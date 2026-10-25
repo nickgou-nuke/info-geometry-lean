@@ -5984,4 +5984,227 @@ theorem zorn_five_graded_kantor_koecher_and_erlangen_flag_states
     · rename_i i; fin_cases i <;> (simp [zornHomogeneousFlagState, mul, ZornVec3.dot, ZornVec3.cross]; try ring)
     · simp [zornHomogeneousFlagState, mul, ZornVec3.dot]
 
+/-- Negative Heisenberg nilradical element $N_-(y, z, \eta) = E_{-1}(y, z) + E_{-2}(\eta) \in \mathcal{G}_{-1} \oplus \mathcal{G}_{-2}$. -/
+def zornHeisenbergNilMinus (y z η : R) : ZornVectorMatrix R := ⟨0, ![η, 0, 0], ![0, y, z], 0⟩
+
+/-- Negative Heisenberg group element $H_-(y, z, \eta) = 1 + N_-(y, z, \eta) \in \exp(\mathcal{G}_{-1} \oplus \mathcal{G}_{-2})$. -/
+def zornHeisenbergGroupMinus (y z η : R) : ZornVectorMatrix R := ⟨1, ![η, 0, 0], ![0, y, z], 1⟩
+
+/-- Helper lemma: product of two elements in the 5-graded negative Heisenberg nilradical $\mathcal{N}_- = \mathcal{G}_{-1} \oplus \mathcal{G}_{-2}$. -/
+theorem zornHeisenbergNilMinus_mul (y₁ z₁ η₁ y₂ z₂ η₂ : R) :
+    zornHeisenbergNilMinus y₁ z₁ η₁ * zornHeisenbergNilMinus y₂ z₂ η₂ =
+      zornGradeMinus2 (-(y₁ * z₂ - z₁ * y₂)) := by
+  ext
+  · simp [zornHeisenbergNilMinus, zornGradeMinus2, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · rename_i i; fin_cases i <;>
+      (simp [zornHeisenbergNilMinus, zornGradeMinus2, mul, ZornVec3.cross]; try ring)
+  · rename_i i; fin_cases i <;>
+      simp [zornHeisenbergNilMinus, zornGradeMinus2, mul, ZornVec3.cross]
+  · simp [zornHeisenbergNilMinus, zornGradeMinus2, mul, ZornVec3.dot, Fin.sum_univ_three]
+
+/-- Helper lemma: product of two elements in the 5-graded negative Heisenberg group $\exp(\mathcal{N}_-)$. -/
+theorem zornHeisenbergGroupMinus_mul (y₁ z₁ η₁ y₂ z₂ η₂ : R) :
+    zornHeisenbergGroupMinus y₁ z₁ η₁ * zornHeisenbergGroupMinus y₂ z₂ η₂ =
+      zornHeisenbergGroupMinus (y₁ + y₂) (z₁ + z₂) (η₁ + η₂ - (y₁ * z₂ - z₁ * y₂)) := by
+  ext
+  · simp [zornHeisenbergGroupMinus, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · rename_i i; fin_cases i <;>
+      (simp [zornHeisenbergGroupMinus, mul, ZornVec3.cross]; try ring)
+  · rename_i i; fin_cases i <;>
+      (simp [zornHeisenbergGroupMinus, mul, ZornVec3.cross]; try ring)
+  · simp [zornHeisenbergGroupMinus, mul, ZornVec3.dot, Fin.sum_univ_three]
+
+/-- **55. Negative Heisenberg Nilradical $\mathcal{N}_-$, Dual Group Law, & Opposite-Nilradical Nucleus Coupling in $\mathrm{Zorn}(R)$**:
+    Over any commutative ring $R$:
+    1. Step-2 Negative Nilradical Closure & Associativity:
+       $N_-(y_1, z_1, \eta_1) * N_-(y_2, z_2, \eta_2) = E_{-2}(-(y_1 z_2 - z_1 y_2))$ and
+       $\mathrm{bundledAssociator}\;H_{-,1}\;H_{-,2}\;H_{-,3} = 0$.
+    2. Dual Heisenberg Group Law & Exact Inversion:
+       $H_-(y_1, z_1, \eta_1) * H_-(y_2, z_2, \eta_2) = H_-(y_1 + y_2, z_1 + z_2, \eta_1 + \eta_2 - (y_1 z_2 - z_1 y_2))$ and
+       $H_{-,1} * H_-(-y_1, -z_1, -\eta_1) = \mathrm{zornGradeZero}\;1\;1$.
+    3. Exact $\mathcal{G}_0$ Central Nucleus Closure of the Jordan Anticommutator $\{N_+, N_-\}$:
+       $N_+(y_1, z_1, \xi) * N_-(y_2, z_2, \eta) + N_-(y_2, z_2, \eta) * N_+(y_1, z_1, \xi) =
+         \mathrm{zornGradeZero}\;(y_1 y_2 + z_1 z_2 + \xi \eta)\;(y_1 y_2 + z_1 z_2 + \xi \eta)$. -/
+theorem zorn_negative_nilradical_and_nucleus_coupling
+    (y₁ z₁ η₁ y₂ z₂ η₂ y₃ z₃ η₃ ξ η : R) :
+    let H₁ := zornHeisenbergGroupMinus y₁ z₁ η₁
+    let H₂ := zornHeisenbergGroupMinus y₂ z₂ η₂
+    let H₃ := zornHeisenbergGroupMinus y₃ z₃ η₃
+    let N_p := zornHeisenbergNilPlus y₁ z₁ ξ
+    let N_m := zornHeisenbergNilMinus y₂ z₂ η
+    zornHeisenbergNilMinus y₁ z₁ η₁ * zornHeisenbergNilMinus y₂ z₂ η₂ =
+      zornGradeMinus2 (-(y₁ * z₂ - z₁ * y₂)) ∧
+    H₁ * H₂ = zornHeisenbergGroupMinus (y₁ + y₂) (z₁ + z₂) (η₁ + η₂ - (y₁ * z₂ - z₁ * y₂)) ∧
+    bundledAssociator H₁ H₂ H₃ = 0 ∧
+    H₁ * zornHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) = zornGradeZero 1 1 ∧
+    N_p * N_m + N_m * N_p =
+      zornGradeZero (y₁ * y₂ + z₁ * z₂ + ξ * η) (y₁ * y₂ + z₁ * z₂ + ξ * η) := by
+  intro H₁ H₂ H₃ N_p N_m
+  have hAssocH : (H₁ * H₂) * H₃ = H₁ * (H₂ * H₃) := by
+    change (zornHeisenbergGroupMinus y₁ z₁ η₁ * zornHeisenbergGroupMinus y₂ z₂ η₂) * zornHeisenbergGroupMinus y₃ z₃ η₃ =
+      zornHeisenbergGroupMinus y₁ z₁ η₁ * (zornHeisenbergGroupMinus y₂ z₂ η₂ * zornHeisenbergGroupMinus y₃ z₃ η₃)
+    rw [zornHeisenbergGroupMinus_mul, zornHeisenbergGroupMinus_mul,
+        zornHeisenbergGroupMinus_mul, zornHeisenbergGroupMinus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus]; try ring)
+    · rfl
+  refine ⟨zornHeisenbergNilMinus_mul y₁ z₁ η₁ y₂ z₂ η₂,
+          zornHeisenbergGroupMinus_mul y₁ z₁ η₁ y₂ z₂ η₂,
+          sub_eq_zero.mpr hAssocH, ?_, ?_⟩
+  · change zornHeisenbergGroupMinus y₁ z₁ η₁ * zornHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) = zornGradeZero 1 1
+    rw [zornHeisenbergGroupMinus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus, zornGradeZero]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus, zornGradeZero]; try ring)
+    · rfl
+  · ext
+    · simp [N_p, N_m, zornHeisenbergNilPlus, zornHeisenbergNilMinus, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+    · rename_i i; fin_cases i <;>
+        (simp [N_p, N_m, zornHeisenbergNilPlus, zornHeisenbergNilMinus, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [N_p, N_m, zornHeisenbergNilPlus, zornHeisenbergNilMinus, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]; try ring)
+    · simp [N_p, N_m, zornHeisenbergNilPlus, zornHeisenbergNilMinus, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+
+/-- Positive central contact subgroup $C_+(\xi) := H_+(0, 0, \xi) = \langle 1, 0, \langle \xi, 0, 0 \rangle, 1 \rangle \in \mathrm{Zorn}(R)$. -/
+def zornContactSubgroupPlus (ξ : R) : ZornVectorMatrix R :=
+  zornHeisenbergGroupPlus 0 0 ξ
+
+/-- Negative central contact subgroup $C_-(\eta) := H_-(0, 0, \eta) = \langle 1, \langle \eta, 0, 0 \rangle, 0, 1 \rangle \in \mathrm{Zorn}(R)$. -/
+def zornContactSubgroupMinus (η : R) : ZornVectorMatrix R :=
+  zornHeisenbergGroupMinus 0 0 η
+
+/-- **56. 5-Grade Nucleus Derivation Invariance, Central Contact Subgroup Readout, & Contact-Gauss Associativity in $\mathrm{Zorn}(R)$**:
+    Over any commutative ring $R$, for all $\rho_+, \rho_-, y, z, \xi, \xi', \eta, \eta' \in R$:
+    1. 5-Grade Eigenvalue Invariance Under $D = \mathrm{zornGradeZero}\;\rho_+\;\rho_-$:
+       $$D * E_{+1}(y, z) - E_{+1}(y, z) * D = (\rho_+ - \rho_-) \cdot E_{+1}(y, z), \qquad
+         D * E_{+2}(\xi) - E_{+2}(\xi) * D = (\rho_- - \rho_+) \cdot E_{+2}(\xi).$$
+    2. Exact Centrality of Contact Subgroups $C_+(\xi')$ and $C_-(\eta')$:
+       $$H_+(y, z, \xi) * C_+(\xi') = C_+(\xi') * H_+(y, z, \xi) = H_+(y, z, \xi + \xi'),$$
+       $$H_-(y, z, \eta) * C_-(\eta') = C_-(\eta') * H_-(y, z, \eta) = H_-(y, z, \eta + \eta').$$
+    3. Selective Contact Readout & Contact-Gauss Associativity:
+       $$E_{-2}(\eta) * (E_{-1}(y, z) + E_{+2}(\xi)) = \mathrm{zornGradeZero}\;(\eta \xi)\;0,$$
+       $$\mathrm{bundledAssociator}\;(C_+(\xi))\;(\mathrm{zornGradeZero}\;\rho_+\;\rho_-)\;(C_-(\eta)) = 0.$$ -/
+theorem zorn_five_graded_nucleus_invariance_and_contact_centrality
+    (ρ_plus ρ_minus y z ξ ξ' η η' : R) :
+    let D := zornGradeZero ρ_plus ρ_minus
+    D * zornGradePlus1 y z - zornGradePlus1 y z * D =
+      zornGradePlus1 ((ρ_plus - ρ_minus) * y) ((ρ_plus - ρ_minus) * z) ∧
+    D * zornGradePlus2 ξ - zornGradePlus2 ξ * D =
+      zornGradePlus2 ((ρ_minus - ρ_plus) * ξ) ∧
+    zornHeisenbergGroupPlus y z ξ * zornContactSubgroupPlus ξ' =
+      zornHeisenbergGroupPlus y z (ξ + ξ') ∧
+    zornContactSubgroupPlus ξ' * zornHeisenbergGroupPlus y z ξ =
+      zornHeisenbergGroupPlus y z (ξ + ξ') ∧
+    zornHeisenbergGroupMinus y z η * zornContactSubgroupMinus η' =
+      zornHeisenbergGroupMinus y z (η + η') ∧
+    zornContactSubgroupMinus η' * zornHeisenbergGroupMinus y z η =
+      zornHeisenbergGroupMinus y z (η + η') ∧
+    zornGradeMinus2 η * (zornGradeMinus1 y z + zornGradePlus2 ξ) =
+      zornGradeZero (η * ξ) 0 ∧
+    bundledAssociator (zornContactSubgroupPlus ξ) D (zornContactSubgroupMinus η) = 0 := by
+  intro D
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · apply sub_eq_iff_eq_add.mpr
+    ext
+    · simp [D, zornGradeZero, zornGradePlus1,
+            InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [D, zornGradeZero, zornGradePlus1,
+               InfoGeometry.Algebra.zvm_add_def,
+               add, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        simp [D, zornGradeZero, zornGradePlus1,
+              InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · simp [D, zornGradeZero, zornGradePlus1,
+            InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · apply sub_eq_iff_eq_add.mpr
+    ext
+    · simp [D, zornGradeZero, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [D, zornGradeZero, zornGradePlus2,
+              InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        (simp [D, zornGradeZero, zornGradePlus2,
+               InfoGeometry.Algebra.zvm_add_def,
+               add, mul, ZornVec3.cross]; try ring)
+    · simp [D, zornGradeZero, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · change zornHeisenbergGroupPlus y z ξ * zornHeisenbergGroupPlus 0 0 ξ' =
+      zornHeisenbergGroupPlus y z (ξ + ξ')
+    rw [zornHeisenbergGroupPlus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rfl
+  · change zornHeisenbergGroupPlus 0 0 ξ' * zornHeisenbergGroupPlus y z ξ =
+      zornHeisenbergGroupPlus y z (ξ + ξ')
+    rw [zornHeisenbergGroupPlus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rfl
+  · change zornHeisenbergGroupMinus y z η * zornHeisenbergGroupMinus 0 0 η' =
+      zornHeisenbergGroupMinus y z (η + η')
+    rw [zornHeisenbergGroupMinus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus]; try ring)
+    · rfl
+  · change zornHeisenbergGroupMinus 0 0 η' * zornHeisenbergGroupMinus y z η =
+      zornHeisenbergGroupMinus y z (η + η')
+    rw [zornHeisenbergGroupMinus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupMinus]; try ring)
+    · rfl
+  · ext
+    · simp [zornGradeMinus2, zornGradeMinus1, zornGradePlus2, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [zornGradeMinus2, zornGradeMinus1, zornGradePlus2, zornGradeZero,
+              InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        simp [zornGradeMinus2, zornGradeMinus1, zornGradePlus2, zornGradeZero,
+              InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]
+    · simp [zornGradeMinus2, zornGradeMinus1, zornGradePlus2, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · apply sub_eq_zero.mpr
+    ext
+    · simp [D, zornContactSubgroupPlus, zornContactSubgroupMinus,
+            zornHeisenbergGroupPlus, zornHeisenbergGroupMinus, zornGradeZero,
+            mul, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+    · rename_i i; fin_cases i <;>
+        (simp [D, zornContactSubgroupPlus, zornContactSubgroupMinus,
+               zornHeisenbergGroupPlus, zornHeisenbergGroupMinus, zornGradeZero,
+               mul, ZornVec3.dot, Fin.sum_univ_three, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [D, zornContactSubgroupPlus, zornContactSubgroupMinus,
+               zornHeisenbergGroupPlus, zornHeisenbergGroupMinus, zornGradeZero,
+               mul, ZornVec3.dot, Fin.sum_univ_three, ZornVec3.cross]; try ring)
+    · simp [D, zornContactSubgroupPlus, zornContactSubgroupMinus,
+            zornHeisenbergGroupPlus, zornHeisenbergGroupMinus, zornGradeZero,
+            mul, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

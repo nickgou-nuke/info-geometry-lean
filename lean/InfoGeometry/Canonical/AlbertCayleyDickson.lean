@@ -3862,6 +3862,329 @@ theorem fiveGraded_opposite_grade_couplings
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     try noncomm_ring))
 
+/-!
+## 18. Archetypes XLIV & XLV: The Negative Heisenberg Nilradical $\mathcal{N}_-$, Krein Involution Duality, & Opposite-Nilradical Nucleus Coupling in $\mathrm{Zorn}(A)$
+-/
+
+/-- General element $N_-(y, z, \eta) = E_{-1}(y, z) + E_{-2}(\eta)$ of the negative Heisenberg nilradical $\mathcal{N}_- = \mathcal{G}_{-1} \oplus \mathcal{G}_{-2}$. -/
+def opHeisenbergNilMinus (y z η : A) : OpZornMatrix A :=
+  ⟨0, ⟨η, 0, 0⟩, ⟨0, y, z⟩, 0⟩
+
+/-- Exponential element $H_-(y, z, \eta) = 1 + N_-(y, z, \eta)$ in the negative Heisenberg group $\exp(\mathcal{N}_-)$. -/
+def opHeisenbergGroupMinus (y z η : A) : OpZornMatrix A :=
+  ⟨1, ⟨η, 0, 0⟩, ⟨0, y, z⟩, 1⟩
+
+/-- Helper lemma: product of two elements in the 5-graded negative Heisenberg nilradical $\mathcal{N}_- = \mathcal{G}_{-1} \oplus \mathcal{G}_{-2}$. -/
+theorem opHeisenbergNilMinus_mul (y₁ z₁ η₁ y₂ z₂ η₂ : A) :
+    opHeisenbergNilMinus y₁ z₁ η₁ * opHeisenbergNilMinus y₂ z₂ η₂ =
+      opGradeMinus2 (-opContactSymplecticForm y₁ z₁ y₂ z₂) := by
+  ext <;>
+  (simp [opHeisenbergNilMinus, opGradeMinus2, opContactSymplecticForm,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- Helper lemma: product of two elements in the 5-graded negative Heisenberg group $\exp(\mathcal{N}_-)$. -/
+theorem opHeisenbergGroupMinus_mul (y₁ z₁ η₁ y₂ z₂ η₂ : A) :
+    opHeisenbergGroupMinus y₁ z₁ η₁ * opHeisenbergGroupMinus y₂ z₂ η₂ =
+      opHeisenbergGroupMinus (y₁ + y₂) (z₁ + z₂)
+        (η₁ + η₂ - opContactSymplecticForm y₁ z₁ y₂ z₂) := by
+  ext <;>
+  (simp [opHeisenbergGroupMinus, opContactSymplecticForm,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring
+   try abel)
+
+/-- **60. Negative Nilradical Step-2 Closure, Associativity, & Dual Heisenberg Group Law (Archetype XLIV.1)**:
+    Over ANY noncommutative operator ring $A$, for all $y_i, z_i, \eta_i \in A$:
+    1. 2-Step Negative Nilradical Product (Opposite Symplectic Chirality):
+       $N_-(y_1, z_1, \eta_1) * N_-(y_2, z_2, \eta_2) = E_{-2}(-\omega_\perp(y_1, z_1; y_2, z_2))$.
+    2. Vanishing Triple Products & Vanishing 3-Associator on $\mathcal{N}_-$:
+       $(N_1 * N_2) * N_3 = 0$, $N_1 * (N_2 * N_3) = 0$, and $\mathrm{opAssociator}\;N_1\;N_2\;N_3 = 0$.
+    3. Exact Associative Dual Heisenberg Group Law on $\exp(\mathcal{N}_-)$:
+       $H_-(y_1, z_1, \eta_1) * H_-(y_2, z_2, \eta_2) =
+        H_-(y_1 + y_2,\; z_1 + z_2,\; \eta_1 + \eta_2 - \omega_\perp(y_1, z_1; y_2, z_2))$.
+    4. Vanishing Group 3-Associator & Exact Two-Sided Group Inversion:
+       $\mathrm{opAssociator}\;H_1\;H_2\;H_3 = 0$,
+       $H_-(y_1, z_1, \eta_1) * H_-(-y_1, -z_1, -\eta_1) = 1$, and
+       $H_-(-y_1, -z_1, -\eta_1) * H_-(y_1, z_1, \eta_1) = 1$. -/
+theorem heisenbergNilMinus_associativity_and_group_law
+    (y₁ z₁ η₁ y₂ z₂ η₂ y₃ z₃ η₃ : A) :
+    let N₁ := opHeisenbergNilMinus y₁ z₁ η₁
+    let N₂ := opHeisenbergNilMinus y₂ z₂ η₂
+    let N₃ := opHeisenbergNilMinus y₃ z₃ η₃
+    let H₁ := opHeisenbergGroupMinus y₁ z₁ η₁
+    let H₂ := opHeisenbergGroupMinus y₂ z₂ η₂
+    let H₃ := opHeisenbergGroupMinus y₃ z₃ η₃
+    N₁ * N₂ = opGradeMinus2 (-opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+    (N₁ * N₂) * N₃ = 0 ∧
+    N₁ * (N₂ * N₃) = 0 ∧
+    opAssociator N₁ N₂ N₃ = 0 ∧
+    H₁ * H₂ =
+      opHeisenbergGroupMinus (y₁ + y₂) (z₁ + z₂)
+        (η₁ + η₂ - opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+    opAssociator H₁ H₂ H₃ = 0 ∧
+    H₁ * opHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) = 1 ∧
+    opHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) * H₁ = 1 := by
+  intro N₁ N₂ N₃ H₁ H₂ H₃
+  have hL : (N₁ * N₂) * N₃ = 0 := by
+    change (opHeisenbergNilMinus y₁ z₁ η₁ * opHeisenbergNilMinus y₂ z₂ η₂) * N₃ = 0
+    rw [opHeisenbergNilMinus_mul]
+    ext <;>
+    simp [N₃, opGradeMinus2, opHeisenbergNilMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  have hR : N₁ * (N₂ * N₃) = 0 := by
+    change N₁ * (opHeisenbergNilMinus y₂ z₂ η₂ * opHeisenbergNilMinus y₃ z₃ η₃) = 0
+    rw [opHeisenbergNilMinus_mul]
+    ext <;>
+    simp [N₁, opGradeMinus2, opHeisenbergNilMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  have hAssocN : opAssociator N₁ N₂ N₃ = 0 := by
+    unfold opAssociator
+    rw [hL, hR]
+    ext <;> simp
+  refine ⟨opHeisenbergNilMinus_mul y₁ z₁ η₁ y₂ z₂ η₂,
+          hL, hR, hAssocN,
+          opHeisenbergGroupMinus_mul y₁ z₁ η₁ y₂ z₂ η₂,
+          ?_, ?_, ?_⟩
+  · change (opHeisenbergGroupMinus y₁ z₁ η₁ * opHeisenbergGroupMinus y₂ z₂ η₂) * opHeisenbergGroupMinus y₃ z₃ η₃ -
+      opHeisenbergGroupMinus y₁ z₁ η₁ * (opHeisenbergGroupMinus y₂ z₂ η₂ * opHeisenbergGroupMinus y₃ z₃ η₃) = 0
+    rw [opHeisenbergGroupMinus_mul, opHeisenbergGroupMinus_mul,
+        opHeisenbergGroupMinus_mul, opHeisenbergGroupMinus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupMinus, opContactSymplecticForm];
+     try noncomm_ring
+     try abel)
+  · change opHeisenbergGroupMinus y₁ z₁ η₁ * opHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) = 1
+    rw [opHeisenbergGroupMinus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupMinus, opContactSymplecticForm];
+     try noncomm_ring)
+  · change opHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) * opHeisenbergGroupMinus y₁ z₁ η₁ = 1
+    rw [opHeisenbergGroupMinus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupMinus, opContactSymplecticForm];
+     try noncomm_ring)
+
+/-- **61. Exact Krein Space Anti-Involution Duality Between $\mathcal{N}_+$ and $\mathcal{N}_-$ (Archetype XLIV.2)**:
+    Over ANY noncommutative $*$-ring $A$ (`[Ring A] [StarRing A]`), for all $y, z, \xi \in A$:
+    1. $(E_{+1}(y, z))^\flat = E_{-1}(y^\star, z^\star)$ and $(E_{+2}(\xi))^\flat = E_{-2}(\xi^\star)$.
+    2. $(N_+(y, z, \xi))^\flat = N_-(y^\star, z^\star, \xi^\star)$.
+    3. $(H_+(y, z, \xi))^\flat = H_-(y^\star, z^\star, \xi^\star)$. -/
+theorem heisenbergNil_kreinAdjoint_duality [StarRing A]
+    (y z ξ : A) :
+    opZornKreinAdjoint (opGradePlus1 y z) = opGradeMinus1 (star y) (star z) ∧
+    opZornKreinAdjoint (opGradePlus2 ξ) = opGradeMinus2 (star ξ) ∧
+    opZornKreinAdjoint (opHeisenbergNilPlus y z ξ) =
+      opHeisenbergNilMinus (star y) (star z) (star ξ) ∧
+    opZornKreinAdjoint (opHeisenbergGroupPlus y z ξ) =
+      opHeisenbergGroupMinus (star y) (star z) (star ξ) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   simp [opZornKreinAdjoint, opVec3Star, opGradePlus1, opGradeMinus1, opGradePlus2, opGradeMinus2,
+         opHeisenbergNilPlus, opHeisenbergNilMinus, opHeisenbergGroupPlus, opHeisenbergGroupMinus])
+
+/-- **62. 3-Grade Decomposition of $N_+ * N_-$ & Exact $\mathcal{G}_0$ Nucleus Closure of $\{N_+, N_-\}$ (Archetype XLV)**:
+    Over ANY noncommutative operator ring $A$, for all $y_1, z_1, \xi, y_2, z_2, \eta \in A$,
+    $v, w \in A^3$, and $X, Y \in \mathrm{OpZornMatrix}\;A$,
+    let $N_+ = N_+(y_1, z_1, \xi) \in \mathcal{N}_+$ and $N_- = N_-(y_2, z_2, \eta) \in \mathcal{N}_-$:
+    1. Forward-Backward Product Decomposition ($\mathcal{G}_0 \oplus \mathcal{G}_{+1} \oplus \mathcal{G}_{-1}$):
+       $$N_+ * N_- = \mathrm{opGradeZero}\;(-(y_1 y_2 + z_1 z_2))\;(-\xi \eta) +
+                     E_{+1}(\xi z_2 + z_2 \xi,\; -(\xi y_2 + y_2 \xi)) +
+                     E_{-1}(z_1 \eta + \eta z_1,\; -(y_1 \eta + \eta y_1)).$$
+    2. Backward-Forward Product Decomposition ($\mathcal{G}_0 \oplus \mathcal{G}_{+1} \oplus \mathcal{G}_{-1}$):
+       $$N_- * N_+ = \mathrm{opGradeZero}\;(-\eta \xi)\;(-(y_2 y_1 + z_2 z_1)) +
+                     E_{+1}(-(\xi z_2 + z_2 \xi),\; \xi y_2 + y_2 \xi) +
+                     E_{-1}(-(z_1 \eta + \eta z_1),\; y_1 \eta + \eta y_1).$$
+    3. Exact $\mathcal{G}_0$ Associative Nucleus Closure of the Jordan Anticommutator $\{N_+, N_-\}$:
+       $$K = N_+ * N_- + N_- * N_+ =
+         \mathrm{opGradeZero}\;\bigl(-(y_1 y_2 + z_1 z_2 + \eta \xi)\bigr)\;\bigl(-(y_2 y_1 + z_2 z_1 + \xi \eta)\bigr) \in \mathcal{G}_0.$$
+    4. Exact Opposite-Chirality & Diagonal Leibniz Derivation Property of $K = \{N_+, N_-\}$:
+       $$[K, L_+(v) * L_-(w)] = [K, L_+(v)] * L_-(w) + L_+(v) * [K, L_-(w)],$$
+       $$([K, X * Y]).a = ([K, X] * Y + X * [K, Y]).a, \qquad ([K, X * Y]).b = ([K, X] * Y + X * [K, Y]).b.$$ -/
+theorem oppositeNilradical_coupling_and_nucleus_anticommutator
+    (y₁ z₁ ξ y₂ z₂ η : A) (v w : OpVec3 A) (X Y : OpZornMatrix A) :
+    let N_p := opHeisenbergNilPlus y₁ z₁ ξ
+    let N_m := opHeisenbergNilMinus y₂ z₂ η
+    let K := N_p * N_m + N_m * N_p
+    let Lp := opLightconeRayPlus v
+    let Lm := opLightconeRayMinus w
+    N_p * N_m =
+      opGradeZero (-(y₁ * y₂ + z₁ * z₂)) (-ξ * η) +
+        opGradePlus1 (ξ * z₂ + z₂ * ξ) (-(ξ * y₂ + y₂ * ξ)) +
+        opGradeMinus1 (z₁ * η + η * z₁) (-(y₁ * η + η * y₁)) ∧
+    N_m * N_p =
+      opGradeZero (-η * ξ) (-(y₂ * y₁ + z₂ * z₁)) +
+        opGradePlus1 (-(ξ * z₂ + z₂ * ξ)) (ξ * y₂ + y₂ * ξ) +
+        opGradeMinus1 (-(z₁ * η + η * z₁)) (y₁ * η + η * y₁) ∧
+    K = opGradeZero (-(y₁ * y₂ + z₁ * z₂ + η * ξ)) (-(y₂ * y₁ + z₂ * z₁ + ξ * η)) ∧
+    opCommutator K (Lp * Lm) = opCommutator K Lp * Lm + Lp * opCommutator K Lm ∧
+    (opCommutator K (X * Y)).a = (opCommutator K X * Y + X * opCommutator K Y).a ∧
+    (opCommutator K (X * Y)).b = (opCommutator K X * Y + X * opCommutator K Y).b := by
+  intro N_p N_m K Lp Lm
+  have hK : K = opGradeZero (-(y₁ * y₂ + z₁ * z₂ + η * ξ)) (-(y₂ * y₁ + z₂ * z₁ + ξ * η)) := by
+    ext <;>
+    (simp [K, N_p, N_m, opHeisenbergNilPlus, opHeisenbergNilMinus, opGradeZero, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  have hLeib := opModularDeriv_nucleus_and_exact_leibniz_rule K X Y v w
+    (-(y₁ * y₂ + z₁ * z₂ + η * ξ)) (-(y₂ * y₁ + z₂ * z₁ + ξ * η))
+  refine ⟨?_, ?_, hK, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [N_p, N_m, opHeisenbergNilPlus, opHeisenbergNilMinus,
+           opGradeZero, opCartanDiag, opGradePlus1, opGradeMinus1,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [N_p, N_m, opHeisenbergNilPlus, opHeisenbergNilMinus,
+           opGradeZero, opCartanDiag, opGradePlus1, opGradeMinus1,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · rw [hK]
+    exact hLeib.2.2.2.2.1
+  · rw [hK]
+    exact hLeib.2.2.2.2.2.2.1
+  · rw [hK]
+    exact hLeib.2.2.2.2.2.2.2
+
+/-- Positive central contact subgroup $C_+(\xi) := H_+(0, 0, \xi) = 1 + E_{+2}(\xi) = \langle 1, 0, \langle \xi, 0, 0 \rangle, 1 \rangle \in \exp(\mathcal{N}_+)$. -/
+def opContactSubgroupPlus (ξ : A) : OpZornMatrix A :=
+  opHeisenbergGroupPlus 0 0 ξ
+
+/-- Negative central contact subgroup $C_-(\eta) := H_-(0, 0, \eta) = 1 + E_{-2}(\eta) = \langle 1, \langle \eta, 0, 0 \rangle, 0, 1 \rangle \in \exp(\mathcal{N}_-)$. -/
+def opContactSubgroupMinus (η : A) : OpZornMatrix A :=
+  opHeisenbergGroupMinus 0 0 η
+
+/-- **63. 5-Grade Invariance Under $\mathcal{G}_0$ Nucleus Derivations & Opposite-Grade / Contact Leibniz Laws (Archetype XLVI)**:
+    Over ANY noncommutative operator ring $A$, for any $\mathcal{G}_0$ nucleus Hamiltonian
+    $D = \mathrm{opGradeZero}\;\rho_+\;\rho_- = D(\rho_+, \rho_-)$:
+    1. Grade $+1$ Invariance: $[D, E_{+1}(y, z)] = E_{+1}(\rho_+ y - y \rho_-,\; \rho_+ z - z \rho_-) \in \mathcal{G}_{+1}$.
+    2. Grade $+2$ Invariance: $[D, E_{+2}(\xi)] = E_{+2}(\rho_- \xi - \xi \rho_+) \in \mathcal{G}_{+2}$.
+    3. Grade $-1$ Invariance: $[D, E_{-1}(y, z)] = E_{-1}(\rho_- y - y \rho_+,\; \rho_- z - z \rho_+) \in \mathcal{G}_{-1}$.
+    4. Grade $-2$ Invariance: $[D, E_{-2}(\eta)] = E_{-2}(\rho_+ \eta - \eta \rho_-) \in \mathcal{G}_{-2}$.
+    5. Contact-Center Eigenvalue Law on $\mathcal{G}_{+1} * \mathcal{G}_{+1} \to \mathcal{G}_{+2}$:
+       $$[D, E_{+1}(y_1, z_1) * E_{+1}(y_2, z_2)] = E_{+2}\bigl(\rho_- \omega_\perp(y_1, z_1; y_2, z_2) - \omega_\perp(y_1, z_1; y_2, z_2) \rho_+\bigr).$$
+    6. Exact Opposite-Grade Leibniz Rules on $\mathcal{G}_{+1} * \mathcal{G}_{-1} \to \mathcal{G}_0$ and $\mathcal{G}_{-2} * \mathcal{G}_{+2} \to \mathcal{G}_0$:
+       $$[D, E_{+1}(y_1, z_1) * E_{-1}(y_2, z_2)] = [D, E_{+1}(y_1, z_1)] * E_{-1}(y_2, z_2) + E_{+1}(y_1, z_1) * [D, E_{-1}(y_2, z_2)],$$
+       $$[D, E_{-2}(\eta) * E_{+2}(\xi)] = [D, E_{-2}(\eta)] * E_{+2}(\xi) + E_{-2}(\eta) * [D, E_{+2}(\xi)].$$ -/
+theorem fiveGraded_nucleus_derivation_invariance_and_contact_leibniz
+    (ρ_plus ρ_minus y z y₁ z₁ y₂ z₂ ξ η : A) :
+    let D := opGradeZero ρ_plus ρ_minus
+    opCommutator D (opGradePlus1 y z) =
+      opGradePlus1 (ρ_plus * y - y * ρ_minus) (ρ_plus * z - z * ρ_minus) ∧
+    opCommutator D (opGradePlus2 ξ) =
+      opGradePlus2 (ρ_minus * ξ - ξ * ρ_plus) ∧
+    opCommutator D (opGradeMinus1 y z) =
+      opGradeMinus1 (ρ_minus * y - y * ρ_plus) (ρ_minus * z - z * ρ_plus) ∧
+    opCommutator D (opGradeMinus2 η) =
+      opGradeMinus2 (ρ_plus * η - η * ρ_minus) ∧
+    opCommutator D (opGradePlus1 y₁ z₁ * opGradePlus1 y₂ z₂) =
+      opGradePlus2 (ρ_minus * opContactSymplecticForm y₁ z₁ y₂ z₂ -
+        opContactSymplecticForm y₁ z₁ y₂ z₂ * ρ_plus) ∧
+    opCommutator D (opGradePlus1 y₁ z₁ * opGradeMinus1 y₂ z₂) =
+      opCommutator D (opGradePlus1 y₁ z₁) * opGradeMinus1 y₂ z₂ +
+        opGradePlus1 y₁ z₁ * opCommutator D (opGradeMinus1 y₂ z₂) ∧
+    opCommutator D (opGradeMinus2 η * opGradePlus2 ξ) =
+      opCommutator D (opGradeMinus2 η) * opGradePlus2 ξ +
+        opGradeMinus2 η * opCommutator D (opGradePlus2 ξ) := by
+  intro D
+  have hModP1 := opModularDeriv_lightconeRayPlus ρ_plus ρ_minus ⟨0, y, z⟩
+  have hModP2 := opModularDeriv_lightconeRayMinus ρ_plus ρ_minus ⟨ξ, 0, 0⟩
+  have hModM1 := opModularDeriv_lightconeRayMinus ρ_plus ρ_minus ⟨0, y, z⟩
+  have hModM2 := opModularDeriv_lightconeRayPlus ρ_plus ρ_minus ⟨η, 0, 0⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · change opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus ⟨0, y, z⟩) =
+      opGradePlus1 (ρ_plus * y - y * ρ_minus) (ρ_plus * z - z * ρ_minus)
+    rw [hModP1]
+    ext <;> simp [opGradePlus1, opLightconeRayPlus, OpVec3.bimoduleDiff]
+  · change opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus ⟨ξ, 0, 0⟩) =
+      opGradePlus2 (ρ_minus * ξ - ξ * ρ_plus)
+    rw [hModP2]
+    ext <;> simp [opGradePlus2, opLightconeRayMinus, OpVec3.bimoduleDiff]
+  · change opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus ⟨0, y, z⟩) =
+      opGradeMinus1 (ρ_minus * y - y * ρ_plus) (ρ_minus * z - z * ρ_plus)
+    rw [hModM1]
+    ext <;> simp [opGradeMinus1, opLightconeRayMinus, OpVec3.bimoduleDiff]
+  · change opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus ⟨η, 0, 0⟩) =
+      opGradeMinus2 (ρ_plus * η - η * ρ_minus)
+    rw [hModM2]
+    ext <;> simp [opGradeMinus2, opLightconeRayPlus, OpVec3.bimoduleDiff]
+  · have hStep : opGradePlus1 y₁ z₁ * opGradePlus1 y₂ z₂ =
+        opGradePlus2 (opContactSymplecticForm y₁ z₁ y₂ z₂) :=
+      (fiveGraded_step_two_heisenberg_and_termination 0 0 y₁ z₁ y₂ z₂ 0 0 0 0 0 0).1
+    rw [hStep]
+    change opModularDeriv ρ_plus ρ_minus
+        (opLightconeRayMinus ⟨opContactSymplecticForm y₁ z₁ y₂ z₂, 0, 0⟩) =
+      opGradePlus2 (ρ_minus * opContactSymplecticForm y₁ z₁ y₂ z₂ -
+        opContactSymplecticForm y₁ z₁ y₂ z₂ * ρ_plus)
+    rw [opModularDeriv_lightconeRayMinus]
+    ext <;> simp [opGradePlus2, opLightconeRayMinus, OpVec3.bimoduleDiff]
+  · exact (opModularDeriv_nucleus_and_exact_leibniz_rule D 0 0
+      ⟨0, y₁, z₁⟩ ⟨0, y₂, z₂⟩ ρ_plus ρ_minus).2.2.2.2.1
+  · exact (opModularDeriv_nucleus_and_exact_leibniz_rule D 0 0
+      ⟨η, 0, 0⟩ ⟨ξ, 0, 0⟩ ρ_plus ρ_minus).2.2.2.2.1
+
+/-- **64. Centrality of Contact Subgroups $C_\pm$, Selective Contact Readout, & Contact-Gauss Associativity (Archetype XLVII)**:
+    Over ANY noncommutative operator ring $A$, for all $y, z, \xi, \xi', \eta, \eta', \rho_+, \rho_- \in A$:
+    1. Centrality of $C_+(\xi') = H_+(0, 0, \xi')$ in $\exp(\mathcal{N}_+)$ (Up to Ring Commutators in $A$):
+       $$H_+(y, z, \xi) * C_+(\xi') = H_+(y, z, \xi + \xi'), \qquad
+         C_+(\xi') * H_+(y, z, \xi) = H_+(y, z, \xi' + \xi).$$
+    2. Centrality of $C_-(\eta') = H_-(0, 0, \eta')$ in $\exp(\mathcal{N}_-)$ (Up to Ring Commutators in $A$):
+       $$H_-(y, z, \eta) * C_-(\eta') = H_-(y, z, \eta + \eta'), \qquad
+         C_-(\eta') * H_-(y, z, \eta) = H_-(y, z, \eta' + \eta).$$
+    3. Selective Contact Readout by Opposite Contact Generators $E_{\mp 2}$ (Blindness to Same-Nilradical $\mathcal{G}_{\mp 1}$):
+       $$E_{-2}(\eta) * \bigl(E_{-1}(y, z) + E_{+2}(\xi)\bigr) = \mathrm{opGradeZero}\;(-\eta \xi)\;0,$$
+       $$\bigl(E_{-1}(y, z) + E_{+2}(\xi)\bigr) * E_{-2}(\eta) = \mathrm{opGradeZero}\;0\;(-\xi \eta).$$
+    4. Exact Contact-Gauss Bruhat Associativity Across Opposite Contact Subgroups and the $\mathcal{G}_0$ Levi Nucleus:
+       $$\mathrm{opAssociator}\;\bigl(C_+(\xi)\bigr)\;\bigl(\mathrm{opGradeZero}\;\rho_+\;\rho_-\bigr)\;\bigl(C_-(\eta)\bigr) = 0.$$ -/
+theorem contactSubgroup_centrality_selective_readout_and_gauss_assoc
+    (y z ξ ξ' η η' ρ_plus ρ_minus : A) :
+    opHeisenbergGroupPlus y z ξ * opContactSubgroupPlus ξ' =
+      opHeisenbergGroupPlus y z (ξ + ξ') ∧
+    opContactSubgroupPlus ξ' * opHeisenbergGroupPlus y z ξ =
+      opHeisenbergGroupPlus y z (ξ' + ξ) ∧
+    opHeisenbergGroupMinus y z η * opContactSubgroupMinus η' =
+      opHeisenbergGroupMinus y z (η + η') ∧
+    opContactSubgroupMinus η' * opHeisenbergGroupMinus y z η =
+      opHeisenbergGroupMinus y z (η' + η) ∧
+    opGradeMinus2 η * (opGradeMinus1 y z + opGradePlus2 ξ) =
+      opGradeZero (-η * ξ) 0 ∧
+    (opGradeMinus1 y z + opGradePlus2 ξ) * opGradeMinus2 η =
+      opGradeZero 0 (-ξ * η) ∧
+    opAssociator (opContactSubgroupPlus ξ) (opGradeZero ρ_plus ρ_minus)
+      (opContactSubgroupMinus η) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · change opHeisenbergGroupPlus y z ξ * opHeisenbergGroupPlus 0 0 ξ' =
+      opHeisenbergGroupPlus y z (ξ + ξ')
+    rw [opHeisenbergGroupPlus_mul]
+    ext <;> simp [opHeisenbergGroupPlus, opContactSymplecticForm]
+  · change opHeisenbergGroupPlus 0 0 ξ' * opHeisenbergGroupPlus y z ξ =
+      opHeisenbergGroupPlus y z (ξ' + ξ)
+    rw [opHeisenbergGroupPlus_mul]
+    ext <;> simp [opHeisenbergGroupPlus, opContactSymplecticForm]
+  · change opHeisenbergGroupMinus y z η * opHeisenbergGroupMinus 0 0 η' =
+      opHeisenbergGroupMinus y z (η + η')
+    rw [opHeisenbergGroupMinus_mul]
+    ext <;> simp [opHeisenbergGroupMinus, opContactSymplecticForm]
+  · change opHeisenbergGroupMinus 0 0 η' * opHeisenbergGroupMinus y z η =
+      opHeisenbergGroupMinus y z (η' + η)
+    rw [opHeisenbergGroupMinus_mul]
+    ext <;> simp [opHeisenbergGroupMinus, opContactSymplecticForm]
+  · ext <;>
+    (simp [opGradeMinus2, opGradeMinus1, opGradePlus2, opGradeZero, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opGradeMinus2, opGradeMinus1, opGradePlus2, opGradeZero, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opAssociator, opContactSubgroupPlus, opContactSubgroupMinus,
+           opHeisenbergGroupPlus, opHeisenbergGroupMinus, opGradeZero, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

@@ -229,6 +229,90 @@ theorem operator_five_graded_kantor_koecher_contact_master_bridge
          ⟨hHeis.2.2.2.2.1, hHeis.2.2.2.2.2.1, hHeis.2.2.2.2.2.2⟩,
          ⟨hOpp.1, hOpp.2.2.2⟩⟩
 
+/-- **Theorem 9 (Negative Heisenberg Nilradical $\mathcal{N}_-$, Krein Involution Duality, & Opposite-Nilradical Nucleus Coupling Master Bridge)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`):
+    1. Step-2 Closure & Associativity of the Negative Nilradical $\mathcal{N}_- = \mathcal{G}_{-1} \oplus \mathcal{G}_{-2}$:
+       $N_-(y_1, z_1, \eta_1) * N_-(y_2, z_2, \eta_2) = E_{-2}(-\omega_\perp(y_1, z_1; y_2, z_2))$ and
+       $\mathrm{opAssociator}\;N_{-,1}\;N_{-,2}\;N_{-,3} = 0$.
+    2. Associative Dual Heisenberg Group Law & Exact Two-Sided Group Inversion on $\exp(\mathcal{N}_-)$:
+       $H_-(y_1, z_1, \eta_1) * H_-(y_2, z_2, \eta_2) = H_-(y_1 + y_2, z_1 + z_2, \eta_1 + \eta_2 - \omega_\perp(y_1, z_1; y_2, z_2))$,
+       $\mathrm{opAssociator}\;H_{-,1}\;H_{-,2}\;H_{-,3} = 0$, and $H_{-,1} * H_-(-y_1, -z_1, -\eta_1) = 1$.
+    3. Exact $\mathcal{G}_0$ Associative Nucleus Closure of the Jordan Anticommutator $\{N_+, N_-\}$:
+       $K = N_+(y_1, z_1, \xi) * N_-(y_2, z_2, \eta) + N_-(y_2, z_2, \eta) * N_+(y_1, z_1, \xi) =
+         \mathrm{opGradeZero}\;(-(y_1 y_2 + z_1 z_2 + \eta \xi))\;(-(y_2 y_1 + z_2 z_1 + \xi \eta))$ and
+       $[K, L_+(v) * L_-(w)] = [K, L_+(v)] * L_-(w) + L_+(v) * [K, L_-(w)]$. -/
+theorem operator_negative_nilradical_and_contact_coupling_master_bridge
+    (y₁ z₁ η₁ y₂ z₂ η₂ y₃ z₃ η₃ ξ η : A) (v w : OpVec3 A) (X Y : OpZornMatrix A) :
+    let N₁ := opHeisenbergNilMinus y₁ z₁ η₁
+    let N₂ := opHeisenbergNilMinus y₂ z₂ η₂
+    let N₃ := opHeisenbergNilMinus y₃ z₃ η₃
+    let H₁ := opHeisenbergGroupMinus y₁ z₁ η₁
+    let H₂ := opHeisenbergGroupMinus y₂ z₂ η₂
+    let H₃ := opHeisenbergGroupMinus y₃ z₃ η₃
+    let N_p := opHeisenbergNilPlus y₁ z₁ ξ
+    let N_m := opHeisenbergNilMinus y₂ z₂ η
+    let K := N_p * N_m + N_m * N_p
+    let Lp := opLightconeRayPlus v
+    let Lm := opLightconeRayMinus w
+    (N₁ * N₂ = opGradeMinus2 (-opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+     opAssociator N₁ N₂ N₃ = 0) ∧
+    (H₁ * H₂ =
+       opHeisenbergGroupMinus (y₁ + y₂) (z₁ + z₂)
+         (η₁ + η₂ - opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+     opAssociator H₁ H₂ H₃ = 0 ∧
+     H₁ * opHeisenbergGroupMinus (-y₁) (-z₁) (-η₁) = 1) ∧
+    (K = opGradeZero (-(y₁ * y₂ + z₁ * z₂ + η * ξ)) (-(y₂ * y₁ + z₂ * z₁ + ξ * η)) ∧
+     opCommutator K (Lp * Lm) = opCommutator K Lp * Lm + Lp * opCommutator K Lm) := by
+  have hNeg := heisenbergNilMinus_associativity_and_group_law y₁ z₁ η₁ y₂ z₂ η₂ y₃ z₃ η₃
+  have hCoup := oppositeNilradical_coupling_and_nucleus_anticommutator y₁ z₁ ξ y₂ z₂ η v w X Y
+  exact ⟨⟨hNeg.1, hNeg.2.2.2.1⟩,
+         ⟨hNeg.2.2.2.2.1, hNeg.2.2.2.2.2.1, hNeg.2.2.2.2.2.2.1⟩,
+         ⟨hCoup.2.2.1, hCoup.2.2.2.1⟩⟩
+
+/-- **Theorem 10 (5-Grade Derivation Invariance, Opposite-Grade Leibniz Law, & Central Contact Subgroup Readout Master Bridge)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`):
+    1. 5-Grade Invariance Under $\mathcal{G}_0$ Nucleus Derivations & Opposite-Grade Leibniz Laws:
+       $[D, E_{+1}(y, z)] = E_{+1}(\rho_+ y - y \rho_-,\; \rho_+ z - z \rho_-)$,
+       $[D, E_{+2}(\xi)] = E_{+2}(\rho_- \xi - \xi \rho_+)$,
+       $[D, E_{-1}(y, z)] = E_{-1}(\rho_- y - y \rho_+,\; \rho_- z - z \rho_+)$,
+       $[D, E_{-2}(\eta)] = E_{-2}(\rho_+ \eta - \eta \rho_-)$, and
+       $[D, E_{+1}(y_1, z_1) * E_{-1}(y_2, z_2)] =
+         [D, E_{+1}(y_1, z_1)] * E_{-1}(y_2, z_2) + E_{+1}(y_1, z_1) * [D, E_{-1}(y_2, z_2)]$.
+    2. Centrality of Contact Subgroups $C_\pm$ in $\exp(\mathcal{N}_\pm)$:
+       $H_+(y, z, \xi) * C_+(\xi') = H_+(y, z, \xi + \xi')$ and
+       $H_-(y, z, \eta) * C_-(\eta') = H_-(y, z, \eta + \eta')$.
+    3. Selective Contact Readout & Contact-Gauss Associativity:
+       $E_{-2}(\eta) * (E_{-1}(y, z) + E_{+2}(\xi)) = \mathrm{opGradeZero}\;(-\eta \xi)\;0$ and
+       $\mathrm{opAssociator}\;(C_+(\xi))\;(\mathrm{opGradeZero}\;\rho_+\;\rho_-)\;(C_-(\eta)) = 0$. -/
+theorem operator_five_graded_implications_master_bridge
+    (ρ_plus ρ_minus y z y₁ z₁ y₂ z₂ ξ ξ' η η' : A) :
+    let D := opGradeZero ρ_plus ρ_minus
+    (opCommutator D (opGradePlus1 y z) =
+       opGradePlus1 (ρ_plus * y - y * ρ_minus) (ρ_plus * z - z * ρ_minus) ∧
+     opCommutator D (opGradePlus2 ξ) =
+       opGradePlus2 (ρ_minus * ξ - ξ * ρ_plus) ∧
+     opCommutator D (opGradeMinus1 y z) =
+       opGradeMinus1 (ρ_minus * y - y * ρ_plus) (ρ_minus * z - z * ρ_plus) ∧
+     opCommutator D (opGradeMinus2 η) =
+       opGradeMinus2 (ρ_plus * η - η * ρ_minus) ∧
+     opCommutator D (opGradePlus1 y₁ z₁ * opGradeMinus1 y₂ z₂) =
+       opCommutator D (opGradePlus1 y₁ z₁) * opGradeMinus1 y₂ z₂ +
+         opGradePlus1 y₁ z₁ * opCommutator D (opGradeMinus1 y₂ z₂)) ∧
+    (opHeisenbergGroupPlus y z ξ * opContactSubgroupPlus ξ' =
+       opHeisenbergGroupPlus y z (ξ + ξ') ∧
+     opHeisenbergGroupMinus y z η * opContactSubgroupMinus η' =
+       opHeisenbergGroupMinus y z (η + η')) ∧
+    (opGradeMinus2 η * (opGradeMinus1 y z + opGradePlus2 ξ) =
+       opGradeZero (-η * ξ) 0 ∧
+     opAssociator (opContactSubgroupPlus ξ) D (opContactSubgroupMinus η) = 0) := by
+  have hInv := fiveGraded_nucleus_derivation_invariance_and_contact_leibniz
+    ρ_plus ρ_minus y z y₁ z₁ y₂ z₂ ξ η
+  have hCent := contactSubgroup_centrality_selective_readout_and_gauss_assoc
+    y z ξ ξ' η η' ρ_plus ρ_minus
+  exact ⟨⟨hInv.1, hInv.2.1, hInv.2.2.1, hInv.2.2.2.1, hInv.2.2.2.2.2.1⟩,
+         ⟨hCent.1, hCent.2.2.1⟩,
+         ⟨hCent.2.2.2.2.1, hCent.2.2.2.2.2.2⟩⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

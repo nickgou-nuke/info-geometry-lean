@@ -3188,6 +3188,149 @@ theorem opMaurerCartanForm_grade_hierarchy_and_anomaly_generation
     try noncomm_ring
     try abel))
 
+/-- Relative dual Maurer-Cartan transition form $\Theta_-(w_1, w_2) = U_-(-w_1) * U_-(w_2) - 1$
+    on the dual affine mixture family in $\mathrm{OpZornMatrix}\;A$. -/
+def opDualMaurerCartanForm (w₁ w₂ : OpVec3 A) : OpZornMatrix A :=
+  opUnipotentLower (-w₁) * opUnipotentLower w₂ - 1
+
+/-- **50. Commutative Maurer-Cartan Vanishing vs. Noncommutative Dual Mixture Hierarchy (Archetype XXXVII.2)**:
+    1. Exact Commutative Orthogonality Vanishing:
+       Over ANY commutative ring $R$ (`[CommRing R]`), for all $u_1, u_2 \in R^3$, the cross product
+       $u_1 \times_{\mathrm{skew}} u_2$ is orthogonal to $u_2 - u_1$, so the Grade-3 Maurer-Cartan
+       square vanishes identically:
+       $$\Theta(u_1, u_2) * \Theta(u_1, u_2) = 0, \qquad
+         (1 + \Theta(u_1, u_2)) * (1 + \Theta(u_2, u_1)) = 1.$$
+    2. Colinear / Diagonal Vanishing over Arbitrary Noncommutative `[Ring A]`:
+       For any $v \in A^3$, $\Theta(v, v) = 0$ and $\Theta(-v, v) * \Theta(-v, v) = 0$.
+    3. Dual Mixture Maurer-Cartan Grade Decomposition & Square over `[Ring A]`:
+       For all $w_1, w_2 \in A^3$ with $\Delta w = w_2 - w_1$ and $\sigma_{12} = w_1 \times_{\mathrm{skew}} w_2$:
+       $$\Theta_-(w_1, w_2) = L_-(\Delta w) + L_+(\sigma_{12}), \qquad
+         \Theta_-(w_1, w_2) * \Theta_-(w_1, w_2) =
+           \langle -(\sigma_{12} \cdot \Delta w),\; 0,\; 0,\; -(\Delta w \cdot \sigma_{12}) \rangle.$$ -/
+theorem opMaurerCartan_commutative_vanishing_and_dual_hierarchy
+    {R : Type*} [CommRing R] (u₁ u₂ : OpVec3 R) (v w₁ w₂ : OpVec3 A) :
+    let Θ_R := opMaurerCartanForm u₁ u₂
+    let Θ_m := opDualMaurerCartanForm w₁ w₂
+    let Δw := w₂ - w₁
+    let σ₁₂ := OpVec3.skewCross w₁ w₂
+    Θ_R * Θ_R = 0 ∧
+    (1 + opMaurerCartanForm u₁ u₂) * (1 + opMaurerCartanForm u₂ u₁) = 1 ∧
+    opMaurerCartanForm v v = 0 ∧
+    opMaurerCartanForm (-v) v * opMaurerCartanForm (-v) v = 0 ∧
+    Θ_m = opLightconeRayMinus Δw + opLightconeRayPlus σ₁₂ ∧
+    Θ_m * Θ_m = ⟨-OpVec3.dot σ₁₂ Δw, 0, 0, -OpVec3.dot Δw σ₁₂⟩ := by
+  intro Θ_R Θ_m Δw σ₁₂
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [Θ_R, opMaurerCartanForm, opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try ring)
+  · ext <;>
+    (simp [opMaurerCartanForm, opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try ring)
+  · ext <;>
+    (simp [opMaurerCartanForm, opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [opMaurerCartanForm, opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [Θ_m, Δw, σ₁₂, opDualMaurerCartanForm, opUnipotentLower, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [Θ_m, Δw, σ₁₂, opDualMaurerCartanForm, opUnipotentLower,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+
+/-- **51. Higher-Grade Maurer-Cartan Cube, Self-Associator Emergent Flow, & Dual Flatness (Archetype XXXVII.3)**:
+    Over ANY noncommutative operator ring $A$, for all $v_1, v_2, v_3, w_1, w_2, w_3 \in A^3$, let
+    $\Theta = \Theta(v_1, v_2)$, $\Delta v = v_2 - v_1$, $\tau_{12} = v_1 \times_{\mathrm{skew}} v_2$,
+    $\alpha_+ = \Delta v \cdot \tau_{12}$, $\alpha_- = \tau_{12} \cdot \Delta v$, and
+    $D_{\mathrm{anom}} = D(\alpha_+, \alpha_-) = \Theta * \Theta$:
+    1. Left and Right Grade-4 Maurer-Cartan Cubes:
+       $$(\Theta * \Theta) * \Theta = L_+(\alpha_+ \cdot_L \Delta v) - L_-(\alpha_- \cdot_L \tau_{12}), \qquad
+         \Theta * (\Theta * \Theta) = L_+(\Delta v \cdot_R \alpha_-) - L_-(\tau_{12} \cdot_R \alpha_+).$$
+    2. Maurer-Cartan Self-Associator Equals Anomaly-Driven Heisenberg-Dirac Flow:
+       $$[\Theta, \Theta, \Theta] = [D_{\mathrm{anom}}, \Theta] =
+         L_+\!\bigl(\nabla_{\alpha_+, \alpha_-}(\Delta v)\bigr) - L_-\!\bigl(\nabla_{\alpha_-, \alpha_+}(\tau_{12})\bigr).$$
+    3. Individual Parabolic Flatness & Unipotent Inversion:
+       $$U_+(v_1) * U_+(-v_1) = 1, \qquad U_-(w_1) * U_-(-w_1) = 1,$$
+       $$\bigl((L_+(v_1) * L_+(v_2)) * L_+(v_3)\bigr).v = 0, \qquad
+         \bigl((L_+(v_1) * L_+(v_2)) * L_+(v_3)\bigr).w = 0,$$
+       $$\bigl((L_-(w_1) * L_-(w_2)) * L_-(w_3)\bigr).v = 0, \qquad
+         \bigl((L_-(w_1) * L_-(w_2)) * L_-(w_3)\bigr).w = 0.$$ -/
+theorem opMaurerCartan_cube_and_self_associator_emergent_flow
+    (v₁ v₂ v₃ w₁ w₂ w₃ : OpVec3 A) :
+    let Θ := opMaurerCartanForm v₁ v₂
+    let Δv := v₂ - v₁
+    let τ₁₂ := OpVec3.skewCross v₁ v₂
+    let α_plus := OpVec3.dot Δv τ₁₂
+    let α_minus := OpVec3.dot τ₁₂ Δv
+    let D_anom := opCartanDiag α_plus α_minus
+    (Θ * Θ) * Θ =
+      opLightconeRayPlus (OpVec3.leftScale α_plus Δv) -
+        opLightconeRayMinus (OpVec3.leftScale α_minus τ₁₂) ∧
+    Θ * (Θ * Θ) =
+      opLightconeRayPlus (OpVec3.rightScale Δv α_minus) -
+        opLightconeRayMinus (OpVec3.rightScale τ₁₂ α_plus) ∧
+    opAssociator Θ Θ Θ = opCommutator D_anom Θ ∧
+    opAssociator Θ Θ Θ =
+      opLightconeRayPlus (OpVec3.bimoduleDiff α_plus α_minus Δv) -
+        opLightconeRayMinus (OpVec3.bimoduleDiff α_minus α_plus τ₁₂) ∧
+    opUnipotentUpper v₁ * opUnipotentUpper (-v₁) = 1 ∧
+    opUnipotentLower w₁ * opUnipotentLower (-w₁) = 1 ∧
+    ((opLightconeRayPlus v₁ * opLightconeRayPlus v₂) * opLightconeRayPlus v₃).v = 0 ∧
+    ((opLightconeRayPlus v₁ * opLightconeRayPlus v₂) * opLightconeRayPlus v₃).w = 0 ∧
+    ((opLightconeRayMinus w₁ * opLightconeRayMinus w₂) * opLightconeRayMinus w₃).v = 0 ∧
+    ((opLightconeRayMinus w₁ * opLightconeRayMinus w₂) * opLightconeRayMinus w₃).w = 0 := by
+  intro Θ Δv τ₁₂ α_plus α_minus D_anom
+  have hΘ : Θ = opLightconeRayPlus Δv - opLightconeRayMinus τ₁₂ :=
+    (opMaurerCartanForm_grade_hierarchy_and_anomaly_generation v₁ v₂).1
+  have hΘ2 : Θ * Θ = D_anom :=
+    (opMaurerCartanForm_grade_hierarchy_and_anomaly_generation v₁ v₂).2.1
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hΘ2, hΘ]
+    ext <;>
+    (simp [D_anom, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [hΘ2, hΘ]
+    ext <;>
+    (simp [D_anom, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · simp only [opAssociator, opCommutator, hΘ2]
+  · simp only [opAssociator]
+    rw [hΘ2, hΘ]
+    ext <;>
+    (simp [D_anom, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [opUnipotentLower, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
@@ -91,5 +96,55 @@ theorem cdEmbed_preserves_chiral_nilpotency [StarRing R]
   constructor
   · rw [← cdEmbed_mul, h_plus, cdEmbed_zero]
   · rw [← cdEmbed_mul, h_minus, cdEmbed_zero]
+
+section OperatorParaKahlerAmariMaurerCartanBridge
+
+open InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion
+
+variable {A : Type*} [Ring A]
+
+/-- **Theorem 6 (Operator Para-Kähler, Amari-Chentsov Cubic Skewness, & Maurer-Cartan Chiral Anomaly Master Bridge)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`) and commutative scalar ring $R$ (`[CommRing R]`):
+    1. Fundamental Para-Kähler Compatibility & Chiral Anomaly Residue:
+       $\Gamma * g(v, w) = \omega(v, w)$, $\Gamma * \omega(v, w) = g(v, w)$, and
+       $\mathrm{opZornTrace}(\omega(v, w)) = w \cdot v - v \cdot w$.
+    2. Amari-Chentsov Cubic Skewness Tensor:
+       $[[L_-(w), L_+(v)], L_+(v)] = L_+\!\bigl((v \cdot w) \cdot_L v + v \cdot_R (w \cdot v)\bigr)$.
+    3. Maurer-Cartan Grade Decomposition & Anomaly-Driven Grade-3 Square:
+       $\Theta(v_1, v_2) = L_+(v_2 - v_1) - L_-(v_1 \times_{\mathrm{skew}} v_2)$ and
+       $\Theta(v_1, v_2) * \Theta(v_1, v_2) = \langle (v_2 - v_1) \cdot (v_1 \times_{\mathrm{skew}} v_2), 0, 0, (v_1 \times_{\mathrm{skew}} v_2) \cdot (v_2 - v_1) \rangle$.
+    4. Commutative Vanishing vs. Noncommutative Self-Associator Flow:
+       Over any commutative ring $R$, $\Theta(u_1, u_2) * \Theta(u_1, u_2) = 0$ identically, whereas over
+       a noncommutative ring $A$, the self-associator $[\Theta, \Theta, \Theta]$ equals the anomaly-driven
+       Heisenberg-Dirac commutator $[D_{\mathrm{anom}}, \Theta]$. -/
+theorem operator_paraKahler_amari_maurerCartan_master_bridge
+    (u₁ u₂ : OpVec3 R) (v w v₁ v₂ : OpVec3 A) :
+    let g := opParaKahlerMetric v w
+    let ω := opParaKahlerSymplectic v w
+    let Θ := opMaurerCartanForm v₁ v₂
+    let Δv := v₂ - v₁
+    let τ₁₂ := OpVec3.skewCross v₁ v₂
+    let D_anom := opCartanDiag (OpVec3.dot Δv τ₁₂) (OpVec3.dot τ₁₂ Δv)
+    (opZornGamma * g = ω ∧
+     opZornGamma * ω = g ∧
+     opZornTrace ω = OpVec3.dot w v - OpVec3.dot v w) ∧
+    opCommutator (opCommutator (opLightconeRayMinus w) (opLightconeRayPlus v)) (opLightconeRayPlus v) =
+      opLightconeRayPlus
+        (OpVec3.leftScale (OpVec3.dot v w) v + OpVec3.rightScale v (OpVec3.dot w v)) ∧
+    (Θ = opLightconeRayPlus Δv - opLightconeRayMinus τ₁₂ ∧
+     Θ * Θ = D_anom) ∧
+    (opMaurerCartanForm u₁ u₂ * opMaurerCartanForm u₁ u₂ = 0 ∧
+     opAssociator Θ Θ Θ = opCommutator D_anom Θ) := by
+  have hPK := opParaKahler_triplet_compatibility_and_anomaly_residue v w
+  have hAC := amariChentsov_cubic_skewness_tensor v w
+  have hMC := opMaurerCartanForm_grade_hierarchy_and_anomaly_generation v₁ v₂
+  have hComm := opMaurerCartan_commutative_vanishing_and_dual_hierarchy u₁ u₂ v w w
+  have hFlow := opMaurerCartan_cube_and_self_associator_emergent_flow v₁ v₂ v w w w
+  exact ⟨⟨hPK.2.2.1, hPK.2.2.2.1, hPK.2.2.2.2.1⟩,
+         hAC.1,
+         ⟨hMC.1, hMC.2.1⟩,
+         ⟨hComm.1, hFlow.2.2.1⟩⟩
+
+end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

@@ -6117,7 +6117,7 @@ theorem zorn_five_graded_nucleus_invariance_and_contact_centrality
     ext
     · simp [D, zornGradeZero, zornGradePlus1,
             InfoGeometry.Algebra.zvm_add_def,
-            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+            add, mul, ZornVec3.dot]
     · rename_i i; fin_cases i <;>
         (simp [D, zornGradeZero, zornGradePlus1,
                InfoGeometry.Algebra.zvm_add_def,
@@ -6128,12 +6128,12 @@ theorem zorn_five_graded_nucleus_invariance_and_contact_centrality
               add, mul, ZornVec3.cross]
     · simp [D, zornGradeZero, zornGradePlus1,
             InfoGeometry.Algebra.zvm_add_def,
-            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+            add, mul, ZornVec3.dot]
   · apply sub_eq_iff_eq_add.mpr
     ext
     · simp [D, zornGradeZero, zornGradePlus2,
             InfoGeometry.Algebra.zvm_add_def,
-            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+            add, mul, ZornVec3.dot]
     · rename_i i; fin_cases i <;>
         simp [D, zornGradeZero, zornGradePlus2,
               InfoGeometry.Algebra.zvm_add_def,
@@ -6144,7 +6144,7 @@ theorem zorn_five_graded_nucleus_invariance_and_contact_centrality
                add, mul, ZornVec3.cross]; try ring)
     · simp [D, zornGradeZero, zornGradePlus2,
             InfoGeometry.Algebra.zvm_add_def,
-            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+            add, mul, ZornVec3.dot]
   · change zornHeisenbergGroupPlus y z ξ * zornHeisenbergGroupPlus 0 0 ξ' =
       zornHeisenbergGroupPlus y z (ξ + ξ')
     rw [zornHeisenbergGroupPlus_mul]
@@ -6206,5 +6206,156 @@ theorem zorn_five_graded_nucleus_invariance_and_contact_centrality
             zornHeisenbergGroupPlus, zornHeisenbergGroupMinus, zornGradeZero,
             mul, ZornVec3.dot, Fin.sum_univ_three]
       try ring
+
+/-- Transverse Erlangen flag state $\Pi_\perp(y, z) := \langle 1, ![0, -y, -z], 0, 0 \rangle \in \mathrm{Zorn}(R)$. -/
+def zornTransverseFlagState (y z : R) : ZornVectorMatrix R :=
+  ⟨1, ![0, -y, -z], 0, 0⟩
+
+/-- Transverse BCFW shift operator $S_+(y_s, z_s) := \mathrm{zornHeisenbergGroupPlus}\;y_s\;z_s\;0 = \langle 1, ![0, y_s, z_s], 0, 1 \rangle \in \mathrm{Zorn}(R)$. -/
+def zornBCFWShift (y_s z_s : R) : ZornVectorMatrix R :=
+  zornHeisenbergGroupPlus y_s z_s 0
+
+/-- **57. 5-Graded BCFW Transverse Shift, Symplectic Contact Residue, & Dual Probe Readout in $\mathrm{Zorn}(R)$ (Archetype XLIX)**:
+    Over any commutative ring $R$, for all $y_0, z_0, y_s, z_s, \eta \in R$:
+    1. Vanishing BCFW Shift Associator:
+       $$\mathrm{bundledAssociator}\;(\mathrm{zornBCFWShift}\;y_s\;z_s)\;(\mathrm{zornTransverseFlagState}\;y_0\;z_0)\;(\mathrm{zornBCFWShift}\;(-y_s)\;(-z_s)) = 0.$$
+    2. Exact Right BCFW Shift & Symplectic Contact Residue Factorization:
+       $$\Pi_\perp(y_0, z_0) * S_+(-y_s, -z_s) = \Pi_\perp(y_s + y_0, z_s + z_0) + E_{+2}(-(y_s z_0 - z_s y_0)).$$
+    3. Exact Two-Sided BCFW Conjugation Shift:
+       $$(S_+(y_s, z_s) * \Pi_\perp(y_0, z_0)) * S_+(-y_s, -z_s) = \Pi_\perp(y_s + y_0, z_s + z_0) + E_{+2}(-2 (y_s z_0 - z_s y_0)).$$
+    4. Direct Dual Contact Probe Readout of the BCFW Symplectic Residue:
+       $$E_{-2}(\eta) * E_{+2}(-(y_s z_0 - z_s y_0)) = \mathrm{zornGradeZero}\;(-\eta (y_s z_0 - z_s y_0))\;0.$$ -/
+theorem zorn_five_graded_bcfw_shift_and_contact_residue
+    (y₀ z₀ y_s z_s η : R) :
+    let P₀ := zornTransverseFlagState y₀ z₀
+    let P_shifted := zornTransverseFlagState (y_s + y₀) (z_s + z₀)
+    let S_plus := zornBCFWShift y_s z_s
+    let S_minus := zornBCFWShift (-y_s) (-z_s)
+    let ω_res := y_s * z₀ - z_s * y₀
+    bundledAssociator S_plus P₀ S_minus = 0 ∧
+    P₀ * S_minus = P_shifted + zornGradePlus2 (-ω_res) ∧
+    (S_plus * P₀) * S_minus = P_shifted + zornGradePlus2 (-(2 * ω_res)) ∧
+    zornGradeMinus2 η * zornGradePlus2 (-ω_res) =
+      zornGradeZero (-η * ω_res) 0 := by
+  intro P₀ P_shifted S_plus S_minus ω_res
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · apply sub_eq_zero.mpr
+    ext
+    · simp [P₀, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+            zornHeisenbergGroupPlus, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [P₀, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+               zornHeisenbergGroupPlus, mul, ZornVec3.dot, Fin.sum_univ_three, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P₀, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+               zornHeisenbergGroupPlus, mul, ZornVec3.dot, Fin.sum_univ_three, ZornVec3.cross]; try ring)
+    · simp [P₀, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+            zornHeisenbergGroupPlus, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [P₀, P_shifted, S_minus, zornTransverseFlagState, zornBCFWShift,
+            zornHeisenbergGroupPlus, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [P₀, P_shifted, S_minus, zornTransverseFlagState, zornBCFWShift,
+               zornHeisenbergGroupPlus, zornGradePlus2,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P₀, P_shifted, S_minus, zornTransverseFlagState, zornBCFWShift,
+               zornHeisenbergGroupPlus, zornGradePlus2, ω_res,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]; try ring)
+    · simp [P₀, P_shifted, S_minus, zornTransverseFlagState, zornBCFWShift,
+            zornHeisenbergGroupPlus, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [P₀, P_shifted, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+            zornHeisenbergGroupPlus, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [P₀, P_shifted, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+               zornHeisenbergGroupPlus, zornGradePlus2,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P₀, P_shifted, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+               zornHeisenbergGroupPlus, zornGradePlus2, ω_res,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three, ZornVec3.cross]; try ring)
+    · simp [P₀, P_shifted, S_plus, S_minus, zornTransverseFlagState, zornBCFWShift,
+            zornHeisenbergGroupPlus, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [zornGradeMinus2, zornGradePlus2, zornGradeZero, mul, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+    · rename_i i; fin_cases i <;>
+        simp [zornGradeMinus2, zornGradePlus2, zornGradeZero, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        simp [zornGradeMinus2, zornGradePlus2, zornGradeZero, mul, ZornVec3.cross]
+    · simp [zornGradeMinus2, zornGradePlus2, zornGradeZero, mul, ZornVec3.dot, Fin.sum_univ_three]
+
+/-- **58. Unified Three-Arnold Synthesis in $\mathrm{Zorn}(R)$: 3-Layer KAN Superposition, 4-Gate Braid Monodromy Loop, & Beltrami Lamb Vanishing**:
+    Over any commutative ring $R$, for all $y_i, z_i, \xi_i, \eta, \xi \in R$ and $u \in \mathrm{ZornVec3}\;R$:
+    1. 3-Layer KAN + Symplectic Braid Composition:
+       $$(H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2)) * H_+(y_3, z_3, \xi_3) =
+         H_+\!\bigl(y_1 + y_2 + y_3,\; z_1 + z_2 + z_3,\;
+                    \xi_1 + \xi_2 + \xi_3 + (y_1 z_2 - z_1 y_2) + ((y_1 + y_2) z_3 - (z_1 + z_2) y_3)\bigr).$$
+    2. 4-Gate Braid Group Commutator Loop (Pure Contact Phase Monodromy):
+       $$(H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2)) *
+         (H_+(-y_1, -z_1, -\xi_1) * H_+(-y_2, -z_2, -\xi_2)) =
+         \mathrm{zornContactSubgroupPlus}\;(2 (y_1 z_2 - z_1 y_2)).$$
+    3. Beltrami Lamb Vector Vanishing & Helicity Casimir Identity:
+       $$\langle 0, u, 0, 0 \rangle * \langle 0, u, 0, 0 \rangle = 0 \qquad \text{and} \qquad
+         \langle 0, u, 0, 0 \rangle * \langle 0, 0, u, 0 \rangle +
+         \langle 0, 0, u, 0 \rangle * \langle 0, u, 0, 0 \rangle =
+         \mathrm{zornGradeZero}\;(u \cdot u)\;(u \cdot u).$$ -/
+theorem zorn_unified_three_arnold_kan_braid_and_beltrami
+    (y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃ : R) (u : ZornVec3 R) :
+    let G₁ := zornHeisenbergGroupPlus y₁ z₁ ξ₁
+    let G₂ := zornHeisenbergGroupPlus y₂ z₂ ξ₂
+    let G₃ := zornHeisenbergGroupPlus y₃ z₃ ξ₃
+    let G₁_inv := zornHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁)
+    let G₂_inv := zornHeisenbergGroupPlus (-y₂) (-z₂) (-ξ₂)
+    let ω₁₂ := y₁ * z₂ - z₁ * y₂
+    let ω₁₂_₃ := (y₁ + y₂) * z₃ - (z₁ + z₂) * y₃
+    let Lu_p : ZornVectorMatrix R := ⟨0, u, 0, 0⟩
+    let Lu_m : ZornVectorMatrix R := ⟨0, 0, u, 0⟩
+    (G₁ * G₂) * G₃ =
+      zornHeisenbergGroupPlus (y₁ + y₂ + y₃) (z₁ + z₂ + z₃) (ξ₁ + ξ₂ + ξ₃ + ω₁₂ + ω₁₂_₃) ∧
+    (G₁ * G₂) * (G₁_inv * G₂_inv) = zornContactSubgroupPlus (2 * ω₁₂) ∧
+    Lu_p * Lu_p = 0 ∧
+    Lu_p * Lu_m + Lu_m * Lu_p = zornGradeZero (ZornVec3.dot u u) (ZornVec3.dot u u) := by
+  intro G₁ G₂ G₃ G₁_inv G₂_inv ω₁₂ ω₁₂_₃ Lu_p Lu_m
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · change (zornHeisenbergGroupPlus y₁ z₁ ξ₁ * zornHeisenbergGroupPlus y₂ z₂ ξ₂) *
+        zornHeisenbergGroupPlus y₃ z₃ ξ₃ =
+      zornHeisenbergGroupPlus (y₁ + y₂ + y₃) (z₁ + z₂ + z₃) (ξ₁ + ξ₂ + ξ₃ + ω₁₂ + ω₁₂_₃)
+    rw [zornHeisenbergGroupPlus_mul, zornHeisenbergGroupPlus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus, ω₁₂, ω₁₂_₃]; try ring)
+    · rfl
+  · change (zornHeisenbergGroupPlus y₁ z₁ ξ₁ * zornHeisenbergGroupPlus y₂ z₂ ξ₂) *
+        (zornHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) * zornHeisenbergGroupPlus (-y₂) (-z₂) (-ξ₂)) =
+      zornContactSubgroupPlus (2 * ω₁₂)
+    rw [zornHeisenbergGroupPlus_mul, zornHeisenbergGroupPlus_mul, zornHeisenbergGroupPlus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus, zornContactSubgroupPlus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus, zornContactSubgroupPlus, ω₁₂]; try ring)
+    · rfl
+  · ext
+    · simp [Lu_p, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [Lu_p, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [Lu_p, mul, ZornVec3.cross]; try ring)
+    · simp [Lu_p, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [Lu_p, Lu_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [Lu_p, Lu_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        simp [Lu_p, Lu_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · simp [Lu_p, Lu_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
 
 end InfoGeometry.Algebra.ZornVectorMatrix

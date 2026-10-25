@@ -4185,6 +4185,274 @@ theorem contactSubgroup_centrality_selective_readout_and_gauss_assoc
      try noncomm_ring
      try abel)
 
+/-- Transverse Erlangen flag state $\Pi_\perp(y, z) := \Pi_{\mathrm{hom}}(\langle 0, y, z \rangle)$ supported in $\mathcal{G}_0 \oplus \mathcal{G}_{+1}$. -/
+def opTransverseFlagState (y z : A) : OpZornMatrix A :=
+  homogeneousFlagState ⟨0, y, z⟩
+
+/-- Transverse BCFW shift operator $H_{+1}(y_s, z_s) := 1 + E_{+1}(y_s, z_s) = H_+(y_s, z_s, 0)$. -/
+def opBCFWTransverseShift (y_s z_s : A) : OpZornMatrix A :=
+  1 + opGradePlus1 y_s z_s
+
+/-- **65. 5-Graded BCFW Transverse Shift, Grade $+2$ Contact Pole Residue, & Dual Probe Readout (Archetype XLVIII)**:
+    Over ANY noncommutative operator ring $A$, for all $y_0, z_0, y_s, z_s, \eta \in A$,
+    let $\Pi_0 = \mathrm{opTransverseFlagState}\;y_0\;z_0$,
+    $\Pi_{\mathrm{shifted}} = \mathrm{opTransverseFlagState}\;(y_s + y_0)\;(z_s + z_0)$,
+    $S_+ = \mathrm{opBCFWTransverseShift}\;y_s\;z_s$,
+    $S_- = \mathrm{opBCFWTransverseShift}\;(-y_s)\;(-z_s)$, and
+    $\omega_{\mathrm{res}} = \mathrm{opContactSymplecticForm}\;y_s\;z_s\;y_0\;z_0$:
+    1. Explicit Transverse Homogeneous Flag Coordinates:
+       $$\Pi_0 = \langle 1, \langle 0, -y_0, -z_0 \rangle, 0, 0 \rangle = e_{11} - E_{+1}(y_0, z_0).$$
+    2. Vanishing BCFW Shift 3-Associator:
+       $$\mathrm{opAssociator}\;S_+\;\Pi_0\;S_- = 0.$$
+    3. Exact Right BCFW Shift & Grade $+2$ Symplectic Contact Residue Factorization:
+       $$\Pi_0 * S_- = \Pi_{\mathrm{shifted}} - E_{+2}(\omega_{\mathrm{res}}).$$
+    4. Exact Two-Sided BCFW Conjugation Shift:
+       $$(S_+ * \Pi_0) * S_- = \Pi_{\mathrm{shifted}} - E_{+2}(\omega_{\mathrm{res}} + \omega_{\mathrm{res}}).$$
+    5. Direct Dual Contact Probe Readout of the BCFW Symplectic Residue:
+       $$E_{-2}(\eta) * (\Pi_0 * S_- - \Pi_{\mathrm{shifted}}) = \mathrm{opGradeZero}\;(\eta * \omega_{\mathrm{res}})\;0,$$
+       $$E_{-2}(\eta) * ((S_+ * \Pi_0) * S_- - \Pi_{\mathrm{shifted}}) =
+         \mathrm{opGradeZero}\;(\eta * (\omega_{\mathrm{res}} + \omega_{\mathrm{res}}))\;0.$$ -/
+theorem bcfwTransverseShift_flag_recursion_and_contact_residue
+    (y₀ z₀ y_s z_s η : A) :
+    let P₀ := opTransverseFlagState y₀ z₀
+    let P_shifted := opTransverseFlagState (y_s + y₀) (z_s + z₀)
+    let S_plus := opBCFWTransverseShift y_s z_s
+    let S_minus := opBCFWTransverseShift (-y_s) (-z_s)
+    let ω_res := opContactSymplecticForm y_s z_s y₀ z₀
+    P₀ = ⟨1, ⟨0, -y₀, -z₀⟩, 0, 0⟩ ∧
+    opAssociator S_plus P₀ S_minus = 0 ∧
+    P₀ * S_minus = P_shifted - opGradePlus2 ω_res ∧
+    (S_plus * P₀) * S_minus = P_shifted - opGradePlus2 (ω_res + ω_res) ∧
+    opGradeMinus2 η * (P₀ * S_minus - P_shifted) =
+      opGradeZero (η * ω_res) 0 ∧
+    opGradeMinus2 η * ((S_plus * P₀) * S_minus - P_shifted) =
+      opGradeZero (η * (ω_res + ω_res)) 0 := by
+  intro P₀ P_shifted S_plus S_minus ω_res
+  have hP₀ : P₀ = ⟨1, ⟨0, -y₀, -z₀⟩, 0, 0⟩ := by
+    change homogeneousFlagState ⟨0, y₀, z₀⟩ = ⟨1, ⟨0, -y₀, -z₀⟩, 0, 0⟩
+    rw [homogeneousFlagState_coords]
+    ext <;> simp
+  have hP_s : P_shifted = ⟨1, ⟨0, -(y_s + y₀), -(z_s + z₀)⟩, 0, 0⟩ := by
+    change homogeneousFlagState ⟨0, y_s + y₀, z_s + z₀⟩ = ⟨1, ⟨0, -(y_s + y₀), -(z_s + z₀)⟩, 0, 0⟩
+    rw [homogeneousFlagState_coords]
+    ext <;> simp
+  have hRight : P₀ * S_minus = P_shifted - opGradePlus2 ω_res := by
+    rw [hP₀, hP_s]
+    ext <;>
+    (simp [S_minus, opBCFWTransverseShift, opGradePlus1, opGradePlus2,
+           ω_res, opContactSymplecticForm,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  have hConj : (S_plus * P₀) * S_minus = P_shifted - opGradePlus2 (ω_res + ω_res) := by
+    rw [hP₀, hP_s]
+    ext <;>
+    (simp [S_plus, S_minus, opBCFWTransverseShift, opGradePlus1, opGradePlus2,
+           ω_res, opContactSymplecticForm,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  refine ⟨hP₀, ?_, hRight, hConj, ?_, ?_⟩
+  · rw [hP₀]
+    ext <;>
+    (simp [opAssociator, S_plus, S_minus, opBCFWTransverseShift, opGradePlus1,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · rw [hRight]
+    ext <;>
+    (simp [opGradeMinus2, opGradePlus2, opGradeZero, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [hConj]
+    ext <;>
+    (simp [opGradeMinus2, opGradePlus2, opGradeZero, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-- Operator Lamb vector $\mathbf{L}_{\mathrm{op}}(\omega, u) := \omega \times_{\mathrm{skew}} u \in A^3$. -/
+def opLambVector (ω u : OpVec3 A) : OpVec3 A :=
+  OpVec3.skewCross ω u
+
+/-- Operator Helicity Casimir $H_{\mathrm{hel}}(u, \omega) := \{L_+(u), L_-(\omega)\} \in \mathcal{G}_0$. -/
+def opHelicityNucleus (u ω : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opLightconeRayPlus u) (opLightconeRayMinus ω)
+
+/-- Operator Bernoulli-Beltrami Hamiltonian $B(u) := \{L_+(u), L_-(u)\} \in \mathcal{G}_0$. -/
+def opBernoulliBeltrami (u : OpVec3 A) : OpZornMatrix A :=
+  opHelicityNucleus u u
+
+/-- Symmetric Metric Readout of a 5-graded state $X$ by a dual contact probe $E_{-2}(\eta)$. -/
+def opArnoldMetricReadout (η : A) (X : OpZornMatrix A) : OpZornMatrix A :=
+  opAnticommutator (opGradeMinus2 η) X
+
+/-- Antisymmetric Chiral Phase Readout of a 5-graded state $X$ by a dual contact probe $E_{-2}(\eta)$. -/
+def opArnoldPhaseReadout (η : A) (X : OpZornMatrix A) : OpZornMatrix A :=
+  opCommutator (opGradeMinus2 η) X
+
+/-- **66. Arnold (1969) Braid Cohomology, Pairwise 3-Term Relation, & 5-Graded Nilradical Lie-Jacobi Law (Archetype L)**:
+    Over ANY noncommutative operator ring $A$, for ALL $v_1, v_2, v_3 \in A^3$ and $y_i, z_i, \xi_i \in A$:
+    1. Pairwise Difference 3-Term Arnold Curvature Residue ($\omega_{ij} = v_i - v_j \in A^3$):
+       $$\omega_{12} \times_{\mathrm{skew}} \omega_{23} +
+         \omega_{23} \times_{\mathrm{skew}} \omega_{31} +
+         \omega_{31} \times_{\mathrm{skew}} \omega_{12} =
+         \mathrm{cycle} + \mathrm{cycle} + \mathrm{cycle},$$
+       where $\mathrm{cycle} = v_1 \times_{\mathrm{skew}} v_2 + v_2 \times_{\mathrm{skew}} v_3 + v_3 \times_{\mathrm{skew}} v_1$.
+    2. BCFW Collinear Splitting Rearrangement of the 3-Term Arnold Identity:
+       $$\omega_{12} \times_{\mathrm{skew}} \omega_{23} =
+         -(\omega_{23} \times_{\mathrm{skew}} \omega_{31} + \omega_{31} \times_{\mathrm{skew}} \omega_{12}) +
+         (\mathrm{cycle} + \mathrm{cycle} + \mathrm{cycle}).$$
+    3. Exact Vanishing of Nested 3-Term Products & Exact Lie-Jacobi Identity in the 5-Graded Nilradical $\mathcal{N}_+$:
+       $$(E_{+1}(y_1, z_1) * E_{+1}(y_2, z_2)) * E_{+1}(y_3, z_3) = 0,$$
+       $$[[N_1, N_2], N_3] + [[N_2, N_3], N_1] + [[N_3, N_1], N_2] = 0$$
+       for all $N_i = N_+(y_i, z_i, \xi_i) \in \mathcal{N}_+$. -/
+theorem arnold_braid_jacobi_and_three_term_relation
+    (v₁ v₂ v₃ : OpVec3 A) (y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃ : A) :
+    let ω₁₂ := v₁ - v₂
+    let ω₂₃ := v₂ - v₃
+    let ω₃₁ := v₃ - v₁
+    let cycle := OpVec3.skewCross v₁ v₂ + OpVec3.skewCross v₂ v₃ + OpVec3.skewCross v₃ v₁
+    let N₁ := opHeisenbergNilPlus y₁ z₁ ξ₁
+    let N₂ := opHeisenbergNilPlus y₂ z₂ ξ₂
+    let N₃ := opHeisenbergNilPlus y₃ z₃ ξ₃
+    OpVec3.skewCross ω₁₂ ω₂₃ + OpVec3.skewCross ω₂₃ ω₃₁ + OpVec3.skewCross ω₃₁ ω₁₂ =
+      cycle + cycle + cycle ∧
+    OpVec3.skewCross ω₁₂ ω₂₃ =
+      -(OpVec3.skewCross ω₂₃ ω₃₁ + OpVec3.skewCross ω₃₁ ω₁₂) + (cycle + cycle + cycle) ∧
+    (opGradePlus1 y₁ z₁ * opGradePlus1 y₂ z₂) * opGradePlus1 y₃ z₃ = 0 ∧
+    opCommutator (opCommutator N₁ N₂) N₃ +
+      opCommutator (opCommutator N₂ N₃) N₁ +
+      opCommutator (opCommutator N₃ N₁) N₂ = 0 := by
+  intro ω₁₂ ω₂₃ ω₃₁ cycle N₁ N₂ N₃
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [ω₁₂, ω₂₃, ω₃₁, cycle, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [ω₁₂, ω₂₃, ω₃₁, cycle, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · have hStep := (fiveGraded_step_two_heisenberg_and_termination 0 0 y₁ z₁ y₂ z₂ 0 0 0 0 0 0).1
+    rw [hStep]
+    exact (fiveGraded_step_two_heisenberg_and_termination y₃ z₃ 0 0 0 0
+      (opContactSymplecticForm y₁ z₁ y₂ z₂) 0 0 0 0 0).2.2.2.1
+  · have hC : ∀ a₁ b₁ c₁ a₂ b₂ c₂ a₃ b₃ c₃ : A,
+        opCommutator (opCommutator (opHeisenbergNilPlus a₁ b₁ c₁) (opHeisenbergNilPlus a₂ b₂ c₂))
+          (opHeisenbergNilPlus a₃ b₃ c₃) = 0 := by
+      intro a₁ b₁ c₁ a₂ b₂ c₂ a₃ b₃ c₃
+      dsimp [opCommutator]
+      rw [opHeisenbergNilPlus_mul, opHeisenbergNilPlus_mul]
+      ext <;>
+      simp [opGradePlus2, opHeisenbergNilPlus,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+    rw [hC, hC, hC]
+    ext <;> simp
+
+/-- **67. Arnold (1966) Geometric Fluid Dynamics: Lamb Vector, Helicity Casimir, & Beltrami Flows (Archetype LI)**:
+    Over ANY noncommutative operator ring $A$, for ALL velocity/vorticity fields $u, \omega, v, w \in A^3$
+    and arbitrary states $X, Y \in \mathrm{OpZornMatrix}\;A$:
+    1. Same-Chirality Advection Isolates Arnold's Lamb Vector:
+       $$L_+(\omega) * L_+(u) = L_-(\mathbf{L}_{\mathrm{op}}(\omega, u)).$$
+    2. Opposite-Chirality Anticommutator Isolates the Helicity Casimir in $\mathcal{G}_0$:
+       $$H_{\mathrm{hel}}(u, \omega) = \mathrm{opGradeZero}\;(-(u \cdot \omega))\;(-(\omega \cdot u)).$$
+    3. Noncommutative Beltrami Flow Fixed-Point Law ($\omega = u \implies \mathbf{L}_{\mathrm{op}} = 0$):
+       $$\mathbf{L}_{\mathrm{op}}(u, u) = 0 \qquad \text{and} \qquad L_+(u) * L_+(u) = 0.$$
+    4. Bernoulli-Beltrami Nucleus Hamiltonian $B(u) = \{L_+(u), L_-(u)\} \in \mathcal{G}_0$ Generates an Exact Opposite-Chirality & Diagonal Leibniz Derivation:
+       $$[B(u), L_+(v) * L_-(w)] = [B(u), L_+(v)] * L_-(w) + L_+(v) * [B(u), L_-(w)],$$
+       $$([B(u), X * Y]).a = ([B(u), X] * Y + X * [B(u), Y]).a, \qquad
+         ([B(u), X * Y]).b = ([B(u), X] * Y + X * [B(u), Y]).b.$$ -/
+theorem arnold_hydrodynamics_lamb_helicity_and_beltrami_flow
+    (u ω v w : OpVec3 A) (X Y : OpZornMatrix A) :
+    let B := opBernoulliBeltrami u
+    let Lp := opLightconeRayPlus v
+    let Lm := opLightconeRayMinus w
+    opLightconeRayPlus ω * opLightconeRayPlus u = opLightconeRayMinus (opLambVector ω u) ∧
+    opHelicityNucleus u ω = opGradeZero (-OpVec3.dot u ω) (-OpVec3.dot ω u) ∧
+    opLambVector u u = 0 ∧
+    opLightconeRayPlus u * opLightconeRayPlus u = 0 ∧
+    opCommutator B (Lp * Lm) = opCommutator B Lp * Lm + Lp * opCommutator B Lm ∧
+    (opCommutator B (X * Y)).a = (opCommutator B X * Y + X * opCommutator B Y).a ∧
+    (opCommutator B (X * Y)).b = (opCommutator B X * Y + X * opCommutator B Y).b := by
+  intro B Lp Lm
+  have hHel : ∀ u' ω' : OpVec3 A,
+      opHelicityNucleus u' ω' = opGradeZero (-OpVec3.dot u' ω') (-OpVec3.dot ω' u') := by
+    intro u' ω'
+    ext <;>
+    (simp [opHelicityNucleus, opAnticommutator, opLightconeRayPlus, opLightconeRayMinus,
+           opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  have hB : B = opGradeZero (-OpVec3.dot u u) (-OpVec3.dot u u) := hHel u u
+  have hLeib := opModularDeriv_nucleus_and_exact_leibniz_rule B X Y v w
+    (-OpVec3.dot u u) (-OpVec3.dot u u)
+  refine ⟨?_, hHel u ω, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    simp [opLightconeRayPlus, opLightconeRayMinus, opLambVector,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opLambVector, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;>
+    simp [opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · rw [hB]
+    exact hLeib.2.2.2.2.1
+  · rw [hB]
+    exact hLeib.2.2.2.2.2.2.1
+  · rw [hB]
+    exact hLeib.2.2.2.2.2.2.2
+
+/-- **68. Arnold-Majorana Braid Networks: 3-Layer KAN Superposition, 4-Gate Braid Monodromy Loop, & Metric/Phase Readouts (Archetype LII)**:
+    Over ANY noncommutative operator ring $A$, for all $y_i, z_i, \xi_i, \eta, \xi \in A$:
+    1. Strict 3-Layer Associativity & Additive KAN + Symplectic Braid Accumulation:
+       $$(H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2)) * H_+(y_3, z_3, \xi_3) =
+         H_+\!\bigl(y_1 + y_2 + y_3,\; z_1 + z_2 + z_3,\;
+                    \xi_1 + \xi_2 + \xi_3 + \omega_\perp(y_1, z_1; y_2, z_2) +
+                    \omega_\perp(y_1 + y_2, z_1 + z_2; y_3, z_3)\bigr).$$
+    2. 4-Gate Braid Group Commutator Loop Isolates Pure Grade $+2$ Contact Monodromy:
+       $$(H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2)) *
+         (H_+(-y_1, -z_1, -\xi_1) * H_+(-y_2, -z_2, -\xi_2)) =
+         C_+\!\bigl(\omega_\perp(y_1, z_1; y_2, z_2) + \omega_\perp(y_1, z_1; y_2, z_2)\bigr).$$
+    3. Exact Grade-0 Symmetric Metric Readout & Antisymmetric Phase Readout of Contact Register:
+       $$\mathrm{opArnoldMetricReadout}\;\eta\;(E_{+2}(\xi)) = \mathrm{opGradeZero}\;(-\eta \xi)\;(-\xi \eta),$$
+       $$\mathrm{opArnoldPhaseReadout}\;\eta\;(E_{+2}(\xi)) = \mathrm{opGradeZero}\;(-\eta \xi)\;(+\xi \eta).$$ -/
+theorem arnold_network_three_layer_kan_braid_loop_and_readouts
+    (y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃ η ξ : A) :
+    let G₁ := opHeisenbergGroupPlus y₁ z₁ ξ₁
+    let G₂ := opHeisenbergGroupPlus y₂ z₂ ξ₂
+    let G₃ := opHeisenbergGroupPlus y₃ z₃ ξ₃
+    let G₁_inv := opHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁)
+    let G₂_inv := opHeisenbergGroupPlus (-y₂) (-z₂) (-ξ₂)
+    let ω₁₂ := opContactSymplecticForm y₁ z₁ y₂ z₂
+    let ω₁₂_₃ := opContactSymplecticForm (y₁ + y₂) (z₁ + z₂) y₃ z₃
+    (G₁ * G₂) * G₃ =
+      opHeisenbergGroupPlus (y₁ + y₂ + y₃) (z₁ + z₂ + z₃) (ξ₁ + ξ₂ + ξ₃ + ω₁₂ + ω₁₂_₃) ∧
+    (G₁ * G₂) * (G₁_inv * G₂_inv) = opContactSubgroupPlus (ω₁₂ + ω₁₂) ∧
+    opArnoldMetricReadout η (opGradePlus2 ξ) = opGradeZero (-η * ξ) (-ξ * η) ∧
+    opArnoldPhaseReadout η (opGradePlus2 ξ) = opGradeZero (-η * ξ) (ξ * η) := by
+  intro G₁ G₂ G₃ G₁_inv G₂_inv ω₁₂ ω₁₂_₃
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · change (opHeisenbergGroupPlus y₁ z₁ ξ₁ * opHeisenbergGroupPlus y₂ z₂ ξ₂) *
+        opHeisenbergGroupPlus y₃ z₃ ξ₃ =
+      opHeisenbergGroupPlus (y₁ + y₂ + y₃) (z₁ + z₂ + z₃) (ξ₁ + ξ₂ + ξ₃ + ω₁₂ + ω₁₂_₃)
+    rw [opHeisenbergGroupPlus_mul, opHeisenbergGroupPlus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupPlus, ω₁₂, ω₁₂_₃];
+     try abel)
+  · change (opHeisenbergGroupPlus y₁ z₁ ξ₁ * opHeisenbergGroupPlus y₂ z₂ ξ₂) *
+        (opHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) * opHeisenbergGroupPlus (-y₂) (-z₂) (-ξ₂)) =
+      opContactSubgroupPlus (ω₁₂ + ω₁₂)
+    rw [opHeisenbergGroupPlus_mul, opHeisenbergGroupPlus_mul, opHeisenbergGroupPlus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupPlus, opContactSubgroupPlus, ω₁₂, opContactSymplecticForm];
+     try noncomm_ring
+     try abel)
+  · ext <;>
+    (simp [opArnoldMetricReadout, opAnticommutator, opGradeMinus2, opGradePlus2,
+           opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opArnoldPhaseReadout, opCommutator, opGradeMinus2, opGradePlus2,
+           opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

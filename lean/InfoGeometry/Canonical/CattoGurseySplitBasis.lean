@@ -184,7 +184,7 @@ theorem no_injective_associative_realization [Nontrivial R]
   have ha : associator (u 0 : ZornVectorMatrix R) (u 1) (u 2) = 0 := by
     apply hi
     change f (mul (mul (u 0) (u 1)) (u 2) - mul (u 0) (mul (u 1) (u 2))) = f 0
-    simp only [map_sub, hmul, _root_.mul_assoc, sub_self, map_zero]
+    simp only [map_sub, hmul, _root_.mul_assoc, _root_.sub_self, map_zero]
   rw [triple_associator] at ha
   have hb := congrArg ZornVectorMatrix.b ha
   simp [sub, neg, uZero, uStarZero, E11, E22] at hb

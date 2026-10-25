@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.MinimalAxioms
@@ -392,6 +398,14 @@ def neg (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
 def sub (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
   add X (neg Y)
 
+@[simp] theorem sub_zero (X : ZornVectorMatrix R) :
+    sub X zero = X := by
+  ext i <;> simp [sub, neg, add, zero]
+
+@[simp] theorem sub_self (X : ZornVectorMatrix R) :
+    sub X X = zero := by
+  ext i <;> simp [sub, neg, add, zero]
+
 def smul (r : R) (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
   ⟨r * X.a, fun i => r * X.v i, fun i => r * X.w i, r * X.b⟩
 
@@ -447,11 +461,11 @@ theorem add_assoc (X Y Z : ZornVectorMatrix R) :
     add (add X Y) Z = add X (add Y Z) := by
   ext i <;> simp [add, _root_.add_assoc]
 
-theorem add_zero (X : ZornVectorMatrix R) :
+@[simp] theorem add_zero (X : ZornVectorMatrix R) :
     add X zero = X := by
   ext i <;> simp [add, zero]
 
-theorem zero_add (X : ZornVectorMatrix R) :
+@[simp] theorem zero_add (X : ZornVectorMatrix R) :
     add zero X = X := by
   ext i <;> simp [add, zero]
 
@@ -543,8 +557,8 @@ theorem neg_eq_smul_neg_one (X : ZornVectorMatrix R) :
     neg X = smul (-1 : R) X := by
   ext i <;> simp [neg, smul]
 
-theorem smul_zero (r : R) :
-    smul r (zero : ZornVectorMatrix R) = zero := by
+@[simp] theorem smul_zero (r : R) :
+    smul r zero = zero := by
   ext i <;> simp [smul, zero]
 
 theorem zero_smul (X : ZornVectorMatrix R) :
@@ -625,11 +639,11 @@ theorem smul_mul (r : R) (X Y : ZornVectorMatrix R) :
   · simp [mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
     ring
 
-theorem mul_zero (X : ZornVectorMatrix R) :
+@[simp] theorem mul_zero (X : ZornVectorMatrix R) :
     mul X zero = zero := by
   ext i <;> simp [mul, zero, ZornVec3.dot, ZornVec3.cross]
 
-theorem zero_mul (X : ZornVectorMatrix R) :
+@[simp] theorem zero_mul (X : ZornVectorMatrix R) :
     mul zero X = zero := by
   ext i <;> simp [mul, zero, ZornVec3.dot, ZornVec3.cross]
 

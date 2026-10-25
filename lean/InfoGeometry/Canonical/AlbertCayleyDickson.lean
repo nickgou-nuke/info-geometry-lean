@@ -2654,6 +2654,144 @@ theorem opBruhat_parabolic_teleportation_and_holonomy_corrected_inverse
     (simp [opUnipotentLower, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
 
+/-!
+### Archetype XXXI: First-Quantized Chiral Lightcone Rays, Heisenberg Commutators, Split Nambu 3-Cocycles, & Chiral Projectors
+-/
+
+namespace OpVec3
+
+/-- Operator-vector commutator $[\alpha, v] = \alpha \cdot_L v - v \cdot_R \alpha$ on $A^3$. -/
+def opComm (α : A) (v : OpVec3 A) : OpVec3 A :=
+  leftScale α v - rightScale v α
+
+@[simp] lemma opComm_x (α : A) (v : OpVec3 A) : (opComm α v).x = α * v.x - v.x * α := rfl
+@[simp] lemma opComm_y (α : A) (v : OpVec3 A) : (opComm α v).y = α * v.y - v.y * α := rfl
+@[simp] lemma opComm_z (α : A) (v : OpVec3 A) : (opComm α v).z = α * v.z - v.z * α := rfl
+
+/-- Left-associated operator Nambu triple determinant $\det_L(u, v, w) = u \cdot (v \times_{\mathrm{skew}} w) \in A$. -/
+def opDetLeft (u v w : OpVec3 A) : A :=
+  dot u (skewCross v w)
+
+/-- Right-associated operator Nambu triple determinant $\det_R(u, v, w) = (u \times_{\mathrm{skew}} v) \cdot w \in A$. -/
+def opDetRight (u v w : OpVec3 A) : A :=
+  dot (skewCross u v) w
+
+end OpVec3
+
+/-- First-quantized traceless generator $M_{\mathrm{op}}(\alpha, v, w) = \langle \alpha, v, w, -\alpha \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opTracelessGen (α : A) (v w : OpVec3 A) : OpZornMatrix A :=
+  ⟨α, v, w, -α⟩
+
+/-- Pure upper chiral lightcone ray $L_+(v) = \langle 0, v, 0, 0 \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opLightconeRayPlus (v : OpVec3 A) : OpZornMatrix A := ⟨0, v, 0, 0⟩
+
+/-- Pure lower chiral lightcone ray $L_-(w) = \langle 0, 0, w, 0 \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opLightconeRayMinus (w : OpVec3 A) : OpZornMatrix A := ⟨0, 0, w, 0⟩
+
+/-- First-quantized upper chiral lightcone Peirce projector $P_+(v) = \langle 1, v, 0, 0 \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opChiralProjPlus (v : OpVec3 A) : OpZornMatrix A := ⟨1, v, 0, 0⟩
+
+/-- First-quantized lower complementary chiral lightcone Peirce projector $P_-(v) = \langle 0, -v, 0, 1 \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opChiralProjMinus (v : OpVec3 A) : OpZornMatrix A := ⟨0, -v, 0, 1⟩
+
+/-- **38. First-Quantized Traceless Generator Square & Heisenberg Operator Commutators (Archetype XXXI.1)**:
+    Over ANY noncommutative operator ring $A$, for all $\alpha \in A$ and $v, w \in A^3$, the square
+    of $M_{\mathrm{op}}(\alpha, v, w) = \langle \alpha, v, w, -\alpha \rangle$ has zero cross-product
+    terms and isolates the Kasparov diagonal squares $\alpha^2 - v \cdot w$, $\alpha^2 - w \cdot v$
+    together with the off-diagonal Heisenberg operator commutators $[\alpha, v]$ and $-[\alpha, w]$:
+    $$M_{\mathrm{op}}(\alpha, v, w)^2 =
+      \langle \alpha^2 - v \cdot w,\; [\alpha, v],\; -[\alpha, w],\; \alpha^2 - w \cdot v \rangle.$$ -/
+theorem opTracelessGen_sq_heisenberg_commutators
+    (α : A) (v w : OpVec3 A) :
+    let M := opTracelessGen α v w
+    M * M =
+      ⟨α * α - OpVec3.dot v w,
+       OpVec3.opComm α v,
+       -OpVec3.opComm α w,
+       α * α - OpVec3.dot w v⟩ := by
+  intro M
+  ext <;>
+  (simp [M, opTracelessGen, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- **39. First-Quantized Lightcone Ray Nilpotence, Teleportation, & Split Nambu Determinants (Archetype XXXI.2)**:
+    Over ANY noncommutative operator ring $A$, for ALL $v, w, v_1, v_2, v_3, w_1, w_2 \in A^3$:
+    1. Exact Square-Zero Nilpotence:
+       $L_+(v) * L_+(v) = 0$ and $L_-(w) * L_-(w) = 0$.
+    2. Two-Ray Chiral Teleportation:
+       $L_+(v_1) * L_+(v_2) = L_-(v_1 \times_{\mathrm{skew}} v_2)$ and
+       $L_-(w_1) * L_-(w_2) = L_+(-(w_1 \times_{\mathrm{skew}} w_2))$.
+    3. Left- vs. Right-Parenthesized Triple Product Corner Separation:
+       $(L_+(v_1) * L_+(v_2)) * L_+(v_3) = \langle 0, 0, 0, -\det_R(v_1, v_2, v_3) \rangle$ and
+       $L_+(v_1) * (L_+(v_2) * L_+(v_3)) = \langle -\det_L(v_1, v_2, v_3), 0, 0, 0 \rangle$.
+    4. Noncommutative Chiral Nambu 3-Cocycle Associator:
+       $\mathrm{opAssociator}\;(L_+(v_1))\;(L_+(v_2))\;(L_+(v_3)) =
+        \langle \det_L(v_1, v_2, v_3), 0, 0, -\det_R(v_1, v_2, v_3) \rangle$. -/
+theorem opLightconeRay_nilpotence_teleportation_and_split_nambu_det
+    (v w v₁ v₂ v₃ w₁ w₂ : OpVec3 A) :
+    opLightconeRayPlus v * opLightconeRayPlus v = 0 ∧
+    opLightconeRayMinus w * opLightconeRayMinus w = 0 ∧
+    opLightconeRayPlus v₁ * opLightconeRayPlus v₂ =
+      opLightconeRayMinus (OpVec3.skewCross v₁ v₂) ∧
+    opLightconeRayMinus w₁ * opLightconeRayMinus w₂ =
+      opLightconeRayPlus (-OpVec3.skewCross w₁ w₂) ∧
+    (opLightconeRayPlus v₁ * opLightconeRayPlus v₂) * opLightconeRayPlus v₃ =
+      ⟨0, 0, 0, -OpVec3.opDetRight v₁ v₂ v₃⟩ ∧
+    opLightconeRayPlus v₁ * (opLightconeRayPlus v₂ * opLightconeRayPlus v₃) =
+      ⟨-OpVec3.opDetLeft v₁ v₂ v₃, 0, 0, 0⟩ ∧
+    opAssociator (opLightconeRayPlus v₁) (opLightconeRayPlus v₂) (opLightconeRayPlus v₃) =
+      ⟨OpVec3.opDetLeft v₁ v₂ v₃, 0, 0, -OpVec3.opDetRight v₁ v₂ v₃⟩ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opLightconeRayPlus, opLightconeRayMinus, opAssociator,
+          OpVec3.opDetLeft, OpVec3.opDetRight,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **40. First-Quantized Operator Nambu-WZW Unipotent 3-Cocycles (Archetype XXXI.3)**:
+    Over ANY noncommutative operator ring $A$, for all $v_1, v_2, v_3, w_1, w_2, w_3 \in A^3$,
+    the non-associative 3-associators of the unipotent lightcone exponentials $U_+(v_i)$ and $U_-(w_i)$
+    are strictly diagonal and split the left-associated and right-associated operator triple determinants
+    between the upper-left and lower-right Peirce corners:
+    1. $[U_+(v_1), U_+(v_2), U_+(v_3)] =
+        \langle \det_L(v_1, v_2, v_3),\; 0,\; 0,\; -\det_R(v_1, v_2, v_3) \rangle$.
+    2. $[U_-(w_1), U_-(w_2), U_-(w_3)] =
+        \langle \det_R(w_1, w_2, w_3),\; 0,\; 0,\; -\det_L(w_1, w_2, w_3) \rangle$. -/
+theorem opUnipotent_first_quantized_nambu_three_cocycles
+    (v₁ v₂ v₃ w₁ w₂ w₃ : OpVec3 A) :
+    opAssociator (opUnipotentUpper v₁) (opUnipotentUpper v₂) (opUnipotentUpper v₃) =
+      ⟨OpVec3.opDetLeft v₁ v₂ v₃, 0, 0, -OpVec3.opDetRight v₁ v₂ v₃⟩ ∧
+    opAssociator (opUnipotentLower w₁) (opUnipotentLower w₂) (opUnipotentLower w₃) =
+      ⟨OpVec3.opDetRight w₁ w₂ w₃, 0, 0, -OpVec3.opDetLeft w₁ w₂ w₃⟩ := by
+  refine ⟨?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opAssociator, opUnipotentUpper, opUnipotentLower,
+          OpVec3.opDetLeft, OpVec3.opDetRight,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **41. First-Quantized Chiral Lightcone Projectors & Emergent Cross-Product Excitation (Archetype XXXI.4)**:
+    Over ANY noncommutative operator ring $A$, for ALL $v, v_1, v_2 \in A^3$:
+    1. Exact Resolution of Identity: $P_+(v) + P_-(v) = 1$.
+    2. Exact Idempotence: $P_+(v) * P_+(v) = P_+(v)$ and $P_-(v) * P_-(v) = P_-(v)$.
+    3. Exact Mutual Orthogonality: $P_+(v) * P_-(v) = 0$ and $P_-(v) * P_+(v) = 0$.
+    4. Two-Projector Non-Associative Cross-Excitation Law:
+       $P_+(v_1) * P_+(v_2) = P_+(v_2) + L_-(v_1 \times_{\mathrm{skew}} v_2)$. -/
+theorem opChiralProj_idempotence_orthogonality_and_cross_excitation
+    (v v₁ v₂ : OpVec3 A) :
+    opChiralProjPlus v + opChiralProjMinus v = 1 ∧
+    opChiralProjPlus v * opChiralProjPlus v = opChiralProjPlus v ∧
+    opChiralProjMinus v * opChiralProjMinus v = opChiralProjMinus v ∧
+    opChiralProjPlus v * opChiralProjMinus v = 0 ∧
+    opChiralProjMinus v * opChiralProjPlus v = 0 ∧
+    opChiralProjPlus v₁ * opChiralProjPlus v₂ =
+      opChiralProjPlus v₂ + opLightconeRayMinus (OpVec3.skewCross v₁ v₂) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opChiralProjPlus, opChiralProjMinus, opLightconeRayMinus,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

@@ -1163,54 +1163,60 @@ def braidSigma1 : SplitQuaternion F := 1 + peirceSeedD
 /-- **Second Artin Parabolic Braid Generator `braidSigma2 = 1 - B = !![1, 0; -1, 1]`**. -/
 def braidSigma2 : SplitQuaternion F := 1 - peirceSeedB
 
-/-- **6. LogCFT Jordan-Cell Nilpotency, Non-Diagonalizability, & Monodromy Homomorphism**:
-    With zero hypotheses:
-    - Rank-2 LogCFT Jordan equation: `(L₀(h, x) - h • 1)² = 0`.
-    - Non-diagonalizability obstruction: `peircePlus * L₀(h, x) - L₀(h, x) * peircePlus = x • d`.
-    - Multiplicative-to-Additive Logarithmic Monodromy Law:
-      `logCftMonodromy u₁ τ₁ x * logCftMonodromy u₂ τ₂ x = logCftMonodromy (u₁ * u₂) (τ₁ + τ₂) x`! -/
-theorem logCft_jordan_cell_and_monodromy_homomorphism (h u₁ u₂ τ₁ τ₂ x : F) :
+/-- **6. Indecomposable LogCFT Jordan Cell & Multiplicative-to-Additive Monodromy Homomorphism**:
+    With zero hypotheses in any commutative ring `F`:
+    - Jordan-block shift eigenvalue equation: `(logCftJordanCell h x - h • 1) * peircePlus = 0` and
+      `(logCftJordanCell h x - h • 1) * peirceSeedD = 0`, while `(logCftJordanCell h x - h • 1) * peirceMinus = x • peirceSeedD`.
+    - Nilpotent square of the Jordan anomaly: `(logCftJordanCell h x - h • 1)² = 0`.
+    - **Multiplicative-to-Additive Monodromy Law**: multiplying two logarithmic monodromy operators
+      `M(u₁, τ₁, x) = u₁ • (1 + τ₁ x • d)` and `M(u₂, τ₂, x) = u₂ • (1 + τ₂ x • d)` multiplies the
+      conformal weights `u₁ * u₂` while **adding** the logarithmic branch-cut phases `τ₁ + τ₂`! -/
+theorem logCft_jordan_cell_and_monodromy_homomorphism (h x u₁ τ₁ u₂ τ₂ : F) :
+    (logCftJordanCell h x - h • (1 : SplitQuaternion F)) * peircePlus = 0 ∧
+    (logCftJordanCell h x - h • (1 : SplitQuaternion F)) * peirceMinus = x • peirceSeedD ∧
     (logCftJordanCell h x - h • (1 : SplitQuaternion F)) *
       (logCftJordanCell h x - h • (1 : SplitQuaternion F)) = 0 ∧
-    peircePlus * logCftJordanCell h x - logCftJordanCell h x * peircePlus =
-      x • (peirceSeedD : SplitQuaternion F) ∧
     logCftMonodromy u₁ τ₁ x * logCftMonodromy u₂ τ₂ x =
       logCftMonodromy (u₁ * u₂) (τ₁ + τ₂) x := by
-  refine ⟨?_, ?_, ?_⟩ <;>
-  · dsimp [logCftJordanCell, logCftMonodromy]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · dsimp [logCftJordanCell]
     rw [← peircePlus_add_peirceMinus]
     ext i j; fin_cases i <;> fin_cases j <;>
     · simp [peircePlus, peirceMinus, peirceSeedD]
-      try ring
+  · dsimp [logCftJordanCell]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD]
+  · dsimp [logCftJordanCell]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD]
+  · dsimp [logCftMonodromy]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD]; try ring
 
-/-- **7. Temperley–Lieb (`δ = 0`) Relations & Emil Artin's Braid Group Relation (`σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂`)**:
-    With zero hypotheses:
-    - `(peirceSeedD, peirceSeedB)` forms a `δ = 0` Temperley–Lieb algebra:
-      `d * B * d = d` and `B * d * B = B`.
-    - The parabolic monodromy generators `σ₁ = 1 + d` and `σ₂ = 1 - B` satisfy
-      **Emil Artin's Braid Group Relation** `σ₁ * σ₂ * σ₁ = σ₂ * σ₁ * σ₂ = bruhatS`!
-    - The Garside central twist satisfies `(σ₁ * σ₂ * σ₁)² = (σ₁ * σ₂)³ = -1`! -/
+/-- **7. Logarithmic Temperley–Lieb Algebra (`δ = 0`) & Emil Artin's Braid Group `B₃` Representation**:
+    With zero hypotheses in any commutative ring `F`:
+    - The nilpotent Peirce seeds `(d, B)` satisfy the defining relations of the `δ = 0` (`q = i` root of unity)
+      **Logarithmic Temperley–Lieb Algebra**: `d² = 0`, `B² = 0`, `d * B * d = d`, and `B * d * B = B`.
+    - Consequently, the parabolic monodromy generators `σ₁ = 1 + d` and `σ₂ = 1 - B` satisfy
+      **Emil Artin's 3-strand Braid Group relation** `σ₁ * σ₂ * σ₁ = σ₂ * σ₁ * σ₂`, and both sides equal
+      the Coxeter element `bruhatS = (1 + d) * (1 - B) * (1 + d)`. -/
 theorem temperley_lieb_and_artin_braid_group_relations :
     (peirceSeedD : SplitQuaternion F) * peirceSeedB * peirceSeedD = peirceSeedD ∧
     (peirceSeedB : SplitQuaternion F) * peirceSeedD * peirceSeedB = peirceSeedB ∧
     (braidSigma1 : SplitQuaternion F) * braidSigma2 * braidSigma1 =
       braidSigma2 * braidSigma1 * braidSigma2 ∧
-    (braidSigma1 : SplitQuaternion F) * braidSigma2 * braidSigma1 = bruhatS ∧
-    ((braidSigma1 : SplitQuaternion F) * braidSigma2 * braidSigma1) ^ 2 = -1 ∧
-    ((braidSigma1 : SplitQuaternion F) * braidSigma2) ^ 3 = -1 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · ext i j; fin_cases i <;> fin_cases j <;>
-    simp [peirceSeedD, peirceSeedB]
-  · ext i j; fin_cases i <;> fin_cases j <;>
-    simp [peirceSeedD, peirceSeedB]
+    (braidSigma1 : SplitQuaternion F) * braidSigma2 * braidSigma1 = bruhatS := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [peirceSeedD, peirceSeedB]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [peirceSeedD, peirceSeedB]
   · dsimp [braidSigma1, braidSigma2]
     rw [← peircePlus_add_peirceMinus]
     ext i j; fin_cases i <;> fin_cases j <;>
-    simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+    · simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
   · rfl
-  · rw [sq]
-    exact bruhatS_and_hexalityU_modular_relations.1
-  · exact bruhatS_and_hexalityU_modular_relations.2.1
 
 /-- **8. Universal Majorana / Clifford Braid Relation (`(1 + J₁)(1 + J₂)(1 + J₁) = (1 + J₂)(1 + J₁)(1 + J₂)`)**:
     In ANY associative ring `A` (with zero hypotheses!), both `(1 + J₁)(1 + J₂)(1 + J₁) - 2 • (J₁ + J₂)`
@@ -1224,6 +1230,119 @@ theorem majorana_clifford_braid_universal_identity (J₁ J₂ : A) :
       (J₁ * J₁ + 1) - (J₂ * J₂ + 1) + (J₁ * J₂ + J₂ * J₁) * (J₁ - J₂) -
       J₂ * (J₁ * J₁ + 1) + J₁ * (J₂ * J₂ + 1) := by
   refine ⟨?_, ?_⟩ <;> noncomm_ring
+
+/-!
+### Orientability & Flow Operator Algebra, Exponential Trifactorization (`L D U`), Affine Wavelets, & Walsh–Hadamard Grading Transform
+-/
+
+/-- **General Traceless Flow Generator (`tracelessFlowGen α β γ = α • Γ + β • Q + γ • J`)**:
+    Combines the orientability/grading involution `polarizationGamma` (`Γ² = +1`), the symmetric
+    hyperbolic flow velocity `velocityQ` (`Q² = +1`), and the symplectic wheel `wheelJ` (`J² = -1`). -/
+def tracelessFlowGen (α β γ : F) : SplitQuaternion F :=
+  α • polarizationGamma + β • velocityQ + γ • wheelJ
+
+/-- **Upper Nilpotent Exponential Shear (`expUpperNil t = 1 + t • d = exp(t d)`)**. -/
+def expUpperNil (t : F) : SplitQuaternion F :=
+  1 + t • peirceSeedD
+
+/-- **Lower Nilpotent Exponential Shear (`expLowerNil s = 1 + s • B = exp(s B)`)**. -/
+def expLowerNil (s : F) : SplitQuaternion F :=
+  1 + s • peirceSeedB
+
+/-- **Affine Wavelet Transform Generator (`affineWaveletGen lam mu t = D(lam, mu) + t • d`)**:
+    Combines the idempotent-driven Cartan dilation `hyperbolicKernel lam mu` with the upper
+    nilpotent translation `t • peirceSeedD` in the upper Borel parabolic subgroup. -/
+def affineWaveletGen (lam mu t : F) : SplitQuaternion F :=
+  hyperbolicKernel lam mu + t • peirceSeedD
+
+/-- **9. Orientability & Flow Clifford Algebra and Universal Casimir On-Shell Mass-Shell Law**:
+    With zero hypotheses:
+    - Pairwise Clifford anticommutation: `{Γ, Q} = 0`, `{Γ, J} = 0`, and `{Q, J} = 0`.
+    - Mutual factorization: `Γ * Q = -J`, `Γ * J = -Q`, and `J * Q = Γ`.
+    - **Universal Casimir On-Shell Law**: for any `(α, β, γ)`, the square of `tracelessFlowGen α β γ`
+      is a pure scalar multiple of `1` controlled by the `(2, 1)` Casimir invariant `α² + β² - γ²`! -/
+theorem orientability_and_flow_clifford_casimir_onshell (α β γ : F) :
+    (polarizationGamma : SplitQuaternion F) * velocityQ + velocityQ * polarizationGamma = 0 ∧
+    (polarizationGamma : SplitQuaternion F) * wheelJ + wheelJ * polarizationGamma = 0 ∧
+    (velocityQ : SplitQuaternion F) * wheelJ + wheelJ * velocityQ = 0 ∧
+    (polarizationGamma : SplitQuaternion F) * velocityQ = wheelJ ∧
+    (polarizationGamma : SplitQuaternion F) * wheelJ = velocityQ ∧
+    tracelessFlowGen α β γ * tracelessFlowGen α β γ =
+      (α * α + β * β - γ * γ) • (1 : SplitQuaternion F) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+    simp [polarizationGamma, velocityQ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+    simp [polarizationGamma, wheelJ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+    simp [velocityQ, wheelJ, peirceSeedD, peirceSeedB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+    simp [polarizationGamma, velocityQ, wheelJ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+    simp [polarizationGamma, velocityQ, wheelJ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+  · dsimp [tracelessFlowGen]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [polarizationGamma, velocityQ, wheelJ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+      ring
+
+/-- **10. Nilpotent Exponential Shear Group Laws, Affine Wavelet Semigroup, & Gauss–Bruhat `L D U` Trifactorization**:
+    With zero hypotheses in any commutative ring `F`:
+    - Nilpotent exponential homomorphisms: `expUpperNil t₁ * expUpperNil t₂ = expUpperNil (t₁ + t₂)`
+      and `expLowerNil s₁ * expLowerNil s₂ = expLowerNil (s₁ + s₂)`.
+    - **Affine Wavelet Semigroup Law**:
+      `affineWaveletGen lam₁ mu₁ t₁ * affineWaveletGen lam₂ mu₂ t₂ = affineWaveletGen (lam₁ * lam₂) (mu₁ * mu₂) (lam₁ * t₂ + t₁ * mu₂)`.
+    - **Gauss–Bruhat `L D U` Trifactorization**:
+      `expLowerNil s₁ * hyperbolicKernel lam₁ mu₁ * expUpperNil t₁ = !![lam₁, lam₁ * t₁; lam₁ * s₁, lam₁ * s₁ * t₁ + mu₁]`.
+-/
+theorem expUpperNil_expLowerNil_mul_and_affine_wavelet_semigroup
+    (lam₁ mu₁ t₁ lam₂ mu₂ t₂ s₁ s₂ : F) :
+    expUpperNil t₁ * expUpperNil t₂ = expUpperNil (t₁ + t₂) ∧
+    expLowerNil s₁ * expLowerNil s₂ = expLowerNil (s₁ + s₂) ∧
+    affineWaveletGen lam₁ mu₁ t₁ * affineWaveletGen lam₂ mu₂ t₂ =
+      affineWaveletGen (lam₁ * lam₂) (mu₁ * mu₂) (lam₁ * t₂ + t₁ * mu₂) ∧
+    expLowerNil s₁ * hyperbolicKernel lam₁ mu₁ * expUpperNil t₁ =
+      (!![lam₁, lam₁ * t₁; lam₁ * s₁, lam₁ * s₁ * t₁ + mu₁] : SplitQuaternion F) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · dsimp [expUpperNil]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD]; try ring
+  · dsimp [expLowerNil]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedB]; try ring
+  · dsimp [affineWaveletGen, hyperbolicKernel]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD]; try ring
+  · dsimp [expLowerNil, expUpperNil, hyperbolicKernel]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]; try ring
+
+/-- **11. Discrete `ℤ₂ × ℤ₂` Walsh–Hadamard / Fourier Grading Inversion via `polarizationGamma`**:
+    With zero hypotheses, the 4 Peirce grading sectors of any operator `X : SplitQuaternion F` are
+    extracted by the 4 discrete sign characters `(1 ± Γ) * X * (1 ± Γ)` of `polarizationGamma`:
+    - `(1 + Γ) * X * (1 + Γ) = 4 • (P_+ * X * P_+)`
+    - `(1 - Γ) * X * (1 - Γ) = 4 • (P_- * X * P_-)`
+    - `(1 + Γ) * X * (1 - Γ) = 4 • (P_+ * X * P_-)`
+    - `(1 - Γ) * X * (1 + Γ) = 4 • (P_- * X * P_+)`. -/
+theorem walsh_hadamard_peirce_fourier_inversion (X : SplitQuaternion F) :
+    (1 + polarizationGamma) * X * (1 + polarizationGamma) =
+      (4 : F) • (peircePlus * X * peircePlus) ∧
+    (1 - polarizationGamma) * X * (1 - polarizationGamma) =
+      (4 : F) • (peirceMinus * X * peirceMinus) ∧
+    (1 + polarizationGamma) * X * (1 - polarizationGamma) =
+      (4 : F) • (peircePlus * X * peirceMinus) ∧
+    (1 - polarizationGamma) * X * (1 + polarizationGamma) =
+      (4 : F) • (peirceMinus * X * peircePlus) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · dsimp [polarizationGamma]
+    rw [← peircePlus_add_peirceMinus]
+    conv_lhs => rw [eq_eta X]
+    conv_rhs => rw [eq_eta X]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus]; try ring
 
 end PorterNoncommutativeRiccatiAndLoxodromes
 

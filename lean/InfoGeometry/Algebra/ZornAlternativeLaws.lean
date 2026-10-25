@@ -251,7 +251,7 @@ theorem right_moufang (X Y Z : ZornVectorMatrix R) :
       change -bundledAssociator (X * X) Y Z -
         -bundledAssociator X Y (X * Z) + 0 -
         X * (-(bundledAssociator X Y Z)) - 0 = 0 at h2
-      simp only [_root_.mul_neg, neg_neg] at h2
+      simp only [_root_.mul_neg] at h2
       abel_nf at h2 ⊢
       exact h2
     have hs : (bundledAssociator (X * X) Y Z - bundledAssociator X (X * Y) Z - X * bundledAssociator X Y Z) +
@@ -2299,5 +2299,181 @@ theorem zorn_1930_peirce_lagrange_and_triple_pole_split
             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
             add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
       ring
+
+/-!
+## 15. Two-Sided Hyperbolic Laplace Spectral Semigroup, Walsh–Hadamard Grading Transform, & Octonionic Gauss–Bruhat Trifactorization
+-/
+
+/-- **Octonionic Upper Nilpotent Exponential Shear (`zornExpUpperNil v = ⟨1, v, 0, 1⟩ = exp(e₁₂(v))`)**. -/
+def zornExpUpperNil (v : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨1, v, fun _ => 0, 1⟩
+
+/-- **Octonionic Lower Nilpotent Exponential Shear (`zornExpLowerNil w = ⟨1, 0, w, 1⟩ = exp(e₂₁(w))`)**. -/
+def zornExpLowerNil (w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨1, fun _ => 0, w, 1⟩
+
+/-- **1. Two-Sided Hyperbolic Laplace 4-Sector Spectral Multiplier & Semigroup Composition Law**:
+    With zero hypotheses on non-associative `ZornVectorMatrix R`:
+    - 4-sector Peirce completeness: `zornPeirce11 X + zornPeirce22 X + zornPeirce12 X + zornPeirce21 X = X`.
+    - **4-Sector Twin-Wave Spectral Decomposition**:
+      `zornTwoSidedHyperbolicLaplace lamL muL lamR muR X = (lamL * lamR) • zornPeirce11 X + (muL * muR) • zornPeirce22 X + (lamL * muR) • zornPeirce12 X + (muL * lamR) • zornPeirce21 X`.
+    - **Exact Two-Sided Laplace Semigroup Law**:
+      `zornTwoSidedHyperbolicLaplace lamL₁ muL₁ lamR₁ muR₁ (zornTwoSidedHyperbolicLaplace lamL₂ muL₂ lamR₂ muR₂ X) = zornTwoSidedHyperbolicLaplace (lamL₁ * lamL₂) (muL₁ * muL₂) (lamR₂ * lamR₁) (muR₂ * muR₁) X`! -/
+theorem zornTwoSidedHyperbolicLaplace_spectral_and_semigroup_laws
+    (lamL muL lamR muR lamL₁ muL₁ lamR₁ muR₁ lamL₂ muL₂ lamR₂ muR₂ : R)
+    (X : ZornVectorMatrix R) :
+    zornPeirce11 X + zornPeirce22 X + zornPeirce12 X + zornPeirce21 X = X ∧
+    zornTwoSidedHyperbolicLaplace lamL muL lamR muR X =
+      (lamL * lamR) • zornPeirce11 X + (muL * muR) • zornPeirce22 X +
+      (lamL * muR) • zornPeirce12 X + (muL * lamR) • zornPeirce21 X ∧
+    zornTwoSidedHyperbolicLaplace lamL₁ muL₁ lamR₁ muR₁
+      (zornTwoSidedHyperbolicLaplace lamL₂ muL₂ lamR₂ muR₂ X) =
+      zornTwoSidedHyperbolicLaplace (lamL₁ * lamL₂) (muL₁ * muL₂)
+        (lamR₂ * lamR₁) (muR₂ * muR₁) X := by
+  refine ⟨?_, ?_, ?_⟩
+  · ext
+    · simp [zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+              InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+              InfoGeometry.Algebra.zvm_add_def, add]
+    · simp [zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, add]
+  · ext
+    · simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+            zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.dot]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+               zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+               zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.cross]; ring)
+    · simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+            zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.dot]
+      ring
+  · ext
+    · simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · simp [zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+      ring
+
+/-- **2. Discrete `ℤ₂ × ℤ₂` Walsh–Hadamard / Fourier Grading Inversion on Split Octonions via `zornGamma`**:
+    With zero hypotheses, evaluating the two-sided grading characters `((one ± zornGamma) * X) * (one ± zornGamma)`
+    projects any split-octonion `X : ZornVectorMatrix R` onto its 4 Peirce grading sectors:
+    - `((one + zornGamma) * X) * (one + zornGamma) = 4 • zornPeirce11 X`
+    - `((one - zornGamma) * X) * (one - zornGamma) = 4 • zornPeirce22 X`
+    - `((one + zornGamma) * X) * (one - zornGamma) = 4 • zornPeirce12 X`
+    - `((one - zornGamma) * X) * (one + zornGamma) = 4 • zornPeirce21 X`. -/
+theorem zorn_walsh_hadamard_peirce_fourier_inversion (X : ZornVectorMatrix R) :
+    ((one + zornGamma) * X) * (one + zornGamma) = (4 : R) • zornPeirce11 X ∧
+    ((one - zornGamma) * X) * (one - zornGamma) = (4 : R) • zornPeirce22 X ∧
+    ((one + zornGamma) * X) * (one - zornGamma) = (4 : R) • zornPeirce12 X ∧
+    ((one - zornGamma) * X) * (one + zornGamma) = (4 : R) • zornPeirce21 X := by
+  simp only [_root_.sub_eq_add_neg]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · ext
+    · simp [one, zornGamma, zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot]
+      try ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [one, zornGamma, zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [one, zornGamma, zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · simp [one, zornGamma, zornPeirce11, zornPeirce22, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot]
+      try ring
+
+/-- **3. Octonionic Nilpotent–Idempotent–Nilpotent Gauss–Bruhat `L D U` Trifactorization & Diquark Cross-Product Cocycle**:
+    With zero hypotheses on `ZornVectorMatrix R`:
+    - **Non-Associative Diquark Cross-Product Cocycles**:
+      `zornExpUpperNil v₁ * zornExpUpperNil v₂ = ⟨1, v₁ + v₂, v₁ × v₂, 1⟩` and
+      `zornExpLowerNil w₁ * zornExpLowerNil w₂ = ⟨1, -w₁ × w₂, w₁ + w₂, 1⟩`.
+    - **Exact Octonionic Gauss–Bruhat `L D U` Trifactorization**:
+      `(zornExpLowerNil w * zornHyperbolicKernel lam mu) * zornExpUpperNil v = ⟨lam, lam • v, lam • w, lam * (w ⋅ v) + mu⟩`,
+      with exact multiplicative Casimir norm `norm ((zornExpLowerNil w * zornHyperbolicKernel lam mu) * zornExpUpperNil v) = lam * mu`! -/
+theorem zorn_gauss_bruhat_trifactor_and_torsion_residual
+    (lam mu : R) (v₁ v₂ w₁ w₂ v w : ZornVec3 R) :
+    zornExpUpperNil v₁ * zornExpUpperNil v₂ =
+      ⟨1, fun i => v₁ i + v₂ i, fun i => ZornVec3.cross v₁ v₂ i, 1⟩ ∧
+    zornExpLowerNil w₁ * zornExpLowerNil w₂ =
+      ⟨1, fun i => -ZornVec3.cross w₁ w₂ i, fun i => w₁ i + w₂ i, 1⟩ ∧
+    (zornExpLowerNil w * zornHyperbolicKernel lam mu) * zornExpUpperNil v =
+      ⟨lam, fun i => lam * v i, fun i => lam * w i, lam * ZornVec3.dot w v + mu⟩ ∧
+    norm ((zornExpLowerNil w * zornHyperbolicKernel lam mu) * zornExpUpperNil v) =
+      lam * mu := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · ext
+    · simp [zornExpLowerNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornExpLowerNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornExpLowerNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornExpLowerNil, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · ext
+    · simp [zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · simp [zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel, norm,
+          InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
 
 end InfoGeometry.Algebra.ZornVectorMatrix

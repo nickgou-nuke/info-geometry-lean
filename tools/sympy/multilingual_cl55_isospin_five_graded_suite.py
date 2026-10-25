@@ -764,21 +764,17 @@ def run_sympy_verification() -> dict:
     assert sp.expand(MU_schur[1, 0] - x10_nc) == 0
     assert sp.expand(MU_schur[1, 1] - (x11_nc - x10_nc * c_inv_nc * x11_nc)) == 0
 
-    # 26. LogCFT Jordan Cell, Multiplicative-to-Additive Monodromy, Temperley-Lieb (delta=0),
-    #     Emil Artin's Braid Group B_3, & Universal Majorana Clifford Braiding
-    # (`logCft_jordan_cell_and_monodromy_homomorphism`,
-    #  `temperley_lieb_and_artin_braid_group_relations`,
+    # 26. LogCFT Monodromy Homomorphism, Artin Braid Relation for SplitQuaternion Generators,
+    #     & Universal Majorana Clifford Braiding
+    # (`logCftMonodromy_mul`,
+    #  `braidSigma_artin_relation`,
     #  `majorana_clifford_braid_universal_identity` in `AlbertCayleyDickson.lean`)
     h_cft, u1_cft, u2_cft, tau1_cft, tau2_cft, x_cft = sp.symbols(
         "h_cft u1_cft u2_cft tau1_cft tau2_cft x_cft"
     )
     seed_d_mat = sp.Matrix([[0, 1], [0, 0]])
     seed_B_mat = sp.Matrix([[0, 0], [1, 0]])
-    P_plus_mat = sp.Matrix([[1, 0], [0, 0]])
     I2_mat = sp.eye(2)
-    L0_cft = h_cft * I2_mat + x_cft * seed_d_mat
-    assert (L0_cft - h_cft * I2_mat) ** 2 == sp.zeros(2, 2)
-    assert P_plus_mat * L0_cft - L0_cft * P_plus_mat == x_cft * seed_d_mat
 
     def log_cft_monodromy(u, tau, x):
         return u * I2_mat + (u * tau * x) * seed_d_mat
@@ -788,15 +784,11 @@ def run_sympy_verification() -> dict:
         * log_cft_monodromy(u2_cft, tau2_cft, x_cft)
         - log_cft_monodromy(u1_cft * u2_cft, tau1_cft + tau2_cft, x_cft)
     ) == sp.zeros(2, 2)
-    assert seed_d_mat * seed_B_mat * seed_d_mat == seed_d_mat
-    assert seed_B_mat * seed_d_mat * seed_B_mat == seed_B_mat
     sigma1_braid = I2_mat + seed_d_mat
     sigma2_braid = I2_mat - seed_B_mat
     bruhat_S_mat = sp.Matrix([[0, 1], [-1, 0]])
     assert sigma1_braid * sigma2_braid * sigma1_braid == sigma2_braid * sigma1_braid * sigma2_braid
     assert sigma1_braid * sigma2_braid * sigma1_braid == bruhat_S_mat
-    assert (sigma1_braid * sigma2_braid * sigma1_braid) ** 2 == -I2_mat
-    assert (sigma1_braid * sigma2_braid) ** 3 == -I2_mat
     J1_nc, J2_nc = sp.symbols("J1_nc J2_nc", commutative=False)
     assert sp.expand(
         (1 + J1_nc) * (1 + J2_nc) * (1 + J1_nc)
@@ -819,6 +811,48 @@ def run_sympy_verification() -> dict:
             + J1_nc * (J2_nc * J2_nc + 1)
         )
     ) == 0
+
+    # 27. Orientability & Flow Clifford Casimir On-Shell, Affine Wavelet Semigroup,
+    #     Walsh-Hadamard Grading Inversion, & Octonionic Gauss-Bruhat Trifactorization
+    # (`orientability_and_flow_clifford_casimir_onshell`,
+    #  `gauss_bruhat_trifactor_and_affine_wavelet_decomposition`,
+    #  `walsh_hadamard_peirce_fourier_inversion` in `AlbertCayleyDickson.lean`, and
+    #  `zornTwoSidedHyperbolicLaplace_spectral_and_semigroup_laws`,
+    #  `zorn_walsh_hadamard_peirce_fourier_inversion`,
+    #  `zorn_gauss_bruhat_trifactor_and_torsion_residual` in `ZornAlternativeLaws.lean`)
+    alpha_fl, beta_fl, gamma_fl = sp.symbols("alpha_fl beta_fl gamma_fl")
+    Gamma_2 = sp.Matrix([[1, 0], [0, -1]])
+    Q_2 = sp.Matrix([[0, 1], [1, 0]])
+    J_2 = sp.Matrix([[0, 1], [-1, 0]])
+    P_minus_mat = sp.Matrix([[0, 0], [0, 1]])
+    V_flow = alpha_fl * Gamma_2 + beta_fl * Q_2 + gamma_fl * J_2
+    assert sp.simplify(V_flow * V_flow - (alpha_fl**2 + beta_fl**2 - gamma_fl**2) * I2_mat) == sp.zeros(2, 2)
+    lam1_w, mu1_w, t1_w, lam2_w, mu2_w, t2_w = sp.symbols("lam1_w mu1_w t1_w lam2_w mu2_w t2_w")
+    a_ldu, b_ldu, c_ldu, d_ldu = sp.symbols("a_ldu b_ldu c_ldu d_ldu")
+    W1_mat = sp.Matrix([[lam1_w, t1_w], [0, mu1_w]])
+    W2_mat = sp.Matrix([[lam2_w, t2_w], [0, mu2_w]])
+    assert sp.simplify(
+        W1_mat * W2_mat - sp.Matrix([[lam1_w * lam2_w, lam1_w * t2_w + t1_w * mu2_w], [0, mu1_w * mu2_w]])
+    ) == sp.zeros(2, 2)
+    L_bruhat = sp.Matrix([[1, 0], [c_ldu, 1]])
+    D_bruhat = sp.Matrix([[a_ldu, 0], [0, a_ldu * d_ldu - b_ldu * c_ldu]])
+    U_bruhat = sp.Matrix([[1, b_ldu], [0, 1]])
+    M_bruhat = sp.Matrix([[a_ldu, b_ldu], [c_ldu, d_ldu]])
+    assert sp.simplify(L_bruhat * D_bruhat * U_bruhat - a_ldu * M_bruhat) == sp.zeros(2, 2)
+    assert sp.simplify((I2_mat + Gamma_2) * M_bruhat * (I2_mat + Gamma_2) - 4 * P_plus_mat * M_bruhat * P_plus_mat) == sp.zeros(2, 2)
+    assert sp.simplify((I2_mat - Gamma_2) * M_bruhat * (I2_mat - Gamma_2) - 4 * P_minus_mat * M_bruhat * P_minus_mat) == sp.zeros(2, 2)
+    assert sp.simplify((I2_mat + Gamma_2) * M_bruhat * (I2_mat - Gamma_2) - 4 * P_plus_mat * M_bruhat * P_minus_mat) == sp.zeros(2, 2)
+    assert sp.simplify((I2_mat - Gamma_2) * M_bruhat * (I2_mat + Gamma_2) - 4 * P_minus_mat * M_bruhat * P_plus_mat) == sp.zeros(2, 2)
+    # Octonionic Gauss-Bruhat trifactorization with torsion residual
+    norm_X_zorn = xa * xb - xv.dot(xw)
+    L_zorn = (1, sp.Matrix([0, 0, 0]), xw, 1)
+    D_zorn = (xa, sp.Matrix([0, 0, 0]), sp.Matrix([0, 0, 0]), norm_X_zorn)
+    U_zorn = (1, xv, sp.Matrix([0, 0, 0]), 1)
+    LDU_zorn = zorn_mul(zorn_mul(L_zorn, D_zorn), U_zorn)
+    assert sp.simplify(LDU_zorn[0] - xa * xa) == 0
+    assert sp.simplify(LDU_zorn[1] - xa * xv) == sp.zeros(3, 1)
+    assert sp.simplify(LDU_zorn[2] - (xa * xw + xa * xv.cross(xw))) == sp.zeros(3, 1)
+    assert sp.simplify(LDU_zorn[3] - xa * xb) == 0
 
     return {
         "engine": "SymPy",

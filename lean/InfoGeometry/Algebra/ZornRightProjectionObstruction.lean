@@ -24,7 +24,8 @@ theorem right_E22_upper_not_tangent :
       L_map (R := ℝ) (U 0) * R_map (R := ℝ) E22 ≠ L_map (R := ℝ) (U 0) := by
   intro h
   have hd := right_E22_upper_tangent_defect (R := ℝ)
-  rw [h, sub_self] at hd
+  rw [h] at hd
+  simp [_root_.sub_self] at hd
   have hv := congrArg (fun X : ZornVectorMatrix ℝ => X.v 0) hd
   norm_num [U, ZornVec3.basis] at hv
 

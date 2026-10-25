@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ZornAssociativeSpectralAdapter
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornChiralLightConeCoordinates
@@ -45,7 +50,8 @@ theorem null_field_zorn_square_zero
           (fun i => -(electric i + magnetic i))
           (fun i => electric i - magnetic i)) =
       zero := by
-  rw [electricMagnetic_offDiagonal_square, hnull, sub_self]
+  rw [electricMagnetic_offDiagonal_square, hnull]
+  rw [_root_.sub_self]
   rfl
 
 end InfoGeometry.Canonical.ZornChiralLightConeMaxwellBridge

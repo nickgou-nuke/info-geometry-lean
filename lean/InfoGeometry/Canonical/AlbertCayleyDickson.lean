@@ -1971,6 +1971,466 @@ theorem uhfInductiveColimit_homomorphism_and_jordan_wigner
   · ext i j; fin_cases i <;> fin_cases j <;>
       simp [jwStringSite1, jwFlipSite2]
 
+/-!
+### Archetypes XXI–XXVIII: Operator-Valued Kasparov Bimodules, Krein Space Involutions, & Noncommutative Zorn Algebras $\mathrm{Zorn}(A)$
+-/
+
+/-- Fundamental Krein metric symmetry $\Gamma = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \in M_2(A)$. -/
+def kreinGamma : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, -1]
+
+/-- The indefinite Krein adjoint $X^\flat = \Gamma X^{\mathrm{H}} \Gamma =
+    \begin{pmatrix} \mathrm{star}(X_{00}) & -\mathrm{star}(X_{10}) \\ -\mathrm{star}(X_{01}) & \mathrm{star}(X_{11}) \end{pmatrix}$
+    on $M_2(A)$ over a noncommutative $*$-ring $A$. -/
+def kreinAdjoint [StarRing A] (X : Matrix (Fin 2) (Fin 2) A) : Matrix (Fin 2) (Fin 2) A :=
+  !![star (X 0 0), -star (X 1 0);
+     -star (X 0 1), star (X 1 1)]
+
+/-- **25. Noncommutative Krein Space Anti-Involution Laws on $M_2(A)$ (Archetype XXI)**:
+    Over ANY noncommutative $*$-ring $A$ and for all $X, Y \in M_2(A)$:
+    1. Involution Period-2: $(X^\flat)^\flat = X$.
+    2. Krein Self-Adjointness of $\Gamma$: $\Gamma^\flat = \Gamma$.
+    3. Exact Multiplicative Anti-Homomorphism: $(X Y)^\flat = Y^\flat X^\flat$. -/
+theorem kreinAdjoint_involution_and_antihomomorphism [StarRing A]
+    (X Y : Matrix (Fin 2) (Fin 2) A) :
+    kreinAdjoint (kreinAdjoint X) = X ∧
+    kreinAdjoint (kreinGamma : Matrix (Fin 2) (Fin 2) A) = kreinGamma ∧
+    kreinAdjoint (X * Y) = kreinAdjoint Y * kreinAdjoint X := by
+  refine ⟨?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinAdjoint]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinAdjoint, kreinGamma]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [kreinAdjoint, Matrix.mul_apply, Fin.sum_univ_two, star_add, star_mul];
+       try abel)
+
+/-- Grading involution $\Gamma = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \in M_2(A)$. -/
+def kasparovGamma : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, -1]
+
+/-- Positive and negative Krein–Peirce subbundle projectors $e_{11}, e_{22} \in M_2(A)$. -/
+def kasparovProjPlus : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, 0]
+def kasparovProjMinus : Matrix (Fin 2) (Fin 2) A := !![0, 0; 0, 1]
+
+/-- Odd Kasparov Fredholm/Dirac operator $F(u, v) = \begin{pmatrix} 0 & u \\ v & 0 \end{pmatrix} \in M_2(A)$
+    with noncommuting operator entries $u, v \in A$. -/
+def kasparovFredholm (u v : A) : Matrix (Fin 2) (Fin 2) A := !![0, u; v, 0]
+
+/-- The Fedosov–Kasparov curvature defect $D_F(u, v) = I_2 - F(u, v)^2 =
+    \begin{pmatrix} 1 - u v & 0 \\ 0 & 1 - v u \end{pmatrix} \in M_2(A)$. -/
+def kasparovDefect (u v : A) : Matrix (Fin 2) (Fin 2) A :=
+  1 - kasparovFredholm u v * kasparovFredholm u v
+
+/-- **26. Even Kasparov Bimodule Relations & Noncommutative Fedosov Defect Intertwining (Archetype XXII)**:
+    Over ANY noncommutative operator ring $A$ and for all $u, v \in A$:
+    1. Odd Grading Anticommutation: $\Gamma F(u, v) + F(u, v) \Gamma = 0$.
+    2. Noncommutative Diagonal Square: $F(u, v)^2 = \begin{pmatrix} u v & 0 \\ 0 & v u \end{pmatrix}$.
+    3. Even Grading Commutation of Curvature Defect: $\Gamma D_F(u, v) = D_F(u, v) \Gamma$.
+    4. Exact Noncommutative Fedosov Intertwining:
+       $F(u, v) D_F(u, v) = D_F(u, v) F(u, v)$ and
+       $D_F(u, v) F(u, v) e_{11} = e_{22} F(u, v) D_F(u, v)$. -/
+theorem kasparovFredholm_grading_square_and_fedosov_intertwining (u v : A) :
+    let F := kasparovFredholm u v
+    let D_F := kasparovDefect u v
+    kasparovGamma * F + F * kasparovGamma = 0 ∧
+    F * F = !![u * v, 0; 0, v * u] ∧
+    kasparovGamma * D_F = D_F * kasparovGamma ∧
+    F * D_F = D_F * F ∧
+    D_F * F * kasparovProjPlus = kasparovProjMinus * F * D_F := by
+  intro F D_F
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext i j; fin_cases i <;> fin_cases j <;>
+   (simp [F, D_F, kasparovGamma, kasparovFredholm, kasparovDefect,
+          kasparovProjPlus, kasparovProjMinus,
+          Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply];
+    try noncomm_ring))
+
+/-- 3-component operator tuple $v = (v_x, v_y, v_z) \in A^3$ over a noncommutative ring $A$. -/
+@[ext]
+structure OpVec3 (A : Type*) where
+  x : A
+  y : A
+  z : A
+  deriving DecidableEq
+
+namespace OpVec3
+
+instance : Zero (OpVec3 A) := ⟨⟨0, 0, 0⟩⟩
+instance : Inhabited (OpVec3 A) := ⟨0⟩
+instance : Add (OpVec3 A) := ⟨fun u v => ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩⟩
+instance : Sub (OpVec3 A) := ⟨fun u v => ⟨u.x - v.x, u.y - v.y, u.z - v.z⟩⟩
+instance : Neg (OpVec3 A) := ⟨fun u => ⟨-u.x, -u.y, -u.z⟩⟩
+
+/-- Left and right operator action of $A$ on $A^3$. -/
+def leftScale (c : A) (u : OpVec3 A) : OpVec3 A := ⟨c * u.x, c * u.y, c * u.z⟩
+def rightScale (u : OpVec3 A) (c : A) : OpVec3 A := ⟨u.x * c, u.y * c, u.z * c⟩
+
+@[simp] lemma zero_x : (0 : OpVec3 A).x = 0 := rfl
+@[simp] lemma zero_y : (0 : OpVec3 A).y = 0 := rfl
+@[simp] lemma zero_z : (0 : OpVec3 A).z = 0 := rfl
+@[simp] lemma add_x (u v : OpVec3 A) : (u + v).x = u.x + v.x := rfl
+@[simp] lemma add_y (u v : OpVec3 A) : (u + v).y = u.y + v.y := rfl
+@[simp] lemma add_z (u v : OpVec3 A) : (u + v).z = u.z + v.z := rfl
+@[simp] lemma sub_x (u v : OpVec3 A) : (u - v).x = u.x - v.x := rfl
+@[simp] lemma sub_y (u v : OpVec3 A) : (u - v).y = u.y - v.y := rfl
+@[simp] lemma sub_z (u v : OpVec3 A) : (u - v).z = u.z - v.z := rfl
+@[simp] lemma neg_x (u : OpVec3 A) : (-u).x = -u.x := rfl
+@[simp] lemma neg_y (u : OpVec3 A) : (-u).y = -u.y := rfl
+@[simp] lemma neg_z (u : OpVec3 A) : (-u).z = -u.z := rfl
+@[simp] lemma leftScale_x (c : A) (u : OpVec3 A) : (leftScale c u).x = c * u.x := rfl
+@[simp] lemma leftScale_y (c : A) (u : OpVec3 A) : (leftScale c u).y = c * u.y := rfl
+@[simp] lemma leftScale_z (c : A) (u : OpVec3 A) : (leftScale c u).z = c * u.z := rfl
+@[simp] lemma rightScale_x (u : OpVec3 A) (c : A) : (rightScale u c).x = u.x * c := rfl
+@[simp] lemma rightScale_y (u : OpVec3 A) (c : A) : (rightScale u c).y = u.y * c := rfl
+@[simp] lemma rightScale_z (u : OpVec3 A) (c : A) : (rightScale u c).z = u.z * c := rfl
+
+/-- Ordered noncommutative dot contraction $u \cdot w = u_x w_x + u_y w_y + u_z w_z \in A$. -/
+def dot (u w : OpVec3 A) : A := u.x * w.x + u.y * w.y + u.z * w.z
+
+/-- Naive ordered cross product $(u \times v)_x = u_y v_z - u_z v_y$ over noncommutative $A$. -/
+def naiveCross (u v : OpVec3 A) : OpVec3 A :=
+  ⟨u.y * v.z - u.z * v.y,
+   u.z * v.x - u.x * v.z,
+   u.x * v.y - u.y * v.x⟩
+
+/-- Skew-symmetrized operator cross product $u \times_{\mathrm{skew}} v = u \times v - v \times u$,
+    which satisfies $v \times_{\mathrm{skew}} v = 0$ over ANY noncommutative ring $A$. -/
+def skewCross (u v : OpVec3 A) : OpVec3 A :=
+  naiveCross u v - naiveCross v u
+
+end OpVec3
+
+/-- **27. Yang–Mills Commutator Curvature of Naive Cross vs. Alternativity of Skew Cross (Archetype XXIII)**:
+    Over ANY noncommutative operator ring $A$ and for all $u, v \in A^3$:
+    1. Naive Self-Cross-Product is the Noncommutative Operator Commutator Curvature:
+       $v \times v = \langle [v_y, v_z], [v_z, v_x], [v_x, v_y] \rangle$.
+    2. Skew-Symmetrized Cross Product Vanishes on Diagonal: $v \times_{\mathrm{skew}} v = 0$.
+    3. Exact Skew-Symmetry over Noncommutative $A$: $u \times_{\mathrm{skew}} v + v \times_{\mathrm{skew}} u = 0$. -/
+theorem opVec3_naive_commutator_curvature_and_skewCross_alternating
+    (u v : OpVec3 A) :
+    OpVec3.naiveCross v v =
+      ⟨v.y * v.z - v.z * v.y, v.z * v.x - v.x * v.z, v.x * v.y - v.y * v.x⟩ ∧
+    OpVec3.skewCross v v = 0 ∧
+    OpVec3.skewCross u v + OpVec3.skewCross v u = 0 := by
+  refine ⟨rfl, ?_, ?_⟩
+  · ext <;> simp [OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [OpVec3.skewCross, OpVec3.naiveCross]
+
+/-- **Operator-Valued Zorn Algebra (`OpZornMatrix A`) over a Noncommutative Ring $A$**. -/
+@[ext]
+structure OpZornMatrix (A : Type*) where
+  a : A
+  v : OpVec3 A
+  w : OpVec3 A
+  b : A
+  deriving DecidableEq
+
+instance : Zero (OpZornMatrix A) := ⟨⟨0, 0, 0, 0⟩⟩
+instance : One (OpZornMatrix A) := ⟨⟨1, 0, 0, 1⟩⟩
+instance : Inhabited (OpZornMatrix A) := ⟨0⟩
+instance : Add (OpZornMatrix A) :=
+  ⟨fun X Y => ⟨X.a + Y.a, X.v + Y.v, X.w + Y.w, X.b + Y.b⟩⟩
+instance : Sub (OpZornMatrix A) :=
+  ⟨fun X Y => ⟨X.a - Y.a, X.v - Y.v, X.w - Y.w, X.b - Y.b⟩⟩
+instance : Neg (OpZornMatrix A) :=
+  ⟨fun X => ⟨-X.a, -X.v, -X.w, -X.b⟩⟩
+
+/-- Noncommutative bimodule Zorn multiplication over `[Ring A]`. -/
+instance : Mul (OpZornMatrix A) :=
+  ⟨fun X Y =>
+    { a := X.a * Y.a - OpVec3.dot X.v Y.w
+      v := OpVec3.leftScale X.a Y.v + OpVec3.rightScale X.v Y.b - OpVec3.skewCross X.w Y.w
+      w := OpVec3.rightScale X.w Y.a + OpVec3.leftScale X.b Y.w + OpVec3.skewCross X.v Y.v
+      b := -OpVec3.dot X.w Y.v + X.b * Y.b }⟩
+
+namespace OpZornMatrix
+
+@[simp] lemma zero_a : (0 : OpZornMatrix A).a = 0 := rfl
+@[simp] lemma zero_v : (0 : OpZornMatrix A).v = 0 := rfl
+@[simp] lemma zero_w : (0 : OpZornMatrix A).w = 0 := rfl
+@[simp] lemma zero_b : (0 : OpZornMatrix A).b = 0 := rfl
+@[simp] lemma one_a : (1 : OpZornMatrix A).a = 1 := rfl
+@[simp] lemma one_v : (1 : OpZornMatrix A).v = 0 := rfl
+@[simp] lemma one_w : (1 : OpZornMatrix A).w = 0 := rfl
+@[simp] lemma one_b : (1 : OpZornMatrix A).b = 1 := rfl
+@[simp] lemma add_a (X Y : OpZornMatrix A) : (X + Y).a = X.a + Y.a := rfl
+@[simp] lemma add_v (X Y : OpZornMatrix A) : (X + Y).v = X.v + Y.v := rfl
+@[simp] lemma add_w (X Y : OpZornMatrix A) : (X + Y).w = X.w + Y.w := rfl
+@[simp] lemma add_b (X Y : OpZornMatrix A) : (X + Y).b = X.b + Y.b := rfl
+@[simp] lemma sub_a (X Y : OpZornMatrix A) : (X - Y).a = X.a - Y.a := rfl
+@[simp] lemma sub_v (X Y : OpZornMatrix A) : (X - Y).v = X.v - Y.v := rfl
+@[simp] lemma sub_w (X Y : OpZornMatrix A) : (X - Y).w = X.w - Y.w := rfl
+@[simp] lemma sub_b (X Y : OpZornMatrix A) : (X - Y).b = X.b - Y.b := rfl
+@[simp] lemma neg_a (X : OpZornMatrix A) : (-X).a = -X.a := rfl
+@[simp] lemma neg_v (X : OpZornMatrix A) : (-X).v = -X.v := rfl
+@[simp] lemma neg_w (X : OpZornMatrix A) : (-X).w = -X.w := rfl
+@[simp] lemma neg_b (X : OpZornMatrix A) : (-X).b = -X.b := rfl
+@[simp] lemma mul_a (X Y : OpZornMatrix A) :
+    (X * Y).a = X.a * Y.a - OpVec3.dot X.v Y.w := rfl
+@[simp] lemma mul_v (X Y : OpZornMatrix A) :
+    (X * Y).v = OpVec3.leftScale X.a Y.v + OpVec3.rightScale X.v Y.b - OpVec3.skewCross X.w Y.w := rfl
+@[simp] lemma mul_w (X Y : OpZornMatrix A) :
+    (X * Y).w = OpVec3.rightScale X.w Y.a + OpVec3.leftScale X.b Y.w + OpVec3.skewCross X.v Y.v := rfl
+@[simp] lemma mul_b (X Y : OpZornMatrix A) :
+    (X * Y).b = -OpVec3.dot X.w Y.v + X.b * Y.b := rfl
+
+end OpZornMatrix
+
+/-- Trilinear associator $[X, Y, Z] = (X Y) Z - X (Y Z)$ in $\mathrm{Zorn}(A)$. -/
+def opAssociator (X Y Z : OpZornMatrix A) : OpZornMatrix A :=
+  (X * Y) * Z - X * (Y * Z)
+
+/-- Grading involution $\Gamma = \langle 1, 0, 0, -1 \rangle \in \mathrm{Zorn}(A)$. -/
+def opZornGamma : OpZornMatrix A := ⟨1, 0, 0, -1⟩
+
+/-- Odd Kasparov–Zorn operator $J(v, w) = \langle 0, v, w, 0 \rangle \in \mathrm{Zorn}(A)$. -/
+def opKasparovZornJ (v w : OpVec3 A) : OpZornMatrix A := ⟨0, v, w, 0⟩
+
+/-- Diagonal operator torus $D(\lambda, \mu) = \langle \lambda, 0, 0, \mu \rangle \in \mathrm{Zorn}(A)$. -/
+def opCartanDiag (lam mu : A) : OpZornMatrix A := ⟨lam, 0, 0, mu⟩
+
+/-- Upper and lower parabolic unipotent operators $U_+(v), U_-(w) \in \mathrm{Zorn}(A)$. -/
+def opUnipotentUpper (v : OpVec3 A) : OpZornMatrix A := ⟨1, v, 0, 1⟩
+def opUnipotentLower (w : OpVec3 A) : OpZornMatrix A := ⟨1, 0, w, 1⟩
+
+/-- **28. Operator-Valued Kasparov–Zorn Odd Square, Unipotent 2-Cocycle, & Bruhat Associativity (Archetype XXIV)**:
+    Over ANY noncommutative operator ring $A$, for all $v, w, v_1, v_2 \in A^3$, $\lambda, \mu, \lambda_1, \mu_1, \lambda_2, \mu_2 \in A$, and $X \in \mathrm{Zorn}(A)$:
+    1. Odd Kasparov Grading Anticommutation: $\Gamma J(v, w) + J(v, w) \Gamma = 0$.
+    2. Noncommutative Kasparov–Zorn Square: $J(v, w)^2 = \langle -(v \cdot w), 0, 0, -(w \cdot v) \rangle$.
+    3. Operator Unipotent Multiplication: $U_+(v_1) U_+(v_2) = \langle 1, v_1 + v_2, v_1 \times_{\mathrm{skew}} v_2, 1 \rangle$.
+    4. Two-Sided Cartan Bimodule Associativity: $[D(\lambda_1, \mu_1), X, D(\lambda_2, \mu_2)] = 0$.
+    5. Noncommutative Gauss–Bruhat Trifactor Associativity: $[U_-(w), D(\lambda, \mu), U_+(v)] = 0$. -/
+theorem opZorn_kasparov_square_unipotent_and_bruhat_assoc
+    (v w v₁ v₂ : OpVec3 A) (lam mu lam₁ mu₁ lam₂ mu₂ : A) (X : OpZornMatrix A) :
+    let J := opKasparovZornJ v w
+    opZornGamma * J + J * opZornGamma = 0 ∧
+    J * J = ⟨-OpVec3.dot v w, 0, 0, -OpVec3.dot w v⟩ ∧
+    opUnipotentUpper v₁ * opUnipotentUpper v₂ =
+      ⟨1, v₁ + v₂, OpVec3.skewCross v₁ v₂, 1⟩ ∧
+    opAssociator (opCartanDiag lam₁ mu₁) X (opCartanDiag lam₂ mu₂) = 0 ∧
+    opAssociator (opUnipotentLower w) (opCartanDiag lam mu) (opUnipotentUpper v) = 0 := by
+  intro J
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [J, opZornGamma, opKasparovZornJ, opUnipotentUpper, opUnipotentLower,
+          opCartanDiag, opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    (try noncomm_ring); (try abel)))
+
+/-- Canonical first basis vector $e_1(c) = \langle c, 0, 0 \rangle \in A^3$. -/
+def opBasisE1 (c : A) : OpVec3 A := ⟨c, 0, 0⟩
+
+@[simp] lemma opBasisE1_x (c : A) : (opBasisE1 c).x = c := rfl
+@[simp] lemma opBasisE1_y (c : A) : (opBasisE1 c).y = 0 := rfl
+@[simp] lemma opBasisE1_z (c : A) : (opBasisE1 c).z = 0 := rfl
+
+/-- Canonical noncommutative slice embedding $\Phi_{e_1, -e_1} : M_2(A) \hookrightarrow \mathrm{OpZornMatrix}\;A$. -/
+def opCanonicalMatEmbed (X : Matrix (Fin 2) (Fin 2) A) : OpZornMatrix A :=
+  ⟨X 0 0, opBasisE1 (X 0 1), opBasisE1 (-X 1 0), X 1 1⟩
+
+@[simp] lemma opCanonicalMatEmbed_a (X : Matrix (Fin 2) (Fin 2) A) :
+    (opCanonicalMatEmbed X).a = X 0 0 := rfl
+@[simp] lemma opCanonicalMatEmbed_v (X : Matrix (Fin 2) (Fin 2) A) :
+    (opCanonicalMatEmbed X).v = opBasisE1 (X 0 1) := rfl
+@[simp] lemma opCanonicalMatEmbed_w (X : Matrix (Fin 2) (Fin 2) A) :
+    (opCanonicalMatEmbed X).w = opBasisE1 (-X 1 0) := rfl
+@[simp] lemma opCanonicalMatEmbed_b (X : Matrix (Fin 2) (Fin 2) A) :
+    (opCanonicalMatEmbed X).b = X 1 1 := rfl
+
+/-- Componentwise star involution on `OpVec3 A` over a noncommutative $*$-ring $A$. -/
+def opVec3Star [StarRing A] (u : OpVec3 A) : OpVec3 A :=
+  ⟨star u.x, star u.y, star u.z⟩
+
+@[simp] lemma opVec3Star_x [StarRing A] (u : OpVec3 A) : (opVec3Star u).x = star u.x := rfl
+@[simp] lemma opVec3Star_y [StarRing A] (u : OpVec3 A) : (opVec3Star u).y = star u.y := rfl
+@[simp] lemma opVec3Star_z [StarRing A] (u : OpVec3 A) : (opVec3Star u).z = star u.z := rfl
+
+/-- **8D Indefinite Krein Adjoint (`opZornKreinAdjoint X`) on `OpZornMatrix A`**:
+    $\langle a, v, w, b \rangle^\flat = \langle a^\star, w^\star, v^\star, b^\star \rangle$. -/
+def opZornKreinAdjoint [StarRing A] (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨star X.a, opVec3Star X.w, opVec3Star X.v, star X.b⟩
+
+@[simp] lemma opZornKreinAdjoint_a [StarRing A] (X : OpZornMatrix A) :
+    (opZornKreinAdjoint X).a = star X.a := rfl
+@[simp] lemma opZornKreinAdjoint_v [StarRing A] (X : OpZornMatrix A) :
+    (opZornKreinAdjoint X).v = opVec3Star X.w := rfl
+@[simp] lemma opZornKreinAdjoint_w [StarRing A] (X : OpZornMatrix A) :
+    (opZornKreinAdjoint X).w = opVec3Star X.v := rfl
+@[simp] lemma opZornKreinAdjoint_b [StarRing A] (X : OpZornMatrix A) :
+    (opZornKreinAdjoint X).b = star X.b := rfl
+
+/-- **29. 8D Noncommutative Krein Anti-Involution & $M_2(A) \hookrightarrow \mathrm{Zorn}(A)$ $*$-Homomorphism (Archetype XXV)**:
+    Over ANY noncommutative $*$-ring $A$ (`[Ring A] [StarRing A]`), for all $X, Y \in \mathrm{OpZornMatrix}\;A$
+    and $M, N \in M_2(A)$:
+    1. Period-2 & Grading Self-Adjointness: $(X^\flat)^\flat = X$ and $\Gamma^\flat = \Gamma$.
+    2. Exact 8D Multiplicative Anti-Homomorphism: $(X * Y)^\flat = Y^\flat * X^\flat$.
+    3. Noncommutative Slice Multiplicativity:
+       $\Phi_{e_1, -e_1}(M * N) = \Phi_{e_1, -e_1}(M) * \Phi_{e_1, -e_1}(N)$.
+    4. Krein Adjoint Intertwining:
+       $(\Phi_{e_1, -e_1}(M))^\flat = \Phi_{e_1, -e_1}(\mathrm{kreinAdjoint}\;M)$. -/
+theorem opZornKreinAdjoint_and_slice_star_homomorphism [StarRing A]
+    (X Y : OpZornMatrix A) (M N : Matrix (Fin 2) (Fin 2) A) :
+    opZornKreinAdjoint (opZornKreinAdjoint X) = X ∧
+    opZornKreinAdjoint (opZornGamma : OpZornMatrix A) = opZornGamma ∧
+    opZornKreinAdjoint (X * Y) = opZornKreinAdjoint Y * opZornKreinAdjoint X ∧
+    opCanonicalMatEmbed (M * N) = opCanonicalMatEmbed M * opCanonicalMatEmbed N ∧
+    opZornKreinAdjoint (opCanonicalMatEmbed M) = opCanonicalMatEmbed (kreinAdjoint M) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp
+  · ext <;> simp [opZornGamma]
+  · ext <;>
+    (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+           star_add, star_sub, star_mul, star_neg];
+     try abel)
+  · ext <;>
+    (simp [Matrix.mul_apply, Fin.sum_univ_two,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  · ext <;> simp [kreinAdjoint]
+
+/-- The 8D Kasparov–Zorn curvature defect $D_J(v, w) = 1 + J(v, w)^2 = \langle 1 - v \cdot w, 0, 0, 1 - w \cdot v \rangle$. -/
+def opKasparovZornDefect (v w : OpVec3 A) : OpZornMatrix A :=
+  1 + opKasparovZornJ v w * opKasparovZornJ v w
+
+/-- **30. Kasparov–Zorn Self-Associator Bimodule Defect & Single-Channel Fedosov Law (Archetype XXVI)**:
+    Over ANY noncommutative ring $A$, for all $v, w \in A^3$ and $u, q \in A$:
+    1. Exact Self-Associator Bimodule Defect:
+       $[J(v, w), J(v, w), J(v, w)] =
+        \langle 0, v \cdot_R (w \cdot v) - (v \cdot w) \cdot_L v, w \cdot_R (v \cdot w) - (w \cdot v) \cdot_L w, 0 \rangle$.
+    2. Defect-Generator Commutator:
+       $D_J(v, w) * J(v, w) - J(v, w) * D_J(v, w) = [J(v, w), J(v, w), J(v, w)]$.
+    3. Single-Channel Noncommutative Fedosov Associativity:
+       For $v = \langle u, 0, 0 \rangle$ and $w = \langle q, 0, 0 \rangle$,
+       $[J(v, w), J(v, w), J(v, w)] = 0$ and $D_J(v, w) * J(v, w) = J(v, w) * D_J(v, w)$. -/
+theorem opKasparovZornJ_self_associator_and_fedosov_intertwining
+    (v w : OpVec3 A) (u q : A) :
+    let J := opKasparovZornJ v w
+    let D_J := opKasparovZornDefect v w
+    let J₁ := opKasparovZornJ (opBasisE1 u) (opBasisE1 q)
+    let D₁ := opKasparovZornDefect (opBasisE1 u) (opBasisE1 q)
+    opAssociator J J J =
+      ⟨0,
+       OpVec3.rightScale v (OpVec3.dot w v) - OpVec3.leftScale (OpVec3.dot v w) v,
+       OpVec3.rightScale w (OpVec3.dot v w) - OpVec3.leftScale (OpVec3.dot w v) w,
+       0⟩ ∧
+    D_J * J - J * D_J = opAssociator J J J ∧
+    opAssociator J₁ J₁ J₁ = 0 ∧
+    D₁ * J₁ = J₁ * D₁ := by
+  intro J D_J J₁ D₁
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [J, D_J, J₁, D₁, opAssociator, opKasparovZornJ, opKasparovZornDefect,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- Operator-valued Gauss–Bruhat trifactor flow $(U_-(w) * D(\lambda, \mu)) * U_+(v) \in \mathrm{OpZornMatrix}\;A$. -/
+def opBruhatTrifactor (w : OpVec3 A) (lam mu : A) (v : OpVec3 A) : OpZornMatrix A :=
+  (opUnipotentLower w * opCartanDiag lam mu) * opUnipotentUpper v
+
+/-- Reverse-order Banachiewicz–Bruhat inverse trifactor $(U_+(-v) * D(\lambda^{-1}, \mu^{-1})) * U_-(-w) \in \mathrm{OpZornMatrix}\;A$. -/
+def opBruhatTrifactorInv (w : OpVec3 A) (invLam invMu : A) (v : OpVec3 A) : OpZornMatrix A :=
+  (opUnipotentUpper (-v) * opCartanDiag invLam invMu) * opUnipotentLower (-w)
+
+/-- **31. Noncommutative Parabolic Inversion, Bruhat Coordinates, & Schur Reconstruction (Archetype XXVII)**:
+    Over ANY noncommutative operator ring $A$, for all $w, v \in A^3$, $\lambda, \mu, b \in A$,
+    and any invertible operator $u \in A^\times$ (`u : Aˣ`):
+    1. Exact Parabolic Unipotent Inverses:
+       $U_+(v) * U_+(-v) = 1$ and $U_-(w) * U_-(-w) = 1$.
+    2. Explicit Noncommutative Bimodule Bruhat Coordinates:
+       $\mathrm{opBruhatTrifactor}\;w\;\lambda\;\mu\;v =
+        \langle \lambda,\; \lambda \cdot_L v,\; w \cdot_R \lambda,\; \mu - (w \cdot_R \lambda) \cdot v \rangle$.
+    3. Universal Noncommutative Schur Complement Reconstruction (`u : Aˣ`):
+       $\mathrm{opBruhatTrifactor}\;(w \cdot_R u^{-1})\;u\;(b + w \cdot (u^{-1} \cdot_L v))\;(u^{-1} \cdot_L v) = \langle u, v, w, b \rangle$. -/
+theorem opBruhatTrifactor_coords_and_operator_schur_reconstruction
+    (w v : OpVec3 A) (lam mu b : A) (u : Aˣ) :
+    opUnipotentUpper v * opUnipotentUpper (-v) = 1 ∧
+    opUnipotentLower w * opUnipotentLower (-w) = 1 ∧
+    opBruhatTrifactor w lam mu v =
+      ⟨lam,
+       OpVec3.leftScale lam v,
+       OpVec3.rightScale w lam,
+       mu - OpVec3.dot (OpVec3.rightScale w lam) v⟩ ∧
+    opBruhatTrifactor (OpVec3.rightScale w (↑u⁻¹ : A)) (u : A)
+      (b + OpVec3.dot w (OpVec3.leftScale (↑u⁻¹ : A) v))
+      (OpVec3.leftScale (↑u⁻¹ : A) v) =
+      ⟨(u : A), v, w, b⟩ := by
+  have h_coords : ∀ w' : OpVec3 A, ∀ l m : A, ∀ v' : OpVec3 A,
+      opBruhatTrifactor w' l m v' =
+        ⟨l, OpVec3.leftScale l v', OpVec3.rightScale w' l,
+         m - OpVec3.dot (OpVec3.rightScale w' l) v'⟩ := by
+    intro w' l m v'; ext <;>
+    (simp [opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  have h_v : OpVec3.leftScale (u : A) (OpVec3.leftScale (↑u⁻¹ : A) v) = v := by
+    ext <;> simp [OpVec3.leftScale, ← mul_assoc, Units.mul_inv]
+  have h_w : OpVec3.rightScale (OpVec3.rightScale w (↑u⁻¹ : A)) (u : A) = w := by
+    ext <;> simp [OpVec3.rightScale, mul_assoc, Units.inv_mul]
+  refine ⟨?_, ?_, h_coords w lam mu v, ?_⟩
+  · ext <;>
+    (simp [opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [opUnipotentLower, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [h_coords, h_v, h_w, add_sub_cancel_right]
+
+/-- **32. Reverse-Order Banachiewicz–Bruhat Coordinates & Exact Two-Sided Inversion (Archetype XXVIII)**:
+    Over ANY noncommutative operator ring $A$, for all $w, v \in A^3$, $\tilde{\lambda}, \tilde{\mu}, p, q \in A$,
+    and any invertible operators $u, \Delta \in A^\times$ (`u Δ : Aˣ`):
+    1. Explicit Reverse-Order Inverse Trifactor Coordinates:
+       $\mathrm{opBruhatTrifactorInv}\;w\;\tilde{\lambda}\;\tilde{\mu}\;v =
+        \langle \tilde{\lambda} - (v \cdot_R \tilde{\mu}) \cdot w,\; -v \cdot_R \tilde{\mu},\; -\tilde{\mu} \cdot_L w,\; \tilde{\mu} \rangle$.
+    2. Exact Two-Sided Cartan Diagonal Inversion in $\mathrm{OpZornMatrix}\;A$:
+       $D(u, \Delta) * D(u^{-1}, \Delta^{-1}) = 1$ and $D(u^{-1}, \Delta^{-1}) * D(u, \Delta) = 1$.
+    3. Exact Single-Channel Two-Sided Banachiewicz–Bruhat Inversion in $\mathrm{OpZornMatrix}\;A$:
+       For $w_1 = e_1(p)$ and $v_1 = e_1(q)$,
+       $\mathrm{opBruhatTrifactor}\;w_1\;u\;\Delta\;v_1 * \mathrm{opBruhatTrifactorInv}\;w_1\;u^{-1}\;\Delta^{-1}\;v_1 = 1$ and
+       $\mathrm{opBruhatTrifactorInv}\;w_1\;u^{-1}\;\Delta^{-1}\;v_1 * \mathrm{opBruhatTrifactor}\;w_1\;u\;\Delta\;v_1 = 1$. -/
+theorem opBruhatTrifactorInv_coords_and_cartan_inversion
+    (w v : OpVec3 A) (invLam invMu p q : A) (u Δ : Aˣ) :
+    let w₁ := opBasisE1 p
+    let v₁ := opBasisE1 q
+    opBruhatTrifactorInv w invLam invMu v =
+      ⟨invLam - OpVec3.dot (OpVec3.rightScale v invMu) w,
+       -OpVec3.rightScale v invMu,
+       -OpVec3.leftScale invMu w,
+       invMu⟩ ∧
+    opCartanDiag (u : A) (Δ : A) * opCartanDiag (↑u⁻¹ : A) (↑Δ⁻¹ : A) = 1 ∧
+    opCartanDiag (↑u⁻¹ : A) (↑Δ⁻¹ : A) * opCartanDiag (u : A) (Δ : A) = 1 ∧
+    opBruhatTrifactor w₁ (u : A) (Δ : A) v₁ *
+      opBruhatTrifactorInv w₁ (↑u⁻¹ : A) (↑Δ⁻¹ : A) v₁ = 1 ∧
+    opBruhatTrifactorInv w₁ (↑u⁻¹ : A) (↑Δ⁻¹ : A) v₁ *
+      opBruhatTrifactor w₁ (u : A) (Δ : A) v₁ = 1 := by
+  intro w₁ v₁
+  have hu_r : (u : A) * (↑u⁻¹ : A) = 1 := Units.mul_inv u
+  have hu_l : (↑u⁻¹ : A) * (u : A) = 1 := Units.inv_mul u
+  have hD_r : (Δ : A) * (↑Δ⁻¹ : A) = 1 := Units.mul_inv Δ
+  have hD_l : (↑Δ⁻¹ : A) * (Δ : A) = 1 := Units.inv_mul Δ
+  have hu_l_assoc : ∀ x : A, (↑u⁻¹ : A) * ((u : A) * x) = x := fun x => by
+    rw [← mul_assoc, hu_l, one_mul]
+  have hD_r_assoc : ∀ x : A, (Δ : A) * ((↑Δ⁻¹ : A) * x) = x := fun x => by
+    rw [← mul_assoc, hD_r, one_mul]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [opBruhatTrifactorInv, opUnipotentUpper, opCartanDiag, opUnipotentLower,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    simp [opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;>
+    simp [opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;>
+    (simp [w₁, v₁, opBruhatTrifactor, opBruhatTrifactorInv,
+           opUnipotentUpper, opCartanDiag, opUnipotentLower,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try (simp only [sub_eq_add_neg, mul_add, add_mul, mul_neg, neg_mul, neg_add_rev, neg_neg,
+                     mul_assoc, hu_r, hD_r, hD_r_assoc, mul_one];
+          abel))
+  · ext <;>
+    (simp [w₁, v₁, opBruhatTrifactor, opBruhatTrifactorInv,
+           opUnipotentUpper, opCartanDiag, opUnipotentLower,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try (simp only [sub_eq_add_neg, mul_add, add_mul, mul_neg, neg_mul, neg_add_rev, neg_neg,
+                     mul_assoc, hu_l, hD_l, hu_l_assoc, mul_one];
+          abel))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

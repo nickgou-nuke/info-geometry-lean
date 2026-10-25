@@ -2769,14 +2769,12 @@ theorem zornTracelessFlowGen_casimir_onshell_and_klein_gordon
             mul, smul, ZornVec3.dot]; ring
   · rw [h_sq 0 v (-v)]
     ext
-    · simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def,
-            smul, neg, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · simp [one, InfoGeometry.Algebra.zvm_smul_def, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
     · rename_i i; fin_cases i <;>
         simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def, smul, neg]
     · rename_i i; fin_cases i <;>
         simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def, smul, neg]
-    · simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def,
-            smul, neg, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · simp [one, InfoGeometry.Algebra.zvm_smul_def, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
 
 /-- **7. Exponential Diquark 2-Cocycle & Jackiw–WZW Nambu 3-Cocycle**:
     For any upper nilpotent exponentials `U_i = zornExpUpperNil v_i` and lower nilpotent exponentials
@@ -3009,5 +3007,551 @@ theorem zornWaveletOp_vorticity_and_wzw_three_cocycle
              add, mul, ZornVec3.cross]; try ring)
   · simp [zornWaveletOp, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
           add, mul, ZornVec3.dot]
+
+/-! ### 8D Two-Sided Loxodromic Twin-Wave Kernel, Moving Projectors, & Weak-Value Syzygy -/
+
+/-- **General 6D Off-Diagonal Wheel Generator (`zornOffDiagWheel v w = ⟨0, v, w, 0⟩`)**
+    in `ZornVectorMatrix R`. -/
+def zornOffDiagWheel (v w : ZornVec3 R) : ZornVectorMatrix R := ⟨0, v, w, 0⟩
+
+/-- **8D Split-Octonion Fourier–Phase Rotor (`zornFourierRotor c s v w = c • 1 + s • J(v, w)`)**. -/
+def zornFourierRotor (c s : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨c, fun i => s * v i, fun i => s * w i, c⟩
+
+/-- **8D Forward Loxodromic Kernel (`K_lox(λ, μ, c, s, v, w) = D(λ, μ) * R(c, s, v, w)`)**. -/
+noncomputable def zornLoxodromicKernel (lam mu c s : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  zornHyperbolicKernel lam mu * zornFourierRotor c s v w
+
+/-- **8D Twin Loxodromic Kernel (`K_twin(c, s, invLam, invMu, v, w) = R(c, -s, v, w) * D(invLam, invMu)`)**. -/
+noncomputable def zornLoxodromicTwinKernel (c s invLam invMu : R) (v w : ZornVec3 R) :
+    ZornVectorMatrix R :=
+  zornFourierRotor c (-s) v w * zornHyperbolicKernel invLam invMu
+
+/-- **8D Moving Loxodromic Positive-Chiral Projector (`(K_lox * E11) * K_twin`)**. -/
+noncomputable def zornMovingLoxodromicPlus (lam mu invLam invMu c s : R) (v w : ZornVec3 R) :
+    ZornVectorMatrix R :=
+  (zornLoxodromicKernel lam mu c s v w * E11) * zornLoxodromicTwinKernel c s invLam invMu v w
+
+/-- **8D Moving Loxodromic Negative-Chiral Projector (`(K_lox * E22) * K_twin`)**. -/
+noncomputable def zornMovingLoxodromicMinus (lam mu invLam invMu c s : R) (v w : ZornVec3 R) :
+    ZornVectorMatrix R :=
+  (zornLoxodromicKernel lam mu c s v w * E22) * zornLoxodromicTwinKernel c s invLam invMu v w
+
+/-- **8D Tilted Off-Diagonal Velocity Observable (`⟨0, ratio₁ • v, -ratio₂ • w, 0⟩`)**. -/
+def zornTiltedVelocity (ratio₁ ratio₂ : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, fun i => ratio₁ * v i, fun i => -(ratio₂ * w i), 0⟩
+
+/-- **11. 8D Off-Diagonal Wheel Square, Chiral Anticommutation, & Fourier Rotor Norm**:
+    Because `v × v = 0` and `w × w = 0`, the off-diagonal wheel `J(v, w) = ⟨0, v, w, 0⟩`
+    squares to `(v ⋅ w) • 1`, anticommutes with `Γ = ⟨1, 0, 0, -1⟩`, and the 8D Fourier rotor
+    satisfies `R(c, s, v, w) * R(c, -s, v, w) = (c² - s² (v ⋅ w)) • 1`! -/
+theorem zornOffDiagWheel_sq_anticomm_and_fourierRotor_inv
+    (c s : R) (v w : ZornVec3 R) :
+    zornOffDiagWheel v w * zornOffDiagWheel v w =
+      (ZornVec3.dot v w) • (one : ZornVectorMatrix R) ∧
+    zornGamma * zornOffDiagWheel v w + zornOffDiagWheel v w * zornGamma = 0 ∧
+    zornFourierRotor c s v w * zornFourierRotor c (-s) v w =
+      (c * c - s * s * ZornVec3.dot v w) • (one : ZornVectorMatrix R) := by
+  refine ⟨?_, ?_, ?_⟩
+  · ext
+    · simp [zornOffDiagWheel, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [zornOffDiagWheel, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornOffDiagWheel, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornOffDiagWheel, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · ext
+    · simp [zornOffDiagWheel, zornGamma, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, mul, zero, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornOffDiagWheel, zornGamma, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, mul, zero, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornOffDiagWheel, zornGamma, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, mul, zero, ZornVec3.cross]; try ring)
+    · simp [zornOffDiagWheel, zornGamma, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, mul, zero, ZornVec3.dot]
+  · ext
+    · simp [zornFourierRotor, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornFourierRotor, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornFourierRotor, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornFourierRotor, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **12. Two-Sided Cartan Sandwich Associativity & Chiral Grading Reversal**:
+    - Any two diagonal Cartan kernels `D(λ₁, μ₁)` and `D(λ₂, μ₂)` associate identically across
+      any 8D split-octonion `X : ZornVectorMatrix R`: `[D(λ₁, μ₁), X, D(λ₂, μ₂)] = 0`.
+    - Conjugating `K_lox(λ, μ, c, s, v, w)` by `Γ = ⟨1, 0, 0, -1⟩` reverses the Fourier phase
+      `s ↦ -s` without associative defect! -/
+theorem zornCartan_sandwich_assoc_and_loxodromic_grading
+    (lam₁ mu₁ lam₂ mu₂ lam mu c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    zornAssociator (zornHyperbolicKernel lam₁ mu₁) X (zornHyperbolicKernel lam₂ mu₂) = 0 ∧
+    (zornGamma * zornLoxodromicKernel lam mu c s v w) * zornGamma =
+      zornLoxodromicKernel lam mu c (-s) v w ∧
+    zornGamma * (zornLoxodromicKernel lam mu c s v w * zornGamma) =
+      zornLoxodromicKernel lam mu c (-s) v w := by
+  refine ⟨?_, ?_, ?_⟩
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.dot]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.dot]; try ring
+  · ext
+    · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]; try ring
+  · ext
+    · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor, zornGamma,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]; try ring
+
+/-- **13. 8D Loxodromic Coordinates, Factored Casimir Norm, & Twin-Kernel Synthesis**:
+    - `K_lox(λ, μ, c, s, v, w) = ⟨λ c, (λ s) • v, (μ s) • w, μ c⟩`.
+    - `K_twin(c, s, invLam, invMu, v, w) = ⟨c * invLam, (-invMu * s) • v, (-invLam * s) • w, c * invMu⟩`.
+    - `norm (K_lox) = (λ * μ) * (c² - s² (v ⋅ w))`.
+    - `K_lox * K_twin = (c² - s² (v ⋅ w)) • D(λ * invLam, μ * invMu)`! -/
+theorem zornLoxodromicKernel_coords_casimir_and_twin_mul
+    (lam mu invLam invMu c s : R) (v w : ZornVec3 R) :
+    zornLoxodromicKernel lam mu c s v w =
+      ⟨lam * c, fun i => (lam * s) * v i, fun i => (mu * s) * w i, mu * c⟩ ∧
+    zornLoxodromicTwinKernel c s invLam invMu v w =
+      ⟨c * invLam, fun i => -(invMu * s * v i), fun i => -(invLam * s * w i), c * invMu⟩ ∧
+    norm (zornLoxodromicKernel lam mu c s v w) =
+      (lam * mu) * (c * c - s * s * ZornVec3.dot v w) ∧
+    zornLoxodromicKernel lam mu c s v w * zornLoxodromicTwinKernel c s invLam invMu v w =
+      (c * c - s * s * ZornVec3.dot v w) •
+        zornHyperbolicKernel (lam * invLam) (mu * invMu) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · ext
+    · simp [zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · simp [zornLoxodromicKernel, zornHyperbolicKernel, zornFourierRotor,
+          InfoGeometry.Algebra.zvm_mul_def, mul, norm, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · ext
+    · simp [zornLoxodromicKernel, zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornLoxodromicKernel, zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornLoxodromicKernel, zornLoxodromicTwinKernel, zornHyperbolicKernel, zornFourierRotor,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **14. Two-Sided Unit Loxodromic Inversion (`u, m : Rˣ`)**:
+    When `lam = u`, `mu = m`, `invLam = u⁻¹`, `invMu = m⁻¹` for `u, m : Rˣ`, both
+    `K_lox * K_twin` and `K_twin * K_lox` collapse to the pure scalar multiple
+    `(c² - s² (v ⋅ w)) • 1`! -/
+theorem zornLoxodromicKernel_twin_unit_inversion
+    (u m : Rˣ) (c s : R) (v w : ZornVec3 R) :
+    zornLoxodromicKernel (u : R) (m : R) c s v w *
+      zornLoxodromicTwinKernel c s (↑u⁻¹ : R) (↑m⁻¹ : R) v w =
+        (c * c - s * s * ZornVec3.dot v w) • (one : ZornVectorMatrix R) ∧
+    zornLoxodromicTwinKernel c s (↑u⁻¹ : R) (↑m⁻¹ : R) v w *
+      zornLoxodromicKernel (u : R) (m : R) c s v w =
+        (c * c - s * s * ZornVec3.dot v w) • (one : ZornVectorMatrix R) := by
+  have hu : (u : R) * (↑u⁻¹ : R) = 1 := Units.mul_inv u
+  have hm : (m : R) * (↑m⁻¹ : R) = 1 := Units.mul_inv m
+  have hc := zornLoxodromicKernel_coords_casimir_and_twin_mul (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w
+  refine ⟨?_, ?_⟩
+  · rw [hc.2.2.2, hu, hm]
+    rfl
+  · rw [hc.1, hc.2.1]
+    ext
+    · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             mul, smul, one, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination (c * c) * hu - (s * s * (v 0 * w 0 + v 1 * w 1 + v 2 * w 2)) * hm
+    · rename_i i; fin_cases i
+      · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, one, ZornVec3.cross]
+        linear_combination (c * s * v 0) * hu - (c * s * v 0) * hm
+      · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, one, ZornVec3.cross]
+        linear_combination (c * s * v 1) * hu - (c * s * v 1) * hm
+      · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, one, ZornVec3.cross]
+        linear_combination (c * s * v 2) * hu - (c * s * v 2) * hm
+    · rename_i i; fin_cases i
+      · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, one, ZornVec3.cross]
+        linear_combination (c * s * w 0) * hm - (c * s * w 0) * hu
+      · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, one, ZornVec3.cross]
+        linear_combination (c * s * w 1) * hm - (c * s * w 1) * hu
+      · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, one, ZornVec3.cross]
+        linear_combination (c * s * w 2) * hm - (c * s * w 2) * hu
+    · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             mul, smul, one, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination (c * c) * hm - (s * s * (w 0 * v 0 + w 1 * v 1 + w 2 * v 2)) * hu
+
+/-- **15. 8D Moving Loxodromic Projector Associativity, Coordinates, & Partition of Unity**:
+    - Both `(K_lox, E11, K_twin)` and `(K_lox, E22, K_twin)` have identically vanishing associator.
+    - Explicit coordinates of `P_+^lox` and `P_-^lox`.
+    - `P_+^lox + P_-^lox = (c² - s² (v ⋅ w)) • D(λ * invLam, μ * invMu)`! -/
+theorem zornMovingLoxodromic_assoc_coords_and_sum
+    (lam mu invLam invMu c s : R) (v w : ZornVec3 R) :
+    zornAssociator (zornLoxodromicKernel lam mu c s v w) E11
+      (zornLoxodromicTwinKernel c s invLam invMu v w) = 0 ∧
+    zornAssociator (zornLoxodromicKernel lam mu c s v w) E22
+      (zornLoxodromicTwinKernel c s invLam invMu v w) = 0 ∧
+    zornMovingLoxodromicPlus lam mu invLam invMu c s v w =
+      ⟨lam * invLam * (c * c),
+       fun i => -(lam * invMu * c * s * v i),
+       fun i => (mu * invLam * c * s) * w i,
+       -(mu * invMu * (s * s) * ZornVec3.dot v w)⟩ ∧
+    zornMovingLoxodromicMinus lam mu invLam invMu c s v w =
+      ⟨-(lam * invLam * (s * s) * ZornVec3.dot v w),
+       fun i => (lam * invMu * c * s) * v i,
+       fun i => -(mu * invLam * c * s * w i),
+       mu * invMu * (c * c)⟩ ∧
+    zornMovingLoxodromicPlus lam mu invLam invMu c s v w +
+      zornMovingLoxodromicMinus lam mu invLam invMu c s v w =
+        (c * c - s * s * ZornVec3.dot v w) •
+          zornHyperbolicKernel (lam * invLam) (mu * invMu) := by
+  have hc := zornLoxodromicKernel_coords_casimir_and_twin_mul lam mu invLam invMu c s v w
+  have hp : zornMovingLoxodromicPlus lam mu invLam invMu c s v w =
+      ⟨lam * invLam * (c * c),
+       fun i => -(lam * invMu * c * s * v i),
+       fun i => (mu * invLam * c * s) * w i,
+       -(mu * invMu * (s * s) * ZornVec3.dot v w)⟩ := by
+    unfold zornMovingLoxodromicPlus
+    rw [hc.1, hc.2.1]
+    ext
+    · simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  have hm_coord : zornMovingLoxodromicMinus lam mu invLam invMu c s v w =
+      ⟨-(lam * invLam * (s * s) * ZornVec3.dot v w),
+       fun i => (lam * invMu * c * s) * v i,
+       fun i => -(mu * invLam * c * s * w i),
+       mu * invMu * (c * c)⟩ := by
+    unfold zornMovingLoxodromicMinus
+    rw [hc.1, hc.2.1]
+    ext
+    · simp [E22, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [E22, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E22, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [E22, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]; try ring
+  refine ⟨?_, ?_, hp, hm_coord, ?_⟩
+  · unfold zornAssociator
+    rw [hc.1, hc.2.1]
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [E11, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [E11, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E11, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · simp [E11, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · unfold zornAssociator
+    rw [hc.1, hc.2.1]
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [E22, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [E22, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E22, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · simp [E22, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · rw [hp, hm_coord]
+    ext
+    · simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring)
+    · simp [zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring
+
+/-- **Helper: On-Shell Moving Loxodromic Projector Coordinates (`u, m : Rˣ`)**. -/
+theorem zornMovingLoxodromic_unit_coords
+    (u m : Rˣ) (c s : R) (v w : ZornVec3 R) :
+    zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w =
+      ⟨c * c,
+       fun i => -((u : R) * (↑m⁻¹ : R) * c * s * v i),
+       fun i => ((m : R) * (↑u⁻¹ : R) * c * s) * w i,
+       -(s * s * ZornVec3.dot v w)⟩ ∧
+    zornMovingLoxodromicMinus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w =
+      ⟨-(s * s * ZornVec3.dot v w),
+       fun i => ((u : R) * (↑m⁻¹ : R) * c * s) * v i,
+       fun i => -((m : R) * (↑u⁻¹ : R) * c * s * w i),
+       c * c⟩ := by
+  have hu : (u : R) * (↑u⁻¹ : R) = 1 := Units.mul_inv u
+  have hm : (m : R) * (↑m⁻¹ : R) = 1 := Units.mul_inv m
+  have hc := zornMovingLoxodromic_assoc_coords_and_sum (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w
+  refine ⟨?_, ?_⟩
+  · rw [hc.2.2.1, hu, hm, _root_.one_mul, _root_.one_mul]
+  · rw [hc.2.2.2.1, hu, hm, _root_.one_mul, _root_.one_mul]
+
+/-- **16. Moving Loxodromic Idempotence, Orthogonality, & Boost-Invariant Chordal Metric**:
+    For any `u, m : Rˣ` and `N_vw := c² - s² (v ⋅ w)`:
+    1. `Π_+ + Π_- = N_vw • 1` (Complete resolution of the identity).
+    2. `Π_+ * Π_- = 0` (Exact mutual orthogonality).
+    3. `Π_+ * Π_+ = N_vw • Π_+` (Exact scaled idempotence).
+    4. `(Π_+ - N_vw • E11)² = (-(s² (v ⋅ w)) * N_vw) • 1` (Boost-invariant Fubini–Study chordal
+       distance, completely independent of the hyperbolic scales `(u, m)`)! -/
+theorem zornMovingLoxodromic_idem_orth_and_chordal_metric
+    (u m : Rˣ) (c s : R) (v w : ZornVec3 R) :
+    zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w +
+      zornMovingLoxodromicMinus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w =
+        (c * c - s * s * ZornVec3.dot v w) • (one : ZornVectorMatrix R) ∧
+    zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w *
+      zornMovingLoxodromicMinus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w = 0 ∧
+    zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w *
+      zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w =
+        (c * c - s * s * ZornVec3.dot v w) •
+          zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w ∧
+    (zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w -
+        (c * c - s * s * ZornVec3.dot v w) • E11) *
+      (zornMovingLoxodromicPlus (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w -
+        (c * c - s * s * ZornVec3.dot v w) • E11) =
+        (-(s * s * ZornVec3.dot v w) * (c * c - s * s * ZornVec3.dot v w)) •
+          (one : ZornVectorMatrix R) := by
+  have hu : (u : R) * (↑u⁻¹ : R) = 1 := Units.mul_inv u
+  have hm : (m : R) * (↑m⁻¹ : R) = 1 := Units.mul_inv m
+  have hum : ((u : R) * (↑m⁻¹ : R)) * ((m : R) * (↑u⁻¹ : R)) = 1 := by
+    calc ((u : R) * (↑m⁻¹ : R)) * ((m : R) * (↑u⁻¹ : R))
+      _ = ((u : R) * (↑u⁻¹ : R)) * ((m : R) * (↑m⁻¹ : R)) := by ring
+      _ = (1 : R) * 1 := by rw [hu, hm]
+      _ = 1 := _root_.mul_one (1 : R)
+  have huc := zornMovingLoxodromic_unit_coords u m c s v w
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have hsum := (zornMovingLoxodromic_assoc_coords_and_sum (u : R) (m : R) (↑u⁻¹ : R) (↑m⁻¹ : R) c s v w).2.2.2.2
+    rw [hsum, hu, hm]
+    rfl
+  · rw [huc.1, huc.2]
+    ext
+    · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+             mul, zero, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination (c * c * s * s * (v 0 * w 0 + v 1 * w 1 + v 2 * w 2)) * hum
+    · rename_i i; fin_cases i <;>
+        (dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+                mul, zero, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+                mul, zero, ZornVec3.cross]; ring)
+    · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+             mul, zero, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination (c * c * s * s * (w 0 * v 0 + w 1 * v 1 + w 2 * v 2)) * hum
+  · rw [huc.1]
+    ext
+    · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             mul, smul, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination -(c * c * s * s * (v 0 * w 0 + v 1 * w 1 + v 2 * w 2)) * hum
+    · rename_i i; fin_cases i <;>
+        (dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+                mul, smul, ZornVec3.dot, ZornVec3.cross]; simp only [Fin.sum_univ_three]; ring)
+    · rename_i i; fin_cases i <;>
+        (dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+                mul, smul, ZornVec3.dot, ZornVec3.cross]; simp only [Fin.sum_univ_three]; ring)
+    · dsimp [InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             mul, smul, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination -(c * c * s * s * (w 0 * v 0 + w 1 * v 1 + w 2 * v 2)) * hum
+  · rw [huc.1]
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · dsimp [E11, one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             add, neg, mul, smul, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination -(c * c * s * s * (v 0 * w 0 + v 1 * w 1 + v 2 * w 2)) * hum
+    · rename_i i; fin_cases i <;>
+        (dsimp [E11, one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+                InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+                add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross];
+         simp only [Fin.sum_univ_three]; ring)
+    · rename_i i; fin_cases i <;>
+        (dsimp [E11, one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+                InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+                add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross];
+         simp only [Fin.sum_univ_three]; ring)
+    · dsimp [E11, one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             add, neg, mul, smul, ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      linear_combination -(c * c * s * s * (w 0 * v 0 + w 1 * v 1 + w 2 * v 2)) * hum
+
+/-- **17. 8D Two-State Aharonov Weak-Value Syzygy**:
+    With zero hypotheses on `lam, mu, invLam, invMu, c, s`:
+    1. `E11 * P_+^lox = ⟨λ * invLam * c², -(λ * invMu * c * s) • v, 0, 0⟩`.
+    2. `(E11 * Q(r₁, r₂)) * P_+^lox = ⟨r₁ * μ * invLam * c * s * (v ⋅ w), -(r₁ * μ * invMu * s² * (v ⋅ w)) • v, 0, 0⟩`.
+    3. Both the unscaled tilted velocity `Q(λ, μ)` and the Cartan-ratio tilted velocity
+       `Q(λ * invMu, μ * invLam)` satisfy the division-free Two-State Aharonov Weak-Value
+       operator syzygy with `E11 * P_+^lox`! -/
+theorem zornMovingLoxodromic_two_state_weak_syzygy
+    (lam mu invLam invMu r₁ r₂ c s : R) (v w : ZornVec3 R) :
+    E11 * zornMovingLoxodromicPlus lam mu invLam invMu c s v w =
+      ⟨lam * invLam * (c * c), fun i => -(lam * invMu * c * s * v i), 0, 0⟩ ∧
+    (E11 * zornTiltedVelocity r₁ r₂ v w) *
+      zornMovingLoxodromicPlus lam mu invLam invMu c s v w =
+      ⟨r₁ * mu * invLam * c * s * ZornVec3.dot v w,
+       fun i => -(r₁ * mu * invMu * (s * s) * ZornVec3.dot v w * v i), 0, 0⟩ ∧
+    (mu * s * ZornVec3.dot v w) •
+        (E11 * zornMovingLoxodromicPlus lam mu invLam invMu c s v w) -
+      c • ((E11 * zornTiltedVelocity lam mu v w) *
+        zornMovingLoxodromicPlus lam mu invLam invMu c s v w) = 0 ∧
+    (mu * invMu * s * ZornVec3.dot v w) •
+        (E11 * zornMovingLoxodromicPlus lam mu invLam invMu c s v w) -
+      c • ((E11 * zornTiltedVelocity (lam * invMu) (mu * invLam) v w) *
+        zornMovingLoxodromicPlus lam mu invLam invMu c s v w) = 0 := by
+  have hp := (zornMovingLoxodromic_assoc_coords_and_sum lam mu invLam invMu c s v w).2.2.1
+  have h1 : E11 * zornMovingLoxodromicPlus lam mu invLam invMu c s v w =
+      ⟨lam * invLam * (c * c), fun i => -(lam * invMu * c * s * v i), 0, 0⟩ := by
+    rw [hp]
+    ext
+    · simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [E11, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  have h2 : ∀ q₁ q₂ : R,
+      (E11 * zornTiltedVelocity q₁ q₂ v w) *
+        zornMovingLoxodromicPlus lam mu invLam invMu c s v w =
+        ⟨q₁ * mu * invLam * c * s * ZornVec3.dot v w,
+         fun i => -(q₁ * mu * invMu * (s * s) * ZornVec3.dot v w * v i), 0, 0⟩ := by
+    intro q₁ q₂
+    rw [hp]
+    ext
+    · simp [E11, zornTiltedVelocity, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [E11, zornTiltedVelocity, InfoGeometry.Algebra.zvm_mul_def,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E11, zornTiltedVelocity, InfoGeometry.Algebra.zvm_mul_def,
+               mul, ZornVec3.cross]; try ring)
+    · simp [E11, zornTiltedVelocity, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot]
+  refine ⟨h1, h2 r₁ r₂, ?_, ?_⟩
+  · rw [h1, h2 lam mu]
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, smul, zero]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, smul, zero]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, smul, zero]; try ring)
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, smul, zero]
+  · rw [h1, h2 (lam * invMu) (mu * invLam)]
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, smul, zero]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, smul, zero]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, smul, zero]; try ring)
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, smul, zero]
 
 end InfoGeometry.Algebra.ZornVectorMatrix

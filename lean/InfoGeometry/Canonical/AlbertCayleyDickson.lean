@@ -1728,6 +1728,249 @@ theorem kitaevMajoranaChain_clifford_and_boundary_zero_modes :
       simp [kitaevChainLeftZeroMode, kitaevChainRightZeroMode,
             Matrix.mul_apply, Fin.sum_univ_two]
 
+/-!
+### Archetypes XVII–XX: Cuntz–Majorana Braiding, Noncommutative Gauss–LDU Banachiewicz Inversion, Sylvester–Peirce Derivations, and UHF Inductive Colimits
+-/
+
+/-- First Cuntz partial isometry $S_1 = e_{11} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} \in M_2(A)$. -/
+def cuntzS1 : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, 0]
+
+/-- Second Cuntz partial isometry $S_2 = e_{21} = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix} \in M_2(A)$. -/
+def cuntzS2 : Matrix (Fin 2) (Fin 2) A := !![0, 0; 1, 0]
+
+/-- Adjoint partial isometry $S_2^* = e_{12} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} \in M_2(A)$. -/
+def cuntzS2Star : Matrix (Fin 2) (Fin 2) A := !![0, 1; 0, 0]
+
+/-- Symmetric Majorana partner $\gamma_X = \gamma_A \gamma_B = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \in M_2(A)$. -/
+def majoranaX : Matrix (Fin 2) (Fin 2) A := !![0, 1; 1, 0]
+
+/-- Unnormalized Ivanov–Majorana braid rotor $B_+ = I_2 + \gamma_B = \begin{pmatrix} 1 & 1 \\ -1 & 1 \end{pmatrix} \in M_2(A)$. -/
+def majoranaBraidPlus : Matrix (Fin 2) (Fin 2) A := !![1, 1; -1, 1]
+
+/-- Inverse unnormalized Ivanov–Majorana braid rotor $B_- = I_2 - \gamma_B = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix} \in M_2(A)$. -/
+def majoranaBraidMinus : Matrix (Fin 2) (Fin 2) A := !![1, -1; 1, 1]
+
+/-- **21. Noncommutative Cuntz Partition of Unity & Ivanov–Majorana Braiding Exchange Law**:
+    Over ANY noncommutative ring $A$:
+    1. Cuntz Range Orthogonality & Partition of Unity:
+       $S_1^* S_2 = 0$, $S_2^* S_1 = 0$, and $S_1 S_1^* + S_2 S_2^* = I_2$.
+    2. Majorana Braid Rotor Decomposition & Inversion:
+       $B_+ = I_2 + \gamma_B$, $B_- = I_2 - \gamma_B$, $B_+ B_- = 2 I_2$, and $B_- B_+ = 2 I_2$.
+    3. Exact Ivanov–Majorana Braiding Exchange of $(\gamma_A, \gamma_X)$:
+       $B_+ \gamma_A B_- = -2 \gamma_X$ and $B_+ \gamma_X B_- = 2 \gamma_A$. -/
+theorem cuntz_and_majorana_braid_relations :
+    (cuntzS1 : Matrix (Fin 2) (Fin 2) A) * cuntzS2 = 0 ∧
+    (cuntzS2Star : Matrix (Fin 2) (Fin 2) A) * cuntzS1 = 0 ∧
+    (cuntzS1 : Matrix (Fin 2) (Fin 2) A) * cuntzS1 + cuntzS2 * cuntzS2Star = 1 ∧
+    (majoranaBraidPlus : Matrix (Fin 2) (Fin 2) A) = 1 + majoranaB ∧
+    (majoranaBraidMinus : Matrix (Fin 2) (Fin 2) A) = 1 - majoranaB ∧
+    (majoranaBraidPlus : Matrix (Fin 2) (Fin 2) A) * majoranaBraidMinus = 2 • 1 ∧
+    (majoranaBraidMinus : Matrix (Fin 2) (Fin 2) A) * majoranaBraidPlus = 2 • 1 ∧
+    (majoranaBraidPlus : Matrix (Fin 2) (Fin 2) A) * majoranaA * majoranaBraidMinus =
+      -(2 • majoranaX) ∧
+    (majoranaBraidPlus : Matrix (Fin 2) (Fin 2) A) * majoranaX * majoranaBraidMinus =
+      2 • majoranaA := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [cuntzS1, cuntzS2, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [cuntzS2Star, cuntzS1, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [cuntzS1, cuntzS2, cuntzS2Star]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [majoranaBraidPlus, majoranaB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [majoranaBraidMinus, majoranaB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [majoranaBraidPlus, majoranaBraidMinus, Matrix.mul_apply, Fin.sum_univ_two, two_smul];
+       try noncomm_ring)
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [majoranaBraidPlus, majoranaBraidMinus, Matrix.mul_apply, Fin.sum_univ_two, two_smul];
+       try noncomm_ring)
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [majoranaBraidPlus, majoranaBraidMinus, majoranaA, majoranaX,
+             Matrix.mul_apply, Fin.sum_univ_two, two_smul];
+       try noncomm_ring)
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [majoranaBraidPlus, majoranaBraidMinus, majoranaA, majoranaX,
+             Matrix.mul_apply, Fin.sum_univ_two, two_smul];
+       try noncomm_ring)
+
+/-- Lower unipotent Gauss factor $L(l) = \begin{pmatrix} 1 & 0 \\ l & 1 \end{pmatrix} \in M_2(A)$. -/
+def gaussL (l : A) : Matrix (Fin 2) (Fin 2) A := !![1, 0; l, 1]
+
+/-- Diagonal pivot-Schur Gauss factor $D(d_1, d_2) = \begin{pmatrix} d_1 & 0 \\ 0 & d_2 \end{pmatrix} \in M_2(A)$. -/
+def gaussD (d₁ d₂ : A) : Matrix (Fin 2) (Fin 2) A := !![d₁, 0; 0, d₂]
+
+/-- Upper unipotent Gauss factor $U(r) = \begin{pmatrix} 1 & r \\ 0 & 1 \end{pmatrix} \in M_2(A)$. -/
+def gaussU (r : A) : Matrix (Fin 2) (Fin 2) A := !![1, r; 0, 1]
+
+/-- Noncommutative Gauss–Bruhat LDU trifactor product $L(l) * D(d_1, d_2) * U(r) \in M_2(A)$. -/
+def noncommLDU (l d₁ d₂ r : A) : Matrix (Fin 2) (Fin 2) A :=
+  gaussL l * gaussD d₁ d₂ * gaussU r
+
+/-- Reverse-order Banachiewicz–Schur inverse trifactor $U(-r) * D(d_1^{-1}, d_2^{-1}) * L(-l) \in M_2(A)$. -/
+def noncommLDUInv (l invD₁ invD₂ r : A) : Matrix (Fin 2) (Fin 2) A :=
+  gaussU (-r) * gaussD invD₁ invD₂ * gaussL (-l)
+
+/-- **22. Noncommutative Unipotent Factor Inverses, Schur Reconstruction, & Banachiewicz Inverse**:
+    Over ANY noncommutative ring $A$, for any $l, d_1, d_2, r, v, w, b \in A$ and units $u, \Delta \in A^\times$:
+    1. Unipotent Factor Inverses:
+       $L(l) L(-l) = I_2$ and $U(r) U(-r) = I_2$.
+    2. Explicit Noncommutative LDU Product:
+       $L(l) D(d_1, d_2) U(r) = \begin{pmatrix} d_1 & d_1 r \\ l d_1 & l d_1 r + d_2 \end{pmatrix}$.
+    3. Exact Noncommutative Schur Complement Reconstruction of $\begin{pmatrix} u & v \\ w & b \end{pmatrix}$:
+       $L(w u^{-1}) D(u, b - w u^{-1} v) U(u^{-1} v) = \begin{pmatrix} u & v \\ w & b \end{pmatrix}$.
+    4. Exact Two-Sided Noncommutative Banachiewicz–Schur Inversion:
+       $\mathrm{noncommLDU}\;l\;u\;\Delta\;r * \mathrm{noncommLDUInv}\;l\;u^{-1}\;\Delta^{-1}\;r = I_2$ and
+       $\mathrm{noncommLDUInv}\;l\;u^{-1}\;\Delta^{-1}\;r * \mathrm{noncommLDU}\;l\;u\;\Delta\;r = I_2$. -/
+theorem noncommLDU_schur_reconstruction_and_banachiewicz_inverse
+    (l d₁ d₂ r v w b : A) (u Δ : Aˣ) :
+    gaussL l * gaussL (-l) = 1 ∧
+    gaussU r * gaussU (-r) = 1 ∧
+    noncommLDU l d₁ d₂ r = !![d₁, d₁ * r; l * d₁, l * d₁ * r + d₂] ∧
+    noncommLDU (w * (↑u⁻¹ : A)) (u : A) (b - w * (↑u⁻¹ : A) * v) ((↑u⁻¹ : A) * v) =
+      !![(u : A), v; w, b] ∧
+    noncommLDU l (u : A) (Δ : A) r * noncommLDUInv l (↑u⁻¹ : A) (↑Δ⁻¹ : A) r = 1 ∧
+    noncommLDUInv l (↑u⁻¹ : A) (↑Δ⁻¹ : A) r * noncommLDU l (u : A) (Δ : A) r = 1 := by
+  have hL : ∀ x : A, gaussL x * gaussL (-x) = 1 := by
+    intro x; ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [gaussL, Matrix.mul_apply, Fin.sum_univ_two]; try noncomm_ring)
+  have hL_sym : ∀ x : A, gaussL (-x) * gaussL x = 1 := by
+    intro x; ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [gaussL, Matrix.mul_apply, Fin.sum_univ_two]; try noncomm_ring)
+  have hU : ∀ x : A, gaussU x * gaussU (-x) = 1 := by
+    intro x; ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [gaussU, Matrix.mul_apply, Fin.sum_univ_two]; try noncomm_ring)
+  have hU_sym : ∀ x : A, gaussU (-x) * gaussU x = 1 := by
+    intro x; ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [gaussU, Matrix.mul_apply, Fin.sum_univ_two]; try noncomm_ring)
+  have hD_r : gaussD (u : A) (Δ : A) * gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A) = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [gaussD, Matrix.mul_apply, Fin.sum_univ_two]
+  have hD_l : gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A) * gaussD (u : A) (Δ : A) = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [gaussD, Matrix.mul_apply, Fin.sum_univ_two]
+  have h_prod : ∀ l' a₁ a₂ r' : A,
+      noncommLDU l' a₁ a₂ r' = !![a₁, a₁ * r'; l' * a₁, l' * a₁ * r' + a₂] := by
+    intro l' a₁ a₂ r'
+    ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [noncommLDU, gaussL, gaussD, gaussU, Matrix.mul_apply, Fin.sum_univ_two];
+       try noncomm_ring)
+  refine ⟨hL l, hU r, h_prod l d₁ d₂ r, ?_, ?_, ?_⟩
+  · rw [h_prod]
+    ext i j; fin_cases i <;> fin_cases j <;> (simp; try noncomm_ring)
+  · unfold noncommLDU noncommLDUInv
+    calc gaussL l * gaussD (u : A) (Δ : A) * gaussU r *
+           (gaussU (-r) * gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A) * gaussL (-l))
+      _ = gaussL l * (gaussD (u : A) (Δ : A) * ((gaussU r * gaussU (-r)) *
+            gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A)) * gaussL (-l)) := by simp only [mul_assoc]
+      _ = gaussL l * ((gaussD (u : A) (Δ : A) * gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A)) * gaussL (-l)) := by
+          rw [hU r, one_mul, mul_assoc]
+      _ = gaussL l * gaussL (-l) := by rw [hD_r, one_mul]
+      _ = 1 := hL l
+  · unfold noncommLDU noncommLDUInv
+    calc gaussU (-r) * gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A) * gaussL (-l) *
+           (gaussL l * gaussD (u : A) (Δ : A) * gaussU r)
+      _ = gaussU (-r) * (gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A) * ((gaussL (-l) * gaussL l) *
+            gaussD (u : A) (Δ : A)) * gaussU r) := by simp only [mul_assoc]
+      _ = gaussU (-r) * ((gaussD (↑u⁻¹ : A) (↑Δ⁻¹ : A) * gaussD (u : A) (Δ : A)) * gaussU r) := by
+          rw [hL_sym l, one_mul, mul_assoc]
+      _ = gaussU (-r) * gaussU r := by rw [hD_l, one_mul]
+      _ = 1 := hU_sym r
+
+/-- The Sylvester–Peirce grading derivation $\mathrm{ad}_\Gamma(X) = \gamma_A X - X \gamma_A$ in $M_2(A)$. -/
+def sylvesterAdGamma (X : Matrix (Fin 2) (Fin 2) A) : Matrix (Fin 2) (Fin 2) A :=
+  majoranaA * X - X * majoranaA
+
+/-- Diagonal Peirce projection $X_{\mathrm{diag}} = e_{11} X e_{11} + e_{22} X e_{22}$ in $M_2(A)$. -/
+def peirceDiagPart (X : Matrix (Fin 2) (Fin 2) A) : Matrix (Fin 2) (Fin 2) A :=
+  !![X 0 0, 0; 0, X 1 1]
+
+/-- Off-diagonal Peirce projection $X_{\mathrm{off}} = e_{11} X e_{22} + e_{22} X e_{11}$ in $M_2(A)$. -/
+def peirceOffDiagPart (X : Matrix (Fin 2) (Fin 2) A) : Matrix (Fin 2) (Fin 2) A :=
+  !![0, X 0 1; X 1 0, 0]
+
+/-- **23. Sylvester Derivation Kernel, Off-Diagonal Eigen-Square, & Cubic Periodicity**:
+    For ANY matrix $X \in M_2(A)$ over a noncommutative ring $A$:
+    1. Additive Peirce Split: $X = X_{\mathrm{diag}} + X_{\mathrm{off}}$.
+    2. Commutant Kernel Law: $\mathrm{ad}_\Gamma(X_{\mathrm{diag}}) = 0$.
+    3. Double Sylvester Derivation on Off-Diagonal Module:
+       $\mathrm{ad}_\Gamma(\mathrm{ad}_\Gamma(X)) = 4 \bullet X_{\mathrm{off}}$.
+    4. Universal Cubic Period-2 Law:
+       $\mathrm{ad}_\Gamma(\mathrm{ad}_\Gamma(\mathrm{ad}_\Gamma(X))) = 4 \bullet \mathrm{ad}_\Gamma(X)$. -/
+theorem sylvesterAdGamma_kernel_square_and_cubic_periodicity
+    (X : Matrix (Fin 2) (Fin 2) A) :
+    peirceDiagPart X + peirceOffDiagPart X = X ∧
+    sylvesterAdGamma (peirceDiagPart X) = 0 ∧
+    sylvesterAdGamma (sylvesterAdGamma X) = (4 : ℕ) • peirceOffDiagPart X ∧
+    sylvesterAdGamma (sylvesterAdGamma (sylvesterAdGamma X)) = (4 : ℕ) • sylvesterAdGamma X := by
+  have h_ad : ∀ Y : Matrix (Fin 2) (Fin 2) A,
+      sylvesterAdGamma Y = !![0, Y 0 1 + Y 0 1; -(Y 1 0 + Y 1 0), 0] := by
+    intro Y; ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [sylvesterAdGamma, majoranaA, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two];
+       try noncomm_ring)
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [peirceDiagPart, peirceOffDiagPart]
+  · rw [h_ad]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [peirceDiagPart]
+  · rw [h_ad, h_ad]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [peirceOffDiagPart, nsmul_eq_mul]; try noncomm_ring)
+  · rw [h_ad, h_ad, h_ad]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [nsmul_eq_mul]; try noncomm_ring)
+
+/-- First-site UHF inductive colimit embedding $\iota_1(X) = \begin{pmatrix} X & 0 \\ 0 & X \end{pmatrix} \in M_2(M_2(A))$. -/
+def uhfEmbedSite1 (X : Matrix (Fin 2) (Fin 2) A) :
+    Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A) :=
+  !![X, 0; 0, X]
+
+/-- Graded Jordan–Wigner string involution $\mathcal{J}_1 = \begin{pmatrix} \gamma_A & 0 \\ 0 & -\gamma_A \end{pmatrix} \in M_2(M_2(A))$. -/
+def jwStringSite1 : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A) :=
+  !![majoranaA, 0; 0, -majoranaA]
+
+/-- Inter-site Jordan–Wigner flip involution $\mathcal{J}_2 = \begin{pmatrix} 0 & I_2 \\ I_2 & 0 \end{pmatrix} \in M_2(M_2(A))$. -/
+def jwFlipSite2 : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A) :=
+  !![0, 1; 1, 0]
+
+/-- **24. UHF Inductive Colimit Ring Homomorphism & Jordan–Wigner Inter-Site Clifford Relations**:
+    Over ANY noncommutative ring $A$ and for all $X, Y \in M_2(A)$:
+    1. Unital Inductive Colimit Homomorphism:
+       $\iota_1(I_2) = I_4$, $\iota_1(X + Y) = \iota_1(X) + \iota_1(Y)$, and $\iota_1(X Y) = \iota_1(X) \iota_1(Y)$.
+    2. Exact Inter-Site Commutativity of Site-1 Operators with Site-2 Flip:
+       $\iota_1(X) \mathcal{J}_2 = \mathcal{J}_2 \iota_1(X)$.
+    3. Graded Jordan–Wigner Clifford Anticommutation Across Inductive Stages:
+       $\mathcal{J}_1^2 = I_4$, $\mathcal{J}_2^2 = I_4$, and $\mathcal{J}_1 \mathcal{J}_2 + \mathcal{J}_2 \mathcal{J}_1 = 0$. -/
+theorem uhfInductiveColimit_homomorphism_and_jordan_wigner
+    (X Y : Matrix (Fin 2) (Fin 2) A) :
+    uhfEmbedSite1 (1 : Matrix (Fin 2) (Fin 2) A) = 1 ∧
+    uhfEmbedSite1 (X + Y) = uhfEmbedSite1 X + uhfEmbedSite1 Y ∧
+    uhfEmbedSite1 (X * Y) = uhfEmbedSite1 X * uhfEmbedSite1 Y ∧
+    uhfEmbedSite1 X * (jwFlipSite2 : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) =
+      jwFlipSite2 * uhfEmbedSite1 X ∧
+    (jwStringSite1 : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) * jwStringSite1 = 1 ∧
+    (jwFlipSite2 : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) * jwFlipSite2 = 1 ∧
+    (jwStringSite1 : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) * jwFlipSite2 +
+      jwFlipSite2 * jwStringSite1 = 0 := by
+  have h_majA_sq : (majoranaA : Matrix (Fin 2) (Fin 2) A) * majoranaA = 1 :=
+    (kitaevMajoranaChain_clifford_and_boundary_zero_modes (A := A)).1
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;> rfl
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [uhfEmbedSite1]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [uhfEmbedSite1, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [uhfEmbedSite1, jwFlipSite2, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [jwStringSite1, Matrix.mul_apply, Fin.sum_univ_two, h_majA_sq]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [jwFlipSite2, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [jwStringSite1, jwFlipSite2]
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

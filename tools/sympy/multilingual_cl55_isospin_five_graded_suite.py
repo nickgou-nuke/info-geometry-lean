@@ -577,6 +577,70 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(assoc_coplanar[2]) == sp.zeros(3, 1)
     assert sp.simplify(assoc_coplanar[3]) == 0
 
+    # 22. H3Zorn Explicit Jordan Product, Freudenthal Nambu Triality, & KMS Modular Anomaly
+    # (`h3Zorn_mul_explicit`, `h3Zorn_peirce_generations_mul_and_adjoint`,
+    #  `normCubic_offDiagH3_spacetimeFrame_and_fourPotential_nambu`,
+    #  `h3KMSFlow_trace_invariance_and_normCubic_nambu_anomaly`)
+    def zvm_tr(m):
+        return m[0] + m[3]
+
+    def h3_triality_trace(m1, m2, m3):
+        return zvm_tr(zvm_mul(zvm_mul(m1, m2), m3))
+
+    assert (
+        sp.simplify(
+            h3_triality_trace(eX, eY, eZ)
+            - (xv.dot(yv.cross(zv)) - xw.dot(yw.cross(zw)))
+        )
+        == 0
+    )
+    assert (
+        sp.simplify(
+            h3_triality_trace(zvm_tomita(eX), zvm_tomita(eY), zvm_tomita(eZ))
+            + h3_triality_trace(eX, eY, eZ)
+        )
+        == 0
+    )
+    eP1 = (0, d_vec, -d_vec, 0)
+    eP2 = (0, a_vec, -a_vec, 0)
+    eP3 = (0, b_vec, -b_vec, 0)
+    assert (
+        sp.simplify(h3_triality_trace(eP1, eP2, eP3) - 2 * d_vec.dot(a_vec.cross(b_vec)))
+        == 0
+    )
+    u_kms = sp.Symbol("u_kms", nonzero=True)
+    def zvm_kms(m):
+        return (m[0], (u_kms**2) * m[1], (u_kms ** (-2)) * m[2], m[3])
+
+    kms_diff = h3_triality_trace(zvm_kms(D_pot), zvm_kms(A_pot), zvm_kms(B_pot)) - h3_triality_trace(
+        D_pot, A_pot, B_pot
+    )
+    expected_kms_diff = (u_kms**6 - 1) * d_vec.dot(a_vec.cross(b_vec)) - (
+        u_kms ** (-6) - 1
+    ) * (-d_vec).dot((-a_vec).cross(-b_vec))
+    assert sp.simplify(kms_diff - expected_kms_diff) == 0
+
+    # Bridge 1-4: Chiral Nambu Split, GEM Adjoint Invariants, & F4 Modular Automorphism
+    # (`normCubic_threeGenFrame_chiral_nambu_split_and_coplanar_vanishing`,
+    #  `adjointQuad_threeGenFieldStrength_diagonals_and_tomita_stress`,
+    #  `h3ZornModularSwap_f4_cubic_and_jordan_automorphism`)
+    pole_readout = -assoc_eXYZ[0]
+    norm_cubic_eXYZ = h3_triality_trace(eX, eY, eZ)
+    assert sp.simplify((pole_readout + norm_cubic_eXYZ) - 2 * xv.dot(yv.cross(zv))) == 0
+    assert sp.simplify((pole_readout - norm_cubic_eXYZ) - 2 * xw.dot(yw.cross(zw))) == 0
+    eCoplanar = (0, c1_sym * xv + c2_sym * yv, c1_sym * xw + c2_sym * yw, 0)
+    assert sp.simplify(h3_triality_trace(eX, eY, eCoplanar)) == 0
+    def zvm_conj(m):
+        return (m[3], -m[1], -m[2], m[0])
+
+    def zvm_str(m):
+        return m[0] - m[3]
+
+    c_stress = zvm_mul(zvm_conj(zvm_tomita(F_eb)), zvm_conj(F_eb))
+    assert sp.simplify(zvm_tr(c_stress) - 2 * (E_vec.dot(E_vec) + B_vec.dot(B_vec))) == 0
+    assert sp.simplify(zvm_str(c_stress) - 4 * E_vec.dot(B_vec)) == 0
+    assert sp.simplify((c_stress[1] + c_stress[2]) - (-4 * ExB)) == sp.zeros(3, 1)
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

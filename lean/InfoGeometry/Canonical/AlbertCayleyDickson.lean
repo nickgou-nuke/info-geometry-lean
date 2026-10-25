@@ -3036,6 +3036,158 @@ theorem universal_akivis_bianchi_identity_and_chiral_volume_commutator
            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
 
+/-!
+## 15. Archetypes XXXVI & XXXVII: Operator Para-Kähler Super-Grassmannians, Amari-Chentsov Cubic Skewness Tensor, & Maurer-Cartan Chiral Anomaly Hierarchy
+-/
+
+/-- Operator Zorn trace $\mathrm{opZornTrace}(X) = X_a + X_b \in A$. -/
+def opZornTrace (X : OpZornMatrix A) : A := X.a + X.b
+
+/-- Symmetric Jordan anticommutator $\{X, Y\} = X * Y + Y * X$ in $\mathrm{OpZornMatrix}\;A$. -/
+def opAnticommutator (X Y : OpZornMatrix A) : OpZornMatrix A :=
+  X * Y + Y * X
+
+/-- Para-Kähler pseudo-Riemannian metric $g(v, w) = \{L_+(v), L_-(w)\}$. -/
+def opParaKahlerMetric (v w : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opLightconeRayPlus v) (opLightconeRayMinus w)
+
+/-- Para-Kähler symplectic 2-form $\omega(v, w) = [L_+(v), L_-(w)]$. -/
+def opParaKahlerSymplectic (v w : OpVec3 A) : OpZornMatrix A :=
+  opCommutator (opLightconeRayPlus v) (opLightconeRayMinus w)
+
+/-- Relative Maurer-Cartan transition form $\Theta(v_1, v_2) = U_+(-v_1) * U_+(v_2) - 1$
+    on the primal affine exponential family in $\mathrm{OpZornMatrix}\;A$. -/
+def opMaurerCartanForm (v₁ v₂ : OpVec3 A) : OpZornMatrix A :=
+  opUnipotentUpper (-v₁) * opUnipotentUpper v₂ - 1
+
+/-- **47. Operator Para-Kähler Triplet Compatibility, Chiral Anomaly Residue, & Primal-Dual Loop Anomaly (Archetype XXXVI.1)**:
+    Over ANY noncommutative operator ring $A$, for all $v, w \in A^3$:
+    1. Explicit Para-Kähler Metric (Symmetric Jordan Sum):
+       $g(v, w) = \langle -(v \cdot w), 0, 0, -(w \cdot v) \rangle$.
+    2. Explicit Symplectic 2-Form (Antisymmetric Commutator Difference):
+       $\omega(v, w) = \langle -(v \cdot w), 0, 0, w \cdot v \rangle$.
+    3. Fundamental Para-Kähler Compatibility ($\Gamma g = \omega$ and $\Gamma \omega = g$):
+       $\Gamma * g(v, w) = \omega(v, w)$ and $\Gamma * \omega(v, w) = g(v, w)$.
+    4. Noncommuting Chiral Anomaly Residue:
+       $\mathrm{opZornTrace}(\omega(v, w)) = (w \cdot v) - (v \cdot w)$.
+    5. Primal-Dual Exponential Commutator & Loop Holonomy Identity:
+       $[U_+(v), U_-(w)] = \omega(v, w)$, and for $G(v, w) = U_+(v) * U_-(w)$ and
+       $G_{\mathrm{inv}}(v, w) = U_-(-w) * U_+(-v)$,
+       $G(v, w) * G_{\mathrm{inv}}(v, w) - 1 = [L_+(v), g(v, w)] =
+        L_+\!\bigl((v \cdot w) \cdot_L v - v \cdot_R (w \cdot v)\bigr)$. -/
+theorem opParaKahler_triplet_compatibility_and_anomaly_residue
+    (v w : OpVec3 A) :
+    let g := opParaKahlerMetric v w
+    let ω := opParaKahlerSymplectic v w
+    let Γ := opZornGamma
+    let G := opUnipotentUpper v * opUnipotentLower w
+    let G_inv := opUnipotentLower (-w) * opUnipotentUpper (-v)
+    g = ⟨-OpVec3.dot v w, 0, 0, -OpVec3.dot w v⟩ ∧
+    ω = ⟨-OpVec3.dot v w, 0, 0, OpVec3.dot w v⟩ ∧
+    Γ * g = ω ∧
+    Γ * ω = g ∧
+    opZornTrace ω = OpVec3.dot w v - OpVec3.dot v w ∧
+    opCommutator (opUnipotentUpper v) (opUnipotentLower w) = ω ∧
+    G * G_inv - 1 = opCommutator (opLightconeRayPlus v) g := by
+  intro g ω Γ G G_inv
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [g, opParaKahlerMetric, opAnticommutator, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [ω, opParaKahlerSymplectic, opCommutator, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [Γ, g, ω, opZornGamma, opParaKahlerMetric, opParaKahlerSymplectic,
+           opAnticommutator, opCommutator, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [Γ, g, ω, opZornGamma, opParaKahlerMetric, opParaKahlerSymplectic,
+           opAnticommutator, opCommutator, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · simp [ω, opParaKahlerSymplectic, opCommutator, opLightconeRayPlus, opLightconeRayMinus,
+          opZornTrace, OpVec3.dot]
+    noncomm_ring
+  · ext <;>
+    (simp [ω, opParaKahlerSymplectic, opCommutator, opUnipotentUpper, opUnipotentLower,
+           opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [G, G_inv, g, opParaKahlerMetric, opAnticommutator, opCommutator,
+           opUnipotentUpper, opUnipotentLower,
+           opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-- **48. Amari-Chentsov Cubic Skewness Tensor & Jordan Triple Product (Archetype XXXVI.2)**:
+    Over ANY noncommutative operator ring $A$, for all $v, w \in A^3$, the nested commutator
+    of the symplectic 2-form $\omega(v, w) = [L_+(v), L_-(w)]$ with the primal and dual tangent
+    spaces reproduces the exact noncommutative Jordan triple product:
+    1. Primal Amari-Chentsov Cubic Tensor:
+       $[[L_-(w), L_+(v)], L_+(v)] = L_+\!\bigl((v \cdot w) \cdot_L v + v \cdot_R (w \cdot v)\bigr)$ and
+       $[[L_+(v), L_-(w)], L_+(v)] = -L_+\!\bigl((v \cdot w) \cdot_L v + v \cdot_R (w \cdot v)\bigr)$.
+    2. Dual Amari-Chentsov Cubic Tensor:
+       $[[L_+(v), L_-(w)], L_-(w)] = L_-\!\bigl((w \cdot v) \cdot_L w + w \cdot_R (v \cdot w)\bigr)$ and
+       $[[L_-(w), L_+(v)], L_-(w)] = -L_-\!\bigl((w \cdot v) \cdot_L w + w \cdot_R (v \cdot w)\bigr)$. -/
+theorem amariChentsov_cubic_skewness_tensor
+    (v w : OpVec3 A) :
+    let L_v := opLightconeRayPlus v
+    let L_w := opLightconeRayMinus w
+    let T_v := OpVec3.leftScale (OpVec3.dot v w) v + OpVec3.rightScale v (OpVec3.dot w v)
+    let T_w := OpVec3.leftScale (OpVec3.dot w v) w + OpVec3.rightScale w (OpVec3.dot v w)
+    opCommutator (opCommutator L_w L_v) L_v = opLightconeRayPlus T_v ∧
+    opCommutator (opCommutator L_v L_w) L_v = -opLightconeRayPlus T_v ∧
+    opCommutator (opCommutator L_v L_w) L_w = opLightconeRayMinus T_w ∧
+    opCommutator (opCommutator L_w L_v) L_w = -opLightconeRayMinus T_w := by
+  intro L_v L_w T_v T_w
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [L_v, L_w, T_v, T_w, opCommutator, opLightconeRayPlus, opLightconeRayMinus,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **49. Maurer-Cartan Grade Decomposition & Anomaly-Driven Grade-3 Square (Archetype XXXVII)**:
+    Over ANY noncommutative operator ring $A$, for all $v_1, v_2 \in A^3$:
+    1. Grade-1 (Flat Affine Difference) + Grade-2 (Skew Torsion) Decomposition:
+       $$\Theta(v_1, v_2) = L_+(v_2 - v_1) - L_-(v_1 \times_{\mathrm{skew}} v_2).$$
+    2. Grade-3 Maurer-Cartan Square (Generated Purely by the Noncommuting Anomaly):
+       $$\Theta(v_1, v_2) * \Theta(v_1, v_2) =
+         \Bigl\langle (v_2 - v_1) \cdot (v_1 \times_{\mathrm{skew}} v_2),\;\; 0,\;\; 0,\;\;
+                      (v_1 \times_{\mathrm{skew}} v_2) \cdot (v_2 - v_1) \Bigr\rangle.$$
+    3. Maurer-Cartan Symplectic Anomaly Commutator:
+       $$\bigl[L_+(v_2 - v_1),\; -L_-(v_1 \times_{\mathrm{skew}} v_2)\bigr] =
+         \Bigl\langle (v_2 - v_1) \cdot (v_1 \times_{\mathrm{skew}} v_2),\;\; 0,\;\; 0,\;\;
+                      -((v_1 \times_{\mathrm{skew}} v_2) \cdot (v_2 - v_1)) \Bigr\rangle.$$
+    4. Antisymmetry & Two-Point Maurer-Cartan Multiplicative Cocycle Anomaly:
+       $$\Theta(v_2, v_1) = -\Theta(v_1, v_2), \qquad
+         (1 + \Theta(v_1, v_2)) * (1 + \Theta(v_2, v_1)) = 1 - \Theta(v_1, v_2) * \Theta(v_1, v_2).$$
+    5. Three-Point Maurer-Cartan Associator Anomaly:
+       $$(U_+(-v_1) * U_+(v_2)) * U_+(-v_2) =
+         U_+(-v_1) + \Bigl\langle 0,\;\; 0,\;\; 0,\;\; -((v_1 \times_{\mathrm{skew}} v_2) \cdot v_2) \Bigr\rangle.$$ -/
+theorem opMaurerCartanForm_grade_hierarchy_and_anomaly_generation
+    (v₁ v₂ : OpVec3 A) :
+    let Θ := opMaurerCartanForm v₁ v₂
+    let Δv := v₂ - v₁
+    let τ₁₂ := OpVec3.skewCross v₁ v₂
+    Θ = opLightconeRayPlus Δv - opLightconeRayMinus τ₁₂ ∧
+    Θ * Θ = ⟨OpVec3.dot Δv τ₁₂, 0, 0, OpVec3.dot τ₁₂ Δv⟩ ∧
+    opCommutator (opLightconeRayPlus Δv) (-opLightconeRayMinus τ₁₂) =
+      ⟨OpVec3.dot Δv τ₁₂, 0, 0, -OpVec3.dot τ₁₂ Δv⟩ ∧
+    opMaurerCartanForm v₂ v₁ = -Θ ∧
+    (1 + opMaurerCartanForm v₁ v₂) * (1 + opMaurerCartanForm v₂ v₁) = 1 - Θ * Θ ∧
+    (opUnipotentUpper (-v₁) * opUnipotentUpper v₂) * opUnipotentUpper (-v₂) =
+      opUnipotentUpper (-v₁) + ⟨0, 0, 0, -OpVec3.dot τ₁₂ v₂⟩ := by
+  intro Θ Δv τ₁₂
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Θ, Δv, τ₁₂, opMaurerCartanForm, opUnipotentUpper, opLightconeRayPlus,
+          opLightconeRayMinus, opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring
+    try abel))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

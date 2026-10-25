@@ -2934,6 +2934,108 @@ theorem polarizedTime_heisenberg_derivative_and_covariant_gauge_shift
           opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     try noncomm_ring))
 
+/-!
+### Archetypes XXXIV & XXXV: Cartan's First & Second Structure Equations and the Universal Operator Akivis-Bianchi Identity
+-/
+
+/-- Operator commutator $[X, Y] = X Y - Y X$ in $\mathrm{OpZornMatrix}\;A$. -/
+def opCommutator (X Y : OpZornMatrix A) : OpZornMatrix A :=
+  X * Y - Y * X
+
+/-- Forward chiral lightcone Lie gauge derivation $\delta_{v}(X) = [L_+(v), X] = L_+(v) * X - X * L_+(v)$. -/
+def opLightconeLieDerivPlus (v : OpVec3 A) (X : OpZornMatrix A) : OpZornMatrix A :=
+  opCommutator (opLightconePlus v) X
+
+/-- Right and left distributivity of `OpZornMatrix A` multiplication over subtraction. -/
+lemma opZorn_sub_mul (X Y Z : OpZornMatrix A) :
+    (X - Y) * Z = X * Z - Y * Z := by
+  ext <;>
+  (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+lemma opZorn_mul_sub (X Y Z : OpZornMatrix A) :
+    X * (Y - Z) = X * Y - X * Z := by
+  ext <;>
+  (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- **45. Cartan's First & Second Structure Equations: Torsion & Gauge Curvature 2-Form (Archetype XXXIV)**:
+    Over ANY noncommutative operator ring $A$, for all $\tau_+, \tau_- \in A$ and $v_1, v_2 \in A^3$:
+    1. Cartan's First Structure Equation (Unipotent Translation + Teleported Torsion 2-Form):
+       $U_+(v_1) * U_+(v_2) = U_+(v_1 + v_2) + L_-(v_1 \times_{\mathrm{skew}} v_2)$.
+    2. Additive Abelianization Defect (Torsion Commutator):
+       $[U_+(v_1), U_+(v_2)] = L_-(v_1 \times_{\mathrm{skew}} v_2 + v_1 \times_{\mathrm{skew}} v_2)$.
+    3. Two-Step Chiral Lightcone Gauge Derivation of Polarized Time $D_\tau = D(\tau_+, \tau_-)$:
+       $\delta_{v_1}(\delta_{v_2}(D_\tau)) = -L_-(v_1 \times_{\mathrm{skew}} \nabla_\tau v_2 + v_1 \times_{\mathrm{skew}} \nabla_\tau v_2)$.
+    4. Cartan's Second Structure Equation (Curvature Commutator of Sequential Lightcone Gauge Shifts):
+       $\delta_{v_1}(\delta_{v_2}(D_\tau)) - \delta_{v_2}(\delta_{v_1}(D_\tau)) = L_-(F_{12} + F_{12})$,
+       where $F_{12} = v_2 \times_{\mathrm{skew}} \nabla_\tau v_1 - v_1 \times_{\mathrm{skew}} \nabla_\tau v_2$. -/
+theorem cartan_first_and_second_structure_equations
+    (τ_plus τ_minus : A) (v₁ v₂ : OpVec3 A) :
+    let D_τ := opTimeDiag τ_plus τ_minus
+    let dv₁ := OpVec3.bimoduleDiff τ_plus τ_minus v₁
+    let dv₂ := OpVec3.bimoduleDiff τ_plus τ_minus v₂
+    let F₁₂ := OpVec3.skewCross v₂ dv₁ - OpVec3.skewCross v₁ dv₂
+    opGaugePlus v₁ * opGaugePlus v₂ =
+      opGaugePlus (v₁ + v₂) + opLightconeMinus (OpVec3.skewCross v₁ v₂) ∧
+    opCommutator (opGaugePlus v₁) (opGaugePlus v₂) =
+      opLightconeMinus (OpVec3.skewCross v₁ v₂ + OpVec3.skewCross v₁ v₂) ∧
+    opLightconeLieDerivPlus v₁ (opLightconeLieDerivPlus v₂ D_τ) =
+      -opLightconeMinus (OpVec3.skewCross v₁ dv₂ + OpVec3.skewCross v₁ dv₂) ∧
+    opLightconeLieDerivPlus v₁ (opLightconeLieDerivPlus v₂ D_τ) -
+      opLightconeLieDerivPlus v₂ (opLightconeLieDerivPlus v₁ D_τ) =
+      opLightconeMinus (F₁₂ + F₁₂) := by
+  intro D_τ dv₁ dv₂ F₁₂
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [D_τ, dv₁, dv₂, F₁₂, opLightconeLieDerivPlus, opUnipotentUpper,
+          opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+          opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring
+    try abel))
+
+/-- **46. Universal Operator Akivis-Bianchi Identity & Chiral Volume Triple Commutator (Archetype XXXV)**:
+    Over ANY noncommutative operator ring $A$, for ALL $X, Y, Z \in \mathrm{OpZornMatrix}\;A$ and
+    all chiral lightcone rays $v_1, v_2, v_3 \in A^3$:
+    1. Universal Operator Akivis-Bianchi Identity:
+       The Lie Jacobiator $[[X, Y], Z] + [[Y, Z], X] + [[Z, X], Y]$ is identically equal to the
+       6-term alternating sum of trilinear associators:
+       $$[[X, Y], Z] + [[Y, Z], X] + [[Z, X], Y] =
+         [X, Y, Z] + [Y, Z, X] + [Z, X, Y] - [Y, X, Z] - [X, Z, Y] - [Z, Y, X].$$
+    2. Chiral Lightcone Triple Commutator (Split Einstein-Nambu Volume Operator):
+       $$[[L_+(v_1), L_+(v_2)], L_+(v_3)] =
+         \Bigl\langle 2 \bigl(v_3 \cdot (v_1 \times_{\mathrm{skew}} v_2)\bigr),\;\; 0,\;\; 0,\;\;
+                      -2 \bigl((v_1 \times_{\mathrm{skew}} v_2) \cdot v_3\bigr) \Bigr\rangle.$$ -/
+theorem universal_akivis_bianchi_identity_and_chiral_volume_commutator
+    (X Y Z : OpZornMatrix A) (v₁ v₂ v₃ : OpVec3 A) :
+    let L₁ := opLightconePlus v₁
+    let L₂ := opLightconePlus v₂
+    let L₃ := opLightconePlus v₃
+    let w₁₂ := OpVec3.skewCross v₁ v₂
+    opCommutator (opCommutator X Y) Z +
+      opCommutator (opCommutator Y Z) X +
+      opCommutator (opCommutator Z X) Y =
+      opAssociator X Y Z + opAssociator Y Z X + opAssociator Z X Y -
+        opAssociator Y X Z - opAssociator X Z Y - opAssociator Z Y X ∧
+    opCommutator (opCommutator L₁ L₂) L₃ =
+      ⟨OpVec3.dot v₃ w₁₂ + OpVec3.dot v₃ w₁₂,
+       0,
+       0,
+       -(OpVec3.dot w₁₂ v₃ + OpVec3.dot w₁₂ v₃)⟩ := by
+  intro L₁ L₂ L₃ w₁₂
+  refine ⟨?_, ?_⟩
+  · simp only [opCommutator, opAssociator, opZorn_sub_mul, opZorn_mul_sub]
+    ext <;>
+    (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                OpZornMatrix.sub_a, OpZornMatrix.sub_v, OpZornMatrix.sub_w, OpZornMatrix.sub_b,
+                OpVec3.add_x, OpVec3.add_y, OpVec3.add_z,
+                OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z];
+     abel)
+  · ext <;>
+    (simp [L₁, L₂, L₃, w₁₂, opCommutator, opLightconeRayPlus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

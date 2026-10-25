@@ -6399,4 +6399,191 @@ theorem zorn_threeDim_lamb_velocity_and_vorticity_annihilation
     · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.cross]
     · simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
 
+/-! ## Section 60: Madelung QGT Split, Metriplectic Chiral Factorization, & Beltrami Helicity Dissipation (Archetypes LV–LVII) -/
+
+/-- **Madelung QGT Metric-Berry Split, Metriplectic Chiral Factorization, & Navier–Stokes Beltrami Helicity Dissipation (Archetypes LV–LVII)**:
+    Over any commutative ring $R$ (`[CommRing R]`):
+    1. Quantum Geometric Tensor Metric-Berry Split ($Q(v, w) = 2(L_+(v) * L_-(w))$):
+       $$L_+(v) * L_-(w) + L_+(v) * L_-(w) = (L_+(v) * L_-(w) + L_-(w) * L_+(v)) + (L_+(v) * L_-(w) + -(L_-(w) * L_+(v))).$$
+    2. Metriplectic Chiral Left-Right Factorization ($H = \mathrm{zornGradeZero}\;h_+\;h_-$, $S = \mathrm{zornGradeZero}\;\nu_+\;\nu_-$):
+       $$(H * X + -(X * H)) + (S * X + X * S) = (H + S) * X + X * (S + -H).$$
+    3. Beltrami Collinear Lamb Vanishing, Helicity Casimir, & Viscous Helicity Dissipation Rate ($\omega = \lambda \bullet u$):
+       $$\langle 0, \lambda \bullet u, 0, 0 \rangle * \langle 0, u, 0, 0 \rangle = 0,$$
+       $$\{L_+(u), L_-(\lambda \bullet u)\} = \mathrm{zornGradeZero}\;(\lambda (u \cdot u))\;(\lambda (u \cdot u)),$$
+       $$\{(S_{\mathrm{visc}} * L_+(u)), L_-(\lambda \bullet u)\} + \{L_+(u), (S_{\mathrm{visc}} * L_-(\lambda \bullet u))\} =
+         \mathrm{zornGradeZero}\;(-(2 \nu \lambda^2))\;(-(2 \nu \lambda^2)) * \{L_+(u), L_-(\lambda \bullet u)\}.$$ -/
+theorem zorn_qgt_metriplectic_and_beltrami_helicity_dissipation
+    (h_plus h_minus ν_plus ν_minus ν lam : R) (v w u : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let Lp : ZornVectorMatrix R := ⟨0, v, 0, 0⟩
+    let Lm : ZornVectorMatrix R := ⟨0, 0, w, 0⟩
+    let H := zornGradeZero h_plus h_minus
+    let S := zornGradeZero ν_plus ν_minus
+    let U_p : ZornVectorMatrix R := ⟨0, u, 0, 0⟩
+    let Ω_p : ZornVectorMatrix R := ⟨0, lam • u, 0, 0⟩
+    let Ω_m : ZornVectorMatrix R := ⟨0, 0, lam • u, 0⟩
+    let S_visc := zornGradeZero (-(ν * (lam * lam))) (-(ν * (lam * lam)))
+    let H_hel := U_p * Ω_m + Ω_m * U_p
+    Lp * Lm + Lp * Lm = (Lp * Lm + Lm * Lp) + (Lp * Lm + -(Lm * Lp)) ∧
+    (H * X + -(X * H)) + (S * X + X * S) = (H + S) * X + X * (S + -H) ∧
+    Ω_p * U_p = 0 ∧
+    H_hel = zornGradeZero (lam * ZornVec3.dot u u) (lam * ZornVec3.dot u u) ∧
+    ((S_visc * U_p) * Ω_m + Ω_m * (S_visc * U_p)) +
+      (U_p * (S_visc * Ω_m) + (S_visc * Ω_m) * U_p) =
+      zornGradeZero (-(2 * ν * (lam * lam))) (-(2 * ν * (lam * lam))) * H_hel := by
+  intro Lp Lm H S U_p Ω_p Ω_m S_visc H_hel
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · abel
+  · ext
+    · simp [H, S, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.dot]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [H, S, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [H, S, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [H, S, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.dot]; ring
+  · ext
+    · simp [U_p, Ω_p, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [U_p, Ω_p, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [U_p, Ω_p, mul, ZornVec3.cross]; try ring)
+    · simp [U_p, Ω_p, mul, ZornVec3.dot]
+  · ext
+    · simp [H_hel, U_p, Ω_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;>
+        simp [H_hel, U_p, Ω_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        simp [H_hel, U_p, Ω_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · simp [H_hel, U_p, Ω_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · ext
+    · simp [H_hel, S_visc, U_p, Ω_m, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [H_hel, S_visc, U_p, Ω_m, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, ZornVec3.cross,
+               Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [H_hel, S_visc, U_p, Ω_m, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, ZornVec3.cross,
+               Fin.sum_univ_three]; try ring)
+    · simp [H_hel, S_visc, U_p, Ω_m, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+
+/-! ## Section 61: Quark–Diquark–Meson–Baryon Color Confinement into the $\mathcal{G}_0$ Associative Nucleus (Archetype LIX) -/
+
+/-- **Quark–Diquark Anti-Triplet Pairing & Meson/Baryon Color Confinement into $\mathcal{G}_0$ (Archetype LIX)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all 3-color quark vectors $v, v_1, v_2, v_3 \in \mathrm{ZornVec3}\;R$
+    and antiquark vector $w \in \mathrm{ZornVec3}\;R$:
+    1. Quark $\times$ Quark $\to$ Diquark Anti-Triplet:
+       $$\langle 0, v_1, 0, 0 \rangle * \langle 0, v_2, 0, 0 \rangle = \langle 0, 0, v_1 \times v_2, 0 \rangle.$$
+    2. Meson Singlet Lands in the Grade-0 Associative Nucleus $\mathcal{G}_0$:
+       $$\langle 0, v, 0, 0 \rangle * \langle 0, 0, w, 0 \rangle + \langle 0, 0, w, 0 \rangle * \langle 0, v, 0, 0 \rangle =
+         \mathrm{zornGradeZero}\;(v \cdot w)\;(w \cdot v).$$
+    3. 3-Quark Baryon Associator Lands in the Grade-0 Associative Nucleus $\mathcal{G}_0$:
+       $$(\langle 0, v_1, 0, 0 \rangle * \langle 0, v_2, 0, 0 \rangle) * \langle 0, v_3, 0, 0 \rangle +
+         -(\langle 0, v_1, 0, 0 \rangle * (\langle 0, v_2, 0, 0 \rangle * \langle 0, v_3, 0, 0 \rangle)) =
+         \mathrm{zornGradeZero}\;(-(v_1 \cdot (v_2 \times v_3)))\;((v_1 \times v_2) \cdot v_3).$$ -/
+theorem zorn_baryon_meson_singlet_nucleus_confinement
+    (v w v₁ v₂ v₃ : ZornVec3 R) :
+    let Qv : ZornVectorMatrix R := ⟨0, v, 0, 0⟩
+    let Qw : ZornVectorMatrix R := ⟨0, 0, w, 0⟩
+    let Q₁ : ZornVectorMatrix R := ⟨0, v₁, 0, 0⟩
+    let Q₂ : ZornVectorMatrix R := ⟨0, v₂, 0, 0⟩
+    let Q₃ : ZornVectorMatrix R := ⟨0, v₃, 0, 0⟩
+    Q₁ * Q₂ = ⟨0, 0, ZornVec3.cross v₁ v₂, 0⟩ ∧
+    Qv * Qw + Qw * Qv = zornGradeZero (ZornVec3.dot v w) (ZornVec3.dot w v) ∧
+    (Q₁ * Q₂) * Q₃ + -(Q₁ * (Q₂ * Q₃)) =
+      zornGradeZero (-ZornVec3.dot v₁ (ZornVec3.cross v₂ v₃))
+                    (ZornVec3.dot (ZornVec3.cross v₁ v₂) v₃) := by
+  intro Qv Qw Q₁ Q₂ Q₃
+  refine ⟨?_, ?_, ?_⟩
+  · ext
+    · simp [Q₁, Q₂, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [Q₁, Q₂, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [Q₁, Q₂, mul, ZornVec3.cross]; try ring)
+    · simp [Q₁, Q₂, mul, ZornVec3.dot]
+  · ext
+    · simp [Qv, Qw, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [Qv, Qw, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        simp [Qv, Qw, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              add, mul, ZornVec3.cross]
+    · simp [Qv, Qw, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [Q₁, Q₂, Q₃, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, add, neg, mul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [Q₁, Q₂, Q₃, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              InfoGeometry.Algebra.zvm_neg_def, add, neg, mul,
+              ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [Q₁, Q₂, Q₃, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+              InfoGeometry.Algebra.zvm_neg_def, add, neg, mul,
+              ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · simp [Q₁, Q₂, Q₃, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, add, neg, mul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+
+/-! ## Section 62: Master Trifactor Wavefunction Factorization & 4-Factor Associative Square (Archetype LX) -/
+
+/-- **Chiral Wavefunction Factors $\Psi_L(w) = \langle 1, 0, w, 0 \rangle$, $\Psi_R(v) = \langle 1, v, 0, 0 \rangle$ & 4-Factor Associative Square (Archetype LX)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all 3-vectors $v, w \in \mathrm{ZornVec3}\;R$,
+    let $\Psi_L = \langle 1, 0, w, 0 \rangle$, $\Psi_R = \langle 1, v, 0, 0 \rangle$, and $\Pi = \Psi_L * \Psi_R$:
+    1. Exact Idempotence of Chiral Wavefunction Factors:
+       $$\Psi_L * \Psi_L = \Psi_L \qquad \text{and} \qquad \Psi_R * \Psi_R = \Psi_R.$$
+    2. Inner vs. Outer Contractions:
+       $$\Psi_R * \Psi_L = \mathrm{zornGradeZero}\;(1 + v \cdot w)\;0 \qquad \text{and} \qquad
+         \Pi = \langle 1, v, w, w \cdot v \rangle.$$
+    3. Exact 4-Factor Associative Square Law:
+       $$\Pi * \Pi = \Psi_L * ((\Psi_R * \Psi_L) * \Psi_R).$$ -/
+theorem zorn_trifactor_wavefunction_and_contact_idempotent
+    (w v : ZornVec3 R) :
+    let Ψ_L : ZornVectorMatrix R := ⟨1, 0, w, 0⟩
+    let Ψ_R : ZornVectorMatrix R := ⟨1, v, 0, 0⟩
+    let Pi_tri : ZornVectorMatrix R := Ψ_L * Ψ_R
+    Ψ_L * Ψ_L = Ψ_L ∧
+    Ψ_R * Ψ_R = Ψ_R ∧
+    Ψ_R * Ψ_L = zornGradeZero (1 + ZornVec3.dot v w) 0 ∧
+    Pi_tri = ⟨1, v, w, ZornVec3.dot w v⟩ ∧
+    Pi_tri * Pi_tri = Ψ_L * ((Ψ_R * Ψ_L) * Ψ_R) := by
+  intro Ψ_L Ψ_R Pi_tri
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [Ψ_L, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, mul, ZornVec3.cross]; try ring)
+    · simp [Ψ_L, mul, ZornVec3.dot]
+  · ext
+    · simp [Ψ_R, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Ψ_R, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Ψ_R, mul, ZornVec3.cross]; try ring)
+    · simp [Ψ_R, mul, ZornVec3.dot]
+  · ext
+    · simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.cross]; try ring)
+    · simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.dot]
+  · ext
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.cross]; try ring)
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot]
+  · ext
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

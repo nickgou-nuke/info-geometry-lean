@@ -4544,6 +4544,484 @@ theorem fiveGraded_operator_lamb_orthogonality_and_vorticity_depletion
     (simp [U_perp, Ω_perp, opGradePlus1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
 
+/-! ### Archetypes LV, LVI, & LVII: Noncommutative QGT, Metriplectic Evolution, & Beltrami Helicity Dissipation -/
+
+/-- **Forward Noncommutative Quantum Geometric Tensor**
+    $Q_{\mathrm{QGT}}(v, w) := L_+(v) * L_-(w) + L_+(v) * L_-(w)$. -/
+def opQuantumGeometricTensor (v w : OpVec3 A) : OpZornMatrix A :=
+  opLightconeRayPlus v * opLightconeRayMinus w + opLightconeRayPlus v * opLightconeRayMinus w
+
+/-- **Backward Dual Noncommutative Quantum Geometric Tensor**
+    $Q_{\mathrm{QGT}}^*(v, w) := L_-(w) * L_+(v) + L_-(w) * L_+(v)$. -/
+def opQuantumGeometricTensorDual (v w : OpVec3 A) : OpZornMatrix A :=
+  opLightconeRayMinus w * opLightconeRayPlus v + opLightconeRayMinus w * opLightconeRayPlus v
+
+/-- **Combined Non-Associative Metriplectic Evolution Operator**
+    $\mathcal{M}_{H, S}(X) := [H, X] + \{S, X\} = \mathrm{opCommutator}\;H\;X + \mathrm{opAnticommutator}\;S\;X$. -/
+def opMetriplecticFlow (H S X : OpZornMatrix A) : OpZornMatrix A :=
+  opCommutator H X + opAnticommutator S X
+
+/-- **Theorem 71 (Archetype LV — Noncommutative Quantum Geometric Tensor & Madelung Metric-Berry Split)**:
+    Over *any* noncommutative operator ring $A$, for all $v, w \in \mathrm{OpVec3}\;A$, let
+    $g(v, w) = \mathrm{opParaKahlerMetric}\;v\;w = \{L_+(v), L_-(w)\}$ and
+    $\omega(v, w) = \mathrm{opParaKahlerSymplectic}\;v\;w = [L_+(v), L_-(w)]$:
+    1. Forward QGT = Quantum Metric + Berry Symplectic 2-Form:
+       $$Q_{\mathrm{QGT}}(v, w) = g(v, w) + \omega(v, w) = \mathrm{opGradeZero}\;(-(v \cdot w + v \cdot w))\;0.$$
+    2. Backward Dual QGT = Quantum Metric - Berry Symplectic 2-Form:
+       $$Q_{\mathrm{QGT}}^*(v, w) = g(v, w) - \omega(v, w) = \mathrm{opGradeZero}\;0\;(-(w \cdot v + w \cdot v)).$$
+    3. Para-Kähler Chiral Projector Split of the QGT ($\Gamma = \mathrm{opZornGamma}$):
+       $$(1 + \Gamma) * g(v, w) = Q_{\mathrm{QGT}}(v, w) \qquad \text{and} \qquad
+         (1 - \Gamma) * g(v, w) = Q_{\mathrm{QGT}}^*(v, w).$$ -/
+theorem quantumGeometricTensor_madelung_metric_berry_split
+    (v w : OpVec3 A) :
+    let Q := opQuantumGeometricTensor v w
+    let Q_dual := opQuantumGeometricTensorDual v w
+    let g := opParaKahlerMetric v w
+    let ω := opParaKahlerSymplectic v w
+    let Γ := opZornGamma
+    Q = g + ω ∧
+    Q_dual = g - ω ∧
+    Q = opGradeZero (-(OpVec3.dot v w + OpVec3.dot v w)) 0 ∧
+    Q_dual = opGradeZero 0 (-(OpVec3.dot w v + OpVec3.dot w v)) ∧
+    (1 + Γ) * g = Q ∧
+    (1 - Γ) * g = Q_dual := by
+  intro Q Q_dual g ω Γ
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [Q, g, ω, opQuantumGeometricTensor, opParaKahlerMetric, opParaKahlerSymplectic,
+           opAnticommutator, opCommutator];
+     try abel)
+  · ext <;>
+    (simp [Q_dual, g, ω, opQuantumGeometricTensorDual, opParaKahlerMetric, opParaKahlerSymplectic,
+           opAnticommutator, opCommutator];
+     try abel)
+  · ext <;>
+    (simp [Q, opQuantumGeometricTensor, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [Q_dual, opQuantumGeometricTensorDual, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [Q, g, Γ, opQuantumGeometricTensor, opParaKahlerMetric, opZornGamma,
+           opAnticommutator, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [Q_dual, g, Γ, opQuantumGeometricTensorDual, opParaKahlerMetric, opZornGamma,
+           opAnticommutator, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+lemma opVec3_add_zero (u : OpVec3 A) : u + 0 = u := by
+  ext <;> simp
+
+lemma opVec3_zero_add (u : OpVec3 A) : 0 + u = u := by
+  ext <;> simp
+
+lemma opVec3_sub_zero (u : OpVec3 A) : u - 0 = u := by
+  ext <;> simp
+
+lemma opVec3_sub_self (u : OpVec3 A) : u - u = 0 := by
+  ext <;> simp
+
+lemma opVec3_dot_zero_left (u : OpVec3 A) : OpVec3.dot 0 u = 0 := by
+  simp [OpVec3.dot]
+
+lemma opVec3_dot_zero_right (u : OpVec3 A) : OpVec3.dot u 0 = 0 := by
+  simp [OpVec3.dot]
+
+lemma opVec3_leftScale_zero (c : A) : OpVec3.leftScale c 0 = 0 := by
+  ext <;> simp
+
+lemma opVec3_rightScale_zero (c : A) : OpVec3.rightScale 0 c = 0 := by
+  ext <;> simp
+
+lemma opVec3_skewCross_zero_left (u : OpVec3 A) : OpVec3.skewCross 0 u = 0 := by
+  ext <;> simp [OpVec3.skewCross, OpVec3.naiveCross]
+
+lemma opVec3_skewCross_zero_right (u : OpVec3 A) : OpVec3.skewCross u 0 = 0 := by
+  ext <;> simp [OpVec3.skewCross, OpVec3.naiveCross]
+
+/-- **Theorem 72 (Archetype LVI — Non-Associative Metriplectic Operator Evolution & Poisson–Jordan Derivation Law)**:
+    Over *any* noncommutative operator ring $A$, for any Hamiltonian $H = \mathrm{opGradeZero}\;h_+\;h_- \in \mathcal{G}_0$,
+    viscous/entropy generator $S = \mathrm{opGradeZero}\;\nu_+\;\nu_- \in \mathcal{G}_0$, any $v, w \in \mathrm{OpVec3}\;A$,
+    and ALL $X \in \mathrm{OpZornMatrix}\;A$:
+    1. Universal Left-Right Chiral Factorization of Metriplectic Flow:
+       $$\mathcal{M}_{H, S}(X) = [H, X] + \{S, X\} = (H + S) * X + X * (S - H).$$
+    2. Exact Viscous Jordan Modified-Leibniz Product Law on Opposite-Chirality Pairings:
+       $$\{S, L_+(v) * L_-(w)\} = \{S, L_+(v)\} * L_-(w) + L_+(v) * \{S, L_-(w)\} - ((L_+(v) * S) * L_-(w) + (L_+(v) * S) * L_-(w)).$$
+    3. Universal Poisson–Jordan Derivation Law on 8D $\mathrm{OpZornMatrix}\;A$:
+       $$[H, \{S, X\}] - \{S, [H, X]\} = \{[H, S], X\}.$$ -/
+theorem metriplecticFlow_chiral_factorization_and_viscous_leibniz
+    (h_plus h_minus ν_plus ν_minus : A) (v w : OpVec3 A) (X : OpZornMatrix A) :
+    let H := opGradeZero h_plus h_minus
+    let S := opGradeZero ν_plus ν_minus
+    let Lp := opLightconeRayPlus v
+    let Lm := opLightconeRayMinus w
+    opMetriplecticFlow H S X = (H + S) * X + X * (S - H) ∧
+    opAnticommutator S (Lp * Lm) =
+      opAnticommutator S Lp * Lm + Lp * opAnticommutator S Lm - ((Lp * S) * Lm + (Lp * S) * Lm) ∧
+    opCommutator H (opAnticommutator S X) - opAnticommutator S (opCommutator H X) =
+      opAnticommutator (opCommutator H S) X := by
+  intro H S Lp Lm
+  refine ⟨?_, ?_, ?_⟩
+  · ext <;>
+    (simp [H, S, opMetriplecticFlow, opCommutator, opAnticommutator, opCartanDiag,
+           opVec3_add_zero, opVec3_zero_add, opVec3_sub_zero, opVec3_sub_self,
+           opVec3_dot_zero_left, opVec3_dot_zero_right,
+           opVec3_leftScale_zero, opVec3_rightScale_zero,
+           opVec3_skewCross_zero_left, opVec3_skewCross_zero_right];
+     try noncomm_ring)
+  · ext <;>
+    (simp [S, Lp, Lm, opAnticommutator, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [H, S, opCommutator, opAnticommutator, opCartanDiag,
+           opVec3_add_zero, opVec3_zero_add, opVec3_sub_zero, opVec3_sub_self,
+           opVec3_dot_zero_left, opVec3_dot_zero_right,
+           opVec3_leftScale_zero, opVec3_rightScale_zero,
+           opVec3_skewCross_zero_left, opVec3_skewCross_zero_right];
+     try noncomm_ring)
+
+/-- **Theorem 73 (Archetype LVII — Noncommutative Beltrami Lamb Vanishing & Viscous Helicity Dissipation)**:
+    Over *any* noncommutative operator ring $A$, for any velocity $u \in \mathrm{OpVec3}\;A$,
+    vorticity $\omega \in \mathrm{OpVec3}\;A$, and viscous decay operator
+    $S = \mathrm{opGradeZero}\;(-\nu)\;(-\nu)$:
+    1. Beltrami Collinear Lamb Product Vanishing:
+       $$L_+(u) * L_+(u) = 0.$$
+    2. Exact Noncommutative Viscous Helicity Dissipation Bimodule Law:
+       $$\mathrm{opAnticommutator}\;(S * L_+(u))\;(L_-(\omega)) +
+         \mathrm{opAnticommutator}\;(L_+(u))\;(S * L_-(\omega)) =
+         \mathrm{opGradeZero}\;(\nu * \mathrm{OpVec3.dot}\;u\;\omega + \mathrm{OpVec3.dot}\;(\mathrm{OpVec3.rightScale}\;u\;\nu)\;\omega)\;
+                               (\nu * \mathrm{OpVec3.dot}\;\omega\;u + \mathrm{OpVec3.dot}\;(\mathrm{OpVec3.rightScale}\;\omega\;\nu)\;u).$$ -/
+theorem operator_beltrami_lamb_vanishing_and_viscous_helicity_dissipation
+    (ν : A) (u ω : OpVec3 A) :
+    let U_p := opLightconeRayPlus u
+    let Ω_m := opLightconeRayMinus ω
+    let S := opGradeZero (-ν) (-ν)
+    U_p * U_p = 0 ∧
+    opAnticommutator (S * U_p) Ω_m + opAnticommutator U_p (S * Ω_m) =
+      opGradeZero (ν * OpVec3.dot u ω + OpVec3.dot (OpVec3.rightScale u ν) ω)
+                  (ν * OpVec3.dot ω u + OpVec3.dot (OpVec3.rightScale ω ν) u) := by
+  intro U_p Ω_m S
+  refine ⟨?_, ?_⟩
+  · ext <;>
+    (simp [U_p, opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U_p, Ω_m, S, opAnticommutator, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-! ### Archetypes LVIII & LIX: Quantum Chromo-Hydrodynamics, Algebraic QCD Bianchi Identity, & Nucleus Color Confinement -/
+
+/-- **Symmetric Non-Abelian Color-Commutator Cross Product**
+    $u \times_{\mathrm{color}} v := u \times_{\mathrm{naive}} v + v \times_{\mathrm{naive}} u$. -/
+def OpVec3.colorCross (u v : OpVec3 A) : OpVec3 A :=
+  OpVec3.naiveCross u v + OpVec3.naiveCross v u
+
+/-- **Non-Abelian Yang–Mills Color-Magnetic Field Strength**
+    $F_{\mathrm{YM}}(u) := u \times_{\mathrm{naive}} u = \langle [u_y, u_z], [u_z, u_x], [u_x, u_y] \rangle$. -/
+def OpVec3.yangMillsColorField (u : OpVec3 A) : OpVec3 A :=
+  OpVec3.naiveCross u u
+
+/-- **Left & Right Baryon Color-Singlet Nambu Determinants**
+    $\det_L(v_1, v_2, v_3) = v_1 \cdot (v_2 \times_{\mathrm{skew}} v_3)$ and
+    $\det_R(v_1, v_2, v_3) = (v_1 \times_{\mathrm{skew}} v_2) \cdot v_3$. -/
+def OpVec3.baryonDetLeft (v₁ v₂ v₃ : OpVec3 A) : A := OpVec3.dot v₁ (OpVec3.skewCross v₂ v₃)
+def OpVec3.baryonDetRight (v₁ v₂ v₃ : OpVec3 A) : A := OpVec3.dot (OpVec3.skewCross v₁ v₂) v₃
+
+/-- **Chromo-Magnetic Chern–Simons Color Helicity Operator**
+    $\mathcal{C}_{\mathrm{CS}}(u) := \{L_+(u), L_-(F_{\mathrm{YM}}(u))\} \in \mathcal{G}_0$. -/
+def opChernSimonsColorHelicity (u : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opLightconeRayPlus u) (opLightconeRayMinus (OpVec3.yangMillsColorField u))
+
+/-- **Quark–Antiquark Meson Color-Singlet Operator**
+    $M(v, w) := \{L_+(v), L_-(w)\} \in \mathcal{G}_0$. -/
+def opMesonSinglet (v w : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opLightconeRayPlus v) (opLightconeRayMinus w)
+
+/-- **3-Quark Baryon Color-Singlet Associator Operator**
+    $B(v_1, v_2, v_3) := [L_+(v_1), L_+(v_2), L_+(v_3)] \in \mathcal{G}_0$. -/
+def opBaryonSinglet (v₁ v₂ v₃ : OpVec3 A) : OpZornMatrix A :=
+  opAssociator (opLightconeRayPlus v₁) (opLightconeRayPlus v₂) (opLightconeRayPlus v₃)
+
+/-- **Theorem 74 (Archetype LVIII — Chromo-Hydrodynamic Vorticity Split, Algebraic QCD Bianchi Identity, & Anomaly-Free Chern–Simons Helicity)**:
+    Over *any* noncommutative operator ring $A$, for all 3-color operator fields $u, v \in \mathrm{OpVec3}\;A$:
+    1. Exact Chromo-Hydrodynamic Decomposition of the Ordered Cross Product:
+       $$u \times_{\mathrm{naive}} v + u \times_{\mathrm{naive}} v = (u \times_{\mathrm{skew}} v) + (u \times_{\mathrm{color}} v).$$
+    2. Self-Interaction Isolates Pure Yang–Mills Gluon Field Strength:
+       $$u \times_{\mathrm{skew}} u = 0 \qquad \text{and} \qquad u \times_{\mathrm{color}} u = F_{\mathrm{YM}}(u) + F_{\mathrm{YM}}(u).$$
+    3. Exact Algebraic QCD Bianchi Identity (Jacobi Cancellation of Color-Magnetic Divergence):
+       $$u \cdot F_{\mathrm{YM}}(u) = F_{\mathrm{YM}}(u) \cdot u.$$
+    4. Balanced Chern–Simons Color Helicity in $\mathcal{G}_0$:
+       $$\mathcal{C}_{\mathrm{CS}}(u) = \mathrm{opGradeZero}\;(-(u \cdot F_{\mathrm{YM}}(u)))\;(-(u \cdot F_{\mathrm{YM}}(u))).$$
+    5. Identical Vanishing of the Chiral Anomaly Trace of $\omega(u, F_{\mathrm{YM}}(u))$:
+       $$\mathrm{opZornTrace}\bigl(\mathrm{opCommutator}\;(L_+(u))\;(L_-(F_{\mathrm{YM}}(u)))\bigr) = 0.$$ -/
+theorem chromoHydrodynamics_vorticity_split_bianchi_and_chern_simons
+    (u v : OpVec3 A) :
+    let F_u := OpVec3.yangMillsColorField u
+    OpVec3.naiveCross u v + OpVec3.naiveCross u v =
+      OpVec3.skewCross u v + OpVec3.colorCross u v ∧
+    OpVec3.skewCross u u = 0 ∧
+    OpVec3.colorCross u u = F_u + F_u ∧
+    OpVec3.dot u F_u = OpVec3.dot F_u u ∧
+    opChernSimonsColorHelicity u =
+      opGradeZero (-OpVec3.dot u F_u) (-OpVec3.dot u F_u) ∧
+    opZornTrace (opCommutator (opLightconeRayPlus u) (opLightconeRayMinus F_u)) = 0 := by
+  intro F_u
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp [OpVec3.naiveCross, OpVec3.skewCross, OpVec3.colorCross]; try noncomm_ring)
+  · ext <;> (simp [OpVec3.skewCross, OpVec3.naiveCross]; try noncomm_ring)
+  · ext <;> simp [F_u, OpVec3.colorCross, OpVec3.yangMillsColorField, OpVec3.naiveCross]
+  · simp [F_u, OpVec3.yangMillsColorField, OpVec3.dot, OpVec3.naiveCross]; noncomm_ring
+  · ext <;>
+    (simp [F_u, opChernSimonsColorHelicity, opAnticommutator, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.yangMillsColorField, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · simp [F_u, opZornTrace, opCommutator, opLightconeRayPlus, opLightconeRayMinus,
+          OpVec3.yangMillsColorField, OpVec3.dot, OpVec3.naiveCross]
+    noncomm_ring
+
+/-- **Theorem 75 (Archetype LIX — Quark–Diquark Anti-Triplet Pairing & Meson/Baryon Confinement into the $\mathcal{G}_0$ Leibniz Nucleus)**:
+    Over *any* noncommutative operator ring $A$, for all 3-color quark fields $v, v_1, v_2, v_3, q \in \mathrm{OpVec3}\;A$
+    and antiquark fields $w, \bar{q} \in \mathrm{OpVec3}\;A$:
+    1. Quark $\times$ Quark $\to$ Diquark Anti-Triplet:
+       $$L_+(v_1) * L_+(v_2) = L_-(v_1 \times_{\mathrm{skew}} v_2).$$
+    2. Meson Singlet Lands in the Grade-0 Associative Nucleus $\mathcal{G}_0$:
+       $$M(v, w) = \mathrm{opGradeZero}\;(-(v \cdot w))\;(-(w \cdot v)).$$
+    3. 3-Quark Baryon Singlet Lands in the Grade-0 Associative Nucleus $\mathcal{G}_0$:
+       $$B(v_1, v_2, v_3) = \mathrm{opGradeZero}\;(\det_L(v_1, v_2, v_3))\;(-\det_R(v_1, v_2, v_3)).$$
+    4. Confined Meson & Baryon Singlets Generate Exact Leibniz Derivations on Opposite-Chirality Pairings:
+       $$\mathrm{opCommutator}\;M\;(L_+(q) * L_-(\bar{q})) =
+         (\mathrm{opCommutator}\;M\;(L_+(q))) * L_-(\bar{q}) + L_+(q) * (\mathrm{opCommutator}\;M\;(L_-(\bar{q}))),$$
+       $$\mathrm{opCommutator}\;B\;(L_+(q) * L_-(\bar{q})) =
+         (\mathrm{opCommutator}\;B\;(L_+(q))) * L_-(\bar{q}) + L_+(q) * (\mathrm{opCommutator}\;B\;(L_-(\bar{q}))).$$ -/
+theorem quark_diquark_meson_baryon_nucleus_confinement_and_leibniz
+    (v w v₁ v₂ v₃ q q_bar : OpVec3 A) :
+    let M := opMesonSinglet v w
+    let B := opBaryonSinglet v₁ v₂ v₃
+    let Qp := opLightconeRayPlus q
+    let Qm := opLightconeRayMinus q_bar
+    opLightconeRayPlus v₁ * opLightconeRayPlus v₂ =
+      opLightconeRayMinus (OpVec3.skewCross v₁ v₂) ∧
+    M = opGradeZero (-OpVec3.dot v w) (-OpVec3.dot w v) ∧
+    B = opGradeZero (OpVec3.baryonDetLeft v₁ v₂ v₃) (-OpVec3.baryonDetRight v₁ v₂ v₃) ∧
+    opCommutator M (Qp * Qm) = opCommutator M Qp * Qm + Qp * opCommutator M Qm ∧
+    opCommutator B (Qp * Qm) = opCommutator B Qp * Qm + Qp * opCommutator B Qm := by
+  intro M B Qp Qm
+  have hM : M = opGradeZero (-OpVec3.dot v w) (-OpVec3.dot w v) := by
+    ext <;>
+    (simp [M, opMesonSinglet, opAnticommutator, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  have hB : B = opGradeZero (OpVec3.baryonDetLeft v₁ v₂ v₃) (-OpVec3.baryonDetRight v₁ v₂ v₃) := by
+    ext <;>
+    (simp [B, opBaryonSinglet, opAssociator, opCartanDiag,
+           opLightconeRayPlus, OpVec3.baryonDetLeft, OpVec3.baryonDetRight,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  refine ⟨?_, hM, hB, ?_, ?_⟩
+  · ext <;>
+    (simp [opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [hM]
+    ext <;>
+    (simp [Qp, Qm, opCommutator, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [hB]
+    ext <;>
+    (simp [Qp, Qm, opCommutator, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-!
+## 25. Archetype LX: The Master Nilpotent–Idempotent Trifactor Synthesis (Wavefunction Factors, 4-Factor Associative Square, Madelung–Bernoulli Split, & Contact-Lamb Composition)
+-/
+
+/-- **Left Chiral Wavefunction Factor (`opChiralWaveLeft w = U_-(w) * e_{11}` = $\langle 1, 0, w, 0 \rangle$)**. -/
+def opChiralWaveLeft (w : OpVec3 A) : OpZornMatrix A :=
+  opUnipotentLower w * opPeircePlus
+
+/-- **Right Chiral Wavefunction Factor (`opChiralWaveRight v = e_{11} * U_+(v)` = $\langle 1, v, 0, 0 \rangle$)**. -/
+def opChiralWaveRight (v : OpVec3 A) : OpZornMatrix A :=
+  opPeircePlus * opUnipotentUpper v
+
+/-- **Rank-1 Trifactor Projector (`opTrifactorProjector w v = (U_-(w) * e_{11}) * U_+(v)`)**. -/
+def opTrifactorProjector (w v : OpVec3 A) : OpZornMatrix A :=
+  (opUnipotentLower w * opPeircePlus) * opUnipotentUpper v
+
+lemma opChiralWaveLeft_eq (w : OpVec3 A) :
+    opChiralWaveLeft w = ⟨1, 0, w, 0⟩ := by
+  ext <;> simp [opChiralWaveLeft, opUnipotentLower, opPeircePlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+
+lemma opChiralWaveRight_eq (v : OpVec3 A) :
+    opChiralWaveRight v = ⟨1, v, 0, 0⟩ := by
+  ext <;> simp [opChiralWaveRight, opUnipotentUpper, opPeircePlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+
+lemma opTrifactorProjector_eq (w v : OpVec3 A) :
+    opTrifactorProjector w v = ⟨1, v, w, -OpVec3.dot w v⟩ := by
+  ext <;> simp [opTrifactorProjector, opUnipotentLower, opUnipotentUpper, opPeircePlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+
+/-- **Flow-Conjugated Rank-1 Core Projector (`opFlowProjectorCore w ρ_plus v`)**:
+    $\Pi_{\mathrm{flow}}(w, \rho_+, v) = (U_-(w) * \mathrm{opGradeZero}\;\rho_+\;0) * U_+(-v)$. -/
+def opFlowProjectorCore (w : OpVec3 A) (ρ_plus : A) (v : OpVec3 A) : OpZornMatrix A :=
+  (opUnipotentLower w * opGradeZero ρ_plus 0) * opUnipotentUpper (-v)
+
+/-- **5-Graded Contact-Transverse Trifactor Idempotent (`opContactFlowIdempotent ξ y z`)**:
+    $\Pi_{\mathrm{contact}}(\xi, y, z) = \Pi_{\mathrm{flow}}(\langle \xi, 0, 0 \rangle, 1, \langle 0, y, z \rangle)$. -/
+def opContactFlowIdempotent (ξ y z : A) : OpZornMatrix A :=
+  opFlowProjectorCore ⟨ξ, 0, 0⟩ 1 ⟨0, y, z⟩
+
+/-- **Complementary Contact-Transverse Trifactor Idempotent (`opContactFlowIdempotentCompl ξ y z`)**:
+    $\Pi_{\mathrm{contact}}^\perp(\xi, y, z) = 1 - \Pi_{\mathrm{contact}}(\xi, y, z)$. -/
+def opContactFlowIdempotentCompl (ξ y z : A) : OpZornMatrix A :=
+  1 - opContactFlowIdempotent ξ y z
+
+/-- **Theorem 76 (Archetype LX.1 — Chiral Wavefunction Idempotence, Inner/Outer Contractions, Noether-Sandwich Associators, & Lamb Vorticity Generation)**:
+    Over *any* noncommutative operator ring $A$, for all 3-vectors $v, w, v_1, v_2, w_1, w_2 \in \mathrm{OpVec3}\;A$,
+    let $\Psi_L = \mathrm{opChiralWaveLeft}\;w$, $\Psi_R = \mathrm{opChiralWaveRight}\;v$,
+    $\Pi = \mathrm{opTrifactorProjector}\;w\;v$, and $H_{\mathrm{mod}} = \{L_+(v), L_-(w)\}$:
+    1. Exact Idempotence of Chiral Wavefunction Factors:
+       $$\Psi_L * \Psi_L = \Psi_L \qquad \text{and} \qquad \Psi_R * \Psi_R = \Psi_R.$$
+    2. Inner Contraction = Grade-0 Quantum Metric / Helicity Eigenvalue:
+       $$\Psi_R * \Psi_L = \mathrm{opGradeZero}\;(1 - v \cdot w)\;0.$$
+    3. Outer Contraction = Rank-1 Trifactor Projector:
+       $$\Psi_L * \Psi_R = \Pi \qquad \text{and} \qquad \Pi = \langle 1, v, w, -(w \cdot v) \rangle.$$
+    4. Exact Noether Modular Commutator Law for the 3-Factor Sandwich Associators & Explicit Trifactor Square:
+       $$\mathrm{opAssociator}\;\Psi_R\;\Psi_L\;\Psi_R = \mathrm{opCommutator}\;H_{\mathrm{mod}}\;(L_+(v)), \qquad
+         \mathrm{opAssociator}\;\Psi_L\;\Psi_R\;\Psi_L = \mathrm{opCommutator}\;H_{\mathrm{mod}}\;(L_-(w)),$$
+       $$\Pi * \Pi = \bigl\langle 1 - v \cdot w,\;\; v - v \cdot_{\mathrm{R}} (w \cdot v),\;\;
+                                  w - (w \cdot v) \cdot_{\mathrm{L}} w,\;\; -(w \cdot v) + (w \cdot v) * (w \cdot v) \bigr\rangle.$$
+    5. Same-Chirality Row & Column Composition Generates Arnold's Hydrodynamic Lamb Curl:
+       $$\mathrm{opChiralWaveRight}\;v_1 * \mathrm{opChiralWaveRight}\;v_2 =
+         \mathrm{opChiralWaveRight}\;v_2 + L_-(v_1 \times_{\mathrm{skew}} v_2),$$
+       $$\mathrm{opChiralWaveLeft}\;w_1 * \mathrm{opChiralWaveLeft}\;w_2 =
+         \mathrm{opChiralWaveLeft}\;w_1 - L_+(w_1 \times_{\mathrm{skew}} w_2).$$ -/
+theorem chiralWave_trifactor_contractions_and_four_factor_associativity
+    (w v v₁ v₂ w₁ w₂ : OpVec3 A) :
+    let Ψ_L := opChiralWaveLeft w
+    let Ψ_R := opChiralWaveRight v
+    let Pi_tri := opTrifactorProjector w v
+    let H_mod := opAnticommutator (opLightconeRayPlus v) (opLightconeRayMinus w)
+    Ψ_L * Ψ_L = Ψ_L ∧
+    Ψ_R * Ψ_R = Ψ_R ∧
+    Ψ_R * Ψ_L = opGradeZero (1 - OpVec3.dot v w) 0 ∧
+    Ψ_L * Ψ_R = Pi_tri ∧
+    Pi_tri = ⟨1, v, w, -OpVec3.dot w v⟩ ∧
+    opAssociator Ψ_R Ψ_L Ψ_R = opCommutator H_mod (opLightconeRayPlus v) ∧
+    opAssociator Ψ_L Ψ_R Ψ_L = opCommutator H_mod (opLightconeRayMinus w) ∧
+    Pi_tri * Pi_tri =
+      ⟨1 - OpVec3.dot v w,
+       v - OpVec3.rightScale v (OpVec3.dot w v),
+       w - OpVec3.leftScale (OpVec3.dot w v) w,
+       -OpVec3.dot w v + OpVec3.dot w v * OpVec3.dot w v⟩ ∧
+    opChiralWaveRight v₁ * opChiralWaveRight v₂ =
+      opChiralWaveRight v₂ + opLightconeRayMinus (OpVec3.skewCross v₁ v₂) ∧
+    opChiralWaveLeft w₁ * opChiralWaveLeft w₂ =
+      opChiralWaveLeft w₁ - opLightconeRayPlus (OpVec3.skewCross w₁ w₂) := by
+  intro Ψ_L Ψ_R Pi_tri H_mod
+  refine ⟨?_, ?_, ?_, ?_, opTrifactorProjector_eq w v, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Ψ_L, Ψ_R, Pi_tri, H_mod,
+          opChiralWaveLeft_eq, opChiralWaveRight_eq, opTrifactorProjector_eq,
+          opCartanDiag, opAssociator, opCommutator, opAnticommutator,
+          opLightconeRayPlus, opLightconeRayMinus,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **Theorem 77 (Archetype LX.2 — Madelung–Bohm–Bernoulli Core-Pressure Split of the General Gauss–Bruhat Trifactor Flow)**:
+    Over *any* noncommutative operator ring $A$, for all $w, v \in \mathrm{OpVec3}\;A$ and $\rho_+, \rho_- \in A$:
+    1. Vanishing Trifactor Associators:
+       $$\mathrm{opAssociator}\;(U_-(w))\;(\mathrm{opGradeZero}\;\rho_+\;\rho_-)\;(U_+(v)) = 0 \quad \text{and} \quad
+         \mathrm{opAssociator}\;(U_-(w))\;(\mathrm{opGradeZero}\;\rho_+\;0)\;(U_+(-v)) = 0.$$
+    2. Explicit Madelung–Bohm Coordinates of $\Pi_{\mathrm{flow}}(w, \rho_+, v)$:
+       $$\Pi_{\mathrm{flow}}(w, \rho_+, v) =
+         \Bigl\langle \rho_+,\;\; -(\rho_+ \cdot_{\mathrm{L}} v),\;\; w \cdot_{\mathrm{R}} \rho_+,\;\;
+                      (w \cdot_{\mathrm{R}} \rho_+) \cdot v \Bigr\rangle.$$
+    3. Exact Decomposition into Rank-1 Madelung Core $\oplus$ Complementary Pressure Reservoir:
+       $$\mathrm{opBruhatTrifactor}\;w\;\rho_+\;\rho_-\;v =
+         (\mathrm{opChiralWaveLeft}\;w * \mathrm{opGradeZero}\;\rho_+\;0) * \mathrm{opChiralWaveRight}\;v +
+         \mathrm{opGradeZero}\;0\;\rho_-,$$
+       $$\mathrm{opBruhatTrifactor}\;w\;\rho_+\;\rho_-\;(-v) =
+         \mathrm{opFlowProjectorCore}\;w\;\rho_+\;v + \mathrm{opGradeZero}\;0\;\rho_-.$$
+    4. On-Shell Madelung–Bernoulli Balance ($\rho_- = (w \cdot_{\mathrm{R}} \rho_+) \cdot v$):
+       When the reservoir $\rho_-$ equals the kinetic energy density $(w \cdot_{\mathrm{R}} \rho_+) \cdot v$,
+       the $(1, 1)$ Schur complement vanishes identically:
+       $$\mathrm{opBruhatTrifactor}\;w\;\rho_+\;\bigl((w \cdot_{\mathrm{R}} \rho_+) \cdot v\bigr)\;v =
+         \bigl\langle \rho_+,\;\; \rho_+ \cdot_{\mathrm{L}} v,\;\; w \cdot_{\mathrm{R}} \rho_+,\;\; 0 \bigr\rangle.$$ -/
+theorem madelung_bernoulli_trifactor_core_pressure_decomposition
+    (w v : OpVec3 A) (ρ_plus ρ_minus : A) :
+    let Ψ_L := opChiralWaveLeft w
+    let Ψ_R := opChiralWaveRight v
+    let K_kin := OpVec3.dot (OpVec3.rightScale w ρ_plus) v
+    opAssociator (opUnipotentLower w) (opGradeZero ρ_plus ρ_minus) (opUnipotentUpper v) = 0 ∧
+    opAssociator (opUnipotentLower w) (opGradeZero ρ_plus 0) (opUnipotentUpper (-v)) = 0 ∧
+    opFlowProjectorCore w ρ_plus v =
+      ⟨ρ_plus,
+       -OpVec3.leftScale ρ_plus v,
+       OpVec3.rightScale w ρ_plus,
+       K_kin⟩ ∧
+    opBruhatTrifactor w ρ_plus ρ_minus v =
+      (Ψ_L * opGradeZero ρ_plus 0) * Ψ_R + opGradeZero 0 ρ_minus ∧
+    opBruhatTrifactor w ρ_plus ρ_minus (-v) =
+      opFlowProjectorCore w ρ_plus v + opGradeZero 0 ρ_minus ∧
+    opBruhatTrifactor w ρ_plus K_kin v =
+      ⟨ρ_plus, OpVec3.leftScale ρ_plus v, OpVec3.rightScale w ρ_plus, 0⟩ := by
+  intro Ψ_L Ψ_R K_kin
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Ψ_L, Ψ_R, K_kin, opFlowProjectorCore, opBruhatTrifactor,
+          opChiralWaveLeft, opChiralWaveRight,
+          opUnipotentLower, opUnipotentUpper, opPeircePlus, opCartanDiag, opAssociator,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **Theorem 78 (Archetype LX.3 — 5-Graded Contact-Transverse Strict Idempotence, Orthogonality, & Lamb Vorticity Composition)**:
+    Over *any* noncommutative operator ring $A$, for all $\xi, y, z, \xi_1, y_1, z_1, \xi_2, y_2, z_2 \in A$,
+    let $\Pi = \mathrm{opContactFlowIdempotent}\;\xi\;y\;z$ and $\Pi^\perp = \mathrm{opContactFlowIdempotentCompl}\;\xi\;y\;z$:
+    1. Explicit Coordinates:
+       $$\Pi_{\mathrm{contact}}(\xi, y, z) = \langle 1, \langle 0, -y, -z \rangle, \langle \xi, 0, 0 \rangle, 0 \rangle.$$
+    2. Strict Idempotence in All 8 Non-Associative Channels:
+       $$\Pi * \Pi = \Pi \qquad \text{and} \qquad \Pi^\perp * \Pi^\perp = \Pi^\perp.$$
+    3. Exact Mutual Orthogonality:
+       $$\Pi * \Pi^\perp = 0 \qquad \text{and} \qquad \Pi^\perp * \Pi = 0.$$
+    4. Two-Projector Composition Law (Injecting the Lamb / Symplectic Contact Vorticity $\omega_\perp$):
+       $$\Pi_{\mathrm{contact}}(\xi_1, y_1, z_1) * \Pi_{\mathrm{contact}}(\xi_2, y_2, z_2) =
+         \Pi_{\mathrm{contact}}\!\bigl(\xi_1 + \omega_\perp(y_1, z_1; y_2, z_2),\;\; y_2,\;\; z_2\bigr).$$ -/
+theorem contactFlowIdempotent_strict_idem_orth_and_lamb_composition
+    (ξ y z ξ₁ y₁ z₁ ξ₂ y₂ z₂ : A) :
+    let Pi_c := opContactFlowIdempotent ξ y z
+    let Pi_perp := opContactFlowIdempotentCompl ξ y z
+    let Pi_c1 := opContactFlowIdempotent ξ₁ y₁ z₁
+    let Pi_c2 := opContactFlowIdempotent ξ₂ y₂ z₂
+    Pi_c = ⟨1, ⟨0, -y, -z⟩, ⟨ξ, 0, 0⟩, 0⟩ ∧
+    Pi_c * Pi_c = Pi_c ∧
+    Pi_perp * Pi_perp = Pi_perp ∧
+    Pi_c * Pi_perp = 0 ∧
+    Pi_perp * Pi_c = 0 ∧
+    Pi_c1 * Pi_c2 =
+      opContactFlowIdempotent (ξ₁ + opContactSymplecticForm y₁ z₁ y₂ z₂) y₂ z₂ := by
+  intro Pi_c Pi_perp Pi_c1 Pi_c2
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Pi_c, Pi_perp, Pi_c1, Pi_c2, opContactFlowIdempotent, opContactFlowIdempotentCompl,
+          opFlowProjectorCore, opUnipotentLower, opUnipotentUpper, opCartanDiag,
+          opContactSymplecticForm,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

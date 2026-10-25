@@ -110,6 +110,30 @@ assert z_mul(Om_perp, Lamb_perp) == z_zero()
 assert z_mul(Lamb_perp, Om_perp) == z_zero()
 print("[PASS] FreeAlgebra: 5-Graded Noncommutative Navier-Stokes Lamb Orthogonality & Depletion")
 
+# Verify Archetype LVIII in FreeAlgebra: Algebraic QCD Bianchi Identity u . (u x_naive u) == (u x_naive u) . u
+u_color = (y1, z1, xi1)
+F_ym_color = naive_cross(u_color, u_color)
+assert dot(u_color, F_ym_color) == dot(F_ym_color, u_color)
+print("[PASS] FreeAlgebra: Algebraic QCD Bianchi Identity u . F_YM(u) = F_YM(u) . u")
+
+# Verify Archetype LX in FreeAlgebra: Chiral Wavefunction Factors & 4-Factor Associative Square
+e11 = grade_zero(F(1), F(0))
+v_tri = (y1, z1, xi1)
+w_tri = (y2, z2, xi2)
+Psi_L = (F(1), v_zero(), w_tri, F(0))
+Psi_R = (F(1), v_tri, v_zero(), F(0))
+Pi_tri = z_mul(Psi_L, Psi_R)
+assert z_mul(Psi_L, Psi_L) == Psi_L
+assert z_mul(Psi_R, Psi_R) == Psi_R
+assert z_mul(Psi_R, Psi_L) == grade_zero(F(1) - dot(v_tri, w_tri), F(0))
+assert z_sub(z_mul(z_mul(Psi_R, Psi_L), Psi_R), z_mul(Psi_R, z_mul(Psi_L, Psi_R))) == (
+    F(0),
+    v_sub(right_scale(v_tri, dot(w_tri, v_tri)), left_scale(dot(v_tri, w_tri), v_tri)),
+    v_zero(),
+    F(0),
+)
+print("[PASS] FreeAlgebra: Archetype LX Chiral Wavefunction Factors & Noether-Sandwich Associator")
+
 # 2. Commutative 3D PolynomialRing verification of Universal 3D Zorn Lamb Nilpotence
 R.<ux,uy,uz,wx,wy,wz,dp,dm> = PolynomialRing(QQ, 8)
 

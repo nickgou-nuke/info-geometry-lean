@@ -338,6 +338,98 @@ def main() -> int:
     assert (cOm * cU) * cOm == z_zero()
     print("[PASS] Archetype LIV.4 (Commutative 3D): Universal 3D Zorn Lamb-Velocity & Lamb-Vorticity Nilpotence")
 
+    # 8. Archetypes LV-LVII: Noncommutative QGT, Metriplectic Evolution, & Beltrami Helicity Dissipation
+    Gamma = grade_zero(sp.Integer(1), sp.Integer(-1))
+    Q_qgt = U_op * Om_m + U_op * Om_m
+    Q_dual = Om_m * U_op + Om_m * U_op
+    g_qgt = op_anti(U_op, Om_m)
+    w_berry = op_comm(U_op, Om_m)
+    assert Q_qgt == g_qgt + w_berry
+    assert Q_dual == g_qgt - w_berry
+    assert (z_one() + Gamma) * g_qgt == Q_qgt
+    assert (z_one() - Gamma) * g_qgt == Q_dual
+
+    hp, hm, nup, num, nu = sp.symbols("hp hm nup num nu", commutative=False)
+    H_gen = grade_zero(hp, hm)
+    S_gen = grade_zero(nup, num)
+    X_full = OpZornMatrix(dp, u_vec, w_vec, dm)
+    assert op_comm(H_gen, X_full) + op_anti(S_gen, X_full) == (H_gen + S_gen) * X_full + X_full * (S_gen - H_gen)
+    assert op_anti(S_gen, U_op * Om_m) == op_anti(S_gen, U_op) * Om_m + U_op * op_anti(S_gen, Om_m) - ((U_op * S_gen) * Om_m + (U_op * S_gen) * Om_m)
+    assert op_comm(H_gen, op_anti(S_gen, X_full)) - op_anti(S_gen, op_comm(H_gen, X_full)) == op_anti(op_comm(H_gen, S_gen), X_full)
+
+    c_nu, c_lam = sp.symbols("c_nu c_lam", commutative=True)
+    cu_beltrami = OpVec3(c_lam * c_ux, c_lam * c_uy, c_lam * c_uz)
+    cOm_beltrami_p = lightcone_plus(cu_beltrami)
+    cOm_beltrami_m = lightcone_minus(cu_beltrami)
+    cS_visc = grade_zero(-c_nu * c_lam**2, -c_nu * c_lam**2)
+    cH_hel = op_anti(cU, cOm_beltrami_m)
+    assert cOm_beltrami_p * cU == z_zero()
+    assert op_anti(cS_visc * cU, cOm_beltrami_m) + op_anti(cU, cS_visc * cOm_beltrami_m) == grade_zero(-2 * c_nu * c_lam**2, -2 * c_nu * c_lam**2) * cH_hel
+    print("[PASS] Archetypes LV-LVII: Noncommutative QGT, Metriplectic Evolution & Beltrami Helicity Dissipation")
+
+    # 9. Archetypes LVIII & LIX: Quantum Chromo-Hydrodynamics (Yang-Mills Bianchi, Chern-Simons, & Confinement)
+    def color_cross(u: OpVec3, v: OpVec3) -> OpVec3:
+        return naive_cross(u, v) + naive_cross(v, u)
+
+    F_ym = naive_cross(u_vec, u_vec)
+    assert naive_cross(u_vec, w_vec) + naive_cross(u_vec, w_vec) == skew_cross(u_vec, w_vec) + color_cross(u_vec, w_vec)
+    assert skew_cross(u_vec, u_vec) == v_zero()
+    assert color_cross(u_vec, u_vec) == F_ym + F_ym
+    # Algebraic QCD Bianchi identity: u . F_YM(u) == F_YM(u) . u
+    assert sp.expand(dot(u_vec, F_ym) - dot(F_ym, u_vec)) == 0
+    # Anomaly-free Chern-Simons color helicity in G_0:
+    F_m = lightcone_minus(F_ym)
+    C_cs = op_anti(U_op, F_m)
+    assert C_cs == grade_zero(-dot(u_vec, F_ym), -dot(u_vec, F_ym))
+    w_cs = op_comm(U_op, F_m)
+    assert sp.expand(w_cs.a + w_cs.b) == 0
+
+    # Quark-Diquark-Meson-Baryon Nucleus Confinement:
+    M_singlet = op_anti(U_op, Om_m)
+    B_singlet = op_assoc(U_op, Om_p, lightcone_plus(OpVec3(y1, z1, xi1)))
+    assert M_singlet.v == v_zero() and M_singlet.w == v_zero()
+    assert B_singlet.v == v_zero() and B_singlet.w == v_zero()
+    assert op_comm(M_singlet, U_op * Om_m) == op_comm(M_singlet, U_op) * Om_m + U_op * op_comm(M_singlet, Om_m)
+    assert op_comm(B_singlet, U_op * Om_m) == op_comm(B_singlet, U_op) * Om_m + U_op * op_comm(B_singlet, Om_m)
+    print("[PASS] Archetypes LVIII-LIX: Quantum Chromo-Hydrodynamics, QCD Bianchi & Nucleus Confinement")
+
+    # 10. Archetype LX: Master Nilpotent-Idempotent Trifactor Synthesis
+    e11 = grade_zero(sp.Integer(1), sp.Integer(0))
+    Unip_u = z_one() + U_op
+    Unip_w = z_one() + Om_m
+    Psi_L = Unip_w * e11
+    Psi_R = e11 * Unip_u
+    Pi_tri = Psi_L * Psi_R
+    assert Psi_L * Psi_L == Psi_L
+    assert Psi_R * Psi_R == Psi_R
+    assert Psi_R * Psi_L == grade_zero(sp.Integer(1) - dot(u_vec, w_vec), sp.Integer(0))
+    H_mod_uw = op_anti(U_op, Om_m)
+    assert op_assoc(Psi_R, Psi_L, Psi_R) == op_comm(H_mod_uw, U_op)
+    assert op_assoc(Psi_L, Psi_R, Psi_L) == op_comm(H_mod_uw, Om_m)
+    assert Pi_tri * Pi_tri == OpZornMatrix(
+        sp.Integer(1) - dot(u_vec, w_vec),
+        u_vec - right_scale(u_vec, dot(w_vec, u_vec)),
+        w_vec - left_scale(dot(w_vec, u_vec), w_vec),
+        -dot(w_vec, u_vec) + dot(w_vec, u_vec) * dot(w_vec, u_vec),
+    )
+    # General Gauss-Bruhat Trifactor Madelung-Bernoulli split:
+    T_bruhat = (Unip_w * D_visc) * Unip_u
+    assert T_bruhat == (Psi_L * grade_zero(dp, sp.Integer(0))) * Psi_R + grade_zero(sp.Integer(0), dm)
+    # 5-Graded Contact-Transverse Strict Idempotence & Lamb Composition:
+    def contact_flow_idem(xi_val, y_val, z_val):
+        u_m = z_one() + lightcone_minus(OpVec3(xi_val, sp.Integer(0), sp.Integer(0)))
+        u_p = z_one() + lightcone_plus(OpVec3(sp.Integer(0), -y_val, -z_val))
+        return (u_m * e11) * u_p
+    Pi_c1 = contact_flow_idem(xi1, y1, z1)
+    Pi_c1_perp = z_one() - Pi_c1
+    Pi_c2 = contact_flow_idem(xi2, y2, z2)
+    assert Pi_c1 * Pi_c1 == Pi_c1
+    assert Pi_c1_perp * Pi_c1_perp == Pi_c1_perp
+    assert Pi_c1 * Pi_c1_perp == z_zero()
+    assert Pi_c1_perp * Pi_c1 == z_zero()
+    assert Pi_c1 * Pi_c2 == contact_flow_idem(xi1 + w12, y2, z2)
+    print("[PASS] Archetype LX: Master Nilpotent-Idempotent Trifactor Synthesis & Contact-Lamb Composition")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

@@ -681,6 +681,35 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(zvm_str(c_stress) - 4 * E_vec.dot(B_vec)) == 0
     assert sp.simplify((c_stress[1] + c_stress[2]) - (-4 * ExB)) == sp.zeros(3, 1)
 
+    # 24. Max Zorn (1930) Viereridentitaet, Peirce Zweierregeln/Dreierregeln, & Lagrange Identity
+    # (`zorn_1930_viereridentitaet_and_associator_factorization`,
+    #  `zorn_1930_peirce_zweierregeln_and_scalar_pullthrough`,
+    #  `zorn_1930_peirce_lagrange_and_triple_pole_split`)
+    lhs_1930_1 = zvm_assoc(eX, zvm_mul(eY, eX), eZ)
+    rhs_1930_1 = zvm_mul(eX, zvm_assoc(eX, eY, eZ))
+    assert sp.simplify(lhs_1930_1[0] - rhs_1930_1[0]) == 0
+    assert sp.simplify(lhs_1930_1[1] - rhs_1930_1[1]) == sp.zeros(3, 1)
+    assert sp.simplify(lhs_1930_1[2] - rhs_1930_1[2]) == sp.zeros(3, 1)
+    assert sp.simplify(lhs_1930_1[3] - rhs_1930_1[3]) == 0
+    X12 = (0, xv, sp.zeros(3, 1), 0)
+    Y12 = (0, yv, sp.zeros(3, 1), 0)
+    Z12 = (0, zv, sp.zeros(3, 1), 0)
+    Y21 = (0, sp.zeros(3, 1), yw, 0)
+    Z21 = (0, sp.zeros(3, 1), zw, 0)
+    Z22 = (0, sp.zeros(3, 1), sp.zeros(3, 1), phi3)
+    p1_1930 = zvm_mul(X12, zvm_mul(Y12, Z22))
+    p2_1930 = zvm_mul(zvm_mul(X12, Z22), Y12)
+    p3_1930 = zvm_mul(Z22, zvm_mul(X12, Y12))
+    assert sp.simplify(p1_1930[2] - p2_1930[2]) == sp.zeros(3, 1)
+    assert sp.simplify(p2_1930[2] - p3_1930[2]) == sp.zeros(3, 1)
+    lag_lhs = zvm_mul(X12, zvm_mul(Y21, Z21))
+    lag_rhs = zvm_sub(zvm_mul(Z21, zvm_mul(X12, Y21)), zvm_mul(zvm_mul(Z21, X12), Y21))
+    assert sp.simplify(lag_lhs[2] - lag_rhs[2]) == sp.zeros(3, 1)
+    pole_L_1930 = zvm_mul(zvm_mul(X12, Y12), Z12)
+    pole_R_1930 = zvm_mul(X12, zvm_mul(Y12, Z12))
+    assert sp.simplify(pole_L_1930[3] - xv.dot(yv.cross(zv))) == 0
+    assert sp.simplify(pole_R_1930[0] - xv.dot(yv.cross(zv))) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

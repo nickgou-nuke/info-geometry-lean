@@ -2131,4 +2131,173 @@ theorem zorn_machian_three_body_coplanar_degeneracy
             add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
       ring
 
+/-!
+## 14. Max Zorn (1930): Viereridentität, Peirce Zweierregeln/Dreierregeln, & Lagrange Identity
+-/
+
+/-- Zorn's (1,1) Peirce projection `𝔖₁₁` (`⟨X.a, 0, 0, 0⟩`, 1930 §2 Eq. 6' & §4 p. 145). -/
+def zornPeirce11 (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, fun _ => 0, fun _ => 0, 0⟩
+
+/-- Zorn's (2,2) Peirce projection `𝔖₂₂` (`⟨0, 0, 0, X.b⟩`, 1930 §2 Eq. 6' & §4 p. 145). -/
+def zornPeirce22 (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0, fun _ => 0, fun _ => 0, X.b⟩
+
+/-- Zorn's (1,2) Peirce projection `𝔖₁₂` (`⟨0, X.v, 0, 0⟩`, 1930 §2 Eq. 6' & §4 p. 145). -/
+def zornPeirce12 (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0, X.v, fun _ => 0, 0⟩
+
+/-- Zorn's (2,1) Peirce projection `𝔖₂₁` (`⟨0, 0, X.w, 0⟩`, 1930 §2 Eq. 6' & §4 p. 145). -/
+def zornPeirce21 (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0, fun _ => 0, X.w, 0⟩
+
+/-- **1. Zorn's Viereridentität (1930, §1 Eq. 2, p. 125) & Associator Factorization (§4 p. 142)**:
+    - `[X * Y, Z, W] - [X, Y * Z, W] + [X, Y, Z * W] = X * [Y, Z, W] + [X, Y, Z] * W`.
+    - `[X, Y * X, Z] = X * [X, Y, Z]` and `[Z, X * Y, X] = [Z, Y, X] * X`! -/
+theorem zorn_1930_viereridentitaet_and_associator_factorization
+    (X Y Z W : ZornVectorMatrix R) :
+    zornAssociator (X * Y) Z W - zornAssociator X (Y * Z) W + zornAssociator X Y (Z * W) =
+      X * zornAssociator Y Z W + zornAssociator X Y Z * W ∧
+    zornAssociator X (Y * X) Z = X * zornAssociator X Y Z ∧
+    zornAssociator Z (X * Y) X = zornAssociator Z Y X * X := by
+  have hb (A B C : ZornVectorMatrix R) : zornAssociator A B C = bundledAssociator A B C := rfl
+  simp only [hb]
+  refine ⟨?_, ?_, ?_⟩
+  · have ht := teichmuller X Y Z W
+    have hz :
+        (bundledAssociator (X * Y) Z W - bundledAssociator X (Y * Z) W +
+          bundledAssociator X Y (Z * W)) -
+        (X * bundledAssociator Y Z W + bundledAssociator X Y Z * W) = 0 := by
+      abel_nf at ht ⊢
+      exact ht
+    exact sub_eq_zero.mp hz
+  · rw [bundledAssociator_swap23 X (Y * X) Z, bundledAssociator_right_product X Z Y,
+        bundledAssociator_swap23 X Z Y]
+    simp only [_root_.mul_neg, neg_neg]
+  · rw [bundledAssociator_swap12 Z (X * Y) X, bundledAssociator_mul_right X Y Z,
+        bundledAssociator_cycle Z X Y, bundledAssociator_swap23 Z X Y]
+    simp only [_root_.neg_mul, neg_neg]
+
+/-- **2. Zorn's Peirce Zweierregeln (§2 Eq. 15, p. 132) & Scalar Pull-Through (§2 Eq. 21, p. 135)**:
+    For `X₁₂ = zornPeirce12 X`, `Y₁₂ = zornPeirce12 Y`, and `Z₂₂ = zornPeirce22 Z`:
+    - **Eq. (15)**: `X₁₂ * Y₁₂` lands in the opposite corner `𝔖₂₁` (`zornPeirce21 (X₁₂ * Y₁₂) = X₁₂ * Y₁₂`),
+      is skew-symmetric (`X₁₂ * Y₁₂ + Y₁₂ * X₁₂ = 0`), and is square-zero (`X₁₂ * X₁₂ = 0`).
+    - **Eq. (21) („Durchziehen eines skalaren Faktors“)**:
+      `X₁₂ * (Y₁₂ * Z₂₂) = (X₁₂ * Z₂₂) * Y₁₂` and `(X₁₂ * Z₂₂) * Y₁₂ = Z₂₂ * (X₁₂ * Y₁₂)`! -/
+theorem zorn_1930_peirce_zweierregeln_and_scalar_pullthrough
+    (X Y Z : ZornVectorMatrix R) :
+    let X₁₂ := zornPeirce12 X
+    let Y₁₂ := zornPeirce12 Y
+    let Z₂₂ := zornPeirce22 Z
+    zornPeirce21 (X₁₂ * Y₁₂) = X₁₂ * Y₁₂ ∧
+    X₁₂ * Y₁₂ + Y₁₂ * X₁₂ = 0 ∧
+    X₁₂ * X₁₂ = 0 ∧
+    X₁₂ * (Y₁₂ * Z₂₂) = (X₁₂ * Z₂₂) * Y₁₂ ∧
+    (X₁₂ * Z₂₂) * Y₁₂ = Z₂₂ * (X₁₂ * Y₁₂) := by
+  intro X₁₂ Y₁₂ Z₂₂
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  · ext
+    · simp [X₁₂, Y₁₂, Z₂₂, zornPeirce12, zornPeirce21, zornPeirce22,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, mul, zero, ZornVec3.dot]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₂₂, zornPeirce12, zornPeirce21, zornPeirce22,
+              InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+              InfoGeometry.Algebra.zvm_zero_def, add, mul, zero, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        (simp [X₁₂, Y₁₂, Z₂₂, zornPeirce12, zornPeirce21, zornPeirce22,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, mul, zero, ZornVec3.cross]; try ring)
+    · simp [X₁₂, Y₁₂, Z₂₂, zornPeirce12, zornPeirce21, zornPeirce22,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, mul, zero, ZornVec3.dot]
+
+/-- **3. Zorn's Peirce „Identität von Lagrange“ (§2 Eq. 22, p. 135) & Triple Pole Split (§4 Eqs. 11–12, p. 146)**:
+    - **Eq. (22) („Identität von Lagrange“)**:
+      For `X₁₂ ∈ 𝔖₁₂` and `Y₂₁, Z₂₁ ∈ 𝔖₂₁`,
+      `X₁₂ * (Y₂₁ * Z₂₁) = Z₂₁ * (X₁₂ * Y₂₁) - (Z₂₁ * X₁₂) * Y₂₁`!
+    - **Eqs. (11)–(12) & (23) (Triple-Product Pole Split)**:
+      `(X₁₂ * Y₁₂) * Z₁₂ = ⟨0, 0, 0, zornNambuDet X.v Y.v Z.v⟩`,
+      `X₁₂ * (Y₁₂ * Z₁₂) = ⟨zornNambuDet X.v Y.v Z.v, 0, 0, 0⟩`, and
+      `[X₁₂, Y₁₂, Z₁₂] = (-zornNambuDet X.v Y.v Z.v) • zornGamma`! -/
+theorem zorn_1930_peirce_lagrange_and_triple_pole_split
+    (X Y Z : ZornVectorMatrix R) :
+    let X₁₂ := zornPeirce12 X
+    let Y₁₂ := zornPeirce12 Y
+    let Z₁₂ := zornPeirce12 Z
+    let Y₂₁ := zornPeirce21 Y
+    let Z₂₁ := zornPeirce21 Z
+    X₁₂ * (Y₂₁ * Z₂₁) = Z₂₁ * (X₁₂ * Y₂₁) - (Z₂₁ * X₁₂) * Y₂₁ ∧
+    (X₁₂ * Y₁₂) * Z₁₂ = ⟨0, fun _ => 0, fun _ => 0, zornNambuDet X.v Y.v Z.v⟩ ∧
+    X₁₂ * (Y₁₂ * Z₁₂) = ⟨zornNambuDet X.v Y.v Z.v, fun _ => 0, fun _ => 0, 0⟩ ∧
+    zornAssociator X₁₂ Y₁₂ Z₁₂ = (-zornNambuDet X.v Y.v Z.v) • zornGamma := by
+  intro X₁₂ Y₁₂ Z₁₂ Y₂₁ Z₂₁
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [X₁₂, Y₂₁, Z₂₁, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.dot]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₂₁, Z₂₁, zornPeirce12, zornPeirce21,
+              InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+              InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        (simp [X₁₂, Y₂₁, Z₂₁, zornPeirce12, zornPeirce21,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+               ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · simp [X₁₂, Y₂₁, Z₂₁, zornPeirce12, zornPeirce21,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.dot]
+  · ext
+    · simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, zornNambuDet,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+  · ext
+    · simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, zornNambuDet,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, zornGamma, zornNambuDet,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, zornGamma,
+              InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+              InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+              add, neg, mul, smul, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, zornGamma,
+              InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+              InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+              add, neg, mul, smul, ZornVec3.cross]
+    · simp [X₁₂, Y₁₂, Z₁₂, zornPeirce12, zornGamma, zornNambuDet,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

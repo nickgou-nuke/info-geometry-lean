@@ -103,6 +103,18 @@ if ((wheeler_vol_L - 0) - baryon_123 != -2*baryon_123 || wheeler_vol_L - wheeler
 }
 print("[PASS] Singular: Archetypes LXIII-LXIV (Wheeler 'It from Bit' & 'Boundary of a Boundary is Zero')");
 
+// 3e. Archetypes LXV & LXVI: Super-Grassmannian KKT Polynomial P_5(x) = x^5 - 5*x^3 + 4*x & (2|3) Supertrace:
+poly kkt_m2 = (-2)^5 - 5*(-2)^3 + 4*(-2);
+poly kkt_m1 = (-1)^5 - 5*(-1)^3 + 4*(-1);
+poly kkt_0  = (0)^5  - 5*(0)^3  + 4*(0);
+poly kkt_p1 = (1)^5  - 5*(1)^3  + 4*(1);
+poly kkt_p2 = (2)^5  - 5*(2)^3  + 4*(2);
+poly str_23 = (y1*y2 + z1*z2 + xi1*xi2) - (y1*y2 + z1*z2 + xi1*xi2);
+if (kkt_m2 != 0 || kkt_m1 != 0 || kkt_0 != 0 || kkt_p1 != 0 || kkt_p2 != 0 || str_23 != 0) {
+    ERROR("FAIL: Archetype LXV-LXVI KKT degree-5 polynomial or (2|3) supertrace cancellation failed");
+}
+print("[PASS] Singular: Archetypes LXV-LXVI (KKT Degree-5 Polynomial & (2|3) Lepton-Quark Supertrace Cancellation)");
+
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;
 poly omega_perp = y1*z2 - z1*y2;

@@ -140,6 +140,21 @@ assert(zornMul(Lpq1, zornMul(Lpq2, Lpq3)) == gradeZero(-baryonDet, 0_R))
 assert(zornMul(zornMul(Lpq1, Lpq2), Lpq3) == gradeZero(0_R, -baryonDet))
 print("[PASS] Macaulay2: Archetypes LXIII-LXIV (Wheeler 'It from Bit', 'Boundary of a Boundary is Zero', & 3-Bit Volume)")
 
+-- 2e. Archetypes LXV & LXVI: Euler 5-Grading Operator E_5, Nilradical Derivation, & KKT Degree-5 Minimal Polynomial
+zornEuler5 = (X) -> (
+    {0_R, {-2 * X#1#0, X#1#1, X#1#2}, {2 * X#2#0, -X#2#1, -X#2#2}, 0_R}
+)
+N1p = {0_R, {0_R, y1, z1}, {xi1, 0_R, 0_R}, 0_R}
+N2p = {0_R, {0_R, y2, z2}, {xi2, 0_R, 0_R}, 0_R}
+assert(zornEuler5(zornMul(N1p, N2p)) == zornAdd(zornMul(zornEuler5(N1p), N2p), zornMul(N1p, zornEuler5(N2p))))
+E1A = zornEuler5(Xjvnw)
+E2A = zornEuler5(E1A)
+E3A = zornEuler5(E2A)
+E4A = zornEuler5(E3A)
+E5A = zornEuler5(E4A)
+assert(zornAdd(zornSub(E5A, zornAdd(zornAdd(zornAdd(zornAdd(E3A, E3A), E3A), E3A), E3A)), zornAdd(zornAdd(zornAdd(E1A, E1A), E1A), E1A)) == zornZero)
+print("[PASS] Macaulay2: Archetypes LXV-LXVI (Euler 5-Grading Nilradical Derivation & KKT Degree-5 Minimal Polynomial)")
+
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]
 omegaPerp = y1*z2 - z1*y2

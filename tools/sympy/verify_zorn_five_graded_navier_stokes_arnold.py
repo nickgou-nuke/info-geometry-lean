@@ -504,6 +504,34 @@ def main() -> int:
     assert (d_1 * d_2) * d_3 == grade_zero(sp.Integer(0), -dot(skew_cross(u_vec, w_vec), v3_vec))
     print("[PASS] Archetypes LXIII-LXIV: Wheeler 'It from Bit', 'Boundary of a Boundary is Zero', & Participatory Loops")
 
+    # ------------------------------------------------------------------
+    # 13. Archetypes LXV & LXVI: Super-Grassmannian 5-Grading Euler Operator,
+    #     KKT Minimal Polynomial (E_5^5 - 5 E_5^3 + 4 E_5 = 0), & (2|3) Supertrace
+    # ------------------------------------------------------------------
+    def euler5(X: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(
+            sp.Integer(0),
+            OpVec3(-2 * X.v.x, X.v.y, X.v.z),
+            OpVec3(2 * X.w.x, -X.w.y, -X.w.z),
+            sp.Integer(0),
+        )
+
+    assert euler5(N1p * N2p) == euler5(N1p) * N2p + N1p * euler5(N2p)
+    assert euler5(N1m * N2m) == euler5(N1m) * N2m + N1m * euler5(N2m)
+    E1_X = euler5(X_full)
+    E2_X = euler5(E1_X)
+    E3_X = euler5(E2_X)
+    E4_X = euler5(E3_X)
+    E5_X = euler5(E4_X)
+    assert E5_X - (E3_X + E3_X + E3_X + E3_X + E3_X) + (E1_X + E1_X + E1_X + E1_X) == z_zero()
+    # (2|3) Lepton-Quark Supertrace cancellation:
+    # Lepton trace tr(gradeZero(u.w, 0)) = u.w; Quark trace tr(G_color(u,w)) = u.x*w.x + u.y*w.y + u.z*w.z = u.w
+    quark_tr = u_vec.x * w_vec.x + u_vec.y * w_vec.y + u_vec.z * w_vec.z
+    lepton_Mat = z_zero() - (lightcone_plus(u_vec) * lightcone_minus(w_vec))
+    lepton_tr = lepton_Mat.a + lepton_Mat.b
+    assert sp.expand(lepton_tr - quark_tr) == 0
+    print("[PASS] Archetypes LXV-LXVI: Euler 5-Grading Derivation, KKT Degree-5 Polynomial, & (2|3) Supertrace Cancellation")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

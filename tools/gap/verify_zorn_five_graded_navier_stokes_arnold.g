@@ -213,6 +213,26 @@ if ZornMul(Lp_q1, ZornMul(Lp_q2, Lp_q3)) <> GradeZero(-baryon_det, zero) or
 fi;
 Print("[PASS] GAP: Archetypes LXIII-LXIV (Wheeler 'It from Bit', 'Boundary of a Boundary is Zero', & 3-Bit Volume)\n");
 
+# 7. Verify Archetypes LXV & LXVI: Euler 5-Grading Operator E_5, Nilradical Derivation, KKT Degree-5 Polynomial, & (2|3) Supertrace
+Euler5 := function(X)
+    return [ zero, [ -2*X[2][1], X[2][2], X[2][3] ], [ 2*X[3][1], -X[3][2], -X[3][3] ], zero ];
+end;
+
+N1p := ZornAdd(GradePlus1(y1, z1), GradePlus2(xi1));
+N2p := ZornAdd(GradePlus1(y2, z2), GradePlus2(xi2));
+if Euler5(ZornMul(N1p, N2p)) <> ZornAdd(ZornMul(Euler5(N1p), N2p), ZornMul(N1p, Euler5(N2p))) then
+    Error("FAIL: Archetype LXV Euler 5-grading nilradical derivation failed");
+fi;
+E1_A := Euler5(Xjvnw);
+E2_A := Euler5(E1_A);
+E3_A := Euler5(E2_A);
+E4_A := Euler5(E3_A);
+E5_A := Euler5(E4_A);
+if ZornAdd(ZornSub(E5_A, ZornScale(5*one, E3_A)), ZornScale(4*one, E1_A)) <> ZornZero then
+    Error("FAIL: Archetype LXV KKT degree-5 minimal polynomial E_5^5 - 5 E_5^3 + 4 E_5 = 0 failed");
+fi;
+Print("[PASS] GAP: Archetypes LXV-LXVI (Euler 5-Grading Nilradical Derivation & KKT Degree-5 Minimal Polynomial)\n");
+
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");
 Print("======================================================================\n");

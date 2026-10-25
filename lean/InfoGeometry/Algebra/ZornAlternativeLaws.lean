@@ -6760,4 +6760,72 @@ theorem zorn_wheeler_it_from_bit_and_boundary_of_boundary
             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
             add, neg, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring }
 
+/-! ## Section 65: The 5-Graded Super-Grassmannian Euler Operator $\mathcal{E}_5$, KKT Degree-5 Polynomial, & $(2|3)$ Lepton–Quark Supertrace Cancellation on `ZornVectorMatrix R` (Archetypes LXV & LXVI) -/
+
+/-- The Euler 5-grading linear operator $\mathcal{E}_5$ on `ZornVectorMatrix R` with eigenvalues $(-2, -1, 0, +1, +2)$ on $(\mathcal{G}_{-2}, \mathcal{G}_{-1}, \mathcal{G}_0, \mathcal{G}_{+1}, \mathcal{G}_{+2})$. -/
+def zornEulerFiveGrading (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0,
+   ![-(2 * X.v 0), X.v 1, X.v 2],
+   ![2 * X.w 0, -X.w 1, -X.w 2],
+   0⟩
+
+/-- **Euler 5-Grading Nilradical Derivation Law, KKT Degree-5 Polynomial $\mathcal{E}_5^5 - 5\mathcal{E}_5^3 + 4\mathcal{E}_5 = 0$, & $(2|3)$ Lepton–Quark Supertrace Cancellation on `ZornVectorMatrix R` (Archetypes LXV & LXVI)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all $X \in \mathrm{ZornVectorMatrix}\;R$,
+    all $y_1, z_1, \xi_1, y_2, z_2, \xi_2 \in R$, and all $u, w \in \mathrm{ZornVec3}\;R$:
+    1. Exact Leibniz Derivation Law of $\mathcal{E}_5$ on the Positive Heisenberg Nilradical $\mathcal{N}_+ = \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$:
+       $$\mathcal{E}_5(N_1 * N_2) = \mathcal{E}_5(N_1) * N_2 + N_1 * \mathcal{E}_5(N_2).$$
+    2. Universal KKT Degree-5 Minimal Polynomial Annihilation ($x^5 - 5x^3 + 4x = 0$):
+       $$\mathcal{E}_5^5(X) + -(5 • \mathcal{E}_5^3(X)) + 4 • \mathcal{E}_5(X) = 0.$$
+    3. $(2|3)$ Lepton–Quark Supertrace UV Cancellation:
+       For the leptonic singlet excitation $L(u, w) = \langle 0, u, 0, 0 \rangle * \langle 0, 0, w, 0 \rangle = \mathrm{zornGradeZero}\;(u \cdot w)\;0$,
+       its leptonic trace $L.a + L.b$ equals the $3 \times 3$ quark outer-product trace $u_0 w_0 + u_1 w_1 + u_2 w_2$, so their $(2|3)$ supertrace difference vanishes identically:
+       $$(L.a + L.b) - (u 0 * w 0 + u 1 * w 1 + u 2 * w 2) = 0.$$ -/
+theorem zorn_euler_five_grading_kkt_and_supercolor_cancellation
+    (X : ZornVectorMatrix R) (y₁ z₁ ξ₁ y₂ z₂ ξ₂ : R) (u w : ZornVec3 R) :
+    let N₁ := zornGradePlus1 y₁ z₁ + zornGradePlus2 ξ₁
+    let N₂ := zornGradePlus1 y₂ z₂ + zornGradePlus2 ξ₂
+    let E1 := zornEulerFiveGrading X
+    let E2 := zornEulerFiveGrading E1
+    let E3 := zornEulerFiveGrading E2
+    let E4 := zornEulerFiveGrading E3
+    let E5 := zornEulerFiveGrading E4
+    let Q_u : ZornVectorMatrix R := ⟨0, u, 0, 0⟩
+    let Q_w : ZornVectorMatrix R := ⟨0, 0, w, 0⟩
+    let L_uw := Q_u * Q_w
+    zornEulerFiveGrading (N₁ * N₂) =
+      zornEulerFiveGrading N₁ * N₂ + N₁ * zornEulerFiveGrading N₂ ∧
+    E5 + -(E3 + E3 + E3 + E3 + E3) + (E1 + E1 + E1 + E1) = 0 ∧
+    L_uw = zornGradeZero (ZornVec3.dot u w) 0 ∧
+    (L_uw.a + L_uw.b) - (u 0 * w 0 + u 1 * w 1 + u 2 * w 2) = 0 := by
+  intro N₁ N₂ E1 E2 E3 E4 E5 Q_u Q_w L_uw
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [N₁, N₂, zornEulerFiveGrading, zornGradePlus1, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [N₁, N₂, zornEulerFiveGrading, zornGradePlus1, zornGradePlus2,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [N₁, N₂, zornEulerFiveGrading, zornGradePlus1, zornGradePlus2,
+               InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.cross]; try ring)
+    · simp [N₁, N₂, zornEulerFiveGrading, zornGradePlus1, zornGradePlus2,
+            InfoGeometry.Algebra.zvm_add_def, add, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [E1, E2, E3, E4, E5, zornEulerFiveGrading,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · rename_i i; fin_cases i <;>
+        (simp [E1, E2, E3, E4, E5, zornEulerFiveGrading,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [E1, E2, E3, E4, E5, zornEulerFiveGrading,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]; try ring)
+    · simp [E1, E2, E3, E4, E5, zornEulerFiveGrading,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+  · ext
+    · simp [L_uw, Q_u, Q_w, zornGradeZero, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [L_uw, Q_u, Q_w, zornGradeZero, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [L_uw, Q_u, Q_w, zornGradeZero, mul, ZornVec3.cross]
+    · simp [L_uw, Q_u, Q_w, zornGradeZero, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · simp [L_uw, Q_u, Q_w, mul, ZornVec3.dot, Fin.sum_univ_three]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

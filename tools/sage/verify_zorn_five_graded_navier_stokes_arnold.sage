@@ -159,6 +159,25 @@ assert z_add(z_mul(d_v_wh, d_w_wh), z_mul(d_w_wh, d_v_wh)) == grade_zero(-dot(v_
 assert z_sub(z_mul(d_v_wh, d_w_wh), z_mul(d_w_wh, d_v_wh)) == grade_zero(-dot(v_tri, w_tri), dot(w_tri, v_tri))
 print("[PASS] FreeAlgebra: Archetypes LXIII-LXIV Wheeler 'It from Bit' & 'Boundary of a Boundary is Zero'")
 
+def z_euler5(X):
+    return (
+        F(0),
+        (-2*X[1][0], X[1][1], X[1][2]),
+        (2*X[2][0], -X[2][1], -X[2][2]),
+        F(0),
+    )
+
+N1p_f = z_add(grade_plus1(y1, z1), grade_plus2(xi1))
+N2p_f = z_add(grade_plus1(y2, z2), grade_plus2(xi2))
+assert z_euler5(z_mul(N1p_f, N2p_f)) == z_add(z_mul(z_euler5(N1p_f), N2p_f), z_mul(N1p_f, z_euler5(N2p_f)))
+E1f = z_euler5(X_jvnw)
+E2f = z_euler5(E1f)
+E3f = z_euler5(E2f)
+E4f = z_euler5(E3f)
+E5f = z_euler5(E4f)
+assert z_add(z_sub(E5f, z_add(z_add(z_add(z_add(E3f, E3f), E3f), E3f), E3f)), z_add(z_add(z_add(E1f, E1f), E1f), E1f)) == z_zero()
+print("[PASS] FreeAlgebra: Archetypes LXV-LXVI Euler 5-Grading Nilradical Derivation & KKT Degree-5 Polynomial")
+
 # 2. Commutative 3D PolynomialRing verification of Universal 3D Zorn Lamb Nilpotence & JvNW Axiom (III)
 R.<ux,uy,uz,wx,wy,wz,dp,dm> = PolynomialRing(QQ, 8)
 

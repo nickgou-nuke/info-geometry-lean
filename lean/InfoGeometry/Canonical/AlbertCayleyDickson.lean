@@ -5328,6 +5328,133 @@ theorem wheeler_it_from_bit_metric_torsion_and_volume_emergence
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     try abel))
 
+/-!
+## 28. Archetypes LXV & LXVI: The 5-Graded Super-Grassmannian, KKT Degree-5 Polynomial, Günaydin–Gürsey $\mathfrak{gl}_3(A)$ Color Bridge, & $(2|3)$ Supertrace Cancellation
+-/
+
+/-- **The Euler 5-Grading Operator (`opEulerFiveGrading X`)**:
+    Assigns eigenvalues $(-2, -1, 0, +1, +2)$ to $(\mathcal{G}_{-2}, \mathcal{G}_{-1}, \mathcal{G}_0, \mathcal{G}_{+1}, \mathcal{G}_{+2})$. -/
+def opEulerFiveGrading (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨0,
+   ⟨-(X.v.x + X.v.x), X.v.y, X.v.z⟩,
+   ⟨X.w.x + X.w.x, -X.w.y, -X.w.z⟩,
+   0⟩
+
+/-- **Günaydin–Gürsey $\mathfrak{gl}_3(A)$ Color Outer-Product Matrix (`opColorOuterMat u w`)**:
+    $G_{\mathrm{color}}(u, w)_{ij} = u_i * w_j \in \mathrm{Matrix}\;(\mathrm{Fin}\;3)\;(\mathrm{Fin}\;3)\;A$. -/
+def opColorOuterMat (u w : OpVec3 A) : Matrix (Fin 3) (Fin 3) A :=
+  !![u.x * w.x, u.x * w.y, u.x * w.z;
+     u.y * w.x, u.y * w.y, u.y * w.z;
+     u.z * w.x, u.z * w.y, u.z * w.z]
+
+/-- Quark color trace $\mathrm{tr}_{\mathrm{quark}}(C) = C_{00} + C_{11} + C_{22}$ on `Matrix (Fin 3) (Fin 3) A`. -/
+def opQuarkTrace (C : Matrix (Fin 3) (Fin 3) A) : A :=
+  C 0 0 + C 1 1 + C 2 2
+
+/-- **The $(2|3)$ Lepton–Quark Supertrace (`opSuperTrace23 L C`)**:
+    $\mathrm{str}_{2|3}(L, C) = \mathrm{opZornTrace}(L) - \mathrm{opQuarkTrace}(C) \in A$. -/
+def opSuperTrace23 (L : OpZornMatrix A) (C : Matrix (Fin 3) (Fin 3) A) : A :=
+  opZornTrace L - opQuarkTrace C
+
+/-- **Theorem 84 (Archetype LXV.1 — Euler 5-Grading Eigenvalues, Nilradical Leibniz Derivation Law, & Universal KKT Polynomial $\mathcal{E}_5^5 - 5\mathcal{E}_5^3 + 4\mathcal{E}_5 = 0$)**:
+    Over *any* noncommutative operator ring $A$, for ALL $X \in \mathrm{OpZornMatrix}\;A$ and
+    all $y, z, \xi, \eta, \rho_+, \rho_-, y_1, z_1, \xi_1, y_2, z_2, \xi_2 \in A$:
+    1. Eigen-Action on $\mathcal{G}_0, \mathcal{G}_{\pm 1}, \mathcal{G}_{\pm 2}$:
+       $$\mathcal{E}_5(\mathrm{opGradeZero}\;\rho_+\;\rho_-) = 0, \qquad
+         \mathcal{E}_5(E_{+1}(y, z)) = E_{+1}(y, z), \qquad
+         \mathcal{E}_5(E_{-1}(y, z)) = -E_{-1}(y, z),$$
+       $$\mathcal{E}_5(E_{+2}(\xi)) = E_{+2}(\xi + \xi), \qquad
+         \mathcal{E}_5(E_{-2}(\eta)) = -E_{-2}(\eta + \eta).$$
+    2. Exact Leibniz Derivation Law on Both Heisenberg Nilradicals $\mathcal{N}_+$ and $\mathcal{N}_-$:
+       $$\mathcal{E}_5(N_{+,1} * N_{+,2}) = \mathcal{E}_5(N_{+,1}) * N_{+,2} + N_{+,1} * \mathcal{E}_5(N_{+,2}),$$
+       $$\mathcal{E}_5(N_{-,1} * N_{-,2}) = \mathcal{E}_5(N_{-,1}) * N_{-,2} + N_{-,1} * \mathcal{E}_5(N_{-,2}).$$
+    3. Universal KKT Degree-5 Minimal Polynomial Annihilation ($\mathcal{E}_5^5 - 5 \mathcal{E}_5^3 + 4 \mathcal{E}_5 = 0$):
+       $$\mathcal{E}_5^5(X) - (\mathcal{E}_5^3(X) + \mathcal{E}_5^3(X) + \mathcal{E}_5^3(X) + \mathcal{E}_5^3(X) + \mathcal{E}_5^3(X)) +
+         (\mathcal{E}_5(X) + \mathcal{E}_5(X) + \mathcal{E}_5(X) + \mathcal{E}_5(X)) = 0.$$ -/
+theorem eulerFiveGrading_eigen_derivation_and_kkt_polynomial
+    (X : OpZornMatrix A) (y z ξ η ρ_plus ρ_minus y₁ z₁ ξ₁ y₂ z₂ ξ₂ : A) :
+    let N_p1 := opHeisenbergNilPlus y₁ z₁ ξ₁
+    let N_p2 := opHeisenbergNilPlus y₂ z₂ ξ₂
+    let N_m1 := opHeisenbergNilMinus y₁ z₁ ξ₁
+    let N_m2 := opHeisenbergNilMinus y₂ z₂ ξ₂
+    let E1 := opEulerFiveGrading X
+    let E2 := opEulerFiveGrading E1
+    let E3 := opEulerFiveGrading E2
+    let E4 := opEulerFiveGrading E3
+    let E5 := opEulerFiveGrading E4
+    opEulerFiveGrading (opGradeZero ρ_plus ρ_minus) = 0 ∧
+    opEulerFiveGrading (opGradePlus1 y z) = opGradePlus1 y z ∧
+    opEulerFiveGrading (opGradeMinus1 y z) = -opGradeMinus1 y z ∧
+    opEulerFiveGrading (opGradePlus2 ξ) = opGradePlus2 (ξ + ξ) ∧
+    opEulerFiveGrading (opGradeMinus2 η) = -opGradeMinus2 (η + η) ∧
+    opEulerFiveGrading (N_p1 * N_p2) =
+      opEulerFiveGrading N_p1 * N_p2 + N_p1 * opEulerFiveGrading N_p2 ∧
+    opEulerFiveGrading (N_m1 * N_m2) =
+      opEulerFiveGrading N_m1 * N_m2 + N_m1 * opEulerFiveGrading N_m2 ∧
+    E5 - (E3 + E3 + E3 + E3 + E3) + (E1 + E1 + E1 + E1) = 0 := by
+  intro N_p1 N_p2 N_m1 N_m2 E1 E2 E3 E4 E5
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [opEulerFiveGrading, opCartanDiag]
+  · ext <;> simp [opEulerFiveGrading, opGradePlus1]
+  · ext <;> simp [opEulerFiveGrading, opGradeMinus1]
+  · ext <;> simp [opEulerFiveGrading, opGradePlus2]
+  · ext <;> (simp [opEulerFiveGrading, opGradeMinus2]; try abel)
+  · ext <;>
+    (simp [N_p1, N_p2, opEulerFiveGrading, opHeisenbergNilPlus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  · ext <;>
+    (simp [N_m1, N_m2, opEulerFiveGrading, opHeisenbergNilMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  · ext <;>
+    (simp [E1, E2, E3, E4, E5, opEulerFiveGrading];
+     try abel)
+
+/-- **Theorem 85 (Archetypes LXV.2 & LXVI — Günaydin–Gürsey $\mathfrak{gl}_3(A)$ Contraction Bridge, $(2|3)$ Lepton–Quark Supertrace UV Cancellation, & Bogoliubov–Weyl Invariance)**:
+    Over *any* noncommutative operator ring $A$, for ALL quark/antiquark 3-vectors $u, w, u_1, w_1, u_2, w_2 \in \mathrm{OpVec3}\;A$
+    and any invertible Bogoliubov–Weyl boost operator $\lambda \in A^\times$ (`lam : Aˣ`):
+    1. $\mathfrak{gl}_3(A)$ Outer-Product Multiplication Intertwines the Zorn Singlet Contraction $w_1 \cdot u_2$:
+       $$G_{\mathrm{color}}(u_1, w_1) * G_{\mathrm{color}}(u_2, w_2) =
+         G_{\mathrm{color}}\bigl(u_1 \cdot_{\mathrm{R}} (w_1 \cdot u_2),\; w_2\bigr).$$
+    2. General & Exact Forward $(2|3)$ Lepton–Quark Supertrace UV Cancellation:
+       $$\mathrm{str}_{2|3}\bigl(-(L_+(u) * L_-(w)),\; G_{\mathrm{color}}(u_2, w_2)\bigr) = u \cdot w - u_2 \cdot w_2,$$
+       $$\mathrm{str}_{2|3}\bigl(-(L_+(u) * L_-(w)),\; G_{\mathrm{color}}(u, w)\bigr) = 0.$$
+    3. Backward Dual $(2|3)$ Lepton–Quark Supertrace UV Cancellation:
+       $$\mathrm{str}_{2|3}\bigl(-(L_-(w) * L_+(u)),\; G_{\mathrm{color}}(w, u)\bigr) = 0.$$
+    4. Noncommutative Hyperbolic Bogoliubov–Weyl Boost Invariance (`lam : Aˣ`):
+       Under $u' = \lambda \cdot_L u$ and $w' = w \cdot_R \lambda^{-1}$,
+       $$w' \cdot u' = w \cdot u \qquad \text{and} \qquad
+         L_-(w') * L_+(u') = L_-(w) * L_+(u).$$ -/
+theorem gunaydin_gursey_color_bridge_supertrace_cancellation_and_bogoliubov
+    (u w u₁ w₁ u₂ w₂ : OpVec3 A) (lam : Aˣ) :
+    let u_boost := OpVec3.leftScale (lam : A) u
+    let w_boost := OpVec3.rightScale w (↑lam⁻¹ : A)
+    opColorOuterMat u₁ w₁ * opColorOuterMat u₂ w₂ =
+      opColorOuterMat (OpVec3.rightScale u₁ (OpVec3.dot w₁ u₂)) w₂ ∧
+    opSuperTrace23 (-(opLightconeRayPlus u * opLightconeRayMinus w)) (opColorOuterMat u₂ w₂) =
+      OpVec3.dot u w - OpVec3.dot u₂ w₂ ∧
+    opSuperTrace23 (-(opLightconeRayPlus u * opLightconeRayMinus w)) (opColorOuterMat u w) = 0 ∧
+    opSuperTrace23 (-(opLightconeRayMinus w * opLightconeRayPlus u)) (opColorOuterMat w u) = 0 ∧
+    OpVec3.dot w_boost u_boost = OpVec3.dot w u ∧
+    opLightconeRayMinus w_boost * opLightconeRayPlus u_boost =
+      opLightconeRayMinus w * opLightconeRayPlus u := by
+  intro u_boost w_boost
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+    (simp [opColorOuterMat, OpVec3.dot, Matrix.mul_apply, Fin.sum_univ_three];
+     try noncomm_ring)
+  · simp [opSuperTrace23, opZornTrace, opQuarkTrace, opLightconeRayPlus, opLightconeRayMinus,
+          opColorOuterMat, OpVec3.dot]
+  · simp [opSuperTrace23, opZornTrace, opQuarkTrace, opLightconeRayPlus, opLightconeRayMinus,
+          opColorOuterMat, OpVec3.dot]
+  · simp [opSuperTrace23, opZornTrace, opQuarkTrace, opLightconeRayPlus, opLightconeRayMinus,
+          opColorOuterMat, OpVec3.dot]
+  · simp [u_boost, w_boost, OpVec3.dot, mul_assoc]
+  · ext <;>
+    simp [u_boost, w_boost, opLightconeRayMinus, opLightconeRayPlus,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, mul_assoc]
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

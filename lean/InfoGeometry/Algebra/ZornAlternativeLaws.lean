@@ -6924,4 +6924,80 @@ theorem zorn_dahm_plucker_klein_bijection_and_maxwell_lagrange_synthesis
     · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmS1, zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, ZornVec3.cross]
     · simp [zornDahmS0, zornDahmS1, zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
 
+/-! ## Section 67: Plücker–Klein Simple Line Square-Zero Nilpotence, Unipotent Line Exponential Group Law, & Zorn Poynting Orthogonality on `ZornVectorMatrix R` (Archetypes LXIX & LXX) -/
+
+/-- Plücker–Klein simple line matrix $J_{\mathrm{line}}(x, y) = \langle 0, \mathbf{p}_{\mathrm{rad}}(x, y), \mathbf{p}_{\mathrm{trans}}(x, y), 0 \rangle$ in `ZornVectorMatrix R`. -/
+def zornPluckerLineMatrix (x y : Fin 4 → R) : ZornVectorMatrix R :=
+  ⟨0, zornPluckerRad x y, zornPluckerTrans x y, 0⟩
+
+/-- **Plücker–Klein Simple Line Square-Zero Theorem ($J_{\mathrm{line}}(x, y)^2 = 0$), Unipotent Line Exponential Group Law, & Zorn Poynting Orthogonality on `ZornVectorMatrix R` (Archetypes LXIX & LXX)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all homogeneous points $x, y : \mathrm{Fin}\;4 \to R$,
+    all scalars $s : R$, and all 3-vector fields $E, B : \mathrm{ZornVec3}\;R$,
+    let $J_{\mathrm{line}} = \mathrm{zornPluckerLineMatrix}\;x\;y$, $L_E = \langle 0, E, 0, 0 \rangle$, and $L_B = \langle 0, B, 0, 0 \rangle$:
+    1. Exact Vanishing of the Plücker–Klein Norm:
+       $$\mathrm{norm}(J_{\mathrm{line}}) = 0.$$
+    2. Exact Square-Zero Nilpotence in All 8 Dimensions of `ZornVectorMatrix R`:
+       $$J_{\mathrm{line}} * J_{\mathrm{line}} = 0.$$
+    3. Exact Unipotent Exponential Inversion of Any Simple Projective Line in $\mathbb{P}^3$:
+       $$(\mathrm{one} + s \bullet J_{\mathrm{line}}) * (\mathrm{one} + -(s \bullet J_{\mathrm{line}})) = \mathrm{one}.$$
+    4. Zorn Poynting 3-Fold Orthogonality ($L_+(\mathbf{E}) * (L_+(\mathbf{E}) * L_+(\mathbf{B})) = 0$ and $L_+(\mathbf{B}) * (L_+(\mathbf{E}) * L_+(\mathbf{B})) = 0$):
+       $$L_E * (L_E * L_B) = 0 \qquad \text{and} \qquad L_B * (L_E * L_B) = 0.$$ -/
+theorem dahm_simple_plucker_line_null_square_and_unipotent_inversion
+    (x y : Fin 4 → R) (s : R) (E B : ZornVec3 R) :
+    let J_line := zornPluckerLineMatrix x y
+    let L_E : ZornVectorMatrix R := ⟨0, E, 0, 0⟩
+    let L_B : ZornVectorMatrix R := ⟨0, B, 0, 0⟩
+    norm J_line = 0 ∧
+    J_line * J_line = 0 ∧
+    (one + s • J_line) * (one + -(s • J_line)) = one ∧
+    L_E * (L_E * L_B) = 0 ∧
+    L_B * (L_E * L_B) = 0 := by
+  intro J_line L_E L_B
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+          norm, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · ext
+    · simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+            mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i; fin_cases i <;>
+        (simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+               mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+               mul, ZornVec3.cross]; try ring)
+    · simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+            mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · ext
+    · simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+            one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i; fin_cases i <;>
+        (simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+               one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+               one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul, mul, ZornVec3.cross]; try ring)
+    · simp [J_line, zornPluckerLineMatrix, zornPluckerRad, zornPluckerTrans,
+            one, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · ext
+    · simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    · rename_i i; fin_cases i <;> simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+  · ext
+    · simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    · rename_i i; fin_cases i <;> simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

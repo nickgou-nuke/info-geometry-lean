@@ -164,7 +164,14 @@ assert(zornMul(dahmS0, dahmS0) == dahmR0)
 assert(zornMul(dahmS1, dahmS1) == dahmR0)
 assert(zornMul(dahmS0, dahmR1) == dahmS1)
 assert(zornMul(zornMul(dahmS1, dahmS0), dahmR1) == dahmR0)
-print("[PASS] Macaulay2: Archetypes LXVII-LXVIII (Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple s1*s0*r1 = r0)")
+-- Archetypes LXIX & LXX: Maxwell-Poynting Hodge-Dual Stress Matrix J(E, B) * J*(E, B) & Simple Plücker Line J_line^2 = 0
+Jem = {0_R, {ux, uy, uz}, {wx, wy, wz}, 0_R}
+Jstar = {0_R, {-wx, -wy, -wz}, {ux, uy, uz}, 0_R}
+Spoynt = vecCross({ux, uy, uz}, {wx, wy, wz})
+assert(zornMul(Jem, Jstar) == {-vecDot({ux, uy, uz}, {ux, uy, uz}), Spoynt, vecScale(-1_R, Spoynt), vecDot({wx, wy, wz}, {wx, wy, wz})})
+Jline = {0_R, {y1*z2 - y2*z1, y1*xi2 - y2*xi1, y1*z3 - y2*y3}, {xi1*z3 - xi2*y3, y3*z2 - z3*z1, z1*xi2 - z2*xi1}, 0_R}
+assert(zornMul(Jline, Jline) == zornZero)
+print("[PASS] Macaulay2: Archetypes LXVII-LXX (Dahm Dihedral D_4, PG(3,2) Triple, Maxwell-Poynting Stress Matrix, & Simple Line J_line^2 = 0)")
 
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]

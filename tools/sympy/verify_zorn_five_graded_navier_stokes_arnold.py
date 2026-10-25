@@ -569,6 +569,19 @@ def main() -> int:
     assert psi_L * e22 == z_zero()
     print("[PASS] Archetypes LXVII-LXVIII: Dahm Plücker-Klein Bijection, Dihedral D_4 / PG(3,2) Collinear Triples, & Lounesto Spinorial Ideals")
 
+    # 15. Archetypes LXIX & LXX: Electromagnetic Hodge Dual Maxwell-Poynting Stress Matrix
+    #     J(E, B) * J*(E, B) = <-(E.E), E x B, -(E x B), B.B> & Simple Line Square-Zero J_line^2 = 0
+    J_em = OpZornMatrix(sp.Integer(0), u_vec, w_vec, sp.Integer(0))
+    J_star = OpZornMatrix(sp.Integer(0), -w_vec, u_vec, sp.Integer(0))
+    J_dual = OpZornMatrix(sp.Integer(0), w_vec, u_vec, sp.Integer(0))
+    S_poynt = skew_cross(u_vec, w_vec)
+    assert J_em * J_star == OpZornMatrix(-dot(u_vec, u_vec), S_poynt, -S_poynt, dot(w_vec, w_vec))
+    assert J_em * J_dual == OpZornMatrix(-dot(u_vec, u_vec), S_poynt, S_poynt, -dot(w_vec, w_vec))
+    assert sp.expand(((J_em * J_star).a + (J_em * J_star).b) - (dot(w_vec, w_vec) - dot(u_vec, u_vec))) == 0
+    assert sp.expand(((dahm_s0 * (J_em * J_star)).a + (dahm_s0 * (J_em * J_star)).b) + (dot(u_vec, u_vec) + dot(w_vec, w_vec))) == 0
+    assert J_em * J_em == grade_zero(-dot(u_vec, w_vec), -dot(w_vec, u_vec))
+    print("[PASS] Archetypes LXIX-LXX: Electromagnetic Hodge-Dual Maxwell-Poynting Stress Matrix & Simple Plücker Line Nilpotence")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

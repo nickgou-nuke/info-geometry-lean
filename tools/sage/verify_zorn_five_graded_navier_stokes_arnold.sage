@@ -231,7 +231,13 @@ assert c_zmul(dahm_s0, dahm_s0) == dahm_r0
 assert c_zmul(dahm_s1, dahm_s1) == dahm_r0
 assert c_zmul(dahm_s0, dahm_r1) == dahm_s1
 assert c_zmul(c_zmul(dahm_s1, dahm_s0), dahm_r1) == dahm_r0
-print("[PASS] PolynomialRing: Archetypes LXVII-LXVIII (Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple s1*s0*r1 = r0)")
+# Archetypes LXIX & LXX: Maxwell-Poynting Hodge-Dual Stress Matrix J(E, B) * J*(E, B)
+J_em_c = (R(0), (ux, uy, uz), (wx, wy, wz), R(0))
+J_star_c = (R(0), (-wx, -wy, -wz), (ux, uy, uz), R(0))
+S_c = c_cross((ux, uy, uz), (wx, wy, wz))
+S_neg_c = tuple(-x for x in S_c)
+assert c_zmul(J_em_c, J_star_c) == (-c_dot((ux, uy, uz), (ux, uy, uz)), S_c, S_neg_c, c_dot((wx, wy, wz), (wx, wy, wz)))
+print("[PASS] PolynomialRing: Archetypes LXVII-LXX (Dahm Dihedral D_4, PG(3,2) Triple, & Maxwell-Poynting Hodge-Dual Stress Matrix)")
 
 print("======================================================================")
 print("ALL CHECKS PASSED")

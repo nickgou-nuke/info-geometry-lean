@@ -5636,6 +5636,80 @@ theorem dahm_dihedral_d4_pg32_line_triple_and_lounesto_spinor_ideals
   · ext <;> simp [opLounestoSpinorLeft, opPeircePlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
   · ext <;> simp [opLounestoSpinorLeft, opPeirceMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
 
+/-!
+## 30. Archetypes LXIX & LXX: Electromagnetic Hodge Duality & the 8D Operator Maxwell–Poynting Stress Matrix in `OpZornMatrix A`
+-/
+
+/-- **Plücker–Klein Line Complex Matrix (`opLineComplex E B`)**:
+    $J(\mathbf{E}, \mathbf{B}) = \langle 0, \mathbf{E}, \mathbf{B}, 0 \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opLineComplex (E B : OpVec3 A) : OpZornMatrix A :=
+  ⟨0, E, B, 0⟩
+
+/-- **Electromagnetic Hodge Dual Line Complex (`opLineHodgeDual E B`)**:
+    $J^\star(\mathbf{E}, \mathbf{B}) = \langle 0, -\mathbf{B}, \mathbf{E}, 0 \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+def opLineHodgeDual (E B : OpVec3 A) : OpZornMatrix A :=
+  ⟨0, -B, E, 0⟩
+
+/-- **Theorem 88 (Archetype LXIX — Operator Maxwell–Poynting Stress Matrix, Lagrangian & Hamiltonian Traces, Dual-Line Product, & Plücker–Klein Square)**:
+    Over *any* noncommutative operator ring $A$, for ALL 3-vector fields $\mathbf{E}, \mathbf{B} \in \mathrm{OpVec3}\;A$,
+    let $J = \mathrm{opLineComplex}\;\mathbf{E}\;\mathbf{B}$ and $J^\star = \mathrm{opLineHodgeDual}\;\mathbf{E}\;\mathbf{B}$:
+    1. Exact 8D Operator Maxwell–Poynting Stress Product ($J * J^\star$):
+       $$J * J^\star =
+         \bigl\langle -(\mathbf{E} \cdot \mathbf{E}),\;\;
+                      \mathbf{S}(\mathbf{E}, \mathbf{B}),\;\;
+                      -\mathbf{S}(\mathbf{E}, \mathbf{B}),\;\;
+                      \mathbf{B} \cdot \mathbf{B} \bigr\rangle.$$
+    2. Dual-Line Conjugate Stress Product ($J * \mathrm{opLineDualConj}\;J$):
+       $$J * \mathrm{opLineDualConj}\;J =
+         \bigl\langle -(\mathbf{E} \cdot \mathbf{E}),\;\;
+                      \mathbf{S}(\mathbf{E}, \mathbf{B}),\;\;
+                      \mathbf{S}(\mathbf{E}, \mathbf{B}),\;\;
+                      -(\mathbf{B} \cdot \mathbf{B}) \bigr\rangle.$$
+    3. Trace of $J * J^\star$ Isolates Dahm's First Maxwell Lagrangian Invariant $I_1(\mathbf{E}, \mathbf{B}) = \mathbf{B} \cdot \mathbf{B} - \mathbf{E} \cdot \mathbf{E}$:
+       $$\mathrm{opZornTrace}(J * J^\star) = -((\mathbf{E} \cdot \mathbf{E}) - (\mathbf{B} \cdot \mathbf{B})).$$
+    4. Chiral Trace of $J * J^\star$ Isolates Minus the Total Maxwell Hamiltonian Energy Density $-(\mathbf{E} \cdot \mathbf{E} + \mathbf{B} \cdot \mathbf{B})$:
+       $$\mathrm{opZornTrace}(\mathrm{opDahmS0} * (J * J^\star)) = -(\mathbf{E} \cdot \mathbf{E} + \mathbf{B} \cdot \mathbf{B}).$$
+    5. Self-Square Isolates Dahm's Second (Plücker–Klein Pfaffian) Invariant $I_2(\mathbf{E}, \mathbf{B}) = \mathbf{E} \cdot \mathbf{B}$:
+       $$J * J = \mathrm{opGradeZero}\;(-I_2(\mathbf{E}, \mathbf{B}))\;(-I_2(\mathbf{B}, \mathbf{E})).$$
+    6. Hodge Dual Period-4 Complex Structure:
+       $$\mathrm{opLineHodgeDual}\;(-\mathbf{B})\;\mathbf{E} = -J.$$ -/
+theorem dahm_hodge_dual_maxwell_poynting_stress_tensor
+    (E B : OpVec3 A) :
+    let J := opLineComplex E B
+    let J_star := opLineHodgeDual E B
+    J * J_star =
+      ⟨-OpVec3.dot E E,
+       opPoyntingAxis E B,
+       -opPoyntingAxis E B,
+       OpVec3.dot B B⟩ ∧
+    J * opLineDualConj J =
+      ⟨-OpVec3.dot E E,
+       opPoyntingAxis E B,
+       opPoyntingAxis E B,
+       -OpVec3.dot B B⟩ ∧
+    opZornTrace (J * J_star) = -OpVec3.dot E E + OpVec3.dot B B ∧
+    opZornTrace (opDahmS0 * (J * J_star)) = -(OpVec3.dot E E + OpVec3.dot B B) ∧
+    J * J = opGradeZero (-opPluckerKleinQuadric E B) (-opPluckerKleinQuadric B E) ∧
+    opLineHodgeDual (-B) E = -J := by
+  intro J J_star
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [J, J_star, opLineComplex, opLineHodgeDual, opPoyntingAxis,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  · ext <;>
+    (simp [J, opLineComplex, opLineDualConj, opPoyntingAxis,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  · simp [J, J_star, opLineComplex, opLineHodgeDual, opZornTrace, OpVec3.dot]
+    abel
+  · simp [J, J_star, opDahmS0, opLineComplex, opLineHodgeDual, opZornTrace, OpVec3.dot]
+    abel
+  · ext <;>
+    simp [J, opLineComplex, opCartanDiag, opPluckerKleinQuadric,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [J, opLineComplex, opLineHodgeDual]
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

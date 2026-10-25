@@ -782,6 +782,32 @@ theorem operator_dahm_projective_line_geometry_pg32_and_sl2h_master_bridge
   ⟨dahm_plucker_klein_quadric_and_maxwell_poynting_invariants E B x_even x_odd X,
    dahm_dihedral_d4_pg32_line_triple_and_lounesto_spinor_ideals ψ₁ ψ₂ u₁ w₁ u₂ w₂ u₃ w₃⟩
 
+/-- **Theorem 21 (Master Operator Maxwell–Poynting Stress Matrix & Electromagnetic Hodge Duality Bridge — Archetypes LXIX & LXX)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all 3-vector fields $\mathbf{E}, \mathbf{B} \in \mathrm{OpVec3}\;A$:
+    - $J(\mathbf{E}, \mathbf{B}) * J^\star(\mathbf{E}, \mathbf{B}) = \langle -(\mathbf{E}\cdot\mathbf{E}),\; \mathbf{S}(\mathbf{E},\mathbf{B}),\; -\mathbf{S}(\mathbf{E},\mathbf{B}),\; \mathbf{B}\cdot\mathbf{B} \rangle$,
+    - $J(\mathbf{E}, \mathbf{B}) * \mathrm{opLineDualConj}(J(\mathbf{E}, \mathbf{B})) = \langle -(\mathbf{E}\cdot\mathbf{E}),\; \mathbf{S}(\mathbf{E},\mathbf{B}),\; \mathbf{S}(\mathbf{E},\mathbf{B}),\; -(\mathbf{B}\cdot\mathbf{B}) \rangle$,
+    - $\mathrm{opZornTrace}(J * J^\star) = -(\mathbf{E}\cdot\mathbf{E}) + \mathbf{B}\cdot\mathbf{B}$ and $\mathrm{opZornTrace}(\mathrm{opDahmS0} * (J * J^\star)) = -(\mathbf{E}\cdot\mathbf{E} + \mathbf{B}\cdot\mathbf{B})$,
+    - $J(\mathbf{E}, \mathbf{B}) * J(\mathbf{E}, \mathbf{B}) = \mathrm{opGradeZero}\;(-I_2(\mathbf{E}, \mathbf{B}))\;(-I_2(\mathbf{B}, \mathbf{E}))$ and $\mathrm{opLineHodgeDual}\;(-\mathbf{B})\;\mathbf{E} = -J(\mathbf{E}, \mathbf{B})$. -/
+theorem operator_dahm_maxwell_poynting_hodge_dual_stress_master_bridge
+    (E B : OpVec3 A) :
+    let J := opLineComplex E B
+    let J_star := opLineHodgeDual E B
+    J * J_star =
+      ⟨-OpVec3.dot E E,
+       opPoyntingAxis E B,
+       -opPoyntingAxis E B,
+       OpVec3.dot B B⟩ ∧
+    J * opLineDualConj J =
+      ⟨-OpVec3.dot E E,
+       opPoyntingAxis E B,
+       opPoyntingAxis E B,
+       -OpVec3.dot B B⟩ ∧
+    opZornTrace (J * J_star) = -OpVec3.dot E E + OpVec3.dot B B ∧
+    opZornTrace (opDahmS0 * (J * J_star)) = -(OpVec3.dot E E + OpVec3.dot B B) ∧
+    J * J = opGradeZero (-opPluckerKleinQuadric E B) (-opPluckerKleinQuadric B E) ∧
+    opLineHodgeDual (-B) E = -J :=
+  dahm_hodge_dual_maxwell_poynting_stress_tensor E B
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

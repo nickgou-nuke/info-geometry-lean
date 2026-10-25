@@ -244,7 +244,14 @@ fi;
 if ZornMul(ZornMul(DahmS0, DahmS1), DahmR1) <> DahmR0 then
     Error("FAIL: Archetype LXVIII Dahm PG(3,2) collinear triple product (s0*s1)*r1 = r0 failed");
 fi;
-Print("[PASS] GAP: Archetypes LXVII-LXVIII (Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple s0*s1*r1 = r0)\n");
+# Archetypes LXIX & LXX: Maxwell-Poynting Hodge-Dual Stress Matrix J(E, B) * J*(E, B)
+J_EM := [ zero, [ux, uy, uz], [wx, wy, wz], zero ];
+J_Star := [ zero, [-wx, -wy, -wz], [ux, uy, uz], zero ];
+S_Poynt := VecCross([ux, uy, uz], [wx, wy, wz]);
+if ZornMul(J_EM, J_Star) <> [ -VecDot([ux, uy, uz], [ux, uy, uz]), S_Poynt, [-S_Poynt[1], -S_Poynt[2], -S_Poynt[3]], VecDot([wx, wy, wz], [wx, wy, wz]) ] then
+    Error("FAIL: Archetype LXIX Maxwell-Poynting Hodge-dual stress matrix failed");
+fi;
+Print("[PASS] GAP: Archetypes LXVII-LXX (Dahm Dihedral D_4, PG(3,2) Collinear Triple, & Maxwell-Poynting Hodge-Dual Stress Matrix)\n");
 
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");

@@ -1607,6 +1607,24 @@ theorem cliffordWeyl_noncomm_relations :
    simp [cliffordU, cliffordV, twoPeircePlus, twoPeirceMinus,
          Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply])
 
+/-- **19. Clifford–Weyl Anticommutation & Peirce Intertwining in $M_2(F)$**:
+    1. $\Gamma^2 = I_2$, $Q^2 = I_2$, and $J^2 = -I_2$.
+    2. Mutual Clifford Anticommutativity: $\Gamma Q + Q \Gamma = 0$, $\Gamma J + J \Gamma = 0$, $Q J + J Q = 0$.
+    3. Exact Peirce Intertwining: $Q e_{11} = e_{22} Q$ and $J e_{11} = e_{22} J$. -/
+theorem cliffordWeyl_noncomm_involutions_and_intertwining :
+    (polarizationGamma : SplitQuaternion F) * polarizationGamma = 1 ∧
+    (velocityQ : SplitQuaternion F) * velocityQ = 1 ∧
+    (wheelJ : SplitQuaternion F) * wheelJ = -1 ∧
+    (polarizationGamma : SplitQuaternion F) * velocityQ + velocityQ * polarizationGamma = 0 ∧
+    (polarizationGamma : SplitQuaternion F) * wheelJ + wheelJ * polarizationGamma = 0 ∧
+    (velocityQ : SplitQuaternion F) * wheelJ + wheelJ * velocityQ = 0 ∧
+    (velocityQ : SplitQuaternion F) * peircePlus = peirceMinus * velocityQ ∧
+    (wheelJ : SplitQuaternion F) * peircePlus = peirceMinus * wheelJ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext i j; fin_cases i <;> fin_cases j <;>
+   simp [polarizationGamma, velocityQ, wheelJ, peircePlus, peirceMinus,
+         peirceSeedD, peirceSeedB, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply])
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

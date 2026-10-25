@@ -5164,4 +5164,59 @@ theorem peirceDiagonalOperator_eigen_and_spectral_annihilation
           norm, InfoGeometry.Algebra.zvm_add_def, add, ZornVec3.dot, Fin.sum_univ_three]
     ring
 
+/-- **45. Unconditional 8D Transition Projective Idempotence & Multi-Archetype Commutator Clifford Law**:
+    Because every element of $\mathrm{Zorn}(R)$ is quadratic over $R$ and the composition norm is
+    multiplicative (`norm (Π₁ * Π₂) = 0`), the product $P_{12} = \Pi_1 * \Pi_2$ of ANY two tilted
+    projective Peirce idempotents $\Pi_1, \Pi_2 \in \mathrm{Zorn}(R)$ is itself a projective idempotent
+    across the **entire 8D non-associative algebra** (requiring no coplanarity hypothesis!):
+    - **Unconditional 8D Transition Idempotence**:
+      `(Π₁ * Π₂) * (Π₁ * Π₂) = σ(Π₁, Π₂) • (Π₁ * Π₂)` and
+      `(Π₂ * Π₁) * (Π₂ * Π₁) = σ(Π₁, Π₂) • (Π₂ * Π₁)`.
+    - **Traceless 7D Malcev Commutator**:
+      `trace (Π₁ * Π₂ - Π₂ * Π₁) = 0` and `(Π₁ * Π₂ - Π₂ * Π₁) + conj (Π₁ * Π₂ - Π₂ * Π₁) = 0`.
+    - **Multi-Archetype Commutator Clifford Square**:
+      `(Π₁ * Π₂ - Π₂ * Π₁) * (Π₁ * Π₂ - Π₂ * Π₁) = (-norm (Π₁ * Π₂ - Π₂ * Π₁)) • 1`! -/
+theorem twoArchetype_transition_idempotence_and_commutator_clifford
+    (r₁ r₂ c₁ s₁ r'₁ r'₂ c₂ s₂ : R) (v₁ w₁ v₂ w₂ : ZornVec3 R) :
+    let P₁ := tiltedPeircePlus r₁ r₂ c₁ s₁ v₁ w₁
+    let P₂ := tiltedPeircePlus r'₁ r'₂ c₂ s₂ v₂ w₂
+    let σ := bargmannFidelity r₁ r₂ c₁ s₁ v₁ w₁ r'₁ r'₂ c₂ s₂ v₂ w₂
+    let C₁₂ := P₁ * P₂ - P₂ * P₁
+    (P₁ * P₂) * (P₁ * P₂) = σ • (P₁ * P₂) ∧
+    (P₂ * P₁) * (P₂ * P₁) = σ • (P₂ * P₁) ∧
+    trace C₁₂ = 0 ∧
+    C₁₂ + conj C₁₂ = 0 ∧
+    C₁₂ * C₁₂ = (-norm C₁₂) • (one : ZornVectorMatrix R) := by
+  intro P₁ P₂ σ C₁₂
+  have h43 := twoArchetype_bargmann_sandwich_and_fidelity r₁ r₂ c₁ s₁ r'₁ r'₂ c₂ s₂ v₁ w₁ v₂ w₂
+  have h_tr12 : trace (P₁ * P₂) = σ := h43.1
+  have h_tr21 : trace (P₂ * P₁) = σ := h43.2.1
+  have h_norm12 : norm (P₁ * P₂) = 0 := h43.2.2.2.2.2
+  have h_norm21 : norm (P₂ * P₁) = 0 := by
+    change norm (mul P₂ P₁) = 0
+    rw [norm_mul, (tiltedPeirce_norm_central_sum_and_associators r'₁ r'₂ c₂ s₂ v₂ w₂ 0).1,
+        MulZeroClass.zero_mul]
+  have h_tr_comm : trace C₁₂ = 0 := by
+    have h_sub : trace C₁₂ = trace (P₁ * P₂) - trace (P₂ * P₁) := by
+      simp [C₁₂, _root_.sub_eq_add_neg, trace, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, add, neg]
+      ring
+    rw [h_sub, h_tr12, h_tr21, _root_.sub_self]
+  refine ⟨?_, ?_, h_tr_comm, ?_, ?_⟩
+  · apply sub_eq_zero.mp
+    have hch := (zorn_involution_cayley_hamilton_and_antiautomorphism (P₁ * P₂) 0).2.2.2.1
+    rw [h_tr12, h_norm12, _root_.zero_smul, _root_.add_zero] at hch
+    exact hch
+  · apply sub_eq_zero.mp
+    have hch := (zorn_involution_cayley_hamilton_and_antiautomorphism (P₂ * P₁) 0).2.2.2.1
+    rw [h_tr21, h_norm21, _root_.zero_smul, _root_.add_zero] at hch
+    exact hch
+  · have h_inv := (zorn_involution_cayley_hamilton_and_antiautomorphism C₁₂ 0).1
+    rw [h_tr_comm, _root_.zero_smul] at h_inv
+    exact h_inv
+  · have hch := (zorn_involution_cayley_hamilton_and_antiautomorphism C₁₂ 0).2.2.2.1
+    rw [h_tr_comm, _root_.zero_smul, _root_.sub_zero] at hch
+    rw [neg_smul]
+    exact eq_neg_of_add_eq_zero_left hch
+
 end InfoGeometry.Algebra.ZornVectorMatrix

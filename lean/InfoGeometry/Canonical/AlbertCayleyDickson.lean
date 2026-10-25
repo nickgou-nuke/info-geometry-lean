@@ -1531,6 +1531,24 @@ theorem porterRiccati_tracelessFlowGen_and_casimir_discriminant
     simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
     ring
 
+/-- **16. Porter's Riccati Composition Law & Casimir Discriminant (`porterRiccati_composition_and_tracelessFlowGen_discriminant`)**:
+    1. In any associative ring `A`:
+       `P_{X * Y}(q) = (X 0 0 - q * X 1 0) * P_Y(q) + P_X(q) * (Y 1 0 * q + Y 1 1)`.
+    2. On `M = tracelessFlowGen α β γ`, `P_M(x) = -(β - γ) * x² + (2 * α) * x + (β + γ)`,
+       whose discriminant `(2 * α)² + 4 * (β - γ) * (β + γ)` is `4 * (α² + β² - γ²)`! -/
+theorem porterRiccati_composition_and_tracelessFlowGen_discriminant
+    (X Y : Matrix (Fin 2) (Fin 2) A) (q : A) (α β γ x : F) :
+    porterRiccati (X * Y) q =
+      (X 0 0 - q * X 1 0) * porterRiccati Y q +
+      porterRiccati X q * (Y 1 0 * q + Y 1 1) ∧
+    porterRiccati (tracelessFlowGen α β γ) x =
+      -(β - γ) * (x * x) + (2 * α) * x + (β + γ) ∧
+    (2 * α) * (2 * α) + 4 * (β - γ) * (β + γ) =
+      4 * (α * α + β * β - γ * γ) := by
+  exact ⟨(porterRiccati_factorization_and_mul_composition X Y q).2,
+         (porterRiccati_tracelessFlowGen_and_casimir_discriminant α β γ 0 0 x).1,
+         (porterRiccati_tracelessFlowGen_and_casimir_discriminant α β γ 0 0 x).2.1⟩
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

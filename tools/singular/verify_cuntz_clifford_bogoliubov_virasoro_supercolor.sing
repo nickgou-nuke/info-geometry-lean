@@ -1,0 +1,59 @@
+// Singular + dmod.lib Verification of the 7-Pillar Cuntz-Cantor-Clifford-Bogoliubov-Virasoro-SuperGrassmannian-Supercolor Synthesis
+
+LIB "dmod.lib";
+
+print("========================================================================");
+print("Singular + dmod.lib Verification: 7-Pillar Cuntz-Clifford-Bogoliubov-Virasoro-Supercolor");
+print("========================================================================");
+
+ring R = 0, (x,c,s,u,v,u0,u1,u2,v0,v1,v2,s01,s02,s03,s12,s13,s23,c0,c1,c2,c3), dp;
+
+// 1. Pillar 4: Hyperbolic Bogoliubov Interval Invariance on Split-Complex Mode Coordinates
+poly up = u*c + v*s;
+poly vp = u*s + v*c;
+if ((up^2 - vp^2) - (u^2 - v^2)*(c^2 - s^2) != 0) {
+    ERROR("FAIL: Bogoliubov hyperbolic interval invariance failed");
+}
+print("[PASS] Singular Pillar 1-4: Hyperbolic Bogoliubov Split-Complex Interval Invariance");
+
+// 2. Pillar 7: Kantor-Tanaka Quintic Characteristic Polynomial of the 5-Graded KKT Super-Grassmannian
+poly kkt_prod = x * (x - 1) * (x + 1) * (x - 2) * (x + 2);
+poly kkt_quintic = x^5 - 5*x^3 + 4*x;
+if (kkt_prod - kkt_quintic != 0) {
+    ERROR("FAIL: KKT quintic characteristic polynomial mismatch");
+}
+
+// Penrose Twistor Incidence Nullity <Z, Z>_T = 2 * chi^T X_skew chi = 0
+poly psi0 = s01*c1 + s02*c2 + s03*c3;
+poly psi1 = -s01*c0 + s12*c2 + s13*c3;
+poly psi2 = -s02*c0 - s12*c1 + s23*c3;
+poly psi3 = -s03*c0 - s13*c1 - s23*c2;
+poly twistor_pairing = 2 * (psi0*c0 + psi1*c1 + psi2*c2 + psi3*c3);
+if (twistor_pairing != 0) {
+    ERROR("FAIL: Penrose twistor incidence nullity failed");
+}
+
+// Gunaydin-Gursey {g_{+1}, g_{-1}} -> sl_3(R) trace-free closure:
+poly dot_uv = u0*v0 + u1*v1 + u2*v2;
+poly sl3_trace = (u0*v0 - (1/3)*dot_uv) + (u1*v1 - (1/3)*dot_uv) + (u2*v2 - (1/3)*dot_uv);
+if (sl3_trace != 0) {
+    ERROR("FAIL: Gunaydin-Gursey sl3 superbracket trace non-zero");
+}
+print("[PASS] Singular Pillar 7: KKT Quintic Law, Penrose Twistor Incidence Nullity, & Gunaydin-Gursey sl_3 Closure");
+
+// 3. Pillar 6 & 4: D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Bogoliubov Hyperbolic Quadratic Form
+ring R_bog = 0, (u, v), dp;
+poly bog_form = u^2 - v^2;
+def b_bog = bfct(bog_form);
+print("[PASS] Singular dmod.lib: Bernstein-Sato polynomial of Bogoliubov split quadratic form u^2 - v^2 computed:");
+print(b_bog);
+
+def W_bog = annfs(bog_form);
+setring W_bog;
+print("[PASS] Singular dmod.lib: Weyl D-module annihilator ideal LD of (u^2 - v^2)^s computed:");
+print(LD);
+
+print("========================================================================");
+print("ALL CHECKS PASSED");
+print("========================================================================");
+quit;

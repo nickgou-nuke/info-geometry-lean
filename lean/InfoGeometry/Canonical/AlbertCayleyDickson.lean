@@ -5022,6 +5022,312 @@ theorem contactFlowIdempotent_strict_idem_orth_and_lamb_composition
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     try noncomm_ring))
 
+/-!
+## 26. Archetypes LXI & LXII: The 1934 Jordan–von Neumann–Wigner Formalism in $\mathrm{OpZornMatrix}\;A$ (Non-Associative Interchangeability, Cubic Peirce Polynomial, & Yang–Mills Jordan Balance)
+-/
+
+/-- **Jordan Associator (`opJordanAssoc X Y Z`)** (Jordan–von Neumann–Wigner 1934, Page 31, Eq. 1):
+    $[X, Y, Z]_J := \{ \{X, Y\}, Z \} - \{ X, \{Y, Z\} \}$. -/
+def opJordanAssoc (X Y Z : OpZornMatrix A) : OpZornMatrix A :=
+  opAnticommutator (opAnticommutator X Y) Z - opAnticommutator X (opAnticommutator Y Z)
+
+/-- **Left Jordan Multiplication (`opLeftJordan E X`)** by an operator $E \in \mathrm{OpZornMatrix}\;A$:
+    $L_E(X) := \{E, X\} = E * X + X * E$. -/
+def opLeftJordan (E X : OpZornMatrix A) : OpZornMatrix A :=
+  opAnticommutator E X
+
+/-- **Left Jordan Multiplication by the Primitive Peirce Idempotent $e_{11} = \langle 1, 0, 0, 0 \rangle$**:
+    $L_{e_{11}}(X) := \{e_{11}, X\} = \mathrm{opAnticommutator}\;\mathrm{opPeircePlus}\;X$. -/
+def opLeftJordanPeircePlus (X : OpZornMatrix A) : OpZornMatrix A :=
+  opAnticommutator opPeircePlus X
+
+/-- Right and left distributivity of `OpZornMatrix A` multiplication over addition. -/
+lemma opZorn_add_mul (X Y Z : OpZornMatrix A) :
+    (X + Y) * Z = X * Z + Y * Z := by
+  ext <;>
+  (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+lemma opZorn_mul_add (X Y Z : OpZornMatrix A) :
+    X * (Y + Z) = X * Y + X * Z := by
+  ext <;>
+  (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- Explicit 8-channel action of $L_{e_{11}}(X) = \{e_{11}, X\} = \langle 2 X.a, X.v, X.w, 0 \rangle$. -/
+@[simp] lemma opLeftJordanPeircePlus_eq (X : OpZornMatrix A) :
+    opLeftJordanPeircePlus X = ⟨X.a + X.a, X.v, X.w, 0⟩ := by
+  ext <;>
+  (simp [opLeftJordanPeircePlus, opAnticommutator, opPeircePlus,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try abel)
+
+/-- **Theorem 79 (Archetype LXI.1 — JvNW Page 31 Associator Symmetries & Page 45 Universal Non-Associative Interchangeability Law)**:
+    Over *any* noncommutative operator ring $A$, for ALL $X, Y, Z \in \mathrm{OpZornMatrix}\;A$ and
+    any Grade-0 nucleus operators $\rho_1, \sigma_1, \rho_2, \sigma_2 \in A$:
+    1. Jordan Commutativity:
+       $$\{X, Y\} = \{Y, X\}.$$
+    2. JvNW Page 31, Eq. (2) (Outer Skew-Symmetry of the Jordan Associator):
+       $$[X, Y, Z]_J + [Z, Y, X]_J = 0.$$
+    3. JvNW Page 31, Eq. (3) (Cyclic Jacobi Sum of the Jordan Associator):
+       $$[X, Y, Z]_J + [Y, Z, X]_J + [Z, X, Y]_J = 0.$$
+    4. JvNW Page 45 Universal Non-Associative Interchangeability Identity:
+       $$[X, Y, Z]_J = [[Z, X], Y] +
+         \bigl([X, Y, Z] + [Y, X, Z] + [X, Z, Y] - [Z, X, Y] - [Y, Z, X] - [Z, Y, X]\bigr).$$
+    5. Exact JvNW Page 45 Interchangeability Formula on the Associative Nucleus $\mathcal{G}_0$
+       ($D_1 = \mathrm{opGradeZero}\;\rho_1\;\sigma_1$, $D_2 = \mathrm{opGradeZero}\;\rho_2\;\sigma_2$):
+       $$[D_1, Y, D_2]_J = [[D_2, D_1], Y] \qquad \text{and} \qquad [D_1, Y, D_1]_J = 0.$$ -/
+theorem jvnw_page31_and_page45_nonassociative_interchangeability
+    (X Y Z : OpZornMatrix A) (ρ₁ σ₁ ρ₂ σ₂ : A) :
+    let D₁ := opGradeZero ρ₁ σ₁
+    let D₂ := opGradeZero ρ₂ σ₂
+    opAnticommutator X Y = opAnticommutator Y X ∧
+    opJordanAssoc X Y Z + opJordanAssoc Z Y X = 0 ∧
+    opJordanAssoc X Y Z + opJordanAssoc Y Z X + opJordanAssoc Z X Y = 0 ∧
+    opJordanAssoc X Y Z =
+      opCommutator (opCommutator Z X) Y +
+        (opAssociator X Y Z + opAssociator Y X Z + opAssociator X Z Y -
+          opAssociator Z X Y - opAssociator Y Z X - opAssociator Z Y X) ∧
+    opJordanAssoc D₁ Y D₂ = opCommutator (opCommutator D₂ D₁) Y ∧
+    opJordanAssoc D₁ Y D₁ = 0 := by
+  intro D₁ D₂
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp only [opAnticommutator]
+    ext <;> (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                        OpVec3.add_x, OpVec3.add_y, OpVec3.add_z]; abel)
+  · simp only [opJordanAssoc, opAnticommutator, opZorn_add_mul, opZorn_mul_add]
+    ext <;> (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                        OpZornMatrix.sub_a, OpZornMatrix.sub_v, OpZornMatrix.sub_w, OpZornMatrix.sub_b,
+                        OpZornMatrix.zero_a, OpZornMatrix.zero_v, OpZornMatrix.zero_w, OpZornMatrix.zero_b,
+                        OpVec3.add_x, OpVec3.add_y, OpVec3.add_z,
+                        OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z,
+                        OpVec3.zero_x, OpVec3.zero_y, OpVec3.zero_z]; abel)
+  · simp only [opJordanAssoc, opAnticommutator, opZorn_add_mul, opZorn_mul_add]
+    ext <;> (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                        OpZornMatrix.sub_a, OpZornMatrix.sub_v, OpZornMatrix.sub_w, OpZornMatrix.sub_b,
+                        OpZornMatrix.zero_a, OpZornMatrix.zero_v, OpZornMatrix.zero_w, OpZornMatrix.zero_b,
+                        OpVec3.add_x, OpVec3.add_y, OpVec3.add_z,
+                        OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z,
+                        OpVec3.zero_x, OpVec3.zero_y, OpVec3.zero_z]; abel)
+  · simp only [opJordanAssoc, opAnticommutator, opCommutator, opAssociator,
+               opZorn_add_mul, opZorn_mul_add, opZorn_sub_mul, opZorn_mul_sub]
+    ext <;> (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                        OpZornMatrix.sub_a, OpZornMatrix.sub_v, OpZornMatrix.sub_w, OpZornMatrix.sub_b,
+                        OpVec3.add_x, OpVec3.add_y, OpVec3.add_z,
+                        OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z]; abel)
+  · ext <;>
+    (simp [D₁, D₂, opJordanAssoc, opAnticommutator, opCommutator, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [D₁, opJordanAssoc, opAnticommutator, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-- **Theorem 80 (Archetype LXI.2 — JvNW Theorem 3 Cubic Peirce Polynomial & Theorem 4 / 12 Cross-Product Cancellation)**:
+    Over *any* noncommutative operator ring $A$, for ALL $X \in \mathrm{OpZornMatrix}\;A$,
+    all $\rho_1, \sigma_2 \in A$, and all $v_1, w_1, v_2, w_2 \in \mathrm{OpVec3}\;A$:
+    1. JvNW Theorem 3, Eq. (8) (Page 33: Cubic Peirce Minimal Polynomial of $L_{e_{11}}$):
+       $$L_{e_{11}}^3(X) - 3 L_{e_{11}}^2(X) + 2 L_{e_{11}}(X) = 0.$$
+    2. JvNW Theorem 3, Eq. (10) (Page 33: Explicit Peirce Eigen-Projectors onto $N_0(e_{11}), N_{1/2}(e_{11}), N_1(e_{11})$):
+       $$L_{e_{11}}^2(X) - 3 L_{e_{11}}(X) + 2 X = \mathrm{opGradeZero}\;0\;(X.b + X.b),$$
+       $$-L_{e_{11}}^2(X) + 2 L_{e_{11}}(X) = \mathrm{opKasparovZornJ}\;X.v\;X.w,$$
+       $$L_{e_{11}}^2(X) - L_{e_{11}}(X) = \mathrm{opGradeZero}\;(X.a + X.a)\;0.$$
+    3. JvNW Theorem 4 (Page 34: Orthogonality of Diagonal Peirce Subspaces $N_1(e_{11}) \circ N_0(e_{11}) = 0$):
+       $$\mathrm{opAnticommutator}\;(\mathrm{opGradeZero}\;\rho_1\;0)\;(\mathrm{opGradeZero}\;0\;\sigma_2) = 0.$$
+    4. JvNW Theorem 4 & Theorem 12 (Pages 34 & 41: $N_{1/2}(e_{11}) \circ N_{1/2}(e_{11}) \subseteq N_1(e_{11}) \oplus N_0(e_{11})$ with Zero Cross-Product Leakage):
+       $$\mathrm{opAnticommutator}\;(\mathrm{opKasparovZornJ}\;v_1\;w_1)\;(\mathrm{opKasparovZornJ}\;v_2\;w_2) =
+         \mathrm{opGradeZero}\;\bigl(-(v_1 \cdot w_2 + v_2 \cdot w_1)\bigr)\;\bigl(-(w_1 \cdot v_2 + w_2 \cdot v_1)\bigr).$$ -/
+theorem jvnw_theorem3_cubic_peirce_and_theorem4_multiplication_table
+    (X : OpZornMatrix A) (ρ₁ σ₂ : A) (v₁ w₁ v₂ w₂ : OpVec3 A) :
+    let L1 := opLeftJordanPeircePlus X
+    let L2 := opLeftJordanPeircePlus L1
+    let L3 := opLeftJordanPeircePlus L2
+    L3 - (L2 + L2 + L2) + (L1 + L1) = 0 ∧
+    L2 - (L1 + L1 + L1) + (X + X) = opGradeZero 0 (X.b + X.b) ∧
+    -L2 + (L1 + L1) = opKasparovZornJ X.v X.w ∧
+    L2 - L1 = opGradeZero (X.a + X.a) 0 ∧
+    opAnticommutator (opGradeZero ρ₁ 0) (opGradeZero 0 σ₂) = 0 ∧
+    opAnticommutator (opKasparovZornJ v₁ w₁) (opKasparovZornJ v₂ w₂) =
+      opGradeZero (-(OpVec3.dot v₁ w₂ + OpVec3.dot v₂ w₁))
+                  (-(OpVec3.dot w₁ v₂ + OpVec3.dot w₂ v₁)) := by
+  intro L1 L2 L3
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp [L1, L2, L3]; try abel)
+  · ext <;> (simp [L1, L2, opCartanDiag]; try abel)
+  · ext <;> (simp [L1, L2, opKasparovZornJ]; try abel)
+  · ext <;> (simp [L1, L2, opCartanDiag]; try abel)
+  · ext <;>
+    (simp [opCartanDiag, opAnticommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross])
+  · ext <;>
+    (simp [opKasparovZornJ, opCartanDiag, opAnticommutator,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+
+/-- Explicit 8-channel action of $L_{\Pi_c}$ on any positive-parabolic operator
+    $\langle a_0, \langle 0, u_y, u_z \rangle, \langle w_x, 0, 0 \rangle, b_0 \rangle \in \mathcal{G}_0 \oplus \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$. -/
+@[simp] lemma opLeftJordan_contact_posParabolic (ξ y z a₀ u_y u_z w_x b₀ : A) :
+    opLeftJordan (opContactFlowIdempotent ξ y z) ⟨a₀, ⟨0, u_y, u_z⟩, ⟨w_x, 0, 0⟩, b₀⟩ =
+      ⟨a₀ + a₀,
+       ⟨0, u_y - (y * b₀ + a₀ * y), u_z - (z * b₀ + a₀ * z)⟩,
+       ⟨w_x + (ξ * a₀ + b₀ * ξ), 0, 0⟩,
+       0⟩ := by
+  ext <;>
+  (simp [opLeftJordan, opAnticommutator, opContactFlowIdempotent, opFlowProjectorCore,
+         opUnipotentLower, opUnipotentUpper, opCartanDiag,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try abel;
+   try noncomm_ring)
+
+/-- **Theorem 81 (Archetype LXII — JvNW Theorem 12 Noncommutative Yang–Mills Balance, Universal Cubic Power-Associativity, & 5-Graded Contact Cubic Peirce Law)**:
+    Over *any* noncommutative operator ring $A$, for ALL $X, Y \in \mathrm{OpZornMatrix}\;A$,
+    all $u \in \mathrm{OpVec3}\;A$, and all $\rho_1, \sigma_1, \xi, y, z, a_0, b_0, u_y, u_z, w_x \in A$:
+    1. Universal Cubic Jordan Power-Associativity on $\mathrm{OpZornMatrix}\;A$:
+       $$[X, X, X]_J = 0 \qquad (\text{i.e., } \{\{X, X\}, X\} = \{X, \{X, X\}\}).$$
+    2. Exact JvNW Fundamental Axiom (III) on the Associative Nucleus $\mathcal{G}_0$ ($D = \mathrm{opGradeZero}\;\rho_1\;\sigma_1$):
+       $$[\{D, D\}, Y, D]_J = 0 \qquad (\text{i.e., } \{\{\{D, D\}, Y\}, D\} = \{\{D, D\}, \{Y, D\}\}).$$
+    3. JvNW Theorem 12 Equal-Weight Law ($\alpha = \beta$, Page 41) on Noncommutative Yang–Mills States
+       $J_{\mathrm{YM}}(u) = \mathrm{opKasparovZornJ}\;u\;(F_{\mathrm{YM}}(u))$ via the QCD Bianchi Identity:
+       $$\{J_{\mathrm{YM}}(u), J_{\mathrm{YM}}(u)\} =
+         \mathrm{opGradeZero}\;\bigl(-(u \cdot F_{\mathrm{YM}}(u) + u \cdot F_{\mathrm{YM}}(u))\bigr)\;
+                               \bigl(-(u \cdot F_{\mathrm{YM}}(u) + u \cdot F_{\mathrm{YM}}(u))\bigr).$$
+    4. 5-Graded Positive-Parabolic Cubic Peirce Law for Any Contact Flow Idempotent $\Pi_c = \mathrm{opContactFlowIdempotent}\;\xi\;y\;z$
+       on $X_+ = \mathrm{opGradeZero}\;a_0\;b_0 + \mathrm{opGradePlus1}\;u_y\;u_z + \mathrm{opGradePlus2}\;w_x \in \mathcal{G}_0 \oplus \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$:
+       $$L_{\Pi_c}^3(X_+) - 3 L_{\Pi_c}^2(X_+) + 2 L_{\Pi_c}(X_+) = 0.$$ -/
+theorem jvnw_theorem12_yang_mills_balance_and_jordan_power_associativity
+    (X Y : OpZornMatrix A) (u : OpVec3 A) (ρ₁ σ₁ ξ y z a₀ b₀ u_y u_z w_x : A) :
+    let D := opGradeZero ρ₁ σ₁
+    let F_u := OpVec3.yangMillsColorField u
+    let J_YM := opKasparovZornJ u F_u
+    let α := -(OpVec3.dot u F_u + OpVec3.dot u F_u)
+    let Pi_c := opContactFlowIdempotent ξ y z
+    let X_pos := opGradeZero a₀ b₀ + opGradePlus1 u_y u_z + opGradePlus2 w_x
+    let Lc1 := opLeftJordan Pi_c X_pos
+    let Lc2 := opLeftJordan Pi_c Lc1
+    let Lc3 := opLeftJordan Pi_c Lc2
+    opJordanAssoc X X X = 0 ∧
+    opJordanAssoc (opAnticommutator D D) Y D = 0 ∧
+    opAnticommutator J_YM J_YM = opGradeZero α α ∧
+    Lc3 - (Lc2 + Lc2 + Lc2) + (Lc1 + Lc1) = 0 := by
+  intro D F_u J_YM α Pi_c X_pos Lc1 Lc2 Lc3
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simp only [opJordanAssoc, opAnticommutator, opZorn_add_mul, opZorn_mul_add]
+    ext <;> (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                        OpZornMatrix.sub_a, OpZornMatrix.sub_v, OpZornMatrix.sub_w, OpZornMatrix.sub_b,
+                        OpZornMatrix.zero_a, OpZornMatrix.zero_v, OpZornMatrix.zero_w, OpZornMatrix.zero_b,
+                        OpVec3.add_x, OpVec3.add_y, OpVec3.add_z,
+                        OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z,
+                        OpVec3.zero_x, OpVec3.zero_y, OpVec3.zero_z]; abel)
+  · ext <;>
+    (simp [D, opJordanAssoc, opAnticommutator, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [F_u, J_YM, α, opAnticommutator, opCartanDiag, opKasparovZornJ,
+           OpVec3.yangMillsColorField, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · have hX : X_pos = ⟨a₀, ⟨0, u_y, u_z⟩, ⟨w_x, 0, 0⟩, b₀⟩ := by
+      ext <;> simp [X_pos, opCartanDiag, opGradePlus1, opGradePlus2]
+    dsimp [Lc3, Lc2, Lc1, Pi_c]
+    rw [hX]
+    ext <;> (simp; try abel; try noncomm_ring)
+
+/-!
+## 27. Archetypes LXIII & LXIV: John Archibald Wheeler's Pregeometry in $\mathrm{OpZornMatrix}\;A$ ("It from Bit", "The Boundary of a Boundary is Zero", & Participatory Idempotent Loops)
+-/
+
+/-- **Wheeler Forward Boundary Differential (`opBoundaryDiffPlus v := P_row(v) - e_{11}` = $\langle 0, v, 0, 0 \rangle$)**. -/
+def opBoundaryDiffPlus (v : OpVec3 A) : OpZornMatrix A :=
+  opChiralWaveRight v - opPeircePlus
+
+/-- **Wheeler Backward Codifferential (`opBoundaryDiffMinus w := P_col(w) - e_{11}` = $\langle 0, 0, w, 0 \rangle$)**. -/
+def opBoundaryDiffMinus (w : OpVec3 A) : OpZornMatrix A :=
+  opChiralWaveLeft w - opPeircePlus
+
+@[simp] lemma opBoundaryDiffPlus_eq (v : OpVec3 A) :
+    opBoundaryDiffPlus v = opLightconeRayPlus v := by
+  ext <;> simp [opBoundaryDiffPlus, opChiralWaveRight_eq, opPeircePlus, opLightconeRayPlus]
+
+@[simp] lemma opBoundaryDiffMinus_eq (w : OpVec3 A) :
+    opBoundaryDiffMinus w = opLightconeRayMinus w := by
+  ext <;> simp [opBoundaryDiffMinus, opChiralWaveLeft_eq, opPeircePlus, opLightconeRayMinus]
+
+/-- **Theorem 82 (Archetype LXIII.1 — Wheeler's "Boundary of a Boundary is Zero" $\partial^2 = 0$ Derived from Binary Idempotents $P^2 = P$)**:
+    Over *any* noncommutative operator ring $A$, for ALL $v, w, u \in \mathrm{OpVec3}\;A$ and $y, z, y_0, z_0, \xi_0 \in A$:
+    1. Exact Idempotence of Binary Bits ("It from Bit"):
+       $$e_{11} * e_{11} = e_{11}, \qquad
+         P_{\mathrm{row}}(v) * P_{\mathrm{row}}(v) = P_{\mathrm{row}}(v), \qquad
+         P_{\mathrm{col}}(w) * P_{\mathrm{col}}(w) = P_{\mathrm{col}}(w).$$
+    2. Exact Nilpotence of Bit-Differences ("The Boundary of a Boundary is Zero", $d^2 = 0$ and $(d^*)^2 = 0$):
+       $$d(v) * d(v) = 0 \qquad \text{and} \qquad d^*(w) * d^*(w) = 0.$$
+    3. 5-Graded Nilradical Chain Boundary Law ($\partial_{y, z} \circ \partial_{y, z} = 0$ on $\mathcal{N}_+$):
+       $$E_{+1}(y, z) * \bigl(E_{+1}(y, z) * N_+(y_0, z_0, \xi_0)\bigr) = 0.$$
+    4. Yang–Mills Bianchi Boundary-of-a-Boundary Law ($d_u F_{\mathrm{YM}}(u) = 0$):
+       $$u \cdot F_{\mathrm{YM}}(u) - F_{\mathrm{YM}}(u) \cdot u = 0.$$ -/
+theorem wheeler_bit_idempotence_and_boundary_of_boundary_zero
+    (v w u : OpVec3 A) (y z y₀ z₀ ξ₀ : A) :
+    let d_v := opBoundaryDiffPlus v
+    let d_w := opBoundaryDiffMinus w
+    let d_yz := opGradePlus1 y z
+    let N₀ := opHeisenbergNilPlus y₀ z₀ ξ₀
+    let F_u := OpVec3.yangMillsColorField u
+    opPeircePlus * (opPeircePlus : OpZornMatrix A) = opPeircePlus ∧
+    opChiralWaveRight v * opChiralWaveRight v = opChiralWaveRight v ∧
+    opChiralWaveLeft w * opChiralWaveLeft w = opChiralWaveLeft w ∧
+    d_v * d_v = 0 ∧
+    d_w * d_w = 0 ∧
+    d_yz * (d_yz * N₀) = 0 ∧
+    OpVec3.dot u F_u - OpVec3.dot F_u u = 0 := by
+  intro d_v d_w d_yz N₀ F_u
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [opPeircePlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> (simp [opChiralWaveRight_eq, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]; try abel)
+  · ext <;> (simp [opChiralWaveLeft_eq, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]; try abel)
+  · ext <;> (simp [d_v, opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross])
+  · ext <;> (simp [d_w, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross])
+  · ext <;>
+    (simp [d_yz, N₀, opGradePlus1, opHeisenbergNilPlus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · simp [F_u, OpVec3.yangMillsColorField, OpVec3.dot, OpVec3.naiveCross]; noncomm_ring
+
+/-- **Theorem 83 (Archetypes LXIII.2 & LXIV — Wheeler's "It from Bit" Emergence of Metric, Spin Connection, Torsion, & 3D Volume from Binary Idempotents)**:
+    Over *any* noncommutative operator ring $A$, for ALL $v, w, v_1, v_2, v_3 \in \mathrm{OpVec3}\;A$,
+    let $d(v) = P_{\mathrm{row}}(v) - e_{11}$ and $d^*(w) = P_{\mathrm{col}}(w) - e_{11}$:
+    1. Born Transition Amplitude from Direct Bit Product:
+       $$P_{\mathrm{row}}(v) * P_{\mathrm{col}}(w) = \mathrm{opGradeZero}\;(1 - v \cdot w)\;0.$$
+    2. Spacetime Metric $g(v, w)$ as the Hodge Laplacian $\{d(v), d^*(w)\}$ of Two Bits:
+       $$d(v) * d^*(w) + d^*(w) * d(v) = \mathrm{opGradeZero}\;(-(v \cdot w))\;(-(w \cdot v)).$$
+    3. Symplectic Spin Connection $\omega(v, w)$ as the Commutator $[d(v), d^*(w)]$ of Two Bits:
+       $$d(v) * d^*(w) - d^*(w) * d(v) = \mathrm{opGradeZero}\;(-(v \cdot w))\;(+(w \cdot v)).$$
+    4. Emergent Spin/Gauge Torsion from Two Sequential Row Bits:
+       $$e_{22} * (P_{\mathrm{row}}(v_1) * P_{\mathrm{row}}(v_2)) = d^*(v_1 \times_{\mathrm{skew}} v_2).$$
+    5. Emergent 3D Spacetime Volume from Three Sequential Bit-Differences:
+       $$d(v_1) * (d(v_2) * d(v_3)) = \mathrm{opGradeZero}\;(-\det_L(v_1, v_2, v_3))\;0 \quad \text{and} \quad
+         (d(v_1) * d(v_2)) * d(v_3) = \mathrm{opGradeZero}\;0\;(-\det_R(v_1, v_2, v_3)).$$ -/
+theorem wheeler_it_from_bit_metric_torsion_and_volume_emergence
+    (v w v₁ v₂ v₃ : OpVec3 A) :
+    let d_v := opBoundaryDiffPlus v
+    let d_w := opBoundaryDiffMinus w
+    let d₁ := opBoundaryDiffPlus v₁
+    let d₂ := opBoundaryDiffPlus v₂
+    let d₃ := opBoundaryDiffPlus v₃
+    opChiralWaveRight v * opChiralWaveLeft w = opGradeZero (1 - OpVec3.dot v w) 0 ∧
+    d_v * d_w + d_w * d_v = opGradeZero (-OpVec3.dot v w) (-OpVec3.dot w v) ∧
+    d_v * d_w - d_w * d_v = opGradeZero (-OpVec3.dot v w) (OpVec3.dot w v) ∧
+    opPeirceMinus * (opChiralWaveRight v₁ * opChiralWaveRight v₂) =
+      opBoundaryDiffMinus (OpVec3.skewCross v₁ v₂) ∧
+    d₁ * (d₂ * d₃) = opGradeZero (-OpVec3.baryonDetLeft v₁ v₂ v₃) 0 ∧
+    (d₁ * d₂) * d₃ = opGradeZero 0 (-OpVec3.baryonDetRight v₁ v₂ v₃) := by
+  intro d_v d_w d₁ d₂ d₃
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [d_v, d_w, d₁, d₂, d₃, opChiralWaveRight_eq, opChiralWaveLeft_eq,
+          opPeirceMinus, opLightconeRayPlus, opLightconeRayMinus, opCartanDiag,
+          OpVec3.baryonDetLeft, OpVec3.baryonDetRight,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try abel))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

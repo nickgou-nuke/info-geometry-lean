@@ -119,6 +119,100 @@ if ZornMul(Om3, Lamb3) <> ZornZero or ZornMul(Lamb3, Om3) <> ZornZero then
 fi;
 Print("[PASS] GAP: Universal 3D Zorn Lamb-Velocity & Lamb-Vorticity Nilpotence\n");
 
+# 4. Verify Archetypes LXI & LXII: 1934 JvNW Cubic Peirce Polynomial & Fundamental Jordan Axiom (III)
+ZornJordan := function(X, Y)
+    return ZornAdd(ZornMul(X, Y), ZornMul(Y, X));
+end;
+
+e11 := GradeZero(one, zero);
+Xjvnw := [ y1, [ux, uy, uz], [wx, wy, wz], z1 ];
+Bjvnw := [ y2, [wx, uz, uy], [ux, wz, wy], z2 ];
+L1e := ZornJordan(e11, Xjvnw);
+L2e := ZornJordan(e11, L1e);
+L3e := ZornJordan(e11, L2e);
+if ZornAdd(ZornSub(L3e, ZornAdd(ZornAdd(L2e, L2e), L2e)), ZornAdd(L1e, L1e)) <> ZornZero then
+    Error("FAIL: 1934 JvNW Cubic Peirce polynomial non-zero");
+fi;
+Asq := ZornJordan(Xjvnw, Xjvnw);
+if ZornJordan(ZornJordan(Asq, Bjvnw), Xjvnw) <> ZornJordan(Asq, ZornJordan(Bjvnw, Xjvnw)) then
+    Error("FAIL: 1934 JvNW Fundamental Jordan Axiom (III) failed");
+fi;
+Print("[PASS] GAP: 1934 JvNW Cubic Peirce Polynomial & Fundamental Jordan Axiom (III)\n");
+
+# 5. Verify Archetypes LV-LX: QGT Madelung Split, Metriplectic Flow, Baryon-Meson Confinement, & Master Trifactor Synthesis
+ZornComm := function(X, Y)
+    return ZornSub(ZornMul(X, Y), ZornMul(Y, X));
+end;
+ZornScale := function(c, X)
+    return [ c*X[1], [c*X[2][1], c*X[2][2], c*X[2][3]], [c*X[3][1], c*X[3][2], c*X[3][3]], c*X[4] ];
+end;
+
+Lp_v := [ zero, [ux, uy, uz], [zero, zero, zero], zero ];
+Lm_w := [ zero, [zero, zero, zero], [wx, wy, wz], zero ];
+QGT_vw := ZornScale(2*one, ZornMul(Lp_v, Lm_w));
+g_vw := ZornJordan(Lp_v, Lm_w);
+om_vw := ZornComm(Lp_v, Lm_w);
+if QGT_vw <> ZornAdd(g_vw, om_vw) then
+    Error("FAIL: Archetype LV QGT Madelung split mismatch");
+fi;
+if ZornAdd(ZornComm(Lp_v, Xjvnw), ZornJordan(Lp_v, Xjvnw)) <> ZornScale(2*one, ZornMul(Lp_v, Xjvnw)) then
+    Error("FAIL: Archetype LVI Metriplectic chiral factorization mismatch");
+fi;
+
+# Archetype LIX: 3-Quark Baryon Singlet Antisymmetry & Pauli Exclusion
+Lp_q1 := [ zero, [y1, z1, xi1], [zero, zero, zero], zero ];
+Lp_q2 := [ zero, [y2, z2, xi2], [zero, zero, zero], zero ];
+Lp_q3 := [ zero, [y3, z3, xi3], [zero, zero, zero], zero ];
+B_123 := ZornAssoc(Lp_q1, Lp_q2, Lp_q3);
+B_213 := ZornAssoc(Lp_q2, Lp_q1, Lp_q3);
+B_113 := ZornAssoc(Lp_q1, Lp_q1, Lp_q3);
+baryon_det := VecDot([y1, z1, xi1], VecCross([y2, z2, xi2], [y3, z3, xi3]));
+if B_123 <> GradeZero(baryon_det, -baryon_det) then
+    Error("FAIL: Archetype LIX Baryon singlet determinant mismatch");
+fi;
+if ZornAdd(B_123, B_213) <> ZornZero or B_113 <> ZornZero then
+    Error("FAIL: Archetype LIX Baryon antisymmetry / Pauli exclusion failed");
+fi;
+
+# Archetype LX: Chiral Wavefunction Factors, 4-Factor Associative Square, & Contact Flow Idempotent
+Psi_L := [ one, [zero, zero, zero], [wx, wy, wz], zero ];
+Psi_R := [ one, [ux, uy, uz], [zero, zero, zero], zero ];
+Pi_tri := ZornMul(Psi_L, Psi_R);
+if ZornMul(Psi_L, Psi_L) <> Psi_L or ZornMul(Psi_R, Psi_R) <> Psi_R then
+    Error("FAIL: Archetype LX Chiral wavefunction idempotence failed");
+fi;
+if ZornAssoc(Psi_R, Psi_L, Psi_R) <> ZornZero or ZornAssoc(Psi_L, Psi_R, Psi_L) <> ZornZero then
+    Error("FAIL: Archetype LX Chiral sandwich associators non-zero over commutative ring");
+fi;
+if ZornMul(Pi_tri, Pi_tri) <> ZornMul(Psi_L, ZornMul(ZornMul(Psi_R, Psi_L), Psi_R)) then
+    Error("FAIL: Archetype LX 4-Factor associative square failed");
+fi;
+Pi_c1 := [ one, [zero, -y1, -z1], [xi1, zero, zero], zero ];
+Pi_c2 := [ one, [zero, -y2, -z2], [xi2, zero, zero], zero ];
+if ZornMul(Pi_c1, Pi_c1) <> Pi_c1 then
+    Error("FAIL: Archetype LX Contact flow strict idempotence failed");
+fi;
+if ZornMul(Pi_c1, Pi_c2) <> [ one, [zero, -y2, -z2], [xi1 + w12, zero, zero], zero ] then
+    Error("FAIL: Archetype LX Two-state contact Lamb composition failed");
+fi;
+Print("[PASS] GAP: Archetypes LV-LX (QGT Madelung, Metriplectic, Baryon Singlet, & Master Trifactor Synthesis)\n");
+
+# 6. Verify Archetypes LXIII & LXIV: Wheeler "It from Bit" (P^2 = P), "Boundary of a Boundary is Zero" (d^2 = 0), & Volume Emergence
+e22 := GradeZero(zero, one);
+d_v_wh := ZornSub(Psi_R, e11);
+d_w_wh := ZornSub(Psi_L, e11);
+if ZornMul(d_v_wh, d_v_wh) <> ZornZero or ZornMul(d_w_wh, d_w_wh) <> ZornZero then
+    Error("FAIL: Archetype LXIII Wheeler boundary-of-boundary nilpotence failed");
+fi;
+if ZornAdd(ZornMul(d_v_wh, d_w_wh), ZornMul(d_w_wh, d_v_wh)) <> g_vw then
+    Error("FAIL: Archetype LXIII Wheeler Hodge Laplacian metric emergence failed");
+fi;
+if ZornMul(Lp_q1, ZornMul(Lp_q2, Lp_q3)) <> GradeZero(-baryon_det, zero) or
+   ZornMul(ZornMul(Lp_q1, Lp_q2), Lp_q3) <> GradeZero(zero, -baryon_det) then
+    Error("FAIL: Archetype LXIV Wheeler 3-bit volume emergence failed");
+fi;
+Print("[PASS] GAP: Archetypes LXIII-LXIV (Wheeler 'It from Bit', 'Boundary of a Boundary is Zero', & 3-Bit Volume)\n");
+
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");
 Print("======================================================================\n");

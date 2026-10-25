@@ -591,6 +591,101 @@ theorem operator_master_trifactor_projector_flow_synthesis_bridge
    madelung_bernoulli_trifactor_core_pressure_decomposition w v ρ_plus ρ_minus,
    contactFlowIdempotent_strict_idem_orth_and_lamb_composition ξ y z ξ₁ y₁ z₁ ξ₂ y₂ z₂⟩
 
+/-- **Theorem 17 (Master Jordan–von Neumann–Wigner 1934 Noncommutative Operator Synthesis Bridge — Archetypes LXI & LXII)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`):
+    1. JvNW Page 31 Associator Symmetries & Page 45 Universal Non-Associative Interchangeability Law:
+       - $\{X, Y\} = \{Y, X\}$, $[X, Y, Z]_J + [Z, Y, X]_J = 0$, and $[X, Y, Z]_J + [Y, Z, X]_J + [Z, X, Y]_J = 0$,
+       - $[X, Y, Z]_J = [[Z, X], Y] + ([X, Y, Z] + [Y, X, Z] + [X, Z, Y] - [Z, X, Y] - [Y, Z, X] - [Z, Y, X])$,
+       - $[D_1, Y, D_2]_J = [[D_2, D_1], Y]$ and $[D_1, Y, D_1]_J = 0$ for all $D_1, D_2 \in \mathcal{G}_0$.
+    2. JvNW Theorem 3 Cubic Peirce Polynomial & Theorem 4 / 12 Cross-Product Cancellation:
+       - $L_{e_{11}}^3(X) - 3 L_{e_{11}}^2(X) + 2 L_{e_{11}}(X) = 0$,
+       - Explicit Peirce eigen-projectors onto $N_0(e_{11})$, $N_{1/2}(e_{11})$, and $N_1(e_{11})$,
+       - $N_1(e_{11}) \circ N_0(e_{11}) = 0$ and $J(v_1, w_1) \circ J(v_2, w_2) = \mathrm{opGradeZero}\;(-(v_1 \cdot w_2 + v_2 \cdot w_1))\;(-(w_1 \cdot v_2 + w_2 \cdot v_1)) \in \mathcal{G}_0$.
+    3. JvNW Theorem 12 Noncommutative Yang–Mills Balance, Universal Cubic Power-Associativity, & 5-Graded Contact Cubic Peirce Law:
+       - $[X, X, X]_J = 0$ and $[\{D, D\}, Y, D]_J = 0$ for all $D \in \mathcal{G}_0$,
+       - $\{J_{\mathrm{YM}}(u), J_{\mathrm{YM}}(u)\} = \mathrm{opGradeZero}\;\alpha\;\alpha$ with $\alpha = -(u \cdot F_{\mathrm{YM}}(u) + u \cdot F_{\mathrm{YM}}(u))$,
+       - $L_{\Pi_c}^3(X_+) - 3 L_{\Pi_c}^2(X_+) + 2 L_{\Pi_c}(X_+) = 0$ for any contact idempotent $\Pi_c$ on $\mathcal{G}_0 \oplus \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$. -/
+theorem operator_jordan_von_neumann_wigner_1934_master_bridge
+    (X Y Z : OpZornMatrix A) (ρ₁ σ₁ ρ₂ σ₂ ξ y z a₀ b₀ u_y u_z w_x : A)
+    (u v₁ w₁ v₂ w₂ : OpVec3 A) :
+    let D₁ := opGradeZero ρ₁ σ₁
+    let D₂ := opGradeZero ρ₂ σ₂
+    let L1 := opLeftJordanPeircePlus X
+    let L2 := opLeftJordanPeircePlus L1
+    let L3 := opLeftJordanPeircePlus L2
+    let F_u := OpVec3.yangMillsColorField u
+    let J_YM := opKasparovZornJ u F_u
+    let α := -(OpVec3.dot u F_u + OpVec3.dot u F_u)
+    let Pi_c := opContactFlowIdempotent ξ y z
+    let X_pos := opGradeZero a₀ b₀ + opGradePlus1 u_y u_z + opGradePlus2 w_x
+    let Lc1 := opLeftJordan Pi_c X_pos
+    let Lc2 := opLeftJordan Pi_c Lc1
+    let Lc3 := opLeftJordan Pi_c Lc2
+    (opAnticommutator X Y = opAnticommutator Y X ∧
+     opJordanAssoc X Y Z + opJordanAssoc Z Y X = 0 ∧
+     opJordanAssoc X Y Z + opJordanAssoc Y Z X + opJordanAssoc Z X Y = 0 ∧
+     opJordanAssoc X Y Z =
+       opCommutator (opCommutator Z X) Y +
+         (opAssociator X Y Z + opAssociator Y X Z + opAssociator X Z Y -
+           opAssociator Z X Y - opAssociator Y Z X - opAssociator Z Y X) ∧
+     opJordanAssoc D₁ Y D₂ = opCommutator (opCommutator D₂ D₁) Y ∧
+     opJordanAssoc D₁ Y D₁ = 0) ∧
+    (L3 - (L2 + L2 + L2) + (L1 + L1) = 0 ∧
+     L2 - (L1 + L1 + L1) + (X + X) = opGradeZero 0 (X.b + X.b) ∧
+     -L2 + (L1 + L1) = opKasparovZornJ X.v X.w ∧
+     L2 - L1 = opGradeZero (X.a + X.a) 0 ∧
+     opAnticommutator (opGradeZero ρ₁ 0) (opGradeZero 0 σ₂) = 0 ∧
+     opAnticommutator (opKasparovZornJ v₁ w₁) (opKasparovZornJ v₂ w₂) =
+       opGradeZero (-(OpVec3.dot v₁ w₂ + OpVec3.dot v₂ w₁))
+                   (-(OpVec3.dot w₁ v₂ + OpVec3.dot w₂ v₁))) ∧
+    (opJordanAssoc X X X = 0 ∧
+     opJordanAssoc (opAnticommutator D₁ D₁) Y D₁ = 0 ∧
+     opAnticommutator J_YM J_YM = opGradeZero α α ∧
+     Lc3 - (Lc2 + Lc2 + Lc2) + (Lc1 + Lc1) = 0) :=
+  ⟨jvnw_page31_and_page45_nonassociative_interchangeability X Y Z ρ₁ σ₁ ρ₂ σ₂,
+   jvnw_theorem3_cubic_peirce_and_theorem4_multiplication_table X ρ₁ σ₂ v₁ w₁ v₂ w₂,
+   jvnw_theorem12_yang_mills_balance_and_jordan_power_associativity X Y u ρ₁ σ₁ ξ y z a₀ b₀ u_y u_z w_x⟩
+
+/-- **Theorem 18 (Master Wheeler Pregeometry Synthesis Bridge: "It from Bit", "The Boundary of a Boundary is Zero", & Participatory Idempotent Loops — Archetypes LXIII & LXIV)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`):
+    1. From Binary Idempotents ($P^2 = P$) to "The Boundary of a Boundary is Zero" ($d^2 = 0$):
+       - $e_{11} * e_{11} = e_{11}$, $P_{\mathrm{row}}(v) * P_{\mathrm{row}}(v) = P_{\mathrm{row}}(v)$, and $P_{\mathrm{col}}(w) * P_{\mathrm{col}}(w) = P_{\mathrm{col}}(w)$,
+       - $d(v) * d(v) = 0$ and $d^*(w) * d^*(w) = 0$ where $d(v) = P_{\mathrm{row}}(v) - e_{11}$ and $d^*(w) = P_{\mathrm{col}}(w) - e_{11}$,
+       - $E_{+1}(y, z) * (E_{+1}(y, z) * N_+(y_0, z_0, \xi_0)) = 0$ and $u \cdot F_{\mathrm{YM}}(u) - F_{\mathrm{YM}}(u) \cdot u = 0$.
+    2. Emergence of Metric, Spin Connection, Torsion, & 3D Spacetime Volume from Binary Bits:
+       - Born Transition Amplitude: $P_{\mathrm{row}}(v) * P_{\mathrm{col}}(w) = \mathrm{opGradeZero}\;(1 - v \cdot w)\;0$,
+       - Spacetime Metric as Hodge Laplacian: $d(v) * d^*(w) + d^*(w) * d(v) = \mathrm{opGradeZero}\;(-(v \cdot w))\;(-(w \cdot v))$,
+       - Symplectic Spin Connection as Commutator: $d(v) * d^*(w) - d^*(w) * d(v) = \mathrm{opGradeZero}\;(-(v \cdot w))\;(+(w \cdot v))$,
+       - 2-Bit Gauge/Spin Torsion: $e_{22} * (P_{\mathrm{row}}(v_1) * P_{\mathrm{row}}(v_2)) = d^*(v_1 \times_{\mathrm{skew}} v_2)$,
+       - 3-Bit Spacetime Volume: $d(v_1) * (d(v_2) * d(v_3)) = \mathrm{opGradeZero}\;(-\det_L(v_1, v_2, v_3))\;0$ and
+         $(d(v_1) * d(v_2)) * d(v_3) = \mathrm{opGradeZero}\;0\;(-\det_R(v_1, v_2, v_3))$. -/
+theorem operator_wheeler_it_from_bit_boundary_of_boundary_master_bridge
+    (v w u v₁ v₂ v₃ : OpVec3 A) (y z y₀ z₀ ξ₀ : A) :
+    let d_v := opBoundaryDiffPlus v
+    let d_w := opBoundaryDiffMinus w
+    let d₁ := opBoundaryDiffPlus v₁
+    let d₂ := opBoundaryDiffPlus v₂
+    let d₃ := opBoundaryDiffPlus v₃
+    let d_yz := opGradePlus1 y z
+    let N₀ := opHeisenbergNilPlus y₀ z₀ ξ₀
+    let F_u := OpVec3.yangMillsColorField u
+    (opPeircePlus * (opPeircePlus : OpZornMatrix A) = opPeircePlus ∧
+     opChiralWaveRight v * opChiralWaveRight v = opChiralWaveRight v ∧
+     opChiralWaveLeft w * opChiralWaveLeft w = opChiralWaveLeft w ∧
+     d_v * d_v = 0 ∧
+     d_w * d_w = 0 ∧
+     d_yz * (d_yz * N₀) = 0 ∧
+     OpVec3.dot u F_u - OpVec3.dot F_u u = 0) ∧
+    (opChiralWaveRight v * opChiralWaveLeft w = opGradeZero (1 - OpVec3.dot v w) 0 ∧
+     d_v * d_w + d_w * d_v = opGradeZero (-OpVec3.dot v w) (-OpVec3.dot w v) ∧
+     d_v * d_w - d_w * d_v = opGradeZero (-OpVec3.dot v w) (OpVec3.dot w v) ∧
+     opPeirceMinus * (opChiralWaveRight v₁ * opChiralWaveRight v₂) =
+       opBoundaryDiffMinus (OpVec3.skewCross v₁ v₂) ∧
+     d₁ * (d₂ * d₃) = opGradeZero (-OpVec3.baryonDetLeft v₁ v₂ v₃) 0 ∧
+     (d₁ * d₂) * d₃ = opGradeZero 0 (-OpVec3.baryonDetRight v₁ v₂ v₃)) :=
+  ⟨wheeler_bit_idempotence_and_boundary_of_boundary_zero v w u y z y₀ z₀ ξ₀,
+   wheeler_it_from_bit_metric_torsion_and_volume_emergence v w v₁ v₂ v₃⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

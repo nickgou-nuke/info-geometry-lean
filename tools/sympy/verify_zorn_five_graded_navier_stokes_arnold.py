@@ -430,6 +430,80 @@ def main() -> int:
     assert Pi_c1 * Pi_c2 == contact_flow_idem(xi1 + w12, y2, z2)
     print("[PASS] Archetype LX: Master Nilpotent-Idempotent Trifactor Synthesis & Contact-Lamb Composition")
 
+    # 11. Archetypes LXI & LXII: 1934 Jordan-von Neumann-Wigner Formalism in OpZornMatrix A & ZornVectorMatrix R
+    def j_assoc(A_mat: OpZornMatrix, B_mat: OpZornMatrix, C_mat: OpZornMatrix) -> OpZornMatrix:
+        return op_anti(op_anti(A_mat, B_mat), C_mat) - op_anti(A_mat, op_anti(B_mat, C_mat))
+
+    Y_full = OpZornMatrix(hp, v3_vec, OpVec3(qx, qy, qz), hm)
+    Z_full = OpZornMatrix(nup, OpVec3(y1, z1, xi1), OpVec3(y2, z2, xi2), num)
+    assert j_assoc(X_full, Y_full, Z_full) + j_assoc(Z_full, Y_full, X_full) == z_zero()
+    assert j_assoc(X_full, Y_full, Z_full) + j_assoc(Y_full, Z_full, X_full) + j_assoc(Z_full, X_full, Y_full) == z_zero()
+    jvnw_rhs = op_comm(op_comm(Z_full, X_full), Y_full) + (
+        op_assoc(X_full, Y_full, Z_full)
+        + op_assoc(Y_full, X_full, Z_full)
+        + op_assoc(X_full, Z_full, Y_full)
+        - op_assoc(Z_full, X_full, Y_full)
+        - op_assoc(Y_full, Z_full, X_full)
+        - op_assoc(Z_full, Y_full, X_full)
+    )
+    assert j_assoc(X_full, Y_full, Z_full) == jvnw_rhs
+    assert j_assoc(H_gen, X_full, S_gen) == op_comm(op_comm(S_gen, H_gen), X_full)
+    assert j_assoc(H_gen, X_full, H_gen) == z_zero()
+
+    # JvNW Theorem 3 Cubic Peirce Polynomial & Theorem 4 / 12 Cross-Product Cancellation:
+    L1_e = op_anti(e11, X_full)
+    L2_e = op_anti(e11, L1_e)
+    L3_e = op_anti(e11, L2_e)
+    assert L3_e - (L2_e + L2_e + L2_e) + (L1_e + L1_e) == z_zero()
+    assert L2_e - (L1_e + L1_e + L1_e) + (X_full + X_full) == grade_zero(sp.Integer(0), dm + dm)
+    assert (z_zero() - L2_e) + (L1_e + L1_e) == OpZornMatrix(sp.Integer(0), u_vec, w_vec, sp.Integer(0))
+    assert L2_e - L1_e == grade_zero(dp + dp, sp.Integer(0))
+
+    J_1 = OpZornMatrix(sp.Integer(0), u_vec, w_vec, sp.Integer(0))
+    J_2 = OpZornMatrix(sp.Integer(0), v3_vec, OpVec3(qx, qy, qz), sp.Integer(0))
+    assert op_anti(J_1, J_2) == grade_zero(
+        -(dot(u_vec, OpVec3(qx, qy, qz)) + dot(v3_vec, w_vec)),
+        -(dot(w_vec, v3_vec) + dot(OpVec3(qx, qy, qz), u_vec)),
+    )
+
+    # JvNW Theorem 12 Noncommutative Yang-Mills Balance & Cubic Power-Associativity:
+    J_ym = OpZornMatrix(sp.Integer(0), u_vec, F_ym, sp.Integer(0))
+    alpha_ym = -(dot(u_vec, F_ym) + dot(u_vec, F_ym))
+    assert op_anti(J_ym, J_ym) == grade_zero(alpha_ym, alpha_ym)
+    assert j_assoc(X_full, X_full, X_full) == z_zero()
+    assert j_assoc(op_anti(H_gen, H_gen), X_full, H_gen) == z_zero()
+
+    # Commutative JvNW Fundamental Axiom (III) on ZornVectorMatrix R:
+    cA_mat = OpZornMatrix(c_dp, cu, cw, c_dm)
+    cB_mat = OpZornMatrix(c_nu, OpVec3(c_wx, c_uz, c_uy), OpVec3(c_ux, c_wz, c_wy), c_lam)
+    assert j_assoc(op_anti(cA_mat, cA_mat), cB_mat, cA_mat) == z_zero()
+    print("[PASS] Archetypes LXI-LXII: 1934 Jordan-von Neumann-Wigner Cubic Peirce, Page 45 & Axiom III")
+
+    # 12. Archetypes LXIII & LXIV: Wheeler's "It from Bit" (P^2 = P), "Boundary of a Boundary is Zero" (d^2 = 0), & Participatory Loops
+    e22 = grade_zero(sp.Integer(0), sp.Integer(1))
+    P_row_u = Psi_R
+    P_col_w = Psi_L
+    P_row_v1 = e11 + lightcone_plus(u_vec)
+    P_row_v2 = e11 + lightcone_plus(w_vec)
+    P_row_v3 = e11 + lightcone_plus(v3_vec)
+    d_u = P_row_u - e11
+    d_w = P_col_w - e11
+    d_1 = P_row_v1 - e11
+    d_2 = P_row_v2 - e11
+    d_3 = P_row_v3 - e11
+    assert P_row_u * P_row_u == P_row_u
+    assert P_col_w * P_col_w == P_col_w
+    assert d_u * d_u == z_zero()
+    assert d_w * d_w == z_zero()
+    assert grade_plus1(y1, z1) * (grade_plus1(y1, z1) * N2p) == z_zero()
+    assert P_row_u * P_col_w == grade_zero(sp.Integer(1) - dot(u_vec, w_vec), sp.Integer(0))
+    assert d_u * d_w + d_w * d_u == grade_zero(-dot(u_vec, w_vec), -dot(w_vec, u_vec))
+    assert d_u * d_w - d_w * d_u == grade_zero(-dot(u_vec, w_vec), dot(w_vec, u_vec))
+    assert e22 * (P_row_v1 * P_row_v2) == lightcone_minus(skew_cross(u_vec, w_vec))
+    assert d_1 * (d_2 * d_3) == grade_zero(-dot(u_vec, skew_cross(w_vec, v3_vec)), sp.Integer(0))
+    assert (d_1 * d_2) * d_3 == grade_zero(sp.Integer(0), -dot(skew_cross(u_vec, w_vec), v3_vec))
+    print("[PASS] Archetypes LXIII-LXIV: Wheeler 'It from Bit', 'Boundary of a Boundary is Zero', & Participatory Loops")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

@@ -78,6 +78,68 @@ assert(zornMul(P0, Sminus) == zornSub(Pshifted, gradePlus2(wres)))
 assert(zornMul(gradeMinus2(eta), zornSub(zornMul(P0, Sminus), Pshifted)) == gradeZero(eta*wres, 0_R))
 print("[PASS] Macaulay2: 5-Graded BCFW Transverse Shift & Contact Pole Residue Readout")
 
+-- 2b. Archetypes LXI & LXII: 1934 JvNW Cubic Peirce Polynomial & Fundamental Jordan Axiom (III)
+zornJordan = (X, Y) -> zornAdd(zornMul(X, Y), zornMul(Y, X))
+e11 = gradeZero(1_R, 0_R)
+Xjvnw = {y1, {ux, uy, uz}, {wx, wy, wz}, z1}
+Bjvnw = {y2, {wx, uz, uy}, {ux, wz, wy}, z2}
+L1e = zornJordan(e11, Xjvnw)
+L2e = zornJordan(e11, L1e)
+L3e = zornJordan(e11, L2e)
+assert(zornAdd(zornSub(L3e, zornAdd(zornAdd(L2e, L2e), L2e)), zornAdd(L1e, L1e)) == zornZero)
+Asq = zornJordan(Xjvnw, Xjvnw)
+assert(zornJordan(zornJordan(Asq, Bjvnw), Xjvnw) == zornJordan(Asq, zornJordan(Bjvnw, Xjvnw)))
+print("[PASS] Macaulay2: 1934 JvNW Cubic Peirce Polynomial & Fundamental Jordan Axiom (III)")
+
+-- 2c. Archetypes LV-LX: QGT Madelung Split, Metriplectic Flow, Baryon-Meson Confinement, & Master Trifactor Synthesis
+zornComm = (X, Y) -> zornSub(zornMul(X, Y), zornMul(Y, X))
+zornScale = (c, X) -> {c * X#0, vecScale(c, X#1), vecScale(c, X#2), c * X#3}
+
+Lpv = {0_R, {ux, uy, uz}, {0_R, 0_R, 0_R}, 0_R}
+Lmw = {0_R, {0_R, 0_R, 0_R}, {wx, wy, wz}, 0_R}
+QGTvw = zornScale(2_R, zornMul(Lpv, Lmw))
+gvw = zornJordan(Lpv, Lmw)
+omvw = zornComm(Lpv, Lmw)
+assert(QGTvw == zornAdd(gvw, omvw))
+assert(zornAdd(zornComm(Lpv, Xjvnw), zornJordan(Lpv, Xjvnw)) == zornScale(2_R, zornMul(Lpv, Xjvnw)))
+
+Lpq1 = {0_R, {y1, z1, xi1}, {0_R, 0_R, 0_R}, 0_R}
+Lpq2 = {0_R, {y2, z2, xi2}, {0_R, 0_R, 0_R}, 0_R}
+Lpq3 = {0_R, {y3, z3, xi3}, {0_R, 0_R, 0_R}, 0_R}
+B123 = zornAssoc(Lpq1, Lpq2, Lpq3)
+B213 = zornAssoc(Lpq2, Lpq1, Lpq3)
+B113 = zornAssoc(Lpq1, Lpq1, Lpq3)
+baryonDet = vecDot({y1, z1, xi1}, vecCross({y2, z2, xi2}, {y3, z3, xi3}))
+assert(B123 == gradeZero(baryonDet, -baryonDet))
+assert(zornAdd(B123, B213) == zornZero)
+assert(B113 == zornZero)
+
+PsiL = {1_R, {0_R, 0_R, 0_R}, {wx, wy, wz}, 0_R}
+PsiR = {1_R, {ux, uy, uz}, {0_R, 0_R, 0_R}, 0_R}
+Pitri = zornMul(PsiL, PsiR)
+assert(zornMul(PsiL, PsiL) == PsiL)
+assert(zornMul(PsiR, PsiR) == PsiR)
+assert(zornAssoc(PsiR, PsiL, PsiR) == zornZero)
+assert(zornAssoc(PsiL, PsiR, PsiL) == zornZero)
+assert(zornMul(Pitri, Pitri) == zornMul(PsiL, zornMul(zornMul(PsiR, PsiL), PsiR)))
+
+Pic1 = {1_R, {0_R, -y1, -z1}, {xi1, 0_R, 0_R}, 0_R}
+Pic2 = {1_R, {0_R, -y2, -z2}, {xi2, 0_R, 0_R}, 0_R}
+assert(zornMul(Pic1, Pic1) == Pic1)
+assert(zornMul(Pic1, Pic2) == {1_R, {0_R, -y2, -z2}, {xi1 + w12, 0_R, 0_R}, 0_R})
+print("[PASS] Macaulay2: Archetypes LV-LX (QGT Madelung, Metriplectic, Baryon Singlet, & Master Trifactor Synthesis)")
+
+-- 2d. Archetypes LXIII & LXIV: Wheeler "It from Bit" (P^2 = P), "Boundary of a Boundary is Zero" (d^2 = 0), & 3-Bit Volume
+dvWh = zornSub(PsiR, e11)
+dwWh = zornSub(PsiL, e11)
+assert(zornMul(dvWh, dvWh) == zornZero)
+assert(zornMul(dwWh, dwWh) == zornZero)
+assert(zornAdd(zornMul(dvWh, dwWh), zornMul(dwWh, dvWh)) == gvw)
+assert(zornSub(zornMul(dvWh, dwWh), zornMul(dwWh, dvWh)) == omvw)
+assert(zornMul(Lpq1, zornMul(Lpq2, Lpq3)) == gradeZero(-baryonDet, 0_R))
+assert(zornMul(zornMul(Lpq1, Lpq2), Lpq3) == gradeZero(0_R, -baryonDet))
+print("[PASS] Macaulay2: Archetypes LXIII-LXIV (Wheeler 'It from Bit', 'Boundary of a Boundary is Zero', & 3-Bit Volume)")
+
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]
 omegaPerp = y1*z2 - z1*y2

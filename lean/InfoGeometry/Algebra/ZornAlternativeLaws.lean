@@ -6499,9 +6499,12 @@ theorem zorn_baryon_meson_singlet_nucleus_confinement
     Qv * Qw + Qw * Qv = zornGradeZero (ZornVec3.dot v w) (ZornVec3.dot w v) ∧
     (Q₁ * Q₂) * Q₃ + -(Q₁ * (Q₂ * Q₃)) =
       zornGradeZero (-ZornVec3.dot v₁ (ZornVec3.cross v₂ v₃))
-                    (ZornVec3.dot (ZornVec3.cross v₁ v₂) v₃) := by
+                    (ZornVec3.dot (ZornVec3.cross v₁ v₂) v₃) ∧
+    (Q₁ * Q₂) * Q₃ + -(Q₁ * (Q₂ * Q₃)) =
+      -((Q₂ * Q₁) * Q₃ + -(Q₂ * (Q₁ * Q₃))) ∧
+    (Q₁ * Q₁) * Q₃ + -(Q₁ * (Q₁ * Q₃)) = 0 := by
   intro Qv Qw Q₁ Q₂ Q₃
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · ext
     · simp [Q₁, Q₂, mul, ZornVec3.dot]
     · rename_i i; fin_cases i <;> simp [Q₁, Q₂, mul, ZornVec3.cross]
@@ -6533,6 +6536,10 @@ theorem zorn_baryon_meson_singlet_nucleus_confinement
     · simp [Q₁, Q₂, Q₃, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
             InfoGeometry.Algebra.zvm_neg_def, add, neg, mul,
             ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+  · change bundledAssociator Q₁ Q₂ Q₃ = -bundledAssociator Q₂ Q₁ Q₃
+    exact bundledAssociator_swap12 Q₁ Q₂ Q₃
+  · change bundledAssociator Q₁ Q₁ Q₃ = 0
+    exact bundledAssociator_left_alt Q₁ Q₃
 
 /-! ## Section 62: Master Trifactor Wavefunction Factorization & 4-Factor Associative Square (Archetype LX) -/
 
@@ -6544,7 +6551,9 @@ theorem zorn_baryon_meson_singlet_nucleus_confinement
     2. Inner vs. Outer Contractions:
        $$\Psi_R * \Psi_L = \mathrm{zornGradeZero}\;(1 + v \cdot w)\;0 \qquad \text{and} \qquad
          \Pi = \langle 1, v, w, w \cdot v \rangle.$$
-    3. Exact 4-Factor Associative Square Law:
+    3. Exact Vanishing of Sandwich Associators & 4-Factor Associative Square Law:
+       $$(\Psi_R * \Psi_L) * \Psi_R + -(\Psi_R * (\Psi_L * \Psi_R)) = 0, \qquad
+         (\Psi_L * \Psi_R) * \Psi_L + -(\Psi_L * (\Psi_R * \Psi_L)) = 0,$$
        $$\Pi * \Pi = \Psi_L * ((\Psi_R * \Psi_L) * \Psi_R).$$ -/
 theorem zorn_trifactor_wavefunction_and_contact_idempotent
     (w v : ZornVec3 R) :
@@ -6555,35 +6564,200 @@ theorem zorn_trifactor_wavefunction_and_contact_idempotent
     Ψ_R * Ψ_R = Ψ_R ∧
     Ψ_R * Ψ_L = zornGradeZero (1 + ZornVec3.dot v w) 0 ∧
     Pi_tri = ⟨1, v, w, ZornVec3.dot w v⟩ ∧
+    (Ψ_R * Ψ_L) * Ψ_R + -(Ψ_R * (Ψ_L * Ψ_R)) = 0 ∧
+    (Ψ_L * Ψ_R) * Ψ_L + -(Ψ_L * (Ψ_R * Ψ_L)) = 0 ∧
     Pi_tri * Pi_tri = Ψ_L * ((Ψ_R * Ψ_L) * Ψ_R) := by
   intro Ψ_L Ψ_R Pi_tri
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [Ψ_L, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, mul, ZornVec3.cross]; try ring)
+    · simp [Ψ_L, mul, ZornVec3.dot]
+  · ext
+    · simp [Ψ_R, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Ψ_R, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Ψ_R, mul, ZornVec3.cross]; try ring)
+    · simp [Ψ_R, mul, ZornVec3.dot]
+  · ext
+    · simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.cross]; try ring)
+    · simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.dot]
+  · ext
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.cross]; try ring)
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot]
+  · change bundledAssociator Ψ_R Ψ_L Ψ_R = 0
+    exact bundledAssociator_flexible Ψ_R Ψ_L
+  · change bundledAssociator Ψ_L Ψ_R Ψ_L = 0
+    exact bundledAssociator_flexible Ψ_L Ψ_R
+  · ext
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+
+/-! ## Section 63: The 1934 Jordan–von Neumann–Wigner Fundamental Axiom (III) & Theorem 12 Off-Diagonal Balance on `ZornVectorMatrix R` (Archetypes LXI & LXII) -/
+
+/-- Unscaled Jordan product $X \circ Y = X * Y + Y * X$ on `ZornVectorMatrix R` (JvNW 1934, Page 29). -/
+noncomputable def zornJordan (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  X * Y + Y * X
+
+/-- Jordan associator $[X, Y, Z]_J = (X \circ Y) \circ Z + -(X \circ (Y \circ Z))$ on `ZornVectorMatrix R` (JvNW 1934, Page 31, Eq. 1). -/
+noncomputable def zornJordanAssoc (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  zornJordan (zornJordan X Y) Z + -(zornJordan X (zornJordan Y Z))
+
+private lemma bundledAssociator_sq_left_right (A B : ZornVectorMatrix R) :
+    bundledAssociator (A * A) B A = 0 := by
+  rw [bundledAssociator_mul_right A A B, bundledAssociator_left_alt A B]
+  exact zero_mul A
+
+private lemma sq_mul_comm_self (A : ZornVectorMatrix R) :
+    (A * A) * A = A * (A * A) := by
+  exact sub_eq_zero.mp (bundledAssociator_left_alt A A)
+
+private lemma mul_sq_right_assoc (A B : ZornVectorMatrix R) :
+    (A * A) * (B * A) = ((A * A) * B) * A := by
+  exact (sub_eq_zero.mp (bundledAssociator_sq_left_right A B)).symm
+
+private lemma mul_sq_mid_assoc (A B : ZornVectorMatrix R) :
+    (B * (A * A)) * A = (B * A) * (A * A) := by
+  have h1 : bundledAssociator B (A * A) A = 0 := by
+    rw [bundledAssociator_swap12 B (A * A) A, bundledAssociator_sq_left_right A B, neg_zero]
+  have h2 : bundledAssociator B A (A * A) = 0 := by
+    rw [bundledAssociator_swap23 B A (A * A), h1, neg_zero]
+  rw [sub_eq_zero.mp h1, sq_mul_comm_self A, ← sub_eq_zero.mp h2]
+
+private lemma mul_sq_left_assoc (A B : ZornVectorMatrix R) :
+    A * ((A * A) * B) = (A * A) * (A * B) := by
+  have h1 : bundledAssociator (A * A) A B = 0 := by
+    rw [bundledAssociator_swap23 (A * A) A B, bundledAssociator_sq_left_right A B, neg_zero]
+  have h2 : bundledAssociator A (A * A) B = 0 := by
+    rw [bundledAssociator_swap12 A (A * A) B, h1, neg_zero]
+  rw [← sub_eq_zero.mp h2, ← sq_mul_comm_self A, sub_eq_zero.mp h1]
+
+private lemma mul_sq_far_right_assoc (A B : ZornVectorMatrix R) :
+    A * (B * (A * A)) = (A * B) * (A * A) := by
+  have h : bundledAssociator A B (A * A) = 0 := by
+    rw [bundledAssociator_swap23 A B (A * A), bundledAssociator_swap12 A (A * A) B,
+        bundledAssociator_swap23 (A * A) A B, bundledAssociator_sq_left_right A B,
+        neg_zero, neg_zero, neg_zero]
+  exact (sub_eq_zero.mp h).symm
+
+/-- Structural proof that `(A * A) ∘ (B ∘ A) = ((A * A) ∘ B) ∘ A` in `ZornVectorMatrix R`. -/
+lemma zornJordan_sq_assoc (A B : ZornVectorMatrix R) :
+    zornJordan (zornJordan (A * A) B) A = zornJordan (A * A) (zornJordan B A) := by
+  simp only [zornJordan, _root_.add_mul, _root_.mul_add]
+  rw [← mul_sq_right_assoc A B, mul_sq_mid_assoc A B,
+      mul_sq_left_assoc A B, mul_sq_far_right_assoc A B]
+  abel
+
+/-- **Jordan–von Neumann–Wigner (1934) Fundamental Axiom (III), Page 31 Associator Symmetries, & Theorem 12 Off-Diagonal Balance on `ZornVectorMatrix R` (Archetypes LXI & LXII)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for ALL $A, B, C \in \mathrm{ZornVectorMatrix}\;R$
+    and all $v, w \in \mathrm{ZornVec3}\;R$:
+    1. Jordan Commutativity & JvNW Page 31, Eqs. (2)–(3) Associator Identities:
+       $$A \circ B = B \circ A, \qquad [A, B, C]_J + [C, B, A]_J = 0, \qquad
+         [A, B, C]_J + [B, C, A]_J + [C, A, B]_J = 0.$$
+    2. JvNW Fundamental Jordan Identity (III) (Page 30):
+       $$((A \circ A) \circ B) \circ A = (A \circ A) \circ (B \circ A)
+         \qquad (\text{i.e., } [A \circ A, B, A]_J = 0).$$
+    3. JvNW Theorem 12 Equal-Weight Off-Diagonal Square Law (Page 41, $\alpha = \beta$ on $N_{1/2}(e_{11})$):
+       $$\langle 0, v, w, 0 \rangle \circ \langle 0, v, w, 0 \rangle =
+         \mathrm{zornGradeZero}\;(2 * (v \cdot w))\;(2 * (v \cdot w)).$$ -/
+theorem zorn_jordan_von_neumann_wigner_1934_axiom_III_and_peirce
+    (A B C : ZornVectorMatrix R) (v w : ZornVec3 R) :
+    let J_vw : ZornVectorMatrix R := ⟨0, v, w, 0⟩
+    zornJordan A B = zornJordan B A ∧
+    zornJordanAssoc A B C + zornJordanAssoc C B A = 0 ∧
+    zornJordanAssoc A B C + zornJordanAssoc B C A + zornJordanAssoc C A B = 0 ∧
+    zornJordan (zornJordan (zornJordan A A) B) A =
+      zornJordan (zornJordan A A) (zornJordan B A) ∧
+    zornJordan J_vw J_vw =
+      zornGradeZero (2 * ZornVec3.dot v w) (2 * ZornVec3.dot v w) := by
+  intro J_vw
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · simp only [zornJordan]; abel
+  · simp only [zornJordanAssoc, zornJordan, _root_.add_mul, _root_.mul_add]; abel
+  · simp only [zornJordanAssoc, zornJordan, _root_.add_mul, _root_.mul_add]; abel
+  · simp only [zornJordan, _root_.add_mul, _root_.mul_add]
+    rw [← mul_sq_right_assoc A B, mul_sq_mid_assoc A B,
+        mul_sq_left_assoc A B, mul_sq_far_right_assoc A B]
+    abel
   · ext
-    · simp [Ψ_L, mul, ZornVec3.dot]
-    · rename_i i; fin_cases i <;> (simp [Ψ_L, mul, ZornVec3.cross]; try ring)
-    · rename_i i; fin_cases i <;> (simp [Ψ_L, mul, ZornVec3.cross]; try ring)
-    · simp [Ψ_L, mul, ZornVec3.dot]
-  · ext
-    · simp [Ψ_R, mul, ZornVec3.dot]
-    · rename_i i; fin_cases i <;> (simp [Ψ_R, mul, ZornVec3.cross]; try ring)
-    · rename_i i; fin_cases i <;> (simp [Ψ_R, mul, ZornVec3.cross]; try ring)
-    · simp [Ψ_R, mul, ZornVec3.dot]
-  · ext
-    · simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.dot]
-    · rename_i i; fin_cases i <;> (simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.cross]; try ring)
-    · rename_i i; fin_cases i <;> (simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.cross]; try ring)
-    · simp [Ψ_L, Ψ_R, zornGradeZero, mul, ZornVec3.dot]
-  · ext
-    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot]
-    · rename_i i; fin_cases i <;> (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.cross]; try ring)
-    · rename_i i; fin_cases i <;> (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.cross]; try ring)
-    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot]
-  · ext
-    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · simp [J_vw, zornJordan, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
     · rename_i i; fin_cases i <;>
-        (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+        (simp [J_vw, zornJordan, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+               add, mul, ZornVec3.cross]; try ring)
     · rename_i i; fin_cases i <;>
-        (simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
-    · simp [Pi_tri, Ψ_L, Ψ_R, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+        (simp [J_vw, zornJordan, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+               add, mul, ZornVec3.cross]; try ring)
+    · simp [J_vw, zornJordan, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+
+/-! ## Section 64: John Archibald Wheeler's "It from Bit" ($P^2 = P$), "The Boundary of a Boundary is Zero" ($d^2 = 0$), & Participatory Idempotent Loops on `ZornVectorMatrix R` (Archetypes LXIII & LXIV) -/
+
+/-- **John Archibald Wheeler's Pregeometry on `ZornVectorMatrix R`: "It from Bit", "The Boundary of a Boundary is Zero", & Participatory Idempotent Loops (Archetypes LXIII & LXIV)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all $v, w, v_1, v_2, v_3 \in \mathrm{ZornVec3}\;R$,
+    let $e_{11} = \langle 1, 0, 0, 0 \rangle$, $e_{22} = \langle 0, 0, 0, 1 \rangle$,
+    $P_{\mathrm{row}}(v) = \langle 1, v, 0, 0 \rangle$, $P_{\mathrm{col}}(w) = \langle 1, 0, w, 0 \rangle$,
+    $d(v) = P_{\mathrm{row}}(v) + -e_{11}$, and $d^*(w) = P_{\mathrm{col}}(w) + -e_{11}$:
+    1. Binary Bit Idempotence ($P^2 = P$) & Boundary-of-a-Boundary Nilpotence ($d^2 = 0$):
+       $$P_{\mathrm{row}}(v) * P_{\mathrm{row}}(v) = P_{\mathrm{row}}(v), \qquad
+         P_{\mathrm{col}}(w) * P_{\mathrm{col}}(w) = P_{\mathrm{col}}(w),$$
+       $$d(v) * d(v) = 0, \qquad d^*(w) * d^*(w) = 0.$$
+    2. Born Transition Amplitude, Hodge Laplacian Metric $\{d(v), d^*(w)\}$, & Symplectic Spin Connection $[d(v), d^*(w)]$:
+       $$P_{\mathrm{row}}(v) * P_{\mathrm{col}}(w) = \mathrm{zornGradeZero}\;(1 + v \cdot w)\;0,$$
+       $$d(v) * d^*(w) + d^*(w) * d(v) = \mathrm{zornGradeZero}\;(v \cdot w)\;(v \cdot w),$$
+       $$d(v) * d^*(w) + -(d^*(w) * d(v)) = \mathrm{zornGradeZero}\;(v \cdot w)\;(-(v \cdot w)).$$
+    3. 2-Bit Gauge Torsion & 3-Bit Spacetime Volume Determinant:
+       $$e_{22} * (P_{\mathrm{row}}(v_1) * P_{\mathrm{row}}(v_2)) = \langle 0, 0, v_1 \times v_2, 0 \rangle,$$
+       $$d(v_1) * (d(v_2) * d(v_3)) = \mathrm{zornGradeZero}\;(v_1 \cdot (v_2 \times v_3))\;0,$$
+       $$(d(v_1) * d(v_2)) * d(v_3) = \mathrm{zornGradeZero}\;0\;(v_1 \cdot (v_2 \times v_3)).$$ -/
+theorem zorn_wheeler_it_from_bit_and_boundary_of_boundary
+    (v w v₁ v₂ v₃ : ZornVec3 R) :
+    let e₁₁ : ZornVectorMatrix R := ⟨1, 0, 0, 0⟩
+    let e₂₂ : ZornVectorMatrix R := ⟨0, 0, 0, 1⟩
+    let P_row : ZornVectorMatrix R := ⟨1, v, 0, 0⟩
+    let P_col : ZornVectorMatrix R := ⟨1, 0, w, 0⟩
+    let P_row1 : ZornVectorMatrix R := ⟨1, v₁, 0, 0⟩
+    let P_row2 : ZornVectorMatrix R := ⟨1, v₂, 0, 0⟩
+    let d_v : ZornVectorMatrix R := P_row + -e₁₁
+    let d_w : ZornVectorMatrix R := P_col + -e₁₁
+    let d₁ : ZornVectorMatrix R := ⟨1, v₁, 0, 0⟩ + -e₁₁
+    let d₂ : ZornVectorMatrix R := ⟨1, v₂, 0, 0⟩ + -e₁₁
+    let d₃ : ZornVectorMatrix R := ⟨1, v₃, 0, 0⟩ + -e₁₁
+    let vol := ZornVec3.dot v₁ (ZornVec3.cross v₂ v₃)
+    (P_row * P_row = P_row ∧
+     P_col * P_col = P_col ∧
+     d_v * d_v = 0 ∧
+     d_w * d_w = 0) ∧
+    (P_row * P_col = zornGradeZero (1 + ZornVec3.dot v w) 0 ∧
+     d_v * d_w + d_w * d_v = zornGradeZero (ZornVec3.dot v w) (ZornVec3.dot v w) ∧
+     d_v * d_w + -(d_w * d_v) = zornGradeZero (ZornVec3.dot v w) (-ZornVec3.dot v w)) ∧
+    (e₂₂ * (P_row1 * P_row2) = ⟨0, 0, ZornVec3.cross v₁ v₂, 0⟩ ∧
+     d₁ * (d₂ * d₃) = zornGradeZero vol 0 ∧
+     (d₁ * d₂) * d₃ = zornGradeZero 0 vol) := by
+  intro e₁₁ e₂₂ P_row P_col P_row1 P_row2 d_v d_w d₁ d₂ d₃ vol
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩, ⟨?_, ?_, ?_⟩⟩ <;>
+  { ext
+    · simp [e₁₁, e₂₂, P_row, P_col, P_row1, P_row2, d_v, d_w, d₁, d₂, d₃, vol, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [e₁₁, e₂₂, P_row, P_col, P_row1, P_row2, d_v, d_w, d₁, d₂, d₃, vol, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [e₁₁, e₂₂, P_row, P_col, P_row1, P_row2, d_v, d_w, d₁, d₂, d₃, vol, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [e₁₁, e₂₂, P_row, P_col, P_row1, P_row2, d_v, d_w, d₁, d₂, d₃, vol, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring }
 
 end InfoGeometry.Algebra.ZornVectorMatrix

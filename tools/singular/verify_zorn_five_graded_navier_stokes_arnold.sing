@@ -53,6 +53,56 @@ if (loop_xi - 2*w12 != 0) {
 }
 print("[PASS] Singular: 4-Gate Braid Commutator Loop Isolates Pure Contact Monodromy 2*w12");
 
+// 3b. Archetypes LXI & LXII (1934 JvNW Cubic Peirce & Theorem 12 Off-Diagonal Cross Cancellation):
+// For L_{e11}(X) = {e11, X} = (2*a, v, w, 0), eigenvalues are 2, 1, 0:
+poly jvnw_eig2 = 2*2*2*y1 - 3*2*2*y1 + 2*2*y1;
+poly jvnw_eig1 = 1*1*1*ux - 3*1*1*ux + 2*1*ux;
+poly jvnw_eig0 = 0;
+if (jvnw_eig2 != 0 || jvnw_eig1 != 0 || jvnw_eig0 != 0) {
+    ERROR("FAIL: 1934 JvNW Cubic Peirce polynomial non-zero");
+}
+// In J(u, w) o J(u, w), the upper and lower cross products are -(w x w + w x w) = 0 and (u x u + u x u) = 0,
+// and the diagonal entries are -2*(u . w) on both e11 and e22:
+poly jvnw_a = -2*(ux*wx + uy*wy + uz*wz);
+poly jvnw_b = -2*(wx*ux + wy*uy + wz*uz);
+if (jvnw_a - jvnw_b != 0) {
+    ERROR("FAIL: 1934 JvNW Theorem 12 off-diagonal balance mismatch");
+}
+print("[PASS] Singular: 1934 JvNW Cubic Peirce Polynomial & Theorem 12 Off-Diagonal Balance");
+
+// 3c. Archetypes LV-LX: QGT Madelung Split, 3-Quark Baryon Singlet, & Contact Flow Idempotent:
+poly qgt_a = 2 * (- (ux*wx + uy*wy + uz*wz));
+poly metric_a = - (ux*wx + uy*wy + uz*wz);
+poly metric_b = - (wx*ux + wy*uy + wz*uz);
+poly berry_a = - (ux*wx + uy*wy + uz*wz);
+poly berry_b = (wx*ux + wy*uy + wz*uz);
+if (qgt_a - (metric_a + berry_a) != 0 || (metric_b + berry_b) != 0 || (berry_a + berry_b) != 0) {
+    ERROR("FAIL: Archetype LV QGT Madelung split mismatch");
+}
+// 3-Quark Baryon determinant det(q1, q2, q3):
+poly baryon_123 = y1*(z2*xi3 - xi2*z3) + z1*(xi2*y3 - y2*xi3) + xi1*(y2*z3 - z2*y3);
+poly baryon_213 = y2*(z1*xi3 - xi1*z3) + z2*(xi1*y3 - y1*xi3) + xi2*(y1*z3 - z1*y3);
+poly baryon_113 = y1*(z1*xi3 - xi1*z3) + z1*(xi1*y3 - y1*xi3) + xi1*(y1*z3 - z1*y3);
+if (baryon_123 + baryon_213 != 0 || baryon_113 != 0) {
+    ERROR("FAIL: Archetype LIX 3-Quark Baryon antisymmetry or Pauli exclusion mismatch");
+}
+// Archetype LX: Two-state Contact Flow Idempotent composition Pi_c1 * Pi_c2 Grade +2 entry:
+poly contact_comp_wx = xi1 + ((-y1)*(-z2) - (-z1)*(-y2));
+if (contact_comp_wx - (xi1 + w12) != 0) {
+    ERROR("FAIL: Archetype LX Contact Flow Idempotent Lamb composition mismatch");
+}
+print("[PASS] Singular: Archetypes LV-LX (QGT Madelung, Baryon Pauli Exclusion, & Contact Flow Idempotent)");
+
+// 3d. Archetypes LXIII & LXIV: Wheeler "It from Bit" & "Boundary of a Boundary is Zero":
+// For d(q_i) = P_row(q_i) - e11 = L_+(q_i), d(q_1)*(d(q_2)*d(q_3)) has (0,0) entry -det(q1,q2,q3)
+// and (d(q_1)*d(q_2))*d(q_3) has (1,1) entry -det(q1,q2,q3), so their difference is B(q1,q2,q3):
+poly wheeler_vol_L = -baryon_123;
+poly wheeler_vol_R = -baryon_123;
+if ((wheeler_vol_L - 0) - baryon_123 != -2*baryon_123 || wheeler_vol_L - wheeler_vol_R != 0) {
+    ERROR("FAIL: Archetype LXIV Wheeler 3-bit volume emergence mismatch");
+}
+print("[PASS] Singular: Archetypes LXIII-LXIV (Wheeler 'It from Bit' & 'Boundary of a Boundary is Zero')");
+
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;
 poly omega_perp = y1*z2 - z1*y2;

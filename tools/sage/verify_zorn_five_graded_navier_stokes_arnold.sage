@@ -134,7 +134,32 @@ assert z_sub(z_mul(z_mul(Psi_R, Psi_L), Psi_R), z_mul(Psi_R, z_mul(Psi_L, Psi_R)
 )
 print("[PASS] FreeAlgebra: Archetype LX Chiral Wavefunction Factors & Noether-Sandwich Associator")
 
-# 2. Commutative 3D PolynomialRing verification of Universal 3D Zorn Lamb Nilpotence
+# Verify Archetypes LXI & LXII in FreeAlgebra: 1934 JvNW Cubic Peirce Polynomial & Yang-Mills Balance
+def z_anti(X, Y):
+    return z_add(z_mul(X, Y), z_mul(Y, X))
+
+X_jvnw = (y1, (z1, xi1, y2), (z2, xi2, y3), z3)
+L1_jvnw = z_anti(e11, X_jvnw)
+L2_jvnw = z_anti(e11, L1_jvnw)
+L3_jvnw = z_anti(e11, L2_jvnw)
+assert z_add(z_sub(L3_jvnw, z_add(z_add(L2_jvnw, L2_jvnw), L2_jvnw)), z_add(L1_jvnw, L1_jvnw)) == z_zero()
+
+J_ym_free = (F(0), u_color, F_ym_color, F(0))
+alpha_ym_free = -(dot(u_color, F_ym_color) + dot(u_color, F_ym_color))
+assert z_anti(J_ym_free, J_ym_free) == grade_zero(alpha_ym_free, alpha_ym_free)
+print("[PASS] FreeAlgebra: Archetypes LXI-LXII 1934 JvNW Cubic Peirce & Noncommutative Yang-Mills Balance")
+
+# Verify Archetypes LXIII & LXIV in FreeAlgebra: Wheeler "It from Bit" & "Boundary of a Boundary is Zero"
+e22 = grade_zero(F(0), F(1))
+d_v_wh = z_sub(Psi_R, e11)
+d_w_wh = z_sub(Psi_L, e11)
+assert z_mul(d_v_wh, d_v_wh) == z_zero()
+assert z_mul(d_w_wh, d_w_wh) == z_zero()
+assert z_add(z_mul(d_v_wh, d_w_wh), z_mul(d_w_wh, d_v_wh)) == grade_zero(-dot(v_tri, w_tri), -dot(w_tri, v_tri))
+assert z_sub(z_mul(d_v_wh, d_w_wh), z_mul(d_w_wh, d_v_wh)) == grade_zero(-dot(v_tri, w_tri), dot(w_tri, v_tri))
+print("[PASS] FreeAlgebra: Archetypes LXIII-LXIV Wheeler 'It from Bit' & 'Boundary of a Boundary is Zero'")
+
+# 2. Commutative 3D PolynomialRing verification of Universal 3D Zorn Lamb Nilpotence & JvNW Axiom (III)
 R.<ux,uy,uz,wx,wy,wz,dp,dm> = PolynomialRing(QQ, 8)
 
 def c_cross(u, v):
@@ -143,12 +168,23 @@ def c_cross(u, v):
 def c_dot(u, v):
     return u[0]*v[0] + u[1]*v[1] + u[2]*v[2]
 
+def c_zadd(X, Y):
+    return (
+        X[0] + Y[0],
+        tuple(X[1][i] + Y[1][i] for i in range(3)),
+        tuple(X[2][i] + Y[2][i] for i in range(3)),
+        X[3] + Y[3],
+    )
+
 def c_zmul(X, Y):
     a = X[0]*Y[0] - c_dot(X[1], Y[2])
     v = tuple(X[0]*Y[1][i] + X[1][i]*Y[3] - c_cross(X[2], Y[2])[i] for i in range(3))
     w = tuple(X[2][i]*Y[0] + X[3]*Y[2][i] + c_cross(X[1], Y[1])[i] for i in range(3))
     b = -c_dot(X[2], Y[1]) + X[3]*Y[3]
     return (a, v, w, b)
+
+def c_zjordan(X, Y):
+    return c_zadd(c_zmul(X, Y), c_zmul(Y, X))
 
 c_zero = (R(0), (R(0), R(0), R(0)), (R(0), R(0), R(0)), R(0))
 U3 = (R(0), (ux, uy, uz), (R(0), R(0), R(0)), R(0))
@@ -160,6 +196,12 @@ assert c_zmul(Lamb3, U3) == c_zero
 assert c_zmul(Om3, Lamb3) == c_zero
 assert c_zmul(Lamb3, Om3) == c_zero
 print("[PASS] PolynomialRing: Universal 3D Zorn Lamb-Velocity & Lamb-Vorticity Nilpotence")
+
+A_jvnw = (dp, (ux, uy, uz), (wx, wy, wz), dm)
+B_jvnw = (dm, (wx, uz, uy), (ux, wz, wy), dp)
+A_sq = c_zjordan(A_jvnw, A_jvnw)
+assert c_zjordan(c_zjordan(A_sq, B_jvnw), A_jvnw) == c_zjordan(A_sq, c_zjordan(B_jvnw, A_jvnw))
+print("[PASS] PolynomialRing: 1934 JvNW Fundamental Jordan Axiom (III) ((A o A) o B) o A = (A o A) o (B o A)")
 
 print("======================================================================")
 print("ALL CHECKS PASSED")

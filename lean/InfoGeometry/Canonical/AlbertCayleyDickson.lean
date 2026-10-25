@@ -1029,23 +1029,22 @@ end TrivialStarPositivityAndConservation
 
 section OrderedGramPositivity
 
-variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
-  [StarRing R] [TrivialStar R]
+variable [LinearOrder F] [IsStrictOrderedRing F] [TrivialStar F]
 
 /-- Zero-hypothesis nonnegativity of the positive right-isospin sector Gram trace. -/
-theorem trace_star_mul_self_peircePlus_nonneg (χ : SplitQuaternion R) :
+theorem trace_star_mul_self_peircePlus_nonneg (χ : SplitQuaternion F) :
     0 ≤ Matrix.trace (star (χ * peircePlus) * (χ * peircePlus)) := by
   rw [trace_star_mul_self_peircePlus_eq_sum_sq]
   exact add_nonneg (mul_self_nonneg (χ 0 0)) (mul_self_nonneg (χ 1 0))
 
 /-- Zero-hypothesis nonnegativity of the negative right-isospin sector Gram trace. -/
-theorem trace_star_mul_self_peirceMinus_nonneg (χ : SplitQuaternion R) :
+theorem trace_star_mul_self_peirceMinus_nonneg (χ : SplitQuaternion F) :
     0 ≤ Matrix.trace (star (χ * peirceMinus) * (χ * peirceMinus)) := by
   rw [trace_star_mul_self_peirceMinus_eq_sum_sq]
   exact add_nonneg (mul_self_nonneg (χ 0 1)) (mul_self_nonneg (χ 1 1))
 
-/-- Zero-hypothesis nonnegativity of the full Hilbert–Schmidt Gram trace on `SplitQuaternion R`. -/
-theorem trace_star_mul_self_nonneg (χ : SplitQuaternion R) :
+/-- Zero-hypothesis nonnegativity of the full Hilbert–Schmidt Gram trace on `SplitQuaternion F`. -/
+theorem trace_star_mul_self_nonneg (χ : SplitQuaternion F) :
     0 ≤ Matrix.trace (star χ * χ) := by
   rw [trace_peirce_gram_decomposition]
   exact add_nonneg
@@ -1053,6 +1052,99 @@ theorem trace_star_mul_self_nonneg (χ : SplitQuaternion R) :
     (trace_star_mul_self_peirceMinus_nonneg χ)
 
 end OrderedGramPositivity
+
+section PorterNoncommutativeRiccatiAndLoxodromes
+
+variable {A : Type*} [Ring A]
+
+/-!
+### Porter's Noncommutative Riccati Operator, Loxodrome Spirals, & Parabolic Commutator Anomaly
+-/
+
+/-- **Porter's Noncommutative Riccati Quadratic Operator (`porterRiccati`, Eq. 1.4 & Prop. 3.1)**:
+    For `X : Matrix (Fin 2) (Fin 2) A` and `q : A`,
+    `P_X(q) = -q * X 1 0 * q - q * X 1 1 + X 0 0 * q + X 0 1`. -/
+def porterRiccati (X : Matrix (Fin 2) (Fin 2) A) (q : A) : A :=
+  -q * X 1 0 * q - q * X 1 1 + X 0 0 * q + X 0 1
+
+/-- **1. Grassmannian Factorization & Universal Riccati Composition Law (Porter Lemma 2.4)**:
+    In ANY associative ring `A` (with zero hypotheses!):
+    - `P_X(q) = (X 0 0 * q + X 0 1) - q * (X 1 0 * q + X 1 1)`.
+    - `P_{X * Y}(q) = (X 0 0 - q * X 1 0) * P_Y(q) + P_X(q) * (Y 1 0 * q + Y 1 1)`!
+    This proves Porter's Lemma 2.4 (`P_X(q) = 0 ∧ P_Y(q) = 0 ⟹ P_{X*Y}(q) = 0`)
+    purely algebraically without analytic limits! -/
+theorem porterRiccati_factorization_and_mul_composition
+    (X Y : Matrix (Fin 2) (Fin 2) A) (q : A) :
+    porterRiccati X q = (X 0 0 * q + X 0 1) - q * (X 1 0 * q + X 1 1) ∧
+    porterRiccati (X * Y) q =
+      (X 0 0 - q * X 1 0) * porterRiccati Y q +
+      porterRiccati X q * (Y 1 0 * q + Y 1 1) := by
+  refine ⟨?_, ?_⟩
+  · unfold porterRiccati
+    noncomm_ring
+  · unfold porterRiccati
+    simp only [Matrix.mul_apply, Fin.sum_univ_two]
+    noncomm_ring
+
+/-- **2. Riccati Classification of Spirals, `Pin_±` Reflections, & Idempotent Selectors**:
+    In ANY associative ring `A` (with zero hypotheses!):
+    - Identity matrix `1`: `porterRiccati 1 q = 0`.
+    - Diagonal spiral generator `!![u, 0; 0, v]` (Porter Eq. 3.3): `P(q) = u * q - q * v`.
+    - `Pin_+` reflection `!![0, 1; 1, 0]`: `P(q) = 1 - q * q` (selects involutions `q² = 1`).
+    - `Pin_-` wheel `!![0, 1; -1, 0]`: `P(q) = 1 + q * q` (selects complex structures `q² = -1`).
+    - Idempotent selector `!![1, 0; 1, 0]`: `P(q) = q - q * q` (selects idempotents `q² = q`). -/
+theorem porterRiccati_spiral_and_generator_classification (u v q : A) :
+    porterRiccati (1 : Matrix (Fin 2) (Fin 2) A) q = 0 ∧
+    porterRiccati !![u, 0; 0, v] q = u * q - q * v ∧
+    porterRiccati !![(0 : A), 1; 1, 0] q = 1 - q * q ∧
+    porterRiccati !![(0 : A), 1; -1, 0] q = 1 + q * q ∧
+    porterRiccati !![(1 : A), 0; 1, 0] q = q - q * q := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  · simp [porterRiccati, add_comm, sub_eq_add_neg]
+
+/-- **3. Porter's Parabolic Commutator Anomaly (Eq. 2.8, p. 6)**:
+    For any traceless upper-triangular matrix `X = !![a, x; 0, -a]` over a noncommutative ring `A`,
+    squaring `X` produces `a * a` on the diagonal and the exact commutator `a * x - x * a`
+    in the upper-right parabolic corner! -/
+theorem porter_parabolic_sq_commutator_anomaly (a x : A) :
+    let X : Matrix (Fin 2) (Fin 2) A := !![a, x; 0, -a]
+    X * X = !![a * a, a * x - x * a; 0, a * a] := by
+  intro X
+  ext i j; fin_cases i <;> fin_cases j <;>
+  · simp [X, Matrix.mul_apply, Fin.sum_univ_two]
+    try noncomm_ring
+
+/-- **4. Schur Complement Identity for the Isometric Sphere Radius (`δ_c = b - a c⁻¹ d`, Eq. 4.5)**:
+    When `c` has a two-sided inverse `c_inv` (`c * c_inv = 1`), the upper-right entry of
+    `!![a, b; c, d] * !![1, -c_inv * d; 0, 1]` isolates Porter's Schur complement `b - a * c_inv * d`! -/
+theorem porter_schur_complement_factorization (a b c d c_inv : A) :
+    let M : Matrix (Fin 2) (Fin 2) A := !![a, b; c, d]
+    let U : Matrix (Fin 2) (Fin 2) A := !![1, -c_inv * d; 0, 1]
+    (M * U) 0 0 = a ∧
+    (M * U) 0 1 = b - a * c_inv * d ∧
+    (M * U) 1 0 = c ∧
+    (M * U) 1 1 = d - c * c_inv * d := by
+  intro M U
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · simp [M, U, Matrix.mul_apply, Fin.sum_univ_two]
+    try noncomm_ring
+
+/-- Upper-right `2 × 2` parabolic seed `!![0, 1; 0, 0]` over `A`. -/
+def porterSeedD : Matrix (Fin 2) (Fin 2) A := !![0, 1; 0, 0]
+
+/-- Lower-left `2 × 2` parabolic seed `!![0, 0; 1, 0]` over `A`. -/
+def porterSeedB : Matrix (Fin 2) (Fin 2) A := !![0, 0; 1, 0]
+
+/-- **5. Explicit Non-Commutativity Witness on `Matrix (Fin 2) (Fin 2) ℤ` (`porterSeedD * porterSeedB ≠ porterSeedB * porterSeedD`)**:
+    In `Matrix (Fin 2) (Fin 2) ℤ`, the upper and lower parabolic seeds do not commute. -/
+theorem porter_parabolic_noncomm_witness :
+    porterSeedD (A := ℤ) * porterSeedB (A := ℤ) ≠ porterSeedB (A := ℤ) * porterSeedD (A := ℤ) := by
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  revert h00
+  decide
+
+end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion
 

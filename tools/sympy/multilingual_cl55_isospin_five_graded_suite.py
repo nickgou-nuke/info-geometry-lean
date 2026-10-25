@@ -710,6 +710,60 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(pole_L_1930[3] - xv.dot(yv.cross(zv))) == 0
     assert sp.simplify(pole_R_1930[0] - xv.dot(yv.cross(zv))) == 0
 
+    # 25. Porter's Noncommutative Riccati Operator, Loxodromic Spirals, & Parabolic Commutator Anomaly
+    # (`porterRiccati_factorization_and_mul_composition`,
+    #  `porterRiccati_spiral_and_generator_classification`,
+    #  `porter_parabolic_sq_commutator_anomaly`,
+    #  `porter_schur_complement_factorization` in `AlbertCayleyDickson.lean`)
+    x00_nc, x01_nc, x10_nc, x11_nc = sp.symbols("x00_nc x01_nc x10_nc x11_nc", commutative=False)
+    y00_nc, y01_nc, y10_nc, y11_nc = sp.symbols("y00_nc y01_nc y10_nc y11_nc", commutative=False)
+    q_nc, u_nc, v_nc, a_nc, x_nc, c_inv_nc = sp.symbols(
+        "q_nc u_nc v_nc a_nc x_nc c_inv_nc", commutative=False
+    )
+
+    def porter_riccati(M, q):
+        return -q * M[1, 0] * q - q * M[1, 1] + M[0, 0] * q + M[0, 1]
+
+    X_nc = sp.Matrix([[x00_nc, x01_nc], [x10_nc, x11_nc]])
+    Y_nc = sp.Matrix([[y00_nc, y01_nc], [y10_nc, y11_nc]])
+    XY_nc = X_nc * Y_nc
+    assert sp.expand(
+        porter_riccati(X_nc, q_nc)
+        - ((x00_nc * q_nc + x01_nc) - q_nc * (x10_nc * q_nc + x11_nc))
+    ) == 0
+    assert sp.expand(
+        porter_riccati(XY_nc, q_nc)
+        - (
+            (x00_nc - q_nc * x10_nc) * porter_riccati(Y_nc, q_nc)
+            + porter_riccati(X_nc, q_nc) * (y10_nc * q_nc + y11_nc)
+        )
+    ) == 0
+    assert sp.expand(porter_riccati(sp.eye(2), q_nc)) == 0
+    assert sp.expand(
+        porter_riccati(sp.Matrix([[u_nc, 0], [0, v_nc]]), q_nc) - (u_nc * q_nc - q_nc * v_nc)
+    ) == 0
+    assert sp.expand(
+        porter_riccati(sp.Matrix([[0, 1], [1, 0]]), q_nc) - (1 - q_nc * q_nc)
+    ) == 0
+    assert sp.expand(
+        porter_riccati(sp.Matrix([[0, 1], [-1, 0]]), q_nc) - (1 + q_nc * q_nc)
+    ) == 0
+    assert sp.expand(
+        porter_riccati(sp.Matrix([[1, 0], [1, 0]]), q_nc) - (q_nc - q_nc * q_nc)
+    ) == 0
+    P_par = sp.Matrix([[a_nc, x_nc], [0, -a_nc]])
+    P_par_sq = P_par * P_par
+    assert sp.expand(P_par_sq[0, 0] - a_nc * a_nc) == 0
+    assert sp.expand(P_par_sq[0, 1] - (a_nc * x_nc - x_nc * a_nc)) == 0
+    assert sp.expand(P_par_sq[1, 0]) == 0
+    assert sp.expand(P_par_sq[1, 1] - a_nc * a_nc) == 0
+    U_schur = sp.Matrix([[1, -c_inv_nc * x11_nc], [0, 1]])
+    MU_schur = X_nc * U_schur
+    assert sp.expand(MU_schur[0, 0] - x00_nc) == 0
+    assert sp.expand(MU_schur[0, 1] - (x01_nc - x00_nc * c_inv_nc * x11_nc)) == 0
+    assert sp.expand(MU_schur[1, 0] - x10_nc) == 0
+    assert sp.expand(MU_schur[1, 1] - (x11_nc - x10_nc * c_inv_nc * x11_nc)) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

@@ -1549,6 +1549,64 @@ theorem porterRiccati_composition_and_tracelessFlowGen_discriminant
          (porterRiccati_tracelessFlowGen_and_casimir_discriminant α β γ 0 0 x).1,
          (porterRiccati_tracelessFlowGen_and_casimir_discriminant α β γ 0 0 x).2.1⟩
 
+/-- **17. Porter's Riccati Composition Law, Casimir Square Completion, & On-Shell Annihilation**:
+    1. **Noncommutative Composition (`[Ring A]`)**:
+       `P_{X * Y}(q) = (X 0 0 - q * X 1 0) * P_Y(q) + P_X(q) * (Y 1 0 * q + Y 1 1)`.
+    2. **Evaluation on `M = tracelessFlowGen α β γ`**:
+       `P_M(x) = -(β - γ) * x² + (2 * α) * x + (β + γ)`.
+    3. **Division-Free Riccati–Casimir Square Completion**:
+       `(α - (β - γ) * x)² + (β - γ) * P_M(x) = α² + β² - γ²`
+       (and discriminant `(2 * α)² + 4 * (β - γ) * (β + γ) = 4 * (α² + β² - γ²)`).
+    4. **On-Shell Riccati Annihilation of `M * M`**:
+       `P_{M * M}(x) = 0` for all `x : F`! -/
+theorem porterRiccati_composition_and_tracelessFlowGen_casimir
+    (X Y : Matrix (Fin 2) (Fin 2) A) (q : A) (α β γ x : F) :
+    porterRiccati (X * Y) q =
+      (X 0 0 - q * X 1 0) * porterRiccati Y q +
+      porterRiccati X q * (Y 1 0 * q + Y 1 1) ∧
+    porterRiccati (tracelessFlowGen α β γ) x =
+      -(β - γ) * (x * x) + (2 * α) * x + (β + γ) ∧
+    (α - (β - γ) * x) * (α - (β - γ) * x) +
+      (β - γ) * porterRiccati (tracelessFlowGen α β γ) x =
+      α * α + β * β - γ * γ ∧
+    (2 * α) * (2 * α) + 4 * (β - γ) * (β + γ) =
+      4 * (α * α + β * β - γ * γ) ∧
+    porterRiccati (tracelessFlowGen α β γ * tracelessFlowGen α β γ) x = 0 := by
+  have hd := porterRiccati_composition_and_tracelessFlowGen_discriminant X Y q α β γ x
+  refine ⟨hd.1, hd.2.1, ?_, hd.2.2, ?_⟩
+  · rw [hd.2.1]; ring
+  · simp [porterRiccati, tracelessFlowGen, polarizationGamma,
+          velocityQ, wheelJ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB,
+          Matrix.mul_apply, Fin.sum_univ_two]
+    ring
+
+/-- Noncommutative grading involution $U = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \in M_2(A)$. -/
+def cliffordU : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, -1]
+
+/-- Noncommutative flip involution $V = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \in M_2(A)$. -/
+def cliffordV : Matrix (Fin 2) (Fin 2) A := !![0, 1; 1, 0]
+
+/-- Twice the orthogonal Peirce projectors $2 \Pi_\pm = I_2 \pm U \in M_2(A)$. -/
+def twoPeircePlus : Matrix (Fin 2) (Fin 2) A := 1 + cliffordU
+def twoPeirceMinus : Matrix (Fin 2) (Fin 2) A := 1 - cliffordU
+
+/-- **18. Noncommutative Clifford–Weyl Relations & Chiral Intertwining in $M_2(A)$**:
+    Over any noncommutative ring $A$:
+    1. $U^2 = I_2$ and $V^2 = I_2$.
+    2. Anticommutativity: $U V + V U = 0$.
+    3. Peirce Orthogonality: $(I_2 + U)(I_2 - U) = 0$.
+    4. Exact Chiral Intertwining: $V (I_2 + U) = (I_2 - U) V$. -/
+theorem cliffordWeyl_noncomm_relations :
+    (cliffordU : Matrix (Fin 2) (Fin 2) A) * cliffordU = 1 ∧
+    (cliffordV : Matrix (Fin 2) (Fin 2) A) * cliffordV = 1 ∧
+    (cliffordU : Matrix (Fin 2) (Fin 2) A) * cliffordV + cliffordV * cliffordU = 0 ∧
+    (twoPeircePlus : Matrix (Fin 2) (Fin 2) A) * twoPeirceMinus = 0 ∧
+    (cliffordV : Matrix (Fin 2) (Fin 2) A) * twoPeircePlus = twoPeirceMinus * cliffordV := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext i j; fin_cases i <;> fin_cases j <;>
+   simp [cliffordU, cliffordV, twoPeircePlus, twoPeirceMinus,
+         Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply])
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

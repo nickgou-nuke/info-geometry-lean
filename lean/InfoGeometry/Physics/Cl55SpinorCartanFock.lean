@@ -2147,8 +2147,87 @@ theorem cl55_mode_graded_laplace_wavelet_bruhat_and_braid_synthesis
     module
   · dsimp [modeExpAnnihilation, modeHyperbolicKernel, modeExpCreation]
     simp only [add_mul, mul_add, one_mul, mul_one, smul_mul_assoc, mul_smul_comm,
-               h_f_occ, h_f_vac, h_occ_e, h_vac_e, h_f_e, zero_mul, mul_zero, smul_zero]
+               h_f_occ, h_f_vac, h_occ_e, h_vac_e, h_f_e, zero_mul, smul_zero]
     module
+
+/-!
+### 5c. 5-Mode Cartan Occupation Sign Tuple, `16 + 16` Chiral Split, & `sixChargeBL` Spectral Table
+-/
+
+section CartanOccupationSigns
+
+variable {R : Type*} [CommRing R]
+
+/-- **5-Mode Cartan Occupation Sign Tuple (`CartanSigns R = Fin 5 → R`)**:
+    Represents the 5 commuting Cartan involutions `(σ₀, σ₁, σ₂, σ₃, σ₄)` of `𝔥₅ ⊂ Cl(5,5)`,
+    where `(σ₀, σ₁, σ₂)` are the 3 color modes, `σ₃` is weak isospin `2τ₃`, and `σ₄` is `2K₀`. -/
+abbrev CartanSigns (R : Type*) := Fin 5 → R
+
+/-- Twice color isospin `2 * T₃^color = σ₀ - σ₁`. -/
+def twoColorT3 (s : CartanSigns R) : R := s 0 - s 1
+
+/-- Three times color hypercharge `3 * Y^color = σ₀ + σ₁ - 2 * σ₂`. -/
+def threeColorY (s : CartanSigns R) : R := s 0 + s 1 - 2 * s 2
+
+/-- Shifted color number operator `2 * N_color - 3 = σ₀ + σ₁ + σ₂`. -/
+def shiftedColorNum (s : CartanSigns R) : R := s 0 + s 1 + s 2
+
+/-- Integer-scaled `3 * (B - L) = σ₀ + σ₁ + σ₂` (`-3` for leptons, `+1` for quarks, `+3` for baryons). -/
+def threeBMinusL (s : CartanSigns R) : R := s 0 + s 1 + s 2
+
+/-- **Six times the Gell-Mann–Nishijima Electric Charge on Cartan Signs (`sixChargeBLSign = 3 * (2τ₃) + 3 * (B - L)`)**:
+    `6 * Q_em = 3 * σ₃ + (σ₀ + σ₁ + σ₂)`. -/
+def sixChargeBLSign (s : CartanSigns R) : R :=
+  3 * s 3 + threeBMinusL s
+
+/-- **Total `Cl(5,5)` Chiral Grading Eigenvalue (`cl55Gamma = σ₀ * σ₁ * σ₂ * σ₃ * σ₄`)**. -/
+def cl55Gamma (s : CartanSigns R) : R :=
+  s 0 * s 1 * s 2 * s 3 * s 4
+
+/-- Twice the `16_+` and `16_-` chiral half-spinor projectors (`2 * Π₁₆^± = 1 ± Γ_{Cl(5,5)}`). -/
+def twoChiralProjPlus (s : CartanSigns R) : R := 1 + cl55Gamma s
+def twoChiralProjMinus (s : CartanSigns R) : R := 1 - cl55Gamma s
+
+/-- Canonical Fock basis states in `{±1}⁵`. -/
+def protonState : CartanSigns R := ![1, 1, 1, 1, 1]
+def neutronState : CartanSigns R := ![1, 1, 1, -1, 1]
+def neutrinoState : CartanSigns R := ![-1, -1, -1, 1, 1]
+def electronState : CartanSigns R := ![-1, -1, -1, -1, 1]
+def redUpQuarkState : CartanSigns R := ![1, -1, 1, 1, 1]
+def redDownQuarkState : CartanSigns R := ![1, -1, 1, -1, 1]
+
+/-- **7. Exact Cartan Inversion, `16 + 16` Chiral Decomposition, & `sixChargeBLSign` Spectral Table**:
+    With zero hypotheses:
+    1. **Exact `SU(3)` Color Cartan Reconstruction**:
+       `3 * (twoColorT3 s) + (threeColorY s) + 2 * (shiftedColorNum s) = 6 * s 0`.
+    2. **`16 + 16` Chiral Projector Split**:
+       `twoChiralProjPlus s + twoChiralProjMinus s = 2` and
+       `twoChiralProjPlus s - twoChiralProjMinus s = 2 * cl55Gamma s`.
+    3. **`sixChargeBLSign` (`6 * Q_em`) Fermion & Baryon Spectral Table**:
+       - Proton: `+6` (`Q = +1`)
+       - Neutron: `0` (`Q = 0`)
+       - Neutrino: `0` (`Q = 0`)
+       - Electron: `-6` (`Q = -1`)
+       - Up Quark: `+4` (`Q = +2/3`)
+       - Down Quark: `-2` (`Q = -1/3`)! -/
+theorem cl55_cartan_reconstruction_chiral_split_and_sixChargeBL_table
+    (s : CartanSigns R) :
+    3 * twoColorT3 s + threeColorY s + 2 * shiftedColorNum s = 6 * s 0 ∧
+    twoChiralProjPlus s + twoChiralProjMinus s = 2 ∧
+    twoChiralProjPlus s - twoChiralProjMinus s = 2 * cl55Gamma s ∧
+    sixChargeBLSign (protonState : CartanSigns R) = 6 ∧
+    sixChargeBLSign (neutronState : CartanSigns R) = 0 ∧
+    sixChargeBLSign (neutrinoState : CartanSigns R) = 0 ∧
+    sixChargeBLSign (electronState : CartanSigns R) = -6 ∧
+    sixChargeBLSign (redUpQuarkState : CartanSigns R) = 4 ∧
+    sixChargeBLSign (redDownQuarkState : CartanSigns R) = -2 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (simp [twoColorT3, threeColorY, shiftedColorNum, twoChiralProjPlus,
+         twoChiralProjMinus, cl55Gamma, sixChargeBLSign, threeBMinusL,
+         protonState, neutronState, neutrinoState, electronState,
+         redUpQuarkState, redDownQuarkState]; ring)
+
+end CartanOccupationSigns
 
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 

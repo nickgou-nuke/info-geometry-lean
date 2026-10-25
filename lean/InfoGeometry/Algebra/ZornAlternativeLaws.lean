@@ -3554,4 +3554,869 @@ theorem zornMovingLoxodromic_two_state_weak_syzygy
             InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def,
             add, neg, smul, zero]
 
+/-!
+### Two-Mode Cayley–Hamilton Exponential Flow (`zornTracelessExp`), Clifford Polarization, & Malcev Closure
+-/
+
+/-- **7D `(4, 3)` Casimir Mass-Shell Scalar (`zornTracelessCasimir α v w = α² + v ⋅ w`)**:
+    Satisfies `M(α, v, w) * M(α, v, w) = zornTracelessCasimir α v w • 1`
+    and `norm (M(α, v, w)) = -zornTracelessCasimir α v w`. -/
+def zornTracelessCasimir (α : R) (v w : ZornVec3 R) : R :=
+  α * α + ZornVec3.dot v w
+
+/-- **7D Two-Mode Cayley–Hamilton Exponential Flow (`zornTracelessExp c s α v w`)**:
+    `exp_{(c, s)}(M(α, v, w)) = c • 1 + s • zornTracelessFlowGen α v w`. -/
+noncomputable def zornTracelessExp (c s α : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  c • (one : ZornVectorMatrix R) + s • zornTracelessFlowGen α v w
+
+private lemma bundledAssociator_smul_left (r : R) (X Y Z : ZornVectorMatrix R) :
+    bundledAssociator (r • X) Y Z = r • bundledAssociator X Y Z := by
+  change mul (mul (smul r X) Y) Z - mul (smul r X) (mul Y Z) =
+    r • (mul (mul X Y) Z - mul X (mul Y Z))
+  rw [smul_mul, smul_mul, smul_mul]
+  exact (_root_.smul_sub r (mul (mul X Y) Z) (mul X (mul Y Z))).symm
+
+private lemma bundledAssociator_smul_mid (r : R) (X Y Z : ZornVectorMatrix R) :
+    bundledAssociator X (r • Y) Z = r • bundledAssociator X Y Z := by
+  change mul (mul X (smul r Y)) Z - mul X (mul (smul r Y) Z) =
+    r • (mul (mul X Y) Z - mul X (mul Y Z))
+  rw [mul_smul, smul_mul, smul_mul, mul_smul]
+  exact (_root_.smul_sub r (mul (mul X Y) Z) (mul X (mul Y Z))).symm
+
+private lemma bundledAssociator_smul_right (r : R) (X Y Z : ZornVectorMatrix R) :
+    bundledAssociator X Y (r • Z) = r • bundledAssociator X Y Z := by
+  change mul (mul X Y) (smul r Z) - mul X (mul Y (smul r Z)) =
+    r • (mul (mul X Y) Z - mul X (mul Y Z))
+  rw [mul_smul, mul_smul, mul_smul]
+  exact (_root_.smul_sub r (mul (mul X Y) Z) (mul X (mul Y Z))).symm
+
+private lemma bundledAssociator_one_left (Y Z : ZornVectorMatrix R) :
+    bundledAssociator one Y Z = 0 := by
+  change mul (mul one Y) Z - mul one (mul Y Z) = 0
+  rw [one_mul, one_mul, _root_.sub_self]
+
+private lemma bundledAssociator_one_mid (X Z : ZornVectorMatrix R) :
+    bundledAssociator X one Z = 0 := by
+  change mul (mul X one) Z - mul X (mul one Z) = 0
+  rw [mul_one, one_mul, _root_.sub_self]
+
+private lemma bundledAssociator_one_right (X Y : ZornVectorMatrix R) :
+    bundledAssociator X Y one = 0 := by
+  change mul (mul X Y) one - mul X (mul Y one) = 0
+  rw [mul_one, mul_one, _root_.sub_self]
+
+/-- **18. Universal 7D `(4, 3)` Casimir On-Shell, Two-Sided Klein–Gordon, & Clifford Polarization**:
+    For ANY 7D traceless flow generators `M = zornTracelessFlowGen α v w`,
+    `M' = zornTracelessFlowGen α' v' w'`, and ANY 8D state `X`:
+    - **On-Shell Square**: `M * M = zornTracelessCasimir α v w • 1`.
+    - **Left & Right Klein–Gordon Wave Action**:
+      `M * (M * X) = zornTracelessCasimir α v w • X` and `(X * M) * M = zornTracelessCasimir α v w • X`.
+    - **7D Clifford Symmetric Anticommutator**:
+      `M * M' + M' * M = (2 * α * α' + v ⋅ w' + v' ⋅ w) • 1`. -/
+theorem zornTracelessFlowGen_casimir_klein_gordon_and_clifford
+    (α α' : R) (v w v' w' : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let M := zornTracelessFlowGen α v w
+    let M' := zornTracelessFlowGen α' v' w'
+    M * M = zornTracelessCasimir α v w • (one : ZornVectorMatrix R) ∧
+    M * (M * X) = zornTracelessCasimir α v w • X ∧
+    (X * M) * M = zornTracelessCasimir α v w • X ∧
+    M * M' + M' * M =
+      (2 * α * α' + ZornVec3.dot v w' + ZornVec3.dot v' w) • (one : ZornVectorMatrix R) := by
+  intro M M'
+  have h12 := zornTracelessFlowGen_casimir_onshell_and_klein_gordon α v w X
+  refine ⟨h12.1, h12.2.1, h12.2.2.1, ?_⟩
+  · ext
+    · simp [M, M', zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [M, M', zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [M, M', zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, mul, smul, ZornVec3.cross]; try ring)
+    · simp [M, M', zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **19. Hyperbolic `Pin_+` (4D) vs. Elliptic `SU(2)` (3D) Specializations of `zornTracelessFlowGen`**:
+    - On the 4D hyperbolic sheet (`w = v`), `M(α, v, v)² = (α² + v ⋅ v) • 1`.
+    - On the 3D quaternion sphere (`α = 0, w = -v`), `M(0, v, -v)² = -(v ⋅ v) • 1`. -/
+theorem zornTracelessFlowGen_hyperbolic_and_elliptic_sheets
+    (α : R) (v : ZornVec3 R) :
+    zornTracelessFlowGen α v v * zornTracelessFlowGen α v v =
+      (α * α + ZornVec3.dot v v) • (one : ZornVectorMatrix R) ∧
+    zornTracelessFlowGen 0 v (-v) * zornTracelessFlowGen 0 v (-v) =
+      (-ZornVec3.dot v v) • (one : ZornVectorMatrix R) :=
+  ⟨(zornTracelessFlowGen_casimir_onshell_and_klein_gordon α v v 0).2.2.2.1,
+   (zornTracelessFlowGen_casimir_onshell_and_klein_gordon α v v 0).2.2.2.2⟩
+
+/-- **20. Upper & Lower Exponential Diquark 2-Cocycles & Jackiw–WZW Nambu 3-Cocycles**:
+    For any `v₁, v₂, v₃, w₁, w₂, w₃ : ZornVec3 R` with `U_i = zornExpUpperNil v_i` and `L_i = zornExpLowerNil w_i`:
+    - **Jordan Additivity**: `U₁ * U₂ + U₂ * U₁ = (2 : R) • zornExpUpperNil (v₁ + v₂)`.
+    - **Upper Diquark 2-Cocycle**: `U₁ * U₂ - U₂ * U₁ = ⟨0, 0, (2 : R) • (v₁ × v₂), 0⟩`.
+    - **Lower Anti-Diquark 2-Cocycle**: `L₁ * L₂ - L₂ * L₁ = ⟨0, -(2 : R) • (w₁ × w₂), 0, 0⟩`.
+    - **Dual Jackiw–WZW Nambu 3-Cocycles**:
+      `[U₁, U₂, U₃] = (-zornNambuDet v₁ v₂ v₃) • zornGamma` and
+      `[L₁, L₂, L₃] = (-zornNambuDet w₁ w₂ w₃) • zornGamma`! -/
+theorem zornExpNil_diquark_two_cocycles_and_wzw_three_cocycles
+    (v₁ v₂ v₃ w₁ w₂ w₃ : ZornVec3 R) :
+    let U₁ := zornExpUpperNil v₁
+    let U₂ := zornExpUpperNil v₂
+    let U₃ := zornExpUpperNil v₃
+    let L₁ := zornExpLowerNil w₁
+    let L₂ := zornExpLowerNil w₂
+    let L₃ := zornExpLowerNil w₃
+    U₁ * U₂ + U₂ * U₁ = (2 : R) • zornExpUpperNil (v₁ + v₂) ∧
+    U₁ * U₂ - U₂ * U₁ = ⟨0, 0, fun i => (2 : R) * ZornVec3.cross v₁ v₂ i, 0⟩ ∧
+    L₁ * L₂ - L₂ * L₁ = ⟨0, fun i => -((2 : R) * ZornVec3.cross w₁ w₂ i), 0, 0⟩ ∧
+    zornAssociator U₁ U₂ U₃ = (-zornNambuDet v₁ v₂ v₃) • zornGamma ∧
+    zornAssociator L₁ L₂ L₃ = (-zornNambuDet w₁ w₂ w₃) • zornGamma := by
+  intro U₁ U₂ U₃ L₁ L₂ L₃
+  have h := zornExpUpperNil_diquark_two_cocycle_and_wzw_three_cocycle v₁ v₂ v₃ w₁ w₂ w₃
+  refine ⟨h.1, h.2.1, ?_, h.2.2.1, h.2.2.2⟩
+  simp only [_root_.sub_eq_add_neg]
+  ext
+  · simp [L₁, L₂, zornExpLowerNil, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+          add, neg, mul, ZornVec3.dot]
+  · rename_i i; fin_cases i <;>
+      (simp [L₁, L₂, zornExpLowerNil, InfoGeometry.Algebra.zvm_add_def,
+             InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+             add, neg, mul, ZornVec3.cross]; try ring)
+  · rename_i i; fin_cases i <;>
+      (simp [L₁, L₂, zornExpLowerNil, InfoGeometry.Algebra.zvm_add_def,
+             InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+             add, neg, mul, ZornVec3.cross]; try ring)
+  · simp [L₁, L₂, zornExpLowerNil, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+          add, neg, mul, ZornVec3.dot]
+
+/-- **21. Explicit Coordinates, Casimir Norm, 1-Parameter Group Law, & Conjugate Inversion**:
+    For all mode weights `c, s, c₁, s₁, c₂, s₂, α : R` and 3-vectors `v, w : ZornVec3 R`:
+    - **Explicit Coordinates**:
+      `zornTracelessExp c s α v w = ⟨c + s * α, s • v, s • w, c - s * α⟩`.
+    - **Casimir Norm Identity**:
+      `norm (zornTracelessExp c s α v w) = c * c - s * s * zornTracelessCasimir α v w`.
+    - **1-Parameter Cayley–Hamilton Group Multiplication Law**:
+      `E(c₁, s₁) * E(c₂, s₂) = E(c₁ * c₂ + s₁ * s₂ * κ, c₁ * s₂ + s₁ * c₂)`.
+    - **Conjugate Inversion (`s ↦ -s`)**:
+      `E(c, s) * E(c, -s) = (c * c - s * s * κ) • 1`. -/
+theorem zornTracelessExp_coords_casimir_norm_and_group_law
+    (c s c₁ s₁ c₂ s₂ α : R) (v w : ZornVec3 R) :
+    zornTracelessExp c s α v w =
+      ⟨c + s * α, fun i => s * v i, fun i => s * w i, c - s * α⟩ ∧
+    norm (zornTracelessExp c s α v w) =
+      c * c - s * s * zornTracelessCasimir α v w ∧
+    zornTracelessExp c₁ s₁ α v w * zornTracelessExp c₂ s₂ α v w =
+      zornTracelessExp (c₁ * c₂ + s₁ * s₂ * zornTracelessCasimir α v w)
+        (c₁ * s₂ + s₁ * c₂) α v w ∧
+    zornTracelessExp c s α v w * zornTracelessExp c (-s) α v w =
+      (c * c - s * s * zornTracelessCasimir α v w) • (one : ZornVectorMatrix R) := by
+  have hc : ∀ p q : R,
+      zornTracelessExp p q α v w =
+        ⟨p + q * α, fun i => q * v i, fun i => q * w i, p - q * α⟩ := by
+    intro p q
+    ext
+    · simp [zornTracelessExp, zornTracelessFlowGen, one,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessExp, zornTracelessFlowGen, one,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessExp, zornTracelessFlowGen, one,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring)
+    · simp [zornTracelessExp, zornTracelessFlowGen, one,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_smul_def, add, smul]; try ring
+  refine ⟨hc c s, ?_, ?_, ?_⟩
+  · rw [hc c s]
+    simp [zornTracelessCasimir, norm, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · rw [hc c₁ s₁, hc c₂ s₂,
+        hc (c₁ * c₂ + s₁ * s₂ * zornTracelessCasimir α v w) (c₁ * s₂ + s₁ * c₂)]
+    ext
+    · simp [zornTracelessCasimir, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornTracelessCasimir, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · rw [hc c s, hc c (-s)]
+    ext
+    · simp [zornTracelessCasimir, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornTracelessCasimir, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **22. Artin–Moufang Associativity of `zornTracelessExp` on Arbitrary 8D States `X`**:
+    For any two exponentials `E₁, E₂` sharing the same 7D generator `M(α, v, w)` and ANY 8D state `X`:
+    - **Left Representation Associativity**: `zornAssociator E₁ E₂ X = 0`.
+    - **Right Representation Associativity**: `zornAssociator X E₁ E₂ = 0`.
+    - **Two-Sided Sandwich Associativity**: `zornAssociator E₁ X E₂ = 0`.
+    - **Exact Left Inversion on `X`**:
+      `E(c, -s) * (E(c, s) * X) = (c * c - s * s * zornTracelessCasimir α v w) • X`! -/
+theorem zornTracelessExp_artin_associativity_and_state_inversion
+    (c s c₁ s₁ c₂ s₂ α : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let E₁ := zornTracelessExp c₁ s₁ α v w
+    let E₂ := zornTracelessExp c₂ s₂ α v w
+    let E := zornTracelessExp c s α v w
+    let E_inv := zornTracelessExp c (-s) α v w
+    zornAssociator E₁ E₂ X = 0 ∧
+    zornAssociator X E₁ E₂ = 0 ∧
+    zornAssociator E₁ X E₂ = 0 ∧
+    E_inv * (E * X) = (c * c - s * s * zornTracelessCasimir α v w) • X := by
+  intro E₁ E₂ E E_inv
+  have h_left : ∀ p₁ q₁ p₂ q₂ : R,
+      zornAssociator (zornTracelessExp p₁ q₁ α v w) (zornTracelessExp p₂ q₂ α v w) X = 0 := by
+    intro p₁ q₁ p₂ q₂
+    change bundledAssociator
+      (p₁ • one + q₁ • zornTracelessFlowGen α v w)
+      (p₂ • one + q₂ • zornTracelessFlowGen α v w) X = 0
+    simp only [bundledAssociator_add_left, bundledAssociator_add_mid,
+               bundledAssociator_smul_left, bundledAssociator_smul_mid,
+               bundledAssociator_one_left, bundledAssociator_one_mid,
+               bundledAssociator_left_alt, _root_.smul_zero, _root_.add_zero]
+  have h_right :
+      zornAssociator X (zornTracelessExp c₁ s₁ α v w) (zornTracelessExp c₂ s₂ α v w) = 0 := by
+    change bundledAssociator X
+      (c₁ • one + s₁ • zornTracelessFlowGen α v w)
+      (c₂ • one + s₂ • zornTracelessFlowGen α v w) = 0
+    simp only [bundledAssociator_add_mid, bundledAssociator_add_right,
+               bundledAssociator_smul_mid, bundledAssociator_smul_right,
+               bundledAssociator_one_mid, bundledAssociator_one_right,
+               bundledAssociator_right_alt, _root_.smul_zero, _root_.add_zero]
+  have h_mid :
+      zornAssociator (zornTracelessExp c₁ s₁ α v w) X (zornTracelessExp c₂ s₂ α v w) = 0 := by
+    change bundledAssociator
+      (c₁ • one + s₁ • zornTracelessFlowGen α v w) X
+      (c₂ • one + s₂ • zornTracelessFlowGen α v w) = 0
+    simp only [bundledAssociator_add_left, bundledAssociator_add_right,
+               bundledAssociator_smul_left, bundledAssociator_smul_right,
+               bundledAssociator_one_left, bundledAssociator_one_right,
+               bundledAssociator_flexible, _root_.smul_zero, _root_.add_zero]
+  refine ⟨h_left c₁ s₁ c₂ s₂, h_right, h_mid, ?_⟩
+  have h_assoc_inv : (E_inv * E) * X = E_inv * (E * X) :=
+    sub_eq_zero.mp (h_left c (-s) c s)
+  have h_inv_mul : E_inv * E =
+      (c * c - s * s * zornTracelessCasimir α v w) • (one : ZornVectorMatrix R) := by
+    have h0 := (zornTracelessExp_coords_casimir_norm_and_group_law c (-s) 0 0 0 0 α v w).2.2.2
+    simpa [neg_neg, neg_mul, mul_neg] using h0
+  rw [← h_assoc_inv, h_inv_mul]
+  change mul (smul (c * c - s * s * zornTracelessCasimir α v w) one) X =
+    smul (c * c - s * s * zornTracelessCasimir α v w) X
+  rw [ZornVectorMatrix.smul_mul, ZornVectorMatrix.one_mul]
+
+/-- **23. Unification of Cartan, Parabolic Nilpotent, Hyperbolic, & Elliptic Regimes**:
+    `zornTracelessExp` specializes directly to all four canonical Zorn operators:
+    - **Cartan Diagonal Kernel (`α = 1, v = 0, w = 0`)**:
+      `zornTracelessExp c s 1 0 0 = zornHyperbolicKernel (c + s) (c - s)`.
+    - **Upper Parabolic Exponential (`c = 1, α = 0, w = 0`)**:
+      `zornTracelessExp 1 s 0 v 0 = zornExpUpperNil (s • v)`.
+    - **Lower Parabolic Exponential (`c = 1, α = 0, v = 0`)**:
+      `zornTracelessExp 1 s 0 0 w = zornExpLowerNil (s • w)`.
+    - **Elliptic Fourier Rotor (`α = 0`)**:
+      `zornTracelessExp c s 0 v w = zornFourierRotor c s v w`. -/
+theorem zornTracelessExp_unifies_cartan_parabolic_and_fourier
+    (c s : R) (v w : ZornVec3 R) :
+    zornTracelessExp c s 1 0 0 = zornHyperbolicKernel (c + s) (c - s) ∧
+    zornTracelessExp 1 s 0 v 0 = zornExpUpperNil (fun i => s * v i) ∧
+    zornTracelessExp 1 s 0 0 w = zornExpLowerNil (fun i => s * w i) ∧
+    zornTracelessExp c s 0 v w = zornFourierRotor c s v w := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [(zornTracelessExp_coords_casimir_norm_and_group_law c s 0 0 0 0 1 0 0).1]
+    ext <;> (simp [zornHyperbolicKernel]; try ring)
+  · rw [(zornTracelessExp_coords_casimir_norm_and_group_law 1 s 0 0 0 0 0 v 0).1]
+    ext <;> (simp [zornExpUpperNil]; try ring)
+  · rw [(zornTracelessExp_coords_casimir_norm_and_group_law 1 s 0 0 0 0 0 0 w).1]
+    ext <;> (simp [zornExpLowerNil]; try ring)
+  · rw [(zornTracelessExp_coords_casimir_norm_and_group_law c s 0 0 0 0 0 v w).1]
+    ext <;> (simp [zornFourierRotor]; try ring)
+
+/-- **24. Two-Generator Malcev Commutator Closure of 7D Exponential Flows**:
+    For any two exponential flows `E₁ = zornTracelessExp c₁ s₁ α₁ v₁ w₁` and
+    `E₂ = zornTracelessExp c₂ s₂ α₂ v₂ w₂` with distinct 7D generators `M₁, M₂`,
+    their commutator `E₁ * E₂ - E₂ * E₁` closes inside the 7D traceless Malcev algebra! -/
+theorem zornTracelessExp_two_generator_malcev_commutator
+    (c₁ s₁ α₁ c₂ s₂ α₂ : R) (v₁ w₁ v₂ w₂ : ZornVec3 R) :
+    let E₁ := zornTracelessExp c₁ s₁ α₁ v₁ w₁
+    let E₂ := zornTracelessExp c₂ s₂ α₂ v₂ w₂
+    E₁ * E₂ - E₂ * E₁ =
+      (s₁ * s₂) • zornTracelessFlowGen
+        (ZornVec3.dot v₁ w₂ - ZornVec3.dot v₂ w₁)
+        (fun i => (2 : R) * (α₁ * v₂ i - α₂ * v₁ i - ZornVec3.cross w₁ w₂ i))
+        (fun i => (2 : R) * (α₂ * w₁ i - α₁ * w₂ i + ZornVec3.cross v₁ v₂ i)) := by
+  intro E₁ E₂
+  have hc1 := (zornTracelessExp_coords_casimir_norm_and_group_law c₁ s₁ 0 0 0 0 α₁ v₁ w₁).1
+  have hc2 := (zornTracelessExp_coords_casimir_norm_and_group_law c₂ s₂ 0 0 0 0 α₂ v₂ w₂).1
+  dsimp [E₁, E₂]; rw [hc1, hc2]
+  simp only [_root_.sub_eq_add_neg]
+  ext
+  · simp [zornTracelessFlowGen, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def,
+          add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · rename_i i; fin_cases i <;>
+      (simp [zornTracelessFlowGen, InfoGeometry.Algebra.zvm_add_def,
+             InfoGeometry.Algebra.zvm_neg_def,
+             add, neg, mul, ZornVec3.cross]; try ring)
+  · rename_i i; fin_cases i <;>
+      (simp [zornTracelessFlowGen, InfoGeometry.Algebra.zvm_add_def,
+             InfoGeometry.Algebra.zvm_neg_def,
+             add, neg, mul, ZornVec3.cross]; try ring)
+  · simp [zornTracelessFlowGen, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def,
+          add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **25. Exponential Norm Multiplicativity & Adjoint Axis Invariance**:
+    For any 7D exponential flow `E = zornTracelessExp c s α v w`, its conjugate
+    `E_inv = zornTracelessExp c (-s) α v w`, and ANY 8D state `X`:
+    - **Left & Right Norm Multiplicativity**:
+      `norm (E * X) = (c * c - s * s * zornTracelessCasimir α v w) * norm X` and
+      `norm (X * E) = norm X * (c * c - s * s * zornTracelessCasimir α v w)`.
+    - **Adjoint Generator Invariance**:
+      `(E * M) * E_inv = (c * c - s * s * zornTracelessCasimir α v w) • M`. -/
+theorem zornTracelessExp_norm_multiplicativity_and_adjoint_axis
+    (c s α : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let E := zornTracelessExp c s α v w
+    let E_inv := zornTracelessExp c (-s) α v w
+    let M := zornTracelessFlowGen α v w
+    let κ := zornTracelessCasimir α v w
+    norm (E * X) = (c * c - s * s * κ) * norm X ∧
+    norm (X * E) = norm X * (c * c - s * s * κ) ∧
+    (E * M) * E_inv = (c * c - s * s * κ) • M := by
+  intro E E_inv M κ
+  have h_norm := (zornTracelessExp_coords_casimir_norm_and_group_law c s 0 0 0 0 α v w).2.1
+  have hce := (zornTracelessExp_coords_casimir_norm_and_group_law c s 0 0 0 0 α v w).1
+  have hci := (zornTracelessExp_coords_casimir_norm_and_group_law c (-s) 0 0 0 0 α v w).1
+  refine ⟨?_, ?_, ?_⟩
+  · dsimp [E, κ]; rw [norm_mul, h_norm]
+  · dsimp [E, κ]; rw [norm_mul, h_norm]
+  · dsimp [E, E_inv, M, κ]; rw [hce, hci]
+    ext
+    · simp [zornTracelessFlowGen, zornTracelessCasimir,
+            mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessFlowGen, zornTracelessCasimir,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessFlowGen, zornTracelessCasimir,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [zornTracelessFlowGen, zornTracelessCasimir,
+            mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-!
+### Two-Sided Moufang Adjoint Spinor Action, Rodrigues–Cartan–Malcev Closure, & Isotropic Eichler–Siegel Cone
+-/
+
+/-- **7D Symmetric Clifford Bilinear Pairing (`zornTracelessPairing`)**:
+    Satisfies `M * M' + M' * M = zornTracelessPairing α v w α' v' w' • 1`
+    and `zornTracelessPairing α v w α v w = 2 * zornTracelessCasimir α v w`. -/
+def zornTracelessPairing (α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) : R :=
+  2 * α * α' + ZornVec3.dot v w' + ZornVec3.dot v' w
+
+/-- **Two-Sided Moufang Adjoint Spinor Action (`zornAdjointSpinorAction c s α v w X`)**:
+    `(E(c, s) * X) * E(c, -s)` where `E(c, s) = zornTracelessExp c s α v w`. -/
+noncomputable def zornAdjointSpinorAction
+    (c s α : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  (zornTracelessExp c s α v w * X) * zornTracelessExp c (-s) α v w
+
+/-- Transformed Cartan scalar coordinate `α''` of `zornAdjointSpinorAction c s α v w (M(α', v', w'))`. -/
+def zornAdjointAlpha (c s α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) : R :=
+  (c * c + s * s * zornTracelessCasimir α v w) * α' -
+    s * s * zornTracelessPairing α v w α' v' w' * α +
+    c * s * (ZornVec3.dot v w' - ZornVec3.dot v' w)
+
+/-- Transformed upper 3-vector `v''` of `zornAdjointSpinorAction c s α v w (M(α', v', w'))`. -/
+def zornAdjointVecV (c s α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) : ZornVec3 R :=
+  fun i =>
+    (c * c + s * s * zornTracelessCasimir α v w) * v' i -
+      (s * s * zornTracelessPairing α v w α' v' w') * v i +
+      (2 * c * s) * (α * v' i - α' * v i - ZornVec3.cross w w' i)
+
+/-- Transformed lower 3-vector `w''` of `zornAdjointSpinorAction c s α v w (M(α', v', w'))`. -/
+def zornAdjointVecW (c s α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) : ZornVec3 R :=
+  fun i =>
+    (c * c + s * s * zornTracelessCasimir α v w) * w' i -
+      (s * s * zornTracelessPairing α v w α' v' w') * w i +
+      (2 * c * s) * (α' * w i - α * w' i + ZornVec3.cross v v' i)
+
+/-- **26. Cartan–Dieudonné Householder Reflection, Rodrigues–Malcev Decomposition, & 7D Subspace Closure**:
+    For any two 7D traceless generators `M = zornTracelessFlowGen α v w` and
+    `M' = zornTracelessFlowGen α' v' w'`, and any mode weights `c, s : R`:
+    - **7D Householder Reflection Identity**:
+      `(M * M') * M = zornTracelessPairing α v w α' v' w' • M - zornTracelessCasimir α v w • M'`
+      and `M * (M' * M) = (M * M') * M`.
+    - **Rodrigues–Cartan–Malcev Decomposition**:
+      `zornAdjointSpinorAction c s α v w M' = (c² + s² κ) • M' - (s² ⟨M, M'⟩) • M + (c s) • (M * M' - M' * M)`.
+    - **Exact 7D Traceless Closure**:
+      `zornAdjointSpinorAction c s α v w M' = zornTracelessFlowGen α'' v'' w''`. -/
+theorem zornAdjointSpinorAction_householder_rodrigues_and_closure
+    (c s α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) :
+    let M := zornTracelessFlowGen α v w
+    let M' := zornTracelessFlowGen α' v' w'
+    let κ := zornTracelessCasimir α v w
+    let pair := zornTracelessPairing α v w α' v' w'
+    (M * M') * M = pair • M - κ • M' ∧
+    M * (M' * M) = (M * M') * M ∧
+    zornAdjointSpinorAction c s α v w M' =
+      (c * c + s * s * κ) • M' - (s * s * pair) • M + (c * s) • (M * M' - M' * M) ∧
+    zornAdjointSpinorAction c s α v w M' =
+      zornTracelessFlowGen
+        (zornAdjointAlpha c s α v w α' v' w')
+        (zornAdjointVecV c s α v w α' v' w')
+        (zornAdjointVecW c s α v w α' v' w') := by
+  intro M M' κ pair
+  have h_hh : (M * M') * M = pair • M - κ • M' := by
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [M, M', κ, pair, zornTracelessFlowGen, zornTracelessCasimir, zornTracelessPairing,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [M, M', κ, pair, zornTracelessFlowGen, zornTracelessCasimir, zornTracelessPairing,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+               ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [M, M', κ, pair, zornTracelessFlowGen, zornTracelessCasimir, zornTracelessPairing,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+               ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [M, M', κ, pair, zornTracelessFlowGen, zornTracelessCasimir, zornTracelessPairing,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+  have h_flex : M * (M' * M) = (M * M') * M :=
+    (sub_eq_zero.mp (bundledAssociator_flexible M M')).symm
+  have hce := (zornTracelessExp_coords_casimir_norm_and_group_law c s 0 0 0 0 α v w).1
+  have hci := (zornTracelessExp_coords_casimir_norm_and_group_law c (-s) 0 0 0 0 α v w).1
+  have h_clos : zornAdjointSpinorAction c s α v w M' =
+      zornTracelessFlowGen
+        (zornAdjointAlpha c s α v w α' v' w')
+        (zornAdjointVecV c s α v w α' v' w')
+        (zornAdjointVecW c s α v w α' v' w') := by
+    dsimp [zornAdjointSpinorAction, M']; rw [hce, hci]
+    ext
+    · simp [zornTracelessFlowGen, zornAdjointAlpha, zornTracelessCasimir, zornTracelessPairing,
+            mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessFlowGen, zornAdjointVecV, zornTracelessCasimir, zornTracelessPairing,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessFlowGen, zornAdjointVecW, zornTracelessCasimir, zornTracelessPairing,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [zornTracelessFlowGen, zornAdjointAlpha, zornTracelessCasimir, zornTracelessPairing,
+            mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+  refine ⟨h_hh, h_flex, ?_, h_clos⟩
+  rw [h_clos]
+  simp only [_root_.sub_eq_add_neg]
+  ext
+  · simp [M, M', κ, pair, zornTracelessFlowGen, zornAdjointAlpha,
+          zornTracelessCasimir, zornTracelessPairing,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+          ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · rename_i i; fin_cases i <;>
+      (simp [M, M', κ, pair, zornTracelessFlowGen, zornAdjointVecV,
+             zornTracelessCasimir, zornTracelessPairing,
+             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+             ZornVec3.cross]; try ring)
+  · rename_i i; fin_cases i <;>
+      (simp [M, M', κ, pair, zornTracelessFlowGen, zornAdjointVecW,
+             zornTracelessCasimir, zornTracelessPairing,
+             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+             ZornVec3.cross]; try ring)
+  · simp [M, M', κ, pair, zornTracelessFlowGen, zornAdjointAlpha,
+          zornTracelessCasimir, zornTracelessPairing,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+          ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **27. Tracelessness Preservation & Conformal Norm Similitude (`Spin(4, 3)` Action)**:
+    For any 7D traceless generator `M' = zornTracelessFlowGen α' v' w'` and ANY 8D state `X`:
+    - **Tracelessness**: `trace (zornAdjointSpinorAction c s α v w M') = 0`.
+    - **8D Quadratic Norm Similitude**:
+      `norm (zornAdjointSpinorAction c s α v w X) = (c² - s² κ)² * norm X`. -/
+theorem zornAdjointSpinorAction_norm_scaling
+    (c s α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let M' := zornTracelessFlowGen α' v' w'
+    let κ := zornTracelessCasimir α v w
+    trace (zornAdjointSpinorAction c s α v w M') = 0 ∧
+    norm (zornAdjointSpinorAction c s α v w X) =
+      (c * c - s * s * κ) * (c * c - s * s * κ) * norm X := by
+  intro M' κ
+  have h_clos :=
+    (zornAdjointSpinorAction_householder_rodrigues_and_closure c s α v w α' v' w').2.2.2
+  have h_n1 := (zornTracelessExp_coords_casimir_norm_and_group_law c s 0 0 0 0 α v w).2.1
+  have h_n2 : norm (zornTracelessExp c (-s) α v w) = c * c - s * s * κ := by
+    have h0 := (zornTracelessExp_coords_casimir_norm_and_group_law c (-s) 0 0 0 0 α v w).2.1
+    simpa [κ, neg_mul, mul_neg] using h0
+  refine ⟨?_, ?_⟩
+  · dsimp [M']; rw [h_clos]
+    simp [trace, zornTracelessFlowGen]
+  · dsimp [zornAdjointSpinorAction, κ]
+    rw [norm_mul, norm_mul, h_n1, h_n2]
+    ring
+
+/-- **28. 7D `(4, 3)` Casimir & Operator Square Similitude of the Adjoint Spinor Action**:
+    The transformed 7D coordinates `(α'', v'', w'')` satisfy:
+    - `zornTracelessCasimir α'' v'' w'' = (c² - s² κ)² * zornTracelessCasimir α' v' w'`.
+    - `(zornAdjointSpinorAction c s α v w M')² = ((c² - s² κ)² * zornTracelessCasimir α' v' w') • 1`. -/
+theorem zornAdjointSpinorAction_casimir_and_square_scaling
+    (c s α : R) (v w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) :
+    let M' := zornTracelessFlowGen α' v' w'
+    let κ := zornTracelessCasimir α v w
+    let κ' := zornTracelessCasimir α' v' w'
+    let α'' := zornAdjointAlpha c s α v w α' v' w'
+    let v'' := zornAdjointVecV c s α v w α' v' w'
+    let w'' := zornAdjointVecW c s α v w α' v' w'
+    zornTracelessCasimir α'' v'' w'' = (c * c - s * s * κ) * (c * c - s * s * κ) * κ' ∧
+    zornAdjointSpinorAction c s α v w M' * zornAdjointSpinorAction c s α v w M' =
+      ((c * c - s * s * κ) * (c * c - s * s * κ) * κ') • (one : ZornVectorMatrix R) := by
+  intro M' κ κ' α'' v'' w''
+  have h_norm_cas : ∀ (β : R) (x y : ZornVec3 R),
+      norm (zornTracelessFlowGen β x y) = -zornTracelessCasimir β x y := by
+    intro β x y
+    simp [norm, zornTracelessFlowGen, zornTracelessCasimir]
+    ring
+  have h_clos : zornAdjointSpinorAction c s α v w M' = zornTracelessFlowGen α'' v'' w'' :=
+    (zornAdjointSpinorAction_householder_rodrigues_and_closure c s α v w α' v' w').2.2.2
+  have h_ns := (zornAdjointSpinorAction_norm_scaling c s α v w α' v' w' M').2
+  have h_cas : zornTracelessCasimir α'' v'' w'' =
+      (c * c - s * s * κ) * (c * c - s * s * κ) * κ' := by
+    have h1 : norm (zornTracelessFlowGen α'' v'' w'') =
+        (c * c - s * s * κ) * (c * c - s * s * κ) * norm M' := by
+      rw [← h_clos]; exact h_ns
+    rw [h_norm_cas α'' v'' w'', h_norm_cas α' v' w'] at h1
+    dsimp [κ']
+    linear_combination -h1
+  refine ⟨h_cas, ?_⟩
+  rw [h_clos, (zornTracelessFlowGen_casimir_klein_gordon_and_clifford α'' 0 v'' w'' 0 0 0).1, h_cas]
+
+/-- **29. 1-Parameter Group Composition Law of the Moufang Adjoint Spinor Action**:
+    For ANY 8D split-octonion `X : ZornVectorMatrix R`, two successive adjoint actions
+    sharing the same 7D generator `(α, v, w)` compose strictly by the 1-parameter
+    Cayley–Hamilton group law! -/
+theorem zornAdjointSpinorAction_comp
+    (c₁ s₁ c₂ s₂ α : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    zornAdjointSpinorAction c₁ s₁ α v w (zornAdjointSpinorAction c₂ s₂ α v w X) =
+      zornAdjointSpinorAction
+        (c₁ * c₂ + s₁ * s₂ * zornTracelessCasimir α v w)
+        (c₁ * s₂ + s₁ * c₂) α v w X := by
+  let κ := zornTracelessCasimir α v w
+  let c₁₂ := c₁ * c₂ + s₁ * s₂ * κ
+  let s₁₂ := c₁ * s₂ + s₁ * c₂
+  let E₁ := zornTracelessExp c₁ s₁ α v w
+  let E₂ := zornTracelessExp c₂ s₂ α v w
+  let E₁' := zornTracelessExp c₁ (-s₁) α v w
+  let E₂' := zornTracelessExp c₂ (-s₂) α v w
+  let E₁₂ := zornTracelessExp c₁₂ s₁₂ α v w
+  let E₁₂' := zornTracelessExp c₁₂ (-s₁₂) α v w
+  change (E₁ * ((E₂ * X) * E₂')) * E₁' = (E₁₂ * X) * E₁₂'
+  have h1 : (E₂ * X) * E₂' = E₂ * (X * E₂') :=
+    sub_eq_zero.mp
+      (zornTracelessExp_artin_associativity_and_state_inversion 0 0 c₂ s₂ c₂ (-s₂) α v w X).2.2.1
+  have h2 : E₁ * (E₂ * (X * E₂')) = (E₁ * E₂) * (X * E₂') :=
+    (sub_eq_zero.mp
+      (zornTracelessExp_artin_associativity_and_state_inversion 0 0 c₁ s₁ c₂ s₂ α v w (X * E₂')).1).symm
+  have h_mul12 : E₁ * E₂ = E₁₂ :=
+    (zornTracelessExp_coords_casimir_norm_and_group_law 0 0 c₁ s₁ c₂ s₂ α v w).2.2.1
+  have h3 : (E₁₂ * (X * E₂')) * E₁' = E₁₂ * ((X * E₂') * E₁') :=
+    sub_eq_zero.mp
+      (zornTracelessExp_artin_associativity_and_state_inversion 0 0 c₁₂ s₁₂ c₁ (-s₁) α v w (X * E₂')).2.2.1
+  have h4 : (X * E₂') * E₁' = X * (E₂' * E₁') :=
+    sub_eq_zero.mp
+      (zornTracelessExp_artin_associativity_and_state_inversion 0 0 c₂ (-s₂) c₁ (-s₁) α v w X).2.1
+  have h_mul12' : E₂' * E₁' = E₁₂' := by
+    have h0 :=
+      (zornTracelessExp_coords_casimir_norm_and_group_law 0 0 c₂ (-s₂) c₁ (-s₁) α v w).2.2.1
+    dsimp [E₂', E₁', E₁₂', c₁₂, s₁₂, κ] at h0 ⊢
+    rw [h0]
+    congr 1 <;> ring
+  have h5 : E₁₂ * (X * E₁₂') = (E₁₂ * X) * E₁₂' :=
+    (sub_eq_zero.mp
+      (zornTracelessExp_artin_associativity_and_state_inversion 0 0 c₁₂ s₁₂ c₁₂ (-s₁₂) α v w X).2.2.1).symm
+  rw [h1, h2, h_mul12, h3, h4, h_mul12', h5]
+
+/-- **30. Two-Sided Adjoint Inversion, Vanishing Parenthesization Defect, & Unipotent Residual**:
+    For ANY 8D state `X : ZornVectorMatrix R`:
+    - `zornAdjointSpinorAction c (-s) α v w (zornAdjointSpinorAction c s α v w X) = (c² - s² κ)² • X`.
+    - `zornAdjointSpinorAction c s α v w (zornAdjointSpinorAction c (-s) α v w X) = (c² - s² κ)² • X`.
+    - `(E(c, s) * X) * E(c, -s) - E(c, s) * (X * E(c, -s)) = 0`.
+    - `zornAdjointSpinorAction 1 (-s) α v w (zornAdjointSpinorAction 1 s α v w X) - X = (κ * s * s * (s * s * κ - 2)) • X`. -/
+theorem zornAdjointSpinorAction_two_sided_inverse_and_defect
+    (c s α : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let κ := zornTracelessCasimir α v w
+    let E := zornTracelessExp c s α v w
+    let E_inv := zornTracelessExp c (-s) α v w
+    zornAdjointSpinorAction c (-s) α v w (zornAdjointSpinorAction c s α v w X) =
+      ((c * c - s * s * κ) * (c * c - s * s * κ)) • X ∧
+    zornAdjointSpinorAction c s α v w (zornAdjointSpinorAction c (-s) α v w X) =
+      ((c * c - s * s * κ) * (c * c - s * s * κ)) • X ∧
+    (E * X) * E_inv - E * (X * E_inv) = 0 ∧
+    zornAdjointSpinorAction 1 (-s) α v w (zornAdjointSpinorAction 1 s α v w X) - X =
+      (κ * s * s * (s * s * κ - 2)) • X := by
+  intro κ E E_inv
+  have h_zero_exp : ∀ r : R, zornTracelessExp r 0 α v w = r • (one : ZornVectorMatrix R) := by
+    intro r
+    simp [zornTracelessExp]
+  have h_zero_act : ∀ r : R, zornAdjointSpinorAction r 0 α v w X = (r * r) • X := by
+    intro r
+    dsimp [zornAdjointSpinorAction]
+    rw [neg_zero, h_zero_exp r]
+    change mul (mul (smul r one) X) (smul r one) = smul (r * r) X
+    rw [ZornVectorMatrix.smul_mul, ZornVectorMatrix.one_mul,
+        ZornVectorMatrix.mul_smul, ZornVectorMatrix.mul_one]
+    change (r • (r • X)) = (r * r) • X
+    rw [smul_smul]
+  have h_inv : ∀ p q : R,
+      zornAdjointSpinorAction p (-q) α v w (zornAdjointSpinorAction p q α v w X) =
+        ((p * p - q * q * κ) * (p * p - q * q * κ)) • X := by
+    intro p q
+    rw [zornAdjointSpinorAction_comp]
+    have hc : p * p + -q * q * zornTracelessCasimir α v w = p * p - q * q * κ := by
+      dsimp [κ]; ring
+    have hs : p * q + -q * p = 0 := by ring
+    rw [hc, hs, h_zero_act]
+  refine ⟨h_inv c s, ?_, ?_, ?_⟩
+  · have h0 := h_inv c (-s)
+    simpa [neg_neg, neg_mul, mul_neg] using h0
+  · exact (zornTracelessExp_artin_associativity_and_state_inversion 0 0 c s c (-s) α v w X).2.2.1
+  · rw [h_inv 1 s]
+    nth_rw 2 [← _root_.one_smul R X]
+    rw [← _root_.sub_smul]
+    congr 1
+    ring
+
+/-- Isotropic scalar coordinate `α(u, w) := u ⋅ w` on the 6D null quadric cone. -/
+def isotropicAlpha (u w : ZornVec3 R) : R :=
+  ZornVec3.dot u w
+
+/-- Isotropic upper 3-vector `v(u, p, w) := -(u ⋅ w) • u + p × w` satisfying `α² + v ⋅ w = 0`. -/
+def isotropicVecV (u p w : ZornVec3 R) : ZornVec3 R :=
+  fun i => -(ZornVec3.dot u w * u i) + ZornVec3.cross p w i
+
+/-- Division-free 7D traceless isotropic generator `L(u, p, w)` on the null cone `Q(L) = 0`. -/
+def isotropicGen (u p w : ZornVec3 R) : ZornVectorMatrix R :=
+  zornTracelessFlowGen (isotropicAlpha u w) (isotropicVecV u p w) w
+
+/-- Unipotent parabolic exponential `exp(s L(u, p, w)) = 1 + s • L(u, p, w)` (`norm = 1`). -/
+noncomputable def isotropicExp (s : R) (u p w : ZornVec3 R) : ZornVectorMatrix R :=
+  zornTracelessExp 1 s (isotropicAlpha u w) (isotropicVecV u p w) w
+
+/-- Two-sided unipotent Eichler–Siegel transvection `(exp(s L) * X) * exp(-s L)`. -/
+noncomputable def isotropicAdjointAction
+    (s : R) (u p w : ZornVec3 R) (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  zornAdjointSpinorAction 1 s (isotropicAlpha u w) (isotropicVecV u p w) w X
+
+/-- **31. Division-Free Isotropic Nilpotent Cone (`Q(L) = 0, L² = 0`), Rank-1 Jordan Operator, & Eichler–Siegel Transvections**:
+    For ANY three 3-vectors `u, p, w : ZornVec3 R`, any 7D generator `M' = zornTracelessFlowGen α' v' w'`,
+    and any 8D state `X : ZornVectorMatrix R`:
+    - **Identical Null Casimir**: `zornTracelessCasimir (isotropicAlpha u w) (isotropicVecV u p w) w = 0`.
+    - **Nilpotent Square & Wave Annihilation**: `L * L = 0`, `L * (L * X) = 0`, and `(X * L) * L = 0`.
+    - **Rank-1 Jordan Triple Projection**:
+      `(L * M') * L = zornTracelessPairing (isotropicAlpha u w) (isotropicVecV u p w) w α' v' w' • L`.
+    - **Eichler–Siegel Parabolic Transvection**:
+      `isotropicAdjointAction s u p w M' = M' - (s² ⟨L, M'⟩) • L + s • (L * M' - M' * L)`. -/
+theorem isotropicGen_nilpotence_and_eichler_siegel_transvection
+    (s : R) (u p w : ZornVec3 R) (α' : R) (v' w' : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let α₀ := isotropicAlpha u w
+    let v₀ := isotropicVecV u p w
+    let L := isotropicGen u p w
+    let M' := zornTracelessFlowGen α' v' w'
+    let pair := zornTracelessPairing α₀ v₀ w α' v' w'
+    zornTracelessCasimir α₀ v₀ w = 0 ∧
+    L * L = 0 ∧
+    L * (L * X) = 0 ∧
+    (X * L) * L = 0 ∧
+    (L * M') * L = pair • L ∧
+    isotropicAdjointAction s u p w M' =
+      M' - (s * s * pair) • L + s • (L * M' - M' * L) := by
+  intro α₀ v₀ L M' pair
+  have h_cas : zornTracelessCasimir α₀ v₀ w = 0 := by
+    simp [α₀, v₀, zornTracelessCasimir, isotropicAlpha, isotropicVecV,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  have h18 := zornTracelessFlowGen_casimir_klein_gordon_and_clifford α₀ 0 v₀ w 0 0 X
+  have h26 := zornAdjointSpinorAction_householder_rodrigues_and_closure 1 s α₀ v₀ w α' v' w'
+  have hL : L = zornTracelessFlowGen α₀ v₀ w := rfl
+  have hA : isotropicAdjointAction s u p w M' = zornAdjointSpinorAction 1 s α₀ v₀ w M' := rfl
+  refine ⟨h_cas, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hL, h18.1, h_cas, _root_.zero_smul]
+  · rw [hL, h18.2.1, h_cas, _root_.zero_smul]
+  · rw [hL, h18.2.2.1, h_cas, _root_.zero_smul]
+  · rw [hL, h26.1, h_cas, _root_.zero_smul, _root_.sub_zero]
+  · rw [hA, hL, h26.2.2.1, h_cas]
+    simp [M', pair, _root_.one_mul]
+
+/-- **32. Unipotent Group Law, Exact Division-Free Inversion, & Norm/Casimir Isometry on the Isotropic Cone**:
+    For ANY `s, s₁, s₂, α' : R`, `u, p, w, v', w' : ZornVec3 R`, and 8D state `X : ZornVectorMatrix R`:
+    - **Unipotent Norm**: `norm (isotropicExp s u p w) = 1`.
+    - **Additive 1-Parameter Subgroup Law**:
+      `isotropicExp s₁ u p w * isotropicExp s₂ u p w = isotropicExp (s₁ + s₂) u p w`.
+    - **Additive Adjoint Group Law**:
+      `isotropicAdjointAction s₁ u p w (isotropicAdjointAction s₂ u p w X) = isotropicAdjointAction (s₁ + s₂) u p w X`.
+    - **Exact Division-Free Inversion (`s ↦ -s`)**:
+      `isotropicAdjointAction (-s) u p w (isotropicAdjointAction s u p w X) = X`.
+    - **Exact 8D Norm & 7D Casimir Isometry**:
+      `norm (isotropicAdjointAction s u p w X) = norm X` and
+      `zornTracelessCasimir α'' v'' w'' = zornTracelessCasimir α' v' w'`! -/
+theorem isotropicAdjointAction_group_inversion_and_isometry
+    (s s₁ s₂ α' : R) (u p w v' w' : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let α₀ := isotropicAlpha u w
+    let v₀ := isotropicVecV u p w
+    norm (isotropicExp s u p w) = 1 ∧
+    isotropicExp s₁ u p w * isotropicExp s₂ u p w = isotropicExp (s₁ + s₂) u p w ∧
+    isotropicAdjointAction s₁ u p w (isotropicAdjointAction s₂ u p w X) =
+      isotropicAdjointAction (s₁ + s₂) u p w X ∧
+    isotropicAdjointAction (-s) u p w (isotropicAdjointAction s u p w X) = X ∧
+    norm (isotropicAdjointAction s u p w X) = norm X ∧
+    zornTracelessCasimir
+        (zornAdjointAlpha 1 s α₀ v₀ w α' v' w')
+        (zornAdjointVecV 1 s α₀ v₀ w α' v' w')
+        (zornAdjointVecW 1 s α₀ v₀ w α' v' w') =
+      zornTracelessCasimir α' v' w' := by
+  intro α₀ v₀
+  have h_cas : zornTracelessCasimir α₀ v₀ w = 0 :=
+    (isotropicGen_nilpotence_and_eichler_siegel_transvection 0 u p w 0 0 0 0).1
+  have hE : ∀ q : R, isotropicExp q u p w = zornTracelessExp 1 q α₀ v₀ w := fun _ => rfl
+  have hA : ∀ q : R, ∀ Y : ZornVectorMatrix R,
+      isotropicAdjointAction q u p w Y = zornAdjointSpinorAction 1 q α₀ v₀ w Y := fun _ _ => rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hE s, (zornTracelessExp_coords_casimir_norm_and_group_law 1 s 0 0 0 0 α₀ v₀ w).2.1, h_cas]
+    ring
+  · rw [hE s₁, hE s₂, hE (s₁ + s₂),
+        (zornTracelessExp_coords_casimir_norm_and_group_law 0 0 1 s₁ 1 s₂ α₀ v₀ w).2.2.1, h_cas]
+    congr 1 <;> ring
+  · rw [hA s₂ X, hA s₁ _, hA (s₁ + s₂) X, zornAdjointSpinorAction_comp, h_cas]
+    congr 1 <;> ring
+  · rw [hA s X, hA (-s) _,
+        (zornAdjointSpinorAction_two_sided_inverse_and_defect 1 s α₀ v₀ w X).1, h_cas]
+    simp [_root_.one_smul]
+  · rw [hA s X, (zornAdjointSpinorAction_norm_scaling 1 s α₀ v₀ w 0 0 0 X).2, h_cas]
+    ring
+  · rw [(zornAdjointSpinorAction_casimir_and_square_scaling 1 s α₀ v₀ w α' v' w').1, h_cas]
+    ring
+
+/-- Universal polynomial family of tilted upper projective Peirce idempotents `Π_+(r₁, r₂, c, s, v, w)`. -/
+def tiltedPeircePlus (r₁ r₂ c s : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨c * c,
+   fun i => -(r₁ * c * s * v i),
+   fun i => (r₂ * c * s) * w i,
+   -(r₁ * r₂ * (s * s) * ZornVec3.dot v w)⟩
+
+/-- Universal polynomial family of tilted lower projective Peirce idempotents `Π_-(r₁, r₂, c, s, v, w)`. -/
+def tiltedPeirceMinus (r₁ r₂ c s : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨-(r₁ * r₂ * (s * s) * ZornVec3.dot v w),
+   fun i => (r₁ * c * s) * v i,
+   fun i => -(r₂ * c * s * w i),
+   c * c⟩
+
+/-- **33. Universal Polynomial Projective Peirce Idempotence, Chordal Square, & Left Peirce Syzygy**:
+    For ANY scalars `r₁, r₂, c, s : R` and 3-vectors `v, w : ZornVec3 R`, let
+    `P_+ = tiltedPeircePlus r₁ r₂ c s v w`, `P_- = tiltedPeirceMinus r₁ r₂ c s v w`, and
+    `N_vw = c * c - r₁ * r₂ * (s * s) * (v ⋅ w)`:
+    - **Mutual Orthogonality**: `P_+ * P_- = 0`.
+    - **Projective Idempotence**: `P_+ * P_+ = N_vw • P_+`.
+    - **Universal Grassmannian Chordal Distance Identity**:
+      `(P_+ - N_vw • E11)² = (-(r₁ * r₂ * s² * (v ⋅ w)) * N_vw) • 1`.
+    - **Left Peirce Module Annihilation Syzygy**:
+      `(r₁ * r₂ * s * (v ⋅ w)) • (E11 * P_+) - c • ((E11 * zornTiltedVelocity r₁ r₂ v w) * P_+) = 0`! -/
+theorem tiltedPeirce_orth_idem_chordal_and_syzygy
+    (r₁ r₂ c s : R) (v w : ZornVec3 R) :
+    let P_plus := tiltedPeircePlus r₁ r₂ c s v w
+    let P_minus := tiltedPeirceMinus r₁ r₂ c s v w
+    let N_vw := c * c - r₁ * r₂ * (s * s) * ZornVec3.dot v w
+    let Q := zornTiltedVelocity r₁ r₂ v w
+    P_plus * P_minus = 0 ∧
+    P_plus * P_plus = N_vw • P_plus ∧
+    (P_plus - N_vw • E11) * (P_plus - N_vw • E11) =
+      (-(r₁ * r₂ * (s * s) * ZornVec3.dot v w) * N_vw) • (one : ZornVectorMatrix R) ∧
+    (r₁ * r₂ * s * ZornVec3.dot v w) • (E11 * P_plus) -
+      c • ((E11 * Q) * P_plus) = 0 := by
+  intro P_plus P_minus N_vw Q
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               mul, zero, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               mul, zero, ZornVec3.cross]; try ring)
+    · simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · ext
+    · simp [P_plus, N_vw, tiltedPeircePlus,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, N_vw, tiltedPeircePlus,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, N_vw, tiltedPeircePlus,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [P_plus, N_vw, tiltedPeircePlus,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [P_plus, N_vw, E11, one, tiltedPeircePlus,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+            ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, N_vw, E11, one, tiltedPeircePlus,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+               ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, N_vw, E11, one, tiltedPeircePlus,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+               ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · simp [P_plus, N_vw, E11, one, tiltedPeircePlus,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+            ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [P_plus, Q, E11, tiltedPeircePlus, zornTiltedVelocity,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, Q, E11, tiltedPeircePlus, zornTiltedVelocity,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, Q, E11, tiltedPeircePlus, zornTiltedVelocity,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+               add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · simp [P_plus, Q, E11, tiltedPeircePlus, zornTiltedVelocity,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot]; try ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

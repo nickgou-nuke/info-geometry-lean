@@ -46,13 +46,13 @@ theorem dual_seed_pair_albert_trace_pairing :
   rw [crossProduct_e1_e2]
   refine ⟨?_, ?_, ?_, ?_⟩
   · change traceBilin cuntzToAlbert_e1 cuntzToAlbert_e1 = 1
-    simp [traceBilin, cuntzToAlbert_e1, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+    simp [traceBilin, cuntzToAlbert_e1, ZornVectorMatrix.trace_zero]
   · change traceBilin cuntzToAlbert_e2 cuntzToAlbert_e2 = 1
-    simp [traceBilin, cuntzToAlbert_e2, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+    simp [traceBilin, cuntzToAlbert_e2, ZornVectorMatrix.trace_zero]
   · change traceBilin cuntzToAlbert_e3 cuntzToAlbert_e3 = 1
-    simp [traceBilin, cuntzToAlbert_e3, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+    simp [traceBilin, cuntzToAlbert_e3, ZornVectorMatrix.trace_zero]
   · change traceBilin cuntzToAlbert_e3 cuntzToAlbert_e3 ≠ 0
-    simp [traceBilin, cuntzToAlbert_e3, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+    simp [traceBilin, cuntzToAlbert_e3, ZornVectorMatrix.trace_zero]
 
 /-- **2. Degree-2 Spin-Factor Vanishing vs. Degree-3 Freudenthal Cubic Norm Restoration**:
     - On the 2×2 Peirce spin-factor span `α • e₁ + β • e₂ + γ • Q₁`, the cubic norm `normCubic`
@@ -69,7 +69,7 @@ theorem dual_seed_pair_degree_two_vs_degree_three_cubic_norm (α β γ δ : ℝ)
   simp [normCubic, cuntzToAlbert_e1, cuntzToAlbert_e2, cuntzToAlbert_e3, cuntzToAlbert_Q1,
         ZornVectorMatrix.smul_zero, ZornVectorMatrix.add_zero, ZornVectorMatrix.zero_add,
         ZornVectorMatrix.norm_zero, ZornVectorMatrix.norm_smul, ZornVectorMatrix.norm_one,
-        ZornVectorMatrix.mul_zero, ZornVectorMatrix.trace_zero]
+        ZornVectorMatrix.trace_zero]
   ring
 
 end InfoGeometry.Exceptional.DualSeedPairFreudenthal

@@ -55,11 +55,11 @@ theorem adjointQuad_e1_zero : adjointQuad cuntzToAlbert_e1 = 0 := by
   · simp [adjointQuad, cuntzToAlbert_e1, ZornVectorMatrix.norm_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, ZornVectorMatrix.norm_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, ZornVectorMatrix.conj_zero,
-      ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+      ZornVectorMatrix.smul_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, ZornVectorMatrix.conj_zero,
-      ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+      ZornVectorMatrix.smul_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, ZornVectorMatrix.conj_zero,
-      ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+      ZornVectorMatrix.smul_zero]
 
 theorem adjointQuad_e2_zero : adjointQuad cuntzToAlbert_e2 = 0 := by
   apply ext_h3
@@ -67,11 +67,11 @@ theorem adjointQuad_e2_zero : adjointQuad cuntzToAlbert_e2 = 0 := by
   · simp [adjointQuad, cuntzToAlbert_e2, ZornVectorMatrix.norm_zero]
   · simp [adjointQuad, cuntzToAlbert_e2, ZornVectorMatrix.norm_zero]
   · simp [adjointQuad, cuntzToAlbert_e2, ZornVectorMatrix.conj_zero,
-      ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+      ZornVectorMatrix.smul_zero]
   · simp [adjointQuad, cuntzToAlbert_e2, ZornVectorMatrix.conj_zero,
-      ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+      ZornVectorMatrix.smul_zero]
   · simp [adjointQuad, cuntzToAlbert_e2, ZornVectorMatrix.conj_zero,
-      ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+      ZornVectorMatrix.smul_zero]
 
 theorem linearTrace_e1 : linearTrace cuntzToAlbert_e1 = (1 : ℝ) := by
   simp [linearTrace_diagonal, cuntzToAlbert_e1]
@@ -97,13 +97,13 @@ theorem crossProduct_e1_e2 :
           ZornVectorMatrix.add_zero, ZornVectorMatrix.norm_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, cuntzToAlbert_e2, cuntzToAlbert_e3,
           ZornVectorMatrix.add_zero, ZornVectorMatrix.conj_zero,
-          ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+          ZornVectorMatrix.smul_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, cuntzToAlbert_e2, cuntzToAlbert_e3,
           ZornVectorMatrix.add_zero, ZornVectorMatrix.conj_zero,
-          ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+          ZornVectorMatrix.smul_zero]
   · simp [adjointQuad, cuntzToAlbert_e1, cuntzToAlbert_e2, cuntzToAlbert_e3,
           ZornVectorMatrix.add_zero, ZornVectorMatrix.conj_zero,
-          ZornVectorMatrix.zero_mul, ZornVectorMatrix.smul_zero]
+          ZornVectorMatrix.smul_zero]
 
 theorem linearTrace_crossProduct_e1_e2 :
     linearTrace (crossProduct cuntzToAlbert_e1 cuntzToAlbert_e2) = (1 : ℝ) := by

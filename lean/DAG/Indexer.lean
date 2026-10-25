@@ -28,20 +28,42 @@ open Lean.Meta
 open DAG
 open List
 
-def mapToShape (e : Expr) : Expr :=
-  match e with
-  | .bvar _ => Expr.bvar 0
-  | .fvar _ => Expr.fvar (FVarId.mk Name.anonymous)
-  | .const _ _ => Expr.const Name.anonymous []
-  | .mvar _ => Expr.mvar (MVarId.mk Name.anonymous)
-  | .lit _ => Expr.lit (Literal.natVal 0)
-  | .sort _ => Expr.sort Level.zero
-  | .app f a => Expr.app (mapToShape f) (mapToShape a)
-  | .lam i t b d => Expr.lam i (mapToShape t) (mapToShape b) d
-  | .forallE i t b d => Expr.forallE i (mapToShape t) (mapToShape b) d
-  | .letE i t v b d => Expr.letE i (mapToShape t) (mapToShape v) (mapToShape b) d
-  | .mdata d b => Expr.mdata d (mapToShape b)
-  | .proj s i b => Expr.proj s i (mapToShape b)
+def mapToShape (e : Expr) : Expr := Id.run do
+  let mut memo : Std.HashMap ExprStructEq Expr := {}
+  let mut stack : List (Expr × Bool) := [(e, false)]
+  while !stack.isEmpty do
+    let (curr, expanded) := stack.head!
+    stack := stack.tail!
+    let key : ExprStructEq := ⟨curr⟩
+    if memo.contains key then continue
+    if !expanded then
+      stack := (curr, true) :: stack
+      match curr with
+      | .app f a => stack := (f, false) :: (a, false) :: stack
+      | .lam _ t b _ => stack := (t, false) :: (b, false) :: stack
+      | .forallE _ t b _ => stack := (t, false) :: (b, false) :: stack
+      | .letE _ t v b _ => stack := (t, false) :: (v, false) :: (b, false) :: stack
+      | .mdata _ b => stack := (b, false) :: stack
+      | .proj _ _ b => stack := (b, false) :: stack
+      | _ => pure ()
+      continue
+    let child (x : Expr) : Expr := memo.getD (⟨x⟩ : ExprStructEq) x
+    let mapped :=
+      match curr with
+      | .bvar _ => Expr.bvar 0
+      | .fvar _ => Expr.fvar (FVarId.mk Name.anonymous)
+      | .const _ _ => Expr.const Name.anonymous []
+      | .mvar _ => Expr.mvar (MVarId.mk Name.anonymous)
+      | .lit _ => Expr.lit (Literal.natVal 0)
+      | .sort _ => Expr.sort Level.zero
+      | .app f a => Expr.app (child f) (child a)
+      | .lam i t b d => Expr.lam i (child t) (child b) d
+      | .forallE i t b d => Expr.forallE i (child t) (child b) d
+      | .letE i t v b d => Expr.letE i (child t) (child v) (child b) d
+      | .mdata d b => Expr.mdata d (child b)
+      | .proj s i b => Expr.proj s i (child b)
+    memo := memo.insert key mapped
+  return memo.getD (⟨e⟩ : ExprStructEq) e
 
 def shapeFingerprint (e : Expr) : ExprFingerprint :=
   { (DAG.computeFingerprint (mapToShape e)) with
@@ -644,9 +666,9 @@ def streamWriteJsonl {α} [ToJson α] (x : α) : MetaM Unit := do
   liftM (IO.println (toJson x).compress)
 
 -- Process a single constant and return the decl node (streaming version)
-def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM StreamDecl := do
+def processConstantStreaming (env : Environment) (fileStr : String) (root : String)
+    (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM StreamDecl := do
   let modName := getModuleName env name
-  let fileStr ← moduleToLeanFile sp modName
 
   let range ← DAG.Schema.sourceRange name
   let line := range.line
@@ -663,7 +685,6 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
       attrs := attrs.push "capstone"
     attrs
 
-  let root := (← IO.currentDir).toString
   let typeDigest := DAG.TermDigest.compute ci.type
   let valueDigest := (ci.value? (allowOpaque := true)).map DAG.TermDigest.compute
   let typeFingerprint := DAG.computeFingerprint ci.type
@@ -707,6 +728,7 @@ def streamConstantEdges (env : Environment) (nsFilters : Option (List String))
 
 def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environment) : MetaM Unit := do
   let srcSearchPath ← liftM Lean.getSrcSearchPath
+  let root := (← IO.currentDir).toString
   let nsFilters := parseNamespaceFilters nsPrefix
   let consts : Array PendingConstant := env.constants.fold (init := #[]) fun acc name ci =>
     if inNamespaceFilters nsFilters name then
@@ -718,9 +740,17 @@ def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environ
   let consts := consts.qsort (fun a b => a.nameStr < b.nameStr)
 
   -- Process each constant and stream output immediately
+  let mut moduleFiles : Std.HashMap Name String := {}
   let mut dropped := 0
   for entry in consts do
-    let declNode ← processConstantStreaming env srcSearchPath entry.name entry.nameStr entry.ci
+    let modName := getModuleName env entry.name
+    let fileStr ← match moduleFiles.get? modName with
+      | some f => pure f
+      | none =>
+          let f ← moduleToLeanFile srcSearchPath modName
+          moduleFiles := moduleFiles.insert modName f
+          pure f
+    let declNode ← processConstantStreaming env fileStr root entry.name entry.nameStr entry.ci
     streamWriteJsonl declNode
     -- Also stream edges for this constant
     dropped := dropped + (← streamConstantEdges env nsFilters entry.nameStr entry.ci)

@@ -5710,6 +5710,174 @@ theorem dahm_hodge_dual_maxwell_poynting_stress_tensor
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
   · ext <;> simp [J, opLineComplex, opLineHodgeDual]
 
+/-!
+## 31. Archetypes LXXI & LXXII: Saniga–Holweck–Pracna (2015) Combinatorial Grassmannians $G_2(N+1)$, Edge-Triangle Invariance, & Operator Cayley–Dickson Sedenion Zero Divisors
+-/
+
+/-- Number of points $v_N = \binom{N+1}{2}$ of the combinatorial Grassmannian $\mathcal{C}_N \cong G_2(N+1)$
+    (Saniga–Holweck–Pracna, *Mathematics* **3** (2015), 1192–1221, Page 1217). -/
+def grassmannPoints (N : ℕ) : ℕ := Nat.choose (N + 1) 2
+
+/-- Number of lines $b_N = \binom{N+1}{3}$ of the combinatorial Grassmannian $\mathcal{C}_N \cong G_2(N+1)$
+    (Saniga–Holweck–Pracna, Page 1217). -/
+def grassmannLines (N : ℕ) : ℕ := Nat.choose (N + 1) 3
+
+/-- Number of Pasch $(6_2, 4_3)$ subconfigurations $\binom{N+1}{4}$ in $\mathcal{C}_N \cong G_2(N+1)$
+    (Saniga–Holweck–Pracna, Page 1218). -/
+def grassmannPaschCount (N : ℕ) : ℕ := Nat.choose (N + 1) 4
+
+/-- **Theorem 89 (Archetype LXXI.1 — Saniga–Holweck–Pracna Combinatorial Grassmannian $G_2(N+1)$ Hierarchy & Binomial Incidence Law)**:
+    1. Exact $(v_N, b_N, \mathrm{Pasch}_N)$ hierarchy for $N = 1, 2, 3, 4, 5, 6$ (Pages 1217–1218):
+       - $N = 1$ (Complex): $(1, 0, 0)$
+       - $N = 2$ (Quaternions): $(3, 1, 0)$
+       - $N = 3$ (Octonions / Pasch $G_2(4)$): $(6, 4, 1)$
+       - $N = 4$ (Sedenions / Desargues $G_2(5)$): $(10, 10, 5)$
+       - $N = 5$ (32-Nions / Cayley–Salmon $G_2(6)$): $(15, 20, 15)$
+       - $N = 6$ (64-Nions / Generalized Desargues $G_2(7)$): $(21, 35, 35)$.
+    2. Universal Binomial Point-Line Incidence Law ($r = N - 1, k = 3$):
+       For all $m \in \mathbb{N}$ (setting $N = m + 1 \ge 1$),
+       $$m * \binom{m + 2}{2} = 3 * \binom{m + 2}{3}.$$ -/
+theorem saniga_grassmannian_binomial_configuration_identities (m : ℕ) :
+    (grassmannPoints 1, grassmannLines 1, grassmannPaschCount 1) = (1, 0, 0) ∧
+    (grassmannPoints 2, grassmannLines 2, grassmannPaschCount 2) = (3, 1, 0) ∧
+    (grassmannPoints 3, grassmannLines 3, grassmannPaschCount 3) = (6, 4, 1) ∧
+    (grassmannPoints 4, grassmannLines 4, grassmannPaschCount 4) = (10, 10, 5) ∧
+    (grassmannPoints 5, grassmannLines 5, grassmannPaschCount 5) = (15, 20, 15) ∧
+    (grassmannPoints 6, grassmannLines 6, grassmannPaschCount 6) = (21, 35, 35) ∧
+    m * grassmannPoints (m + 1) = 3 * grassmannLines (m + 1) := by
+  refine ⟨rfl, rfl, rfl, rfl, rfl, rfl, ?_⟩
+  unfold grassmannPoints grassmannLines
+  have h_step : (m + 2).choose 3 * 3 = (m + 2).choose 2 * m := Nat.choose_succ_right_eq (m + 2) 2
+  rw [Nat.mul_comm 3, h_step, Nat.mul_comm]
+
+/-- **Combinatorial Grassmannian $G_2(N+1)$ Edge Operator (`opGrassmannEdge v_i v_j`)**:
+    Represents the 2-element subset (edge) $\{i, j\}$ as $\Omega_{ij} = L_+(v_i - v_j) \in \mathrm{OpZornMatrix}\;A$. -/
+def opGrassmannEdge (v_i v_j : OpVec3 A) : OpZornMatrix A :=
+  opLightconePlus (v_i - v_j)
+
+/-- **Theorem 90 (Archetype LXXI.2 — Noncommutative Operator Grassmannian $G_2(N+1)$ Edge-Triangle Collinear Invariance)**:
+    Over *any* noncommutative operator ring $A$, for ALL vertex 3-vectors $v_i, v_j, v_k \in \mathrm{OpVec3}\;A$,
+    let $\Omega_{ij}, \Omega_{jk}, \Omega_{ki}, \Omega_{ik}$ be the edge operators of the triangle $\{i, j, k\}$:
+    1. Edge Nilpotence: $\Omega_{ij} * \Omega_{ij} = 0$.
+    2. Veldkamp Collinear Triangle Sum:
+       $\Omega_{ij} + \Omega_{jk} = \Omega_{ik}$ and $\Omega_{ij} + \Omega_{jk} + \Omega_{ki} = 0$.
+    3. Universal 2-Plane Invariance Across All Three Edges of the Line $\{\{i, j\}, \{j, k\}, \{k, i\}\}$:
+       $$\Omega_{ij} * \Omega_{jk} = \Omega_{jk} * \Omega_{ki} = \Omega_{ki} * \Omega_{ij} =
+         L_-\!\bigl(v_i \times_{\mathrm{skew}} v_j + v_j \times_{\mathrm{skew}} v_k + v_k \times_{\mathrm{skew}} v_i\bigr).$$ -/
+theorem operator_grassmannian_edge_triangle_collinear_invariance
+    (v_i v_j v_k : OpVec3 A) :
+    let Ω_ij := opGrassmannEdge v_i v_j
+    let Ω_jk := opGrassmannEdge v_j v_k
+    let Ω_ki := opGrassmannEdge v_k v_i
+    let Ω_ik := opGrassmannEdge v_i v_k
+    let plane_ijk :=
+      opLightconeMinus
+        (OpVec3.skewCross v_i v_j + OpVec3.skewCross v_j v_k + OpVec3.skewCross v_k v_i)
+    Ω_ij * Ω_ij = 0 ∧
+    Ω_ij + Ω_jk = Ω_ik ∧
+    Ω_ij + Ω_jk + Ω_ki = 0 ∧
+    Ω_ij * Ω_jk = plane_ijk ∧
+    Ω_jk * Ω_ki = plane_ijk ∧
+    Ω_ki * Ω_ij = plane_ijk := by
+  intro Ω_ij Ω_jk Ω_ki Ω_ik plane_ijk
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Ω_ij, Ω_jk, Ω_ki, Ω_ik, plane_ijk, opGrassmannEdge,
+          opLightconePlus, opLightconeMinus, opLightconeRayPlus, opLightconeRayMinus,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- Canonical Cayley involution $X^* = \langle b, -v, -w, a \rangle$ on `OpZornMatrix A`. -/
+def opCayleyConj (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨X.b, -X.v, -X.w, X.a⟩
+
+/-- **16-Component Operator Sedenion Algebra (`OpSedenion A`)**:
+    Constructed via the Cayley–Dickson doubling of `OpZornMatrix A`
+    (Saniga–Holweck–Pracna, Page 1193, Eqs. 1–2). -/
+@[ext]
+structure OpSedenion (A : Type*) where
+  x : OpZornMatrix A
+  y : OpZornMatrix A
+  deriving DecidableEq
+
+instance : Zero (OpSedenion A) := ⟨⟨0, 0⟩⟩
+instance : One (OpSedenion A) := ⟨⟨1, 0⟩⟩
+instance : Inhabited (OpSedenion A) := ⟨0⟩
+instance : Add (OpSedenion A) := ⟨fun S₁ S₂ => ⟨S₁.x + S₂.x, S₁.y + S₂.y⟩⟩
+instance : Sub (OpSedenion A) := ⟨fun S₁ S₂ => ⟨S₁.x - S₂.x, S₁.y - S₂.y⟩⟩
+instance : Neg (OpSedenion A) := ⟨fun S => ⟨-S.x, -S.y⟩⟩
+
+namespace OpSedenion
+
+@[simp] lemma zero_x : (0 : OpSedenion A).x = 0 := rfl
+@[simp] lemma zero_y : (0 : OpSedenion A).y = 0 := rfl
+@[simp] lemma one_x : (1 : OpSedenion A).x = 1 := rfl
+@[simp] lemma one_y : (1 : OpSedenion A).y = 0 := rfl
+@[simp] lemma add_x (S₁ S₂ : OpSedenion A) : (S₁ + S₂).x = S₁.x + S₂.x := rfl
+@[simp] lemma add_y (S₁ S₂ : OpSedenion A) : (S₁ + S₂).y = S₁.y + S₂.y := rfl
+@[simp] lemma sub_x (S₁ S₂ : OpSedenion A) : (S₁ - S₂).x = S₁.x - S₂.x := rfl
+@[simp] lemma sub_y (S₁ S₂ : OpSedenion A) : (S₁ - S₂).y = S₁.y - S₂.y := rfl
+@[simp] lemma neg_x (S : OpSedenion A) : (-S).x = -S.x := rfl
+@[simp] lemma neg_y (S : OpSedenion A) : (-S).y = -S.y := rfl
+
+end OpSedenion
+
+/-- Saniga–Holweck–Pracna Eq. (1) (Page 1193): Cayley–Dickson conjugation $(x, y)^* = (x^*, -y)$. -/
+def opSedenionConj (S : OpSedenion A) : OpSedenion A :=
+  ⟨opCayleyConj S.x, -S.y⟩
+
+/-- Saniga–Holweck–Pracna Eq. (2) (Page 1193): Cayley–Dickson multiplication
+    $(x, y)(X, Y) = (x X - Y y^*,\; x^* Y + X y)$. -/
+instance : Mul (OpSedenion A) :=
+  ⟨fun S₁ S₂ =>
+    { x := S₁.x * S₂.x - S₂.y * opCayleyConj S₁.y
+      y := opCayleyConj S₁.x * S₂.y + S₂.x * S₁.y }⟩
+
+@[simp] lemma OpSedenion.mul_x (S₁ S₂ : OpSedenion A) :
+    (S₁ * S₂).x = S₁.x * S₂.x - S₂.y * opCayleyConj S₁.y := rfl
+
+@[simp] lemma OpSedenion.mul_y (S₁ S₂ : OpSedenion A) :
+    (S₁ * S₂).y = opCayleyConj S₁.x * S₂.y + S₂.x * S₁.y := rfl
+
+/-- Paired chiral sedenion zero-divisor state $S_+(v, w) = (L_+(v), L_-(w))$. -/
+def opSedenionZeroDivPlus (v w : OpVec3 A) : OpSedenion A :=
+  ⟨opLightconePlus v, opLightconeMinus w⟩
+
+/-- Dual paired chiral sedenion zero-divisor state $S_-(v, w) = (L_-(w), -L_+(v))$. -/
+def opSedenionZeroDivMinus (v w : OpVec3 A) : OpSedenion A :=
+  ⟨opLightconeMinus w, -opLightconePlus v⟩
+
+/-- **Theorem 91 (Archetype LXXII — Operator Sedenion Cayley–Dickson Laws, 4-Ray Cross Multiplication, & Universal Two-Sided Zero Divisors)**:
+    Over *any* noncommutative operator ring $A$, for ALL $S \in \mathrm{OpSedenion}\;A$ and
+    all 3-vectors $v, w, v_1, v_2, v_3, v_4 \in \mathrm{OpVec3}\;A$:
+    1. Exact Period-2 Sedenion Conjugation & Unit Preservation:
+       $((S)^*)^* = S$, $1 * S = S$, and $S * 1 = S$.
+    2. Desargues 4-Ray Sedenion Cross-Product Multiplication Law:
+       $$(L_+(v_1), L_+(v_2)) * (L_+(v_3), L_+(v_4)) =
+         \bigl(L_-(v_1 \times_{\mathrm{skew}} v_3 + v_4 \times_{\mathrm{skew}} v_2),\;
+               L_-(v_3 \times_{\mathrm{skew}} v_2 - v_1 \times_{\mathrm{skew}} v_4)\bigr).$$
+    3. Universal Two-Sided Sedenion Zero-Divisor Theorem (Valid for ALL $v, w \in A^3$):
+       $$S_+(v, w) * S_-(v, w) = 0 \quad \text{and} \quad S_-(v, w) * S_+(v, w) = 0.$$ -/
+theorem operator_sedenion_cayley_dickson_and_universal_zero_divisors
+    (S : OpSedenion A) (v w v₁ v₂ v₃ v₄ : OpVec3 A) :
+    let S₁ : OpSedenion A := ⟨opLightconePlus v₁, opLightconePlus v₂⟩
+    let S₂ : OpSedenion A := ⟨opLightconePlus v₃, opLightconePlus v₄⟩
+    opSedenionConj (opSedenionConj S) = S ∧
+    (1 : OpSedenion A) * S = S ∧
+    S * (1 : OpSedenion A) = S ∧
+    S₁ * S₂ =
+      ⟨opLightconeMinus (OpVec3.skewCross v₁ v₃ + OpVec3.skewCross v₄ v₂),
+       opLightconeMinus (OpVec3.skewCross v₃ v₂ - OpVec3.skewCross v₁ v₄)⟩ ∧
+    opSedenionZeroDivPlus v w * opSedenionZeroDivMinus v w = 0 ∧
+    opSedenionZeroDivMinus v w * opSedenionZeroDivPlus v w = 0 := by
+  intro S₁ S₂
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [S₁, S₂, opSedenionConj, opCayleyConj, opSedenionZeroDivPlus, opSedenionZeroDivMinus,
+          opLightconePlus, opLightconeMinus, opLightconeRayPlus, opLightconeRayMinus,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

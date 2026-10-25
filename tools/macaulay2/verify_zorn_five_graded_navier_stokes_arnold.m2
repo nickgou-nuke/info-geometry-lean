@@ -171,7 +171,17 @@ Spoynt = vecCross({ux, uy, uz}, {wx, wy, wz})
 assert(zornMul(Jem, Jstar) == {-vecDot({ux, uy, uz}, {ux, uy, uz}), Spoynt, vecScale(-1_R, Spoynt), vecDot({wx, wy, wz}, {wx, wy, wz})})
 Jline = {0_R, {y1*z2 - y2*z1, y1*xi2 - y2*xi1, y1*z3 - y2*y3}, {xi1*z3 - xi2*y3, y3*z2 - z3*z1, z1*xi2 - z2*xi1}, 0_R}
 assert(zornMul(Jline, Jline) == zornZero)
-print("[PASS] Macaulay2: Archetypes LXVII-LXX (Dahm Dihedral D_4, PG(3,2) Triple, Maxwell-Poynting Stress Matrix, & Simple Line J_line^2 = 0)")
+-- Archetypes LXXI & LXXII: Saniga-Holweck-Pracna Grassmannian Edge-Triangle & Sedenion Zero Divisors
+zornConj = X -> {X#3, vecScale(-1_R, X#1), vecScale(-1_R, X#2), X#0}
+Om12 = {0_R, {y1 - y2, z1 - z2, xi1 - xi2}, {0_R, 0_R, 0_R}, 0_R}
+Om23 = {0_R, {y2 - y3, z2 - z3, xi2 - xi3}, {0_R, 0_R, 0_R}, 0_R}
+Om31 = {0_R, {y3 - y1, z3 - z1, xi3 - xi1}, {0_R, 0_R, 0_R}, 0_R}
+assert(zornMul(Om12, Om23) == zornMul(Om23, Om31))
+assert(zornMul(Om23, Om31) == zornMul(Om31, Om12))
+SedX = zornSub(zornMul(Lpv, Lmw), zornMul(zornScale(-1_R, Lpv), zornConj(Lmw)))
+SedY = zornAdd(zornMul(zornConj(Lpv), zornScale(-1_R, Lpv)), zornMul(Lmw, Lmw))
+assert(SedX == zornZero and SedY == zornZero)
+print("[PASS] Macaulay2: Archetypes LXVII-LXXII (Dahm Dihedral D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), & Sedenion Zero Divisors)")
 
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]

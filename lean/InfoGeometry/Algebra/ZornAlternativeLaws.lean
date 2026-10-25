@@ -7000,4 +7000,88 @@ theorem dahm_simple_plucker_line_null_square_and_unipotent_inversion
     · rename_i i; fin_cases i <;> simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
     · simp [L_E, L_B, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
 
+/-! ## Section 68: Saniga–Holweck–Pracna (2015) Combinatorial Grassmannian $G_2(N+1)$ Edge-Triangle Invariance & Cayley–Dickson Sedenion Zero Divisors on `ZornVectorMatrix R` (Archetypes LXXI & LXXII) -/
+
+/-- Combinatorial Grassmannian $G_2(N+1)$ edge operator $\Omega_{ij} = \langle 0, v_i - v_j, 0, 0 \rangle$ in `ZornVectorMatrix R`. -/
+def zornGrassmannEdge (v_i v_j : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, v_i - v_j, 0, 0⟩
+
+/-- **Saniga–Holweck–Pracna Combinatorial Grassmannian $G_2(N+1)$ Edge-Triangle Collinear Invariance & Cayley–Dickson Sedenion Zero-Divisor Identity on `ZornVectorMatrix R` (Archetypes LXXI & LXXII)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all vertex 3-vectors $v_i, v_j, v_k, v, w : \mathrm{ZornVec3}\;R$,
+    let $\Omega_{ij} = \mathrm{zornGrassmannEdge}\;v_i\;v_j$, $\Omega_{jk} = \mathrm{zornGrassmannEdge}\;v_j\;v_k$,
+    $\Omega_{ki} = \mathrm{zornGrassmannEdge}\;v_k\;v_i$, $\Omega_{ik} = \mathrm{zornGrassmannEdge}\;v_i\;v_k$,
+    $x = \langle 0, v, 0, 0 \rangle$, $y = \langle 0, 0, w, 0 \rangle$, $X = \langle 0, 0, w, 0 \rangle$, and $Y = -\langle 0, v, 0, 0 \rangle$:
+    1. Edge Nilpotence & Veldkamp Collinear Triangle Sum:
+       $$\Omega_{ij} * \Omega_{ij} = 0, \qquad \Omega_{ij} + \Omega_{jk} = \Omega_{ik}, \qquad \Omega_{ij} + \Omega_{jk} + \Omega_{ki} = 0.$$
+    2. Universal 2-Plane Invariance Across All Three Edges of the Line $\{\{i, j\}, \{j, k\}, \{k, i\}\}$:
+       $$\Omega_{ij} * \Omega_{jk} = \Omega_{jk} * \Omega_{ki} \qquad \text{and} \qquad \Omega_{jk} * \Omega_{ki} = \Omega_{ki} * \Omega_{ij}.$$
+    3. Universal Sedenion Zero-Divisor Cancellation on `ZornVectorMatrix R` (Saniga–Holweck–Pracna Page 1193, Eq. 2):
+       $$x * X + -(Y * \mathrm{conj}\;y) = 0 \qquad \text{and} \qquad \mathrm{conj}\;x * Y + X * y = 0.$$ -/
+theorem saniga_holweck_pracna_grassmannian_edge_triangle_and_sedenion_zero_divisors
+    (v_i v_j v_k v w : ZornVec3 R) :
+    let Ω_ij := zornGrassmannEdge v_i v_j
+    let Ω_jk := zornGrassmannEdge v_j v_k
+    let Ω_ki := zornGrassmannEdge v_k v_i
+    let Ω_ik := zornGrassmannEdge v_i v_k
+    let x : ZornVectorMatrix R := ⟨0, v, 0, 0⟩
+    let y : ZornVectorMatrix R := ⟨0, 0, w, 0⟩
+    let X : ZornVectorMatrix R := ⟨0, 0, w, 0⟩
+    let Y : ZornVectorMatrix R := -⟨0, v, 0, 0⟩
+    Ω_ij * Ω_ij = 0 ∧
+    Ω_ij + Ω_jk = Ω_ik ∧
+    (Ω_ij + Ω_jk) + Ω_ki = 0 ∧
+    Ω_ij * Ω_jk = Ω_jk * Ω_ki ∧
+    Ω_jk * Ω_ki = Ω_ki * Ω_ij ∧
+    x * X + -(Y * conj y) = 0 ∧
+    conj x * Y + X * y = 0 := by
+  intro Ω_ij Ω_jk Ω_ki Ω_ik x y X Y
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [Ω_ij, zornGrassmannEdge, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [Ω_ij, zornGrassmannEdge, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [Ω_ij, zornGrassmannEdge, mul, ZornVec3.cross]; try ring)
+    · simp [Ω_ij, zornGrassmannEdge, mul, ZornVec3.dot]
+  · ext
+    · simp [Ω_ij, Ω_jk, Ω_ik, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;> (simp [Ω_ij, Ω_jk, Ω_ik, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]; try ring)
+    · rename_i i; fin_cases i <;> simp [Ω_ij, Ω_jk, Ω_ik, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]
+    · simp [Ω_ij, Ω_jk, Ω_ik, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]
+  · ext
+    · simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;> (simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]; try ring)
+    · rename_i i; fin_cases i <;> simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]
+    · simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, add]
+  · ext
+    · simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.cross]; try ring)
+    · simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.dot]
+  · ext
+    · simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.cross]; try ring)
+    · simp [Ω_ij, Ω_jk, Ω_ki, zornGrassmannEdge, mul, ZornVec3.dot]
+  · ext
+    · simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot]
+  · ext
+    · simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

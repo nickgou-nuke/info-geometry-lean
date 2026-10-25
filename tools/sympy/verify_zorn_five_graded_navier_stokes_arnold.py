@@ -582,6 +582,38 @@ def main() -> int:
     assert J_em * J_em == grade_zero(-dot(u_vec, w_vec), -dot(w_vec, u_vec))
     print("[PASS] Archetypes LXIX-LXX: Electromagnetic Hodge-Dual Maxwell-Poynting Stress Matrix & Simple Plücker Line Nilpotence")
 
+    # 16. Archetypes LXXI & LXXII: Saniga-Holweck-Pracna (2015) Combinatorial Grassmannian G_2(N+1)
+    #     Edge-Triangle Collinear Invariance & Operator Sedenion Two-Sided Zero Divisors
+    for N_val, expected in [(1, (1, 0, 0)), (2, (3, 1, 0)), (3, (6, 4, 1)), (4, (10, 10, 5)), (5, (15, 20, 15)), (6, (21, 35, 35))]:
+        pts = int(sp.binomial(N_val + 1, 2))
+        lns = int(sp.binomial(N_val + 1, 3))
+        pasch = int(sp.binomial(N_val + 1, 4))
+        assert (pts, lns, pasch) == expected
+        assert (N_val - 1) * pts == 3 * lns
+    Om_12 = lightcone_plus(u_vec - w_vec)
+    Om_23 = lightcone_plus(w_vec - v3_vec)
+    Om_31 = lightcone_plus(v3_vec - u_vec)
+    Om_13 = lightcone_plus(u_vec - v3_vec)
+    plane_123 = lightcone_minus(skew_cross(u_vec, w_vec) + skew_cross(w_vec, v3_vec) + skew_cross(v3_vec, u_vec))
+    assert Om_12 * Om_12 == z_zero()
+    assert Om_12 + Om_23 == Om_13
+    assert Om_12 + Om_23 + Om_31 == z_zero()
+    assert Om_12 * Om_23 == plane_123
+    assert Om_23 * Om_31 == plane_123
+    assert Om_31 * Om_12 == plane_123
+
+    def z_conj(X: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(X.b, -X.v, -X.w, X.a)
+
+    def sed_mul(S1: tuple[OpZornMatrix, OpZornMatrix], S2: tuple[OpZornMatrix, OpZornMatrix]) -> tuple[OpZornMatrix, OpZornMatrix]:
+        return (S1[0] * S2[0] - S2[1] * z_conj(S1[1]), z_conj(S1[0]) * S2[1] + S2[0] * S1[1])
+
+    S_plus_zd = (lightcone_plus(u_vec), lightcone_minus(w_vec))
+    S_minus_zd = (lightcone_minus(w_vec), z_zero() - lightcone_plus(u_vec))
+    assert sed_mul(S_plus_zd, S_minus_zd) == (z_zero(), z_zero())
+    assert sed_mul(S_minus_zd, S_plus_zd) == (z_zero(), z_zero())
+    print("[PASS] Archetypes LXXI-LXXII: Saniga-Holweck-Pracna Grassmannian G_2(N+1) Edge-Triangle Invariance & Operator Sedenion Zero Divisors")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

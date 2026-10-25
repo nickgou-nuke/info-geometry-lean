@@ -545,14 +545,18 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
         (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLineComplex u v *
           InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLineHodgeDual u v) =
       -InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u u +
-        InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot v v := by
+        InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot v v ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSedenionZeroDivPlus u v *
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSedenionZeroDivMinus u v = 0 := by
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, ?_,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge
       X 0 0 0 0 0 0 0 0 0 0 0 0 u v u v u v 1).1.2.2.2.2.2.2.2,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_dahm_projective_line_geometry_pg32_and_sl2h_master_bridge
       u v u v X 0 0 0 0 0 0 0 0).2.2.2.2.2.2.2.2.1,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_dahm_maxwell_poynting_hodge_dual_stress_master_bridge
-      u v).2.2.1⟩
+      u v).2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_saniga_holweck_pracna_grassmannian_and_sedenion_zero_divisor_master_bridge
+      1 0 u v u u v u v u v).2.2.2.2.2.2.1⟩
   · rcases u with ⟨ux, uy, uz⟩
     rcases v with ⟨vx, vy, vz⟩
     simp [opVec3Fin3Equiv,

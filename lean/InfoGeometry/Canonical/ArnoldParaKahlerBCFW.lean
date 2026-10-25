@@ -808,6 +808,48 @@ theorem operator_dahm_maxwell_poynting_hodge_dual_stress_master_bridge
     opLineHodgeDual (-B) E = -J :=
   dahm_hodge_dual_maxwell_poynting_stress_tensor E B
 
+/-- **Theorem 22 (Master Saniga–Holweck–Pracna Combinatorial Grassmannian $G_2(N+1)$, Edge-Triangle Invariance, & Operator Sedenion Zero-Divisor Bridge — Archetypes LXXI & LXXII)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all $m \in \mathbb{N}$,
+    all $S \in \mathrm{OpSedenion}\;A$, and all 3-vector fields $v_i, v_j, v_k, v, w, v_1, v_2, v_3, v_4 \in \mathrm{OpVec3}\;A$:
+    - Exact $(v_N, b_N, \mathrm{Pasch}_N)$ hierarchy for $N = 1, \dots, 6$ and binomial configuration incidence law $m \binom{m+2}{2} = 3 \binom{m+2}{3}$,
+    - Edge nilpotence $\Omega_{ij}^2 = 0$, Veldkamp triangle sum $\Omega_{ij} + \Omega_{jk} + \Omega_{ki} = 0$, and cyclic 2-plane invariance $\Omega_{ij} * \Omega_{jk} = \Omega_{jk} * \Omega_{ki} = \Omega_{ki} * \Omega_{ij}$,
+    - Cayley–Dickson sedenion involution period-2, 4-ray cross-product multiplication, and universal two-sided zero divisors $S_+(v, w) * S_-(v, w) = 0$ and $S_-(v, w) * S_+(v, w) = 0$. -/
+theorem operator_saniga_holweck_pracna_grassmannian_and_sedenion_zero_divisor_master_bridge
+    (m : ℕ) (S : OpSedenion A) (v_i v_j v_k v w v₁ v₂ v₃ v₄ : OpVec3 A) :
+    let Ω_ij := opGrassmannEdge v_i v_j
+    let Ω_jk := opGrassmannEdge v_j v_k
+    let Ω_ki := opGrassmannEdge v_k v_i
+    let Ω_ik := opGrassmannEdge v_i v_k
+    let plane_ijk :=
+      opLightconeMinus
+        (OpVec3.skewCross v_i v_j + OpVec3.skewCross v_j v_k + OpVec3.skewCross v_k v_i)
+    let S₁ : OpSedenion A := ⟨opLightconePlus v₁, opLightconePlus v₂⟩
+    let S₂ : OpSedenion A := ⟨opLightconePlus v₃, opLightconePlus v₄⟩
+    ((grassmannPoints 1, grassmannLines 1, grassmannPaschCount 1) = (1, 0, 0) ∧
+     (grassmannPoints 2, grassmannLines 2, grassmannPaschCount 2) = (3, 1, 0) ∧
+     (grassmannPoints 3, grassmannLines 3, grassmannPaschCount 3) = (6, 4, 1) ∧
+     (grassmannPoints 4, grassmannLines 4, grassmannPaschCount 4) = (10, 10, 5) ∧
+     (grassmannPoints 5, grassmannLines 5, grassmannPaschCount 5) = (15, 20, 15) ∧
+     (grassmannPoints 6, grassmannLines 6, grassmannPaschCount 6) = (21, 35, 35) ∧
+     m * grassmannPoints (m + 1) = 3 * grassmannLines (m + 1)) ∧
+    (Ω_ij * Ω_ij = 0 ∧
+     Ω_ij + Ω_jk = Ω_ik ∧
+     Ω_ij + Ω_jk + Ω_ki = 0 ∧
+     Ω_ij * Ω_jk = plane_ijk ∧
+     Ω_jk * Ω_ki = plane_ijk ∧
+     Ω_ki * Ω_ij = plane_ijk) ∧
+    (opSedenionConj (opSedenionConj S) = S ∧
+     (1 : OpSedenion A) * S = S ∧
+     S * (1 : OpSedenion A) = S ∧
+     S₁ * S₂ =
+       ⟨opLightconeMinus (OpVec3.skewCross v₁ v₃ + OpVec3.skewCross v₄ v₂),
+        opLightconeMinus (OpVec3.skewCross v₃ v₂ - OpVec3.skewCross v₁ v₄)⟩ ∧
+     opSedenionZeroDivPlus v w * opSedenionZeroDivMinus v w = 0 ∧
+     opSedenionZeroDivMinus v w * opSedenionZeroDivPlus v w = 0) :=
+  ⟨saniga_grassmannian_binomial_configuration_identities m,
+   operator_grassmannian_edge_triangle_collinear_invariance v_i v_j v_k,
+   operator_sedenion_cayley_dickson_and_universal_zero_divisors S v w v₁ v₂ v₃ v₄⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

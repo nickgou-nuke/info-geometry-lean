@@ -239,6 +239,26 @@ S_neg_c = tuple(-x for x in S_c)
 assert c_zmul(J_em_c, J_star_c) == (-c_dot((ux, uy, uz), (ux, uy, uz)), S_c, S_neg_c, c_dot((wx, wy, wz), (wx, wy, wz)))
 print("[PASS] PolynomialRing: Archetypes LXVII-LXX (Dahm Dihedral D_4, PG(3,2) Triple, & Maxwell-Poynting Hodge-Dual Stress Matrix)")
 
+# Archetypes LXXI & LXXII: Saniga-Holweck-Pracna (2015) Combinatorial Grassmannian G_2(N+1) & Sedenion Zero Divisors
+def c_zconj(X):
+    return (X[3], tuple(-x for x in X[1]), tuple(-x for x in X[2]), X[0])
+
+def c_sed_mul(S1, S2):
+    x_part = c_zadd(c_zmul(S1[0], S2[0]), c_zmul(S2[1], ( -c_zconj(S1[1])[0], tuple(-x for x in c_zconj(S1[1])[1]), tuple(-x for x in c_zconj(S1[1])[2]), -c_zconj(S1[1])[3] )))
+    y_part = c_zadd(c_zmul(c_zconj(S1[0]), S2[1]), c_zmul(S2[0], S1[1]))
+    return (x_part, y_part)
+
+Om_12_c = (R(0), (ux - wx, uy - wy, uz - wz), (R(0), R(0), R(0)), R(0))
+Om_23_c = (R(0), (wx - dp, wy - dm, wz - ux), (R(0), R(0), R(0)), R(0))
+Om_31_c = (R(0), (dp - ux, dm - uy, ux - uz), (R(0), R(0), R(0)), R(0))
+assert c_zmul(Om_12_c, Om_23_c) == c_zmul(Om_23_c, Om_31_c)
+assert c_zmul(Om_23_c, Om_31_c) == c_zmul(Om_31_c, Om_12_c)
+S_p_c = ((R(0), (ux, uy, uz), (R(0), R(0), R(0)), R(0)), (R(0), (R(0), R(0), R(0)), (wx, wy, wz), R(0)))
+S_m_c = ((R(0), (R(0), R(0), R(0)), (wx, wy, wz), R(0)), (R(0), (-ux, -uy, -uz), (R(0), R(0), R(0)), R(0)))
+assert c_sed_mul(S_p_c, S_m_c) == (c_zero, c_zero)
+assert c_sed_mul(S_m_c, S_p_c) == (c_zero, c_zero)
+print("[PASS] PolynomialRing: Archetypes LXXI-LXXII (Saniga-Holweck-Pracna Grassmannian G_2(N+1) & Sedenion Zero Divisors)")
+
 print("======================================================================")
 print("ALL CHECKS PASSED")
 print("======================================================================")

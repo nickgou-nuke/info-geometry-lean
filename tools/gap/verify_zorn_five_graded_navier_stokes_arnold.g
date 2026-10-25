@@ -251,7 +251,22 @@ S_Poynt := VecCross([ux, uy, uz], [wx, wy, wz]);
 if ZornMul(J_EM, J_Star) <> [ -VecDot([ux, uy, uz], [ux, uy, uz]), S_Poynt, [-S_Poynt[1], -S_Poynt[2], -S_Poynt[3]], VecDot([wx, wy, wz], [wx, wy, wz]) ] then
     Error("FAIL: Archetype LXIX Maxwell-Poynting Hodge-dual stress matrix failed");
 fi;
-Print("[PASS] GAP: Archetypes LXVII-LXX (Dahm Dihedral D_4, PG(3,2) Collinear Triple, & Maxwell-Poynting Hodge-Dual Stress Matrix)\n");
+# Archetypes LXXI & LXXII: Saniga-Holweck-Pracna Grassmannian G_2(N+1) Edge-Triangle Invariance & Sedenion Zero Divisors
+ZornConj := function(X)
+    return [ X[4], [-X[2][1], -X[2][2], -X[2][3]], [-X[3][1], -X[3][2], -X[3][3]], X[1] ];
+end;
+Om12 := [ zero, [y1 - y2, z1 - z2, xi1 - xi2], [zero, zero, zero], zero ];
+Om23 := [ zero, [y2 - y3, z2 - z3, xi2 - xi3], [zero, zero, zero], zero ];
+Om31 := [ zero, [y3 - y1, z3 - z1, xi3 - xi1], [zero, zero, zero], zero ];
+if ZornMul(Om12, Om23) <> ZornMul(Om23, Om31) or ZornMul(Om23, Om31) <> ZornMul(Om31, Om12) then
+    Error("FAIL: Archetype LXXI Grassmannian edge-triangle collinear product invariance failed");
+fi;
+SedX := ZornSub(ZornMul(Lp_v, Lm_w), ZornMul(ZornScale(-one, Lp_v), ZornConj(Lm_w)));
+SedY := ZornAdd(ZornMul(ZornConj(Lp_v), ZornScale(-one, Lp_v)), ZornMul(Lm_w, Lm_w));
+if SedX <> ZornZero or SedY <> ZornZero then
+    Error("FAIL: Archetype LXXII Sedenion two-sided zero divisor failed");
+fi;
+Print("[PASS] GAP: Archetypes LXVII-LXXII (Dahm Dihedral D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), & Sedenion Zero Divisors)\n");
 
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");

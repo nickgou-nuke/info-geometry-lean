@@ -60,27 +60,37 @@ instance [Repr α] [BEq α] [Hashable α] :
 
 /-- Collect projection head names in an expression.
 
-The traversal is structural on `Lean.Expr`, so this no longer needs a `partial`
-meta recursion bypass.  Expressions are acyclic syntax trees; duplicate sharing is
-harmless because the result is a `NameSet`.
+Uses an explicit worklist and `Std.HashSet Lean.ExprStructEq` visited set so
+shared `Lean.Expr` DAG subterms (common in elaborated proof terms and nested
+`let`-bindings) are traversed in $O(|V_{\mathrm{DAG}}|)$ time rather than
+exponential tree time.
 -/
-def projHeads (e : Lean.Expr) : Lean.NameSet :=
-  let rec go (x : Lean.Expr) (out : Lean.NameSet) : Lean.NameSet :=
-    match x with
+def projHeads (e : Lean.Expr) : Lean.NameSet := Id.run do
+  let mut seen : Std.HashSet Lean.ExprStructEq := {}
+  let mut stack : List Lean.Expr := [e]
+  let mut out : Lean.NameSet := Lean.NameSet.empty
+  while !stack.isEmpty do
+    let curr := stack.head!
+    stack := stack.tail!
+    let key : Lean.ExprStructEq := ⟨curr⟩
+    if seen.contains key then continue
+    seen := seen.insert key
+    match curr with
     | .proj s _ body =>
-        go body (out.insert s)
+        out := out.insert s
+        stack := body :: stack
     | .app f a =>
-        go a (go f out)
+        stack := f :: a :: stack
     | .lam _ ty body _ =>
-        go body (go ty out)
+        stack := ty :: body :: stack
     | .forallE _ ty body _ =>
-        go body (go ty out)
+        stack := ty :: body :: stack
     | .letE _ ty val body _ =>
-        go body (go val (go ty out))
+        stack := ty :: val :: body :: stack
     | .mdata _ body =>
-        go body out
-    | _ => out
-  go e Lean.NameSet.empty
+        stack := body :: stack
+    | _ => pure ()
+  return out
 
 /-- Collect constant names appearing in an expression. -/
 def collectExprConsts (e : Lean.Expr) : Lean.NameSet :=

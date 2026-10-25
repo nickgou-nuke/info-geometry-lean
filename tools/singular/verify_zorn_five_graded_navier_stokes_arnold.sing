@@ -134,7 +134,14 @@ poly sp12 = z1*xi2 - z2*xi1;
 if (sp01*sp23 + sp02*sp31 + sp03*sp12 != 0) {
     ERROR("FAIL: Archetype LXX Simple Plücker line Klein quadric vanishing failed");
 }
-print("[PASS] Singular: Archetypes LXVII-LXX (Dahm Plücker-Klein to SO(3,3) Bijection & Simple Plücker Line Square-Zero)");
+// Archetypes LXXI & LXXII: Saniga-Holweck-Pracna Edge-Triangle Cyclic Cross-Product Invariance:
+poly om12_23_x = (z1 - z2)*(xi2 - xi3) - (xi1 - xi2)*(z2 - z3);
+poly om23_31_x = (z2 - z3)*(xi3 - xi1) - (xi2 - xi3)*(z3 - z1);
+poly om31_12_x = (z3 - z1)*(xi1 - xi2) - (xi3 - xi1)*(z1 - z2);
+if (om12_23_x - om23_31_x != 0 || om23_31_x - om31_12_x != 0) {
+    ERROR("FAIL: Archetype LXXI Grassmannian edge-triangle cyclic invariance failed");
+}
+print("[PASS] Singular: Archetypes LXVII-LXXII (Dahm Plücker-Klein, Simple Line Square-Zero, & Saniga Grassmannian Edge-Triangle)");
 
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;

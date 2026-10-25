@@ -38,7 +38,9 @@ from tools.infra.opengauss_cli import (
     execute_checkpoint,
     generate_certification_audit,
     generate_handoff_context,
+    generate_whnf_binder_telescope_script,
     main,
+    parse_whnf_telescope_output,
     plan_top_down_proof,
     quarantine_obstruction,
     refute_content,
@@ -46,6 +48,7 @@ from tools.infra.opengauss_cli import (
     run_autoprove_cycle,
     run_formalize,
     verify_certification_audit,
+    verify_whnf_binder_telescope,
 )
 
 
@@ -688,6 +691,54 @@ def test_scratch_draft_cannot_write_a_source_file():
     except SystemExit:
         return
     raise AssertionError("scratch draft unexpectedly accepted a source output path")
+
+
+def test_whnf_binder_and_result_telescope_audit(tmp_path):
+    """Verify MetaM whnf binder and result-type telescope generation and violation parsing."""
+    owner = tmp_path / "lean" / "TelescopeTest.lean"
+    owner.parent.mkdir()
+    owner.write_text(
+        "namespace Test\n"
+        "def HiddenImplication := True → True\n"
+        "theorem clean_thm (n : Nat) : n = n := rfl\n"
+        "theorem hidden_forall_thm (n : Nat) : HiddenImplication := fun h => h\n"
+        "end Test\n",
+        encoding="utf-8",
+    )
+    audit = generate_whnf_binder_telescope_script(owner, repo_root=tmp_path)
+    assert audit.theorem_declarations == [
+        "Test.clean_thm",
+        "Test.hidden_forall_thm",
+    ]
+    assert "OpenGaussWhnfTelescope.auditDeclarationTelescope ``Test.clean_thm" in audit.telescope_script
+    assert "OpenGaussWhnfTelescope.auditDeclarationTelescope ``Test.hidden_forall_thm" in audit.telescope_script
+
+    mock_output = (
+        '{"tag":"OPENGAUSS_BINDER_TELESCOPE","declaration":"Test.clean_thm","index":0,"name":"n","isProp":false,"isSubtype":false,"isProofLift":false,"structure":""}\n'
+        '{"tag":"OPENGAUSS_RESULT_TELESCOPE","declaration":"Test.clean_thm","isProp":true,"isNegation":false,"hasHiddenWhnfForall":false}\n'
+        '{"tag":"OPENGAUSS_BINDER_TELESCOPE","declaration":"Test.hidden_forall_thm","index":0,"name":"hSub","isProp":false,"isSubtype":true,"isProofLift":false,"structure":"Subtype"}\n'
+        '{"tag":"OPENGAUSS_RESULT_TELESCOPE","declaration":"Test.hidden_forall_thm","isProp":true,"isNegation":false,"hasHiddenWhnfForall":true}\n'
+    )
+    binders, results, violations = parse_whnf_telescope_output(mock_output)
+    assert len(binders) == 2
+    assert len(results) == 2
+    assert len(violations) == 2
+    assert any("Subtype" in v for v in violations)
+    assert any("hidden ∀/→ premise" in v for v in violations)
+
+    with patch(
+        "tools.infra.opengauss_cli.acquire_build_lock",
+        return_value=SimpleNamespace(release=lambda: None),
+    ), patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        side_effect=[
+            SimpleNamespace(returncode=0, stdout="", stderr=""),
+            SimpleNamespace(returncode=0, stdout=mock_output, stderr=""),
+        ],
+    ):
+        verified = verify_whnf_binder_telescope(owner, repo_root=tmp_path)
+    assert verified.verification_status == "telescope_violation"
+    assert len(verified.violations) == 2
 
 
 if __name__ == "__main__":

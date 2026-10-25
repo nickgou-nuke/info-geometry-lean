@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import functools
 import hashlib
 import json
 import re
@@ -668,9 +669,9 @@ def _bare_identifier(expression: str) -> str | None:
     return expression if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_']*", expression) else None
 
 
-def _prior_variable_binders(source: str) -> list[tuple[str, str]]:
+def _prior_variable_binders(source: str, *, already_clean: bool = False) -> list[tuple[str, str]]:
     """Return `(name, type)` pairs from preceding Lean `variable` commands."""
-    clean = _strip_lean_comments_and_strings(source)
+    clean = source if already_clean else _strip_lean_comments_and_strings(source)
     binders: list[tuple[str, str]] = []
     active_declarations = _ambient_variable_declarations(clean, len(clean))
     for block in active_declarations:
@@ -701,6 +702,7 @@ def _has_prior_variable_binder(source: str, target: str) -> bool:
     return any(name == target for name, _ in _prior_variable_binders(source))
 
 
+@functools.lru_cache(maxsize=256)
 def _strip_lean_comments_and_strings(source: str) -> str:
     """Blank comments and strings while preserving line breaks and offsets."""
     chars = list(source)
@@ -1065,8 +1067,9 @@ def _known_nontrivial_scalar_type(scalar: str, source: str = "") -> bool:
     return bool(polynomial and _known_nontrivial_scalar_type(polynomial.group(1), source))
 
 
-def _expand_local_type_alias(source: str, type_text: str) -> str:
-    """Expand simple local type aliases, including parameterized aliases."""
+@functools.lru_cache(maxsize=128)
+def _parsed_local_type_aliases(source: str) -> dict[str, tuple[list[str], str]]:
+    """Extract parameterized and unparameterized local type aliases once per source."""
     aliases: dict[str, tuple[list[str], str]] = {}
     for name, params, rhs in re.findall(
         r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([\w']+)\s*((?:\((?:[^()\n]|\([^()\n]*\))*\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
@@ -1075,6 +1078,12 @@ def _expand_local_type_alias(source: str, type_text: str) -> str:
     ):
         param_names = re.findall(r"\(\s*([\w']+)\s*:", params)
         aliases[name] = (param_names, rhs.strip())
+    return aliases
+
+
+def _expand_local_type_alias(source: str, type_text: str) -> str:
+    """Expand simple local type aliases, including parameterized aliases."""
+    aliases = _parsed_local_type_aliases(source)
     expanded = re.sub(r"\s+", " ", type_text.strip())
     for _ in range(min(len(aliases) + 1, 8)):
         updated = expanded
@@ -1248,6 +1257,29 @@ def _has_typed_noncommutative_product(source: str) -> bool:
     return False
 
 
+@functools.lru_cache(maxsize=128)
+def _source_def_carrier_map(source: str) -> dict[str, tuple[str, str, str]]:
+    """Map file-level `def`/`abbrev` constants to their matrix carrier once per source."""
+    carriers: dict[str, tuple[str, str, str]] = {}
+    declaration_start = re.compile(r"^\s*(?:private\s+|protected\s+|noncomputable\s+)*(?:def|abbrev)\s+(\w+)")
+    source_lines = source.splitlines()
+    for idx, line in enumerate(source_lines):
+        match = declaration_start.match(line)
+        if not match:
+            continue
+        header = [line]
+        for following in source_lines[idx + 1 : idx + 5]:
+            if ":=" in " ".join(header):
+                break
+            header.append(following)
+        signature = _matrix_carrier_signature(
+            _expand_local_type_alias(source, " ".join(header).split(":=", 1)[0])
+        )
+        if signature:
+            carriers[match.group(1)] = signature
+    return carriers
+
+
 def _witness_carrier_map(source: str, binders: str) -> dict[str, tuple[str, str, str]]:
     """Map explicit matrix variables/constants to their syntactic carrier."""
     carriers: dict[str, tuple[str, str, str]] = {}
@@ -1275,21 +1307,7 @@ def _witness_carrier_map(source: str, binders: str) -> dict[str, tuple[str, str,
             for name in match.group(1).split():
                 carriers[name] = signature
 
-    declaration_start = re.compile(r"^\s*(?:private\s+|protected\s+|noncomputable\s+)*(?:def|abbrev)\s+(\w+)")
-    for idx, line in enumerate(source.splitlines()):
-        match = declaration_start.match(line)
-        if not match:
-            continue
-        header = [line]
-        for following in source.splitlines()[idx + 1 : idx + 5]:
-            if ":=" in " ".join(header):
-                break
-            header.append(following)
-        signature = _matrix_carrier_signature(
-            _expand_local_type_alias(source, " ".join(header).split(":=", 1)[0])
-        )
-        if signature:
-            carriers[match.group(1)] = signature
+    carriers.update(_source_def_carrier_map(source))
     return carriers
 
 
@@ -1698,8 +1716,27 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
         r"\bhave\s+\w+\s*:\s*(?:[^:]*?\b(?:Matrix|End|CliffordAlgebra)\b.*?|.*?(\b\w+\s*\*\s*\w+\s*=\s*\w+\s*\*\s*\w+\b).*?):=(?:\s*by)?\s*\b(ring|linarith|nlinarith)\b"
     )
 
+    alias_source = _strip_lean_comments_and_strings("\n".join(lines))
+    clean_lines = alias_source.splitlines()
+    aliases = set(re.findall(
+        r"\b(?:abbrev|def)\s+([A-Za-z_][A-Za-z0-9_']*)[^\n]*:=\s*[^\n]*\bMatrix\b",
+        alias_source,
+    ))
+    all_alias_defs = re.findall(
+        r"\b(?:abbrev|def)\s+([A-Za-z_][A-Za-z0-9_']*)[^\n]*:=\s*([^\n]*)",
+        alias_source,
+    )
+    # Propagate direct aliases (`abbrev Op₂ := Op`) to a fixed point once per file.
+    changed = True
+    while changed:
+        changed = False
+        for alias, rhs in all_alias_defs:
+            if alias not in aliases and any(re.search(rf"\b{re.escape(old)}\b", rhs) for old in aliases):
+                aliases.add(alias)
+                changed = True
+
     i = 0
-    n = len(lines)
+    n = len( lines )
     while i < n:
         raw_line = lines[i]
         line_clean = raw_line.split("--")[0].strip()
@@ -1744,24 +1781,9 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
             full_header = " ".join(decl_lines)
 
             # Check if declaration involves operator carriers
-            alias_source = "\n".join(lines)
-            aliases = set(re.findall(
-                r"\b(?:abbrev|def)\s+([A-Za-z_][A-Za-z0-9_']*)[^\n]*:=\s*[^\n]*\bMatrix\b",
-                alias_source,
-            ))
-            # Propagate direct aliases (`abbrev Op₂ := Op`) to a fixed point.
-            changed = True
-            while changed:
-                changed = False
-                for alias, rhs in re.findall(
-                    r"\b(?:abbrev|def)\s+([A-Za-z_][A-Za-z0-9_']*)[^\n]*:=\s*([^\n]*)",
-                    alias_source,
-                ):
-                    if alias not in aliases and any(re.search(rf"\b{re.escape(old)}\b", rhs) for old in aliases):
-                        aliases.add(alias)
-                        changed = True
             alias_used = any(re.search(rf"\b{re.escape(alias)}\b", full_header) for alias in aliases)
-            prior_variables = _prior_variable_binders("\n".join(lines[:i]))
+            prior_variables = _prior_variable_binders("\n".join(clean_lines[:i]), already_clean=True)
+            prior_variable_names = {name for name, _ in prior_variables}
             ambient_operator_names = {
                 name
                 for name, binder_type in prior_variables
@@ -1813,7 +1835,7 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
             )
             scalar_projection_shadowed = any(
                 re.search(rf"[({{⦃]\s*{name}\s*:", header_before_assign)
-                or _has_prior_variable_binder("\n".join(lines[:i]), name)
+                or name in prior_variable_names
                 for name in ("innerProduct", "dotProduct")
             )
             scalar_projection = bool(

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
@@ -43,7 +48,7 @@ variable {R : Type*} [CommRing R]
 lemma ext_h3 (X Y : H3Zorn R)
     (h1 : X.α₁ = Y.α₁) (h2 : X.α₂ = Y.α₂) (h3 : X.α₃ = Y.α₃)
     (ha : X.a = Y.a) (hb : X.b = Y.b) (hc : X.c = Y.c) : X = Y := by
-  cases X; cases Y; congr
+  cases X; cases Y; cases h1; cases h2; cases h3; cases ha; cases hb; cases hc; rfl
 
 noncomputable instance : Add (H3Zorn R) where
   add X Y := ⟨X.α₁ + Y.α₁, X.α₂ + Y.α₂, X.α₃ + Y.α₃,
@@ -493,6 +498,131 @@ noncomputable def U (X Y : H3Zorn R) : H3Zorn R :=
 /-- The triple product {X, Y, Z} = T(X, Y, Z) = U_{X,Z}(Y). -/
 noncomputable def T (X Y Z : H3Zorn R) : H3Zorn R :=
   U (X + Z) Y - U X Y - U Z Y
+
+/-!
+### 3-Generation Diagonal Cartan Kernel & 27D Quadratic Jordan Laplace–Mellin Transform
+-/
+
+/-- **3-Generation Diagonal Cartan / Laplace–Mellin Kernel (`diagCartan lam₁ lam₂ lam₃`)** in `H3Zorn R`. -/
+noncomputable def diagCartan (lam₁ lam₂ lam₃ : R) : H3Zorn R :=
+  { α₁ := lam₁
+    α₂ := lam₂
+    α₃ := lam₃
+    a := ZornVectorMatrix.zero
+    b := ZornVectorMatrix.zero
+    c := ZornVectorMatrix.zero }
+
+/-- Quadratic adjoint of a diagonal Cartan kernel in `H3Zorn R`. -/
+@[simp] theorem adjointQuad_diagCartan (lam₁ lam₂ lam₃ : R) :
+    adjointQuad (diagCartan lam₁ lam₂ lam₃) =
+      diagCartan (lam₂ * lam₃) (lam₁ * lam₃) (lam₁ * lam₂) := by
+  apply ext_h3
+  · simp [adjointQuad, diagCartan, ZornVectorMatrix.norm, ZornVectorMatrix.zero, ZornVec3.dot]
+  · simp [adjointQuad, diagCartan, ZornVectorMatrix.norm, ZornVectorMatrix.zero, ZornVec3.dot]
+  · simp [adjointQuad, diagCartan, ZornVectorMatrix.norm, ZornVectorMatrix.zero, ZornVec3.dot]
+  · ext i <;>
+      simp [adjointQuad, diagCartan, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+            ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.mul,
+            ZornVectorMatrix.conj, ZornVectorMatrix.zero, ZornVec3.dot, ZornVec3.cross]
+  · ext i <;>
+      simp [adjointQuad, diagCartan, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+            ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.mul,
+            ZornVectorMatrix.conj, ZornVectorMatrix.zero, ZornVec3.dot, ZornVec3.cross]
+  · ext i <;>
+      simp [adjointQuad, diagCartan, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+            ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.mul,
+            ZornVectorMatrix.conj, ZornVectorMatrix.zero, ZornVec3.dot, ZornVec3.cross]
+
+/-- Bilinear trace pairing against a diagonal Cartan kernel in `H3Zorn R`. -/
+@[simp] theorem traceBilin_diagCartan_left (lam₁ lam₂ lam₃ : R) (Y : H3Zorn R) :
+    traceBilin (diagCartan lam₁ lam₂ lam₃) Y =
+      lam₁ * Y.α₁ + lam₂ * Y.α₂ + lam₃ * Y.α₃ := by
+  simp [traceBilin, diagCartan, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+
+/-- Freudenthal cross product against a diagonal Cartan kernel in `H3Zorn R`. -/
+@[simp] theorem crossProduct_diagCartan_left (d₁ d₂ d₃ : R) (Y : H3Zorn R) :
+    crossProduct (diagCartan d₁ d₂ d₃) Y =
+      { α₁ := d₂ * Y.α₃ + d₃ * Y.α₂
+        α₂ := d₁ * Y.α₃ + d₃ * Y.α₁
+        α₃ := d₁ * Y.α₂ + d₂ * Y.α₁
+        a := ZornVectorMatrix.neg (ZornVectorMatrix.smul d₃ Y.a)
+        b := ZornVectorMatrix.neg (ZornVectorMatrix.smul d₁ Y.b)
+        c := ZornVectorMatrix.neg (ZornVectorMatrix.smul d₂ Y.c) } := by
+  rw [crossProduct, adjointQuad_diagCartan]
+  simp only [add_readback, sub_readback, diagCartan, ZornVectorMatrix.zero_add]
+  apply ext_h3
+  · simp [adjointQuad, ZornVectorMatrix.norm]; ring
+  · simp [adjointQuad, ZornVectorMatrix.norm]; ring
+  · simp [adjointQuad, ZornVectorMatrix.norm]; ring
+  · ext i <;>
+      (simp [adjointQuad, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+             ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.zero]; ring)
+  · ext i <;>
+      (simp [adjointQuad, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+             ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.zero]; ring)
+  · ext i <;>
+      (simp [adjointQuad, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+             ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.zero]; ring)
+
+/-- **27D Exceptional Jordan Algebra `H₃(𝕆_s)` 6-Sector Peirce Laplace–Mellin Transform & Semigroup Law**:
+    With zero hypotheses on `H3Zorn R`:
+    - **Quadratic Adjoint & Cubic Norm of the Cartan Kernel**:
+      `adjointQuad (diagCartan lam₁ lam₂ lam₃) = diagCartan (lam₂ * lam₃) (lam₁ * lam₃) (lam₁ * lam₂)` and
+      `normCubic (diagCartan lam₁ lam₂ lam₃) = lam₁ * lam₂ * lam₃`.
+    - **Exact 6-Sector Peirce Laplace–Mellin Scaling Formula**:
+      For any 27D element `X = ⟨α₁, α₂, α₃, a, b, c⟩ : H3Zorn R`, the quadratic Jordan operator
+      `U (diagCartan lam₁ lam₂ lam₃) X` scales the 3 diagonal Peirce-`1` sectors by `(lam₁², lam₂², lam₃²)`
+      and scales the 3 off-diagonal 8D octonionic Peirce-`1/2` generations `(a, b, c)` by
+      `(lam₁ * lam₂, lam₂ * lam₃, lam₁ * lam₃)`:
+      `U (diagCartan lam₁ lam₂ lam₃) X = ⟨lam₁² * α₁, lam₂² * α₂, lam₃² * α₃, (lam₁ * lam₂) • a, (lam₂ * lam₃) • b, (lam₁ * lam₃) • c⟩`!
+    - **Exact 27D Quadratic Jordan Laplace–Mellin Semigroup Law**:
+      `U (diagCartan lam₁ lam₂ lam₃) (U (diagCartan mu₁ mu₂ mu₃) X) = U (diagCartan (lam₁ * mu₁) (lam₂ * mu₂) (lam₃ * mu₃)) X`! -/
+theorem diagCartan_quadratic_U_peirce_laplace_mellin_and_semigroup
+    (lam₁ lam₂ lam₃ mu₁ mu₂ mu₃ : R) (X : H3Zorn R) :
+    adjointQuad (diagCartan lam₁ lam₂ lam₃) =
+      diagCartan (lam₂ * lam₃) (lam₁ * lam₃) (lam₁ * lam₂) ∧
+    normCubic (diagCartan lam₁ lam₂ lam₃) = lam₁ * lam₂ * lam₃ ∧
+    U (diagCartan lam₁ lam₂ lam₃) X =
+      { α₁ := lam₁ * lam₁ * X.α₁
+        α₂ := lam₂ * lam₂ * X.α₂
+        α₃ := lam₃ * lam₃ * X.α₃
+        a := ZornVectorMatrix.smul (lam₁ * lam₂) X.a
+        b := ZornVectorMatrix.smul (lam₂ * lam₃) X.b
+        c := ZornVectorMatrix.smul (lam₁ * lam₃) X.c } ∧
+    U (diagCartan lam₁ lam₂ lam₃) (U (diagCartan mu₁ mu₂ mu₃) X) =
+      U (diagCartan (lam₁ * mu₁) (lam₂ * mu₂) (lam₃ * mu₃)) X := by
+  have hU : ∀ (l₁ l₂ l₃ : R) (Y : H3Zorn R),
+      U (diagCartan l₁ l₂ l₃) Y =
+        { α₁ := l₁ * l₁ * Y.α₁
+          α₂ := l₂ * l₂ * Y.α₂
+          α₃ := l₃ * l₃ * Y.α₃
+          a := ZornVectorMatrix.smul (l₁ * l₂) Y.a
+          b := ZornVectorMatrix.smul (l₂ * l₃) Y.b
+          c := ZornVectorMatrix.smul (l₁ * l₃) Y.c } := by
+    intro l₁ l₂ l₃ Y
+    rw [U, traceBilin_diagCartan_left, adjointQuad_diagCartan, crossProduct_diagCartan_left,
+        smul_readback, sub_readback]
+    apply ext_h3
+    · dsimp [diagCartan]; ring
+    · dsimp [diagCartan]; ring
+    · dsimp [diagCartan]; ring
+    · ext i <;> simp [diagCartan, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+                      ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.zero]
+    · ext i <;> simp [diagCartan, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+                      ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.zero]
+    · ext i <;> simp [diagCartan, ZornVectorMatrix.sub, ZornVectorMatrix.add,
+                      ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.zero]
+  refine ⟨adjointQuad_diagCartan lam₁ lam₂ lam₃, ?_, hU lam₁ lam₂ lam₃ X, ?_⟩
+  · simp [normCubic, diagCartan, ZornVectorMatrix.norm, ZornVectorMatrix.trace,
+          ZornVectorMatrix.mul, ZornVectorMatrix.zero, ZornVec3.dot, ZornVec3.cross]
+  · rw [hU mu₁ mu₂ mu₃ X, hU lam₁ lam₂ lam₃, hU (lam₁ * mu₁) (lam₂ * mu₂) (lam₃ * mu₃) X]
+    apply ext_h3
+    · dsimp; ring
+    · dsimp; ring
+    · dsimp; ring
+    · ext i <;> (simp [ZornVectorMatrix.smul]; ring)
+    · ext i <;> (simp [ZornVectorMatrix.smul]; ring)
+    · ext i <;> (simp [ZornVectorMatrix.smul]; ring)
 
 /-!
 The remaining Jordan-product and derivation-closure claims are intentionally

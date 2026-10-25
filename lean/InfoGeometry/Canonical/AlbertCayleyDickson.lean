@@ -1293,17 +1293,20 @@ theorem orientability_and_flow_clifford_casimir_onshell (α β γ : F) :
     - **Affine Wavelet Semigroup Law**:
       `affineWaveletGen lam₁ mu₁ t₁ * affineWaveletGen lam₂ mu₂ t₂ = affineWaveletGen (lam₁ * lam₂) (mu₁ * mu₂) (lam₁ * t₂ + t₁ * mu₂)`.
     - **Gauss–Bruhat `L D U` Trifactorization**:
-      `expLowerNil s₁ * hyperbolicKernel lam₁ mu₁ * expUpperNil t₁ = !![lam₁, lam₁ * t₁; lam₁ * s₁, lam₁ * s₁ * t₁ + mu₁]`.
+      `expLowerNil s₁ * hyperbolicKernel lam₁ mu₁ * expUpperNil t₁ = !![lam₁, lam₁ * t₁; lam₁ * s₁, lam₁ * s₁ * t₁ + mu₁]` and
+      `expLowerNil c * hyperbolicKernel 1 (d - b * c) * expUpperNil b = !![1, b; c, d]`.
 -/
 theorem expUpperNil_expLowerNil_mul_and_affine_wavelet_semigroup
-    (lam₁ mu₁ t₁ lam₂ mu₂ t₂ s₁ s₂ : F) :
+    (lam₁ mu₁ t₁ lam₂ mu₂ t₂ s₁ s₂ b c d : F) :
     expUpperNil t₁ * expUpperNil t₂ = expUpperNil (t₁ + t₂) ∧
     expLowerNil s₁ * expLowerNil s₂ = expLowerNil (s₁ + s₂) ∧
     affineWaveletGen lam₁ mu₁ t₁ * affineWaveletGen lam₂ mu₂ t₂ =
       affineWaveletGen (lam₁ * lam₂) (mu₁ * mu₂) (lam₁ * t₂ + t₁ * mu₂) ∧
     expLowerNil s₁ * hyperbolicKernel lam₁ mu₁ * expUpperNil t₁ =
-      (!![lam₁, lam₁ * t₁; lam₁ * s₁, lam₁ * s₁ * t₁ + mu₁] : SplitQuaternion F) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
+      (!![lam₁, lam₁ * t₁; lam₁ * s₁, lam₁ * s₁ * t₁ + mu₁] : SplitQuaternion F) ∧
+    expLowerNil c * hyperbolicKernel 1 (d - b * c) * expUpperNil b =
+      (!![1, b; c, d] : SplitQuaternion F) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · dsimp [expUpperNil]
     rw [← peircePlus_add_peirceMinus]
     ext i j; fin_cases i <;> fin_cases j <;>
@@ -1315,6 +1318,10 @@ theorem expUpperNil_expLowerNil_mul_and_affine_wavelet_semigroup
   · dsimp [affineWaveletGen, hyperbolicKernel]
     ext i j; fin_cases i <;> fin_cases j <;>
     · simp [peircePlus, peirceMinus, peirceSeedD]; try ring
+  · dsimp [expLowerNil, expUpperNil, hyperbolicKernel]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]; try ring
   · dsimp [expLowerNil, expUpperNil, hyperbolicKernel]
     rw [← peircePlus_add_peirceMinus]
     ext i j; fin_cases i <;> fin_cases j <;>
@@ -1343,6 +1350,186 @@ theorem walsh_hadamard_peirce_fourier_inversion (X : SplitQuaternion F) :
     conv_rhs => rw [eq_eta X]
     ext i j; fin_cases i <;> fin_cases j <;>
     · simp [peircePlus, peirceMinus]; try ring
+
+/-- **12. Universal Associative-Ring Walsh–Hadamard Grading Completeness & Orientability–Flow Casimir Law**:
+    In ANY associative ring `A` (with zero hypotheses on `Γ, Q, J, X, D₁, D₂, N₁, N₂ : A`!):
+    - **4-Sector Walsh–Hadamard Completeness**:
+      `(1 + Γ)X(1 + Γ) + (1 - Γ)X(1 - Γ) + (1 + Γ)X(1 - Γ) + (1 - Γ)X(1 + Γ) = 4 • X`.
+    - **Block-Diagonal (Grade `0`) vs. Off-Diagonal (Grade `±1`) Separation**:
+      `(1 + Γ)X(1 + Γ) + (1 - Γ)X(1 - Γ) = 2 • (X + Γ X Γ)` and
+      `(1 + Γ)X(1 - Γ) + (1 - Γ)X(1 + Γ) = 2 • (X - Γ X Γ)`.
+    - **Signed Chiral Grading Commutator**:
+      `(1 + Γ)X(1 - Γ) - (1 - Γ)X(1 + Γ) = 2 • (Γ X - X Γ)`.
+    - **Universal Orientability–Flow–Wheel Clifford Casimir Identity**:
+      `(Γ + Q + J)² - (Γ² + Q² + J²) = {Γ, Q} + {Γ, J} + {Q, J}`.
+    - **Universal Affine Wavelet Upper-Borel Product Decomposition**:
+      `(D₁ + N₁)(D₂ + N₂) - (D₁ D₂ + (D₁ N₂ + N₁ D₂)) = N₁ N₂`. -/
+theorem universal_ring_walsh_hadamard_and_orientability_flow_casimir
+    (Γ Q J X D₁ D₂ N₁ N₂ : A) :
+    (1 + Γ) * X * (1 + Γ) + (1 - Γ) * X * (1 - Γ) +
+      (1 + Γ) * X * (1 - Γ) + (1 - Γ) * X * (1 + Γ) = (4 : ℕ) • X ∧
+    (1 + Γ) * X * (1 + Γ) + (1 - Γ) * X * (1 - Γ) =
+      (2 : ℕ) • (X + Γ * X * Γ) ∧
+    (1 + Γ) * X * (1 - Γ) + (1 - Γ) * X * (1 + Γ) =
+      (2 : ℕ) • (X - Γ * X * Γ) ∧
+    (1 + Γ) * X * (1 - Γ) - (1 - Γ) * X * (1 + Γ) =
+      (2 : ℕ) • (Γ * X - X * Γ) ∧
+    (Γ + Q + J) * (Γ + Q + J) - (Γ * Γ + Q * Q + J * J) =
+      (Γ * Q + Q * Γ) + (Γ * J + J * Γ) + (Q * J + J * Q) ∧
+    (D₁ + N₁) * (D₂ + N₂) - (D₁ * D₂ + (D₁ * N₂ + N₁ * D₂)) = N₁ * N₂ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> noncomm_ring
+
+/-!
+### Gauss–Bruhat–Harish-Chandra Trifactor Flow (`trifactorFlow`), Schur Reconstruction, & Two-Sided Loxodromic Twin-Wave Kernel
+-/
+
+/-- **Nilpotent–Idempotent Trifactor Flow (`trifactorFlow β λ μ α`)**:
+    `(1 + β • B) * (λ • P_+ + μ • P_-) * (1 + α • d) = !![λ, λ * α; λ * β, μ + λ * α * β]`. -/
+def trifactorFlow (β lam mu α : F) : SplitQuaternion F :=
+  (1 + β • peirceSeedB) * hyperbolicKernel lam mu * (1 + α • peirceSeedD)
+
+/-- **Reversed Trifactor Inverse Flow (`trifactorFlowInv α invLam invMu β`)**:
+    `(1 - α • d) * (invLam • P_+ + invMu • P_-) * (1 - β • B)`. -/
+def trifactorFlowInv (α invLam invMu β : F) : SplitQuaternion F :=
+  (1 - α • peirceSeedD) * hyperbolicKernel invLam invMu * (1 - β • peirceSeedB)
+
+/-- **Affine Wavelet Scale–Translation Operator (`waveletOp a b = !![a, b; 0, 1]`)**:
+    Combines Mellin scale dilation `D(a, 1)` with nilpotent translation `b • peirceSeedD`. -/
+def waveletOp (a b : F) : SplitQuaternion F :=
+  hyperbolicKernel a 1 + b • peirceSeedD
+
+/-- **Loxodromic Laplace–Fourier Kernel (`loxodromicKernel λ μ c s = D(λ, μ) * (c • 1 + s • J)`)**. -/
+def loxodromicKernel (lam mu c s : F) : SplitQuaternion F :=
+  hyperbolicKernel lam mu * (c • (1 : SplitQuaternion F) + s • wheelJ)
+
+/-- **Backward Twin Loxodromic Kernel (`loxodromicTwinKernel c s invLam invMu = (c • 1 - s • J) * D(invLam, invMu)`)**. -/
+def loxodromicTwinKernel (c s invLam invMu : F) : SplitQuaternion F :=
+  (c • (1 : SplitQuaternion F) - s • wheelJ) * hyperbolicKernel invLam invMu
+
+/-- **13. Trifactor Casimir On-Shell Invariance, Two-Sided Inversion, Wavelet Semigroup, & Exact Schur Reconstruction**:
+    With zero hypotheses:
+    - **Casimir On-Shell Determinant**: `det (trifactorFlow β λ μ α) = λ * μ` (independent of `α, β`!).
+    - **Exact Reversed Trifactor Inverse (`u, v : Fˣ`)**:
+      `trifactorFlow β u v α * trifactorFlowInv α u⁻¹ v⁻¹ β = 1`.
+    - **Affine Wavelet Semigroup Law**: `waveletOp a₁ b₁ * waveletOp a₂ b₂ = waveletOp (a₁ * a₂) (b₁ + a₁ * b₂)`.
+    - **Universal Schur Reconstruction (`u : Fˣ`)**:
+      Every matrix `!![u, x₀₁; x₁₀, x₁₁]` equals `trifactorFlow (u⁻¹ * x₁₀) u (x₁₁ - x₁₀ * u⁻¹ * x₀₁) (u⁻¹ * x₀₁)`! -/
+theorem trifactorFlow_casimir_wavelet_and_schur_reconstruction
+    (β lam mu α a₁ b₁ a₂ b₂ x₀₁ x₁₀ x₁₁ : F) (u v : Fˣ) :
+    Matrix.det (trifactorFlow β lam mu α) = lam * mu ∧
+    trifactorFlow β (u : F) (v : F) α *
+      trifactorFlowInv α (↑u⁻¹ : F) (↑v⁻¹ : F) β = 1 ∧
+    waveletOp a₁ b₁ * waveletOp a₂ b₂ = waveletOp (a₁ * a₂) (b₁ + a₁ * b₂) ∧
+    trifactorFlow (x₁₀ * (↑u⁻¹ : F)) (u : F)
+      (x₁₁ - x₁₀ * (↑u⁻¹ : F) * x₀₁) ((↑u⁻¹ : F) * x₀₁) =
+      !![(u : F), x₀₁; x₁₀, x₁₁] := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · dsimp [trifactorFlow, hyperbolicKernel]
+    rw [← peircePlus_add_peirceMinus]
+    simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB, Matrix.det_fin_two]; ring
+  · have h_d : ((1 : SplitQuaternion F) + α • peirceSeedD) * (1 - α • peirceSeedD) = 1 := by
+      rw [← peircePlus_add_peirceMinus]
+      ext i j; fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceMinus, peirceSeedD]
+    have h_B : ((1 : SplitQuaternion F) + β • peirceSeedB) * (1 - β • peirceSeedB) = 1 := by
+      rw [← peircePlus_add_peirceMinus]
+      ext i j; fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceMinus, peirceSeedB]
+    have h_D : hyperbolicKernel (u : F) (v : F) *
+               hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F) = 1 := by
+      rw [← peircePlus_add_peirceMinus]
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [hyperbolicKernel, peircePlus, peirceMinus, Units.mul_inv]
+    dsimp [trifactorFlow, trifactorFlowInv]
+    calc
+      (1 + β • peirceSeedB) * hyperbolicKernel (u : F) (v : F) * (1 + α • peirceSeedD) *
+          ((1 - α • peirceSeedD) * hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F) * (1 - β • peirceSeedB)) =
+        (1 + β • peirceSeedB) * (hyperbolicKernel (u : F) (v : F) *
+          (((1 + α • peirceSeedD) * (1 - α • peirceSeedD)) *
+          hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F))) * (1 - β • peirceSeedB) := by
+        simp only [mul_assoc]
+      _ = (1 + β • peirceSeedB) * (1 - β • peirceSeedB) := by
+        rw [h_d, one_mul, h_D, mul_one]
+      _ = 1 := h_B
+  · dsimp [waveletOp, hyperbolicKernel]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD]; try ring
+  · dsimp [trifactorFlow, hyperbolicKernel]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]; try ring
+
+/-- **14. Loxodromic Twin-Wave Kernel: Casimir Determinant, Cartan Grading Flip, & Twin Inversion**:
+    With zero hypotheses:
+    - **Loxodromic Casimir Factorization**: `det (loxodromicKernel λ μ c s) = (λ * μ) * (c * c + s * s)`.
+    - **Cartan Grading Conjugation**: `Γ * loxodromicKernel λ μ c s * Γ = loxodromicKernel λ μ c (-s)`.
+    - **Forward–Backward Twin Wave Inversion (`u, v : Fˣ`)**:
+      `loxodromicKernel u v c s * loxodromicTwinKernel c s u⁻¹ v⁻¹ = (c * c + s * s) • 1`! -/
+theorem loxodromicKernel_casimir_grading_and_twin_inversion
+    (lam mu c s : F) (u v : Fˣ) :
+    Matrix.det (loxodromicKernel lam mu c s) = (lam * mu) * (c * c + s * s) ∧
+    polarizationGamma * loxodromicKernel lam mu c s * polarizationGamma =
+      loxodromicKernel lam mu c (-s) ∧
+    loxodromicKernel (u : F) (v : F) c s *
+      loxodromicTwinKernel c s (↑u⁻¹ : F) (↑v⁻¹ : F) =
+      (c * c + s * s) • (1 : SplitQuaternion F) := by
+  have h_grad : polarizationGamma * loxodromicKernel lam mu c s * polarizationGamma =
+      loxodromicKernel lam mu c (-s) := by
+    dsimp [loxodromicKernel, polarizationGamma, hyperbolicKernel, wheelJ]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+    · simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]; try ring
+  refine ⟨?_, h_grad, ?_⟩
+  · dsimp [loxodromicKernel, hyperbolicKernel, wheelJ]
+    rw [← peircePlus_add_peirceMinus]
+    simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB, Matrix.det_fin_two]; ring
+  · have h_R : (c • (1 : SplitQuaternion F) + s • wheelJ) *
+               (c • (1 : SplitQuaternion F) - s • wheelJ) =
+               (c * c + s * s) • (1 : SplitQuaternion F) := by
+      dsimp [wheelJ]
+      rw [← peircePlus_add_peirceMinus]
+      ext i j; fin_cases i <;> fin_cases j <;>
+      · simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]; try ring
+    have h_D : hyperbolicKernel (u : F) (v : F) *
+               hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F) = 1 := by
+      rw [← peircePlus_add_peirceMinus]
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [hyperbolicKernel, peircePlus, peirceMinus, Units.mul_inv]
+    dsimp [loxodromicKernel, loxodromicTwinKernel]
+    calc
+      hyperbolicKernel (u : F) (v : F) * (c • 1 + s • wheelJ) *
+          ((c • 1 - s • wheelJ) * hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F)) =
+        hyperbolicKernel (u : F) (v : F) *
+          ((c • 1 + s • wheelJ) * (c • 1 - s • wheelJ)) *
+          hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F) := by simp only [mul_assoc]
+      _ = (c * c + s * s) • (hyperbolicKernel (u : F) (v : F) *
+          hyperbolicKernel (↑u⁻¹ : F) (↑v⁻¹ : F)) := by
+        rw [h_R, Matrix.mul_smul, Matrix.smul_mul, mul_one]
+      _ = (c * c + s * s) • 1 := by rw [h_D]
+
+/-- **15. Porter's Riccati Operator on `tracelessFlowGen α β γ` & `trifactorFlow β λ μ α`, and the `(2, 1)` Casimir Discriminant**:
+    With zero hypotheses:
+    1. On `M = tracelessFlowGen α β γ = α • Γ + β • Q + γ • J`,
+       `porterRiccati M x = -(β - γ) * (x * x) + (2 * α) * x + (β + γ)`.
+    2. Its quadratic discriminant `(2 * α)² + 4 * (β - γ) * (β + γ)` equals
+       `4 * (α * α + β * β - γ * γ)` — exactly 4 times the `(2, 1)` Casimir mass-shell invariant!
+    3. On `trifactorFlow β lam mu α = U_-(β) * D(lam, mu) * U_+(α)`,
+       `porterRiccati (trifactorFlow β lam mu α) x = -β * lam * (x * x) + (lam - mu - β * lam * α) * x + lam * α`! -/
+theorem porterRiccati_tracelessFlowGen_and_casimir_discriminant
+    (α β γ lam mu x : F) :
+    porterRiccati (tracelessFlowGen α β γ) x =
+      -(β - γ) * (x * x) + (2 * α) * x + (β + γ) ∧
+    (2 * α) * (2 * α) + 4 * (β - γ) * (β + γ) =
+      4 * (α * α + β * β - γ * γ) ∧
+    porterRiccati (trifactorFlow β lam mu α) x =
+      -β * lam * (x * x) + (lam - mu - β * lam * α) * x + lam * α := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [porterRiccati, tracelessFlowGen, polarizationGamma,
+          velocityQ, wheelJ, peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+    ring
+  · ring
+  · dsimp [porterRiccati, trifactorFlow, hyperbolicKernel]
+    rw [← peircePlus_add_peirceMinus]
+    simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+    ring
 
 end PorterNoncommutativeRiccatiAndLoxodromes
 

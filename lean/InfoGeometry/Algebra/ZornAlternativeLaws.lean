@@ -2476,4 +2476,393 @@ theorem zorn_gauss_bruhat_trifactor_and_torsion_residual
           InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
     ring
 
+/-- **Octonionic Hyperbolic Flow Velocity (`zornVelocityQ v w = ⟨0, v, w, 0⟩`)**. -/
+def zornVelocityQ (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, v, w, 0⟩
+
+/-- **Octonionic Symplectic Wheel (`zornWheelJ v w = ⟨0, v, -w, 0⟩`)**. -/
+def zornWheelJ (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, v, fun i => -w i, 0⟩
+
+/-- **General 8D Traceless Octonionic Flow Generator (`zornTracelessFlowGen α v w = ⟨α, v, w, -α⟩`)**. -/
+def zornTracelessFlowGen (α : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨α, v, w, -α⟩
+
+/-- **Octonionic Affine Wavelet Generator (`zornAffineWavelet lam mu v = ⟨lam, v, 0, mu⟩`)**. -/
+def zornAffineWavelet (lam mu : R) (v : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨lam, v, fun _ => 0, mu⟩
+
+/-- **4. Octonionic Orientability–Flow–Wheel Clifford Casimir On-Shell & Affine Wavelet Semigroup**:
+    With zero hypotheses on `ZornVectorMatrix R`:
+    - **Chiral Orientability Factorization & Anticommutation**:
+      `zornGamma * zornVelocityQ v w = zornWheelJ v w`, `zornVelocityQ v w * zornGamma = -zornWheelJ v w`,
+      `zornGamma * zornWheelJ v w = zornVelocityQ v w`, and `zornWheelJ v w * zornGamma = -zornVelocityQ v w`.
+    - **Universal Octonionic `(4, 4)` Casimir Mass-Shell Law**:
+      `zornVelocityQ v w * zornVelocityQ v w = (v ⋅ w) • 1`,
+      `zornWheelJ v w * zornWheelJ v w = -(v ⋅ w) • 1`, and
+      `zornTracelessFlowGen α v w * zornTracelessFlowGen α v w = (α² + v ⋅ w) • 1`!
+    - **Octonionic Affine Wavelet Semigroup with Diquark Cross-Product Cocycle**:
+      `zornAffineWavelet lam₁ mu₁ v₁ * zornAffineWavelet lam₂ mu₂ v₂ = ⟨lam₁ * lam₂, lam₁ • v₂ + mu₂ • v₁, v₁ × v₂, mu₁ * mu₂⟩`! -/
+theorem zorn_orientability_flow_clifford_casimir_and_affine_wavelet
+    (α lam₁ mu₁ lam₂ mu₂ : R) (v w v₁ v₂ : ZornVec3 R) :
+    zornGamma * zornVelocityQ v w = zornWheelJ v w ∧
+    zornVelocityQ v w * zornGamma = -zornWheelJ v w ∧
+    zornGamma * zornWheelJ v w = zornVelocityQ v w ∧
+    zornWheelJ v w * zornGamma = -zornVelocityQ v w ∧
+    zornVelocityQ v w * zornVelocityQ v w = (ZornVec3.dot v w) • (one : ZornVectorMatrix R) ∧
+    zornWheelJ v w * zornWheelJ v w = (-(ZornVec3.dot v w)) • (one : ZornVectorMatrix R) ∧
+    zornTracelessFlowGen α v w * zornTracelessFlowGen α v w =
+      (α * α + ZornVec3.dot v w) • (one : ZornVectorMatrix R) ∧
+    zornAffineWavelet lam₁ mu₁ v₁ * zornAffineWavelet lam₂ mu₂ v₂ =
+      ⟨lam₁ * lam₂, fun i => lam₁ * v₂ i + v₁ i * mu₂, fun i => ZornVec3.cross v₁ v₂ i, mu₁ * mu₂⟩ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · ext
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.cross]; try ring)
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.dot]
+  · ext
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · ext
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornGamma, zornVelocityQ, zornWheelJ,
+               InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.cross]; try ring)
+    · simp [zornGamma, zornVelocityQ, zornWheelJ,
+            InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, neg, mul, ZornVec3.dot]
+  · ext
+    · simp [zornVelocityQ, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornVelocityQ, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornVelocityQ, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornVelocityQ, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · ext
+    · simp [zornWheelJ, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [zornWheelJ, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def,
+               mul, smul, neg, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornWheelJ, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def,
+               mul, smul, neg, ZornVec3.cross]; try ring)
+    · simp [zornWheelJ, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · ext
+    · simp [zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornTracelessFlowGen, one, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · ext
+    · simp [zornAffineWavelet, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornAffineWavelet, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornAffineWavelet, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornAffineWavelet, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+
+/-- Lower parabolic nilpotent exponential `U_-(w) = ⟨1, 0, w, 1⟩`. -/
+abbrev zornParabolicMinus (w : ZornVec3 R) : ZornVectorMatrix R := zornExpLowerNil w
+
+/-- Upper parabolic nilpotent exponential `U_+(v) = ⟨1, v, 0, 1⟩`. -/
+abbrev zornParabolicPlus (v : ZornVec3 R) : ZornVectorMatrix R := zornExpUpperNil v
+
+/-- **8D Octonionic Nilpotent–Idempotent Trifactor Flow (`zornTrifactorFlow w λ μ v`)**:
+    `(U_-(w) * D(λ, μ)) * U_+(v) = ⟨λ, λ • v, λ • w, μ + λ * (w ⋅ v)⟩`. -/
+noncomputable def zornTrifactorFlow (w : ZornVec3 R) (lam mu : R) (v : ZornVec3 R) : ZornVectorMatrix R :=
+  (zornParabolicMinus w * zornHyperbolicKernel lam mu) * zornParabolicPlus v
+
+/-- **5. Octonionic Trifactor Associativity (`[U_-(w), D(λ, μ), U_+(v)] = 0`), Casimir On-Shell Norm, & Universal Schur Reconstruction**:
+    Even though `ZornVectorMatrix R` is non-associative, for ALL `w, v : ZornVec3 R` and `λ, μ : R`:
+    1. **Zero Trifactor Associator**: `zornAssociator (zornParabolicMinus w) (zornHyperbolicKernel lam mu) (zornParabolicPlus v) = 0`!
+    2. **Explicit Coordinate Form**: `zornTrifactorFlow w lam mu v = ⟨lam, λ • v, λ • w, mu + lam * (w ⋅ v)⟩`.
+    3. **Casimir On-Shell Norm Invariance**: `norm (zornTrifactorFlow w lam mu v) = lam * mu`
+       (completely independent of the 6 nilpotent vector parameters `v, w`!).
+    4. **Universal Schur Reconstruction (`u : Rˣ`)**:
+       Every split-octonion `⟨u, v, w, b⟩` equals
+       `zornTrifactorFlow (u⁻¹ • w) u (b - u⁻¹ * (w ⋅ v)) (u⁻¹ • v)`! -/
+theorem zornTrifactorFlow_assoc_casimir_and_reconstruction
+    (w v : ZornVec3 R) (lam mu b : R) (u : Rˣ) :
+    zornAssociator (zornParabolicMinus w) (zornHyperbolicKernel lam mu) (zornParabolicPlus v) = 0 ∧
+    zornTrifactorFlow w lam mu v =
+      ⟨lam, fun i => lam * v i, fun i => lam * w i, mu + lam * ZornVec3.dot w v⟩ ∧
+    norm (zornTrifactorFlow w lam mu v) = lam * mu ∧
+    zornTrifactorFlow (fun i => (↑u⁻¹ : R) * w i) (u : R)
+      (b - (↑u⁻¹ : R) * ZornVec3.dot w v) (fun i => (↑u⁻¹ : R) * v i) =
+      ⟨(u : R), v, w, b⟩ := by
+  have h_form (w' v' : ZornVec3 R) (lam' mu' : R) :
+      zornTrifactorFlow w' lam' mu' v' =
+      ⟨lam', fun i => lam' * v' i, fun i => lam' * w' i, mu' + lam' * ZornVec3.dot w' v'⟩ := by
+    ext
+    · simp [zornTrifactorFlow, zornParabolicMinus, zornParabolicPlus,
+            zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornTrifactorFlow, zornParabolicMinus, zornParabolicPlus,
+               zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornTrifactorFlow, zornParabolicMinus, zornParabolicPlus,
+               zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornTrifactorFlow, zornParabolicMinus, zornParabolicPlus,
+            zornExpLowerNil, zornExpUpperNil, zornHyperbolicKernel,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  refine ⟨?_, h_form w v lam mu, ?_, ?_⟩
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+            zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+               zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+               zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.cross]; try ring)
+    · simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+            zornHyperbolicKernel, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · exact (zorn_gauss_bruhat_trifactor_and_torsion_residual lam mu v v w w v w).2.2.2
+  · rw [h_form]
+    ext
+    · rfl
+    · rename_i i
+      dsimp
+      rw [← _root_.mul_assoc, Units.mul_inv, _root_.one_mul]
+    · rename_i i
+      dsimp
+      rw [← _root_.mul_assoc, Units.mul_inv, _root_.one_mul]
+    · dsimp [ZornVec3.dot]
+      simp only [Fin.sum_univ_three]
+      calc
+        (b - (↑u⁻¹ : R) * (w 0 * v 0 + w 1 * v 1 + w 2 * v 2)) +
+          (u : R) *
+            ((↑u⁻¹ : R) * w 0 * ((↑u⁻¹ : R) * v 0) +
+             (↑u⁻¹ : R) * w 1 * ((↑u⁻¹ : R) * v 1) +
+             (↑u⁻¹ : R) * w 2 * ((↑u⁻¹ : R) * v 2)) =
+        b + ((u : R) * (↑u⁻¹ : R) - 1) * (↑u⁻¹ : R) *
+          (w 0 * v 0 + w 1 * v 1 + w 2 * v 2) := by ring
+      _ = b := by simp [Units.mul_inv]
+
+/-- **6. Universal 7D `(4, 3)` Casimir On-Shell & Exact 8D Klein–Gordon Propagation Law**:
+    For ANY 7D traceless split-octonion generator `M = zornTracelessFlowGen α v w` and ANY 8D state `X`:
+    1. **Casimir Mass-Shell Square**: `M * M = (α * α + v ⋅ w) • 1` (all cross-products cancel!).
+    2. **Exact Left & Right 8D Klein–Gordon Propagation**:
+       `M * (M * X) = (α * α + v ⋅ w) • X` and `(X * M) * M = (α * α + v ⋅ w) • X`!
+    3. **4D `Pin_+` Hyperbolic Sheet (`w = v`)**: `M(α, v, v)² = (α * α + v ⋅ v) • 1`.
+    4. **3D `SU(2)` Quaternion Sphere (`α = 0, w = -v`)**: `M(0, v, -v)² = -(v ⋅ v) • 1`! -/
+theorem zornTracelessFlowGen_casimir_onshell_and_klein_gordon
+    (α : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    zornTracelessFlowGen α v w * zornTracelessFlowGen α v w =
+      (α * α + ZornVec3.dot v w) • (one : ZornVectorMatrix R) ∧
+    zornTracelessFlowGen α v w * (zornTracelessFlowGen α v w * X) =
+      (α * α + ZornVec3.dot v w) • X ∧
+    (X * zornTracelessFlowGen α v w) * zornTracelessFlowGen α v w =
+      (α * α + ZornVec3.dot v w) • X ∧
+    zornTracelessFlowGen α v v * zornTracelessFlowGen α v v =
+      (α * α + ZornVec3.dot v v) • (one : ZornVectorMatrix R) ∧
+    zornTracelessFlowGen 0 v (-v) * zornTracelessFlowGen 0 v (-v) =
+      (-ZornVec3.dot v v) • (one : ZornVectorMatrix R) := by
+  have h_sq (α' : R) (v' w' : ZornVec3 R) :
+      zornTracelessFlowGen α' v' w' * zornTracelessFlowGen α' v' w' =
+      (α' * α' + ZornVec3.dot v' w') • (one : ZornVectorMatrix R) :=
+    (zorn_orientability_flow_clifford_casimir_and_affine_wavelet α' 0 0 0 0 v' w' v' w').2.2.2.2.2.2.1
+  have h_left_alt :
+      zornTracelessFlowGen α v w * (zornTracelessFlowGen α v w * X) =
+      (zornTracelessFlowGen α v w * zornTracelessFlowGen α v w) * X := by
+    have h0 := bundledAssociator_left_alt (zornTracelessFlowGen α v w) X
+    simp only [bundledAssociator, _root_.associator_apply] at h0
+    exact (sub_eq_zero.mp h0).symm
+  have h_right_alt :
+      (X * zornTracelessFlowGen α v w) * zornTracelessFlowGen α v w =
+      X * (zornTracelessFlowGen α v w * zornTracelessFlowGen α v w) := by
+    have h0 := bundledAssociator_right_alt X (zornTracelessFlowGen α v w)
+    simp only [bundledAssociator, _root_.associator_apply] at h0
+    exact sub_eq_zero.mp h0
+  refine ⟨h_sq α v w, ?_, ?_, h_sq α v v, ?_⟩
+  · rw [h_left_alt, h_sq α v w]
+    ext
+    · simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+              mul, smul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+              mul, smul, ZornVec3.cross]
+    · simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot]
+  · rw [h_right_alt, h_sq α v w]
+    ext
+    · simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               mul, smul, ZornVec3.cross]; try ring)
+    · simp [one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            mul, smul, ZornVec3.dot]; ring
+  · rw [h_sq 0 v (-v)]
+    ext
+    · simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def,
+            smul, neg, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def, smul, neg]
+    · rename_i i; fin_cases i <;>
+        simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def, smul, neg]
+    · simp [one, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_neg_def,
+            smul, neg, ZornVec3.dot, Fin.sum_univ_three]; try ring
+
+/-- **7. Exponential Diquark 2-Cocycle & Jackiw–WZW Nambu 3-Cocycle**:
+    For any upper nilpotent exponentials `U_i = zornExpUpperNil v_i` and lower nilpotent exponentials
+    `L_i = zornExpLowerNil w_i`:
+    1. **Jordan Average Recovers Abelian Addition**:
+       `U₁ * U₂ + U₂ * U₁ = (2 : R) • zornExpUpperNil (v₁ + v₂)`.
+    2. **Commutator Isolates the Diquark 2-Cocycle**:
+       `U₁ * U₂ - U₂ * U₁ = ⟨0, 0, (2 : R) • (v₁ × v₂), 0⟩`.
+    3. **Upper & Lower Group Associators Are the Jackiw–WZW Nambu 3-Cocycles**:
+       `zornAssociator U₁ U₂ U₃ = (-zornNambuDet v₁ v₂ v₃) • zornGamma` and
+       `zornAssociator L₁ L₂ L₃ = (-zornNambuDet w₁ w₂ w₃) • zornGamma`! -/
+theorem zornExpUpperNil_diquark_two_cocycle_and_wzw_three_cocycle
+    (v₁ v₂ v₃ w₁ w₂ w₃ : ZornVec3 R) :
+    zornExpUpperNil v₁ * zornExpUpperNil v₂ + zornExpUpperNil v₂ * zornExpUpperNil v₁ =
+      (2 : R) • zornExpUpperNil (v₁ + v₂) ∧
+    zornExpUpperNil v₁ * zornExpUpperNil v₂ - zornExpUpperNil v₂ * zornExpUpperNil v₁ =
+      ⟨0, 0, fun i => (2 : R) * ZornVec3.cross v₁ v₂ i, 0⟩ ∧
+    zornAssociator (zornExpUpperNil v₁) (zornExpUpperNil v₂) (zornExpUpperNil v₃) =
+      (-zornNambuDet v₁ v₂ v₃) • zornGamma ∧
+    zornAssociator (zornExpLowerNil w₁) (zornExpLowerNil w₂) (zornExpLowerNil w₃) =
+      (-zornNambuDet w₁ w₂ w₃) • zornGamma := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.dot]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.dot]; ring
+  · simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [zornExpUpperNil, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.dot]
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornExpUpperNil, zornGamma, zornNambuDet,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpUpperNil, zornGamma,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpUpperNil, zornGamma,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornExpUpperNil, zornGamma, zornNambuDet,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornExpLowerNil, zornGamma, zornNambuDet,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpLowerNil, zornGamma,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornExpLowerNil, zornGamma,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornExpLowerNil, zornGamma, zornNambuDet,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

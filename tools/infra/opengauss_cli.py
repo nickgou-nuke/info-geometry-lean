@@ -1957,6 +1957,317 @@ def generate_certification_audit(
     )
 
 
+@dataclass
+class WhnfTelescopeAudit:
+    source_file: str
+    theorem_declarations: List[str]
+    telescope_script: str
+    kernel_checked: bool = False
+    verification_status: str = "not_requested"
+    binder_records: List[Dict[str, Any]] = field(default_factory=list)
+    result_records: List[Dict[str, Any]] = field(default_factory=list)
+    violations: List[str] = field(default_factory=list)
+
+
+_WHNF_TELESCOPE_PREAMBLE = """open Lean Meta Elab Command Term
+
+namespace OpenGaussWhnfTelescope
+
+/-- Bounded shallow delta/beta reduction (fuel ≤ 4) that unfolds thin type aliases
+    without traversing or unfolding deep algebraic/colimit definitions across the DAG. -/
+private partial def shallowUnfold : Nat → Expr → MetaM Expr
+  | 0, e => return e.headBeta
+  | fuel + 1, e => do
+      let e' := e.headBeta
+      match ← unfoldDefinition? e' with
+      | some unfolded => shallowUnfold fuel unfolded
+      | none => return e'
+
+private partial def proofCarrier : Nat → Expr → MetaM Bool
+  | 0, _ => return true
+  | fuel + 1, ty => do
+      if ← isProp ty then return true
+      let reduced ← shallowUnfold 4 ty
+      if reduced.isAppOf ``Subtype then return true
+      if reduced.isAppOf ``PLift || reduced.isAppOf ``ULift then
+        return ← proofCarrier fuel reduced.getAppArgs.back!
+      match reduced with
+      | .forallE n domain body bi =>
+          if ← isProp domain then return true
+          withLocalDecl n bi domain fun x => proofCarrier fuel (body.instantiate1 x)
+      | _ => return false
+
+def auditDeclarationTelescope (declName : Name) : TermElabM Unit := do
+  let info ← getConstInfo declName
+  forallTelescope info.type fun xs resultType => do
+    let env ← getEnv
+    for i in [:xs.size] do
+      let fvar := xs[i]!
+      let decl ← getFVarLocalDecl fvar
+      let ty ← instantiateMVars decl.type
+      let prop ← isProp ty
+      let reduced ← shallowUnfold 4 ty
+      let isSubtype := reduced.isAppOf ``Subtype
+      let isProofLift ← if reduced.isAppOf ``PLift || reduced.isAppOf ``ULift then
+          proofCarrier 8 reduced
+        else pure false
+      let structureName :=
+        match reduced.getAppFn with
+        | .const name _ =>
+            if (Lean.getStructureInfo? env name).isSome then name.toString else ""
+        | _ => ""
+      let stableName :=
+        if decl.userName.isAnonymous || decl.userName.hasMacroScopes then
+          s!"_binder{i}"
+        else decl.userName.eraseMacroScopes.toString
+      logInfo (Json.mkObj [
+        ("tag", Json.str "OPENGAUSS_BINDER_TELESCOPE"),
+        ("declaration", Json.str declName.toString),
+        ("index", toJson i),
+        ("name", Json.str stableName),
+        ("isProp", toJson prop),
+        ("isSubtype", toJson isSubtype),
+        ("isProofLift", toJson isProofLift),
+        ("structure", Json.str structureName)
+      ]).compress
+    let resultIsNegation := resultType.isAppOf ``Not
+    let syntacticForall := resultType.isForall
+    let reducedResultType ← shallowUnfold 4 resultType
+    let whnfLeadingForall := (!resultIsNegation) && (!syntacticForall) && reducedResultType.isForall
+    logInfo (Json.mkObj [
+      ("tag", Json.str "OPENGAUSS_RESULT_TELESCOPE"),
+      ("declaration", Json.str declName.toString),
+      ("isProp", toJson (← isProp resultType)),
+      ("isNegation", toJson resultIsNegation),
+      ("hasHiddenWhnfForall", toJson whnfLeadingForall)
+    ]).compress
+
+end OpenGaussWhnfTelescope
+"""
+
+
+def generate_whnf_binder_telescope_script(
+    lean_file: Path,
+    repo_root: Optional[Path] = None,
+) -> WhnfTelescopeAudit:
+    """Generate a Lean 4 MetaM whnf binder and result-type telescope audit script."""
+    if repo_root is None:
+        repo_root = Path(__file__).resolve().parent.parent.parent
+    lean_path = Path(lean_file)
+    if not lean_path.is_file():
+        raise FileNotFoundError(f"Target Lean file not found: {lean_file}")
+
+    content = _strip_lean_comments_and_strings(
+        lean_path.read_text(encoding="utf-8", errors="replace")
+    )
+    scope_stack: list[tuple[str, Optional[str]]] = []
+    theorem_declarations: list[str] = []
+    namespace_pattern = re.compile(rf"^\s*namespace\s+({_LEAN_IDENT})\s*$")
+    end_pattern = re.compile(rf"^\s*end(?:\s+({_LEAN_IDENT}))?\s*(?:--.*)?$")
+    modifiers = r"(?:private|protected|noncomputable|unsafe|scoped|partial)"
+    thm_pattern = re.compile(
+        r"^\s*(?:(?:@\[[^\]]*\]\s*)*)"
+        rf"((?:{modifiers}\s+)*)"
+        rf"(theorem|lemma)\s+({_LEAN_IDENT})"
+    )
+    pending_private = False
+    for line in content.splitlines():
+        stripped_line = line.strip()
+        if stripped_line == "private":
+            pending_private = True
+            continue
+        if pending_private and (not stripped_line or stripped_line.startswith("@[") and stripped_line.endswith("]")):
+            continue
+        namespace_match = namespace_pattern.match(line)
+        if namespace_match:
+            pending_private = False
+            scope_stack.extend(
+                ("namespace", component)
+                for component in namespace_match.group(1).split(".")
+            )
+            continue
+        section_match = re.match(
+            rf"^\s*(?:noncomputable\s+)?section(?:\s+({_LEAN_IDENT}))?\s*$",
+            line,
+        )
+        if section_match:
+            pending_private = False
+            scope_stack.append(("section", section_match.group(1)))
+            continue
+        end_match = end_pattern.match(line)
+        if end_match:
+            pending_private = False
+            closing_name = end_match.group(1)
+            if closing_name is None:
+                if scope_stack:
+                    scope_stack.pop()
+            else:
+                closing_parts = closing_name.split(".")
+                last_named_scope = next(
+                    (
+                        index
+                        for index in range(len(scope_stack) - 1, -1, -1)
+                        if scope_stack[index][1] == closing_name
+                    ),
+                    None,
+                )
+                namespace_entries = [
+                    (index, name)
+                    for index, (kind, name) in enumerate(scope_stack)
+                    if kind == "namespace" and name is not None
+                ]
+                namespace_tail = namespace_entries[-len(closing_parts):]
+                if len(closing_parts) == 1 and last_named_scope is not None:
+                    del scope_stack[last_named_scope:]
+                elif [name for _, name in namespace_tail] == closing_parts:
+                    del scope_stack[namespace_tail[0][0]:]
+                elif last_named_scope is not None:
+                    del scope_stack[last_named_scope:]
+            continue
+        thm_match = thm_pattern.match(line)
+        if thm_match:
+            visibility_modifiers = thm_match.group(1) or ""
+            is_private = pending_private or bool(re.search(r"\bprivate\b", visibility_modifiers))
+            pending_private = False
+            if is_private:
+                continue
+            name = thm_match.group(3)
+            active_namespace = [
+                value for kind, value in scope_stack
+                if kind == "namespace" and value is not None
+            ]
+            theorem_declarations.append(
+                ".".join([*active_namespace, name]) if active_namespace else name
+            )
+        elif stripped_line:
+            pending_private = False
+
+    mod_path = _file_to_module_path(lean_path, repo_root)
+    lines: List[str] = [
+        "/-",
+        "Copyright (c) 2026 InfoGeometry Authors. All rights reserved.",
+        "Released under Apache 2.0 license as described in the file LICENSE.",
+        "Authors: InfoGeometry Engine Contributors",
+        "-/",
+        "",
+        "import Lean",
+        f"import {mod_path}",
+        "",
+        _WHNF_TELESCOPE_PREAMBLE.rstrip(),
+        "",
+    ]
+    for decl in theorem_declarations:
+        lines.append(
+            f"#eval Command.liftTermElabM do OpenGaussWhnfTelescope.auditDeclarationTelescope ``{decl}"
+        )
+    lines.append("")
+    return WhnfTelescopeAudit(
+        source_file=str(lean_path),
+        theorem_declarations=theorem_declarations,
+        telescope_script="\n".join(lines),
+    )
+
+
+def parse_whnf_telescope_output(output: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[str]]:
+    """Parse JSON records from OpenGaussWhnfTelescope output and flag violations."""
+    binder_records: List[Dict[str, Any]] = []
+    result_records: List[Dict[str, Any]] = []
+    violations: List[str] = []
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        if '"OPENGAUSS_' not in line:
+            continue
+        start = line.find("{")
+        end = line.rfind("}")
+        if start == -1 or end == -1 or end <= start:
+            continue
+        try:
+            payload = json.loads(line[start:end + 1])
+        except json.JSONDecodeError:
+            continue
+        tag = payload.get("tag")
+        decl = payload.get("declaration", "<unknown>")
+        if tag == "OPENGAUSS_BINDER_TELESCOPE":
+            binder_records.append(payload)
+            b_name = payload.get("name", "<binder>")
+            if payload.get("isSubtype") is True:
+                violations.append(
+                    f"{decl}: binder '{b_name}' reduces under whnf to Subtype (proof-bundling carrier)."
+                )
+            if payload.get("isProofLift") is True:
+                violations.append(
+                    f"{decl}: binder '{b_name}' reduces under whnf to PLift/ULift wrapping a Prop carrier."
+                )
+        elif tag == "OPENGAUSS_RESULT_TELESCOPE":
+            result_records.append(payload)
+            if payload.get("hasHiddenWhnfForall") is True:
+                violations.append(
+                    f"{decl}: result type after ':' unfolds under whnf to a hidden ∀/→ premise."
+                )
+    return binder_records, result_records, violations
+
+
+def verify_whnf_binder_telescope(
+    lean_file: Path,
+    *,
+    repo_root: Optional[Path] = None,
+) -> WhnfTelescopeAudit:
+    """Compile and evaluate the MetaM whnf binder/result telescope under the shared build lock."""
+    root = Path(repo_root) if repo_root is not None else canonical_repo_root()
+    audit = generate_whnf_binder_telescope_script(lean_file, repo_root=root)
+    module = _file_to_module_path(Path(lean_file), root)
+    if not audit.theorem_declarations:
+        audit.kernel_checked = True
+        audit.verification_status = "passed"
+        return audit
+
+    lock = acquire_build_lock(None, f"opengauss-telescope:{module}", block=True)
+    try:
+        build = subprocess.run(
+            ["lake", "build", module],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if build.returncode != 0:
+            audit.verification_status = "build_failed"
+            audit.violations.append((build.stdout + build.stderr)[-12000:])
+            return audit
+
+        with tempfile.TemporaryDirectory(prefix="opengauss-telescope-") as temp_dir:
+            script_path = Path(temp_dir) / "WhnfTelescopeAudit.lean"
+            script_path.write_text(audit.telescope_script, encoding="utf-8")
+            checked = subprocess.run(
+                ["lake", "env", "lean", str(script_path)],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        output = checked.stdout + checked.stderr
+        if checked.returncode != 0:
+            audit.verification_status = "telescope_compile_failed"
+            audit.violations.append(output[-12000:])
+            return audit
+
+        binders, results, violations = parse_whnf_telescope_output(output)
+        audit.binder_records = binders
+        audit.result_records = results
+        audit.violations = violations
+        if len(results) != len(audit.theorem_declarations):
+            audit.verification_status = "telescope_output_incomplete"
+            audit.violations.append(
+                f"Expected {len(audit.theorem_declarations)} result telescope records; found {len(results)}."
+            )
+            return audit
+        audit.kernel_checked = True
+        audit.verification_status = "passed" if not violations else "telescope_violation"
+        return audit
+    finally:
+        lock.release()
+
+
 # ---------------------------------------------------------------------------
 # CLI Argument Parsing & Dispatcher
 # ---------------------------------------------------------------------------
@@ -2086,6 +2397,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_cert.add_argument("--file", required=True, help="Target Lean 4 file")
     p_cert.add_argument("--write-audit", action="store_true", help="Write companion Audit.lean file next to source")
     p_cert.add_argument("--verify-kernel", action="store_true", help="Build the owner and run its generated #print axioms audit under the shared build lock")
+    p_cert.add_argument("--verify-telescope", action="store_true", help="Run the Lean 4 MetaM whnf binder and result-type telescope check under the shared build lock")
     p_cert.add_argument("--json", action="store_true", help="Output JSON")
 
     return parser
@@ -2431,8 +2743,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             audit.rejected_axioms = verified.rejected_axioms
             audit.verification_errors = verified.verification_errors
             audit.unparsed_declarations = verified.unparsed_declarations
+        telescope_audit: Optional[WhnfTelescopeAudit] = None
+        if getattr(args, "verify_telescope", False):
+            telescope_audit = verify_whnf_binder_telescope(p, repo_root=repo_root)
+            if telescope_audit.verification_status != "passed":
+                audit.verification_status = telescope_audit.verification_status
+                audit.verification_errors.extend(telescope_audit.violations)
         if args.json:
-            print(json.dumps(asdict(audit), indent=2))
+            payload = asdict(audit)
+            if telescope_audit is not None:
+                payload["whnf_telescope"] = asdict(telescope_audit)
+            print(json.dumps(payload, indent=2))
         else:
             if audit.written:
                 print(f"✓ Certification audit written to {audit.audit_file} ({len(audit.declarations)} declarations)")
@@ -2445,7 +2766,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     print(f"Disallowed axioms: {', '.join(audit.rejected_axioms)}")
                 for error in audit.verification_errors:
                     print(error)
+            if telescope_audit is not None:
+                print(f"MetaM whnf telescope verification: {telescope_audit.verification_status}")
+                for v in telescope_audit.violations:
+                    print(f"  [TELESCOPE VIOLATION] {v}")
         if args.verify_kernel and audit.verification_status != "passed":
+            return 1
+        if telescope_audit is not None and telescope_audit.verification_status != "passed":
             return 1
         return 0
 

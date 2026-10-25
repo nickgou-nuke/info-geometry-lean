@@ -673,9 +673,6 @@ def run_sympy_verification() -> dict:
     def zvm_conj(m):
         return (m[3], -m[1], -m[2], m[0])
 
-    def zvm_str(m):
-        return m[0] - m[3]
-
     c_stress = zvm_mul(zvm_conj(zvm_tomita(F_eb)), zvm_conj(F_eb))
     assert sp.simplify(zvm_tr(c_stress) - 2 * (E_vec.dot(E_vec) + B_vec.dot(B_vec))) == 0
     assert sp.simplify(zvm_str(c_stress) - 4 * E_vec.dot(B_vec)) == 0
@@ -853,6 +850,45 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(LDU_zorn[1] - xa * xv) == sp.zeros(3, 1)
     assert sp.simplify(LDU_zorn[2] - (xa * xw + xa * xv.cross(xw))) == sp.zeros(3, 1)
     assert sp.simplify(LDU_zorn[3] - xa * xb) == 0
+
+    # 28. Full Multi-Tier Unification:
+    #     - Universal Ring Walsh-Hadamard & Orientability-Flow Casimir (`AlbertCayleyDickson.lean`)
+    #     - Octonionic Orientability-Flow-Wheel Casimir & Affine Wavelet (`ZornAlternativeLaws.lean`)
+    #     - 32-Spinor Cl(5,5) Mode-Graded Laplace-Wavelet-Bruhat-Braid (`Cl55SpinorCartanFock.lean`)
+    #     - 27D H3(O_s) Quadratic Jordan U_{D(lam1,lam2,lam3)} Laplace-Mellin Semigroup (`QuadraticJordanH3Zorn.lean`)
+    Gamma_nc, Q_nc, J_nc, X_nc_wh = sp.symbols("Gamma_nc Q_nc J_nc X_nc_wh", commutative=False)
+    wh_pp = (1 + Gamma_nc) * X_nc_wh * (1 + Gamma_nc)
+    wh_mm = (1 - Gamma_nc) * X_nc_wh * (1 - Gamma_nc)
+    wh_pm = (1 + Gamma_nc) * X_nc_wh * (1 - Gamma_nc)
+    wh_mp = (1 - Gamma_nc) * X_nc_wh * (1 + Gamma_nc)
+    assert sp.expand(wh_pp + wh_mm + wh_pm + wh_mp - 4 * X_nc_wh) == 0
+    assert sp.expand(wh_pp + wh_mm - 2 * (X_nc_wh + Gamma_nc * X_nc_wh * Gamma_nc)) == 0
+    assert sp.expand(wh_pm + wh_mp - 2 * (X_nc_wh - Gamma_nc * X_nc_wh * Gamma_nc)) == 0
+    assert sp.expand(wh_pm - wh_mp - 2 * (Gamma_nc * X_nc_wh - X_nc_wh * Gamma_nc)) == 0
+    M_nc = Gamma_nc + Q_nc + J_nc
+    assert sp.expand(
+        M_nc * M_nc
+        - (Gamma_nc**2 + Q_nc**2 + J_nc**2)
+        - ((Gamma_nc * Q_nc + Q_nc * Gamma_nc) + (Gamma_nc * J_nc + J_nc * Gamma_nc) + (Q_nc * J_nc + J_nc * Q_nc))
+    ) == 0
+    # Octonionic traceless flow generator square M(alpha, v, w)^2 = (alpha^2 + v.w) * 1
+    M_zorn = (alpha_fl, xv, xw, -alpha_fl)
+    M_zorn_sq = zorn_mul(M_zorn, M_zorn)
+    assert sp.simplify(M_zorn_sq[0] - (alpha_fl**2 + xv.dot(xw))) == 0
+    assert sp.simplify(M_zorn_sq[1]) == sp.zeros(3, 1)
+    assert sp.simplify(M_zorn_sq[2]) == sp.zeros(3, 1)
+    assert sp.simplify(M_zorn_sq[3] - (alpha_fl**2 + xv.dot(xw))) == 0
+    # 27D H3(O_s) Quadratic Jordan U_{D(lam1,lam2,lam3)}(X)
+    lam1_j, lam2_j, lam3_j, a1_j, a2_j, a3_j = sp.symbols("lam1_j lam2_j lam3_j a1_j a2_j a3_j")
+    T_DX = lam1_j * a1_j + lam2_j * a2_j + lam3_j * a3_j
+    # Diagonal entries of U_D(X) = T(D,X) D - D# x X
+    dsharp_1, dsharp_2, dsharp_3 = lam2_j * lam3_j, lam1_j * lam3_j, lam1_j * lam2_j
+    cross_Dsharp_X_1 = dsharp_2 * a3_j + dsharp_3 * a2_j
+    cross_Dsharp_X_2 = dsharp_1 * a3_j + dsharp_3 * a1_j
+    cross_Dsharp_X_3 = dsharp_1 * a2_j + dsharp_2 * a1_j
+    assert sp.expand(T_DX * lam1_j - cross_Dsharp_X_1 - lam1_j**2 * a1_j) == 0
+    assert sp.expand(T_DX * lam2_j - cross_Dsharp_X_2 - lam2_j**2 * a2_j) == 0
+    assert sp.expand(T_DX * lam3_j - cross_Dsharp_X_3 - lam3_j**2 * a3_j) == 0
 
     return {
         "engine": "SymPy",

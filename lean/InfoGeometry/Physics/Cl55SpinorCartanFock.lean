@@ -2004,6 +2004,152 @@ theorem neutron_proton_mass_gap_commutator
   simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, mul_assoc]
   module
 
+/-!
+### 5b. 32-Spinor `Cl(5, 5)` Mode-Graded Laplace–Wavelet–Bruhat Trifactorization & Artin Braid Group `B₃`
+-/
+
+/-- **Single-Mode Hyperbolic Laplace / Mellin Kernel (`modeHyperbolicKernel a lam mu = lam • N_a + mu • Ñ_a`)**. -/
+def modeHyperbolicKernel (a : Fin 5) (lam mu : ℝ) : MatStage 5 :=
+  lam • modeOccupied a + mu • modeVacant a
+
+/-- **Single-Mode Upper Nilpotent Creation Exponential (`modeExpCreation a t = 1 + t • e_a`)**. -/
+def modeExpCreation (a : Fin 5) (t : ℝ) : MatStage 5 :=
+  1 + t • e a
+
+/-- **Single-Mode Lower Nilpotent Annihilation Exponential (`modeExpAnnihilation a s = 1 + s • f_a`)**. -/
+def modeExpAnnihilation (a : Fin 5) (s : ℝ) : MatStage 5 :=
+  1 + s • f a
+
+/-- **Single-Mode Affine Wavelet Generator (`modeAffineWavelet a lam mu t = D_a(lam, mu) + t • e_a`)**. -/
+def modeAffineWavelet (a : Fin 5) (lam mu t : ℝ) : MatStage 5 :=
+  modeHyperbolicKernel a lam mu + t • e a
+
+/-- **Single-Mode Parabolic Artin Braid Generators (`modeBraidSigma1 a = 1 + e_a`, `modeBraidSigma2 a = 1 - f_a`)**. -/
+def modeBraidSigma1 (a : Fin 5) : MatStage 5 := 1 + e a
+def modeBraidSigma2 (a : Fin 5) : MatStage 5 := 1 - f a
+
+/-- **6. 32-Spinor `Cl(5, 5)` Mode-Graded Laplace–Wavelet–Bruhat Trifactorization & Artin Braid Group `B₃` Synthesis**:
+    For every fermionic mode `a : Fin 5` in `MatStage 5 ≅ Cl(5, 5)`:
+    - **Temperley–Lieb (`δ = 0`) Relations**: `e_a * f_a * e_a = e_a` and `f_a * e_a * f_a = f_a`.
+    - **Emil Artin Braid Group `B₃` Relation**:
+      `modeBraidSigma1 a * modeBraidSigma2 a * modeBraidSigma1 a = modeBraidSigma2 a * modeBraidSigma1 a * modeBraidSigma2 a = gammaMinus a`.
+    - **Hyperbolic Laplace–Mellin Kernel Semigroup**:
+      `modeHyperbolicKernel a lam₁ mu₁ * modeHyperbolicKernel a lam₂ mu₂ = modeHyperbolicKernel a (lam₁ * lam₂) (mu₁ * mu₂)`.
+    - **Nilpotent Creation/Annihilation Exponential Homomorphisms & Affine Wavelet Semigroup**:
+      `modeExpCreation a t₁ * modeExpCreation a t₂ = modeExpCreation a (t₁ + t₂)`,
+      `modeExpAnnihilation a s₁ * modeExpAnnihilation a s₂ = modeExpAnnihilation a (s₁ + s₂)`, and
+      `modeAffineWavelet a lam₁ mu₁ t₁ * modeAffineWavelet a lam₂ mu₂ t₂ = modeAffineWavelet a (lam₁ * lam₂) (mu₁ * mu₂) (lam₁ * t₂ + t₁ * mu₂)`.
+    - **32-Spinor Gauss–Bruhat `L D U` Trifactorization**:
+      `modeExpAnnihilation a s * modeHyperbolicKernel a lam mu * modeExpCreation a t = lam • modeOccupied a + (lam * t) • e a + (lam * s) • f a + (lam * s * t + mu) • modeVacant a`! -/
+theorem cl55_mode_graded_laplace_wavelet_bruhat_and_braid_synthesis
+    (a : Fin 5) (lam₁ mu₁ t₁ lam₂ mu₂ t₂ lam mu s₁ s₂ s t : ℝ) :
+    e a * f a * e a = e a ∧
+    f a * e a * f a = f a ∧
+    modeBraidSigma1 a * modeBraidSigma2 a * modeBraidSigma1 a =
+      modeBraidSigma2 a * modeBraidSigma1 a * modeBraidSigma2 a ∧
+    modeBraidSigma1 a * modeBraidSigma2 a * modeBraidSigma1 a = gammaMinus a ∧
+    modeHyperbolicKernel a lam₁ mu₁ * modeHyperbolicKernel a lam₂ mu₂ =
+      modeHyperbolicKernel a (lam₁ * lam₂) (mu₁ * mu₂) ∧
+    modeExpCreation a t₁ * modeExpCreation a t₂ = modeExpCreation a (t₁ + t₂) ∧
+    modeExpAnnihilation a s₁ * modeExpAnnihilation a s₂ = modeExpAnnihilation a (s₁ + s₂) ∧
+    modeAffineWavelet a lam₁ mu₁ t₁ * modeAffineWavelet a lam₂ mu₂ t₂ =
+      modeAffineWavelet a (lam₁ * lam₂) (mu₁ * mu₂) (lam₁ * t₂ + t₁ * mu₂) ∧
+    modeExpAnnihilation a s * modeHyperbolicKernel a lam mu * modeExpCreation a t =
+      lam • modeOccupied a + (lam * t) • e a + (lam * s) • f a +
+      (lam * s * t + mu) • modeVacant a := by
+  have hesq : e a * e a = 0 := e_sq a
+  have hfsq : f a * f a = 0 := f_sq a
+  have hcar : e a * f a + f a * e a = 1 := by simpa using ef_car a a
+  have hefe : e a * f a * e a = e a := by
+    calc
+      (e a * f a) * e a = (1 - f a * e a) * e a := by rw [eq_sub_of_add_eq hcar]
+      _ = e a - f a * (e a * e a) := by noncomm_ring
+      _ = e a := by rw [hesq, mul_zero, sub_zero]
+  have hfef : f a * e a * f a = f a := by
+    calc
+      (f a * e a) * f a = (1 - e a * f a) * f a := by rw [eq_sub_of_add_eq' hcar]
+      _ = f a - e a * (f a * f a) := by noncomm_ring
+      _ = f a := by rw [hfsq, mul_zero, sub_zero]
+  have h_occ_sq : modeOccupied a * modeOccupied a = modeOccupied a := modeOccupied_idem a
+  have h_vac_sq : modeVacant a * modeVacant a = modeVacant a := modeVacant_idem a
+  have h_occ_vac : modeOccupied a * modeVacant a = 0 := modeOccupied_mul_modeVacant a
+  have h_vac_occ : modeVacant a * modeOccupied a = 0 := modeVacant_mul_modeOccupied a
+  have h_sum : modeOccupied a + modeVacant a = 1 := modeOccupied_add_modeVacant a
+  have h_occ_e : modeOccupied a * e a = e a := hefe
+  have h_e_occ : e a * modeOccupied a = 0 := by
+    dsimp [modeOccupied]
+    calc e a * (e a * f a) = (e a * e a) * f a := by noncomm_ring
+    _ = 0 := by rw [hesq, zero_mul]
+  have h_vac_e : modeVacant a * e a = 0 := by
+    dsimp [modeVacant]
+    calc f a * e a * e a = f a * (e a * e a) := by noncomm_ring
+    _ = 0 := by rw [hesq, mul_zero]
+  have h_e_vac : e a * modeVacant a = e a := by
+    dsimp [modeVacant]
+    calc e a * (f a * e a) = (e a * f a) * e a := by noncomm_ring
+    _ = e a := hefe
+  have h_f_occ : f a * modeOccupied a = f a := by
+    dsimp [modeOccupied]
+    calc f a * (e a * f a) = (f a * e a) * f a := by noncomm_ring
+    _ = f a := hfef
+  have h_occ_f : modeOccupied a * f a = 0 := by
+    dsimp [modeOccupied]
+    calc e a * f a * f a = e a * (f a * f a) := by noncomm_ring
+    _ = 0 := by rw [hfsq, mul_zero]
+  have h_vac_f : modeVacant a * f a = f a := hfef
+  have h_f_vac : f a * modeVacant a = 0 := by
+    dsimp [modeVacant]
+    calc f a * (f a * e a) = (f a * f a) * e a := by noncomm_ring
+    _ = 0 := by rw [hfsq, zero_mul]
+  have h_f_e : f a * e a = modeVacant a := rfl
+  have h_e_f : e a * f a = modeOccupied a := rfl
+  have h_braid1 : modeBraidSigma1 a * modeBraidSigma2 a * modeBraidSigma1 a = gammaMinus a := by
+    dsimp [modeBraidSigma1, modeBraidSigma2, gammaMinus]
+    have hstep1 : (1 + e a) * (1 - f a) = 1 + e a - f a - modeOccupied a := by
+      dsimp [modeOccupied]; noncomm_ring
+    rw [hstep1]
+    calc
+      (1 + e a - f a - modeOccupied a) * (1 + e a) =
+        (1 - (modeOccupied a + f a * e a)) + e a + e a - f a +
+        (e a * e a) - (modeOccupied a * e a) := by noncomm_ring
+      _ = (1 - (modeOccupied a + modeVacant a)) + e a + e a - f a + 0 - e a := by
+        rw [h_f_e, hesq, h_occ_e]
+      _ = (1 - 1) + e a + e a - f a + 0 - e a := by rw [h_sum]
+      _ = e a - f a := by abel
+  have h_braid2 : modeBraidSigma2 a * modeBraidSigma1 a * modeBraidSigma2 a = gammaMinus a := by
+    dsimp [modeBraidSigma1, modeBraidSigma2, gammaMinus]
+    have hstep1 : (1 - f a) * (1 + e a) = 1 - f a + e a - modeVacant a := by
+      dsimp [modeVacant]; noncomm_ring
+    rw [hstep1]
+    calc
+      (1 - f a + e a - modeVacant a) * (1 - f a) =
+        (1 - (e a * f a + modeVacant a)) - f a - f a + e a +
+        (f a * f a) + (modeVacant a * f a) := by noncomm_ring
+      _ = (1 - (modeOccupied a + modeVacant a)) - f a - f a + e a + 0 + f a := by
+        rw [h_e_f, hfsq, h_vac_f]
+      _ = (1 - 1) - f a - f a + e a + 0 + f a := by rw [h_sum]
+      _ = e a - f a := by abel
+  refine ⟨hefe, hfef, h_braid1.trans h_braid2.symm, h_braid1, ?_, ?_, ?_, ?_, ?_⟩
+  · dsimp [modeHyperbolicKernel]
+    simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+               h_occ_sq, h_occ_vac, h_vac_occ, h_vac_sq]
+    module
+  · dsimp [modeExpCreation]
+    simp only [add_mul, mul_add, one_mul, mul_one, smul_mul_assoc, mul_smul_comm, hesq]
+    module
+  · dsimp [modeExpAnnihilation]
+    simp only [add_mul, mul_add, one_mul, mul_one, smul_mul_assoc, mul_smul_comm, hfsq]
+    module
+  · dsimp [modeAffineWavelet, modeHyperbolicKernel]
+    simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+               h_occ_sq, h_occ_vac, h_vac_occ, h_vac_sq,
+               h_occ_e, h_vac_e, h_e_occ, h_e_vac, hesq]
+    module
+  · dsimp [modeExpAnnihilation, modeHyperbolicKernel, modeExpCreation]
+    simp only [add_mul, mul_add, one_mul, mul_one, smul_mul_assoc, mul_smul_comm,
+               h_f_occ, h_f_vac, h_occ_e, h_vac_e, h_f_e, zero_mul, mul_zero, smul_zero]
+    module
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

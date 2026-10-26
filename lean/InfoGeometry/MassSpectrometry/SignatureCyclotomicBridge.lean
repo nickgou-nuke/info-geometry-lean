@@ -57,8 +57,8 @@ theorem doubled_support (P : A) (hp : P*P=P) :
   fin_cases i <;> fin_cases j <;>
     simp [activeSupport, exactSupport, coexactSupport, raise, lower, hp]
 
-/-- A nilpotent in a nontrivial ring cannot itself be a unit. -/
 omit [StarRing A] in
+/-- A nilpotent in a nontrivial ring cannot itself be a unit. -/
 theorem nilpotent_not_unit [Nontrivial A] (a : A) (N : ℕ) (h : a^N=0) : ¬ IsUnit a := by
   intro hu
   have hn := hu.pow N

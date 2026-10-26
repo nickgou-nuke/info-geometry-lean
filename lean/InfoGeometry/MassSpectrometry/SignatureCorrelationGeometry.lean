@@ -33,7 +33,9 @@ theorem selfAdjoint_mp_drazin {a b : A} (ha : star a = a)
   have hb : star b = b := (MoorePenrose_unique h hs).symm
   have hab : a*b=b*a := by simpa [star_mul, ha, hb] using h.ab_adj_eq.symm
   refine IsDrazinInverse.mk h.bab_eq_b hab ?_
-  simp only [pow_one, pow_two]
+  rw [pow_one]
+  change a = a ^ 2 * b
+  rw [pow_two]
   calc
     a = a*b*a := h.aba_eq_a.symm
     _ = a*(b*a) := mul_assoc _ _ _
@@ -43,8 +45,8 @@ theorem selfAdjoint_mp_drazin {a b : A} (ha : star a = a)
 end Algebra
 
 variable {E F : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [CompleteSpace E]
-variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F] [CompleteSpace F]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /-- State-side correlation of the specified observation map. -/
 def gram (O : E →L[ℝ] F) : E →L[ℝ] E := O.adjoint.comp O
@@ -87,12 +89,17 @@ theorem same_signature_iff_gram_difference (O : E →L[ℝ] F) (x y : E) :
 def observableQuotientEquiv (O : E →L[ℝ] F) :
     (E ⧸ O.ker) ≃ₗ[ℝ] O.range := O.toLinearMap.quotKerEquivRange
 
+section FiniteIndex
+variable [FiniteDimensional ℝ E] [FiniteDimensional ℝ F]
+
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- The finite compatibility alternative, stated using Mathlib's adjoint. -/
 theorem finite_fredholm_alternative (O : E →L[ℝ] F) (y : F) :
     (∃ x, O x = y) ↔ y ∈ O.toLinearMap.adjoint.kerᗮ := by
   rw [LinearMap.orthogonal_ker, LinearMap.adjoint_adjoint]
   rfl
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Finite index balance; for equal dimensions the two defects have equal dimension. -/
 theorem finite_index_balance (O : E →L[ℝ] F) :
     Module.finrank ℝ O.ker + Module.finrank ℝ F =
@@ -101,6 +108,10 @@ theorem finite_index_balance (O : E →L[ℝ] F) :
   have ha := O.toLinearMap.adjoint.finrank_range_add_finrank_ker
   have hr := O.toLinearMap.finrank_range_adjoint
   omega
+
+end FiniteIndex
+
+variable [FiniteDimensional ℝ E]
 
 /-- Instantiate the pre-existing closed-range MP construction. -/
 def inverse (O : E →L[ℝ] F) : F →L[ℝ] E :=

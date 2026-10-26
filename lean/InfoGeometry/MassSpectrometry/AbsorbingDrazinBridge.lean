@@ -95,7 +95,8 @@ theorem generator_group_inverse (T P : A) (N : ℕ)
   obtain ⟨_, hpz⟩ := centeredGreen_annihilates T P hPP hTP hPT N
   refine IsDrazinInverse.mk ?_ (hl.trans hr.symm) ?_
   · rw [hr, sub_mul, one_mul, hpz, sub_zero]
-  · change 1 - T = (1-T)^2 * centeredGreen T P N
+  · rw [pow_one]
+    change 1 - T = (1-T)^2 * centeredGreen T P N
     rw [pow_two, mul_assoc, hl]
     noncomm_ring [hTP]
 

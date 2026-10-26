@@ -28,8 +28,11 @@ theorem norm_le_of_nonneg_row_sum
     apply Finset.sup_le
     intro i _
     apply NNReal.coe_le_coe.mp
-    simpa only [NNReal.coe_sum, coe_nnnorm, Real.norm_eq_abs,
-      abs_of_nonneg (hpos i _)] using hrow i
+    calc
+      ((∑ j, ‖K i j‖₊ : NNReal) : ℝ) = ∑ j, K i j := by
+        simp only [NNReal.coe_sum, coe_nnnorm]
+        exact Finset.sum_congr rfl (fun j _ => Real.norm_of_nonneg (hpos i j))
+      _ ≤ C := hrow i
   rw [Matrix.linfty_opNorm_def]
   exact_mod_cast h
 
@@ -119,9 +122,7 @@ def response_uniformErrorBound (G : StochasticGrammar D) (H : StochasticGrammar 
             ‖G.transientMatrix - H.transientMatrix‖) * ‖g.1‖ :=
         G.response_difference_norm_le H g.1
       _ ≤ ((rankHorizon D.rank : ℝ) * (rankHorizon E.rank : ℝ) * (δ : ℝ)) * (C : ℝ) := by
-        gcongr
-        · exact hδ
-        · exact g.2
+        gcongr <;> first | exact hδ | exact g.2
       _ = _ := by simp
 
 end StochasticGrammar

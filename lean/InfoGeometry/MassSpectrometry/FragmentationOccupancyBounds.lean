@@ -20,7 +20,10 @@ variable {n : ℕ} {D : FragmentationDAG n}
 theorem finiteGreen_row_sum_le_rank (G : StochasticGrammar D) (N : ℕ) :
     ∀ u, ∑ v, finiteGreen G.transientMatrix N u v ≤ ((D.rank u + 1 : ℕ) : ℝ) := by
   induction N with
-  | zero => intro u; simp [finiteGreen]
+  | zero =>
+      intro u
+      simpa [finiteGreen] using
+        (show (0 : ℝ) ≤ ((D.rank u + 1 : ℕ) : ℝ) by positivity)
   | succ N ih =>
       intro u
       have hstep (v : Fin n) :
@@ -42,11 +45,11 @@ theorem finiteGreen_row_sum_le_rank (G : StochasticGrammar D) (N : ℕ) :
           rw [Finset.sum_comm]
           simp only [Finset.mul_sum, transientMatrix]
         _ ≤ 1 + ∑ w, G.weight u w * (D.rank u : ℝ) :=
-          add_le_add_left (Finset.sum_le_sum (fun v _ => hstep v)) 1
+          add_le_add (le_refl (1 : ℝ)) (Finset.sum_le_sum (fun v _ => hstep v))
         _ = 1 + (∑ w, G.weight u w) * (D.rank u : ℝ) := by rw [Finset.sum_mul]
         _ ≤ 1 + 1 * (D.rank u : ℝ) :=
-          add_le_add_left (mul_le_mul_of_nonneg_right (G.row_sum_le_one u)
-            (Nat.cast_nonneg _)) 1
+          add_le_add (le_refl (1 : ℝ))
+            (mul_le_mul_of_nonneg_right (G.row_sum_le_one u) (Nat.cast_nonneg (D.rank u)))
         _ = ((D.rank u + 1 : ℕ) : ℝ) := by push_cast; ring
 
 /-- A nonempty time window includes the identity contribution. -/
@@ -76,7 +79,8 @@ theorem occupancyPotential_bounds (G : StochasticGrammar D) (u : Fin n) :
 /-- Nonnegative rewards give nonnegative finite responses. -/
 theorem response_nonneg (G : StochasticGrammar D) (g : Fin n → ℝ)
     (hg : ∀ u, 0 ≤ g u) (u : Fin n) : 0 ≤ (G.fundamentalMatrix *ᵥ g) u := by
+  change 0 ≤ ∑ v, finiteGreen G.transientMatrix (rankHorizon D.rank) u v * g v
   exact Finset.sum_nonneg (fun v _ => mul_nonneg
-    (G.finiteGreen_nonneg _ u v) (hg v))
+    (G.finiteGreen_nonneg (rankHorizon D.rank) u v) (hg v))
 
 end InfoGeometry.MassSpectrometry.StochasticGrammar

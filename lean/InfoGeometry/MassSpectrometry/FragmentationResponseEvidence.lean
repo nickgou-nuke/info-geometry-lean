@@ -49,11 +49,11 @@ def responseModelError
             ‖(G x).transientMatrix - (H x).transientMatrix‖) * ‖reward x‖ :=
         (G x).response_difference_norm_le (H x) (reward x)
       _ ≤ ((N : ℝ) * (M : ℝ) * (δ : ℝ)) * (C : ℝ) := by
-        gcongr
-        · exact_mod_cast hN x
-        · exact_mod_cast hM x
-        · exact hδ x
-        · exact hC x
+        gcongr <;> first
+        | exact_mod_cast hN x
+        | exact_mod_cast hM x
+        | exact hδ x
+        | exact hC x
       _ = _ := by simp
 
 /-- End-to-end class uniqueness using the derived accumulated-response budget. -/

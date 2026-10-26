@@ -10,7 +10,7 @@ centered Green group inverse. None is identified with a metric pseudoinverse.
 -/
 noncomputable section
 namespace InfoGeometry.MassSpectrometry.AbsorbingDrazin
-open scoped BigOperators
+open scoped BigOperators Matrix
 open InfoGeometry.Singular.Drazin
 
 section Ring
@@ -75,8 +75,16 @@ theorem centeredGreen_annihilates (T P : A)
     (hPP : P * P = P) (hTP : T * P = P) (hPT : P * T = P) (N : ℕ) :
     centeredGreen T P N * P = 0 ∧ P * centeredGreen T P N = 0 := by
   constructor
-  · simp [centeredGreen, Finset.sum_mul, sub_mul, pow_mul_stationary T P hTP, hPP]
-  · simp [centeredGreen, Finset.mul_sum, mul_sub, stationary_mul_pow T P hPT, hPP]
+  · unfold centeredGreen
+    rw [Finset.sum_mul]
+    apply Finset.sum_eq_zero
+    intro k _
+    rw [sub_mul, pow_mul_stationary T P hTP, hPP, sub_self]
+  · unfold centeredGreen
+    rw [Finset.mul_sum]
+    apply Finset.sum_eq_zero
+    intro k _
+    rw [mul_sub, stationary_mul_pow T P hPT, hPP, sub_self]
 
 /-- The generator has group-inverse laws on 1-P, not the inverse of T. -/
 theorem generator_group_inverse (T P : A) (N : ℕ)
@@ -87,8 +95,8 @@ theorem generator_group_inverse (T P : A) (N : ℕ)
   obtain ⟨_, hpz⟩ := centeredGreen_annihilates T P hPP hTP hPT N
   refine IsDrazinInverse.mk ?_ (hl.trans hr.symm) ?_
   · rw [hr, sub_mul, one_mul, hpz, sub_zero]
-  · simp only [pow_one, pow_two]
-    rw [mul_assoc, hl]
+  · change 1 - T = (1-T)^2 * centeredGreen T P N
+    rw [pow_two, mul_assoc, hl]
     noncomm_ring [hTP]
 
 /-- The completed operator has an explicit stationary-plus-nilpotent split. -/
@@ -109,7 +117,7 @@ variable {ι R : Type*} [Fintype ι] [DecidableEq ι] [Ring R]
 
 /-- Finite Fredholm-type alternative for the completed singular generator. -/
 theorem generator_solvable_iff
-    (T P : Matrix ι ι R) (N : ℕ) (hPP : P*P=P)
+    (T P : Matrix ι ι R) (N : ℕ)
     (hTP : T*P=P) (hPT : P*T=P) (hN : T^N=P) (b : ι → R) :
     (∃ x, (1-T) *ᵥ x = b) ↔ P *ᵥ b = 0 := by
   have hl : (1-T)*centeredGreen T P N = 1-P := by rw [centeredGreen_left T P hTP, hN]
@@ -124,7 +132,7 @@ theorem generator_solvable_iff
 /-- Every solution consists of the centered Green solution plus its stationary part. -/
 theorem generator_solution_decomposition
     (T P : Matrix ι ι R) (N : ℕ) (hPT : P*T=P) (hN : T^N=P)
-    (b x : ι → R) (hx : (1-T)*ᵥx=b) :
+    (b x : ι → R) (hx : (1-T) *ᵥ x = b) :
     x = centeredGreen T P N *ᵥ b + P *ᵥ x := by
   have hr : centeredGreen T P N*(1-T)=1-P := by rw [centeredGreen_right T P hPT, hN]
   have he := congrArg (fun y => centeredGreen T P N *ᵥ y) hx

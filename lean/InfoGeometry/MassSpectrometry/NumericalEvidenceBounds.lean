@@ -16,7 +16,7 @@ namespace InfoGeometry.MassSpectrometry.NumericalEvidence
 /-- Uniform certified deviation from a specified map. -/
 structure UniformErrorBound {Input Output : Type*} [PseudoMetricSpace Output]
     (specification implementation : Input → Output) where
-  error : ℝ≥0
+  error : NNReal
   bound : ∀ x, dist (implementation x) (specification x) ≤ (error : ℝ)
 
 namespace UniformErrorBound
@@ -26,7 +26,7 @@ variable {X Y Z : Type*} [PseudoMetricSpace Y] [PseudoMetricSpace Z]
 Lipschitz constant: e₂ + L e₁. -/
 def comp {f₁ g₁ : X → Y} {f₂ g₂ : Y → Z}
     (B₁ : UniformErrorBound f₁ g₁) (B₂ : UniformErrorBound f₂ g₂)
-    {L : ℝ≥0} (hL : LipschitzWith L f₂) :
+    {L : NNReal} (hL : LipschitzWith L f₂) :
     UniformErrorBound (f₂ ∘ f₁) (g₂ ∘ g₁) where
   error := B₂.error + L * B₁.error
   bound x := by
@@ -38,7 +38,7 @@ def comp {f₁ g₁ : X → Y} {f₂ g₂ : Y → Z}
         exact add_le_add (B₂.bound (g₁ x))
           ((hL.dist_le_mul _ _).trans
             (mul_le_mul_of_nonneg_left (B₁.bound x) L.coe_nonneg))
-      _ = ((B₂.error + L * B₁.error : ℝ≥0) : ℝ) := by simp
+      _ = ((B₂.error + L * B₁.error : NNReal) : ℝ) := by simp
 
 /-- Native metric separation turns zero error into actual function equality. -/
 theorem eq_of_zero_error {Y : Type*} [MetricSpace Y] {f g : X → Y}
@@ -64,11 +64,8 @@ theorem three_stage_error_budget {Y : Type*} [PseudoMetricSpace Y]
     (h₂ : dist processed predicted ≤ e₂)
     (h₃ : dist predicted ideal ≤ e₃) :
     dist observed ideal ≤ e₁ + e₂ + e₃ := by
-  calc
-    dist observed ideal ≤ dist observed predicted + dist predicted ideal :=
-      dist_triangle _ _ _
-    _ ≤ (dist observed processed + dist processed predicted) +
-        dist predicted ideal := add_le_add_right (dist_triangle _ _ _) _
-    _ ≤ e₁ + e₂ + e₃ := add_le_add (add_le_add h₁ h₂) h₃
+  have h₁₂ : dist observed predicted ≤ e₁ + e₂ :=
+    (dist_triangle _ _ _).trans (add_le_add h₁ h₂)
+  exact (dist_triangle _ _ _).trans (add_le_add h₁₂ h₃)
 
 end InfoGeometry.MassSpectrometry.NumericalEvidence

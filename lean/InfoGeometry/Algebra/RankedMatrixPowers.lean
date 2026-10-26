@@ -23,7 +23,7 @@ theorem pow_entry_eq_zero_of_rank_lt
         intro heq
         subst j
         omega
-      simp [Matrix.one_apply, hne]
+      simp [hne]
   | succ k ih =>
       intro i j hij
       rw [pow_succ', Matrix.mul_apply]
@@ -57,6 +57,7 @@ theorem pow_eq_zero_of_rank_bound
 /-- A total computable bound; the empty-index convention is one. -/
 def rankHorizon (rank : ι → ℕ) : ℕ := Finset.univ.sup rank + 1
 
+omit [DecidableEq ι] in
 theorem rank_lt_rankHorizon (rank : ι → ℕ) (i : ι) :
     rank i < rankHorizon rank := by
   have h : rank i ≤ Finset.univ.sup rank := Finset.le_sup (Finset.mem_univ i)

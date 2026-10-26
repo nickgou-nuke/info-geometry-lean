@@ -46,7 +46,7 @@ theorem absorbingCompletion_pow_none (G : StochasticGrammar D) (m : ℕ)
     (j : Option (Fin n)) :
     (G.absorbingCompletion ^ m) none j = if j = none then 1 else 0 := by
   induction m with
-  | zero => cases j <;> simp [Matrix.one_apply]
+  | zero => cases j <;> simp
   | succ m ih =>
       simp [pow_succ', Matrix.mul_apply, Fintype.sum_option, absorbingCompletion, ih]
 
@@ -58,8 +58,13 @@ theorem absorbingCompletion_pow_original (G : StochasticGrammar D) (m : ℕ)
   induction m generalizing u v with
   | zero => simp [Matrix.one_apply]
   | succ m ih =>
-      simp [pow_succ, Matrix.mul_apply, Fintype.sum_option, absorbingCompletion,
-        transientMatrix, ih]
+      calc
+        (G.absorbingCompletion ^ (m + 1)) (some u) (some v) =
+            ∑ w, (G.transientMatrix ^ m) u w * G.weight w v := by
+          rw [pow_succ, Matrix.mul_apply, Fintype.sum_option]
+          simp only [absorbingCompletion, mul_zero, zero_add, ih]
+        _ = (G.transientMatrix ^ (m + 1)) u v := by
+          rw [pow_succ, Matrix.mul_apply]
 
 /-- All powers preserve row normalization, not just the one-step completion. -/
 theorem absorbingCompletion_pow_row_sum (G : StochasticGrammar D) (m : ℕ)
@@ -118,8 +123,7 @@ theorem completion_mul_absorptionProjection (G : StochasticGrammar D) :
 theorem absorptionProjection_mul_completion (G : StochasticGrammar D) :
     absorptionProjection n * G.absorbingCompletion = absorptionProjection n := by
   ext i j
-  cases j <;> simp [Matrix.mul_apply, Fintype.sum_option, absorptionProjection,
-    absorbingCompletion]
+  cases j <;> simp [Matrix.mul_apply, absorptionProjection, absorbingCompletion]
 
 theorem absorbingCompletion_stabilizes (G : StochasticGrammar D) (t : ℕ) :
     G.absorbingCompletion ^ (rankHorizon D.rank + t) = absorptionProjection n := by
@@ -134,6 +138,6 @@ end StochasticGrammar
 theorem absorptionProjection_idempotent (n : ℕ) :
     absorptionProjection n * absorptionProjection n = absorptionProjection n := by
   ext i j
-  simp [Matrix.mul_apply, Fintype.sum_option, absorptionProjection]
+  simp [Matrix.mul_apply, absorptionProjection]
 
 end InfoGeometry.MassSpectrometry

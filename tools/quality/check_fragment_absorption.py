@@ -9,6 +9,10 @@ checker.TARGETS = [
     "InfoGeometry.Algebra.RankedMatrixPowers",
     "InfoGeometry.MassSpectrometry.FiniteFragmentAbsorption",
     "InfoGeometry.MassSpectrometry.FragmentationGreenResponse",
+    "InfoGeometry.MassSpectrometry.FragmentationOccupancyBounds",
+    "InfoGeometry.MassSpectrometry.FragmentationResponseStability",
+    "InfoGeometry.MassSpectrometry.FragmentationResponseEvidence",
+    "InfoGeometry.MassSpectrometry.FiniteFragmentAbsorptionAudit",
 ]
 if __name__ == "__main__":
     checker.main()

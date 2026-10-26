@@ -276,6 +276,126 @@ scalar components with `norm_num` and vector components with
 `simp [ZornVectorMatrix.zero, ZornVectorMatrix.add, ZornVectorMatrix.smul]`.
 Do not rely on `rfl` or `decide` for these equalities.
 
+## Mathematical Design Validation
+
+**Verify the mathematical claim before proving it.** User correction: "random single shot pathing does not fix design flaws." If a theorem statement is mathematically false, no tactic sequence can prove it.
+
+### Procedure
+
+1. **State the claim precisely** — write the theorem in plain language: "parent rank ≤ child rank" or "rank index is injective"
+2. **Check edge cases manually** — for taxonomy ranks, test `kingdom ≤ domain` (false), `domain ≤ species` (true)
+3. **Only then write tactics** — once the claim is verified, design the proof structure
+4. **Fix the statement if wrong** — if the claim is false, correct it (e.g., change `≤` to `≥`, or replace with `≠`/`comparability`)
+
+### Pitfall: Brute-Force Tactic Thrashing
+
+Random tactic substitution (`omega` → `decide` → `contradiction` → `cases`) on a false claim wastes cycles. The error "omega could not prove the goal" or "unsolved goals" after `simp` often means the goal is impossible, not that the tactic is weak. Stop, re-examine the theorem statement, and verify the claim on paper before editing tactics again.
+
+## Inductive Type Equality Proofs
+
+**Use `cases a; cases b` instead of `match a, b with` for inductive equalities.**
+
+`match a, b with` does not reduce `a` and `b` in the motive, so Lean cannot synthesize the equation motive for dependent elimination. The result is "Dependent elimination failed" or "don't know how to synthesize implicit argument".
+
+### Correct Pattern
+
+```lean
+theorem rankIndex_injective (a b : TaxonRank) : rankIndex a = rankIndex b → a = b := by
+  intro h
+  cases a
+  case domain =>
+    cases b
+    case domain => rfl
+    case kingdom => simp [rankIndex] at h; cases h
+    -- ...
+```
+
+### Incorrect Pattern
+
+```lean
+-- FAILS: "Dependent elimination failed"
+theorem rankIndex_injective (a b : TaxonRank) : rankIndex a = rankIndex b → a = b := by
+  match a, b with
+  | domain, domain => intro h; rfl
+  | _, _ => intro h; simp [rankIndex] at h; cases h
+```
+
+## Arithmetic Tactic Limitations
+
+**`omega` fails on non-arithmetic goals.** After `simp [f] at h`, if `h` reduces to `0 = 1`, the goal is `False`, not an arithmetic inequality. `omega` cannot prove `False` from `0 = 1` because it only handles linear arithmetic goals.
+
+### Pattern for Impossible Equalities
+
+```lean
+| _, _ => intro h; simp [rankIndex] at h; cases h
+```
+
+`cases h` closes the goal when `h` is reduced to `0 = 1` by `simp`. Do not use `omega` or `decide` for this pattern.
+
+## Prop-Valued Contradiction Patterns
+
+**`h : P ≠ Q` is a `Prop`, not an inductive type.** `cases h` fails with "Tactic `cases` failed: major premise type is not an inductive type".
+
+### Pattern for `Prop`-Valued Negation
+
+```lean
+h_nonempty : a.modulePaths ≠ []
+⊢ False
+
+-- CORRECT:
+exact h_nonempty rfl
+
+-- INCORRECT:
+cases h_nonempty  -- fails: ≠ is not inductive
+apply h_nonempty   -- fails: type mismatch
+```
+
+Ensure the argument type matches: `rfl` has type `x = x`, so `h_nonempty rfl` requires `a.modulePaths = []`. If the goal is `False`, use `exact False.elim (h_nonempty rfl)`.
+
+## Import Placement Rule
+
+**`import` must come before doc comments.** Lean rejects `import` after `/-! ... -/` blocks with "invalid 'import' command, it must be used in the beginning of the file".
+
+```lean
+-- CORRECT:
+import Mathlib.Tactic
+
+/-!
+# Module docstring
+-/
+
+namespace Foo
+
+-- INCORRECT:
+/-!
+# Module docstring
+-/
+import Mathlib.Tactic  -- ERROR
+```
+
+## List Membership After Rewriting
+
+When proving `path ∈ b.modulePaths` after `rw [← h_paths]`, the goal becomes `path ∈ a.modulePaths`. Use `List.Mem.head _ _` directly:
+
+```lean
+rw [h_paths]
+exact List.Mem.head _ _ _
+```
+
+If `List.Mem.head` fails with "could not unify the conclusion", check that the goal is exactly `List.Mem ?a (?a :: ?as)` after rewriting.
+
+### Preserve Original Form with `cases h : x`
+
+When pattern matching would lose the original term, use `cases h : x with` to keep both the pattern-match result and the original equation:
+
+```lean
+cases h : a.modulePaths with
+| nil => exact h_nonempty h
+| cons p ps => ...
+```
+
+Here `h : a.modulePaths = []` in the `nil` branch, allowing `exact h_nonempty h` to close the goal.
+
 ## Dependent Type Rewriting Issues
 
 **When you encounter "motive is not type correct" or similar errors during rewriting:**

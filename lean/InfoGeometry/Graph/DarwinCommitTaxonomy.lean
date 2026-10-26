@@ -48,9 +48,7 @@ def rankIndex : TaxonRank → ℕ
 theorem rankIndex_injective (a b : TaxonRank) : rankIndex a = rankIndex b → a = b := by
   intro h
   cases a <;> cases b <;>
-  (try simp_all [rankIndex]) <;>
-  (try contradiction) <;>
-  (try rfl)
+  simp_all [rankIndex]
 
 /-- Any two ranks are comparable by `rankIndex`. -/
 theorem rankIndex_total (a b : TaxonRank) :
@@ -105,18 +103,22 @@ theorem shared_path_not_equivalence {a b : CommitNode} :
     exact h_nonempty
   cases h_list : b.modulePaths with
   | nil =>
-    -- h_list : b.modulePaths = []
     exfalso
     have h_a_eq_nil : a.modulePaths = [] := by
-      rw [h_eq, h_list]
+      rw [h_eq]
+      exact h_list
     exact h_nonempty h_a_eq_nil
   | cons path paths =>
-    -- h_list : b.modulePaths = path :: paths
+    have h_cons : b.modulePaths = path :: paths := h_list
     use path
     constructor
-    · have h_cons : b.modulePaths = path :: paths := h_list
-      rw [h_eq] at *
-      simp_all
-    · simp_all
+    · -- path ∈ a.modulePaths
+      have h_a_cons : a.modulePaths = path :: paths := by
+        rw [h_eq]
+        exact h_cons
+      rw [h_a_cons]
+      simp
+    · -- path ∈ b.modulePaths
+      simp
 
 end InfoGeometry.Graph

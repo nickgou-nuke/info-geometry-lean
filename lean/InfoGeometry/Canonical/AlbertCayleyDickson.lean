@@ -6341,19 +6341,17 @@ instance instNonUnitalNonAssocRingOpZornMatrix : NonUnitalNonAssocRing (OpZornMa
 
 private lemma mat3_one_mul (B : Matrix (Fin 3) (Fin 3) (OpZornMatrix A)) : 1 * B = B := by
   refine Matrix.ext fun i j => ?_
-  fin_cases i <;>
-    (ext <;>
-     simp [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_three,
-           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
-           OpVec3.leftScale, OpVec3.rightScale])
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_three,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+          OpVec3.leftScale, OpVec3.rightScale]
 
 private lemma mat3_mul_one (B : Matrix (Fin 3) (Fin 3) (OpZornMatrix A)) : B * 1 = B := by
   refine Matrix.ext fun i j => ?_
-  fin_cases j <;>
-    (ext <;>
-     simp [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_three,
-           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
-           OpVec3.leftScale, OpVec3.rightScale])
+  fin_cases j <;> fin_cases i <;>
+    simp [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_three,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+          OpVec3.leftScale, OpVec3.rightScale]
 
 /-- **Theorem 97 (Archetype LXXIX — $\mathbb{Z}_3$-Triality Splitting of the Operator Freudenthal Determinant & Leibniz Nucleus)**:
     Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all chiral spinor-octonion fields
@@ -6389,7 +6387,9 @@ private lemma opCommutator_opGradeZero_leibniz
     opCommutator G (Lu * Lw) = opCommutator G Lu * Lw + Lu * opCommutator G Lw ∧
     (opCommutator G (X * Y)).a = (opCommutator G X * Y + X * opCommutator G Y).a ∧
     (opCommutator G (X * Y)).b = (opCommutator G X * Y + X * opCommutator G Y).b := by
+  intro G Lu Lw
   have h := opModularDeriv_nucleus_and_exact_leibniz_rule (opGradeZero d₁ d₂) X Y u w d₁ d₂
+  simp [opModularDeriv] at h
   exact ⟨h.2.2.2.2.1, h.2.2.2.2.2.2.1, h.2.2.2.2.2.2.2⟩
 
 theorem operator_albert_triality_determinant_split_and_nucleus_leibniz

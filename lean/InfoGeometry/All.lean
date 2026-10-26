@@ -262,6 +262,9 @@ import InfoGeometry.Library
 import InfoGeometry.MassSpectrometry.GPUExecutionContracts
 import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
 import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
+import InfoGeometry.NCG.NonCommutativeFlagHierarchy
+import InfoGeometry.NCG.NonCommutativeOddConnesFlag
+import InfoGeometry.NCG.NonCommutativeCayleyBott
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability

@@ -34,8 +34,12 @@ variable {A : Type*} [Ring A] [Algebra ℂ A]
 attribute [local instance] LieRing.ofAssociativeRing
 variable (q p : A) (hqp : ⁅q, p⁆ = Complex.I • (1 : A))
 
+include hqp
+
 private theorem reverse_ccr : ⁅p, q⁆ = (-Complex.I) • (1 : A) := by
-  rw [lie_skew, hqp, neg_smul]
+  calc
+    ⁅p, q⁆ = -⁅q, p⁆ := by simp only [Ring.lie_def]; abel
+    _ = (-Complex.I) • (1 : A) := by rw [hqp, neg_smul]
 
 theorem H0_comm_q : ⁅H0 q p, q⁆ = (-2 * Complex.I) • p := by
   simp only [H0, add_lie, bracket_mul_left, reverse_ccr q p hqp, lie_self,
@@ -89,6 +93,8 @@ theorem H2_comm_H0 : ⁅H2 q p, H0 q p⁆ = (-4 * Complex.I) • H1 q p := by
     H2_comm_p q p hqp, H1, Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
   module
 
+omit hqp
+
 def K1 (q p : A) : A := (1 / 4 : ℂ) • H1 q p
 
 def K2 (q p : A) : A := (1 / 4 : ℂ) • H2 q p
@@ -96,6 +102,7 @@ def K2 (q p : A) : A := (1 / 4 : ℂ) • H2 q p
 def K3 (q p : A) : A := (-1 / 4 : ℂ) • H0 q p
 
 /-- The three scaled Lie relations (5.3), without an adjoint or spectrum claim. -/
+include hqp in
 theorem su11_relations :
     ⁅K1 q p, K2 q p⁆ = (-Complex.I) • K3 q p ∧
     ⁅K2 q p, K3 q p⁆ = Complex.I • K1 q p ∧

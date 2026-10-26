@@ -374,7 +374,138 @@ riccati_T_g := VecDot(T_bruhat_g[3], [y1, z1, xi1]) * [y1, z1, xi1] + T_bruhat_g
 if riccati_T_g <> xi3 * [y1, z1, xi1] then
     Error("FAIL: Archetype LXXXIX 8D Zorn-Riccati Möbius Schur residual failed");
 fi;
-Print("[PASS] GAP: Archetypes LXXV-LXXXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)\n");
+# Archetypes XC-XCV: 56D Freudenthal E_7 Euler Trace Identity <M, M^#>_27 = 3 Det_27(M), Doublet Tower, & Gelfand-Retakh Gauss-Bruhat Elimination
+trace_pair_27_g := xp_a*sh_xp + xm_a*sh_xm + v_a*sh_v + ZornInner(Q_alb, sh_Q) + ZornInner(Xi1_alb, sh_Xi1) + ZornInner(Xi2_alb, sh_Xi2);
+if trace_pair_27_g <> 3*det27 then
+    Error("FAIL: Archetype XC 56D Freudenthal Euler trace identity <M, M^#>_27 = 3 Det_27(M) failed");
+fi;
+U_up_neg_g := [ one, -[y1, z1, xi1], [zero, zero, zero], one ];
+U_lo_neg_g := [ one, [zero, zero, zero], -[y2, z2, xi2], one ];
+if ZornMul(ZornMul(U_lo_neg_g, T_bruhat_g), U_up_neg_g) <> [ one, [zero, zero, zero], [zero, zero, zero], xi3 ] then
+    Error("FAIL: Archetype XCIV Gelfand-Retakh Gauss-Bruhat trifactor elimination failed");
+fi;
+if T_bruhat_g[4] + VecDot(T_bruhat_g[3], T_bruhat_g[2]) <> xi3 then
+    Error("FAIL: Archetype XCV Gelfand-Retakh (2,2)-quasideterminant extraction failed");
+fi;
+cross_orig_g := ((1 - VecDot([y1,z1,xi1]+[y3,z3,xi3], [y2,z2,xi2]+[y3,z3,xi3])) - (1 - VecDot([y1,z1,xi1]+[y3,z3,xi3], [y3,z3,xi3]+[y3,z3,xi3])))
+              - ((1 - VecDot([y3,z3,xi3]+[y3,z3,xi3], [y2,z2,xi2]+[y3,z3,xi3])) - (1 - VecDot([y3,z3,xi3]+[y3,z3,xi3], [y3,z3,xi3]+[y3,z3,xi3])));
+cross_base_g := ((1 - VecDot([y1,z1,xi1], [y2,z2,xi2])) - (1 - VecDot([y1,z1,xi1], [y3,z3,xi3])))
+              - ((1 - VecDot([y3,z3,xi3], [y2,z2,xi2])) - (1 - VecDot([y3,z3,xi3], [y3,z3,xi3])));
+if cross_orig_g <> cross_base_g then
+    Error("FAIL: Archetype XCIII 4-spinor cross-difference translation invariance failed");
+fi;
+# Archetypes XCVI-XCVIII: Operator-Twisted Nambu-Gorkov Cayley-Dickson Doubling & 5-Graded Spectral Projectors
+CDMul_g := function(Om, z_p, w_p)
+    return [ z_p[1]*w_p[1] + Om*(w_p[2]*z_p[2]), z_p[1]*w_p[2] + w_p[1]*z_p[2] ];
+end;
+E_cd_g := [ zero, one ];
+Z_cd_g := [ y1, z1 ];
+if CDMul_g(xi1, Z_cd_g, [ y1, -z1 ]) <> [ y1*y1 - xi1*(z1*z1), zero ] then
+    Error("FAIL: Archetype XCVI Nambu-Gorkov operator Cayley-Dickson norm cancellation failed");
+fi;
+E2_cd_g := CDMul_g(xi1, E_cd_g, E_cd_g);
+if E2_cd_g <> [ xi1, zero ] or CDMul_g(xi1, E2_cd_g, E2_cd_g) <> [ xi1*xi1, zero ] then
+    Error("FAIL: Archetype XCVII Nambu-Gorkov doubling generator powers failed");
+fi;
+OpEuler5_g := function(Z_m)
+    return [ zero, [ -2*Z_m[2][1], Z_m[2][2], Z_m[2][3] ], [ 2*Z_m[3][1], -Z_m[3][2], -Z_m[3][3] ], zero ];
+end;
+X_full_g := [ y1, [xi1, y2, z2], [xi2, y3, z3], z1 ];
+D1_g := OpEuler5_g(X_full_g);
+D2_g := OpEuler5_g(D1_g);
+D3_g := OpEuler5_g(D2_g);
+D4_g := OpEuler5_g(D3_g);
+if ZornSub(D3_g, D1_g) <> [ zero, [ -6*xi1, zero, zero ], [ 6*xi2, zero, zero ], zero ] then
+    Error("FAIL: Archetype XCVIII Cubic contact horizon spectral projector failed");
+fi;
+if ZornAdd(ZornSub(D4_g, 5*D2_g), 4*X_full_g) <> [ 4*y1, [zero, zero, zero], [zero, zero, zero], 4*z1 ] then
+    Error("FAIL: Archetype XCVIII Quartic nucleus spectral projector failed");
+fi;
+# Archetypes XCIX-C: Cyclotomic Factorizations & Z_6 Galois Automorphism Group
+if (xi1^6 - one) <> (xi1 - one)*(xi1 + one)*(xi1^2 + xi1 + one)*(xi1^2 - xi1 + one) then
+    Error("FAIL: Archetype XCIX Cyclotomic polynomial factorization failed");
+fi;
+TriPermVec := function(u) return [ u[2], u[3], u[1] ]; end;
+GradeParityVec := function(u) return [ u[1], -u[2], -u[3] ]; end;
+ZornGaloisZ3 := function(M) return [ M[1], TriPermVec(M[2]), TriPermVec(M[3]), M[4] ]; end;
+ZornGradeParity := function(M) return [ M[1], GradeParityVec(M[2]), GradeParityVec(M[3]), M[4] ]; end;
+ZornGaloisZ6 := function(M) return [ M[1], -TriPermVec(M[2]), -TriPermVec(M[3]), M[4] ]; end;
+if ZornGaloisZ3(ZornMul(Q_alb, Xi1_alb)) <> ZornMul(ZornGaloisZ3(Q_alb), ZornGaloisZ3(Xi1_alb)) then
+    Error("FAIL: Archetype C Z_3 triality Galois automorphism failed");
+fi;
+if ZornGradeParity(ZornMul(Q_alb, Xi1_alb)) <> ZornMul(ZornGradeParity(Q_alb), ZornGradeParity(Xi1_alb)) then
+    Error("FAIL: Archetype C 5-grading parity Z_2 automorphism failed");
+fi;
+if ZornGaloisZ6(ZornGaloisZ6(Q_alb)) <> ZornGaloisZ3(ZornGaloisZ3(Q_alb)) then
+    Error("FAIL: Archetype C Z_6 cyclotomic Galois period law failed");
+fi;
+Cyc3Mul_g := function(z, w) return [ z[1]*w[1] - z[2]*w[2], z[1]*w[2] + z[2]*w[1] - z[2]*w[2] ]; end;
+Cyc6Mul_g := function(z, w) return [ z[1]*w[1] - z[2]*w[2], z[1]*w[2] + z[2]*w[1] + z[2]*w[2] ]; end;
+ToCyc3_g := function(z) return [ z[1] + z[2], z[2] ]; end;
+if ToCyc3_g(Cyc6Mul_g([y1, z1], [y2, z2])) <> Cyc3Mul_g(ToCyc3_g([y1, z1]), ToCyc3_g([y2, z2])) then
+    Error("FAIL: Archetype CIII OpCyclotomic6 <-> OpCyclotomic3 ring isomorphism failed");
+fi;
+Riccati_g := function(M, q_v)
+    return VecDot(M[3], q_v) * q_v + M[4] * q_v - M[1] * q_v - M[2];
+end;
+if TriPermVec(Riccati_g(Q_alb, [y1, z1, xi1])) <> Riccati_g(ZornGaloisZ3(Q_alb), TriPermVec([y1, z1, xi1])) then
+    Error("FAIL: Archetype CIV Z_3 triality Zorn-Riccati equivariance failed");
+fi;
+if -TriPermVec(Riccati_g(Q_alb, [y1, z1, xi1])) <> Riccati_g(ZornGaloisZ6(Q_alb), -TriPermVec([y1, z1, xi1])) then
+    Error("FAIL: Archetype CIV Z_6 cyclotomic Zorn-Riccati equivariance failed");
+fi;
+ZornSinglet_g := function(a_s, c_s, d_s, b_s) return [ a_s, [c_s, c_s, c_s], [d_s, d_s, d_s], b_s ]; end;
+S1_g := ZornSinglet_g(y1, z1, xi1, y2);
+S2_g := ZornSinglet_g(z2, xi2, y3, z3);
+S3_g := ZornSinglet_g(xi3, y1, z2, xi1);
+if ZornSub(ZornMul(ZornMul(S1_g, S2_g), S3_g), ZornMul(S1_g, ZornMul(S2_g, S3_g))) <> ZornZero then
+    Error("FAIL: Archetype CVI Z_3 singlet strict associativity failed");
+fi;
+ReflVec_g := function(v) return [ -v[1], -v[3], -v[2] ]; end;
+KleinXVec_g := function(v) return [ v[1], -v[2], -v[3] ]; end;
+KleinYVec_g := function(v) return [ -v[1], v[2], -v[3] ]; end;
+KleinZVec_g := function(v) return [ -v[1], -v[2], v[3] ]; end;
+ZornRefl_g := function(M) return [ M[1], ReflVec_g(M[2]), ReflVec_g(M[3]), M[4] ]; end;
+ZornKleinX_g := function(M) return [ M[1], KleinXVec_g(M[2]), KleinXVec_g(M[3]), M[4] ]; end;
+ZornKleinY_g := function(M) return [ M[1], KleinYVec_g(M[2]), KleinYVec_g(M[3]), M[4] ]; end;
+ZornKleinZ_g := function(M) return [ M[1], KleinZVec_g(M[2]), KleinZVec_g(M[3]), M[4] ]; end;
+if ZornRefl_g(ZornMul(Q_alb, Xi1_alb)) <> ZornMul(ZornRefl_g(Q_alb), ZornRefl_g(Xi1_alb)) then
+    Error("FAIL: Archetype CVIII signed reflection automorphism failed");
+fi;
+if ZornRefl_g(ZornGaloisZ3(ZornRefl_g(Q_alb))) <> ZornGaloisZ3(ZornGaloisZ3(Q_alb)) then
+    Error("FAIL: Archetype CVIII dihedral S_3 relation failed");
+fi;
+if ZornKleinY_g(ZornMul(Q_alb, Xi1_alb)) <> ZornMul(ZornKleinY_g(Q_alb), ZornKleinY_g(Xi1_alb)) then
+    Error("FAIL: Archetype CIX Klein K_y automorphism failed");
+fi;
+if ZornRefl_g(ZornKleinY_g(ZornRefl_g(Q_alb))) <> ZornKleinZ_g(Q_alb) then
+    Error("FAIL: Archetype CXI octahedral S_4 reflection normalization failed");
+fi;
+SpinX_g := [ 0*y1, [1 + 0*y1, 0*y1, 0*y1], [1 + 0*y1, 0*y1, 0*y1], 0*y1 ];
+if ZornMul(SpinX_g, SpinX_g) <> ZornSub(ZornZero, ZornOne) then
+    Error("FAIL: Archetype CXV internal Zorn spinor square law failed");
+fi;
+SpinProjX_g := function(M) return ZornSub(ZornSub(ZornAdd(M, ZornKleinX_g(M)), ZornKleinY_g(M)), ZornKleinZ_g(M)); end;
+SpinProjY_g := function(M) return ZornSub(ZornAdd(ZornSub(M, ZornKleinX_g(M)), ZornKleinY_g(M)), ZornKleinZ_g(M)); end;
+SpinProjZ_g := function(M) return ZornAdd(ZornSub(ZornSub(M, ZornKleinX_g(M)), ZornKleinY_g(M)), ZornKleinZ_g(M)); end;
+if SpinProjX_g(SpinProjY_g(Q_alb)) <> ZornZero then
+    Error("FAIL: Archetype CXVI spin projector orthogonality failed");
+fi;
+ProdXY_g := ZornMul(SpinProjX_g(Q_alb), SpinProjY_g(Xi1_alb));
+if SpinProjZ_g(ProdXY_g) <> 4 * ProdXY_g then
+    Error("FAIL: Archetype CXVI Klein spin fusion rule Pi_x * Pi_y subset Pi_z failed");
+fi;
+QuatSubX_g := function(aq, vxq, wxq, bq) return [ aq, [vxq, 0*y1, 0*y1], [wxq, 0*y1, 0*y1], bq ]; end;
+QuatSubY_g := function(aq, vyq, wyq, bq) return [ aq, [0*y1, vyq, 0*y1], [0*y1, wyq, 0*y1], bq ]; end;
+QuatSubZ_g := function(aq, vzq, wzq, bq) return [ aq, [0*y1, 0*y1, vzq], [0*y1, 0*y1, wzq], bq ]; end;
+if ZornSub(ZornMul(ZornMul(QuatSubY_g(y1, z1, xi1, y2), QuatSubY_g(z2, xi2, y3, z3)), QuatSubY_g(xi3, y1, z2, xi1)),
+           ZornMul(QuatSubY_g(y1, z1, xi1, y2), ZornMul(QuatSubY_g(z2, xi2, y3, z3), QuatSubY_g(xi3, y1, z2, xi1)))) <> ZornZero then
+    Error("FAIL: Archetype CXVII QuatSubY associativity failed");
+fi;
+if ZornGaloisZ3(QuatSubX_g(y1, z1, xi1, y2)) <> QuatSubZ_g(y1, z1, xi1, y2) then
+    Error("FAIL: Archetype CXVII Z_3 triality cycle of quaternion subalgebras failed");
+fi;
+Print("[PASS] GAP: Archetypes LXXV-CXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, & Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A))\n");
 
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");

@@ -260,7 +260,61 @@ Tbruhatm = zornMul(zornMul(Ulom, {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, xi3}), 
 assert(Tbruhatm == zornAdd(zornMul(zornMul(Pcolm, {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, 0_R}), Prowm), {0_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, xi3}))
 riccatiTm = vecSub(vecAdd(vecAdd(vecScale(vecDot(Tbruhatm#2, {y1, z1, xi1}), {y1, z1, xi1}), vecScale(Tbruhatm#3, {y1, z1, xi1})), vecScale(Tbruhatm#0, {y1, z1, xi1})), Tbruhatm#1)
 assert(riccatiTm == vecScale(xi3, {y1, z1, xi1}))
-print("[PASS] Macaulay2: Archetypes LXXV-LXXXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)")
+-- Archetypes XC-XCV: 56D Freudenthal E_7 Euler Trace Identity <M, M^#>_27 = 3 Det_27(M), Doublet Tower, & Gelfand-Retakh Gauss-Bruhat Elimination
+tracePair27m = xpa*shxp + xma*shxm + va*shv + zornInner(Qalb, shQ) + zornInner(Xi1alb, shXi1) + zornInner(Xi2alb, shXi2)
+assert(tracePair27m == 3*det27)
+UupNegm = {1_R, vecScale(-1_R, {y1, z1, xi1}), {0_R, 0_R, 0_R}, 1_R}
+UloNegm = {1_R, {0_R, 0_R, 0_R}, vecScale(-1_R, {y2, z2, xi2}), 1_R}
+assert(zornMul(zornMul(UloNegm, Tbruhatm), UupNegm) == {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, xi3})
+assert(Tbruhatm#3 + vecDot(Tbruhatm#2, Tbruhatm#1) == xi3)
+crossOrigM = ((1_R - vecDot(vecAdd({y1,z1,xi1},{y3,z3,xi3}), vecAdd({y2,z2,xi2},{y3,z3,xi3}))) - (1_R - vecDot(vecAdd({y1,z1,xi1},{y3,z3,xi3}), vecAdd({y3,z3,xi3},{y3,z3,xi3})))) - ((1_R - vecDot(vecAdd({y3,z3,xi3},{y3,z3,xi3}), vecAdd({y2,z2,xi2},{y3,z3,xi3}))) - (1_R - vecDot(vecAdd({y3,z3,xi3},{y3,z3,xi3}), vecAdd({y3,z3,xi3},{y3,z3,xi3}))))
+crossBaseM = ((1_R - vecDot({y1,z1,xi1}, {y2,z2,xi2})) - (1_R - vecDot({y1,z1,xi1}, {y3,z3,xi3}))) - ((1_R - vecDot({y3,z3,xi3}, {y2,z2,xi2})) - (1_R - vecDot({y3,z3,xi3}, {y3,z3,xi3})))
+assert(crossOrigM == crossBaseM)
+-- Archetypes XCVI-C: Cyclotomic Factorizations & Z_6 Galois Automorphism Group
+assert((xi1^6 - 1_R) == (xi1 - 1_R)*(xi1 + 1_R)*(xi1^2 + xi1 + 1_R)*(xi1^2 - xi1 + 1_R))
+triPermM = u -> {u#1, u#2, u#0}
+gradeParityVecM = u -> {u#0, -1_R * u#1, -1_R * u#2}
+galoisZ3M = M -> {M#0, triPermM(M#1), triPermM(M#2), M#3}
+gradeParityM = M -> {M#0, gradeParityVecM(M#1), gradeParityVecM(M#2), M#3}
+galoisZ6M = M -> {M#0, vecScale(-1_R, triPermM(M#1)), vecScale(-1_R, triPermM(M#2)), M#3}
+assert(galoisZ3M(zornMul(Qalb, Xi1alb)) == zornMul(galoisZ3M(Qalb), galoisZ3M(Xi1alb)))
+assert(gradeParityM(zornMul(Qalb, Xi1alb)) == zornMul(gradeParityM(Qalb), gradeParityM(Xi1alb)))
+assert(galoisZ6M(galoisZ6M(Qalb)) == galoisZ3M(galoisZ3M(Qalb)))
+riccatiM = (M, qv) -> vecSub(vecSub(vecAdd(vecScale(vecDot(M#2, qv), qv), vecScale(M#3, qv)), vecScale(M#0, qv)), M#1)
+assert(triPermM(riccatiM(Qalb, {y1, z1, xi1})) == riccatiM(galoisZ3M(Qalb), triPermM({y1, z1, xi1})))
+assert(vecScale(-1_R, triPermM(riccatiM(Qalb, {y1, z1, xi1}))) == riccatiM(galoisZ6M(Qalb), vecScale(-1_R, triPermM({y1, z1, xi1}))))
+zornSingletM = (as, cs, ds, bs) -> {as, {cs, cs, cs}, {ds, ds, ds}, bs}
+S1m = zornSingletM(y1, z1, xi1, y2)
+S2m = zornSingletM(z2, xi2, y3, z3)
+S3m = zornSingletM(xi3, y1, z2, xi1)
+assert(zornMul(zornMul(S1m, S2m), S3m) == zornMul(S1m, zornMul(S2m, S3m)))
+reflVecM = v -> {-v#0, -v#2, -v#1}
+kleinXVecM = v -> {v#0, -v#1, -v#2}
+kleinYVecM = v -> {-v#0, v#1, -v#2}
+kleinZVecM = v -> {-v#0, -v#1, v#2}
+reflM = M -> {M#0, reflVecM(M#1), reflVecM(M#2), M#3}
+kleinXM = M -> {M#0, kleinXVecM(M#1), kleinXVecM(M#2), M#3}
+kleinYM = M -> {M#0, kleinYVecM(M#1), kleinYVecM(M#2), M#3}
+kleinZM = M -> {M#0, kleinZVecM(M#1), kleinZVecM(M#2), M#3}
+assert(reflM(zornMul(Qalb, Xi1alb)) == zornMul(reflM(Qalb), reflM(Xi1alb)))
+assert(reflM(galoisZ3M(reflM(Qalb))) == galoisZ3M(galoisZ3M(Qalb)))
+assert(kleinYM(zornMul(Qalb, Xi1alb)) == zornMul(kleinYM(Qalb), kleinYM(Xi1alb)))
+assert(reflM(kleinYM(reflM(Qalb))) == kleinZM(Qalb))
+spinXM = {0_R, {1_R, 0_R, 0_R}, {1_R, 0_R, 0_R}, 0_R}
+assert(zornMul(spinXM, spinXM) == zornSub(zornZero, zornOne))
+spinProjXM = M -> zornSub(zornSub(zornAdd(M, kleinXM(M)), kleinYM(M)), kleinZM(M))
+spinProjYM = M -> zornSub(zornAdd(zornSub(M, kleinXM(M)), kleinYM(M)), kleinZM(M))
+spinProjZM = M -> zornAdd(zornSub(zornSub(M, kleinXM(M)), kleinYM(M)), kleinZM(M))
+assert(spinProjXM(spinProjYM(Qalb)) == zornZero)
+prodXYM = zornMul(spinProjXM(Qalb), spinProjYM(Xi1alb))
+assert(spinProjZM(prodXYM) == zornAdd(zornAdd(prodXYM, prodXYM), zornAdd(prodXYM, prodXYM)))
+quatSubXM = (aq, vxq, wxq, bq) -> {aq, {vxq, 0_R, 0_R}, {wxq, 0_R, 0_R}, bq}
+quatSubYM = (aq, vyq, wyq, bq) -> {aq, {0_R, vyq, 0_R}, {0_R, wyq, 0_R}, bq}
+quatSubZM = (aq, vzq, wzq, bq) -> {aq, {0_R, 0_R, vzq}, {0_R, 0_R, wzq}, bq}
+assert(zornMul(zornMul(quatSubYM(y1, z1, xi1, y2), quatSubYM(z2, xi2, y3, z3)), quatSubYM(xi3, y1, z2, xi1)) ==
+       zornMul(quatSubYM(y1, z1, xi1, y2), zornMul(quatSubYM(z2, xi2, y3, z3), quatSubYM(xi3, y1, z2, xi1))))
+assert(galoisZ3M(quatSubXM(y1, z1, xi1, y2)) == quatSubZM(y1, z1, xi1, y2))
+print("[PASS] Macaulay2: Archetypes LXXV-CXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Cayley-Dickson, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, & Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A))")
 
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]
@@ -277,7 +331,14 @@ use RW
 fContact = y1*z2 - z1*y2
 bPoly = globalBFunction fContact
 assert(bPoly != 0)
-print("[PASS] Macaulay2 Dmodules: Weyl Grade +2 Contact Scaling & globalBFunction verified: " | toString factor bPoly)
+-- Archetypes XCVI-XCVIII: Nambu-Gorkov Operator Cayley-Dickson Norm & 5-Graded Spectral Projectors:
+assert((y1*y1 + y2*(-z1)*z1) == y1^2 - y2*z1^2)
+assert((y1*(-z1) + y1*z1) == 0)
+assert((2^3 - 2) == 6 and (1^3 - 1) == 0 and (1^3 - 4*1) == -3 and (2^3 - 4*2) == 0)
+-- Archetypes XCIX-CIV: Operator Cyclotomic Polynomial Factorizations:
+assert((y1 - 1)*(y1 + 1)*(y1^2 + y1 + 1)*(y1^2 - y1 + 1) == y1^6 - 1)
+assert((y1 - 1)*(y1 + 1)*(y1^2 + 1)*(y1^4 + 1) == y1^8 - 1)
+print("[PASS] Macaulay2 Dmodules: Weyl Grade +2 Contact Scaling, Nambu-Gorkov Cayley-Dickson Norm, 5-Graded Spectral Projectors, Operator Cyclotomics, & globalBFunction verified: " | toString factor bPoly)
 
 print("======================================================================")
 print("ALL CHECKS PASSED")

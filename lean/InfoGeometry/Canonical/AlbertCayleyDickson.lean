@@ -7329,6 +7329,1652 @@ theorem trifactorLoxodromicCompass_moebius_inversion_and_zorn_riccati_fixed_poin
   exact ⟨h1.1, h1.2.1, h1.2.2.1, h1.2.2.2.1, h1.2.2.2.2.1, h1.2.2.2.2.2,
     h2.1, h2.2.1, h2.2.2.1, h2.2.2.2⟩
 
+/-!
+## 39. Archetypes XC & XCI: Noncommutative Operator 56D Freudenthal System, Chiral Sharp Map, Euler Triple-Trace Pairing, & Symplectic $S$-Duality
+-/
+
+/-- Chiral Freudenthal sharp maps $(Q^\#, \Xi_1^\#, \Xi_2^\#) = (\overline{\Xi_1 * \Xi_2}, \overline{\Xi_2 * Q}, \overline{Q * \Xi_1})$
+    on `OpZornMatrix A`. -/
+@[simp] def opAlbertChiralSharpQ (Ξ₁ Ξ₂ : OpZornMatrix A) : OpZornMatrix A :=
+  opCayleyConj (Ξ₁ * Ξ₂)
+
+@[simp] def opAlbertChiralSharpXi1 (Ξ₂ Q : OpZornMatrix A) : OpZornMatrix A :=
+  opCayleyConj (Ξ₂ * Q)
+
+@[simp] def opAlbertChiralSharpXi2 (Q Ξ₁ : OpZornMatrix A) : OpZornMatrix A :=
+  opCayleyConj (Q * Ξ₁)
+
+/-- Noncommutative 56D Freudenthal symplectic pairing
+    $\Omega_{56}(\alpha_1, \beta_1, \alpha_2, \beta_2, t_{12}, t_{21}) = \alpha_1 \beta_2 - \beta_1 \alpha_2 + t_{12} - t_{21}$. -/
+@[simp] def opFreudenthal56Symplectic (α₁ β₁ α₂ β₂ t₁₂ t₂₁ : A) : A :=
+  α₁ * β₂ - β₁ * α₂ + t₁₂ - t₂₁
+
+/-- **Theorem 110 (Archetypes XC & XCI — Noncommutative Chiral Freudenthal Sharp Map, Euler Triple-Trace Pairing, & 56D Symplectic $S$-Duality)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all chiral lightcone fields
+    $q, \xi_1, \xi_2 \in \mathrm{OpVec3}\;A$ with $Q = L_+(q)$, $\Xi_1 = L_+(\xi_1)$, $\Xi_2 = L_+(\xi_2)$
+    and all operator charges $\alpha, \beta, \alpha_1, \beta_1, \alpha_2, \beta_2, t, t_{12}, t_{21} \in A$:
+    1. Exact Chiral Sharp Cross-Product Dualization ($\mathcal{G}_{+1} \times \mathcal{G}_{+1} \to \mathcal{G}_{-1}$):
+       $$Q^\# = -L_-(\xi_1 \times_{\mathrm{skew}} \xi_2), \qquad
+         \Xi_1^\# = -L_-(\xi_2 \times_{\mathrm{skew}} q), \qquad
+         \Xi_2^\# = -L_-(q \times_{\mathrm{skew}} \xi_1).$$
+    2. Exact Noncommutative Euler Chiral Sharp Pairing Into the $e_{11}$ Corner:
+       $$Q * \overline{Q^\#} = \mathrm{opGradeZero}\;(-\det_L(q, \xi_1, \xi_2))\;0,$$
+       $$\Xi_1 * \overline{\Xi_1^\#} = \mathrm{opGradeZero}\;(-\det_L(\xi_1, \xi_2, q))\;0,$$
+       $$\Xi_2 * \overline{\Xi_2^\#} = \mathrm{opGradeZero}\;(-\det_L(\xi_2, q, \xi_1))\;0,$$
+       $$Q * \overline{Q^\#} + \Xi_1 * \overline{\Xi_1^\#} + \Xi_2 * \overline{\Xi_2^\#} =
+         \mathrm{opGradeZero}\;(-(\det_L(q, \xi_1, \xi_2) + \det_L(\xi_1, \xi_2, q) + \det_L(\xi_2, q, \xi_1)))\;0.$$
+    3. 56D Noncommutative Symplectic Commutator Defect, Diagonal Alternation, & Dual Skew-Symmetry:
+       $$\Omega_{56}(\alpha, \beta, \alpha, \beta, t, t) = \alpha * \beta - \beta * \alpha, \qquad
+         \Omega_{56}(\alpha, \alpha, \alpha, \alpha, t, t) = 0,$$
+       $$\Omega_{56}(\alpha_1, \beta_1, \alpha_2, \beta_2, t_{12}, t_{21}) +
+         \Omega_{56}(-\alpha_1, \beta_1, \alpha_2, -\beta_2, t_{21}, t_{12}) = 0.$$ -/
+theorem opFreudenthal56_chiral_sharp_symplectic_and_euler_triple_trace
+    (q ξ₁ ξ₂ : OpVec3 A) (α β α₁ β₁ α₂ β₂ t t₁₂ t₂₁ : A) :
+    let Q := opLightconePlus q
+    let Ξ₁ := opLightconePlus ξ₁
+    let Ξ₂ := opLightconePlus ξ₂
+    let Q_sh := opAlbertChiralSharpQ Ξ₁ Ξ₂
+    let Ξ₁_sh := opAlbertChiralSharpXi1 Ξ₂ Q
+    let Ξ₂_sh := opAlbertChiralSharpXi2 Q Ξ₁
+    let Δ₀ := OpVec3.baryonDetLeft q ξ₁ ξ₂
+    let Δ₁ := OpVec3.baryonDetLeft ξ₁ ξ₂ q
+    let Δ₂ := OpVec3.baryonDetLeft ξ₂ q ξ₁
+    Q_sh = -opLightconeMinus (OpVec3.skewCross ξ₁ ξ₂) ∧
+    Ξ₁_sh = -opLightconeMinus (OpVec3.skewCross ξ₂ q) ∧
+    Ξ₂_sh = -opLightconeMinus (OpVec3.skewCross q ξ₁) ∧
+    Q * opCayleyConj Q_sh = opGradeZero (-Δ₀) 0 ∧
+    Ξ₁ * opCayleyConj Ξ₁_sh = opGradeZero (-Δ₁) 0 ∧
+    Ξ₂ * opCayleyConj Ξ₂_sh = opGradeZero (-Δ₂) 0 ∧
+    Q * opCayleyConj Q_sh + Ξ₁ * opCayleyConj Ξ₁_sh + Ξ₂ * opCayleyConj Ξ₂_sh =
+      opGradeZero (-(Δ₀ + Δ₁ + Δ₂)) 0 ∧
+    opFreudenthal56Symplectic α β α β t t = α * β - β * α ∧
+    opFreudenthal56Symplectic α α α α t t = 0 ∧
+    opFreudenthal56Symplectic α₁ β₁ α₂ β₂ t₁₂ t₂₁ +
+      opFreudenthal56Symplectic (-α₁) (-β₁) α₂ β₂ t₂₁ t₁₂ = 0 := by
+  intro Q Ξ₁ Ξ₂ Q_sh Ξ₁_sh Ξ₂_sh Δ₀ Δ₁ Δ₂
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+      (simp [Q_sh, opAlbertChiralSharpQ, Ξ₁, Ξ₂, opCayleyConj, opLightconeMinus,
+             opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross,
+             OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [Ξ₁_sh, opAlbertChiralSharpXi1, Ξ₂, Q, opCayleyConj, opLightconeMinus,
+             opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross,
+             OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [Ξ₂_sh, opAlbertChiralSharpXi2, Q, Ξ₁, opCayleyConj, opLightconeMinus,
+             opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross,
+             OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [Q, Q_sh, opAlbertChiralSharpQ, Ξ₁, Ξ₂, Δ₀, OpVec3.baryonDetLeft,
+             opCayleyConj, opGradeZero, opCartanDiag, opLightconeRayPlus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [Ξ₁, Ξ₁_sh, opAlbertChiralSharpXi1, Ξ₂, Q, Δ₁, OpVec3.baryonDetLeft,
+             opCayleyConj, opGradeZero, opCartanDiag, opLightconeRayPlus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [Ξ₂, Ξ₂_sh, opAlbertChiralSharpXi2, Q, Ξ₁, Δ₂, OpVec3.baryonDetLeft,
+             opCayleyConj, opGradeZero, opCartanDiag, opLightconeRayPlus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [Q, Ξ₁, Ξ₂, Q_sh, Ξ₁_sh, Ξ₂_sh, opAlbertChiralSharpQ, opAlbertChiralSharpXi1,
+             opAlbertChiralSharpXi2, Δ₀, Δ₁, Δ₂, OpVec3.baryonDetLeft,
+             opCayleyConj, opGradeZero, opCartanDiag, opLightconeRayPlus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · simp [opFreudenthal56Symplectic]
+  · simp [opFreudenthal56Symplectic]
+  · simp [opFreudenthal56Symplectic]; abel
+
+/-!
+## 40. Archetypes XCII & XCIII: Inductive Colimit Doublet Tower Bridge, Cantor-Peirce Bit-Split, & Orthogonal Root-Ray Compass-Needle Semigroup Homomorphism
+-/
+
+/-- Diagonal unital doublet embedding $\iota_{\mathrm{diag}}(a) = \mathrm{opGradeZero}\;a\;a = \langle a, 0, 0, a \rangle$. -/
+@[simp] def opDoubletDiagEmbed (a : A) : OpZornMatrix A :=
+  opGradeZero a a
+
+/-- Peirce $(1,1)$ bit-0 corner embedding $\iota_{11}(a) = \mathrm{opGradeZero}\;a\;0 = \langle a, 0, 0, 0 \rangle$. -/
+@[simp] def opPeirceCornerEmbed11 (a : A) : OpZornMatrix A :=
+  opGradeZero a 0
+
+/-- Peirce $(2,2)$ bit-1 corner embedding $\iota_{22}(b) = \mathrm{opGradeZero}\;0\;b = \langle 0, 0, 0, b \rangle$. -/
+@[simp] def opPeirceCornerEmbed22 (b : A) : OpZornMatrix A :=
+  opGradeZero 0 b
+
+/-- Orthogonal root-ray compass-needle embedding
+    $\varpi_{y_1, \xi_1}(a) = (P_{\mathrm{col}}(\langle \xi_1, 0, 0 \rangle) * \iota_{11}(a)) * P_{\mathrm{row}}(\langle 0, y_1, 0 \rangle)$. -/
+@[simp] def opCompassRootEmbed (y₁ ξ₁ a : A) : OpZornMatrix A :=
+  (opCompassNeedleCol ⟨ξ₁, 0, 0⟩ * opPeirceCornerEmbed11 a) * opCompassNeedleRow ⟨0, y₁, 0⟩
+
+/-- **Theorem 111 (Archetypes XCII & XCIII — Inductive Colimit Doublet Tower Bridge, Cantor-Peirce Bit-Split, & Compass-Needle Semigroup Homomorphism)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all $a, b, y_1, \xi_1 \in A$:
+    1. Exact Unital Ring Homomorphism & Left-Inverse Retraction of `opDoubletDiagEmbed` (`TensorTowerColimit` Bridge):
+       $$\iota_{\mathrm{diag}}(0) = 0, \quad \iota_{\mathrm{diag}}(1) = 1, \quad
+         \iota_{\mathrm{diag}}(a + b) = \iota_{\mathrm{diag}}(a) + \iota_{\mathrm{diag}}(b), \quad
+         \iota_{\mathrm{diag}}(a * b) = \iota_{\mathrm{diag}}(a) * \iota_{\mathrm{diag}}(b),$$
+       $$(\iota_{\mathrm{diag}}(a)).a = a, \qquad \mathrm{opZornTrace}(\iota_{\mathrm{diag}}(a)) = a + a.$$
+    2. Cantor-Peirce Binary Bit-Split (`UHFInductiveColimitBoundary` Bridge):
+       $$\iota_{\mathrm{diag}}(a) = \iota_{11}(a) + \iota_{22}(a), \qquad
+         \iota_{11}(a) * \iota_{22}(b) = 0, \qquad \iota_{22}(b) * \iota_{11}(a) = 0,$$
+       $$\iota_{11}(a) * \iota_{11}(b) = \iota_{11}(a * b), \qquad
+         \iota_{22}(a) * \iota_{22}(b) = \iota_{22}(a * b).$$
+    3. Orthogonal Root-Ray Compass-Needle Semigroup Homomorphism & Idempotence:
+       $$\varpi_{y_1, \xi_1}(a) * \varpi_{y_1, \xi_1}(b) = \varpi_{y_1, \xi_1}(a * b), \qquad
+         \varpi_{y_1, \xi_1}(1) * \varpi_{y_1, \xi_1}(1) = \varpi_{y_1, \xi_1}(1).$$ -/
+theorem opDoubletTower_cantor_peirce_and_compass_semigroup_homomorphism
+    (a b y₁ ξ₁ : A) :
+    opDoubletDiagEmbed (0 : A) = 0 ∧
+    opDoubletDiagEmbed (1 : A) = 1 ∧
+    opDoubletDiagEmbed (a + b) = opDoubletDiagEmbed a + opDoubletDiagEmbed b ∧
+    opDoubletDiagEmbed (a * b) = opDoubletDiagEmbed a * opDoubletDiagEmbed b ∧
+    (opDoubletDiagEmbed a).a = a ∧
+    opZornTrace (opDoubletDiagEmbed a) = a + a ∧
+    opDoubletDiagEmbed a = opPeirceCornerEmbed11 a + opPeirceCornerEmbed22 a ∧
+    opPeirceCornerEmbed11 a * opPeirceCornerEmbed22 b = 0 ∧
+    opPeirceCornerEmbed22 b * opPeirceCornerEmbed11 a = 0 ∧
+    opPeirceCornerEmbed11 a * opPeirceCornerEmbed11 b = opPeirceCornerEmbed11 (a * b) ∧
+    opPeirceCornerEmbed22 a * opPeirceCornerEmbed22 b = opPeirceCornerEmbed22 (a * b) ∧
+    opCompassRootEmbed y₁ ξ₁ a * opCompassRootEmbed y₁ ξ₁ b = opCompassRootEmbed y₁ ξ₁ (a * b) ∧
+    opCompassRootEmbed y₁ ξ₁ 1 * opCompassRootEmbed y₁ ξ₁ 1 = opCompassRootEmbed y₁ ξ₁ 1 := by
+  refine ⟨?_, ?_, ?_, ?_, rfl, rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [opDoubletDiagEmbed, opGradeZero, opCartanDiag]
+  · ext <;> simp [opDoubletDiagEmbed, opGradeZero, opCartanDiag]
+  · ext <;> simp [opDoubletDiagEmbed, opGradeZero, opCartanDiag]
+  · ext <;>
+      simp [opDoubletDiagEmbed, opGradeZero, opCartanDiag, OpVec3.dot,
+            OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [opDoubletDiagEmbed, opPeirceCornerEmbed11, opPeirceCornerEmbed22, opGradeZero, opCartanDiag]
+  · ext <;>
+      simp [opPeirceCornerEmbed11, opPeirceCornerEmbed22, opGradeZero, opCartanDiag,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      simp [opPeirceCornerEmbed11, opPeirceCornerEmbed22, opGradeZero, opCartanDiag,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      simp [opPeirceCornerEmbed11, opGradeZero, opCartanDiag,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      simp [opPeirceCornerEmbed22, opGradeZero, opCartanDiag,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      (simp [opCompassRootEmbed, opCompassNeedleCol, opCompassNeedleRow, opPeirceCornerEmbed11,
+             opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale, mul_assoc];
+       try noncomm_ring)
+  · ext <;>
+      (simp [opCompassRootEmbed, opCompassNeedleCol, opCompassNeedleRow, opPeirceCornerEmbed11,
+             opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale])
+
+/-!
+## 41. Archetypes XCIV & XCV: Noncommutative Gelfand–Retakh Quasideterminants, Exact Gauss–Bruhat Trifactor Elimination, Bimodule Curvature, Riccati Taylor Shift, & Operator Berezinian
+-/
+
+/-- Noncommutative operator Berezinian $\mathrm{Ber}_{\mathrm{nc}}(u, \Delta) = (u : A) * (\uparrow \Delta^{-1} : A)$. -/
+@[simp] def opNoncommBerezinian (u Δ : Aˣ) : A :=
+  (u : A) * (↑Δ⁻¹ : A)
+
+/-- Inverse noncommutative operator Berezinian $\mathrm{Ber}_{\mathrm{nc}}^{-1}(u, \Delta) = (\Delta : A) * (\uparrow u^{-1} : A)$. -/
+@[simp] def opNoncommBerezinianInv (u Δ : Aˣ) : A :=
+  (Δ : A) * (↑u⁻¹ : A)
+
+theorem gelfandRetakh_gauss_bruhat_elimination_and_bimodule_curvature
+    (v w : OpVec3 A) (lam mu Δ : A) :
+    let T_u1 := opBruhatTrifactor w 1 Δ v
+    opUnipotentUpper v * opUnipotentUpper (-v) = 1 ∧
+    opUnipotentLower w * opUnipotentLower (-w) = 1 ∧
+    (opUnipotentLower (-w) * T_u1) * opUnipotentUpper (-v) = opGradeZero 1 Δ ∧
+    T_u1.b + OpVec3.dot T_u1.w T_u1.v = Δ ∧
+    opUnipotentLower (-w) * (opUnipotentLower w * opGradeZero lam mu) =
+      opGradeZero lam mu + opLightconePlus (OpVec3.skewCross w (OpVec3.rightScale w lam)) ∧
+    (opGradeZero lam mu * opUnipotentUpper v) * opUnipotentUpper (-v) =
+      opGradeZero lam mu - opLightconeMinus (OpVec3.skewCross (OpVec3.leftScale lam v) v) := by
+  intro T_u1
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+      simp [opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+            OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      simp [opUnipotentLower, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+            OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      (simp [T_u1, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper,
+             opGradeZero, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try abel; try noncomm_ring)
+  · simp [T_u1, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+          OpVec3.leftScale, OpVec3.rightScale]
+    abel
+  · ext <;>
+      (simp [opUnipotentLower, opGradeZero, opCartanDiag, opLightconeRayPlus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [opUnipotentUpper, opGradeZero, opCartanDiag, opLightconeRayMinus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+
+theorem zornRiccati_taylor_shift_and_noncomm_berezinian_unit
+    (X : OpZornMatrix A) (q δ : OpVec3 A) (u Δ : Aˣ) :
+    opZornRiccati X (q + δ) =
+      opZornRiccati X q +
+      (OpVec3.leftScale X.a δ + OpVec3.rightScale δ (X.b + OpVec3.dot X.w q) +
+        OpVec3.rightScale q (OpVec3.dot X.w δ)) +
+      OpVec3.rightScale δ (OpVec3.dot X.w δ) ∧
+    opCartanDiag (u : A) (Δ : A) * opCartanDiag (↑u⁻¹ : A) (↑Δ⁻¹ : A) = 1 ∧
+    opCartanDiag (↑u⁻¹ : A) (↑Δ⁻¹ : A) * opCartanDiag (u : A) (Δ : A) = 1 ∧
+    opNoncommBerezinian u Δ * opNoncommBerezinianInv u Δ = 1 ∧
+    opNoncommBerezinianInv u Δ * opNoncommBerezinian u Δ = 1 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+      (simp [opZornRiccati, OpVec3.dot, OpVec3.leftScale, OpVec3.rightScale];
+       noncomm_ring)
+  · ext <;>
+      simp [opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+            OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      simp [opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+            OpVec3.leftScale, OpVec3.rightScale]
+  · simp [opNoncommBerezinian, opNoncommBerezinianInv, mul_assoc]
+  · simp [opNoncommBerezinian, opNoncommBerezinianInv, mul_assoc]
+
+/-- **Theorem 112 (Archetypes XCIV & XCV — Noncommutative Gelfand–Retakh Quasideterminants, Exact Gauss–Bruhat Trifactor Elimination, Bimodule Curvature, Riccati Taylor Shift, & Operator Berezinian)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all $X \in \mathrm{OpZornMatrix}\;A$,
+    $v, w, q, \delta \in \mathrm{OpVec3}\;A$, $\lambda, \mu, \Delta \in A$, and units $u, \Delta_u \in A^\times$:
+    1. Exact Gauss–Bruhat Unipotent Elimination & Gelfand–Retakh $(2,2)$-Quasideterminant Extraction:
+       $$U_+(v) * U_+(-v) = 1, \qquad U_-(w) * U_-(-w) = 1,$$
+       $$(U_-(-w) * \mathrm{opBruhatTrifactor}\;w\;1\;\Delta\;v) * U_+(-v) = \mathrm{opGradeZero}\;1\;\Delta,$$
+       $$(\mathrm{opBruhatTrifactor}\;w\;1\;\Delta\;v).b +
+         (\mathrm{opBruhatTrifactor}\;w\;1\;\Delta\;v).w \cdot (\mathrm{opBruhatTrifactor}\;w\;1\;\Delta\;v).v = \Delta.$$
+    2. Exact Yang–Mills Noncommutative Bimodule Curvature of General Cartan Elimination:
+       $$U_-(-w) * (U_-(w) * \mathrm{opGradeZero}\;\lambda\;\mu) =
+         \mathrm{opGradeZero}\;\lambda\;\mu + L_+\bigl(w \times_{\mathrm{skew}} (w \cdot_{\mathrm{R}} \lambda)\bigr),$$
+       $$(\mathrm{opGradeZero}\;\lambda\;\mu * U_+(v)) * U_+(-v) =
+         \mathrm{opGradeZero}\;\lambda\;\mu - L_-\bigl((\lambda \cdot_{\mathrm{L}} v) \times_{\mathrm{skew}} v\bigr).$$
+    3. Noncommutative Zorn–Riccati Taylor Shift Cocycle & Operator Berezinian Unit Laws:
+       $$\mathrm{opZornRiccati}\;X\;(q + \delta) =
+         \mathrm{opZornRiccati}\;X\;q +
+         \bigl(X.a \cdot_{\mathrm{L}} \delta + \delta \cdot_{\mathrm{R}} (X.b + X.w \cdot q) + q \cdot_{\mathrm{R}} (X.w \cdot \delta)\bigr) +
+         \delta \cdot_{\mathrm{R}} (X.w \cdot \delta),$$
+       $$\mathrm{opNoncommBerezinian}\;u\;\Delta_u * \mathrm{opNoncommBerezinianInv}\;u\;\Delta_u = 1, \qquad
+         \mathrm{opNoncommBerezinianInv}\;u\;\Delta_u * \mathrm{opNoncommBerezinian}\;u\;\Delta_u = 1.$$ -/
+theorem gelfandRetakh_quasideterminant_gauss_bruhat_elimination_and_berezinian
+    (X : OpZornMatrix A) (v w q δ : OpVec3 A) (lam mu Δ : A) (u Δ_u : Aˣ) :
+    let T_u1 := opBruhatTrifactor w 1 Δ v
+    (opUnipotentUpper v * opUnipotentUpper (-v) = 1 ∧
+     opUnipotentLower w * opUnipotentLower (-w) = 1 ∧
+     (opUnipotentLower (-w) * T_u1) * opUnipotentUpper (-v) = opGradeZero 1 Δ ∧
+     T_u1.b + OpVec3.dot T_u1.w T_u1.v = Δ ∧
+     opUnipotentLower (-w) * (opUnipotentLower w * opGradeZero lam mu) =
+       opGradeZero lam mu + opLightconePlus (OpVec3.skewCross w (OpVec3.rightScale w lam)) ∧
+     (opGradeZero lam mu * opUnipotentUpper v) * opUnipotentUpper (-v) =
+       opGradeZero lam mu - opLightconeMinus (OpVec3.skewCross (OpVec3.leftScale lam v) v)) ∧
+    (opZornRiccati X (q + δ) =
+       opZornRiccati X q +
+       (OpVec3.leftScale X.a δ + OpVec3.rightScale δ (X.b + OpVec3.dot X.w q) +
+         OpVec3.rightScale q (OpVec3.dot X.w δ)) +
+       OpVec3.rightScale δ (OpVec3.dot X.w δ) ∧
+     opCartanDiag (u : A) (Δ_u : A) * opCartanDiag (↑u⁻¹ : A) (↑Δ_u⁻¹ : A) = 1 ∧
+     opCartanDiag (↑u⁻¹ : A) (↑Δ_u⁻¹ : A) * opCartanDiag (u : A) (Δ_u : A) = 1 ∧
+     opNoncommBerezinian u Δ_u * opNoncommBerezinianInv u Δ_u = 1 ∧
+     opNoncommBerezinianInv u Δ_u * opNoncommBerezinian u Δ_u = 1) :=
+  ⟨gelfandRetakh_gauss_bruhat_elimination_and_bimodule_curvature v w lam mu Δ,
+   zornRiccati_taylor_shift_and_noncomm_berezinian_unit X q δ u Δ_u⟩
+
+/-- **Functorial 3-Vector Lift (`OpVec3.map f u`)**:
+    Applies a ring homomorphism $f : A \to+* B$ componentwise to `u : OpVec3 A`. -/
+@[simp] def OpVec3.map {B : Type*} [Ring B] (f : A →+* B) (u : OpVec3 A) : OpVec3 B :=
+  ⟨f u.x, f u.y, f u.z⟩
+
+/-- **Functorial 8D Operator Zorn Lift (`OpZornMatrix.map f X`)**:
+    Applies a ring homomorphism $f : A \to+* B$ to `X : OpZornMatrix A`. -/
+@[simp] def OpZornMatrix.map {B : Type*} [Ring B] (f : A →+* B) (X : OpZornMatrix A) : OpZornMatrix B :=
+  ⟨f X.a, OpVec3.map f X.v, OpVec3.map f X.w, f X.b⟩
+
+theorem OpZornMatrix.map_add {B : Type*} [Ring B] (f : A →+* B) (X Y : OpZornMatrix A) :
+    OpZornMatrix.map f (X + Y) = OpZornMatrix.map f X + OpZornMatrix.map f Y := by
+  ext <;> simp [OpZornMatrix.map, OpVec3.map]
+
+theorem OpZornMatrix.map_sub {B : Type*} [Ring B] (f : A →+* B) (X Y : OpZornMatrix A) :
+    OpZornMatrix.map f (X - Y) = OpZornMatrix.map f X - OpZornMatrix.map f Y := by
+  ext <;> simp [OpZornMatrix.map, OpVec3.map]
+
+theorem OpZornMatrix.map_mul {B : Type*} [Ring B] (f : A →+* B) (X Y : OpZornMatrix A) :
+    OpZornMatrix.map f (X * Y) = OpZornMatrix.map f X * OpZornMatrix.map f Y := by
+  ext <;>
+    simp [OpZornMatrix.map, OpVec3.map, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+          OpVec3.leftScale, OpVec3.rightScale]
+
+/-- **Theorem 113 (Archetypes XC–XCV — Functorial Ring-Homomorphism Intertwining of `OpVec3.map` & `OpZornMatrix.map`, Colimit Bonding Naturality, On-Shell Trifactor Tangent Linearization, & 4-Spinor Cross-Difference Translation Invariance)**:
+    Over *any* noncommutative operator rings $A, B$ (`[Ring A] [Ring B]`) and any ring homomorphism
+    $f : A \to+* B$, for all $X, Y, Z \in \mathrm{OpZornMatrix}\;A$, all $x \in A$, and all $u, v, w, q, \delta, v_1, v_2, w_3, w_4, \delta_v, \delta_w \in \mathrm{OpVec3}\;A$:
+    1. **Exact Functoriality & Colimit Bonding Naturality of `OpVec3.map` & `OpZornMatrix.map`**:
+       $$\mathrm{OpZornMatrix.map}\;(\mathrm{RingHom.id}\;A)\;X = X,$$
+       $$\mathrm{OpZornMatrix.map}\;f\;(\mathrm{opDoubletDiagEmbed}\;x) = \mathrm{opDoubletDiagEmbed}\;(f\;x),$$
+       $$\mathrm{OpVec3.dot}\;(\mathrm{OpVec3.map}\;f\;u)\;(\mathrm{OpVec3.map}\;f\;w) = f\;(\mathrm{OpVec3.dot}\;u\;w),$$
+       $$\mathrm{OpVec3.skewCross}\;(\mathrm{OpVec3.map}\;f\;u)\;(\mathrm{OpVec3.map}\;f\;v) = \mathrm{OpVec3.map}\;f\;(\mathrm{OpVec3.skewCross}\;u\;v),$$
+       $$\mathrm{OpZornMatrix.map}\;f\;(X + Y) = \mathrm{OpZornMatrix.map}\;f\;X + \mathrm{OpZornMatrix.map}\;f\;Y,$$
+       $$\mathrm{OpZornMatrix.map}\;f\;(X * Y) = \mathrm{OpZornMatrix.map}\;f\;X * \mathrm{OpZornMatrix.map}\;f\;Y,$$
+       $$\mathrm{OpZornMatrix.map}\;f\;(\mathrm{opAssociator}\;X\;Y\;Z) = \mathrm{opAssociator}\;(\mathrm{OpZornMatrix.map}\;f\;X)\;(\mathrm{OpZornMatrix.map}\;f\;Y)\;(\mathrm{OpZornMatrix.map}\;f\;Z),$$
+       $$\mathrm{OpVec3.map}\;f\;(\mathrm{opZornRiccati}\;X\;q) = \mathrm{opZornRiccati}\;(\mathrm{OpZornMatrix.map}\;f\;X)\;(\mathrm{OpVec3.map}\;f\;q).$$
+    2. **Exact Tangent Linearization at the On-Shell Trifactor Fixed Point $T_0 = \mathrm{opBruhatTrifactor}\;w\;1\;0\;v$ & 4-Spinor Cross-Difference Translation Invariance**:
+       $$\mathrm{opZornRiccati}\;T_0\;(v + \delta) =
+         \delta + \mathrm{OpVec3.rightScale}\;v\;(\mathrm{OpVec3.dot}\;w\;\delta) +
+         \mathrm{OpVec3.rightScale}\;\delta\;(\mathrm{OpVec3.dot}\;w\;\delta),$$
+       $$\bigl(P_{\mathrm{row}}(v_1 + \delta_v) * P_{\mathrm{col}}(w_3 + \delta_w) - P_{\mathrm{row}}(v_1 + \delta_v) * P_{\mathrm{col}}(w_4 + \delta_w)\bigr) -
+         \bigl(P_{\mathrm{row}}(v_2 + \delta_v) * P_{\mathrm{col}}(w_3 + \delta_w) - P_{\mathrm{row}}(v_2 + \delta_v) * P_{\mathrm{col}}(w_4 + \delta_w)\bigr) =$$
+       $$\bigl(P_{\mathrm{row}}(v_1) * P_{\mathrm{col}}(w_3) - P_{\mathrm{row}}(v_1) * P_{\mathrm{col}}(w_4)\bigr) -
+         \bigl(P_{\mathrm{row}}(v_2) * P_{\mathrm{col}}(w_3) - P_{\mathrm{row}}(v_2) * P_{\mathrm{col}}(w_4)\bigr).$$ -/
+theorem opZorn_functorial_map_and_trifactor_riccati_tangent_linearization
+    {B : Type*} [Ring B] (f : A →+* B)
+    (X Y Z : OpZornMatrix A) (x : A) (u v w q δ v₁ v₂ w₃ w₄ δ_v δ_w : OpVec3 A) :
+    let T₀ := opBruhatTrifactor w 1 0 v
+    let amp (v' w' : OpVec3 A) : OpZornMatrix A := opCompassNeedleRow v' * opCompassNeedleCol w'
+    OpZornMatrix.map (RingHom.id A) X = X ∧
+    OpZornMatrix.map f (opDoubletDiagEmbed x) = opDoubletDiagEmbed (f x) ∧
+    OpVec3.dot (OpVec3.map f u) (OpVec3.map f w) = f (OpVec3.dot u w) ∧
+    OpVec3.skewCross (OpVec3.map f u) (OpVec3.map f v) = OpVec3.map f (OpVec3.skewCross u v) ∧
+    OpZornMatrix.map f (X + Y) = OpZornMatrix.map f X + OpZornMatrix.map f Y ∧
+    OpZornMatrix.map f (X * Y) = OpZornMatrix.map f X * OpZornMatrix.map f Y ∧
+    OpZornMatrix.map f (opAssociator X Y Z) =
+      opAssociator (OpZornMatrix.map f X) (OpZornMatrix.map f Y) (OpZornMatrix.map f Z) ∧
+    OpVec3.map f (opZornRiccati X q) =
+      opZornRiccati (OpZornMatrix.map f X) (OpVec3.map f q) ∧
+    opZornRiccati T₀ (v + δ) =
+      δ + OpVec3.rightScale v (OpVec3.dot w δ) +
+        OpVec3.rightScale δ (OpVec3.dot w δ) ∧
+    (amp (v₁ + δ_v) (w₃ + δ_w) - amp (v₁ + δ_v) (w₄ + δ_w)) -
+      (amp (v₂ + δ_v) (w₃ + δ_w) - amp (v₂ + δ_v) (w₄ + δ_w)) =
+    (amp v₁ w₃ - amp v₁ w₄) - (amp v₂ w₃ - amp v₂ w₄) := by
+  intro T₀ amp
+  refine ⟨?_, ?_, ?_, ?_, OpZornMatrix.map_add f X Y, OpZornMatrix.map_mul f X Y, ?_, ?_, ?_, ?_⟩
+  · ext <;> rfl
+  · ext <;> simp [OpZornMatrix.map, OpVec3.map, opDoubletDiagEmbed, opGradeZero, opCartanDiag]
+  · simp [OpVec3.map, OpVec3.dot]
+  · ext <;> simp [OpVec3.map, OpVec3.skewCross, OpVec3.naiveCross]
+  · simp only [opAssociator, OpZornMatrix.map_sub, OpZornMatrix.map_mul]
+  · ext <;>
+      simp [OpZornMatrix.map, OpVec3.map, opZornRiccati, OpVec3.dot,
+            OpVec3.leftScale, OpVec3.rightScale]
+  · have h_shift := (zornRiccati_taylor_shift_and_noncomm_berezinian_unit T₀ v δ 1 1).1
+    have h_fp : opZornRiccati T₀ v = 0 :=
+      (zornRiccati_moving_frame_and_trifactor_fixed_point T₀ v w v 0 0 0).2.2.2
+    have h_a : T₀.a = 1 := by
+      simp [T₀, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+    have h_w : T₀.w = w := by
+      ext <;>
+        simp [T₀, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper,
+              OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+    have h_bv : T₀.b + OpVec3.dot T₀.w v = 0 := by
+      have h_q := (gelfandRetakh_gauss_bruhat_elimination_and_bimodule_curvature v w 1 0 0).2.2.2.1
+      have h_v : T₀.v = v := by
+        ext <;>
+          simp [T₀, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper,
+                OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+      rw [← h_v]
+      exact h_q
+    rw [h_shift, h_fp, h_a, h_bv, h_w]
+    ext <;> simp [OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;>
+      (simp [amp, opCompassNeedleRow, opCompassNeedleCol, OpVec3.dot, OpVec3.skewCross,
+             OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+
+/-- **Gelfand–Retakh $(1, 1)$-Quasideterminant (`gelfandRetakhQuasiDet11 u v w b`)**:
+    $|X|_{11} = b + w \cdot (u^{-1} \cdot_{\mathrm{L}} v) \in A$ for $X = \langle u, v, w, b \rangle \in \mathrm{OpZornMatrix}\;A$. -/
+@[simp] def gelfandRetakhQuasiDet11 (u : Aˣ) (v w : OpVec3 A) (b : A) : A :=
+  b + OpVec3.dot w (OpVec3.leftScale (↑u⁻¹ : A) v)
+
+/-- **5-Graded Boundary Compass Stage Embedding (`opCompassStageEmbed ξ y z x`)**:
+    Sandwiches $\iota_{11}(x) = \mathrm{opPeirceCornerEmbed11}\;x$ between the 5-graded contact-transverse
+    compass needles $P_{\mathrm{col}}(\langle \xi, 0, 0 \rangle)$ and $P_{\mathrm{row}}(\langle 0, -y, -z \rangle)$. -/
+@[simp] def opCompassStageEmbed (ξ y z x : A) : OpZornMatrix A :=
+  (opCompassNeedleCol ⟨ξ, 0, 0⟩ * opPeirceCornerEmbed11 x) * opCompassNeedleRow ⟨0, -y, -z⟩
+
+/-- **Theorem 114 (Archetypes XCII–XCV — Associative Nucleus of `opDoubletDiagEmbed` against Grade-0 / Opposite-Nilradical States, 5-Graded Compass Stage Idempotence, Gelfand–Retakh Quasideterminant Reconstruction, & Two-Sided Contact-Cartan Banachiewicz Inversion)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all $x, a, b, \xi, \eta, y, z \in A$,
+    all $v, w \in \mathrm{OpVec3}\;A$, all $Y \in \mathrm{OpZornMatrix}\;A$, and all units $u, \Delta_u \in A^\times$:
+    1. **Associative Nucleus of `opDoubletDiagEmbed` with Opposite Lightcone Rays & Grade-0 States (`Archetype XCII.3`)**:
+       $$[\iota_{\mathrm{diag}}(x), L_+(v), L_-(w)] = 0, \qquad
+         [L_+(v), \iota_{\mathrm{diag}}(x), L_-(w)] = 0, \qquad
+         [L_+(v), L_-(w), \iota_{\mathrm{diag}}(x)] = 0, \qquad
+         [\iota_{\mathrm{diag}}(x), Y, \mathrm{opGradeZero}\;a\;b] = 0.$$
+    2. **3-Channel Boundary Compass Stage Idempotent Survival (`Archetype XCIII.2`)**:
+       $$\mathrm{opCompassStageEmbed}\;\xi\;y\;z\;1 * \mathrm{opCompassStageEmbed}\;\xi\;y\;z\;1 =
+         \mathrm{opCompassStageEmbed}\;\xi\;y\;z\;1.$$
+    3. **Exact Gelfand–Retakh $(1, 1)$-Quasideterminant Trifactor Reconstruction (`Archetype XCIV.3`)**:
+       $$\mathrm{opBruhatTrifactor}\;(w \cdot_{\mathrm{R}} u^{-1})\;(u : A)\;(\mathrm{gelfandRetakhQuasiDet11}\;u\;v\;w\;b)\;(u^{-1} \cdot_{\mathrm{L}} v) =
+         \langle (u : A), v, w, b \rangle.$$
+    4. **Exact Two-Sided Banachiewicz–Quasideterminant Inversion on the Contact-Cartan Subalgebra $\mathcal{G}_{-2} \oplus \mathcal{G}_0 \oplus \mathcal{G}_{+2}$ (`Archetype XCV.2`)**:
+       For $w_c = \mathrm{opBasisE1}\;\xi = \langle \xi, 0, 0 \rangle$ and $v_c = \mathrm{opBasisE1}\;\eta = \langle \eta, 0, 0 \rangle$:
+       $$\mathrm{opBruhatTrifactor}\;w_c\;(u : A)\;(\Delta_u : A)\;v_c *
+         \mathrm{opBruhatTrifactorInv}\;v_c\;(\uparrow u^{-1} : A)\;(\uparrow \Delta_u^{-1} : A)\;w_c = 1,$$
+       $$\mathrm{opBruhatTrifactorInv}\;v_c\;(\uparrow u^{-1} : A)\;(\uparrow \Delta_u^{-1} : A)\;w_c *
+         \mathrm{opBruhatTrifactor}\;w_c\;(u : A)\;(\Delta_u : A)\;v_c = 1.$$ -/
+theorem opDoubletNucleus_compassStage_and_gelfandRetakh_two_sided_inverse
+    (x a b ξ η y z : A) (v w : OpVec3 A) (Y : OpZornMatrix A) (u Δ_u : Aˣ) :
+    let w_c := opBasisE1 ξ
+    let v_c := opBasisE1 η
+    opAssociator (opDoubletDiagEmbed x) (opLightconePlus v) (opLightconeMinus w) = 0 ∧
+    opAssociator (opLightconePlus v) (opDoubletDiagEmbed x) (opLightconeMinus w) = 0 ∧
+    opAssociator (opLightconePlus v) (opLightconeMinus w) (opDoubletDiagEmbed x) = 0 ∧
+    opAssociator (opDoubletDiagEmbed x) Y (opGradeZero a b) = 0 ∧
+    opCompassStageEmbed ξ y z 1 * opCompassStageEmbed ξ y z 1 =
+      opCompassStageEmbed ξ y z 1 ∧
+    opBruhatTrifactor (OpVec3.rightScale w (↑u⁻¹ : A)) (u : A)
+      (gelfandRetakhQuasiDet11 u v w b) (OpVec3.leftScale (↑u⁻¹ : A) v) =
+      ⟨(u : A), v, w, b⟩ ∧
+    opBruhatTrifactor w_c (u : A) (Δ_u : A) v_c *
+      opBruhatTrifactorInv v_c (↑u⁻¹ : A) (↑Δ_u⁻¹ : A) w_c = 1 ∧
+    opBruhatTrifactorInv v_c (↑u⁻¹ : A) (↑Δ_u⁻¹ : A) w_c *
+      opBruhatTrifactor w_c (u : A) (Δ_u : A) v_c = 1 := by
+  intro w_c v_c
+  have h_schur := (opBruhatTrifactor_coords_and_operator_schur_reconstruction w v (u : A) b b u).2.2.2
+  have h_inv := (opBruhatTrifactor_parabolic_cartan_and_single_channel_inverse v w η ξ u Δ_u).2.2.2.2.2
+  refine ⟨?_, ?_, ?_, ?_, ?_, h_schur, h_inv.1, h_inv.2⟩
+  · ext <;>
+      (simp [opAssociator, opDoubletDiagEmbed, opGradeZero, opCartanDiag,
+             opLightconeRayPlus, opLightconeRayMinus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [opAssociator, opDoubletDiagEmbed, opGradeZero, opCartanDiag,
+             opLightconeRayPlus, opLightconeRayMinus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [opAssociator, opDoubletDiagEmbed, opGradeZero, opCartanDiag,
+             opLightconeRayPlus, opLightconeRayMinus,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [opAssociator, opDoubletDiagEmbed, opGradeZero, opCartanDiag,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+  · ext <;>
+      (simp [opCompassStageEmbed, opCompassNeedleCol, opCompassNeedleRow, opPeirceCornerEmbed11,
+             opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try noncomm_ring)
+
+/-- **Noncommutative Zorn–Riccati Tangent Jacobian (`opZornRiccatiJacobian X q δ`)**:
+    The linear Fréchet directional derivative of $\mathcal{R}_X$ at $q$ in direction $\delta \in \mathrm{OpVec3}\;A$:
+    $\mathcal{J}_{X, q}(\delta) = X.a \cdot_{\mathrm{L}} \delta + \delta \cdot_{\mathrm{R}} (X.b + X.w \cdot q) + q \cdot_{\mathrm{R}} (X.w \cdot \delta)$. -/
+@[simp] def opZornRiccatiJacobian (X : OpZornMatrix A) (q δ : OpVec3 A) : OpVec3 A :=
+  OpVec3.leftScale X.a δ +
+    OpVec3.rightScale δ (X.b + OpVec3.dot X.w q) +
+    OpVec3.rightScale q (OpVec3.dot X.w δ)
+
+/-- **Theorem 115 (Archetypes XC–XCIII — Functorial Category Laws of `OpZornMatrix.map`, Compass Stage Colimit Naturality, Riccati Jacobian Taylor Cocycle, & Dilaton Gauge Cross-Ratio Covariance)**:
+    For any noncommutative ring homomorphisms $f : A \to+* B$ and $g : B \to+* C$ (`[Ring A] [Ring B] [Ring C]`),
+    for all $X, Y, Z \in \mathrm{OpZornMatrix}\;A$, $q, \delta, v_1, v_2, w_3, w_4 \in \mathrm{OpVec3}\;A$,
+    $x, \xi, y, z \in A$, and units $u_g, \mu_g \in A^\times$:
+    1. **Category Functoriality & Unital Ring Homomorphism Laws of `OpZornMatrix.map`**:
+       $$\mathrm{OpZornMatrix.map}\;(\mathrm{RingHom.id}\;A)\;X = X, \qquad
+         \mathrm{OpZornMatrix.map}\;(g.\mathrm{comp}\;f)\;X = \mathrm{OpZornMatrix.map}\;g\;(\mathrm{OpZornMatrix.map}\;f\;X),$$
+       $$\mathrm{OpZornMatrix.map}\;f\;0 = 0, \qquad \mathrm{OpZornMatrix.map}\;f\;1 = 1, \qquad
+         \mathrm{opZornTrace}\;(\mathrm{OpZornMatrix.map}\;f\;X) = f\;(\mathrm{opZornTrace}\;X).$$
+    2. **Naturality of Inductive Colimit Stage & 5-Graded Compass Embeddings**:
+       $$\mathrm{OpZornMatrix.map}\;f\;(\mathrm{opDoubletDiagEmbed}\;x) = \mathrm{opDoubletDiagEmbed}\;(f\;x),$$
+       $$\mathrm{OpZornMatrix.map}\;f\;(\mathrm{opCompassStageEmbed}\;\xi\;y\;z\;x) =
+         \mathrm{opCompassStageEmbed}\;(f\;\xi)\;(f\;y)\;(f\;z)\;(f\;x).$$
+    3. **Noncommutative Zorn–Riccati Jacobian Taylor Cocycle & 4-Spinor Cross-Ratio Dilaton Gauge Covariance**:
+       $$\mathrm{opZornRiccati}\;X\;(q + \delta) =
+         \mathrm{opZornRiccati}\;X\;q + \mathrm{opZornRiccatiJacobian}\;X\;q\;\delta +
+         \mathrm{OpVec3.rightScale}\;\delta\;(\mathrm{OpVec3.dot}\;X.w\;\delta),$$
+       $$\mathrm{OpVec3.dot}\;\bigl(\mathrm{OpVec3.leftScale}\;(u_g : A)\;(\mathrm{OpVec3.rightScale}\;(v_1 - v_2)\;(\uparrow \mu_g^{-1} : A))\bigr)\;
+         \bigl(\mathrm{OpVec3.leftScale}\;(\mu_g : A)\;(\mathrm{OpVec3.rightScale}\;(w_3 - w_4)\;(\uparrow u_g^{-1} : A))\bigr) =
+         (u_g : A) * \mathrm{OpVec3.dot}\;(v_1 - v_2)\;(w_3 - w_4) * (\uparrow u_g^{-1} : A).$$ -/
+theorem opZornMatrix_map_functorial_riccati_and_colimit_naturality
+    {B C : Type*} [Ring B] [Ring C] (f : A →+* B) (g : B →+* C)
+    (X : OpZornMatrix A) (q δ v₁ v₂ w₃ w₄ : OpVec3 A) (x ξ y z : A) (u_g μ_g : Aˣ) :
+    OpZornMatrix.map (RingHom.id A) X = X ∧
+    OpZornMatrix.map (g.comp f) X = OpZornMatrix.map g (OpZornMatrix.map f X) ∧
+    OpZornMatrix.map f 0 = 0 ∧
+    OpZornMatrix.map f 1 = 1 ∧
+    opZornTrace (OpZornMatrix.map f X) = f (opZornTrace X) ∧
+    OpZornMatrix.map f (opDoubletDiagEmbed x) = opDoubletDiagEmbed (f x) ∧
+    OpZornMatrix.map f (opCompassStageEmbed ξ y z x) =
+      opCompassStageEmbed (f ξ) (f y) (f z) (f x) ∧
+    opZornRiccati X (q + δ) =
+      opZornRiccati X q + opZornRiccatiJacobian X q δ +
+        OpVec3.rightScale δ (OpVec3.dot X.w δ) ∧
+    OpVec3.dot
+        (OpVec3.leftScale (u_g : A) (OpVec3.rightScale (v₁ - v₂) (↑μ_g⁻¹ : A)))
+        (OpVec3.leftScale (μ_g : A) (OpVec3.rightScale (w₃ - w₄) (↑u_g⁻¹ : A))) =
+      (u_g : A) * OpVec3.dot (v₁ - v₂) (w₃ - w₄) * (↑u_g⁻¹ : A) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_,
+          (zornRiccati_taylor_shift_and_noncomm_berezinian_unit X q δ 1 1).1, ?_⟩
+  · ext <;> rfl
+  · ext <;> rfl
+  · ext <;> simp [OpZornMatrix.map, OpVec3.map]
+  · ext <;> simp [OpZornMatrix.map, OpVec3.map]
+  · simp [OpZornMatrix.map, opZornTrace]
+  · ext <;> simp [OpZornMatrix.map, OpVec3.map, opDoubletDiagEmbed, opGradeZero, opCartanDiag]
+  · rw [opCompassStageEmbed, OpZornMatrix.map_mul, OpZornMatrix.map_mul]
+    ext <;>
+      simp [opCompassStageEmbed, opCompassNeedleCol, opCompassNeedleRow, opPeirceCornerEmbed11,
+            opGradeZero, opCartanDiag, OpZornMatrix.map, OpVec3.map,
+            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+            OpVec3.leftScale, OpVec3.rightScale]
+  · have h_mu : ∀ a b : A, a * (↑μ_g⁻¹ : A) * ((μ_g : A) * b) = a * b := by
+      intro a b
+      calc a * (↑μ_g⁻¹ : A) * ((μ_g : A) * b)
+        _ = a * ((↑μ_g⁻¹ : A) * (μ_g : A)) * b := by noncomm_ring
+        _ = a * 1 * b := by rw [Units.inv_mul]
+        _ = a * b := by simp
+    simp only [OpVec3.dot, OpVec3.leftScale_x, OpVec3.leftScale_y, OpVec3.leftScale_z,
+               OpVec3.rightScale_x, OpVec3.rightScale_y, OpVec3.rightScale_z,
+               OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z]
+    have h1 : (u_g : A) * ((v₁.x - v₂.x) * (↑μ_g⁻¹ : A)) * ((μ_g : A) * ((w₃.x - w₄.x) * (↑u_g⁻¹ : A))) =
+        (u_g : A) * (v₁.x - v₂.x) * (w₃.x - w₄.x) * (↑u_g⁻¹ : A) := by
+      calc (u_g : A) * ((v₁.x - v₂.x) * (↑μ_g⁻¹ : A)) * ((μ_g : A) * ((w₃.x - w₄.x) * (↑u_g⁻¹ : A)))
+        _ = ((u_g : A) * (v₁.x - v₂.x)) * (↑μ_g⁻¹ : A) * ((μ_g : A) * ((w₃.x - w₄.x) * (↑u_g⁻¹ : A))) := by noncomm_ring
+        _ = ((u_g : A) * (v₁.x - v₂.x)) * ((w₃.x - w₄.x) * (↑u_g⁻¹ : A)) := h_mu _ _
+        _ = (u_g : A) * (v₁.x - v₂.x) * (w₃.x - w₄.x) * (↑u_g⁻¹ : A) := by noncomm_ring
+    have h2 : (u_g : A) * ((v₁.y - v₂.y) * (↑μ_g⁻¹ : A)) * ((μ_g : A) * ((w₃.y - w₄.y) * (↑u_g⁻¹ : A))) =
+        (u_g : A) * (v₁.y - v₂.y) * (w₃.y - w₄.y) * (↑u_g⁻¹ : A) := by
+      calc (u_g : A) * ((v₁.y - v₂.y) * (↑μ_g⁻¹ : A)) * ((μ_g : A) * ((w₃.y - w₄.y) * (↑u_g⁻¹ : A)))
+        _ = ((u_g : A) * (v₁.y - v₂.y)) * (↑μ_g⁻¹ : A) * ((μ_g : A) * ((w₃.y - w₄.y) * (↑u_g⁻¹ : A))) := by noncomm_ring
+        _ = ((u_g : A) * (v₁.y - v₂.y)) * ((w₃.y - w₄.y) * (↑u_g⁻¹ : A)) := h_mu _ _
+        _ = (u_g : A) * (v₁.y - v₂.y) * (w₃.y - w₄.y) * (↑u_g⁻¹ : A) := by noncomm_ring
+    have h3 : (u_g : A) * ((v₁.z - v₂.z) * (↑μ_g⁻¹ : A)) * ((μ_g : A) * ((w₃.z - w₄.z) * (↑u_g⁻¹ : A))) =
+        (u_g : A) * (v₁.z - v₂.z) * (w₃.z - w₄.z) * (↑u_g⁻¹ : A) := by
+      calc (u_g : A) * ((v₁.z - v₂.z) * (↑μ_g⁻¹ : A)) * ((μ_g : A) * ((w₃.z - w₄.z) * (↑u_g⁻¹ : A)))
+        _ = ((u_g : A) * (v₁.z - v₂.z)) * (↑μ_g⁻¹ : A) * ((μ_g : A) * ((w₃.z - w₄.z) * (↑u_g⁻¹ : A))) := by noncomm_ring
+        _ = ((u_g : A) * (v₁.z - v₂.z)) * ((w₃.z - w₄.z) * (↑u_g⁻¹ : A)) := h_mu _ _
+        _ = (u_g : A) * (v₁.z - v₂.z) * (w₃.z - w₄.z) * (↑u_g⁻¹ : A) := by noncomm_ring
+    rw [h1, h2, h3]
+    noncomm_ring
+
+/-!
+## 42. Archetypes XCVI–XCVIII: Operator-Twisted Nambu–Gorkov Cayley–Dickson Doubling $\mathrm{CD}_\Omega(A)$ and Spectral Projectors of the 5-Graded Operator Characteristic Polynomial
+-/
+
+/-- **Operator-Twisted Nambu–Gorkov Cayley–Dickson Pair (`OpCayleyDickson A`)**:
+    Represents an element $(x, y) \in A \times A$ with particle component $x \in A$ and
+    anomalous / hole component $y \in A$. -/
+@[ext]
+structure OpCayleyDickson (A : Type*) where
+  x : A
+  y : A
+  deriving DecidableEq, Inhabited
+
+instance : Zero (OpCayleyDickson A) := ⟨⟨0, 0⟩⟩
+instance : One (OpCayleyDickson A) := ⟨⟨1, 0⟩⟩
+instance : Inhabited (OpCayleyDickson A) := ⟨0⟩
+instance : Add (OpCayleyDickson A) := ⟨fun z w => ⟨z.x + w.x, z.y + w.y⟩⟩
+instance : Sub (OpCayleyDickson A) := ⟨fun z w => ⟨z.x - w.x, z.y - w.y⟩⟩
+instance : Neg (OpCayleyDickson A) := ⟨fun z => ⟨-z.x, -z.y⟩⟩
+
+@[simp] lemma OpCayleyDickson.zero_x : (0 : OpCayleyDickson A).x = 0 := rfl
+@[simp] lemma OpCayleyDickson.zero_y : (0 : OpCayleyDickson A).y = 0 := rfl
+@[simp] lemma OpCayleyDickson.one_x : (1 : OpCayleyDickson A).x = 1 := rfl
+@[simp] lemma OpCayleyDickson.one_y : (1 : OpCayleyDickson A).y = 0 := rfl
+@[simp] lemma OpCayleyDickson.add_x (z w : OpCayleyDickson A) : (z + w).x = z.x + w.x := rfl
+@[simp] lemma OpCayleyDickson.add_y (z w : OpCayleyDickson A) : (z + w).y = z.y + w.y := rfl
+@[simp] lemma OpCayleyDickson.sub_x (z w : OpCayleyDickson A) : (z - w).x = z.x - w.x := rfl
+@[simp] lemma OpCayleyDickson.sub_y (z w : OpCayleyDickson A) : (z - w).y = z.y - w.y := rfl
+@[simp] lemma OpCayleyDickson.neg_x (z : OpCayleyDickson A) : (-z).x = -z.x := rfl
+@[simp] lemma OpCayleyDickson.neg_y (z : OpCayleyDickson A) : (-z).y = -z.y := rfl
+
+/-- **Nambu–Gorkov Cayley–Dickson Conjugation (`cdConj z`)**:
+    $(x, y)^\star = (x^\star, -y)$. -/
+@[simp] def cdConj [StarRing A] (z : OpCayleyDickson A) : OpCayleyDickson A :=
+  ⟨star z.x, -z.y⟩
+
+/-- **Operator-Twisted Cayley–Dickson Product (`cdMul Ω z w`)**:
+    $$(x, y) *_\Omega (X, Y) = \bigl(x * X + \Omega * (Y * y^\star),\;\; x^\star * Y + X * y\bigr).$$ -/
+@[simp] def cdMul [StarRing A] (Ω : A) (z w : OpCayleyDickson A) : OpCayleyDickson A :=
+  ⟨z.x * w.x + Ω * (w.y * star z.y),
+   star z.x * w.y + w.x * z.y⟩
+
+/-- Particle-channel unital embedding $\iota(x) = (x, 0) \in \mathrm{OpCayleyDickson}\;A$. -/
+@[simp] def cdEmbed (x : A) : OpCayleyDickson A := ⟨x, 0⟩
+
+/-- The Nambu–Gorkov Cayley–Dickson doubling unit $\mathbf{E} = (0, 1) \in \mathrm{OpCayleyDickson}\;A$. -/
+@[simp] def cdGenE : OpCayleyDickson A := ⟨0, 1⟩
+
+/-- **Theorem 116 (Archetypes XCVI & XCVII — Operator-Twisted Nambu–Gorkov Cayley–Dickson Laws, Norm Cancellation, & Particle-Hole Flip)**:
+    Over *any* noncommutative $*$-ring $A$ (`[Ring A] [StarRing A]`) and for *any* operator twist $\Omega \in A$ and $x, y \in A$:
+    1. **Exact Involution & Unital Embedding**:
+       $((x, y)^\star)^\star = (x, y)$, $\mathrm{cdMul}\;\Omega\;1\;(x, y) = (x, y)$,
+       $\mathrm{cdMul}\;\Omega\;(x, y)\;1 = (x, y)$, and
+       $\mathrm{cdMul}\;\Omega\;(\iota(x))\;(\iota(y)) = \iota(x * y)$.
+    2. **Universal Cancellation of Anomalous Off-Diagonal Pairing in $Z *_\Omega Z^\star$**:
+       $$\mathrm{cdMul}\;\Omega\;\langle x, y \rangle\;(\mathrm{cdConj}\;\langle x, y \rangle) =
+         \iota\bigl(x * x^\star - \Omega * (y * y^\star)\bigr).$$
+    3. **Universal Operator Powers of the Doubling Generator $\mathbf{E} = (0, 1)$**:
+       $$\mathrm{cdMul}\;\Omega\;\mathbf{E}\;\mathbf{E} = \iota(\Omega), \qquad
+         \mathrm{cdMul}\;\Omega\;(\mathrm{cdMul}\;\Omega\;\mathbf{E}\;\mathbf{E})\;\mathbf{E} = \langle 0, \Omega \rangle,$$
+       $$\mathrm{cdMul}\;\Omega\;(\mathrm{cdMul}\;\Omega\;\mathbf{E}\;\mathbf{E})\;(\mathrm{cdMul}\;\Omega\;\mathbf{E}\;\mathbf{E}) =
+         \iota(\Omega * \Omega).$$
+    4. **Nambu–Gorkov Antilinear Particle-Hole Conjugation by $\mathbf{E} = (0, 1)$**:
+       $$\mathrm{cdMul}\;\Omega\;(\iota(x))\;\mathbf{E} = \langle 0, x^\star \rangle, \qquad
+         \mathrm{cdMul}\;\Omega\;\mathbf{E}\;(\iota(x)) = \langle 0, x \rangle,$$
+       $$\mathrm{cdMul}\;\Omega\;(\mathrm{cdMul}\;\Omega\;\mathbf{E}\;(\iota(x)))\;\mathbf{E} =
+         \iota(\Omega * x^\star).$$ -/
+theorem nambuGorkov_operator_cayley_dickson_norm_and_particle_hole_flip
+    [StarRing A] (Ω x y : A) :
+    let Z : OpCayleyDickson A := ⟨x, y⟩
+    let E : OpCayleyDickson A := cdGenE
+    let E2 := cdMul Ω E E
+    cdConj (cdConj Z) = Z ∧
+    cdMul Ω 1 Z = Z ∧
+    cdMul Ω Z 1 = Z ∧
+    cdMul Ω (cdEmbed x) (cdEmbed y) = cdEmbed (x * y) ∧
+    cdMul Ω Z (cdConj Z) = cdEmbed (x * star x - Ω * (y * star y)) ∧
+    E2 = cdEmbed Ω ∧
+    cdMul Ω E2 E = ⟨0, star Ω⟩ ∧
+    cdMul Ω E2 E2 = cdEmbed (Ω * Ω) ∧
+    cdMul Ω (cdEmbed x) E = ⟨0, star x⟩ ∧
+    cdMul Ω E (cdEmbed x) = ⟨0, x⟩ ∧
+    cdMul Ω (cdMul Ω E (cdEmbed x)) E = cdEmbed (Ω * star x) := by
+  intro Z E E2
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Z, E, E2, cdConj, cdMul, cdEmbed, cdGenE, star_one, star_zero];
+    try noncomm_ring))
+
+/-- **Theorem 117 (Archetype XCVII — Unification of Division $\Omega = -1$, Split $\Omega = +1$, and Quartic Operator $\Omega^2 = \pm 1$ Regimes)**:
+    Over *any* noncommutative $*$-ring $A$ (`[Ring A] [StarRing A]`), for all $\Omega, x, y \in A$:
+    1. **Normed Division Doubling ($\Omega = -1$)**:
+       $\mathbf{E} *_{-1} \mathbf{E} = -1$ and
+       $(x, y) *_{-1} (x, y)^\star = \iota(x * x^\star + y * y^\star)$.
+    2. **Split Hypercomplex Doubling ($\Omega = +1$)**:
+       $\mathbf{E} *_{+1} \mathbf{E} = 1$ and
+       $(x, y) *_{+1} (x, y)^\star = \iota(x * x^\star - y * y^\star)$.
+    3. **Quartic Operator Twist Regime**:
+       $(\mathbf{E} *_\Omega \mathbf{E})^2 - 1 = \iota(\Omega^2 - 1)$ and
+       $(\mathbf{E} *_\Omega \mathbf{E})^2 + 1 = \iota(\Omega^2 + 1)$. -/
+theorem nambuGorkov_division_split_and_quartic_operator_regimes
+    [StarRing A] (Ω x y : A) :
+    let Z : OpCayleyDickson A := ⟨x, y⟩
+    let E : OpCayleyDickson A := cdGenE
+    let E2_Ω := cdMul Ω E E
+    cdMul (-1) E E = -1 ∧
+    cdMul (-1) Z (cdConj Z) = cdEmbed (x * star x + y * star y) ∧
+    cdMul 1 E E = 1 ∧
+    cdMul 1 Z (cdConj Z) = cdEmbed (x * star x - y * star y) ∧
+    cdMul Ω E2_Ω E2_Ω - 1 = cdEmbed (Ω * Ω - 1) ∧
+    cdMul Ω E2_Ω E2_Ω + 1 = cdEmbed (Ω * Ω + 1) := by
+  intro Z E E2_Ω
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Z, E, E2_Ω, cdConj, cdMul, cdEmbed, cdGenE, star_one, star_zero];
+    try noncomm_ring))
+
+/-- **Theorem 118 (Archetype XCVIII — Spectral Projector Factorization of the 5-Graded Operator Characteristic Polynomial $\mathcal{D}_5^5 - 5\mathcal{D}_5^3 + 4\mathcal{D}_5 = 0$)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for every 8-component operator state
+    $X \in \mathrm{OpZornMatrix}\;A$, let $D_k = \mathrm{opEulerFiveGrading}^k(X)$:
+    1. **5-Grade Resolution of $X$**:
+       $$X = \mathrm{opGradeMinus2}\;X.v.x + \mathrm{opGradeMinus1}\;X.w.y\;X.w.z + \mathrm{opGradeZero}\;X.a\;X.b +
+             \mathrm{opGradePlus1}\;X.v.y\;X.v.z + \mathrm{opGradePlus2}\;X.w.x.$$
+    2. **Quartic Nucleus Spectral Projector $(\mathcal{D}_5^2 - I)(\mathcal{D}_5^2 - 4I)(X) = \mathcal{D}_5^4(X) - 5\mathcal{D}_5^2(X) + 4X$**:
+       Annihilates $\mathcal{G}_{-2}, \mathcal{G}_{-1}, \mathcal{G}_{+1}, \mathcal{G}_{+2}$ and isolates $4 \bullet \mathcal{G}_0(X)$:
+       $$D_4 - (D_2 + D_2 + D_2 + D_2 + D_2) + (X + X + X + X) =
+         \mathrm{opGradeZero}\;X.a\;X.b + \mathrm{opGradeZero}\;X.a\;X.b +
+         \mathrm{opGradeZero}\;X.a\;X.b + \mathrm{opGradeZero}\;X.a\;X.b.$$
+    3. **Cubic Transverse Cone Spectral Projector $\mathcal{D}_5(\mathcal{D}_5^2 - 4I)(X) = \mathcal{D}_5^3(X) - 4\mathcal{D}_5(X)$**:
+       Annihilates $\mathcal{G}_{-2}, \mathcal{G}_0, \mathcal{G}_{+2}$ and isolates $-3 \bullet (\mathcal{G}_{+1}(X) - \mathcal{G}_{-1}(X))$:
+       $$D_3 - (D_1 + D_1 + D_1 + D_1) =
+         -((\mathrm{opGradePlus1}\;X.v.y\;X.v.z - \mathrm{opGradeMinus1}\;X.w.y\;X.w.z) +
+           (\mathrm{opGradePlus1}\;X.v.y\;X.v.z - \mathrm{opGradeMinus1}\;X.w.y\;X.w.z) +
+           (\mathrm{opGradePlus1}\;X.v.y\;X.v.z - \mathrm{opGradeMinus1}\;X.w.y\;X.w.z)).$$
+    4. **Cubic Contact Horizon Spectral Projector $\mathcal{D}_5(\mathcal{D}_5^2 - I)(X) = \mathcal{D}_5^3(X) - \mathcal{D}_5(X)$**:
+       Annihilates $\mathcal{G}_{-1}, \mathcal{G}_0, \mathcal{G}_{+1}$ and isolates $6 \bullet (\mathcal{G}_{+2}(X) - \mathcal{G}_{-2}(X))$:
+       $$D_3 - D_1 =
+         (\mathrm{opGradePlus2}\;X.w.x - \mathrm{opGradeMinus2}\;X.v.x) +
+         (\mathrm{opGradePlus2}\;X.w.x - \mathrm{opGradeMinus2}\;X.v.x) +
+         (\mathrm{opGradePlus2}\;X.w.x - \mathrm{opGradeMinus2}\;X.v.x) +
+         (\mathrm{opGradePlus2}\;X.w.x - \mathrm{opGradeMinus2}\;X.v.x) +
+         (\mathrm{opGradePlus2}\;X.w.x - \mathrm{opGradeMinus2}\;X.v.x) +
+         (\mathrm{opGradePlus2}\;X.w.x - \mathrm{opGradeMinus2}\;X.v.x).$$
+    5. **Universal Degree-5 Characteristic Polynomial Annihilation**:
+       $$D_5 - (D_3 + D_3 + D_3 + D_3 + D_3) + (D_1 + D_1 + D_1 + D_1) = 0.$$ -/
+theorem fiveGraded_operator_characteristic_polynomial_and_spectral_projectors
+    (X : OpZornMatrix A) :
+    let D₁ := opEulerFiveGrading X
+    let D₂ := opEulerFiveGrading D₁
+    let D₃ := opEulerFiveGrading D₂
+    let D₄ := opEulerFiveGrading D₃
+    let D₅ := opEulerFiveGrading D₄
+    let G₀ := opGradeZero X.a X.b
+    let G₁ := opGradePlus1 X.v.y X.v.z - opGradeMinus1 X.w.y X.w.z
+    let G₂ := opGradePlus2 X.w.x - opGradeMinus2 X.v.x
+    X = opGradeMinus2 X.v.x + opGradeMinus1 X.w.y X.w.z + opGradeZero X.a X.b +
+          opGradePlus1 X.v.y X.v.z + opGradePlus2 X.w.x ∧
+    D₄ - (D₂ + D₂ + D₂ + D₂ + D₂) + (X + X + X + X) = G₀ + G₀ + G₀ + G₀ ∧
+    D₃ - (D₁ + D₁ + D₁ + D₁) = -(G₁ + G₁ + G₁) ∧
+    D₃ - D₁ = G₂ + G₂ + G₂ + G₂ + G₂ + G₂ ∧
+    D₅ - (D₃ + D₃ + D₃ + D₃ + D₃) + (D₁ + D₁ + D₁ + D₁) = 0 := by
+  intro D₁ D₂ D₃ D₄ D₅ G₀ G₁ G₂
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [D₁, D₂, D₃, D₄, D₅, G₀, G₁, G₂, opEulerFiveGrading,
+          opGradeMinus2, opGradeMinus1, opGradeZero, opCartanDiag, opGradePlus1, opGradePlus2];
+    try abel))
+
+/-! ### 43. Operator Cyclotomics, Noncommutative Cyclotomic Quotients, & the $\mathbb{Z}_6$ Galois Automorphism Group (`Archetypes XCIX & C`) -/
+
+/-- The $\mathbb{Z}_2$ Cayley–Dickson Galois involution $\sigma_{\mathrm{CD}}(x, y) := (x, -y)$
+on `OpCayleyDickson A` (`Archetype C.1`). -/
+def cdGaloisZ2 (Z : OpCayleyDickson A) : OpCayleyDickson A :=
+  ⟨Z.x, -Z.y⟩
+
+@[simp] theorem cdGaloisZ2_x (Z : OpCayleyDickson A) : (cdGaloisZ2 Z).x = Z.x := rfl
+@[simp] theorem cdGaloisZ2_y (Z : OpCayleyDickson A) : (cdGaloisZ2 Z).y = -Z.y := rfl
+
+/-- The 1st operator cyclotomic polynomial $\Phi_1(\Omega) = \Omega - 1$ (`Archetype XCIX.1`). -/
+def opPhi1 (Ω : A) : A := Ω - 1
+
+/-- The 2nd operator cyclotomic polynomial $\Phi_2(\Omega) = \Omega + 1$ (`Archetype XCIX.1`). -/
+def opPhi2 (Ω : A) : A := Ω + 1
+
+/-- The 3rd operator cyclotomic polynomial $\Phi_3(\Omega) = \Omega^2 + \Omega + 1$ (`Archetype XCIX.1`). -/
+def opPhi3 (Ω : A) : A := Ω * Ω + Ω + 1
+
+/-- The 4th operator cyclotomic polynomial $\Phi_4(\Omega) = \Omega^2 + 1$ (`Archetype XCIX.1`). -/
+def opPhi4 (Ω : A) : A := Ω * Ω + 1
+
+/-- The 6th operator cyclotomic polynomial $\Phi_6(\Omega) = \Omega^2 - \Omega + 1$ (`Archetype XCIX.1`). -/
+def opPhi6 (Ω : A) : A := Ω * Ω - Ω + 1
+
+/-- The 8th operator cyclotomic polynomial $\Phi_8(\Omega) = \Omega^4 + 1$ (`Archetype XCIX.1`). -/
+def opPhi8 (Ω : A) : A := (Ω * Ω) * (Ω * Ω) + 1
+
+/-- **Theorem 119 (`Archetypes XCIX.1 & C.1`: Universal Noncommutative Cyclotomic Polynomial Factorizations & $\mathbb{Z}_2$ Cayley–Dickson Galois Automorphism)**:
+    Over ANY noncommutative ring $A$ (`[Ring A] [StarRing A]`):
+    1. **Universal Noncommutative Cyclotomic Factorizations in $A$**:
+       - $\Omega^2 - 1 = \Phi_1(\Omega) * \Phi_2(\Omega) = \Phi_2(\Omega) * \Phi_1(\Omega)$,
+       - $\Omega^3 - 1 = \Phi_1(\Omega) * \Phi_3(\Omega) = \Phi_3(\Omega) * \Phi_1(\Omega)$,
+       - $\Omega^3 + 1 = \Phi_2(\Omega) * \Phi_6(\Omega) = \Phi_6(\Omega) * \Phi_2(\Omega)$,
+       - $\Omega^4 - 1 = (\Phi_1(\Omega) * \Phi_2(\Omega)) * \Phi_4(\Omega)$,
+       - $\Omega^6 - 1 = ((\Phi_1(\Omega) * \Phi_2(\Omega)) * \Phi_3(\Omega)) * \Phi_6(\Omega)$,
+       - $\Omega^8 - 1 = ((\Phi_1(\Omega) * \Phi_2(\Omega)) * \Phi_4(\Omega)) * \Phi_8(\Omega)$.
+    2. **Order-2 $\mathbb{Z}_2$ Cayley–Dickson Galois Automorphism $\sigma_{\mathrm{CD}}(x, y) = (x, -y)$**:
+       - Involution: $\sigma_{\mathrm{CD}}(\sigma_{\mathrm{CD}}(Z)) = Z$,
+       - Fixed subalgebra: $\sigma_{\mathrm{CD}}(\iota(x)) = \iota(x)$ and $\sigma_{\mathrm{CD}}(\mathbf{E}) = -\mathbf{E}$,
+       - Exact $*$-algebra automorphism for every twist $\Omega \in A$:
+         $$\sigma_{\mathrm{CD}}(Z *_\Omega W) = \sigma_{\mathrm{CD}}(Z) *_\Omega \sigma_{\mathrm{CD}}(W) \quad \text{and} \quad
+           \sigma_{\mathrm{CD}}(Z^\star) = (\sigma_{\mathrm{CD}}(Z))^\star.$$ -/
+theorem operator_cyclotomic_polynomial_factorizations
+    [StarRing A] (Ω : A) (Z W : OpCayleyDickson A) :
+    let Ω2 := Ω * Ω
+    let Ω3 := Ω2 * Ω
+    let Ω4 := Ω2 * Ω2
+    let Ω6 := Ω3 * Ω3
+    let Ω8 := Ω4 * Ω4
+    (Ω2 - 1 = opPhi1 Ω * opPhi2 Ω ∧
+     Ω2 - 1 = opPhi2 Ω * opPhi1 Ω ∧
+     Ω3 - 1 = opPhi1 Ω * opPhi3 Ω ∧
+     Ω3 - 1 = opPhi3 Ω * opPhi1 Ω ∧
+     Ω3 + 1 = opPhi2 Ω * opPhi6 Ω ∧
+     Ω3 + 1 = opPhi6 Ω * opPhi2 Ω ∧
+     Ω4 - 1 = (opPhi1 Ω * opPhi2 Ω) * opPhi4 Ω ∧
+     Ω6 - 1 = ((opPhi1 Ω * opPhi2 Ω) * opPhi3 Ω) * opPhi6 Ω ∧
+     Ω8 - 1 = ((opPhi1 Ω * opPhi2 Ω) * opPhi4 Ω) * opPhi8 Ω) ∧
+    (cdGaloisZ2 (cdGaloisZ2 Z) = Z ∧
+     cdGaloisZ2 (cdEmbed Ω) = cdEmbed Ω ∧
+     cdGaloisZ2 (cdGenE : OpCayleyDickson A) = -(cdGenE : OpCayleyDickson A) ∧
+     cdGaloisZ2 (cdMul Ω Z W) = cdMul Ω (cdGaloisZ2 Z) (cdGaloisZ2 W) ∧
+     cdGaloisZ2 (cdConj Z) = cdConj (cdGaloisZ2 Z)) := by
+  intro Ω2 Ω3 Ω4 Ω6 Ω8
+  refine ⟨⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_, ?_⟩⟩
+  · simp [Ω2, opPhi1, opPhi2]; noncomm_ring
+  · simp [Ω2, opPhi1, opPhi2]; noncomm_ring
+  · simp [Ω3, Ω2, opPhi1, opPhi3]; noncomm_ring
+  · simp [Ω3, Ω2, opPhi1, opPhi3]; noncomm_ring
+  · simp [Ω3, Ω2, opPhi2, opPhi6]; noncomm_ring
+  · simp [Ω3, Ω2, opPhi2, opPhi6]; noncomm_ring
+  · simp [Ω4, Ω2, opPhi1, opPhi2, opPhi4]; noncomm_ring
+  · simp [Ω6, Ω3, Ω2, opPhi1, opPhi2, opPhi3, opPhi6]; noncomm_ring
+  · simp [Ω8, Ω4, Ω2, opPhi1, opPhi2, opPhi4, opPhi8]; noncomm_ring
+  · ext <;> simp [cdGaloisZ2]
+  · ext <;> simp [cdGaloisZ2, cdEmbed]
+  · ext <;> simp [cdGaloisZ2, cdGenE]
+  · ext <;> (simp [cdGaloisZ2, cdMul]; try abel; try noncomm_ring)
+  · ext <;> simp [cdGaloisZ2, cdConj]
+
+/-- **The 3rd Operator Cyclotomic Quotient Ring $\mathrm{OpCyclotomic3}\;A := A[\omega]/(\omega^2 + \omega + 1 = 0)$ (`Archetype XCIX.2`)**:
+    Represented in the basis $\{1, \omega\}$ with $\omega^2 = -1 - \omega$:
+    $$(a + b\omega)(c + d\omega) = (ac - bd) + (ad + bc - bd)\omega.$$ -/
+@[ext]
+structure OpCyclotomic3 (A : Type*) where
+  c0 : A
+  c1 : A
+  deriving DecidableEq, Inhabited
+
+namespace OpCyclotomic3
+
+instance : Zero (OpCyclotomic3 A) := ⟨⟨0, 0⟩⟩
+instance : One (OpCyclotomic3 A) := ⟨⟨1, 0⟩⟩
+instance : Inhabited (OpCyclotomic3 A) := ⟨0⟩
+instance : Add (OpCyclotomic3 A) := ⟨fun x y => ⟨x.c0 + y.c0, x.c1 + y.c1⟩⟩
+instance : Neg (OpCyclotomic3 A) := ⟨fun x => ⟨-x.c0, -x.c1⟩⟩
+instance : Sub (OpCyclotomic3 A) := ⟨fun x y => ⟨x.c0 - y.c0, x.c1 - y.c1⟩⟩
+instance : Mul (OpCyclotomic3 A) :=
+  ⟨fun x y => ⟨x.c0 * y.c0 - x.c1 * y.c1, x.c0 * y.c1 + x.c1 * y.c0 - x.c1 * y.c1⟩⟩
+
+@[simp] theorem zero_c0 : (0 : OpCyclotomic3 A).c0 = 0 := rfl
+@[simp] theorem zero_c1 : (0 : OpCyclotomic3 A).c1 = 0 := rfl
+@[simp] theorem one_c0 : (1 : OpCyclotomic3 A).c0 = 1 := rfl
+@[simp] theorem one_c1 : (1 : OpCyclotomic3 A).c1 = 0 := rfl
+@[simp] theorem add_c0 (x y : OpCyclotomic3 A) : (x + y).c0 = x.c0 + y.c0 := rfl
+@[simp] theorem add_c1 (x y : OpCyclotomic3 A) : (x + y).c1 = x.c1 + y.c1 := rfl
+@[simp] theorem neg_c0 (x : OpCyclotomic3 A) : (-x).c0 = -x.c0 := rfl
+@[simp] theorem neg_c1 (x : OpCyclotomic3 A) : (-x).c1 = -x.c1 := rfl
+@[simp] theorem sub_c0 (x y : OpCyclotomic3 A) : (x - y).c0 = x.c0 - y.c0 := rfl
+@[simp] theorem sub_c1 (x y : OpCyclotomic3 A) : (x - y).c1 = x.c1 - y.c1 := rfl
+@[simp] theorem mul_c0 (x y : OpCyclotomic3 A) : (x * y).c0 = x.c0 * y.c0 - x.c1 * y.c1 := rfl
+@[simp] theorem mul_c1 (x y : OpCyclotomic3 A) :
+    (x * y).c1 = x.c0 * y.c1 + x.c1 * y.c0 - x.c1 * y.c1 := rfl
+
+/-- Canonical embedding $\iota_3(a) = (a, 0)$ of $A$ into $\mathrm{OpCyclotomic3}\;A$. -/
+def embed (a : A) : OpCyclotomic3 A := ⟨a, 0⟩
+
+/-- The primitive 3rd cyclotomic root $\omega = (0, 1) \in \mathrm{OpCyclotomic3}\;A$. -/
+def omega : OpCyclotomic3 A := ⟨0, 1⟩
+
+/-- The order-2 cyclotomic Galois automorphism $\sigma_3(a + b\omega) = (a - b) - b\omega$
+sending $\omega \mapsto \omega^2 = -1 - \omega$ (`Archetype C.1`). -/
+def galoisConj (x : OpCyclotomic3 A) : OpCyclotomic3 A :=
+  ⟨x.c0 - x.c1, -x.c1⟩
+
+end OpCyclotomic3
+
+/-- **Theorem 120 (`Archetype XCIX.2 & C.1`: Noncommutative 3rd Cyclotomic Quotient Ring Laws & Galois Automorphism)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`):
+    1. **Associativity & Distributivity**: $(x * y) * z = x * (y * z)$, $1 * x = x$, $x * 1 = x$.
+    2. **Primitive 3rd Root of Unity**: $\omega^2 = \langle -1, -1 \rangle$, $\omega^2 + \omega + 1 = 0$, and $\omega^3 = 1$.
+    3. **Galois Automorphism $\sigma_3(\omega) = \omega^2$**:
+       - $\sigma_3(\sigma_3(x)) = x$,
+       - $\sigma_3(\omega) = \omega * \omega$,
+       - $\sigma_3(x * y) = \sigma_3(x) * \sigma_3(y)$,
+       - Norm over $A$: $(a + b\omega) * \sigma_3(a + b\omega) = \langle a^2 - ab + b^2,\; b a - a b \rangle$. -/
+theorem opCyclotomic3_ring_laws_and_galois_automorphism
+    (x y z : OpCyclotomic3 A) (a b : A) :
+    let ω : OpCyclotomic3 A := OpCyclotomic3.omega
+    let w : OpCyclotomic3 A := ⟨a, b⟩
+    (x * y) * z = x * (y * z) ∧
+    1 * x = x ∧
+    x * 1 = x ∧
+    ω * ω = ⟨-1, -1⟩ ∧
+    ω * ω + ω + 1 = 0 ∧
+    (ω * ω) * ω = 1 ∧
+    OpCyclotomic3.galoisConj (OpCyclotomic3.galoisConj x) = x ∧
+    OpCyclotomic3.galoisConj ω = ω * ω ∧
+    OpCyclotomic3.galoisConj (x * y) = OpCyclotomic3.galoisConj x * OpCyclotomic3.galoisConj y ∧
+    w * OpCyclotomic3.galoisConj w = ⟨a * a - a * b + b * b, b * a - a * b⟩ := by
+  intro ω w
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp; noncomm_ring)
+  · ext <;> simp
+  · ext <;> simp
+  · ext <;> simp [ω, OpCyclotomic3.omega]
+  · ext <;> (simp [ω, OpCyclotomic3.omega]; try abel)
+  · ext <;> simp [ω, OpCyclotomic3.omega]
+  · ext <;> (simp [OpCyclotomic3.galoisConj]; try abel)
+  · ext <;> simp [ω, OpCyclotomic3.omega, OpCyclotomic3.galoisConj]
+  · ext <;> (simp [OpCyclotomic3.galoisConj]; try noncomm_ring)
+  · ext <;> (simp [w, OpCyclotomic3.galoisConj]; try noncomm_ring)
+
+/-- Cyclic $\mathbb{Z}_3$-triality permutation $\tau_3(x, y, z) := (y, z, x)$ on `OpVec3 A`
+(`Archetype C.2`). -/
+def OpVec3.trialityPerm (u : OpVec3 A) : OpVec3 A :=
+  ⟨u.y, u.z, u.x⟩
+
+omit [Ring A] in
+@[simp] theorem OpVec3.trialityPerm_x (u : OpVec3 A) : (OpVec3.trialityPerm u).x = u.y := rfl
+omit [Ring A] in
+@[simp] theorem OpVec3.trialityPerm_y (u : OpVec3 A) : (OpVec3.trialityPerm u).y = u.z := rfl
+omit [Ring A] in
+@[simp] theorem OpVec3.trialityPerm_z (u : OpVec3 A) : (OpVec3.trialityPerm u).z = u.x := rfl
+
+/-- The order-2 5-grading parity vector involution $\pi_5(x, y, z) := (x, -y, -z)$ on `OpVec3 A`,
+fixing the Grade-$\pm 2$ contact horizon $x$ and negating the Grade-$\pm 1$ transverse cone $(y, z)$. -/
+def OpVec3.gradeParity (u : OpVec3 A) : OpVec3 A :=
+  ⟨u.x, -u.y, -u.z⟩
+
+@[simp] theorem OpVec3.gradeParity_x (u : OpVec3 A) : (OpVec3.gradeParity u).x = u.x := rfl
+@[simp] theorem OpVec3.gradeParity_y (u : OpVec3 A) : (OpVec3.gradeParity u).y = -u.y := rfl
+@[simp] theorem OpVec3.gradeParity_z (u : OpVec3 A) : (OpVec3.gradeParity u).z = -u.z := rfl
+
+/-- The order-2 5-Grading Parity Automorphism $\pi_5(X) := \langle X.a, \pi_5(X.v), \pi_5(X.w), X.b \rangle$
+on `OpZornMatrix A`, fixing $\mathcal{G}_0 \oplus \mathcal{G}_{-2} \oplus \mathcal{G}_{+2}$ and negating $\mathcal{G}_{-1} \oplus \mathcal{G}_{+1}$. -/
+def zornGradeParity (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨X.a, OpVec3.gradeParity X.v, OpVec3.gradeParity X.w, X.b⟩
+
+/-- The $\mathbb{Z}_2$ Chiral Grading Involution $\sigma_2\langle a, v, w, b \rangle := \langle a, -v, -w, b \rangle$
+on `OpZornMatrix A`, reflecting the off-diagonal color channels (`Archetype C.2`). -/
+def zornGaloisZ2 (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨X.a, -X.v, -X.w, X.b⟩
+
+/-- The $\mathbb{Z}_3$ Color-Triality Galois Automorphism $\tau_3\langle a, v, w, b \rangle := \langle a, \tau_3(v), \tau_3(w), b \rangle$
+on `OpZornMatrix A`, cyclically permuting the 3 color coordinates (`Archetype C.2`). -/
+def zornGaloisZ3 (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨X.a, OpVec3.trialityPerm X.v, OpVec3.trialityPerm X.w, X.b⟩
+
+/-- The combined $\mathbb{Z}_6 \cong \mathbb{Z}_2 \times \mathbb{Z}_3$ Cyclotomic Galois Generator
+$\gamma_6 := \sigma_2 \circ \tau_3$ on `OpZornMatrix A` (`Archetype C.2`). -/
+def zornGaloisZ6 (X : OpZornMatrix A) : OpZornMatrix A :=
+  zornGaloisZ2 (zornGaloisZ3 X)
+
+/-- **Theorem 121 (`Archetype C.2`: The Noncommutative $\mathbb{Z}_2 \times \mathbb{Z}_3 \cong \mathbb{Z}_6$ Cyclotomic Galois Group & 5-Grading Parity Automorphism of `OpZornMatrix A`)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`):
+    1. **Cross & Dot Product Covariance under $\tau_3$ and $\pi_5$**:
+       $$\tau_3(u) \times \tau_3(v) = \tau_3(u \times v), \qquad \langle \tau_3(u), \tau_3(v) \rangle = \langle u, v \rangle.$$
+    2. **Cyclic Order-2, Order-3, & Order-6 Group Relations**:
+       $$\sigma_2^2(X) = X, \qquad \tau_3^3(X) = X, \qquad
+         \sigma_2(\tau_3(X)) = \tau_3(\sigma_2(X)), \qquad \gamma_6^6(X) = X.$$
+    3. **Exact Non-Associative Ring Automorphisms (`zornGradeParity` and `zornGaloisZ3`) & Orbit Invariance**:
+       $$\pi_5(X * Y) = \pi_5(X) * \pi_5(Y), \qquad
+         \tau_3(X * Y) = \tau_3(X) * \tau_3(Y),$$
+       $$\tau_3\bigl(X + \tau_3(X) + \tau_3(\tau_3(X))\bigr) = X + \tau_3(X) + \tau_3(\tau_3(X)),$$
+       and $\mathrm{opZornTrace}(\gamma_6(X)) = \mathrm{opZornTrace}(X)$.
+    4. **Fixed-Point Galois Invariant Subalgebra (`Peirce Nucleus` $\mathcal{G}_0 = A \oplus A$)**:
+       $$\sigma_2(X) + X = 2 \bullet \mathcal{G}_0(X) = \mathrm{opGradeZero}\;X.a\;X.b + \mathrm{opGradeZero}\;X.a\;X.b.$$ -/
+theorem opZornMatrix_cyclotomic_galois_automorphism_group
+    (X Y : OpZornMatrix A) (u v : OpVec3 A) :
+    let orbit3 := X + zornGaloisZ3 X + zornGaloisZ3 (zornGaloisZ3 X)
+    OpVec3.naiveCross (OpVec3.trialityPerm u) (OpVec3.trialityPerm v) =
+      OpVec3.trialityPerm (OpVec3.naiveCross u v) ∧
+    OpVec3.dot (OpVec3.trialityPerm u) (OpVec3.trialityPerm v) = OpVec3.dot u v ∧
+    zornGaloisZ2 (zornGaloisZ2 X) = X ∧
+    zornGaloisZ3 (zornGaloisZ3 (zornGaloisZ3 X)) = X ∧
+    zornGaloisZ2 (zornGaloisZ3 X) = zornGaloisZ3 (zornGaloisZ2 X) ∧
+    zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 X))))) = X ∧
+    zornGradeParity (X * Y) = zornGradeParity X * zornGradeParity Y ∧
+    zornGaloisZ3 (X * Y) = zornGaloisZ3 X * zornGaloisZ3 Y ∧
+    zornGaloisZ3 orbit3 = orbit3 ∧
+    opZornTrace (zornGaloisZ6 X) = opZornTrace X ∧
+    zornGaloisZ2 X + X = opGradeZero X.a X.b + opGradeZero X.a X.b := by
+  intro orbit3
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [OpVec3.naiveCross, OpVec3.trialityPerm]
+  · simp [OpVec3.dot, OpVec3.trialityPerm]; abel
+  · ext <;> simp [zornGaloisZ2]
+  · ext <;> simp [zornGaloisZ3, OpVec3.trialityPerm]
+  · ext <;> simp [zornGaloisZ2, zornGaloisZ3, OpVec3.trialityPerm]
+  · ext <;> simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, OpVec3.trialityPerm]
+  · ext <;> (simp [zornGradeParity, OpVec3.gradeParity, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> (simp [zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> (simp [orbit3, zornGaloisZ3, OpVec3.trialityPerm]; try abel)
+  · simp [opZornTrace, zornGaloisZ6, zornGaloisZ2, zornGaloisZ3]
+  · ext <;> simp [zornGaloisZ2, opGradeZero, opCartanDiag]
+
+/-- **Theorem 122 (`Archetype CII`: Exact $\mathbb{Z}_2$ Galois Automorphism & Cyclotomic Degree-Doubling in $\mathrm{CD}_\Omega(A)$)**:
+    Over ANY noncommutative $*$-ring $A$ (`[Ring A] [StarRing A]`) and for ANY operator twist $\Omega \in A$:
+    1. $\sigma_{\mathrm{CD}}(x, y) = (x, -y)$ has Galois trace $Z + \sigma_{\mathrm{CD}}(Z) = \iota(2x)$.
+    2. **Cyclotomic Degree-Doubling Laws** for $\mathbf{E} = (0, 1)$ and $\mathbf{E}^2 = \mathbf{E} *_\Omega \mathbf{E} = \iota(\Omega)$:
+       - $\mathbf{E}^2 + 1 = \iota(\Phi_2(\Omega))$,
+       - $\mathbf{E}^4 + 1 = \iota(\Phi_4(\Omega))$,
+       - $\mathbf{E}^8 + 1 = \iota(\Phi_8(\Omega))$,
+       - $\mathbf{E}^4 + \mathbf{E}^2 + 1 = \iota(\Phi_3(\Omega))$,
+       - $\mathbf{E}^4 - \mathbf{E}^2 + 1 = \iota(\Phi_6(\Omega))$. -/
+theorem cdGaloisZ2_automorphism_and_cyclotomic_degree_doubling
+    [StarRing A] (Ω : A) (Z W : OpCayleyDickson A) :
+    let E : OpCayleyDickson A := cdGenE
+    let E2 := cdMul Ω E E
+    let E4 := cdMul Ω E2 E2
+    let E8 := cdMul Ω E4 E4
+    cdGaloisZ2 (cdGaloisZ2 Z) = Z ∧
+    cdGaloisZ2 (cdMul Ω Z W) = cdMul Ω (cdGaloisZ2 Z) (cdGaloisZ2 W) ∧
+    Z + cdGaloisZ2 Z = cdEmbed (Z.x + Z.x) ∧
+    E2 + 1 = cdEmbed (opPhi2 Ω) ∧
+    E4 + 1 = cdEmbed (opPhi4 Ω) ∧
+    E8 + 1 = cdEmbed (opPhi8 Ω) ∧
+    E4 + E2 + 1 = cdEmbed (opPhi3 Ω) ∧
+    E4 - E2 + 1 = cdEmbed (opPhi6 Ω) := by
+  intro E E2 E4 E8
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [cdGaloisZ2]
+  · ext <;> (simp [cdGaloisZ2, cdMul]; try abel; try noncomm_ring)
+  · ext <;> simp [cdGaloisZ2, cdEmbed]
+  · ext <;> (simp [E, E2, cdMul, cdGenE, cdEmbed, opPhi2, star_one, star_zero]; try abel; try noncomm_ring)
+  · ext <;> (simp [E, E2, E4, cdMul, cdGenE, cdEmbed, opPhi4, star_one, star_zero]; try abel; try noncomm_ring)
+  · ext <;> (simp [E, E2, E4, E8, cdMul, cdGenE, cdEmbed, opPhi8, star_one, star_zero]; try abel; try noncomm_ring)
+  · ext <;> (simp [E, E2, E4, cdMul, cdGenE, cdEmbed, opPhi3, star_one, star_zero]; try abel; try noncomm_ring)
+  · ext <;> (simp [E, E2, E4, cdMul, cdGenE, cdEmbed, opPhi6, star_one, star_zero]; try abel; try noncomm_ring)
+
+/-- **The Noncommutative 6th Cyclotomic Quotient Ring $\mathrm{OpCyclotomic6}\;A := A[\zeta]/(\zeta^2 - \zeta + 1 = 0)$ (`Archetype CIII`)**:
+    Represented in the basis $\{1, \zeta\}$ with $\zeta^2 = \zeta - 1$:
+    $$(a_1 + b_1\zeta)(a_2 + b_2\zeta) = (a_1 a_2 - b_1 b_2) + (a_1 b_2 + b_1 a_2 + b_1 b_2)\zeta.$$ -/
+@[ext]
+structure OpCyclotomic6 (A : Type*) where
+  c0 : A
+  c1 : A
+  deriving DecidableEq, Inhabited
+
+namespace OpCyclotomic6
+
+instance : Zero (OpCyclotomic6 A) := ⟨⟨0, 0⟩⟩
+instance : One (OpCyclotomic6 A) := ⟨⟨1, 0⟩⟩
+instance : Inhabited (OpCyclotomic6 A) := ⟨0⟩
+instance : Add (OpCyclotomic6 A) := ⟨fun x y => ⟨x.c0 + y.c0, x.c1 + y.c1⟩⟩
+instance : Neg (OpCyclotomic6 A) := ⟨fun x => ⟨-x.c0, -x.c1⟩⟩
+instance : Sub (OpCyclotomic6 A) := ⟨fun x y => ⟨x.c0 - y.c0, x.c1 - y.c1⟩⟩
+instance : Mul (OpCyclotomic6 A) :=
+  ⟨fun x y => ⟨x.c0 * y.c0 - x.c1 * y.c1, x.c0 * y.c1 + x.c1 * y.c0 + x.c1 * y.c1⟩⟩
+
+@[simp] theorem zero_c0 : (0 : OpCyclotomic6 A).c0 = 0 := rfl
+@[simp] theorem zero_c1 : (0 : OpCyclotomic6 A).c1 = 0 := rfl
+@[simp] theorem one_c0 : (1 : OpCyclotomic6 A).c0 = 1 := rfl
+@[simp] theorem one_c1 : (1 : OpCyclotomic6 A).c1 = 0 := rfl
+@[simp] theorem add_c0 (x y : OpCyclotomic6 A) : (x + y).c0 = x.c0 + y.c0 := rfl
+@[simp] theorem add_c1 (x y : OpCyclotomic6 A) : (x + y).c1 = x.c1 + y.c1 := rfl
+@[simp] theorem neg_c0 (x : OpCyclotomic6 A) : (-x).c0 = -x.c0 := rfl
+@[simp] theorem neg_c1 (x : OpCyclotomic6 A) : (-x).c1 = -x.c1 := rfl
+@[simp] theorem sub_c0 (x y : OpCyclotomic6 A) : (x - y).c0 = x.c0 - y.c0 := rfl
+@[simp] theorem sub_c1 (x y : OpCyclotomic6 A) : (x - y).c1 = x.c1 - y.c1 := rfl
+@[simp] theorem mul_c0 (x y : OpCyclotomic6 A) : (x * y).c0 = x.c0 * y.c0 - x.c1 * y.c1 := rfl
+@[simp] theorem mul_c1 (x y : OpCyclotomic6 A) :
+    (x * y).c1 = x.c0 * y.c1 + x.c1 * y.c0 + x.c1 * y.c1 := rfl
+
+/-- Canonical embedding $\iota_6(a) = (a, 0)$ of $A$ into $\mathrm{OpCyclotomic6}\;A$. -/
+def embed (a : A) : OpCyclotomic6 A := ⟨a, 0⟩
+
+/-- Primitive 6th root of unity $\zeta = (0, 1) \in \mathrm{OpCyclotomic6}\;A$. -/
+def zeta : OpCyclotomic6 A := ⟨0, 1⟩
+
+/-- Order-2 Galois automorphism $\sigma_6(a + b\zeta) = (a + b) - b\zeta$ sending $\zeta \mapsto 1 - \zeta = \zeta^{-1}$. -/
+def galoisConj (x : OpCyclotomic6 A) : OpCyclotomic6 A :=
+  ⟨x.c0 + x.c1, -x.c1⟩
+
+/-- Canonical ring isomorphism `toCyclotomic3 : OpCyclotomic6 A → OpCyclotomic3 A` sending $\zeta \mapsto 1 + \omega$. -/
+def toCyclotomic3 (x : OpCyclotomic6 A) : OpCyclotomic3 A :=
+  ⟨x.c0 + x.c1, x.c1⟩
+
+/-- Inverse ring isomorphism `ofCyclotomic3 : OpCyclotomic3 A → OpCyclotomic6 A` sending $\omega \mapsto \zeta - 1$. -/
+def ofCyclotomic3 (x : OpCyclotomic3 A) : OpCyclotomic6 A :=
+  ⟨x.c0 - x.c1, x.c1⟩
+
+end OpCyclotomic6
+
+/-- **Theorem 123 (`Archetype CIII`: Noncommutative 6th Cyclotomic Quotient Ring Laws, Galois Automorphism, & $\Phi_6 \leftrightarrow \Phi_3$ Isomorphism)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`):
+    1. `OpCyclotomic6 A` is an associative ring where $\zeta = (0, 1)$ satisfies $\zeta^2 - \zeta + 1 = 0$, $\zeta^3 = -1$, and $\zeta^6 = 1$.
+    2. $\sigma_6(a, b) = (a + b, -b)$ is an order-2 multiplicative Galois automorphism with $\zeta * \sigma_6(\zeta) = 1$.
+    3. `toCyclotomic3` and `ofCyclotomic3` are mutually inverse multiplicative ring isomorphisms between `OpCyclotomic6 A` and `OpCyclotomic3 A`. -/
+theorem opCyclotomic6_laws_and_isomorphism
+    (Z W U : OpCyclotomic6 A) :
+    let ζ : OpCyclotomic6 A := OpCyclotomic6.zeta
+    let ζ3 := (ζ * ζ) * ζ
+    (Z * W) * U = Z * (W * U) ∧
+    ζ * ζ - ζ + 1 = 0 ∧
+    ζ3 = -1 ∧
+    ζ3 * ζ3 = 1 ∧
+    OpCyclotomic6.galoisConj (OpCyclotomic6.galoisConj Z) = Z ∧
+    ζ * OpCyclotomic6.galoisConj ζ = 1 ∧
+    OpCyclotomic6.galoisConj (Z * W) = OpCyclotomic6.galoisConj Z * OpCyclotomic6.galoisConj W ∧
+    OpCyclotomic6.ofCyclotomic3 (OpCyclotomic6.toCyclotomic3 Z) = Z ∧
+    OpCyclotomic6.toCyclotomic3 (Z * W) = OpCyclotomic6.toCyclotomic3 Z * OpCyclotomic6.toCyclotomic3 W := by
+  intro ζ ζ3
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp; try abel; try noncomm_ring)
+  · ext <;> (simp [ζ, OpCyclotomic6.zeta]; try abel)
+  · ext <;> (simp [ζ3, ζ, OpCyclotomic6.zeta]; try abel)
+  · ext <;> (simp [ζ3, ζ, OpCyclotomic6.zeta]; try abel; try noncomm_ring)
+  · ext <;> (simp [OpCyclotomic6.galoisConj]; try abel)
+  · ext <;> (simp [ζ, OpCyclotomic6.zeta, OpCyclotomic6.galoisConj]; try abel)
+  · ext <;> (simp [OpCyclotomic6.galoisConj]; try abel; try noncomm_ring)
+  · ext <;> (simp [OpCyclotomic6.ofCyclotomic3, OpCyclotomic6.toCyclotomic3]; try abel)
+  · ext <;> (simp [OpCyclotomic6.toCyclotomic3]; try abel; try noncomm_ring)
+
+/-- Left Nambu–Gorkov Zorn quadratic determinant $\det_L(X) = X.a * X.b + \langle X.v, X.w \rangle$. -/
+def opNambuDetLeft (X : OpZornMatrix A) : A :=
+  X.a * X.b + OpVec3.dot X.v X.w
+
+/-- Right Nambu–Gorkov Zorn quadratic determinant $\det_R(X) = X.b * X.a + \langle X.w, X.v \rangle$. -/
+def opNambuDetRight (X : OpZornMatrix A) : A :=
+  X.b * X.a + OpVec3.dot X.w X.v
+
+/-- **Theorem 124 (`Archetype CIV`: $\mathbb{Z}_6$ Galois Invariance of Nambu Determinants & Equivariance of the Bruhat Trifactor and Zorn–Riccati Operator)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`), for all $X \in \mathrm{OpZornMatrix}\;A$, $a, b \in A$, and $w, v, q \in \mathrm{OpVec3}\;A$:
+    1. **Exact Galois Invariance of Left and Right Nambu Determinants under $\tau_3$ and $\gamma_6$**:
+       $$\mathrm{opNambuDetLeft}(\tau_3(X)) = \mathrm{opNambuDetLeft}(X), \qquad
+         \mathrm{opNambuDetRight}(\tau_3(X)) = \mathrm{opNambuDetRight}(X),$$
+       $$\mathrm{opNambuDetLeft}(\gamma_6(X)) = \mathrm{opNambuDetLeft}(X), \qquad
+         \mathrm{opNambuDetRight}(\gamma_6(X)) = \mathrm{opNambuDetRight}(X).$$
+    2. **Exact Galois Equivariance of the Bruhat Trifactor**:
+       $$\tau_3(\mathrm{opBruhatTrifactor}\;w\;a\;b\;v) =
+         \mathrm{opBruhatTrifactor}\;(\tau_3(w))\;a\;b\;(\tau_3(v)),$$
+       $$\gamma_6(\mathrm{opBruhatTrifactor}\;w\;a\;b\;v) =
+         \mathrm{opBruhatTrifactor}\;(-\tau_3(w))\;a\;b\;(-\tau_3(v)).$$
+    3. **Exact Galois Equivariance of the 8D Noncommutative Zorn–Riccati Operator $\mathcal{R}_X(q)$**:
+       $$\tau_3(\mathrm{opZornRiccati}\;X\;q) = \mathrm{opZornRiccati}\;(\tau_3(X))\;(\tau_3(q)),$$
+       $$-\tau_3(\mathrm{opZornRiccati}\;X\;q) = \mathrm{opZornRiccati}\;(\gamma_6(X))\;(-\tau_3(q)).$$ -/
+theorem zornGalois_nambuDet_bruhat_and_riccati_equivariance
+    (X : OpZornMatrix A) (a b : A) (w v q : OpVec3 A) :
+    opNambuDetLeft (zornGaloisZ3 X) = opNambuDetLeft X ∧
+    opNambuDetRight (zornGaloisZ3 X) = opNambuDetRight X ∧
+    opNambuDetLeft (zornGaloisZ6 X) = opNambuDetLeft X ∧
+    opNambuDetRight (zornGaloisZ6 X) = opNambuDetRight X ∧
+    zornGaloisZ3 (opBruhatTrifactor w a b v) =
+      opBruhatTrifactor (OpVec3.trialityPerm w) a b (OpVec3.trialityPerm v) ∧
+    zornGaloisZ6 (opBruhatTrifactor w a b v) =
+      opBruhatTrifactor (-OpVec3.trialityPerm w) a b (-OpVec3.trialityPerm v) ∧
+    OpVec3.trialityPerm (opZornRiccati X q) =
+      opZornRiccati (zornGaloisZ3 X) (OpVec3.trialityPerm q) ∧
+    -OpVec3.trialityPerm (opZornRiccati X q) =
+      opZornRiccati (zornGaloisZ6 X) (-OpVec3.trialityPerm q) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [opNambuDetLeft, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot]; abel
+  · simp [opNambuDetRight, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot]; abel
+  · simp [opNambuDetLeft, zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot]; abel
+  · simp [opNambuDetRight, zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot]; abel
+  · ext <;> (simp [zornGaloisZ3, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper, OpVec3.trialityPerm, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> (simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper, OpVec3.trialityPerm, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> (simp [opZornRiccati, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> (simp [opZornRiccati, zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+
+/-! ### 44. Noncommutative Cyclotomic Galois Norms, Associativity of the $\mathbb{Z}_3$-Galois Singlet Subalgebra, Octahedral $S_4 = V_4 \rtimes S_3$ Galois Group, & Triality 5-Gradings (`Archetypes CV–CXIII`) -/
+
+/-- **Theorem 125 (`Archetype CV`: Noncommutative Galois Norm Commutator Anomaly & Symmetrized Jordan Galois Norm)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`), for all $Z_3 = \langle a, b \rangle \in \mathrm{OpCyclotomic3}\;A$
+    and $Z_6 = \langle a, b \rangle \in \mathrm{OpCyclotomic6}\;A$:
+    1. **Left & Right Galois Norms in `OpCyclotomic3 A` Isolate the Commutator $[b, a]$**:
+       $$Z_3 * \sigma_3(Z_3) = \langle a * a - a * b + b * b,\; b * a - a * b \rangle, \qquad
+         \sigma_3(Z_3) * Z_3 = \langle a * a - b * a + b * b,\; a * b - b * a \rangle.$$
+    2. **Symmetrized Jordan Galois Norm in `OpCyclotomic3 A` Lands Purely in Base Ring $A$**:
+       $$Z_3 * \sigma_3(Z_3) + \sigma_3(Z_3) * Z_3 =
+         \mathrm{OpCyclotomic3.embed}\bigl((a * a + a * a) - (a * b + b * a) + (b * b + b * b)\bigr).$$
+    3. **Left & Right Galois Norms in `OpCyclotomic6 A` Isolate the Commutator $[b, a]$**:
+       $$Z_6 * \sigma_6(Z_6) = \langle a * a + a * b + b * b,\; b * a - a * b \rangle, \qquad
+         \sigma_6(Z_6) * Z_6 = \langle a * a + b * a + b * b,\; a * b - b * a \rangle.$$
+    4. **Symmetrized Jordan Galois Norm in `OpCyclotomic6 A` Lands Purely in Base Ring $A$**:
+       $$Z_6 * \sigma_6(Z_6) + \sigma_6(Z_6) * Z_6 =
+         \mathrm{OpCyclotomic6.embed}\bigl((a * a + a * a) + (a * b + b * a) + (b * b + b * b)\bigr).$$ -/
+theorem opCyclotomic_galois_norm_commutator_and_jordan_norm (a b : A) :
+    let Z₃ : OpCyclotomic3 A := ⟨a, b⟩
+    let Z₆ : OpCyclotomic6 A := ⟨a, b⟩
+    Z₃ * OpCyclotomic3.galoisConj Z₃ = ⟨a * a - a * b + b * b, b * a - a * b⟩ ∧
+    OpCyclotomic3.galoisConj Z₃ * Z₃ = ⟨a * a - b * a + b * b, a * b - b * a⟩ ∧
+    Z₃ * OpCyclotomic3.galoisConj Z₃ + OpCyclotomic3.galoisConj Z₃ * Z₃ =
+      OpCyclotomic3.embed ((a * a + a * a) - (a * b + b * a) + (b * b + b * b)) ∧
+    Z₆ * OpCyclotomic6.galoisConj Z₆ = ⟨a * a + a * b + b * b, b * a - a * b⟩ ∧
+    OpCyclotomic6.galoisConj Z₆ * Z₆ = ⟨a * a + b * a + b * b, a * b - b * a⟩ ∧
+    Z₆ * OpCyclotomic6.galoisConj Z₆ + OpCyclotomic6.galoisConj Z₆ * Z₆ =
+      OpCyclotomic6.embed ((a * a + a * a) + (a * b + b * a) + (b * b + b * b)) := by
+  intro Z₃ Z₆
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Z₃, Z₆, OpCyclotomic3.galoisConj, OpCyclotomic3.embed,
+          OpCyclotomic6.galoisConj, OpCyclotomic6.embed];
+    try abel; try noncomm_ring))
+
+/-- Diagonal singlet 3-vector $\mathbf{1}(c) = \langle c, c, c \rangle \in \mathrm{OpVec3}\;A$ (`Archetype CVI`). -/
+def OpVec3.diagVec (c : A) : OpVec3 A := ⟨c, c, c⟩
+
+omit [Ring A] in
+@[simp] theorem OpVec3.diagVec_x (c : A) : (OpVec3.diagVec c).x = c := rfl
+omit [Ring A] in
+@[simp] theorem OpVec3.diagVec_y (c : A) : (OpVec3.diagVec c).y = c := rfl
+omit [Ring A] in
+@[simp] theorem OpVec3.diagVec_z (c : A) : (OpVec3.diagVec c).z = c := rfl
+
+/-- $\mathbb{Z}_3$-Galois Invariant Singlet Element `zornSinglet a c d b := ⟨a, ⟨c, c, c⟩, ⟨d, d, d⟩, b⟩`
+in $\mathrm{Fix}(\tau_3) \subset \mathrm{OpZornMatrix}\;A$ (`Archetype CVI`). -/
+def zornSinglet (a c d b : A) : OpZornMatrix A :=
+  ⟨a, OpVec3.diagVec c, OpVec3.diagVec d, b⟩
+
+/-- $\mathbb{Z}_3$-Galois singlet projection $\mathcal{P}_{\mathrm{sing}}(X) = X + \tau_3(X) + \tau_3^2(X)$ (`Archetype CVI`). -/
+def zornSingletProj (X : OpZornMatrix A) : OpZornMatrix A :=
+  X + zornGaloisZ3 X + zornGaloisZ3 (zornGaloisZ3 X)
+
+/-- $\mathbb{Z}_3$-Galois octet residual $\mathcal{P}_{\mathrm{oct}}(X) = (X + X + X) - \mathcal{P}_{\mathrm{sing}}(X)$ (`Archetype CVI`). -/
+def zornOctetProj (X : OpZornMatrix A) : OpZornMatrix A :=
+  (X + X + X) - zornSingletProj X
+
+/-- **Theorem 126 (`Archetype CVI`: Strict Associativity of the $\mathbb{Z}_3$-Galois Singlet Subalgebra $\mathrm{Fix}(\tau_3)$ & $\Phi_3$ Singlet-Octet Split)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`):
+    1. **Exact $\mathbb{Z}_3$-Galois Fixed-Point Invariance & Vanishing Diagonal Cross Product**:
+       $\tau_3(\mathrm{zornSinglet}\;a_1\;c_1\;d_1\;b_1) = \mathrm{zornSinglet}\;a_1\;c_1\;d_1\;b_1$
+       and $\mathrm{OpVec3.skewCross}\;(\mathbf{1}(c_1))\;(\mathbf{1}(c_2)) = 0$.
+    2. **Multiplicative Closure of $\mathrm{Fix}(\tau_3)$**:
+       $$\mathrm{zornSinglet}\;a_1\;c_1\;d_1\;b_1 * \mathrm{zornSinglet}\;a_2\;c_2\;d_2\;b_2 =
+         \mathrm{zornSinglet}\;(a_1 a_2 - (c_1 d_2 + c_1 d_2 + c_1 d_2))\;(a_1 c_2 + c_1 b_2)\;
+                               (d_1 a_2 + b_1 d_2)\;(-(d_1 c_2 + d_1 c_2 + d_1 c_2) + b_1 b_2).$$
+    3. **Strict Associativity of the $\mathbb{Z}_3$-Galois Fixed-Point Subalgebra $\mathrm{Fix}(\tau_3)$**:
+       $$\mathrm{opAssociator}\;(\mathrm{zornSinglet}\;a_1\;c_1\;d_1\;b_1)\;
+                                (\mathrm{zornSinglet}\;a_2\;c_2\;d_2\;b_2)\;
+                                (\mathrm{zornSinglet}\;a_3\;c_3\;d_3\;b_3) = 0.$$
+    4. **Exact $\Phi_3(\tau_3)$ Singlet-Octet Orthogonality**:
+       $$\tau_3(\mathcal{P}_{\mathrm{sing}}(X)) = \mathcal{P}_{\mathrm{sing}}(X) \quad \text{and} \quad
+         \mathcal{P}_{\mathrm{sing}}(\mathcal{P}_{\mathrm{oct}}(X)) = 0.$$ -/
+theorem zornSinglet_closure_strict_associativity_and_octet_split
+    (a₁ c₁ d₁ b₁ a₂ c₂ d₂ b₂ a₃ c₃ d₃ b₃ : A) (X : OpZornMatrix A) :
+    let S₁ := zornSinglet a₁ c₁ d₁ b₁
+    let S₂ := zornSinglet a₂ c₂ d₂ b₂
+    let S₃ := zornSinglet a₃ c₃ d₃ b₃
+    zornGaloisZ3 S₁ = S₁ ∧
+    OpVec3.skewCross (OpVec3.diagVec c₁) (OpVec3.diagVec c₂) = 0 ∧
+    S₁ * S₂ =
+      zornSinglet (a₁ * a₂ - (c₁ * d₂ + c₁ * d₂ + c₁ * d₂))
+                  (a₁ * c₂ + c₁ * b₂)
+                  (d₁ * a₂ + b₁ * d₂)
+                  (-(d₁ * c₂ + d₁ * c₂ + d₁ * c₂) + b₁ * b₂) ∧
+    opAssociator S₁ S₂ S₃ = 0 ∧
+    zornGaloisZ3 (zornSingletProj X) = zornSingletProj X ∧
+    zornSingletProj (zornOctetProj X) = 0 := by
+  intro S₁ S₂ S₃
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [S₁, S₂, S₃, zornSinglet, zornSingletProj, zornOctetProj,
+          zornGaloisZ3, opAssociator, OpVec3.diagVec, OpVec3.trialityPerm,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+          OpVec3.leftScale, OpVec3.rightScale];
+    try abel; try noncomm_ring))
+
+/-- **Theorem 127 (`Archetype CVII`: $\mathbb{Z}_6$ Galois Equivariance of the Zorn–Riccati Tangent Jacobian & Singlet Riccati Reduction)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`), for all $X \in \mathrm{OpZornMatrix}\;A$,
+    $q, \delta \in \mathrm{OpVec3}\;A$, and $a, c, d, b, q_0 \in A$:
+    1. **Exact $\mathbb{Z}_3$-Triality Galois Equivariance of the Riccati Jacobian $\mathcal{J}_{X, q}(\delta)$**:
+       $$\tau_3\bigl(\mathrm{opZornRiccatiJacobian}\;X\;q\;\delta\bigr) =
+         \mathrm{opZornRiccatiJacobian}\;(\tau_3(X))\;(\tau_3(q))\;(\tau_3(\delta)).$$
+    2. **Exact $\mathbb{Z}_6$-Cyclotomic Galois Equivariance of the Riccati Jacobian $\mathcal{J}_{X, q}(\delta)$**:
+       $$\tau_3\bigl(\mathrm{opZornRiccatiJacobian}\;X\;q\;\delta\bigr) =
+         \mathrm{opZornRiccatiJacobian}\;(\gamma_6(X))\;(-\tau_3(q))\;(\tau_3(\delta)).$$
+    3. **Exact Reduction of 8D `opZornRiccati` on $\mathrm{Fix}(\tau_3)$ to the 1D Baryonic Singlet Riccati Equation**:
+       $$\mathrm{opZornRiccati}\;(\mathrm{zornSinglet}\;a\;c\;d\;b)\;(\mathbf{1}(q_0)) =
+         \mathbf{1}\bigl(q_0 * (d * q_0 + d * q_0 + d * q_0) + q_0 * b + a * q_0 - c\bigr).$$ -/
+theorem zornRiccatiJacobian_galois_equivariance_and_singlet_reduction
+    (X : OpZornMatrix A) (q δ : OpVec3 A) (a c d b q₀ : A) :
+    let r_sing := q₀ * (d * q₀ + d * q₀ + d * q₀) + q₀ * b + a * q₀ - c
+    OpVec3.trialityPerm (opZornRiccatiJacobian X q δ) =
+      opZornRiccatiJacobian (zornGaloisZ3 X) (OpVec3.trialityPerm q) (OpVec3.trialityPerm δ) ∧
+    OpVec3.trialityPerm (opZornRiccatiJacobian X q δ) =
+      opZornRiccatiJacobian (zornGaloisZ6 X) (-OpVec3.trialityPerm q) (OpVec3.trialityPerm δ) ∧
+    opZornRiccati (zornSinglet a c d b) (OpVec3.diagVec q₀) =
+      OpVec3.diagVec r_sing := by
+  intro r_sing
+  refine ⟨?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [r_sing, opZornRiccati, opZornRiccatiJacobian,
+          zornGaloisZ3, zornGaloisZ6, zornGaloisZ2, zornSinglet,
+          OpVec3.diagVec, OpVec3.trialityPerm, OpVec3.dot,
+          OpVec3.leftScale, OpVec3.rightScale];
+    try abel; try noncomm_ring))
+
+/-- Order-2 signed reflection vector involution $\sigma_{\mathrm{refl}}\langle x, y, z \rangle := \langle -x, -z, -y \rangle$
+on `OpVec3 A` with $\det(\sigma_{\mathrm{refl}}) = +1 \in \mathrm{SO}(3, \mathbb{Z})$ (`Archetype CVIII`). -/
+def OpVec3.reflPerm (u : OpVec3 A) : OpVec3 A :=
+  ⟨-u.x, -u.z, -u.y⟩
+
+@[simp] theorem OpVec3.reflPerm_x (u : OpVec3 A) : (OpVec3.reflPerm u).x = -u.x := rfl
+@[simp] theorem OpVec3.reflPerm_y (u : OpVec3 A) : (OpVec3.reflPerm u).y = -u.z := rfl
+@[simp] theorem OpVec3.reflPerm_z (u : OpVec3 A) : (OpVec3.reflPerm u).z = -u.y := rfl
+
+/-- Order-2 signed reflection automorphism $\sigma_{\mathrm{refl}}\langle a, v, w, b \rangle := \langle a, \sigma_{\mathrm{refl}}(v), \sigma_{\mathrm{refl}}(w), b \rangle$
+on `OpZornMatrix A`, generating the non-abelian dihedral group $S_3 = \mathbb{Z}_3 \rtimes \mathbb{Z}_2$ with `zornGaloisZ3` (`Archetype CVIII`). -/
+def zornReflZ2 (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨X.a, OpVec3.reflPerm X.v, OpVec3.reflPerm X.w, X.b⟩
+
+/-- **Theorem 128 (`Archetype CVIII`: The Non-Abelian Dihedral Galois Group $S_3 = \mathbb{Z}_3 \rtimes \mathbb{Z}_2$, Reflection Automorphism `zornReflZ2`, & Riccati Reflection Equivariance)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`):
+    1. **Cross & Dot Product Covariance under $\sigma_{\mathrm{refl}}$ ($\det = +1$)**:
+       $$\sigma_{\mathrm{refl}}(u) \times_{\mathrm{skew}} \sigma_{\mathrm{refl}}(v) = \sigma_{\mathrm{refl}}(u \times_{\mathrm{skew}} v), \qquad
+         \langle \sigma_{\mathrm{refl}}(u), \sigma_{\mathrm{refl}}(v) \rangle = \langle u, v \rangle.$$
+    2. **Exact Non-Associative Ring Automorphism & Dihedral $S_3 = \mathbb{Z}_3 \rtimes \mathbb{Z}_2$ Group Law**:
+       $$\sigma_{\mathrm{refl}}(\sigma_{\mathrm{refl}}(X)) = X, \qquad
+         \sigma_{\mathrm{refl}}(X * Y) = \sigma_{\mathrm{refl}}(X) * \sigma_{\mathrm{refl}}(Y), \qquad
+         \sigma_{\mathrm{refl}}(\tau_3(\sigma_{\mathrm{refl}}(X))) = \tau_3(\tau_3(X)).$$
+    3. **Exact Reflection Equivariance of `opZornRiccati`**:
+       $$\sigma_{\mathrm{refl}}(\mathrm{opZornRiccati}\;X\;q) =
+         \mathrm{opZornRiccati}\;(\sigma_{\mathrm{refl}}(X))\;(\sigma_{\mathrm{refl}}(q)).$$ -/
+theorem zornReflZ2_automorphism_dihedral_S3_and_riccati_equivariance
+    (X Y : OpZornMatrix A) (u v q : OpVec3 A) :
+    OpVec3.skewCross (OpVec3.reflPerm u) (OpVec3.reflPerm v) =
+      OpVec3.reflPerm (OpVec3.skewCross u v) ∧
+    OpVec3.dot (OpVec3.reflPerm u) (OpVec3.reflPerm v) = OpVec3.dot u v ∧
+    zornReflZ2 (zornReflZ2 X) = X ∧
+    zornReflZ2 (X * Y) = zornReflZ2 X * zornReflZ2 Y ∧
+    zornReflZ2 (zornGaloisZ3 (zornReflZ2 X)) = zornGaloisZ3 (zornGaloisZ3 X) ∧
+    OpVec3.reflPerm (opZornRiccati X q) =
+      opZornRiccati (zornReflZ2 X) (OpVec3.reflPerm q) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp [OpVec3.reflPerm, OpVec3.skewCross, OpVec3.naiveCross]; try abel; try noncomm_ring)
+  · simp [OpVec3.reflPerm, OpVec3.dot]; try abel; try noncomm_ring
+  · ext <;> simp [zornReflZ2, OpVec3.reflPerm]
+  · ext <;>
+    (simp [zornReflZ2, OpVec3.reflPerm, OpVec3.dot, OpVec3.skewCross,
+           OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale];
+     try abel; try noncomm_ring)
+  · ext <;> simp [zornReflZ2, zornGaloisZ3, OpVec3.reflPerm, OpVec3.trialityPerm]
+  · ext <;>
+    (simp [opZornRiccati, zornReflZ2, OpVec3.reflPerm, OpVec3.dot,
+           OpVec3.leftScale, OpVec3.rightScale];
+     try abel; try noncomm_ring)
+
+/-- Klein four-group vector involutions $\kappa_y\langle x, y, z \rangle = \langle -x, y, -z \rangle$
+and $\kappa_z\langle x, y, z \rangle = \langle -x, -y, z \rangle$ on `OpVec3 A` (`Archetype CIX`). -/
+def OpVec3.kleinY (u : OpVec3 A) : OpVec3 A := ⟨-u.x, u.y, -u.z⟩
+def OpVec3.kleinZ (u : OpVec3 A) : OpVec3 A := ⟨-u.x, -u.y, u.z⟩
+
+@[simp] theorem OpVec3.kleinY_x (u : OpVec3 A) : (OpVec3.kleinY u).x = -u.x := rfl
+@[simp] theorem OpVec3.kleinY_y (u : OpVec3 A) : (OpVec3.kleinY u).y = u.y := rfl
+@[simp] theorem OpVec3.kleinY_z (u : OpVec3 A) : (OpVec3.kleinY u).z = -u.z := rfl
+@[simp] theorem OpVec3.kleinZ_x (u : OpVec3 A) : (OpVec3.kleinZ u).x = -u.x := rfl
+@[simp] theorem OpVec3.kleinZ_y (u : OpVec3 A) : (OpVec3.kleinZ u).y = -u.y := rfl
+@[simp] theorem OpVec3.kleinZ_z (u : OpVec3 A) : (OpVec3.kleinZ u).z = u.z := rfl
+
+/-- Klein four-group $V_4 = \{I, K_x, K_y, K_z\}$ of order-2 multiplicative automorphisms on `OpZornMatrix A` (`Archetype CIX`). -/
+abbrev zornKleinX (X : OpZornMatrix A) : OpZornMatrix A := zornGradeParity X
+def zornKleinY (X : OpZornMatrix A) : OpZornMatrix A := ⟨X.a, OpVec3.kleinY X.v, OpVec3.kleinY X.w, X.b⟩
+def zornKleinZ (X : OpZornMatrix A) : OpZornMatrix A := ⟨X.a, OpVec3.kleinZ X.v, OpVec3.kleinZ X.w, X.b⟩
+
+/-- The second and third triality-conjugate Euler 5-grading operators $\mathcal{D}_{5,y}$ and $\mathcal{D}_{5,z}$
+on `OpZornMatrix A`, isolating the $y$-axis and $z$-axis as Grade $\pm 2$ contact horizons (`Archetype CXII`). -/
+def opEuler5Y (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨0, ⟨X.v.x, -(X.v.y + X.v.y), X.v.z⟩, ⟨-X.w.x, X.w.y + X.w.y, -X.w.z⟩, 0⟩
+
+def opEuler5Z (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨0, ⟨X.v.x, X.v.y, -(X.v.z + X.v.z)⟩, ⟨-X.w.x, -X.w.y, X.w.z + X.w.z⟩, 0⟩
+
+/-- **Theorem 129 (`Archetypes CIX–CXIII`: The 24-Element Octahedral Galois Group $S_4 = V_4 \rtimes S_3$, Klein 4-Character Resolution, & Triality Trio of 5-Gradings)**:
+    Over ANY noncommutative ring $A$ (`[Ring A]`):
+    1. **Klein Four-Group $V_4 = \{I, K_x, K_y, K_z\}$ of Multiplicative Automorphisms**:
+       $K_y(X * Y) = K_y(X) * K_y(Y)$, $K_z(X * Y) = K_z(X) * K_z(Y)$, $K_x(K_y(X)) = K_z(X)$, and
+       $$X + K_x(X) + K_y(X) + K_z(X) =
+         \mathrm{opGradeZero}\;X.a\;X.b + \mathrm{opGradeZero}\;X.a\;X.b +
+         \mathrm{opGradeZero}\;X.a\;X.b + \mathrm{opGradeZero}\;X.a\;X.b.$$
+    2. **Octahedral $S_4 = V_4 \rtimes S_3$ Conjugation by $\tau_3$ and $\sigma_{\mathrm{refl}}$**:
+       $$\tau_3^2(K_x(\tau_3(X))) = K_y(X), \quad \tau_3^2(K_y(\tau_3(X))) = K_z(X), \quad
+         \sigma_{\mathrm{refl}}(K_x(\sigma_{\mathrm{refl}}(X))) = K_x(X), \quad
+         \sigma_{\mathrm{refl}}(K_y(\sigma_{\mathrm{refl}}(X))) = K_z(X).$$
+    3. **Triality Trio of 5-Grading Operators $(\mathcal{D}_{5,x}, \mathcal{D}_{5,y}, \mathcal{D}_{5,z})$**:
+       Pairwise commutativity, $S_3$ conjugation, and exact zero-sum conservation:
+       $$\mathrm{opEulerFiveGrading}\;X + \mathrm{opEuler5Y}\;X + \mathrm{opEuler5Z}\;X = 0,$$
+       $$\mathrm{opEulerFiveGrading}\;(\mathrm{opEuler5Y}\;X) = \mathrm{opEuler5Y}\;(\mathrm{opEulerFiveGrading}\;X),$$
+       $$\tau_3^2(\mathrm{opEulerFiveGrading}\;(\tau_3(X))) = \mathrm{opEuler5Y}\;X, \qquad
+         \sigma_{\mathrm{refl}}(\mathrm{opEuler5Y}\;(\sigma_{\mathrm{refl}}(X))) = \mathrm{opEuler5Z}\;X.$$ -/
+theorem octahedral_S4_klein_character_resolution_and_triality_five_gradings
+    (X Y : OpZornMatrix A) :
+    let G₀ := opGradeZero X.a X.b
+    zornKleinY (X * Y) = zornKleinY X * zornKleinY Y ∧
+    zornKleinZ (X * Y) = zornKleinZ X * zornKleinZ Y ∧
+    zornKleinX (zornKleinY X) = zornKleinZ X ∧
+    X + zornKleinX X + zornKleinY X + zornKleinZ X = G₀ + G₀ + G₀ + G₀ ∧
+    zornGaloisZ3 (zornGaloisZ3 (zornKleinX (zornGaloisZ3 X))) = zornKleinY X ∧
+    zornGaloisZ3 (zornGaloisZ3 (zornKleinY (zornGaloisZ3 X))) = zornKleinZ X ∧
+    zornReflZ2 (zornKleinX (zornReflZ2 X)) = zornKleinX X ∧
+    zornReflZ2 (zornKleinY (zornReflZ2 X)) = zornKleinZ X ∧
+    opEulerFiveGrading X + opEuler5Y X + opEuler5Z X = 0 ∧
+    opEulerFiveGrading (opEuler5Y X) = opEuler5Y (opEulerFiveGrading X) ∧
+    zornGaloisZ3 (zornGaloisZ3 (opEulerFiveGrading (zornGaloisZ3 X))) = opEuler5Y X ∧
+    zornReflZ2 (opEuler5Y (zornReflZ2 X)) = opEuler5Z X := by
+  intro G₀
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp [zornKleinY, OpVec3.kleinY, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> (simp [zornKleinZ, OpVec3.kleinZ, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+  · ext <;> simp [zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]
+  · ext <;> (simp [G₀, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ, opCartanDiag]; try abel)
+  · ext <;> simp [zornGaloisZ3, zornKleinX, zornGradeParity, zornKleinY, OpVec3.trialityPerm, OpVec3.gradeParity, OpVec3.kleinY]
+  · ext <;> simp [zornGaloisZ3, zornKleinY, zornKleinZ, OpVec3.trialityPerm, OpVec3.kleinY, OpVec3.kleinZ]
+  · ext <;> simp [zornReflZ2, zornKleinX, zornGradeParity, OpVec3.reflPerm, OpVec3.gradeParity]
+  · ext <;> simp [zornReflZ2, zornKleinY, zornKleinZ, OpVec3.reflPerm, OpVec3.kleinY, OpVec3.kleinZ]
+  · ext <;> (simp [opEulerFiveGrading, opEuler5Y, opEuler5Z]; try abel)
+  · ext <;> (simp [opEulerFiveGrading, opEuler5Y]; try abel)
+  · ext <;> simp [zornGaloisZ3, opEulerFiveGrading, opEuler5Y, OpVec3.trialityPerm]
+  · ext <;> (simp [zornReflZ2, opEuler5Y, opEuler5Z, OpVec3.reflPerm]; try abel)
+
+/-! ### 45. The Discrete Spin Projection Group: Quaternion Double Cover $Q_8 \twoheadrightarrow V_4$, Internal Zorn Spinors $S_a^2 = -1$, & Klein Spin-Sector Fusion (`Archetypes CXIV–CXVI`) -/
+
+/-- The 4-component Operator Quaternion Algebra `OpQuaternion A` over a noncommutative ring `A` (`Archetype CXIV`). -/
+@[ext]
+structure OpQuaternion (A : Type*) where
+  w : A
+  x : A
+  y : A
+  z : A
+  deriving DecidableEq, Inhabited
+
+namespace OpQuaternion
+
+instance : Zero (OpQuaternion A) := ⟨⟨0, 0, 0, 0⟩⟩
+instance : One (OpQuaternion A) := ⟨⟨1, 0, 0, 0⟩⟩
+instance : Inhabited (OpQuaternion A) := ⟨0⟩
+instance : Add (OpQuaternion A) := ⟨fun p q => ⟨p.w + q.w, p.x + q.x, p.y + q.y, p.z + q.z⟩⟩
+instance : Sub (OpQuaternion A) := ⟨fun p q => ⟨p.w - q.w, p.x - q.x, p.y - q.y, p.z - q.z⟩⟩
+instance : Neg (OpQuaternion A) := ⟨fun p => ⟨-p.w, -p.x, -p.y, -p.z⟩⟩
+instance : Mul (OpQuaternion A) := ⟨fun p q =>
+  ⟨p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z,
+   p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y,
+   p.w * q.y - p.x * q.z + p.y * q.w + p.z * q.x,
+   p.w * q.z + p.x * q.y - p.y * q.x + p.z * q.w⟩⟩
+
+@[simp] theorem zero_w : (0 : OpQuaternion A).w = 0 := rfl
+@[simp] theorem zero_x : (0 : OpQuaternion A).x = 0 := rfl
+@[simp] theorem zero_y : (0 : OpQuaternion A).y = 0 := rfl
+@[simp] theorem zero_z : (0 : OpQuaternion A).z = 0 := rfl
+@[simp] theorem one_w : (1 : OpQuaternion A).w = 1 := rfl
+@[simp] theorem one_x : (1 : OpQuaternion A).x = 0 := rfl
+@[simp] theorem one_y : (1 : OpQuaternion A).y = 0 := rfl
+@[simp] theorem one_z : (1 : OpQuaternion A).z = 0 := rfl
+@[simp] theorem neg_w (p : OpQuaternion A) : (-p).w = -p.w := rfl
+@[simp] theorem neg_x (p : OpQuaternion A) : (-p).x = -p.x := rfl
+@[simp] theorem neg_y (p : OpQuaternion A) : (-p).y = -p.y := rfl
+@[simp] theorem neg_z (p : OpQuaternion A) : (-p).z = -p.z := rfl
+@[simp] theorem mul_w (p q : OpQuaternion A) :
+    (p * q).w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z := rfl
+@[simp] theorem mul_x (p q : OpQuaternion A) :
+    (p * q).x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y := rfl
+@[simp] theorem mul_y (p q : OpQuaternion A) :
+    (p * q).y = p.w * q.y - p.x * q.z + p.y * q.w + p.z * q.x := rfl
+@[simp] theorem mul_z (p q : OpQuaternion A) :
+    (p * q).z = p.w * q.z + p.x * q.y - p.y * q.x + p.z * q.w := rfl
+
+/-- Quaternion conjugate `conj (w, x, y, z) = (w, -x, -y, -z)`. -/
+def conj (p : OpQuaternion A) : OpQuaternion A := ⟨p.w, -p.x, -p.y, -p.z⟩
+
+/-- Pure 3-vector embedding `OpVec3 A ↪ OpQuaternion A`. -/
+def ofVec3 (v : OpVec3 A) : OpQuaternion A := ⟨0, v.x, v.y, v.z⟩
+
+/-- The three unit quaternion spin generators `spinI, spinJ, spinK` generating $Q_8$. -/
+def spinI : OpQuaternion A := ⟨0, 1, 0, 0⟩
+def spinJ : OpQuaternion A := ⟨0, 0, 1, 0⟩
+def spinK : OpQuaternion A := ⟨0, 0, 0, 1⟩
+
+/-- Spinor adjoint sandwich action `Ad_s(v) = (s * ofVec3(v)) * conj(s)`. -/
+def spinSandwich (s : OpQuaternion A) (v : OpVec3 A) : OpQuaternion A :=
+  (s * ofVec3 v) * conj s
+
+end OpQuaternion
+
+/-- **Theorem 130 (`Archetype CXIV`: The Discrete Spin Double Cover $1 \to \{\pm 1\} \to Q_8 \xrightarrow{\mathrm{Ad}} V_4 \to 1$)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`), for every 3-vector $v \in \mathrm{OpVec3}\;A$:
+    1. **Non-Abelian Quaternion Spin Group Relations ($Q_8$)**:
+       $$\mathbf{i}_Q^2 = -1, \quad \mathbf{j}_Q^2 = -1, \quad \mathbf{k}_Q^2 = -1, \quad
+         \mathbf{i}_Q * \mathbf{j}_Q = \mathbf{k}_Q = -\mathbf{j}_Q * \mathbf{i}_Q.$$
+    2. **Exact Double-Cover Projection onto the Klein Four-Group $V_4 = \{\mathrm{id}, \kappa_x, \kappa_y, \kappa_z\}$**:
+       Both $+\mathbf{i}_Q$ and $-\mathbf{i}_Q$ (and similarly $\pm \mathbf{j}_Q, \pm \mathbf{k}_Q$) project
+       under `spinSandwich` onto the exact same Klein involution $\kappa_x, \kappa_y, \kappa_z$, while
+       the kernel $\{\pm 1\}$ acts as the identity $\mathrm{ofVec3}(v)$. -/
+theorem quaternion_Q8_double_cover_of_klein_V4 (v : OpVec3 A) :
+    let iQ : OpQuaternion A := OpQuaternion.spinI
+    let jQ : OpQuaternion A := OpQuaternion.spinJ
+    let kQ : OpQuaternion A := OpQuaternion.spinK
+    iQ * iQ = -1 ∧
+    jQ * jQ = -1 ∧
+    kQ * kQ = -1 ∧
+    iQ * jQ = kQ ∧
+    jQ * iQ = -kQ ∧
+    OpQuaternion.spinSandwich (-1) v = OpQuaternion.ofVec3 v ∧
+    OpQuaternion.spinSandwich iQ v = OpQuaternion.ofVec3 (OpVec3.gradeParity v) ∧
+    OpQuaternion.spinSandwich (-iQ) v = OpQuaternion.ofVec3 (OpVec3.gradeParity v) ∧
+    OpQuaternion.spinSandwich jQ v = OpQuaternion.ofVec3 (OpVec3.kleinY v) ∧
+    OpQuaternion.spinSandwich (-jQ) v = OpQuaternion.ofVec3 (OpVec3.kleinY v) ∧
+    OpQuaternion.spinSandwich kQ v = OpQuaternion.ofVec3 (OpVec3.kleinZ v) ∧
+    OpQuaternion.spinSandwich (-kQ) v = OpQuaternion.ofVec3 (OpVec3.kleinZ v) := by
+  intro iQ jQ kQ
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   simp [iQ, jQ, kQ, OpQuaternion.spinI, OpQuaternion.spinJ, OpQuaternion.spinK,
+         OpQuaternion.spinSandwich, OpQuaternion.conj, OpQuaternion.ofVec3,
+         OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ])
+
+/-- Internal Zorn axial spinor generators $S_x, S_y, S_z \in \mathrm{OpZornMatrix}\;A$ satisfying
+$S_a * S_a = -1$ (`Archetype CXV`). -/
+def zornSpinX : OpZornMatrix A := ⟨0, ⟨1, 0, 0⟩, ⟨1, 0, 0⟩, 0⟩
+def zornSpinY : OpZornMatrix A := ⟨0, ⟨0, 1, 0⟩, ⟨0, 1, 0⟩, 0⟩
+def zornSpinZ : OpZornMatrix A := ⟨0, ⟨0, 0, 1⟩, ⟨0, 0, 1⟩, 0⟩
+
+/-- The four discrete spin sector projectors $\Pi_0, \Pi_x, \Pi_y, \Pi_z$ on `OpZornMatrix A`
+(scaled by $|V_4| = 4$ so they are division-free over any ring $A$, `Archetype CXVI`). -/
+def spinProj0 (X : OpZornMatrix A) : OpZornMatrix A :=
+  X + zornKleinX X + zornKleinY X + zornKleinZ X
+def spinProjX (X : OpZornMatrix A) : OpZornMatrix A :=
+  X + zornKleinX X - zornKleinY X - zornKleinZ X
+def spinProjY (X : OpZornMatrix A) : OpZornMatrix A :=
+  X - zornKleinX X + zornKleinY X - zornKleinZ X
+def spinProjZ (X : OpZornMatrix A) : OpZornMatrix A :=
+  X - zornKleinX X - zornKleinY X + zornKleinZ X
+
+/-- **Theorem 131 (`Archetypes CXV & CXVI`: Internal Zorn Spinors $S_a^2 = -1$, Orthogonal Spin Projectors, & Klein Fusion Rule $\Pi_x * \Pi_y \subseteq \Pi_z$)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`), for all $X, Y \in \mathrm{OpZornMatrix}\;A$:
+    1. **Internal Spinor Period-4 Law ($S_a^2 = -1$)**:
+       $$S_x * S_x = -1, \qquad S_y * S_y = -1, \qquad S_z * S_z = -1.$$
+    2. **Scaled Idempotency, Mutual Orthogonality, & Resolution of the Identity**:
+       $$\Pi_\alpha(\Pi_\alpha(X)) = 4 \bullet \Pi_\alpha(X), \qquad
+         \Pi_\alpha(\Pi_\beta(X)) = 0 \quad (\alpha \neq \beta), \qquad
+         \Pi_0(X) + \Pi_x(X) + \Pi_y(X) + \Pi_z(X) = 4 \bullet X.$$
+    3. **Exact Spin-Sector Selection / Fusion Rule ($\Pi_x(X) * \Pi_y(Y)$ Lands Purely in $\mathrm{Im}(\Pi_z)$)**:
+       $$\Pi_0\bigl(\Pi_x(X) * \Pi_y(Y)\bigr) = 0, \quad
+         \Pi_x\bigl(\Pi_x(X) * \Pi_y(Y)\bigr) = 0, \quad
+         \Pi_y\bigl(\Pi_x(X) * \Pi_y(Y)\bigr) = 0,$$
+       $$\Pi_z\bigl(\Pi_x(X) * \Pi_y(Y)\bigr) = 4 \bullet \bigl(\Pi_x(X) * \Pi_y(Y)\bigr)!$$ -/
+theorem zorn_internal_spinors_orthogonal_projectors_and_klein_fusion
+    (X Y : OpZornMatrix A) :
+    let fourZ (W : OpZornMatrix A) : OpZornMatrix A := W + W + W + W
+    (zornSpinX : OpZornMatrix A) * zornSpinX = -1 ∧
+    (zornSpinY : OpZornMatrix A) * zornSpinY = -1 ∧
+    (zornSpinZ : OpZornMatrix A) * zornSpinZ = -1 ∧
+    spinProj0 X + spinProjX X + spinProjY X + spinProjZ X = fourZ X ∧
+    spinProj0 (spinProj0 X) = fourZ (spinProj0 X) ∧
+    spinProjX (spinProjX X) = fourZ (spinProjX X) ∧
+    spinProjY (spinProjY X) = fourZ (spinProjY X) ∧
+    spinProjZ (spinProjZ X) = fourZ (spinProjZ X) ∧
+    spinProj0 (spinProjX X) = 0 ∧
+    spinProjX (spinProjY X) = 0 ∧
+    spinProjY (spinProjZ X) = 0 ∧
+    spinProjZ (spinProjX X) = 0 ∧
+    spinProj0 (spinProjX X * spinProjY Y) = 0 ∧
+    spinProjX (spinProjX X * spinProjY Y) = 0 ∧
+    spinProjY (spinProjX X * spinProjY Y) = 0 ∧
+    spinProjZ (spinProjX X * spinProjY Y) = fourZ (spinProjX X * spinProjY Y) := by
+  intro fourZ
+  set a4 := X.a + X.a + X.a + X.a
+  set b4 := X.b + X.b + X.b + X.b
+  set vx4 := X.v.x + X.v.x + X.v.x + X.v.x
+  set wx4 := X.w.x + X.w.x + X.w.x + X.w.x
+  set vy4 := X.v.y + X.v.y + X.v.y + X.v.y
+  set wy4 := X.w.y + X.w.y + X.w.y + X.w.y
+  set vz4 := X.v.z + X.v.z + X.v.z + X.v.z
+  set wz4 := X.w.z + X.w.z + X.w.z + X.w.z
+  set yvy4 := Y.v.y + Y.v.y + Y.v.y + Y.v.y
+  set ywy4 := Y.w.y + Y.w.y + Y.w.y + Y.w.y
+  have hP0 : spinProj0 X = ⟨a4, 0, 0, b4⟩ := by
+    ext <;> (simp [a4, b4, spinProj0, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  have hPx : spinProjX X = ⟨0, ⟨vx4, 0, 0⟩, ⟨wx4, 0, 0⟩, 0⟩ := by
+    ext <;> (simp [vx4, wx4, spinProjX, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  have hPy : spinProjY X = ⟨0, ⟨0, vy4, 0⟩, ⟨0, wy4, 0⟩, 0⟩ := by
+    ext <;> (simp [vy4, wy4, spinProjY, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  have hPz : spinProjZ X = ⟨0, ⟨0, 0, vz4⟩, ⟨0, 0, wz4⟩, 0⟩ := by
+    ext <;> (simp [vz4, wz4, spinProjZ, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  have hPyY : spinProjY Y = ⟨0, ⟨0, yvy4, 0⟩, ⟨0, ywy4, 0⟩, 0⟩ := by
+    ext <;> (simp [yvy4, ywy4, spinProjY, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  have hProd : spinProjX X * spinProjY Y =
+      ⟨0, ⟨0, 0, -(wx4 * ywy4 + ywy4 * wx4)⟩, ⟨0, 0, vx4 * yvy4 + yvy4 * vx4⟩, 0⟩ := by
+    rw [hPx, hPyY]
+    ext <;> (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [zornSpinX, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [zornSpinY, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [zornSpinZ, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> (simp [fourZ, spinProj0, spinProjX, spinProjY, spinProjZ, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hP0]; ext <;> simp [fourZ, spinProj0, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]
+  · rw [hPx]; ext <;> simp [fourZ, spinProjX, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]
+  · rw [hPy]; ext <;> (simp [fourZ, spinProjY, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hPz]; ext <;> (simp [fourZ, spinProjZ, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hPx]; ext <;> (simp [spinProj0, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hPy]; ext <;> (simp [spinProjX, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hPz]; ext <;> (simp [spinProjY, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hPx]; ext <;> (simp [spinProjZ, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hProd]; ext <;> (simp [spinProj0, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hProd]; ext <;> (simp [spinProjX, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hProd]; ext <;> (simp [spinProjY, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+  · rw [hProd]; ext <;> (simp [fourZ, spinProjZ, zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ]; try abel)
+
+/-- The three Galois-fixed split-quaternion subalgebras $\mathbb{H}_x(A) = \mathrm{Fix}(K_x)$,
+$\mathbb{H}_y(A) = \mathrm{Fix}(K_y)$, and $\mathbb{H}_z(A) = \mathrm{Fix}(K_z)$ in `OpZornMatrix A` (`Archetypes CXI–CXIII`). -/
+def quatSubalgX (a vx wx b : A) : OpZornMatrix A := ⟨a, ⟨vx, 0, 0⟩, ⟨wx, 0, 0⟩, b⟩
+def quatSubalgY (a vy wy b : A) : OpZornMatrix A := ⟨a, ⟨0, vy, 0⟩, ⟨0, wy, 0⟩, b⟩
+def quatSubalgZ (a vz wz b : A) : OpZornMatrix A := ⟨a, ⟨0, 0, vz⟩, ⟨0, 0, wz⟩, b⟩
+
+/-- **Theorem 132 (`Archetypes CXI–CXIII`: The Three Galois-Fixed Split-Quaternion Subalgebras $\mathbb{H}_{x,y,z}(A)$, Strict Associativity, $\mathbb{Z}_3$-Triality Cycle, & Riccati Axis Decoupling)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`), for all $a_i, v_i, w_i, b_i, a, v_x, w_x, v_y, w_y, v_z, w_z, b, q_x, q_y, q_z \in A$:
+    1. **Exact Klein Fixed-Point Invariance**:
+       $K_x(\mathrm{quatSubalgX}\;a_1\;v_1\;w_1\;b_1) = \mathrm{quatSubalgX}\;a_1\;v_1\;w_1\;b_1$,
+       $K_y(\mathrm{quatSubalgY}\;a_1\;v_1\;w_1\;b_1) = \mathrm{quatSubalgY}\;a_1\;v_1\;w_1\;b_1$,
+       $K_z(\mathrm{quatSubalgZ}\;a_1\;v_1\;w_1\;b_1) = \mathrm{quatSubalgZ}\;a_1\;v_1\;w_1\;b_1$.
+    2. **Strict Associativity of All Three Quaternion Subalgebras**:
+       $$\mathrm{opAssociator}\;(\mathrm{quatSubalgX}\;a_1\;v_1\;w_1\;b_1)\;(\mathrm{quatSubalgX}\;a_2\;v_2\;w_2\;b_2)\;(\mathrm{quatSubalgX}\;a_3\;v_3\;w_3\;b_3) = 0,$$
+       $$\mathrm{opAssociator}\;(\mathrm{quatSubalgY}\;a_1\;v_1\;w_1\;b_1)\;(\mathrm{quatSubalgY}\;a_2\;v_2\;w_2\;b_2)\;(\mathrm{quatSubalgY}\;a_3\;v_3\;w_3\;b_3) = 0,$$
+       $$\mathrm{opAssociator}\;(\mathrm{quatSubalgZ}\;a_1\;v_1\;w_1\;b_1)\;(\mathrm{quatSubalgZ}\;a_2\;v_2\;w_2\;b_2)\;(\mathrm{quatSubalgZ}\;a_3\;v_3\;w_3\;b_3) = 0.$$
+    3. **Exact $\mathbb{Z}_3$-Triality Cycle of $\mathbb{H}_x(A) \to \mathbb{H}_z(A) \to \mathbb{H}_y(A) \to \mathbb{H}_x(A)$**:
+       $$\tau_3(\mathrm{quatSubalgX}\;a\;v_x\;w_x\;b) = \mathrm{quatSubalgZ}\;a\;v_x\;w_x\;b, \quad
+         \tau_3(\mathrm{quatSubalgZ}\;a\;v_z\;w_z\;b) = \mathrm{quatSubalgY}\;a\;v_z\;w_z\;b, \quad
+         \tau_3(\mathrm{quatSubalgY}\;a\;v_y\;w_y\;b) = \mathrm{quatSubalgX}\;a\;v_y\;w_y\;b.$$
+    4. **Galois-Fixed Riccati Axis Decoupling on $\mathbb{H}_x(A), \mathbb{H}_y(A), \mathbb{H}_z(A)$**:
+       $$\mathrm{opZornRiccati}\;(\mathrm{quatSubalgX}\;a\;v_x\;w_x\;b)\;\langle q_x, 0, 0 \rangle =
+         \langle q_x * (w_x * q_x) + q_x * b + a * q_x - v_x,\; 0,\; 0 \rangle,$$
+       $$\mathrm{opZornRiccati}\;(\mathrm{quatSubalgY}\;a\;v_y\;w_y\;b)\;\langle 0, q_y, 0 \rangle =
+         \langle 0,\; q_y * (w_y * q_y) + q_y * b + a * q_y - v_y,\; 0 \rangle,$$
+       $$\mathrm{opZornRiccati}\;(\mathrm{quatSubalgZ}\;a\;v_z\;w_z\;b)\;\langle 0, 0, q_z \rangle =
+         \langle 0,\; 0,\; q_z * (w_z * q_z) + q_z * b + a * q_z - v_z \rangle.$$ -/
+theorem three_quaternion_galois_subalgebras_and_riccati_axis_decoupling
+    (a₁ v₁ w₁ b₁ a₂ v₂ w₂ b₂ a₃ v₃ w₃ b₃ a vx wx vy wy vz wz b qx qy qz : A) :
+    zornKleinX (quatSubalgX a₁ v₁ w₁ b₁) = quatSubalgX a₁ v₁ w₁ b₁ ∧
+    zornKleinY (quatSubalgY a₁ v₁ w₁ b₁) = quatSubalgY a₁ v₁ w₁ b₁ ∧
+    zornKleinZ (quatSubalgZ a₁ v₁ w₁ b₁) = quatSubalgZ a₁ v₁ w₁ b₁ ∧
+    opAssociator (quatSubalgX a₁ v₁ w₁ b₁) (quatSubalgX a₂ v₂ w₂ b₂) (quatSubalgX a₃ v₃ w₃ b₃) = 0 ∧
+    opAssociator (quatSubalgY a₁ v₁ w₁ b₁) (quatSubalgY a₂ v₂ w₂ b₂) (quatSubalgY a₃ v₃ w₃ b₃) = 0 ∧
+    opAssociator (quatSubalgZ a₁ v₁ w₁ b₁) (quatSubalgZ a₂ v₂ w₂ b₂) (quatSubalgZ a₃ v₃ w₃ b₃) = 0 ∧
+    zornGaloisZ3 (quatSubalgX a vx wx b) = quatSubalgZ a vx wx b ∧
+    zornGaloisZ3 (quatSubalgZ a vz wz b) = quatSubalgY a vz wz b ∧
+    zornGaloisZ3 (quatSubalgY a vy wy b) = quatSubalgX a vy wy b ∧
+    opZornRiccati (quatSubalgX a vx wx b) ⟨qx, 0, 0⟩ =
+      ⟨qx * (wx * qx) + qx * b + a * qx - vx, 0, 0⟩ ∧
+    opZornRiccati (quatSubalgY a vy wy b) ⟨0, qy, 0⟩ =
+      ⟨0, qy * (wy * qy) + qy * b + a * qy - vy, 0⟩ ∧
+    opZornRiccati (quatSubalgZ a vz wz b) ⟨0, 0, qz⟩ =
+      ⟨0, 0, qz * (wz * qz) + qz * b + a * qz - vz⟩ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [quatSubalgX, quatSubalgY, quatSubalgZ,
+          zornKleinX, zornGradeParity, zornKleinY, zornKleinZ, zornGaloisZ3,
+          opAssociator, opZornRiccati,
+          OpVec3.gradeParity, OpVec3.kleinY, OpVec3.kleinZ, OpVec3.trialityPerm,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+          OpVec3.leftScale, OpVec3.rightScale];
+    try abel; try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

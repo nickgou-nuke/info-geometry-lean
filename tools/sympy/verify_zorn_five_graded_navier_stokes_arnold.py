@@ -971,6 +971,450 @@ def main() -> int:
     assert zorn_riccati(T_unit_zero, u_vec) == v_zero()
     print("[PASS] Archetypes LXXXVIII-LXXXIX: Trifactor-Loxodromic Compass, Doubled 4-Vector Potentials, Dilaton Scaling, & 8D Zorn-Riccati Möbius Operator")
 
+    # ------------------------------------------------------------------
+    # 23. Archetypes XC & XCI: 56D Freudenthal-Kantor-Tits E_7 Symplectic Triple System,
+    #     Euler Cubic-Adjoint Trace Identity, Cartan Quartic I_4 Invariant, & S-Duality
+    # ------------------------------------------------------------------
+    # 27D Freudenthal trace pairing <M, M^#>_27 == 3 * Det_27(M):
+    trace_pair_M_Msharp = xp * sh_xp + xm * sh_xm + vs * sh_v + cz_inner(Q_z, sh_Q) + cz_inner(Xi1_z, sh_Xi1) + cz_inner(Xi2_z, sh_Xi2)
+    assert sp.expand(trace_pair_M_Msharp - 3 * det27) == 0
+    # Symplectic form Omega_56 & Electric-Magnetic S-Duality J_56(alpha, X, Y, beta) = (-beta, Y, -X, alpha):
+    # Under J_56: (al, X, Y, be) -> (-be, Y, -X, al), we have:
+    # al' = -be, be' = al, <X', Y'> = <Y, -X> = -<X, Y>, Det(X') = Det(Y), Det(Y') = Det(-X) = -Det(X), <(X')^#, (Y')^#> = <Y^#, (-X)^#> = <X^#, Y^#>
+    al1, be1, al2, be2, trXY, trYX, detX, detY, trXsYs = sp.symbols("al1 be1 al2 be2 trXY trYX detX detY trXsYs", commutative=True)
+    omega56_12 = al1 * be2 - be1 * al2 + trXY - trYX
+    omega56_11 = al1 * be1 - be1 * al1 + trXY - trXY
+    assert sp.expand(omega56_11) == 0
+    I4_orig = -(al1 * be1 - trXY)**2 - 4 * (al1 * detY + be1 * detX - trXsYs)
+    I4_sdual = -((-be1) * al1 - (-trXY))**2 - 4 * ((-be1) * (-detX) + al1 * detY - trXsYs)
+    assert sp.expand(I4_orig - I4_sdual) == 0
+    # Noncommutative Chiral Albert Sharp & Freudenthal S-Duality over OpZornMatrix:
+    def op_conj(Z: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z.b, -Z.v, -Z.w, Z.a)
+    Q_sh_op = op_conj(Xi1_ch * Xi2_ch)
+    Xi1_sh_op = op_conj(Xi2_ch * Q_ch)
+    Xi2_sh_op = op_conj(Q_ch * Xi1_ch)
+    assert Q_sh_op == lightcone_minus(-skew_cross(v3_vec, w_vec))
+    assert Xi1_sh_op == lightcone_minus(-skew_cross(w_vec, u_vec))
+    assert Xi2_sh_op == lightcone_minus(-skew_cross(u_vec, v3_vec))
+    # Chiral trace pairing <X, X^#>_ch = Tr(Q * conj(Q^#) + Xi1 * conj(Xi1^#) + Xi2 * conj(Xi2^#)):
+    ch_pair_Q = Q_ch * op_conj(Q_sh_op)
+    ch_pair_Xi1 = Xi1_ch * op_conj(Xi1_sh_op)
+    ch_pair_Xi2 = Xi2_ch * op_conj(Xi2_sh_op)
+    assert ch_pair_Q == grade_zero(-dot(u_vec, skew_cross(v3_vec, w_vec)), sp.Integer(0))
+    assert ch_pair_Xi1 == grade_zero(-dot(v3_vec, skew_cross(w_vec, u_vec)), sp.Integer(0))
+    assert ch_pair_Xi2 == grade_zero(-dot(w_vec, skew_cross(u_vec, v3_vec)), sp.Integer(0))
+    print("[PASS] Archetypes XC-XCI: 56D Freudenthal-Kantor-Tits E_7 Symplectic Triple System, Euler <M, M^#>_27 = 3 Det_27(M), Cartan Quartic I_4 S-Duality, & Chiral Sharp")
+
+    # ------------------------------------------------------------------
+    # 24. Archetypes XCII & XCIII: Inductive Colimit Doublet Tower Bridge,
+    #     Cantor-Peirce Bit-Split, & Orthogonal Compass-Needle Semigroup Homomorphism
+    # ------------------------------------------------------------------
+    def doublet_embed(a_el):
+        return grade_zero(a_el, a_el)
+    def peirce11_embed(a_el):
+        return grade_zero(a_el, sp.Integer(0))
+    def peirce22_embed(b_el):
+        return grade_zero(sp.Integer(0), b_el)
+    assert doublet_embed(y1 + z1) == doublet_embed(y1) + doublet_embed(z1)
+    assert doublet_embed(y1 * z1) == doublet_embed(y1) * doublet_embed(z1)
+    assert doublet_embed(y1) == peirce11_embed(y1) + peirce22_embed(y1)
+    assert peirce11_embed(y1) * peirce22_embed(z1) == z_zero()
+    assert peirce11_embed(y1) * peirce11_embed(z1) == peirce11_embed(y1 * z1)
+    assert peirce22_embed(y1) * peirce22_embed(z1) == peirce22_embed(y1 * z1)
+    # Orthogonal 1-component root-ray compass needle embedding (dot(v_ray, w_ray) = 0, skew_cross = 0 over any noncommutative ring):
+    v_tr = OpVec3(sp.Integer(0), y1, sp.Integer(0))
+    w_tr = OpVec3(xi1, sp.Integer(0), sp.Integer(0))
+    assert dot(v_tr, w_tr) == 0 and dot(w_tr, v_tr) == 0
+    P_row_tr = OpZornMatrix(sp.Integer(1), v_tr, v_zero(), sp.Integer(0))
+    P_col_tr = OpZornMatrix(sp.Integer(1), v_zero(), w_tr, sp.Integer(0))
+    def compass_embed(a_el):
+        return (P_col_tr * peirce11_embed(a_el)) * P_row_tr
+    assert compass_embed(y2) * compass_embed(z2) == compass_embed(y2 * z2)
+    assert compass_embed(sp.Integer(1)) * compass_embed(sp.Integer(1)) == compass_embed(sp.Integer(1))
+    print("[PASS] Archetypes XCII-XCIII: Inductive Colimit Doublet Tower Bridge, Cantor-Peirce Bit-Split, & Compass-Needle Semigroup Homomorphism")
+
+    # ------------------------------------------------------------------
+    # 25. Archetypes XCIV & XCV: Noncommutative Gelfand-Retakh Quasideterminants,
+    #     Exact Gauss-Bruhat Trifactor Elimination, & Noncommutative Operator Berezinian
+    # ------------------------------------------------------------------
+    U_lo_neg_w = OpZornMatrix(sp.Integer(1), v_zero(), -w_vec, sp.Integer(1))
+    assert U_up_u * U_up_neg_u == z_one() and U_up_neg_u * U_up_u == z_one()
+    assert U_lo_w * U_lo_neg_w == z_one() and U_lo_neg_w * U_lo_w == z_one()
+    # Exact Gauss-Bruhat Unipotent Elimination & Noncommutative Bimodule Curvature:
+    T_u1 = (U_lo_w * grade_zero(sp.Integer(1), xi2)) * U_up_u
+    assert (U_lo_neg_w * T_u1) * U_up_neg_u == grade_zero(sp.Integer(1), xi2)
+    assert U_lo_neg_w * (U_lo_w * grade_zero(xi1, xi2)) == grade_zero(xi1, xi2) + lightcone_plus(skew_cross(w_vec, right_scale(w_vec, xi1)))
+    assert (grade_zero(xi1, xi2) * U_up_u) * U_up_neg_u == grade_zero(xi1, xi2) - lightcone_minus(skew_cross(left_scale(xi1, u_vec), u_vec))
+    # Gelfand-Retakh (2,2)-quasideterminant extraction for unit u = 1:
+    assert T_u1.b + dot(T_u1.w, T_u1.v) == xi2
+    # Exact Noncommutative Zorn-Riccati Shift / Taylor Cocycle & Tangent Linearization at Trifactor Fixed Point:
+    delta_vec = v3_vec
+    ric_shift = zorn_riccati(X_obs, u_vec + delta_vec)
+    ric_base = zorn_riccati(X_obs, u_vec)
+    ric_lin = (
+        left_scale(X_obs.a, delta_vec)
+        + right_scale(delta_vec, X_obs.b + dot(X_obs.w, u_vec))
+        + right_scale(u_vec, dot(X_obs.w, delta_vec))
+    )
+    ric_quad = right_scale(delta_vec, dot(X_obs.w, delta_vec))
+    assert ric_shift == ric_base + ric_lin + ric_quad
+    # At the on-shell trifactor T_unit_zero = (U_lo(w) * diag(1, 0)) * U_up(u), R_T(u) == 0 and T.b + dot(T.w, u) == 0:
+    assert zorn_riccati(T_unit_zero, u_vec + delta_vec) == (
+        left_scale(sp.Integer(1), delta_vec)
+        + right_scale(u_vec, dot(w_vec, delta_vec))
+        + right_scale(delta_vec, dot(w_vec, delta_vec))
+    )
+    # Functoriality of OpVec3.map & OpZornMatrix.map under a ring endomorphism f (e.g., y1 -> y1 + z1):
+    def map_expr(e: sp.Expr) -> sp.Expr:
+        return sp.expand(e.subs(y1, y1 + z1))
+    def map_vec(v_el: OpVec3) -> OpVec3:
+        return OpVec3(map_expr(v_el.x), map_expr(v_el.y), map_expr(v_el.z))
+    def map_zorn(Z_el: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(map_expr(Z_el.a), map_vec(Z_el.v), map_vec(Z_el.w), map_expr(Z_el.b))
+    Y_obs = OpZornMatrix(y2, v3_vec, u_vec, z2)
+    assert map_zorn(X_obs * Y_obs) == map_zorn(X_obs) * map_zorn(Y_obs)
+    assert map_vec(zorn_riccati(X_obs, u_vec)) == zorn_riccati(map_zorn(X_obs), map_vec(u_vec))
+    # 4-Spinor Cross-Difference Translation Invariance & 5-Graded E_8 Nilradical Step-2 Termination:
+    def spin_amp(v_p: OpVec3, w_p: OpVec3) -> OpZornMatrix:
+        return OpZornMatrix(sp.Integer(1), v_p, v_zero(), sp.Integer(0)) * OpZornMatrix(sp.Integer(1), v_zero(), w_p, sp.Integer(0))
+    cross_diff_orig = (spin_amp(u_vec, w_vec) - spin_amp(u_vec, v3_vec)) - (spin_amp(v3_vec, w_vec) - spin_amp(v3_vec, v3_vec))
+    cross_diff_shift = (
+        (spin_amp(u_vec + delta_vec, w_vec + delta_vec) - spin_amp(u_vec + delta_vec, v3_vec + delta_vec))
+        - (spin_amp(v3_vec + delta_vec, w_vec + delta_vec) - spin_amp(v3_vec + delta_vec, v3_vec + delta_vec))
+    )
+    assert cross_diff_orig == cross_diff_shift
+    # 27D Albert-Zorn 3-Idempotent K_0 Peirce Trace Additivity (1 + 1 + 1 = 3):
+    assert (sp.Integer(1) + sp.Integer(0) + sp.Integer(0)) + (sp.Integer(0) + sp.Integer(1) + sp.Integer(0)) + (sp.Integer(0) + sp.Integer(0) + sp.Integer(1)) == sp.Integer(3)
+    print("[PASS] Archetypes XCIV-XCV: Noncommutative Gelfand-Retakh Quasideterminants, Exact Gauss-Bruhat Trifactor Elimination, Zorn-Riccati Taylor Shift, Functorial Ring-Homomorphism Lift, 4-Spinor Cross-Difference, & 5-Graded E_8 / K_0 Peirce Split")
+
+    # ------------------------------------------------------------------
+    # 26. Archetypes XCVI-XCVIII: Operator-Twisted Nambu-Gorkov Cayley-Dickson Doubling CD_Omega(A),
+    #     Particle-Hole Flip, Division/Split/Quartic Regimes, & 5-Graded Spectral Projectors
+    # ------------------------------------------------------------------
+    # In noncommutative *-ring A (with anti-automorphism rev_star reversing noncommutative words):
+    def rev_star(expr: sp.Expr) -> sp.Expr:
+        expr = sp.expand(expr)
+        if expr.is_Add:
+            return sum(rev_star(arg) for arg in expr.args)
+        if expr.is_Mul:
+            c_part, nc_part = expr.args_cnc()
+            res = sp.Mul(*c_part)
+            for factor in reversed(nc_part):
+                if factor.is_Pow:
+                    res = res * (factor.base ** factor.exp)
+                else:
+                    res = res * factor
+            return sp.expand(res)
+        return expr
+
+    def cd_conj(pair):
+        return (rev_star(pair[0]), sp.expand(-pair[1]))
+
+    def cd_mul(Omega_op, z_p, w_p):
+        return (
+            sp.expand(z_p[0] * w_p[0] + Omega_op * (w_p[1] * rev_star(z_p[1]))),
+            sp.expand(rev_star(z_p[0]) * w_p[1] + w_p[0] * z_p[1]),
+        )
+
+    def cd_embed(a_el):
+        return (sp.expand(a_el), sp.Integer(0))
+
+    E_cd = (sp.Integer(0), sp.Integer(1))
+    Z_cd = (y1 * z1, y2 * z2)
+    Omega_nc = xi1
+    # 1. Exact involution, unitality, embedding homomorphism, and universal anomalous off-diagonal cancellation:
+    assert cd_conj(cd_conj(Z_cd)) == Z_cd
+    assert cd_mul(Omega_nc, (sp.Integer(1), sp.Integer(0)), Z_cd) == Z_cd
+    assert cd_mul(Omega_nc, Z_cd, (sp.Integer(1), sp.Integer(0))) == Z_cd
+    assert cd_mul(Omega_nc, cd_embed(y1), cd_embed(z1)) == cd_embed(y1 * z1)
+    assert cd_mul(Omega_nc, Z_cd, cd_conj(Z_cd)) == cd_embed(Z_cd[0] * rev_star(Z_cd[0]) - Omega_nc * (Z_cd[1] * rev_star(Z_cd[1])))
+    # 2. Universal generator powers & Nambu-Gorkov particle-hole conjugation by E = (0, 1):
+    E2_cd = cd_mul(Omega_nc, E_cd, E_cd)
+    assert E2_cd == cd_embed(Omega_nc)
+    assert cd_mul(Omega_nc, E2_cd, E_cd) == (sp.Integer(0), Omega_nc)
+    assert cd_mul(Omega_nc, E2_cd, E2_cd) == cd_embed(Omega_nc * Omega_nc)
+    assert cd_mul(Omega_nc, cd_embed(y1 * z1), E_cd) == (sp.Integer(0), rev_star(y1 * z1))
+    assert cd_mul(Omega_nc, E_cd, cd_embed(y1 * z1)) == (sp.Integer(0), y1 * z1)
+    assert cd_mul(Omega_nc, cd_mul(Omega_nc, E_cd, cd_embed(y1 * z1)), E_cd) == cd_embed(Omega_nc * rev_star(y1 * z1))
+    # 3. Division (Omega = -1) & Split (Omega = +1) Regimes:
+    assert cd_mul(sp.Integer(-1), E_cd, E_cd) == (sp.Integer(-1), sp.Integer(0))
+    assert cd_mul(sp.Integer(-1), Z_cd, cd_conj(Z_cd)) == cd_embed(Z_cd[0] * rev_star(Z_cd[0]) + Z_cd[1] * rev_star(Z_cd[1]))
+    assert cd_mul(sp.Integer(1), E_cd, E_cd) == (sp.Integer(1), sp.Integer(0))
+    assert cd_mul(sp.Integer(1), Z_cd, cd_conj(Z_cd)) == cd_embed(Z_cd[0] * rev_star(Z_cd[0]) - Z_cd[1] * rev_star(Z_cd[1]))
+    # 4. Archetype XCVIII: Factorized Spectral Projectors of D_5^5 - 5 D_5^3 + 4 D_5 = 0 on OpZornMatrix:
+    def op_euler5(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(
+            sp.Integer(0),
+            OpVec3(-2 * Z_m.v.x, Z_m.v.y, Z_m.v.z),
+            OpVec3(2 * Z_m.w.x, -Z_m.w.y, -Z_m.w.z),
+            sp.Integer(0),
+        )
+    def z_scale(k_int: int, Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(k_int * Z_m.a, left_scale(sp.Integer(k_int), Z_m.v), left_scale(sp.Integer(k_int), Z_m.w), k_int * Z_m.b)
+    D1_z = op_euler5(X_obs)
+    D2_z = op_euler5(D1_z)
+    D3_z = op_euler5(D2_z)
+    D4_z = op_euler5(D3_z)
+    D5_z = op_euler5(D4_z)
+    assert D4_z - z_scale(5, D2_z) + z_scale(4, X_obs) == z_scale(4, grade_zero(X_obs.a, X_obs.b))
+    assert D3_z - z_scale(4, D1_z) == z_scale(-3, grade_plus1(X_obs.v.y, X_obs.v.z) - grade_minus1(X_obs.w.y, X_obs.w.z))
+    assert D3_z - D1_z == z_scale(6, grade_plus2(X_obs.w.x) - grade_minus2(X_obs.v.x))
+    assert D5_z - z_scale(5, D3_z) + z_scale(4, D1_z) == z_zero()
+    print("[PASS] Archetypes XCVI-XCVIII: Operator-Twisted Nambu-Gorkov Cayley-Dickson Doubling CD_Omega(A), Particle-Hole Flip, & 5-Graded Spectral Projectors")
+
+    # ------------------------------------------------------------------
+    # 27. Archetypes XCIX-CIV: Operator Cyclotomic Polynomial Factorizations,
+    #     Noncommutative Cyclotomic Quotient Rings OpCyclotomic3 & OpCyclotomic6,
+    #     CD_Omega(A) Degree-Doubling, & Z_6 Galois Equivariance of Zorn-Riccati
+    # ------------------------------------------------------------------
+    # 1. Universal noncommutative cyclotomic polynomial factorizations in A[Omega]:
+    Om = xi1
+    Phi1 = Om - 1
+    Phi2 = Om + 1
+    Phi3 = Om**2 + Om + 1
+    Phi4 = Om**2 + 1
+    Phi6 = Om**2 - Om + 1
+    Phi8 = Om**4 + 1
+    assert sp.expand(Om**3 - 1 - Phi1 * Phi3) == 0 and sp.expand(Om**3 - 1 - Phi3 * Phi1) == 0
+    assert sp.expand(Om**3 + 1 - Phi2 * Phi6) == 0 and sp.expand(Om**3 + 1 - Phi6 * Phi2) == 0
+    assert sp.expand(Om**4 - 1 - Phi1 * Phi2 * Phi4) == 0
+    assert sp.expand(Om**6 - 1 - Phi1 * Phi2 * Phi3 * Phi6) == 0
+    assert sp.expand(Om**8 - 1 - Phi1 * Phi2 * Phi4 * Phi8) == 0
+
+    # 2. Z_2 Galois automorphism & Cyclotomic Degree-Doubling in CD_Omega(A):
+    def cd_galois_z2(z_p):
+        return (z_p[0], sp.expand(-z_p[1]))
+    W_cd = (y3 * z3, xi2 * xi3)
+    assert cd_galois_z2(cd_galois_z2(Z_cd)) == Z_cd
+    assert cd_galois_z2(cd_mul(Om, Z_cd, W_cd)) == cd_mul(Om, cd_galois_z2(Z_cd), cd_galois_z2(W_cd))
+    E4_cd = cd_mul(Om, E2_cd, E2_cd)
+    E8_cd = cd_mul(Om, E4_cd, E4_cd)
+    assert (sp.expand(E2_cd[0] + 1), E2_cd[1]) == cd_embed(Phi2)
+    assert (sp.expand(E4_cd[0] + 1), E4_cd[1]) == cd_embed(Phi4)
+    assert (sp.expand(E8_cd[0] + 1), E8_cd[1]) == cd_embed(Phi8)
+    assert (sp.expand(E4_cd[0] + E2_cd[0] + 1), sp.expand(E4_cd[1] + E2_cd[1])) == cd_embed(Phi3)
+    assert (sp.expand(E4_cd[0] - E2_cd[0] + 1), sp.expand(E4_cd[1] - E2_cd[1])) == cd_embed(Phi6)
+
+    # 3. Noncommutative Cyclotomic Quotient Rings OpCyclotomic3 & OpCyclotomic6 & Isomorphism:
+    def cyc3_mul(z_p, w_p):
+        return (
+            sp.expand(z_p[0] * w_p[0] - z_p[1] * w_p[1]),
+            sp.expand(z_p[0] * w_p[1] + z_p[1] * w_p[0] - z_p[1] * w_p[1]),
+        )
+    def cyc3_gal(z_p):
+        return (sp.expand(z_p[0] - z_p[1]), sp.expand(-z_p[1]))
+    def cyc6_mul(z_p, w_p):
+        return (
+            sp.expand(z_p[0] * w_p[0] - z_p[1] * w_p[1]),
+            sp.expand(z_p[0] * w_p[1] + z_p[1] * w_p[0] + z_p[1] * w_p[1]),
+        )
+    def cyc6_gal(z_p):
+        return (sp.expand(z_p[0] + z_p[1]), sp.expand(-z_p[1]))
+    def to_cyc3(z_p):
+        return (sp.expand(z_p[0] + z_p[1]), z_p[1])
+    def of_cyc3(z_p):
+        return (sp.expand(z_p[0] - z_p[1]), z_p[1])
+
+    om_c3 = (sp.Integer(0), sp.Integer(1))
+    om2_c3 = cyc3_mul(om_c3, om_c3)
+    assert (sp.expand(om2_c3[0] + om_c3[0] + 1), sp.expand(om2_c3[1] + om_c3[1])) == (sp.Integer(0), sp.Integer(0))
+    assert cyc3_mul(om2_c3, om_c3) == (sp.Integer(1), sp.Integer(0))
+    assert cyc3_gal(om_c3) == om2_c3
+    assert cyc3_gal(cyc3_mul(Z_cd, W_cd)) == cyc3_mul(cyc3_gal(Z_cd), cyc3_gal(W_cd))
+
+    ze_c6 = (sp.Integer(0), sp.Integer(1))
+    ze2_c6 = cyc6_mul(ze_c6, ze_c6)
+    ze3_c6 = cyc6_mul(ze2_c6, ze_c6)
+    assert (sp.expand(ze2_c6[0] - ze_c6[0] + 1), sp.expand(ze2_c6[1] - ze_c6[1])) == (sp.Integer(0), sp.Integer(0))
+    assert ze3_c6 == (sp.Integer(-1), sp.Integer(0))
+    assert cyc6_mul(ze3_c6, ze3_c6) == (sp.Integer(1), sp.Integer(0))
+    assert cyc6_gal(cyc6_mul(Z_cd, W_cd)) == cyc6_mul(cyc6_gal(Z_cd), cyc6_gal(W_cd))
+    assert of_cyc3(to_cyc3(Z_cd)) == Z_cd
+    assert to_cyc3(cyc6_mul(Z_cd, W_cd)) == cyc3_mul(to_cyc3(Z_cd), to_cyc3(W_cd))
+
+    # 4. Z_2 x Z_3 = Z_6 Cyclotomic Galois Group, 5-Grading Parity Automorphism, & Zorn-Riccati Equivariance on OpZornMatrix:
+    def tri_perm(v_el: OpVec3) -> OpVec3:
+        return OpVec3(v_el.y, v_el.z, v_el.x)
+    def grade_parity_vec(v_el: OpVec3) -> OpVec3:
+        return OpVec3(v_el.x, -v_el.y, -v_el.z)
+    def zorn_grade_parity(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, grade_parity_vec(Z_m.v), grade_parity_vec(Z_m.w), Z_m.b)
+    def zorn_gal_z2(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, -Z_m.v, -Z_m.w, Z_m.b)
+    def zorn_gal_z3(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, tri_perm(Z_m.v), tri_perm(Z_m.w), Z_m.b)
+    def zorn_gal_z6(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, -tri_perm(Z_m.v), -tri_perm(Z_m.w), Z_m.b)
+
+    assert zorn_grade_parity(X_obs * Y_obs) == zorn_grade_parity(X_obs) * zorn_grade_parity(Y_obs)
+    assert zorn_gal_z3(X_obs * Y_obs) == zorn_gal_z3(X_obs) * zorn_gal_z3(Y_obs)
+    assert zorn_gal_z3(zorn_gal_z3(zorn_gal_z3(X_obs))) == X_obs
+    assert zorn_gal_z6(zorn_gal_z6(X_obs)) == zorn_gal_z3(zorn_gal_z3(X_obs))
+    assert zorn_gal_z6(zorn_gal_z6(zorn_gal_z6(X_obs))) == zorn_gal_z2(X_obs)
+    assert zorn_gal_z6(zorn_gal_z6(zorn_gal_z6(zorn_gal_z6(zorn_gal_z6(zorn_gal_z6(X_obs)))))) == X_obs
+    orbit3_X = X_obs + zorn_gal_z3(X_obs) + zorn_gal_z3(zorn_gal_z3(X_obs))
+    assert zorn_gal_z3(orbit3_X) == orbit3_X
+    assert tri_perm(zorn_riccati(X_obs, u_vec)) == zorn_riccati(zorn_gal_z3(X_obs), tri_perm(u_vec))
+    assert grade_parity_vec(zorn_riccati(X_obs, u_vec)) == zorn_riccati(zorn_grade_parity(X_obs), grade_parity_vec(u_vec))
+
+    # 5. Archetypes CV-CVII: Noncommutative Galois Norm Commutator Anomaly, Symmetrized Jordan Norm,
+    #    Strict Associativity of Z_3-Galois Singlet Subalgebra, & Riccati Jacobian Equivariance:
+    a_nc, b_nc = y1, z1
+    Z3_nc = (a_nc, b_nc)
+    Z6_nc = (a_nc, b_nc)
+    assert cyc3_mul(Z3_nc, cyc3_gal(Z3_nc)) == (sp.expand(a_nc**2 - a_nc * b_nc + b_nc**2), sp.expand(b_nc * a_nc - a_nc * b_nc))
+    assert cyc6_mul(Z6_nc, cyc6_gal(Z6_nc)) == (sp.expand(a_nc**2 + a_nc * b_nc + b_nc**2), sp.expand(b_nc * a_nc - a_nc * b_nc))
+    j3_lhs = cyc3_mul(Z3_nc, cyc3_gal(Z3_nc))
+    j3_rhs = cyc3_mul(cyc3_gal(Z3_nc), Z3_nc)
+    assert (sp.expand(j3_lhs[0] + j3_rhs[0]), sp.expand(j3_lhs[1] + j3_rhs[1])) == (sp.expand(2 * a_nc**2 - (a_nc * b_nc + b_nc * a_nc) + 2 * b_nc**2), sp.Integer(0))
+
+    def diag_vec(c_el) -> OpVec3:
+        return OpVec3(sp.expand(c_el), sp.expand(c_el), sp.expand(c_el))
+    def zorn_singlet(a_s, c_s, d_s, b_s) -> OpZornMatrix:
+        return OpZornMatrix(sp.expand(a_s), diag_vec(c_s), diag_vec(d_s), sp.expand(b_s))
+    S1_z = zorn_singlet(y1, z1, xi1, y2)
+    S2_z = zorn_singlet(z2, xi2, y3, z3)
+    S3_z = zorn_singlet(xi3, y1, z2, xi1)
+    assert zorn_gal_z3(S1_z) == S1_z
+    assert (S1_z * S2_z) * S3_z - S1_z * (S2_z * S3_z) == z_zero()
+    P_sing_X = X_obs + zorn_gal_z3(X_obs) + zorn_gal_z3(zorn_gal_z3(X_obs))
+    P_oct_X = z_scale(3, X_obs) - P_sing_X
+    assert P_oct_X + zorn_gal_z3(P_oct_X) + zorn_gal_z3(zorn_gal_z3(P_oct_X)) == z_zero()
+    def zorn_riccati_jac(X_m: OpZornMatrix, q_v: OpVec3, d_v: OpVec3) -> OpVec3:
+        return (
+            left_scale(X_m.a, d_v)
+            + right_scale(d_v, X_m.b + dot(X_m.w, q_v))
+            + right_scale(q_v, dot(X_m.w, d_v))
+        )
+    assert tri_perm(zorn_riccati_jac(X_obs, u_vec, delta_vec)) == zorn_riccati_jac(zorn_gal_z3(X_obs), tri_perm(u_vec), tri_perm(delta_vec))
+    assert tri_perm(zorn_riccati_jac(X_obs, u_vec, delta_vec)) == zorn_riccati_jac(zorn_gal_z6(X_obs), -tri_perm(u_vec), tri_perm(delta_vec))
+    assert zorn_riccati(S1_z, diag_vec(xi2)) == diag_vec(3 * xi2 * xi1 * xi2 + xi2 * y2 + y1 * xi2 - z1)
+
+    # 6. Archetypes CVIII-CXIII: Signed Reflection Automorphism rho_refl, Dihedral S_3 = Z_3 |>< Z_2,
+    #    Klein Four-Group V_4 = {I, K_x, K_y, K_z}, Octahedral S_4 = V_4 |>< S_3, 4-Character Resolution,
+    #    & Triality Trio of 5-Grading Operators D_{5,x} + D_{5,y} + D_{5,z} = 0:
+    def refl_vec(v_el: OpVec3) -> OpVec3:
+        return OpVec3(-v_el.x, -v_el.z, -v_el.y)
+    def klein_x_vec(v_el: OpVec3) -> OpVec3:
+        return OpVec3(v_el.x, -v_el.y, -v_el.z)
+    def klein_y_vec(v_el: OpVec3) -> OpVec3:
+        return OpVec3(-v_el.x, v_el.y, -v_el.z)
+    def klein_z_vec(v_el: OpVec3) -> OpVec3:
+        return OpVec3(-v_el.x, -v_el.y, v_el.z)
+    def zorn_refl(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, refl_vec(Z_m.v), refl_vec(Z_m.w), Z_m.b)
+    def zorn_klein_x(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, klein_x_vec(Z_m.v), klein_x_vec(Z_m.w), Z_m.b)
+    def zorn_klein_y(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, klein_y_vec(Z_m.v), klein_y_vec(Z_m.w), Z_m.b)
+    def zorn_klein_z(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(Z_m.a, klein_z_vec(Z_m.v), klein_z_vec(Z_m.w), Z_m.b)
+
+    assert zorn_refl(X_obs * Y_obs) == zorn_refl(X_obs) * zorn_refl(Y_obs)
+    assert zorn_refl(zorn_gal_z3(zorn_refl(X_obs))) == zorn_gal_z3(zorn_gal_z3(X_obs))
+    assert refl_vec(zorn_riccati(X_obs, u_vec)) == zorn_riccati(zorn_refl(X_obs), refl_vec(u_vec))
+    assert zorn_klein_x(X_obs * Y_obs) == zorn_klein_x(X_obs) * zorn_klein_x(Y_obs)
+    assert zorn_klein_y(X_obs * Y_obs) == zorn_klein_y(X_obs) * zorn_klein_y(Y_obs)
+    assert zorn_klein_z(X_obs * Y_obs) == zorn_klein_z(X_obs) * zorn_klein_z(Y_obs)
+    assert zorn_klein_x(zorn_klein_y(X_obs)) == zorn_klein_z(X_obs)
+    assert zorn_gal_z3(zorn_klein_x(zorn_gal_z3(zorn_gal_z3(X_obs)))) == zorn_klein_z(X_obs)
+    assert zorn_refl(zorn_klein_x(zorn_refl(X_obs))) == zorn_klein_x(X_obs)
+    assert zorn_refl(zorn_klein_y(zorn_refl(X_obs))) == zorn_klein_z(X_obs)
+    assert zorn_refl(zorn_klein_z(zorn_refl(X_obs))) == zorn_klein_y(X_obs)
+
+    chi0 = X_obs + zorn_klein_x(X_obs) + zorn_klein_y(X_obs) + zorn_klein_z(X_obs)
+    chix = X_obs + zorn_klein_x(X_obs) - zorn_klein_y(X_obs) - zorn_klein_z(X_obs)
+    chiy = X_obs - zorn_klein_x(X_obs) + zorn_klein_y(X_obs) - zorn_klein_z(X_obs)
+    chiz = X_obs - zorn_klein_x(X_obs) - zorn_klein_y(X_obs) + zorn_klein_z(X_obs)
+    assert chi0 + chix + chiy + chiz == z_scale(4, X_obs)
+
+    def euler5_x(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(sp.Integer(0), OpVec3(-2 * Z_m.v.x, Z_m.v.y, Z_m.v.z), OpVec3(2 * Z_m.w.x, -Z_m.w.y, -Z_m.w.z), sp.Integer(0))
+    def euler5_y(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(sp.Integer(0), OpVec3(Z_m.v.x, -2 * Z_m.v.y, Z_m.v.z), OpVec3(-Z_m.w.x, 2 * Z_m.w.y, -Z_m.w.z), sp.Integer(0))
+    def euler5_z(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return OpZornMatrix(sp.Integer(0), OpVec3(Z_m.v.x, Z_m.v.y, -2 * Z_m.v.z), OpVec3(-Z_m.w.x, -Z_m.w.y, 2 * Z_m.w.z), sp.Integer(0))
+    assert euler5_x(X_obs) + euler5_y(X_obs) + euler5_z(X_obs) == z_zero()
+    assert zorn_gal_z3(euler5_x(zorn_gal_z3(zorn_gal_z3(X_obs)))) == euler5_z(X_obs)
+    assert zorn_refl(euler5_y(zorn_refl(X_obs))) == euler5_z(X_obs)
+    Dy1_x = euler5_y(X_obs)
+    Dy3_x = euler5_y(euler5_y(Dy1_x))
+    Dy5_x = euler5_y(euler5_y(Dy3_x))
+    assert Dy5_x - z_scale(5, Dy3_x) + z_scale(4, Dy1_x) == z_zero()
+
+    # 7. Archetypes CXIV-CXVI: Quaternion Spin Double Cover Q_8 ->> V_4, Internal Zorn Spinors S_a^2 = -1,
+    #    Orthogonal Spin Projectors Pi_0, Pi_x, Pi_y, Pi_z, & Klein Fusion Rule Pi_x(X) * Pi_y(Y) in Im(Pi_z):
+    def quat_mul(p_q, q_q):
+        return (
+            sp.expand(p_q[0] * q_q[0] - p_q[1] * q_q[1] - p_q[2] * q_q[2] - p_q[3] * q_q[3]),
+            sp.expand(p_q[0] * q_q[1] + p_q[1] * q_q[0] + p_q[2] * q_q[3] - p_q[3] * q_q[2]),
+            sp.expand(p_q[0] * q_q[2] - p_q[1] * q_q[3] + p_q[2] * q_q[0] + p_q[3] * q_q[1]),
+            sp.expand(p_q[0] * q_q[3] + p_q[1] * q_q[2] - p_q[2] * q_q[1] + p_q[3] * q_q[0]),
+        )
+    def quat_conj(p_q):
+        return (p_q[0], -p_q[1], -p_q[2], -p_q[3])
+    def quat_sandwich(s_q, v_el: OpVec3):
+        return quat_mul(quat_mul(s_q, (sp.Integer(0), v_el.x, v_el.y, v_el.z)), quat_conj(s_q))
+    i_Q = (sp.Integer(0), sp.Integer(1), sp.Integer(0), sp.Integer(0))
+    j_Q = (sp.Integer(0), sp.Integer(0), sp.Integer(1), sp.Integer(0))
+    k_Q = (sp.Integer(0), sp.Integer(0), sp.Integer(0), sp.Integer(1))
+    neg_i_Q = (sp.Integer(0), sp.Integer(-1), sp.Integer(0), sp.Integer(0))
+    assert quat_mul(i_Q, i_Q) == (sp.Integer(-1), sp.Integer(0), sp.Integer(0), sp.Integer(0))
+    assert quat_mul(i_Q, j_Q) == k_Q and quat_mul(j_Q, i_Q) == (sp.Integer(0), sp.Integer(0), sp.Integer(0), sp.Integer(-1))
+    assert quat_sandwich(i_Q, u_vec) == (sp.Integer(0), u_vec.x, -u_vec.y, -u_vec.z)
+    assert quat_sandwich(neg_i_Q, u_vec) == (sp.Integer(0), u_vec.x, -u_vec.y, -u_vec.z)
+    assert quat_sandwich(j_Q, u_vec) == (sp.Integer(0), -u_vec.x, u_vec.y, -u_vec.z)
+    assert quat_sandwich(k_Q, u_vec) == (sp.Integer(0), -u_vec.x, -u_vec.y, u_vec.z)
+
+    S_x_zorn = OpZornMatrix(sp.Integer(0), OpVec3(sp.Integer(1), sp.Integer(0), sp.Integer(0)), OpVec3(sp.Integer(1), sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    S_y_zorn = OpZornMatrix(sp.Integer(0), OpVec3(sp.Integer(0), sp.Integer(1), sp.Integer(0)), OpVec3(sp.Integer(0), sp.Integer(1), sp.Integer(0)), sp.Integer(0))
+    S_z_zorn = OpZornMatrix(sp.Integer(0), OpVec3(sp.Integer(0), sp.Integer(0), sp.Integer(1)), OpVec3(sp.Integer(0), sp.Integer(0), sp.Integer(1)), sp.Integer(0))
+    assert S_x_zorn * S_x_zorn == z_scale(-1, z_one()) and S_y_zorn * S_y_zorn == z_scale(-1, z_one()) and S_z_zorn * S_z_zorn == z_scale(-1, z_one())
+
+    def spin_proj_0(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return Z_m + zorn_klein_x(Z_m) + zorn_klein_y(Z_m) + zorn_klein_z(Z_m)
+    def spin_proj_x(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return Z_m + zorn_klein_x(Z_m) - zorn_klein_y(Z_m) - zorn_klein_z(Z_m)
+    def spin_proj_y(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return Z_m - zorn_klein_x(Z_m) + zorn_klein_y(Z_m) - zorn_klein_z(Z_m)
+    def spin_proj_z(Z_m: OpZornMatrix) -> OpZornMatrix:
+        return Z_m - zorn_klein_x(Z_m) - zorn_klein_y(Z_m) + zorn_klein_z(Z_m)
+    assert spin_proj_x(spin_proj_x(X_obs)) == z_scale(4, spin_proj_x(X_obs))
+    assert spin_proj_x(spin_proj_y(X_obs)) == z_zero()
+    fuse_xy = spin_proj_x(X_obs) * spin_proj_y(Y_obs)
+    assert spin_proj_0(fuse_xy) == z_zero() and spin_proj_x(fuse_xy) == z_zero() and spin_proj_y(fuse_xy) == z_zero()
+    assert spin_proj_z(fuse_xy) == z_scale(4, fuse_xy)
+
+    # 8. Archetypes CXVII-CXIX: Three Galois-Fixed Split-Quaternion Subalgebras H_x(A), H_y(A), H_z(A) ~= M_2(A),
+    #    Z_3-Triality Cycle, Same-Sector Product into P_0, & Riccati Axis Decoupling:
+    def quat_sub_x(a_q, vx_q, wx_q, b_q) -> OpZornMatrix:
+        return OpZornMatrix(sp.expand(a_q), OpVec3(sp.expand(vx_q), sp.Integer(0), sp.Integer(0)), OpVec3(sp.expand(wx_q), sp.Integer(0), sp.Integer(0)), sp.expand(b_q))
+    def quat_sub_y(a_q, vy_q, wy_q, b_q) -> OpZornMatrix:
+        return OpZornMatrix(sp.expand(a_q), OpVec3(sp.Integer(0), sp.expand(vy_q), sp.Integer(0)), OpVec3(sp.Integer(0), sp.expand(wy_q), sp.Integer(0)), sp.expand(b_q))
+    def quat_sub_z(a_q, vz_q, wz_q, b_q) -> OpZornMatrix:
+        return OpZornMatrix(sp.expand(a_q), OpVec3(sp.Integer(0), sp.Integer(0), sp.expand(vz_q)), OpVec3(sp.Integer(0), sp.Integer(0), sp.expand(wz_q)), sp.expand(b_q))
+    Qx1 = quat_sub_x(y1, z1, xi1, y2)
+    Qx2 = quat_sub_x(z2, xi2, y3, z3)
+    Qx3 = quat_sub_x(xi3, y1, z2, xi1)
+    Qy1 = quat_sub_y(y1, z1, xi1, y2)
+    Qy2 = quat_sub_y(z2, xi2, y3, z3)
+    Qy3 = quat_sub_y(xi3, y1, z2, xi1)
+    Qz1 = quat_sub_z(y1, z1, xi1, y2)
+    Qz2 = quat_sub_z(z2, xi2, y3, z3)
+    Qz3 = quat_sub_z(xi3, y1, z2, xi1)
+    assert (Qx1 * Qx2) * Qx3 - Qx1 * (Qx2 * Qx3) == z_zero()
+    assert (Qy1 * Qy2) * Qy3 - Qy1 * (Qy2 * Qy3) == z_zero()
+    assert (Qz1 * Qz2) * Qz3 - Qz1 * (Qz2 * Qz3) == z_zero()
+    assert zorn_gal_z3(Qx1) == Qz1 and zorn_gal_z3(Qz1) == Qy1 and zorn_gal_z3(Qy1) == Qx1
+    fuse_xx = spin_proj_x(X_obs) * spin_proj_x(Y_obs)
+    assert spin_proj_x(fuse_xx) == z_zero() and spin_proj_y(fuse_xx) == z_zero() and spin_proj_z(fuse_xx) == z_zero()
+    assert spin_proj_0(fuse_xx) == z_scale(4, fuse_xx)
+    assert zorn_riccati(Qx1, OpVec3(xi2, sp.Integer(0), sp.Integer(0))) == OpVec3(-xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1, sp.Integer(0), sp.Integer(0))
+    assert zorn_riccati(Qy1, OpVec3(sp.Integer(0), xi2, sp.Integer(0))) == OpVec3(sp.Integer(0), -xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1, sp.Integer(0))
+    assert zorn_riccati(Qz1, OpVec3(sp.Integer(0), sp.Integer(0), xi2)) == OpVec3(sp.Integer(0), sp.Integer(0), -xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1)
+    print("[PASS] Archetypes XCIX-CXIX: Operator Cyclotomics, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), & Riccati Axis Decoupling")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

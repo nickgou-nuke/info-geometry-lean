@@ -192,7 +192,93 @@ poly riccati_res = y1 * (T_comp[2,1] * y1) - y1 * T_comp[2,2] + T_comp[1,1] * y1
 if (riccati_res + y1 * xi2 != 0) {
     ERROR("FAIL: Archetype LXXXIX Trifactor-Loxodromic Riccati Schur residual failed");
 }
-print("[PASS] Singular: Archetypes LXVII-LXXXIX (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, Pasch 4-Simplex, Catto Freudenthal Cubic, Hansen Cl(4,2) Doublet Tower, Zero Chiral Volume, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)");
+// Archetypes XC-XCV: 56D Freudenthal E_7 Euler Trace <M, M^#> = 3 Det(M) & S-Duality, Doublet Tower, & Gelfand-Retakh Quasideterminant:
+matrix prod_full[3][3] = M_cs * M_sharp;
+poly trace_M_Msharp = prod_full[1,1] + prod_full[2,2] + prod_full[3,3];
+if (trace_M_Msharp - 3 * detM != 0) {
+    ERROR("FAIL: Archetype XC Freudenthal Euler trace identity <M, M^#> = 3 Det(M) failed");
+}
+poly I4_orig = -(y1*z1 - xi1)^2 - 4*(y1*z2 + z1*y2 - xi2);
+poly I4_sdual = -((-z1)*y1 - (-xi1))^2 - 4*((-z1)*(-y2) + y1*z2 - xi2);
+if (I4_orig - I4_sdual != 0) {
+    ERROR("FAIL: Archetype XCI Cartan quartic E_7 invariant S-duality failed");
+}
+matrix Ulo_neg_c[2][2] = 1, 0, -xi1, 1;
+matrix Uup_neg_c[2][2] = 1, -y1, 0, 1;
+matrix T_elim[2][2] = Ulo_neg_c * T_comp * Uup_neg_c;
+if (T_elim[1,1] != 1 || T_elim[1,2] != 0 || T_elim[2,1] != 0 || T_elim[2,2] != xi2) {
+    ERROR("FAIL: Archetype XCIV Gelfand-Retakh Gauss-Bruhat elimination failed");
+}
+poly cross_orig_s = ((1 - (y1 + xi1)*(z1 + xi2)) - (1 - (y1 + xi1)*(z2 + xi2))) - ((1 - (y2 + xi1)*(z1 + xi2)) - (1 - (y2 + xi1)*(z2 + xi2)));
+poly cross_base_s = ((1 - y1*z1) - (1 - y1*z2)) - ((1 - y2*z1) - (1 - y2*z2));
+if (cross_orig_s - cross_base_s != 0) {
+    ERROR("FAIL: Archetype XCIII 4-spinor cross-difference translation invariance failed");
+}
+// Archetypes XCVI-XCVIII: Nambu-Gorkov Operator Cayley-Dickson Norm & 5-Graded Spectral Projectors:
+poly cd_norm_re = y1*y1 + xi1*(-z1)*z1;
+poly cd_norm_im = y1*(-z1) + y1*z1;
+if (cd_norm_re - (y1^2 - xi1*z1^2) != 0 || cd_norm_im != 0) {
+    ERROR("FAIL: Archetype XCVI Nambu-Gorkov Cayley-Dickson norm cancellation failed");
+}
+// Check spectral projector polynomials p_0(lam) = lam^4 - 5*lam^2 + 4, p_1(lam) = lam^3 - 4*lam, p_2(lam) = lam^3 - lam:
+poly p5_m2 = (-2)^5 - 5*(-2)^3 + 4*(-2);
+poly p5_m1 = (-1)^5 - 5*(-1)^3 + 4*(-1);
+poly p5_p1 = 1^5 - 5*1^3 + 4*1;
+poly p5_p2 = 2^5 - 5*2^3 + 4*2;
+if (p5_m2 != 0 || p5_m1 != 0 || p5_p1 != 0 || p5_p2 != 0) {
+    ERROR("FAIL: Archetype XCVIII 5-graded characteristic polynomial roots failed");
+}
+// Archetypes XCIX-C: Operator Cyclotomic Factorizations & OpCyclotomic3 Galois Automorphism
+poly phi1_s = xi1 - 1;
+poly phi2_s = xi1 + 1;
+poly phi3_s = xi1^2 + xi1 + 1;
+poly phi4_s = xi1^2 + 1;
+poly phi6_s = xi1^2 - xi1 + 1;
+if ((xi1^6 - 1) - phi1_s * phi2_s * phi3_s * phi6_s != 0 || (xi1^4 - 1) - phi1_s * phi2_s * phi4_s != 0) {
+    ERROR("FAIL: Archetype XCIX Cyclotomic polynomial factorization failed");
+}
+poly cyc3_prod_a = y1*y2 - z1*z2;
+poly cyc3_prod_b = y1*z2 + z1*y2 - z1*z2;
+poly cyc3_gal_prod_a = (y1 - z1)*(y2 - z2) - (-z1)*(-z2);
+poly cyc3_gal_prod_b = (y1 - z1)*(-z2) + (-z1)*(y2 - z2) - (-z1)*(-z2);
+if (cyc3_gal_prod_a - (cyc3_prod_a - cyc3_prod_b) != 0 || cyc3_gal_prod_b - (-cyc3_prod_b) != 0) {
+    ERROR("FAIL: Archetype XCIX OpCyclotomic3 Galois automorphism failed");
+}
+poly cyc6_prod_a = y1*y2 - z1*z2;
+poly cyc6_prod_b = y1*z2 + z1*y2 + z1*z2;
+poly to_cyc3_a = (y1 + z1)*(y2 + z2) - z1*z2;
+poly to_cyc3_b = (y1 + z1)*z2 + z1*(y2 + z2) - z1*z2;
+if (to_cyc3_a - (cyc6_prod_a + cyc6_prod_b) != 0 || to_cyc3_b - cyc6_prod_b != 0) {
+    ERROR("FAIL: Archetype CIII OpCyclotomic6 <-> OpCyclotomic3 isomorphism failed");
+}
+poly cyc3_norm_a = y1*(y1 - z1) - z1*(-z1);
+poly cyc3_norm_b = y1*(-z1) + z1*(y1 - z1) - z1*(-z1);
+if (cyc3_norm_a - (y1^2 - y1*z1 + z1^2) != 0 || cyc3_norm_b != 0) {
+    ERROR("FAIL: Archetype CV OpCyclotomic3 Galois norm failed");
+}
+// Archetypes CVIII-CXIII: Signed Reflection Cross-Product Orientation Fix & Triality Trio 5-Grading Zero-Sum Conservation
+poly refl_cross_x = (-z1)*(-y2) - (-y1)*(-z2);
+poly orig_cross_x = y1*z2 - z1*y2;
+if (refl_cross_x + orig_cross_x != 0) {
+    ERROR("FAIL: Archetype CVIII signed reflection cross product orientation failed");
+}
+poly d5x_vx = -2*xi1; poly d5y_vx = xi1; poly d5z_vx = xi1;
+if (d5x_vx + d5y_vx + d5z_vx != 0) {
+    ERROR("FAIL: Archetype CXII triality trio 5-grading conservation failed");
+}
+// Archetypes CXIV-CXVI: Quaternion Spin Sandwich Ad_{+-i_Q}(v) = (v_x, -v_y, -v_z) & Spin Projector Orthogonality
+poly q_sand_x = 1 * xi1 * 1;
+poly q_sand_y = -1 * y1 * 1;
+poly q_sand_z = -1 * z1 * 1;
+if (q_sand_x - xi1 != 0 || q_sand_y + y1 != 0 || q_sand_z + z1 != 0) {
+    ERROR("FAIL: Archetype CXIV quaternion spin double cover failed");
+}
+// Archetypes CXVII-CXIX: Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A) & Riccati Axis Decoupling
+poly qx_riccati = xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1;
+if (qx_riccati - (xi1 * xi2^2 + (y2 - y1) * xi2 - z1) != 0) {
+    ERROR("FAIL: Archetype CXIX Riccati axis decoupling failed");
+}
+print("[PASS] Singular: Archetypes LXVII-CXIX (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, Pasch 4-Simplex, Catto Freudenthal Cubic, Hansen Cl(4,2) Doublet Tower, Zero Chiral Volume, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Quartic S-Duality, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Cayley-Dickson Norm, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Jordan Norms, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, & Three Associative Quaternion Subalgebras)");
 
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;

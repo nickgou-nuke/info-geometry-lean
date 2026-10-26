@@ -7757,4 +7757,719 @@ theorem zorn_trifactor_loxodromic_compass_doubled_four_potential_and_riccati_fix
       (simp [T_tri, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three];
        try ring)
 
+/-! ## 76. The 56D Freudenthal–Kantor–Tits $E_7$ Symplectic Triple System, Euler's 27D Cubic-Adjoint Trace Identity, & Cartan's Quartic $I_4$ $S$-Duality (`Archetypes XC & XCI`) -/
+
+/-- **The 27D Albert Trace Pairing** $\langle M, N \rangle_{27} := x_+ y_+ + x_- y_- + v w + \langle Q, P \rangle_{\mathrm{Kac}} + \langle \Xi_1, \Upsilon_1 \rangle_{\mathrm{Kac}} + \langle \Xi_2, \Upsilon_2 \rangle_{\mathrm{Kac}}$. -/
+noncomputable def albertZornTracePair
+    (x_plus x_minus v : R) (Q Ξ₁ Ξ₂ : ZornVectorMatrix R)
+    (y_plus y_minus w : R) (P Υ₁ Υ₂ : ZornVectorMatrix R) : R :=
+  x_plus * y_plus + x_minus * y_minus + v * w +
+    zornKacMoodyPairing Q P + zornKacMoodyPairing Ξ₁ Υ₁ + zornKacMoodyPairing Ξ₂ Υ₂
+
+/-- **Cartan's Quartic $E_7$ Invariant** $I_4(\alpha, \beta, \langle X, Y \rangle_{27}, \mathrm{Det}_{27}(X), \mathrm{Det}_{27}(Y), \langle X^\#, Y^\# \rangle_{27})$
+    on the 56-dimensional Freudenthal Triple System $\mathcal{F} = (\alpha, X, Y, \beta) \in R \oplus \mathfrak{J}_3 \oplus \mathfrak{J}_3^* \oplus R$:
+    $$I_4 = -\bigl(\alpha \beta - \langle X, Y \rangle_{27}\bigr)^2 - 4\bigl(\alpha\,\mathrm{Det}_{27}(Y) + \beta\,\mathrm{Det}_{27}(X) - \langle X^\#, Y^\# \rangle_{27}\bigr).$$ -/
+def freudenthal56QuarticInvariant (α β trXY detX detY trXsYs : R) : R :=
+  -(α * β - trXY) ^ 2 - 4 * (α * detY + β * detX - trXsYs)
+
+/-- **The 56D Symplectic Form** $\Omega_{56}((\alpha_1, X_1, Y_1, \beta_1), (\alpha_2, X_2, Y_2, \beta_2)) = \alpha_1 \beta_2 - \beta_1 \alpha_2 + \langle X_1, Y_2 \rangle_{27} - \langle Y_1, X_2 \rangle_{27}$. -/
+def freudenthal56SymplecticForm (α₁ β₁ α₂ β₂ trX1Y2 trY1X2 : R) : R :=
+  α₁ * β₂ - β₁ * α₂ + trX1Y2 - trY1X2
+
+/-- **Theorem (`freudenthal56Zorn_euler_trace_symplectic_and_quartic_s_duality`, Archetypes XC & XCI)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for ALL 27D split-octonion Albert parameters
+    $x_+, x_-, v : R$ and $Q, \Xi_1, \Xi_2 : \mathrm{ZornVectorMatrix}\;R$, and all Freudenthal 56D
+    invariants $\alpha, \beta, \alpha_1, \beta_1, \alpha_2, \beta_2, \mathrm{trXY}, \mathrm{detX}, \mathrm{detY}, \mathrm{trXsYs} : R$:
+    1. **Euler's 27D Cubic-Adjoint Trace Identity**:
+       $$\langle M, M^\# \rangle_{27} = 3 * \mathrm{Det}_{27}(M).$$
+    2. **Symplectic Alternation & Skew-Symmetry of $\Omega_{56}$**:
+       $$\Omega_{56}(\alpha, \beta, \alpha, \beta, \mathrm{trXY}, \mathrm{trXY}) = 0, \qquad
+         \Omega_{56}(\alpha_1, \beta_1, \alpha_2, \beta_2, t_{12}, t_{21}) + \Omega_{56}(\alpha_2, \beta_2, \alpha_1, \beta_1, t_{21}, t_{12}) = 0.$$
+    3. **Electric-Magnetic $S$-Duality Invariance of Cartan's Quartic $E_7$ Invariant $I_4$ under $J_{56}(\alpha, X, Y, \beta) = (-\beta, Y, -X, \alpha)$**
+       (where $\alpha' = -\beta$, $\beta' = \alpha$, $\langle X', Y' \rangle_{27} = -\langle X, Y \rangle_{27}$, $\mathrm{Det}_{27}(X') = \mathrm{Det}_{27}(Y)$, $\mathrm{Det}_{27}(Y') = -\mathrm{Det}_{27}(X)$, and $\langle (X')^\#, (Y')^\# \rangle_{27} = \langle X^\#, Y^\# \rangle_{27}$):
+       $$I_4(-\beta, \alpha, -\mathrm{trXY}, \mathrm{detY}, -\mathrm{detX}, \mathrm{trXsYs}) =
+         I_4(\alpha, \beta, \mathrm{trXY}, \mathrm{detX}, \mathrm{detY}, \mathrm{trXsYs}),$$
+       together with the dyonic corner specialization $I_4(\alpha, \beta, 0, 0, 0, 0) = -(\alpha * \beta)^2$
+       and pure D-brane flux specialization $I_4(0, 0, \mathrm{trXY}, \mathrm{detX}, \mathrm{detY}, \mathrm{trXsYs}) = -\mathrm{trXY}^2 + 4 * \mathrm{trXsYs}$. -/
+theorem freudenthal56Zorn_euler_trace_symplectic_and_quartic_s_duality
+    (x_plus x_minus v : R) (Q Ξ₁ Ξ₂ : ZornVectorMatrix R)
+    (α β α₁ β₁ α₂ β₂ trXY t₁₂ t₂₁ detX detY trXsYs : R) :
+    let S_xp := x_minus * v - norm Ξ₂
+    let S_xm := x_plus * v - norm Ξ₁
+    let S_v := x_plus * x_minus - norm Q
+    let S_Q := albertZornSharpQ v Q Ξ₁ Ξ₂
+    let S_Xi1 := albertZornSharpXi1 x_minus Q Ξ₁ Ξ₂
+    let S_Xi2 := albertZornSharpXi2 x_plus Q Ξ₁ Ξ₂
+    let det27 := albertZornDet x_plus x_minus v Q Ξ₁ Ξ₂
+    albertZornTracePair x_plus x_minus v Q Ξ₁ Ξ₂ S_xp S_xm S_v S_Q S_Xi1 S_Xi2 = 3 * det27 ∧
+    freudenthal56SymplecticForm α β α β trXY trXY = 0 ∧
+    freudenthal56SymplecticForm α₁ β₁ α₂ β₂ t₁₂ t₂₁ +
+      freudenthal56SymplecticForm α₂ β₂ α₁ β₁ t₂₁ t₁₂ = 0 ∧
+    freudenthal56QuarticInvariant (-β) α (-trXY) detY (-detX) trXsYs =
+      freudenthal56QuarticInvariant α β trXY detX detY trXsYs ∧
+    freudenthal56QuarticInvariant β α trXY detY detX trXsYs =
+      freudenthal56QuarticInvariant α β trXY detX detY trXsYs ∧
+    freudenthal56QuarticInvariant α β 0 0 0 0 = -(α * β) ^ 2 ∧
+    freudenthal56QuarticInvariant 0 0 trXY detX detY trXsYs = -trXY ^ 2 + 4 * trXsYs := by
+  intro S_xp S_xm S_v S_Q S_Xi1 S_Xi2 det27
+  have h_pair_Q : zornKacMoodyPairing Q S_Q = trace ((Q * Ξ₂) * conj Ξ₁) - 2 * v * norm Q := by
+    dsimp [zornKacMoodyPairing, S_Q, albertZornSharpQ]
+    change trace (mul Q (conj (add (mul Ξ₁ (conj Ξ₂)) (neg (smul v Q))))) = _
+    rw [conj_add, conj_neg, conj_mul, conj_conj, conj_smul,
+        mul_add, mul_neg, mul_smul, trace_add, trace_neg, trace_smul,
+        conj_norm_identity_left, trace_scalar, ← trace_mul_assoc Q Ξ₂ (conj Ξ₁)]
+    ring
+  have h_pair_Xi1 : zornKacMoodyPairing Ξ₁ S_Xi1 = trace ((Q * Ξ₂) * conj Ξ₁) - 2 * x_minus * norm Ξ₁ := by
+    dsimp [zornKacMoodyPairing, S_Xi1, albertZornSharpXi1]
+    change trace (mul Ξ₁ (conj (add (mul Q Ξ₂) (neg (smul x_minus Ξ₁))))) = _
+    rw [conj_add, conj_neg, conj_smul,
+        mul_add, mul_neg, mul_smul, trace_add, trace_neg, trace_smul,
+        conj_norm_identity_left, trace_scalar, trace_mul_conj_comm Ξ₁ (mul Q Ξ₂)]
+    ring
+  have h_pair_Xi2 : zornKacMoodyPairing Ξ₂ S_Xi2 = trace ((Q * Ξ₂) * conj Ξ₁) - 2 * x_plus * norm Ξ₂ := by
+    dsimp [zornKacMoodyPairing, S_Xi2, albertZornSharpXi2]
+    change trace (mul Ξ₂ (conj (add (mul (conj Q) Ξ₁) (neg (smul x_plus Ξ₂))))) = _
+    have h_cyc : trace (mul Ξ₂ (mul (conj Ξ₁) Q)) = trace (mul (mul Q Ξ₂) (conj Ξ₁)) := by
+      rw [← trace_mul_assoc Ξ₂ (conj Ξ₁) Q, ← trace_mul_cyclic Q Ξ₂ (conj Ξ₁)]
+    rw [conj_add, conj_neg, conj_mul, conj_conj, conj_smul,
+        mul_add, mul_neg, mul_smul, trace_add, trace_neg, trace_smul,
+        conj_norm_identity_left, trace_scalar, h_cyc]
+    ring
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · dsimp [albertZornTracePair]
+    rw [h_pair_Q, h_pair_Xi1, h_pair_Xi2]
+    dsimp [S_xp, S_xm, S_v, det27, albertZornDet]
+    ring
+  · dsimp [freudenthal56SymplecticForm]; ring
+  · dsimp [freudenthal56SymplecticForm]; ring
+  · dsimp [freudenthal56QuarticInvariant]; ring
+  · dsimp [freudenthal56QuarticInvariant]; ring
+  · dsimp [freudenthal56QuarticInvariant]; ring
+  · dsimp [freudenthal56QuarticInvariant]; ring
+
+/-- **Theorem (`freudenthal56Zorn_cartan_boost_and_homogeneity_invariance`, Archetype XC.4)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all 27D split-octonion Albert parameters
+    $x_+, x_-, v, c \in R$, $Q, \Xi_1, \Xi_2 \in \mathrm{ZornVectorMatrix}\;R$, all 56D invariants
+    $\alpha, \beta, \alpha_1, \beta_1, \alpha_2, \beta_2, \mathrm{trXY}, t_{12}, t_{21}, \mathrm{detX}, \mathrm{detY}, \mathrm{trXsYs} \in R$,
+    and any unit $u \in R^\times$:
+    1. **Homogeneity of Degree 2 of `albertZornSharp` & Degree 3 of `albertZornDet`**:
+       $$\mathrm{albertZornSharpQ}\;(c * v)\;(c \bullet Q)\;(c \bullet \Xi_1)\;(c \bullet \Xi_2) = (c * c) \bullet \mathrm{albertZornSharpQ}\;v\;Q\;\Xi_1\;\Xi_2,$$
+       $$\mathrm{albertZornDet}\;(c * x_+)\;(c * x_-)\;(c * v)\;(c \bullet Q)\;(c \bullet \Xi_1)\;(c \bullet \Xi_2) = (c ^ 3) * \mathrm{albertZornDet}\;x_+\;x_-\;v\;Q\;\Xi_1\;\Xi_2.$$
+    2. **Exact 56-Dimensional $E_{7(7)}$ Cartan Torus Boost Invariance of $\Omega_{56}$ and $I_4$ (`u : Rˣ`)**:
+       Under $(\alpha, X, Y, \beta) \mapsto (u^3 \alpha, u \bullet X, u^{-1} \bullet Y, u^{-3} \beta)$,
+       where $\mathrm{Det}_{27}(u \bullet X) = u^3 \mathrm{Det}_{27}(X)$, $\mathrm{Det}_{27}(u^{-1} \bullet Y) = u^{-3} \mathrm{Det}_{27}(Y)$,
+       $\langle u \bullet X, u^{-1} \bullet Y \rangle_{27} = (u * u^{-1}) \langle X, Y \rangle_{27}$, and
+       $\langle (u \bullet X)^\#, (u^{-1} \bullet Y)^\# \rangle_{27} = (u^2 * u^{-2}) \langle X^\#, Y^\# \rangle_{27}$:
+       $$\Omega_{56}\bigl((u : R)^3 * \alpha_1, (\uparrow u^{-1} : R)^3 * \beta_1, (u : R)^3 * \alpha_2, (\uparrow u^{-1} : R)^3 * \beta_2,
+           ((u : R) * (\uparrow u^{-1} : R)) * t_{12}, ((\uparrow u^{-1} : R) * (u : R)) * t_{21}\bigr) =
+         \Omega_{56}(\alpha_1, \beta_1, \alpha_2, \beta_2, t_{12}, t_{21}),$$
+       $$I_4\bigl((u : R)^3 * \alpha, (\uparrow u^{-1} : R)^3 * \beta, ((u : R) * (\uparrow u^{-1} : R)) * \mathrm{trXY},
+           (u : R)^3 * \mathrm{detX}, (\uparrow u^{-1} : R)^3 * \mathrm{detY}, ((u : R)^2 * (\uparrow u^{-2} : R)^2) * \mathrm{trXsYs}\bigr) =
+         I_4(\alpha, \beta, \mathrm{trXY}, \mathrm{detX}, \mathrm{detY}, \mathrm{trXsYs}).$$ -/
+theorem freudenthal56Zorn_cartan_boost_and_homogeneity_invariance
+    (x_plus x_minus v c : R) (Q Ξ₁ Ξ₂ : ZornVectorMatrix R)
+    (α β α₁ β₁ α₂ β₂ trXY t₁₂ t₂₁ detX detY trXsYs : R) (u : Rˣ) :
+    albertZornSharpQ (c * v) (c • Q) (c • Ξ₁) (c • Ξ₂) =
+      (c * c) • albertZornSharpQ v Q Ξ₁ Ξ₂ ∧
+    albertZornDet (c * x_plus) (c * x_minus) (c * v) (c • Q) (c • Ξ₁) (c • Ξ₂) =
+      (c ^ 3) * albertZornDet x_plus x_minus v Q Ξ₁ Ξ₂ ∧
+    freudenthal56SymplecticForm ((u : R) ^ 3 * α₁) ((↑u⁻¹ : R) ^ 3 * β₁)
+      ((u : R) ^ 3 * α₂) ((↑u⁻¹ : R) ^ 3 * β₂)
+      (((u : R) * (↑u⁻¹ : R)) * t₁₂) (((↑u⁻¹ : R) * (u : R)) * t₂₁) =
+      freudenthal56SymplecticForm α₁ β₁ α₂ β₂ t₁₂ t₂₁ ∧
+    freudenthal56QuarticInvariant ((u : R) ^ 3 * α) ((↑u⁻¹ : R) ^ 3 * β)
+      (((u : R) * (↑u⁻¹ : R)) * trXY)
+      ((u : R) ^ 3 * detX) ((↑u⁻¹ : R) ^ 3 * detY)
+      (((u : R) ^ 2 * (↑u⁻¹ : R) ^ 2) * trXsYs) =
+      freudenthal56QuarticInvariant α β trXY detX detY trXsYs := by
+  have hu : (u : R) * (↑u⁻¹ : R) = 1 := Units.mul_inv u
+  have hu_inv : (↑u⁻¹ : R) * (u : R) = 1 := Units.inv_mul u
+  have hu2 : (u : R) ^ 2 * (↑u⁻¹ : R) ^ 2 = 1 := by
+    calc (u : R) ^ 2 * (↑u⁻¹ : R) ^ 2
+      _ = ((u : R) * (↑u⁻¹ : R)) ^ 2 := by ring
+      _ = 1 := by rw [hu, one_pow]
+  have hu3 : (u : R) ^ 3 * (↑u⁻¹ : R) ^ 3 = 1 := by
+    calc (u : R) ^ 3 * (↑u⁻¹ : R) ^ 3
+      _ = ((u : R) * (↑u⁻¹ : R)) ^ 3 := by ring
+      _ = 1 := by rw [hu, one_pow]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [albertZornSharpQ, conj, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, mul, add, neg, smul,
+            ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i; fin_cases i <;>
+        (simp [albertZornSharpQ, conj, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, mul, add, neg, smul,
+               ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [albertZornSharpQ, conj, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, mul, add, neg, smul,
+               ZornVec3.cross]; ring)
+    · simp [albertZornSharpQ, conj, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, mul, add, neg, smul,
+            ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · simp [albertZornDet, norm, trace, conj, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · dsimp [freudenthal56SymplecticForm]
+    rw [hu, hu_inv]
+    linear_combination (α₁ * β₂ - β₁ * α₂) * hu3
+  · dsimp [freudenthal56QuarticInvariant]
+    rw [hu, hu2]
+    have h_ab : (u : R) ^ 3 * α * ((↑u⁻¹ : R) ^ 3 * β) = α * β := by
+      calc (u : R) ^ 3 * α * ((↑u⁻¹ : R) ^ 3 * β)
+        _ = ((u : R) ^ 3 * (↑u⁻¹ : R) ^ 3) * (α * β) := by ring
+        _ = α * β := by rw [hu3, _root_.one_mul]
+    have h_ay : (u : R) ^ 3 * α * ((↑u⁻¹ : R) ^ 3 * detY) = α * detY := by
+      calc (u : R) ^ 3 * α * ((↑u⁻¹ : R) ^ 3 * detY)
+        _ = ((u : R) ^ 3 * (↑u⁻¹ : R) ^ 3) * (α * detY) := by ring
+        _ = α * detY := by rw [hu3, _root_.one_mul]
+    have h_bx : (↑u⁻¹ : R) ^ 3 * β * ((u : R) ^ 3 * detX) = β * detX := by
+      calc (↑u⁻¹ : R) ^ 3 * β * ((u : R) ^ 3 * detX)
+        _ = ((u : R) ^ 3 * (↑u⁻¹ : R) ^ 3) * (β * detX) := by ring
+        _ = β * detX := by rw [hu3, _root_.one_mul]
+    rw [h_ab, h_ay, h_bx]
+    ring
+
+/-! ## 77. Inductive Doublet Tower Embedding, Cantor-Peirce Bit-Split, Zorn–Riccati Taylor Shift, & Gelfand–Retakh Gauss–Bruhat Elimination in `ZornVectorMatrix R` (`Archetypes XCII–XCV`) -/
+
+/-- The 8D Zorn–Riccati quadratic vector field on `ZornVectorMatrix R`:
+    $\mathcal{R}_X(q) := -(X.w \cdot q) \bullet q + X.b \bullet q + X.a \bullet q - X.v$. -/
+noncomputable def zornRiccatiMap (X : ZornVectorMatrix R) (q : ZornVec3 R) : ZornVec3 R :=
+  -(ZornVec3.dot X.w q) • q + X.b • q + X.a • q + -X.v
+
+/-- **Theorem (`zorn_doublet_colimit_riccati_taylor_and_gelfand_retakh_elimination`, Archetypes XCII–XCV)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all scalars $a, b, \Delta \in R$,
+    all matrices $X \in \mathrm{ZornVectorMatrix}\;R$, and all 3-vectors $v, w, q, \delta \in R^3$:
+    1. **Doublet Tower Homomorphism & Cantor-Peirce Orthogonal Bit-Split (`Archetypes XCII & XCIII`)**:
+       $$\mathrm{zornGradeZero}\;(a + b)\;(a + b) = \mathrm{zornGradeZero}\;a\;a + \mathrm{zornGradeZero}\;b\;b,$$
+       $$\mathrm{zornGradeZero}\;(a * b)\;(a * b) = \mathrm{zornGradeZero}\;a\;a * \mathrm{zornGradeZero}\;b\;b,$$
+       $$\mathrm{zornGradeZero}\;a\;a = \mathrm{zornGradeZero}\;a\;0 + \mathrm{zornGradeZero}\;0\;a, \qquad
+         \mathrm{zornGradeZero}\;a\;0 * \mathrm{zornGradeZero}\;0\;b = 0.$$
+    2. **Exact Zorn–Riccati Taylor Shift Cocycle**:
+       $$\mathrm{zornRiccatiMap}\;X\;(q + \delta) =
+         \mathrm{zornRiccatiMap}\;X\;q +
+         ((X.a + X.b - \mathrm{ZornVec3.dot}\;X.w\;q) \bullet \delta - (\mathrm{ZornVec3.dot}\;X.w\;\delta) \bullet q) -
+         (\mathrm{ZornVec3.dot}\;X.w\;\delta) \bullet \delta.$$
+    3. **Exact Gauss–Bruhat Trifactor Elimination & Gelfand–Retakh $(2,2)$-Quasideterminant Extraction (`Archetypes XCIV & XCV`)**:
+       For $U_+(v) = \langle 1, v, 0, 1 \rangle$, $U_-(w) = \langle 1, 0, w, 1 \rangle$, and
+       $T = (U_-(w) * \mathrm{zornGradeZero}\;1\;\Delta) * U_+(v)$:
+       $$(U_-(-w) * T) * U_+(-v) = \mathrm{zornGradeZero}\;1\;\Delta, \qquad
+         T.b - \mathrm{ZornVec3.dot}\;T.w\;T.v = \Delta.$$ -/
+theorem zorn_doublet_colimit_riccati_taylor_and_gelfand_retakh_elimination
+    (X : ZornVectorMatrix R) (a b Δ : R) (v w q δ : ZornVec3 R) :
+    let U_plus : ZornVectorMatrix R := ⟨1, v, 0, 1⟩
+    let U_minus : ZornVectorMatrix R := ⟨1, 0, w, 1⟩
+    let U_plus_neg : ZornVectorMatrix R := ⟨1, -v, 0, 1⟩
+    let U_minus_neg : ZornVectorMatrix R := ⟨1, 0, -w, 1⟩
+    let T_tri := (U_minus * zornGradeZero 1 Δ) * U_plus
+    zornGradeZero (a + b) (a + b) = zornGradeZero a a + zornGradeZero b b ∧
+    zornGradeZero (a * b) (a * b) = zornGradeZero a a * zornGradeZero b b ∧
+    zornGradeZero a a = zornGradeZero a 0 + zornGradeZero 0 a ∧
+    zornGradeZero a 0 * zornGradeZero 0 b = 0 ∧
+    zornRiccatiMap X (q + δ) =
+      zornRiccatiMap X q +
+      ((X.a + X.b - ZornVec3.dot X.w q) • δ - (ZornVec3.dot X.w δ) • q) -
+      (ZornVec3.dot X.w δ) • δ ∧
+    (U_minus_neg * T_tri) * U_plus_neg = zornGradeZero 1 Δ ∧
+    T_tri.b - ZornVec3.dot T_tri.w T_tri.v = Δ := by
+  intro U_plus U_minus U_plus_neg U_minus_neg T_tri
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+  · ext
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · ext
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_add_def, add]
+  · ext
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.cross]
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.dot]
+  · ext i
+    fin_cases i <;>
+      (simp [zornRiccatiMap, ZornVec3.dot, Fin.sum_univ_three] <;>
+       ring)
+  · ext
+    · simp [U_minus_neg, U_plus_neg, T_tri, U_minus, U_plus, zornGradeZero,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+        ring
+    · rename_i i; fin_cases i <;>
+        (simp [U_minus_neg, U_plus_neg, T_tri, U_minus, U_plus, zornGradeZero,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+         (change _ = (0 : R); ring))
+    · rename_i i; fin_cases i <;>
+        (simp [U_minus_neg, U_plus_neg, T_tri, U_minus, U_plus, zornGradeZero,
+               InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+         (change _ = (0 : R); ring))
+    · simp [U_minus_neg, U_plus_neg, T_tri, U_minus, U_plus, zornGradeZero,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+        ring
+  · simp [T_tri, U_minus, U_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;>
+      ring
+
+/-! ## 78. 5-Graded $E_8$ Contact Nilradical $\mathcal{F}_{56} \oplus R$, Step-2 Heisenberg Associativity, & 27D Albert–Zorn $K_0$ Peirce Idempotent Split (`Archetypes XCIV & XCV`) -/
+
+/-- **5-Graded $E_8$ Contact Nilradical Element (`E8ContactNilradical R`)**:
+    Represents an element $((\alpha, \beta, t_X, t_Y), \xi) \in \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$
+    of the positive nilradical $\mathcal{N}_{E_8} = \mathcal{F}_{56} \oplus R$ in the 5-graded
+    Kantor–Koecher–Tits decomposition of $E_{8(8)}$ ($248 = 1 + 56 + (133 + 1) + 56 + 1$). -/
+@[ext]
+structure E8ContactNilradical (R : Type*) where
+  α : R
+  β : R
+  t_X : R
+  t_Y : R
+  ξ : R
+  deriving DecidableEq, Inhabited
+
+instance : Zero (E8ContactNilradical R) := ⟨⟨0, 0, 0, 0, 0⟩⟩
+
+instance : Inhabited (E8ContactNilradical R) := ⟨0⟩
+
+@[simp] theorem E8ContactNilradical.zero_def :
+    (0 : E8ContactNilradical R) = ⟨0, 0, 0, 0, 0⟩ := rfl
+
+/-- Step-2 Heisenberg-Contact multiplication on $\mathcal{N}_{E_8}$:
+    Grade $+1 \times$ Grade $+1 \to$ Grade $+2$ via `freudenthal56SymplecticForm`,
+    while Grade $+1 \times$ Grade $+2 = 0$ and Grade $+2 \times$ Grade $+2 = 0$. -/
+instance : Mul (E8ContactNilradical R) :=
+  ⟨fun N₁ N₂ =>
+    ⟨0, 0, 0, 0,
+     freudenthal56SymplecticForm N₁.α N₁.β N₂.α N₂.β (N₁.t_X * N₂.t_Y) (N₂.t_X * N₁.t_Y)⟩⟩
+
+@[simp] theorem E8ContactNilradical.mul_def (N₁ N₂ : E8ContactNilradical R) :
+    N₁ * N₂ =
+      ⟨0, 0, 0, 0,
+       freudenthal56SymplecticForm N₁.α N₁.β N₂.α N₂.β (N₁.t_X * N₂.t_Y) (N₂.t_X * N₁.t_Y)⟩ := rfl
+
+/-- Diagonal $(0,0)$, $(1,1)$, and $(2,2)$ entries of the 27D Freudenthal Sharp Adjoint $M^\#$. -/
+noncomputable def albertZornSharpXp (x_minus v : R) (Ξ₂ : ZornVectorMatrix R) : R :=
+  x_minus * v - norm Ξ₂
+
+noncomputable def albertZornSharpXm (x_plus v : R) (Ξ₁ : ZornVectorMatrix R) : R :=
+  x_plus * v - norm Ξ₁
+
+noncomputable def albertZornSharpV (x_plus x_minus : R) (Q : ZornVectorMatrix R) : R :=
+  x_plus * x_minus - norm Q
+
+/-- **Theorem (`fiveGraded_E8_nilradical_associativity_and_albert_K0_peirce_split`, Archetypes XCIV & XCV)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all $N_1, N_2, N_3 \in \mathrm{E8ContactNilradical}\;R$:
+    1. **Skew-Symmetry of the $E_8$ Contact Bracket ($\mathcal{G}_{+1} \times \mathcal{G}_{+1} \to \mathcal{G}_{+2}$)**:
+       $$(N_1 * N_1).\xi = 0, \qquad (N_1 * N_2).\xi + (N_2 * N_1).\xi = 0.$$
+    2. **Exact Step-2 Nilpotent Termination & Associativity of the $E_8$ Nilradical**:
+       $$(N_1 * N_2) * N_3 = 0, \qquad N_1 * (N_2 * N_3) = 0, \qquad
+         (N_1 * N_2) * N_3 = N_1 * (N_2 * N_3).$$
+    3. **27D Albert–Zorn 3-Idempotent Peirce Rank-1 Vanishing & Grothendieck $K_0$ Trace Additivity**:
+       For the three primitive Peirce idempotents $E_1 = (1, 0, 0, 0, 0, 0)$, $E_2 = (0, 1, 0, 0, 0, 0)$,
+       $E_3 = (0, 0, 1, 0, 0, 0)$ in $\mathfrak{J}_3(\mathrm{Zorn}(R))$:
+       $$\mathrm{albertZornSharpXp}\;0\;0\;0 = 0, \qquad
+         \mathrm{albertZornSharpXm}\;0\;0\;0 = 0, \qquad
+         \mathrm{albertZornSharpV}\;1\;0\;0 = 0,$$
+       $$\mathrm{albertZornDet}\;1\;0\;0\;0\;0\;0 = 0, \qquad
+         \mathrm{albertZornDet}\;0\;1\;0\;0\;0\;0 = 0, \qquad
+         \mathrm{albertZornDet}\;0\;0\;1\;0\;0\;0 = 0,$$
+       $$(1 + 0 + 0) + (0 + 1 + 0) + (0 + 0 + 1) = (3 : R).$$ -/
+theorem fiveGraded_E8_nilradical_associativity_and_albert_K0_peirce_split
+    (N₁ N₂ N₃ : E8ContactNilradical R) :
+    (N₁ * N₁).ξ = 0 ∧
+    (N₁ * N₂).ξ + (N₂ * N₁).ξ = 0 ∧
+    (N₁ * N₂) * N₃ = 0 ∧
+    N₁ * (N₂ * N₃) = 0 ∧
+    (N₁ * N₂) * N₃ = N₁ * (N₂ * N₃) ∧
+    albertZornSharpXp (0 : R) 0 (0 : ZornVectorMatrix R) = 0 ∧
+    albertZornSharpXm (0 : R) 0 (0 : ZornVectorMatrix R) = 0 ∧
+    albertZornSharpV (1 : R) 0 (0 : ZornVectorMatrix R) = 0 ∧
+    albertZornDet (1 : R) 0 0 0 0 0 = 0 ∧
+    albertZornDet (0 : R) 1 0 0 0 0 = 0 ∧
+    albertZornDet (0 : R) 0 1 0 0 0 = 0 ∧
+    ((1 : R) + 0 + 0) + (0 + 1 + 0) + (0 + 0 + 1) = 3 := by
+  have h_left : (N₁ * N₂) * N₃ = 0 := by
+    ext <;> simp [E8ContactNilradical.mul_def, E8ContactNilradical.zero_def, freudenthal56SymplecticForm]
+  have h_right : N₁ * (N₂ * N₃) = 0 := by
+    ext <;> simp [E8ContactNilradical.mul_def, E8ContactNilradical.zero_def, freudenthal56SymplecticForm]
+  refine ⟨?_, ?_, h_left, h_right, by rw [h_left, h_right], ?_, ?_, ?_, ?_, ?_, ?_, by ring⟩
+  · simp [E8ContactNilradical.mul_def, freudenthal56SymplecticForm]; ring
+  · simp [E8ContactNilradical.mul_def, freudenthal56SymplecticForm]; ring
+  · simp [albertZornSharpXp, norm, InfoGeometry.Algebra.zvm_zero_def, zero, ZornVec3.dot]
+  · simp [albertZornSharpXm, norm, InfoGeometry.Algebra.zvm_zero_def, zero, ZornVec3.dot]
+  · simp [albertZornSharpV, norm, InfoGeometry.Algebra.zvm_zero_def, zero, ZornVec3.dot]
+  · simp [albertZornDet, norm, trace, conj, InfoGeometry.Algebra.zvm_zero_def,
+          InfoGeometry.Algebra.zvm_mul_def, zero, mul, ZornVec3.dot, ZornVec3.cross]
+  · simp [albertZornDet, norm, trace, conj, InfoGeometry.Algebra.zvm_zero_def,
+          InfoGeometry.Algebra.zvm_mul_def, zero, mul, ZornVec3.dot, ZornVec3.cross]
+  · simp [albertZornDet, norm, trace, conj, InfoGeometry.Algebra.zvm_zero_def,
+          InfoGeometry.Algebra.zvm_mul_def, zero, mul, ZornVec3.dot, ZornVec3.cross]
+
+/-! ## 79. Operator-Twisted Nambu–Gorkov Cayley–Dickson Doubling & Spectral Projectors of the 5-Graded Operator Characteristic Polynomial (`Archetypes XCVI–XCVIII`) -/
+
+/-- **Nambu–Gorkov Cayley–Dickson Conjugation (`zornCayleyDicksonConj z`)** on `ZornVectorMatrix R × ZornVectorMatrix R`:
+    $(X, Y)^\star = (\mathrm{conj}\;X, -Y)$. -/
+noncomputable def zornCayleyDicksonConj (z : ZornVectorMatrix R × ZornVectorMatrix R) :
+    ZornVectorMatrix R × ZornVectorMatrix R :=
+  (conj z.1, -z.2)
+
+/-- **Operator-Twisted Nambu–Gorkov Cayley–Dickson Multiplication (`zornCayleyDicksonMul Ω z w`)**:
+    $$(X_1, Y_1) *_\Omega (X_2, Y_2) = \bigl(X_1 * X_2 + \Omega * (Y_2 * \mathrm{conj}\;Y_1),\;\; \mathrm{conj}\;X_1 * Y_2 + X_2 * Y_1\bigr).$$ -/
+noncomputable def zornCayleyDicksonMul (Ω : ZornVectorMatrix R)
+    (z w : ZornVectorMatrix R × ZornVectorMatrix R) :
+    ZornVectorMatrix R × ZornVectorMatrix R :=
+  (z.1 * w.1 + Ω * (w.2 * conj z.2),
+   conj z.1 * w.2 + w.1 * z.2)
+
+/-- **Theorem (`zorn_nambuGorkov_cayley_dickson_and_five_graded_spectral_projectors`, Archetypes XCVI–XCVIII)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all $\Omega, X, Y \in \mathrm{ZornVectorMatrix}\;R$,
+    let $\mathbf{E} = (0, \mathrm{one})$, $Z_{\mathrm{cd}} = (X, Y)$, and $D_k = \mathcal{E}_5^k(X)$:
+    1. **Exact Particle-Hole Involution, Doubling Generator Powers, & Bogoliubov Conjugation**:
+       $$\mathrm{zornCayleyDicksonConj}(\mathrm{zornCayleyDicksonConj}\;Z_{\mathrm{cd}}) = Z_{\mathrm{cd}},$$
+       $$\mathbf{E} *_\Omega \mathbf{E} = (\Omega, 0), \qquad
+         (\mathbf{E} *_\Omega \mathbf{E}) *_\Omega (\mathbf{E} *_\Omega \mathbf{E}) = (\Omega * \Omega, 0),$$
+       $$(X, 0) *_\Omega \mathbf{E} = (0, \mathrm{conj}\;X), \qquad
+         \mathbf{E} *_\Omega (X, 0) = (0, X), \qquad
+         (\mathbf{E} *_\Omega (X, 0)) *_\Omega \mathbf{E} = (\Omega * \mathrm{conj}\;X, 0),$$
+       $$Z_{\mathrm{cd}} *_\Omega Z_{\mathrm{cd}}^\star = \bigl(X * \mathrm{conj}\;X + -(\Omega * (Y * \mathrm{conj}\;Y)),\;\; 0\bigr).$$
+    2. **Factorized Spectral Projectors of the 5-Graded Characteristic Polynomial $\mathcal{E}_5^5 - 5\mathcal{E}_5^3 + 4\mathcal{E}_5 = 0$**:
+       - **Quartic Nucleus Projector $(\mathcal{E}_5^2 - I)(\mathcal{E}_5^2 - 4I)(X) = 4 \bullet \mathcal{G}_0(X)$**:
+         $$D_4 + -(5 \bullet D_2) + 4 \bullet X = 4 \bullet \mathrm{zornGradeZero}\;X.a\;X.b.$$
+       - **Cubic Transverse Cone Projector $\mathcal{E}_5(\mathcal{E}_5^2 - 4I)(X) = -3 \bullet (\mathcal{G}_{+1}(X) - \mathcal{G}_{-1}(X))$**:
+         $$D_3 + -(4 \bullet D_1) = -\bigl(3 \bullet (\mathrm{zornGradePlus1}\;(X.v\;1)\;(X.v\;2) + -\mathrm{zornGradeMinus1}\;(X.w\;1)\;(X.w\;2))\bigr).$$
+       - **Cubic Contact Horizon Projector $\mathcal{E}_5(\mathcal{E}_5^2 - I)(X) = 6 \bullet (\mathcal{G}_{+2}(X) - \mathcal{G}_{-2}(X))$**:
+         $$D_3 + -D_1 = 6 \bullet \bigl(\mathrm{zornGradePlus2}\;(X.w\;0) + -\mathrm{zornGradeMinus2}\;(X.v\;0)\bigr).$$ -/
+theorem zorn_nambuGorkov_cayley_dickson_and_five_graded_spectral_projectors
+    (Ω X Y : ZornVectorMatrix R) :
+    let E_cd : ZornVectorMatrix R × ZornVectorMatrix R := (0, one)
+    let Z_cd : ZornVectorMatrix R × ZornVectorMatrix R := (X, Y)
+    let E2 := zornCayleyDicksonMul Ω E_cd E_cd
+    let D₁ := zornEulerFiveGrading X
+    let D₂ := zornEulerFiveGrading D₁
+    let D₃ := zornEulerFiveGrading D₂
+    let D₄ := zornEulerFiveGrading D₃
+    zornCayleyDicksonConj (zornCayleyDicksonConj Z_cd) = Z_cd ∧
+    E2 = (Ω, 0) ∧
+    zornCayleyDicksonMul Ω E2 E2 = (Ω * Ω, 0) ∧
+    zornCayleyDicksonMul Ω (X, 0) E_cd = (0, conj X) ∧
+    zornCayleyDicksonMul Ω E_cd (X, 0) = (0, X) ∧
+    zornCayleyDicksonMul Ω (zornCayleyDicksonMul Ω E_cd (X, 0)) E_cd = (Ω * conj X, 0) ∧
+    zornCayleyDicksonMul Ω Z_cd (zornCayleyDicksonConj Z_cd) =
+      (X * conj X + -(Ω * (Y * conj Y)), 0) ∧
+    D₄ + -((5 : R) • D₂) + (4 : R) • X = (4 : R) • zornGradeZero X.a X.b ∧
+    D₃ + -((4 : R) • D₁) =
+      -((3 : R) • (zornGradePlus1 (X.v 1) (X.v 2) + -zornGradeMinus1 (X.w 1) (X.w 2))) ∧
+    D₃ + -D₁ = (6 : R) • (zornGradePlus2 (X.w 0) + -zornGradeMinus2 (X.v 0)) := by
+  intro E_cd Z_cd E2 D₁ D₂ D₃ D₄
+  have h_conj_zero : conj (0 : ZornVectorMatrix R) = 0 := by
+    ext k <;> try (fin_cases k <;> simp [conj, InfoGeometry.Algebra.zvm_zero_def, zero])
+    all_goals simp [conj, InfoGeometry.Algebra.zvm_zero_def, zero]
+  have h_conj_one : conj (one : ZornVectorMatrix R) = one := by
+    ext k <;> try (fin_cases k <;> simp [conj, one])
+    all_goals simp [conj, one]
+  have h_mul_one : ∀ W : ZornVectorMatrix R, W * one = W := mul_one
+  have h_one_mul : ∀ W : ZornVectorMatrix R, one * W = W := one_mul
+  have h_mul_zero : ∀ W : ZornVectorMatrix R, W * 0 = 0 := mul_zero
+  have h_zero_mul : ∀ W : ZornVectorMatrix R, 0 * W = 0 := zero_mul
+  have h_E2 : E2 = (Ω, 0) := by
+    simp only [E2, E_cd, zornCayleyDicksonMul, h_conj_one, h_conj_zero,
+               h_mul_zero, h_mul_one, _root_.zero_add, _root_.add_zero]
+  refine ⟨?_, h_E2, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact Prod.ext (conj_conj X) (neg_neg Y)
+  · rw [h_E2]
+    simp only [zornCayleyDicksonMul, h_conj_zero, h_mul_zero, _root_.add_zero]
+  · simp only [E_cd, zornCayleyDicksonMul, h_conj_zero, h_mul_zero, _root_.add_zero, h_mul_one]
+  · simp only [E_cd, zornCayleyDicksonMul, h_conj_zero, h_conj_one, h_zero_mul, h_mul_zero,
+               _root_.add_zero, _root_.zero_add, h_mul_one]
+  · simp only [E_cd, zornCayleyDicksonMul, h_conj_zero, h_conj_one, h_zero_mul, h_mul_zero,
+               _root_.add_zero, _root_.zero_add, h_mul_one, h_one_mul]
+  · simp only [Z_cd, zornCayleyDicksonConj, zornCayleyDicksonMul,
+               _root_.mul_neg, _root_.neg_mul, neg_add_cancel]
+  · ext k
+    · simp [D₁, D₂, D₃, D₄, zornEulerFiveGrading, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring
+    · fin_cases k <;>
+        (simp [D₁, D₂, D₃, D₄, zornEulerFiveGrading, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring)
+    · fin_cases k <;>
+        (simp [D₁, D₂, D₃, D₄, zornEulerFiveGrading, zornGradeZero,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring)
+    · simp [D₁, D₂, D₃, D₄, zornEulerFiveGrading, zornGradeZero,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring
+  · ext k
+    · simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus1, zornGradeMinus1,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring
+    · fin_cases k <;>
+        (simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus1, zornGradeMinus1,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring)
+    · fin_cases k <;>
+        (simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus1, zornGradeMinus1,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring)
+    · simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus1, zornGradeMinus1,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring
+  · ext k
+    · simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus2, zornGradeMinus2,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring
+    · fin_cases k <;>
+        (simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus2, zornGradeMinus2,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring)
+    · fin_cases k <;>
+        (simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus2, zornGradeMinus2,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring)
+    · simp [D₁, D₂, D₃, zornEulerFiveGrading, zornGradePlus2, zornGradeMinus2,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; try ring
+
+/-! ### 80. Commutative Specialization of Operator Cyclotomics, 5-Grading Parity Automorphism, & the $\mathbb{Z}_6$ Galois Group (`Archetypes XCIX–CIV`) -/
+
+/-- Cyclic $\mathbb{Z}_3$-triality permutation $\tau_3(v_0, v_1, v_2) = (v_1, v_2, v_0)$ on `Fin 3 → R`. -/
+def zornTrialityVec {R : Type*} (v : Fin 3 → R) : Fin 3 → R :=
+  ![v 1, v 2, v 0]
+
+/-- 5-Grading Parity Vector Involution $\kappa_5(v_0, v_1, v_2) = (v_0, -v_1, -v_2)$ on `Fin 3 → R`. -/
+def zornGradeParityVec {R : Type*} [CommRing R] (v : Fin 3 → R) : Fin 3 → R :=
+  ![v 0, -v 1, -v 2]
+
+/-- The $\mathbb{Z}_2$ Chiral Sign Involution $\sigma_2\langle a, v, w, b \rangle := \langle a, -v, -w, b \rangle$
+on `ZornVectorMatrix R` (`Archetype C.2`). -/
+def zornGaloisZ2 {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, -X.v, -X.w, X.b⟩
+
+/-- The $\mathbb{Z}_2$ 5-Grading Parity Automorphism $(-1)^{\mathcal{D}_5}$ on `ZornVectorMatrix R`. -/
+def zornGradeParity {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, zornGradeParityVec X.v, zornGradeParityVec X.w, X.b⟩
+
+/-- The $\mathbb{Z}_3$ Color-Triality Galois Automorphism $\tau_3\langle a, v, w, b \rangle := \langle a, \tau_3(v), \tau_3(w), b \rangle$
+on `ZornVectorMatrix R` (`Archetype C.2`). -/
+def zornGaloisZ3 {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, zornTrialityVec X.v, zornTrialityVec X.w, X.b⟩
+
+/-- The combined $\mathbb{Z}_6 \cong \mathbb{Z}_2 \times \mathbb{Z}_3$ Cyclotomic Galois Generator
+$\gamma_6 := \sigma_2 \circ \tau_3$ on `ZornVectorMatrix R` (`Archetype C.2`). -/
+def zornGaloisZ6 {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  zornGaloisZ2 (zornGaloisZ3 X)
+
+/-- **Commutative Specialization of Operator Cyclotomic Factorizations, 5-Grading Parity Automorphism, & the $\mathbb{Z}_6$ Galois Group (`Archetypes XCIX–CIV`)**:
+    Over any commutative ring $R$ (`[CommRing R]`):
+    1. **Universal Cyclotomic Polynomial Factorizations**:
+       - $\Omega^3 - 1 = (\Omega - 1)(\Omega^2 + \Omega + 1)$,
+       - $\Omega^3 + 1 = (\Omega + 1)(\Omega^2 - \Omega + 1)$,
+       - $\Omega^6 - 1 = (\Omega - 1)(\Omega + 1)(\Omega^2 + \Omega + 1)(\Omega^2 - \Omega + 1)$,
+       - $\Omega^8 - 1 = (\Omega - 1)(\Omega + 1)(\Omega^2 + 1)(\Omega^4 + 1)$.
+    2. **Cyclic $\mathbb{Z}_2 \times \mathbb{Z}_3 \cong \mathbb{Z}_6$ Galois Group & 5-Grading Parity Automorphisms of `ZornVectorMatrix R`**:
+       - $\sigma_2^2(X) = X$, $\kappa_5^2(X) = X$, $\tau_3^3(X) = X$, $\sigma_2(\tau_3(X)) = \tau_3(\sigma_2(X))$, $\gamma_6^2(X) = \tau_3^2(X)$, and $\gamma_6^6(X) = X$,
+       - Multiplicative & Quadratic-Norm Invariance:
+         $$\kappa_5(X * Y) = \kappa_5(X) * \kappa_5(Y), \quad \tau_3(X * Y) = \tau_3(X) * \tau_3(Y), \quad \gamma_6^2(X * Y) = \gamma_6^2(X) * \gamma_6^2(Y),$$
+         and $\mathrm{norm}(\gamma_6(X)) = \mathrm{norm}(X)$, $\mathrm{trace}(\gamma_6(X)) = \mathrm{trace}(X)$. -/
+theorem zorn_cyclotomic_factorizations_and_z6_galois_automorphism_group
+    {R : Type*} [CommRing R] (Ω : R) (X Y : ZornVectorMatrix R) :
+    (Ω ^ 3 - 1 = (Ω - 1) * (Ω ^ 2 + Ω + 1) ∧
+     Ω ^ 3 + 1 = (Ω + 1) * (Ω ^ 2 - Ω + 1) ∧
+     Ω ^ 6 - 1 = (Ω - 1) * (Ω + 1) * (Ω ^ 2 + Ω + 1) * (Ω ^ 2 - Ω + 1) ∧
+     Ω ^ 8 - 1 = (Ω - 1) * (Ω + 1) * (Ω ^ 2 + 1) * (Ω ^ 4 + 1)) ∧
+    (zornGaloisZ2 (zornGaloisZ2 X) = X ∧
+     zornGradeParity (zornGradeParity X) = X ∧
+     zornGaloisZ3 (zornGaloisZ3 (zornGaloisZ3 X)) = X ∧
+     zornGaloisZ2 (zornGaloisZ3 X) = zornGaloisZ3 (zornGaloisZ2 X) ∧
+     zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 (zornGaloisZ6 X))))) = X ∧
+     zornGradeParity (X * Y) = zornGradeParity X * zornGradeParity Y ∧
+     zornGaloisZ3 (X * Y) = zornGaloisZ3 X * zornGaloisZ3 Y ∧
+     zornGaloisZ6 (zornGaloisZ6 X) = zornGaloisZ3 (zornGaloisZ3 X) ∧
+     norm (zornGaloisZ6 X) = norm X ∧
+     trace (zornGaloisZ6 X) = trace X) := by
+  refine ⟨⟨by ring, by ring, by ring, by ring⟩, ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩⟩
+  · ext k <;> simp [zornGaloisZ2]
+  · ext k
+    · rfl
+    · fin_cases k <;> simp [zornGradeParity, zornGradeParityVec]
+    · fin_cases k <;> simp [zornGradeParity, zornGradeParityVec]
+    · rfl
+  · ext k
+    · rfl
+    · fin_cases k <;> rfl
+    · fin_cases k <;> rfl
+    · rfl
+  · ext k
+    · rfl
+    · fin_cases k <;> rfl
+    · fin_cases k <;> rfl
+    · rfl
+  · ext k
+    · rfl
+    · fin_cases k <;> simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, zornTrialityVec]
+    · fin_cases k <;> simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, zornTrialityVec]
+    · rfl
+  · ext k
+    · simp [zornGradeParity, zornGradeParityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;>
+        (simp [zornGradeParity, zornGradeParityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · fin_cases k <;>
+        (simp [zornGradeParity, zornGradeParityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornGradeParity, zornGradeParityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext k
+    · simp [zornGaloisZ3, zornTrialityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · fin_cases k <;>
+        (simp [zornGaloisZ3, zornTrialityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · fin_cases k <;>
+        (simp [zornGaloisZ3, zornTrialityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornGaloisZ3, zornTrialityVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  · ext k
+    · rfl
+    · fin_cases k <;> simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, zornTrialityVec]
+    · fin_cases k <;> simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, zornTrialityVec]
+    · rfl
+  · simp [norm, zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, zornTrialityVec, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · rfl
+
+/-! ### 81. Commutative Specialization of the $\mathbb{Z}_3$-Galois Singlet Subalgebra & Strict Associativity (`Archetypes CV–CVII`) -/
+
+/-- Diagonal singlet 3-vector $\mathbf{1}(c) = ![c, c, c]$ on `Fin 3 → R`. -/
+def zornDiagVec {R : Type*} (c : R) : Fin 3 → R :=
+  ![c, c, c]
+
+/-- $\mathbb{Z}_3$-Galois Invariant Singlet Element `zornSinglet a c d b := ⟨a, ![c, c, c], ![d, d, d], b⟩`
+in $\mathrm{Fix}(\tau_3) \subset \mathrm{ZornVectorMatrix}\;R$ (`Archetype CVI`). -/
+def zornSinglet {R : Type*} (a c d b : R) : ZornVectorMatrix R :=
+  ⟨a, zornDiagVec c, zornDiagVec d, b⟩
+
+/-- **Strict Associativity & $\mathbb{Z}_3$-Galois Invariance of the Singlet Subalgebra $\mathrm{Fix}(\tau_3) \subset \mathrm{ZornVectorMatrix}\;R$ (`Archetypes CVI & CVII`)**:
+    Over any commutative ring $R$ (`[CommRing R]`):
+    1. $\tau_3(\mathrm{zornSinglet}\;a_1\;c_1\;d_1\;b_1) = \mathrm{zornSinglet}\;a_1\;c_1\;d_1\;b_1$.
+    2. $\mathbf{1}(c_1) \times \mathbf{1}(c_2) = 0$.
+    3. Multiplication closure and strict associativity $(S_1 * S_2) * S_3 = S_1 * (S_2 * S_3)$. -/
+theorem zornSinglet_strict_associativity_and_riccati_reduction
+    {R : Type*} [CommRing R] (a₁ c₁ d₁ b₁ a₂ c₂ d₂ b₂ a₃ c₃ d₃ b₃ : R) :
+    let S₁ := zornSinglet a₁ c₁ d₁ b₁
+    let S₂ := zornSinglet a₂ c₂ d₂ b₂
+    let S₃ := zornSinglet a₃ c₃ d₃ b₃
+    zornGaloisZ3 S₁ = S₁ ∧
+    ZornVec3.cross (zornDiagVec c₁) (zornDiagVec c₂) = 0 ∧
+    S₁ * S₂ = zornSinglet (a₁ * a₂ + 3 * c₁ * d₂) (a₁ * c₂ + c₁ * b₂) (d₁ * a₂ + b₁ * d₂) (3 * d₁ * c₂ + b₁ * b₂) ∧
+    (S₁ * S₂) * S₃ = S₁ * (S₂ * S₃) := by
+  intro S₁ S₂ S₃
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext k
+    · rfl
+    · fin_cases k <;> rfl
+    · fin_cases k <;> rfl
+    · rfl
+  · ext k; fin_cases k <;> (simp [zornDiagVec, ZornVec3.cross]; try ring)
+  · ext k
+    · simp [S₁, S₂, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+    · fin_cases k <;> (simp [S₁, S₂, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · fin_cases k <;> (simp [S₁, S₂, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · simp [S₁, S₂, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · ext k
+    · simp [S₁, S₂, S₃, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+    · fin_cases k <;> (simp [S₁, S₂, S₃, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · fin_cases k <;> (simp [S₁, S₂, S₃, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · simp [S₁, S₂, S₃, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+
+/-- Order-2 signed reflection vector involution $\sigma_{\mathrm{refl}}(v_0, v_1, v_2) = (-v_0, -v_2, -v_1)$
+with $\det(\sigma_{\mathrm{refl}}) = +1 \in \mathrm{SO}(3, \mathbb{Z})$ (`Archetype CVIII`). -/
+def zornReflVec {R : Type*} [CommRing R] (v : Fin 3 → R) : Fin 3 → R :=
+  ![-v 0, -v 2, -v 1]
+
+/-- Order-2 signed reflection automorphism $\sigma_{\mathrm{refl}}\langle a, v, w, b \rangle = \langle a, \sigma_{\mathrm{refl}}(v), \sigma_{\mathrm{refl}}(w), b \rangle$
+on `ZornVectorMatrix R` (`Archetype CVIII`). -/
+def zornReflZ2 {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, zornReflVec X.v, zornReflVec X.w, X.b⟩
+
+/-- Second and third triality-conjugate Euler 5-grading operators $\mathcal{E}_{5,y}$ and $\mathcal{E}_{5,z}$
+on `ZornVectorMatrix R` (`Archetype CXII`). -/
+def zornEuler5Y {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0, ![X.v 0, -(2 * X.v 1), X.v 2], ![-X.w 0, 2 * X.w 1, -X.w 2], 0⟩
+
+def zornEuler5Z {R : Type*} [CommRing R] (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0, ![X.v 0, X.v 1, -(2 * X.v 2)], ![-X.w 0, -X.w 1, 2 * X.w 2], 0⟩
+
+/-- **Dihedral $S_3 = \mathbb{Z}_3 \rtimes \mathbb{Z}_2$ Reflection Automorphism & Triality Trio of 5-Grading Operators on `ZornVectorMatrix R` (`Archetypes CVIII–CXIII`)**:
+    Over any commutative ring $R$ (`[CommRing R]`):
+    1. $\sigma_{\mathrm{refl}}$ is an order-2 multiplicative ring automorphism satisfying $\sigma_{\mathrm{refl}}(\tau_3(\sigma_{\mathrm{refl}}(X))) = \tau_3^2(X)$.
+    2. The triality trio $(\mathcal{E}_5, \mathcal{E}_{5,y}, \mathcal{E}_{5,z})$ commutes pairwise and satisfies the exact zero-sum law
+       $\mathcal{E}_5(X) + \mathcal{E}_{5,y}(X) + \mathcal{E}_{5,z}(X) = 0$. -/
+theorem zornReflZ2_dihedral_S3_and_triality_five_gradings
+    {R : Type*} [CommRing R] (X Y : ZornVectorMatrix R) :
+    zornReflZ2 (zornReflZ2 X) = X ∧
+    zornReflZ2 (X * Y) = zornReflZ2 X * zornReflZ2 Y ∧
+    zornReflZ2 (zornGaloisZ3 (zornReflZ2 X)) = zornGaloisZ3 (zornGaloisZ3 X) ∧
+    zornEulerFiveGrading X + zornEuler5Y X + zornEuler5Z X = 0 ∧
+    zornEulerFiveGrading (zornEuler5Y X) = zornEuler5Y (zornEulerFiveGrading X) ∧
+    zornGaloisZ3 (zornGaloisZ3 (zornEulerFiveGrading (zornGaloisZ3 X))) = zornEuler5Y X ∧
+    zornReflZ2 (zornEuler5Y (zornReflZ2 X)) = zornEuler5Z X := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext k
+    · rfl
+    · fin_cases k <;> simp [zornReflZ2, zornReflVec]
+    · fin_cases k <;> simp [zornReflZ2, zornReflVec]
+    · rfl
+  · ext k
+    · simp [zornReflZ2, zornReflVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+    · fin_cases k <;> (simp [zornReflZ2, zornReflVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · fin_cases k <;> (simp [zornReflZ2, zornReflVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · simp [zornReflZ2, zornReflVec, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · ext k
+    · rfl
+    · fin_cases k <;> simp [zornReflZ2, zornReflVec, zornGaloisZ3, zornTrialityVec]
+    · fin_cases k <;> simp [zornReflZ2, zornReflVec, zornGaloisZ3, zornTrialityVec]
+    · rfl
+  · ext k
+    · simp [zornEulerFiveGrading, zornEuler5Y, zornEuler5Z, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_zero_def, add, zero]
+    · fin_cases k <;> (simp [zornEulerFiveGrading, zornEuler5Y, zornEuler5Z, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_zero_def, add, zero]; ring)
+    · fin_cases k <;> (simp [zornEulerFiveGrading, zornEuler5Y, zornEuler5Z, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_zero_def, add, zero]; ring)
+    · simp [zornEulerFiveGrading, zornEuler5Y, zornEuler5Z, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_zero_def, add, zero]
+  · ext k
+    · rfl
+    · fin_cases k <;> (simp [zornEulerFiveGrading, zornEuler5Y]; try ring)
+    · fin_cases k <;> (simp [zornEulerFiveGrading, zornEuler5Y]; try ring)
+    · rfl
+  · ext k
+    · rfl
+    · fin_cases k <;> simp [zornGaloisZ3, zornTrialityVec, zornEulerFiveGrading, zornEuler5Y]
+    · fin_cases k <;> simp [zornGaloisZ3, zornTrialityVec, zornEulerFiveGrading, zornEuler5Y]
+    · rfl
+  · ext k
+    · rfl
+    · fin_cases k <;> (simp [zornReflZ2, zornReflVec, zornEuler5Y, zornEuler5Z]; try ring)
+    · fin_cases k <;> (simp [zornReflZ2, zornReflVec, zornEuler5Y, zornEuler5Z]; try ring)
+    · rfl
+
+/-- Internal Zorn axial spinor generators $S_x, S_y, S_z \in \mathrm{ZornVectorMatrix}\;R$ satisfying
+$S_a * S_a = -\mathrm{one}$ (`Archetype CXV`). -/
+def zornSpinX {R : Type*} [CommRing R] : ZornVectorMatrix R := ⟨0, ![1, 0, 0], ![-1, 0, 0], 0⟩
+def zornSpinY {R : Type*} [CommRing R] : ZornVectorMatrix R := ⟨0, ![0, 1, 0], ![0, -1, 0], 0⟩
+def zornSpinZ {R : Type*} [CommRing R] : ZornVectorMatrix R := ⟨0, ![0, 0, 1], ![0, 0, -1], 0⟩
+
+/-- **Internal Zorn Spinors $S_a^2 = -\mathrm{one}$ on `ZornVectorMatrix R` (`Archetype CXV`)**:
+    Over any commutative ring $R$ (`[CommRing R]`), $S_x * S_x = -\mathrm{one}$, $S_y * S_y = -\mathrm{one}$, and $S_z * S_z = -\mathrm{one}$. -/
+theorem zornSpin_square_eq_neg_one {R : Type*} [CommRing R] :
+    (zornSpinX : ZornVectorMatrix R) * zornSpinX = -one ∧
+    (zornSpinY : ZornVectorMatrix R) * zornSpinY = -one ∧
+    (zornSpinZ : ZornVectorMatrix R) * zornSpinZ = -one := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  { ext k
+    · simp [zornSpinX, zornSpinY, zornSpinZ, one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;> simp [zornSpinX, zornSpinY, zornSpinZ, one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.cross]
+    · fin_cases k <;> simp [zornSpinX, zornSpinY, zornSpinZ, one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.cross]
+    · simp [zornSpinX, zornSpinY, zornSpinZ, one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.dot, Fin.sum_univ_three] }
+
 end InfoGeometry.Algebra.ZornVectorMatrix

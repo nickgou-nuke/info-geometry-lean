@@ -407,6 +407,194 @@ riccati_T_f = v_sub(v_add(v_add(right_scale(q_f, dot(T_bruhat_f[2], q_f)), right
 assert riccati_T_f == right_scale(q_f, xi2)
 print("[PASS] FreeAlgebra: Archetypes LXXXIV-LXXXIX (Zero Chiral Volume, Krein Null Kernel, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)")
 
+# Archetypes XC-XCV: 56D Freudenthal E_7 Euler Trace Identity & S-Duality, Colimit Doublet Tower, & Gelfand-Retakh Gauss-Bruhat Elimination
+trace_pair_27 = xp_a*sh_xp + xm_a*sh_xm + v_a*sh_v + c_zinner(Q_alb, sh_Q) + c_zinner(Xi1_alb, sh_Xi1) + c_zinner(Xi2_alb, sh_Xi2)
+assert trace_pair_27 == 3 * det27_a
+# Noncommutative Doublet Tower & Cantor-Peirce Bit-Split in FreeAlgebra:
+def doublet_f(a_el):
+    return grade_zero(a_el, a_el)
+def peirce11_f(a_el):
+    return grade_zero(a_el, F(0))
+def peirce22_f(b_el):
+    return grade_zero(F(0), b_el)
+assert doublet_f(y1 * z1) == z_mul(doublet_f(y1), doublet_f(z1))
+assert doublet_f(y1) == z_add(peirce11_f(y1), peirce22_f(y1))
+assert z_mul(peirce11_f(y1), peirce22_f(z1)) == z_zero()
+# Orthogonal 1-Component Root-Ray Compass-Needle Semigroup Homomorphism in FreeAlgebra:
+P_row_tr_f = (F(1), (F(0), y1, F(0)), v_zero(), F(0))
+P_col_tr_f = (F(1), v_zero(), (xi1, F(0), F(0)), F(0))
+def compass_f(a_el):
+    return z_mul(z_mul(P_col_tr_f, peirce11_f(a_el)), P_row_tr_f)
+assert z_mul(compass_f(y2), compass_f(z2)) == compass_f(y2 * z2)
+# Exact Gauss-Bruhat Trifactor Elimination & Gelfand-Retakh Quasideterminant in FreeAlgebra:
+# For orthogonal 1-component root-ray channels v_tr = (0, y1, 0), w_tr = (xi1, 0, 0), skew_cross vanishes identically:
+U_up_tr_f = (F(1), (F(0), y1, F(0)), v_zero(), F(1))
+U_lo_tr_f = (F(1), v_zero(), (xi1, F(0), F(0)), F(1))
+U_up_neg_tr_f = (F(1), (F(0), -y1, F(0)), v_zero(), F(1))
+U_lo_neg_tr_f = (F(1), v_zero(), (-xi1, F(0), F(0)), F(1))
+T_gen_f = z_mul(z_mul(U_lo_tr_f, grade_zero(xi2, xi3)), U_up_tr_f)
+assert z_mul(z_mul(U_lo_neg_tr_f, T_gen_f), U_up_neg_tr_f) == grade_zero(xi2, xi3)
+U_up_neg_f = (F(1), v_sub(v_zero(), q_f), v_zero(), F(1))
+U_lo_neg_f = (F(1), v_zero(), v_sub(v_zero(), xi1_f), F(1))
+assert z_mul(z_mul(U_lo_neg_f, T_bruhat_f), U_up_neg_f) == grade_zero(F(1), xi2)
+assert z_mul(U_lo_neg_f, z_mul(U_lo_f, grade_zero(xi1, xi2))) == (xi1, skew_cross(xi1_f, right_scale(xi1_f, xi1)), v_zero(), xi2)
+assert z_mul(z_mul(grade_zero(xi1, xi2), U_up_f), U_up_neg_f) == (xi1, v_zero(), v_sub(v_zero(), skew_cross(left_scale(xi1, q_f), q_f)), xi2)
+assert T_bruhat_f[3] + dot(T_bruhat_f[2], T_bruhat_f[1]) == xi2
+# Exact Noncommutative Zorn-Riccati Shift / Taylor Cocycle in FreeAlgebra:
+def riccati_f(X_m, q_v):
+    return v_sub(v_add(v_add(right_scale(q_v, dot(X_m[2], q_v)), right_scale(q_v, X_m[3])), left_scale(X_m[0], q_v)), X_m[1])
+delta_f = xi2_f
+ric_shift_f = riccati_f(X_obs_f, v_add(q_f, delta_f))
+ric_lin_f = v_add(v_add(left_scale(X_obs_f[0], delta_f), right_scale(delta_f, X_obs_f[3] + dot(X_obs_f[2], q_f))), right_scale(q_f, dot(X_obs_f[2], delta_f)))
+ric_quad_f = right_scale(delta_f, dot(X_obs_f[2], delta_f))
+assert ric_shift_f == v_add(v_add(riccati_f(X_obs_f, q_f), ric_lin_f), ric_quad_f)
+# 4-Spinor Cross-Difference Translation Invariance in FreeAlgebra:
+def spin_amp_f(v_p, w_p):
+    return z_mul((F(1), v_p, v_zero(), F(0)), (F(1), v_zero(), w_p, F(0)))
+cross_orig_f = z_sub(z_sub(spin_amp_f(q_f, xi1_f), spin_amp_f(q_f, xi2_f)), z_sub(spin_amp_f(xi2_f, xi1_f), spin_amp_f(xi2_f, xi2_f)))
+cross_shift_f = z_sub(
+    z_sub(spin_amp_f(v_add(q_f, delta_f), v_add(xi1_f, delta_f)), spin_amp_f(v_add(q_f, delta_f), v_add(xi2_f, delta_f))),
+    z_sub(spin_amp_f(v_add(xi2_f, delta_f), v_add(xi1_f, delta_f)), spin_amp_f(v_add(xi2_f, delta_f), v_add(xi2_f, delta_f)))
+)
+assert cross_orig_f == cross_shift_f
+# Archetypes XCVI-XCVIII: Operator-Twisted Nambu-Gorkov Cayley-Dickson Doubling & 5-Graded Spectral Projectors
+def cd_conj_f(z_p):
+    return (z_p[0], -z_p[1])
+def cd_mul_f(Om_el, z_p, w_p):
+    # For symmetric elements in FreeAlgebra (where star(x) = x, star(y) = y):
+    return (z_p[0] * w_p[0] + Om_el * (w_p[1] * z_p[1]), z_p[0] * w_p[1] + w_p[0] * z_p[1])
+E_cd_f = (F(0), F(1))
+Z_cd_f = (y1, z1)
+assert cd_mul_f(xi1, Z_cd_f, cd_conj_f(Z_cd_f)) == (y1 * y1 - xi1 * (z1 * z1), F(0))
+E2_cd_f = cd_mul_f(xi1, E_cd_f, E_cd_f)
+assert E2_cd_f == (xi1, F(0))
+assert cd_mul_f(xi1, E2_cd_f, E2_cd_f) == (xi1 * xi1, F(0))
+assert cd_mul_f(xi1, cd_mul_f(xi1, E_cd_f, (y1, F(0))), E_cd_f) == (xi1 * y1, F(0))
+def op_euler5_f(Z_m):
+    return (F(0), (-2 * Z_m[1][0], Z_m[1][1], Z_m[1][2]), (2 * Z_m[2][0], -Z_m[2][1], -Z_m[2][2]), F(0))
+def z_scale_f(k_s, Z_m):
+    return (k_s * Z_m[0], left_scale(k_s, Z_m[1]), left_scale(k_s, Z_m[2]), k_s * Z_m[3])
+D1_f = op_euler5_f(X_obs_f)
+D2_f = op_euler5_f(D1_f)
+D3_f = op_euler5_f(D2_f)
+D4_f = op_euler5_f(D3_f)
+D5_f = op_euler5_f(D4_f)
+assert z_add(z_sub(D4_f, z_scale_f(F(5), D2_f)), z_scale_f(F(4), X_obs_f)) == z_scale_f(F(4), grade_zero(X_obs_f[0], X_obs_f[3]))
+assert z_sub(D3_f, z_scale_f(F(4), D1_f)) == z_scale_f(F(-3), z_sub(grade_plus1(X_obs_f[1][1], X_obs_f[1][2]), (F(0), v_zero(), (F(0), X_obs_f[2][1], X_obs_f[2][2]), F(0))))
+assert z_sub(D3_f, D1_f) == z_scale_f(F(6), z_sub(grade_plus2(X_obs_f[2][0]), grade_minus2(X_obs_f[1][0])))
+assert z_add(z_sub(D5_f, z_scale_f(F(5), D3_f)), z_scale_f(F(4), D1_f)) == z_zero()
+# Archetypes XCIX-C: Noncommutative Cyclotomic Factorizations, OpCyclotomic3 Quotient Ring, & Z_6 Galois Automorphism Group:
+phi1_f = xi1 - F(1)
+phi2_f = xi1 + F(1)
+phi3_f = xi1 * xi1 + xi1 + F(1)
+phi4_f = xi1 * xi1 + F(1)
+phi6_f = xi1 * xi1 - xi1 + F(1)
+assert xi1^3 - F(1) == phi1_f * phi3_f and xi1^3 - F(1) == phi3_f * phi1_f
+assert xi1^3 + F(1) == phi2_f * phi6_f and xi1^3 + F(1) == phi6_f * phi2_f
+assert xi1^6 - F(1) == phi1_f * phi2_f * phi3_f * phi6_f
+def cyc3_mul_f(zp, wp):
+    return (zp[0]*wp[0] - zp[1]*wp[1], zp[0]*wp[1] + zp[1]*wp[0] - zp[1]*wp[1])
+def cyc3_gal_f(zp):
+    return (zp[0] - zp[1], -zp[1])
+def cyc6_mul_f(zp, wp):
+    return (zp[0]*wp[0] - zp[1]*wp[1], zp[0]*wp[1] + zp[1]*wp[0] + zp[1]*wp[1])
+def cyc6_gal_f(zp):
+    return (zp[0] + zp[1], -zp[1])
+def to_cyc3_f(zp):
+    return (zp[0] + zp[1], zp[1])
+assert cyc3_gal_f(cyc3_mul_f((y1, z1), (y2, z2))) == cyc3_mul_f(cyc3_gal_f((y1, z1)), cyc3_gal_f((y2, z2)))
+assert cyc6_gal_f(cyc6_mul_f((y1, z1), (y2, z2))) == cyc6_mul_f(cyc6_gal_f((y1, z1)), cyc6_gal_f((y2, z2)))
+assert to_cyc3_f(cyc6_mul_f((y1, z1), (y2, z2))) == cyc3_mul_f(to_cyc3_f((y1, z1)), to_cyc3_f((y2, z2)))
+def tri_v_f(vp):
+    return (vp[1], vp[2], vp[0])
+def gal_z3_f(Xm):
+    return (Xm[0], tri_v_f(Xm[1]), tri_v_f(Xm[2]), Xm[3])
+Y_obs_f = (y2, (xi2, y1, z1), (xi3, y2, z2), z2)
+assert gal_z3_f(z_mul(X_obs_f, Y_obs_f)) == z_mul(gal_z3_f(X_obs_f), gal_z3_f(Y_obs_f))
+assert gal_z3_f(gal_z3_f(gal_z3_f(X_obs_f))) == X_obs_f
+def z_riccati_f(Xm, qv):
+    return v_sub(v_sub(v_add(right_scale(qv, dot(Xm[2], qv)), right_scale(qv, Xm[3])), left_scale(Xm[0], qv)), Xm[1])
+assert tri_v_f(z_riccati_f(X_obs_f, q_f)) == z_riccati_f(gal_z3_f(X_obs_f), tri_v_f(q_f))
+# Archetypes CV-CVII: Noncommutative Galois Norm Commutator Anomaly & Z_3 Singlet Associativity:
+assert cyc3_mul_f((y1, z1), cyc3_gal_f((y1, z1))) == (y1*y1 - y1*z1 + z1*z1, z1*y1 - y1*z1)
+assert cyc6_mul_f((y1, z1), cyc6_gal_f((y1, z1))) == (y1*y1 + y1*z1 + z1*z1, z1*y1 - y1*z1)
+def z_singlet_f(a_s, c_s, d_s, b_s):
+    return (a_s, (c_s, c_s, c_s), (d_s, d_s, d_s), b_s)
+S1_f = z_singlet_f(y1, z1, xi1, y2)
+S2_f = z_singlet_f(z2, xi2, y3, z3)
+S3_f = z_singlet_f(xi3, y1, z2, xi1)
+assert z_assoc(S1_f, S2_f, S3_f) == z_zero()
+# Archetypes CVIII-CXIII: Signed Reflection Automorphism rho_refl, Dihedral S_3, Klein V_4, Octahedral S_4, & Triality Trio of 5-Gradings:
+def refl_v_f(vp):
+    return (-vp[0], -vp[2], -vp[1])
+def klein_x_v_f(vp):
+    return (vp[0], -vp[1], -vp[2])
+def klein_y_v_f(vp):
+    return (-vp[0], vp[1], -vp[2])
+def klein_z_v_f(vp):
+    return (-vp[0], -vp[1], vp[2])
+def refl_z_f(Xm):
+    return (Xm[0], refl_v_f(Xm[1]), refl_v_f(Xm[2]), Xm[3])
+def klein_x_z_f(Xm):
+    return (Xm[0], klein_x_v_f(Xm[1]), klein_x_v_f(Xm[2]), Xm[3])
+def klein_y_z_f(Xm):
+    return (Xm[0], klein_y_v_f(Xm[1]), klein_y_v_f(Xm[2]), Xm[3])
+def klein_z_z_f(Xm):
+    return (Xm[0], klein_z_v_f(Xm[1]), klein_z_v_f(Xm[2]), Xm[3])
+assert refl_z_f(z_mul(X_obs_f, Y_obs_f)) == z_mul(refl_z_f(X_obs_f), refl_z_f(Y_obs_f))
+assert refl_z_f(gal_z3_f(refl_z_f(X_obs_f))) == gal_z3_f(gal_z3_f(X_obs_f))
+assert refl_v_f(z_riccati_f(X_obs_f, q_f)) == z_riccati_f(refl_z_f(X_obs_f), refl_v_f(q_f))
+assert klein_x_z_f(z_mul(X_obs_f, Y_obs_f)) == z_mul(klein_x_z_f(X_obs_f), klein_x_z_f(Y_obs_f))
+assert klein_y_z_f(z_mul(X_obs_f, Y_obs_f)) == z_mul(klein_y_z_f(X_obs_f), klein_y_z_f(Y_obs_f))
+assert klein_z_z_f(z_mul(X_obs_f, Y_obs_f)) == z_mul(klein_z_z_f(X_obs_f), klein_z_z_f(Y_obs_f))
+assert refl_z_f(klein_y_z_f(refl_z_f(X_obs_f))) == klein_z_z_f(X_obs_f)
+def euler5_x_f(Xm):
+    return (F(0), (-F(2)*Xm[1][0], Xm[1][1], Xm[1][2]), (F(2)*Xm[2][0], -Xm[2][1], -Xm[2][2]), F(0))
+def euler5_y_f(Xm):
+    return (F(0), (Xm[1][0], -F(2)*Xm[1][1], Xm[1][2]), (-Xm[2][0], F(2)*Xm[2][1], -Xm[2][2]), F(0))
+def euler5_z_f(Xm):
+    return (F(0), (Xm[1][0], Xm[1][1], -F(2)*Xm[1][2]), (-Xm[2][0], -Xm[2][1], F(2)*Xm[2][2]), F(0))
+assert z_add(z_add(euler5_x_f(X_obs_f), euler5_y_f(X_obs_f)), euler5_z_f(X_obs_f)) == z_zero()
+# Archetypes CXIV-CXVI: Quaternion Spin Group Q_8 ->> V_4 Double Cover, Internal Zorn Spinors S_a^2 = -1, & Spin Sector Fusion:
+def quat_mul_f(p, q):
+    return (p[0]*q[0] - p[1]*q[1] - p[2]*q[2] - p[3]*q[3],
+            p[0]*q[1] + p[1]*q[0] + p[2]*q[3] - p[3]*q[2],
+            p[0]*q[2] - p[1]*q[3] + p[2]*q[0] + p[3]*q[1],
+            p[0]*q[3] + p[1]*q[2] - p[2]*q[1] + p[3]*q[0])
+def quat_conj_f(p):
+    return (p[0], -p[1], -p[2], -p[3])
+def quat_sandwich_f(sq, vp):
+    return quat_mul_f(quat_mul_f(sq, (F(0), vp[0], vp[1], vp[2])), quat_conj_f(sq))
+q_i_f = (F(0), F(1), F(0), F(0))
+q_j_f = (F(0), F(0), F(1), F(0))
+q_k_f = (F(0), F(0), F(0), F(1))
+assert quat_sandwich_f(q_i_f, q_f) == (F(0), klein_x_v_f(q_f)[0], klein_x_v_f(q_f)[1], klein_x_v_f(q_f)[2])
+assert quat_sandwich_f((-F(0), -F(1), F(0), F(0)), q_f) == (F(0), klein_x_v_f(q_f)[0], klein_x_v_f(q_f)[1], klein_x_v_f(q_f)[2])
+assert quat_sandwich_f(q_j_f, q_f) == (F(0), klein_y_v_f(q_f)[0], klein_y_v_f(q_f)[1], klein_y_v_f(q_f)[2])
+assert quat_sandwich_f(q_k_f, q_f) == (F(0), klein_z_v_f(q_f)[0], klein_z_v_f(q_f)[1], klein_z_v_f(q_f)[2])
+S_spin_x_f = (F(0), (F(1), F(0), F(0)), (F(1), F(0), F(0)), F(0))
+assert z_mul(S_spin_x_f, S_spin_x_f) == (-F(1), (F(0), F(0), F(0)), (F(0), F(0), F(0)), -F(1))
+def spin_proj_x_f(Xm):
+    return z_sub(z_sub(z_add(Xm, klein_x_z_f(Xm)), klein_y_z_f(Xm)), klein_z_z_f(Xm))
+def spin_proj_y_f(Xm):
+    return z_sub(z_add(z_sub(Xm, klein_x_z_f(Xm)), klein_y_z_f(Xm)), klein_z_z_f(Xm))
+def spin_proj_z_f(Xm):
+    return z_add(z_sub(z_sub(Xm, klein_x_z_f(Xm)), klein_y_z_f(Xm)), klein_z_z_f(Xm))
+assert spin_proj_x_f(spin_proj_y_f(X_obs_f)) == z_zero()
+prod_xy_f = z_mul(spin_proj_x_f(X_obs_f), spin_proj_y_f(Y_obs_f))
+assert spin_proj_x_f(prod_xy_f) == z_zero() and spin_proj_y_f(prod_xy_f) == z_zero()
+def quat_sub_x_f(aq, vxq, wxq, bq):
+    return (aq, (vxq, F(0), F(0)), (wxq, F(0), F(0)), bq)
+def quat_sub_y_f(aq, vyq, wyq, bq):
+    return (aq, (F(0), vyq, F(0)), (F(0), wyq, F(0)), bq)
+def quat_sub_z_f(aq, vzq, wzq, bq):
+    return (aq, (F(0), F(0), vzq), (F(0), F(0), wzq), bq)
+assert z_assoc(quat_sub_y_f(y1, z1, xi1, y2), quat_sub_y_f(z2, xi2, y3, z3), quat_sub_y_f(xi3, y1, z2, xi1)) == z_zero()
+assert z_assoc(quat_sub_z_f(y1, z1, xi1, y2), quat_sub_z_f(z2, xi2, y3, z3), quat_sub_z_f(xi3, y1, z2, xi1)) == z_zero()
+assert gal_z3_f(quat_sub_x_f(y1, z1, xi1, y2)) == quat_sub_z_f(y1, z1, xi1, y2)
+assert z_riccati_f(quat_sub_x_f(y1, z1, xi1, y2), (xi2, F(0), F(0))) == (xi2*xi1*xi2 + xi2*y2 - y1*xi2 - z1, F(0), F(0))
+print("[PASS] FreeAlgebra & PolynomialRing: Archetypes XC-CXIX (56D Freudenthal E_7 Euler Trace Identity, Inductive Colimit Doublet Tower, Zorn-Riccati Taylor Shift, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio of 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), & Riccati Axis Decoupling)")
+
 print("======================================================================")
 print("ALL CHECKS PASSED")
 print("======================================================================")

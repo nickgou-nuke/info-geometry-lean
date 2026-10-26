@@ -13,8 +13,8 @@ namespace InfoGeometry.MassSpectrometry.SignatureIdentification
 open SignatureGeometry
 
 variable {E F Candidate Condition : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [CompleteSpace E]
-variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F] [CompleteSpace F]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 def signatureModel (O : Condition → E →L[ℝ] F) (state : Candidate → E) :
     MultiEnergyForwardModel Candidate Condition F where

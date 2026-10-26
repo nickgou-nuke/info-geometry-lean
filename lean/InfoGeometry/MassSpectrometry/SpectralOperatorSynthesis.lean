@@ -16,7 +16,7 @@ open FragmentObservability SignatureGeometry SignatureCyclotomic
 open InfoGeometry.Algebra.RankedMatrixPowers
 open InfoGeometry.Core.DiracSuperalgebra
 
-variable {n : ℕ} {J : Type*} [Fintype J] [DecidableEq J] {D : FragmentationDAG n}
+variable {n : ℕ} {J : Type*} [Fintype J] {D : FragmentationDAG n}
 
 def signature (G : StochasticGrammar D) (C : Matrix J (Fin n) ℝ) :=
   historyMap G.transientMatrix C (rankHorizon D.rank)

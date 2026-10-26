@@ -158,6 +158,28 @@ theorem same_signature_iff_visible (O : E →L[ℝ] F) (x y : E) :
   · intro h
     simpa only [visible_preserves_signature] using congrArg O h
 
+/-- The Gram itself determines the same observable metric projector. -/
+theorem visible_eq_gram_visible (O : E →L[ℝ] F) : visible O = visible (gram O) := by
+  have hPQ : visible O * visible (gram O) = visible O := by
+    apply ContinuousLinearMap.ext
+    intro x
+    have h0 := (visible_gram_kernel O (invisible (gram O) x)).mpr
+      (invisible_signature_zero (gram O) x)
+    change visible O (x - visible (gram O) x) = 0 at h0
+    rw [map_sub, sub_eq_zero] at h0
+    exact h0.symm
+  have hQP : visible (gram O) * visible O = visible (gram O) := by
+    apply ContinuousLinearMap.ext
+    intro x
+    have h0 := (visible_zero_iff (gram O) (invisible O x)).mpr
+      ((gram_zero_iff O (invisible O x)).mpr (invisible_signature_zero O x))
+    change visible (gram O) (x - visible O x) = 0 at h0
+    rw [map_sub, sub_eq_zero] at h0
+    exact h0.symm
+  have hs : visible (gram O) * visible O = visible O := by
+    simpa only [star_mul, visible_selfAdjoint] using congrArg star hPQ
+  exact hs.symm.trans hQP
+
 /-- Drazin/MP coincidence is justified for the self-adjoint Gram, not for K. -/
 theorem gram_inverse_drazin (O : E →L[ℝ] F) :
     IsDrazinInverse (gram O) (inverse (gram O)) 1 := by

@@ -15,7 +15,7 @@ open scoped BigOperators Matrix
 open SignatureGeometry
 open InfoGeometry.Canonical.FiniteSteinInverse
 
-variable {ι J : Type*} [Fintype ι] [DecidableEq ι] [Fintype J] [DecidableEq J]
+variable {ι J : Type*} [Fintype ι] [Fintype J]
 
 /-- Native finite Euclidean realization, with no custom inner-product carrier. -/
 def matrixMap (C : Matrix J ι ℝ) : EuclideanSpace ℝ ι →L[ℝ] EuclideanSpace ℝ J :=
@@ -25,7 +25,7 @@ def matrixMap (C : Matrix J ι ℝ) : EuclideanSpace ℝ ι →L[ℝ] EuclideanS
 @[simp] theorem matrixMap_apply (C : Matrix J ι ℝ) (x : EuclideanSpace ℝ ι) (j : J) :
     matrixMap C x j = ∑ i, C j i * x i := rfl
 
-theorem matrixMap_mul {κ : Type*} [Fintype κ] [DecidableEq κ]
+theorem matrixMap_mul {κ : Type*} [Fintype κ]
     (C : Matrix J ι ℝ) (K : Matrix ι κ ℝ) :
     matrixMap (C*K) = (matrixMap C).comp (matrixMap K) := by
   ext x j
@@ -34,7 +34,8 @@ theorem matrixMap_mul {κ : Type*} [Fintype κ] [DecidableEq κ]
 /-- The Euclidean adjoint is exactly matrix transposition on this real carrier. -/
 theorem matrixMap_transpose (C : Matrix J ι ℝ) :
     matrixMap C.transpose = (matrixMap C).adjoint := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
   apply ext_inner_right ℝ
   intro y
   rw [ContinuousLinearMap.adjoint_inner_left]
@@ -51,6 +52,8 @@ theorem matrixMap_gram (C : Matrix J ι ℝ) :
     matrixMap (C.transpose*C) = gram (matrixMap C) := by
   rw [matrixMap_mul, matrixMap_transpose]
   rfl
+
+variable [DecidableEq ι]
 
 /-- One row for each time/channel pair. -/
 def historyMatrix (K : Matrix ι ι ℝ) (C : Matrix J ι ℝ) (N : ℕ) :
@@ -72,12 +75,12 @@ theorem historyGram_eq_finiteStein (K : Matrix ι ι ℝ) (C : Matrix J ι ℝ) 
   have ht (k : ℕ) : (C*K^k).transpose*(C*K^k) =
       K.transpose^k*(C.transpose*C)*K^k := by
     rw [Matrix.transpose_mul, Matrix.transpose_pow]
-    simp only [mul_assoc]
+    simp only [Matrix.mul_assoc]
   calc
     historyGram K C N = ∑ t : Fin N, (C*K^t.val).transpose*(C*K^t.val) := by
       ext i j
-      simp [historyGram, historyMatrix, Matrix.mul_apply, Matrix.sum_apply,
-        Fintype.sum_prod_type]
+      simp only [historyGram, historyMatrix, Matrix.mul_apply, Matrix.transpose_apply,
+        Matrix.sum_apply, Fintype.sum_prod_type]
     _ = ∑ t : Fin N, K.transpose^t.val*(C.transpose*C)*K^t.val := by
       apply Finset.sum_congr rfl
       intro t _
@@ -106,6 +109,35 @@ theorem historyGram_stein_unique (K : Matrix ι ι ℝ) (C : Matrix J ι ℝ)
 /-- Same dynamics but different readouts: no positivity claim for the cross term. -/
 def historyCrossGram (K : Matrix ι ι ℝ) (C D : Matrix J ι ℝ) (N : ℕ) :
     Matrix ι ι ℝ := finiteStein K.transpose K (C.transpose*D) N
+
+/-- The finite cross-Stein sum is the actual cross-correlation of two histories. -/
+theorem historyCrossGram_as_correlation (K : Matrix ι ι ℝ) (C D : Matrix J ι ℝ)
+    (N : ℕ) :
+    (historyMatrix K C N).transpose * historyMatrix K D N = historyCrossGram K C D N := by
+  have ht (k : ℕ) : (C*K^k).transpose*(D*K^k) =
+      K.transpose^k*(C.transpose*D)*K^k := by
+    rw [Matrix.transpose_mul, Matrix.transpose_pow]
+    simp only [Matrix.mul_assoc]
+  calc
+    (historyMatrix K C N).transpose * historyMatrix K D N =
+        ∑ t : Fin N, (C*K^t.val).transpose*(D*K^t.val) := by
+      ext i j
+      simp only [historyMatrix, Matrix.mul_apply, Matrix.transpose_apply,
+        Matrix.sum_apply, Fintype.sum_prod_type]
+    _ = ∑ t : Fin N, K.transpose^t.val*(C.transpose*D)*K^t.val := by
+      apply Finset.sum_congr rfl
+      intro t _
+      exact ht t.val
+    _ = historyCrossGram K C D N := by
+      simpa [historyCrossGram, finiteStein] using
+        (Fin.sum_univ_eq_sum_range (fun k => K.transpose^k*(C.transpose*D)*K^k) N)
+
+theorem historyCrossGram_realization (K : Matrix ι ι ℝ) (C D : Matrix J ι ℝ)
+    (N : ℕ) :
+    matrixMap (historyCrossGram K C D N) =
+      crossGram (historyMap K C N) (historyMap K D N) := by
+  rw [← historyCrossGram_as_correlation, matrixMap_mul, matrixMap_transpose]
+  rfl
 
 theorem historyCrossGram_stein (K : Matrix ι ι ℝ) (C D : Matrix J ι ℝ)
     (N : ℕ) (hN : K^N=0) :

@@ -23,10 +23,12 @@ variable {A : Type*} [Ring A] [StarRing A]
 def raise (P : A) : Matrix (Fin 2) (Fin 2) A := !![0, P; 0, 0]
 def lower (P : A) : Matrix (Fin 2) (Fin 2) A := !![0, 0; P, 0]
 
+omit [StarRing A] in
 theorem raise_square_zero (P : A) : raise P * raise P = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [raise, Matrix.mul_apply, Fin.sum_univ_two]
 
+omit [StarRing A] in
 theorem lower_square_zero (P : A) : lower P * lower P = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [lower, Matrix.mul_apply, Fin.sum_univ_two]
@@ -48,14 +50,15 @@ theorem doubled_mp_pair (P : A) (hp : P*P=P) (hs : star P=P) :
     fin_cases i <;> fin_cases j <;>
       simp [raise, lower, Matrix.conjTranspose_apply, Matrix.mul_apply, Fin.sum_univ_two, hp, hs]
 
+omit [StarRing A] in
 theorem doubled_support (P : A) (hp : P*P=P) :
     activeSupport (raise P) (lower P) = !![P, 0; 0, P] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [activeSupport, exactSupport, coexactSupport, raise, lower,
-      Matrix.mul_apply, Fin.sum_univ_two, hp]
+    simp [activeSupport, exactSupport, coexactSupport, raise, lower, hp]
 
 /-- A nilpotent in a nontrivial ring cannot itself be a unit. -/
+omit [StarRing A] in
 theorem nilpotent_not_unit [Nontrivial A] (a : A) (N : ℕ) (h : a^N=0) : ¬ IsUnit a := by
   intro hu
   have hn := hu.pow N
@@ -66,7 +69,7 @@ end Algebra
 
 variable {E F : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [CompleteSpace E]
-variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F] [CompleteSpace F]
+variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 def signatureRaise (O : E →L[ℝ] F) := raise (visible O)
 def signatureLower (O : E →L[ℝ] F) := lower (visible O)

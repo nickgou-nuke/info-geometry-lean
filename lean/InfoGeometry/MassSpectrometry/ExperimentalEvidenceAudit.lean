@@ -21,7 +21,7 @@ theorem mz_order_is_not_neutral_mass_order :
 
 theorem rational_peak_checker_accepts :
     (RationalPeakRecord.mk (101 / 2) (7 / 3)).check = true := by
-  apply RationalPeakRecord.check_iff.mpr
+  apply (RationalPeakRecord.check_iff _).mpr
   norm_num [RationalPeakRecord.Valid]
 
 theorem rational_peak_checker_rejects_zero_mz :

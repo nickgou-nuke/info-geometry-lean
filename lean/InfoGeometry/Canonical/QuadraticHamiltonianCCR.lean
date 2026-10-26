@@ -101,8 +101,8 @@ def K2 (q p : A) : A := (1 / 4 : ℂ) • H2 q p
 
 def K3 (q p : A) : A := (-1 / 4 : ℂ) • H0 q p
 
-/-- The three scaled Lie relations (5.3), without an adjoint or spectrum claim. -/
 include hqp in
+/-- The three scaled Lie relations (5.3), without an adjoint or spectrum claim. -/
 theorem su11_relations :
     ⁅K1 q p, K2 q p⁆ = (-Complex.I) • K3 q p ∧
     ⁅K2 q p, K3 q p⁆ = Complex.I • K1 q p ∧

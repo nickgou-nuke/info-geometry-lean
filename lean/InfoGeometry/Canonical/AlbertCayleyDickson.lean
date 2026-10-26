@@ -7916,12 +7916,11 @@ structure OpCayleyDickson (A : Type*) where
   y : A
   deriving DecidableEq, Inhabited
 
-instance : Zero (OpCayleyDickson A) := ⟨⟨0, 0⟩⟩
-instance : One (OpCayleyDickson A) := ⟨⟨1, 0⟩⟩
-instance : Inhabited (OpCayleyDickson A) := ⟨0⟩
-instance : Add (OpCayleyDickson A) := ⟨fun z w => ⟨z.x + w.x, z.y + w.y⟩⟩
-instance : Sub (OpCayleyDickson A) := ⟨fun z w => ⟨z.x - w.x, z.y - w.y⟩⟩
-instance : Neg (OpCayleyDickson A) := ⟨fun z => ⟨-z.x, -z.y⟩⟩
+instance instZeroOpCayleyDickson : Zero (OpCayleyDickson A) := ⟨⟨0, 0⟩⟩
+instance instOneOpCayleyDickson : One (OpCayleyDickson A) := ⟨⟨1, 0⟩⟩
+instance instAddOpCayleyDickson : Add (OpCayleyDickson A) := ⟨fun z w => ⟨z.x + w.x, z.y + w.y⟩⟩
+instance instSubOpCayleyDickson : Sub (OpCayleyDickson A) := ⟨fun z w => ⟨z.x - w.x, z.y - w.y⟩⟩
+instance instNegOpCayleyDickson : Neg (OpCayleyDickson A) := ⟨fun z => ⟨-z.x, -z.y⟩⟩
 
 @[simp] lemma OpCayleyDickson.zero_x : (0 : OpCayleyDickson A).x = 0 := rfl
 @[simp] lemma OpCayleyDickson.zero_y : (0 : OpCayleyDickson A).y = 0 := rfl
@@ -8163,13 +8162,12 @@ structure OpCyclotomic3 (A : Type*) where
 
 namespace OpCyclotomic3
 
-instance : Zero (OpCyclotomic3 A) := ⟨⟨0, 0⟩⟩
-instance : One (OpCyclotomic3 A) := ⟨⟨1, 0⟩⟩
-instance : Inhabited (OpCyclotomic3 A) := ⟨0⟩
-instance : Add (OpCyclotomic3 A) := ⟨fun x y => ⟨x.c0 + y.c0, x.c1 + y.c1⟩⟩
-instance : Neg (OpCyclotomic3 A) := ⟨fun x => ⟨-x.c0, -x.c1⟩⟩
-instance : Sub (OpCyclotomic3 A) := ⟨fun x y => ⟨x.c0 - y.c0, x.c1 - y.c1⟩⟩
-instance : Mul (OpCyclotomic3 A) :=
+instance instZero : Zero (OpCyclotomic3 A) := ⟨⟨0, 0⟩⟩
+instance instOne : One (OpCyclotomic3 A) := ⟨⟨1, 0⟩⟩
+instance instAdd : Add (OpCyclotomic3 A) := ⟨fun x y => ⟨x.c0 + y.c0, x.c1 + y.c1⟩⟩
+instance instNeg : Neg (OpCyclotomic3 A) := ⟨fun x => ⟨-x.c0, -x.c1⟩⟩
+instance instSub : Sub (OpCyclotomic3 A) := ⟨fun x y => ⟨x.c0 - y.c0, x.c1 - y.c1⟩⟩
+instance instMul : Mul (OpCyclotomic3 A) :=
   ⟨fun x y => ⟨x.c0 * y.c0 - x.c1 * y.c1, x.c0 * y.c1 + x.c1 * y.c0 - x.c1 * y.c1⟩⟩
 
 @[simp] theorem zero_c0 : (0 : OpCyclotomic3 A).c0 = 0 := rfl
@@ -8364,13 +8362,12 @@ structure OpCyclotomic6 (A : Type*) where
 
 namespace OpCyclotomic6
 
-instance : Zero (OpCyclotomic6 A) := ⟨⟨0, 0⟩⟩
-instance : One (OpCyclotomic6 A) := ⟨⟨1, 0⟩⟩
-instance : Inhabited (OpCyclotomic6 A) := ⟨0⟩
-instance : Add (OpCyclotomic6 A) := ⟨fun x y => ⟨x.c0 + y.c0, x.c1 + y.c1⟩⟩
-instance : Neg (OpCyclotomic6 A) := ⟨fun x => ⟨-x.c0, -x.c1⟩⟩
-instance : Sub (OpCyclotomic6 A) := ⟨fun x y => ⟨x.c0 - y.c0, x.c1 - y.c1⟩⟩
-instance : Mul (OpCyclotomic6 A) :=
+instance instZero : Zero (OpCyclotomic6 A) := ⟨⟨0, 0⟩⟩
+instance instOne : One (OpCyclotomic6 A) := ⟨⟨1, 0⟩⟩
+instance instAdd : Add (OpCyclotomic6 A) := ⟨fun x y => ⟨x.c0 + y.c0, x.c1 + y.c1⟩⟩
+instance instNeg : Neg (OpCyclotomic6 A) := ⟨fun x => ⟨-x.c0, -x.c1⟩⟩
+instance instSub : Sub (OpCyclotomic6 A) := ⟨fun x y => ⟨x.c0 - y.c0, x.c1 - y.c1⟩⟩
+instance instMul : Mul (OpCyclotomic6 A) :=
   ⟨fun x y => ⟨x.c0 * y.c0 - x.c1 * y.c1, x.c0 * y.c1 + x.c1 * y.c0 + x.c1 * y.c1⟩⟩
 
 @[simp] theorem zero_c0 : (0 : OpCyclotomic6 A).c0 = 0 := rfl
@@ -8747,13 +8744,12 @@ structure OpQuaternion (A : Type*) where
 
 namespace OpQuaternion
 
-instance : Zero (OpQuaternion A) := ⟨⟨0, 0, 0, 0⟩⟩
-instance : One (OpQuaternion A) := ⟨⟨1, 0, 0, 0⟩⟩
-instance : Inhabited (OpQuaternion A) := ⟨0⟩
-instance : Add (OpQuaternion A) := ⟨fun p q => ⟨p.w + q.w, p.x + q.x, p.y + q.y, p.z + q.z⟩⟩
-instance : Sub (OpQuaternion A) := ⟨fun p q => ⟨p.w - q.w, p.x - q.x, p.y - q.y, p.z - q.z⟩⟩
-instance : Neg (OpQuaternion A) := ⟨fun p => ⟨-p.w, -p.x, -p.y, -p.z⟩⟩
-instance : Mul (OpQuaternion A) := ⟨fun p q =>
+instance instZero : Zero (OpQuaternion A) := ⟨⟨0, 0, 0, 0⟩⟩
+instance instOne : One (OpQuaternion A) := ⟨⟨1, 0, 0, 0⟩⟩
+instance instAdd : Add (OpQuaternion A) := ⟨fun p q => ⟨p.w + q.w, p.x + q.x, p.y + q.y, p.z + q.z⟩⟩
+instance instSub : Sub (OpQuaternion A) := ⟨fun p q => ⟨p.w - q.w, p.x - q.x, p.y - q.y, p.z - q.z⟩⟩
+instance instNeg : Neg (OpQuaternion A) := ⟨fun p => ⟨-p.w, -p.x, -p.y, -p.z⟩⟩
+instance instMul : Mul (OpQuaternion A) := ⟨fun p q =>
   ⟨p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z,
    p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y,
    p.w * q.y - p.x * q.z + p.y * q.w + p.z * q.x,

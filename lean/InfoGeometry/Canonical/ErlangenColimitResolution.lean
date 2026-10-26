@@ -27,7 +27,7 @@ class CausalPreorder (A : Type*) [Ring A] extends Preorder A where
   add_le_add_left : ∀ a b : A, a ≤ b → ∀ c : A, c + a ≤ c + b
 
 /-- Canonical discrete equality `CausalPreorder` inhabitant on any ring `A`. -/
-instance {A : Type*} [Ring A] : Inhabited (CausalPreorder A) :=
+instance instInhabitedCausalPreorder {A : Type*} [Ring A] : Inhabited (CausalPreorder A) :=
   ⟨{ le := (· = ·)
      le_refl := fun _ => rfl
      le_trans := fun _ _ _ hab hbc => hab.trans hbc
@@ -51,7 +51,7 @@ def trivialSupergradedClosure (A : Type*) [Ring A] : SupergradedClosureAt A wher
   projector_identity := ⟨0, trivial, mul_zero 0⟩
 
 /-- Canonical identity `CausalBondingIntertwiner` inhabitant. -/
-instance {A : Type*} [Ring A] [CausalPreorder A] :
+instance instInhabitedCausalBondingIntertwiner {A : Type*} [Ring A] [CausalPreorder A] :
     Inhabited (CausalBondingIntertwiner (trivialSupergradedClosure A) (trivialSupergradedClosure A)) :=
   ⟨{ map := RingHom.id A
      preserves_odd := fun _ hx => hx

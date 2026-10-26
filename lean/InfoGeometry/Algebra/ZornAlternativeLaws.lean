@@ -8035,9 +8035,7 @@ structure E8ContactNilradical (R : Type*) where
   ξ : R
   deriving DecidableEq, Inhabited
 
-instance : Zero (E8ContactNilradical R) := ⟨⟨0, 0, 0, 0, 0⟩⟩
-
-instance : Inhabited (E8ContactNilradical R) := ⟨0⟩
+instance instZeroE8ContactNilradical : Zero (E8ContactNilradical R) := ⟨⟨0, 0, 0, 0, 0⟩⟩
 
 @[simp] theorem E8ContactNilradical.zero_def :
     (0 : E8ContactNilradical R) = ⟨0, 0, 0, 0, 0⟩ := rfl
@@ -8045,7 +8043,7 @@ instance : Inhabited (E8ContactNilradical R) := ⟨0⟩
 /-- Step-2 Heisenberg-Contact multiplication on $\mathcal{N}_{E_8}$:
     Grade $+1 \times$ Grade $+1 \to$ Grade $+2$ via `freudenthal56SymplecticForm`,
     while Grade $+1 \times$ Grade $+2 = 0$ and Grade $+2 \times$ Grade $+2 = 0$. -/
-instance : Mul (E8ContactNilradical R) :=
+instance instMulE8ContactNilradical : Mul (E8ContactNilradical R) :=
   ⟨fun N₁ N₂ =>
     ⟨0, 0, 0, 0,
      freudenthal56SymplecticForm N₁.α N₁.β N₂.α N₂.β (N₁.t_X * N₂.t_Y) (N₂.t_X * N₁.t_Y)⟩⟩

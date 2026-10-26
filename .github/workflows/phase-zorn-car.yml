@@ -62,4 +62,5 @@ jobs:
             verification/**/*.log
             verification/**/*.json
             verification/**/*.txt
-            verification/src
+            verification/core/src
+            verification/integration/src

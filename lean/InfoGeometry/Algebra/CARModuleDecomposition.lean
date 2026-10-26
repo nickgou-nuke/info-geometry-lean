@@ -66,12 +66,13 @@ def splitEquiv : (C.ann.ker × C.ann.ker) ≃ₗ[K] V where
 theorem ann_split (x y : C.ann.ker) :
     C.ann (splitEquiv C (x,y)) = splitEquiv C (0,x) := by
   have hy : C.ann (y : V) = 0 := y.property
-  simp only [splitEquiv_apply, map_add, ann_cre_kernel, hy, map_zero, add_zero, zero_add]
+  simp only [splitEquiv_apply, Submodule.coe_zero, map_add, ann_cre_kernel, hy,
+    map_zero, add_zero, zero_add]
 
 /-- Upper block action is the supplied creation. -/
 theorem cre_split (x y : C.ann.ker) :
     C.cre (splitEquiv C (x,y)) = splitEquiv C (y,0) := by
-  simp only [splitEquiv_apply, map_add, cre_cre, zero_add, add_zero]
+  simp only [splitEquiv_apply, Submodule.coe_zero, map_add, cre_cre, zero_add, add_zero]
 
 /-- Dimension is derived from the CAR equations, not assumed. -/
 theorem finrank_twice_kernel [FiniteDimensional K V] :

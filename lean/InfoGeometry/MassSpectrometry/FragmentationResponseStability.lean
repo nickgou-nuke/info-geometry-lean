@@ -122,7 +122,7 @@ def response_uniformErrorBound (G : StochasticGrammar D) (H : StochasticGrammar 
             ‖G.transientMatrix - H.transientMatrix‖) * ‖g.1‖ :=
         G.response_difference_norm_le H g.1
       _ ≤ ((rankHorizon D.rank : ℝ) * (rankHorizon E.rank : ℝ) * (δ : ℝ)) * (C : ℝ) := by
-        gcongr <;> first | exact hδ | exact g.2
+        gcongr; first | exact hδ | exact g.2
       _ = _ := by simp
 
 end StochasticGrammar

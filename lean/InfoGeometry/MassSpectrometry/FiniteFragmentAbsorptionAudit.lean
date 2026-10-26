@@ -25,11 +25,13 @@ def chainGrammar : StochasticGrammar chainDAG where
   weight_nonneg := by intro u v; split_ifs <;> norm_num
   support := by
     intro u v h
+    change u.val = v.val + 1
     by_contra hn
-    exact h (if_neg hn)
+    simp [hn] at h
   row_sum_le_one := by
     intro u
-    fin_cases u <;> norm_num [Fin.sum_univ_succ]
+    simp only [Fin.sum_univ_succ]
+    fin_cases u <;> norm_num
 
 theorem chain_transient_cube : chainGrammar.transientMatrix ^ 3 = 0 :=
   chainGrammar.transient_pow_eq_zero_of_rank_bound 3 (fun u => u.isLt)
@@ -54,10 +56,12 @@ theorem chain_fundamental_explicit :
     chain_transient_cube
   change finiteGreen chainGrammar.transientMatrix (rankHorizon chainDAG.rank) = _
   rw [h]
+  simp only [finiteGreen, Finset.sum_range_succ, Finset.sum_range_zero,
+    pow_zero, pow_one, pow_two, zero_add]
   ext i j
+  simp only [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_succ]
   fin_cases i <;> fin_cases j <;>
-    norm_num [finiteGreen, StochasticGrammar.transientMatrix, chainGrammar,
-      Finset.sum_range_succ, pow_succ, Matrix.mul_apply, Fin.sum_univ_succ]
+    norm_num [StochasticGrammar.transientMatrix, chainGrammar]
 
 theorem chain_occupancy_explicit : chainGrammar.occupancyPotential = ![1, 2, 3] := by
   rw [StochasticGrammar.occupancyPotential, chain_fundamental_explicit]

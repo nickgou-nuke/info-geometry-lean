@@ -58,6 +58,7 @@ noncomputable def IonInterpretation.chargeMagnitude (c : IonInterpretation) : �
 theorem IonInterpretation.chargeMagnitude_pos (c : IonInterpretation) :
     0 < c.chargeMagnitude := by
   have h : 0 < c.charge.natAbs := Int.natAbs_pos.mpr c.charge_ne_zero
+  change 0 < (c.charge.natAbs : ℝ)
   exact_mod_cast h
 
 noncomputable def IonInterpretation.neutralMass (c : IonInterpretation) (mz : ℝ) : ℝ :=
@@ -71,20 +72,27 @@ theorem IonInterpretation.neutralMass_mz_roundTrip (c : IonInterpretation) (m : 
   have hz := ne_of_gt c.chargeMagnitude_pos
   dsimp [IonInterpretation.neutralMass, IonInterpretation.mzOfNeutralMass]
   field_simp [hz]
-  <;> ring
+  ring
 
 theorem IonInterpretation.mz_neutralMass_roundTrip (c : IonInterpretation) (mz : ℝ) :
     c.mzOfNeutralMass (c.neutralMass mz) = mz := by
   have hz := ne_of_gt c.chargeMagnitude_pos
   dsimp [IonInterpretation.neutralMass, IonInterpretation.mzOfNeutralMass]
   field_simp [hz]
-  <;> ring
+  ring
 
 /-- Under one fixed charge/offset convention, the mass map preserves strict order. -/
 theorem IonInterpretation.neutralMass_lt_iff (c : IonInterpretation) (x y : ℝ) :
     c.neutralMass x < c.neutralMass y ↔ x < y := by
   simp only [IonInterpretation.neutralMass, sub_lt_sub_iff_right]
-  exact mul_lt_mul_left c.chargeMagnitude_pos
+  have hc := c.chargeMagnitude_pos
+  constructor
+  · intro h
+    by_contra hxy
+    have hmul := mul_le_mul_of_nonneg_left (le_of_not_gt hxy) hc.le
+    exact (not_lt_of_ge hmul) h
+  · intro h
+    exact mul_lt_mul_of_pos_left h hc
 
 /-- Interpret the stored positive coordinate as m/z, with a certified positive
 neutral-mass result. Intensity is unchanged. -/

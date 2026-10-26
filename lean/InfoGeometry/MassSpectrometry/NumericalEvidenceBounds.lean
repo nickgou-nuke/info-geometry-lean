@@ -10,6 +10,7 @@ No tolerance test is promoted into a universal proof. Native metric and
 Lipschitz APIs provide composition and observation error accounting.
 -/
 
+noncomputable section
 namespace InfoGeometry.MassSpectrometry.NumericalEvidence
 
 /-- Uniform certified deviation from a specified map. -/

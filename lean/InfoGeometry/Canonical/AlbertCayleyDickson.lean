@@ -9066,7 +9066,20 @@ theorem zorn_connes_vacuum_idempotent_derivation_and_curvature_collapse
   · rw [h_curv]
     simp [opZornTrace, opZornGamma, opCartanDiag, OpVec3.dot]
     abel
-  · rw [h_der]
+  · have h_der1 : opCommutator E_plus D = ⟨0, D.v, -D.w, 0⟩ := by
+      ext <;>
+      (simp [opCommutator, E_plus, opCartanDiag,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try abel)
+    have h_der2 : opCommutator E_plus (opCommutator E_plus D) = ⟨0, D.v, D.w, 0⟩ := by
+      rw [h_der1]
+      ext <;>
+      (simp [opCommutator, E_plus, opCartanDiag,
+             OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+             OpVec3.leftScale, OpVec3.rightScale];
+       try abel)
+    rw [h_der2, h_der]
     ext <;>
     (simp [opCommutator, E_plus, opCartanDiag,
            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
@@ -9541,6 +9554,793 @@ theorem matrix_connes_cocycle_global_inner_gauge_and_master_invariance
     (matrix_connes_cocycle_horizontal_adiabatic_and_infinitesimal_invariance A D P D hP).2.2.1
   refine ⟨h_idem_gauge, h_comm_gauge D, h_dens_gauge D, h_cocyc_gauge D, ?_⟩
   rw [h_cocyc_gauge (D + P * A * P), h_adiab]
+
+/-- A 0-cochain on the non-commutative matrix algebra $\mathrm{Matrix}\;n\;n\;R$. -/
+abbrev MatCochain0 (n R : Type*) := Matrix n n R → R
+
+/-- A 1-cochain on the non-commutative matrix algebra $\mathrm{Matrix}\;n\;n\;R$. -/
+abbrev MatCochain1 (n R : Type*) := Matrix n n R → Matrix n n R → R
+
+/-- A 2-cochain on the non-commutative matrix algebra $\mathrm{Matrix}\;n\;n\;R$. -/
+abbrev MatCochain2 (n R : Type*) := Matrix n n R → Matrix n n R → Matrix n n R → R
+
+/-- A 3-cochain on the non-commutative matrix algebra $\mathrm{Matrix}\;n\;n\;R$. -/
+abbrev MatCochain3 (n R : Type*) :=
+  Matrix n n R → Matrix n n R → Matrix n n R → Matrix n n R → R
+
+/-- Hochschild coboundary operator $b_0 : C^0(M_n(R)) \to C^1(M_n(R))$. -/
+def matHochschildB0 {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (φ : MatCochain0 n R) : MatCochain1 n R :=
+  fun A₀ A₁ => φ (A₀ * A₁) - φ (A₁ * A₀)
+
+/-- Hochschild coboundary operator $b_1 : C^1(M_n(R)) \to C^2(M_n(R))$. -/
+def matHochschildB1 {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (φ : MatCochain1 n R) : MatCochain2 n R :=
+  fun A₀ A₁ A₂ => φ (A₀ * A₁) A₂ - φ A₀ (A₁ * A₂) + φ (A₂ * A₀) A₁
+
+/-- Hochschild coboundary operator $b_2 : C^2(M_n(R)) \to C^3(M_n(R))$. -/
+def matHochschildB2 {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (φ : MatCochain2 n R) : MatCochain3 n R :=
+  fun A₀ A₁ A₂ A₃ =>
+    φ (A₀ * A₁) A₂ A₃ - φ A₀ (A₁ * A₂) A₃ + φ A₀ A₁ (A₂ * A₃) - φ (A₃ * A₀) A₁ A₂
+
+/-- Signed cyclic permutation operator $\lambda_1 : C^1(M_n(R)) \to C^1(M_n(R))$,
+    $(\lambda_1 \varphi)(A_0, A_1) = -\varphi(A_1, A_0)$. -/
+def matCyclicLambda1 {R : Type*} {n : Type*} [Ring R]
+    (φ : MatCochain1 n R) : MatCochain1 n R :=
+  fun A₀ A₁ => - φ A₁ A₀
+
+/-- Signed cyclic permutation operator $\lambda_2 : C^2(M_n(R)) \to C^2(M_n(R))$,
+    $(\lambda_2 \varphi)(A_0, A_1, A_2) = \varphi(A_2, A_0, A_1)$. -/
+def matCyclicLambda2 {R : Type*} {n : Type*}
+    (φ : MatCochain2 n R) : MatCochain2 n R :=
+  fun A₀ A₁ A₂ => φ A₂ A₀ A₁
+
+/-- Signed cyclic permutation operator $\lambda_3 : C^3(M_n(R)) \to C^3(M_n(R))$,
+    $(\lambda_3 \varphi)(A_0, A_1, A_2, A_3) = -\varphi(A_3, A_0, A_1, A_2)$. -/
+def matCyclicLambda3 {R : Type*} {n : Type*} [Ring R]
+    (φ : MatCochain3 n R) : MatCochain3 n R :=
+  fun A₀ A₁ A₂ A₃ => - φ A₃ A₀ A₁ A₂
+
+/-- Cyclic norm operator $N_1 = 1 + \lambda_1$ on 1-cochains. -/
+def matCyclicNorm1 {R : Type*} {n : Type*} [Ring R]
+    (φ : MatCochain1 n R) : MatCochain1 n R :=
+  fun A₀ A₁ => φ A₀ A₁ - φ A₁ A₀
+
+/-- Cyclic norm operator $N_2 = 1 + \lambda_2 + \lambda_2^2$ on 2-cochains. -/
+def matCyclicNorm2 {R : Type*} {n : Type*} [Ring R]
+    (φ : MatCochain2 n R) : MatCochain2 n R :=
+  fun A₀ A₁ A₂ => φ A₀ A₁ A₂ + φ A₂ A₀ A₁ + φ A₁ A₂ A₀
+
+/-- Cyclic norm operator $N_3 = 1 + \lambda_3 + \lambda_3^2 + \lambda_3^3$ on 3-cochains. -/
+def matCyclicNorm3 {R : Type*} {n : Type*} [Ring R]
+    (φ : MatCochain3 n R) : MatCochain3 n R :=
+  fun A₀ A₁ A₂ A₃ =>
+    φ A₀ A₁ A₂ A₃ - φ A₃ A₀ A₁ A₂ + φ A₂ A₃ A₀ A₁ - φ A₁ A₂ A₃ A₀
+
+/-- Connes' reduced boundary operator $B_0 : C^1(M_n(R)) \to C^0(M_n(R))$,
+    $(B_0 \varphi)(A_0) = \varphi(1, A_0) + \varphi(A_0, 1)$. -/
+def matConnesB0_1 {R : Type*} {n : Type*} [DecidableEq n] [Ring R]
+    (φ : MatCochain1 n R) : MatCochain0 n R :=
+  fun A₀ => φ 1 A₀ + φ A₀ 1
+
+/-- Connes' reduced boundary operator $B_0 : C^2(M_n(R)) \to C^1(M_n(R))$,
+    $(B_0 \varphi)(A_0, A_1) = \varphi(1, A_0, A_1) - \varphi(A_0, A_1, 1)$. -/
+def matConnesB0_2 {R : Type*} {n : Type*} [DecidableEq n] [Ring R]
+    (φ : MatCochain2 n R) : MatCochain1 n R :=
+  fun A₀ A₁ => φ 1 A₀ A₁ - φ A₀ A₁ 1
+
+/-- Connes' reduced boundary operator $B_0 : C^3(M_n(R)) \to C^2(M_n(R))$,
+    $(B_0 \Phi)(A_0, A_1, A_2) = \Phi(1, A_0, A_1, A_2) + \Phi(A_0, A_1, A_2, 1)$. -/
+def matConnesB0_3 {R : Type*} {n : Type*} [DecidableEq n] [Ring R]
+    (Φ : MatCochain3 n R) : MatCochain2 n R :=
+  fun A₀ A₁ A₂ => Φ 1 A₀ A₁ A₂ + Φ A₀ A₁ A₂ 1
+
+/-- Connes' cyclic coboundary operator $B_1 = N_0 \circ B_0 : C^1(M_n(R)) \to C^0(M_n(R))$. -/
+def matConnesB1 {R : Type*} {n : Type*} [DecidableEq n] [Ring R]
+    (φ : MatCochain1 n R) : MatCochain0 n R :=
+  matConnesB0_1 φ
+
+/-- Connes' cyclic coboundary operator $B_2 = N_1 \circ B_0 : C^2(M_n(R)) \to C^1(M_n(R))$. -/
+def matConnesB2 {R : Type*} {n : Type*} [DecidableEq n] [Ring R]
+    (φ : MatCochain2 n R) : MatCochain1 n R :=
+  matCyclicNorm1 (matConnesB0_2 φ)
+
+/-- Connes' cyclic coboundary operator $B_3 = N_2 \circ B_0 : C^3(M_n(R)) \to C^2(M_n(R))$. -/
+def matConnesB3 {R : Type*} {n : Type*} [DecidableEq n] [Ring R]
+    (Φ : MatCochain3 n R) : MatCochain2 n R :=
+  matCyclicNorm2 (matConnesB0_3 Φ)
+
+/-- The Chern–Connes spectral 2-cochain $\phi_D(A_0, A_1, A_2) = \mathrm{tr}(A_0 [D, A_1] [D, A_2])$. -/
+def matChernConnesCochain2 {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (D : Matrix n n R) : MatCochain2 n R :=
+  fun A₀ A₁ A₂ => Matrix.trace (A₀ * matInnerDer D A₁ * matInnerDer D A₂)
+
+/-- **Theorem 139 (`Archetype CXXIII`: Hochschild Simplicial Coboundary $b_0, b_1, b_2$, Nilpotence $b^2 = 0$, Signed Cyclic Permutations $\lambda_k$, & Cyclic Norm Symmetrizer $N_k$)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all cochains $\varphi_0 \in C^0(M_n(R)), \varphi_1 \in C^1(M_n(R)), \varphi_2 \in C^2(M_n(R)), \varphi_3 \in C^3(M_n(R))$:
+    1. **Trace 0-Cocycle & Hochschild Nilpotence ($b_1 \circ b_0 = 0$ and $b_2 \circ b_1 = 0$)**:
+       $$b_0(\mathrm{tr}) = 0, \qquad b_1(b_0 \varphi_0) = 0, \qquad b_2(b_1 \varphi_1) = 0.$$
+    2. **Cyclic Permutation Periodicity ($\lambda_k^{k+1} = \mathrm{id}$) & Norm Invariance ($\lambda_k \circ N_k = N_k$)**:
+       $$\lambda_1^2(\varphi_1) = \varphi_1, \quad \lambda_2^3(\varphi_2) = \varphi_2, \quad \lambda_3^4(\varphi_3) = \varphi_3,$$
+       $$\lambda_1(N_1 \varphi_1) = N_1 \varphi_1, \quad \lambda_2(N_2 \varphi_2) = N_2 \varphi_2, \quad \lambda_3(N_3 \varphi_3) = N_3 \varphi_3.$$ -/
+theorem matrix_hochschild_coboundary_nilpotence_and_cyclic_norm_invariance
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (φ₀ : MatCochain0 n R) (φ₁ : MatCochain1 n R)
+    (φ₂ : MatCochain2 n R) (φ₃ : MatCochain3 n R) :
+    matHochschildB0 (Matrix.trace : MatCochain0 n R) = 0 ∧
+    matHochschildB1 (matHochschildB0 φ₀) = 0 ∧
+    matHochschildB2 (matHochschildB1 φ₁) = 0 ∧
+    matCyclicLambda1 (matCyclicLambda1 φ₁) = φ₁ ∧
+    matCyclicLambda2 (matCyclicLambda2 (matCyclicLambda2 φ₂)) = φ₂ ∧
+    matCyclicLambda3 (matCyclicLambda3 (matCyclicLambda3 (matCyclicLambda3 φ₃))) = φ₃ ∧
+    matCyclicLambda1 (matCyclicNorm1 φ₁) = matCyclicNorm1 φ₁ ∧
+    matCyclicLambda2 (matCyclicNorm2 φ₂) = matCyclicNorm2 φ₂ ∧
+    matCyclicLambda3 (matCyclicNorm3 φ₃) = matCyclicNorm3 φ₃ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · funext A₀ A₁
+    dsimp [matHochschildB0]
+    rw [Matrix.trace_mul_comm A₀ A₁, sub_self]
+  · funext A₀ A₁ A₂
+    dsimp [matHochschildB1, matHochschildB0]
+    simp only [mul_assoc]
+    abel
+  · funext A₀ A₁ A₂ A₃
+    dsimp [matHochschildB2, matHochschildB1]
+    simp only [mul_assoc]
+    abel
+  · funext A₀ A₁
+    dsimp [matCyclicLambda1]
+    exact neg_neg (φ₁ A₀ A₁)
+  · funext A₀ A₁ A₂
+    rfl
+  · funext A₀ A₁ A₂ A₃
+    dsimp [matCyclicLambda3]
+    rw [neg_neg, neg_neg]
+  · funext A₀ A₁
+    dsimp [matCyclicLambda1, matCyclicNorm1]
+    abel
+  · funext A₀ A₁ A₂
+    dsimp [matCyclicLambda2, matCyclicNorm2]
+    abel
+  · funext A₀ A₁ A₂ A₃
+    dsimp [matCyclicLambda3, matCyclicNorm3]
+    abel
+
+/-- **Theorem 140 (`Archetype CXXIV`: Connes' Cyclic Coboundary $B = N \circ B_0$, Nilpotence $B^2 = 0$, $(b, B)$ Bicomplex Anticommutativity $b_0 B_1 + B_2 b_1 = 0$, & $(b, B)$-Closure of the Chern–Connes Spectral 2-Cochain $\phi_D$)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all cochains $\varphi_1 \in C^1(M_n(R)), \varphi_2 \in C^2(M_n(R)), \Phi_3 \in C^3(M_n(R))$ and matrices $D, P, A_0, A_1 \in \mathrm{Matrix}\;n\;n\;R$:
+    1. **Kernel-Image Orthogonality ($B_0 \circ N = 0$) & Connes Nilpotency ($B_1 \circ B_2 = 0$ and $B_2 \circ B_3 = 0$)**:
+       $$B_0^{(1)}(N_1 \varphi_1)(A_0) = 0, \qquad B_0^{(2)}(N_2 \varphi_2)(A_0, A_1) = 0,$$
+       $$B_1(B_2 \varphi_2) = 0, \qquad B_2(B_3 \Phi_3) = 0.$$
+    2. **Connes $(b, B)$ Bicomplex Anticommutativity**:
+       $$b_0(B_1 \varphi_1) + B_2(b_1 \varphi_1) = 0.$$
+    3. **Diagonal Recovery & Simultaneous $(b_2, B_2)$-Cocycle Closure of the Chern–Connes 2-Cochain $\phi_D$**:
+       $$\phi_D(P, P, P) = \mathrm{matConnesCocycle}\;D\;P, \qquad B_2(\phi_D) = 0, \qquad b_2(\phi_D) = 0.$$ -/
+theorem matrix_connes_cyclic_coboundary_nilpotence_bicomplex_and_chern_connes_cocycle
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (φ₁ : MatCochain1 n R) (φ₂ : MatCochain2 n R) (Φ₃ : MatCochain3 n R)
+    (D P A₀ A₁ : Matrix n n R) :
+    matConnesB0_1 (matCyclicNorm1 φ₁) A₀ = 0 ∧
+    matConnesB0_2 (matCyclicNorm2 φ₂) A₀ A₁ = 0 ∧
+    matConnesB1 (matConnesB2 φ₂) = 0 ∧
+    matConnesB2 (matConnesB3 Φ₃) = 0 ∧
+    matHochschildB0 (matConnesB1 φ₁) + matConnesB2 (matHochschildB1 φ₁) = 0 ∧
+    matChernConnesCochain2 D P P P = matConnesCocycle D P ∧
+    matConnesB2 (matChernConnesCochain2 D) = 0 ∧
+    matHochschildB2 (matChernConnesCochain2 D) = 0 := by
+  have h_b0_n1 : ∀ (ψ : MatCochain1 n R) (X : Matrix n n R),
+      matConnesB0_1 (matCyclicNorm1 ψ) X = 0 := by
+    intro ψ X
+    dsimp [matConnesB0_1, matCyclicNorm1]
+    abel
+  have h_b0_n2 : ∀ (ψ : MatCochain2 n R) (X Y : Matrix n n R),
+      matConnesB0_2 (matCyclicNorm2 ψ) X Y = 0 := by
+    intro ψ X Y
+    dsimp [matConnesB0_2, matCyclicNorm2]
+    abel
+  have h_comm_one : matInnerDer D 1 = 0 := by
+    dsimp [matInnerDer]
+    rw [mul_one, one_mul, sub_self]
+  have h_leib : ∀ X Y : Matrix n n R,
+      matInnerDer D (X * Y) = matInnerDer D X * Y + X * matInnerDer D Y := by
+    intro X Y
+    dsimp [matInnerDer]
+    noncomm_ring
+  refine ⟨h_b0_n1 φ₁ A₀, h_b0_n2 φ₂ A₀ A₁, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · funext X
+    dsimp [matConnesB1, matConnesB2]
+    exact h_b0_n1 (matConnesB0_2 φ₂) X
+  · funext X Y
+    dsimp [matConnesB2, matConnesB3, matCyclicNorm1]
+    rw [h_b0_n2 (matConnesB0_3 Φ₃) X Y, h_b0_n2 (matConnesB0_3 Φ₃) Y X]
+    exact sub_self 0
+  · funext X Y
+    change matHochschildB0 (matConnesB1 φ₁) X Y + matConnesB2 (matHochschildB1 φ₁) X Y = 0
+    dsimp [matHochschildB0, matHochschildB1, matConnesB1, matConnesB2,
+      matConnesB0_1, matConnesB0_2, matCyclicNorm1]
+    simp only [one_mul, mul_one]
+    abel
+  · dsimp [matChernConnesCochain2, matConnesCocycle, matConnesDensity]
+    rw [mul_assoc]
+  · funext X Y
+    dsimp [matConnesB2, matCyclicNorm1, matConnesB0_2, matChernConnesCochain2]
+    simp only [h_comm_one, mul_zero, Matrix.trace_zero, sub_zero, one_mul]
+    rw [Matrix.trace_mul_comm (matInnerDer D X) (matInnerDer D Y), sub_self]
+  · funext X₀ X₁ X₂ X₃
+    dsimp [matHochschildB2, matChernConnesCochain2]
+    rw [h_leib X₁ X₂, h_leib X₂ X₃]
+    have h_alg1 :
+        X₀ * (matInnerDer D X₁ * X₂ + X₁ * matInnerDer D X₂) * matInnerDer D X₃ =
+        X₀ * matInnerDer D X₁ * X₂ * matInnerDer D X₃ +
+        X₀ * X₁ * matInnerDer D X₂ * matInnerDer D X₃ := by noncomm_ring
+    have h_alg2 :
+        X₀ * matInnerDer D X₁ * (matInnerDer D X₂ * X₃ + X₂ * matInnerDer D X₃) =
+        X₀ * matInnerDer D X₁ * matInnerDer D X₂ * X₃ +
+        X₀ * matInnerDer D X₁ * X₂ * matInnerDer D X₃ := by noncomm_ring
+    have h_alg3 :
+        X₃ * X₀ * matInnerDer D X₁ * matInnerDer D X₂ =
+        X₃ * (X₀ * matInnerDer D X₁ * matInnerDer D X₂) := by noncomm_ring
+    rw [h_alg1, h_alg2, h_alg3]
+    rw [Matrix.trace_add, Matrix.trace_add]
+    rw [Matrix.trace_mul_comm X₃ (X₀ * matInnerDer D X₁ * matInnerDer D X₂)]
+    abel
+
+/-- Non-commutative taxonomic subprojection relation $P \preceq G$:
+    $P$ is absorbed on both the right and left by the coarser projection $G$ ($P G = P \wedge G P = P$). -/
+def IsMatrixSubprojection {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P G : Matrix n n R) : Prop :=
+  P * G = P ∧ G * P = P
+
+/-- Two operator strata $P$ and $Q$ are mutually orthogonal if $P Q = 0 \wedge Q P = 0$. -/
+def IsMatrixOrthogonalPair {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P Q : Matrix n n R) : Prop :=
+  P * Q = 0 ∧ Q * P = 0
+
+/-- The non-commutative coarse-graining (pinching) conditional expectation
+    $\mathcal{E}_P(X) = P X P + (1 - P) X (1 - P)$ on $\mathrm{Matrix}\;n\;n\;R$. -/
+def matCoarseGrain {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P X : Matrix n n R) : Matrix n n R :=
+  P * X * P + (1 - P) * X * (1 - P)
+
+/-- **Theorem 141 (`Archetype CXXV`: Halmos–Connes Taxonomic Subprojection Poset $P \preceq G$, Hierarchical Corner Tower Law, Binomial Corner Factorization $G P G = P$, & Orthogonal Speciation / Fusion)**:
+    Over *any* noncommutative base ring $R$ (`[Ring R]`), for all $P, Q, G, X \in \mathrm{Matrix}\;n\;n\;R$:
+    1. **Partial Order Laws**: Reflexivity on idempotents ($P^2 = P \implies P \preceq P$), antisymmetry ($P \preceq Q \wedge Q \preceq P \implies P = Q$), and transitivity ($P \preceq Q \wedge Q \preceq G \implies P \preceq G$).
+    2. **Commutativity, Corner Tower Law, & Binomial Corner Identity**:
+       $$P \preceq G \implies [G, P] = 0 \;\wedge\; P (G X G) P = P X P \;\wedge\; G P G = P.$$
+    3. **Relative Complement Speciation**:
+       $$P^2 = P \wedge G^2 = G \wedge P \preceq G \implies (G - P)^2 = G - P \;\wedge\; (G - P) \preceq G \;\wedge\; P(G - P) = (G - P)P = 0.$$
+    4. **Orthogonal Stratum Fusion**:
+       $$P^2 = P \wedge Q^2 = Q \wedge P Q = Q P = 0 \implies (P + Q)^2 = P + Q \;\wedge\; P \preceq P + Q \;\wedge\; Q \preceq P + Q.$$ -/
+theorem matrix_taxonomic_subprojection_poset_binomial_corner_and_orthogonal_speciation
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P Q G X : Matrix n n R) :
+    (IsMatrixIdempotent P → IsMatrixSubprojection P P) ∧
+    (IsMatrixSubprojection P Q → IsMatrixSubprojection Q P → P = Q) ∧
+    (IsMatrixSubprojection P Q → IsMatrixSubprojection Q G → IsMatrixSubprojection P G) ∧
+    (IsMatrixSubprojection P G →
+      matInnerDer G P = 0 ∧ P * (G * X * G) * P = P * X * P ∧ G * P * G = P) ∧
+    (IsMatrixIdempotent P → IsMatrixIdempotent G → IsMatrixSubprojection P G →
+      IsMatrixIdempotent (G - P) ∧
+      IsMatrixSubprojection (G - P) G ∧
+      IsMatrixOrthogonalPair P (G - P)) ∧
+    (IsMatrixIdempotent P → IsMatrixIdempotent Q → IsMatrixOrthogonalPair P Q →
+      IsMatrixIdempotent (P + Q) ∧
+      IsMatrixSubprojection P (P + Q) ∧
+      IsMatrixSubprojection Q (P + Q)) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro hP
+    exact ⟨hP, hP⟩
+  · intro hPQ hQP
+    rw [← hPQ.1, hQP.2]
+  · intro hPQ hQG
+    refine ⟨?_, ?_⟩
+    · calc
+        P * G = (P * Q) * G := by rw [hPQ.1]
+        _ = P * (Q * G) := by rw [mul_assoc]
+        _ = P * Q := by rw [hQG.1]
+        _ = P := hPQ.1
+    · calc
+        G * P = G * (Q * P) := by rw [hPQ.2]
+        _ = (G * Q) * P := by rw [mul_assoc]
+        _ = Q * P := by rw [hQG.2]
+        _ = P := hPQ.2
+  · intro hPG
+    refine ⟨?_, ?_, ?_⟩
+    · dsimp [matInnerDer]
+      rw [hPG.2, hPG.1, sub_self]
+    · calc
+        P * (G * X * G) * P = (P * G) * X * (G * P) := by noncomm_ring
+        _ = P * X * P := by rw [hPG.1, hPG.2]
+    · rw [hPG.2, hPG.1]
+  · intro hP hG hPG
+    have hP_eq : P * P = P := hP
+    have hG_eq : G * G = G := hG
+    refine ⟨?_, ⟨?_, ?_⟩, ⟨?_, ?_⟩⟩
+    · dsimp [IsMatrixIdempotent]
+      calc
+        (G - P) * (G - P) = G * G - G * P - P * G + P * P := by noncomm_ring
+        _ = G - P - P + P := by rw [hG_eq, hPG.2, hPG.1, hP_eq]
+        _ = G - P := by noncomm_ring
+    · calc
+        (G - P) * G = G * G - P * G := by noncomm_ring
+        _ = G - P := by rw [hG_eq, hPG.1]
+    · calc
+        G * (G - P) = G * G - G * P := by noncomm_ring
+        _ = G - P := by rw [hG_eq, hPG.2]
+    · calc
+        P * (G - P) = P * G - P * P := by noncomm_ring
+        _ = P - P := by rw [hPG.1, hP_eq]
+        _ = 0 := sub_self P
+    · calc
+        (G - P) * P = G * P - P * P := by noncomm_ring
+        _ = P - P := by rw [hPG.2, hP_eq]
+        _ = 0 := sub_self P
+  · intro hP hQ hPQ
+    have hP_eq : P * P = P := hP
+    have hQ_eq : Q * Q = Q := hQ
+    refine ⟨?_, ⟨?_, ?_⟩, ⟨?_, ?_⟩⟩
+    · dsimp [IsMatrixIdempotent]
+      calc
+        (P + Q) * (P + Q) = P * P + P * Q + Q * P + Q * Q := by noncomm_ring
+        _ = P + 0 + 0 + Q := by rw [hP_eq, hPQ.1, hPQ.2, hQ_eq]
+        _ = P + Q := by abel
+    · calc
+        P * (P + Q) = P * P + P * Q := by noncomm_ring
+        _ = P + 0 := by rw [hP_eq, hPQ.1]
+        _ = P := add_zero P
+    · calc
+        (P + Q) * P = P * P + Q * P := by noncomm_ring
+        _ = P + 0 := by rw [hP_eq, hPQ.2]
+        _ = P := add_zero P
+    · calc
+        Q * (P + Q) = Q * P + Q * Q := by noncomm_ring
+        _ = 0 + Q := by rw [hPQ.2, hQ_eq]
+        _ = Q := zero_add Q
+    · calc
+        (P + Q) * Q = P * Q + Q * Q := by noncomm_ring
+        _ = 0 + Q := by rw [hPQ.1, hQ_eq]
+        _ = Q := zero_add Q
+
+/-- **Theorem 142 (`Archetype CXXVI`: Coarse-Graining Conditional Expectation $\mathcal{E}_P$, Hodge–Peirce Splitting $\mathcal{E}_P(X) + [P, [P, X]] = X$, & Genus-Confined Partition of the Connes Cyclic Cocycle)**:
+    Over *any* commutative base ring $R$ (`[CommRing R]`), for all $D, P, G, X \in \mathrm{Matrix}\;n\;n\;R$ with $P^2 = P$ (`hP : IsMatrixIdempotent P`), $P \preceq G$ (`hPG : IsMatrixSubprojection P G`), and $[D, G] = 0$ (`hDG : matInnerDer D G = 0`):
+    1. **Hodge–Peirce Decomposition, Idempotence, Derivation Annihilation, & Trace Preservation**:
+       $$\mathcal{E}_P(X) + [P, [P, X]] = X, \qquad \mathcal{E}_P(\mathcal{E}_P(X)) = \mathcal{E}_P(X),$$
+       $$\mathcal{E}_P([D, P]) = 0, \qquad \mathrm{tr}(\mathcal{E}_P(X)) = \mathrm{tr}(X).$$
+    2. **Genus-Confined Evolution, Sibling Curvature Equality, & Taxonomic Cocycle Partition**:
+       $$G [D, P] G = [D, P], \qquad [D, G - P] = -[D, P], \qquad \Omega_D(G - P) = \Omega_D(P),$$
+       $$\mathrm{matConnesCocycle}\;D\;P + \mathrm{matConnesCocycle}\;D\;(G - P) = \mathrm{tr}(G \, \Omega_D(P)).$$ -/
+theorem matrix_coarse_graining_hodge_peirce_and_genus_confined_cocycle_partition
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (D P G X : Matrix n n R)
+    (hP : IsMatrixIdempotent P)
+    (hPG : IsMatrixSubprojection P G)
+    (hDG : matInnerDer D G = 0) :
+    matCoarseGrain P X + matInnerDer P (matInnerDer P X) = X ∧
+    matCoarseGrain P (matCoarseGrain P X) = matCoarseGrain P X ∧
+    matCoarseGrain P (matInnerDer D P) = 0 ∧
+    Matrix.trace (matCoarseGrain P X) = Matrix.trace X ∧
+    G * matInnerDer D P * G = matInnerDer D P ∧
+    matInnerDer D (G - P) = - matInnerDer D P ∧
+    matConnesCurvature D (G - P) = matConnesCurvature D P ∧
+    matConnesCocycle D P + matConnesCocycle D (G - P) =
+      Matrix.trace (G * matConnesCurvature D P) := by
+  have hP_eq : P * P = P := hP
+  have h_hp : matCoarseGrain P X + matInnerDer P (matInnerDer P X) = X := by
+    dsimp [matCoarseGrain, matInnerDer]
+    calc
+      P * X * P + (1 - P) * X * (1 - P) + (P * (P * X - X * P) - (P * X - X * P) * P)
+        = X + (P * P - P) * X + X * (P * P - P) := by noncomm_ring
+      _ = X + (P - P) * X + X * (P - P) := by rw [hP_eq]
+      _ = X := by noncomm_ring
+  have h_sub_der : matInnerDer D (G - P) = - matInnerDer D P := by
+    have h_lin : matInnerDer D (G - P) = matInnerDer D G - matInnerDer D P := by
+      dsimp [matInnerDer]
+      noncomm_ring
+    rw [h_lin, hDG, zero_sub]
+  have h_curv_eq : matConnesCurvature D (G - P) = matConnesCurvature D P := by
+    dsimp [matConnesCurvature]
+    rw [h_sub_der, neg_mul_neg]
+  refine ⟨h_hp, ?_, ?_, ?_, ?_, h_sub_der, h_curv_eq, ?_⟩
+  · dsimp [matCoarseGrain]
+    calc
+      P * (P * X * P + (1 - P) * X * (1 - P)) * P +
+        (1 - P) * (P * X * P + (1 - P) * X * (1 - P)) * (1 - P)
+        = (P * P) * X * (P * P) + (P - P * P) * X * (P - P * P) +
+          (P - P * P) * X * (P - P * P) +
+          (1 - P - P + P * P) * X * (1 - P - P + P * P) := by noncomm_ring
+      _ = P * X * P + (P - P) * X * (P - P) +
+          (P - P) * X * (P - P) +
+          (1 - P - P + P) * X * (1 - P - P + P) := by rw [hP_eq]
+      _ = P * X * P + (1 - P) * X * (1 - P) := by noncomm_ring
+  · dsimp [matCoarseGrain, matInnerDer]
+    calc
+      P * (D * P - P * D) * P + (1 - P) * (D * P - P * D) * (1 - P)
+        = P * D * (P * P) - (P * P) * D * P +
+          ((D - P * D) * (P - P * P) - (P - P * P) * (D - D * P)) := by noncomm_ring
+      _ = P * D * P - P * D * P +
+          ((D - P * D) * (P - P) - (P - P) * (D - D * P)) := by rw [hP_eq]
+      _ = 0 := by noncomm_ring
+  · have h_tr := congr_arg Matrix.trace h_hp
+    have h_tr_comm : Matrix.trace (matInnerDer P (matInnerDer P X)) = 0 := by
+      dsimp [matInnerDer]
+      rw [Matrix.trace_sub, Matrix.trace_mul_comm P _, sub_self]
+    rw [Matrix.trace_add, h_tr_comm, add_zero] at h_tr
+    exact h_tr
+  · have h1 : G * matInnerDer D P * G = G * D * (P * G) - (G * P) * D * G := by
+      dsimp [matInnerDer]
+      noncomm_ring
+    rw [hPG.1, hPG.2] at h1
+    have h2 : matInnerDer D P = D * (G * P) - (P * G) * D := by
+      rw [hPG.2, hPG.1]
+      rfl
+    have h3 : (G * D * P - P * D * G) - (D * (G * P) - (P * G) * D) =
+        -(matInnerDer D G * P) - P * matInnerDer D G := by
+      dsimp [matInnerDer]
+      noncomm_ring
+    rw [← h1, ← h2, hDG] at h3
+    have h4 : G * matInnerDer D P * G - matInnerDer D P = 0 := by
+      calc
+        G * matInnerDer D P * G - matInnerDer D P
+          = -(0 * P) - P * 0 := h3
+        _ = 0 := by noncomm_ring
+    exact sub_eq_zero.mp h4
+  · dsimp [matConnesCocycle, matConnesDensity]
+    change Matrix.trace (P * matConnesCurvature D P) +
+      Matrix.trace ((G - P) * matConnesCurvature D (G - P)) =
+      Matrix.trace (G * matConnesCurvature D P)
+    rw [h_curv_eq, ← Matrix.trace_add]
+    have h_sum :
+        P * matConnesCurvature D P + (G - P) * matConnesCurvature D P =
+        G * matConnesCurvature D P := by
+      noncomm_ring
+    rw [h_sum]
+
+/-- A 3-level non-commutative taxonomic projection flag $P \preceq G \preceq M$ in $\mathrm{Matrix}\;n\;n\;R$. -/
+def IsMatrixThreeLevelFlag {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P G M : Matrix n n R) : Prop :=
+  IsMatrixIdempotent P ∧
+  IsMatrixIdempotent G ∧
+  IsMatrixIdempotent M ∧
+  IsMatrixSubprojection P G ∧
+  IsMatrixSubprojection G M
+
+/-- Two-level flag coarse-graining conditional expectation across $P \preceq G$:
+    $\mathcal{E}_{P,G}(X) = P X P + (G - P) X (G - P) + (1 - G) X (1 - G)$. -/
+def matCoarseGrain2 {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P G X : Matrix n n R) : Matrix n n R :=
+  P * X * P + (G - P) * X * (G - P) + (1 - G) * X * (1 - G)
+
+/-- Three-level flag coarse-graining conditional expectation across $P \preceq G \preceq M$:
+    $\mathcal{E}_{P,G,M}(X) = P X P + (G - P) X (G - P) + (M - G) X (M - G) + (1 - M) X (1 - M)$. -/
+def matCoarseGrain3 {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P G M X : Matrix n n R) : Matrix n n R :=
+  P * X * P + (G - P) * X * (G - P) + (M - G) * X * (M - G) + (1 - M) * X * (1 - M)
+
+/-- The total 3-stratum Chern–Connes flag density across $S_1 = P, S_2 = G - P, S_3 = M - G$. -/
+def matFlagConnesDensity {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (D P G M : Matrix n n R) : Matrix n n R :=
+  matConnesDensity D P + matConnesDensity D (G - P) + matConnesDensity D (M - G)
+
+/-- **Theorem 143 (`Archetype CXXVII`: Three-Level Projection Flag $P \preceq G \preceq M$, Orthogonal Peirce Shell Resolution, & Abelianization of Coarse-Graining Conditional Expectations $\mathcal{E}_P \circ \mathcal{E}_G \circ \mathcal{E}_M = \mathcal{E}_{P,G,M}$)**:
+    Over *any* noncommutative base ring $R$ (`[Ring R]`), for all $P, G, M, X \in \mathrm{Matrix}\;n\;n\;R$ forming a 3-level flag `hFlag : IsMatrixThreeLevelFlag P G M`:
+    1. **Telescoping Shell Resolution & Pairwise Orthogonality**:
+       $$P + (G - P) + (M - G) = M, \qquad P + (G - P) + (M - G) + (1 - M) = 1, \qquad P \preceq M,$$
+       $$\mathrm{IsMatrixOrthogonalPair}\;P\;(G - P) \;\wedge\; \mathrm{IsMatrixOrthogonalPair}\;P\;(M - G) \;\wedge\; \mathrm{IsMatrixOrthogonalPair}\;(G - P)\;(M - G).$$
+    2. **Abelianization of Coarse-Graining Conditional Expectations & Four-Stratum Flag Pinching**:
+       $$\mathcal{E}_P(\mathcal{E}_G(X)) = \mathcal{E}_G(\mathcal{E}_P(X)) = \mathcal{E}_{P,G}(X),$$
+       $$\mathcal{E}_G(\mathcal{E}_M(X)) = \mathcal{E}_M(\mathcal{E}_G(X)), \qquad \mathcal{E}_P(\mathcal{E}_M(X)) = \mathcal{E}_M(\mathcal{E}_P(X)),$$
+       $$\mathcal{E}_P(\mathcal{E}_G(\mathcal{E}_M(X))) = \mathcal{E}_M(\mathcal{E}_G(\mathcal{E}_P(X))) = \mathcal{E}_{P,G,M}(X).$$ -/
+theorem matrix_three_level_flag_orthogonal_shells_and_commuting_coarse_graining_expectations
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P G M X : Matrix n n R)
+    (hFlag : IsMatrixThreeLevelFlag P G M) :
+    P + (G - P) + (M - G) = M ∧
+    P + (G - P) + (M - G) + (1 - M) = 1 ∧
+    IsMatrixSubprojection P M ∧
+    IsMatrixOrthogonalPair P (G - P) ∧
+    IsMatrixOrthogonalPair P (M - G) ∧
+    IsMatrixOrthogonalPair (G - P) (M - G) ∧
+    matCoarseGrain P (matCoarseGrain G X) = matCoarseGrain2 P G X ∧
+    matCoarseGrain G (matCoarseGrain P X) = matCoarseGrain2 P G X ∧
+    matCoarseGrain P (matCoarseGrain G X) = matCoarseGrain G (matCoarseGrain P X) ∧
+    matCoarseGrain G (matCoarseGrain M X) = matCoarseGrain M (matCoarseGrain G X) ∧
+    matCoarseGrain P (matCoarseGrain M X) = matCoarseGrain M (matCoarseGrain P X) ∧
+    matCoarseGrain P (matCoarseGrain G (matCoarseGrain M X)) = matCoarseGrain3 P G M X ∧
+    matCoarseGrain M (matCoarseGrain G (matCoarseGrain P X)) = matCoarseGrain3 P G M X := by
+  rcases hFlag with ⟨hP, hG, _hM, hPG, hGM⟩
+  have hP_eq : P * P = P := hP
+  have hG_eq : G * G = G := hG
+  have hPM : IsMatrixSubprojection P M :=
+    (matrix_taxonomic_subprojection_poset_binomial_corner_and_orthogonal_speciation P G M X).2.2.1 hPG hGM
+  have h_orth_PG : IsMatrixOrthogonalPair P (G - P) :=
+    ((matrix_taxonomic_subprojection_poset_binomial_corner_and_orthogonal_speciation P P G X).2.2.2.2.1 hP hG hPG).2.2
+  have h_orth_PM : IsMatrixOrthogonalPair P (M - G) := by
+    refine ⟨?_, ?_⟩
+    · calc
+        P * (M - G) = P * M - P * G := by noncomm_ring
+        _ = P - P := by rw [hPM.1, hPG.1]
+        _ = 0 := sub_self P
+    · calc
+        (M - G) * P = M * P - G * P := by noncomm_ring
+        _ = P - P := by rw [hPM.2, hPG.2]
+        _ = 0 := sub_self P
+  have h_orth_GM : IsMatrixOrthogonalPair (G - P) (M - G) := by
+    refine ⟨?_, ?_⟩
+    · calc
+        (G - P) * (M - G) = G * M - G * G - P * M + P * G := by noncomm_ring
+        _ = G - G - P + P := by rw [hGM.1, hG_eq, hPM.1, hPG.1]
+        _ = 0 := by abel
+    · calc
+        (M - G) * (G - P) = M * G - M * P - G * G + G * P := by noncomm_ring
+        _ = G - P - G + P := by rw [hGM.2, hPM.2, hG_eq, hPG.2]
+        _ = 0 := by abel
+  have h_comp1 : ∀ (A B Y : Matrix n n R),
+      IsMatrixSubprojection A B →
+      matCoarseGrain A (matCoarseGrain B Y) = matCoarseGrain2 A B Y := by
+    intro A B Y hAB
+    have h1 : (1 - A) * B = B - A := by
+      calc (1 - A) * B = B - A * B := by noncomm_ring
+      _ = B - A := by rw [hAB.1]
+    have h2 : B * (1 - A) = B - A := by
+      calc B * (1 - A) = B - B * A := by noncomm_ring
+      _ = B - A := by rw [hAB.2]
+    have h3 : A * (1 - B) = 0 := by
+      calc A * (1 - B) = A - A * B := by noncomm_ring
+      _ = A - A := by rw [hAB.1]
+      _ = 0 := sub_self A
+    have h4 : (1 - B) * A = 0 := by
+      calc (1 - B) * A = A - B * A := by noncomm_ring
+      _ = A - A := by rw [hAB.2]
+      _ = 0 := sub_self A
+    have h5 : (1 - A) * (1 - B) = 1 - B := by
+      calc (1 - A) * (1 - B) = 1 - B - A + A * B := by noncomm_ring
+      _ = 1 - B - A + A := by rw [hAB.1]
+      _ = 1 - B := by abel
+    have h6 : (1 - B) * (1 - A) = 1 - B := by
+      calc (1 - B) * (1 - A) = 1 - B - A + B * A := by noncomm_ring
+      _ = 1 - B - A + A := by rw [hAB.2]
+      _ = 1 - B := by abel
+    dsimp [matCoarseGrain, matCoarseGrain2]
+    calc
+      A * (B * Y * B + (1 - B) * Y * (1 - B)) * A +
+        (1 - A) * (B * Y * B + (1 - B) * Y * (1 - B)) * (1 - A)
+        = (A * B) * Y * (B * A) + (A * (1 - B)) * Y * ((1 - B) * A) +
+          ((1 - A) * B) * Y * (B * (1 - A)) +
+          ((1 - A) * (1 - B)) * Y * ((1 - B) * (1 - A)) := by noncomm_ring
+      _ = A * Y * A + 0 * Y * 0 + (B - A) * Y * (B - A) + (1 - B) * Y * (1 - B) := by
+          rw [hAB.1, hAB.2, h3, h4, h1, h2, h5, h6]
+      _ = A * Y * A + (B - A) * Y * (B - A) + (1 - B) * Y * (1 - B) := by noncomm_ring
+  have h_comp2 : ∀ (A B Y : Matrix n n R),
+      IsMatrixSubprojection A B →
+      matCoarseGrain B (matCoarseGrain A Y) = matCoarseGrain2 A B Y := by
+    intro A B Y hAB
+    have h1 : (1 - A) * B = B - A := by
+      calc (1 - A) * B = B - A * B := by noncomm_ring
+      _ = B - A := by rw [hAB.1]
+    have h2 : B * (1 - A) = B - A := by
+      calc B * (1 - A) = B - B * A := by noncomm_ring
+      _ = B - A := by rw [hAB.2]
+    have h3 : A * (1 - B) = 0 := by
+      calc A * (1 - B) = A - A * B := by noncomm_ring
+      _ = A - A := by rw [hAB.1]
+      _ = 0 := sub_self A
+    have h4 : (1 - B) * A = 0 := by
+      calc (1 - B) * A = A - B * A := by noncomm_ring
+      _ = A - A := by rw [hAB.2]
+      _ = 0 := sub_self A
+    have h5 : (1 - A) * (1 - B) = 1 - B := by
+      calc (1 - A) * (1 - B) = 1 - B - A + A * B := by noncomm_ring
+      _ = 1 - B - A + A := by rw [hAB.1]
+      _ = 1 - B := by abel
+    have h6 : (1 - B) * (1 - A) = 1 - B := by
+      calc (1 - B) * (1 - A) = 1 - B - A + B * A := by noncomm_ring
+      _ = 1 - B - A + A := by rw [hAB.2]
+      _ = 1 - B := by abel
+    dsimp [matCoarseGrain, matCoarseGrain2]
+    calc
+      B * (A * Y * A + (1 - A) * Y * (1 - A)) * B +
+        (1 - B) * (A * Y * A + (1 - A) * Y * (1 - A)) * (1 - B)
+        = (B * A) * Y * (A * B) + (B * (1 - A)) * Y * ((1 - A) * B) +
+          ((1 - B) * A) * Y * (A * (1 - B)) +
+          ((1 - B) * (1 - A)) * Y * ((1 - A) * (1 - B)) := by noncomm_ring
+      _ = A * Y * A + (B - A) * Y * (B - A) + 0 * Y * 0 + (1 - B) * Y * (1 - B) := by
+          rw [hAB.2, hAB.1, h2, h1, h4, h3, h6, h5]
+      _ = A * Y * A + (B - A) * Y * (B - A) + (1 - B) * Y * (1 - B) := by noncomm_ring
+  have h_comm_sub : ∀ (A B Y : Matrix n n R),
+      IsMatrixSubprojection A B →
+      matCoarseGrain A (matCoarseGrain B Y) = matCoarseGrain B (matCoarseGrain A Y) := by
+    intro A B Y hAB
+    rw [h_comp1 A B Y hAB, h_comp2 A B Y hAB]
+  have h_flag3 : matCoarseGrain P (matCoarseGrain G (matCoarseGrain M X)) = matCoarseGrain3 P G M X := by
+    rw [h_comp1 G M X hGM]
+    have h1 : (1 - P) * G = G - P := by
+      calc (1 - P) * G = G - P * G := by noncomm_ring
+      _ = G - P := by rw [hPG.1]
+    have h2 : G * (1 - P) = G - P := by
+      calc G * (1 - P) = G - G * P := by noncomm_ring
+      _ = G - P := by rw [hPG.2]
+    have h3 : P * (1 - M) = 0 := by
+      calc P * (1 - M) = P - P * M := by noncomm_ring
+      _ = P - P := by rw [hPM.1]
+      _ = 0 := sub_self P
+    have h4 : (1 - M) * P = 0 := by
+      calc (1 - M) * P = P - M * P := by noncomm_ring
+      _ = P - P := by rw [hPM.2]
+      _ = 0 := sub_self P
+    have h5 : (1 - P) * (1 - M) = 1 - M := by
+      calc (1 - P) * (1 - M) = 1 - M - P + P * M := by noncomm_ring
+      _ = 1 - M - P + P := by rw [hPM.1]
+      _ = 1 - M := by abel
+    have h6 : (1 - M) * (1 - P) = 1 - M := by
+      calc (1 - M) * (1 - P) = 1 - M - P + M * P := by noncomm_ring
+      _ = 1 - M - P + P := by rw [hPM.2]
+      _ = 1 - M := by abel
+    have h7 : (1 - P) * (M - G) = M - G := by
+      calc (1 - P) * (M - G) = (M - G) - P * (M - G) := by noncomm_ring
+      _ = (M - G) - 0 := by rw [h_orth_PM.1]
+      _ = M - G := sub_zero (M - G)
+    have h8 : (M - G) * (1 - P) = M - G := by
+      calc (M - G) * (1 - P) = (M - G) - (M - G) * P := by noncomm_ring
+      _ = (M - G) - 0 := by rw [h_orth_PM.2]
+      _ = M - G := sub_zero (M - G)
+    dsimp [matCoarseGrain, matCoarseGrain2, matCoarseGrain3]
+    calc
+      P * (G * X * G + (M - G) * X * (M - G) + (1 - M) * X * (1 - M)) * P +
+        (1 - P) * (G * X * G + (M - G) * X * (M - G) + (1 - M) * X * (1 - M)) * (1 - P)
+        = (P * G) * X * (G * P) +
+          (P * (M - G)) * X * ((M - G) * P) +
+          (P * (1 - M)) * X * ((1 - M) * P) +
+          ((1 - P) * G) * X * (G * (1 - P)) +
+          ((1 - P) * (M - G)) * X * ((M - G) * (1 - P)) +
+          ((1 - P) * (1 - M)) * X * ((1 - M) * (1 - P)) := by noncomm_ring
+      _ = P * X * P + 0 * X * 0 + 0 * X * 0 +
+          (G - P) * X * (G - P) + (M - G) * X * (M - G) + (1 - M) * X * (1 - M) := by
+          rw [hPG.1, hPG.2, h_orth_PM.1, h_orth_PM.2, h3, h4, h1, h2, h7, h8, h5, h6]
+      _ = P * X * P + (G - P) * X * (G - P) + (M - G) * X * (M - G) + (1 - M) * X * (1 - M) := by
+          noncomm_ring
+  refine ⟨by abel, by abel, hPM, h_orth_PG, h_orth_PM, h_orth_GM,
+    h_comp1 P G X hPG, h_comp2 P G X hPG,
+    h_comm_sub P G X hPG, h_comm_sub G M X hGM, h_comm_sub P M X hPM,
+    h_flag3, ?_⟩
+  rw [← h_comm_sub P G X hPG]
+  rw [← h_comm_sub P M (matCoarseGrain G X) hPM]
+  rw [← h_comm_sub G M X hGM]
+  exact h_flag3
+
+/-- **Theorem 144 (`Archetype CXXVIII`: Three-Stratum Connes Curvature Corner Decomposition, Non-Commutative Gauss–Codazzi Interference, Outer-Shell Annihilation, & Macro-Stratum Cocycle Partition)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all $D, P, G, M \in \mathrm{Matrix}\;n\;n\;R$ forming a 3-level flag `hFlag : IsMatrixThreeLevelFlag P G M`:
+    1. **Three-Stratum Corner Decomposition & Unconditional Macro Split**:
+       $$\mathcal{C}_{\mathrm{flag}}(D; P, G, M) = P \Omega_D(P) P + (G - P) \Omega_D(G - P) (G - P) + (M - G) \Omega_D(M - G) (M - G),$$
+       $$M \Omega_D(P) = P \Omega_D(P) + (G - P) \Omega_D(P) + (M - G) \Omega_D(P),$$
+       $$[D, P] + [D, G - P] + [D, M - G] = [D, M].$$
+    2. **Non-Commutative Gauss–Codazzi Interference Decomposition**:
+       $$\Omega_D(G) = \Omega_D(P) + \Omega_D(G - P) + ([D, P][D, G - P] + [D, G - P][D, P]),$$
+       $$[D, M] = 0 \implies \Omega_D(M - G) = \Omega_D(P) + \Omega_D(G - P) + ([D, P][D, G - P] + [D, G - P][D, P]).$$
+    3. **Outer-Shell Annihilation & Three-Stratum Connes Cyclic Cocycle Partition ($[D, G] = 0$ and $[D, M] = 0$)**:
+       $$[D, G] = 0 \implies (M - G)[D, P] = 0 \;\wedge\; (M - G)\Omega_D(P) = 0,$$
+       $$[D, G] = 0 \wedge [D, M] = 0 \implies \tau(P[D,P]^2) + \tau((G-P)[D,G-P]^2) + \tau((M-G)[D,M-G]^2) = \mathrm{tr}(M \Omega_D(P)).$$ -/
+theorem matrix_three_stratum_connes_curvature_gauss_codazzi_and_macro_cocycle_partition
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (D P G M : Matrix n n R)
+    (hFlag : IsMatrixThreeLevelFlag P G M) :
+    matFlagConnesDensity D P G M =
+      P * matConnesCurvature D P * P +
+      (G - P) * matConnesCurvature D (G - P) * (G - P) +
+      (M - G) * matConnesCurvature D (M - G) * (M - G) ∧
+    M * matConnesCurvature D P =
+      P * matConnesCurvature D P +
+      (G - P) * matConnesCurvature D P +
+      (M - G) * matConnesCurvature D P ∧
+    matInnerDer D P + matInnerDer D (G - P) + matInnerDer D (M - G) = matInnerDer D M ∧
+    matConnesCurvature D G =
+      matConnesCurvature D P + matConnesCurvature D (G - P) +
+      (matInnerDer D P * matInnerDer D (G - P) +
+       matInnerDer D (G - P) * matInnerDer D P) ∧
+    Matrix.trace (matFlagConnesDensity D P G M) =
+      matConnesCocycle D P + matConnesCocycle D (G - P) + matConnesCocycle D (M - G) ∧
+    (matInnerDer D M = 0 →
+      matInnerDer D P + matInnerDer D (G - P) + matInnerDer D (M - G) = 0 ∧
+      matConnesCurvature D (M - G) =
+        matConnesCurvature D P + matConnesCurvature D (G - P) +
+        (matInnerDer D P * matInnerDer D (G - P) +
+         matInnerDer D (G - P) * matInnerDer D P)) ∧
+    (matInnerDer D G = 0 →
+      (M - G) * matInnerDer D P = 0 ∧
+      (M - G) * matConnesCurvature D P = 0) ∧
+    (matInnerDer D G = 0 → matInnerDer D M = 0 →
+      matConnesCocycle D P + matConnesCocycle D (G - P) + matConnesCocycle D (M - G) =
+        Matrix.trace (M * matConnesCurvature D P)) := by
+  rcases hFlag with ⟨hP, hG, hM, hPG, hGM⟩
+  have hGP : IsMatrixIdempotent (G - P) :=
+    ((matrix_taxonomic_subprojection_poset_binomial_corner_and_orthogonal_speciation P P G P).2.2.2.2.1 hP hG hPG).1
+  have hMG : IsMatrixIdempotent (M - G) :=
+    ((matrix_taxonomic_subprojection_poset_binomial_corner_and_orthogonal_speciation G G M G).2.2.2.2.1 hG hM hGM).1
+  have h_corner_self : ∀ S : Matrix n n R, IsMatrixIdempotent S →
+      S * matConnesCurvature D S * S = matConnesDensity D S := by
+    intro S hS
+    have hS_eq : S * S = S := hS
+    have h_comm : S * matConnesCurvature D S = matConnesCurvature D S * S :=
+      (matrix_inner_derivation_idempotent_connes_curvature_and_gauss_codazzi D D D D D S hS).2.2.2.2.2.2.2.2.2.2.2.2.2.1
+    dsimp [matConnesDensity]
+    calc
+      S * matConnesCurvature D S * S = (matConnesCurvature D S * S) * S := by rw [h_comm]
+      _ = matConnesCurvature D S * (S * S) := by noncomm_ring
+      _ = matConnesCurvature D S * S := by rw [hS_eq]
+      _ = S * matConnesCurvature D S := by rw [← h_comm]
+  have h_gc_G : matConnesCurvature D G =
+      matConnesCurvature D P + matConnesCurvature D (G - P) +
+      (matInnerDer D P * matInnerDer D (G - P) +
+       matInnerDer D (G - P) * matInnerDer D P) := by
+    dsimp [matConnesCurvature, matInnerDer]
+    noncomm_ring
+  refine ⟨?_, by noncomm_ring, ?_, h_gc_G, ?_, ?_, ?_, ?_⟩
+  · dsimp [matFlagConnesDensity]
+    rw [h_corner_self P hP, h_corner_self (G - P) hGP, h_corner_self (M - G) hMG]
+  · dsimp [matInnerDer]
+    noncomm_ring
+  · dsimp [matFlagConnesDensity, matConnesCocycle]
+    rw [Matrix.trace_add, Matrix.trace_add]
+  · intro hDM
+    refine ⟨?_, ?_⟩
+    · have h_sum : matInnerDer D P + matInnerDer D (G - P) + matInnerDer D (M - G) = matInnerDer D M := by
+        dsimp [matInnerDer]
+        noncomm_ring
+      rw [h_sum, hDM]
+    · have h_curv_MG : matConnesCurvature D (M - G) = matConnesCurvature D G :=
+        (matrix_coarse_graining_hodge_peirce_and_genus_confined_cocycle_partition D G M G hG hGM hDM).2.2.2.2.2.2.1
+      rw [h_curv_MG, h_gc_G]
+  · intro hDG
+    have h_conf : G * matInnerDer D P * G = matInnerDer D P :=
+      (matrix_coarse_graining_hodge_peirce_and_genus_confined_cocycle_partition D P G P hP hPG hDG).2.2.2.2.1
+    have hG_eq : G * G = G := hG
+    have h_ann1 : (M - G) * matInnerDer D P = 0 := by
+      calc
+        (M - G) * matInnerDer D P = (M - G) * (G * matInnerDer D P * G) :=
+          congr_arg ((M - G) * ·) h_conf.symm
+        _ = (M * G - G * G) * matInnerDer D P * G := by noncomm_ring
+        _ = (G - G) * matInnerDer D P * G := by rw [hGM.2, hG_eq]
+        _ = 0 := by noncomm_ring
+    refine ⟨h_ann1, ?_⟩
+    dsimp [matConnesCurvature]
+    calc
+      (M - G) * (matInnerDer D P * matInnerDer D P)
+        = ((M - G) * matInnerDer D P) * matInnerDer D P := by noncomm_ring
+      _ = 0 * matInnerDer D P := by rw [h_ann1]
+      _ = 0 := by noncomm_ring
+  · intro hDG hDM
+    have h_part2 : matConnesCocycle D P + matConnesCocycle D (G - P) =
+        Matrix.trace (G * matConnesCurvature D P) :=
+      (matrix_coarse_graining_hodge_peirce_and_genus_confined_cocycle_partition D P G P hP hPG hDG).2.2.2.2.2.2.2
+    have h_curv_MG : matConnesCurvature D (M - G) = matConnesCurvature D G :=
+      (matrix_coarse_graining_hodge_peirce_and_genus_confined_cocycle_partition D G M G hG hGM hDM).2.2.2.2.2.2.1
+    have h_third : matConnesCocycle D (M - G) = 0 := by
+      dsimp [matConnesCocycle, matConnesDensity]
+      change Matrix.trace ((M - G) * matConnesCurvature D (M - G)) = 0
+      rw [h_curv_MG]
+      dsimp [matConnesCurvature]
+      rw [hDG, mul_zero, mul_zero, Matrix.trace_zero]
+    have h_conf : G * matInnerDer D P * G = matInnerDer D P :=
+      (matrix_coarse_graining_hodge_peirce_and_genus_confined_cocycle_partition D P G P hP hPG hDG).2.2.2.2.1
+    have hG_eq : G * G = G := hG
+    have h_ann1 : (M - G) * matInnerDer D P = 0 := by
+      calc
+        (M - G) * matInnerDer D P = (M - G) * (G * matInnerDer D P * G) :=
+          congr_arg ((M - G) * ·) h_conf.symm
+        _ = (M * G - G * G) * matInnerDer D P * G := by noncomm_ring
+        _ = (G - G) * matInnerDer D P * G := by rw [hGM.2, hG_eq]
+        _ = 0 := by noncomm_ring
+    have h_ann2 : (M - G) * matConnesCurvature D P = 0 := by
+      dsimp [matConnesCurvature]
+      calc
+        (M - G) * (matInnerDer D P * matInnerDer D P)
+          = ((M - G) * matInnerDer D P) * matInnerDer D P := by noncomm_ring
+        _ = 0 * matInnerDer D P := by rw [h_ann1]
+        _ = 0 := by noncomm_ring
+    rw [h_third, add_zero, h_part2]
+    have h_split :
+        M * matConnesCurvature D P =
+        G * matConnesCurvature D P + (M - G) * matConnesCurvature D P := by
+      noncomm_ring
+    rw [h_split, h_ann2, add_zero]
 
 end SplitQuaternion
 

@@ -104,7 +104,9 @@ theorem phase_intertwines (θ : ℝ) (z : DoubledSpace E) :
     Real.sin θ • ((C.ann - C.cre) (doubledCAREquiv C e z)) = _
   rw [haxis, ← map_smul, ← map_smul, ← map_add]
   congr 1
-  rw [phaseFlow_eq_KRotation, KRotation_apply]
+  try rw [phaseFlow_eq_KRotation]
+  try rw [KRotation_apply]
+  try rfl
 
 /-- Full operator covariance, not merely generator agreement. -/
 theorem conjugation_intertwines (θ : ℝ)
@@ -113,6 +115,6 @@ theorem conjugation_intertwines (θ : ℝ)
         (doubledCAREquiv C e (T (phaseFlow (E := E) θ z))) =
       doubledCAREquiv C e (phaseConjugation (E := E) θ T z) := by
   rw [phase_intertwines]
-  rfl
+  try rfl
 
 end InfoGeometry.Canonical.DoubledCARIntertwiner

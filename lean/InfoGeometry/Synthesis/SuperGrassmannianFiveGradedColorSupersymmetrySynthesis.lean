@@ -662,7 +662,15 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
       ⟨0, -X.v, X.w, 0⟩ ∧
     Matrix.trace
       (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matConnesDensityVariation
-        (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0) = 0 := by
+        (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0) = 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matConnesB2
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matChernConnesCochain2
+        (0 : Matrix (Fin 2) (Fin 2) ℝ)) = 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matCoarseGrain
+      (0 : Matrix (Fin 2) (Fin 2) ℝ)
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matCoarseGrain 0
+        (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matCoarseGrain 0 0)) =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matCoarseGrain3 0 0 0 0 := by
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, ?_,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge
       X 0 0 0 0 0 0 0 0 0 0 0 0 u v u v u v 1).1.2.2.2.2.2.2.2,
@@ -705,7 +713,11 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_connes_idempotent_curvature_gauss_codazzi_and_zorn_vacuum_master_bridge
       (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 0 (Matrix.zero_mul 0) X).2.2.2.2.2.2.2.1,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_connes_cocycle_adiabatic_double_commutator_and_lie_exactness_master_bridge
-      (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 1 1 0 ⟨Matrix.one_mul 1, Matrix.one_mul 1⟩ (Matrix.zero_mul 0)).2.1.2.2.2.2.1⟩
+      (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 1 1 0 ⟨Matrix.one_mul 1, Matrix.one_mul 1⟩ (Matrix.zero_mul 0)).2.1.2.2.2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_connes_bicomplex_chern_connes_cocycle_and_taxonomic_coarse_graining_master_bridge
+      0 0 0 0 (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 0 0 0 0 (Matrix.zero_mul 0) ⟨Matrix.zero_mul 0, Matrix.zero_mul 0⟩ (by simp [InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matInnerDer])).2.1.2.2.2.2.2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_three_level_flag_commuting_coarse_graining_and_three_stratum_connes_cocycle_master_bridge
+      (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 0 0 ⟨Matrix.zero_mul 0, Matrix.zero_mul 0, Matrix.zero_mul 0, ⟨Matrix.zero_mul 0, Matrix.zero_mul 0⟩, ⟨Matrix.zero_mul 0, Matrix.zero_mul 0⟩⟩).1.2.2.2.2.2.2.2.2.2.2.2.1⟩
   · rcases u with ⟨ux, uy, uz⟩
     rcases v with ⟨vx, vy, vz⟩
     simp [opVec3Fin3Equiv,

@@ -1467,7 +1467,37 @@ def main() -> int:
     assert E_plus_z * Om_z == Om_z * E_plus_z
     assert (E_plus_z * op_comm(X_obs, dE_z)) * E_plus_z + ((E_plus_z * Om_z) * E_plus_z + (E_plus_z * Om_z) * E_plus_z) == z_zero()
     assert op_comm(op_comm(E_plus_z, op_comm(E_plus_z, X_obs)), E_plus_z) == dE_z
-    print("[PASS] Archetypes XCIX-CXXII: Operator Cyclotomics, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes Idempotent Curvature, Non-Abelian Gauss-Codazzi, Adiabatic/Double-Commutator Projection, Lie-Connes Exactness, & Zorn-Connes Vacuum Collapse")
+    # Archetypes CXXIII-CXXVI (alpha_10..alpha_17): Connes (b, B) Cyclic Bicomplex,
+    # Chern-Connes 2-Cochain Closure, Taxonomic Subprojection Poset, & Coarse-Graining Hodge-Peirce:
+    def m2_tr(M):
+        return sp.expand(M[0][0] + M[1][1])
+    def phi_D(A0, A1, A2):
+        return m2_tr(m2_mul(m2_mul(A0, m2_comm(D1_m, A1)), m2_comm(D1_m, A2)))
+    One2 = ((sp.Integer(1), sp.Integer(0)), (sp.Integer(0), sp.Integer(1)))
+    B0_phi_12 = sp.expand(phi_D(One2, D1_m, D2_m) - phi_D(D1_m, D2_m, One2))
+    B0_phi_21 = sp.expand(phi_D(One2, D2_m, D1_m) - phi_D(D2_m, D1_m, One2))
+    assert sp.expand(B0_phi_12 - B0_phi_21) == 0
+    b2_phi = sp.expand(
+        phi_D(m2_mul(P_idem, D1_m), D2_m, P_idem)
+        - phi_D(P_idem, m2_mul(D1_m, D2_m), P_idem)
+        + phi_D(P_idem, D1_m, m2_mul(D2_m, P_idem))
+        - phi_D(m2_mul(P_idem, P_idem), D1_m, D2_m)
+    )
+    assert b2_phi == 0
+    Q_idem = m2_sub(One2, P_idem)
+    E_P_D1 = m2_add(m2_mul(m2_mul(P_idem, D1_m), P_idem), m2_mul(m2_mul(Q_idem, D1_m), Q_idem))
+    assert m2_add(E_P_D1, m2_comm(P_idem, m2_comm(P_idem, D1_m))) == D1_m
+    assert m2_add(m2_mul(m2_mul(P_idem, dP1), P_idem), m2_mul(m2_mul(Q_idem, dP1), Q_idem)) == Zero2
+    # Archetypes CXXVII-CXXVIII: Three-Level Projection Flag P <= G <= M,
+    # Commuting Coarse-Graining Expectations, & 3-Stratum Curvature/Cocycle Decomposition:
+    def m2_cg(S, Xm):
+        Sc = m2_sub(One2, S)
+        return m2_add(m2_mul(m2_mul(S, Xm), S), m2_mul(m2_mul(Sc, Xm), Sc))
+    G_flag = One2
+    M_flag = One2
+    assert m2_cg(P_idem, m2_cg(G_flag, m2_cg(M_flag, D1_m))) == m2_cg(M_flag, m2_cg(G_flag, m2_cg(P_idem, D1_m)))
+    assert m2_mul(m2_mul(P_idem, Om1), P_idem) == m2_mul(P_idem, Om1)
+    print("[PASS] Archetypes XCIX-CXXVIII: Operator Cyclotomics, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes Idempotent Curvature, Non-Abelian Gauss-Codazzi, Adiabatic/Double-Commutator Projection, Lie-Connes Exactness, Connes (b, B) Cyclic Bicomplex, Chern-Connes 2-Cocycle Closure, Taxonomic Coarse-Graining Hodge-Peirce, & 3-Level Projection Flag Hierarchy")
 
     print("======================================================================")
     print("ALL CHECKS PASSED")

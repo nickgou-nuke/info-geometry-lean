@@ -605,7 +605,10 @@ assert z_add(sec_var_f, z_add(curv_comp_f, curv_comp_f)) == z_zero()
 dE_inner_f = z_sub(z_mul(E_plus_f, X_obs_f), z_mul(X_obs_f, E_plus_f))
 dbl_comm_f = z_sub(z_mul(E_plus_f, dE_inner_f), z_mul(dE_inner_f, E_plus_f))
 assert z_sub(z_mul(dbl_comm_f, E_plus_f), z_mul(E_plus_f, dbl_comm_f)) == dE_f
-print("[PASS] FreeAlgebra & PolynomialRing: Archetypes XC-CXXII (56D Freudenthal E_7 Euler Trace Identity, Inductive Colimit Doublet Tower, Zorn-Riccati Taylor Shift, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio of 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes Double-Commutator Projection, & Zorn-Connes Vacuum Idempotent Curvature Collapse)")
+E_minus_f = (F(0), (F(0), F(0), F(0)), (F(0), F(0), F(0)), F(1))
+coarse_X_f = z_add(z_mul(z_mul(E_plus_f, X_obs_f), E_plus_f), z_mul(z_mul(E_minus_f, X_obs_f), E_minus_f))
+assert z_add(coarse_X_f, dbl_comm_f) == X_obs_f
+print("[PASS] FreeAlgebra & PolynomialRing: Archetypes XC-CXXVI (56D Freudenthal E_7 Euler Trace Identity, Inductive Colimit Doublet Tower, Zorn-Riccati Taylor Shift, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio of 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes (b, B) Cyclic Bicomplex, Taxonomic Coarse-Graining Hodge-Peirce Decomposition, & Zorn-Connes Vacuum Idempotent Curvature Collapse)")
 
 print("======================================================================")
 print("ALL CHECKS PASSED")

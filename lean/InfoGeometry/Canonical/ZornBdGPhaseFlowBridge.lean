@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DoubledCARIntertwiner
 import InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner
 import Mathlib.Analysis.InnerProductSpace.PiL2
@@ -25,10 +30,13 @@ open InfoGeometry.Canonical.RealDoubledWaveplate
 open InfoGeometry.Algebra.CARModuleDecomposition
 open InfoGeometry.Canonical.DoubledCARIntertwiner
 open InfoGeometry.Canonical.SplitOctonionCARRightRegularBridge
+open InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift
 open InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
+open InfoGeometry.Canonical.SplitOctonionExteriorGradePeirceParityBridge
 open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 
+abbrev Exterior3 := InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner.Exterior3
 abbrev Multiplicity := EuclideanSpace ℝ (Fin 4)
 abbrev ZornCarrier := InfoGeometry.Canonical.ZornMatrix ℝ
 abbrev ModeKernel (i : Fin 3) := (rightRegularCARPair i).ann.ker
@@ -80,7 +88,8 @@ theorem phaseFlow_intertwiner (i : Fin 3) (θ : ℝ) (x : DoubledSpace Multiplic
 
 theorem zornPhase_inverse (i : Fin 3) (θ : ℝ) :
     zornPhase i (-θ) * zornPhase i θ = 1 := by
-  ext z
+  apply LinearMap.ext
+  intro z
   obtain ⟨x, rfl⟩ := (doubledZornEquiv i).surjective z
   change zornPhase i (-θ) (zornPhase i θ (doubledZornEquiv i x)) = doubledZornEquiv i x
   rw [phaseFlow_intertwiner, phaseFlow_intertwiner, phaseFlow_left_inverse_apply]
@@ -136,14 +145,5 @@ theorem phaseConjugation_creation (i : Fin 3) (θ : ℝ)
       doubledZornEquiv i (phaseConjugation θ (concreteCARCreation) x) := by
   rw [phaseFlow_intertwiner, creation_intertwiner, phaseFlow_intertwiner]
   rfl
-
-#check InfoGeometry.Canonical.PhaseFlowCARBridge.annihilation_quarter_turn
-#check InfoGeometry.Canonical.PhaseFlowCARBridge.creation_quarter_turn
-#check InfoGeometry.Canonical.PhaseFlowCARBridge.quarter_turn_supports
-#check modeKernel_finrank
-#check phaseFlow_intertwiner
-#check fockBdG_phase_intertwiner
-#check comparison_triangle
-#check phaseConjugation_annihilation
 
 end InfoGeometry.Canonical.ZornBdGPhaseFlowBridge

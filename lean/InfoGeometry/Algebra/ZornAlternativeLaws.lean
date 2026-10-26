@@ -8571,7 +8571,6 @@ theorem zorn_connes_vacuum_idempotent_derivation_curvature_and_supertrace
     simp [trace]
   · rw [h_curv]
     simp [trace, zornGamma, E11, E22, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, sub, ZornVec3.dot]
-    ring
   · rw [h_der]
     ext k
     · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.dot]

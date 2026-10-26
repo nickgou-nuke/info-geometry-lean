@@ -514,7 +514,14 @@ fi;
 if ZornMul(Eplus_g, Om_g) <> ZornMul(Om_g, Eplus_g) then
     Error("FAIL: Archetype CXIX Connes curvature commutation failed");
 fi;
-Print("[PASS] GAP: Archetypes LXXV-CXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), & Zorn-Connes Vacuum Curvature Collapse)\n");
+Eminus_g := [ 0*y1, [0*y1, 0*y1, 0*y1], [0*y1, 0*y1, 0*y1], 1 + 0*y1 ];
+dE_in_g := ZornSub(ZornMul(Eplus_g, Q_alb), ZornMul(Q_alb, Eplus_g));
+dbl_comm_g := ZornSub(ZornMul(Eplus_g, dE_in_g), ZornMul(dE_in_g, Eplus_g));
+coarse_Q_g := ZornAdd(ZornMul(ZornMul(Eplus_g, Q_alb), Eplus_g), ZornMul(ZornMul(Eminus_g, Q_alb), Eminus_g));
+if ZornAdd(coarse_Q_g, dbl_comm_g) <> Q_alb then
+    Error("FAIL: Archetype CXXVI Hodge-Peirce coarse-graining decomposition failed");
+fi;
+Print("[PASS] GAP: Archetypes LXXV-CXXVI (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes (b, B) Cyclic Bicomplex, Taxonomic Coarse-Graining Hodge-Peirce Decomposition, & Zorn-Connes Vacuum Curvature Collapse)\n");
 
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");

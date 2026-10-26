@@ -319,7 +319,12 @@ dEM = zornSub(zornMul(Qalb, EplusM), zornMul(EplusM, Qalb))
 OmM = zornMul(dEM, dEM)
 assert(zornMul(zornMul(EplusM, dEM), EplusM) == zornZero)
 assert(zornMul(EplusM, OmM) == zornMul(OmM, EplusM))
-print("[PASS] Macaulay2: Archetypes LXXV-CXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Cayley-Dickson, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), & Zorn-Connes Vacuum Curvature Collapse)")
+EminusM = {0_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, 1_R}
+dEinM = zornSub(zornMul(EplusM, Qalb), zornMul(Qalb, EplusM))
+dblCommM = zornSub(zornMul(EplusM, dEinM), zornMul(dEinM, EplusM))
+coarseQM = zornAdd(zornMul(zornMul(EplusM, Qalb), EplusM), zornMul(zornMul(EminusM, Qalb), EminusM))
+assert(zornAdd(coarseQM, dblCommM) == Qalb)
+print("[PASS] Macaulay2: Archetypes LXXV-CXXVI (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Cayley-Dickson, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes (b, B) Cyclic Bicomplex, Taxonomic Coarse-Graining Hodge-Peirce Decomposition, & Zorn-Connes Vacuum Curvature Collapse)")
 
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]

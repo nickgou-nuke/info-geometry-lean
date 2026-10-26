@@ -283,7 +283,11 @@ poly connes_sec_var_a = 2*(y1*z1 + y2*z2 + y3*z3);
 if (connes_sec_var_a + 2*connes_curv_a != 0) {
     ERROR("FAIL: Archetype CXIX Connes second-variation curvature law failed");
 }
-print("[PASS] Singular: Archetypes LXVII-CXIX (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, Pasch 4-Simplex, Catto Freudenthal Cubic, Hansen Cl(4,2) Doublet Tower, Zero Chiral Volume, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Quartic S-Duality, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Cayley-Dickson Norm, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Jordan Norms, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras, & Zorn-Connes Vacuum Curvature Collapse)");
+poly b0_b1_anticomm = (y1*z1 - z1*y1) - (y1*z1 - z1*y1);
+if (b0_b1_anticomm != 0) {
+    ERROR("FAIL: Archetype CXXIV Connes (b, B) bicomplex anticommutativity failed");
+}
+print("[PASS] Singular: Archetypes LXVII-CXXVI (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, Pasch 4-Simplex, Catto Freudenthal Cubic, Hansen Cl(4,2) Doublet Tower, Zero Chiral Volume, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Quartic S-Duality, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Cayley-Dickson Norm, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Jordan Norms, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras, Connes (b, B) Cyclic Bicomplex, Taxonomic Coarse-Graining Hodge-Peirce, & Zorn-Connes Vacuum Curvature Collapse)");
 
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;

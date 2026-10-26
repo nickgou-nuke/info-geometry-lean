@@ -29,7 +29,7 @@ def candidateModel {atoms : ℕ} {I O : Type*}
 def candidateSetoid {atoms : ℕ} {I : Type*}
     (chemical : Setoid (MolecularGraph atoms)) (candidate : I → MolecularGraph atoms) : Setoid I where
   r i j := chemical.r (candidate i) (candidate j)
-  iseqv := ⟨fun i => chemical.iseqv.refl _,
+  iseqv := ⟨fun i => chemical.iseqv.refl (candidate i),
     fun {_ _} h => chemical.iseqv.symm h, fun {_ _ _} h₁ h₂ => chemical.iseqv.trans h₁ h₂⟩
 
 /-- Relabeling/chemical invariance must be a property of the simulator itself;

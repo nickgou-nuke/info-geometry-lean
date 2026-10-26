@@ -62,7 +62,7 @@ theorem exists_finite_identifying_experiment [Fintype M]
   have hsep : ∀ a b, ¬ chemical.r a b → ∃ e, F.observe e a ≠ F.observe e b := by
     intro a b hab
     by_contra hn
-    push_neg at hn
+    push Not at hn
     exact hab (h a b hn)
   let Bad := {p : M × M // ¬ chemical.r p.1 p.2}
   let chooseEnergy : Bad → Energy := fun p => Classical.choose (hsep p.val.1 p.val.2 p.property)

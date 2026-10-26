@@ -20,7 +20,9 @@ theorem mz_order_is_not_neutral_mass_order :
     IonInterpretation.chargeMagnitude]
 
 theorem rational_peak_checker_accepts :
-    (RationalPeakRecord.mk (101 / 2) (7 / 3)).check = true := by decide
+    (RationalPeakRecord.mk (101 / 2) (7 / 3)).check = true := by
+  apply RationalPeakRecord.check_iff.mpr
+  norm_num [RationalPeakRecord.Valid]
 
 theorem rational_peak_checker_rejects_zero_mz :
     (RationalPeakRecord.mk 0 1).check = false := by decide
@@ -92,7 +94,10 @@ theorem one_informative_condition_separates :
 theorem uninformative_condition_identifies_nothing :
     twoCandidates.observe false false = twoCandidates.observe false true ∧
     ¬ equalityChemistry.r false true := by
-  simp [twoCandidates, equalityChemistry]
+  constructor
+  · rfl
+  · change (false : Bool) ≠ true
+    decide
 
 /-- At exactly twice the radius, two closed error balls can intersect. -/
 theorem strict_margin_is_necessary :

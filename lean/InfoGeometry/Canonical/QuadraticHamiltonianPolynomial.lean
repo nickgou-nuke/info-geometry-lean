@@ -17,7 +17,7 @@ namespace InfoGeometry.Canonical.QuadraticHamiltonian
 /-- Coordinate multiplication on the native complex polynomial module. -/
 def polynomialPosition : Module.End ℂ (Polynomial ℂ) where
   toFun f := Polynomial.X * f
-  map_add' f g := mul_add _ _ _
+  map_add' f g := mul_add Polynomial.X f g
   map_smul' r f := Algebra.mul_smul_comm r Polynomial.X f
 
 /-- Exact CCR on polynomials, not a finite cutoff with a discarded boundary. -/
@@ -25,7 +25,8 @@ def polynomialCCR : SplitClifford.CCRPair (Module.End ℂ (Polynomial ℂ)) wher
   ann := Polynomial.derivative
   cre := polynomialPosition
   commutator := by
-    ext f
+    apply LinearMap.ext
+    intro f
     change Polynomial.derivative (Polynomial.X * f) -
       Polynomial.X * Polynomial.derivative f = f
     simp [Polynomial.derivative_mul]

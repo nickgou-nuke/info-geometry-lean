@@ -47,8 +47,12 @@ theorem finiteGreen_succ_left (K : A) (N : ℕ) :
   induction N with
   | zero => simp [finiteGreen]
   | succ N ih =>
-      rw [finiteGreen_succ, ih, finiteGreen_succ, mul_add, ← pow_succ']
-      abel
+      calc
+        finiteGreen K (N + 1 + 1) = finiteGreen K (N + 1) + K ^ (N + 1) :=
+          finiteGreen_succ K (N + 1)
+        _ = (1 + K * finiteGreen K N) + K * K ^ N := by rw [ih, pow_succ']
+        _ = 1 + K * (finiteGreen K N + K ^ N) := by noncomm_ring
+        _ = 1 + K * finiteGreen K (N + 1) := by rw [finiteGreen_succ]
 
 end FiniteGreenResponse
 
@@ -116,7 +120,7 @@ theorem transient_pow_row_sum_le_one (G : StochasticGrammar D) (k : ℕ) :
 
 theorem finiteGreen_nonneg (G : StochasticGrammar D) (N : ℕ) (u v : Fin n) :
     0 ≤ finiteGreen G.transientMatrix N u v := by
-  simp only [finiteGreen, Finset.sum_apply]
+  simp only [finiteGreen, Matrix.sum_apply]
   exact Finset.sum_nonneg (fun k _ => G.transient_pow_nonneg k u v)
 
 theorem finiteGreen_row_sum_le (G : StochasticGrammar D) (N : ℕ) (u : Fin n) :
@@ -124,7 +128,7 @@ theorem finiteGreen_row_sum_le (G : StochasticGrammar D) (N : ℕ) (u : Fin n) :
   calc
     ∑ v, finiteGreen G.transientMatrix N u v =
         ∑ k ∈ Finset.range N, ∑ v, (G.transientMatrix ^ k) u v := by
-      simp only [finiteGreen, Finset.sum_apply]
+      simp only [finiteGreen, Matrix.sum_apply]
       exact Finset.sum_comm
     _ ≤ ∑ _k ∈ Finset.range N, (1 : ℝ) := by
       exact Finset.sum_le_sum (fun k _ => G.transient_pow_row_sum_le_one k u)

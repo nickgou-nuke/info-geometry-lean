@@ -60,7 +60,7 @@ theorem one_le_finiteGreen_row_sum (G : StochasticGrammar D)
       Finset.single_le_sum
         (fun k _ => Finset.sum_nonneg (fun v _ => G.transient_pow_nonneg k u v)) hzero
     _ = ∑ v, finiteGreen G.transientMatrix N u v := by
-      simp only [finiteGreen, Finset.sum_apply]
+      simp only [finiteGreen, Matrix.sum_apply]
       exact Finset.sum_comm
 
 theorem occupancyPotential_bounds (G : StochasticGrammar D) (u : Fin n) :

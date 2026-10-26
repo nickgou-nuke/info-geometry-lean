@@ -97,9 +97,12 @@ theorem response_two_source_error (G : StochasticGrammar D) (H : StochasticGramm
       (rankHorizon D.rank : ℝ) * ‖g - h‖ +
         ((rankHorizon D.rank : ℝ) * (rankHorizon E.rank : ℝ) *
           ‖G.transientMatrix - H.transientMatrix‖) * ‖h‖ := by
-  exact (norm_sub_le (G.fundamentalMatrix *ᵥ g) (G.fundamentalMatrix *ᵥ h)
-    (H.fundamentalMatrix *ᵥ h)).trans
-      (add_le_add (G.response_reward_error g h) (G.response_difference_norm_le H h))
+  have heq : G.fundamentalMatrix *ᵥ g - H.fundamentalMatrix *ᵥ h =
+      (G.fundamentalMatrix *ᵥ g - G.fundamentalMatrix *ᵥ h) +
+        (G.fundamentalMatrix *ᵥ h - H.fundamentalMatrix *ᵥ h) := by abel
+  rw [heq]
+  exact (norm_add_le _ _).trans
+    (add_le_add (G.response_reward_error g h) (G.response_difference_norm_le H h))
 
 /-- A uniform response certificate on bounded rewards, using the existing owner. -/
 def response_uniformErrorBound (G : StochasticGrammar D) (H : StochasticGrammar E)

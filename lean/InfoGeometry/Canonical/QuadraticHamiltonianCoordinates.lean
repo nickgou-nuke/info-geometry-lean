@@ -44,7 +44,7 @@ def doubleSin (c s : R) : R := 2 * c * s
 theorem rotated_commutator (c s : R) (q p : A) :
     ⁅rotatedQ c s q p, rotatedP c s q p⁆ = (c * c + s * s) • ⁅q, p⁆ := by
   simp only [Ring.lie_def, rotatedQ, rotatedP, add_mul, mul_add,
-    Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, smul_sub]
+    Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_sub]
   module
 
 theorem H0_rotated (c s : R) (q p : A) :
@@ -135,7 +135,8 @@ theorem quarter_turn (q p : A) :
     unfold doubleSin
     rw [heq] at *
     nlinarith
-  simp [H1_rotated, H2_rotated, hc, hs]
+  simp only [H1_rotated, H2_rotated, hc, hs, zero_smul, one_smul,
+    zero_add, zero_sub, and_self]
 
 end RealCoordinates
 

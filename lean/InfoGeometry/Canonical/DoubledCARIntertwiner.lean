@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.CARModuleDecomposition
 import InfoGeometry.Canonical.PhaseFlowCARBridge
 
@@ -100,7 +105,6 @@ theorem phase_intertwines (θ : ℝ) (z : DoubledSpace E) :
   rw [haxis, ← map_smul, ← map_smul, ← map_add]
   congr 1
   rw [phaseFlow_eq_KRotation, KRotation_apply]
-  rfl
 
 /-- Full operator covariance, not merely generator agreement. -/
 theorem conjugation_intertwines (θ : ℝ)

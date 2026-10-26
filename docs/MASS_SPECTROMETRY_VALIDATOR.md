@@ -69,7 +69,7 @@ they are not silently run or reported as approved by this command.
 ```sh
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
   InfoGeometry.MassSpectrometry.ValidatorIO
-lake env lean --run lean/Examples/MassSpectrometry/Validate.lean \
+lake env lean --run lean/InfoGeometry/MassSpectrometry/Validate.lean \
   examples/mass-spectrometry/two-fragment.json
 ```
 
@@ -108,8 +108,8 @@ results. These use kernel reduction, not native proof evaluation. String parsing
 is tested separately at runtime in `JsonChecks.lean`.
 
 ```sh
-lake env lean lean/Examples/MassSpectrometry/ValidationChecks.lean
-lake env lean --run lean/Examples/MassSpectrometry/JsonChecks.lean \
+lake env lean lean/InfoGeometry/MassSpectrometry/ValidationChecks.lean
+lake env lean --run lean/InfoGeometry/MassSpectrometry/JsonChecks.lean \
   examples/mass-spectrometry/two-fragment.json
 ```
 

@@ -8971,7 +8971,576 @@ theorem three_quaternion_galois_subalgebras_and_riccati_axis_decoupling
           OpVec3.leftScale, OpVec3.rightScale];
     try abel; try noncomm_ring))
 
+/-!
+## 46. Archetypes CXVII–CXIX: Non-Commutative Inner Derivations, Idempotent Strata, Connes Curvature, Gauss–Codazzi Equation, Second-Variation Law, Spectral Supertrace Conservation, & Zorn–Connes Vacuum Idempotent Collapse
+-/
+
+/-- **Zorn–Connes Curvature (`opZornConnesCurvature D P`)** on `OpZornMatrix A`:
+    $\Omega_D^{\mathrm{Zorn}}(P) := \mathrm{opCommutator}\;D\;P * \mathrm{opCommutator}\;D\;P$. -/
+def opZornConnesCurvature (D P : OpZornMatrix A) : OpZornMatrix A :=
+  opCommutator D P * opCommutator D P
+
+/-- **Theorem 133 (`Archetype CXIX`: Zorn–Connes Vacuum Idempotent Derivation, Transverse 1-Form $\delta_D(E_+) = \langle 0, -v, w, 0 \rangle$, Singlet Curvature Collapse $\Omega_D^{\mathrm{Zorn}}(E_+) = \langle -(v \cdot w), 0, 0, -(w \cdot v) \rangle$, & Second-Variation Identity in `OpZornMatrix A`)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`), for all $D \in \mathrm{OpZornMatrix}\;A$,
+    let $E_+ := \mathrm{opGradeZero}\;1\;0 = \langle 1, 0, 0, 0 \rangle$ and $E_- := \mathrm{opGradeZero}\;0\;1 = \langle 0, 0, 0, 1 \rangle$:
+    1. **Peirce Idempotent Orthogonality & Chirality Grading**:
+       $$E_+ * E_+ = E_+, \quad E_- * E_- = E_-, \quad E_+ * E_- = 0, \quad E_- * E_+ = 0, \quad
+         E_+ + E_- = 1, \quad E_+ - E_- = \mathrm{opZornGamma}.$$
+    2. **Exact Transverse Connes 1-Form of the Vacuum Idempotent $E_+$**:
+       $$\mathrm{opCommutator}\;D\;E_+ = \langle 0, -D.v, D.w, 0 \rangle,$$
+       $$E_+ * \mathrm{opCommutator}\;D\;E_+ + \mathrm{opCommutator}\;D\;E_+ * E_+ = \mathrm{opCommutator}\;D\;E_+,$$
+       $$\mathrm{opZornGamma} * \mathrm{opCommutator}\;D\;E_+ + \mathrm{opCommutator}\;D\;E_+ * \mathrm{opZornGamma} = 0,$$
+       $$(E_+ * \mathrm{opCommutator}\;D\;E_+) * E_+ = 0, \qquad (E_- * \mathrm{opCommutator}\;D\;E_+) * E_- = 0.$$
+    3. **Collapse of the Zorn–Connes Curvature $\Omega_D^{\mathrm{Zorn}}(E_+)$ into the Associative Cartan Singlet Nucleus $\mathcal{G}_0$**:
+       $$\mathrm{opZornConnesCurvature}\;D\;E_+ =
+         \mathrm{opGradeZero}\;(\mathrm{OpVec3.dot}\;D.v\;D.w)\;(\mathrm{OpVec3.dot}\;D.w\;D.v),$$
+       $$E_+ * \mathrm{opZornConnesCurvature}\;D\;E_+ = \mathrm{opZornConnesCurvature}\;D\;E_+ * E_+,$$
+       $$(E_+ * \mathrm{opCommutator}\;D\;(\mathrm{opCommutator}\;D\;E_+)) * E_+ +
+         ((E_+ * \mathrm{opZornConnesCurvature}\;D\;E_+) * E_+ +
+          (E_+ * \mathrm{opZornConnesCurvature}\;D\;E_+) * E_+) = 0,$$
+       $$\mathrm{opZornTrace}\;(\mathrm{opZornGamma} * \mathrm{opZornConnesCurvature}\;D\;E_+) =
+         \mathrm{OpVec3.dot}\;D.v\;D.w - \mathrm{OpVec3.dot}\;D.w\;D.v.$$ -/
+theorem zorn_connes_vacuum_idempotent_derivation_and_curvature_collapse
+    (D : OpZornMatrix A) :
+    let E_plus : OpZornMatrix A := opGradeZero 1 0
+    let E_minus : OpZornMatrix A := opGradeZero 0 1
+    E_plus * E_plus = E_plus ∧
+    E_minus * E_minus = E_minus ∧
+    E_plus * E_minus = 0 ∧
+    E_minus * E_plus = 0 ∧
+    E_plus + E_minus = 1 ∧
+    E_plus - E_minus = opZornGamma ∧
+    opCommutator D E_plus = ⟨0, -D.v, D.w, 0⟩ ∧
+    E_plus * opCommutator D E_plus + opCommutator D E_plus * E_plus = opCommutator D E_plus ∧
+    opZornGamma * opCommutator D E_plus + opCommutator D E_plus * opZornGamma = 0 ∧
+    (E_plus * opCommutator D E_plus) * E_plus = 0 ∧
+    (E_minus * opCommutator D E_plus) * E_minus = 0 ∧
+    opZornConnesCurvature D E_plus =
+      opGradeZero (OpVec3.dot D.v D.w) (OpVec3.dot D.w D.v) ∧
+    E_plus * opZornConnesCurvature D E_plus = opZornConnesCurvature D E_plus * E_plus ∧
+    (E_plus * opCommutator D (opCommutator D E_plus)) * E_plus +
+      ((E_plus * opZornConnesCurvature D E_plus) * E_plus +
+       (E_plus * opZornConnesCurvature D E_plus) * E_plus) = 0 ∧
+    opZornTrace (opZornGamma * opZornConnesCurvature D E_plus) =
+      OpVec3.dot D.v D.w - OpVec3.dot D.w D.v ∧
+    opCommutator (opCommutator E_plus (opCommutator E_plus D)) E_plus = opCommutator D E_plus := by
+  intro E_plus E_minus
+  have h_der : opCommutator D E_plus = ⟨0, -D.v, D.w, 0⟩ := by
+    ext <;>
+    (simp [opCommutator, E_plus, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+           OpVec3.leftScale, OpVec3.rightScale];
+     try abel)
+  have h_curv : opZornConnesCurvature D E_plus =
+      opGradeZero (OpVec3.dot D.v D.w) (OpVec3.dot D.w D.v) := by
+    dsimp [opZornConnesCurvature]
+    rw [h_der]
+    ext <;>
+    (simp [opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+           OpVec3.leftScale, OpVec3.rightScale];
+     try abel; try noncomm_ring)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, h_der, ?_, ?_, ?_, ?_, h_curv, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [E_plus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [E_minus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [E_plus, E_minus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [E_plus, E_minus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · ext <;> simp [E_plus, E_minus, opCartanDiag]
+  · ext <;> simp [E_plus, E_minus, opCartanDiag, opZornGamma]
+  · rw [h_der]
+    ext <;> (simp [E_plus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel)
+  · rw [h_der]
+    ext <;> (simp [opZornGamma, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel)
+  · rw [h_der]
+    ext <;> simp [E_plus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · rw [h_der]
+    ext <;> simp [E_minus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · rw [h_curv]
+    ext <;> simp [E_plus, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+  · rw [h_der, h_curv]
+    ext <;>
+    (simp [opCommutator, E_plus, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+           OpVec3.leftScale, OpVec3.rightScale];
+     try noncomm_ring)
+  · rw [h_curv]
+    simp [opZornTrace, opZornGamma, opCartanDiag, OpVec3.dot]
+    abel
+  · rw [h_der]
+    ext <;>
+    (simp [opCommutator, E_plus, opCartanDiag,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+           OpVec3.leftScale, OpVec3.rightScale];
+     try abel)
+
 end PorterNoncommutativeRiccatiAndLoxodromes
+
+/-- **Matrix Inner Derivation (`matInnerDer D X`)** on `Matrix n n R`:
+    $\delta_D(X) = [D, X] = D * X - X * D$. -/
+def matInnerDer {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (D X : Matrix n n R) : Matrix n n R :=
+  D * X - X * D
+
+/-- **Matrix Connes Curvature (`matConnesCurvature D P`)** on `Matrix n n R`:
+    $\Omega_D(P) = [D, P]^2 = \delta_D(P) * \delta_D(P)$. -/
+def matConnesCurvature {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (D P : Matrix n n R) : Matrix n n R :=
+  matInnerDer D P * matInnerDer D P
+
+/-- **Local Chern–Connes 2-Chain Operator Density (`matConnesDensity D P`)** on `Matrix n n R`:
+    $\mathcal{C}(D, P) = P * [D, P]^2 = P * (\delta_D(P) * \delta_D(P))$. -/
+def matConnesDensity {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (D P : Matrix n n R) : Matrix n n R :=
+  P * (matInnerDer D P * matInnerDer D P)
+
+/-- **Connes Cyclic Cocycle Pairing (`matConnesCocycle D P`)** on `Matrix n n R`:
+    $\tau(P * [D, P]^2) = \mathrm{Matrix.trace}(\mathcal{C}(D, P))$. -/
+def matConnesCocycle {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (D P : Matrix n n R) : R :=
+  Matrix.trace (matConnesDensity D P)
+
+/-- **Total First-Order Inner Variation (`matConnesDensityVariation A D P`)** of the Chern–Connes
+    density $\mathcal{C}(D, P) = P * [D, P]^2$ under $\delta_A(P) = [A, P]$ and $\delta_A(D) = [A, D]$. -/
+def matConnesDensityVariation {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (A D P : Matrix n n R) : Matrix n n R :=
+  matInnerDer A P * (matInnerDer D P * matInnerDer D P) +
+  P * ((matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)) * matInnerDer D P) +
+  P * (matInnerDer D P * (matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)))
+
+/-- **Idempotent Projection Stratum (`IsMatrixIdempotent P`)** in `Matrix n n R`:
+    $P * P = P$. -/
+def IsMatrixIdempotent {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (P : Matrix n n R) : Prop :=
+  P * P = P
+
+/-- **Invertible Inner Gauge Pair (`IsMatrixInnerGaugePair U V`)** in `Matrix n n R`:
+    $U * V = 1 \wedge V * U = 1$. -/
+def IsMatrixInnerGaugePair {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (U V : Matrix n n R) : Prop :=
+  U * V = 1 ∧ V * U = 1
+
+/-- **Theorem 134 (`Archetype CXVII`: Matrix Inner Derivations, Leibniz Cocycle, Path-Curvature Defect, Idempotent Strata, Connes Curvature, Second-Variation Law, & Non-Abelian Gauss–Codazzi Equation)**:
+    Over *any* noncommutative ring $R$ (`[Ring R]`) and finite index type $n$, for all $D, D_1, D_2, X, Y, P \in \mathrm{Matrix}\;n\;n\;R$ with $P^2 = P$ (`hP : IsMatrixIdempotent P`):
+    1. **Skew-Symmetry & Self-Nilpotence ($\alpha_1$)**:
+       $$\delta_D(X) = -\delta_X(D), \qquad \delta_D(D) = 0.$$
+    2. **Non-Commutative Leibniz Cocycle ($\alpha_2$)**:
+       $$\delta_D(X * Y) = \delta_D(X) * Y + X * \delta_D(Y).$$
+    3. **Jacobi Syzygy & Non-Abelian Path-Curvature Defect ($\alpha_3$)**:
+       $$\delta_D(\delta_X(Y)) + \delta_X(\delta_Y(D)) + \delta_Y(\delta_D(X)) = 0,$$
+       $$\delta_{D_1}(\delta_{D_2}(X)) - \delta_{D_2}(\delta_{D_1}(X)) = \delta_{\delta_{D_1}(D_2)}(X).$$
+    4. **Idempotent Stratum Orthogonality, Grading Involution $F = 2P - 1$, & Chirality Anticommutation ($\alpha_4$)**:
+       $$(1 - P) * (1 - P) = 1 - P, \qquad P * (1 - P) = 0, \qquad (1 - P) * P = 0,$$
+       $$(P + P - 1) * (P + P - 1) = 1,$$
+       $$P * \delta_D(P) + \delta_D(P) * P = \delta_D(P), \qquad
+         (P + P - 1) * \delta_D(P) + \delta_D(P) * (P + P - 1) = 0,$$
+       $$P * \delta_D(P) * P = 0, \qquad (1 - P) * \delta_D(P) * (1 - P) = 0.$$
+    5. **Connes Curvature Commutation, Cubic Compression Vanishing, Second-Variation Law, & Non-Abelian Gauss–Codazzi Equation ($\alpha_4 \prec \alpha_6$)**:
+       $$P * \Omega_D(P) = \Omega_D(P) * P, \qquad
+         P * (\Omega_D(P) * \delta_D(P)) * P = 0,$$
+       $$P * \delta_D(\delta_D(P)) * P + (P * \Omega_D(P) * P + P * \Omega_D(P) * P) = 0,$$
+       $$\delta_{P * D_1 * P}(P * D_2 * P) - P * \delta_{D_1}(D_2) * P =
+         P * \delta_{D_1}(P) * \delta_{D_2}(P) * P - P * \delta_{D_2}(P) * \delta_{D_1}(P) * P.$$ -/
+theorem matrix_inner_derivation_idempotent_connes_curvature_and_gauss_codazzi
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (D D₁ D₂ X Y P : Matrix n n R) (hP : IsMatrixIdempotent P) :
+    matInnerDer D X = -matInnerDer X D ∧
+    matInnerDer D D = 0 ∧
+    matInnerDer D (X * Y) = matInnerDer D X * Y + X * matInnerDer D Y ∧
+    matInnerDer D (matInnerDer X Y) +
+      matInnerDer X (matInnerDer Y D) +
+      matInnerDer Y (matInnerDer D X) = 0 ∧
+    matInnerDer D₁ (matInnerDer D₂ X) - matInnerDer D₂ (matInnerDer D₁ X) =
+      matInnerDer (matInnerDer D₁ D₂) X ∧
+    (1 - P) * (1 - P) = 1 - P ∧
+    P * (1 - P) = 0 ∧
+    (1 - P) * P = 0 ∧
+    (P + P - 1) * (P + P - 1) = 1 ∧
+    P * matInnerDer D P + matInnerDer D P * P = matInnerDer D P ∧
+    (P + P - 1) * matInnerDer D P + matInnerDer D P * (P + P - 1) = 0 ∧
+    P * matInnerDer D P * P = 0 ∧
+    (1 - P) * matInnerDer D P * (1 - P) = 0 ∧
+    P * matConnesCurvature D P = matConnesCurvature D P * P ∧
+    P * (matConnesCurvature D P * matInnerDer D P) * P = 0 ∧
+    P * matInnerDer D (matInnerDer D P) * P +
+      (P * matConnesCurvature D P * P + P * matConnesCurvature D P * P) = 0 ∧
+    matInnerDer (P * D₁ * P) (P * D₂ * P) - P * matInnerDer D₁ D₂ * P =
+      P * matInnerDer D₁ P * matInnerDer D₂ P * P -
+      P * matInnerDer D₂ P * matInnerDer D₁ P * P := by
+  have hP_eq : P * P = P := hP
+  have h_leib : ∀ A B C : Matrix n n R,
+      matInnerDer A (B * C) = matInnerDer A B * C + B * matInnerDer A C := by
+    intro A B C
+    dsimp [matInnerDer]
+    noncomm_ring
+  have h_off : P * matInnerDer D P + matInnerDer D P * P = matInnerDer D P := by
+    have h := h_leib D P P
+    rw [hP_eq] at h
+    rw [add_comm]
+    exact h.symm
+  have h_comp0 : P * matInnerDer D P * P = 0 := by
+    dsimp [matInnerDer]
+    calc
+      P * (D * P - P * D) * P
+        = P * D * (P * P) - (P * P) * D * P := by noncomm_ring
+      _ = P * D * P - P * D * P := by rw [hP_eq]
+      _ = 0 := sub_self (P * D * P)
+  have h_comm : P * matConnesCurvature D P = matConnesCurvature D P * P := by
+    dsimp [matConnesCurvature, matInnerDer]
+    have hL : P * ((D * P - P * D) * (D * P - P * D)) = P * D * P * D * P - P * D * D * P := by
+      calc
+        P * ((D * P - P * D) * (D * P - P * D))
+          = P * D * P * D * P - P * D * (P * P) * D - (P * P) * D * D * P + (P * P) * D * P * D := by
+            noncomm_ring
+        _ = P * D * P * D * P - P * D * P * D - P * D * D * P + P * D * P * D := by
+            rw [hP_eq]
+        _ = P * D * P * D * P - P * D * D * P := by
+            noncomm_ring
+    have hR : (D * P - P * D) * (D * P - P * D) * P = P * D * P * D * P - P * D * D * P := by
+      calc
+        (D * P - P * D) * (D * P - P * D) * P
+          = D * P * D * (P * P) - D * (P * P) * D * P - P * D * D * (P * P) + P * D * P * D * P := by
+            noncomm_ring
+        _ = D * P * D * P - D * P * D * P - P * D * D * P + P * D * P * D * P := by
+            rw [hP_eq]
+        _ = P * D * P * D * P - P * D * D * P := by
+            noncomm_ring
+    rw [hL, hR]
+  have h_pair : ∀ A B : Matrix n n R,
+      P * matInnerDer A P * matInnerDer B P * P = P * A * P * B * P - P * A * B * P := by
+    intro A B
+    dsimp [matInnerDer]
+    calc
+      P * (A * P - P * A) * (B * P - P * B) * P
+        = P * A * P * B * (P * P) - P * A * (P * P) * B * P -
+          (P * P) * A * B * (P * P) + (P * P) * A * P * B * P := by noncomm_ring
+      _ = P * A * P * B * P - P * A * P * B * P - P * A * B * P + P * A * P * B * P := by
+          rw [hP_eq]
+      _ = P * A * P * B * P - P * A * B * P := by noncomm_ring
+  refine ⟨?_, ?_, h_leib D X Y, ?_, ?_, ?_, ?_, ?_, ?_, h_off, ?_, h_comp0, ?_, h_comm, ?_, ?_, ?_⟩
+  · dsimp [matInnerDer]; noncomm_ring
+  · dsimp [matInnerDer]; exact sub_self (D * D)
+  · dsimp [matInnerDer]; noncomm_ring
+  · dsimp [matInnerDer]; noncomm_ring
+  · calc
+      (1 - P) * (1 - P) = 1 - P - P + P * P := by noncomm_ring
+      _ = 1 - P - P + P := by rw [hP_eq]
+      _ = 1 - P := by noncomm_ring
+  · calc
+      P * (1 - P) = P - P * P := by noncomm_ring
+      _ = P - P := by rw [hP_eq]
+      _ = 0 := sub_self P
+  · calc
+      (1 - P) * P = P - P * P := by noncomm_ring
+      _ = P - P := by rw [hP_eq]
+      _ = 0 := sub_self P
+  · calc
+      (P + P - 1) * (P + P - 1)
+        = (P * P + P * P + P * P + P * P) - (P + P + P + P) + 1 := by noncomm_ring
+      _ = (P + P + P + P) - (P + P + P + P) + 1 := by rw [hP_eq]
+      _ = 1 := by noncomm_ring
+  · calc
+      (P + P - 1) * matInnerDer D P + matInnerDer D P * (P + P - 1)
+        = (P * matInnerDer D P + matInnerDer D P * P) +
+          (P * matInnerDer D P + matInnerDer D P * P) -
+          (matInnerDer D P + matInnerDer D P) := by noncomm_ring
+      _ = matInnerDer D P + matInnerDer D P - (matInnerDer D P + matInnerDer D P) := by
+          rw [h_off]
+      _ = 0 := sub_self _
+  · calc
+      (1 - P) * matInnerDer D P * (1 - P)
+        = matInnerDer D P - (P * matInnerDer D P + matInnerDer D P * P) + P * matInnerDer D P * P := by
+          noncomm_ring
+      _ = matInnerDer D P - matInnerDer D P + 0 := by rw [h_off, h_comp0]
+      _ = 0 := by noncomm_ring
+  · calc
+      P * (matConnesCurvature D P * matInnerDer D P) * P
+        = (P * matConnesCurvature D P) * matInnerDer D P * P := by noncomm_ring
+      _ = (matConnesCurvature D P * P) * matInnerDer D P * P := by rw [h_comm]
+      _ = matConnesCurvature D P * (P * matInnerDer D P * P) := by noncomm_ring
+      _ = matConnesCurvature D P * 0 := by rw [h_comp0]
+      _ = 0 := mul_zero _
+  · have h_curv_comp : P * matConnesCurvature D P * P = P * D * P * D * P - P * D * D * P := by
+      simpa [matConnesCurvature, mul_assoc] using h_pair D D
+    have h_sec_var :
+        P * matInnerDer D (matInnerDer D P) * P =
+          (P * D * D * P - P * D * P * D * P) + (P * D * D * P - P * D * P * D * P) := by
+      dsimp [matInnerDer]
+      calc
+        P * (D * (D * P - P * D) - (D * P - P * D) * D) * P
+          = P * D * D * (P * P) - P * D * P * D * P - P * D * P * D * P + (P * P) * D * D * P := by
+            noncomm_ring
+        _ = P * D * D * P - P * D * P * D * P - P * D * P * D * P + P * D * D * P := by
+            rw [hP_eq]
+        _ = (P * D * D * P - P * D * P * D * P) + (P * D * D * P - P * D * P * D * P) := by
+            noncomm_ring
+    rw [h_sec_var, h_curv_comp]
+    noncomm_ring
+  · have h_lhs :
+        matInnerDer (P * D₁ * P) (P * D₂ * P) =
+          P * D₁ * P * D₂ * P - P * D₂ * P * D₁ * P := by
+      dsimp [matInnerDer]
+      calc
+        (P * D₁ * P) * (P * D₂ * P) - (P * D₂ * P) * (P * D₁ * P)
+          = P * D₁ * (P * P) * D₂ * P - P * D₂ * (P * P) * D₁ * P := by noncomm_ring
+        _ = P * D₁ * P * D₂ * P - P * D₂ * P * D₁ * P := by rw [hP_eq]
+    rw [h_lhs, h_pair D₁ D₂, h_pair D₂ D₁]
+    dsimp [matInnerDer]
+    noncomm_ring
+
+/-- **Theorem 135 (`Archetype CXVIII`: Matrix Spectral Trace Conservation, Equal Complementary Stratum Curvature Trace, & Vanishing Chiral Supertrace of Connes Curvature)**:
+    Over *any* commutative base ring $R$ (`[CommRing R]`), for all $D, X, P \in \mathrm{Matrix}\;n\;n\;R$ with $P^2 = P$ (`hP : IsMatrixIdempotent P`):
+    1. **Homological Trace Vanishing & Spectral Mass Conservation**:
+       $$\mathrm{Matrix.trace}(\delta_D(X)) = 0, \qquad
+         \mathrm{Matrix.trace}(X + \delta_D(X)) = \mathrm{Matrix.trace}(X).$$
+    2. **Cyclic Chern–Connes Trace Invariance**:
+       $$\mathrm{Matrix.trace}(P * \Omega_D(P)) = \mathrm{Matrix.trace}(\Omega_D(P) * P).$$
+    3. **Equal Complementary Stratum Curvature Trace & Vanishing $\mathbb{Z}_2$-Graded Chiral Supertrace**:
+       $$\mathrm{Matrix.trace}(P * \Omega_D(P)) = \mathrm{Matrix.trace}((1 - P) * \Omega_D(P)),$$
+       $$\mathrm{Matrix.trace}((P + P - 1) * \Omega_D(P)) = 0.$$ -/
+theorem matrix_trace_conservation_and_connes_chiral_supertrace_vanishing
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (D X P : Matrix n n R) (hP : IsMatrixIdempotent P) :
+    Matrix.trace (matInnerDer D X) = 0 ∧
+    Matrix.trace (X + matInnerDer D X) = Matrix.trace X ∧
+    Matrix.trace (P * matConnesCurvature D P) = Matrix.trace (matConnesCurvature D P * P) ∧
+    Matrix.trace (P * matConnesCurvature D P) = Matrix.trace ((1 - P) * matConnesCurvature D P) ∧
+    Matrix.trace ((P + P - 1) * matConnesCurvature D P) = 0 := by
+  have hP_eq : P * P = P := hP
+  have h_tr_comm : Matrix.trace (matInnerDer D X) = 0 := by
+    dsimp [matInnerDer]
+    rw [Matrix.trace_sub, Matrix.trace_mul_comm D X, sub_self]
+  have h_swap : (1 - P) * matInnerDer D P = matInnerDer D P * P := by
+    dsimp [matInnerDer]
+    have h1 : (1 - P) * (D * P - P * D) = D * P - P * D * P := by
+      calc
+        (1 - P) * (D * P - P * D)
+          = D * P - P * D - P * D * P + (P * P) * D := by noncomm_ring
+        _ = D * P - P * D - P * D * P + P * D := by rw [hP_eq]
+        _ = D * P - P * D * P := by noncomm_ring
+    have h2 : (D * P - P * D) * P = D * P - P * D * P := by
+      calc
+        (D * P - P * D) * P
+          = D * (P * P) - P * D * P := by noncomm_ring
+        _ = D * P - P * D * P := by rw [hP_eq]
+    exact h1.trans h2.symm
+  have h_eq_strata :
+      Matrix.trace (P * matConnesCurvature D P) =
+        Matrix.trace ((1 - P) * matConnesCurvature D P) := by
+    calc
+      Matrix.trace (P * matConnesCurvature D P)
+        = Matrix.trace ((P * matInnerDer D P) * matInnerDer D P) := by
+          dsimp [matConnesCurvature]; rw [mul_assoc]
+      _ = Matrix.trace (matInnerDer D P * (P * matInnerDer D P)) :=
+          Matrix.trace_mul_comm (P * matInnerDer D P) (matInnerDer D P)
+      _ = Matrix.trace ((matInnerDer D P * P) * matInnerDer D P) := by
+          rw [mul_assoc]
+      _ = Matrix.trace (((1 - P) * matInnerDer D P) * matInnerDer D P) := by
+          rw [← h_swap]
+      _ = Matrix.trace ((1 - P) * matConnesCurvature D P) := by
+          dsimp [matConnesCurvature]; rw [mul_assoc]
+  refine ⟨h_tr_comm, ?_, ?_, h_eq_strata, ?_⟩
+  · rw [Matrix.trace_add, h_tr_comm, add_zero]
+  · exact Matrix.trace_mul_comm P (matConnesCurvature D P)
+  · have h_split :
+        (P + P - 1) * matConnesCurvature D P =
+          P * matConnesCurvature D P - (1 - P) * matConnesCurvature D P := by
+      noncomm_ring
+    rw [h_split, Matrix.trace_sub, h_eq_strata, sub_self]
+
+/-- **Theorem 136 (`Archetype CXX`: Adiabatic Stratum Compression, Double-Commutator Off-Diagonal Projection $[[P, [P, D]], P] = [D, P]$, & Infinitesimal Lie–Connes Cochain Exactness $\mathcal{L}_A(P[D,P]^2) = [A, P[D,P]^2]$)**:
+    Over *any* noncommutative ring $R$ (`[Ring R]`) and finite index type $n$, for all $A, D, D_1, D_2, X, P \in \mathrm{Matrix}\;n\;n\;R$ with $P^2 = P$ (`hP : IsMatrixIdempotent P`):
+    1. **Generator Additivity & Adiabatic Stratum Compression ($\alpha_7$)**:
+       $$[D_1 + D_2, X] = [D_1, X] + [D_2, X], \qquad [P * A * P, P] = 0, \qquad [D + P * A * P, P] = [D, P].$$
+    2. **Double-Commutator Off-Diagonal Projection ($\alpha_7$)**:
+       $$[[P, [P, D]], P] = [D, P].$$
+    3. **Infinitesimal Inner Gauge Covariance & Lie–Connes Cochain Exactness ($\alpha_8$)**:
+       $$[[A, D], P] + [D, [A, P]] = [A, [D, P]],$$
+       $$\mathrm{matConnesDensityVariation}\;A\;D\;P = [A, P * [D, P]^2].$$ -/
+theorem matrix_adiabatic_compression_double_commutator_and_lie_connes_exactness
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [Ring R]
+    (A D D₁ D₂ X P : Matrix n n R) (hP : IsMatrixIdempotent P) :
+    matInnerDer (D₁ + D₂) X = matInnerDer D₁ X + matInnerDer D₂ X ∧
+    matInnerDer (P * A * P) P = 0 ∧
+    matInnerDer (D + P * A * P) P = matInnerDer D P ∧
+    matInnerDer (matInnerDer P (matInnerDer P D)) P = matInnerDer D P ∧
+    matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P) =
+      matInnerDer A (matInnerDer D P) ∧
+    matConnesDensityVariation A D P = matInnerDer A (matConnesDensity D P) := by
+  have hP_eq : P * P = P := hP
+  have h_add_left : ∀ B₁ B₂ Y : Matrix n n R,
+      matInnerDer (B₁ + B₂) Y = matInnerDer B₁ Y + matInnerDer B₂ Y := by
+    intro B₁ B₂ Y
+    dsimp [matInnerDer]
+    noncomm_ring
+  have h_comp_zero : matInnerDer (P * A * P) P = 0 := by
+    dsimp [matInnerDer]
+    calc
+      P * A * P * P - P * (P * A * P)
+        = P * A * (P * P) - (P * P) * A * P := by noncomm_ring
+      _ = P * A * P - P * A * P := by rw [hP_eq]
+      _ = 0 := sub_self (P * A * P)
+  have h_off : P * matInnerDer D P + matInnerDer D P * P = matInnerDer D P := by
+    dsimp [matInnerDer]
+    calc
+      P * (D * P - P * D) + (D * P - P * D) * P
+        = D * (P * P) - (P * P) * D := by noncomm_ring
+      _ = D * P - P * D := by rw [hP_eq]
+  have h_comp0 : P * matInnerDer D P * P = 0 := by
+    dsimp [matInnerDer]
+    calc
+      P * (D * P - P * D) * P
+        = P * D * (P * P) - (P * P) * D * P := by noncomm_ring
+      _ = P * D * P - P * D * P := by rw [hP_eq]
+      _ = 0 := sub_self (P * D * P)
+  refine ⟨h_add_left D₁ D₂ X, h_comp_zero, ?_, ?_, ?_, ?_⟩
+  · rw [h_add_left D (P * A * P) P, h_comp_zero, add_zero]
+  · have h_step1 :
+        matInnerDer (matInnerDer P (matInnerDer P D)) P =
+        matInnerDer D P * (P * P) + (P * P) * matInnerDer D P -
+        (P * matInnerDer D P * P + P * matInnerDer D P * P) := by
+      dsimp [matInnerDer]
+      noncomm_ring
+    rw [h_step1, hP_eq, h_comp0, add_zero, sub_zero, add_comm, h_off]
+  · dsimp [matInnerDer]
+    noncomm_ring
+  · dsimp [matConnesDensityVariation, matConnesDensity, matInnerDer]
+    noncomm_ring
+
+/-- **Theorem 137 (`Archetype CXXI`: Horizontal Base-Stratum Tangency, Fiber-Leg Reduction, Adiabatic & Double-Commutator Cocycle Invariance, & Infinitesimal Lie–Connes Trace Invariance)**:
+    Over *any* commutative base ring $R$ (`[CommRing R]`), for all $A, D, P, V \in \mathrm{Matrix}\;n\;n\;R$ with $P^2 = P$ (`hP : IsMatrixIdempotent P`):
+    1. **Horizontal Base-Stratum Tangency & Off-Diagonal Fiber-Leg Reduction ($\alpha_6$)**:
+       $$\mathrm{Matrix.trace}([A, P] * [D, P]^2) = 0,$$
+       $$\mathrm{Matrix.trace}(P * V * [D, P] + P * [D, P] * V) = \mathrm{Matrix.trace}(V * [D, P]).$$
+    2. **Adiabatic & Double-Commutator Invariance of the Connes Cyclic Cocycle ($\alpha_7$)**:
+       $$\mathrm{matConnesCocycle}\;(D + P * A * P)\;P = \mathrm{matConnesCocycle}\;D\;P,$$
+       $$\mathrm{matConnesCocycle}\;([P, [P, D]])\;P = \mathrm{matConnesCocycle}\;D\;P.$$
+    3. **Infinitesimal Total & Fiber-Leg Invariance of the Connes Cyclic Cocycle ($\alpha_8$)**:
+       $$\mathrm{Matrix.trace}(\mathrm{matConnesDensityVariation}\;A\;D\;P) = 0,$$
+       $$\mathrm{Matrix.trace}\bigl(P * (([[A, D], P] + [D, [A, P]]) * [D, P]) + P * ([D, P] * ([[A, D], P] + [D, [A, P]]))\bigr) = 0.$$ -/
+theorem matrix_connes_cocycle_horizontal_adiabatic_and_infinitesimal_invariance
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (A D P V : Matrix n n R) (hP : IsMatrixIdempotent P) :
+    Matrix.trace (matInnerDer A P * matConnesCurvature D P) = 0 ∧
+    Matrix.trace (P * V * matInnerDer D P + P * matInnerDer D P * V) =
+      Matrix.trace (V * matInnerDer D P) ∧
+    matConnesCocycle (D + P * A * P) P = matConnesCocycle D P ∧
+    matConnesCocycle (matInnerDer P (matInnerDer P D)) P = matConnesCocycle D P ∧
+    Matrix.trace (matConnesDensityVariation A D P) = 0 ∧
+    Matrix.trace (
+      P * ((matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)) * matInnerDer D P) +
+      P * (matInnerDer D P * (matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)))
+    ) = 0 := by
+  have h134 := matrix_inner_derivation_idempotent_connes_curvature_and_gauss_codazzi D D D D D P hP
+  have h_off : P * matInnerDer D P + matInnerDer D P * P = matInnerDer D P :=
+    h134.2.2.2.2.2.2.2.2.2.1
+  have h_comm : P * matConnesCurvature D P = matConnesCurvature D P * P :=
+    h134.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  have h136 := matrix_adiabatic_compression_double_commutator_and_lie_connes_exactness A D D D D P hP
+  have h_add_comp : matInnerDer (D + P * A * P) P = matInnerDer D P := h136.2.2.1
+  have h_dbl_comm : matInnerDer (matInnerDer P (matInnerDer P D)) P = matInnerDer D P := h136.2.2.2.1
+  have h_exact : matConnesDensityVariation A D P = matInnerDer A (matConnesDensity D P) := h136.2.2.2.2.2
+  have h_base_zero : Matrix.trace (matInnerDer A P * matConnesCurvature D P) = 0 := by
+    have h_expand :
+        matInnerDer A P * matConnesCurvature D P =
+        A * (P * matConnesCurvature D P) - P * (A * matConnesCurvature D P) := by
+      dsimp [matInnerDer]
+      noncomm_ring
+    rw [h_expand, Matrix.trace_sub, Matrix.trace_mul_comm P (A * matConnesCurvature D P)]
+    have h_assoc : A * matConnesCurvature D P * P = A * (matConnesCurvature D P * P) := by
+      noncomm_ring
+    rw [h_assoc, ← h_comm]
+    exact sub_self _
+  have h_total_zero : Matrix.trace (matConnesDensityVariation A D P) = 0 := by
+    rw [h_exact]
+    dsimp [matInnerDer]
+    rw [Matrix.trace_sub, Matrix.trace_mul_comm A (matConnesDensity D P), sub_self]
+  refine ⟨h_base_zero, ?_, ?_, ?_, h_total_zero, ?_⟩
+  · rw [Matrix.trace_add]
+    have h1 : P * V * matInnerDer D P = P * (V * matInnerDer D P) := by noncomm_ring
+    rw [h1, Matrix.trace_mul_comm P (V * matInnerDer D P)]
+    rw [Matrix.trace_mul_comm (P * matInnerDer D P) V]
+    rw [← Matrix.trace_add]
+    have h_sum :
+        V * matInnerDer D P * P + V * (P * matInnerDer D P) =
+        V * (P * matInnerDer D P + matInnerDer D P * P) := by
+      noncomm_ring
+    rw [h_sum, h_off]
+  · dsimp [matConnesCocycle, matConnesDensity]
+    rw [h_add_comp]
+  · dsimp [matConnesCocycle, matConnesDensity]
+    rw [h_dbl_comm]
+  · have h_tot := h_total_zero
+    dsimp [matConnesDensityVariation] at h_tot
+    change Matrix.trace (
+      matInnerDer A P * matConnesCurvature D P +
+      P * ((matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)) * matInnerDer D P) +
+      P * (matInnerDer D P * (matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)))
+    ) = 0 at h_tot
+    rw [add_assoc, Matrix.trace_add, h_base_zero, zero_add] at h_tot
+    exact h_tot
+
+/-- **Theorem 138 (`Archetype CXXII`: Global Inner Gauge Conjugation $(D, P) \mapsto (U D V, U P V)$ & Master Perturbation Invariance of the Connes Cyclic Cocycle $\tau(P[D,P]^2)$)**:
+    Over *any* commutative base ring $R$ (`[CommRing R]`), for all $U, V, D, A, P \in \mathrm{Matrix}\;n\;n\;R$ with $U * V = 1 \wedge V * U = 1$ (`hUV : IsMatrixInnerGaugePair U V`) and $P^2 = P$ (`hP : IsMatrixIdempotent P`):
+    1. **Global Inner Gauge Preservation of Idempotence & Covariant Conjugation**:
+       $$\mathrm{IsMatrixIdempotent}\;(U * P * V),$$
+       $$[U * D * V, U * P * V] = U * [D, P] * V,$$
+       $$\mathcal{C}(U * D * V, U * P * V) = U * \mathcal{C}(D, P) * V.$$
+    2. **Global Inner Gauge & Master Perturbation Invariance of the Connes Cyclic Cocycle**:
+       $$\mathrm{matConnesCocycle}\;(U * D * V)\;(U * P * V) = \mathrm{matConnesCocycle}\;D\;P,$$
+       $$\mathrm{matConnesCocycle}\;(U * (D + P * A * P) * V)\;(U * P * V) = \mathrm{matConnesCocycle}\;D\;P.$$ -/
+theorem matrix_connes_cocycle_global_inner_gauge_and_master_invariance
+    {R : Type*} {n : Type*} [Fintype n] [DecidableEq n] [CommRing R]
+    (U V D A P : Matrix n n R)
+    (hUV : IsMatrixInnerGaugePair U V) (hP : IsMatrixIdempotent P) :
+    IsMatrixIdempotent (U * P * V) ∧
+    matInnerDer (U * D * V) (U * P * V) = U * matInnerDer D P * V ∧
+    matConnesDensity (U * D * V) (U * P * V) = U * matConnesDensity D P * V ∧
+    matConnesCocycle (U * D * V) (U * P * V) = matConnesCocycle D P ∧
+    matConnesCocycle (U * (D + P * A * P) * V) (U * P * V) = matConnesCocycle D P := by
+  have h_vu : V * U = 1 := hUV.2
+  have hP_eq : P * P = P := hP
+  have h_idem_gauge : IsMatrixIdempotent (U * P * V) := by
+    dsimp [IsMatrixIdempotent]
+    calc
+      (U * P * V) * (U * P * V)
+        = U * P * (V * U) * P * V := by noncomm_ring
+      _ = U * P * 1 * P * V := by rw [h_vu]
+      _ = U * (P * P) * V := by noncomm_ring
+      _ = U * P * V := by rw [hP_eq]
+  have h_comm_gauge : ∀ B : Matrix n n R,
+      matInnerDer (U * B * V) (U * P * V) = U * matInnerDer B P * V := by
+    intro B
+    dsimp [matInnerDer]
+    calc
+      (U * B * V) * (U * P * V) - (U * P * V) * (U * B * V)
+        = U * B * (V * U) * P * V - U * P * (V * U) * B * V := by noncomm_ring
+      _ = U * B * 1 * P * V - U * P * 1 * B * V := by rw [h_vu]
+      _ = U * (B * P - P * B) * V := by noncomm_ring
+  have h_dens_gauge : ∀ B : Matrix n n R,
+      matConnesDensity (U * B * V) (U * P * V) = U * matConnesDensity B P * V := by
+    intro B
+    dsimp [matConnesDensity]
+    rw [h_comm_gauge B]
+    calc
+      (U * P * V) * ((U * matInnerDer B P * V) * (U * matInnerDer B P * V))
+        = U * P * (V * U) * matInnerDer B P * (V * U) * matInnerDer B P * V := by
+          noncomm_ring
+      _ = U * P * 1 * matInnerDer B P * 1 * matInnerDer B P * V := by
+          rw [h_vu]
+      _ = U * (P * (matInnerDer B P * matInnerDer B P)) * V := by
+          noncomm_ring
+  have h_cocyc_gauge : ∀ B : Matrix n n R,
+      matConnesCocycle (U * B * V) (U * P * V) = matConnesCocycle B P := by
+    intro B
+    dsimp [matConnesCocycle]
+    rw [h_dens_gauge B, Matrix.trace_mul_comm (U * matConnesDensity B P) V]
+    have h_assoc : V * (U * matConnesDensity B P) = (V * U) * matConnesDensity B P := by
+      noncomm_ring
+    rw [h_assoc, h_vu, one_mul]
+  have h_adiab : matConnesCocycle (D + P * A * P) P = matConnesCocycle D P :=
+    (matrix_connes_cocycle_horizontal_adiabatic_and_infinitesimal_invariance A D P D hP).2.2.1
+  refine ⟨h_idem_gauge, h_comm_gauge D, h_dens_gauge D, h_cocyc_gauge D, ?_⟩
+  rw [h_cocyc_gauge (D + P * A * P), h_adiab]
 
 end SplitQuaternion
 

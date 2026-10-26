@@ -8470,4 +8470,113 @@ theorem zornSpin_square_eq_neg_one {R : Type*} [CommRing R] :
     · fin_cases k <;> simp [zornSpinX, zornSpinY, zornSpinZ, one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.cross]
     · simp [zornSpinX, zornSpinY, zornSpinZ, one, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.dot, Fin.sum_univ_three] }
 
+/-! ## 83. Zorn–Connes Vacuum Idempotent Derivation, Singlet Curvature Collapse, Second-Variation Law, & Vanishing Chiral Supertrace (`Archetypes CXVII–CXIX`) -/
+
+/-- **Zorn Inner Commutator Derivation (`zornInnerDer D X`)**:
+    $\delta_D(X) := D * X + -(X * D)$. -/
+noncomputable def zornInnerDer {R : Type*} [CommRing R] (D X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  D * X + -(X * D)
+
+/-- **Zorn–Connes Curvature (`zornConnesCurvature D P`)**:
+    $\Omega_D(P) := \delta_D(P) * \delta_D(P)$. -/
+noncomputable def zornConnesCurvature {R : Type*} [CommRing R] (D P : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  zornInnerDer D P * zornInnerDer D P
+
+/-- **Theorem (`zorn_connes_vacuum_idempotent_derivation_curvature_and_supertrace`, Archetypes CXVII–CXIX)**:
+    Over *any* commutative ring $R$ (`[CommRing R]`), for all $D \in \mathrm{ZornVectorMatrix}\;R$,
+    let $E_+ = \mathrm{zornGradeZero}\;1\;0$ and $E_- = \mathrm{zornGradeZero}\;0\;1$:
+    1. **Transverse Connes 1-Form of the Vacuum Idempotent $E_+$**:
+       $$\delta_D(E_+) = \langle 0, -D.v, D.w, 0 \rangle,$$
+       $$E_+ * \delta_D(E_+) + \delta_D(E_+) * E_+ = \delta_D(E_+), \qquad
+         \mathrm{zornGamma} * \delta_D(E_+) + \delta_D(E_+) * \mathrm{zornGamma} = 0,$$
+       $$(E_+ * \delta_D(E_+)) * E_+ = 0, \qquad (E_- * \delta_D(E_+)) * E_- = 0.$$
+    2. **Collapse of the Zorn–Connes Curvature $\Omega_D(E_+) = \delta_D(E_+) * \delta_D(E_+)$ into the Cartan Nucleus**:
+       $$\Omega_D(E_+) = \mathrm{zornGradeZero}\;(-\mathrm{ZornVec3.dot}\;D.v\;D.w)\;(-\mathrm{ZornVec3.dot}\;D.v\;D.w),$$
+       $$E_+ * \Omega_D(E_+) = \Omega_D(E_+) * E_+,$$
+       $$(E_+ * \delta_D(\delta_D(E_+))) * E_+ + (2 : R) • ((E_+ * \Omega_D(E_+)) * E_+) = 0.$$
+    3. **Trace Conservation & Vanishing Chiral Supertrace**:
+       $$\mathrm{trace}(\delta_D(E_+)) = 0, \qquad
+         \mathrm{trace}(\mathrm{zornGamma} * \Omega_D(E_+)) = 0.$$ -/
+theorem zorn_connes_vacuum_idempotent_derivation_curvature_and_supertrace
+    {R : Type*} [CommRing R] (D : ZornVectorMatrix R) :
+    let E_plus : ZornVectorMatrix R := zornGradeZero 1 0
+    let E_minus : ZornVectorMatrix R := zornGradeZero 0 1
+    zornInnerDer D E_plus = ⟨0, -D.v, D.w, 0⟩ ∧
+    E_plus * zornInnerDer D E_plus + zornInnerDer D E_plus * E_plus = zornInnerDer D E_plus ∧
+    zornGamma * zornInnerDer D E_plus + zornInnerDer D E_plus * zornGamma = 0 ∧
+    (E_plus * zornInnerDer D E_plus) * E_plus = 0 ∧
+    (E_minus * zornInnerDer D E_plus) * E_minus = 0 ∧
+    zornConnesCurvature D E_plus =
+      zornGradeZero (-ZornVec3.dot D.v D.w) (-ZornVec3.dot D.v D.w) ∧
+    E_plus * zornConnesCurvature D E_plus = zornConnesCurvature D E_plus * E_plus ∧
+    (E_plus * zornInnerDer D (zornInnerDer D E_plus)) * E_plus +
+      (2 : R) • ((E_plus * zornConnesCurvature D E_plus) * E_plus) = 0 ∧
+    trace (zornInnerDer D E_plus) = 0 ∧
+    trace (zornGamma * zornConnesCurvature D E_plus) = 0 ∧
+    zornInnerDer (zornInnerDer E_plus (zornInnerDer E_plus D)) E_plus = zornInnerDer D E_plus := by
+  intro E_plus E_minus
+  have h_der : zornInnerDer D E_plus = ⟨0, -D.v, D.w, 0⟩ := by
+    ext k
+    · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.dot]
+    · fin_cases k <;> simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.cross]
+    · fin_cases k <;> simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.cross]
+    · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.dot]
+  have h_curv : zornConnesCurvature D E_plus =
+      zornGradeZero (-ZornVec3.dot D.v D.w) (-ZornVec3.dot D.v D.w) := by
+    dsimp [zornConnesCurvature]
+    rw [h_der]
+    ext k
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;> (simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · fin_cases k <;> (simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; try ring)
+    · simp [zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]; try ring
+  refine ⟨h_der, ?_, ?_, ?_, ?_, h_curv, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [h_der]
+    ext k
+    · simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, mul, add, ZornVec3.dot]
+    · fin_cases k <;> simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, mul, add, ZornVec3.cross]
+    · fin_cases k <;> simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, mul, add, ZornVec3.cross]
+    · simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, mul, add, ZornVec3.dot]
+  · rw [h_der]
+    ext k
+    · simp [zornGamma, E11, E22, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, zero, sub, ZornVec3.dot]
+    · fin_cases k <;> (simp [zornGamma, E11, E22, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, zero, sub, ZornVec3.cross]; try ring)
+    · fin_cases k <;> (simp [zornGamma, E11, E22, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, zero, sub, ZornVec3.cross]; try ring)
+    · simp [zornGamma, E11, E22, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, zero, sub, ZornVec3.dot]
+  · rw [h_der]
+    ext k
+    · simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.dot]
+    · fin_cases k <;> simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.cross]
+    · fin_cases k <;> simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.cross]
+    · simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.dot]
+  · rw [h_der]
+    ext k
+    · simp [E_minus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.dot]
+    · fin_cases k <;> simp [E_minus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.cross]
+    · fin_cases k <;> simp [E_minus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.cross]
+    · simp [E_minus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def, mul, zero, ZornVec3.dot]
+  · rw [h_curv]
+    ext k
+    · simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+    · fin_cases k <;> simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · fin_cases k <;> simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]
+    · simp [E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot]
+  · rw [h_der, h_curv]
+    ext k
+    · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, smul, zero, ZornVec3.dot, Fin.sum_univ_three]; try ring
+    · fin_cases k <;> (simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, smul, zero, ZornVec3.cross]; try ring)
+    · fin_cases k <;> (simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, smul, zero, ZornVec3.cross]; try ring)
+    · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_smul_def, InfoGeometry.Algebra.zvm_zero_def, mul, add, neg, smul, zero, ZornVec3.dot]
+  · rw [h_der]
+    simp [trace]
+  · rw [h_curv]
+    simp [trace, zornGamma, E11, E22, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, mul, sub, ZornVec3.dot]
+    ring
+  · rw [h_der]
+    ext k
+    · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.dot]
+    · fin_cases k <;> simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.cross]
+    · fin_cases k <;> simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.cross]
+    · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.dot]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

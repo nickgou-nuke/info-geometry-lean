@@ -14,9 +14,9 @@ The completed-square identity is a polynomial identity; it does not assert
 the existence of a Riccati solution or analytic flow.
 -/
 
-namespace SplitQuaternion
+namespace InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion
 
-variable {F : Type*} [CommRing F]
+variable {F : Type*} [CommRing F] [StarRing F]
 
 theorem porterRiccati_traceless_square_completion
     (α β γ x : F) :
@@ -29,4 +29,4 @@ theorem porterRiccati_traceless_square_completion
   rw [h]
   ring
 
-end SplitQuaternion
+end InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion

@@ -505,7 +505,16 @@ fi;
 if ZornGaloisZ3(QuatSubX_g(y1, z1, xi1, y2)) <> QuatSubZ_g(y1, z1, xi1, y2) then
     Error("FAIL: Archetype CXVII Z_3 triality cycle of quaternion subalgebras failed");
 fi;
-Print("[PASS] GAP: Archetypes LXXV-CXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, & Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A))\n");
+Eplus_g := [ 1 + 0*y1, [0*y1, 0*y1, 0*y1], [0*y1, 0*y1, 0*y1], 0*y1 ];
+dE_g := ZornSub(ZornMul(Q_alb, Eplus_g), ZornMul(Eplus_g, Q_alb));
+Om_g := ZornMul(dE_g, dE_g);
+if ZornMul(ZornMul(Eplus_g, dE_g), Eplus_g) <> ZornZero then
+    Error("FAIL: Archetype CXIX Connes compression vanishing failed");
+fi;
+if ZornMul(Eplus_g, Om_g) <> ZornMul(Om_g, Eplus_g) then
+    Error("FAIL: Archetype CXIX Connes curvature commutation failed");
+fi;
+Print("[PASS] GAP: Archetypes LXXV-CXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, Trifactor-Loxodromic Zorn-Riccati Compass, 56D Freudenthal E_7 Euler Trace, 4-Spinor Cross-Difference, Gelfand-Retakh Elimination, Nambu-Gorkov Operator Cayley-Dickson Doubling, 5-Graded Spectral Projectors, OpCyclotomic3/OpCyclotomic6 Quotients, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), & Zorn-Connes Vacuum Curvature Collapse)\n");
 
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");

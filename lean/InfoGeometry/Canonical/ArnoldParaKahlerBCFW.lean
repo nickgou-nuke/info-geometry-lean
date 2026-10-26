@@ -1705,6 +1705,98 @@ theorem operator_quaternion_Q8_spin_double_cover_internal_spinors_and_klein_fusi
       X.a X.v.x X.w.x X.b Y.a Y.v.x Y.w.x Y.b X.a X.v.x X.w.x X.b
       X.a X.v.x X.w.x X.v.y X.w.y X.v.z X.w.z X.b v.x v.y v.z).2.2.2.2.2.2.2.2.2.1⟩⟩
 
+/-- **Master Bridge 40 (`Archetypes CXVII, CXVIII, & CXIX`: Non-Commutative Matrix Inner Derivations, Idempotent Strata, Connes Curvature, Non-Abelian Gauss–Codazzi Equation, Second-Variation Law, & Zorn–Connes Vacuum Idempotent Collapse)**:
+    Unifies:
+    1. Matrix inner derivations $\delta_D(X) = D X - X D$, Leibniz cocycle, Jacobi syzygy, path-curvature defect, idempotent stratum compression $P \delta_D(P) P = 0$, Connes curvature commutation $P \Omega_D(P) = \Omega_D(P) P$, second-variation identity $P \delta_D^2(P) P + 2 P \Omega_D(P) P = 0$, and the non-abelian Gauss–Codazzi curvature equation (`matrix_inner_derivation_idempotent_connes_curvature_and_gauss_codazzi`),
+    2. Zorn–Connes vacuum idempotent 1-form $\delta_D(E_+) = \langle 0, -D.v, D.w, 0 \rangle$, Cartan singlet curvature collapse $\Omega_D^{\mathrm{Zorn}}(E_+) = \mathrm{opGradeZero}\;(-(D.v \cdot D.w))\;(-(D.w \cdot D.v))$, and noncommutative supertrace anomaly (`zorn_connes_vacuum_idempotent_derivation_and_curvature_collapse`). -/
+theorem operator_connes_idempotent_curvature_gauss_codazzi_and_zorn_vacuum_master_bridge
+    {A : Type*} [Ring A]
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (M₁ M₂ M₃ P : Matrix n n A) (hP : IsMatrixIdempotent P)
+    (D : OpZornMatrix A) :
+    let E_plus : OpZornMatrix A := opGradeZero 1 0
+    let E_minus : OpZornMatrix A := opGradeZero 0 1
+    (matInnerDer M₁ M₂ = -matInnerDer M₂ M₁ ∧
+     matInnerDer M₁ M₁ = 0 ∧
+     matInnerDer M₁ (M₂ * M₃) = matInnerDer M₁ M₂ * M₃ + M₂ * matInnerDer M₁ M₃ ∧
+     matInnerDer M₁ (matInnerDer M₂ M₃) +
+       matInnerDer M₂ (matInnerDer M₃ M₁) +
+       matInnerDer M₃ (matInnerDer M₁ M₂) = 0 ∧
+     matInnerDer M₁ (matInnerDer M₂ M₃) - matInnerDer M₂ (matInnerDer M₁ M₃) =
+       matInnerDer (matInnerDer M₁ M₂) M₃ ∧
+     (1 - P) * (1 - P) = 1 - P ∧
+     P * (1 - P) = 0 ∧
+     (1 - P) * P = 0 ∧
+     (P + P - 1) * (P + P - 1) = 1 ∧
+     P * matInnerDer M₁ P + matInnerDer M₁ P * P = matInnerDer M₁ P ∧
+     (P + P - 1) * matInnerDer M₁ P + matInnerDer M₁ P * (P + P - 1) = 0 ∧
+     P * matInnerDer M₁ P * P = 0 ∧
+     (1 - P) * matInnerDer M₁ P * (1 - P) = 0 ∧
+     P * matConnesCurvature M₁ P = matConnesCurvature M₁ P * P ∧
+     P * (matConnesCurvature M₁ P * matInnerDer M₁ P) * P = 0 ∧
+     P * matInnerDer M₁ (matInnerDer M₁ P) * P +
+       (P * matConnesCurvature M₁ P * P + P * matConnesCurvature M₁ P * P) = 0 ∧
+     matInnerDer (P * M₁ * P) (P * M₂ * P) - P * matInnerDer M₁ M₂ * P =
+       P * matInnerDer M₁ P * matInnerDer M₂ P * P -
+       P * matInnerDer M₂ P * matInnerDer M₁ P * P) ∧
+    (E_plus * E_plus = E_plus ∧
+     E_minus * E_minus = E_minus ∧
+     E_plus * E_minus = 0 ∧
+     E_minus * E_plus = 0 ∧
+     E_plus + E_minus = 1 ∧
+     E_plus - E_minus = opZornGamma ∧
+     opCommutator D E_plus = ⟨0, -D.v, D.w, 0⟩ ∧
+     E_plus * opCommutator D E_plus + opCommutator D E_plus * E_plus = opCommutator D E_plus ∧
+     opZornGamma * opCommutator D E_plus + opCommutator D E_plus * opZornGamma = 0 ∧
+     (E_plus * opCommutator D E_plus) * E_plus = 0 ∧
+     (E_minus * opCommutator D E_plus) * E_minus = 0 ∧
+     opZornConnesCurvature D E_plus =
+       opGradeZero (OpVec3.dot D.v D.w) (OpVec3.dot D.w D.v) ∧
+     E_plus * opZornConnesCurvature D E_plus = opZornConnesCurvature D E_plus * E_plus ∧
+     (E_plus * opCommutator D (opCommutator D E_plus)) * E_plus +
+       ((E_plus * opZornConnesCurvature D E_plus) * E_plus +
+        (E_plus * opZornConnesCurvature D E_plus) * E_plus) = 0 ∧
+     opZornTrace (opZornGamma * opZornConnesCurvature D E_plus) =
+       OpVec3.dot D.v D.w - OpVec3.dot D.w D.v ∧
+     opCommutator (opCommutator E_plus (opCommutator E_plus D)) E_plus = opCommutator D E_plus) :=
+  ⟨matrix_inner_derivation_idempotent_connes_curvature_and_gauss_codazzi M₁ M₁ M₂ M₂ M₃ P hP,
+   zorn_connes_vacuum_idempotent_derivation_and_curvature_collapse D⟩
+
+/-- **Master Bridge 41 (`Archetypes CXX, CXXI, & CXXII`: Adiabatic Stratum Compression, Double-Commutator Off-Diagonal Projection $[[P, [P, D]], P] = [D, P]$, Infinitesimal Lie–Connes Cochain Exactness $\mathcal{L}_A(P[D,P]^2) = [A, P[D,P]^2]$, Horizontal Base-Stratum Tangency, & Global Inner Gauge Conjugation)**:
+    Unifies:
+    1. Adiabatic stratum compression $[P A P, P] = 0$, $[D + P A P, P] = [D, P]$, double-commutator off-diagonal projection $[[P, [P, D]], P] = [D, P]$, and exact Lie–Connes density variation $\mathcal{L}_A(P[D,P]^2) = [A, P[D,P]^2]$ (`matrix_adiabatic_compression_double_commutator_and_lie_connes_exactness`),
+    2. Horizontal base-stratum tangency $\mathrm{tr}([A, P][D, P]^2) = 0$, off-diagonal fiber-leg reduction, adiabatic & double-commutator cocycle invariance, and infinitesimal total & fiber-leg cocycle invariance (`matrix_connes_cocycle_horizontal_adiabatic_and_infinitesimal_invariance`),
+    3. Global inner gauge conjugation $(D, P) \mapsto (U D V, U P V)$ and master perturbation invariance $\tau((U P V)[U(D + P A P)V, U P V]^2) = \tau(P[D, P]^2)$ (`matrix_connes_cocycle_global_inner_gauge_and_master_invariance`). -/
+theorem operator_connes_cocycle_adiabatic_double_commutator_and_lie_exactness_master_bridge
+    {R : Type*} [CommRing R]
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A D U V P : Matrix n n R)
+    (hUV : IsMatrixInnerGaugePair U V) (hP : IsMatrixIdempotent P) :
+    (matInnerDer (P * A * P) P = 0 ∧
+     matInnerDer (D + P * A * P) P = matInnerDer D P ∧
+     matInnerDer (matInnerDer P (matInnerDer P D)) P = matInnerDer D P ∧
+     matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P) =
+       matInnerDer A (matInnerDer D P) ∧
+     matConnesDensityVariation A D P = matInnerDer A (matConnesDensity D P)) ∧
+    (Matrix.trace (matInnerDer A P * matConnesCurvature D P) = 0 ∧
+     Matrix.trace (P * V * matInnerDer D P + P * matInnerDer D P * V) =
+       Matrix.trace (V * matInnerDer D P) ∧
+     matConnesCocycle (D + P * A * P) P = matConnesCocycle D P ∧
+     matConnesCocycle (matInnerDer P (matInnerDer P D)) P = matConnesCocycle D P ∧
+     Matrix.trace (matConnesDensityVariation A D P) = 0 ∧
+     Matrix.trace (
+       P * ((matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)) * matInnerDer D P) +
+       P * (matInnerDer D P * (matInnerDer (matInnerDer A D) P + matInnerDer D (matInnerDer A P)))
+     ) = 0) ∧
+    (IsMatrixIdempotent (U * P * V) ∧
+     matInnerDer (U * D * V) (U * P * V) = U * matInnerDer D P * V ∧
+     matConnesDensity (U * D * V) (U * P * V) = U * matConnesDensity D P * V ∧
+     matConnesCocycle (U * D * V) (U * P * V) = matConnesCocycle D P ∧
+     matConnesCocycle (U * (D + P * A * P) * V) (U * P * V) = matConnesCocycle D P) :=
+  ⟨(matrix_adiabatic_compression_double_commutator_and_lie_connes_exactness A D D D D P hP).2,
+   matrix_connes_cocycle_horizontal_adiabatic_and_infinitesimal_invariance A D P V hP,
+   matrix_connes_cocycle_global_inner_gauge_and_master_invariance U V D A P hUV hP⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

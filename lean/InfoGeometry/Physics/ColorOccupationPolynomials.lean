@@ -60,8 +60,11 @@ theorem cartan_polynomial (a b c : A) :
       (2 : ℕ) • ((quark a b c + diquark a b c) +
         (quark c b a + diquark c b a)) +
       (4 : ℕ) • ((a * a - a) + (b * b - b) + (c * c - c)) := by
+  have h4 : ∀ x : A, (4 : ℕ) • x = x + x + x + x := fun x => by
+    rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul, two_nsmul]
+    abel
   simp only [t3, threeY, quark, diquark,
-    two_nsmul, three_nsmul, four_nsmul]
+    two_nsmul, three_nsmul, h4]
   noncomm_ring
 
 end InfoGeometry.Physics.ColorOccupationPolynomials

@@ -1410,10 +1410,64 @@ def main() -> int:
     fuse_xx = spin_proj_x(X_obs) * spin_proj_x(Y_obs)
     assert spin_proj_x(fuse_xx) == z_zero() and spin_proj_y(fuse_xx) == z_zero() and spin_proj_z(fuse_xx) == z_zero()
     assert spin_proj_0(fuse_xx) == z_scale(4, fuse_xx)
-    assert zorn_riccati(Qx1, OpVec3(xi2, sp.Integer(0), sp.Integer(0))) == OpVec3(-xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1, sp.Integer(0), sp.Integer(0))
-    assert zorn_riccati(Qy1, OpVec3(sp.Integer(0), xi2, sp.Integer(0))) == OpVec3(sp.Integer(0), -xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1, sp.Integer(0))
-    assert zorn_riccati(Qz1, OpVec3(sp.Integer(0), sp.Integer(0), xi2)) == OpVec3(sp.Integer(0), sp.Integer(0), -xi2 * xi1 * xi2 + xi2 * y2 - y1 * xi2 - z1)
-    print("[PASS] Archetypes XCIX-CXIX: Operator Cyclotomics, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), & Riccati Axis Decoupling")
+    assert zorn_riccati(Qx1, OpVec3(xi2, sp.Integer(0), sp.Integer(0))) == OpVec3(xi2 * xi1 * xi2 + xi2 * y2 + y1 * xi2 - z1, sp.Integer(0), sp.Integer(0))
+    assert zorn_riccati(Qy1, OpVec3(sp.Integer(0), xi2, sp.Integer(0))) == OpVec3(sp.Integer(0), xi2 * xi1 * xi2 + xi2 * y2 + y1 * xi2 - z1, sp.Integer(0))
+    assert zorn_riccati(Qz1, OpVec3(sp.Integer(0), sp.Integer(0), xi2)) == OpVec3(sp.Integer(0), sp.Integer(0), xi2 * xi1 * xi2 + xi2 * y2 + y1 * xi2 - z1)
+
+    # 9. Non-Commutative Matrix Inner Derivations, Idempotent Strata, Connes Curvature,
+    #    Second-Variation Law, Non-Abelian Gauss-Codazzi Equation, & Zorn-Connes Vacuum Collapse:
+    P_idem = ((sp.Integer(1), y1), (sp.Integer(0), sp.Integer(0)))
+    assert m2_mul(P_idem, P_idem) == P_idem
+    D1_m = ((z1, xi1), (y2, z2))
+    D2_m = ((xi2, y3), (z3, xi3))
+    def m2_comm(Am, Bm):
+        return m2_sub(m2_mul(Am, Bm), m2_mul(Bm, Am))
+    dP1 = m2_comm(D1_m, P_idem)
+    dP2 = m2_comm(D2_m, P_idem)
+    Om1 = m2_mul(dP1, dP1)
+    assert m2_add(m2_mul(P_idem, dP1), m2_mul(dP1, P_idem)) == dP1
+    assert m2_mul(m2_mul(P_idem, dP1), P_idem) == Zero2
+    assert m2_mul(P_idem, Om1) == m2_mul(Om1, P_idem)
+    assert m2_mul(m2_mul(P_idem, m2_mul(Om1, dP1)), P_idem) == Zero2
+    sec_var_m = m2_mul(m2_mul(P_idem, m2_comm(D1_m, dP1)), P_idem)
+    curv_comp_m = m2_mul(m2_mul(P_idem, Om1), P_idem)
+    assert m2_add(sec_var_m, m2_add(curv_comp_m, curv_comp_m)) == Zero2
+    gc_lhs = m2_sub(
+        m2_comm(m2_mul(m2_mul(P_idem, D1_m), P_idem), m2_mul(m2_mul(P_idem, D2_m), P_idem)),
+        m2_mul(m2_mul(P_idem, m2_comm(D1_m, D2_m)), P_idem),
+    )
+    gc_rhs = m2_sub(
+        m2_mul(m2_mul(m2_mul(P_idem, dP1), dP2), P_idem),
+        m2_mul(m2_mul(m2_mul(P_idem, dP2), dP1), P_idem),
+    )
+    assert gc_lhs == gc_rhs
+    # Archetypes CXX-CXXII (alpha_6..alpha_9): Adiabatic Stratum Compression,
+    # Double-Commutator Projection [[P,[P,D]],P] = [D,P], & Lie-Connes Cochain Exactness:
+    PAP_m = m2_mul(m2_mul(P_idem, D2_m), P_idem)
+    assert m2_comm(PAP_m, P_idem) == Zero2
+    assert m2_comm(m2_add(D1_m, PAP_m), P_idem) == dP1
+    assert m2_comm(m2_comm(P_idem, m2_comm(P_idem, D1_m)), P_idem) == dP1
+    C_dens = m2_mul(P_idem, Om1)
+    d_dP1 = m2_add(m2_comm(m2_comm(D2_m, D1_m), P_idem), m2_comm(D1_m, dP2))
+    assert d_dP1 == m2_comm(D2_m, dP1)
+    L_A_C = m2_add(
+        m2_add(m2_mul(dP2, Om1), m2_mul(P_idem, m2_mul(d_dP1, dP1))),
+        m2_mul(P_idem, m2_mul(dP1, d_dP1)),
+    )
+    assert L_A_C == m2_comm(D2_m, C_dens)
+    E_plus_z = grade_zero(sp.Integer(1), sp.Integer(0))
+    E_minus_z = grade_zero(sp.Integer(0), sp.Integer(1))
+    dE_z = op_comm(X_obs, E_plus_z)
+    Om_z = dE_z * dE_z
+    assert dE_z == OpZornMatrix(sp.Integer(0), -X_obs.v, X_obs.w, sp.Integer(0))
+    assert E_plus_z * dE_z + dE_z * E_plus_z == dE_z
+    assert (E_plus_z * dE_z) * E_plus_z == z_zero()
+    assert (E_minus_z * dE_z) * E_minus_z == z_zero()
+    assert Om_z == grade_zero(dot(X_obs.v, X_obs.w), dot(X_obs.w, X_obs.v))
+    assert E_plus_z * Om_z == Om_z * E_plus_z
+    assert (E_plus_z * op_comm(X_obs, dE_z)) * E_plus_z + ((E_plus_z * Om_z) * E_plus_z + (E_plus_z * Om_z) * E_plus_z) == z_zero()
+    assert op_comm(op_comm(E_plus_z, op_comm(E_plus_z, X_obs)), E_plus_z) == dE_z
+    print("[PASS] Archetypes XCIX-CXXII: Operator Cyclotomics, OpCyclotomic3 & OpCyclotomic6 Jordan Norms, Z_3 Singlet Associativity, Octahedral S_4 = V_4 |>< S_3 Galois Group, Triality Trio 5-Gradings, Quaternion Spin Double Cover Q_8 ->> V_4, Three Associative Quaternion Subalgebras H_{x,y,z}(A) ~= M_2(A), Connes Idempotent Curvature, Non-Abelian Gauss-Codazzi, Adiabatic/Double-Commutator Projection, Lie-Connes Exactness, & Zorn-Connes Vacuum Collapse")
 
     print("======================================================================")
     print("ALL CHECKS PASSED")

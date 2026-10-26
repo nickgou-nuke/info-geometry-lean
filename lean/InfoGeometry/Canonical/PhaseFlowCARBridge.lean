@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RealDoubledWaveplate
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 
@@ -6,7 +11,7 @@ import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 
 Conventions: `phaseConjugation θ T = R(-θ) T R(θ)` and
 `HestenesI = modular_j * spectral_epsilon`.  In particular, at pi/4 the
-annihilation/creation operators are `(epsilon +/- HestenesI)/2`.
+annihilation/creation operators are `(epsilon ± HestenesI)/2`.
 -/
 
 noncomputable section
@@ -65,7 +70,7 @@ theorem annihilation_quarter_turn :
       (1 / 2 : ℝ) • (spectral_epsilon (E := E) + HestenesI (E := E)) := by
   rw [annihilation_eq_half_swap_add_phase, phaseConjugation_smul,
     phaseConjugation_add, phaseConjugation_HestenesI_pi_div_four]
-  change (1 / 2 : ℝ) • (_ + HestenesI (E := E)) = _
+  dsimp only [phaseConjugation]
   rw [phaseFlow_conj_modular_j_pi_div_four]
 
 /-- The requested minus formula is the transported existing creation. -/
@@ -74,9 +79,8 @@ theorem creation_quarter_turn :
       (1 / 2 : ℝ) • (spectral_epsilon (E := E) - HestenesI (E := E)) := by
   rw [creation_eq_half_swap_sub_phase, phaseConjugation_smul, sub_eq_add_neg,
     phaseConjugation_add, phaseConjugation_neg, phaseConjugation_HestenesI_pi_div_four]
-  change (1 / 2 : ℝ) • (_ + -HestenesI (E := E)) = _
-  rw [phaseFlow_conj_modular_j_pi_div_four]
-  rfl
+  dsimp only [phaseConjugation]
+  rw [phaseFlow_conj_modular_j_pi_div_four, ← sub_eq_add_neg]
 
 /-- Square-zero is preserved, not created, by phase conjugation. -/
 theorem conjugation_square_zero (θ : ℝ) (T : EndH) (hT : T * T = 0) :

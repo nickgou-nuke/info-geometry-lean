@@ -656,7 +656,13 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
       InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opEuler5Z X = 0 ∧
     (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.zornSpinX :
       InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix ℝ) *
-      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.zornSpinX = -1 := by
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.zornSpinX = -1 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opCommutator X
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGradeZero 1 0) =
+      ⟨0, -X.v, X.w, 0⟩ ∧
+    Matrix.trace
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.matConnesDensityVariation
+        (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0) = 0 := by
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, ?_,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge
       X 0 0 0 0 0 0 0 0 0 0 0 0 u v u v u v 1).1.2.2.2.2.2.2.2,
@@ -695,7 +701,11 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_dihedral_S3_octahedral_S4_klein_resolution_and_triality_five_gradings_master_bridge
       X X u v u).2.2.2.2.2.2.2.2.2.1,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_quaternion_Q8_spin_double_cover_internal_spinors_and_klein_fusion_master_bridge
-      u X X).2.1.1⟩
+      u X X).2.1.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_connes_idempotent_curvature_gauss_codazzi_and_zorn_vacuum_master_bridge
+      (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 0 (Matrix.zero_mul 0) X).2.2.2.2.2.2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_connes_cocycle_adiabatic_double_commutator_and_lie_exactness_master_bridge
+      (0 : Matrix (Fin 2) (Fin 2) ℝ) 0 1 1 0 ⟨Matrix.one_mul 1, Matrix.one_mul 1⟩ (Matrix.zero_mul 0)).2.1.2.2.2.2.1⟩
   · rcases u with ⟨ux, uy, uz⟩
     rcases v with ⟨vx, vy, vz⟩
     simp [opVec3Fin3Equiv,

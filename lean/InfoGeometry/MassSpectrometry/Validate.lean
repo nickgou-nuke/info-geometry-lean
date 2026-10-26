@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.MassSpectrometry.ValidatorIO
 
-/-- Run with `lake env lean --run lean/Examples/MassSpectrometry/Validate.lean file.json`.
+/-- Run with `lake env lean --run lean/InfoGeometry/MassSpectrometry/Validate.lean file.json`.
 Exit 0 means structural acceptance, 1 rejection, 2 malformed input or usage. -/
 def main (args : List String) : IO UInt32 := do
   let out ← IO.getStdout

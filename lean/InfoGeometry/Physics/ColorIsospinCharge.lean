@@ -46,25 +46,14 @@ theorem charge6_expansion (a b c u v : A) :
       (3 : ℕ) • (baryon a b c * isoPair u v) +
       (3 : ℕ) • (vacuum a b c * isoPlus u v) -
       (3 : ℕ) • (vacuum a b c * isoMinus u v) := by
-  have hc := sector_sum a b c
-  have hn := number_expansion a b c
-  have hi := iso_partition u v
-  unfold charge6
-  rw [hn]
-  calc
-    quark a b c + (2 : ℕ) • diquark a b c +
-        (3 : ℕ) • baryon a b c +
-        (3 : ℕ) • (isoPlus u v - isoMinus u v) =
-      (quark a b c + (2 : ℕ) • diquark a b c +
-        (3 : ℕ) • baryon a b c) *
-        (isoPlus u v + isoMinus u v + isoPair u v) +
-      (3 : ℕ) • (vacuum a b c + quark a b c +
-        diquark a b c + baryon a b c) *
-        (isoPlus u v - isoMinus u v) := by
-          rw [hi, hc, mul_one, one_mul]
-    _ = _ := by
-      simp only [two_nsmul, three_nsmul, four_nsmul,
-        five_nsmul, six_nsmul]
-      noncomm_ring
+  have h4 : ∀ x : A, (4 : ℕ) • x = x + x + x + x := fun x => by
+    rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul, two_nsmul]; abel
+  have h5 : ∀ x : A, (5 : ℕ) • x = x + x + x + x + x := fun x => by
+    rw [show (5 : ℕ) = 3 + 2 from rfl, add_nsmul, three_nsmul, two_nsmul]; abel
+  have h6 : ∀ x : A, (6 : ℕ) • x = x + x + x + x + x + x := fun x => by
+    rw [show (6 : ℕ) = 3 + 3 from rfl, add_nsmul, three_nsmul]; abel
+  simp only [charge6, number, quark, diquark, baryon, vacuum,
+    isoPlus, isoMinus, isoPair, two_nsmul, three_nsmul, h4, h5, h6]
+  noncomm_ring
 
 end InfoGeometry.Physics.ColorIsospinCharge

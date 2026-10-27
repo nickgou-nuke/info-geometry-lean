@@ -1,5 +1,18 @@
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.MatrixNoncommutativity
+import Mathlib.Algebra.Algebra.StrictPositivity
+import Mathlib.Analysis.InnerProductSpace.StarOrder
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix
 
 noncomputable section
@@ -350,8 +363,10 @@ theorem maximallyMixed_bkm_kernel_eq_normalized_trace
 construction. -/
 theorem exists_noncommuting_finiteOperators :
     ∃ A B : FiniteOperatorAlgebra 2, A * B ≠ B * A := by
-  let X : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 1, 0]
-  let Z : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
+  let X : Matrix (Fin 2) (Fin 2) ℂ :=
+    InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix
+  let Z : Matrix (Fin 2) (Fin 2) ℂ :=
+    InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix
   refine
     ⟨CblinfunMatrix.matrixOp X,
       CblinfunMatrix.matrixOp Z, ?_⟩
@@ -367,7 +382,6 @@ theorem exists_noncommuting_finiteOperators :
         ((CblinfunMatrix.matrixOp Z).comp
           (CblinfunMatrix.matrixOp X)) at hm
   simp only [matrixOfOp_comp, matrixOfOp_matrixOp] at hm
-  have hentry := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) hm
-  norm_num [X, Z, Matrix.mul_apply, Fin.sum_univ_two] at hentry
+  exact InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne hm
 
 end SouriauOnsagerBKM

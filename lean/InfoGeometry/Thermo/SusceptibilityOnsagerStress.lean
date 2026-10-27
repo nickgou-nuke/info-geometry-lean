@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SusceptibilityHessian
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Thermo.OnsagerTwoOperatorForm
 
 /-!
 # Susceptibility Onsager Stress
@@ -28,61 +34,8 @@ open InfoGeometry.Thermo.SusceptibilityHessian
 
 /-! ## 1. Two-operator Onsager forms -/
 
-/--
-A scalar two-operator form.
-
-This is the abstract response kernel `L(A,B)` used for Onsager coefficients,
-susceptibility pairings, and stress-response contractions.
--/
-abbrev TwoOperatorForm
-    (Op : Type*)
-    [AddCommMonoid Op] [Module ℝ Op] : Type _ :=
-  LinearMap.BilinForm ℝ Op
-
-/--
-An Onsager two-operator form.
-
-The symmetry field is the reciprocal-response law. Positivity is kept as a
-a separate theorem-owner obligation because indefinite/Krein response channels
-are not automatically positive.
--/
-structure OnsagerTwoOperatorForm
-    (Op : Type*)
-    [AddCommMonoid Op] [Module ℝ Op] where
-  /-- Scalar response coefficient for a pair of operator perturbations. -/
-  form : TwoOperatorForm Op
-
-  /-- Onsager reciprocity. -/
-  symmetric :
-    ∀ A B : Op, form A B = form B A
-
-  /-- Second-law positivity of the Onsager quadratic response. -/
-  diagonal_nonnegative :
-    ∀ A : Op, 0 ≤ form A A
-
-namespace OnsagerTwoOperatorForm
-
-variable
-    {Op : Type*}
-    [AddCommMonoid Op] [Module ℝ Op]
-
-variable (L : OnsagerTwoOperatorForm Op)
-
-/-- Re-export of Onsager reciprocity. -/
-@[rep_depth thermo]
-theorem swap
-    (A B : Op) :
-    L.form A B = L.form B A :=
-  L.symmetric A B
-
-/-- The Onsager quadratic response is nonnegative. -/
-@[rep_depth thermo]
-theorem apply_self_nonnegative
-    (A : Op) :
-    0 ≤ L.form A A :=
-  L.diagonal_nonnegative A
-
-end OnsagerTwoOperatorForm
+attribute [rep_depth thermo] OnsagerTwoOperatorForm.swap
+  OnsagerTwoOperatorForm.apply_self_nonnegative
 
 /-! ## 2. Susceptibility-induced Onsager pairings -/
 

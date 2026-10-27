@@ -1,0 +1,309 @@
+{
+  "status": "passed",
+  "targets": [
+    "InfoGeometry.Algebra.MatrixNoncommutativity",
+    "InfoGeometry.Core.IdempotentTangent",
+    "InfoGeometry.Thermo.OnsagerTwoOperatorForm",
+    "InfoGeometry.Physics.BdGOperatorCalculus",
+    "InfoGeometry.OperatorAlgebra.ChiralBlockSpectralGap",
+    "InfoGeometry.OperatorAlgebra.BdGOperatorGeometryTests",
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces",
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspacesTests",
+    "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature",
+    "InfoGeometry.OperatorAlgebra.PeirceProjectedConnection",
+    "InfoGeometry.OperatorAlgebra.PeirceCompressedGramPositivity",
+    "InfoGeometry.OperatorAlgebra.BdGPeirceCurvature",
+    "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry"
+  ],
+  "scope": "exact repository source closure; selected-owner native axiom audit",
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentTangent",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Thermo.OnsagerTwoOperatorForm",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Physics.BdGChiralBlockMatrix",
+      "returncode": 0,
+      "warnings": 15
+    },
+    {
+      "module": "InfoGeometry.Physics.BdGOperatorCalculus",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ChiralBlockSpectralGap",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix",
+      "returncode": 0,
+      "warnings": 10
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.BdGOperatorGeometryTests",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PartnerEigenspaces",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspacesTests",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.ChiralProjectorBerryCurvature",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceProjectedConnection",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceCompressedGramPositivity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.BdGPeirceCurvature",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMBridge",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.BKMScalarGaugeQuotient",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra",
+      "returncode": 0,
+      "warnings": 3
+    },
+    {
+      "module": "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry",
+      "returncode": 0,
+      "warnings": 0
+    }
+  ],
+  "axiom_audit_passed": true,
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "dependencies": {
+    "InfoGeometry.Algebra.MatrixNoncommutativity": [],
+    "InfoGeometry.Core.IdempotentTangent": [],
+    "InfoGeometry.Thermo.OnsagerTwoOperatorForm": [],
+    "InfoGeometry.Physics.BdGChiralBlockMatrix": [
+      "InfoGeometry.Algebra.MatrixNoncommutativity"
+    ],
+    "InfoGeometry.Physics.BdGOperatorCalculus": [
+      "InfoGeometry.Physics.BdGChiralBlockMatrix"
+    ],
+    "InfoGeometry.OperatorAlgebra.ChiralBlockSpectralGap": [
+      "InfoGeometry.Physics.BdGChiralBlockMatrix"
+    ],
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix": [],
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix": [
+      "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix"
+    ],
+    "InfoGeometry.OperatorAlgebra.BdGOperatorGeometryTests": [
+      "InfoGeometry.OperatorAlgebra.ChiralBlockSpectralGap",
+      "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix"
+    ],
+    "InfoGeometry.OperatorAlgebra.PartnerEigenspaces": [],
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces": [
+      "InfoGeometry.OperatorAlgebra.PartnerEigenspaces"
+    ],
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspacesTests": [
+      "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces"
+    ],
+    "InfoGeometry.Clifford.ChiralProjectorBerryCurvature": [],
+    "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature": [
+      "InfoGeometry.Core.IdempotentTangent",
+      "InfoGeometry.Clifford.ChiralProjectorBerryCurvature"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceProjectedConnection": [
+      "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceCompressedGramPositivity": [
+      "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature"
+    ],
+    "InfoGeometry.OperatorAlgebra.BdGPeirceCurvature": [
+      "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "InfoGeometry.Physics.BdGChiralBlockMatrix",
+      "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMBridge": [
+      "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMBridge"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability",
+      "InfoGeometry.Thermo.OnsagerTwoOperatorForm"
+    ],
+    "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity"
+    ],
+    "InfoGeometry.Canonical.BKMScalarGaugeQuotient": [
+      "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance",
+      "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity"
+    ],
+    "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo": [],
+    "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra": [],
+    "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry": [
+      "InfoGeometry.Canonical.BKMScalarGaugeQuotient",
+      "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo",
+      "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra"
+    ]
+  },
+  "source_sha256": {
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "InfoGeometry.Core.IdempotentTangent": "d0336f7cf430b8614519e4af2d7d2d8a68319eca7272dc898acea627d23d86bf",
+    "InfoGeometry.Thermo.OnsagerTwoOperatorForm": "c3af90fcdb5ccbf15089e3a9febec90caa84964aa515a09e25a76c1562a07b2b",
+    "InfoGeometry.Physics.BdGChiralBlockMatrix": "9d46c95aac10fa210af9d93157edd0e287fd4c8293271ed049c557f706b4534d",
+    "InfoGeometry.Physics.BdGOperatorCalculus": "99d0ec794aba341458d88847591b2f264bf8f6901aa0fd0d43c68d0d3bfe6a99",
+    "InfoGeometry.OperatorAlgebra.ChiralBlockSpectralGap": "5c4ae46885a266734a12de0e347f800e2241ef897b7c30ca66e9470f3e238009",
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix": "d33ff989458b85a8a090efad26586515c779850d42f452adcf92df311cdbdcb1",
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix": "4cdcd2ea6673e2d9598f7fbdfed63e86e0eb36005d09bfa1811ef7b064233371",
+    "InfoGeometry.OperatorAlgebra.BdGOperatorGeometryTests": "0605aef48bf4688df23e27b4b343aa422fd79c18de1605ecf9301c1af2c7a11f",
+    "InfoGeometry.OperatorAlgebra.PartnerEigenspaces": "7680deff2ad170f13e0cc3b1f0f22a63d15648e8ba4b736fee8b6c98e66d4e64",
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces": "7d485db9d657392293db4bcf1e75edbd174dbf2fed449ede38273fcaa7a69acf",
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspacesTests": "f680f73d717942b523de0e9b862d6035c731d63cab7bd5cef85666a2806d3bce",
+    "InfoGeometry.Clifford.ChiralProjectorBerryCurvature": "e91e549c072e9ec8c9becd3924f4b59295d6f16db1757a1c0609e55cc17c5268",
+    "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature": "8317861d052ec3a374621f8c9a0accafd97a890c19984729f520aff23166c782",
+    "InfoGeometry.OperatorAlgebra.PeirceProjectedConnection": "a9c60c9512c15ae18e8b5e68d85ca6c20156ceafb52b6e82c607dc146171c7a4",
+    "InfoGeometry.OperatorAlgebra.PeirceCompressedGramPositivity": "03efcbd8e351cb83597358c2cc111c998bee2c8f4197b83a67137ae2c4d770ea",
+    "InfoGeometry.OperatorAlgebra.BdGPeirceCurvature": "57944e257bd5575a855b5c70104bcd8a05018f56de087398406bd37775f74562",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMBridge": "ae18fbcaed0be1e5043fc381d1fd2a5e9ca33b70cf4836b8e2320a039d58f2a9",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability": "94252ac0ee2117984b74411c6e57a1c3e78afb1d9b27062a1443734a06b66abb",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm": "b642cc7485af29076b23c579891a69dd94703a6dba703ab37a482a54bd7ac4cf",
+    "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance": "fd1b2a1e8449fc461902be445ffbc00cbc384df070e26f9aaa96184a7dbe68ad",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity": "60f360b35163b253f9cfca53375d8f45b0b2443be810616aa74cbc44265ce6a3",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity": "eb572e141a3ccd473ad0ea8e1b90bf94ee7be986f66a6bb144fa9af52fb496a2",
+    "InfoGeometry.Canonical.BKMScalarGaugeQuotient": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677",
+    "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo": "3515c7f3c136d0eefff57a7c7f8e39c6e371f614871ac01359e816a54079ab09",
+    "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra": "96020d21920e321cd20561007de8070550e1a70cb462775e8a01f4bf4e4c05ce",
+    "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry": "e72d1543d329c18ca1718c422748b99dbf0c38b8c9c79fef52f1d7cc2e1b145d"
+  },
+  "declaration_counts": {
+    "InfoGeometry.Algebra.MatrixNoncommutativity": 7,
+    "InfoGeometry.Core.IdempotentTangent": 24,
+    "InfoGeometry.Thermo.OnsagerTwoOperatorForm": 21,
+    "InfoGeometry.Physics.BdGOperatorCalculus": 6,
+    "InfoGeometry.OperatorAlgebra.ChiralBlockSpectralGap": 16,
+    "InfoGeometry.OperatorAlgebra.BdGOperatorGeometryTests": 32,
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspaces": 19,
+    "InfoGeometry.OperatorAlgebra.PartnerGeneralizedEigenspacesTests": 22,
+    "InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature": 21,
+    "InfoGeometry.OperatorAlgebra.PeirceProjectedConnection": 38,
+    "InfoGeometry.OperatorAlgebra.PeirceCompressedGramPositivity": 5,
+    "InfoGeometry.OperatorAlgebra.BdGPeirceCurvature": 9,
+    "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry": 27
+  },
+  "axioms": "[propext, Classical.choice, Quot.sound]",
+  "verification_date": "2026-10-27",
+  "verified_working_tree_base": "b143075bbf27e75860a1011e04423a0f227b7c41",
+  "native_audit_declaration_total": 247,
+  "note": "Source hashes bind the exact verified files. Counts include generated/private declarations and are not named-theorem counts. This is not a root Lake build.",
+  "independent_report_sha256": "ffc741279967cfd422f47170c18533bfb60ae55c2cdbb95903208c3a7a8d5903",
+  "verifier_sha256": "895adad389167336d1c5fc62313aaf2e69311576a585954fd5df6afa7063ae3d",
+  "source_gates": [
+    {
+      "name": "diff-final",
+      "exit_code": 0
+    },
+    {
+      "name": "proof-proxy-final",
+      "exit_code": 0
+    },
+    {
+      "name": "semantic-vacuity-final",
+      "exit_code": 0
+    }
+  ],
+  "semantic_vacuity": {
+    "authority": "lexical heuristics; not a semantic or kernel proof",
+    "files_scanned": 27,
+    "severity_counts": {
+      "warning": 45
+    },
+    "read_failures": []
+  },
+  "audit_log_sha256": "19fb0394d2f5306d4a1b652b9d00eeee674c4d1780dfb8a4cc8a534006a551b5"
+}

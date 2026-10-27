@@ -153,7 +153,8 @@ def main() -> None:
                         raise RuntimeError(f"Compiler {proc.name} active after lock acquisition")
             except (FileNotFoundError, PermissionError, ProcessLookupError):
                 pass
-        version = subprocess.check_output([args.lean, "--version"], env=env, text=True).strip()
+        version = subprocess.check_output([args.lean, "--version"], cwd=root, env=env,
+                                          text=True).strip()
         expected_version = toolchain.split(":v", 1)[1]
         if f"version {expected_version}" not in version:
             raise RuntimeError(f"Compiler mismatch: {version}")
@@ -172,7 +173,7 @@ def main() -> None:
             command = [args.lean, "--root=" + str(work / "lean"), "-o", str(out),
                        str(work / "lean" / relative.with_suffix(".lean"))]
             print("CHECK " + module, flush=True)
-            result = subprocess.run(command, env=env, text=True,
+            result = subprocess.run(command, cwd=root, env=env, text=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (work / (module + ".log")).write_text(result.stdout)
             print(result.stdout, end="", flush=True)
@@ -183,7 +184,7 @@ def main() -> None:
         if args.audit:
             command = [args.lean, "--root=" + str(work / "lean"),
                        str(work / "lean/OperatorGeometryDeclarationAudit.lean")]
-            result = subprocess.run(command, env=env, text=True,
+            result = subprocess.run(command, cwd=root, env=env, text=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (work / "declaration-audit.jsonl").write_text(result.stdout)
             result.check_returncode()

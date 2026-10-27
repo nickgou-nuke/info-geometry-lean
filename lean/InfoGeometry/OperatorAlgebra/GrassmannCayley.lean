@@ -36,27 +36,37 @@ def regressiveOperator (a : ExteriorAlgebra K V) : Module.End K (ExteriorAlgebra
 theorem regressiveOperator_mul (a c : ExteriorAlgebra K V) :
     regressiveOperator b (regressive b a c) =
       regressiveOperator b a * regressiveOperator b c := by
-  ext d
+  apply LinearMap.ext
+  intro d
+  simp only [Module.End.mul_apply, regressiveOperator_apply]
   exact regressive_assoc b a c d
 
 /-- The top blade acts as the identity operator. -/
 @[simp] theorem regressiveOperator_volume : regressiveOperator b (volume b) = 1 := by
-  ext a
+  apply LinearMap.ext
+  intro a
+  simp only [regressiveOperator_apply, Module.End.one_apply]
   exact volume_regressive b a
 
 @[simp] theorem regressiveOperator_zero :
     regressiveOperator b (0 : ExteriorAlgebra K V) = 0 := by
-  ext a
+  apply LinearMap.ext
+  intro a
+  simp only [regressiveOperator_apply, LinearMap.zero_apply]
   exact zero_regressive b a
 
 theorem regressiveOperator_add (a c : ExteriorAlgebra K V) :
     regressiveOperator b (a + c) = regressiveOperator b a + regressiveOperator b c := by
-  ext d
+  apply LinearMap.ext
+  intro d
+  simp only [regressiveOperator_apply, LinearMap.add_apply]
   exact add_regressive b a c d
 
 theorem regressiveOperator_smul (r : K) (a : ExteriorAlgebra K V) :
     regressiveOperator b (r • a) = r • regressiveOperator b a := by
-  ext d
+  apply LinearMap.ext
+  intro d
+  simp only [regressiveOperator_apply, LinearMap.smul_apply]
   exact smul_regressive b r a d
 
 /-- Evaluation at the volume reconstructs every exterior element. -/
@@ -84,7 +94,10 @@ theorem matrix_regressiveOperator_eq_iff (a c : ExteriorAlgebra K V) :
 theorem hodge_intertwines_regressive (a : ExteriorAlgebra K V) :
     (hodge b).toLinearMap * regressiveOperator b a =
       Algebra.lmul K (ExteriorAlgebra K V) (hodge b a) * (hodge b).toLinearMap := by
-  ext c
+  apply LinearMap.ext
+  intro c
+  rw [Module.End.mul_apply, Module.End.mul_apply, regressiveOperator_apply]
+  change hodge b (regressive b a c) = hodge b a * hodge b c
   exact hodge_regressive b a c
 
 end InfoGeometry.OperatorAlgebra.GrassmannCayley

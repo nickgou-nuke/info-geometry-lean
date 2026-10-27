@@ -28,14 +28,16 @@ local instance : CompleteSpace E := FiniteDimensional.complete 𝕜 E
 
 /-- The rank of points is the dimension of the join of their operator ranges. -/
 theorem pointRank_eq_finrank_projection_ranges (s : Finset (Projectivization 𝕜 E)) :
-    pointRank s = finrank 𝕜 (s.sup fun p => (pointProjection p).range) := by
-  simp only [pointProjection_range]
-  rfl
+    pointRank s = finrank 𝕜 (s.sup (fun p => (pointProjection p).range) : Submodule 𝕜 E) := by
+  have hspan : (s.sup (fun p => (pointProjection p).range) : Submodule 𝕜 E) =
+      pointSpan s := by
+    simp only [pointProjection_range, pointSpan]
+  exact congrArg (fun U : Submodule 𝕜 E => finrank 𝕜 U) hspan.symm
 
 /-- Native matroid rank is the rank of the joined operator ranges. -/
 theorem matroid_eRk_eq_finrank_projection_ranges (s : Finset (Projectivization 𝕜 E)) :
     (IncidenceMatroid.projectiveMatroid 𝕜 E).eRk (s : Set (Projectivization 𝕜 E)) =
-      (finrank 𝕜 (s.sup fun p => (pointProjection p).range) : ℕ∞) :=
+      (finrank 𝕜 (s.sup (fun p => (pointProjection p).range) : Submodule 𝕜 E) : ℕ∞) :=
   (IncidenceMatroid.projectiveMatroid_eRk_finset s).trans
     (congrArg (fun n : ℕ => (n : ℕ∞)) (pointRank_eq_finrank_projection_ranges s))
 
@@ -62,7 +64,8 @@ theorem pointRank_le_two_iff_projection (s : Finset (Projectivization 𝕜 E)) :
   constructor
   · intro hs
     refine ⟨(pointSpan s).starProjection, isStarProjection_starProjection, ?_, ?_⟩
-    · simpa only [Submodule.range_starProjection] using hs
+    · rw [Submodule.range_starProjection]
+      exact hs
     · intro p hp
       exact (point_incident_iff p (pointSpan s)).mp (submodule_le_pointSpan hp)
   · rintro ⟨L, hL, hdim, hpoints⟩

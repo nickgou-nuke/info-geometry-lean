@@ -22,16 +22,14 @@ namespace InfoGeometry.Algebra.RectangularRetract
 
 open Matrix
 
-variable {R m n : Type*} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
+variable {R m n : Type*} [Fintype m] [DecidableEq m] [Fintype n]
 
 section Semiring
 variable [Semiring R] {K : Matrix n m R} {Q : Matrix m n R}
 
-omit [DecidableEq n] in
 theorem support_mul_inclusion (h : Q * K = 1) : (K * Q) * K = K := by
   rw [Matrix.mul_assoc, h, Matrix.mul_one]
 
-omit [DecidableEq n] in
 theorem retraction_mul_support (h : Q * K = 1) : Q * (K * Q) = Q := by
   rw [← Matrix.mul_assoc, h, Matrix.one_mul]
 
@@ -39,7 +37,6 @@ theorem support_idempotent (h : Q * K = 1) : IsIdempotentElem (K * Q) := by
   change (K * Q) * (K * Q) = K * Q
   rw [← Matrix.mul_assoc, support_mul_inclusion h]
 
-omit [DecidableEq n] in
 theorem sandwich_mul (h : Q * K = 1) (A B : Matrix m m R) :
     (K * A * Q) * (K * B * Q) = K * (A * B) * Q := by
   calc
@@ -73,6 +70,8 @@ theorem cornerHom_injective (h : Q * K = 1) : Function.Injective (cornerHom K Q 
 @[simp] theorem cornerHom_one (h : Q * K = 1) :
     cornerHom K Q h 1 = K * Q := by simp
 
+variable [DecidableEq n]
+
 /-- Positive powers transport through a nonunital embedding; exponent zero is separate. -/
 theorem cornerHom_pow_succ (h : Q * K = 1) (A : Matrix m m R) (r : ℕ) :
     (cornerHom K Q h A) ^ (r + 1) = cornerHom K Q h (A ^ (r + 1)) := by
@@ -84,7 +83,7 @@ theorem cornerHom_pow_succ (h : Q * K = 1) (A : Matrix m m R) (r : ℕ) :
 end Semiring
 
 section Geometry
-variable [CommRing R] {K : Matrix n m R} {Q : Matrix m n R}
+variable [CommRing R] [DecidableEq n] {K : Matrix n m R} {Q : Matrix m n R}
 
 theorem toLin_support_idempotent (h : Q * K = 1) :
     IsIdempotentElem (Matrix.toLin' (K * Q)) := by
@@ -132,8 +131,8 @@ theorem range_le_iff {s : Type*} [Fintype s] [DecidableEq s]
 theorem square_retract_support {K Q : Matrix n n R} (h : Q * K = 1) : K * Q = 1 :=
   _root_.mul_eq_one_comm.mp h
 
-/-- A strictly smaller retract dimension rules out collapse to the ambient unit. -/
 omit [DecidableEq m] in
+/-- A strictly smaller retract dimension rules out collapse to the ambient unit. -/
 theorem support_ne_one_of_card_lt [StrongRankCondition R]
     (K : Matrix n m R) (Q : Matrix m n R) (hdim : Fintype.card m < Fintype.card n) :
     K * Q ≠ 1 := by

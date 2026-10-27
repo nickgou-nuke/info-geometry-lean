@@ -1794,6 +1794,34 @@ derivations or establishes an iff classification by `sl₃(Z(A))`. The new
 module built in a locked 3,095-job Lake run (exit 0); the imported owner emits
 pre-existing linter warnings.
 
+The separate real split-Zorn owner `Lie.CanonicalZornDerivationDimension`
+proves a 14-parameter linear model for its derivations. Its companion
+`Lie.CanonicalZornDerivationBeyondSL3` gives a parameter derivation sending
+`U 0` to an element with diagonal coordinate `1`, so it fails the stated
+grade-preservation property of the standard block `sl₃` action. This refutes
+identifying the full derivation algebra of that real split-Zorn carrier with
+the grade-preserving `sl₃` action. It is not a classification for arbitrary
+noncommutative coefficient rings. The focused locked build passed (3,106 jobs);
+warnings came from the imported canonical vector-matrix bridge.
+
+## Operator-valued Zorn alternativity obstruction (2026-10-27)
+
+`Canonical.NCZornAlternativityAudit` works with the displayed `NCZornElement`
+product over `BdGBlock ℚ = M₂(ℚ)`. For the upper-coordinate test element with
+coefficients `a,b` and the pure upper diagonal element with coefficient `d`,
+the two sides of left alternativity have `sigma_minus 2` coordinates
+`(ab-ba)d` and `0`. The new
+`left_alternativity_sigma_minus_two_eq_iff` states the exact equality
+criterion for that coordinate; `left_alternativity_obstruction` and
+`bdg_left_alternativity_fails` turn nonzero commutators into a failure of the
+full law. The corresponding right-side coordinate is `0` versus
+`d(ab-ba)`, with its exact criterion in
+`right_alternativity_sigma_minus_two_eq_iff`; the BdG matrix-unit witness
+refutes right alternativity as well. These coordinate criteria do not assert
+that vanishing of the selected coordinate suffices for equality of the full
+products. The focused locked build passed (3,096 jobs); warnings came from
+imported BdG and Zorn owners.
+
 ## Trace of a commutator needs commutative coefficients (2026-10-27)
 
 `OperatorAlgebra.NoncommutativeAssociativeGeometry.matrix_trace_lieBracket_eq_zero`
@@ -1803,8 +1831,12 @@ assumption matters: two off-diagonal block operators over the noncommutative
 coefficient algebra `M₂(ℝ)` have a nonzero coefficient-valued trace of their
 commutator. The outer block operators also fail to commute. Thus the canonical
 trace-zero claim cannot be extended to arbitrary noncommutative coefficient
-rings. The focused strict screen and proof-proxy gate passed; the locked build
-passed (8,955 jobs). The kernel axiom audit passed for all eight declarations
+rings. The canonical replacement is
+`matrix_trace_lieBracket_eq_sum_entry_commutators`, proved for arbitrary
+`[Ring R]`: `trace (x*y - y*x) = ∑ i, ∑ j, (x i j * y j i - y i j * x j i)`.
+It records precisely the coefficient commutators that obstruct cancellation.
+The focused strict screen and proof-proxy gate passed; the locked owner build
+passed (8,954 jobs). The kernel axiom audit passed for all eight declarations
 with only `propext`, `Classical.choice`, and `Quot.sound`; two independent
 read-only reviews approved the witness and its scope.
 
@@ -1925,6 +1957,14 @@ subsets of `[propext, Classical.choice, Quot.sound]`, with no rejected axioms.
 The scoped semantic-vacuity audit reports zero findings. The repository-wide
 staged proof-proxy gate remains blocked by ten unrelated malformed/missing
 copyright headers in other files; the bridge itself has the required header.
+
+The follow-up `Canonical.GaloisG2MatrixRingEquivalence.mul_val_eq_owner`
+closes a compatibility gap in the transported subtype ring: it proves that
+the subtype product's underlying value is the ambient owner Zorn product.
+Without this lemma, the abstract `Equiv.ringEquiv` alone only identifies the
+transported ring and does not establish compatibility with the multiplication
+on `OpZornMatrix`. The lemma reuses `axisXMatrix_mul` and the channel
+coordinate reconstruction; its focused locked build passed (3,096 jobs).
 
 ## Current lexical scan reconciliation (2026-10-27)
 

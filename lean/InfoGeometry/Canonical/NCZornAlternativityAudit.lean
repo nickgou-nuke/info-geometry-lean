@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.ZornMultiplicationOverBdG
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.FinCases
@@ -56,6 +61,21 @@ theorem upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two (a b d : A) :
   simp [NCZornElement.mul, upperTwo, NCZornElement.pureNPlus,
     NCZornElement.zornDot, NCZornElement.zornCross]
 
+/-- On the displayed test elements, equality in the witnessing coordinate of
+left alternativity is equivalent to annihilation of the coefficient
+commutator by `d`. This is a coordinate criterion, not a claim that the full
+Zorn products are equal when that coordinate vanishes. -/
+theorem left_alternativity_sigma_minus_two_eq_iff (a b d : A) :
+    (NCZornElement.mul
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))
+        (NCZornElement.pureNPlus d)).sigma_minus 2 =
+      (NCZornElement.mul (upperTwo a b)
+        (NCZornElement.mul (upperTwo a b)
+          (NCZornElement.pureNPlus d))).sigma_minus 2 ↔
+      (a * b - b * a) * d = 0 := by
+  rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
+    upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two]
+
 theorem left_alternativity_obstruction
     {a b d : A} (h : (a * b - b * a) * d ≠ 0) :
     NCZornElement.mul
@@ -90,6 +110,23 @@ theorem pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two (a b d : A) :
         (upperTwo a b)).sigma_minus 2 = 0 := by
   simp [NCZornElement.mul, upperTwo, NCZornElement.pureNMinus,
     NCZornElement.zornDot, NCZornElement.zornCross]
+
+/-- The corresponding right-alternativity coordinate criterion is left
+annihilation of the coefficient commutator by `d`. -/
+theorem right_alternativity_sigma_minus_two_eq_iff (a b d : A) :
+    (NCZornElement.mul
+        (NCZornElement.mul (NCZornElement.pureNMinus d) (upperTwo a b))
+        (upperTwo a b)).sigma_minus 2 =
+      (NCZornElement.mul (NCZornElement.pureNMinus d)
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))).sigma_minus 2 ↔
+      d * (a * b - b * a) = 0 := by
+  rw [pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two,
+    pureNMinus_mul_upperTwo_square_sigma_minus_two]
+  constructor
+  · intro h
+    exact h.symm
+  · intro h
+    exact h.symm
 
 theorem right_alternativity_obstruction
     {a b d : A} (h : d * (a * b - b * a) ≠ 0) :

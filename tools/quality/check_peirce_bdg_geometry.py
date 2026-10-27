@@ -59,8 +59,10 @@ def compiler_preflight():
         raise RuntimeError("Concurrent compiler/test task: " + ", ".join(active))
 
 
-def main():
-    parser = argparse.ArgumentParser(__doc__)
+def main(*, targets=None, label="peirce-bdg-geometry",
+         audit_filename="PeirceBdGGeometryAudit.lean", description=None):
+    targets = TARGETS if targets is None else targets
+    parser = argparse.ArgumentParser(description or __doc__)
     parser.add_argument("--mathlib-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True,
                         help="A new directory; verification never reuses project oleans")
@@ -69,7 +71,7 @@ def main():
     args = parser.parse_args()
     mathlib, output = args.mathlib_root.resolve(), args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
-    state = {"status": "pending", "targets": TARGETS,
+    state = {"status": "pending", "targets": targets,
              "scope": "exact repository source closure; selected-owner native axiom audit",
              "modules": [], "axiom_audit_passed": False}
     try:
@@ -84,7 +86,7 @@ def main():
             raise RuntimeError("Toolchain mismatch")
         run(["git", "diff", "--exit-code", "HEAD", "--", "Mathlib", "Mathlib.lean",
              "lakefile.lean", "lake-manifest.json", "lean-toolchain"], mathlib)
-        ordered, dependencies, native = closure(ROOT, TARGETS)
+        ordered, dependencies, native = closure(ROOT, targets)
         state["dependencies"] = dependencies
         state["source_sha256"] = {}
         source, lib, logs = output / "src", output / "lib", output / "logs"
@@ -108,7 +110,7 @@ def main():
                         or stripped.startswith(("public import ", "private import "))):
                     raise RuntimeError("Unsupported import syntax in " + module)
         compiler_preflight()
-        lock = acquire_build_lock(None, "peirce-bdg-geometry:" + str(os.getpid()), block=False)
+        lock = acquire_build_lock(None, label + ":" + str(os.getpid()), block=False)
         try:
             compiler_preflight()
             fds = (lock.fileno(),)
@@ -146,10 +148,10 @@ def main():
                 state["modules"].append({"module": module, "returncode": 0,
                                          "warnings": warnings})
                 print(f"CHECK {module}: passed ({warnings} warnings)", flush=True)
-            audit = source / "PeirceBdGGeometryAudit.lean"
-            audit.write_text(audit_source(TARGETS))
+            audit = source / audit_filename
+            audit.write_text(audit_source(targets))
             evidence = run(["lean", str(audit)], source, env, logs / "audit.log", fds)
-            state["declaration_counts"] = parse_audit_output(evidence, TARGETS)
+            state["declaration_counts"] = parse_audit_output(evidence, targets)
             state["axioms"] = next(line.removeprefix("AUDIT_AXIOMS: ")
                 for line in evidence.splitlines() if line.startswith("AUDIT_AXIOMS: "))
             for module, digest in state["source_sha256"].items():

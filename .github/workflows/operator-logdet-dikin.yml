@@ -1,0 +1,99 @@
+name: Operator logdet and Dikin geometry (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
+      - 'lean/InfoGeometry/Analysis/ComplexMatrixJacobi.lean'
+      - 'lean/InfoGeometry/Analysis/ComplexMatrixLogDetCalculus.lean'
+      - 'lean/InfoGeometry/Analysis/LogDetSelfConcordantBarrier.lean'
+      - 'lean/InfoGeometry/Analysis/PositiveMatrixDikin.lean'
+      - 'lean/InfoGeometry/Canonical/BKMCommutatorDikin.lean'
+      - 'lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean'
+      - 'lean/InfoGeometry/Canonical/CenteredBKMCommutatorGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/DikinFiniteOrbitColimit.lean'
+      - 'lean/InfoGeometry/Canonical/FiniteBogoliubovFrameDeformationEntropy.lean'
+      - 'lean/InfoGeometry/Canonical/FiniteDimensionalCCRNoGo.lean'
+      - 'lean/InfoGeometry/Canonical/MatrixDetExpTraceJacobi.lean'
+      - 'lean/InfoGeometry/Canonical/NoncommutativeGibbsCenteredBKMCovariance.lean'
+      - 'lean/InfoGeometry/Canonical/OperatorLogDetDikinGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/OperatorLogDetDikinGeometryTests.lean'
+      - 'lean/InfoGeometry/Canonical/PolarFrameBKMGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/PolarFrameTraceDensity.lean'
+      - 'lean/InfoGeometry/Canonical/QuantumInformationGeometryColimitDualityCapstone.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauOnsagerBKMBridge.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauOnsagerBKMIntegrability.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauOnsagerBKMPositivity.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauOnsagerBKMRealForm.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauOnsagerBKMStrictPositivity.lean'
+      - 'lean/InfoGeometry/Canonical/YangBaxterProof.lean'
+      - 'lean/InfoGeometry/Geometry/LegendreDifferential.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/CblinfunMatrix.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/FiniteMatrix.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorExteriorAlgebra.lean'
+      - 'lean/InfoGeometry/Quantum/DikinBlahutOrbits.lean'
+      - 'lean/InfoGeometry/Thermo/OnsagerTwoOperatorForm.lean'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'docs/OPERATOR_LOGDET_DIKIN_GEOMETRY.md'
+      - 'tools/quality/check_operator_logdet_dikin.py'
+      - 'tools/quality/check_peirce_bdg_geometry.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - '.github/workflows/operator-logdet-dikin.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: operator-logdet-dikin-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact public source without initializing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install exact toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile full source closure and audit new declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          ps -eo pid,comm,args
+          python3 project/tools/quality/check_operator_logdet_dikin.py \
+            --mathlib-root pinned-mathlib --output verification --fetch-cache
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: operator-logdet-dikin-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

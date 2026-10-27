@@ -40,6 +40,7 @@ jobs:
           subprocess.run(['git', '-C', str(target), 'checkout', '--detach', 'FETCH_HEAD'], check=True)
           PY
       - uses: actions/cache@v4
+        id: dependencies-cache
         with:
           path: |
             ~/.elan
@@ -74,3 +75,11 @@ jobs:
             ${{ runner.temp }}/incidence-verification/**/*.json
             ${{ runner.temp }}/incidence-verification/**/*.txt
             ${{ runner.temp }}/incidence-verification/src
+      - name: Retain pinned dependency downloads for subsequent proof checks
+        uses: actions/cache/save@v4
+        if: always() && steps.dependencies-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: incidence-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}

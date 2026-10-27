@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Projective.IncidenceRank
+import InfoGeometry.Projective.IncidenceMatroid
 import InfoGeometry.Projective.ProjectionIncidence
 
 /-!
@@ -23,11 +24,20 @@ open Module IncidenceRank
 variable {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
   [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E]
 
+local instance : CompleteSpace E := FiniteDimensional.complete 𝕜 E
+
 /-- The rank of points is the dimension of the join of their operator ranges. -/
 theorem pointRank_eq_finrank_projection_ranges (s : Finset (Projectivization 𝕜 E)) :
     pointRank s = finrank 𝕜 (s.sup fun p => (pointProjection p).range) := by
   simp only [pointProjection_range]
   rfl
+
+/-- Native matroid rank is the rank of the joined operator ranges. -/
+theorem matroid_eRk_eq_finrank_projection_ranges (s : Finset (Projectivization 𝕜 E)) :
+    (IncidenceMatroid.projectiveMatroid 𝕜 E).eRk (s : Set (Projectivization 𝕜 E)) =
+      (finrank 𝕜 (s.sup fun p => (pointProjection p).range) : ℕ∞) :=
+  (IncidenceMatroid.projectiveMatroid_eRk_finset s).trans
+    (congrArg (fun n : ℕ => (n : ℕ∞)) (pointRank_eq_finrank_projection_ranges s))
 
 /-- Operator absorption is equivalent to absence of growth in range rank. -/
 theorem absorption_iff_range_rank_eq {P L : E →L[𝕜] E}

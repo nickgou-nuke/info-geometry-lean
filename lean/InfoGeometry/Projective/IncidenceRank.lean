@@ -51,7 +51,8 @@ omit [FiniteDimensional K V] in
 omit [FiniteDimensional K V] in
 @[simp] theorem pointRank_empty :
     pointRank (∅ : Finset (Projectivization K V)) = 0 := by
-  simp [pointRank]
+  change finrank K (pointSpan (∅ : Finset (Projectivization K V))) = 0
+  rw [pointSpan_empty, finrank_bot]
 
 omit [FiniteDimensional K V] in
 @[simp] theorem pointRank_singleton (p : Projectivization K V) :
@@ -189,8 +190,8 @@ theorem pointRank_insert_of_not_le (p : Projectivization K V)
 
 end FinsetOperations
 
-/-- Distinct projective points generate a two-dimensional vector subspace. -/
 omit [FiniteDimensional K V] in
+/-- Distinct projective points generate a two-dimensional vector subspace. -/
 theorem finrank_sup_points {p q : Projectivization K V} (hpq : p ≠ q) :
     finrank K (p.submodule ⊔ q.submodule : Submodule K V) = 2 := by
   have hupper := Submodule.finrank_add_le_finrank_add_finrank p.submodule q.submodule

@@ -21,6 +21,10 @@ paper's abstract cryptomorphism for arbitrary incidence structures.
 - Points: native `Projectivization K V`, with its existing quotient and
   `Projectivization.submodule`.
 - Linear/projective rank: `Module.finrank K` of the span of the point subspaces.
+- Matroid: native `Matroid (Projectivization K V)`, constructed by
+  `IndepMatroid.ofBddAugment` from independence of representatives. The native
+  `Matroid.eRk` equals the dimension of the span for arbitrary point sets,
+  including infinite sets in the finite-dimensional ambient space.
 - Lines: submodules of vector-space dimension exactly two.
 - Operator carrier: the full noncommutative algebra `E →L[𝕜] E`, with
   `𝕜` real or complex and ordinary composition as multiplication.
@@ -61,13 +65,15 @@ Native mathlib interfaces reused directly to keep imports narrow:
 - `ContinuousLinearMap.IsStarProjection.ext_iff`: star projections are equal
   exactly when their ranges are equal.
 - `Submodule.finrank_sup_add_finrank_inf_eq`: the dimension modular identity.
+- `IndepMatroid.ofBddAugment`, `Projectivization.independent_iff`, and
+  `Matroid.IsBasis'.eRk_eq_encard`: the native matroid and its rank interface.
 
 The source-confirmed gap addressed here is the reusable connection from native
 projective points and their rank geometry to arbitrary orthogonal-projection
 operators, including the failure of multiplication to represent intersection
 without commutativity.
 
-## Intended theorem dependency order
+## Theorem dependency poset
 
 1. Native subspaces and orthogonal projections give inverse carrier maps.
 2. Subspace inclusion is equivalent to operator absorption in both orders.
@@ -81,6 +87,27 @@ without commutativity.
 7. Isometric conjugation preserves the operator and geometric constructions.
 8. A proved noncommutativity result witnesses the limits of replacing meets
    by products.
+9. Linear independence and finite-dimensional augmentation construct the native
+   projective matroid. Its extended natural-number rank agrees with both the
+   geometric rank and the dimension of joined projection ranges.
+
+The dependency relation has independent branches; it is not a forced linear
+sequence. The geometric order itself is Mathlib's existing complete lattice
+`Submodule K V`.
+
+```mermaid
+flowchart TD
+  R["Native rays and subspace lattice"] --> D["Span rank and dimension identities"]
+  R --> P["Orthogonal projection equivalence"]
+  D --> M["Native projective matroid"]
+  D --> L["Lines, collinearity and rank closure"]
+  P --> A["Incidence as operator absorption"]
+  M --> G["Matroid rank equals joined-range rank"]
+  L --> G
+  A --> G
+  P --> N["Meet criterion and noncommuting rays"]
+  P --> C["Isometric covariance"]
+```
 
 This is a dependency order of mathematical statements. It is not an assertion
 of physical causation or a new theory of causality.

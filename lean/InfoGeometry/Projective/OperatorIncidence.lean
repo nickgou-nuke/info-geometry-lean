@@ -5,10 +5,12 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Projective.IncidenceRank
 import InfoGeometry.Projective.IncidenceNondegeneracy
+import InfoGeometry.Projective.IncidenceMatroid
 import InfoGeometry.Projective.ProjectionIncidence
 import InfoGeometry.Projective.ProjectionRankGeometry
 import InfoGeometry.Projective.ProjectionCovariance
 import InfoGeometry.Projective.ProjectionNoncommutativity
+import InfoGeometry.Projective.ProjectionMatrixGeometry
 
 /-! Entry point for representable projective incidence, geometric rank,
 orthogonal-projection realization, and noncommutative operator covariance. -/

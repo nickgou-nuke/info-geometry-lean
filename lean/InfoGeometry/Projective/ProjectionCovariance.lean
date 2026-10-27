@@ -40,15 +40,16 @@ theorem range_conj (e : E ≃ₗᵢ[𝕜] F) (T : E →L[𝕜] E) :
     exact ⟨T (e.symm x), ⟨e.symm x, rfl⟩, rfl⟩
   · rintro ⟨x, ⟨z, rfl⟩, rfl⟩
     refine ⟨e z, ?_⟩
-    simp only [LinearIsometryEquiv.conjStarAlgEquiv_apply_apply,
-      LinearIsometryEquiv.symm_apply_apply]
+    change e (T (e.symm (e z))) = e (T z)
+    rw [e.symm_apply_apply]
 
 /-- Range incidence is preserved and reflected by operator conjugation. -/
 theorem range_le_range_conj_iff (e : E ≃ₗᵢ[𝕜] F) (S T : E →L[𝕜] E) :
     (e.conjStarAlgEquiv S).range ≤ (e.conjStarAlgEquiv T).range ↔
       S.range ≤ T.range := by
   rw [range_conj, range_conj]
-  exact Submodule.map_le_map_iff_of_injective e.injective _ _
+  exact Submodule.map_le_map_iff_of_injective
+    (f := e.toLinearEquiv.toLinearMap) e.injective S.range T.range
 
 /-- Projection absorption is invariant under an arbitrary isometric change of basis. -/
 theorem mapped_projection_mul_eq_iff (e : E ≃ₗᵢ[𝕜] F)
@@ -79,7 +80,8 @@ theorem mapped_projections_commute_iff (e : E ≃ₗᵢ[𝕜] F)
         (V.map e.toLinearEquiv.toLinearMap).starProjection ↔
       Commute U.starProjection V.starProjection := by
   rw [starProjection_map_eq_conj, starProjection_map_eq_conj]
-  simp only [commute_iff_eq, ← map_mul, e.conjStarAlgEquiv.injective.eq_iff]
+  simp only [commute_iff_eq, ← map_mul]
+  exact e.conjStarAlgEquiv.injective.eq_iff
 
 section FiniteDimensional
 
@@ -89,28 +91,41 @@ variable [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
 theorem finrank_range_conj (e : E ≃ₗᵢ[𝕜] F) (T : E →L[𝕜] E) :
     Module.finrank 𝕜 (e.conjStarAlgEquiv T).range =
       Module.finrank 𝕜 T.range := by
-  rw [range_conj]
-  exact e.toLinearEquiv.finrank_map_eq T.range
+  exact
+    (congrArg (fun W : Submodule 𝕜 F => Module.finrank 𝕜 W)
+      (range_conj e T)).trans
+      (e.toLinearEquiv.finrank_map_eq T.range)
 
 /-- Rank of a family means rank of its joined ranges and is coordinate invariant. -/
 theorem finrank_iSup_range_conj {ι : Sort*} (e : E ≃ₗᵢ[𝕜] F)
     (T : ι → E →L[𝕜] E) :
-    Module.finrank 𝕜 (⨆ i, (e.conjStarAlgEquiv (T i)).range) =
-      Module.finrank 𝕜 (⨆ i, (T i).range) := by
-  simp_rw [range_conj]
-  rw [← Submodule.map_iSup]
-  exact e.toLinearEquiv.finrank_map_eq _
+    Module.finrank 𝕜 (⨆ i, (e.conjStarAlgEquiv (T i)).range : Submodule 𝕜 F) =
+      Module.finrank 𝕜 (⨆ i, (T i).range : Submodule 𝕜 E) := by
+  have hjoin :
+      (⨆ i, (e.conjStarAlgEquiv (T i)).range : Submodule 𝕜 F) =
+        (⨆ i, (T i).range : Submodule 𝕜 E).map e.toLinearEquiv.toLinearMap := by
+    rw [Submodule.map_iSup]
+    exact iSup_congr (fun i => range_conj e (T i))
+  exact
+    (congrArg (fun W : Submodule 𝕜 F => Module.finrank 𝕜 W) hjoin).trans
+      (e.toLinearEquiv.finrank_map_eq _)
 
 /-- The rank of a projective join is unchanged under unitary transport. -/
 theorem finrank_sup_mapped_projection_ranges (e : E ≃ₗᵢ[𝕜] F)
     (U V : Submodule 𝕜 E) :
     Module.finrank 𝕜
       ((U.map e.toLinearEquiv.toLinearMap).starProjection.range ⊔
-        (V.map e.toLinearEquiv.toLinearMap).starProjection.range) =
-      Module.finrank 𝕜 (U.starProjection.range ⊔ V.starProjection.range) := by
-  simp only [Submodule.range_starProjection]
-  rw [← Submodule.map_sup]
-  exact e.toLinearEquiv.finrank_map_eq _
+        (V.map e.toLinearEquiv.toLinearMap).starProjection.range : Submodule 𝕜 F) =
+      Module.finrank 𝕜 (U.starProjection.range ⊔ V.starProjection.range : Submodule 𝕜 E) := by
+  have hjoin :
+      ((U.map e.toLinearEquiv.toLinearMap).starProjection.range ⊔
+        (V.map e.toLinearEquiv.toLinearMap).starProjection.range : Submodule 𝕜 F) =
+      (U.starProjection.range ⊔ V.starProjection.range : Submodule 𝕜 E).map
+        e.toLinearEquiv.toLinearMap := by
+    simp only [Submodule.range_starProjection, Submodule.map_sup]
+  exact
+    (congrArg (fun W : Submodule 𝕜 F => Module.finrank 𝕜 W) hjoin).trans
+      (e.toLinearEquiv.finrank_map_eq _)
 
 end FiniteDimensional
 

@@ -62,6 +62,8 @@ section FiniteDimensional
 
 variable [FiniteDimensional 𝕜 E]
 
+local instance : CompleteSpace E := FiniteDimensional.complete 𝕜 E
+
 /-- Every subspace is represented by exactly one self-adjoint idempotent. -/
 def projectionEquiv :
     Submodule 𝕜 E ≃ {P : E →L[𝕜] E // IsStarProjection P} where
@@ -92,7 +94,8 @@ theorem pointProjection_injective :
     Function.Injective (pointProjection : Projectivization 𝕜 E → E →L[𝕜] E) := by
   intro p q h
   apply Projectivization.submodule_injective
-  simpa only [pointProjection_range] using congrArg ContinuousLinearMap.range h
+  simpa only [pointProjection_range] using
+    congrArg (fun T : E →L[𝕜] E => T.range) h
 
 /-- This is a two-sided equivalence with the actual projective quotient,
 not just a representation of selected vectors. -/

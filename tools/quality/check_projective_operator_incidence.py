@@ -9,10 +9,12 @@ from tools.quality import check_ms_signature_geometry as checker
 checker.TARGETS = [
     "InfoGeometry.Projective.IncidenceRank",
     "InfoGeometry.Projective.IncidenceNondegeneracy",
+    "InfoGeometry.Projective.IncidenceMatroid",
     "InfoGeometry.Projective.ProjectionIncidence",
     "InfoGeometry.Projective.ProjectionRankGeometry",
     "InfoGeometry.Projective.ProjectionCovariance",
     "InfoGeometry.Projective.ProjectionNoncommutativity",
+    "InfoGeometry.Projective.ProjectionMatrixGeometry",
     "InfoGeometry.Projective.OperatorIncidence",
 ]
 

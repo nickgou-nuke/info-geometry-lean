@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.ZornLeftParity
+import Mathlib.Tactic.NoncommRing
 
 /-! Native split-Clifford operators on the Zorn module. The existing real CAR
 owner provides its Clifford universal-property lift; these

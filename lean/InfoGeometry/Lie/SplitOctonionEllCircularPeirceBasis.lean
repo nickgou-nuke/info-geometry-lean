@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Lie.CanonicalZornRegularOperators
 import InfoGeometry.Lie.SplitOctonionEllCrossChannel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -20,42 +26,6 @@ open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 open InfoGeometry.Lie.SplitOctonionEllPolarization
 open InfoGeometry.Lie.SplitOctonionEllCrossChannel
-
-abbrev CanonicalZorn := InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn
-
-/-- Left multiplication by a fixed carrier element, as a native linear
-operator on the full nonassociative carrier. -/
-noncomputable def leftMultiplication (A : CanonicalZorn) : Module.End ℝ CanonicalZorn where
-  toFun X := A * X
-  map_add' X Y := by
-    change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul A (X + Y) =
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul A X +
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul A Y
-    rw [zMul_add_right]
-  map_smul' r X := by
-    change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul A (r • X) =
-      r • InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul A X
-    rw [zMul_smul_right]
-
-/-- Right multiplication by a fixed carrier element, as a native linear
-operator on the full nonassociative carrier. -/
-noncomputable def rightMultiplication (A : CanonicalZorn) : Module.End ℝ CanonicalZorn where
-  toFun X := X * A
-  map_add' X Y := by
-    change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (X + Y) A =
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul X A +
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul Y A
-    rw [zMul_add_left]
-  map_smul' r X := by
-    change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (r • X) A =
-      r • InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul X A
-    rw [zMul_smul_left]
-
-@[simp] theorem leftMultiplication_apply (A X : CanonicalZorn) :
-    leftMultiplication A X = A * X := rfl
-
-@[simp] theorem rightMultiplication_apply (A X : CanonicalZorn) :
-    rightMultiplication A X = X * A := rfl
 
 theorem ellLeftMul_eq_leftMultiplication :
     ellLeftMul = leftMultiplication lUnit := by

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Canonical.OperatorBerezinianCore
 import Mathlib.Algebra.Ring.Associator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -7517,14 +7518,6 @@ theorem opDoubletTower_cantor_peirce_and_compass_semigroup_homomorphism
 /-!
 ## 41. Archetypes XCIV & XCV: Noncommutative Gelfand–Retakh Quasideterminants, Exact Gauss–Bruhat Trifactor Elimination, Bimodule Curvature, Riccati Taylor Shift, & Operator Berezinian
 -/
-
-/-- Noncommutative operator Berezinian $\mathrm{Ber}_{\mathrm{nc}}(u, \Delta) = (u : A) * (\uparrow \Delta^{-1} : A)$. -/
-@[simp] def opNoncommBerezinian (u Δ : Aˣ) : A :=
-  (u : A) * (↑Δ⁻¹ : A)
-
-/-- Inverse noncommutative operator Berezinian $\mathrm{Ber}_{\mathrm{nc}}^{-1}(u, \Delta) = (\Delta : A) * (\uparrow u^{-1} : A)$. -/
-@[simp] def opNoncommBerezinianInv (u Δ : Aˣ) : A :=
-  (Δ : A) * (↑u⁻¹ : A)
 
 theorem gelfandRetakh_gauss_bruhat_elimination_and_bimodule_curvature
     (v w : OpVec3 A) (lam mu Δ : A) :

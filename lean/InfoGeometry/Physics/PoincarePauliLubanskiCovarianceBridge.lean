@@ -1,30 +1,40 @@
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Physics.SplitOctonionPoincareCasimirBridge
-import InfoGeometry.Physics.PoincareCasimirCentralityBridge
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Basic.Real.Basic
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum
 
 set_option linter.unusedSimpArgs false
 
 /-!
-# Poincaré Pauli-Lubański Covariance and Full Casimir Centrality Bridge
+# Covariant operator vectors and generator-relative quadratic invariants
 
-This owner module formalizes the exact representation-theoretic covariance and
-Casimir centrality theorems for the Poincaré Lie algebra:
+The coefficient algebra is an arbitrary associative real algebra. The results
+derive quadratic invariance from a supplied Lorentz covariance law, without
+assuming that vector components commute. The historical `PoincareRepresentation`
+name denotes a conditional interface: its fields do not construct a full Lie
+or group representation and do not define `W` from `P` and `M`.
 
 1. **Generic Lorentz Vector Transformation Law:**
    A 4-vector operator $V : \text{Fin } 4 \to A$ is a Lorentz vector if:
    $$[M_{\mu\nu}, V_\rho] = \eta_{\nu\rho} V_\mu - \eta_{\mu\rho} V_\nu$$
 
 2. **Universal Lorentz Scalar Invariant Theorem (`lorentz_vector_sq_comm_M`):**
-   For any commuting 4-vector $V$ transforming as a Lorentz vector under $M_{\mu\nu}$,
+   For any operator-valued 4-vector $V$ transforming as a Lorentz vector under $M_{\mu\nu}$,
    its Minkowski squared norm $V^2 = V_0^2 - V_1^2 - V_2^2 - V_3^2$ strictly commutes
    with all Lorentz generators: $[M_{\mu\nu}, V^2] = 0$.
 
-3. **Full First Casimir Centrality ($[C_1, \mathfrak{p}] = 0$):**
+3. **First quadratic invariant relative to the supplied generators:**
    - $[C_1, P_\mu] = 0$ for all translation generators $P_\mu$.
    - $[C_1, M_{\mu\nu}] = 0$ for all Lorentz rotation/boost generators $M_{\mu\nu}$.
 
-4. **Full Second Casimir Centrality ($[C_2, \mathfrak{p}] = 0$):**
+4. **Second quadratic invariant relative to the supplied generators:**
    - $[C_2, P_\mu] = 0$ for all translation generators $P_\mu$.
    - $[C_2, M_{\mu\nu}] = 0$ for all Lorentz rotation/boost generators $M_{\mu\nu}$.
 -/
@@ -32,9 +42,6 @@ Casimir centrality theorems for the Poincaré Lie algebra:
 noncomputable section
 
 namespace InfoGeometry.Physics.PoincarePauliLubanskiCovarianceBridge
-
-open InfoGeometry.Physics.PoincareCasimirCentralityBridge
-open InfoGeometry.Physics.SplitOctonionPoincareCasimirBridge
 
 /-- Commutator of two elements in an associative ring. -/
 def bracket {A : Type*} [Ring A] (x y : A) : A := x * y - y * x
@@ -86,13 +93,13 @@ theorem bracket_M_V_sq {A : Type*} [Ring A] [Algebra ℝ A]
       V i * ((eta ν i • V μ) - (eta μ i • V ν)) := by
   rw [bracket_sq, hLor μ ν i]
 
-/-- 🏆 THEOREM 1 (GENERIC LORENTZ SCALAR INVARIANCE):
-    For any commuting 4-vector $V$ transforming as a Lorentz vector under $M_{\mu\nu}$,
+/-- Quadratic invariance from Lorentz covariance alone:
+    For any operator-valued 4-vector $V$ transforming as a Lorentz vector under $M_{\mu\nu}$,
     its Minkowski norm $V^2$ commutes with all Lorentz generators: $[M_{\mu\nu}, V^2] = 0$. -/
 theorem lorentz_vector_sq_comm_M {A : Type*} [Ring A] [Algebra ℝ A]
     (M : Fin 4 → Fin 4 → A) (V : Fin 4 → A)
     (hLor : IsLorentzVector M V)
-    (hV_comm : ∀ μ ν, bracket (V μ) (V ν) = 0) (μ ν : Fin 4) :
+    (μ ν : Fin 4) :
     bracket (minkowskiSq V) (M μ ν) = 0 := by
   have h_anti : bracket (minkowskiSq V) (M μ ν) = - bracket (M μ ν) (minkowskiSq V) := by
     dsimp [bracket]; abel
@@ -107,72 +114,21 @@ theorem lorentz_vector_sq_comm_M {A : Type*} [Ring A] [Algebra ℝ A]
     abel
   rw [h_cas]
   simp only [bracket_M_V_sq M V hLor]
-  fin_cases μ <;> fin_cases ν
-  · dsimp [eta, etaSign]; simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_sub, neg_zero]
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 0 1
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 0 2
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 0 3
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 1 0
-    rw [hp]; abel
-  · dsimp [eta, etaSign]; simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_sub, neg_zero]
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 1 2
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 1 3
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 2 0
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 2 1
-    rw [hp]; abel
-  · dsimp [eta, etaSign]; simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_sub, neg_zero]
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 2 3
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 3 0
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 3 1
-    rw [hp]; abel
-  · dsimp [eta, etaSign]
-    simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_add, zero_sub, one_smul, neg_smul, neg_one_smul, mul_neg, neg_mul, neg_neg]
-    have hp := v_comm_eq V hV_comm 3 2
-    rw [hp]; abel
-  · dsimp [eta, etaSign]; simp only [zero_smul, sub_zero, mul_zero, zero_mul, sub_self, add_zero, zero_sub, neg_zero]
+  fin_cases μ <;> fin_cases ν <;>
+    norm_num [eta, etaSign] <;> noncomm_ring
 
-/-- Abstract Poincaré algebra structure. -/
+/-- Conditional covariance and translation-commutation interface.
+This does not supply the full Lorentz bracket laws or define `W` from `P` and `M`. -/
 structure PoincareRepresentation (A : Type*) [Ring A] [Algebra ℝ A] where
   P : Fin 4 → A
   M : Fin 4 → Fin 4 → A
   W : Fin 4 → A
   P_comm : ∀ μ ν, bracket (P μ) (P ν) = 0
-  W_comm : ∀ μ ν, bracket (W μ) (W ν) = 0
   PW_comm : ∀ μ ν, bracket (P μ) (W ν) = 0
   P_lorentz : IsLorentzVector M P
   W_lorentz : IsLorentzVector M W
 
-/-- 🏆 THEOREM 2: Full Casimir 1 Centrality in Poincaré Algebra. -/
+/-- The first quadratic invariant commutes with the supplied translations. -/
 theorem poincare_casimir1_central_translations {A : Type*} [Ring A] [Algebra ℝ A]
     (poinc : PoincareRepresentation A) (μ : Fin 4) :
     bracket (minkowskiSq poinc.P) (poinc.P μ) = 0 := by
@@ -197,9 +153,9 @@ theorem poincare_casimir1_central_translations {A : Type*} [Ring A] [Algebra ℝ
 theorem poincare_casimir1_central_lorentz {A : Type*} [Ring A] [Algebra ℝ A]
     (poinc : PoincareRepresentation A) (μ ν : Fin 4) :
     bracket (minkowskiSq poinc.P) (poinc.M μ ν) = 0 :=
-  lorentz_vector_sq_comm_M poinc.M poinc.P poinc.P_lorentz poinc.P_comm μ ν
+  lorentz_vector_sq_comm_M poinc.M poinc.P poinc.P_lorentz μ ν
 
-/-- 🏆 THEOREM 3: Full Casimir 2 Centrality in Poincaré Algebra. -/
+/-- The second quadratic invariant commutes with the supplied translations. -/
 theorem poincare_casimir2_central_translations {A : Type*} [Ring A] [Algebra ℝ A]
     (poinc : PoincareRepresentation A) (μ : Fin 4) :
     bracket (minkowskiSq poinc.W) (poinc.P μ) = 0 := by
@@ -224,6 +180,6 @@ theorem poincare_casimir2_central_translations {A : Type*} [Ring A] [Algebra ℝ
 theorem poincare_casimir2_central_lorentz {A : Type*} [Ring A] [Algebra ℝ A]
     (poinc : PoincareRepresentation A) (μ ν : Fin 4) :
     bracket (minkowskiSq poinc.W) (poinc.M μ ν) = 0 :=
-  lorentz_vector_sq_comm_M poinc.M poinc.W poinc.W_lorentz poinc.W_comm μ ν
+  lorentz_vector_sq_comm_M poinc.M poinc.W poinc.W_lorentz μ ν
 
 end InfoGeometry.Physics.PoincarePauliLubanskiCovarianceBridge

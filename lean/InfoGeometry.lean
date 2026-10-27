@@ -25,6 +25,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit
+import InfoGeometry.Physics.NuclearTwistorSectorAudit
 import InfoGeometry.Library
 import InfoGeometry.Routing.All
 import InfoGeometry.Core.MajoranaSupportSwap

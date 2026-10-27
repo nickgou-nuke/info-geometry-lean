@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Twistor.RealConstructs
 import InfoGeometry.Twistor.RealConstructsAudit
+import InfoGeometry.Physics.NuclearTwistorSectorAudit
 import InfoGeometry.AllExhaustive
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionTwistorDiracKahlerBridge

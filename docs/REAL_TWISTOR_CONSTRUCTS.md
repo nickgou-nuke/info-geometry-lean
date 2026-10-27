@@ -72,11 +72,20 @@ All modules below are under `lean/InfoGeometry/Twistor/`.
 | Dual/Krein soldering | `RealDualTwistorKreinBridge` | Explicit algebraic equivalence, bilinear transport, fundamental involution and positive finite-dimensional normalization |
 | Algebraic quantization | `RealTwistorPolynomialCCR`, `RealTwistorDualCCR` | Exact infinite-polynomial CCR for nonempty mode sets, occupation/Euler identities, intrinsic dual-coordinate compatibility |
 | Algebraic state pairing | `RealTwistorFockPairing` | Positive factorial pairing, unit vacuum, creation/annihilation adjointness, injective map to the algebraic dual |
+| Constrained configuration sector | `RealTwistorOneParticleSector`, `RealTwistorOneParticleRealization`, `RealTwistorOneParticleDual` | Actual polynomial projector, faithful number-conserving operators, and pairing-preserving finite primal/dual embedding with an explicit retraction |
+| Positive sector and stationary action | `RealDualTwistorPositiveSector`, `RealTwistorSpectralAction` | Normalized positive graph, neutral self-adjoint projectors and operators, actual variational derivative, normalized eigen-equations |
 | Supertwistor operator algebra | `RealSupertwistorOperators` | Polynomial tensor exterior carrier, bosonic CCR, fermionic CAR, commuting factors and fermionic nilpotence |
 | Higher-dimensional Clifford/pure-spinor bridge | `RealDualTwistorClifford` | Pairing normalization and square-zero action equivalence for the existing real Cl(5,5) module; existing annihilator isotropy reused |
 | Euclidean minitwistors | `RealMiniTwistor` | Actual quotient by translation along a fixed unit direction, perpendicular representative equivalence, incidence and unique parameter |
 | Flat three-dimensional twistor spinors | `RealFlatTwistorSpinor` | Real quaternion Clifford action, actual Fréchet derivative, calculated Dirac contraction, flat twistor equation and translation law |
 | Quaternionic twistor sphere compatibility | `RealFlatTwistorSpinor.sphere_action` | Explicit compatibility of that Clifford action with the existing quaternionic sphere |
+
+The [concrete sector-action extension](REAL_TWISTOR_SECTOR_ACTION.md) connects
+these operators to the existing three-configuration nuclear model. It proves
+normalized stationary states and transition strengths in polynomial and
+genuine-dual realizations, including an exact nonzero-mixing example. That
+document records the real resolvent domain, physical interpretation boundary
+and current extended validation results.
 
 ## Essential distinctions
 
@@ -145,9 +154,14 @@ build and publication gate can be certified. Direct native Lean checks of
 this package's actual source closure are reported separately below; they do
 not constitute a full root Lake build.
 
-## Verification of this source snapshot
+## Initial geometry/quantization verification
 
-The final `InfoGeometry.Twistor.RealConstructsAudit` check passed with Lean
+The following records the initial PR snapshot at
+`1a5e343eeb421f81c56ba3051e55f2d4d60cf405`. The later sector-action modules
+enlarge the source closure; their current verification is recorded in
+[REAL_TWISTOR_SECTOR_ACTION.md](REAL_TWISTOR_SECTOR_ACTION.md).
+
+The initial `InfoGeometry.Twistor.RealConstructsAudit` check passed with Lean
 4.34.1 and Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`, the repository's
 unchanged pins. A disposable sequential runner used the repository's shared
 build lock and invoked native `lean --root=<source-root> -o <output> <source>`

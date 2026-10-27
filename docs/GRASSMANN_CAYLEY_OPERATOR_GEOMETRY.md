@@ -144,6 +144,51 @@ from CAR, kernel incidence, or associativity of the transported product.
 
 ## Verification
 
-Pending source compilation and independent semantic/axiom audit.
-The eventual verification scope is the complete source import closure of the
-new modules against the exact Mathlib pin, not the unrelated root Lake package.
+The complete formal-source check passed at revision
+`ed4bbb3996e9a5cbb46215c131cbad3e784930cf` in
+[Actions run 40542929086](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40542929086).
+The [retained verification artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40542929086/artifacts/12752016264)
+contains the source hashes, compiler logs, generated native audit, and its output.
+Subsequent changes recording these results affect this document only.
+
+All seven repository-owned modules in the selected import closure compiled from
+unchanged source against the pinned Mathlib and Lean toolchain. The native audit
+then checked **every declaration owned by the four new modules**, including
+definitions and private/generated declarations, and reconciled these counts:
+
+| New module | Audited declarations |
+| --- | ---: |
+| `Projective.ExteriorBladeIncidence` | 29 |
+| `OperatorAlgebra.ExteriorOperatorGeometry` | 20 |
+| `Projective.ExteriorRegressive` | 42 |
+| `OperatorAlgebra.GrassmannCayley` | 15 |
+| **Total** | **106** |
+
+The complete transitive axiom set is `propext`, `Classical.choice`, and
+`Quot.sound`. There are no admitted proofs, custom axioms, unsafe/partial target
+declarations, or `native_decide` proofs in these new sources. Independent
+read-only mathematical reviews confirmed the nondegeneracy assumptions,
+full endomorphism/matrix carriers, Hodge normalization, and quotient boundaries.
+
+This evidence covers the full selected source import closure and all declarations
+of the four new owners. It does not certify the unrelated root Lake package or
+unused declarations in every imported owner. The unchanged repository-wide
+Sorry Gate fails before Lean starts because `lake` is missing from its runner;
+this occurs on both
+[the base revision](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40378047581)
+and [the feature branch](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40541062476).
+The dedicated workflow installs the exact toolchain and checks this source closure.
+
+To reproduce locally, first prepare the exact pinned Mathlib checkout and its
+native build cache, then run the shared-lock-aware verifier:
+
+```sh
+python3 tools/quality/check_grassmann_cayley.py \
+  --mathlib /path/to/pinned/mathlib \
+  --output /tmp/grassmann-cayley-verified
+```
+
+The checker fails on a toolchain/pin mismatch, missing source dependency, compiler
+failure, source mutation, forbidden proof construct, disallowed axiom, or
+incomplete declaration-count audit. Independent target failures are collected
+sequentially and cannot produce a successful status.

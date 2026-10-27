@@ -1,0 +1,4 @@
+# Optional Hodge analysis environment; Python >=3.11.
+# These exact versions were used for the recorded sparse operator checks.
+numpy==2.3.5
+scipy==1.17.0

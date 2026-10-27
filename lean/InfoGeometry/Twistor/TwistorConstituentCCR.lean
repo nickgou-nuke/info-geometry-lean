@@ -3,10 +3,10 @@ import InfoGeometry.Twistor.PenrosePolynomialCCR
 /-!
 # Polynomial CCR for arbitrarily many twistor constituents
 
-The carrier is the full native polynomial algebra. Multiplication and
-partial differentiation are actual endomorphisms, not assumed CCR data.
-The generic operators recover the existing single-twistor owner exactly.
-No Hilbert completion or analytic-adjoint claim is made.
+Multiplication and partial differentiation act on the full native polynomial
+algebra. Their commutators are derived, never assumed as structure fields.
+The single-constituent operations agree with the existing owner. No analytic
+Hilbert completion or operator-adjoint assertion is made.
 -/
 
 noncomputable section
@@ -41,7 +41,7 @@ theorem partials_commute (i j : ι) (p : PolynomialSpace ι) :
     MvPolynomial.pderiv i (MvPolynomial.pderiv j p) =
       MvPolynomial.pderiv j (MvPolynomial.pderiv i p) := by
   have hd : ⁅(MvPolynomial.pderiv i : Derivation ℂ (PolynomialSpace ι) (PolynomialSpace ι)),
-      MvPolynomial.pderiv j⁆ = 0 := by
+      (MvPolynomial.pderiv j : Derivation ℂ (PolynomialSpace ι) (PolynomialSpace ι))⁆ = 0 := by
     apply MvPolynomial.derivation_ext
     intro k
     simp [Derivation.commutator_apply, MvPolynomial.pderiv_X]
@@ -59,7 +59,7 @@ theorem derivative_commute (i j : ι) : derivative i * derivative j = derivative
   intro p
   exact partials_commute i j p
 
-/-- Derived from Leibniz and the values on polynomial generators. -/
+/-- Leibniz gives the central CCR on the actual infinite-dimensional carrier. -/
 theorem coordinate_CCR (h : ℂ) (i j : ι) :
     creation i * conjugateCoordinate h j - conjugateCoordinate h j * creation i =
       (if i = j then h else 0) • (1 : PolynomialOperator ι) := by
@@ -119,7 +119,6 @@ theorem distinct_constituents_commute (n : ℕ) (h : ℂ) (i j : Fin n)
   simp only [hij, false_and, ite_false, zero_smul] at hh
   exact sub_eq_zero.mp hh
 
-/-- A nonzero central CCR cannot be a commuting representation. -/
 theorem coordinate_noncommuting (h : ℂ) (hh : h ≠ 0) (i : ι) :
     creation i * conjugateCoordinate h i ≠ conjugateCoordinate h i * creation i := by
   intro hc

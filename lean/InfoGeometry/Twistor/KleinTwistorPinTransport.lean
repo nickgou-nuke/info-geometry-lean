@@ -4,13 +4,15 @@ import InfoGeometry.Topology.KleinGlideCovering
 /-!
 # Klein glide, Mobius sign line and pinorial transport
 
-The base is the existing torus/Klein quotient, not a replacement scalar
-model. The fibers are the existing complex four-dimensional twistor carrier.
-On the universal cover the glide squares to translation, not to identity.
-The two fiber signs are separate explicit choices. The minus choice cannot
-act involutively on an ordinary periodic product torus: its translation
-boundary condition is antiperiodic. This is a flat equivariant transport
-model, not a classification of Pin bundles or an explanation of all spin.
+The base is the existing torus/Klein quotient. Fibers are the existing
+complex four-dimensional twistor carrier. A universal-cover glide squares
+to longitudinal translation. The two fiber-square signs are independent
+choices. The minus choice requires an antiperiodic translation condition;
+it is not an involution on an ordinary periodic product torus.
+
+This is an explicit auxiliary Clifford-plane transport model, not a
+classification of Pin bundles or an identification with all Lorentz twistor
+transformations or physical spin holonomies.
 -/
 
 noncomputable section
@@ -19,16 +21,12 @@ namespace InfoGeometry.Twistor.KleinTwistorPinTransport
 open PenroseIncidence PerjesConventions
 open KleinBrillouinBase KleinBottleOrbitQuotient
 
-/-- Exchange of the two native spinor blocks. -/
 def blockSwap : Twistor4 ≃ₗ[ℂ] Twistor4 := LinearEquiv.prodComm ℂ Spinor2 Spinor2
 
-/-- The square-plus fiber lift. -/
 def pinPlus : Module.End ℂ Twistor4 := blockSwap.toLinearMap
 
-/-- The independent block grading, not the scalar imaginary unit. -/
 def grading : Module.End ℂ Twistor4 := -incidenceSignChange.toLinearMap
 
-/-- A square-minus lift on the same complex carrier. -/
 def pinMinus : Module.End ℂ Twistor4 := Complex.I • pinPlus
 
 @[simp] theorem blockSwap_apply (Z : Twistor4) : blockSwap Z = (Z.2, Z.1) := rfl
@@ -55,7 +53,7 @@ theorem grading_pinPlus_anticommute : grading * pinPlus = -(pinPlus * grading) :
   simp [pinMinus, Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul,
     Complex.I_mul_I]
 
-/-- Clifford action for the Euclidean tangent plane. -/
+/-- Clifford action of the auxiliary Euclidean tangent plane. -/
 def tangentClifford (v : Cover) : Module.End ℂ Twistor4 :=
   (v.1 : ℂ) • grading + (v.2 : ℂ) • pinPlus
 
@@ -67,7 +65,7 @@ theorem tangentClifford_sq (v : Cover) :
   apply Prod.ext <;> funext i <;>
     simp [tangentClifford, Module.End.mul_apply, smul_eq_mul] <;> ring
 
-/-- Twisted Clifford adjoint covers the derivative of the actual base glide. -/
+/-- The twisted Clifford adjoint covers the derivative of the base glide. -/
 theorem pinPlus_covers_reflection (v : Cover) :
     -(pinPlus * tangentClifford v * pinPlus) = tangentClifford (v.1, -v.2) := by
   apply LinearMap.ext
@@ -75,22 +73,22 @@ theorem pinPlus_covers_reflection (v : Cover) :
   apply Prod.ext <;> funext i <;>
     simp [tangentClifford, Module.End.mul_apply, smul_eq_mul] <;> ring
 
-/-- Same base reflection with inverse `-pinMinus`, not `pinMinus`. -/
+/-- A square-minus lift uses inverse `-pinMinus`, not `pinMinus`. -/
 theorem pinMinus_covers_reflection (v : Cover) :
     -(pinMinus * tangentClifford v * (-pinMinus)) = tangentClifford (v.1, -v.2) := by
-  rw [pinMinus, pinMinus]
+  simp only [pinMinus]
   simpa [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul,
     Complex.I_mul_I] using pinPlus_covers_reflection v
 
-/-- The literal lifted glide on the universal cover and native twistor fiber. -/
 def liftedGlide (c : ℂ) (p : Cover × Twistor4) : Cover × Twistor4 :=
   (glide p.1, c • blockSwap p.2)
 
 theorem liftedGlide_sq (c : ℂ) (p : Cover × Twistor4) :
     liftedGlide c (liftedGlide c p) = (tx p.1, (c * c) • p.2) := by
   simp [liftedGlide, glide_sq, smul_smul]
+  rfl
 
-/-- Boundary equivariance is between different base points, not an eigenvector equation. -/
+/-- Equivariance relates different base points, not eigenvectors at one point. -/
 def IsEquivariant (c : ℂ) (ψ : Cover → Twistor4) : Prop :=
   ∀ k, ψ (glide k) = c • blockSwap (ψ k)
 
@@ -99,24 +97,28 @@ theorem equivariant_translation (c : ℂ) (ψ : Cover → Twistor4)
     ψ (tx k) = (c * c) • ψ k := by
   rw [← glide_sq, hψ, hψ]
   simp [smul_smul]
+  rfl
 
 theorem minus_lift_antiperiodic (ψ : Cover → Twistor4)
     (hψ : IsEquivariant Complex.I ψ) (k : Cover) : ψ (tx k) = -ψ k := by
   simpa using equivariant_translation Complex.I ψ hψ k
 
-/-- A minus lift cannot be imposed on a periodic product torus without killing the field. -/
+/-- A periodic product torus cannot silently absorb the minus fiber square. -/
 theorem periodic_torus_minus_forces_zero (ψ : BrillouinTorus → Twistor4)
     (hψ : ∀ k, ψ (torusGlide k) = Complex.I • blockSwap (ψ k)) : ψ = 0 := by
   funext k
   have hh := hψ (torusGlide k)
   rw [torusGlide_involutive, hψ] at hh
-  have he : ψ k = -ψ k := by simpa [smul_smul] using hh
+  have hs (Z : Twistor4) : Complex.I • blockSwap (Complex.I • blockSwap Z) = -Z := by
+    apply Prod.ext <;> funext i <;> simp [smul_smul]
+  rw [hs] at hh
+  have he : ψ k = -ψ k := hh
   have hz : (2 : ℂ) • ψ k = 0 := by
     calc (2 : ℂ) • ψ k = ψ k + ψ k := by module
-         _ = 0 := by rw [he]; simp
+         _ = -ψ k + ψ k := congrArg (fun x => x + ψ k) he
+         _ = 0 := neg_add_cancel _
   exact (smul_eq_zero.mp hz).resolve_left (by norm_num)
 
-/-- A nonzero common-block vector supplies an equivariant test section. -/
 def commonSpinor : Twistor4 := (![1, 0], ![1, 0])
 
 @[simp] theorem blockSwap_commonSpinor : blockSwap commonSpinor = commonSpinor := rfl
@@ -125,9 +127,11 @@ def quarterPhase : ℂ := Complex.exp (((Real.pi : ℂ) / 2) * Complex.I)
 
 theorem quarterPhase_sq : quarterPhase * quarterPhase = -1 := by
   rw [quarterPhase, ← Complex.exp_add]
-  convert Complex.exp_pi_mul_I using 1 <;> congr 1 <;> ring
+  have h : ((Real.pi : ℂ) / 2) * Complex.I + ((Real.pi : ℂ) / 2) * Complex.I =
+      (Real.pi : ℂ) * Complex.I := by ring
+  rw [h, Complex.exp_pi_mul_I]
 
-/-- A genuine nonzero antiperiodic section on the universal cover. -/
+/-- A nonzero antiperiodic section on the universal cover. -/
 def minusSection (k : Cover) : Twistor4 :=
   Complex.exp (((k.1 : ℂ) / 2) * Complex.I) • commonSpinor
 
@@ -144,20 +148,21 @@ theorem minusSection_translation (k : Cover) : minusSection (tx k) = -minusSecti
   simpa [quarterPhase_sq] using equivariant_translation quarterPhase minusSection
     minusSection_equivariant k
 
+theorem minusSection_transverse_periodic (k : Cover) : minusSection (ty k) = minusSection k := rfl
+
 theorem minusSection_nonzero : minusSection ≠ 0 := by
   intro h
   have h0 := congrArg (fun ψ : Cover → Twistor4 => (ψ (0, 0)).1 0) h
   norm_num [minusSection, commonSpinor] at h0
 
-/-- An involutive lift to the actual two-sheeted torus covering. -/
 def torusLift (p : BrillouinTorus × Twistor4) : BrillouinTorus × Twistor4 :=
   (torusGlide p.1, blockSwap p.2)
 
 theorem torusLift_involutive : Function.Involutive torusLift := by
-  intro p
-  simp [torusLift, torusGlide_involutive]
+  rintro ⟨k, Z⟩
+  change (torusGlide (torusGlide k), Z) = (k, Z)
+  rw [torusGlide_involutive k]
 
-/-- Orbit relation for the associated square-plus transport carrier. -/
 def twistedSetoid : Setoid (BrillouinTorus × Twistor4) where
   r p q := q = p ∨ q = torusLift p
   iseqv := by
@@ -176,7 +181,7 @@ def twistedSetoid : Setoid (BrillouinTorus × Twistor4) where
 
 abbrev TwistedTotalSpace := Quotient twistedSetoid
 
-/-- Projection lands in the existing Klein quotient, not a renamed base set. -/
+/-- Projection to the existing Klein quotient, not a renamed scalar base. -/
 def twistedProjection : TwistedTotalSpace → KleinBrillouinQuotient :=
   Quotient.lift (fun p => quotientMap p.1) (by
     intro p q h
@@ -185,22 +190,24 @@ def twistedProjection : TwistedTotalSpace → KleinBrillouinQuotient :=
     · rw [h]
       exact (quotientMap_glide p.1).symm)
 
-/-- The minus eigenline carries the Mobius sign under one torus glide. -/
 def signLine (v : Spinor2) : Twistor4 := (v, -v)
 
+/-- The minus eigenline has the Mobius transition sign on a single glide. -/
 theorem signLine_glide (k : BrillouinTorus) (v : Spinor2) :
     Quotient.mk twistedSetoid (torusGlide k, signLine (-v)) =
       Quotient.mk twistedSetoid (k, signLine v) := by
   apply Quotient.sound
   right
-  simp [torusLift, signLine, torusGlide_involutive]
+  change (k, signLine v) = (torusGlide (torusGlide k), blockSwap (signLine (-v)))
+  rw [torusGlide_involutive k]
+  simp [signLine]
 
-/-- Spin rotations and orientation-reversing transport are different operations. -/
+/-- Spin rotations of the auxiliary plane remain distinct from reflection. -/
 def spinRotor (θ : ℝ) : Module.End ℂ Twistor4 :=
   (Real.cos (θ / 2) : ℂ) • 1 + (Real.sin (θ / 2) : ℂ) • (grading * pinPlus)
 
 theorem spinRotor_two_pi : spinRotor (2 * Real.pi) = -1 := by
-  simp [spinRotor]
+  simp [spinRotor, neg_smul]
 
 theorem spinRotor_four_pi : spinRotor (4 * Real.pi) = 1 := by
   have h : (4 * Real.pi) / 2 = 2 * Real.pi := by ring

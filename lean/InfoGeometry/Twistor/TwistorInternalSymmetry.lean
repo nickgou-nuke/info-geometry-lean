@@ -3,11 +3,11 @@ import InfoGeometry.Twistor.TwistorConstituentKinematics
 /-!
 # Concrete internal transformations of constituent twistors
 
-Perjes (6.14) contains both unitary mixing and a skew-complex shift through
-the infinity tensor. Both transformations below act on the same finite
-family of native twistors, and preserve its actual total kinematic tensor.
-Columns act on the right; all matrix product orders are retained. No
-classification as ISU(3), nor particle multiplet identification, is inferred.
+Both unitary mixing and the skew-complex infinity shift in Perjes (6.14)
+act on the same native constituent family. The actual total momentum and
+kinematic tensor are preserved. Columns act on the right; product order is
+not discarded. No internal-group classification or particle multiplet
+interpretation follows merely from these invariants.
 -/
 
 noncomputable section
@@ -25,7 +25,7 @@ def coordinateColumns (Z : ι → Twistor4) : Matrix TwistorIndex ι ℂ :=
 def raisedColumns (Z : ι → Twistor4) : Matrix TwistorIndex ι ℂ :=
   coordinateColumns (fun i => raisedConjugate (Z i))
 
-/-- Entrywise conjugation is not the matrix star (conjugate transpose). -/
+/-- Entrywise conjugation, distinct from conjugate transpose. -/
 def entryConjugate (U : Matrix ι ι ℂ) : Matrix ι ι ℂ := fun i j => star (U i j)
 
 @[simp] theorem entryConjugate_transpose (U : Matrix ι ι ℂ) :
@@ -52,9 +52,8 @@ theorem totalKinematic_matrix_formula (Z : ι → Twistor4) :
       raisedColumns Z * (coordinateColumns Z)ᵀ := by
   ext a b
   simp [totalKinematic, kinematic, coordinateColumns, raisedColumns,
-    Matrix.mul_apply, vecMulVec, Finset.sum_add_distrib]
+    Matrix.mul_apply, Matrix.sum_apply, vecMulVec, Finset.sum_add_distrib]
 
-/-- Right-column convention for the constituent unitary action. -/
 def mix (U : Matrix ι ι ℂ) (Z : ι → Twistor4) : ι → Twistor4 :=
   fun j => ∑ i, U i j • Z i
 
@@ -105,7 +104,6 @@ theorem unitary_kinematic_invariant (U : Matrix ι ι ℂ)
          _ = _ := by rw [hUc]; simp
   rw [h1, h2]
 
-/-- The infinity-tensor shift, with no new independent constituent data. -/
 def skewShift (L : Matrix ι ι ℂ) (Z : ι → Twistor4) : ι → Twistor4 :=
   fun j => Z j + ∑ i, L i j • raisedConjugate (Z i)
 
@@ -130,7 +128,7 @@ theorem skewShift_momentum_invariant (L : Matrix ι ι ℂ) (Z : ι → Twistor4
     simp [spinorColumns, skewShift]
   simp only [totalMomentum, hP]
 
-/-- The exact defect makes the skew-symmetry hypothesis inspectable. -/
+/-- The exact defect exposes why skew-symmetry is the relevant condition. -/
 theorem skewShift_kinematic_defect (L : Matrix ι ι ℂ) (Z : ι → Twistor4) :
     totalKinematic (skewShift L Z) - totalKinematic Z =
       raisedColumns Z * (L + Lᵀ) * (raisedColumns Z)ᵀ := by
@@ -146,7 +144,7 @@ theorem skewShift_kinematic_invariant (L : Matrix ι ι ℂ)
   rw [skewShift_kinematic_defect, hL]
   simp
 
-/-- Both parts of (6.14), with their actual matrix hypotheses. -/
+/-- Both transformations in (6.14), with their explicit matrix hypotheses. -/
 theorem internal_kinematic_invariant (U L : Matrix ι ι ℂ)
     (hU : U * Uᴴ = 1) (hL : Lᵀ = -L) (Z : ι → Twistor4) :
     totalKinematic (mix U (skewShift L Z)) = totalKinematic Z := by

@@ -1,5 +1,6 @@
 import InfoGeometry.Twistor.TwistorKinematicTensor
 import InfoGeometry.Twistor.SpinorOuterProduct
+import Mathlib.Analysis.Matrix.PosDef
 
 /-! # Finite constituent kinematics on the existing twistor carrier
 
@@ -13,12 +14,11 @@ noncomputable section
 namespace InfoGeometry.Twistor.TwistorConstituentKinematics
 
 open Matrix
-open scoped BigOperators
+open scoped BigOperators ComplexOrder
 open PenroseIncidence TwistorKinematicTensor
 
 variable {ι : Type*} [Fintype ι]
 
-/-- Columns are the actual momentum spinors of the constituents. -/
 def spinorColumns (Z : ι → Twistor4) : Matrix (Fin 2) ι ℂ := fun a i => (Z i).2 a
 
 def totalMomentum (Z : ι → Twistor4) : ComplexSpacetime :=
@@ -29,7 +29,7 @@ def totalKinematic (Z : ι → Twistor4) : KinematicMatrix := ∑ i, kinematic (
 theorem totalMomentum_eq_sum (Z : ι → Twistor4) :
     totalMomentum Z = ∑ i, momentum (Z i) := by
   ext a b
-  simp [totalMomentum, spinorColumns, momentum, Matrix.mul_apply, vecMulVec]
+  simp [totalMomentum, spinorColumns, momentum, Matrix.mul_apply, vecMulVec, Matrix.sum_apply]
 
 theorem totalMomentum_hermitian (Z : ι → Twistor4) :
     (totalMomentum Z)ᴴ = totalMomentum Z := by
@@ -44,20 +44,22 @@ theorem totalMomentum_posSemidef (Z : ι → Twistor4) :
 
 theorem totalKinematic_symmetric (Z : ι → Twistor4) :
     (totalKinematic Z)ᵀ = totalKinematic Z := by
-  simp [totalKinematic, kinematic_symmetric]
+  ext a b
+  simp only [totalKinematic, Matrix.transpose_apply, Matrix.sum_apply]
+  apply Finset.sum_congr rfl
+  intro i _
+  exact congrFun (congrFun (kinematic_symmetric (Z i)) a) b
 
-/-- Momentum readback uses the same constituent family as the kinematic tensor. -/
 theorem totalKinematic_momentum_zero (Z : ι → Twistor4) (a : Fin 2) :
     totalKinematic Z (.inr a) (.inl 0) = totalMomentum Z a 1 := by
   rw [totalMomentum_eq_sum]
-  simp [totalKinematic, kinematic_momentum_column_zero]
+  simp [totalKinematic, Matrix.sum_apply, kinematic_momentum_column_zero]
 
 theorem totalKinematic_momentum_one (Z : ι → Twistor4) (a : Fin 2) :
     totalKinematic Z (.inr a) (.inl 1) = -totalMomentum Z a 0 := by
   rw [totalMomentum_eq_sum]
-  simp [totalKinematic, kinematic_momentum_column_one]
+  simp [totalKinematic, Matrix.sum_apply, kinematic_momentum_column_one]
 
-/-- The determinant minor is the existing infinity contraction. -/
 def spinorMinor (Z W : Twistor4) : ℂ := InfinityTwistor.infinityTwistor Z W
 
 def pairMassSq (Z W : Twistor4) : ℝ := Complex.normSq (spinorMinor Z W)
@@ -79,7 +81,6 @@ theorem pairMassSq_pos_iff (Z W : Twistor4) :
     0 < pairMassSq Z W ↔ InfinityTwistor.infinityTwistor Z W ≠ 0 := by
   exact Complex.normSq_pos
 
-/-- A single constituent is null even when the full sum is massive. -/
 theorem momentum_det_zero (Z : Twistor4) : (momentum Z).det = 0 := by
   simp [momentum, vecMulVec, Matrix.det_fin_two]
   ring
@@ -91,9 +92,8 @@ theorem momentum_phase (c : ℂ) (hc : c * star c = 1) (Z : Twistor4) :
 theorem pairMassSq_translation (X : ComplexSpacetime) (Z W : Twistor4) :
     pairMassSq (InfinityTwistor.translation X Z) (InfinityTwistor.translation X W) =
       pairMassSq Z W := by
-  simp [pairMassSq, spinorMinor]
+  rfl
 
-/-- Non-vacuous timelike sum of two distinct rank-one momenta. -/
 theorem two_null_constituents_massive :
     ∃ Z W : Twistor4,
       (momentum Z).det = 0 ∧ (momentum W).det = 0 ∧

@@ -4,9 +4,9 @@ import InfoGeometry.Twistor.PerjesConventions
 # Real null lines as complete Hermitian incidence fibers
 
 Given a Hermitian incident base point and a nonzero lower spinor, every
-Hermitian point with the same incidence is on one explicit real affine null
-line. This classifies the entire fiber, not just one direction. Existence of
-an incident base point for arbitrary null twistor data is a separate result.
+Hermitian point with the same incidence lies on one explicit real affine
+null line. This classifies the entire fiber. Existence of an incident base
+point for arbitrary null twistor data is a separate result.
 -/
 
 noncomputable section
@@ -68,7 +68,6 @@ theorem rayDirection_ne_zero (π : Spinor2) (hπ : π ≠ 0) : rayDirection π �
   have hz : spinorNormSq π = 0 := by simpa using ht
   exact (ne_of_gt (spinorNormSq_pos π hπ)) hz
 
-/-- Cancellation occurs in the actual matrix action, with the native factor i. -/
 theorem incidence_equal_iff (X Y : ComplexSpacetime) (π : Spinor2) :
     incidenceLinearMap X π = incidenceLinearMap Y π ↔ (X - Y).mulVec π = 0 := by
   constructor
@@ -82,7 +81,7 @@ theorem incidence_equal_iff (X Y : ComplexSpacetime) (π : Spinor2) :
       simpa [Matrix.sub_mulVec] using h)
     simp [incidenceLinearMap, omegaLinearMap, hxy]
 
-/-- Complete two-dimensional matrix identity behind the real fiber theorem. -/
+/-- Complete matrix identity underlying the real fiber classification. -/
 theorem hermitian_kernel_formula (D : ComplexSpacetime) (π : Spinor2)
     (hD : Dᴴ = D) (hker : D.mulVec π = 0) :
     (spinorNormSq π : ℂ) • D = Matrix.trace D • rayDirection π := by
@@ -97,15 +96,17 @@ theorem hermitian_kernel_formula (D : ComplexSpacetime) (π : Spinor2)
   have c1 : star (π 0) * D 0 1 + star (π 1) * D 1 1 = 0 := by
     have hh := congrArg star r1
     simpa [hd, mul_comm] using hh
+  change (starRingEnd ℂ) (π 0) * D 0 0 + (starRingEnd ℂ) (π 1) * D 1 0 = 0 at c0
+  change (starRingEnd ℂ) (π 0) * D 0 1 + (starRingEnd ℂ) (π 1) * D 1 1 = 0 at c1
   rw [spinorNormSq_cast]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [rayDirection, orthogonalSpinor, Matrix.trace, vecMulVec, Fin.sum_univ_two,
       smul_eq_mul]
-  · linear_combination star (π 0) * r0 - π 1 * c1
-  · linear_combination star (π 1) * r0 + π 0 * c1
-  · linear_combination star (π 0) * r1 + π 1 * c0
-  · linear_combination star (π 1) * r1 - π 0 * c0
+  · linear_combination (starRingEnd ℂ) (π 0) * r0 - π 1 * c1
+  · linear_combination (starRingEnd ℂ) (π 1) * r0 + π 0 * c1
+  · linear_combination (starRingEnd ℂ) (π 0) * r1 + π 1 * c0
+  · linear_combination (starRingEnd ℂ) (π 1) * r1 - π 0 * c0
 
 theorem hermitian_trace_real (D : ComplexSpacetime) (hD : Dᴴ = D) :
     ((Matrix.trace D).re : ℂ) = Matrix.trace D := by
@@ -125,7 +126,9 @@ theorem hermitian_kernel_real_span (D : ComplexSpacetime) (π : Spinor2)
   have hf := hermitian_kernel_formula D π hD hker
   have hh := congrArg (fun M : ComplexSpacetime => (spinorNormSq π : ℂ)⁻¹ • M) hf
   refine ⟨(Matrix.trace D).re / spinorNormSq π, ?_⟩
-  simpa [smul_smul, hn, div_eq_mul_inv, hermitian_trace_real D hD, mul_comm] using hh
+  rw [smul_smul, inv_mul_cancel₀ hn, one_smul] at hh
+  simpa only [Complex.ofReal_div, hermitian_trace_real D hD, div_eq_mul_inv,
+    mul_comm, smul_smul] using hh
 
 /-- The entire Hermitian incidence fiber is a real affine null line. -/
 theorem real_incidence_fiber (X Y : ComplexSpacetime) (hX : Xᴴ = X)
@@ -144,7 +147,6 @@ theorem real_incidence_fiber (X Y : ComplexSpacetime) (hX : Xᴴ = X)
     · apply (incidence_equal_iff _ _ π).mpr
       simp [Matrix.smul_mulVec, rayDirection_annihilates]
 
-/-- The parameter on the nondegenerate real ray is unique. -/
 theorem real_ray_parameter_unique (X : ComplexSpacetime) (π : Spinor2)
     (hπ : π ≠ 0) (s t : ℝ)
     (h : X + (s : ℂ) • rayDirection π = X + (t : ℂ) • rayDirection π) : s = t := by

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Twistor.RealConstructs
+import InfoGeometry.Twistor.RealInfinityContractionAudit
 
 /-! Kernel axiom footprints for the real twistor constructions.
 These checks expose dependencies of the actual proved declarations. -/

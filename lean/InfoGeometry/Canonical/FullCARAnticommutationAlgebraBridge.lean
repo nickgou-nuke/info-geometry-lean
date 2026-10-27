@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARSpinorCliffordActionBridge
@@ -40,7 +45,8 @@ theorem creation_creation_car_anticommute (alpha beta : U →ₗ[R] R) (omega : 
 theorem annihilation_annihilation_car_anticommute (u v : U) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
     (contractionOp (evaluationLinear u)) ((contractionOp (evaluationLinear v)) omega) +
     (contractionOp (evaluationLinear v)) ((contractionOp (evaluationLinear u)) omega) = 0 :=
-  contraction_op_anticommute (evaluationLinear u) (evaluationLinear v) omega
+  contraction_op_anticommute (R := R) (V := U →ₗ[R] R)
+    (evaluationLinear (R := R) u) (evaluationLinear (R := R) v) omega
 
 /-- **Theorem**: Master Full CAR Anticommutation Algebra & Split Clifford Action Synthesis.
     Unifies:
@@ -55,7 +61,7 @@ theorem master_full_car_anticommutation_algebra_synthesis
      (contractionOp (evaluationLinear v)) ((contractionOp (evaluationLinear u)) omega) = 0) ∧
     (evaluationLinear u alpha = alpha u) := ⟨
   creation_creation_car_anticommute alpha beta omega,
-  annihilation_annihilation_car_anticommute u v omega,
+  annihilation_annihilation_car_anticommute (R := R) u v omega,
   rfl
 ⟩
 

@@ -201,3 +201,12 @@ The complete root gate is a separate check:
 ```sh
 bash scripts/quality/post_build_gate.sh --full
 ```
+
+## Real infinity and glide continuation
+
+The native infinity, literal exterior-square and full glide actions, including
+the retained sign on the genuine dual, are documented in
+[REAL_INFINITY_CONTRACTION_REPAIR.md](REAL_INFINITY_CONTRACTION_REPAIR.md).
+That continuation also repairs the legacy zero contraction implementation
+using the same actual exterior operator already owned by the real
+Kähler--Atiyah construction. Its verification is recorded separately there.

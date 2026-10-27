@@ -56,7 +56,7 @@ matrix multiplication. It is not packaged as Mathlib's `Derivation`: that
 structure at this pin requires a commutative source semiring, which would not
 represent the requested full matrix algebra.
 
-## Intended new claims
+## New claims
 
 1. Supply the missing native matrix identities listed above and state the
    different bilinear trace and sesquilinear Hilbert--Schmidt
@@ -79,7 +79,7 @@ represent the requested full matrix algebra.
 ## Semantic corrections
 
 The dependency relation is a branching proof dependency order, not an asserted
-unique chain and not a homotopy. It will be extracted from constants occurring
+unique chain and not a homotopy. It is extracted from constants occurring
 in the checked declarations' types and values.
 
 At the conceptual level, multiplication and adjoint support the Lie/symmetric
@@ -109,5 +109,93 @@ declaration owned by the new modules, including generated declarations and
 transitive axioms; allow only `propext`, `Classical.choice`, and `Quot.sound`.
 Run the repository proof-proxy and semantic-vacuity gates and independent
 mathematical and acceptance reviews. Do not claim a whole-repository build
-from a scoped source-closure check. Verification results will be recorded
-after the checks finish.
+from a scoped source-closure check.
+
+## Verified result
+
+The [scoped workflow run](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40540543586)
+passed on source commit `7b89abbf5da29b28423ae5d5c11525519c8325df`, tested as
+merge `2fdf6146d9b084cfb35ef9031711ce55cf1b854d` into the baseline above.
+The final evidence publication changes documentation and JSON only; the five
+Lean modules and verification tools retain the checked bytes.
+
+| Check | Result |
+| --- | --- |
+| Fresh, nonincremental source compilation | **PASS**, all 27 selected repository modules; 22 unchanged imports match the exact baseline Git blobs. |
+| Pinned environment | **PASS**, Lean 4.34.1, the documented Mathlib revision, and all 8 Mathlib package pins. |
+| Named source declarations | 67 theorems and 6 definitions across 5 modules. |
+| Complete owner audit | **PASS**, 100 declarations including generated helpers: 91 theorem-kind declarations and 9 definitions. No owned axioms, unsafe declarations, or partial declarations. |
+| Transitive axiom audit | **PASS**, only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or additional axiom. |
+| Dependency extraction | **PASS**, 100 nodes, 136 direct edges, 77 Hasse edges, 6 topological layers; the graph was recomputed byte-for-byte from the returned raw audit. |
+| Proof-proxy staged gate | **PASS** on the final staged source. |
+| Semantic-vacuity gate | **PASS** at the error threshold: 0 errors and 4 reviewed warnings for explicit native-operation bridge lemmas. |
+| Placeholder scan and staged whitespace | **PASS**. |
+| Provenance | **PASS**: artifact bytes, all source copies, staged blobs, baseline dependencies, and executed verification-tool hashes match. |
+| Independent agent review | **ACCEPTED**: a non-author acceptance reviewer independently checked GitHub metadata, all source/artifact bindings, declarations, axioms, graph, and diagnostics; no blocking finding remains. |
+
+The complete [dependency order](OPERATOR_ARCHETYPES_DEPENDENCIES.json) records
+all direct constant references, the restricted dependency relation, the
+transitive reduction, and the topological layers. The
+[verification record](OPERATOR_ARCHETYPES_VERIFICATION.json) includes source
+hashes, package pins, gate commands/results, and diagnostic dispositions.
+The [workflow artifact](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40540543586/artifacts/12750872063)
+contains the raw declaration audit, the full source snapshot, and compiler logs.
+
+Artifact ZIP SHA-256:
+`ee3bc2d5f91534f43a6dff8cc3ce0a282e6509c6230545f988968fd54ea569a6`.
+Raw declaration audit SHA-256:
+`ab91e61f0270b6fb6858b2f66da2efa7688b2bf82243c615e328617a40391e61`.
+Dependency JSON SHA-256:
+`12ff0a9cfb81c24941324b2aebd9090411918a8c53bc13ae07b131e90fdc7a03`.
+
+### A checked subgraph of the dependency order
+
+Each arrow below is an actual Hasse edge among the checked declarations.
+Other branches and generated declarations remain in the complete JSON.
+
+```mermaid
+flowchart TD
+  S["trace_sandwich_mul"] --> E["trace_evenPart_mul"]
+  E --> H["trace_star_evenPart"]
+  A["star_evenPart"] --> H
+  H --> EO["trace_even_odd_zero"]
+  H --> O["trace_star_oddPart"]
+  O --> OE["trace_odd_even_zero"]
+  EO --> P["trace_peirce_pythagoras"]
+  OE --> P
+```
+
+### Diagnostics retained
+
+The four semantic-vacuity warnings concern `star_lie`, `ad_apply`,
+`conjStarAlgAut_lie`, and `conjStarAlgAut_anticommutator`. Their short proofs
+expose the intended native operations; they are not weakened replacement
+claims. The independent mathematical review accepted these statements.
+
+The compiler also reports unused section assumptions in
+`adjoint_decomposition`, `star_anticommutator`, and
+`compression_isSelfAdjoint`. These are nonblocking generality/style warnings.
+Unchanged imported modules emit existing deprecation and unused-argument
+warnings. No claim of a warning-free compilation is made.
+
+### Whole-repository CI boundary
+
+The scoped result does not turn the other workflows green. Their observed
+failures occur in unchanged baseline configuration or prechecks:
+
+| Workflow | Observed blocker |
+| --- | --- |
+| [CI](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40540543473) | Missing Atlas path package and uninitialized GIFT gitlink/configuration; project compilation was skipped. |
+| [Post-Build Quality Gate](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40540543367) | Lake stopped at the missing Atlas package; the quality gate did not run. |
+| [Sorry Gate](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40538289768) | `lake` was absent; the build and later debt audit did not run. |
+| [Closure Debt](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40538289567) | `pytest` was absent; later audit/build steps did not run. |
+| [Lean style](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40538289804) | Baseline case collision between `PellisFineStructure.lean` and `PellisfineStructure.lean`; later lint steps did not run. |
+| [Docs](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40538289797) | Pages-site API returned 404; later builds did not run. |
+| [Reviewed PR Integration](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40538290007) | Recursive checkout used the baseline submodule URL `/home/goutev/repos/pure_math_lib`, unavailable on the runner. |
+
+The last five diagnostic runs are from predecessor source commit `e40b4a9`;
+the first two are from the passing scoped source head. Exact baseline sources
+and the PR diff were checked when attributing these blockers. No existing
+workflow, dependency pin, submodule URL, or conflicting Physics file is changed
+by this implementation. The skipped whole-repository checks are not reported
+as passed.

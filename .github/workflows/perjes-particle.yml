@@ -9,6 +9,7 @@ on:
       - 'lean/InfoGeometry/Twistor/PenroseContourTransform.lean'
       - 'lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean'
       - 'lean/InfoGeometry/Twistor/KleinTwistorPinTransport.lean'
+      - 'lean/InfoGeometry/Physics/Pin55Glide.lean'
       - 'tools/quality/check_perjes_particle.py'
       - '.github/workflows/perjes-particle.yml'
   workflow_dispatch:
@@ -33,13 +34,21 @@ jobs:
           git -C project fetch --depth=1 origin "$SOURCE_REV"
           git -C project checkout --detach FETCH_HEAD
           python3 - <<'PY'
-          import json, pathlib, subprocess
+          import json, os, pathlib, subprocess
           pin = next(p for p in json.loads(pathlib.Path('project/lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
           subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
           subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
           subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
           subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write('MATHLIB_REV=' + pin['rev'] + '\n')
           PY
+      - name: Restore pinned dependency artifacts only
+        id: mathlib-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: pinned-mathlib/.lake
+          key: perjes-pinned-mathlib-${{ env.MATHLIB_REV }}-v1
       - name: Install exact Lean toolchain
         shell: bash
         run: |
@@ -54,6 +63,12 @@ jobs:
           set -euo pipefail
           ps -eo pid,comm,args
           python3 project/tools/quality/check_perjes_particle.py --mathlib-root pinned-mathlib --output verification
+      - name: Save pinned dependency artifacts
+        if: always() && steps.mathlib-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: pinned-mathlib/.lake
+          key: perjes-pinned-mathlib-${{ env.MATHLIB_REV }}-v1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

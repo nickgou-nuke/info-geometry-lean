@@ -5,22 +5,16 @@ namespace InfoGeometry.Physics.Pin
 
 variable {G : Type*} [Group G]
 
-/-- 
-A Non-Symmorphic Pin Reflection structure.
-The reflection operator R has a double-cover parity.
-R flips the translation: R * T = T⁻¹ * R.
--/
+/-- A reflection lift with a reversed translation. The historical name is
+retained for compatibility. Here `T` is transverse to the reflection axis;
+this hypothesis does not describe the axial translation of a geometric glide. -/
 def IsPinGlide (R T parity : G) : Prop :=
   R * R = parity ∧
     R * T = T⁻¹ * R ∧
     T⁻¹ * (parity * T) = parity
 
-/-- 
-THEOREM: The Pin(5,5) Mandatory Glide Reflection.
-Proves that applying the glide reflection (R * T) twice in a non-symmorphic 
-lattice completely annihilates the spatial translation, leaving ONLY the 
-pure spinor parity of the Pin double-cover.
--/
+/-- For a reversed transverse translation the two translation factors cancel.
+This valid group identity is not the square law for a commuting axial glide. -/
 theorem glide_squared_is_parity (R T parity : G) (h : IsPinGlide R T parity) :
     (R * T) * (R * T) = parity := by
   have hflip : R * T = T⁻¹ * R := h.2.1
@@ -30,5 +24,14 @@ theorem glide_squared_is_parity (R T parity : G) (h : IsPinGlide R T parity) :
     _ = T⁻¹ * ((R * R) * T) := by simp [mul_assoc]
     _ = T⁻¹ * (parity * T) := by rw [hsq]
     _ = parity := h.2.2
+
+/-- A commuting axial translation survives the double glide. Fiber parity and
+longitudinal translation remain separate factors. -/
+theorem axial_glide_squared (R T : G) (h : Commute R T) :
+    (R * T) * (R * T) = (R * R) * (T * T) := by
+  calc
+    (R * T) * (R * T) = R * (T * R) * T := by simp [mul_assoc]
+    _ = R * (R * T) * T := by rw [← h.eq]
+    _ = (R * R) * (T * T) := by simp [mul_assoc]
 
 end InfoGeometry.Physics.Pin

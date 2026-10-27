@@ -20,7 +20,6 @@ open PenroseIncidence PerjesConventions
 abbrev TwistorIndex := Fin 2 ⊕ Fin 2
 abbrev KinematicMatrix := Matrix TwistorIndex TwistorIndex ℂ
 
-/-- Product coordinates, retaining the upper/lower spinor index distinction. -/
 def twistorCoordinate (Z : Twistor4) : TwistorIndex → ℂ := Sum.elim Z.1 Z.2
 
 @[simp] theorem twistorCoordinate_smul (c : ℂ) (Z : Twistor4) (a : TwistorIndex) :
@@ -31,10 +30,9 @@ def twistorCoordinate (Z : Twistor4) : TwistorIndex → ℂ := Sum.elim Z.1 Z.2
     twistorCoordinate (Z + W) a = twistorCoordinate Z a + twistorCoordinate W a := by
   cases a <;> rfl
 
-/-- The upper spinor coordinate vectors. -/
 def upperBasis (i : Fin 2) : Twistor4 := (Pi.single i 1, 0)
 
-/-- Upper infinity bivector, contracted with an actual algebraic covector. -/
+/-- Upper infinity bivector contracted with an actual algebraic covector. -/
 def infinitySharp : Module.Dual ℂ Twistor4 →ₗ[ℂ] Twistor4 where
   toFun f := f (upperBasis 1) • upperBasis 0 - f (upperBasis 0) • upperBasis 1
   map_add' f g := by simp [add_smul]; abel
@@ -57,7 +55,7 @@ theorem raisedConjugate_explicit (Z : Twistor4) :
     raisedConjugate Z = (![star (Z.2 1), -star (Z.2 0)], 0) := by
   apply Prod.ext <;> funext i <;> fin_cases i <;>
     simp [raisedConjugate, infinitySharp, twistorCovector, incidenceHermitian,
-      upperBasis, Fin.sum_univ_two, Pi.single_apply]
+      upperBasis, Fin.sum_univ_two]
 
 @[simp] theorem raisedConjugate_snd (Z : Twistor4) : (raisedConjugate Z).2 = 0 := by
   rw [raisedConjugate_explicit]
@@ -65,7 +63,7 @@ theorem raisedConjugate_explicit (Z : Twistor4) :
 @[simp] theorem raisedConjugate_add (Z W : Twistor4) :
     raisedConjugate (Z + W) = raisedConjugate Z + raisedConjugate W := by
   simp only [raisedConjugate_explicit]
-  apply Prod.ext <;> funext i <;> fin_cases i <;> simp
+  apply Prod.ext <;> funext i <;> fin_cases i <;> simp [add_comm]
 
 @[simp] theorem raisedConjugate_smul (c : ℂ) (Z : Twistor4) :
     raisedConjugate (c • Z) = star c • raisedConjugate Z := by
@@ -79,7 +77,6 @@ theorem raisedConjugate_explicit (Z : Twistor4) :
     raisedConjugate (raisedConjugate Z) = 0 := by
   simp [raisedConjugate_explicit]
 
-/-- The sharp image lies in the radical of the lower infinity form. -/
 theorem infinityTwistor_raisedConjugate (Z : Twistor4) :
     InfinityTwistor.infinityTwistor (raisedConjugate Z) = 0 := by
   exact (InfinityTwistor.infinityTwistor_radical _).2 (raisedConjugate_snd Z)
@@ -124,7 +121,6 @@ theorem kinematic_momentum_column_one (Z : Twistor4) (i : Fin 2) :
     kinematic Z (.inr i) (.inl 1) = -momentum Z i 0 := by
   simp [kinematic, momentum, vecMulVec, twistorCoordinate, raisedConjugate_explicit]
 
-/-- The upper symmetric spinor block, rather than a Plucker coordinate. -/
 def angularSpinor (Z : Twistor4) : ComplexSpacetime :=
   (kinematic Z).submatrix Sum.inl Sum.inl
 
@@ -135,7 +131,6 @@ theorem angularSpinor_symmetric (Z : Twistor4) : (angularSpinor Z)ᵀ = angularS
 theorem momentum_translation (X : ComplexSpacetime) (Z : Twistor4) :
     momentum (InfinityTwistor.translation X Z) = momentum Z := rfl
 
-/-- Coordinate covector for the off-diagonal Hermitian form. -/
 def conjugateCoordinate (Z : Twistor4) : TwistorIndex → ℂ :=
   Sum.elim (star Z.2) (star Z.1)
 
@@ -155,7 +150,7 @@ theorem null_momentOperator_square (Z : Twistor4) (hZ : incidenceHermitian Z Z =
     momentOperator Z * momentOperator Z = 0 := by
   rw [momentOperator_square, hZ, zero_smul]
 
-/-- The operator carrier is genuinely noncommutative, even on null rank-one data. -/
+/-- Genuine noncommutativity, even on two null rank-one moment operators. -/
 theorem momentOperators_noncommuting :
     ∃ Z W : Twistor4,
       incidenceHermitian Z Z = 0 ∧ incidenceHermitian W W = 0 ∧

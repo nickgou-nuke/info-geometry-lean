@@ -1,0 +1,67 @@
+name: Twisting Twistor Algebra (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/QuantumAlgebra/TwistCoproduct.lean'
+      - 'lean/InfoGeometry/QuantumAlgebra/RepresentedTwistProduct.lean'
+      - 'lean/InfoGeometry/QuantumAlgebra/FirstOrderTwist.lean'
+      - 'lean/InfoGeometry/Twistor/MeierVianaIncidence.lean'
+      - 'lean/InfoGeometry/Twistor/TwistedGaugeCoefficients.lean'
+      - 'lean/InfoGeometry/Twistor/PoincareFirstOrderTwist.lean'
+      - 'lean/InfoGeometry/Twistor/TwistingTwistorAudit.lean'
+      - 'tools/quality/check_twisting_twistor.py'
+      - '.github/workflows/twisting-twistor.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: twisting-twistor-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact source and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root = pathlib.Path('project')
+          spec = json.loads((root/'lake-manifest.json').read_text())
+          pin = next(p for p in spec['packages'] if p['name']=='mathlib')
+          subprocess.run(['git','init','pinned-mathlib'],check=True)
+          subprocess.run(['git','-C','pinned-mathlib','remote','add','origin',pin['url']],check=True)
+          subprocess.run(['git','-C','pinned-mathlib','fetch','--depth=1','origin',pin['rev']],check=True)
+          subprocess.run(['git','-C','pinned-mathlib','checkout','--detach','FETCH_HEAD'],check=True)
+          PY
+      - name: Install exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile selected source closure and audit declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_twisting_twistor.py \
+            --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: twisting-twistor-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

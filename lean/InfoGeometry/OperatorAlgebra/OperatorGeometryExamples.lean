@@ -114,7 +114,8 @@ theorem image_commutator_entry :
     (krausMap V P * krausMap V Q - krausMap V Q * krausMap V P) 0 1 =
       (31323 / 156250 : ℂ) := by
   norm_num [krausMap, V, P, Q, Matrix.mul_apply, Matrix.star_apply,
-    Matrix.vecMul, dotProduct, Complex.conj_ofNat, Fin.sum_univ_two]
+    Matrix.vecMul, dotProduct, Matrix.vecHead, Matrix.vecTail,
+    Complex.conj_ofNat, Fin.sum_univ_two]
 
 theorem kraus_images_not_commute : ¬ Commute (krausMap V P) (krausMap V Q) := by
   intro h
@@ -127,7 +128,8 @@ theorem multiplicativity_defect_entry :
     (krausMap V (P * Q) - krausMap V P * krausMap V Q) 0 0 =
       (5184 / 78125 : ℂ) := by
   norm_num [krausMap, V, P, Q, Matrix.mul_apply, Matrix.star_apply,
-    Matrix.vecMul, dotProduct, Complex.conj_ofNat, Fin.sum_univ_two]
+    Matrix.vecMul, dotProduct, Matrix.vecHead, Matrix.vecTail,
+    Complex.conj_ofNat, Fin.sum_univ_two]
 
 theorem krausMap_not_multiplicative :
     krausMap V (P * Q) ≠ krausMap V P * krausMap V Q := by

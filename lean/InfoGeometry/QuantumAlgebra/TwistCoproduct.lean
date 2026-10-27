@@ -21,14 +21,14 @@ def coproduct (F : (H ⊗[R] H)ˣ) : H →ₐ[R] H ⊗[R] H where
   map_add' x y := by simp [mul_add, add_mul]
   commutes' r := by
     rw [(Bialgebra.comulAlgHom R H).commutes]
-    rw [← (Algebra.commutes r (F : H ⊗[R] H)).eq]
+    rw [← Algebra.commutes r (F : H ⊗[R] H)]
     simp [mul_assoc]
 
 @[simp] theorem coproduct_apply (F : (H ⊗[R] H)ˣ) (x : H) :
-    coproduct F x = (F : H ⊗[R] H)*Coalgebra.comul x*↑F⁻¹ := rfl
+    coproduct F x = (F : H ⊗[R] H)*Coalgebra.comul (R := R) x*(↑F⁻¹ : H ⊗[R] H) := rfl
 
 theorem untwist_coproduct (F : (H ⊗[R] H)ˣ) (x : H) :
-    (↑F⁻¹ : H ⊗[R] H)*coproduct F x*↑F=Coalgebra.comul x := by
+    (↑F⁻¹ : H ⊗[R] H)*coproduct F x*(↑F : H ⊗[R] H)=Coalgebra.comul (R := R) x := by
   simp [coproduct_apply, mul_assoc]
 
 /-- Tensor exchange is an algebra equivalence even when H is noncommutative. -/

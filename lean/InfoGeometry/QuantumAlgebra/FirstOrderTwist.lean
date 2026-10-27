@@ -3,10 +3,9 @@ import Mathlib
 /-!
 # Exact first-order twist algebra
 
-The deformation parameter has square zero. These are exact algebra identities
-modulo h^2, not an all-orders star product or a numerical approximation. A pair
-of native derivations produces the leading inverse-twist term D(f) E(g), and
-its Hochschild cocycle identity proves associativity of the constructed ring.
+The deformation parameter has square zero. These are exact identities modulo
+h^2, not an all-orders star product. A native bilinear cocycle constructs an
+associative ring; associativity is proved, not assumed as a field.
 -/
 noncomputable section
 namespace InfoGeometry.QuantumAlgebra.FirstOrderTwist
@@ -18,7 +17,7 @@ structure Cocycle where
   one_right : ∀ a, bilinear a 1 = 0
   law : ∀ a b c, bilinear a b*c + bilinear (a*b) c = a*bilinear b c + bilinear a (b*c)
 
-/-- Leading term for the abelian inverse twist exp(h D tensor E). -/
+/-- Leading term for the ordered abelian inverse twist exp(h D tensor E). -/
 def derivationCocycle (D E : Derivation R A A) : Cocycle (R := R) (A := A) where
   bilinear := (LinearMap.mul R A).compl₁₂ D.toLinearMap E.toLinearMap
   one_left := by intro b; simp
@@ -32,15 +31,19 @@ def derivationCocycle (D E : Derivation R A A) : Cocycle (R := R) (A := A) where
 
 namespace Cocycle
 
-/-- The parameter is explicit, so different cocycles cannot share a ring instance. -/
 def Jet (_c : Cocycle (R := R) (A := A)) := A × A
-
 variable (c : Cocycle (R := R) (A := A))
+
 instance : AddCommGroup c.Jet := inferInstanceAs (AddCommGroup (A × A))
+instance : One c.Jet := ⟨(1,0)⟩
+instance : NatCast c.Jet := ⟨fun n => (n,0)⟩
+instance : IntCast c.Jet := ⟨fun n => (n,0)⟩
 
 /-- (a + h a1) star (b + h b1), with h^2 = 0. -/
 def multiply (x y : c.Jet) : c.Jet :=
   (x.1*y.1, x.1*y.2+x.2*y.1+c.bilinear x.1 y.1)
+
+instance : Mul c.Jet := ⟨c.multiply⟩
 
 theorem multiply_assoc (x y z : c.Jet) : c.multiply (c.multiply x y) z = c.multiply x (c.multiply y z) := by
   apply Prod.ext
@@ -52,28 +55,74 @@ theorem multiply_assoc (x y z : c.Jet) : c.multiply (c.multiply x y) z = c.multi
 
 instance : Ring c.Jet where
   __ := (inferInstance : AddCommGroup c.Jet)
-  one := (1,0)
-  mul := c.multiply
-  natCast n := (n,0)
-  intCast n := (n,0)
+  __ := (inferInstance : One c.Jet)
+  __ := (inferInstance : Mul c.Jet)
+  __ := (inferInstance : NatCast c.Jet)
+  __ := (inferInstance : IntCast c.Jet)
   natCast_zero := rfl
-  natCast_succ n := by apply Prod.ext <;> simp [Nat.cast_add, Nat.cast_one]
-  intCast_ofNat n := rfl
-  intCast_negSucc n := by apply Prod.ext <;> simp
+  natCast_succ n := by
+    apply Prod.ext
+    · change ((n+1 : ℕ) : A)=(n : A)+1
+      simp
+    · change (0 : A)=0+0
+      simp
+  intCast_ofNat n := by
+    apply Prod.ext
+    · change ((n : ℤ) : A)=(n : A)
+      simp
+    · rfl
+  intCast_negSucc n := by
+    apply Prod.ext
+    · change ((Int.negSucc n : ℤ) : A) = -((n+1 : ℕ) : A)
+      simp
+    · change (0 : A) = -0
+      simp
   mul_assoc := c.multiply_assoc
-  one_mul x := by apply Prod.ext <;> simp [multiply, c.one_left]
-  mul_one x := by apply Prod.ext <;> simp [multiply, c.one_right]
-  zero_mul x := by apply Prod.ext <;> simp [multiply]
-  mul_zero x := by apply Prod.ext <;> simp [multiply]
-  left_distrib x y z := by apply Prod.ext <;> simp [multiply, mul_add, add_mul] <;> abel
-  right_distrib x y z := by apply Prod.ext <;> simp [multiply, mul_add, add_mul] <;> abel
+  one_mul x := by
+    apply Prod.ext
+    · change (1 : A)*x.1=x.1
+      simp
+    · change (1 : A)*x.2+0*x.1+c.bilinear 1 x.1=x.2
+      simp [c.one_left]
+  mul_one x := by
+    apply Prod.ext
+    · change x.1*(1 : A)=x.1
+      simp
+    · change x.1*(0 : A)+x.2*1+c.bilinear x.1 1=x.2
+      simp [c.one_right]
+  zero_mul x := by
+    apply Prod.ext
+    · change (0 : A)*x.1=0
+      simp
+    · change (0 : A)*x.2+0*x.1+c.bilinear 0 x.1=0
+      simp
+  mul_zero x := by
+    apply Prod.ext
+    · change x.1*(0 : A)=0
+      simp
+    · change x.1*(0 : A)+x.2*0+c.bilinear x.1 0=0
+      simp
+  left_distrib x y z := by
+    apply Prod.ext
+    · change x.1*(y.1+z.1)=x.1*y.1+x.1*z.1
+      exact mul_add _ _ _
+    · change x.1*(y.2+z.2)+x.2*(y.1+z.1)+c.bilinear x.1 (y.1+z.1)=
+        (x.1*y.2+x.2*y.1+c.bilinear x.1 y.1)+(x.1*z.2+x.2*z.1+c.bilinear x.1 z.1)
+      rw [map_add]
+      ring
+  right_distrib x y z := by
+    apply Prod.ext
+    · change (x.1+y.1)*z.1=x.1*z.1+y.1*z.1
+      exact add_mul _ _ _
+    · change (x.1+y.1)*z.2+(x.2+y.2)*z.1+c.bilinear (x.1+y.1) z.1=
+        (x.1*z.2+x.2*z.1+c.bilinear x.1 z.1)+(y.1*z.2+y.2*z.1+c.bilinear y.1 z.1)
+      simp only [map_add, LinearMap.add_apply]
+      ring
 
 @[simp] theorem mul_fst (x y : c.Jet) : (x*y).1=x.1*y.1 := rfl
 @[simp] theorem mul_snd (x y : c.Jet) : (x*y).2=x.1*y.2+x.2*y.1+c.bilinear x.1 y.1 := rfl
 
-/-- Constant coefficient inclusion is additive, not in general multiplicative. -/
 def constant (a : A) : c.Jet := (a,0)
-
 def parameter : c.Jet := (0,1)
 
 def classicalLimit : c.Jet →+* A where
@@ -106,7 +155,6 @@ theorem constant_commutator (a b : A) :
   · change a*0+0*b+c.bilinear a b-(b*0+0*a+c.bilinear b a)=_
     simp
 
-/-- Exact undeformed product on an invariant pair. -/
 theorem constant_product_of_cocycle_zero (a b : A) (h : c.bilinear a b=0) :
     c.constant a*c.constant b=c.constant (a*b) := by
   apply Prod.ext
@@ -116,7 +164,6 @@ theorem constant_product_of_cocycle_zero (a b : A) (h : c.bilinear a b=0) :
 
 end Cocycle
 
-/-- The product is undeformed when the translation leg vanishes. -/
 theorem invariant_fibre_product (D E : Derivation R A A) (a b : A) (ha : D a=0) :
     (derivationCocycle D E).constant a * (derivationCocycle D E).constant b =
       (derivationCocycle D E).constant (a*b) := by
@@ -124,19 +171,17 @@ theorem invariant_fibre_product (D E : Derivation R A A) (a b : A) (ha : D a=0) 
   change D a*E b=0
   rw [ha, zero_mul]
 
-/-- Commutativity within the fibre is not centrality with arbitrary fields. -/
 theorem invariant_fibre_commutes (D E : Derivation R A A) (a b : A)
     (ha : D a=0) (hb : D b=0) :
     (derivationCocycle D E).constant a * (derivationCocycle D E).constant b =
       (derivationCocycle D E).constant b * (derivationCocycle D E).constant a := by
   rw [invariant_fibre_product D E a b ha, invariant_fibre_product D E b a hb, mul_comm a b]
 
-/-- The differential on both coefficients is unchanged. -/
 def liftDifferential (D E Z : Derivation R A A) :
     (derivationCocycle D E).Jet →+ (derivationCocycle D E).Jet where
   toFun x := (Z x.1,Z x.2)
-  map_zero' := by apply Prod.ext <;> simp
-  map_add' x y := by apply Prod.ext <;> simp
+  map_zero' := by apply Prod.ext <;> exact map_zero Z
+  map_add' x y := by apply Prod.ext <;> exact map_add Z _ _
 
 theorem liftDifferential_leibniz (D E Z : Derivation R A A)
     (hZD : ∀ a, Z (D a)=D (Z a)) (hZE : ∀ a, Z (E a)=E (Z a))

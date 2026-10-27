@@ -47,6 +47,11 @@ structure InverseTwist where
   normal_left : ∀ a : A, two (1 ⊗ₜ[R] a) = 1 ⊗ₜ[R] a
   normal_right : ∀ a : A, two (a ⊗ₜ[R] 1) = a ⊗ₜ[R] 1
 
+/-- Explicitly typed tensor differential avoids ambiguity between module actions. -/
+def tensorDifferential (d : A →ₗ[R] A) : A ⊗[R] A →ₗ[R] A ⊗[R] A :=
+  TensorProduct.map d (LinearMap.id : A →ₗ[R] A) +
+    TensorProduct.map (LinearMap.id : A →ₗ[R] A) d
+
 namespace InverseTwist
 variable (F : InverseTwist (R := R) (A := A))
 
@@ -80,23 +85,18 @@ theorem braiding_involutive : Function.Involutive F.braiding := by
   intro t
   simp [braiding, LinearEquiv.trans_apply]
 
-/-- The unchanged differential remains a derivation when its tensor action commutes
-with the twist. This is the degree-zero version of (3.8). -/
+/-- Coefficient version of (3.8), with the commutation condition explicit. -/
 theorem differential_product (d : A →ₗ[R] A)
     (hd : ∀ a b, d (a*b) = d a*b+a*d b)
-    (hc : ∀ t : A ⊗[R] A,
-      (TensorProduct.map d LinearMap.id + TensorProduct.map LinearMap.id d) (F.two t) =
-      F.two ((TensorProduct.map d LinearMap.id + TensorProduct.map LinearMap.id d) t))
+    (hc : ∀ t, tensorDifferential d (F.two t)=F.two (tensorDifferential d t))
     (a b : A) : d (F.product a b) = F.product (d a) b + F.product a (d b) := by
   have hm : d.comp (multiply (R := R) (A := A)) =
-      (multiply (R := R) (A := A)).comp
-        (TensorProduct.map d LinearMap.id + TensorProduct.map LinearMap.id d) := by
+      (multiply (R := R) (A := A)).comp (tensorDifferential d) := by
     ext x y
-    simpa using hd x y
+    simpa [tensorDifferential] using hd x y
   change (d.comp multiply) (F.two (a ⊗ₜ[R] b)) = _
-  rw [hm]
-  simp only [LinearMap.comp_apply, hc]
-  simp [product]
+  rw [hm, LinearMap.comp_apply, hc]
+  simp [product, tensorDifferential]
 
 end InverseTwist
 

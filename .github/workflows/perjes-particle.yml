@@ -1,0 +1,65 @@
+name: Perjes particle and Klein spinor (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Twistor/Perjes*.lean'
+      - 'lean/InfoGeometry/Twistor/TwistorKinematicTensor.lean'
+      - 'lean/InfoGeometry/Twistor/TwistorConstituent*.lean'
+      - 'lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean'
+      - 'lean/InfoGeometry/Twistor/HomogeneousTwistorCech.lean'
+      - 'lean/InfoGeometry/Twistor/PenroseContourTransform.lean'
+      - 'lean/InfoGeometry/Twistor/PenroseElementaryFields.lean'
+      - 'lean/InfoGeometry/Topology/KleinBottleSpinorGlide.lean'
+      - 'tools/quality/check_perjes_particle.py'
+      - 'tools/quality/perjes_targets.json'
+      - '.github/workflows/perjes-particle.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: perjes-particle-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Fetch exact source and pinned Mathlib without external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          pin = next(p for p in json.loads(pathlib.Path('project/lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
+          for command in [['git','init','pinned-mathlib'], ['git','-C','pinned-mathlib','remote','add','origin',pin['url']], ['git','-C','pinned-mathlib','fetch','--depth=1','origin',pin['rev']], ['git','-C','pinned-mathlib','checkout','--detach','FETCH_HEAD']]:
+              subprocess.run(command, check=True)
+          PY
+      - name: Install pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Serial source closure and transitive axiom audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          ps -eo pid,comm,args
+          python3 project/tools/quality/check_perjes_particle.py --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-particle-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

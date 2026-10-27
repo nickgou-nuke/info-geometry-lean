@@ -24,7 +24,7 @@ def incidenceSignChange : Twistor4 ≃ₗ[ℂ] Twistor4 where
   invFun Z := (-Z.1, Z.2)
   left_inv Z := by simp
   right_inv Z := by simp
-  map_add' Z W := by simp
+  map_add' Z W := by simp [add_comm]
   map_smul' c Z := by simp
 
 /-- Equation (3.7), with the paper's minus sign. -/
@@ -37,7 +37,7 @@ theorem signChange_incidence (X : ComplexSpacetime) (π : Spinor2) :
 
 /-- The Hermitian form in the incidence (off-diagonal) spin frame. -/
 def incidenceHermitian (Z W : Twistor4) : ℂ :=
-  ∑ i : Fin 2, star (Z.1 i) * W.2 i + star (Z.2 i) * W.1 i
+  ∑ i : Fin 2, (star (Z.1 i) * W.2 i + star (Z.2 i) * W.1 i)
 
 theorem incidenceHermitian_conj (Z W : Twistor4) :
     star (incidenceHermitian Z W) = incidenceHermitian W Z := by
@@ -51,7 +51,7 @@ def incidenceToDiagonal : Twistor4 ≃ₗ[ℂ] TwistorCarrier where
   invFun z := (fun i => if i = 0 then (z 0 + z 2) / 2 else (z 1 + z 3) / 2,
     fun i => if i = 0 then (z 0 - z 2) / 2 else (z 1 - z 3) / 2)
   left_inv Z := by
-    apply Prod.ext <;> funext i <;> fin_cases i <;> simp <;> ring
+    apply Prod.ext <;> funext i <;> fin_cases i <;> simp
   right_inv z := by
     funext i
     fin_cases i <;> simp <;> ring
@@ -88,7 +88,8 @@ theorem incidenceHermitian_smul (c : ℂ) (Z W : Twistor4) :
 
 theorem physicalHelicity_phase (c : ℂ) (hc : star c * c = 1) (Z : Twistor4) :
     physicalHelicity (c • Z) = physicalHelicity Z := by
-  simp [physicalHelicity, incidenceHermitian_smul, hc]
+  unfold physicalHelicity
+  rw [incidenceHermitian_smul, hc, one_mul]
 
 /-- Incidence isotropy measures the skew-Hermitian part of the actual matrix. -/
 theorem incidenceHermitian_incidence (X : ComplexSpacetime) (π ρ : Spinor2) :
@@ -115,14 +116,9 @@ theorem perjesSolder_determinant (t x y z : ℝ) :
       ((t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2 : ℝ) : ℂ) := by
   have hs : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by
     exact_mod_cast Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)
-  have hn : (Real.sqrt 2 : ℂ) ≠ 0 := by
-    intro h
-    rw [h] at hs
-    norm_num at hs
-  simp only [perjesSolder, Matrix.det_smul, Fintype.card_fin,
-    det_pauliMomentum, minkowskiSq]
+  simp only [perjesSolder, Matrix.det_smul, Fintype.card_fin, inv_pow,
+    hs, det_pauliMomentum, minkowskiSq]
   push_cast
-  field_simp
-  nlinarith [hs]
+  ring
 
 end InfoGeometry.Twistor.PerjesConventions

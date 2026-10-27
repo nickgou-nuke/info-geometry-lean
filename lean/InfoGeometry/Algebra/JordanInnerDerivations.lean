@@ -1,7 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.H3ZornJordanInstance
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.NonAssocDerivation
 import Mathlib.Algebra.Jordan.Basic
+import Mathlib.Algebra.CharP.Invertible
 
 /-!
 # Inner derivations on the real split Albert algebra
@@ -213,7 +218,7 @@ theorem h3ZornJordanInnerDerivation_linearTrace_zero
       linearTrace (u - v) = linearTrace u - linearTrace v := by
     rw [sub_eq_add_neg, linearTrace_add]
     rw [show -v = (-1 : ℝ) • v by module, linearTrace_smul]
-    ring
+    simp only [neg_one_mul, sub_eq_add_neg]
   rw [hsub]
   rw [← traceBilin_one, ← traceBilin_one]
   rw [h3Zorn_traceBilin_jordanLmul_assoc a (b * x) 1]
@@ -227,7 +232,7 @@ theorem h3ZornJordanInnerDerivation_linearTrace_zero
     change candidateJordanMul b 1 = b
     exact candidateJordanMul_one_right b
   rw [ha, hb, mul_comm b a]
-  ring
+  exact sub_self _
 
 /-- The split-Albert inner derivation satisfies the ordinary Leibniz rule. -/
 theorem h3ZornJordanInnerDerivation_leibniz

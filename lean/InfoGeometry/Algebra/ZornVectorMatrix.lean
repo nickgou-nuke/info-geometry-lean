@@ -5,12 +5,15 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic.NormNum
 import Mathlib.Algebra.Ring.MinimalAxioms
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Ring
 
 /-!
 # Zorn vector matrices: split-octonion invariant interface

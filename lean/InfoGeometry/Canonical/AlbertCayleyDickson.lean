@@ -2213,6 +2213,15 @@ theorem opZorn_kasparov_square_unipotent_and_bruhat_assoc
           opCartanDiag, opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     (try noncomm_ring); (try abel)))
 
+/-- Exact lower-unipotent composition: its only deviation from additive
+parameter addition is the owner-defined skew-cross contact term. -/
+theorem opUnipotentLower_mul (w₁ w₂ : OpVec3 A) :
+    opUnipotentLower w₁ * opUnipotentLower w₂ =
+      ⟨1, -OpVec3.skewCross w₁ w₂, w₁ + w₂, 1⟩ := by
+  ext <;>
+  simp [opUnipotentLower, OpVec3.dot, OpVec3.skewCross,
+    OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+
 /-- Canonical first basis vector $e_1(c) = \langle c, 0, 0 \rangle \in A^3$. -/
 def opBasisE1 (c : A) : OpVec3 A := ⟨c, 0, 0⟩
 
@@ -8442,6 +8451,16 @@ def opNambuDetLeft (X : OpZornMatrix A) : A :=
 def opNambuDetRight (X : OpZornMatrix A) : A :=
   X.b * X.a + OpVec3.dot X.w X.v
 
+/-- Both ordered quadratic Zorn determinants take the unit value on either
+unipotent family, with no commutativity assumptions on the step coordinates. -/
+theorem opNambuDet_unipotent_conservation (v w : OpVec3 A) :
+    opNambuDetLeft (opUnipotentUpper v) = 1 ∧
+    opNambuDetRight (opUnipotentUpper v) = 1 ∧
+    opNambuDetLeft (opUnipotentLower w) = 1 ∧
+    opNambuDetRight (opUnipotentLower w) = 1 := by
+  simp [opNambuDetLeft, opNambuDetRight, opUnipotentUpper,
+    opUnipotentLower, OpVec3.dot]
+
 /-- **Theorem 124 (`Archetype CIV`: $\mathbb{Z}_6$ Galois Invariance of Nambu Determinants & Equivariance of the Bruhat Trifactor and Zorn–Riccati Operator)**:
     Over ANY noncommutative ring $A$ (`[Ring A]`), for all $X \in \mathrm{OpZornMatrix}\;A$, $a, b \in A$, and $w, v, q \in \mathrm{OpVec3}\;A$:
     1. **Exact Galois Invariance of Left and Right Nambu Determinants under $\tau_3$ and $\gamma_6$**:
@@ -8480,6 +8499,77 @@ theorem zornGalois_nambuDet_bruhat_and_riccati_equivariance
   · ext <;> (simp [zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, opBruhatTrifactor, opUnipotentLower, opCartanDiag, opUnipotentUpper, OpVec3.trialityPerm, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
   · ext <;> (simp [opZornRiccati, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
   · ext <;> (simp [opZornRiccati, zornGaloisZ6, zornGaloisZ2, zornGaloisZ3, OpVec3.trialityPerm, OpVec3.dot, OpVec3.leftScale, OpVec3.rightScale]; try abel; try noncomm_ring)
+
+/-- A zero of the Zorn–Riccati operator is transported to a zero by color triality.
+This is the fixed-point consequence of `zornGalois_nambuDet_bruhat_and_riccati_equivariance`. -/
+theorem opZornRiccati_triality_fixed_point
+    (X : OpZornMatrix A) (q : OpVec3 A)
+    (h : opZornRiccati X q = 0) :
+    opZornRiccati (zornGaloisZ3 X) (OpVec3.trialityPerm q) = 0 := by
+  have hequiv :=
+    (zornGalois_nambuDet_bruhat_and_riccati_equivariance
+      X (0 : A) (0 : A) (0 : OpVec3 A) (0 : OpVec3 A) q).2.2.2.2.2.2.1
+  rw [← hequiv, h]
+  rfl
+
+/-- Both first triality conjugates of a Riccati zero are again zeros, with their
+operator parameters transformed by the same powers of triality. -/
+theorem opZornRiccati_first_two_triality_fixed_points
+    (X : OpZornMatrix A) (q : OpVec3 A)
+    (h : opZornRiccati X q = 0) :
+    opZornRiccati (zornGaloisZ3 X) (OpVec3.trialityPerm q) = 0 ∧
+    opZornRiccati (zornGaloisZ3 (zornGaloisZ3 X))
+      (OpVec3.trialityPerm (OpVec3.trialityPerm q)) = 0 := by
+  refine ⟨opZornRiccati_triality_fixed_point X q h, ?_⟩
+  exact opZornRiccati_triality_fixed_point (zornGaloisZ3 X)
+    (OpVec3.trialityPerm q) (opZornRiccati_triality_fixed_point X q h)
+
+/-- The triality-fixed family in the canonical Zorn owner. -/
+def opZornTrialityFixed (a v w b : A) : OpZornMatrix A :=
+  ⟨a, ⟨v, v, v⟩, ⟨w, w, w⟩, b⟩
+
+/-- Exact coordinate characterization of the fixed locus of triality. -/
+theorem zornGaloisZ3_eq_self_iff (X : OpZornMatrix A) :
+    zornGaloisZ3 X = X ↔
+      X.v.x = X.v.y ∧ X.v.y = X.v.z ∧
+      X.w.x = X.w.y ∧ X.w.y = X.w.z := by
+  constructor
+  · intro h
+    have hvx := congrArg (fun Z : OpZornMatrix A => Z.v.x) h
+    have hvy := congrArg (fun Z : OpZornMatrix A => Z.v.y) h
+    have hwx := congrArg (fun Z : OpZornMatrix A => Z.w.x) h
+    have hwy := congrArg (fun Z : OpZornMatrix A => Z.w.y) h
+    simp [zornGaloisZ3, OpVec3.trialityPerm] at hvx hvy hwx hwy
+    exact ⟨hvx.symm, hvy.symm, hwx.symm, hwy.symm⟩
+  · rintro ⟨hvx, hvy, hwx, hwy⟩
+    ext <;>
+      simp [zornGaloisZ3, OpVec3.trialityPerm, hvx, hvy, hwx, hwy]
+
+/-- The triality-fixed family is closed under the canonical noncommutative
+Zorn product. The factor three is the three-term owner dot contraction. -/
+theorem opZornTrialityFixed_mul
+    (a₁ v₁ w₁ b₁ a₂ v₂ w₂ b₂ : A) :
+    opZornTrialityFixed a₁ v₁ w₁ b₁ * opZornTrialityFixed a₂ v₂ w₂ b₂ =
+      opZornTrialityFixed
+        (a₁ * a₂ - ((v₁ * w₂ + v₁ * w₂) + v₁ * w₂))
+        (a₁ * v₂ + v₁ * b₂)
+        (w₁ * a₂ + b₁ * w₂)
+        (-( (w₁ * v₂ + w₁ * v₂) + w₁ * v₂) + b₁ * b₂) := by
+  ext <;>
+  simp [opZornTrialityFixed, OpVec3.dot, OpVec3.skewCross,
+    OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale]
+
+/-- The triality-fixed family has zero Zorn associator. Equivalently, its
+restricted multiplication is associative despite possible noncommutativity in A. -/
+theorem opZornTrialityFixed_associator
+    (a₁ v₁ w₁ b₁ a₂ v₂ w₂ b₂ a₃ v₃ w₃ b₃ : A) :
+    opAssociator (opZornTrialityFixed a₁ v₁ w₁ b₁)
+      (opZornTrialityFixed a₂ v₂ w₂ b₂)
+      (opZornTrialityFixed a₃ v₃ w₃ b₃) = 0 := by
+  ext <;>
+  simp [opAssociator, opZornTrialityFixed, OpVec3.dot, OpVec3.skewCross,
+    OpVec3.naiveCross, OpVec3.leftScale, OpVec3.rightScale] <;>
+  noncomm_ring
 
 /-! ### 44. Noncommutative Cyclotomic Galois Norms, Associativity of the $\mathbb{Z}_3$-Galois Singlet Subalgebra, Octahedral $S_4 = V_4 \rtimes S_3$ Galois Group, & Triality 5-Gradings (`Archetypes CV–CXIII`) -/
 

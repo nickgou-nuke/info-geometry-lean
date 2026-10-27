@@ -50,7 +50,7 @@ theorem bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V) :
 /-- The ordered composition is the regular action of the ordered exterior blade. -/
 theorem bladeOperator_eq_prod {n : ℕ} (v : Fin n → V) :
     bladeOperator v = (List.ofFn fun i => create (R := K) (v i)).prod := by
-  induction n with
+  induction n generalizing v with
   | zero => simp [bladeOperator, ExteriorAlgebra.ιMulti_zero_apply]
   | succ n ih =>
     rw [bladeOperator, ExteriorAlgebra.ιMulti_succ_apply, map_mul]
@@ -83,6 +83,17 @@ theorem mem_span_inf_iff_operator {m n : ℕ} (v : Fin m → V) (w : Fin n → V
         create (R := K) x * bladeOperator w = 0 := by
   rw [Submodule.mem_inf, create_mul_bladeOperator_eq_zero_iff v hv,
     create_mul_bladeOperator_eq_zero_iff w hw]
+
+/-- Two independent frame operators have zero product exactly for incident subspaces. -/
+theorem bladeOperator_mul_eq_zero_iff {m n : ℕ}
+    (v : Fin m → V) (w : Fin n → V)
+    (hv : LinearIndependent K v) (hw : LinearIndependent K w) :
+    bladeOperator v * bladeOperator w = 0 ↔
+      ¬Disjoint (Submodule.span K (Set.range v))
+        (Submodule.span K (Set.range w)) := by
+  have hmul : bladeOperator v * bladeOperator w = bladeOperator (Fin.append v w) := by
+    simp only [bladeOperator, ← map_mul, ExteriorAlgebra.ιMulti_mul_ιMulti]
+  rw [hmul, bladeOperator_eq_zero_iff, linearIndependent_append_iff_disjoint v w hv hw]
 
 /-- Noncommutativity is witnessed on the vacuum, not inferred from a sign rule. -/
 theorem annih_mul_create_ne_create_mul_annih
@@ -135,6 +146,17 @@ theorem matrix_create_mul_blade_eq_zero_iff {n : ℕ} (v : Fin n → V)
         LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (bladeOperator v) = 0 ↔
       x ∈ Submodule.span K (Set.range v) := by
   rw [← create_mul_bladeOperator_eq_zero_iff v hv x, ← map_mul]
+  exact (LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra).map_eq_zero_iff
+
+/-- Matrix products detect nontrivial intersection of arbitrary finite frame spans. -/
+theorem matrix_blade_mul_eq_zero_iff {m n : ℕ}
+    (v : Fin m → V) (w : Fin n → V)
+    (hv : LinearIndependent K v) (hw : LinearIndependent K w) :
+    LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (bladeOperator v) *
+        LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (bladeOperator w) = 0 ↔
+      ¬Disjoint (Submodule.span K (Set.range v))
+        (Submodule.span K (Set.range w)) := by
+  rw [← bladeOperator_mul_eq_zero_iff v w hv hw, ← map_mul]
   exact (LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra).map_eq_zero_iff
 
 /-- Arbitrary exterior elements, including inhomogeneous ones, are retained faithfully. -/

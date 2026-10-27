@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.DecomposableBivector
 import Mathlib.LinearAlgebra.LinearIndependent.Lemmas
 import Mathlib.LinearAlgebra.Prod
+import Mathlib.LinearAlgebra.Projectivization.Basic
 
 /-!
 # Exterior blades recover their incident subspaces
@@ -55,7 +56,7 @@ theorem ι_mul_ιMulti_eq_zero_iff {n : ℕ} (v : Fin n → V)
       ExteriorAlgebra.ι K x * ExteriorAlgebra.ιMulti K n v := by
     rw [ExteriorAlgebra.ιMulti_succ_apply]
     rfl
-  rw [← hw, ιMulti_eq_zero_iff, linearIndependent_finCons]
+  rw [← hw, ιMulti_eq_zero_iff, Matrix.vecCons, linearIndependent_finCons]
   simp only [hv, true_and, not_not]
 
 /-- The linear map whose kernel consists of vectors incident to a blade. -/
@@ -128,5 +129,55 @@ theorem span_eq_of_proportional {m n : ℕ} (v : Fin m → V) (w : Fin n → V)
     Submodule.span K (Set.range v) = Submodule.span K (Set.range w) := by
   rw [← bladeSupport_ιMulti v hv, ← bladeSupport_ιMulti w hw]
   exact bladeSupport_eq_of_proportional hc h
+
+/-- Concatenated independent frames are independent precisely for disjoint spans. -/
+theorem linearIndependent_append_iff_disjoint {m n : ℕ}
+    (v : Fin m → V) (w : Fin n → V)
+    (hv : LinearIndependent K v) (hw : LinearIndependent K w) :
+    LinearIndependent K (Fin.append v w) ↔
+      Disjoint (Submodule.span K (Set.range v))
+        (Submodule.span K (Set.range w)) := by
+  have happend : Fin.append v w ∘
+      (finSumFinEquiv : Fin m ⊕ Fin n ≃ Fin (m + n)) = Sum.elim v w :=
+    Fin.append_comp_sumElim
+  rw [← linearIndependent_equiv
+    (finSumFinEquiv : Fin m ⊕ Fin n ≃ Fin (m + n)), happend, linearIndependent_sum]
+  simpa only [Function.comp_def, Sum.elim_inl, Sum.elim_inr, hv, hw, true_and]
+
+/-- Nontrivial intersection is detected by the product of the two frame blades. -/
+theorem ιMulti_mul_ιMulti_eq_zero_iff {m n : ℕ}
+    (v : Fin m → V) (w : Fin n → V)
+    (hv : LinearIndependent K v) (hw : LinearIndependent K w) :
+    ExteriorAlgebra.ιMulti K m v * ExteriorAlgebra.ιMulti K n w = 0 ↔
+      ¬Disjoint (Submodule.span K (Set.range v))
+        (Submodule.span K (Set.range w)) := by
+  rw [ExteriorAlgebra.ιMulti_mul_ιMulti, ιMulti_eq_zero_iff,
+    linearIndependent_append_iff_disjoint v w hv hw]
+
+/-- Vector annihilator support descends to the native projectivization. -/
+def projectiveBladeSupport :
+    Projectivization K (ExteriorAlgebra K V) → Submodule K V :=
+  Projectivization.lift
+    (fun a : {ω : ExteriorAlgebra K V // ω ≠ 0} => bladeSupport a.1)
+    (by
+      intro a b c h
+      have hc : c ≠ 0 := by
+        intro hc
+        apply a.2
+        simpa only [hc, zero_smul] using h
+      exact bladeSupport_eq_of_proportional hc h)
+
+@[simp] theorem projectiveBladeSupport_mk (ω : ExteriorAlgebra K V) (hω : ω ≠ 0) :
+    projectiveBladeSupport (Projectivization.mk K ω hω) = bladeSupport ω :=
+  rfl
+
+/-- A projective independent blade recovers its frame's underlying subspace. -/
+@[simp] theorem projectiveBladeSupport_ιMulti {n : ℕ} (v : Fin n → V)
+    (hv : LinearIndependent K v) :
+    projectiveBladeSupport
+        (Projectivization.mk K (ExteriorAlgebra.ιMulti K n v)
+          (ιMulti_ne_zero_of_linearIndependent v hv)) =
+      Submodule.span K (Set.range v) := by
+  rw [projectiveBladeSupport_mk, bladeSupport_ιMulti v hv]
 
 end InfoGeometry.Projective.ExteriorBladeIncidence

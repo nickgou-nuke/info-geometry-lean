@@ -88,44 +88,58 @@ def main() -> int:
             libs = [output, mathlib / ".lake/build/lib/lean"]
             libs += sorted((mathlib / ".lake/packages").glob("*/.lake/build/lib/lean"))
             env = dict(os.environ, LEAN_PATH=os.pathsep.join(map(str, libs)))
-            checked, visiting = {}, set()
+            checked, visiting, failed = {}, set(), {}
             def check(module: str) -> None:
                 if module in checked:
                     return
+                if module in failed:
+                    raise RuntimeError("Previously failed dependency: " + module)
                 if module in visiting:
                     raise RuntimeError("Cyclic source imports: " + module)
                 visiting.add(module)
-                path = ROOT / "lean" / (module.replace(".", "/") + ".lean")
-                if not path.is_file():
-                    raise RuntimeError("Missing source owner: " + module)
-                text = path.read_text()
-                before = sha256(path)
-                for dep in imports(text):
-                    if dep.startswith(("InfoGeometry.", "DAG.")):
-                        check(dep)
-                    elif dep.split(".")[0] not in {
-                            "Mathlib", "Lean", "Std", "Init", "Batteries", "Aesop",
-                            "Qq", "ProofWidgets", "Plausible", "ImportGraph", "LeanSearchClient"}:
-                        raise RuntimeError("Unresolved non-Mathlib dependency: " + dep)
-                if module in TARGETS:
-                    code = _strip_lean_comments_and_strings(text)
-                    if re.search(r"\b(sorry|admit|axiom|unsafe|partial|native_decide)\b", code):
-                        raise RuntimeError("Forbidden proof construct: " + module)
-                olean = output / (module.replace(".", "/") + ".olean")
-                olean.parent.mkdir(parents=True, exist_ok=True)
-                print("CHECK", module, flush=True)
-                result = subprocess.run(
-                    [args.lean, "--root=" + str(ROOT / "lean"), "-o", str(olean), str(path)],
-                    env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                print(result.stdout, end="", flush=True)
-                olean.with_suffix(".log").write_text(result.stdout)
-                result.check_returncode()
-                if sha256(path) != before:
-                    raise RuntimeError("Source changed during compilation: " + module)
-                checked[module] = before
-                visiting.remove(module)
+                try:
+                    path = ROOT / "lean" / (module.replace(".", "/") + ".lean")
+                    if not path.is_file():
+                        raise RuntimeError("Missing source owner: " + module)
+                    text = path.read_text()
+                    before = sha256(path)
+                    for dep in imports(text):
+                        if dep.startswith(("InfoGeometry.", "DAG.")):
+                            check(dep)
+                        elif dep.split(".")[0] not in {
+                                "Mathlib", "Lean", "Std", "Init", "Batteries", "Aesop",
+                                "Qq", "ProofWidgets", "Plausible", "ImportGraph", "LeanSearchClient"}:
+                            raise RuntimeError("Unresolved non-Mathlib dependency: " + dep)
+                    if module in TARGETS:
+                        code = _strip_lean_comments_and_strings(text)
+                        if re.search(r"\b(sorry|admit|axiom|unsafe|partial|native_decide)\b", code):
+                            raise RuntimeError("Forbidden proof construct: " + module)
+                    olean = output / (module.replace(".", "/") + ".olean")
+                    olean.parent.mkdir(parents=True, exist_ok=True)
+                    print("CHECK", module, flush=True)
+                    result = subprocess.run(
+                        [args.lean, "--root=" + str(ROOT / "lean"), "-o", str(olean), str(path)],
+                        env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    print(result.stdout, end="", flush=True)
+                    olean.with_suffix(".log").write_text(result.stdout)
+                    result.check_returncode()
+                    if sha256(path) != before:
+                        raise RuntimeError("Source changed during compilation: " + module)
+                    checked[module] = before
+                except Exception as error:
+                    failed[module] = repr(error)
+                    raise
+                finally:
+                    visiting.remove(module)
+            failures = {}
             for target in TARGETS:
-                check(target)
+                try:
+                    check(target)
+                except Exception as error:
+                    failures[target] = repr(error)
+            report.update(source_sha256=checked, compilation_failures=failures)
+            if failures:
+                raise RuntimeError("Target compilation failed: " + ", ".join(failures))
             audit = output / "GrassmannCayleyAudit.lean"
             audit.write_text(audit_source(TARGETS))
             result = subprocess.run([args.lean, "--root=" + str(output), str(audit)],

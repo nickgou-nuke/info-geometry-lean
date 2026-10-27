@@ -90,6 +90,22 @@ flowchart TD
   K["Finite exterior basis"] --> J
 ```
 
+The regressive branch uses the same full exterior carrier:
+
+```mermaid
+flowchart TD
+  B["Ordered finite exterior basis"] --> S["Complement shuffle sign"]
+  B --> H["Constructed Hodge equivalence"]
+  S --> H
+  H --> P["Volume-normalized basis pairing"]
+  P --> U["Hodge unit and volume identities"]
+  H --> R["Regressive product through inverse Hodge"]
+  U --> A["Associative product with volume unit"]
+  R --> A
+  A --> F["Faithful regressive operator action"]
+  F --> M["Matrix product and Hodge intertwining"]
+```
+
 ### Source specification audit
 
 The paper's printed formulas require checking before transcription. On PDF

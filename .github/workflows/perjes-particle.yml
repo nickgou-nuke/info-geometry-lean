@@ -63,6 +63,25 @@ jobs:
           set -euo pipefail
           ps -eo pid,comm,args
           python3 project/tools/quality/check_perjes_particle.py --mathlib-root pinned-mathlib --output verification
+      - name: Export exact public verification runtime
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime-export
+          LEAN_ROOT="$(dirname "$(dirname "$(cd project && elan which lean)")")"
+          tar --exclude='*.a' --exclude='*.o' --exclude='*.c' -I 'zstd -T2 -3' -cf runtime-export/lean-runtime.tar.zst -C "$LEAN_ROOT" bin/lean bin/lake lib
+          tar --exclude='.git' --exclude='*.a' --exclude='*.o' --exclude='*.c' --exclude='build/ir' -I 'zstd -T2 -3' -cf runtime-export/mathlib-runtime.tar.zst -C pinned-mathlib Mathlib .lake lean-toolchain lake-manifest.json lakefile.lean
+          cp project/lean-toolchain runtime-export/
+          git -C pinned-mathlib rev-parse HEAD > runtime-export/mathlib-revision.txt
+          sha256sum runtime-export/*.tar.zst > runtime-export/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-exact-runtime
+          compression-level: 0
+          retention-days: 3
+          path: runtime-export
       - name: Save pinned dependency artifacts
         if: always() && steps.mathlib-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4

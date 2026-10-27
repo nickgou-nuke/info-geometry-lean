@@ -216,3 +216,49 @@ boundary. As recorded in the earlier PR validation, the root environment lacks
 the authentic Atlas path and initialized GIFT dependency and has the existing
 broad Architect/toolchain incompatibility. This native 209-module check does
 not claim a complete root Lake build or full publication-gate pass.
+
+### Independent native proof QA
+
+A separately authored sandbox probe was compiled freshly under the shared
+build lock. Before compiling, its runner recursively checked the source and
+dependency hashes for all **70 imported repository modules**, confirmed the
+same Mathlib revision, and reported the exact Lean 4.34.1 executable commit
+`5045d0056413266e57c625dcd7c365b10e377c52`.
+
+The final native result was **exit 0: all 17 probes compiled, all 22 axiom
+queries contained only `propext`, `Classical.choice`, and `Quot.sound`, and
+there were zero errors and zero warnings**. The probes exercise concrete
+primal and genuine-dual minus signs, base translation, a nonzero neutral
+pairing, the distinct partial/global reflections, the full exterior
+involution, the native Pin central sign and vector action, nonzero contraction,
+an occupied mode distinct from both zero and identity, actual two-particle
+annihilation, and the one-mode Berezin unit.
+
+The first sandbox-only attempt needed an explicit real scalar type in one
+number-operator theorem application. That probe was corrected and rerun;
+no live Lean owner changed. The final independent result is a pass, rather
+than the earlier queued status. This scoped QA does not replace the unresolved
+full-repository gates below.
+
+### Published-commit CI diagnostics
+
+The GitHub Actions jobs for source commit
+`8792a4d21a459e086dac5262a8507a008fe50625` failed before checking the new
+twistor declarations. Their actual logs give the following blockers:
+
+| Workflow | Observed blocker |
+| --- | --- |
+| [CI](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843230) | Path preflight: absent Atlas package and uninitialized pinned GIFT gitlink |
+| [Post-Build Quality Gate](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843159) | Lake cannot find `external_refs/atlas-lean` |
+| [Lean style lint](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843225) | Case-collision check finds both `KRDualityCascade.lean` and `KrDualityCascade.lean`; the Lean linter is skipped |
+| [Closure Debt + Superorganism Smoke](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843327) | The Python environment has no `pytest` module |
+| [Sorry Gate](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843315) | The build wrapper cannot start the absent `lake` executable |
+| [Reviewed PR Integration](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843378) | Recursive checkout attempts the unavailable local submodule URL `/home/goutev/repos/pure_math_lib` |
+| [Build thesis, blueprint, and docs](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40510843243) | GitHub Pages configuration returns HTTP 404 before Lean installation/build |
+
+The PR changes no workflows, test tooling, dependency metadata, or submodule
+configuration. Both case-colliding files already occur at base
+`b143075bbf27e75860a1011e04423a0f227b7c41` with the same blobs. These are
+observed checkout/configuration blockers, not successful checks of the new
+proofs; they leave the full CI gate unresolved. The scoped native results
+above remain the available compilation evidence.

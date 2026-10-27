@@ -8,7 +8,7 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Star.UnitaryStarAlgAut
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic.NoncommRing
 
 /-!
@@ -22,6 +22,8 @@ associative Lie bracket and native unitary star-algebra automorphism.
 namespace InfoGeometry.OperatorAlgebra.MatrixTraceGeometry
 
 open Matrix
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

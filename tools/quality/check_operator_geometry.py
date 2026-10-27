@@ -117,12 +117,15 @@ def main() -> None:
         for module in OWNERS:
             stage(module)
         shutil.copyfile(audit_source, work / "lean/OperatorGeometryDeclarationAudit.lean")
-    tool_paths = [Path(__file__).resolve()]
+    tool_paths = [Path(__file__).resolve(), root / "tools/build_lock.py"]
     if args.audit:
-        tool_paths.append(audit_source)
+        tool_paths.extend([audit_source,
+                           overlay / "tools/quality/operator_geometry_dependency_order.py"])
     tool_hashes = {str(path): digest(path) for path in tool_paths}
     source_record = {
         "toolchain": toolchain, "mathlib": pin, "sources": hashes,
+        "repository_head": subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                                   cwd=root, text=True).strip(),
         "compile_order": order, "owners": OWNERS,
         "mathlib_package_pins": package_pins,
         "baseline_ref": args.base_ref, "baseline_git_blobs": baseline_blobs,
@@ -156,7 +159,8 @@ def main() -> None:
         version = subprocess.check_output([args.lean, "--version"], cwd=root, env=env,
                                           text=True).strip()
         expected_version = toolchain.split(":v", 1)[1]
-        if f"version {expected_version}" not in version:
+        actual_version = re.search(r"\bversion\s+(\S+)", version)
+        if actual_version is None or actual_version.group(1).rstrip(",") != expected_version:
             raise RuntimeError(f"Compiler mismatch: {version}")
         print(version, flush=True)
         (work / "compiler-version.txt").write_text(version + "\n")
@@ -187,6 +191,8 @@ def main() -> None:
             result = subprocess.run(command, cwd=root, env=env, text=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (work / "declaration-audit.jsonl").write_text(result.stdout)
+            if result.returncode:
+                print(result.stdout, end="", flush=True)
             result.check_returncode()
             summaries = [json.loads(s) for s in result.stdout.splitlines() if s.startswith("{")]
             if not summaries or summaries[-1].get("status") != "PASS":
@@ -195,6 +201,11 @@ def main() -> None:
         for module, source in paths.items():
             if digest(source) != hashes[module]:
                 raise RuntimeError(f"Source changed while checking: {module}")
+            staged = work / "lean" / Path(*module.split(".")).with_suffix(".lean")
+            if digest(staged) != hashes[module]:
+                raise RuntimeError(f"Staged source changed while checking: {module}")
+        if args.audit and digest(work / "lean/OperatorGeometryDeclarationAudit.lean") != digest(audit_source):
+            raise RuntimeError("Staged declaration audit changed during the run")
         for path, expected_hash in tool_hashes.items():
             if digest(Path(path)) != expected_hash:
                 raise RuntimeError("Verification tool changed during the run: " + path)

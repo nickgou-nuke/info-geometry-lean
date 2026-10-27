@@ -26,6 +26,8 @@ namespace InfoGeometry.OperatorAlgebra.PeirceTraceGeometry
 open Matrix InfoGeometry.Core.IdempotentCartan InfoGeometry.Core.PeirceDecomposition
 open scoped ComplexOrder
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- The existing even Peirce operation as a native complex-linear map. -/

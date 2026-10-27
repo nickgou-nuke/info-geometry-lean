@@ -118,8 +118,7 @@ theorem image_commutator_entry :
 theorem kraus_images_not_commute : ¬ Commute (krausMap V P) (krausMap V Q) := by
   intro h
   have hz : (krausMap V P * krausMap V Q - krausMap V Q * krausMap V P) 0 1 = 0 := by
-    rw [h.eq, sub_self]
-    rfl
+    rw [h.eq, sub_self]; rfl
   rw [image_commutator_entry] at hz
   norm_num at hz
 
@@ -133,8 +132,7 @@ theorem krausMap_not_multiplicative :
     krausMap V (P * Q) ≠ krausMap V P * krausMap V Q := by
   intro h
   have hz : (krausMap V (P * Q) - krausMap V P * krausMap V Q) 0 0 = 0 := by
-    rw [h, sub_self]
-    rfl
+    rw [h, sub_self]; rfl
   rw [multiplicativity_defect_entry] at hz
   norm_num at hz
 

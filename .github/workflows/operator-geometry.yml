@@ -24,6 +24,8 @@ jobs:
   kernel-check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      BASE_REV: ${{ github.event.pull_request.base.sha || github.sha }}
     steps:
       - name: Fetch the exact source and pinned Mathlib
         shell: bash
@@ -35,6 +37,7 @@ jobs:
           git -C project remote add origin "https://github.com/${{ github.repository }}.git"
           git -C project fetch --depth=1 origin "$SOURCE_REV"
           git -C project checkout --detach FETCH_HEAD
+          git -C project fetch --depth=1 origin "$BASE_REV"
           python3 - <<'PY'
           import json, pathlib, subprocess
           spec = json.loads(pathlib.Path('project/lake-manifest.json').read_text())
@@ -63,7 +66,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 project/tools/quality/check_operator_geometry.py \
-            --mathlib pinned-mathlib --work-dir verification --audit
+            --mathlib pinned-mathlib --work-dir verification --audit --base-ref "$BASE_REV"
           python3 project/tools/quality/operator_geometry_dependency_order.py \
             verification/declaration-audit.jsonl verification/dependency-order.json
       - uses: actions/upload-artifact@v4

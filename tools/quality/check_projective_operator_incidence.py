@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from tools.quality import check_peirce_reflection as checker
+from tools.quality import check_ms_signature_geometry as checker
 
 checker.TARGETS = [
     "InfoGeometry.Projective.IncidenceRank",

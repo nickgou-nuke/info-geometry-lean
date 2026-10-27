@@ -38,30 +38,39 @@ def pointSpan (s : Finset (Projectivization K V)) : Submodule K V :=
 def pointRank (s : Finset (Projectivization K V)) : ℕ :=
   finrank K (pointSpan s)
 
+omit [FiniteDimensional K V] in
 @[simp] theorem pointSpan_empty :
     pointSpan (∅ : Finset (Projectivization K V)) = ⊥ := by
   simp [pointSpan]
 
+omit [FiniteDimensional K V] in
 @[simp] theorem pointSpan_singleton (p : Projectivization K V) :
     pointSpan {p} = p.submodule := by
   simp [pointSpan]
 
+omit [FiniteDimensional K V] in
 @[simp] theorem pointRank_empty :
     pointRank (∅ : Finset (Projectivization K V)) = 0 := by
   simp [pointRank]
 
+omit [FiniteDimensional K V] in
 @[simp] theorem pointRank_singleton (p : Projectivization K V) :
     pointRank {p} = 1 := by
-  simp [pointRank, p.finrank_submodule]
+  change finrank K (pointSpan {p}) = 1
+  rw [pointSpan_singleton]
+  exact p.finrank_submodule
 
+omit [FiniteDimensional K V] in
 theorem pointSpan_le_iff (s : Finset (Projectivization K V)) (U : Submodule K V) :
     pointSpan s ≤ U ↔ ∀ p ∈ s, p.submodule ≤ U :=
   Finset.sup_le_iff
 
+omit [FiniteDimensional K V] in
 theorem submodule_le_pointSpan {s : Finset (Projectivization K V)}
     {p : Projectivization K V} (hp : p ∈ s) : p.submodule ≤ pointSpan s :=
   Finset.le_sup hp
 
+omit [FiniteDimensional K V] in
 theorem pointSpan_mono {s t : Finset (Projectivization K V)} (h : s ⊆ t) :
     pointSpan s ≤ pointSpan t :=
   Finset.sup_mono h
@@ -90,8 +99,8 @@ theorem isCollinear_iff_pointRank_le_two (s : Finset (Projectivization K V)) :
     refine ⟨(pointSpan s).projectivization, ?_, ?_, ?_⟩
     · rw [Projectivization.Subspace.submodule.apply_symm_apply]
       infer_instance
-    · simpa only [Submodule.projectivization,
-        Projectivization.Subspace.submodule.apply_symm_apply] using h
+    · rw [Projectivization.Subspace.submodule.apply_symm_apply]
+      exact h
     · intro p hp
       exact (Submodule.mem_projectivization_iff_submodule_le (pointSpan s) p).mpr
         (submodule_le_pointSpan hp)
@@ -112,11 +121,13 @@ section FinsetOperations
 
 variable [DecidableEq (Projectivization K V)]
 
+omit [FiniteDimensional K V] in
 @[simp] theorem pointSpan_insert (p : Projectivization K V)
     (s : Finset (Projectivization K V)) :
     pointSpan (insert p s) = p.submodule ⊔ pointSpan s :=
   Finset.sup_insert
 
+omit [FiniteDimensional K V] in
 @[simp] theorem pointSpan_union (s t : Finset (Projectivization K V)) :
     pointSpan (s ∪ t) = pointSpan s ⊔ pointSpan t :=
   Finset.sup_union
@@ -129,7 +140,8 @@ theorem pointRank_le_card (s : Finset (Projectivization K V)) :
   | @insert p s hp ih =>
       have hdim := Submodule.finrank_add_le_finrank_add_finrank p.submodule (pointSpan s)
       rw [p.finrank_submodule] at hdim
-      simp only [pointRank, pointSpan_insert, Finset.card_insert_of_notMem hp]
+      change finrank K (pointSpan (insert p s)) ≤ (insert p s).card
+      rw [pointSpan_insert, Finset.card_insert_of_notMem hp]
       change finrank K (pointSpan s) ≤ s.card at ih
       omega
 
@@ -141,14 +153,25 @@ theorem pointRank_submodular (s t : Finset (Projectivization K V)) :
       (pointSpan_mono Finset.inter_subset_right)
   have hmono := Submodule.finrank_mono hinter
   have hdim := Submodule.finrank_sup_add_finrank_inf_eq (pointSpan s) (pointSpan t)
-  simp only [pointRank, pointSpan_union]
+  change finrank K (pointSpan (s ∪ t)) + finrank K (pointSpan (s ∩ t)) ≤
+    finrank K (pointSpan s) + finrank K (pointSpan t)
+  rw [pointSpan_union]
   omega
+
+/-- The common-subset form of submodularity used in incidence rank calculations. -/
+theorem pointRank_union_add_common_le (s t i : Finset (Projectivization K V))
+    (his : i ⊆ s) (hit : i ⊆ t) :
+    pointRank (s ∪ t) + pointRank i ≤ pointRank s + pointRank t :=
+  (Nat.add_le_add_left (pointRank_mono (Finset.subset_inter his hit)) _).trans
+    (pointRank_submodular s t)
 
 /-- A point belongs to the span exactly when inserting it leaves the rank unchanged. -/
 theorem pointRank_insert_eq_iff (p : Projectivization K V)
     (s : Finset (Projectivization K V)) :
     pointRank (insert p s) = pointRank s ↔ p.submodule ≤ pointSpan s := by
-  simp only [pointRank, pointSpan_insert]
+  change finrank K (pointSpan (insert p s)) = finrank K (pointSpan s) ↔
+    p.submodule ≤ pointSpan s
+  rw [pointSpan_insert]
   exact (subspace_le_iff_finrank_sup_eq p.submodule (pointSpan s)).symm
 
 /-- A point outside a span increases its rank by exactly one. -/
@@ -160,12 +183,14 @@ theorem pointRank_insert_of_not_le (p : Projectivization K V)
     apply hp
     rw [p.submodule_eq]
     exact Submodule.span_le.mpr (by simpa using hv)
-  simpa only [pointRank, pointSpan_insert, p.submodule_eq, sup_comm] using
-    (Submodule.finrank_sup_span_singleton (p := pointSpan s) hv)
+  change finrank K (pointSpan (insert p s)) = finrank K (pointSpan s) + 1
+  rw [pointSpan_insert, p.submodule_eq, sup_comm]
+  exact Submodule.finrank_sup_span_singleton (p := pointSpan s) hv
 
 end FinsetOperations
 
 /-- Distinct projective points generate a two-dimensional vector subspace. -/
+omit [FiniteDimensional K V] in
 theorem finrank_sup_points {p q : Projectivization K V} (hpq : p ≠ q) :
     finrank K (p.submodule ⊔ q.submodule : Submodule K V) = 2 := by
   have hupper := Submodule.finrank_add_le_finrank_add_finrank p.submodule q.submodule
@@ -276,7 +301,8 @@ theorem existsUnique_common_point_of_finrank_inf_eq_one {L M : Submodule K V}
   let p := Projectivization.mk'' (L ⊓ M) hdim
   have hp : p.submodule = L ⊓ M := Projectivization.submodule_mk'' _ _
   refine ⟨p, ?_, ?_⟩
-  · rw [hp]
+  · change p.submodule ≤ L ∧ p.submodule ≤ M
+    rw [hp]
     exact ⟨inf_le_left, inf_le_right⟩
   · intro q hq
     apply Projectivization.submodule_injective

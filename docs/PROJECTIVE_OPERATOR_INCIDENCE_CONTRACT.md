@@ -28,6 +28,9 @@ paper's abstract cryptomorphism for arbitrary incidence structures.
 - Lines: submodules of vector-space dimension exactly two.
 - Operator carrier: the full noncommutative algebra `E →L[𝕜] E`, with
   `𝕜` real or complex and ordinary composition as multiplication.
+- Matrix carrier: the full native algebra `Matrix n n ℂ`. An arbitrary
+  orthonormal basis supplies `LinearMap.toMatrixOrthonormal`; the continuous
+  operator representation is proved both injective and surjective.
 - Projection carrier: native subtype of operators satisfying
   `IsStarProjection`, i.e. self-adjoint idempotents.
 - Geometry-to-operator map: `Submodule.starProjection`; inverse: operator range.
@@ -36,6 +39,10 @@ paper's abstract cryptomorphism for arbitrary incidence structures.
 - Finite-dimensional hypotheses are explicit wherever natural-number rank is
   used. Projective plane means vector dimension three; projective three-space
   means vector dimension four.
+
+The supplied inner product determines orthogonality and the canonical
+self-adjoint projectors. The projective matroid alone does not determine that
+inner product or the multiplication of arbitrary operators.
 
 ## Source-confirmed owners and exact interfaces
 
@@ -67,6 +74,8 @@ Native mathlib interfaces reused directly to keep imports narrow:
 - `Submodule.finrank_sup_add_finrank_inf_eq`: the dimension modular identity.
 - `IndepMatroid.ofBddAugment`, `Projectivization.independent_iff`, and
   `Matroid.IsBasis'.eRk_eq_encard`: the native matroid and its rank interface.
+- `LinearMap.toMatrixOrthonormal` and `Matrix.rank_eq_finrank_range_toLin`:
+  the full matrix star-algebra representation and its rank interface.
 
 The source-confirmed gap addressed here is the reusable connection from native
 projective points and their rank geometry to arbitrary orthogonal-projection
@@ -90,6 +99,10 @@ without commutativity.
 9. Linear independence and finite-dimensional augmentation construct the native
    projective matroid. Its extended natural-number rank agrees with both the
    geometric rank and the dimension of joined projection ranges.
+10. The native orthonormal-basis equivalence transports these operators to the
+    full matrix algebra, preserving incidence, rank, and the exact commutation
+    criterion for intersection. Every complex ambient dimension at least two
+    admits distinct noncommuting rank-one Hermitian idempotent matrices.
 
 The dependency relation has independent branches; it is not a forced linear
 sequence. The geometric order itself is Mathlib's existing complete lattice
@@ -107,10 +120,28 @@ flowchart TD
   A --> G
   P --> N["Meet criterion and noncommuting rays"]
   P --> C["Isometric covariance"]
+  A --> X["Full matrix realization"]
+  N --> X
 ```
 
 This is a dependency order of mathematical statements. It is not an assertion
 of physical causation or a new theory of causality.
+
+## Source map
+
+Import `InfoGeometry.Projective.OperatorIncidence` for the complete development.
+Each theorem-bearing module can also be imported independently.
+
+| Module | Principal content |
+| --- | --- |
+| `IncidenceRank` | Span rank, rank axioms, closure, native collinearity, unique lines, line intersections |
+| `IncidenceNondegeneracy` | Geometric witness separation, third points, repeated-point line existence, skew lines in vector dimension four |
+| `IncidenceMatroid` | Native projective matroid, augmentation, finite rank, arbitrary-set rank equals span dimension |
+| `ProjectionIncidence` | Two-sided subspace/projection and point/rank-one-projection equivalences; absorption; meet/product criterion |
+| `ProjectionRankGeometry` | Native matroid rank equals joined-range dimension; collinearity and line intersections as operator equations |
+| `ProjectionCovariance` | Isometric conjugation of projections, ranges, incidence, commutators, and joined-range rank |
+| `ProjectionNoncommutativity` | Ray projections commute exactly for equal or orthogonal rays; noncommuting witnesses in every complex dimension at least two |
+| `ProjectionMatrixGeometry` | Full matrix representation, matrix/range rank equality, matrix incidence and meet criterion, noncommuting rank-one matrix witnesses |
 
 ## Specification checks
 
@@ -137,3 +168,11 @@ The environment uses a source snapshot of the inspected upstream files and
 reads the already available pinned mathlib cache. No dependency revision or
 upstream manifest is changed. Full-repository build status is separate from
 the checked new import closure.
+
+The dedicated `Projective operator incidence` workflow compiles all nine new
+modules sequentially using that exact pin. It then enumerates every declaration
+owned by those modules in Lean's imported environment and applies
+`Lean.collectAxioms`. The only permitted axioms are `propext`,
+`Classical.choice`, and `Quot.sound`; unsafe and partial declarations are
+rejected. The workflow publishes the source snapshot, source hashes, compiler
+logs, and declaration audit together as verification evidence.

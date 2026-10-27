@@ -72,7 +72,7 @@ variable (K V) in
 def projectiveMatroid : Matroid (Projectivization K V) :=
   (IndepMatroid.ofBddAugment Set.univ
     (LinearIndepOn K Projectivization.rep)
-    linearIndepOn_empty
+    (linearIndepOn_empty K Projectivization.rep)
     (fun _ _ hJ hIJ => hJ.mono hIJ)
     (fun _ _ hI hJ hcard => independent_augment hI hJ hcard)
     ⟨finrank K V, fun _ hI => independent_encard_le_finrank hI⟩

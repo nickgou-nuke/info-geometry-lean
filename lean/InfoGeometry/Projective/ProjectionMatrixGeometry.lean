@@ -63,7 +63,7 @@ theorem operatorMatrix_rank (T : E →L[ℂ] E) :
 theorem operatorMatrix_isStarProjection {T : E →L[ℂ] E} (hT : IsStarProjection T) :
     IsStarProjection (operatorMatrix b T) := by
   have hlin : IsStarProjection T.toLinearMap :=
-    ⟨hT.isIdempotentElem.toLinearMap,
+    ⟨ContinuousLinearMap.IsIdempotentElem.toLinearMap hT.isIdempotentElem,
       (T.isSelfAdjoint_toLinearMap_iff).mpr hT.isSelfAdjoint⟩
   exact hlin.map (LinearMap.toMatrixOrthonormal b)
 
@@ -121,6 +121,7 @@ theorem exists_noncommuting_pointMatrices (hdim : 2 ≤ Module.finrank ℂ E) :
   refine ⟨p, q, hpq, fun h => hcomm ?_⟩
   exact (operatorMatrix_commute_iff b (pointProjection p) (pointProjection q)).mp h
 
+include b in
 /-- A witness statement entirely inside the native full matrix algebra. -/
 theorem exists_noncommuting_rankOne_matrices (hdim : 2 ≤ Module.finrank ℂ E) :
     ∃ A B : Matrix n n ℂ,
@@ -131,5 +132,14 @@ theorem exists_noncommuting_rankOne_matrices (hdim : 2 ≤ Module.finrank ℂ E)
     pointMatrix_isStarProjection b p, pointMatrix_isStarProjection b q,
     pointMatrix_rank b p, pointMatrix_rank b q,
     fun h => hpq (pointMatrix_injective b h), hcomm⟩
+
+/-- Every full complex matrix algebra of size at least two contains distinct,
+noncommuting rank-one Hermitian idempotents. -/
+theorem exists_noncommuting_rankOne_fin_matrices (N : ℕ) (hN : 2 ≤ N) :
+    ∃ A B : Matrix (Fin N) (Fin N) ℂ,
+      IsStarProjection A ∧ IsStarProjection B ∧ A.rank = 1 ∧ B.rank = 1 ∧
+        A ≠ B ∧ ¬ Commute A B := by
+  exact exists_noncommuting_rankOne_matrices (EuclideanSpace.basisFun (Fin N) ℂ)
+    (by simpa only [finrank_euclideanSpace_fin] using hN)
 
 end InfoGeometry.Projective.ProjectionMatrixGeometry

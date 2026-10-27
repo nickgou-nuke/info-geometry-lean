@@ -112,7 +112,8 @@ theorem exists_third_point {p q : Projectivization K V} (hpq : p ≠ q) :
     apply Submodule.span_le.mpr
     simpa only [Set.singleton_subset_iff, SetLike.mem_coe] using
       (p.submodule ⊔ q.submodule).add_mem
-        (le_sup_left (representative_mem p)) (le_sup_right (representative_mem q))
+        ((le_sup_left : p.submodule ≤ p.submodule ⊔ q.submodule) (representative_mem p))
+        ((le_sup_right : q.submodule ≤ p.submodule ⊔ q.submodule) (representative_mem q))
 
 /-- Every projective line contains at least three pairwise distinct points. -/
 theorem three_points_on_line {L : Submodule K V} (hL : finrank K L = 2) :

@@ -24,7 +24,7 @@ def incidenceSign : Twistor4 ≃ₗ[ℂ] Twistor4 where
   invFun Z := (-Z.1, Z.2)
   left_inv Z := by simp
   right_inv Z := by simp
-  map_add' Z W := by ext <;> simp
+  map_add' Z W := by ext <;> simp [add_comm]
   map_smul' c Z := by ext <;> simp
 
 /-- Equation (3.7), with the sign used in KFKI-1980-76. -/
@@ -71,7 +71,7 @@ def wittToDiagonal : Twistor4 ≃ₗ[ℂ] TwistorCarrier where
                 Z.1 0 - Z.2 0, Z.1 1 - Z.2 1]
   invFun z := ((fun a => if a = 0 then (z 0 + z 2) / 2 else (z 1 + z 3) / 2),
                (fun a => if a = 0 then (z 0 - z 2) / 2 else (z 1 - z 3) / 2))
-  left_inv Z := by ext a <;> fin_cases a <;> simp <;> ring
+  left_inv Z := by ext a <;> fin_cases a <;> simp
   right_inv z := by ext a; fin_cases a <;> simp <;> ring
   map_add' Z W := by ext a; fin_cases a <;> simp <;> ring
   map_smul' c Z := by ext a; fin_cases a <;> simp [smul_eq_mul] <;> ring

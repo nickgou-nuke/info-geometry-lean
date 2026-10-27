@@ -63,3 +63,19 @@ jobs:
             verification/**/*.json
             verification/**/*.txt
             verification/src
+      - name: Export temporary portable kernel environment
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLCHAIN_DIR="$(find "$HOME/.elan/toolchains" -mindepth 1 -maxdepth 1 -type d | head -1)"
+          tar --zstd -cf portable-lean-environment.tar.zst --exclude='.git' --exclude='*.a' --exclude='*.o' --exclude='*.c' --exclude='*.bc' \
+            -C "$(dirname "$TOOLCHAIN_DIR")" "$(basename "$TOOLCHAIN_DIR")" \
+            -C "$GITHUB_WORKSPACE" pinned-mathlib verification -C "$GITHUB_WORKSPACE/project" lean tools/quality lake-manifest.json lean-toolchain
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel
+          path: portable-lean-environment.tar.zst
+          compression-level: 0
+          retention-days: 1

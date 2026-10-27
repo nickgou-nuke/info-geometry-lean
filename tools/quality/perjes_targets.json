@@ -2,5 +2,8 @@
   "InfoGeometry.Twistor.PerjesConventions",
   "InfoGeometry.Twistor.TwistorKinematicTensor",
   "InfoGeometry.Twistor.TwistorConstituentKinematics",
-  "InfoGeometry.Twistor.TwistorConstituentCCR"
+  "InfoGeometry.Twistor.TwistorConstituentCCR",
+  "InfoGeometry.Twistor.TwistorInternalSymmetry",
+  "InfoGeometry.Twistor.PerjesNullLineCorrespondence",
+  "InfoGeometry.Topology.KleinBottleSpinorGlide"
 ]

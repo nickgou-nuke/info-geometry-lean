@@ -41,7 +41,7 @@ omit [DecidableEq σ] in
 theorem partials_commute (i j : σ) (p : Wave σ) :
     MvPolynomial.pderiv i (MvPolynomial.pderiv j p) =
       MvPolynomial.pderiv j (MvPolynomial.pderiv i p) := by
-  have hd : (⁅MvPolynomial.pderiv i, MvPolynomial.pderiv j⁆ :
+  have hd : (⁅MvPolynomial.pderiv (R := ℂ) i, MvPolynomial.pderiv (R := ℂ) j⁆ :
       Derivation ℂ (Wave σ) (Wave σ)) = 0 := by
     apply MvPolynomial.derivation_ext
     intro k

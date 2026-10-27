@@ -72,10 +72,53 @@ jobs:
           tar --zstd -cf portable-lean-environment.tar.zst --exclude='.git' --exclude='*.a' --exclude='*.o' --exclude='*.c' --exclude='*.bc' \
             -C "$(dirname "$TOOLCHAIN_DIR")" "$(basename "$TOOLCHAIN_DIR")" \
             -C "$GITHUB_WORKSPACE" pinned-mathlib verification -C "$GITHUB_WORKSPACE/project" lean tools/quality lake-manifest.json lean-toolchain
+          split -b 480M -d portable-lean-environment.tar.zst portable-kernel-
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: perjes-portable-kernel
-          path: portable-lean-environment.tar.zst
+          name: perjes-portable-kernel-00
+          path: portable-kernel-00
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel-01
+          path: portable-kernel-01
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel-02
+          path: portable-kernel-02
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel-03
+          path: portable-kernel-03
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel-04
+          path: portable-kernel-04
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel-05
+          path: portable-kernel-05
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perjes-portable-kernel-06
+          path: portable-kernel-06
           compression-level: 0
           retention-days: 1

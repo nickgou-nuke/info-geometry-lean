@@ -64,9 +64,9 @@ lemma hermitianSolution_mulVec (p v : Spinor2) (hp : p ≠ 0)
     (hc : star (pair p v) = pair p v) :
     (hermitianSolution p v).mulVec p = v := by
   have hr := normSq_cast_ne_zero p hp
-  have hn : (∑ a : Fin 2, star (p a) * p a) = (spinorNormSq p : ℂ) := by
+  have hn : (∑ a : Fin 2, (star p) a * p a) = (spinorNormSq p : ℂ) := by
     rw [Fin.sum_univ_two, normSq_cast]
-  have hv : (∑ a : Fin 2, star (v a) * p a) = pair p v := by
+  have hv : (∑ a : Fin 2, (star v) a * p a) = pair p v := by
     calc
       _ = star (pair p v) := by simp [pair, Fin.sum_univ_two]; ring
       _ = pair p v := hc
@@ -158,14 +158,16 @@ lemma hermitian_kernel_identity (D : ComplexSpacetime) (p : Spinor2)
     simpa [hs, mul_comm] using congrArg star r0
   have c1 : star (p 0) * D 0 1 + star (p 1) * D 1 1 = 0 := by
     simpa [hs, mul_comm] using congrArg star r1
+  change (starRingEnd ℂ) (p 0) * D 0 0 + (starRingEnd ℂ) (p 1) * D 1 0 = 0 at c0
+  change (starRingEnd ℂ) (p 0) * D 0 1 + (starRingEnd ℂ) (p 1) * D 1 1 = 0 at c1
   ext a b
   fin_cases a <;> fin_cases b <;>
     simp [normSq_cast, lineDirection, orthogonalSpinor, Matrix.vecMulVec,
       Matrix.trace, Fin.sum_univ_two, smul_eq_mul]
-  · linear_combination star (p 0) * r0 - p 1 * c1
-  · linear_combination star (p 1) * r0 + p 0 * c1
-  · linear_combination star (p 0) * r1 + p 1 * c0
-  · linear_combination star (p 1) * r1 - p 0 * c0
+  · linear_combination (starRingEnd ℂ) (p 0) * r0 - p 1 * c1
+  · linear_combination (starRingEnd ℂ) (p 1) * r0 + p 0 * c1
+  · linear_combination (starRingEnd ℂ) (p 0) * r1 + p 1 * c0
+  · linear_combination (starRingEnd ℂ) (p 1) * r1 - p 0 * c0
 
 lemma hermitian_trace_real (D : ComplexSpacetime) (hD : Dᴴ = D) :
     ((Matrix.trace D).re : ℂ) = Matrix.trace D := by
@@ -187,6 +189,7 @@ theorem hermitian_kernel_line (D : ComplexSpacetime) (p : Spinor2) (hp : p ≠ 0
   ext a b
   have hab := congrFun (congrFun h a) b
   simp only [Matrix.smul_apply, smul_eq_mul] at hab ⊢
+  change D a b = (((Matrix.trace D).re / spinorNormSq p : ℝ) : ℂ) * lineDirection p a b
   push_cast
   rw [hermitian_trace_real D hD]
   field_simp [hr]

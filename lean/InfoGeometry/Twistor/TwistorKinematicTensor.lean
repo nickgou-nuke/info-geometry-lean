@@ -34,7 +34,7 @@ def raiseSpinor (pi : Spinor2) : Spinor2 := ![pi 1, -pi 0]
 /-- Contravariant infinity bivector: upper alternating block, lower block zero. -/
 def infinitySharp : Module.Dual ℂ Twistor4 →ₗ[ℂ] Twistor4 where
   toFun f := ((fun a => if a = 0 then f (![0, 1], 0) else -f (![1, 0], 0)), 0)
-  map_add' f g := by ext a <;> fin_cases a <;> simp
+  map_add' f g := by ext a <;> fin_cases a <;> simp [add_comm]
   map_smul' c f := by ext a <;> fin_cases a <;> simp [smul_eq_mul]
 
 /-- The two infinity tensors annihilate each other; they are not inverses. -/
@@ -58,7 +58,7 @@ theorem infinityConjugate_eq_sharp_dual (Z : Twistor4) :
 
 @[simp] theorem infinityConjugate_add (Z W : Twistor4) :
     infinityConjugate (Z + W) = infinityConjugate Z + infinityConjugate W := by
-  ext a <;> fin_cases a <;> simp [infinityConjugate, raiseSpinor]
+  ext a <;> fin_cases a <;> simp [infinityConjugate, raiseSpinor, add_comm]
 
 @[simp] theorem infinityConjugate_smul (c : ℂ) (Z : Twistor4) :
     infinityConjugate (c • Z) = star c • infinityConjugate Z := by

@@ -10,11 +10,11 @@ import Lean.Elab.Command
 /-!
 # Exact-owner trust audit for the Plücker/infinity/modular addition
 
-The eight substantive modules are selected by imported-module ownership,
+The twelve substantive modules are selected by imported-module ownership,
 not declaration-name prefixes. Every owned constant, including private and
 compiler-generated declarations present in the imported environment, is
 checked for forbidden declaration kinds and transitive axiom dependencies.
-The ninth module is an import-only aggregate and must own no declarations.
+The aggregate module is import-only and must own no declarations.
 
 Counts below are kernel declaration counts. In particular theorem counts
 include generated theorem declarations and need not match source keywords.
@@ -34,7 +34,11 @@ run_cmd do
     `InfoGeometry.Twistor.PluckerLorentzRealForm,
     `InfoGeometry.Twistor.PluckerInfinityGeometry,
     `InfoGeometry.Canonical.RealModularConjugationBridge,
-    `InfoGeometry.Projective.ExteriorKleinCliffordInversion]
+    `InfoGeometry.Projective.ExteriorKleinCliffordInversion,
+    `InfoGeometry.Twistor.PluckerCl55InfinityBridge,
+    `InfoGeometry.Canonical.Cl55InfinitySourceSinkGrading,
+    `InfoGeometry.Canonical.Cl55InfinityChiralCharge,
+    `InfoGeometry.Canonical.Cl55InfinityGradeReversal]
   let aggregate : Name := `InfoGeometry.Twistor.PluckerInfinityModular
   let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
   for owner in owners do
@@ -86,4 +90,4 @@ run_cmd do
   logInfo m!"AUDIT_AXIOMS: {allAxioms.qsort Name.lt}"
   logInfo m!"AUDIT_COUNT: {declarationCount}"
   logInfo m!"AUDIT_THEOREM_COUNT: {theoremCount}"
-  logInfo "AUDIT_SUCCESS: all eight owners passed the exact-owner trust audit"
+  logInfo "AUDIT_SUCCESS: all twelve owners passed the exact-owner trust audit"

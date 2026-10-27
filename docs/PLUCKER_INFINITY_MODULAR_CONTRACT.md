@@ -173,6 +173,107 @@ oscillator model nor a construction of physical wavefront sets. The chosen
 bounded exponential flow is not identified with the spectral modular flow
 of a faithful state without additional standard-form and logarithm data.
 
+### 7. Continuation: infinity, source/sink sectors, and chiral charge
+
+Intake: the user identifies the infinity twistor with a relationship to the
+repository's sources/sinks and the five-grading of chiral parity charges.
+The precise continuation is a compatibility of existing constructions, not
+an equality of objects with different types. The following contract was
+fixed before source promotion and is implemented by the four continuation
+owners listed below.
+
+The native owner `Canonical/Cl55InfinityWittBoundary.lean` defines
+`infinityClifford55 = ι55 ((1/2) • n_bar_vec)` and
+`originClifford55 = ι55 ((1/2) • n_vec)`. Its proved
+`infinity_origin_CAR_clifford` is `e*f + f*e = 1`, and both generators
+square to zero. Its four left/right grading identities imply
+`[infinityGrading55,e] = 2 • e` and
+`[infinityGrading55,f] = (-2) • f`.
+
+An explicit coordinate injection sends the existing `ConformalSix` to
+`PACSplit55` and then through the existing `pacSplit55ToV55`:
+
+```text
+positive coordinates = (a0,0,0,0,bz)
+negative coordinates = (ax,ay,az,0,b0).
+```
+
+Its six-coordinate left inverse proves injectivity; native `ι55_injective`
+also makes the induced vector-to-Clifford map injective. The proved exact
+compatibilities are
+
+```text
+Q55(embed X) = quadratic24 X
+kleinPolar (lorentzPlucker X) (lorentzPlucker Y)
+  = -ofReal (polar Q55 (embed X) (embed Y))
+e * ι55(embed X) + ι55(embed X) * e = algebraMap (b0+bz).
+```
+
+For an actual Penrose pair with the explicit compatibility hypothesis
+`twistorPairPlucker Z W = lorentzPlucker X`, the last scalar is precisely
+`infinityTwistor Z W`, which is then real. This proves equality of the
+actual boundary zero conditions without dropping an imaginary component.
+Degenerate pairs are allowed; a nonzero projective point requires its own
+nonzero hypothesis. The representative signs are fixed:
+`embed(lorentzReadback infinityPlucker) = -infinityVector55`, whereas the
+origin maps to `originVector55`.
+
+The existing `Clifford/Cl55CARSpinAutomorphism.lean` defines the same native
+generators as `creation55 4` and `annihilation55 4`.
+`Clifford/Cl55OperatorFiveGradeClosure.lean` proves their number-adjoint
+degrees are respectively `+1` and `-1`; products of two creations have
+degree `+2`, and products of two annihilations have degree `-2`. The number
+operator `numberOperator55` is the raw sum of five occupations. The matrix
+owner's centered `numberOperator` has a different normalization.
+
+The concrete charge in `Clifford/Cl55ChiralGrandCanonical.lean` is
+`chiralCharge55 = mixedGenerator55 0 0 - mixedGenerator55 1 1`.
+The native mixed-generator commutator identities make mode 4 neutral under
+this charge. Pairing it with mode 0 or 1 yields number-degree `+2` source
+operators of chiral charges `+1` or `-1`; the corresponding annihilation
+pairs have degree `-2` and opposite chiral charges. The actual Clifford
+nonzero witnesses require the second mode to differ from 4; repeated-mode
+products are separately proved zero. With `e = infinityClifford55`,
+`f = originClifford55`, `c_i = creation55 i`, and
+`a_i = annihilation55 i`, the exact adjoint eigenvalues are:
+
+| Native operator | Number degree | Chiral charge |
+| --- | ---: | ---: |
+| `e` | +1 | 0 |
+| `f` | -1 | 0 |
+| `e*c_0` | +2 | +1 |
+| `e*c_1` | +2 | -1 |
+| `f*a_0` | -2 | -1 |
+| `f*a_1` | -2 | +1 |
+
+The Clifford grade involution negates each endpoint and fixes each quadratic
+pair. This even/odd parity is a further distinct quantity, proved using the
+native `CliffordAlgebra.involute` operation.
+
+These are three distinct readouts: integer number degree, the local
+infinity grading, and the selected two-mode chiral charge. In particular,
+the local infinity involution has no nonzero odd Peirce sectors. The full
+associative Clifford algebra is not restricted to five degrees: the
+existing `Cl55CreationWordGradeObstruction` supplies a nonzero degree-five
+word. A five-grade closure concerns the selected linear/quadratic Lie
+carrier. No physical current-divergence equation, KMS limit, or new
+continuum/colimit theorem is inferred here.
+
+The existing `globalSheetReflectionAlg` is an actual Clifford algebra
+equivalence induced by `(p,q) ↦ (p,-q)`. Its creation/annihilation exchange
+proves `N ↦ 5-N`, fixed-`N` grade reversal, and source/sink exchange.
+The reversal is an equality of actual submodule images for every integer
+degree, `F(gradeSubmodule N k) = gradeSubmodule N (-k)`. It also sends the
+selected chiral charge and local infinity grading to their negatives.
+This native symmetry is not identified with the Plücker block exchange
+without a separate action-compatibility theorem.
+
+Discovery used broad owner/dependent searches and the maintained context
+preflight. This checkout has no generated declaration-DAG/index artifacts
+or available external-reference sources; no claim of graph freshness or
+exhaustive external equivalence is made. Current source types, their
+dependencies, and the serial kernel check decide the accepted scope.
+
 ## Module map
 
 | Module suffix | Responsibility |
@@ -185,15 +286,19 @@ of a faithful state without additional standard-form and logarithm data.
 | `Twistor.PluckerInfinityGeometry` | Polar dual of the infinity point, arbitrary spinor-frame cancellation, and Minkowski null-intersection theorem |
 | `Projective.ExteriorKleinCliffordInversion` | Native exterior Clifford units, null obstruction, explicit witnesses |
 | `Canonical.RealModularConjugationBridge` | Bounded operator conjugation, exponentials, oriented shells |
+| `Twistor.PluckerCl55InfinityBridge` | Injective Lorentz-six embedding, native Clifford infinity readout, and real-frame boundary equivalence |
+| `Canonical.Cl55InfinitySourceSinkGrading` | Native CAR endpoints, nonzero degree-two source/sink words, Clifford parity, and separate local grading |
+| `Canonical.Cl55InfinityChiralCharge` | Actual two-mode chiral-charge commutators of the endpoints and quadratic words |
+| `Canonical.Cl55InfinityGradeReversal` | Existing global reflection, fixed-number submodule reversal, endpoint and source/sink exchange |
 | `Twistor.PluckerInfinityModular` | Aggregate import of the geometric and operator results |
 | `Twistor.PluckerInfinityModularAudit` | Transitive axiom check for every declaration owned by the new modules |
 
 All module names have the prefix `InfoGeometry.`. Existing foundational
 owners and dependency pins are unchanged.
 
-There are **eight substantive owner modules**: six under `Twistor`, one
-under `Projective`, and one under `Canonical`. The aggregate contains only
-imports. The audit selects those eight owners by Lean's imported-module
+There are **twelve substantive owner modules**: seven under `Twistor`, one
+under `Projective`, and four under `Canonical`. The aggregate contains only
+imports. The audit selects those twelve owners by Lean's imported-module
 metadata rather than declaration-name prefixes. It checks every owned
 constant present in the imported environment, including private and
 compiler-generated declarations, rejects introduced axioms and unsafe or
@@ -209,6 +314,7 @@ recorded below. They do not certify the unchanged pinned build.
 | Package | Classification | Exact boundary |
 | --- | --- | --- |
 | Plücker, infinity, incidence, Lorentz real form, block inversion, and native exterior Clifford results | `[accepted_limited_scope]` | Algebraic chart, quadratic-form, submodule, and Clifford-algebra theorems; no compactification homeomorphism, differential metric tensor, global stabilizer classification, or continuum theorem |
+| Native `Cl55` infinity, source/sink grades, chiral charge, and global reflection | `[accepted_limited_scope]` | Explicit coordinate injection and operator identities; the Penrose readout uses the stated real-frame hypothesis, and integer number degree, local grade, charge, and Clifford parity remain distinct |
 | Real bounded-operator modular conjugation | `[bucket_2_conditional]` | Uses the existing exponential certificate and the named oddness hypothesis `J*deltaLog = -deltaLog*J`; does not supply a positive spectral logarithm, faithful state, or standard-form commutant theorem |
 
 The focused/defocused shell identity is conditional operator algebra with
@@ -245,7 +351,7 @@ separately recorded compatible LeanArchitect revision.
 | Lean | `v4.34.1` | `v4.34.1` |
 | Mathlib | `d13f23b723b8a846827a245b89c10fc7d3f11612` | Same pinned revision |
 | LeanArchitect | `54d3fb249685db8e5a564e0b3f331cff77991607` | `468e8f58fb4ad6e6ad672a08da6d0d0531e95a97` |
-| Verification status | **BLOCKED** by the pinned dependency's Lean API incompatibility | **PASS**: all eight owners and the transitive axiom audit |
+| Verification status | **BLOCKED** by the pinned dependency's Lean API incompatibility | **PASS**: all twelve owners and the transitive axiom audit |
 
 The strict check first rejected a previously available LeanArchitect checkout
 whose actual revision was `468e8f58fb4ad6e6ad672a08da6d0d0531e95a97`, rather
@@ -305,25 +411,31 @@ report rather than retaining a previous successful status.
 | Evidence | Current record |
 | --- | --- |
 | Diagnostic source-closure compilation | PASS |
-| Exact-owner transitive axiom audit | PASS; all eight substantive owners, aggregate owns zero declarations |
-| Audited declaration count | 208, including generated/private declarations |
-| Audited theorem count | 172 `.thmInfo` declarations, including generated helpers; not a count of hand-written results |
-| Source modules in checked closure | 261 |
+| Exact-owner transitive axiom audit | PASS; all twelve substantive owners, aggregate owns zero declarations |
+| Audited declaration count | 315, including generated/private declarations |
+| Audited theorem count | 273 `.thmInfo` declarations, including generated helpers; not a count of hand-written results |
+| Source modules in checked closure | 284 |
 | Observed transitive axiom union | Exactly `propext`, `Classical.choice`, and `Quot.sound` |
-| Proof-proxy gate | PASS on all ten staged Lean files, including the actual matrix-order witness |
-| Semantic-vacuity gate | PASS, with 14 reviewed `trivial_surface` warnings and zero errors |
-| Placeholder/custom-axiom source scan | No `sorry`, `admit`, or axiom declarations in the ten Lean files |
-| Independent semantic review | PASS for the stated algebraic and conditional operator scope; all 14 short-proof warnings reviewed against actual definitions |
+| Proof-proxy gate | PASS on all fourteen staged Lean files, including the actual matrix-order witness |
+| Semantic-vacuity gate | PASS, with 23 reviewed warnings and zero errors: 22 `trivial_surface`, one `dynamic_literal_definition` |
+| Placeholder/custom-axiom source scan | No `sorry`, `admit`, or axiom declarations in the fourteen Lean files |
+| Independent semantic review | PASS for all twelve owners' stated algebraic and conditional operator scope; all semantic warnings reviewed against actual definitions |
 | Whitespace check | `git diff --cached --check` passed |
 | Root-package path preflight | BLOCKED: `Atlas` source/config unavailable; `GIFT` gitlink uninitialized in this checkout |
 | Root-package build | Not certified by this focused check |
 
-The semantic warnings concern four definitional accessors, two alternation
-laws, five convention/invariance readouts, two concrete coordinate evaluations,
-and the normalized-interval corollary. They are appropriate helper results,
-not evidence for stronger geometric or analytic claims. No gate was disabled
-or weakened. The matrix-order witness uses an existing owner on the same
-matrix carrier rather than introducing a surrogate witness assumption.
+The original fourteen semantic warnings concern four definitional accessors,
+two alternation laws, five convention/invariance readouts, two concrete
+coordinate evaluations, and the normalized-interval corollary. The eight new
+short-proof warnings concern two null-vector reflection formulas, two CAR
+pair exchanges, two repeated-mode zero formulas, and two Clifford parity
+formulas. These are appropriate helper results. The remaining lexical
+warning mistakes zero padding in `conformalSixToPAC55` for a zero-valued
+definition: all six input coordinates are retained and injectivity is
+proved by a left inverse. None supports a stronger geometric or analytic
+claim. No gate was disabled or weakened. The matrix-order witness uses an
+existing owner on the same matrix carrier rather than introducing a
+surrogate witness assumption.
 
 The machine-readable receipt is
 [`PLUCKER_INFINITY_MODULAR_VALIDATION.json`](PLUCKER_INFINITY_MODULAR_VALIDATION.json).

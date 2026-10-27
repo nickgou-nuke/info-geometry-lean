@@ -63,7 +63,8 @@ theorem index_eq_of_le {A D : Matrix m m R} {k s : ℕ}
   calc
     A ^ (k + t + 1) * D = A ^ t * (A ^ (k + 1) * D) := by
       rw [← Matrix.mul_assoc, ← pow_add]
-      congr 2 <;> omega
+      congr 2
+      omega
     _ = A ^ t * A ^ k := by rw [hD.index_eq]
     _ = A ^ (k + t) := by rw [← pow_add, Nat.add_comm]
 
@@ -86,7 +87,6 @@ theorem isDrazinInverse_lift (h : Q * K = 1)
   · rw [hpow (k + r + 1) (by omega), hpow (k + r) (by omega), ← map_mul,
       index_eq_of_le hD (by omega)]
 
-omit [DecidableEq n] in
 /-- The lifted spectral projector transports the inner spectral projector.
 It need not equal the support `K * Q`. -/
 theorem lifted_spectralProj (h : Q * K = 1) (hNK : N * K = 0)

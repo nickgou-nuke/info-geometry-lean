@@ -72,7 +72,7 @@ theorem oddPart_P_Q :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [oddPart, component10, component01, complementIdempotent,
-      P, Q, Matrix.mul_apply, Fin.sum_univ_two]
+      P, Q, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
 
 theorem Q_posSemidef : Q.PosSemidef := by
   have hQQ : Qᴴ * Q = Q := by
@@ -97,7 +97,8 @@ def V : Fin 2 → Mat :=
 theorem V_complete : (∑ i : Fin 2, star (V i) * V i) = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [V, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two]
+    norm_num [V, Matrix.mul_apply, Matrix.star_apply, starRingEnd_apply,
+      Fin.sum_univ_two]
 
 theorem kraus_commutator_entry :
     (V 0 * V 1 - V 1 * V 0) 0 1 = (-72 / 125 : ℂ) := by
@@ -113,7 +114,7 @@ theorem image_commutator_entry :
     (krausMap V P * krausMap V Q - krausMap V Q * krausMap V P) 0 1 =
       (31323 / 156250 : ℂ) := by
   norm_num [krausMap, V, P, Q, Matrix.mul_apply, Matrix.star_apply,
-    Fin.sum_univ_two]
+    Matrix.vecMul, dotProduct, starRingEnd_apply, Fin.sum_univ_two]
 
 theorem kraus_images_not_commute : ¬ Commute (krausMap V P) (krausMap V Q) := by
   intro h
@@ -126,7 +127,7 @@ theorem multiplicativity_defect_entry :
     (krausMap V (P * Q) - krausMap V P * krausMap V Q) 0 0 =
       (5184 / 78125 : ℂ) := by
   norm_num [krausMap, V, P, Q, Matrix.mul_apply, Matrix.star_apply,
-    Fin.sum_univ_two]
+    Matrix.vecMul, dotProduct, starRingEnd_apply, Fin.sum_univ_two]
 
 theorem krausMap_not_multiplicative :
     krausMap V (P * Q) ≠ krausMap V P * krausMap V Q := by

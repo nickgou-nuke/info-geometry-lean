@@ -13,13 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from tools.quality.check_peirce_reflection import audit_source, run
 from tools.quality.check_reviewed_prs import closure
-TARGETS = [
-    'InfoGeometry.Twistor.PerjesConventions',
-    'InfoGeometry.Twistor.TwistorKinematicTensor',
-    'InfoGeometry.Twistor.TwistorConstituentKinematics',
-    'InfoGeometry.Twistor.TwistorInternalSymmetry',
-    'InfoGeometry.Twistor.TwistorConstituentCCR',
-]
+TARGETS = (ROOT/'tools/quality/check_perjes_klein_targets.txt').read_text().splitlines()
 
 def main():
     parser = argparse.ArgumentParser(__doc__)

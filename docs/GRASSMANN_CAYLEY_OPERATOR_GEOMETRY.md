@@ -51,9 +51,13 @@ already exist elsewhere in the repository.
 2. For an independent frame `v`, `ι x * ιMulti v = 0` iff
    `x ∈ Submodule.span K (Set.range v)`.
 3. The native kernel of `x ↦ ι x * ω` recovers that subspace, is invariant
-   under nonzero rescaling, and represents intersection by simultaneous kernels.
+   under nonzero rescaling, descends to native `Projectivization`, and represents
+   intersection by simultaneous kernels. On a projective independent blade the
+   descended map evaluates to its actual frame span.
 4. Faithful left multiplication transfers incidence to composition of actual
-   operators. Frame operators are nonzero exactly for independent frames.
+   operators. Frame operators are nonzero exactly for independent frames. Two
+   individually independent frames have zero blade/operator product exactly
+   when their spans have nontrivial intersection.
 5. The native full matrix algebra equivalence preserves and reflects those
    identities and the existing CAR relations.
 6. If `φ(v) ≠ 0`, annihilation and creation do not commute. This is proved by
@@ -68,11 +72,15 @@ already exist elsewhere in the repository.
 
 These are algebraic statements, not analytic, topological, or physical claims.
 The matrix realization requires a finite basis; the incidence theorem does not
-require finite ambient dimension. Basis choices are explicitly noncomputable.
+require finite ambient dimension. Basis-dependent constructions are explicitly noncomputable. The projective
+support map is defined on all nonzero exterior rays; its frame-span
+interpretation is proved on independent decomposable blades. No classification
+of all rays as Grassmannian points is claimed.
 
 ### Logical dependency order
 
-The arrows are proof prerequisites, not physical causal assertions.
+The arrows are mathematical proof prerequisites. Their reflexive transitive
+closure is the dependency partial order; no physical causal claim is imposed.
 
 ```mermaid
 flowchart TD
@@ -80,8 +88,11 @@ flowchart TD
   B --> C["Independent frame has nonzero blade"]
   C --> D["Blade annihilator equals frame span"]
   D --> E["Rescaling and intersection incidence"]
+  E --> Q["Native projective quotient descent"]
+  C --> T["Concatenated frames and intersection"]
+  T --> G
   B --> F["Faithful regular action"]
-  D --> G["Operator incidence"]
+  D --> G["Operator incidence and products"]
   F --> G
   B --> H["Constructed contraction and creation"]
   H --> I["CAR and noncommuting vacuum witness"]

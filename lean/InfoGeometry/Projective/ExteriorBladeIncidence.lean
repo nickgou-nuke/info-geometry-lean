@@ -142,7 +142,7 @@ theorem linearIndependent_append_iff_disjoint {m n : ℕ}
     Fin.append_comp_sumElim
   rw [← linearIndependent_equiv
     (finSumFinEquiv : Fin m ⊕ Fin n ≃ Fin (m + n)), happend, linearIndependent_sum]
-  simpa only [Function.comp_def, Sum.elim_inl, Sum.elim_inr, hv, hw, true_and]
+  simp only [Function.comp_def, Sum.elim_inl, Sum.elim_inr, hv, hw, true_and]
 
 /-- Nontrivial intersection is detected by the product of the two frame blades. -/
 theorem ιMulti_mul_ιMulti_eq_zero_iff {m n : ℕ}

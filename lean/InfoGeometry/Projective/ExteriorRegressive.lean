@@ -72,7 +72,9 @@ def volume : ExteriorAlgebra K V := b.ExteriorAlgebra Finset.univ
 theorem volume_ne_zero : volume b ≠ 0 := b.ExteriorAlgebra.ne_zero Finset.univ
 
 @[simp] theorem basis_empty : b.ExteriorAlgebra ∅ = 1 := by
-  simp [ExteriorAlgebra.basis_apply, ExteriorAlgebra.ιMulti_family]
+  rw [ExteriorAlgebra.basis_apply]
+  change ExteriorAlgebra.ιMulti K 0 _ = 1
+  exact ExteriorAlgebra.ιMulti_zero_apply K _
 
 /-- Complementary basis blades multiply with their actual shuffle sign. -/
 theorem basis_mul_compl (s : Finset (Fin n)) :
@@ -81,8 +83,8 @@ theorem basis_mul_compl (s : Finset (Fin n)) :
   calc
     b.ExteriorAlgebra s * b.ExteriorAlgebra sᶜ =
         shuffleSign s • b.ExteriorAlgebra (s.disjUnion sᶜ disjoint_compl_right) := by
-      simpa only [shuffleSign, Set.powersetCard.coe_disjUnion,
-        Set.powersetCard.val_ofCard] using
+      simpa only [shuffleSign, Set.powersetCard.disjUnion,
+        Set.powersetCard.ofCard] using
         (ExteriorAlgebra.basis_mul_of_disjoint b
           (Set.powersetCard.ofCard (s := s) rfl)
           (Set.powersetCard.ofCard (s := sᶜ) rfl) disjoint_compl_right)
@@ -130,8 +132,8 @@ theorem basis_hodge_pairing (s t : Finset (Fin n)) (hcard : s.card = t.card) :
   classical
   by_cases h : s = t
   · subst t
-    rw [if_pos rfl, basis_mul_hodge_self]
-  · rw [if_neg h]
+    rw [ite_eq_left rfl, basis_mul_hodge_self]
+  · rw [ite_eq_right h]
     exact basis_mul_hodge_of_ne b s t hcard h
 
 @[simp] theorem hodge_one : hodge b 1 = volume b := by
@@ -144,7 +146,7 @@ theorem basis_hodge_pairing (s t : Finset (Fin n)) (hcard : s.card = t.card) :
   have hc : (1 : K) =
       (orientationUnit (K := K) (Finset.univ : Finset (Fin n)) : K) := by
     apply smul_left_injective K (volume_ne_zero b)
-    simpa only [one_smul] using h
+    simpa only [one_smul, volume] using h
   change hodge b (b.ExteriorAlgebra Finset.univ) = 1
   rw [hodge_basis, Finset.compl_univ, basis_empty, ← hc, one_smul]
 

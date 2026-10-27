@@ -38,7 +38,7 @@ def bladeOperator {n : ℕ} (v : Fin n → V) : Module.End K (ExteriorAlgebra K 
 
 /-- An operator made from a frame vanishes exactly when the frame is dependent. -/
 theorem bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V) :
-    bladeOperator v = 0 ↔ ¬LinearIndependent K v := by
+    bladeOperator (K := K) v = 0 ↔ ¬LinearIndependent K v := by
   constructor
   · intro h
     apply (ιMulti_eq_zero_iff v).1
@@ -50,8 +50,10 @@ theorem bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V) :
 /-- The ordered composition is the regular action of the ordered exterior blade. -/
 theorem bladeOperator_eq_prod {n : ℕ} (v : Fin n → V) :
     bladeOperator v = (List.ofFn fun i => create (R := K) (v i)).prod := by
-  induction n generalizing v with
-  | zero => simp [bladeOperator, ExteriorAlgebra.ιMulti_zero_apply]
+  induction n with
+  | zero =>
+    simp only [bladeOperator, ExteriorAlgebra.ιMulti_zero_apply, map_one,
+      List.ofFn_zero, List.prod_nil]
   | succ n ih =>
     rw [bladeOperator, ExteriorAlgebra.ιMulti_succ_apply, map_mul]
     change create (R := K) (v 0) * bladeOperator (Matrix.vecTail v) = _
@@ -62,7 +64,7 @@ theorem bladeOperator_eq_prod {n : ℕ} (v : Fin n → V) :
 /-- Exact incidence as composition-zero in the full endomorphism algebra. -/
 theorem create_mul_bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V)
     (hv : LinearIndependent K v) (x : V) :
-    create (R := K) x * bladeOperator v = 0 ↔
+    create (R := K) x * bladeOperator (K := K) v = 0 ↔
       x ∈ Submodule.span K (Set.range v) := by
   rw [← ι_mul_ιMulti_eq_zero_iff v hv x]
   constructor
@@ -88,10 +90,10 @@ theorem mem_span_inf_iff_operator {m n : ℕ} (v : Fin m → V) (w : Fin n → V
 theorem bladeOperator_mul_eq_zero_iff {m n : ℕ}
     (v : Fin m → V) (w : Fin n → V)
     (hv : LinearIndependent K v) (hw : LinearIndependent K w) :
-    bladeOperator v * bladeOperator w = 0 ↔
+    bladeOperator (K := K) v * bladeOperator w = 0 ↔
       ¬Disjoint (Submodule.span K (Set.range v))
         (Submodule.span K (Set.range w)) := by
-  have hmul : bladeOperator v * bladeOperator w = bladeOperator (Fin.append v w) := by
+  have hmul : bladeOperator (K := K) v * bladeOperator w = bladeOperator (Fin.append v w) := by
     simp only [bladeOperator, ← map_mul, ExteriorAlgebra.ιMulti_mul_ιMulti]
   rw [hmul, bladeOperator_eq_zero_iff, linearIndependent_append_iff_disjoint v w hv hw]
 
@@ -103,7 +105,7 @@ theorem annih_mul_create_ne_create_mul_annih
   have h1 := LinearMap.congr_fun h (1 : ExteriorAlgebra K V)
   change annih d (create v 1) = create v (annih d 1) at h1
   rw [annih_create_vacuum, annih_vacuum, map_zero] at h1
-  exact hd ((ExteriorAlgebra.algebraMap_eq_zero_iff K (d v)).1 h1)
+  exact hd ((ExteriorAlgebra.algebraMap_eq_zero_iff V (d v)).1 h1)
 
 /-- Every nonzero mode has a covector giving genuinely noncommuting operators. -/
 theorem exists_noncommuting_annihilator {v : V} (hv : v ≠ 0) :

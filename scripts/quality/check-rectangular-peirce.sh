@@ -53,6 +53,32 @@ for module in "${modules[@]}"; do
   lean --root="$repo_root/lean" -o "$proof_oleans/$relative_path.olean" \
     "$repo_root/lean/$relative_path.lean" 2>&1 | tee ".artifacts/rectangular-peirce/$module.log"
 done
+python3 - <<'AXIOM_AUDIT'
+import re
+from pathlib import Path
+sources = [
+    Path('lean/InfoGeometry/Algebra/RectangularRetract.lean'),
+    Path('lean/InfoGeometry/QuantumContext/RectangularDrazinLift.lean'),
+    Path('lean/InfoGeometry/QuantumContext/RectangularPeirceDrazin.lean'),
+]
+expected = set()
+for source in sources:
+    text = source.read_text()
+    namespace = re.search(r'^namespace (\S+)', text, re.M).group(1)
+    expected.update(namespace + '.' + name for name in
+                    re.findall(r'^(?:@\[simp\] )?theorem (\w+)', text, re.M))
+log = Path('.artifacts/rectangular-peirce/InfoGeometry.QuantumContext.RectangularPeirceDrazinAudit.log').read_text()
+reports = {}
+for name, dependencies in re.findall(r"'([^']+)' depends on axioms:\s*\[([^]]*)\]", log):
+    reports[name] = {x.strip() for x in dependencies.split(',') if x.strip()}
+for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+    reports[name] = set()
+assert set(reports) == expected, (expected - set(reports), set(reports) - expected)
+allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+for name, dependencies in reports.items():
+    assert dependencies <= allowed, (name, dependencies - allowed)
+print(f'AXIOM_AUDIT_PASS: {len(reports)} declarations; only standard Lean foundations')
+AXIOM_AUDIT
 python3 tools/quality/semantic_vacuity_gate.py \
   lean/InfoGeometry/Algebra/RectangularRetract.lean \
   lean/InfoGeometry/QuantumContext/RectangularDrazinLift.lean \

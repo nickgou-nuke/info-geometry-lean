@@ -27,9 +27,11 @@ variable {R m n : Type*} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 section Semiring
 variable [Semiring R] {K : Matrix n m R} {Q : Matrix m n R}
 
+omit [DecidableEq n] in
 theorem support_mul_inclusion (h : Q * K = 1) : (K * Q) * K = K := by
   rw [Matrix.mul_assoc, h, Matrix.mul_one]
 
+omit [DecidableEq n] in
 theorem retraction_mul_support (h : Q * K = 1) : Q * (K * Q) = Q := by
   rw [← Matrix.mul_assoc, h, Matrix.one_mul]
 
@@ -37,6 +39,7 @@ theorem support_idempotent (h : Q * K = 1) : IsIdempotentElem (K * Q) := by
   change (K * Q) * (K * Q) = K * Q
   rw [← Matrix.mul_assoc, support_mul_inclusion h]
 
+omit [DecidableEq n] in
 theorem sandwich_mul (h : Q * K = 1) (A B : Matrix m m R) :
     (K * A * Q) * (K * B * Q) = K * (A * B) * Q := by
   calc
@@ -95,7 +98,7 @@ theorem support_range (h : Q * K = 1) :
   rintro x ⟨v, rfl⟩
   refine ⟨Matrix.toLin' K v, ?_⟩
   change Matrix.toLin' K (Matrix.toLin' Q (Matrix.toLin' K v)) = Matrix.toLin' K v
-  rw [← Matrix.toLin'_mul_apply, h, Matrix.toLin'_one, LinearMap.id_apply]
+  rw [← Matrix.toLin'_mul_apply Q K, h, Matrix.toLin'_one, LinearMap.id_apply]
 
 theorem support_ker (h : Q * K = 1) :
     LinearMap.ker (Matrix.toLin' (K * Q)) = LinearMap.ker (Matrix.toLin' Q) := by
@@ -104,7 +107,7 @@ theorem support_ker (h : Q * K = 1) :
   constructor
   · intro hv
     have hc := congrArg (Matrix.toLin' Q) hv
-    rw [← Matrix.toLin'_mul_apply, h, Matrix.toLin'_one, LinearMap.id_apply,
+    rw [← Matrix.toLin'_mul_apply Q K, h, Matrix.toLin'_one, LinearMap.id_apply,
       map_zero] at hc
     exact hc
   · intro hv
@@ -114,22 +117,23 @@ theorem support_ker (h : Q * K = 1) :
 theorem range_isCompl_ker (h : Q * K = 1) :
     IsCompl (LinearMap.range (Matrix.toLin' K)) (LinearMap.ker (Matrix.toLin' Q)) := by
   rw [← support_range h, ← support_ker h]
-  exact (toLin_support_idempotent h).isCompl
+  exact LinearMap.IsIdempotentElem.isCompl (toLin_support_idempotent h)
 
 /-- Inclusion in the retract range is detected by the actual projection action. -/
 theorem range_le_iff {s : Type*} [Fintype s] [DecidableEq s]
     (h : Q * K = 1) (L : Matrix n s R) :
     LinearMap.range (Matrix.toLin' L) ≤ LinearMap.range (Matrix.toLin' K) ↔
       (K * Q) * L = L := by
-  rw [← support_range h, ← (toLin_support_idempotent h).comp_eq_right_iff]
+  rw [← support_range h, ← LinearMap.IsIdempotentElem.comp_eq_right_iff (toLin_support_idempotent h)]
   rw [← Matrix.toLin'_mul]
   exact Matrix.toLin'.injective.eq_iff
 
 /-- Equal finite square dimensions force the retract support to be the identity. -/
 theorem square_retract_support {K Q : Matrix n n R} (h : Q * K = 1) : K * Q = 1 :=
-  Matrix.mul_eq_one_comm.mp h
+  _root_.mul_eq_one_comm.mp h
 
 /-- A strictly smaller retract dimension rules out collapse to the ambient unit. -/
+omit [DecidableEq m] in
 theorem support_ne_one_of_card_lt [StrongRankCondition R]
     (K : Matrix n m R) (Q : Matrix m n R) (hdim : Fintype.card m < Fintype.card n) :
     K * Q ≠ 1 := by

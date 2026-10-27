@@ -3,6 +3,7 @@ name: Operator geometry (scoped)
 on:
   pull_request:
     paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixOperatorIdentities.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/MatrixTraceGeometry.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/PeirceTraceGeometry.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/PeirceKrausGeometry.lean'

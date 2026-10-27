@@ -19,6 +19,7 @@ import sys
 import tempfile
 
 OWNERS = [
+    "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities",
     "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry",
     "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry",
     "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry",
@@ -48,6 +49,7 @@ def main() -> None:
     mathlib = (args.mathlib or root / ".lake/packages/mathlib").resolve()
     work = (args.work_dir or Path(tempfile.mkdtemp(prefix="operator-geometry-"))).resolve()
     work.mkdir(parents=True, exist_ok=True)
+    (work / "result.json").unlink(missing_ok=True)
     manifest = json.loads((root / "lake-manifest.json").read_text())
     pin = next(p["rev"] for p in manifest["packages"] if p["name"] == "mathlib")
     actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=mathlib, text=True).strip()

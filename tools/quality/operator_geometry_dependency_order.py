@@ -53,7 +53,7 @@ edges = sorted((parent, name) for name, incoming in deps.items() for parent in i
 covers = sorted((parent, name) for name, incoming in deps.items() for parent in incoming
                 if not any(parent in ancestors[other] for other in incoming - {parent}))
 result = {
-    "scope": "Constants in checked declaration types and values, restricted to four new owners",
+    "scope": "Constants in checked declaration types and values, restricted to five new owners",
     "relation": "a <= b iff a = b or b transitively depends on a",
     "orientation": "dependency -> dependent",
     "is_dag": True,

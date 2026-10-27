@@ -5,6 +5,7 @@
 Source: the user attachment `Pasted text(20261027-142754).txt`, received
 2026-10-27. Its five proposed layers are associative star algebra, inner
 derivations, idempotent geometry, cyclic trace, and unitary/Kraus maps.
+Input SHA-256: `394a0535524248e2c0c5e94f9e225d414d72d21448c269d14e5c426f7f34ddb9`.
 The implementation works on full `Matrix n n ℂ` for arbitrary finite `n`.
 Operators are not assumed diagonal, scalar, or pairwise commuting.
 
@@ -33,9 +34,32 @@ No replacement definitions for commutators, orthogonal projections, unitaries,
 Kraus maps, or amplification are introduced. The canonical checkout contains
 other agents' staged boundary-duality work; it is neither modified nor imported.
 
+## Attachment coverage and native dependencies
+
+| Mathematical content | Owner or implementation |
+| --- | --- |
+| Associative commutator and adjoint representation | Native `Ring.lie_def`, `LieRing.ofAssociativeRing`, `LieAlgebra.ad`; the associative instance is activated locally, as in Mathlib's matrix Lie module. |
+| Lie/Jordan product splitting, star compatibility, associative Leibniz, unrestricted nested commutator | `MatrixOperatorIdentities` proves the displayed formulas on arbitrary `Matrix n n ℂ`, without introducing an anticommutator definition. |
+| Hermitian/skew-Hermitian splitting | Native `selfAdjointPart`, `skewAdjointPart`, and `StarModule.decomposeProdAdjoint`; the scalar ring is **ℝ**, so this is a real-linear decomposition. |
+| Jacobi and the adjoint action | Native `lie_jacobi` and `LieAlgebra.ad`, specialized explicitly to matrices. |
+| Complement of a projection | Native `IsStarProjection.one_sub`. |
+| Hermitian compression | Native `IsSelfAdjoint.conjugate_self`, exposed with its stronger hypothesis that neither factor needs to be idempotent. |
+| Sandwich annihilation and expanded projection double commutator | `MatrixOperatorIdentities.projection_sandwich_lie_zero` and `projection_double_lie`. |
+| Peirce splitting and tangent equation | Existing `Core.IdempotentCartan` and `Core.PeirceTangent`, bundled and connected in `PeirceTraceGeometry`. |
+| Cyclic trace, trace of a bracket, and the two adjoint conventions | Native `Matrix.trace_mul_comm`, `Matrix.trace_mul_cycle`, and `MatrixTraceGeometry`. |
+| Unitary preservation of Lie and symmetric products | The multiplication and addition laws of native `Unitary.conjStarAlgAut`, exposed in `MatrixOperatorIdentities`. |
+| General Kraus adjoint compatibility and trace preservation | `PeirceKrausGeometry.star_krausMap` and `trace_krausMap_of_complete`, using the existing `Choi.krausMap`. |
+| Complete positivity at every finite ancillary size | Existing `Quantum.KrausAmplificationCP`, transported to the Peirce channel. |
+
+The associative Leibniz formula is a theorem about the native Lie action on
+matrix multiplication. It is not packaged as Mathlib's `Derivation`: that
+structure at this pin requires a commutative source semiring, which would not
+represent the requested full matrix algebra.
+
 ## Intended new claims
 
-1. State the different bilinear trace and sesquilinear Hilbert--Schmidt
+1. Supply the missing native matrix identities listed above and state the
+   different bilinear trace and sesquilinear Hilbert--Schmidt
    adjoint identities for the native matrix Lie bracket.
 2. Bundle the existing Peirce operations into native complex-linear maps.
 3. Derive their trace-pairing self-adjointness, orthogonal images, and exact
@@ -46,7 +70,9 @@ other agents' staged boundary-duality work; it is neither modified nor imported.
 5. Identify `E` with the existing Kraus map on `p, 1-p`; transport the
    existing all-size amplification positivity theorem. Prove unitality,
    trace preservation, the bimodule property, and covariance under the
-   native unitary star-algebra automorphism.
+   native unitary star-algebra automorphism. For arbitrary finite Kraus
+   families, prove adjoint preservation and trace preservation under the
+   completeness relation, without commutation assumptions.
 6. Prove concrete nondiagonal noncommuting matrix examples, including failure
    of positivity of `O` and failure of multiplicativity of a complete Kraus map.
 
@@ -55,6 +81,16 @@ other agents' staged boundary-duality work; it is neither modified nor imported.
 The dependency relation is a branching proof dependency order, not an asserted
 unique chain and not a homotopy. It will be extracted from constants occurring
 in the checked declarations' types and values.
+
+At the conceptual level, multiplication and adjoint support the Lie/symmetric
+products, projections, and unitary/Kraus constructions. Cyclic trace is an
+additional input to trace duality. Projection identities and trace duality
+meet in Peirce orthogonality and the exact positive defect. The Kraus formula
+and the projection laws meet in the pinching-channel identification. Neither
+unitary conjugation nor a general Kraus map requires first constructing the
+Peirce tangent projector. The generated dependency JSON records the chosen
+proofs' actual constant dependencies, restricted to the five added owners;
+it does not claim that every listed dependency is mathematically necessary.
 
 `Tr(A B)` and `Tr(star A * B)` are different pairings. For the first,
 `ad H` is skew; for the second its adjoint is `ad (star H)`.

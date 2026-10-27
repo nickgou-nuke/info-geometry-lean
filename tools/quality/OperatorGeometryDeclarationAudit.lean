@@ -10,7 +10,7 @@ import Lean.Util.CollectAxioms
 import Lean.Util.FoldConsts
 import Lean.Data.Json
 
-/-! Audit every declaration owned by the four additions, including generated
+/-! Audit every declaration owned by the five additions, including generated
 declarations. Dependencies come from the checked types and proof/definition
 values, and axioms are collected transitively. This is verification tooling. -/
 
@@ -19,6 +19,7 @@ open Lean Elab Command
 namespace OperatorGeometryDeclarationAudit
 
 private def owners : Array Name := #[
+  `InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities,
   `InfoGeometry.OperatorAlgebra.MatrixTraceGeometry,
   `InfoGeometry.OperatorAlgebra.PeirceTraceGeometry,
   `InfoGeometry.OperatorAlgebra.PeirceKrausGeometry,

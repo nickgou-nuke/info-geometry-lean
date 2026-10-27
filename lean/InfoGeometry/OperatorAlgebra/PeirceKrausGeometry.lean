@@ -26,6 +26,16 @@ open scoped ComplexOrder
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
+/-- Every finite Kraus map respects adjoints, without a completeness premise. -/
+theorem star_krausMap {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Matrix n n ℂ) (A : Matrix n n ℂ) :
+    star (krausMap V A) = krausMap V (star A) := by
+  change star (∑ i, V i * A * star (V i)) = ∑ i, V i * star A * star (V i)
+  rw [star_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  simp only [star_mul, star_star, mul_assoc]
+
 /-- Trace preservation for an arbitrary finite complete Kraus family. The
 coefficients need not commute with each other or with the input matrix. -/
 theorem trace_krausMap_of_complete {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -77,9 +87,13 @@ theorem evenPart_posSemidef {p A : Matrix n n ℂ} (hp : IsStarProjection p)
     (hA : A.PosSemidef) : (evenPart p A).PosSemidef := by
   have hpstar : pᴴ = p := hp.isSelfAdjoint.star_eq
   have hqstar : (1 - p)ᴴ = 1 - p := hp.one_sub.isSelfAdjoint.star_eq
-  simpa only [evenPart, component11, component00, complementIdempotent,
-    hpstar, hqstar] using
-    (hA.mul_mul_conjTranspose_same p).add (hA.mul_mul_conjTranspose_same (1 - p))
+  have hpA : (p * A * pᴴ).PosSemidef := hA.mul_mul_conjTranspose_same p
+  have hqA : ((1 - p) * A * (1 - p)ᴴ).PosSemidef :=
+    hA.mul_mul_conjTranspose_same (1 - p)
+  rw [hpstar] at hpA
+  rw [hqstar] at hqA
+  change (p * A * p + (1 - p) * A * (1 - p)).PosSemidef
+  exact hpA.add hqA
 
 /-- The fixed matrices of pinching are exactly those commuting with `p`. -/
 theorem evenPart_eq_self_iff_commute {p : Matrix n n ℂ}

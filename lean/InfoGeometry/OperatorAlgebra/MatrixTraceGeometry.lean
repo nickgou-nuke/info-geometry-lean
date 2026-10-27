@@ -4,12 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Star.UnitaryStarAlgAut
+import InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities
 import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.LinearAlgebra.Matrix.ConjTranspose
-import Mathlib.Basic.Complex.Basic
-import Mathlib.Tactic.NoncommRing
 
 /-!
 # Two trace pairings on the full matrix algebra
@@ -26,6 +22,10 @@ open Matrix
 attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+/-- The native commutator lies in the kernel of the cyclic trace. -/
+theorem trace_lie_zero (A B : Matrix n n ℂ) : trace ⁅A, B⁆ = 0 := by
+  rw [Ring.lie_def, trace_sub, trace_mul_comm A B, sub_self]
 
 /-- Cyclic integration by parts for the bilinear trace pairing. -/
 theorem trace_lie_mul (H A B : Matrix n n ℂ) :

@@ -36,8 +36,7 @@ def evenLinearMap (p : Matrix n n ℂ) :
   toFun := evenPart p
   map_add' := evenPart_add p
   map_smul' c A := by
-    simp [evenPart, component11, component00, mul_smul_comm, smul_mul_assoc,
-      smul_add]
+    simp [evenPart, component11, component00, smul_add]
 
 /-- The existing odd Peirce operation as a native complex-linear map. -/
 def oddLinearMap (p : Matrix n n ℂ) :
@@ -45,8 +44,7 @@ def oddLinearMap (p : Matrix n n ℂ) :
   toFun := oddPart p
   map_add' := oddPart_add p
   map_smul' c A := by
-    simp [oddPart, component10, component01, mul_smul_comm, smul_mul_assoc,
-      smul_add]
+    simp [oddPart, component10, component01, smul_add]
 
 /-- Complementarity holds as equality of native linear maps. -/
 theorem evenLinearMap_add_oddLinearMap (p : Matrix n n ℂ) :
@@ -90,6 +88,7 @@ theorem oddPart_eq_self_iff_tangent {p : Matrix n n ℂ}
     rw [hcomm]
     exact InfoGeometry.Core.PeirceTangent.tangent_eq_double_commutator hp h
 
+omit [DecidableEq n] in
 /-- Cyclic trace transfers a two-sided sandwich to the other argument. -/
 theorem trace_sandwich_mul (p A B : Matrix n n ℂ) :
     trace (p * A * p * B) = trace (A * (p * B * p)) := by

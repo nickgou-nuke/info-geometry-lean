@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.RectangularRetract
 import InfoGeometry.QuantumContext.DrazinSpectralKernel
-import Mathlib.Tactic.Omega
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Drazin transport through a rectangular retract
@@ -25,10 +25,12 @@ variable {R m n : Type*} [Ring R]
 variable [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 variable {K : Matrix n m R} {Q : Matrix m n R} {N : Matrix n n R}
 
+omit [DecidableEq n] in
 theorem lift_mul_complement (h : Q * K = 1) (hQN : Q * N = 0) (A : Matrix m m R) :
     cornerHom K Q h A * N = 0 := by
   simp only [cornerHom_apply, Matrix.mul_assoc, hQN, Matrix.mul_zero]
 
+omit [DecidableEq n] in
 theorem complement_mul_lift (h : Q * K = 1) (hNK : N * K = 0) (A : Matrix m m R) :
     N * cornerHom K Q h A = 0 := by
   simp only [cornerHom_apply, ← Matrix.mul_assoc, hNK, Matrix.zero_mul]
@@ -84,6 +86,7 @@ theorem isDrazinInverse_lift (h : Q * K = 1)
   · rw [hpow (k + r + 1) (by omega), hpow (k + r) (by omega), ← map_mul,
       index_eq_of_le hD (by omega)]
 
+omit [DecidableEq n] in
 /-- The lifted spectral projector transports the inner spectral projector.
 It need not equal the support `K * Q`. -/
 theorem lifted_spectralProj (h : Q * K = 1) (hNK : N * K = 0)

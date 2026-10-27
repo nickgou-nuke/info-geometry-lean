@@ -74,7 +74,7 @@ theorem volume_ne_zero : volume b ≠ 0 := b.ExteriorAlgebra.ne_zero Finset.univ
 @[simp] theorem basis_empty : b.ExteriorAlgebra ∅ = 1 := by
   rw [ExteriorAlgebra.basis_apply]
   change ExteriorAlgebra.ιMulti K 0 _ = 1
-  exact ExteriorAlgebra.ιMulti_zero_apply K _
+  exact ExteriorAlgebra.ιMulti_zero_apply _
 
 /-- Complementary basis blades multiply with their actual shuffle sign. -/
 theorem basis_mul_compl (s : Finset (Fin n)) :

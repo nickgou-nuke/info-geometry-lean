@@ -2133,6 +2133,7 @@ import InfoGeometry.Canonical.ThermalIndividuation
 import InfoGeometry.Canonical.Monotonicity
 import InfoGeometry.Canonical.MathematicalUnification
 import InfoGeometry.Canonical.Mat2
+import InfoGeometry.Canonical.MatrixPeirceZorn
 import InfoGeometry.Canonical.BogoliubovMatrixConnection
 import InfoGeometry.Canonical.CliffordInfiniteSplitAlgebra
 import InfoGeometry.Canonical.DrazinAnomaly

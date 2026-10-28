@@ -921,6 +921,7 @@ lean_lib InfoGeometryTestSuite where
     `DvorakSystemTest,
     `ExprFingerprintHashTests,
     `InfoGeometryTests,
+    `MatrixPeirceZornAxiomAudit,
     `OperatorZornTwinCyclotomicAxiomAudit,
     `PO55ConformalClosureTests,
     `PR78Audit,

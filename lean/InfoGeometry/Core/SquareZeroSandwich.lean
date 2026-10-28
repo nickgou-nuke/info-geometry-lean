@@ -142,16 +142,9 @@ theorem commutator_anticomm_right (hy : Y * Y = 0) :
 theorem anticomm_mul_commutator (hx : X * X = 0) (hy : Y * Y = 0) :
     (X * Y + Y * X) * (X * Y - Y * X) =
       (X * Y - Y * X) * (X * Y + Y * X) := by
-  have hxy : X * Y * (Y * X) = 0 := by
-    calc
-      _ = X * (Y * Y) * X := by simp only [mul_assoc]
-      _ = 0 := by rw [hy, mul_zero, zero_mul]
-  have hyx : Y * X * (X * Y) = 0 := by
-    calc
-      _ = Y * (X * X) * Y := by simp only [mul_assoc]
-      _ = 0 := by rw [hx, mul_zero, zero_mul]
-  simp only [mul_sub, add_mul, sub_mul, mul_add, hxy, hyx, add_zero, zero_add,
-    sub_zero, zero_sub, sub_eq_add_neg]
+  have hcx : Commute (X * Y + Y * X) X := anticomm_mul_left hx
+  have hcy : Commute (X * Y + Y * X) Y := anticomm_mul_right hy
+  exact (hcx.mul_right hcy).sub_right (hcy.mul_right hcx)
 
 /-- Only the product difference has the claimed negative sandwich image. -/
 theorem sandwich_commutator (hx : X * X = 0) (hy : Y * Y = 0) :
@@ -168,10 +161,10 @@ theorem dissipator_anticomm (hx : X * X = 0) (hy : Y * Y = 0) :
 
 theorem dissipator_add (hx : X * X = 0) (hy : Y * Y = 0) :
     symmDissipator X Y (X + Y) = -((2 : R) • ((X * Y + Y * X) * (X + Y))) := by
-  rw [symmDissipator_apply, sandwich_add hx hy, smul_zero, zero_sub]
-  congr 1
-  rw [two_smul]
-  simp only [mul_add, add_mul, ← anticomm_mul_left hx, ← anticomm_mul_right hy]
+  have hcx : Commute (X * Y + Y * X) X := anticomm_mul_left hx
+  have hcy : Commute (X * Y + Y * X) Y := anticomm_mul_right hy
+  rw [symmDissipator_apply, sandwich_add hx hy, smul_zero, zero_sub,
+    ← (hcx.add_right hcy).eq, two_smul]
 
 theorem dissipator_sub (hx : X * X = 0) (hy : Y * Y = 0) :
     symmDissipator X Y (X - Y) = -((2 : R) • ((X * Y + Y * X) * (X - Y))) := by
@@ -189,8 +182,9 @@ theorem dissipator_commutator (hx : X * X = 0) (hy : Y * Y = 0) :
 /-- The complete corrected action on the sum, including the inner derivation. -/
 theorem generator_add (hx : X * X = 0) (hy : Y * Y = 0) :
     symmGenerator X Y (X + Y) = -((2 : R) • ((X * Y + Y * X) * (X + Y))) := by
-  rw [generator_eq_dissipator X Y (X + Y) (by
-    simp only [mul_add, add_mul, anticomm_mul_left hx, anticomm_mul_right hy]),
+  have hcx : Commute (X * Y + Y * X) X := anticomm_mul_left hx
+  have hcy : Commute (X * Y + Y * X) Y := anticomm_mul_right hy
+  rw [generator_eq_dissipator X Y (X + Y) (hcx.add_right hcy).eq,
     dissipator_add hx hy]
 
 theorem generator_sub (hx : X * X = 0) (hy : Y * Y = 0) :

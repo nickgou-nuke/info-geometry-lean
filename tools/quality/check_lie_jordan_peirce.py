@@ -9,6 +9,11 @@ from tools.quality import check_peirce_weyl as checker
 
 checker.TARGETS = [
     'InfoGeometry.OperatorAlgebra.LieJordanDuality',
+    'InfoGeometry.OperatorAlgebra.PeirceLieJordanResolution',
+    'InfoGeometry.OperatorAlgebra.LieJordanTraceDuality',
+    'InfoGeometry.OperatorAlgebra.PeirceTracePairing',
+    'InfoGeometry.OperatorAlgebra.OperatorDiracSchur',
+    'InfoGeometry.OperatorAlgebra.LieJordanPeirceColimit',
 ]
 
 if __name__ == '__main__':

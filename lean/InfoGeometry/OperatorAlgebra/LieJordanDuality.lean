@@ -62,14 +62,11 @@ theorem dual_difference (H S : A) :
 
 /-- Calibrates the factor two and the sign of the right multiplication. -/
 theorem dualPlus_self (H : A) : dualPlus R H H = 2 • LinearMap.mulLeft R H := by
-  ext X
-  simp only [dualPlus_apply, LinearMap.smul_apply, LinearMap.mulLeft_apply, two_nsmul]
+  simp only [dualPlus, ad, jordan, two_nsmul]
   abel
 
 theorem dualMinus_self (H : A) : dualMinus R H H = -(2 • LinearMap.mulRight R H) := by
-  ext X
-  simp only [dualMinus_apply, LinearMap.neg_apply, LinearMap.smul_apply,
-    LinearMap.mulRight_apply, two_nsmul]
+  simp only [dualMinus, ad, jordan, two_nsmul]
   abel
 
 /-- Reuses the repository's associative-envelope Lie identity. -/
@@ -95,16 +92,16 @@ theorem minus_mul_plus (H S : A) :
     dualMinus R H S * dualPlus R H S =
       ad R H * ad R H - jordan R S * jordan R S + jordan R (H * S - S * H) := by
   rw [← ad_jordan_bracket]
-  simp only [dualMinus, dualPlus]
-  noncomm_ring
+  simp only [dualMinus, dualPlus, sub_mul, mul_add, add_mul, mul_sub]
+  abel
 
 /-- Reversing composition changes the mixed term's sign. -/
 theorem plus_mul_minus (H S : A) :
     dualPlus R H S * dualMinus R H S =
       ad R H * ad R H - jordan R S * jordan R S - jordan R (H * S - S * H) := by
   rw [← ad_jordan_bracket]
-  simp only [dualMinus, dualPlus]
-  noncomm_ring
+  simp only [dualMinus, dualPlus, sub_mul, mul_add, add_mul, mul_sub]
+  abel
 
 /-- The symmetric product removes cross terms without any commuting hypothesis. -/
 theorem dual_symmetric_product (H S : A) :

@@ -124,7 +124,8 @@ include hp
 theorem left_reflection_involution :
     LinearMap.mulLeft ℝ (reflection p) * LinearMap.mulLeft ℝ (reflection p) =
       (1 : Module.End ℝ (Matrix n n ℝ)) := by
-  ext x
+  apply LinearMap.ext
+  intro x
   change reflection p*(reflection p*x)=x
   rw [← mul_assoc, reflection_sq hp, one_mul]
 

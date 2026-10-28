@@ -49,7 +49,7 @@ theorem ad_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
         cornerOp (R := R) p i j x := by
   change p * cornerOp (R := R) p i j x - cornerOp (R := R) p i j x * p = _
   rw [left_corner hp, right_corner hp]
-  cases i <;> cases j <;> simp [sub_smul]
+  cases i <;> cases j <;> simp
 
 /-- Weights `2,0,1,1` on the same four full operator corners. -/
 theorem jordan_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
@@ -58,7 +58,7 @@ theorem jordan_corner {p : A} (hp : p * p = p) (i j : Bool) (x : A) :
         cornerOp (R := R) p i j x := by
   change p * cornerOp (R := R) p i j x + cornerOp (R := R) p i j x * p = _
   rw [left_corner hp, right_corner hp]
-  cases i <;> cases j <;> simp [add_smul, two_zsmul]
+  cases i <;> cases j <;> simp [two_mul]
 
 /-- The adjoint action is the difference of the two off-diagonal projectors. -/
 theorem ad_eq_corner_difference (p : A) :

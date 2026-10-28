@@ -8,9 +8,11 @@ import Mathlib.Data.Fintype.Basic
 
 /-! # Explicit dependency order of the boundary compilation
 
-This finite partial order specifies theorem stages. It is not an extracted
-Lean declaration graph or a physical time order. In particular the algebraic
-boundary and metric-adjoint inputs are independent prerequisites of Hodge energy.
+This finite partial order specifies sufficient theorem stages, not an extracted
+Lean declaration graph or physical time. Nilpotence makes a differential complex;
+the metric adjoint supplies positive energy. Those are separate prerequisites
+for the combined complex-with-adjoint stage, although the energy formula alone
+does not require nilpotence.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceBoundaryOrder
@@ -22,20 +24,29 @@ inductive Stage
 open Stage
 
 instance : Fintype Stage where
-  elems := {associative, lieJordan, peirce, compositions, differential, adjoint, hodge, tests}
+  elems := {associative, lieJordan, Stage.peirce, compositions, differential,
+    adjoint, hodge, tests}
   complete s := by cases s <;> simp
 
 def prerequisites : Stage → Finset Stage
-  | associative => {associative}
-  | lieJordan => {associative, lieJordan}
-  | peirce => {associative, peirce}
-  | compositions => {associative, lieJordan, compositions}
-  | differential => {associative, lieJordan, peirce, differential}
-  | adjoint => {associative, lieJordan, peirce, adjoint}
-  | hodge => {associative, lieJordan, peirce, differential, adjoint, hodge}
-  | tests => Finset.univ
+  | .associative => {associative}
+  | .lieJordan => {associative, lieJordan}
+  | .peirce => {associative, Stage.peirce}
+  | .compositions => {associative, lieJordan, compositions}
+  | .differential => {associative, lieJordan, Stage.peirce, differential}
+  | .adjoint => {associative, lieJordan, Stage.peirce, adjoint}
+  | .hodge => {associative, lieJordan, Stage.peirce, differential, adjoint, hodge}
+  | .tests => Finset.univ
 
-theorem prerequisites_injective : Function.Injective prerequisites := by decide
+theorem prerequisites_injective : Function.Injective prerequisites := by
+  intro a b h
+  have ha : a ∈ prerequisites b := by
+    rw [← h]
+    cases a <;> simp [prerequisites]
+  have hb : b ∈ prerequisites a := by
+    rw [h]
+    cases b <;> simp [prerequisites]
+  cases a <;> cases b <;> simp_all [prerequisites]
 
 instance : PartialOrder Stage where
   le a b := prerequisites a ⊆ prerequisites b
@@ -47,13 +58,24 @@ instance : DecidableLE Stage := fun a b =>
   inferInstanceAs (Decidable (prerequisites a ⊆ prerequisites b))
 
 theorem boundary_metric_incomparable :
-    ¬ differential ≤ adjoint ∧ ¬ adjoint ≤ differential := by decide
+    ¬ differential ≤ adjoint ∧ ¬ adjoint ≤ differential := by
+  change ¬ prerequisites differential ⊆ prerequisites adjoint ∧
+    ¬ prerequisites adjoint ⊆ prerequisites differential
+  simp [prerequisites, Finset.subset_iff]
 
-theorem hodge_requires_both : differential ≤ hodge ∧ adjoint ≤ hodge := by decide
+theorem hodge_requires_both : differential ≤ hodge ∧ adjoint ≤ hodge := by
+  change prerequisites differential ⊆ prerequisites hodge ∧
+    prerequisites adjoint ⊆ prerequisites hodge
+  simp [prerequisites, Finset.subset_iff]
 
 theorem mixed_and_boundary_incomparable :
-    ¬ compositions ≤ differential ∧ ¬ differential ≤ compositions := by decide
+    ¬ compositions ≤ differential ∧ ¬ differential ≤ compositions := by
+  change ¬ prerequisites compositions ⊆ prerequisites differential ∧
+    ¬ prerequisites differential ⊆ prerequisites compositions
+  simp [prerequisites, Finset.subset_iff]
 
-theorem witnesses_cover_all (s : Stage) : s ≤ tests := by cases s <;> decide
+theorem witnesses_cover_all (s : Stage) : s ≤ tests := by
+  change prerequisites s ⊆ Finset.univ
+  exact Finset.subset_univ _
 
 end InfoGeometry.OperatorAlgebra.PeirceBoundaryOrder

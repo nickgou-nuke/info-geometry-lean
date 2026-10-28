@@ -34,6 +34,12 @@ TARGETS = [
     'InfoGeometry.Canonical.PeirceCouplingGeometry',
     'InfoGeometry.Canonical.PeirceCouplingPositivity',
     'InfoGeometry.Canonical.PeirceCouplingExamples',
+    'InfoGeometry.Core.LieJordanBoundaryOperators',
+    'InfoGeometry.Core.PeirceAdjointCycle',
+    'InfoGeometry.Core.PeirceQuadraticFrame',
+    'InfoGeometry.Canonical.PeirceBoundaryComplex',
+    'InfoGeometry.Canonical.LieJordanSandwichGeometry',
+    'InfoGeometry.Canonical.LieJordanBoundaryExamples',
 ]
 
 

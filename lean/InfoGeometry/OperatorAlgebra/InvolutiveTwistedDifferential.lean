@@ -71,4 +71,16 @@ theorem twistedInner_natural {B : Type*} [Ring B] [Algebra R B]
   change f (q * x - θ x * q) = f q * f x - η (f x) * f q
   rw [map_sub, map_mul, map_mul, hf]
 
+/-- The square-zero twisted action defines a short complex on the full algebra
+module. This records the differential data without asserting exactness. -/
+noncomputable def twistedInnerShortComplex (θ : A →ₐ[R] A)
+    (hθ : Function.Involutive θ) {q : A} (hq : θ q = -q) (hqq : q * q = 0) :
+    CategoryTheory.ShortComplex (ModuleCat R) where
+  X₁ := ModuleCat.of R A
+  X₂ := ModuleCat.of R A
+  X₃ := ModuleCat.of R A
+  f := ModuleCat.ofHom (twistedInner θ q)
+  g := ModuleCat.ofHom (twistedInner θ q)
+  zero := ModuleCat.hom_ext (twistedInner_square_zero θ hθ hq hqq)
+
 end InfoGeometry.OperatorAlgebra.InvolutiveTwistedDifferential

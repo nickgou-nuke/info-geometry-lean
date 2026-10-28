@@ -62,7 +62,13 @@ Self Moore–Penrose inversion is characterized by tripotency and
 self-adjointness of T². Self-adjoint T is a sufficient specialization.
 
 For field scalars λ with `λ≠0` and `λ²≠1`, the actual two-sided inverse of
-`λ • 1 - T` is proved explicitly. A polynomial factorization alone is not
+`λ • 1 - T` is proved explicitly as
+
+```text
+(λ(λ²−1))⁻¹ • ((λ²−1) • 1 + λ • T + T*T).
+```
+
+A polynomial factorization alone is not
 called an inverse. These conditions are sufficient, not necessary when
 some spectral sectors vanish.
 
@@ -109,11 +115,45 @@ The zero pair is permitted; nontriviality is not silently assumed.
 
 ## Verification
 
-Pending pinned Lean kernel checking, exact-set axiom inspection, static
-placeholder/vacuity checks, and independent semantic and acceptance review.
+The focused [run 40681706623](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40681706623),
+[job 122793778237](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40681706623/job/122793778237),
+passed on source commit `5c00d6724180e394c9363e66c00472ac777468e2`.
+The checked merge was `c0810a3e10b15d37d4873e195f4a248c33c55605`, against
+base `cb7482d86eadb42f2ab9c2f6f624d67b7bfe7ce4` on 2026-10-28.
+It rebuilt all 19 project modules in the selected import closure, serially,
+with fresh project oleans and the pinned mathlib cache.
+
+- Lean `4.34.1`, compiler commit `5045d0056413266e57c625dcd7c365b10e377c52`;
+  Lake `5.0.0-src+5045d00`.
+- mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`; no dependency pin changes.
+- 39 theorems and one definition passed exact-set `#print axioms` inspection.
+  The only dependencies are `propext`, `Classical.choice`, and `Quot.sound`.
+- No placeholders, custom axioms, `unsafe`, or `native_decide` in new proofs;
+  semantic vacuity gate: zero findings. Shell syntax and diff checks pass.
+- New modules emit no Lean warnings. The existing `Singular/MoorePenrose`
+  owner emits 14 deprecation/style warnings; it is unchanged.
+- Independent source semantic audit: PASS, accepted at the documented
+  algebraic scope. Separate independent QA: ACCEPTED_WITH_LIMITED_SCOPE,
+  after verifying the exact source hashes, theorem inventory, compiler log,
+  axiom report, and warning scope.
+
+This is focused kernel validation, not a claim of a successful repository-wide
+build. Separate existing CI jobs fail before checking these proofs: style run
+`40680179717` reports the `Canonical/KRDualityCascade.lean` / `KrDualityCascade.lean`
+case collision; Sorry Gate run `40680179709` cannot find `lake` (exit 127).
+
+The final verification-document commit does not change any checked source,
+audit module, dependency pin, or build script.
 
 ## Intake SHA256
 
 - `Pasted text(20261028-110439).txt`: `47df7a3dc10b58649e0bbafda858bf39939796ae11aac670298e26bd88cf5a0b`.
 - `Pasted text (2)(20261028-110934).txt`: `31426c3f8b2539fc39de439fe41de56b2031bc8c4eb22a841579c46324552a57`.
 - `Pasted text (3)(6).txt`: `9d1e867fbcb6d9ad5f7241fe2fe6d0deed171854c508866aaee884b33033835c`.
+
+## Verified source SHA256
+
+- `SquareZeroMatrixPair.lean`: `6c30f14324ee102560908c592567ac317ce4dddc2f70f08b021576d28e1cc634`.
+- `TripotentMatrixGeometry.lean`: `c9f22e1984c52a82586ce9324013ab89ee5dc0e1467b8cd8a07db2bc11e830d1`.
+- `TripotentMatrixResolvent.lean`: `cd888214e5f5018f67d13197fc90326c997af1354ac4a9e429668024253ee828`.
+- `SquareZeroTripotentAudit.lean`: `bf01b932599af2774dfe995b862119c6183986c9aec429dd36bc0cf116ed6a45`.

@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'lean/InfoGeometry/OperatorAlgebra/LieJordan*.lean'
-      - 'lean/InfoGeometry/Algebra/PeirceLieJordanResolution.lean'
+      - 'lean/InfoGeometry/Algebra/PeirceLieJordan*.lean'
       - 'lean/InfoGeometry/Canonical/LieJordanPeirce*.lean'
       - 'tools/quality/check_lie_jordan_peirce.py'
       - '.github/workflows/lie-jordan-peirce.yml'

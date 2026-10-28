@@ -1,5 +1,6 @@
 import InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 import InfoGeometry.Algebra.PeirceLieJordanResolution
+import InfoGeometry.Algebra.PeirceLieJordanEigen
 import InfoGeometry.OperatorAlgebra.LieJordanTracePairing
 import InfoGeometry.OperatorAlgebra.LieJordanCliffordDouble
 import InfoGeometry.Canonical.LieJordanPeirceColimit

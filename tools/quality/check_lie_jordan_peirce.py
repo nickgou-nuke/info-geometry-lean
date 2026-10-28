@@ -14,6 +14,7 @@ from tools.quality import check_peirce_weyl as checker
 checker.TARGETS = [
     "InfoGeometry.OperatorAlgebra.LieJordanDualTransport",
     "InfoGeometry.Algebra.PeirceLieJordanResolution",
+    "InfoGeometry.Algebra.PeirceLieJordanEigen",
     "InfoGeometry.OperatorAlgebra.LieJordanTracePairing",
     "InfoGeometry.OperatorAlgebra.LieJordanCliffordDouble",
     "InfoGeometry.Canonical.LieJordanPeirceColimit",

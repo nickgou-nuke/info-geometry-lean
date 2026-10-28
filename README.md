@@ -126,6 +126,64 @@ not prove mathematical statements. Lean kernel-checked source files decide
 truth. See `skills/darwin-commit-taxonomy/` and
 `skills/darwin-evolution-algorithms/` for full skill documentation.
 
+### Erlangen 2.0 synthesis: Günaydin–Gürsey SU(3), Cuntz-Cantor hopping, Lax mass gap
+
+The Erlangen 2.0 structural renaissance attacks the continuum directly:
+infinity emerges through inductive colimits and fractal Cantor topologies on
+exceptional lattices, encoded in non-commutative matrix operator algebra and
+geometry. The repository formalizes the three core bridges:
+
+```bash
+# 1. Günaydin–Gürsey SU(3) ⊂ G₂ stabilizer of the octonionic imaginary unit
+lake build InfoGeometry.NCG.GunaydinGurseySU3Stabilizer
+
+# 2. Cuntz Oₙ hopping operators on the Cantor binary lattice
+lake build InfoGeometry.NCG.CuntzHoppingCantorLattice
+
+# 3. Lax pair isospectral invariants and zero-mode/mass-gap criterion
+lake build InfoGeometry.NCG.LaxPairIsospectralMassGap
+```
+
+**Existing Erlangen 2.0 infrastructure already formalized** (do not duplicate):
+
+| Concept | Lean file | Namespace |
+|---------|-----------|-----------|
+| Günaydin–Gürsey quark basis & multiplication table | `Canonical/GunaydinGurseyQuarkBasis.lean` | `InfoGeometry.Canonical.GunaydinGursey` |
+| Günaydin–Gürsey triple products / associator / jacobiator | `Canonical/GunaydinGurseyTripleProducts.lean` | `InfoGeometry.Canonical.GunaydinGursey` |
+| SU(3) soldering / 8 traceless gluon generators | `Superalgebra/GunaydinGurseySolderingSU3Automorphisms.lean` | `InfoGeometry.Superalgebra.GunaydinGurseySU3` |
+| Manakov Zorn Lax pair, χ⁽³⁾=4, trace conservation | `Canonical/ManakovZornSolitonLaxBridge.lean` | `InfoGeometry.Canonical.ManakovZornSolitonLax` |
+| Cuntz Oₙ algebras, canonical shift, KMS/GNS | `NCG/CuntzColimitKMSTiltGNS.lean` | `InfoGeometry.NCG.CuntzColimit` |
+| Cantor binary lattice hopping, square-zero null hops | `Tessellation/CantorDiracSeaWalk.lean` | `InfoGeometry.Tessellation` |
+| Peirce grading η = P₊ − P₋, η² = 1 | `NCG/PeirceGradingOperator.lean` | `InfoGeometry.NCG.PeirceGradingOperator` |
+| Zorn commutator, Jacobiator on x-axis | `NCG/ZornCommutator.lean` | `InfoGeometry.NCG.ZornCommutator` |
+| Categorical UHF colimits of Zorn stages | `Categorical/ZornUHFColimit.lean` | `InfoGeometry.Categorical.ZornUHFColimit` |
+
+**ASTAQLHASH DNA queries on live ArangoDB infotree** (`infogeometry` database,
+306,503 declarations, 2,085,736 edges):
+
+```bash
+# Concept bridge: Tomita/KMS (quantum) vs Fisher/Onsager (classical)
+PYTHONPATH=/home/goutev/repos/info-geometry-lean \
+  ARANGO_DATABASE=infogeometry \
+  ARANGO_PASS=<password> \
+  /home/goutev/miniforge3/envs/sage/bin/python \
+  tools/infra/astaql_concept_bridge.py \
+  --quantum-term tomita --quantum-term kms \
+  --classical-term fisher --classical-term onsager \
+  --quantum-module-prefix InfoGeometry.Canonical \
+  --classical-module-prefix InfoGeometry.Canonical \
+  --depth 3 --json-out /tmp/astaql_concept_bridge.json
+```
+
+Result from this session: 3842 quantum (Tomita/KMS) declarations and
+1271 classical (Fisher/Onsager) declarations matched. Graph results are
+navigation evidence only — Lean kernel-checked source files decide truth.
+
+See `skills/erlangen-2-0-synthesis-workflow/` for the complete workflow:
+exhaustive codebase exploration, ASTAQLHASH DNA queries, native Lean theorem
+writing, targeted lake build verification, hurdles encountered, and improvements
+needed.
+
 ---
 
 ### Citation

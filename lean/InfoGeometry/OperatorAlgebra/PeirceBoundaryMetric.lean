@@ -42,11 +42,13 @@ theorem crossTransport_trace_of_normalized (a b : Matrix n n ℝ)
     trace (crossTransport ℝ a b x) = trace x := by
   rw [crossTransport_trace, h, one_mul]
 
+omit [DecidableEq n] in
 theorem frobenius_trace_symm (x y : Matrix n n ℝ) :
     trace (xᴴ * y) = trace (yᴴ * x) := by
   simpa only [conjTranspose_mul, conjTranspose_conjTranspose, star_trivial]
     using (trace_conjTranspose (xᴴ * y)).symm
 
+omit [DecidableEq n] in
 theorem sandwich_frobenius_adjoint (a b x y : Matrix n n ℝ) :
     trace ((a * x * b)ᴴ * y) = trace (xᴴ * (aᴴ * y * bᴴ)) := by
   simp only [conjTranspose_mul]
@@ -57,7 +59,7 @@ theorem sandwich_frobenius_adjoint (a b x y : Matrix n n ℝ) :
 
 variable {p : Matrix n n ℝ} (hp : p * p = p) (hps : pᴴ = p)
 include hps
-local notation "θ" => (peirceTwist ℝ p hp).toAlgHom
+local notation "θ" => AlgEquiv.toAlgHom (peirceTwist ℝ p hp)
 
 private theorem reflection_conjTranspose : (reflection p)ᴴ = reflection p := by
   simp only [reflection, two_nsmul, conjTranspose_sub, conjTranspose_add,

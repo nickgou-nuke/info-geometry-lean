@@ -28,10 +28,9 @@ theorem reflection_cross_left {p : A} (hp : p * p = p) (a b x : A) :
       orientedTransport (R := R) (peirce10 p a) (peirce01 p b) x := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, orientedTransport_apply, peirce10, peirce01,
+    compIdempotent, mul_add, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- Output grading changes the signed action back to the symmetric action. -/
 theorem reflection_oriented_left {p : A} (hp : p * p = p) (a b x : A) :
@@ -39,32 +38,25 @@ theorem reflection_oriented_left {p : A} (hp : p * p = p) (a b x : A) :
       crossTransport (R := R) (peirce10 p a) (peirce01 p b) x := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, orientedTransport_apply, peirce10, peirce01,
+    compIdempotent, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The same output action holds by right multiplication. -/
 theorem reflection_cross_right {p : A} (hp : p * p = p) (a b x : A) :
     (crossTransport (R := R) (peirce10 p a) (peirce01 p b) x) * (p - compIdempotent p) =
       orientedTransport (R := R) (peirce10 p a) (peirce01 p b) x := by
-  have hl (z : A) : p * (p * z) = p * z := by
-    rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, orientedTransport_apply, peirce10, peirce01,
+    compIdempotent, add_mul, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hp]
+  abel
 
 /-- Right output grading also interchanges the actions. -/
 theorem reflection_oriented_right {p : A} (hp : p * p = p) (a b x : A) :
     (orientedTransport (R := R) (peirce10 p a) (peirce01 p b) x) * (p - compIdempotent p) =
       crossTransport (R := R) (peirce10 p a) (peirce01 p b) x := by
-  have hl (z : A) : p * (p * z) = p * z := by
-    rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, orientedTransport_apply, peirce10, peirce01,
+    compIdempotent, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hp]
+  abel
 
 /-- Input grading has the opposite sign: it grades the source corner. -/
 theorem cross_reflection_input {p : A} (hp : p * p = p) (a b x : A) :
@@ -72,10 +64,9 @@ theorem cross_reflection_input {p : A} (hp : p * p = p) (a b x : A) :
       -(orientedTransport (R := R) (peirce10 p a) (peirce01 p b) x) := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, orientedTransport_apply, peirce10, peirce01,
+    compIdempotent, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The signed action also reverses the input grading sign. -/
 theorem oriented_reflection_input {p : A} (hp : p * p = p) (a b x : A) :
@@ -83,10 +74,9 @@ theorem oriented_reflection_input {p : A} (hp : p * p = p) (a b x : A) :
       -(crossTransport (R := R) (peirce10 p a) (peirce01 p b) x) := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, orientedTransport_apply, peirce10, peirce01,
+    compIdempotent, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- Only the two even input corners contribute. -/
 theorem cross_reads_even {p : A} (hp : p * p = p) (a b x : A) :
@@ -94,10 +84,9 @@ theorem cross_reads_even {p : A} (hp : p * p = p) (a b x : A) :
       crossTransport (R := R) (peirce10 p a) (peirce01 p b) x := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, peirce11, peirce00, peirce10, peirce01, compIdempotent,
+    mul_add, add_mul, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The same input support holds for the signed action. -/
 theorem oriented_reads_even {p : A} (hp : p * p = p) (a b x : A) :
@@ -105,50 +94,45 @@ theorem oriented_reads_even {p : A} (hp : p * p = p) (a b x : A) :
       orientedTransport (R := R) (peirce10 p a) (peirce01 p b) x := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [orientedTransport_apply, peirce11, peirce00, peirce10, peirce01, compIdempotent,
+    mul_add, add_mul, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The upper off-diagonal input corner is annihilated. -/
 theorem cross_kills_upper {p : A} (hp : p * p = p) (a b x : A) :
     crossTransport (R := R) (peirce10 p a) (peirce01 p b) (peirce10 p x) = 0 := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, peirce10, peirce01, compIdempotent, mul_sub, sub_mul,
+    one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The lower off-diagonal input corner is annihilated. -/
 theorem cross_kills_lower {p : A} (hp : p * p = p) (a b x : A) :
     crossTransport (R := R) (peirce10 p a) (peirce01 p b) (peirce01 p x) = 0 := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, peirce10, peirce01, compIdempotent, mul_sub, sub_mul,
+    one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The signed action annihilates the upper input corner. -/
 theorem oriented_kills_upper {p : A} (hp : p * p = p) (a b x : A) :
     orientedTransport (R := R) (peirce10 p a) (peirce01 p b) (peirce10 p x) = 0 := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [orientedTransport_apply, peirce10, peirce01, compIdempotent, mul_sub, sub_mul,
+    one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The signed action annihilates the lower input corner. -/
 theorem oriented_kills_lower {p : A} (hp : p * p = p) (a b x : A) :
     orientedTransport (R := R) (peirce10 p a) (peirce01 p b) (peirce01 p x) = 0 := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [orientedTransport_apply, peirce10, peirce01, compIdempotent, mul_sub, sub_mul,
+    one_mul, mul_one, mul_assoc, hl]
+  abel
 
 /-- The positive output corner is the first ordered sandwich. -/
 theorem cross_corner11 {p : A} (hp : p * p = p) (a b x : A) :
@@ -156,10 +140,9 @@ theorem cross_corner11 {p : A} (hp : p * p = p) (a b x : A) :
       peirce10 p a * x * peirce01 p b := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, peirce11, peirce10, peirce01, compIdempotent, mul_add,
+    add_mul, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hp, hl]
+  abel
 
 /-- The complementary output corner is the reverse ordered sandwich. -/
 theorem cross_corner00 {p : A} (hp : p * p = p) (a b x : A) :
@@ -167,10 +150,9 @@ theorem cross_corner00 {p : A} (hp : p * p = p) (a b x : A) :
       peirce01 p b * x * peirce10 p a := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, peirce00, peirce10, peirce01, compIdempotent, mul_add,
+    add_mul, mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hp, hl]
+  abel
 
 /-- The positive signed-output corner has unchanged sign. -/
 theorem oriented_corner11 {p : A} (hp : p * p = p) (a b x : A) :
@@ -178,10 +160,9 @@ theorem oriented_corner11 {p : A} (hp : p * p = p) (a b x : A) :
       peirce10 p a * x * peirce01 p b := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [orientedTransport_apply, peirce11, peirce10, peirce01, compIdempotent, mul_sub,
+    sub_mul, one_mul, mul_one, mul_assoc, hp, hl]
+  abel
 
 /-- The complementary signed-output corner has the negative sign. -/
 theorem oriented_corner00 {p : A} (hp : p * p = p) (a b x : A) :
@@ -189,10 +170,9 @@ theorem oriented_corner00 {p : A} (hp : p * p = p) (a b x : A) :
       -(peirce01 p b * x * peirce10 p a) := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [orientedTransport_apply, peirce00, peirce10, peirce01, compIdempotent, mul_sub,
+    sub_mul, one_mul, mul_one, mul_assoc, hp, hl]
+  abel
 
 /-- The full output is even, without commuting the input with the idempotent. -/
 theorem cross_commutes_projector {p : A} (hp : p * p = p) (a b x : A) :
@@ -200,10 +180,9 @@ theorem cross_commutes_projector {p : A} (hp : p * p = p) (a b x : A) :
       (crossTransport (R := R) (peirce10 p a) (peirce01 p b) x) * p := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [crossTransport_apply, peirce10, peirce01, compIdempotent, mul_add, add_mul,
+    mul_sub, sub_mul, one_mul, mul_one, mul_assoc, hp, hl]
+  abel
 
 /-- The signed output is also even. -/
 theorem oriented_commutes_projector {p : A} (hp : p * p = p) (a b x : A) :
@@ -211,9 +190,8 @@ theorem oriented_commutes_projector {p : A} (hp : p * p = p) (a b x : A) :
       (orientedTransport (R := R) (peirce10 p a) (peirce01 p b) x) * p := by
   have hl (z : A) : p * (p * z) = p * z := by
     rw [← mul_assoc, hp]
-  simp only [crossTransport_apply, orientedTransport_apply,
-    peirce11, peirce00, peirce10, peirce01, compIdempotent,
-    mul_add, add_mul, mul_sub, sub_mul, mul_neg, neg_mul,
-    one_mul, mul_one, mul_assoc, hp, hl] <;> abel
+  simp only [orientedTransport_apply, peirce10, peirce01, compIdempotent, mul_sub, sub_mul,
+    one_mul, mul_one, mul_assoc, hp, hl]
+  abel
 
 end InfoGeometry.Algebra.PeirceSandwichDuality

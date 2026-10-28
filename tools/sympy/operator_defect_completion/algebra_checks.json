@@ -1,0 +1,23 @@
+{
+  "checks_passed": 13,
+  "checks": {
+    "Peirce exact reconstruction": true,
+    "double commutator extracts odd part": true,
+    "upper corner square zero": true,
+    "lower corner square zero": true,
+    "compression bracket defect": true,
+    "ambient Jacobi identity": true,
+    "projected Jacobiator exact feedback": true,
+    "witness coefficient blocks do not commute": true,
+    "witness idempotent is non-diagonal": true,
+    "witness p squared equals p": true,
+    "witness retained X and Y": true,
+    "witness nonzero defect is even, not odd": true,
+    "witness defect remains after reconstruction": true
+  },
+  "method": "Exact rational free-associative polynomial reduction and exact rational matrix arithmetic",
+  "extra_polynomial_relation": "p*p=p",
+  "lean_compilation_performed": false,
+  "lean_axiom_audit_performed": false,
+  "scope": "Algebra identities and regression only; not a substitute for Lean elaboration or proof audit."
+}

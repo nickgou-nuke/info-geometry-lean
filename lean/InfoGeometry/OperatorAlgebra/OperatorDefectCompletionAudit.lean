@@ -1,0 +1,12 @@
+import InfoGeometry.OperatorAlgebra.ZornDefectLieClosure
+
+-- Commands for the repository's pinned Lean environment; not executed here.
+#print axioms InfoGeometry.OperatorAlgebra.DefectCompletion.projectedJacobiator_eq_defect
+#print axioms InfoGeometry.OperatorAlgebra.DefectCompletion.range_lt_retainedLieClosure_of_defect
+#print axioms InfoGeometry.OperatorAlgebra.DefectCompletion.bracketDefect_weight
+#print axioms InfoGeometry.OperatorAlgebra.DefectCompletion.oddPart_mem_of_mem
+#print axioms InfoGeometry.Algebra.ZornLeftCAR.multiplicationDefect_eq_half_commutator_correction
+#print axioms InfoGeometry.Algebra.ZornLeftCAR.multiplicationDefect_mem_native_lieSpan
+#print axioms InfoGeometry.Algebra.ZornLeftCAR.nonzero_multiplicationDefect_not_mem_left_range
+#print axioms InfoGeometry.Algebra.ZornLeftCAR.multiplicationDefect_U01_ne_zero
+#print axioms InfoGeometry.Algebra.ZornLeftCAR.left_action_range_lt_native_lieSpan

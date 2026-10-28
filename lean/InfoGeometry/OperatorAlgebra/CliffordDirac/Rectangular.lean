@@ -89,7 +89,7 @@ omit [DecidableEq m] [DecidableEq n] in
 theorem block_hamiltonian_posSemidef (T : Matrix m n ℂ) :
     (dirac T * dirac T).PosSemidef := by
   classical
-  simpa only [(dirac_isHermitian T).eq] using posSemidef_conjTranspose_mul_self (dirac T)
+  simpa only [dirac_isHermitian T] using posSemidef_conjTranspose_mul_self (dirac T)
 
 omit [DecidableEq m] [DecidableEq n] in
 /-- The two Gram operators are intertwined by the rectangular input itself. -/

@@ -76,13 +76,13 @@ theorem spinLift_finTwo_injective : Function.Injective (spinLift (n := Fin 2)) :
 
 theorem spinLift_lie {n : Type*} [Fintype n] [DecidableEq n]
     (A B : Matrix (Fin 2) (Fin 2) ℂ) :
-    ⁅spinLift (n := n) A, spinLift B⁆ = spinLift ⁅A, B⁆ := by
+    ⁅spinLift (n := n) A, spinLift (n := n) B⁆ = spinLift (n := n) ⁅A, B⁆ := by
   simp only [Ring.lie_def, ← spinLift_mul]
   ext ⟨i, a⟩ ⟨j, b⟩
   simp [spinLift, Matrix.kroneckerMap_apply, sub_mul]
 
 theorem spinLift_finTwo_lie_ne_zero_iff (A B : Matrix (Fin 2) (Fin 2) ℂ) :
-    ⁅spinLift (n := Fin 2) A, spinLift B⁆ ≠ 0 ↔ ⁅A, B⁆ ≠ 0 := by
+    ⁅spinLift (n := Fin 2) A, spinLift (n := Fin 2) B⁆ ≠ 0 ↔ ⁅A, B⁆ ≠ 0 := by
   rw [spinLift_lie]
   constructor
   · intro h hz

@@ -153,7 +153,10 @@ theorem star_clifford_sum {g h x y : A}
     (hg : IsSelfAdjoint g) (hh : IsSelfAdjoint h)
     (hx : IsSelfAdjoint x) (hy : IsSelfAdjoint y) :
     star (g * x + h * y) = x * g + y * h := by
-  simp only [star_add, star_mul, hg.star_eq, hh.star_eq, hx.star_eq, hy.star_eq]
+  calc
+    star (g * x + h * y) = star x * star g + star y * star h := by
+      rw [star_add, star_mul, star_mul]
+    _ = x * g + y * h := by rw [hg.star_eq, hh.star_eq, hx.star_eq, hy.star_eq]
 
 end Star
 

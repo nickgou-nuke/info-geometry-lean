@@ -236,7 +236,8 @@ theorem matrixCurvature_ne_zero_iff (A B : Matrix n n ℂ) :
 omit [DecidableEq n] in
 theorem matrixLaplacian_eq (A B : Matrix n n ℂ) :
     matrixLaplacian A B = coefficientLift (A * A + B * B) := by
-  simp only [matrixLaplacian, coefficientLift_add, coefficientLift_mul]
+  exact ((coefficientLift_add (A * A) (B * B)).trans
+    (congrArg₂ (· + ·) (coefficientLift_mul A A) (coefficientLift_mul B B))).symm
 
 theorem matrixLaplacian_curvature_lie (A B : Matrix n n ℂ) :
     ⁅matrixLaplacian A B, matrixCurvature A B⁆ =

@@ -1,0 +1,155 @@
+name: Peirce superoperator kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators/**'
+      - 'lean/InfoGeometry/OperatorAlgebra/All.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceGrading.lean'
+      - 'lean/InfoGeometry/Core/IdempotentCartan.lean'
+      - 'lean/InfoGeometry/Core/JordanAssociatorRing.lean'
+      - 'lean/InfoGeometry/Core/JordanMultiplicationClosure.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean'
+      - 'tools/quality/check_peirce_superoperators.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/proof_proxy_staged_gate.py'
+      - 'tools/infra/opengauss_screener.py'
+      - '.githooks/pre-commit'
+      - 'docs/PEIRCE_SUPEROPERATOR_CONTRACT.md'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/peirce-superoperators.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: peirce-superoperators-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: peirce-superoperators-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          from tools.quality.check_peirce_superoperators import PREFIX, TARGETS
+          _, _, native = closure(Path('project'), TARGETS + [PREFIX])
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'peirce-superoperators-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Check complete source closure and every declaration's axioms
+        working-directory: project
+        run: |
+          python3 tools/quality/check_peirce_superoperators.py \
+            --mathlib-root ../mathlib --output ../peirce-superoperators-report
+      - name: Check placeholders and semantic vacuity
+        working-directory: project
+        run: |
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators --strict
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean --strict
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators.lean --strict
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry/OperatorAlgebra/All.lean --strict
+          python3 tools/quality/semantic_vacuity_gate.py \
+            lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators \
+            lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean \
+            lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators.lean \
+            lean/InfoGeometry/OperatorAlgebra/All.lean --fail-on warning \
+            --fail-prefix lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators \
+            --fail-prefix lean/InfoGeometry/OperatorAlgebra/All.lean \
+            --json-out ../peirce-superoperators-report/semantic-vacuity.json
+      - name: Bind the complete semantic report to the kernel evidence
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          out = Path('../peirce-superoperators-report')
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['blocking_severity_counts']
+          owner = 'lean/InfoGeometry/OperatorAlgebra/IntrinsicGradedAdjoint.lean'
+          subjects = {'gradedAdjoint_apply', 'transportParity_apply', 'transportParity_odd',
+                      'map_gradedAdjoint_of_intertwines'}
+          expected = {(owner, s, 'warning', 'trivial_surface') for s in subjects}
+          actual = {(f['file'], f['subject'], f['severity'], f['category']) for f in semantic['findings']}
+          assert actual == expected and len(semantic['findings']) == len(expected)
+          index['semantic-vacuity.json'] = hashlib.sha256((out / 'semantic-vacuity.json').read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: peirce-superoperators-kernel-evidence
+          path: |
+            peirce-superoperators-report/report.json
+            peirce-superoperators-report/evidence-sha256.json
+            peirce-superoperators-report/environment.json
+            peirce-superoperators-report/semantic-vacuity.json
+            peirce-superoperators-report/src/PeirceSuperoperatorsAudit.lean
+            peirce-superoperators-report/*.log
+          if-no-files-found: warn

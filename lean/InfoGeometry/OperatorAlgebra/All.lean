@@ -250,6 +250,7 @@ import InfoGeometry.OperatorAlgebra.KreinModularTwinFourVector
 import InfoGeometry.OperatorAlgebra.OperatorZornTwinFormalism
 import InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction
 import InfoGeometry.OperatorAlgebra.OperatorZornTwinAll
+import InfoGeometry.OperatorAlgebra.PeirceSuperoperators
 
 namespace InfoGeometry.OperatorAlgebra
 

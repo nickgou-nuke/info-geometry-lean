@@ -107,14 +107,15 @@ theorem U_mul_transpose_ne_transpose_mul : U * U.transpose ≠ U.transpose * U :
 theorem gram_square :
     (U * U.transpose + U.transpose * U) ^ 2 =
       (98 / 9 : ℝ) • (U * U.transpose + U.transpose * U) := by
-  have hK : U * U.transpose + U.transpose * U =
-      fun i j => (98 + probe i * probe j) / 27 := by
-    ext i j
-    exact gram_apply i j
-  rw [hK]
-  ext i j
+  rw [pow_two]
+  apply Matrix.ext
+  intro i j
+  change Finset.univ.sum (fun k : Fin 3 =>
+      (U * U.transpose + U.transpose * U) i k *
+        (U * U.transpose + U.transpose * U) k j) =
+    (98 / 9 : ℝ) * (U * U.transpose + U.transpose * U) i j
+  simp only [gram_apply]
   fin_cases i <;> fin_cases j <;>
-    simp only [pow_two, Matrix.mul_apply, Matrix.smul_apply] <;>
     norm_num [probe, Fin.sum_univ_succ]
 
 theorem one_sub_gram_idempotence_defect_entry :
@@ -196,10 +197,13 @@ theorem affineOrbit_hasDerivAt (t : ℝ) :
     HasDerivAt affineOrbit
       (skewPlusGenerator (R := ℝ) U U.transpose (affineOrbit t)) t := by
   rw [affineOrbit_generator]
-  change HasDerivAt (fun s : ℝ => P + s • skewPlusGenerator (R := ℝ) U U.transpose P)
-    (skewPlusGenerator (R := ℝ) U U.transpose P) t
-  simpa using HasDerivAt.const_add P
-    ((hasDerivAt_id t).smul_const (skewPlusGenerator (R := ℝ) U U.transpose P))
+  let L : Mat3 := skewPlusGenerator (R := ℝ) U U.transpose P
+  change HasDerivAt (fun s : ℝ => P + s • L) L t
+  have hlin : HasDerivAt (fun s : ℝ => s • L) ((1 : ℝ) • L) t :=
+    HasDerivAt.smul_const (F := Mat3) (hasDerivAt_id' t) L
+  rw [one_smul] at hlin
+  exact (hasDerivAt_const_add_iff (𝕜 := ℝ) (F := Mat3)
+    (f := fun s : ℝ => s • L) (f' := L) (x := t) P).mpr hlin
 
 theorem affineOrbit_quadratic_form (t : ℝ) :
     probe ⬝ᵥ (affineOrbit t *ᵥ probe) = -(19208 / 3 : ℝ) * t := by

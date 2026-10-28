@@ -50,11 +50,12 @@ flowchart TD
   B --> S["Exact stationarity criteria"]
   K --> S
   D --> S
-  B --> F["Real transpose adjunction"]
+  A --> F["Real Frobenius structure and adjunction"]
   F --> H["Energy, kernel and orthogonal range"]
+  B --> H
   T --> E["Dense real matrix witnesses"]
   S --> E
-  H --> E
+  F --> E
 ```
 
 ## Distinct generator laws

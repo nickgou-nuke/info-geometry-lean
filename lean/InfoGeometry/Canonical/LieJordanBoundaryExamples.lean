@@ -109,7 +109,7 @@ theorem gram_not_commute_S : ¬ Commute (U * Uᴴ + Uᴴ * U) S := by
 
 theorem coupled_cube_defect_entry :
     ((U + Uᴴ) ^ 3 - (U + Uᴴ)) 0 0 = -2314 / 81 := by
-  simp only [pow_succ, pow_zero, mul_one, Matrix.sub_apply, Matrix.add_apply,
+  simp only [pow_succ, pow_zero, Matrix.sub_apply, Matrix.add_apply,
     Matrix.mul_apply, Matrix.conjTranspose_apply]
   norm_num [U_apply, Fin.sum_univ_succ, map_ofNat]
 

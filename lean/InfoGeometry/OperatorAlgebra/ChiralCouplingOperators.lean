@@ -17,17 +17,17 @@ Parity restoration is proved for the explicitly defined averaging map,
 not asserted for arbitrary mixed states or for a physical mass mechanism.
 -/
 
+noncomputable section
 namespace InfoGeometry.OperatorAlgebra.ChiralCouplingOperators
 
 open Matrix
 open InfoGeometry.Core.PeirceDecomposition
-namespace Coupling := InfoGeometry.QuantumContext.MassAsCommutantCoupling
+open InfoGeometry.QuantumContext.MassAsCommutantCoupling
 
 section Blocks
 variable {R m n : Type*} [Ring R]
 variable [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
-/-- The native doubled operator, with independent noncommuting blocks. -/
 def chiral (B : Matrix m n R) (C : Matrix n m R) : Matrix (m ⊕ n) (m ⊕ n) R :=
   fromBlocks 0 B C 0
 
@@ -38,7 +38,6 @@ theorem leftProjection_idempotent :
   change leftProjection * leftProjection = leftProjection
   simp [leftProjection, fromBlocks_multiply]
 
-/-- Each one-way chiral channel is square-zero. -/
 theorem upper_square_zero (B : Matrix m n R) :
     chiral B 0 * chiral B 0 = 0 := by
   ext i j
@@ -61,13 +60,11 @@ theorem coupling_swaps (B : Matrix m n R) (C : Matrix n m R) :
   ext i j
   cases i <;> cases j <;> simp [leftProjection, chiral, fromBlocks_multiply]
 
-/-- Reuse the existing Peirce grading rather than a new chirality carrier. -/
+/-- Reuse the existing Peirce grading instead of a new chirality carrier. -/
 theorem coupling_odd (B : Matrix m n R) (C : Matrix n m R) :
-    Coupling.grading leftProjection * chiral B C +
-      chiral B C * Coupling.grading leftProjection = 0 :=
-  Coupling.grading_anticommutes _ _ (coupling_swaps B C)
+    grading leftProjection * chiral B C + chiral B C * grading leftProjection = 0 :=
+  grading_anticommutes _ _ (coupling_swaps B C)
 
-/-- The squared coupling preserves each original sector. -/
 theorem coupling_square_commutes (B : Matrix m n R) (C : Matrix n m R) :
     Commute leftProjection (chiral B C * chiral B C) := by
   change leftProjection * (chiral B C * chiral B C) =
@@ -75,7 +72,7 @@ theorem coupling_square_commutes (B : Matrix m n R) (C : Matrix n m R) :
   rw [coupling_square]
   simp [leftProjection, fromBlocks_multiply]
 
-/-- Scalar dispersion laws require an additional operator intertwining law. -/
+/-- Without an intertwining law the kinetic-coupling cross terms remain. -/
 theorem kinetic_coupling_defect
     (L : Matrix m m R) (R' : Matrix n n R)
     (B : Matrix m n R) (C : Matrix n m R) :
@@ -94,7 +91,8 @@ variable [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 theorem adjoint_coupling_hermitian (B : Matrix m n R) :
     (chiral B Bᴴ)ᴴ = chiral B Bᴴ := by
-  simp [chiral, Matrix.fromBlocks_conjTranspose]
+  ext i j
+  cases i <;> cases j <;> simp [chiral, Matrix.conjTranspose_apply]
 
 /-- The two Gramian products retain their order. -/
 theorem adjoint_coupling_square (B : Matrix m n R) :
@@ -106,7 +104,6 @@ end StarBlocks
 section Parity
 variable {A : Type*} [Ring A] [Algebra ℝ A]
 
-/-- Explicit averaging over an involutive inner symmetry. -/
 def parityAverage (γ a : A) : A := (1 / 2 : ℝ) • (a + γ * a * γ)
 
 theorem conjugate_parityAverage (γ a : A) (hγ : γ * γ = 1) :
@@ -134,8 +131,8 @@ theorem parityAverage_eq_self_iff (γ a : A) (hγ : γ * γ = 1) :
     have hc : γ * a * γ = a := by
       rw [← h]
       exact conjugate_parityAverage γ a hγ
-    have := congrArg (fun z : A => z * γ) hc
-    simpa [mul_assoc, hγ] using this
+    have hh := congrArg (fun z : A => z * γ) hc
+    simpa [mul_assoc, hγ] using hh
   · intro h
     apply parityAverage_eq_self
     calc γ * a * γ = a * (γ * γ) := by rw [h.eq, mul_assoc]
@@ -144,7 +141,7 @@ theorem parityAverage_eq_self_iff (γ a : A) (hγ : γ * γ = 1) :
 theorem parityAverage_odd_zero (γ a : A) (ha : γ * a * γ = -a) :
     parityAverage γ a = 0 := by simp [parityAverage, ha]
 
-/-- Symmetric averaging discards odd coupling, not the operator's square. -/
+/-- Symmetric averaging removes odd coupling but preserves its even square. -/
 theorem parityAverage_preserves_square_of_odd
     (γ a : A) (hγ : γ * γ = 1) (ha : γ * a * γ = -a) :
     parityAverage γ (a * a) = a * a := by
@@ -155,7 +152,6 @@ theorem parityAverage_preserves_square_of_odd
 
 end Parity
 
-/-- A square-zero element is never a unit in a nontrivial ring. -/
 theorem square_zero_not_isUnit {A : Type*} [Ring A] [Nontrivial A]
     (a : A) (ha : a * a = 0) : ¬ IsUnit a := by
   rintro ⟨u, rfl⟩

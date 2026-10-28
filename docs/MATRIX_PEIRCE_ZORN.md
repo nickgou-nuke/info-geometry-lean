@@ -1,6 +1,6 @@
 # Matrix Peirce geometry and exact Zorn defects
 
-The import entry point is `InfoGeometry.Canonical.MatrixPeirceZorn`. Its eight
+The import entry point is `InfoGeometry.Canonical.MatrixPeirceZorn`. Its eleven
 modules formalize arbitrary complex square matrices, their algebraic Peirce
 geometry, and an explicitly named matrix-valued Zorn bilinear operation.
 
@@ -34,6 +34,46 @@ composition and its doubled Jordan product. `DependencyPoset` records the
 chosen prerequisites and proves that reachability is a partial order using
 a strictly increasing edge rank.
 
+`MatrixReassociation` uses native `FreeMagma` expressions with matrix-valued
+leaves. A context contains exactly one hole and acts by a native
+`AddMonoidHom` on its value. Each directed rotation has a correction equal
+to its contextual associator. Along any finite sequence of rotations these
+corrections sum to the difference of the endpoint evaluations, and two paths
+with the same endpoints have the same total correction. Signed exchange
+commutes with evaluation of every expression. The reflected three-channel
+identity remains valid inside every context.
+
+`MatrixReassociationOrder` supplies a separate, named native `PartialOrder`
+on these actual expressions. Its order is reachability by right rotations,
+not a numbering of the expressions. A strictly decreasing tree weight proves
+antisymmetry, while the native `FreeMagma.toFreeSemigroup` map proves that
+rotations preserve the ordered word of matrix-valued leaves. This order is
+distinct from the chosen 25-archetype prerequisite order in `DependencyPoset`.
+
+## Exact mixed-associator signs
+
+Write `U = Zorn.upper`, `L = Zorn.lower`, `alpha = Zorn.associator`,
+`t = Zorn.cross u v`, and `B(p,q) = cross p q + cross q p`. The exact identities are
+
+```text
+alpha (L w) (U u) (U v) + alpha (U u) (U v) (L w)
+  = U (cross w t - cross t w)
+alpha (L w) (U u) (U v) - alpha (U u) (U v) (L w)
+  = U (B(w,t))
+```
+
+Replacing the first right-hand side by `U (B(w,-t))` leaves the residual
+`2 • U (cross w t)`. The proposed equality therefore holds exactly when
+`cross w t = 0`. This is a proved equivalence over complex matrices.
+
+For unrestricted matrices `A`, `B`, and `C`, take the operator triples
+`u = ![A,0,0]`, `v = ![0,B,0]`, and `w = ![0,C,0]`. The sum is
+`U ![C*(A*B) + (A*B)*C,0,0]`; the difference is
+`U ![C*(A*B) - (A*B)*C,0,0]`. The difference is nonzero exactly when
+`C` and `A*B` do not commute. The incorrect signed-defect equation holds
+exactly when `C*(A*B) = 0`. These results impose no scalar or diagonal
+restriction on the matrix coefficients.
+
 ## Modules
 
 | Module | Principal content |
@@ -46,6 +86,9 @@ a strictly increasing edge rank.
 | `MatrixReflection` | Signed exchange automorphism, unsigned exchange defect, cancellations |
 | `MatrixZornGrading` | Number-grading defect, additive generation, coefficient commutation criterion |
 | `MatrixZornCorners` | Exact triple-associator image and opposite-corner Jacobiator |
+| `MatrixBraidingDefect` | Mixed sum/difference signs, exact residual, matrix noncommutation criterion |
+| `MatrixReassociation` | Native expression trees, contextual defects, finite-path corrections |
+| `MatrixReassociationOrder` | Directed-rotation partial order and ordered leaf-word preservation |
 
 ## Relationship to existing owners
 
@@ -63,6 +106,9 @@ It does not replace those owners or claim an unproved equivalence of carriers.
 The scope is finite-dimensional operator algebra and algebraic tangent
 geometry. Smooth manifold charts, analytic differentiation, categorical
 coherence, and Hochschild cohomology are not conclusions of these modules.
+The expression results concern parenthesized products and exact evaluation
+corrections. They do not identify nonassociative multiplication with category
+composition or assert a logical normalization theorem.
 
 ## Integration and verification
 

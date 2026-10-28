@@ -11,6 +11,9 @@ import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixZorn
 import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixReflection
 import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixZornGrading
 import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixZornCorners
+import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixBraidingDefect
+import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixReassociation
+import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixReassociationOrder
 
 /-!
 # Matrix Peirce geometry and exact Zorn defects
@@ -18,4 +21,6 @@ import InfoGeometry.Canonical.MatrixPeirceZorn.MatrixZornCorners
 Native matrix composition, algebraic tangent submodules, bilinear associator
 identities, and a separately named matrix-valued Zorn product. The exact
 same-channel triple-associator image consists of opposite even corners.
+Parenthesized expressions carry an exact contextual correction calculus and a
+directed-rotation partial order.
 -/

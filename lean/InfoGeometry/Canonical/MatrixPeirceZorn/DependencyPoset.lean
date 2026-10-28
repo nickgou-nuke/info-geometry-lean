@@ -36,6 +36,12 @@ inductive Archetype
   | jacobiatorResolution
   | reflectionCancellation
   | braidingDefect
+  | expressionSyntax
+  | expressionEvaluation
+  | contextPropagation
+  | rotationOrder
+  | pathCorrection
+  | signObstruction
   deriving DecidableEq, Repr
 
 open Archetype
@@ -45,7 +51,8 @@ instance : Fintype Archetype where
     jordanProduct, jordanGeometry, universalDefects, peirceGeometry, crossIdentities, zornProduct,
     zornCorners, channelAssociators, reflection, numberDefect, oddGeneration,
     evenAssociatorRange, jacobiatorResolution,
-    reflectionCancellation, braidingDefect}
+    reflectionCancellation, braidingDefect, expressionSyntax, expressionEvaluation,
+    contextPropagation, rotationOrder, pathCorrection, signObstruction}
   complete a := by cases a <;> simp
 
 inductive Edge : Archetype → Archetype → Prop
@@ -73,13 +80,26 @@ inductive Edge : Archetype → Archetype → Prop
   | reflection_cancellation : Edge reflection reflectionCancellation
   | cross_braiding : Edge crossIdentities braidingDefect
   | associators_braiding : Edge channelAssociators braidingDefect
+  | operator_syntax : Edge operatorAlgebra expressionSyntax
+  | syntax_evaluation : Edge expressionSyntax expressionEvaluation
+  | zorn_evaluation : Edge zornProduct expressionEvaluation
+  | syntax_order : Edge expressionSyntax rotationOrder
+  | additive_context : Edge additiveBilinearity contextPropagation
+  | evaluation_context : Edge expressionEvaluation contextPropagation
+  | context_path : Edge contextPropagation pathCorrection
+  | defects_path : Edge universalDefects pathCorrection
+  | cancellation_path : Edge reflectionCancellation pathCorrection
+  | braiding_sign : Edge braidingDefect signObstruction
 
 def rank : Archetype → ℕ
   | operatorAlgebra | additiveBilinearity => 0
-  | peirceCorners | operatorTriples | jordanProduct | universalDefects => 1
-  | peirceGeometry | crossIdentities | zornProduct | jordanGeometry => 2
-  | zornCorners | channelAssociators | reflection | numberDefect | oddGeneration => 3
-  | jacobiatorResolution | reflectionCancellation | braidingDefect | evenAssociatorRange => 4
+  | peirceCorners | operatorTriples | jordanProduct | universalDefects | expressionSyntax => 1
+  | peirceGeometry | crossIdentities | zornProduct | jordanGeometry | rotationOrder => 2
+  | zornCorners | channelAssociators | reflection | numberDefect | oddGeneration |
+      expressionEvaluation => 3
+  | jacobiatorResolution | reflectionCancellation | braidingDefect | evenAssociatorRange |
+      contextPropagation => 4
+  | pathCorrection | signObstruction => 5
 
 theorem edge_rank_lt {a b : Archetype} (h : Edge a b) : rank a < rank b := by
   cases h <;> decide
@@ -150,6 +170,15 @@ theorem independent_first_branches :
 theorem independent_terminal_branches :
     ¬ reflectionCancellation ≤ braidingDefect ∧
       ¬ braidingDefect ≤ reflectionCancellation :=
+  distinct_equal_rank_incomparable (by decide) rfl
+
+theorem operator_precedes_pathCorrection : operatorAlgebra ≤ pathCorrection :=
+  le_trans (edge_le .operator_syntax)
+    (le_trans (edge_le .syntax_evaluation)
+      (le_trans (edge_le .evaluation_context) (edge_le .context_path)))
+
+theorem independent_rotation_and_cross_branches :
+    ¬ rotationOrder ≤ crossIdentities ∧ ¬ crossIdentities ≤ rotationOrder :=
   distinct_equal_rank_incomparable (by decide) rfl
 
 end InfoGeometry.Canonical.MatrixPeirceZorn.DependencyPoset

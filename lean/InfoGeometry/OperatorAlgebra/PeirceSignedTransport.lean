@@ -136,7 +136,8 @@ theorem pair_double_commutator_sum :
   have hm : lieOp R (q*r-r*q) (q*r+r*q)=0 := by
     rw [lieOp_apply, ← pair_quadratic_commute hq hr, sub_self]
   rw [hm, zero_mul, zero_add, pair_commutator_on_difference R hq hr]
-  simp only [mul_nsmul, smul_smul, ← mul_assoc]
+  simp only [nsmul_eq_mul, Nat.cast_ofNat]
+  noncomm_ring
 
 theorem pair_double_commutator_difference :
     lieOp R (q*r-r*q) (lieOp R (q*r-r*q) (q-r)) =
@@ -145,7 +146,8 @@ theorem pair_double_commutator_difference :
   have hm : lieOp R (q*r-r*q) (q*r+r*q)=0 := by
     rw [lieOp_apply, ← pair_quadratic_commute hq hr, sub_self]
   rw [hm, zero_mul, zero_add, pair_commutator_on_sum R hq hr]
-  simp only [mul_nsmul, smul_smul, ← mul_assoc]
+  simp only [nsmul_eq_mul, Nat.cast_ofNat]
+  noncomm_ring
 
 end DoubleCommutator
 end InfoGeometry.OperatorAlgebra.LieJordan

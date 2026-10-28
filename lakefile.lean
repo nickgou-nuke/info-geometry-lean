@@ -916,6 +916,7 @@ lean_lib InfoGeometryTestSuite where
   srcDir := "../tests"
   roots := #[]
   globs := #[
+    `BalabanOperatorTests,
     `BekensteinHawkingDyadicEntropyTests,
     `ComplexAnalyticBridgeTests,
     `DvorakSystemTest,

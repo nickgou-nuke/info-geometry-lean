@@ -30,6 +30,9 @@ OWNERS = [
     "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry",
     "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples",
     "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples",
+    "InfoGeometry.OperatorAlgebra.PeircePairGeometry",
+    "InfoGeometry.OperatorAlgebra.PeircePairPositivity",
+    "InfoGeometry.OperatorAlgebra.PeircePairExamples",
 ]
 IMPORT = re.compile(r"^\s*(?:public\s+)?import\s+([^\n]+)", re.MULTILINE)
 

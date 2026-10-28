@@ -1,0 +1,646 @@
+{
+  "schema_version": 1,
+  "scope": "Full finite complex matrix algebra; opposite Peirce pairs and adjoint Gram geometry",
+  "intake": [
+    {
+      "filename": "Pasted text(20261028-104318).txt",
+      "sha256": "fc76f3c1295af250a9aac658b305d0860fc9726fa581ccdd30c735e808bea659"
+    },
+    {
+      "filename": "Pasted text (2)(20261028-104338).txt",
+      "sha256": "5a4f6b652586a71d405b6543bb7e24152d2a284705f5a3a7a35481f454dd4e7f"
+    }
+  ],
+  "local_verification": {
+    "status": "PASS",
+    "mode": "Incremental source compilation followed by a complete newly executed declaration/axiom audit",
+    "release_ci_attestation": false,
+    "source_binding": "The 39 hashes identify this snapshot. The prepublication repository_head is its parent, not a commit containing the additions.",
+    "prepublication_head": "54896c873c04459e18c702decc20b135d9dcf4d5",
+    "compiler": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "command": [
+      "python",
+      "tools/quality/check_operator_geometry.py",
+      "--mathlib",
+      "/workspace/scratch/54cfa22a65a6/operator-geometry-pr/.lake/packages/mathlib",
+      "--lean",
+      "/tmp/operator-pr-toolchain/lean-4.34.1-linux/bin/lean",
+      "--work-dir",
+      "/workspace/scratch/3c7848773029/extension-verification",
+      "--target",
+      "InfoGeometry.OperatorAlgebra.PeircePairExamples",
+      "--incremental",
+      "--audit",
+      "--base-ref",
+      "54896c873c04459e18c702decc20b135d9dcf4d5"
+    ]
+  },
+  "fresh_release_ci": {
+    "attestation_location": "https://github.com/nickgou-nuke/info-geometry-lean/pull/251",
+    "workflow": ".github/workflows/operator-geometry.yml",
+    "policy": "Published-commit acceptance is reported in the PR body only after fresh nonincremental 39-module compilation and the complete audit match this snapshot and graph.",
+    "require_exact_source_and_tool_hash_match": true,
+    "require_tested_merge_tree_binding": true,
+    "scope": "Selected complete source closure, not the whole repository"
+  },
+  "source_manifest": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "sources": {
+      "InfoGeometry.OperatorAlgebra.PeircePairExamples": "293c7dd79e6199f897e82ce948b935ed6491fa369df26d23bb15a9aa6dbdc31c",
+      "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples": "bcc02411e6f8a8b0571132cc3a84def6e9e80d4bcdc6a63524fc6be64fee585b",
+      "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry": "bbcdbc32bbd166a7c14c4362e7e905e85f231843edd8f154ac42bff5a0e54aae",
+      "InfoGeometry.OperatorAlgebra.MatrixMaurerCartan": "a7f45f76e71fef8ab8c4b7460ca5601c77fbd31b2f082d6106695453119c2e75",
+      "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": "17ac7f059668f9c07e656da35970503dcce868002fbad94cdf79f134e09fd410",
+      "InfoGeometry.Canonical.FiniteFrameMaurerCartanPolarSplit": "93ddd38b84677d2d5d19430a558d7ef97c55173bf6976c6ef9ac420f8e7ee1ff",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+      "InfoGeometry.OperatorAlgebra.IndividuatedCayley": "0dfa69f11613623af32eae5881ce353c7d8baea96284406d086830aa9aa6e6dc",
+      "InfoGeometry.Meta.Architecture": "2048d1a137c9ab86deca4414c6cb26120ee0fbe014dcae7a5f0724e1a12a794f",
+      "DAG.Basic": "e7b758aa982f6f2b876b836ce7dc09d7557e237f5f09a8d96585cfbd7b34e7ff",
+      "InfoGeometry.Meta.OwnerTarget": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "InfoGeometry.OperatorAlgebra.PeirceChiralGeometry": "7840d1d12ae3d7da130400c92a48f45df10ad86e5c61be073cc6e66176d26843",
+      "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry": "38a9a6ad67d7653616f3a376d987466260fa4162ae05fbbad7ee94bd4d816337",
+      "InfoGeometry.Core.IdempotentCartan": "774fcd4b531dbedd62fdf3ae21a5e56840ed83d55f9ed5a4b17607fb690aba82",
+      "InfoGeometry.Core.PeirceDecomposition": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+      "InfoGeometry.Core.PeirceTangent": "2119570fb07a8c639877ab033f2b6eaa2a110b00e12ac5576a96c0cbac60de8d",
+      "InfoGeometry.Core.DiracSuperalgebra": "a0fba78ffa87e8d4ab1703f936d63631351b9353a8fbe8d8f71e4266434629c3",
+      "InfoGeometry.Singular.SquareZeroChiralHodge": "7ce60156d35e8e70abb5f8d2ec71e7e44d40b469f9b668923ac65c275e9b91a0",
+      "InfoGeometry.Singular.MoorePenroseChiralDefects": "778792593499fe4643ff3b5bcc212fceacfcab7f948b2bd3b2856ed3f3a20934",
+      "InfoGeometry.Singular.SquareZeroMoorePenrose": "f00a4254e0928c0d634da8d915d014162576985cbb051e825fbec504d3e49d47",
+      "InfoGeometry.Singular.MoorePenroseSectors": "d74d7f659942d8a2e6ab65316d1049427ee3027e13b5224ba9d3a83f0bcb3132",
+      "InfoGeometry.Singular.MetricAlgebraicProjectionDefect": "82e17cb8b2af47f6f75d4d606f55a93f939c143191297b3bef20323fe360adf1",
+      "InfoGeometry.Singular.MoorePenrose": "0fc09c7636869e801a51e4603e76620e051ac4953068e35d3652953876ae0fd3",
+      "InfoGeometry.Singular.Drazin": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+      "InfoGeometry.Canonical.Drazin": "e991b7d1c6b5fe8c1577c9949ed27d7e2c7f6395c721b3c54eabd1d5c42e0e27",
+      "InfoGeometry.Core.JordanAssociator": "283b80ccd518e134430832657657bdc66c98a71b737447f08acfcb33c5ab0a43",
+      "InfoGeometry.Core.JordanPeirceDecomposition": "74aab0f34a7b618ab3a3ea867e8010893ef7457df7243222792602270b3e3261",
+      "InfoGeometry.Core.JordanAssociatorRing": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+      "InfoGeometry.Core.IdempotentSymmetricOverlap": "6d7e6ded3525b0515c974f7cbcd72ddbe153eb5c361f4cfd4ef0de2defc5067d",
+      "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry": "3b091f89e70740ebb00cffb6e0956a4e7f0082ecdefbb7bb39abd0a849897e72",
+      "InfoGeometry.OperatorAlgebra.PeircePairPositivity": "a08aa5ef456741632c45f7337609cae05db734247d3f209febca97921eb8fa61",
+      "InfoGeometry.OperatorAlgebra.PeircePairGeometry": "d248be4fbf4583dc8662050be8dc6e2af794e9fe600cd07c65e2fdfe199bebd9",
+      "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry": "e28edd9f1fd663755dac6fef022b31240a87c8b400e3fb5fb5ba3576f59ec1d1",
+      "InfoGeometry.Quantum.KrausAmplificationCP": "02075c267b4595a5c20320457a92c9c1ea8731bf03931e75871467633dfd4877",
+      "InfoGeometry.Modular.Choi": "1bfb539ed3eecf50a99164a80319fa8bd6a7fd31af7a32d1d7b15dc81351eb52",
+      "InfoGeometry.Quantum.ChoiCompletePositivity": "aa6c043d4b1ce9234db49f248423c2a8afa2bdfa65b952a22679597f46ace551",
+      "InfoGeometry.OperatorAlgebra.OperatorGeometryExamples": "b4f31808a64941c8834d7029819546b815cb92cdadebac414895be86d670b5a0",
+      "InfoGeometry.OperatorAlgebra.MatrixConservation": "dd28681b41dd70d9f2ee5935bb3a077ff1bafb620d3803b16ceebb97cb513281",
+      "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples": "f8d8d872688946b3c6460d5fab4488884b3cae52fa3aea6396291eb35b264011"
+    },
+    "repository_head": "54896c873c04459e18c702decc20b135d9dcf4d5",
+    "compile_order": [
+      "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Canonical.FiniteFrameMaurerCartanPolarSplit",
+      "InfoGeometry.OperatorAlgebra.MatrixMaurerCartan",
+      "DAG.Basic",
+      "InfoGeometry.Meta.Architecture",
+      "InfoGeometry.Meta.OwnerTarget",
+      "InfoGeometry.OperatorAlgebra.IndividuatedCayley",
+      "InfoGeometry.Core.PeirceDecomposition",
+      "InfoGeometry.Core.IdempotentCartan",
+      "InfoGeometry.Singular.MoorePenrose",
+      "InfoGeometry.Singular.Drazin",
+      "InfoGeometry.Singular.MetricAlgebraicProjectionDefect",
+      "InfoGeometry.Singular.MoorePenroseSectors",
+      "InfoGeometry.Canonical.Drazin",
+      "InfoGeometry.Singular.SquareZeroMoorePenrose",
+      "InfoGeometry.Core.JordanPeirceDecomposition",
+      "InfoGeometry.Core.JordanAssociatorRing",
+      "InfoGeometry.Core.JordanAssociator",
+      "InfoGeometry.Core.IdempotentSymmetricOverlap",
+      "InfoGeometry.Singular.MoorePenroseChiralDefects",
+      "InfoGeometry.Singular.SquareZeroChiralHodge",
+      "InfoGeometry.Core.DiracSuperalgebra",
+      "InfoGeometry.Core.PeirceTangent",
+      "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry",
+      "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry",
+      "InfoGeometry.OperatorAlgebra.PeirceChiralGeometry",
+      "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry",
+      "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples",
+      "InfoGeometry.OperatorAlgebra.PeircePairGeometry",
+      "InfoGeometry.OperatorAlgebra.PeircePairPositivity",
+      "InfoGeometry.OperatorAlgebra.PeircePairExamples",
+      "InfoGeometry.Quantum.ChoiCompletePositivity",
+      "InfoGeometry.Modular.Choi",
+      "InfoGeometry.Quantum.KrausAmplificationCP",
+      "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry",
+      "InfoGeometry.OperatorAlgebra.OperatorGeometryExamples",
+      "InfoGeometry.OperatorAlgebra.MatrixConservation",
+      "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples"
+    ],
+    "owners": [
+      "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities",
+      "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry",
+      "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry",
+      "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry",
+      "InfoGeometry.OperatorAlgebra.OperatorGeometryExamples",
+      "InfoGeometry.OperatorAlgebra.PeirceChiralGeometry",
+      "InfoGeometry.OperatorAlgebra.MatrixMaurerCartan",
+      "InfoGeometry.OperatorAlgebra.MatrixConservation",
+      "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry",
+      "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples",
+      "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples",
+      "InfoGeometry.OperatorAlgebra.PeircePairGeometry",
+      "InfoGeometry.OperatorAlgebra.PeircePairPositivity",
+      "InfoGeometry.OperatorAlgebra.PeircePairExamples"
+    ],
+    "mathlib_package_pins": {
+      "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+      "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+    },
+    "baseline_ref": "54896c873c04459e18c702decc20b135d9dcf4d5",
+    "baseline_git_blobs": {
+      "InfoGeometry.Canonical.FiniteFrameMaurerCartanPolarSplit": "e2027cb4d3176fdfbbd70a6db0dbcd8c9bf2622e",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+      "InfoGeometry.OperatorAlgebra.IndividuatedCayley": "07c502013293c384411f01e62a6916f1d478d52f",
+      "InfoGeometry.Meta.Architecture": "92d3f6261acf50890cfd0e95c30a526a00b7b7c5",
+      "DAG.Basic": "26ae8eb9d447d39df74a00d27428b1ff07e3fbbd",
+      "InfoGeometry.Meta.OwnerTarget": "2707571da1c5be523549ed9ba9800b88b00f1497",
+      "InfoGeometry.Core.IdempotentCartan": "0c0ffa50b0109fd96aa80a18cf85f6133ec59d8d",
+      "InfoGeometry.Core.PeirceDecomposition": "10ab08af18412be000fcac59c91b49d6b9ab9df8",
+      "InfoGeometry.Core.PeirceTangent": "d6add7ea1b254948b77050a0633ef8e1205a1fc8",
+      "InfoGeometry.Core.DiracSuperalgebra": "170ae640fe79a0c06eab7cdce7fbbc108dfe4339",
+      "InfoGeometry.Singular.SquareZeroChiralHodge": "1d4bf9d4c8bcd1f2c6e68a56777b3b6d024d9d2a",
+      "InfoGeometry.Singular.MoorePenroseChiralDefects": "7ad9b5605a723a2509340e75cfdc1eaffe921141",
+      "InfoGeometry.Singular.SquareZeroMoorePenrose": "2b557448b3728374024fbe1b5692cef230ebbaac",
+      "InfoGeometry.Singular.MoorePenroseSectors": "1a0159f349325c60d354e1e498b0d04f83a5b5b8",
+      "InfoGeometry.Singular.MetricAlgebraicProjectionDefect": "953e428d4260812771885a96659878d3593b4536",
+      "InfoGeometry.Singular.MoorePenrose": "b97bcd4da2e93b0795a03439830b7e28ee480cd3",
+      "InfoGeometry.Singular.Drazin": "1cc75bc92ca74efc52e1ded18894aaca2c1d4b54",
+      "InfoGeometry.Canonical.Drazin": "10e867602ce2a0c770c35bb29975a30d9e994428",
+      "InfoGeometry.Core.JordanAssociator": "e2af203077c82660ef107b23a6c1d596b35868e5",
+      "InfoGeometry.Core.JordanPeirceDecomposition": "bd44ab852daff2a4d6e0aa1e5fd820c57165c6f1",
+      "InfoGeometry.Core.JordanAssociatorRing": "3a329702761cc44db0b7684f94290d7d14252895",
+      "InfoGeometry.Core.IdempotentSymmetricOverlap": "d253d541cc4a474b9fa17fd7f0c96c1e6f554a6d",
+      "InfoGeometry.Quantum.KrausAmplificationCP": "bd8af30d7f24623fbcdcf43728a600d1f27486f4",
+      "InfoGeometry.Modular.Choi": "e9a0675153e65ef42628cc8b9d9dd0d42c32afd0",
+      "InfoGeometry.Quantum.ChoiCompletePositivity": "ba22364772cec0f9602fc1d534094d96274dc515"
+    },
+    "verification_tool_sha256": {
+      "/workspace/scratch/3c7848773029/operator-extension-repo/tools/quality/check_operator_geometry.py": "f1cc15a0cb6b18769eaf41505080bd2a612c90af1fbb19fba6bae588627adb4a",
+      "/workspace/scratch/3c7848773029/operator-extension-repo/tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "/workspace/scratch/3c7848773029/operator-extension-repo/tools/quality/OperatorGeometryDeclarationAudit.lean": "ae9f7325563b04380b5662c3ce833ceed0cd616af37dc314629a7843ba17df68",
+      "/workspace/scratch/3c7848773029/operator-extension-repo/tools/quality/operator_geometry_dependency_order.py": "90305a21f77790cadd3d6b16123d60839c9dd293d41468d39c60e7d7399ad2ec"
+    },
+    "scope": "complete selected source closure, not a whole-repository build"
+  },
+  "normalized_verification_tool_sha256": {
+    "tools/quality/check_operator_geometry.py": "f1cc15a0cb6b18769eaf41505080bd2a612c90af1fbb19fba6bae588627adb4a",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    "tools/quality/OperatorGeometryDeclarationAudit.lean": "ae9f7325563b04380b5662c3ce833ceed0cd616af37dc314629a7843ba17df68",
+    "tools/quality/operator_geometry_dependency_order.py": "90305a21f77790cadd3d6b16123d60839c9dd293d41468d39c60e7d7399ad2ec"
+  },
+  "workflow_sha256": "28cd4b84b7c0e806ee6106834aed8b97e9720eb346599d3c7ea69a9503a97063",
+  "new_modules": {
+    "InfoGeometry.OperatorAlgebra.PeircePairGeometry": {
+      "named_theorems": 28,
+      "names": [
+        "pair_square",
+        "oddPart_pair",
+        "reflection_pair",
+        "reflection_pair_anticommute",
+        "idempotent_mul_pair_sum",
+        "complement_mul_pair_sum",
+        "pair_sum_eq_zero_iff",
+        "pair_sum_mulVec_eq_zero_iff",
+        "reflection_mul_pair_jordan",
+        "reflection_mul_pair_lie",
+        "pair_jordan_eq_zero_iff_lie",
+        "pair_jordan_ne_zero_iff_not_commute",
+        "commute_pair_jordan",
+        "commute_pair_lie",
+        "reflection_conj_pair_jordan",
+        "commute_reflection_pair_jordan",
+        "reflection_conj_pair_lie",
+        "commute_reflection_pair_lie",
+        "component11_pair_jordan",
+        "component00_pair_jordan",
+        "component11_pair_lie",
+        "component00_pair_lie",
+        "pair_jordan_eq_zero_iff_products",
+        "trace_pair_jordan",
+        "trace_pair_jordan_corners",
+        "trace_pair_lie_corners",
+        "trace_reflection_pair_lie",
+        "trace_reflection_pair_jordan"
+      ],
+      "source_sha256": "d248be4fbf4583dc8662050be8dc6e2af794e9fe600cd07c65e2fdfe199bebd9",
+      "source_definitions": 0,
+      "audited_declarations": 38,
+      "compiler_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiler_warnings": 0
+    },
+    "InfoGeometry.OperatorAlgebra.PeircePairPositivity": {
+      "named_theorems": 14,
+      "names": [
+        "pair_sum_isSelfAdjoint",
+        "pair_jordan_eq_gram_sum",
+        "component11_adjoint_pair_eq_gram",
+        "component00_adjoint_pair_eq_gram",
+        "component11_adjoint_pair_posSemidef",
+        "component00_adjoint_pair_posSemidef",
+        "adjoint_pair_posSemidef",
+        "adjoint_pair_isSelfAdjoint",
+        "adjoint_pair_eq_zero_iff",
+        "trace_adjoint_pair_eq_zero_iff",
+        "adjoint_pair_lie_eq_zero_iff",
+        "adjoint_pair_lie_isSelfAdjoint",
+        "adjoint_pair_mulVec_eq_zero_iff",
+        "adjoint_pair_posDef_iff_injective"
+      ],
+      "source_sha256": "a08aa5ef456741632c45f7337609cae05db734247d3f209febca97921eb8fa61",
+      "source_definitions": 0,
+      "audited_declarations": 18,
+      "compiler_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiler_warnings": 0
+    },
+    "InfoGeometry.OperatorAlgebra.PeircePairExamples": {
+      "named_theorems": 7,
+      "names": [
+        "opposite_corners_not_commute",
+        "pair_lie_off_diagonal_ne_zero",
+        "pair_lie_not_scalar",
+        "positive_pair_joint_kernel",
+        "negative_pair_square",
+        "negative_pair_not_commute",
+        "negative_pair_not_posSemidef"
+      ],
+      "source_sha256": "293c7dd79e6199f897e82ce948b935ed6491fa369df26d23bb15a9aa6dbdc31c",
+      "source_definitions": 0,
+      "audited_declarations": 10,
+      "compiler_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compiler_warnings": 0
+    }
+  },
+  "baseline_preservation": {
+    "parent": "54896c873c04459e18c702decc20b135d9dcf4d5",
+    "previous_fresh_run": 40670195791,
+    "unchanged_sources": {
+      "lean/InfoGeometry/OperatorAlgebra/OperatorExtensionExamples.lean": {
+        "sha256": "bcc02411e6f8a8b0571132cc3a84def6e9e80d4bcdc6a63524fc6be64fee585b",
+        "git_blob": "258d45634b6fac8b001f48be2d8e891f23c17c17"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/MatrixCayleyGeometry.lean": {
+        "sha256": "bbcdbc32bbd166a7c14c4362e7e905e85f231843edd8f154ac42bff5a0e54aae",
+        "git_blob": "624287b32fc871c68aa48ea33d5139445d53521d"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/MatrixMaurerCartan.lean": {
+        "sha256": "a7f45f76e71fef8ab8c4b7460ca5601c77fbd31b2f082d6106695453119c2e75",
+        "git_blob": "59e4fa07edfec44c94a3767ea2ec973820a8625f"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/MatrixOperatorIdentities.lean": {
+        "sha256": "17ac7f059668f9c07e656da35970503dcce868002fbad94cdf79f134e09fd410",
+        "git_blob": "a5812bd0138c0b941f28f5680a579b2c9d54e72e"
+      },
+      "lean/InfoGeometry/Canonical/FiniteFrameMaurerCartanPolarSplit.lean": {
+        "sha256": "93ddd38b84677d2d5d19430a558d7ef97c55173bf6976c6ef9ac420f8e7ee1ff",
+        "git_blob": "e2027cb4d3176fdfbbd70a6db0dbcd8c9bf2622e"
+      },
+      "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": {
+        "sha256": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+        "git_blob": "e2ef7d33156ed3eeb35dd7bb219521270091cda0"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/IndividuatedCayley.lean": {
+        "sha256": "0dfa69f11613623af32eae5881ce353c7d8baea96284406d086830aa9aa6e6dc",
+        "git_blob": "07c502013293c384411f01e62a6916f1d478d52f"
+      },
+      "lean/InfoGeometry/Meta/Architecture.lean": {
+        "sha256": "2048d1a137c9ab86deca4414c6cb26120ee0fbe014dcae7a5f0724e1a12a794f",
+        "git_blob": "92d3f6261acf50890cfd0e95c30a526a00b7b7c5"
+      },
+      "lean/DAG/Basic.lean": {
+        "sha256": "e7b758aa982f6f2b876b836ce7dc09d7557e237f5f09a8d96585cfbd7b34e7ff",
+        "git_blob": "26ae8eb9d447d39df74a00d27428b1ff07e3fbbd"
+      },
+      "lean/InfoGeometry/Meta/OwnerTarget.lean": {
+        "sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+        "git_blob": "2707571da1c5be523549ed9ba9800b88b00f1497"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/PeirceChiralGeometry.lean": {
+        "sha256": "7840d1d12ae3d7da130400c92a48f45df10ad86e5c61be073cc6e66176d26843",
+        "git_blob": "e5a1901884d6803bd2e79837f566b07dfdf558b8"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/PeirceTraceGeometry.lean": {
+        "sha256": "38a9a6ad67d7653616f3a376d987466260fa4162ae05fbbad7ee94bd4d816337",
+        "git_blob": "bd1a51db225a82289043a6634986a14810382fc4"
+      },
+      "lean/InfoGeometry/Core/IdempotentCartan.lean": {
+        "sha256": "774fcd4b531dbedd62fdf3ae21a5e56840ed83d55f9ed5a4b17607fb690aba82",
+        "git_blob": "0c0ffa50b0109fd96aa80a18cf85f6133ec59d8d"
+      },
+      "lean/InfoGeometry/Core/PeirceDecomposition.lean": {
+        "sha256": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+        "git_blob": "10ab08af18412be000fcac59c91b49d6b9ab9df8"
+      },
+      "lean/InfoGeometry/Core/PeirceTangent.lean": {
+        "sha256": "2119570fb07a8c639877ab033f2b6eaa2a110b00e12ac5576a96c0cbac60de8d",
+        "git_blob": "d6add7ea1b254948b77050a0633ef8e1205a1fc8"
+      },
+      "lean/InfoGeometry/Core/DiracSuperalgebra.lean": {
+        "sha256": "a0fba78ffa87e8d4ab1703f936d63631351b9353a8fbe8d8f71e4266434629c3",
+        "git_blob": "170ae640fe79a0c06eab7cdce7fbbc108dfe4339"
+      },
+      "lean/InfoGeometry/Singular/SquareZeroChiralHodge.lean": {
+        "sha256": "7ce60156d35e8e70abb5f8d2ec71e7e44d40b469f9b668923ac65c275e9b91a0",
+        "git_blob": "1d4bf9d4c8bcd1f2c6e68a56777b3b6d024d9d2a"
+      },
+      "lean/InfoGeometry/Singular/MoorePenroseChiralDefects.lean": {
+        "sha256": "778792593499fe4643ff3b5bcc212fceacfcab7f948b2bd3b2856ed3f3a20934",
+        "git_blob": "7ad9b5605a723a2509340e75cfdc1eaffe921141"
+      },
+      "lean/InfoGeometry/Singular/SquareZeroMoorePenrose.lean": {
+        "sha256": "f00a4254e0928c0d634da8d915d014162576985cbb051e825fbec504d3e49d47",
+        "git_blob": "2b557448b3728374024fbe1b5692cef230ebbaac"
+      },
+      "lean/InfoGeometry/Singular/MoorePenroseSectors.lean": {
+        "sha256": "d74d7f659942d8a2e6ab65316d1049427ee3027e13b5224ba9d3a83f0bcb3132",
+        "git_blob": "1a0159f349325c60d354e1e498b0d04f83a5b5b8"
+      },
+      "lean/InfoGeometry/Singular/MetricAlgebraicProjectionDefect.lean": {
+        "sha256": "82e17cb8b2af47f6f75d4d606f55a93f939c143191297b3bef20323fe360adf1",
+        "git_blob": "953e428d4260812771885a96659878d3593b4536"
+      },
+      "lean/InfoGeometry/Singular/MoorePenrose.lean": {
+        "sha256": "0fc09c7636869e801a51e4603e76620e051ac4953068e35d3652953876ae0fd3",
+        "git_blob": "b97bcd4da2e93b0795a03439830b7e28ee480cd3"
+      },
+      "lean/InfoGeometry/Singular/Drazin.lean": {
+        "sha256": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+        "git_blob": "1cc75bc92ca74efc52e1ded18894aaca2c1d4b54"
+      },
+      "lean/InfoGeometry/Canonical/Drazin.lean": {
+        "sha256": "e991b7d1c6b5fe8c1577c9949ed27d7e2c7f6395c721b3c54eabd1d5c42e0e27",
+        "git_blob": "10e867602ce2a0c770c35bb29975a30d9e994428"
+      },
+      "lean/InfoGeometry/Core/JordanAssociator.lean": {
+        "sha256": "283b80ccd518e134430832657657bdc66c98a71b737447f08acfcb33c5ab0a43",
+        "git_blob": "e2af203077c82660ef107b23a6c1d596b35868e5"
+      },
+      "lean/InfoGeometry/Core/JordanPeirceDecomposition.lean": {
+        "sha256": "74aab0f34a7b618ab3a3ea867e8010893ef7457df7243222792602270b3e3261",
+        "git_blob": "bd44ab852daff2a4d6e0aa1e5fd820c57165c6f1"
+      },
+      "lean/InfoGeometry/Core/JordanAssociatorRing.lean": {
+        "sha256": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+        "git_blob": "3a329702761cc44db0b7684f94290d7d14252895"
+      },
+      "lean/InfoGeometry/Core/IdempotentSymmetricOverlap.lean": {
+        "sha256": "6d7e6ded3525b0515c974f7cbcd72ddbe153eb5c361f4cfd4ef0de2defc5067d",
+        "git_blob": "d253d541cc4a474b9fa17fd7f0c96c1e6f554a6d"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/MatrixTraceGeometry.lean": {
+        "sha256": "3b091f89e70740ebb00cffb6e0956a4e7f0082ecdefbb7bb39abd0a849897e72",
+        "git_blob": "9c0b73a69684fa6125f319f775bac830975b1c88"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/PeirceKrausGeometry.lean": {
+        "sha256": "e28edd9f1fd663755dac6fef022b31240a87c8b400e3fb5fb5ba3576f59ec1d1",
+        "git_blob": "0f9c36f0a2cb695aba45e359c2ad601dc4cf4877"
+      },
+      "lean/InfoGeometry/Quantum/KrausAmplificationCP.lean": {
+        "sha256": "02075c267b4595a5c20320457a92c9c1ea8731bf03931e75871467633dfd4877",
+        "git_blob": "bd8af30d7f24623fbcdcf43728a600d1f27486f4"
+      },
+      "lean/InfoGeometry/Modular/Choi.lean": {
+        "sha256": "1bfb539ed3eecf50a99164a80319fa8bd6a7fd31af7a32d1d7b15dc81351eb52",
+        "git_blob": "e9a0675153e65ef42628cc8b9d9dd0d42c32afd0"
+      },
+      "lean/InfoGeometry/Quantum/ChoiCompletePositivity.lean": {
+        "sha256": "aa6c043d4b1ce9234db49f248423c2a8afa2bdfa65b952a22679597f46ace551",
+        "git_blob": "ba22364772cec0f9602fc1d534094d96274dc515"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/OperatorGeometryExamples.lean": {
+        "sha256": "b4f31808a64941c8834d7029819546b815cb92cdadebac414895be86d670b5a0",
+        "git_blob": "83f10dc86c2599fcc4fc231f61c0cd8566266c70"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/MatrixConservation.lean": {
+        "sha256": "dd28681b41dd70d9f2ee5935bb3a077ff1bafb620d3803b16ceebb97cb513281",
+        "git_blob": "7eef7e84fd805561bf0286111ba5f4027b61ab0f"
+      },
+      "lean/InfoGeometry/OperatorAlgebra/MatrixCasimirExamples.lean": {
+        "sha256": "f8d8d872688946b3c6460d5fab4488884b3cae52fa3aea6396291eb35b264011",
+        "git_blob": "40432e456ee13b1b7414ab4a61e10481a08fe489"
+      }
+    },
+    "unchanged_old_audit_records": 277
+  },
+  "audit": {
+    "status": "PASS",
+    "owners": [
+      "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities",
+      "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry",
+      "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry",
+      "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry",
+      "InfoGeometry.OperatorAlgebra.OperatorGeometryExamples",
+      "InfoGeometry.OperatorAlgebra.PeirceChiralGeometry",
+      "InfoGeometry.OperatorAlgebra.MatrixMaurerCartan",
+      "InfoGeometry.OperatorAlgebra.MatrixConservation",
+      "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry",
+      "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples",
+      "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples",
+      "InfoGeometry.OperatorAlgebra.PeircePairGeometry",
+      "InfoGeometry.OperatorAlgebra.PeircePairPositivity",
+      "InfoGeometry.OperatorAlgebra.PeircePairExamples"
+    ],
+    "declarations": 343,
+    "kinds": {
+      "definition": 29,
+      "theorem": 314
+    },
+    "by_module": {
+      "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples": 44,
+      "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry": 41,
+      "InfoGeometry.OperatorAlgebra.MatrixConservation": 15,
+      "InfoGeometry.OperatorAlgebra.MatrixMaurerCartan": 24,
+      "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 20,
+      "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry": 8,
+      "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples": 32,
+      "InfoGeometry.OperatorAlgebra.OperatorGeometryExamples": 30,
+      "InfoGeometry.OperatorAlgebra.PeirceChiralGeometry": 21,
+      "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry": 16,
+      "InfoGeometry.OperatorAlgebra.PeircePairExamples": 10,
+      "InfoGeometry.OperatorAlgebra.PeircePairGeometry": 38,
+      "InfoGeometry.OperatorAlgebra.PeircePairPositivity": 18,
+      "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry": 26
+    },
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "unsafe": 0,
+    "partial": 0,
+    "owned_axioms": 0,
+    "new_generated_definitions": [
+      "_private.InfoGeometry.OperatorAlgebra.PeircePairExamples.0.InfoGeometry.OperatorAlgebra.PeircePairExamples._aux_InfoGeometry_OperatorAlgebra_PeircePairExamples___macroRules__private_InfoGeometry_OperatorAlgebra_PeircePairExamples_0_InfoGeometry_OperatorAlgebra_PeircePairExamples_termMat_1",
+      "_private.InfoGeometry.OperatorAlgebra.PeircePairExamples.0.InfoGeometry.OperatorAlgebra.PeircePairExamples._aux_InfoGeometry_OperatorAlgebra_PeircePairExamples___unexpand_Matrix_1",
+      "_private.InfoGeometry.OperatorAlgebra.PeircePairExamples.0.InfoGeometry.OperatorAlgebra.PeircePairExamples.termMat"
+    ],
+    "definition_note": "The three new definition-kind records are safe axiom-free syntax support for local Mat notation; there are no new mathematical definitions."
+  },
+  "dependency_poset": {
+    "path": "docs/PEIRCE_PAIR_DEPENDENCIES.json",
+    "sha256": "656d22c20d845d0ac8a25db2b67ac8af8c102f3a1b309b472e00d6dd623046c1",
+    "audit_sha256": "5b4f9755c18fb98d0b5a839033d87f4633dfcf1bf5d440fb22466f20f7bf1b9f",
+    "nodes": 343,
+    "direct_edges": 644,
+    "hasse_edges": 354,
+    "layers": 7,
+    "layer_sizes": [
+      142,
+      49,
+      73,
+      40,
+      21,
+      15,
+      3
+    ],
+    "relation": "a <= b iff a = b or b transitively depends on a",
+    "orientation": "dependency -> dependent",
+    "exact_exporter_output": true,
+    "no_nonowner_source_imports_an_owner": true
+  },
+  "local_evidence_sha256": {
+    "result.json": "45c0457086e198b2c28682a40813a6a47097ed730293e61cc264297f91c571ee",
+    "source-manifest.json": "7395b52f3fd8201fc3d3ee44aeca8e5a1e5ad246a70b534f0d686c2155eb0d25",
+    "declaration-audit.jsonl": "5b4f9755c18fb98d0b5a839033d87f4633dfcf1bf5d440fb22466f20f7bf1b9f",
+    "dependency-order.json": "656d22c20d845d0ac8a25db2b67ac8af8c102f3a1b309b472e00d6dd623046c1",
+    "compiler-version.txt": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680"
+  },
+  "static_gates": {
+    "prepublication_head": "54896c873c04459e18c702decc20b135d9dcf4d5",
+    "sources_sha256": {
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean": "d248be4fbf4583dc8662050be8dc6e2af794e9fe600cd07c65e2fdfe199bebd9",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean": "a08aa5ef456741632c45f7337609cae05db734247d3f209febca97921eb8fa61",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean": "293c7dd79e6199f897e82ce948b935ed6491fa369df26d23bb15a9aa6dbdc31c"
+    },
+    "checks": {
+      "proof-proxy": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "tools/quality/proof_proxy_staged_gate.py"
+        ],
+        "exit_code": 0,
+        "log_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+      },
+      "semantic-vacuity": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "tools/quality/semantic_vacuity_gate.py",
+          "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean",
+          "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean",
+          "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean",
+          "--fail-on",
+          "error",
+          "--json-out",
+          "/workspace/scratch/3c7848773029/pair-static-verification/semantic-vacuity.json"
+        ],
+        "exit_code": 0,
+        "log_sha256": "f30902d08823be15a76cdfd8b3e35845863928b01e167cb80d012cd65326328d"
+      },
+      "whitespace": {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--check"
+        ],
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "placeholder_scan": {
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean": [],
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean": [],
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean": []
+    },
+    "staged_blobs": {
+      ".github/workflows/operator-geometry.yml": "0e51b65322d21a7485a73ee581d652e25590c421",
+      "docs/PEIRCE_PAIR_CONTRACT.md": "e521e8d6b5b743d512d752eb76cd091aa489736e",
+      "docs/PEIRCE_PAIR_DEPENDENCIES.json": "e6525db2d506f1ddabe80044f682669a195c7515",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean": "f2418d9841771791c789d4bc5024bf8eb6a6863f",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean": "1db92e1d9e82ff7c1e01bd45e373861d0f3894a6",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean": "a6a2700db9069bdcbeb2d5c99d34fff9bf068e8c",
+      "tools/quality/OperatorGeometryDeclarationAudit.lean": "c436acf7424fbf3e7f7205468f5af64477ac6e6c",
+      "tools/quality/check_operator_geometry.py": "99ffb1984fd059a648ba400f7698c349c4906a07"
+    },
+    "all_worktree_matches_index": true,
+    "gate_sources_sha256": {
+      "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+      "tools/infra/opengauss_screener.py": "77ff57a80dfa3264e212af116701547aef9f58639f329f0f1f27a63c46d1cda0",
+      "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+      "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082"
+    },
+    "status": "PASS",
+    "record_scope": "Final sources and eight staged paths before adding this verification record"
+  },
+  "static_record_sha256": "df8e7cb8779ead0b0a39384019fc6b5bd52b64f187809fa790c949f7a92c6321",
+  "semantic_scan": {
+    "authority": "lexical heuristics; not a semantic or kernel proof",
+    "blocking_severity_counts": {},
+    "counts": {},
+    "coverage_complete": true,
+    "fail_on": "error",
+    "fail_prefixes": [],
+    "files_scanned": 3,
+    "files_selected": 3,
+    "findings": [],
+    "pattern_version": 1,
+    "read_failures": [],
+    "scope_roots": [
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean"
+    ],
+    "severity_counts": {},
+    "source_paths": [
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean"
+    ],
+    "successfully_read_paths": [
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean",
+      "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean"
+    ],
+    "tracked": false
+  },
+  "warnings": {
+    "new_module_total": 0,
+    "inherited_total": 41,
+    "unchanged_files": {
+      "InfoGeometry.Singular.MoorePenrose": 14,
+      "InfoGeometry.Quantum.KrausAmplificationCP": 5,
+      "InfoGeometry.Canonical.FiniteFrameMaurerCartanPolarSplit": 1,
+      "InfoGeometry.Core.JordanPeirceDecomposition": 2,
+      "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 3,
+      "InfoGeometry.Quantum.ChoiCompletePositivity": 9,
+      "InfoGeometry.Core.JordanAssociator": 7
+    },
+    "disposition": "Inherited deprecation, unused-section/simp-argument and tactic-style diagnostics; no proof-debt warning."
+  },
+  "independent_agent_reviews": {
+    "source_semantics": {
+      "reviewer": "pair_refuter",
+      "status": "PASS",
+      "scope": "All 49 final theorem statements and proofs; no false strengthening, hidden commutation premise, scalar surrogate or witness packet",
+      "source_sha256": {
+        "lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean": "d248be4fbf4583dc8662050be8dc6e2af794e9fe600cd07c65e2fdfe199bebd9",
+        "lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean": "a08aa5ef456741632c45f7337609cae05db734247d3f209febca97921eb8fa61",
+        "lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean": "293c7dd79e6199f897e82ce948b935ed6491fa369df26d23bb15a9aa6dbdc31c"
+      }
+    },
+    "local_verification": {
+      "reviewer": "pair_acceptance",
+      "status": "PASS_AS_LOCAL_EVIDENCE",
+      "scope": "All 39 source bindings, staged gate receipts, 343 audited declarations, 49 named new theorems, 277 unchanged prior records and recomputed 644 direct/354 Hasse edges",
+      "fresh_ci_acceptance": "Separate and not asserted by this prepublication record"
+    }
+  }
+}

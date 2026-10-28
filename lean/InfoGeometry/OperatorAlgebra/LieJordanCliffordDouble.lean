@@ -16,6 +16,8 @@ no spacetime Dirac equation, curvature tensor, or analytic domain is asserted.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordanCliffordDouble
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
@@ -87,7 +89,7 @@ def doubled (h s : A) : Module.End R (A × A) where
 /-- The two summands use actual Clifford generators on the product module. -/
 theorem doubled_clifford_decomposition (h s : A) :
     doubled (R := R) h s =
-      swapOp * liftOp (LieAlgebra.ad R A h) + phaseOp * liftOp (jordanLeft s) := by
+      swapOp * liftOp (LieAlgebra.ad R A h) + phaseOp * liftOp (jordanLeft (R := R) s) := by
   apply LinearMap.ext
   intro v
   change (LieAlgebra.ad R A h v.2 - jordanLeft (R := R) s v.2,
@@ -109,9 +111,9 @@ vanishes; neither block is replaced by scalar multiplication. -/
 theorem doubled_square_apply (h s : A) (v : A × A) :
     (doubled (R := R) h s * doubled h s) v =
       ((LieAlgebra.ad R A h * LieAlgebra.ad R A h -
-          jordanLeft s * jordanLeft s + jordanLeft (h * s - s * h)) v.1,
+          jordanLeft (R := R) s * jordanLeft (R := R) s + jordanLeft (R := R) (h * s - s * h)) v.1,
        (LieAlgebra.ad R A h * LieAlgebra.ad R A h -
-          jordanLeft s * jordanLeft s - jordanLeft (h * s - s * h)) v.2) := by
+          jordanLeft (R := R) s * jordanLeft (R := R) s - jordanLeft (R := R) (h * s - s * h)) v.2) := by
   apply Prod.ext
   · exact congrArg (fun t : Module.End R A => t v.1) (minus_mul_plus h s)
   · exact congrArg (fun t : Module.End R A => t v.2) (plus_mul_minus h s)

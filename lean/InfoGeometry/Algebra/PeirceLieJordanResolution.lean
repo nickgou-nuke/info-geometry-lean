@@ -17,6 +17,8 @@ two. Orthogonality here is algebraic annihilation of projections, not positivity
 
 namespace InfoGeometry.Algebra.PeirceLieJordanResolution
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
@@ -51,8 +53,8 @@ theorem endpoint_mul {p : A} (hp : p * p = p) (i j : Bool) :
 
 /-- The full sixteen-cell composition table of the four projection operators. -/
 theorem cornerOp_comp {p : A} (hp : p * p = p) (i j k l : Bool) :
-    cornerOp (R := R) p i j * cornerOp p k l =
-      if i = k ∧ j = l then cornerOp p i j else 0 := by
+    cornerOp (R := R) p i j * cornerOp (R := R) p k l =
+      if i = k ∧ j = l then cornerOp (R := R) p i j else 0 := by
   ext x
   change endpoint p i * (endpoint p k * x * endpoint p l) * endpoint p j = _
   calc
@@ -67,7 +69,7 @@ theorem cornerOp_comp {p : A} (hp : p * p = p) (i j k l : Bool) :
 silently commuted. Compatible products retain the intermediate endpoint. -/
 theorem cornerOp_product {p : A} (hp : p * p = p)
     (i j k l : Bool) (x y : A) :
-    cornerOp (R := R) p i j x * cornerOp p k l y =
+    cornerOp (R := R) p i j x * cornerOp (R := R) p k l y =
       if j = k then endpoint p i * x * endpoint p j * y * endpoint p l else 0 := by
   change (endpoint p i * x * endpoint p j) *
     (endpoint p k * y * endpoint p l) = _
@@ -79,8 +81,8 @@ theorem cornerOp_product {p : A} (hp : p * p = p)
       by_cases hjk : j = k <;> simp [hjk, mul_assoc]
 
 theorem cornerOp_resolution (p : A) :
-    cornerOp (R := R) p true true + cornerOp p true false +
-      cornerOp p false true + cornerOp p false false = 1 := by
+    cornerOp (R := R) p true true + cornerOp (R := R) p true false +
+      cornerOp (R := R) p false true + cornerOp (R := R) p false false = 1 := by
   ext x
   exact peirce_decomposition_sum p x
 

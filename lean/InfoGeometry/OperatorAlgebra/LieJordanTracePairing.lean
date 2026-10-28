@@ -17,6 +17,8 @@ signature is inferred. The dual product identity needs no `[h,s] = 0` premise.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordanTracePairing
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.Core.JordanAssociator
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
@@ -40,8 +42,8 @@ theorem jordan_trace_adjoint (s x y : A) :
 /-- Opposite Jordan perturbations are dual for the cyclic bilinear pairing. -/
 theorem trace_dual (h s x y : A) :
     tau (plus (R := R) h s x * y) + tau (x * minus (R := R) h s y) = 0 := by
-  change tau ((LieAlgebra.ad R A h x + jordanLeft s x) * y) +
-    tau (x * (LieAlgebra.ad R A h y - jordanLeft s y)) = 0
+  change tau ((LieAlgebra.ad R A h x + jordanLeft (R := R) s x) * y) +
+    tau (x * (LieAlgebra.ad R A h y - jordanLeft (R := R) s y)) = 0
   rw [add_mul, mul_sub, map_add, map_sub, ← jordan_trace_adjoint (R := R) tau hcyc s x y]
   calc
     _ = tau (x * (h * y - y * h)) + tau ((h * x - x * h) * y) := by
@@ -63,25 +65,25 @@ theorem trace_minus (h s x : A) :
 /-- Both order-sensitive products are formally symmetric; commutation of
 `h` and `s` is not necessary for this bilinear adjoint statement. -/
 theorem minus_plus_trace_symmetric (h s x y : A) :
-    tau (minus (R := R) h s (plus h s x) * y) =
-      tau (x * minus (R := R) h s (plus h s y)) := by
+    tau (minus (R := R) h s (plus (R := R) h s x) * y) =
+      tau (x * minus (R := R) h s (plus (R := R) h s y)) := by
   have hl := trace_dual (R := R) tau hcyc h s y (plus (R := R) h s x)
-  rw [hcyc (plus (R := R) h s y) (plus h s x),
-    hcyc y (minus (R := R) h s (plus h s x))] at hl
+  rw [hcyc (plus (R := R) h s y) (plus (R := R) h s x),
+    hcyc y (minus (R := R) h s (plus (R := R) h s x))] at hl
   have hr := trace_dual (R := R) tau hcyc h s x (plus (R := R) h s y)
   exact add_left_cancel (hl.trans hr.symm)
 
 /-- The exact negative-square pairing, with no positivity interpretation. -/
 theorem minus_plus_trace_factor (h s x y : A) :
-    tau (minus (R := R) h s (plus h s x) * y) =
-      -tau (plus (R := R) h s x * plus h s y) := by
+    tau (minus (R := R) h s (plus (R := R) h s x) * y) =
+      -tau (plus (R := R) h s x * plus (R := R) h s y) := by
   have hz := trace_dual (R := R) tau hcyc h s y (plus (R := R) h s x)
-  rw [hcyc (plus (R := R) h s y) (plus h s x),
-    hcyc y (minus (R := R) h s (plus h s x))] at hz
+  rw [hcyc (plus (R := R) h s y) (plus (R := R) h s x),
+    hcyc y (minus (R := R) h s (plus (R := R) h s x))] at hz
   calc
-    _ = (tau (plus (R := R) h s x * plus h s y) +
-          tau (minus (R := R) h s (plus h s x) * y)) -
-          tau (plus (R := R) h s x * plus h s y) := by abel
+    _ = (tau (plus (R := R) h s x * plus (R := R) h s y) +
+          tau (minus (R := R) h s (plus (R := R) h s x) * y)) -
+          tau (plus (R := R) h s x * plus (R := R) h s y) := by abel
     _ = _ := by rw [hz, zero_sub]
 
 /-- Exact obstruction to symmetry of a weighted bilinear trace pairing. -/

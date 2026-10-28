@@ -17,6 +17,8 @@ statistical manifold, and the product formula is not a differential Laplacian.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.Core.JordanAssociator
 
@@ -24,11 +26,11 @@ variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 
 /-- Lie transport with a positive unnormalized Jordan summand. -/
 def plus (h s : A) : Module.End R A :=
-  LieAlgebra.ad R A h + jordanLeft s
+  LieAlgebra.ad R A h + jordanLeft (R := R) s
 
 /-- Lie transport with the opposite Jordan summand. -/
 def minus (h s : A) : Module.End R A :=
-  LieAlgebra.ad R A h - jordanLeft s
+  LieAlgebra.ad R A h - jordanLeft (R := R) s
 
 @[simp] theorem plus_apply (h s x : A) :
     plus (R := R) h s x = h * x - x * h + (s * x + x * s) := rfl
@@ -37,54 +39,56 @@ def minus (h s : A) : Module.End R A :=
     minus (R := R) h s x = h * x - x * h - (s * x + x * s) := rfl
 
 theorem plus_add_minus (h s : A) :
-    plus (R := R) h s + minus h s = 2 • LieAlgebra.ad R A h := by
+    plus (R := R) h s + minus (R := R) h s = 2 • LieAlgebra.ad R A h := by
   unfold plus minus
   simp only [two_nsmul]
   abel
 
 theorem plus_sub_minus (h s : A) :
-    plus (R := R) h s - minus h s = 2 • jordanLeft (R := R) s := by
+    plus (R := R) h s - minus (R := R) h s = 2 • jordanLeft (R := R) s := by
   unfold plus minus
   simp only [two_nsmul]
   abel
 
 /-- The mixed bracket is the Jordan operator of the coefficient commutator. -/
 theorem mixed_operator_commutator (h s : A) :
-    LieAlgebra.ad R A h * jordanLeft s - jordanLeft s * LieAlgebra.ad R A h =
+    LieAlgebra.ad R A h * jordanLeft (R := R) s - jordanLeft (R := R) s * LieAlgebra.ad R A h =
       jordanLeft (R := R) (h * s - s * h) := by
   ext x
   exact commutator_symm_operator h s x
 
 /-- The correction has a plus sign for the order `minus * plus`. -/
 theorem minus_mul_plus (h s : A) :
-    minus (R := R) h s * plus h s =
+    minus (R := R) h s * plus (R := R) h s =
       LieAlgebra.ad R A h * LieAlgebra.ad R A h -
-        jordanLeft s * jordanLeft s + jordanLeft (h * s - s * h) := by
+        jordanLeft (R := R) s * jordanLeft (R := R) s + jordanLeft (R := R) (h * s - s * h) := by
   calc
     _ = LieAlgebra.ad R A h * LieAlgebra.ad R A h -
-          jordanLeft s * jordanLeft s +
-          (LieAlgebra.ad R A h * jordanLeft s -
-            jordanLeft s * LieAlgebra.ad R A h) := by
+          jordanLeft (R := R) s * jordanLeft (R := R) s +
+          (LieAlgebra.ad R A h * jordanLeft (R := R) s -
+            jordanLeft (R := R) s * LieAlgebra.ad R A h) := by
           unfold minus plus
-          noncomm_ring
+          simp only [sub_mul, mul_sub, add_mul, mul_add]
+          abel
     _ = _ := by rw [mixed_operator_commutator]
 
 /-- Reversing the composition reverses the mixed correction. -/
 theorem plus_mul_minus (h s : A) :
-    plus (R := R) h s * minus h s =
+    plus (R := R) h s * minus (R := R) h s =
       LieAlgebra.ad R A h * LieAlgebra.ad R A h -
-        jordanLeft s * jordanLeft s - jordanLeft (h * s - s * h) := by
+        jordanLeft (R := R) s * jordanLeft (R := R) s - jordanLeft (R := R) (h * s - s * h) := by
   calc
     _ = LieAlgebra.ad R A h * LieAlgebra.ad R A h -
-          jordanLeft s * jordanLeft s -
-          (LieAlgebra.ad R A h * jordanLeft s -
-            jordanLeft s * LieAlgebra.ad R A h) := by
+          jordanLeft (R := R) s * jordanLeft (R := R) s -
+          (LieAlgebra.ad R A h * jordanLeft (R := R) s -
+            jordanLeft (R := R) s * LieAlgebra.ad R A h) := by
           unfold minus plus
-          noncomm_ring
+          simp only [sub_mul, mul_sub, add_mul, mul_add]
+          abel
     _ = _ := by rw [mixed_operator_commutator]
 
 theorem product_order_defect (h s : A) :
-    minus (R := R) h s * plus h s - plus h s * minus h s =
+    minus (R := R) h s * plus (R := R) h s - plus (R := R) h s * minus (R := R) h s =
       2 • jordanLeft (R := R) (h * s - s * h) := by
   rw [minus_mul_plus, plus_mul_minus]
   simp only [two_nsmul]
@@ -92,13 +96,13 @@ theorem product_order_defect (h s : A) :
 
 /-- Characteristic-free obstruction; no cancellation of two is hidden. -/
 theorem products_commute_iff (h s : A) :
-    minus (R := R) h s * plus h s = plus h s * minus h s ↔
+    minus (R := R) h s * plus (R := R) h s = plus (R := R) h s * minus (R := R) h s ↔
       2 • jordanLeft (R := R) (h * s - s * h) = 0 := by
   rw [← sub_eq_zero, product_order_defect]
 
 /-- Algebraic curvature of two positive transports, retaining all cross terms. -/
 theorem plus_commutator (h s k t : A) :
-    plus (R := R) h s * plus k t - plus k t * plus h s =
+    plus (R := R) h s * plus (R := R) k t - plus (R := R) k t * plus (R := R) h s =
       plus (R := R) (h * k - k * h + (s * t - t * s))
         (h * t - t * h + (s * k - k * s)) := by
   ext x
@@ -116,7 +120,7 @@ theorem plus_commutator (h s k t : A) :
 /-- A Jordan perturbation has this exact failure of the associative Leibniz law. -/
 theorem plus_leibniz_defect (h s x y : A) :
     plus (R := R) h s (x * y) -
-      (plus h s x * y + x * plus h s y) = -(2 • (x * s * y)) := by
+      (plus (R := R) h s x * y + x * plus (R := R) h s y) = -(2 • (x * s * y)) := by
   simp only [plus_apply, two_nsmul]
   noncomm_ring
 

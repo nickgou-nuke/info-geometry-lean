@@ -1,0 +1,525 @@
+{
+  "status": "passed",
+  "targets": [
+    "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation",
+    "InfoGeometry.Analysis.MatrixTraceQuadratic",
+    "InfoGeometry.Geometry.MatrixCurvatureEnergy",
+    "InfoGeometry.Geometry.MatrixCurvatureHessian",
+    "InfoGeometry.Geometry.MatrixCurvatureNonconvexity",
+    "InfoGeometry.Geometry.DerivationMatrixCurvature",
+    "InfoGeometry.OperatorAlgebra.PeirceCurvatureDefect",
+    "InfoGeometry.Geometry.PeirceCurvatureHessian",
+    "InfoGeometry.Analysis.OperatorDirichletLaplacian",
+    "InfoGeometry.Analysis.OperatorDirichletSpectralGap",
+    "InfoGeometry.Analysis.OperatorDirichletScaling",
+    "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet",
+    "InfoGeometry.OperatorAlgebra.TracialGNSGauge",
+    "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests",
+    "InfoGeometry.Canonical.MatrixEntropyUnitaryOrbit"
+  ],
+  "scope": "exact repository source closure; selected-owner native axiom audit",
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.NonAssocDerivation",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.DerivationLieLane",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Algebra.DerivationLieLaneRepresentation",
+      "returncode": 0,
+      "warnings": 3
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms",
+      "returncode": 0,
+      "warnings": 9
+    },
+    {
+      "module": "InfoGeometry.Geometry.AssociativeGaugeConnection",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.ComplexMatrixJacobi",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.MatrixTraceQuadratic",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Geometry.MatrixCurvatureEnergy",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Geometry.MatrixCurvatureHessian",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Geometry.MatrixCurvatureNonconvexity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Geometry.DerivationMatrixCurvature",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceGrading",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceCompressionDefect",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceCurvatureDefect",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Geometry.PeirceCurvatureHessian",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.OperatorDirichletLaplacian",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.OperatorDirichletSpectralGap",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.OperatorDirichletScaling",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TracialGNSRightMultiplication",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TracialGNSCommutator",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TracialGNSGauge",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Canonical.MatrixDetExpTraceJacobi",
+      "returncode": 0,
+      "warnings": 5
+    },
+    {
+      "module": "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PolarFrameTraceDensity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.QuantumRelativeSurprisal",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Canonical.MatrixEntropyUnitaryOrbit",
+      "returncode": 0,
+      "warnings": 0
+    }
+  ],
+  "axiom_audit_passed": true,
+  "revision": "37c47ae5ddd9d00d700fe1df61b0c60ee80e2efc",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Algebra.NonAssocDerivation": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.DerivationLieLane": [
+      "InfoGeometry.Algebra.NonAssocDerivation",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.DerivationLieLaneRepresentation": [
+      "InfoGeometry.Algebra.DerivationLieLane",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms": [
+      "InfoGeometry.Algebra.DerivationLieLaneRepresentation"
+    ],
+    "InfoGeometry.Geometry.AssociativeGaugeConnection": [],
+    "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation": [
+      "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms",
+      "InfoGeometry.Geometry.AssociativeGaugeConnection"
+    ],
+    "InfoGeometry.Analysis.ComplexMatrixJacobi": [],
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus": [
+      "InfoGeometry.Analysis.ComplexMatrixJacobi"
+    ],
+    "InfoGeometry.Analysis.MatrixTraceQuadratic": [
+      "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus"
+    ],
+    "InfoGeometry.Geometry.MatrixCurvatureEnergy": [
+      "InfoGeometry.Analysis.MatrixTraceQuadratic",
+      "InfoGeometry.Geometry.AssociativeGaugeConnection"
+    ],
+    "InfoGeometry.Geometry.MatrixCurvatureHessian": [
+      "InfoGeometry.Geometry.MatrixCurvatureEnergy"
+    ],
+    "InfoGeometry.Geometry.MatrixCurvatureNonconvexity": [
+      "InfoGeometry.Geometry.MatrixCurvatureHessian"
+    ],
+    "InfoGeometry.Geometry.DerivationMatrixCurvature": [
+      "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation",
+      "InfoGeometry.Geometry.MatrixCurvatureHessian"
+    ],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceCompressionDefect": [],
+    "InfoGeometry.OperatorAlgebra.PeirceCurvatureDefect": [
+      "InfoGeometry.Core.PeirceGrading",
+      "InfoGeometry.Core.PeirceCompressionDefect",
+      "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation"
+    ],
+    "InfoGeometry.Geometry.PeirceCurvatureHessian": [
+      "InfoGeometry.Analysis.MatrixTraceQuadratic",
+      "InfoGeometry.Geometry.MatrixCurvatureHessian",
+      "InfoGeometry.Core.PeirceGrading"
+    ],
+    "InfoGeometry.Analysis.OperatorDirichletLaplacian": [],
+    "InfoGeometry.Analysis.OperatorDirichletSpectralGap": [
+      "InfoGeometry.Analysis.OperatorDirichletLaplacian"
+    ],
+    "InfoGeometry.Analysis.OperatorDirichletScaling": [
+      "InfoGeometry.Analysis.OperatorDirichletSpectralGap"
+    ],
+    "InfoGeometry.OperatorAlgebra.TracialGNSRightMultiplication": [],
+    "InfoGeometry.OperatorAlgebra.TracialGNSCommutator": [
+      "InfoGeometry.OperatorAlgebra.TracialGNSRightMultiplication"
+    ],
+    "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet": [
+      "InfoGeometry.Analysis.OperatorDirichletLaplacian",
+      "InfoGeometry.OperatorAlgebra.TracialGNSCommutator"
+    ],
+    "InfoGeometry.OperatorAlgebra.TracialGNSGauge": [
+      "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet"
+    ],
+    "InfoGeometry.Algebra.MatrixNoncommutativity": [],
+    "InfoGeometry.Canonical.MatrixDetExpTraceJacobi": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy": [
+      "InfoGeometry.Canonical.MatrixDetExpTraceJacobi"
+    ],
+    "InfoGeometry.Canonical.PolarFrameTraceDensity": [
+      "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy"
+    ],
+    "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests": [
+      "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "InfoGeometry.Analysis.OperatorDirichletScaling",
+      "InfoGeometry.Canonical.PolarFrameTraceDensity",
+      "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet"
+    ],
+    "InfoGeometry.Canonical.QuantumRelativeSurprisal": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.MatrixEntropyUnitaryOrbit": [
+      "InfoGeometry.Canonical.PolarFrameTraceDensity",
+      "InfoGeometry.Canonical.QuantumRelativeSurprisal"
+    ]
+  },
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "InfoGeometry.Algebra.NonAssocDerivation": "6e547efa21b548014b1e8353bf9addcdadc32a5423fcb5ca8b73e2426bc5f033",
+    "InfoGeometry.Algebra.DerivationLieLane": "c5050204adc7f41448fe1edd37bc1a966af13b3c3d177dda805f85024f8eacc5",
+    "InfoGeometry.Algebra.DerivationLieLaneRepresentation": "51d20cd1cbc9250ae5ed8d8a50442dba9d5001c3e6c36bb9d7f76542ff6bf707",
+    "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms": "5c7f16e3f8f7da0268639b62aad48025547f8efcbc3b83f1b9e4d524a1af3b22",
+    "InfoGeometry.Geometry.AssociativeGaugeConnection": "1810110d5db0175777b2be6b0aceace7aea3b9a4050df3e91d643acf2ccd1a72",
+    "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation": "ebde8fac33122f9076eda6ca814cf92315777d6abb0bfc8bf766c70ff20d73e9",
+    "InfoGeometry.Analysis.ComplexMatrixJacobi": "ef4b0bb1f28982def8d9819fd79bc8f8196e139a2b90f794b3ab1ea9aa50abe7",
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus": "d0521c9cc0d840f2733c50f00c03efd10bf85f7cb9788b58b7abd185ccebe8ed",
+    "InfoGeometry.Analysis.MatrixTraceQuadratic": "562a844256f4826c5c9a94fe6f5b0dd52bdb4354f6f251b743f407187a83eac8",
+    "InfoGeometry.Geometry.MatrixCurvatureEnergy": "b1c1ee49191240280b855793ca91199b02e8e55f04cdbb88900ca17bddbe7da6",
+    "InfoGeometry.Geometry.MatrixCurvatureHessian": "2129ef134febf6067f3779fdf77a358c0565ca2fe8e84b1cc0be095cef82c497",
+    "InfoGeometry.Geometry.MatrixCurvatureNonconvexity": "ba798d621fb0c6634b62162339c88e9b6970d800432260e116301b69fe2d5fae",
+    "InfoGeometry.Geometry.DerivationMatrixCurvature": "9b28ca7689e1b4903af16ac972ee20b8b86717e69f148524e284f0ee709321ff",
+    "InfoGeometry.Core.PeirceDecomposition": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+    "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+    "InfoGeometry.Core.PeirceCompressionDefect": "c7071f3d431a678fac636657ed78b8bd5eb99d5b775a14b4bd1be03089968be4",
+    "InfoGeometry.OperatorAlgebra.PeirceCurvatureDefect": "26909ffb810bc3a5ec7346cafb294e9f2fc567eb5879a7ccdda1b8cdc5798877",
+    "InfoGeometry.Geometry.PeirceCurvatureHessian": "6f9e3cfd72593ac440e1a46a50ea5bb31c69646087a6d76b49052da942c81fe3",
+    "InfoGeometry.Analysis.OperatorDirichletLaplacian": "74e62dd64f66b37882f99b45bf3830663a7eb7d63c5d99d2842108f965903ddb",
+    "InfoGeometry.Analysis.OperatorDirichletSpectralGap": "be367684b896468c297b4119ce7e38d890831fd17942eb228ac2681977ae312f",
+    "InfoGeometry.Analysis.OperatorDirichletScaling": "5514bfb24efaec8dd332fbc485b47097498961991720870f0d8464eaaf96a1c4",
+    "InfoGeometry.OperatorAlgebra.TracialGNSRightMultiplication": "df672b36e0835f8560ee9e3be4e509fa50082358f7469896d9d3facb7a87e474",
+    "InfoGeometry.OperatorAlgebra.TracialGNSCommutator": "b1b2ce1db36ed84ff65b2d1d08b5af21ea42cbf2af2d16ac6659722bca600851",
+    "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet": "ae181859bf1b66b595fe2cfa951ca8b1ffad20fef3a8da3c876fd6a596fea51d",
+    "InfoGeometry.OperatorAlgebra.TracialGNSGauge": "a5c42f41b77ee22563f5cbab04c48ed630e6e11c694c41d30e11e54a39b87af8",
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "InfoGeometry.Canonical.MatrixDetExpTraceJacobi": "143c9237821e5751452a31e0b59c007cfe2082706789fdf90818819887140c6a",
+    "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy": "04b0660249840326891727daa8417e66edda588ad6a9b04a05e480d266387d23",
+    "InfoGeometry.Canonical.PolarFrameTraceDensity": "251cac5fab943bada186a20e8328d3bcb1dfbd8c2acb42c195388beac7fdf95e",
+    "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests": "51e65819be8eb9bf878fb8edb31b96af943d502b9ab56d550caa99a1bf01c7ec",
+    "InfoGeometry.Canonical.QuantumRelativeSurprisal": "52442910d6882afd8cd5e39d99aa1c5ff9f4821b3f41e92b2a5e50efa19a6dba",
+    "InfoGeometry.Canonical.MatrixEntropyUnitaryOrbit": "fe620d1766ed05a94754bbfb9f3adb0b54292dce375c80f817afd857ab2fda65"
+  },
+  "declaration_counts": {
+    "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation": 38,
+    "InfoGeometry.Analysis.MatrixTraceQuadratic": 37,
+    "InfoGeometry.Geometry.MatrixCurvatureEnergy": 48,
+    "InfoGeometry.Geometry.MatrixCurvatureHessian": 70,
+    "InfoGeometry.Geometry.MatrixCurvatureNonconvexity": 10,
+    "InfoGeometry.Geometry.DerivationMatrixCurvature": 28,
+    "InfoGeometry.OperatorAlgebra.PeirceCurvatureDefect": 18,
+    "InfoGeometry.Geometry.PeirceCurvatureHessian": 11,
+    "InfoGeometry.Analysis.OperatorDirichletLaplacian": 40,
+    "InfoGeometry.Analysis.OperatorDirichletSpectralGap": 15,
+    "InfoGeometry.Analysis.OperatorDirichletScaling": 10,
+    "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet": 29,
+    "InfoGeometry.OperatorAlgebra.TracialGNSGauge": 39,
+    "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests": 39,
+    "InfoGeometry.Canonical.MatrixEntropyUnitaryOrbit": 13
+  },
+  "axioms": "[propext, Classical.choice, Quot.sound]",
+  "verified_working_tree_base": "37c47ae5ddd9d00d700fe1df61b0c60ee80e2efc",
+  "task_base_commit": "37c47ae5ddd9d00d700fe1df61b0c60ee80e2efc",
+  "post_verification_checkout_commit": "37c47ae5ddd9d00d700fe1df61b0c60ee80e2efc",
+  "verification_date_utc": "2026-10-28T06:02:26.414579+00:00",
+  "native_audit_declaration_total": 445,
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "source_blob_sha1": {
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+    "lean/InfoGeometry/Algebra/NonAssocDerivation.lean": "ea0a5388d14edc3bf445ba5d4a5272493074fbf3",
+    "lean/InfoGeometry/Algebra/DerivationLieLane.lean": "6675f86fae424b1bc425029c15484024ed544548",
+    "lean/InfoGeometry/Algebra/DerivationLieLaneRepresentation.lean": "518ba4b5554595956bc4e3c737b79ec48355a73a",
+    "lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean": "4d472c2fdd184129482b87067719146b58b8026b",
+    "lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean": "58b04dc2569a197c53ca42a8762c3b9d8d42ee25",
+    "lean/InfoGeometry/OperatorAlgebra/DerivationCurvatureVariation.lean": "5e96f8ffee47f1159399269a237b2d6cd6336484",
+    "lean/InfoGeometry/Analysis/ComplexMatrixJacobi.lean": "de516b3cb8146f87fb3f996c26aed7a4dc4d90d1",
+    "lean/InfoGeometry/Analysis/ComplexMatrixLogDetCalculus.lean": "0b87a5998d6773f8fc4896624aa9113084a7f26a",
+    "lean/InfoGeometry/Analysis/MatrixTraceQuadratic.lean": "52042b014f810e4896b03e03a77e60a6334befad",
+    "lean/InfoGeometry/Geometry/MatrixCurvatureEnergy.lean": "4eca820b8616f88c9d45728a37b11bd3f4d9b483",
+    "lean/InfoGeometry/Geometry/MatrixCurvatureHessian.lean": "6e2a14cc4d85b32dc757574e433bee771998cb20",
+    "lean/InfoGeometry/Geometry/MatrixCurvatureNonconvexity.lean": "b6e03e5828115b6d4867a163f761a98f56ced223",
+    "lean/InfoGeometry/Geometry/DerivationMatrixCurvature.lean": "e106832ed95949db4d85033a33a6c079920787fb",
+    "lean/InfoGeometry/Core/PeirceDecomposition.lean": "10ab08af18412be000fcac59c91b49d6b9ab9df8",
+    "lean/InfoGeometry/Core/PeirceGrading.lean": "be8a70cd3b86892bd0b8a7b1ed9396c8296fd5f1",
+    "lean/InfoGeometry/Core/PeirceCompressionDefect.lean": "f16f3faeedf96350ad62feb3c008cf9419bb42bf",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceCurvatureDefect.lean": "75dc8ad37c104351069f1ad90d27a4da2f90417f",
+    "lean/InfoGeometry/Geometry/PeirceCurvatureHessian.lean": "3cd45a58877acfdbeec4b14a19fcd356c5cfa746",
+    "lean/InfoGeometry/Analysis/OperatorDirichletLaplacian.lean": "50ce7cad2a78c9b166781bd28dd36b6ea7891d70",
+    "lean/InfoGeometry/Analysis/OperatorDirichletSpectralGap.lean": "1f34ee3c06dbdbad05fd133259c2613b0d2f3b9a",
+    "lean/InfoGeometry/Analysis/OperatorDirichletScaling.lean": "eacdac2cb44ea0832598871f5c822212b9bef999",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.lean": "232be3cbae3422546b53c0ce6b806025fd93fee0",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.lean": "125f6de1731f9ed63c64b5d06d7a9700af65d1e0",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSDirichlet.lean": "056357dd820283406bb79c7d5d3760c8bddc786c",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSGauge.lean": "15d8af335abd796ac4ede9a3f9f5d003d5524009",
+    "lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean": "51e5d4b98efafbf35d4eeaeec6ae81bf34b17648",
+    "lean/InfoGeometry/Canonical/MatrixDetExpTraceJacobi.lean": "8bbeba293f1be8fc6f4f27b09521f0d4f9526701",
+    "lean/InfoGeometry/Canonical/FiniteBogoliubovFrameDeformationEntropy.lean": "e0d7220f43a2ff07cacca3780536502a8ab82660",
+    "lean/InfoGeometry/Canonical/PolarFrameTraceDensity.lean": "ccee4c17b3e5b1cae421b0278a769749811f1d2d",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSMatrixTests.lean": "27b988835ac05ce5c2018bf2089947d64e1b9ebe",
+    "lean/InfoGeometry/Canonical/QuantumRelativeSurprisal.lean": "6b2d5ed9b6a1a1fdef41ef57ec3e854f0b6035b9",
+    "lean/InfoGeometry/Canonical/MatrixEntropyUnitaryOrbit.lean": "d41c28425bbe84df2c2985f6a4ef235ae78b57bd"
+  },
+  "verifier_sha256": {
+    "tools/quality/check_yang_mills_operator_extraction.py": "3c629fa53b762b13b0a20223701d9f5ee77654dda58d4a0f4aaed26b8f54565c",
+    "tools/quality/check_peirce_bdg_geometry.py": "03a263aaab778bc1ce1c3e31471bfc6a6d2b50c9e9c11f02e25b561cb1c67ca0",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "workflow_sha256": "9b79446580721fc4fafb93dfd59e8f9c2e2cf350f6d23a097551d28157f51342",
+  "audit_log_sha256": "3383cbb6da82d8300373bddfe70d0772dcfbcd4711f5010c256f4ced906da818",
+  "new_owner_warnings": 0,
+  "inherited_dependency_warnings": 20,
+  "inherited_dependency_blob_sha1": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+    "InfoGeometry.Algebra.NonAssocDerivation": "ea0a5388d14edc3bf445ba5d4a5272493074fbf3",
+    "InfoGeometry.Algebra.DerivationLieLane": "6675f86fae424b1bc425029c15484024ed544548",
+    "InfoGeometry.Algebra.DerivationLieLaneRepresentation": "518ba4b5554595956bc4e3c737b79ec48355a73a",
+    "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms": "4d472c2fdd184129482b87067719146b58b8026b",
+    "InfoGeometry.Geometry.AssociativeGaugeConnection": "58b04dc2569a197c53ca42a8762c3b9d8d42ee25",
+    "InfoGeometry.Analysis.ComplexMatrixJacobi": "de516b3cb8146f87fb3f996c26aed7a4dc4d90d1",
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus": "0b87a5998d6773f8fc4896624aa9113084a7f26a",
+    "InfoGeometry.Core.PeirceDecomposition": "10ab08af18412be000fcac59c91b49d6b9ab9df8",
+    "InfoGeometry.Core.PeirceGrading": "be8a70cd3b86892bd0b8a7b1ed9396c8296fd5f1",
+    "InfoGeometry.Core.PeirceCompressionDefect": "f16f3faeedf96350ad62feb3c008cf9419bb42bf",
+    "InfoGeometry.OperatorAlgebra.TracialGNSRightMultiplication": "232be3cbae3422546b53c0ce6b806025fd93fee0",
+    "InfoGeometry.OperatorAlgebra.TracialGNSCommutator": "125f6de1731f9ed63c64b5d06d7a9700af65d1e0",
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "51e5d4b98efafbf35d4eeaeec6ae81bf34b17648",
+    "InfoGeometry.Canonical.MatrixDetExpTraceJacobi": "8bbeba293f1be8fc6f4f27b09521f0d4f9526701",
+    "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy": "e0d7220f43a2ff07cacca3780536502a8ab82660",
+    "InfoGeometry.Canonical.PolarFrameTraceDensity": "ccee4c17b3e5b1cae421b0278a769749811f1d2d",
+    "InfoGeometry.Canonical.QuantumRelativeSurprisal": "6b2d5ed9b6a1a1fdef41ef57ec3e854f0b6035b9"
+  },
+  "staged_source_matches_native": {
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": true,
+    "lean/InfoGeometry/Algebra/NonAssocDerivation.lean": true,
+    "lean/InfoGeometry/Algebra/DerivationLieLane.lean": true,
+    "lean/InfoGeometry/Algebra/DerivationLieLaneRepresentation.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/DerivationDifferentialForms.lean": true,
+    "lean/InfoGeometry/Geometry/AssociativeGaugeConnection.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/DerivationCurvatureVariation.lean": true,
+    "lean/InfoGeometry/Analysis/ComplexMatrixJacobi.lean": true,
+    "lean/InfoGeometry/Analysis/ComplexMatrixLogDetCalculus.lean": true,
+    "lean/InfoGeometry/Analysis/MatrixTraceQuadratic.lean": true,
+    "lean/InfoGeometry/Geometry/MatrixCurvatureEnergy.lean": true,
+    "lean/InfoGeometry/Geometry/MatrixCurvatureHessian.lean": true,
+    "lean/InfoGeometry/Geometry/MatrixCurvatureNonconvexity.lean": true,
+    "lean/InfoGeometry/Geometry/DerivationMatrixCurvature.lean": true,
+    "lean/InfoGeometry/Core/PeirceDecomposition.lean": true,
+    "lean/InfoGeometry/Core/PeirceGrading.lean": true,
+    "lean/InfoGeometry/Core/PeirceCompressionDefect.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/PeirceCurvatureDefect.lean": true,
+    "lean/InfoGeometry/Geometry/PeirceCurvatureHessian.lean": true,
+    "lean/InfoGeometry/Analysis/OperatorDirichletLaplacian.lean": true,
+    "lean/InfoGeometry/Analysis/OperatorDirichletSpectralGap.lean": true,
+    "lean/InfoGeometry/Analysis/OperatorDirichletScaling.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSDirichlet.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSGauge.lean": true,
+    "lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean": true,
+    "lean/InfoGeometry/Canonical/MatrixDetExpTraceJacobi.lean": true,
+    "lean/InfoGeometry/Canonical/FiniteBogoliubovFrameDeformationEntropy.lean": true,
+    "lean/InfoGeometry/Canonical/PolarFrameTraceDensity.lean": true,
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSMatrixTests.lean": true,
+    "lean/InfoGeometry/Canonical/QuantumRelativeSurprisal.lean": true,
+    "lean/InfoGeometry/Canonical/MatrixEntropyUnitaryOrbit.lean": true
+  },
+  "static_source_review": {
+    "owners_scanned": 15,
+    "placeholder_custom_axiom_unsafe_partial_native_decide_matches": 0,
+    "copyright_headers": "all passed; exact byte-zero header",
+    "workflow_closure_triggers": "complete",
+    "authority": "Lexical checks are auxiliary. Acceptance depends on the fresh native source build and complete-owner axiom audit.",
+    "heuristic_tool": "scripts/vacuity-linter.py",
+    "documented_tool_path_note": "The SOP example tools/scripts/vacuity-linter.py is absent; the repository-owned scripts/vacuity-linter.py is the available maintained lexical linter and was inspected and run on all selected owners.",
+    "heuristic_findings_reviewed": [
+      {
+        "module": "InfoGeometry.Analysis.MatrixTraceQuadratic",
+        "declaration": "tracePair_comm",
+        "pattern": "no_hyp_use",
+        "classification": "Line-oriented regex false positive: the full multiline proof uses both matrices through trace conjugation and proves symmetry of the actual trace pairing."
+      },
+      {
+        "module": "InfoGeometry.Analysis.OperatorDirichletLaplacian",
+        "declaration": "energy_nonneg",
+        "pattern": "empty_where",
+        "classification": "The complete proof term is on the following line: Finset.sum_nonneg applied to square nonnegativity."
+      },
+      {
+        "module": "InfoGeometry.Analysis.OperatorDirichletScaling",
+        "declaration": "exists_positive_scaling_energy_lt",
+        "pattern": "auto_prover",
+        "classification": "Native nlinarith proves the displayed real inequalities from explicit positivity and min bounds; the operator-family scaling identity is separately proved and used."
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet",
+        "declaration": "gns_vacuum_ne_zero",
+        "pattern": "no_hyp_use",
+        "classification": "Multiline regex false positive: the proof explicitly applies hf after converting a zero GNS class into vanishing of the positive functional."
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.TracialGNSGauge",
+        "declaration": "tracialConjugationGNS_toPreGNS",
+        "pattern": "simp_vacuous",
+        "classification": "The simp proof applies the preceding dense-representative action theorem and native toPreGNS/ofPreGNS identities; its conclusion is the concrete conjugation action."
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests",
+        "declaration": "commutatorMatrix_ne_zero",
+        "pattern": "empty_where",
+        "classification": "The complete next-line proof term is sub_ne_zero.mpr applied to the existing checked noncommuting matrix witness."
+      },
+      {
+        "module": "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests",
+        "declaration": "matrixTrace_apply",
+        "pattern": "no_hyp_use",
+        "classification": "Goal-directed simplification unfolds the constructed positive functional and removes identity multiplication for the arbitrary matrix parameter; this is an actual functional equality."
+      }
+    ],
+    "heuristic_tool_sha256": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033",
+    "axiom_audit_authority": "Pinned Lean.collectAxioms via tools/quality/reviewed_audit_source.py; all selected owners and private/generated declarations enumerated by native module ownership."
+  },
+  "note": "Every repository module in the recorded closure was freshly rebuilt. The complete-owner native audit covers all named targets, including private and generated declarations. The working-tree base identifies ancestry; source SHA256 and Git blob SHA1 bind the exact verified files independently of a later publication commit.",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "qa_verdict": "ACCEPTED in the stated native algebraic, finite-matrix, and bounded-operator scope",
+  "foundation_axiom_classification": {
+    "propext": "Standard Lean propositional extensionality inherited through Mathlib rewriting and extensional reasoning; no local axiom declaration is added.",
+    "Classical.choice": "Standard classical choice used by the imported Hilbert-space adjoint, functional calculus, finite-dimensional and noncomputable constructions; finite-family proofs also use ordinary classical elaboration.",
+    "Quot.sound": "Standard quotient soundness used by Mathlib quotient/completion infrastructure and the native tracial GNS carrier. It is not a supplied spectral or curvature assumption."
+  },
+  "inherited_warning_classification": {
+    "unnecessarySimpa": 5,
+    "unusedSimpArgs": 6,
+    "unnecessarySeqFocus": 5,
+    "style.haveILetI": 2,
+    "deprecated_theorem_name": 1,
+    "deprecated_import": 1
+  },
+  "independent_acceptance_sha256": "74dcb470352b16f2e69d2ca961431fed02fc9e7e13560198fad0ca91476be2d4"
+}

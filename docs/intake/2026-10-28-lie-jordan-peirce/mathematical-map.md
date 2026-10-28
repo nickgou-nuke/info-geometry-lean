@@ -147,5 +147,5 @@ These witnesses establish nonvacuity; the main theorems remain arbitrary in size
 - Manifold connections, state-dependent BKM geometry, unbounded operator domains,
   PDE and continuum interpretations remain `[bucket_3_open_debt]`.
 
-The final verification record determines `[kernel_verified]` and
+The [verification record](verification.md) determines `[kernel_verified]` and
 `[accepted_limited_scope]`; the informal streams supply no kernel evidence.

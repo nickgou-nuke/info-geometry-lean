@@ -62,8 +62,14 @@ theorem cornerOp_comp {p : A} (hp : p * p = p) (i j k l : Bool) :
           (endpoint p l * endpoint p j) := by simp only [mul_assoc]
     _ = _ := by
       rw [endpoint_mul hp, endpoint_mul hp]
-      by_cases hik : i = k <;> by_cases hjl : j = l <;>
-        simp_all [cornerOp, mul_assoc, eq_comm]
+      by_cases hik : i = k
+      · subst k
+        by_cases hjl : j = l
+        · subst l
+          simp [cornerOp, mul_assoc]
+        · have hlj : l ≠ j := Ne.symm hjl
+          simp [hjl, hlj, cornerOp, mul_assoc]
+      · simp [hik, cornerOp, mul_assoc]
 
 /-- The full sixteen-cell product rule; no elements from distinct corners are
 silently commuted. Compatible products retain the intermediate endpoint. -/

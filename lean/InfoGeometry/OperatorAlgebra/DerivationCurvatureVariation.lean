@@ -4,16 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
-import Mathlib.Tactic.Abel
+import InfoGeometry.Geometry.AssociativeGaugeConnection
 
-/-!
-# Variation of derivation-based noncommutative curvature
+/-! # Exact variations of native derivation-based curvature
 
-The existing curvature is a native Mathlib two-cochain. Its exact perturbation
-formula retains both multiplication orders and the Lie-bracket term in the
-base directions. The first variation is a linear map between the existing
-native cochain spaces. The mixed quadratic term is symmetric in the two
-one-form variations, although the coefficient multiplication need not commute.
+All forms and differentials are the existing Chevalley--Eilenberg objects.
+The quadratic remainder and the bracket of derivation directions are retained.
+These are algebraic variation identities; analytic derivatives of finite
+matrix connection energies are developed separately.
 -/
 
 noncomputable section
@@ -26,7 +24,34 @@ open LieModule.Cohomology
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 variable (K : DerivationLieLane R A)
 
-/-- The mixed commutator wedge of two operator-valued one-forms. -/
+private theorem twoForm_ext {α β : TwoForm K}
+    (h : ∀ x y, α x y = β x y) : α = β :=
+  DFunLike.ext _ _ (fun x => LinearMap.ext (h x))
+
+@[simp] private theorem twoForm_zero_apply (x y : K.L) :
+    (0 : TwoForm K) x y = 0 := rfl
+
+/-- Polarization of the actual commutator wedge square. -/
+def connectionCrossWedge (Γ α : OneForm K) : TwoForm K :=
+  connectionWedgeSquare K (Γ + α) - connectionWedgeSquare K Γ -
+    connectionWedgeSquare K α
+
+@[simp] theorem connectionCrossWedge_apply (Γ α : OneForm K) (x y : K.L) :
+    connectionCrossWedge K Γ α x y =
+      Γ x * α y - α y * Γ x - Γ y * α x + α x * Γ y := by
+  change connectionWedgeSquare K (Γ + α) x y - connectionWedgeSquare K Γ x y -
+    connectionWedgeSquare K α x y = _
+  simp only [connectionWedgeSquare_apply, LinearMap.add_apply]
+  noncomm_ring
+
+theorem connectionCrossWedge_comm (Γ α : OneForm K) :
+    connectionCrossWedge K Γ α = connectionCrossWedge K α Γ := by
+  apply twoForm_ext K
+  intro x y
+  simp only [connectionCrossWedge_apply]
+  noncomm_ring
+
+/-- Compatibility form retained for earlier users of the mixed curvature term. -/
 def connectionMixedWedge (Γ α : OneForm K) : TwoForm K :=
   ⟨LinearMap.mk₂ R
       (fun x y =>
@@ -52,23 +77,71 @@ def connectionMixedWedge (Γ α : OneForm K) : TwoForm K :=
 @[simp] theorem connectionMixedWedge_apply
     (Γ α : OneForm K) (x y : K.L) :
     connectionMixedWedge K Γ α x y =
-      (Γ x * α y - α y * Γ x) - (Γ y * α x - α x * Γ y) :=
-  rfl
+      (Γ x * α y - α y * Γ x) - (Γ y * α x - α x * Γ y) := rfl
 
-/-- Symmetry comes from the two degree-one slots, not from commuting
-coefficient matrices. -/
 theorem connectionMixedWedge_comm (Γ α : OneForm K) :
-    connectionMixedWedge K Γ α = connectionMixedWedge K α Γ := by
-  apply Subtype.ext
-  apply LinearMap.ext
-  intro x
-  apply LinearMap.ext
-  intro y
-  change (Γ x * α y - α y * Γ x) - (Γ y * α x - α x * Γ y) =
-    (α x * Γ y - Γ y * α x) - (α y * Γ x - Γ x * α y)
+    connectionMixedWedge K Γ α = connectionMixedWedge K α Γ :=
+  by
+    apply Subtype.ext
+    apply LinearMap.ext
+    intro x
+    apply LinearMap.ext
+    intro y
+    change (Γ x * α y - α y * Γ x) - (Γ y * α x - α x * Γ y) =
+      (α x * Γ y - Γ y * α x) - (α y * Γ x - Γ x * α y)
+    abel
+
+/-- The new polarization convention agrees with the established mixed wedge. -/
+theorem connectionCrossWedge_eq_connectionMixedWedge (Γ α : OneForm K) :
+    connectionCrossWedge K Γ α = connectionMixedWedge K Γ α := by
+  apply twoForm_ext K
+  intro x y
+  rw [connectionCrossWedge_apply, connectionMixedWedge_apply]
   abel
 
-/-- On the diagonal the mixed wedge is twice the quadratic wedge. -/
+/-- The native linearized curvature map `d_Γ` on one-cochains. -/
+def curvatureLinearization (Γ : OneForm K) : OneForm K →ₗ[R] TwoForm K where
+  toFun α := exteriorDerivativeOne K α + connectionCrossWedge K Γ α
+  map_add' α β := by
+    apply twoForm_ext K
+    intro x y
+    simp only [map_add, add_apply_apply, LinearMap.add_apply, exteriorDerivativeOne_apply,
+      connectionCrossWedge_apply]
+    noncomm_ring
+  map_smul' r α := by
+    apply twoForm_ext K
+    intro x y
+    simp only [map_smul, add_apply_apply, smul_apply_apply, LinearMap.smul_apply,
+      connectionCrossWedge_apply, smul_add, smul_sub, smul_mul_assoc,
+      mul_smul_comm, RingHom.id_apply]
+
+@[simp] theorem curvatureLinearization_apply (Γ α : OneForm K) (x y : K.L) :
+    curvatureLinearization K Γ α x y =
+      covariantDerivative K Γ x (α y) - covariantDerivative K Γ y (α x) -
+        α ⁅x, y⁆ := by
+  simp only [curvatureLinearization, LinearMap.coe_mk, AddHom.coe_mk,
+    add_apply_apply, exteriorDerivativeOne_apply, connectionCrossWedge_apply,
+    covariantDerivative]
+  noncomm_ring
+
+/-- Exact Taylor expansion in the algebraic connection space. -/
+theorem connectionCurvature_add (Γ α : OneForm K) :
+    connectionCurvature K (Γ + α) = connectionCurvature K Γ +
+      curvatureLinearization K Γ α + connectionWedgeSquare K α := by
+  apply twoForm_ext K
+  intro x y
+  simp only [add_apply_apply, connectionCurvature_apply, curvatureLinearization_apply,
+    connectionWedgeSquare_apply, LinearMap.add_apply, map_add, covariantDerivative]
+  noncomm_ring
+
+theorem connectionWedgeSquare_smul (α : OneForm K) (t : R) :
+    connectionWedgeSquare K (t • α) = t ^ 2 • connectionWedgeSquare K α := by
+  apply twoForm_ext K
+  intro x y
+  simp only [smul_apply_apply, connectionWedgeSquare_apply, LinearMap.smul_apply,
+    smul_mul_assoc, mul_smul_comm, smul_smul, ← smul_sub, pow_two]
+
+/-- The compatibility mixed wedge restricts to twice the quadratic wedge. -/
 theorem connectionMixedWedge_self (α : OneForm K) :
     connectionMixedWedge K α α = (2 : R) • connectionWedgeSquare K α := by
   apply Subtype.ext
@@ -81,105 +154,60 @@ theorem connectionMixedWedge_self (α : OneForm K) :
   rw [two_smul]
   abel
 
-/-- The covariant exterior derivative on one-forms as a native linear map. -/
-def covariantExteriorDerivativeOne (Γ : OneForm K) :
-    OneForm K →ₗ[R] TwoForm K where
-  toFun α := exteriorDerivativeOne K α + connectionMixedWedge K Γ α
-  map_add' α β := by
-    apply Subtype.ext
-    apply LinearMap.ext
-    intro x
-    apply LinearMap.ext
-    intro y
-    change exteriorDerivativeOne K (α + β) x y +
-        connectionMixedWedge K Γ (α + β) x y =
-      (exteriorDerivativeOne K α x y + connectionMixedWedge K Γ α x y) +
-        (exteriorDerivativeOne K β x y + connectionMixedWedge K Γ β x y)
-    simp only [exteriorDerivativeOne_apply, connectionMixedWedge_apply,
-      LinearMap.add_apply, map_add, LieModule.Cohomology.add_apply_apply,
-      mul_add, add_mul]
-    abel
-  map_smul' t α := by
-    apply Subtype.ext
-    apply LinearMap.ext
-    intro x
-    apply LinearMap.ext
-    intro y
-    change exteriorDerivativeOne K (t • α) x y +
-        connectionMixedWedge K Γ (t • α) x y =
-      t • (exteriorDerivativeOne K α x y + connectionMixedWedge K Γ α x y)
-    simp only [exteriorDerivativeOne_apply, connectionMixedWedge_apply,
-      LinearMap.smul_apply, map_smul, LieModule.Cohomology.smul_apply_apply,
-      smul_mul_assoc, mul_smul_comm,
-      smul_add, smul_sub]
+/-- The quadratic term is the full noncommutative self-wedge. -/
+theorem connectionCurvature_add_smul (Γ α : OneForm K) (t : R) :
+    connectionCurvature K (Γ + t • α) = connectionCurvature K Γ +
+      t • curvatureLinearization K Γ α + t ^ 2 • connectionWedgeSquare K α := by
+  rw [connectionCurvature_add, map_smul, connectionWedgeSquare_smul]
 
-@[simp] theorem covariantExteriorDerivativeOne_apply
-    (Γ α : OneForm K) (x y : K.L) :
-    covariantExteriorDerivativeOne K Γ α x y =
-      K.operatorAction x (α y) - K.operatorAction y (α x) - α ⁅x, y⁆ +
-        ((Γ x * α y - α y * Γ x) - (Γ y * α x - α x * Γ y)) :=
-  rfl
-
-/-- Exact finite perturbation formula in the full noncommutative coefficient
-algebra. No terms of order two are discarded. -/
-theorem connectionCurvature_add_smul
-    (Γ α : OneForm K) (t : R) :
-    connectionCurvature K (Γ + t • α) =
-      connectionCurvature K Γ +
-        t • covariantExteriorDerivativeOne K Γ α +
-        t ^ 2 • connectionWedgeSquare K α := by
-  apply Subtype.ext
-  apply LinearMap.ext
-  intro x
-  apply LinearMap.ext
-  intro y
-  change connectionCurvature K (Γ + t • α) x y =
-    connectionCurvature K Γ x y +
-      t • covariantExteriorDerivativeOne K Γ α x y +
-      t ^ 2 • connectionWedgeSquare K α x y
-  simp only [connectionCurvature_apply, covariantExteriorDerivativeOne_apply,
-    connectionWedgeSquare_apply, LinearMap.add_apply, LinearMap.smul_apply,
-    map_add, map_smul, mul_add, add_mul, smul_mul_assoc, mul_smul_comm,
-    smul_add, smul_sub, smul_smul, pow_two]
-  abel
-
-/-- Unit-parameter form of the exact curvature perturbation identity. -/
-theorem connectionCurvature_add (Γ α : OneForm K) :
-    connectionCurvature K (Γ + α) =
-      connectionCurvature K Γ + covariantExteriorDerivativeOne K Γ α +
-        connectionWedgeSquare K α := by
-  simpa using connectionCurvature_add_smul K Γ α (1 : R)
-
-/-- Changing the connection changes its linearized curvature by the mixed
-wedge term. -/
-theorem covariantExteriorDerivativeOne_add_smul
-    (Γ α β : OneForm K) (t : R) :
-    covariantExteriorDerivativeOne K (Γ + t • α) β =
-      covariantExteriorDerivativeOne K Γ β +
-        t • connectionMixedWedge K α β := by
-  apply Subtype.ext
-  apply LinearMap.ext
-  intro x
-  apply LinearMap.ext
-  intro y
-  change covariantExteriorDerivativeOne K (Γ + t • α) β x y =
-    covariantExteriorDerivativeOne K Γ β x y +
-      t • connectionMixedWedge K α β x y
-  simp only [covariantExteriorDerivativeOne_apply, connectionMixedWedge_apply,
-    LinearMap.add_apply, LinearMap.smul_apply, add_mul, mul_add,
-    smul_mul_assoc, mul_smul_comm, smul_sub]
-  abel
-
-/-- The second mixed curvature difference is independent of the original
-connection. -/
+/-- The mixed second difference is independent of the background connection. -/
 theorem connectionCurvature_mixed_difference (Γ α β : OneForm K) :
     connectionCurvature K (Γ + α + β) - connectionCurvature K (Γ + α) -
-        connectionCurvature K (Γ + β) + connectionCurvature K Γ =
-      connectionMixedWedge K α β := by
-  have h := covariantExteriorDerivativeOne_add_smul K Γ α β (1 : R)
-  simp only [one_smul] at h
-  rw [connectionCurvature_add K (Γ + α) β, h,
-    connectionCurvature_add K Γ β]
-  abel
+      connectionCurvature K (Γ + β) + connectionCurvature K Γ =
+        connectionCrossWedge K α β := by
+  apply twoForm_ext K
+  intro x y
+  change connectionCurvature K (Γ + α + β) x y - connectionCurvature K (Γ + α) x y -
+    connectionCurvature K (Γ + β) x y + connectionCurvature K Γ x y = _
+  simp only [connectionCurvature_apply,
+    connectionCrossWedge_apply, LinearMap.add_apply, map_add]
+  noncomm_ring
+
+/-- The induced covariant differential of an algebra-valued zero-form. -/
+def covariantExteriorDerivativeZero (Γ : OneForm K) (a : A) : OneForm K :=
+  exteriorDerivativeZero K a + (LinearMap.mulRight R a).comp Γ -
+    (LinearMap.mulLeft R a).comp Γ
+
+@[simp] theorem covariantExteriorDerivativeZero_apply
+    (Γ : OneForm K) (a : A) (x : K.L) :
+    covariantExteriorDerivativeZero K Γ a x = covariantDerivative K Γ x a := rfl
+
+/-- Infinitesimal gauge directions act on curvature by its inner derivation. -/
+theorem curvatureLinearization_covariantExteriorDerivativeZero
+    (Γ : OneForm K) (a : A) (x y : K.L) :
+    curvatureLinearization K Γ (covariantExteriorDerivativeZero K Γ a) x y =
+      connectionCurvature K Γ x y * a - a * connectionCurvature K Γ x y := by
+  simpa only [curvatureLinearization_apply, covariantExteriorDerivativeZero_apply]
+    using covariantDerivative_commutator K Γ x y a
+
+/-- Flat connections have infinitesimal gauge directions in the linearized kernel. -/
+theorem curvatureLinearization_gauge_eq_zero_of_flat
+    (Γ : OneForm K) (hΓ : connectionCurvature K Γ = 0) (a : A) :
+    curvatureLinearization K Γ (covariantExteriorDerivativeZero K Γ a) = 0 := by
+  apply twoForm_ext K
+  intro x y
+  rw [curvatureLinearization_covariantExteriorDerivativeZero, hΓ]
+  simp
+
+/-- Explicit comparison with the existing regular-module curvature convention.
+The Lie-direction correction is retained unless its vanishing is proved. -/
+theorem connectionCurvature_eq_regular_curvature_sub
+    (Γ : OneForm K) (x y : K.L) :
+    connectionCurvature K Γ x y =
+      InfoGeometry.Geometry.AssociativeGaugeConnection.curvature
+        (K.operatorAction x) (K.operatorAction y) (Γ x) (Γ y) - Γ ⁅x, y⁆ := by
+  simp only [connectionCurvature_apply,
+    InfoGeometry.Geometry.AssociativeGaugeConnection.curvature]
+  noncomm_ring
 
 end InfoGeometry.OperatorAlgebra.DerivationDifferentialForms

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARSpinorCliffordActionBridge
@@ -22,24 +27,27 @@ open InfoGeometry.Canonical.MixedCAROperatorAnticommutatorBridge
 
 variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
 
-/-- **Theorem**: Mixed CAR Operator Action on Vacuum State |0⟩ = 1. -/
+/-- On the vacuum the reverse-ordered term vanishes by native annihilation. -/
 theorem mixed_car_on_vacuum (u : U) (alpha : U →ₗ[R] R) :
     mixedCARAnticommutator u alpha (vacuumState R U) =
     (contractionOp (evaluationLinear u)) (creationOp alpha (vacuumState R U)) := by
-  dsimp [mixedCARAnticommutator, creationOp, vacuumState, contractionOp]
-  rw [mul_zero, add_zero]
+  unfold mixedCARAnticommutator
+  rw [annihilation_vacuum_zero]
+  simp only [creationOp, mul_zero, add_zero]
 
-/-- **Theorem**: Master Vacuum Expectation Value of CAR Synthesis.
-    Unifies:
-    1. Mixed CAR operator anticommutator sum {a_u, ε_α} |0⟩ on vacuum state |0⟩ = 1.
-    2. Annihilation operator vacuum state annihilation a_u |0⟩ = 0.
-    3. Vacuum expectation pairing identity (ev_u α) • |0⟩ = α(u) • |0⟩. -/
+/-- The actual mixed CAR evaluates to the scalar pairing times the vacuum. -/
+theorem mixed_car_vacuum_evaluation (u : U) (alpha : U →ₗ[R] R) :
+    mixedCARAnticommutator u alpha (vacuumState R U) =
+      alpha u • vacuumState R U :=
+  mixed_car_operator_identity u alpha (vacuumState R U)
+
+/-- The original vacuum/evaluation compatibility packet retains its statement. -/
 theorem master_vacuum_expectation_car_synthesis
     (u : U) (alpha : U →ₗ[R] R) :
-    (mixedCARAnticommutator u alpha (vacuumState R U) = (contractionOp (evaluationLinear u)) (creationOp alpha (vacuumState R U))) ∧
-    ((evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U)) := ⟨
-  mixed_car_on_vacuum u alpha,
-  rfl
-⟩
+    (mixedCARAnticommutator u alpha (vacuumState R U) =
+      (contractionOp (evaluationLinear u)) (creationOp alpha (vacuumState R U))) ∧
+    ((evaluationLinear u alpha) • (vacuumState R U) =
+      alpha u • (vacuumState R U)) :=
+  ⟨mixed_car_on_vacuum u alpha, rfl⟩
 
 end InfoGeometry.Canonical.VacuumExpectationCARBridge

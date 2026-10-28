@@ -97,7 +97,9 @@ theorem mixed_charge_trace_skew_defect :
     trace ((F S) * (1 : Matrix (Fin 4) (Fin 4) ℂ)) +
       trace (S * (F (1 : Matrix (Fin 4) (Fin 4) ℂ))) = 448 := by
   rw [mixed_charge_reflection, mixed_charge_one, zero_mul, trace_zero, zero_add]
-  norm_num [PeirceGrading.reflection, projection, charge, Ring.lie_def,
+  rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  simp only [PeirceGrading.reflection, two_mul, two_nsmul]
+  norm_num [projection, charge, Ring.lie_def,
     Matrix.trace, Matrix.mul_apply, Matrix.vecMul, dotProduct, conjTranspose_apply,
     map_ofNat, Fin.sum_univ_succ]
 
@@ -107,7 +109,8 @@ theorem raw_commutator_trace_symmetry_defect :
   simp only [LinearMap.sub_apply, Module.End.mul_apply, LinearMap.add_apply,
     LieAlgebra.ad_apply, Ring.lie_def]
   norm_num [gram, charge, probe, Matrix.single, Matrix.trace, Matrix.mul_apply,
-    Matrix.vecMul, dotProduct, conjTranspose_apply, map_ofNat, Fin.sum_univ_succ]
+    Matrix.vecMul, Matrix.vecHead, Matrix.vecTail, dotProduct, conjTranspose_apply,
+    map_ofNat, Fin.sum_univ_succ]
 
 /-- The raw perturbation fails star compatibility on `probe + probeᴴ`, with explicit orientation. -/
 theorem raw_commutator_star_defect :
@@ -118,7 +121,7 @@ theorem raw_commutator_star_defect :
     dotProduct, conjTranspose_apply, map_ofNat, Fin.sum_univ_succ]
 
 /-- The charge centralizes its Gram matrix but is absent from the joint-commutant kernel. -/
-theorem charge_not_doubleCommutator_kernel : charge ∉ Δ.ker := by
+theorem charge_not_doubleCommutator_kernel : charge ∉ LinearMap.ker Δ := by
   intro h
   have hpair := (doubleCommutator_apply_eq_zero_iff charge charge).mp
     (LinearMap.mem_ker.mp h)
@@ -126,12 +129,12 @@ theorem charge_not_doubleCommutator_kernel : charge ∉ Δ.ker := by
 
 /-- The identity remains in the ordinary paired double-commutator kernel. -/
 theorem identity_doubleCommutator_kernel :
-    (1 : Matrix (Fin 4) (Fin 4) ℂ) ∈ Δ.ker :=
+    (1 : Matrix (Fin 4) (Fin 4) ℂ) ∈ LinearMap.ker Δ :=
   LinearMap.mem_ker.mpr double_charge_one
 
 /-- The ordinary paired kernel differs from the actual graded Hodge kernel. -/
 theorem doubleCommutator_kernel_ne_gradedHodge_kernel :
-    Δ.ker ≠
+    LinearMap.ker Δ ≠
       (gradedAdjoint θ charge * (gradedAdjoint θ charge).adjoint +
         (gradedAdjoint θ charge).adjoint * gradedAdjoint θ charge).ker := by
   intro h

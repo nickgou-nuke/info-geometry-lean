@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Data.Finset.Basic
-import Mathlib.Tactic.DeriveFintype
+import Mathlib.Data.Fintype.Basic
 
 /-!
 # A finite partial order for the graded inverse compilation stages
@@ -18,19 +18,25 @@ namespace InfoGeometry.Canonical.GradedDMPDependencyOrder
 
 inductive Stage where
   | retract | peirce | drazin | penrose | hybrid | obstruction | transport | witness
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
-open Stage
+instance : Fintype Stage where
+  elems := {Stage.retract, Stage.peirce, Stage.drazin, Stage.penrose,
+    Stage.hybrid, Stage.obstruction, Stage.transport, Stage.witness}
+  complete s := by cases s <;> simp
 
 def prerequisites : Stage → Finset Stage
-  | retract => {retract}
-  | peirce => {retract, peirce}
-  | drazin => {retract, peirce, drazin}
-  | penrose => {penrose}
-  | hybrid => {retract, peirce, drazin, penrose, hybrid}
-  | obstruction => {retract, peirce, drazin, penrose, hybrid, obstruction}
-  | transport => {retract, peirce, drazin, penrose, hybrid, transport}
-  | witness => {retract, peirce, drazin, penrose, hybrid, obstruction, transport, witness}
+  | .retract => {Stage.retract}
+  | .peirce => {Stage.retract, Stage.peirce}
+  | .drazin => {Stage.retract, Stage.peirce, Stage.drazin}
+  | .penrose => {Stage.penrose}
+  | .hybrid => {Stage.retract, Stage.peirce, Stage.drazin, Stage.penrose, Stage.hybrid}
+  | .obstruction =>
+      {Stage.retract, Stage.peirce, Stage.drazin, Stage.penrose, Stage.hybrid, Stage.obstruction}
+  | .transport =>
+      {Stage.retract, Stage.peirce, Stage.drazin, Stage.penrose, Stage.hybrid, Stage.transport}
+  | .witness => {Stage.retract, Stage.peirce, Stage.drazin, Stage.penrose,
+      Stage.hybrid, Stage.obstruction, Stage.transport, Stage.witness}
 
 theorem prerequisites_injective : Function.Injective prerequisites := by decide
 
@@ -43,13 +49,15 @@ instance : PartialOrder Stage where
 instance : DecidableLE Stage := fun a b =>
   inferInstanceAs (Decidable (prerequisites a ⊆ prerequisites b))
 
-theorem inverse_branches_incomparable : ¬drazin ≤ penrose ∧ ¬penrose ≤ drazin := by decide
+theorem inverse_branches_incomparable :
+    ¬Stage.drazin ≤ Stage.penrose ∧ ¬Stage.penrose ≤ Stage.drazin := by decide
 
-theorem join_requires_both : drazin ≤ hybrid ∧ penrose ≤ hybrid := by decide
+theorem join_requires_both : Stage.drazin ≤ Stage.hybrid ∧ Stage.penrose ≤ Stage.hybrid := by
+  decide
 
 theorem continuation_branches_incomparable :
-    ¬obstruction ≤ transport ∧ ¬transport ≤ obstruction := by decide
+    ¬Stage.obstruction ≤ Stage.transport ∧ ¬Stage.transport ≤ Stage.obstruction := by decide
 
-theorem stages_reach_witness (s : Stage) : s ≤ witness := by cases s <;> decide
+theorem stages_reach_witness (s : Stage) : s ≤ Stage.witness := by cases s <;> decide
 
 end InfoGeometry.Canonical.GradedDMPDependencyOrder

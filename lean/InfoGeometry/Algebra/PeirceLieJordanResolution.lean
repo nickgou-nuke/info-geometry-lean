@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.IdempotentProjector
+import InfoGeometry.Algebra.PeirceDeWittChiralSplit
 import InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
 /-!
@@ -136,6 +137,15 @@ theorem twice_peirce01 {p : A} (hp : p * p = p) (x : A) :
     (p * x - x * p)
   simp only [two_nsmul]
   noncomm_ring
+
+/-- The doubled commutator action is exactly the existing off-diagonal part. -/
+theorem ad_square_eq_oddPart {p : A} (hp : p * p = p) (x : A) :
+    LieAlgebra.ad R A p (LieAlgebra.ad R A p x) =
+      InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart p x := by
+  rw [ad_square_apply hp]
+  simp only [InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart,
+    peirce10, peirce01, compIdempotent, two_nsmul]
+  noncomm_ring [hp]
 
 /-- The Jordan operator is the identity on the image of the idempotent adjoint. -/
 theorem jordan_ad_apply {p : A} (hp : p * p = p) (x : A) :

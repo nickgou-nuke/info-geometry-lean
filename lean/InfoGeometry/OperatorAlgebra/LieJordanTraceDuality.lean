@@ -60,20 +60,20 @@ theorem trace_same_side_defect (H S X Y : Matrix n n R) :
   calc
     _ = (trace (ad R H X * Y) + trace (X * ad R H Y)) +
         (trace (jordan R S X * Y) + trace (jordan R S X * Y)) := by abel
-    _ = _ := by rw [trace_ad_skew]; simp [two_nsmul]
+    _ = _ := by rw [trace_ad_skew]; simp [two_mul]
 
 /-- The trace shift of the positive perturbation; it is not generally zero. -/
 theorem trace_plus (H S X : Matrix n n R) :
     trace (dualPlus R H S X) = 2 • trace (S * X) := by
   simp only [dualPlus_apply, trace_add, trace_sub]
   rw [trace_mul_comm X H, trace_mul_comm X S]
-  simp [two_nsmul]
+  simp [two_mul]
 
 theorem trace_minus (H S X : Matrix n n R) :
     trace (dualMinus R H S X) = -(2 • trace (S * X)) := by
   simp only [dualMinus_apply, trace_add, trace_sub]
   rw [trace_mul_comm X H, trace_mul_comm X S]
-  simp [two_nsmul]
+  simp [two_mul]
 
 /-- Exact obstruction to symmetry of a left-weighted bilinear trace form. -/
 theorem weighted_symmetry_defect (W X Y : Matrix n n R) :
@@ -94,9 +94,9 @@ theorem weighted_symmetric_iff (W : Matrix n n R) :
       _ = trace ((X * W) * Y) := by
         rw [trace_cycle3 X W Y, mul_assoc W Y X]
   · intro h X Y
-    have hz := weighted_symmetry_defect W X Y
-    rw [h X, sub_self, zero_mul, trace_zero] at hz
-    exact sub_eq_zero.mp hz
+    calc
+      trace (W * X * Y) = trace (X * W * Y) := by rw [h X]
+      _ = trace (W * Y * X) := by rw [trace_cycle3 X W Y, mul_assoc]
 
 section Star
 

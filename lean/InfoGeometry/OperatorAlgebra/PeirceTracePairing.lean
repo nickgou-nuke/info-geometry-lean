@@ -73,9 +73,10 @@ theorem weighted_peirce_split {p : Matrix n n R} (hp : p * p = p)
 theorem weighted_even_symmetric {p : Matrix n n R} (hp : p * p = p)
     (X Y : Matrix n n R) :
     trace (grading p * evenPart p X * Y) = trace (grading p * Y * evenPart p X) := by
-  have h := weighted_symmetry_defect (grading p) (evenPart p X) Y
-  rw [grading_commutes_evenPart p hp X, sub_self, zero_mul, trace_zero] at h
-  exact sub_eq_zero.mp h
+  calc
+    _ = trace (evenPart p X * grading p * Y) := by
+      rw [grading_commutes_evenPart p hp X]
+    _ = _ := by rw [trace_cycle3 (evenPart p X) (grading p) Y, mul_assoc]
 
 /-- The grade-weighted trace is skew when its first input is odd. -/
 theorem weighted_odd_skew {p : Matrix n n R} (hp : p * p = p)

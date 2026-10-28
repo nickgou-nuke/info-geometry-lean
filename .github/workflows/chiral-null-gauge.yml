@@ -1,0 +1,78 @@
+name: Chiral null gauge (scoped kernel)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralCouplingOperators.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MaurerCartanFrameTransport.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/InnerDivergenceCharge.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ProjectiveNullInversion.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ConservedOperatorFlow.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralNullGaugeTests.lean'
+      - 'tools/quality/check_chiral_null_gauge.py'
+      - '.github/workflows/chiral-null-gauge.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: chiral-null-gauge-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact head and unchanged Mathlib pin
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          pin = next(p for p in json.loads(pathlib.Path('project/lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write('MATHLIB_REV=' + pin['rev'] + '\n')
+          PY
+      - name: Restore pinned Mathlib artifacts only
+        id: mathlib-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: pinned-mathlib/.lake
+          key: chiral-null-pinned-mathlib-${{ env.MATHLIB_REV }}-v1
+          restore-keys: |
+            perjes-pinned-mathlib-${{ env.MATHLIB_REV }}-v1
+      - name: Install exact toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Serial source-closure build and public axiom audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_chiral_null_gauge.py --mathlib-root pinned-mathlib --output verification
+      - name: Save only pinned dependency cache
+        if: always() && steps.mathlib-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: pinned-mathlib/.lake
+          key: chiral-null-pinned-mathlib-${{ env.MATHLIB_REV }}-v1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chiral-null-gauge-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/src

@@ -73,7 +73,7 @@ sent = js("""
   var buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
   var btn = buttons.find(function(b) {
     var label = (b.getAttribute('aria-label') || '') + ' ' + (b.getAttribute('title') || '') + ' ' + (b.innerText || '');
-    return /Send|Submit|Ask|Search AI/i.test(label) && !b.disabled && b.offsetParent !== null;
+    return /Send|Submit|Ask|Search AI|Изпращане/i.test(label) && !b.disabled && b.offsetParent !== null;
   });
   if (!btn) {
     btn = document.querySelector('button[type="submit"]:not([disabled])');
@@ -120,8 +120,8 @@ started = time.monotonic()
 for _ in range(timeout // 3):
     time.sleep(3)
     body = js("return (document.body.innerText || '')")
-    prompt_idx = body.find(prompt_need) if prompt_need else 0
-    response_region = body[prompt_idx:] if prompt_idx >= 0 else body
+    prompt_idx = body.rfind(prompt_need) if prompt_need else 0
+    response_region = body[prompt_idx + len(prompt_need):] if prompt_idx >= 0 else body
     if (
         prompt_idx >= 0
         and not _is_intermediate(body)
@@ -148,10 +148,20 @@ for _ in range(timeout // 3):
 # Extract full response
 time.sleep(1)
 body = js("return (document.body.innerText || '')")
-idx = body.find("AI Mode")
-if idx == -1:
-    idx = body.find("Gemini")
-result = {"summary": body[idx:idx+6000] if idx >= 0 else body[:6000], "links": []}
+prompt_tail = prompt.strip()[-160:]
+tail_idx = body.rfind(prompt_tail) if prompt_tail else -1
+if tail_idx >= 0:
+    response_start = tail_idx + len(prompt_tail)
+    summary = body[response_start:response_start + 6000]
+else:
+    anchor_idx = body.rfind(prompt_need) if prompt_need else -1
+    if anchor_idx >= 0:
+        response_start = anchor_idx + len(prompt_need)
+        summary = body[response_start:response_start + 6000]
+    else:
+        idx = max(body.rfind("AI Mode"), body.rfind("Gemini"))
+        summary = body[idx:idx+6000] if idx >= 0 else body[-6000:]
+result = {"summary": summary, "links": []}
 result["summary"] = _clean_summary(result["summary"])
 
 # Extract links

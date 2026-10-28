@@ -101,6 +101,27 @@ theorem adjoint_coupling_square (B : Matrix m n R) :
 
 end StarBlocks
 
+section GradedDerivation
+variable {A : Type*} [Ring A]
+
+/-- Odd inner superderivation, squared on an even input. -/
+theorem superderivation_square_even (D a : A) :
+    D * (D * a - a * D) + (D * a - a * D) * D =
+      (D * D) * a - a * (D * D) := by noncomm_ring
+
+/-- The same square on an odd input, with the other bracket order. -/
+theorem superderivation_square_odd (D a : A) :
+    D * (D * a + a * D) - (D * a + a * D) * D =
+      (D * D) * a - a * (D * D) := by noncomm_ring
+
+/-- Centrality on a selected observable is a condition, not inferred globally. -/
+theorem superderivation_square_zero_of_commute (D a : A)
+    (ha : Commute (D * D) a) :
+    D * (D * a - a * D) + (D * a - a * D) * D = 0 := by
+  rw [superderivation_square_even, ha.eq, sub_self]
+
+end GradedDerivation
+
 section Parity
 variable {A : Type*} [Ring A] [Algebra ℝ A]
 
@@ -146,9 +167,11 @@ theorem parityAverage_preserves_square_of_odd
     (γ a : A) (hγ : γ * γ = 1) (ha : γ * a * γ = -a) :
     parityAverage γ (a * a) = a * a := by
   apply parityAverage_eq_self
-  calc γ * (a * a) * γ = (γ * a * γ) * (γ * a * γ) := by
-         simp [mul_assoc, hγ]
-       _ = a * a := by rw [ha]; simp
+  have h : (γ * a * γ) * (γ * a * γ) = γ * (a * a) * γ := by
+    calc (γ * a * γ) * (γ * a * γ) = γ * a * (γ * γ) * a * γ := by noncomm_ring
+      _ = γ * (a * a) * γ := by rw [hγ]; noncomm_ring
+  rw [← h, ha]
+  simp
 
 end Parity
 

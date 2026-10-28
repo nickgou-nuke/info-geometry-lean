@@ -118,7 +118,7 @@ theorem trace_mixed_isSkewAdjoint_iff (u v : Matrix n n R) :
       trace (X * -((D u * J v - D v * J u) Y)) at hs
     rw [mul_neg, trace_neg] at hs
     rw [hs, neg_add_cancel] at hd
-    simpa only [LinearMap.smul_apply, LinearMap.zero_apply, two_nsmul,
+    simpa only [LinearMap.smul_apply, LinearMap.zero_apply, two_nsmul, LinearMap.add_apply,
       mul_add, trace_add, mul_zero, trace_zero] using hd.symm
   · intro h
     have hsum : (J u * D v - J v * D u) + (D u * J v - D v * J u) = 0 := by

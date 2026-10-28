@@ -59,10 +59,14 @@ theorem square_zero_pair_adjoin_le_centralizer {u v : A}
   apply (Subalgebra.mem_centralizer_iff R).mpr
   intro g hg
   rcases Set.mem_insert_iff.mp hg with rfl | hg
-  · noncomm_ring [hu]
+  · simp only [mul_add, add_mul, ← mul_assoc g g v, mul_assoc v g g, hu,
+      zero_mul, mul_zero, zero_add, add_zero]
+    exact (mul_assoc g v g).symm
   · have hgv := Set.mem_singleton_iff.mp hg
     subst g
-    noncomm_ring [hv]
+    simp only [mul_add, add_mul, ← mul_assoc v v u, mul_assoc u v v, hv,
+      zero_mul, mul_zero, zero_add, add_zero]
+    exact (mul_assoc v u v).symm
 
 /-- The generated algebra is a native submodule of stationary vectors. -/
 theorem square_zero_pair_adjoin_le_ker (c : R) {u v : A}

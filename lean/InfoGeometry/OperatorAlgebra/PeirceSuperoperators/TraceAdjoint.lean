@@ -57,8 +57,10 @@ theorem trace_adjoint_double_lie (u v : Matrix n n R) :
     (f' := D v) (g' := -D v) (trace_adjoint_ad u) (trace_adjoint_ad v)
   have h₂ := LinearMap.IsAdjointPair.mul (f := D v) (g := -D v)
     (f' := D u) (g' := -D u) (trace_adjoint_ad v) (trace_adjoint_ad u)
-  simpa only [neg_mul_neg, neg_one_smul, add_comm] using
-    LinearMap.IsAdjointPair.smul (-1 : R) (h₁.add h₂)
+  intro X Y
+  simpa only [neg_mul_neg, LinearMap.neg_apply, LinearMap.add_apply,
+    Pi.smul_apply, Pi.add_apply, Pi.neg_apply, neg_one_smul, add_comm] using
+    LinearMap.IsAdjointPair.smul (-1 : R) (h₁.add h₂) X Y
 
 /-- The mixed action's trace adjoint has reversed composition order. -/
 theorem trace_adjoint_mixed_difference (u v : Matrix n n R) :
@@ -68,7 +70,9 @@ theorem trace_adjoint_mixed_difference (u v : Matrix n n R) :
     (f' := J v) (g' := J v) (trace_adjoint_ad u) (trace_adjoint_jordan v)
   have h₂ := LinearMap.IsAdjointPair.mul (f := D v) (g := -D v)
     (f' := J u) (g' := J u) (trace_adjoint_ad v) (trace_adjoint_jordan u)
-  simpa only [mul_neg, neg_sub_neg] using h₁.sub h₂
+  intro X Y
+  simpa only [mul_neg, LinearMap.neg_apply, LinearMap.sub_apply,
+    Pi.sub_apply, neg_sub_neg] using (h₁.sub h₂) X Y
 
 /-- Adding an inner action changes its sign in the bilinear trace adjoint. -/
 theorem trace_adjoint_commutator_perturbation (u v : Matrix n n R) :
@@ -76,7 +80,8 @@ theorem trace_adjoint_commutator_perturbation (u v : Matrix n n R) :
       (D (u * v + v * u) - (D u * D v + D v * D u) : E)
       (-D (u * v + v * u) - (D u * D v + D v * D u) : E) := by
   have h := (trace_adjoint_ad (u * v + v * u)).add (trace_adjoint_double_lie u v)
-  simpa only [sub_eq_add_neg] using h
+  intro X Y
+  simpa only [sub_eq_add_neg, LinearMap.add_apply, Pi.add_apply] using h X Y
 
 /-- The failure of mixed trace-skewness is exactly the Jordan commutator term. -/
 theorem trace_mixed_skew_defect (u v X Y : Matrix n n R) :
@@ -94,7 +99,8 @@ theorem trace_mixed_skew_defect (u v X Y : Matrix n n R) :
   have hy := LinearMap.congr_fun hsum Y
   change (J u * D v - J v * D u) Y + (D u * J v - D v * J u) Y =
     2 • (J ⁅u, v⁆ Y) at hy
-  rw [hy, mul_nsmul, trace_smul]
+  rw [hy]
+  simp only [two_nsmul, mul_add, trace_add]
 
 /-- The exact skewness obstruction is valid without a characteristic restriction. -/
 theorem trace_mixed_isSkewAdjoint_iff (u v : Matrix n n R) :
@@ -112,8 +118,8 @@ theorem trace_mixed_isSkewAdjoint_iff (u v : Matrix n n R) :
       trace (X * -((D u * J v - D v * J u) Y)) at hs
     rw [mul_neg, trace_neg] at hs
     rw [hs, neg_add_cancel] at hd
-    simpa only [LinearMap.smul_apply, LinearMap.zero_apply, mul_nsmul,
-      trace_smul, mul_zero, trace_zero] using hd.symm
+    simpa only [LinearMap.smul_apply, LinearMap.zero_apply, two_nsmul,
+      mul_add, trace_add, mul_zero, trace_zero] using hd.symm
   · intro h
     have hsum : (J u * D v - J v * D u) + (D u * J v - D v * J u) = 0 := by
       rw [jordan_lie_difference, lie_jordan_difference]

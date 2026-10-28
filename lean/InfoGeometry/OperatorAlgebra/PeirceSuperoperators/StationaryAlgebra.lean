@@ -56,7 +56,7 @@ theorem square_zero_pair_adjoin_le_centralizer {u v : A}
   intro X hX
   rw [Set.mem_singleton_iff] at hX
   subst X
-  apply Subalgebra.mem_centralizer_iff.mpr
+  apply (Subalgebra.mem_centralizer_iff R).mpr
   intro g hg
   rcases Set.mem_insert_iff.mp hg with rfl | hg
   · noncomm_ring [hu]

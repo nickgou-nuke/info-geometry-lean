@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.LieJordanGeneratorTrace
 import InfoGeometry.Canonical.RealLieJordanGeometry
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-!
 # Dense real witnesses and an exact nonpositive generator orbit
@@ -106,17 +107,22 @@ theorem U_mul_transpose_ne_transpose_mul : U * U.transpose ≠ U.transpose * U :
 theorem gram_square :
     (U * U.transpose + U.transpose * U) ^ 2 =
       (98 / 9 : ℝ) • (U * U.transpose + U.transpose * U) := by
+  have hK : U * U.transpose + U.transpose * U =
+      fun i j => (98 + probe i * probe j) / 27 := by
+    ext i j
+    exact gram_apply i j
+  rw [hK]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp only [pow_two, Matrix.mul_apply, Matrix.smul_apply] <;>
-    norm_num [gram_apply, probe, Fin.sum_univ_succ]
+    norm_num [probe, Fin.sum_univ_succ]
 
 theorem one_sub_gram_idempotence_defect_entry :
-    ((1 - (U * U.transpose + U.transpose * U)) ^ 2 -
-      (1 - (U * U.transpose + U.transpose * U))) 0 0 = 7921 / 81 := by
+    (((1 - (U * U.transpose + U.transpose * U)) ^ 2 -
+      (1 - (U * U.transpose + U.transpose * U))) : Mat3) 0 0 = 7921 / 81 := by
   rw [one_sub_idempotence_defect, gram_square]
-  simp only [Matrix.sub_apply, Matrix.smul_apply]
-  norm_num [gram_apply, probe]
+  simp only [Matrix.sub_apply, Matrix.smul_apply, gram_apply]
+  norm_num [probe]
 
 theorem one_sub_gram_not_idempotent :
     ¬ IsIdempotentElem (1 - (U * U.transpose + U.transpose * U)) := by
@@ -190,15 +196,17 @@ theorem affineOrbit_hasDerivAt (t : ℝ) :
     HasDerivAt affineOrbit
       (skewPlusGenerator (R := ℝ) U U.transpose (affineOrbit t)) t := by
   rw [affineOrbit_generator]
-  simpa only [affineOrbit, one_smul] using
-    ((hasDerivAt_id t).smul_const (skewPlusGenerator (R := ℝ) U U.transpose P)).const_add P
+  change HasDerivAt (fun s : ℝ => P + s • skewPlusGenerator (R := ℝ) U U.transpose P)
+    (skewPlusGenerator (R := ℝ) U U.transpose P) t
+  simpa using HasDerivAt.const_add P
+    ((hasDerivAt_id t).smul_const (skewPlusGenerator (R := ℝ) U U.transpose P))
 
 theorem affineOrbit_quadratic_form (t : ℝ) :
     probe ⬝ᵥ (affineOrbit t *ᵥ probe) = -(19208 / 3 : ℝ) * t := by
   rw [affineOrbit, skewPlusGenerator_projection P_idempotent
     U_mem_peirce10 U_transpose_mem_peirce01]
   simp only [Matrix.mulVec, dotProduct, Matrix.add_apply, Matrix.smul_apply,
-    Pi.smul_apply, smul_eq_mul, two_nsmul]
+    smul_eq_mul, two_nsmul]
   norm_num [bracket_apply, P, probe, Fin.sum_univ_succ]
   ring
 

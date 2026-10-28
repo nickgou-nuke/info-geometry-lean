@@ -211,16 +211,12 @@ if [ "$MODE" = "incremental" ]; then
         fi
     fi
 
-    # Test files are Lean sources but are intentionally outside the InfoGeometry
-    # Lake package. Check each changed test directly and sequentially so the
-    # incremental gate certifies them without silently skipping compilation.
+    # Test files are compiled as the InfoGeometryTestSuite Lake library. Build
+    # that owner package so test-to-test imports resolve in dependency order.
     if [ -n "$TEST_LEAN_FILES" ]; then
-        while IFS= read -r test_file; do
-            [ -n "$test_file" ] || continue
-            run_check "Kernel check ($test_file)" \
-                python3 tools/infra/run_locked_lean.py \
-                  --wait-for-build-lock "$test_file"
-        done <<<"$TEST_LEAN_FILES"
+        run_check "Locked Lake build (InfoGeometryTestSuite)" \
+            python3 tools/infra/run_locked_lake_build.py \
+              --wait-for-build-lock InfoGeometryTestSuite
     fi
 
     # This repository-wide declaration audit is a standalone Lean command

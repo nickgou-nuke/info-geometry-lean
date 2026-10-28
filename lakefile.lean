@@ -917,12 +917,17 @@ lean_lib InfoGeometryTestSuite where
   roots := #[]
   globs := #[
     `BalabanOperatorTests,
+    `MatrixPeirceZornAxiomAudit,
+    `OperatorGaugeConnectionsAxiomAudit,
+    `SeligmanCubicOperatorTests,
+    `SeligmanCubicOperatorAxiomAudit,
+    `YangMillsMatrixGeometryTests,
+    `YangMillsNativeGaugeAxiomAudit,
     `BekensteinHawkingDyadicEntropyTests,
     `ComplexAnalyticBridgeTests,
     `DvorakSystemTest,
     `ExprFingerprintHashTests,
     `InfoGeometryTests,
-    `MatrixPeirceZornAxiomAudit,
     `OperatorZornTwinCyclotomicAxiomAudit,
     `PO55ConformalClosureTests,
     `PR78Audit,

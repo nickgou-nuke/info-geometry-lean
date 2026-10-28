@@ -124,6 +124,11 @@ def curvatureLinearization (Γ : OneForm K) : OneForm K →ₗ[R] TwoForm K wher
     covariantDerivative]
   noncomm_ring
 
+/-- Covariant exterior derivative of a one-form, given by the linearized
+curvature at the background connection. -/
+abbrev covariantExteriorDerivativeOne (Γ α : OneForm K) : TwoForm K :=
+  curvatureLinearization K Γ α
+
 /-- Exact Taylor expansion in the algebraic connection space. -/
 theorem connectionCurvature_add (Γ α : OneForm K) :
     connectionCurvature K (Γ + α) = connectionCurvature K Γ +

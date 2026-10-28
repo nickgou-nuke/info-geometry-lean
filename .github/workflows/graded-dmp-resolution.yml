@@ -1,0 +1,76 @@
+name: Graded DMP resolution (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/GradedDMP*.lean'
+      - 'lean/InfoGeometry/QuantumContext/GradedDMP*.lean'
+      - 'tools/quality/check_graded_dmp_resolution.py'
+      - '.github/workflows/graded-dmp-resolution.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: graded-dmp-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact sources and pinned mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          manifest = json.loads(pathlib.Path('project/lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: graded-dmp-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install exact Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile full closure and audit every owned declaration
+        run: |
+          python3 project/tools/quality/check_graded_dmp_resolution.py \
+            --mathlib-root pinned-mathlib --output verification
+      - name: Check semantic vacuity and proof proxies
+        run: |
+          cd project
+          python3 tools/quality/semantic_vacuity_gate.py \
+            lean/InfoGeometry/Canonical/GradedDMPResolution.lean \
+            lean/InfoGeometry/QuantumContext/GradedDMPTransport.lean \
+            lean/InfoGeometry/Canonical/GradedDMPMatrixWitness.lean \
+            lean/InfoGeometry/Canonical/GradedDMPDependencyOrder.lean \
+            --fail-on error --json-out ../verification/vacuity.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: graded-dmp-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

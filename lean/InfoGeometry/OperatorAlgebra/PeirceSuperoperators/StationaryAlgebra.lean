@@ -3,7 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.Crossover
+import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.MixedActions
 import Mathlib.RingTheory.Adjoin.Polynomial.Basic
 
 /-!
@@ -93,8 +93,8 @@ theorem mixed_difference_of_mem_centralizer (u v X : A)
   change (u * v - v * u) * X + X * (u * v - v * u) +
     2 • (u * (X * v) - v * (X * u)) = 4 • ((u * v - v * u) * X)
   rw [← hpair.1.eq, ← hpair.2.eq, ← hK.eq]
-  simp only [nsmul_eq_mul]
+  rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  simp only [two_nsmul]
   noncomm_ring
 
 end InfoGeometry.OperatorAlgebra.PeirceSuperoperators
-

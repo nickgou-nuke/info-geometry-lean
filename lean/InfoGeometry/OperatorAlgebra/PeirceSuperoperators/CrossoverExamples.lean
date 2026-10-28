@@ -43,7 +43,7 @@ local notation "Δ" => -(adM charge * adM chargeᴴ + adM chargeᴴ * adM charge
 local notation "F" => adM charge * J chargeᴴ - adM chargeᴴ * J charge
 local notation "G" => adM gram - (adM charge * adM chargeᴴ + adM chargeᴴ * adM charge)
 local notation "B" =>
-  (LinearMap.mul ℂ (Matrix (Fin 4) (Fin 4) ℂ)).compr₂
+  LinearMap.compr₂ (LinearMap.mul ℂ (Matrix (Fin 4) (Fin 4) ℂ))
     (Matrix.traceLinearMap (Fin 4) ℂ ℂ)
 local notation "θ" =>
   parityEquiv (R := ℂ) projection projection_isStarProjection.isIdempotentElem

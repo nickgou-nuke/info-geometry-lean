@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.MixedActions
 import Mathlib.LinearAlgebra.BilinearForm.Properties
+import Mathlib.Algebra.Group.Pi.Torsion
 
 /-!
 # Native bilinear trace adjoints and the mixed-action defect
@@ -26,7 +27,7 @@ variable {n R : Type*} [Fintype n] [DecidableEq n] [CommRing R]
 local notation "D" => LieAlgebra.ad R (Matrix n n R)
 local notation "J" => jordanLeft (R := R)
 local notation "B" =>
-  (LinearMap.mul R (Matrix n n R)).compr₂ (Matrix.traceLinearMap n R R)
+  LinearMap.compr₂ (LinearMap.mul R (Matrix n n R)) (Matrix.traceLinearMap n R R)
 
 /-- The actual trace bilinear form pairs an inner action with its negative. -/
 theorem trace_adjoint_ad (u : Matrix n n R) :
@@ -122,6 +123,8 @@ theorem trace_mixed_isSkewAdjoint_iff (u v : Matrix n n R) :
 theorem trace_mixed_isSkewAdjoint_iff_commute [IsAddTorsionFree R]
     (u v : Matrix n n R) :
     LinearMap.IsSkewAdjoint B (D u * J v - D v * J u) ↔ Commute u v := by
+  letI : IsAddTorsionFree (Matrix n n R) :=
+    inferInstanceAs (IsAddTorsionFree (n → n → R))
   rw [trace_mixed_isSkewAdjoint_iff]
   constructor
   · intro h
@@ -167,4 +170,3 @@ theorem trace_commutator_perturbation (u v X : Matrix n n R) :
   rw [trace_sub, trace_mul_comm, sub_self]
 
 end InfoGeometry.OperatorAlgebra.PeirceSuperoperators
-

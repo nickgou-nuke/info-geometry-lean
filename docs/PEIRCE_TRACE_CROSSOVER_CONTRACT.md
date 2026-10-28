@@ -178,4 +178,3 @@ The inherited immutable-owner heuristic review remains as documented in the
 PR261 contract. New findings must be explicitly reviewed; none may be silently
 omitted or reported as zero total findings. This is scoped source-closure
 acceptance, not an assertion that the whole repository builds.
-

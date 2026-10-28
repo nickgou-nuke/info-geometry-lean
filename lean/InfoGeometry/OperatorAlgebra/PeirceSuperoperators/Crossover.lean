@@ -40,7 +40,9 @@ theorem mixed_difference_one (u v : A) :
     (D u * J v - D v * J u) 1 = 4 • ⁅u, v⁆ := by
   change (u * (v * 1 + 1 * v) - (v * 1 + 1 * v) * u) -
     (v * (u * 1 + 1 * u) - (u * 1 + 1 * u) * v) = 4 • (u * v - v * u)
-  simp only [mul_one, one_mul, nsmul_eq_mul]
+  simp only [mul_one, one_mul]
+  rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
+  simp only [two_nsmul]
   noncomm_ring
 
 /-- The upper directed corner has negative reflection weight for the inner action. -/
@@ -92,8 +94,7 @@ theorem double_lie_reflection {p : A} (hp : IsIdempotentElem p) (a b : A) :
   rw [lie_component01_reflection hp, lie_component10_reflection hp,
     map_nsmul, map_neg, map_nsmul]
   simp only [LieAlgebra.ad_apply]
-  rw [lie_skew (component01 p b) (component10 p a)]
+  rw [← lie_skew (component01 p b) (component10 p a)]
   abel
 
 end InfoGeometry.OperatorAlgebra.PeirceSuperoperators
-

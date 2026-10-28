@@ -106,9 +106,54 @@ An equality of two corner traces is not a positivity statement.
 
 ## Verification
 
-Pending kernel checking and independent acceptance. Local Lean launch fails
-with `error: failed to locate application`; verification uses the repository's
-pinned Lean/mathlib versions in an isolated, serial GitHub Actions check.
+`[kernel_verified]` All 29 new declarations passed the focused check, with
+zero Lean warnings or errors and `semantic_vacuity: 0`.
+
+- Source commit: `59b846e63ea45545e2664eaacd5dd75c1d09fc70`.
+- Checked PR merge: `f1ca9c006209d9159e23237460dbc96997027f10`.
+- [Successful run 40675941324](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40675941324),
+  job `122774239354`.
+- Command: `bash scripts/quality/check-opposite-peirce.sh`. This compiles the
+  seven-module import closure serially in an isolated directory using the
+  root-pinned mathlib revision; it does not claim a full root Lake build.
+- Lean `4.34.1`, compiler commit `5045d0056413266e57c625dcd7c365b10e377c52`;
+  Lake `5.0.0-src+5045d00`;
+  mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+- Exact-set axiom inspection: 29 declaration reports, each with precisely
+  `[propext, Classical.choice, Quot.sound]`. No extra axioms or placeholders.
+- Static placeholder scan, semantic-vacuity gate and staged proof-proxy gate
+  passed. No scalar/diagonal specialization or commuting assumption was added.
+
+Verified SHA256 fingerprints:
+
+| File | SHA256 |
+| --- | --- |
+| `OppositePeirceCoupling.lean` | `e7ff68b70a87806d409d7fafb219af4af738e9f809928bc72daea8ffdac682ef` |
+| `OppositePeirceTrace.lean` | `ee193baded42a3643b24b483f40bf62cdb26df36e41c0d86b688228efb00de98` |
+| `OppositePeirceAudit.lean` | `91368a4303278c8973257040d2c279d7c467be07b40129af354da1a641eeeea6` |
+
+Local Lean launch failed with `error: failed to locate application`, so no
+local kernel success is claimed. The first remote run diagnosed a name
+collision in four simplifier entries (`commutator` resolved to a group-theory
+constant). Fully qualifying the matrix definition repaired those steps;
+explicitly importing `RCLike.Basic` supplies complex ordered-star instances.
+The statements and hypotheses were unchanged.
+
+Independent semantic audit found the finite algebra and conditional positivity
+sound. Separate acceptance review independently retrieved the successful logs,
+matched all 29 theorem names and all three hashes, and returned
+`ACCEPTED_WITH_LIMITED_SCOPE`. The final verification-record update changes
+only this document; the verified proof files, script and workflow are unchanged.
+
+### Repository-wide checks outside this closure
+
+Full repository CI is not green. On the first source head, style run
+`40675621774`, job `122773151777`, stopped before Lean lint on the existing
+case collision `Physics/PellisFineStructure.lean` versus
+`Physics/PellisfineStructure.lean`. Sorry Gate run `40675621682`, job
+`122773150953`, failed before compilation because `lake` was missing
+(`Errno 2`, exit 127). These are separate from the successful focused kernel
+check; this PR does not repair unrelated repository infrastructure.
 
 ## Intake fingerprints
 

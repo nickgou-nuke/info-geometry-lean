@@ -173,8 +173,10 @@ intertwiners -> native kernel/range geometry. Support and quadratic centralizers
 -> exact stationary-element and idempotence criteria. Native cyclic trace and
 reflection intertwiners -> distinct trace-annihilation laws. Native real matrix
 Frobenius structure and actual adjunction -> existing adjoint-pair energy theorem
--> kernel/common-centralizer and range geometry. These branches meet in the
-dense real matrix witnesses. Edges are proof prerequisites.
+-> kernel/common-centralizer and range geometry. The algebraic and trace
+branches feed the dense real matrix witnesses; native matrix topology supplies
+their curve calculus. The Frobenius geometry is a separate consequence of the
+same generators. Edges are proof prerequisites.
 
 Acceptance requires complete Lean proofs, strict target warnings, source-hash
 reconciliation, constructivity/proof-proxy scans, exhaustive native ownership

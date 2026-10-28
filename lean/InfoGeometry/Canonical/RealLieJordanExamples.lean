@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.LieJordanGeneratorTrace
-import InfoGeometry.Canonical.RealLieJordanGeometry
+import Mathlib.Analysis.Matrix.Normed
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Add
@@ -23,7 +23,7 @@ namespace InfoGeometry.Canonical.RealLieJordanExamples
 
 open Matrix Core.PeirceDecomposition Core.PeirceGrading Core.PeirceCoupledCorners
 open Core.PeirceSandwichDuality Core.LieJordanGenerators LieJordanGeneratorTrace
-open scoped Matrix InfoGeometry.Canonical.RealLieJordanGeometry
+open scoped Matrix Matrix.Norms.Elementwise
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 

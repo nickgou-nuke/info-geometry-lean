@@ -55,7 +55,7 @@ flowchart TD
   B --> H
   T --> E["Dense real matrix witnesses"]
   S --> E
-  F --> E
+  N["Native matrix topology"] --> E
 ```
 
 ## Distinct generator laws
@@ -107,7 +107,9 @@ with `U.transpose`. Let `K=UUᵀ+UᵀU`, `C=[U,Uᵀ]`.
 | `Gminus` annihilates ordinary trace | `Tr(Gminus P) = -392/9` |
 | The skew sandwich preserves positive semidefiniteness | `(PhiMinus 1) 0 0 = -71/27` |
 
-The actual curve `X(t)=P+t Gplus(P)` satisfies `X(0)=P` and the native
+The curve uses Mathlib's native matrix product topology and the compatible
+`Matrix.Norms.Elementwise` calculus instances. The actual curve
+`X(t)=P+t Gplus(P)` satisfies `X(0)=P` and the native
 `HasDerivAt X (Gplus(X(t))) t` equation. With `a=(-13,2,11)`, its matrix
 quadratic form is `aᵀ X(t) a=-(19208/3)t`; hence `X(t)` is not positive
 semidefinite for every `t>0`. This is an explicit curve theorem, without an

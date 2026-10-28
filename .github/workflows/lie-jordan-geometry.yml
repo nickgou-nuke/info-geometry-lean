@@ -1,0 +1,76 @@
+name: Lie–Jordan matrix geometry (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Core/LieJordanComposition.lean'
+      - 'lean/InfoGeometry/Core/OperatorCliffordDouble.lean'
+      - 'lean/InfoGeometry/Core/PeirceStarCharges.lean'
+      - 'lean/InfoGeometry/Canonical/LieJordanMatrixGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/LieJordanMatrixExamples.lean'
+      - 'lean/InfoGeometry/Core/JordanAssociatorRing.lean'
+      - 'lean/InfoGeometry/Core/JordanMultiplicationClosure.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/Core/PeirceGrading.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'tools/quality/check_lie_jordan_geometry.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/lie-jordan-geometry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lie-jordan-geometry-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact source and pinned Mathlib without external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install repository-pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile exact closure, audit every declaration, and build isolated Lake targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_lie_jordan_geometry.py \
+            --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lie-jordan-geometry-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

@@ -79,7 +79,39 @@ recovering undoubled quantities requires extra hypotheses.
 
 ## Verification
 
-Pending kernel, axiom, vacuity, and independent acceptance gates.
+`[kernel_verified]` for all 29 new theorems (16 Clifford products and 13
+Peirce-pair results), within the finite algebraic scope above.
+
+- Verified source commit: `7a3ea8d5439dee90c9c15e8c932f49331555710d`.
+- Checked PR merge: `dfa2af03cd28704ed1661e7c864b3e97a551b136`.
+- Successful [run 40669221464](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40669221464),
+  job `122751457176`, executing `bash scripts/quality/check-clifford-peirce.sh`.
+- Official Lean 4.34.1, commit `5045d0056413266e57c625dcd7c365b10e377c52`;
+  Lake `5.0.0-src+5045d00`; pinned mathlib
+  `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+- Eight modules compiled sequentially with fresh project oleans and the shared
+  build lock: FiniteSpinAlgebra, PeirceDecomposition, PeirceGrading,
+  NonCommutativeFredholmIndex, LorentzianBivectorSignatureBridge,
+  CliffordMatrixProducts, PeirceOddPair, CliffordPeirceAudit.
+- Exact-set axiom gate: `AXIOM_AUDIT_PASS: 29 declarations`; each footprint
+  contains only `propext`, `Classical.choice`, and `Quot.sound`.
+- `semantic_vacuity: 0`; no Lean warnings in the focused check. New source has
+  no placeholders, custom axioms, unsafe declarations, or `native_decide`.
+  The local staged proof-proxy gate also passes.
+- Independent semantic audit and a separate acceptance reviewer returned
+  `ACCEPTED_WITH_LIMITED_SCOPE`. The acceptance reviewer independently read
+  the successful job logs, checked all 29 axiom reports, and matched all three
+  source hashes to the inspected files.
+- Final verification documentation changes do not alter the checked Lean
+  sources, workflow, or verification script. This is not a full root Lake build.
+
+Checked SHA256 source digests:
+
+| File in `lean/InfoGeometry/NCG/` | SHA256 |
+| --- | --- |
+| `CliffordMatrixProducts.lean` | `34ea150486bba0e53ea13cc23d37132159c85e235be1debfdc885f0c56c0eff6` |
+| `PeirceOddPair.lean` | `2757611981cc13b5a41d9d36a1d7596a04ff5d8f03ec2d72776e704e00d8ca5c` |
+| `CliffordPeirceAudit.lean` | `13bf927a2554b8938a0fe03cf470d6ff6b139050e8ff35ad922308a073f5bc3b` |
 
 Separate repository-wide checks are not being represented as passing:
 at source `18253fe9faf82d676f4c2eb4c6e050358cad88b8`, style run

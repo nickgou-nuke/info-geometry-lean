@@ -110,6 +110,8 @@ section Trace
 variable {G : Type*} [AddCommGroup G]
 variable (tau : A →+ G) (hcyc : ∀ a b : A, tau (a * b) = tau (b * a))
 
+include hcyc
+
 /-- The minus sign in the signed trace readout follows from cyclicity alone. -/
 theorem trace_orientedTransport (u v x : A) :
     tau (orientedTransport (R := R) u v x) = -tau ((u * v - v * u) * x) := by

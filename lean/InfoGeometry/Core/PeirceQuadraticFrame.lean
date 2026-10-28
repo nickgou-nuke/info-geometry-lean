@@ -222,10 +222,10 @@ end OppositeCorners
 
 section ReciprocalCycle
 
-variable (a e j : A) (he : ⁅a, e⁆ = j) (hj : ⁅a, j⁆ = e)
+variable (a e j : A)
 
 /-- Leibniz applied to the ordered product in an arbitrary reciprocal cycle. -/
-theorem reciprocal_product_bracket :
+theorem reciprocal_product_bracket (he : ⁅a, e⁆ = j) (hj : ⁅a, j⁆ = e) :
     ⁅a, j * e⁆ = e ^ 2 + j ^ 2 := by
   calc
     _ = ⁅a, j⁆ * e + j * ⁅a, e⁆ := by
@@ -233,7 +233,7 @@ theorem reciprocal_product_bracket :
       noncomm_ring
     _ = e ^ 2 + j ^ 2 := by rw [hj, he]; noncomm_ring
 
-theorem reciprocal_reverse_product_bracket :
+theorem reciprocal_reverse_product_bracket (he : ⁅a, e⁆ = j) (hj : ⁅a, j⁆ = e) :
     ⁅a, e * j⁆ = j ^ 2 + e ^ 2 := by
   calc
     _ = ⁅a, e⁆ * j + e * ⁅a, j⁆ := by
@@ -242,7 +242,7 @@ theorem reciprocal_reverse_product_bracket :
     _ = j ^ 2 + e ^ 2 := by rw [he, hj]; noncomm_ring
 
 /-- Differentiating a square gives the anticommutator, without division by two. -/
-theorem reciprocal_left_square_bracket :
+theorem reciprocal_left_square_bracket (he : ⁅a, e⁆ = j) :
     ⁅a, e ^ 2⁆ = j * e + e * j := by
   calc
     _ = ⁅a, e⁆ * e + e * ⁅a, e⁆ := by
@@ -250,7 +250,7 @@ theorem reciprocal_left_square_bracket :
       noncomm_ring
     _ = j * e + e * j := by rw [he]
 
-theorem reciprocal_right_square_bracket :
+theorem reciprocal_right_square_bracket (hj : ⁅a, j⁆ = e) :
     ⁅a, j ^ 2⁆ = e * j + j * e := by
   calc
     _ = ⁅a, j⁆ * j + j * ⁅a, j⁆ := by
@@ -259,7 +259,7 @@ theorem reciprocal_right_square_bracket :
     _ = e * j + j * e := by rw [hj]
 
 /-- Constancy of the ordered product is exactly the opposite-square equation. -/
-theorem reciprocal_product_bracket_eq_zero_iff :
+theorem reciprocal_product_bracket_eq_zero_iff (he : ⁅a, e⁆ = j) (hj : ⁅a, j⁆ = e) :
     ⁅a, j * e⁆ = 0 ↔ e ^ 2 = -(j ^ 2) := by
   rw [reciprocal_product_bracket a e j he hj]
   constructor
@@ -268,15 +268,15 @@ theorem reciprocal_product_bracket_eq_zero_iff :
     rw [h, neg_add_cancel]
 
 /-- Constancy of the square is exactly anticommutation in a reciprocal cycle. -/
-theorem reciprocal_square_bracket_eq_zero_iff :
+theorem reciprocal_square_bracket_eq_zero_iff (he : ⁅a, e⁆ = j) :
     ⁅a, e ^ 2⁆ = 0 ↔ j * e + e * j = 0 := by
   rw [reciprocal_left_square_bracket a e j he]
 
-theorem reciprocal_product_commute_iff :
+theorem reciprocal_product_commute_iff (he : ⁅a, e⁆ = j) (hj : ⁅a, j⁆ = e) :
     Commute a (j * e) ↔ e ^ 2 = -(j ^ 2) := by
   rw [commute_iff_lie_eq, reciprocal_product_bracket_eq_zero_iff a e j he hj]
 
-theorem reciprocal_square_commute_iff :
+theorem reciprocal_square_commute_iff (he : ⁅a, e⁆ = j) :
     Commute a (e ^ 2) ↔ j * e + e * j = 0 := by
   rw [commute_iff_lie_eq, reciprocal_square_bracket_eq_zero_iff a e j he]
 

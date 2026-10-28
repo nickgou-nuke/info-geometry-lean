@@ -150,43 +150,43 @@ theorem jordan_sq (a : A) :
 
 section SquareZero
 
-variable {a : A} (ha : a * a = 0)
+variable {a : A}
 
-theorem ad_mul_jordan_eq_zero :
+theorem ad_mul_jordan_eq_zero (ha : a * a = 0) :
     LieAlgebra.ad R A a * jordanLeft (R := R) a = 0 := by
   rw [ad_mul_jordan_self, ha, map_zero]
 
-theorem jordan_mul_ad_eq_zero :
+theorem jordan_mul_ad_eq_zero (ha : a * a = 0) :
     jordanLeft (R := R) a * LieAlgebra.ad R A a = 0 := by
   rw [jordan_mul_ad_self, ha, map_zero]
 
-theorem range_jordan_le_ker_ad :
+theorem range_jordan_le_ker_ad (ha : a * a = 0) :
     LinearMap.range (jordanLeft (R := R) a) ≤ LinearMap.ker (LieAlgebra.ad R A a) :=
   LinearMap.range_le_ker_iff.mpr (ad_mul_jordan_eq_zero (R := R) ha)
 
-theorem range_ad_le_ker_jordan :
+theorem range_ad_le_ker_jordan (ha : a * a = 0) :
     LinearMap.range (LieAlgebra.ad R A a) ≤ LinearMap.ker (jordanLeft (R := R) a) :=
   LinearMap.range_le_ker_iff.mpr (jordan_mul_ad_eq_zero (R := R) ha)
 
-theorem ad_sq_of_sq_zero :
+theorem ad_sq_of_sq_zero (ha : a * a = 0) :
     LieAlgebra.ad R A a ^ 2 = -(2 • LinearMap.mulLeftRight R (a, a)) := by
   rw [ad_sq, ha]
   apply LinearMap.ext
   intro x
   simp [jordanLeft]
 
-theorem jordan_sq_of_sq_zero :
+theorem jordan_sq_of_sq_zero (ha : a * a = 0) :
     jordanLeft (R := R) a ^ 2 = 2 • LinearMap.mulLeftRight R (a, a) := by
   rw [jordan_sq, ha]
   apply LinearMap.ext
   intro x
   simp [jordanLeft]
 
-theorem ad_sq_eq_zero_iff :
+theorem ad_sq_eq_zero_iff (ha : a * a = 0) :
     LieAlgebra.ad R A a ^ 2 = 0 ↔ 2 • LinearMap.mulLeftRight R (a, a) = 0 := by
   rw [ad_sq_of_sq_zero ha, neg_eq_zero]
 
-theorem jordan_sq_eq_zero_iff :
+theorem jordan_sq_eq_zero_iff (ha : a * a = 0) :
     jordanLeft (R := R) a ^ 2 = 0 ↔ 2 • LinearMap.mulLeftRight R (a, a) = 0 := by
   rw [jordan_sq_of_sq_zero ha]
 

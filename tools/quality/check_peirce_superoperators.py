@@ -28,7 +28,9 @@ INTRINSIC = 'InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint'
 INTRINSIC_SOURCE_SHA256 = '77610dd9f8583cb5ebae047f65a4351ef4bbdaabab387d64d0efd861d7c5316c'
 TARGETS = [INTRINSIC] + [f'{PREFIX}.{name}' for name in
     ('MixedActions', 'SquareZeroPair', 'PeirceParity', 'PeirceDifferential',
-     'HilbertSchmidt', 'HodgeKernel', 'MatrixParity', 'Examples')]
+     'HilbertSchmidt', 'HodgeKernel', 'MatrixParity', 'Examples',
+     'Crossover', 'TraceAdjoint', 'StationaryAlgebra', 'DoubleCommutator',
+     'SkewPerturbation', 'CrossoverExamples')]
 
 
 def owned(module):
@@ -76,7 +78,8 @@ def main():
                'lean/InfoGeometry/OperatorAlgebra/All.lean',
                'lean-toolchain', 'lake-manifest.json',
                '.github/workflows/peirce-superoperators.yml',
-               'docs/PEIRCE_SUPEROPERATOR_CONTRACT.md']
+               'docs/PEIRCE_SUPEROPERATOR_CONTRACT.md',
+               'docs/PEIRCE_TRACE_CROSSOVER_CONTRACT.md']
     helper_hashes = {p: digest(ROOT / p) for p in helpers}
     report['verification_source_sha256'] = helper_hashes
     try:

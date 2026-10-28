@@ -24,6 +24,7 @@ on:
       - 'tools/infra/opengauss_screener.py'
       - '.githooks/pre-commit'
       - 'docs/PEIRCE_SUPEROPERATOR_CONTRACT.md'
+      - 'docs/PEIRCE_TRACE_CROSSOVER_CONTRACT.md'
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - '.github/workflows/peirce-superoperators.yml'

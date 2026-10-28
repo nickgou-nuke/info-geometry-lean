@@ -35,9 +35,9 @@ theorem mem_centralizer_range_iff_ad (H : ι → Matrix n n ℂ)
   constructor
   · intro h i
     change H i * A - A * H i = 0
-    exact sub_eq_zero.mpr ((Subalgebra.mem_centralizer_iff.mp h) (H i) ⟨i, rfl⟩)
+    exact sub_eq_zero.mpr (((Subalgebra.mem_centralizer_iff ℂ).mp h) (H i) ⟨i, rfl⟩)
   · intro h
-    apply Subalgebra.mem_centralizer_iff.mpr
+    apply (Subalgebra.mem_centralizer_iff ℂ).mpr
     rintro _ ⟨i, rfl⟩
     exact sub_eq_zero.mp (h i)
 
@@ -73,6 +73,7 @@ theorem anticommutator_mem_centralizer {H : ι → Matrix n n ℂ}
 
 variable [Fintype ι]
 
+omit [DecidableEq n] in
 /-- Skew coefficients contract to zero against the symmetric ordered products.
 The cancellation uses only a swap of the two finite indices. -/
 theorem skew_quadratic_sum_eq_zero (H : ι → Matrix n n ℂ)
@@ -124,7 +125,7 @@ theorem quadratic_sum_mem_centralizer (H : ι → Matrix n n ℂ)
     (haction : ∀ k i, ⁅H k, H i⁆ = ∑ j, c k i j • H j)
     (hskew : ∀ k i j, c k i j = -c k j i) :
     (∑ i, H i * H i) ∈ Subalgebra.centralizer ℂ (Set.range H) := by
-  apply Subalgebra.mem_centralizer_iff.mpr
+  apply (Subalgebra.mem_centralizer_iff ℂ).mpr
   rintro _ ⟨k, rfl⟩
   exact commute_quadratic_sum (H k) H (c k) (haction k) (hskew k)
 
@@ -142,7 +143,7 @@ theorem trace_centralizer_mul_sum_lie_zero (H J : ι → Matrix n n ℂ)
   apply Finset.sum_eq_zero
   intro i _
   have hc : ⁅H i, C⁆ = 0 :=
-    sub_eq_zero.mpr ((Subalgebra.mem_centralizer_iff.mp hC) (H i) ⟨i, rfl⟩)
+    sub_eq_zero.mpr (((Subalgebra.mem_centralizer_iff ℂ).mp hC) (H i) ⟨i, rfl⟩)
   have ht := MatrixTraceGeometry.trace_lie_mul (H i) C (J i)
   rw [hc, zero_mul, trace_zero] at ht
   exact neg_eq_zero.mp ht.symm

@@ -41,7 +41,8 @@ no declaration-DAG freshness is claimed.
 3. The source's mixed sum equals L_(ab+ba), as stated. It is not automatically
    the positive Hodge Laplacian. The adjoint construction below is distinct.
 4. The trace identity for axb+bxa holds for every matrix x, not just even ones.
-   Positivity requires b=a^T; trace preservation requires ab+ba=I.
+   Positivity is proved under b=a^T; trace preservation is proved under
+   ab+ba=I. These are explicit sufficient hypotheses of the stated theorems.
    The implementation proves positivity preservation, not a complete-positivity
    amplification theorem and not a normalized channel without hypotheses.
 5. The last two uploads supply valid algebraic reciprocal-derivation and
@@ -59,7 +60,8 @@ no declaration-DAG freshness is claimed.
 
 All general operators live in Module.End R A, where R is a commutative scalar
 ring and A is an arbitrary associative R-algebra. A is not assumed commutative.
-All concrete metric carriers and regressions are Matrix (Fin 4) (Fin 4) real.
+The metric carrier is Matrix n n real for arbitrary finite n. The explicit
+regressions use Matrix (Fin 4) (Fin 4) real.
 No complexification, diagonalization or simultaneous commutativity is used.
 
 The actual maps L_q and J_q are inherited from #250. sandwichOp is ordered
@@ -108,14 +110,92 @@ PeirceBoundaryOrder constructs a finite native PartialOrder by inclusion of
 explicit prerequisite sets. The differential and metric-adjoint stages are
 incomparable prerequisites of the energy/kernel result. Composition identities
 and the global differential are separate descendants of the operator layer.
-This is a dependency specification, not the extracted full declaration graph.
+This is a sufficient stage dependency specification, not the extracted full
+declaration graph or a claim of minimal proof dependencies. The energy/kernel
+identities themselves do not require q^2=0; nilpotence additionally makes the
+construction a genuine differential complex.
 
-## Verification
+## Verification: passed on exact sources
 
-Pending the actual scoped workflow. The local authoring environment has no Lean
-executable and cannot resolve external hosts. The workflow reuses the existing
-exact-pin source-closure compiler and native Lean.collectAxioms audit. It checks
-the two reused parent owners and all six new owners, including generated/private
-declarations, under the shared build lock. Root toolchain, Lake manifest and
-dependency pins are unchanged. A successful focused check is not a full root
-build, independent human review, or an all-green-CI claim.
+- PR: #260, stacked on #250 at the base identified above; no merge.
+- Successful workflow: https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40693263918
+- Kernel job: `122833252556`.
+- Checked source head: `dc6d04d4a1e8f976962c9f8f2d5634b29573532d`.
+- Checked PR merge snapshot: `3fc2cc61d2b5ac0fe3f6a68b2d11f40bec1b5d7e`.
+  GitHub compare reports no file changes relative to the source head.
+- Official Lean `4.34.1`, executable commit
+  `5045d0056413266e57c625dcd7c365b10e377c52`.
+- Unchanged Mathlib pin: `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+- All **12 repository modules** in the selected import closure compiled from
+  their actual source bytes under the shared serial build lock.
+- Six new modules contain **80 named theorem/lemma declarations**: **78 public**
+  and **two private proof lemmas**. The two reused owners contain another 34,
+  so the checked eight-owner surface contains **114 named theorems/lemmas**.
+- Native public `Lean.collectAxioms` inspection passed on **278 owned declarations**,
+  including definitions, private helpers, and generated declarations. Every one
+  of the 114 named theorems/lemmas occurs in the inspected set. This is not a
+  count of 278 theorems. The exact axiom union is `propext`, `Classical.choice`,
+  `Quot.sound`; no `sorryAx` or custom axiom. Unsafe/partial declarations are
+  rejected by the checker.
+- Every new module compiler log is empty: **zero errors and zero warnings**.
+  The unchanged parent owners have **nine inherited linter warnings**: four
+  unused simp arguments in LieJordanEndomorphisms, and four deprecated `if_pos`/
+  `if_neg` uses plus one unused simp argument in PeirceLieJordanResolution.
+- Static scanning of the six new source owners found no explicit proof holes,
+  axioms, unsafe/partial declarations or native_decide. Their required headers
+  are intact. Git whitespace checking passed.
+- The semantic-vacuity lexical gate read all six selected files, with **zero
+  errors and eight advisory warnings**. All eight were reviewed: five are
+  definitional apply/readback lemmas, one evaluates crossTransport at the unit,
+  and two specialize the differential to actual sign eigenspaces. None is an
+  assumed conclusion or replacement of the operator carrier. No gate setting,
+  suppression or exemption was added. This check is heuristic, not a semantic proof.
+
+The artifact `real-graded-boundary-verification`, ID `12818595930`, contains
+exact checked sources, the generated native declaration audit, compiler logs,
+Lean version, source hashes, status and lexical report. Its downloaded ZIP
+SHA-256 matches GitHub's published digest:
+
+`6694a2c9d2bc65591c249717d5e0d345bb84705fd1b41807e8a9cd819d70a964`
+
+All 12 extracted source hashes match the manifest. The supplementary local
+exact-rational calculation also checked the complete 16x16 differential and
+codifferential matrices and the counterexample entries; it is not proof authority.
+The final evidence update changes this document only, leaving the checked Lean
+sources and verification machinery unchanged.
+
+### Exact checked source hashes
+
+| Module | SHA-256 |
+|---|---|
+| `InfoGeometry.OperatorAlgebra.LieJordanEndomorphisms` | `e448973da9b859295ed1a6539733a8cd6e775df2f1594d91a18e6262fd086488` |
+| `InfoGeometry.Algebra.FiniteSpinAlgebra` | `5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26` |
+| `InfoGeometry.Algebra.IdempotentProjector` | `56eaf80ce2db517999a78643bf2cf8f45f669d99dcbbdd53c931e2bae69b038d` |
+| `InfoGeometry.Algebra.PeirceLieJordanResolution` | `6e893a08f8d33322c13c9c68db038a6c0159086f1516bb535a48257aebc1aee7` |
+| `InfoGeometry.OperatorAlgebra.LieJordanBoundaryComposition` | `e3c53bf60407cd7eb37dbaf1e82d3a9cd83cd09de1f40b99f2cdc8d8b7098e0f` |
+| `InfoGeometry.Core.PeirceDecomposition` | `0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813` |
+| `InfoGeometry.Core.IdempotentCartan` | `774fcd4b531dbedd62fdf3ae21a5e56840ed83d55f9ed5a4b17607fb690aba82` |
+| `InfoGeometry.OperatorAlgebra.PeirceGradedDifferential` | `22799852f3ea1a83f32bc59bee31e3a8e4d79e44cdaffb69eadaae191edd0729` |
+| `InfoGeometry.OperatorAlgebra.PeirceBoundaryDynamics` | `e102cd9b4505b3195d50d204dbb742db07ea410b7c7869d56abaf2dadf8344de` |
+| `InfoGeometry.OperatorAlgebra.PeirceBoundaryMetric` | `a83f365e9260c8f3d7190e2e8b1e78f14207eaa1a3cee9bf3898462d14ea7391` |
+| `InfoGeometry.OperatorAlgebra.PeirceBoundaryWitness` | `cff9562c442802e3e1a3658dac057602b0711216bf96a166e9bd9153c64a3eb8` |
+| `InfoGeometry.OperatorAlgebra.PeirceBoundaryOrder` | `f6341c115e8cb76661ac46046902bd3defddf099c7eedd0006ef03c64d4584b9` |
+
+### Reproduction and boundaries
+
+With the checked repository revision, the declared Lean toolchain and a Mathlib
+checkout at the exact pin:
+
+```sh
+python3 tools/quality/check_peirce_boundaries.py \
+  --mathlib-root /path/to/pinned-mathlib --output verification-boundary
+```
+
+There is no local Lean executable in the authoring container. The proof authority
+reported here is the completed GitHub Actions kernel run and its inspected
+artifact, not a local compile or an independent human/agent acceptance review.
+Root toolchain, Lake manifest, dependency pins and other PR branches are unchanged.
+This is not a full root Lake build or an all-green-CI claim: the unrelated Sorry
+Gate and thesis/blueprint/docs workflows failed on the checked source commit.
+No physics identification, completed operator space, global de Rham theorem,
+full Hodge decomposition or homology comparison is asserted.

@@ -139,7 +139,7 @@ def peirceTwist (p : A) (hp : p * p = p) : A ≃ₐ[R] A where
   toRingEquiv := reflectionConj p hp
   commutes' r := by
     change reflection p * algebraMap R A r * reflection p = algebraMap R A r
-    rw [← (Algebra.commutes r (reflection p)).eq, mul_assoc, reflection_sq hp, mul_one]
+    rw [← Algebra.commutes r (reflection p), mul_assoc, reflection_sq hp, mul_one]
 
 @[simp] theorem peirceTwist_apply (p : A) (hp : p * p = p) (x : A) :
     peirceTwist R p hp x = reflection p * x * reflection p := rfl

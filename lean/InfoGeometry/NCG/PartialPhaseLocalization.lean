@@ -23,7 +23,7 @@ variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 theorem phase_commutator_square_defect (F E : Matrix n n R) :
     commutator F (commutator F E * commutator F E) =
       commutator (commutator (F * F) E) (commutator F E) := by
-  simp only [commutator]
+  simp only [NonCommutativeFredholmIndex.commutator]
   noncomm_ring
 
 /-- For a partial phase the support, not necessarily the unit, controls the defect. -/
@@ -33,7 +33,7 @@ theorem phase_commutes_commutator_square {F E : Matrix n n R}
   apply sub_eq_zero.mp
   change commutator F (commutator F E * commutator F E) = 0
   rw [phase_commutator_square_defect]
-  simp only [commutator, h.eq, sub_self, zero_mul, mul_zero]
+  simp only [NonCommutativeFredholmIndex.commutator, h.eq, sub_self, zero_mul, mul_zero]
 
 /-- Orthogonal idempotents give the square of a signed partial phase. -/
 theorem signed_projection_square {P Q : Matrix n n R}

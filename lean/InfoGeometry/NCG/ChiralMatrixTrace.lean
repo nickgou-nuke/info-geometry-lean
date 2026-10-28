@@ -19,7 +19,7 @@ variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 /-- The commutator moves from the test matrix to the trace weight. -/
 theorem trace_commutator_transport (γ A X : Matrix n n R) :
     trace (γ * commutator A X) = trace (commutator γ A * X) := by
-  simp only [commutator, mul_sub, sub_mul, trace_sub, ← mul_assoc]
+  simp only [NonCommutativeFredholmIndex.commutator, mul_sub, sub_mul, trace_sub, ← mul_assoc]
   rw [trace_mul_cycle γ X A]
 
 /-- The same transport holds for the anticommutator, with no grading hypotheses. -/
@@ -53,10 +53,12 @@ theorem trace_commutator_zero_iff (γ A : Matrix n n R) :
     apply sub_eq_zero.mp
     apply Matrix.ext_iff_trace_mul_right.mpr
     intro X
-    simpa only [zero_mul, trace_zero, ← trace_commutator_transport] using h X
+    change trace (NonCommutativeFredholmIndex.commutator γ A * X) = trace (0 * X)
+    rw [← trace_commutator_transport, zero_mul, trace_zero]
+    exact h X
   · intro h X
     rw [trace_commutator_transport]
-    simp only [commutator, h.eq, sub_self, zero_mul, trace_zero]
+    simp only [NonCommutativeFredholmIndex.commutator, h.eq, sub_self, zero_mul, trace_zero]
 
 /-- The Peirce pinching is self-adjoint for the bilinear matrix trace pairing. -/
 theorem trace_even_adjoint (P γ X : Matrix n n R) :
@@ -104,7 +106,8 @@ theorem two_trace_mul_eq_zero {γ D B : Matrix n n R}
 /-- Cancellation on the regular factor requires no additive two-torsion. -/
 theorem trace_mul_eq_zero [IsAddTorsionFree R] {γ D B : Matrix n n R}
     (hγ : anticommutator γ D = 0) (hDB : Commute D B) :
-    trace (γ * (D * B)) = 0 :=
-  add_self_eq_zero.mp (two_trace_mul_eq_zero hγ hDB)
+    trace (γ * (D * B)) = 0 := by
+  apply IsAddTorsionFree.nsmul_right_injective (by decide : (2 : ℕ) ≠ 0)
+  simpa only [two_nsmul, smul_zero] using two_trace_mul_eq_zero hγ hDB
 
 end InfoGeometry.NCG.ChiralMatrixTrace

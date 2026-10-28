@@ -4,19 +4,21 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.SuperGrassmannian.GraphChartTransition
+import InfoGeometry.Topology.KleinBrillouinBase
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Tactic
 
 /-!
-# Null operators and signed graph inversion
+# Null operators, signed graph inversion and the Klein cover
 
 The inverse chart is a chart on actual submodules, not a totalized scalar
-reciprocal. Signed exchange has square -I on vectors and acts involutively
-on submodules. Nonzero square-zero operators leave the graph chart, while
-the ambient linear equivalence remains nonsingular. Clifford nullity is
-used only through the native quadratic relation.
+reciprocal. Signed exchange has square -I on vectors but acts involutively
+on submodules. Nonzero square-zero operators leave the graph chart. The
+existing Klein glide is lifted with its translation and fiber sign kept
+separate. This is an explicit transport law, not a Pin-bundle classification.
 -/
 
+noncomputable section
 namespace InfoGeometry.OperatorAlgebra.ProjectiveNullInversion
 
 open InfoGeometry.SuperGrassmannian.GraphChartTransition
@@ -24,7 +26,6 @@ open InfoGeometry.SuperGrassmannian.GraphChartTransition
 section Graphs
 variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 
-/-- The signed homogeneous interchange of the two operator-graph coordinates. -/
 def signedSwap : (V × V) ≃ₗ[R] (V × V) where
   toFun z := (-z.2, z.1)
   invFun z := (z.2, -z.1)
@@ -38,7 +39,7 @@ def signedSwap : (V × V) ≃ₗ[R] (V × V) where
 theorem signedSwap_square (z : V × V) :
     signedSwap (R := R) (signedSwap z) = -z := rfl
 
-/-- The vector sign is retained; only passage to submodules forgets it. -/
+/-- Only passage to submodules forgets the central vector sign. -/
 theorem signedSwap_map_twice (S : Submodule R (V × V)) :
     (S.map signedSwap.toLinearMap).map signedSwap.toLinearMap = S := by
   ext z
@@ -51,7 +52,7 @@ theorem signedSwap_map_twice (S : Submodule R (V × V)) :
     change -(-z) = z
     exact neg_neg z
 
-/-- The ordered operator inverse, on its exact invertible chart. -/
+/-- The ordered inverse of an operator, on its genuine invertible chart. -/
 theorem signedSwap_graph_inverse (u : V ≃ₗ[R] V) :
     u.toLinearMap.graph.map signedSwap.toLinearMap = (-u.symm.toLinearMap).graph := by
   apply (map_graph_eq_iff _ _ _).mpr
@@ -64,7 +65,6 @@ theorem signedSwap_graph_inverse (u : V ≃ₗ[R] V) :
     change -(u (u.symm (-y))) = y
     simp
 
-/-- Signed inversion has exactly the same domain obstruction as ordinary swap. -/
 theorem signedSwap_graph_chart_iff (f : Module.End R V) :
     (∃ g : Module.End R V, f.graph.map signedSwap.toLinearMap = g.graph) ↔
       Function.Bijective f := by
@@ -86,7 +86,7 @@ theorem signedSwap_graph_chart_iff (f : Module.End R V) :
       obtain ⟨x, hx⟩ := hs (-y)
       exact ⟨x, by rw [hx, neg_neg]⟩
 
-/-- A genuine nonzero nilpotent channel is an inverse-chart boundary. -/
+/-- A nonzero nilpotent channel is an inverse-chart boundary. -/
 theorem square_zero_exits_graph_chart (f : Module.End R V)
     (hf : f ≠ 0) (hsq : f * f = 0) (g : Module.End R V) :
     f.graph.map signedSwap.toLinearMap ≠ g.graph := by
@@ -99,7 +99,6 @@ theorem square_zero_exits_graph_chart (f : Module.End R V)
     simpa using hh
   exact hi hx
 
-/-- The zero graph maps to the vertical submodule, without an inverse at zero. -/
 theorem zero_graph_to_vertical :
     (0 : Module.End R V).graph.map signedSwap.toLinearMap =
       LinearMap.ker (LinearMap.fst R V V) := by
@@ -146,5 +145,38 @@ theorem clifford_null_graph_boundary (Q : QuadraticForm R V) (v : V)
   rw [cliffordLeft_square, hQ, zero_smul]
 
 end Clifford
+
+section KleinCover
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
+open KleinBrillouinBase
+
+/-- Lift the existing affine glide to the doubled operator-module carrier. -/
+def signedGlide (p : Cover × (V × V)) : Cover × (V × V) :=
+  (glide p.1, signedSwap (R := R) p.2)
+
+/-- The axial translation survives; the fiber independently acquires a minus sign. -/
+theorem signedGlide_square (p : Cover × (V × V)) :
+    signedGlide (R := R) (signedGlide p) = (tx p.1, -p.2) := by
+  change (glide (glide p.1), signedSwap (R := R) (signedSwap p.2)) = _
+  rw [glide_sq, signedSwap_square]
+
+/-- Equivariance is across base points, not a pointwise parity eigenvector. -/
+theorem equivariant_translation_sign (ψ : Cover → V × V)
+    (hψ : ∀ k, ψ (glide k) = signedSwap (R := R) (ψ k)) (k : Cover) :
+    ψ (tx k) = -ψ k := by
+  rw [← glide_sq, hψ, hψ, signedSwap_square]
+
+/-- A globally pure sector cannot satisfy a sector-exchanging glide law. -/
+theorem equivariant_pure_sector_zero (ψ : Cover → V × V)
+    (hψ : ∀ k, ψ (glide k) = signedSwap (R := R) (ψ k))
+    (hpure : ∀ k, (ψ k).2 = 0) : ψ = 0 := by
+  funext k
+  apply Prod.ext
+  · have hh := congrArg Prod.snd (hψ k)
+    change (ψ (glide k)).2 = (ψ k).1 at hh
+    exact hh.symm.trans (hpure (glide k))
+  · exact hpure k
+
+end KleinCover
 
 end InfoGeometry.OperatorAlgebra.ProjectiveNullInversion

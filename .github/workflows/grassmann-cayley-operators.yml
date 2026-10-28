@@ -1,0 +1,70 @@
+name: Grassmann Cayley operators (pinned, scoped)
+
+on:
+  push:
+    branches: [feat/grassmann-cayley-operators]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Projective/ExteriorBladeIncidence.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ExteriorOperatorGeometry.lean'
+      - 'lean/InfoGeometry/Projective/ExteriorRegressive.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/GrassmannCayley.lean'
+      - 'tools/quality/check_grassmann_cayley.py'
+      - '.github/workflows/grassmann-cayley-operators.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: grassmann-cayley-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  native-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Install exact repository Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Materialize pinned Mathlib separately from root Lake
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          repo = pathlib.Path.cwd()
+          pin = next(p for p in json.loads((repo / 'lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
+          work = pathlib.Path(os.environ['RUNNER_TEMP']) / 'grassmann-cayley-mathlib'
+          for cmd in [
+              ['git', 'init', str(work)],
+              ['git', '-C', str(work), 'remote', 'add', 'origin', pin['url']],
+              ['git', '-C', str(work), 'fetch', '--depth=1', 'origin', pin['rev']],
+              ['git', '-C', str(work), 'checkout', '--detach', 'FETCH_HEAD']]:
+              subprocess.run(cmd, check=True)
+          subprocess.run(['lake', 'exe', 'cache', 'get'], cwd=work, check=True)
+          PY
+      - name: Compile full source closure and audit all declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/quality/check_grassmann_cayley.py \
+            --mathlib "$RUNNER_TEMP/grassmann-cayley-mathlib" \
+            --output "$RUNNER_TEMP/grassmann-cayley-verified"
+      - name: Retain compiler and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grassmann-cayley-verification
+          path: |
+            ${{ runner.temp }}/grassmann-cayley-verified/**/*.log
+            ${{ runner.temp }}/grassmann-cayley-verified/verification.json
+            ${{ runner.temp }}/grassmann-cayley-verified/GrassmannCayleyAudit.lean

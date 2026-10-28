@@ -1,0 +1,82 @@
+name: Operator geometry (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixOperatorIdentities.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixTraceGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceTraceGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceKrausGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorGeometryExamples.lean'
+      - 'tools/quality/check_operator_geometry.py'
+      - 'tools/quality/OperatorGeometryDeclarationAudit.lean'
+      - 'tools/quality/operator_geometry_dependency_order.py'
+      - '.github/workflows/operator-geometry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: operator-geometry-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE_REV: ${{ github.event.pull_request.base.sha || github.sha }}
+    steps:
+      - name: Fetch the exact source and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          git -C project fetch --depth=1 origin "$BASE_REV"
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          spec = json.loads(pathlib.Path('project/lake-manifest.json').read_text())
+          pin = next(p for p in spec['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install the exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Obtain pinned dependency artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd pinned-mathlib
+          lake exe cache get
+      - name: Compile the source closure and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_operator_geometry.py \
+            --mathlib pinned-mathlib --work-dir verification --audit --base-ref "$BASE_REV"
+          python3 project/tools/quality/operator_geometry_dependency_order.py \
+            verification/declaration-audit.jsonl verification/dependency-order.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: operator-geometry-verification
+          path: |
+            verification/*.log
+            verification/*.json
+            verification/*.jsonl
+            verification/*.txt
+            verification/lean

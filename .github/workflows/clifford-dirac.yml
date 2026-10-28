@@ -1,0 +1,108 @@
+name: Clifford Dirac kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/CliffordDirac.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CliffordDirac/**'
+      - 'lean/InfoGeometry/Clifford/LorentzianBivectorSignatureBridge.lean'
+      - 'lean/InfoGeometry/Krein/FiniteDiracGramSquare.lean'
+      - 'lean/InfoGeometry/Core/AnticommutingSum.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Superalgebra/KahlerDiracWeitzenbockSynthesis.lean'
+      - 'lean/InfoGeometry/UnifiedMatrixBasis.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/clifford-dirac.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: clifford-dirac-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: clifford-dirac-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch the pinned native import cache
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          from tools.quality.check_clifford_dirac import PREFIX
+          _, _, native = closure(Path('project'), [PREFIX])
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'clifford-dirac-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Check complete source closure and every declaration's axioms
+        working-directory: project
+        run: |
+          python3 tools/quality/check_clifford_dirac.py \
+            --mathlib-root ../mathlib --output ../clifford-dirac-report
+      - name: Check placeholders and semantic vacuity
+        working-directory: project
+        run: |
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry/OperatorAlgebra/CliffordDirac --strict
+          python3 tools/quality/semantic_vacuity_gate.py \
+            lean/InfoGeometry/OperatorAlgebra/CliffordDirac --fail-on warning
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clifford-dirac-kernel-evidence
+          path: |
+            clifford-dirac-report/report.json
+            clifford-dirac-report/evidence-sha256.json
+            clifford-dirac-report/src/CliffordDiracAudit.lean
+            clifford-dirac-report/*.log
+          if-no-files-found: warn

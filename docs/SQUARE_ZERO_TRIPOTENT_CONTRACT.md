@@ -71,7 +71,33 @@ some spectral sectors vanish.
 The causal order is the prerequisite-to-consumer order of proof declarations,
 with its reflexive transitive closure. It is a source-derived partial order,
 not physical time and not a newly declared finite poset of metaphor names.
-The concrete proof-use edges will be listed after checking the final code.
+The following are principal named proof-use edges in the source (independent
+rows need not be ordered). Their transitive closure gives the prerequisite
+order; primitive algebraic normalizations are leaves, not temporal processes.
+
+| Prerequisite declarations | Consumer declarations |
+| --- | --- |
+| `sum_mul_difference`, `difference_mul_sum` | `sum_difference_anticommute` |
+| `sum_sq` | `anticommutator_commutes_sum` |
+| `sum_cube` | `sum_cube_of_reflexive` |
+| `reflexive_squareZero_supports`, `orthogonal_difference_cube` | `commutator_cube_of_reflexive` |
+| `commutator_mul_sum` | `commutator_mul_sum_of_reflexive` |
+| Native Peirce square-zero laws, `sum_cube_of_reflexive` | `corner_sum_cube` |
+| `square_idempotent` | `complement_idempotent` |
+| `complement_idempotent`, `complement_mul`, `mul_complement` | `completion_sq` |
+| `completion_sq` | `completion_isUnit`, `completion_mem_unitary` |
+| `self_moorePenrose_iff` | `self_moorePenrose_of_isSelfAdjoint` |
+| `mul_complement` | `complement_mulVec_eq_self_iff`, `range_complement_eq_ker` |
+| `complement_mulVec_eq_self_iff` | `range_complement_eq_ker` |
+| `resolventPolynomial`, `numerator_left` | `shift_mul_resolvent` |
+| `resolventPolynomial`, `numerator_right` | `resolvent_mul_shift` |
+| `shift_mul_resolvent`, mathlib `Matrix.inv_eq_right_inv` | `shift_inv` |
+| `shift_mul_resolvent`, `resolvent_mul_shift` | `shift_isUnit` |
+
+The square-zero/reflexive table produces tripotent sums and commutators;
+these conclusions can instantiate the general geometry and resolvent
+lemmas. That is a composable interface, distinct from an existing proof-use
+edge: the geometry file does not import the square-zero table.
 Context preflight found no generated declaration-DAG/InfoTree artifacts;
 no graph freshness claim is made.
 

@@ -82,7 +82,7 @@ theorem charge_anticommutator (hP : IsIdempotentElem P) (A : Matrix n n R) :
       unfold NonCommutativeFredholmIndex.anticommutator
       simp only [two_nsmul]
       noncomm_ring
-    _ = _ := by rw [hD]; simp only [nsmul_neg]; abel
+    _ = _ := by rw [hD]; abel
 
 theorem reflection_anticommutes_charge (hP : IsIdempotentElem P) (A : Matrix n n R) :
     anticommutator (reflection P) (odd P A + commutator P A) = 0 := by
@@ -114,6 +114,7 @@ theorem charge_commutes_odd_square (hP : IsIdempotentElem P) (A : Matrix n n R) 
 section Star
 variable [StarRing R]
 
+omit [DecidableEq n] in
 theorem commutator_star {A : Matrix n n R}
     (hP : IsSelfAdjoint P) (hA : IsSelfAdjoint A) :
     star (commutator P A) = -commutator P A := by

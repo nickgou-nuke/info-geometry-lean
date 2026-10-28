@@ -67,9 +67,9 @@ theorem arrow_adjoint_noncommute : arrow * arrowᴴ ≠ arrowᴴ * arrow := by
   rw [arrow_is_corner] at h
   exact fun hc => arrow_ne_zero (h.mp hc)
 
-theorem projection_arrow_noncommute : ¬Commute projection arrow := by
+theorem projection_arrow_noncommute : projection * arrow ≠ arrow * projection := by
   intro h
-  exact arrow_ne_zero (by simpa only [projection_mul_arrow, arrow_mul_projection] using h.eq)
+  exact arrow_ne_zero (by simpa only [projection_mul_arrow, arrow_mul_projection] using h)
 
 theorem negative_adjoint_noncommute : ¬Commute arrow (-arrowᴴ) := by
   intro h

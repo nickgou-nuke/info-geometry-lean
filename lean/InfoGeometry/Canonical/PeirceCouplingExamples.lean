@@ -57,7 +57,7 @@ theorem U_mul_adj_ne_adj_mul_U : U * Uᴴ ≠ Uᴴ * U := by
 
 theorem U_gram_trace : Matrix.trace (U * Uᴴ + Uᴴ * U) = 196 / 9 := by
   norm_num [Matrix.trace_add, Matrix.trace, Matrix.diag, Matrix.mul_apply,
-    Matrix.conjTranspose_apply, U_apply, Fin.sum_univ_succ]
+    Matrix.conjTranspose_apply, U_apply, Fin.sum_univ_succ, map_ofNat]
 
 theorem U_gram_posSemidef : (U * Uᴴ + Uᴴ * U).PosSemidef := gram_posSemidef U
 

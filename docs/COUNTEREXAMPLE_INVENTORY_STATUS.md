@@ -4,6 +4,51 @@ The active objective remains repository-wide discovery, semantic review, and
 constructive mathematical replacement of counterexamples. No completion claim
 is supported by the present lexical inventory or by individual passing builds.
 
+## NCG intake correction: Cuntz, stabilizer, and Lax claims (2026-10-28)
+
+Three newly added NCG modules were checked against their current owners. Their
+initial source did not compile and several docstrings overstated the formal
+content. The modules now use narrower owner-aligned statements:
+
+- `InfoGeometry.NCG.CuntzHoppingCantorLattice` reuses
+  `InfoGeometry.NCG.CuntzSystem` and its `canonicalShift` rather than defining
+  a second Cuntz-family record. It proves shift unitality, multiplicativity,
+  star preservation, the generator intertwining identity, and orthogonality
+  directly from the Cuntz relations. Finite binary-address prefixing is a
+  separate `List Bool` operation; the module does not claim a Cuntz
+  representation on the Cantor boundary. The completeness equation is an
+  explicit Cuntz-system field, not an independently derived partition model.
+- `InfoGeometry.NCG.GunaydinGurseySU3Stabilizer` now calls its predicate
+  `FixesChosenImaginaryUnit`. The inspected carrier is the existing
+  14-parameter family `Params = Fin 14 → ℝ` with the owner derivation map
+  `zornG2Derivation`. The predicate is only the equation `D(e)=0`; the former
+  “8-dimensional SU(3)” description and color triplet/antitriplet claims had no
+  corresponding subalgebra, dimension, or representation theorem and have
+  been removed. The remaining derivation and conjugation laws are inherited
+  from the general owner theorems, while the scalar-coordinate statement is
+  explicitly not described as pointwise fixation.
+- `InfoGeometry.NCG.LaxPairIsospectralMassGap` no longer defines a residual
+  using `L` in place of `dL/dt`, calls a reflexive equality an isospectrality
+  theorem, or defines a gap as the difference of two identical maxima. It now
+  proves `trace([P,L]) = 0`, the exact cyclic trace-power commutator
+  cancellation `trace(L^k [P,L]) = 0`, and the finite-matrix equivalence
+  `det L = 0 ↔ ∃ v ≠ 0, L v = 0` from Mathlib. No differentiable Lax flow,
+  singular-value gap, or Yang–Mills mass-gap result is claimed.
+
+The first locked build exposed missing/incorrect namespace and address-carrier
+references in the Cuntz and stabilizer modules, plus a parser/proof issue in the
+initial Lax module. After correction, the three owner targets built: the
+Cuntz module passed in the 4,003-job run, the stabilizer module passed in the
+same batch (its unrelated linter warnings remain), and the Lax module passed in
+the 3,092-job run. The umbrella `InfoGeometry` build then passed all 28,117
+jobs. That umbrella emitted the repository's existing warnings and a broad
+audit report; it is not a warning-free build or a fresh exhaustive axiom audit.
+
+The corresponding epistemic-compilation, anomaly-resolution, and Darwinian
+codebase-epistemology skills already exist under `skills/`; this entry applies
+their source-grounding rules. The broader counterexample inventory and
+independent semantic QA remain open.
+
 ## Source-grounded candidate batch (2026-10-27)
 
 A fresh run of `tools/quality/counterexample_inventory.py --json` scanned
@@ -1032,6 +1077,21 @@ equation. The focused audit's locked build passed (3,095 jobs, exit 0); all
 five declarations report only `[propext, Classical.choice, Quot.sound]`.
 Pre-existing deprecation and sequencing warnings occur in the owner.
 
+A source audit found that the former `A4TE8TwoResolutionLayerNonembedding`
+theorem did not formalize field carriers or maps: “embedding” was represented
+only by the numerical proposition `8 ≤ 4`, and the claimed totally-real
+obstruction by a signature tuple's second coordinate being zero. Its E₈,
+ADE, and cyclotomic dependencies were destructured and discarded. I replaced
+that overclaim with `paper_pom_a4t_e8_two_resolution_layer_recorded_data`,
+which states only the recorded degree ratio and recorded signature, plus the
+generic theorem `no_injective_linearMap_finrank_eight_to_four`. That theorem
+proves the actual dimension obstruction when genuine finite-dimensional
+carriers of dimensions 8 and 4 are supplied; it does not identify the
+repository's records with constructed number fields. The module now depends
+only on the Newman signature owner. The focused target and full `Omega.POM`
+aggregate rebuilt successfully (10,495 jobs, exit 0); pre-existing warnings
+remain in the aggregate's dependencies.
+
 ## G₂ cell-two raw residual collision and paired replacement (2026-10-27)
 
 `G2ResidualCoordinateCellTwoBoundary.residualWord_cell_two_collision`
@@ -2025,6 +2085,13 @@ work and audit surfaces; they are navigation data, not counts of unresolved
 mathematical counterexamples. The current source-reviewed batch below is only
 one family within that inventory.
 
+A mechanical cross-reference of the 30 repo-owned `countermodel` candidates
+against this ledger found a name or owner-family mention for all 30. This is
+only a coverage pointer: it does not certify that each entry's current owner,
+corrected theorem, dependents, and build evidence have been freshly rechecked.
+The negative-boundary and obstruction categories are much larger and still
+require semantic triage.
+
 ## Obstruction-name triage: witnesses versus positive criteria (2026-10-28)
 
 A targeted read of further lexical `obstruction` matches confirmed they are not
@@ -2134,3 +2201,217 @@ When doubling is injective, the reflection criterion is equivalent to
 tangency; the explicit `ZMod 2` witness shows why that hypothesis cannot be
 omitted. This is a resolved anomaly family, not a new theorem request; no
 duplicate API was added in this audit pass.
+
+## Higher-nilpotent support-associator witness: independent source audit (2026-10-28)
+
+The present `lean/InfoGeometry/Singular/HigherNilpotentAssociatorCounterexample.lean`
+uses the actual noncommuting `3 × 3` matrix shift `chain3` and its transpose.
+The source proves `chain3 ^ 3 = 0` and `chain3 * chain3 ≠ 0`; its Moore–Penrose
+support idempotents are respectively `diag(1,1,0)` and `diag(0,1,1)`. These
+supports commute although `chain3` and `chain3.transpose` do not. The proposed
+implication from a nonzero square (or nilpotency index three) to a nonzero
+support Jordan associator is therefore false on this operator carrier.
+
+The exact replacement is already in the native arbitrary-ring owner:
+`Core.JordanAssociator.symm_associator_eq_double_commutator` identifies the
+unnormalized Jordan associator with the double commutator of its endpoints,
+and `idempotent_double_commutator_zero_iff` / `idempotent_all_associators_zero_iff`
+prove that, when the first endpoint is idempotent, vanishing of that defect
+(respectively for one input / every middle input) is equivalent to commuting
+endpoints. Thus the witness is explained by support commutation; it does not
+assert associativity of the full matrix algebra's Jordan product or infer
+support commutation from nilpotence.
+
+Independent source review followed the exact definitions and proof terms in
+`MoorePenroseSectorExamples`, `HigherNilpotentAssociatorCounterexample`,
+`Core/JordanAssociatorRing`, and `MoorePenroseChiralDefects`. The locked build
+of `InfoGeometry.Singular.HigherNilpotentAssociatorCounterexample` and
+`InfoGeometry.NCG.AnomalyGradeGeneration` passed (3,187 jobs, exit 0). The
+counterexample's `#print axioms` reports `[propext, Classical.choice,
+Quot.sound]`; the arbitrary-ring idempotent criterion reports
+`[propext, Quot.sound]`. Existing warnings in imported Moore–Penrose and
+Albert–Cayley–Dickson owners remain; this is a focused family review, not a
+repository-wide closure result.
+
+## Stale characteristic-obstruction path
+
+An earlier ledger entry names
+`InfoGeometry.Canonical.FiveGradeCharacteristicObstructionCounterexample`,
+but that module path is absent from the current checkout: it is not returned by
+`rg --files lean`, and the matching path/name occurs only in this ledger. The
+old description is therefore historical navigation context, not current
+source evidence; its stated build and axiom status were not replayed in this
+pass. The tracked inventory does not establish whether the former source was
+renamed, removed, or exists only outside this checkout.
+
+## Peirce reflection/tangency anomaly: full-ring correction (2026-10-28)
+
+The current source family is `Core.PeirceTangent` plus its characteristic-two
+matrix witness. Its exact general statement is not merely the conditional
+reflection/tangency equivalence. For any idempotent `p` in any ring and any
+`x`, `tangent_iff_diagonal_corners_zero` identifies the first-order tangent
+equation with vanishing of both diagonal Peirce corners. The companion
+`reflection_anticommutes_iff_diagonal_corners_two_torsion` proves that
+reflection anticommutation is equivalent, in every characteristic, to
+annihilation by doubling of those same corners. Thus the anomaly is precisely
+the two-torsion in the diagonal Peirce components; the off-diagonal tangent
+corners remain unrestricted. Injective doubling recovers the familiar
+equivalence, while the existing noncommuting `2 × 2` matrix over `ZMod 2`
+exhibits its failure without replacing the general operator-ring theorem.
+
+The dependent `SuperGrassmannian.SignedPullbackMatrixBoundary` reuses that
+witness and proves invariance for arbitrary matrix-valued graded fields under
+the signed identity pullback. `Canonical.PeirceParityBoundaryExamples` records
+the separate support-difference boundary examples. The focused locked build of
+`InfoGeometry.Core.PeirceTangentCounterexample`,
+`InfoGeometry.SuperGrassmannian.SignedPullbackMatrixBoundary`, and
+`InfoGeometry.Canonical.PeirceParityBoundaryExamples` passed (8,973 jobs,
+exit 0). This closes this family at the theorem/source level; it does not
+certify the remaining lexical inventory as semantically reviewed.
+
+## Noncentral corner compression and cyclic trace (2026-10-28)
+
+`Algebra.CornerCompressionTraceCounterexample` uses noncommuting integral
+`3 × 3` matrices and a noncentral idempotent projection. The sandwich
+functional `X ↦ Matrix.trace (P * X * P)` is not cyclic: the explicit
+enter/leave-corner pair gives unequal compressed product traces. Consequently
+it cannot factor through the additive commutator quotient. This is an anomaly
+of the compressed functional, not of the ambient matrix trace.
+
+The corrected general structures are already present. `Algebra.CyclicQuotient`
+defines the additive module quotient by the linear span of commutators, and
+`Algebra.CyclicMatrixCurvature.cyclicTrace` composes the full matrix trace with
+the coefficient cyclic class. Its `cyclicTrace_mul_comm` holds for matrices
+over an arbitrary associative coefficient ring after passing to that
+quotient. The distinction is exact: the quotient is an additive module, not a
+ring quotient, and compression by a noncentral projector does not inherit
+cyclicity. The focused locked build of
+`InfoGeometry.Algebra.CornerCompressionTraceCounterexample` and
+`InfoGeometry.Algebra.CyclicMatrixCurvature` passed (1,615 jobs, exit 0).
+
+## Fixed-metric Moore--Penrose shear: promote the named witness (2026-10-28)
+
+The current `Canonical.ConformalProjectorAgreement` counterexample had a
+scope gap: its `ProjectorPair` record required only idempotency, although the
+names described the metric-side values as Moore--Penrose projectors. I closed
+that gap in the owner by adding explicit inverses for the two rational shear
+matrices and proving the four Penrose equations for each. The new
+`shear_metric_complements_are_penrose_projectors` theorem identifies the
+stored metric complements as `1 - A†A` for those verified pairs. The existing
+shear calculation then remains a genuine noncommuting matrix witness that a
+fixed Euclidean metric does not transport its Moore--Penrose projector by
+arbitrary similarity.
+
+The correct general statement remains `MetricTransport.penrose_projectors_similarity_iff`:
+fixed-metric covariance is equivalent to commutation of both source supports
+with the Gram operator `g†g`. Transporting the metric restores covariance.
+The new owner proof and its exact transport dependencies passed the locked
+build of `InfoGeometry.Canonical.ConformalProjectorAgreement` (3,180 jobs,
+exit 0). The `ProjectorPair` abstraction elsewhere still records idempotence
+alone; this addition certifies the concrete shear data and does not silently
+upgrade every abstract pair to Penrose data.
+
+## Higher support spectrum is not determined by singleton marginals (2026-10-28)
+
+The three current `Omega.CircleDimension.MultiPrimeSpectrum` countermodel
+declarations are one coherent finite-support result. For distinct `p,q`, the
+families `{{p},{q}}` and `{{p,q},∅}` have identical values on every singleton
+query, but their `{p,q}` spectrum values are `0` and `1`. The exact corrected
+statement is already proved by `higher_spectrum_counterexample_singleton_formula`,
+`higher_spectrum_counterexample_pair_values`, and the combined
+`paper_cdim_higher_spectrum_not_determined_by_marginals`; the companion
+`higher_spectrum_counterexample_Aprime_piecewise` gives the full piecewise
+formula for the second family. This establishes non-identifiability from
+singleton marginals on the declared `Finset (Finset Nat)` carrier. It does not
+establish a claim about arithmetic prime spectra beyond that formal carrier.
+The locked build of `Omega.CircleDimension.MultiPrimeSpectrum` passed (3,092
+jobs, exit 0); no duplicate theorem was added.
+
+## Split-octonion/Cuntz/colimit intake: bridge and gap audit (2026-10-28)
+
+The new intake combines several existing but separately owned structures. The
+source-grounded boundary is:
+
+* `Lie.G2FromSplitOctonions` and `Lie.RealSplitOctonionG2Classification`
+  establish the concrete split-octonion derivation Lie algebra, its finrank
+  14, and spanning by the named standard derivations. The latter owner
+  explicitly distinguishes this Lie-algebra result from a proved global
+  automorphism-group equivalence. These statements do not by themselves
+  construct an `E₈` lattice, a Günaydin representation, or a mass-gap model.
+* `Algebra.Cuntz.CuntzNAlgebra` owns the actual abstract star-ring relations
+  `Sᵢ* Sⱼ = δᵢⱼ 1` and `∑ Sᵢ Sᵢ* = 1`. `Topology.CuntzCantorSpectralTriple`
+  explicitly keeps Clifford and spectral-triple laws behind separate witness
+  fields. By contrast, the legacy `GrandUnification.CuntzCantorBoundary`
+  proves only a sum-to-one identity for three scalar trifactor components.
+  Its comments now state that this does not define a Cuntz representation or a
+  Cantor action.
+* `Canonical.TensorTowerColimit` proves compatibility of a specified linear
+  cone with iterated bonding maps and conditional survival under an explicit
+  kernel-lifting hypothesis. The current `GrandUnification.PureSpinorContinuumColimit`
+  packet stores finite orbifold values independently of its direct-limit
+  operations; its anomaly equation is the explicit additive identity for
+  translation and negation. Its comments now delimit that scope. Neither owner
+  supplies a type-III factor, a Yang--Mills field, or scaling-invariant mass
+  gap.
+* The corrected mass-gap statement is already formalized in
+  `Millennium.YangMillsMassGapAudit`: under only per-state positive coupling,
+  every positive threshold admits a state with positive total energy below
+  that threshold, so there is no uniform positive lower bound. A uniform
+  lower bound on the coupling-squared values is a sufficient additional
+  hypothesis. This audits that abstract energy model; it is not a proof or
+  disproof of the Yang--Mills existence-and-gap problem.
+
+The three edited owner files passed their locked builds:
+`InfoGeometry.GrandUnification.CuntzCantorBoundary` (3,096 jobs),
+`InfoGeometry.GrandUnification.PureSpinorContinuumColimit` (8,936 jobs), and
+`InfoGeometry.Millennium.YangMillsMassGapAudit` (3,093 jobs), all exit 0.
+The proposed combined map from split-octonion data through Cuntz dynamics and
+the module colimit to a Yang--Mills mass gap remains an open bridge obligation;
+the separate owner theorems do not compose without explicit maps and proved
+compatibility laws.
+
+## Reflection symmetry counterexample and its certification hypothesis (2026-10-28)
+
+Reviewed `Arithmetic.SarnakLocalCertification` together with its direct
+consumers in `LectureStructureAndRandomness`, `ReflectionZeroCount`, and
+`SarnakLocalCertificationTests`. The witness `counterexample_f(z) = z(z-1)`
+is invariant at the zero-set level under `z ↦ 1 - conj(z)`, but has zeros at
+both 0 and 1, so reflection symmetry alone does not confine zeros to the fixed
+line `Re(z)=1/2`. The module proves this as
+`zero_reflection_does_not_imply_confinement`.
+
+The corrected theorem is the existing `CertifiedRegion.zero_on_critical_line`:
+for a reflection-invariant carrier on which the function has at most one zero,
+any zero in that carrier is fixed by reflection and hence lies on the line.
+`covered_zeros_on_critical_line` and its finite-height and all-height variants
+then require explicit coverage of the zeros by such regions. The finite
+`ReflectionZeroCount` route is distinct: reflection pairs off-line points, and
+odd cardinality of a finite invariant zero set forces a fixed point. These are
+valid conditional certification mechanisms; they do not certify that the
+required regions cover all zeros of the actual Xi function.
+
+The focused locked build of the owner, its tests, and these three direct
+consumers passed (8,942 jobs, exit 0). The printed axiom dependencies were
+`[propext, Classical.choice, Quot.sound]`. Existing linter warnings remain in
+the replayed `CompletedZetaSouriauDInfinityThermodynamics`,
+`ActualRiemannXiEntireBridge`, and test file; this review did not modify them.
+The broader counterexample inventory remains incomplete.
+
+## Recheck: nonlinear-chart barrier inequality (2026-10-28)
+
+Re-read `Convex.BinaryBarrierCoordinateHessian` and its direct consumers. The
+counterexample evaluates the actual iterated derivatives at a point with
+`p = 15/16` and refutes the squared affine-coordinate self-concordance
+inequality after the nonlinear log-odds chart. It is not a failure of the
+original interval barrier's affine-coordinate theorem. The replacement remains
+the exact criterion `barrier_chart_standard_bound_iff`, together with the
+global strict third-derivative bound
+`barrier_chart_third_abs_lt_twice_second`; the coordinate defect theorem also
+exhibits the explicit nonpositive correction `-4 * (2p - 1)^2`.
+
+A fresh locked build of the coordinate-Hessian axiom audit, the Dikin
+derivative bridge and its audit passed (8,982 jobs, exit 0). The audited
+declarations report `[propext, Classical.choice, Quot.sound]`. Imported
+dependencies emit pre-existing linter warnings. This confirms these local
+claims and dependent bridge, not general invariance of self-concordance under
+nonlinear charts or the repository-wide counterexample census.

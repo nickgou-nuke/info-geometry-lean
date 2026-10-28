@@ -96,11 +96,16 @@ theorem complementary_charge_balance (P : Matrix n n R) (H F : ι → Matrix n n
 /-- Finite weighted twisted cyclicity; not a full analytic KMS assertion. -/
 theorem weighted_twisted_cyclicity (ρ : (Matrix n n R)ˣ) (A B : Matrix n n R) :
     Matrix.trace ((↑ρ : Matrix n n R) * (A * B)) =
-      Matrix.trace (B * (↑ρ : Matrix n n R) * A) := by
+      Matrix.trace (((↑ρ : Matrix n n R) * B) *
+        ((↑ρ : Matrix n n R) * A * (↑(ρ⁻¹) : Matrix n n R))) := by
   calc Matrix.trace ((↑ρ : Matrix n n R) * (A * B))
-      = Matrix.trace (((↑ρ : Matrix n n R) * A) * B) := by rw [mul_assoc]
-    _ = Matrix.trace (B * ((↑ρ : Matrix n n R) * A)) := Matrix.trace_mul_comm _ _
-    _ = Matrix.trace (B * (↑ρ : Matrix n n R) * A) := by rw [mul_assoc]
+      = Matrix.trace (((↑ρ : Matrix n n R) * A * (↑(ρ⁻¹) : Matrix n n R)) *
+          ((↑ρ : Matrix n n R) * B)) := by
+            congr 1
+            simp [mul_assoc, Units.inv_mul]
+    _ = Matrix.trace (((↑ρ : Matrix n n R) * B) *
+          ((↑ρ : Matrix n n R) * A * (↑(ρ⁻¹) : Matrix n n R))) :=
+          Matrix.trace_mul_comm _ _
 
 end Trace
 

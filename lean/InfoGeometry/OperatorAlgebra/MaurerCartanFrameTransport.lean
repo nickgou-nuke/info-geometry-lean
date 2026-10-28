@@ -37,9 +37,12 @@ theorem action_inverse (x : K.L) (g : Aˣ) :
       -(↑g⁻¹ * K.operatorAction x (↑g : A) * ↑g⁻¹) := by
   have h : K.operatorAction x (↑g : A) * ↑g⁻¹ +
       (↑g : A) * K.operatorAction x (↑g⁻¹ : A) = 0 := by
-    have hder := K.operatorAction_leibniz x (↑g : A) (↑g⁻¹ : A)
-    rw [Units.mul_inv, action_one] at hder
-    simpa using hder.symm
+    calc
+      K.operatorAction x (↑g : A) * ↑g⁻¹ +
+          (↑g : A) * K.operatorAction x (↑g⁻¹ : A) =
+          K.operatorAction x ((↑g : A) * ↑g⁻¹) := by
+            rw [K.operatorAction_leibniz]
+      _ = 0 := by rw [Units.mul_inv]; exact action_one K x
   have hh := congrArg (fun z : A => (↑g⁻¹ : A) * z) h
   simp only [mul_add, ← mul_assoc, Units.inv_mul, one_mul, mul_zero] at hh
   calc K.operatorAction x (↑g⁻¹ : A) =
@@ -93,15 +96,23 @@ theorem frameTransport_square_zero (g : Aˣ) (a : A) (ha : a * a = 0) :
 theorem covariant_frameTransport (g : Aˣ) (x : K.L) (a : A) :
     covariantDerivative K (gaugeForm K g) x (frameTransport g a) =
       frameTransport g (K.operatorAction x a) := by
-  change K.operatorAction x ((↑g⁻¹ : A) * a * ↑g) +
-      ((↑g⁻¹ : A) * K.operatorAction x (↑g : A)) *
-        ((↑g⁻¹ : A) * a * ↑g) -
-      ((↑g⁻¹ : A) * a * ↑g) *
-        ((↑g⁻¹ : A) * K.operatorAction x (↑g : A)) =
-    (↑g⁻¹ : A) * K.operatorAction x a * ↑g
-  rw [K.operatorAction_leibniz x ((↑g⁻¹ : A) * a) (↑g),
-    K.operatorAction_leibniz x (↑g⁻¹ : A) a, action_inverse]
-  simp [mul_assoc, Units.inv_mul, Units.mul_inv]
+  simp only [covariantDerivative, frameTransport, gaugeForm_apply]
+  rw [K.operatorAction_leibniz x ((↑g⁻¹ : A) * a) (↑g : A)]
+  rw [K.operatorAction_leibniz x (↑g⁻¹ : A) a]
+  rw [action_inverse K x g]
+  have hunit : (↑g : A) * (↑g⁻¹ : A) = 1 := by
+    simpa using congrArg (fun u : Aˣ => (u : A)) g.mul_inv
+  have hlast : (↑g⁻¹ : A) * a * ↑g *
+      ((↑g⁻¹ : A) * K.operatorAction x (↑g : A)) =
+      (↑g⁻¹ : A) * a * K.operatorAction x (↑g : A) := by
+    calc
+      (↑g⁻¹ : A) * a * ↑g *
+          ((↑g⁻¹ : A) * K.operatorAction x (↑g : A)) =
+          (↑g⁻¹ : A) * a * ((↑g : A) * (↑g⁻¹ : A)) *
+            K.operatorAction x (↑g : A) := by noncomm_ring
+      _ = (↑g⁻¹ : A) * a * K.operatorAction x (↑g : A) := by
+        rw [hunit, mul_one]
+  rw [hlast]
   noncomm_ring
 
 /-- Constant charge or projector data become covariantly constant. -/

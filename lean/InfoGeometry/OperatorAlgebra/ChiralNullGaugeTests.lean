@@ -42,8 +42,8 @@ theorem gramian_blocks_noncommuting :
       (couplingBlockᵀ * couplingBlock) * (couplingBlock * couplingBlockᵀ) := by
   intro h
   have hh := congrArg (fun M : Mat => M 0 1) h
-  norm_num [couplingBlock, Matrix.mul_apply, Matrix.transpose_apply,
-    Matrix.vecMul_apply_eq_sum, Fin.sum_univ_two] at hh
+  norm_num [couplingBlock, Matrix.transpose_apply, Matrix.mul_apply,
+    Matrix.vecMul_apply, Fin.sum_univ_two] at hh
 
 theorem one_way_channel_nonzero_square_zero :
     chiral couplingBlock 0 ≠ 0 ∧
@@ -124,25 +124,24 @@ theorem noncommuting_pure_gauge :
     ⁅gaugeForm fullLane shearUnit (innerDirection sinkStep),
       gaugeForm fullLane shearUnit (innerDirection region)⁆ ≠ 0 := by
   refine ⟨gaugeForm_flat fullLane shearUnit, ?_⟩
-  have h₁ : gaugeForm fullLane shearUnit (innerDirection sinkStep) =
-      !![(-1 : ℝ), -1; 0, 1] := by
+  have hsink : gaugeForm fullLane shearUnit (innerDirection sinkStep) =
+      !![-1, -1; 0, 1] := by
     rw [gaugeForm_apply, action_innerDirection]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [shearUnit, couplingBlock, sinkStep, Ring.lie_def,
-      Matrix.mul_apply, Matrix.transpose_apply, Matrix.vecMul_apply_eq_sum,
-      Fin.sum_univ_two]
-  have h₂ : gaugeForm fullLane shearUnit (innerDirection region) =
-      !![(0 : ℝ), 1; 0, 0] := by
+      norm_num [shearUnit, couplingBlock, sinkStep, Matrix.mul_apply,
+        Matrix.transpose_apply, Fin.sum_univ_two]
+  have hregion : gaugeForm fullLane shearUnit (innerDirection region) =
+      sourceStep := by
     rw [gaugeForm_apply, action_innerDirection]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [shearUnit, couplingBlock, region, Ring.lie_def,
-      Matrix.mul_apply, Matrix.transpose_apply, Matrix.vecMul_apply_eq_sum,
-      Fin.sum_univ_two]
-  rw [h₁, h₂]
+      norm_num [shearUnit, couplingBlock, region, sourceStep, Matrix.mul_apply,
+        Matrix.transpose_apply, Fin.sum_univ_two]
+  rw [hsink, hregion]
   intro h
   have hh := congrArg (fun M : Mat => M 0 1) h
-  norm_num [Ring.lie_def, Matrix.mul_apply, Fin.sum_univ_two] at hh
+  norm_num [sourceStep, Ring.lie_def, Matrix.mul_apply, Matrix.vecMul_apply,
+    Fin.sum_univ_two] at hh
 
 end InfoGeometry.OperatorAlgebra.ChiralNullGaugeTests

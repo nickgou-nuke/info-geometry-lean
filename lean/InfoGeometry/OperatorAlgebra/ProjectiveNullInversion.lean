@@ -37,12 +37,12 @@ def signedSwap : (V × V) ≃ₗ[R] (V × V) where
 @[simp] theorem signedSwap_apply (z : V × V) : signedSwap (R := R) z = (-z.2, z.1) := rfl
 
 theorem signedSwap_square (z : V × V) :
-    signedSwap (R := R) (signedSwap (R := R) z) = -z := rfl
+    signedSwap (R := R) (signedSwap (R := R) z) = (-z.1, -z.2) := by
+  ext <;> simp [signedSwap]
 
 /-- Only passage to submodules forgets the central vector sign. -/
 theorem signedSwap_map_twice (S : Submodule R (V × V)) :
-    (S.map (signedSwap (R := R)).toLinearMap).map
-      (signedSwap (R := R)).toLinearMap = S := by
+    (S.map signedSwap.toLinearMap).map signedSwap.toLinearMap = S := by
   ext z
   constructor
   · rintro ⟨x, ⟨y, hy, rfl⟩, rfl⟩
@@ -55,8 +55,7 @@ theorem signedSwap_map_twice (S : Submodule R (V × V)) :
 
 /-- The ordered inverse of an operator, on its genuine invertible chart. -/
 theorem signedSwap_graph_inverse (u : V ≃ₗ[R] V) :
-    u.toLinearMap.graph.map (signedSwap (R := R)).toLinearMap =
-      (-u.symm.toLinearMap).graph := by
+    u.toLinearMap.graph.map signedSwap.toLinearMap = (-u.symm.toLinearMap).graph := by
   apply (map_graph_eq_iff _ _ _).mpr
   constructor
   · intro x
@@ -68,10 +67,9 @@ theorem signedSwap_graph_inverse (u : V ≃ₗ[R] V) :
     simp
 
 theorem signedSwap_graph_chart_iff (f : Module.End R V) :
-    (∃ g : Module.End R V,
-        f.graph.map (signedSwap (R := R)).toLinearMap = g.graph) ↔
+    (∃ g : Module.End R V, f.graph.map signedSwap.toLinearMap = g.graph) ↔
       Function.Bijective f := by
-  rw [exists_map_graph_iff _ (signedSwap (R := R)).injective]
+  rw [exists_map_graph_iff _ signedSwap.injective]
   change Function.Bijective (fun x => -f x) ↔ Function.Bijective f
   constructor
   · rintro ⟨hi, hs⟩
@@ -87,12 +85,14 @@ theorem signedSwap_graph_chart_iff (f : Module.End R V) :
       exact hi (neg_injective h)
     · intro y
       obtain ⟨x, hx⟩ := hs (-y)
-      exact ⟨x, by simp [hx]⟩
+      exact ⟨x, by calc
+        -f x = -(-y) := congrArg Neg.neg hx
+        _ = y := neg_neg y⟩
 
 /-- A nonzero nilpotent channel is an inverse-chart boundary. -/
 theorem square_zero_exits_graph_chart (f : Module.End R V)
     (hf : f ≠ 0) (hsq : f * f = 0) (g : Module.End R V) :
-    f.graph.map (signedSwap (R := R)).toLinearMap ≠ g.graph := by
+    f.graph.map signedSwap.toLinearMap ≠ g.graph := by
   intro h
   have hi := ((signedSwap_graph_chart_iff f).mp ⟨g, h⟩).1
   apply hf
@@ -145,7 +145,7 @@ theorem orthogonal_generator_pair_anticommutes :
   rintro Q a b ⟨v, w, rfl, rfl, hpolar⟩
   exact cliffordGenerators_orthogonal_anticommute Q v w hpolar
 
-/-- Left multiplication by a native Clifford generator on the Clifford algebra. -/
+/-- The faithful left regular action of the native Clifford generator. -/
 def cliffordLeft (Q : QuadraticForm R V) (v : V) : Module.End R (CliffordAlgebra Q) where
   toFun a := CliffordAlgebra.ι Q v * a
   map_add' a b := mul_add _ _ _
@@ -167,7 +167,7 @@ theorem cliffordLeft_ne_zero (Q : QuadraticForm R V) (v : V)
 theorem clifford_null_graph_boundary (Q : QuadraticForm R V) (v : V)
     (hQ : Q v = 0) (hv : CliffordAlgebra.ι Q v ≠ 0)
     (g : Module.End R (CliffordAlgebra Q)) :
-    (cliffordLeft Q v).graph.map (signedSwap (R := R)).toLinearMap ≠ g.graph := by
+    (cliffordLeft Q v).graph.map signedSwap.toLinearMap ≠ g.graph := by
   apply square_zero_exits_graph_chart _ (cliffordLeft_ne_zero Q v hv)
   rw [cliffordLeft_square, hQ, zero_smul]
 
@@ -183,15 +183,17 @@ def signedGlide (p : Cover × (V × V)) : Cover × (V × V) :=
 
 /-- The axial translation survives; the fiber independently acquires a minus sign. -/
 theorem signedGlide_square (p : Cover × (V × V)) :
-    signedGlide (R := R) (signedGlide (R := R) p) = (tx p.1, -p.2) := by
-  change (glide (glide p.1), signedSwap (R := R) (signedSwap p.2)) = _
-  rw [glide_sq, signedSwap_square (R := R)]
+    signedGlide (R := R) (signedGlide (R := R) p) =
+      (tx p.1, (-p.2.1, -p.2.2)) := by
+  change (glide (glide p.1), signedSwap (R := R)
+    (signedSwap (R := R) p.2)) = _
+  rw [glide_sq, signedSwap_square]
 
 /-- Equivariance is across base points, not a pointwise parity eigenvector. -/
 theorem equivariant_translation_sign (ψ : Cover → V × V)
     (hψ : ∀ k, ψ (glide k) = signedSwap (R := R) (ψ k)) (k : Cover) :
-    ψ (tx k) = -ψ k := by
-  rw [← glide_sq, hψ, hψ, signedSwap_square (R := R)]
+    ψ (tx k) = (-(ψ k).1, -(ψ k).2) := by
+  rw [← glide_sq, hψ, hψ, signedSwap_square]
 
 /-- A globally pure sector cannot satisfy a sector-exchanging glide law. -/
 theorem equivariant_pure_sector_zero (ψ : Cover → V × V)

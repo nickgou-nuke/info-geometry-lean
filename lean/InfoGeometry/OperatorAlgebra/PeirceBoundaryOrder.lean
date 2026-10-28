@@ -46,6 +46,7 @@ theorem prerequisites_injective : Function.Injective prerequisites := by
   have hb : b ∈ prerequisites a := by
     rw [h]
     cases b <;> simp [prerequisites]
+  clear h
   cases a <;> cases b <;> simp_all [prerequisites]
 
 instance : PartialOrder Stage where

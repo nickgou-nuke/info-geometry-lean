@@ -6,6 +6,7 @@ Authors: InfoGeometry Contributors
 import InfoGeometry.OperatorAlgebra.LieJordanBoundaryCalculus
 import InfoGeometry.OperatorAlgebra.LieJordanPeirceExamples
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Full-matrix positivity and noncommuting obstruction witnesses
@@ -67,13 +68,14 @@ theorem cornerWitnessP_idempotent : cornerWitnessP * cornerWitnessP = cornerWitn
 theorem cornerWitness_upper : peirce10 cornerWitnessP transportH = transportH := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [peirce10, compIdempotent, cornerWitnessP, transportH,
+    norm_num [peirce10, compIdempotent, Matrix.one_apply, cornerWitnessP, transportH,
       Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem cornerWitness_lower : peirce01 cornerWitnessP cornerWitnessV = cornerWitnessV := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [peirce01, compIdempotent, cornerWitnessP, cornerWitnessV, transportH, transportS,
+    norm_num [peirce01, compIdempotent, Matrix.one_apply, cornerWitnessP, cornerWitnessV,
+      transportH, transportS,
       Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- The error persists for opposite corners of a non-diagonal idempotent.

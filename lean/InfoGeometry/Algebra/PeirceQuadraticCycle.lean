@@ -160,4 +160,68 @@ theorem peirce_bracket_sum {p : A} (hp : p * p = p) (x : A) :
         (peirce10 p x - peirce01 p x)) :=
   bracket_sum (peirce10_square_zero hp x) (peirce01_square_zero hp x)
 
+/-- The off-diagonal difference is the native inner bracket, for every `p`. -/
+theorem peirce_difference_eq_bracket (p x : A) :
+    peirce10 p x - peirce01 p x = ⁅p, x⁆ := by
+  simp only [peirce10, peirce01, compIdempotent, Ring.lie_def]
+  noncomm_ring
+
+theorem peirce10_eq_left_bracket {p : A} (hp : p * p = p) (x : A) :
+    peirce10 p x = p * ⁅p, x⁆ := by
+  have hl (z : A) : p * (p * z) = p * z := by rw [← mul_assoc, hp]
+  simp only [peirce10, compIdempotent, Ring.lie_def, mul_sub, mul_one, mul_assoc, hl]
+
+theorem peirce01_eq_neg_right_bracket {p : A} (hp : p * p = p) (x : A) :
+    peirce01 p x = -(⁅p, x⁆ * p) := by
+  simp only [peirce01, compIdempotent, Ring.lie_def, sub_mul, one_mul, mul_assoc, hp]
+  abel
+
+theorem peirce_sum_eq_double_bracket {p : A} (hp : p * p = p) (x : A) :
+    peirce10 p x + peirce01 p x = ⁅p, ⁅p, x⁆⁆ := by
+  have hl (z : A) : p * (p * z) = p * z := by rw [← mul_assoc, hp]
+  simp only [peirce10, peirce01, compIdempotent, Ring.lie_def,
+    mul_sub, sub_mul, mul_one, one_mul, mul_assoc, hp, hl]
+  abel
+
+/-- The reciprocal cycle is derived from idempotence, not supplied as a field. -/
+theorem peirce_cycle {p : A} (hp : p * p = p) (x : A) :
+    ⁅p, peirce10 p x - peirce01 p x⁆ = peirce10 p x + peirce01 p x ∧
+      ⁅p, peirce10 p x + peirce01 p x⁆ = peirce10 p x - peirce01 p x := by
+  have hl (z : A) : p * (p * z) = p * z := by rw [← mul_assoc, hp]
+  constructor <;>
+    simp only [peirce10, peirce01, compIdempotent, Ring.lie_def,
+      mul_sub, sub_mul, mul_add, add_mul, mul_one, one_mul, mul_assoc, hp, hl] <;>
+    abel
+
+/-- Pure-commutator expressions for both quadratic coefficients. -/
+theorem peirce_quadratic_readouts {p : A} (hp : p * p = p) (x : A) :
+    peirce10 p x * peirce01 p x + peirce01 p x * peirce10 p x =
+        -(⁅p, x⁆ * ⁅p, x⁆) ∧
+      peirce10 p x * peirce01 p x - peirce01 p x * peirce10 p x =
+        ⁅p, x⁆ * ⁅p, ⁅p, x⁆⁆ := by
+  have hu := peirce10_square_zero hp x
+  have hv := peirce01_square_zero hp x
+  constructor
+  · calc
+      _ = -((peirce10 p x - peirce01 p x) * (peirce10 p x - peirce01 p x)) := by
+        rw [difference_sq hu hv, neg_neg]
+      _ = _ := by simp only [peirce_difference_eq_bracket]
+  · calc
+      _ = (peirce10 p x - peirce01 p x) * (peirce10 p x + peirce01 p x) :=
+        (difference_mul_sum hu hv).symm
+      _ = _ := by rw [peirce_difference_eq_bracket, peirce_sum_eq_double_bracket hp]
+
+/-- Both quadratic coefficients lie in the actual idempotent commutant. -/
+theorem peirce_quadratic_conserved {p : A} (hp : p * p = p) (x : A) :
+    ⁅p, peirce10 p x * peirce01 p x + peirce01 p x * peirce10 p x⁆ = 0 ∧
+      ⁅p, peirce10 p x * peirce01 p x - peirce01 p x * peirce10 p x⁆ = 0 := by
+  have hu := peirce10_square_zero hp x
+  have hv := peirce01_square_zero hp x
+  obtain ⟨hj, he⟩ := peirce_cycle hp x
+  constructor
+  · rw [← sum_sq hu hv, cycle_square he]
+    simpa only [add_comm] using sum_difference_anticommute hu hv
+  · rw [← difference_mul_sum hu hv, cycle_product hj he,
+      sum_sq hu hv, difference_sq hu hv, add_neg_cancel]
+
 end InfoGeometry.Algebra.PeirceQuadraticCycle

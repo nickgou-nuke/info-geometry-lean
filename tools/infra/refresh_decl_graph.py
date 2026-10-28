@@ -128,7 +128,13 @@ def stream_to_arango(
     edge_batch = []
     def import_batch(collection_name: str, batch: list[dict]) -> None:
         """Append one stream batch to a collection truncated before this run."""
-        db[collection_name].import_bulk(batch, overwrite=False, on_duplicate="replace")
+        result = db[collection_name].import_bulk(
+            batch, overwrite=False, on_duplicate="replace"
+        )
+        if isinstance(result, dict) and int(result.get("errors", 0) or 0) > 0:
+            raise RuntimeError(
+                f"Arango import errors in {collection_name}: {result}"
+            )
 
     try:
         for line in proc.stdout:

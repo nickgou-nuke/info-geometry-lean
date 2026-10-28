@@ -438,6 +438,24 @@ def import_rows(
     }
 
 
+def import_accounting_failures(imports: dict[str, dict[str, Any]]) -> list[str]:
+    """Find collections whose response reports errors or misses submitted rows."""
+    failures: list[str] = []
+    for collection, result in imports.items():
+        try:
+            submitted = int(result["total"])
+            accounted = int(result["created"]) + int(result["updated"]) + int(result["errors"])
+        except (KeyError, TypeError, ValueError):
+            failures.append(f"{collection}: incomplete import accounting")
+            continue
+        if result.get("error") or int(result.get("errors", 0)) > 0 or accounted != submitted:
+            failures.append(
+                f"{collection}: submitted={submitted} accounted={accounted} "
+                f"errors={result.get('errors')}"
+            )
+    return failures
+
+
 def edge_doc(collection: str, key: str, from_id: str, to_id: str, **fields: Any) -> dict[str, Any]:
     return {"_key": key, "_from": from_id, "_to": to_id, "role": collection, **fields}
 
@@ -1055,6 +1073,13 @@ def main() -> int:
             )
 
         report["imports"] = imports
+        import_failures = import_accounting_failures(imports)
+        report["import_accounting_failures"] = import_failures
+        if import_failures:
+            raise RuntimeError(
+                "raw_infotree import accounting failed; refusing generation completion: "
+                + "; ".join(import_failures)
+            )
         if not args.skip_indexes:
             report["indexes"] = ensure_indexes(
                 target, (spec.name for spec in all_specs),

@@ -15,6 +15,7 @@ from tools.infra.arango_env import (
     arango_password,
     arango_username,
     load_repo_arango_env,
+    normalized_darwin_arango_env,
     repo_root_from,
 )
 
@@ -94,6 +95,42 @@ def test_arango_endpoint_custom_default(monkeypatch: pytest.MonkeyPatch) -> None
 def test_arango_database_custom_default(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(_DATABASE_VAR, raising=False)
     assert arango_database(default="my_db") == "my_db"
+
+
+def test_darwin_arango_config_keeps_database_role_separate(monkeypatch: pytest.MonkeyPatch) -> None:
+    for name in (
+        "DARWIN_ARANGO_ENDPOINT", "DARWIN_ARANGO_DATABASE", "DARWIN_ARANGO_USER",
+        "DARWIN_ARANGO_USERNAME", "DARWIN_ARANGO_PASS", "DARWIN_ARANGO_PASSWORD",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("ARANGO_ENDPOINT", "http://generic:8530/")
+    monkeypatch.setenv("ARANGO_DATABASE", "infogeometry")
+    monkeypatch.setenv("ARANGO_USERNAME", "shared-user")
+    monkeypatch.setenv("ARANGO_PASSWORD", "shared-pass")
+
+    config = normalized_darwin_arango_env()
+
+    assert config == {
+        "endpoint": "http://generic:8530",
+        "database": "darwin_commits",
+        "user": "shared-user",
+        "password": "shared-pass",
+    }
+
+
+def test_darwin_arango_config_specific_values_override_generic(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ARANGO_DATABASE", "infogeometry")
+    monkeypatch.setenv("DARWIN_ARANGO_DATABASE", "darwin_test")
+    monkeypatch.setenv("ARANGO_USER", "generic-user")
+    monkeypatch.setenv("DARWIN_ARANGO_USERNAME", "darwin-user")
+    monkeypatch.setenv("ARANGO_PASS", "generic-pass")
+    monkeypatch.setenv("DARWIN_ARANGO_PASSWORD", "darwin-pass")
+
+    config = normalized_darwin_arango_env()
+
+    assert config["database"] == "darwin_test"
+    assert config["user"] == "darwin-user"
+    assert config["password"] == "darwin-pass"
 
 
 # ---------------------------------------------------------------------------

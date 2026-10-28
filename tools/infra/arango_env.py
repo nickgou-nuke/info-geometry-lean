@@ -19,6 +19,7 @@ if str(_SRC) not in sys.path:
 
 from igf.config import (  # noqa: E402
     DEFAULT_ARANGO_DATABASE,
+    DEFAULT_DARWIN_ARANGO_DATABASE,
     DEFAULT_ARANGO_ENDPOINT,
     DEFAULT_ARANGO_ENV,
     DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT,
@@ -35,12 +36,14 @@ from igf.config import (  # noqa: E402
     hive_arango_endpoint,
     hive_arango_password,
     hive_arango_username,
+    normalized_darwin_arango_env,
     load_repo_arango_env,
     repo_root_from,
 )
 
 __all__ = [
     "DEFAULT_ARANGO_DATABASE",
+    "DEFAULT_DARWIN_ARANGO_DATABASE",
     "DEFAULT_ARANGO_ENDPOINT",
     "DEFAULT_ARANGO_ENV",
     "DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT",
@@ -57,6 +60,7 @@ __all__ = [
     "hive_arango_endpoint",
     "hive_arango_password",
     "hive_arango_username",
+    "normalized_darwin_arango_env",
     "load_repo_arango_env",
     "os",
     "repo_root_from",

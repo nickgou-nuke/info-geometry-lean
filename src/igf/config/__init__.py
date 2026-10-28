@@ -2,6 +2,7 @@
 
 from igf.config.env_aliases import (
     DEFAULT_ARANGO_DATABASE,
+    DEFAULT_DARWIN_ARANGO_DATABASE,
     DEFAULT_ARANGO_ENDPOINT,
     DEFAULT_ARANGO_ENV,
     DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT,
@@ -23,6 +24,7 @@ from igf.config.env_aliases import (
     normalized_alexandria_arango_env,
     load_repo_arango_env,
     normalized_arango_env,
+    normalized_darwin_arango_env,
     normalized_hive_arango_env,
     repo_root_from,
 )
@@ -41,6 +43,7 @@ from igf.config.model import ArangoConfig
 __all__ = [
     "ArangoConfig",
     "DEFAULT_ARANGO_DATABASE",
+    "DEFAULT_DARWIN_ARANGO_DATABASE",
     "DEFAULT_ARANGO_ENDPOINT",
     "DEFAULT_ARANGO_ENV",
     "DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT",
@@ -69,6 +72,7 @@ __all__ = [
     "load_repo_arango_env",
     "normalized_alexandria_arango_env",
     "normalized_arango_env",
+    "normalized_darwin_arango_env",
     "normalized_hive_arango_env",
     "repo_root_from",
     "resolve_graph_mode",

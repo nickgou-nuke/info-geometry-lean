@@ -1,7 +1,10 @@
 import json
 from pathlib import Path
 
-from tools.infra.arango_raw_infotree_ingest import raw_row_edges
+from tools.infra.arango_raw_infotree_ingest import (
+    import_accounting_failures,
+    raw_row_edges,
+)
 
 
 def write_jsonl(path: Path, records: list[dict]) -> None:
@@ -113,3 +116,28 @@ def test_raw_infotree_edges_preserve_projection_descent(tmp_path: Path) -> None:
     assert len(goal_edges) == 1
     assert goal_edges[0]["_from"] == "raw_infotree_nodes/n1"
     assert goal_edges[0]["_to"] == "raw_infotree_goal_states/gs0"
+
+
+def test_import_accounting_rejects_errors_before_generation_completion() -> None:
+    assert import_accounting_failures({
+        "nodes": {
+            "error": False, "created": 4, "updated": 1, "errors": 0,
+            "total": 5,
+        },
+    }) == []
+
+    failures = import_accounting_failures({
+        "nodes": {
+            "error": True, "created": 3, "updated": 0, "errors": 1,
+            "total": 4,
+        },
+        "edges": {
+            "error": False, "created": 2, "updated": 0, "errors": 0,
+            "total": 3,
+        },
+    })
+
+    assert len(failures) == 2
+    assert failures[0].startswith("nodes:")
+    assert "submitted=4 accounted=4 errors=1" in failures[0]
+    assert "submitted=3 accounted=2 errors=0" in failures[1]

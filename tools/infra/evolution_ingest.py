@@ -13,7 +13,6 @@ import argparse
 import base64
 import hashlib
 import json
-import os
 import sys
 from itertools import islice
 from pathlib import Path
@@ -25,11 +24,8 @@ for import_root in (REPO_ROOT, REPO_ROOT / "src"):
         sys.path.insert(0, str(import_root))
 
 from tools.infra.arango_env import (  # noqa: E402
-    arango_database,
-    arango_endpoint,
-    arango_password,
-    arango_username,
     load_repo_arango_env,
+    normalized_darwin_arango_env,
 )
 
 
@@ -220,10 +216,10 @@ def main() -> int:
         from arango import ArangoClient
     except ImportError as exc:
         raise SystemExit(f"python-arango is required: {exc}") from exc
-    endpoint = os.environ.get("DARWIN_ARANGO_ENDPOINT", arango_endpoint())
-    database = args.database or os.environ.get("DARWIN_ARANGO_DATABASE", arango_database())
-    client = ArangoClient(hosts=endpoint)
-    db = client.db(database, username=arango_username(), password=arango_password())
+    config = normalized_darwin_arango_env()
+    database = args.database or config["database"]
+    client = ArangoClient(hosts=config["endpoint"])
+    db = client.db(database, username=config["user"], password=config["password"])
     counts = ingest(db, args.commits, args.labels, args.paths, args.numstat,
                     batch_size=args.batch_size, replace=args.replace)
     print(json.dumps({"database": database, **counts}, sort_keys=True))

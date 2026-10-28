@@ -10,6 +10,7 @@ DEFAULT_ARANGO_ENDPOINT = "http://127.0.0.1:8530"
 DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT = "http://127.0.0.1:8532"
 DEFAULT_HIVE_ARANGO_ENDPOINT = "http://127.0.0.1:8540"
 DEFAULT_ARANGO_DATABASE = "infogeometry"
+DEFAULT_DARWIN_ARANGO_DATABASE = "darwin_commits"
 DEFAULT_HIVE_ARANGO_DATABASE = "hive_live"
 DEFAULT_ARANGO_ENV = Path("configs/local/hive_arango.env")
 
@@ -129,6 +130,25 @@ def normalized_hive_arango_env() -> dict[str, str]:
     database = get_env_alias(*HIVE_ALIASES["ARANGO_DATABASE"]) or DEFAULT_HIVE_ARANGO_DATABASE
     user = get_env_alias(*HIVE_ALIASES["ARANGO_USER"])
     password = get_env_alias(*HIVE_ALIASES["ARANGO_PASS"])
+    return {
+        "endpoint": endpoint.rstrip("/"),
+        "database": database,
+        "user": user,
+        "password": password,
+    }
+
+
+def normalized_darwin_arango_env() -> dict[str, str]:
+    """Resolve the Darwin commit/evolution database role consistently.
+
+    Darwin shares the generic Arango endpoint and credentials by default, but
+    its database is deliberately separate from the declaration/InfoTree
+    database. Dedicated DARWIN_ARANGO_* values take precedence.
+    """
+    endpoint = get_env_alias("DARWIN_ARANGO_ENDPOINT") or arango_endpoint()
+    database = get_env_alias("DARWIN_ARANGO_DATABASE") or DEFAULT_DARWIN_ARANGO_DATABASE
+    user = get_env_alias("DARWIN_ARANGO_USER", "DARWIN_ARANGO_USERNAME") or arango_username()
+    password = get_env_alias("DARWIN_ARANGO_PASS", "DARWIN_ARANGO_PASSWORD") or arango_password()
     return {
         "endpoint": endpoint.rstrip("/"),
         "database": database,

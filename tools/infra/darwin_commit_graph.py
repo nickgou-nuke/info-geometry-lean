@@ -21,11 +21,8 @@ from pathlib import Path
 from typing import Iterable
 
 from tools.infra.arango_env import (
-    arango_database,
-    arango_endpoint,
-    arango_username,
-    arango_password,
     load_repo_arango_env,
+    normalized_darwin_arango_env,
 )
 
 try:
@@ -374,13 +371,19 @@ def main() -> int:
     import argparse
     parser = argparse.ArgumentParser(description="Darwin commit-evolution taxonomy importer")
     parser.add_argument("--drop-existing", action="store_true", help="drop commit_* collections before import")
+    parser.add_argument("--database", help="Override the resolved Darwin commit database")
     parser.add_argument("--no-query", action="store_true", help="skip post-import queries")
     parser.add_argument("--attach-decl-edges", action="store_true", help="attach commit->path edges")
     parser.add_argument("--max-edges", type=int, default=50000)
     args = parser.parse_args()
     load_repo_arango_env(REPO_ROOT)
-    client = ArangoClient(hosts=arango_endpoint())
-    db = client.db(arango_database(), username=arango_username(), password=arango_password())
+    config = normalized_darwin_arango_env()
+    client = ArangoClient(hosts=config["endpoint"])
+    db = client.db(
+        args.database or config["database"],
+        username=config["user"],
+        password=config["password"],
+    )
     import_commit_nodes(db, drop_existing=args.drop_existing)
     if args.attach_decl_edges:
         attach_decl_edges(db, max_edges=args.max_edges)

@@ -31,6 +31,7 @@ from tools.infra.arango_env import (  # noqa: E402
     arango_password,
     arango_username,
     load_repo_arango_env,
+    normalized_darwin_arango_env,
 )
 
 SCHEMA = "info_geometry.darwin_tree_visualization.v1"
@@ -332,11 +333,12 @@ def _identity(prefix: str) -> tuple[str, str, str]:
 
 def main() -> int:
     load_repo_arango_env(REPO_ROOT)
+    darwin_config = normalized_darwin_arango_env()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--commit-database", default=os.environ.get("DARWIN_ARANGO_DATABASE", "darwin_commits"))
+    parser.add_argument("--commit-database", default=darwin_config["database"])
     parser.add_argument("--commit-collection", default="commit_nodes",
                         help="Use commit_nodes or evo_commits; parent ids are read from each document's parents")
-    parser.add_argument("--commit-endpoint", default=os.environ.get("DARWIN_ARANGO_ENDPOINT", arango_endpoint()))
+    parser.add_argument("--commit-endpoint", default=darwin_config["endpoint"])
     parser.add_argument("--commit-edge-collection", default="commit_decl_edges",
                         help="Commit-to-declaration links; used only with --join-mode declaration")
     parser.add_argument("--declaration-edges-jsonl", type=Path,
@@ -359,8 +361,7 @@ def main() -> int:
     args = parser.parse_args()
 
     commit_identity = (args.commit_endpoint, args.commit_database,
-                       os.environ.get("DARWIN_ARANGO_USER", arango_username()),
-                       os.environ.get("DARWIN_ARANGO_PASS", arango_password()))
+                       darwin_config["user"], darwin_config["password"])
     dna_database = args.dna_database or os.environ.get("ARANGO_DATABASE", arango_database())
     dna_identity = (args.dna_endpoint, dna_database,
                     os.environ.get("DNA_ARANGO_USER", arango_username()),

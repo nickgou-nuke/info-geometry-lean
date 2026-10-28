@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 
 namespace Omega.StableArithmetic.NonAffineWitness
@@ -102,5 +107,14 @@ theorem paper_stable_audit_non_affine_witness :
             op (op (op 0 0) 0) 0 = 11 ∧
               ¬ (∀ x : Fin 36, op x x = op (op (op x x) x) x) := by
   refine ⟨stable_audit_non_affine_witness_op, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
+
+/-- The failure of the audited identity has a concrete input: at `0`, the
+left side is `17` while the displayed nested iterate on the right is `11`. -/
+theorem stable_audit_non_affine_witness_op_fails_at_zero :
+    stable_audit_non_affine_witness_op 0 0 ≠
+      stable_audit_non_affine_witness_op
+        (stable_audit_non_affine_witness_op
+          (stable_audit_non_affine_witness_op 0 0) 0) 0 := by
+  decide
 
 end Omega.StableArithmetic.NonAffineWitness

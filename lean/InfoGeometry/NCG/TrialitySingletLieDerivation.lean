@@ -29,6 +29,27 @@ open InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion
 open InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix
 open InfoGeometry.NCG.ZornCommutator
 
+/-- The triality-fixed singlet carrier is closed under the ambient
+noncommutative Zorn commutator. The four output coefficients retain their
+ordered products; no commutativity of `A` is used. -/
+theorem opCommutator_zornSinglet_closed
+    (a₁ c₁ d₁ b₁ a₂ c₂ d₂ b₂ : A) :
+    ∃ a c d b,
+      opCommutator (zornSinglet a₁ c₁ d₁ b₁) (zornSinglet a₂ c₂ d₂ b₂) =
+        zornSinglet a c d b := by
+  refine ⟨
+    (a₁ * a₂ - (c₁ * d₂ + c₁ * d₂ + c₁ * d₂)) -
+      (a₂ * a₁ - (c₂ * d₁ + c₂ * d₁ + c₂ * d₁)),
+    (a₁ * c₂ + c₁ * b₂) - (a₂ * c₁ + c₂ * b₁),
+    (d₁ * a₂ + b₁ * d₂) - (d₂ * a₁ + b₂ * d₁),
+    (-(d₁ * c₂ + d₁ * c₂ + d₁ * c₂) + b₁ * b₂) -
+      (-(d₂ * c₁ + d₂ * c₁ + d₂ * c₁) + b₂ * b₁), ?_⟩
+  ext <;>
+    simp [opCommutator, zornSinglet, OpVec3.diagVec,
+      mul_a, mul_b, mul_v, mul_w,
+      OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross,
+      OpVec3.leftScale, OpVec3.rightScale]
+
 /-- Grade `+2` ray in the triality-fixed sector: all three vector coordinates
 are the same coefficient. -/
 def singletGradePlusTwo (ξ : A) : OpZornMatrix A :=

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -38,6 +44,23 @@ theorem symplecticRankTwo_mixedTriple_counterexample :
     simpa [alpha_add] using (eq_neg_of_add_eq_zero_right hz)
   rw [hneg] at hα
   norm_num at hα
+
+/-- The rank-two counterexample is the nonzero `(-1)`-graded Jacobi defect
+of the existing total TKK bracket on the same Freudenthal charge witnesses.
+This promotes the failed universal triple law to an explicit component
+obstruction; it does not assert Jacobi for the full TKK bracket. -/
+theorem tkk_mixed_jacobi_alpha_beta_alpha_ne_zero :
+    (tkkTotalBracket D (injMinus1 D (alphaCharge (J := J)))
+      (tkkTotalBracket D (injPlus1 D (alphaCharge (J := J)))
+        (injMinus1 D (betaCharge (J := J))))).minus1 +
+      (tkkTotalBracket D (injPlus1 D (alphaCharge (J := J)))
+        (tkkTotalBracket D (injMinus1 D (betaCharge (J := J)))
+          (injMinus1 D (alphaCharge (J := J))))).minus1 +
+      (tkkTotalBracket D (injMinus1 D (betaCharge (J := J)))
+        (tkkTotalBracket D (injMinus1 D (alphaCharge (J := J)))
+          (injPlus1 D (alphaCharge (J := J))))).minus1 ≠ 0 := by
+  rw [tkk_mixed_jacobi_plus1_component]
+  exact sub_ne_zero.mpr (symplecticRankTwo_mixedTriple_counterexample D)
 
 theorem tkk_mixed_jacobi_is_not_available_from_symplecticRankTwo :
     ¬ (∀ x z y : FreudenthalCharge J,

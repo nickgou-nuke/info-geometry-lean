@@ -52,4 +52,26 @@ theorem not_faithful_gl31_with_CAR_odd
   change (F X * F Y + F Y * F X) * F Z - F Z * (F X * F Y + F Y * F X) = 0
   exact sub_eq_zero.mpr (odd_bracket_central (hodd X hx) (hodd Y hy) (F Z)).eq
 
+/-- A classical existential kernel form of the noninjectivity obstruction:
+every homogeneous-bracket-preserving linear map into the raw CAR odd sector
+kills some nonzero element. This theorem does not identify that element. -/
+theorem exists_nonzero_kernel_of_homogeneous_bracket_map_to_CAR_odd
+    (F : SuperMatrix 3 1 R →ₗ[R] Op R)
+    (hodd : ∀ X, IsHomogeneous .odd X → F X ∈ oddPart)
+    (hbracket : ∀ (p q : Parity) (X Y : SuperMatrix 3 1 R),
+      IsHomogeneous p X → IsHomogeneous q Y →
+      F (ringSuperbracket p q X Y) = ringSuperbracket p q (F X) (F Y)) :
+    ∃ X, X ≠ 0 ∧ F X = 0 := by
+  by_contra h
+  have hzero : ∀ X, F X = 0 → X = 0 := by
+    intro X hFX
+    by_contra hX
+    exact h ⟨X, hX, hFX⟩
+  have hinj : Function.Injective F := by
+    intro X Y hXY
+    apply sub_eq_zero.mp
+    apply hzero
+    rw [map_sub, hXY, sub_self]
+  exact (not_faithful_gl31_with_CAR_odd F hodd hbracket) hinj
+
 end InfoGeometry.Algebra.ZornColorOperatorCoordinates

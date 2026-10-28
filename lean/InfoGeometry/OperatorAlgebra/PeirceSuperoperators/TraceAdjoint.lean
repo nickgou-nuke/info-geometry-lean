@@ -26,12 +26,13 @@ variable {n R : Type*} [Fintype n] [DecidableEq n] [CommRing R]
 
 local notation "D" => LieAlgebra.ad R (Matrix n n R)
 local notation "J" => jordanLeft (R := R)
+local notation "E" => Module.End R (Matrix n n R)
 local notation "B" =>
   LinearMap.compr₂ (LinearMap.mul R (Matrix n n R)) (Matrix.traceLinearMap n R R)
 
 /-- The actual trace bilinear form pairs an inner action with its negative. -/
 theorem trace_adjoint_ad (u : Matrix n n R) :
-    LinearMap.IsAdjointPair B B (D u) (-D u) := by
+    LinearMap.IsAdjointPair B B (D u) (-D u : E) := by
   intro X Y
   change trace ((u * X - X * u) * Y) = trace (X * -(u * Y - Y * u))
   rw [mul_neg, trace_neg]
@@ -43,31 +44,37 @@ theorem trace_adjoint_jordan (u : Matrix n n R) :
     LinearMap.IsAdjointPair B B (J u) (J u) := by
   intro X Y
   change trace ((u * X + X * u) * Y) = trace (X * (u * Y + Y * u))
-  rw [add_mul, mul_add, trace_add, trace_add, trace_mul_cycle u X Y]
+  rw [add_mul, mul_add, trace_add, trace_add, trace_mul_cycle u X Y,
+    trace_mul_cycle Y u X]
   simp only [mul_assoc]
   rw [add_comm]
 
 /-- The symmetric double inner action is trace-self-adjoint for arbitrary coefficients. -/
 theorem trace_adjoint_double_lie (u v : Matrix n n R) :
     LinearMap.IsAdjointPair B B
-      (-(D u * D v + D v * D u)) (-(D u * D v + D v * D u)) := by
-  have h := ((trace_adjoint_ad u).mul (trace_adjoint_ad v)).add
-    ((trace_adjoint_ad v).mul (trace_adjoint_ad u))
-  simpa only [neg_mul_neg, neg_one_smul, add_comm] using h.smul (-1 : R)
+      (-(D u * D v + D v * D u) : E) (-(D u * D v + D v * D u) : E) := by
+  have h₁ := LinearMap.IsAdjointPair.mul (f := D u) (g := -D u)
+    (f' := D v) (g' := -D v) (trace_adjoint_ad u) (trace_adjoint_ad v)
+  have h₂ := LinearMap.IsAdjointPair.mul (f := D v) (g := -D v)
+    (f' := D u) (g' := -D u) (trace_adjoint_ad v) (trace_adjoint_ad u)
+  simpa only [neg_mul_neg, neg_one_smul, add_comm] using
+    LinearMap.IsAdjointPair.smul (-1 : R) (h₁.add h₂)
 
 /-- The mixed action's trace adjoint has reversed composition order. -/
 theorem trace_adjoint_mixed_difference (u v : Matrix n n R) :
     LinearMap.IsAdjointPair B B
-      (D u * J v - D v * J u) (J u * D v - J v * D u) := by
-  have h := ((trace_adjoint_ad u).mul (trace_adjoint_jordan v)).sub
-    ((trace_adjoint_ad v).mul (trace_adjoint_jordan u))
-  simpa only [mul_neg, neg_sub_neg] using h
+      (D u * J v - D v * J u : E) (J u * D v - J v * D u : E) := by
+  have h₁ := LinearMap.IsAdjointPair.mul (f := D u) (g := -D u)
+    (f' := J v) (g' := J v) (trace_adjoint_ad u) (trace_adjoint_jordan v)
+  have h₂ := LinearMap.IsAdjointPair.mul (f := D v) (g := -D v)
+    (f' := J u) (g' := J u) (trace_adjoint_ad v) (trace_adjoint_jordan u)
+  simpa only [mul_neg, neg_sub_neg] using h₁.sub h₂
 
 /-- Adding an inner action changes its sign in the bilinear trace adjoint. -/
 theorem trace_adjoint_commutator_perturbation (u v : Matrix n n R) :
     LinearMap.IsAdjointPair B B
-      (D (u * v + v * u) - (D u * D v + D v * D u))
-      (-D (u * v + v * u) - (D u * D v + D v * D u)) := by
+      (D (u * v + v * u) - (D u * D v + D v * D u) : E)
+      (-D (u * v + v * u) - (D u * D v + D v * D u) : E) := by
   have h := (trace_adjoint_ad (u * v + v * u)).add (trace_adjoint_double_lie u v)
   simpa only [sub_eq_add_neg] using h
 
@@ -91,7 +98,7 @@ theorem trace_mixed_skew_defect (u v X Y : Matrix n n R) :
 
 /-- The exact skewness obstruction is valid without a characteristic restriction. -/
 theorem trace_mixed_isSkewAdjoint_iff (u v : Matrix n n R) :
-    LinearMap.IsSkewAdjoint B (D u * J v - D v * J u) ↔
+    LinearMap.IsSkewAdjoint B (D u * J v - D v * J u : E) ↔
       (2 : ℕ) • J ⁅u, v⁆ = 0 := by
   constructor
   · intro h
@@ -114,16 +121,16 @@ theorem trace_mixed_isSkewAdjoint_iff (u v : Matrix n n R) :
         _ = 2 • J ⁅u, v⁆ := by abel
         _ = 0 := h
     have heq := eq_neg_of_add_eq_zero_left hsum
-    change LinearMap.IsAdjointPair B B (D u * J v - D v * J u)
-      (-(D u * J v - D v * J u))
+    change LinearMap.IsAdjointPair B B (D u * J v - D v * J u : E)
+      (-(D u * J v - D v * J u) : E)
     rw [← heq]
     exact trace_adjoint_mixed_difference u v
 
 /-- With additive torsion excluded, mixed trace-skewness is equivalent to commutation. -/
 theorem trace_mixed_isSkewAdjoint_iff_commute [IsAddTorsionFree R]
     (u v : Matrix n n R) :
-    LinearMap.IsSkewAdjoint B (D u * J v - D v * J u) ↔ Commute u v := by
-  letI : IsAddTorsionFree (Matrix n n R) :=
+    LinearMap.IsSkewAdjoint B (D u * J v - D v * J u : E) ↔ Commute u v := by
+  let : IsAddTorsionFree (Matrix n n R) :=
     inferInstanceAs (IsAddTorsionFree (n → n → R))
   rw [trace_mixed_isSkewAdjoint_iff]
   constructor

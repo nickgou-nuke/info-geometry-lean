@@ -39,6 +39,8 @@ The bilinear form is the native composition
 (LinearMap.mul R (Matrix n n R)).compr₂ (Matrix.traceLinearMap n R R).
 Its value is trace(XY). Adjoint assertions use LinearMap.IsAdjointPair
 and LinearMap.IsSkewAdjoint, with order reversal supplied by Mathlib.
+Composed expressions are explicitly typed as Module.End before coercion to
+these function-valued predicates, so their product remains composition.
 
 The complex metric uses the same native matrix norm and inner-product
 instances at weight one as PR261. Its metric adjoint is LinearMap.adjoint.

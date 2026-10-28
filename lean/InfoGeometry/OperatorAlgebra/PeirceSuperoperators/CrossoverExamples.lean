@@ -38,10 +38,11 @@ local instance : InnerProductSpace ℂ (Matrix (Fin 4) (Fin 4) ℂ) :=
 
 local notation "adM" => LieAlgebra.ad ℂ (Matrix (Fin 4) (Fin 4) ℂ)
 local notation "J" => jordanLeft (R := ℂ)
+local notation "E" => Module.End ℂ (Matrix (Fin 4) (Fin 4) ℂ)
 local notation "S" => PeirceGrading.reflection projection
-local notation "Δ" => -(adM charge * adM chargeᴴ + adM chargeᴴ * adM charge)
-local notation "F" => adM charge * J chargeᴴ - adM chargeᴴ * J charge
-local notation "G" => adM gram - (adM charge * adM chargeᴴ + adM chargeᴴ * adM charge)
+local notation "Δ" => (-(adM charge * adM chargeᴴ + adM chargeᴴ * adM charge) : E)
+local notation "F" => (adM charge * J chargeᴴ - adM chargeᴴ * J charge : E)
+local notation "G" => (adM gram - (adM charge * adM chargeᴴ + adM chargeᴴ * adM charge) : E)
 local notation "B" =>
   LinearMap.compr₂ (LinearMap.mul ℂ (Matrix (Fin 4) (Fin 4) ℂ))
     (Matrix.traceLinearMap (Fin 4) ℂ ℂ)

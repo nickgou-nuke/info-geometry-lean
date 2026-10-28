@@ -31,7 +31,7 @@ theorem commutator_perturbation_eq_zero_of_mem_centralizer
     (c : R) (u v X : A) (hX : X ∈ Subalgebra.centralizer R ({u, v} : Set A)) :
     (c • D (u * v + v * u) - (D u * D v + D v * D u)) X = 0 := by
   have hpair : Commute u X ∧ Commute v X := by
-    simpa only [Subalgebra.mem_centralizer_iff, Set.forall_mem_insert,
+    simpa only [commute_iff_eq, Subalgebra.mem_centralizer_iff, Set.forall_mem_insert,
       Set.forall_mem_singleton] using hX
   have hH : Commute (u * v + v * u) X :=
     (hpair.1.mul_left hpair.2).add_left (hpair.2.mul_left hpair.1)
@@ -56,11 +56,13 @@ theorem square_zero_pair_adjoin_le_centralizer {u v : A}
   intro X hX
   rw [Set.mem_singleton_iff] at hX
   subst X
-  simp only [Subalgebra.mem_centralizer_iff, Set.forall_mem_insert,
-    Set.forall_mem_singleton]
-  constructor
+  apply Subalgebra.mem_centralizer_iff.mpr
+  intro g hg
+  rcases Set.mem_insert_iff.mp hg with rfl | hg
   · noncomm_ring [hu]
-  · noncomm_ring [hv]
+  · have hgv := Set.mem_singleton_iff.mp hg
+    subst g
+    noncomm_ring [hv]
 
 /-- The generated algebra is a native submodule of stationary vectors. -/
 theorem square_zero_pair_adjoin_le_ker (c : R) {u v : A}
@@ -85,7 +87,7 @@ theorem mixed_difference_of_mem_centralizer (u v X : A)
     (hX : X ∈ Subalgebra.centralizer R ({u, v} : Set A)) :
     (D u * J v - D v * J u) X = 4 • (⁅u, v⁆ * X) := by
   have hpair : Commute u X ∧ Commute v X := by
-    simpa only [Subalgebra.mem_centralizer_iff, Set.forall_mem_insert,
+    simpa only [commute_iff_eq, Subalgebra.mem_centralizer_iff, Set.forall_mem_insert,
       Set.forall_mem_singleton] using hX
   have hK : Commute (u * v - v * u) X :=
     (hpair.1.mul_left hpair.2).sub_left (hpair.2.mul_left hpair.1)

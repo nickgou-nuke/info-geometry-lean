@@ -65,6 +65,7 @@ theorem coefficientLift_sub (A B : Matrix n n ℂ) :
   ext ⟨i, a⟩ ⟨j, b⟩
   simp [coefficientLift, Matrix.kroneckerMap_apply, mul_sub]
 
+omit [DecidableEq n] in
 theorem coefficientLift_mul (A B : Matrix n n ℂ) :
     coefficientLift (A * B) = coefficientLift A * coefficientLift B := by
   simpa only [coefficientLift, one_mul] using

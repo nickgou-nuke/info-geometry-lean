@@ -88,15 +88,15 @@ theorem secondBlockCharge_commute_hamiltonian (T : Matrix m n ℂ) :
 omit [DecidableEq m] [DecidableEq n] in
 theorem block_hamiltonian_posSemidef (T : Matrix m n ℂ) :
     (dirac T * dirac T).PosSemidef := by
-  simpa only [dirac_isHermitian] using posSemidef_conjTranspose_mul_self (dirac T)
+  simpa only [(dirac_isHermitian T).eq] using posSemidef_conjTranspose_mul_self (dirac T)
 
-/-- The two Gram operators are intertwined by the rectangular input itself. -/
 omit [DecidableEq m] [DecidableEq n] in
+/-- The two Gram operators are intertwined by the rectangular input itself. -/
 theorem gram_intertwining (T : Matrix m n ℂ) :
     leftGram T * T = T * rightGram T := Matrix.mul_assoc _ _ _
 
-/-- The kernel condition retains both summands and the actual adjoint. -/
 omit [DecidableEq m] [DecidableEq n] in
+/-- The kernel condition retains both summands and the actual adjoint. -/
 theorem dirac_mulVec_eq_zero_iff (T : Matrix m n ℂ) (u : m → ℂ) (v : n → ℂ) :
     dirac T *ᵥ Sum.elim u v = 0 ↔ T *ᵥ v = 0 ∧ Tᴴ *ᵥ u = 0 := by
   rw [dirac, fromBlocks_mulVec]

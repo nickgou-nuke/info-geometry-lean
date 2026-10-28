@@ -97,8 +97,8 @@ theorem mixed_charge_trace_skew_defect :
     trace ((F S) * (1 : Matrix (Fin 4) (Fin 4) ℂ)) +
       trace (S * (F (1 : Matrix (Fin 4) (Fin 4) ℂ))) = 448 := by
   rw [mixed_charge_reflection, mixed_charge_one, zero_mul, trace_zero, zero_add]
-  rw [show (4 : ℕ) = 2 + 2 from rfl, add_nsmul]
-  simp only [PeirceGrading.reflection, two_mul, two_nsmul]
+  change trace (S * ((2 + 2 : ℕ) • ⁅charge, chargeᴴ⁆)) = 448
+  simp only [add_nsmul, PeirceGrading.reflection, two_mul, two_nsmul]
   norm_num [projection, charge, Ring.lie_def,
     Matrix.trace, Matrix.mul_apply, Matrix.vecMul, dotProduct, conjTranspose_apply,
     map_ofNat, Fin.sum_univ_succ]

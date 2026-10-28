@@ -20,7 +20,7 @@ namespace InfoGeometry.OperatorAlgebra.CliffordDirac
 
 abbrev ThreeFactorMatrix := SpinMatrix (Fin 2 × Fin 2)
 
-theorem coefficientLift_commute {n : Type*} [Fintype n] [DecidableEq n]
+theorem coefficientLift_commute {n : Type*} [Fintype n]
     {A B : Matrix n n ℂ} (h : Commute A B) :
     Commute (coefficientLift A) (coefficientLift B) := by
   change coefficientLift A * coefficientLift B = coefficientLift B * coefficientLift A

@@ -95,10 +95,12 @@ omit [Fintype n] [DecidableEq n] in
   · rintro rfl
     exact coefficientLift_zero
 
+omit [DecidableEq n] in
 theorem coefficientLift_lie (A B : Matrix n n ℂ) :
     ⁅coefficientLift A, coefficientLift B⁆ = coefficientLift ⁅A, B⁆ := by
   simp only [Ring.lie_def, coefficientLift_sub, coefficientLift_mul]
 
+omit [DecidableEq n] in
 theorem coefficientLift_lie_ne_zero_iff (A B : Matrix n n ℂ) :
     ⁅coefficientLift A, coefficientLift B⁆ ≠ 0 ↔ ⁅A, B⁆ ≠ 0 := by
   rw [coefficientLift_lie]
@@ -231,6 +233,7 @@ theorem matrixCurvature_ne_zero_iff (A B : Matrix n n ℂ) :
   exact (bivector_mul_ne_zero_iff (g := spinX) (h := spinY)
     spinX_sq spinY_sq spin_anticommute _).trans (coefficientLift_lie_ne_zero_iff A B)
 
+omit [DecidableEq n] in
 theorem matrixLaplacian_eq (A B : Matrix n n ℂ) :
     matrixLaplacian A B = coefficientLift (A * A + B * B) := by
   simp only [matrixLaplacian, coefficientLift_add, coefficientLift_mul]

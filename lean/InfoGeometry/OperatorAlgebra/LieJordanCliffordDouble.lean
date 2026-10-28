@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.LieJordanDualTransport
+import InfoGeometry.OperatorAlgebra.CliffordDirac.Defect
 
 /-!
 # A genuine doubled endomorphism and its order-sensitive square
@@ -22,6 +23,47 @@ open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.OperatorAlgebra.LieJordanDualTransport
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+
+/-- A coefficient-weighted sum of two endomorphisms of the full algebra.
+The coefficients act by left multiplication, so no commutation between the
+coefficients and the endomorphisms is built into the definition. -/
+def coefficientWeighted (Γ₁ Γ₂ : A) (T₁ T₂ : Module.End R A) : Module.End R A :=
+  LinearMap.mulLeft R Γ₁ * T₁ + LinearMap.mulLeft R Γ₂ * T₂
+
+/-- The square of a coefficient-weighted operator retains both the mixed
+operator commutator and every coefficient-transport defect. -/
+theorem coefficientWeighted_square_with_defects
+    (Γ₁ Γ₂ : A) (T₁ T₂ : Module.End R A)
+    (h₁ : Γ₁ * Γ₁ = 1) (h₂ : Γ₂ * Γ₂ = 1)
+    (h₁₂ : Γ₁ * Γ₂ + Γ₂ * Γ₁ = 0) :
+    coefficientWeighted (R := R) Γ₁ Γ₂ T₁ T₂ *
+        coefficientWeighted (R := R) Γ₁ Γ₂ T₁ T₂ =
+      T₁ * T₁ + T₂ * T₂ +
+        LinearMap.mulLeft R Γ₁ * LinearMap.mulLeft R Γ₂ * (T₁ * T₂ - T₂ * T₁) +
+        LinearMap.mulLeft R Γ₁ *
+          (T₁ * LinearMap.mulLeft R Γ₁ - LinearMap.mulLeft R Γ₁ * T₁) * T₁ +
+        LinearMap.mulLeft R Γ₁ *
+          (T₁ * LinearMap.mulLeft R Γ₂ - LinearMap.mulLeft R Γ₂ * T₁) * T₂ +
+        LinearMap.mulLeft R Γ₂ *
+          (T₂ * LinearMap.mulLeft R Γ₁ - LinearMap.mulLeft R Γ₁ * T₂) * T₁ +
+        LinearMap.mulLeft R Γ₂ *
+          (T₂ * LinearMap.mulLeft R Γ₂ - LinearMap.mulLeft R Γ₂ * T₂) * T₂ := by
+  have h₁' : LinearMap.mulLeft R Γ₁ * LinearMap.mulLeft R Γ₁ = 1 := by
+    ext x
+    change Γ₁ * (Γ₁ * x) = x
+    rw [← mul_assoc, h₁, one_mul]
+  have h₂' : LinearMap.mulLeft R Γ₂ * LinearMap.mulLeft R Γ₂ = 1 := by
+    ext x
+    change Γ₂ * (Γ₂ * x) = x
+    rw [← mul_assoc, h₂, one_mul]
+  have h₁₂' : LinearMap.mulLeft R Γ₁ * LinearMap.mulLeft R Γ₂ +
+      LinearMap.mulLeft R Γ₂ * LinearMap.mulLeft R Γ₁ = 0 := by
+    ext x
+    change Γ₁ * (Γ₂ * x) + Γ₂ * (Γ₁ * x) = 0
+    rw [← mul_assoc, ← mul_assoc, ← add_mul, h₁₂, zero_mul]
+  have hsq := InfoGeometry.OperatorAlgebra.CliffordDirac.clifford_sum_sq_with_defect
+    (LinearMap.mulLeft R Γ₁) (LinearMap.mulLeft R Γ₂) T₁ T₂ h₁' h₂' h₁₂'
+  simpa only [coefficientWeighted, Ring.lie_def] using hsq
 
 /-- Componentwise lift of an actual algebra endomorphism. -/
 def liftOp (t : Module.End R A) : Module.End R (A × A) where

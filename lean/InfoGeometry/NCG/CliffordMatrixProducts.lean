@@ -126,8 +126,8 @@ theorem factor_reversal_defect (a b X Y : Matrix n n R) :
   unfold NonCommutativeFredholmIndex.commutator
   abel
 
-/-- Native `Commute` closure gives conservation of the commutator summand. -/
 omit [DecidableEq n] in
+/-- Native `Commute` closure gives conservation of the commutator summand. -/
 theorem commute_curvature_term {C : Matrix n n R}
     (hCa : Commute C a) (hCb : Commute C b)
     (hCX : Commute C X) (hCY : Commute C Y) :

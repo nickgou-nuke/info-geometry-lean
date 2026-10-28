@@ -49,13 +49,19 @@ modules=(
   InfoGeometry.NCG.PeirceOddPair
   InfoGeometry.NCG.CliffordPeirceAudit
 )
+proof_failed=0
 for module in "${modules[@]}"; do
   relative_path=${module//./\/}
   mkdir -p "$proof_oleans/$(dirname "$relative_path")"
   echo "CHECK $module"
-  lean --root="$repo_root/lean" -o "$proof_oleans/$relative_path.olean" \
-    "$repo_root/lean/$relative_path.lean" 2>&1 | tee ".artifacts/clifford-peirce/$module.log"
+  if ! lean --root="$repo_root/lean" -o "$proof_oleans/$relative_path.olean" \
+      "$repo_root/lean/$relative_path.lean" 2>&1 | tee ".artifacts/clifford-peirce/$module.log"; then
+    proof_failed=1
+  fi
 done
+if [ "$proof_failed" -ne 0 ]; then
+  exit 1
+fi
 python3 - <<'AXIOM_AUDIT'
 import re
 from pathlib import Path

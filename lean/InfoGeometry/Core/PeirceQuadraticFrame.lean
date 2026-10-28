@@ -206,7 +206,7 @@ theorem double_bracket_sum (hp : IsIdempotentElem p)
       4 • ((u * v + v * u) ^ 2 * (u + v)) := by
   rw [bracket_bracket_sum hp hu hv, lie_nsmul,
     quadratic_bracket_left_factor hp hu hv, bracket_bracket_difference hp hu hv]
-  simp only [nsmul_eq_mul]
+  simp only [nsmul_eq_mul, Nat.cast_ofNat]
   noncomm_ring
 
 theorem double_bracket_difference (hp : IsIdempotentElem p)
@@ -215,7 +215,7 @@ theorem double_bracket_difference (hp : IsIdempotentElem p)
       4 • ((u * v + v * u) ^ 2 * (u - v)) := by
   rw [bracket_bracket_difference hp hu hv, lie_nsmul,
     quadratic_bracket_left_factor hp hu hv, bracket_bracket_sum hp hu hv]
-  simp only [nsmul_eq_mul]
+  simp only [nsmul_eq_mul, Nat.cast_ofNat]
   noncomm_ring
 
 end OppositeCorners

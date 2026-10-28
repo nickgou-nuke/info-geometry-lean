@@ -56,10 +56,12 @@ prove `{D,M}=0`, `D²+M²=0`, `M+D=2 P A(1-P)`,
 The source proof dependencies give the order:
 Clifford relations -> product with defects -> commutant product -> four
 specializations -> sum/difference identities. Independently, native Peirce
-corners and reconstruction -> opposite squares and anticommuting pair ->
-square-zero charges -> paired anticommutator and conserved square; the star
-branch gives adjoint charges. Bivector adjoints and conjugation follow from
-the native square theorem and Clifford relations.
+corner nilpotence -> square-zero charges; reconstruction and native parity ->
+pair anticommutation. These two branches imply opposite squares, which imply
+the paired anticommutator. Pair anticommutation also gives the conserved
+square; the star branch gives adjoint charges. The native bivector square
+theorem supplies its unit, while adjoint and conjugation results use the
+Clifford relations directly.
 
 This is a source-level dependency order, not an independently formalized
 causal-poset carrier. Context preflight found no generated declaration-DAG

@@ -34,7 +34,8 @@ def representation (h : IsDualSeedPair X Y) :
   map_zero' := by simp [peirceBlock]
   map_add' M N := by simp only [Matrix.add_apply, peirceBlock, add_smul]; abel
   map_smul' a M := by
-    simp only [Matrix.smul_apply, smul_eq_mul, peirceBlock, smul_add, smul_smul]
+    simp only [Matrix.smul_apply, smul_eq_mul, peirceBlock, smul_add, smul_smul,
+      MonoidHom.id_apply]
   map_mul' M N := by
     simp only [peirceBlock_mul h, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -81,7 +82,7 @@ theorem range_eq_adjoin (h : IsDualSeedPair X Y) :
     intro Z hZ
     rcases Set.mem_insert_iff.mp hZ with rfl | hZ
     · refine ⟨Matrix.single 0 1 1, ?_⟩
-      change representation h (Matrix.single 0 1 1) = X
+      change representation h (Matrix.single 0 1 1) = _
       simp
     · have : Z = Y := Set.mem_singleton_iff.mp hZ
       subst Z

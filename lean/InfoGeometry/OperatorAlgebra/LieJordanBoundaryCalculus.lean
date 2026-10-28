@@ -45,6 +45,37 @@ def orientedTransport (u v : A) : Module.End R A where
 @[simp] theorem orientedTransport_apply (u v x : A) :
     orientedTransport (R := R) u v x = u * x * v - v * x * u := rfl
 
+private theorem squareZero_nested (u : A) (hu : u * u = 0) (x : A) :
+    u * (u * x) = 0 := by
+  rw [← mul_assoc, hu, zero_mul]
+
+/-- On a square-zero pair of coefficients, the oriented sandwich has the
+negative square of the symmetric sandwich. This is an endomorphism identity
+on the whole algebra and retains the order of every coefficient. -/
+theorem orientedTransport_square_of_square_zero {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0) :
+    orientedTransport (R := R) u v * orientedTransport (R := R) u v =
+      -(crossTransport (R := R) u v * crossTransport (R := R) u v) := by
+  ext x
+  change u * (u * x * v - v * x * u) * v -
+      v * (u * x * v - v * x * u) * u =
+    -(u * (u * x * v + v * x * u) * v +
+      v * (u * x * v + v * x * u) * u)
+  noncomm_ring [hu, hv, squareZero_nested u hu, squareZero_nested v hv]
+
+/-- The symmetric and oriented sandwiches anticommute for square-zero
+coefficients, again as endomorphisms of the full noncommutative algebra. -/
+theorem cross_oriented_anticommute_of_square_zero {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0) :
+    crossTransport (R := R) u v * orientedTransport (R := R) u v +
+      orientedTransport (R := R) u v * crossTransport (R := R) u v = 0 := by
+  ext x
+  change (u * (u * x * v - v * x * u) * v +
+      v * (u * x * v - v * x * u) * u) +
+    (u * (u * x * v + v * x * u) * v -
+      v * (u * x * v + v * x * u) * u) = 0
+  noncomm_ring [hu, hv, squareZero_nested u hu, squareZero_nested v hv]
+
 /-- Mixed symmetric composition cancels all two-sided terms. -/
 theorem jordan_lie_sum (u v : A) :
     jordanLeft (R := R) u * LieAlgebra.ad R A v +

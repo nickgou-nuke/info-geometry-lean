@@ -188,6 +188,19 @@ theorem trace_star_dual (tau : A →+ G)
   rw [star_plus h s x hh hs]
   exact trace_dual (R := R) tau hcyc h s (star x) y
 
+/-- The trace energy of the plus action is the negative pairing with its
+dual minus action. This is an algebraic identity for any cyclic additive
+trace; positivity requires additional hypotheses on the trace and algebra. -/
+theorem trace_star_energy (tau : A →+ G)
+    (hcyc : ∀ x y : A, tau (x * y) = tau (y * x))
+    (h s x : A) (hh : star h = -h) (hs : star s = s) :
+    tau (star (plus (R := R) h s x) * plus (R := R) h s x) =
+      tau (star x * (-minus (R := R) h s (plus (R := R) h s x))) := by
+  have hdual := trace_star_dual (R := R) tau hcyc h s x
+    (plus (R := R) h s x) hh hs
+  rw [mul_neg, map_neg]
+  simpa using eq_neg_of_add_eq_zero_left hdual
+
 end Star
 
 section Matrix

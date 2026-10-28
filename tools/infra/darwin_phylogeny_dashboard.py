@@ -181,7 +181,8 @@ def main() -> int:
     args.out.write_text(PAGE.replace("__DATA__", encoded), encoding="utf-8")
     print(json.dumps({"output": str(args.out), "commits": len(commits),
                       "linked_commits": sum(bool(a["declarations"]) for a in annotations.values()),
-                      "fingerprint_records": sum(len(a["fingerprints"]) for a in annotations.values())},
+                      "fingerprint_records": sum(len(a["fingerprint_records"])
+                                                 for a in annotations.values())},
                      sort_keys=True))
     return 0
 

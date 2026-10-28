@@ -1,0 +1,385 @@
+{
+  "status": "passed",
+  "targets": [
+    "InfoGeometry.Analysis.ComplexMatrixJacobi",
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus",
+    "InfoGeometry.Analysis.PositiveMatrixDikin",
+    "InfoGeometry.Canonical.PolarFrameTraceDensity",
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometry",
+    "InfoGeometry.Canonical.BKMCommutatorDikin",
+    "InfoGeometry.Canonical.PolarFrameBKMGeometry",
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometryTests"
+  ],
+  "scope": "exact repository source closure; selected-owner native axiom audit",
+  "modules": [
+    {
+      "module": "InfoGeometry.Analysis.ComplexMatrixJacobi",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.LogDetSelfConcordantBarrier",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.PositiveMatrixDikin",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.MatrixDetExpTraceJacobi",
+      "returncode": 0,
+      "warnings": 5
+    },
+    {
+      "module": "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PolarFrameTraceDensity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Geometry.LegendreDifferential",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.OperatorLogDetDikinGeometry",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix",
+      "returncode": 0,
+      "warnings": 10
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMBridge",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Thermo.OnsagerTwoOperatorForm",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.BKMScalarGaugeQuotient",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra",
+      "returncode": 0,
+      "warnings": 3
+    },
+    {
+      "module": "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Quantum.DikinBlahutOrbits",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Canonical.YangBaxterProof",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.QuantumInformationGeometryColimitDualityCapstone",
+      "returncode": 0,
+      "warnings": 2
+    },
+    {
+      "module": "InfoGeometry.Canonical.DikinFiniteOrbitColimit",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.BKMCommutatorDikin",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PolarFrameBKMGeometry",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.OperatorLogDetDikinGeometryTests",
+      "returncode": 0,
+      "warnings": 0
+    }
+  ],
+  "axiom_audit_passed": true,
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "dependencies": {
+    "InfoGeometry.Analysis.ComplexMatrixJacobi": [],
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus": [
+      "InfoGeometry.Analysis.ComplexMatrixJacobi"
+    ],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Analysis.LogDetSelfConcordantBarrier": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Analysis.PositiveMatrixDikin": [
+      "InfoGeometry.Analysis.LogDetSelfConcordantBarrier"
+    ],
+    "InfoGeometry.Canonical.MatrixDetExpTraceJacobi": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy": [
+      "InfoGeometry.Canonical.MatrixDetExpTraceJacobi"
+    ],
+    "InfoGeometry.Canonical.PolarFrameTraceDensity": [
+      "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy"
+    ],
+    "InfoGeometry.Geometry.LegendreDifferential": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometry": [
+      "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus",
+      "InfoGeometry.Analysis.PositiveMatrixDikin",
+      "InfoGeometry.Canonical.PolarFrameTraceDensity",
+      "InfoGeometry.Geometry.LegendreDifferential"
+    ],
+    "InfoGeometry.Algebra.MatrixNoncommutativity": [],
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix": [],
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix": [
+      "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMBridge": [
+      "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMBridge"
+    ],
+    "InfoGeometry.Thermo.OnsagerTwoOperatorForm": [],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability",
+      "InfoGeometry.Thermo.OnsagerTwoOperatorForm"
+    ],
+    "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm"
+    ],
+    "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity": [
+      "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity"
+    ],
+    "InfoGeometry.Canonical.BKMScalarGaugeQuotient": [
+      "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance",
+      "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity"
+    ],
+    "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo": [],
+    "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra": [],
+    "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry": [
+      "InfoGeometry.Canonical.BKMScalarGaugeQuotient",
+      "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo",
+      "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra"
+    ],
+    "InfoGeometry.Quantum.DikinBlahutOrbits": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.YangBaxterProof": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.QuantumInformationGeometryColimitDualityCapstone": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Canonical.YangBaxterProof"
+    ],
+    "InfoGeometry.Canonical.DikinFiniteOrbitColimit": [
+      "InfoGeometry.Quantum.DikinBlahutOrbits",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Canonical.QuantumInformationGeometryColimitDualityCapstone",
+      "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm",
+      "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity",
+      "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity"
+    ],
+    "InfoGeometry.Canonical.BKMCommutatorDikin": [
+      "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry",
+      "InfoGeometry.Canonical.DikinFiniteOrbitColimit"
+    ],
+    "InfoGeometry.Canonical.PolarFrameBKMGeometry": [
+      "InfoGeometry.Canonical.PolarFrameTraceDensity",
+      "InfoGeometry.Canonical.BKMCommutatorDikin"
+    ],
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometryTests": [
+      "InfoGeometry.Canonical.OperatorLogDetDikinGeometry"
+    ]
+  },
+  "source_sha256": {
+    "InfoGeometry.Analysis.ComplexMatrixJacobi": "ef4b0bb1f28982def8d9819fd79bc8f8196e139a2b90f794b3ab1ea9aa50abe7",
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus": "d0521c9cc0d840f2733c50f00c03efd10bf85f7cb9788b58b7abd185ccebe8ed",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "InfoGeometry.Analysis.LogDetSelfConcordantBarrier": "6be30a32ec4f9b4fdcd46e3249eb08ae63ccdaaabfdbd1297eaf2dc71e6732d3",
+    "InfoGeometry.Analysis.PositiveMatrixDikin": "db4e129db1adfb98c433d8c94923fa456b9a96a6ad13b7042a16e0f13c723a9c",
+    "InfoGeometry.Canonical.MatrixDetExpTraceJacobi": "143c9237821e5751452a31e0b59c007cfe2082706789fdf90818819887140c6a",
+    "InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy": "04b0660249840326891727daa8417e66edda588ad6a9b04a05e480d266387d23",
+    "InfoGeometry.Canonical.PolarFrameTraceDensity": "251cac5fab943bada186a20e8328d3bcb1dfbd8c2acb42c195388beac7fdf95e",
+    "InfoGeometry.Geometry.LegendreDifferential": "6c07516e30acf081a92b4ae1ce750f66aca104f3da1a35de5b989acc03cde0ae",
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometry": "be2adba9d7fc085b08a7ee66ee0a4dc982d2aeb688704f9a9189d2acbdc2be1a",
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix": "d33ff989458b85a8a090efad26586515c779850d42f452adcf92df311cdbdcb1",
+    "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix": "4cdcd2ea6673e2d9598f7fbdfed63e86e0eb36005d09bfa1811ef7b064233371",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMBridge": "ae18fbcaed0be1e5043fc381d1fd2a5e9ca33b70cf4836b8e2320a039d58f2a9",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability": "94252ac0ee2117984b74411c6e57a1c3e78afb1d9b27062a1443734a06b66abb",
+    "InfoGeometry.Thermo.OnsagerTwoOperatorForm": "c3af90fcdb5ccbf15089e3a9febec90caa84964aa515a09e25a76c1562a07b2b",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMRealForm": "b642cc7485af29076b23c579891a69dd94703a6dba703ab37a482a54bd7ac4cf",
+    "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance": "fd1b2a1e8449fc461902be445ffbc00cbc384df070e26f9aaa96184a7dbe68ad",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMPositivity": "60f360b35163b253f9cfca53375d8f45b0b2443be810616aa74cbc44265ce6a3",
+    "InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity": "eb572e141a3ccd473ad0ea8e1b90bf94ee7be986f66a6bb144fa9af52fb496a2",
+    "InfoGeometry.Canonical.BKMScalarGaugeQuotient": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677",
+    "InfoGeometry.Canonical.FiniteDimensionalCCRNoGo": "3515c7f3c136d0eefff57a7c7f8e39c6e371f614871ac01359e816a54079ab09",
+    "InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra": "96020d21920e321cd20561007de8070550e1a70cb462775e8a01f4bf4e4c05ce",
+    "InfoGeometry.Canonical.CenteredBKMCommutatorGeometry": "e72d1543d329c18ca1718c422748b99dbf0c38b8c9c79fef52f1d7cc2e1b145d",
+    "InfoGeometry.Quantum.DikinBlahutOrbits": "2af5ee1154976509da8bb1b99707a178285d1f48955e8a408b90f4cfb1a5fcac",
+    "InfoGeometry.Canonical.YangBaxterProof": "ab9ddbc80ff0eea304731c41f7c37144dcf7d65b026f177769a7ea23c6fe6f33",
+    "InfoGeometry.Canonical.QuantumInformationGeometryColimitDualityCapstone": "bc882c49eeedc3107a8de99e0cdec1b2819ee20dff550f9c10301381808c17ad",
+    "InfoGeometry.Canonical.DikinFiniteOrbitColimit": "f557d995f414f12124cd7d4b84965f20ebe9a73fc945f832d64fe408be8d6d55",
+    "InfoGeometry.Canonical.BKMCommutatorDikin": "3816049b48c295076e9974058858867628c72fb7f725c4e8939ac3ae5e9ea2f7",
+    "InfoGeometry.Canonical.PolarFrameBKMGeometry": "40fea19f6fff9d492bceb2ea0ec19755f9da9b613d4de1d8ce77175b5bf6e44d",
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometryTests": "f017ffcbd89a6096ca4e3433a9f1292cae817d6813d4ef02b248d730cbdaae31"
+  },
+  "declaration_counts": {
+    "InfoGeometry.Analysis.ComplexMatrixJacobi": 13,
+    "InfoGeometry.Analysis.ComplexMatrixLogDetCalculus": 78,
+    "InfoGeometry.Analysis.PositiveMatrixDikin": 43,
+    "InfoGeometry.Canonical.PolarFrameTraceDensity": 34,
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometry": 21,
+    "InfoGeometry.Canonical.BKMCommutatorDikin": 20,
+    "InfoGeometry.Canonical.PolarFrameBKMGeometry": 18,
+    "InfoGeometry.Canonical.OperatorLogDetDikinGeometryTests": 23
+  },
+  "axioms": "[propext, Classical.choice, Quot.sound]",
+  "verified_working_tree_base": "4e2c0ef69aced9dee6290d2c798940a704f893f4",
+  "verification_date_utc": "2026-10-27T22:41:27.335942+00:00",
+  "native_audit_declaration_total": 250,
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "note": "Every repository source module in this import closure was rebuilt. Declaration counts include generated and private declarations. The complete-owner native audit covers the eight named targets. Source hashes bind the exact verified contents independently of the working-tree ancestor.",
+  "source_blob_sha1": {
+    "lean/InfoGeometry/Analysis/ComplexMatrixJacobi.lean": "de516b3cb8146f87fb3f996c26aed7a4dc4d90d1",
+    "lean/InfoGeometry/Analysis/ComplexMatrixLogDetCalculus.lean": "0b87a5998d6773f8fc4896624aa9113084a7f26a",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+    "lean/InfoGeometry/Analysis/LogDetSelfConcordantBarrier.lean": "8168497ce208c195153454e0a24d8dc8defd397a",
+    "lean/InfoGeometry/Analysis/PositiveMatrixDikin.lean": "8fbfeba32a0022ef4b91b7790c4be025e19ddc66",
+    "lean/InfoGeometry/Canonical/MatrixDetExpTraceJacobi.lean": "8bbeba293f1be8fc6f4f27b09521f0d4f9526701",
+    "lean/InfoGeometry/Canonical/FiniteBogoliubovFrameDeformationEntropy.lean": "e0d7220f43a2ff07cacca3780536502a8ab82660",
+    "lean/InfoGeometry/Canonical/PolarFrameTraceDensity.lean": "ccee4c17b3e5b1cae421b0278a769749811f1d2d",
+    "lean/InfoGeometry/Geometry/LegendreDifferential.lean": "f2f2a3275e68fe080456ec9562d6a6f0d1779d6b",
+    "lean/InfoGeometry/Canonical/OperatorLogDetDikinGeometry.lean": "9036781c03f20e4e736d7320ae5c071597a5cb5f",
+    "lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean": "51e5d4b98efafbf35d4eeaeec6ae81bf34b17648",
+    "lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/FiniteMatrix.lean": "6a99711b86f76221fa820aeb85844e549ac32f5c",
+    "lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/CblinfunMatrix.lean": "07e4c603ff82a85ca917972bc228c456d4b2cc6f",
+    "lean/InfoGeometry/Canonical/SouriauOnsagerBKMBridge.lean": "8f6c84421bb0920fddcd871a0c8fd63a4a8744d1",
+    "lean/InfoGeometry/Canonical/SouriauOnsagerBKMIntegrability.lean": "adc3024222eeb7ac6b7c3bf3b3167fe64e2a88c0",
+    "lean/InfoGeometry/Thermo/OnsagerTwoOperatorForm.lean": "028abf0755d59fd7e647eb1498fd076152fdd112",
+    "lean/InfoGeometry/Canonical/SouriauOnsagerBKMRealForm.lean": "9bbe43c835c65a2e91e6e7fe1e0b4657c4ab1194",
+    "lean/InfoGeometry/Canonical/NoncommutativeGibbsCenteredBKMCovariance.lean": "e32cefc41f1ccfa058e7777ddaf6d4049015ac95",
+    "lean/InfoGeometry/Canonical/SouriauOnsagerBKMPositivity.lean": "5ef8388b38d6e763e9549f5d53329f9a284fe956",
+    "lean/InfoGeometry/Canonical/SouriauOnsagerBKMStrictPositivity.lean": "9b613bba797e0d06fa35a305df9beff4ecf861a8",
+    "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean": "c8fca7c968b4af207ce7527a6f4c90660a4ddaa0",
+    "lean/InfoGeometry/Canonical/FiniteDimensionalCCRNoGo.lean": "785556db1c3c485876456252bcfbb71822b17659",
+    "lean/InfoGeometry/OperatorAlgebra/OperatorExteriorAlgebra.lean": "07f98c4cad5c67912de81cbbb2d2ff6d90e1197c",
+    "lean/InfoGeometry/Canonical/CenteredBKMCommutatorGeometry.lean": "78df8d7bca1c576d453ee5fb480beb9abdd5d407",
+    "lean/InfoGeometry/Quantum/DikinBlahutOrbits.lean": "5fed63a8336a4587b6cde2904eb12965d072a181",
+    "lean/InfoGeometry/Canonical/YangBaxterProof.lean": "7bfb94c4c8b94e38f8e9dd771fadca90b9991cab",
+    "lean/InfoGeometry/Canonical/QuantumInformationGeometryColimitDualityCapstone.lean": "121eb4a562f71799f24cae7d80fd225e866e6a4c",
+    "lean/InfoGeometry/Canonical/DikinFiniteOrbitColimit.lean": "1796b32a0c5d0f9544032e4dbae80d367308e062",
+    "lean/InfoGeometry/Canonical/BKMCommutatorDikin.lean": "8edadab0a7d4a499fd81e63b1d155ecfd293aee0",
+    "lean/InfoGeometry/Canonical/PolarFrameBKMGeometry.lean": "1fe251bc86432f14fe5d850b0d360969503d407f",
+    "lean/InfoGeometry/Canonical/OperatorLogDetDikinGeometryTests.lean": "ec4359830a2de8b2ade764bfdeadcbb353020a9f"
+  },
+  "verifier_sha256": {
+    "tools/quality/check_operator_logdet_dikin.py": "adb057a6d6d55899961a77647054bed1670c7f8fa53b1c48b853262554d26439",
+    "tools/quality/check_peirce_bdg_geometry.py": "03a263aaab778bc1ce1c3e31471bfc6a6d2b50c9e9c11f02e25b561cb1c67ca0",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df"
+  },
+  "audit_log_sha256": "7e7845b2d03883b7d26627f6ab999bd5c5b1f4948778219f759575ae77be4a7f",
+  "new_owner_warnings": 0,
+  "inherited_dependency_warnings": 22,
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "independent_acceptance_sha256": "89f69ab8cac9cf5e76e847dd5904f1b3c768c2862d6e6ae8e14c17a8b331798e",
+  "static_source_review": {
+    "owners_scanned": 8,
+    "placeholder_custom_axiom_unsafe_partial_native_decide_matches": 0,
+    "copyright_headers": "all passed",
+    "heuristic_findings_reviewed": [
+      {
+        "declaration": "contDiff_det",
+        "classification": "multiline parser false positive; k is used in the typed smoothness proof"
+      },
+      {
+        "declaration": "inverseSqrt_isSelfAdjoint",
+        "classification": "complete native proof term occurs on the following line"
+      },
+      {
+        "declaration": "baseMatrix_inv",
+        "classification": "complete native inverse proof term occurs on the following line"
+      }
+    ],
+    "authority": "Lexical checks are auxiliary; native kernel compilation and complete-owner axiom audit are the acceptance gate."
+  }
+}

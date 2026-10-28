@@ -76,6 +76,30 @@ theorem left_alternativity_sigma_minus_two_eq_iff (a b d : A) :
   rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
     upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two]
 
+/-- The left-alternativity defect, read in the witnessing coordinate, is
+exactly the ordered coefficient commutator followed by right multiplication
+by `d`.  Thus this coordinate detects failure precisely when that product is
+nonzero; it does not assert that this one coordinate detects every possible
+failure of the full identity. -/
+theorem left_alternativity_defect_coordinate (a b d : A) :
+    (NCZornElement.mul
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))
+        (NCZornElement.pureNPlus d)).sigma_minus 2 =
+      (a * b - b * a) * d ∧
+    (NCZornElement.mul (upperTwo a b)
+        (NCZornElement.mul (upperTwo a b)
+          (NCZornElement.pureNPlus d))).sigma_minus 2 = 0 ∧
+    ((NCZornElement.mul
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))
+        (NCZornElement.pureNPlus d)).sigma_minus 2 ≠
+      (NCZornElement.mul (upperTwo a b)
+        (NCZornElement.mul (upperTwo a b)
+          (NCZornElement.pureNPlus d))).sigma_minus 2 ↔
+      (a * b - b * a) * d ≠ 0) := by
+  rw [upperTwo_square_mul_pureNPlus_sigma_minus_two,
+    upperTwo_mul_upperTwo_mul_pureNPlus_sigma_minus_two]
+  exact ⟨rfl, rfl, Iff.rfl⟩
+
 theorem left_alternativity_obstruction
     {a b d : A} (h : (a * b - b * a) * d ≠ 0) :
     NCZornElement.mul
@@ -122,6 +146,32 @@ theorem right_alternativity_sigma_minus_two_eq_iff (a b d : A) :
       d * (a * b - b * a) = 0 := by
   rw [pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two,
     pureNMinus_mul_upperTwo_square_sigma_minus_two]
+  constructor
+  · intro h
+    exact h.symm
+  · intro h
+    exact h.symm
+
+/-- The right-alternativity defect in the same coordinate is left
+annihilation of the coefficient commutator.  This records the exact ordered
+defect and its nonvanishing criterion. -/
+theorem right_alternativity_defect_coordinate (a b d : A) :
+    (NCZornElement.mul
+        (NCZornElement.mul (NCZornElement.pureNMinus d) (upperTwo a b))
+        (upperTwo a b)).sigma_minus 2 =
+      0 ∧
+    (NCZornElement.mul (NCZornElement.pureNMinus d)
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))).sigma_minus 2 =
+      d * (a * b - b * a) ∧
+    ((NCZornElement.mul
+        (NCZornElement.mul (NCZornElement.pureNMinus d) (upperTwo a b))
+        (upperTwo a b)).sigma_minus 2 ≠
+      (NCZornElement.mul (NCZornElement.pureNMinus d)
+        (NCZornElement.mul (upperTwo a b) (upperTwo a b))).sigma_minus 2 ↔
+      d * (a * b - b * a) ≠ 0) := by
+  rw [pureNMinus_mul_upperTwo_square_sigma_minus_two,
+    pureNMinus_mul_upperTwo_mul_upperTwo_sigma_minus_two]
+  refine ⟨rfl, rfl, ?_⟩
   constructor
   · intro h
     exact h.symm

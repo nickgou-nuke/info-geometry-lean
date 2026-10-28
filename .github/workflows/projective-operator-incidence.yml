@@ -1,0 +1,85 @@
+name: Projective operator incidence
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Projective/Incidence*.lean'
+      - 'lean/InfoGeometry/Projective/Projection*.lean'
+      - 'lean/InfoGeometry/Projective/OperatorIncidence.lean'
+      - 'tools/quality/check_projective_operator_incidence.py'
+      - '.github/workflows/projective-operator-incidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: projective-operator-incidence-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Fetch the exact Mathlib revision from the repository manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          pin = next(p for p in json.loads(pathlib.Path('lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
+          target = pathlib.Path(os.environ['RUNNER_TEMP']) / 'incidence-mathlib'
+          subprocess.run(['git', 'init', str(target)], check=True)
+          subprocess.run(['git', '-C', str(target), 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', str(target), 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', str(target), 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - uses: actions/cache@v4
+        id: dependencies-cache
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: incidence-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+      - name: Install the exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 - <<'PY'
+          import os, pathlib, subprocess
+          subprocess.run([str(pathlib.Path.home() / '.elan/bin/elan'), 'toolchain', 'install', pathlib.Path('lean-toolchain').read_text().strip()], check=True)
+          PY
+      - name: Compile the complete new source closure and audit all owned declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/quality/check_projective_operator_incidence.py \
+            --mathlib-root "$RUNNER_TEMP/incidence-mathlib" \
+            --output "$RUNNER_TEMP/incidence-verification"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: projective-operator-incidence-verification
+          path: |
+            ${{ runner.temp }}/incidence-verification/**/*.log
+            ${{ runner.temp }}/incidence-verification/**/*.json
+            ${{ runner.temp }}/incidence-verification/**/*.txt
+            ${{ runner.temp }}/incidence-verification/src
+      - name: Retain pinned dependency downloads for subsequent proof checks
+        uses: actions/cache/save@v4
+        if: always() && steps.dependencies-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: incidence-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}

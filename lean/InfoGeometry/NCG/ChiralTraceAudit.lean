@@ -1,0 +1,30 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.NCG.PartialPhaseLocalization
+
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_commutator_transport
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_anticommutator_transport
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_anticommutator_zero
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_anticommutator_zero_iff
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_commutator_zero_iff
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_even_adjoint
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_even_invariant_iff
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_odd_zero
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.commutator_product_mem_even
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.two_trace_mul_eq_zero
+#print axioms InfoGeometry.NCG.ChiralMatrixTrace.trace_mul_eq_zero
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.phase_commutator_square_defect
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.phase_commutes_commutator_square
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.signed_projection_square
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.signed_projection_tripotent
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.tripotent_isDrazinInverse
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.tripotent_support_isStarProjection
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.tripotent_partial_isometry
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.group_inverse_kernel_range
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.tripotent_kernel_range
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.trace_spectralProj_zero
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.trace_kernelProj_eq
+#print axioms InfoGeometry.NCG.PartialPhaseLocalization.trace_tripotent_kernel_eq

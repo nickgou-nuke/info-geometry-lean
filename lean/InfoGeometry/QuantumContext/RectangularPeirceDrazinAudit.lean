@@ -1,0 +1,35 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.RectangularPeirceDrazin
+
+#print axioms InfoGeometry.Algebra.RectangularRetract.support_mul_inclusion
+#print axioms InfoGeometry.Algebra.RectangularRetract.retraction_mul_support
+#print axioms InfoGeometry.Algebra.RectangularRetract.support_idempotent
+#print axioms InfoGeometry.Algebra.RectangularRetract.sandwich_mul
+#print axioms InfoGeometry.Algebra.RectangularRetract.cornerHom_apply
+#print axioms InfoGeometry.Algebra.RectangularRetract.compress_corner
+#print axioms InfoGeometry.Algebra.RectangularRetract.cornerHom_injective
+#print axioms InfoGeometry.Algebra.RectangularRetract.cornerHom_one
+#print axioms InfoGeometry.Algebra.RectangularRetract.cornerHom_pow_succ
+#print axioms InfoGeometry.Algebra.RectangularRetract.toLin_support_idempotent
+#print axioms InfoGeometry.Algebra.RectangularRetract.support_range
+#print axioms InfoGeometry.Algebra.RectangularRetract.support_ker
+#print axioms InfoGeometry.Algebra.RectangularRetract.range_isCompl_ker
+#print axioms InfoGeometry.Algebra.RectangularRetract.range_le_iff
+#print axioms InfoGeometry.Algebra.RectangularRetract.square_retract_support
+#print axioms InfoGeometry.Algebra.RectangularRetract.support_ne_one_of_card_lt
+#print axioms InfoGeometry.Algebra.RectangularRetract.cornerHom_conjTranspose
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.lift_mul_complement
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.complement_mul_lift
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.lift_add_complement_pow_succ
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.index_eq_of_le
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.isDrazinInverse_lift
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.lifted_spectralProj
+#print axioms InfoGeometry.QuantumContext.RectangularDrazinLift.nilpotence_exponent_pos
+#print axioms InfoGeometry.QuantumContext.RectangularPeirceDrazin.split_of_commute
+#print axioms InfoGeometry.QuantumContext.RectangularPeirceDrazin.retraction_mul_complement_corner
+#print axioms InfoGeometry.QuantumContext.RectangularPeirceDrazin.complement_corner_mul_inclusion
+#print axioms InfoGeometry.QuantumContext.RectangularPeirceDrazin.isDrazinInverse_of_retract

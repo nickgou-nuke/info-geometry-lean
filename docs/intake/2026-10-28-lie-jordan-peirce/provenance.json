@@ -1,0 +1,20 @@
+{
+  "base_commit": "cb7482d86eadb42f2ab9c2f6f624d67b7bfe7ce4",
+  "date": "2026-10-28",
+  "sources": [
+    {
+      "file": "stream-1.txt",
+      "original_filename": "Pasted text(20261028-091406).txt",
+      "bytes": 16756,
+      "sha256": "c3e4a1075d4c0e5fb2e9cf943f16d82dc2dd75a0bbf0e08aa27a532ad588da3c",
+      "role": "untrusted informal intake; not proof evidence"
+    },
+    {
+      "file": "stream-2.txt",
+      "original_filename": "Pasted text (2)(20261028-091603).txt",
+      "bytes": 24012,
+      "sha256": "2bbbcb930837a8ff82ab3e0d486f5af50289f870aa8c0d5df429f9ae2856d4f7",
+      "role": "untrusted informal intake; not proof evidence"
+    }
+  ]
+}

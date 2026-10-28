@@ -1,0 +1,23 @@
+{
+  "schema": "info_geometry.theorem_dependency_order.v1",
+  "source_sha256": "8cad16c145458a913ffb933dab2ab48a47f590f36daa85ce58657bf6544f3ad9",
+  "meaning": "Mathematical prerequisite reachability, not physical causation. The reflexive transitive closure of the DAG is the partial order; this file is proof navigation metadata, not a Lean declaration.",
+  "nodes": ["associative_algebra", "native_endomorphisms", "composition_octet", "division_free_readouts", "idempotent", "peirce_corners", "peirce_support_and_grading", "cyclic_trace", "trace_duality", "real_matrix_order", "signed_nonpositivity", "existing_tower_maps", "colimit_transport"],
+  "cover_edges": [
+    ["associative_algebra", "native_endomorphisms"],
+    ["native_endomorphisms", "composition_octet"],
+    ["composition_octet", "division_free_readouts"],
+    ["associative_algebra", "idempotent"],
+    ["idempotent", "peirce_corners"],
+    ["native_endomorphisms", "peirce_support_and_grading"],
+    ["peirce_corners", "peirce_support_and_grading"],
+    ["associative_algebra", "cyclic_trace"],
+    ["native_endomorphisms", "trace_duality"],
+    ["cyclic_trace", "trace_duality"],
+    ["native_endomorphisms", "signed_nonpositivity"],
+    ["real_matrix_order", "signed_nonpositivity"],
+    ["peirce_support_and_grading", "colimit_transport"],
+    ["existing_tower_maps", "colimit_transport"]
+  ],
+  "topological_order": ["associative_algebra", "real_matrix_order", "existing_tower_maps", "native_endomorphisms", "idempotent", "cyclic_trace", "composition_octet", "signed_nonpositivity", "peirce_corners", "trace_duality", "division_free_readouts", "peirce_support_and_grading", "colimit_transport"]
+}

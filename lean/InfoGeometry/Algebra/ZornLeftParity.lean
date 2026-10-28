@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.ZornLeftGrading
+import Mathlib.Tactic.NoncommRing
 
 /-! # Three-mode parity product on the native Zorn module
 

@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornCubicOperators
 import InfoGeometry.Algebra.H3ZornQuadraticCommutation
 import InfoGeometry.Exceptional.Freudenthal

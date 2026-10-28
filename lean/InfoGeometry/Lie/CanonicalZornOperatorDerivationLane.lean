@@ -1,9 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.OfAssociative
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.DerivationLieLaneRepresentation
 import InfoGeometry.Lie.CanonicalZornDerivationLane
-import InfoGeometry.Lie.SplitOctonionRegularActionIntertwiner
+import InfoGeometry.Lie.CanonicalZornRegularDerivation
 
 /-!
 # Canonical Zorn derivations acting on the associative operator algebra
@@ -29,8 +33,7 @@ namespace InfoGeometry.Lie.CanonicalZornOperatorDerivationLane
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.NonAssocDerivation
 open InfoGeometry.Lie.CanonicalZornDerivation
-open InfoGeometry.Lie.SplitOctonionRegularActionIntertwiner
-open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
+open InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 abbrev EndCZ := Module.End ℝ CZ
@@ -110,32 +113,11 @@ theorem operatorAdjointAction_injective :
       ⁅D.1, InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.leftRegular x⁆ =
         ⁅E.1, InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.leftRegular x⁆ := by
     simpa [LieRing.of_associative_ring_bracket] using hOnLeft'
-  rw [derivation_commutator_leftRegular D.1 D.2 x,
-    derivation_commutator_leftRegular E.1 E.2 x] at hBracket
+  rw [derivation_lie_leftRegular D.1 D.2 x,
+    derivation_lie_leftRegular E.1 E.2 x] at hBracket
   have hAtOne := LinearMap.congr_fun hBracket (1 : CZ)
   change D.1 x * (1 : CZ) = E.1 x * (1 : CZ) at hAtOne
-  have hAtOne' := hAtOne
-  simp [InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.leftRegular,
-    InfoGeometry.Canonical.ZornMatrix.mul_def,
-    InfoGeometry.Canonical.ZornMatrix.mul,
-    InfoGeometry.Canonical.ZornMatrix.dot,
-    InfoGeometry.Canonical.ZornMatrix.cross] at hAtOne'
-  rcases hAtOne' with ⟨ha, hb, hx, hy⟩
-  rcases hx with ⟨hx0, hx1, hx2⟩
-  rcases hy with ⟨hy0, hy1, hy2⟩
-  apply InfoGeometry.Canonical.ZornMatrix.ext
-  · exact ha
-  · exact hb
-  · funext i
-    fin_cases i
-    · exact hx0
-    · exact hx1
-    · exact hx2
-  · funext i
-    fin_cases i
-    · exact hy0
-    · exact hy1
-    · exact hy2
+  simpa only [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_one] using hAtOne
 
 /-- Canonical split-octonion derivations as a faithful derivation lane on the
 associative operator algebra `End(CZ)`. -/

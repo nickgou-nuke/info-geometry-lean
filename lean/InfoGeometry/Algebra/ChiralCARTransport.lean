@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Star.Basic
+import Mathlib.LinearAlgebra.LinearIndependent.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.LinearCombination
 
 /-!
 # Transport of algebraic CAR relations

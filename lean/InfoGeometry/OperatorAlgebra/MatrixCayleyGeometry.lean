@@ -46,13 +46,13 @@ theorem commute_one_sub_one_add (X : Matrix n n ℂ) : Commute (1 - X) (1 + X) :
 theorem commute_cayley (X : Matrix n n ℂ) [Invertible (1 + X)] :
     Commute X (cayley X) := by
   rw [cayley_eq_invOf]
-  have h₊ : Commute X (1 + X) := by
+  have hAdd : Commute X (1 + X) := by
     change X * (1 + X) = (1 + X) * X
     noncomm_ring
-  have h₋ : Commute X (1 - X) := by
+  have hSub : Commute X (1 - X) := by
     change X * (1 - X) = (1 - X) * X
     noncomm_ring
-  exact h₋.mul_right h₊.invOf_right
+  exact hSub.mul_right hAdd.invOf_right
 
 theorem one_add_cayley (X : Matrix n n ℂ) [Invertible (1 + X)] :
     1 + cayley X = (2 : ℂ) • ⅟(1 + X) := by

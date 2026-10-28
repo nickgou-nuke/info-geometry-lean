@@ -143,6 +143,6 @@ theorem reconstructed_curl (G : Matˣ) (A B : Mat) :
     ⁅A, (G : Mat) * maurerCartan G B⁆ -
         ⁅B, (G : Mat) * maurerCartan G A⁆ = ⁅⁅A, B⁆, (G : Mat)⁆ := by
   rw [mul_maurerCartan, mul_maurerCartan]
-  exact lie_lie.symm
+  exact (lie_lie A B (G : Mat)).symm
 
 end InfoGeometry.OperatorAlgebra.MatrixMaurerCartan

@@ -86,8 +86,8 @@ theorem odd_square_eq_cross_products {p : Matrix n n ℂ}
     (hp : IsIdempotentElem p) (A : Matrix n n ℂ) :
     oddPart p A * oddPart p A =
       component10 p A * component01 p A + component01 p A * component10 p A := by
-  rcases corners_square_zero hp.eq A with ⟨h₊, h₋⟩
-  simp only [oddPart, add_mul, mul_add, h₊, h₋, zero_add, add_zero]
+  rcases corners_square_zero hp.eq A with ⟨hForward, hReverse⟩
+  simp only [oddPart, add_mul, mul_add, hForward, hReverse, zero_add, add_zero]
 
 /-- Multiplication of odd operators returns to the even algebra. -/
 theorem commute_odd_square {p : Matrix n n ℂ} (hp : IsIdempotentElem p)
@@ -160,7 +160,7 @@ theorem oddPart_eq_self_iff_reflection_anticommute {p : Matrix n n ℂ}
   rw [oddPart_eq_self_iff_tangent hp]
   have h : reflection p * A + A * reflection p =
       (2 : ℂ) • (p * A + A * p - A) := by
-    simp only [reflection, two_nsmul, two_smul]
+    simp only [reflection, two_smul]
     noncomm_ring
   rw [h, smul_eq_zero]
   simp only [OfNat.ofNat_ne_zero, false_or, sub_eq_zero]

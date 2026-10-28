@@ -30,6 +30,10 @@ TARGETS = [
     'InfoGeometry.Core.PeirceStarCharges',
     'InfoGeometry.Canonical.LieJordanMatrixGeometry',
     'InfoGeometry.Canonical.LieJordanMatrixExamples',
+    'InfoGeometry.Core.PeirceCoupledCorners',
+    'InfoGeometry.Canonical.PeirceCouplingGeometry',
+    'InfoGeometry.Canonical.PeirceCouplingPositivity',
+    'InfoGeometry.Canonical.PeirceCouplingExamples',
 ]
 
 

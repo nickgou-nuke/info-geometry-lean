@@ -45,6 +45,10 @@ All castes are strictly bound by the top-priority mandate:
 
 ## Policy Skills
 
+- [`google-ai-mode-audit`](google-ai-mode-audit/SKILL.md): submit and capture
+  explicitly requested Google AI Mode audits through the repo's
+  browser-harness lane, including the Ubuntu ARM/Snap Chromium CDP setup.
+
 - [`astaqlhash-concept-bridge`](astaqlhash-concept-bridge/SKILL.md): bounded,
   read-only cross-concept navigation over the compiler-backed `decls`/`edges`
   DAG. It never treats graph proximity or fingerprints as proof.

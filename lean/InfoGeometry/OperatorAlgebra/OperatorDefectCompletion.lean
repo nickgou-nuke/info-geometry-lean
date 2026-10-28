@@ -13,8 +13,10 @@ All products are ordered products in an arbitrary associative algebra.
 In particular, the results specialize to full matrix algebras and endomorphism
 algebras without a commutativity, diagonalization, or scalar-coupling hypothesis.
 
-This file is a proof-script draft. It has not been elaborated by Lean in the
-current environment. No admission or additional axiom is used in its proofs.
+The declarations are proved in the repository's pinned Lean/Mathlib
+environment; the focused `OperatorDefectCompletionAudit` target checks their
+kernel elaboration and reports their axiom dependencies. No admission or
+additional axiom is used in these proofs.
 -/
 
 set_option autoImplicit false

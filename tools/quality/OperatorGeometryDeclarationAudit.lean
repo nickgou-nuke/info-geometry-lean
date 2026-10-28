@@ -6,11 +6,13 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.OperatorAlgebra.PeirceKrausGeometry
 import InfoGeometry.OperatorAlgebra.OperatorGeometryExamples
+import InfoGeometry.OperatorAlgebra.OperatorExtensionExamples
+import InfoGeometry.OperatorAlgebra.MatrixCasimirExamples
 import Lean.Util.CollectAxioms
 import Lean.Util.FoldConsts
 import Lean.Data.Json
 
-/-! Audit every declaration owned by the five additions, including generated
+/-! Audit every declaration owned by the eleven mathematical modules, including generated
 declarations. Dependencies come from the checked types and proof/definition
 values, and axioms are collected transitively. This is verification tooling. -/
 
@@ -23,7 +25,13 @@ private def owners : Array Name := #[
   `InfoGeometry.OperatorAlgebra.MatrixTraceGeometry,
   `InfoGeometry.OperatorAlgebra.PeirceTraceGeometry,
   `InfoGeometry.OperatorAlgebra.PeirceKrausGeometry,
-  `InfoGeometry.OperatorAlgebra.OperatorGeometryExamples
+  `InfoGeometry.OperatorAlgebra.OperatorGeometryExamples,
+  `InfoGeometry.OperatorAlgebra.PeirceChiralGeometry,
+  `InfoGeometry.OperatorAlgebra.MatrixMaurerCartan,
+  `InfoGeometry.OperatorAlgebra.MatrixConservation,
+  `InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry,
+  `InfoGeometry.OperatorAlgebra.OperatorExtensionExamples,
+  `InfoGeometry.OperatorAlgebra.MatrixCasimirExamples
 ]
 
 private def ownerOf (env : Environment) (n : Name) : Name :=

@@ -24,6 +24,12 @@ OWNERS = [
     "InfoGeometry.OperatorAlgebra.PeirceTraceGeometry",
     "InfoGeometry.OperatorAlgebra.PeirceKrausGeometry",
     "InfoGeometry.OperatorAlgebra.OperatorGeometryExamples",
+    "InfoGeometry.OperatorAlgebra.PeirceChiralGeometry",
+    "InfoGeometry.OperatorAlgebra.MatrixMaurerCartan",
+    "InfoGeometry.OperatorAlgebra.MatrixConservation",
+    "InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry",
+    "InfoGeometry.OperatorAlgebra.OperatorExtensionExamples",
+    "InfoGeometry.OperatorAlgebra.MatrixCasimirExamples",
 ]
 IMPORT = re.compile(r"^\s*(?:public\s+)?import\s+([^\n]+)", re.MULTILINE)
 

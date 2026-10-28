@@ -30,6 +30,16 @@ checker.TARGETS = [
     "InfoGeometry.OperatorAlgebra.LieJordanOctetMatrices",
     "InfoGeometry.Canonical.LieJordanOctetColimit",
     "InfoGeometry.Canonical.LieJordanOctetSynthesis",
+    # Additive operator-level duality/Peirce packet from PR #254. Keep the
+    # established owner set above: this checker audits both generations.
+    "InfoGeometry.OperatorAlgebra.LieJordanDuality",
+    "InfoGeometry.OperatorAlgebra.PeirceLieJordanResolution",
+    "InfoGeometry.OperatorAlgebra.LieJordanTraceDuality",
+    "InfoGeometry.OperatorAlgebra.PeirceTracePairing",
+    "InfoGeometry.OperatorAlgebra.OperatorDiracSchur",
+    "InfoGeometry.OperatorAlgebra.LieJordanDiracPair",
+    "InfoGeometry.OperatorAlgebra.LieJordanPeirceColimit",
+    "InfoGeometry.OperatorAlgebra.LieJordanPeirce",
 ]
 
 if __name__ == "__main__":

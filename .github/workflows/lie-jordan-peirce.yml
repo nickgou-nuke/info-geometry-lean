@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - 'lean/InfoGeometry/OperatorAlgebra/LieJordan*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceLieJordan*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceTracePairing.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorDiracSchur.lean'
       - 'lean/InfoGeometry/Algebra/PeirceLieJordan*.lean'
       - 'lean/InfoGeometry/Algebra/PeirceQuadraticCycle.lean'
       - 'lean/InfoGeometry/Canonical/LieJordan*.lean'

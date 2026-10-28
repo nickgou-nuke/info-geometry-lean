@@ -108,6 +108,33 @@ colimit consumer.
 * `LieJordanPeirceExamples`: noncommuting off-diagonal 3-by-3 coefficient
   witnesses and a non-diagonal idempotent refuting weighted-trace symmetry.
 
+## Additive operator-level packet (PR #254)
+
+The later operator-level packet is kept alongside the established owners above;
+it does not replace their 3-by-3 regression witnesses or narrow their audit
+scope. Its additional owners are `OperatorAlgebra.LieJordanDuality`,
+`OperatorAlgebra.PeirceLieJordanResolution`,
+`OperatorAlgebra.LieJordanTraceDuality`,
+`OperatorAlgebra.PeirceTracePairing`,
+`OperatorAlgebra.OperatorDiracSchur`,
+`OperatorAlgebra.LieJordanDiracPair`, and
+`OperatorAlgebra.LieJordanPeirceColimit`. The
+`OperatorAlgebra.LieJordanPeirce` module is an import façade.
+
+The packet retains ordered noncommutative products, explicit composition
+defects, and the actual full-matrix tensor-colimit owner. Its dense 2-by-2
+examples are supplementary regression witnesses nested in the existing
+`LieJordanPeirceExamples` namespace; the original off-diagonal 3-by-3 and
+oblique-idempotent tests remain available. The checker audits both the
+pre-existing 18-module owner set and these new modules.
+
+Corrections remain explicit: for `a = ad_h` and `j = J_s`,
+`(a-j)(a+j) = a²-j²+[a,j]`; the bilinear trace is not a Hilbert--Schmidt or
+BKM metric; and the complementary-corner identity has a minus sign before
+`ad_p²`. The dense examples prove the positive-sign variant false. None of
+these algebraic statements by itself supplies a manifold connection, a
+Lichnerowicz formula, or a spectral-gap theorem.
+
 ## Verification discipline
 
 The source contains explicit proof terms/tactics, no proof holes or extra axioms.

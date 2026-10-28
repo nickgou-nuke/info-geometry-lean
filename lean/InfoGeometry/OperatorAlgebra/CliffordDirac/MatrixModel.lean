@@ -37,23 +37,29 @@ def spinLift (S : Matrix (Fin 2) (Fin 2) ℂ) : SpinMatrix n :=
 def coefficientLift (A : Matrix n n ℂ) : SpinMatrix n :=
   (1 : Matrix (Fin 2) (Fin 2) ℂ) ⊗ₖ A
 
+omit [Fintype n] in
 @[simp] theorem spinLift_zero : spinLift (n := n) 0 = 0 := Matrix.zero_kronecker _
+omit [Fintype n] in
 @[simp] theorem spinLift_one : spinLift (n := n) 1 = 1 := Matrix.one_kronecker_one
+omit [Fintype n] [DecidableEq n] in
 @[simp] theorem coefficientLift_zero : coefficientLift (n := n) 0 = 0 :=
   Matrix.kronecker_zero _
 
+omit [Fintype n] in
 theorem spinLift_add (S T : Matrix (Fin 2) (Fin 2) ℂ) :
     spinLift (n := n) (S + T) = spinLift S + spinLift T := Matrix.add_kronecker _ _ _
 
 theorem spinLift_mul (S T : Matrix (Fin 2) (Fin 2) ℂ) :
     spinLift (n := n) (S * T) = spinLift S * spinLift T := by
   simpa only [spinLift, one_mul] using
-    Matrix.mul_kronecker_mul S T (1 : Matrix n n ℂ) 1
+    Matrix.mul_kronecker_mul S T (1 : Matrix n n ℂ) (1 : Matrix n n ℂ)
 
+omit [Fintype n] [DecidableEq n] in
 theorem coefficientLift_add (A B : Matrix n n ℂ) :
     coefficientLift (A + B) = coefficientLift A + coefficientLift B :=
   Matrix.kronecker_add _ _ _
 
+omit [Fintype n] [DecidableEq n] in
 theorem coefficientLift_sub (A B : Matrix n n ℂ) :
     coefficientLift (A - B) = coefficientLift A - coefficientLift B := by
   ext ⟨i, a⟩ ⟨j, b⟩
@@ -62,7 +68,8 @@ theorem coefficientLift_sub (A B : Matrix n n ℂ) :
 theorem coefficientLift_mul (A B : Matrix n n ℂ) :
     coefficientLift (A * B) = coefficientLift A * coefficientLift B := by
   simpa only [coefficientLift, one_mul] using
-    Matrix.mul_kronecker_mul (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 A B
+    Matrix.mul_kronecker_mul (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) A B
 
 theorem spinLift_commute (S : Matrix (Fin 2) (Fin 2) ℂ) (A : Matrix n n ℂ) :
     Commute (spinLift S) (coefficientLift A) := by
@@ -70,12 +77,14 @@ theorem spinLift_commute (S : Matrix (Fin 2) (Fin 2) ℂ) (A : Matrix n n ℂ) :
   rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
   simp
 
+omit [Fintype n] [DecidableEq n] in
 theorem coefficientLift_injective : Function.Injective (coefficientLift (n := n)) := by
   intro A B h
   ext i j
   have hij := congrArg (fun M : SpinMatrix n => M (0, i) (0, j)) h
   simpa [coefficientLift, Matrix.kroneckerMap_apply, Matrix.one_apply] using hij
 
+omit [Fintype n] [DecidableEq n] in
 @[simp] theorem coefficientLift_eq_zero_iff (A : Matrix n n ℂ) :
     coefficientLift A = 0 ↔ A = 0 := by
   constructor
@@ -104,14 +113,16 @@ theorem coefficient_spin_lie (S : Matrix (Fin 2) (Fin 2) ℂ)
     (spinLift_commute S A).symm.eq]
   noncomm_ring
 
+omit [Fintype n] in
 theorem spinLift_isHermitian {S : Matrix (Fin 2) (Fin 2) ℂ} (hS : S.IsHermitian) :
     (spinLift (n := n) S).IsHermitian := by
-  change (S ⊗ₖ (1 : Matrix n n ℂ))ᴴ = _
+  change (S ⊗ₖ (1 : Matrix n n ℂ))ᴴ = S ⊗ₖ (1 : Matrix n n ℂ)
   rw [Matrix.conjTranspose_kronecker, hS.eq, Matrix.conjTranspose_one]
 
+omit [Fintype n] [DecidableEq n] in
 theorem coefficientLift_isHermitian {A : Matrix n n ℂ} (hA : A.IsHermitian) :
     (coefficientLift A).IsHermitian := by
-  change ((1 : Matrix (Fin 2) (Fin 2) ℂ) ⊗ₖ A)ᴴ = _
+  change ((1 : Matrix (Fin 2) (Fin 2) ℂ) ⊗ₖ A)ᴴ = (1 : Matrix (Fin 2) (Fin 2) ℂ) ⊗ₖ A
   rw [Matrix.conjTranspose_kronecker, hA.eq, Matrix.conjTranspose_one]
 
 def spinX : SpinMatrix n := spinLift σ₁
@@ -119,7 +130,7 @@ def spinY : SpinMatrix n := spinLift σ₂
 
 private theorem pauliIdentity_eq_one : UnifiedMatrixBasis.I₂ = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [UnifiedMatrixBasis.I₂, Matrix.one_apply]
+  fin_cases i <;> fin_cases j <;> simp [UnifiedMatrixBasis.I₂]
 
 theorem spinX_sq : spinX (n := n) * spinX = 1 := by
   change spinLift (n := n) σ₁ * spinLift σ₁ = 1
@@ -141,27 +152,31 @@ theorem spinX_commute (A : Matrix n n ℂ) : Commute spinX (coefficientLift A) :
 theorem spinY_commute (A : Matrix n n ℂ) : Commute spinY (coefficientLift A) :=
   spinLift_commute _ _
 
+omit [Fintype n] in
 theorem spinX_isHermitian : (spinX (n := n)).IsHermitian := by
   apply spinLift_isHermitian
   ext i j
   fin_cases i <;> fin_cases j <;> simp [σ₁, Matrix.conjTranspose_apply]
 
+omit [Fintype n] in
 theorem spinY_isHermitian : (spinY (n := n)).IsHermitian := by
   apply spinLift_isHermitian
   ext i j
   fin_cases i <;> fin_cases j <;> simp [σ₂, Matrix.conjTranspose_apply]
 
+omit [Fintype n] in
 theorem spinX_not_isDiag [Nonempty n] : ¬ (spinX (n := n)).IsDiag := by
   intro h
   obtain ⟨i⟩ := ‹Nonempty n›
   have hz : spinX (0, i) (1, i) = 0 := h (by simp)
-  simpa [spinX, spinLift, σ₁, Matrix.kroneckerMap_apply] using hz
+  simp [spinX, spinLift, σ₁, Matrix.kroneckerMap_apply] at hz
 
+omit [Fintype n] in
 theorem spinY_not_isDiag [Nonempty n] : ¬ (spinY (n := n)).IsDiag := by
   intro h
   obtain ⟨i⟩ := ‹Nonempty n›
   have hz : spinY (0, i) (1, i) = 0 := h (by simp)
-  simpa [spinY, spinLift, σ₂, Matrix.kroneckerMap_apply] using hz
+  simp [spinY, spinLift, σ₂, Matrix.kroneckerMap_apply] at hz
 
 def matrixDirac (A B : Matrix n n ℂ) : SpinMatrix n :=
   spinX * coefficientLift A + spinY * coefficientLift B
@@ -182,7 +197,8 @@ theorem matrixDirac_sq (A B : Matrix n n ℂ) :
 
 theorem matrixDirac_isHermitian {A B : Matrix n n ℂ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (matrixDirac A B).IsHermitian := by
-  change (spinX * coefficientLift A + spinY * coefficientLift B)ᴴ = _
+  change (spinX * coefficientLift A + spinY * coefficientLift B)ᴴ =
+    spinX * coefficientLift A + spinY * coefficientLift B
   simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_mul,
     spinX_isHermitian.eq, spinY_isHermitian.eq,
     (coefficientLift_isHermitian hA).eq, (coefficientLift_isHermitian hB).eq]
@@ -202,7 +218,8 @@ theorem matrixCharges_anticommute (A B : Matrix n n ℂ) :
 
 theorem matrixSecondCharge_isHermitian {A B : Matrix n n ℂ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (matrixSecondCharge A B).IsHermitian := by
-  change (spinY * coefficientLift A - spinX * coefficientLift B)ᴴ = _
+  change (spinY * coefficientLift A - spinX * coefficientLift B)ᴴ =
+    spinY * coefficientLift A - spinX * coefficientLift B
   simp only [Matrix.conjTranspose_sub, Matrix.conjTranspose_mul,
     spinX_isHermitian.eq, spinY_isHermitian.eq,
     (coefficientLift_isHermitian hA).eq, (coefficientLift_isHermitian hB).eq]

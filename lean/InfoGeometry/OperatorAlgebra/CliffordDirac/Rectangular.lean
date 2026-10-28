@@ -20,6 +20,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.CliffordDirac
 
 open Matrix
+open scoped ComplexOrder MatrixOrder
 open InfoGeometry.Krein.FiniteDiracGramSquare
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -30,24 +31,25 @@ def rectangularGrading : Matrix (m ⊕ n) (m ⊕ n) ℂ :=
 
 theorem rectangularGrading_sq :
     (rectangularGrading : Matrix (m ⊕ n) (m ⊕ n) ℂ) * rectangularGrading = 1 := by
-  rw [rectangularGrading, fromBlocks_multiply]
-  simp only [mul_one, mul_zero, zero_mul, add_zero, zero_add, neg_mul_neg]
-  exact fromBlocks_one
+  simp [rectangularGrading, fromBlocks_multiply]
 
+omit [Fintype m] [Fintype n] in
 theorem rectangularGrading_selfAdjoint :
     IsSelfAdjoint (rectangularGrading : Matrix (m ⊕ n) (m ⊕ n) ℂ) := by
   change (rectangularGrading : Matrix (m ⊕ n) (m ⊕ n) ℂ)ᴴ = rectangularGrading
-  ext i j <;> cases i <;> cases j <;> simp [rectangularGrading, fromBlocks]
+  simp [rectangularGrading, fromBlocks_conjTranspose]
 
 theorem rectangularGrading_mul_dirac (T : Matrix m n ℂ) :
     rectangularGrading * dirac T = qPlus T - qMinus T := by
   rw [rectangularGrading, dirac, fromBlocks_multiply]
-  ext i j <;> cases i <;> cases j <;> simp [qPlus, qMinus, fromBlocks]
+  ext i j
+  cases i <;> cases j <;> simp [qPlus, qMinus, fromBlocks]
 
 theorem rectangularGrading_odd (T : Matrix m n ℂ) :
     rectangularGrading * dirac T + dirac T * rectangularGrading = 0 := by
   simp only [rectangularGrading, dirac, fromBlocks_multiply]
-  ext i j <;> cases i <;> cases j <;> simp [fromBlocks]
+  ext i j
+  cases i <;> cases j <;> simp [fromBlocks]
 
 /-- The equal-square second charge, with its complex sign fixed explicitly. -/
 def secondBlockCharge (T : Matrix m n ℂ) : Matrix (m ⊕ n) (m ⊕ n) ℂ :=
@@ -83,19 +85,22 @@ theorem secondBlockCharge_commute_hamiltonian (T : Matrix m n ℂ) :
     Commute (secondBlockCharge T) (dirac T * dirac T) :=
   chiralMate_commute_square rectangularGrading_sq (rectangularGrading_odd T)
 
+omit [DecidableEq m] [DecidableEq n] in
 theorem block_hamiltonian_posSemidef (T : Matrix m n ℂ) :
     (dirac T * dirac T).PosSemidef := by
   simpa only [dirac_isHermitian] using posSemidef_conjTranspose_mul_self (dirac T)
 
 /-- The two Gram operators are intertwined by the rectangular input itself. -/
+omit [DecidableEq m] [DecidableEq n] in
 theorem gram_intertwining (T : Matrix m n ℂ) :
     leftGram T * T = T * rightGram T := Matrix.mul_assoc _ _ _
 
 /-- The kernel condition retains both summands and the actual adjoint. -/
+omit [DecidableEq m] [DecidableEq n] in
 theorem dirac_mulVec_eq_zero_iff (T : Matrix m n ℂ) (u : m → ℂ) (v : n → ℂ) :
     dirac T *ᵥ Sum.elim u v = 0 ↔ T *ᵥ v = 0 ∧ Tᴴ *ᵥ u = 0 := by
   rw [dirac, fromBlocks_mulVec]
-  simp only [zero_mulVec, zero_add, add_zero]
+  simp only [Sum.elim_comp_inl, Sum.elim_comp_inr, zero_mulVec, zero_add, add_zero]
   constructor
   · intro h
     constructor
@@ -104,7 +109,9 @@ theorem dirac_mulVec_eq_zero_iff (T : Matrix m n ℂ) (u : m → ℂ) (v : n →
     · funext j
       exact congrFun h (Sum.inr j)
   · rintro ⟨hv, hu⟩
-    rw [hv, hu]
-    rfl
+    funext i
+    cases i with
+    | inl i => exact congrFun hv i
+    | inr j => exact congrFun hu j
 
 end InfoGeometry.OperatorAlgebra.CliffordDirac

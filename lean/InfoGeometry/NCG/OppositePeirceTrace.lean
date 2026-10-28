@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.NCG.OppositePeirceCoupling
 import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.RCLike.Basic
 
 /-! # Trace and positivity of opposite Peirce coupling
 

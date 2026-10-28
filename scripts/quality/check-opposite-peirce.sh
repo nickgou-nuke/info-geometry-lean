@@ -35,7 +35,7 @@ test "$(cat lean-toolchain)" = "$(cat "$proof_mathlib/lean-toolchain")"
     Mathlib/LinearAlgebra/Projection.lean Mathlib/LinearAlgebra/Matrix/ToLin.lean \
     Mathlib/LinearAlgebra/Eigenspace/Basic.lean Mathlib/Algebra/Star/StarProjection.lean \
     Mathlib/Algebra/Lie/OfAssociative.lean Mathlib/LinearAlgebra/Matrix/ConjTranspose.lean \
-    Mathlib/LinearAlgebra/Matrix/PosDef.lean Mathlib/Analysis/Complex/Order.lean
+    Mathlib/LinearAlgebra/Matrix/PosDef.lean Mathlib/Analysis/RCLike/Basic.lean
 )
 mathlib_lean_path=$(cd "$proof_mathlib" && lake env printenv LEAN_PATH)
 export LEAN_PATH="$proof_oleans:$mathlib_lean_path"

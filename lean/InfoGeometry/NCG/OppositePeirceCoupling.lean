@@ -50,13 +50,14 @@ theorem anticommutator_mem_even : anticommutator X Y ∈ LinearMap.range (even P
 
 theorem commutator_mem_even : commutator X Y ∈ LinearMap.range (even P) := by
   rw [mem_even_iff hP]
-  simp only [commutator, component10, component01, complementIdempotent]
+  simp only [NonCommutativeFredholmIndex.commutator,
+    component10, component01, complementIdempotent]
   noncomm_ring [hP.eq, idempotent_mul_nested P hP.eq]
 
 /-- The reflection exchanges the symmetric and antisymmetric products. -/
 theorem commutator_eq_reflection_mul :
     commutator X Y = reflection P * anticommutator X Y := by
-  simp only [commutator, anticommutator, reflection,
+  simp only [NonCommutativeFredholmIndex.commutator, anticommutator, reflection,
     component10, component01, complementIdempotent]
   noncomm_ring [hP.eq, idempotent_mul_nested P hP.eq]
 
@@ -81,11 +82,13 @@ theorem component00_anticommutator : component00 P (anticommutator X Y) = Y * X 
   noncomm_ring [hP.eq, idempotent_mul_nested P hP.eq]
 
 theorem component11_commutator : component11 P (commutator X Y) = X * Y := by
-  simp only [component11, commutator, component10, component01, complementIdempotent]
+  simp only [component11, NonCommutativeFredholmIndex.commutator,
+    component10, component01, complementIdempotent]
   noncomm_ring [hP.eq, idempotent_mul_nested P hP.eq]
 
 theorem component00_commutator : component00 P (commutator X Y) = -(Y * X) := by
-  simp only [component00, commutator, component10, component01, complementIdempotent]
+  simp only [component00, NonCommutativeFredholmIndex.commutator,
+    component10, component01, complementIdempotent]
   noncomm_ring [hP.eq, idempotent_mul_nested P hP.eq]
 
 /-- Complementary supports prohibit cancellation, in every characteristic. -/

@@ -31,6 +31,9 @@ remains noncommutative. The positivity branch uses complex matrices, Hermitian
 - `Canonical/OperatorHermitianLieJordanSplit`: a different, normalized
   Jordan product on Dirac matrices; no silent identification with our
   division-free anticommutator.
+- `Krein/FiniteDiracGramSquare`: rectangular `fromBlocks` Dirac/Gram
+  identities; the present carrier instead uses arbitrary ambient idempotents
+  and independent opposite corners, without choosing a block basis.
 - Mathlib `Matrix.PosSemidef`, Gram positivity, and
   `trace_mul_conjTranspose_self_eq_zero_iff` supply the ordered branch.
 
@@ -60,6 +63,35 @@ edges, oriented prerequisite → result. Distinct declarations in these files
 are ordered before their consumers, so this relation is acyclic and its
 closure is a partial order. This is documentation of proof dependencies;
 no physical time order or new Lean poset carrier is asserted.
+
+The following principal proof-use edges generate the partial order; the full
+proof terms also depend on the imported support, ring, trace and order lemmas.
+Namespaces are abbreviated to the two new modules.
+
+| Prerequisite declaration(s) | Consumer declaration(s) |
+| --- | --- |
+| Existing same-corner zero-product lemmas | `sum_sq` |
+| `sum_mem_odd`, existing odd-parity law | `conjugate_sum` |
+| `sum_sq`, `sum_mem_odd`, existing `odd_mul_odd` | `anticommutator_mem_even` |
+| `commutator_eq_reflection_mul`, existing `reflection_sq` | `anticommutator_eq_reflection_mul` |
+| Both reflection-exchange lemmas | `anticommutator_eq_zero_iff_commutator` |
+| `component11_anticommutator`, `component00_anticommutator` | `anticommutator_eq_zero_iff_products` |
+| The respective even-membership lemma, existing reflection laws | `conjugate_anticommutator`, `conjugate_commutator` |
+| `sum_sq`, native cyclic trace | `trace_sum_sq` |
+| `anticommutator_eq_reflection_mul`, native cyclic trace | `trace_reflection_mul_commutator` |
+| Respective corner readouts, native cyclic trace | `trace_anticommutator_corners`, `trace_commutator_corners_add` |
+| `component01_conjTranspose` | `adjoint_sum_isHermitian`, `adjoint_anticommutator_posSemidef` |
+| `sum_sq`, `adjoint_anticommutator_posSemidef` | `adjoint_sum_sq_posSemidef` |
+| `adjoint_anticommutator_posSemidef` | `trace_adjoint_anticommutator_nonneg` |
+| `anticommutator_eq_zero_iff_products`, `component01_conjTranspose`, native faithful Gram trace | `adjoint_anticommutator_eq_zero_iff` |
+| `anticommutator_eq_zero_iff_commutator`, `adjoint_anticommutator_eq_zero_iff` | `adjoint_commutator_ne_zero_iff` |
+| `sum_sq`, `adjoint_anticommutator_eq_zero_iff` | `adjoint_sum_sq_eq_zero_iff` |
+
+The base support/reflection identities use noncommutative ring normalization
+with the actual idempotence equation; they assume no pairwise commutativity.
+In the ordered branch `open scoped ComplexOrder` means
+`z ≤ w ↔ z.re ≤ w.re ∧ z.im = w.im`. Thus the trace nonnegativity theorem
+also certifies that this trace is real.
 
 ## Rejected promotions
 

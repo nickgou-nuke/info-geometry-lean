@@ -48,6 +48,7 @@ theorem trace_coupled (hp : IsIdempotentElem p)
     trace_eq_zero_of_mem_peirce01 hp hv, add_zero]
 
 /-- Cyclicity doubles the trace of either ordered product. -/
+omit [DecidableEq n] in
 theorem trace_jordan (u v : Matrix n n R) :
     trace (u * v + v * u) = 2 * trace (u * v) := by
   rw [trace_add, trace_mul_comm v u, two_mul]

@@ -39,11 +39,13 @@ theorem adjoint_mem_peirce01 (hp : IsStarProjection p)
     star_mem_peirce01 hp.isSelfAdjoint hu
 
 /-- The adjoint-paired coupled matrix is Hermitian without a support assumption. -/
+omit [Fintype n] [DecidableEq n] in
 theorem coupled_isHermitian (u : Matrix n n ℂ) :
     (u + uᴴ).IsHermitian :=
   Matrix.isHermitian_add_transpose_self u
 
 /-- The bracket of a matrix with its adjoint is Hermitian. -/
+omit [DecidableEq n] in
 theorem bracket_isHermitian (u : Matrix n n ℂ) :
     (⁅u, uᴴ⁆).IsHermitian := by
   change (u * uᴴ - uᴴ * u).IsHermitian
@@ -51,11 +53,13 @@ theorem bracket_isHermitian (u : Matrix n n ℂ) :
     (Matrix.isHermitian_conjTranspose_mul_self u)
 
 /-- The two opposite Gram products have a positive semidefinite sum. -/
+omit [DecidableEq n] in
 theorem gram_posSemidef (u : Matrix n n ℂ) :
     (u * uᴴ + uᴴ * u).PosSemidef :=
   (Matrix.posSemidef_self_mul_conjTranspose u).add
     (Matrix.posSemidef_conjTranspose_mul_self u)
 
+omit [DecidableEq n] in
 theorem gram_isHermitian (u : Matrix n n ℂ) :
     (u * uᴴ + uᴴ * u).IsHermitian :=
   (gram_posSemidef u).isHermitian
@@ -104,6 +108,7 @@ theorem bracket_eq_zero_iff (hp : IsStarProjection p)
   (jordan_eq_zero_iff_bracket_eq_zero hp.isIdempotentElem hu
     (adjoint_mem_peirce01 hp hu)).symm.trans (gram_eq_zero_iff hp hu)
 
+omit [DecidableEq n] in
 theorem gram_trace_nonneg (u : Matrix n n ℂ) :
     0 ≤ trace (u * uᴴ + uᴴ * u) :=
   (gram_posSemidef u).trace_nonneg

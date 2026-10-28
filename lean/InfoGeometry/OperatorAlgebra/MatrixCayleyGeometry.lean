@@ -85,7 +85,7 @@ theorem cayley_mul_cayley_neg (X : Matrix n n ℂ)
   have hneg : cayley (-X) = (1 + X) * ⅟(1 - X) := by
     simp only [cayley, sub_neg_eq_add, ← sub_eq_add_neg,
       ← Matrix.invOf_eq_nonsing_inv]
-  rw [cayley_eq_invOf, hneg]
+  rw [cayley_eq_invOf X, hneg]
   calc
     _ = (1 - X) * (⅟(1 + X) * (1 + X)) * ⅟(1 - X) := by
       simp only [mul_assoc]
@@ -96,7 +96,7 @@ theorem cayley_neg_mul_cayley (X : Matrix n n ℂ)
   have hneg : cayley (-X) = (1 + X) * ⅟(1 - X) := by
     simp only [cayley, sub_neg_eq_add, ← sub_eq_add_neg,
       ← Matrix.invOf_eq_nonsing_inv]
-  rw [cayley_eq_invOf, hneg]
+  rw [cayley_eq_invOf X, hneg]
   calc
     _ = (1 + X) * (⅟(1 - X) * (1 - X)) * ⅟(1 + X) := by
       simp only [mul_assoc]
@@ -112,7 +112,7 @@ theorem cayley_units_inv (G : (Matrix n n ℂ)ˣ)
       simp only [mul_add, mul_one, Units.inv_mul, add_comm]
     rw [he]
     exact (G⁻¹).isUnit.mul (isUnit_of_invertible _)
-  letI := hb.invertible
+  let _ := hb.invertible
   have hfactor : (1 + (↑(G⁻¹) : Matrix n n ℂ)) * (G : Matrix n n ℂ) =
       1 + (G : Matrix n n ℂ) := by
     simp only [add_mul, one_mul, Units.inv_mul, add_comm]
@@ -170,7 +170,7 @@ theorem commute_cayley_iff (H X : Matrix n n ℂ) [Invertible (1 + X)] :
     ← sub_eq_zero (a := H * X) (b := X * H)]
   change ⁅H, cayley X⁆ = 0 ↔ ⁅H, X⁆ = 0
   rw [lie_cayley, smul_eq_zero]
-  simp only [neg_ne_zero, OfNat.ofNat_ne_zero, false_or]
+  simp only [neg_eq_zero, OfNat.ofNat_ne_zero, false_or]
   constructor
   · intro h
     have h' := congrArg (fun Y => (1 + X) * Y * (1 + X)) h
@@ -194,7 +194,7 @@ theorem isUnit_one_sub_and_one_add_of_skew {X : Matrix n n ℂ}
 /-- The existing general starred-ring Cayley theorem yields native unitary membership. -/
 theorem cayley_mem_unitary_of_skew {X : Matrix n n ℂ} (hX : star X = -X) :
     cayley X ∈ unitary (Matrix n n ℂ) := by
-  letI := (isUnit_one_sub_and_one_add_of_skew hX).2.invertible
+  let _ := (isUnit_one_sub_and_one_add_of_skew hX).2.invertible
   let R : IndividuatedCayley.VerifiedUnitaryResolvent (Matrix n n ℂ) X 1 :=
     { denomInv := ⅟(1 + X)
       denom_right := mul_invOf_self _
@@ -208,7 +208,7 @@ theorem cayley_mem_unitary_of_skew {X : Matrix n n ℂ} (hX : star X = -X) :
 /-- Square-zero operators have a polynomial Cayley expression. -/
 theorem cayley_of_square_zero {N : Matrix n n ℂ} (hN : N * N = 0) :
     cayley N = 1 - (2 : ℂ) • N := by
-  letI : Invertible (1 + N) :=
+  let _ : Invertible (1 + N) :=
     { invOf := 1 - N
       invOf_mul_self := by noncomm_ring [hN]
       mul_invOf_self := by noncomm_ring [hN] }

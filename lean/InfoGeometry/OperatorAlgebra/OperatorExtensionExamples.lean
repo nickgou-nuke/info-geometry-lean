@@ -164,7 +164,7 @@ theorem cayley_lie_mem_unitary : cayley ⁅P, Q⁆ ∈ unitary Mat :=
 theorem cayley_lie_not_commute : ¬ Commute P (cayley ⁅P, Q⁆) := by
   have hJ := MatrixOperatorIdentities.star_lie_of_isSelfAdjoint
     P_isStarProjection.isSelfAdjoint Q_isStarProjection.isSelfAdjoint
-  letI := (isUnit_one_sub_and_one_add_of_skew hJ).2.invertible
+  let _ := (isUnit_one_sub_and_one_add_of_skew hJ).2.invertible
   intro h
   have hc := (commute_cayley_iff P ⁅P, Q⁆).mp h
   have hz : oddPart P Q = 0 := by

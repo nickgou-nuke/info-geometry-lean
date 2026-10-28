@@ -1,0 +1,31 @@
+{
+  "intake_date": "2026-10-28",
+  "parent_commit": "935473bc3015919107e0fc18f71f9aea20ea1f20",
+  "sources": [
+    {
+      "file": "stream-1.txt",
+      "uploaded_name": "Pasted text(20261028-121016).txt",
+      "bytes": 13039,
+      "sha256": "70a02c2bfae6f92aa8a21c60738777361541a52ec546ad8770474ffda75323af"
+    },
+    {
+      "file": "stream-2.txt",
+      "uploaded_name": "Pasted text (2)(20261028-121132).txt",
+      "bytes": 11978,
+      "sha256": "da48160c8e6e84b3ba8696a97520282e8b4fd8e604346d215f8ea03d37602180"
+    },
+    {
+      "file": "stream-3.txt",
+      "uploaded_name": "Pasted text (3)(20261028-121256).txt",
+      "bytes": 10871,
+      "sha256": "9accca3218bb34d7bbc033e6c0c6ed17ad9718b526cd2e2d835c139d9974c308"
+    },
+    {
+      "file": "stream-4.txt",
+      "uploaded_name": "Pasted text (4)(6).txt",
+      "bytes": 12297,
+      "sha256": "c9ea1b3660df958f1492aa1bb7aa48a1a59abb84439546bd958ba1180cfe8c85"
+    }
+  ],
+  "status": "verbatim user intake; embedded verification claims are untrusted until independently checked"
+}

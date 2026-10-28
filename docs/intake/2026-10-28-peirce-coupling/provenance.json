@@ -1,0 +1,19 @@
+{
+  "intake_date": "2026-10-28",
+  "base_commit": "5ba5ebe6ca55d7eea9179ef8f096a714d8d5923e",
+  "role": "untrusted mathematical intake; claims of verification are not proof evidence",
+  "sources": [
+    {
+      "original_filename": "Pasted text(20261028-104327).txt",
+      "preserved_as": "stream-1.txt",
+      "bytes": 13041,
+      "sha256": "fc76f3c1295af250a9aac658b305d0860fc9726fa581ccdd30c735e808bea659"
+    },
+    {
+      "original_filename": "Pasted text (2)(20261028-104346).txt",
+      "preserved_as": "stream-2.txt",
+      "bytes": 16591,
+      "sha256": "5a4f6b652586a71d405b6543bb7e24152d2a284705f5a3a7a35481f454dd4e7f"
+    }
+  ]
+}

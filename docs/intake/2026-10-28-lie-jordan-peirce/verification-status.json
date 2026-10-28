@@ -1,0 +1,124 @@
+{
+  "status": "passed",
+  "targets": [
+    "InfoGeometry.Core.LieJordanComposition",
+    "InfoGeometry.Core.OperatorCliffordDouble",
+    "InfoGeometry.Core.PeirceStarCharges",
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry",
+    "InfoGeometry.Canonical.LieJordanMatrixExamples"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Core.JordanAssociatorRing",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.JordanMultiplicationClosure",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanComposition",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.OperatorCliffordDouble",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceGrading",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceStarCharges",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanMatrixGeometry",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanMatrixExamples",
+      "status": "passed",
+      "warnings": 0
+    }
+  ],
+  "scope": "exact source closure and isolated native Lake package; not root package",
+  "revision": "b174e8f0123819cb568aea179272996f69472222",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "working_tree_status": "",
+  "dependencies": {
+    "InfoGeometry.Core.JordanAssociatorRing": [],
+    "InfoGeometry.Core.JordanMultiplicationClosure": [
+      "InfoGeometry.Core.JordanAssociatorRing"
+    ],
+    "InfoGeometry.Core.LieJordanComposition": [
+      "InfoGeometry.Core.JordanMultiplicationClosure"
+    ],
+    "InfoGeometry.Core.OperatorCliffordDouble": [],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceStarCharges": [
+      "InfoGeometry.Core.PeirceGrading"
+    ],
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry": [
+      "InfoGeometry.Core.LieJordanComposition",
+      "InfoGeometry.Core.OperatorCliffordDouble"
+    ],
+    "InfoGeometry.Canonical.LieJordanMatrixExamples": [
+      "InfoGeometry.Canonical.LieJordanMatrixGeometry",
+      "InfoGeometry.Core.PeirceStarCharges"
+    ]
+  },
+  "source_sha256": {
+    "InfoGeometry.Core.JordanAssociatorRing": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+    "InfoGeometry.Core.JordanMultiplicationClosure": "7a4bbf9a9c072f181b5fed9efc9e6fed3b4d6120d48f4435292001d0008cb5ba",
+    "InfoGeometry.Core.LieJordanComposition": "0bbab38efde19cea920df26cdd13f20a7fb2227b2a284e419016f645d0b933ee",
+    "InfoGeometry.Core.OperatorCliffordDouble": "80d3de08b09ed8d947eb77c8e11683b05dc307aa7fc213490553ea6cdf1388f0",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "InfoGeometry.Core.PeirceDecomposition": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+    "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+    "InfoGeometry.Core.PeirceStarCharges": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry": "dcafe51f30afcb952129c2c45e071a368bb0a93fa0f9e0398734ae4943383a05",
+    "InfoGeometry.Canonical.LieJordanMatrixExamples": "26327145ce70a1132f37ffc3e686b9b0a3bbed488134f168daf7f7d98b98139b"
+  },
+  "constructivity_findings": [],
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "audited_declarations": 442,
+  "module_counts": {
+    "InfoGeometry.Core.JordanAssociatorRing": 30,
+    "InfoGeometry.Core.JordanMultiplicationClosure": 12,
+    "InfoGeometry.Core.LieJordanComposition": 31,
+    "InfoGeometry.Core.OperatorCliffordDouble": 82,
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": 83,
+    "InfoGeometry.Core.PeirceDecomposition": 58,
+    "InfoGeometry.Core.PeirceGrading": 59,
+    "InfoGeometry.Core.PeirceStarCharges": 26,
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry": 28,
+    "InfoGeometry.Canonical.LieJordanMatrixExamples": 33
+  },
+  "isolated_lake_build": "passed"
+}

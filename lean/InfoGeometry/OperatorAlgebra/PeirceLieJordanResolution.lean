@@ -7,7 +7,7 @@ import InfoGeometry.Algebra.PeirceDeWittChiralSplit
 The four corners are the repository's existing `peirce11`, `peirce10`,
 `peirce01`, and `peirce00`. The Boolean-indexed bundled maps add a uniform
 composition and multiplication interface, not a second corner carrier.
-The complementary-corner formula has **plus** the double commutator.
+The complementary-corner formula retains the source's negative double commutator.
 -/
 
 noncomputable section
@@ -98,9 +98,9 @@ theorem twice_peirce11 {p : A} (hp : p * p = p) (X : A) :
   simp only [jordan_apply, peirce11, two_nsmul]
   noncomm_ring
 
-/-- The sign before the double commutator is positive. -/
+/-- The source's negative double-commutator sign is essential. -/
 theorem twice_peirce00 {p : A} (hp : p * p = p) (X : A) :
-    2 • peirce00 p X = 2 • X - jordan R p X + ad R p (ad R p X) := by
+    2 • peirce00 p X = 2 • X - jordan R p X - ad R p (ad R p X) := by
   rw [ad_square R hp]
   simp only [jordan_apply, peirce00, compIdempotent, two_nsmul]
   noncomm_ring
@@ -117,11 +117,11 @@ theorem twice_peirce01 {p : A} (hp : p * p = p) (X : A) :
   simp only [ad_apply, peirce01, compIdempotent, two_nsmul]
   noncomm_ring
 
-/-- The supplied erroneous formula has a precise, generally nonzero defect. -/
-theorem complementary_formula_defect {p : A} (hp : p * p = p) (X : A) :
+/-- Regression against an incorrect positive-sign variant of the source formula. -/
+theorem complementary_plus_sign_defect {p : A} (hp : p * p = p) (X : A) :
     2 • peirce00 p X -
-      (2 • X - jordan R p X - ad R p (ad R p X)) =
-        2 • ad R p (ad R p X) := by
+      (2 • X - jordan R p X + ad R p (ad R p X)) =
+        -(2 • ad R p (ad R p X)) := by
   rw [twice_peirce00 R hp]
   simp only [two_nsmul]
   abel
@@ -144,7 +144,7 @@ theorem corner_joint_action {p : A} (hp : p * p = p) (i j : Bool) (X : A) :
   have hn (x : A) : p * (p * x) = p * x := by rw [← mul_assoc, hp]
   cases i <;> cases j <;> constructor <;>
     simp only [corner_apply, ad_apply, jordan_apply, Bool.false_eq_true,
-      if_false, if_true, compIdempotent] <;> noncomm_ring [hp, hn]
+      ite_false, ite_true, compIdempotent] <;> noncomm_ring [hp, hn]
 
 /-- The primal corner readout uses the same generator twice. -/
 theorem primal_ad_corner {p : A} (hp : p * p = p) (X : A) :

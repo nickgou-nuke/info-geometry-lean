@@ -1,58 +1,72 @@
 # Lie--Jordan / Peirce epistemic compilation contract
 
 Base: `cb7482d86eadb42f2ab9c2f6f624d67b7bfe7ce4` (main).
-Separate addition from PR #228; its branch and dependency pins are unchanged.
+This is a separate addition from PR #228; it does not modify that branch.
 
-## Source and exact scope
+## Intake provenance
 
-Source: the two user-supplied pastes dated 2026-10-28, at 09:19:32 and
-09:20:23, titled operatorial information geometry and Peirce--DeWitt geometry.
-Their assertions of verification are not compiler evidence.
+- `Pasted text(20261028-091932).txt`: `2bbbcb930837a8ff82ab3e0d486f5af50289f870aa8c0d5df429f9ae2856d4f7`.
+- `Pasted text (2)(20261028-092023).txt`: `0a95f3948dc8e241844197bd3034a9fcf01ee16817c91f0f7b1d2afa83599259`.
 
-The carrier is `Module.End R A` for an arbitrary associative `R`-algebra,
-including the full matrix algebra. Native `LinearMap.mulLeft`, `mulRight`,
-and `mulLeftRight` provide the operations. No matrices are diagonalized and
-no commuting-input hypothesis suppresses the defects.
+The source texts call their snippets verified. That assertion is not evidence.
+The new statements are checked separately at their actual Lean types.
 
-Existing owners read before drafting:
-- `Core.JordanAssociatorRing`: `commutator_operator_commutator`,
-  `commutator_symm_operator`, `symm_operator_commutator`.
-- `Algebra.IdempotentProjector`: `peirce11/10/01/00`, reconstruction,
-  complementary idempotents and off-diagonal square-zero laws.
-- `Algebra.PeirceDeWittChiralSplit`: even/odd parts and grading.
-- `Clifford.Cl11TensorTowerLimit`: full-matrix direct limit and stage maps.
+## Exact carriers and owners
 
-## Corrections
+- `Module.End R A`, with `[CommRing R] [Ring A] [Algebra R A]`; no
+  commutativity of `A` or of the inputs is assumed. In particular `A` can be
+  the full `Matrix n n R`, or an endomorphism algebra.
+- Native `LinearMap.mulLeft`, `mulRight`, and `mulLeftRight` provide the maps.
+- `Core.JordanAssociatorRing` owns `commutator_operator_commutator`,
+  `commutator_symm_operator`, and `symm_operator_commutator`. The new bundled
+  theorems reuse those proofs rather than reintroducing the identities.
+- `Algebra.IdempotentProjector` owns `peirce11/10/01/00`, complementary
+  idempotents, reconstruction, square-zero corners, and their products.
+- `Algebra.PeirceDeWittChiralSplit` owns the even/odd sums and grading.
+- `Clifford.Cl11TensorTowerLimit` owns the actual noncommutative matrix
+  direct limit, its ring inclusions, and their successor compatibility.
+  The separate diagonal-MASA cylinder carrier is not used as a substitute.
 
-For `A=ad_H`, `B=J_S`, `(A-B)(A+B)=A^2-B^2+[A,B]`, with
-`[A,B]=J_[H,S]`. The source's ordered-product prose has the wrong sign.
-Both ordered products must retain this term.
+## Corrections, not silent reinterpretations
 
-The complementary Peirce formula is
-`2(1-p)X(1-p)=2X-J_p(X)+ad_p^2(X)`, with a positive double-commutator term.
-The source formula's defect is `2 ad_p^2(X)`.
+For `A = ad_H`, `B = J_S`, the source's ordered-product prose has the wrong
+sign: `(A-B)(A+B) = A^2-B^2+[A,B]`, and `[A,B]=J_[H,S]`.
+Both ordered products and their nonzero difference must be retained.
+
+For an idempotent `p`, the source's complementary-corner formula is correct:
+`2(1-p)X(1-p) = 2X-J_p(X)-ad_p^2(X)`. The initial intake review incorrectly
+called that minus sign erroneous; both exact dense-matrix computation and
+Lean rejected the resulting positive-sign variant. The final theorem retains
+the source sign, and `positive_sign_variant_false` guards against repeating
+that review error. The incorrect plus-sign variant has defect `-2 ad_p^2(X)`.
 Also `dualMinus p p (ad_p X)=2(1-p)Xp`, not its negative.
 
-`trace(XY)` is a bilinear trace pairing, not `trace(X^*Y)` and not a
-state-dependent BKM metric. The weighted form `trace((2p-1)XY)` is generally
-nonsymmetric. Its restricted symmetric/alternating behavior must be proved.
-No DeWitt/Fubini--Study/Berry/Connes--Chern identification is asserted.
+`trace(XY)` is a bilinear trace pairing, not the complex Hilbert--Schmidt
+inner product `trace(X^*Y)` and not a state-dependent BKM metric.
+The weighted form `trace((2p-1)XY)` is generally nonsymmetric. Its symmetry
+and alternating restrictions must be proved, not called a DeWitt metric,
+Fubini--Study metric, Berry curvature, or Connes--Chern form by analogy.
+No manifold, torsion-free connection, Levi-Civita identification, statistical
+cubic tensor, dual flatness, physical Dirac wave, or spectral theorem follows
+from these algebraic identities alone.
 
-## Dependency poset
+## Dependency order
 
-Native multiplication -> bundled Lie/Jordan actions -> operator brackets ->
-signed ordered products -> directional coefficient commutators.
-Native idempotent corners -> projector composition -> Peirce multiplication ->
-corrected quartet -> parity projection. Their common consumers are trace
-pairings, block-operator factorization and native matrix-colimit transport.
-These are proof dependencies, not physical causal relations.
+Native regular-module multiplication -> bundled Lie/Jordan actions ->
+operator brackets -> signed ordered products -> directional coefficient
+commutators. Independently: native idempotent corners -> orthogonal projection
+composition -> Peirce multiplication -> division-free quartet -> odd projection.
+Their joint consumers are trace duality, matrix block identities, and transport
+through the existing full-matrix direct limit. These are logical dependencies,
+not asserted spacetime causal relations.
 
-## Verification
+## Verification policy
 
-The supplementary workflow specializes the existing serial
-`tools.quality.check_peirce_weyl` checker. It compares the exact Mathlib commit
-and Lean toolchain with the unchanged manifest, compiles the source-import
-closure, and audits transitive axioms. This is not the root Lake package build,
-and it does not disable or replace existing CI. Verification remains pending
-until the actual workflow succeeds. No placeholder proof or custom axiom is
-permitted. Further consumers are added to the same scoped target list.
+Full proof terms only: no `sorry`, `admit`, custom axiom, `native_decide`,
+scalar proxy, or assumed theorem hidden in a structure field.
+The supplementary workflow uses the existing locked `check_peirce_weyl`
+source-closure/axiom checker, with its target list specialized to this packet.
+It checks the exact Mathlib commit and Lean toolchain from the unchanged
+repository files, and does not claim a root-package build. It neither disables
+nor replaces existing CI. Kernel verification is pending until the workflow
+has actually completed; source inspection is not kernel verification.

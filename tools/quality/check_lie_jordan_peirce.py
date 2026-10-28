@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Specialize the existing serial source-closure checker; not a root Lake build."""
+"""Use the existing serial source-closure checker for Lie--Jordan/Peirce owners.
+
+This is a scoped check against the unchanged Mathlib pin, not a root Lake build.
+"""
 from pathlib import Path
 import sys
 
@@ -13,7 +16,10 @@ checker.TARGETS = [
     'InfoGeometry.OperatorAlgebra.LieJordanTraceDuality',
     'InfoGeometry.OperatorAlgebra.PeirceTracePairing',
     'InfoGeometry.OperatorAlgebra.OperatorDiracSchur',
+    'InfoGeometry.OperatorAlgebra.LieJordanDiracPair',
     'InfoGeometry.OperatorAlgebra.LieJordanPeirceColimit',
+    'InfoGeometry.OperatorAlgebra.LieJordanPeirceExamples',
+    'InfoGeometry.OperatorAlgebra.LieJordanPeirce',
 ]
 
 if __name__ == '__main__':

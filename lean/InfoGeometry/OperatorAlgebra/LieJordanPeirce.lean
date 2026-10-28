@@ -1,0 +1,8 @@
+import InfoGeometry.OperatorAlgebra.LieJordanDuality
+import InfoGeometry.OperatorAlgebra.PeirceLieJordanResolution
+import InfoGeometry.OperatorAlgebra.LieJordanTraceDuality
+import InfoGeometry.OperatorAlgebra.PeirceTracePairing
+import InfoGeometry.OperatorAlgebra.OperatorDiracSchur
+import InfoGeometry.OperatorAlgebra.LieJordanPeirceColimit
+import InfoGeometry.OperatorAlgebra.LieJordanPeirceExamples
+import InfoGeometry.OperatorAlgebra.LieJordanDiracPair

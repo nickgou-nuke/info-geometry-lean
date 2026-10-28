@@ -55,10 +55,12 @@ The order of `c * u * b` in the Schur complement is essential. -/
 theorem operator_block_LDU (a b c d u : A) (hau : a * u = 1) (hua : u * a = 1) :
     (!![1, 0; c * u, 1] : Matrix (Fin 2) (Fin 2) A) *
       !![a, 0; 0, d - c * u * b] * !![1, u * b; 0, 1] = !![a, b; c, d] := by
+  have ha (x : A) : a * (u * x) = x := by rw [← mul_assoc, hau, one_mul]
+  have hu (x : A) : u * (a * x) = x := by rw [← mul_assoc, hua, one_mul]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply] <;>
-    noncomm_ring [hau, hua]
+    simp [Matrix.mul_apply, Fin.sum_univ_two, mul_assoc, hau, hua, ha, hu] <;>
+    noncomm_ring
 
 /-- The lower triangular factor has the displayed two-sided inverse. -/
 theorem lower_unipotent_inverse (c : A) :

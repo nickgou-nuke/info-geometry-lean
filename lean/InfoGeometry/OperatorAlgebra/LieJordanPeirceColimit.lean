@@ -33,7 +33,8 @@ theorem stage_corner (n : ℕ) (p X : Stage n) (i j : Bool) :
     ofStage n (corner ℝ p i j X) =
       corner ℝ (ofStage n p) i j (ofStage n X) := by
   cases i <;> cases j <;>
-    simp [corner_apply, compIdempotent, map_mul, map_sub]
+    simp only [corner_apply, Bool.false_eq_true, ite_false, ite_true,
+      compIdempotent, map_mul, map_sub, map_one]
 
 /-- The full mixed defect is preserved, not discarded at infinity. -/
 theorem stage_mixed_defect (n : ℕ) (H S X : Stage n) :
@@ -55,11 +56,11 @@ theorem stage_dualMinus_bond (n : ℕ) (H S X : Stage n) :
       ofStage n (dualMinus ℝ H S X) := by
   rw [← map_dualMinus ℝ (stageEmbed n), ofStage_apply_bond]
 
-/-- The corrected complementary corner identity holds on the actual limit. -/
+/-- The complementary corner identity holds on the actual limit. -/
 theorem limit_complementary_corner (n : ℕ) (p : Stage n) (hp : p * p = p)
     (X : Limit) :
     2 • peirce00 (ofStage n p) X =
-      2 • X - jordan ℝ (ofStage n p) X +
+      2 • X - jordan ℝ (ofStage n p) X -
         ad ℝ (ofStage n p) (ad ℝ (ofStage n p) X) := by
   exact twice_peirce00 ℝ (limit_idempotent hp) X
 

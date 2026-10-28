@@ -17,7 +17,10 @@ namespace InfoGeometry.OperatorAlgebra.LieJordan
 open InfoGeometry.Core.PeirceDecomposition InfoGeometry.Core.IdempotentCartan
 
 variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+
+section Peirce
 variable {p : A} (hp : p*p=p)
+include hp
 
 /-- Left grading converts the symmetric transfer to the signed transfer. -/
 theorem reflection_crossTransport (a b : A) :
@@ -119,8 +122,11 @@ theorem skewTransport_even_input (a b x : A) :
     (even_add_odd p x)
   simpa only [map_add, skewTransport_odd_input R hp, add_zero] using h
 
+end Peirce
+
 section DoubleCommutator
 variable {q r : A} (hq : q*q=0) (hr : r*r=0)
+include hq hr
 
 /-- The second commutator retains the square of the full operator weight. -/
 theorem pair_double_commutator_sum :

@@ -106,8 +106,19 @@ theorem skewTransport_positive_input_obstruction {a : Matrix n n ℝ}
     (a*aᴴ).PosSemidef ∧ ¬ (skewTransport ℝ a aᴴ (a*aᴴ)).PosSemidef :=
   ⟨posSemidef_self_mul_conjTranspose a, skewTransport_not_positive ha hne⟩
 
+/-- Symmetry of the indefinite pairing requires a symmetric projector. -/
+theorem left_reflection_pairing_symm {p : Matrix n n ℝ} (hps : pᴴ=p)
+    (x y : Matrix n n ℝ) :
+    trace (xᴴ*reflection p*y) = trace (yᴴ*reflection p*x) := by
+  have hs : (reflection p)ᴴ=reflection p := by
+    simp only [reflection, two_nsmul, conjTranspose_sub, conjTranspose_add,
+      conjTranspose_one, hps]
+  simpa only [conjTranspose_mul, conjTranspose_conjTranspose, hs, star_trivial,
+    mul_assoc] using (trace_conjTranspose (xᴴ*reflection p*y)).symm
+
 section Reflection
 variable {p : Matrix n n ℝ} (hp : p*p=p)
+include hp
 
 /-- A fundamental involution on the entire real matrix carrier. -/
 theorem left_reflection_involution :
@@ -121,11 +132,21 @@ theorem left_reflection_involution :
 theorem left_reflection_positive (x : Matrix n n ℝ) (hx : x≠0) :
     0 < trace (xᴴ * reflection p * (reflection p*x)) := by
   have he : xᴴ * reflection p * (reflection p*x)=xᴴ*x := by
-    simp only [mul_assoc, ← mul_assoc (reflection p) (reflection p), reflection_sq hp, one_mul]
+    calc
+      _ = xᴴ*((reflection p*reflection p)*x) := by noncomm_ring
+      _ = xᴴ*x := by rw [reflection_sq hp, one_mul]
   rw [he]
   have hn := (posSemidef_conjTranspose_mul_self x).trace_nonneg
   have hz : trace (xᴴ*x)≠0 := mt trace_conjTranspose_mul_self_eq_zero_iff.mp hx
   exact lt_of_le_of_ne hn (Ne.symm hz)
+
+/-- Nondegeneracy uses an actual test matrix, not a stipulated metric interface. -/
+theorem left_reflection_pairing_nondegenerate (x : Matrix n n ℝ)
+    (h : ∀ y : Matrix n n ℝ, trace (xᴴ*reflection p*y)=0) : x=0 := by
+  by_contra hx
+  have ht := left_reflection_positive hp x hx
+  rw [h (reflection p*x)] at ht
+  exact (lt_irrefl 0) ht
 
 /-- The signed map is self-adjoint for B(x,y)=tr(x^T S y), not for Frobenius. -/
 theorem skewTransport_krein_pairing (hps : pᴴ=p) (a x y : Matrix n n ℝ) :

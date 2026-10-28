@@ -33,16 +33,14 @@ theorem shift_product_split (T : Matrix n n K) (a : K) :
 theorem numerator_left {T : Matrix n n K} (hT : T * T * T = T) (a : K) :
     (a • (1 : Matrix n n K) - T) * ((a ^ 2 - 1) • 1 + a • T + T * T) =
       (a * (a ^ 2 - 1)) • (1 : Matrix n n K) := by
-  simp only [sub_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
-    smul_smul]
+  simp only [sub_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one]
   rw [← mul_assoc T T T, hT]
   module
 
 theorem numerator_right {T : Matrix n n K} (hT : T * T * T = T) (a : K) :
     ((a ^ 2 - 1) • (1 : Matrix n n K) + a • T + T * T) *
       (a • (1 : Matrix n n K) - T) = (a * (a ^ 2 - 1)) • (1 : Matrix n n K) := by
-  simp only [mul_sub, add_mul, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
-    smul_smul, hT]
+  simp only [mul_sub, add_mul, smul_mul_assoc, mul_smul_comm, one_mul, mul_one, hT]
   module
 
 end Polynomial

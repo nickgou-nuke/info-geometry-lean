@@ -5,7 +5,8 @@ on:
     paths:
       - 'lean/InfoGeometry/OperatorAlgebra/LieJordan*.lean'
       - 'lean/InfoGeometry/Algebra/PeirceLieJordan*.lean'
-      - 'lean/InfoGeometry/Canonical/LieJordanPeirce*.lean'
+      - 'lean/InfoGeometry/Algebra/PeirceQuadraticCycle.lean'
+      - 'lean/InfoGeometry/Canonical/LieJordan*.lean'
       - 'tools/quality/check_lie_jordan_peirce.py'
       - '.github/workflows/lie-jordan-peirce.yml'
   workflow_dispatch:

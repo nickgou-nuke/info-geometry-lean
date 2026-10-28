@@ -20,6 +20,11 @@ checker.TARGETS = [
     "InfoGeometry.Canonical.LieJordanPeirceColimit",
     "InfoGeometry.OperatorAlgebra.LieJordanPeirceExamples",
     "InfoGeometry.Canonical.LieJordanPeirceSynthesis",
+    "InfoGeometry.OperatorAlgebra.LieJordanBoundaryCalculus",
+    "InfoGeometry.Algebra.PeirceQuadraticCycle",
+    "InfoGeometry.OperatorAlgebra.LieJordanBoundaryMatrices",
+    "InfoGeometry.Canonical.LieJordanBoundaryColimit",
+    "InfoGeometry.Canonical.LieJordanBoundarySynthesis",
 ]
 
 if __name__ == "__main__":

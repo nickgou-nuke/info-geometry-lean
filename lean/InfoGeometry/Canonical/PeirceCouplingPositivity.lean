@@ -38,22 +38,22 @@ theorem adjoint_mem_peirce01 (hp : IsStarProjection p)
   simpa only [Matrix.star_eq_conjTranspose] using
     star_mem_peirce01 hp.isSelfAdjoint hu
 
-/-- The adjoint-paired coupled matrix is Hermitian without a support assumption. -/
 omit [Fintype n] [DecidableEq n] in
+/-- The adjoint-paired coupled matrix is Hermitian without a support assumption. -/
 theorem coupled_isHermitian (u : Matrix n n ℂ) :
     (u + uᴴ).IsHermitian :=
   Matrix.isHermitian_add_transpose_self u
 
-/-- The bracket of a matrix with its adjoint is Hermitian. -/
 omit [DecidableEq n] in
+/-- The bracket of a matrix with its adjoint is Hermitian. -/
 theorem bracket_isHermitian (u : Matrix n n ℂ) :
     (⁅u, uᴴ⁆).IsHermitian := by
   change (u * uᴴ - uᴴ * u).IsHermitian
   exact (Matrix.isHermitian_mul_conjTranspose_self u).sub
     (Matrix.isHermitian_conjTranspose_mul_self u)
 
-/-- The two opposite Gram products have a positive semidefinite sum. -/
 omit [DecidableEq n] in
+/-- The two opposite Gram products have a positive semidefinite sum. -/
 theorem gram_posSemidef (u : Matrix n n ℂ) :
     (u * uᴴ + uᴴ * u).PosSemidef :=
   (Matrix.posSemidef_self_mul_conjTranspose u).add

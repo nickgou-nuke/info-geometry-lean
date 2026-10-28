@@ -138,7 +138,8 @@ assumption; the Peirce hypotheses identify it with the coupled square.
 ## Full-matrix boundary witnesses
 
 The code reuses the existing dense `P,S` and sets `U=component10 P S`. Every
-row of `U` is `(-13,2,11)/9`. Its two opposite products fail to commute, while
+row of `U` is `(-13,2,11)/9`. The corner operators `U` and `Uᴴ` do not commute:
+`U*Uᴴ ≠ Uᴴ*U`. Their symmetric product satisfies
 
 \[
 \operatorname{Tr}(UU^\dagger+U^\dagger U)=196/9,
@@ -147,8 +148,9 @@ row of `U` is `(-13,2,11)/9`. Its two opposite products fail to commute, while
 
 Thus the coupled square is nonzero and positive semidefinite but not positive
 definite. Choosing the independent second input `-S` instead gives the negative
-Gram square, trace `-196/9`, and failure of positive semidefiniteness. This pair
-also fails to commute. The general theorems retain unrestricted full matrices.
+Gram square, trace `-196/9`, and failure of positive semidefiniteness. The corner
+pair `(U, component01 P (-S)) = (U,-Uᴴ)` also fails to commute. The general
+theorems retain unrestricted full matrices.
 
 No particle interpretation, spontaneous symmetry-breaking theorem, connection,
 curvature, topological invariant, or continuum gap is inferred. Exact compiler

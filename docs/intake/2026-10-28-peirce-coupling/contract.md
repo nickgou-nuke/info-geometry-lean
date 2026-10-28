@@ -103,8 +103,8 @@ Reuse PR #253's dense `P,S`. Prove that `u = component10 P S` has repeated
 row `(-13,2,11)/9`; its positive coupled square has trace `196/9`, is nonzero,
 and annihilates the nonzero vector `(3,-8,5)`. Prove it is not positive definite.
 For the independently chosen opposite corner `-uᴴ`, prove negative Gram square,
-negative trace, and failure of positive semidefiniteness. The relevant actual
-matrix products fail to commute; the projection is nondiagonal.
+negative trace, and failure of positive semidefiniteness. Both pairs of corner
+operators, `(u,uᴴ)` and `(u,-uᴴ)`, fail to commute; the projection is nondiagonal.
 
 ## Proof prerequisite partial order
 

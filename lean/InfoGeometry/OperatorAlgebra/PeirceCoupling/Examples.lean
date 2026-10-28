@@ -147,7 +147,7 @@ theorem balanced_posDef :
   have h2 := congrFun hv.1 2
   have h0' := congrFun hv.2 0
   have h2' := congrFun hv.2 2
-  norm_num [balancedArrow, Matrix.mulVec, dotProduct, conjTranspose_apply, starRingEnd_apply,
+  norm_num [balancedArrow, Matrix.mulVec, dotProduct, conjTranspose_apply, map_ofNat,
     Fin.sum_univ_succ] at h0 h2 h0' h2'
   funext i
   fin_cases i
@@ -172,6 +172,6 @@ theorem balanced_adjoint_noncommute : ¬Commute balancedArrow balancedArrowᴴ :
 theorem balanced_square_nondiagonal :
     (balancedArrow * balancedArrowᴴ + balancedArrowᴴ * balancedArrow) 0 1 = 2 := by
   norm_num [balancedArrow, Matrix.mul_apply, Matrix.vecMul, dotProduct,
-    conjTranspose_apply, starRingEnd_apply, Fin.sum_univ_succ]
+    conjTranspose_apply, map_ofNat, Fin.sum_univ_succ]
 
 end InfoGeometry.OperatorAlgebra.PeirceCoupling.Examples

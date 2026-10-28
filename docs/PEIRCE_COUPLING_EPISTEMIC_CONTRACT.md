@@ -146,7 +146,7 @@ Selected declaration edges refine the module order:
 - Support actions -> `reflection_mul_jordan` -> `reflection_mul_lie` ->
   `jordan_eq_zero_iff_lie_eq_zero`. The reverse algebraic equality does not
   create a reverse proof dependency.
-- Signed compressions -> `lie_second_order_boundary` -> `second_order_iff`
+- Support actions -> `lie_second_order_boundary` -> `second_order_iff`
   -> `even_second_order_iff`, using the existing complementary even/odd ranges.
 - Native Gram kernel lemmas -> `gramSum_mulVec_eq_zero_iff` -> `gramSum_ker`
   and `gramSum_posDef_iff` -> the native kernel/injectivity/unit criteria.

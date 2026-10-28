@@ -70,7 +70,8 @@ theorem oddPart_P_Q : oddPart P Q =
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [oddPart, component10, component01, complementIdempotent,
-      P, Q, Matrix.mul_apply, Fin.sum_univ_succ]
+      P, Q, Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.one_apply,
+      Matrix.sub_apply, Fin.sum_univ_succ]
 
 theorem component10_P_Q : component10 P Q =
     !![80 / 729, -56 / 729, 16 / 729;
@@ -79,7 +80,8 @@ theorem component10_P_Q : component10 P Q =
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [component10, complementIdempotent, P, Q,
-      Matrix.mul_apply, Fin.sum_univ_succ]
+      Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.one_apply,
+      Matrix.sub_apply, Fin.sum_univ_succ]
 
 theorem chiral_square_matrix : oddPart P Q * oddPart P Q =
     !![832 / 6561, -256 / 6561, 128 / 2187;
@@ -152,7 +154,8 @@ theorem maurerCartan_without_direction_term_ne_zero :
       ⁅maurerCartan unipotentFrame P, maurerCartan unipotentFrame Q⁆ =
       maurerCartan unipotentFrame ⁅P, Q⁆ := by
     apply sub_eq_zero.mp
-    convert h using 1 <;> abel
+    convert h using 1
+    abel
   rw [he]
   exact maurerCartan_direction_term_ne_zero
 

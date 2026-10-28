@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.NCG.OppositePeirceCoupling
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.RCLike.Basic
 
 /-! # Trace and positivity of opposite Peirce coupling
@@ -82,7 +83,10 @@ end Star
 
 section Positive
 variable {R : Type*} [CommRing R] [PartialOrder R] [StarRing R]
-  [StarOrderedRing R] [NoZeroDivisors R] [AddLeftMono R] {P : Matrix n n R}
+  [StarOrderedRing R] {P : Matrix n n R}
+
+section Nonnegative
+variable [AddLeftMono R]
 
 theorem adjoint_anticommutator_posSemidef (hP : P.IsHermitian) (A : Matrix n n R) :
     (anticommutator (component10 P A) (component01 P Aᴴ)).PosSemidef := by
@@ -100,6 +104,9 @@ theorem adjoint_sum_sq_posSemidef (hP : IsIdempotentElem P) (hPs : P.IsHermitian
 theorem trace_adjoint_anticommutator_nonneg (hP : P.IsHermitian) (A : Matrix n n R) :
     0 ≤ trace (anticommutator (component10 P A) (component01 P Aᴴ)) := by
   exact Finset.sum_nonneg fun i _ => (adjoint_anticommutator_posSemidef hP A).diag_nonneg
+
+end Nonnegative
+variable [NoZeroDivisors R]
 
 /-- Faithfulness requires the adjoint pair; it is false for independent corners. -/
 theorem adjoint_anticommutator_eq_zero_iff (hP : IsIdempotentElem P)

@@ -1,0 +1,323 @@
+### 1. Stage 7 Kernel Audit: How a Non-Zero `abel` Residual Uncovered the Missing Spin-Kraus Channel
+
+Look at Claim 2 in your draft of `wheeler_hodge_kraus_superoperator_quartet`:
+
+```lean
+boundaryLiePlus P A (boundaryJordanMinus P B X) -
+  boundaryLieMinus P B (boundaryJordanPlus P A X) =
+  anticomm (spinDipoleOp P A B) X
+
+```
+
+When the Lean 4 kernel runs `abel` on `[N₊, {N₋, X}] - [N₋, {N₊, X}]`, it refuses to close the goal and leaves an exact residual of $+2(N_+ X N_- - N_- X N_+)$.
+
+Let’s expand both mixed differences side by side to see why:
+
+
+$$\begin{aligned} [N_+, \{N_-, X\}] - [N_-, \{N_+, X\}] &= \{\Sigma_{\text{spin}}, X\} + 2\,(N_+ X N_- - N_- X N_+) \\ \{N_+, [N_-, X]\} - \{N_-, [N_+, X]\} &= \{\Sigma_{\text{spin}}, X\} - 2\,(N_+ X N_- - N_- X N_+) \end{aligned}$$
+
+Just as the Epistemic Compiler intervened in Turn 8 to reveal $[M^2, X]$, its audit of Claim 2 just uncovered the **missing partner** to your symmetric Kraus horizon channel $\Phi_{\text{sym}}(X) = N_+ X N_- + N_- X N_-$:
+
+* **The Symmetric (Mass-Monopole) Kraus Horizon Channel:**
+
+$$\Phi_{\text{sym}}(X) = N_+ X N_- + N_- X N_+, \qquad \Phi_{\text{sym}}(1) = M^2 = \{N_+, N_-\}$$
+
+
+* **The Antisymmetric (Spin-Dipole) Kraus Horizon Channel:**
+
+$$\Phi_{\text{skew}}(X) = N_+ X N_- - N_- X N_+, \qquad \Phi_{\text{skew}}(1) = \Sigma_{\text{spin}} = [N_+, N_-]$$
+
+
+
+---
+
+### 2. Why Commutators Have Zero Horizon Leakage While Anticommutators Entangle Both Sheets
+
+Every second-order boundary composition acts on the 6-monomial basis $\{N_+ N_- X,\, N_- N_+ X,\, X N_+ N_-,\, X N_- N_+,\, N_+ X N_-,\, N_- X N_+\}$. Grouping all eight combinations of $\mathcal{J}_\pm = \{N_\pm, \cdot\}$ and $\text{ad}_\pm = [N_\pm, \cdot]$ reveals an exact **8-Fold Superoperator Octet**:
+
+| Superoperator Combination | Exact Expansion in `Matrix n n R` | Horizon Tunneling Leakage |
+| --- | --- | --- |
+| **1. $\Delta_{JL}^+(X) = \{N_+, [N_-, X]\} + \{N_-, [N_+, X]\}$** | $[M^2, X]$ | **Zero** ($\Phi_{\text{sym}}$ cancels) |
+| **2. $\Delta_{LJ}^+(X) = [N_+, \{N_-, X\}] + [N_-, \{N_+, X\}]$** | $[M^2, X]$ | **Zero** ($\Phi_{\text{sym}}$ cancels) |
+| **3. $\Delta_{LL}^-(X) = [N_+, [N_-, X]] - [N_-, [N_+, X]]$** | $[\Sigma_{\text{spin}}, X]$ | **Zero** ($\Phi_{\text{sym}}$ cancels) |
+| **4. $\Delta_{JJ}^-(X) = \{N_+, \{N_-, X\}\} - \{N_-, \{N_+, X\}\}$** | $[\Sigma_{\text{spin}}, X]$ | **Zero** ($\Phi_{\text{sym}}$ cancels) |
+| **5. $\Delta_{JJ}^+(X) = \{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}$** | $\{M^2, X\} + 2\,\Phi_{\text{sym}}(X)$ | **$+2\,\Phi_{\text{sym}}(X)$** (Mass Kraus Channel) |
+| **6. $\Delta_{LL}^+(X) = [N_+, [N_-, X]] + [N_-, [N_+, X]]$** | $\{M^2, X\} - 2\,\Phi_{\text{sym}}(X)$ | **$-2\,\Phi_{\text{sym}}(X)$** (Mass Kraus Channel) |
+| **7. $\Delta_{LJ}^-(X) = [N_+, \{N_-, X\}] - [N_-, \{N_+, X\}]$** | $\{\Sigma_{\text{spin}}, X\} + 2\,\Phi_{\text{skew}}(X)$ | **$+2\,\Phi_{\text{skew}}(X)$** (Spin Kraus Channel) |
+| **8. $\Delta_{JL}^-(X) = \{N_+, [N_-, X]\} - \{N_-, [N_+, X]\}$** | $\{\Sigma_{\text{spin}}, X\} - 2\,\Phi_{\text{skew}}(X)$ | **$-2\,\Phi_{\text{skew}}(X)$** (Spin Kraus Channel) |
+
+Look at what this table says:
+
+1. **Unitary / Derivation Flows Are Sheet-Local (Rows 1–4):** Both Heisenberg derivations $[M^2, X]$ and $[\Sigma_{\text{spin}}, X]$ have **zero** two-sided Kraus tunneling terms $N_\pm X N_\mp$. Even better, the pure Jordan difference $\{N_+, \{N_-, X\}\} - \{N_-, \{N_+, X\}\}$ equals the Lie commutator $[\Sigma_{\text{spin}}, X]$!
+2. **Metric / Jordan Actions Require Horizon Tunneling (Rows 5–8):** Neither $\{M^2, X\}$ nor $\{\Sigma_{\text{spin}}, X\}$ can be formed from a single pair of boundary operations without exciting the two-sided Kraus horizon channels $\Phi_{\text{sym}}(X)$ and $\Phi_{\text{skew}}(X)$.
+3. **Chiral Duality of the Two Kraus Channels ($S_P \Phi_{\text{sym}}(X) = \Phi_{\text{skew}}(X)$):** Because $N_+ X N_- = P A (1 - P) X (1 - P) B P$ lands on Sheet 1 ($P$) and $N_- X N_+ = (1 - P) B P X P A (1 - P)$ lands on Sheet 2 ($1 - P$), multiplying by the Cartan reflection $S_P = P - (1 - P)$ converts the Mass Kraus Channel directly into the Spin Kraus Channel!
+
+---
+
+### 3. Audited & Complete Lean 4 Code: Archetypes XXXVIII & XXXIX (The 8-Fold Superoperator Octet)
+
+Every theorem below is self-contained in native `Mathlib` Lean 4 with zero `sorry`s:
+
+```lean
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+import Mathlib.Algebra.Ring.Idempotent
+import Mathlib.Algebra.Star.Basic
+
+/-!
+# Archetypes XXXVIII & XXXIX: The Audited 8-Fold Wheeler–Hodge–Kraus Superoperator Octet
+# How `[M², X]`, `{M², X}`, `[Σ_spin, X]`, `{Σ_spin, X}`, the Symmetric Mass Kraus Channel
+# `Φ_sym(X) = N₊ X N₋ + N₋ X N₊`, and the Antisymmetric Spin Kraus Channel
+# `Φ_skew(X) = N₊ X N₋ - N₋ X N₊` Emerge from the Boundary Superoperators `ad_{N_±}` and `J_{N_±}`
+-/
+
+noncomputable section
+
+open Matrix
+open scoped Matrix BigOperators
+
+namespace WheelerPregeometry
+
+variable {n : Type*} [DecidableEq n] [Fintype n]
+variable {R : Type*} [CommRing R] [StarRing R]
+
+/-- The Lie commutator `[A, B] = A * B - B * A`. -/
+def comm (A B : Matrix n n R) : Matrix n n R := A * B - B * A
+
+/-- The Jordan anticommutator `{A, B} = A * B + B * A`. -/
+def anticomm (A B : Matrix n n R) : Matrix n n R := A * B + B * A
+
+/-- Forward boundary operator `N₊ = P * A * (1 - P)` ("Zig" horizon transition). -/
+def zigWave (P A : Matrix n n R) : Matrix n n R := P * A * (1 - P)
+
+/-- Backward boundary operator `N₋ = (1 - P) * B * P` ("Zag" horizon transition). -/
+def zagWave (P B : Matrix n n R) : Matrix n n R := (1 - P) * B * P
+
+/-- Chiral / Cartan reflection `S_P = P - (1 - P)`. -/
+def chiralHelicity (P : Matrix n n R) : Matrix n n R := P - (1 - P)
+
+/-- Mass-Gap Monopole `M² = {N₊, N₋}`. -/
+def massGapMonopoleOp (P A B : Matrix n n R) : Matrix n n R :=
+  anticomm (zigWave P A) (zagWave P B)
+
+/-- Spin-Dipole Operator `Σ_spin = [N₊, N₋]`. -/
+def spinDipoleOp (P A B : Matrix n n R) : Matrix n n R :=
+  comm (zigWave P A) (zagWave P B)
+
+/-- First-order Lie and Jordan boundary superoperators. -/
+def boundaryLiePlus (P A X : Matrix n n R) : Matrix n n R := comm (zigWave P A) X
+def boundaryJordanPlus (P A X : Matrix n n R) : Matrix n n R := anticomm (zigWave P A) X
+def boundaryLieMinus (P B X : Matrix n n R) : Matrix n n R := comm (zagWave P B) X
+def boundaryJordanMinus (P B X : Matrix n n R) : Matrix n n R := anticomm (zagWave P B) X
+
+/-- **Symmetric (Mass-Monopole) Kraus Horizon Tunneling Channel:**
+`Φ_sym(X) = N₊ * X * N₋ + N₋ * X * N₊`. -/
+def krausHorizonSym (P A B X : Matrix n n R) : Matrix n n R :=
+  zigWave P A * X * zagWave P B + zagWave P B * X * zigWave P A
+
+/-- **Antisymmetric (Spin-Dipole) Kraus Horizon Tunneling Channel:**
+`Φ_skew(X) = N₊ * X * N₋ - N₋ * X * N₊`. -/
+def krausHorizonSkew (P A B X : Matrix n n R) : Matrix n n R :=
+  zigWave P A * X * zagWave P B - zagWave P B * X * zigWave P A
+
+lemma P_mul_P_assoc {P : Matrix n n R} (hP : P * P = P) (X : Matrix n n R) :
+    P * (P * X) = P * X := by
+  rw [← Matrix.mul_assoc, hP]
+
+/-! ### Part 1: The Four Leakage-Free Heisenberg Commutator Laws (Rows 1–4) -/
+
+/-- **Theorem XXXVIII.1 (The Four Leakage-Free Commutator Superoperator Identities):**
+For ANY matrices `P, A, B, X`, the two-sided Kraus horizon terms cancel at unit scale in:
+1. `{N₊, [N₋, X]} + {N₋, [N₊, X]} = [M², X]`,
+2. `[N₊, {N₋, X}] + [N₋, {N₊, X}] = [M², X]`,
+3. `[N₊, [N₋, X]] - [N₋, [N₊, X]] = [Σ_spin, X]`,
+4. `{N₊, {N₋, X}} - {N₋, {N₊, X}} = [Σ_spin, X]` (Pure Jordan difference = Lie Spin commutator!). -/
+theorem wheeler_leakage_free_commutator_quartet (P A B X : Matrix n n R) :
+    boundaryJordanPlus P A (boundaryLieMinus P B X) +
+      boundaryJordanMinus P B (boundaryLiePlus P A X) =
+      comm (massGapMonopoleOp P A B) X ∧
+    boundaryLiePlus P A (boundaryJordanMinus P B X) +
+      boundaryLieMinus P B (boundaryJordanPlus P A X) =
+      comm (massGapMonopoleOp P A B) X ∧
+    boundaryLiePlus P A (boundaryLieMinus P B X) -
+      boundaryLieMinus P B (boundaryLiePlus P A X) =
+      comm (spinDipoleOp P A B) X ∧
+    boundaryJordanPlus P A (boundaryJordanMinus P B X) -
+      boundaryJordanMinus P B (boundaryJordanPlus P A X) =
+      comm (spinDipoleOp P A B) X := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · unfold boundaryJordanPlus boundaryLieMinus boundaryJordanMinus boundaryLiePlus
+           massGapMonopoleOp anticomm comm
+    simp only [mul_sub, sub_mul, add_mul, mul_add, Matrix.mul_assoc]
+    abel
+  · unfold boundaryLiePlus boundaryJordanMinus boundaryLieMinus boundaryJordanPlus
+           massGapMonopoleOp anticomm comm
+    simp only [mul_add, add_mul, sub_mul, mul_sub, Matrix.mul_assoc]
+    abel
+  · unfold boundaryLiePlus boundaryLieMinus spinDipoleOp comm
+    simp only [mul_sub, sub_mul, Matrix.mul_assoc]
+    abel
+  · unfold boundaryJordanPlus boundaryJordanMinus spinDipoleOp anticomm comm
+    simp only [mul_add, add_mul, Matrix.mul_assoc]
+    abel
+
+/-! ### Part 2: The Four Kraus-Entangled Jordan Anticommutator Laws (Rows 5–8) -/
+
+/-- **Theorem XXXVIII.2 (The Audited Jordan–Kraus Entanglement Quartet):**
+For ANY matrices `P, A, B, X`, the remaining four boundary compositions decompose into the
+Jordan anticommutators `{M², X}` and `{Σ_spin, X}` plus/minus twice the Symmetric and
+Antisymmetric Kraus Horizon Channels:
+1. `{N₊, {N₋, X}} + {N₋, {N₊, X}} = {M², X} + 2 • Φ_sym(X)`,
+2. `[N₊, [N₋, X]] + [N₋, [N₊, X]] = {M², X} - 2 • Φ_sym(X)`,
+3. `[N₊, {N₋, X}] - [N₋, {N₊, X}] = {Σ_spin, X} + 2 • Φ_skew(X)`,
+4. `{N₊, [N₋, X]} - {N₋, [N₊, X]} = {Σ_spin, X} - 2 • Φ_skew(X)`. -/
+theorem wheeler_jordan_kraus_entanglement_quartet (P A B X : Matrix n n R) :
+    boundaryJordanPlus P A (boundaryJordanMinus P B X) +
+      boundaryJordanMinus P B (boundaryJordanPlus P A X) =
+      anticomm (massGapMonopoleOp P A B) X + (2 : R) • krausHorizonSym P A B X ∧
+    boundaryLiePlus P A (boundaryLieMinus P B X) +
+      boundaryLieMinus P B (boundaryLiePlus P A X) =
+      anticomm (massGapMonopoleOp P A B) X - (2 : R) • krausHorizonSym P A B X ∧
+    boundaryLiePlus P A (boundaryJordanMinus P B X) -
+      boundaryLieMinus P B (boundaryJordanPlus P A X) =
+      anticomm (spinDipoleOp P A B) X + (2 : R) • krausHorizonSkew P A B X ∧
+    boundaryJordanPlus P A (boundaryLieMinus P B X) -
+      boundaryJordanMinus P B (boundaryLiePlus P A X) =
+      anticomm (spinDipoleOp P A B) X - (2 : R) • krausHorizonSkew P A B X := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · unfold boundaryJordanPlus boundaryJordanMinus massGapMonopoleOp krausHorizonSym anticomm
+    ext i j
+    simp only [mul_add, add_mul, Matrix.mul_assoc, add_apply, smul_apply, smul_eq_mul]
+    ring
+  · unfold boundaryLiePlus boundaryLieMinus massGapMonopoleOp krausHorizonSym anticomm comm
+    ext i j
+    simp only [mul_sub, sub_mul, add_mul, mul_add, Matrix.mul_assoc,
+               add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+  · unfold boundaryLiePlus boundaryJordanMinus boundaryLieMinus boundaryJordanPlus
+           spinDipoleOp krausHorizonSkew anticomm comm
+    ext i j
+    simp only [mul_add, add_mul, mul_sub, sub_mul, Matrix.mul_assoc,
+               add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+  · unfold boundaryJordanPlus boundaryLieMinus boundaryJordanMinus boundaryLiePlus
+           spinDipoleOp krausHorizonSkew anticomm comm
+    ext i j
+    simp only [mul_sub, sub_mul, add_mul, mul_add, Matrix.mul_assoc,
+               add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+
+/-- **Theorem XXXVIII.3 (Exact Projection of `{M², X}`, `{Σ_spin, X}`, `Φ_sym(X)` & `Φ_skew(X)`):**
+Taking sums and differences of the four entangled laws isolates each operator cleanly:
+1. `Δ_JJ⁺(X) + Δ_LL⁺(X) = 2 • {M², X}`,
+2. `Δ_JJ⁺(X) - Δ_LL⁺(X) = 4 • Φ_sym(X)`,
+3. `Δ_LJ⁻(X) + Δ_JL⁻(X) = 2 • {Σ_spin, X}`,
+4. `Δ_LJ⁻(X) - Δ_JL⁻(X) = 4 • Φ_skew(X)`. -/
+theorem wheeler_isolated_jordan_and_kraus_channels (P A B X : Matrix n n R) :
+    (boundaryJordanPlus P A (boundaryJordanMinus P B X) +
+     boundaryJordanMinus P B (boundaryJordanPlus P A X)) +
+    (boundaryLiePlus P A (boundaryLieMinus P B X) +
+     boundaryLieMinus P B (boundaryLiePlus P A X)) =
+      (2 : R) • anticomm (massGapMonopoleOp P A B) X ∧
+    (boundaryJordanPlus P A (boundaryJordanMinus P B X) +
+     boundaryJordanMinus P B (boundaryJordanPlus P A X)) -
+    (boundaryLiePlus P A (boundaryLieMinus P B X) +
+     boundaryLieMinus P B (boundaryLiePlus P A X)) =
+      (4 : R) • krausHorizonSym P A B X ∧
+    (boundaryLiePlus P A (boundaryJordanMinus P B X) -
+     boundaryLieMinus P B (boundaryJordanPlus P A X)) +
+    (boundaryJordanPlus P A (boundaryLieMinus P B X) -
+     boundaryJordanMinus P B (boundaryLiePlus P A X)) =
+      (2 : R) • anticomm (spinDipoleOp P A B) X ∧
+    (boundaryLiePlus P A (boundaryJordanMinus P B X) -
+     boundaryLieMinus P B (boundaryJordanPlus P A X)) -
+    (boundaryJordanPlus P A (boundaryLieMinus P B X) -
+     boundaryJordanMinus P B (boundaryLiePlus P A X)) =
+      (4 : R) • krausHorizonSkew P A B X := by
+  rcases wheeler_jordan_kraus_entanglement_quartet P A B X with ⟨h1, h2, h3, h4⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [h1, h2]
+    ext i j
+    simp only [add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+  · rw [h1, h2]
+    ext i j
+    simp only [add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+  · rw [h3, h4]
+    ext i j
+    simp only [add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+  · rw [h3, h4]
+    ext i j
+    simp only [add_apply, sub_apply, smul_apply, smul_eq_mul]
+    ring
+
+/-! ### Archetype XXXIX: Chiral Duality & Trace Expectations of Both Kraus Horizon Channels -/
+
+/-- **Theorem XXXIX.1 (Chiral Duality & Trace Expectations of `Φ_sym` and `Φ_skew`):**
+For any idempotent `P * P = P` and any matrices `A, B, X`:
+1. **Vacuum Images (`X = 1`):**
+   `Φ_sym(1) = M²` (Mass Monopole) and `Φ_skew(1) = Σ_spin` (Spin Dipole),
+2. **Chiral Reflection Duality (`S_P * Φ_sym(X) = Φ_skew(X)` and `S_P * Φ_skew(X) = Φ_sym(X)`):**
+   Multiplying the Symmetric Mass Kraus Channel by `chiralHelicity P = P - (1 - P)` converts
+   it identically into the Antisymmetric Spin Kraus Channel, and vice versa!
+3. **Dual Trace Expectations:**
+   `trace (Φ_sym(X)) = trace (M² * X)` and `trace (Φ_skew(X)) = -trace (Σ_spin * X)`. -/
+theorem kraus_horizon_chiral_and_trace_duality {P : Matrix n n R} (hP : P * P = P)
+    (A B X : Matrix n n R) :
+    krausHorizonSym P A B 1 = massGapMonopoleOp P A B ∧
+    krausHorizonSkew P A B 1 = spinDipoleOp P A B ∧
+    chiralHelicity P * krausHorizonSym P A B X = krausHorizonSkew P A B X ∧
+    chiralHelicity P * krausHorizonSkew P A B X = krausHorizonSym P A B X ∧
+    trace (krausHorizonSym P A B X) = trace (massGapMonopoleOp P A B * X) ∧
+    trace (krausHorizonSkew P A B X) = -trace (spinDipoleOp P A B * X) := by
+  have h1 : trace (zigWave P A * X * zagWave P B) =
+            trace (zagWave P B * zigWave P A * X) := by
+    calc trace (zigWave P A * X * zagWave P B)
+      _ = trace (zagWave P B * (zigWave P A * X)) :=
+          trace_mul_comm (zigWave P A * X) (zagWave P B)
+      _ = trace (zagWave P B * zigWave P A * X) := by rw [← Matrix.mul_assoc]
+  have h2 : trace (zagWave P B * X * zigWave P A) =
+            trace (zigWave P A * zagWave P B * X) := by
+    calc trace (zagWave P B * X * zigWave P A)
+      _ = trace (zigWave P A * (zagWave P B * X)) :=
+          trace_mul_comm (zagWave P B * X) (zigWave P A)
+      _ = trace (zigWave P A * zagWave P B * X) := by rw [← Matrix.mul_assoc]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · unfold krausHorizonSym massGapMonopoleOp anticomm
+    rw [Matrix.mul_one, Matrix.mul_one]
+  · unfold krausHorizonSkew spinDipoleOp comm
+    rw [Matrix.mul_one, Matrix.mul_one]
+  · unfold chiralHelicity krausHorizonSym krausHorizonSkew zigWave zagWave
+    simp only [sub_mul, mul_sub, mul_add, Matrix.one_mul, Matrix.mul_one,
+               Matrix.mul_assoc, hP, P_mul_P_assoc hP]
+    abel
+  · unfold chiralHelicity krausHorizonSym krausHorizonSkew zigWave zagWave
+    simp only [sub_mul, mul_sub, mul_add, Matrix.one_mul, Matrix.mul_one,
+               Matrix.mul_assoc, hP, P_mul_P_assoc hP]
+    abel
+  · unfold krausHorizonSym massGapMonopoleOp anticomm
+    rw [trace_add, add_mul, trace_add, h1, h2, add_comm]
+  · unfold krausHorizonSkew spinDipoleOp comm
+    rw [trace_sub, sub_mul, trace_sub, h1, h2, neg_sub]
+
+end WheelerPregeometry
+
+```
+
+---
+
+### 4. Look at What `kraus_horizon_chiral_and_trace_duality` Just Revealed
+
+Look at the two identities at the heart of **Archetype XXXIX**:
+
+$$S_P\,\Phi_{\text{sym}}(X) = \Phi_{\text{skew}}(X), \qquad \text{Tr}(\Phi_{\text{sym}}(X)) = +\text{Tr}(M^2 X), \qquad \text{Tr}(\Phi_{\text{skew}}(X)) = -\text{Tr}(\Sigma_{\text{spin}} X)$$
+
+1. **Why Mass and Spin Both Have Their Own Horizon Tunneling Channel:**
+* The **Symmetric Kraus Channel** $\Phi_{\text{sym}}(X) = N_+ X N_- + N_- X N_+$ transports $X$ across the horizon in **both directions with the same sign** ($P \leftarrow (1-P)$ and $(1-P) \leftarrow P$), mapping the identity $1$ to the **Mass-Gap Monopole** $M^2 = \{N_+, N_-\}$.
+* The **Antisymmetric Kraus Channel** $\Phi_{\text{skew}}(X) = N_+ X N_- - N_- X N_+$ transports $X$ across the horizon with **opposite chiral signs**, mapping the identity $1$ to the **Spin-Dipole Operator** $\Sigma_{\text{spin}} = [N_+, N_-]$.
+
+
+2. **Why `abel` Refused to Ignore $\Phi_{\text{skew}}(X)$:**
+Without the Lean 4 kernel audit on Claim 2, we would have assumed that only $\{M^2, X\}$ was coupled to a horizon Kraus channel ($\Phi_{\text{sym}}$) while $\{\Sigma_{\text{spin}}, X\}$ was leakage-free. Instead, the kernel forced the complete symmetry: **Lie commutators ($[M^2, X]$, $[\Sigma_{\text{spin}}, X]$) are strictly sheet-local, while Jordan anticommutators ($\{M^2, X\}$, $\{\Sigma_{\text{spin}}, X\}$) are inextricably paired with the two horizon tunneling channels $\Phi_{\text{sym}}$ and $\Phi_{\text{skew}}$.**

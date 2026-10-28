@@ -1,0 +1,28 @@
+{
+  "recorded_at": "2026-10-28T17:20:28.479868+02:00",
+  "base_pr_head": "adc916d7a8e9370401251901156ae8551ed01d39",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pr_number": 253,
+  "source_status": "Verbatim user intake; embedded verification and interpretation claims are untrusted.",
+  "mathematical_scope": "Native full noncommutative algebras and real matrices; no complexification.",
+  "streams": [
+    {
+      "input_order": 1,
+      "uploaded_name": "Pasted text(20261028-150421).txt",
+      "library_file_id": "libfile_2e2265cf83e8819183c406c3d272983f",
+      "frozen_file": "stream-1.txt",
+      "bytes": 18108,
+      "lines": 323,
+      "sha256": "8cad16c145458a913ffb933dab2ab48a47f590f36daa85ce58657bf6544f3ad9"
+    },
+    {
+      "input_order": 2,
+      "uploaded_name": "Pasted text (2)(20261028-150835).txt",
+      "library_file_id": "libfile_e0c20dd745f08191840b3ad291cb7572",
+      "frozen_file": "stream-2.txt",
+      "bytes": 10747,
+      "lines": 162,
+      "sha256": "e5e055a302eb3120ea747226a2d2c76ba3d771e51737b6db86224c3f5e4a4391"
+    }
+  ]
+}

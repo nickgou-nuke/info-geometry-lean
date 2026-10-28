@@ -40,6 +40,11 @@ TARGETS = [
     'InfoGeometry.Canonical.PeirceBoundaryComplex',
     'InfoGeometry.Canonical.LieJordanSandwichGeometry',
     'InfoGeometry.Canonical.LieJordanBoundaryExamples',
+    'InfoGeometry.Core.PeirceSandwichDuality',
+    'InfoGeometry.Core.LieJordanGenerators',
+    'InfoGeometry.Canonical.LieJordanGeneratorTrace',
+    'InfoGeometry.Canonical.RealLieJordanGeometry',
+    'InfoGeometry.Canonical.RealLieJordanExamples',
 ]
 
 

@@ -78,6 +78,44 @@ theorem ad_mul_jordan_sub (a b : A) :
         ((a * x * b - b * x * a) + (a * x * b - b * x * a))
   noncomm_ring
 
+/-- The complementary generator-swapped difference has the opposite sandwich sign. -/
+theorem jordan_mul_ad_sub (a b : A) :
+    jordanLeft (R := R) a * LieAlgebra.ad R A b -
+      jordanLeft (R := R) b * LieAlgebra.ad R A a =
+        jordanLeft (R := R) ⁅a, b⁆ -
+          2 • (LinearMap.mulLeftRight R (a, b) - LinearMap.mulLeftRight R (b, a)) := by
+  rw [two_nsmul]
+  apply LinearMap.ext
+  intro x
+  change (a * (b * x - x * b) + (b * x - x * b) * a) -
+    (b * (a * x - x * a) + (a * x - x * a) * b) =
+      ((a * b - b * a) * x + x * (a * b - b * a)) -
+        ((a * x * b - b * x * a) + (a * x * b - b * x * a))
+  noncomm_ring
+
+/-- Adding the two mixed differences isolates the Jordan action of the bracket. -/
+theorem mixed_compositions_add (a b : A) :
+    (LieAlgebra.ad R A a * jordanLeft (R := R) b -
+      LieAlgebra.ad R A b * jordanLeft (R := R) a) +
+      (jordanLeft (R := R) a * LieAlgebra.ad R A b -
+        jordanLeft (R := R) b * LieAlgebra.ad R A a) =
+          2 • jordanLeft (R := R) ⁅a, b⁆ := by
+  rw [ad_mul_jordan_sub, jordan_mul_ad_sub]
+  simp only [two_nsmul]
+  abel
+
+/-- Subtracting the two mixed differences isolates the skew two-sided action. -/
+theorem mixed_compositions_sub (a b : A) :
+    (LieAlgebra.ad R A a * jordanLeft (R := R) b -
+      LieAlgebra.ad R A b * jordanLeft (R := R) a) -
+      (jordanLeft (R := R) a * LieAlgebra.ad R A b -
+        jordanLeft (R := R) b * LieAlgebra.ad R A a) =
+          4 • (LinearMap.mulLeftRight R (a, b) - LinearMap.mulLeftRight R (b, a)) := by
+  rw [ad_mul_jordan_sub, jordan_mul_ad_sub]
+  rw [show (4 : ℕ) = 2 + 2 by decide, add_nsmul]
+  simp only [two_nsmul]
+  abel
+
 theorem jordan_mul_jordan_add (a b : A) :
     jordanLeft (R := R) a * jordanLeft (R := R) b +
       jordanLeft (R := R) b * jordanLeft (R := R) a =

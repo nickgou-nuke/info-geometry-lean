@@ -89,6 +89,43 @@ navigation evidence only. Read owner source and prove every claimed
 comparison in Lean; do not infer semantic edges such as `INHERITS_FROM` or
 `HAS_PROPERTY` from graph proximity.
 
+### Phylogenetic and DNA analysis of commit evolution
+
+The repository ships read-only tools for analyzing the commit-evolution
+graph stored in ArangoDB (`darwin_commits` database). These trace how
+mathematical declarations and Lean surfaces co-evolve across commits:
+
+```bash
+# 1. Taxonomic summary: every Linnaean rank with commit count
+PYTHONPATH=/home/goutev/repos/info-geometry-lean \
+  ARANGO_DATABASE=darwin_commits \
+  ARANGO_PASS=<password> \
+  /home/goutev/miniforge3/envs/sage/bin/python \
+  tools/infra/darwin_commit_taxonomy.py --query taxonomy_summary
+
+# 2. Full evolution report: Tarjan SCC, DNA cohorts, rank hierarchy,
+#    Lean-mirrored invariants (rankIndex round-trip, anti-collapse)
+PYTHONPATH=/home/goutev/repos/info-geometry-lean \
+  ARANGO_DATABASE=darwin_commits \
+  ARANGO_PASS=<password> \
+  /home/goutev/miniforge3/envs/sage/bin/python \
+  tools/infra/darwin_evolution_algorithms.py \
+  --json-out artifacts/dag/darwin_evolution_report.json
+
+# 3. Trace ancestral paths up to depth 6 from a target commit
+... tools/infra/darwin_commit_taxonomy.py \
+  --query phylogenetic_paths --target <commit_sha> --depth 6
+```
+
+Rank ontology (Kingdom = merges, Phylum = `lean/InfoGeometry/` with ≥3 paths,
+Class = subdir prefix, Order = `feat`/`fix`/`refactor`/`formalize`, Family =
+`archetype`/`theorem`/`lemma`, Genus = single path, Species = default).
+
+All queries are read-only; graph results are navigation evidence only and do
+not prove mathematical statements. Lean kernel-checked source files decide
+truth. See `skills/darwin-commit-taxonomy/` and
+`skills/darwin-evolution-algorithms/` for full skill documentation.
+
 ---
 
 ### Citation

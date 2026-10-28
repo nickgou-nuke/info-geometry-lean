@@ -48,6 +48,29 @@ theorem symmetric_support_overlap_zero :
       Matrix.transpose_apply, Fin.sum_univ_succ]
   decide
 
+/-- The two MP support idempotents have zero symmetric overlap, but their
+product is nonzero: characteristic two turns the overlap equation into
+commutation plus additive two-torsion, not orthogonality. -/
+theorem support_product_nonzero :
+    (shift * backward) * (backward * shift) ≠ 0 := by
+  intro h
+  have he := congrArg
+    (fun C : Matrix (Fin 3) (Fin 3) (ZMod 2) => C 1 1) h
+  norm_num [shift, backward, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+    Matrix.transpose_apply, Fin.sum_univ_succ] at he
+
+/-- Applying the arbitrary-ring overlap criterion identifies the exact
+characteristic-two alternative in this witness. -/
+theorem support_overlap_anomaly_components :
+    (shift * backward) * (backward * shift) =
+        (backward * shift) * (shift * backward) ∧
+      (shift * backward) * (backward * shift) +
+        (shift * backward) * (backward * shift) = 0 := by
+  have hp : (shift * backward) * (shift * backward) = shift * backward := by
+    exact MP_Projector_idempotent penrose_pair
+  exact (InfoGeometry.Core.IdempotentSymmetricOverlap.symmetric_overlap_zero_iff hp).mp
+    symmetric_support_overlap_zero
+
 #print axioms penrose_pair
 #print axioms symmetric_support_overlap_zero
 #print axioms InfoGeometry.Core.IdempotentSymmetricOverlap.symmetric_overlap_zero_iff

@@ -111,10 +111,15 @@ already proved in
 under the actual source and target Moore–Penrose inverse hypotheses and an
 invertible similarity, both support projectors transport exactly iff the
 source range and co-range projections commute with the Gram element
-`star g * g`. The existing `mismatch_transport_decomposition` separately
-isolates the fixed-metric tear term. Both owner modules built successfully in
-the locked 3,180-job run; warnings came from the imported Moore–Penrose owner.
-No new bridge or duplicate theorem was needed.
+`star g * g`. The five `shearCounterexample_*` declarations in the witness
+file are supporting matrix equalities/inequalities (the shear image, inverse
+identities, Drazin-vs-Euclidean-MP mismatch, and failed fixed-metric transport),
+not five independent general counterclaims. The existing
+`mismatch_transport_decomposition` separately isolates the fixed-metric tear
+term. The exact criterion applies when both sides are actual Penrose
+projectors. Both owner modules built successfully in the locked 3,180-job run;
+a fresh replay also passed (3,180 jobs), with warnings from the imported
+Moore–Penrose owner. No new bridge or duplicate theorem was needed.
 
 ## Split-octonion ordinary-matrix representation obstruction (2026-10-27)
 
@@ -1996,3 +2001,136 @@ Their per-declaration status needs source-level reconciliation. Many are valid
 conditional theorems or boundary lemmas rather than counterexamples; the
 scanner cannot decide that distinction. Result artifact:
 the scan output is ephemeral and was not retained as a repository artifact.
+
+
+## Current replay of named countermodel owners (2026-10-28)
+
+A single locked Lake invocation replayed 23 current owner/audit targets covering
+the explicitly named repo-owned countermodel families: signed-radius and
+reflection, symmetry localization, fixed-metric projectors, Gramian and Peirce
+signs, barrier and harmonic estimates, Freudenthal/Jacobi, Arnold numerators,
+Krein kernels/traces, split-octonion representation, spin mixing, normalization,
+attention fibers, and the Omega examples. It completed successfully (9,376
+jobs, exit 0). This establishes compilation for those selected targets only;
+it does not semantically review every declaration in them or cover the 359
+lexical obstruction family and 12,047 negative-boundary matches.
+
+## Tracked-surface lexical refresh (2026-10-28)
+
+`counterexample_inventory.py --tracked` scanned 27,961 Lean files with zero
+read errors and emitted 12,539 candidate declarations: 30 countermodels, 359
+obstructions, 103 identifiability boundaries, and 12,047 negative-boundary
+matches. These are lexical counts across tracked/unignored files, including
+work and audit surfaces; they are navigation data, not counts of unresolved
+mathematical counterexamples. The current source-reviewed batch below is only
+one family within that inventory.
+
+## Obstruction-name triage: witnesses versus positive criteria (2026-10-28)
+
+A targeted read of further lexical `obstruction` matches confirmed they are not
+all counterexamples. `Algebra/H3ZornJordanObstruction` explicitly records that
+its historical sparse pair satisfies the Jordan product law; the owner
+`H3ZornJordanIdentity.TJordanCommutation_proof` closes the global law from the
+quadratic-representation identities. Thus the two declarations ending in
+`_proof` are positive refutations of an old candidate, not countermodels.
+`DihedralArtinI2SixSpinOrder.spin_coxeter_twelfth_lower_order_obstructions`
+is likewise a positive conditional power-order package; the `orderOf` theorem
+states the exact-order conclusion only with its explicit lower-power
+hypothesis. `Algebra/Zorn/AssociatorObstruction` is a genuine concrete
+nonassociativity/Jacobi witness, and its finite Akivis identities give the
+exact alternating-associator correction. The general owner identities are in
+`Algebra/AkivisIdentity` and `NCG/ZornCommutator`.
+
+The current locked replay of these owners together with
+`AkivisLeftRegularBridge` passed (3,124 jobs, exit 0). Existing deprecation and
+linter warnings remain. This triage illustrates why name-based “obstruction”
+counts require semantic review.
+
+## Peirce anomaly-generation owner replay (2026-10-28)
+
+The current `NCG.AnomalyGradeGeneration` owner and its four direct dependencies
+(`ZornCommutator`, `PeirceGradingOperator`, `TrialitySingletLieDerivation`,
+`CausalPoset`) built successfully together in a locked run (3,099 jobs, exit
+0). The owner proves the four-component Peirce decomposition, the actual
+`skewCross`-valued homogeneous product/associator formulas, and exact
+component-vanishing criteria. Its statements distinguish “defect decomposes
+into grades” from the stronger and generally invalid inference “every nonzero
+defect generates a specified grade.” Existing warnings in the large
+Albert–Cayley–Dickson owner and this file remain; this was not a warning-free
+build or an independent semantic review.
+
+## Singular Moore–Penrose support anomalies (2026-10-28)
+
+Two nearby witnesses have different exact resolutions and should not be
+collapsed into one slogan:
+
+- `Singular/CharacteristicTwoOverlapCounterexample` gives a noncommuting
+  Moore–Penrose pair of `3 × 3` matrices over `ZMod 2`. Its symmetric support
+overlap is zero while the product of the two support idempotents is nonzero.
+  The owner-level theorem `Core.IdempotentSymmetricOverlap.symmetric_overlap_zero_iff`
+  supplies the arbitrary-ring correction: for idempotent `p`,
+  `p*q + q*p = 0` iff `p*q = q*p` and `p*q + p*q = 0`. The witness now proves
+  both nonzero support product and this exact decomposition in
+  `support_product_nonzero` and `support_overlap_anomaly_components`.
+- `Singular/HigherNilpotentAssociatorCounterexample` uses the real length-three
+  shift: its cube is zero and square is nonzero, while the two Moore–Penrose
+  supports commute and the support Jordan associator vanishes for every middle
+  matrix. The existing general criterion
+  `Core.JordanAssociator.idempotent_double_commutator_zero_iff` is the
+  structural explanation; no additional wrapper theorem was needed.
+
+The locked target `InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample`
+built successfully (8,927 jobs). Its `#print axioms` output contains standard
+Lean axioms only. This is a source-verified family, not closure of the full
+lexical inventory.
+
+
+## Split-octonion left-regular obstruction and associator correction (2026-10-28)
+
+The witnesses in `Lie/SplitOctonionNonmultiplicativity` refute the claim that
+left multiplication is a multiplicative representation into the associative
+endomorphism algebra. The source exhibits the exact reason: evaluating
+`L_x ∘ L_y - L_(x*y)` at `z` yields the negative carrier associator under the
+alternative-law hypotheses. `Algebra/AkivisLeftRegularBridge` proves this as
+`leftRegular_commutator_obstruction_apply`, while separately proving that the
+commutator of endomorphisms satisfies Jacobi. The carrier obstruction is thus
+an associator-valued defect; it does not imply Jacobi failure in the operator
+algebra. The native Zorn specialization obtains the required alternative
+associator swap from the actual product. This family already has a canonical
+corrected statement, so no duplicate theorem was added in this pass. The
+locked target `InfoGeometry.Algebra.AkivisLeftRegularBridge` built successfully
+(3,102 jobs, exit 0); existing warnings were reported in imported Akivis
+owners and this bridge.
+
+## Asano–Ruelle counterexample and corrected endpoint theorem (2026-10-28)
+
+The unrestricted claim has explicit vacuity witnesses in
+`AsanoRuelle/UnrestrictedFalse` and related owners. The wrapper's former
+`CorrectedAsanoRuelleClaim` was not yet a theorem: it stated closed sets and
+zero exclusion but omitted the boundedness hypotheses required by the actual
+Möbius pole-escape result. The claim now includes closedness, boundedness,
+zero exclusion, and zero-freeness on the two-variable complement. Its proof
+converts these inputs to the native `ZeroFreeOutside` and signed-product
+definitions, then applies
+`asanoContract_ne_zero_outside_signedProduct_of_closed_bounded_zeroFree_all_branches`.
+This preserves the D=0, rank-one, and nondegenerate branches proved by that
+owner; it does not overstate an unrestricted theorem. The locked target
+`InfoGeometry.AsanoRuelle.AsanoRuelleCounterexample` built successfully
+(8,963 jobs, exit 0). The first attempt exposed wrapper namespace/binder
+mismatches and was corrected before the successful build.
+
+## Peirce reflection/tangent characteristic-two anomaly (2026-10-28)
+
+`Core/PeirceTangentCounterexample` exhibits a noncommuting `2 × 2` matrix
+over `ZMod 2` whose reflection anticommutator vanishes although the
+Grassmannian tangent equation fails. The owner `Core/PeirceTangent` gives the
+exact defect identity
+`(2*p - 1)*x + x*(2*p - 1) = 2 • (p*x + x*p - x)`.
+Its universal correction
+`reflection_anticommutes_iff_diagonal_corners_two_torsion` characterizes the
+additional solutions in every characteristic: both diagonal Peirce corners
+are killed by doubling, while the off-diagonal corners are unrestricted.
+When doubling is injective, the reflection criterion is equivalent to
+tangency; the explicit `ZMod 2` witness shows why that hypothesis cannot be
+omitted. This is a resolved anomaly family, not a new theorem request; no
+duplicate API was added in this audit pass.

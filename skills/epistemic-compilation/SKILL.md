@@ -47,6 +47,36 @@ Only the first three levels can promote a theorem claim.
 10. **Report honestly.** State the exact theorem, file, commit, commands,
     axiom footprint, warnings, and remaining open debt.
 
+## Repository-specific graph grounding
+
+This repository has several related, separately owned structures. Search and
+cite their actual interfaces rather than merging their names into one presumed
+object:
+
+- `lean/DAG/LambdaReductionPreorder.lean` owns a preorder on the repository's
+  de Bruijn lambda terms via beta-reduction reachability.
+- `lean/DAG/TermDigest.lean` owns the versioned `lean-expr-debruijn-v4`
+  structural digest of Lean `Expr`; constants encode their names and universe
+  levels, so this is not recursively content-addressed dependency closure.
+- `lean/InfoGeometry/NCG/CausalPoset.lean` and
+  `lean/InfoGeometry/NCG/AnomalyGradeGeneration.lean` own distinct Zorn-sector
+  causal and Peirce-component results.
+- Declaration DAG, InfoTree, Hodge/Dirac, and Arango tooling are separate
+  navigation or graph constructions unless an owner proves a connecting map.
+
+Do not call these collectively a formalized “noncommutative lambda-calculus
+DG” without locating a declaration that defines that combined carrier and
+proves the required compatibility maps. A topological-extension proposal may
+be recorded as a candidate archetype, but its edges must come from explicit
+maps and proved laws; similarity of vocabulary or graph proximity is not a
+mathematical morphism.
+
+When the prompt refers to the repo's causal/Darwinian pipeline, use
+`skills/darwinian-codebase-epistemology/SKILL.md` for the graph-evidence and
+coverage checks. When a classical identity fails on an owner carrier, use
+`skills/anomaly-resolution/SKILL.md` to normalize the defect and prove its
+component readouts.
+
 ## Scope barriers
 
 Finite algebra does not imply topology, a quotient manifold, a colimit,

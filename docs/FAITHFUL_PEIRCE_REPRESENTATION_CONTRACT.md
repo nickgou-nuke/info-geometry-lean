@@ -25,7 +25,7 @@ M ↦ M₀₀ • (X*Y) + M₀₁ • X + M₁₀ • Y + M₁₁ • (Y*X).
 
 It is a native `NonUnitalAlgHom`, defined over commutative coefficient rings.
 No commutativity of matrix multiplication is assumed; the imported source
-witness applies to every nontrivial coefficient ring. Over fields, injectivity is
+witness applies to every nontrivial commutative coefficient ring. Over fields, injectivity is
 equivalent to `X ≠ 0`; its range then has native `Module.finrank` equal to 4.
 The range is proved equal to `NonUnitalAlgebra.adjoin K {X,Y}`. The generators
 are proved not to commute when `X ≠ 0`, in every characteristic.

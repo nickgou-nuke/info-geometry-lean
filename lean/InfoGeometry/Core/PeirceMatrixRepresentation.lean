@@ -32,9 +32,9 @@ def representation (h : IsDualSeedPair X Y) :
     Matrix (Fin 2) (Fin 2) R →ₙₐ[R] Matrix n n R where
   toFun M := peirceBlock X Y (M 0 0) (M 0 1) (M 1 0) (M 1 1)
   map_zero' := by simp [peirceBlock]
-  map_add' M N := by simp only [add_apply, peirceBlock, add_smul]; abel
+  map_add' M N := by simp only [Matrix.add_apply, peirceBlock, add_smul]; abel
   map_smul' a M := by
-    simp only [smul_apply, smul_eq_mul, peirceBlock, smul_add, smul_smul]
+    simp only [Matrix.smul_apply, smul_eq_mul, peirceBlock, smul_add, smul_smul]
   map_mul' M N := by
     simp only [peirceBlock_mul h, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -80,10 +80,14 @@ theorem range_eq_adjoin (h : IsDualSeedPair X Y) :
   · apply NonUnitalAlgebra.adjoin_le
     intro Z hZ
     rcases Set.mem_insert_iff.mp hZ with rfl | hZ
-    · exact ⟨Matrix.single 0 1 1, by simp⟩
+    · refine ⟨Matrix.single 0 1 1, ?_⟩
+      change representation h (Matrix.single 0 1 1) = X
+      simp
     · have : Z = Y := Set.mem_singleton_iff.mp hZ
       subst Z
-      exact ⟨Matrix.single 1 0 1, by simp⟩
+      refine ⟨Matrix.single 1 0 1, ?_⟩
+      change representation h (Matrix.single 1 0 1) = Y
+      simp
 
 /-- Nonzero reflexive square-zero partners cannot commute, in any characteristic. -/
 theorem generators_mul_ne (h : IsDualSeedPair X Y) (hx : X ≠ 0) :
@@ -129,7 +133,7 @@ theorem representation_injective_iff (h : IsDualSeedPair X Y) :
   have hm : (Matrix.single 0 1 (1 : R) : Matrix (Fin 2) (Fin 2) R) = 0 :=
     hi (by simp [hx])
   have hz := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 1) hm
-  simpa using hz
+  simp at hz
 
 /-- The supported image is four-dimensional even when its ambient corner is larger. -/
 theorem finrank_range (h : IsDualSeedPair X Y) (hx : X ≠ 0) :

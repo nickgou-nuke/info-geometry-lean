@@ -125,7 +125,8 @@ theorem H_S_doubled_pair_correction_ne_zero :
 
 theorem P_S_commutator_zero_one : (⁅P, S⁆ : Mat3) 0 1 = 5 / 3 := by
   change (P * S - S * P) 0 1 = 5 / 3
-  norm_num [P, S, Matrix.mul_apply, Matrix.sub_apply, Fin.sum_univ_succ]
+  simp only [Matrix.sub_apply, Matrix.mul_apply]
+  norm_num [P, S, Fin.sum_univ_succ]
 
 theorem P_S_not_commute : ¬ Commute P S := by
   intro hc

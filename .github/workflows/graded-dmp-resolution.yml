@@ -56,7 +56,7 @@ jobs:
         run: |
           python3 project/tools/quality/check_graded_dmp_resolution.py \
             --mathlib-root pinned-mathlib --output verification
-      - name: Check semantic vacuity and proof proxies
+      - name: Check semantic vacuity
         run: |
           cd project
           python3 tools/quality/semantic_vacuity_gate.py \

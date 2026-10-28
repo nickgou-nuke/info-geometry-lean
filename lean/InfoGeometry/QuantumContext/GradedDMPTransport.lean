@@ -72,7 +72,7 @@ theorem lifted_recovery
       (cornerHom K Q h A + N) (cornerHom K Q h D) = cornerHom K Q h (A * D) :=
     RectangularDrazinLift.lifted_spectralProj h hNK A D
   exact ⟨by simpa only [hp] using dmp_mul_original hCanon hM,
-    by simpa only [hp] using original_mul_dualDmp hM,
+    by simpa only [hp] using original_mul_dualDmp (d := cornerHom K Q h D) hM,
     by simpa only [hp] using (dmp_eq_dual_iff_odd_zero (m := M) hCanon)⟩
 
 end InfoGeometry.QuantumContext.GradedDMPTransport

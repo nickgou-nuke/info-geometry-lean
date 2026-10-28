@@ -87,7 +87,7 @@ theorem star_dmpInverse (a d m : R) :
     star (dmpInverse a d m) = dualDmpInverse (star a) (star d) (star m) := by
   simp only [dmpInverse, dualDmpInverse, star_mul, mul_assoc]
 
-/-- Metric adjoints preserve the even grading only for a self-adjoint support. -/
+/-- Metric adjoints preserve the even grading for a self-adjoint support. -/
 theorem star_evenPart {p : R} (hp : star p = p) (x : R) :
     star (evenPart p x) = evenPart p (star x) := by
   simp only [evenPart, component11, component00, complementIdempotent,
@@ -116,11 +116,13 @@ theorem original_mul_dualDmp (hm : IsMoorePenroseInverse a m) :
     _ = (a * m * a) * d := by simp only [dualDmpInverse, mul_assoc]
     _ = projection a d := by rw [hm.aba_eq_a]; rfl
 
+omit [StarRing R] in
 /-- The outer multiplication is an ordered spectral/metric support product. -/
 theorem original_mul_dmp (a d m : R) :
     a * dmpInverse a d m = projection a d * (a * m) := by
   simp only [dmpInverse, projection, mul_assoc]
 
+omit [StarRing R] in
 theorem dualDmp_mul_original (hd : IsDrazinInverse a d k) :
     dualDmpInverse a d m * a = (m * a) * projection a d := by
   calc
@@ -198,8 +200,9 @@ theorem dmp_inner_iff_nilpotent_part_zero (hd : IsDrazinInverse a d k)
 /-- The Penrose arrow respects its distinct source and target reflections. -/
 theorem penrose_reflection_intertwining (hm : IsMoorePenroseInverse a m) :
     reflection (a * m) * a = a ∧ a * reflection (m * a) = a := by
-  constructor <;> simp only [reflection, two_nsmul] <;>
-    noncomm_ring [hm.aba_eq_a]
+  constructor <;>
+    simp only [reflection, two_nsmul, mul_sub, sub_mul, mul_add, add_mul,
+      mul_one, one_mul, ← mul_assoc, hm.aba_eq_a] <;> abel
 
 /-- The two metric reflections are self-adjoint involutions; they need not coincide. -/
 theorem penrose_reflections_unitary (hm : IsMoorePenroseInverse a m) :

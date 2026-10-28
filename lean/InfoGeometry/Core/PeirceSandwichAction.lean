@@ -43,14 +43,14 @@ theorem support_mul_add (h : IsDualSeedPair X Y) :
 theorem support_mul_sub (h : IsDualSeedPair X Y) :
     (X * Y + Y * X) * (X - Y) = X - Y := by
   change (polePlus X Y + poleMinus X Y) * (X - Y) = X - Y
-  simp only [add_mul, mul_sub, h.pd, h.pb, h.qd, h.qb, sub_zero, zero_sub]
+  simp only [add_mul, mul_sub, h.pd, h.pb, h.qd, h.qb]
   abel
 
 theorem support_mul_commutator (h : IsDualSeedPair X Y) :
     (X * Y + Y * X) * (X * Y - Y * X) = X * Y - Y * X := by
   change (polePlus X Y + poleMinus X Y) *
     (polePlus X Y - poleMinus X Y) = polePlus X Y - poleMinus X Y
-  simp only [add_mul, mul_sub, h.pp, h.pq, h.qp, h.qq, sub_zero, zero_sub]
+  simp only [add_mul, mul_sub, h.pp, h.pq, h.qp, h.qq]
   abel
 
 /-- The sum has coefficient -2, rather than the claimed zero action. -/
@@ -74,10 +74,8 @@ theorem sandwich_peirceBlock (h : IsDualSeedPair X Y) (a b c d : R) :
   have hxy : X * Y = polePlus X Y := rfl
   have hyx : Y * X = poleMinus X Y := rfl
   simp only [symmSandwich_apply, peirceBlock, add_mul, mul_add,
-    smul_mul_assoc, mul_smul_comm, h.pp, h.pq, h.qp, h.qq, h.pd, h.pb,
-    h.dp, h.dq, h.qd, h.qb, h.bp, h.bq, h.d_sq, h.b_sq, hxy, hyx,
-    smul_zero, add_zero, zero_add]
-  module
+    smul_mul_assoc, mul_smul_comm, h.pb, h.dp, h.dq, h.qd, h.bp, h.bq,
+    h.d_sq, h.b_sq, hxy, hyx, smul_zero, add_zero, zero_add]
 
 /-- Exact action on every existing supported Peirce block. -/
 theorem dissipator_peirceBlock (h : IsDualSeedPair X Y) (a b c d : R) :

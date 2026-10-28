@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.FinitePairingImplementer
+import InfoGeometry.OperatorAlgebra.CliffordDirac
 import InfoGeometry.OperatorAlgebra.FinitePairingReducedVacuum
 import InfoGeometry.OperatorAlgebra.TracialCARDensity
 import InfoGeometry.OperatorAlgebra.QuadraticRotorUnit
@@ -261,3 +262,4 @@ and represented Drazin splitting.
 -/
 
 end InfoGeometry.OperatorAlgebra
+

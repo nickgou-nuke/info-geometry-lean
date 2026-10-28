@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.LieJordanGeneratorTrace
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Matrix.Normed
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.Calculus.Deriv.Mul

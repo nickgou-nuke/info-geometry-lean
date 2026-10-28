@@ -1,0 +1,74 @@
+name: Real graded boundary proofs
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceBoundary*.lean'
+      - 'tools/quality/check_peirce_boundaries.py'
+      - '.github/workflows/peirce-boundaries.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: real-boundary-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          show-progress: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: real-boundary-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+          restore-keys: |
+            opposite-peirce-${{ runner.os }}-
+            graded-dmp-${{ runner.os }}-
+      - name: Install declared Lean and exact Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          pin = next(p for p in json.loads(pathlib.Path('lake-manifest.json').read_text())['packages'] if p['name'] == 'mathlib')
+          dest = os.path.join(os.environ['RUNNER_TEMP'], 'boundary-mathlib')
+          subprocess.run(['git', 'init', dest], check=True)
+          subprocess.run(['git', '-C', dest, 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', dest, 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', dest, 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Compile selected source closure and audit every owned declaration
+        run: |
+          python3 tools/quality/check_peirce_boundaries.py \
+            --mathlib-root "$RUNNER_TEMP/boundary-mathlib" --output verification-boundary
+      - name: Check semantic vacuity
+        run: |
+          python3 tools/quality/semantic_vacuity_gate.py \
+            lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean \
+            lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean \
+            lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryDynamics.lean \
+            lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryMetric.lean \
+            lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryWitness.lean \
+            lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryOrder.lean \
+            --fail-on error --json-out verification-boundary/vacuity.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-graded-boundary-verification
+          path: |
+            verification-boundary/**/*.log
+            verification-boundary/**/*.json
+            verification-boundary/**/*.txt
+            verification-boundary/src

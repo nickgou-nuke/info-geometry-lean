@@ -377,4 +377,16 @@ theorem associator_diagonal_iff_offdiag_vanish (X Y Z : OpZornMatrix A) :
         peirce_mp (opAssociator X Y Z) = 0 :=
   peirce_diagonal_iff_offdiag_vanish (opAssociator X Y Z)
 
+/-- Pentagon coherence for the reassociation defect on the actual Zorn
+operator carrier. This is a distributive identity, not associativity: the
+five associators record the two paths through the reassociation pentagon. -/
+theorem associator_pentagon_identity (W X Y Z : OpZornMatrix A) :
+    W * opAssociator X Y Z -
+        opAssociator (W * X) Y Z +
+        opAssociator W (X * Y) Z -
+        opAssociator W X (Y * Z) +
+        opAssociator W X Y * Z = 0 := by
+  simp only [opAssociator, sub_mul, mul_sub]
+  abel
+
 end InfoGeometry.NCG.AnomalyGradeGeneration

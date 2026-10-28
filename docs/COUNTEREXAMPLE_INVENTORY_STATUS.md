@@ -2156,18 +2156,20 @@ lexical inventory.
 
 The witnesses in `Lie/SplitOctonionNonmultiplicativity` refute the claim that
 left multiplication is a multiplicative representation into the associative
-endomorphism algebra. The source exhibits the exact reason: evaluating
-`L_x ∘ L_y - L_(x*y)` at `z` yields the negative carrier associator under the
-alternative-law hypotheses. `Algebra/AkivisLeftRegularBridge` proves this as
-`leftRegular_commutator_obstruction_apply`, while separately proving that the
-commutator of endomorphisms satisfies Jacobi. The carrier obstruction is thus
-an associator-valued defect; it does not imply Jacobi failure in the operator
-algebra. The native Zorn specialization obtains the required alternative
-associator swap from the actual product. This family already has a canonical
-corrected statement, so no duplicate theorem was added in this pass. The
-locked target `InfoGeometry.Algebra.AkivisLeftRegularBridge` built successfully
-(3,102 jobs, exit 0); existing warnings were reported in imported Akivis
-owners and this bridge.
+endomorphism algebra. The general owner theorem `associatorOperator_apply`
+identifies `L_(x*y) - L_x ∘ L_y`, evaluated at `z`, with the carrier
+associator. Under the explicit alternative-law hypothesis,
+`leftRegular_commutator_obstruction_apply` gives the corresponding signed
+commutator defect; the same owner separately proves Jacobi for endomorphism
+commutators. Thus the carrier associator defect does not imply Jacobi failure
+in the associative operator algebra. The native Zorn specialization obtains
+the required alternative associator swap from the actual product. No duplicate
+theorem was added. A fresh locked build of
+`InfoGeometry.Algebra.AkivisLeftRegularBridge`,
+`InfoGeometry.Lie.SplitOctonionOperatorRealignmentAudit`, and
+`InfoGeometry.Canonical.UnifiedGeometryOperatorSignificanceAudit` passed
+(9,285 jobs, exit 0). Their audits report only standard Lean axioms; imported
+owners still emit existing warnings.
 
 ## Asano–Ruelle counterexample and corrected endpoint theorem (2026-10-28)
 
@@ -2415,3 +2417,24 @@ declarations report `[propext, Classical.choice, Quot.sound]`. Imported
 dependencies emit pre-existing linter warnings. This confirms these local
 claims and dependent bridge, not general invariance of self-concordance under
 nonlinear charts or the repository-wide counterexample census.
+
+## Krein quadratic trace versus supertrace (2026-10-28)
+
+The finite matrix witness `Modular.Graded.trace_superTrace_counterexample`
+refutes unconditional equality of the ordinary trace and supertrace of the
+Krein square: at the identity operator, the supertrace is zero while the
+ordinary trace is twice the dimension of the positive block. The owner-level
+replacement is the exact identity
+`trace_krein_square_correction`, whose correction is twice the difference
+between the lower-right and upper-right block Gram traces. Over `ℂ`,
+`trace_eq_superTrace_krein_square_iff` proves that equality holds exactly
+when those Gram traces agree. The carrier is a full block matrix algebra;
+the identity witness is used only to refute the universal trace claim, not to
+replace the operator statement by a scalar model.
+
+The focused locked build of `InfoGeometry.Modular.KreinPotentialTraceAudit`
+and `InfoGeometry.Canonical.KreinSpinPositiveAudit` passed (8,952 jobs,
+exit 0). The audit printed only the standard Lean axioms for the correction
+and equivalence theorems. Existing linter and deprecation warnings were
+emitted in imported owners; this is targeted verification, not a warning-free
+global build.

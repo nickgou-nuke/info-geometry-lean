@@ -31,7 +31,7 @@ The range is proved equal to `NonUnitalAlgebra.adjoin K {X,Y}`. The generators
 are proved not to commute when `X ≠ 0`, in every characteristic.
 
 For the original quartet `X+Y`, `X-Y`, `X*Y-Y*X`, `X*Y+Y*X`, linear
-independence additionally requires `(2 : K) ≠ 0`. This is proved using native
+independence additionally requires `(2 : R) ≠ 0`. This is proved using native
 `LinearIndependent`, not a structure storing independence as a field.
 
 The image of the identity is `H=X*Y+Y*X`. This is the identity on the supported
@@ -78,12 +78,48 @@ freshness or automatic semantic equivalence is asserted.
 | `representation_injective`, `representation_single01` | `representation_injective_iff` |
 | `representation_injective`, native dimension lemmas | `finrank_range` |
 | `range_eq_adjoin`, `finrank_range` | `finrank_adjoin` |
-| `representation_eq_zero_iff`, `(2 : K) ≠ 0` | `quartet_combination_eq_zero_iff` |
+| `representation_eq_zero_iff`, `(2 : R) ≠ 0` | `quartet_combination_eq_zero_iff` |
 | coefficient uniqueness, `Fintype.linearIndependent_iff` | `quartet_linearIndependent` |
 
 ## Verification
 
-Pending focused pinned kernel checking and exact-set axiom inspection of all
-15 declarations (14 theorems and one homomorphism definition), followed by
-separate independent source audit and acceptance review. The workflow rebuilds
-the complete selected project import closure with fresh output files.
+The focused [run 40717030280](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40717030280),
+[job 122917404783](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40717030280/job/122917404783),
+passed on 2026-10-28. Source commit: `f9735f5439586373c87768b00a51f13c7d26b3ee`.
+Checked merge: `0df3cdaf31063fd14af4be27d14af46a8be76ced`, against
+base `cb7482d86eadb42f2ab9c2f6f624d67b7bfe7ce4`.
+
+- All 23 project modules in the selected import closure rebuilt serially into
+  fresh project output files using the pinned mathlib cache.
+- Lean `4.34.1`, compiler commit `5045d0056413266e57c625dcd7c365b10e377c52`;
+  Lake `5.0.0-src+5045d00`; mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+  Dependency source and pins are unchanged.
+- Exact-set axiom audit: all 15 declarations (14 theorems and one native
+  homomorphism definition) use only `propext`, `Classical.choice`, `Quot.sound`.
+- No source placeholders, custom axioms, `unsafe`, or `native_decide`.
+  New modules produce zero Lean warnings. Static syntax and diff checks pass.
+- Existing imported owners emit 23 Lean warnings: 14 in `Singular/MoorePenrose`,
+  two in `Core/JordanPeirceDecomposition`, seven in `Core/JordanAssociator`.
+  These are deprecation/style/unused-argument warnings; the owners are unchanged.
+- The semantic screen reports two warning-level `trivial_surface` findings on
+  `representation_single01` and `representation_single10`. Both are genuine
+  matrix-unit image identities, used by injectivity and generated-subalgebra
+  proofs. No semantic-screen error is reported; the warnings are retained.
+- Separate independent semantic source audit: PASS at the documented scope.
+  Independent QA verdict: `accepted_limited_scope`, after independently
+  verifying the successful job, source hashes, complete declaration inventory,
+  axiom dependencies, and warning classification.
+
+This is focused kernel acceptance, not full-repository build success. Existing
+style run `40715550949` fails on the `Physics/PellisFineStructure.lean` /
+`PellisfineStructure.lean` case collision. Sorry Gate run `40715552494` fails
+because its build job cannot find `lake` (exit 127), before theorem checking.
+
+The final evidence commit changes only this document; checked proof sources,
+audit module, build script, workflow, and dependency pins remain unchanged.
+
+## Verified source SHA256
+
+- `PeirceMatrixRepresentation.lean`: `55b000ad8799a84b926a82c668f9cebb088205c0ea23c909f19e08b4d36f701b`.
+- `PeirceQuartetIndependence.lean`: `1a20992533686d92e753d25e251fef27e149a8762ca0cae699bb7f94119242e1`.
+- `PeirceRepresentationAudit.lean`: `67d5449c60d5e41499bb9eb13a1532b7c1bab5ead2395c2614f329bddf739a74`.

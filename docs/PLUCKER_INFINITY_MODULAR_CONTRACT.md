@@ -1,5 +1,13 @@
 # Plücker, infinity twistor, and modular conjugation
 
+This document records the conventions and evidence of the initial twelve-owner
+package at `d6d7a86cf5cadef212082e879605390f0fafaea8`. The subsequent operator,
+grading, analytic-colimit, and Tomita-stage extension is specified in
+[`PLUCKER_INFINITY_CONTINUATION_CONTRACT.md`](PLUCKER_INFINITY_CONTINUATION_CONTRACT.md).
+The current combined verification scope and source hashes belong to
+[`PLUCKER_INFINITY_MODULAR_VALIDATION.json`](PLUCKER_INFINITY_MODULAR_VALIDATION.json);
+the counts in this document's validation section describe the initial package.
+
 ## Intent and source conventions
 
 This addition formalizes the algebraic content of the 27 October 2026 request
@@ -342,9 +350,9 @@ separately recorded compatible LeanArchitect revision.
 - No unbounded Tomita theorem, new completion, or categorical colimit is
   claimed from the bounded/finite statements in this addition.
 
-## Validation
+## Initial-package validation
 
-### Configurations and current status
+### Configurations and initial-package status
 
 | Component | Unchanged repository configuration | Explicit diagnostic configuration |
 | --- | --- | --- |
@@ -406,9 +414,9 @@ with both declared dependency pins and checked revisions. It cannot certify
 the unchanged pinned environment. A failed invocation writes a failure
 report rather than retaining a previous successful status.
 
-### Completed evidence
+### Completed initial-package evidence
 
-| Evidence | Current record |
+| Evidence | Initial-package record |
 | --- | --- |
 | Diagnostic source-closure compilation | PASS |
 | Exact-owner transitive axiom audit | PASS; all twelve substantive owners, aggregate owns zero declarations |
@@ -437,7 +445,7 @@ claim. No gate was disabled or weakened. The matrix-order witness uses an
 existing owner on the same matrix carrier rather than introducing a
 surrogate witness assumption.
 
-The machine-readable receipt is
+The current combined machine-readable receipt is
 [`PLUCKER_INFINITY_MODULAR_VALIDATION.json`](PLUCKER_INFINITY_MODULAR_VALIDATION.json).
 It records the exact checked dependency revisions, source-closure digests,
 new Lean source hashes, audit counts, gate results, and existing blockers.

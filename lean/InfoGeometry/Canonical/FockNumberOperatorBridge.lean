@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARSpinorCliffordActionBridge
@@ -27,8 +32,35 @@ def singleModeNumberOp (alpha : U →ₗ[R] R) (u : U) (omega : ExteriorAlgebra 
 /-- **Theorem**: Single-Mode Number Operator Annihilates Vacuum State (N_{α, u} |0⟩ = 0). -/
 theorem number_op_vacuum_zero (alpha : U →ₗ[R] R) (u : U) :
     singleModeNumberOp alpha u (vacuumState R U) = 0 := by
-  dsimp [singleModeNumberOp, creationOp, vacuumState, contractionOp]
-  rw [mul_zero]
+  simp only [singleModeNumberOp, annihilation_vacuum_zero, creationOp, mul_zero]
+
+/-- Evaluated single-particle action of the actual number operator. -/
+theorem number_op_single_particle_evaluated (alpha beta : U →ₗ[R] R) (u : U) :
+    singleModeNumberOp alpha u (singleParticleState beta) =
+      beta u • singleParticleState alpha := by
+  simp only [singleModeNumberOp, single_particle_state_eq_generator,
+    contraction_op_generator, creationOp, evaluation_linear_apply,
+    Algebra.algebraMap_eq_smul_one, Algebra.mul_smul_comm, mul_one]
+
+/-- A normalized mode has the expected occupied-state eigenvalue one. -/
+theorem number_op_occupied (alpha : U →ₗ[R] R) (u : U) (h : alpha u = 1) :
+    singleModeNumberOp alpha u (singleParticleState alpha) = singleParticleState alpha := by
+  rw [number_op_single_particle_evaluated, h, one_smul]
+
+/-- The single-mode number operator satisfies its actual quadratic relation. -/
+theorem number_op_square (alpha : U →ₗ[R] R) (u : U)
+    (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
+    singleModeNumberOp alpha u (singleModeNumberOp alpha u omega) =
+      alpha u • singleModeNumberOp alpha u omega := by
+  simp only [singleModeNumberOp, creationOp, contraction_op_generator_mul,
+    contraction_op_sq_zero, mul_zero, sub_zero, evaluation_linear_apply,
+    Algebra.mul_smul_comm]
+
+theorem number_op_idempotent (alpha : U →ₗ[R] R) (u : U) (h : alpha u = 1)
+    (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
+    singleModeNumberOp alpha u (singleModeNumberOp alpha u omega) =
+      singleModeNumberOp alpha u omega := by
+  rw [number_op_square, h, one_smul]
 
 /-- **Theorem**: Single-Mode Number Operator on Single-Particle State (N_{α, u} |β⟩ = ε_α (a_u |β⟩)). -/
 theorem number_op_single_particle_action (alpha beta : U →ₗ[R] R) (u : U) :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARSpinorCliffordActionBridge
@@ -26,8 +31,8 @@ variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
 theorem mixed_car_on_vacuum (u : U) (alpha : U →ₗ[R] R) :
     mixedCARAnticommutator u alpha (vacuumState R U) =
     (contractionOp (evaluationLinear u)) (creationOp alpha (vacuumState R U)) := by
-  dsimp [mixedCARAnticommutator, creationOp, vacuumState, contractionOp]
-  rw [mul_zero, add_zero]
+  simp only [mixedCARAnticommutator, annihilation_vacuum_zero, creationOp,
+    mul_zero, add_zero]
 
 /-- **Theorem**: Master Vacuum Expectation Value of CAR Synthesis.
     Unifies:

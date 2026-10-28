@@ -10,7 +10,7 @@ import Lean.Elab.Command
 /-!
 # Exact-owner trust audit for the Plücker/infinity/modular addition
 
-The twelve substantive modules are selected by imported-module ownership,
+The substantive new and repaired modules are selected by imported-module ownership,
 not declaration-name prefixes. Every owned constant, including private and
 compiler-generated declarations present in the imported environment, is
 checked for forbidden declaration kinds and transitive axiom dependencies.
@@ -27,18 +27,52 @@ run_cmd do
   let env ← getEnv
   let moduleNames := env.header.moduleNames
   let owners : Array Name := #[
-    `InfoGeometry.Twistor.PluckerInfinityChart,
-    `InfoGeometry.Twistor.PluckerBlockInversion,
-    `InfoGeometry.Twistor.InfinityTwistor,
-    `InfoGeometry.Twistor.PluckerPenroseIncidence,
-    `InfoGeometry.Twistor.PluckerLorentzRealForm,
-    `InfoGeometry.Twistor.PluckerInfinityGeometry,
-    `InfoGeometry.Canonical.RealModularConjugationBridge,
-    `InfoGeometry.Projective.ExteriorKleinCliffordInversion,
-    `InfoGeometry.Twistor.PluckerCl55InfinityBridge,
-    `InfoGeometry.Canonical.Cl55InfinitySourceSinkGrading,
+    `InfoGeometry.Canonical.Cl55ChiralAnalyticKMS,
     `InfoGeometry.Canonical.Cl55InfinityChiralCharge,
-    `InfoGeometry.Canonical.Cl55InfinityGradeReversal]
+    `InfoGeometry.Canonical.Cl55InfinityGradeReversal,
+    `InfoGeometry.Canonical.Cl55InfinitySourceSinkGrading,
+    `InfoGeometry.Canonical.Cl55WittInternalFiveGrading,
+    `InfoGeometry.Canonical.ComplexOperatorBilingualAnalyticity,
+    `InfoGeometry.Canonical.ExteriorContractionOperatorBridge,
+    `InfoGeometry.Canonical.ExteriorFockOperatorLaws,
+    `InfoGeometry.Canonical.FilteredGNSHestenesPhaseCone,
+    `InfoGeometry.Canonical.FilteredGNSMatrixAnalyticKMS,
+    `InfoGeometry.Canonical.FiniteFaithfulGNSTomitaClosability,
+    `InfoGeometry.Canonical.FiniteMatrixGibbsFaithfulness,
+    `InfoGeometry.Canonical.FiniteSeedGibbsTomitaClosability,
+    `InfoGeometry.Canonical.FiniteSeedRepresentedAnalyticKMS,
+    `InfoGeometry.Canonical.FockNumberOperatorBridge,
+    `InfoGeometry.Canonical.FockVacuumAnnihilationBridge,
+    `InfoGeometry.Canonical.FullCARAnticommutationAlgebraBridge,
+    `InfoGeometry.Canonical.MatrixTraceTomitaColimit,
+    `InfoGeometry.Canonical.RealModularConjugationBridge,
+    `InfoGeometry.Canonical.TracialGNSTomitaClosability,
+    `InfoGeometry.Canonical.VacuumExpectationCARBridge,
+    `InfoGeometry.Clifford.Cl55NativeInternalFiveGrading,
+    `InfoGeometry.Clifford.Cl55WittCalibratedColimit,
+    `InfoGeometry.Clifford.Cl55WittCalibratedGamma,
+    `InfoGeometry.Clifford.Cl55WittCalibratedHermitian,
+    `InfoGeometry.Clifford.Cl55WittCalibratedRepresentation,
+    `InfoGeometry.OperatorAlgebra.ComplexTimeCorrelation,
+    `InfoGeometry.Projective.ExteriorKleinCliffordInversion,
+    `InfoGeometry.Twistor.InfinityTwistor,
+    `InfoGeometry.Twistor.PluckerBlockInversion,
+    `InfoGeometry.Twistor.PluckerCl55InfinityBridge,
+    `InfoGeometry.Twistor.PluckerInfinityChart,
+    `InfoGeometry.Twistor.PluckerInfinityGeometry,
+    `InfoGeometry.Twistor.PluckerLorentzRealForm,
+    `InfoGeometry.Twistor.PluckerPenroseIncidence,
+    `InfoGeometry.Twistor.PluckerPinAffineRestriction,
+    `InfoGeometry.Twistor.PluckerPinEndpointStabilizers,
+    `InfoGeometry.Twistor.PluckerSheetReflection,
+    `InfoGeometry.Twistor.WittenCl55ExteriorBridge,
+    `InfoGeometry.Twistor.WittenCollinearityOperator,
+    `InfoGeometry.Twistor.WittenExteriorHelicity,
+    `InfoGeometry.Twistor.WittenExteriorScalarExtension,
+    `InfoGeometry.Twistor.WittenIncidence,
+    `InfoGeometry.Twistor.WittenParkeTaylor,
+    `InfoGeometry.Twistor.WittenSpinorBCFW,
+    `InfoGeometry.Twistor.WittenSpinorHelicity]
   let aggregate : Name := `InfoGeometry.Twistor.PluckerInfinityModular
   let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
   for owner in owners do
@@ -90,4 +124,4 @@ run_cmd do
   logInfo m!"AUDIT_AXIOMS: {allAxioms.qsort Name.lt}"
   logInfo m!"AUDIT_COUNT: {declarationCount}"
   logInfo m!"AUDIT_THEOREM_COUNT: {theoremCount}"
-  logInfo "AUDIT_SUCCESS: all twelve owners passed the exact-owner trust audit"
+  logInfo m!"AUDIT_SUCCESS: all {owners.size} owners passed the exact-owner trust audit"

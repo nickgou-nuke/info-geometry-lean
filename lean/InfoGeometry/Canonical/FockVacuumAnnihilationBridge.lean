@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorContractionOperatorBridge
@@ -21,7 +26,7 @@ def vacuumState (R U : Type*) [CommRing R] [AddCommGroup U] [Module R U] : Exter
 /-- **Theorem**: Annihilation Operator Annihilates Vacuum State (a_u |0⟩ = 0). -/
 theorem annihilation_vacuum_zero (u : U) :
     (contractionOp (evaluationLinear u)) (vacuumState R U) = 0 := by
-  dsimp [vacuumState, contractionOp]
+  exact contraction_op_one _
 
 /-- **Theorem**: Master Fock Space Vacuum State Annihilation Synthesis.
     Unifies:

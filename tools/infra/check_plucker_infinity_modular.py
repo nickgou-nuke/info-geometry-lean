@@ -133,8 +133,10 @@ def verify(args: argparse.Namespace, output: Path) -> int:
     libraries = [output, args.mathlib / ".lake/build/lib/lean"]
     libraries += sorted((args.mathlib / ".lake/packages").glob("*/.lake/build/lib/lean"))
     env = dict(os.environ, LEAN_PATH=os.pathsep.join(map(str, libraries)))
-    roots = [ROOT / "lean", ROOT / "lib/InfoGeometryCore", args.lean_architect]
-    owned_namespaces = {"InfoGeometry", "InfoGeometryCore", "DAG", "Architect"}
+    # The declared `proofs` library is rooted at the repository root. Native
+    # Hestenes owners still import its actual source modules.
+    roots = [ROOT / "lean", ROOT / "lib/InfoGeometryCore", ROOT, args.lean_architect]
+    owned_namespaces = {"InfoGeometry", "InfoGeometryCore", "DAG", "Architect", "proofs"}
     fingerprint = f"lean-{expected}/mathlib-{pins['mathlib'][:8]}"
     seen: dict[str, str] = {}
     active: set[str] = set()
@@ -163,6 +165,8 @@ def verify(args: argparse.Namespace, output: Path) -> int:
                 deps.append(check(dep))
             elif dep.split(".", 1)[0] in owned_namespaces:
                 raise RuntimeError(f"Missing owned import source: {module} imports {dep}")
+        if path.read_text() != text:
+            raise RuntimeError(f"Source changed while checking dependencies: {module}; retry")
         digest = hashlib.sha256((text + "".join(deps) + fingerprint).encode()).hexdigest()
         olean = output / (module.replace(".", "/") + ".olean")
         stamp = olean.with_suffix(".stamp")

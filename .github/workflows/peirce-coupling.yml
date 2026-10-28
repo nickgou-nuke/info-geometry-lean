@@ -12,6 +12,7 @@ on:
       - 'tools/quality/reviewed_audit_source.py'
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/build_lock.py'
+      - 'docs/PEIRCE_COUPLING_EPISTEMIC_CONTRACT.md'
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - '.github/workflows/peirce-coupling.yml'

@@ -43,11 +43,19 @@ theorem projection_isStarProjection : IsStarProjection projection where
 theorem projection_nondiagonal : projection 0 1 ≠ 0 := by
   norm_num [projection]
 
-theorem arrow_is_corner : component10 projection arrow = arrow := by
+theorem projection_mul_arrow : projection * arrow = arrow := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [component10, complementIdempotent, projection, arrow,
-      Matrix.mul_apply, Fin.sum_univ_succ, Matrix.one_apply]
+    norm_num [projection, arrow, Matrix.mul_apply, Fin.sum_univ_succ]
+
+theorem arrow_mul_projection : arrow * projection = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [projection, arrow, Matrix.mul_apply, Fin.sum_univ_succ]
+
+theorem arrow_is_corner : component10 projection arrow = arrow := by
+  rw [component10, complementIdempotent, projection_mul_arrow,
+    mul_sub, mul_one, arrow_mul_projection, sub_zero]
 
 theorem arrow_ne_zero : arrow ≠ 0 := by
   intro h
@@ -61,14 +69,20 @@ theorem arrow_adjoint_noncommute : ¬Commute arrow arrowᴴ := by
 
 theorem projection_arrow_noncommute : ¬Commute projection arrow := by
   intro h
-  have h02 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℂ => M 0 2) h.eq
-  norm_num [projection, arrow, Matrix.mul_apply, Fin.sum_univ_succ] at h02
+  exact arrow_ne_zero (by simpa only [projection_mul_arrow, arrow_mul_projection] using h.eq)
+
+theorem negative_adjoint_noncommute : ¬Commute arrow (-arrowᴴ) := by
+  intro h
+  apply arrow_adjoint_noncommute
+  change arrow * arrowᴴ = arrowᴴ * arrow
+  simpa only [mul_neg, neg_mul, neg_neg] using congrArg Neg.neg h.eq
 
 theorem positive_square : (arrow * arrowᴴ + arrowᴴ * arrow).PosSemidef :=
   gramSum_posSemidef arrow
 
 theorem square_nondiagonal : (arrow * arrowᴴ + arrowᴴ * arrow) 0 1 = 2 := by
-  norm_num [arrow, Matrix.mul_apply, conjTranspose_apply, Fin.sum_univ_succ]
+  norm_num [arrow, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+    conjTranspose_apply, Fin.sum_univ_succ]
 
 theorem square_ne_zero : arrow * arrowᴴ + arrowᴴ * arrow ≠ 0 := by
   intro h
@@ -112,7 +126,8 @@ theorem negative_coupling_not_posSemidef :
   rw [negative_coupling_square]
   intro h
   have h0 := h.diag_nonneg (i := (0 : Fin 4))
-  norm_num [arrow, Matrix.mul_apply, conjTranspose_apply, Fin.sum_univ_succ,
+  norm_num [arrow, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+    conjTranspose_apply, Fin.sum_univ_succ,
     Complex.le_def] at h0
 
 def balancedArrow : Matrix (Fin 4) (Fin 4) ℂ :=
@@ -132,14 +147,18 @@ theorem balanced_posDef :
   have h2 := congrFun hv.1 2
   have h0' := congrFun hv.2 0
   have h2' := congrFun hv.2 2
-  norm_num [balancedArrow, Matrix.mulVec, dotProduct, conjTranspose_apply,
+  norm_num [balancedArrow, Matrix.mulVec, dotProduct, conjTranspose_apply, starRingEnd_apply,
     Fin.sum_univ_succ] at h0 h2 h0' h2'
-  ext i
+  funext i
   fin_cases i
-  · linear_combination (1 / 2 : ℂ) * h0 - (1 / 4 : ℂ) * h2 + (1 / 2 : ℂ) * h0'
-  · linear_combination -(1 / 2 : ℂ) * h0 + (1 / 4 : ℂ) * h2 + (1 / 2 : ℂ) * h0'
-  · linear_combination (1 / 4 : ℂ) * h2 + (1 / 4 : ℂ) * h2' - (1 / 4 : ℂ) * h0'
-  · linear_combination -(1 / 4 : ℂ) * h2 + (1 / 4 : ℂ) * h2' - (1 / 4 : ℂ) * h0'
+  · change v 0 = 0
+    linear_combination (1 / 2 : ℂ) * h0 - (1 / 4 : ℂ) * h2 + (1 / 2 : ℂ) * h0'
+  · change v 1 = 0
+    linear_combination -(1 / 2 : ℂ) * h0 + (1 / 4 : ℂ) * h2 + (1 / 2 : ℂ) * h0'
+  · change v 2 = 0
+    linear_combination (1 / 4 : ℂ) * h2 + (1 / 4 : ℂ) * h2' - (1 / 4 : ℂ) * h0'
+  · change v 3 = 0
+    linear_combination -(1 / 4 : ℂ) * h2 + (1 / 4 : ℂ) * h2' - (1 / 4 : ℂ) * h0'
 
 theorem balanced_exact : LinearMap.range balancedArrow.toEuclideanLin =
     LinearMap.ker balancedArrow.toEuclideanLin :=
@@ -149,5 +168,10 @@ theorem balanced_adjoint_noncommute : ¬Commute balancedArrow balancedArrowᴴ :
   intro h
   have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℂ => M 0 0) h.eq
   norm_num [balancedArrow, Matrix.mul_apply, conjTranspose_apply, Fin.sum_univ_succ] at h00
+
+theorem balanced_square_nondiagonal :
+    (balancedArrow * balancedArrowᴴ + balancedArrowᴴ * balancedArrow) 0 1 = 2 := by
+  norm_num [balancedArrow, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+    conjTranspose_apply, starRingEnd_apply, Fin.sum_univ_succ]
 
 end InfoGeometry.OperatorAlgebra.PeirceCoupling.Examples

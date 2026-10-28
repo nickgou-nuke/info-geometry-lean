@@ -122,6 +122,51 @@ required dependency. A failing candidate is not accepted as an owner.
 
 ## Acceptance contract
 
+### Source-backed causal poset
+
+The prerequisite order is the reflexive transitive closure of the following
+acyclic direct-import graph. The two initial branches are independent; their
+join is the actual adjoint specialization. This diagram records source
+dependencies, not a claim of an elaborated constant-dependency export.
+
+```mermaid
+flowchart TD
+  P["Core.PeirceGrading"] --> A["Algebra"]
+  A --> T["Trace"]
+  A --> S["SecondOrder"]
+  A --> D["Adjoint"]
+  G["GramGeometry"] --> D
+  G --> E["Exactness"]
+  D --> X["Examples"]
+  E --> X
+```
+
+Selected declaration edges refine the module order:
+
+- Support actions -> `reflection_mul_jordan` -> `reflection_mul_lie` ->
+  `jordan_eq_zero_iff_lie_eq_zero`. The reverse algebraic equality does not
+  create a reverse proof dependency.
+- Signed compressions -> `lie_second_order_boundary` -> `second_order_iff`
+  -> `even_second_order_iff`, using the existing complementary even/odd ranges.
+- Native Gram kernel lemmas -> `gramSum_mulVec_eq_zero_iff` -> `gramSum_ker`
+  and `gramSum_posDef_iff` -> the native kernel/injectivity/unit criteria.
+- `squareZero_sum_mulVec_eq_zero_iff` -> `squareZero_sum_ker` ->
+  `gramSum_posDef_iff_sum_isUnit`.
+- Orthogonal range/kernel geometry + square-zero range inclusion ->
+  `squareZero_ker_inf_eq_bot_iff_exact` -> `gramSum_posDef_iff_exact` ->
+  `card_eq_two_mul_rank_of_gramSum_posDef` -> `even_card_of_gramSum_posDef`.
+- `adjoint_reverse_corner` + `opposite_sum_sq` -> `adjoint_coupling_sq`;
+  the Gram and zero-equivalence results then give
+  `adjoint_corners_commute_iff`.
+
+The common-kernel proof uses the native PSD lemmas locally; it does not refer
+to the separately exposed `gramSum_posSemidef`. The Peirce-specific kernel
+proof in `Adjoint` uses its self-adjoint sum directly and does not import
+`Exactness`. A semantic specialization is therefore not silently presented
+as an implementation dependency.
+
+### Required verification
+
 Root generates/integrates. A separate mathematical auditor checks hypotheses,
 source fidelity and nonvacuity. A nonauthoring acceptance reviewer reconciles
 source, kernel and axiom evidence. Subagents may author only new sandbox files.

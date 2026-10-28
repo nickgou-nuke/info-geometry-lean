@@ -58,7 +58,9 @@ def main():
     report_path = out / 'report.json'
     previous = json.loads(report_path.read_text()) if args.incremental and report_path.exists() else {}
     report = {'status': 'pending', 'scope': 'Exact repository source closure and native axiom audit',
-              'targets': targets, 'modules': [], 'audit_required': not args.skip_audit}
+              'targets': targets, 'modules': [], 'audit_required': not args.skip_audit,
+              'target_override': args.target, 'incremental': args.incremental,
+              'skip_audit': args.skip_audit}
     helpers = ['tools/quality/check_peirce_coupling.py', 'tools/quality/check_reviewed_prs.py',
                'tools/quality/reviewed_audit_source.py', 'tools/build_lock.py',
                'lean-toolchain', 'lake-manifest.json',

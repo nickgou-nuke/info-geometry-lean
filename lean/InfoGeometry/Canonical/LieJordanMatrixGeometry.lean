@@ -10,7 +10,7 @@ import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Complex.Order
-import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Full matrix trace geometry and doubled Lie–Jordan operators

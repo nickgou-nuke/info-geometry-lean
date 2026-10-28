@@ -20,7 +20,7 @@ to `1 / 3`, so it has nonzero off-diagonal entries in the displayed basis.
 
 namespace InfoGeometry.Canonical.LieJordanMatrixExamples
 
-open scoped Matrix
+open scoped Matrix ComplexOrder
 
 open InfoGeometry.Core.LieJordanComposition
 open InfoGeometry.Core.JordanMultiplicationClosure

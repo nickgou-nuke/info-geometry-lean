@@ -49,11 +49,12 @@ def assert_clean_dependency(path):
         raise RuntimeError('Dependency source differs from its pinned checkout: ' + str(path))
 
 
-def make_lake_package(directory, source, mathlib, toolchain):
+def make_lake_package(directory, source, mathlib, toolchain, modules):
     """Use real path dependencies; do not symlink or mutate any existing cache."""
     directory.mkdir(exist_ok=True)
     (directory / 'lean-toolchain').write_text(toolchain)
-    roots = ', '.join('`' + module for module in TARGETS)
+    # Lake ownership must include imported repository modules as well as targets.
+    roots = ', '.join('`' + module for module in modules)
     (directory / 'lakefile.lean').write_text(
         'import Lake\nopen Lake DSL\npackage lieJordanVerification\n'
         f'require mathlib from {json.dumps(str(mathlib))}\n'
@@ -158,7 +159,7 @@ def main():
             counts = parse_audit_output(evidence, ordered)
             state.update(audited_declarations=sum(counts.values()), module_counts=counts)
             lake_dir = out / 'lake'
-            make_lake_package(lake_dir, src, mathlib, toolchain)
+            make_lake_package(lake_dir, src, mathlib, toolchain, ordered)
             run(['lake', 'build', *TARGETS], lake_dir,
                 log=out / 'lake-build.log', pass_fds=fds)
             state['isolated_lake_build'] = 'passed'

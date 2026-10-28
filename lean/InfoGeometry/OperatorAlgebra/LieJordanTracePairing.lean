@@ -213,6 +213,28 @@ theorem matrix_trace_dual (h s x y : Matrix n n R) :
       Matrix.trace (x * minus (R := R) h s y) = 0 :=
   trace_dual (R := R) (Matrix.traceAddMonoidHom n R) Matrix.trace_mul_comm h s x y
 
+omit [DecidableEq n] in
+/-- Symmetry of the left-weighted matrix trace pairing is equivalent to the
+weight commuting with every matrix. This uses nondegeneracy of the full matrix
+trace pairing, not a restriction to diagonal or commuting matrices. -/
+theorem matrix_weighted_symmetric_iff (w : Matrix n n R) :
+    (∀ x y, Matrix.trace (w * x * y) = Matrix.trace (w * y * x)) ↔
+      ∀ x, w * x = x * w := by
+  constructor
+  · intro h x
+    apply Matrix.ext_iff_trace_mul_right.mpr
+    intro y
+    calc
+      Matrix.trace ((w * x) * y) = Matrix.trace ((w * y) * x) := by
+        simpa only [mul_assoc] using h x y
+      _ = Matrix.trace (x * (w * y)) := Matrix.trace_mul_comm _ _
+      _ = Matrix.trace ((x * w) * y) := by rw [mul_assoc]
+  · intro h x y
+    calc
+      Matrix.trace (w * x * y) = Matrix.trace (x * w * y) := by rw [h x]
+      _ = Matrix.trace (x * (w * y)) := by rw [mul_assoc]
+      _ = Matrix.trace (w * y * x) := Matrix.trace_mul_comm _ _
+
 end Matrix
 
 end InfoGeometry.OperatorAlgebra.LieJordanTracePairing

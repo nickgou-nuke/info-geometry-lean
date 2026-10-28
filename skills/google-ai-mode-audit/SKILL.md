@@ -58,9 +58,10 @@ the script. Do not assume the Codex app's built-in browser is the same surface
 as the host Chromium display.
 
 The temporary profile is separate from the user's normal Chromium profile and
-does not inherit its cookies. If Google requires sign-in, stop at the login
-wall and let the user complete sign-in in that browser window; do not request
-or handle their password or MFA.
+does not inherit its cookies. If Google presents a cookie-consent screen or
+requires sign-in, stop and ask the user to choose/complete it in that browser
+window; do not make the consent choice or request/handle their password or
+MFA.
 
 ## Submit and capture
 
@@ -68,7 +69,9 @@ For example, to audit the repository's Darwin pipeline blueprint:
 
 ```bash
 ./scripts/google-ai-search.sh --raw \
-  "Audit the following pipeline blueprint. Identify the highest-priority architectural gaps, incorrect or unsupported claims, relevant primary literature, and concrete improvements. Distinguish Git ancestry, compiler observations, declaration fingerprints, InfoTree data, and inferred affinity. Treat repository claims as hypotheses to verify against the cited source inventory. Return concise findings with source links and uncertainty labels.\n\n$(cat docs/DARWIN_PIPELINE_BLUEPRINT.md)"
+  "Audit the following pipeline blueprint. Identify the highest-priority architectural gaps, incorrect or unsupported claims, relevant primary literature, and concrete improvements. Distinguish Git ancestry, compiler observations, declaration fingerprints, InfoTree data, and inferred affinity. Treat repository claims as hypotheses to verify against the cited source inventory. Return concise findings with source links and uncertainty labels.
+
+$(cat docs/DARWIN_PIPELINE_BLUEPRINT.md)"
 ```
 
 The script's send action clicks an enabled Google AI Mode send/search button;

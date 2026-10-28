@@ -51,6 +51,6 @@ theorem oriented_adjoint_not_positive :
   have ht := h.dotProduct_mulVec_nonneg ![1, 1]
   norm_num [orientedTransport_apply, jump, Matrix.mul_apply,
     Matrix.conjTranspose_apply, Matrix.one_apply, dotProduct, Matrix.mulVec,
-    Fin.sum_univ_succ] at ht
+    Matrix.vecMul, Matrix.transpose_apply, Fin.sum_univ_succ] at ht
 
 end InfoGeometry.OperatorAlgebra.LieJordanOctetMatrices

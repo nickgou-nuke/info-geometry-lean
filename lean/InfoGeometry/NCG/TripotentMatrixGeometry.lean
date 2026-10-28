@@ -25,8 +25,11 @@ include hT
 
 theorem self_drazin : IsDrazinInverse T T 1 := by
   refine IsDrazinInverse.mk hT rfl ?_
-  simpa only [pow_one, pow_two] using hT.symm
+  simp only [pow_one]
+  change T = T ^ 2 * T
+  simpa only [pow_two] using hT.symm
 
+omit [DecidableEq n] in
 theorem square_idempotent : IsIdempotentElem (T * T) := by
   change (T * T) * (T * T) = T * T
   calc
@@ -93,10 +96,10 @@ theorem complement_mulVec_eq_self_iff (v : n → K) :
   · intro h
     calc
       T *ᵥ v = T *ᵥ ((1 - T * T) *ᵥ v) := by rw [h]
-      _ = (T * (1 - T * T)) *ᵥ v := (mulVec_mulVec _ _ _).symm
+      _ = (T * (1 - T * T)) *ᵥ v := mulVec_mulVec _ _ _
       _ = 0 := by rw [mul_complement hT, zero_mulVec]
   · intro h
-    rw [sub_mulVec, one_mulVec, mulVec_mulVec, h, mulVec_zero, sub_zero]
+    rw [sub_mulVec, one_mulVec, ← mulVec_mulVec, h, mulVec_zero, sub_zero]
 
 /-- A native submodule equality, without a basis change or division. -/
 theorem range_complement_eq_ker :
@@ -105,7 +108,7 @@ theorem range_complement_eq_ker :
   constructor
   · rintro ⟨w, rfl⟩
     change T *ᵥ ((1 - T * T) *ᵥ w) = 0
-    rw [← mulVec_mulVec, mul_complement hT, zero_mulVec]
+    rw [mulVec_mulVec, mul_complement hT, zero_mulVec]
   · intro h
     refine ⟨v, ?_⟩
     exact (complement_mulVec_eq_self_iff hT v).mpr h

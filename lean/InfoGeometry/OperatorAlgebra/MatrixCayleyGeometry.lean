@@ -166,15 +166,16 @@ theorem lie_cayley (H X : Matrix n n ℂ) [Invertible (1 + X)] :
 theorem commute_cayley_iff (H X : Matrix n n ℂ) [Invertible (1 + X)] :
     Commute H (cayley X) ↔ Commute H X := by
   change H * cayley X = cayley X * H ↔ H * X = X * H
-  rw [← sub_eq_zero, ← sub_eq_zero]
+  rw [← sub_eq_zero (a := H * cayley X) (b := cayley X * H),
+    ← sub_eq_zero (a := H * X) (b := X * H)]
   change ⁅H, cayley X⁆ = 0 ↔ ⁅H, X⁆ = 0
   rw [lie_cayley, smul_eq_zero]
   simp only [neg_ne_zero, OfNat.ofNat_ne_zero, false_or]
   constructor
   · intro h
     have h' := congrArg (fun Y => (1 + X) * Y * (1 + X)) h
-    simpa only [mul_assoc, invOf_mul_self, mul_one, mul_zero, zero_mul,
-      mul_invOf_self, one_mul] using h'
+    simp only [mul_assoc, invOf_mul_self, mul_one, mul_zero, zero_mul] at h'
+    simpa only [← mul_assoc, mul_invOf_self, one_mul] using h'
   · intro h
     rw [h, mul_zero, zero_mul]
 

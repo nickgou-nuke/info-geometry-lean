@@ -88,6 +88,7 @@ theorem odd_square_eq_cross_products {p : Matrix n n ℂ}
       component10 p A * component01 p A + component01 p A * component10 p A := by
   rcases corners_square_zero hp.eq A with ⟨hForward, hReverse⟩
   simp only [oddPart, add_mul, mul_add, hForward, hReverse, zero_add, add_zero]
+  exact add_comm _ _
 
 /-- Multiplication of odd operators returns to the even algebra. -/
 theorem commute_odd_square {p : Matrix n n ℂ} (hp : IsIdempotentElem p)

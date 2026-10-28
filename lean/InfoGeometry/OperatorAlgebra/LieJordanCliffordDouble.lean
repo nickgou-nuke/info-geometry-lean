@@ -38,7 +38,7 @@ def swapOp : Module.End R (A × A) where
 /-- The two-sheet grading, acting on the full product module. -/
 def gradingOp : Module.End R (A × A) where
   toFun v := (v.1, -v.2)
-  map_add' _ _ := by simp
+  map_add' _ _ := by simp [add_comm]
   map_smul' _ _ := by simp
 
 /-- Internal square-minus-one phase, with no external imaginary scalar. -/
@@ -99,7 +99,7 @@ theorem doubled_clifford_decomposition (h s : A) :
   simp only [sub_eq_add_neg]
 
 theorem grading_anticommutes_doubled (h s : A) :
-    gradingOp * doubled (R := R) h s + doubled h s * gradingOp = 0 := by
+    gradingOp * doubled (R := R) h s + doubled (R := R) h s * gradingOp = 0 := by
   apply LinearMap.ext
   intro v
   change (minus (R := R) h s v.2 + minus (R := R) h s (-v.2),
@@ -109,7 +109,7 @@ theorem grading_anticommutes_doubled (h s : A) :
 /-- The square has different diagonal blocks unless the exact obstruction
 vanishes; neither block is replaced by scalar multiplication. -/
 theorem doubled_square_apply (h s : A) (v : A × A) :
-    (doubled (R := R) h s * doubled h s) v =
+    (doubled (R := R) h s * doubled (R := R) h s) v =
       ((LieAlgebra.ad R A h * LieAlgebra.ad R A h -
           jordanLeft (R := R) s * jordanLeft (R := R) s + jordanLeft (R := R) (h * s - s * h)) v.1,
        (LieAlgebra.ad R A h * LieAlgebra.ad R A h -

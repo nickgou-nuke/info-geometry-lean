@@ -1,0 +1,87 @@
+name: Peirce BdG operator geometry (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
+      - 'lean/InfoGeometry/Core/IdempotentTangent.lean'
+      - 'lean/InfoGeometry/Clifford/ChiralProjectorBerryCurvature.lean'
+      - 'lean/InfoGeometry/Physics/BdGChiralBlockMatrix.lean'
+      - 'lean/InfoGeometry/Physics/BdGOperatorCalculus.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ChiralBlockSpectralGap.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/BdGOperatorGeometryTests.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/Partner*Eigenspaces*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/Peirce*Curvature.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceProjectedConnection.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceCompressedGramPositivity.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/BdGPeirceCurvature.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorExteriorAlgebra.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/**'
+      - 'lean/InfoGeometry/Thermo/OnsagerTwoOperatorForm.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauOnsagerBKM*.lean'
+      - 'lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean'
+      - 'lean/InfoGeometry/Canonical/NoncommutativeGibbsCenteredBKMCovariance.lean'
+      - 'lean/InfoGeometry/Canonical/CenteredBKMCommutatorGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/FiniteDimensionalCCRNoGo.lean'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'docs/PEIRCE_BDG_OPERATOR_GEOMETRY.md'
+      - 'tools/quality/check_peirce_bdg_geometry.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - '.github/workflows/peirce-bdg-geometry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: peirce-bdg-geometry-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact public source without initializing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install exact toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile full source closure and audit new declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          ps -eo pid,comm,args
+          python3 project/tools/quality/check_peirce_bdg_geometry.py \
+            --mathlib-root pinned-mathlib --output verification --fetch-cache
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: peirce-bdg-geometry-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

@@ -54,10 +54,11 @@ theorem support_selfadjoint : support.IsHermitian := by
     norm_num [support, Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply]
 
 theorem singular_arrow_corner : component10 support singularArrow = singularArrow := by
+  change support * singularArrow * (1 - support) = singularArrow
+  rw [mul_sub, mul_one]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [component10, complementIdempotent, support, singularArrow, Matrix.mul_apply,
-      Matrix.one_apply, Fin.sum_univ_succ]
+    norm_num [support, singularArrow, Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem singular_arrow_nonzero : singularArrow ≠ 0 := by
   intro h
@@ -117,10 +118,11 @@ theorem singular_square_not_posDef :
   exact (lt_irrefl (0 : ℝ)) this
 
 theorem regular_arrow_corner : component10 support regularArrow = regularArrow := by
+  change support * regularArrow * (1 - support) = regularArrow
+  rw [mul_sub, mul_one]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [component10, complementIdempotent, support, regularArrow, Matrix.mul_apply,
-      Matrix.one_apply, Fin.sum_univ_succ]
+    norm_num [support, regularArrow, Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem regular_coupling_formula :
     component10 support regularArrow + component01 support regularArrowᴴ =

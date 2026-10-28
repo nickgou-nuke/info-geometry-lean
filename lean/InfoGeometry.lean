@@ -152,7 +152,6 @@ import InfoGeometry.NCG.TrialitySingletLieDerivation
 import InfoGeometry.NCG.CausalPoset
 import InfoGeometry.NCG.AnomalyGradeGeneration
 import InfoGeometry.NCG.GunaydinGurseySU3Stabilizer
-import InfoGeometry.NCG.CuntzHoppingCantorLattice
 import InfoGeometry.NCG.LaxPairIsospectralMassGap
 import InfoGeometry.MassSpectrometry.GPUExecutionContracts
 import InfoGeometry.Canonical.CuntzFractalHoppingAnyons

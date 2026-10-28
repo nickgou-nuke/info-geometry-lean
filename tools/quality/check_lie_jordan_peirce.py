@@ -25,6 +25,11 @@ checker.TARGETS = [
     "InfoGeometry.OperatorAlgebra.LieJordanBoundaryMatrices",
     "InfoGeometry.Canonical.LieJordanBoundaryColimit",
     "InfoGeometry.Canonical.LieJordanBoundarySynthesis",
+    "InfoGeometry.OperatorAlgebra.LieJordanOctet",
+    "InfoGeometry.Algebra.PeirceSandwichDuality",
+    "InfoGeometry.OperatorAlgebra.LieJordanOctetMatrices",
+    "InfoGeometry.Canonical.LieJordanOctetColimit",
+    "InfoGeometry.Canonical.LieJordanOctetSynthesis",
 ]
 
 if __name__ == "__main__":

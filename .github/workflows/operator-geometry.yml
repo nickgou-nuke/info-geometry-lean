@@ -8,9 +8,26 @@ on:
       - 'lean/InfoGeometry/OperatorAlgebra/PeirceTraceGeometry.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/PeirceKrausGeometry.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/OperatorGeometryExamples.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceChiralGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixMaurerCartan.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixConservation.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixCayleyGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorExtensionExamples.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixCasimirExamples.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeircePairGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeircePairExamples.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixLieJordanOperators.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceGradedTraceGeometry.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixSquareZeroPairs.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceInnerAction.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorSuperoperatorExamples.lean'
       - 'tools/quality/check_operator_geometry.py'
       - 'tools/quality/OperatorGeometryDeclarationAudit.lean'
       - 'tools/quality/operator_geometry_dependency_order.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tests/test_native_matrix_witness.py'
       - '.github/workflows/operator-geometry.yml'
   workflow_dispatch:
 
@@ -48,6 +65,14 @@ jobs:
           subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
           subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
           PY
+      - name: Check native matrix witness recognition
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification
+          cd project
+          python3 -m unittest discover -s tests -p test_native_matrix_witness.py -v \
+            2>&1 | tee ../verification/native-matrix-witness.log
       - name: Install the exact Lean toolchain
         shell: bash
         run: |

@@ -1257,13 +1257,93 @@ def _has_typed_noncommutative_product(source: str) -> bool:
     return False
 
 
+def _active_nullary_matrix_notations(
+    source: str, before_offset: int,
+) -> dict[str, tuple[str, str, str] | None]:
+    """Resolve only simple, active, unambiguous local matrix notation.
+
+    Code locations come from the blanked source; quoted notation identifiers
+    come from the raw source at those same offsets. Comments and arbitrary
+    strings therefore cannot introduce aliases. Unsupported or shadowed
+    notation is retained as an unknown binding, never guessed.
+    """
+    clean = _strip_lean_comments_and_strings(source)
+    scopes: list[dict[str, tuple[str, str, str] | None]] = [{}]
+    seen: set[str] = set()
+    ambiguous: set[str] = set()
+    unsupported = False
+    prefix = clean[:before_offset]
+    for raw_line, clean_line in zip(
+        source[:before_offset].splitlines(), prefix.splitlines()
+    ):
+        code = clean_line.strip()
+        if re.match(r"^(?:noncomputable\s+)?(?:section|namespace)\b", code):
+            scopes.append({})
+            continue
+        if re.match(r"^end(?:\s|$)", code):
+            if len(scopes) > 1:
+                scopes.pop()
+            continue
+        command = re.match(
+            r"^[ \t]*(?:(?:local|scoped)[ \t]+)?notation(?::[\w]+)?\b",
+            clean_line,
+        )
+        if command is None:
+            continue
+        # Stop the code match before whitespace belonging to the blanked
+        # string literal, so its offset still points to the raw quoted name.
+        quoted = re.match(
+            r'''[ \t]+"([A-Za-z_][A-Za-z0-9_']*)"''', raw_line[command.end():]
+        )
+        if quoted is None:
+            unsupported = True
+            continue
+        name = quoted.group(1)
+        if name in seen:
+            ambiguous.add(name)
+        seen.add(name)
+        carrier = None
+        tail = clean_line[command.end() + quoted.end():]
+        assignment = re.fullmatch(r"[ \t]*=>[ \t]*(.*)", tail)
+        if (
+            re.fullmatch(r"[ \t]*local[ \t]+notation", command.group(0))
+            and assignment is not None
+        ):
+            rhs = assignment.group(1).strip()
+            head = re.match(r"Matrix\b", rhs)
+            if head is not None:
+                position = head.end()
+                for _ in range(3):
+                    atom = _balanced_lean_atom(rhs, position)
+                    if atom is None:
+                        break
+                    _value, position = atom
+                else:
+                    if not rhs[position:].strip():
+                        carrier = _matrix_carrier_at(rhs)
+        scopes[-1][name] = carrier
+    active = {name: carrier for scope in scopes for name, carrier in scope.items()}
+    declared_names = set(re.findall(
+        r"(?m)^\s*(?:(?:private|protected|noncomputable|unsafe)\s+)*"
+        r"(?:def|abbrev|axiom|opaque|structure|class|inductive)\s+([A-Za-z_][\w']*)\b",
+        prefix,
+    ))
+    return {
+        name: None if unsupported or name in ambiguous or name in declared_names else carrier
+        for name, carrier in active.items()
+    }
+
+
 @functools.lru_cache(maxsize=128)
 def _source_def_carrier_map(source: str) -> dict[str, tuple[str, str, str]]:
     """Map file-level `def`/`abbrev` constants to their matrix carrier once per source."""
     carriers: dict[str, tuple[str, str, str]] = {}
     declaration_start = re.compile(r"^\s*(?:private\s+|protected\s+|noncomputable\s+)*(?:def|abbrev)\s+(\w+)")
-    source_lines = source.splitlines()
+    source_lines = _strip_lean_comments_and_strings(source).splitlines(keepends=True)
+    offset = 0
     for idx, line in enumerate(source_lines):
+        before_offset = offset
+        offset += len(line)
         match = declaration_start.match(line)
         if not match:
             continue
@@ -1275,6 +1355,17 @@ def _source_def_carrier_map(source: str) -> dict[str, tuple[str, str, str]]:
         signature = _matrix_carrier_signature(
             _expand_local_type_alias(source, " ".join(header).split(":=", 1)[0])
         )
+        parsed = _top_level_result_type(" ".join(header))
+        if parsed is not None:
+            type_name = _bare_identifier(parsed[1])
+            if type_name is not None:
+                notations = _active_nullary_matrix_notations(source, before_offset)
+                if type_name in notations:
+                    nullary = re.fullmatch(
+                        r"\s*(?:(?:private|protected|noncomputable)\s+)*"
+                        rf"(?:def|abbrev)\s+{re.escape(match.group(1))}\s*", parsed[0]
+                    )
+                    signature = notations[type_name] if nullary else None
         if signature:
             carriers[match.group(1)] = signature
     return carriers
@@ -1340,6 +1431,116 @@ def _strip_inline_type_ascriptions(expr: str) -> str:
     return "".join(pieces)
 
 
+def _native_witness_declarations(source: str) -> list[tuple[str, str]]:
+    """Inventory code-level declaration kinds and short names conservatively.
+
+    The scan is intentionally not line-anchored: attributes and modifiers
+    must not hide a declaration. Qualified and quoted final components count
+    as the same short name. This is a rejection aid, not Lean name resolution.
+    """
+    clean = _strip_lean_comments_and_strings(source)
+    component = r"(?:«[^»\n]+»|[^\W\d][\w']*)"
+    declarations = re.finditer(
+        r"(?<![\w'.])"
+        r"(def|abbrev|theorem|lemma|axiom|opaque|postulate|structure|class|inductive|instance)"
+        rf"\s+({component}(?:\.{component})*)",
+        clean,
+    )
+    return [
+        (match.group(1), re.findall(component, match.group(2))[-1].strip("«»"))
+        for match in declarations
+    ]
+
+
+def _native_witness_notation_is_supported(source: str) -> bool:
+    """Fail closed on syntax outside the native witness's bounded notation form.
+
+    Keep the existing general notation resolver unchanged. In particular,
+    quoted tokens containing whitespace (such as ``"Commute "``), notation
+    arguments, and syntax/macro commands are outside this native-only path.
+    Raw text supplies a quoted token only at a code-level command location.
+    """
+    clean = _strip_lean_comments_and_strings(source)
+    syntax_command = re.compile(
+        r"(?<![\w'.])(?:notation|infixl?|infixr|prefix|postfix|syntax|macro|macro_rules|elab)\b"
+    )
+    for raw_line, clean_line in zip(source.splitlines(), clean.splitlines()):
+        commands = list(syntax_command.finditer(clean_line))
+        if not commands:
+            continue
+        command = re.match(r"^[ \t]*local[ \t]+notation\b", clean_line)
+        if len(commands) != 1 or command is None:
+            return False
+        quoted = re.match(
+            r'''[ \t]+"([A-Za-z_][A-Za-z0-9_']*)"''', raw_line[command.end():]
+        )
+        if quoted is None:
+            return False
+        tail = clean_line[command.end() + quoted.end():]
+        if re.fullmatch(r"[ \t]*=>[ \t]*\S.*", tail) is None:
+            return False
+    return True
+
+
+@functools.lru_cache(maxsize=128)
+def _native_nullary_matrix_carriers(source: str) -> dict[str, tuple[str, str, str]]:
+    """Credit only unique nullary constants with an exact matrix result type.
+
+    A Matrix occurrence in a binder, a function domain, or a product type is
+    insufficient. Supported results are a complete primitive Matrix type or
+    the existing bounded scoped notation for one. No def/abbrev type-alias
+    expansion is used here; the legacy product-witness resolver is unchanged.
+    """
+    clean = _strip_lean_comments_and_strings(source)
+    names = [name for _kind, name in _native_witness_declarations(source)]
+    declaration_start = re.compile(
+        r"(?m)^[ \t]*(?:(?:private|protected|noncomputable)[ \t]+)*"
+        r"(?:def|abbrev)[ \t]+([A-Za-z_][A-Za-z0-9_']*)\b"
+    )
+    carriers: dict[str, tuple[str, str, str]] = {}
+    for match in declaration_start.finditer(clean):
+        name = match.group(1)
+        if names.count(name) != 1:
+            continue
+        # Ambient section variables may become implicit definition arguments.
+        if _ambient_variable_declarations(clean, match.start()):
+            continue
+        declaration = clean[match.start():]
+        assignment = _top_level_assignment_index(declaration)
+        if assignment is None:
+            continue
+        parsed = _top_level_result_type(declaration[:assignment])
+        if parsed is None or re.fullmatch(
+            r"\s*(?:(?:private|protected|noncomputable)\s+)*"
+            rf"(?:def|abbrev)\s+{re.escape(name)}\s*", parsed[0],
+        ) is None:
+            continue
+        result_type = parsed[1].strip()
+        carrier = None
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_']*", result_type):
+            # Attribute-insensitive declaration collisions also invalidate a
+            # notation alias, including names qualified in another namespace.
+            if result_type not in names:
+                carrier = _active_nullary_matrix_notations(
+                    source, match.start()
+                ).get(result_type)
+        else:
+            head = re.match(r"Matrix\b", result_type)
+            if head is not None:
+                position = head.end()
+                for _ in range(3):
+                    atom = _balanced_lean_atom(result_type, position)
+                    if atom is None:
+                        break
+                    _value, position = atom
+                else:
+                    if not result_type[position:].strip():
+                        carrier = _matrix_carrier_at(result_type)
+        if carrier is not None:
+            carriers[name] = carrier
+    return carriers
+
+
 def _witness_matches_matrix_carriers(source: str, binders: str, result: str,
                                      required_carriers: set[tuple[str, str, str]]) -> bool:
     """Require the two product operands in the witness to belong to this carrier."""
@@ -1377,6 +1578,40 @@ def _witness_matches_matrix_carriers(source: str, binders: str, result: str,
                     and _known_nontrivial_scalar_type(target[2], source)):
                 return True
         return False
+
+    # This is a complete result proposition, not an occurrence inside an
+    # implication/disjunction or a premise. Closure is checked by the caller.
+    native_not_commute = re.fullmatch(
+        r"\s*¬\s*Commute\s+([A-Za-z_][A-Za-z0-9_']*)\s+"
+        r"([A-Za-z_][A-Za-z0-9_']*)\s*", result,
+    )
+    if native_not_commute:
+        left, right = native_not_commute.groups()
+        declarations = _native_witness_declarations(source)
+        names = [name for _kind, name in declarations]
+        if not _native_witness_notation_is_supported(source):
+            return False
+        if any(name in {"Commute", "Matrix", "Fin"} for name in names):
+            return False
+        # The legacy taint scanner has a narrower declaration parser. This
+        # native-only rule rejects attributed axioms/opaque declarations and
+        # every authored-hole diagnostic anywhere in the preceding source.
+        if any(kind in {"axiom", "opaque", "postulate"} for kind, _name in declarations):
+            return False
+        if check_authored_axioms_and_holes(source):
+            return False
+        notations = _active_nullary_matrix_notations(source, len(source))
+        if any(name in notations for name in {"Commute", "Matrix", "Fin", left, right}):
+            return False
+        native_carriers = _native_nullary_matrix_carriers(source)
+        left_carrier = native_carriers.get(left)
+        return (
+            left != right
+            and left_carrier is not None
+            and left_carrier == native_carriers.get(right)
+            and compatible(left_carrier)
+        )
+
 
     pair = re.search(
         r"\b(\w+)\s*\*\s*(\w+)\s*(?:≠|!=)\s*(\w+)\s*\*\s*(\w+)\b",
@@ -1538,6 +1773,7 @@ def _has_closed_noncommutativity_witness(
     required_carriers: set[tuple[str, str, str]] | None = None,
 ) -> bool:
     """Recognize a closed theorem whose result states a witness, not an assumption."""
+    raw_source = source
     source = _strip_lean_comments_and_strings(source)
     unsafe_names = _unsafe_local_declaration_names(source)
     starts = list(re.finditer(
@@ -1595,7 +1831,8 @@ def _has_closed_noncommutativity_witness(
             continue
         if re.search(_NONCOMMUTATIVITY_PATTERNS, normalized_result):
             if required_carriers is not None and not _witness_matches_matrix_carriers(
-                source, " ".join([binders, *ambient_binders]), result, required_carriers
+                raw_source[:match.start()], " ".join([binders, *ambient_binders]),
+                result, required_carriers
             ):
                 continue
             return True
@@ -1620,8 +1857,8 @@ def _has_resolved_import_witness(
     if filename == "<unknown>":
         return False
     repo_root = import_root or Path(__file__).resolve().parents[2]
-    source = _strip_lean_comments_and_strings(source)
     subject_carriers = required_carriers or _required_matrix_carriers(source)
+    source = _strip_lean_comments_and_strings(source)
     imported_modules = [
         module
         for imported_line in re.findall(
@@ -1643,9 +1880,7 @@ def _has_resolved_import_witness(
         if candidate is None:
             continue
         try:
-            imported_source = _strip_lean_comments_and_strings(
-                candidate.read_text(encoding="utf-8")
-            )
+            imported_source = candidate.read_text(encoding="utf-8")
         except OSError:
             continue
         if any(
@@ -2261,6 +2496,7 @@ def screen_lean_content(
     content: str, filename: str = "<unknown>", *, import_root: Path | None = None
 ) -> list[TrapViolation]:
     """Run the 17-trap screener on a Lean source string."""
+    raw_content = content
     content = _strip_lean_comments_and_strings(content)
     violations: list[TrapViolation] = []
     lines = content.splitlines()
@@ -2272,7 +2508,7 @@ def screen_lean_content(
     violations.extend(check_homomorphism_rejection(lines))
     violations.extend(
         check_noncommutative_witness_requirement(
-            content, lines, filename, import_root=import_root
+            raw_content, lines, filename, import_root=import_root
         )
     )
     violations.extend(check_tactic_misuse_on_operators(lines))

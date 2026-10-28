@@ -6,11 +6,15 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.OperatorAlgebra.PeirceKrausGeometry
 import InfoGeometry.OperatorAlgebra.OperatorGeometryExamples
+import InfoGeometry.OperatorAlgebra.OperatorExtensionExamples
+import InfoGeometry.OperatorAlgebra.MatrixCasimirExamples
+import InfoGeometry.OperatorAlgebra.PeircePairExamples
+import InfoGeometry.OperatorAlgebra.OperatorSuperoperatorExamples
 import Lean.Util.CollectAxioms
 import Lean.Util.FoldConsts
 import Lean.Data.Json
 
-/-! Audit every declaration owned by the five additions, including generated
+/-! Audit every declaration owned by the twenty mathematical modules, including generated
 declarations. Dependencies come from the checked types and proof/definition
 values, and axioms are collected transitively. This is verification tooling. -/
 
@@ -23,7 +27,22 @@ private def owners : Array Name := #[
   `InfoGeometry.OperatorAlgebra.MatrixTraceGeometry,
   `InfoGeometry.OperatorAlgebra.PeirceTraceGeometry,
   `InfoGeometry.OperatorAlgebra.PeirceKrausGeometry,
-  `InfoGeometry.OperatorAlgebra.OperatorGeometryExamples
+  `InfoGeometry.OperatorAlgebra.OperatorGeometryExamples,
+  `InfoGeometry.OperatorAlgebra.PeirceChiralGeometry,
+  `InfoGeometry.OperatorAlgebra.MatrixMaurerCartan,
+  `InfoGeometry.OperatorAlgebra.MatrixConservation,
+  `InfoGeometry.OperatorAlgebra.MatrixCayleyGeometry,
+  `InfoGeometry.OperatorAlgebra.OperatorExtensionExamples,
+  `InfoGeometry.OperatorAlgebra.MatrixCasimirExamples,
+  `InfoGeometry.OperatorAlgebra.PeircePairGeometry,
+  `InfoGeometry.OperatorAlgebra.PeircePairPositivity,
+  `InfoGeometry.OperatorAlgebra.PeircePairExamples,
+  `InfoGeometry.OperatorAlgebra.MatrixLieJordanOperators,
+  `InfoGeometry.OperatorAlgebra.PeirceGradedDifferential,
+  `InfoGeometry.OperatorAlgebra.PeirceGradedTraceGeometry,
+  `InfoGeometry.OperatorAlgebra.MatrixSquareZeroPairs,
+  `InfoGeometry.OperatorAlgebra.PeirceInnerAction,
+  `InfoGeometry.OperatorAlgebra.OperatorSuperoperatorExamples
 ]
 
 private def ownerOf (env : Environment) (n : Name) : Name :=

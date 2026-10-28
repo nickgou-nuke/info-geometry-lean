@@ -80,3 +80,11 @@ recovering undoubled quantities requires extra hypotheses.
 ## Verification
 
 Pending kernel, axiom, vacuity, and independent acceptance gates.
+
+Separate repository-wide checks are not being represented as passing:
+at source `18253fe9faf82d676f4c2eb4c6e050358cad88b8`, style run
+40665096410 stops at the existing filename case collision
+`Canonical/KRDualityCascade.lean` versus `Canonical/KrDualityCascade.lean`;
+Sorry Gate run 40665096270 cannot start its build because `lake` is absent
+from that runner. Neither reaches the new proof modules. These unrelated
+infrastructure defects are outside this mathematical change.

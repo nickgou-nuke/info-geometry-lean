@@ -30,13 +30,17 @@ jobs:
             ~/.cache/mathlib
           key: rectangular-proof-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
       - name: Install pinned Lean toolchain
+        timeout-minutes: 6
         shell: bash
         run: |
           set -euo pipefail
           if [ ! -x "$HOME/.elan/bin/elan" ]; then
-            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+            curl --connect-timeout 15 --max-time 60 --retry 2 -sSf \
+              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              -o "$RUNNER_TEMP/elan-init.sh"
+            timeout 120 sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
           fi
-          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+          timeout 180 "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check matrix proofs and inspect axioms
         run: bash scripts/quality/check-clifford-peirce.sh

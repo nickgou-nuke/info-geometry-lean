@@ -2,10 +2,9 @@ name: Opposite Peirce proofs
 on:
   pull_request:
     paths:
-      - 'lean/InfoGeometry/NCG/OppositePeirceCoupling.lean'
-      - 'lean/InfoGeometry/NCG/OppositePeirceTrace.lean'
-      - 'lean/InfoGeometry/NCG/OppositePeirceAudit.lean'
+      - 'lean/InfoGeometry/NCG/OppositePeirce*.lean'
       - 'scripts/quality/check-opposite-peirce.sh'
+      - 'tools/quality/check_opposite_peirce.py'
       - '.github/workflows/opposite-peirce.yml'
       - 'lean-toolchain'
       - 'lake-manifest.json'
@@ -28,7 +27,10 @@ jobs:
           path: |
             ~/.elan
             ~/.cache/mathlib
-          key: rectangular-proof-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+          key: opposite-peirce-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+          restore-keys: |
+            graded-dmp-${{ runner.os }}-
+            rectangular-proof-${{ runner.os }}-
       - name: Install pinned Lean toolchain
         timeout-minutes: 6
         shell: bash
@@ -42,10 +44,14 @@ jobs:
           fi
           timeout 180 "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check matrix proofs and inspect axioms
+      - name: Check exact source closure and all owned declarations
         run: bash scripts/quality/check-opposite-peirce.sh
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: opposite-peirce-proof-logs
-          path: .artifacts/opposite-peirce
+          path: |
+            .artifacts/opposite-peirce/**/*.log
+            .artifacts/opposite-peirce/**/*.json
+            .artifacts/opposite-peirce/**/*.txt
+            .artifacts/opposite-peirce/src

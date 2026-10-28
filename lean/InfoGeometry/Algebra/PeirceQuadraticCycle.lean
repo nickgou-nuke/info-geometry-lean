@@ -27,6 +27,7 @@ lemma square_zero_left {u : A} (hu : u * u = 0) (x : A) : u * (u * x) = 0 := by
 theorem sum_sq {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
     (u + v) * (u + v) = u * v + v * u := by
   simp only [add_mul, mul_add, hu, hv, zero_add, add_zero]
+  abel
 
 theorem difference_sq {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
     (u - v) * (u - v) = -(u * v + v * u) := by
@@ -35,7 +36,8 @@ theorem difference_sq {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
 
 theorem difference_mul_sum {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
     (u - v) * (u + v) = u * v - v * u := by
-  simp only [sub_mul, mul_add, hu, hv, zero_add, add_zero]
+  simp only [sub_mul, mul_add, hu, hv]
+  abel
 
 theorem sum_mul_difference {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
     (u + v) * (u - v) = -(u * v - v * u) := by
@@ -72,7 +74,7 @@ theorem quadratic_central_on_adjoin {R : Type*} [CommRing R] [Algebra R A]
   · intro r
     exact (Algebra.commutes r (u * v + v * u)).symm
   · intro a b _ _ ha hb
-    rw [mul_add, add_mul, ha, hb]
+    rw [mul_add, ha, hb, ← add_mul]
   · intro a b _ _ ha hb
     calc
       _ = ((u * v + v * u) * a) * b := by rw [mul_assoc]
@@ -86,14 +88,14 @@ theorem bracket_sum {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
     ⁅u * v - v * u, u + v⁆ = 2 • ((u * v + v * u) * (u - v)) := by
   simp only [Ring.lie_def, two_nsmul, add_mul, mul_add, sub_mul, mul_sub,
     mul_assoc, hu, hv, square_zero_left hu, square_zero_left hv,
-    zero_mul, mul_zero, add_zero, zero_add, sub_zero, zero_sub]
+    mul_zero, add_zero, zero_add, sub_zero, zero_sub]
   abel
 
 theorem bracket_difference {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
     ⁅u * v - v * u, u - v⁆ = 2 • ((u * v + v * u) * (u + v)) := by
   simp only [Ring.lie_def, two_nsmul, add_mul, mul_add, sub_mul, mul_sub,
     mul_assoc, hu, hv, square_zero_left hu, square_zero_left hv,
-    zero_mul, mul_zero, add_zero, zero_add, sub_zero, zero_sub]
+    mul_zero, add_zero, zero_add, sub_zero, zero_sub]
   abel
 
 theorem bracket_square_eq_quadratic_square {u v : A}
@@ -101,8 +103,8 @@ theorem bracket_square_eq_quadratic_square {u v : A}
     (u * v - v * u) * (u * v - v * u) =
       (u * v + v * u) * (u * v + v * u) := by
   simp only [add_mul, mul_add, sub_mul, mul_sub, mul_assoc,
-    hu, hv, square_zero_left hu, square_zero_left hv,
-    zero_mul, mul_zero, add_zero, zero_add, sub_zero, zero_sub]
+    square_zero_left hu, square_zero_left hv,
+    mul_zero, add_zero, zero_add, sub_zero, zero_sub]
   abel
 
 theorem bracket_twice_sum {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
@@ -111,7 +113,7 @@ theorem bracket_twice_sum {u v : A} (hu : u * u = 0) (hv : v * v = 0) :
   simp only [Ring.lie_def, show (4 : ℕ) = 2 + 2 from rfl, add_nsmul, two_nsmul,
     add_mul, mul_add, sub_mul, mul_sub, neg_mul, mul_neg, mul_assoc,
     hu, hv, square_zero_left hu, square_zero_left hv,
-    zero_mul, mul_zero, add_zero, zero_add, sub_zero, zero_sub]
+    mul_zero, add_zero, zero_add, sub_zero, zero_sub]
   abel
 
 /-- A reciprocal adjoint cycle gives this exact derivative of its mixed product. -/

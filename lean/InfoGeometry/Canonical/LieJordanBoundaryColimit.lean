@@ -73,8 +73,9 @@ theorem ofStage_quadratic_commutes (n : ℕ) (u v : Stage n)
         (ofStage n u * ofStage n v + ofStage n v * ofStage n u) := by
   have hu' : ofStage n u * ofStage n u = 0 := limit_square_zero hu
   have hv' : ofStage n v * ofStage n v = 0 := limit_square_zero hv
-  rw [mul_add, add_mul,
+  rw [mul_add,
     InfoGeometry.Algebra.PeirceQuadraticCycle.quadratic_commutes_left hu',
-    InfoGeometry.Algebra.PeirceQuadraticCycle.quadratic_commutes_right hv']
+    InfoGeometry.Algebra.PeirceQuadraticCycle.quadratic_commutes_right hv',
+    ← add_mul]
 
 end InfoGeometry.Canonical.LieJordanBoundaryColimit

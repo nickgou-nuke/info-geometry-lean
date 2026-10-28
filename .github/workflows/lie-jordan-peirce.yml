@@ -1,0 +1,54 @@
+name: Lie-Jordan Peirce scoped proof check
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/LieJordan*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceLieJordan*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceTracePairing.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/OperatorDiracSchur.lean'
+      - 'tools/quality/check_lie_jordan_peirce.py'
+      - '.github/workflows/lie-jordan-peirce.yml'
+permissions:
+  contents: read
+concurrency:
+  group: lie-jordan-peirce-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+jobs:
+  scoped-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Resolve the unchanged repository Mathlib pin
+        id: pins
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path('lake-manifest.json').read_text())
+          pin = next(p['rev'] for p in data['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f'mathlib={pin}\n')
+          PY
+      - uses: actions/checkout@v5
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: .validation/mathlib
+          persist-credentials: false
+      - name: Install declared Lean toolchain
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+      - name: Serial source compilation and native axiom audit
+        run: python3 tools/quality/check_lie_jordan_peirce.py --mathlib-root .validation/mathlib --output .artifacts/lie-jordan-peirce
+      - name: Preserve compiler evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lie-jordan-peirce-${{ github.sha }}
+          path: .artifacts/lie-jordan-peirce
+          include-hidden-files: true

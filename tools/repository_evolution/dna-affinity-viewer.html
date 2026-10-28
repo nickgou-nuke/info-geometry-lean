@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Structural DNA affinity — unrooted viewer</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f3f5f7; --panel:#fff; --ink:#182431; --muted:#586774; --line:#d6dee5; --accent:#096b70; --soft:#e5f3f1; --edge:#8898a5; --negative:#b34167; --error:#a52a34; --shadow:0 8px 28px #142c4110; }
+    @media (prefers-color-scheme:dark) { :root { --bg:#111922; --panel:#192530; --ink:#e6edf2; --muted:#a7b7c4; --line:#344453; --accent:#79d8cb; --soft:#203d40; --edge:#8496a8; --negative:#ff9ab8; --error:#ffa8ad; --shadow:0 8px 28px #0002; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:1580px; margin:auto; padding:28px; }
+    h1 { font-size:clamp(25px,3vw,36px); line-height:1.15; letter-spacing:-.035em; margin:4px 0 12px; }
+    h2 { margin:0 0 12px; font-size:17px; }
+    h3 { margin:0 0 8px; font-size:15px; }
+    p { margin:8px 0; }
+    .eyebrow { color:var(--accent); font-weight:700; font-size:12px; letter-spacing:.11em; text-transform:uppercase; }
+    .intro { max-width:920px; color:var(--muted); }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); }
+    .load { margin:22px 0 16px; padding:17px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    .load label { font-weight:650; }
+    input,button { font:inherit; }
+    input[type=file] { max-width:100%; }
+    input[type=file]::file-selector-button,button { padding:8px 13px; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--ink); cursor:pointer; }
+    button:hover,input[type=file]::file-selector-button:hover { background:var(--soft); }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    #load-status { color:var(--muted); font-size:13px; overflow-wrap:anywhere; }
+    #error { margin:12px 0; padding:14px 18px; border:1px solid var(--error); border-radius:10px; color:var(--error); background:var(--panel); }
+    [hidden] { display:none!important; }
+    #empty { padding:36px; max-width:920px; margin:28px auto; }
+    #empty p { color:var(--muted); }
+    code { font:13px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .command { display:block; margin:18px 0; padding:14px; background:var(--bg); border-radius:8px; overflow-wrap:anywhere; white-space:normal; }
+    .metrics { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; margin:0 0 16px; }
+    .metric { padding:14px 16px; }
+    .metric dt { color:var(--muted); font-size:12px; }
+    .metric dd { margin:4px 0 0; font-size:24px; font-weight:650; letter-spacing:-.025em; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:16px; align-items:start; }
+    .plot-panel { overflow:hidden; }
+    .plot-heading { padding:17px 20px 12px; border-bottom:1px solid var(--line); }
+    .plot-heading h2 { margin-bottom:5px; }
+    .topology-note { color:var(--accent); font-size:13px; font-weight:650; }
+    .toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line); }
+    .search { display:flex; gap:8px; align-items:center; flex:1 1 230px; }
+    .search label { font-size:13px; color:var(--muted); }
+    input[type=search] { min-width:100px; width:100%; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:7px; padding:8px 10px; }
+    #search-status { min-height:18px; color:var(--muted); font-size:12px; padding:0 18px; }
+    #plot { display:block; width:100%; height:640px; touch-action:none; cursor:grab; }
+    #plot.dragging { cursor:grabbing; }
+    .edge-line { stroke:var(--edge); stroke-width:1.6; vector-effect:non-scaling-stroke; }
+    .negative .edge-line { stroke:var(--negative); stroke-dasharray:6 4; stroke-width:2; }
+    .edge.selected .edge-line,.edge:focus .edge-line { stroke:var(--accent); stroke-width:3.5; }
+    .edge-hit { stroke:transparent; stroke-width:15; vector-effect:non-scaling-stroke; }
+    .edge,.tip { cursor:pointer; outline:none; }
+    .inner-node { fill:var(--edge); }
+    .tip circle { fill:var(--panel); stroke:var(--accent); stroke-width:1.8; vector-effect:non-scaling-stroke; }
+    .tip text { fill:var(--ink); font-size:12px; dominant-baseline:middle; }
+    .tip.selected circle,.tip.search-match circle,.tip:focus circle { fill:var(--accent); stroke-width:3; }
+    .tip.selected text,.tip.search-match text,.tip:focus text { fill:var(--accent); font-weight:700; }
+    .tip.is-dim { opacity:.68; }
+    .plot-footer { border-top:1px solid var(--line); padding:12px 18px; font-size:12px; color:var(--muted); }
+    .legend { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:4px; }
+    .swatch { display:inline-block; width:25px; border-top:2px solid var(--edge); vertical-align:middle; margin-right:6px; }
+    .swatch.negative { border-color:var(--negative); border-top-style:dashed; }
+    aside { display:grid; gap:14px; }
+    aside .panel { padding:18px; overflow:hidden; }
+    .muted { color:var(--muted); }
+    .detail-grid { margin:0; }
+    .detail-grid dt { font-size:12px; color:var(--muted); margin-top:12px; }
+    .detail-grid dd { margin:2px 0 0; overflow-wrap:anywhere; }
+    .detail-grid dd.mono { font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .small { font-size:13px; }
+    .warning { color:var(--negative); }
+    .supplement { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+    .supplement .panel { padding:18px 20px; min-width:0; }
+    summary { cursor:pointer; font-weight:650; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; max-height:340px; overflow:auto; margin:12px 0 0; }
+    .marker-list { max-height:340px; overflow:auto; padding-left:20px; font-size:12px; overflow-wrap:anywhere; }
+    .marker-list li { margin:8px 0; }
+    .footnote { color:var(--muted); margin-top:18px; font-size:12px; }
+    @media(max-width:1120px) { .workspace { grid-template-columns:minmax(0,1fr) 290px; } .metrics { grid-template-columns:repeat(3,minmax(0,1fr)); } #plot { height:570px; } }
+    @media(max-width:820px) { main { padding:18px; } .workspace,.supplement { grid-template-columns:1fr; } aside { grid-template-columns:1fr 1fr; } #plot { height:540px; } }
+    @media(max-width:520px) { main { padding:12px; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } aside { grid-template-columns:1fr; } #empty { padding:22px; } #plot { height:470px; } .load { padding:14px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Observed characters · structural affinity</div>
+    <h1>An unrooted view of the repo’s DNA</h1>
+    <p class="intro">Explore the neighbor-joining tree inferred from comparable character profiles. Branches describe structural affinity; no root, ancestral declaration, evolutionary date, or molecular clock is inferred.</p>
+  </header>
+  <section class="load panel" aria-label="Load an inference result">
+    <label for="file">Import affinity JSON</label>
+    <input id="file" type="file" accept=".json,application/json">
+    <span id="load-status" role="status" aria-live="polite">Offline · your file stays in this browser</span>
+  </section>
+  <div id="error" role="alert" tabindex="-1" hidden></div>
+  <section id="empty" class="panel">
+    <h2>Actual Arango fingerprints have not been loaded.</h2>
+    <p>From the repository root, run the inference CLI on observed character profiles or native term-digest snapshots, then import its <code>repo-structural-affinity/v1</code> output here.</p>
+    <code class="command">python3 tools/repository_evolution/dna_character_tree.py --input profiles.json --out artifacts/repository-evolution/affinity.json</code>
+    <p>Inference requires no Git SHA. Exact declaration names are assumed alignments; a separate observation-to-commit mapping is needed only for a later comparison with Git ancestry.</p>
+    <p class="small">No sample graph is preloaded. This page makes no network requests.</p>
+  </section>
+  <section id="loaded" hidden>
+    <dl id="metrics" class="metrics" aria-label="Inference summary"></dl>
+    <div class="workspace">
+      <section class="panel plot-panel" aria-labelledby="tree-title">
+        <div class="plot-heading">
+          <h2 id="tree-title">Unrooted structural-affinity tree</h2>
+          <div class="topology-note">Equal-angle topology · edges are uniform on screen and are not to scale</div>
+          <p class="small muted">The layout center has no genealogical meaning. Select an edge to inspect its signed, exact branch length. Zero-length branches and tie breaking do not establish support for a split.</p>
+        </div>
+        <div class="toolbar">
+          <div class="search"><label for="search">Find taxon</label><input id="search" type="search" placeholder="Label or observation ID" autocomplete="off"></div>
+          <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+          <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
+          <button id="fit" type="button">Fit</button>
+        </div>
+        <div id="search-status" role="status" aria-live="polite"></div>
+        <svg id="plot" xmlns="http://www.w3.org/2000/svg" role="group" aria-labelledby="svg-title svg-description">
+          <title id="svg-title">Unrooted structural-affinity topology</title>
+          <desc id="svg-description">Uniform display lengths. Dashed edges retain negative inferred branch lengths. Tips and edges can be selected with a pointer or by pressing Enter when focused.</desc>
+          <g id="drawing"></g>
+        </svg>
+        <div class="plot-footer">
+          <div class="legend"><span><span class="swatch"></span>Inferred edge</span><span><span class="swatch negative"></span>Negative branch length</span></div>
+          Scroll to zoom; drag the background to pan. Use Tab and Enter to select tips or edges. Search and press Enter to visit a match. Long labels are shortened here; selection shows the full text.
+        </div>
+      </section>
+      <aside>
+        <section class="panel" aria-labelledby="selection-title"><h2 id="selection-title">Inspect a tip or edge</h2><div id="selection" aria-live="polite"><p class="muted small">Select a tip for its observation ID and profile details, or an edge for its exact signed length.</p></div></section>
+        <section class="panel" aria-labelledby="diagnostic-title"><h2 id="diagnostic-title">How well does a tree fit?</h2><div id="diagnostics"></div><p class="muted small">Residuals describe the fit to the observed distance matrix. They are not ancestry evidence or model confidence.</p></section>
+      </aside>
+    </div>
+    <div class="supplement">
+      <section class="panel"><h2>Character coverage</h2><p class="small muted">Every retained marker is observed in every taxon with a matching algorithm version. Missing or open observations are unknown; incompatible columns are excluded for all pairs.</p><p id="coverage-note" class="small"></p><details><summary>Retained markers</summary><ol id="retained-list" class="marker-list"></ol></details><details><summary>Excluded markers</summary><ol id="excluded-list" class="marker-list"></ol></details></section>
+      <section class="panel"><h2>Provenance assertions</h2><p class="small muted">These are assertions copied from the input. This viewer validates the export structure and tree; it does not verify database provenance or a historical binding.</p><details><summary>View input provenance</summary><pre id="provenance"></pre></details><details><summary>Observation identifiers and binding status</summary><pre id="binding"></pre></details></section>
+    </div>
+    <p class="footnote">Distance is the fraction of comparable columns with unequal categorical states. Hashes are allele labels, never numeric or bit distances. Shared structure and correlated markers can produce affinity without common historical descent.</p>
+  </section>
+</main>
+<script>
+"use strict";
+(() => {
+  const $ = id => document.getElementById(id);
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  const EXPECTED_SCOPE = "unrooted_structural_affinity_not_historical_ancestry";
+  const MAX_TAXA = 128;
+  let current = null, positions = new Map(), tipElements = new Map(), selectedElement = null;
+  let view = null, baseView = null, drag = null, searchMatches = [], searchIndex = -1, loadSerial = 0;
+  const fail = message => { throw new Error(message); };
+  const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
+  const text = value => typeof value === "string" && value.trim().length > 0;
+  const finite = value => typeof value === "number" && Number.isFinite(value);
+  const count = value => Number.isSafeInteger(value) && value >= 0;
+  const number = value => value === 0 ? "0" : Math.abs(value) < .0001 || Math.abs(value) >= 100000 ? value.toExponential(3) : Number(value.toPrecision(6)).toLocaleString(undefined, {maximumFractionDigits:8});
+
+  function validate(data) {
+    if (!object(data) || data.schema !== "repo-structural-affinity/v1") fail("Expected a repo-structural-affinity/v1 inference result. Raw snapshots must first pass through the CLI.");
+    if (data.claim_scope !== EXPECTED_SCOPE) fail("The export must explicitly claim unrooted structural affinity, without historical ancestry.");
+    if (!Array.isArray(data.taxa) || data.taxa.length < 3 || data.taxa.length > MAX_TAXA) fail("Expected between 3 and 128 taxa.");
+    const taxa = new Map();
+    for (const row of data.taxa) {
+      if (!object(row) || !text(row.id) || taxa.has(row.id) || (row.label !== undefined && !text(row.label))) fail("Taxa need unique, nonempty IDs and valid labels.");
+      taxa.set(row.id, {id:row.id, label:row.label || row.id});
+    }
+    const tree = data.tree;
+    if (!object(tree) || tree.orientation !== "unrooted" || tree.undirected !== true) fail("The tree must explicitly be undirected and unrooted.");
+    if (!Array.isArray(tree.nodes) || tree.nodes.length < taxa.size || tree.nodes.length > 2 * MAX_TAXA - 2 || !Array.isArray(tree.edges)) fail("Invalid tree node/edge arrays or unsupported node count.");
+    const nodes = new Map(), adjacency = new Map(), tipIds = new Map();
+    for (const node of tree.nodes) {
+      if (!object(node) || !text(node.id) || nodes.has(node.id) || !["taxon","internal"].includes(node.kind)) fail("Tree nodes need unique IDs and a taxon or internal kind.");
+      if (node.kind === "taxon") {
+        if (!text(node.taxon_id) || !taxa.has(node.taxon_id) || tipIds.has(node.taxon_id)) fail("Each taxon must have one unique, valid tip reference.");
+        tipIds.set(node.taxon_id, node.id);
+      }
+      nodes.set(node.id, node); adjacency.set(node.id, []);
+    }
+    if (tipIds.size !== taxa.size) fail("Some taxa have no corresponding tree tip.");
+    if (tree.edges.length !== nodes.size - 1) fail("A connected acyclic tree must have exactly one fewer edge than nodes.");
+    const parents = new Map([...nodes.keys()].map(id => [id,id]));
+    function representative(id) { let root=id; while(parents.get(root)!==root) root=parents.get(root); while(parents.get(id)!==id) { const next=parents.get(id); parents.set(id,root); id=next; } return root; }
+    const pairKeys = new Set();
+    const edges = tree.edges.map((edge,index) => {
+      if (!object(edge) || !nodes.has(edge.a) || !nodes.has(edge.b) || edge.a === edge.b) fail("An edge has an invalid node reference or a self-loop.");
+      if (!finite(edge.length)) fail("Every branch length must be a finite number.");
+      if (!text(edge.exact_length) || edge.exact_length.length > 1024 || !/^-?\d+(?:\/[1-9]\d*)?$/.test(edge.exact_length)) fail("Every edge needs a valid exact rational length from the CLI.");
+      const parts=edge.exact_length.split("/"), numerator=BigInt(parts[0]), denominator=BigInt(parts[1] || "1");
+      const negative=numerator < 0n;
+      if ((negative && edge.length >= 0) || (numerator >= 0n && edge.length < 0) || (numerator === 0n && edge.length !== 0)) fail("An edge's exact length and numeric length have inconsistent signs.");
+      const ratio=Number(numerator)/Number(denominator);
+      if (Number.isFinite(ratio) && Math.abs(ratio-edge.length) > 1e-10*Math.max(1,Math.abs(ratio),Math.abs(edge.length))) fail("An edge's exact length disagrees with its numeric length.");
+      const pair=JSON.stringify([edge.a,edge.b].sort());
+      if (pairKeys.has(pair)) fail("The tree contains duplicate edges.");
+      pairKeys.add(pair);
+      const left=representative(edge.a), right=representative(edge.b);
+      if (left === right) fail("The graph contains a cycle.");
+      parents.set(left,right);
+      adjacency.get(edge.a).push({node:edge.b,index}); adjacency.get(edge.b).push({node:edge.a,index});
+      return {...edge,index,negative};
+    });
+    if (new Set([...nodes.keys()].map(representative)).size !== 1) fail("The graph is disconnected.");
+    for (const [id,node] of nodes) {
+      const degree=adjacency.get(id).length;
+      if (node.kind === "taxon" && degree !== 1) fail("Every declared taxon must be a terminal tip.");
+      if (node.kind === "internal" && degree < 2) fail("An internal grouping cannot be a terminal tip.");
+    }
+    const negativeCount=edges.filter(edge=>edge.negative).length;
+    if (!count(tree.negative_branch_count) || tree.negative_branch_count !== negativeCount || tree.negative_lengths_clipped !== false) fail("Negative-length reporting is missing, inconsistent, or indicates clipping.");
+    const alignment=data.alignment;
+    if (!object(alignment) || !count(alignment.retained_marker_count) || alignment.retained_marker_count < 1 || !count(alignment.excluded_marker_count)) fail("Valid retained/excluded marker counts are required.");
+    if (!Array.isArray(alignment.retained_markers) || alignment.retained_markers.length !== alignment.retained_marker_count || !Array.isArray(alignment.excluded_markers) || alignment.excluded_markers.length !== alignment.excluded_marker_count) fail("Marker details and coverage counts disagree.");
+    if (!alignment.retained_markers.every(row=>object(row)&&text(row.marker)&&text(row.algorithm_version))) fail("Retained marker metadata is invalid.");
+    if (!alignment.excluded_markers.every(row=>object(row)&&text(row.marker)&&Array.isArray(row.reasons)&&row.reasons.every(text))) fail("Excluded marker metadata is invalid.");
+    const diagnostics=data.diagnostics;
+    if (!object(diagnostics) || !object(diagnostics.tree_fit) || !finite(diagnostics.tree_fit.path_distance_rmse) || diagnostics.tree_fit.path_distance_rmse < 0) fail("A finite, nonnegative tree reconstruction RMSE is required.");
+    const four=diagnostics.four_point;
+    if (!object(four) || !["measured","requires_at_least_four_taxa"].includes(four.status)) fail("Four-point diagnostic status is missing or invalid.");
+    if (four.status === "measured" && (!["all_quartets","deterministic_sample_of_quartets"].includes(four.evaluation_scope) || !count(four.evaluated_quartets) || four.evaluated_quartets < 1 || !count(four.total_quartets) || four.total_quartets < four.evaluated_quartets || !finite(four.max_residual) || four.max_residual < 0)) fail("Four-point diagnostic values or evaluation scope are invalid.");
+    if (four.status === "requires_at_least_four_taxa" && taxa.size !== 3) fail("Four-point diagnostics are absent for a tree with at least four taxa.");
+    if (!object(data.provenance)) fail("Provenance assertions must be an object.");
+    const distance=data.distance_matrix;
+    if (!object(distance) || !Array.isArray(distance.taxon_order) || distance.taxon_order.length !== taxa.size || new Set(distance.taxon_order).size !== taxa.size || !distance.taxon_order.every(id=>taxa.has(id)) || !Array.isArray(distance.values) || distance.values.length !== taxa.size) fail("Distance-matrix taxon references are invalid.");
+    if (!distance.values.every(row=>Array.isArray(row)&&row.length===taxa.size&&row.every(value=>finite(value)&&value>=0&&value<=1))) fail("Expected a finite categorical mismatch matrix with entries between zero and one.");
+    for(let i=0;i<taxa.size;i++) for(let j=0;j<taxa.size;j++) if ((i===j && distance.values[i][j]!==0) || Math.abs(distance.values[i][j]-distance.values[j][i])>1e-12) fail("The distance matrix must be symmetric with a zero diagonal.");
+    return {data,taxa,nodes,adjacency,tipIds,edges,negativeCount};
+  }
+
+  function element(tag, content, className) { const node=document.createElement(tag); if(content!==undefined) node.textContent=content; if(className) node.className=className; return node; }
+  function svgElement(tag, attributes={}) { const node=document.createElementNS(SVG_NS,tag); for(const [key,value] of Object.entries(attributes)) node.setAttribute(key,String(value)); return node; }
+  function detailList(rows) { const list=element("dl",undefined,"detail-grid"); for(const [title,value,mono] of rows) { list.append(element("dt",title),element("dd",String(value),mono?"mono":undefined)); } return list; }
+  function markSelected(node) { if(selectedElement) selectedElement.classList.remove("selected"); selectedElement=node; if(node) node.classList.add("selected"); }
+  function endpointLabel(id) { const node=current.nodes.get(id); return node.kind==="taxon"?current.taxa.get(node.taxon_id).label:`Internal grouping (${id})`; }
+
+  function selectTip(id,focus=false) {
+    const node=current.nodes.get(id), taxon=current.taxa.get(node.taxon_id);
+    markSelected(tipElements.get(id));
+    $("selection-title").textContent="Observed taxon";
+    const rows=[["Label",taxon.label],["Observation ID",taxon.id,true],["Markers retained for every comparison",current.data.alignment.retained_marker_count.toLocaleString()]];
+    const observed=current.data.alignment.per_taxon_observed_marker_counts?.[taxon.id];
+    if(count(observed)) rows.push(["Observed markers before common-panel filtering",observed.toLocaleString()]);
+    const matrix=current.data.distance_matrix, index=matrix.taxon_order.indexOf(taxon.id);
+    const nearest=matrix.taxon_order.map((other,j)=>({id:other,distance:matrix.values[index][j]})).filter(row=>row.id!==taxon.id).sort((a,b)=>a.distance-b.distance||a.id.localeCompare(b.id));
+    rows.push(["Closest observed profile",`${current.taxa.get(nearest[0].id).label} · distance ${number(nearest[0].distance)}`]);
+    $("selection").replaceChildren(detailList(rows),element("p","A tip is an input observation. Similarity does not establish historical parenthood.","small muted"));
+    if(focus) { const position=positions.get(id); view={...view,x:position.x-view.w/2,y:position.y-view.h/2}; applyView(); }
+  }
+
+  function selectEdge(edge,node) {
+    markSelected(node); $("selection-title").textContent="Inferred undirected edge";
+    const rows=[["Endpoint A",endpointLabel(edge.a)],["Endpoint B",endpointLabel(edge.b)],["Exact signed branch length",edge.exact_length,true],["Decimal approximation",number(edge.length)],["Units","Retained-marker mismatch fraction"],["Display geometry","Uniform edge length; not to scale"]];
+    $("selection").replaceChildren(detailList(rows));
+    if(edge.negative) $("selection").append(element("p","This negative length is preserved and drawn dashed. It has not been clipped to zero.","small warning"));
+    if(edge.length===0) $("selection").append(element("p","This branch has zero inferred length. Its visible extent is a layout choice, not evidence of a supported separation.","small muted"));
+  }
+
+  function layout(model) {
+    const leaves=id=>model.nodes.get(id).kind==="taxon"?1:0;
+    function componentCount(id,parent) { let total=leaves(id); for(const next of model.adjacency.get(id)) if(next.node!==parent) total+=componentCount(next.node,id); return total; }
+    const candidates=[...model.nodes.values()].filter(node=>node.kind==="internal").map(node=>({id:node.id,balance:Math.max(...model.adjacency.get(node.id).map(next=>componentCount(next.node,node.id)))})).sort((a,b)=>a.balance-b.balance||a.id.localeCompare(b.id));
+    const anchor=candidates[0].id, result=new Map([[anchor,{x:0,y:0,angle:0}]]), unit=72;
+    function place(id,parent,start,end) {
+      const children=model.adjacency.get(id).filter(next=>next.node!==parent).sort((a,b)=>a.node.localeCompare(b.node));
+      const weights=children.map(next=>componentCount(next.node,id)), total=weights.reduce((a,b)=>a+b,0);
+      let angleStart=start;
+      children.forEach((next,index)=>{ const width=(end-start)*weights[index]/total, angle=angleStart+width/2, point=result.get(id); result.set(next.node,{x:point.x+unit*Math.cos(angle),y:point.y+unit*Math.sin(angle),angle}); place(next.node,id,angleStart,angleStart+width); angleStart+=width; });
+    }
+    place(anchor,null,-Math.PI/2,Math.PI*1.5);
+    return result;
+  }
+
+  function renderTree() {
+    positions=layout(current); tipElements=new Map(); selectedElement=null;
+    const group=$("drawing"); group.replaceChildren();
+    const activate=(node,handler)=>{ node.addEventListener("click",handler); node.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();handler();}}); };
+    for(const edge of current.edges) {
+      const a=positions.get(edge.a), b=positions.get(edge.b), line={x1:a.x,y1:a.y,x2:b.x,y2:b.y};
+      const node=svgElement("g",{class:`edge${edge.negative?" negative":""}`,tabindex:0,role:"button","aria-label":`Undirected edge, exact length ${edge.exact_length}${edge.negative?", negative":""}`});
+      node.append(svgElement("line",{...line,class:"edge-line"}),svgElement("line",{...line,class:"edge-hit"}));
+      const title=svgElement("title"); title.textContent=`Exact length ${edge.exact_length}; uniform display length`; node.append(title);
+      activate(node,()=>selectEdge(edge,node)); group.append(node);
+    }
+    for(const [id,node] of current.nodes) {
+      const point=positions.get(id);
+      if(node.kind==="internal") { const dot=svgElement("circle",{cx:point.x,cy:point.y,r:2.4,class:"inner-node"}); const title=svgElement("title"); title.textContent="Inferred internal grouping; no ancestor identity"; dot.append(title); group.append(dot); continue; }
+      const taxon=current.taxa.get(node.taxon_id), left=Math.cos(point.angle)<0;
+      const tip=svgElement("g",{class:"tip",tabindex:0,role:"button","aria-label":`${taxon.label}; observation ${taxon.id}`,transform:`translate(${point.x},${point.y})`});
+      tip.append(svgElement("circle",{r:4}));
+      const label=svgElement("text",{x:left?-10:10,y:0,"text-anchor":left?"end":"start"});
+      label.textContent=taxon.label.length>38?`${taxon.label.slice(0,13)}…${taxon.label.slice(-22)}`:taxon.label;
+      const title=svgElement("title"); title.textContent=`${taxon.label}\n${taxon.id}`;
+      tip.append(label,title); activate(tip,()=>selectTip(id)); tipElements.set(id,tip); group.append(tip);
+    }
+    const bounds=group.getBBox(), pad=28;
+    baseView={x:bounds.x-pad,y:bounds.y-pad,w:Math.max(bounds.width+2*pad,240),h:Math.max(bounds.height+2*pad,240)};
+    view={...baseView}; applyView();
+  }
+
+  function renderMarkerList(id,rows,excluded) {
+    const list=$(id); list.replaceChildren();
+    for(const row of rows.slice(0,100)) {
+      const description=excluded?`${row.marker} — ${row.reasons.join(", ")}${Array.isArray(row.missing_taxa)?`; missing in ${row.missing_taxa.length} taxa`:""}`:`${row.marker} — ${row.algorithm_version}`;
+      list.append(element("li",description));
+    }
+    if(rows.length>100) list.append(element("li",`Showing 100 of ${rows.length.toLocaleString()} markers. The complete list is in the imported JSON.`));
+    if(!rows.length) list.append(element("li","None."));
+  }
+
+  function render(model,name) {
+    current=model; $("loaded").hidden=false; $("empty").hidden=true; $("search").value=""; $("search-status").textContent=""; searchMatches=[]; searchIndex=-1;
+    const data=model.data, alignment=data.alignment, four=data.diagnostics.four_point, fit=data.diagnostics.tree_fit;
+    const metrics=[["Observed taxa",model.taxa.size.toLocaleString()],["Retained markers",alignment.retained_marker_count.toLocaleString()],["Excluded markers",alignment.excluded_marker_count.toLocaleString()],["Negative branches",model.negativeCount.toLocaleString()],["Tree-path RMSE",number(fit.path_distance_rmse)],["Max quartet residual",four.status==="measured"?number(four.max_residual):"n/a"]];
+    $("metrics").replaceChildren(...metrics.map(([label,value])=>{const node=element("div",undefined,"metric panel");node.append(element("dt",label),element("dd",value));return node;}));
+    const diagnosticRows=[["Pairwise reconstruction RMSE",number(fit.path_distance_rmse)],["Negative inferred branches",model.negativeCount.toLocaleString()]];
+    if(four.status==="measured") diagnosticRows.push(["Four-point scope",four.evaluation_scope==="all_quartets"?"All quartets":"Deterministic sample"],["Quartets evaluated",`${four.evaluated_quartets.toLocaleString()} / ${four.total_quartets.toLocaleString()}`],["Maximum four-point residual",number(four.max_residual)]);
+    else diagnosticRows.push(["Four-point scope","Requires at least four taxa"]);
+    $("diagnostics").replaceChildren(detailList(diagnosticRows));
+    $("selection-title").textContent="Inspect a tip or edge"; $("selection").replaceChildren(element("p","Select a tip for its observation ID and profile details, or an edge for its exact signed length.","muted small"));
+    $("coverage-note").textContent=`${alignment.retained_marker_count.toLocaleString()} retained; ${alignment.excluded_marker_count.toLocaleString()} excluded. Equal-weight categorical mismatch is computed on one shared complete-case panel.`;
+    renderMarkerList("retained-list",alignment.retained_markers,false); renderMarkerList("excluded-list",alignment.excluded_markers,true);
+    $("provenance").textContent=JSON.stringify(data.provenance,null,2);
+    $("binding").textContent=JSON.stringify({historical_binding:data.historical_binding??"Not supplied",observation_identifiers:data.adapter?.snapshots?.map(row=>({taxon_id:row.taxon_id,source_identifiers_asserted:row.source_identifiers_asserted}))??data.taxa},null,2);
+    $("load-status").textContent=`${name} · ${model.taxa.size} taxa · tree structure validated locally`;
+    renderTree();
+  }
+
+  function applyView() { if(view) $("plot").setAttribute("viewBox",`${view.x} ${view.y} ${view.w} ${view.h}`); }
+  function screenPoint(x,y) { const point=$("plot").createSVGPoint(); point.x=x;point.y=y;return point.matrixTransform($("plot").getScreenCTM().inverse()); }
+  function zoom(factor,center) {
+    if(!view) return;
+    const target=Math.max(baseView.w/30,Math.min(baseView.w*4,view.w/factor)), ratio=target/view.w;
+    const anchor=center||{x:view.x+view.w/2,y:view.y+view.h/2};
+    view={x:anchor.x-(anchor.x-view.x)*ratio,y:anchor.y-(anchor.y-view.y)*ratio,w:target,h:view.h*ratio};applyView();
+  }
+  $("zoom-in").addEventListener("click",()=>zoom(1.4)); $("zoom-out").addEventListener("click",()=>zoom(1/1.4)); $("fit").addEventListener("click",()=>{if(baseView){view={...baseView};applyView();}});
+  $("plot").addEventListener("wheel",event=>{if(!current)return;event.preventDefault();zoom(event.deltaY<0?1.15:1/1.15,screenPoint(event.clientX,event.clientY));},{passive:false});
+  $("plot").addEventListener("pointerdown",event=>{if(!current||event.button!==0||event.target.closest(".tip,.edge"))return;drag={x:event.clientX,y:event.clientY,id:event.pointerId};$("plot").setPointerCapture(event.pointerId);$("plot").classList.add("dragging");});
+  $("plot").addEventListener("pointermove",event=>{if(!drag||drag.id!==event.pointerId)return;const before=screenPoint(drag.x,drag.y),after=screenPoint(event.clientX,event.clientY);view.x-=after.x-before.x;view.y-=after.y-before.y;drag.x=event.clientX;drag.y=event.clientY;applyView();});
+  function endDrag(){drag=null;$("plot").classList.remove("dragging");}
+  $("plot").addEventListener("pointerup",endDrag);$("plot").addEventListener("pointercancel",endDrag);$("plot").addEventListener("lostpointercapture",endDrag);
+  $("search").addEventListener("input",()=>{
+    if(!current)return;const query=$("search").value.trim().toLocaleLowerCase();searchMatches=[];searchIndex=-1;
+    for(const [id,node] of tipElements){const tip=current.nodes.get(id),taxon=current.taxa.get(tip.taxon_id),match=query&&(taxon.label.toLocaleLowerCase().includes(query)||taxon.id.toLocaleLowerCase().includes(query));node.classList.toggle("search-match",Boolean(match));node.classList.toggle("is-dim",Boolean(query&&!match));if(match)searchMatches.push(id);}
+    $("search-status").textContent=query?`${searchMatches.length} matching taxa${searchMatches.length?" · press Enter to visit":""}`:"";
+  });
+  $("search").addEventListener("keydown",event=>{if(event.key==="Enter"&&searchMatches.length){event.preventDefault();searchIndex=(searchIndex+1)%searchMatches.length;selectTip(searchMatches[searchIndex],true);}});
+  $("file").addEventListener("change",async()=>{
+    const file=$("file").files?.[0];if(!file)return;const serial=++loadSerial;
+    current=null;drag=null;view=null;baseView=null;$("drawing").replaceChildren();$("loaded").hidden=true;$("empty").hidden=false;$("error").hidden=true;$("load-status").textContent=`Validating ${file.name}…`;
+    try {
+      if(file.size>128*1024*1024)fail("This local viewer supports JSON files up to 128 MiB.");
+      const raw=await file.text();if(serial!==loadSerial)return;
+      let data;try{data=JSON.parse(raw);}catch{fail("The selected file is not valid JSON.");}
+      render(validate(data),file.name);
+    } catch(error) {
+      if(serial!==loadSerial)return;current=null;$("loaded").hidden=true;$("empty").hidden=false;$("load-status").textContent="Import rejected; no graph rendered";$("error").textContent=error instanceof Error?error.message:String(error);$("error").hidden=false;$("error").focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -32,10 +32,14 @@ private theorem left_upper : p * U = U :=
   peirceCorner_absorb_left hp.eq
 
 private theorem right_upper : U * p = 0 := by
-  simp [component10, mul_assoc, complement_mul_idempotent p hp.eq]
+  change (p * a * complementIdempotent p) * p = 0
+  rw [mul_assoc, complement_mul_idempotent p hp.eq, mul_zero]
 
 private theorem left_lower : p * V = 0 := by
-  simp [component01, mul_assoc, idempotent_complement_nested p hp.eq]
+  change p * (complementIdempotent p * b * p) = 0
+  calc
+    _ = (p * complementIdempotent p) * (b * p) := by simp only [mul_assoc]
+    _ = 0 := by rw [idempotent_mul_complement p hp.eq, zero_mul]
 
 private theorem right_lower : V * p = V :=
   peirceCorner_absorb_right hp.eq

@@ -62,7 +62,7 @@ theorem arrow_ne_zero : arrow ≠ 0 := by
   have h02 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℂ => M 0 2) h
   norm_num [arrow] at h02
 
-theorem arrow_adjoint_noncommute : ¬Commute arrow arrowᴴ := by
+theorem arrow_adjoint_noncommute : arrow * arrowᴴ ≠ arrowᴴ * arrow := by
   have h := adjoint_corners_commute_iff projection_isStarProjection arrow
   rw [arrow_is_corner] at h
   exact fun hc => arrow_ne_zero (h.mp hc)
@@ -74,7 +74,6 @@ theorem projection_arrow_noncommute : ¬Commute projection arrow := by
 theorem negative_adjoint_noncommute : ¬Commute arrow (-arrowᴴ) := by
   intro h
   apply arrow_adjoint_noncommute
-  change arrow * arrowᴴ = arrowᴴ * arrow
   simpa only [mul_neg, neg_mul, neg_neg] using congrArg Neg.neg h.eq
 
 theorem positive_square : (arrow * arrowᴴ + arrowᴴ * arrow).PosSemidef :=

@@ -30,10 +30,10 @@ open InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint
 
 attribute [local instance] LieRing.ofAssociativeRing
 
-local instance : NormedAddCommGroup (Matrix (Fin 4) (Fin 4) ℂ) :=
+local instance crossoverNormedAddCommGroup : NormedAddCommGroup (Matrix (Fin 4) (Fin 4) ℂ) :=
   Matrix.toMatrixNormedAddCommGroup 1 Matrix.PosDef.one
 
-local instance : InnerProductSpace ℂ (Matrix (Fin 4) (Fin 4) ℂ) :=
+local instance crossoverInnerProductSpace : InnerProductSpace ℂ (Matrix (Fin 4) (Fin 4) ℂ) :=
   Matrix.toMatrixInnerProductSpace 1 Matrix.PosSemidef.one
 
 local notation "adM" => LieAlgebra.ad ℂ (Matrix (Fin 4) (Fin 4) ℂ)

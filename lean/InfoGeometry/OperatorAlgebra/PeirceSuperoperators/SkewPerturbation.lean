@@ -25,10 +25,10 @@ attribute [local instance] LieRing.ofAssociativeRing
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-local instance : NormedAddCommGroup (Matrix n n ℂ) :=
+local instance skewPerturbationNormedAddCommGroup : NormedAddCommGroup (Matrix n n ℂ) :=
   Matrix.toMatrixNormedAddCommGroup 1 Matrix.PosDef.one
 
-local instance : InnerProductSpace ℂ (Matrix n n ℂ) :=
+local instance skewPerturbationInnerProductSpace : InnerProductSpace ℂ (Matrix n n ℂ) :=
   Matrix.toMatrixInnerProductSpace 1 Matrix.PosSemidef.one
 
 local notation "adM" => LieAlgebra.ad ℂ (Matrix n n ℂ)

@@ -15,6 +15,7 @@ import json
 import re
 import os
 import hashlib
+import subprocess
 from pathlib import Path
 
 
@@ -109,7 +110,7 @@ def surface(path: Path) -> str:
     return "other-review-required"
 
 
-def inventory(root: Path) -> dict[str, object]:
+def inventory(root: Path, tracked_only: bool = False) -> dict[str, object]:
     """Walk repository source folders and report every skipped tree.
 
     Candidate detection remains lexical, not a proof or completeness claim.
@@ -120,17 +121,39 @@ def inventory(root: Path) -> dict[str, object]:
     files, skipped, errors, paths = [], [], [], []
     def onerror(error: OSError) -> None:
         errors.append({"path": str(error.filename), "error": str(error)})
-    for directory, dirs, names in os.walk(root, followlinks=False, onerror=onerror):
-        for name in dirs.copy():
-            path = Path(directory) / name
-            if name in SKIP_DIRECTORIES or path.is_symlink():
-                dirs.remove(name)
-                reason = "git-metadata" if name == ".git" else (
-                    "external-ref" if name == "external_refs" else (
-                        "dependency-or-build" if name in SKIP_DIRECTORIES else "symlink"))
-                skipped.append({"path": str(path.relative_to(root)), "reason": reason})
-        dirs.sort()
-        paths.extend(Path(directory) / name for name in names if name.endswith(".lean"))
+    if tracked_only:
+        repo = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+        repo_root = Path(repo).resolve()
+        listing = subprocess.run(
+            ["git", "-C", str(repo_root), "ls-files", "-z", "--cached", "--others",
+             "--exclude-standard", "--", "*.lean"],
+            check=True, capture_output=True,
+        ).stdout
+        for raw_path in listing.split(b"\0"):
+            if not raw_path:
+                continue
+            repo_path = repo_root / os.fsdecode(raw_path)
+            try:
+                relative = repo_path.relative_to(root)
+            except ValueError:
+                continue
+            paths.append(root / relative)
+        skipped.append({"path": ".git ls-files", "reason": "tracked-and-unignored-worktree-mode"})
+    else:
+        for directory, dirs, names in os.walk(root, followlinks=False, onerror=onerror):
+            for name in dirs.copy():
+                path = Path(directory) / name
+                if name in SKIP_DIRECTORIES or path.is_symlink():
+                    dirs.remove(name)
+                    reason = "git-metadata" if name == ".git" else (
+                        "external-ref" if name == "external_refs" else (
+                            "dependency-or-build" if name in SKIP_DIRECTORIES else "symlink"))
+                    skipped.append({"path": str(path.relative_to(root)), "reason": reason})
+            dirs.sort()
+            paths.extend(Path(directory) / name for name in names if name.endswith(".lean"))
     for path in sorted(paths):
         relative = path.relative_to(root)
         if path.is_symlink():
@@ -188,9 +211,13 @@ def inventory(root: Path) -> dict[str, object]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument(
+        "--tracked", action="store_true",
+        help="scan tracked, staged, and unignored worktree Lean files via git ls-files",
+    )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
-    report = inventory(args.root.resolve())
+    report = inventory(args.root.resolve(), tracked_only=args.tracked)
     rows = report["candidates"]
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False))

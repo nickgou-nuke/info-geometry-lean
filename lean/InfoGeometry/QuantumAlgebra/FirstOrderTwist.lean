@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 
 /-!
@@ -27,17 +32,20 @@ def derivationCocycle (D E : Derivation R A A) : Cocycle (R := R) (A := A) where
     change D a * E b * c + D (a*b) * E c = a*(D b*E c)+D a*E (b*c)
     rw [D.leibniz, E.leibniz]
     simp only [smul_eq_mul]
-    ring
+    ring_nf
 
 namespace Cocycle
 
 def Jet (_c : Cocycle (R := R) (A := A)) := A × A
 variable (c : Cocycle (R := R) (A := A))
+instance instJetNatCast : NatCast c.Jet := ⟨fun n => ((n : A), (0 : A))⟩
+instance instJetIntCast : IntCast c.Jet := ⟨fun n => ((n : A), (0 : A))⟩
+
+@[ext] theorem jet_ext {x y : c.Jet} (h₁ : x.1 = y.1) (h₂ : x.2 = y.2) : x = y := by
+  apply Prod.ext <;> assumption
 
 instance : AddCommGroup c.Jet := inferInstanceAs (AddCommGroup (A × A))
 instance : One c.Jet := ⟨(1,0)⟩
-instance : NatCast c.Jet := ⟨fun n => (n,0)⟩
-instance : IntCast c.Jet := ⟨fun n => (n,0)⟩
 
 /-- (a + h a1) star (b + h b1), with h^2 = 0. -/
 def multiply (x y : c.Jet) : c.Jet :=
@@ -57,9 +65,13 @@ instance : Ring c.Jet where
   __ := (inferInstance : AddCommGroup c.Jet)
   __ := (inferInstance : One c.Jet)
   __ := (inferInstance : Mul c.Jet)
-  __ := (inferInstance : NatCast c.Jet)
-  __ := (inferInstance : IntCast c.Jet)
-  natCast_zero := rfl
+  __ := instJetNatCast c
+  __ := instJetIntCast c
+  natCast_zero := by
+    apply jet_ext
+    · change ((0 : ℕ) : A) = 0
+      simp
+    · rfl
   natCast_succ n := by
     apply Prod.ext
     · change ((n+1 : ℕ) : A)=(n : A)+1
@@ -78,6 +90,9 @@ instance : Ring c.Jet where
     · change (0 : A) = -0
       simp
   mul_assoc := c.multiply_assoc
+  npow n x := Nat.rec 1 (fun _ y => y * x) n
+  npow_zero := by intro x; rfl
+  npow_succ := by intro n x; rfl
   one_mul x := by
     apply Prod.ext
     · change (1 : A)*x.1=x.1
@@ -125,19 +140,25 @@ instance : Ring c.Jet where
 def constant (a : A) : c.Jet := (a,0)
 def parameter : c.Jet := (0,1)
 
+@[simp] theorem constant_mul (a b : A) :
+    c.constant a * c.constant b = (a*b, c.bilinear a b) := by
+  change c.multiply (a, 0) (b, 0) = (a*b, c.bilinear a b)
+  simp [Cocycle.multiply]
+  rfl
+
 def classicalLimit : c.Jet →+* A where
   toFun x := x.1
   map_one' := rfl
   map_mul' _ _ := rfl
   map_zero' := rfl
-  map_add' _ _ := rfl
+  map_add' x y := by
+    change x.1 + y.1 = x.1 + y.1
+    rfl
 
 @[simp] theorem parameter_sq : c.parameter*c.parameter=0 := by
-  apply Prod.ext
-  · change (0 : A)*0=0
-    simp
-  · change (0 : A)*1+1*0+c.bilinear 0 0=0
-    simp
+  change c.multiply (0, 1) (0, 1) = (0, 0)
+  simp [Cocycle.multiply]
+  rfl
 
 theorem parameter_commutes (x : c.Jet) : c.parameter*x=x*c.parameter := by
   apply Prod.ext
@@ -149,18 +170,18 @@ theorem parameter_commutes (x : c.Jet) : c.parameter*x=x*c.parameter := by
 theorem constant_commutator (a b : A) :
     c.constant a*c.constant b-c.constant b*c.constant a =
       ((0,c.bilinear a b-c.bilinear b a) : c.Jet) := by
+  rw [constant_mul, constant_mul]
+  change ((a*b - b*a, c.bilinear a b - c.bilinear b a) : A × A) =
+    (0, c.bilinear a b - c.bilinear b a)
   apply Prod.ext
-  · change a*b-b*a=0
-    ring
-  · change a*0+0*b+c.bilinear a b-(b*0+0*a+c.bilinear b a)=_
-    simp
+  · ring
+  · rfl
 
 theorem constant_product_of_cocycle_zero (a b : A) (h : c.bilinear a b=0) :
     c.constant a*c.constant b=c.constant (a*b) := by
-  apply Prod.ext
-  · rfl
-  · change a*0+0*b+c.bilinear a b=0
-    simp [h]
+  rw [constant_mul]
+  change (a*b, c.bilinear a b) = (a*b, 0)
+  apply Prod.ext <;> simp [h]
 
 end Cocycle
 
@@ -180,8 +201,13 @@ theorem invariant_fibre_commutes (D E : Derivation R A A) (a b : A)
 def liftDifferential (D E Z : Derivation R A A) :
     (derivationCocycle D E).Jet →+ (derivationCocycle D E).Jet where
   toFun x := (Z x.1,Z x.2)
-  map_zero' := by apply Prod.ext <;> exact map_zero Z
-  map_add' x y := by apply Prod.ext <;> exact map_add Z _ _
+  map_zero' := by
+    change (Z 0, Z 0) = (0, 0)
+    simp
+  map_add' x y := by
+    change (Z (x.1 + y.1), Z (x.2 + y.2)) =
+      (Z x.1 + Z y.1, Z x.2 + Z y.2)
+    exact Prod.ext (map_add Z x.1 y.1) (map_add Z x.2 y.2)
 
 theorem liftDifferential_leibniz (D E Z : Derivation R A A)
     (hZD : ∀ a, Z (D a)=D (Z a)) (hZE : ∀ a, Z (E a)=E (Z a))

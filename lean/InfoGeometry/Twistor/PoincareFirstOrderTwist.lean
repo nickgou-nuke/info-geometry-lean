@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.QuantumAlgebra.FirstOrderTwist
 import InfoGeometry.Twistor.TwistedGaugeCoefficients
 
@@ -17,9 +22,27 @@ open MvPolynomial
 
 abbrev Coordinates := MvPolynomial (Fin 4) ℂ
 
-def translation : Derivation ℂ Coordinates Coordinates := X 0 • pderiv 2
+def translation : Derivation ℂ Coordinates Coordinates where
+  toLinearMap :=
+    { toFun := fun f => X 0 * pderiv 2 f
+      map_add' := by intro f g; simp [mul_add]
+      map_smul' := by intro r f; simp }
+  map_one_eq_zero' := by simp [pderiv_X]
+  leibniz' f g := by
+    change X 0 * pderiv 2 (f*g) = f * (X 0 * pderiv 2 g) + g * (X 0 * pderiv 2 f)
+    rw [pderiv_mul]
+    ring
 
-def leftLorentz : Derivation ℂ Coordinates Coordinates := X 0 • pderiv 1
+def leftLorentz : Derivation ℂ Coordinates Coordinates where
+  toLinearMap :=
+    { toFun := fun f => X 0 * pderiv 1 f
+      map_add' := by intro f g; simp [mul_add]
+      map_smul' := by intro r f; simp }
+  map_one_eq_zero' := by simp [pderiv_X]
+  leibniz' f g := by
+    change X 0 * pderiv 1 (f*g) = f * (X 0 * pderiv 1 g) + g * (X 0 * pderiv 1 f)
+    rw [pderiv_mul]
+    ring
 
 @[simp] theorem translation_apply (f : Coordinates) : translation f=X 0*pderiv 2 f := rfl
 @[simp] theorem leftLorentz_apply (f : Coordinates) : leftLorentz f=X 0*pderiv 1 f := rfl

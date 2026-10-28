@@ -146,6 +146,11 @@ import InfoGeometry.GrandUnification.CantorTypeDBitwordLimit
 
 import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
 import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
+import InfoGeometry.NCG.ZornCommutator
+import InfoGeometry.NCG.PeirceGradingOperator
+import InfoGeometry.NCG.TrialitySingletLieDerivation
+import InfoGeometry.NCG.CausalPoset
+import InfoGeometry.NCG.AnomalyGradeGeneration
 import InfoGeometry.MassSpectrometry.GPUExecutionContracts
 import InfoGeometry.Canonical.CuntzFractalHoppingAnyons
 import InfoGeometry.GrandUnification.Capstone

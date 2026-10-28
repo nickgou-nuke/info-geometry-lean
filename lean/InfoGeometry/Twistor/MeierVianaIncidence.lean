@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Twistor.PenroseIncidence
 
 /-!
@@ -121,8 +126,19 @@ theorem reconstruct_unique (x : ComplexSpacetime) (l m : Spinor2) (hl : l≠0)
     fin_cases j
     · fin_cases i <;>
         simpa [Matrix.mul_apply, Matrix.mulVec, dotProduct, spinorFrame, Fin.sum_univ_two] using congrFun hi _
-    · fin_cases i <;>
-        simpa [Matrix.mul_apply, Matrix.mulVec, dotProduct, spinorFrame, hat, Fin.sum_univ_two] using congrFun hh _
+    · fin_cases i
+      · calc
+          (x * spinorFrame l) 0 1 = (x *ᵥ hat l) 0 := by
+            simp [Matrix.mul_apply, Matrix.mulVec, dotProduct, spinorFrame, hat,
+              Fin.sum_univ_two]
+          _ = hat m 0 := congrFun hh 0
+          _ = spinorFrame m 0 1 := by rfl
+      · calc
+          (x * spinorFrame l) 1 1 = (x *ᵥ hat l) 1 := by
+            simp [Matrix.mul_apply, Matrix.mulVec, dotProduct, spinorFrame, hat,
+              Fin.sum_univ_two]
+          _ = hat m 1 := congrFun hh 1
+          _ = spinorFrame m 1 1 := by rfl
   calc
     x = x * (spinorFrame l * (spinorFrame l)⁻¹) := by
       rw [Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr (spinorFrame_det_ne_zero l hl)), Matrix.mul_one]

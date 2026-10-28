@@ -1,0 +1,41 @@
+name: Rectangular Peirce Drazin proofs
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/RectangularRetract.lean'
+      - 'lean/InfoGeometry/QuantumContext/Rectangular*.lean'
+      - 'scripts/quality/check-rectangular-peirce.sh'
+      - '.github/workflows/rectangular-peirce-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: rectangular-peirce-proof-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  kernel:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            ~/.cache/mathlib
+          key: rectangular-proof-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+      - name: Install pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check full matrix proofs and inspect axioms
+        run: bash scripts/quality/check-rectangular-peirce.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rectangular-peirce-proof-logs
+          path: .artifacts/rectangular-peirce

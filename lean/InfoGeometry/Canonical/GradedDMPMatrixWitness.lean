@@ -55,7 +55,8 @@ theorem nilpotent_part_square_zero : (fittingNilpotentPart forward drazin) ^ 2 =
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [fittingNilpotentPart, complementaryProjection, projection,
-      forward, drazin, pow_two, Matrix.mul_apply, Fin.sum_univ_succ]
+      forward, drazin, pow_two, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Matrix.one_apply, Fin.sum_univ_succ]
 
 theorem nilpotent_part_ne_zero : fittingNilpotentPart forward drazin ≠ 0 := by
   intro h

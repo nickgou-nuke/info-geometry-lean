@@ -132,8 +132,8 @@ theorem skewPlus_one_sub_gram_entry :
       (1 - (U * U.transpose + U.transpose * U))) 0 0 = 25276 / 243 := by
   rw [skewPlusGenerator_one_sub_quadratic P_idempotent
     U_mem_peirce10 U_transpose_mem_peirce01]
-  simp only [show (4 : ℕ) = 2 + 2 by decide, add_nsmul, two_nsmul,
-    Matrix.add_apply, Matrix.mul_apply, Matrix.sub_apply]
+  simp only [Matrix.smul_apply, nsmul_eq_mul, Nat.cast_ofNat]
+  simp only [Matrix.mul_apply, Matrix.sub_apply, bracket_apply, gram_apply]
   norm_num [bracket_apply, gram_apply, probe, Fin.sum_univ_succ, Matrix.one_apply]
 
 theorem skewPlus_one_sub_gram_ne_zero :
@@ -147,7 +147,7 @@ theorem skewPlus_one_sub_gram_ne_zero :
 theorem skewPlus_one_entry :
     (skewPlusGenerator (R := ℝ) U U.transpose 1) 0 0 = -284 / 27 := by
   rw [skewPlusGenerator_one]
-  simp only [show (4 : ℕ) = 2 + 2 by decide, add_nsmul, two_nsmul, Matrix.add_apply]
+  simp only [Matrix.smul_apply]
   norm_num [bracket_apply, probe]
 
 theorem trace_skewMinus_projection :

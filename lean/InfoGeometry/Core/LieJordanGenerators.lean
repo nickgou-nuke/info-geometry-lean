@@ -106,7 +106,6 @@ theorem skewMinusGenerator_sandwich_apply (a b x : A) :
   simp only [mul_one, one_mul, Ring.lie_def]
   rw [show (4 : ℕ) = 2 + 2 by decide, add_nsmul]
   simp only [two_nsmul]
-  abel
 
 @[simp] theorem skewMinusGenerator_one (a b : A) :
     skewMinusGenerator (R := R) a b 1 = 0 := by
@@ -229,7 +228,6 @@ theorem skewPlusGenerator_quadratic (hp : IsIdempotentElem p)
     (quadratic_commute_bracket hp hu hv).eq]
   rw [show (4 : ℕ) = 2 + 2 by decide, add_nsmul]
   simp only [two_nsmul]
-  abel
 
 theorem skewMinusGenerator_quadratic (hp : IsIdempotentElem p)
     (hu : u ∈ peirce10 p) (hv : v ∈ peirce01 p) :

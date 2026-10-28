@@ -5,12 +5,15 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic.NormNum
 import Mathlib.Algebra.Ring.MinimalAxioms
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Ring
 
 /-!
 # Zorn vector matrices: split-octonion invariant interface
@@ -473,9 +476,8 @@ theorem add_left_neg (X : ZornVectorMatrix R) :
     add (neg X) X = zero := by
   ext i <;> simp [add, neg, zero]
 
-private def nsmulZorn : Nat → ZornVectorMatrix R → ZornVectorMatrix R
-  | 0, _ => zero
-  | n + 1, X => add (nsmulZorn n X) X
+private def nsmulZorn (n : Nat) (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  Nat.rec zero (fun _ Y => add Y X) n
 
 private def zsmulZorn : Int → ZornVectorMatrix R → ZornVectorMatrix R
   | Int.ofNat n, X => nsmulZorn n X

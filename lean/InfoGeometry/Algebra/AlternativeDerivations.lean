@@ -1,5 +1,11 @@
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Module.LinearMap.End
+import Mathlib.LinearAlgebra.Span.Basic
+import Mathlib.Tactic.LinearCombination
 import Mathlib.Algebra.Ring.Associator
 
 /-!

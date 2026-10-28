@@ -1,5 +1,13 @@
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Algebra.Bilinear
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false

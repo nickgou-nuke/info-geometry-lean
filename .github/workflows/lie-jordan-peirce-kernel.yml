@@ -66,11 +66,11 @@ jobs:
           # Only this new temporary package is resolved; repository manifests are untouched.
           lake update mathlib
           lake exe cache get
-      - name: Check actual selected source
+      - name: Check actual selected source and transitive axioms
         shell: bash
         run: |
           set -euo pipefail
           cd "$SELECTED_CHECK_ROOT"
           exec 9>/tmp/info-geometry-build.lock
           flock 9
-          lake build InfoGeometry.OperatorAlgebra.LieJordanEndomorphisms
+          lake build InfoGeometry.OperatorAlgebra.LieJordanPeirceAudit

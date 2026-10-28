@@ -109,7 +109,8 @@ theorem minus_mul_plus (H S : A) :
         lieOp R H * lieOp R H - jordanOp R S * jordanOp R S +
           (lieOp R H * jordanOp R S - jordanOp R S * lieOp R H) := by
       unfold minus plus
-      noncomm_ring
+      simp only [sub_mul, mul_add, add_mul, mul_sub]
+      abel
     _ = _ := by rw [lie_jordan]
 
 /-- Reversing composition reverses the mixed term. -/
@@ -121,8 +122,9 @@ theorem plus_mul_minus (H S : A) :
     plus R H S * minus R H S =
         lieOp R H * lieOp R H - jordanOp R S * jordanOp R S -
           (lieOp R H * jordanOp R S - jordanOp R S * lieOp R H) := by
-      unfold minus plus
-      noncomm_ring
+      unfold plus minus
+      simp only [sub_mul, mul_add, add_mul, mul_sub]
+      abel
     _ = _ := by rw [lie_jordan]
 
 /-- An exact defect formula, not a commuting-generator specialization. -/

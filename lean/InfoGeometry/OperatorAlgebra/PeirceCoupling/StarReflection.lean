@@ -95,6 +95,7 @@ theorem starReflection_star_pairing_zero (hp : IsStarProjection p) (a : A) :
       (corners_sq_zero hp.isIdempotentElem a).1
   rw [starReflection_component10 hp a, star_neg, star_star, neg_mul, hn, neg_zero]
 
+omit [StarRing A] in
 /-- The positive and negative weights are native commutator identities. -/
 theorem reflection_corner_weights (hp : IsIdempotentElem p) (a b : A) :
     ⁅reflection p, component10 p a⁆ = (2 : ℕ) • component10 p a ∧

@@ -1,0 +1,67 @@
+name: Positive Hodge coercivity kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/LieJordanHodge*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/BoundedHomotopyCoercivity.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceHodge*.lean'
+      - 'lean/InfoGeometry/Canonical/LieJordanHodge*.lean'
+      - 'tools/quality/check_hodge_coercivity.py'
+      - '.github/workflows/hodge-coercivity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hodge-coercivity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Read existing dependency pins
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path('lake-manifest.json').read_text())
+          pin = next(p['rev'] for p in data['packages'] if p['name'] == 'mathlib')
+          toolchain = Path('lean-toolchain').read_text().strip()
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write(f'MATHLIB_PIN={pin}\nLEAN_TOOLCHAIN={toolchain}\n')
+          PY
+      - name: Install declared Lean toolchain
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$LEAN_TOOLCHAIN"
+      - name: Materialize exact Mathlib revision outside the repository
+        run: |
+          git init "$RUNNER_TEMP/hodge-mathlib"
+          git -C "$RUNNER_TEMP/hodge-mathlib" remote add origin https://github.com/leanprover-community/mathlib4.git
+          git -C "$RUNNER_TEMP/hodge-mathlib" fetch --depth=1 origin "$MATHLIB_PIN"
+          git -C "$RUNNER_TEMP/hodge-mathlib" checkout --detach FETCH_HEAD
+      - name: Restore scoped Mathlib cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/hodge-mathlib/.lake
+          key: hodge-mathlib-${{ runner.os }}-${{ env.MATHLIB_PIN }}
+          restore-keys: |
+            lie-jordan-mathlib-${{ runner.os }}-${{ env.MATHLIB_PIN }}
+      - name: Compile exact import closure and audit transitive axioms
+        run: |
+          python3 tools/quality/check_hodge_coercivity.py \
+            --mathlib-root "$RUNNER_TEMP/hodge-mathlib" \
+            --output "$RUNNER_TEMP/hodge-check"
+      - name: Preserve proof logs, hashes, and status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hodge-coercivity-${{ github.sha }}
+          path: ${{ runner.temp }}/hodge-check
+          if-no-files-found: warn

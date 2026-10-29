@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import signal
 import shlex
@@ -32,50 +33,159 @@ def log_spectral_stage(stage: str, module: str, details: str = "") -> None:
 
 
 def compute_olean_content_hash(root: Path) -> str:
-    """Compute a fast content hash over .olean files to detect environment changes."""
+    """Content-address built oleans and pinned build inputs for DAG cache safety."""
     build_lib = root / ".lake" / "build" / "lib"
     if not build_lib.exists():
         build_lib = root / ".build" / "lib"
-    if not build_lib.exists():
+    manifest_path = root / "lake-manifest.json"
+    manifest_bytes = manifest_path.read_bytes() if manifest_path.is_file() else b""
+    dependencies = _declared_path_dependencies(root, manifest_bytes)
+    oleans = _olean_inventory(build_lib, dependencies)
+    if not oleans:
         return ""
-    oleans = sorted(build_lib.rglob("*.olean"))
+    build_identity_files = _build_identity_inventory(root)
+    build_identity_state = _inventory_state(build_identity_files)
     h = hashlib.sha256()
+    h.update(b"info-geometry-olean-content-v2\0")
+    for name in ("lean-toolchain", "lakefile.lean", "lakefile.toml"):
+        path = root / name
+        h.update(name.encode() + b"\0")
+        if path.is_file():
+            _hash_stable_file(h, path)
+    h.update(b"lake-manifest.json\0" + manifest_bytes)
+    inventory = tuple(str(path) for path in oleans)
+    inventory_state = _inventory_state(oleans)
     for path in oleans:
-        stat = path.stat()
-        h.update(str(path.relative_to(build_lib)).encode())
-        h.update(str(stat.st_mtime_ns).encode())
-        h.update(str(stat.st_size).encode())
+        h.update(_path_identity(path, root).encode() + b"\0")
+        _hash_stable_file(h, path)
+    if manifest_path.is_file() and manifest_path.read_bytes() != manifest_bytes:
+        raise RuntimeError("lake manifest changed while hashing artifacts")
+    final_identity_files = _build_identity_inventory(root)
+    if tuple(map(str, final_identity_files)) != tuple(map(str, build_identity_files)):
+        raise RuntimeError("build configuration inventory changed while hashing artifacts")
+    if _inventory_state(final_identity_files) != build_identity_state:
+        raise RuntimeError("build configuration changed while hashing artifacts")
+    final_oleans = _olean_inventory(build_lib, dependencies)
+    if tuple(str(path) for path in final_oleans) != inventory:
+        raise RuntimeError("olean inventory changed while hashing artifacts")
+    if _inventory_state(final_oleans) != inventory_state:
+        raise RuntimeError("olean files changed while hashing artifacts")
     return h.hexdigest()
 
 
 def compute_lean_source_hash(root: Path) -> str:
-    """Compute a content hash over Lean source/config inputs relevant to decl indexing."""
-    lean_root = root / "lean"
-    if not lean_root.exists():
-        return ""
-    lean_files = sorted(lean_root.rglob("*.lean"))
-    if not lean_files:
+    """Content-address Lean sources, path-package sources, and build configuration."""
+    manifest_path = root / "lake-manifest.json"
+    manifest_bytes = manifest_path.read_bytes() if manifest_path.is_file() else b""
+    dependencies = _declared_path_dependencies(root, manifest_bytes)
+    files = _source_inventory(root, dependencies)
+    if not any(path.suffix == ".lean" for path in files):
         return ""
     h = hashlib.sha256()
-    for path in lean_files:
-        try:
-            stat = path.stat()
-        except FileNotFoundError:
-            # Concurrent source edits should not crash hash computation.
-            continue
-        h.update(str(path.relative_to(root)).encode())
-        h.update(str(stat.st_mtime_ns).encode())
-        h.update(str(stat.st_size).encode())
-
-    for extra in ("lakefile.lean", "lakefile.toml", "lean-toolchain"):
-        extra_path = root / extra
-        if not extra_path.exists():
-            continue
-        stat = extra_path.stat()
-        h.update(extra.encode())
-        h.update(str(stat.st_mtime_ns).encode())
-        h.update(str(stat.st_size).encode())
+    h.update(b"info-geometry-source-content-v2\0")
+    inventory = tuple(str(path) for path in files)
+    inventory_state = _inventory_state(files)
+    for path in files:
+        h.update(_path_identity(path, root).encode() + b"\0")
+        _hash_stable_file(h, path)
+    if manifest_path.is_file() and manifest_path.read_bytes() != manifest_bytes:
+        raise RuntimeError("lake manifest changed while hashing sources")
+    final_files = _source_inventory(root, dependencies)
+    if tuple(str(path) for path in final_files) != inventory:
+        raise RuntimeError("source inventory changed while hashing sources")
+    if _inventory_state(final_files) != inventory_state:
+        raise RuntimeError("source files changed while hashing sources")
     return h.hexdigest()
+
+
+def _hash_stable_file(hasher: "hashlib._Hash", path: Path) -> None:
+    with path.open("rb") as stream:
+        before = os.fstat(stream.fileno())
+        hasher.update(before.st_size.to_bytes(8, "big"))
+        while chunk := stream.read(1024 * 1024):
+            hasher.update(chunk)
+        after = os.fstat(stream.fileno())
+    if _stat_identity(before) != _stat_identity(after):
+        raise RuntimeError(f"file changed while hashing: {path}")
+    try:
+        current_path = path.stat()
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"file replaced while hashing: {path}") from exc
+    if _stat_identity(before) != _stat_identity(current_path):
+        raise RuntimeError(f"file replaced while hashing: {path}")
+
+
+def _stat_identity(stat_result: os.stat_result) -> tuple[int, int, int, int, int]:
+    return (
+        stat_result.st_dev,
+        stat_result.st_ino,
+        stat_result.st_size,
+        stat_result.st_mtime_ns,
+        stat_result.st_ctime_ns,
+    )
+
+
+def _inventory_state(paths: Sequence[Path]) -> tuple[tuple[str, tuple[int, int, int, int, int]], ...]:
+    try:
+        return tuple((str(path), _stat_identity(path.stat())) for path in paths)
+    except FileNotFoundError as exc:
+        raise RuntimeError("file inventory changed while hashing") from exc
+
+
+def _declared_path_dependencies(root: Path, manifest: bytes) -> tuple[Path, ...]:
+    if not manifest:
+        return ()
+    try:
+        packages = json.loads(manifest).get("packages", [])
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError("lake manifest is not valid JSON") from exc
+    paths = set()
+    for item in packages:
+        if item.get("type") != "path" or not item.get("dir"):
+            continue
+        path = (root / item["dir"]).resolve()
+        if not path.is_dir():
+            raise RuntimeError(f"declared Lake path dependency is unavailable: {item['dir']}")
+        paths.add(path)
+    return tuple(sorted(paths))
+
+
+def _olean_inventory(build_lib: Path, dependencies: Sequence[Path]) -> list[Path]:
+    paths = set(build_lib.rglob("*.olean")) if build_lib.is_dir() else set()
+    for package in dependencies:
+        package_lib = package / ".lake" / "build" / "lib"
+        if package_lib.is_dir():
+            paths.update(package_lib.rglob("*.olean"))
+    return sorted(path.resolve() for path in paths if path.is_file())
+
+
+def _source_inventory(root: Path, dependencies: Sequence[Path]) -> list[Path]:
+    paths = set((root / "lean").rglob("*.lean")) if (root / "lean").is_dir() else set()
+    for package in dependencies:
+        paths.update(
+            path for path in package.rglob("*.lean")
+            if not {".git", ".lake"}.intersection(path.relative_to(package).parts)
+        )
+        for name in ("lakefile.lean", "lakefile.toml", "lean-toolchain", "lake-manifest.json"):
+            config = package / name
+            if config.is_file():
+                paths.add(config)
+    for name in ("lakefile.lean", "lakefile.toml", "lean-toolchain", "lake-manifest.json"):
+        path = root / name
+        if path.is_file():
+            paths.add(path)
+    return sorted(path.resolve() for path in paths if path.is_file())
+
+
+def _build_identity_inventory(root: Path) -> list[Path]:
+    names = ("lean-toolchain", "lakefile.lean", "lakefile.toml", "lake-manifest.json")
+    return [root / name for name in names if (root / name).is_file()]
+
+
+def _path_identity(path: Path, root: Path) -> str:
+    # Keep external Lake `type = path` dependencies relocatable when the same
+    # project/dependency layout is checked out under a different absolute root.
+    return Path(os.path.relpath(path.resolve(), root.resolve())).as_posix()
 
 
 def lake_build_command(targets: Sequence[str], *, wfail: bool = False) -> list[str]:

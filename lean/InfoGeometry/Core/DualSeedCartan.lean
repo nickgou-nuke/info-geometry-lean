@@ -17,6 +17,8 @@ The support identities below are algebraic, not analytic spectral estimates.
 
 namespace InfoGeometry.Core.DualSeedPeirce.IsDualSeedPair
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open InfoGeometry.Core.DiracSuperalgebra
 open InfoGeometry.Singular.MoorePenrose
 

@@ -18,6 +18,8 @@ replacing the ambient full matrix algebra by a diagonal model.
 
 namespace InfoGeometry.OperatorAlgebra.PeirceCoupling.RealCartanWitnesses
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open Matrix InfoGeometry.Core.DualSeedPeirce
 open RealReflectionGeometry
 

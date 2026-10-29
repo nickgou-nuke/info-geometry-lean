@@ -18,6 +18,8 @@ nonzero support or a nondegenerate Cartan triple is concluded.
 
 namespace InfoGeometry.OperatorAlgebra.PeirceCoupling.CartanDirectLimit
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open InfoGeometry.Core.DualSeedPeirce
 
 variable {I : Type*} [Preorder I] [Nonempty I] [IsDirectedOrder I]
@@ -39,9 +41,10 @@ theorem seedPair_of {i : I} {d b : A i} (h : IsDualSeedPair d b) :
 theorem support_of (i : I) (d b : A i) :
     DirectLimit.Ring.of A f i (carrierSupport d b) =
       carrierSupport (DirectLimit.Ring.of A f i d) (DirectLimit.Ring.of A f i b) := by
-  change DirectLimit.Ring.of A f i (d * b + b * d) = _
+  change DirectLimit.Ring.of A f i (d * b + b * d) =
+    DirectLimit.Ring.of A f i d * DirectLimit.Ring.of A f i b +
+      DirectLimit.Ring.of A f i b * DirectLimit.Ring.of A f i d
   simp only [map_add, map_mul]
-  rfl
 
 /-- Nonzero support survives in the actual colimit under faithful bonding maps. -/
 theorem support_of_ne_zero

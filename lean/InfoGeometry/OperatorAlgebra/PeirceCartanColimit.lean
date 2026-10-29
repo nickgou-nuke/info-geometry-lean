@@ -8,3 +8,4 @@ import InfoGeometry.OperatorAlgebra.PeirceCoupling.StarReflection
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.RealReflectionGeometry
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.CartanDirectLimit
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.RealCartanWitnesses
+import InfoGeometry.OperatorAlgebra.PeirceCoupling.StarDirectLimit

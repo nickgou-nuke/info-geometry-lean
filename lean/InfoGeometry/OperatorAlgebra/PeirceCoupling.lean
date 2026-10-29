@@ -10,3 +10,4 @@ import InfoGeometry.OperatorAlgebra.PeirceCoupling.GramGeometry
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.Exactness
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.Adjoint
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.Examples
+import InfoGeometry.OperatorAlgebra.PeirceCartanColimit

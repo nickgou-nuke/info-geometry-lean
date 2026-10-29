@@ -27,6 +27,11 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 noncomputable def hodge (d : E →L[ℝ] E) : E →L[ℝ] E :=
   d * adjoint d + adjoint d * d
 
+/-- Self-adjointness is proved using the native operator star. -/
+theorem hodge_selfAdjoint (d : E →L[ℝ] E) : IsSelfAdjoint (hodge d) := by
+  change star (d * star d + star d * d) = d * star d + star d * d
+  simp only [star_add, star_mul, star_star]
+
 theorem inner_hodge (d : E →L[ℝ] E) (x : E) :
     inner ℝ x (hodge d x) = ‖d x‖ ^ 2 + ‖adjoint d x‖ ^ 2 := by
   have h₁ : inner ℝ x (d (adjoint d x)) = ‖adjoint d x‖ ^ 2 := by
@@ -82,7 +87,8 @@ theorem norm_le_of_homotopy
       _ = inner ℝ x (d (h x) + h (d x)) := by
         rw [hstate, real_inner_self_eq_norm_sq, pow_two]
       _ = inner ℝ (adjoint d x) (h x) + inner ℝ (adjoint h x) (d x) := by
-        rw [inner_add_right, ← adjoint_inner_left, ← adjoint_inner_left]
+        rw [inner_add_right, ← adjoint_inner_left d (h x) x,
+          ← adjoint_inner_left h (d x) x]
       _ ≤ ‖adjoint d x‖ * ‖h x‖ + ‖adjoint h x‖ * ‖d x‖ :=
         add_le_add (real_inner_le_norm _ _) (real_inner_le_norm _ _)
       _ ≤ ‖adjoint d x‖ * (C * ‖x‖) + (C * ‖x‖) * ‖d x‖ :=
@@ -91,7 +97,7 @@ theorem norm_le_of_homotopy
       _ = _ := by ring
   by_cases hx0 : x = 0
   · simp [hx0]
-  · exact (mul_le_mul_right (norm_pos_iff.mpr hx0)).mp hestimate
+  · exact (mul_le_mul_iff_right₀ (norm_pos_iff.mpr hx0)).mp hestimate
 
 /-- A common homotopy bound yields a common positive coercivity constant.
 The model must still construct h and prove its bound. -/

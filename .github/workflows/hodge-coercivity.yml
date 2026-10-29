@@ -58,6 +58,31 @@ jobs:
           python3 tools/quality/check_hodge_coercivity.py \
             --mathlib-root "$RUNNER_TEMP/hodge-mathlib" \
             --output "$RUNNER_TEMP/hodge-check"
+      - name: Diagnose independent branches after a failed full check
+        if: failure()
+        run: |
+          python3 - "$RUNNER_TEMP/hodge-mathlib" "$RUNNER_TEMP/hodge-check" <<'PY'
+          from pathlib import Path
+          import sys
+          from tools.quality import check_peirce_weyl as checker
+          mathlib, output = sys.argv[1:]
+          failures = []
+          branches = {
+              "matrix-diagnostic": ["InfoGeometry.OperatorAlgebra.PeirceHodgeExamples"],
+              "tower-diagnostic": ["InfoGeometry.Canonical.LieJordanHodgeColimit"],
+          }
+          for lane, targets in branches.items():
+              checker.TARGETS = targets
+              sys.argv = ["diagnostic", "--mathlib-root", mathlib,
+                          "--output", str(Path(output) / lane)]
+              try:
+                  checker.main()
+              except Exception as error:
+                  failures.append(lane)
+                  print(lane, error, flush=True)
+          if failures:
+              raise SystemExit(1)
+          PY
       - name: Preserve proof logs, hashes, and status
         if: always()
         uses: actions/upload-artifact@v4

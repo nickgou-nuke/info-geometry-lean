@@ -97,7 +97,8 @@ theorem norm_le_of_homotopy
       _ = _ := by ring
   by_cases hx0 : x = 0
   · simp [hx0]
-  · exact (mul_le_mul_iff_right₀ (norm_pos_iff.mpr hx0)).mp hestimate
+  · apply (mul_le_mul_iff_right₀ (norm_pos_iff.mpr hx0)).mp
+    simpa only [mul_comm] using hestimate
 
 /-- A common homotopy bound yields a common positive coercivity constant.
 The model must still construct h and prove its bound. -/

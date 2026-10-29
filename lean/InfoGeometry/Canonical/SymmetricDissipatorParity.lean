@@ -24,8 +24,11 @@ open InfoGeometry.Algebra.PrimonSuperalgebra
 theorem globalParity_dissipator (u v x : PrimonUHFAlgebra)
     (hu : isFermionic u) (hv : isFermionic v) :
     globalParity (dissipator (R := ℤ) u v x) =
-      dissipator (R := ℤ) u v (globalParity x) :=
-  parity_equivariant globalParityEquiv u v x hu hv
+      dissipator (R := ℤ) u v (globalParity x) := by
+  have h := map_dissipator (R := ℤ) globalParity u v x
+  change globalParity u = -u at hu
+  change globalParity v = -v at hv
+  rwa [hu, hv, dissipator_neg_neg] at h
 
 theorem dissipator_preserves_bosonic (u v x : PrimonUHFAlgebra)
     (hu : isFermionic u) (hv : isFermionic v) (hx : isBosonic x) :

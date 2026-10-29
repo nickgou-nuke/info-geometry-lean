@@ -47,9 +47,22 @@ identified with Krein adjoints without a separate compatibility theorem.
 
 ## Verification
 
-Pending fresh kernel compilation. Source generation and polynomial checking are
-not compilation evidence. Use the repository-pinned serial source-closure
-checker and native transitive axiom audit, with the shared build lock.
+Fresh scoped kernel compilation and transitive axiom audit passed in run
+`40903090422`, at source head `07952140d903f99b66e777e167af49ffb5df7e81`
+and checked synthetic merge `8489cb5594d8a1965a7bb3950594985295b6960c`.
+All 32 repository-owned modules in the selected source-import closure compiled.
+The six targets contain 45 explicitly named theorems and lemmas; the native
+audit covers 65 declarations including generated helpers. Its transitive axiom
+union is only `propext`, `Classical.choice`, and `Quot.sound`.
+All six target modules emitted zero compiler warnings. Imported-owner warnings
+remain in the preserved original logs. All 32 archived source hashes were checked.
+Lean is `leanprover/lean4:v4.34.1` and Mathlib is
+`d13f23b723b8a846827a245b89c10fc7d3f11612`, with no pin changes.
+See `LIE_JORDAN_HODGE_VALIDATION.json` and the original Actions artifact
+`12909554068`. The checker is the existing serial source-closure checker and
+public Lean axiom collector, executed under its shared build lock.
+This does not certify a root-package build: the separately inspected CI
+preflight still reports missing Atlas and an uninitialized GIFT gitlink.
 
 ## Semantic checks retained
 
@@ -59,3 +72,20 @@ The transfer theorem must not be read as a construction of a growing interacting
 Hamiltonian: its exact compatibility hypotheses describe fixed limit elements.
 The state-functional branch proves odd-readout vanishing and non-invariance,
 not positivity, equilibrium, extremality, or a broken/restored phase.
+
+## Concrete consumer and regression checks
+
+The real matrix Hodge theorem consumes the generic homotopy estimate via a
+finite-dimensional pointwise bound `forall z, ||h z|| <= C ||z||`; the generic
+bridge proves the corresponding bounded-operator norm bound. No matrix norm
+is silently replaced. `differential_ne_zero` and `adjoint_ne_unexchanged`
+exclude the zero-operator and incorrect-unexchanged-adjoint interpretations.
+The conditional colimit inequality is a trace-form statement. It does not
+construct a completed self-adjoint Hamiltonian, select its vacuum projection,
+or derive a common coercivity constant from a specified interacting family.
+
+## Entry point
+
+```lean
+import InfoGeometry.Canonical.LieJordanHodgeSynthesis
+```

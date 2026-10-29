@@ -4,6 +4,9 @@ on:
     paths:
       - 'lean/InfoGeometry/Core/**'
       - 'lean/InfoGeometry/Clifford/**'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Causal/Cones.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
       - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
       - 'lean/InfoGeometry/Algebra/TensorAlgebraCanonical.lean'
       - 'lean/InfoGeometry/Algebra/FiniteTensorDeterminantStabilization.lean'

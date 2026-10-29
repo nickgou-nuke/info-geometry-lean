@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -104,7 +105,7 @@ Cartan involution intertwines with the canonical matrix inverse.
 This is the matrix-level compatibility needed to connect `ModularMirror` and Cartan wiring.
 -/
 lemma cartan_inv_of_isUnit (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ)
-    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n)) (_hJt : (Jn J1 n)ᵀ = (Jn J1 n))
+    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n))
     {X : Mat n} (hX : IsUnit X.det) :
     cartan J1 n X⁻¹ = (cartan J1 n X)⁻¹ := by
   set J : Mat n := Jn J1 n

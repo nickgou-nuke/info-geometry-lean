@@ -143,13 +143,24 @@ python3 tools/quality/check_real_peirce_colimit.py \
 ```
 
 The entry point selects the five new owners and the repaired existing
-`Clifford.TowerMatrix` owner, and reuses the maintained closure verifier.
+`Clifford.TowerMatrix` and `Causal.Cones` owners, and reuses the maintained
+closure verifier.
 `TowerMatrix.Idx` retains its exact recursive type equations and is marked
 `noncomputable`, suppressing generation of an executable unsafe/partial helper
 for this type-valued definition. Its kernel definition and equation-based
 unfolding remain available. No stage, bonding map, or quotient carrier is
-replaced. The verifier compiles the exact repository
-import closure, treats warnings in all six targets as errors, audits all
+replaced. The owner explicitly imports the existing shared nondiagonal
+noncommuting pair on its full coefficient matrix algebra. The actual stage-two
+and limit witnesses remain in `PeirceColimitExamples`. The unused transpose
+symmetry hypothesis is removed from `cartan_inv_of_isUnit` and its sole
+repository caller, `modularMirror_cartan_comm_of_isUnit`; both inverse
+intertwining statements now require only the involution and invertibility
+hypotheses actually used. Calls to these two public theorems should omit the
+former symmetry argument. Symmetry assumptions in the separate Cartan
+involutivity results are retained.
+
+The verifier compiles the exact repository
+import closure, treats warnings in all seven targets as errors, audits all
 declarations in that closure, builds an
 isolated native Lake package, and reconciles source hashes and dependency pins.
 The scoped GitHub Actions workflow runs the same check and retains its evidence.

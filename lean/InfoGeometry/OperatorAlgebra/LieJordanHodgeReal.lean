@@ -99,16 +99,19 @@ def onDouble (t : Module.End ℝ (Matrix n n ℝ × Matrix n n ℝ)) :
   ((WithLp.linearEquiv 2 ℝ (Matrix n n ℝ × Matrix n n ℝ)).symm.toLinearMap.comp t).comp
     (WithLp.linearEquiv 2 ℝ (Matrix n n ℝ × Matrix n n ℝ)).toLinearMap
 
+omit [Fintype n] [DecidableEq n] in
 @[simp] theorem onDouble_apply
     (t : Module.End ℝ (Matrix n n ℝ × Matrix n n ℝ))
     (z : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)) :
     (onDouble t z).ofLp = t z.ofLp := rfl
 
+omit [Fintype n] [DecidableEq n] in
 theorem onDouble_mul (s t : Module.End ℝ (Matrix n n ℝ × Matrix n n ℝ)) :
     onDouble (s * t) = onDouble s * onDouble t := by
   ext z
   rfl
 
+omit [Fintype n] [DecidableEq n] in
 theorem onDouble_add (s t : Module.End ℝ (Matrix n n ℝ × Matrix n n ℝ)) :
     onDouble (s + t) = onDouble s + onDouble t := by
   ext z
@@ -152,7 +155,7 @@ theorem hodge_energy (u : Matrix n n ℝ)
   change inner ℝ z (d (d.adjoint z) + d.adjoint (d z)) = _
   rw [inner_add_right, ← LinearMap.adjoint_inner_left d (d.adjoint z) z,
     LinearMap.adjoint_inner_right d z (d z)]
-  simp only [real_inner_self_eq_norm_sq]
+  simp only [real_inner_self_eq_norm_sq, d]
 
 theorem hodge_isPositive (u : Matrix n n ℝ) :
     (differential u * (differential u).adjoint +
@@ -207,6 +210,7 @@ theorem differential_ne_zero {u : Matrix n n ℝ} (hu : u ≠ 0) :
   simp only [mul_one, one_mul] at hx
   apply hu
   ext i j
+  change u i j = 0
   have hij := congrArg (fun m : Matrix n n ℝ => m i j) hx
   change u i j + u i j = 0 at hij
   linarith
@@ -224,6 +228,7 @@ theorem adjoint_ne_unexchanged {u : Matrix n n ℝ} (hu : u ≠ 0) :
   simp only [mul_one, one_mul, sub_self] at hx
   have hz : uᴴ = 0 := by
     ext i j
+    change uᴴ i j = 0
     have hij := congrArg (fun m : Matrix n n ℝ => m i j) hx
     change 0 = uᴴ i j + uᴴ i j at hij
     linarith
@@ -231,22 +236,19 @@ theorem adjoint_ne_unexchanged {u : Matrix n n ℝ} (hu : u ≠ 0) :
   simpa only [Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_zero] using
     congrArg (fun m : Matrix n n ℝ => mᴴ) hz
 
-/-- The abstract homotopy estimate applies to this exact real matrix operator. -/
+/-- The finite-space bound is stated pointwise on the actual homotopy; this
+is equivalent to an operator-norm bound and avoids changing the matrix norm. -/
 theorem hodge_coercive_of_homotopy (u : Matrix n n ℝ)
-    (h P : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ) →L[ℝ]
-      WithLp 2 (Matrix n n ℝ × Matrix n n ℝ))
-    (C : ℝ) (hC : 0 < C) (hbound : ‖h‖ ≤ C)
-    (hhom : (differential u).toContinuousLinearMap * h +
-      h * (differential u).toContinuousLinearMap = 1 - P)
+    (h P : Module.End ℝ (WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)))
+    (C : ℝ) (hC : 0 < C)
+    (hbound : ∀ z : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ), ‖h z‖ ≤ C * ‖z‖)
+    (hhom : differential u * h + h * differential u = 1 - P)
     (z : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)) (hz : P z = 0) :
     (1 / (2 * C ^ 2)) * ‖z‖ ^ 2 ≤
       inner ℝ z (onDouble (liftOp (jordanLeft (R := ℝ) (u * uᴴ + uᴴ * u))) z) := by
-  have he := LieJordanHodgeCoercivity.energy_ge_of_homotopy
-    (differential u).toContinuousLinearMap h P C hC hbound hhom z hz
-  rw [← LinearMap.adjoint_toContinuousLinearMap] at he
-  change (1 / (2 * C ^ 2)) * ‖z‖ ^ 2 ≤
-    inner ℝ z ((differential u * (differential u).adjoint +
-      (differential u).adjoint * differential u) z) at he
+  letI := FiniteDimensional.complete ℝ (WithLp 2 (Matrix n n ℝ × Matrix n n ℝ))
+  have he := LieJordanHodgeCoercivity.linear_energy_ge_of_homotopy
+    (differential u) h P C hC hbound hhom z hz
   rw [hodge_eq_jordan] at he
   exact he
 

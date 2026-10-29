@@ -179,6 +179,22 @@ evaluation, or scalar replacements are acceptable. Record the exact result,
 source hashes and transitive axioms after verification. Independent semantic
 review and separate artifact/publication acceptance precede completion.
 
+The strict declaration audit also covers inherited owners. It exposed the
+compiler-generated partial runtime auxiliaries of `TowerMatrix.Idx` and
+the root-level `iota_seq` in `Canonical.TensorTowerColimit`. The type-valued
+`Idx` keeps its exact recursive body and is explicitly `noncomputable` to
+suppress runtime code generation. The iterated linear map `iota_seq` is
+expressed directly with `Nat.rec`. Both retain their original types and
+definitional zero and successor equations. All existing theorem statements
+remain unchanged. The existing Cartan inverse proof now uses its transpose
+premise to identify the inverse with the transpose. The two existing
+off-diagonal `Cl11Matrix` seeds receive an explicit noncommutation theorem in
+their own owner, which `TowerMatrix` imports. These three owners become strict
+warning-as-error targets, with the existing `Cl11Matrix` lint warnings repaired.
+The verifier's
+unsafe/partial rejection and its axiom allowlist remain unchanged, with no
+declaration exceptions.
+
 ## Entry point
 
 ```lean

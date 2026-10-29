@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Clifford.Cl11Matrix
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -13,7 +19,7 @@ namespace InfoGeometry.Clifford.TowerMatrix
 
 open Matrix
 
-def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2
+noncomputable def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2
 
 instance (n : ℕ) : Fintype (Idx n) := by induction n with | zero => dsimp [Idx]; exact inferInstance | succ _ ih => dsimp [Idx]; exact @instFintypeProd _ _ ih _
 instance (n : ℕ) : DecidableEq (Idx n) := by induction n with | zero => dsimp [Idx]; exact inferInstance | succ _ ih => dsimp [Idx]; exact @instDecidableEqProd _ _ ih _
@@ -97,13 +103,15 @@ Cartan involution intertwines with the canonical matrix inverse.
 This is the matrix-level compatibility needed to connect `ModularMirror` and Cartan wiring.
 -/
 lemma cartan_inv_of_isUnit (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ)
-    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n)) (_hJt : (Jn J1 n)ᵀ = (Jn J1 n))
+    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n)) (hJt : (Jn J1 n)ᵀ = (Jn J1 n))
     {X : Mat n} (hX : IsUnit X.det) :
     cartan J1 n X⁻¹ = (cartan J1 n X)⁻¹ := by
   set J : Mat n := Jn J1 n
   have hJJ' : J * J = (1 : Mat n) := by simpa [J] using hJJ
-  have hJinv : J⁻¹ = J := by
-    simpa using (Matrix.inv_eq_left_inv (A := J) (B := J) hJJ')
+  have hJt' : Jᵀ = J := by simpa [J] using hJt
+  have hJinv : J⁻¹ = Jᵀ := by
+    apply Matrix.inv_eq_left_inv
+    simpa only [hJt'] using hJJ'
   have hXt : IsUnit (Xᵀ).det := Matrix.isUnit_det_transpose (A := X) hX
   have hJdet : IsUnit J.det := Matrix.isUnit_det_of_left_inverse (A := J) (B := J) hJJ'
   have hA : IsUnit (J * Xᵀ * J).det := by
@@ -126,7 +134,7 @@ lemma cartan_inv_of_isUnit (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ)
                   = ((J * Xᵀ) * J)⁻¹ := by simp [Matrix.mul_assoc]
               _ = J⁻¹ * (J * Xᵀ)⁻¹ := by simp [Matrix.mul_inv_rev]
               _ = J⁻¹ * ((Xᵀ)⁻¹ * J⁻¹) := by simp [Matrix.mul_inv_rev]
-              _ = J * (Xᵀ)⁻¹ * J := by simp [hJinv, Matrix.mul_assoc]
+              _ = J * (Xᵀ)⁻¹ * J := by simp [hJinv, hJt', Matrix.mul_assoc]
           rw [hmul]
     _ = (cartan J1 n X)⁻¹ := by
           calc

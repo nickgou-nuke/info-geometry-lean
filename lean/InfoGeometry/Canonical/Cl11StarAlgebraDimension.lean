@@ -18,6 +18,8 @@ that same carrier.
 
 noncomputable section
 
+open scoped BigOperators
+
 namespace InfoGeometry.Canonical.Cl11StarAlgebraDimension
 
 open InfoGeometry.Canonical.Cl11StarAlgebraColimit
@@ -35,7 +37,7 @@ theorem stage_finrank (n : ℕ) :
 /-- The existing algebraic tensor limit is not a finite-dimensional real algebra. -/
 theorem not_finiteDimensional : ¬ FiniteDimensional ℝ Limit := by
   intro h
-  letI : FiniteDimensional ℝ Limit := h
+  let : FiniteDimensional ℝ Limit := h
   let d := Module.finrank ℝ Limit
   have hle : Module.finrank ℝ (Stage d) ≤ d :=
     LinearMap.finrank_le_finrank_of_injective
@@ -50,10 +52,18 @@ theorem stage_one_generators_mul_ne :
   intro h
   have hentry := congrArg
     (fun A : Stage 1 => A ((0 : Fin 1), (0 : Fin 2)) ((0 : Fin 1), (0 : Fin 2))) h
-  simp only [Matrix.mul_apply] at hentry
+  change (∑ j : Fin 1 × Fin 2,
+      gamma_0 ((0 : Fin 1), (0 : Fin 2)) j *
+        gamma_1 j ((0 : Fin 1), (0 : Fin 2))) =
+    ∑ j : Fin 1 × Fin 2,
+      gamma_1 ((0 : Fin 1), (0 : Fin 2)) j *
+        gamma_0 j ((0 : Fin 1), (0 : Fin 2)) at hentry
   norm_num [gamma_0, gamma_1, gamma_0_base, gamma_1_base,
     TowerMatrix.kronPow, TowerMatrix.Idx, Cl11Matrix.J1, Cl11Matrix.Eminus,
-    Matrix.kronecker_apply, Fintype.sum_prod_type, Fin.sum_univ_succ] at hentry
+    Matrix.kroneckerMap, Matrix.of, Equiv.refl_apply, Matrix.one_apply,
+    Fintype.sum_prod_type, Fin.sum_univ_succ] at hentry
+  change (0 : ℝ) * 0 + 1 * (-1) = 0 * 0 + 1 * 1 at hentry
+  norm_num at hentry
 
 /-- Two actual elements of the algebraic limit have unequal ordered products. -/
 theorem exists_noncommuting : ∃ a b : Limit, a * b ≠ b * a := by

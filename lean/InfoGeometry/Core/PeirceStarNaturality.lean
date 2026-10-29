@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.PeirceSandwichDuality
-import Mathlib.Algebra.Star.StarRingHom
+import Mathlib.Algebra.Star.StarAlgHom
 
 /-!
 # Naturality and reflected star identities for Peirce corners
 
 The existing corners and reflection are transported by native ring and
-star-ring homomorphisms. The reflected-star anticommutator is a sum of two
+star-algebra homomorphisms. The reflected-star anticommutator is a sum of two
 star squares in the original associative ring. No order structure is assumed.
 -/
 
@@ -55,11 +55,13 @@ section Star
 
 variable [StarRing A] [StarRing B]
 
-@[simp] theorem map_reflected_star (f : A →⋆+* B) (p x : A) :
+@[simp] theorem map_reflected_star {R : Type*} [CommRing R]
+    [Algebra R A] [Algebra R B] (f : A →⋆ₐ[R] B) (p x : A) :
     f (reflection p * star x * reflection p) =
       reflection (f p) * star (f x) * reflection (f p) := by
   simp only [map_mul, map_star]
-  rw [show f (reflection p) = reflection (f p) from map_reflection f.toRingHom p]
+  rw [show f (reflection p) = reflection (f p) from
+    map_reflection f.toAlgHom.toRingHom p]
 
 /-- Star reverses the corner, on which reflection conjugation has sign minus. -/
 theorem reflected_star_corner {p u : A} (hp : IsStarProjection p)

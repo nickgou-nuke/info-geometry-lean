@@ -39,12 +39,11 @@ theorem matrix_dissipator {n : Type*} [Fintype n] [DecidableEq n]
     dissipator (R := R) u v = Core.SquareZeroSandwich.symmDissipator u v := by
   ext x
   simp only [dissipator_apply, Core.SquareZeroSandwich.symmDissipator_apply,
-    Core.SquareZeroSandwich.symmSandwich_apply, two_nsmul, two_smul]
+    Core.SquareZeroSandwich.symmSandwich_apply, two_smul]
 
 /-- This algebraic map annihilates the identity, for arbitrary coefficients. -/
 theorem dissipator_one (u v : A) : dissipator (R := R) u v 1 = 0 := by
-  rw [dissipator_apply]
-  simp [two_nsmul]
+  simp only [dissipator_apply, mul_one, one_mul, two_smul, sub_self]
 
 theorem map_dissipator {B : Type*} [Ring B] [Algebra R B]
     (f : A →+* B) (u v x : A) :
@@ -63,13 +62,19 @@ Involutivity is not needed for this general criterion. -/
 theorem parity_equivariant (θ : A ≃+* A) (u v x : A)
     (hu : θ u = -u) (hv : θ v = -v) :
     θ (dissipator (R := R) u v x) = dissipator (R := R) u v (θ x) := by
-  rw [map_dissipator θ.toRingHom, hu, hv, dissipator_neg_neg]
+  have h := map_dissipator (R := R) θ.toRingHom u v x
+  change θ (dissipator (R := R) u v x) =
+    dissipator (R := R) (θ u) (θ v) (θ x) at h
+  rwa [hu, hv, dissipator_neg_neg] at h
 
 /-- Every eigenspace of a sign-reversing algebra automorphism is invariant. -/
 theorem parity_eigenspace_invariant (θ : A ≃ₐ[R] A) (u v x : A) (r : R)
     (hu : θ u = -u) (hv : θ v = -v) (hx : θ x = r • x) :
     θ (dissipator (R := R) u v x) = r • dissipator (R := R) u v x := by
-  rw [parity_equivariant θ.toRingEquiv u v x hu hv, hx, map_smul]
+  have h : θ (dissipator (R := R) u v x) =
+      dissipator (R := R) u v (θ x) :=
+    parity_equivariant (R := R) θ.toRingEquiv u v x hu hv
+  rw [h, hx, map_smul]
 
 /-- Naturality holds for every finite iterate, not merely one application. -/
 theorem map_dissipator_iterate {B : Type*} [Ring B] [Algebra R B]

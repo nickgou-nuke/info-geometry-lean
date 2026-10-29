@@ -55,9 +55,9 @@ theorem antisymmetrized_isFermionic (x : PrimonUHFAlgebra) :
 theorem toColimit_dissipator (n : ℕ) (u v x : MatrixStage n) :
     toColimit n (Core.SquareZeroSandwich.symmDissipator u v x) =
       dissipator (R := ℤ) (toColimit n u) (toColimit n v) (toColimit n x) := by
-  rw [← map_dissipator]
+  rw [← map_dissipator (R := ℤ)]
   congr 1
   simp only [dissipator_apply, Core.SquareZeroSandwich.symmDissipator_apply,
-    Core.SquareZeroSandwich.symmSandwich_apply, two_nsmul, two_smul]
+    Core.SquareZeroSandwich.symmSandwich_apply, two_smul]
 
 end InfoGeometry.Canonical.SymmetricDissipatorParity

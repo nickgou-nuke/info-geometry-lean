@@ -1,0 +1,64 @@
+name: Peirce Cartan colimit (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Core/DualSeedCartan.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceCoupling/**'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceCartanColimit.lean'
+      - 'tools/quality/check_peirce_cartan_colimit.py'
+      - '.github/workflows/peirce-cartan-colimit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: peirce-cartan-colimit-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact public sources without external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile unchanged source closure and audit native declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          ps -eo pid,comm,args
+          python3 project/tools/quality/check_peirce_cartan_colimit.py \
+            --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: peirce-cartan-colimit-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

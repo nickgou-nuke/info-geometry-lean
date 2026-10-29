@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.StarReflection
 import InfoGeometry.Core.DualSeedCartan
 import Mathlib.Algebra.Colimit.DirectLimit
+import Mathlib.Algebra.Star.StarRingHom
 
 /-!
 # Star-compatible transport into the native noncommutative direct limit

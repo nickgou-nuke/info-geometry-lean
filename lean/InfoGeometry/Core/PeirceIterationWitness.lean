@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.PeirceQuadraticIteration
-import Mathlib.Data.Matrix.Notation
+import Mathlib
 
 /-! # Dense real matrix regression for all-order inner action -/
 namespace InfoGeometry.Core.PeirceIterationWitness

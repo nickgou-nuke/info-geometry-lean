@@ -919,6 +919,7 @@ lean_lib InfoGeometryTestSuite where
     `BalabanOperatorTests,
     `MatrixPeirceZornAxiomAudit,
     `OperatorGaugeConnectionsAxiomAudit,
+    `OperatorContentNetworkAxiomAudit,
     `SeligmanCubicOperatorTests,
     `SeligmanCubicOperatorAxiomAudit,
     `YangMillsMatrixGeometryTests,

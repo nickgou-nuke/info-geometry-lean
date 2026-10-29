@@ -120,8 +120,12 @@ theorem hodge_energy (u : Mat) (z : Mat × Mat) :
   rw [← boundary_coboundary_anticommutator]
   change doubledPair z (boundary (R := ℝ) u (coboundary (R := ℝ) uᵀ z) +
     coboundary (R := ℝ) uᵀ (boundary (R := ℝ) u z)) = _
-  rw [doubledPair_add_right, ← coboundary_adjoint_pairing, ← boundary_adjoint_pairing]
-  exact add_comm _ _
+  rw [doubledPair_add_right,
+    ← coboundary_adjoint_pairing u z (coboundary (R := ℝ) uᵀ z),
+    ← boundary_adjoint_pairing u z (boundary (R := ℝ) u z)]
+  exact add_comm
+    (doubledPair (coboundary (R := ℝ) uᵀ z) (coboundary (R := ℝ) uᵀ z))
+    (doubledPair (boundary (R := ℝ) u z) (boundary (R := ℝ) u z))
 
 theorem hodge_energy_nonneg (u : Mat) (z : Mat × Mat) :
     0 ≤ doubledPair z (liftOp (jordanLeft (R := ℝ) (u * uᵀ + uᵀ * u)) z) := by

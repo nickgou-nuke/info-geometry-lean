@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Reindex
@@ -13,7 +18,9 @@ namespace InfoGeometry.Clifford.TowerMatrix
 
 open Matrix
 
-def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2
+/-- The binary tensor index retains its defining equations without generating
+an executable recursive helper for this type-valued definition. -/
+noncomputable def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2
 
 instance (n : ℕ) : Fintype (Idx n) := by induction n with | zero => dsimp [Idx]; exact inferInstance | succ _ ih => dsimp [Idx]; exact @instFintypeProd _ _ ih _
 instance (n : ℕ) : DecidableEq (Idx n) := by induction n with | zero => dsimp [Idx]; exact inferInstance | succ _ ih => dsimp [Idx]; exact @instDecidableEqProd _ _ ih _

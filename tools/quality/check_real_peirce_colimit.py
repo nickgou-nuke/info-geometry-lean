@@ -2,8 +2,8 @@
 """Verify the exact real Peirce/tensor-colimit closure at repository pins.
 
 All acceptance logic is the existing sequential source-closure verifier.
-This entrypoint selects only the new theorem owners and their real tower
-dependencies; it does not alter the root package or its dependency graph.
+This entrypoint selects the new theorem owners and the repaired real tensor
+index owner; it does not alter the root package or its dependency graph.
 """
 from pathlib import Path
 import sys
@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT))
 from tools.quality import check_lie_jordan_geometry as checker
 
 checker.TARGETS = [
+    'InfoGeometry.Clifford.TowerMatrix',
     'InfoGeometry.Core.PeirceDoubleCommutator',
     'InfoGeometry.Clifford.Cl11StarUniversal',
     'InfoGeometry.Clifford.Cl11ColimitDimension',

@@ -142,8 +142,14 @@ python3 tools/quality/check_real_peirce_colimit.py \
   --output /absolute/path/to/verification
 ```
 
-The entry point selects the five new owners and reuses the maintained closure
-verifier. It compiles their exact repository import closure, treats warnings in
-the five targets as errors, audits all declarations in that closure, builds an
+The entry point selects the five new owners and the repaired existing
+`Clifford.TowerMatrix` owner, and reuses the maintained closure verifier.
+`TowerMatrix.Idx` retains its exact recursive type equations and is marked
+`noncomputable`, suppressing generation of an executable unsafe/partial helper
+for this type-valued definition. Its kernel definition and equation-based
+unfolding remain available. No stage, bonding map, or quotient carrier is
+replaced. The verifier compiles the exact repository
+import closure, treats warnings in all six targets as errors, audits all
+declarations in that closure, builds an
 isolated native Lake package, and reconciles source hashes and dependency pins.
 The scoped GitHub Actions workflow runs the same check and retains its evidence.

@@ -82,9 +82,9 @@ theorem boundary_commutes_hodge {u : A} (hu : u * u = 0) (v : A) :
 /-- Its value on the identity pair need not be zero. -/
 theorem hodge_identity_pair (u v : A) :
     liftOp (jordanLeft (R := R) (u * v + v * u)) (1, 1) =
-      (2 • (u * v + v * u), 2 • (u * v + v * u)) := by
+      ((2 : ℕ) • (u * v + v * u), (2 : ℕ) • (u * v + v * u)) := by
   change ((u * v + v * u) * 1 + 1 * (u * v + v * u),
     (u * v + v * u) * 1 + 1 * (u * v + v * u)) = _
-  simp [two_nsmul]
+  simp only [mul_one, one_mul, two_nsmul]
 
 end InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge

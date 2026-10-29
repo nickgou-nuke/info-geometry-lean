@@ -12,6 +12,10 @@ checker.TARGETS = [
     "InfoGeometry.OperatorAlgebra.LieJordanHodgePairing",
     "InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity",
     "InfoGeometry.OperatorAlgebra.LieJordanHodgeHilbert",
+    "InfoGeometry.OperatorAlgebra.PeirceHodgeCoercivity",
+    "InfoGeometry.OperatorAlgebra.PeirceHodgeExamples",
+    "InfoGeometry.Canonical.LieJordanHodgeColimit",
+    "InfoGeometry.Canonical.LieJordanHodgeSynthesis",
 ]
 
 if __name__ == "__main__":

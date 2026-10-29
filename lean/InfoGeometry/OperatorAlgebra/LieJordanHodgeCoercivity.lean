@@ -61,7 +61,10 @@ theorem norm_le_of_homotopy
         add_le_add (mul_le_mul_of_nonneg_left hb₁ (norm_nonneg _))
           (mul_le_mul_of_nonneg_left hb₂ (norm_nonneg _))
       _ = _ := by ring
-  exact (mul_le_mul_left hr).mp hnorm
+  by_contra hnot
+  have hlt : C * (‖d.adjoint x‖ + ‖d x‖) < ‖x‖ := lt_of_not_ge hnot
+  have hpos := mul_pos hr (sub_pos.mpr hlt)
+  nlinarith only [hpos, hnorm]
 
 /-- Division-free form of the estimate; C is a norm bound, not a spectral input. -/
 theorem squared_norm_le_energy
@@ -81,7 +84,7 @@ theorem squared_norm_le_energy
       mul_le_mul_of_nonneg_left hp (sq_nonneg C)
     _ = _ := by ring
 
-/-- Quantitative coercivity above ker P, with its positive constant displayed. -/
+/-- Quantitative coercivity on ker P, with its positive constant displayed. -/
 theorem energy_ge_of_homotopy
     (d h P : E →L[ℝ] E) (C : ℝ) (hC : 0 < C) (hbound : ‖h‖ ≤ C)
     (hhom : d * h + h * d = 1 - P) (x : E) (hx : P x = 0) :
@@ -93,7 +96,7 @@ theorem energy_ge_of_homotopy
   have hd : ‖x‖ ^ 2 / (2 * C ^ 2) ≤
       ‖d.adjoint x‖ ^ 2 + ‖d x‖ ^ 2 :=
     (div_le_iff₀ hden).2 (by simpa only [mul_comm] using hs)
-  simpa only [one_div, div_eq_mul_inv, mul_comm] using hd
+  simpa only [one_div, div_eq_mul_inv, one_mul, mul_comm] using hd
 
 /-- The same bound applies to the complementary component when P is idempotent. -/
 theorem complement_coercivity

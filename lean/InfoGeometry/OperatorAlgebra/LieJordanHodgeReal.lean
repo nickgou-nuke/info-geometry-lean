@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge
+import InfoGeometry.OperatorAlgebra.LieJordanHodgeCoercivity
 import Mathlib.Analysis.InnerProductSpace.Positive
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Matrix.Order
@@ -194,5 +195,59 @@ theorem differential_square_zero {u : Matrix n n ℝ} (hu : u * u = 0) :
   rw [← onDouble_mul, boundary_square_zero hu]
   ext z
   rfl
+
+/-- Every nonzero real matrix gives a nonzero doubled boundary. -/
+theorem differential_ne_zero {u : Matrix n n ℝ} (hu : u ≠ 0) :
+    differential u ≠ 0 := by
+  intro h
+  have hx := congrArg
+    (fun t : Module.End ℝ (WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)) =>
+      (t (WithLp.toLp 2 (1, 0))).ofLp.2) h
+  change u * 1 + 1 * u = 0 at hx
+  simp only [mul_one, one_mul] at hx
+  apply hu
+  ext i j
+  have hij := congrArg (fun m : Matrix n n ℝ => m i j) hx
+  change u i j + u i j = 0 at hij
+  linarith
+
+/-- For nonzero coefficients the positive adjoint is never the unexchanged
+boundary of the transposed coefficient. This excludes the false identification. -/
+theorem adjoint_ne_unexchanged {u : Matrix n n ℝ} (hu : u ≠ 0) :
+    (differential u).adjoint ≠ differential uᴴ := by
+  intro h
+  rw [differential_adjoint] at h
+  have hx := congrArg
+    (fun t : Module.End ℝ (WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)) =>
+      (t (WithLp.toLp 2 (1, 0))).ofLp.2) h
+  change uᴴ * 1 - 1 * uᴴ = uᴴ * 1 + 1 * uᴴ at hx
+  simp only [mul_one, one_mul, sub_self] at hx
+  have hz : uᴴ = 0 := by
+    ext i j
+    have hij := congrArg (fun m : Matrix n n ℝ => m i j) hx
+    change 0 = uᴴ i j + uᴴ i j at hij
+    linarith
+  apply hu
+  simpa only [Matrix.conjTranspose_conjTranspose, Matrix.conjTranspose_zero] using
+    congrArg (fun m : Matrix n n ℝ => mᴴ) hz
+
+/-- The abstract homotopy estimate applies to this exact real matrix operator. -/
+theorem hodge_coercive_of_homotopy (u : Matrix n n ℝ)
+    (h P : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ) →L[ℝ]
+      WithLp 2 (Matrix n n ℝ × Matrix n n ℝ))
+    (C : ℝ) (hC : 0 < C) (hbound : ‖h‖ ≤ C)
+    (hhom : (differential u).toContinuousLinearMap * h +
+      h * (differential u).toContinuousLinearMap = 1 - P)
+    (z : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)) (hz : P z = 0) :
+    (1 / (2 * C ^ 2)) * ‖z‖ ^ 2 ≤
+      inner ℝ z (onDouble (liftOp (jordanLeft (R := ℝ) (u * uᴴ + uᴴ * u))) z) := by
+  have he := LieJordanHodgeCoercivity.energy_ge_of_homotopy
+    (differential u).toContinuousLinearMap h P C hC hbound hhom z hz
+  rw [← LinearMap.adjoint_toContinuousLinearMap] at he
+  change (1 / (2 * C ^ 2)) * ‖z‖ ^ 2 ≤
+    inner ℝ z ((differential u * (differential u).adjoint +
+      (differential u).adjoint * differential u) z) at he
+  rw [hodge_eq_jordan] at he
+  exact he
 
 end InfoGeometry.OperatorAlgebra.LieJordanHodgeReal

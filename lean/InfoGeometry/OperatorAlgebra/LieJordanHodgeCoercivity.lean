@@ -112,12 +112,14 @@ theorem complement_coercivity
 
 /-- A finite-dimensional pointwise homotopy bound supplies the bounded-operator
 hypothesis without imposing a different norm on a concrete carrier. -/
+omit [CompleteSpace E] in
 theorem linear_energy_ge_of_homotopy [FiniteDimensional ℝ E]
     (d h P : Module.End ℝ E) (C : ℝ) (hC : 0 < C)
     (hbound : ∀ x : E, ‖h x‖ ≤ C * ‖x‖)
     (hhom : d * h + h * d = 1 - P) (x : E) (hx : P x = 0) :
     (1 / (2 * C ^ 2)) * ‖x‖ ^ 2 ≤
       inner ℝ x ((d * d.adjoint + d.adjoint * d) x) := by
+  have := FiniteDimensional.complete ℝ E
   let dc : E →L[ℝ] E := LinearMap.toContinuousLinearMap d
   let hc : E →L[ℝ] E := LinearMap.toContinuousLinearMap h
   let pc : E →L[ℝ] E := LinearMap.toContinuousLinearMap P

@@ -246,7 +246,6 @@ theorem hodge_coercive_of_homotopy (u : Matrix n n ℝ)
     (z : WithLp 2 (Matrix n n ℝ × Matrix n n ℝ)) (hz : P z = 0) :
     (1 / (2 * C ^ 2)) * ‖z‖ ^ 2 ≤
       inner ℝ z (onDouble (liftOp (jordanLeft (R := ℝ) (u * uᴴ + uᴴ * u))) z) := by
-  letI := FiniteDimensional.complete ℝ (WithLp 2 (Matrix n n ℝ × Matrix n n ℝ))
   have he := LieJordanHodgeCoercivity.linear_energy_ge_of_homotopy
     (differential u) h P C hC hbound hhom z hz
   rw [hodge_eq_jordan] at he

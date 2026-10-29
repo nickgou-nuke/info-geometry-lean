@@ -239,8 +239,12 @@ not producers.
 
 **Algorithm:**
 ```
-1. Compute olean content hash (SHA256 of all .olean files)
-2. Compute lean source hash (SHA256 of all .lean files)
+1. Compute OLean content identity from the bytes of root build outputs and each
+   Lake package's `.lake/build/lib` outputs named by `lake-manifest.json`;
+   package paths are recorded relative to the project root.
+2. Compute Lean source identity from repo `lean/` sources and declared local
+   path-package sources/configuration. Git package revisions are bound by the
+   Lake manifest, and their compiled OLean bytes are included above.
 3. Check if should_skip_decl_refresh:
    - meta.json exists with matching olean/source hash AND matching import_root/namespace
    - AND no stale source file references in existing decls
@@ -254,6 +258,10 @@ not producers.
 
 **Key design decision**: Uses content-hash incremental skip to avoid rebuilding
 the entire index when nothing changed.
+
+These are cache identities, not a peer-transfer archive or an import-closure
+manifest. They do not clone Git history per commit or assert that a particular
+subset of OLean files is sufficient to load an arbitrary module elsewhere.
 
 ### `tools/infra/refresh_blueprint_tags.py`
 

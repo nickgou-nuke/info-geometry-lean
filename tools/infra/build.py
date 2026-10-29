@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from functools import lru_cache
 import os
 import signal
 import shlex
@@ -39,14 +40,14 @@ def compute_olean_content_hash(root: Path) -> str:
         build_lib = root / ".build" / "lib"
     manifest_path = root / "lake-manifest.json"
     manifest_bytes = manifest_path.read_bytes() if manifest_path.is_file() else b""
-    dependencies = _declared_path_dependencies(root, manifest_bytes)
-    oleans = _olean_inventory(build_lib, dependencies)
+    packages = _declared_lake_packages(root, manifest_bytes)
+    oleans = _olean_inventory(build_lib, packages)
     if not oleans:
         return ""
     build_identity_files = _build_identity_inventory(root)
     build_identity_state = _inventory_state(build_identity_files)
     h = hashlib.sha256()
-    h.update(b"info-geometry-olean-content-v2\0")
+    h.update(b"info-geometry-olean-content-v4\0")
     for name in ("lean-toolchain", "lakefile.lean", "lakefile.toml"):
         path = root / name
         h.update(name.encode() + b"\0")
@@ -65,7 +66,10 @@ def compute_olean_content_hash(root: Path) -> str:
         raise RuntimeError("build configuration inventory changed while hashing artifacts")
     if _inventory_state(final_identity_files) != build_identity_state:
         raise RuntimeError("build configuration changed while hashing artifacts")
-    final_oleans = _olean_inventory(build_lib, dependencies)
+    final_packages = _declared_lake_packages(root, manifest_bytes)
+    if final_packages != packages:
+        raise RuntimeError("Lake package inventory changed while hashing artifacts")
+    final_oleans = _olean_inventory(build_lib, final_packages)
     if tuple(str(path) for path in final_oleans) != inventory:
         raise RuntimeError("olean inventory changed while hashing artifacts")
     if _inventory_state(final_oleans) != inventory_state:
@@ -74,15 +78,15 @@ def compute_olean_content_hash(root: Path) -> str:
 
 
 def compute_lean_source_hash(root: Path) -> str:
-    """Content-address Lean sources, path-package sources, and build configuration."""
+    """Content-address root and local path-package sources/configuration."""
     manifest_path = root / "lake-manifest.json"
     manifest_bytes = manifest_path.read_bytes() if manifest_path.is_file() else b""
-    dependencies = _declared_path_dependencies(root, manifest_bytes)
-    files = _source_inventory(root, dependencies)
+    packages = _declared_lake_packages(root, manifest_bytes, package_types={"path"})
+    files = _source_inventory(root, packages)
     if not any(path.suffix == ".lean" for path in files):
         return ""
     h = hashlib.sha256()
-    h.update(b"info-geometry-source-content-v2\0")
+    h.update(b"info-geometry-source-content-v3\0")
     inventory = tuple(str(path) for path in files)
     inventory_state = _inventory_state(files)
     for path in files:
@@ -90,7 +94,10 @@ def compute_lean_source_hash(root: Path) -> str:
         _hash_stable_file(h, path)
     if manifest_path.is_file() and manifest_path.read_bytes() != manifest_bytes:
         raise RuntimeError("lake manifest changed while hashing sources")
-    final_files = _source_inventory(root, dependencies)
+    final_packages = _declared_lake_packages(root, manifest_bytes, package_types={"path"})
+    if final_packages != packages:
+        raise RuntimeError("Lake package inventory changed while hashing sources")
+    final_files = _source_inventory(root, final_packages)
     if tuple(str(path) for path in final_files) != inventory:
         raise RuntimeError("source inventory changed while hashing sources")
     if _inventory_state(final_files) != inventory_state:
@@ -99,20 +106,37 @@ def compute_lean_source_hash(root: Path) -> str:
 
 
 def _hash_stable_file(hasher: "hashlib._Hash", path: Path) -> None:
-    with path.open("rb") as stream:
-        before = os.fstat(stream.fileno())
-        hasher.update(before.st_size.to_bytes(8, "big"))
-        while chunk := stream.read(1024 * 1024):
-            hasher.update(chunk)
-        after = os.fstat(stream.fileno())
-    if _stat_identity(before) != _stat_identity(after):
-        raise RuntimeError(f"file changed while hashing: {path}")
+    stat_result = path.stat()
+    identity = _stat_identity(stat_result)
+    digest = _stable_file_digest(str(path.resolve()), identity)
+    hasher.update(stat_result.st_size.to_bytes(8, "big"))
+    hasher.update(digest)
+
+
+@lru_cache(maxsize=100_000)
+def _stable_file_digest(path: str, identity: tuple[int, int, int, int, int]) -> bytes:
+    """Reuse exact content digests within one process when file identity is stable."""
+    target = Path(path)
+    digest = hashlib.sha256()
     try:
-        current_path = path.stat()
+        with target.open("rb") as stream:
+            before = os.fstat(stream.fileno())
+            if _stat_identity(before) != identity:
+                raise RuntimeError(f"file changed before hashing: {target}")
+            while chunk := stream.read(1024 * 1024):
+                digest.update(chunk)
+            after = os.fstat(stream.fileno())
     except FileNotFoundError as exc:
-        raise RuntimeError(f"file replaced while hashing: {path}") from exc
+        raise RuntimeError(f"file disappeared while hashing: {target}") from exc
+    if _stat_identity(before) != _stat_identity(after):
+        raise RuntimeError(f"file changed while hashing: {target}")
+    try:
+        current_path = target.stat()
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"file replaced while hashing: {target}") from exc
     if _stat_identity(before) != _stat_identity(current_path):
-        raise RuntimeError(f"file replaced while hashing: {path}")
+        raise RuntimeError(f"file replaced while hashing: {target}")
+    return digest.digest()
 
 
 def _stat_identity(stat_result: os.stat_result) -> tuple[int, int, int, int, int]:
@@ -132,22 +156,55 @@ def _inventory_state(paths: Sequence[Path]) -> tuple[tuple[str, tuple[int, int, 
         raise RuntimeError("file inventory changed while hashing") from exc
 
 
-def _declared_path_dependencies(root: Path, manifest: bytes) -> tuple[Path, ...]:
+def _declared_lake_packages(
+    root: Path, manifest: bytes, *, package_types: set[str] | None = None
+) -> tuple[Path, ...]:
+    """Resolve Lake package directories, optionally restricted by manifest type."""
     if not manifest:
         return ()
     try:
-        packages = json.loads(manifest).get("packages", [])
+        manifest_data = json.loads(manifest)
+        entries = manifest_data.get("packages", [])
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise RuntimeError("lake manifest is not valid JSON") from exc
-    paths = set()
-    for item in packages:
-        if item.get("type") != "path" or not item.get("dir"):
+    packages_dir_raw = manifest_data.get("packagesDir", ".lake/packages")
+    if not isinstance(packages_dir_raw, str) or Path(packages_dir_raw).is_absolute():
+        raise RuntimeError(f"Lake manifest has an invalid packagesDir: {packages_dir_raw!r}")
+    packages_dir = (root / packages_dir_raw).resolve()
+    packages: set[Path] = set()
+    for item in entries:
+        package_type = item.get("type")
+        if package_types is not None and package_type not in package_types:
             continue
-        path = (root / item["dir"]).resolve()
-        if not path.is_dir():
-            raise RuntimeError(f"declared Lake path dependency is unavailable: {item['dir']}")
-        paths.add(path)
-    return tuple(sorted(paths))
+        if package_type == "path":
+            relative = item.get("dir")
+            if not relative:
+                raise RuntimeError(f"Lake path package has no directory: {item.get('name', '<unnamed>')}")
+            package = (root / relative).resolve()
+            if not package.is_dir():
+                raise RuntimeError(f"declared Lake path dependency is unavailable: {relative}")
+        elif package_type == "git":
+            name = item.get("name", "").strip("«»")
+            if not name or Path(name).name != name:
+                raise RuntimeError(f"Lake Git package has an invalid name: {item.get('name')!r}")
+            relative = item.get("dir") or str(Path(packages_dir_raw) / name)
+            package = (root / relative).resolve()
+        else:
+            raise RuntimeError(f"unsupported Lake package type: {package_type!r}")
+        package_base = package
+        sub_dir = item.get("subDir")
+        if sub_dir is not None:
+            if not isinstance(sub_dir, str) or Path(sub_dir).is_absolute():
+                raise RuntimeError(f"Lake package has an invalid subDir: {sub_dir!r}")
+            package = (package_base / sub_dir).resolve()
+            try:
+                package.relative_to(package_base)
+            except ValueError as exc:
+                raise RuntimeError(f"Lake package subDir escapes its package: {sub_dir!r}") from exc
+        if not package.is_dir():
+            raise RuntimeError(f"declared Lake package directory is unavailable: {package}")
+        packages.add(package)
+    return tuple(sorted(packages))
 
 
 def _olean_inventory(build_lib: Path, dependencies: Sequence[Path]) -> list[Path]:
@@ -160,6 +217,7 @@ def _olean_inventory(build_lib: Path, dependencies: Sequence[Path]) -> list[Path
 
 
 def _source_inventory(root: Path, dependencies: Sequence[Path]) -> list[Path]:
+    """List project/package Lean sources while excluding VCS and build internals."""
     paths = set((root / "lean").rglob("*.lean")) if (root / "lean").is_dir() else set()
     for package in dependencies:
         paths.update(
@@ -183,8 +241,7 @@ def _build_identity_inventory(root: Path) -> list[Path]:
 
 
 def _path_identity(path: Path, root: Path) -> str:
-    # Keep external Lake `type = path` dependencies relocatable when the same
-    # project/dependency layout is checked out under a different absolute root.
+    # Keep root and Lake package inputs relocatable across checkout roots.
     return Path(os.path.relpath(path.resolve(), root.resolve())).as_posix()
 
 

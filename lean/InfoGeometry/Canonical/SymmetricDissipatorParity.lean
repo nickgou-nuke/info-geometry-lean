@@ -28,7 +28,10 @@ theorem globalParity_dissipator (u v x : PrimonUHFAlgebra)
   have h := map_dissipator (R := ℤ) globalParity u v x
   change globalParity u = -u at hu
   change globalParity v = -v at hv
-  rwa [hu, hv, dissipator_neg_neg] at h
+  rw [hu, hv] at h
+  exact h.trans (congrArg
+    (fun T : Module.End ℤ PrimonUHFAlgebra => T (globalParity x))
+    (dissipator_neg_neg (R := ℤ) u v))
 
 theorem dissipator_preserves_bosonic (u v x : PrimonUHFAlgebra)
     (hu : isFermionic u) (hv : isFermionic v) (hx : isBosonic x) :

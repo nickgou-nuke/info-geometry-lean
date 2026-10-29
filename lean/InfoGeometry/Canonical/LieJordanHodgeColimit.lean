@@ -65,7 +65,7 @@ theorem gram_bonding_compatible (n : ℕ) (u x : Stage n) :
   exact (ofStage_jordan_gram n u x).symm
 
 /-- The maintained universal map retains the noncommutative ordered readout. -/
-theorem lift_jordan_gram {B : Type*} [Semiring B]
+theorem lift_jordan_gram {B : Type} [Semiring B]
     (f : ∀ n : ℕ, Stage n →+* B) (hf : CompatibleCone stageBond f)
     (n : ℕ) (u x : Stage n) :
     directLimitLift stageBond f hf

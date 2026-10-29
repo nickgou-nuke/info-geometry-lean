@@ -110,9 +110,10 @@ theorem complement_coercivity
   change P (P x) = P x at hpx
   rw [map_sub, hpx, sub_self]
 
+omit [CompleteSpace E]
+
 /-- A finite-dimensional pointwise homotopy bound supplies the bounded-operator
 hypothesis without imposing a different norm on a concrete carrier. -/
-omit [CompleteSpace E] in
 theorem linear_energy_ge_of_homotopy [FiniteDimensional ℝ E]
     (d h P : Module.End ℝ E) (C : ℝ) (hC : 0 < C)
     (hbound : ∀ x : E, ‖h x‖ ≤ C * ‖x‖)

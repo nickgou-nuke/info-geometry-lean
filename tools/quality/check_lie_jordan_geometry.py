@@ -45,6 +45,11 @@ TARGETS = [
     'InfoGeometry.Canonical.LieJordanGeneratorTrace',
     'InfoGeometry.Canonical.RealLieJordanGeometry',
     'InfoGeometry.Canonical.RealLieJordanExamples',
+    'InfoGeometry.Core.LieJordanSingleSquare',
+    'InfoGeometry.Core.PeirceStarNaturality',
+    'InfoGeometry.Canonical.Cl11StarAlgebraColimit',
+    'InfoGeometry.Canonical.Cl11StarAlgebraDimension',
+    'InfoGeometry.Canonical.Cl11PeirceStarColimit',
 ]
 
 

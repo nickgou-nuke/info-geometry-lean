@@ -147,7 +147,8 @@ theorem stage_gram_mul_U_ne_smul (r : ℝ) :
   intro h
   apply gram_mul_U_ne_smul r
   have he := congrArg (matEquivFinPowTwo 2) h
-  simp only [map_mul, map_add, map_smul, stageU_star, stageU,
+  simp only [stageU_star] at he
+  simp only [map_mul, map_add, map_smul, stageU,
     AlgEquiv.apply_symm_apply, Matrix.star_eq_conjTranspose,
     Matrix.conjTranspose_eq_transpose_of_trivial] at he
   exact he

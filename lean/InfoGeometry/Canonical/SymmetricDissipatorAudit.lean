@@ -1,0 +1,30 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.SymmetricDissipator
+import InfoGeometry.Canonical.SymmetricDissipatorColimit
+import InfoGeometry.Canonical.SymmetricDissipatorParity
+
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.dissipator
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.dissipator_apply
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.matrix_dissipator
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.dissipator_one
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.map_dissipator
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.dissipator_neg_neg
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.parity_equivariant
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.parity_eigenspace_invariant
+#print axioms InfoGeometry.OperatorAlgebra.SymmetricDissipator.map_dissipator_iterate
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorColimit.ofStage_dissipator
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorColimit.dissipator_bonding_compatible
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorColimit.dissipator_eq_zero_iff
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorColimit.dissipator_iterate_eq_zero_iff
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorColimit.ofStage_noncommute_iff
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorColimit.lift_dissipator
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorParity.globalParity_dissipator
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorParity.dissipator_preserves_bosonic
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorParity.dissipator_preserves_fermionic
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorParity.symmetrized_isBosonic
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorParity.antisymmetrized_isFermionic
+#print axioms InfoGeometry.Canonical.SymmetricDissipatorParity.toColimit_dissipator

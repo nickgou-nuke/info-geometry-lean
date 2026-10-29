@@ -256,6 +256,11 @@ import InfoGeometry.OperatorAlgebra.OperatorZornTwinFormalism
 import InfoGeometry.OperatorAlgebra.SL2CTwinWeylZornAction
 import InfoGeometry.OperatorAlgebra.OperatorZornTwinAll
 import InfoGeometry.OperatorAlgebra.PeirceSuperoperators
+import InfoGeometry.Clifford.Cl11StarAlgebraColimit
+import InfoGeometry.Clifford.Cl11StarAlgebraFiltration
+import InfoGeometry.Clifford.Cl11StarCoconeObstruction
+import InfoGeometry.OperatorAlgebra.PeirceStarColimitActions
+import InfoGeometry.OperatorAlgebra.PeirceStarColimitModes
 
 namespace InfoGeometry.OperatorAlgebra
 

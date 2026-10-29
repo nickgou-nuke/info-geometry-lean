@@ -31,7 +31,10 @@ theorem dissipator_bonding_compatible (n : ℕ) (u v x : Stage n) :
     ofStage (n + 1)
         (dissipator (R := ℝ) (stageEmbed n u) (stageEmbed n v) (stageEmbed n x)) =
       ofStage n (dissipator (R := ℝ) u v x) := by
-  rw [← map_dissipator (stageEmbed n).toRingHom, ofStage_apply_bond]
+  have h := map_dissipator (R := ℝ) (stageEmbed n).toRingHom u v x
+  change stageEmbed n (dissipator (R := ℝ) u v x) =
+    dissipator (R := ℝ) (stageEmbed n u) (stageEmbed n v) (stageEmbed n x) at h
+  rw [← h, ofStage_apply_bond]
 
 /-- Faithfulness reflects vanishing as well as preserving it. -/
 theorem dissipator_eq_zero_iff (n : ℕ) (u v x : Stage n) :

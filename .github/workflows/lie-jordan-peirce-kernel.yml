@@ -1,0 +1,76 @@
+name: Lie-Jordan Peirce kernel
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/LieJordan*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceTraceForms.lean'
+      - 'lean/InfoGeometry/Algebra/PeirceLieJordan*.lean'
+      - 'lean/InfoGeometry/Canonical/LieJordanTensorColimit.lean'
+      - '.github/workflows/lie-jordan-peirce-kernel.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lie-jordan-peirce-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  selected-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install declared Lean compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+      - name: Prepare isolated source-check package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, shutil
+          repo = pathlib.Path.cwd()
+          work = pathlib.Path(os.environ['RUNNER_TEMP']) / ('lie-jordan-' + os.environ['GITHUB_RUN_ID'])
+          work.mkdir()
+          manifest = json.loads((repo / 'lake-manifest.json').read_text())
+          mathlib = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          rev = mathlib['rev']
+          if len(rev) != 40 or any(c not in '0123456789abcdef' for c in rev):
+              raise RuntimeError('Expected an exact Mathlib commit')
+          shutil.copy2(repo / 'lean-toolchain', work / 'lean-toolchain')
+          shutil.copytree(repo / 'lean', work / 'lean')
+          (work / 'lakefile.lean').write_text(
+              'import Lake\nopen Lake DSL\npackage lieJordanPeirceCheck\n'
+              'require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "' + rev + '"\n'
+              'lean_lib InfoGeometry where\n  srcDir := "lean"\n'
+              'lean_lib DAG where\n  srcDir := "lean"\n')
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write('SELECTED_CHECK_ROOT=' + str(work) + '\n')
+          print('Selected source check only; NOT the repository root package build.')
+          print('Compiler:', (work / 'lean-toolchain').read_text().strip())
+          print('Mathlib:', rev)
+          PY
+      - name: Resolve exact Mathlib and retrieve its compiled cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$SELECTED_CHECK_ROOT"
+          exec 9>/tmp/info-geometry-build.lock
+          flock 9
+          # Only this new temporary package is resolved; repository manifests are untouched.
+          lake update mathlib
+          lake exe cache get
+      - name: Check actual selected source and transitive axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$SELECTED_CHECK_ROOT"
+          exec 9>/tmp/info-geometry-build.lock
+          flock 9
+          lake build InfoGeometry.OperatorAlgebra.LieJordanPeirceAudit

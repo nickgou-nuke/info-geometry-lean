@@ -18,3 +18,6 @@ import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.DoubleCommutator
 import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.SkewPerturbation
 import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.CrossoverExamples
 import InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity
+import InfoGeometry.WheelerEpilogue
+import InfoGeometry.WheelerEpilogueWitness
+import InfoGeometry.WheelerEpilogueRegression

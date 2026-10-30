@@ -124,56 +124,32 @@ theorem R_sq_add_one_kernel_eq_bot :
 generator.  This is the concrete representation-level negative theorem; no
 unbundled or hypothetical `ℂ²_Fib` representation is introduced. -/
 
+/-- The obstruction depends only on the source quadratic relation, not on
+its dimension or on a choice of a second braid generator. -/
+theorem intertwiner_eq_zero_of_square_neg_one
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (S : Matrix ι ι ℂ) (T : Matrix (Fin 2) ι ℂ)
+    (hS : S * S = -1) (hT : T * S = R * T) : T = 0 := by
+  have hsq : T * (S * S) = (R * R) * T := by
+    calc
+      T * (S * S) = (T * S) * S := (Matrix.mul_assoc _ _ _).symm
+      _ = (R * T) * S := by rw [hT]
+      _ = R * (T * S) := Matrix.mul_assoc _ _ _
+      _ = (R * R) * T := by rw [hT, ← Matrix.mul_assoc]
+  have hzero : (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) * T = 0 := by
+    rw [Matrix.add_mul, Matrix.one_mul, ← hsq, hS]
+    simp
+  ext i j
+  have hcol : (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)).mulVec
+      (fun k => T k j) = 0 := by
+    exact congrArg (fun M : Matrix (Fin 2) ι ℂ => fun k => M k j) hzero
+  exact congrFun (R_sq_add_one_trivial_kernel (fun k => T k j) hcol) i
+
 theorem no_first_B3_generator_intertwiner
     (T : Matrix (Fin 2) (Fin 8) ℂ)
     (hT : T * InfoGeometry.Physics.JonesBraidB3.s0 = R * T) :
-    T = 0 := by
-  have hsq :
-      T * (InfoGeometry.Physics.JonesBraidB3.s0 *
-          InfoGeometry.Physics.JonesBraidB3.s0) = (R * R) * T := by
-    calc
-      T * (InfoGeometry.Physics.JonesBraidB3.s0 *
-          InfoGeometry.Physics.JonesBraidB3.s0) =
-          (T * InfoGeometry.Physics.JonesBraidB3.s0) *
-            InfoGeometry.Physics.JonesBraidB3.s0 := by
-            simp [Matrix.mul_assoc]
-      _ = (R * T) * InfoGeometry.Physics.JonesBraidB3.s0 := by rw [hT]
-      _ = R * (T * InfoGeometry.Physics.JonesBraidB3.s0) := by
-        simp [Matrix.mul_assoc]
-      _ = (R * R) * T := by rw [hT]; simp [Matrix.mul_assoc]
-  have hzero :
-      (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) * T = 0 := by
-    calc
-      (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) * T =
-          (R * R) * T + T := by
-            rw [Matrix.add_mul, Matrix.one_mul]
-      _ = T * (InfoGeometry.Physics.JonesBraidB3.s0 *
-          InfoGeometry.Physics.JonesBraidB3.s0) + T := by rw [← hsq]
-      _ = 0 := by rw [s0_sq_eq_neg_one]; simp
-  have hdet :
-      (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)).det ≠ 0 :=
-    R_sq_add_one_det_ne_zero
-  have hunit : IsUnit (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) :=
-    (Matrix.isUnit_iff_isUnit_det _).mpr
-      (isUnit_iff_ne_zero.mpr hdet)
-  let u := hunit.unit
-  have hu_val :
-      (u : Matrix (Fin 2) (Fin 2) ℂ) =
-        R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ) := hunit.unit_spec
-  have h_inv_mul :
-      (u⁻¹ : Matrix (Fin 2) (Fin 2) ℂ) *
-          (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) = 1 := by
-    rw [← hu_val]
-    simp
-  calc
-    T = (1 : Matrix (Fin 2) (Fin 2) ℂ) * T := by simp
-    _ = ((u⁻¹ : Matrix (Fin 2) (Fin 2) ℂ) *
-        (R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ))) * T := by
-          rw [h_inv_mul]
-    _ = (u⁻¹ : Matrix (Fin 2) (Fin 2) ℂ) *
-        ((R * R + (1 : Matrix (Fin 2) (Fin 2) ℂ)) * T) := by
-          rw [Matrix.mul_assoc]
-    _ = 0 := by rw [hzero]; simp
+    T = 0 :=
+  intertwiner_eq_zero_of_square_neg_one _ T s0_sq_eq_neg_one hT
 
 /-! The concrete finite Hom-space for the two presented B₃ generator
 representations.  This is the matrix realization of generator-wise group

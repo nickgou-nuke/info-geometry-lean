@@ -164,5 +164,27 @@ theorem oblique_inverse_not_reverse_corner :
   rw [oblique_reverse_corner_entry] at he
   norm_num [obliqueM] at he
 
+/-- The corrected localization places the Moore--Penrose inverse between the
+adjoints of the target and source shells, even though the unstarred formula
+fails for this oblique example. -/
+theorem oblique_inverse_adjoint_reverse_corner :
+    star (drazinShellProj obliqueA obliqueD obliquePowers 0) * obliqueM *
+      star (drazinShellProj obliqueA obliqueD obliquePowers 1) = obliqueM := by
+  have h := interShell_inverse_adjoint_shell_localization
+    oblique_drazin oblique_mp_family 1 0 oblique_corner_mp
+  exact h.2.2
+
+/-- In this example the exact criterion for the unstarred reverse-corner rule
+fails: if both adjoint absorptions held, the generic Moore--Penrose criterion
+would force the equality already disproved above. -/
+theorem oblique_adjoint_absorption_criterion_fails :
+    ¬ (star (drazinShellProj obliqueA obliqueD obliquePowers 1) * obliqueN = obliqueN ∧
+       obliqueN * star (drazinShellProj obliqueA obliqueD obliquePowers 0) = obliqueN) := by
+  intro h
+  rw [← oblique_corner_eq] at h
+  have hrev := (interShell_inverse_reverse_corner_iff
+    oblique_drazin oblique_mp_family 1 0 oblique_corner_mp).2 h
+  exact oblique_inverse_not_reverse_corner hrev
+
 end
 end InfoGeometry.Canonical.ObliqueShellCounterexample

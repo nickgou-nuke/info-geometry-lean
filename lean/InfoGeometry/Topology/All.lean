@@ -56,6 +56,9 @@ import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Topology.KleinMonodromyRepresentation
 import InfoGeometry.Topology.KleinQuotientDeckInvariants
 import InfoGeometry.Topology.KleinBottleTangentHolonomy
+import InfoGeometry.Topology.KleinDeckRepresentation
+import InfoGeometry.Topology.KleinCliffordPinLift
+import InfoGeometry.Topology.KleinAssociatedSpinors
 import InfoGeometry.Topology.KleinParityDeck
 import InfoGeometry.Topology.Q8MonodromySpinorCover
 import InfoGeometry.Topology.Q8ModularFlowBridge

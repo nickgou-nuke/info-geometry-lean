@@ -2,8 +2,9 @@ import Mathlib.Tactic
 
 namespace Omega.Conclusion
 
-/-- Concrete modulus parameter for the real-input-40 residue obstruction.  The model uses
-`D + 2`, so every instance has at least two residue classes. -/
+/-- Parameter for a finite residue-predicate exercise.  The model uses `D + 2`,
+so the finite type contains the two distinguished indices zero and one.  No
+analytic number-theoretic modulus is represented by this parameter. -/
 abbrev conclusion_realinput40_no_uniform_rh_residue_law_data := ℕ
 
 namespace conclusion_realinput40_no_uniform_rh_residue_law_data
@@ -12,13 +13,15 @@ namespace conclusion_realinput40_no_uniform_rh_residue_law_data
 def residue_modulus (D : conclusion_realinput40_no_uniform_rh_residue_law_data) : ℕ :=
   D + 2
 
-/-- A periodic residue class satisfying the square-root bound in the contradiction model. -/
+/-- Placeholder finite predicate: the residue index is not zero.  This
+definition does not encode a square-root estimate. -/
 def periodic_residue_class_square_root_bound
     (_D : conclusion_realinput40_no_uniform_rh_residue_law_data)
     (r : Fin (_D.residue_modulus)) : Prop :=
   r.val ≠ 0
 
-/-- A primitive residue class satisfying the square-root bound in the contradiction model. -/
+/-- Placeholder finite predicate: the residue index is not one.  This
+definition does not encode a primitive-residue estimate. -/
 def primitive_residue_class_square_root_bound
     (_D : conclusion_realinput40_no_uniform_rh_residue_law_data)
     (r : Fin (_D.residue_modulus)) : Prop :=
@@ -51,10 +54,10 @@ def no_uniform_square_root_residue_law
 
 end conclusion_realinput40_no_uniform_rh_residue_law_data
 
-/-- Paper label: `thm:conclusion-realinput40-no-uniform-rh-residue-law`.
-Concrete residue witnesses contradict the hypothesis that every periodic and primitive residue
-class obeys the square-root law, so no uniform RH-type residue law survives. -/
-theorem paper_conclusion_realinput40_no_uniform_rh_residue_law
+/-- The two finite predicates are not universally true: index zero refutes
+the first and index one refutes the second.  This theorem is only about the
+definitions above; it has no RH, prime-counting, or analytic content. -/
+theorem finite_residue_exclusions_disprove_local_universal_predicates
     (D : conclusion_realinput40_no_uniform_rh_residue_law_data) :
     D.exists_periodic_counterexample ∧ D.exists_primitive_counterexample ∧
       D.no_uniform_square_root_residue_law := by
@@ -74,5 +77,14 @@ theorem paper_conclusion_realinput40_no_uniform_rh_residue_law
   intro hUniform
   rcases hPeriodic with ⟨r, hr⟩
   exact hr (hUniform.1 r)
+
+/-- Compatibility alias for the former paper-facing name.  Its proposition
+remains exactly the finite predicate statement above and does not formalize
+an RH residue law. -/
+theorem paper_conclusion_realinput40_no_uniform_rh_residue_law
+    (D : conclusion_realinput40_no_uniform_rh_residue_law_data) :
+    D.exists_periodic_counterexample ∧ D.exists_primitive_counterexample ∧
+      D.no_uniform_square_root_residue_law :=
+  finite_residue_exclusions_disprove_local_universal_predicates D
 
 end Omega.Conclusion

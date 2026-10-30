@@ -1,0 +1,119 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts
+
+/-!
+# Peirce components of the idempotency defect
+
+Dependency order: corner relations → even/odd decomposition → defect
+components → odd perturbations → generator specializations. All results hold
+in arbitrary associative rings. Parity orbit products are ordered products;
+no field extension, Hilbert 90 theorem, or division by two is assumed.
+-/
+
+namespace InfoGeometry.OperatorAlgebra.PeirceSpine
+
+open InfoGeometry.Core.IdempotentGraphGrassmannian
+
+variable {B : Type*} [Ring B]
+
+/-- The commutator differentiates the defect polynomial in its actual order. -/
+theorem comm_idempotencyDefect (P X : B) :
+    comm P (idempotencyDefect X) = anticomm X (comm P X) - comm P X := by
+  simp only [comm, anticomm, idempotencyDefect]
+  noncomm_ring
+
+variable {P : B} (hP : P * P = P)
+include hP
+
+theorem parity_idempotencyDefect (X : B) :
+    parityConj P (idempotencyDefect X) = idempotencyDefect (parityConj P X) :=
+  map_idempotencyDefect (parityConjRingEquiv hP).toRingHom X
+
+theorem even_idempotencyDefect (X : B) :
+    evenGrade P (idempotencyDefect X) =
+      idempotencyDefect (evenGrade P X) + oddGrade P X * oddGrade P X := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+theorem odd_idempotencyDefect (X : B) :
+    oddGrade P (idempotencyDefect X) =
+      anticomm (evenGrade P X) (oddGrade P X) - oddGrade P X := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+theorem odd_perturbation_defect (X : B) :
+    idempotencyDefect (P + oddGrade P X) = oddGrade P X * oddGrade P X := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+theorem odd_perturbation_defect_eq_neg_comm_square (X : B) :
+    idempotencyDefect (P + oddGrade P X) =
+      -(comm P (P + oddGrade P X) * comm P (P + oddGrade P X)) := by
+  rw [odd_perturbation_defect hP]
+  peirce_nf hP
+
+/-- Characteristic-free scaled difference identity; no cancellation of four. -/
+theorem odd_perturbation_parity_difference_square (X : B) :
+    ((P + oddGrade P X) - parityConj P (P + oddGrade P X)) *
+      ((P + oddGrade P X) - parityConj P (P + oddGrade P X)) =
+      (4 : ℤ) • idempotencyDefect (P + oddGrade P X) := by
+  rw [odd_perturbation_defect hP]
+  simp only [parityConj]
+  peirce_nf hP
+
+theorem transfer_defect_eq_neg_comm_square (A C : B) :
+    idempotencyDefect (P + genPhi P A C) =
+      -(comm P (P + genPhi P A C) * comm P (P + genPhi P A C)) := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+theorem transfer_j_defect_eq_neg_comm_square (A C : B) :
+    idempotencyDefect (P + genJ P A C) =
+      -(comm P (P + genJ P A C) * comm P (P + genJ P A C)) := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+/-- The odd term in this ordered product has a minus sign. -/
+theorem transfer_parity_product (A C : B) :
+    (P + genPhi P A C) * parityConj P (P + genPhi P A C) =
+      P - genV P A C - genJ P A C := by
+  simp only [parityConj]
+  peirce_nf hP
+
+theorem metric_phi_parity_product (A C : B) :
+    (genV P A C + genPhi P A C) * parityConj P (genV P A C + genPhi P A C) =
+      idempotencyDefect (genV P A C) := by
+  simp only [parityConj, idempotencyDefect]
+  peirce_nf hP
+
+theorem metric_defect_eq_square_add_comm_square (A C : B) :
+    idempotencyDefect (genV P A C) = genV P A C * genV P A C +
+      comm P (genV P A C + genPhi P A C) * comm P (genV P A C + genPhi P A C) := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+theorem even_metric_phi_defect (A C : B) :
+    evenGrade P (idempotencyDefect (genV P A C + genPhi P A C)) =
+      idempotencyDefect (genV P A C) + genV P A C := by
+  simp only [idempotencyDefect]
+  peirce_nf hP
+
+theorem odd_metric_phi_defect (A C : B) :
+    oddGrade P (idempotencyDefect (genV P A C + genPhi P A C)) =
+      ((2 : ℤ) • genV P A C - 1) * genPhi P A C := by
+  simp only [idempotencyDefect, two_zsmul]
+  peirce_nf hP
+
+theorem derivation_mismatch_phi (A C : B) :
+    derivSqSig P A C (genPhi P A C) - derivSqJ P A C (genPhi P A C) =
+      -((4 : ℤ) • (idempotencyDefect (genV P A C) * genPhi P A C)) := by
+  simp only [derivSqSig, derivSqJ, idempotencyDefect]
+  peirce_nf hP
+
+theorem derivation_mismatch_j (A C : B) :
+    derivSqSig P A C (genJ P A C) - derivSqPhi P A C (genJ P A C) =
+      -((4 : ℤ) • (idempotencyDefect (genV P A C) * genJ P A C)) := by
+  simp only [derivSqSig, derivSqPhi, idempotencyDefect]
+  peirce_nf hP
+
+end InfoGeometry.OperatorAlgebra.PeirceSpine

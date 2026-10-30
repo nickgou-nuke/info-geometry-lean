@@ -1,0 +1,8 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityExactness
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+#print axioms ringEquiv_map_half
+#print axioms automorphismDifference_half
+#print axioms trace_zero_iff_exists_automorphismDifference
+#print axioms parity_trace_zero_iff_exists_difference

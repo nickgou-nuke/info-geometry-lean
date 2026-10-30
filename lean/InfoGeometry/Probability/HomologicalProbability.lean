@@ -1222,20 +1222,11 @@ Typeclass instances are supplied as explicit function parameters so that this
 owner surface compiles without extra imports.
 -/
 structure FiveGradedSymmetryGroup
-    (Sym X G : Type*)
-    (mulSym    : Sym → Sym → Sym)   -- group multiplication
-    (oneSym    : Sym)               -- group identity
-    (actSym    : Sym → X → X)       -- group action on X
-    (bracket   : G → G → G) where   -- Lie bracket on G
+    (Sym X G : Type*) [Group Sym] [MulAction Sym X]
+    (bracket : G → G → G) where
   fiveGrading       : FiveGradedLieAlgebra G bracket
   expMap            : G → Sym
-  structureSubgroup : Set Sym
-  /-- The identity is in the structure subgroup. -/
-  struct_one : oneSym ∈ structureSubgroup
-  /-- The structure subgroup is closed under multiplication. -/
-  struct_mul : ∀ g₁ g₂ : Sym,
-    g₁ ∈ structureSubgroup → g₂ ∈ structureSubgroup →
-    mulSym g₁ g₂ ∈ structureSubgroup
+  structureSubgroup : Subgroup Sym
   /-- The grade-0 subalgebra exponentiates into the structure subgroup. -/
   exp_lands_in_struct : ∀ v : G,
     v ∈ fiveGrading.gradeSubspace ⟨2, by omega⟩ →
@@ -1256,11 +1247,10 @@ Examples:
 
 `BX` replaces the notation `∂X` (boundary) since `∂` is a reserved Lean token.
 -/
-structure AffineClosure (Sym X XBar BX : Type*) where
+structure AffineClosure (Sym X XBar BX : Type*) [Group Sym]
+    [MulAction Sym X] [MulAction Sym XBar] where
   /-- Embedding of the open dense stratum. -/
   inclusion      : X → XBar
-  /-- Extended group action on the compactification. -/
-  extendedAction : Sym → XBar → XBar
   /-- Boundary-at-infinity stratum embedding. -/
   boundary       : BX → XBar
   /-- Every point of `XBar` lies in the open stratum or the boundary. -/
@@ -1269,7 +1259,7 @@ structure AffineClosure (Sym X XBar BX : Type*) where
     (∃ b : BX, boundary b = p)
   /-- The action preserves the open stratum: `g · inclusion(x) = inclusion(g · x)`. -/
   action_preserves_open : ∀ (g : Sym) (x : X),
-    ∃ y : X, extendedAction g (inclusion x) = inclusion y
+    ∃ y : X, g • inclusion x = inclusion y
 
 /--
 **Theorem 22.4 — GW bundle isomorphism principle (Fan–Lee 2018, arXiv:1607.00740).**
@@ -1302,6 +1292,7 @@ equivariant Chern classes.
 -/
 def AffineClosureOwnerStatement
     (Sym X XBar BX Bundle ChernClass : Type*)
+    [Group Sym] [MulAction Sym X] [MulAction Sym XBar]
     (chernClasses : Bundle → ChernClass)
     (gwTheory     : Bundle → Type*) : Prop :=
   AffineClosure Sym X XBar BX →
@@ -1316,13 +1307,11 @@ single owner witness.  This is the §22 Erlangen–Langlands owner target.
 -/
 abbrev ErlangenFiveGradedOwnerWitness
     (Sym X XBar BX G Bundle ChernClass : Type*)
-    (mulSym       : Sym → Sym → Sym)
-    (oneSym       : Sym)
-    (actSym       : Sym → X → X)
+    [Group Sym] [MulAction Sym X] [MulAction Sym XBar]
     (bracket      : G → G → G)
     (chernClasses : Bundle → ChernClass)
     (gwTheory     : Bundle → Type*) : Type _ :=
-  FiveGradedSymmetryGroup Sym X G mulSym oneSym actSym bracket ×
+  FiveGradedSymmetryGroup Sym X G bracket ×
     (AffineClosure Sym X XBar BX ×
       (Σ' _ : GWBundleIsomorphismStatement Bundle ChernClass chernClasses gwTheory,
         FiveGradedLieAlgebra G bracket))
@@ -1331,32 +1320,32 @@ namespace ErlangenFiveGradedOwnerWitness
 
 abbrev fiveGradedSym
     {Sym X XBar BX G Bundle ChernClass : Type*}
-    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    [Group Sym] [MulAction Sym X] [MulAction Sym XBar]
     (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
     (gwTheory : Bundle → Type*)
     (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
-      mulSym oneSym actSym bracket chernClasses gwTheory) := W.1
+      bracket chernClasses gwTheory) := W.1
 abbrev affineClosure
     {Sym X XBar BX G Bundle ChernClass : Type*}
-    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    [Group Sym] [MulAction Sym X] [MulAction Sym XBar]
     (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
     (gwTheory : Bundle → Type*)
     (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
-      mulSym oneSym actSym bracket chernClasses gwTheory) := W.2.1
+      bracket chernClasses gwTheory) := W.2.1
 abbrev gwIsomorphism
     {Sym X XBar BX G Bundle ChernClass : Type*}
-    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    [Group Sym] [MulAction Sym X] [MulAction Sym XBar]
     (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
     (gwTheory : Bundle → Type*)
     (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
-      mulSym oneSym actSym bracket chernClasses gwTheory) := W.2.2.1
+      bracket chernClasses gwTheory) := W.2.2.1
 abbrev boundaryFiveGrading
     {Sym X XBar BX G Bundle ChernClass : Type*}
-    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    [Group Sym] [MulAction Sym X] [MulAction Sym XBar]
     (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
     (gwTheory : Bundle → Type*)
     (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
-      mulSym oneSym actSym bracket chernClasses gwTheory) := W.2.2.2
+      bracket chernClasses gwTheory) := W.2.2.2
 
 end ErlangenFiveGradedOwnerWitness
 

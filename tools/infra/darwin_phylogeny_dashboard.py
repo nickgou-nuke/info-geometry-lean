@@ -117,7 +117,9 @@ def build_payload(commits: list[dict], annotations: dict[str, dict],
         modules_here = sorted(ann.get("modules", ()))
         labels_here = labels.get(row["sha"], [])
         for label in labels_here:
-            archetypes[label.get("species", "Unclassified")] += 1
+            # Accept the old field while reading cached v2 label artifacts;
+            # current producers emit non-hierarchical ``category`` facets.
+            archetypes[label.get("category", label.get("species", "Unclassified"))] += 1
         for module in modules_here:
             modules[module] += 1
         monthly[row["date"][:7]] += 1

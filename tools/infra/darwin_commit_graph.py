@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Darwin commit-evolution taxonomy for ArangoDB.
+"""Darwin commit history and weak change facets for ArangoDB.
 
 Builds a dual-view graph:
-- commit_nodes / commit_edges: repository commit history as evolutionary taxonomy
+- commit_nodes / commit_parent_edges_v2: exact Git history and ordered parent→child edges
+- changeLabels: non-hierarchical weak classifications of commit changes
 - commit_decl_edges: causal links from commits to decls DNA nodes
 
 Boundaries:
@@ -14,7 +15,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 import subprocess
 from pathlib import Path
@@ -32,14 +32,7 @@ except ImportError as e:
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-
-
-def _run_git(args: list[str]) -> str:
-    raw = subprocess.check_output(
-        ["git", *args], cwd=REPO_ROOT, stderr=subprocess.DEVNULL
-    )
-    # history blobs are not guaranteed UTF-8; parsing is navigation-grade
-    return raw.decode("utf-8", errors="replace")
+PARENT_EDGE_COLLECTION = "commit_parent_edges_v2"
 
 
 def _run_git_bytes(args: list[str]) -> bytes:
@@ -51,9 +44,8 @@ def _run_git_bytes(args: list[str]) -> bytes:
 def _ensure_collections(db, database: str) -> None:
     for name, is_edge in (
         ("commit_nodes", False),
-        ("commit_edges", True),
+        (PARENT_EDGE_COLLECTION, True),
         ("commit_decl_edges", True),
-        ("taxonomy_ranks", False),
     ):
         if db.has_collection(name):
             continue
@@ -62,7 +54,7 @@ def _ensure_collections(db, database: str) -> None:
 
 
 def _diff_record(commit: str) -> tuple[str, list[str], dict[str, list[str]]]:
-    """Patch record for one commit: (diffHash, changed paths, added lines per path).
+    """Optional patch record used only by declaration-line attachment.
 
     ``git diff-tree -p`` is required: without ``-p`` no ``diff --git`` sections
     are emitted and path parsing would silently return an empty taxonomy for
@@ -86,6 +78,17 @@ def _diff_record(commit: str) -> tuple[str, list[str], dict[str, list[str]]]:
         elif current_path and line.startswith("+") and not line.startswith("+++"):
             added_by_path.setdefault(current_path, []).append(line[1:])
     return diff_hash, paths, added_by_path
+
+
+def _changed_paths(commit: str) -> tuple[str, list[str]]:
+    """Read path metadata only; do not materialize historical patch contents."""
+    raw = _run_git_bytes([
+        "diff-tree", "--no-commit-id", "--root", "-r", "-m", "--no-renames",
+        "--name-only", "-z", commit,
+    ])
+    paths = [part.decode("utf-8", errors="replace")
+             for part in raw.split(b"\0") if part]
+    return hashlib.sha256(raw).hexdigest(), list(dict.fromkeys(paths))
 
 
 _LEAN_DECL_RE = re.compile(
@@ -133,59 +136,30 @@ def _decl_names_in_added(added_lines: Iterable[str], module: str) -> list[str]:
     return names
 
 
-_RANK_ORDER = [
-    "Domain",
-    "Kingdom",
-    "Phylum",
-    "Class",
-    "Order",
-    "Family",
-    "Genus",
-    "Species",
-]
+def _change_labels(message: str, paths: list[str]) -> list[dict]:
+    """Reuse the repo's multi-label weak rules; no rank or ancestry inference."""
+    from tools.infra.evolution_taxonomy import classify
 
-
-def _classify_rank(message: str, paths: list[str], parents: list[str]) -> str:
-    msg = message.lower()
-    if any(k in msg for k in ["merge", "merge branch", "merge remote"]):
-        return "Kingdom"
-    if len(parents) > 1:
-        return "Kingdom"
-    if any(p.startswith("lean/InfoGeometry/") for p in paths) and len(paths) >= 3:
-        return "Phylum"
-    module_hits = [p for p in paths if re.match(r"^lean/InfoGeometry/[^/]+/", p)]
-    if module_hits:
-        return "Class"
-    if any(k in msg for k in ["feat", "fix", "refactor", "formalize"]):
-        return "Order"
-    if any(k in msg for k in ["archetype", "theorem", "lemma"]):
-        return "Family"
-    if len(paths) == 1:
-        return "Genus"
-    return "Species"
-
-
-def _rank_index(rank: str) -> int:
-    try:
-        return _RANK_ORDER.index(rank)
-    except ValueError:
-        return len(_RANK_ORDER)
+    return classify(message, "", paths)
 
 
 def iter_commits() -> Iterable[dict]:
-    log = _run_git([
+    process = subprocess.Popen([
+        "git",
         "log", "--all", "--topo-order", "--reverse",
-        "--format=%H|%P|%an|%ae|%ad|%s",
-    ])
-    for line in log.splitlines():
-        if not line.strip():
+        "--format=%H%x1f%P%x1f%an%x1f%ae%x1f%aI%x1f%s",
+    ], cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        text=True, encoding="utf-8", errors="replace")
+    assert process.stdout is not None
+    for line in process.stdout:
+        line = line.rstrip("\n")
+        if not line:
             continue
-        parts = line.split("|", 5)
+        parts = line.split("\x1f", 5)
         if len(parts) != 6:
             continue
         commit, parents, author, email, date, message = parts
-        diff, paths, _added = _diff_record(commit)
-        rank = _classify_rank(message, paths, [p for p in parents.split() if p])
+        path_change_hash, paths = _changed_paths(commit)
         yield {
             "_key": commit,
             "hash": commit,
@@ -194,56 +168,90 @@ def iter_commits() -> Iterable[dict]:
             "email": email,
             "date": date,
             "message": message,
-            "diffHash": diff,
-            "taxonRank": rank,
-            "taxonRankIndex": _rank_index(rank),
+            "pathChangeHash": path_change_hash,
+            "changeLabels": _change_labels(message, paths),
+            "changeLabelMethod": "weak-rule-v3",
             "modulePaths": paths,
-            "leanVerified": False,
         }
+    return_code = process.wait()
+    if return_code:
+        raise subprocess.CalledProcessError(return_code, process.args)
+
+
+def iter_parent_edges(commits: Iterable[dict], known_commit_keys: set[str]) -> Iterable[dict]:
+    """Yield ordered parent-to-child Git edges among exported commits."""
+    for child_doc in commits:
+        child = child_doc["_key"]
+        for parent_slot, parent in enumerate(child_doc.get("parents", [])):
+            if parent not in known_commit_keys:
+                continue
+            yield {
+                "_key": f"{parent}__{child}__p{parent_slot}",
+                "_from": f"commit_nodes/{parent}",
+                "_to": f"commit_nodes/{child}",
+                "edgeKind": "parent_of",
+                "parent_slot": parent_slot,
+            }
+
+
+def iter_git_parent_edges(known_commit_keys: set[str]) -> Iterable[dict]:
+    """Stream parent edges from Git metadata without rebuilding patch records."""
+    process = subprocess.Popen(
+        ["git", "log", "--all", "--topo-order", "--reverse",
+         "--format=%H %P"],
+        cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        text=True, encoding="ascii", errors="replace",
+    )
+    assert process.stdout is not None
+    for line in process.stdout:
+        fields = line.split()
+        if not fields:
+            continue
+        child, *parents = fields
+        if child not in known_commit_keys:
+            continue
+        for parent_slot, parent in enumerate(parents):
+            if parent not in known_commit_keys:
+                continue
+            yield {
+                "_key": f"{parent}__{child}__p{parent_slot}",
+                "_from": f"commit_nodes/{parent}",
+                "_to": f"commit_nodes/{child}",
+                "edgeKind": "parent_of",
+                "parent_slot": parent_slot,
+            }
+    return_code = process.wait()
+    if return_code:
+        raise subprocess.CalledProcessError(return_code, process.args)
 
 
 def import_commit_nodes(db, *, drop_existing: bool = False) -> int:
     if drop_existing and db.has_collection("commit_nodes"):
         db.collection("commit_nodes").truncate()
-        db.collection("commit_edges").truncate()
+        if db.has_collection(PARENT_EDGE_COLLECTION):
+            db.collection(PARENT_EDGE_COLLECTION).truncate()
         db.collection("commit_decl_edges").truncate()
-        db.collection("taxonomy_ranks").truncate()
+        # taxonomy_ranks is a legacy heuristic collection. Leave it untouched;
+        # this importer no longer writes or truncates biological-rank records.
     _ensure_collections(db, db.name)
     count = 0
-    by_key: dict[str, dict] = {}
+    known_commit_keys: set[str] = set()
     for doc in iter_commits():
         db.collection("commit_nodes").insert(doc, overwrite=True, sync=False)
-        by_key[doc["_key"]] = doc
+        known_commit_keys.add(doc["_key"])
         count += 1
-    edges: list[dict] = []
-    for doc in by_key.values():
-        src = doc["_key"]
-        for parent in doc.get("parents", []):
-            if parent in by_key:
-                edges.append({
-                    "_key": f"{src}->{parent}",
-                    "_from": f"commit_nodes/{src}",
-                    "_to": f"commit_nodes/{parent}",
-                    "edgeKind": "parent_of",
-                })
-    if edges:
-        db.collection("commit_edges").import_bulk(edges, overwrite=True, on_duplicate="replace", sync=False)
-    taxonomy: dict[tuple[str, str], dict] = {}
-    for doc in by_key.values():
-        rank = doc.get("taxonRank", "Species")
-        name = doc.get("message", "")[:80].replace("\n", " ")
-        key = (rank, name)
-        if key not in taxonomy:
-            taxonomy[key] = {
-                "_key": f"{rank}::{re.sub(r'[^A-Za-z0-9_-]+','_',name)[:60]}",
-                "rank": rank,
-                "rankIndex": _rank_index(rank),
-                "name": name,
-                "commitCount": 0,
-            }
-        taxonomy[key]["commitCount"] += 1
-    if taxonomy:
-        db.collection("taxonomy_ranks").import_bulk(list(taxonomy.values()), overwrite=True, on_duplicate="replace", sync=False)
+    edge_batch: list[dict] = []
+    for edge in iter_git_parent_edges(known_commit_keys):
+        edge_batch.append(edge)
+        if len(edge_batch) >= 5000:
+            db.collection(PARENT_EDGE_COLLECTION).import_bulk(
+                edge_batch, overwrite=True, on_duplicate="replace", sync=False
+            )
+            edge_batch = []
+    if edge_batch:
+        db.collection(PARENT_EDGE_COLLECTION).import_bulk(
+            edge_batch, overwrite=True, on_duplicate="replace", sync=False
+        )
     print(f"[darwin] imported {count} commit nodes")
     return count
 
@@ -342,15 +350,18 @@ def attach_decl_edges(db, *, max_edges: int = 50000, max_files_per_commit: int =
 
 def query_darwin(db) -> None:
     for label, query in [
-        ("taxonomy counts", """
-        FOR r IN taxonomy_ranks
-          SORT r.rankIndex
-          RETURN {rank: r.rank, name: r.name, commits: r.commitCount}
+        ("weak change-category counts", """
+        FOR c IN commit_nodes
+          FOR label IN c.changeLabels
+          COLLECT category = label.category, categoryId = label.categoryId
+          WITH COUNT INTO commits
+          SORT category
+          RETURN {category, categoryId, commits}
         """),
         ("paths from alpha6-style apex", """
         FOR c IN commit_nodes
           FILTER 'alpha6' IN c.message
-          RETURN {hash: c._key, rank: c.taxonRank, message: c.message}
+          RETURN {hash: c._key, changeLabels: c.changeLabels, message: c.message}
         """),
         ("commit-decl bridge sample", """
         FOR e IN commit_decl_edges

@@ -30,7 +30,31 @@ theorem chain3_supports_commute :
   fin_cases i <;> fin_cases j <;>
     norm_num [Matrix.mul_apply, Fin.sum_univ_succ, Matrix.diagonal]
 
-/-- Every middle input gives zero support associator despite nilpotency index three. -/
+/-- The exact replacement for the naive implication from nilpotency to a
+nonzero support associator: vanishing for every middle input is equivalent to
+commutation of the two support idempotents. -/
+theorem chain3_support_associator_zero_iff :
+    (∀ z : Matrix (Fin 3) (Fin 3) ℝ,
+      let p := chain3 * chain3.transpose
+      let q := chain3.transpose * chain3
+      ((p * z + z * p) * q + q * (p * z + z * p)) -
+        (p * (z * q + q * z) + (z * q + q * z) * p) = 0) ↔
+      (chain3 * chain3.transpose) * (chain3.transpose * chain3) =
+        (chain3.transpose * chain3) * (chain3 * chain3.transpose) := by
+  let p := chain3 * chain3.transpose
+  let q := chain3.transpose * chain3
+  have hp : p * p = p := by
+    change (chain3 * chain3.transpose) * (chain3 * chain3.transpose) =
+      chain3 * chain3.transpose
+    rw [chain3_supports.1]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [Matrix.mul_apply, Matrix.diagonal, Fin.sum_univ_succ]
+  simpa [p, q] using
+    (InfoGeometry.Core.JordanAssociator.idempotent_all_associators_zero_iff hp)
+
+/-- Every middle input gives zero support associator; the iff above explains
+that this comes from commuting supports, independently of chain length. -/
 theorem chain3_support_associator_zero (z : Matrix (Fin 3) (Fin 3) ℝ) :
     let p := chain3 * chain3.transpose
     let q := chain3.transpose * chain3

@@ -23,9 +23,11 @@ and the inductive colimit UHF matrix tower $\mathcal{A}_\infty = \varinjlim_k M_
    that for any finite index type `m` (`[Fintype m] [DecidableEq m]`), no matrices
    $S_1, S_1^*, S_2, S_2^* \in M_m(\mathbb{R})$ can simultaneously satisfy the Cuntz
    isometry relations $S_1^* S_1 = I$, $S_2^* S_2 = I$ and the completeness relation
-   $S_1 S_1^* + S_2 S_2^* = I$ unless $\operatorname{card}(m) = 0$. Consequently, the
-   exact Cuntz algebra $\mathcal{O}_2$ forces passage to the infinite-dimensional
-   inductive colimit horizon $\mathcal{A}_\infty$.
+   $S_1 S_1^* + S_2 S_2^* = I$ unless $\operatorname{card}(m) = 0$. Thus the exact
+   relations have no realization on a nonempty finite matrix carrier. This trace
+   obstruction does not construct a representation on the repository's UHF
+   inductive colimit or imply that this particular colimit carries an exact
+   $\mathcal{O}_2$ action.
 
 2. **Archetype II (Explicate-to-Implicate Enfoldment $\mathcal{E}(X) = X \oplus X$ & Cuntz Projectors $P_1, P_2$)**:
    Defines the block-diagonal enfoldment map `enfold (X) = fromBlocks X 0 0 X`
@@ -112,8 +114,9 @@ theorem cuntz_finite_matrix_trace_obstruction
 /-- **No Finite-Dimensional Real Matrix Realization of $\mathcal{O}_2$ on a Nonempty Carrier**:
 On any nonempty finite index type `m` (`[Nonempty m]`), no matrices
 $S_1, S_1^*, S_2, S_2^* \in M_m(\mathbb{R})$ can satisfy both $S_i^* S_i = I$ and
-$S_1 S_1^* + S_2 S_2^* = I$. Thus the exact Cuntz algebra $\mathcal{O}_2$ requires the
-infinite inductive colimit horizon. -/
+$S_1 S_1^* + S_2 S_2^* = I$. Thus no such matrices exist on a nonempty finite
+carrier. The theorem does not identify an infinite-dimensional representation
+with the repository's UHF inductive colimit. -/
 theorem no_cuntz_isometries_on_nonempty_finite_matrix
     [h_ne : Nonempty m]
     (S₁ S₁_star S₂ S₂_star : Matrix m m ℝ)

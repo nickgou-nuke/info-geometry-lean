@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetricTransport
+import InfoGeometry.Singular.MoorePenrose
 import Mathlib.Tactic
 
 /-!
@@ -101,6 +107,13 @@ def shearEuclideanMPZeroAprime : Mat2 :=
   !![(1 / 2 : ℚ), (1 / 2 : ℚ); (1 / 2 : ℚ), (1 / 2 : ℚ)]
 def shearEuclideanMPZeroA : Mat2 := !![0, 0; 0, 1]
 
+/-- The Euclidean Moore--Penrose inverse of the first shear representative. -/
+def shearMPInverseA : Mat2 := shearA
+
+/-- The Euclidean Moore--Penrose inverse of the similar rank-one matrix. -/
+def shearMPInverseAprime : Mat2 :=
+  !![(1 / 2 : ℚ), 0; (-1 / 2 : ℚ), 0]
+
 theorem shearA_idempotent :
     shearA * shearA = shearA := by
   ext i j
@@ -125,6 +138,34 @@ theorem shearEuclideanMPZeroAprime_idempotent :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [shearEuclideanMPZeroAprime, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Both displayed generalized inverses satisfy all four Penrose equations,
+so the fixed-metric shear witness is a genuine Moore--Penrose example. -/
+theorem shear_metric_complements_are_penrose_projectors :
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
+      shearA shearMPInverseA ∧
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
+      shearAprime shearMPInverseAprime ∧
+    1 - shearMPInverseA * shearA = shearEuclideanMPZeroA ∧
+    1 - shearMPInverseAprime * shearAprime = shearEuclideanMPZeroAprime := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      (ext i j <;> fin_cases i <;> fin_cases j <;>
+        norm_num [shearA, shearMPInverseA, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply, star_trivial])
+  · refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      (ext i j <;> fin_cases i <;> fin_cases j <;>
+        norm_num [shearAprime, shearMPInverseAprime, Matrix.mul_apply,
+          Fin.sum_univ_two, Matrix.star_eq_conjTranspose,
+          Matrix.conjTranspose_apply, star_trivial])
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [shearMPInverseA, shearA, shearEuclideanMPZeroA,
+        Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [shearMPInverseAprime, shearAprime, shearEuclideanMPZeroAprime,
+        Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem shearCounterexample_Aprime_eq :
     shearG * shearA * shearGInv = shearAprime := by

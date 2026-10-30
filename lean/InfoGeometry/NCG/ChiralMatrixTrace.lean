@@ -16,6 +16,77 @@ open InfoGeometry.Core.PeirceGrading
 
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 
+/-- Conjugation by an involutive chirality reverses an odd Dirac operator.
+The statement is for arbitrary noncommuting matrix operators. -/
+theorem dirac_conjugation_by_chirality
+    {γ D : Matrix n n R}
+    (hγsq : γ * γ = 1)
+    (hγD : anticommutator γ D = 0) :
+    γ * D * γ = -D := by
+  have hsum : γ * D + D * γ = 0 := by
+    simpa [NonCommutativeFredholmIndex.anticommutator, add_comm] using hγD
+  have hsum' : D * γ + γ * D = 0 := by simpa [add_comm] using hsum
+  have hDγ : γ * D = -(D * γ) := eq_neg_of_add_eq_zero_right hsum'
+  calc
+    γ * D * γ = (-(D * γ)) * γ := by rw [hDγ]
+    _ = -(D * (γ * γ)) := by simp only [Matrix.neg_mul, Matrix.mul_assoc]
+    _ = -(D * 1) := by rw [hγsq]
+    _ = -D := by simp
+
+/-- The square of an odd Dirac operator is even: chirality commutes with `D²`.
+This is an operator identity and uses no diagonal form or spectral
+decomposition. -/
+theorem dirac_square_commutes_with_chirality
+    {γ D : Matrix n n R}
+    (hγD : anticommutator γ D = 0) :
+    commutator γ (D * D) = 0 := by
+  have hDγ : D * γ = -(γ * D) := eq_neg_of_add_eq_zero_right hγD
+  dsimp [NonCommutativeFredholmIndex.commutator]
+  calc
+    γ * (D * D) - (D * D) * γ = γ * (D * D) + D * (γ * D) := by
+      rw [mul_assoc D D γ, hDγ, mul_neg, sub_neg_eq_add]
+    _ = 0 := by
+      calc
+        γ * (D * D) + D * (γ * D) = (γ * D) * D + (D * γ) * D := by
+          simp only [← mul_assoc]
+        _ = 0 := by
+          have hmul := congrArg (fun Z : Matrix n n R => Z * D) hγD
+          dsimp [NonCommutativeFredholmIndex.anticommutator] at hmul
+          simpa only [add_mul, zero_mul, ← mul_assoc] using hmul
+
+/-- Operator-valued divergence for a finite family of generators and fluxes. -/
+def operatorDivergence {κ : Type*} [Fintype κ]
+    (H J : κ → Matrix n n R) : Matrix n n R :=
+  ∑ i, commutator (H i) (J i)
+
+/-- The trace of the operator-valued inner-derivation divergence vanishes by
+cyclicity, while the divergence itself remains a matrix operator. -/
+theorem trace_operatorDivergence_zero {κ : Type*} [Fintype κ]
+    (H J : κ → Matrix n n R) :
+    trace (operatorDivergence H J) = 0 := by
+  simp [operatorDivergence, NonCommutativeFredholmIndex.trace_commutator_zero]
+
+/-- Taking the flux in each direction to be its inner gradient yields the
+noncommutative sum of double commutators. -/
+theorem operatorDivergence_innerGradient {κ : Type*} [Fintype κ]
+    (H : κ → Matrix n n R) (X : Matrix n n R) :
+    operatorDivergence H (fun i => commutator (H i) X) =
+      ∑ i, commutator (H i) (commutator (H i) X) := rfl
+
+/-- Quadratic Casimir operator assembled from a finite family of generators. -/
+def operatorCasimir {κ : Type*} [Fintype κ]
+    (H : κ → Matrix n n R) : Matrix n n R :=
+  ∑ i, H i * H i
+
+/-- The Casimir commutator expands as the sum of the generator-level
+commutators, without assuming that the generators commute. -/
+theorem operatorCasimir_commutator {κ : Type*} [Fintype κ]
+    (H : κ → Matrix n n R) (k : κ) :
+    commutator (H k) (operatorCasimir H) =
+      ∑ i, commutator (H k) (H i * H i) := by
+  unfold NonCommutativeFredholmIndex.commutator operatorCasimir
+  simp only [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
+
 /-- The commutator moves from the test matrix to the trace weight. -/
 theorem trace_commutator_transport (γ A X : Matrix n n R) :
     trace (γ * commutator A X) = trace (commutator γ A * X) := by

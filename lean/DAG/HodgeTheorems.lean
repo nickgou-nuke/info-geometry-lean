@@ -33,7 +33,8 @@ def canonicalChain : HydratedGraph Nat := Id.run do
     dag := #[#[1], #[2], #[]]
     preds := #[#[], #[0], #[1]]
     topo := #[0, 1, 2]
-    doms := #[] }
+    idom := #[none, some 0, some 1]
+    idomDepth := #[0, 1, 2] }
 
 /-- Triangle graph `0 → 1`, `1 → 2`, `0 → 2`. -/
 def canonicalTriangle : HydratedGraph Nat := Id.run do
@@ -52,7 +53,8 @@ def canonicalTriangle : HydratedGraph Nat := Id.run do
     dag := #[#[1, 2], #[2], #[]]
     preds := #[#[], #[0], #[0, 1]]
     topo := #[0, 1, 2]
-    doms := #[] }
+    idom := #[none, some 0, some 0]
+    idomDepth := #[0, 1, 1] }
 
 /-- Digon graph `0 ⇄ 1`. -/
 def canonicalDigon : HydratedGraph Nat := Id.run do
@@ -70,7 +72,25 @@ def canonicalDigon : HydratedGraph Nat := Id.run do
     dag := #[#[]]
     preds := #[#[]]
     topo := #[0]
-    doms := #[] }
+    idom := #[none]
+    idomDepth := #[0] }
+
+/-- The chain's dominator forest records its unique causal parent at each
+non-root component. -/
+theorem canonicalChain_idom_correct :
+    canonicalChain.idom = #[none, some 0, some 1] ∧
+      canonicalChain.idomDepth = #[0, 1, 2] := by native_decide
+
+/-- The direct edge `0 → 2` in the triangle makes `0`, rather than `1`, the
+immediate dominator of component `2`. -/
+theorem canonicalTriangle_idom_correct :
+    canonicalTriangle.idom = #[none, some 0, some 0] ∧
+      canonicalTriangle.idomDepth = #[0, 1, 1] := by native_decide
+
+/-- An SCC condensed to one component is a one-root dominator forest. -/
+theorem canonicalDigon_idom_correct :
+    canonicalDigon.idom = #[none] ∧ canonicalDigon.idomDepth = #[0] := by
+  native_decide
 
 def canonicalChainComplex : TwoComplex Nat :=
   buildTwoComplex canonicalChain

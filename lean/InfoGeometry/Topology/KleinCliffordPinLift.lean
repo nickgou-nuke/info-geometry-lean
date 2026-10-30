@@ -1,9 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
-
 import InfoGeometry.Topology.KleinDeckRepresentation
 import InfoGeometry.Twistor.TwistorKinematicTensor
 import Mathlib
@@ -40,40 +34,20 @@ def vectorPlus : Tangent →ₗ[ℝ] Mat where
 
 def vectorMinus : Tangent →ₗ[ℝ] Mat := Complex.I • vectorPlus
 
-/-- The represented Clifford vectors retain genuinely noncommutative operator
-behavior: the two coordinate generators anticommute and are nonzero. -/
-theorem vectorPlus_coordinate_generators_anticommute :
-    vectorPlus ![1, 0] * vectorPlus ![0, 1] =
-      -(vectorPlus ![0, 1] * vectorPlus ![1, 0]) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [vectorPlus, Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- Concrete operator representatives of the two coordinate Clifford vectors. -/
-def matI : Mat := vectorPlus ![1, 0]
-def matJ : Mat := vectorPlus ![0, 1]
-
-theorem vectorPlus_coordinate_generators_do_not_commute :
-    matI * matJ ≠ matJ * matI := by
-  intro h
-  have h01 := congrArg (fun M : Mat => M 0 1) h
-  norm_num [matI, matJ, vectorPlus, Matrix.mul_apply, Fin.sum_univ_two] at h01
-
 theorem vectorPlus_square (v : Tangent) :
     vectorPlus v * vectorPlus v=algebraMap ℝ Mat (positiveForm v) := by
   ext i j
-  rw [Matrix.algebraMap_matrix_apply]
   fin_cases i <;> fin_cases j <;>
-    simp [vectorPlus, positiveForm, Matrix.mul_apply, Fin.sum_univ_two,
-      QuadraticMap.proj_apply] <;> ring
+    simp [vectorPlus,Matrix.mul_apply,Fin.sum_univ_two,Matrix.algebraMap_matrix_apply,
+      positiveForm] <;> ring
 
 theorem vectorMinus_square (v : Tangent) :
     vectorMinus v * vectorMinus v=algebraMap ℝ Mat (negativeForm v) := by
   ext i j
-  rw [Matrix.algebraMap_matrix_apply]
   fin_cases i <;> fin_cases j <;>
-    simp [vectorMinus, vectorPlus, negativeForm, Matrix.mul_apply, Fin.sum_univ_two,
-      QuadraticMap.proj_apply, smul_eq_mul, Complex.I_sq] <;> ring_nf <;> simp [Complex.I_sq] <;> ring
+    simp [vectorMinus,vectorPlus,Matrix.mul_apply,Fin.sum_univ_two,
+      Matrix.algebraMap_matrix_apply,positiveForm,negativeForm,smul_eq_mul,Complex.I_sq]
+      <;> ring_nf <;> simp [Complex.I_sq] <;> ring
 
 def positiveRepresentation : CliffordAlgebra positiveForm →ₐ[ℝ] Mat :=
   CliffordAlgebra.lift positiveForm ⟨vectorPlus,vectorPlus_square⟩
@@ -112,7 +86,7 @@ theorem plus_twisted_adjoint (v : Tangent) :
     -(plusUnit.val * vectorPlus v * plusUnit.inv)=vectorPlus (reflected v) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [plusUnit,reflectionPlus,vectorPlus,reflected,Matrix.mul_apply,Fin.sum_univ_two] <;> ring
+    simp [plusUnit,reflectionPlus,vectorPlus,reflected,Matrix.mul_apply,Fin.sum_univ_two]
 
 /-- The negative Clifford lift has the same geometric reflection but different square. -/
 theorem minus_twisted_adjoint (v : Tangent) :
@@ -164,7 +138,7 @@ theorem minus_equivariant_antiperiodic (ψ : PlanePoint → Spinor)
     ψ (p.1,p.2+2)=-ψ p := by
   rw [equivariant_double_glide _ ψ hψ,reflectionMinus_square]
   ext i
-  fin_cases i <;> simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two, neg_smul]
+  fin_cases i <;> simp
 
 /-- A negative lift cannot define an ordinary involution on a nonzero periodic field. -/
 theorem negative_lift_periodic_obstruction (ψ : PlanePoint → Spinor)
@@ -175,9 +149,8 @@ theorem negative_lift_periodic_obstruction (ψ : PlanePoint → Spinor)
   rw [hper] at h
   ext i
   have hi := congrFun h i
-  have : (2:ℂ)*(ψ p i)=0 := by
-    simp only [Pi.neg_apply] at hi
-    linear_combination hi
+  have hi' : ψ p i = -(ψ p i) := by simpa using hi
+  have : (2:ℂ)*(ψ p i)=0 := by linear_combination hi'
   exact (mul_eq_zero.mp this).resolve_left (by norm_num)
 
 end InfoGeometry.Topology.KleinCliffordPinLift

@@ -316,6 +316,7 @@ import Omega.Folding.FoldBinGaugeVolumeStieltjesSum
 import Omega.Folding.FoldBinChi2Col
 import Omega.Folding.FoldBinBoundaryCenterZ2
 import Omega.Folding.FoldBinGaugeConstantNotCFinite
+import Omega.Folding.FoldBinGaugeConstantRecurrenceCounterexample
 import Omega.Folding.FoldBinEscortEscortKl
 import Omega.Folding.FoldBinGaugeBernoulliExtractionOperator
 import Omega.Folding.FoldBinGaugeConstantStirlingBernoulliHierarchy

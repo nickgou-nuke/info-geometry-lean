@@ -100,15 +100,24 @@ theorem rawBlock_square_ne_one (h1 : (1 : Coeff) ≠ 0) : rawBlock * rawBlock �
   apply other_range_nonzero h1
   simpa using hh.symm
 
-/-- No normalized additive cyclic trace exists on the two-generator quotient. -/
-theorem no_normalized_cyclic_trace
-    (τ : Coeff →+ ℂ) (hcyc : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 ≠ 1 := by
-  intro hn
+/-- Every additive cyclic functional on the two-generator Cuntz quotient
+annihilates the unit. The two equivalent range projections each have the
+same value as the unit by cyclicity, while their sum is the unit. -/
+theorem cyclic_trace_unit_eq_zero
+    (τ : Coeff →+ ℂ) (hcyc : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 = 0 := by
   have hdiag (i : Fin 2) : τ (e i i) = τ 1 := by
     change τ (shift i * shiftDag i) = τ 1
     rw [hcyc, shiftDag_mul_shift]
   have hsum := congrArg τ diagonal_sum
-  rw [map_add, hdiag 0, hdiag 1, hn] at hsum
-  norm_num at hsum
+  rw [map_add, hdiag 0, hdiag 1] at hsum
+  have hsum' : τ 1 + τ 1 = τ 1 + 0 := by simpa using hsum
+  exact add_left_cancel hsum'
+
+/-- In particular, no additive cyclic functional on the two-generator
+Cuntz quotient is normalized at the unit. -/
+theorem no_normalized_cyclic_trace
+    (τ : Coeff →+ ℂ) (hcyc : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 ≠ 1 := by
+  rw [cyclic_trace_unit_eq_zero τ hcyc]
+  norm_num
 
 end InfoGeometry.Algebra.CuntzClockObstructions

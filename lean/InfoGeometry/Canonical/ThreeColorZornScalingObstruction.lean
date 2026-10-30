@@ -80,5 +80,52 @@ theorem zornScale_upper_product_defect (q : ℂ) (hq : q ≠ 0) :
         simp [zornSmul, zornScale, zornMul, E_k, F_k, e_k, cross3, hq_inv]
     · simp [zornSmul, zornScale, zornMul, E_k, F_k, e_k, dot3, hq_inv]
 
+/-- The generator-level defect is the complete obstruction: reciprocal
+weighting of the two vector sectors preserves the full Zorn product exactly
+when the cross-product weights satisfy the cubic compatibility law. -/
+theorem zornScale_multiplicative_iff (q : ℂ) (hq : q ≠ 0) :
+    (∀ X Y : Zorn,
+      zornScale q (zornMul X Y) = zornMul (zornScale q X) (zornScale q Y)) ↔
+      q ^ 3 = 1 := by
+  constructor
+  · intro hmul
+    exact (zornScale_upper_product_defect q hq).mp
+      (hmul (E_k 0) (E_k 1)).symm
+  · intro hq3 X Y
+    have hq2 : q ^ 2 = q⁻¹ := by
+      apply mul_left_cancel₀ hq
+      calc
+        q * q ^ 2 = q ^ 3 := by ring
+        _ = 1 := hq3
+        _ = q * q⁻¹ := by simp [hq]
+    have hinv2 : q⁻¹ * q⁻¹ = q := by
+      rw [← hq2]
+      calc
+        q ^ 2 * q ^ 2 = q ^ 3 * q := by ring
+        _ = q := by rw [hq3]; simp
+    have hcrossUpper :
+        cross3 (fun i => q⁻¹ * X.v i) (fun i => q⁻¹ * Y.v i) =
+          fun i => q * cross3 X.v Y.v i := by
+      funext i
+      fin_cases i <;> simp only [cross3] <;> ring_nf <;> rw [pow_two, hinv2] <;> ring
+    have hcrossLower :
+        cross3 (fun i => q * X.u i) (fun i => q * Y.u i) =
+          fun i => q⁻¹ * cross3 X.u Y.u i := by
+      funext i
+      fin_cases i <;> simp only [cross3] <;> ring_nf <;> rw [hq2] <;> ring
+    apply zorn_ext
+    · simp [zornScale, zornMul, dot3, mul_assoc, mul_left_comm, mul_comm, hq]
+    · funext i
+      simp only [zornScale, zornMul, zornSmul]
+      rw [show cross3 (fun j => q⁻¹ * X.v j) (fun j => q⁻¹ * Y.v j) i =
+        q * cross3 X.v Y.v i from congrFun hcrossUpper i]
+      ring
+    · funext i
+      simp only [zornScale, zornMul, zornSmul]
+      rw [show cross3 (fun j => q * X.u j) (fun j => q * Y.u j) i =
+        q⁻¹ * cross3 X.u Y.u i from congrFun hcrossLower i]
+      ring
+    · simp [zornScale, zornMul, dot3, mul_assoc, mul_left_comm, mul_comm, hq]
+
 end
 end InfoGeometry.Canonical.ThreeColorZornScalingObstruction

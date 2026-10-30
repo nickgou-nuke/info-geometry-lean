@@ -51,6 +51,21 @@ theorem proposed_triple_formula_defect (x y z : R) :
       (x * y * z + z * y * x) = (z * x - x * z) * y := by
   noncomm_ring
 
+/-- The proposed triple formula holds exactly when its right-multiplied
+commutator obstruction vanishes. This gives a precise scope for the formula
+without assuming commutativity of the ambient ring. -/
+theorem proposed_triple_formula_iff_obstruction_vanishes (x y z : R) :
+    ( ((x * y) * z + z * (x * y) - (x * (z * y) - (z * y) * x)) =
+        x * y * z + z * y * x) ↔ (z * x - x * z) * y = 0 := by
+  constructor
+  · intro h
+    have hd := proposed_triple_formula_defect x y z
+    rw [h] at hd
+    simpa using hd.symm
+  · intro h
+    apply sub_eq_zero.mp
+    rw [proposed_triple_formula_defect, h]
+
 /-- Square-zero and an inner inverse suffice for the unnormalized `-2d` law;
 neither an involution nor the other Moore–Penrose equations are needed. -/
 theorem symm_associator_square_zero_inner_inverse {d b : R}

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -12,61 +13,35 @@ if __package__ in (None, ""):
 _SRC = Path(__file__).resolve().parents[2] / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
-    from tools.infra.artifacts import (
-        normalize_repo_output,
-        should_skip_decl_refresh,
-        load_decl_index_meta,
-        stamp_decl_index_meta,
-        find_missing_decl_source_files,
-    )
-    from tools.infra.build import (
-        build_indexer_command,
-        compute_olean_content_hash,
-        compute_lean_source_hash,
-        run_locked_prebuild,
-    )
-    from tools.infra.timings import write_indexer_timing_sidecar
-    from tools.pathing import (
-        default_decl_graph_file,
-        default_decl_index_dir,
-        default_decl_structure_file,
-        repo_root,
-    )
-    from tools.infra.arango_env import (
-        arango_endpoint,
-        arango_username,
-        arango_password,
-        load_repo_arango_env,
-    )
-    from igf.graph.decl_schema import decl_key, edge_key
-else:
-    from tools.infra.artifacts import (
-        normalize_repo_output,
-        should_skip_decl_refresh,
-        load_decl_index_meta,
-        stamp_decl_index_meta,
-        find_missing_decl_source_files,
-    )
-    from tools.infra.build import (
-        build_indexer_command,
-        compute_olean_content_hash,
-        compute_lean_source_hash,
-        run_locked_prebuild,
-    )
-    from tools.infra.timings import write_indexer_timing_sidecar
-    from tools.pathing import (
-        default_decl_graph_file,
-        default_decl_index_dir,
-        default_decl_structure_file,
-        repo_root,
-    )
-    from tools.infra.arango_env import (
-        arango_endpoint,
-        arango_username,
-        arango_password,
-        load_repo_arango_env,
-    )
-    from igf.graph.decl_schema import decl_key, edge_key
+
+from tools.build_lock import BuildLock, acquire_build_lock
+from tools.infra.artifacts import (
+    normalize_repo_output,
+    should_skip_decl_refresh,
+    load_decl_index_meta,
+    stamp_decl_index_meta,
+    find_missing_decl_source_files,
+)
+from tools.infra.build import (
+    build_indexer_command,
+    compute_olean_content_hash,
+    compute_lean_source_hash,
+    run_locked_prebuild,
+)
+from tools.infra.timings import write_indexer_timing_sidecar
+from tools.pathing import (
+    default_decl_graph_file,
+    default_decl_index_dir,
+    default_decl_structure_file,
+    repo_root,
+)
+from tools.infra.arango_env import (
+    arango_endpoint,
+    arango_username,
+    arango_password,
+    load_repo_arango_env,
+)
+from igf.graph.decl_schema import decl_key, edge_key
 
 
 def stream_to_arango(
@@ -337,7 +312,12 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     root = repo_root()
+    owner = f"decl-graph-refresh:{os.getpid()}"
+    with acquire_build_lock(None, owner, block=True) as build_lock:
+        return _run_refresh(args, root, build_lock)
 
+
+def _run_refresh(args: argparse.Namespace, root: Path, build_lock: BuildLock) -> int:
     # Streaming mode: pipe directly to ArangoDB
     if args.stream:
         if args.generation_id and not args.build_fingerprint:
@@ -395,7 +375,14 @@ def main() -> int:
             run_mode=args.run_mode,
             python_executable=sys.executable,
             allow_failure=args.allow_prebuild_failure,
+            build_lock=build_lock,
         )
+
+    # Bind the exporter run to one stable source/olean snapshot. The preflight
+    # hashes above may precede the build target, so take this receipt after the
+    # optional build and compare it again after declaration extraction.
+    source_hash_before_indexer = compute_lean_source_hash(root)
+    olean_hash_before_indexer = compute_olean_content_hash(root)
 
     cmd = build_indexer_command(
         root,
@@ -413,6 +400,16 @@ def main() -> int:
     # the build products that actually produced the refreshed artifacts.
     current_hash = compute_olean_content_hash(root)
     current_source_hash = compute_lean_source_hash(root)
+    if current_hash != olean_hash_before_indexer:
+        raise SystemExit(
+            "[refresh-decl-graph] olean inventory changed during declaration export; "
+            "refusing to stamp a mixed-generation index"
+        )
+    if current_source_hash != source_hash_before_indexer:
+        raise SystemExit(
+            "[refresh-decl-graph] source inventory changed during declaration export; "
+            "refusing to stamp a mixed-generation index"
+        )
 
     # Backfill the ISO timestamp that the Lean indexer cannot produce.
     # Also store the olean content hash for incremental skip on next run.
@@ -420,6 +417,14 @@ def main() -> int:
         meta_path,
         olean_hash=current_hash,
         source_hash=current_source_hash,
+        output_paths={
+            "decls.jsonl": index_dir / "decls.jsonl",
+            "edges.jsonl": index_dir / "edges.jsonl",
+            "morphisms.jsonl": index_dir / "morphisms.jsonl",
+            "types.jsonl": index_dir / "types.jsonl",
+            "full_graph.json": graph_out,
+            "structural-topology.json": structure_out,
+        },
     ) is not None:
         print(f"[refresh-decl-graph] stamped {meta_path}", flush=True)
     meta = load_decl_index_meta(meta_path)

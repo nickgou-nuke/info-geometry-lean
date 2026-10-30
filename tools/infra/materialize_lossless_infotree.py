@@ -334,6 +334,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                 "is_capstone": meta.get("isCapstone"),
                 "depth_min": meta.get("depthMin"),
                 "depth_max": meta.get("depthMax"),
+                "immediate_dominator_component_id": meta.get("immediateDominatorComponentId"),
                 "strict_dominator_count": meta.get("strictDominatorCount"),
                 "member_count": len(members),
                 "cyclic": cyclic,

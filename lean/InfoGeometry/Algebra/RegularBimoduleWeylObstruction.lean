@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.RegularBimoduleCommutant
 
 /-!
@@ -44,6 +49,25 @@ theorem phase_commutator (x z : A) (q : R)
   rw [hphase, sub_smul, one_smul]
 
 omit [Nontrivial A] in
+/-- For arbitrary operators, a nontrivial scalar phase permits commutation
+exactly when their product vanishes. No invertibility or absence of zero
+divisors in the ambient algebra is required. -/
+theorem phase_commute_iff (x z : A) (q : R)
+    (hphase : z * x = q • (x * z)) :
+    Commute x z ↔ q = 1 ∨ x * z = 0 := by
+  change x * z = z * x ↔ _
+  rw [← sub_eq_zero, phase_commutator x z q hphase, smul_eq_zero, sub_eq_zero]
+  simp only [eq_comm]
+
+omit [Nontrivial A] in
+/-- The nonzero-product condition is the precise replacement for the unit
+hypothesis in the phase noncommutation obstruction. -/
+theorem phase_noncommute_iff (x z : A) (q : R)
+    (hphase : z * x = q • (x * z)) :
+    ¬ Commute x z ↔ q ≠ 1 ∧ x * z ≠ 0 := by
+  rw [phase_commute_iff x z q hphase, not_or]
+
+omit [Nontrivial A] in
 theorem phase_anticommutator (x z : A) (q : R)
     (hphase : z * x = q • (x * z)) :
     x * z + z * x = (1 + q) • (x * z) := by
@@ -54,6 +78,17 @@ end Phase
 section Conjugation
 
 abbrev Matrix3 := Matrix (Fin 3) (Fin 3) ℂ
+
+def matrixE01 : Matrix3 := Matrix.single 0 1 1
+def matrixE10 : Matrix3 := Matrix.single 1 0 1
+
+/-- Opposite matrix units witness noncommutativity of the actual carrier. -/
+theorem matrix3_noncommutative :
+    matrixE01 * matrixE10 ≠ matrixE10 * matrixE01 := by
+  intro h
+  have h00 := congrArg (fun M : Matrix3 => M 0 0) h
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_succ,
+    Matrix.single] at h00
 
 /-- Standard matrix adjunction on the regular complex matrix bimodule. -/
 def matrixConjugation (T : Matrix3) : Matrix3 := star T

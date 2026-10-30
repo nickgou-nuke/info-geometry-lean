@@ -1,0 +1,21 @@
+{
+  "math_expression_count": 170,
+  "source_name": "aistudio_prompt_1YHHorO_scroll_extract.json",
+  "source_path": "tmp/aistudio_prompt_1YHHorO_scroll_extract.json",
+  "source_bytes": 1005007,
+  "source_sha256": "17172828248554f44ef30f01ffb0a594626ebebed6171ec14e52b5b33b5d5026",
+  "turn_count": 93,
+  "role_counts": {
+    "Model": 62,
+    "User": 31
+  },
+  "transcript_characters": 860269,
+  "fence_count": 0,
+  "fence_languages": {},
+  "tagged_lean_fences": 0,
+  "unterminated_fences": 0,
+  "unlabelled_lean_candidates": 0,
+  "first_timestamp": null,
+  "last_timestamp": null,
+  "authority": "transcript extraction only; no theorem or proof is promoted"
+}

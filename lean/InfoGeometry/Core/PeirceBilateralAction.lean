@@ -26,6 +26,29 @@ def bilateral (u v : A) : A →ₗ[R] A := (R_map v).comp (L_map u)
 
 @[simp] theorem bilateral_apply (u v x : A) : bilateral (R := R) u v x = u * x * v := rfl
 
+/-- Exact multiplicativity defect of a two-sided multiplication operator.
+The sandwich map `x ↦ u * x * v` is multiplicative on a pair precisely when
+the middle factors `v * u` act as the identity on that pair. -/
+theorem bilateral_mul_defect (u v x y : A) :
+    bilateral (R := R) u v x * bilateral (R := R) u v y -
+      bilateral (R := R) u v (x * y) = u * x * (v * u - 1) * y * v := by
+  simp only [bilateral_apply]
+  noncomm_ring
+
+/-- Pairwise multiplicativity is equivalent to vanishing of the middle-factor
+obstruction. -/
+theorem bilateral_mul_iff_defect_zero (u v x y : A) :
+    bilateral (R := R) u v x * bilateral (R := R) u v y =
+      bilateral (R := R) u v (x * y) ↔ u * x * (v * u - 1) * y * v = 0 := by
+  constructor
+  · intro h
+    have hd := bilateral_mul_defect (R := R) u v x y
+    rw [h] at hd
+    simpa using hd.symm
+  · intro h
+    apply sub_eq_zero.mp
+    rw [bilateral_mul_defect, h]
+
 /-- The right factors compose in the opposite order. -/
 theorem bilateral_comp (u v a b : A) :
     (bilateral (R := R) u v).comp (bilateral (R := R) a b) = bilateral (R := R) (u * a) (b * v) := by

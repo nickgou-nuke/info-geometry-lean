@@ -1,0 +1,1397 @@
+{
+  "scope": "Filename and text search candidates only; not a complete semantic inventory. Per-entry replacement_evidence records subsequent kernel verification; entries without it retain their original unverified status.",
+  "candidates": [
+    {
+      "path": "lean/InfoGeometry/Algebra/AssociativityObstruction.lean",
+      "sha256": "15e923fdce3a816e8e2f997d1494fe269f8d540e69f8142682a67ceb840386f9",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.multiplicative_map_identifies_associativity_paths",
+          "InfoGeometry.Algebra.no_injective_matrix_representation_of_zornMatrix"
+        ],
+        "statement_summary": "Every multiplicative map to an associative semigroup identifies reassociation paths. Hence witnessed nonassociativity prevents faithful multiplicative matrix representation. The universal path-identification statement applies to ZornMatrix without a carrier change.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/ZornLeftMultiplicationDefect.lean",
+        "related_replacement_sha256": "1f799327557ec584e927e6f2029babda85725d637ab697ae09d9945d25ff0bf4",
+        "related_replacement_scope": "Separately on ZornVectorMatrix: faithful linear left action preserves squares and anticommutators; multiplicativity defect equals the associator; generated operator Lie algebra strictly contains the left-action range. No identification with the distinct ZornMatrix structure is claimed.",
+        "audit_module": "InfoGeometry.Algebra.ZornLeftMultiplicationDefectAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3116,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named declarations only; distinct carriers kept explicit; no repository-wide completeness claim."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CornerCompressionTraceCounterexample.lean",
+      "sha256": "d0b1224222c9cec3799b2259a23c648d8548a01c7933885cb808e49de0c977b6",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.compressed_trace_defect",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.compressed_trace_cyclic_iff_commutes",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.compressed_trace_preserving_iff",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.compressed_trace_globally_cyclic_iff",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.compression_not_cyclic",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.compression_no_cyclic_factor",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.ambientTraceOnCyclicQuotient_class",
+          "InfoGeometry.Algebra.CornerCompressionTraceCounterexample.ambient_trace_extends_corner"
+        ],
+        "statement_summary": "Compression trace is cyclic against every left factor iff the right factor commutes with P. It is cyclic globally iff every matrix commutes with P. It preserves ambient trace on every matrix iff P=1. The explicit noncentral compression does not descend to the cyclic quotient; ordinary ambient trace does and agrees on the corner.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/CornerCompressionTraceCriterion.lean",
+        "related_replacement_sha256": "4421659925a0e2fe6bb09497b2888b27fa0b2442ef74f982430836958b81bce0",
+        "audit_module": "InfoGeometry.Algebra.CornerCompressionTraceAudit",
+        "build_exit_code": 0,
+        "build_jobs": 1246,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Finite square matrix algebras over arbitrary commutative coefficient rings; no commutativity of matrices assumed. Eight named declarations audited; global inventory remains incomplete."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CuntzClockObstructions.lean",
+      "sha256": "426cdac320ea3c5c6ee5d13c2a86fe5d1697b8b6261c138e38aa75c2f93c55b7",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.CuntzClifford22.gamma_anticommutator",
+          "InfoGeometry.Algebra.CuntzClifford22.gammaVector_square",
+          "InfoGeometry.Algebra.CuntzClifford22.representation_iota",
+          "InfoGeometry.Algebra.CuntzClifford22.representation_basis",
+          "InfoGeometry.Algebra.CuntzClockObstructions.left_right_commute",
+          "InfoGeometry.Algebra.CuntzClockObstructions.commuting_clock_scalar_eq_one",
+          "InfoGeometry.Algebra.CuntzClockObstructions.rawBlock_square_ne_one",
+          "InfoGeometry.Algebra.CuntzClockObstructions.no_normalized_cyclic_trace",
+          "InfoGeometry.Algebra.CuntzClockObstructions.clock_commutes_iff",
+          "InfoGeometry.Algebra.CuntzClockObstructions.clock_anticommutes_iff",
+          "InfoGeometry.Algebra.CuntzClockObstructions.rawBlock_square",
+          "InfoGeometry.Algebra.CuntzClockObstructions.cyclic_trace_unit_eq_zero"
+        ],
+        "statement_summary": "For ZX=qXZ in an arbitrary complex algebra, commutation iff q=1 or XZ=0 and anticommutation iff q=-1 or XZ=0. In the owned Cuntz quotient, the single-isometry block squares to a proper range projector in one corner; actual Clifford generators instead arise from the complete matrix units via a native CliffordAlgebra lift. Cyclic additive functionals annihilate the unit, excluding normalization but not nontracial states.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/ClockRelationCriteria.lean",
+        "related_replacement_sha256": "c15e896d1dd0d982ca396831e4c7e1063e7af7657cb961abcef31510302e8f0b",
+        "clifford_owner_path": "lean/InfoGeometry/Algebra/CuntzClifford22.lean",
+        "clifford_owner_sha256": "87ebd92262d3edf6110c3891ffe548a786d0269fafa1902f33949cb794d111c4",
+        "audit_module": "InfoGeometry.Algebra.ClockRelationCriteriaAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3109,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Twelve named declarations only. The algebraic scalar-fixing involution on this quotient is not a conjugate-semilinear C*-star; no positivity or KMS conclusion is inferred."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CuntzTensorQuotientPositivityObstruction.lean",
+      "sha256": "97e7bada29f19063556db2d30c36df547be1e7055ab3d23714f78375e5119d99",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.no_normalized_positive_complexLinearFunctional",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.no_nonempty_CuntzGNSState",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.corrected_complex_scalar_I_star_square",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.normalized_functional_corrected_scalar_I_nonnegative",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.corrected_binary_carrier_has_normalized_positive_functional",
+          "InfoGeometry.Algebra.CuntzComplexStarHomogeneousComponents.projection_invariant_positive_iff",
+          "InfoGeometry.Algebra.CuntzComplexStarHomogeneousComponents.projection_star_mul",
+          "InfoGeometry.Algebra.CuntzComplexStarHomogeneousComponents.homogeneous_square_nonneg",
+          "InfoGeometry.OperatorAlgebra.CuntzComplexStarProductFunctional.quotientProductFunctional_nonneg"
+        ],
+        "statement_summary": "The scalar-fixing complex-linear quotient star excludes normalized positive complex-linear functionals. The corrected complexification of the real binary Cuntz quotient has conjugate-semilinear star and a normalized star-preserving functional positive on every star-square. More generally, for any degree-zero-projection-invariant complex-linear functional on that corrected carrier, full positivity is equivalent to core positivity.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/CuntzComplexStarPositivityCriterion.lean",
+        "related_replacement_sha256": "16c81ad9a5b0ffe0b5afbed603ab7439a823233d640e8f1f13ccf1ac9e89f19f",
+        "audit_module": "InfoGeometry.Algebra.CuntzComplexStarPositivityCriterionAudit",
+        "build_exit_code": 0,
+        "build_jobs": 9421,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Nine named declarations audited. Positivity replacement is on ComplexStarCuntzAlg Bool, not the old CuntzAlg n. Proof uses finite homogeneous decomposition and the native matrix-core colimit. No KMS or C*-completion claim."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CuntzTensorQuotientPositivityObstructionAudit.lean",
+      "sha256": "ae2d108962e34946476ac922130ed8092baacadea258026fa396ae982ea094fa",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.no_normalized_positive_complexLinearFunctional",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.no_nonempty_CuntzGNSState",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.corrected_complex_scalar_I_star_square",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.normalized_functional_corrected_scalar_I_nonnegative",
+          "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction.corrected_binary_carrier_has_normalized_positive_functional",
+          "InfoGeometry.Algebra.CuntzComplexStarHomogeneousComponents.projection_invariant_positive_iff",
+          "InfoGeometry.Algebra.CuntzComplexStarHomogeneousComponents.projection_star_mul",
+          "InfoGeometry.Algebra.CuntzComplexStarHomogeneousComponents.homogeneous_square_nonneg",
+          "InfoGeometry.OperatorAlgebra.CuntzComplexStarProductFunctional.quotientProductFunctional_nonneg"
+        ],
+        "statement_summary": "The scalar-fixing complex-linear quotient star excludes normalized positive complex-linear functionals. The corrected complexification of the real binary Cuntz quotient has conjugate-semilinear star and a normalized star-preserving functional positive on every star-square. More generally, for any degree-zero-projection-invariant complex-linear functional on that corrected carrier, full positivity is equivalent to core positivity.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/CuntzComplexStarPositivityCriterion.lean",
+        "related_replacement_sha256": "16c81ad9a5b0ffe0b5afbed603ab7439a823233d640e8f1f13ccf1ac9e89f19f",
+        "audit_module": "InfoGeometry.Algebra.CuntzComplexStarPositivityCriterionAudit",
+        "build_exit_code": 0,
+        "build_jobs": 9421,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Nine named declarations audited. Positivity replacement is on ComplexStarCuntzAlg Bool, not the old CuntzAlg n. Proof uses finite homogeneous decomposition and the native matrix-core colimit. No KMS or C*-completion claim."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/F4S3JordanObstruction.lean",
+      "sha256": "129ae2177eef59c9ba77324ebf7045794aee37cde191fd1989d3575f3de32713",
+      "status": "historical_obstruction_resolved_kernel_verified",
+      "replacement_evidence": {
+        "audit_module": "InfoGeometry.Algebra.H3ZornResolvedObstructionAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3140,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "statement_summary": "The current conjugated s12 action preserves the actual quadratic adjoint; the historical filename does not state a current counterexample.",
+        "scope": "Current source declarations only; no inference of F4 classification or unrestricted coordinate permutation symmetry."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/H3ZornJordanObstruction.lean",
+      "sha256": "a5470ece2b5eb25d07066bdc3bd34a47439f9c5950b774ae1ea9dfc1fc97cfb8",
+      "status": "historical_obstruction_resolved_kernel_verified",
+      "replacement_evidence": {
+        "audit_module": "InfoGeometry.Algebra.H3ZornResolvedObstructionAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3140,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "statement_summary": "The induced product one-half T(X,1,Y) satisfies the global Jordan law. The historical sparse pair satisfies that law and its T formulation; it is not a counterexample.",
+        "scope": "Current source declarations only; no inference of F4 classification or unrestricted coordinate permutation symmetry."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/H3ZornJordanTruthfulObstruction.lean",
+      "sha256": "1be3f75e678f8109886cb63e77d0123df639e4b8aa1b4bcd611df9b5a7c85f7e",
+      "status": "historical_obstruction_resolved_kernel_verified",
+      "replacement_evidence": {
+        "audit_module": "InfoGeometry.Algebra.H3ZornResolvedObstructionAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3140,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "statement_summary": "The induced product one-half T(X,1,Y) satisfies the global Jordan law. The historical sparse pair satisfies that law and its T formulation; it is not a counterexample.",
+        "scope": "Current source declarations only; no inference of F4 classification or unrestricted coordinate permutation symmetry."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/OctonionMatrixObstruction.lean",
+      "sha256": "46923b98e2769c9bb651b8fa2003470a141ec9ea52e2cdd70e35a40685d69d17",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.multiplicative_map_identifies_associativity_paths",
+          "InfoGeometry.Algebra.no_injective_matrix_representation_of_zornMatrix"
+        ],
+        "statement_summary": "Every multiplicative map to an associative semigroup identifies reassociation paths. Hence witnessed nonassociativity prevents faithful multiplicative matrix representation. The universal path-identification statement applies to ZornMatrix without a carrier change.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/ZornLeftMultiplicationDefect.lean",
+        "related_replacement_sha256": "1f799327557ec584e927e6f2029babda85725d637ab697ae09d9945d25ff0bf4",
+        "related_replacement_scope": "Separately on ZornVectorMatrix: faithful linear left action preserves squares and anticommutators; multiplicativity defect equals the associator; generated operator Lie algebra strictly contains the left-action range. No identification with the distinct ZornMatrix structure is claimed.",
+        "audit_module": "InfoGeometry.Algebra.ZornLeftMultiplicationDefectAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3116,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named declarations only; distinct carriers kept explicit; no repository-wide completeness claim."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/RegularBimoduleWeylObstruction.lean",
+      "sha256": "8e74b082a5aa5237d29fe9922a8073341e50ab5f9b549134021f8460e174f74a",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declaration": "phase_noncommute_iff",
+        "statement_summary": "Under zx=q smul (xz), noncommutation iff q differs from 1 and xz is nonzero; no unit hypothesis.",
+        "audit_module": "InfoGeometry.Canonical.ScalingRootPhaseAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8933,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named replacement declarations only; not a repository-wide completeness certificate."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/AssociatorObstruction.lean",
+      "sha256": "51c550e2f508e1b6328b25e974780415efcec657b6735479725fefcb6844f08b",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8.concrete_akivis_identity",
+          "InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8.concrete_jacobi_iff_associator_sum_zero",
+          "InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8.not_associative_concrete_zorn",
+          "InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8.not_jacobi_commutator_concrete_zorn",
+          "InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8.associator_e11_u1_u2_eq_v3",
+          "InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8.commutator_jacobi_u1_u2_u3"
+        ],
+        "statement_summary": "The concrete integer Zorn cell product is nonassociative and its element commutator fails Jacobi. On arbitrary cells, not just the finite basis, the right-nested commutator Jacobiator equals the owner-defined signed associator sum. Thus Jacobi vanishes on a triple exactly when that associator sum vanishes.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/Zorn/ConcreteAkivisIdentity.lean",
+        "related_replacement_sha256": "e9e725a2f204e48c6dd0deddbb8a410c168a1551e5e52db773f58ad5f93ce5d5",
+        "audit_module": "InfoGeometry.Algebra.Zorn.ConcreteAkivisAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3097,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Six named declarations on the concrete ZornCell integer carrier. Original product and right-nested sign convention retained. No identification with other Zorn carriers or LieRing instance asserted."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/G2CrossProductCarrierAudit.lean",
+      "sha256": "dd38d54a561124cfb10b5f4ccffefccae0626fcbcbe9ccc57dfe9d0cb8d9a294",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/G2CyclotomicActionObstruction.lean",
+      "sha256": "2497219f4f84bd2a5d3ed2dcf69740fc333714b2df7b983900a8f6cdb4dc1cc7",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.Zorn.G2CyclotomicActionObstruction.no_dihedral_equivariance_for_s1",
+          "InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge.signedRootCyclotomicEquiv_s1",
+          "InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge.signedRootCyclotomicEquiv_s2",
+          "InfoGeometry.Exceptional.G2CyclotomicCoxeterLift.cyclotomicReflectionGenerators_isLiftable",
+          "InfoGeometry.Exceptional.G2CalibratedCoxeterTransport.calibratedCoordinateAction_equivariant",
+          "InfoGeometry.Exceptional.G2CalibratedCoxeterTransport.calibratedCoordinateAction_simple_zero",
+          "InfoGeometry.Exceptional.G2CalibratedCoxeterTransport.calibratedCoordinateAction_simple_one"
+        ],
+        "statement_summary": "The old single-axis dihedral action cannot realize the signed first reflection through the submitted calibration. The existing sector-dependent reflections satisfy Coxeter relations. Their native Coxeter lift is transported by the signed-root equivalence to a group homomorphism into coordinate-root permutations, equivariant for every group element and agreeing with both concrete simple reflections.",
+        "related_replacement_path": "lean/InfoGeometry/Exceptional/G2CalibratedCoxeterTransport.lean",
+        "related_replacement_sha256": "bef3edbf96f724dfef985fc3715db8e43475a913fd2cd646b06375f13ffa9b28",
+        "audit_module": "InfoGeometry.Exceptional.G2CalibratedCoxeterTransportAudit",
+        "build_exit_code": 0,
+        "build_jobs": 9065,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Seven named declarations on existing finite root and coordinate-root carriers. The calibrated action is not identified with the old dihedral action; no additional faithfulness statement is claimed."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/G2ExportedFlagAction.lean",
+      "sha256": "0c85b1bd928b13cf224c187e00bb8db0dd42572a62d209c1b317b31dd54862dc",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/G2FullPeelWeylObstruction.lean",
+      "sha256": "84ea2b591d2c08b9033a32c26388e5caec10e1f8b7de6a183c2a5c021b6bc3d1",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.Zorn.G2FullPeelWeylObstruction.not_fullPeel_mem_weylG2Subgroup",
+          "InfoGeometry.Algebra.Zorn.G2NativeFlagResidualClosure.fullPeel_eq_one_of_stabilizer",
+          "InfoGeometry.Algebra.Zorn.G2NativeFlagResidualClosure.ambient_card_eq_12096",
+          "InfoGeometry.Algebra.Zorn.G2NativeCellDecomposition.exists_unique_cell",
+          "InfoGeometry.Algebra.Zorn.G2FullPeelCellClassification.exists_unique_common_cell",
+          "InfoGeometry.Algebra.Zorn.G2FullPeelCellClassification.fullPeel_mem_cell_iff"
+        ],
+        "statement_summary": "PC peeling preserves the unique concrete Bruhat cell; global Weyl-only residual membership is false. Native flag stabilizers have trivial peel.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/Zorn/G2FullPeelCellClassification.lean",
+        "related_replacement_sha256": "63ae3f70f77aa41a85b6234e6753115453dd358bc90a5b70bc7680d0e1c51d22",
+        "audit_module": "InfoGeometry.Algebra.Zorn.G2FullPeelReplacementAudit",
+        "build_exit_code": 0,
+        "build_jobs": 9080,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Native split-octonion automorphisms over F2. Unconditional unique common cell and membership equivalence; not uniqueness of Borel factors or Weyl-only residuals."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/G2ResidualExponentRealizationBoundary.lean",
+      "sha256": "8e0e034b68a0048f501602d3a019d24a00cc13380b1936f631f88b10879eb606",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.Zorn.G2ResidualExponentRealizationBoundary.not_residualExponentRealizes_corrected_simple",
+          "InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleEquiv.canonicalResidualImage_card",
+          "InfoGeometry.Algebra.Zorn.G2BruhatResidualSimpleEquiv.canonicalResidualImage_ne_univ",
+          "InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv.correctedSimpleResidualCoordinateEquiv",
+          "InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv.correctedSimpleResidualCoordinateEquiv_apply",
+          "InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv.correctedSimpleResidualCoordinateEquiv_coordinate_readback",
+          "InfoGeometry.Algebra.Zorn.G2CorrectedResidualCard.residual_card",
+          "InfoGeometry.Algebra.Zorn.G2ResidualRealizationClassification.realizes_iff_lengths_equal",
+          "InfoGeometry.Algebra.Zorn.G2ResidualRealizationClassification.length_agreement_classification",
+          "InfoGeometry.Algebra.Zorn.G2ResidualRealizationClassification.realizes_iff_parameter"
+        ],
+        "statement_summary": "Uncorrected inversion exponents admit a set equivalence with the native residual subgroup iff correctedLength equals dihedralLength, equivalently the parameter is a rotation or its first coordinate is 0 or 3. The corrected simple residual has a native five-bit PC parametrization; its eight-element inversion-coordinate image is proper.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/Zorn/G2ResidualRealizationClassification.lean",
+        "related_replacement_sha256": "13aa9a8025018e3cbf09c91769234987d749599fd9c083bfbcf6cef8fca8ae4b",
+        "audit_module": "InfoGeometry.Algebra.Zorn.G2ResidualRealizationClassificationAudit",
+        "build_exit_code": 0,
+        "build_jobs": 9106,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "All twelve native Weyl parameters, actual residual subgroups of split-octonion automorphisms over F2. The general existence criterion is for set equivalences only; it does not assert root-product compatibility or group isomorphism. The existing five-bit simple-case map is audited separately."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/ZornTwistedGroupReadoutObstruction.lean",
+      "sha256": "f83ee4ad65abdbef7aac63b5a7b6557c4486fdeae12d6f314176099210e52730",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.lean",
+      "sha256": "73af434b5f927138ca491bfc1d0aadf9d9589f7e49a36a0fc7ce68536aeafcb0",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.zorn_standard_ternary_fundamental_identity",
+          "InfoGeometry.Algebra.zornStanDerivation_apply_normal_form",
+          "InfoGeometry.Algebra.ZornVectorMatrix.associatorFilippovDefect_UUUVV",
+          "InfoGeometry.Algebra.ZornVectorMatrix.associatorFilippovDefect_UUUVV_eq_zero_iff_four_eq_zero",
+          "InfoGeometry.Algebra.ZornVectorMatrix.associator_not_filippov_real"
+        ],
+        "statement_summary": "The raw Zorn associator has the exact displayed Filippov defect 4 U₂, which vanishes for that witness iff 4=0; over the reals it is not a Filippov bracket. On the same ZornVectorMatrix carrier over any commutative ring, the existing standard derivation action D(a,b)(x) satisfies the ternary derivation identity. Its Kleinfeld normal form is the commutator action minus three times the associator.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/ZornStandardTernaryIdentity.lean",
+        "related_replacement_sha256": "a447fe41d6c039ab5ad84a7c5c0fdddb83f8478cc4af10348dd3fc023ada4dec",
+        "audit_module": "InfoGeometry.Algebra.ZornStandardTernaryIdentityAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3104,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Five named declarations. The replacement changes the ternary operation explicitly, preserving the native carrier and product. No total alternation or universal Filippov identity for the raw associator in characteristic two is claimed."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.lean",
+      "sha256": "ea19dc929aedf12851ce00d588439456765436ad54a0ca2194ede35abdddf9ee",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.gl31_odd_bracket_noncentral",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.not_faithful_gl31_with_CAR_odd",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.explicit_anomaly_in_kernel_of_homogeneous_bracket_map_to_CAR_odd",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.gl3Representation_injective",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.oddDerived_eq_scalar",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.finrank_oddDerived",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.finrank_color_operator_space",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.bracket_mem",
+          "InfoGeometry.Algebra.ZornColorOperatorCoordinates.homogeneous_super_jacobi"
+        ],
+        "statement_summary": "The native endomorphism color space has a faithful gl3 Lie representation, one-dimensional scalar odd-derived part, and total dimension sixteen over a field. Its homogeneous superbracket closes and satisfies super-Jacobi. A homogeneous-bracket-preserving map from gl(3|1) whose entire odd image lies in the raw CAR odd part kills a nonzero nested bracket and cannot be faithful.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/ZornColorOddDerived.lean",
+        "related_replacement_sha256": "e3b5c0be389354812e8e7e39647e0df57f246d33b13eba0ed5905bf8436dc915",
+        "audit_module": "InfoGeometry.Algebra.ZornProjectionColorAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8946,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named native Zorn endomorphism declarations only. Ring generality, nontriviality for nonzero witnesses, and field assumptions for dimensions are retained. No gl(3|1) identification or unrestricted faithful embedding obstruction is asserted."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/ZornRightProjectionObstruction.lean",
+      "sha256": "73abd69905a5b91e91c5d6c24f922b69112a2ddcdf2bbbd2fd490df0da7d3353",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Algebra.ZornVectorMatrix.right_E22_offDiagonal_tangent_defect",
+          "InfoGeometry.Algebra.ZornVectorMatrix.right_E22_offDiagonal_tangent_iff",
+          "InfoGeometry.Algebra.ZornVectorMatrix.right_E22_offDiagonal_tangent_operator_iff",
+          "InfoGeometry.Algebra.ZornVectorMatrix.right_E22_upper_not_tangent",
+          "InfoGeometry.Algebra.ZornVectorMatrix.left_E11_idempotent",
+          "InfoGeometry.Algebra.ZornVectorMatrix.left_E11_tangent_offDiagonal",
+          "InfoGeometry.Algebra.ZornVectorMatrix.left_diagonal_difference_involution",
+          "InfoGeometry.Algebra.ZornVectorMatrix.left_diagonal_difference_anticommutes_offDiagonal"
+        ],
+        "statement_summary": "The right-E22 off-diagonal tangent operator vanishes iff both vectors vanish. Its exact pointwise defect and coordinate criterion are proved. The left-E11 operator is idempotent and every off-diagonal left action satisfies its tangent equation; the diagonal-difference left action is an involution anticommuting with these directions.",
+        "related_replacement_path": "lean/InfoGeometry/Algebra/ZornLeftGrading.lean",
+        "related_replacement_sha256": "1da8ed287e208fb45e9b8891cb9713ea4c1b813f3ce81f1022501be9efd469fb",
+        "audit_module": "InfoGeometry.Algebra.ZornProjectionColorAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8946,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named native Zorn endomorphism declarations only. Ring generality, nontriviality for nonzero witnesses, and field assumptions for dimensions are retained. No gl(3|1) identification or unrestricted faithful embedding obstruction is asserted."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Algebraic/CartanExponentialFamily.lean",
+      "sha256": "1fd328b5466b3f368a232a6d15f8b340a011cd8bbda0652e685b03a7460e7f30",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/AllExhaustive.lean",
+      "sha256": "ace8f399a9a0e8c7a1139031257f99a5b9b11b743013303b00e75218eef0aaeb",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/AsanoRuelleObstruction.lean",
+      "sha256": "82a1fa5d5616467e3b8bc05eb755f2039bf8ba7737b77bc817ba758a68449acc",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/BipolarCircleEnclosurePeriods.lean",
+      "sha256": "13004ebe3e99e036d0445f401149a6d5cde1ed28a16765c73d272bc01d5e239e",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/BipolarSignedRadiusPeriodsAudit.lean",
+      "sha256": "819e566e5002ef6649ece9a4e21fa30e2a74e612837add589393d623f0c90258",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/SimplePoleReflection.lean",
+      "sha256": "54ba2765ef2245096d99879bf579ef2eabf6d3708e5befc11c572a4c85e5246c",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/SimplePoleRegularPart.lean",
+      "sha256": "59966f61d10a0e7a93b1dc36c2b572f60bddc6b4463d8b51b99bb1d05300e686",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/LectureStructureAndRandomness.lean",
+      "sha256": "054185dc5347dd41516a1f88216d04639be3451b1d5436f962b17211021b12aa",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean",
+      "sha256": "2ab43b23d5336cc371cdfa23be2e2a478df3fa0127cac7f8dac711fe9aaebbd0",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/SarnakLocalCertification.lean",
+      "sha256": "52358ef0c878ee035508b70752e437a12754f229ab70f25011b8cac34f856c19",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/SarnakLocalCertificationTests.lean",
+      "sha256": "2c23ef105f216ee7140be93c26c60c9c47a94ea115e2acc1ef44a31e6f6fdf72",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/ZetaSymmetryHeuristicComplement.lean",
+      "sha256": "d26aa28a0cb39498fd314cfd489e40a2eb15c6c14d822eae868ccf5ffc3e20af",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean",
+      "sha256": "4296fe151c8d7f21095125a9c57ed27e0a5eec98ee5c0f1b371cd3f47732c4af",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/AsanoRuelle/UnrestrictedFalse.lean",
+      "sha256": "8ec3654141ce73d69f438331bd6e7b4ed9666fd4e60e645d9ed64fe6943d3a71",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/All.lean",
+      "sha256": "13b5d5c3baf1a046ae8aa07ccf545aff91539f1c88627887ff68db3479844d96",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AsanoCounterexampleRealignmentAudit.lean",
+      "sha256": "b0013a3cc8d54e721b3a8aa62f0935e35067d9fd8dc4fc839ade6ffe7130bbb0",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean",
+      "sha256": "f2fb48d25f120b7e8615a3acfaed8de1b77eb584e57fda1a3be47b98779d4e3b",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/BipolarContourSpinHolonomyAudit.lean",
+      "sha256": "6c8ee033717d8e2b5a2ce87888599c8d5b2bf4dde5066069d45ab83884bf98c2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/BoundaryFibonacciHomObstruction.lean",
+      "sha256": "0d4d52de611f289cae8b723ac1c4f5c27c653e86e9f182801f0e9fa3e7f3a1c8",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/BoundaryFibonacciIntertwinerObstruction.lean",
+      "sha256": "de118f393f810a1e4f6a655bbcbff81a8517bce916b9563aad3f8dfc9f357cc4",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralZornAlternativityAudit.lean",
+      "sha256": "ed00205fb327833d39144f1e6fec8d2218eb213a0aae3f466414b2616ed96425",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ConformalProjectorAgreement.lean",
+      "sha256": "3b02fd9f5d2dad20a18d73fe40428e3386d20bfd02a4d06041329703d662f024",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CounterexampleAlternatives.lean",
+      "sha256": "aa95552622f42bab04e3ad156829382f22a755bfb3544c0f0072570b47c40414",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CounterexamplePositiveBatchAudit.lean",
+      "sha256": "e28eb3113fc97fe3deb876c9e1b896748e093b96e3aeebb3105cf9974012d07b",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CuntzBoundaryCouplingObstruction.lean",
+      "sha256": "481ed9e427d43efb5258d47797bde0cf43b2d6d335503b3f8bf2b6fe4a08a5fd",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CuntzFiniteStageObstruction.lean",
+      "sha256": "1722fb6be8c3eb2d736173cfabff165a70fb4985d29f85997751b282d98d4178",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CyclicTraceIsometryObstruction.lean",
+      "sha256": "55123b82e1fb6e3cfe4e75971f227b5b920e39779d6465b251dc1b1ccc6b8839",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CyclotomicTrialityOrderObstruction.lean",
+      "sha256": "36c23884e88ad8c311f537659ae47a297f14871b9163246b2eee877944fcaa18",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinCartanAlternatives.lean",
+      "sha256": "195d044d40e6ddfad3c68ff96ee61715d8d2490ff75153e12874442600d3795c",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinShellConsequenceExamples.lean",
+      "sha256": "208d82efca7daa1da3dfc745ade6c58bdffbf8888ce4e942ba13abecd78b48d9",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinShellSelfAdjointCriterionAudit.lean",
+      "sha256": "01cfbb5d588cb00daf94540685df71ea1ee05b004744c393d8b93a191c3f8c60",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/FibonacciHadjiivanovSpectralObstruction.lean",
+      "sha256": "d0696451fcc80b5dfc6f9b00e51c8117ee8f45a512110552a263a9505de20456",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/FiniteDimensionalCCRObstruction.lean",
+      "sha256": "87876a9c307d90a5bd9308626887ebf240b204d85da45ee26ecccd4633168a76",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/FiniteMatrixCuntzObstruction.lean",
+      "sha256": "d5e5851649931c193b50ec6b0eddaf489cf5a0ae01e5633f9bd768ad4674876f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/FiniteStageCuntzObstruction.lean",
+      "sha256": "d146626861de29d86b5e6570c7202a09f4afdfdb686e13dfd876a598c2418eec",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/G2ExportedFlagObstruction.lean",
+      "sha256": "b84a2de6d6379bf483ca92e0e9b4979c29e8fd78ae3ed454e0cb93315d70594b",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GramianInverseContracts.lean",
+      "sha256": "87e7eec3f94871f4acce0b6dadddf4c49cfba52f5939a9ef758e0f70946fd2bb",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GramianInverseContractsAudit.lean",
+      "sha256": "0f60a495d9c5be63ad471fa3c1dfad1e05221bab7d9ae09674637724ddeb275e",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.lean",
+      "sha256": "5b1cf7001141e56805777d1feac9b9e034f6dc3e14809f9bea40478891548fca",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/InversePartitionExamples.lean",
+      "sha256": "706b2e155661271c7214a85bdc8c6a5ae5f83c958b2a19190273987c4660c317",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/KernelCommutatorObstruction.lean",
+      "sha256": "df5d7d91def7c4082b463db3d7fa3b352554bba7ae1356323f01c14db816f7bb",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/KleinVectorLiftObstruction.lean",
+      "sha256": "10b96f0a582637689f5d021a1c0d882c4b8165e4de4fe79a7752931386a8837f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/KreinKramersAlternatives.lean",
+      "sha256": "811e588e2d9ca0d89d836d879cebe62a39240d3acbee74c5102101faff15f74f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/KreinSpinConnectionObstruction.lean",
+      "sha256": "010e9bab5eedfa1e09366236184a9bf2a933a980a44ceab0f425a758ab665e6b",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/KreinSpinPositiveAudit.lean",
+      "sha256": "78ec2f4b5d25c9a71864c9e4cb492e66ac767c92531e8f3572d506b7c6e34958",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean",
+      "sha256": "a0200687f61acc28162adb09698a2d4a44a57b9419cad913cb15c7c3d12d6c28",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "sha256": "77eaf250626a4a597381c5afe6d81e172455b641d588e1348aa3b2110d7905ca",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/MoorePenroseDrazinObstruction.lean",
+      "sha256": "51c9b6ae2fa61ffc3b6378e9ca6db07e068930be3bbbc809db19eca0bff3c66e",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/MoorePenroseDrazinObstructionAudit.lean",
+      "sha256": "2b56e0397c229ec4710908df622b0c81647f815132a549ddb2b7adcc9c22ecfc",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/NativeMathlibSuperamplituhedronBridge.lean",
+      "sha256": "90f8f42b2f75bb35582d4ae36156d007d499ff7cee9fef865d0607884b18cb63",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ObliqueShellCounterexample.lean",
+      "sha256": "46942722172ca41d2e290c12bd0f320db34e476439669623d32a29d624cffd90",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ObliqueShellCounterexampleAudit.lean",
+      "sha256": "70e6384a512cb2b0bb02d3df28670cb2951de88af43aea8583101a0d480e7c55",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OpenAIFrontierUnificationBridge.lean",
+      "sha256": "fe4ed170e79b6e025debaa5bbc53c42446d526ffda488c7bd5c8b792bc945ee5",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorZornOrderedChannels.lean",
+      "sha256": "367c074dffa2a42b4472ca582b25eaf41285c70d97415088e68582ad07af6927",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PeirceParityBoundaryExamples.lean",
+      "sha256": "482b7ebfe0278990f6703599a01d90431648f53fbf670e31bee6b9bb03903532",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PeirceReflectionClaimBoundaries.lean",
+      "sha256": "13bf011efa8e633427578121e772e6a47759077d2ea190398b8b6581dc931682",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PeirceSquareZeroExamples.lean",
+      "sha256": "e6ae853bb5369646aa527a58234f2d8167a315a8e5b909126d980a18a1849eb8",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PeirceWeylExamples.lean",
+      "sha256": "e0efd82ddb23726181a1007a421a75ee993af8e19133e960c3de4a1a697f24b2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFlowObstructionCompHaus.lean",
+      "sha256": "fcb4514573d9378c6619119c708c12d8b0223ea5d30f3e89c2cd42db02fd151a",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauOnsagerBKMParaKahlerObstruction.lean",
+      "sha256": "3aa1b639a4675a6a9be07fe9ccba12941d63e1cc3eb83fb8c8acd38fb12eff8e",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SpinAffineExteriorAudit.lean",
+      "sha256": "37562e3254538c07ca2cc0c360aa59cec2e64bc5ffcf30544408e3530a4014c1",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SpinorialCore/AxiomAudit.lean",
+      "sha256": "33714a643dffc4a562235bf2ec795b86ad6079dc05591e98a332b987e9640f3d",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SpinorialCore/KreinAdjoint.lean",
+      "sha256": "a6fa1871a8e165c9e75b8ea868538bb9fc0cb161e44189010d3ba9b8ba835f65",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitAtomCarrierObstructions.lean",
+      "sha256": "2c4d348d6f89335e5a7986d4cf4871c7b90713e300c10f060a84b09c4260d57c",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean",
+      "sha256": "2a47cbb5cb30707487511da0717fa35a917036394a465631f0d7d274f61e898b",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SugawaraFiveGradingObstruction.lean",
+      "sha256": "d11b3c1063da47437dacecc8f460278ce73aaccd3e1b0adcd83bd5b53f410e93",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SuperGrassmannianProjectorEnvelope.lean",
+      "sha256": "aec131c572a78ad13f6215916a14b3be991e7d947f1311b53c31b3bca48af9c0",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ThreeColorZornScalingObstruction.lean",
+      "sha256": "2b555006ffdc92f8e221054f385fdb7fb2bdacc10f8f6a311559d321d32fba10",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declaration": "zornScale_multiplicative_iff",
+        "statement_summary": "For nonzero complex q, reciprocal Zorn scaling preserves every product iff q^3=1.",
+        "audit_module": "InfoGeometry.Canonical.ScalingRootPhaseAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8933,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named replacement declarations only; not a repository-wide completeness certificate."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WeakValuePoleExamples.lean",
+      "sha256": "b1c08e61461227f2f95866caec7057750f67b41d525c8ea74db89c88826960d3",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ZornAssociativeCarrierObstruction.lean",
+      "sha256": "f4cc3b05a53ec1375caa8192d0b16b031db6def9a4431aac7cad859832fb7714",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ZornMovingCornerBoundary.lean",
+      "sha256": "daa97e4c43ef3e60b6f0049ec5dd8485a7f1a74d8fc52c866cec1c9f6552b0ea",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ZornRootUnipotentObstruction.lean",
+      "sha256": "929d3eb8a088bb6c8c344d879dc47f3f44260ad382d581edd073bf2f94613d27",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declaration": "six_root_actions_are_derivations_and_updates_multiplicative",
+        "statement_summary": "The six explicit root maps obey Leibniz and have pairwise-zero image products for each fixed root; their id-plus-root updates preserve the native operator-valued Zorn product.",
+        "audit_module": "InfoGeometry.Canonical.ScalingRootPhaseAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8933,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named replacement declarations only; not a repository-wide completeness certificate."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ZornThreeGeneratorObstruction.lean",
+      "sha256": "aae120e065d4968ccd89c4954ea7b85d18c5fec416a8e26b60ed8c1653781150",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl55CreationWordGradeObstruction.lean",
+      "sha256": "b07c190583bb3f030cbb53ada25fa34dd371f975f0e554d12eb8e50c241a1da2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/CliffordWeyl/DiracSolderAdjoint.lean",
+      "sha256": "2c838a240123dc6ca177956efce5243ebfd04e52f8c5eaf993ac36dc9cbe022c",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean",
+      "sha256": "c0a79dab5d4245829aa06e1d01ef25c37eb7a8a24a5574f6ab5c42856c520c75",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessianAudit.lean",
+      "sha256": "6e9606e2119dba39152fc1c977c3013556c3c0580e5834afe6edfd63ccea95e6",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Core/All.lean",
+      "sha256": "7f6fcf1befcfab57bb3a4ffe11f0855fb4248302e178171e4c2c8044406f16ac",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Core/IdempotentGraphReflectionOrder.lean",
+      "sha256": "73b3aaa4f2d48bbc511236ce687e8f9ee9b3da82f0af05ee8fd1d85e38716248",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Core/PeirceTangentCounterexample.lean",
+      "sha256": "70bf838e2d5c19e81c3246bc0a829d4bbdd894ef3d8c853e54d10d103b4b0d7f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/CoverageClosure.lean",
+      "sha256": "bba14679d887bce9160d103a4d5ebe83f76d8faa23f8d03b3626283516bba76f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/EmergentGeometry/HarmonicQuadraticRectangleAudit.lean",
+      "sha256": "4f5270985582b18025a40300b28c7640c8eba9963d3a311c71029a68e60f870c",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/EmergentGeometry/HarmonicRectangle.lean",
+      "sha256": "dcf670925b27d188bf449b7960a1fd5925696dbe507bf2661cda935308840923",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/EmergentGeometry/HarmonicRectangleTests.lean",
+      "sha256": "4d4ceb5629e8fd6391e2e251423566b9317e22db756b5ddd75bc7d41e3725f19",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Epistemology/DistributedProofStateNetwork.lean",
+      "sha256": "eb5897b562b97f2229c31e5f0a5ed517269815cb7a9eceac7865a00e5fce8f6f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/CyclotomicKreinG2Dependency.lean",
+      "sha256": "db342433fe63dd33e3663a3b87f753e49f356bb43800719802a1dead1c6fc558",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalContactRealignmentAudit.lean",
+      "sha256": "2d162239a594501c9519f7bca1d020c1253bf29df2bbd982d4ee0b4a925b5b23",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalFiveGradedLegacyJacobiCounterexample.lean",
+      "sha256": "51f33452a25f7a8434616009cae97759a9ce474c487adc63f17c300a6065dcb2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalGlobalJacobiFrontier.lean",
+      "sha256": "9bcd49f17997a7539f2531687ddab8590d93d3f2a8deebb7493d05f9be97ceec",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalLegacyFiveGradedJacobiCounterexample.lean",
+      "sha256": "9b2643d4fc8d09772e8b604cad9728eb982399e373f0b598108924b5c73f1ef0",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalSymplecticContactAll.lean",
+      "sha256": "6788d9cad28036feff122c1b4bcb3639cdf4532fb6807937f644729dabd5e883",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalSymplecticContactRepresentation.lean",
+      "sha256": "59c76572d0ac2f668609c0c9485f740d36f51538a07e41209c4d9fc6fb67ae0a",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalSymplecticMixedTripleCounterexample.lean",
+      "sha256": "053cbd735653a86fa36157ff6344d4a6b00d3d23b62fede4ee7491657ba75935",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Exceptional/FreudenthalSymplecticTKKJacobiObstruction.lean",
+      "sha256": "e5948863b9f724d7d35ed568c8a1d45aa32e6d6bbe8c80922bcef603b1ecee71",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/External/Auto/NonIsoConf3LogWedgeObstruction.lean",
+      "sha256": "d46f61f588ce123884fc917462c657f970baf7afb61fe8fc7da1942fc6c45aa5",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Fibonacci/FibAnyonSpectralObstruction.lean",
+      "sha256": "9dd11cd6dbb10e32cc4addd5eb50350215fce8008df2c115d61cf302aac2d2b6",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declaration": "intertwiner_eq_zero_of_square_neg_one",
+        "statement_summary": "For the native fifth-root R matrix, every rectangular T with TS=RT vanishes whenever the arbitrary finite square source S satisfies S*S=-1.",
+        "audit_module": "InfoGeometry.Fibonacci.FibAnyonSpectralAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3128,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "First-generator obstruction only. The local b3RepresentationHom definition uses R for both target generators; it is not the separate canonical tenth-root (R,B) representation."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/QuadraticArnoldNumerator.lean",
+      "sha256": "72869c1097178db83437ee2d4f083677ebd1c4a96c66355d9ff5c90971de1ec5",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/QuadraticArnoldNumeratorAudit.lean",
+      "sha256": "953b1b013cd14a0b72cc22f770e7461c5b04c52e45331270cc54f7b096c3b5c8",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/QuadraticArnoldVanishingAudit.lean",
+      "sha256": "000140b35d937a83e491bde3a67f43537da676abbe7c30d68dd2f7772c156ab2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/HodgeCohomology/KernelSquareCriterionAudit.lean",
+      "sha256": "10c9f9a10be0ff32c5eb80e625fce93517775b7348464d973616de92b3b2c4d1",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/HodgeCohomology/KreinHodgeDiracBoundedTests.lean",
+      "sha256": "06072a33ff54f6364a7c4095e62d04b103c6ecdbc029aab59b5219964626c025",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/HodgeCohomology/KreinHodgeDiracTests.lean",
+      "sha256": "e0e0a5aabc094ec2e0735e106a2da0cbbaaca67f42e7037bbaa09484810513c3",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/HodgeCohomology/KreinHodgeObstruction.lean",
+      "sha256": "5dd53da5ce70dadccd932eab3358765f3b6926f9774cbbd27d910e7b4b8fa93b",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.HodgeCohomology.KreinHodgeKernelCriterion.hodge_kernel_eq_iff",
+          "InfoGeometry.HodgeCohomology.KreinHodgeKernelCriterion.square_zero_eq_zero_of_commutes_symmetry",
+          "InfoGeometry.HodgeCohomology.kernel_square_eq_iff",
+          "InfoGeometry.HodgeCohomology.square_zero_kernel_stable_iff",
+          "InfoGeometry.HodgeCohomology.KreinHodgeDiracBounded.krein_hodge_kernel_eq_of_commutes_symmetry",
+          "InfoGeometry.HodgeCohomology.KreinHodgeObstruction.nullDirac_krein_adjoint",
+          "InfoGeometry.HodgeCohomology.KreinHodgeObstruction.nullDirac_kernel_counterexample",
+          "InfoGeometry.HodgeCohomology.KreinHodgeObstruction.nullComplex_homology_zero",
+          "InfoGeometry.HodgeCohomology.KreinHodgeObstruction.nonzero_exact_closed_coclosed_harmonic",
+          "InfoGeometry.HodgeCohomology.KreinNullContraction.null_contracting_identity",
+          "InfoGeometry.HodgeCohomology.KreinNullContraction.null_closed_unique_primitive"
+        ],
+        "statement_summary": "For bounded square-zero d with the native Krein adjoint, ker(d d♯+d♯ d)=ker(d+d♯) iff range(d+d♯) and ker(d+d♯) are disjoint. A square-zero Krein-self-adjoint operator commuting with the fundamental symmetry vanishes. The original nonzero null example remains exact, has zero categorical homology, and admits the existing explicit bounded contraction.",
+        "related_replacement_path": "lean/InfoGeometry/HodgeCohomology/KreinHodgeKernelCriterion.lean",
+        "related_replacement_sha256": "112aba4177eceb66843c8a0e15361b06a08da76c36e947dc5b3a6e37da1b1df3",
+        "audit_module": "InfoGeometry.HodgeCohomology.KreinHodgeReplacementAudit",
+        "build_exit_code": 0,
+        "build_jobs": 3293,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Native bounded operators on a complete real inner product space with a KreinSpace structure; no change to the indefinite adjoint. The contraction statement is restricted to the original DoubledSpace real null example. No unrestricted harmonic-homology identification."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Krein/ZornDoubledGramObstruction.lean",
+      "sha256": "19e0d03f7922c43c327c5a755905e4b8b46be49f3d3fa5deb28e2d9962e89575",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/AttentionFrameCorrections.lean",
+      "sha256": "8209571ca455007931a956797e998dd58e5a658c7874e4ae791806dc08007bd7",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Lie/SplitOctonionCartanDihedralMultiplicationAudit.lean",
+      "sha256": "cc5413b21bd757c7a8e9afd846af7cd9ce5b50ada5c19193c8d67cac2467c624",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Lie/SplitOctonionCircularZ3Grading.lean",
+      "sha256": "e82afdbff15ec3e5f188b3246821e108245394545ee7090f6ead701e310df6ac",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Lie/SplitOctonionNonmultiplicativity.lean",
+      "sha256": "6d7b2ccfb2d893fc0a754f554084e995b0459b204f5978ccb9b85db7204951a8",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Lie/SplitOctonionOperatorRealignmentAudit.lean",
+      "sha256": "0881471c083c85f29c5d5bf107704759fb86eb14f78ad9a6776108305a4bef34",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/InductionHandbook.lean",
+      "sha256": "1d8da7a18fd3654bd36624b1d82802e21b63c6fb255eb1d2c78ee03e5b2d02cf",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Modular/KreinPotentialTrace.lean",
+      "sha256": "77b4dc590a1f96e8d5bd70a1b814e588dd22fcf7fa2e1765f715fc81e5895ff2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryMatrices.lean",
+      "sha256": "70da80b8a12c4ac70634be00c9c356863414e9dbf5d74db4df0d9b92b157345d",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanOctetMatrices.lean",
+      "sha256": "ae4bae7ba298c8f166923ec45f81c6bea8ddeaeb09e4200d1b0a27236f065c18",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/OperatorGeometryExamples.lean",
+      "sha256": "0132b7f2a517b096cc32f0e7b2f2cd5500b1b03b7a49c7ec1dcda8e767b89d2a",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Homogenized.lean",
+      "sha256": "5744ff2b0968bb47edcfafb62ffe52c6da2858a0d692603e30c9e10ec03ae7ed",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators/Examples.lean",
+      "sha256": "8d0aff10b405f90248fc61368a6bd1c354753ea1c576fe8a58281eed47409424",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/CobaltAsymmetryDependency.lean",
+      "sha256": "e57ada635b928a77c3121bad7d47fb18abeef1fb5d5a1b2d48c6c3d69e26b839",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/MDPASJMSouriauGlobalObstruction.lean",
+      "sha256": "db542c8501037e38c33ec8b96ab90f8f9dba516469e51b169b9eceb9fc56af0e",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/NuclearAlgebraicResolventObstruction.lean",
+      "sha256": "b79702cb9686e786e32be918c9da5611605471f456e1ee68ac75f18e95a06ea5",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "replacement_path": "lean/InfoGeometry/Physics/NuclearComplementaryResolvent.lean",
+        "replacement_sha256": "3ef9b979793eff7a73b4a32f55992f95630cd4a72c7b5eea5e2552d832693798",
+        "declarations": [
+          "denominator_mul_liftInverse",
+          "liftInverse_mul_denominator",
+          "eigen_equation_iff_of_equiv",
+          "reconstruct_eigenvector_of_equiv"
+        ],
+        "statement_summary": "A linear equivalence of the shifted complementary endomorphism on ker P gives both supported inverse equations and exact eigenvector reconstruction. This is conditional and does not assert inverse existence on the unrestricted sequence carrier.",
+        "audit_module": "InfoGeometry.Physics.NuclearComplementaryResolventAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8968,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named replacement declarations and counterexamples only; not a repository-wide completeness certificate."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/ParaKahlerFisherCompatibilityObstruction.lean",
+      "sha256": "6b21a4954859cc3cbf923857c0fb3e0c8441667277215adcb6bf7a1c8a6b40f7",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/SpinAffineCasimirRigidity.lean",
+      "sha256": "67c5a0d379f4d4cc5cfb5a1a743022f0c64e530ec6d54a6ae4596a4ab6c2c84c",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Probability/CausalDetailedBalanceObstruction.lean",
+      "sha256": "5ae01ebfbc9a7028efe882b4c4ddeafb05ac00b317ef2bd37c62306ac020f72f",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Probability/CausalDetailedBalanceObstructionAudit.lean",
+      "sha256": "a20ab56ac2c6cd960a2769262a5d1d6d242346d28a5f919e68150011b6dd8805",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Probability/FiniteMarkovWeightedAdjoint.lean",
+      "sha256": "20859b58e3ff7c8d2bb95315f6d4b37811995f737f970c37f014a641f4584701",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Probability/GromovPermutationNormalization.lean",
+      "sha256": "5542d16529c6587351cc7d8d3c86f68c941421a68436628667a587e35e043bd2",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/Cl55ProjectiveNullJonesDeckMonodromyObstruction.lean",
+      "sha256": "6f95a156a91c8484ff88659928821fd8efb4497b1cde3e782149d7772bc73641",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/ProjectiveNullBoundaryJonesPermutationObstruction.lean",
+      "sha256": "d033d89c6554944d3737af8a6650b169042f3816f5b14da10b9b4cc589798003",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Quantum/DikinApolloniusTrap.lean",
+      "sha256": "313261cf4208b55af9ed027524c9a8f0512792829a745e62fcc1e2046fc05def",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Quantum/DikinBarrierDerivativeBridgeAudit.lean",
+      "sha256": "c491b51182931210a3fe60ad172fb15c861b1d2186ccce3e58c7a17f29219469",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Quantum/RelativeEntropyFlow.lean",
+      "sha256": "37da3ff16cbee1fa5fab099ba9d1f595e4d2738d5038ed3077075a66b9eab7e5",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/QuantumContext/GroupInverseIntertwinerAlgebra.lean",
+      "sha256": "b225157ea5453a992a1494059a170eb600112302352db86408385100f3a284a1",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerFunctoriality.lean",
+      "sha256": "487c9c50e92166b9f768fac52dd851783443851e78dae9c152926d28b07526ff",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/QuantumContext/MarkovMajoranaLoxodromicObstruction.lean",
+      "sha256": "54809b6de87e704ffcdaa2448158c00e6a3a7d057f77015485b2209bddfc09c0",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/QuantumContext/MarkovMajoranaLoxodromicObstructionAudit.lean",
+      "sha256": "a32220edb77debd1a8d4ac6b68af5d69a3a746270c92769b298710df6df44301",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Routing/AttentionInteriorFiber.lean",
+      "sha256": "7cfc86b5bf962cbd735befa234b983091dc9b6d00787a0f31350a899dc11a569",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Routing/FunctionalRouteObstructions.lean",
+      "sha256": "67af99aa32aa16ff54d393a285090e1e18034fb1a64bd31308ac4ead092d0dec",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "replacement_path": "lean/InfoGeometry/Routing/FunctionalRouteCore.lean",
+        "replacement_sha256": "d31da0eb33bc9ce5cba35ff1d2857244e48e0e6b78ca410e49641cfe9bcdc51f",
+        "declarations": [
+          "drazin_of_synchronized_retraction",
+          "synchronized_projection",
+          "inverse_factorization",
+          "core_factorization",
+          "mp_of_split_factorization"
+        ],
+        "statement_summary": "A synchronized recurrent retraction certificate gives the Drazin inverse as lift times inverse cycle times restriction. Split rectangular factors give an MP inverse when their supports are self-adjoint. No depth-selector or commuting-support claim is made.",
+        "audit_module": "InfoGeometry.Routing.FunctionalRouteObstructionsAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8968,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named replacement declarations and counterexamples only; not a repository-wide completeness certificate."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Singular/CharacteristicTwoOverlapCounterexample.lean",
+      "sha256": "e274a39ba8153ba2e7dfd119dfcbbe07de7dbaa077e8691d2d8fbddec6d28af3",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_support_associator_zero",
+          "InfoGeometry.Core.JordanAssociator.idempotent_double_commutator_zero_iff",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.penrose_pair",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.symmetric_support_overlap_zero",
+          "InfoGeometry.Core.IdempotentSymmetricOverlap.symmetric_overlap_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.support_associators_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.support_overlap_eq_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.symmetric_support_overlap_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.symmetric_support_overlap_zero_iff_square_zero",
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_cube_zero",
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_square_ne_zero",
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_supports_commute",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.pair_noncommuting",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.shift_square_nonzero",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.support_product_nonzero",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.support_overlap_anomaly_components"
+        ],
+        "statement_summary": "Support Jordan associators vanish for every middle input iff supports commute. Ordered overlap zero detects square-zero in every characteristic. Symmetric overlap zero detects commuting supports and additive two-torsion of the square; with torsion-free addition it is equivalent to square-zero. Native length-three real and characteristic-two shift witnesses remain intact.",
+        "related_replacement_path": "lean/InfoGeometry/Singular/MoorePenroseOverlapTorsionFree.lean",
+        "related_replacement_sha256": "87ceb9fbdbbc411b906a1b31682d65270f464b572bfb7748ca4604447812a33a",
+        "audit_module": "InfoGeometry.Singular.SupportOverlapReplacementAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8943,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Moore-Penrose pairs in arbitrary associative star rings, with IsAddTorsionFree only for the symmetric-overlap square-zero equivalence. No ambient or pair commutativity assumption; native noncommuting matrix counterexamples retained."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Singular/HigherNilpotentAssociatorCounterexample.lean",
+      "sha256": "49a0560d0068a3ec6d3680feb7a98d061c392925a06c3ea7fb9748abe42619eb",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declarations": [
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_support_associator_zero",
+          "InfoGeometry.Core.JordanAssociator.idempotent_double_commutator_zero_iff",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.penrose_pair",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.symmetric_support_overlap_zero",
+          "InfoGeometry.Core.IdempotentSymmetricOverlap.symmetric_overlap_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.support_associators_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.support_overlap_eq_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.symmetric_support_overlap_zero_iff",
+          "InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.symmetric_support_overlap_zero_iff_square_zero",
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_cube_zero",
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_square_ne_zero",
+          "InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_supports_commute",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.pair_noncommuting",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.shift_square_nonzero",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.support_product_nonzero",
+          "InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample.support_overlap_anomaly_components"
+        ],
+        "statement_summary": "Support Jordan associators vanish for every middle input iff supports commute. Ordered overlap zero detects square-zero in every characteristic. Symmetric overlap zero detects commuting supports and additive two-torsion of the square; with torsion-free addition it is equivalent to square-zero. Native length-three real and characteristic-two shift witnesses remain intact.",
+        "related_replacement_path": "lean/InfoGeometry/Singular/MoorePenroseOverlapTorsionFree.lean",
+        "related_replacement_sha256": "87ceb9fbdbbc411b906a1b31682d65270f464b572bfb7748ca4604447812a33a",
+        "audit_module": "InfoGeometry.Singular.SupportOverlapReplacementAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8943,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Moore-Penrose pairs in arbitrary associative star rings, with IsAddTorsionFree only for the symmetric-overlap square-zero equivalence. No ambient or pair commutativity assumption; native noncommuting matrix counterexamples retained."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/SuperGrassmannian/SignedPullbackMatrixBoundary.lean",
+      "sha256": "bf412b52abe0ca8e1e5cdedda5b17075caed65a63267e4fe6d61044fb442d709",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Synthesis/G2Sl2SeventeenParameterProductActionBridge.lean",
+      "sha256": "851c128bcfc3789111c17017ac7df958fd44b24f7f501389cca5db069e84deb5",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Synthesis/SedenionSocleDirectSumSeparationBridge.lean",
+      "sha256": "7ec20739b586ccfa6d0d877f64123e42337a81c3d2d8ccc2a974f54b0d03cca4",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Thermo/BipolarTwoDimensionalSkewObstruction.lean",
+      "sha256": "bc5094e4e129bd010479356313bd658f5b8126234b07e5d18986902df191d3f1",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Thermodynamics/FiniteGibbsRelative.lean",
+      "sha256": "e415ebe3c5b8470d4c5a8c3b532ab2add9338fe31fba22cce41e54da3d77f190",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Topology/KleinXiAutomorphyObstructionBridge.lean",
+      "sha256": "840cbe3d84397f105b18d427c5633ade4eeaed40671bd7d793167d0870a444e1",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Topology/NativeZornChiralExchangeProductObstruction.lean",
+      "sha256": "e2cd5dce8e191126d0dc0e5805f5d744f4da1dcaee3a3e44a1c50508c2707437",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "declaration": "nativeChiralExchangeMulOpposite; nativeChiralExchange_mul_iff_commute",
+        "statement_summary": "Native Zorn exchange is a multiplicative equivalence to the opposite carrier; same-order preservation at X,Y iff Commute X Y.",
+        "audit_module": "InfoGeometry.Topology.NativeZornChiralExchangeProductAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8930,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named declarations and original nonmultiplicativity witness only."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/PenroseExterior3PeirceQuadraticAudit.lean",
+      "sha256": "67a5bce1b26ed8a4bf981e0e53b05b5ee5b6a43099647d60345661a90302e709",
+      "status": "requires_source_audit"
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/PenroseLiteralCrossObstruction.lean",
+      "sha256": "03fd267d2a41d677355ae1d2e8a1bd749c77f79e44198852a349b141be19f650",
+      "status": "replacement_source_reviewed_and_kernel_verified",
+      "replacement_evidence": {
+        "replacement_owner": "lean/InfoGeometry/Twistor/PenroseWittCompositionCompletion.lean",
+        "replacement_sha256": "ab7fe7a92ff7126b8bbe31987d0a3b8fd00cbe446d8a87a525af9dbd7462c477",
+        "declarations": [
+          "selectedMul_norm",
+          "selectedMul_unit_left",
+          "selectedMul_unit_right",
+          "selectedMul_left_alternative",
+          "selectedMul_right_alternative",
+          "selectedMul_ne_literal_candidate"
+        ],
+        "statement_summary": "An explicit real-linear Witt equivalence transports the native Zorn multiplication to a distinct unital alternative composition product on the original real twistor carrier; the original literal CCR candidate fails composition for every normalization.",
+        "audit_module": "InfoGeometry.Twistor.PenroseCCRAudit",
+        "build_exit_code": 0,
+        "build_jobs": 8988,
+        "axiom_declarations_inspected": 111,
+        "axioms_within_standard_foundations": true,
+        "independent_semantic_review": false,
+        "scope": "Named product laws and explicit distinction from the literal candidate; no uniqueness or exceptional-group classification."
+      }
+    },
+    {
+      "path": "lean/InfoGeometry/Twistor/TwoTwistorIncidenceIsotropy.lean",
+      "sha256": "6efcc35dc529a640cdc475d920a319a178eef60db2ba7045a556173ed3edb5ec",
+      "status": "requires_source_audit"
+    }
+  ],
+  "reviewed_links": [
+    {
+      "counterexample_owner": "lean/InfoGeometry/Core/PeirceTangentCounterexample.lean",
+      "replacement_owner": "lean/InfoGeometry/Core/IdempotentTangent.lean",
+      "owner_sha256": "ade44f681a822491eb2a10a13cddc8264030e44387484255dc2a4cbce4559c5e",
+      "declarations": [
+        "tangent_iff_adjoint_square_eq_self",
+        "tangent_iff_diagonal_corners_zero"
+      ],
+      "scope": "Characteristic-free tangent characterization replaces unconditional reflection criterion.",
+      "status": "source_inspected_existing_replacement",
+      "fresh_kernel_verification": false
+    },
+    {
+      "counterexample_owner": "lean/InfoGeometry/Canonical/BoundaryFibonacciHomObstruction.lean",
+      "replacement_owner": "lean/InfoGeometry/Canonical/BoundaryFibonacciIntertwinerObstruction.lean",
+      "owner_sha256": "de118f393f810a1e4f6a655bbcbff81a8517bce916b9563aad3f8dfc9f357cc4",
+      "declarations": [
+        "direct_intertwiner_eq_zero",
+        "simultaneousGeneratorDefect_ker_eq_bot"
+      ],
+      "scope": "Concrete generator intertwiners form the zero submodule; no categorical equivalence is inferred.",
+      "status": "source_inspected_existing_replacement",
+      "fresh_kernel_verification": false
+    },
+    {
+      "counterexample_owner": "lean/InfoGeometry/Algebra/CuntzClockObstructions.lean",
+      "replacement_owner": "lean/InfoGeometry/Algebra/CuntzClifford22.lean",
+      "owner_sha256": "87ebd92262d3edf6110c3891ffe548a786d0269fafa1902f33949cb794d111c4",
+      "declarations": [
+        "gammaVector_square",
+        "representation"
+      ],
+      "scope": "Matrix-unit block generators admit a native Clifford lift; the raw single-isometry block does not square to one.",
+      "status": "source_inspected_existing_replacement",
+      "fresh_kernel_verification": false
+    },
+    {
+      "counterexample_owner": "lean/InfoGeometry/Algebra/CuntzTensorQuotientPositivityObstruction.lean",
+      "replacement_owner": "lean/InfoGeometry/Algebra/CuntzTensorQuotientPositivityObstruction.lean",
+      "owner_sha256": "97e7bada29f19063556db2d30c36df547be1e7055ab3d23714f78375e5119d99",
+      "declarations": [
+        "corrected_binary_carrier_has_normalized_positive_functional"
+      ],
+      "scope": "Corrected conjugate-semilinear star admits a positive functional on the full binary quotient.",
+      "status": "source_inspected_existing_replacement",
+      "fresh_kernel_verification": false
+    },
+    {
+      "counterexample_owner": "lean/InfoGeometry/Analysis/AsanoRuelleObstruction.lean",
+      "replacement_owner": "lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean",
+      "owner_sha256": "4296fe151c8d7f21095125a9c57ed27e0a5eec98ee5c0f1b371cd3f47732c4af",
+      "declarations": [
+        "correctedAsanoRuelleClaim_proof"
+      ],
+      "scope": "Replacement explicitly assumes closed bounded forbidden sets excluding zero.",
+      "status": "source_inspected_existing_replacement",
+      "fresh_kernel_verification": false
+    },
+    {
+      "counterexample_owner": "lean/InfoGeometry/Krein/ZornDoubledGramObstruction.lean",
+      "replacement_owner": "lean/InfoGeometry/Krein/ZornDoubledGramObstruction.lean",
+      "owner_sha256": "19e0d03f7922c43c327c5a755905e4b8b46be49f3d3fa5deb28e2d9962e89575",
+      "declarations": [
+        "zornToDoubleKrein_kreinForm",
+        "zornToDoubleKrein_not_norm_isometry"
+      ],
+      "scope": "Actual transported Gram formula replaces the false norm-isometry claim.",
+      "status": "source_inspected_existing_replacement",
+      "fresh_kernel_verification": false
+    }
+  ]
+}

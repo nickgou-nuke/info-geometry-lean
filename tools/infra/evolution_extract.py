@@ -19,7 +19,7 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path
-from typing import Iterator
+from typing import Callable, Iterator
 
 FIELD_SEP = b"\x1f"
 RECORD_SEP = b"\x1e"
@@ -45,7 +45,7 @@ def _ref_fingerprint(repo: Path) -> str:
     return hashlib.sha256(refs + b"\0HEAD\0" + head).hexdigest()
 
 
-def _git_records(repo: Path, stderr_path: Path) -> Iterator[bytes]:
+def _git_records(repo: Path, stderr_path: Path, *, metadata_only: bool = False) -> Iterator[bytes]:
     """Yield commit records using fixed-size reads from one git-log process.
 
     Git's pretty-format framing is checked structurally before a record is
@@ -58,7 +58,8 @@ def _git_records(repo: Path, stderr_path: Path) -> Iterator[bytes]:
     )
     with stderr_path.open("ab") as errlog:
         proc = subprocess.Popen(
-            ["git", "log", "--all", "--date=iso-strict", "--shortstat", pretty],
+            ["git", "log", "--all", "--date=iso-strict",
+             *([] if metadata_only else ["--shortstat"]), pretty],
             cwd=repo, stdout=subprocess.PIPE, stderr=errlog, bufsize=1024 * 64,
         )
         yield from _read_git_records(proc)
@@ -134,7 +135,7 @@ def _trailers(body: str) -> list[dict[str, str]]:
     return list(reversed(parsed))
 
 
-def _parse_record(raw: bytes) -> dict | None:
+def _parse_record(raw: bytes, *, metadata_only: bool = False) -> dict | None:
     header, sep, message_stats = raw.partition(BODY_SEP)
     if not sep:
         return None
@@ -148,7 +149,7 @@ def _parse_record(raw: bytes) -> dict | None:
     (sha, parents_raw, author, author_email, author_ts, authored_at, committer,
      committer_email, commit_ts, committed_at, subject) = decoded
     text = message_stats.decode("utf-8", errors="replace")
-    stats = list(SHORTSTAT.finditer(text))
+    stats = [] if metadata_only else list(SHORTSTAT.finditer(text))
     if stats:
         match = stats[-1]
         body = text[:match.start()].rstrip("\n")
@@ -165,13 +166,15 @@ def _parse_record(raw: bytes) -> dict | None:
         "committer_name": committer, "committer_email": committer_email,
         "committed_timestamp": int(commit_ts), "committed_at": committed_at,
         "subject": subject, "body": body, "trailers": _trailers(body),
-        "files_changed": int(files), "insertions": int(insertions or 0),
-        "deletions": int(deletions or 0),
+        "files_changed": None if metadata_only else int(files),
+        "insertions": None if metadata_only else int(insertions or 0),
+        "deletions": None if metadata_only else int(deletions or 0),
+        "diff_stats_status": "not_collected" if metadata_only else "git_shortstat",
     }
 
 
 def stream_to_jsonl(repo: Path, destination: Path, *, resume: bool = False,
-                    checkpoint_every: int = 128) -> int:
+                    checkpoint_every: int = 128, metadata_only: bool = False) -> int:
     """Checkpoint each bounded batch; ``--resume`` truncates uncommitted tail."""
     partial = destination.with_name(destination.name + ".partial")
     state_path = destination.with_name(destination.name + ".checkpoint.sqlite3")
@@ -191,6 +194,11 @@ def stream_to_jsonl(repo: Path, destination: Path, *, resume: bool = False,
     if stored and stored.get("refs_fingerprint") != fingerprint:
         state.close()
         raise RuntimeError("Git refs changed since checkpoint; start a new extraction")
+    mode_id = "metadata_only" if metadata_only else "git_shortstat"
+    if stored and stored.get("extraction_mode", "git_shortstat") != mode_id:
+        state.close()
+        raise RuntimeError("extraction mode differs from checkpoint; start a new extraction")
+    state.execute("INSERT OR REPLACE INTO metadata VALUES ('extraction_mode', ?)", (mode_id,))
     state.execute("INSERT OR REPLACE INTO metadata VALUES ('refs_fingerprint', ?)", (fingerprint,))
     state.commit()
     if resume and stored.get("complete") == "1" and destination.exists():
@@ -211,8 +219,8 @@ def stream_to_jsonl(repo: Path, destination: Path, *, resume: bool = False,
                     raise RuntimeError("partial JSONL is shorter than checkpoint")
                 out.truncate(offset)
                 out.seek(offset)
-            for raw in _git_records(repo, stderr_path):
-                record = _parse_record(raw)
+            for raw in _git_records(repo, stderr_path, metadata_only=metadata_only):
+                record = _parse_record(raw, metadata_only=metadata_only)
                 if record is None:
                     raise ValueError("Git record did not match the declared stream format")
                 sha = record["sha"]
@@ -432,11 +440,155 @@ def _write_file_stream(repo: Path, destination: Path, *, numstat: bool,
     return count
 
 
+def aggregate_current_path_lineage(
+    repo: Path, current_paths: list[str], *, revision: str = "HEAD",
+    rename_sample_limit: int = 20, recent_commit_limit: int = 5,
+    event_callback: Callable[[dict], None] | None = None,
+) -> dict[str, dict]:
+    """Summarize Git path-history fossils for current files without copying trees.
+
+    The reverse rename walk links historical paths to current path keys as a
+    candidate lineage. It uses names/status and commit metadata only; it does
+    not claim that a path rename preserves declaration or source identity.
+    """
+    repo = repo.resolve()
+    resolved = subprocess.run(
+        ["git", "rev-parse", "--verify", f"{revision}^{{commit}}"], cwd=repo,
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    path_to_current: dict[str, set[str]] = {path: {path} for path in current_paths}
+    summaries: dict[str, dict] = {
+        path: {
+            "method": "git-name-status-reverse-rename-v1",
+            "historyRevision": resolved,
+            "status": "path_continuity_candidate_not_content_identity",
+            "touchCount": 0,
+            "changeTypes": {},
+            "renamedFromPathCount": 0,
+            "renamedFromPathSample": [],
+            "recentCommitSamples": [],
+            "oldestObservedCommit": None,
+        }
+        for path in current_paths
+    }
+    rename_sources: dict[str, set[str]] = {path: set() for path in current_paths}
+    change_counts: dict[str, dict[str, int]] = {path: {} for path in current_paths}
+    recent: dict[str, list[dict]] = {path: [] for path in current_paths}
+    last_time: dict[str, int | None] = {path: None for path in current_paths}
+    newest_time: dict[str, int | None] = {path: None for path in current_paths}
+
+    args = [
+        "git", "log", "--topo-order", "--find-renames", "-z", "--name-status",
+        f"--format=COMMIT%x00%H%x00%P%x00%ct", resolved,
+    ]
+    proc = subprocess.Popen(args, cwd=repo, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    assert proc.stdout is not None
+    tokens = iter(_nul_tokens(proc.stdout))
+    current_sha: str | None = None
+    current_timestamp: int | None = None
+    touched_this_commit: set[str] = set()
+    try:
+        for token in tokens:
+            if token.startswith(b"\n"):
+                token = token[1:]
+            if token == b"COMMIT":
+                current_sha = next(tokens).decode("ascii")
+                next(tokens)  # parent SHAs are already represented by the commit graph.
+                current_timestamp = int(next(tokens).decode("ascii"))
+                touched_this_commit = set()
+                continue
+            if current_sha is None or not token:
+                continue
+            if not re.fullmatch(rb"[ACDMRTUXB][0-9]*", token):
+                raise ValueError(f"malformed name-status token: {token!r}")
+            status = token.decode("ascii")
+            if status.startswith(("R", "C")):
+                old_path = next(tokens).decode("utf-8", errors="surrogateescape")
+                new_path = next(tokens).decode("utf-8", errors="surrogateescape")
+                changed_paths = (old_path, new_path)
+            else:
+                old_path = None
+                new_path = next(tokens).decode("utf-8", errors="surrogateescape")
+                changed_paths = (new_path,)
+            affected: set[str] = set()
+            for path in changed_paths:
+                affected.update(path_to_current.get(path, set()))
+            for current_path in affected - touched_this_commit:
+                touched_this_commit.add(current_path)
+                base_status = status[0]
+                if event_callback is not None:
+                    event = {
+                        "schema": "info_geometry.git_path_fossil_event.v1",
+                        "historyRevision": resolved,
+                        "artifactPath": current_path,
+                        "commitSha": current_sha,
+                        "committerTimestamp": current_timestamp,
+                        "changeType": base_status,
+                        "changedPath": new_path,
+                    }
+                    if old_path is not None:
+                        event["oldPath"] = old_path
+                    event_callback(event)
+                summaries[current_path]["touchCount"] += 1
+                change_counts[current_path][base_status] = change_counts[current_path].get(base_status, 0) + 1
+                sample = {
+                    "sha": current_sha,
+                    "committerTimestamp": current_timestamp,
+                    "changeType": base_status,
+                    "path": new_path,
+                }
+                if old_path is not None:
+                    sample["oldPath"] = old_path
+                if len(recent[current_path]) < recent_commit_limit:
+                    recent[current_path].append(sample)
+                if current_timestamp is not None:
+                    if newest_time[current_path] is None or current_timestamp > newest_time[current_path]:
+                        newest_time[current_path] = current_timestamp
+                    if last_time[current_path] is None or current_timestamp < last_time[current_path]:
+                        last_time[current_path] = current_timestamp
+                    if last_time[current_path] == current_timestamp:
+                        summaries[current_path]["oldestObservedCommit"] = current_sha
+            if status.startswith("R") and old_path is not None:
+                # Walk history backward from the new path to its old path.
+                for current_path in path_to_current.get(new_path, set()):
+                    path_to_current.setdefault(old_path, set()).add(current_path)
+                    rename_sources[current_path].add(old_path)
+        proc.stdout.close()
+        code = proc.wait()
+        if code:
+            raise subprocess.CalledProcessError(code, args)
+    except BaseException:
+        proc.stdout.close()
+        proc.wait()
+        raise
+
+    resolved_after = subprocess.run(
+        ["git", "rev-parse", "--verify", f"{revision}^{{commit}}"], cwd=repo,
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    if resolved_after != resolved:
+        raise RuntimeError(f"Git revision moved during path-history scan: {revision}")
+
+    for path, summary in summaries.items():
+        summary["changeTypes"] = dict(sorted(change_counts[path].items()))
+        rename_paths = sorted(rename_sources[path])
+        summary["renamedFromPathCount"] = len(rename_paths)
+        summary["renamedFromPathSample"] = rename_paths[:rename_sample_limit]
+        summary["recentCommitSamples"] = recent[path]
+        if summary["touchCount"] == 0:
+            summary["status"] = "no_path_event_found_in_revision_scope"
+        if newest_time[path] is not None:
+            summary["newestObservedCommitTimestamp"] = newest_time[path]
+    return summaries
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path, nargs="?",
                         help="commit JSONL output (optional with --details-only)")
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument("--metadata-only", action="store_true",
+                        help="omit historical diffs; change counts remain unknown")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--details-only", action="store_true",
                         help="skip metadata extraction and run only requested file-level streams")
@@ -462,7 +614,7 @@ def main() -> int:
         destination = args.output.expanduser().resolve()
         destination.parent.mkdir(parents=True, exist_ok=True)
         count = stream_to_jsonl(repo, destination, resume=args.resume,
-                                checkpoint_every=args.checkpoint_every)
+                                checkpoint_every=args.checkpoint_every, metadata_only=args.metadata_only)
     if args.paths_output:
         path_count = _write_file_stream(repo, args.paths_output.expanduser().resolve(),
                                         numstat=False, resume=args.resume,

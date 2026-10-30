@@ -6,65 +6,77 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Tactic
 
 /-!
-# Darwin Commit Taxonomy
+# Darwin Commit History and Change Facets
 
-Formal types for the evolutionary commit graph and its link to the
-repository's declaration DNA (`decls`/`edges`).
-
-This module does not prove that evolution is optimal; it models the
-structure claimed by `tools/infra/darwin_commit_graph.py` and
-`tools/infra/darwin_commit_taxonomy.py`, keeping the Arango schema and
-the Lean schema aligned.
+Formal data types for exact Git parent edges and non-hierarchical weak change
+labels. A change label is a classification observation, not an ancestor,
+species, declaration identity, or proof of mathematical equivalence.
 -/
 
 namespace InfoGeometry.Graph
 
-/-- Rank of an evolutionary commit node. -/
-inductive TaxonRank where
-  | domain
-  | kingdom
-  | phylum
-  | classLevel
-  | order
-  | family
-  | genus
-  | species
+/-! Stable category identifiers shared with `evolution_taxonomy.py`. -/
+inductive ChangeCategory where
+  | revertBackout
+  | securityHardening
+  | bugFix
+  | testEvolution
+  | documentationDeveloperUx
+  | refactorRestructure
+  | performanceOptimization
+  | buildToolingCi
+  | dependencyVendorSync
+  | releaseVersioningMeta
+  | localizationPortability
+  | featureIntroduction
 deriving Repr, DecidableEq
 
-namespace TaxonRank
+namespace ChangeCategory
 
-/-- Taxonomic rank order for monotonicity reasoning. -/
-def rankIndex : TaxonRank → ℕ
-  | domain => 0
-  | kingdom => 1
-  | phylum => 2
-  | classLevel => 3
-  | order => 4
-  | family => 5
-  | genus => 6
-  | species => 7
+/-- Stable machine-readable identifier used by the weak-label producer. -/
+def id : ChangeCategory → String
+  | revertBackout => "revertBackout"
+  | securityHardening => "securityHardening"
+  | bugFix => "bugFix"
+  | testEvolution => "testEvolution"
+  | documentationDeveloperUx => "documentationDeveloperUx"
+  | refactorRestructure => "refactorRestructure"
+  | performanceOptimization => "performanceOptimization"
+  | buildToolingCi => "buildToolingCi"
+  | dependencyVendorSync => "dependencyVendorSync"
+  | releaseVersioningMeta => "releaseVersioningMeta"
+  | localizationPortability => "localizationPortability"
+  | featureIntroduction => "featureIntroduction"
 
-/-- Rank order is injective. -/
-theorem rankIndex_injective (a b : TaxonRank) : rankIndex a = rankIndex b → a = b := by
-  intro h
-  cases a <;> cases b <;>
-  simp_all [rankIndex]
+/-- Distinct change facets have distinct serialized category identifiers. -/
+theorem id_injective : Function.Injective id := by
+  intro a b h
+  cases a <;> cases b <;> simp_all [id]
 
-/-- Any two ranks are comparable by `rankIndex`. -/
-theorem rankIndex_total (a b : TaxonRank) :
-  rankIndex a ≤ rankIndex b ∨ rankIndex b ≤ rankIndex a := by
-  exact Nat.le_total (rankIndex a) (rankIndex b)
+end ChangeCategory
 
-end TaxonRank
+/-- Provenance class for one weak category match. -/
+inductive ChangeLabelEvidence where
+  | subjectBodyRule
+  | pathHint
+  | defaultNoRuleMatch
+  | other
+deriving Repr, DecidableEq
+
+/-- One non-hierarchical, evidence-bearing change facet. -/
+structure CommitChangeLabel where
+  category : ChangeCategory
+  ruleWeightPercent : Fin 101
+  evidenceKinds : List ChangeLabelEvidence
+deriving Repr, DecidableEq
 
 /-- A commit node in the evolutionary Arango graph. -/
 structure CommitNode where
   hash : String
   author : String
   date : String
-  taxonRank : TaxonRank
-  diffHash : String
-  leanVerified : Bool
+  pathChangeHash : String
+  changeLabels : List CommitChangeLabel
   modulePaths : List String
 
 /-- A typed edge in the evolutionary commit graph. -/
@@ -73,7 +85,7 @@ inductive CommitEdgeKind where
   | touches
 deriving Repr, DecidableEq
 
-/-- Edge between two commit nodes. -/
+/-- Edge between commits; for `parent_of`, `src` is the parent and `dst` its child. -/
 structure CommitEdge where
   src : CommitNode
   dst : CommitNode
@@ -84,12 +96,6 @@ structure CommitDeclEdge where
   commit : CommitNode
   path : String
   edgeKind : CommitEdgeKind := CommitEdgeKind.touches
-
-/-- Any two commit ranks are comparable by `rankIndex`. -/
-theorem commit_rank_total (c parent : CommitNode) :
-  TaxonRank.rankIndex parent.taxonRank ≤ TaxonRank.rankIndex c.taxonRank ∨
-    TaxonRank.rankIndex c.taxonRank ≤ TaxonRank.rankIndex parent.taxonRank := by
-  exact Nat.le_total (TaxonRank.rankIndex parent.taxonRank) (TaxonRank.rankIndex c.taxonRank)
 
 /-- Distinct commits can share a non-empty module path; this does not imply theorem equivalence. -/
 theorem shared_path_not_equivalence {a b : CommitNode} :

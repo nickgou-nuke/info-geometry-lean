@@ -78,6 +78,29 @@ class NeighborJoiningTests(unittest.TestCase):
 
 
 class CharacterProfileTests(unittest.TestCase):
+    def test_resolution_reports_identity_after_complete_case_filtering(self):
+        data = profiles([
+            ("C", {"common": character("x"), "partial": character("different")}),
+            ("A", {"common": character("x"), "partial": character("other")}),
+            ("B", {"common": character("x")}),
+        ])
+        result = infer_tree(data)
+        resolution = result["diagnostics"]["profile_resolution"]
+        self.assertTrue(resolution["all_profiles_identical"])
+        self.assertEqual(resolution["indistinguishable_taxon_groups"], [["A", "B", "C"]])
+        self.assertEqual(resolution["constant_marker_count"], 1)
+        self.assertEqual(resolution["variable_marker_count"], 0)
+
+    def test_resolution_preserves_distinct_ids_with_matching_digest_profiles(self):
+        result = infer_tree(snapshots())
+        resolution = result["diagnostics"]["profile_resolution"]
+        self.assertEqual(resolution["distinct_profile_count"], 2)
+        self.assertEqual(resolution["indistinguishable_taxon_groups"], [["g1", "g3"]])
+        self.assertFalse(resolution["all_profiles_identical"])
+        self.assertEqual(resolution["constant_marker_count"], 1)
+        self.assertEqual(resolution["variable_marker_count"], 1)
+        self.assertEqual(len(result["taxa"]), 3)
+
     def test_missing_marker_is_excluded_for_every_pair(self):
         data = profiles([
             ("A", {"common": character("x"), "partial": character("same")}),

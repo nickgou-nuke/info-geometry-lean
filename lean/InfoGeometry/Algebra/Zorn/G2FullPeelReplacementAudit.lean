@@ -1,0 +1,9 @@
+import InfoGeometry.Algebra.Zorn.G2FullPeelCellClassification
+import InfoGeometry.Algebra.Zorn.G2FullPeelWeylObstruction
+
+#print axioms InfoGeometry.Algebra.Zorn.G2FullPeelWeylObstruction.not_fullPeel_mem_weylG2Subgroup
+#print axioms InfoGeometry.Algebra.Zorn.G2NativeFlagResidualClosure.fullPeel_eq_one_of_stabilizer
+#print axioms InfoGeometry.Algebra.Zorn.G2NativeFlagResidualClosure.ambient_card_eq_12096
+#print axioms InfoGeometry.Algebra.Zorn.G2NativeCellDecomposition.exists_unique_cell
+#print axioms InfoGeometry.Algebra.Zorn.G2FullPeelCellClassification.exists_unique_common_cell
+#print axioms InfoGeometry.Algebra.Zorn.G2FullPeelCellClassification.fullPeel_mem_cell_iff

@@ -22,9 +22,9 @@ open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2SteinbergRoots
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 
-/-! The pure-Weyl residual statement is conditional: membership in the
-concrete Weyl subgroup is the missing classification theorem, not an
-algebraic consequence of the six PC peel coordinates. -/
+/-! The pure-Weyl residual statement requires membership in the concrete
+Weyl subgroup for the particular element. Its universal version is refuted
+in `G2FullPeelWeylObstruction`; it is not a missing classification theorem. -/
 
 theorem fullPeel_eq_weylNF_of_mem_weylG2Subgroup
     (f : SplitOctF2Aut)

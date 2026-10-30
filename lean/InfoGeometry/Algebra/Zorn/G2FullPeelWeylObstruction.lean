@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2BruhatResidualNormalForm
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2GroupOrderReduction
+import InfoGeometry.Algebra.Zorn.G2NativeFlagResidualClosure
 
 /-!
 # The Weyl-only `fullPeel` target is incompatible with the ambient order
@@ -76,5 +77,12 @@ theorem not_fullPeel_mem_weylG2Subgroup_of_ambient_card
     exact Fintype.card_le_of_injective _ (fullPeelWeylEncoding_injective h)
   rw [hG, Nat.card_prod, sylowTwoSubgroup_card_nat] at hcard
   norm_num [Nat.card_eq_fintype_card, ZMod.card] at hcard
+
+/-- The native flag-residual computation proves the required ambient order,
+so the Weyl-only claim fails unconditionally for this repository carrier. -/
+theorem not_fullPeel_mem_weylG2Subgroup :
+    ¬ (∀ f : SplitOctF2Aut, fullPeel f ∈ weylG2Subgroup) :=
+  not_fullPeel_mem_weylG2Subgroup_of_ambient_card
+    G2NativeFlagResidualClosure.ambient_card_eq_12096
 
 end InfoGeometry.Algebra.Zorn.G2FullPeelWeylObstruction

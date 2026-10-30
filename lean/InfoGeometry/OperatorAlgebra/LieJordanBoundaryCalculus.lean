@@ -215,6 +215,25 @@ theorem ad_square_of_square_zero {u : A} (hu : u * u = 0) (x : A) :
       noncomm_ring
     _ = _ := by rw [hu]; simp
 
+/-- The exact square-zero criterion retains possible additive two-torsion. -/
+theorem ad_square_zero_iff_sandwich {u : A} (hu : u * u = 0) (x : A) :
+    LieAlgebra.ad R A u (LieAlgebra.ad R A u x) = 0 ↔
+      2 • (u * x * u) = 0 := by
+  rw [ad_square_of_square_zero hu, neg_eq_zero]
+
+/-- A square-zero coefficient always induces an adjoint action of nilpotency
+index at most three, even when its square is nonzero. -/
+theorem ad_cube_of_square_zero {u : A} (hu : u * u = 0) (x : A) :
+    LieAlgebra.ad R A u (LieAlgebra.ad R A u (LieAlgebra.ad R A u x)) = 0 := by
+  rw [ad_square_of_square_zero hu]
+  change -(2 • (u * (u * x - x * u) * u)) = 0
+  have hs : u * (u * x - x * u) * u = 0 := by
+    calc
+      _ = (u * u) * x * u - u * x * (u * u) := by noncomm_ring
+      _ = 0 := by rw [hu]; simp
+  rw [hs]
+  simp
+
 @[simp] theorem crossTransport_one (u v : A) :
     crossTransport (R := R) u v 1 = u * v + v * u := by
   simp only [crossTransport_apply, mul_one]

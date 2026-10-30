@@ -89,4 +89,25 @@ theorem boundaryZZ_not_commutator_compatible (H : MatrixStage 1)
   apply boundaryZZ_not_commute_old_switch lam hlam
   simpa only [add_sub_cancel_left] using hc
 
+/-- Exact boundary for strict commutator transport: the two-site coupling is
+compatible with every old observable precisely when its coefficient is zero.
+The forward implication packages the explicit switch obstruction above; the
+reverse implication is preservation of products and subtraction by
+`concreteStep`. -/
+theorem boundaryZZ_commutator_compatible_iff_zero (H : MatrixStage 1)
+    (lam : ℂ) :
+    (∀ A : MatrixStage 1,
+      (concreteStep 1 H + lam • boundaryZZ) * concreteStep 1 A -
+        concreteStep 1 A * (concreteStep 1 H + lam • boundaryZZ) =
+      concreteStep 1 (H * A - A * H)) ↔ lam = 0 := by
+  constructor
+  · intro h
+    by_contra hlam
+    exact boundaryZZ_not_commutator_compatible H lam hlam h
+  · intro hlam
+    subst lam
+    intro A
+    simp only [zero_smul, add_zero]
+    simp only [map_sub, map_mul]
+
 end InfoGeometry.Canonical.CuntzBoundaryCouplingObstruction

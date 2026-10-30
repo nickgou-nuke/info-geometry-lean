@@ -204,6 +204,25 @@ theorem attentionRepresentationState_eval [Nonempty ι]
   rw [attentionState_eq_weightedMatrixFunctional]
   rfl
 
+/-- The state functional on the actual algebraic GNS representation satisfies
+the finite attention KMS boundary identity. This transports the existing
+matrix-state theorem through the repository's GNS state wrapper; it does not
+assert an analytic KMS condition for a completed operator algebra. -/
+theorem attentionRepresentationState_kms [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) (A B : Matrix ι ι ℝ) :
+    (attentionRepresentationState logits β).state.eval
+        (A * (attentionDensityMatrix logits β * B * attentionDensityMatrixInv logits β)) =
+      (attentionRepresentationState logits β).state.eval (B * A) := by
+  calc
+    (attentionRepresentationState logits β).state.eval
+        (A * (attentionDensityMatrix logits β * B * attentionDensityMatrixInv logits β))
+      = attentionState logits β
+          (A * (attentionDensityMatrix logits β * B * attentionDensityMatrixInv logits β)) :=
+            attentionRepresentationState_eval logits β _
+    _ = attentionState logits β (B * A) := attentionState_kms logits β A B
+    _ = (attentionRepresentationState logits β).state.eval (B * A) :=
+          (attentionRepresentationState_eval logits β _).symm
+
 /-- Softmax's GNS quotient vacuum is cyclic, with the quotient action supplied
 by the existing representation-state owner. -/
 theorem attention_vacuum_cyclic [Nonempty ι]

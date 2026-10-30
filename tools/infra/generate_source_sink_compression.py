@@ -152,6 +152,23 @@ def ordered_unique(items: list[str]) -> list[str]:
     return out
 
 
+def strict_dominator_ancestry(
+    component_id: str, components_by_id: dict[str, dict[str, Any]]
+) -> list[str]:
+    """Expand a compact immediate-dominator parent chain, nearest first."""
+    out: list[str] = []
+    seen = {component_id}
+    current = components_by_id.get(component_id, {}).get("immediateDominatorComponentId")
+    while current:
+        current = str(current)
+        if current in seen:
+            break
+        seen.add(current)
+        out.append(current)
+        current = components_by_id.get(current, {}).get("immediateDominatorComponentId")
+    return out
+
+
 def build_native_lookup(payload: dict[str, Any]) -> dict[str, Any]:
     components_by_id: dict[str, dict[str, Any]] = {}
     decl_to_component: dict[str, dict[str, Any]] = {}
@@ -180,8 +197,18 @@ def build_native_lookup(payload: dict[str, Any]) -> dict[str, Any]:
             "depth_spread": int(component.get("depthSpread", 0)),
             "canonical_root_witness": [str(x) for x in component.get("canonicalRootWitness", [])],
             "canonical_root_witness_component_ids": [str(x) for x in component.get("canonicalRootWitnessComponentIds", [])],
-            "strict_dominator_component_ids": [str(x) for x in component.get("strictDominatorComponentIds", [])],
-            "strict_dominator_representatives": [str(x) for x in component.get("strictDominatorRepresentatives", [])],
+            "strict_dominator_component_ids": (
+                strict_dominator_ancestry(component_id, components_by_id)
+                if "immediateDominatorComponentId" in component
+                else [str(x) for x in component.get("strictDominatorComponentIds", [])]
+            ),
+            "strict_dominator_representatives": (
+                [str(components_by_id[cid].get("representative", ""))
+                 for cid in strict_dominator_ancestry(component_id, components_by_id)
+                 if cid in components_by_id]
+                if "immediateDominatorComponentId" in component
+                else [str(x) for x in component.get("strictDominatorRepresentatives", [])]
+            ),
         }
 
     return {

@@ -40,7 +40,6 @@ supplies the five finite branch values of contribution `2`, and the finite discr
 generators are the explicit principal polynomials displayed in the paper. -/
 theorem paper_xi_terminal_zm_exterior_square_finite_ramification_index_ideal :
     xiLeyangGeometricMonodromyGroup = ⊤ ∧
-      xiLeyangFunctionFieldGaloisGroup = ⊤ ∧
       xi_terminal_zm_exterior_square_curve_genus2_finite_branch_point_count = 5 ∧
       xi_terminal_zm_exterior_square_curve_genus2_finite_branch_contribution = 2 ∧
       xi_terminal_zm_exterior_square_finite_ramification_index_ideal_finite_discriminant =
@@ -55,8 +54,8 @@ theorem paper_xi_terminal_zm_exterior_square_finite_ramification_index_ideal :
           (X + 1) * Q₁ ∧
           xi_terminal_zm_exterior_square_finite_ramification_index_ideal_index_polynomial =
             (X ^ 2 + X - 1) * Q₂ := by
-  rcases paper_xi_terminal_zm_leyang_monodromy_s4 with ⟨hGeo, hGal⟩
-  refine ⟨hGeo, hGal, rfl, rfl, rfl, rfl, rfl, ?_⟩
+  have hGeo := xiLeyang_geometric_monodromy_eq_top
+  refine ⟨hGeo, rfl, rfl, rfl, rfl, rfl, ?_⟩
   refine ⟨X ^ 3 * (X + 1) ^ 2 * (X ^ 2 + X - 1), X ^ 3 * (X + 1) ^ 3, ?_, ?_⟩
   · unfold xi_terminal_zm_exterior_square_finite_ramification_index_ideal_index_polynomial
     ring

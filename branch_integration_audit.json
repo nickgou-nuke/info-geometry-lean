@@ -1,0 +1,3183 @@
+{
+  "date": "2026-10-29",
+  "baseline": {
+    "branch": "main",
+    "head": "033fbf0e6fc61a8c24c825ab39ad480460804a85",
+    "upstream_main": "d23c9afe00275126fd4d4e25cb0842ee55fe82af",
+    "local_ahead_of_upstream": 3,
+    "staged_paths_preserved": 99,
+    "mutations": "No reset, checkout, merge, push, or PR close performed."
+  },
+  "upstream_branch_count": 58,
+  "branches": [
+    {
+      "ref": "upstream/codex/chiral-supertrace-localization",
+      "head": "3254210e5e6e114d5c18e84e7de72741f24c8593",
+      "main_unique_commit_count": 190,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/clifford-peirce-products",
+      "head": "a9fc6375c2f814876cf4e6a44a225602f186b9c6",
+      "main_unique_commit_count": 187,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/cyclic-curvature-discrete-frame",
+      "head": "e6883d5f2db7610341105661f20d6b26bee0494f",
+      "main_unique_commit_count": 275,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/epistemic-clifford-dirac-20261028",
+      "head": "e5ba7e1adcbfb3d747356934988d5064361dc174",
+      "main_unique_commit_count": 188,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/faithful-peirce-matrix-representation",
+      "head": "bfeed50e9c1a8eee6896ca5ce40d1b23b5e4e14f",
+      "main_unique_commit_count": 189,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/graded-dmp-resolution",
+      "head": "67fd0428b8888541aa85a2e0d90dddb921a4c428",
+      "main_unique_commit_count": 200,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/mass-spectrometry-validator",
+      "head": "4f3306dea3cec396237486db7665473f5581c733",
+      "main_unique_commit_count": 276,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/matrix-peirce-zorn-proofs-20261028",
+      "head": "9df96fa8480000753e14a2f8473247bebf2056fe",
+      "main_unique_commit_count": 209,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/native-peirce-hodge-20261028",
+      "head": "59904bb5238bbfea3c849011daa8c8797b9a5848",
+      "main_unique_commit_count": 192,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/noncommutative-boundary-pairing",
+      "head": "cc5b39dfc368796115633c1c8eaba9266791ad3a",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 2,
+      "audit_status": "integrated_locally_verified",
+      "unique_commits": [
+        {
+          "sha": "cc5b39dfc368796115633c1c8eaba9266791ad3a",
+          "subject": "Record independent review and blocked kernel verification"
+        },
+        {
+          "sha": "46386ccdc09922014f48b20fe80537b1bf37871a",
+          "subject": "Add noncommutative boundary operator formalization"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/NONCOMMUTATIVE_BOUNDARY_PAIRING_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Quantum/KrausBoundaryAudit.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Quantum/KrausBoundaryDuality.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Quantum/KrausInvariantGeometry.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Quantum/PositiveBoundaryConditioning.lean",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "unique_math_files_added_or_adapted": [
+          "lean/InfoGeometry/Quantum/KrausBoundaryDuality.lean"
+        ],
+        "already_present_and_unchanged": [
+          "lean/InfoGeometry/Quantum/KrausInvariantGeometry.lean",
+          "lean/InfoGeometry/Quantum/PositiveBoundaryConditioning.lean",
+          "lean/InfoGeometry/Quantum/KrausBoundaryAudit.lean"
+        ],
+        "excluded": [
+          "docs/NONCOMMUTATIVE_BOUNDARY_PAIRING_CONTRACT.md"
+        ],
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.Quantum.KrausBoundaryDuality",
+            "InfoGeometry.Quantum.KrausInvariantGeometry",
+            "InfoGeometry.Quantum.PositiveBoundaryConditioning",
+            "InfoGeometry.Quantum.KrausBoundaryAudit"
+          ],
+          "result": "pass after making the Kraus family explicit in backwardWord_posSemidef; initial implicit-argument elaboration timed out",
+          "axiom_audit": "audit owner compiled; declarations depend only on propext, Classical.choice, Quot.sound"
+        }
+      }
+    },
+    {
+      "ref": "upstream/codex/nuclear-sector-feshbach-inference",
+      "head": "ef59526ea498c5985bc2e7ebffe1232d1d2372dc",
+      "main_unique_commit_count": 273,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/opposite-peirce-coupling",
+      "head": "c192b99fdee5783915c247b35f64e8c32ab117a0",
+      "main_unique_commit_count": 190,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/peirce-trace-crossover-20261028",
+      "head": "3f472658c4a007677b43f8ce7b89366b08e3f821",
+      "main_unique_commit_count": 184,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/real-graded-boundary-compilation",
+      "head": "fd11e1c052b69c98ff9533f97edc773e769fa9bb",
+      "main_unique_commit_count": 193,
+      "branch_unique_commit_count": 17,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "fd11e1c052b69c98ff9533f97edc773e769fa9bb",
+          "subject": "Merge PR #262: Complete signed Peirce transport, composition octet, and real Krein pairing"
+        },
+        {
+          "sha": "d61a6c93ee7d075df752c6f3b19b68974cc6b763",
+          "subject": "fix(operator-algebra): keep reflection involution proof at matrix endomorphism level"
+        },
+        {
+          "sha": "52b1efb57a8186718990890089ba4a9237872d8e",
+          "subject": "fix(operator-algebra): normalize cast numerals in weighted commutator proofs"
+        },
+        {
+          "sha": "e38b300aac0a60eab0bb2474db85f510da08b2c3",
+          "subject": "fix(operator-algebra): compose natural scaling before reassociating double commutators"
+        },
+        {
+          "sha": "093e80eed83d0c0ff0e74a9a84cd27268e3f2f18",
+          "subject": "fix(operator-algebra): normalize double commutator scaling without distributing operator weights"
+        },
+        {
+          "sha": "103d5bb661d9c52b5bb68f9834f31697143b2de1",
+          "subject": "fix(operator-algebra): bind Peirce hypotheses and certify the real indefinite pairing"
+        },
+        {
+          "sha": "ad9d92e7c53600deae2ef10bd16c585361197b08",
+          "subject": "feat(operator-algebra): complete signed Peirce transport and real metric distinctions"
+        },
+        {
+          "sha": "da8d0d0aa8ea24c50fc4c9ceb24fd42835d2cbe0",
+          "subject": "docs(operator-algebra): record successful graded-boundary kernel audit and exact evidence"
+        },
+        {
+          "sha": "dc6d04d4a1e8f976962c9f8f2d5634b29573532d",
+          "subject": "fix(operator-algebra): retain separating membership witnesses in order antisymmetry"
+        },
+        {
+          "sha": "edb75e6797f2540027a57e81006842d177268d2e",
+          "subject": "fix(operator-algebra): disambiguate dependency stages and prove order by set membership"
+        },
+        {
+          "sha": "b62ec37224a52ffb9d1ddb585d99ced9d259bce5",
+          "subject": "fix(operator-algebra): bind the concrete grading parameters explicitly in metric theorems"
+        },
+        {
+          "sha": "85bd32a552700befa9af9c2c4bc6443b48f0bb2f",
+          "subject": "fix(operator-algebra): make grading notation explicit and remove unused trace assumptions"
+        },
+        {
+          "sha": "cf6f9f8954e8b1e45bb1d483a8c50c26d779df1f",
+          "subject": "fix(operator-algebra): use the pinned scalar-commutation equality directly"
+        },
+        {
+          "sha": "617f67123d8959d6cb5045995390f6269501822a",
+          "subject": "feat(operator-algebra): compile graded Peirce boundaries and correct Lie–Jordan defects"
+        },
+        {
+          "sha": "f550271b141afb44c0ff52fec81eb1552a45ebca",
+          "subject": "Add Peirce projections, honest trace forms, Dirac coefficient defects and native tensor-colimit consumers"
+        },
+        {
+          "sha": "1b79b49fdf2e02200345e7ee54b27317f5bdeff5",
+          "subject": "Add isolated selected-source kernel verification without changing repository dependency pins"
+        },
+        {
+          "sha": "e12460af45c09f786edd374c453b72e8841ec4ff",
+          "subject": "Add native noncommutative Lie–Jordan endomorphisms and exact composition defects"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/lie-jordan-peirce-kernel.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/peirce-boundaries.yml",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/signed-transport.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "docs/REAL_GRADED_BOUNDARY_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "docs/SIGNED_TRANSPORT_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Algebra/PeirceLieJordanResolution.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/LieJordanTensorColimit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanDiracComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanEndomorphisms.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanNoncommutingWitnesses.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirce.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanTraceDuality.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryDynamics.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryMetric.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryOrder.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryWitness.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSignedTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceTraceForms.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedBoundaryTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportMetric.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportOrder.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportWitness.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_peirce_boundaries.py",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_signed_transport.py",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "verified_addition": "lean/InfoGeometry/OperatorAlgebra/PeirceTwistedComplex.lean (ported from branch PeirceGradedDifferential owner; kept separate to preserve current owner)",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.OperatorAlgebra.PeirceTwistedComplex",
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirce",
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirceAudit"
+          ],
+          "result": "pass (8,972 jobs aggregate/audit; 3,197 jobs for the separately ported twisted complex)"
+        },
+        "compatibility": "No wholesale merge: branch diverges from current main and its branch tip would delete 606 paths relative to main; multiple changed Lean owners have distinct current-main implementations. Identical branch files already in HEAD were not recopied.",
+        "remaining_review": "None for source mathematics; branch-specific API spellings were mapped to current owner declarations rather than duplicated. Workflow and prose artifacts were not imported.",
+        "semantic_mapping": "Fully represented in current owners: branch corner extraction/product/double-adjoint identities map to Algebra.PeirceLieJordanResolution.cornerOp, cornerOp_product, ad_square_apply and four twice_peirce lemmas; branch trace duality/defect/star-energy claims map to OperatorAlgebra.LieJordanTraceDuality.trace_dual_balance, trace_same_side_defect, trace_plus/minus and star_trace_dual_balance, with current LieJordanDuality dualPlus/dualMinus replacing the branch-local plus/minus names. Its globally graded twisted differential is separately ported as PeirceTwistedComplex. Branch-only theorem spellings are not treated as missing mathematics; no branch-specific consumer depends on those old names. Existing signed metric/order/tensor owners are built via the LieJordanPeirce aggregate/audit."
+      }
+    },
+    {
+      "ref": "upstream/codex/real-operator-content-network-20261029",
+      "head": "63904e24dedfd10dc6234f76da0eb0450f95fcc9",
+      "main_unique_commit_count": 4,
+      "branch_unique_commit_count": 1,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "63904e24dedfd10dc6234f76da0eb0450f95fcc9",
+          "subject": "Formalize real operator programs and causal peer exchange"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/OPERATOR_CONTENT_NETWORK.md",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "M",
+          "path": "lakefile.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Canonical/All.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/Basic.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/CausalBlocks.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/ContentAddressing.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/DAGEvaluation.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/DependencyPoset.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/PathTransport.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/PeerEvaluation.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/PeerStore.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/OperatorContentNetwork/Programs.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "tests/OperatorContentNetworkAxiomAudit.lean",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "All 14 branch-changed file blobs are byte-for-byte identical to HEAD; no port needed.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.Canonical.OperatorContentNetwork",
+            "OperatorContentNetworkAxiomAudit"
+          ],
+          "result": "pass (1306 jobs); audit reports 191 declarations and 151 theorem constants, only standard Lean axioms"
+        }
+      }
+    },
+    {
+      "ref": "upstream/codex/real-peirce-kernel-krein",
+      "head": "02b2a2aa6fc03841e6d05d4d9117f5272fb63de2",
+      "main_unique_commit_count": 186,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/rectangular-peirce-drazin",
+      "head": "eff3c64b95a2cb9e1cd79015cd3fdd9b12f2916f",
+      "main_unique_commit_count": 205,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/rindler-spin-torsion-trace-splitting",
+      "head": "96334f33d22d71ac46267b535c12673e04e12c8b",
+      "main_unique_commit_count": 276,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/signed-peirce-transport",
+      "head": "d61a6c93ee7d075df752c6f3b19b68974cc6b763",
+      "main_unique_commit_count": 193,
+      "branch_unique_commit_count": 16,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "d61a6c93ee7d075df752c6f3b19b68974cc6b763",
+          "subject": "fix(operator-algebra): keep reflection involution proof at matrix endomorphism level"
+        },
+        {
+          "sha": "52b1efb57a8186718990890089ba4a9237872d8e",
+          "subject": "fix(operator-algebra): normalize cast numerals in weighted commutator proofs"
+        },
+        {
+          "sha": "e38b300aac0a60eab0bb2474db85f510da08b2c3",
+          "subject": "fix(operator-algebra): compose natural scaling before reassociating double commutators"
+        },
+        {
+          "sha": "093e80eed83d0c0ff0e74a9a84cd27268e3f2f18",
+          "subject": "fix(operator-algebra): normalize double commutator scaling without distributing operator weights"
+        },
+        {
+          "sha": "103d5bb661d9c52b5bb68f9834f31697143b2de1",
+          "subject": "fix(operator-algebra): bind Peirce hypotheses and certify the real indefinite pairing"
+        },
+        {
+          "sha": "ad9d92e7c53600deae2ef10bd16c585361197b08",
+          "subject": "feat(operator-algebra): complete signed Peirce transport and real metric distinctions"
+        },
+        {
+          "sha": "da8d0d0aa8ea24c50fc4c9ceb24fd42835d2cbe0",
+          "subject": "docs(operator-algebra): record successful graded-boundary kernel audit and exact evidence"
+        },
+        {
+          "sha": "dc6d04d4a1e8f976962c9f8f2d5634b29573532d",
+          "subject": "fix(operator-algebra): retain separating membership witnesses in order antisymmetry"
+        },
+        {
+          "sha": "edb75e6797f2540027a57e81006842d177268d2e",
+          "subject": "fix(operator-algebra): disambiguate dependency stages and prove order by set membership"
+        },
+        {
+          "sha": "b62ec37224a52ffb9d1ddb585d99ced9d259bce5",
+          "subject": "fix(operator-algebra): bind the concrete grading parameters explicitly in metric theorems"
+        },
+        {
+          "sha": "85bd32a552700befa9af9c2c4bc6443b48f0bb2f",
+          "subject": "fix(operator-algebra): make grading notation explicit and remove unused trace assumptions"
+        },
+        {
+          "sha": "cf6f9f8954e8b1e45bb1d483a8c50c26d779df1f",
+          "subject": "fix(operator-algebra): use the pinned scalar-commutation equality directly"
+        },
+        {
+          "sha": "617f67123d8959d6cb5045995390f6269501822a",
+          "subject": "feat(operator-algebra): compile graded Peirce boundaries and correct Lie–Jordan defects"
+        },
+        {
+          "sha": "f550271b141afb44c0ff52fec81eb1552a45ebca",
+          "subject": "Add Peirce projections, honest trace forms, Dirac coefficient defects and native tensor-colimit consumers"
+        },
+        {
+          "sha": "1b79b49fdf2e02200345e7ee54b27317f5bdeff5",
+          "subject": "Add isolated selected-source kernel verification without changing repository dependency pins"
+        },
+        {
+          "sha": "e12460af45c09f786edd374c453b72e8841ec4ff",
+          "subject": "Add native noncommutative Lie–Jordan endomorphisms and exact composition defects"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/lie-jordan-peirce-kernel.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/peirce-boundaries.yml",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/signed-transport.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "docs/REAL_GRADED_BOUNDARY_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "docs/SIGNED_TRANSPORT_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Algebra/PeirceLieJordanResolution.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/LieJordanTensorColimit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanDiracComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanEndomorphisms.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanNoncommutingWitnesses.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirce.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanTraceDuality.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryDynamics.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryMetric.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryOrder.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryWitness.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSignedTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceTraceForms.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedBoundaryTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportMetric.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportOrder.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportWitness.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_peirce_boundaries.py",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_signed_transport.py",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "verified_addition": "The branch shares the parity-twisted full-algebra differential extracted to lean/InfoGeometry/OperatorAlgebra/PeirceTwistedComplex.lean; that owner passed locked build.",
+        "already_present_identically": [
+          "LieJordanBoundaryComposition.lean",
+          "LieJordanDiracComposition.lean",
+          "LieJordanEndomorphisms.lean",
+          "LieJordanNoncommutingWitnesses.lean",
+          "PeirceBoundaryOrder.lean",
+          "PeirceBoundaryWitness.lean",
+          "PeirceTraceForms.lean",
+          "tools/quality/check_signed_transport.py"
+        ],
+        "remaining_review": "None for source mathematics; branch-specific API spellings were mapped to current owner declarations rather than duplicated. Workflow and prose artifacts were not imported.",
+        "merge_decision": "No wholesale merge; branch tip predates current main by 193 commits and its tree is not a safe replacement.",
+        "semantic_mapping": "Fully represented by current signed boundary/transport/metric/order/witness owners and the LieJordanPeirce aggregate; the global parity-twisted complex is separately ported as PeirceTwistedComplex. Differing branch theorem names and formulations map to current Peirce corner and trace/transport statements; no branch-only consumer depends on the alternate names. No wholesale merge because the branch tip is an older divergent tree that would remove current code.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.OperatorAlgebra.PeirceTwistedComplex",
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirce",
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirceAudit"
+          ],
+          "result": "pass (8,972 jobs aggregate/audit; 3,197 jobs for the separately ported twisted complex)"
+        }
+      }
+    },
+    {
+      "ref": "upstream/codex/square-zero-sandwich-action",
+      "head": "b72dd9ed4632dea0ed6846d0ec7f148d57b7871c",
+      "main_unique_commit_count": 189,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/square-zero-tripotent-resolvent",
+      "head": "b67208c58a877483a9476b71173c55ebef9abc4d",
+      "main_unique_commit_count": 188,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/codex/sulfur37-configuration-mixing",
+      "head": "fde47b6c2986134ca878456771f28e69dce18895",
+      "main_unique_commit_count": 272,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/balaban-operator-coarse-graining",
+      "head": "7f5514c1c6c1671dbd82777723f4a19898c0f0f4",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 1,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "7f5514c1c6c1671dbd82777723f4a19898c0f0f4",
+          "subject": "feat: formalize noncommutative positive operator coarse-graining"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/BALABAN_OPERATOR_COARSE_GRAINING.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "M",
+          "path": "lakefile.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/OperatorAlgebra/All.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/CoarseGrainingComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/CoarseGrainingVariational.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/CoisometricCoarseGraining.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/FiniteParametrix.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PositiveCoarseGraining.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "tests/BalabanOperatorTests.lean",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "All five Lean owners and the Lean regression/audit test are byte-identical to HEAD. Branch-only content is prose documentation; no code change required. The lakefile and aggregate differences are newer local-main surfaces and were retained.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining",
+            "InfoGeometry.OperatorAlgebra.CoarseGrainingComposition",
+            "InfoGeometry.OperatorAlgebra.CoarseGrainingVariational",
+            "InfoGeometry.OperatorAlgebra.CoisometricCoarseGraining",
+            "InfoGeometry.OperatorAlgebra.FiniteParametrix",
+            "BalabanOperatorTests"
+          ],
+          "result": "pass (2694 jobs); audit passed for 62 named theorems, only standard Lean axioms"
+        }
+      }
+    },
+    {
+      "ref": "upstream/feat/bilateral-peirce-zorn-kernels",
+      "head": "7dfcf03dcd9786d7aa34a572d93ea2b1341b3d7d",
+      "main_unique_commit_count": 345,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/grassmann-cayley-operators",
+      "head": "5e83edbd6742152777425a9a76630dfde28480aa",
+      "main_unique_commit_count": 205,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/ms-experimental-evidence",
+      "head": "756646098b235aa8b8a0111fea552d921634afd5",
+      "main_unique_commit_count": 272,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/ms-finite-absorption",
+      "head": "f9a5c6d5a7e5bc9d1ae6b6f0f3e8c77ff67a5d6e",
+      "main_unique_commit_count": 267,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/ms-signature-spectral-geometry",
+      "head": "674f6ec4d583aa00a36a30cfed24f6a1b6b7ad89",
+      "main_unique_commit_count": 262,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/noncommutative-lie-jordan-geometry",
+      "head": "a477f2b2e2006db895b8ca7fc86f24f4f974a817",
+      "main_unique_commit_count": 171,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/noncommutative-yang-mills-dirichlet",
+      "head": "9849972bf11c6afa85bc095fba1b77af2112ac4b",
+      "main_unique_commit_count": 209,
+      "branch_unique_commit_count": 1,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "9849972bf11c6afa85bc095fba1b77af2112ac4b",
+          "subject": "feat: connect noncommutative curvature, Peirce defects, and GNS Dirichlet geometry"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/yang-mills-operator-extraction.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "docs/YANG_MILLS_OPERATOR_EXTRACTION.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/verification/yang_mills_operator_extraction_20261028.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/verification/yang_mills_operator_extraction_axioms_20261028.txt",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Analysis/MatrixTraceQuadratic.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Analysis/OperatorDirichletLaplacian.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Analysis/OperatorDirichletScaling.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Analysis/OperatorDirichletSpectralGap.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/MatrixEntropyUnitaryOrbit.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Geometry/DerivationMatrixCurvature.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Geometry/MatrixCurvatureEnergy.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Geometry/MatrixCurvatureHessian.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Geometry/MatrixCurvatureNonconvexity.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Geometry/PeirceCurvatureHessian.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/DerivationCurvatureVariation.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceCurvatureDefect.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/TracialGNSDirichlet.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/TracialGNSGauge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/TracialGNSMatrixTests.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_yang_mills_operator_extraction.py",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "All mathematical owner files and the TracialGNSMatrixTests file are byte-identical to HEAD except two branch variants: PeirceCurvatureHessian shortens a proof; DerivationCurvatureVariation removes compatibility declarations that current HEAD retains. Current code is at least as API-complete; no branch code was copied.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.Geometry.PeirceCurvatureHessian",
+            "InfoGeometry.OperatorAlgebra.DerivationCurvatureVariation",
+            "InfoGeometry.OperatorAlgebra.TracialGNSDirichlet",
+            "InfoGeometry.OperatorAlgebra.TracialGNSGauge",
+            "InfoGeometry.OperatorAlgebra.TracialGNSMatrixTests"
+          ],
+          "result": "pass (3708 jobs)"
+        }
+      }
+    },
+    {
+      "ref": "upstream/feat/operator-archetype-geometry",
+      "head": "423762cd7128ada367735aeb2452f4c53bf192c7",
+      "main_unique_commit_count": 203,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/operator-archetypes-xiv-xviii",
+      "head": "64460eeb7209e029178e53ec4609f16e044256e4",
+      "main_unique_commit_count": 194,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/operator-defect-lie-closure",
+      "head": "21500b3ac90c0a3dd642e898ddd83f5052b2cd26",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 1,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "21500b3ac90c0a3dd642e898ddd83f5052b2cd26",
+          "subject": "Add draft operator defect completion and native Zorn Lie-closure proofs"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/OPERATOR_DEFECT_COMPLETION.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/OperatorDefectCompletion.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/OperatorDefectCompletionAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/ZornDefectLieClosure.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/sympy/operator_defect_completion/algebra_checks.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "tools/sympy/operator_defect_completion/source_manifest.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "tools/sympy/operator_defect_completion/validate_algebra.py",
+          "content_vs_main": "missing_on_main"
+        }
+      ],
+      "local_integration": {
+        "result": "Branch-only Zorn Lie-span, unit-annihilation, nonzero-witness, and strict-enlargement declarations are already owned by InfoGeometry.Algebra.ZornLeftMultiplicationDefect and imported by the current adapter. Current OperatorDefectCompletion and its audit were preserved; no source delta was needed.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.Algebra.ZornLeftMultiplicationDefect",
+            "InfoGeometry.OperatorAlgebra.ZornDefectLieClosure",
+            "InfoGeometry.OperatorAlgebra.OperatorDefectCompletionAudit"
+          ],
+          "result": "pass (3115 jobs); audit outputs only standard Lean axioms"
+        }
+      }
+    },
+    {
+      "ref": "upstream/feat/operator-logdet-dikin-geometry",
+      "head": "37c47ae5ddd9d00d700fe1df61b0c60ee80e2efc",
+      "main_unique_commit_count": 209,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/peirce-bdg-correlation-geometry",
+      "head": "4e2c0ef69aced9dee6290d2c798940a704f893f4",
+      "main_unique_commit_count": 210,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/phase-flow-zorn-bdg-car",
+      "head": "0b8f3258f56eb2c1c81aa036b8bd3e6c01a23958",
+      "main_unique_commit_count": 273,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/quadratic-oscillator-bk-bridge",
+      "head": "8311db186fe9aa6e472ec3dab17fe417e1751acb",
+      "main_unique_commit_count": 272,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/real-twistor-constructs-20261027",
+      "head": "fd397a4a58f17e56449ec9a9150cfd5e4192dfdc",
+      "main_unique_commit_count": 207,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/repository-evolution-explorer",
+      "head": "272b93ab41e70523a898d80c3bbf73c0cec9a613",
+      "main_unique_commit_count": 210,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/seligman-jordan-operator-geometry",
+      "head": "2bd54f6c353bff719019be16039181936ede4030",
+      "main_unique_commit_count": 210,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/twisting-twistor-meier-viana",
+      "head": "6a00d4c7df4edf05cd83b6fdeb8b04374c77c23e",
+      "main_unique_commit_count": 209,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/feat/yang-mills-native-gauge-geometry",
+      "head": "dbf21915b23c6f78305ec57a3d12b21c24ed1104",
+      "main_unique_commit_count": 209,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalization/projective-operator-incidence-20261027",
+      "head": "281e05b2fb12aa71143fb7140b6725a25aa34158",
+      "main_unique_commit_count": 206,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/chiral-null-gauge-inversion",
+      "head": "61ca97daaa3bfac333f7621fe103049e2c650f05",
+      "main_unique_commit_count": 193,
+      "branch_unique_commit_count": 13,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "61ca97daaa3bfac333f7621fe103049e2c650f05",
+          "subject": "feat(operator): expose graded derivation square and exact parity-square transport"
+        },
+        {
+          "sha": "515540adbad0596b9ef2487ea770a7e647aaae0a",
+          "subject": "ci: bound and checksum-verify exact Lean bootstrap without changing pins"
+        },
+        {
+          "sha": "2147152013e260b95b2e105c5aaee82530ff8430",
+          "subject": "feat(geometry): retain glide translation and fiber sign on the existing Klein cover"
+        },
+        {
+          "sha": "260d8b797b8aa5c20f06d0886793a9e3b24ae9e0",
+          "subject": "fix(operator): use existing grading namespace and explicit adjoint block proof"
+        },
+        {
+          "sha": "46e127e87f479973ce38aad8d321514173bca5a6",
+          "subject": "test(operator): add noncommuting block, boundary and pure-gauge witnesses"
+        },
+        {
+          "sha": "c57bc244032b79fc35467b9dd0ee348439a6e697",
+          "subject": "feat(operator): prove full-time conservation and algebra covariance of existing flows"
+        },
+        {
+          "sha": "4234a1abb0cb923d19ee46e50779c660f9813cfb",
+          "subject": "feat(geometry): connect native graph inversion with Clifford null operators"
+        },
+        {
+          "sha": "7c781fff0850db52c8682080669216ba142aa2e9",
+          "subject": "feat(operator): prove divergence, curvature defect and boundary trace balance"
+        },
+        {
+          "sha": "21028ca14dd7e7a520511dd18413a249b6d48b70",
+          "subject": "ci: check pinned chiral-null-gauge source closure and transitive axioms"
+        },
+        {
+          "sha": "9527ec8d7c2b9ae2c63c17d7a6ec3628adc4cf07",
+          "subject": "test: add exact-source closure and axiom audit for chiral gauge synthesis"
+        },
+        {
+          "sha": "5e2a1447bfb14777fcdf157af91fb31e068ba13e",
+          "subject": "feat(operator): construct pure-gauge forms on existing derivation lanes"
+        },
+        {
+          "sha": "fc2695734193a4497092c17601aefa807ea1ea75",
+          "subject": "feat(operator): realize chiral coupling with arbitrary noncommutative blocks"
+        },
+        {
+          "sha": "ee6ea5424e8ddc8ebcf26313c6e365721fb9234c",
+          "subject": "docs: specify noncommutative chiral, gauge and inversion theorem contracts"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/chiral-null-gauge.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "docs/CHIRAL_NULL_GAUGE_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralCouplingOperators.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/ChiralNullGaugeTests.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/ConservedOperatorFlow.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/InnerDivergenceCharge.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/MaurerCartanFrameTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/ProjectiveNullInversion.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_chiral_null_gauge.py",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "All declared Lean APIs from the branch already exist in current owners. The changed files contain proof/text variants only; no additional theorem declarations were missing. Current files and test owner were preserved.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.OperatorAlgebra.ChiralCouplingOperators",
+            "InfoGeometry.OperatorAlgebra.ConservedOperatorFlow",
+            "InfoGeometry.OperatorAlgebra.InnerDivergenceCharge",
+            "InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport",
+            "InfoGeometry.OperatorAlgebra.ProjectiveNullInversion",
+            "InfoGeometry.OperatorAlgebra.ChiralNullGaugeTests"
+          ],
+          "result": "pass (8950 jobs)"
+        }
+      }
+    },
+    {
+      "ref": "upstream/formalize/color-charge-polynomial-identities-20261025",
+      "head": "54e21841e47f78cfa7f2a16a94894469832ab128",
+      "main_unique_commit_count": 349,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/drazin-mp-kitaev-boundary-audit-20261025",
+      "head": "a7b438ba0061c3d8d4bb7342dccaea26066f2d8f",
+      "main_unique_commit_count": 300,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/lie-jordan-peirce-dual-transport",
+      "head": "359aa65ea4d1cf93e1c2b95373416d5b71cad643",
+      "main_unique_commit_count": 180,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/lie-jordan-peirce-duality-20261028",
+      "head": "aa829406bfc262a789759766a407a004dbb1f93a",
+      "main_unique_commit_count": 193,
+      "branch_unique_commit_count": 4,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "aa829406bfc262a789759766a407a004dbb1f93a",
+          "subject": "Repair trace scalar normalization and weighted symmetry transport"
+        },
+        {
+          "sha": "53c3e01e07196c2a76b77a273ebf41db6f3ef7ac",
+          "subject": "Retain the correct source Peirce sign and add dense regression witnesses"
+        },
+        {
+          "sha": "0c39ae033d4b3224b55a748bbf58734a29f5dbf7",
+          "subject": "Add corrected Peirce projectors, trace duality, operator Schur products and native colimit transport"
+        },
+        {
+          "sha": "30635b41407ec883f3ccc377e81bbbe0d1907454",
+          "subject": "Formalize native Lie-Jordan dual superoperators with exact noncommuting defects"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/lie-jordan-peirce.yml",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "docs/LIE_JORDAN_PEIRCE_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanDiracPair.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanDuality.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirce.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceColimit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceExamples.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanTraceDuality.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/OperatorDiracSchur.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceLieJordanResolution.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceTracePairing.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_lie_jordan_peirce.py",
+          "content_vs_main": "different"
+        }
+      ],
+      "local_integration": {
+        "result": "All branch declaration names match current owner files; branch differences are proof/text variants, and current LieJordanPeirceExamples and OperatorDiracSchur include additional declarations. No port or replacement was needed.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirce",
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirceAudit"
+          ],
+          "result": "pass (8969 jobs); audit covered 152 declarations / 133 theorem constants in 7 owners, only propext, Classical.choice, Quot.sound"
+        }
+      }
+    },
+    {
+      "ref": "upstream/formalize/lie-jordan-peirce-operators-20261028",
+      "head": "6577163b28f747b14dedd689be8a2eb905a524c0",
+      "main_unique_commit_count": 193,
+      "branch_unique_commit_count": 18,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "6577163b28f747b14dedd689be8a2eb905a524c0",
+          "subject": "Merge PR #260: Prove real graded Peirce differentials, exact Lie–Jordan defects, and adjoint Hodge kernels"
+        },
+        {
+          "sha": "fd11e1c052b69c98ff9533f97edc773e769fa9bb",
+          "subject": "Merge PR #262: Complete signed Peirce transport, composition octet, and real Krein pairing"
+        },
+        {
+          "sha": "d61a6c93ee7d075df752c6f3b19b68974cc6b763",
+          "subject": "fix(operator-algebra): keep reflection involution proof at matrix endomorphism level"
+        },
+        {
+          "sha": "52b1efb57a8186718990890089ba4a9237872d8e",
+          "subject": "fix(operator-algebra): normalize cast numerals in weighted commutator proofs"
+        },
+        {
+          "sha": "e38b300aac0a60eab0bb2474db85f510da08b2c3",
+          "subject": "fix(operator-algebra): compose natural scaling before reassociating double commutators"
+        },
+        {
+          "sha": "093e80eed83d0c0ff0e74a9a84cd27268e3f2f18",
+          "subject": "fix(operator-algebra): normalize double commutator scaling without distributing operator weights"
+        },
+        {
+          "sha": "103d5bb661d9c52b5bb68f9834f31697143b2de1",
+          "subject": "fix(operator-algebra): bind Peirce hypotheses and certify the real indefinite pairing"
+        },
+        {
+          "sha": "ad9d92e7c53600deae2ef10bd16c585361197b08",
+          "subject": "feat(operator-algebra): complete signed Peirce transport and real metric distinctions"
+        },
+        {
+          "sha": "da8d0d0aa8ea24c50fc4c9ceb24fd42835d2cbe0",
+          "subject": "docs(operator-algebra): record successful graded-boundary kernel audit and exact evidence"
+        },
+        {
+          "sha": "dc6d04d4a1e8f976962c9f8f2d5634b29573532d",
+          "subject": "fix(operator-algebra): retain separating membership witnesses in order antisymmetry"
+        },
+        {
+          "sha": "edb75e6797f2540027a57e81006842d177268d2e",
+          "subject": "fix(operator-algebra): disambiguate dependency stages and prove order by set membership"
+        },
+        {
+          "sha": "b62ec37224a52ffb9d1ddb585d99ced9d259bce5",
+          "subject": "fix(operator-algebra): bind the concrete grading parameters explicitly in metric theorems"
+        },
+        {
+          "sha": "85bd32a552700befa9af9c2c4bc6443b48f0bb2f",
+          "subject": "fix(operator-algebra): make grading notation explicit and remove unused trace assumptions"
+        },
+        {
+          "sha": "cf6f9f8954e8b1e45bb1d483a8c50c26d779df1f",
+          "subject": "fix(operator-algebra): use the pinned scalar-commutation equality directly"
+        },
+        {
+          "sha": "617f67123d8959d6cb5045995390f6269501822a",
+          "subject": "feat(operator-algebra): compile graded Peirce boundaries and correct Lie–Jordan defects"
+        },
+        {
+          "sha": "f550271b141afb44c0ff52fec81eb1552a45ebca",
+          "subject": "Add Peirce projections, honest trace forms, Dirac coefficient defects and native tensor-colimit consumers"
+        },
+        {
+          "sha": "1b79b49fdf2e02200345e7ee54b27317f5bdeff5",
+          "subject": "Add isolated selected-source kernel verification without changing repository dependency pins"
+        },
+        {
+          "sha": "e12460af45c09f786edd374c453b72e8841ec4ff",
+          "subject": "Add native noncommutative Lie–Jordan endomorphisms and exact composition defects"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/lie-jordan-peirce-kernel.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/peirce-boundaries.yml",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/signed-transport.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "docs/REAL_GRADED_BOUNDARY_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "docs/SIGNED_TRANSPORT_CONTRACT.md",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Algebra/PeirceLieJordanResolution.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/LieJordanTensorColimit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanDiracComposition.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanEndomorphisms.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanNoncommutingWitnesses.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirce.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanTraceDuality.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryDynamics.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryMetric.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryOrder.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryWitness.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSignedTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceTraceForms.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedBoundaryTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportMetric.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportOrder.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportWitness.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_peirce_boundaries.py",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_signed_transport.py",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "The 18-commit branch adds no unrepresented declarations in the shared owners. Its alternate names for Peirce extraction and trace pairings correspond to current cornerOp/ad-square and trace-pairing APIs. Its parity-twisted ShortComplex layer is now separately represented by PeirceTwistedComplex. Signed transport and real boundary owners are retained in current main.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirce",
+            "InfoGeometry.OperatorAlgebra.LieJordanPeirceAudit",
+            "InfoGeometry.OperatorAlgebra.PeirceTwistedComplex"
+          ],
+          "result": "pass; aggregate audit covers 152 declarations / 133 theorem constants, and the twisted-complex owner built successfully"
+        }
+      }
+    },
+    {
+      "ref": "upstream/formalize/peirce-coupling-exactness-20261028",
+      "head": "bac4420d81458ae02f3e320a311b407217e890a7",
+      "main_unique_commit_count": 188,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/penney-octonion-isospin-1971",
+      "head": "f4988cd51c9281c6589555950507af57380285a9",
+      "main_unique_commit_count": 355,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/perjes-klein-particle-completion",
+      "head": "4383aa550df4ad749b6ba802c23a684bc7648bde",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 5,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "4383aa550df4ad749b6ba802c23a684bc7648bde",
+          "subject": "feat(topology): lift the existing Klein glide through native Clifford and associated spinor carriers"
+        },
+        {
+          "sha": "7e8e97e1c253dddb0307b3f42ad41888426534fa",
+          "subject": "feat(twistor): add constituent kinematics, internal symmetries and polynomial CCR adapters"
+        },
+        {
+          "sha": "27b4802a0fb1cb048006c2fe14461f19e066deec",
+          "subject": "feat(twistor): implement Perjes convention maps and symmetric kinematic tensor"
+        },
+        {
+          "sha": "d6d7a86cf5cadef212082e879605390f0fafaea8",
+          "subject": "Connect infinity readout to native chiral source and sink grading"
+        },
+        {
+          "sha": "cf42798ec8a3d6ca35aca65172730829a0a35469",
+          "subject": "Formalize Plücker infinity geometry and real modular conjugation"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/perjes-klein.yml",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PERJES_KLEIN_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_VALIDATION.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityChiralCharge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityGradeReversal.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinitySourceSinkGrading.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/RealModularConjugationBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Projective/ExteriorKleinCliffordInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinAssociatedSpinors.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinCliffordPinLift.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinDeckRepresentation.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/InfinityTwistor.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesConventions.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerBlockInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerCl55InfinityBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityChart.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityGeometry.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModular.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModularAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerLorentzRealForm.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerPenroseIncidence.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentCCR.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentKinematics.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorKinematicTensor.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/infra/check_plucker_infinity_modular.py",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_klein.py",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_klein_targets.txt",
+          "content_vs_main": "missing_on_main"
+        }
+      ],
+      "local_integration": {
+        "result": "The Perjes/Klein and constituent owners are already represented by current owners, with newer affine null-line, Cech and symmetry contracts. No code file was missing. The branch workflow/check scripts and docs are not needed for source integration; locked focused 13-target Perjes/Klein/Twistor build passed."
+      }
+    },
+    {
+      "ref": "upstream/formalize/perjes-particle-klein-holonomy",
+      "head": "fa183120e693a3d60f17260cf3067d50e9e7f463",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 11,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "fa183120e693a3d60f17260cf3067d50e9e7f463",
+          "subject": "fix(twistor): align native Laurent, matrix sums and pin transport proofs with pinned Mathlib"
+        },
+        {
+          "sha": "db46984ba816d011c652a2f784fc0c4c174a7c6d",
+          "subject": "ci: split reproducible public verification runtime into bounded artifacts"
+        },
+        {
+          "sha": "ec4858aac498327af093a4fbef07c47de8e4b260",
+          "subject": "ci: export exact public Lean runtime for reproducible local proof checking"
+        },
+        {
+          "sha": "9e87e11b50087039aab4cdb30ee90e93d9f7b43f",
+          "subject": "feat(twistor): implement null fibers, Cech quotient, contour Maxwell field and Klein transport"
+        },
+        {
+          "sha": "f0b59206747aee57f8038f1fb334dbea3b6fc837",
+          "subject": "feat(twistor): add kinematic tensors, constituent momenta and polynomial CCR"
+        },
+        {
+          "sha": "da892bdb9df1c297ab5cd5dd4d57cd4686dc749b",
+          "subject": "ci: verify Perjes particle source closure on pinned Lean and Mathlib"
+        },
+        {
+          "sha": "7ac00bace45e9616a9a180808196ff62145b5a43",
+          "subject": "test(twistor): add exact source-closure and axiom checker for Perjes modules"
+        },
+        {
+          "sha": "648f645e538f90ab803f55f0683d120eca5a3a06",
+          "subject": "feat(twistor): construct Perjes incidence and Hermitian convention adapters"
+        },
+        {
+          "sha": "f1d58a0e030addeae50b7a58a5ae00f905ce2fcc",
+          "subject": "docs: specify Perjes particle and Klein glide theorem contracts"
+        },
+        {
+          "sha": "d6d7a86cf5cadef212082e879605390f0fafaea8",
+          "subject": "Connect infinity readout to native chiral source and sink grading"
+        },
+        {
+          "sha": "cf42798ec8a3d6ca35aca65172730829a0a35469",
+          "subject": "Formalize Plücker infinity geometry and real modular conjugation"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/perjes-particle.yml",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "docs/PERJES_PARTICLE_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_VALIDATION.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityChiralCharge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityGradeReversal.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinitySourceSinkGrading.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/RealModularConjugationBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Physics/Pin55Glide.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Projective/ExteriorKleinCliffordInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/HomogeneousTwistorCech.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/InfinityTwistor.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/KleinTwistorPinTransport.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PenroseContourTransform.lean",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesConventions.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesNullLineCorrespondence.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesParticleGeometry.lean",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerBlockInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerCl55InfinityBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityChart.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityGeometry.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModular.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModularAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerLorentzRealForm.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerPenroseIncidence.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentCCR.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentKinematics.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorKinematicTensor.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/infra/check_plucker_infinity_modular.py",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_particle.py",
+          "content_vs_main": "different"
+        }
+      ],
+      "local_integration": {
+        "result": "Current Pin55, Cech, Klein transport, Perjes null-line and constituent owners are evolved implementations; no branch-only theorem API was identified. The staged PenroseContourTransform is preserved and was included in the focused build. PerjesParticleGeometry is only a forwarding façade. 13 focused targets passed locked build."
+      }
+    },
+    {
+      "ref": "upstream/formalize/perjes-particle-klein-spinor",
+      "head": "dcd56a134735ac122926b747a189be446f65f55f",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 5,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "dcd56a134735ac122926b747a189be446f65f55f",
+          "subject": "Resolve kernel-reported conjugation and scalar-action elaboration failures"
+        },
+        {
+          "sha": "b0bcbb76d5930191cacebf40d1cc54a0dcf4a234",
+          "subject": "Construct real null-line fibres, internal actions and explicit Klein spinor lift"
+        },
+        {
+          "sha": "c7d6628fb0b6c4250d79fe46d09aea2bc9fb8247",
+          "subject": "Add Perjes convention, kinematic tensor and constituent CCR owners"
+        },
+        {
+          "sha": "d6d7a86cf5cadef212082e879605390f0fafaea8",
+          "subject": "Connect infinity readout to native chiral source and sink grading"
+        },
+        {
+          "sha": "cf42798ec8a3d6ca35aca65172730829a0a35469",
+          "subject": "Formalize Plücker infinity geometry and real modular conjugation"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/perjes-particle.yml",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "docs/PERJES_PARTICLE_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_VALIDATION.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityChiralCharge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityGradeReversal.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinitySourceSinkGrading.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/RealModularConjugationBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Projective/ExteriorKleinCliffordInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinBottleSpinorGlide.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/InfinityTwistor.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesConventions.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesNullLineCorrespondence.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerBlockInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerCl55InfinityBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityChart.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityGeometry.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModular.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModularAudit.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerLorentzRealForm.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerPenroseIncidence.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentCCR.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentKinematics.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorKinematicTensor.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/infra/check_plucker_infinity_modular.py",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_particle.py",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/perjes_targets.json",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "The core Perjes/Klein source overlaps the current owners and the Perjes source set was covered by the successful 13-target locked build. Branch contract/workflow artifacts are not source code; no wholesale merge selected.",
+        "verification": {
+          "locked_build_targets": [
+            "InfoGeometry.Twistor.PerjesConventions",
+            "InfoGeometry.Twistor.TwistorConstituentCCR",
+            "InfoGeometry.Twistor.TwistorConstituentKinematics",
+            "InfoGeometry.Twistor.TwistorInternalSymmetry",
+            "InfoGeometry.Twistor.TwistorKinematicTensor",
+            "InfoGeometry.Topology.KleinAssociatedSpinors",
+            "InfoGeometry.Topology.KleinCliffordPinLift",
+            "InfoGeometry.Topology.KleinDeckRepresentation",
+            "InfoGeometry.Twistor.HomogeneousTwistorCech",
+            "InfoGeometry.Twistor.KleinTwistorPinTransport",
+            "InfoGeometry.Twistor.PerjesNullLineCorrespondence",
+            "InfoGeometry.Twistor.PenroseContourTransform",
+            "InfoGeometry.Physics.Pin55Glide"
+          ],
+          "result": "pass (included in the sequential 13-target locked build recorded for Perjes/Klein integration)"
+        }
+      }
+    },
+    {
+      "ref": "upstream/formalize/plucker-infinity-modular-bridge",
+      "head": "feb80d28cd580eefcc525ed769feeff8f685a25e",
+      "main_unique_commit_count": 211,
+      "branch_unique_commit_count": 3,
+      "audit_status": "fully_represented_verified",
+      "unique_commits": [
+        {
+          "sha": "feb80d28cd580eefcc525ed769feeff8f685a25e",
+          "subject": "Complete Plucker infinity continuation through native CAR and analytic colimits"
+        },
+        {
+          "sha": "d6d7a86cf5cadef212082e879605390f0fafaea8",
+          "subject": "Connect infinity readout to native chiral source and sink grading"
+        },
+        {
+          "sha": "cf42798ec8a3d6ca35aca65172730829a0a35469",
+          "subject": "Formalize Plücker infinity geometry and real modular conjugation"
+        }
+      ],
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_CONTINUATION_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_CONTRACT.md",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/PLUCKER_INFINITY_MODULAR_VALIDATION.json",
+          "content_vs_main": "missing_on_main"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55ChiralAnalyticKMS.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityChiralCharge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinityGradeReversal.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55InfinitySourceSinkGrading.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/Cl55WittInternalFiveGrading.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/ComplexOperatorBilingualAnalyticity.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Canonical/ExteriorContractionOperatorBridge.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/ExteriorFockOperatorLaws.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/FilteredGNSHestenesPhaseCone.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/FilteredGNSMatrixAnalyticKMS.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/FiniteFaithfulGNSTomitaClosability.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/FiniteMatrixGibbsFaithfulness.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/FiniteSeedGibbsTomitaClosability.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/FiniteSeedRepresentedAnalyticKMS.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Canonical/FockNumberOperatorBridge.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Canonical/FockVacuumAnnihilationBridge.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Canonical/FullCARAnticommutationAlgebraBridge.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/MatrixTraceTomitaColimit.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/RealModularConjugationBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/TracialGNSTomitaClosability.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Canonical/VacuumExpectationCARBridge.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Clifford/Cl55NativeInternalFiveGrading.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Clifford/Cl55WittCalibratedColimit.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Clifford/Cl55WittCalibratedGamma.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Clifford/Cl55WittCalibratedHermitian.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Clifford/Cl55WittCalibratedRepresentation.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/ComplexTimeCorrelation.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Projective/ExteriorKleinCliffordInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/InfinityTwistor.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerBlockInversion.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerCl55InfinityBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityChart.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityGeometry.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModular.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerInfinityModularAudit.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerLorentzRealForm.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerPenroseIncidence.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerPinAffineRestriction.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerPinEndpointStabilizers.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PluckerSheetReflection.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenCl55ExteriorBridge.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenCollinearityOperator.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenExteriorHelicity.lean",
+          "content_vs_main": "different"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenExteriorScalarExtension.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenIncidence.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenParkeTaylor.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenSpinorBCFW.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/WittenSpinorHelicity.lean",
+          "content_vs_main": "same"
+        },
+        {
+          "status": "A",
+          "path": "tools/infra/check_plucker_infinity_modular.py",
+          "content_vs_main": "same"
+        }
+      ],
+      "local_integration": {
+        "result": "Three base-only commits largely repeat current Lean owners; current main contains evolved versions of the few divergent owners. The branch adds contracts/validation docs only; not source code. PR #231/#234 depend on this old base, but it is not a safe merge base to import wholesale."
+      }
+    },
+    {
+      "ref": "upstream/formalize/zorn-chiral-archetype-conditional-20261025",
+      "head": "59182a753233a548f171e8f8b6f4f4479efee122",
+      "main_unique_commit_count": 349,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/formalize/zorn-traceless-two-mode-flow-20261025",
+      "head": "78b227955e62ff8ce4d5d8cc6276368c73d301fa",
+      "main_unique_commit_count": 305,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    },
+    {
+      "ref": "upstream/main",
+      "head": "d23c9afe00275126fd4d4e25cb0842ee55fe82af",
+      "main_unique_commit_count": 3,
+      "branch_unique_commit_count": 0,
+      "audit_status": "no_branch_unique_commits"
+    }
+  ],
+  "open_pr_audit": [
+    {
+      "number": 231,
+      "head_ref": "upstream/formalize/perjes-klein-particle-completion",
+      "head": "4383aa550df4ad749b6ba802c23a684bc7648bde",
+      "base_ref": "upstream/formalize/plucker-infinity-modular-bridge",
+      "base": "feb80d28cd580eefcc525ed769feeff8f685a25e",
+      "status": "OPEN/DRAFT/UNSTABLE; GitHub checks failed",
+      "unique_commits": [
+        "4383aa550df4ad749b6ba802c23a684bc7648bde",
+        "7e8e97e1c253dddb0307b3f42ad41888426534fa",
+        "27b4802a0fb1cb048006c2fe14461f19e066deec"
+      ],
+      "files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/perjes-klein.yml",
+          "local_content": "absent"
+        },
+        {
+          "status": "A",
+          "path": "docs/PERJES_KLEIN_CONTRACT.md",
+          "local_content": "absent"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinAssociatedSpinors.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "exp_half_pi",
+            "minusWave",
+            "minusWave_glide",
+            "minusWave_nonzero"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinCliffordPinLift.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Topology/KleinDeckRepresentation.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesConventions.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "coordinateEquiv",
+            "diagonalFrame",
+            "diagonalFrame_pairing",
+            "helicity_adapter",
+            "helicity_phase_invariant",
+            "hermitian_incidence_isotropic",
+            "incidence",
+            "incidence_injective",
+            "incidence_pairing",
+            "pairing",
+            "pairing_smul",
+            "pairing_swap",
+            "physicalHelicity"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentCCR.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "Coordinate",
+            "conjugate_commute",
+            "constituent_CCR",
+            "derivative",
+            "derivative_commute",
+            "derivative_position",
+            "position",
+            "position_commute",
+            "quadraticGenerator",
+            "quadraticGenerator_X",
+            "quadraticGenerator_bracket",
+            "singleEmbedding",
+            "singleEmbedding_conjugate",
+            "singleEmbedding_derivative",
+            "singleEmbedding_position",
+            "translationGenerator"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentKinematics.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "Columns",
+            "columns",
+            "conjugateEntries",
+            "conjugateEntries_mul",
+            "lowerColumns",
+            "raisedColumns",
+            "raisedColumns_column",
+            "raisedColumns_mul",
+            "raisingMatrix",
+            "raisingMatrix_square_zero",
+            "totalKinematic_eq_sum",
+            "totalMomentum_eq_sum",
+            "totalMomentum_positive",
+            "totalMomentum_readout",
+            "two_constituent_mass_readout"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "internalTransform_preserves_kinematics",
+            "internalTransform_preserves_mass",
+            "internalTransform_preserves_momentum",
+            "skewShift",
+            "skewShiftEquiv",
+            "skewShift_add",
+            "skewShift_mem_stabilizer",
+            "totalKinematic_skewShift",
+            "totalKinematic_unitary",
+            "unitaryMixEquiv",
+            "unitaryMix_mem_stabilizer"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorKinematicTensor.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "angular_block",
+            "conjugateDual",
+            "covariant_infinitySharp_zero",
+            "kinematic_scaling",
+            "momentumReadout",
+            "momentumReadout_kinematic",
+            "momentum_det_zero",
+            "momentum_trace",
+            "momentum_trace_nonnegative",
+            "momentum_trace_positive",
+            "raised",
+            "two_constituent_mass",
+            "upperBasis"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_klein.py",
+          "local_content": "absent"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_klein_targets.txt",
+          "local_content": "absent"
+        }
+      ],
+      "local_disposition": "Useful mathematical source is represented by current main owners; draft remains unmerged remotely pending the complete branch/PR audit. No remote PR state changed."
+    },
+    {
+      "number": 234,
+      "head_ref": "upstream/formalize/perjes-particle-klein-holonomy",
+      "head": "fa183120e693a3d60f17260cf3067d50e9e7f463",
+      "base_ref": "upstream/formalize/plucker-infinity-modular-bridge",
+      "base": "feb80d28cd580eefcc525ed769feeff8f685a25e",
+      "status": "OPEN/DRAFT/UNSTABLE; GitHub checks failed",
+      "unique_commits": [
+        "fa183120e693a3d60f17260cf3067d50e9e7f463",
+        "db46984ba816d011c652a2f784fc0c4c174a7c6d",
+        "ec4858aac498327af093a4fbef07c47de8e4b260",
+        "9e87e11b50087039aab4cdb30ee90e93d9f7b43f",
+        "f0b59206747aee57f8038f1fb334dbea3b6fc837",
+        "da892bdb9df1c297ab5cd5dd4d57cd4686dc749b",
+        "7ac00bace45e9616a9a180808196ff62145b5a43",
+        "648f645e538f90ab803f55f0683d120eca5a3a06",
+        "f1d58a0e030addeae50b7a58a5ae00f905ce2fcc"
+      ],
+      "files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/perjes-particle.yml",
+          "local_content": "different_main_owner"
+        },
+        {
+          "status": "A",
+          "path": "docs/PERJES_PARTICLE_CONTRACT.md",
+          "local_content": "absent"
+        },
+        {
+          "status": "M",
+          "path": "lean/InfoGeometry/Physics/Pin55Glide.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "axial_glide_squared"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/HomogeneousTwistorCech.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/KleinTwistorPinTransport.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PenroseContourTransform.lean",
+          "local_content": "staged_local_candidate",
+          "branch_only_declaration_name_candidates": [
+            "contourMaxwell",
+            "contourMaxwell_eq_field",
+            "contourMaxwell_nonconstant",
+            "contourMaxwell_zero_rest_mass",
+            "contourNormalization",
+            "contourNormalization_ne_zero",
+            "contourOnCohomology",
+            "contourOnCohomology_mk",
+            "contour_coboundary_invariant",
+            "contour_eq_principalPart",
+            "deriv_affine_product",
+            "maxwellField",
+            "maxwellField_symmetric",
+            "maxwellKernel",
+            "maxwellKernel_incidence",
+            "maxwellRepresentative",
+            "maxwellRepresentative_homogeneous",
+            "maxwell_zero_rest_mass",
+            "monomial_circleIntegrable",
+            "nonzero_residue",
+            "normalizedMoment",
+            "normalizedMoment_eq_coefficient",
+            "spacetimePartial",
+            "zpow_circleIntegrable",
+            "zpow_circleIntegral"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesConventions.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "diagonalHermitian_eq_twice",
+            "existing_helicity_adapter",
+            "hermitian_incidence_isotropic",
+            "incidenceHermitian",
+            "incidenceHermitian_conj",
+            "incidenceHermitian_incidence",
+            "incidenceHermitian_smul",
+            "incidenceSignChange",
+            "incidenceToDiagonal",
+            "perjesIncidence",
+            "perjesSolder",
+            "perjesSolder_determinant",
+            "physicalHelicity",
+            "physicalHelicity_phase",
+            "signChange_incidence"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesNullLineCorrespondence.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "hermitian_kernel_formula",
+            "hermitian_kernel_real_span",
+            "incidence_equal_iff",
+            "rayDirection",
+            "rayDirection_annihilates",
+            "rayDirection_hermitian",
+            "rayDirection_ne_zero",
+            "rayDirection_null",
+            "real_incidence_fiber",
+            "real_ray_parameter_unique",
+            "spinorNormSq_cast",
+            "trace_rayDirection"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/PerjesParticleGeometry.lean",
+          "local_content": "absent",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentCCR.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "ConstituentOperator",
+            "ConstituentPolynomial",
+            "PolynomialOperator",
+            "PolynomialSpace",
+            "constituent_CCR",
+            "coordinate_noncommuting",
+            "creation",
+            "creation_commute",
+            "creation_eq_existing",
+            "derivative",
+            "derivative_commute",
+            "distinct_constituents_commute"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorConstituentKinematics.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "momentum_det_zero",
+            "momentum_phase",
+            "pairMassSq_eq_zero_iff",
+            "pairMassSq_translation",
+            "pair_determinant",
+            "spinorColumns",
+            "totalKinematic_momentum_one",
+            "totalKinematic_momentum_zero",
+            "totalMomentum_eq_sum",
+            "totalMomentum_posSemidef",
+            "two_null_constituents_massive"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "coordinateColumns",
+            "coordinateColumns_injective",
+            "coordinateColumns_mix",
+            "coordinateColumns_skewShift",
+            "entryConjugate",
+            "internal_kinematic_invariant",
+            "mix_composition",
+            "raisedColumns",
+            "raisedColumns_mix",
+            "raisedColumns_skewShift",
+            "raised_skewShift",
+            "skewShift",
+            "skewShift_kinematic_defect",
+            "skewShift_kinematic_invariant",
+            "skewShift_momentum_invariant",
+            "spinorColumns_mix",
+            "totalKinematic_matrix_formula",
+            "unitary_kinematic_invariant",
+            "unitary_momentum_invariant"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Twistor/TwistorKinematicTensor.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "TwistorIndex",
+            "angularSpinor_symmetric",
+            "conjugateCoordinate",
+            "infinitySharp_alternating",
+            "infinityTwistor_raisedConjugate",
+            "kinematic_lower_block_zero",
+            "kinematic_momentum_column_one",
+            "kinematic_momentum_column_zero",
+            "momentOperator",
+            "momentOperator_square",
+            "momentOperators_noncommuting",
+            "momentum_translation",
+            "null_momentOperator_square",
+            "raisedConjugate",
+            "raisedConjugate_explicit",
+            "twistorCoordinate",
+            "twistorCovector",
+            "upperBasis"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_perjes_particle.py",
+          "local_content": "different_main_owner"
+        }
+      ],
+      "local_disposition": "Useful mathematical source is represented by current main owners; draft remains unmerged remotely pending the complete branch/PR audit. No remote PR state changed."
+    },
+    {
+      "number": 250,
+      "head_ref": "upstream/formalize/lie-jordan-peirce-operators-20261028",
+      "head": "6577163b28f747b14dedd689be8a2eb905a524c0",
+      "base_ref": "upstream/main",
+      "base": "d23c9afe00275126fd4d4e25cb0842ee55fe82af",
+      "status": "OPEN/DIRTY; sorry-gate failed; user reports focused audit passed",
+      "unique_commits": [
+        "6577163b28f747b14dedd689be8a2eb905a524c0",
+        "fd11e1c052b69c98ff9533f97edc773e769fa9bb",
+        "d61a6c93ee7d075df752c6f3b19b68974cc6b763",
+        "52b1efb57a8186718990890089ba4a9237872d8e",
+        "e38b300aac0a60eab0bb2474db85f510da08b2c3",
+        "093e80eed83d0c0ff0e74a9a84cd27268e3f2f18",
+        "103d5bb661d9c52b5bb68f9834f31697143b2de1",
+        "ad9d92e7c53600deae2ef10bd16c585361197b08",
+        "da8d0d0aa8ea24c50fc4c9ceb24fd42835d2cbe0",
+        "dc6d04d4a1e8f976962c9f8f2d5634b29573532d",
+        "edb75e6797f2540027a57e81006842d177268d2e",
+        "b62ec37224a52ffb9d1ddb585d99ced9d259bce5",
+        "85bd32a552700befa9af9c2c4bc6443b48f0bb2f",
+        "cf6f9f8954e8b1e45bb1d483a8c50c26d779df1f",
+        "617f67123d8959d6cb5045995390f6269501822a",
+        "f550271b141afb44c0ff52fec81eb1552a45ebca",
+        "1b79b49fdf2e02200345e7ee54b27317f5bdeff5",
+        "e12460af45c09f786edd374c453b72e8841ec4ff"
+      ],
+      "files": [
+        {
+          "status": "A",
+          "path": ".github/workflows/lie-jordan-peirce-kernel.yml",
+          "local_content": "same_as_main"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/peirce-boundaries.yml",
+          "local_content": "different_main_owner"
+        },
+        {
+          "status": "A",
+          "path": ".github/workflows/signed-transport.yml",
+          "local_content": "same_as_main"
+        },
+        {
+          "status": "A",
+          "path": "docs/REAL_GRADED_BOUNDARY_CONTRACT.md",
+          "local_content": "different_main_owner"
+        },
+        {
+          "status": "A",
+          "path": "docs/SIGNED_TRANSPORT_CONTRACT.md",
+          "local_content": "different_main_owner"
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Algebra/PeirceLieJordanResolution.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "corner",
+            "corner_comp",
+            "corner_mul",
+            "corner_sum",
+            "double_lie",
+            "double_lie_eq_offDiagonal",
+            "map_corner",
+            "peirce00_lie_jordan",
+            "peirce01_lie_jordan",
+            "peirce10_lie_jordan",
+            "peirce11_lie_jordan"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/Canonical/LieJordanTensorColimit.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanDiracComposition.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanEndomorphisms.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanNoncommutingWitnesses.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirce.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceAudit.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/LieJordanTraceDuality.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "cubic_swap_first",
+            "cubic_swap_last",
+            "plus_conjTranspose",
+            "trace_dual",
+            "trace_lie_skew",
+            "trace_plus_defect",
+            "trace_star_dual",
+            "trace_star_energy"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryDynamics.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryMetric.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryOrder.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceBoundaryWitness.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceGradedDifferential.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": [
+            "peirceShortComplex",
+            "peirceTwist",
+            "peirceTwist_forward",
+            "peirceTwist_involutive",
+            "peirce_boundary_square_zero",
+            "twistedCoInner",
+            "twistedCoInner_square",
+            "twistedInner",
+            "twistedInner_coInner",
+            "twistedInner_even",
+            "twistedInner_leibniz",
+            "twistedInner_mixed",
+            "twistedInner_natural",
+            "twistedInner_odd",
+            "twistedInner_range_le_ker",
+            "twistedInner_reverses_parity",
+            "twistedInner_square",
+            "twistedInner_square_zero",
+            "twistedShortComplex"
+          ]
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSignedTransport.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/PeirceTraceForms.lean",
+          "local_content": "same_as_main",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedBoundaryTransport.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportMetric.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportOrder.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "lean/InfoGeometry/OperatorAlgebra/SignedTransportWitness.lean",
+          "local_content": "different_main_owner",
+          "branch_only_declaration_name_candidates": []
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_peirce_boundaries.py",
+          "local_content": "different_main_owner"
+        },
+        {
+          "status": "A",
+          "path": "tools/quality/check_signed_transport.py",
+          "local_content": "same_as_main"
+        }
+      ]
+    }
+  ],
+  "first_wave_decisions": {
+    "shared_plucker_base": "Its three branch-only commits affect 52 paths from the old fork point; core Lean owners are mostly identical to main, with remaining variants superseded by current owners. Avoid wholesale merge.",
+    "pr231_pr234": "Useful math is already represented by current Perjes/null-line, Cech, Klein transport and constituent owners; staged PenroseContourTransform is preserved. Do not merge stale draft PRs while CI is red.",
+    "local_repair": "Restored license header and repaired KleinAssociatedSpinors proof shortcuts plus minusWave_glide phase proof.",
+    "verification": "Locked Lake build succeeded for all 13 focused Perjes/Klein/Twistor targets (8957 jobs).",
+    "checker": "check_perjes_particle.py requires a clean Lean diff against HEAD, incompatible with preserved staged baseline; direct locked builds used.",
+    "codex_noncommutative_boundary_pairing": "Two of three substantive branch owners already matched HEAD; integrated the missing KrausBoundaryDuality owner, with explicit-family elaboration repair. Four focused targets including the branch axiom-audit owner passed locked Lake build. No docs imported.",
+    "codex_real_graded_boundary_compilation": "17 branch-only commits; branch tip is not merge-compatible (606 paths removed relative to main). Added and kernel-built the distinct parity-twisted differential/Peirce short-complex owner as a separate module. Other owner variants remain pending focused review.",
+    "codex_real_operator_content_network_20261029": "Its sole branch-only commit is not an ancestor of main, but every changed blob is already byte-identical in HEAD. Owner plus 191-declaration axiom audit passed locked build; no merge needed.",
+    "codex_signed_peirce_transport": "This 16-commit branch is an ancestor of codex/real-graded-boundary-compilation. Its distinct twisted differential is represented and kernel-built in PeirceTwistedComplex. Existing identical owners were confirmed; divergent signed-transport and real metric owners remain pending.",
+    "feat_balaban_operator_coarse_graining": "All Lean owners and the 62-theorem regression/audit file are already byte-identical in HEAD. The only missing branch artifact is documentation; source owners and BalabanOperatorTests passed locked build. No merge needed.",
+    "feat_noncommutative_yang_mills_dirichlet": "All substantive owners and the matrix tests are already represented; the branch removes compatibility declarations from one owner and only simplifies a proof in another. Preserved current richer APIs; focused curvature/GNS owner build passed.",
+    "feat_operator_defect_lie_closure": "Branch-only closure claims are already implemented in the Algebra.ZornLeftMultiplicationDefect owner; focused build and OperatorDefectCompletionAudit pass. No merge needed.",
+    "formalize_chiral_null_gauge_inversion": "All branch Lean declaration names were already present in current owners; proof variants add no API surface. Chiral/gauge owner set and regression target passed locked build. No merge needed.",
+    "formalize_lie_jordan_peirce_duality_20261028": "All branch theorem/definition names already occur in current owners, which include additional examples and Schur structure. Aggregate owner and 7-owner audit passed. No merge needed.",
+    "formalize_lie_jordan_peirce_operators_20261028": "Current Peirce owners provide equivalent or richer APIs; the only distinct twisted-complex layer is ported as PeirceTwistedComplex and kernel-built. Aggregate audit passed. No wholesale merge.",
+    "shared_plucker_perjes": "The shared base and PR #231/#234 source owners are represented in current main by evolved Perjes/Klein/Twistor modules. All 13 focused targets passed. Preserve staged PenroseContourTransform; do not merge stale drafts or forwarding-only facades."
+  },
+  "branch_ahead_count": 14,
+  "branches_with_no_unique_commits_count": 44,
+  "main_ahead_branch_count": 58,
+  "ahead_branch_refs": [
+    "upstream/codex/noncommutative-boundary-pairing",
+    "upstream/codex/real-graded-boundary-compilation",
+    "upstream/codex/real-operator-content-network-20261029",
+    "upstream/codex/signed-peirce-transport",
+    "upstream/feat/balaban-operator-coarse-graining",
+    "upstream/feat/noncommutative-yang-mills-dirichlet",
+    "upstream/feat/operator-defect-lie-closure",
+    "upstream/formalize/chiral-null-gauge-inversion",
+    "upstream/formalize/lie-jordan-peirce-duality-20261028",
+    "upstream/formalize/lie-jordan-peirce-operators-20261028",
+    "upstream/formalize/perjes-klein-particle-completion",
+    "upstream/formalize/perjes-particle-klein-holonomy",
+    "upstream/formalize/perjes-particle-klein-spinor",
+    "upstream/formalize/plucker-infinity-modular-bridge"
+  ],
+  "local_validation": {
+    "focused_owner_build": "pass: KrausBoundaryDuality, PeirceTwistedComplex, LieJordanPeirce, LieJordanPeirceAudit (8,972 jobs)",
+    "root_aggregate_build": "failed on pre-existing staged baseline modules: InfoGeometry.Clifford.ClNNPermutationSymmetry, InfoGeometry.RootSystem.D4BitConfigurationAction, InfoGeometry.Cantor.SimpleCantorPermutationGroup, InfoGeometry.Exceptional.CFSGPort.ExceptionalCartanHelpers, InfoGeometry.RootSystem.ExceptionalRootLatticeWeyl, InfoGeometry.Exceptional.CFSGPort.ChevalleyRootGroupsTriangular, Coxeter.GeometricRepresentation; no failures reported for the focused owners The two new owners are included in InfoGeometry.All; this broad target still has the listed unrelated errors.",
+    "scope": "The aggregate failures arise from pre-existing staged additions outside branch-port files; they remain outside this branch audit integration unless separately requested."
+  }
+}

@@ -52,8 +52,8 @@ environment:
 | `lean/DAG/Basic.lean` | foundational graph type and dependency extraction from `ConstantInfo` |
 | `lean/DAG/DeclIndex.lean` | direct dependency and reverse-user maps |
 | `lean/DAG/Indexer.lean` | canonical JSON/JSONL export of declarations, edges, morphisms, types, full graph, structural topology |
-| `lean/DAG/Hydrate.lean` | SCC condensation, DAG, predecessors, topological order, dominators |
-| `lean/DAG/StructuralExport.lean` | `structural-topology.json` rows: components, membership, roots, capstones, layers, dominators |
+| `lean/DAG/Hydrate.lean` | SCC condensation, DAG, predecessors, topological order, sparse immediate-dominator forest |
+| `lean/DAG/StructuralExport.lean` | `structural-topology.json` rows: components, membership, roots, capstones, layers, and compact immediate-dominator parent links |
 | `lean/DAG/ExportForwardGraph.lean` | legacy/simple forward graph exporter; compatibility layer, not current authority |
 
 The key primitive is in `lean/DAG/Basic.lean`:
@@ -88,6 +88,12 @@ artifacts/dag/index/meta.json
 artifacts/dag/full_graph.json
 artifacts/dag/structural-topology.json
 ```
+
+The structural artifact uses schema version 2. Each component stores its
+`immediateDominatorComponentId` and exact `strictDominatorCount`; follow parent
+links to recover the complete strict-dominator chain. Root reachability and
+per-root path counts are not expanded into a component-by-root Cartesian
+product: `componentEdges` remains the exact topology for query-time joins.
 
 ### Layer 2: Lean InfoTree extraction
 
@@ -148,7 +154,7 @@ Important Python wrappers/consumers:
 | `tools/infra/dag_status.py` | monitor | checks DAG artifact status |
 | `tools/infra/dag_all.py` | orchestration | runs the larger DAG refresh/report pipeline |
 | `tools/infra/dag_doctor.py` | diagnostic | checks indexer executable/artifact health |
-| `tools/infra/batch_raw_infotree_export.py` | wrapper | runs `RawInfoTreeExport.lean` file-by-file and merges only validated rows |
+| `tools/infra/batch_raw_infotree_export.py` | wrapper | runs `RawInfoTreeExport.lean` file-by-file; keeps validated per-file rows, reuses only fully bound captures with `--resume`, and creates a merged duplicate only with `--merge` |
 | `tools/infra/validate_raw_infotree_export.py` | validator | validates raw InfoTree output directories |
 | `tools/infra/arango_raw_infotree_ingest.py` | database ingest | imports raw InfoTree JSONL tables into Arango |
 | `tools/infra/arango_raw_infotree_graph.py` | database graph | creates/probes named Arango graph over raw InfoTree tables |
@@ -206,7 +212,8 @@ Lean source file
   -> commandState.infoState.trees
   -> lean/DAG/RawInfoTreeExport.lean
   -> per-file raw_infotree_*.jsonl tables
-  -> tools/infra/batch_raw_infotree_export.py validates and merges
+  -> tools/infra/batch_raw_infotree_export.py validates per-file exports and can safely resume matching captures
+  -> optional `--merge` creates a second combined copy when a consumer requires it
   -> tools/infra/arango_raw_infotree_ingest.py imports rows
   -> tools/infra/arango_raw_infotree_graph.py creates graph overlays
   -> tools/infra/verify_raw_infotree_arango_descent.py audits descent invariants

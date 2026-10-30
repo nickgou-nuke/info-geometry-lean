@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -35,6 +36,27 @@ def muPaper : ℕ → ℤ
   | 11 => -1
   | 12 => 0
   | _ => 0
+
+/-- The finite lookup agrees with the value zero beyond its explicitly listed
+range. This is a statement about the lookup table, not the arithmetic Möbius
+function. -/
+theorem muPaper_eq_zero_of_gt_twelve {n : ℕ} (hn : 12 < n) : muPaper n = 0 := by
+  unfold muPaper
+  split <;> omega
+
+/-- A prime beyond the table range separates the finite lookup from the
+canonical arithmetic Möbius function. The table is intentionally finite and
+must not be extrapolated as a definition of `μ`. -/
+theorem muPaper_ne_moebius_of_prime_gt_twelve {p : ℕ} (hp : p.Prime)
+    (hlarge : 12 < p) : muPaper p ≠ ArithmeticFunction.moebius p := by
+  rw [muPaper_eq_zero_of_gt_twelve hlarge,
+    ArithmeticFunction.moebius_apply_prime hp]
+  norm_num
+
+/-- Concrete witness for the finite/global distinction at the prime 13. -/
+theorem muPaper_thirteen_ne_moebius :
+    muPaper 13 ≠ ArithmeticFunction.moebius 13 := by
+  exact muPaper_ne_moebius_of_prime_gt_twelve (by norm_num) (by norm_num)
 
 /-- The first square-obstruction anomaly: `4` has a repeated prime factor, so `μ(4)=0`. -/
 theorem muPaper_four_square_obstruction : muPaper 4 = 0 := rfl

@@ -205,11 +205,24 @@ def shared_strict_dominator_ids(
     dominator_sets: list[set[str]] = []
     for component_id in component_ids:
         row = components_by_id.get(component_id, {})
-        dominator_sets.append({
-            str(cid)
-            for cid in row.get("strictDominatorComponentIds", [])
-            if str(cid)
-        })
+        if "immediateDominatorComponentId" in row:
+            ancestors: set[str] = set()
+            current = row.get("immediateDominatorComponentId")
+            seen = {component_id}
+            while current:
+                current = str(current)
+                if current in seen:
+                    break
+                seen.add(current)
+                ancestors.add(current)
+                current = components_by_id.get(current, {}).get("immediateDominatorComponentId")
+            dominator_sets.append(ancestors)
+        else:
+            dominator_sets.append({
+                str(cid)
+                for cid in row.get("strictDominatorComponentIds", [])
+                if str(cid)
+            })
     shared = dominator_sets[0].copy()
     for doms in dominator_sets[1:]:
         shared.intersection_update(doms)

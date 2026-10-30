@@ -165,4 +165,26 @@ theorem ProjectorCommutatorObstruction.implies_mismatch
     O.pair.mismatch ≠ 0 :=
   ProjectorPair.commutator_ne_zero_implies_mismatch_ne_zero (P := O.pair) O.noncommutingSplit
 
+/-!
+## The converse fails for distinct commuting idempotents
+
+The implication above is one-way.  The following non-diagonal complementary
+idempotents in the noncommutative matrix ring `M₂(ℤ)` have nonzero difference
+but zero commutator, so mismatch does not characterize a noncommuting split.
+-/
+
+abbrev ComplementaryProjectorWitness := Matrix (Fin 2) (Fin 2) ℤ
+
+def complementaryProjectorWitnessP : ComplementaryProjectorWitness :=
+  !![1, 1; 0, 0]
+
+def complementaryProjectorWitnessQ : ComplementaryProjectorWitness :=
+  !![0, -1; 0, 1]
+
+theorem commuting_projectors_can_have_nonzero_mismatch :
+    ∃ P : ProjectorPair ComplementaryProjectorWitness,
+      P.mismatch ≠ 0 ∧ P.commutator = 0 := by
+  refine ⟨⟨complementaryProjectorWitnessP, complementaryProjectorWitnessQ,
+    ?_, ?_⟩, ?_, ?_⟩ <;> decide
+
 end InfoGeometry.Canonical.OperatorProjectorMismatch

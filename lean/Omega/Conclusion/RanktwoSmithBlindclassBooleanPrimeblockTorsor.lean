@@ -198,4 +198,30 @@ theorem paper_conclusion_ranktwo_smith_blindclass_boolean_primeblock_torsor
   simpa [unitaryDivisors] using
     unitaryDivisors_card (n := Nat.lcm a b / Nat.gcd a b) hh_pos.ne'
 
+/-- Exact domain of the Boolean unitary-divisor count: for the quotient
+`lcm(a,b) / gcd(a,b)`, the count equals `2 ^ number_of_prime_factors` exactly
+when both inputs are positive. Every boundary case has quotient zero and count
+zero, so the positive-input hypothesis is necessary as well as sufficient. -/
+theorem ranktwo_smith_unitary_divisor_count_iff_positive
+    (a b : Nat) :
+    (let g := Nat.gcd a b
+     let l := Nat.lcm a b
+     let h := l / g
+     (h.divisors.filter fun u => Nat.Coprime u (h / u)).card =
+       2 ^ h.primeFactors.card) ↔ 0 < a ∧ 0 < b := by
+  dsimp
+  constructor
+  · intro h
+    by_cases ha : 0 < a
+    · by_cases hb : 0 < b
+      · exact ⟨ha, hb⟩
+      · have hb0 : b = 0 := Nat.eq_zero_of_not_pos hb
+        subst b
+        simp at h
+    · have ha0 : a = 0 := Nat.eq_zero_of_not_pos ha
+      subst a
+      simp at h
+  · rintro ⟨ha, hb⟩
+    exact paper_conclusion_ranktwo_smith_blindclass_boolean_primeblock_torsor a b ha hb
+
 end Omega.Conclusion

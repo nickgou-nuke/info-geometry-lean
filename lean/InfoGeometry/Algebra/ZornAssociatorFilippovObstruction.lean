@@ -55,6 +55,21 @@ theorem associatorFilippovDefect_UUUVV :
   rw [associator_filippov_UUUVV_lhs, associator_filippov_UUUVV_rhs]
   ext i <;> (try fin_cases i) <;> simp [sub, add, neg, zero, smul, U, ZornVec3.basis]
 
+/-- The selected Filippov defect vanishes exactly when the coefficient `4`
+vanishes in the base ring. This classifies the characteristic boundary for
+this witness; it does not assert the universal Filippov identity when `4 = 0`.-/
+theorem associatorFilippovDefect_UUUVV_eq_zero_iff_four_eq_zero :
+    associatorFilippovDefect (U 0 : ZornVectorMatrix R) (U 1) (U 2) (V 0) (V 1) = zero ↔
+      (4 : R) = 0 := by
+  rw [associatorFilippovDefect_UUUVV]
+  constructor
+  · intro h
+    have hv := congrArg (fun X : ZornVectorMatrix R => X.v 2) h
+    simpa [smul, U, ZornVec3.basis, zero] using hv
+  · intro hfour
+    rw [hfour]
+    simp [smul, U, ZornVec3.basis, zero]
+
 /-- Over the reals the displayed obstruction is genuinely nonzero. -/
 theorem associatorFilippovDefect_real_ne_zero :
     associatorFilippovDefect (U 0 : ZornVectorMatrix ℝ) (U 1) (U 2) (V 0) (V 1) ≠

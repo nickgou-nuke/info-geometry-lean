@@ -102,6 +102,19 @@ theorem grade_unique_of_ne_zero {X : Cl55} {r s : ℤ} (hX : X ≠ 0)
   have : (r : ℝ) = (s : ℝ) := sub_eq_zero.mp ((smul_eq_zero.mp hz).resolve_right hX)
   exact_mod_cast this
 
+/-- Exact grade classification for a creation word with no repeated modes.
+Nonvanishing and uniqueness of the operator grade make the length the only
+possible grade. -/
+theorem creationWord_grade_iff (is : List (Fin 5)) (hnd : is.Nodup) (k : ℤ) :
+    creationWord is ∈ cl55GradeSubmodule k ↔ (is.length : ℤ) = k := by
+  constructor
+  · intro hk
+    exact grade_unique_of_ne_zero (creationWord_ne_zero is hnd)
+      (creationWord_mem_grade is) hk
+  · intro hk
+    rw [← hk]
+    exact creationWord_mem_grade is
+
 theorem scalarShift_grade_iff (c : ℝ) (X : Cl55) (k : ℤ) :
     HasOperatorGrade (numberOperator55 - c • (1 : Cl55)) X k ↔
       X ∈ cl55GradeSubmodule k := by

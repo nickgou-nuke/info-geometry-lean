@@ -183,15 +183,18 @@ def build_payload(
         if not isinstance(subject, str):
             subject = str(subject)
         dna = attached[key]
+        churn_known = (doc.get("diff_stats_status") != "not_collected"
+                       and all(type(doc.get(field)) in (int, float)
+                               for field in ("insertions", "deletions")))
         nodes.append({"data": {
             "id": key,
             "label": subject[:100] or key[:12],
             "sha": key,
             "date": _commit_time(doc),
             "author": doc.get("author_name", doc.get("author", "")),
-            "rank": doc.get("taxonRank", ""),
-            "archetypes": doc.get("labels", []),
-            "churn": int(doc.get("insertions") or 0) + int(doc.get("deletions") or 0),
+            "change_labels": doc.get("changeLabels", doc.get("labels", [])),
+            "churn": doc["insertions"] + doc["deletions"] if churn_known else None,
+            "churn_status": "observed" if churn_known else "unknown",
             "fingerprint_count": len(dna),
             "fingerprints": dna,
             "external_parent_count": external_parents[key],
@@ -316,7 +319,7 @@ const cy=cytoscape({{container:document.getElementById('cy'),elements:[...nodes,
 cy.on('tap','node',evt=>{{const d=evt.target.data(),box=document.getElementById('details');
   const fps=d.fingerprints||[];
   box.innerHTML=''; const h=document.createElement('h2');h.textContent=d.label||d.sha;box.appendChild(h);
-  for(const [k,v] of Object.entries({{sha:d.sha,date:d.date,author:d.author,rank:d.rank,churn:d.churn,leaf:d.is_leaf,external_parents:d.external_parent_count}})){{const p=document.createElement('p');p.className='muted';p.textContent=k+': '+String(v??'');box.appendChild(p)}}
+  for(const [k,v] of Object.entries({{sha:d.sha,date:d.date,author:d.author,churn:d.churn??'unknown',leaf:d.is_leaf,external_parents:d.external_parent_count,change_labels:d.change_labels}})){{const p=document.createElement('p');p.className='muted';p.textContent=k+': '+(typeof v==='object'?JSON.stringify(v):String(v??''));box.appendChild(p)}}
   const fh=document.createElement('h2');fh.textContent='DNA fingerprints ('+fps.length+')';box.appendChild(fh);
   if(!fps.length){{const p=document.createElement('p');p.className='muted';p.textContent='No record matched the configured key.';box.appendChild(p)}}
   for(const fp of fps){{const card=document.createElement('div');card.className='item';for(const [k,v] of Object.entries(fp)){{const row=document.createElement('div');row.textContent=k+': '+(typeof v==='object'?JSON.stringify(v):String(v));card.appendChild(row)}}box.appendChild(card)}}

@@ -19,6 +19,16 @@ theorem positiveSlice_norm (temporal : ℝ) (spatial : Vec3 ℝ) :
   simp only [positiveSlice, ZornMatrix.zornNorm, Vec3.dot, Pi.neg_apply]
   ring
 
+/-- The positive-slice norm readout has exactly the fibers of the spatial
+quadratic form: it identifies two vectors precisely when their squared
+quadratic values agree. -/
+theorem positiveSlice_norm_fiber_iff (spatial₁ spatial₂ : Vec3 ℝ) :
+    ZornMatrix.zornNorm (positiveSlice 1 spatial₁) =
+      ZornMatrix.zornNorm (positiveSlice 1 spatial₂) ↔
+        Vec3.dot spatial₁ spatial₁ = Vec3.dot spatial₂ spatial₂ := by
+  rw [positiveSlice_norm, positiveSlice_norm]
+  constructor <;> intro h <;> linarith
+
 theorem positiveSlice_norm_nonneg (temporal : ℝ) (spatial : Vec3 ℝ) :
     0 ≤ ZornMatrix.zornNorm (positiveSlice temporal spatial) := by
   rw [positiveSlice_norm]

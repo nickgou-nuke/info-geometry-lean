@@ -119,6 +119,64 @@ theorem plain_intertwiner_obstruction
     simpa [LinearMap.comp_apply, LinearMap.sub_apply, Module.End.mul_apply,
       hEq]
 
+/-- Any plain intertwiner transports the commutator, even when the source
+operators do not commute. The zero conclusion in
+`plain_intertwiner_obstruction` is the specialization to a commuting source. -/
+theorem plain_intertwiner_commutator_naturality
+    {V W : Type*} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    (C₁ K₁ : Module.End ℝ V) (C₂ K₂ : Module.End ℝ W)
+    (J : V →ₗ[ℝ] W)
+    (hK : J ∘ₗ K₁ = K₂ ∘ₗ J)
+    (hC : J ∘ₗ C₁ = C₂ ∘ₗ J) :
+    J ∘ₗ (C₁ * K₁ - K₁ * C₁) =
+      (C₂ * K₂ - K₂ * C₂) ∘ₗ J := by
+  ext x
+  have hKx : J (K₁ x) = K₂ (J x) := by
+    have h := congrArg (fun f => f x) hK
+    simpa [LinearMap.comp_apply] using h
+  have hCx : J (C₁ x) = C₂ (J x) := by
+    have h := congrArg (fun f => f x) hC
+    simpa [LinearMap.comp_apply] using h
+  have hCK : J (C₁ (K₁ x)) = C₂ (J (K₁ x)) := by
+    have h := congrArg (fun f => f (K₁ x)) hC
+    simpa [LinearMap.comp_apply] using h
+  have hKC : J (K₁ (C₁ x)) = K₂ (J (C₁ x)) := by
+    have h := congrArg (fun f => f (C₁ x)) hK
+    simpa [LinearMap.comp_apply] using h
+  simp only [LinearMap.comp_apply, LinearMap.sub_apply, Module.End.mul_apply, map_sub]
+  rw [hCK, hKC, hKx, hCx]
+
+/-- For an injective plain intertwiner, source commutation is equivalent to
+the target commutator vanishing on the image of the intertwiner. -/
+theorem plain_intertwiner_commutes_iff_target_commutator_kills_image
+    {V W : Type*} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    (C₁ K₁ : Module.End ℝ V) (C₂ K₂ : Module.End ℝ W)
+    (J : V →ₗ[ℝ] W) (hJ : Function.Injective J)
+    (hK : J ∘ₗ K₁ = K₂ ∘ₗ J)
+    (hC : J ∘ₗ C₁ = C₂ ∘ₗ J) :
+    C₁ * K₁ - K₁ * C₁ = 0 ↔
+      (C₂ * K₂ - K₂ * C₂) ∘ₗ J = 0 := by
+  have hnat := plain_intertwiner_commutator_naturality C₁ K₁ C₂ K₂ J hK hC
+  constructor
+  · intro hsrc
+    rw [← hnat, hsrc]
+    simp
+  · intro htarget
+    ext x
+    have hpoint := congrArg (fun f => f x) hnat
+    have hkill := congrArg (fun f => f x) htarget
+    have hzero : J ((C₁ * K₁ - K₁ * C₁) x) = 0 := by
+      calc
+        J ((C₁ * K₁ - K₁ * C₁) x) =
+            ((C₂ * K₂ - K₂ * C₂) ∘ₗ J) x := by
+          simpa [LinearMap.comp_apply] using hpoint
+        _ = 0 := by simpa [LinearMap.comp_apply] using hkill
+    have hzero' : J ((C₁ * K₁ - K₁ * C₁) x) = J 0 := by
+      simpa using hzero
+    exact hJ hzero'
+
 theorem intertwiner_preserves_twisted_law
     {V W : Type*} [AddCommGroup V] [Module ℝ V]
     [AddCommGroup W] [Module ℝ W]

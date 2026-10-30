@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.OperatorAlgebra.PeircePairGeometry
+import InfoGeometry.Core.PeirceCoupledCorners
 
 /-!
 # Gram geometry of adjoint opposite Peirce corners
@@ -17,13 +18,78 @@ the exact vector kernel distinguish this conclusion from positive definiteness.
 
 namespace InfoGeometry.OperatorAlgebra.PeircePairPositivity
 
-open Matrix InfoGeometry.Core.PeirceDecomposition
+open Matrix InfoGeometry.Core.PeirceDecomposition InfoGeometry.Core.IdempotentCartan
 open PeirceChiralGeometry PeircePairGeometry
 open scoped ComplexOrder
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+section GenericOperatorPositivity
+
+variable {A : Type*} [Ring A] [StarRing A] [PartialOrder A] [StarOrderedRing A]
+
+/-- The adjoint-paired Peirce Gramian is positive in every star-ordered
+associative operator algebra. This is the order-theoretic statement behind
+the matrix `PosSemidef` specialization below. -/
+theorem adjoint_peirce_gram_nonneg {p a : A} (hp : IsSelfAdjoint p) :
+    0 ≤ component10 p a * component01 p (star a) +
+      component01 p (star a) * component10 p a := by
+  rw [← InfoGeometry.Core.PeirceCoupledCorners.star_component10 hp a]
+  exact add_nonneg
+    (mul_star_self_nonneg (component10 p a))
+    (star_mul_self_nonneg (component10 p a))
+
+end GenericOperatorPositivity
+
+/-- Peirce star reflection on the finite operator algebra, inherited from the
+generic noncommutative star-ring construction. This is an involution; it does
+not by itself supply Osterwalder--Schrader state positivity. -/
+def peirceStarReflection (p X : Matrix n n ℂ) : Matrix n n ℂ :=
+  InfoGeometry.Core.IdempotentCartan.starReflection p X
+
+/-- For a self-adjoint Peirce projection, the induced star reflection is an
+involution. -/
+theorem peirceStarReflection_involutive {p : Matrix n n ℂ}
+    (hp : IsStarProjection p) :
+    Function.Involutive (peirceStarReflection p) :=
+  InfoGeometry.Core.IdempotentCartan.starReflection_involutive
+    hp.isIdempotentElem.eq hp.isSelfAdjoint
+
+/-- Peirce star reflection sends the forward operator corner to minus its
+adjoint corner. -/
+theorem peirceStarReflection_component10 {p : Matrix n n ℂ} (hp : IsStarProjection p)
+    (A : Matrix n n ℂ) :
+    peirceStarReflection p (component10 p A) = -component01 p (star A) := by
+  exact InfoGeometry.Core.IdempotentCartan.starReflection_component10
+    hp.isIdempotentElem.eq hp.isSelfAdjoint A
+
+/-- Reflection converts the directed adjoint pair into its positive Gramian
+and the associated spin commutator. Positivity is semidefinite in general;
+strict positivity is characterized separately by injectivity. -/
+theorem peirceStarReflection_adjoint_pair_mass_and_spin {p : Matrix n n ℂ}
+    (hp : IsStarProjection p) (A : Matrix n n ℂ) :
+    peirceStarReflection p (component10 p A) = -component01 p (star A) ∧
+    -(peirceStarReflection p (component10 p A) * component10 p A +
+        component10 p A * peirceStarReflection p (component10 p A)) =
+      component10 p A * star (component10 p A) +
+        star (component10 p A) * component10 p A ∧
+    ⁅peirceStarReflection p (component10 p A), component10 p A⁆ =
+      ⁅component10 p A, component01 p (star A)⁆ ∧
+    (component10 p A * star (component10 p A) +
+      star (component10 p A) * component10 p A).PosSemidef := by
+  have hReflect := peirceStarReflection_component10 hp A
+  refine ⟨hReflect, ?_, ?_, ?_⟩
+  · rw [hReflect]
+    rw [← star_component10 hp.isSelfAdjoint A]
+    simp only [neg_mul, mul_neg]
+    abel
+  · rw [hReflect]
+    simp only [Ring.lie_def, neg_mul, mul_neg]
+    abel
+  · exact (Matrix.posSemidef_self_mul_conjTranspose _).add
+      (Matrix.posSemidef_conjTranspose_mul_self _)
 
 /-- Adjoint-paired directed corners have a self-adjoint sum. -/
 theorem pair_sum_isSelfAdjoint {p : Matrix n n ℂ} (hp : IsStarProjection p)

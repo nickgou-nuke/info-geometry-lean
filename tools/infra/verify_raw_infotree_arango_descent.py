@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -453,6 +454,158 @@ def run_checks(target: ArangoTarget) -> dict[str, Any]:
     return reports
 
 
+def remap_query(query: str, collections: dict[str, str]) -> str:
+    """Remap trusted query templates, including document-ID string prefixes."""
+    return re.sub(r"\braw_infotree_[a-z_]+\b",
+                  lambda match: collections[match.group()], query)
+
+
+def shared_context_checks() -> list[QueryCheck]:
+    checks = []
+    for kind, ref_key, decl_key in (("mctx", "(r.mctxKey || r.mctxRefKey)",
+                                   "(r.mctxKey || r.mctxRefKey)"),
+                                  ("lctx", "r.lctxKey", "r.sourceKey")):
+        context = f"raw_infotree_{kind}_contexts"
+        for table, expression, edge, outgoing in (
+                ("refs", ref_key, "ref_context", True),
+                ("decls", decl_key, "context_decl", False)):
+            rows = f"raw_infotree_{kind}_{table}"
+            edges = f"raw_infotree_{kind}_{edge}_edges"
+            source = "r._id" if outgoing else f'CONCAT("{context}/", {expression})'
+            dest = f'CONCAT("{context}/", {expression})' if outgoing else "r._id"
+            # Exactly one edge per raw row, and no edge to the wrong context.
+            row_endpoint = "_from" if outgoing else "_to"
+            checks.append(QueryCheck(f"{kind}_{table}_exact_context_membership", f"""
+FOR r IN {rows}
+  LET ctx = DOCUMENT(CONCAT("{context}/", {expression}))
+  LET links = (FOR e IN {edges} FILTER e.{row_endpoint} == r._id RETURN e)
+  FILTER ctx == null OR ctx.rootKey != (r.rootKey || "") OR LENGTH(links) != 1
+    OR links[0]._from != {source} OR links[0]._to != {dest}
+  LIMIT 20 RETURN {{row: r._id, context: ctx, links: links}}
+"""))
+        # This counts declarations once per context, not once per ref×decl pair.
+        if kind == "lctx":
+            checks.append(QueryCheck("lctx_shared_sizes_match", f"""
+FOR c IN {context}
+  LET size = LENGTH(FOR e IN raw_infotree_lctx_context_decl_edges
+                    FILTER e._from == c._id RETURN 1)
+  FOR r IN raw_infotree_lctx_refs FILTER r.lctxKey == c._key
+  FILTER r.lctxSize != size
+  LIMIT 20 RETURN {{ref: r._id, expected: r.lctxSize, actual: size}}
+"""))
+    return checks
+
+
+def generation_checks(layout: str, collections: dict[str, str], definitions: list[dict[str, Any]]) -> list[QueryCheck]:
+    removed = {"mctx_decl_rows_have_mctx_ref_edges", "lctx_refs_descend_to_decl_rows"}
+    checks = [c for c in structural_checks()
+              if "ig_nodes" not in c.query and not (layout == "shared" and c.name in removed)]
+    if layout == "shared":
+        checks.extend(shared_context_checks())
+    checks = [QueryCheck(c.name, remap_query(c.query, collections), c.expect_empty) for c in checks]
+    # Validate every edge family's endpoints, including cross-generation wires.
+    for definition in definitions:
+        collection = definition["collection"]
+        checks.append(QueryCheck(f"{collection}_closed_endpoints", f"""
+FOR e IN {collection}
+  FILTER DOCUMENT(e._from) == null OR DOCUMENT(e._to) == null
+    OR PARSE_IDENTIFIER(e._from).collection NOT IN {json.dumps(definition['from'])}
+    OR PARSE_IDENTIFIER(e._to).collection NOT IN {json.dumps(definition['to'])}
+  LIMIT 20 RETURN e
+"""))
+    return checks
+
+
+def verify_generation(target: ArangoTarget, generation_id: str) -> dict[str, Any]:
+    from tools.infra.arango_raw_infotree_graph import generation_graph_spec
+    if not re.fullmatch(r"[0-9a-f]{24}", generation_id):
+        raise ValueError("invalid generation ID")
+    receipt = request_json("GET", db_url(target,
+        f"/_api/document/raw_infotree_generations/{generation_id}"),
+        username=target.username, password=target.password)
+    layout, definitions = generation_graph_spec(receipt, generation_id)
+    collections = receipt["collections"]
+    expected = {**receipt["rowCounts"], **receipt["edgeCounts"]}
+    if set(expected) != set(collections) or any(type(n) is not int or n < 0 for n in expected.values()):
+        raise ValueError("generation receipt has incomplete or invalid expected counts")
+    existing = list_collections(target)
+    missing = sorted(set(collections.values()) - existing)
+    live = {name: collection_count(target, name) for name in collections.values() if name in existing}
+    mismatches = {collections[name]: {"expected": n, "live": live.get(collections[name])}
+                  for name, n in expected.items() if live.get(collections[name]) != n}
+    checks = {}
+    if not missing:
+        for check in generation_checks(layout, collections, definitions):
+            rows = run_aql(target, check.query)
+            checks[check.name] = {"ok": not rows, "sample_count": len(rows), "samples": rows}
+    return {"schema": "info_geometry.raw_infotree_arango_descent_verification.v2",
+            "database": target.database, "generation_id": generation_id,
+            "context_layout": layout,
+            "ok": not missing and not mismatches and all(c["ok"] for c in checks.values()),
+            "counts": {"live": live, "missing_collections": missing, "mismatches": mismatches},
+            "checks": checks,
+            "external_declaration_join": {"status": "not_checked",
+                "reason": "ig_nodes has no established generation binding in this receipt"},
+            "scope": "raw projection counts, structural descent and endpoint closure; not compiler losslessness"}
+
+
+def compare_context_layouts(target: ArangoTarget, expanded_id: str, shared_id: str) -> dict[str, Any]:
+    """Compare live raw rows and context endpoint multisets without global pair materialization."""
+    from tools.infra.arango_raw_infotree_graph import generation_graph_spec
+    receipts = []
+    for ident, expected_layout in ((expanded_id, "expanded"), (shared_id, "shared")):
+        if not re.fullmatch(r"[0-9a-f]{24}", ident):
+            raise ValueError("invalid generation ID")
+        receipt = request_json("GET", db_url(target,
+            f"/_api/document/raw_infotree_generations/{ident}"),
+            username=target.username, password=target.password)
+        layout, _ = generation_graph_spec(receipt, ident)
+        if layout != expected_layout:
+            raise ValueError("comparison requires expanded then shared generations")
+        receipts.append(receipt)
+    old, new = receipts
+    for field in ("buildFingerprint", "sourceProvenance"):
+        if not old.get(field) or old[field] != new.get(field):
+            raise ValueError(f"generation provenance mismatch: {field}")
+    checks = {}
+    # Bidirectional raw-row comparison also detects additional rows, not just count differences.
+    for name in ROW_FILES:
+        for direction, left, right in (("forward", old, new), ("reverse", new, old)):
+            rows = run_aql(target, """
+FOR r IN @@left
+  LET other = DOCUMENT(@right, r._key)
+  FILTER other == null OR UNSET(r, "_id", "_rev") != UNSET(other, "_id", "_rev")
+  LIMIT 20 RETURN r._key
+""", {"@left": left["collections"][name], "right": right["collections"][name]})
+            checks[f"{name}_{direction}"] = {"ok": not rows, "samples": rows}
+    for kind, legacy in (("mctx", "raw_infotree_mctx_decl_edges"),
+                         ("lctx", "raw_infotree_lctx_ref_decl_edges")):
+        # Arrays are bounded by one reference's context, not the whole ref×decl relation.
+        rows = run_aql(target, """
+FOR r IN @@refs
+  LET oldRef = CONCAT(@oldRefs, "/", r._key)
+  LET expanded = (FOR e IN @@expanded FILTER e._from == oldRef
+    LET key = PARSE_IDENTIFIER(e._to).key SORT key RETURN key)
+  LET shared = (FOR a IN @@refContext FILTER a._from == r._id
+    FOR b IN @@contextDecl FILTER b._from == a._to
+    LET key = PARSE_IDENTIFIER(b._to).key SORT key RETURN key)
+  FILTER expanded != shared
+  LIMIT 20 RETURN {reference: r._key, expanded: expanded, shared: shared}
+""", {"@refs": new["collections"][f"raw_infotree_{kind}_refs"],
+       "oldRefs": old["collections"][f"raw_infotree_{kind}_refs"],
+       "@expanded": old["collections"][legacy],
+       "@refContext": new["collections"][f"raw_infotree_{kind}_ref_context_edges"],
+       "@contextDecl": new["collections"][f"raw_infotree_{kind}_context_decl_edges"]})
+        checks[f"{kind}_endpoint_multiset"] = {"ok": not rows, "samples": rows}
+    old_edges = sum(old["edgeCounts"].values())
+    new_edges = sum(new["edgeCounts"].values())
+    return {"schema": "info_geometry.raw_context_layout_comparison.v1",
+            "expanded_generation": expanded_id, "shared_generation": shared_id,
+            "ok": all(c["ok"] for c in checks.values()), "checks": checks,
+            "receipt_edge_counts": {"expanded": old_edges, "shared": new_edges},
+            "scope": "raw-row equality and context endpoint multisets; run generation descent separately"}
+
+
 def parse_args() -> argparse.Namespace:
     load_repo_arango_env(REPO_ROOT)
     parser = argparse.ArgumentParser(description=__doc__)
@@ -461,6 +614,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--username", default=arango_username())
     parser.add_argument("--password", default=arango_password())
     parser.add_argument("--ingest-report", type=Path)
+    parser.add_argument("--generation-id", help="Verify a completed immutable raw generation")
+    parser.add_argument("--compare-expanded-generation", help="Compare this expanded generation with --generation-id shared generation")
     parser.add_argument("--json-out", type=Path)
     return parser.parse_args()
 
@@ -473,6 +628,18 @@ def main() -> int:
         username=str(args.username),
         password=str(args.password),
     )
+    if args.compare_expanded_generation and not args.generation_id:
+        raise ValueError("--compare-expanded-generation requires --generation-id")
+    if args.generation_id:
+        if args.ingest_report:
+            raise ValueError("use --generation-id or --ingest-report, not both")
+        report = (compare_context_layouts(target, args.compare_expanded_generation, args.generation_id)
+                  if args.compare_expanded_generation else verify_generation(target, args.generation_id))
+        if args.json_out:
+            args.json_out.parent.mkdir(parents=True, exist_ok=True)
+            args.json_out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print(json.dumps(report, indent=2))
+        return 0 if report["ok"] else 2
     ingest_report = load_json(args.ingest_report)
     counts = count_report(target, ingest_report)
     if counts["missing_collections"]:

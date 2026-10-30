@@ -139,6 +139,22 @@ theorem krausMap_not_multiplicative :
   rw [multiplicativity_defect_entry] at hz
   norm_num at hz
 
+/-- The counterexample above is genuinely about multi-Kraus mixing: a single
+Kraus operator satisfying `Uᴴ U = 1` gives a multiplicative map.  This states
+the correct positive boundary without claiming every complete Kraus channel
+is an algebra homomorphism. -/
+theorem single_isometric_kraus_multiplicative (U : Mat)
+    (hU : star U * U = 1) (X Y : Mat) :
+    krausMap (fun _ : Unit => U) (X * Y) =
+      krausMap (fun _ : Unit => U) X * krausMap (fun _ : Unit => U) Y := by
+  have hsingle (Z : Mat) : krausMap (fun _ : Unit => U) Z = U * Z * star U := by
+    simp [krausMap]
+  rw [hsingle (X * Y), hsingle X, hsingle Y]
+  calc
+    U * (X * Y) * star U = U * X * (Y * star U) := by noncomm_ring
+    _ = U * X * (star U * U) * (Y * star U) := by rw [hU]; simp
+    _ = (U * X * star U) * (U * Y * star U) := by noncomm_ring
+
 end InfoGeometry.OperatorAlgebra.OperatorGeometryExamples
 
 end

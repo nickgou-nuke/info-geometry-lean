@@ -66,7 +66,7 @@ It remains subordinate to Lean source:
 |------|--------|-------------|
 | `Indexer.lean` | `full_graph.json`, `decls.jsonl`, `edges.jsonl`, `morphisms.jsonl`, `types.jsonl`, `structural-topology.json` | Main export pipeline; `DeclNode`, `DepEdge`, `Morphism`, `TypeNode` records; recognizes morphisms (Hom/Equiv/Iso/Map patterns) |
 | `SkeletonExport.lean` | `skeleton.json` | Vulnerability-ranked theorem skeleton (`SkeletonRow`: name, vulSrcs, vulPaths) |
-| `StructuralExport.lean` | `structural-topology.json` | SCC-level metadata: depth spread, dominators, root witnesses, layer membership |
+| `StructuralExport.lean` | `structural-topology.json` | SCC metadata with compact immediate-dominator parent links, root witnesses, and layer membership; root reachability/path counts remain query-time joins over component edges |
 | `ProcessFlowExport.lean` | `process-flow/*.jsonl` | Rich v4 schema: 8 dependency roles, boundary/locality/polarity/defect classifications, `DerivationalRole`; writes the constitutive process-flow export consumed by downstream Python derivations |
 | `ExprArangoExport.lean` | `ig_nodes.jsonl`, `ig_edges.jsonl`, `metadata.json` | Expression-level Arango export (declarations + Expr DAG) with De Bruijn `bvar` annotations and explicit `bound_by` edges; tolerates unresolved binders by marking records as `quality="broken"` |
 | `BlockExport.lean` | block-level JSON and generated dependency quiver | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting; quiver output records block dependencies only and assigns no denotational semantics or theorem proofs |

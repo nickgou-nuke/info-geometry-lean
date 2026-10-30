@@ -35,7 +35,7 @@ def xi_terminal_zm_leyang_langlands_dual_root_stability_nondifferentiability_arr
 
 /-- The preserved dual root data are read from the existing quartic `S₄` monodromy package. -/
 def xi_terminal_zm_leyang_langlands_dual_root_stability_dual_root_data : Prop :=
-  xiLeyangGeometricMonodromyGroup = ⊤ ∧ xiLeyangFunctionFieldGaloisGroup = ⊤
+  xiLeyangGeometricMonodromyGroup = ⊤
 
 /-- Stability package for zero Hausdorff perturbations of the regular Weyl support function. -/
 def xi_terminal_zm_leyang_langlands_dual_root_stability_statement : Prop :=
@@ -61,8 +61,8 @@ theorem paper_xi_terminal_zm_leyang_langlands_dual_root_stability :
       h = xi_terminal_zm_leyang_langlands_dual_root_stability_reference_support := by
     funext i
     exact hpert i
-  rcases paper_xi_terminal_zm_leyang_monodromy_s4 with ⟨hgeo, hgal⟩
-  refine ⟨hEq, ?_, ?_, ⟨hgeo, hgal⟩⟩
+  have hgeo := xiLeyang_geometric_monodromy_eq_top
+  refine ⟨hEq, ?_, ?_, hgeo⟩
   · ext p
     simp [xi_terminal_zm_leyang_langlands_dual_root_stability_normal_fan, hEq]
   · ext p

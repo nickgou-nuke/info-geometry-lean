@@ -25,6 +25,11 @@ repo-wide absence or novelty claims.
 > The compact operational law for the hive is
 > `docs/HIVE_AGENT_COMMANDMENTS.md`.
 
+For the AI Studio transcript export procedure, including when resuming this
+goal, follow [`docs/AI_STUDIO_TRANSCRIPT_EXPORT.md`](docs/AI_STUDIO_TRANSCRIPT_EXPORT.md).
+Download the saved conversation from its Google Drive file preview. AI Studio
+**Get code → Java/REST** produces API examples, not the conversation archive.
+
 For DAG/Arango/LeanTrail/Hodge/de Bruijn/WL redundancy cleanup, namespace
 deduplication, stale dropin removal, pure forwarding module collapse, or
 compatibility-shim refactors, use:

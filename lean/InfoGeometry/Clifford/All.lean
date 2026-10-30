@@ -23,6 +23,7 @@ import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNSuperGrassmannianBridge
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
+import InfoGeometry.Clifford.ClNNPermutationSymmetry
 import InfoGeometry.Clifford.ClNNFockRepresentation
 import InfoGeometry.Clifford.ClNNFockColimitPrimalSheetBridge
 import InfoGeometry.Clifford.CliffordInjectivity

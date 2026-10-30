@@ -90,7 +90,7 @@ class ExportTests(unittest.TestCase):
 
     def test_annotated_tags_extend_reachable_history_and_symref_is_excluded(self):
         data = self.export(since="2025-01-01", until="2027-01-01")
-        self.assertEqual(data["stats"]["branch_refs"], 2)
+        self.assertEqual(data["stats"]["branch_refs"], 3)
         self.assertEqual(data["stats"]["tag_refs"], 1)
         self.assertEqual(data["stats"]["commit_count"], 10)
         self.assertEqual(data["stats"]["root_commits"], 2)
@@ -98,6 +98,19 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(tag["sha"], self.ids["tag_only"])
         self.assertIn(self.ids["tag_only"], {row["sha"] for row in data["nodes"]})
         self.assertNotIn("origin/HEAD", {row["name"] for row in data["source"]["refs"]})
+
+    def test_local_and_upstream_only_refs_contribute_reachable_commits(self):
+        self.commit("local_only", "2026-01-15T00:00:00Z", "root")
+        self.run_git("update-ref", "refs/heads/local-only", self.ids["local_only"])
+        self.run_git("update-ref", "refs/remotes/upstream/feature", self.ids["local_only"])
+
+        data = self.export(since="2025-01-01", until="2027-01-01")
+
+        self.assertIn(self.ids["local_only"], {row["sha"] for row in data["commits"]})
+        ref_names = {row["name"] for row in data["source"]["refs"]}
+        self.assertIn("heads/local-only", ref_names)
+        self.assertIn("upstream/feature", ref_names)
+        self.assertIn("local branches", data["source"]["ref_scope"])
 
     def test_shallow_root_recovers_raw_parent_boundary(self):
         (self.repo / ".git" / "shallow").write_text(self.ids["tip"] + "\n", encoding="ascii")

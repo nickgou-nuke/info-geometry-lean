@@ -54,4 +54,24 @@ theorem splitOctonionLeftCliffordRepresentation_not_injective :
   rw [leftClifford_finrank, canonicalZornEnd_finrank] at hdim
   norm_num at hdim
 
+/-- The dimension obstruction has a quantitative form: at least 64 independent
+directions in the full Clifford algebra lie in the kernel of its represented
+operator action. This is the rank-nullity alternative to injectivity. -/
+theorem splitOctonionLeftCliffordRepresentation_kernel_finrank_ge :
+    64 ≤ Module.finrank ℝ
+      (LinearMap.ker splitOctonionLeftCliffordRepresentation.toLinearMap) := by
+  let : FiniteDimensional ℝ CanonicalZorn :=
+    FiniteDimensional.of_finrank_eq_succ canonicalZorn_finrank
+  let : FiniteDimensional ℝ (CliffordAlgebra leftCliffordQuadratic) :=
+    FiniteDimensional.of_finrank_eq_succ leftClifford_finrank
+  have htotal := LinearMap.finrank_range_add_finrank_ker
+    splitOctonionLeftCliffordRepresentation.toLinearMap
+  have hrange : Module.finrank ℝ
+      splitOctonionLeftCliffordRepresentation.toLinearMap.range ≤
+      Module.finrank ℝ (Module.End ℝ CanonicalZorn) :=
+    Submodule.finrank_le _
+  rw [leftClifford_finrank] at htotal
+  rw [canonicalZornEnd_finrank] at hrange
+  omega
+
 end InfoGeometry.Lie.SplitOctonionImaginaryAction

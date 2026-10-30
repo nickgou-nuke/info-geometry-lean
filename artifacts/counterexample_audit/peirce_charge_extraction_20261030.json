@@ -1,0 +1,50 @@
+{
+  "scope": "A53-A54 intake: integer polynomial extraction and corner operator brackets over an arbitrary associative ring with an idempotent",
+  "status": "kernel_verified",
+  "source_hashes": {
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtraction.lean": "31d5200a7b0fa081082d6106bce358b5f341920fb728b9ac90b7a231ee605868",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichBrackets.lean": "616af5ef7f123024f2a1bfb9af3ccc0cdc63e9ae6037bd631e42a50d3414ef6b",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtractionAudit.lean": "dff9083e56d6d7803980998b4c0a263a9b0982e13d46aaaf70d9eaf3c07baf97",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichCharge.lean": "499c125cd55c38e9520348a734a39d2ee7660ebc2277dfecade60c75e517e57e"
+  },
+  "declarations": [
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_extract_zero",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_extract_plus_one",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_extract_minus_one",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_extract_plus_two",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_extract_minus_two",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_iter_fifth_annihilator",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.sandwich_composition",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.comm_sandwich_commutator",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.extremal_sandwich_commutator",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.corner_commutator_pair",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.raising_lowering_sandwich_bracket",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.lowering_raising_sandwich_bracket",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_spin_comm",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_spin_lower_sandwich",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_spin_upper_sandwich",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.charge_extremal_bracket"
+  ],
+  "build_module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionAudit",
+  "build_exit_code": 0,
+  "build_jobs": 617,
+  "independent_semantic_review": false,
+  "corrections": [
+    "4 Delta2 - Delta4 = 3 (G+1 + G-1), not 12 times that sum.",
+    "4 Delta1 - Delta3 = 3 (G+1 - G-1), not 6 times that difference.",
+    "Adding/subtracting these two expressions extracts 6 G±1 without an additional factor 2.",
+    "[G+2,G-2](X) = Q+ X Q- - Q- X Q+, not Q+ X Q+ - Q- X Q-."
+  ],
+  "nonclaims": [
+    "No integral Vandermonde inverse",
+    "No cancellation of 4,6,24 in arbitrary characteristic",
+    "No KKT identification",
+    "No closure of the span of only the five selected maps"
+  ],
+  "dependencies": [
+    "Peirce corner identities",
+    "sandwich charge identities",
+    "integer polynomial extraction and quintic annihilator",
+    "operator composition and bracket charge identities"
+  ]
+}

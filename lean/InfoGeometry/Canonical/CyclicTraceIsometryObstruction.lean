@@ -1,6 +1,9 @@
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 namespace InfoGeometry.Canonical.CyclicTraceIsometryObstruction
+
+open scoped BigOperators
 
 /-!
 An abstract form of the finite Cuntz/CCR trace obstruction.  The carrier is
@@ -26,6 +29,29 @@ theorem cyclic_additive_trace_vanishes_on_unit
   rw [map_add, ht₀, ht₁] at hτsum
   have h : τ 1 + τ 1 = τ 1 + 0 := by simpa using hτsum
   exact add_left_cancel h
+
+/-- For any finite partition by one-sided range products, a cyclic additive
+readout of the unit is fixed by multiplication by the number of branches.
+This is the exact conclusion over arbitrary rings; further vanishing requires
+the target additive group to have no torsion at the corresponding integer. -/
+theorem cyclic_trace_finite_partition_fixed_point
+    {ι : Type*} [Fintype ι]
+    (x y : ι → A) (τ : A →+ C)
+    (hcyc : ∀ a b : A, τ (a * b) = τ (b * a))
+    (hleft : ∀ i, y i * x i = 1)
+    (hsum : ∑ i : ι, x i * y i = 1) :
+    ((Finset.univ : Finset ι).card : ℕ) • τ 1 = τ 1 := by
+  have hterm (i : ι) : τ (x i * y i) = τ 1 := by
+    rw [hcyc, hleft i]
+  have hτsum : (∑ i : ι, τ (x i * y i)) = τ 1 := by
+    simpa only [map_sum] using congrArg τ hsum
+  calc
+    ((Finset.univ : Finset ι).card : ℕ) • τ 1 = ∑ i : ι, τ 1 := by simp
+    _ = ∑ i : ι, τ (x i * y i) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      exact (hterm i).symm
+    _ = τ 1 := hτsum
 
 /-- Consequently, a normalized cyclic additive trace cannot exist for such a
 two-range partition in a nontrivial target ring. -/

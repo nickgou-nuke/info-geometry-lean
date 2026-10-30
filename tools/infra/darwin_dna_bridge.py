@@ -6,7 +6,7 @@ Connects commit taxonomy in `darwin_commits` to declaration DNA in
 `infogeometry` without cross-database AQL (unsupported between DBs).
 Produces:
   - CommitDeclEdge relations (commit -> decl) in JSONL + optional Arango collection
-  - Habitat Maps: subsystem -> {species: count, churn: sum}
+  - Habitat Maps: subsystem -> {change_category: count, churn: sum}
   - explicitly coarse habitat-cohabitation resolution on CommitDeclEdge
 
 The output is written incrementally. The current-declaration index and commit
@@ -186,9 +186,11 @@ class DarwinInfoGeometryBridge:
             FILTER LENGTH(cn.modulePaths) > 0
             LET ec = DOCUMENT(CONCAT('evo_commits/', cn._key))
             RETURN {
-                commit_key: cn._key, taxonRank: cn.taxonRank,
+                commit_key: cn._key, changeLabels: cn.changeLabels,
                 modulePaths: cn.modulePaths,
-                churn: ec == null ? 0 : (ec.insertions || 0) + (ec.deletions || 0)
+                churn: ec == null OR ec.diff_stats_status == 'not_collected' OR
+                    !IS_NUMBER(ec.insertions) OR !IS_NUMBER(ec.deletions)
+                    ? null : ec.insertions + ec.deletions
             }
         """
         cursor = aql_stream(self.darwin_db, aql, batch_size=2000)
@@ -217,8 +219,8 @@ class DarwinInfoGeometryBridge:
 
                     matched_this_commit = True
                     module_decl_count = len(decls_in_mod)
-                    per_decl_churn = (cn.get("churn", 0) / module_decl_count
-                                      if module_decl_count else 0)
+                    per_decl_churn = (cn["churn"] / module_decl_count
+                                      if cn.get("churn") is not None and module_decl_count else None)
                     for d in decls_in_mod:
                         edge_doc = {
                             "_key": f"{c_key}__{d['_key']}",
@@ -234,7 +236,7 @@ class DarwinInfoGeometryBridge:
                             "canonicalValueHash": d.get("canonicalValueHash"),
                             "moduleName": module_name,
                             "subsystem": subsystem,
-                            "taxonRank": cn.get("taxonRank"),
+                            "changeLabels": cn.get("changeLabels", []),
                             "resolution": "habitat_cohabitation",
                             "exact_match": False,
                             "module_decl_count": module_decl_count,
@@ -270,30 +272,28 @@ class DarwinInfoGeometryBridge:
           subsystem -> {
               "total_churn": sum(insertions + deletions),
               "commits_touched": count,
-              "species_distribution": {species_label: count},
-              "dominant_species": top_species
+              "category_distribution": {change_category: count},
+              "dominant_category": top_category
           }
         """
         aql = """
         FOR c IN evo_commits
             LET cn = DOCUMENT(CONCAT('commit_nodes/', c.sha))
-            LET lbl_doc = FIRST(
-                FOR l IN evo_labels
-                    FILTER l.sha == c.sha
-                    LIMIT 1
-                    RETURN l
-            )
-            LET species_list = lbl_doc != null
+            LET lbl_doc = DOCUMENT(CONCAT('evo_labels/', c.sha))
+            LET category_list = lbl_doc != null
                 ? (lbl_doc.labels != null
-                    ? lbl_doc.labels[*].species
-                    : (lbl_doc.species != null ? [lbl_doc.species] : []))
+                    ? lbl_doc.labels[*].category
+                    : (lbl_doc.category != null ? [lbl_doc.category] :
+                       (lbl_doc.species != null ? [lbl_doc.species] : [])))
                 : []
             RETURN {
                 commit_key: c._key,
                 sha: c.sha,
                 subject: c.subject,
-                churn: (c.insertions || 0) + (c.deletions || 0),
-                species: species_list,
+                churn: c.diff_stats_status == 'not_collected' OR
+                    !IS_NUMBER(c.insertions) OR !IS_NUMBER(c.deletions)
+                    ? null : c.insertions + c.deletions,
+                categories: category_list,
                 modulePaths: cn != null ? cn.modulePaths : []
             }
         """
@@ -302,8 +302,10 @@ class DarwinInfoGeometryBridge:
         habitats: Dict[str, Dict[str, Any]] = defaultdict(
             lambda: {
                 "total_churn": 0,
+                "observed_churn_commits": 0,
+                "unknown_churn_commits": 0,
                 "commits_touched": 0,
-                "species_counts": defaultdict(int),
+                "category_counts": defaultdict(int),
             }
         )
 
@@ -325,33 +327,39 @@ class DarwinInfoGeometryBridge:
                 else:
                     subsystems_in_commit.add("General")
 
-            species_values = row.get("species") or []
-            if isinstance(species_values, str):  # legacy flat documents
-                species_values = [species_values]
-            churn = int(row.get("churn") or 0)
+            category_values = row.get("categories") or []
+            if isinstance(category_values, str):  # legacy flat documents
+                category_values = [category_values]
+            churn = row.get("churn")
 
             for subsys in subsystems_in_commit:
                 h = habitats[subsys]
-                h["total_churn"] += churn
+                if churn is None:
+                    h["unknown_churn_commits"] += 1
+                else:
+                    h["total_churn"] += churn
+                    h["observed_churn_commits"] += 1
                 h["commits_touched"] += 1
-                for species in set(species_values):
-                    h["species_counts"][species] += 1
+                for category in set(category_values):
+                    h["category_counts"][category] += 1
 
         result: Dict[str, Dict[str, Any]] = {}
         for subsys, data in sorted(
             habitats.items(), key=lambda kv: kv[1]["total_churn"], reverse=True
         ):
-            sorted_species = dict(
+            sorted_categories = dict(
                 sorted(
-                    data["species_counts"].items(), key=lambda kv: kv[1], reverse=True
+                    data["category_counts"].items(), key=lambda kv: kv[1], reverse=True
                 )
             )
-            dominant = next(iter(sorted_species.keys()), None)
+            dominant = next(iter(sorted_categories.keys()), None)
             result[subsys] = {
                 "commits_touched": data["commits_touched"],
-                "total_churn": data["total_churn"],
-                "dominant_species": dominant,
-                "species": sorted_species,
+                "total_churn": data["total_churn"] if data["observed_churn_commits"] else None,
+                "observed_churn_commits": data["observed_churn_commits"],
+                "unknown_churn_commits": data["unknown_churn_commits"],
+                "dominant_category": dominant,
+                "categories": sorted_categories,
             }
 
         return result
@@ -384,7 +392,7 @@ def main() -> int:
     parser.add_argument(
         "--habitat-map",
         action="store_true",
-        help="Compute and print habitat map (subsystem -> species + churn)",
+        help="Compute and print habitat map (subsystem -> change categories + churn)",
     )
     args = parser.parse_args()
 
@@ -404,12 +412,12 @@ def main() -> int:
 
     if args.habitat_map:
         habitat = bridge.compute_habitat_map()
-        print("[dna_bridge] Habitat map (subsystem -> species + churn):")
+        print("[dna_bridge] Habitat map (subsystem -> change categories + churn):")
         for subsys, data in habitat.items():
             print(f"  {subsys}: commits={data['commits_touched']}, "
-                  f"churn={data['total_churn']}, dominant={data['dominant_species']}")
-            for sp, cnt in list(data["species"].items())[:5]:
-                print(f"    {sp}: {cnt}")
+                  f"churn={data['total_churn']}, dominant={data['dominant_category']}")
+            for category, cnt in list(data["categories"].items())[:5]:
+                print(f"    {category}: {cnt}")
 
     if not args.build_edges and not args.habitat_map:
         parser.print_help()

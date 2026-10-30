@@ -77,6 +77,21 @@ theorem associator_obstruction :
   have h_sub : ex_associator = 0 := sub_eq_zero.mpr h_eq
   exact ex_associator_ne_zero h_sub
 
+/-- The pointwise multiplicativity defect of the imaginary left-regular
+operators is exactly the negative split-octonion associator. Thus the witness
+is an instance of a uniform defect formula, whenever the product of the first
+two imaginary elements is again imaginary. -/
+theorem imaginaryLeftMul_product_defect
+    (X Y : Imaginary) (hXY : realZornTrace (X.1 * Y.1) = 0)
+    (Z : CanonicalZorn) :
+    (imaginaryLeftMul X * imaginaryLeftMul Y) Z -
+        imaginaryLeftMul
+          (⟨X.1 * Y.1, (mem_imaginary_iff (X.1 * Y.1)).mpr hXY⟩ : Imaginary) Z =
+      -((X.1 * Y.1) * Z - X.1 * (Y.1 * Z)) := by
+  change X.1 * (Y.1 * Z) - (X.1 * Y.1) * Z =
+    -((X.1 * Y.1) * Z - X.1 * (Y.1 * Z))
+  abel
+
 /-- The imaginary-coordinate witnesses `ex_X` and `ex_Y` have an imaginary
 product, but their left operators fail multiplicativity when evaluated at
 `ex_Z.1`. These witnesses are not the diagonal Peirce idempotents. -/

@@ -1,0 +1,12 @@
+import InfoGeometry.Algebra.CornerCompressionTraceCriterion
+
+open InfoGeometry.Algebra.CornerCompressionTraceCounterexample
+
+#print axioms compressed_trace_defect
+#print axioms compressed_trace_cyclic_iff_commutes
+#print axioms compressed_trace_preserving_iff
+#print axioms compressed_trace_globally_cyclic_iff
+#print axioms compression_not_cyclic
+#print axioms compression_no_cyclic_factor
+#print axioms ambientTraceOnCyclicQuotient_class
+#print axioms ambient_trace_extends_corner

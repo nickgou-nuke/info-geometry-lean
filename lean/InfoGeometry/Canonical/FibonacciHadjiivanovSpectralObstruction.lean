@@ -75,6 +75,24 @@ theorem hadjiivanov_not_normal_of_shear
     ¬ matrixIsNormal (upperJordan rho kappa) :=
   upperJordan_not_normal hk
 
+/-- The equal-diagonal Jordan block is normal exactly when its shear
+coefficient vanishes. This gives the precise boundary of the non-normality
+obstruction rather than only its nonzero-shear direction. -/
+theorem upperJordan_normal_iff_shear_zero (rho kappa : ℂ) :
+    matrixIsNormal (upperJordan rho kappa) ↔ kappa = 0 := by
+  constructor
+  · intro hnormal
+    by_contra hk
+    exact upperJordan_not_normal hk hnormal
+  · intro hk
+    subst kappa
+    change upperJordan rho 0 * (upperJordan rho 0)ᴴ =
+      (upperJordan rho 0)ᴴ * upperJordan rho 0
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [upperJordan, Matrix.mul_apply, Matrix.conjTranspose,
+        Fin.sum_univ_two] <;> ring
+
 theorem normal_ne_nontrivial_hadjiivanov
     (W : Matrix (Fin 2) (Fin 2) ℂ)
     (hW : matrixIsNormal W)

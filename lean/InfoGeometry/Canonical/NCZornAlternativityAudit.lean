@@ -197,6 +197,53 @@ theorem right_alternativity_obstruction
     pureNMinus_mul_upperTwo_square_sigma_minus_two] at hCoord
   exact h hCoord.symm
 
+/-- If the displayed NC-Zorn product is left alternative for every pair, then
+the coefficient ring must be commutative.  The witness is the same two
+nonzero coefficient slots used by `upperTwo`; setting the third coefficient
+to `1` makes the recorded left-alternativity defect exactly `a * b - b * a`.
+This is a necessary condition only; it does not assert that commutativity is
+sufficient for alternativity of every variant of the Zorn construction. -/
+theorem leftAlternativeLaw_implies_coefficients_commute
+    (h : leftAlternativeLaw (A := A)) (a b : A) : a * b = b * a := by
+  have hEq := h (upperTwo a b) (NCZornElement.pureNPlus 1)
+  have hCoord := congrArg (fun X : NCZornElement A => X.sigma_minus 2) hEq
+  have hDefect :=
+    (left_alternativity_sigma_minus_two_eq_iff a b 1).mp hCoord
+  have hDefect' : a * b - b * a = 0 := by simpa using hDefect
+  exact sub_eq_zero.mp hDefect'
+
+/-- If the displayed NC-Zorn product is right alternative for every pair,
+then the coefficient ring must be commutative. -/
+theorem rightAlternativeLaw_implies_coefficients_commute
+    (h : rightAlternativeLaw (A := A)) (a b : A) : a * b = b * a := by
+  have hEq := h (NCZornElement.pureNMinus 1) (upperTwo a b)
+  have hCoord := congrArg (fun X : NCZornElement A => X.sigma_minus 2) hEq
+  have hDefect :=
+    (right_alternativity_sigma_minus_two_eq_iff a b 1).mp hCoord
+  have hDefect' : a * b - b * a = 0 := by simpa using hDefect
+  exact sub_eq_zero.mp hDefect'
+
+/-- Any explicit noncommuting coefficient pair produces witnesses against
+both global alternative laws for the displayed NC-Zorn multiplication.
+The two witnesses retain the order of the coefficient commutator in their
+respective defect coordinates. -/
+theorem noncommutativity_produces_both_alternativity_witnesses
+    (hnc : ∃ a b : A, a * b ≠ b * a) :
+    (∃ x y : NCZornElement A,
+      NCZornElement.mul (NCZornElement.mul x x) y ≠
+        NCZornElement.mul x (NCZornElement.mul x y)) ∧
+    (∃ x y : NCZornElement A,
+      NCZornElement.mul (NCZornElement.mul x y) y ≠
+        NCZornElement.mul x (NCZornElement.mul y y)) := by
+  rcases hnc with ⟨a, b, hab⟩
+  constructor
+  · refine ⟨upperTwo a b, NCZornElement.pureNPlus 1, ?_⟩
+    apply left_alternativity_obstruction
+    simpa using (sub_ne_zero.mpr hab)
+  · refine ⟨NCZornElement.pureNMinus 1, upperTwo a b, ?_⟩
+    apply right_alternativity_obstruction
+    simpa using (sub_ne_zero.mpr hab)
+
 theorem bdg_left_alternativity_fails :
     let a := matrixE12
     let b := matrixE21

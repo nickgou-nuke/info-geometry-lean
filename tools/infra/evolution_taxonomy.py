@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Streaming weak labels for commit-level code-change categories.
 
-Categories are multi-label change archetypes, not Linnaean ranks. The rules
-are navigation/classification evidence and do not assert semantic equivalence.
-Input is the commit JSONL emitted by ``evolution_extract.py``.
+Categories are non-hierarchical, multi-label change facets, not species or
+Linnaean ranks. Rule weights are not calibrated probabilities. Input is the
+commit JSONL emitted by ``evolution_extract.py``.
 """
 from __future__ import annotations
 
@@ -36,35 +36,63 @@ PATH_HINTS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"^vendor/|^third_party/|^deps/|\.lock$|go\.mod|Cargo\.toml|package\.json"), "Dependency/Vendor/Third-party sync"),
 ]
 
+CATEGORY_IDS = {
+    "Revert/Backout": "revertBackout",
+    "Security Hardening": "securityHardening",
+    "Bug Fix": "bugFix",
+    "Test Evolution": "testEvolution",
+    "Documentation/Developer UX": "documentationDeveloperUx",
+    "Refactor/Restructure": "refactorRestructure",
+    "Performance Optimization": "performanceOptimization",
+    "Build/Tooling/CI": "buildToolingCi",
+    "Dependency/Vendor/Third-party sync": "dependencyVendorSync",
+    "Release/Versioning/Meta": "releaseVersioningMeta",
+    "Localization/Portability": "localizationPortability",
+    "Feature Introduction": "featureIntroduction",
+}
+
+
+def _label(category: str, weight: float, evidence: list[str]) -> dict:
+    return {
+        "category": category,
+        "categoryId": CATEGORY_IDS[category],
+        "ruleWeightPercent": int(round(weight * 100)),
+        "evidence": evidence,
+        "evidenceKinds": sorted({
+            "subjectBodyRule" if item.startswith("subject-body-rule:") else
+            "pathHint" if item.startswith("path-hint:") else
+            "defaultNoRuleMatch" if item == "default:no-rule-match" else
+            "other"
+            for item in evidence
+        }),
+        "status": "weak_rule",
+    }
+
 
 def classify(subject: str, body: str,
              paths: Iterable[str] | None = None) -> list[dict]:
     """Return all matching change categories, with explicit rule provenance."""
     text = f"{subject}\n{body}"
     labels = [
-        {"species": name, "confidence": score, "matched": [name]}
+        _label(name, score, [f"subject-body-rule:{name}"])
         for name, pattern, score in RULES if pattern.search(text)
     ]
-    by_species = {row["species"]: row for row in labels}
+    by_category = {row["category"]: row for row in labels}
     seen_path_evidence: set[str] = set()
     for path in paths or ():
-        for pattern, species in PATH_HINTS:
+        for pattern, category in PATH_HINTS:
             if pattern.search(path):
-                evidence = f"path-hint:{species}"
+                evidence = f"path-hint:{category}"
                 if evidence in seen_path_evidence:
                     continue
                 seen_path_evidence.add(evidence)
-                if species in by_species:
-                    by_species[species]["matched"].append(evidence)
+                if category in by_category:
+                    by_category[category]["evidence"].append(evidence)
                 else:
-                    by_species[species] = {
-                        "species": species, "confidence": .5,
-                        "matched": [evidence],
-                    }
-    if not by_species:
-        return [{"species": "Feature Introduction", "confidence": .4,
-                 "matched": ["default:no-rule-match"]}]
-    return list(by_species.values())
+                    by_category[category] = _label(category, .5, [evidence])
+    if not by_category:
+        return [_label("Feature Introduction", .4, ["default:no-rule-match"])]
+    return list(by_category.values())
 
 
 def iter_labels(records: Iterable[dict], path_index: sqlite3.Connection | None = None) -> Iterator[dict]:
@@ -78,7 +106,9 @@ def iter_labels(records: Iterable[dict], path_index: sqlite3.Connection | None =
                 "SELECT path FROM commit_paths WHERE sha = ?", (commit["sha"],)
             ))
         labels = classify(commit.get("subject", ""), commit.get("body", ""), paths)
-        yield {"sha": commit["sha"], "labels": labels, "method": "weak-rule-v2"}
+        yield {"schema": "info_geometry.commit_change_labels.v1",
+               "sha": commit["sha"], "labels": labels,
+               "method": "weak-rule-v3"}
 
 
 def iter_jsonl(source: TextIO) -> Iterator[dict]:

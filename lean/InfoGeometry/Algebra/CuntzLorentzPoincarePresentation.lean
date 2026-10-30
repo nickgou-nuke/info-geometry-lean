@@ -144,6 +144,72 @@ theorem poincareTransform_preserves_interval
       ((g : Equiv.Perm FiniteFourVector) y) = minkowskiInterval4 x y :=
   g.property x y
 
+/-- The finite Poincare symmetry acts on real-valued four-vector observables
+by pullback, as an operator on the full function space. -/
+def poincareObservableOperator (g : FinitePoincareGroup) :
+    Module.End ℝ (FiniteFourVector → ℝ) where
+  toFun f x := f (((g : Equiv.Perm FiniteFourVector)⁻¹) x)
+  map_add' f h := by funext x; rfl
+  map_smul' c f := by funext x; rfl
+
+/-- The pullback operator is invertible, with inverse induced by the inverse
+Poincare transformation. -/
+def poincareObservableOperatorUnit (g : FinitePoincareGroup) :
+    (Module.End ℝ (FiniteFourVector → ℝ))ˣ where
+  val := poincareObservableOperator g
+  inv := poincareObservableOperator g⁻¹
+  val_inv := by ext f x; simp [poincareObservableOperator]
+  inv_val := by ext f x; simp [poincareObservableOperator]
+
+/-- Faithful operator-unit representation of the interval-preserving
+Poincare permutation group. -/
+def poincareObservableOperatorRep : FinitePoincareGroup →*
+    (Module.End ℝ (FiniteFourVector → ℝ))ˣ where
+  toFun := poincareObservableOperatorUnit
+  map_one' := by
+    apply Units.ext
+    ext f x
+    simp [poincareObservableOperatorUnit, poincareObservableOperator]
+  map_mul' g h := by
+    apply Units.ext
+    ext f x
+    simp [poincareObservableOperatorUnit, poincareObservableOperator]
+
+/-- Point-indicator observables recover each underlying transformation, so
+the operator representation is injective. -/
+theorem poincareObservableOperatorRep_injective :
+    Function.Injective poincareObservableOperatorRep := by
+  intro g h hgh
+  have hop : poincareObservableOperator g = poincareObservableOperator h :=
+    congrArg Units.val hgh
+  have hinv : ((g : Equiv.Perm FiniteFourVector)⁻¹) =
+      ((h : Equiv.Perm FiniteFourVector)⁻¹) := by
+    apply Equiv.ext
+    intro x
+    let gx := ((g : Equiv.Perm FiniteFourVector)⁻¹) x
+    let hx := ((h : Equiv.Perm FiniteFourVector)⁻¹) x
+    let δ : FiniteFourVector → ℝ := fun y => if y = gx then 1 else 0
+    have heval := congrArg (fun T : Module.End ℝ (FiniteFourVector → ℝ) => T δ x) hop
+    change δ gx = δ hx at heval
+    by_cases hargs : hx = gx
+    · exact hargs.symm
+    · simp [δ, gx, hx] at heval
+      exact False.elim (hargs heval)
+  apply Subtype.ext
+  have h := congrArg Inv.inv hinv
+  simpa using h
+
+/-- The image of the finite Poincare group inside the invertible operator
+algebra on four-vector observables. -/
+def poincareObservableOperatorGroup :
+    Subgroup (Module.End ℝ (FiniteFourVector → ℝ))ˣ :=
+  (⊤ : Subgroup FinitePoincareGroup).map poincareObservableOperatorRep
+
+theorem poincareObservableOperatorUnit_mem_group (g : FinitePoincareGroup) :
+    poincareObservableOperatorUnit g ∈ poincareObservableOperatorGroup := by
+  rw [poincareObservableOperatorGroup, Subgroup.mem_map]
+  exact ⟨g, trivial, rfl⟩
+
 /-- Linear Lorentz part of an affine finite Poincare presentation. -/
 structure LorentzLinearPresentation where
   toEquiv : Equiv.Perm FiniteFourVector

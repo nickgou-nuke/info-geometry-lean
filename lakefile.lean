@@ -905,10 +905,46 @@ lean_lib InfoGeometry where
 -- Mathlib pin, without resolving its unrelated workspace-wide dependencies.
 lean_lib OAI where
   srcDir := "../external_refs/openai-math/lean"
+  roots := #[
+    `OAI.GroupTheory.BooneHigman.Main,
+    `OAI.GroupTheory.BooneHigman.TwistedSimplicity,
+    `OAI.GroupTheory.FiniteType.TwistedBrinSeparated,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.ShiftedSlots,
+    `OAI.GroupTheory.SimpleAmenable.Main
+  ]
   globs := #[
     .submodules `OAI.Analysis.Cuntz,
     .submodules `OAI.Analysis.Quasitrace,
-    .submodules `OAI.Algebra.OrderedStates
+    .submodules `OAI.Algebra.OrderedStates,
+    .submodules `OAI.GroupTheory.FiniteType,
+    .submodules `OAI.GroupTheory.FiniteLattice,
+    .submodules `OAI.GroupTheory.BooneHigman,
+    .submodules `OAI.GroupTheory.SimpleOvergroups,
+    .submodules `OAI.Computability,
+    .submodules `OAI.Combinatorics.PerfectMatching,
+    .submodules `OAI.GroupTheory.SimpleAmenable,
+    `OAI.GroupTheory.SimpleAmenable.Arithmetic.PolygonArithmetic,
+    `OAI.GroupTheory.SimpleAmenable.Configurations.TrackPoint,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.PolygonAction,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.TupleChartDomain,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.Supported,
+    `OAI.GroupTheory.SimpleAmenable.PolygonGeometry.ShiftedSlots
+  ]
+
+-- The external Coxeter reference is compiled against the same root Mathlib
+-- pin. Keep its sources in external_refs while exposing its public umbrella
+-- module to repo-owned Lean files.
+lean_lib Coxeter where
+  srcDir := "../external_refs/lean-coxeter"
+  roots := #[
+    `Coxeter.Basic,
+    `Coxeter.PermutationRepresentation,
+    `Coxeter.StrongExchange,
+    `Coxeter.Bruhat,
+    `Coxeter.Data.List.Lemmas,
+    `Coxeter.LinearAlgebra.BilinearForm,
+    `Coxeter.LinearAlgebra.TwoDim,
+    `Coxeter.Order.Directed
   ]
 
 @[default_target, test_driver]

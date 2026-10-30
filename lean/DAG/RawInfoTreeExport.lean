@@ -275,6 +275,21 @@ structure LeakageRow where
   reason : String
 deriving ToJson
 
+/-- Exact expression content used to disambiguate local-context sharing.
+Hash-table collisions are resolved by structural equality, not by a digest key. -/
+structure LocalDeclIdentity where
+  metadata : String
+  type : ExprStructEq
+  value : Option ExprStructEq
+deriving BEq, Hashable
+
+structure MetavarDeclIdentity where
+  metadata : String
+  type : ExprStructEq
+  assignment : Option ExprStructEq
+  localContext : Array LocalDeclIdentity
+deriving BEq, Hashable
+
 structure ExportState where
   nodes : Array NodeRow := #[]
   edges : Array EdgeRow := #[]
@@ -294,8 +309,8 @@ structure ExportState where
   leakage : Array LeakageRow := #[]
   nextNode : Nat := 0
   nextLctxRef : Nat := 0
-  emittedMctxKeys : Std.HashSet String := {}
-  emittedLctxKeys : Std.HashSet String := {}
+  mctxIdentityKeys : Std.HashMap (String × Array MetavarDeclIdentity) String := {}
+  lctxIdentityKeys : Std.HashMap (String × Nat × Array LocalDeclIdentity) String := {}
 
 abbrev ExportM := StateRefT ExportState IO
 
@@ -564,13 +579,13 @@ def mctxDeclRows
   for (mvarId, decl) in mctx.decls.toList do
     let assignment? := mctx.eAssignment.find? mvarId
     let assignmentDigest? := assignment?.map fun e => (DAG.TermDigest.digestWithLctx decl.lctx e).digest
-    let assignmentText? := assignment?.map (exprProjectionWithLctx decl.lctx)
+    let assignmentText? := assignmentDigest?.map fun digest => "t_" ++ (digest.take 40).toString
     let delayed? := mctx.dAssignment.find? mvarId
     let delayedPending? := delayed?.map fun delayed => mvarIdText delayed.mvarIdPending
     let delayedFVarCount? := delayed?.map fun delayed => delayed.fvars.size
     let typeDigest := (DAG.TermDigest.digestWithLctx decl.lctx decl.type).digest
     let closedTypeDigest := (DAG.TermDigest.computeInLctx decl.lctx decl.type).digest
-    let typeText := exprProjectionWithLctx decl.lctx decl.type
+    let typeText := "t_" ++ (typeDigest.take 40).toString
     rows := rows.push
       { schema := schema
         rootKey := rootKey
@@ -637,6 +652,33 @@ def mctxSignature (mctx : MetavarContext) : String := Id.run do
       , "delayed=" ++ String.intercalate ";" delayed
       ] )
 
+def lctxIdentity (lctx : LocalContext) : Array LocalDeclIdentity := Id.run do
+  let mut entries := #[]
+  for decl in lctx do
+    let (binder, value, nondep) := match decl with
+      | .cdecl (bi := bi) .. => (reprStr bi, none, false)
+      | .ldecl (value := value) (nondep := nondep) .. =>
+          ("", some (⟨value⟩ : ExprStructEq), nondep)
+    let metadata := (toJson #[toString decl.index, fvarIdText decl.fvarId,
+      decl.userName.toString, reprStr decl.kind, binder, toString nondep,
+      toString (lctx.auxDeclToFullName.get? decl.fvarId)]).compress
+    entries := entries.push ⟨metadata, ⟨decl.type⟩, value⟩
+  return entries
+
+def mctxIdentity (mctx : MetavarContext) : Array MetavarDeclIdentity := Id.run do
+  let mut entries := #[]
+  for (id, decl) in mctx.decls.toList do
+    let delayed := mctx.dAssignment.find? id
+    let metadata := (toJson #[mvarIdText id, decl.userName.toString,
+      reprStr decl.kind, toString decl.depth, toString decl.index,
+      toString decl.numScopeArgs, toString decl.lctx.size,
+      toString decl.localInstances.size,
+      toString (delayed.map fun d => mvarIdText d.mvarIdPending),
+      toString (delayed.map fun d => d.fvars.size)]).compress
+    entries := entries.push ⟨metadata, ⟨decl.type⟩,
+      (mctx.eAssignment.find? id).map ExprStructEq.mk, lctxIdentity decl.lctx⟩
+  return entries
+
 def emitMctxRefAndDecls
     (rootKey : String)
     (moduleName : String)
@@ -644,18 +686,21 @@ def emitMctxRefAndDecls
     (nodeKey : String)
     (mctxRefKey : String)
     (mctx : MetavarContext) : ExportM String := do
-  let mctxKey := mkKey "itmc" #[rootKey, toString (stableHash (mctxSignature mctx))]
+  let st ← get
+  let identity := (rootKey, mctxIdentity mctx)
+  let existingKey := st.mctxIdentityKeys.get? identity
+  let mctxKey := existingKey.getD <| mkKey "itmc"
+    #[rootKey, toString (stableHash (mctxSignature mctx)), toString st.mctxIdentityKeys.size]
   let refRow := mctxRefRow rootKey moduleName fileName nodeKey mctxRefKey mctxKey mctx
   modify fun s => { s with mctxRefs := s.mctxRefs.push refRow }
-  let st ← get
-  if st.emittedMctxKeys.contains mctxKey then
+  if existingKey.isSome then
     pure mctxKey
   else
     let rows := mctxDeclRows rootKey moduleName fileName nodeKey mctxKey mctx
     modify fun s =>
       { s with
         mctxDecls := pushAll s.mctxDecls rows
-        emittedMctxKeys := s.emittedMctxKeys.insert mctxKey }
+        mctxIdentityKeys := s.mctxIdentityKeys.insert identity mctxKey }
     pure mctxKey
 
 def lctxDeclRows
@@ -669,13 +714,13 @@ def lctxDeclRows
   let mut rows := #[]
   for decl in lctx do
     let typeDigest := (DAG.TermDigest.digestWithLctx lctx decl.type).digest
-    let typeText := exprProjectionWithLctx lctx decl.type
+    let typeText := "t_" ++ (typeDigest.take 40).toString
     let value? : Option Expr :=
       match decl with
       | .cdecl .. => none
       | .ldecl (value := value) .. => some value
     let valueDigest? := value?.map fun v => (DAG.TermDigest.digestWithLctx lctx v).digest
-    let valueText? := value?.map (exprProjectionWithLctx lctx)
+    let valueText? := valueDigest?.map fun digest => "t_" ++ (digest.take 40).toString
     let nondep? : Option Bool :=
       match decl with
       | .cdecl .. => none
@@ -722,6 +767,7 @@ def lctxSignature (lctx : LocalContext) : String := Id.run do
         , toString (decl.isLet (allowNondep := true)) ]
   return String.intercalate "\n" parts.toList
 
+
 def emitLctxRef
     (rootKey : String)
     (moduleName : String)
@@ -730,8 +776,11 @@ def emitLctxRef
     (sourceKind : String)
     (sourceKey : String)
     (lctx : LocalContext) : ExportM Unit := do
-  let lctxKey := mkKey "itlc" #[rootKey, toString (stableHash (lctxSignature lctx))]
   let st0 ← get
+  let identity := (rootKey, lctx.size, lctxIdentity lctx)
+  let existingKey := st0.lctxIdentityKeys.get? identity
+  let lctxKey := existingKey.getD <| mkKey "itlc"
+    #[rootKey, toString (stableHash (lctxSignature lctx)), toString st0.lctxIdentityKeys.size]
   let lctxRefKey := mkKey "itlr" #[toString (stableHash rootKey), toString st0.nextLctxRef]
   let refRow : LctxRefRow :=
     { schema := schema
@@ -745,15 +794,14 @@ def emitLctxRef
       lctxKey := lctxKey
       lctxSize := lctx.size }
   modify fun s => { s with lctxRefs := s.lctxRefs.push refRow, nextLctxRef := s.nextLctxRef + 1 }
-  let st ← get
-  if st.emittedLctxKeys.contains lctxKey then
+  if existingKey.isSome then
     pure ()
   else
     let rows := lctxDeclRows rootKey moduleName fileName nodeKey "lctx_context" lctxKey lctx
     modify fun s =>
       { s with
         lctxDecls := pushAll s.lctxDecls rows
-        emittedLctxKeys := s.emittedLctxKeys.insert lctxKey }
+        lctxIdentityKeys := s.lctxIdentityKeys.insert identity lctxKey }
 
 def emitMctxDeclLctxRefs
     (rootKey : String)
@@ -1334,6 +1382,7 @@ partial def walk
       pure nodeKey
 
 def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 := do
+  IO.eprintln s!"RawInfoTreeExport: phase=read_source file={file}"
   if !(← file.pathExists) then
     IO.eprintln s!"RawInfoTreeExport: file not found: {file}"
     return 2
@@ -1342,6 +1391,7 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
   let input ← IO.FS.readFile file
   let inputCtx := Parser.mkInputContext input file.toString
   let (headerStx, parserState, msgs) ← Parser.parseHeader inputCtx
+  IO.eprintln "RawInfoTreeExport: phase=load_imports"
   let (env0, msgs) ← Elab.processHeader headerStx opts msgs inputCtx 0
   if msgs.hasErrors then
     for msg in msgs.toList do
@@ -1351,14 +1401,17 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
   let moduleName ← moduleNameOfFileName file none
   let env0 := env0.setMainModule moduleName
   let commandState0 := { Command.mkState env0 msgs opts with infoState.enabled := true }
+  IO.eprintln "RawInfoTreeExport: phase=elaborate_commands"
   let frontendState ← IO.processCommands inputCtx parserState commandState0
   let moduleName := moduleName.toString
   let fileName := file.toString
   let fileKey := toString (stableHash fileName)
   let trees := frontendState.commandState.infoState.trees.toArray
+  IO.eprintln s!"RawInfoTreeExport: phase=walk_trees roots={trees.size}"
   let mut roots : Array RootRow := #[]
   let mut exported : ExportState := {}
   for i in [:trees.size] do
+    IO.eprintln s!"RawInfoTreeExport: phase=walk_root index={i} roots={trees.size}"
     let rootKey := mkKey "itr" #[sanitize moduleName, fileKey, toString i]
     roots := roots.push
       { schema := schema
@@ -1371,6 +1424,7 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
     exported := exported'
   
   -- Stage 4: Collect messages and map them to nodes
+  IO.eprintln "RawInfoTreeExport: phase=serialize_messages"
   let messages := frontendState.commandState.messages.toList
   let mut messageRows := #[]
   for i in [:messages.length] do
@@ -1392,6 +1446,7 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
     }
   exported := { exported with messages := messageRows }
 
+  IO.eprintln s!"RawInfoTreeExport: phase=write_rows nodes={exported.nodes.size}"
   writeJsonl (outDir / "raw_infotree_roots.jsonl") roots
   writeJsonl (outDir / "raw_infotree_nodes.jsonl") exported.nodes
   writeJsonl (outDir / "raw_infotree_edges.jsonl") exported.edges
@@ -1435,11 +1490,14 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
     , ("loss_audited", toJson true)
     ]
   IO.FS.writeFile (outDir / "metadata.json") (metadata.pretty ++ "\n")
+  IO.eprintln "RawInfoTreeExport: phase=complete"
   return 0
 
 def main (args : List String) : IO UInt32 := do
   match args with
-  | [file, outDir] => exportFile (System.FilePath.mk file) (System.FilePath.mk outDir)
+  | [file, outDir] => do
+      unsafe Lean.enableInitializersExecution
+      exportFile (System.FilePath.mk file) (System.FilePath.mk outDir)
   | _ =>
       IO.eprintln "usage: RawInfoTreeExport <lean-file> <output-dir>"
       return 1

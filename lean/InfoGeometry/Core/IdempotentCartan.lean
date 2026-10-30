@@ -61,6 +61,36 @@ theorem reflection_star [StarRing R] {p : R} (hp : star p = p) :
     star (reflection p) = reflection p := by
   simp only [reflection, two_nsmul, star_sub, star_add, star_one, hp]
 
+/-- The star reflection associated to an idempotent: apply the involution
+and conjugate by its Cartan reflection. This construction uses only the
+operations of an arbitrary noncommutative star ring. -/
+def starReflection [StarRing R] (p x : R) : R :=
+  reflection p * star x * reflection p
+
+/-- A self-adjoint idempotent induces an involutive star reflection. -/
+theorem starReflection_involutive [StarRing R] {p : R}
+    (hp : p * p = p) (hstar : star p = p) :
+    Function.Involutive (starReflection p) := by
+  intro x
+  simp only [starReflection, star_mul, reflection_star hstar, star_star]
+  calc
+    reflection p * (reflection p * (x * reflection p)) * reflection p =
+        (reflection p * reflection p) * x * (reflection p * reflection p) := by
+          noncomm_ring
+    _ = 1 * x * 1 := by rw [reflection_sq hp]
+    _ = x := by simp
+
+/-- Star reflection sends the forward Peirce corner of an arbitrary operator
+to the negative adjoint corner. This identity uses only an idempotent
+self-adjoint projection in an associative star ring; it is not a state
+positivity assertion. -/
+theorem starReflection_component10 [StarRing R] {p : R}
+    (hp : p * p = p) (hstar : star p = p) (a : R) :
+    starReflection p (component10 p a) = -component01 p (star a) := by
+  simp only [starReflection, reflection, component10, component01,
+    complementIdempotent, star_mul, star_sub, star_one, hstar, two_nsmul]
+  noncomm_ring [hp, idempotent_mul_nested p hp]
+
 /-- The difference of two annihilating idempotents is a supported tripotent. -/
 theorem orthogonal_difference_powers {p q : R} (hp : p * p = p) (hq : q * q = q)
     (hpq : p * q = 0) (hqp : q * p = 0) :
@@ -154,6 +184,26 @@ theorem reflection_parities {p : R} (hp : p * p = p) (x : R) :
   simp only [reflection, two_nsmul, evenPart, oddPart, component11, component00,
     component10, component01, complementIdempotent]
   constructor <;> noncomm_ring [hp, idempotent_mul_nested p hp]
+
+/-- The four associative Peirce sectors are joint eigencomponents of the
+commutator and anticommutator actions of an idempotent. The eigenvalues are
+expressed by addition, so this statement does not divide by two or assume the
+coefficient ring is a field. -/
+theorem peirce_four_sector_lie_jordan_eigenlaws {p : R} (hp : p * p = p)
+    (x : R) :
+    (p * component11 p x - component11 p x * p = 0 ∧
+      p * component11 p x + component11 p x * p =
+        2 • component11 p x) ∧
+    (p * component00 p x - component00 p x * p = 0 ∧
+      p * component00 p x + component00 p x * p = 0) ∧
+    (p * component10 p x - component10 p x * p = component10 p x ∧
+      p * component10 p x + component10 p x * p = component10 p x) ∧
+    (p * component01 p x - component01 p x * p = -component01 p x ∧
+      p * component01 p x + component01 p x * p = component01 p x) := by
+  simp only [component11, component00, component10, component01,
+    complementIdempotent]
+  refine ⟨⟨?_, ?_⟩, ⟨⟨?_, ?_⟩, ⟨⟨?_, ?_⟩, ⟨?_, ?_⟩⟩⟩⟩ <;>
+    noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem conjugation_on_parts {p : R} (hp : p * p = p) (x : R) :
     reflection p * evenPart p x * reflection p = evenPart p x ∧

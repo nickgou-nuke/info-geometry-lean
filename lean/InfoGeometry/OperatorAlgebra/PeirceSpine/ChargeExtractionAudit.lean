@@ -1,0 +1,21 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtraction
+import InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichBrackets
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+#print axioms charge_extract_zero
+#print axioms charge_extract_plus_one
+#print axioms charge_extract_minus_one
+#print axioms charge_extract_plus_two
+#print axioms charge_extract_minus_two
+#print axioms charge_iter_fifth_annihilator
+#print axioms sandwich_composition
+#print axioms comm_sandwich_commutator
+#print axioms extremal_sandwich_commutator
+#print axioms corner_commutator_pair
+#print axioms raising_lowering_sandwich_bracket
+#print axioms lowering_raising_sandwich_bracket
+#print axioms charge_spin_comm
+#print axioms charge_spin_lower_sandwich
+#print axioms charge_spin_upper_sandwich
+#print axioms charge_extremal_bracket

@@ -14,6 +14,8 @@ import InfoGeometry.Canonical.GramianInverseContracts
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.cmp_support_idempotents
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.star_real_matrix
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.matrix_zero_of_gram_zero
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.matrix_sandwich_zero_iff
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.invertible_sandwiched_projector_cross_zero_iff
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_left_gramian
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_left_gramian_drazin_one
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.oblique_idempotent_counterexample

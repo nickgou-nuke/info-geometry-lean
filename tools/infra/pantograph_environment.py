@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -40,6 +41,17 @@ def _relative_identity(path: Path, root: Path, lean_lib: Path) -> str:
         return "leanlib:" + resolved.relative_to(lean_lib.resolve()).as_posix()
     except ValueError:
         return "absolute:" + str(resolved)
+
+
+def _lexical_source_path(root: Path, source_path: Path) -> tuple[Path, str]:
+    """Normalize path syntax without replacing an indexed symlink module."""
+    root = Path(os.path.abspath(os.fspath(root)))
+    source = source_path if source_path.is_absolute() else root / source_path
+    source = Path(os.path.abspath(os.fspath(source)))
+    try:
+        return source, source.relative_to(root).as_posix()
+    except ValueError as exc:
+        raise RuntimeError("source snapshot must be inside the project root") from exc
 
 
 def _pantograph_root(command: list[str], cwd: Path) -> tuple[Path, Path, int] | None:
@@ -84,11 +96,7 @@ def build_lean_context_manifest(
 ) -> dict[str, Any]:
     """Fingerprint the exact Lean/Lake context for one source, excluding Pantograph."""
     root = project_root.resolve()
-    source = source_path.resolve() if source_path.is_absolute() else (root / source_path).resolve()
-    try:
-        source_relative = source.relative_to(root).as_posix()
-    except ValueError as exc:
-        raise RuntimeError("source snapshot must be inside the project root") from exc
+    source, source_relative = _lexical_source_path(root, source_path)
     if not source.is_file():
         raise RuntimeError(f"source snapshot is unavailable: {source}")
     required = {name: root / name for name in ("lean-toolchain", "lakefile.lean", "lake-manifest.json")}
@@ -137,11 +145,7 @@ def build_environment_manifest(
     artifacts. The caller supplies the already-built REPL command.
     """
     root = project_root.resolve()
-    source = source_path.resolve() if source_path.is_absolute() else (root / source_path).resolve()
-    try:
-        source_relative = source.relative_to(root).as_posix()
-    except ValueError as exc:
-        raise RuntimeError("source snapshot must be inside the project root") from exc
+    source, source_relative = _lexical_source_path(root, source_path)
     if not source.is_file():
         raise RuntimeError(f"source snapshot is unavailable: {source}")
     for required in (root / "lean-toolchain", root / "lakefile.lean", root / "lake-manifest.json"):

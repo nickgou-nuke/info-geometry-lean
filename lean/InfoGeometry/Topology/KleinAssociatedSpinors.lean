@@ -161,4 +161,36 @@ theorem equivariant_kinematic_double_glide (s t : Bool)
   rw [hb,twistorMinus_double_glide] at h
   rw [h,kinematic_negative_holonomy]
 
+/-- A nonzero smooth cover-level field realizes the negative-glide boundary condition. -/
+def minusWave (p : PlanePoint) : Spinor :=
+  Complex.exp (((Real.pi / 2 * p.2 : ℝ) : ℂ) * Complex.I) • ![1,1]
+
+private theorem exp_half_pi :
+    Complex.exp (((Real.pi/2 : ℝ):ℂ)*Complex.I)=Complex.I := by
+  apply Complex.ext <;> simp [Complex.exp_re,Complex.exp_im]
+
+theorem minusWave_glide (p : PlanePoint) :
+    minusWave (deckB p)=reflectionMinus.mulVec (minusWave p) := by
+  have harg : (↑Real.pi / 2 : ℂ) * (↑p.2 + 1) * Complex.I =
+      ((↑Real.pi / 2 : ℂ) * ↑p.2 * Complex.I) +
+        ((↑Real.pi / 2 : ℂ) * Complex.I) := by
+    push_cast
+    ring
+  have hconst : Complex.exp ((↑Real.pi / 2 : ℂ) * Complex.I) = Complex.I := by
+    convert exp_half_pi using 1 <;> push_cast <;> ring
+  have hphase :
+      Complex.exp ((↑Real.pi / 2 : ℂ) * (↑p.2 + 1) * Complex.I) =
+        Complex.I * Complex.exp ((↑Real.pi / 2 : ℂ) * ↑p.2 * Complex.I) := by
+    rw [harg, Complex.exp_add, hconst]
+    ring
+  ext i
+  fin_cases i <;>
+    simp [minusWave, deckB, hphase, reflectionMinus, reflectionPlus,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_two, smul_eq_mul]
+
+theorem minusWave_nonzero : minusWave (0,0) ≠ 0 := by
+  intro h
+  have hh := congrFun h (0 : Fin 2)
+  norm_num [minusWave] at hh
+
 end InfoGeometry.Topology.KleinAssociatedSpinors

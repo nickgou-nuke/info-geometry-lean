@@ -1,5 +1,3 @@
-import InfoGeometry.Dynamics.KanDecomposition
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 noncomputable section
@@ -7,20 +5,14 @@ noncomputable section
 /-!
 # CantorRandomWalk
 
-Finite algebraic Cantor/random-walk shadow for the parabolic `N` lane.
+Cantor configuration carrier and bit-flip action.
 
-The Cantor carrier is the binary sequence space `ℕ → Bool`. This file proves
-the concrete bit-flip laws and connects a local mode-step matrix to the already
-owned parabolic `componentN` power law.
-
-It does not construct a probability measure, a stochastic process, a CAR
-algebra, or a metric-space instance for Cantor space.
+The Cantor carrier is the binary sequence space `ℕ → Bool`. Operator-valued
+finite-mode steps are owned by `Cantor.CliffordMarkovOperators`, where they act
+through the represented split Clifford algebra on the Fock carrier.
 -/
 
 namespace InfoGeometry.Cantor.CantorRandomWalk
-
-open Matrix
-open InfoGeometry.Dynamics.KanDecomposition
 
 /-- Cantor binary sequence space, read as infinitely many occupation bits. -/
 abbrev CantorWord : Type :=
@@ -97,29 +89,5 @@ theorem agree_before_firstDifference
   have hle : firstDifference x y hxy ≤ k :=
     Nat.find_min' (exists_differAt_of_ne hxy) hd
   exact (not_le_of_gt hk) hle
-
-/-- Local parabolic matrix step attached to one Cantor mode. -/
-def localQuantumFlipStep (_i : ℕ) (δ : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
-  componentN δ
-
-/-- Local mode steps are exactly the KAN parabolic `N` gate. -/
-theorem localQuantumFlipStep_eq_componentN (i : ℕ) (δ : ℂ) :
-    localQuantumFlipStep i δ = componentN δ := rfl
-
-/--
-Repeated local parabolic perturbations accumulate linearly in the shear
-parameter. This is a deterministic matrix law, not a probabilistic random-walk
-limit theorem.
--/
-theorem cantor_noise_accumulation (i : ℕ) (δ : ℂ) (n : ℕ) :
-    (localQuantumFlipStep i δ) ^ n = localQuantumFlipStep i ((n : ℂ) * δ) := by
-  simpa [localQuantumFlipStep] using componentN_pow δ n
-
-/-- The accumulated local mode step has the explicit unipotent coordinate form. -/
-theorem cantor_noise_accumulation_matrix (i : ℕ) (δ : ℂ) (n : ℕ) :
-    (localQuantumFlipStep i δ) ^ n =
-      !![1, (n : ℂ) * δ; 0, 1] := by
-  rw [cantor_noise_accumulation]
-  exact componentN_eq ((n : ℂ) * δ)
 
 end InfoGeometry.Cantor.CantorRandomWalk

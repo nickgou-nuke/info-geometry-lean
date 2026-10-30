@@ -1,0 +1,11 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundary
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+#print axioms automorphismCoboundary_one
+#print axioms automorphismCoboundary_mul
+#print axioms automorphismDifference
+#print axioms automorphismDifference_mul
+#print axioms automorphismDifference_eq_zero_iff
+#print axioms parityDifference_trace_zero
+#print axioms parityDifference_eq_two_odd

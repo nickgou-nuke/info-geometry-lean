@@ -83,6 +83,7 @@ import InfoGeometry.Algebra.CubicJordanOs
 import InfoGeometry.Algebra.CubicJordanPeirce
 import InfoGeometry.Algebra.PeirceLadderOperators
 import InfoGeometry.Algebra.PeirceParityClosure
+import InfoGeometry.Algebra.PeirceOmegaTransfer
 import InfoGeometry.Algebra.CubicJordanFreudenthal
 import InfoGeometry.Algebra.FreudenthalComplete
 import InfoGeometry.Algebra.CuntzSupergradedSUSY

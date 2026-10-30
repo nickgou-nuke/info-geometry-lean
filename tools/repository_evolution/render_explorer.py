@@ -25,8 +25,8 @@ def main(argv=None):
     if companion_out.resolve() in protected and companion_out.resolve() != companion.resolve():
         parser.error("companion viewer would overwrite an input file")
     data = json.loads(args.data.read_text(encoding="utf-8"))
-    if data.get("schema") != "repo-phylogeny/v1":
-        parser.error("expected a repo-phylogeny/v1 export")
+    if data.get("schema") not in {"repo-phylogeny/v1", "repo-phylogeny/v2"}:
+        parser.error("expected a supported repo-phylogeny/v1 or /v2 export")
     template = args.template.read_text(encoding="utf-8")
     if template.count("__PHYLOGENY_DATA__") != 1:
         parser.error("template must contain exactly one data placeholder")

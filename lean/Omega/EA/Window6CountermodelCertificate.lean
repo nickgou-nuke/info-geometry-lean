@@ -80,6 +80,40 @@ def window6_fin21_facts_certificate_equation_holds
   window6_first_last_classifier_first s = window6_first_last_classifier_first t ∧
     window6_first_last_classifier_last s = window6_first_last_classifier_last t
 
+/-- Semantic characterization of equation validity in the rectangular-band model:
+two terms agree for every modular assignment exactly when their first and last
+variable indices agree. -/
+theorem window6_equation_holds_iff_forall_eval_eq
+    (s t : window6_first_last_classifier_term 4) :
+    window6_fin21_facts_certificate_equation_holds s t ↔
+      ∀ ρ3 ρ7,
+        window6_first_last_classifier_eval ρ3 ρ7 s =
+          window6_first_last_classifier_eval ρ3 ρ7 t := by
+  constructor
+  · rintro ⟨hfirst, hlast⟩ ρ3 ρ7
+    rw [paper_window6_first_last_classifier s ρ3 ρ7,
+      paper_window6_first_last_classifier t ρ3 ρ7, hfirst, hlast]
+  · intro h
+    constructor
+    · by_contra hfirst
+      let ρ3 : Fin 4 → Nat := fun i => if i =
+        window6_first_last_classifier_first s then 0 else 1
+      have heq := h ρ3 (fun _ => 0)
+      rw [paper_window6_first_last_classifier s ρ3 (fun _ => 0),
+        paper_window6_first_last_classifier t ρ3 (fun _ => 0)] at heq
+      have hst : window6_first_last_classifier_first t ≠
+          window6_first_last_classifier_first s := fun hts => hfirst hts.symm
+      simp [ρ3, hst] at heq
+    · by_contra hlast
+      let ρ7 : Fin 4 → Nat := fun i => if i =
+        window6_first_last_classifier_last s then 0 else 1
+      have heq := h (fun _ => 0) ρ7
+      rw [paper_window6_first_last_classifier s (fun _ => 0) ρ7,
+        paper_window6_first_last_classifier t (fun _ => 0) ρ7] at heq
+      have hst : window6_first_last_classifier_last t ≠
+          window6_first_last_classifier_last s := fun hts => hlast hts.symm
+      simp [ρ7, hst] at heq
+
 /-- ETP index `10`: `x = x <> (y <> x)`. -/
 def window6_fin21_facts_certificate_e10_lhs : window6_fin21_facts_certificate_term :=
   window6_fin21_facts_certificate_x

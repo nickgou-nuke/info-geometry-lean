@@ -12,6 +12,18 @@ theorem const_pos_not_tendsto_zero {c : ℝ} (hc : 0 < c) :
   simpa [hc.ne'] using
     (tendsto_const_nhds_iff (l := atTop) (c := c) (d := (0 : ℝ)))
 
+/-- If the period is allowed to grow with the stage, a fixed positive numerator
+does not give a uniform positive mean gap: the sequence `Δ / (n + 1)` tends to
+zero. This is the exact boundary of the fixed-period theorem below. -/
+theorem growing_period_mean_gap_tendsto_zero {Δ : ℝ} :
+    Tendsto (fun n : ℕ => Δ / ((n + 1 : ℕ) : ℝ)) atTop (𝓝 0) := by
+  have hinv :
+      Tendsto (fun n : ℕ => (((n + 1 : ℕ) : ℝ)⁻¹)) atTop (𝓝 0) := by
+    simpa [Function.comp_def] using
+      (tendsto_inv_atTop_nhds_zero_nat (𝕜 := ℝ)).comp
+        (Filter.tendsto_add_atTop_nat 1)
+  simpa [div_eq_mul_inv, mul_comm] using hinv.const_mul Δ
+
 /-- Paper seed: periodic nearest-neighbor gaps live in a fixed finite set, while a
     cellwise mean gap `Δ / B` stays uniformly positive and therefore cannot shrink to
     zero along height. This rules out a variable-density collapse mechanism.

@@ -9,10 +9,10 @@ import InfoGeometry.Algebra.Zorn.G2CanonicalResidualPCWords
 /-!
 # Ordered inversion coordinates for Bruhat residual product images
 
-This owner provides only the finite ordering interface.  It deliberately does
-not identify Boolean coordinates with a concrete residual subgroup: that
-requires an ordered root-subgroup product and separate injectivity and
-surjectivity proofs.
+This owner provides the finite ordering interface and a concrete five-bit PC
+parametrization of the corrected simple residual subgroup. The latter has
+separate injectivity and surjectivity proofs. Uncorrected inversion-root
+coordinates instead describe a proper eight-element image at that parameter.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2BruhatResidualEquiv

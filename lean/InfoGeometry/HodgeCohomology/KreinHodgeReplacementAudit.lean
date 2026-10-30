@@ -1,0 +1,16 @@
+import InfoGeometry.HodgeCohomology.KreinHodgeKernelCriterion
+import InfoGeometry.HodgeCohomology.KreinNullContraction
+
+open InfoGeometry.HodgeCohomology
+
+#print axioms KreinHodgeKernelCriterion.hodge_kernel_eq_iff
+#print axioms KreinHodgeKernelCriterion.square_zero_eq_zero_of_commutes_symmetry
+#print axioms kernel_square_eq_iff
+#print axioms square_zero_kernel_stable_iff
+#print axioms KreinHodgeDiracBounded.krein_hodge_kernel_eq_of_commutes_symmetry
+#print axioms KreinHodgeObstruction.nullDirac_krein_adjoint
+#print axioms KreinHodgeObstruction.nullDirac_kernel_counterexample
+#print axioms KreinHodgeObstruction.nullComplex_homology_zero
+#print axioms KreinHodgeObstruction.nonzero_exact_closed_coclosed_harmonic
+#print axioms KreinNullContraction.null_contracting_identity
+#print axioms KreinNullContraction.null_closed_unique_primitive

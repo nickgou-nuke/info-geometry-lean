@@ -32,7 +32,7 @@ lemma s4HurwitzRepresentative_monodromy_eq_top :
     s4HurwitzRepresentativeMonodromy = ⊤ := by
   simpa [s4HurwitzRepresentativeMonodromy, s4HurwitzRepresentative,
     Omega.Zeta.xiLeyangGeometricMonodromyGroup] using
-    Omega.Zeta.paper_xi_terminal_zm_leyang_monodromy_s4.1
+    Omega.Zeta.xiLeyang_geometric_monodromy_eq_top
 
 lemma s4HurwitzSingletonOrbit_card :
     s4HurwitzSingletonOrbit.card = 1 := by

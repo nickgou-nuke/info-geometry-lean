@@ -6,6 +6,7 @@ import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
 import InfoGeometry.OperatorAlgebra.InnerConjugation
 import InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio
 import InfoGeometry.OperatorAlgebra.OperatorMobiusAction
+import InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity
 import InfoGeometry.Canonical.ModularZ2CubeGrading
 import InfoGeometry.Optics.OperatorValuedConnection
 
@@ -25,6 +26,42 @@ universe u
 
 variable {J : Type u} [Category.{u} J]
 variable (F : J ⥤ RingCat.{u}) [HasColimit F]
+
+/-- Reflexive square-zero operator pairs retain their idempotent mass,
+Dirac support, reflection involution, `sl₂` root actions, and quadratic
+Casimir after passage through the canonical `RingCat` colimit injection.
+Only polynomial identities are transported: no nonvanishing mass or analytic
+spectral gap is asserted for a potentially noninjective colimit map. -/
+theorem colimit_ι_reflexive_pair_root_system
+    (j : J) (u v : F.obj j)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (huv : u * v * u = u) (hvu : v * u * v = v) :
+    let uk := (colimit.ι F j).hom u
+    let vk := (colimit.ι F j).hom v
+    let mass := uk * vk + vk * uk
+    let dirac := uk + vk
+    let spin := uk * vk - vk * uk
+    mass * mass = mass ∧
+    dirac * dirac = mass ∧
+    dirac * mass = dirac ∧
+    mass * dirac = dirac ∧
+    ((1 - mass) + dirac) * ((1 - mass) + dirac) = 1 ∧
+    spin * uk - uk * spin = (2 : ℕ) • uk ∧
+    spin * vk - vk * spin = -((2 : ℕ) • vk) ∧
+    spin * spin + (2 : ℕ) • mass = (3 : ℕ) • mass := by
+  dsimp
+  let f := (colimit.ι F j).hom
+  have hMass :=
+    PeirceDissipatorTrinity.ringHom_preserves_reflexive_pair_mass_idempotent
+      f u v hu hv huv hvu
+  have hDirac :=
+    PeirceDissipatorTrinity.ringHom_preserves_reflexive_pair_dirac_support
+      f u v hu hv huv hvu
+  have hRoot :=
+    PeirceDissipatorTrinity.ringHom_preserves_reflexive_pair_sl2
+      f u v hu hv huv hvu
+  exact ⟨hMass, hDirac.1, hDirac.2.1, hDirac.2.2.1, hDirac.2.2.2,
+    hRoot.1, hRoot.2.1, hRoot.2.2⟩
 
 theorem colimit_ι_map_quadraticCommutator
     (j : J) (x y : (F.obj j)) :

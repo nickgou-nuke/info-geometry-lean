@@ -42,6 +42,39 @@ theorem routed_gauge_covariant (K : Matrix ι ι ℝ) (g : ι → V ≃ₗ[ℝ] 
   funext i
   simp [routed, gaugeLinks, gaugeValues, map_sum]
 
+/-- Frame changes preserve the fibers of routing under the corresponding
+transport of inputs. This applies to arbitrary real modules, including full
+noncommutative operator spaces. -/
+theorem routed_gauge_fibers_iff (K : Matrix ι ι ℝ)
+    (g : ι → V ≃ₗ[ℝ] V) (U : Links ι V) (x y : ι → V) :
+    routed K (gaugeLinks g U) (gaugeValues g x) =
+        routed K (gaugeLinks g U) (gaugeValues g y) ↔
+      routed K U x = routed K U y := by
+  rw [routed_gauge_covariant, routed_gauge_covariant]
+  constructor
+  · intro h
+    funext i
+    apply (g i).injective
+    exact congrFun h i
+  · intro h
+    rw [h]
+
+/-- A frame change carries each zero mode to a zero mode and reflects
+vanishing; it cannot remove the kernel of an averaging operator. -/
+theorem routed_gauge_zero_iff (K : Matrix ι ι ℝ)
+    (g : ι → V ≃ₗ[ℝ] V) (U : Links ι V) (x : ι → V) :
+    routed K (gaugeLinks g U) (gaugeValues g x) = 0 ↔ routed K U x = 0 := by
+  rw [routed_gauge_covariant]
+  constructor
+  · intro h
+    funext i
+    apply (g i).injective
+    simpa [gaugeValues] using congrFun h i
+  · intro h
+    rw [h]
+    funext i
+    exact (g i).map_zero
+
 /-- Two paths need not give the same transport. This is a discrete path defect. -/
 def pathDefect (U : Links ι V) (i j k : ι) (v : V) : V :=
   U i j (U j k v) - U i k v

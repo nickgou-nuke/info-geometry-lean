@@ -7,5 +7,12 @@ import InfoGeometry.RootSystem.D4DiscriminantCardinality
 import InfoGeometry.RootSystem.D4DualTriality
 import InfoGeometry.RootSystem.D4TrialityAction
 import InfoGeometry.RootSystem.D4WeylGroup
+import InfoGeometry.RootSystem.D4CoxeterBridge
+import InfoGeometry.RootSystem.D4BitConfigurationAction
+import InfoGeometry.RootSystem.D4CantorWeylAction
 import InfoGeometry.RootSystem.CoxeterPlaneProjection
 import InfoGeometry.RootSystem.G2CoxeterPlaneProjection
+import InfoGeometry.RootSystem.ExceptionalRootLatticeWeyl
+import InfoGeometry.RootSystem.ExceptionalRootCoxeterBridge
+import InfoGeometry.RootSystem.ExceptionalRootOperatorWeyl
+import InfoGeometry.RootSystem.ExceptionalRootWeylNoncommutativity

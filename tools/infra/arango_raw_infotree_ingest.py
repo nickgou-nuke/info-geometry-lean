@@ -351,9 +351,79 @@ def stable_row_hash(row: dict[str, Any]) -> str:
     return f"{h:016x}"
 
 
-def generation_fingerprint(input_dir: Path, build_fingerprint: str) -> str:
+# Shared-context layout factors the exact ref/decl join through context vertices.
+# Raw rows remain unchanged; expanded generations retain their historical names.
+CONTEXT_LAYOUTS = ("expanded", "shared")
+SHARED_CONTEXT_SPECS = {
+    "mctx": ("mctxKey", "mctxRefKey", "mctxKey", "declKey"),
+    "lctx": ("lctxKey", "lctxRefKey", "sourceKey", "lctxDeclKey"),
+}
+
+
+def context_edge_collections(layout: str) -> list[str]:
+    if layout not in CONTEXT_LAYOUTS:
+        raise ValueError(f"unknown context layout: {layout}")
+    if layout == "expanded":
+        return list(EDGE_COLLECTIONS)
+    replaced = {"raw_infotree_mctx_decl_edges", "raw_infotree_lctx_ref_decl_edges"}
+    return [name for name in EDGE_COLLECTIONS if name not in replaced] + [
+        f"raw_infotree_{kind}_{suffix}"
+        for kind in SHARED_CONTEXT_SPECS
+        for suffix in ("ref_context_edges", "context_decl_edges")
+    ]
+
+
+def _context_key(row: dict[str, Any], field: str, kind: str) -> str:
+    key = row.get(field)
+    if kind == "mctx" and not key:
+        key = row.get("mctxRefKey")
+    if not isinstance(key, str) or not key:
+        raise ValueError(f"missing {kind} context identity")
+    return key
+
+
+def iter_context_rows(input_dir: Path, kind: str) -> Iterator[dict[str, Any]]:
+    ref_field, _, decl_field, _ = SHARED_CONTEXT_SPECS[kind]
+    seen: dict[str, str] = {}
+    for table, field in (("refs", ref_field), ("decls", decl_field)):
+        for row in iter_jsonl(input_dir / f"raw_infotree_{kind}_{table}.jsonl"):
+            key = _context_key(row, field, kind)
+            root = str(row.get("rootKey") or "")
+            if key in seen:
+                if seen[key] != root:
+                    raise ValueError(f"{kind} context key spans different roots: {key}")
+                continue
+            seen[key] = root
+            yield {"_key": key, "contextKey": key, "rootKey": root,
+                   "schema": "info_geometry.shared_infotree_context.v1", "kind": kind}
+
+
+def iter_shared_context_edges(input_dir: Path, collection: str) -> Iterator[dict[str, Any]]:
+    for kind, (ref_field, ref_id, decl_field, decl_id) in SHARED_CONTEXT_SPECS.items():
+        contexts = f"raw_infotree_{kind}_contexts"
+        if collection == f"raw_infotree_{kind}_ref_context_edges":
+            for row in iter_jsonl(input_dir / f"raw_infotree_{kind}_refs.jsonl"):
+                key = str(row[ref_id])
+                context = _context_key(row, ref_field, kind)
+                yield edge_doc(f"{kind}_ref_has_context", prefixed_key(f"{kind}rc", key),
+                               f"raw_infotree_{kind}_refs/{key}", f"{contexts}/{context}")
+            return
+        if collection == f"raw_infotree_{kind}_context_decl_edges":
+            for row in iter_jsonl(input_dir / f"raw_infotree_{kind}_decls.jsonl"):
+                key = str(row[decl_id])
+                context = _context_key(row, decl_field, kind)
+                yield edge_doc(f"{kind}_context_has_decl", prefixed_key(f"{kind}cd", key),
+                               f"{contexts}/{context}", f"raw_infotree_{kind}_decls/{key}")
+            return
+    raise ValueError(f"not a shared-context edge collection: {collection}")
+
+
+def generation_fingerprint(input_dir: Path, build_fingerprint: str, context_layout: str = "expanded") -> str:
     """Content identity for one validated export in one declared environment."""
     digest = hashlib.sha256()
+    context_edge_collections(context_layout)
+    if context_layout != "expanded":
+        digest.update(b"info_geometry.shared_context_layout.v1\0")
     digest.update(build_fingerprint.encode("utf-8"))
     for path in sorted(input_dir.iterdir(), key=lambda item: item.name):
         if not path.is_file() or (not path.name.endswith(".jsonl") and path.name != "metadata.json"):
@@ -452,6 +522,18 @@ def import_accounting_failures(imports: dict[str, dict[str, Any]]) -> list[str]:
             failures.append(
                 f"{collection}: submitted={submitted} accounted={accounted} "
                 f"errors={result.get('errors')}"
+            )
+    return failures
+
+
+def live_count_failures(expected: dict[str, int], actual: dict[str, int]) -> list[str]:
+    """Reject a generation receipt unless every stored collection count matches."""
+    failures = []
+    for collection, expected_count in sorted(expected.items()):
+        actual_count = actual.get(collection)
+        if actual_count != expected_count:
+            failures.append(
+                f"{collection}: expected={expected_count} actual={actual_count}"
             )
     return failures
 
@@ -973,6 +1055,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--drop-existing", action="store_true")
     parser.add_argument("--build-fingerprint", help="Enable immutable generation ingest bound to this Lean/Lake environment.")
+    parser.add_argument("--context-layout", choices=CONTEXT_LAYOUTS, default="expanded",
+                        help="shared stores context membership once; requires immutable generation mode")
     parser.add_argument("--batch-size", type=int, default=5000)
     parser.add_argument("--skip-validation", action="store_true")
     parser.add_argument("--skip-indexes", action="store_true", help="Do not create Arango persistent indexes after collection setup.")
@@ -989,6 +1073,10 @@ def main() -> int:
     input_dir = args.input_dir.resolve()
     batch_size = max(1, int(args.batch_size))
 
+    layout = args.context_layout
+    if layout == "shared" and not args.build_fingerprint:
+        raise SystemExit("--context-layout shared requires --build-fingerprint")
+    edge_collections = context_edge_collections(layout)
     preflight = preflight_input(input_dir)
     if not preflight["ok"]:
         raise RuntimeError(f"raw_infotree input preflight failed: missing {preflight['missing_files']}")
@@ -1002,15 +1090,22 @@ def main() -> int:
         for collection, filename in ROW_FILES.items()
     }
     edge_counts = raw_edge_counts(input_dir)
-    generation_id = generation_fingerprint(input_dir, args.build_fingerprint) if args.build_fingerprint else None
+    expanded_edge_counts = dict(edge_counts)
+    if layout == "shared":
+        edge_counts = {name: count for name, count in edge_counts.items() if name in edge_collections}
+        for kind in SHARED_CONTEXT_SPECS:
+            row_counts[f"raw_infotree_{kind}_contexts"] = sum(1 for _ in iter_context_rows(input_dir, kind))
+            edge_counts[f"raw_infotree_{kind}_ref_context_edges"] = row_counts[f"raw_infotree_{kind}_refs"]
+            edge_counts[f"raw_infotree_{kind}_context_decl_edges"] = row_counts[f"raw_infotree_{kind}_decls"]
+    generation_id = generation_fingerprint(input_dir, args.build_fingerprint, layout) if args.build_fingerprint else None
     if generation_id and args.drop_existing:
         raise SystemExit("--drop-existing cannot be combined with immutable --build-fingerprint ingest")
     collection_map = {
         name: f"{name}_g_{generation_id}" if generation_id else name
-        for name in list(ROW_FILES) + EDGE_COLLECTIONS
+        for name in list(row_counts) + edge_collections
     }
-    all_specs = [CollectionSpec(collection_map[name], False) for name in ROW_FILES]
-    all_specs += [CollectionSpec(collection_map[name], True) for name in EDGE_COLLECTIONS]
+    all_specs = [CollectionSpec(collection_map[name], False) for name in row_counts]
+    all_specs += [CollectionSpec(collection_map[name], True) for name in edge_collections]
 
     report: dict[str, Any] = {
         "schema": "info_geometry.arango_raw_infotree_ingest.v1",
@@ -1021,6 +1116,8 @@ def main() -> int:
         "row_counts": row_counts,
         "edge_counts": edge_counts,
         "generation_id": generation_id,
+        "context_layout": layout,
+        "expanded_edge_counts": expanded_edge_counts,
         "build_fingerprint": args.build_fingerprint,
         "collections": [spec.name for spec in all_specs],
         "dry_run": bool(args.dry_run),
@@ -1059,8 +1156,14 @@ def main() -> int:
                 batch_size=batch_size,
                 progress_every=max(0, int(args.progress_every)),
             )
-        for collection in EDGE_COLLECTIONS:
-            rows = iter_edge_rows(input_dir, collection)
+        if layout == "shared":
+            for kind in SHARED_CONTEXT_SPECS:
+                collection = collection_map[f"raw_infotree_{kind}_contexts"]
+                imports[collection] = import_rows(target, collection, iter_context_rows(input_dir, kind),
+                    batch_size=batch_size, progress_every=max(0, int(args.progress_every)))
+        for collection in edge_collections:
+            rows = (iter_edge_rows(input_dir, collection) if collection in EDGE_COLLECTIONS
+                    else iter_shared_context_edges(input_dir, collection))
             if generation_id:
                 rows = (remap_edge_collections(row, collection_map) for row in rows)
             target_collection = collection_map[collection]
@@ -1086,6 +1189,17 @@ def main() -> int:
                 {collection_map[name]: name for name in collection_map},
             )
         report["live_counts"] = {spec.name: collection_count(target, spec.name) for spec in all_specs}
+        expected_live_counts = {
+            **{collection_map[name]: count for name, count in row_counts.items()},
+            **{collection_map[name]: count for name, count in edge_counts.items()},
+        }
+        count_failures = live_count_failures(expected_live_counts, report["live_counts"])
+        report["live_count_failures"] = count_failures
+        if count_failures:
+            raise RuntimeError(
+                "Arango collection counts do not match the generation input; "
+                "refusing generation completion: " + "; ".join(count_failures)
+            )
         if generation_id:
             metadata_collection = "raw_infotree_generations"
             if metadata_collection not in existing:
@@ -1095,6 +1209,7 @@ def main() -> int:
                 "schema": "info_geometry.raw_infotree_generation.v1",
                 "status": "complete",
                 "buildFingerprint": args.build_fingerprint,
+                "contextLayout": layout,
                 "exportMetadata": preflight,
                 "sourceProvenance": preflight["source_provenance"],
                 "validation": validation,

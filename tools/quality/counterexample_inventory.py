@@ -24,6 +24,7 @@ DECLARATION = re.compile(
 )
 NEGATIVE_MARKERS = (
     "counterexample",
+    "refut",
     "obstruction",
     "does_not",
     "need_not",
@@ -54,6 +55,8 @@ def category(name: str) -> str:
     lowered = name.lower()
     if "counterexample" in lowered:
         return "countermodel"
+    if "refut" in lowered:
+        return "refutation"
     if "obstruction" in lowered or "nonmultip" in lowered:
         return "obstruction"
     if "injective" in lowered or "separate" in lowered:

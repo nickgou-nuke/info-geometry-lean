@@ -1,0 +1,10 @@
+import InfoGeometry.Algebra.Zorn.ConcreteAkivisIdentity
+
+open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.Basis8
+
+#print axioms concrete_akivis_identity
+#print axioms concrete_jacobi_iff_associator_sum_zero
+#print axioms not_associative_concrete_zorn
+#print axioms not_jacobi_commutator_concrete_zorn
+#print axioms associator_e11_u1_u2_eq_v3
+#print axioms commutator_jacobi_u1_u2_u3

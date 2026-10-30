@@ -33,7 +33,10 @@ structure ZornSlot where
   representation : String  -- "singlet", "fundamental_3", "antifundamental_3bar"
 deriving DecidableEq, Repr
 
-structure SymmetryGroup where
+/-! This record is schema metadata only. It stores a label and reported
+dimension; it carries no group operations, operator representation, or action.
+Use the repo-owned automorphism/operator carriers for actual symmetry claims. -/
+structure SymmetryGroupMetadata where
   group_name : String  -- "SU(3)", "G2", "U(1)"
   dimension : ℕ
   lies_in : String
@@ -115,7 +118,7 @@ def eig_zero : ModularEigenvalue := {
   physical_interpretation := "vacuum"
 }
 
-def su3_color : SymmetryGroup := {
+def su3_color_metadata : SymmetryGroupMetadata := {
   group_name := "SU(3)",
   dimension := 8,
   lies_in := "G2"
@@ -129,7 +132,7 @@ theorem functorial_bridge_correct :
     (color_vector_x.dimension = m2.dimension) ∧
     (complex_J.squares_to = -1) ∧
     (eig_plus.eigenvalue = 1 ∧ eig_minus.eigenvalue = -1 ∧ eig_zero.eigenvalue = 0) ∧
-    (su3_color.group_name = "SU(3)" ∧ su3_color.dimension = 8) := by
+    (su3_color_metadata.group_name = "SU(3)" ∧ su3_color_metadata.dimension = 8) := by
   decide
 
 end InfoGeometry.Canonical

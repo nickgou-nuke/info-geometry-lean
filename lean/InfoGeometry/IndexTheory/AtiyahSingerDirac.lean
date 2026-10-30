@@ -1,54 +1,40 @@
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
-import Mathlib.Topology.Instances.Complex
-import Mathlib.Tactic
+import InfoGeometry.Canonical.AtiyahSingerDiracSupertraceCapstone
+
+/-!
+# Operator-algebraic Dirac parity interface
+
+This module retains the historical import path while exposing only generic
+operator identities. It does not model an analytic or topological index by
+arithmetic functions.
+-/
 
 namespace InfoGeometry.IndexTheory.AtiyahSingerDirac
 
-open Complex Real
+open InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace
 
-noncomputable section
+/-- Oddness of a Dirac operator makes its square even under the grading. -/
+theorem dirac_square_grading_commutes {A : Type*} [Ring A]
+    {D γ : A} (h_odd : D * γ + γ * D = 0) :
+    D * D * γ - γ * (D * D) = 0 :=
+  InfoGeometry.Canonical.AtiyahSingerDirac.dirac_sq_grading_commutes h_odd
 
-set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
+/-- Cyclic graded-trace cancellation for an odd Dirac operator and an even
+operator. -/
+theorem mckean_singer_cyclic_cancellation {A R : Type*} [Ring A]
+    [AddCommGroup R] (τ : A →+ R) (hτ : IsCyclic τ)
+    {γ D X : A} (hγD : γ * D = -(D * γ))
+    (hγX : γ * X = X * γ) :
+    gradedTrace τ γ (operatorAnticommutator D X) = 0 :=
+  InfoGeometry.Canonical.AtiyahSingerDirac.mckean_singer_algebraic_cancellation
+    τ hτ hγD hγX
 
-def analyticDiracIndex (dim_ker dim_coker : ℤ) : ℤ :=
-  dim_ker - dim_coker
+/-- Cyclic supertrace resolution across even and odd Peirce corners. -/
+theorem peirce_supertrace_split {A R : Type*} [Ring A]
+    [AddCommGroup R] (τ : A →+ R) (hτ : IsCyclic τ)
+    {γ p X : A} (hp : p * p = p) (hγp : γ * p = p * γ) :
+    gradedTrace τ γ (oddCorner p X) = 0 ∧
+    gradedTrace τ γ (evenCorner p X) = gradedTrace τ γ X :=
+  InfoGeometry.Canonical.AtiyahSingerDirac.graded_trace_peirce_split
+    τ hτ hp hγp
 
-def topologicalDiracIndex (k : ℤ) : ℤ :=
-  k
-
-def firstChernClassFlux (k : ℤ) : ℤ :=
-  k
-
-def aHatGenusCylinder : ℝ :=
-  1
-
-theorem dirac_light_cone_reduction (d_xi d_theta : ℝ) :
-    (1 / 2) * (d_xi + d_theta) - (1 / 2) * (d_xi - d_theta) = d_theta := by
-  ring
-
-theorem dirac_eigenvalue_real (n : ℤ) :
-    - (n : ℝ) = - ((n : ℝ)) :=
-  rfl
-
-theorem analytic_index_vacuum_zero :
-    analyticDiracIndex 1 1 = 0 := by
-  unfold analyticDiracIndex
-  rfl
-
-theorem topological_index_vacuum_zero :
-    topologicalDiracIndex 0 = 0 := by
-  unfold topologicalDiracIndex
-  rfl
-
-theorem atiyah_singer_index_theorem_match (k : ℤ) :
-    analyticDiracIndex k 0 = topologicalDiracIndex k := by
-  unfold analyticDiracIndex topologicalDiracIndex
-  ring
-
-theorem atiyah_singer_integral_identity (k : ℤ) :
-    aHatGenusCylinder * (firstChernClassFlux k : ℝ) = ((topologicalDiracIndex k : ℤ) : ℝ) := by
-  unfold aHatGenusCylinder firstChernClassFlux topologicalDiracIndex
-  simp only [one_mul]
+end InfoGeometry.IndexTheory.AtiyahSingerDirac

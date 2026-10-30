@@ -3,6 +3,7 @@ from pathlib import Path
 
 from tools.infra.arango_raw_infotree_ingest import (
     import_accounting_failures,
+    live_count_failures,
     raw_row_edges,
 )
 
@@ -141,3 +142,47 @@ def test_import_accounting_rejects_errors_before_generation_completion() -> None
     assert failures[0].startswith("nodes:")
     assert "submitted=4 accounted=4 errors=1" in failures[0]
     assert "submitted=3 accounted=2 errors=0" in failures[1]
+
+
+def test_generation_completion_requires_exact_live_collection_counts() -> None:
+    expected = {"nodes_g_x": 5, "edges_g_x": 3}
+    assert live_count_failures(expected, {"nodes_g_x": 5, "edges_g_x": 3}) == []
+    assert live_count_failures(expected, {"nodes_g_x": 5, "edges_g_x": 2}) == [
+        "edges_g_x: expected=3 actual=2"
+    ]
+
+
+def test_shared_context_paths_preserve_expanded_membership(tmp_path: Path) -> None:
+    from collections import Counter
+    from tools.infra.arango_raw_infotree_ingest import (
+        SHARED_CONTEXT_SPECS, iter_context_rows, iter_edge_rows,
+        iter_shared_context_edges, generation_fingerprint,
+    )
+    for kind, (ref_field, ref_id, decl_field, decl_id) in SHARED_CONTEXT_SPECS.items():
+        refs = [{ref_id: f"r{i}", ref_field: "c", "rootKey": "root"} for i in range(5)]
+        refs.append({ref_id: "empty", ref_field: "empty", "rootKey": "root"})
+        decls = [{decl_id: f"d{i}", decl_field: "c", "rootKey": "root"} for i in range(4)]
+        write_jsonl(tmp_path / f"raw_infotree_{kind}_refs.jsonl", refs)
+        write_jsonl(tmp_path / f"raw_infotree_{kind}_decls.jsonl", decls)
+        contexts = list(iter_context_rows(tmp_path, kind))
+        assert {row['_key'] for row in contexts} == {'c', 'empty'}
+        left = list(iter_shared_context_edges(tmp_path, f"raw_infotree_{kind}_ref_context_edges"))
+        right = list(iter_shared_context_edges(tmp_path, f"raw_infotree_{kind}_context_decl_edges"))
+        reconstructed = Counter((a['_from'], b['_to']) for a in left for b in right if a['_to'] == b['_from'])
+        legacy = 'raw_infotree_mctx_decl_edges' if kind == 'mctx' else 'raw_infotree_lctx_ref_decl_edges'
+        expanded = list(iter_edge_rows(tmp_path, legacy))
+        assert reconstructed == Counter((e['_from'], e['_to']) for e in expanded)
+        assert len(left) + len(right) < len(expanded)
+    assert generation_fingerprint(tmp_path, 'build') == generation_fingerprint(tmp_path, 'build', 'expanded')
+    assert generation_fingerprint(tmp_path, 'build', 'shared') != generation_fingerprint(tmp_path, 'build')
+
+
+def test_shared_context_rejects_cross_root_identity(tmp_path: Path) -> None:
+    import pytest
+    from tools.infra.arango_raw_infotree_ingest import iter_context_rows
+    write_jsonl(tmp_path / 'raw_infotree_mctx_refs.jsonl', [
+        {'mctxRefKey': 'r1', 'mctxKey': 'same', 'rootKey': 'a'},
+        {'mctxRefKey': 'r2', 'mctxKey': 'same', 'rootKey': 'b'},
+    ])
+    with pytest.raises(ValueError, match='different roots'):
+        list(iter_context_rows(tmp_path, 'mctx'))

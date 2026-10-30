@@ -109,3 +109,9 @@
 [submodule "sandbox/Grassmann.jl"]
 	path = sandbox/Grassmann.jl
 	url = https://github.com/chakravala/Grassmann.jl.git
+[submodule "external_refs/lean-coxeter"]
+	path = external_refs/lean-coxeter
+	url = https://github.com/mlyean/lean-coxeter.git
+[submodule "external_refs/CFSG"]
+	path = external_refs/CFSG
+	url = https://github.com/AxiomMath/CFSG.git

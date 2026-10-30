@@ -25,7 +25,10 @@ structure HydratedGraph (α) [BEq α] [Hashable α]
   dag   : Array (Array Nat)
   preds : Array (Array Nat)
   topo  : Array Nat
-  doms  : Array ByteArray
+  /-- Immediate dominator in the root-to-dependent orientation. -/
+  idom : Array (Option Nat)
+  /-- Number of strict dominators, equal to the depth in the dominator forest. -/
+  idomDepth : Array Nat
 
 variable {α : Type u} [BEq α] [Hashable α]
 
@@ -48,7 +51,8 @@ def HydratedGraph.empty : HydratedGraph α where
   dag := #[]
   preds := #[]
   topo := #[]
-  doms := #[]
+  idom := #[]
+  idomDepth := #[]
 
 instance : Inhabited (HydratedGraph α) where
   default := HydratedGraph.empty

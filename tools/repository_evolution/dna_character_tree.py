@@ -420,6 +420,11 @@ def infer_tree(document: Any) -> dict[str, Any]:
         )
     marker_ids = [row["marker"] for row in retained]
     patterns = Counter(tuple(taxon["characters"][marker]["state"] for taxon in taxa) for marker in marker_ids)
+    profile_groups: dict[tuple[str, ...], list[str]] = {}
+    for taxon in taxa:
+        profile = tuple(taxon["characters"][marker]["state"] for marker in marker_ids)
+        profile_groups.setdefault(profile, []).append(taxon["id"])
+    indistinguishable = sorted(group for group in profile_groups.values() if len(group) > 1)
     matrix = [[Fraction(0) for _ in taxa] for _ in taxa]
     for i in range(len(taxa)):
         for j in range(i + 1, len(taxa)):
@@ -464,6 +469,21 @@ def infer_tree(document: Any) -> dict[str, Any]:
         },
         "tree": tree,
         "diagnostics": {
+            "profile_resolution": {
+                "scope": "retained_complete_case_markers_only",
+                "distinct_profile_count": len(profile_groups),
+                "constant_marker_count": sum(count for pattern, count in patterns.items()
+                                             if len(set(pattern)) == 1),
+                "variable_marker_count": sum(count for pattern, count in patterns.items()
+                                             if len(set(pattern)) > 1),
+                "indistinguishable_taxon_groups": indistinguishable,
+                "all_profiles_identical": len(profile_groups) == 1,
+                "interpretation": (
+                    "Taxa within each group cannot be distinguished by retained markers; "
+                    "tie-broken tree resolution is not evidence of differences or ancestry. "
+                    "Distinct profiles alone do not establish a uniquely supported topology."
+                ),
+            },
             "four_point": four_point_diagnostic(matrix),
             "tree_fit": tree_fit_diagnostic(taxon_ids, matrix, tree),
         },

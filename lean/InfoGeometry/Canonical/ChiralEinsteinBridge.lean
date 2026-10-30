@@ -54,6 +54,34 @@ theorem einsteinEquation_of_anomaly_source
   unfold anomalyStressEnergyAt
   ring
 
+/-- Under a nonzero metric component, the sourced Einstein equation for an
+Einstein--Kähler tensor holds exactly at the scalar value used by
+`einsteinEquation_of_anomaly_source`. Thus that theorem is a scalar
+characterization, not an existence result for a new geometric solution. -/
+theorem einsteinEquation_iff_anomaly_scalar_relation
+    (c : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (scalar Λ κ A : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R K x)
+    (hmetric : ∃ u v : E, K.H.metric x u v ≠ 0) :
+    EinsteinEquationAt R K x scalar Λ κ (anomalyStressEnergyAt K x A) ↔
+      scalar = 2 * (c + Λ - κ * A) := by
+  constructor
+  · intro hEquation
+    rcases hmetric with ⟨u, v, huv⟩
+    have hcomponent := hEquation u v
+    have hscaled :
+        (c - scalar / 2 + Λ - κ * A) * K.H.metric x u v = 0 := by
+      rw [einsteinTensor_eq_metric_multiple_of_einsteinKaehlerWith
+        (c := c) (R := R) (K := K) (x := x) (scalar := scalar) hEin u v,
+        anomalyStressEnergyAt] at hcomponent
+      linear_combination hcomponent
+    have hcoefficient : c - scalar / 2 + Λ - κ * A = 0 :=
+      (mul_eq_zero.mp hscaled).resolve_right huv
+    nlinarith [hcoefficient]
+  · intro hscalar
+    rw [hscalar]
+    exact einsteinEquation_of_anomaly_source c R K x Λ κ A hEin
+
 end EinsteinSource
 
 section RoutingEinsteinSource

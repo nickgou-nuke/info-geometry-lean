@@ -133,6 +133,45 @@ lemma matrix_zero_of_gram_zero (X : Matrix ι ι ℝ)
     (fun r (_ : r ∈ Finset.univ) => mul_self_nonneg (X i r))).mp hh j (Finset.mem_univ j)
   exact mul_self_eq_zero.mp hz
 
+/-- A left inverse makes congruence by a square real matrix reflect vanishing. -/
+lemma matrix_sandwich_zero_iff {A B X : Matrix ι ι ℝ}
+    (hBA : B * A = 1) :
+    A * X * A.transpose = 0 ↔ X = 0 := by
+  have htranspose : A.transpose * B.transpose = 1 := by
+    rw [← Matrix.transpose_mul, hBA, Matrix.transpose_one]
+  constructor
+  · intro h
+    have h' : B * (A * X * A.transpose) * B.transpose = 0 := by
+      rw [h]
+      simp
+    calc
+      X = (B * A) * X * (A.transpose * B.transpose) := by rw [hBA, htranspose]; simp
+      _ = B * (A * X * A.transpose) * B.transpose := by noncomm_ring
+      _ = 0 := h'
+  · rintro rfl
+    simp
+
+/-- If the sandwich operator has a left inverse, the observed cross-Gramian vanishes
+exactly when the idempotent is self-adjoint. This strengthens the projector-level
+criterion to the A-sandwiched observation; the oblique example fails this
+left-invertibility condition. -/
+theorem invertible_sandwiched_projector_cross_zero_iff
+    {A B e : Matrix ι ι ℝ}
+    (hBA : B * A = 1) (he : e * e = e) :
+    (A * e) * (A * (1 - e)).transpose = 0 ↔ e.transpose = e := by
+  have hfactor :
+      (A * e) * (A * (1 - e)).transpose =
+        A * (e * (1 - e.transpose)) * A.transpose := by
+    rw [Matrix.transpose_mul, Matrix.transpose_sub, Matrix.transpose_one]
+    noncomm_ring
+  calc
+    (A * e) * (A * (1 - e)).transpose = 0 ↔
+        e * (1 - e.transpose) = 0 := by
+      rw [hfactor]
+      exact matrix_sandwich_zero_iff hBA
+    _ ↔ e.transpose = e := by
+      simpa only [star_real_matrix] using projector_cross_zero_iff e he
+
 /-- Gramian group-inverse formula, with each Penrose equation discharged. -/
 theorem mp_from_left_gramian {A H : Matrix ι ι ℝ}
     (hcomm : (A * A.transpose) * H = H * (A * A.transpose))

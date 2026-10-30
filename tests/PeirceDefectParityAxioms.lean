@@ -1,0 +1,18 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.comm_idempotencyDefect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.parity_idempotencyDefect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.even_idempotencyDefect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.odd_idempotencyDefect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.odd_perturbation_defect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.odd_perturbation_defect_eq_neg_comm_square
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.odd_perturbation_parity_difference_square
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.transfer_defect_eq_neg_comm_square
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.transfer_j_defect_eq_neg_comm_square
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.transfer_parity_product
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.metric_phi_parity_product
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.metric_defect_eq_square_add_comm_square
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.even_metric_phi_defect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.odd_metric_phi_defect
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.derivation_mismatch_phi
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.derivation_mismatch_j

@@ -49,6 +49,15 @@ class EvolutionRenderTests(unittest.TestCase):
         source = Path(render_explorer.__file__).with_name("dna-affinity-viewer.html")
         self.assertEqual((self.out.parent / source.name).read_bytes(), source.read_bytes())
 
+    def test_accepts_phylogeny_v2_with_git_object_provenance(self):
+        self.data.write_text(json.dumps({
+            "schema": "repo-phylogeny/v2",
+            "source": {"git_object_format": "sha1"},
+            "commits": [{"tree_hash": "a" * 40, "author_time": 1, "committer_time": 2}],
+        }), encoding="utf-8")
+        self.run_renderer()
+        self.assertIn('"repo-phylogeny/v2"', self.out.read_text(encoding="utf-8"))
+
     def test_embeds_report_bound_to_exact_input_bytes(self):
         self.run_renderer("--hodge", str(self.make_report()))
         self.assertIn('"all_exact_checks_passed":true', self.out.read_text())

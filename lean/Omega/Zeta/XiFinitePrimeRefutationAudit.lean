@@ -14,13 +14,13 @@ lemma xi_finite_prime_refutation_audit_int_eq_zero_of_natAbs_lt_of_dvd {q : ℕ}
     exact False.elim (Nat.not_lt_of_ge hq hz)
 
 /-- Paper label: `prop:xi-finite-prime-refutation-audit`. If every integer residual entry is
-divisible by the audited prime product and the product is strictly larger than twice every
-entry's absolute value, then all residual entries vanish. -/
+divisible by a finite product and that product is strictly larger than twice every entry's
+absolute value, then all residual entries vanish. No primality property of the factors is
+needed for this implication. -/
 theorem paper_xi_finite_prime_refutation_audit {n d : ℕ} (F : Fin n → Fin d → ℤ)
-    (P : Finset ℕ) (hprime : ∀ p ∈ P, Nat.Prime p)
+    (P : Finset ℕ)
     (hdiv : ∀ i j, (((∏ p ∈ P, p) : ℕ) : ℤ) ∣ F i j)
     (hbound : ∀ i j, 2 * Int.natAbs (F i j) < ∏ p ∈ P, p) : F = 0 := by
-  have _ : ∀ p ∈ P, p ≠ 0 := fun p hp => (hprime p hp).ne_zero
   ext i j
   apply xi_finite_prime_refutation_audit_int_eq_zero_of_natAbs_lt_of_dvd
   · have hentry : Int.natAbs (F i j) ≤ 2 * Int.natAbs (F i j) := by omega

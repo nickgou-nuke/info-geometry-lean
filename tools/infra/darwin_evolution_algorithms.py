@@ -3,26 +3,17 @@
 
 Genuine graph operators, no stubs:
 
-- iterative Tarjan SCC over the ``commit_nodes`` / ``commit_edges`` lineage DAG
-  (species clades; in a linear git DAG every SCC is a singleton, and the
-  algorithm *proves* acyclicity of lineage by finding no multi-node SCC),
-- union-find weak connected components (species cohorts),
-- SCC-condensation coarsening (clade condensation DAG statistics),
+- iterative Tarjan SCC over ``commit_nodes`` / ``commit_parent_edges_v2``;
+- union-find weak connected components of the observed parent-edge graph;
+- SCC-condensation statistics for the imported graph;
 - DNA-projection connectivity: two commits belong to one DNA cohort when they
   bridge to a shared declaration through ``commit_decl_edges`` (bidirectional
   union-find over the commit-declaration bipartite graph),
-- Linnaean rank hierarchy derivation from ``commit_nodes`` (per-rank commit
-  histogram, distinct taxa per rank, parent->child rank-index delta histogram
-  across ``parent_of`` edges),
-- Lean-mirrored data invariants:
-    * ``TaxonRank.rankIndex`` round-trip: every commit doc satisfies
-      ``taxonRankIndex == _rank_index(taxonRank)`` (mirrors
-      ``rankIndex_injective`` / well-definedness in
-      ``lean/InfoGeometry/Graph/DarwinCommitTaxonomy.lean``),
-    * anti-collapse witnesses: pairs of distinct commits sharing one identical
-      non-empty ``modulePaths`` list remain distinct nodes (mirrors
-      ``shared_path_not_equivalence``; the premise tuple is shown to be
-      *inhabited* by real data, not vacuous).
+- Multi-label weak change-category summaries from ``changeLabels``. These
+  facets are not an ordered taxonomy and are never interpreted as descent.
+- Data-level anti-collapse witnesses: distinct commit hashes sharing one
+  identical non-empty ``modulePaths`` list remain distinct graph nodes. This
+  mirrors ``shared_path_not_equivalence`` and includes observed witness rows.
 
 Boundary (docs/ASTAQLHASH-HOWTO.md): all results are navigation evidence valid
 only for the checkout recorded in the report.  Hashes/dedup at data level use
@@ -48,6 +39,7 @@ from tools.infra.arango_env import (
     arango_password,
     load_repo_arango_env,
 )
+from tools.infra.graph_components import tarjan_scc
 
 try:
     from arango.client import ArangoClient
@@ -76,12 +68,12 @@ def connect():
 
 
 def fetch_lineage(db) -> tuple[list[str], dict[str, list[str]]]:
-    """Vertices and parent_of adjacency of the commit lineage."""
+    """Vertices and parent-to-child adjacency from the v2 Git edge collection."""
     vertices: list[str] = []
     for doc in db.collection("commit_nodes").all():
         vertices.append(doc["_key"])
     adjacency: dict[str, list[str]] = defaultdict(list)
-    for e in db.collection("commit_edges").all():
+    for e in db.collection("commit_parent_edges_v2").all():
         if e.get("edgeKind") != "parent_of":
             continue
         src = e["_from"].split("/", 1)[1]
@@ -91,61 +83,6 @@ def fetch_lineage(db) -> tuple[list[str], dict[str, list[str]]]:
 
 
 # ------------------------------------------------- genuine graph algorithms
-
-def tarjan_scc(vertices: list[str], adjacency: dict[str, list[str]]) -> list[list[str]]:
-    """Iterative Tarjan strongly-connected components (no recursion limit)."""
-    index_of: dict[str, int] = {}
-    lowlink: dict[str, int] = {}
-    on_stack: set[str] = set()
-    stack: list[str] = []
-    sccs: list[list[str]] = []
-    counter = 0
-
-    for root in vertices:
-        if root in index_of:
-            continue
-        index_of[root] = lowlink[root] = counter
-        counter += 1
-        stack.append(root)
-        on_stack.add(root)
-        call_stack: list[tuple[str, list[str], int]] = [(root, adjacency.get(root, []), 0)]
-        while call_stack:
-            node, neighbors, pos = call_stack.pop()
-            descends_further = False
-            i = pos
-            while i < len(neighbors):
-                nxt = neighbors[i]
-                i += 1
-                if nxt not in index_of:
-                    # bookkeeping: resume parent later at position i
-                    call_stack.append((node, neighbors, i))
-                    index_of[nxt] = lowlink[nxt] = counter
-                    counter += 1
-                    stack.append(nxt)
-                    on_stack.add(nxt)
-                    call_stack.append((nxt, adjacency.get(nxt, []), 0))
-                    descends_further = True
-                    break
-                if nxt in on_stack and index_of[nxt] < lowlink[node]:
-                    lowlink[node] = index_of[nxt]
-            if descends_further:
-                continue
-            # node finished: propagate lowlink to the parent frame consumer
-            if call_stack:
-                parent, _, _ = call_stack[-1]
-                if lowlink[node] < lowlink[parent]:
-                    lowlink[parent] = lowlink[node]
-            if lowlink[node] == index_of[node]:
-                scc: list[str] = []
-                while True:
-                    member = stack.pop()
-                    on_stack.discard(member)
-                    scc.append(member)
-                    if member == node:
-                        break
-                sccs.append(scc)
-    return sccs
-
 
 def union_components(vertices: Iterable[str], pairs: Iterable[tuple[str, str]]) -> dict[str, str]:
     """Undirected connected components by union-find; returns node -> root."""
@@ -207,7 +144,7 @@ def condensation_stats(
 
 
 def breadth_first_levels(root: str, adjacency: dict[str, list[str]], depth: int) -> dict[int, int]:
-    """BFS frontier sizes from ``root`` through OUT-direction lineage edges."""
+    """BFS frontier sizes from ``root`` through descendant edges."""
     seen = {root}
     frontier = [root]
     levels: dict[int, int] = {}
@@ -275,74 +212,56 @@ def iter_pairs_dedup(pairs):
         yield pair
 
 
-def rank_hierarchy(db) -> dict:
-    """Linnaean lens over commits: histogram, distinct taxa, descent deltas."""
-    rank_of_commit: dict[str, tuple[int, str]] = {}
+def change_facet_summary(db) -> dict:
+    """Summarize weak categories without turning them into a hierarchy."""
+    commits = 0
+    labeled_commits = 0
+    legacy_rank_records = 0
+    category_commit_counts: Counter[str] = Counter()
+    category_ids: dict[str, str] = {}
+    malformed_labels = 0
     for doc in db.collection("commit_nodes").all():
-        rank_of_commit[doc["_key"]] = (
-            doc.get("taxonRankIndex", 8),
-            doc.get("taxonRank", "Unknown"),
-        )
-    rank_histogram: Counter[int] = Counter()
-    for ridx, _ in rank_of_commit.values():
-        rank_histogram[ridx] += 1
-
-    taxa_per_rank: Counter[int] = Counter()
-    if db.has_collection("taxonomy_ranks"):
-        for doc in db.collection("taxonomy_ranks").all():
-            taxa_per_rank[doc.get("rankIndex", 8)] += 1
-
-    delta_histogram: Counter[int] = Counter()
-    for e in db.collection("commit_edges").all():
-        if e.get("edgeKind") != "parent_of":
-            continue
-        src = e["_from"].split("/", 1)[1]
-        dst = e["_to"].split("/", 1)[1]
-        child = rank_of_commit.get(src)
-        parent = rank_of_commit.get(dst)
-        if child is None or parent is None:
-            continue
-        delta_histogram[child[0] - parent[0]] += 1
-
-    names = {0: "Domain", 1: "Kingdom", 2: "Phylum", 3: "Class",
-             4: "Order", 5: "Family", 6: "Genus", 7: "Species", 8: "Unknown"}
+        commits += 1
+        legacy_rank_records += int("taxonRank" in doc or "taxonRankIndex" in doc)
+        labels = doc.get("changeLabels") or []
+        seen: set[str] = set()
+        for label in labels:
+            category = label.get("category") if isinstance(label, dict) else None
+            category_id = label.get("categoryId") if isinstance(label, dict) else None
+            weight = label.get("ruleWeightPercent") if isinstance(label, dict) else None
+            evidence_kinds = label.get("evidenceKinds") if isinstance(label, dict) else None
+            if (not category or not category_id or label.get("status") != "weak_rule"
+                    or not isinstance(weight, int) or not 0 <= weight <= 100
+                    or not isinstance(evidence_kinds, list) or not evidence_kinds):
+                malformed_labels += 1
+                continue
+            category_ids[category] = category_id
+            seen.add(category)
+        if seen:
+            labeled_commits += 1
+        category_commit_counts.update(seen)
     return {
-        "rankHistogram": [
-            {"rankIndex": r, "rank": names[r], "commits": rank_histogram.get(r, 0),
-             "distinctTaxa": taxa_per_rank.get(r, 0)}
-            for r in sorted(set(rank_histogram) | set(taxa_per_rank))
+        "method": "weak-rule-v3",
+        "hierarchical": False,
+        "commits": commits,
+        "labeledCommits": labeled_commits,
+        "unlabeledCommits": commits - labeled_commits,
+        "malformedLabelCount": malformed_labels,
+        "legacyRankRecordCount": legacy_rank_records,
+        "categories": [
+            {"category": category, "categoryId": category_ids[category],
+             "commits": count, "ruleWeightsAreProbabilities": False}
+            for category, count in sorted(category_commit_counts.items())
         ],
-        "parentToChildDeltaHistogram": [
-            {"delta": d, "edges": delta_histogram[d]} for d in sorted(delta_histogram)
-        ],
-        "rankIncreaseEdges": sum(
-            n for d, n in delta_histogram.items() if d > 0
-        ),
-        "rankDecreaseEdges": sum(
-            n for d, n in delta_histogram.items() if d < 0
-        ),
-        "flatRankEdges": sum(
-            n for d, n in delta_histogram.items() if d == 0
-        ),
     }
 
 
-def lean_mirrored_invariants(db) -> dict:
-    """Check data-level consequences of the committed Lean theorems."""
-    from tools.infra.darwin_commit_graph import _rank_index  # single source of truth
-
-    round_trip_violations = []
-    taxonomy_histogram: Counter[str] = Counter()
+def commit_identity_witnesses(db) -> dict:
+    """Expose observed witnesses for distinct hashes sharing one path list."""
+    legacy_rank_records = 0
     modulepaths_by_key: dict[str, list] = {}
     for doc in db.collection("commit_nodes").all():
-        rank = doc.get("taxonRank", "Species")
-        ridx = doc.get("taxonRankIndex")
-        taxonomy_histogram[rank] += 1
-        if ridx != _rank_index(rank):
-            round_trip_violations.append(
-                {"commit": doc["_key"], "rank": rank,
-                 "recordedIndex": ridx, "expectedIndex": _rank_index(rank)}
-            )
+        legacy_rank_records += int("taxonRank" in doc or "taxonRankIndex" in doc)
         modulepaths_by_key[doc["_key"]] = doc.get("modulePaths") or []
 
     groups_by_paths: dict[str, list[str]] = defaultdict(list)
@@ -366,11 +285,9 @@ def lean_mirrored_invariants(db) -> dict:
             break
     witness_pairs.sort(key=lambda w: -w["commitCountOnSameTree"])
     return {
-        "rankIndexRoundTripViolations": round_trip_violations[:10],
-        "rankIndexRoundTripViolationCount": len(round_trip_violations),
+        "legacyRankRecordCount": legacy_rank_records,
         "antiCollapseWitnessCount": len(witness_pairs),
         "antiCollapseWitnesses": witness_pairs,
-        "rankDistribution": dict(taxonomy_histogram),
     }
 
 
@@ -385,10 +302,12 @@ def build_report(db) -> dict:
     ]
     components = union_components(vertices, lineage_undirected_pairs)
     component_sizes = Counter(components.values())
-    biggest_root, biggest_size = max(component_sizes.items(), key=lambda kv: kv[1])
+    biggest_root, biggest_size = max(
+        component_sizes.items(), key=lambda kv: kv[1], default=(None, 0)
+    )
     head = _git(["rev-parse", "HEAD"]).strip()
     return {
-        "reportSchema": "info_geometry.darwin_evolution_report.v1",
+        "reportSchema": "info_geometry.darwin_evolution_report.v2",
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "repoCommit": head,
         "database": db.name,
@@ -408,8 +327,8 @@ def build_report(db) -> dict:
             },
         },
         "dnaCohorts": dna_cohorts(db),
-        "taxonomy": rank_hierarchy(db),
-        "leanMirroredInvariants": lean_mirrored_invariants(db),
+        "changeFacets": change_facet_summary(db),
+        "commitIdentityWitnesses": commit_identity_witnesses(db),
     }
 
 
@@ -447,22 +366,17 @@ def print_human(report: dict) -> None:
         )
     else:
         print("DNA cohorts : unavailable (%s)" % dna.get("reason"))
-    print("rank histogram:")
-    for row in report["taxonomy"]["rankHistogram"]:
-        print(
-            "  %-8s (idx %d): %6d commits, %5d distinct taxa"
-            % (row["rank"], row["rankIndex"], row["commits"], row["distinctTaxa"])
-        )
-    print("descent deltas: +%d increases, %d flat, %d decreases" % (
-        report["taxonomy"]["rankIncreaseEdges"],
-        report["taxonomy"]["flatRankEdges"],
-        report["taxonomy"]["rankDecreaseEdges"],
+    facets = report["changeFacets"]
+    print("weak change facets (non-hierarchical):")
+    for row in facets["categories"]:
+        print("  %-34s %6d commits" % (row["category"], row["commits"]))
+    print("facet coverage: %d/%d commits labeled; malformed labels=%d" % (
+        facets["labeledCommits"], facets["commits"], facets["malformedLabelCount"]
     ))
-    inv = report["leanMirroredInvariants"]
-    print(
-        "invariants  : rankIndex round-trip violations=%d | anti-collapse witnesses=%d"
-        % (inv["rankIndexRoundTripViolationCount"], inv["antiCollapseWitnessCount"])
-    )
+    inv = report["commitIdentityWitnesses"]
+    print("commit identity: %d path-sharing witness groups; legacy rank rows=%d" % (
+        inv["antiCollapseWitnessCount"], inv["legacyRankRecordCount"]
+    ))
     for w in inv["antiCollapseWitnesses"][:3]:
         print(
             "  witness: %d commits share %s  (keys %s vs %s)"

@@ -34,13 +34,11 @@ theorem paper_xi_langlands_leyang_local_degeneration_stratification :
         xiTerminalZmS4PrymTauTorusRank .one = 7 ∧
         xiTerminalZmS4PrymTauTorusRank .two = 3 ∧
         xiTerminalZmS4PrymTauTorusRank .three = 3) ∧
-      xiLeyangGeometricMonodromyGroup = ⊤ ∧
-      xiLeyangFunctionFieldGaloisGroup = ⊤ := by
-  refine ⟨?_, ?_, ?_, ?_⟩
+      xiLeyangGeometricMonodromyGroup = ⊤ := by
+  refine ⟨?_, ?_, ?_⟩
   · intro u
     exact paper_xi_p7_chebotarev_leyang_circularity_and_limit_law u
   · exact paper_xi_terminal_zm_s4_langlands_factor_torus_rank_conductor_table
-  · exact paper_xi_terminal_zm_leyang_monodromy_s4.1
-  · exact paper_xi_terminal_zm_leyang_monodromy_s4.2
+  · exact xiLeyang_geometric_monodromy_eq_top
 
 end Omega.Zeta

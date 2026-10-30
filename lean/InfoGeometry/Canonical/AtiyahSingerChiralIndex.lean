@@ -1,79 +1,80 @@
-import Mathlib.Analysis.Complex.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NoncommRing
+import InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace
 
-set_option linter.unusedSectionVars false
-set_option linter.unnecessarySeqFocus false
-set_option linter.unusedVariables false
+/-!
+# Chiral Dirac operators in a noncommutative algebra
 
-noncomputable section
-
-open Matrix Complex
+This owner formalizes the algebraic parity and cyclic-trace cancellation for
+an odd Dirac operator over an arbitrary associative operator ring. The trace
+range is required to have no 2-torsion for the odd-square cancellation. This
+does not construct a Fredholm index or prove the Atiyah--Singer theorem.
+-/
 
 namespace AtiyahSingerIndex
 
-variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
+open InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace
 
-/-- Chiral Dirac Operator Structure with γ⁵ Operator satisfying (γ⁵)² = 1 and {γ⁵, D} = 0. -/
-structure ChiralDiracOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] where
-  D_val : Matrix (Fin n) (Fin n) ℂ
-  gamma5 : Matrix (Fin n) (Fin n) ℂ
+structure ChiralDiracOperator (A : Type*) [Ring A] where
+  D_val : A
+  gamma5 : A
   h_gamma5_sq : gamma5 * gamma5 = 1
   h_chiral_anti : gamma5 * D_val + D_val * gamma5 = 0
 
 namespace ChiralDiracOperator
 
-variable (chiral : ChiralDiracOperator n)
+variable {A : Type*} [Ring A] (chiral : ChiralDiracOperator A)
 
-/-- **Theorem**: Chiral Gamma5 Involution (γ⁵)² = 1. -/
+/-- The grading stored in the Dirac package is involutive. -/
 theorem gamma5_involution : chiral.gamma5 * chiral.gamma5 = 1 :=
   chiral.h_gamma5_sq
 
-/-- **Theorem**: Chiral Dirac Anti-Commutation γ⁵ D = - D γ⁵. -/
-theorem chiral_anti_commute : chiral.gamma5 * chiral.D_val = - (chiral.D_val * chiral.gamma5) := by
-  have h := chiral.h_chiral_anti
-  calc chiral.gamma5 * chiral.D_val
-    _ = (chiral.gamma5 * chiral.D_val + chiral.D_val * chiral.gamma5) - chiral.D_val * chiral.gamma5 := by noncomm_ring
-    _ = 0 - chiral.D_val * chiral.gamma5 := by rw [h]
-    _ = - (chiral.D_val * chiral.gamma5) := by noncomm_ring
+/-- The Dirac operator is odd under its chiral grading. -/
+theorem chiral_anti_commute :
+    chiral.gamma5 * chiral.D_val = -(chiral.D_val * chiral.gamma5) :=
+  eq_neg_of_add_eq_zero_left chiral.h_chiral_anti
 
-/-- McKean-Singer Chiral Trace Index Ind(D) = Tr(γ⁵ * D * D). -/
-def mckeanSingerIndex : ℂ :=
-  trace (chiral.gamma5 * chiral.D_val * chiral.D_val)
+/-- Conjugation by the involutive grading reverses the odd Dirac operator. -/
+theorem grading_conjugates_Dirac_to_neg :
+    chiral.gamma5 * chiral.D_val * chiral.gamma5 = -chiral.D_val := by
+  calc
+    chiral.gamma5 * chiral.D_val * chiral.gamma5 =
+        -(chiral.D_val * chiral.gamma5) * chiral.gamma5 := by
+      rw [chiral.chiral_anti_commute]
+    _ = -(chiral.D_val * (chiral.gamma5 * chiral.gamma5)) := by
+      simp only [neg_mul, mul_assoc]
+    _ = -chiral.D_val := by rw [chiral.gamma5_involution, mul_one]
 
-/-- **Theorem**: Vanishing McKean-Singer Index for Chiral Dirac Heat Kernel: Tr(γ⁵ D²) = 0. -/
-theorem mckean_singer_index_zero : chiral.mckeanSingerIndex = 0 := by
-  dsimp [mckeanSingerIndex]
-  have h_comm : trace (chiral.gamma5 * chiral.D_val * chiral.D_val) = trace (chiral.D_val * (chiral.gamma5 * chiral.D_val)) := trace_mul_comm (chiral.gamma5 * chiral.D_val) chiral.D_val
-  have h_anti := chiral.chiral_anti_commute
-  have h_subst : trace (chiral.D_val * (chiral.gamma5 * chiral.D_val)) = - trace (chiral.D_val * chiral.D_val * chiral.gamma5) := by
-    rw [h_anti]
-    have h_neg : chiral.D_val * (- (chiral.D_val * chiral.gamma5)) = - (chiral.D_val * chiral.D_val * chiral.gamma5) := by noncomm_ring
-    rw [h_neg, trace_neg]
-  have h_assoc : chiral.gamma5 * chiral.D_val * chiral.D_val = chiral.gamma5 * (chiral.D_val * chiral.D_val) := by noncomm_ring
-  have h_cycle : trace (chiral.D_val * chiral.D_val * chiral.gamma5) = trace (chiral.gamma5 * chiral.D_val * chiral.D_val) := by
-    rw [h_assoc]
-    exact trace_mul_comm (chiral.D_val * chiral.D_val) chiral.gamma5
-  have h_eq : trace (chiral.gamma5 * chiral.D_val * chiral.D_val) = - trace (chiral.gamma5 * chiral.D_val * chiral.D_val) := by
-    calc trace (chiral.gamma5 * chiral.D_val * chiral.D_val)
-      _ = trace (chiral.D_val * (chiral.gamma5 * chiral.D_val)) := h_comm
-      _ = - trace (chiral.D_val * chiral.D_val * chiral.gamma5) := h_subst
-      _ = - trace (chiral.gamma5 * chiral.D_val * chiral.D_val) := by rw [h_cycle]
-  have h_add : trace (chiral.gamma5 * chiral.D_val * chiral.D_val) + trace (chiral.gamma5 * chiral.D_val * chiral.D_val) = 0 := by
-    calc trace (chiral.gamma5 * chiral.D_val * chiral.D_val) + trace (chiral.gamma5 * chiral.D_val * chiral.D_val)
-      _ = - trace (chiral.gamma5 * chiral.D_val * chiral.D_val) + trace (chiral.gamma5 * chiral.D_val * chiral.D_val) := by nth_rw 1 [h_eq]
-      _ = 0 := by ring
-  have h_two : (2 : ℂ) • trace (chiral.gamma5 * chiral.D_val * chiral.D_val) = 0 := by
-    rw [two_smul, h_add]
-  have h_two_ne : (2 : ℂ) ≠ 0 := by norm_num
-  cases smul_eq_zero.mp h_two with
-  | inl h_err => exfalso; exact h_two_ne h_err
-  | inr h_res => exact h_res
+/-- The square of an odd Dirac operator is an even operator: it commutes
+with the grading in the noncommutative operator algebra. -/
+theorem dirac_square_commutes_with_grading :
+    chiral.gamma5 * (chiral.D_val * chiral.D_val) =
+      (chiral.D_val * chiral.D_val) * chiral.gamma5 := by
+  calc
+    chiral.gamma5 * (chiral.D_val * chiral.D_val) =
+        (chiral.gamma5 * chiral.D_val) * chiral.D_val := by rw [mul_assoc]
+    _ = -(chiral.D_val * chiral.gamma5) * chiral.D_val := by
+      rw [chiral.chiral_anti_commute]
+    _ = -(chiral.D_val * (chiral.gamma5 * chiral.D_val)) := by
+      simp only [neg_mul, mul_assoc]
+    _ = -(chiral.D_val * (-(chiral.D_val * chiral.gamma5))) := by
+      rw [chiral.chiral_anti_commute]
+    _ = (chiral.D_val * chiral.D_val) * chiral.gamma5 := by
+      simp only [mul_neg, neg_neg, mul_assoc]
+
+/-- Algebraic graded trace of the Dirac square for a supplied cyclic
+functional. -/
+def mckeanSingerIndex {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) : R :=
+  gradedTrace τ chiral.gamma5 (chiral.D_val * chiral.D_val)
+
+/-- The odd Dirac square has zero cyclic graded trace when the range is
+2-torsion-free. This is a finite algebraic cancellation identity, not a heat
+kernel or Fredholm-index theorem. -/
+theorem mckean_singer_index_zero {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) (hτ : IsCyclic τ)
+    (h_two_torsion_free : ∀ r : R, r + r = 0 → r = 0) :
+    chiral.mckeanSingerIndex τ = 0 := by
+  exact gradedTrace_odd_square_eq_zero τ hτ h_two_torsion_free
+    chiral.h_chiral_anti
 
 end ChiralDiracOperator
 

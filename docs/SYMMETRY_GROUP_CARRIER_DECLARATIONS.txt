@@ -1,0 +1,562 @@
+lean/Experimental/Sandbox/Topology/KleinBieberbachWeyl.lean:71:def KleinNormal : Subgroup KleinFree := Subgroup.normalClosure KleinRelators
+lean/InfoGeometry/Algebra/BaezF4H3Zorn.lean:218:def H3ZornF4Derivations : LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) where
+lean/InfoGeometry/Algebra/Clifford55GaugeSubalgebraBridge.lean:747:def smStabilizerLieSubalgebra : LieSubalgebra ℝ HMatrix :=
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:28:def permGen (σ : Equiv.Perm (Fin n)) : CuntzGen n → CuntzGen n :=
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:31:def permFree (σ : Equiv.Perm (Fin n)) : CuntzFree n →ₗ[ℂ] CuntzFree n where
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:37:def permFreeToCuntz (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:42:def permTensorAlgHom (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:77:def permCuntzAlgHom (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:159:def permCuntzAlgEquiv (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:202:def permCuntzAction : Equiv.Perm (Fin n) →*
+lean/InfoGeometry/Algebra/CuntzBraidExpectationIntertwiner.lean:340:def permutedRangeProjector (σ : Equiv.Perm (Fin n)) (i : Fin n) : CuntzAlg n :=
+lean/InfoGeometry/Algebra/CuntzLorentzPoincarePresentation.lean:121:def PoincareTransformGroup : Subgroup (Equiv.Perm FiniteFourVector) where
+lean/InfoGeometry/Algebra/CuntzLorentzPoincarePresentation.lean:170:def affineEquiv (L : LorentzLinearPresentation) (a : FiniteFourVector) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Algebra/F4Derivations.lean:375:def H3ZornDerivationLieSubalgebra : LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) :=
+lean/InfoGeometry/Algebra/H3ZornCubicOperatorGeometry.lean:34:def h3zornCubicStabilizer : LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) :=
+lean/InfoGeometry/Algebra/H3ZornInfinitesimalReconstruction.lean:33:def h3zornUnitAnnihilator : LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) where
+lean/InfoGeometry/Algebra/KingdonArtinBraidAction.lean:15:abbrev sigma1 : Equiv.Perm (Fin 3) :=
+lean/InfoGeometry/Algebra/KingdonArtinBraidAction.lean:19:abbrev sigma2 : Equiv.Perm (Fin 3) :=
+lean/InfoGeometry/Algebra/KingdonPeterssonIsotope.lean:15:def peterssonCyclePermutation : Equiv.Perm (Fin 3) where
+lean/InfoGeometry/Algebra/NonAssocDerivation.lean:29:def derivations : LieSubalgebra R (Module.End R A) where
+lean/InfoGeometry/Algebra/SpecialUnitary.lean:28:def su (n : Type*) [Fintype n] [DecidableEq n] : LieSubalgebra ℝ (Matrix n n ℂ) where
+lean/InfoGeometry/Algebra/SplitAlbertInnerTraceSpan.lean:47:def h3ZornTraceZeroLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Algebra/SplitAlbertStructureOperators.lean:59:def structureOperatorLieSubalgebra : LieSubalgebra ℝ Operator where
+lean/InfoGeometry/Algebra/SplitCayleyF2LiteratureGenerators.lean:43:def elementaryDeltaNativeSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/SplitMetricLieAlgebra.lean:69:def nativeSkewAdjointLieSubalgebra : LieSubalgebra R (Module.End R S.V) :=
+lean/InfoGeometry/Algebra/TrilinearStabilizer.lean:34:def trilinearStabilizer (C : V →ₗ[R] V →ₗ[R] V →ₗ[R] R) : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Algebra/Zorn/BruhatPeelingTransport.lean:43:def InCell (B : Subgroup G) (x w : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/BruhatPeelingTransport.lean:47:def CellSet (B : Subgroup G) (w : G) : Set G :=
+lean/InfoGeometry/Algebra/Zorn/BruhatPeelingTransport.lean:76:def HasPeelingStep (B : Subgroup G) (S : Set G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/CanonicalDerivationBridge.lean:108:noncomputable def canonicalDerivationLieAlgebra : LieSubalgebra ℝ CanonicalEnd :=
+lean/InfoGeometry/Algebra/Zorn/CanonicalDerivationBridge.lean:202:noncomputable def kingdonDerivationLieAlgebra : LieSubalgebra ℝ KingdonEnd :=
+lean/InfoGeometry/Algebra/Zorn/G2BN2InductivePeeling.lean:40:def InCellBsB (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2BN2InductivePeeling.lean:44:def InBruhatCover (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2BNBruhatFramework.lean:67:def g2weylGroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2BNBruhatFramework.lean:100:def concreteN : Subgroup SplitOctF2Aut := concreteWeylSubgroup
+lean/InfoGeometry/Algebra/Zorn/G2BNPair.lean:17:def doubleCoset {G : Type*} [Group G] (B : Subgroup G) (g : G) : Set G :=
+lean/InfoGeometry/Algebra/Zorn/G2BNPair.lean:46:def quotientOrbit {G : Type*} [Group G] (B : Subgroup G) (w : G) : Set (G ⧸ B) :=
+lean/InfoGeometry/Algebra/Zorn/G2BruhatResidual.lean:42:noncomputable def residualSubgroup (p : WeylG2) : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2BruhatResidualSimpleEquiv.lean:26:noncomputable def canonicalResidualGeneratedSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2CASGeneratorSubgroup.lean:29:def casGeneratedSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2CASNativePointAction.lean:506:noncomputable def casPointPerm (k : Fin 7) : Equiv.Perm (Fin 63) :=
+lean/InfoGeometry/Algebra/Zorn/G2CASNativePointAction.lean:564:noncomputable def correctedTPointPerm : Equiv.Perm (Fin 63) :=
+lean/InfoGeometry/Algebra/Zorn/G2ConcreteBN2CorrectSecondConjugation.lean:107:def correctedTComplementSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2ConcreteBN2FirstConjugation.lean:120:def swap01ComplementSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2ConcreteGeneratorInfrastructure.lean:106:def concreteBNGeneratorSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2CorrectedTComplementCard.lean:26:def zeroBitPCSubgroup : Subgroup SplitOctF2Aut where
+lean/InfoGeometry/Algebra/Zorn/G2CosetActionHomomorphism.lean:43:def permComm (g h : Equiv.Perm Coset) : Equiv.Perm Coset :=
+lean/InfoGeometry/Algebra/Zorn/G2CoxeterGeneratingEquality.lean:100:def casSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2CyclotomicSignedRootBridge.lean:73:noncomputable def cyclotomicS1Perm : Equiv.Perm Root :=
+lean/InfoGeometry/Algebra/Zorn/G2CyclotomicSignedRootBridge.lean:76:noncomputable def cyclotomicS2Perm : Equiv.Perm Root :=
+lean/InfoGeometry/Algebra/Zorn/G2CyclotomicSignedRootBridge.lean:211:noncomputable def cyclotomicCoxeterPerm : Equiv.Perm Root :=
+lean/InfoGeometry/Algebra/Zorn/G2FlagAndParabolicQuotient.lean:36:def cosetProj (H K : Subgroup G) (hHK : H ≤ K) : (G ⧸ H) → (G ⧸ K) :=
+lean/InfoGeometry/Algebra/Zorn/G2FlagAndParabolicQuotient.lean:105:def InDoubleCoset (H : Subgroup G) (x w : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2FlagIncidenceAction.lean:19:def PreservesIncidence (π : Equiv.Perm HexPoint) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2FlagIncidenceAction.lean:23:def flagMap (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) : Flag → Flag
+lean/InfoGeometry/Algebra/Zorn/G2FlagIncidenceAction.lean:44:def flagMapInv (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) : Flag → Flag :=
+lean/InfoGeometry/Algebra/Zorn/G2FlagIncidenceAction.lean:87:noncomputable def flagPerm (π : Equiv.Perm HexPoint) (hπ : PreservesIncidence π) :
+lean/InfoGeometry/Algebra/Zorn/G2FlagWordEvaluator.lean:94:def flagGeneratedSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2GAPCosetHomomorphismBridge.lean:27:def cosetAction (H : Subgroup G) (g : G) : (G ⧸ H) → (G ⧸ H) :=
+lean/InfoGeometry/Algebra/Zorn/G2GAPCosetHomomorphismBridge.lean:51:def cosetActionEquiv (H : Subgroup G) (g : G) : Equiv.Perm (G ⧸ H) where
+lean/InfoGeometry/Algebra/Zorn/G2GAPCosetHomomorphismBridge.lean:66:def permOfGroupElem (H : Subgroup G) {n : ℕ} (enum : Fin n ≃ G ⧸ H) (g : G) :
+lean/InfoGeometry/Algebra/Zorn/G2GAPCosetHomomorphismBridge.lean:75:def actionHom (H : Subgroup G) {n : ℕ} (enum : Fin n ≃ G ⧸ H) :
+lean/InfoGeometry/Algebra/Zorn/G2GAPCosetHomomorphismBridge.lean:108:def cosetProj (B₀ P : Subgroup G) (hBP : B₀ ≤ P) : (G ⧸ B₀) → (G ⧸ P) :=
+lean/InfoGeometry/Algebra/Zorn/G2GAPCosetHomomorphismBridge.lean:123:def discreteProj (B₀ P : Subgroup G) (hBP : B₀ ≤ P)
+lean/InfoGeometry/Algebra/Zorn/G2GaloisCorrespondence.lean:36:def galoisFixedSet (H : Subgroup SplitOctF2Aut) : Set SplitOctF2 :=
+lean/InfoGeometry/Algebra/Zorn/G2GaloisCorrespondence.lean:40:def galoisStabilizer (S : Set SplitOctF2) : Subgroup SplitOctF2Aut where
+lean/InfoGeometry/Algebra/Zorn/G2ImaginaryOctImBridge.lean:236:noncomputable def octImPointPerm (g : SplitOctF2Aut) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Algebra/Zorn/G2ImaginaryPointPermutation.lean:21:noncomputable def pointPerm (g : SplitOctF2Aut) : Equiv.Perm (Fin 63) :=
+lean/InfoGeometry/Algebra/Zorn/G2IndexTwoRankOneBN2.lean:30:def InCellBsB (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2IndexTwoRankOneBN2.lean:34:def InBruhatCover (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2NativeFlagStabilizerTransport.lean:26:noncomputable def nativeFlagStabilizer : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2NativeFullFlagAction.lean:251:noncomputable def nativeFlagPerm (g : SplitOctF2Aut) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Algebra/Zorn/G2NativeOnePointStabilizer.lean:135:noncomputable def nativePointStabilizer : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2NativeRootProductImage.lean:357:def rootProductSubgroup (α β : G2Root) : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:39:def peirceStabilizer : Subgroup G :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:52:def parabolicSubgroup (B₀ : Subgroup G) (s₂ : G) : Subgroup G :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:181:abbrev ParabolicCosetSpace (B₀ P : Subgroup G) :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:185:def toParabolicCoset (B₀ P : Subgroup G) (p : P) : ParabolicCosetSpace B₀ P :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:188:def rep_zero (P : Subgroup G) : P := 1
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:189:def rep_infinity (P : Subgroup G) (s₂ : P) : P := s₂
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:190:def rep_one (P : Subgroup G) (s₂ u : P) : P := u * s₂
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:192:def coset_zero (B₀ P : Subgroup G) : ParabolicCosetSpace B₀ P :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:195:def coset_infinity (B₀ P : Subgroup G) (s₂ : P) : ParabolicCosetSpace B₀ P :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:198:def coset_one (B₀ P : Subgroup G) (s₂ u : P) : ParabolicCosetSpace B₀ P :=
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:202:def p1ToCoset (B₀ P : Subgroup G) (s₂ u : P) : ProjectiveLineF2 → ParabolicCosetSpace B₀ P
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:235:noncomputable def parabolicFiberEquivP1 (B₀ P : Subgroup G) (s₂ u : P)
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:371:def parabolicFiberAction (P : Subgroup G) (hP_stab : ∀ p : P, (p : G) • basePoint = basePoint)
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:379:def cosetToLine (B₀ P : Subgroup G) (standardLine : LinesThroughPoint basePoint)
+lean/InfoGeometry/Algebra/Zorn/G2PeirceParabolicStabilizer.lean:405:noncomputable def parabolicFiberEquivLines (B₀ P : Subgroup G) (standardLine : LinesThroughPoint basePoint)
+lean/InfoGeometry/Algebra/Zorn/G2PointEnumRelabeling.lean:22:noncomputable def casToNative : Equiv.Perm (Fin 63) :=
+lean/InfoGeometry/Algebra/Zorn/G2ReducedWords.lean:58:noncomputable def dihedralToPerm (w : WeylG2) : Equiv.Perm G2CoordinateRoot :=
+lean/InfoGeometry/Algebra/Zorn/G2RootSubgroup.lean:16:def rootSubgroup (α : G2Root) : Subgroup SplitOctF2Aut where
+lean/InfoGeometry/Algebra/Zorn/G2RootSubgroupConjugation.lean:26:noncomputable def rootSubgroup (α : G2Root) : Subgroup SplitOctF2Aut where
+lean/InfoGeometry/Algebra/Zorn/G2RootWeylAdjointCharacter.lean:42:def rootWeylAction (p : WeylG2) : Equiv.Perm RootCarrier :=
+lean/InfoGeometry/Algebra/Zorn/G2RootWeylNormalForm.lean:22:def rootWeylNF (p : WeylG2) : Equiv.Perm G2CoordinateRoot :=
+lean/InfoGeometry/Algebra/Zorn/G2SteinbergPositiveRoots.lean:217:noncomputable def positiveRootSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2StructuralFlagQuotient.lean:39:noncomputable def quotientFlagEquivOfStabilizerEq (x : X) (H : Subgroup G)
+lean/InfoGeometry/Algebra/Zorn/G2SymbolicBN2.lean:30:def InCellBsB (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2SymbolicBN2.lean:34:def InBruhatCover (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2SymbolicBN2Assembly.lean:25:def InCellBsB (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2SymbolicBN2Assembly.lean:29:def InBruhatCover (B : Subgroup G) (s x : G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoBruhatClassification.lean:464:def standardParabolicP1Subgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoBruhatClassification.lean:482:def standardParabolicP2Subgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoConcreteWeylG2.lean:527:def weylG2Subgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoConcreteWeylGroup.lean:112:def concreteWeylSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoExplicitGenerators.lean:523:noncomputable def candidateRootSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoExplicitGenerators.lean:546:def simpleRootSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoOuterGenerators.lean:156:noncomputable def outerRootSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoPCSubgroupClosure.lean:115:def unipotentSubgroup : Subgroup SplitOctF2Aut where
+lean/InfoGeometry/Algebra/Zorn/G2TwoSylowPCAutomorphisms.lean:236:def pcSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/G2TwoSylowSubgroup.lean:23:def sylowTwoSubgroup : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/GaloisPeelingFiltration.lean:46:noncomputable def galoisTower (k : Fin 7) : Subgroup SplitOctF2Aut :=
+lean/InfoGeometry/Algebra/Zorn/KingdonCanonicalBridge.lean:209:noncomputable def realZornCompositionAut : Subgroup CanonicalLinearAut where
+lean/InfoGeometry/Algebra/Zorn/KingdonCanonicalBridge.lean:316:noncomputable def kingdonCompositionAut : [continuation result: Subgroup]
+lean/InfoGeometry/Algebra/Zorn/LeviRootDecompositionBN2.lean:108:def HasBN2Conjugation (B : Subgroup G) (S : Set G) : Prop :=
+lean/InfoGeometry/Algebra/Zorn/SplitCayleyStabilizer.lean:73:def splitCayleyStabilizer : Subgroup (ZornCell R ≃ₗ[R] ZornCell R) where
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:38:def cosetSetoid (K : Subgroup G) : Setoid G where
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:61:def CosetSpace (G : Type*) [Group G] (K : Subgroup G) : Type _ :=
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:65:def toCoset (K : Subgroup G) (g : G) : CosetSpace G K :=
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:69:def origin (K : Subgroup G) : CosetSpace G K :=
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:73:def leftAction (K : Subgroup G) (g : G) (x : CosetSpace G K) : CosetSpace G K :=
+lean/InfoGeometry/Architecture/CartanCosetManifold.lean:114:def cosetIncident (H K : Subgroup G) (c : CosetSpace G H) (d : CosetSpace G K) : Prop :=
+lean/InfoGeometry/Architecture/SymmetricSpace.lean:70:def fixedSubgroup (θ : MulAut G) : Subgroup G where
+lean/InfoGeometry/Architecture/SymmetricSpace.lean:90:def CartanInvolution.fixedSubgroup (θ : CartanInvolution G) : Subgroup G :=
+lean/InfoGeometry/Arithmetic/ConnesFiniteTraceBridge.lean:29:def fixedPointCount (σ : Equiv.Perm X) : ℕ :=
+lean/InfoGeometry/Arithmetic/ConnesFiniteTraceBridge.lean:33:def permutationTrace (σ : Equiv.Perm X) : ℂ :=
+lean/InfoGeometry/Arithmetic/PrimeValuationLatticeWeyl.lean:70:def modePermute {k : ℕ} (π : Equiv.Perm (Fin k))
+lean/InfoGeometry/AsanoRuelle/MobiusPoleScaleAction.lean:20:def poleScaleEquiv (p : ℂ) (lam : ℝˣ) : Equiv.Perm ℂ where
+lean/InfoGeometry/Canonical/A2InsideD5RootSubsystem.lean:56:def weylAction (σ : Equiv.Perm (Fin 3)) : Equiv.Perm A2Root where
+lean/InfoGeometry/Canonical/A2InsideD5RootSubsystem.lean:69:def weylRepresentation : Equiv.Perm (Fin 3) →* Equiv.Perm A2Root where
+lean/InfoGeometry/Canonical/A2QutritWeylAdjoint.lean:54:def shiftRootEquiv : Equiv.Perm A2Root where
+lean/InfoGeometry/Canonical/A2QutritWeylTransport.lean:23:abbrev weylMatrix (σ : Equiv.Perm (Fin 3)) : QutritMatrix :=
+lean/InfoGeometry/Canonical/A2WeylPermutationAction.lean:12:def asPermFin3 (p : WeylA2) : Equiv.Perm (Fin 3) := p
+lean/InfoGeometry/Canonical/AffineKacMoodyColimitBracket.lean:70:def affineFiniteModeColimitLieSubalgebra : LieSubalgebra 𝕜 (KM Φ hΦ hΦs) :=
+lean/InfoGeometry/Canonical/BraidedCubicCompressionBridge.lean:282:def b3CentralizerSubgroup : Subgroup InfoGeometry.Physics.B3PresentedGroup.B3 where
+lean/InfoGeometry/Canonical/CanonicalZornCoordinateOuterTrialityNaturality.lean:13:def cyclic : Equiv.Perm (Fin 3) :=
+lean/InfoGeometry/Canonical/CanonicalZornCoordinateOuterTrialityNaturality.lean:16:def signedPermVec (p : Equiv.Perm (Fin 3)) (x : Fin 3 → ℂ) : Fin 3 → ℂ :=
+lean/InfoGeometry/Canonical/CanonicalZornCoordinateOuterTrialityNaturality.lean:25:def signedCoordinateAction (p : Equiv.Perm (Fin 3)) : Coordinates → Coordinates :=
+lean/InfoGeometry/Canonical/CanonicalZornCoordinateOuterTrialityNaturality.lean:36:def typedSignedCoordinateAction (p : Equiv.Perm (Fin 3))
+lean/InfoGeometry/Canonical/CanonicalZornFiveGradeSymmetryClosure.lean:27:noncomputable def gradeReversalPerm : Equiv.Perm ConformalMatrix where
+lean/InfoGeometry/Canonical/CanonicalZornFiveGradeSymmetryClosure.lean:49:def bracketPreservingPermSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Canonical/CanonicalZornFiveGradeSymmetryClosure.lean:72:def fiveGradeSymmetryGroup : [continuation result: Subgroup]
+lean/InfoGeometry/Canonical/CanonicalZornFiveGradeSymmetryClosure.lean:136:def linearPermSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Canonical/CanonicalZornFiveGradeSymmetryClosure.lean:213:def thetaCommutingPermSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Canonical/CanonicalZornG2SL3TriFactorBridge.lean:53:def g2GradeZeroLieSubalgebra {𝕜 𝔤 : Type*} [CommRing 𝕜] [LieRing 𝔤] [LieAlgebra 𝕜 𝔤] (D : G2Z3TriFactorDatum 𝕜 𝔤) : LieSubalgebra 𝕜 𝔤 :=
+lean/InfoGeometry/Canonical/CanonicalZornG2SimpleRootSL2Bridge.lean:90:def rootTripleSubalgebra {𝕜 𝔤 : Type*} [CommRing 𝕜] [LieRing 𝔤] [LieAlgebra 𝕜 𝔤] (T : RootSL2Triple (𝕜 := 𝕜) (𝔤 := 𝔤)) : LieSubalgebra 𝕜 𝔤 :=
+lean/InfoGeometry/Canonical/CanonicalZornIntegralSpinSubgroup.lean:120:def integralSpin44 : Subgroup (spinGroup realQuadratic44) where
+lean/InfoGeometry/Canonical/CanonicalZornOuterTrialityGroup.lean:87:def relatedTriples : Subgroup TrialityGL where
+lean/InfoGeometry/Canonical/CanonicalZornPhaseBridge.lean:175:noncomputable def phasePreservingDerivations : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/CanonicalZornPhaseBridge.lean:275:def polarizedPhaseDerivations : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/CanonicalZornRealSpinTrialityClosure.lean:87:def realLocusSpin44 : Subgroup ComplexSpin44 where
+lean/InfoGeometry/Canonical/CanonicalZornSpinRelatedFiber.lean:60:def spinRelatedFiber : Subgroup (ComplexSpin44 × CartanTrialityGroup) where
+lean/InfoGeometry/Canonical/CayleyDualitySectorPermutationBridge.lean:31:def sectorC : Equiv.Perm ParitySector := Equiv.swap plusPlus minusMinus
+lean/InfoGeometry/Canonical/CayleyDualitySectorPermutationBridge.lean:33:def sectorXi : Equiv.Perm ParitySector := Equiv.swap plusMinus minusPlus
+lean/InfoGeometry/Canonical/CayleyDualitySectorPermutationBridge.lean:35:def sectorStar : Equiv.Perm ParitySector := sectorC * sectorXi
+lean/InfoGeometry/Canonical/CayleyDualityUnitsBridge.lean:194:def dualityPacketSubgroup : Subgroup CoordEndˣ where
+lean/InfoGeometry/Canonical/CayleyDualityUnitsBridge.lean:207:def cayleyDualityKleinSubgroup : Subgroup CoordEndˣ :=
+lean/InfoGeometry/Canonical/CayleyParityUnitsBridge.lean:151:def parityPacketSubgroup : Subgroup CoordEndˣ where
+lean/InfoGeometry/Canonical/CayleyParityUnitsBridge.lean:167:def parityKleinSubgroup : Subgroup CoordEndˣ :=
+lean/InfoGeometry/Canonical/Cl11SplitQuaternionMobiusBridge.lean:975:def splitNullConjugationStabilizer : [continuation result: Subgroup]
+lean/InfoGeometry/Canonical/Cl55WittFullLieClosure.lean:220:def wittFiveGradeLieSubalgebra : LieSubalgebra ℝ (MatStage 5) :=
+lean/InfoGeometry/Canonical/Cl55WittLieSubalgebra.lean:29:def wittGeneratorLieSpan : LieSubalgebra ℝ (MatStage 5) :=
+lean/InfoGeometry/Canonical/Cl55WittOrthogonalHierarchy.lean:141:def quadraticCoreLieSubalgebra : LieSubalgebra ℝ (MatStage 5) :=
+lean/InfoGeometry/Canonical/Cl55WittOrthogonalHierarchy.lean:175:def quadraticGeneratorLieSpan : LieSubalgebra ℝ (MatStage 5) :=
+lean/InfoGeometry/Canonical/Cl55WittPinConformalBoundaryBridge.lean:13:noncomputable def pinInfinityStabilizer : Subgroup Pin55 where
+lean/InfoGeometry/Canonical/Cl55WittWeylReflections.lean:18:def permuteWeight (σ : Equiv.Perm (Fin 5)) (w : Weight) : Weight :=
+lean/InfoGeometry/Canonical/Cl55WittWeylReflections.lean:24:def modeSwap (i j : Fin 5) : Equiv.Perm (Fin 5) := Equiv.swap i j
+lean/InfoGeometry/Canonical/CoordinateTrialityLabelIntertwiner.lean:29:def coordinateCycle : Equiv.Perm Coordinate := trialityCycle
+lean/InfoGeometry/Canonical/CuntzSuperBraidMoEBridge.lean:54:def sigmaB6 (i : B6Gen) : Equiv.Perm ℕ :=
+lean/InfoGeometry/Canonical/CyclicZornTrialityAction.lean:16:def cyclicTrialityPerm (χ : ZMod 3) : Equiv.Perm ZornCore.Zorn where
+lean/InfoGeometry/Canonical/Cyclotomic12GaloisCorrespondence.lean:31:def subgroupToFixedField (H : Subgroup Gal(E / F)) : IntermediateField F E :=
+lean/InfoGeometry/Canonical/Cyclotomic12GaloisCorrespondence.lean:34:def fieldToFixingSubgroup (K : IntermediateField F E) : Subgroup Gal(E / F) :=
+lean/InfoGeometry/Canonical/Cyclotomic12GaloisCorrespondence.lean:77:noncomputable def normalQuotientEquiv (H : Subgroup Gal(E / F))
+lean/InfoGeometry/Canonical/D4StarObservableDirectLimitAction.lean:83:def observableColimitAction (g : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Canonical/DrazinFierzBridge.lean:545:def permutationMatrix4 (π : Equiv.Perm (Fin 4)) :
+lean/InfoGeometry/Canonical/DualQuaternionF4WeylBridge.lean:69:def dualQuaternionF4GeneratedSubgroup : Subgroup (V ≃ₗ[ℝ] V) :=
+lean/InfoGeometry/Canonical/E8RootDecomposition.lean:230:def e8RootReflection (α : E8Root) : Equiv.Perm E8Root where
+lean/InfoGeometry/Canonical/E8RootDecomposition.lean:251:def e8WeylGroup : Subgroup (Equiv.Perm E8Root) :=
+lean/InfoGeometry/Canonical/EmergentFisherMetric.lean:81:def sheetExchange : Equiv.Perm (Fin 2) := Equiv.swap 0 1
+lean/InfoGeometry/Canonical/FiniteFibonacciAnyonBraiding.lean:110:def fibonacciPhaseOfEval (χ : Equiv.Perm ℕ → Units ℂ) : FibonacciBraidPhase :=
+lean/InfoGeometry/Canonical/FiniteMajoranaBraiding.lean:24:def majoranaSwap (i : ℕ) : Equiv.Perm ℕ :=
+lean/InfoGeometry/Canonical/FiniteMajoranaBraiding.lean:110:def braidGateReadout (Gate : Type*) (readout : Equiv.Perm ℕ → Gate)
+lean/InfoGeometry/Canonical/FiniteMajoranaProjectiveBraiding.lean:33:def phaseOfEval (χ : Equiv.Perm ℕ → Units ℂ) : BraidPhase :=
+lean/InfoGeometry/Canonical/G2Cl55ChiralHodgeEquivarianceBridge.lean:101:def g2SpinorLieSubalgebra : LieSubalgebra ℝ Mat32 where
+lean/InfoGeometry/Canonical/G2CuntzKriegerScalarSeparatedBridge.lean:280:def garsideThetaEquiv : Equiv.Perm G2Vertex where
+lean/InfoGeometry/Canonical/G2H3ZornEntrywiseEmbedding.lean:238:noncomputable def entrywiseCompatibleG2 : LieSubalgebra ℝ G2Derivation where
+lean/InfoGeometry/Canonical/GATLClifford55Bridge.lean:21:abbrev CliffordGroup : Subgroup Cl55ˣ := LipschitzGroup55
+lean/InfoGeometry/Canonical/GolayPermutationSubgroup.lean:13:def PreservesGolay (σ : Equiv.Perm (Fin 24)) : Prop :=
+lean/InfoGeometry/Canonical/GolayPermutationSubgroup.lean:16:def golayPermutationSubgroup : Subgroup (Equiv.Perm (Fin 24)) where
+lean/InfoGeometry/Canonical/GradeAutomorphismPerm.lean:65:noncomputable def gradeAutomorphismPerm (e : KleinFour ≃+ KleinFour) : Equiv.Perm NonZeroGrade :=
+lean/InfoGeometry/Canonical/GradeAutomorphismPerm.lean:131:def rotPerm : Equiv.Perm NonZeroGrade :=
+lean/InfoGeometry/Canonical/HyperbolicDiagonalO55.lean:139:def hyperbolicLieSubalgebra : LieSubalgebra ℝ HMatrix :=
+lean/InfoGeometry/Canonical/IntegralCyclotomicGroup.lean:50:def generated : Subgroup Mat2Zˣ := Subgroup.closure {fourthUnit, thirdUnit}
+lean/InfoGeometry/Canonical/KKTConformalChiralContext.lean:98:def kktClosureSymmetrySubgroup : Subgroup EndHˣ :=
+lean/InfoGeometry/Canonical/KKTConformalChiralContext.lean:109:def kktTkkStructureGroup : Subgroup EndHˣ :=
+lean/InfoGeometry/Canonical/KleinAffinePermutationActionBridge.lean:19:def affineTranslation (a : ℝ) : Equiv.Perm ℝ :=
+lean/InfoGeometry/Canonical/KleinAffinePermutationActionBridge.lean:25:def affineGlide : Equiv.Perm ℝ :=
+lean/InfoGeometry/Canonical/KleinBottleBoundaryActionPacket.lean:46:def sheetSwap : Equiv.Perm (Fin 2) := Equiv.swap 0 1
+lean/InfoGeometry/Canonical/KleinPresentedGroup.lean:30:def KleinNormal : Subgroup KleinFree :=
+lean/InfoGeometry/Canonical/KleinSixStateAssociatedBundle.lean:25:def equivA_Base : Equiv.Perm Base where
+lean/InfoGeometry/Canonical/KleinSixStateAssociatedBundle.lean:41:def equivB_Base : Equiv.Perm Base where
+lean/InfoGeometry/Canonical/KleinSixStateAssociatedBundle.lean:53:noncomputable def act_Fiber (M : U6) : Equiv.Perm Fiber where
+lean/InfoGeometry/Canonical/KleinSixStateAssociatedBundle.lean:83:noncomputable def equivA (Theta : U6) : Equiv.Perm TotalSpace :=
+lean/InfoGeometry/Canonical/KleinSixStateAssociatedBundle.lean:86:noncomputable def equivB (T : U6) : Equiv.Perm TotalSpace :=
+lean/InfoGeometry/Canonical/LorentzSelfDualLieAlgebra.lean:43:def complexBivectorLieSubalgebra : LieSubalgebra ℂ (ComplexClifford Q) :=
+lean/InfoGeometry/Canonical/NonAbelianDihedralSymmetry12.lean:270:def sheetColorSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Canonical/O55OrthogonalLieCarrier.lean:34:noncomputable def so55LieSubalgebra : LieSubalgebra ℝ O55Matrix :=
+lean/InfoGeometry/Canonical/OperatorErlangenFixedPoints.lean:18:def fixedPointSet (H : Subgroup G) : Set A :=
+lean/InfoGeometry/Canonical/OperatorErlangenFixedPoints.lean:22:def fixedPointSubsemiring (H : Subgroup G) : Subsemiring A where
+lean/InfoGeometry/Canonical/OperatorErlangenFixedPoints.lean:60:def ringFixedPointSet (H : Subgroup G) : Set B :=
+lean/InfoGeometry/Canonical/OperatorErlangenFixedPoints.lean:106:def stabilizer (a : X) : Subgroup G := MulAction.stabilizer G a
+lean/InfoGeometry/Canonical/OperatorErlangenGaloisConnection.lean:17:def fixingSubgroup (S : Set A) : Subgroup G where
+lean/InfoGeometry/Canonical/OrientedPfaffianMatching.lean:37:noncomputable def permutation : Equiv.Perm ι :=
+lean/InfoGeometry/Canonical/Orthogonal55Components.lean:13:def specialOrthogonal55 : Subgroup OrthogonalGroup55 :=
+lean/InfoGeometry/Canonical/OrthogonalGroup55.lean:14:def OrthogonalGroup55 : Subgroup GL10 where
+lean/InfoGeometry/Canonical/ParabolicNullQuotientCausalCone.lean:117:def nullVectorStabilizer (n : M) : Subgroup (M ≃ₗ[R] M) where
+lean/InfoGeometry/Canonical/PauliJungTrialityD4Synthesis.lean:68:def trialityCyclePerm : Equiv.Perm ColorChannel where
+lean/InfoGeometry/Canonical/PauliJungTrialityD4Synthesis.lean:192:def pauliGradeAutomorphismPerm (σ : KleinFour ≃+ KleinFour) : Equiv.Perm (Fin 3) where
+lean/InfoGeometry/Canonical/PauliSignedPermutationSupergradedBridge.lean:15:def signedPermVec (p : Equiv.Perm (Fin 3)) (x : Vec3) : Vec3 :=
+lean/InfoGeometry/Canonical/PauliSignedPermutationSupergradedBridge.lean:33:def signedZorn (p : Equiv.Perm (Fin 3))
+lean/InfoGeometry/Canonical/Pin55OrthogonalBridge.lean:61:def pinIsometrySubgroup : Subgroup Pin55 where
+lean/InfoGeometry/Canonical/Pin55OrthogonalBridge.lean:100:def Pin55Isometric : Subgroup Pin55 :=
+lean/InfoGeometry/Canonical/Pin55OrthogonalBridge.lean:106:def OrthogonalV55 : Subgroup (V55 ≃ₗ[ℝ] V55) where
+lean/InfoGeometry/Canonical/PionChiralGoldstoneNative.lean:98:def pionLieSubalgebra : LieSubalgebra ℂ M2C :=
+lean/InfoGeometry/Canonical/ProjectiveUnitary6.lean:8:abbrev centerU6 : Subgroup U6 := Subgroup.center U6
+lean/InfoGeometry/Canonical/SE2SouriauCoadjointTopology.lean:922:noncomputable def se2CarrierTranslationKernelSubgroup : Subgroup MatrixSE2Carrier :=
+lean/InfoGeometry/Canonical/SL2FiveGradingExample.lean:40:def sl₂ : LieSubalgebra ℝ (Matrix (Fin 2) (Fin 2) ℝ) :=
+lean/InfoGeometry/Canonical/SO55RestrictedBivectorEquiv.lean:99:abbrev so55LeviLieSubalgebra : LieSubalgebra ℝ Mat10 := so55LieSubalgebra
+lean/InfoGeometry/Canonical/SixStateD6C2S3.lean:403:def sixStateDihedralSubgroup : Subgroup SixMatrixˣ := d6MatrixHom.range
+lean/InfoGeometry/Canonical/SixStateD6C2S3.lean:405:def sixStateGeneratorClosure : Subgroup SixMatrixˣ :=
+lean/InfoGeometry/Canonical/SouriauKKSLeafRestriction.lean:21:def kksRestriction (μ : Module.Dual R L) (S : LieSubalgebra R L) :
+lean/InfoGeometry/Canonical/SouriauThermodynamicCoadjointOrbitBridge.lean:22:def coadjointOrbit (act : LieGroupAction G V) (μ : LieDual V) : Set (LieDual V) :=
+lean/InfoGeometry/Canonical/Spin55NativeOrthogonalCentralKernel.lean:86:noncomputable def spinSignSubgroup : Subgroup Spin55 :=
+lean/InfoGeometry/Canonical/SpinorialCore/BilinearDerivations.lean:33:def derivations (μ : V →ₗ[R] V →ₗ[R] V) : LieSubalgebra R (Module.End R V) where
+lean/InfoGeometry/Canonical/SpinorialCore/BilinearDerivations.lean:62:def cutStabilizer (μ : V →ₗ[R] V →ₗ[R] V) (p : V) : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/SplitClifford55SpinOrthogonalImageQuotientBridge.lean:113:noncomputable def transportedSpinSignSubgroup : Subgroup ChevalleySpin55 :=
+lean/InfoGeometry/Canonical/SplitOctonionAutomorphismCore.lean:62:def splitOctonionAutSubgroup : Subgroup (SplitOctonionAutCandidate R) where
+lean/InfoGeometry/Canonical/SplitOctonionJordanStructure.lean:412:noncomputable def structureActionLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/SplitOctonionSymplecticLieAlgebra.lean:113:def omegaSymplecticLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/SplitOctonionTKK55.lean:647:noncomputable def hyperbolicSkewLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/SuperUnified.lean:153:def StructureGroupLieAlgebra (S : SuperKaehlerStructure (E := E)) : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Canonical/ThreeColorPolynomialYangBaxterBridge.lean:21:def pairSwap : Equiv.Perm ColourPair where
+lean/InfoGeometry/Canonical/ThreeColorPolynomialYangBaxterBridge.lean:27:def tripleSwap12 : Equiv.Perm ColourTriple where
+lean/InfoGeometry/Canonical/ThreeColorPolynomialYangBaxterBridge.lean:33:def tripleSwap23 : Equiv.Perm ColourTriple where
+lean/InfoGeometry/Canonical/ThreeColorPolynomialYangBaxterBridge.lean:123:def diagonalColourAction (g : Equiv.Perm SplitOctonionColour) : Equiv.Perm ColourPair where
+lean/InfoGeometry/Canonical/ThreeColorPolynomialYangBaxterBridge.lean:133:def diagonalColourMatrix (g : Equiv.Perm SplitOctonionColour) : ColourRMatrix ℚ :=
+lean/InfoGeometry/Canonical/TrialitySpin8Permutations.lean:26:def trialityCycle : Equiv.Perm TrialitySector :=
+lean/InfoGeometry/Canonical/V4SemidirectS3Bridge.lean:99:def trialityAction (σ : Equiv.Perm (Fin 3)) : V4Element → V4Element
+lean/InfoGeometry/Canonical/V4SemidirectS3Bridge.lean:189:def trialityActionMulEquiv (σ : Equiv.Perm (Fin 3)) : V4Element ≃* V4Element where
+lean/InfoGeometry/Canonical/V4SemidirectS3Bridge.lean:198:def trialityActionHom : Equiv.Perm (Fin 3) →* MulAut V4Element where
+lean/InfoGeometry/Canonical/V4SemidirectS3Bridge.lean:234:def inr : Equiv.Perm (Fin 3) →* V4SemidirectS3 := SemidirectProduct.inr
+lean/InfoGeometry/Canonical/ZbwDarwinDemodulation.lean:79:def sixAxisOpposite : Equiv.Perm (Fin 6) where
+lean/InfoGeometry/Canonical/ZornOrientationTwistedS3.lean:25:def permutationSign (p : Equiv.Perm (Fin 3)) : ℂ :=
+lean/InfoGeometry/Canonical/ZornOrientationTwistedS3.lean:28:def permuteVec (p : Equiv.Perm (Fin 3)) (x : Vec3) : Vec3 :=
+lean/InfoGeometry/Canonical/ZornOrientationTwistedS3.lean:31:def twistedVec (p : Equiv.Perm (Fin 3)) (x : Vec3) : Vec3 :=
+lean/InfoGeometry/Canonical/ZornOrientationTwistedS3.lean:52:def zornAction (p : Equiv.Perm (Fin 3)) (X : ZornCell ℂ) : ZornCell ℂ where
+lean/InfoGeometry/Canonical/ZornOuterTrialityGroup.lean:43:def relatedTriples : Subgroup (TrialityGL R) where
+lean/InfoGeometry/Cantor/CliffordSymmetryGroup.lean:41:def group : Subgroup (Module.End ℝ (FockSpace (PrimalSheet n)))ˣ :=
+lean/InfoGeometry/Cantor/SimpleCantorOperatorGroup.lean:85:def operatorGroup : Subgroup (Module.End ℝ (CantorWord → ℝ))ˣ :=
+lean/InfoGeometry/Cantor/SimpleCantorPermutationGroup.lean:29:abbrev TwistedBrinGroup : Subgroup (Equiv.Perm CantorCube) :=
+lean/InfoGeometry/Cantor/SimpleCantorPermutationGroup.lean:47:def group : Subgroup (Equiv.Perm CantorWord) :=
+lean/InfoGeometry/Cantor/SimpleCantorPermutationGroup.lean:52:def transportedCubeBitFlip (x : ℕ) : Equiv.Perm CantorWord :=
+lean/InfoGeometry/Categorical/ArtinGarsideCenterBridge.lean:93:def commutantSubgroup {G : Type*} [Group G] (z : G) : Subgroup G where
+lean/InfoGeometry/Categorical/BraidPermutationQuotient.lean:42:def adjacentSwap (m : ℕ) (i : Fin m) : Equiv.Perm (Fin (m + 1)) :=
+lean/InfoGeometry/Categorical/BraidPermutationQuotient.lean:150:def pureBraidSubgroup (m : ℕ) : Subgroup (braid_group (m + 1)) :=
+lean/InfoGeometry/Categorical/LogJordanBraidGroupInfRepresentation.lean:253:def finiteStageReadbackSubgroup (n : ℕ) : [continuation result: Subgroup]
+lean/InfoGeometry/Categorical/LogJordanTensorPowerStabilization.lean:356:def stabilizationSubgroup (n : ℕ) : Subgroup (braid_group (n + 2)) where
+lean/InfoGeometry/Categorical/SylvesterBraidRepresentation.lean:189:def sylvesterBraidEquiv {n : ℕ} (β : I → I → Rˣ) (i j : Fin n) (hij : i ≠ j) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Categorical/SylvesterBraidRepresentation.lean:196:def sylvesterStandardGen {n : ℕ} (β : I → I → Rˣ) (i : Fin (n - 1)) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Clifford/Cl44GenerationRotation.lean:40:def rotateGenerationLabel (σ : Equiv.Perm GenerationLabel) :
+lean/InfoGeometry/Clifford/Cl44S3CopyModel.lean:58:def s3CopyAction (σ : Equiv.Perm (Fin 3)) : CopyCarrier →ₗ[ℝ] CopyCarrier where
+lean/InfoGeometry/Clifford/Cl44S3Family.lean:86:def coordinateS3Action (σ : Equiv.Perm (Fin 3)) :
+lean/InfoGeometry/Clifford/Cl55OperatorLieSubalgebra.lean:27:def cl55LieGeneratedSubalgebra : LieSubalgebra ℝ Cl55 :=
+lean/InfoGeometry/Clifford/Cl55OperatorLieSubalgebra.lean:101:def spinCl55LieGeneratedSubalgebra (g : Spin55) : LieSubalgebra ℝ Cl55 :=
+lean/InfoGeometry/Clifford/Cl55RealSplitPin.lean:22:noncomputable def realSplitPin55 : Subgroup Cl55ˣ :=
+lean/InfoGeometry/Clifford/Cl55RealSplitPinImage.lean:14:noncomputable def realSplitPinOrthogonalImage : Subgroup orthogonalGroup55 :=
+lean/InfoGeometry/Clifford/Cl55RealSplitPinKernelExact.lean:30:def realSplitPinSignSubgroup : Subgroup realSplitPin55 where
+lean/InfoGeometry/Clifford/Cl55RealSplitPinReflectionImage.lean:91:def normalizedVectorReflectionSubgroup : Subgroup orthogonalGroup55 :=
+lean/InfoGeometry/Clifford/Cl55SpinorChirality.lean:205:def split55RecursiveOrderPerm : Equiv.Perm (Fin 10) :=
+lean/InfoGeometry/Clifford/Cl55WittModePermutations.lean:7:noncomputable def modeReindex (σ : Equiv.Perm (Fin 5)) :
+lean/InfoGeometry/Clifford/Cl55WittModePermutations.lean:24:noncomputable def modePermutationLinearEquiv (σ : Equiv.Perm (Fin 5)) :
+lean/InfoGeometry/Clifford/Cl55WittModePermutations.lean:42:noncomputable def modePermutationIsometry (σ : Equiv.Perm (Fin 5)) :
+lean/InfoGeometry/Clifford/Cl55WittModePermutations.lean:51:noncomputable def modePermutationAlg (σ : Equiv.Perm (Fin 5)) :
+lean/InfoGeometry/Clifford/Cl55WittModePermutations.lean:94:noncomputable def modePermutationOrthogonalHom : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Clifford/Cl55WittNativeCartanDieudonne.lean:22:noncomputable def nativeQuadraticReflectionSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Clifford/Cl55WittNegativeVectorPin.lean:84:def negativeQuadraticReflectionSubgroup : Subgroup orthogonalGroup55 :=
+lean/InfoGeometry/Clifford/Cl55WittOrthogonalDeterminantSign.lean:20:def orthogonalDeterminantSignSubgroup : Subgroup orthogonalGroup55 where
+lean/InfoGeometry/Clifford/Cl55WittPinKernel.lean:83:noncomputable def pinSignSubgroup : Subgroup Pin55 :=
+lean/InfoGeometry/Clifford/Cl55WittReflectionGeneratedSubgroup.lean:22:def quadraticReflectionSubgroup : Subgroup orthogonalGroup55 :=
+lean/InfoGeometry/Clifford/Cl55WittReflectionSubgroup.lean:12:def orthogonalGroup55 : Subgroup (V55 ≃ₗ[ℝ] V55) where
+lean/InfoGeometry/Clifford/Cl55WittReflectionSubgroup.lean:31:noncomputable def coordinateReflectionSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Clifford/Cl55WittReflectionWordDeterminant.lean:18:noncomputable def specialOrthogonalGroup55 : Subgroup orthogonalGroup55 where
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:41:def modePermutationLinearEquiv (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:59:def neutralModePermutation (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:77:def splitModePermutation (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:97:def splitModePermutationIsometry (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:103:def splitCliffordPermutationEquiv (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:109:def permutationSymmetryClosure : [continuation result: Subgroup]
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:121:noncomputable def randomPermutationCliffordAverage (w : Equiv.Perm (Fin n) → ℝ) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:305:def primalSheetModePermutation (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:313:noncomputable def fockPermutationAlgHom (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:333:noncomputable def fockPermutationAlgEquiv (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:381:def fockPermutationSymmetryClosure : [continuation result: Subgroup]
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:393:noncomputable def fockOperatorPermutationEquiv (σ : Equiv.Perm (Fin n)) :
+lean/InfoGeometry/Clifford/ClNNPermutationSymmetry.lean:471:def fockOperatorSymmetryClosure : [continuation result: Subgroup]
+lean/InfoGeometry/Clifford/Clifford55.lean:64:abbrev LipschitzGroup55 : Subgroup Cl55ˣ := lipschitzGroup Q55
+lean/InfoGeometry/Clifford/Clifford55.lean:68:abbrev LipschitzGroup : Subgroup Cl55ˣ := LipschitzGroup55
+lean/InfoGeometry/Clifford/CliffordLieAlgebra.lean:19:def soLieAlgebra {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M] (Q : QuadraticForm R M) : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Clifford/CliffordLieAlgebra.lean:24:def soNN (n : ℕ) : LieSubalgebra ℝ (InfoGeometry.CliffordTower.Clsplit n) :=
+lean/InfoGeometry/Clifford/TodorovInternalSpace.lean:124:def linearCentralizer (K : SpinorEnd S) : Subgroup (S ≃ₗ[ℂ] S) where
+lean/InfoGeometry/Clifford/TodorovInternalSpace.lean:165:abbrev linearStabilizer (v : S) : Subgroup (S ≃ₗ[ℂ] S) :=
+lean/InfoGeometry/Cocycle/ActionCocycle.lean:195:def coboundary (b : X → R) : MulActionCocycle Γ X R where
+lean/InfoGeometry/Cocycle/ActionCocycle.lean:213:noncomputable def logAbsUnits (C : MulActionCocycle Γ X ℝˣ) :
+lean/InfoGeometry/Cocycle/LogarithmicOrderParameter.lean:181:def logAbsDensityOfUnits (C : MulActionCocycle Γ X ℝˣ) (γ : Γ) (x : X) : ℝ :=
+lean/InfoGeometry/Cocycle/LogarithmicOrderParameter.lean:185:def negativeLogDensityOfUnitsFun (C : MulActionCocycle Γ X ℝˣ)
+lean/InfoGeometry/Cocycle/LogarithmicOrderParameter.lean:194:def negativeLogDensityOfUnits (C : MulActionCocycle Γ X ℝˣ) :
+lean/InfoGeometry/Cocycle/LogarithmicOrderParameter.lean:234:def weylOrderParameterOfUnits (n : ℝ) (C : MulActionCocycle Γ X ℝˣ)
+lean/InfoGeometry/Core/DoubleCoset.lean:19:def doubleCoset (H : Subgroup G) (g : G) (K : Subgroup G) : Set G :=
+lean/InfoGeometry/Core/DoubleCoset.lean:47:def doubleCosetSetoid (H K : Subgroup G) : Setoid G where
+lean/InfoGeometry/Core/HomogeneousSpaces.lean:22:def quotientBasepoint (H : Subgroup G) : G ⧸ H :=
+lean/InfoGeometry/Core/SymmetricLie.lean:249:noncomputable def evenLieSubalgebra (S : SymmetricLieAlgebra L) : LieSubalgebra ℝ L where
+lean/InfoGeometry/Core/SymmetricSpaces.lean:71:abbrev fixedSubgroup (θ : MulAut G) : Subgroup G :=
+lean/InfoGeometry/Core/TitsExhaustion.lean:12:def leftStabilizer (U : Set G) : Subgroup G where
+lean/InfoGeometry/Cosmology/SpacetimeParabolicQuotient.lean:329:noncomputable def vacuumRayStabilizer : Subgroup RealSL2 :=
+lean/InfoGeometry/Cosmology/SpacetimeParabolicQuotient.lean:335:noncomputable def vacuumProjectiveOrbitEquiv : [continuation result: MulAction]
+lean/InfoGeometry/CoxeterPort/OperatorRepresentation.lean:93:def coxeterOperatorGroup : [continuation result: Subgroup]
+lean/InfoGeometry/CoxeterPort/GeometricReflectionOperators.lean:110:def geometricReflectionOperatorGroup : [continuation result: Subgroup]
+lean/InfoGeometry/EmergentVacuum/KreinMetricStabilizer.lean:10:def metricStabilizer (metric : Matrix Index Index ℂ) : [continuation result: Subgroup]
+lean/InfoGeometry/EmergentVacuum/KreinMetricStabilizer.lean:58:def specialMetricStabilizer (metric : Matrix Index Index ℂ) : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/ChevalleyBorelIntersection.lean:132:def operatorBorelSubgroup : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:35:abbrev DerivedCentralQuotient {M : Type} [Group M] (H : Subgroup M) : Type :=
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:39:def twistedFixedGroup (t : TwistTag) (K : Type) [Field K] (σ : K →+* K) : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:77:def reeRelationGroup (τ : Tag) (K : Type) [Field K] (ρ : Equiv.Perm (Fin τ.rank))
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:86:def reeFixedGroup (τ : Tag) (K : Type) [Field K] (ρ : Equiv.Perm (Fin τ.rank))
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:170:def suzukiMatrixGroup (a : ℕ) (K : Type) [Field K] : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:174:def suzukiUpperMatrixGroup (a : ℕ) (K : Type) [Field K] : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/ExceptionalCatalog.lean:244:def suzukiGroup (a : ℕ) (K : Type) [Field K] : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/SuzukiOvoid.lean:187:def upperRootMatrixGroup (a : ℕ) : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/SuzukiOvoid.lean:386:def rootWeylOperatorGroup (a : ℕ) : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean:27:def inverseTranspose : [continuation result: MulEquiv]
+lean/InfoGeometry/Exceptional/CFSGPort/J1GeneratorOrders.lean:61:private noncomputable def j1SeedA [Fact (Nat.Prime 11)] : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/CFSGPort/J1GeneratorOrders.lean:69:private noncomputable def j1SeedB [Fact (Nat.Prime 11)] : [continuation result: Subgroup]
+lean/InfoGeometry/Exceptional/DiagonalCompositionTriality.lean:17:def diagonalLieSubalgebra : LieSubalgebra R (TrialityTriple mul) where
+lean/InfoGeometry/Exceptional/FreudenthalChargeLinear.lean:405:def symplecticOperatorLieSubalgebra (D : CubicJordanDatum J) : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Exceptional/G2ArtinKleinBridge.lean:145:noncomputable def throatConjugation : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Exceptional/G2ArtinPresentation.lean:237:def involutionKernel : Subgroup ArtinG2 :=
+lean/InfoGeometry/Exceptional/G2ArtinRootPermutationLift.lean:33:def permMatrix (π : Equiv.Perm G2CoordinateRoot) :
+lean/InfoGeometry/Exceptional/G2ArtinWeylBridge.lean:79:noncomputable def concreteRootTransport : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Exceptional/G2ArtinWeylBridge.lean:95:noncomputable def concreteRootS : Equiv.Perm G2Root :=
+lean/InfoGeometry/Exceptional/G2ArtinWeylBridge.lean:98:noncomputable def concreteRootT : Equiv.Perm G2Root :=
+lean/InfoGeometry/Exceptional/G2CyclotomicCoordinateActionBridge.lean:39:noncomputable def transportRootPermHom : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Exceptional/G2PhaseTransport.lean:15:def phaseTransport (π : Equiv.Perm Root) (phase : Root → ℂ) : Root → ℂ :=
+lean/InfoGeometry/Exceptional/TrialityContactCantor.lean:24:def fixedLieSubalgebra (rotation : LieCarrier ≃ₗ⁅Scalar⁆ LieCarrier) : [continuation result: LieSubalgebra]
+lean/InfoGeometry/External/Auto/BogoliubovBraidGraphWeld.lean:34:def permuteColorSpinor4 {V : Type*} (π : Equiv.Perm (Fin 3))
+lean/InfoGeometry/External/Auto/BogoliubovBraidGraphWeld.lean:39:def qColorBraid4 {V : Type*} [SMul ℂ V] (q : ℂ) (π : Equiv.Perm (Fin 3))
+lean/InfoGeometry/External/Auto/SUNLoopBraidCuntzBoundary.lean:55:def permuteColorSpinorN {N : ℕ} {V : Type*} (π : Equiv.Perm (Fin N))
+lean/InfoGeometry/External/Auto/SouriauCasimirEntropyLeaves.lean:14:def invariant {G X R : Type*} (A : GroupAction G X) (f : X → R) : Prop :=
+lean/InfoGeometry/External/Auto/SouriauCasimirEntropyLeaves.lean:17:def orbit {G X : Type*} (A : GroupAction G X) (x : X) : Set X :=
+lean/InfoGeometry/External/Auto/TKK_StandardModel.lean:38:def IsospinSU2 (su2_sub : LieSubalgebra ℂ tkk.g_0) : Prop :=
+lean/InfoGeometry/External/Auto/TKK_StandardModel.lean:58:def ColorSU3 (su3_sub : LieSubalgebra ℂ tkk.g_0) : Prop :=
+lean/InfoGeometry/External/Auto/WallpaperSemidirectProduct.lean:20:abbrev translationSubgroup : Subgroup (WallpaperGroup φ) :=
+lean/InfoGeometry/Geometry/AnharmonicPunctures.lean:47:def exchangeEquiv : Equiv.Perm Punctured where
+lean/InfoGeometry/Geometry/AnharmonicPunctures.lean:53:def inversionEquiv : Equiv.Perm Punctured where
+lean/InfoGeometry/Geometry/AnharmonicSixPermutations.lean:65:def sixPermutationSubgroup : Subgroup (Equiv.Perm Punctured) where
+lean/InfoGeometry/Geometry/AnharmonicSixPermutations.lean:77:def anharmonicGroup : Subgroup (Equiv.Perm Punctured) :=
+lean/InfoGeometry/Geometry/CocyclicDressing.lean:14:def IsCocyclic (cocycle : MulActionCocycle Gauge Configuration Coefficient)
+lean/InfoGeometry/Geometry/CocyclicDressing.lean:34:def frameTransport (cocycle : MulActionCocycle Gauge Configuration Coefficient)
+lean/InfoGeometry/Geometry/PenroseBraidCliffordDigest.lean:56:def fiveCycle : Equiv.Perm (Fin 5) :=
+lean/InfoGeometry/Geometry/PenroseBraidCliffordDigest.lean:73:def s₁ : Equiv.Perm (Fin 3) :=
+lean/InfoGeometry/Geometry/PenroseBraidCliffordDigest.lean:77:def s₂ : Equiv.Perm (Fin 3) :=
+lean/InfoGeometry/GrandUnification/TypeDWeylSemidirectAction.lean:64:def permAction (σ : Equiv.Perm ι) (w : Bitword ι) : Bitword ι :=
+lean/InfoGeometry/GroupTheory/DoubleCoset.lean:19:def doubleCoset (H : Subgroup G) (g : G) (K : Subgroup G) : Set G :=
+lean/InfoGeometry/GroupTheory/DoubleCoset.lean:23:def DoubleCosetRel (H K : Subgroup G) (x y : G) : Prop :=
+lean/InfoGeometry/GroupTheory/DoubleCoset.lean:54:def doubleCosetSetoid (H K : Subgroup G) : Setoid G where
+lean/InfoGeometry/GroupTheory/DoubleCosetOrbit.lean:53:def conjugateSubgroup (g : G) (K : Subgroup G) : Subgroup G where
+lean/InfoGeometry/GroupTheory/DoubleCosetOrbit.lean:63:def intersectionSubgroup (H K : Subgroup G) : Subgroup G where
+lean/InfoGeometry/GroupTheory/DoubleCosetOrbit.lean:73:def stabilizerEquivIntersection (H K : Subgroup G) (g : G) :
+lean/InfoGeometry/GroupTheory/GeneratedSetExhaustion.lean:18:def leftStabilizer (U : Set G) : Subgroup G where
+lean/InfoGeometry/Krein/DoubledSpace.lean:433:noncomputable def information_lie_algebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Krein/Metric.lean:155:noncomputable def neutralLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Lie/CanonicalZornDerivation.lean:43:noncomputable def canonicalZornDerivations : LieSubalgebra ℝ EndCZ :=
+lean/InfoGeometry/Lie/CanonicalZornG2BasisAlignment.lean:54:def casPermutation : Equiv.Perm (Fin 14) :=
+lean/InfoGeometry/Lie/CanonicalZornG2CoxeterRelations.lean:83:def cartanWeylSubgroup : Subgroup (Cartan ≃ₗ[ℝ] Cartan) :=
+lean/InfoGeometry/Lie/CanonicalZornG2RootStarAction.lean:136:noncomputable def rootActionOnFiniteRoot (g : P.weylGroup) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Lie/CanonicalZornG2WeylGroupAction.lean:105:def WeylGroup : Subgroup Generator :=
+lean/InfoGeometry/Lie/CanonicalZornG2WeylGroupAction.lean:151:def cartanActionRange : Subgroup (Cartan ≃ₗ[ℝ] Cartan) :=
+lean/InfoGeometry/Lie/CanonicalZornG2WeylGroupAction.lean:206:def transportedCartanActionRange : [continuation result: Subgroup]
+lean/InfoGeometry/Lie/CanonicalZornIdealWeightDecomposition.lean:41:def idealRestrict (I : LieIdeal R L) (H : LieSubalgebra R L) : LieSubmodule R H L :=
+lean/InfoGeometry/Lie/CanonicalZornPeirceStabilizer.lean:61:noncomputable def peirceStabilizer : LieSubalgebra ℝ Deriv where
+lean/InfoGeometry/Lie/ConcreteSplitCartan.lean:85:def SplitCartanGroup (K : A) : Subgroup Aˣ :=
+lean/InfoGeometry/Lie/GenericSplitOrthogonalBlocks.lean:84:noncomputable def splitOrthogonalLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Lie/SO55MatrixLieSubalgebra.lean:155:def so55LieSubalgebra : LieSubalgebra ℝ Mat10 where
+lean/InfoGeometry/Lie/SplitOctonionAxialCartanErlangen.lean:171:noncomputable def axialCartanLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Lie/SplitOctonionDerivationWittBlockRealization.lean:105:abbrev transportedDerivationLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Lie/SplitOctonionEllStabilizer.lean:94:def ellStabilizer : LieSubalgebra ℝ EndCZ where
+lean/InfoGeometry/Lie/SplitOctonionEllStabilizer.lean:194:def orderedEllChiralPairStabilizer : LieSubalgebra ℝ EndCZ where
+lean/InfoGeometry/Lie/SplitOctonionEllStabilizer.lean:247:def quaternionicSlicePreserver : LieSubalgebra ℝ EndCZ where
+lean/InfoGeometry/Lie/SplitOctonionEllStabilizer.lean:283:def realZornEllStabilizer : Subgroup realZornCompositionAut where
+lean/InfoGeometry/Lie/SplitOctonionEllStabilizer.lean:305:def realZornOrderedChiralPairStabilizer : Subgroup realZornCompositionAut where
+lean/InfoGeometry/Lie/SplitOctonionEllStabilizer.lean:338:def realZornQuaternionicSliceStabilizer : Subgroup realZornCompositionAut where
+lean/InfoGeometry/Lie/SplitOctonionImaginaryAction.lean:513:def PointStabilizer (X : Imaginary) : Subgroup realZornCompositionAut :=
+lean/InfoGeometry/Lie/SplitOctonionWittSkewEndomorphismSubalgebra.lean:45:def neutralWittSkewLieSubalgebra : [continuation result: LieSubalgebra]
+lean/InfoGeometry/Lie/ZornPeirceDerivationStabilizer.lean:62:def stabilizerLieSubalgebra : LieSubalgebra ℝ Der where
+lean/InfoGeometry/MassSpectrometry/PeakFragmentMatching.lean:16:def hardAssignment {n : ℕ} (σ : Equiv.Perm (Fin n)) : AssignmentMatrix n :=
+lean/InfoGeometry/OperatorAlgebra/CliffordCARQuadraticClosure.lean:151:def wittPosTwoLieSubalgebra (n : ℕ) : LieSubalgebra ℝ (Clnn n) where
+lean/InfoGeometry/OperatorAlgebra/CliffordCARQuadraticClosure.lean:162:def wittNegTwoLieSubalgebra (n : ℕ) : LieSubalgebra ℝ (Clnn n) where
+lean/InfoGeometry/OperatorAlgebra/CliffordCARQuadraticClosure.lean:255:def wittZeroLieSubalgebra (n : ℕ) : LieSubalgebra ℝ (Clnn n) where
+lean/InfoGeometry/OperatorAlgebra/D4StarFiniteCrossedProduct.lean:80:abbrev coeff (F : D4StarCrossedProduct) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/OperatorAlgebra/D4StarFiniteCrossedProduct.lean:114:def groupUnitary (σ : Equiv.Perm ColorChannel) : D4StarCrossedProduct := by
+lean/InfoGeometry/OperatorAlgebra/OperatorDefectCompletion.lean:186:def retainedLieClosure (P : A →ₗ[R] A) : LieSubalgebra R A :=
+lean/InfoGeometry/Orthogonal/O55ContactLie.lean:55:def splitOrthogonalLie : LieSubalgebra ℝ End55 where
+lean/InfoGeometry/Orthogonal/O55RealWittForm.lean:74:def realSplitO55Lie : LieSubalgebra ℝ RealMat10 where
+lean/InfoGeometry/Orthogonal/O55WittRootRepresentation.lean:163:def splitO55Lie : LieSubalgebra ℂ Mat10 where
+lean/InfoGeometry/Physics/JonesPermutationAction.lean:33:def blockAction : Equiv.Perm (Fin 3) →* Equiv.Perm States where
+lean/InfoGeometry/Physics/JonesPermutationAction.lean:38:def stateAction : Equiv.Perm (Fin 3) →* Equiv.Perm (Fin 8) where
+lean/InfoGeometry/Physics/JonesPermutationAction.lean:69:def permutationMatrix : Equiv.Perm (Fin 3) →* Matrix (Fin 8) (Fin 8) ℂ :=
+lean/InfoGeometry/Physics/JonesPermutationAction.lean:72:def signedMatrix : Equiv.Perm (Fin 3) →* Matrix (Fin 8) (Fin 8) ℂ where
+lean/InfoGeometry/Physics/JonesPermutationAction.lean:82:def rho : Equiv.Perm (Fin 3) →* GL8 := signedMatrix.toHomUnits
+lean/InfoGeometry/Physics/SouriauEntropyFoliation.lean:54:def permuteWeight (σ : Equiv.Perm ι) (weight : ι → ℝ) : ι → ℝ :=
+lean/InfoGeometry/Physics/SplitCliffordAlgebras.lean:415:def action (C : ProjectiveAffineConformalClosure R G) : MulAction G C.tkk.L :=
+lean/InfoGeometry/Physics/ThreeColorSU3.lean:28:def SU3 : Subgroup U3C where
+lean/InfoGeometry/Physics/WeylSU3ColorSymmetry.lean:58:abbrev permMatrix (σ : Equiv.Perm (Fin 3)) : M3C :=
+lean/InfoGeometry/Physics/WeylSU3ColorSymmetry.lean:111:def weylAct (σ : Equiv.Perm (Fin 3)) (A : M3C) : M3C :=
+lean/InfoGeometry/Projective/HadjiivanovRankTwoBraidFrame.lean:33:def permuteCells (p : Equiv.Perm (Fin 3)) :
+lean/InfoGeometry/Projective/HadjiivanovRankTwoBraidFrame.lean:51:def cellPermutationRepresentation : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Projective/KleinQuadricLogCharacter.lean:26:def unitCircleUnits : Subgroup ℂˣ where
+lean/InfoGeometry/Projective/ProjectiveUnitary6.lean:16:abbrev centerU6 : Subgroup U6 := InfoGeometry.Canonical.ProjectiveUnitary6.centerU6
+lean/InfoGeometry/Projective/TwistorConfigurationSpace.lean:79:def permute (X : FQ3) (σ : Equiv.Perm (Fin 3)) : FQ3 :=
+lean/InfoGeometry/ProjectiveFoundation/RealProjectiveDescent.lean:58:def centerQuotientMulAction : [continuation result: MulAction]
+lean/InfoGeometry/Quantum/KrausBoundaryDuality.lean:143:def permutationOperator (σ : Equiv.Perm n) : Matrix n n ℂ :=
+lean/InfoGeometry/Quantum/QutritBraidIncidenceBridge.lean:57:def qutritPermutationMatrix (σ : Equiv.Perm (Fin 3)) : QutritMatrix :=
+lean/InfoGeometry/Quantum/QutritBraidIncidenceBridge.lean:61:def qutritCycle : Equiv.Perm (Fin 3) where
+lean/InfoGeometry/Quantum/QutritBraidIncidenceBridge.lean:393:def qutritPermutationMatrixMonoidHom : Equiv.Perm (Fin 3) →* QutritMatrix where
+lean/InfoGeometry/Quantum/QutritMobiusTripotentOrientationBridge.lean:242:def mobiusClassOrientationCharacter : Equiv.Perm (Fin 3) →* ℤˣ :=
+lean/InfoGeometry/Riemannian/ConeAction.lean:62:def coneConjugationMulAction (hv0_norm : Q v0 = 1) : MulAction (ClPlus Q) (ClPlus Q) where
+lean/InfoGeometry/RootSystem/D4CantorWeylAction.lean:67:def cantorWordWeylGroup : Subgroup (Equiv.Perm CantorWord) :=
+lean/InfoGeometry/RootSystem/D4CantorWeylAction.lean:123:def cantorWordOperatorGroup :
+lean/InfoGeometry/RootSystem/D4CantorWeylAction.lean:123:def cantorWordOperatorGroup : [continuation result: Subgroup]
+lean/InfoGeometry/RootSystem/D4DynkinOuterReflectionCandidate.lean:426:def outerDiagramMap (σ : Equiv.Perm (Fin 3)) (x : Lattice) : Lattice :=
+lean/InfoGeometry/RootSystem/D4DynkinOuterReflectionCandidate.lean:473:def outerDiagramHom (σ : Equiv.Perm (Fin 3)) : Lattice →+ Lattice where
+lean/InfoGeometry/RootSystem/D4DynkinOuterReflectionCandidate.lean:573:def outerDiagramEquiv (σ : Equiv.Perm (Fin 3)) : Lattice ≃+ Lattice where
+lean/InfoGeometry/RootSystem/D4DynkinOuterReflectionCandidate.lean:595:def outerDiagramAction : [continuation result: Equiv.Perm]
+lean/InfoGeometry/RootSystem/D4TrialityAction.lean:51:noncomputable def trialityAction (σ : Equiv.Perm (Fin 3)) :
+lean/InfoGeometry/RootSystem/D4WeylGroup.lean:20:def d4WeylGroup : Subgroup (Lattice ≃ Lattice) :=
+lean/InfoGeometry/RootSystem/ExceptionalRootLatticeWeyl.lean:29:def simpleReflection (τ : Tag) (i : Fin τ.rank) : Equiv.Perm (RootLattice τ) :=
+lean/InfoGeometry/RootSystem/ExceptionalRootLatticeWeyl.lean:45:def rootLatticeWeylGroup (τ : Tag) : Subgroup (Equiv.Perm (RootLattice τ)) :=
+lean/InfoGeometry/RootSystem/ExceptionalRootLatticeWeyl.lean:178:noncomputable def cantorWordWeylGroup (τ : Tag) : Subgroup (Equiv.Perm CantorWord) :=
+lean/InfoGeometry/RootSystem/ExceptionalRootOperatorWeyl.lean:100:def rootOperatorWeylGroup (τ : Tag) : [continuation result: Subgroup]
+lean/InfoGeometry/Routing/FunctionalRouteCore.lean:32:def inverseRoute (embed : Fin c → Fin n) (sigma : Equiv.Perm (Fin c))
+lean/InfoGeometry/Routing/PermutationPerfectMatching.lean:16:def permutationEdges {n : ℕ} (σ : Equiv.Perm (Vertex n)) : Set (Edge n) :=
+lean/InfoGeometry/Spectral/Algebra/QuotientGroup.lean:18:abbrev Carrier (N : Subgroup G) [N.Normal] := G ⧸ N
+lean/InfoGeometry/Spectral/Algebra/QuotientGroup.lean:20:def quotientMap (N : Subgroup G) [N.Normal] : G →* Carrier N :=
+lean/InfoGeometry/Spectral/Algebra/QuotientGroup.lean:30:def descend (N : Subgroup G) [N.Normal] (f : G →* H)
+lean/InfoGeometry/Spectral/Algebra/Subgroup.lean:18:abbrev Carrier (S : Subgroup G) := S
+lean/InfoGeometry/Spectral/Algebra/Subgroup.lean:20:def inclusion (S : Subgroup G) : S →* G := S.subtype
+lean/InfoGeometry/Spectral/Algebra/Subgroup.lean:24:def kernel (f : G →* H) : Subgroup G := f.ker
+lean/InfoGeometry/Spectral/Algebra/Subgroup.lean:26:def image (f : G →* H) : Subgroup H := f.range
+lean/InfoGeometry/Spectral/Algebra/Subgroup.lean:61:def map (f : G →* H) (S : Subgroup G) : Subgroup H := S.map f
+lean/InfoGeometry/Spectral/Algebra/Subgroup.lean:63:def comap (f : G →* H) (T : Subgroup H) : Subgroup G := T.comap f
+lean/InfoGeometry/SuperGrassmannian/TrialityGrothendieckGroupAction.lean:70:def ringReindex (σ : Equiv.Perm (Fin 3)) : TrialityRing A ≃+* TrialityRing A :=
+lean/InfoGeometry/SuperGrassmannian/TrialityGrothendieckGroupAction.lean:149:private def grothendieckActionAut : [continuation result: Equiv.Perm]
+lean/InfoGeometry/SuperGrassmannian/TrialityGrothendieckGroupAction.lean:174:def grothendieckAction : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Synthesis/FisherSouriauGroupInversePermutation.lean:74:def scorePermutation (σ : Equiv.Perm (Fin m)) :
+lean/InfoGeometry/Synthesis/FisherSouriauMoorePenrosePermutation.lean:32:def scorePermutationCLM (σ : Equiv.Perm (Fin m)) :
+lean/InfoGeometry/TKK/TKKFramework.lean:74:abbrev perm (σ : D4TrialityPerm) : Equiv.Perm (Fin 4) := σ.1
+lean/InfoGeometry/Topology/ArtinBraidS3Quotient.lean:22:def sigma1 : Equiv.Perm (Fin 3) := Equiv.swap 0 1
+lean/InfoGeometry/Topology/ArtinBraidS3Quotient.lean:25:def sigma2 : Equiv.Perm (Fin 3) := Equiv.swap 1 2
+lean/InfoGeometry/Topology/D4StarDiscreteColorFlow.lean:17:def permutation (F : ColorPermutationFlow) (t : ℤ) : Equiv.Perm ColorChannel :=
+lean/InfoGeometry/Topology/D4StarGraphContinuousAction.lean:39:def vertexPermutationHomeomorph (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/D4StarGraphContinuousAction.lean:45:def colorPermutationStarAction (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/D4StarGraphQuotient.lean:67:def quotientColorAction (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/D4StarQuotientContinuousAction.lean:39:def quotientColorHomeomorph (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/D4StarQuotientFactorization.lean:17:def boolFactorAction (σ : Equiv.Perm ColorChannel) : Bool → Bool :=
+lean/InfoGeometry/Topology/KleinBieberbachWeyl.lean:71:def KleinNormal : Subgroup KleinFree := Subgroup.normalClosure KleinRelators
+lean/InfoGeometry/Topology/KleinBottleCliffordGlide.lean:107:noncomputable def glideCliffordTotalPerm : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Topology/KleinBottleCliffordGlide.lean:123:noncomputable def transverseCliffordTotalPerm : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Topology/KleinBottleSpinorGlide.lean:131:def glideTotal : Equiv.Perm (Cover × Twistor4) where
+lean/InfoGeometry/Topology/KleinBottleSpinorGlide.lean:137:def transverseTotal : Equiv.Perm (Cover × Twistor4) where
+lean/InfoGeometry/Topology/KleinDeckRepresentation.lean:32:def planeAction (g : KleinDeckGroup) : Equiv.Perm PlanePoint where
+lean/InfoGeometry/Topology/MobiusSouriauThermodynamicFlow.lean:31:def pullEnergy (σ : Equiv.Perm ι) (energy : ι → ℝ) : ι → ℝ :=
+lean/InfoGeometry/Topology/PauliJungD4StarTopology.lean:24:def vertexPermutation (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/Pin55TopologicalGroups.lean:55:noncomputable def PinMinus55 : Subgroup Cl55Oppositeˣ :=
+lean/InfoGeometry/Topology/ToeplitzCuntzThreeTrialityBoundaryGroupoidColimit.lean:31:def boundaryPermutation (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/ToeplitzCuntzThreeTrialityBoundaryGroupoidColimit.lean:35:def boundaryPermutationHomeomorph (σ : Equiv.Perm ColorChannel) :
+lean/InfoGeometry/Topology/ToeplitzCuntzThreeTrialityBoundaryGroupoidColimit.lean:73:def stagePermutation (σ : Equiv.Perm ColorChannel) (w : TernaryWord n) :
+lean/InfoGeometry/Topology/ToeplitzCuntzThreeTrialityBoundaryGroupoidColimit.lean:77:def stageTrialityAction (σ : Equiv.Perm ColorChannel)
+lean/InfoGeometry/Twistor/Cl55CelestialDeckPhaseMonodromy.lean:121:def deckSignLinearRepresentation (n : ℕ) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Twistor/Cl55CelestialOrderedExchangePureBraidMonodromy.lean:22:def b3Perm0 : Equiv.Perm (Fin 3) := Equiv.swap 0 1
+lean/InfoGeometry/Twistor/Cl55CelestialOrderedExchangePureBraidMonodromy.lean:23:def b3Perm1 : Equiv.Perm (Fin 3) := Equiv.swap 1 2
+lean/InfoGeometry/Twistor/Cl55CelestialOrderedExchangePureBraidMonodromy.lean:39:def PureBraidGroup3 : Subgroup BoundaryBraidGroup := MonoidHom.ker b3ToPerm
+lean/InfoGeometry/Twistor/Cl55CelestialUnorderedConfiguration.lean:32:def celestialPermute (n : ℕ) (σ : Equiv.Perm (Fin n))
+lean/InfoGeometry/Twistor/ProjectiveNullUnorderedConfiguration.lean:25:def permute (Q : QuadraticForm K V) (n : ℕ) (σ : Equiv.Perm (Fin n))
+lean/InfoGeometry/Twistor/QutritPermutationAssociatedTwistorMonodromy.lean:60:def qutritPermutationRepresentation : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Twistor/RealMomentumTwistor.lean:35:def momentum (σ : Equiv.Perm ι) (x : ι → Vec22) (i : ι) : Vec22 :=
+lean/InfoGeometry/Twistor/RollingSpinorMobiusBridge.lean:350:def permEqualityHom {X : Type*} (σ : Equiv.Perm X) :
+lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean:76:def shiftEquiv (L : Matrix ι ι ℂ) : Equiv.Perm (Packet ι) where
+lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean:92:def mixEquiv (U : Matrix ι ι ℂ) (hleft : Uᴴ * U = 1) (hright : U * Uᴴ = 1) : [continuation result: Equiv.Perm]
+lean/InfoGeometry/Twistor/TwistorInternalSymmetry.lean:142:def kinematicStabilizer : Subgroup (Equiv.Perm (Packet ι)) where
+lean/InfoGeometry/Volume/FunctorialCocycleCalculus.lean:75:def determinantCocycle : MulActionCocycle (Matrix.GeneralLinearGroup n R) PUnit Rˣ :=
+lean/InfoGeometry/Volume/OrientedPfaffian.lean:42:noncomputable def partnerEquiv (M : PerfectMatching m) : Equiv.Perm (Fin (2 * m)) :=
+lean/InfoGeometry/Volume/OrientedPfaffian.lean:197:noncomputable def pairSlotSymmetryPerm (g : PairSlotSymmetry m) : [continuation result: Equiv.Perm]
+lean/Omega/CircleDimension/S4HurwitzConjugacySingleOrbit.lean:19:def s4HurwitzRepresentativeMonodromy : Subgroup (Equiv.Perm (Fin 4)) :=
+lean/Omega/Conclusion/ArtinDeterminantMinimalVisibleQuotient.lean:38:def N_det (D : conclusion_artin_determinant_minimal_visible_quotient_data) : Subgroup D.G := by
+lean/Omega/Conclusion/LeyangOffdiagonalTranspositionQuotient.lean:14:def permuteOrderedDistinctPair (σ : Equiv.Perm (Fin 4)) (p : OrderedDistinctPair4) :
+lean/Omega/Conclusion/LeyangOffdiagonalTranspositionQuotient.lean:21:def offDiagonalPairStabilizer (σ : Equiv.Perm (Fin 4)) : Prop :=
+lean/Omega/Conclusion/LeyangOffdiagonalTranspositionQuotient.lean:25:def offDiagonalTransposition : Equiv.Perm (Fin 4) := Equiv.swap 2 3
+lean/Omega/Conclusion/LeyangOffdiagonalTranspositionQuotient.lean:28:def offDiagonalTranspositionQuotient (σ : Equiv.Perm (Fin 4)) : Prop :=
+lean/Omega/Conclusion/LocalizedAnomalyPairwiseSkeletonDeterminesSpectrum.lean:17:def relabelLocalizedPairwiseData {r : ℕ} {α : Type*} (σ : Equiv.Perm (Fin r))
+lean/Omega/Conclusion/MonoidalJumpA2TorsionClassification.lean:17:def transposition : Equiv.Perm (Fin 2) :=
+lean/Omega/Conclusion/MonoidalJumpA2TorsionClassification.lean:26:def isMonoidalJump (f : Equiv.Perm (Fin 2) → ZMod 2) : Prop :=
+lean/Omega/Conclusion/MonoidalJumpA2TorsionClassification.lean:30:def orientationExtension (a : ZMod 2) (σ : Equiv.Perm (Fin 2)) : ZMod 2 :=
+lean/Omega/Conclusion/PrimeAdjunctionExactMultiplicativeBudget.lean:12:def primeAdjunctionPermute {r : ℕ} (p : Fin r → ℕ) (σ : Equiv.Perm (Fin r)) : Fin r → ℕ :=
+lean/Omega/Conclusion/PrimitiveMinimalCarrierQuotient.lean:24:def PrimitiveCarrierInvariant {G : Type*} [CommGroup G] (H : Subgroup G) (B : G → Complex) : Prop :=
+lean/Omega/Conclusion/PrimitiveMinimalCarrierQuotient.lean:28:def PrimitiveCarrierFactorsThroughQuotient {G : Type*} [CommGroup G] (H : Subgroup G)
+lean/Omega/Conclusion/PrimitiveMinimalCarrierQuotient.lean:33:def PrimitiveCarrierSupportOnQuotient {G X : Type*} [CommGroup G] (H : Subgroup G)
+lean/Omega/Conclusion/SoftcoreKroneckerSympowerDecomposition.lean:9:def permuteBitVec {q : ℕ} (σ : Equiv.Perm (Fin q)) (u : BitVec q) : BitVec q :=
+lean/Omega/Conclusion/Window6CanonicalMicrostateBoundaryCharacterCollapse.lean:25:def window6BoundarySwap1 : Equiv.Perm (Fin 64) :=
+lean/Omega/Conclusion/Window6CanonicalMicrostateBoundaryCharacterCollapse.lean:29:def window6BoundarySwap2 : Equiv.Perm (Fin 64) :=
+lean/Omega/Conclusion/Window6CanonicalMicrostateBoundaryCharacterCollapse.lean:33:def window6BoundarySwap3 : Equiv.Perm (Fin 64) :=
+lean/Omega/EA/FoldGroupoidAutChiSemidirectClassification.lean:11:def chiRigidBlockPermutations (m : Nat) : Subgroup (FoldBlockPermutation m) where
+lean/Omega/EA/FoldGroupoidZ2x2SectorByOrientation.lean:11:def permSignBit {α : Type*} [Fintype α] [DecidableEq α] (σ : Equiv.Perm α) : Bool :=
+lean/Omega/Folding/BinFoldGaugeDecomposition.lean:21:noncomputable def restrictGauge {m : ℕ} (σ : BinFoldGauge m) (x : Omega.X m) : [continuation result: Equiv.Perm]
+lean/Omega/Folding/BinFoldGaugeSign.lean:7:def binFoldGaugeFiberSign (d : ℕ) : Equiv.Perm (Fin d) →* ℤˣ :=
+lean/Omega/GU/BdryZ2JumpUniqueness.lean:8:noncomputable def signHom (k : ℕ) : Equiv.Perm (Fin k) →* ℤˣ :=
+lean/Omega/GU/BdryZ2JumpUniqueness.lean:19:noncomputable def trivHom (k : ℕ) : Equiv.Perm (Fin k) →* ℤˣ := 1
+lean/Omega/GU/FibTailP23S3ActionOnOrbitQuotient.lean:13:def normalizerDescend (σ : Equiv.Perm (Fin 3)) : Equiv.Perm OrbitQuotient23 :=
+lean/Omega/GU/FibTailP23S3ActionOnOrbitQuotient.lean:17:def s3Generator : Equiv.Perm (Fin 3) :=
+lean/Omega/GU/FibTailP23S3ActionOnOrbitQuotient.lean:21:def s3Reflection : Equiv.Perm (Fin 3) :=
+lean/Omega/GU/GroupJGEllipticTwoScaleMahlerMultiplicative.lean:23:def exponentialMahlerFactorization (D : GroupJGEllipticTwoScaleData) : Prop :=
+lean/Omega/GU/GroupJGPrimeRegisterPhaseBohrDense.lean:66:def GroupJGPrimeRegisterPhaseData.phaseImageDense (D : GroupJGPrimeRegisterPhaseData) : Prop :=
+lean/Omega/GU/TerminalWindow6Q6RootFieldPrimitiveNonsolvable.lean:13:def q6PointStabilizer : Subgroup (Equiv.Perm (Fin q6RootFieldDegree)) :=
+lean/Omega/GU/Window6Z2Z3ToZ6Readout.lean:18:def precomposePerm (σ : Equiv.Perm (Fin 3)) (x : Fin 3 → ZMod 2) : Fin 3 → ZMod 2 :=
+lean/Omega/GroupUnification/BdryS3ToS2BreakingByGeoAxis.lean:8:abbrev boundaryAxisStabilizer (i : Fin 3) := { σ : Equiv.Perm (Fin 3) // σ i = i }
+lean/Omega/GroupUnification/Foldbin6GeoStabilizerZ2.lean:40:def geoPerm6 : Equiv.Perm (Fin 6) :=
+lean/Omega/GroupUnification/Window6Delta34GeneratesSquares.lean:20:def squareUnitsSubgroup571 : Subgroup (ZMod 571)ˣ where
+lean/Omega/OperatorAlgebra/FoldEquivalenceAutSemidir.lean:13:noncomputable def inducedFoldPermFun {Ω X : Type} (Fold : Ω → X) (σ : Equiv.Perm Ω) (x : X) : X :=
+lean/Omega/OperatorAlgebra/FoldLiftGlobalSignFactorization.lean:16:def oddFiberVisiblePerm {m : ℕ} (d : Fin m → ℕ) (τ : FoldFiberNormalizer d) : [continuation result: Equiv.Perm]
+lean/Omega/POM/BlockConsistencyRateBlockReduction.lean:103:def schurWitnessSwap : Equiv.Perm (Fin 4) :=
+lean/Omega/POM/BlockConsistencyRateBlockReduction.lean:107:def permuteWeight {α : Type*} (σ : Equiv.Perm α) (w : α → ℝ) : α → ℝ :=
+lean/Omega/POM/FractranCommutativeVsAlgorithmicExternalization.lean:10:def fiberPermutationSubgroup {n : ℕ} {X : Type*} (π : Fin n → X) : Subgroup (Equiv.Perm (Fin n)) where
+lean/Omega/POM/MomentSymmetricPower.lean:10:def pom_moment_symmetric_power_permute {q : ℕ} (σ : Equiv.Perm (Fin q))
+lean/Omega/POM/MomqPermutationSymmetry.lean:10:def permutePureTensor {q : ℕ} {α : Type*} (σ : Equiv.Perm (Fin q))
+lean/Omega/POM/MomqPermutationSymmetry.lean:36:def permuteWeightedPureTensor {q : ℕ} {α : Type*} (σ : Equiv.Perm (Fin q))
+lean/Omega/POM/MomqPermutationSymmetry.lean:41:def permuteSummedTensorCollisionKernel {q : ℕ} {α : Type*} (σ : Equiv.Perm (Fin q))
+lean/Omega/POM/S3OrbitDecomposition.lean:10:def pom_s3_orbit_decomposition_act (π : Equiv.Perm (Fin 3))
+lean/Omega/POM/ToggleCoxeterRelationsPath.lean:70:def pathToggleGenerator (ell : ℕ) (i : Fin ell) : [continuation result: Equiv.Perm]
+lean/Omega/POM/ToggleCoxeterRelationsPath.lean:139:def pathToggleOperatorClosure (ell : ℕ) : [continuation result: Subgroup]
+lean/Omega/POM/ToggleGroupPathFullSymmetric.lean:13:abbrev togglePathGroup (ell : ℕ) : Subgroup (Equiv.Perm (PathIndSets ell)) :=
+lean/Omega/POM/ToggleScanLCMTensorization.lean:35:def productStep (D : pom_toggle_scan_lcm_tensorization_data) : Equiv.Perm D.productState where
+lean/Omega/RatioResultant/RatioFieldFullSymmetric.lean:30:def kernelSubgroup {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) : [continuation result: Subgroup]
+lean/Omega/SyncKernelWeighted/RealInput40BFKTheory.lean:10:def realInput40EssentialCyclePerm : Equiv.Perm (Fin 20) := finRotate 20
+lean/Omega/Zeta/SyncHatdeltaGaloisS6Generic.lean:19:def syncHatdeltaSheetCycle : Equiv.Perm (Fin 6) :=
+lean/Omega/Zeta/SyncHatdeltaGaloisS6Generic.lean:23:def syncHatdeltaSimpleBranchSwap : Equiv.Perm (Fin 6) :=
+lean/Omega/Zeta/SyncHatdeltaGaloisS6Generic.lean:27:def syncHatdeltaSpecializedPermutationClosure : Subgroup (Equiv.Perm (Fin 6)) :=
+lean/Omega/Zeta/XiTerminalZmLeyangMonodromyS4.lean:9:def xiLeyangQuarticFourCycle : Equiv.Perm (Fin 4) :=
+lean/Omega/Zeta/XiTerminalZmLeyangMonodromyS4.lean:13:def xiLeyangSimpleBranchTransposition : Equiv.Perm (Fin 4) :=
+lean/Omega/Zeta/XiTerminalZmLeyangMonodromyS4.lean:18:def xiLeyangGeometricMonodromyGroup : Subgroup (Equiv.Perm (Fin 4)) :=
+lean/Omega/Zeta/XiTerminalZmLeyangPerronP3InertiaPointStabilizer.lean:10:def xi_terminal_zm_leyang_perron_p3_inertia_point_stabilizer_three_cycle : [continuation result: Equiv.Perm]
+lean/Omega/Zeta/XiTerminalZmLeyangPerronP3InertiaPointStabilizer.lean:30:def xi_terminal_zm_leyang_perron_p3_inertia_point_stabilizer_transposition : [continuation result: Equiv.Perm]
+lean/Omega/Zeta/XiTerminalZmPuiseuxInfty4cycle.lean:20:def xi_terminal_zm_puiseux_infty_4cycle_monodromy : Equiv.Perm (Fin 4) :=
+lean/Omega/Zeta/XiTerminalZmS3RootRecoveryCoordinateAutomorphisms.lean:22:def xiTerminalZmSigmaPerm : Equiv.Perm (Fin 3) where
+lean/Omega/Zeta/XiTerminalZmS3RootRecoveryCoordinateAutomorphisms.lean:39:def xiTerminalZmIotaPerm : Equiv.Perm (Fin 3) where

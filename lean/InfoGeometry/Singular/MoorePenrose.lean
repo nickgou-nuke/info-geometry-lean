@@ -43,6 +43,34 @@ theorem mk
     IsMoorePenroseInverse A B :=
   ⟨h1, h2, h3, h4⟩
 
+/-- A self-adjoint idempotent operator is its own Moore--Penrose inverse in
+any associative star ring. -/
+theorem selfAdjointIdempotent_self_isMoorePenrose {P : R}
+    (hP : P * P = P) (hstar : star P = P) :
+    IsMoorePenroseInverse P P := by
+  refine mk ?_ ?_ ?_ ?_
+  · calc
+      P * P * P = P * P := congrArg (fun x : R => x * P) hP
+      _ = P := hP
+  · calc
+      P * P * P = P * P := congrArg (fun x : R => x * P) hP
+      _ = P := hP
+  · simp [hstar, hP]
+  · simp [hstar, hP]
+
+/-- A self-adjoint tripotent is its own Moore--Penrose inverse. This extends
+the projection case to reflexive operator sums whose square is an idempotent. -/
+theorem selfAdjointTripotent_self_isMoorePenrose {T : R}
+    (hT : T * T * T = T) (hstar : star T = T) :
+    IsMoorePenroseInverse T T := by
+  refine mk hT hT ?_ ?_
+  · calc
+      (T * T)† = T† * T† := by rw [star_mul]
+      _ = T * T := by rw [hstar]
+  · calc
+      (T * T)† = T† * T† := by rw [star_mul]
+      _ = T * T := by rw [hstar]
+
 theorem aba_eq_a (h : IsMoorePenroseInverse A B) : A * B * A = A := h.1
 theorem bab_eq_b (h : IsMoorePenroseInverse A B) : B * A * B = B := h.2.1
 theorem ab_adj_eq (h : IsMoorePenroseInverse A B) : (A * B)† = A * B := h.2.2.1

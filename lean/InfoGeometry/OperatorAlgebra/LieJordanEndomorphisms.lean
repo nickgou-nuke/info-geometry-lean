@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Core.IdempotentCartan
 
 /-!
 # Lie--Jordan endomorphisms without a commutativity hypothesis
@@ -16,6 +17,9 @@ No metric, torsion, or differential-geometric curvature is asserted by naming.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.LieJordan
+
+open InfoGeometry.Core.IdempotentCartan
+open InfoGeometry.Core.PeirceDecomposition
 
 variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
 
@@ -67,6 +71,70 @@ theorem minus_self (H : A) :
     minus R H H = -(LinearMap.mulRight R H + LinearMap.mulRight R H) := by
   ext X
   change (H * X - X * H) - (H * X + X * H) = -(X * H + X * H)
+  abel
+
+/-- The inner derivation of an idempotent has the Peirce kernel/range split
+as a native endomorphism: it kills the even part, while its square fixes the
+odd part. Together with `even_add_odd`, this is the algebraic Drazin split of
+`ad_p` without choosing coordinates or dividing by two. -/
+theorem idempotent_adjoint_peirce_split {p x : A} (hp : p * p = p) :
+    evenPart p x + oddPart p x = x ∧
+    lieOp R p (evenPart p x) = 0 ∧
+    lieOp R p (lieOp R p (oddPart p x)) = oddPart p x := by
+  have hpEven : p * evenPart p x = evenPart p x * p := by
+    simp only [evenPart, component11, component00, complementIdempotent]
+    noncomm_ring [hp, InfoGeometry.Core.PeirceDecomposition.idempotent_mul_nested p hp]
+  refine ⟨even_add_odd p x, ?_, ?_⟩
+  · change p * evenPart p x - evenPart p x * p = 0
+    exact sub_eq_zero.mpr hpEven
+  · change p * (p * oddPart p x - oddPart p x * p) -
+      (p * oddPart p x - oddPart p x * p) * p = oddPart p x
+    calc
+      _ = oddPart p (oddPart p x) :=
+        (odd_eq_double_commutator hp (oddPart p x)).symm
+      _ = oddPart p x := (projection_laws hp x).2.2.2
+
+/-- The two directed Peirce transition operators are square-zero root vectors
+for the idempotent's inner derivation: the `10` corner has weight `+1` and the
+`01` corner has weight `-1`. -/
+theorem idempotent_peirce_root_operator_actions {p x : A}
+    (hp : p * p = p) :
+    component10 p x * component10 p x = 0 ∧
+    component01 p x * component01 p x = 0 ∧
+    lieOp R p (component10 p x) = component10 p x ∧
+    lieOp R p (component01 p x) = -component01 p x := by
+  have hSquares := InfoGeometry.Core.IdempotentCartan.corners_square_zero hp x
+  have hForward : lieOp R p (component10 p x) = component10 p x := by
+    change p * component10 p x - component10 p x * p = component10 p x
+    simp only [component10, complementIdempotent]
+    noncomm_ring [hp,
+      InfoGeometry.Core.PeirceDecomposition.idempotent_mul_nested p hp]
+  have hBackward : lieOp R p (component01 p x) = -component01 p x := by
+    change p * component01 p x - component01 p x * p = -component01 p x
+    simp only [component01, complementIdempotent]
+    noncomm_ring [hp,
+      InfoGeometry.Core.PeirceDecomposition.idempotent_mul_nested p hp]
+  exact ⟨hSquares.1, hSquares.2, hForward, hBackward⟩
+
+/-- The plus/minus Lie--Jordan pair is dual under every cyclic additive
+functional applied to the product pairing. The functional is only a readout;
+the states and actions remain elements and endomorphisms of `A`. -/
+theorem plus_minus_cyclic_pairing_compatibility
+    (τ : A →+ R) (hτ : ∀ a b : A, τ (a * b) = τ (b * a))
+    (H S X Y : A) :
+    τ (plus R H S X * Y) + τ (X * minus R H S Y) = 0 := by
+  have hH : τ ((H * X) * Y) = τ ((X * Y) * H) := by
+    calc
+      τ ((H * X) * Y) = τ (H * (X * Y)) := by rw [mul_assoc]
+      _ = τ ((X * Y) * H) := hτ H (X * Y)
+  have hS : τ ((S * X) * Y) = τ ((X * Y) * S) := by
+    calc
+      τ ((S * X) * Y) = τ (S * (X * Y)) := by rw [mul_assoc]
+      _ = τ ((X * Y) * S) := hτ S (X * Y)
+  rw [plus_apply, minus_apply]
+  simp only [sub_mul, add_mul, mul_add, mul_sub, map_add, map_sub]
+  rw [hH, hS]
+  simp only [mul_assoc]
   abel
 
 /-- Commutators of inner derivations are inner derivations. -/

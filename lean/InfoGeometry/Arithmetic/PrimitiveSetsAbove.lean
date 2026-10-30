@@ -1102,6 +1102,41 @@ divisible by `d` and divide them by `d`.
 def primitiveDivisorQuotient (A : Finset ℕ) (d : ℕ) : Finset ℕ :=
   (A.filter fun a => d ∣ a).image fun a => a / d
 
+/-- Quotienting the singleton support `{2 * d}` by a positive divisor `d`
+leaves the fixed quotient support `{2}`. This exact fiber calculation is the
+finite obstruction to bounding an unscaled quotient-weight term by a quantity
+that tends to zero with `d`. -/
+theorem primitiveDivisorQuotient_doubleton {d : ℕ} (hd : 0 < d) :
+    primitiveDivisorQuotient {2 * d} d = {2} := by
+  ext m
+  simp only [primitiveDivisorQuotient, Finset.mem_image]
+  have hdiv : 2 * d / d = 2 := by
+    rw [Nat.mul_comm 2 d]
+    exact Nat.mul_div_right 2 hd
+  constructor
+  · rintro ⟨a, ha, hquot⟩
+    have hmem := (Finset.mem_filter.mp ha).1
+    have ha' : a = 2 * d := by
+      simpa only [Finset.mem_singleton] using hmem
+    subst a
+    rw [hdiv] at hquot
+    simpa using hquot.symm
+  · intro hm
+    have hm' : m = 2 := by simpa using hm
+    subst m
+    refine ⟨2 * d, ?_, hdiv⟩
+    apply Finset.mem_filter.mpr
+    constructor
+    · simp
+    · exact ⟨2, by ring⟩
+
+/-- The quotient support in the preceding lemma has a fixed positive primitive
+weight, independent of the size of `d`. -/
+theorem primitiveDivisorQuotient_doubleton_weight {d : ℕ} (hd : 0 < d) :
+    0 < primitiveWeightSum (primitiveDivisorQuotient {2 * d} d) := by
+  rw [primitiveDivisorQuotient_doubleton hd]
+  simpa [primitiveWeightSum] using primitiveWeight_pos (by norm_num : 1 < 2)
+
 /-- The fixed-`d` divisor fiber inside a finite support. -/
 def primitiveDivisorFiber (A : Finset ℕ) (d : ℕ) : Finset ℕ :=
   A.filter fun a => d ∣ a
@@ -2040,6 +2075,27 @@ def primitiveLogSquaredPairKernel (a d : ℕ) : ℝ :=
   else
     0
 
+/-- Summing the log-squared pair kernel over all divisors recovers the original
+primitive weight. This is an exact finite identity; it does not assert a bound
+for any restricted large-divisor tail. -/
+theorem primitiveLogSquaredPairKernel_divisor_sum {a : ℕ} (ha : 1 < a) :
+    ∑ d ∈ a.divisors, primitiveLogSquaredPairKernel a d = primitiveWeight a := by
+  have haR : (1 : ℝ) < (a : ℝ) := by exact_mod_cast ha
+  have hlog : 0 < Real.log (a : ℝ) := Real.log_pos haR
+  have haRne : (a : ℝ) ≠ 0 := ne_of_gt (by exact_mod_cast (Nat.zero_lt_of_lt ha))
+  have hlogne : Real.log (a : ℝ) ≠ 0 := ne_of_gt hlog
+  calc
+    (∑ d ∈ a.divisors, primitiveLogSquaredPairKernel a d)
+        = (∑ d ∈ a.divisors, realVonMangoldt d) /
+            ((a : ℝ) * (Real.log (a : ℝ)) ^ 2) := by
+          simp only [primitiveLogSquaredPairKernel, if_pos ha]
+          rw [Finset.sum_div]
+    _ = Real.log (a : ℝ) / ((a : ℝ) * (Real.log (a : ℝ)) ^ 2) := by
+          rw [sum_realVonMangoldt_divisors]
+    _ = primitiveWeight a := by
+          simp [primitiveWeight, ha]
+          field_simp [haRne, hlogne]
+
 /--
 Correct analytic input for the large-divisor lane.
 
@@ -2115,6 +2171,68 @@ def GoodDivisorSumChebyshevBound : Prop :=
         (fun d => realVonMangoldt d
           * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
       ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ)
+
+/-- The same proposed Chebyshev bound with only the threshold condition
+`2 < x₀` weakened to `0 < x₀`. -/
+def GoodDivisorSumChebyshevBoundWithoutLargeThreshold : Prop :=
+  ∀ {A : Finset ℕ} {x x₀ : ℕ} {ε : ℝ}, 0 < ε →
+    0 < x₀ →
+    1 ≤ x →
+    PrimitiveFinset A →
+    SupportedAboveFinset x A →
+    let D := A.biUnion (fun a => a.divisors)
+    let good := D.filter (fun d => x₀ ≤ max (x / d) 2)
+    Finset.sum good
+        (fun d => realVonMangoldt d
+          * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+      ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ)
+
+/-- The strict threshold in `GoodDivisorSumChebyshevBound` cannot be weakened
+to mere positivity. At `x₀ = 2`, `x = 1`, and the primitive support `{2}`, the
+good-divisor sum has a positive `d = 2` term, while `x / x₀ = 0`. -/
+theorem goodDivisorSumChebyshevBound_needs_large_threshold :
+    ¬ GoodDivisorSumChebyshevBoundWithoutLargeThreshold := by
+  intro hBound
+  let A : Finset ℕ := {2}
+  have hPrimitive : PrimitiveFinset A := by
+    intro a b ha hb hab
+    have ha' : a = 2 := by simpa [A] using ha
+    have hb' : b = 2 := by simpa [A] using hb
+    exact ha'.trans hb'.symm
+  have hSupported : SupportedAboveFinset 1 A := by
+    intro n hn
+    have hn' : n = 2 := by simpa [A] using hn
+    omega
+  let D := A.biUnion (fun a => a.divisors)
+  let good := D.filter (fun d => 2 ≤ max (1 / d) 2)
+  have hTwoMem : 2 ∈ good := by
+    simp [good, D, A]
+  let f : ℕ → ℝ := fun d =>
+    realVonMangoldt d * ((if d ∈ A then primitiveWeight d else 0) + (1 + (1 : ℝ)))
+  have hNonneg : ∀ d ∈ good, 0 ≤ f d := by
+    intro d _hdGood
+    dsimp [f]
+    have hWeight : 0 ≤ (if d ∈ A then primitiveWeight d else 0) := by
+      split_ifs <;> simp [primitiveWeight_nonneg]
+    exact mul_nonneg (realVonMangoldt_nonneg d)
+      (add_nonneg hWeight (by positivity))
+  have hTermPos : 0 < f 2 := by
+    rw [show f 2 = realVonMangoldt 2 *
+      ((if 2 ∈ A then primitiveWeight 2 else 0) + (1 + (1 : ℝ))) by rfl,
+      realVonMangoldt_apply_prime (by norm_num : Nat.Prime 2)]
+    have hLog : 0 < Real.log (2 : ℝ) := Real.log_pos (by norm_num)
+    have hBracket : 0 < (if 2 ∈ A then primitiveWeight 2 else 0) + (1 + (1 : ℝ)) := by
+      simp [A]
+      linarith [primitiveWeight_nonneg 2]
+    exact mul_pos hLog hBracket
+  have hPos : 0 < Finset.sum good f := by
+    exact lt_of_lt_of_le hTermPos (Finset.single_le_sum hNonneg hTwoMem)
+  have hBadBound := hBound (A := A) (x := 1) (x₀ := 2) (ε := 1)
+    (by norm_num) (by norm_num) (by norm_num) hPrimitive hSupported
+  change Finset.sum good f ≤
+    (1 + (1 : ℝ)) * (Real.log 4 + 4) * ((1 : ℕ) / 2 : ℕ) at hBadBound
+  norm_num at hBadBound
+  linarith
 
 /--
 Chebyshev/good-divisor bound.

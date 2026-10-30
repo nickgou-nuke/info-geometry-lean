@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Core.SuperGrassmannianSusy
+import InfoGeometry.Core.IdempotentTangent
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Data.ZMod.Basic
 
@@ -53,6 +54,18 @@ theorem matrix_reflection_anticommutation_not_tangent :
     fin_cases i <;> fin_cases j <;>
       norm_num [matrixBoundaryProjection, matrixBoundaryDirection, Matrix.mul_apply,
       Fin.sum_univ_succ] <;> decide
+
+/-- The same characteristic-two witness is rejected by the exact `adₚ²`
+criterion: its reflection anticommutator vanishes, but the direction is not
+fixed by the square of the inner adjoint action. -/
+theorem matrix_reflection_example_not_adjoint_square_fixed :
+    idempotentAdjoint matrixBoundaryProjection
+        (idempotentAdjoint matrixBoundaryProjection matrixBoundaryDirection) ≠
+      matrixBoundaryDirection := by
+  have h := matrix_reflection_anticommutation_not_tangent
+  intro had
+  exact h.2.2.1
+    ((tangent_iff_adjoint_square_eq_self h.1).2 had)
 
 #print axioms matrix_reflection_anticommutation_not_tangent
 

@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Core.PeirceGrading
 
 /-!
 # Drazin Projection Localization
@@ -60,7 +67,144 @@ theorem inverse_mul_element_mul_inverse :
     D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse :=
   D.inverse_element_inverse
 
+/-- Campbell--Meyer relations for the supplied Drazin inverse data. The
+regular part is expressed as the operator product `support * element`, so the
+statement remains valid in any associative ring without matrix or spectral
+coordinates. -/
+theorem campbellMeyer_relations :
+    D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse ∧
+    D.drazinInverse * D.element = D.element * D.drazinInverse ∧
+    D.drazinInverse * D.element * D.element = D.support * D.element := by
+  refine ⟨D.inverse_element_inverse, D.element_mul_inverse_eq_inverse_mul_element.symm, ?_⟩
+  calc
+    D.drazinInverse * D.element * D.element =
+        (D.drazinInverse * D.element) * D.element := by rw [mul_assoc]
+    _ = D.support * D.element := by
+      rw [D.inverse_mul_element_eq_support]
+
 end DrazinInverseData
+
+/-! ## Noncommutative Drazin--Moore--Penrose composition -/
+
+section DrazinMoorePenrose
+
+variable {A : Type*} [Ring A] [StarRing A]
+
+/-- The Drazin--Moore--Penrose composite, with multiplication order explicit. -/
+def drazinMoorePenroseComposite
+    (drazinInverse element moorePenroseInverse : A) : A :=
+  drazinInverse * element * moorePenroseInverse
+
+/-- Complementing an idempotent mass by a supported tripotent gives an
+involution. The hypotheses state the exact support laws; no matrix model or
+spectral interpretation is required. -/
+theorem complementaryMassTripotent_isInvolution {mass dirac : A}
+    (hmass : mass * mass = mass)
+    (hdirac : dirac * dirac = mass)
+    (hmass_dirac : mass * dirac = dirac)
+    (hdirac_mass : dirac * mass = dirac) :
+    ((1 - mass) + dirac) * ((1 - mass) + dirac) = 1 := by
+  noncomm_ring [hmass, hdirac, hmass_dirac, hdirac_mass]
+
+/-- The DMP composite is a reflexive generalized inverse. Its product with the
+original operator is the Drazin support. This holds in any associative star
+ring; no matrix coordinates or commutative coefficient ring are used. -/
+theorem drazinMoorePenroseComposite_reflexive
+    (D : DrazinInverseData A)
+    {moorePenroseInverse : A}
+    (hMP : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
+      D.element moorePenroseInverse) :
+    drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse *
+        D.element *
+        drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse =
+      drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse ∧
+    drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse *
+        D.element = D.support := by
+  have hDMP :
+      drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse *
+          D.element = D.support := by
+    unfold drazinMoorePenroseComposite
+    calc
+      D.drazinInverse * D.element * moorePenroseInverse * D.element =
+          D.drazinInverse * (D.element * moorePenroseInverse * D.element) := by
+            simp only [mul_assoc]
+      _ = D.drazinInverse * D.element := by rw [hMP.1]
+      _ = D.support := D.inverse_mul_element_eq_support
+  refine ⟨?_, hDMP⟩
+  calc
+    drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse *
+        D.element *
+        drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse =
+        D.support *
+          drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse := by
+            rw [hDMP]
+    _ = drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse := by
+      unfold drazinMoorePenroseComposite
+      calc
+        D.support * (D.drazinInverse * D.element * moorePenroseInverse) =
+            (D.drazinInverse * D.element * D.drazinInverse) *
+              D.element * moorePenroseInverse := by
+                rw [← D.inverse_mul_element_eq_support]
+                simp only [mul_assoc]
+        _ = D.drazinInverse * D.element * moorePenroseInverse := by
+              rw [D.inverse_element_inverse]
+
+/-- Multiplication of the Drazin--Moore--Penrose composite on the left by
+the original operator factors through the Drazin support followed by the
+original operator. This is the ordered form of the complementary DMP
+factorization and holds in every associative ring. -/
+theorem drazinMoorePenroseComposite_left_factorization
+    (D : DrazinInverseData A) (moorePenroseInverse : A) :
+    D.element *
+        drazinMoorePenroseComposite D.drazinInverse D.element moorePenroseInverse =
+      D.support * D.element * moorePenroseInverse := by
+  unfold drazinMoorePenroseComposite
+  calc
+    D.element * (D.drazinInverse * D.element * moorePenroseInverse) =
+        (D.element * D.drazinInverse) * D.element * moorePenroseInverse := by
+          noncomm_ring
+    _ = D.support * D.element * moorePenroseInverse := by
+          rw [D.element_mul_inverse_eq_support]
+
+/-- A Cartan reflection fixes a Drazin--Moore--Penrose composite whenever its
+idempotent commutes with each ordered factor.  The hypotheses are explicit:
+the Drazin data alone do not assert compatibility with an unrelated grading. -/
+theorem peirceReflection_drazinMoorePenroseComposite_invariant
+    {p d e m : A} (hp : p * p = p)
+    (hd : p * d = d * p) (he : p * e = e * p) (hm : p * m = m * p) :
+    InfoGeometry.Core.PeirceGrading.reflection p *
+        drazinMoorePenroseComposite d e m *
+        InfoGeometry.Core.PeirceGrading.reflection p =
+      drazinMoorePenroseComposite d e m := by
+  let x : A := d * e * m
+  change InfoGeometry.Core.PeirceGrading.reflection p * x *
+      InfoGeometry.Core.PeirceGrading.reflection p = x
+  have hcomm : p * x = x * p := by
+    calc
+      p * x = (p * d) * e * m := by dsimp [x]; noncomm_ring
+      _ = (d * p) * e * m := by rw [hd]
+      _ = d * (p * e) * m := by noncomm_ring
+      _ = d * (e * p) * m := by rw [he]
+      _ = d * e * (p * m) := by noncomm_ring
+      _ = d * e * (m * p) := by rw [hm]
+      _ = x * p := by dsimp [x]; noncomm_ring
+  have hreflect : InfoGeometry.Core.PeirceGrading.reflection p * x =
+      x * InfoGeometry.Core.PeirceGrading.reflection p := by
+    unfold InfoGeometry.Core.PeirceGrading.reflection
+    noncomm_ring [hcomm]
+  have hreflect_sq : InfoGeometry.Core.PeirceGrading.reflection p *
+      InfoGeometry.Core.PeirceGrading.reflection p = 1 := by
+    unfold InfoGeometry.Core.PeirceGrading.reflection
+    noncomm_ring [hp]
+  calc
+    InfoGeometry.Core.PeirceGrading.reflection p * x *
+        InfoGeometry.Core.PeirceGrading.reflection p =
+        x * InfoGeometry.Core.PeirceGrading.reflection p *
+          InfoGeometry.Core.PeirceGrading.reflection p := by rw [hreflect]
+    _ = x := by
+      rw [mul_assoc, hreflect_sq, mul_one]
+
+end DrazinMoorePenrose
 
 /-! ## Finite fiber-product Drazin assembly -/
 

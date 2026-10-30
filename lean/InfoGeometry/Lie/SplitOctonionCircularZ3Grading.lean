@@ -468,6 +468,34 @@ theorem circularAxialGrading_not_derivation :
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_smul,
     smul_add]
 
+/-- Exact Leibniz defect of the axial grading on the first same-polarity
+channel. The failure is a nonzero vector in the negative root sector, not an
+unstructured counterexample to derivation. -/
+theorem axialGrading_leibniz_defect_rootPlus_zero_one :
+    axialGrading (rootPlus 0 * rootPlus 1) -
+        axialGrading (rootPlus 0) * rootPlus 1 -
+        rootPlus 0 * axialGrading (rootPlus 1) =
+      (-3 : ℝ) • rootMinus 2 := by
+  rw [rootPlus_zero_mul_rootPlus_one]
+  change (1 / 2 : ℝ) • ellCommutator (rootMinus 2) -
+      ((1 / 2 : ℝ) • ellCommutator (rootPlus 0)) * rootPlus 1 -
+      rootPlus 0 * ((1 / 2 : ℝ) • ellCommutator (rootPlus 1)) = _
+  rw [ellCommutator_rootMinus, ellCommutator_rootPlus,
+    ellCommutator_rootPlus]
+  simp only [smul_smul]
+  rw [show (1 / 2 : ℝ) * (-2) = -1 by norm_num,
+    show (1 / 2 : ℝ) * 2 = 1 by norm_num]
+  simp only [one_smul, neg_one_smul]
+  rw [rootPlus_zero_mul_rootPlus_one]
+  module
+
+theorem axialGrading_leibniz_defect_rootPlus_zero_one_ne_zero :
+    axialGrading (rootPlus 0 * rootPlus 1) -
+        axialGrading (rootPlus 0) * rootPlus 1 -
+        rootPlus 0 * axialGrading (rootPlus 1) ≠ 0 := by
+  rw [axialGrading_leibniz_defect_rootPlus_zero_one]
+  exact smul_ne_zero (by norm_num) rootMinus_two_ne_zero
+
 theorem rootPlus_associator_zero_one_two :
     (rootPlus 0 * rootPlus 1) * rootPlus 2 -
         rootPlus 0 * (rootPlus 1 * rootPlus 2) =

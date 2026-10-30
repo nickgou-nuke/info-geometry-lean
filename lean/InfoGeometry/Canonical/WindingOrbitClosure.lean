@@ -14,14 +14,13 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.WindingOrbitClosure
 
-Formalization of the topological winding number $N$ in the $Cl(1,1)$ operator algebra.
+Formalization of integer-indexed clock shifts in the $Cl(1,1)$ operator
+algebra. For generators commuting with the clock axis, the exponential is
+periodic under shifts by integer multiples of $2\pi$.
 
-This module implements the Drazin-branch covering map for the modular generator,
-grounding the $2\pi N$ periodicity of the modular clock entirely within the
-real geometric domain.
-
-The clock tick $N$ represents the winding around the modular singularity,
-mapping to the Drazin index of the operator flow.
+The parameter `N` is an integer branch index in this algebraic construction.
+This module does not define a topological winding invariant or a map from the
+branch index to a Drazin index.
 -/
 
 namespace InfoGeometry.Canonical.WindingOrbitClosure
@@ -57,22 +56,12 @@ def clockAxis (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Comp
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   (modular_j (E := E)).comp (spectral_epsilon (E := E))
 
-/--
-The multi-branched modular generator (The Drazin-Branch Covering Map).
-
-$K_N = K_{principal} + 2\pi N J \epsilon$
-
-Where:
-- `K_principal` is the base modular Hamiltonian (regular core).
-- `N` is the Winding Number (Clock Tick).
--/
+/-- Integer-indexed shift of a generator along the clock axis by `2π N`. -/
 @[rep_depth transport]
 def multiBranchedGenerator (K : EndH) (N : ℤ) : EndH :=
   K + (2 * Real.pi * (N : ℝ)) • clockAxis H
 
-/--
-The topo-shift between adjacent winding branches.
--/
+/-- The integer-indexed clock-axis shift at branch index `N`. -/
 @[rep_depth transport]
 def topoShift (N : ℤ) : EndH :=
   (2 * Real.pi * (N : ℝ)) • clockAxis H
@@ -88,9 +77,7 @@ theorem topoShift_commute_base
   unfold topoShift
   exact hComm.smul_right (2 * Real.pi * (N : ℝ))
 
-/--
-The discrete topo-shift between winding branches $N$ and $N+1$ is additive.
--/
+/-- Increasing the branch index by one adds one `2π` clock-axis shift. -/
 theorem multiBranchedGenerator_shift
     (K : EndH) (N : ℤ) :
     multiBranchedGenerator K (N + 1) =

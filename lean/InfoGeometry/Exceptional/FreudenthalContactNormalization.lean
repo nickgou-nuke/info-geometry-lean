@@ -11,9 +11,11 @@ import InfoGeometry.Exceptional.FreudenthalSymplecticContactLieAlgebra
 Contract: perturb two coefficients in the existing actual five-graded contact
 bracket, keeping its rank-two operator and extreme-grade actions unchanged.
 Compute its `(-1,-1,+1)` Leibniz defect on arbitrary full Freudenthal charges.
-Fixing either existing coefficient forces the other. No simultaneous uniqueness
-claim is made: on a two-dimensional charge space the two defects are dependent.
-No exceptional Lie algebra identification or extra cubic law is used.
+Fixing either existing coefficient forces the other. On a nontrivial Jordan
+module, vanishing of the defect for all charges forces both standard
+coefficients. The unconditional statement must retain the two-dimensional
+degenerate case, where the two defect terms are dependent. No exceptional Lie
+algebra identification or extra cubic law is used.
 
 Search/reuse: the contact bracket, faithful representation, and Lie structure
 are owned by FreudenthalSymplecticContactRepresentation/ContactLieAlgebra.
@@ -98,6 +100,42 @@ theorem contactMixedJacobiMinus_fixed_scalar_iff (d : ℝ) :
     change 2 + d = 0 at ha
     linarith
   · rintro rfl x y z
+    rw [contactMixedJacobiMinus_eq]
+    norm_num
+
+/-- On a nontrivial Jordan module, universal vanishing of the mixed Jacobi
+defect uniquely forces the two coefficients of the native contact bracket.
+The nonzero Jordan direction isolates `d`; the existing scalar-charge witness
+then isolates `c`. -/
+theorem contactMixedJacobiMinus_vanishes_iff_of_nontrivial [Nontrivial J]
+    (c d : ℝ) :
+    (∀ x y z : FreudenthalCharge J, contactMixedJacobiMinus D c d x y z = 0) ↔
+      c = 1 ∧ d = -2 := by
+  constructor
+  · intro h
+    obtain ⟨j, hj⟩ := exists_ne (0 : J)
+    let x₀ : FreudenthalCharge J := alphaCharge
+    let y₀ : FreudenthalCharge J := betaCharge
+    let z₀ : FreudenthalCharge J := ⟨0, 0, j, 0⟩
+    have hzero := h x₀ y₀ z₀
+    rw [contactMixedJacobiMinus_eq] at hzero
+    have hcomponent := congrArg (fun q : FreudenthalCharge J => q.x) hzero
+    have hzeroX : (0 : FreudenthalCharge J).x = 0 := rfl
+    have hsmul : (2 + d) • j = 0 := by
+      simpa [-smul_eq_zero, hzeroX, x₀, y₀, z₀, alphaCharge, betaCharge,
+        FreudenthalCharge.symplecticForm, coordinateEquiv] using hcomponent
+    have hcoef : 2 + d = 0 := by
+      rcases smul_eq_zero.mp hsmul with hcoef | hvec
+      · exact hcoef
+      · exact (hj hvec).elim
+    have hd : d = -2 := by linarith
+    have hfixed : ∀ x y z : FreudenthalCharge J,
+        contactMixedJacobiMinus D c (-2) x y z = 0 := by
+      intro x y z
+      simpa [hd] using h x y z
+    have hc := (contactMixedJacobiMinus_fixed_heisenberg_iff D c).mp hfixed
+    exact ⟨hc, hd⟩
+  · rintro ⟨rfl, rfl⟩ x y z
     rw [contactMixedJacobiMinus_eq]
     norm_num
 

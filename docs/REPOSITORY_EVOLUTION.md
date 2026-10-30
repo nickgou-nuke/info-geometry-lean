@@ -36,8 +36,11 @@ refuses to overwrite source inputs, templates or the companion viewer.
 
 Choose the desired date interval; the example covers 27 October 2025 through
 27 October 2026, with an exclusive upper boundary. The exporter reads current
-`refs/remotes/origin/*` and commit-valued tags without fetching or modifying
-the checkout. Update the desired refs separately before exporting.
+local branches (`refs/heads/*`), all remote-tracking branches
+(`refs/remotes/*`), and commit-valued tags without fetching or modifying the
+checkout. This includes locally retained archive and review refs when present;
+inspect the output's `source.refs` and `ref_scope` to see exactly which tips
+contributed. Update the desired refs separately before exporting.
 
 It collects reachable history before filtering by committer time. A skewed
 timestamp therefore cannot prune an ancestor traversal. Outside-window parents

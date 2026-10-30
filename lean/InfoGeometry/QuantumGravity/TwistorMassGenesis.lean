@@ -10,21 +10,22 @@ open InfoGeometry.Canonical.TwoSheetStokesCoordinates
 noncomputable section
 
 /-!
-# Epistemic Purification: Twistor Mass Genesis
-This file implements the strict Categorical Colimit Continuum mandate. 
-It rejects analytical continuations into ℝ and constructs the mass gap purely 
-from the topological properties of the Amplituhedron tensor tower limit.
+# Finite-stage nonzero witnesses in the twistor matrix tower
+
+This file defines a finite-stage nonzero-carrier predicate and proves that
+injective stage inclusions preserve its witnesses. Its universal predicate
+`topological_mass_gap` quantifies over stage zero as well as positive stages;
+the zero-stage audit refutes that universal predicate. This file does not
+construct a topological invariant or a spectral mass gap on the colimit.
 -/
 
-/-- ARCHETYPE A_0: The Finite Non-Commutative Boundary.
-    At finite stage `n`, the twistor phase space possesses a non-vanishing 
-    algebraic obstruction. -/
+/-- A finite stage has a nonzero matrix witness. This predicate is false at
+stage zero, whose column index is empty. -/
 def finite_obstruction_class (n : ℕ) : Prop :=
   ∃ (Z : AmplituhedronAlgebra n), Z ≠ 0
 
-/-- ARCHETYPE A_1: The Categorical Colimit Injection.
-    The obstruction does not analytically decay; it is categorically pushed 
-    into the next colimit stage via the face inclusion. -/
+/-- The injective finite-stage inclusion transports any existing nonzero
+matrix witness to the next stage. -/
 theorem colimit_injection_preserves_obstruction (n : ℕ) 
     (h_obs : finite_obstruction_class n) :
     finite_obstruction_class (n + 1) := by
@@ -41,10 +42,9 @@ theorem colimit_injection_preserves_obstruction (n : ℕ)
 def CPT_grading_involution (q : StokesQuad) : StokesQuad :=
   stokesKreinAdjointHomeomorph q
 
-/-- ARCHETYPE A_3: The A_∞ Limit Mass Gap.
-    Mass is strictly defined as the survival of the obstruction class 
-    at the infinite boundary of the tensor tower. It is a topological defect, 
-    not a classical real number. -/
+/-- Legacy universal finite-stage nontriviality predicate. It includes stage
+zero and is therefore false; it is not a colimit or spectral mass-gap
+statement. See `TopologicalMassGapZeroStageAudit.not_topological_mass_gap`. -/
 def topological_mass_gap : Prop :=
   ∀ n, finite_obstruction_class n
 

@@ -20,9 +20,14 @@ def centerTwoRank : CompactConnectedSimpleLieType → ℕ
   | .F4 => 0
   | .G2 => 0
 
-private theorem centerTwoRank_lt_three (T : CompactConnectedSimpleLieType) :
+theorem centerTwoRank_lt_three (T : CompactConnectedSimpleLieType) :
     centerTwoRank T < 3 := by
   cases T <;> decide
+
+/-- No type in the encoded compact-simple classification has central 2-rank three. -/
+theorem centerTwoRank_ne_three (T : CompactConnectedSimpleLieType) :
+    centerTwoRank T ≠ 3 := by
+  exact Nat.ne_of_lt (centerTwoRank_lt_three T)
 
 /-- Data of a window-`6` envelope candidate whose three commuting boundary sheet-flips would have
 to survive as central order-`2` directions inside a compact connected simple group. -/

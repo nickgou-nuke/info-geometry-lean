@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,6 +21,19 @@ def normalize_repo_output(root: Path, raw: str | Path) -> Path:
 def load_json_dict(path: Path) -> dict[str, Any]:
     raw = json.loads(path.read_text(encoding="utf-8"))
     return raw if isinstance(raw, dict) else {}
+
+
+def _sha256_file(path: Path) -> str | None:
+    try:
+        if not path.is_file():
+            return None
+        digest = hashlib.sha256()
+        with path.open("rb") as stream:
+            for block in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(block)
+        return digest.hexdigest()
+    except OSError:
+        return None
 
 
 def load_decl_index_meta(path: Path) -> dict[str, Any] | None:
@@ -61,13 +75,24 @@ def should_skip_decl_refresh(
     namespace: str,
     schema_version: int = EXPECTED_INDEXER_SCHEMA_VERSION,
 ) -> bool:
-    return meta_matches_decl_refresh(
-        load_decl_index_meta(meta_path),
+    meta = load_decl_index_meta(meta_path)
+    if not meta_matches_decl_refresh(
+        meta,
         current_hash=current_hash,
         current_source_hash=current_source_hash,
         import_root=import_root,
         namespace=namespace,
         schema_version=schema_version,
+    ):
+        return False
+    # Legacy metadata is refreshed once to gain byte-level output receipts.
+    output_hashes = meta.get("outputHashes") if meta else None
+    if meta.get("outputHashAlgorithm") != "sha256" or not isinstance(output_hashes, dict):
+        return False
+    return all(
+        (actual := _sha256_file(meta_path.parent / name)) is not None
+        and output_hashes.get(name) == actual
+        for name in ("decls.jsonl", "edges.jsonl")
     )
 
 
@@ -76,6 +101,7 @@ def stamp_decl_index_meta(
     *,
     olean_hash: str = "",
     source_hash: str = "",
+    output_paths: dict[str, Path] | None = None,
     timestamp: datetime | None = None,
 ) -> dict[str, Any] | None:
     meta = load_decl_index_meta(meta_path)
@@ -86,6 +112,14 @@ def stamp_decl_index_meta(
         meta["oleanHash"] = olean_hash
     if source_hash:
         meta["sourceHash"] = source_hash
+    if output_paths is not None:
+        output_hashes: dict[str, str] = {}
+        for name, output_path in sorted(output_paths.items()):
+            digest = _sha256_file(output_path)
+            if digest is not None:
+                output_hashes[name] = digest
+        meta["outputHashAlgorithm"] = "sha256"
+        meta["outputHashes"] = output_hashes
     meta_path.write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     return meta
 

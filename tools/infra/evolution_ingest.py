@@ -5,7 +5,8 @@ The input file is read twice in bounded batches: first to create commit
 vertices, then to create parent edges after all vertices exist. Credentials use
 the repository Arango environment loader; no secret is embedded in source.
 Writes are append/upsert by default. ``--replace`` explicitly truncates only
-the six ``evo_*`` collections owned by this importer.
+the six ``evo_*`` collections owned by this importer. ``--preserve-existing``
+adds missing keys while leaving all existing documents unchanged.
 """
 from __future__ import annotations
 
@@ -56,10 +57,10 @@ def _ensure(db, name: str, *, edge: bool = False, replace: bool = False) -> None
     db.create_collection(name, edge=edge)
 
 
-def _import(db, collection: str, batch: list[dict]) -> None:
+def _import(db, collection: str, batch: list[dict], *, preserve_existing: bool = False) -> None:
     if batch:
         result = db.collection(collection).import_bulk(
-            batch, overwrite=False, on_duplicate="replace", sync=False
+            batch, overwrite=False, on_duplicate="ignore" if preserve_existing else "replace", sync=False
         )
         if int(result.get("errors", 0) or 0) > 0:
             raise RuntimeError(f"Arango import errors in {collection}: {result}")
@@ -73,7 +74,7 @@ def _path_key(row: dict) -> str:
 
 
 def _ingest_file_stream(db, path: Path, *, collection: str, edge: bool,
-                        batch_size: int, transform, replace: bool = False) -> int:
+                        batch_size: int, transform, preserve_existing: bool = False) -> int:
     _ensure(db, collection, edge=edge)
     batch: list[dict] = []
     total = 0
@@ -81,19 +82,24 @@ def _ingest_file_stream(db, path: Path, *, collection: str, edge: bool,
         for row in _records(stream):
             batch.append(transform(row))
             if len(batch) >= batch_size:
-                _import(db, collection, batch)
+                _import(db, collection, batch, preserve_existing=preserve_existing)
                 total += len(batch)
                 batch = []
     if batch:
-        _import(db, collection, batch)
+        _import(db, collection, batch, preserve_existing=preserve_existing)
         total += len(batch)
     return total
 
 
 def ingest(db, commit_path: Path, label_path: Path | None = None,
            paths_path: Path | None = None, numstat_path: Path | None = None,
-           *, batch_size: int = 1000, replace: bool = False) -> dict[str, int]:
+           *, batch_size: int = 1000, replace: bool = False,
+           preserve_existing: bool = False) -> dict[str, int]:
     """Write commit/label vertices, then lineage edges, using O(batch) RAM."""
+    if replace and preserve_existing:
+        raise ValueError("replace and preserve_existing are mutually exclusive")
+    if batch_size < 1:
+        raise ValueError("batch_size must be positive")
     names = ("evo_commits", "evo_labels", "evo_parent_edges",
              "evo_files", "evo_commit_files", "evo_file_numstats")
     _ensure(db, names[0], replace=replace)
@@ -123,9 +129,10 @@ def ingest(db, commit_path: Path, label_path: Path | None = None,
                     if label.get("sha") != commit.get("sha"):
                         raise ValueError("label/commit order or SHA mismatch")
                     label_batch.append({"_key": label["sha"], **label})
-            _import(db, names[0], [{"_key": row["sha"], **row} for row in commits])
+            _import(db, names[0], [{"_key": row["sha"], **row} for row in commits],
+                    preserve_existing=preserve_existing)
             if label_batch:
-                _import(db, names[1], label_batch)
+                _import(db, names[1], label_batch, preserve_existing=preserve_existing)
             counts["commits"] += len(commits)
             counts["labels"] += len(label_batch)
         if label_records is not None and next(label_records, None) is not None:
@@ -149,11 +156,11 @@ def ingest(db, commit_path: Path, label_path: Path | None = None,
                     "parent_slot": parent_slot,
                 })
                 if len(edge_batch) >= batch_size:
-                    _import(db, names[2], edge_batch)
+                    _import(db, names[2], edge_batch, preserve_existing=preserve_existing)
                     counts["parent_edges"] += len(edge_batch)
                     edge_batch = []
         if edge_batch:
-            _import(db, names[2], edge_batch)
+            _import(db, names[2], edge_batch, preserve_existing=preserve_existing)
             counts["parent_edges"] += len(edge_batch)
     if paths_path:
         def file_doc(row: dict) -> dict:
@@ -164,7 +171,7 @@ def ingest(db, commit_path: Path, label_path: Path | None = None,
 
         counts["files"] = _ingest_file_stream(
             db, paths_path, collection="evo_files", edge=False,
-            batch_size=batch_size, transform=file_doc,
+            batch_size=batch_size, transform=file_doc, preserve_existing=preserve_existing,
         )
 
         def commit_file_edge(row: dict) -> dict:
@@ -181,7 +188,7 @@ def ingest(db, commit_path: Path, label_path: Path | None = None,
 
         counts["commit_files"] = _ingest_file_stream(
             db, paths_path, collection="evo_commit_files", edge=True,
-            batch_size=batch_size, transform=commit_file_edge,
+            batch_size=batch_size, transform=commit_file_edge, preserve_existing=preserve_existing,
         )
     if numstat_path:
         def numstat_doc(row: dict) -> dict:
@@ -193,7 +200,7 @@ def ingest(db, commit_path: Path, label_path: Path | None = None,
 
         counts["file_numstats"] = _ingest_file_stream(
             db, numstat_path, collection="evo_file_numstats", edge=False,
-            batch_size=batch_size, transform=numstat_doc,
+            batch_size=batch_size, transform=numstat_doc, preserve_existing=preserve_existing,
         )
     return counts
 
@@ -208,7 +215,11 @@ def main() -> int:
     parser.add_argument("--database", default=None)
     parser.add_argument("--replace", action="store_true",
                         help="truncate only the six evo_* collections")
+    parser.add_argument("--preserve-existing", action="store_true",
+                        help="insert missing keys only; preserve existing documents including annotations")
     args = parser.parse_args()
+    if args.replace and args.preserve_existing:
+        parser.error("--replace and --preserve-existing are mutually exclusive")
     if args.batch_size < 1:
         parser.error("--batch-size must be positive")
     load_repo_arango_env(REPO_ROOT)
@@ -221,8 +232,10 @@ def main() -> int:
     client = ArangoClient(hosts=config["endpoint"])
     db = client.db(database, username=config["user"], password=config["password"])
     counts = ingest(db, args.commits, args.labels, args.paths, args.numstat,
-                    batch_size=args.batch_size, replace=args.replace)
-    print(json.dumps({"database": database, **counts}, sort_keys=True))
+                    batch_size=args.batch_size, replace=args.replace,
+                    preserve_existing=args.preserve_existing)
+    print(json.dumps({"database": database, "countSemantics": "input_rows_attempted_not_new_documents",
+                      "preserveExisting": args.preserve_existing, **counts}, sort_keys=True))
     return 0
 
 

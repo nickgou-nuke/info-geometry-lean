@@ -69,8 +69,18 @@ theorem positive_projector_not_square_zero : Pplus * Pplus ≠ 0 := by
   have hentry := congrArg (fun matrix : FiniteSpin.Mat2R => matrix 0 0) hequal
   norm_num [Pplus, sqJ] at hentry
 
-theorem complementary_projectors_not_CAR : Pplus * Pminus + Pminus * Pplus ≠ 1 := by
+/-- The complementary split idempotents are orthogonal, so their mixed
+anticommutator is zero. This is the exact relation for the projector pair;
+the unit anticommutator belongs to the distinct null-mode pair `NPlus`,
+`NMinus`. -/
+theorem complementary_projectors_mixed_anticommutator_zero :
+    Pplus * Pminus + Pminus * Pplus = 0 := by
+  rw [Pplus_mul_Pminus, Pminus_mul_Pplus]
   simp
+
+theorem complementary_projectors_not_CAR : Pplus * Pminus + Pminus * Pplus ≠ 1 := by
+  rw [complementary_projectors_mixed_anticommutator_zero]
+  norm_num
 
 theorem mixed_generator_discriminant (angle rapidity : ℝ) :
     Matrix.trace (angle • sqI + rapidity • sqJ) ^ 2 -

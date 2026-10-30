@@ -160,6 +160,17 @@ theorem chiralAnomaly_eq_zero_of_projectorMismatch_eq_zero
   rw [chiralAnomaly_eq_mismatch_commutator_metric]
   simp [hΔ]
 
+/-- The anomaly vanishes exactly when the projector mismatch commutes with
+the metric projector. Vanishing mismatch is sufficient, but not required. -/
+@[rep_depth krein]
+theorem chiralAnomaly_eq_zero_iff_projectorMismatch_commutes_metric
+    {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) :
+    chiralAnomaly a a_d a_mp = 0 ↔
+      projectorMismatch a a_d a_mp * metricProjector a a_mp =
+        metricProjector a a_mp * projectorMismatch a a_d a_mp := by
+  rw [chiralAnomaly_eq_mismatch_commutator_metric]
+  exact sub_eq_zero
+
 /-- Vanishing mismatch is equivalent to projector equality. -/
 @[rep_depth krein]
 theorem projectorMismatch_eq_zero_iff

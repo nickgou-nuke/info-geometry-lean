@@ -1,6 +1,7 @@
 """Tests for tools/infra/artifacts.py — JSON loading, meta matching, and index helpers."""
 from __future__ import annotations
 
+import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -209,11 +210,44 @@ def test_meta_matches_false_on_empty_hash() -> None:
 
 def test_should_skip_returns_true_when_meta_matches(tmp_path: Path) -> None:
     meta_path = tmp_path / "meta.json"
+    decls = tmp_path / "decls.jsonl"
+    edges = tmp_path / "edges.jsonl"
+    decls.write_text('{"name":"A"}\n', encoding="utf-8")
+    edges.write_text("", encoding="utf-8")
+    meta = _good_meta()
+    meta["outputHashAlgorithm"] = "sha256"
+    meta["outputHashes"] = {
+        "decls.jsonl": hashlib.sha256(decls.read_bytes()).hexdigest(),
+        "edges.jsonl": hashlib.sha256(edges.read_bytes()).hexdigest(),
+    }
     meta_path.write_text(
-        json.dumps(_good_meta()),
+        json.dumps(meta),
         encoding="utf-8",
     )
     assert should_skip_decl_refresh(
+        meta_path,
+        current_hash="hash_abc",
+        import_root="InfoGeometry.All",
+        namespace="InfoGeometry",
+    )
+
+
+def test_should_skip_rejects_tampered_decl_export(tmp_path: Path) -> None:
+    meta_path = tmp_path / "meta.json"
+    decls = tmp_path / "decls.jsonl"
+    edges = tmp_path / "edges.jsonl"
+    decls.write_text('{"name":"A"}\n', encoding="utf-8")
+    edges.write_text("", encoding="utf-8")
+    meta = _good_meta()
+    meta["outputHashAlgorithm"] = "sha256"
+    meta["outputHashes"] = {
+        "decls.jsonl": hashlib.sha256(decls.read_bytes()).hexdigest(),
+        "edges.jsonl": hashlib.sha256(edges.read_bytes()).hexdigest(),
+    }
+    meta_path.write_text(json.dumps(meta), encoding="utf-8")
+    decls.write_text('{"name":"changed"}\n', encoding="utf-8")
+
+    assert not should_skip_decl_refresh(
         meta_path,
         current_hash="hash_abc",
         import_root="InfoGeometry.All",
@@ -241,6 +275,20 @@ def test_should_skip_returns_false_when_hash_changes(tmp_path: Path) -> None:
     )
 
 
+def test_should_skip_refreshes_legacy_meta_without_output_receipt(tmp_path: Path) -> None:
+    meta_path = tmp_path / "meta.json"
+    meta_path.write_text(json.dumps(_good_meta()), encoding="utf-8")
+    (tmp_path / "decls.jsonl").write_text("{}\n", encoding="utf-8")
+    (tmp_path / "edges.jsonl").write_text("", encoding="utf-8")
+
+    assert not should_skip_decl_refresh(
+        meta_path,
+        current_hash="hash_abc",
+        import_root="InfoGeometry.All",
+        namespace="InfoGeometry",
+    )
+
+
 # ---------------------------------------------------------------------------
 # stamp_decl_index_meta
 # ---------------------------------------------------------------------------
@@ -261,6 +309,31 @@ def test_stamp_writes_meta_json(tmp_path: Path) -> None:
     data = json.loads(meta_path.read_text())
     assert data["oleanHash"] == "stamped_hash"
     assert "timestamp" in data
+
+
+def test_stamp_binds_decl_export_output_bytes(tmp_path: Path) -> None:
+    index_dir = tmp_path / "index"
+    index_dir.mkdir()
+    meta_path = index_dir / "meta.json"
+    meta_path.write_text(json.dumps({"schemaVersion": EXPECTED_INDEXER_SCHEMA_VERSION}),
+                         encoding="utf-8")
+    decls = index_dir / "decls.jsonl"
+    edges = index_dir / "edges.jsonl"
+    decls.write_text('{"name":"A"}\n', encoding="utf-8")
+    edges.write_text("", encoding="utf-8")
+
+    stamp_decl_index_meta(meta_path, output_paths={
+        "decls.jsonl": decls,
+        "edges.jsonl": edges,
+        "absent.jsonl": index_dir / "absent.jsonl",
+    })
+
+    data = json.loads(meta_path.read_text())
+    assert data["outputHashAlgorithm"] == "sha256"
+    assert data["outputHashes"] == {
+        "decls.jsonl": hashlib.sha256(decls.read_bytes()).hexdigest(),
+        "edges.jsonl": hashlib.sha256(edges.read_bytes()).hexdigest(),
+    }
 
 
 def test_stamp_creates_no_file_when_meta_missing(tmp_path: Path) -> None:

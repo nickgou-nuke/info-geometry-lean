@@ -79,7 +79,7 @@ def topological(records):
 def collect_history(repo):
     refs, ignored = [], []
     output = git(repo, "for-each-ref", "--format=%(refname)%00%(objectname)%00%(symref)",
-                 "refs/remotes/origin/", "refs/tags/").stdout
+                 "refs/heads/", "refs/remotes/", "refs/tags/").stdout
     for line in output.splitlines():
         name, sha, symref = line.split("\0")
         if symref or name == "refs/remotes/origin/HEAD":
@@ -97,15 +97,28 @@ def collect_history(repo):
                      "sha": sha, "kind": kind})
     refs.sort(key=lambda row: (row["name"] != "origin/main", row["kind"], row["name"]))
     if not refs:
-        raise ValueError("no origin branch or commit-valued tag refs found")
+        raise ValueError("no local branch, remote-tracking branch, or commit-valued tag refs found")
     tips = list(dict.fromkeys(row["sha"] for row in refs))
     raw = git(repo, "log", "--topo-order", "--no-show-signature", "--no-decorate",
-              "--format=%H%x00%P%x00%ct%x00%s", "--stdin", input="\n".join(tips) + "\n").stdout
+              "--format=%H%x00%P%x00%T%x00%at%x00%ct%x00%s", "--stdin",
+              input="\n".join(tips) + "\n").stdout
     records = {}
     for line in reversed(raw.splitlines()):
-        sha, parents, timestamp, subject = line.split("\0", 3)
-        records[sha] = {"sha": sha, "parents": parents.split(), "time": int(timestamp),
-                        "subject": subject, "refs": [], "boundary": False}
+        sha, parents, tree, author_time, committer_time, subject = line.split("\0", 5)
+        if not SHA.fullmatch(tree):
+            raise ValueError(f"commit {sha} has an invalid Git tree object ID")
+        records[sha] = {
+            "sha": sha,
+            "parents": parents.split(),
+            "tree_hash": tree,
+            "author_time": int(author_time),
+            "committer_time": int(committer_time),
+            # Keep the existing time field as the committer-time window key.
+            "time": int(committer_time),
+            "subject": subject,
+            "refs": [],
+            "boundary": False,
+        }
     shallow = git(repo, "rev-parse", "--is-shallow-repository").stdout.strip() == "true"
     if shallow:
         # Git log hides shallow-root parents; raw commit headers preserve them.
@@ -118,7 +131,8 @@ def collect_history(repo):
     order = topological(records)
     for index, sha in enumerate(order):
         records[sha]["index"] = index
-    return records, order, refs, ignored, shallow
+    object_format = git(repo, "rev-parse", "--show-object-format").stdout.strip()
+    return records, order, refs, ignored, shallow, object_format
 
 
 def assign_lanes(records, order, main):
@@ -227,7 +241,7 @@ def export(repo, since, until, repository, dna_path=None):
     start, stop = utc(since), utc(until)
     if stop <= start:
         raise ValueError("until must follow since")
-    records, order, refs, ignored, shallow = collect_history(repo)
+    records, order, refs, ignored, shallow, object_format = collect_history(repo)
     main = next((row["sha"] for row in refs if row["name"] == "origin/main"), None)
     main_chain = assign_lanes(records, order, main)
     commits = [records[sha] for sha in order if start.timestamp() <= records[sha]["time"] < stop.timestamp()]
@@ -244,7 +258,9 @@ def export(repo, since, until, repository, dna_path=None):
             if parent not in view:
                 previous = records.get(parent)
                 view[parent] = dict(previous) if previous else {
-                    "sha": parent, "parents": [], "time": None, "subject": "Unresolved parent at history boundary",
+                    "sha": parent, "parents": [], "tree_hash": None,
+                    "author_time": None, "committer_time": None, "time": None,
+                    "subject": "Unresolved parent at history boundary",
                     "refs": [], "index": row["index"] - 0.5, "lane": row["lane"],
                 }
                 view[parent].update(boundary=True, boundary_reason="outside-window" if previous else "unresolved-parent")
@@ -287,10 +303,11 @@ def export(repo, since, until, repository, dna_path=None):
         "dna_snapshot_count": len(dna["snapshots"]),
         "visible_nodes": len(nodes), "boundary_nodes": sum(row["boundary"] for row in nodes),
     }
-    return {"schema": "repo-phylogeny/v1", "repository": repository,
+    return {"schema": "repo-phylogeny/v2", "repository": repository,
             "source": {"head": git(repo, "rev-parse", "HEAD").stdout.strip(), "generated_at": iso(datetime.now(timezone.utc)),
+                       "git_object_format": object_format,
                        "refs": refs, "ignored_refs": ignored, "is_shallow": shallow,
-                       "ref_scope": "current origin branches and tags (reachable history only)",
+                       "ref_scope": "current local branches, remote-tracking branches, and commit-valued tags (reachable history only)",
                        "reachable_commit_count": len(records),
                        "provenance_validation": "manifest contract only; no Lean compilation"},
             "window": {"since": iso(start), "until": iso(stop), "end_exclusive": True},

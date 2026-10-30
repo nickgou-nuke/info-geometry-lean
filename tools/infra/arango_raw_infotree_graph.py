@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -31,6 +32,8 @@ from tools.infra.arango_env import (
 )
 from tools.infra.arango_raw_infotree_ingest import (
     ArangoTarget,
+    ROW_FILES,
+    context_edge_collections,
     auth_header,
     collection_count,
     db_url,
@@ -103,6 +106,58 @@ EDGE_DEFINITIONS: list[dict[str, Any]] = [
     },
 ]
 
+# Include every exported navigation edge, not only the original stage-2 subset.
+EDGE_DEFINITIONS.extend(
+    {"collection": f"raw_infotree_node_{edge}_edges",
+     "from": ["raw_infotree_nodes"], "to": [f"raw_infotree_{rows}"]}
+    for edge, rows in (("goal", "goal_states"), ("fvar", "fvar_lineage"),
+                       ("argument", "tactic_arguments"), ("message", "messages"))
+)
+
+
+def graph_definitions(layout: str = "expanded", collection_map: dict[str, str] | None = None) -> list[dict[str, Any]]:
+    allowed = context_edge_collections(layout)
+    definitions = [d for d in EDGE_DEFINITIONS if d["collection"] in allowed]
+    if layout == "shared":
+        for kind in ("mctx", "lctx"):
+            for edge, source, dest in (("ref_context", "refs", "contexts"),
+                                       ("context_decl", "contexts", "decls")):
+                definitions.append({"collection": f"raw_infotree_{kind}_{edge}_edges",
+                    "from": [f"raw_infotree_{kind}_{source}"],
+                    "to": [f"raw_infotree_{kind}_{dest}"]})
+    if {d["collection"] for d in definitions} != set(allowed):
+        raise ValueError("graph definition does not cover the selected edge layout")
+    names = {d["collection"] for d in definitions} | {
+        name for d in definitions for name in d["from"] + d["to"]}
+    mapping = collection_map if collection_map is not None else {name: name for name in names}
+    if names - mapping.keys():
+        raise ValueError("generation collection map is incomplete")
+    return [{"collection": mapping[d["collection"]],
+             "from": [mapping[n] for n in d["from"]],
+             "to": [mapping[n] for n in d["to"]]} for d in definitions]
+
+
+def generation_graph_spec(receipt: dict[str, Any], generation_id: str) -> tuple[str, list[dict[str, Any]]]:
+    if not re.fullmatch(r"[0-9a-f]{24}", generation_id):
+        raise ValueError("generation ID must be 24 lowercase hexadecimal characters")
+    if (receipt.get("_key") != generation_id or receipt.get("status") != "complete"
+            or receipt.get("schema") != "info_geometry.raw_infotree_generation.v1"):
+        raise ValueError("completed matching raw InfoTree generation receipt required")
+    layout = receipt.get("contextLayout", "expanded")
+    names = set(ROW_FILES) | set(context_edge_collections(layout))
+    if layout == "shared":
+        names |= {f"raw_infotree_{k}_contexts" for k in ("mctx", "lctx")}
+    expected = {n: f"{n}_g_{generation_id}" for n in names}
+    if receipt.get("collections") != expected:
+        raise ValueError("generation collection map does not match its identity and layout")
+    return layout, graph_definitions(layout, expected)
+
+
+def definition_signature(definitions: list[dict[str, Any]]) -> list[tuple]:
+    return sorted((d["collection"], tuple(sorted(d["from"])), tuple(sorted(d["to"])))
+                  for d in definitions)
+
+
 VERTEX_COLLECTIONS = sorted(
     {
         col
@@ -157,7 +212,8 @@ def drop_graph(target: ArangoTarget, graph_name: str) -> None:
             raise
 
 
-def create_graph(target: ArangoTarget, graph_name: str, *, replace: bool) -> dict[str, Any]:
+def create_graph(target: ArangoTarget, graph_name: str, *, replace: bool, definitions: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    definitions = graph_definitions() if definitions is None else definitions
     if replace and graph_exists(target, graph_name):
         drop_graph(target, graph_name)
     elif graph_exists(target, graph_name):
@@ -167,11 +223,15 @@ def create_graph(target: ArangoTarget, graph_name: str, *, replace: bool) -> dic
             username=target.username,
             password=target.password,
         )
-        return {"created": False, "graph": payload.get("graph") if isinstance(payload, dict) else payload}
+        graph = payload.get("graph", {}) if isinstance(payload, dict) else {}
+        if (definition_signature(graph.get("edgeDefinitions", [])) != definition_signature(definitions)
+                or graph.get("orphanCollections", [])):
+            raise ValueError("existing named graph differs from requested layout; use a distinct graph name")
+        return {"created": False, "graph": graph}
 
     payload = {
         "name": graph_name,
-        "edgeDefinitions": EDGE_DEFINITIONS,
+        "edgeDefinitions": definitions,
         "orphanCollections": [],
         "isSmart": False,
     }
@@ -185,12 +245,14 @@ def create_graph(target: ArangoTarget, graph_name: str, *, replace: bool) -> dic
     return {"created": True, "graph": result.get("graph") if isinstance(result, dict) else result}
 
 
-def named_graph_counts(target: ArangoTarget) -> dict[str, int]:
-    collections = VERTEX_COLLECTIONS + [definition["collection"] for definition in EDGE_DEFINITIONS]
+def named_graph_counts(target: ArangoTarget, definitions: list[dict[str, Any]] | None = None) -> dict[str, int]:
+    definitions = graph_definitions() if definitions is None else definitions
+    collections = sorted({d["collection"] for d in definitions} |
+                         {n for d in definitions for n in d["from"] + d["to"]})
     return {collection: collection_count(target, collection) for collection in collections}
 
 
-def networkx_probe(target: ArangoTarget, graph_name: str, *, use_gpu: bool) -> GraphProbe:
+def networkx_probe(target: ArangoTarget, graph_name: str, *, use_gpu: bool, node_collection: str = "raw_infotree_nodes") -> GraphProbe:
     if use_gpu:
         # Do not use NX_CUGRAPH_AUTOCONFIG here. RAPIDS 26.04 sets
         # NETWORKX_BACKEND_PRIORITY_CLASSES, which NetworkX 3.5 rejects while
@@ -229,7 +291,7 @@ def networkx_probe(target: ArangoTarget, graph_name: str, *, use_gpu: bool) -> G
         graph = nxadb.DiGraph(
             name=graph_name,
             db=db,
-            default_node_type="raw_infotree_nodes",
+            default_node_type=node_collection,
         )
         return GraphProbe(
             available=True,
@@ -250,7 +312,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--database", default=arango_database())
     parser.add_argument("--username", default=arango_username())
     parser.add_argument("--password", default=arango_password())
-    parser.add_argument("--graph-name", default=RAW_INFOTREE_GRAPH_NAME)
+    parser.add_argument("--graph-name", default=None)
+    parser.add_argument("--generation-id", help="Use a completed immutable raw InfoTree generation")
     parser.add_argument("--replace", action="store_true", help="Replace the named graph definition without dropping collections.")
     parser.add_argument("--probe-networkx", action="store_true", help="Try opening the graph through nx-arangodb if installed.")
     parser.add_argument("--use-gpu", action="store_true", help="Request nx-cugraph dispatch when probing through nx-arangodb.")
@@ -266,18 +329,35 @@ def main() -> int:
         username=str(args.username),
         password=str(args.password),
     )
-    graph_result = create_graph(target, str(args.graph_name), replace=bool(args.replace))
+    layout = "expanded"
+    definitions = graph_definitions()
+    if args.generation_id:
+        if args.replace:
+            raise ValueError("immutable generation graphs cannot be replaced")
+        if not re.fullmatch(r"[0-9a-f]{24}", args.generation_id):
+            raise ValueError("invalid generation ID")
+        receipt = request_json("GET", db_url(target, f"/_api/document/raw_infotree_generations/{args.generation_id}"),
+                               username=target.username, password=target.password)
+        layout, definitions = generation_graph_spec(receipt, args.generation_id)
+    graph_name = args.graph_name or (f"{RAW_INFOTREE_GRAPH_NAME}_g_{args.generation_id}"
+                                    if args.generation_id else RAW_INFOTREE_GRAPH_NAME)
+    # Count first: missing collections must not be silently created by Gharial.
+    counts = named_graph_counts(target, definitions)
+    graph_result = create_graph(target, graph_name, replace=bool(args.replace), definitions=definitions)
     report: dict[str, Any] = {
         "schema": "info_geometry.raw_infotree_named_graph.v1",
         "database": target.database,
-        "graph_name": str(args.graph_name),
+        "graph_name": graph_name,
+        "generation_id": args.generation_id,
+        "context_layout": layout,
         "graph_created": graph_result["created"],
-        "vertex_collections": VERTEX_COLLECTIONS,
-        "edge_definitions": EDGE_DEFINITIONS,
-        "counts": named_graph_counts(target),
+        "vertex_collections": sorted({n for d in definitions for n in d["from"] + d["to"]}),
+        "edge_definitions": definitions,
+        "counts": counts,
     }
     if args.probe_networkx:
-        probe = networkx_probe(target, str(args.graph_name), use_gpu=bool(args.use_gpu))
+        probe = networkx_probe(target, graph_name, use_gpu=bool(args.use_gpu),
+            node_collection=f"raw_infotree_nodes_g_{args.generation_id}" if args.generation_id else "raw_infotree_nodes")
         report["networkx_probe"] = {
             "available": probe.available,
             "node_count": probe.node_count,
@@ -292,7 +372,7 @@ def main() -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
     print(f"Raw InfoTree named graph report written: {out_path}")
-    print(f"Graph: {args.graph_name} created={graph_result['created']}")
+    print(f"Graph: {graph_name} created={graph_result['created']}")
     print("Counts: " + " ".join(f"{name}={count}" for name, count in report["counts"].items()))
     if "networkx_probe" in report:
         print("NetworkX probe: " + json.dumps(report["networkx_probe"], ensure_ascii=True))

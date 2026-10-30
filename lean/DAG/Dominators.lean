@@ -33,6 +33,44 @@ namespace DAG.Dominators
 
 open DAG
 
+/-- Lowest common ancestor in the dominator forest. `none` is the virtual
+super-root shared by disconnected root branches. -/
+private def lcaInForest (parent : Array (Option Nat)) (depth : Array Nat)
+    (a b : Option Nat) : Option Nat := Id.run do
+  let mut x := a
+  let mut y := b
+  let mut dx := (a.map (fun i => depth[i]!)).getD 0
+  let mut dy := (b.map (fun i => depth[i]!)).getD 0
+  while dx > dy do
+    x := x.bind (fun i => parent[i]!)
+    dx := (x.map (fun i => depth[i]!)).getD 0
+  while dy > dx do
+    y := y.bind (fun i => parent[i]!)
+    dy := (y.map (fun i => depth[i]!)).getD 0
+  while x != y do
+    x := x.bind (fun i => parent[i]!)
+    y := y.bind (fun i => parent[i]!)
+  return x
+
+/-- Compute the dominator forest of a DAG in topological order without dense
+`nodeCount × nodeCount` dominator bit-vectors. For each node, its immediate
+dominator is the lowest common ancestor of its predecessors in the already
+constructed forest. `predecessors` must describe the selected flow direction. -/
+def immediateDominators (predecessors : Array (Array Nat)) (order : Array Nat) :
+    Array (Option Nat) × Array Nat := Id.run do
+  let mut parent := arrayReplicate predecessors.size none
+  let mut depth := arrayReplicate predecessors.size 0
+  for u in order do
+    let ps := predecessors[u]!
+    if ps.isEmpty then
+      continue
+    let mut candidate : Option Nat := some ps[0]!
+    for p in ps.toList.drop 1 do
+      candidate := lcaInForest parent depth candidate (some p)
+    parent := parent.set! u candidate
+    depth := depth.set! u ((candidate.map (fun i => depth[i]! + 1)).getD 0)
+  return (parent, depth)
+
 -- ============================================================
 -- Bit-vector utilities for efficient dominator sets
 -- ============================================================
@@ -210,6 +248,11 @@ theorem chain_idom_smoke :
     buildIdom chainPreds (dominators chainPreds chainOrder) = #[none, some 0, some 1] := by
   decide
 
+theorem chain_sparse_idom_smoke :
+    immediateDominators chainPreds chainOrder =
+      (#[none, some 0, some 1], #[0, 1, 2]) := by
+  native_decide
+
 private def diamondPreds : Array (Array Nat) := #[#[], #[0], #[0], #[1, 2]]
 private def diamondOrder : Array Nat := #[0, 1, 2, 3]
 
@@ -217,6 +260,24 @@ theorem diamond_idom_smoke :
     buildIdom diamondPreds (dominators diamondPreds diamondOrder) =
       #[none, some 0, some 0, some 0] := by
   decide
+
+theorem diamond_sparse_idom_smoke :
+    immediateDominators diamondPreds diamondOrder =
+      (#[none, some 0, some 0, some 0], #[0, 1, 1, 1]) := by
+  native_decide
+
+/-- Dependency edges point from declarations to dependencies, while the
+structural dominator forest is rooted at dependency leaves and flows back to
+their dependent declarations. -/
+private def reverseDiamondPreds : Array (Array Nat) :=
+  #[#[1, 2], #[3], #[3], #[]]
+
+private def reverseDiamondOrder : Array Nat := #[3, 2, 1, 0]
+
+theorem dependency_root_sparse_idom_smoke :
+    immediateDominators reverseDiamondPreds reverseDiamondOrder =
+      (#[some 3, some 3, some 3, none], #[1, 1, 1, 0]) := by
+  native_decide
 
 private def multiRootPreds : Array (Array Nat) := #[#[], #[], #[0, 1]]
 private def multiRootOrder : Array Nat := #[0, 1, 2]
@@ -226,6 +287,11 @@ theorem multi_root_dominance_smoke :
     dominates dom 0 1 = false ∧ dominates dom 1 0 = false ∧
       buildIdom multiRootPreds dom = #[none, none, none] := by
   decide
+
+theorem multi_root_sparse_idom_smoke :
+    immediateDominators multiRootPreds multiRootOrder =
+      (#[none, none, none], #[0, 0, 0]) := by
+  native_decide
 
 end DAG.Dominators
 

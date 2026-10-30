@@ -105,6 +105,36 @@ theorem holonomy_eq_projectorObstruction_nnnorm_of_flat
   simpa using holonomy_eq_target_of_flat (bridge := bridge) (B := B) hFlat
 
 omit [Fintype I] [FiniteDimensional ℝ E] in
+/-- Under a flat-curvature bridge, vanishing Weyl holonomy is equivalent to
+commutation of the spectral and metric chiral projectors. The bridge supplies
+the holonomy endpoint; the equivalence itself follows from the exact
+projector-obstruction criterion. -/
+theorem holonomy_eq_zero_iff_projectors_commute
+    (CI : ConformalInference E)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge (CI := CI) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ = 0
+      ↔ Commute CI.spectralChiralProjector CI.metricChiralProjector := by
+  rw [holonomy_eq_projectorObstruction_nnnorm_of_flat
+    (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat]
+  constructor
+  · intro hHol
+    have hNorm : ‖CI.projectorObstruction‖₊ = 0 :=
+      NNReal.coe_eq_zero.mp hHol
+    exact (CI.projectorObstruction_eq_zero_iff_commute).mp
+      (nnnorm_eq_zero.mp hNorm)
+  · intro hComm
+    have hObstruction : CI.projectorObstruction = 0 :=
+      (CI.projectorObstruction_eq_zero_iff_commute).mpr hComm
+    have hNorm : ‖CI.projectorObstruction‖₊ = 0 :=
+      (nnnorm_eq_zero).mpr hObstruction
+    exact_mod_cast hNorm
+
+omit [Fintype I] [FiniteDimensional ℝ E] in
 /-- Scalar compatibility corollary from the operator-first bridge. -/
 theorem holonomy_eq_chiralScale_of_flat_compat
     (CI : ConformalInference E)

@@ -9,10 +9,11 @@ import signal
 import shlex
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-from tools.build_lock import BuildLockBusyError, acquire_build_lock
+from tools.build_lock import BuildLock, BuildLockBusyError, acquire_build_lock
 from tools.pathing import repo_root
 
 _SPECTRAL_STAGE_PREFIX: dict[str, str] = {
@@ -44,10 +45,12 @@ def compute_olean_content_hash(root: Path) -> str:
     oleans = _olean_inventory(build_lib, packages)
     if not oleans:
         return ""
+    compiler_identity = _lean_compiler_identity(root)
     build_identity_files = _build_identity_inventory(root)
     build_identity_state = _inventory_state(build_identity_files)
     h = hashlib.sha256()
-    h.update(b"info-geometry-olean-content-v4\0")
+    h.update(b"info-geometry-olean-content-v5\0")
+    h.update(b"lean-compiler-identity\0" + compiler_identity.encode("utf-8") + b"\0")
     for name in ("lean-toolchain", "lakefile.lean", "lakefile.toml"):
         path = root / name
         h.update(name.encode() + b"\0")
@@ -66,6 +69,8 @@ def compute_olean_content_hash(root: Path) -> str:
         raise RuntimeError("build configuration inventory changed while hashing artifacts")
     if _inventory_state(final_identity_files) != build_identity_state:
         raise RuntimeError("build configuration changed while hashing artifacts")
+    if _lean_compiler_identity(root) != compiler_identity:
+        raise RuntimeError("Lean compiler identity changed while hashing artifacts")
     final_packages = _declared_lake_packages(root, manifest_bytes)
     if final_packages != packages:
         raise RuntimeError("Lake package inventory changed while hashing artifacts")
@@ -75,6 +80,21 @@ def compute_olean_content_hash(root: Path) -> str:
     if _inventory_state(final_oleans) != inventory_state:
         raise RuntimeError("olean files changed while hashing artifacts")
     return h.hexdigest()
+
+
+def _lean_compiler_identity(root: Path) -> str:
+    """Return Lean's runtime version, including its compiler commit identifier."""
+    result = subprocess.run(
+        ["lean", "--version"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    identity = result.stdout.strip()
+    if not identity:
+        raise RuntimeError("Lean compiler returned an empty version identity")
+    return identity
 
 
 def compute_lean_source_hash(root: Path) -> str:
@@ -156,10 +176,19 @@ def _inventory_state(paths: Sequence[Path]) -> tuple[tuple[str, tuple[int, int, 
         raise RuntimeError("file inventory changed while hashing") from exc
 
 
-def _declared_lake_packages(
+@dataclass(frozen=True)
+class _LakePackage:
+    name: str
+    package_type: str
+    root: Path
+    revision: str | None
+    sub_dir: str | None
+
+
+def _declared_lake_package_records(
     root: Path, manifest: bytes, *, package_types: set[str] | None = None
-) -> tuple[Path, ...]:
-    """Resolve Lake package directories, optionally restricted by manifest type."""
+) -> tuple[_LakePackage, ...]:
+    """Resolve Lake package identity and effective source root from its manifest."""
     if not manifest:
         return ()
     try:
@@ -171,23 +200,25 @@ def _declared_lake_packages(
     if not isinstance(packages_dir_raw, str) or Path(packages_dir_raw).is_absolute():
         raise RuntimeError(f"Lake manifest has an invalid packagesDir: {packages_dir_raw!r}")
     packages_dir = (root / packages_dir_raw).resolve()
-    packages: set[Path] = set()
+    packages: dict[tuple[str, str, Path], _LakePackage] = {}
     for item in entries:
         package_type = item.get("type")
         if package_types is not None and package_type not in package_types:
             continue
         if package_type == "path":
+            name = item.get("name", "")
+            if not name:
+                raise RuntimeError("Lake path package has no name")
             relative = item.get("dir")
-            if not relative:
-                raise RuntimeError(f"Lake path package has no directory: {item.get('name', '<unnamed>')}")
+            if not isinstance(relative, str) or not relative:
+                raise RuntimeError(f"Lake path package has no directory: {name}")
             package = (root / relative).resolve()
-            if not package.is_dir():
-                raise RuntimeError(f"declared Lake path dependency is unavailable: {relative}")
         elif package_type == "git":
-            name = item.get("name", "").strip("«»")
-            if not name or Path(name).name != name:
+            manifest_name = item.get("name", "")
+            directory_name = manifest_name.strip("«»")
+            if not directory_name or Path(directory_name).name != directory_name:
                 raise RuntimeError(f"Lake Git package has an invalid name: {item.get('name')!r}")
-            relative = item.get("dir") or str(Path(packages_dir_raw) / name)
+            relative = item.get("dir") or str(Path(packages_dir_raw) / directory_name)
             package = (root / relative).resolve()
         else:
             raise RuntimeError(f"unsupported Lake package type: {package_type!r}")
@@ -203,16 +234,39 @@ def _declared_lake_packages(
                 raise RuntimeError(f"Lake package subDir escapes its package: {sub_dir!r}") from exc
         if not package.is_dir():
             raise RuntimeError(f"declared Lake package directory is unavailable: {package}")
-        packages.add(package)
-    return tuple(sorted(packages))
+        record = _LakePackage(
+            name=name if package_type == "path" else manifest_name,
+            package_type=package_type,
+            root=package,
+            revision=item.get("rev") if isinstance(item.get("rev"), str) else None,
+            sub_dir=sub_dir,
+        )
+        packages[(record.name, record.package_type, record.root)] = record
+    return tuple(packages[key] for key in sorted(packages))
+
+
+def _declared_lake_packages(
+    root: Path, manifest: bytes, *, package_types: set[str] | None = None
+) -> tuple[Path, ...]:
+    """Resolve Lake package roots, optionally restricted by manifest type."""
+    return tuple(
+        record.root for record in
+        _declared_lake_package_records(root, manifest, package_types=package_types)
+    )
 
 
 def _olean_inventory(build_lib: Path, dependencies: Sequence[Path]) -> list[Path]:
-    paths = set(build_lib.rglob("*.olean")) if build_lib.is_dir() else set()
+    """Inventory main and optional OLean parts that Lean imports together."""
+    paths: set[Path] = set()
+    patterns = ("*.olean", "*.olean.server", "*.olean.private")
+    if build_lib.is_dir():
+        for pattern in patterns:
+            paths.update(build_lib.rglob(pattern))
     for package in dependencies:
         package_lib = package / ".lake" / "build" / "lib"
         if package_lib.is_dir():
-            paths.update(package_lib.rglob("*.olean"))
+            for pattern in patterns:
+                paths.update(package_lib.rglob(pattern))
     return sorted(path.resolve() for path in paths if path.is_file())
 
 
@@ -320,7 +374,8 @@ def _ensure_mathlib_cache_hydrated(root: Path) -> None:
 
 
 def run_locked_lake_build(
-    targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
+    targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False,
+    existing_lock: BuildLock | None = None,
 ) -> int:
     """Run the causal build transaction: validate -> lock -> execute -> release.
 
@@ -339,7 +394,11 @@ def run_locked_lake_build(
     owner = f"locked-lake-build:{os.getpid()}:{target_label}"
     print(f"[locked-lake-build] requesting lock for {target_label}", flush=True)
     try:
-        lock = acquire_build_lock(None, owner, block=wait_for_lock)
+        # A compound operation such as declaration refresh may already hold
+        # the shared lock across hashing, building, and indexing. Re-enter the
+        # same BuildLock object so this build cannot release the caller's lock.
+        lock = (acquire_build_lock(None, owner, block=wait_for_lock)
+                if existing_lock is None else existing_lock.acquire())
     except BuildLockBusyError as exc:
         meta = exc.metadata or {}
         owner_msg = meta.get("owner", "unknown")
@@ -361,12 +420,12 @@ def run_locked_lake_build(
         return 130
 
     print(f"[locked-lake-build] acquired {lock.lock_path}", flush=True)
-    _ensure_mathlib_cache_hydrated(root)
-    cmd = lake_build_command(targets, wfail=wfail)
     status = 126
     proc: subprocess.Popen[bytes] | None = None
     interrupted = False
     try:
+        _ensure_mathlib_cache_hydrated(root)
+        cmd = lake_build_command(targets, wfail=wfail)
         print(f"[locked-lake-build] executing: {shlex.join(cmd)}", flush=True)
         proc = subprocess.Popen(cmd, cwd=root, start_new_session=(os.name == "posix"))
         try:
@@ -470,6 +529,7 @@ def run_locked_prebuild(
     run_mode: str = "exe",
     python_executable: str | None = None,
     allow_failure: bool = False,
+    build_lock: BuildLock | None = None,
 ) -> bool:
     prebuild_target = "dagIndexer" if run_mode == "exe" else "DAG.Indexer"
     cmd = [
@@ -481,7 +541,16 @@ def run_locked_prebuild(
     ]
     print(f"[refresh-decl-graph] prebuilding with lock: {' '.join(cmd)}", flush=True)
     try:
-        subprocess.run(cmd, cwd=root, check=True)
+        if build_lock is None:
+            subprocess.run(cmd, cwd=root, check=True)
+        else:
+            status = run_locked_lake_build(
+                [prebuild_target, build_target],
+                wait_for_lock=False,
+                existing_lock=build_lock,
+            )
+            if status != 0:
+                raise subprocess.CalledProcessError(status, cmd)
         return True
     except subprocess.CalledProcessError as exc:
         if not allow_failure:

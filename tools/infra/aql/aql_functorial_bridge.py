@@ -154,8 +154,8 @@ class ZornSlot:
 
 
 @dataclass
-class SymmetryGroup:
-    """Symmetry group acting on Zorn matrices"""
+class SymmetryGroupMetadata:
+    """Descriptive group metadata; this record has no group law or action."""
     group_name: str
     group_dim: int
     description: str
@@ -165,8 +165,8 @@ class SymmetryGroup:
         self._key = f"group_{self.group_name.lower()}"
     
     @classmethod
-    def su3_color(cls) -> 'SymmetryGroup':
-        """SU(3) color gauge group - stabilizes diagonal scalars"""
+    def su3_color(cls) -> 'SymmetryGroupMetadata':
+        """Metadata describing the proposed SU(3) color symmetry."""
         return cls(
             group_name="SU(3)",
             group_dim=8,
@@ -174,8 +174,8 @@ class SymmetryGroup:
         )
     
     @classmethod
-    def g2_automorphism(cls) -> 'SymmetryGroup':
-        """G_2 automorphism group of split octonions"""
+    def g2_automorphism(cls) -> 'SymmetryGroupMetadata':
+        """Metadata describing the proposed G₂ automorphism group."""
         return cls(
             group_name="G_2",
             group_dim=14,
@@ -540,8 +540,8 @@ class AQLQueries:
             print(f"Error inserting Zorn slot: {e}")
             return None
     
-    def insert_symmetry_group(self, sg: SymmetryGroup) -> Optional[Json]:
-        """Insert a symmetry group document"""
+    def insert_symmetry_group_metadata(self, sg: SymmetryGroupMetadata) -> Optional[Json]:
+        """Insert a descriptive group-metadata document."""
         try:
             coll = self.db['symmetry_groups']
             return coll.insert(asdict(sg), overwrite=True)
@@ -1453,7 +1453,7 @@ class FunctorialBridgeRunner:
                   _to: 'symmetry_groups/e8_root_system',
                   mapping_id: 'mersenne_to_e8_M_7',
                   discrete_type: 'MersennePrime',
-                  continuous_type: 'SymmetryGroup',
+                  continuous_type: 'SymmetryGroupMetadata',
                   discrete_key: 'M_7',
                   continuous_key: 'E8 (dim 248)',
                   mapping_type: 'mersenne_to_exceptional_e8',
@@ -1466,7 +1466,7 @@ class FunctorialBridgeRunner:
                   _to: 'symmetry_groups/e8_root_system',
                   mapping_id: 'mersenne_to_e8_M_7',
                   discrete_type: 'MersennePrime',
-                  continuous_type: 'SymmetryGroup',
+                  continuous_type: 'SymmetryGroupMetadata',
                   discrete_key: 'M_7',
                   continuous_key: 'E8 (dim 248)',
                   mapping_type: 'mersenne_to_exceptional_e8',
@@ -1485,7 +1485,7 @@ class FunctorialBridgeRunner:
                   _to: 'symmetry_groups/triality_structure',
                   mapping_id: 'mersenne_to_triality_M_7',
                   discrete_type: 'MersennePrime',
-                  continuous_type: 'SymmetryGroup',
+                  continuous_type: 'SymmetryGroupMetadata',
                   discrete_key: 'M_7',
                   continuous_key: 'Spin(8) triality',
                   mapping_type: 'mersenne_to_exceptional_triality',
@@ -1498,7 +1498,7 @@ class FunctorialBridgeRunner:
                   _to: 'symmetry_groups/triality_structure',
                   mapping_id: 'mersenne_to_triality_M_7',
                   discrete_type: 'MersennePrime',
-                  continuous_type: 'SymmetryGroup',
+                  continuous_type: 'SymmetryGroupMetadata',
                   discrete_key: 'M_7',
                   continuous_key: 'Spin(8) triality',
                   mapping_type: 'mersenne_to_exceptional_triality',

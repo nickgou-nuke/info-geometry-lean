@@ -1,0 +1,7 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectors
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+#print axioms supportedProjector_extract
+#print axioms supportedProjector_mul
+#print axioms supportedProjector_idempotent
+#print axioms supportedProjector_sum
+#print axioms supportedProjector_unique

@@ -10,6 +10,36 @@ def conclusion_localized_colimit_finite_ledger_linearization_obstruction_prime_p
     {m : ℕ} (primes exponents : Fin m → ℕ) : ℕ :=
   Finset.prod Finset.univ fun i => primes i ^ exponents i
 
+/-- Total multiplicative additivity on `ℕ` forces every ledger value to vanish:
+use `0 * n = 0` and cancel the common additive term. If the intended domain
+is the positive naturals, the multiplicativity hypothesis must be restricted
+to positive inputs instead. -/
+theorem conclusion_localized_colimit_finite_ledger_linearization_obstruction_totalLedger_eq_zero
+    {r : ℕ} (ledger : ℕ → Fin r → ℤ)
+    (hmul : ∀ m n, ledger (m * n) = ledger m + ledger n) (n : ℕ) :
+    ledger n = 0 := by
+  have hcancel : ledger 0 + ledger n = ledger 0 + 0 := by
+    simpa using (hmul 0 n).symm
+  exact add_left_cancel hcancel
+
+/-- Consequently, no ledger satisfying total multiplicative additivity on
+`ℕ` is injective. This stronger conclusion needs no finite-rank or
+prime-relation hypothesis. -/
+theorem conclusion_localized_colimit_finite_ledger_linearization_obstruction_totalLedger_not_injective
+    {r : ℕ} (ledger : ℕ → Fin r → ℤ)
+    (hmul : ∀ m n, ledger (m * n) = ledger m + ledger n) :
+    ¬ Function.Injective ledger := by
+  intro hinj
+  have h0 :=
+    conclusion_localized_colimit_finite_ledger_linearization_obstruction_totalLedger_eq_zero
+      ledger hmul 0
+  have h1 :=
+    conclusion_localized_colimit_finite_ledger_linearization_obstruction_totalLedger_eq_zero
+      ledger hmul 1
+  have h01 : ledger 0 = ledger 1 := h0.trans h1.symm
+  have hnat : (0 : ℕ) = 1 := hinj h01
+  omega
+
 lemma conclusion_localized_colimit_finite_ledger_linearization_obstruction_ledger_pow
     {r : ℕ} (ledger : ℕ → Fin r → ℤ) (h1 : ledger 1 = 0)
     (hmul : ∀ m n, ledger (m * n) = ledger m + ledger n) (a n : ℕ) :
@@ -52,10 +82,11 @@ lemma conclusion_localized_colimit_finite_ledger_linearization_obstruction_ledge
       simp [conclusion_localized_colimit_finite_ledger_linearization_obstruction_ledger_pow,
         h1, hmul]
 
-/-- Paper label: `thm:conclusion-localized-colimit-finite-ledger-linearization-obstruction`. An
-explicit integer relation among the prime images forces the two corresponding prime products to
-have the same ledger value, so any such finite-rank additive ledger is noninjective once the two
-products are genuinely distinct. -/
+/-- Paper label: `thm:conclusion-localized-colimit-finite-ledger-linearization-obstruction`. The
+explicit prime-image relation forces the two corresponding prime products to have the same ledger
+value, so they witness noninjectivity when distinct. Under this file's stronger hypothesis that
+multiplicativity holds on all of `ℕ`, including zero, the preceding total-ledger theorem already
+forces every ledger value to vanish; this theorem retains the paper's prime-product formulation. -/
 theorem paper_conclusion_localized_colimit_finite_ledger_linearization_obstruction
     {r : ℕ} (ledger : ℕ → Fin r → ℤ) (h1 : ledger 1 = 0)
     (hmul : ∀ m n, ledger (m * n) = ledger m + ledger n) (primes : Fin (r + 1) → ℕ)

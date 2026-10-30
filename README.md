@@ -57,6 +57,10 @@ This repository is not a sanitized textbook. It is the raw, authentic record of 
    - Ingest the codebase with your favorite coding agent (Claude, ChatGPT, Cursor, etc.)
    - Follow the structure in `InfoGeometry/` to trace mathematical development
    - Verified source edits are the source of truth
+   - For AI Studio history extraction or a resumed formalization goal, follow
+     [`docs/AI_STUDIO_TRANSCRIPT_EXPORT.md`](docs/AI_STUDIO_TRANSCRIPT_EXPORT.md).
+     The complete saved history is downloaded from Google Drive; **Get code**
+     Java/REST downloads request examples.
 
 3. **Build & Verify Locally:**
    - Lean toolchain is pinned in `lean-toolchain` (`leanprover/lean4:v4.34.1`)
@@ -96,15 +100,15 @@ graph stored in ArangoDB (`darwin_commits` database). These trace how
 mathematical declarations and Lean surfaces co-evolve across commits:
 
 ```bash
-# 1. Taxonomic summary: every Linnaean rank with commit count
+# 1. Weak change-facet summary (categories are multi-label, not hierarchical)
 PYTHONPATH=/home/goutev/repos/info-geometry-lean \
   ARANGO_DATABASE=darwin_commits \
   ARANGO_PASS=<password> \
   /home/goutev/miniforge3/envs/sage/bin/python \
   tools/infra/darwin_commit_taxonomy.py --query taxonomy_summary
 
-# 2. Full evolution report: Tarjan SCC, DNA cohorts, rank hierarchy,
-#    Lean-mirrored invariants (rankIndex round-trip, anti-collapse)
+# 2. Full evolution report: Git ancestry, SCCs, DNA cohorts, weak change facets,
+#    and observed distinct-commit/path-sharing witnesses
 PYTHONPATH=/home/goutev/repos/info-geometry-lean \
   ARANGO_DATABASE=darwin_commits \
   ARANGO_PASS=<password> \
@@ -117,9 +121,13 @@ PYTHONPATH=/home/goutev/repos/info-geometry-lean \
   --query phylogenetic_paths --target <commit_sha> --depth 6
 ```
 
-Rank ontology (Kingdom = merges, Phylum = `lean/InfoGeometry/` with ≥3 paths,
-Class = subdir prefix, Order = `feat`/`fix`/`refactor`/`formalize`, Family =
-`archetype`/`theorem`/`lemma`, Genus = single path, Species = default).
+The change categories are weak, non-hierarchical facets derived from commit
+subjects and paths. Git parent edges alone encode repository ancestry; the
+current Arango writer stores ordered parent→child links in
+`commit_parent_edges_v2`. Existing rows may still contain legacy heuristic
+rank fields until the commit importer is rerun; those fields are not part of
+the current schema or analysis. The old `commit_edges` collection is left
+untouched by this schema migration.
 
 All queries are read-only; graph results are navigation evidence only and do
 not prove mathematical statements. Lean kernel-checked source files decide

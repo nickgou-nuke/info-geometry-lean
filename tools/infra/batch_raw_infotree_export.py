@@ -16,7 +16,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import shutil
+import os
 import subprocess
 import sys
 import time
@@ -28,8 +28,10 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[2]
 if __package__ in (None, ""):
     sys.path.insert(0, str(ROOT))
+    sys.path.insert(0, str(ROOT / "src"))
 
 from tools.infra.pantograph_environment import build_lean_context_manifest  # noqa: E402
+from tools.infra.run_locked_lean import execute_locked_lean  # noqa: E402
 
 EXPORTER = ROOT / "lean" / "DAG" / "RawInfoTreeExport.lean"
 VALIDATOR = ROOT / "tools" / "infra" / "validate_raw_infotree_export.py"
@@ -68,7 +70,10 @@ class FileResult:
     source_provenance: dict[str, Any] | None = None
 
 
-def tail_text(text: str, limit: int = 8000) -> str:
+def tail_text(text: str | bytes, limit: int = 8000) -> str:
+    # TimeoutExpired carries bytes even when subprocess uses text=True.
+    if isinstance(text, bytes):
+        text = text.decode("utf-8", errors="replace")
     return text[-limit:] if len(text) > limit else text
 
 
@@ -78,8 +83,11 @@ def safe_slug(path: Path) -> str:
 
 
 def olean_path_for(path: Path) -> Path | None:
+    root = Path(os.path.abspath(os.fspath(ROOT / "lean")))
+    source = path if path.is_absolute() else ROOT / path
+    source = Path(os.path.abspath(os.fspath(source)))
     try:
-        rel = path.resolve().relative_to((ROOT / "lean").resolve())
+        rel = source.relative_to(root)
     except ValueError:
         return None
     return ROOT / ".lake" / "build" / "lib" / "lean" / rel.with_suffix(".olean")
@@ -110,13 +118,15 @@ def discover_files(args: argparse.Namespace) -> list[Path]:
             files.extend(sorted(root_path.rglob("*.lean")))
     seen: set[str] = set()
     result: list[Path] = []
+    root_absolute = Path(os.path.abspath(os.fspath(ROOT)))
     for path in files:
         if not path.is_absolute():
-            path = ROOT / path
+            path = root_absolute / path
+        path = Path(os.path.abspath(os.fspath(path)))
         try:
-            rel = str(path.resolve().relative_to(ROOT))
+            rel = str(path.relative_to(root_absolute))
         except ValueError:
-            rel = str(path.resolve())
+            rel = str(path)
         if rel not in seen:
             seen.add(rel)
             result.append(path)
@@ -144,6 +154,67 @@ def validate_export(out_dir: Path) -> tuple[int, dict[str, Any], str, str]:
     return proc.returncode, report, proc.stdout, proc.stderr
 
 
+def _capture_bundle_sha256(out_dir: Path) -> str:
+    """Hash the raw row bundle using the shared InfoTree DNA contract."""
+    from tools.repository_evolution.infotree_dna import (
+        capture_bundle_fingerprint, capture_file_digests,
+    )
+
+    digests = capture_file_digests(out_dir)
+    missing = sorted(set(JSONL_FILES) - set(digests))
+    if missing:
+        raise ValueError(f"capture is missing raw InfoTree row files: {', '.join(missing)}")
+    return capture_bundle_fingerprint(digests)
+
+
+def reuse_existing_export(
+    path: Path, per_file_dir: Path, source_sha256: str,
+    source_context: dict[str, Any] | None,
+) -> FileResult:
+    """Reuse only a validated capture bound to current source, context, and row bytes."""
+    start = time.monotonic()
+    if source_context is None:
+        return FileResult(
+            file=str(path), out_dir=str(per_file_dir), status="resume_unbound_context",
+            returncode=None, duration_sec=0.0, validation=None, stdout_tail="",
+            stderr_tail="safe resume requires a source and Lean-context receipt",
+        )
+    validation_rc, validation, stdout, stderr = validate_export(per_file_dir)
+    if validation_rc != 0 or validation.get("ok") is not True:
+        return FileResult(
+            file=str(path), out_dir=str(per_file_dir), status="resume_invalid_existing",
+            returncode=validation_rc, duration_sec=time.monotonic() - start,
+            validation=validation, stdout_tail=tail_text(stdout), stderr_tail=tail_text(stderr),
+        )
+    try:
+        metadata = json.loads((per_file_dir / "metadata.json").read_text(encoding="utf-8"))
+        provenance = metadata.get("sourceProvenance")
+        if not isinstance(provenance, dict):
+            raise ValueError("capture lacks source provenance")
+        if provenance.get("exporterSourceSha256") != hashlib.sha256(EXPORTER.read_bytes()).hexdigest():
+            raise ValueError("capture exporter source receipt is missing or no longer matches")
+        if (provenance.get("sourcePath") != source_context.get("sourcePath")
+                or provenance.get("sourceSha256") != source_sha256
+                or provenance.get("leanContextFingerprint") != source_context.get("fingerprint")):
+            raise ValueError("capture source or Lean context no longer matches")
+        observed_bundle_sha = _capture_bundle_sha256(per_file_dir)
+        if provenance.get("rawCaptureSha256") != observed_bundle_sha:
+            raise ValueError("capture row-bundle digest is missing or mismatched")
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return FileResult(
+            file=str(path), out_dir=str(per_file_dir), status="resume_unverified_existing",
+            returncode=None, duration_sec=time.monotonic() - start,
+            validation=validation, stdout_tail=tail_text(stdout),
+            stderr_tail=f"preserved existing output; cannot safely reuse: {exc}",
+        )
+    return FileResult(
+        file=str(path), out_dir=str(per_file_dir), status="reused",
+        returncode=0, duration_sec=time.monotonic() - start,
+        validation=validation, stdout_tail=tail_text(stdout), stderr_tail=tail_text(stderr),
+        source_provenance=provenance,
+    )
+
+
 def export_one(
     path: Path,
     per_file_dir: Path,
@@ -151,9 +222,11 @@ def export_one(
     lake: str,
     *,
     require_olean: bool,
+    resume: bool = False,
 ) -> FileResult:
     start = time.monotonic()
     source_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    exporter_sha256 = hashlib.sha256(EXPORTER.read_bytes()).hexdigest() if EXPORTER.is_file() else None
     source_context = None
     if require_olean:
         try:
@@ -183,25 +256,38 @@ def export_one(
             stderr_tail=f"corresponding .olean not found: {olean_path}",
         )
     if per_file_dir.exists():
-        shutil.rmtree(per_file_dir)
-    per_file_dir.mkdir(parents=True, exist_ok=True)
-    cmd = [
-        lake,
-        "env",
-        "lean",
-        "--run",
-        str(EXPORTER.relative_to(ROOT)),
-        str(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path),
-        str(per_file_dir.relative_to(ROOT) if per_file_dir.is_relative_to(ROOT) else per_file_dir),
-    ]
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-            timeout=timeout_sec,
+        if resume:
+            return reuse_existing_export(path, per_file_dir, source_sha256, source_context)
+        return FileResult(
+            file=str(path), out_dir=str(per_file_dir), status="output_exists",
+            returncode=None, duration_sec=time.monotonic() - start, validation=None,
+            stdout_tail="", stderr_tail=(
+                "refusing to replace an existing InfoTree capture; choose a new output directory"
+            ),
         )
+    per_file_dir.mkdir(parents=True, exist_ok=True)
+    source_arg = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+    output_arg = per_file_dir.relative_to(ROOT) if per_file_dir.is_relative_to(ROOT) else per_file_dir
+    diagnostic_path = per_file_dir / "export.stderr.log"
+    def diagnostic_tail() -> str:
+        with diagnostic_path.open("rb") as stream:
+            stream.seek(0, os.SEEK_END)
+            stream.seek(max(0, stream.tell() - 32000))
+            return tail_text(stream.read())
+
+    try:
+        with diagnostic_path.open("xb") as diagnostic_stream:
+            proc = execute_locked_lean(
+                EXPORTER.relative_to(ROOT),
+                [str(source_arg), str(output_arg)],
+                lake=lake,
+                root=ROOT,
+                run_script=True,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=diagnostic_stream,
+                timeout=timeout_sec,
+            )
     except subprocess.TimeoutExpired as exc:
         return FileResult(
             file=str(path),
@@ -211,8 +297,9 @@ def export_one(
             duration_sec=time.monotonic() - start,
             validation=None,
             stdout_tail=tail_text(exc.stdout or ""),
-            stderr_tail=tail_text(exc.stderr or ""),
+            stderr_tail=diagnostic_tail() or tail_text(exc.stderr or ""),
         )
+    proc.stderr = diagnostic_tail() or proc.stderr or ""
     if proc.returncode != 0:
         return FileResult(
             file=str(path),
@@ -231,13 +318,21 @@ def export_one(
         "sourceSha256": source_sha256,
         "leanContextFingerprint": source_context["fingerprint"],
         "leanContext": source_context,
+        "exporterSourceSha256": exporter_sha256,
     } if source_context else None)
     if hashlib.sha256(path.read_bytes()).hexdigest() != source_sha256:
         status = "source_changed"
         provenance = None
+    elif provenance is not None and (
+        exporter_sha256 is None or not EXPORTER.is_file()
+        or hashlib.sha256(EXPORTER.read_bytes()).hexdigest() != exporter_sha256
+    ):
+        status = "exporter_changed"
+        provenance = None
     elif provenance is not None:
         metadata_path = per_file_dir / "metadata.json"
         metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        provenance["rawCaptureSha256"] = _capture_bundle_sha256(per_file_dir)
         metadata["sourceProvenance"] = provenance
         metadata_path.write_text(json.dumps(metadata, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
     return FileResult(
@@ -255,7 +350,9 @@ def export_one(
 
 def merge_valid_exports(valid_dirs: list[Path], merged_dir: Path) -> dict[str, Any]:
     if merged_dir.exists():
-        shutil.rmtree(merged_dir)
+        raise FileExistsError(
+            f"refusing to replace existing merged InfoTree export: {merged_dir}"
+        )
     merged_dir.mkdir(parents=True, exist_ok=True)
     counts: dict[str, int] = {}
     for name in JSONL_FILES:
@@ -306,7 +403,18 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Disable the LeanDojo-style build gate. Use only for synthetic probes.",
     )
-    parser.add_argument("--no-merge", action="store_true")
+    parser.add_argument(
+        "--merge", action="store_true",
+        help="Create a second combined copy of all validated per-file rows (opt-in).",
+    )
+    parser.add_argument(
+        "--resume", action="store_true",
+        help="Reuse existing per-file exports only when source, Lean context, row digest, and validation match.",
+    )
+    parser.add_argument(
+        "--no-merge", action="store_true",
+        help=argparse.SUPPRESS,
+    )
     return parser.parse_args()
 
 
@@ -320,6 +428,28 @@ def main() -> int:
     output_dir = args.output_dir.resolve()
     per_file_root = output_dir / "per_file"
     merged_dir = output_dir / "merged"
+    batch_report_path = output_dir / "batch_report.json"
+    planned_dirs = [
+        per_file_root / (f"{idx:05d}_" + safe_slug(Path(
+            path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+        )))
+        for idx, path in enumerate(files)
+    ]
+    existing_outputs = ([] if args.resume else
+                        [str(path) for path in planned_dirs if path.exists()])
+    if args.merge and not args.no_merge and merged_dir.exists():
+        existing_outputs.append(str(merged_dir))
+    report_path = (output_dir / f"batch_report_resume_{time.time_ns()}.json"
+                   if args.resume and batch_report_path.exists() else batch_report_path)
+    if report_path.exists():
+        existing_outputs.append(str(report_path))
+    if existing_outputs:
+        print(
+            "Refusing to overwrite existing batch outputs; choose a new --output-dir: "
+            + ", ".join(existing_outputs[:8]),
+            file=sys.stderr,
+        )
+        return 2
     per_file_root.mkdir(parents=True, exist_ok=True)
 
     results: list[FileResult] = []
@@ -338,23 +468,26 @@ def main() -> int:
                 )
             )
             continue
-        rel = path.resolve().relative_to(ROOT) if path.resolve().is_relative_to(ROOT) else path.resolve()
+        lexical_path = Path(os.path.abspath(os.fspath(path)))
+        root_absolute = Path(os.path.abspath(os.fspath(ROOT)))
+        rel = lexical_path.relative_to(root_absolute) if lexical_path.is_relative_to(root_absolute) else lexical_path
         per_file_dir = per_file_root / f"{idx:05d}_{safe_slug(Path(rel))}"
         print(f"start {idx + 1}/{len(files)}: {rel}", flush=True)
         result = export_one(
-            path.resolve(),
+            lexical_path,
             per_file_dir,
             max(1, args.timeout_sec),
             args.lake,
             require_olean=not args.allow_missing_olean,
+            resume=args.resume,
         )
         results.append(result)
         print(f"{result.status}: {rel} ({result.duration_sec:.2f}s)", flush=True)
 
-    valid_dirs = [Path(row.out_dir) for row in results if row.status == "ok"]
+    valid_dirs = [Path(row.out_dir) for row in results if row.status in {"ok", "reused"}]
     merged_metadata = None
     merged_validation = None
-    if valid_dirs and not args.no_merge:
+    if valid_dirs and args.merge and not args.no_merge:
         print(f"merge: {len(valid_dirs)} valid exports -> {merged_dir}", flush=True)
         merged_metadata = merge_valid_exports(valid_dirs, merged_dir)
         print(f"validate merged export: {merged_dir}", flush=True)
@@ -373,11 +506,12 @@ def main() -> int:
                 )
             )
 
-    failures = [row for row in results if row.status != "ok"]
+    failures = [row for row in results if row.status not in {"ok", "reused"}]
     report = {
         "schema": "info_geometry.raw_infotree_batch_export_report.v1",
         "output_dir": str(output_dir),
-        "merged_dir": str(merged_dir) if valid_dirs and not args.no_merge else None,
+        "merged_dir": str(merged_dir)
+        if valid_dirs and args.merge and not args.no_merge else None,
         "selected_file_count": len(files),
         "valid_file_count": len(valid_dirs),
         "failure_count": len(failures),
@@ -386,9 +520,10 @@ def main() -> int:
         "merged_validation": merged_validation,
         "results": [row.__dict__ for row in results],
     }
-    report_path = output_dir / "batch_report.json"
     report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+    report_path.write_text(
+        json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8"
+    )
     print(f"batch report: {report_path}")
     if failures and not args.allow_failures:
         return 2

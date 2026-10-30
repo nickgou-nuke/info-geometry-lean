@@ -52,6 +52,22 @@ theorem associative_of_injective_mul_map_to_semigroup
     _ = φ (x * (y * z)) := by
         rw [← hmul x (y * z)]
 
+/-- Every multiplicative map into an associative semigroup identifies the two
+reassociation paths, whether or not the map is injective. Thus any source
+associator defect must be collapsed by such a representation. -/
+theorem multiplicative_map_identifies_associativity_paths
+    {O A : Type*} [Mul O] [Semigroup A]
+    (φ : O → A)
+    (hmul : ∀ x y : O, φ (x * y) = φ x * φ y)
+    (x y z : O) :
+    φ ((x * y) * z) = φ (x * (y * z)) := by
+  calc
+    φ ((x * y) * z) = φ (x * y) * φ z := hmul (x * y) z
+    _ = (φ x * φ y) * φ z := by rw [hmul x y]
+    _ = φ x * (φ y * φ z) := mul_assoc _ _ _
+    _ = φ x * φ (y * z) := by rw [← hmul y z]
+    _ = φ (x * (y * z)) := by rw [← hmul x (y * z)]
+
 /--
 Contrapositive form.
 

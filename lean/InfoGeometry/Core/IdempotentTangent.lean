@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Algebra.Basic
+import InfoGeometry.Core.IdempotentCartan
 import Mathlib.Tactic.NoncommRing
 
 /-! # Algebraic tangent equations and generators for an idempotent
@@ -39,6 +40,10 @@ theorem tangent_iff_diagonal_corners_zero {p x : R} (hp : p * p = p) :
         noncomm_ring
       _ = x := by rw [hpxp, hqxq]; abel
 
+/-- The inner adjoint action of `p` on the ring, `adₚ(x) = p*x - x*p`.
+Its square is the identity exactly on the linearized idempotent directions. -/
+def idempotentAdjoint (p x : R) : R := p * x - x * p
+
 /-- A tangent direction is the sum of its two off-diagonal corners. -/
 theorem tangent_eq_offDiagonal {p x : R} (hp : p * p = p)
     (hx : p * x + x * p = x) :
@@ -47,6 +52,39 @@ theorem tangent_eq_offDiagonal {p x : R} (hp : p * p = p)
   calc
     x = p * x + x * p - (p * x * p + p * x * p) := by rw [hx, hpxp]; abel
     _ = p * x * (1 - p) + (1 - p) * x * p := by noncomm_ring
+
+/-- The square of the inner adjoint action is the Peirce odd projection.
+Consequently its fixed points are exactly the first-order idempotent
+directions, over an arbitrary associative ring and in every characteristic. -/
+theorem tangent_iff_adjoint_square_eq_self {p x : R} (hp : p * p = p) :
+    p * x + x * p = x ↔
+      idempotentAdjoint p (idempotentAdjoint p x) = x := by
+  have hodd : idempotentAdjoint p (idempotentAdjoint p x) =
+      IdempotentCartan.oddPart p x := by
+    dsimp [idempotentAdjoint]
+    exact (IdempotentCartan.odd_eq_double_commutator hp x).symm
+  constructor
+  · intro hx
+    rw [hodd]
+    dsimp [IdempotentCartan.oddPart,
+      PeirceDecomposition.component10, PeirceDecomposition.component01,
+      PeirceDecomposition.complementIdempotent]
+    exact (tangent_eq_offDiagonal hp hx).symm
+  · intro had
+    rw [hodd] at had
+    have hoddTangent :
+        p * IdempotentCartan.oddPart p x +
+            IdempotentCartan.oddPart p x * p = IdempotentCartan.oddPart p x := by
+      dsimp [IdempotentCartan.oddPart,
+        PeirceDecomposition.component10, PeirceDecomposition.component01,
+        PeirceDecomposition.complementIdempotent]
+      have hpq : p * (1 - p) = 0 := by noncomm_ring [hp]
+      have hqp : (1 - p) * p = 0 := by noncomm_ring [hp]
+      noncomm_ring [hp, hpq, hqp]
+      simp only [← mul_assoc p p x, ← mul_assoc p p (x * p), hp]
+      abel
+    rw [← had]
+    exact hoddTangent
 
 /-- Reflection anticommutation measures twice the tangent-equation defect.
 Its vanishing cannot be cancelled to tangency in a general ring. -/

@@ -558,6 +558,38 @@ theorem nonzeroProjectorObstruction_sources_transportedEinsteinResidual
       hSource
       (by simpa [ConformalInference.projectorObstruction] using hObs)
 
+/-- Under the explicit Einstein-source equation, the transported residual
+vanishes exactly when the spectral and metric chiral projectors commute.
+This strengthens the one-way nonzero-obstruction implication while retaining
+the source equation as a hypothesis. -/
+@[rep_depth transport]
+theorem transportedEinsteinResidual_eq_zero_iff_projectors_commute
+    (CBA : InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra E)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E) (scalar Λ : ℝ)
+    (V : SplitVielbein K x)
+    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection K x V)
+    (hSource :
+      transportedEinsteinResidual (R := R) (K := K) (x := x)
+        (scalar := scalar) (Λ := Λ) V Γ = CBA.CI.chiralScale) :
+    transportedEinsteinResidual (R := R) (K := K) (x := x)
+        (scalar := scalar) (Λ := Λ) V Γ = 0
+      ↔ Commute CBA.CI.spectralChiralProjector CBA.CI.metricChiralProjector := by
+  rw [hSource, CBA.CI.chiralScale_eq_projectorObstruction_nnnorm]
+  constructor
+  · intro hZero
+    have hNorm : ‖CBA.CI.projectorObstruction‖₊ = 0 :=
+      NNReal.coe_eq_zero.mp hZero
+    exact (CBA.CI.projectorObstruction_eq_zero_iff_commute).mp
+      (nnnorm_eq_zero.mp hNorm)
+  · intro hComm
+    have hObstruction : CBA.CI.projectorObstruction = 0 :=
+      (CBA.CI.projectorObstruction_eq_zero_iff_commute).mpr hComm
+    have hNorm : ‖CBA.CI.projectorObstruction‖₊ = 0 :=
+      (nnnorm_eq_zero).mpr hObstruction
+    exact_mod_cast hNorm
+
 end EinsteinResidualClosure
 
 end InfoGeometry.Canonical.WeylKKTAnomalyIdentity

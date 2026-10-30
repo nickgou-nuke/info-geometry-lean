@@ -74,6 +74,53 @@ If local Chrome misses remote debugging:
 - click Allow on the Chrome 144+ popup if it appears
 - retry `page_info()`
 
+## 2a. Ubuntu Chromium CDP Session (Verified 2026-10-29)
+
+Ubuntu Chromium is the working local browser for this machine. From the active
+Ubuntu desktop session, start it with the same CDP port used by the harness:
+
+```bash
+chromium --remote-debugging-port=9222 &
+```
+
+If the shell does not inherit `DISPLAY`, inspect `/tmp/.X11-unix/` and set
+`DISPLAY` to the active display socket (for example, `DISPLAY=:1` when the
+active socket is `X1`). Do not launch a second browser if port `9222` is
+already occupied; query the existing endpoint first:
+
+```bash
+curl --noproxy '*' -sS http://127.0.0.1:9222/json/version
+```
+
+Attach with the documented stdin interface and an explicit local CDP endpoint:
+
+```bash
+BU_CDP_URL=http://127.0.0.1:9222 browser-harness <<'PY'
+print(page_info())
+PY
+```
+
+To inspect a shared page, navigate through the attached browser so it uses that
+browser profile's existing Google session:
+
+```bash
+BU_CDP_URL=http://127.0.0.1:9222 browser-harness <<'PY'
+url = "https://aistudio.google.com/app/prompts/..."
+new_tab(url)
+wait_for_load()
+print(page_info())
+print(js("document.body.innerText"))
+PY
+```
+
+The default `browser-harness --doctor` checks only the browser visible in its
+own execution context. In the managed agent shell, run browser-harness through
+the approved local-browser access route; a sandbox-local `chrome running`
+failure does not establish that the desktop Chromium session is absent. On
+2026-10-29 the local daemon log recorded a successful attach to port 9222 and a
+later connection loss; reconnecting with the explicit `BU_CDP_URL` and stdin
+interface returned the active Chromium tab.
+
 ## 3. Basic CLI Usage
 
 Repo-standard direct invocation:

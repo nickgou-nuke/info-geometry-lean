@@ -1,0 +1,104 @@
+Symmetry candidate import-surface audit
+Date: 2026-10-30
+
+Method
+------
+Starting at `InfoGeometry` and `InfoGeometry.All`, recursively follow repo-owned
+Lean `import` and `public import` lines. Compare the resulting module names
+with the 339 owner files in `SYMMETRY_GROUP_CARRIER_DECLARATIONS.txt` (562
+candidate declarations). The focused index includes group carriers, actions,
+representations, and Lie subalgebras; being outside an umbrella is an import
+observation, not proof that a module should be imported or defines a group.
+
+Observed closures
+-----------------
+Entry point             reachable modules    indexed owners reached
+`InfoGeometry`          5,267                114 / 339
+`InfoGeometry.All`      18,388               333 / 339
+
+Focused-index owner modules not reached by `InfoGeometry.All`
+------------------------------------------------------------
+InfoGeometry.External.Auto.TKK_StandardModel
+Omega.Conclusion.SoftcoreKroneckerSympowerDecomposition
+Omega.GU.GroupJGEllipticTwoScaleMahlerMultiplicative
+Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
+Omega.GroupUnification.Window6Delta34GeneratesSquares
+Omega.POM.BlockConsistencyRateBlockReduction
+
+The current source review finds no unimported noncommutative symmetry-group
+carrier in this six-module remainder. `TKK_StandardModel` contains abstract
+Lie-subalgebra slots and skeletal claims; `SoftcoreKroneckerSympower` is a
+scalar kernel with coordinate-permutation invariance; `GroupJGElliptic` names
+data rather than a group; `GroupJGPrimeRegisterPhase` defines an additive
+subgroup of `ℝ`; `Window6Delta34` defines a subgroup of scalar units; and
+`BlockConsistencyRateBlockReduction` studies a permutation invariance property.
+These remain indexed in the inventory, with the scalar/commutative cases kept
+separate from the requested noncommutative operator carriers. Import closure
+is navigation evidence and does not prove kernel verification in the current
+build.
+
+Independent subgroup-carrier scan
+---------------------------------
+A refreshed declaration-line scan over visible repo-owned Lean files found
+205 owner modules with a same-line `Subgroup` or `Submonoid` declaration.
+This is a syntax-based cross-check, not a semantic group census. Seventy owners
+were not in the focused 562-declaration index; 56 of those were already
+reachable from `InfoGeometry.All`. Fifteen subgroup-scan owners are outside the
+umbrella:
+
+```text
+InfoGeometry.External.Auto.inductive_colimit_uhf_group
+Omega.Conclusion.DyadicBoundaryGodelAdmissibleMultiplicativeLinearSubcode
+Omega.Conclusion.LeyangPrym3NoQPrincipalizationDegree2
+Omega.EA.FoldGroupoidAut0ComplementFixedSubgroup
+Omega.EA.FoldGroupoidWindow6BoundaryParityRationallyInvisible
+Omega.Folding.GaugeAnomalyTrigonalQ4Galois
+Omega.GU.Window6FamilyProjectionWequivariantUniqueness
+Omega.GU.Window6WeylFamilyEquipotential
+Omega.GroupUnification.Window6Delta34GeneratesSquares
+Omega.POM.BCInverseSystem
+Omega.POM.BCPontryaginDualClassification
+Omega.POM.ProjectionAsPartitionPrimeRegister
+Omega.RecursiveAddressing.PrefixSiteMinVisibleQuotient
+Omega.RootUnitCharacterPressureTensor.GaugePressureS4ClosureGenus49
+Omega.RootUnitCharacterPressureTensor.GaugePressureSignCoverGenus5
+```
+
+Source review of these hits found commutative additive subgroups, scalar-unit
+subgroups, generic subgroup parameters, finite-set or numeric metadata, and a
+finite Galois-group label enum; it did not find an additional noncommutative
+operator symmetry carrier to import. In particular, `GaugeAnomalyTrigonalQ4Galois`
+records `.s4` as an enum value rather than defining an `S₄` carrier, and the
+window-6 Weyl model is the abelian product `ZMod 16 × ZMod 3`. The scan can
+still miss groups declared through other forms and can include subgroup
+carriers unrelated to symmetry.
+
+External simple-group source check
+----------------------------------
+`external_refs/CFSG/CFSG/LieType/Simplicity/` contains 21 Lean owner files
+with family-level simplicity theorems. The local root entrypoints import
+`InfoGeometry.Exceptional.CFSGPort.All`, which ports the model and operator
+APIs but does not import those incompatible CFSG theorem owners. A source scan
+of `external_refs/openai-math/lean` found 24 files mentioning
+`IsSimpleGroup`/`isSimpleGroup`/`IsQuasisimple`/`isQuasisimple`: all 21 such
+owners under `OAI/` are reachable from both `InfoGeometry` and
+`InfoGeometry.All`. The other three are `ComparatorChallenges` statements
+whose proof bodies contain `sorry`; they are not promoted into the root
+entrypoints. A literal scan found no such declarations under
+`external_refs/lean-coxeter`; that checkout contributes Coxeter group
+infrastructure, not a simplicity proof source. The CFSG external checkout is
+pinned to Lean 4.35.0-rc3 and Mathlib b63f6e8a, while the root remains on Lean
+4.34.1 and Mathlib d13f23b; direct CFSG imports remain out of the root build.
+
+External Coxeter pin verification
+---------------------------------
+The `external_refs/lean-coxeter` submodule is at commit
+`857527a5ee35ddb64127654b821aabd99d2c178d`, after tag `v4.35.0`. Its checked-in
+`lean-toolchain` is `v4.34.1` and its manifest pins Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612`, matching the root. The root
+`lakefile.lean` exposes the external source through the `Coxeter` library, and
+the repo-owned `CoxeterPort` modules lift its geometric and signed-reflection
+representations to endomorphism-algebra units. This keeps the external
+reference available without changing the root Mathlib pin. The tracked Lean
+source count in `SYMMETRY_GROUP_INVENTORY.md` was refreshed to 26,149 on
+2026-10-30.

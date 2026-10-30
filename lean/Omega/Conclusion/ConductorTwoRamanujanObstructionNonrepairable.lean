@@ -5,22 +5,24 @@ import Mathlib.Tactic
 
 namespace Omega.Conclusion
 
-/-- A concrete parity-channel growth constant used to package the conductor-two obstruction. -/
+/-- The fixed base coefficient `2` used by this abstract parity-channel model.
+No arithmetic sequence or Ramanujan coefficient interpretation is defined in
+this file. -/
 noncomputable def conclusion_conductor_two_ramanujan_obstruction_nonrepairable_rho_minus_one :
     ℝ :=
   2
 
-/-- The corresponding parity exponent in the golden-ratio base. -/
+/-- The logarithmic ratio `log 2 / log(φ²)` for the chosen model constant. -/
 noncomputable def conclusion_conductor_two_ramanujan_obstruction_nonrepairable_beta_par : ℝ :=
   Real.log conclusion_conductor_two_ramanujan_obstruction_nonrepairable_rho_minus_one /
     Real.log (Real.goldenRatio ^ 2)
 
-/-- The geometric tail modeling the parity channel. -/
+/-- The model sequence `2^n`. -/
 noncomputable def conclusion_conductor_two_ramanujan_obstruction_nonrepairable_base_coeff
     (n : ℕ) : ℝ :=
   conclusion_conductor_two_ramanujan_obstruction_nonrepairable_rho_minus_one ^ n
 
-/-- A finite cyclotomic surgery changes the parity channel by adding a polynomial correction. -/
+/-- A finitely supported coefficient change, represented by a polynomial. -/
 noncomputable def conclusion_conductor_two_ramanujan_obstruction_nonrepairable_surgery_coeff
     (R : Polynomial ℝ) (n : ℕ) : ℝ :=
   conclusion_conductor_two_ramanujan_obstruction_nonrepairable_base_coeff n + R.coeff n
@@ -66,9 +68,10 @@ lemma conclusion_conductor_two_ramanujan_obstruction_nonrepairable_beta_par_gt_h
   simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
     mul_lt_mul_of_pos_right hlog_phi_lt_log_two hrecip_pos
 
-/-- Paper label: `thm:conclusion-conductor-two-ramanujan-obstruction-nonrepairable`.
-Adding a polynomial correction changes only finitely many coefficients of the parity channel, so
-the super-square-root exponent persists under every finite cyclotomic surgery. -/
+/-- In the abstract sequence `2^n`, adding any polynomial coefficient correction
+leaves the sequence unchanged eventually, and the fixed logarithmic ratio is
+greater than `1/2`. This does not identify the model sequence with Ramanujan
+coefficients or prove an arithmetic nonrepairability result. -/
 theorem paper_conclusion_conductor_two_ramanujan_obstruction_nonrepairable :
     conclusion_conductor_two_ramanujan_obstruction_nonrepairable_rho_minus_one >
         Real.goldenRatio ∧

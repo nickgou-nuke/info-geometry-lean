@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Quantum.ChoiCompletePositivity
 import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Data.Matrix.PEquiv
+import Mathlib.GroupTheory.Perm.Basic
 
 /-!
 # Noncommutative forward and backward boundary pairing
@@ -133,8 +135,88 @@ theorem backwardWord_posSemidef (word : List (ι → Matrix n n ℂ))
     {E : Matrix n n ℂ} (hE : E.PosSemidef) : (backwardWord word E).PosSemidef := by
   induction word with
   | nil => exact hE
-  | cons V tail ih =>
-      change (krausMap (fun i => star (V i)) (backwardWord tail E)).PosSemidef
-      exact krausMap_posSemidef (fun i => star (V i)) ih
+  | cons V tail ih => exact krausMap_posSemidef (fun i => star (V i)) ih
+
+/-! ## Unitary mixtures as noncommutative Birkhoff channels -/
+
+/-- The operator matrix associated with a finite permutation. -/
+def permutationOperator (σ : Equiv.Perm n) : Matrix n n ℂ :=
+  σ.toPEquiv.toMatrix
+
+/-- Permutation operators are unitary on the full matrix-operator carrier. -/
+theorem permutationOperator_unitary (σ : Equiv.Perm n) :
+    permutationOperator σ * star (permutationOperator σ) = 1 ∧
+      star (permutationOperator σ) * permutationOperator σ = 1 := by
+  have hstar : star (permutationOperator σ) = (permutationOperator σ)ᵀ := by
+    ext i j
+    simp [permutationOperator]
+  constructor
+  · rw [hstar]
+    ext i j
+    simp only [permutationOperator, Matrix.mul_apply, PEquiv.toMatrix_apply]
+    rw [Finset.sum_eq_single (σ j)]
+    · have hσ : σ i = σ j ↔ i = j := σ.injective.eq_iff
+      simp [hσ, Matrix.one_apply]
+    · intro k hk hne
+      have hkj : σ j ≠ k := by
+        intro h
+        apply hne
+        exact h.symm
+      simp [hkj]
+    · simp
+  · rw [hstar]
+    ext i j
+    simp only [permutationOperator, Matrix.mul_apply, PEquiv.toMatrix_apply]
+    rw [Finset.sum_eq_single (σ.symm j)]
+    · simp [Equiv.apply_symm_apply, Matrix.one_apply, eq_comm]
+    · intro k hk hne
+      have hkj : σ k ≠ j := by
+        intro h
+        apply hne
+        exact σ.injective (h.trans (Equiv.apply_symm_apply σ j).symm)
+      simp [hkj]
+    · simp
+
+/-- A weighted mixture of unitary conjugations on the full matrix algebra.
+The weights are scalar probabilities, while each summand acts by genuine
+noncommuting operator multiplication. -/
+def unitaryMixtureChannel {κ : Type*} [Fintype κ] [DecidableEq κ]
+    (w : κ → ℝ) (U : κ → Matrix n n ℂ) (X : Matrix n n ℂ) : Matrix n n ℂ :=
+  ∑ i, (w i : ℂ) • (U i * X * star (U i))
+
+/-- A normalized finite mixture of two-sided unitary conjugations is both
+unital and trace-preserving on the full, noncommutative matrix algebra. -/
+theorem unitaryMixtureChannel_doubly_stochastic
+    {κ : Type*} [Fintype κ] [DecidableEq κ]
+    (w : κ → ℝ) (hw : ∑ i, w i = 1)
+    (U : κ → Matrix n n ℂ)
+    (hU : ∀ i, U i * star (U i) = 1 ∧ star (U i) * U i = 1)
+    (X : Matrix n n ℂ) :
+    unitaryMixtureChannel w U 1 = 1 ∧
+      trace (unitaryMixtureChannel w U X) = trace X := by
+  constructor
+  · unfold unitaryMixtureChannel
+    have hwC : ∑ i, (w i : ℂ) = 1 := by exact_mod_cast hw
+    have hterm : ∀ i, U i * (1 : Matrix n n ℂ) * star (U i) = 1 := by
+      intro i
+      rw [Matrix.mul_one, (hU i).1]
+    simp_rw [hterm]
+    rw [← Finset.sum_smul, hwC, one_smul]
+  · unfold unitaryMixtureChannel
+    rw [trace_sum]
+    have hwC : ∑ i, (w i : ℂ) = 1 := by exact_mod_cast hw
+    have hterm : ∀ i,
+        trace ((w i : ℂ) • (U i * X * star (U i))) =
+          (w i : ℂ) • trace X := by
+      intro i
+      rw [trace_smul]
+      calc
+        (w i : ℂ) • trace (U i * X * star (U i)) =
+            (w i : ℂ) • trace (star (U i) * (U i * X)) := by
+          rw [Matrix.trace_mul_comm (U i * X) (star (U i))]
+        _ = (w i : ℂ) • trace ((star (U i) * U i) * X) := by
+          rw [← mul_assoc]
+        _ = (w i : ℂ) • trace X := by rw [(hU i).2, Matrix.one_mul]
+    simp_rw [hterm, ← Finset.sum_smul, hwC, one_smul]
 
 end InfoGeometry.Quantum.Choi

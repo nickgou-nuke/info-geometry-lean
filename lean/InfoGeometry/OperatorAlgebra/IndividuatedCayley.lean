@@ -559,6 +559,29 @@ def minus : A :=
 def cayley : A :=
   R.minus * R.plusInv
 
+/-- The Cayley transform with the skew-adjoint phase axis reversed. The
+verified adjoint resolvent supplies the inverse of `D - K`. -/
+def parityFlippedCayley : A :=
+  R.plus * star R.plusInv
+
+/-- The displacement of the Cayley operator from the negative pole is twice
+the self-adjoint operator passed through the verified right resolvent. -/
+theorem one_add_cayley_eq_two_mul_operator_resolvent :
+    1 + R.cayley = (2 : A) * (R.D * R.plusInv) := by
+  change 1 + (R.D - R.K) * R.plusInv =
+    (2 : A) * (R.D * R.plusInv)
+  rw [← R.plus_mul_plusInv]
+  noncomm_ring
+
+/-- The displacement of the Cayley operator from the positive pole is twice
+the phase-axis flux through the verified right resolvent. -/
+theorem one_sub_cayley_eq_two_mul_phase_resolvent :
+    1 - R.cayley = (2 : A) * (R.K * R.plusInv) := by
+  change 1 - (R.D - R.K) * R.plusInv =
+    (2 : A) * (R.K * R.plusInv)
+  rw [← R.plus_mul_plusInv]
+  noncomm_ring
+
 /-- Convert to the existing unitary-resolvent API. -/
 def toVerifiedUnitaryResolvent :
     VerifiedUnitaryResolvent A R.K R.D where
@@ -606,6 +629,33 @@ theorem minus_mul_star_plusInv :
   exact
     VerifiedUnitaryResolvent.num_mul_star_denomInv_eq_one
       R.toVerifiedUnitaryResolvent
+
+/-- Reversing the phase axis inverts the Cayley operator on both sides. This
+is an operator identity in the possibly noncommutative starred ring. -/
+theorem cayley_parity_inversion :
+    R.cayley * R.parityFlippedCayley = 1 ∧
+      R.parityFlippedCayley * R.cayley = 1 := by
+  constructor
+  · unfold cayley parityFlippedCayley
+    calc
+      R.minus * R.plusInv * (R.plus * star R.plusInv) =
+          R.minus * (R.plusInv * R.plus) * star R.plusInv := by noncomm_ring
+      _ = R.minus * star R.plusInv := by
+        have hinv : R.plusInv * R.plus = 1 := by
+          simpa [plus] using R.plusInv_mul_plus
+        rw [hinv, mul_one]
+      _ = 1 := R.minus_mul_star_plusInv
+  · unfold parityFlippedCayley cayley
+    calc
+      R.plus * star R.plusInv * (R.minus * R.plusInv) =
+          R.plus * (star R.plusInv * R.minus) * R.plusInv := by noncomm_ring
+      _ = R.plus * 1 * R.plusInv := by rw [R.star_plusInv_mul_minus]
+      _ = 1 := by
+        have hplus : R.plus * R.plusInv = 1 := by
+          simpa [plus] using R.plus_mul_plusInv
+        calc
+          R.plus * 1 * R.plusInv = R.plus * R.plusInv := by rw [mul_one]
+          _ = 1 := hplus
 
 /-- The numerator commutes with the inverse of the denominator. -/
 theorem minus_mul_plusInv_comm :
@@ -675,5 +725,9 @@ attribute [rep_depth operator]
   VerifiedCayleyResolvent.cayley_star_mul_cayley
   VerifiedCayleyResolvent.cayley_mul_star_cayley
   VerifiedCayleyResolvent.cayley_unitary
+  VerifiedCayleyResolvent.parityFlippedCayley
+  VerifiedCayleyResolvent.cayley_parity_inversion
+  VerifiedCayleyResolvent.one_add_cayley_eq_two_mul_operator_resolvent
+  VerifiedCayleyResolvent.one_sub_cayley_eq_two_mul_phase_resolvent
 
 end InfoGeometry.OperatorAlgebra.IndividuatedCayley

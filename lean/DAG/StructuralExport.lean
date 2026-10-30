@@ -8,12 +8,6 @@ open Lean
 
 namespace DAG
 
-structure StructuralRootContributionRow where
-  componentId : String
-  representative : String
-  paths : Nat
-deriving Repr, ToJson
-
 structure StructuralLayerRow where
   depth : Nat
   size : Nat
@@ -56,10 +50,7 @@ structure StructuralComponentRow where
   depthSpread : Nat
   isRoot : Bool
   isCapstone : Bool
-  rootContributionCount : Nat
-  rootContributions : Array StructuralRootContributionRow
-  strictDominatorComponentIds : Array String
-  strictDominatorRepresentatives : Array String
+  immediateDominatorComponentId : Option String
   strictDominatorCount : Nat
   canonicalRootWitnessComponentIds : Array String
   canonicalRootWitness : Array String
@@ -68,6 +59,7 @@ deriving Repr, ToJson
 structure StructuralPayload where
   schemaVersion : Nat
   orientation : String
+  dominatorEncoding : String
   nodeCount : Nat
   componentCount : Nat
   rootCount : Nat
@@ -98,23 +90,6 @@ private def representativeString (memberLists : Array (Array String)) (si : Nat)
   match (memberLists[si]!)[0]? with
   | some name => name
   | none => ""
-
-private def bitsetHas (bytes : ByteArray) (i : Nat) : Bool :=
-  let bi := i / 8
-  if bi < bytes.size then
-    let bit : UInt8 := 1 <<< (i % 8).toUInt8
-    ((bytes[bi]! &&& bit) != 0)
-  else
-    false
-
-private def dominatorIndices (h : HydratedGraph String) (si : Nat) : Array Nat :=
-  Id.run do
-    let mut out := #[]
-    let bytes := h.doms[si]!
-    for i in [:h.dag.size] do
-      if bitsetHas bytes i then
-        out := out.push i
-    out
 
 -- Use Analysis.depthMaxCore (generic) instead of a local copy.
 -- The private helper here delegates to the public generic version via depthMaxFromRoots
@@ -170,13 +145,6 @@ private def buildPayload (h : HydratedGraph String) : StructuralPayload :=
     let (dMax, pred) := depthMaxWithPred h
     let layersRaw := topologicalLayersFromRoots h
     let deepestRaw := deepestRootChains h
-    let orderFromRoots := h.topo.reverse
-    let rootPathCountsByRoot : Array (Nat × Array Nat) := Id.run do
-      let mut out := #[]
-      for r in roots do
-        out := out.push (r, componentPathCountsUpward h.preds orderFromRoots r)
-      pure out
-
     let memberLists : Array (Array String) := Id.run do
       let mut out := #[]
       for si in [:h.sccs.size] do
@@ -246,16 +214,6 @@ private def buildPayload (h : HydratedGraph String) : StructuralPayload :=
       for si in [:h.dag.size] do
         let dependencies := h.dag[si]!
         let reverseDependents := h.preds[si]!
-        let rootContribs := Id.run do
-          let mut contribs : Array (Nat × Nat) := #[]
-          for entry in rootPathCountsByRoot do
-            let ri := entry.1
-            let counts := entry.2
-            let c := counts[si]!
-            if c != 0 then
-              contribs := contribs.push (ri, c)
-          pure (contribs.qsort (fun a b => a.2 > b.2))
-        let strictDominators := (dominatorIndices h si).filter (fun dj => dj != si)
         let witnessCompIds := canonicalRootWitnessComponents pred si
         out := out.push {
           componentId := componentIds[si]!
@@ -272,23 +230,17 @@ private def buildPayload (h : HydratedGraph String) : StructuralPayload :=
           depthSpread := match dSpread[si]! with | some d => d | none => 0
           isRoot := rootSetHash.contains si
           isCapstone := capSetHash.contains si
-          rootContributionCount := rootContribs.size
-          rootContributions := rootContribs.map fun (ri, paths) => {
-            componentId := componentIds[ri]!
-            representative := representatives[ri]!
-            paths := paths
-          }
-          strictDominatorComponentIds := strictDominators.map (fun dj => componentIds[dj]!)
-          strictDominatorRepresentatives := strictDominators.map (fun dj => representatives[dj]!)
-          strictDominatorCount := strictDominators.size
+          immediateDominatorComponentId := h.idom[si]!.map (fun dj => componentIds[dj]!)
+          strictDominatorCount := h.idomDepth[si]!
           canonicalRootWitnessComponentIds := witnessCompIds.map (fun sj => componentIds[sj]!)
           canonicalRootWitness := witnessCompIds.map (fun sj => representatives[sj]!)
         }
       pure out
 
     {
-      schemaVersion := 1
-      orientation := "Edges are declaration -> dependency on the condensed SCC DAG. Roots are SCCs with empty dependency out-neighborhoods. The structure artifact adds stable component ids, component membership, dominator summaries, and canonical root witness paths."
+      schemaVersion := 2
+      orientation := "Edges are declaration -> dependency on the condensed SCC DAG. Roots are SCCs with empty dependency out-neighborhoods."
+      dominatorEncoding := "immediate-dominator-parent/v1 in dependency-root-to-dependent flow; follow immediateDominatorComponentId to enumerate strict dominators. Root reachability and path counts are query-time joins over componentEdges."
       nodeCount := h.toGraph.nodes.size
       componentCount := h.sccs.size
       rootCount := roots.size
@@ -358,6 +310,7 @@ def writeStructuralJsonOutput (payload : StructuralPayload) (outPath : String) :
   let mut needsComma := false
   needsComma ← writeJsonField h needsComma "schemaVersion" (toJson payload.schemaVersion)
   needsComma ← writeJsonField h needsComma "orientation" (toJson payload.orientation)
+  needsComma ← writeJsonField h needsComma "dominatorEncoding" (toJson payload.dominatorEncoding)
   needsComma ← writeJsonField h needsComma "nodeCount" (toJson payload.nodeCount)
   needsComma ← writeJsonField h needsComma "componentCount" (toJson payload.componentCount)
   needsComma ← writeJsonField h needsComma "rootCount" (toJson payload.rootCount)

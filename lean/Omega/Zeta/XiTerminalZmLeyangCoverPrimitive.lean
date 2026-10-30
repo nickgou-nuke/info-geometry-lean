@@ -7,7 +7,7 @@ namespace Omega.Zeta
 `paper_xi_terminal_zm_leyang_monodromy_s4`. -/
 structure xi_terminal_zm_leyang_cover_primitive_data where
   xi_terminal_zm_leyang_cover_primitive_monodromy :
-    xiLeyangGeometricMonodromyGroup = ⊤ := paper_xi_terminal_zm_leyang_monodromy_s4.1
+    xiLeyangGeometricMonodromyGroup = ⊤ := xiLeyang_geometric_monodromy_eq_top
 
 namespace xi_terminal_zm_leyang_cover_primitive_data
 

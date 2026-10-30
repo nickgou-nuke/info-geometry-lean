@@ -18,12 +18,10 @@ transposition. -/
 def xiLeyangGeometricMonodromyGroup : Subgroup (Equiv.Perm (Fin 4)) :=
   Subgroup.closure ({xiLeyangQuarticFourCycle, xiLeyangSimpleBranchTransposition} : Set _)
 
-/-- The quartic function-field Galois group is computed from the same concrete permutation
-generators. -/
-def xiLeyangFunctionFieldGaloisGroup : Subgroup (Equiv.Perm (Fin 4)) :=
-  xiLeyangGeometricMonodromyGroup
-
-private theorem xiLeyang_geometric_monodromy_eq_top :
+/-- The two explicit permutations generate all of `S₄`. This establishes the
+subgroup they generate; the owner does not construct a function-field Galois
+action or identify it with this subgroup. -/
+theorem xiLeyang_geometric_monodromy_eq_top :
     xiLeyangGeometricMonodromyGroup = ⊤ := by
   simpa [xiLeyangGeometricMonodromyGroup, xiLeyangQuarticFourCycle,
     xiLeyangSimpleBranchTransposition] using
@@ -32,14 +30,5 @@ private theorem xiLeyang_geometric_monodromy_eq_top :
       (h1 := isCycle_finRotate_of_le (by decide : 2 ≤ 4))
       (h2 := support_finRotate_of_le (by decide : 2 ≤ 4))
       (x := (0 : Fin 4)))
-
-/-- The point above infinity yields a `4`-cycle, any simple finite branch yields a transposition,
-and these two permutations generate the full symmetric group `S₄`; hence both the geometric
-monodromy and the quartic function-field Galois group are `S₄`.
-    thm:xi-terminal-zm-leyang-monodromy-s4 -/
-theorem paper_xi_terminal_zm_leyang_monodromy_s4 :
-    xiLeyangGeometricMonodromyGroup = ⊤ ∧ xiLeyangFunctionFieldGaloisGroup = ⊤ := by
-  refine ⟨xiLeyang_geometric_monodromy_eq_top, ?_⟩
-  simpa [xiLeyangFunctionFieldGaloisGroup] using xiLeyang_geometric_monodromy_eq_top
 
 end Omega.Zeta

@@ -74,4 +74,37 @@ theorem exists_nonzero_kernel_of_homogeneous_bracket_map_to_CAR_odd
     rw [map_sub, hXY, sub_self]
   exact (not_faithful_gl31_with_CAR_odd F hodd hbracket) hinj
 
+/-- The obstruction has a canonical witness: the even bracket of the odd
+bracket with the even matrix unit used above is nonzero in `gl(3|1)`, while
+every homogeneous-bracket-preserving map into the raw CAR odd space kills it.
+This strengthens the abstract nonzero-kernel conclusion by identifying a
+specific anomaly-generated kernel element. -/
+theorem explicit_anomaly_in_kernel_of_homogeneous_bracket_map_to_CAR_odd
+    (F : SuperMatrix 3 1 R →ₗ[R] Op R)
+    (hodd : ∀ X, IsHomogeneous .odd X → F X ∈ oddPart)
+    (hbracket : ∀ (p q : Parity) (X Y : SuperMatrix 3 1 R),
+      IsHomogeneous p X → IsHomogeneous q Y →
+      F (ringSuperbracket p q X Y) = ringSuperbracket p q (F X) (F Y)) :
+    ∃ X Y Z : SuperMatrix 3 1 R,
+      IsHomogeneous .odd X ∧ IsHomogeneous .odd Y ∧ IsHomogeneous .even Z ∧
+      ringSuperbracket .even .even (ringSuperbracket .odd .odd X Y) Z ≠ 0 ∧
+      F (ringSuperbracket .even .even (ringSuperbracket .odd .odd X Y) Z) = 0 := by
+  obtain ⟨X, Y, Z, hx, hy, hz, hne⟩ := gl31_odd_bracket_noncentral (R := R)
+  refine ⟨X, Y, Z, hx, hy, hz, hne, ?_⟩
+  have hb : IsHomogeneous .even (ringSuperbracket .odd .odd X Y) := by
+    simpa only [Parity.odd_add_odd, superbracket_eq_ringSuperbracket] using
+      superbracket_preserves_grading .odd .odd X Y hx hy
+  calc
+    F (ringSuperbracket .even .even (ringSuperbracket .odd .odd X Y) Z) =
+        ringSuperbracket .even .even
+          (F (ringSuperbracket .odd .odd X Y)) (F Z) :=
+      hbracket .even .even _ Z hb hz
+    _ = ringSuperbracket .even .even
+          (ringSuperbracket .odd .odd (F X) (F Y)) (F Z) := by
+      rw [hbracket .odd .odd X Y hx hy]
+    _ = 0 := by
+      change (F X * F Y + F Y * F X) * F Z - F Z *
+        (F X * F Y + F Y * F X) = 0
+      exact sub_eq_zero.mpr (odd_bracket_central (hodd X hx) (hodd Y hy) (F Z)).eq
+
 end InfoGeometry.Algebra.ZornColorOperatorCoordinates

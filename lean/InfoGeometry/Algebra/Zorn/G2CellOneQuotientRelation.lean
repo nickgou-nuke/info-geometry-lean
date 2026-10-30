@@ -5,6 +5,8 @@ import InfoGeometry.Algebra.Zorn.G2ResidualPairCoordinateCellOne
 import InfoGeometry.Algebra.Zorn.G2GapResidualPairAssembly
 import InfoGeometry.Algebra.Zorn.G2GapResidualPairCellAssembly
 import InfoGeometry.Algebra.Zorn.G2QuotientEnumInjectivityProbe
+import InfoGeometry.Algebra.Zorn.G2FactorizationAlignmentCertificate
+import InfoGeometry.Algebra.Zorn.G2ResidualCoordinateCellOne
 
 /-!
 # Exact quotient collision and 2-coset structure of Cell 1 in G₂(2)
@@ -163,6 +165,25 @@ theorem cell_one_full_six_pair_classification :
    quotientRepresentative_24_ne_178,
    quotientRepresentative_45_ne_73,
    quotientRepresentative_45_ne_178⟩
+
+/-! The exact quotient collision contradicts the raw residual-alignment field
+    used by the generic and concrete global injectivity packages. -/
+
+theorem no_factorizationAlignmentSystem :
+    IsEmpty InfoGeometry.Algebra.Zorn.G2FactorizationAlignmentCertificate.FactorizationAlignmentSystem := by
+  refine ⟨fun C => ?_⟩
+  have h24 : (24 : Fin 189) ∈ orbitCells 1 := by decide
+  have h45 : (45 : Fin 189) ∈ orbitCells 1 := by decide
+  have halign := C.residual_alignment 1 24 45 h24 h45 quotientRepresentative_24_eq_45
+  exact InfoGeometry.Algebra.Zorn.G2ResidualCoordinateCellOne.residualWord_cell_one_24_ne_45 halign
+
+theorem no_concreteFactorizationAlignmentSystem :
+    IsEmpty InfoGeometry.Algebra.Zorn.G2FactorizationAlignmentCertificate.ConcreteFactorizationAlignmentSystem := by
+  refine ⟨fun C => ?_⟩
+  have h24 : (24 : Fin 189) ∈ orbitCells 1 := by decide
+  have h45 : (45 : Fin 189) ∈ orbitCells 1 := by decide
+  have halign := C.residual_alignment 1 24 45 h24 h45 quotientRepresentative_24_eq_45
+  exact InfoGeometry.Algebra.Zorn.G2ResidualCoordinateCellOne.residualWord_cell_one_24_ne_45 halign
 
 /-- THEOREM: The 4 elements of Cell 1 project onto exactly the 2 distinct
     cosets `{[24] = [45], [73] = [178]}` in `G ⧸ U₆`. -/

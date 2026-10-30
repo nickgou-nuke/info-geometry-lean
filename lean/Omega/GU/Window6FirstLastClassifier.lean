@@ -46,4 +46,35 @@ theorem paper_window6_first_last_classifier {n : ℕ}
       simp [window6_first_last_classifier_eval, window6_first_last_classifier_first,
         window6_first_last_classifier_last, hu, hv]
 
+/-- The rectangular-band operation is not commutative: the first output
+coordinate remembers the left input, so two inputs with distinct `Fin 3`
+coordinates give an explicit counterexample. -/
+theorem window6_rectangular_band_not_commutative :
+    ∃ ρ : Fin 2 → Fin 3 × Fin 7,
+      ∃ x y : window6_first_last_classifier_term 2,
+        window6_first_last_classifier_eval ρ
+            (.window6_first_last_classifier_mul x y) ≠
+          window6_first_last_classifier_eval ρ
+            (.window6_first_last_classifier_mul y x) := by
+  refine ⟨fun i => if i = (0 : Fin 2) then (0, 0) else (1, 0),
+    .window6_first_last_classifier_var 0,
+    .window6_first_last_classifier_var 1, ?_⟩
+  decide
+
+/-- The rectangular-band operation also fails the unrestricted equation
+`x ⋄ y = z ⋄ w`; distinct first coordinates of `x` and `z` witness failure. -/
+theorem window6_rectangular_band_not_unrestricted_product_equality :
+    ∃ ρ : Fin 4 → Fin 3 × Fin 7,
+      ∃ x y z w : window6_first_last_classifier_term 4,
+        window6_first_last_classifier_eval ρ
+            (.window6_first_last_classifier_mul x y) ≠
+          window6_first_last_classifier_eval ρ
+            (.window6_first_last_classifier_mul z w) := by
+  refine ⟨fun i => if i = (2 : Fin 4) then (1, 0) else (0, 0),
+    .window6_first_last_classifier_var 0,
+    .window6_first_last_classifier_var 1,
+    .window6_first_last_classifier_var 2,
+    .window6_first_last_classifier_var 3, ?_⟩
+  decide
+
 end Omega.GU

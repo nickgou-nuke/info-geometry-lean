@@ -41,16 +41,16 @@ schema CombinatorialHierarchy = {
 schema ZornAlgebra = {
   entities
     ZornSlot,          -- 2×2 matrix with scalar diagonal, vector off-diagonal
-    SymmetryGroup,     -- G_2, SU(3), etc.
+    SymmetryGroupMetadata, -- descriptive names/dimensions; not a group carrier
     ModularEigenvalue, -- tripotent: λ³ = λ, λ ∈ {-1, 0, +1}
     DiagonalProjector  -- OP1, OP2 for sandwiching
   attributes
     slot_type     : ZornSlot -> String    -- "scalar", "vector_3", "vector_3bar"
     slot_dim      : ZornSlot -> Integer   -- 1 or 3
     slot_content  : ZornSlot -> String    -- "a", "b", "𝑥⃗", "𝑦⃗"
-    group_name    : SymmetryGroup -> String
-    group_dim     : SymmetryGroup -> Integer
-    stabilizes    : SymmetryGroup -> ZornSlot -> Boolean
+    group_name    : SymmetryGroupMetadata -> String
+    group_dim     : SymmetryGroupMetadata -> Integer
+    stabilizes    : SymmetryGroupMetadata -> ZornSlot -> Boolean
     eigen_val     : ModularEigenvalue -> Integer
     eigen_type    : ModularEigenvalue -> String  -- "quark", "antiquark", "vacuum"
     projector_id  : DiagonalProjector -> String  -- "OP1", "OP2"
@@ -70,7 +70,7 @@ mapping HierarchyToZorn = {
     CombinatorialHierarchy -> ZornAlgebra
   entities
     MersenneMode -> ZornSlot
-    CouplingConstant -> SymmetryGroup
+    CouplingConstant -> SymmetryGroupMetadata
   attributes
     dimension -> slot_dim
     prime_index -> eigen_val  -- p mod 3 classifies representation
@@ -78,10 +78,10 @@ mapping HierarchyToZorn = {
     -- M_2 = 3 maps to 3D color vector slots
     ∀ m : MersenneMode, prime_index(m) = 2 → slot_dim(F(m)) = 3
     -- M_3 = 7 maps to 7 imaginary octonion units (G_2 structure)
-    ∀ m : MersenneMode, prime_index(m) = 3 → ∃ g : SymmetryGroup, group_dim(g) = 7
+    ∀ m : MersenneMode, prime_index(m) = 3 → ∃ g : SymmetryGroupMetadata, group_dim(g) = 7
     -- 137 couples to SU(3) × U(1) structure
     ∀ c : CouplingConstant, value_137(c) = 137 → 
-      ∃ g : SymmetryGroup, group_name(g) = "SU(3)" ∧ group_dim(g) = 8
+      ∃ g : SymmetryGroupMetadata, group_name(g) = "SU(3)" ∧ group_dim(g) = 8
 }
 
 instance Exact137Data = {
@@ -116,8 +116,8 @@ instance ZornColorRealization = {
   generators
     x_slot, y_slot : ZornSlot      -- off-diagonal 3-vectors
     a_slot, b_slot : ZornSlot      -- diagonal scalars
-    su3_group      : SymmetryGroup -- color gauge group
-    g2_group       : SymmetryGroup -- automorphism group
+    su3_group      : SymmetryGroupMetadata -- color group description
+    g2_group       : SymmetryGroupMetadata -- automorphism group description
     e_plus, e_minus, e_zero : ModularEigenvalue
     op1, op2       : DiagonalProjector
   equations
@@ -179,7 +179,7 @@ query ColorStructure = {
   Extract the SU(3) color gauge structure from the Zorn algebra realization.
   Returns the group, stabilized slots, and corresponding Mersenne origins.
   """
-  FOR g IN SymmetryGroup
+  FOR g IN SymmetryGroupMetadata
     FILTER group_name(g) = "SU(3)"
     FOR s IN ZornSlot
       FILTER stabilizes(g, s) = true

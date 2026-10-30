@@ -40,6 +40,50 @@ class LockedLakeBuildTests(unittest.TestCase):
         )
         self.assertFalse(state["locked"])
 
+    def test_nested_build_preserves_callers_refresh_lock(self):
+        with tempfile.TemporaryDirectory() as directory:
+            lock_path = Path(directory) / "build.lock"
+            outer_lock = BuildLock(lock_path, "decl-graph-refresh").acquire()
+            try:
+                with (
+                    patch.object(build, "repo_root", return_value=Path("/repo")),
+                    patch.object(build, "_validate_lake_workspace_integrity", return_value=None),
+                    patch.object(build, "_ensure_mathlib_cache_hydrated"),
+                    patch.object(build.subprocess, "Popen", return_value=Mock(wait=Mock(return_value=0))),
+                    patch("builtins.print"),
+                ):
+                    self.assertEqual(
+                        build.run_locked_lake_build(
+                            ["dagIndexer", "InfoGeometry.Physics.All"],
+                            existing_lock=outer_lock,
+                        ),
+                        0,
+                    )
+
+                self.assertEqual(outer_lock._ref_count, 1)
+                with self.assertRaises(BuildLockBusyError):
+                    BuildLock(lock_path, "concurrent-build", block=False).acquire()
+            finally:
+                outer_lock.release()
+
+    def test_refresh_prebuild_reuses_existing_lock(self):
+        lock = Mock()
+        with (
+            patch.object(build, "run_locked_lake_build", return_value=0) as run_build,
+            patch("builtins.print"),
+        ):
+            self.assertTrue(
+                build.run_locked_prebuild(
+                    Path("/repo"), "InfoGeometry.Physics.All", build_lock=lock
+                )
+            )
+
+        run_build.assert_called_once_with(
+            ["dagIndexer", "InfoGeometry.Physics.All"],
+            wait_for_lock=False,
+            existing_lock=lock,
+        )
+
     def test_lock_file_inode_is_stable_across_release_and_reacquire(self):
         with tempfile.TemporaryDirectory() as directory:
             lock_path = Path(directory) / "build.lock"

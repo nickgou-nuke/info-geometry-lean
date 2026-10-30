@@ -207,4 +207,27 @@ noncomputable def dihedralWeylMulEquiv : DihedralGroup 6 ≃* weylG2Subgroup :=
   MulEquiv.ofBijective dihedralWeylHom
     ⟨dihedralWeylHom_injective, dihedralWeylSubgroupEquiv.surjective⟩
 
+/-- The two generating reflections do not commute in the abstract dihedral
+group. -/
+theorem dihedral_reflections_noncommute :
+    DihedralGroup.sr (0 : ZMod 6) * DihedralGroup.sr (1 : ZMod 6) ≠
+      DihedralGroup.sr (1 : ZMod 6) * DihedralGroup.sr (0 : ZMod 6) := by
+  intro h
+  have hrot : DihedralGroup.r (1 : ZMod 6) = DihedralGroup.r (-1 : ZMod 6) := by
+    simpa [DihedralGroup.sr_mul_sr] using h
+  have hval := DihedralGroup.r.inj hrot
+  have hneq : (1 : ZMod 6) ≠ -1 := by decide
+  exact hneq hval
+
+/-- The two Weyl generators remain noncommuting in the concrete subgroup of
+split-octonion algebra automorphisms. This witnesses noncommutative symmetry
+on the algebra carrier itself. -/
+theorem concrete_weyl_reflections_noncommute :
+    dihedralWeylMulEquiv (DihedralGroup.sr (0 : ZMod 6)) *
+        dihedralWeylMulEquiv (DihedralGroup.sr (1 : ZMod 6)) ≠
+      dihedralWeylMulEquiv (DihedralGroup.sr (1 : ZMod 6)) *
+        dihedralWeylMulEquiv (DihedralGroup.sr (0 : ZMod 6)) := by
+  intro h
+  exact dihedral_reflections_noncommute (dihedralWeylMulEquiv.injective h)
+
 end InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2

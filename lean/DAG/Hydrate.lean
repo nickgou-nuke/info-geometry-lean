@@ -28,7 +28,9 @@ def hydrate {α} [BEq α] [Hashable α] (g : Graph α) : HydratedGraph α := Id.
           seen := seen.insert (i,j)
 
   let order := topo dag preds
-  let doms := Dominators.dominators preds order
+  -- Dominance flows from dependency roots toward their dependents, the reverse
+  -- of the stored declaration-to-dependency edges.
+  let (idom, idomDepth) := Dominators.immediateDominators dag order.reverse
 
   {
     toGraph := g,
@@ -37,7 +39,8 @@ def hydrate {α} [BEq α] [Hashable α] (g : Graph α) : HydratedGraph α := Id.
     dag := dag,
     preds := preds,
     topo := order,
-    doms := doms
+    idom := idom,
+    idomDepth := idomDepth
   }
 
 end DAG

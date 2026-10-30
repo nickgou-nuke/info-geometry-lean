@@ -12,26 +12,25 @@ open InfoGeometry.Canonical.TwoSheetStokesCoordinates
 noncomputable section
 
 /-!
-# Archetype 400: The Finite Heisenberg Obstruction
-At any finite stage `n` of the Amplituhedron tensor tower, the ambitwistor 
-observables do not commute. We represent this non-commutativity algebraically 
-within the finite-dimensional boundary faces.
+# Finite-stage nonzero-carrier predicate
+
+The predicate below records existence of a nonzero matrix at a finite stage.
+It does not encode Heisenberg commutation relations or an analytic bound.
+Since the carrier at stage zero is trivial, the universal predicate named
+`emergent_colimit_mass_gap` below is refuted by
+`TopologicalMassGapZeroStageAudit.not_emergent_colimit_mass_gap`; no mass-gap
+statement about an actual colimit is established here.
 -/
 
-/-- A property indicating that the finite dimensional algebra at stage n 
-    supports a non-commutative Heisenberg core bounded by ħ. -/
+/-- Existence of a nonzero matrix at stage `n`. The parameter `ħ` is retained
+for API compatibility and is not used by this predicate. -/
 def finite_heisenberg_obstruction (n : ℕ) (ħ : ℝ) : Prop :=
-  -- (Mocked purely to structurally satisfy the dependency without real.sqrt heuristics)
-  -- Since AmplituhedronAlgebra n is Matrix (Fin 4) (Fin n) ℝ, we look for topological properties instead of direct HMul
   ∃ (Z : AmplituhedronAlgebra n), Z ≠ 0
 
-/-!
-# Archetype 401: Tensor Tower Colimit Injection
-The non-commutative obstruction is propagated up the categorical direct 
-inductive colimit. It cannot be resolved at any finite stage.
--/
+/-! ## Injective finite-stage transport -/
 
-/-- The topological obstruction persists through the boundary face embedding. -/
+/-- A nonzero finite-stage matrix witness remains nonzero after the injective
+stage inclusion. This does not imply a Heisenberg relation or a spectral gap. -/
 theorem obstruction_persists_in_tower (n : ℕ) (ħ : ℝ) 
     (h_obs : finite_heisenberg_obstruction n ħ) :
     finite_heisenberg_obstruction (n + 1) ħ := by
@@ -42,31 +41,18 @@ theorem obstruction_persists_in_tower (n : ℕ) (ħ : ℝ)
   apply amplituhedronInclusion_injective n
   simpa using h_inclusion
 
-/-!
-# Archetype 402: The Modular Krein CPT Grading
-To stabilize the anomaly at the infinite limit, we impose the Two-Sheeted 
-Krein Topological symmetry. The CPT theorem is enforced as the grading 
-anti-involution across the T-dual boundary limit.
--/
+/-! ## Existing involution on the Stokes carrier -/
 
-/-- The global CPT Modular Conjugation acting on the limit space. 
-    It balances the anomalies from the inner and outer punctures. -/
+/-- The existing Krein-adjoint homeomorphism on the Stokes carrier. -/
 def global_cpt_modular_conjugation (q : InfoGeometry.Canonical.TwoSheetStokesCoordinates.StokesQuad) : InfoGeometry.Canonical.TwoSheetStokesCoordinates.StokesQuad :=
   stokesKreinAdjointHomeomorph q
 
-/-!
-# Archetype 403: The A_∞ Limit Mass Genesis
-Because the obstruction survives the colimit limit, the twistor incidence 
-relation is topologically broken on the macroscopic boundary. 
-The mass gap is defined not by a simple real square root, but as the 
-non-zero topological defect class in the infinite colimit limit.
--/
+/-! ## Legacy universal finite-stage predicate -/
 
-/-- The topological mass gap emerges strictly as the non-vanishing 
-    obstruction class in the A_∞ Amplituhedron limit. -/
+/-- Legacy predicate requiring a nonzero finite-stage matrix at every `n`.
+It is false at `n = 0` and does not assert a spectral gap or a colimit-level
+property. -/
 def emergent_colimit_mass_gap (ħ : ℝ) : Prop :=
-  -- The true structural mass definition: the obstruction never vanishes 
-  -- across the entire categorical colimit tower.
   ∀ n, finite_heisenberg_obstruction n ħ
 
 end

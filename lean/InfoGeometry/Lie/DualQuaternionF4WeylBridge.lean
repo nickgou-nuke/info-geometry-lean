@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.DualQuaternionF4WeylBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
-# Dual Quaternionic Realization of $W(F_4)$
+# Forwarding API for the abstract F₄ Coxeter datum
 
 This module forwards to the canonical owner implementation in
 `InfoGeometry.Canonical.DualQuaternionF4WeylBridge`.
@@ -26,6 +26,7 @@ export InfoGeometry.Canonical.DualQuaternionF4WeylBridge (
   canonicalF4SimpleReflections
   dualQuaternionF4_eq_simpleReflections
   canonicalF4SimpleReflections_range
+  dualQuaternionF4GeneratedSubgroup_eq_simpleReflectionClosure
   dualQuaternionF4GeneratedSubgroup_eq_weylF4
 )
 

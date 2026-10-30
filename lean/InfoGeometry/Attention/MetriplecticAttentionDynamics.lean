@@ -134,11 +134,10 @@ theorem metriplectic_dirac_dispersion (M : Mat2R) (p m : ℝ)
 
 /-!
 # Archetype 905: The Thermodynamic Origin of the Softmax Obstruction
-The trace of the dissipative core is strictly positive for softmax attention matrices:
-  tr(diag_core(M)) = tr(M) = M₀₀ + M₁₁.
-This positive trace represents irreversible entropy generation.
-The failure of the naive chiral identity P*M = M*(1-P) is quantitatively
-equal to the dissipative gradient flow tensor.
+For matrices with positive diagonal entries, the dissipative core has positive trace.
+The chiral obstruction itself is `diag(M₀₀, -M₁₁)`, with trace `M₀₀ - M₁₁`;
+that trace need not be positive. The obstruction operator is nevertheless nonzero
+when either diagonal entry is nonzero. No thermodynamic interpretation is asserted.
 -/
 
 /-- The chiral obstruction tensor: Obs(M) = P * M - M * (1 - P). -/
@@ -146,9 +145,8 @@ def chiral_obstruction (M : Mat2R) : Mat2R :=
   let P : Mat2R := !![1, 0; 0, 0]
   P * M - M * (1 - P)
 
-/-- Master Theorem 7: The Chiral Obstruction is Governed Exactly by the Diagonal Core.
-    The obstruction to naive chirality is purely diagonal and equals
-    diag(M₀₀, -M₁₁). -/
+/-- The obstruction to the proposed chiral identity is diagonal, with opposite
+signs on the two diagonal entries. -/
 theorem chiral_obstruction_eq_diagonal_leak (M : Mat2R) :
     chiral_obstruction M = !![M 0 0, 0; 0, -M 1 1] := by
   ext i j
@@ -156,10 +154,49 @@ theorem chiral_obstruction_eq_diagonal_leak (M : Mat2R) :
     norm_num [chiral_obstruction, Matrix.mul_apply, Matrix.vecMul, dotProduct,
       Fin.sum_univ_two, Matrix.one_apply]
 
-/-- Master Theorem 8: Non-Vanishing Trace of the Obstruction for Positive Diagonal.
-    If M has strictly positive diagonal entries (the universal property of Softmax),
-    the trace of diag_core(M) is strictly positive, proving that the Softmax
-    Obstruction is identically the non-vanishing thermodynamic entropy trace. -/
+/-- The trace of the obstruction is the difference of the diagonal entries;
+positive diagonal entries alone do not make this trace positive. -/
+theorem chiral_obstruction_trace (M : Mat2R) :
+    Matrix.trace (chiral_obstruction M) = M 0 0 - M 1 1 := by
+  rw [chiral_obstruction_eq_diagonal_leak]
+  simp [Matrix.trace, Fin.sum_univ_two]; ring
+
+/-- The obstruction trace is positive exactly when the first diagonal entry
+exceeds the second. Positivity of both entries alone is not sufficient. -/
+theorem chiral_obstruction_trace_pos_iff (M : Mat2R) :
+    0 < Matrix.trace (chiral_obstruction M) ↔ M 0 0 > M 1 1 := by
+  rw [chiral_obstruction_trace]
+  exact sub_pos
+
+/-- Equal positive diagonal entries give a nonzero obstruction with zero trace. -/
+theorem positive_diagonal_obstruction_trace_can_vanish :
+    ∃ M : Mat2R, 0 < M 0 0 ∧ 0 < M 1 1 ∧
+      chiral_obstruction M ≠ 0 ∧ Matrix.trace (chiral_obstruction M) = 0 := by
+  let M : Mat2R := !![1, 2; 3, 1]
+  refine ⟨M, ?_, ?_, ?_, ?_⟩
+  · norm_num [M]
+  · norm_num [M]
+  · intro h
+    have h00 := congrArg (fun A : Mat2R => A 0 0) h
+    rw [chiral_obstruction_eq_diagonal_leak] at h00
+    norm_num [M] at h00
+  · rw [chiral_obstruction_trace]
+    norm_num [M]
+
+/-- A positive first diagonal entry makes the obstruction matrix nonzero,
+although its trace may vanish as shown above. -/
+theorem chiral_obstruction_ne_zero_of_positive_first_diagonal (M : Mat2R)
+    (h00 : 0 < M 0 0) :
+    chiral_obstruction M ≠ 0 := by
+  intro h
+  have h00' := congrArg (fun A : Mat2R => A 0 0) h
+  rw [chiral_obstruction_eq_diagonal_leak] at h00'
+  norm_num at h00'
+  exact (ne_of_gt h00) h00'
+
+/-- Positive diagonal entries imply positive trace for the diagonal core.
+    This is a statement about `diag_core`, not about `chiral_obstruction`:
+    the latter has trace `M 00 - M 11`, which can vanish for positive entries. -/
 theorem softmax_trace_strictly_positive (M : Mat2R)
     (h00 : 0 < M 0 0) (h11 : 0 < M 1 1) :
     0 < Matrix.trace (diag_core M) := by

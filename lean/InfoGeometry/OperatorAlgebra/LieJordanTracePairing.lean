@@ -28,6 +28,16 @@ variable {R A G : Type*} [CommRing R] [Ring A] [Algebra R A] [AddCommGroup G]
 section Cyclic
 
 variable (tau : A →+ G) (hcyc : ∀ x y : A, tau (x * y) = tau (y * x))
+
+/-- The trace cubic form is symmetric in the two Jordan multiplication
+arguments. This statement uses the full noncommutative product; symmetry comes
+from the Jordan sum, not from commuting the factors. -/
+theorem jordan_trace_cubic_swap_first (s x y : A) :
+    tau (jordanLeft (R := R) s x * y) =
+      tau (jordanLeft (R := R) x s * y) := by
+  change tau ((s * x + x * s) * y) = tau ((x * s + s * x) * y)
+  rw [add_comm (s * x) (x * s)]
+
 include hcyc
 
 theorem jordan_trace_adjoint (s x y : A) :
@@ -38,6 +48,13 @@ theorem jordan_trace_adjoint (s x y : A) :
     rw [mul_assoc, hcyc s (x * y), mul_assoc]
   rw [hc, mul_assoc x s y]
   abel
+
+/-- Cyclicity makes the trace cubic form symmetric under exchange of the
+right argument with the differentiated argument. -/
+theorem jordan_trace_cubic_swap_last (s x y : A) :
+    tau (jordanLeft (R := R) s x * y) =
+      tau (jordanLeft (R := R) s y * x) := by
+  rw [jordan_trace_adjoint (R := R) tau hcyc s x y, hcyc]
 
 /-- Opposite Jordan perturbations are dual for the cyclic bilinear pairing. -/
 theorem trace_dual (h s x y : A) :

@@ -1,0 +1,104 @@
+{
+  "source": "cached/aistudio_download_1t9Q3/Non-Commutative Peirce–Cartan Algebra Formalization",
+  "source_bytes": 1429841,
+  "source_sha256": "4a1318e72e6807bfca2314dc7cc10bfd75b7474f08db6e90fe7b6ac75fe9b34d",
+  "turns": 35,
+  "roles": {
+    "user": 18,
+    "model": 17
+  },
+  "documents": 37,
+  "attachments": [
+    {
+      "turn": 7,
+      "name": "Paste October 29, 2026 - 6:02PM",
+      "mime": "text/plain",
+      "bytes": 30339,
+      "sha256": "4ca464e69a9afcf53c17d8c3a17942483cc27514ef50fbc20efa08cd0763fda7",
+      "file": "attachment_turn_0007.txt"
+    }
+  ],
+  "counts": {
+    "code": 33,
+    "inline_code": 196,
+    "tex": 2292
+  },
+  "code_languages": {
+    "lean": 23,
+    "": 3,
+    "text": 7
+  },
+  "declaration_occurrences": 956,
+  "unclosed_spans": [],
+  "streaming_parts_checks": [
+    {
+      "turn": 2,
+      "matches_text": true
+    },
+    {
+      "turn": 4,
+      "matches_text": true
+    },
+    {
+      "turn": 6,
+      "matches_text": true
+    },
+    {
+      "turn": 8,
+      "matches_text": true
+    },
+    {
+      "turn": 10,
+      "matches_text": true
+    },
+    {
+      "turn": 12,
+      "matches_text": true
+    },
+    {
+      "turn": 14,
+      "matches_text": true
+    },
+    {
+      "turn": 16,
+      "matches_text": true
+    },
+    {
+      "turn": 18,
+      "matches_text": true
+    },
+    {
+      "turn": 20,
+      "matches_text": true
+    },
+    {
+      "turn": 22,
+      "matches_text": true
+    },
+    {
+      "turn": 24,
+      "matches_text": true
+    },
+    {
+      "turn": 26,
+      "matches_text": true
+    },
+    {
+      "turn": 28,
+      "matches_text": true
+    },
+    {
+      "turn": 31,
+      "matches_text": true
+    },
+    {
+      "turn": 33,
+      "matches_text": true
+    },
+    {
+      "turn": 35,
+      "matches_text": true
+    }
+  ],
+  "scope": "Complete exported text and embedded text attachments. Explicit TeX and code indexed; prose mathematics preserved in full_chat.txt. No claim of mathematical or Lean verification."
+}

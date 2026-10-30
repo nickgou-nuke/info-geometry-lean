@@ -87,4 +87,21 @@ theorem hodge_identity_pair (u v : A) :
     (u * v + v * u) * 1 + 1 * (u * v + v * u)) = _
   simp only [mul_one, one_mul, two_nsmul]
 
+/-- A ring homomorphism transports the exchanged blocks without reordering them. -/
+theorem map_coboundary {B : Type*} [Ring B] [Algebra R B]
+    (f : A →+* B) (v : A) (z : A × A) :
+    Prod.map f f (coboundary (R := R) v z) =
+      coboundary (R := R) (f v) (Prod.map f f z) := by
+  apply Prod.ext
+  · change f (v * z.2 + z.2 * v) = f v * f z.2 + f z.2 * f v
+    simp only [map_add, map_mul]
+  · change f (v * z.1 - z.1 * v) = f v * f z.1 - f z.1 * f v
+    simp only [map_sub, map_mul]
+
+/-- The Jordan Hodge action, evaluated at the unit, need not vanish. -/
+theorem jordan_quadratic_one (u v : A) :
+    jordanLeft (R := R) (u * v + v * u) 1 = 2 • (u * v + v * u) := by
+  change (u * v + v * u) * 1 + 1 * (u * v + v * u) = _
+  simp only [mul_one, one_mul, two_nsmul]
+
 end InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge

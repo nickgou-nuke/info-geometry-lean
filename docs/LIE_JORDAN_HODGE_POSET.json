@@ -1,0 +1,7 @@
+{
+  "schema": "info_geometry.theorem_dependency_order.v1",
+  "meaning": "Mathematical prerequisites, not physical causation. Uniform form descent still assumes compatible coefficients, trace readback and finite estimates.",
+  "base": "87bfa4567046db6f475a9df2903bd4060dc773ca",
+  "nodes": ["algebraic_boundary", "block_exchange", "real_positive_adjoint", "hodge_energy_kernel", "bounded_homotopy_estimate", "matrix_coercivity", "native_star_tower", "normalized_energy_refinement", "cofinal_tail_cover", "uniform_form_descent", "specified_sheet_exchange", "odd_functional_readout"],
+  "edges": [["algebraic_boundary", "block_exchange"], ["block_exchange", "real_positive_adjoint"], ["real_positive_adjoint", "hodge_energy_kernel"], ["hodge_energy_kernel", "matrix_coercivity"], ["bounded_homotopy_estimate", "matrix_coercivity"], ["native_star_tower", "normalized_energy_refinement"], ["native_star_tower", "cofinal_tail_cover"], ["normalized_energy_refinement", "uniform_form_descent"], ["cofinal_tail_cover", "uniform_form_descent"], ["specified_sheet_exchange", "odd_functional_readout"]]
+}

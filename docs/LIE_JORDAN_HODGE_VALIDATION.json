@@ -1,0 +1,69 @@
+{
+  "schema": "info_geometry.real_lie_jordan_hodge.verification.v1",
+  "status": "passed_scoped_kernel_and_axiom_audit",
+  "scope": "Exact source-import closure, not repository-root Lake build or Yang-Mills theorem",
+  "base_commit": "87bfa4567046db6f475a9df2903bd4060dc773ca",
+  "verified_head_commit": "07952140d903f99b66e777e167af49ffb5df7e81",
+  "checked_merge_revision": "8489cb5594d8a1965a7bb3950594985295b6960c",
+  "workflow_run": 40903090422,
+  "artifact_id": 12909554068,
+  "artifact_sha256": "a115cc0cfaad29a2ac92f99f08aa624bc9beabb4b99fe7e04c96ab65012c33b7",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "target_modules": [
+    "InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge",
+    "InfoGeometry.OperatorAlgebra.LieJordanHodgeCoercivity",
+    "InfoGeometry.OperatorAlgebra.LieJordanHodgeReal",
+    "InfoGeometry.OperatorAlgebra.LieJordanChiralState",
+    "InfoGeometry.Canonical.LieJordanHodgeColimit",
+    "InfoGeometry.Canonical.LieJordanHodgeSynthesis"
+  ],
+  "compiled_repository_modules": 32,
+  "explicit_named_theorems_and_lemmas": 45,
+  "named_theorem_counts": {
+    "InfoGeometry.OperatorAlgebra.LieJordanHodgeBridge": 5,
+    "InfoGeometry.OperatorAlgebra.LieJordanHodgeCoercivity": 6,
+    "InfoGeometry.OperatorAlgebra.LieJordanHodgeReal": 20,
+    "InfoGeometry.OperatorAlgebra.LieJordanChiralState": 5,
+    "InfoGeometry.Canonical.LieJordanHodgeColimit": 9,
+    "InfoGeometry.Canonical.LieJordanHodgeSynthesis": 0
+  },
+  "audited_declarations_including_generated_helpers": 65,
+  "transitive_axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "new_target_compiler_warnings": 0,
+  "imported_module_warnings": {
+    "InfoGeometry.Clifford.SplitQ11": 1,
+    "InfoGeometry.Algebra.PeirceLieJordanResolution": 4,
+    "InfoGeometry.Clifford.Cl11Matrix": 3,
+    "InfoGeometry.OperatorAlgebra.LieJordanDualTransport": 4
+  },
+  "verified_source_hash_mismatches": [],
+  "new_lean_sources_sha256": {
+    "lean/InfoGeometry/OperatorAlgebra/LieJordanHodgeBridge.lean": "b35fc74b1033625580aacff54abf1bef8bec1cd09c8f77b7de096e5fd767d079",
+    "lean/InfoGeometry/OperatorAlgebra/LieJordanHodgeCoercivity.lean": "6a13726c4f41ba01d2eeee77de56315f580a77837ebfa000ae4eb83e3867689e",
+    "lean/InfoGeometry/OperatorAlgebra/LieJordanHodgeReal.lean": "1de1ef0c125238209afafacded9fbb9525935ba0e12b82148d036c22c56e6e7c",
+    "lean/InfoGeometry/OperatorAlgebra/LieJordanChiralState.lean": "49e7aa38da32a9026c29d705d7c5629e1f6c39da0bd89c9c5cc4518e7dadc978",
+    "lean/InfoGeometry/Canonical/LieJordanHodgeColimit.lean": "8f13897ed8bf01e511b3c2e1448db1a9b7618784679bccdf8fe9c2b02f81b391",
+    "lean/InfoGeometry/Canonical/LieJordanHodgeSynthesis.lean": "fb23836809a48a08f47bc03e395ce2c381f4ff773f2732ad8b06453c5fecab89"
+  },
+  "static_target_scan": "No sorry, admit, custom axiom, unsafe, partial, or native_decide declarations/calls found after comment removal",
+  "semantic_scope": {
+    "carrier": "Full real matrix algebra and its native WithLp 2 double; abstract bounded operators on real Hilbert spaces",
+    "positive_adjoint": "Derived from the Hilbert-Schmidt pairing; not assumed equal to a Krein adjoint",
+    "nonzero_tests": "Nonzero coefficients give nonzero doubled boundaries; their positive adjoint differs from the unexchanged boundary",
+    "coercivity_hypotheses": "Actual homotopy equation and explicit norm/pointwise bound; no constructed interacting family or uniform-in-stage bound",
+    "colimit": "Existing Cl11TensorTowerLimit and native ofStage/bonding/universal maps",
+    "uniform_descent": "Conditional trace-form bound on a cofinal tail; exact coefficient compatibility describes fixed limit elements, not growing interactions",
+    "state_tests": "Real linear functional invariance and odd readouts; positivity, equilibrium, extremality and spontaneous phase breaking are not inferred",
+    "hestenes_krein_owners": "Unchanged; no replacement analyticity, complexification, or analytic completion",
+    "physical_claims": "No spectral reconstruction, physical vacuum identification, or Yang-Mills mass-gap theorem"
+  },
+  "root_ci": {
+    "run": 40903090553,
+    "artifact_id": 12909693217,
+    "status": "failed_before_baseline_compilation",
+    "errors": ["Atlas missing/untracked path dependency", "GIFT uninitialized pinned gitlink"],
+    "gates_disabled": false
+  },
+  "publication_note": "Any later documentation-only commit preserves all checked Lean source bytes."
+}

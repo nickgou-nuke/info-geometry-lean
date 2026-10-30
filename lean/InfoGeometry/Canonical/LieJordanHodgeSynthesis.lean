@@ -6,6 +6,9 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.OperatorAlgebra.LieJordanHodgeHilbert
 import InfoGeometry.OperatorAlgebra.PeirceHodgeCoercivity
 import InfoGeometry.OperatorAlgebra.PeirceHodgeExamples
+import InfoGeometry.OperatorAlgebra.LieJordanHodgeReal
+import InfoGeometry.OperatorAlgebra.LieJordanHodgeCoercivity
+import InfoGeometry.OperatorAlgebra.LieJordanChiralState
 import InfoGeometry.Canonical.LieJordanHodgeColimit
 
 /-! # Positive real Hodge operators, conditional coercivity, and native colimit transport -/

@@ -131,4 +131,53 @@ theorem lift_hodge_action {B : Type} [Semiring B]
   rw [← ofStage_hodge_action]
   exact directLimitLift_of stageBond f hf n _
 
+theorem ofStage_coboundary_star (n : ℕ) (u : Stage n) (z : Stage n × Stage n) :
+    Prod.map (ofStage n) (ofStage n) (coboundary (R := ℝ) (star u) z) =
+      coboundary (R := ℝ) (star (ofStage n u))
+        (Prod.map (ofStage n) (ofStage n) z) := by
+  simpa only [ofStage_star] using map_coboundary (R := ℝ) (ofStage n) (star u) z
+
+
+theorem gram_bonding_compatible (n : ℕ) (u x : Stage n) :
+    ofStage (n + 1)
+      (jordanLeft (R := ℝ)
+        (stageEmbed n u * star (stageEmbed n u) + star (stageEmbed n u) * stageEmbed n u)
+        (stageEmbed n x)) =
+      ofStage n (jordanLeft (R := ℝ) (u * star u + star u * u) x) := by
+  rw [ofStage_hodge_action]
+  simp only [ofStage_apply_bond]
+  exact (ofStage_hodge_action n u x).symm
+
+
+/-- Every limit element has a representative above any prescribed finite stage.
+Using a cofinal tail avoids forcing a compatible coefficient to lie in stage 0. -/
+theorem exists_stage_above (start : ℕ) (x : Limit) :
+    ∃ n, start ≤ n ∧ ∃ y : Stage n, ofStage n y = x := by
+  induction x using DirectLimit.induction with
+  | _ n y =>
+    refine ⟨max start n, le_max_left _ _,
+      bondMap stageBond n (max start n) (le_max_right _ _) y, ?_⟩
+    exact directLimitOf_bondMap stageBond n (max start n) (le_max_right _ _) y
+
+/-- A uniform finite inequality on a cofinal tail descends to the actual
+algebraic colimit. The finite bounds and trace readback remain hypotheses.
+Compatibility is NOT imposed at the initial scalar stage. -/
+theorem uniform_coercivity_descends
+    (start : ℕ) (tau : Limit →ₗ[ℝ] ℝ)
+    (htau : ∀ n (x : Stage n), tau (ofStage n x) = normalizedTrace n x)
+    (k p : ∀ n, Stage n) (kinf pinf : Limit)
+    (hk : ∀ n, start ≤ n → ofStage n (k n) = kinf)
+    (hp : ∀ n, start ≤ n → ofStage n (p n) = pinf)
+    (gamma : ℝ)
+    (hfinite : ∀ n, start ≤ n → ∀ x : Stage n,
+      gamma * normalizedTrace n
+        (star (x - p n * x * p n) * (x - p n * x * p n)) ≤
+      normalizedTrace n (star x * (k n * x + x * k n)))
+    (x : Limit) :
+    gamma * tau (star (x - pinf * x * pinf) * (x - pinf * x * pinf)) ≤
+      tau (star x * (kinf * x + x * kinf)) := by
+  obtain ⟨n, hn, y, rfl⟩ := exists_stage_above start x
+  rw [← hk n hn, ← hp n hn]
+  simpa only [← map_mul, ← map_sub, ← map_add, ← ofStage_star, htau] using hfinite n hn y
+
 end InfoGeometry.Canonical.LieJordanHodgeColimit

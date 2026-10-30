@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.WheelerEpilogue
-import Mathlib.Tactic.GuardExpr
+import Lean.Elab.Tactic.Guard
 
 /-!
 # Executable regression for the supplied fourteen-law macro
@@ -74,11 +74,11 @@ theorem partition_without_idempotence (P A C X : B) :
 
 -- An absent second definition makes the multi-unfold fail. The following
 -- `try` must leave the syntactic target unchanged before selective unfolding.
-example (P A : B) : zig P A = P * A * (1 - P) := by
+example {P : B} (hP : P * P = P) (A : B) : zig P A * zig P A = 0 := by
   fail_if_success unfold zig mJ
   try unfold zig mJ
-  guard_target =ₛ zig P A = P * A * (1 - P)
-  simp only [zig, mJ]
+  guard_target =ₛ zig P A * zig P A = 0
+  peirce_abel hP
 
 -- Internal unary negation is supported by the repaired rule set.
 example {P : B} (hP : P * P = P) (A X : B) : (-zig P A) * X = -(zig P A * X) := by

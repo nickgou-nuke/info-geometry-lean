@@ -51,17 +51,8 @@ run_cmd do
       throwError "Empty owner audit: {owner}"
   for name in names.qsort Name.lt do
     let some info := env.find? name | throwError "Missing declaration: {name}"
-    -- Macro implementations are executable meta-level tooling, not proof
-    -- declarations. Audit the mathematical declarations and regression
-    -- theorems; record (rather than certify as mathematics) generated macro
-    -- implementations separately.
     if info.isUnsafe then
-      if ownerOf env name == `InfoGeometry.WheelerEpilogueRegression then
-        liftIO <| IO.println (Json.mkObj [
-          ("record", toJson "meta_tooling"), ("name", toJson name.toString),
-          ("reason", toJson "unsafe macro implementation; not a mathematical proof")]).compress
-        continue
-      throwError "Unsafe mathematical declaration: {name}"
+      throwError "Unsafe owned declaration: {name}"
     if info.isPartial || kindOf info == "axiom" then
       throwError "Partial declaration or local axiom: {name}"
     let value? := info.value? (allowOpaque := true)
@@ -89,7 +80,7 @@ run_cmd do
     ("record", toJson "summary"), ("status", toJson "PASS"),
     ("modules", toJson (owners.map Name.toString)),
     ("axiom_whitelist", toJson (allowed.map Name.toString)),
-    ("scope", toJson "mathematics and regression proofs; meta-tooling separately reported")
+    ("scope", toJson "all declarations in exact owner modules, including generated helpers")
   ]).compress
 
 end WheelerEpilogueAudit

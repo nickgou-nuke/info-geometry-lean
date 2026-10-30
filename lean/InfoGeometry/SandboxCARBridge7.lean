@@ -1,26 +1,8 @@
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Mul
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Tactic
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.SandboxCARBridge
 
-set_option maxHeartbeats 2000000
-
-open Matrix
-
-abbrev Dim8 := Fin 8
-abbrev Mat8 := Matrix Dim8 Dim8 ℝ
-
-def eps0 : Mat8 :=
-  ![![0, 0, 0, 0, 0, 0, 0, 0],
-    ![1, 0, 0, 0, 0, 0, 0, 0],
-    ![0, 0, 0, 0, 0, 0, 0, 0],
-    ![0, 0, 0, 0, 0, 0, 0, 0],
-    ![0, 0, 0, 0, 0, 1, 0, 0],
-    ![0, 0, 0, 0, 0, 0, 0, 0],
-    ![0, 0, 0, -1, 0, 0, 0, 0],
-    ![0, 0, 1, 0, 0, 0, 0, 0]]
-
-theorem eps0_sq : eps0 * eps0 = 0 := by
-  ext i j
-  rw [Matrix.mul_apply]
-  fin_cases i <;> fin_cases j <;> simp [eps0, Fin.sum_univ_eight] <;> norm_num
+/-! Reuse the identical matrix and square-zero theorem from the first sandbox owner. -/

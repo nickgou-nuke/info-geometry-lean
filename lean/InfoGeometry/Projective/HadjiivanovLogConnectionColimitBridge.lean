@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.HadjiivanovLogConnectionReadoutBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
@@ -49,7 +54,9 @@ theorem stageConnection_iota_seq (n m : ℕ) :
   | zero =>
       simp [iota_seq]
   | succ m ih =>
-      simp only [iota_seq]
+      change (C.stageConnection (n + (m + 1))).comp
+          ((C.iota (n + m)).comp (iota_seq A C.iota n m)) =
+        ((C.iota (n + m)).comp (iota_seq A C.iota n m)).comp (C.stageConnection n)
       rw [← LinearMap.comp_assoc]
       have hcomm :
           (C.stageConnection (n + (m + 1))).comp (C.iota (n + m)) =

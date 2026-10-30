@@ -48,6 +48,18 @@ theorem cyclicTrialityHom_injective : Function.Injective cyclicTrialityHom := by
   have he := congrArg (fun e : Equiv.Perm ZornCore.Zorn => e (ZornCore.U ZornCore.e1)) h
   exact cyclicTriality_seed_injective he
 
+/-- Faithfulness preserves the additive order of every cyclic parameter.
+This concerns permutations of the existing Zorn carrier, not the unit group of `ZMod 3`. -/
+theorem cyclicTrialityHom_orderOf (χ : ZMod 3) :
+    orderOf (cyclicTrialityHom (Multiplicative.ofAdd χ)) = addOrderOf χ := by
+  rw [orderOf_injective cyclicTrialityHom cyclicTrialityHom_injective,
+    orderOf_ofAdd_eq_addOrderOf]
+
+/-- The generating permutation has exact order three. -/
+theorem cyclicTriality_generator_order :
+    orderOf (cyclicTrialityHom (Multiplicative.ofAdd (1 : ZMod 3))) = 3 := by
+  rw [cyclicTrialityHom_orderOf, ZMod.addOrderOf_one]
+
 theorem cyclicTrialityHom_preserves_det (χ : Multiplicative (ZMod 3)) (X : ZornCore.Zorn) :
     ZornCore.det (cyclicTrialityHom χ X) = ZornCore.det X :=
   galoisActionOnTriality_preserves_det X χ.toAdd

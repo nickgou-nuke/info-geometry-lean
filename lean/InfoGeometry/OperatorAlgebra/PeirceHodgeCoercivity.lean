@@ -47,7 +47,7 @@ theorem residual_self_pairing {p : Mat} (hp : p * p = p)
     hs x (x - p * x * p) = hs (x - p * x * p) (x - p * x * p) := by
   have he := sandwich_self_pairing hp hpt x
   have hsx := hilbertSchmidt_symmetry x (p * x * p)
-  rw [pairing_sub_left, pairing_sub_right, pairing_sub_right, pairing_sub_right]
+  simp only [pairing_sub_left, pairing_sub_right]
   linarith
 
 /-- The complementary corner contributes once more, and is never discarded. -/

@@ -1,0 +1,40 @@
+{
+  "scope": "Review of A38, A43 geometric remainder and A30 left-only Laplacian in the latest consolidated user packet. Not full certification of the advertised A1-A56 packet; pasted source ends within A50.",
+  "declarations": [
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.genV_ne_zero_of_unit_defect",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.unit_defect_excludes_submitted_cubic",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.unit_defect_excludes_submitted_geometric_remainder",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.unit_defect_excludes_left_only_laplacian",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian.cube_sub_square_eq_mul_idempotencyDefect",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian.one_sub_mul_geometricSum_three_defect",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.hodgeLaplacianPhi_eq",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.defect_level_power_recurrence"
+  ],
+  "source_hashes": {
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectLevelExclusions.lean": "a11f4b1bfbc22a4a288b6bba646cec679b2ab101183a2bf34ec1d2b76f10cf1d",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectLevelExclusionsAudit.lean": "a4f754471bdae83b06057023da8c6b8f5d377771dd23b6a89b7b2f179c43b34a",
+    "lean/InfoGeometry/Core/IdempotentGraphGrassmannian.lean": "4220b177719f4916159ce21f4a0a8ec795c5d321d226991e59136b1e08cd07a4",
+    "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Orientation.lean": "ebc1fe05d7bc43ff2dc4b92f93d5ee0399fefc28e058991444dd50da4c27f8e7"
+  },
+  "build_exit_code": 0,
+  "build_jobs": 3107,
+  "audit_module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelExclusionsAudit",
+  "axioms_within_standard_foundations": true,
+  "independent_semantic_review": false,
+  "results": [
+    "Unit defect implies nonzero V in a nontrivial ring.",
+    "The submitted cubic with extra -V is impossible on the unit defect level set.",
+    "The submitted geometric remainder without -V is impossible on the same level set.",
+    "With additive torsion-freeness, the submitted left-only Laplacian fails already at the identity operator."
+  ],
+  "replacements": [
+    "V^3 - V^2 = V * delta(V)",
+    "(1-V)*(1+V+V^2)-1 = -(1+V)*delta(V)-V",
+    "L(X)=2*(V*X+X*V)",
+    "delta(V)=1 implies the existing power recurrence V^(n+2)=V^(n+1)+V^n"
+  ],
+  "limitations": [
+    "No level-set existence theorem for every ring.",
+    "No Galois group, KKT identification, global geometry, or analytic zeta interpretation follows from these identities."
+  ]
+}

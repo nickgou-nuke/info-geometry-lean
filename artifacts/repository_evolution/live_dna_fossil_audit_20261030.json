@@ -1,0 +1,244 @@
+{
+  "schema": "info_geometry.live_dna_fossil_audit.v1",
+  "observedAt": "2026-10-30T19:21:07.378208+00:00",
+  "gitHead": "305d4c3c2d69d1120b994ee1e6044e1540909173",
+  "database": "infogeometry",
+  "generations": [
+    {
+      "id": "574964fd1aee8f86cc081387",
+      "status": "complete",
+      "sources": [
+        {
+          "path": "lean/DAG/Basic.lean",
+          "recordedHash": "e7b758aa982f6f2b876b836ce7dc09d7557e237f5f09a8d96585cfbd7b34e7ff",
+          "currentHash": "2bbf84bc9ffef91cff27903df6dc762fc61c10ca7566ae35b6eec7223f4cd2ef",
+          "sourceMatches": false,
+          "buildInputs": {
+            "lean-toolchain": {
+              "recorded": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "current": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "matches": true
+            },
+            "lakefile.lean": {
+              "recorded": "3e927e322cb6903d78ccaebdb6a41787d8ff2b95b4f077efc4f3e09712849424",
+              "current": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "matches": false
+            },
+            "lake-manifest.json": {
+              "recorded": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "current": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "matches": true
+            }
+          }
+        }
+      ],
+      "actualCounts": {
+        "raw_infotree_nodes": 3172,
+        "raw_infotree_tree_edges": 3155,
+        "raw_infotree_decl_links": 4975
+      },
+      "recordedTopologyOK": true,
+      "recordedLosslessOK": false,
+      "losslessErrors": [
+        "metadata fully_lossless is not true",
+        "leakage rows present: 10771"
+      ]
+    },
+    {
+      "id": "74b4a13686b2c9f623a21d9b",
+      "status": "complete",
+      "sources": [
+        {
+          "path": "lean/DAG/Basic.lean",
+          "recordedHash": "e7b758aa982f6f2b876b836ce7dc09d7557e237f5f09a8d96585cfbd7b34e7ff",
+          "currentHash": "2bbf84bc9ffef91cff27903df6dc762fc61c10ca7566ae35b6eec7223f4cd2ef",
+          "sourceMatches": false,
+          "buildInputs": {
+            "lean-toolchain": {
+              "recorded": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "current": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "matches": true
+            },
+            "lakefile.lean": {
+              "recorded": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "current": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "matches": true
+            },
+            "lake-manifest.json": {
+              "recorded": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "current": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "matches": true
+            }
+          }
+        }
+      ],
+      "actualCounts": {
+        "raw_infotree_nodes": 3172,
+        "raw_infotree_tree_edges": 3155,
+        "raw_infotree_decl_links": 4975
+      },
+      "recordedTopologyOK": true,
+      "recordedLosslessOK": false,
+      "losslessErrors": [
+        "metadata fully_lossless is not true",
+        "leakage rows present: 10771"
+      ]
+    },
+    {
+      "id": "e05e4a108bcdf1d692338b63",
+      "status": "complete",
+      "sources": [
+        {
+          "path": "lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean",
+          "recordedHash": "7c45c9a3b751af560e9823d1f3c2a465c0b966bb60704d08058511209ed0b3a7",
+          "currentHash": "7c45c9a3b751af560e9823d1f3c2a465c0b966bb60704d08058511209ed0b3a7",
+          "sourceMatches": true,
+          "buildInputs": {
+            "lean-toolchain": {
+              "recorded": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "current": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "matches": true
+            },
+            "lakefile.lean": {
+              "recorded": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "current": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "matches": true
+            },
+            "lake-manifest.json": {
+              "recorded": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "current": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "matches": true
+            }
+          }
+        }
+      ],
+      "actualCounts": {
+        "raw_infotree_nodes": 566,
+        "raw_infotree_tree_edges": 557,
+        "raw_infotree_decl_links": 510
+      },
+      "recordedTopologyOK": true,
+      "recordedLosslessOK": false,
+      "losslessErrors": [
+        "metadata fully_lossless is not true",
+        "leakage rows present: 1894"
+      ]
+    },
+    {
+      "id": "4278689dd7083bd6cecc33ba",
+      "status": "complete",
+      "sources": [
+        {
+          "path": "lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean",
+          "recordedHash": "7c45c9a3b751af560e9823d1f3c2a465c0b966bb60704d08058511209ed0b3a7",
+          "currentHash": "7c45c9a3b751af560e9823d1f3c2a465c0b966bb60704d08058511209ed0b3a7",
+          "sourceMatches": true,
+          "buildInputs": {
+            "lean-toolchain": {
+              "recorded": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "current": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+              "matches": true
+            },
+            "lakefile.lean": {
+              "recorded": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "current": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+              "matches": true
+            },
+            "lake-manifest.json": {
+              "recorded": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "current": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+              "matches": true
+            }
+          }
+        }
+      ],
+      "actualCounts": {
+        "raw_infotree_nodes": 566,
+        "raw_infotree_tree_edges": 557,
+        "raw_infotree_decl_links": 510
+      },
+      "recordedTopologyOK": true,
+      "recordedLosslessOK": false,
+      "losslessErrors": [
+        "metadata fully_lossless is not true",
+        "leakage rows present: 1894"
+      ]
+    }
+  ],
+  "fossilOverlays": [
+    {
+      "id": "0c167061c6a0ad1515bdcaa51cdff0760367c1abfc7809ca67492793b1ab115b",
+      "rawGenerationId": "574964fd1aee8f86cc081387",
+      "status": "staged_validated",
+      "gitHead": "033fbf0e6fc61a8c24c825ab39ad480460804a85",
+      "matchesCurrentHead": false,
+      "actualCounts": {
+        "path_fossils": 1,
+        "path_events": 8,
+        "node_edges": 3172,
+        "raw_nodes": 3172
+      },
+      "relationSemantics": "module_path_cohabitation",
+      "historyReuse": null
+    },
+    {
+      "id": "2a065015a49fb431515d0ba841d92e3ed15bb816a527f3a1616b44f889c8cb30",
+      "rawGenerationId": "74b4a13686b2c9f623a21d9b",
+      "status": "staged_validated",
+      "gitHead": "033fbf0e6fc61a8c24c825ab39ad480460804a85",
+      "matchesCurrentHead": false,
+      "actualCounts": {
+        "path_fossils": 1,
+        "path_events": 8,
+        "node_edges": 3172,
+        "line_fossils": 27,
+        "node_line_edges": 2476,
+        "declaration_line_edges": 12781,
+        "raw_nodes": 3172,
+        "raw_decl_links": 4975
+      },
+      "relationSemantics": "module_path_cohabitation",
+      "historyReuse": null
+    },
+    {
+      "id": "33b83bba7eeff18bec2676500426e9ba7c3d3082960a9368c1c0a60e4fb325ad",
+      "rawGenerationId": "e05e4a108bcdf1d692338b63",
+      "status": "staged_validated",
+      "gitHead": "033fbf0e6fc61a8c24c825ab39ad480460804a85",
+      "matchesCurrentHead": false,
+      "actualCounts": {
+        "path_fossils": 1,
+        "path_events": 0,
+        "evolution_commit_edges": 0,
+        "node_edges": 566,
+        "line_fossils": 1,
+        "node_line_edges": 357,
+        "declaration_line_edges": 510,
+        "raw_nodes": 566,
+        "raw_decl_links": 510
+      },
+      "relationSemantics": "module_path_cohabitation",
+      "historyReuse": {
+        "schema": "info_geometry.evolution_history_reuse.v1",
+        "status": "overlay_only_no_exact_reuse",
+        "baseCollectionsAvailable": true,
+        "snapshotHeadPresentInArango": false,
+        "totalPathEvents": 0,
+        "reusedPathEvents": 0,
+        "overlayFallbackEvents": 0,
+        "distinctReusedCommitFileEdges": 0,
+        "reusedCommitRelationEdgeCount": 0,
+        "fallbackReasonCounts": {}
+      }
+    }
+  ],
+  "authority": "Read-only live count and local byte-hash audit; not kernel certification, declaration ancestry, or learned taxonomy.",
+  "historyCollectionCounts": {
+    "evo_commits": 13986,
+    "evo_commit_files": 638979,
+    "evo_parent_edges": 14343,
+    "commit_nodes": 684,
+    "commit_edges": 0,
+    "commit_decl_edges": 0
+  }
+}

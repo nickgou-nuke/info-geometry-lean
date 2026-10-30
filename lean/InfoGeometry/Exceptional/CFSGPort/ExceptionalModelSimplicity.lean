@@ -14,6 +14,7 @@ module
 public import InfoGeometry.Exceptional.CFSGPort.QuasisimpleTransport
 public import InfoGeometry.Exceptional.CFSGPort.ExceptionalCatalog
 public import InfoGeometry.Exceptional.CFSGPort.CommutatorTorus
+public import InfoGeometry.Exceptional.CFSGPort.SuzukiSimplicity
 
 public section
 
@@ -227,9 +228,7 @@ theorem isSimpleGroup_of_ReeTitsRelationModel
 parameterized operator group to any equivalent carrier. -/
 theorem isSimpleGroup_of_SuzukiExceptionalModel
     {G : Type} [Group G] {p f : ℕ}
-    (hmodel : SuzukiExceptionalModel G p f)
-    (hsimple : ∀ (a : ℕ) (K : Type) [Field K] [Finite K],
-      1 ≤ a → Nat.card K = 2 ^ (2 * a + 1) → IsSimpleGroup (suzukiGroup a K)) :
+    (hmodel : SuzukiExceptionalModel G p f) :
     IsSimpleGroup G := by
   simp only [Chevalley.SuzukiExceptionalModel] at hmodel
   rcases hmodel with ⟨rfl, a, ha, K, instField, instFinite, hf, hcard, ⟨e⟩⟩
@@ -239,7 +238,14 @@ theorem isSimpleGroup_of_SuzukiExceptionalModel
     calc
       Nat.card K = 2 ^ f := hcard
       _ = 2 ^ (2 * a + 1) := by rw [hf]
-  exact e.isSimpleGroup_congr.mpr (hsimple a K ha hfield)
+  haveI : Fintype K := Fintype.ofFinite K
+  have hcard' : Fintype.card K = 2 ^ (2 * a + 1) := by
+    rw [← Nat.card_eq_fintype_card]
+    exact hfield
+  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  letI : CharP K 2 := charP_of_card_eq_prime_pow hcard'
+  exact e.isSimpleGroup_congr.mpr
+    (Suzuki.suzukiGroup_isSimple_of_field (K := K) a (by omega) hfield)
 
 end InfoGeometry.Exceptional.CFSGPort
 

@@ -32,6 +32,14 @@ def idempotentGrassmannian (B : Type*) [Ring B] : Set B :=
 polynomial value, not generally a central element. -/
 def idempotencyDefect (x : B) : B := x * x - x
 
+/-- Polarizing the idempotency defect recovers the ordered Jordan
+anticommutator. This identity holds in every associative ring. -/
+theorem idempotencyDefect_add_polarization (x y : B) :
+    idempotencyDefect (x + y) - idempotencyDefect x - idempotencyDefect y =
+      x * y + y * x := by
+  unfold idempotencyDefect
+  noncomm_ring
+
 /-- The companion defect polynomial `x² + x`, equal to the defect of `-x`. -/
 def idempotencyDefectBar (x : B) : B := x * x + x
 

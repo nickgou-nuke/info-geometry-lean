@@ -9,6 +9,7 @@ module
 public import InfoGeometry.Exceptional.CFSGPort.ClassicalSimpleFamilyCatalog
 public import InfoGeometry.Exceptional.CFSGPort.QuasisimpleTransport
 public import InfoGeometry.Exceptional.CFSGPort.RankOneSimplicity
+public import InfoGeometry.Exceptional.CFSGPort.TitsSimplicitySupport
 public import InfoGeometry.Exceptional.CFSGPort.ReeG2SimplicityArithmetic
 public import InfoGeometry.Exceptional.CFSGPort.CommutatorTorus
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootTorusSubgroup
@@ -20,10 +21,15 @@ public import InfoGeometry.Exceptional.CFSGPort.CurtisTitsRankOneBruhat
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyOperatorPolynomial
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparseCertificate
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparsePolynomial
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyCommutatorCertificate
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyCommutatorFamily
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparseWeyl
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyFastWeylTables
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyFastChecks
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorFamily
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorValidity
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorFamilyData
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorFamilyBridge
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorMirror
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootHeightDescent
 public import InfoGeometry.Exceptional.CFSGPort.ExceptionalModelSimplicity
@@ -31,6 +37,9 @@ public import InfoGeometry.Exceptional.CFSGPort.ExceptionalCartanHelpers
 public import InfoGeometry.Exceptional.CFSGPort.PrimitiveCoprimeSimplicity
 public import InfoGeometry.Exceptional.CFSGPort.J1GeneratorOrders
 public import InfoGeometry.Exceptional.CFSGPort.SuzukiOvoid
+public import InfoGeometry.Exceptional.CFSGPort.SuzukiOvoidKernel
+public import InfoGeometry.Exceptional.CFSGPort.SuzukiBruhatFactorization
+public import InfoGeometry.Exceptional.CFSGPort.SuzukiSimplicity
 
 /-!
 The root-project adaptation of exceptional finite Lie-type models and the
@@ -55,5 +64,8 @@ normalizer-triviality theorem. The generic rank-one
 normal-core simplicity criterion is also ported, but no exceptional model has
 yet been shown to satisfy all of its Bruhat, conjugation, and generation
 hypotheses. Perfectness and the criterion therefore remain inputs rather than
-unconditional simplicity proofs for these exceptional models.
+unconditional simplicity proofs for these exceptional models. Separately, the
+finite Suzuki upper-matrix operator group has a conditional simplicity theorem
+assembled from its proved faithful two-transitive ovoid action, exact local
+point-stabilizer recognition, solvable root–torus subgroup, and perfectness.
 -/

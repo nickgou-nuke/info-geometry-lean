@@ -12242,7 +12242,6 @@ import InfoGeometry.Attention.MetriplecticAttentionTests
 import InfoGeometry.Attention.MultiHeadSymplecticReduction
 import InfoGeometry.Attention.ResidualMetriplecticFlow
 import InfoGeometry.Attention.SymplecticDefectInvariance
-import InfoGeometry.Audit
 import InfoGeometry.Automorphic.CuspidalSpectralLowerBound
 import InfoGeometry.Automorphic.ModularMetriplecticDual
 import InfoGeometry.Canonical.AffineKacMoodyColimitBracket

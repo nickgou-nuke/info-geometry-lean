@@ -24,6 +24,9 @@ namespace InfoGeometry.OperatorAlgebra.PeirceProjectedConnection
 open InfoGeometry.Clifford.ChiralProjectorBerryCurvature
 open InfoGeometry.OperatorAlgebra.PeirceCompressionCurvature
 
+local notation "berryCommutator" =>
+  InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
+
 section RingIdentities
 
 variable {A : Type*} [Ring A]
@@ -31,27 +34,27 @@ variable {A : Type*} [Ring A]
 /-- The raw curvature calculation behind the native endomorphism theorem. -/
 theorem projected_inner_derivation_curvature {p s : A}
     (hp : p * p = p) (hs : p * s = s) (a b : A) :
-    p * commutator a (p * commutator b s) -
-        p * commutator b (p * commutator a s) -
-        p * commutator (commutator a b) s =
-      projectorCurvature p (commutator a p) (commutator b p) * s := by
+    p * berryCommutator a (p * berryCommutator b s) -
+        p * berryCommutator b (p * berryCommutator a s) -
+        p * berryCommutator (berryCommutator a b) s =
+      projectorCurvature p (berryCommutator a p) (berryCommutator b p) * s := by
   have hpp (z : A) : p * (p * z) = p * z := by rw [← mul_assoc, hp]
   have hps (z : A) : p * (s * z) = s * z := by rw [← mul_assoc, hs]
-  unfold projectorCurvature commutator
+  unfold projectorCurvature InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
   simp only [mul_sub, sub_mul, mul_assoc, hpp, hps, hs]
   noncomm_ring
 
 /-- The projected derivation satisfies the right-module Leibniz law. -/
 theorem projected_inner_derivation_leibniz {p s : A}
     (hs : p * s = s) (a b : A) :
-    p * commutator a (s * b) - (p * commutator a s) * b =
-      s * commutator a b := by
+    p * berryCommutator a (s * b) - (p * berryCommutator a s) * b =
+      s * berryCommutator a b := by
   calc
-    p * commutator a (s * b) - (p * commutator a s) * b =
-        (p * s) * commutator a b := by
-          unfold commutator
+    p * berryCommutator a (s * b) - (p * berryCommutator a s) * b =
+        (p * s) * berryCommutator a b := by
+          unfold InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
           noncomm_ring
-    _ = s * commutator a b := by rw [hs]
+    _ = s * berryCommutator a b := by rw [hs]
 
 end RingIdentities
 
@@ -100,19 +103,20 @@ theorem rangeProjection_comp_subtype (p : A) (hp : p * p = p) :
 /-- The projected connection is a native linear endomorphism of the Peirce range. -/
 def projectedConnection (p : A) (hp : p * p = p) (a : A) :
     Module.End R (peirceRange (R := R) p) where
-  toFun s := ⟨p * commutator a (s : A), by
-    change p * (p * commutator a (s : A)) = p * commutator a (s : A)
+  toFun s := ⟨p * berryCommutator a (s : A), by
+    change p * (p * berryCommutator a (s : A)) = p * berryCommutator a (s : A)
     rw [← mul_assoc, hp]⟩
   map_add' s t := by
     apply Subtype.ext
-    change p * commutator a ((s : A) + (t : A)) =
-      p * commutator a (s : A) + p * commutator a (t : A)
-    unfold commutator
+    change p * berryCommutator a ((s : A) + (t : A)) =
+      p * berryCommutator a (s : A) + p * berryCommutator a (t : A)
+    unfold InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
     noncomm_ring
   map_smul' r s := by
     apply Subtype.ext
-    change p * commutator a (r • (s : A)) = r • (p * commutator a (s : A))
-    simp only [commutator, mul_smul_comm, smul_mul_assoc, ← smul_sub]
+    change p * berryCommutator a (r • (s : A)) = r • (p * berryCommutator a (s : A))
+    unfold InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
+    simp only [mul_smul_comm, smul_mul_assoc, ← smul_sub]
 
 /-- Right multiplication preserves the Peirce right ideal. -/
 def rightMultiplication (p b : A) : Module.End R (peirceRange (R := R) p) where
@@ -147,7 +151,7 @@ def leftCornerAction (p c : A) (hc : p * c = c) :
 theorem projectedConnection_leibniz (p : A) (hp : p * p = p) (a b : A) :
     projectedConnection (R := R) p hp a * rightMultiplication p b -
         rightMultiplication p b * projectedConnection p hp a =
-      rightMultiplication p (commutator a b) := by
+      rightMultiplication p (berryCommutator a b) := by
   apply LinearMap.ext
   intro s
   apply Subtype.ext
@@ -158,10 +162,10 @@ the existing projector-curvature coefficient. -/
 theorem projectedConnection_curvature (p : A) (hp : p * p = p) (a b : A) :
     projectedConnection (R := R) p hp a * projectedConnection p hp b -
         projectedConnection p hp b * projectedConnection p hp a -
-        projectedConnection p hp (commutator a b) =
+        projectedConnection p hp (berryCommutator a b) =
       leftCornerAction p
-        (projectorCurvature p (commutator a p) (commutator b p))
-        (projectorCurvature_left hp (commutator a p) (commutator b p)) := by
+        (projectorCurvature p (berryCommutator a p) (berryCommutator b p))
+        (projectorCurvature_left hp (berryCommutator a p) (berryCommutator b p)) := by
   apply LinearMap.ext
   intro s
   apply Subtype.ext
@@ -173,13 +177,13 @@ theorem projectedConnection_curvature_apply_eq_compressedGram
     (p : A) (hp : p * p = p) (a b : A) (s : peirceRange (R := R) p) :
     (((projectedConnection (R := R) p hp a * projectedConnection p hp b -
         projectedConnection p hp b * projectedConnection p hp a -
-        projectedConnection p hp (commutator a b) :
+        projectedConnection p hp (berryCommutator a b) :
           Module.End R (peirceRange (R := R) p)) s) : A) =
-      (compressedGram p (commutator a p) (commutator b p) -
-        compressedGram p (commutator b p) (commutator a p)) * (s : A) := by
-  have ha : p * commutator a p + commutator a p * p = commutator a p :=
+      (compressedGram p (berryCommutator a p) (berryCommutator b p) -
+        compressedGram p (berryCommutator b p) (berryCommutator a p)) * (s : A) := by
+  have ha : p * berryCommutator a p + berryCommutator a p * p = berryCommutator a p :=
     InfoGeometry.Core.PeirceTangent.commutator_tangent hp a
-  have hb : p * commutator b p + commutator b p * p = commutator b p :=
+  have hb : p * berryCommutator b p + berryCommutator b p * p = berryCommutator b p :=
     InfoGeometry.Core.PeirceTangent.commutator_tangent hp b
   rw [compressedGram_sub_swap_eq_projectorCurvature hp ha hb]
   exact projected_inner_derivation_curvature hp s.property a b

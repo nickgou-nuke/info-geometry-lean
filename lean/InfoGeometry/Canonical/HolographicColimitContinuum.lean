@@ -74,7 +74,8 @@ theorem iotaSeq_eq_tensorTowerColimit_iota_seq {R : Type*} [CommRing R]
     iotaSeq tower n m = iota_seq T tower.iota n m := by
   induction' m with m ih
   · rfl
-  · dsimp [iotaSeq, iota_seq]
+  · change (tower.iota (n + m)).comp (iotaSeq tower n m) =
+      (tower.iota (n + m)).comp (iota_seq T tower.iota n m)
     rw [ih]
 
 /-! ### 2. Native Mathlib Module Colimit -/

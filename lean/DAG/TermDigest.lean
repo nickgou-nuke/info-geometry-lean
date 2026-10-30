@@ -33,6 +33,11 @@ require kernel checking (`isDefEq`).
 
 Byte encoding of each node: version byte `0x04`, tag byte, payload. Naturals and
 strings are length-prefixed (`u32` big-endian byte length) decimal / UTF-8.
+
+`computeWithConstDigests` is a separate, versioned encoding for declaration
+artifacts. It replaces every resolved constant reference with its supplied
+dependency digest. If any referenced constant is missing from that resolver,
+the result is marked open and must not be promoted to a closed artifact key.
 -/
 
 open Lean
@@ -95,6 +100,7 @@ private def tagForall : UInt8 := 0x08
 private def tagLet : UInt8 := 0x09
 private def tagLit : UInt8 := 0x0A
 private def tagProj : UInt8 := 0x0C
+private def tagDependencyConst : UInt8 := 0x0D
 
 /-- Canonical node bytes given already-computed child digests.
 If `fvarSlot?` is provided, any `fvar id` mapped to `some slot` is encoded with
@@ -102,8 +108,11 @@ If `fvarSlot?` is provided, any `fvar id` mapped to `some slot` is encoded with
 unmapped `fvar`s use `(tagFVar, 0x00)` and mark the node as open.
 Returns the bytes and whether this node itself is open. -/
 def nodeBytes (e : Expr) (child : Expr → ByteArray)
-    (fvarSlot? : FVarId → Option Nat := fun _ => none) : ByteArray × Bool :=
-  let b0 := (ByteArray.emptyWithCapacity 80).push versionByte
+    (fvarSlot? : FVarId → Option Nat := fun _ => none)
+    (constDigest? : Name → Option String := fun _ => none)
+    (requireConstDigests : Bool := false)
+    (encodingVersion : UInt8 := versionByte) : ByteArray × Bool :=
+  let b0 := (ByteArray.emptyWithCapacity 80).push encodingVersion
   match e with
   | .bvar i => (pushNat (b0.push tagBVar) i, false)
   | .fvar id =>
@@ -113,8 +122,13 @@ def nodeBytes (e : Expr) (child : Expr → ByteArray)
   | .mvar _ => (b0.push tagMVar, true)
   | .sort u => encodeLevel u (b0.push tagSort)
   | .const n us =>
-      let b := pushU32 (pushStr (b0.push tagConst) n.toString) us.length
-      us.foldl (init := (b, false)) fun (b, o) u =>
+      let (b, unresolved) :=
+        match constDigest? n with
+        | some dependencyDigest =>
+            (pushStr (b0.push tagDependencyConst) dependencyDigest, false)
+        | none => (pushStr (b0.push tagConst) n.toString, requireConstDigests)
+      let b := pushU32 b us.length
+      us.foldl (init := (b, unresolved)) fun (b, o) u =>
         let (b, o') := encodeLevel u b
         (b, o || o')
   | .app f a => ((b0.push tagApp) ++ child f ++ child a, false)
@@ -129,7 +143,10 @@ def nodeBytes (e : Expr) (child : Expr → ByteArray)
 /-- Digest every unique subterm of `e` (iterative, sharing-aware).
 Returns the memo table (`ExprStructEq` ↦ 32-byte digest), the root digest,
 the node count and the open flag. -/
-def digestTable (e : Expr) (fvarSlot? : FVarId → Option Nat := fun _ => none) :
+def digestTable (e : Expr) (fvarSlot? : FVarId → Option Nat := fun _ => none)
+    (constDigest? : Name → Option String := fun _ => none)
+    (requireConstDigests : Bool := false)
+    (encodingVersion : UInt8 := versionByte) :
     Std.HashMap ExprStructEq ByteArray × ByteArray × Nat × Bool := Id.run do
   let mut memo : Std.HashMap ExprStructEq ByteArray := {}
   let mut stack : List (Expr × Bool) := [(e, false)]
@@ -156,7 +173,8 @@ def digestTable (e : Expr) (fvarSlot? : FVarId → Option Nat := fun _ => none) 
     | .mdata _ body =>
         memo := memo.insert key (child body)
     | _ =>
-        let (bytes, o) := nodeBytes curr child fvarSlot?
+        let (bytes, o) := nodeBytes curr child fvarSlot? constDigest?
+          requireConstDigests encodingVersion
         isOpen := isOpen || o
         nodes := nodes + 1
         memo := memo.insert key (DAG.Sha256.digest bytes)
@@ -167,6 +185,70 @@ def digestTable (e : Expr) (fvarSlot? : FVarId → Option Nat := fun _ => none) 
 def compute (e : Expr) : TermDigest :=
   let (_, root, nodes, isOpen) := digestTable e
   { digest := DAG.Sha256.toHex root, nodeCount := nodes, openTerm := isOpen }
+
+/-- Versioned declaration-expression digest which substitutes resolved
+constant names by their dependency content digests. A missing dependency is
+recorded by `openTerm = true`; callers must reject such a digest as an artifact
+identity. This remains a fingerprint; hash equality alone does not establish expression equality. -/
+def computeWithConstDigests (e : Expr) (constDigest? : Name → Option String) :
+    TermDigest :=
+  let (_, root, nodes, isOpen) := digestTable e (fun _ => none) constDigest? true 0x05
+  { algorithmVersion := "lean-expr-debruijn-dependencies-v1"
+    digest := DAG.Sha256.toHex root
+    nodeCount := nodes
+    openTerm := isOpen }
+
+/-- A resolved constant leaf is encoded by its dependency digest, so two
+different declaration names with the same supplied digest and universe levels
+have identical canonical node bytes. -/
+theorem nodeBytes_const_eq_of_same_dependency_digest
+    (n m : Name) (levels : List Level) (child : Expr → ByteArray)
+    (constDigest? : Name → Option String) (digest : String)
+    (hn : constDigest? n = some digest) (hm : constDigest? m = some digest) :
+    nodeBytes (.const n levels) child (fun _ => none) constDigest? true 0x05 =
+      nodeBytes (.const m levels) child (fun _ => none) constDigest? true 0x05 := by
+  simp [nodeBytes, hn, hm]
+
+/-- Lambda binder names and binder information do not affect the encoded node
+when the domain and de Bruijn body are fixed. This is the constructor-level
+invariance used by the Merkle digest; it does not by itself assert equality
+for arbitrary alpha-equivalent expressions. -/
+theorem nodeBytes_lam_binder_irrelevant
+    (n m : Name) (bi bj : BinderInfo) (ty body : Expr)
+    (child : Expr → ByteArray) (fvarSlot? : FVarId → Option Nat)
+    (constDigest? : Name → Option String) (requireConstDigests : Bool)
+    (encodingVersion : UInt8) :
+    nodeBytes (.lam n ty body bi) child fvarSlot? constDigest? requireConstDigests
+        encodingVersion =
+      nodeBytes (.lam m ty body bj) child fvarSlot? constDigest? requireConstDigests
+        encodingVersion := by
+  rfl
+
+/-- Forall binder names and binder information do not affect the encoded node
+when the domain and de Bruijn body are fixed. -/
+theorem nodeBytes_forallE_binder_irrelevant
+    (n m : Name) (bi bj : BinderInfo) (ty body : Expr)
+    (child : Expr → ByteArray) (fvarSlot? : FVarId → Option Nat)
+    (constDigest? : Name → Option String) (requireConstDigests : Bool)
+    (encodingVersion : UInt8) :
+    nodeBytes (.forallE n ty body bi) child fvarSlot? constDigest? requireConstDigests
+        encodingVersion =
+      nodeBytes (.forallE m ty body bj) child fvarSlot? constDigest? requireConstDigests
+        encodingVersion := by
+  rfl
+
+/-- Let binder names and the `nonDep` flag do not affect the encoded node when
+its type, value, and de Bruijn body are fixed. -/
+theorem nodeBytes_letE_binder_irrelevant
+    (n m : Name) (nonDep₁ nonDep₂ : Bool) (ty val body : Expr)
+    (child : Expr → ByteArray) (fvarSlot? : FVarId → Option Nat)
+    (constDigest? : Name → Option String) (requireConstDigests : Bool)
+    (encodingVersion : UInt8) :
+    nodeBytes (.letE n ty val body nonDep₁) child fvarSlot? constDigest? requireConstDigests
+        encodingVersion =
+      nodeBytes (.letE m ty val body nonDep₂) child fvarSlot? constDigest? requireConstDigests
+        encodingVersion := by
+  rfl
 
 /-- Map each non-implementation-detail `FVarId` in `lctx` to its 0-based de Bruijn
 level (declaration slot index `0, 1, ...` in telescope order). -/

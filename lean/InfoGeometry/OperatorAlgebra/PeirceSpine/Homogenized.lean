@@ -11,7 +11,10 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 The raw projectors of A₅/A₁₁ mix eigenvalues `V` and `V²`. Multiplying the
 `ad_Φ²`, `ad_J²` channels by `V` makes all four channels have eigenvalue
 `8 V²` on their own generator and `0` on the other three (A₁₃). The
-projectors are mutually orthogonal to second order (A₁₅). No inverse of `V` is used.
+second-order identities in A₁₅ are evaluated on those named generators, not
+asserted as identities of endomorphisms on every input. These are additive
+channels; the name `projector` does not assert ambient idempotence or
+invertibility. No inverse of `V` is used.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
@@ -27,6 +30,26 @@ def hProjJ (P A C X : B) : B :=
   genV P A C * derivSqJ P A C X - genV P A C * derivSqPhi P A C X - derivSqSig P A C X
 def hProjSig (P A C X : B) : B :=
   derivSqSig P A C X - genV P A C * derivSqPhi P A C X - genV P A C * derivSqJ P A C X
+
+/-! ### A₁₇: group-sandwich character channels
+
+These are additive polynomial maps on the ring. The names record their
+formulas; they do not assert that the maps are group actions or automorphisms.
+-/
+
+def grpId (P A C X : B) : B := (genV P A C * genV P A C) * X
+def grpPhi (P A C X : B) : B := genV P A C * (genPhi P A C * X * genPhi P A C)
+def grpJ (P A C X : B) : B := -(genV P A C * (genJ P A C * X * genJ P A C))
+def grpSig (P A C X : B) : B := genSig P A C * X * genSig P A C
+
+def fourierV (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X + grpPhi P A C X + grpJ P A C X + grpSig P A C X)
+def fourierPhi (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X + grpPhi P A C X - grpJ P A C X - grpSig P A C X)
+def fourierJ (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X - grpPhi P A C X + grpJ P A C X - grpSig P A C X)
+def fourierSig (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X - grpPhi P A C X - grpJ P A C X + grpSig P A C X)
 
 /-! ### Degeneracy obstruction to interpreting the channels as automorphisms -/
 
@@ -58,6 +81,33 @@ theorem hProjV_not_injective_at_zero_corners_of_nontrivial [Nontrivial B] (P : B
 
 variable {P : B} (hP : P * P = P)
 include hP
+
+/-! The four sandwich channels act on the tetraktys generators with the
+character table below. The Fourier combinations agree with the homogenized
+channels on their matching generators, with common operator-valued scale
+`8 V²` already established by A₁₃.
+-/
+
+theorem archetype_A17_group_sandwich_character_table (A C : B) :
+    grpPhi P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpPhi P A C (genPhi P A C) = grpId P A C (genPhi P A C) ∧
+    grpPhi P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    grpPhi P A C (genSig P A C) = -grpId P A C (genSig P A C) ∧
+    grpJ P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpJ P A C (genPhi P A C) = -grpId P A C (genPhi P A C) ∧
+    grpJ P A C (genJ P A C) = grpId P A C (genJ P A C) ∧
+    grpJ P A C (genSig P A C) = -grpId P A C (genSig P A C) ∧
+    grpSig P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpSig P A C (genPhi P A C) = -grpId P A C (genPhi P A C) ∧
+    grpSig P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    grpSig P A C (genSig P A C) = grpId P A C (genSig P A C) ∧
+    hProjV P A C (genV P A C) = fourierV P A C (genV P A C) ∧
+    hProjPhi P A C (genPhi P A C) = fourierPhi P A C (genPhi P A C) ∧
+    hProjJ P A C (genJ P A C) = fourierJ P A C (genJ P A C) ∧
+    hProjSig P A C (genSig P A C) = fourierSig P A C (genSig P A C) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    (simp only [grpId, grpPhi, grpJ, grpSig, fourierV, fourierPhi, fourierJ, fourierSig,
+      hProjV, hProjPhi, hProjJ, hProjSig, derivSqPhi, derivSqJ, derivSqSig]; peirce_nf hP)
 
 /-! ### A₁₃ -/
 

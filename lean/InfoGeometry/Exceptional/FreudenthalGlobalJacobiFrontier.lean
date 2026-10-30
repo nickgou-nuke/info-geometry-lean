@@ -10,6 +10,7 @@ import InfoGeometry.Exceptional.FreudenthalJacobiLaneFiniteReconstruction
 import InfoGeometry.Exceptional.FreudenthalFiveGradedExtremeJacobi
 import InfoGeometry.Exceptional.FreudenthalFiveGradedExtremeDualJacobi
 import InfoGeometry.Exceptional.FreudenthalExtremeJacobiCells
+import InfoGeometry.Exceptional.FreudenthalLegacyFiveGradedJacobiCounterexample
 
 /-!
 # Bilinear carrier for the global Jacobi frontier
@@ -464,6 +465,19 @@ theorem global_fiveGraded_jacobi_of_homogeneous
   intro i j k u v w
   rw [leibnizDefect_bracket_eq_jacobiator]
   exact h_cells i j k u v w
+
+/-- The homogeneous-cell premise of `global_fiveGraded_jacobi_of_homogeneous`
+cannot hold for the legacy bracket: multilinear reconstruction would imply
+the global Jacobi identity, contradicted by the explicit extreme-charge
+witness. -/
+theorem no_global_homogeneous_jacobi_completion :
+    ¬ (∀ (i j k : JacobiLane) (x y z : FiveGradedCarrier D),
+      fiveJacobiator D (lanePartLinear D i x) (lanePartLinear D j y)
+        (lanePartLinear D k z) = 0) := by
+  intro h_cells
+  apply legacy_fiveGradedBracket_not_jacobi D
+  intro u v w
+  exact global_fiveGraded_jacobi_of_homogeneous D h_cells u v w
 
 /-- A first concrete projected homogeneous cell, transported from the
 existing extreme/charge owner theorem. -/

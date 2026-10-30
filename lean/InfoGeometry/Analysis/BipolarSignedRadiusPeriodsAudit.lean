@@ -9,6 +9,7 @@ import InfoGeometry.Analysis.BipolarSignedRadiusPeriods
 #print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_abs_radius
 #print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_pole_eq_abs_enclosure
 #print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.circleIntegral_dlog01_eq_abs_circulationPeriod
+#print axioms InfoGeometry.Analysis.BipolarCircleEnclosurePeriods.negative_radius_exterior_counterexample
 
 open Complex Metric
 open InfoGeometry.Analysis.BipolarCircleEnclosurePeriods

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectors
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
@@ -5,7 +10,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentDefect
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityDoubleDerivation
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CurvatureDoubleCommutator
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman
@@ -22,6 +30,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.LeftRightActions
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MixedDifferentials
 import InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDifferentials
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding
+import InfoGeometry.OperatorAlgebra.PeirceSpine.BoundaryDependence
 import InfoGeometry.OperatorAlgebra.PeirceSpine.PrimalDual
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSet
@@ -38,10 +48,12 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinates
 import InfoGeometry.OperatorAlgebra.PeirceSpine.RingHomTransport
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixColimitTransport
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Bridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback
 
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityExactness
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich
 
 import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismCharge
 
@@ -52,11 +64,11 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectors
 import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks
 
 import InfoGeometry.OperatorAlgebra.PeirceSpine.BlockCharges
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtraction
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargePowerMatrix
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBalances
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CrossChargeBrackets
-
-import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBalances
-import InfoGeometry.OperatorAlgebra.PeirceSpine.CrossChargeBrackets
+import InfoGeometry.OperatorAlgebra.PeirceSpine.BlockTriangularIntervention
 
 /-!
 # Peirce operator spine
@@ -71,7 +83,9 @@ Causal poset of the modules:
 ```
 Basic (vocabulary, corner relations, normal form)
  ├─ Tetraktys    A₁–A₁₁  multiplication table, inner-derivation spectra
- │   └─ Homogenized A₁₃, A₁₅  V-homogenized projectors
+ │   ├─ ParityDoubleDerivation A₇₃ core: all-X parity intertwining of the Φ/J double commutators
+ │   └─ CurvatureDoubleCommutator A₇₄ core: a quadratic relation on Φ and J
+ │   └─ Homogenized A₁₃, A₁₅, A₁₇  V-homogenized channels and sandwich character table
  ├─ Unipotent    A₁₂, A₁₄, A₁₆–A₁₉, A₂₁, A₂₂  unipotent groups, braid, ℙ¹(B)
  │   └─ Bergman  A₂₃–A₂₅  Bergman operator, commutator form, Jordan triple
  └─ Supercharge  A₂₆–A₂₈  Q_± derivations, parities, graded derivations
@@ -91,8 +105,15 @@ Basic (vocabulary, corner relations, normal form)
          └─ ChiralDifferentials (also ChiralEulerFactors): A₄₃ closure and exact residual
              └─ GeneratorDifferentials: A₃₁ evaluations on S, Φ, J, V, Σ
          └─ LaplacianHomogenization (also Homogenized): corrected A₃₂ scaled generation
+InnerPullback A₅₁: two-cone pullbacks and exact residual for the proposed ordinary Maurer–Cartan equation
+ └─ PullbackTriple: associative Jordan triple identity and ordered pullback formulas
+SandwichCharge A₅₂: five actual charge sectors in End(B), corner charge table, fifth-order annihilator
+ └─ ChargeExtraction A₅₃: scaled integer extraction of all five corner operators
+     ├─ ChargeExtractionBalances: corrected ±1 factors (3 for sum/difference; 6 after combining)
+     └─ CrossChargeBrackets A₅₄: cross-grade bracket table with crossed extremal supports
 DefectParity (from TransferDefect and ParityProducts): even/odd defect decomposition
 GradingPerturbation (from ChiralEulerFactors): shifted grading and exact defect grades
+TripotentDefect A₅₆–A₅₇: tripotent defect calculus and orthogonal three-corner idempotent identities
  ├─ GradingTransfer (also TransferDefect): discriminants and double-commutator identities
  │   └─ ModeCoordinates: invertible coordinate change when 1+V is a unit
  └─ RingHomTransport (also Homogenized): polynomial naturality
@@ -106,4 +127,15 @@ docstring lists the corrected forms. Intake A₂₀ (`x = x`) has no content and
 dropped. Later transcript versions include A₂₉–A₃₂ statements. Their definitions
 `superDerivPhiBar`, `superDerivJBar`, and `hodgeLaplacianPhi` are given in
 `Orientation`; corrected A₃₂ scaled generation is in `LaplacianHomogenization`.
+
+The later A₅₁–A₅₄ intake is also normalized against the owner files above:
+the pullback is not asserted to satisfy a Maurer–Cartan flatness equation, the
+charge sectors are submodules of `Module.End ℤ B` (not a direct-sum claim), and
+the A₅₃ extraction factors are kept scaled over arbitrary rings. In A₅₄ the
+extremal bracket has crossed `Q₊`/`Q₋` supports; the same-support formula has a
+separately proved residual in `CrossChargeBrackets`.
+
+`TripotentDefect` records polynomial consequences in an arbitrary ring and
+their orthogonal three-corner specialization. It does not infer an `su(3)`
+action or a color symmetry group from tripotency.
 -/

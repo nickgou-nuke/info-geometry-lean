@@ -9,6 +9,127 @@ The root remains on Lean `v4.34.1` and Mathlib
 imply that external modules are root-importable or kernel-checked under the
 root toolchain.
 
+**Latest verification (2026-10-30):** the locked
+`InfoGeometry.Exceptional.CFSGPort.All` build passed with 8,995 jobs after
+adding the unconditional Suzuki model-simplicity adapter; the locked
+`InfoGeometry.All` build then passed with 28,245 jobs. The root Lean 4.34.1
+and Mathlib pins and the build cache were preserved. Historical entries below
+are chronological and are superseded where they conflict with this update.
+An isolated `#print axioms` check reports only
+`[propext, Classical.choice, Quot.sound]` for both the field-level Suzuki
+simplicity theorem and the exceptional-model adapter; semantic-vacuity checks
+reported zero findings in both owner files.
+
+The latest `SuzukiSimplicity.lean` addition,
+`suzukiMatrixGroup_isSimple_of_field`, transports the same local simplicity
+result to the generated four-dimensional matrix subgroup used by the external
+`SuzukiModel` definition. The locked `CFSGPort.All` build passed again with
+8,995 jobs after this addition. This port covers the external matrix-carrier
+conclusion in the root-pinned API; it does not import the external theorem
+declaration or its Lean 4.35.0-rc3 dependency graph.
+
+The follow-up `isSimpleGroup_of_SuzukiMatrixModel` proves the full external
+family-model implication locally: from the same parameter, field-cardinality,
+and matrix-group equivalence fields it derives `IsSimpleGroup G`. The
+`CFSGPort.All` locked build passed with 8,995 jobs after this theorem was
+added. The theorem translates the external statement and proof result into the
+root's own declarations; it does not make the foreign declaration importable.
+
+Current checkout verification (2026-10-30):
+`python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock
+InfoGeometry.Exceptional.CFSGPort.All` completed successfully with 8,993 jobs
+and exit code 0. This is fresh evidence for the local exceptional import
+closure only. It does not prove the family simplicity theorems in the table.
+The same locked wrapper also built `InfoGeometry.All` successfully with
+28,243 jobs and exit code 0, confirming that the root umbrella imports the
+current Cantor, Coxeter, and exceptional port together.
+`ChevalleyCommutatorData.lean` now carries the external factor and cover lists
+for G₂, F₄, D₄, E₆, E₇, and E₈. In
+`ChevalleyCommutatorCertificate.lean`, all six `*_repsCheck` theorems
+kernel-check their root-cone factor rows and sparse polynomial identities;
+`exceptional_coverCheck` validates all six encoded Weyl-walk covers.
+`walkPair_root_spec` proves the encoded walk's action on the checked root
+vectors, and `operator_polynomial_commutation_of_repCheck` derives equality
+in the full root-module endomorphism algebra for every certified factor row.
+The focused owner build passed with 8,960 jobs. The updated
+`CFSGPort.All` and `InfoGeometry.All` builds must be refreshed after this
+extension. The remaining bridge is to identify these polynomial operators
+with the local pinned root-group elements and transport containment through
+the local Weyl action. No exceptional simplicity theorem follows from the
+finite operator identities alone.
+
+The external Suzuki kernel owner is
+`CFSG.LieType.Ree.suzuki_ovoid_scalar_kernel` in
+`external_refs/CFSG/CFSG/LieType/Ree/SuzukiScalarKernel.lean`. It uses
+parameterized ovoid points and a non-fixed Frobenius witness. The local
+`Suzuki.existsSuzukiThetaNotFixed` and
+`Suzuki.existsSuzukiKernelParameter` port its finite-field witness and
+nonzero-factor inputs. The coordinate bridge
+`Suzuki.ovoidPoint_vector_eq_suzukiN` verifies the local chart against the
+Suzuki norm coordinate.
+
+The local port now proves `Suzuki.suzukiOvoid_fixed_operator_is_scalar` by
+using five explicit projective points and their eigenvector equations. It
+also proves `Suzuki.suzukiUpperMatrixGroup_ovoid_action_trivial`: an element
+of the actual Suzuki upper-matrix subgroup fixing every ovoid point is scalar,
+then central, and therefore the identity by the existing determinant-one
+center-triviality theorem. `Suzuki.suzukiUpperMatrixGroup_faithful_ovoid`
+packages this kernel result as Mathlib's `FaithfulSMul` instance on the
+restricted ovoid action under the explicit finite-field and Suzuki-map
+hypotheses. Its focused owner build passed on 2026-10-30 (8,949 jobs). These
+declarations are publicly imported by
+`CFSGPort.All`, whose locked build passed on 2026-10-30 with 8,991 jobs. This
+closes the faithful-action interface step; it does not prove the
+point-stabilizer recognition or Suzuki simplicity theorem.
+
+The next Suzuki equality is sharply isolated by the external source:
+`Simplicity/Suzuki.lean` proves the infinity stabilizer equals the generated
+root–torus subgroup by applying `suzuki_bruhat_normal_form` and ruling out its
+Weyl cell for a fixed-infinity element. The local owner currently proves only
+`suzukiPointStabilizerOperatorGroup_le_stabilizer`; it has no converse for all
+elements of `Chevalley.suzukiUpperMatrixGroup`. The local two-transitivity,
+solvable root–torus candidate, and trivial ovoid-action kernel do not replace
+that missing normal-form/equality theorem.
+
+## External exceptional simplicity theorem crosswalk
+
+The authoritative external theorem owners were checked directly on
+2026-10-30. The `CFSGPort.All` imports local model and transport APIs; it does
+not import the external `CFSG.LieType.Simplicity` declarations, whose Lean and
+Mathlib pins differ from the root. The source-level family theorem coverage is:
+
+| Family | External theorem owner and declaration | Local root-pinned surface | Local status |
+|---|---|---|---|
+| G₂ | `Simplicity/Exceptional.lean`: `fam_g2_simplicity` | `ExceptionalModelSimplicity.isSimpleGroup_of_G2Model`, `..._of_G2Model_of_normalDichotomy`, `g2_family_simple_of_adjoint_quasisimple`, `..._of_normalDichotomy` | Transport and local perfectness are ported; central-or-total normal-subgroup dichotomy remains an input. |
+| F₄, E₈ | `Simplicity/Exceptional.lean`: `fam_f4_simplicity`, `fam_e8_simplicity`; `isSimpleGroup_adjointQuotient_f4/e8` | `isSimpleGroup_adjointQuotient_F4/E8_of_normalDichotomy` | Local adjoint perfectness and quotient transport are available; family dichotomy is still an input. |
+| E₆, E₇ | `Simplicity/Exceptional.lean`: `fam_e6_simplicity`, `fam_e7_simplicity` | `isSimpleGroup_of_untwistedChevalleyModel` and quasisimple-adjoint transport | Family theorem shape is ported conditionally; family quasisimplicity is not locally proved. |
+| ²E₆ | `Simplicity/Exceptional.lean`: `fam_2e6_simplicity`, `isQuasisimple_derived_twistedFixedGroup` | `pow_pow_card_sq`, `isSimpleGroup_of_twistedChevalleyModel` | Finite-field Frobenius arithmetic and model transport are ported; derived twisted-fixed-group quasisimplicity remains an input. |
+| ³D₄ | `Simplicity/TrialityD4.lean`: `fam_3d4_simplicity` | `isSimpleGroup_of_twistedChevalleyModel` | Generic twisted model transport is ported; the D₄-triality fixed-group quasisimplicity theorem is not. |
+| ²B₂ | `Simplicity/Suzuki.lean`: `fam_2b2_simplicity` | `SuzukiSimplicity.suzukiGroup_isSimple_of_field`; unconditional `isSimpleGroup_of_SuzukiExceptionalModel` | Local Suzuki model simplicity now follows from the canonical Frobenius, the proved faithful two-transitive ovoid action, exact point-stabilizer recognition, solvable root–torus subgroup, and perfectness. Comparison with the external `SuzukiModel` remains open. |
+| ²G₂ | `Simplicity/ReeSmall.lean`: `fam_2g2_simplicity` | `ReeG2SimplicityArithmetic.lean`; `isSimpleGroup_of_ReeTitsRelationModel` | Arithmetic and generic relation-model transport are present; the local fixed-group quasisimplicity proof is missing. |
+| ²F₄ | `Simplicity/ReeLargeModel.lean`: `fam_2f4_simplicity` | `isSimpleGroup_of_ReeTitsRelationModel` | Generic transport is present; local family-specific quasisimplicity is missing. |
+| Tits group | `Simplicity/TitsModel.lean`: `fam_tits_simplicity`, `fam_ree_tits_simplicity` | `isSimpleGroup_of_ReeTitsRelationModel` | Generic transport is present; a local Tits-model quasisimplicity proof is missing. |
+
+This crosswalk records source declarations and local theorem contracts, not a
+claim that the external source has been imported or that all exceptional
+simple-group proofs have been ported. The unfinished work is the family
+quasisimplicity/normal-subgroup analysis required to discharge the local
+inputs, plus theorem-level integration into the public import surface.
+
+### ²B₂ update (2026-10-30)
+
+The later local source now closes the Suzuki row above. In
+`SuzukiSimplicity.lean`, `suzukiTitsEndomorphism` is the canonical
+`(a+1)`-fold absolute Frobenius; its square is proved to be field Frobenius
+from `Nat.card K = 2^(2*a+1)`. This removes the arbitrary Tits-endomorphism
+input from `suzukiUpperMatrixGroup_isSimple_of_field` and
+`suzukiGroup_isSimple_of_field`. `ExceptionalModelSimplicity.lean` now
+derives `CharP K 2` from the Suzuki model's finite-field cardinality and
+proves `isSimpleGroup_of_SuzukiExceptionalModel` without a simplicity
+hypothesis. The local theorem is transported across the model equivalence.
+This is a local proof of the model predicate's simplicity, not an import of
+the external theorem declaration or a proof of the global CFSG.
+
 Latest verification, 2026-10-30: the public
 `InfoGeometry.Exceptional.CFSGPort.All` umbrella passes with 8,969 jobs.
 `CurtisTitsRankOneBruhat.lean` now proves Weyl–torus interchange, the nonzero
@@ -75,11 +196,90 @@ Suzuki group remain unproved. Thus no local Suzuki simplicity theorem is
 claimed yet. The updated public `InfoGeometry.Exceptional.CFSGPort.All`
 umbrella then passed its locked build on 2026-10-30 (8,990 jobs, exit code 0).
 
+The Suzuki root-perfectness port has since advanced by three lemmas in
+`SuzukiOvoid.lean`: `upperRootOperator_commutator` proves the exact twisted
+root commutator formula on `GL (Fin 4) K`; `suzukiTwistedNorm_surjective`
+proves surjectivity of `x ↦ x * pi x` on nonzero elements of a finite field
+when `pi (pi x) = x²`; and `upperRootCentralOperator_is_commutator` expresses
+each central parameter operator as an explicit commutator inside the actual
+upper-root matrix subgroup, assuming a witness `t` with `pi t + t ≠ 0`. The
+focused locked owner check passed after these additions. The follow-up
+`suzukiTits_nontrivial` derives such a witness from positive rank, the finite
+field cardinality, and `pi (pi x) = x²`; the corollary
+`upperRootCentralOperator_is_commutator_of_field` now packages the central
+commutator result directly under the standard local Suzuki field hypotheses.
+The remaining full perfectness work includes killing torus and Weyl images in
+the abelianization and identifying the generated root–torus group with the
+exact ovoid point stabilizer. These lemmas do not yet prove simplicity of the
+full Suzuki group.
+
+After the positive-rank Tits witness and direct-field corollary were added,
+the locked `InfoGeometry.Exceptional.CFSGPort.All` build passed again on
+2026-10-30 (8,990 jobs, exit code 0). The focused `SuzukiOvoid.lean` owner
+check also passed, and `semantic_vacuity_gate.py` reported zero findings for
+that owner. Existing linter warnings in `SuzukiOvoid.lean` remain; no
+repository-wide axiom-clean claim is made.
+
+The Suzuki perfectness port now kills both the central upper-root operators
+and every upper-root generator in the abelianization of the full local
+upper-orientation Suzuki operator group. The new
+`upperRootCentralOperator_trivial_in_upperAbelianization` transports the
+explicit root-subgroup commutator into the full group. The new
+`upperRootOperator_trivial_in_upperAbelianization` then uses the torus
+conjugation law, the root multiplication law, and the characteristic-two
+parameter split to kill arbitrary root-generator images. The locked owner
+check for `SuzukiOvoid.lean` passed on 2026-10-30 with existing linter
+warnings, and the locked `InfoGeometry.Exceptional.CFSGPort.All` build passed
+with 8,990 jobs. Torus and Weyl images in the abelianization, full-group
+perfectness, point-stabilizer recognition, and Suzuki simplicity remain open.
+
+The next factorization input, `suzukiBruhatTorusParameter_powers`, is now
+ported on the local field carrier and passes the locked `SuzukiOvoid.lean`
+owner check. It proves the two exponent identities for the explicit torus
+parameter used by the external Suzuki Weyl–root Bruhat decomposition. The
+local matrix factorization itself and the Weyl/torus abelianization steps are
+still open; the exceptional CFSG umbrella has not yet been rebuilt after this
+additional lemma. The follow-up locked build of
+`InfoGeometry.Exceptional.CFSGPort.All` then passed (8,990 jobs, exit code 0)
+on 2026-10-30, with existing Suzuki linter warnings.
+
+The local Suzuki Weyl operator is now also shown to lie in the same generated
+transpose-presentation group as the root and torus operators. Its image in
+that group's abelianization has square one, by the explicit antidiagonal
+operator multiplication law. The torus homomorphism into this same group also
+shows that its abelianization image has exponent dividing `Nat.card Kˣ`.
+The focused locked owner check passed on 2026-10-30. Together these provide
+The special local Bruhat factorization at root parameters `(0,1)` is now
+proved on the four-dimensional operator carrier. Its torus parameter is the
+identity, and the resulting root factors have trivial abelianization images.
+Consequently `suzukiWeylOperator_trivial_in_upperAbelianization` kills the Weyl
+image directly under the standard positive-rank field hypotheses. The
+conditional odd-order comparison theorem remains available for general root
+Weyl factorizations. The focused locked owner check passed on 2026-10-30.
+The local Weyl conjugation identity on the torus is now proved as well, and
+`suzukiTorusOperator_trivial_in_upperAbelianization` kills every torus
+generator image using its odd finite exponent. Thus root, Weyl, and torus
+generators all have trivial image in the current full Suzuki operator group's
+abelianization. The locked owner check passed on 2026-10-30; the public
+exceptional umbrella is being rebuilt after this addition. The remaining
+perfectness step is to assemble these generator results over the exact closure
+presentation, followed by point-stabilizer recognition and simplicity.
+
 The repository umbrella `InfoGeometry.All` then passed its locked build on
 2026-10-30 (28,246 jobs, exit code 0), so the current root import closure
 including Cantor and exceptional CFSG ports compiles together. Its audit target
 reports zero declarations depending on `sorryAx` and 303 generated explicit
 axiom constants; the repository is not thereby represented as axiom-clean.
+
+The local Suzuki ovoid owner now also contains the external scalar-kernel
+proof's two foundational steps: `projective_fixed_vector_is_eigenvector`
+turns a fixed projective point into a scalar eigenvector equation, and
+`existsSuzukiThetaNotFixed` supplies a parameter separated by the defining
+Frobenius power in every positive-rank Suzuki field. The focused locked
+`SuzukiOvoid` build passed on 2026-10-30 (8,948 jobs), and the semantic-vacuity
+gate reported zero findings. The coordinate-specific argument that these
+eigenvector equations force an operator fixing the whole ovoid to be scalar
+remains open; no faithful ovoid action or Suzuki simplicity claim follows yet.
 
 The external `CFSG.LieType.Ree.suzuki_torus_identities` torus section is also
 being ported locally. `zpow_two_pow_eq`, `suzukiD_eq`, `suzukiD_mul`, and
@@ -948,6 +1148,19 @@ CFSG checkout. The source-level inventory in
 artifact; it does not claim a completed semantic audit of every group-like
 declaration in every repository language.
 
+### Separate CFSG sporadic simplicity port lane
+
+The local `CFSGPort.Sporadic.SporadicTag` / `Carrier` catalog declares 26
+sporadic group carriers. The external CFSG checkout also contains family
+proof owners, including `CFSG/Sporadic/Mathieu/M11.lean`,
+`CFSG/Sporadic/J1/Simple.lean`, and `CFSG/Sporadic/Fi22/Simple.lean`. The local
+`SporadicGroups.lean` currently provides carrier definitions and selected
+generator/order facts (for example the M₁₁ and J₁ seed data); those are not
+local `IsSimpleGroup` proofs. A full CFSG port therefore has a distinct
+sporadic lane in addition to the exceptional Lie-type table above. The exact
+family-by-family external theorem census and theorem transport remain open;
+the examples here are verified source owners, not an exhaustive sporadic list.
+
 ## External sources
 
 - `external_refs/CFSG/CFSG/LieType/Simplicity/Exceptional.lean`
@@ -1180,3 +1393,173 @@ remaining step is to identify the external sparse commutator tables with the
 local pinned root operators, then prove factorization into the open-cone root
 subgroup. Consequently the Tits simplicity criterion and unconditional
 exceptional family simplicity remain open.
+
+### Suzuki upper-operator perfectness (2026-10-30)
+
+`SuzukiOvoid.lean` now proves `suzukiUpperMatrixGroup_isPerfect` for the
+locally generated four-dimensional upper Suzuki operator group, under the
+stated finite characteristic-two field, positive-rank, cardinality, and Tits
+automorphism hypotheses. The proof shows that root, torus, and Weyl generator
+images vanish in the group's abelianization, then extends this over the exact
+subgroup closure. The focused locked owner check passed; existing linter
+warnings remain. This proves perfectness of the local upper operator group
+only: full Suzuki group identification, point-stabilizer recognition, and
+Suzuki simplicity remain open. Root pins and external submodules are unchanged.
+
+The perfectness result now transfers through the existing inverse-transpose
+equivalence to `suzukiMatrixGroup`, then through the faithful coordinate
+representation to `suzukiGroup` on the four-dimensional operator module. The
+new `suzukiMatrixGroup_isPerfect` and `suzukiGroup_isPerfect` theorems passed
+the focused locked Lean check and the public
+`InfoGeometry.Exceptional.CFSGPort.All` build (8,990 jobs). This closes the
+local presentation-transfer step for perfectness; the external Suzuki
+simplicity proof still has not been ported, and simplicity remains open.
+
+The local Suzuki port now also proves `suzukiNorm_eq_zero_iff`, porting the
+external `CFSG.LieType.Ree.suzuki_norm_nonzero` argument from the pinned CFSG
+tree. `ovoidNorm_eq_suzukiN` identifies the coordinate norm in the actual
+projective ovoid with that polynomial, and `ovoidNorm_eq_zero_only_at_origin`
+derives the norm hypothesis from the finite Suzuki field cardinality and
+Frobenius formula. Consequently
+`suzukiUpperMatrixGroup_two_transitive_on_ovoid_of_field` gives the local
+two-transitivity theorem without a separate norm-zero assumption. The focused
+Suzuki owner check passed and the public `InfoGeometry.Exceptional.CFSGPort.All`
+build passed with 8,990 jobs on 2026-10-30. The projective action's faithfulness
+and exact point-stabilizer recognition are still required before the local
+perfectness and action results imply simplicity; no Suzuki simplicity theorem
+is claimed. `suzukiGeneratorMatrices_noncommute` also exhibits a noncommuting
+root/Weyl pair directly in the four-dimensional matrix carrier. The final
+umbrella rebuild after this addition passed with 8,990 jobs. The staged
+OpenGauss gate still reports T16 for this owner because its carrier matcher
+does not connect that explicit matrix witness to the file's operator carrier.
+
+### Suzuki determinant-one operator group (2026-10-30)
+
+`SuzukiOvoid.lean` now proves determinant one separately for the root, torus,
+and antidiagonal Weyl operators, then for every element of the generated
+`suzukiUpperMatrixGroup`. This is a local four-dimensional matrix-operator
+theorem and a prerequisite for excluding nontrivial scalar elements from the
+projective action kernel. The focused owner check passed after the addition.
+Projective faithfulness, exact point-stabilizer recognition, the external
+`SuzukiModel` identification, and Suzuki simplicity remain open. Root pins and
+external source trees are unchanged.
+
+### Suzuki projective-kernel step (2026-10-30)
+
+`SuzukiOvoid.lean` now proves `scalar_eq_one_of_det_one` for four-dimensional
+scalar operators in characteristic two, proves that the local generated
+Suzuki operator group intersects the scalar center trivially, and establishes
+`suzukiUpperMatrixGroup_toPGL_injective`. The proof uses determinant one for
+the root, torus, and Weyl generators, then proves the determinant-one scalar
+is trivial in characteristic two. The focused locked Lean check passed. This
+gives a faithful projective representation of the local operator group; it
+does not alone establish faithfulness of the action restricted to the Suzuki
+ovoid, the exact ovoid point stabilizer, or simplicity.
+
+### Suzuki nonzero Bruhat factorization (2026-10-30)
+
+`SuzukiBruhatFactorization.lean` ports the external finite-field matrix
+identity `suzuki_bruhat_factorization` to
+`suzukiWeyl_upperRoot_weyl_factorization` on the local upper-root, Weyl, and
+torus operators in `GL (Fin 4) K`. It also proves
+`exists_suzukiGroup_W_root_W_factorization`, the same decomposition internally
+in the generated local Suzuki operator subgroup. The local `B w U` cell and
+`mul_mem_suzukiBorelOrBigCell_of_upperRoot` establish the upper-root generator
+case of the external two-cell normal-form induction. The torus-generator case
+is proved by `mul_mem_suzukiBorelOrBigCell_of_torus`: right multiplication
+preserves `B ∪ B w U`, using torus normalization of the root subgroup and Weyl
+inversion of the torus. `suzukiTorusOperator_mem_torusOperatorGroup` exposes
+the generator-membership fact from the torus subgroup's defining owner. The
+Weyl generator case is now proved by
+`mul_mem_suzukiBorelOrBigCell_of_weyl`. It handles the identity root parameter
+directly and uses the nonzero Weyl–root factorization otherwise, moving the
+torus factor across the Weyl operator using the proved inversion law. A
+nondependent existential form of that factorization is exposed as
+`exists_suzukiWeyl_upperRoot_weyl_factorization` for this use. The matrix
+factorization transports the external lower identity through
+transpose, explicitly preserving its reversed factor order, and uses local
+Suzuki norm nonvanishing to define the torus parameter.
+The focused `SuzukiOvoid` and `SuzukiBruhatFactorization` locked builds passed
+with 8,948 and 8,950 jobs, respectively, on 2026-10-30; the subsequent
+factorization-owner rebuild also passed with 8,950 jobs after the Weyl case
+was added. The module is imported by the public `CFSGPort.All` umbrella. The
+three generator-stability cases now match the positive root, torus, and Weyl
+generators of the external normal-form induction. The new
+`suzukiUpperMatrixGroup_mem_borelOrBigCell` closes the induction on the actual
+generated operator group and proves two-cell Bruhat coverage. Uniqueness of
+the cell parameters remains unproved. The exact point-stabilizer membership
+criterion is now proved in
+`suzukiUpperMatrixGroup_mem_pointStabilizer_iff`: a generated Suzuki operator
+fixes infinity exactly when it belongs to the local root–torus subgroup. Its
+proof excludes the big cell using the explicit Weyl action on the projective
+ovoid. `SuzukiSimplicity.lean` now assembles the faithful two-transitive ovoid
+action, exact point-stabilizer identification, solvability of the root–torus
+subgroup, perfectness, and a concrete noncommuting witness into
+`suzukiUpperMatrixGroup_isSimple`, under the stated finite-field and Tits
+endomorphism hypotheses. The public exceptional umbrella and root
+`InfoGeometry.All` build both passed after this addition (8,995 and 28,245
+jobs, respectively). No root dependency pin or external source was changed.
+
+### External CFSG simplicity theorem map (2026-10-30)
+
+The checked-out external CFSG theorem owners include
+`CFSG/LieType/Simplicity/Exceptional.lean` for untwisted `G₂`, `F₄`, `E₆`,
+`E₇`, and `E₈`, and for twisted `²E₆`; `TrialityD4.lean` for `³D₄`;
+`Suzuki.lean` for `²B₂`;
+`ReeSmall.lean` and `ReeLargeModel.lean` for the small and large Ree families;
+and `TitsModel.lean` for the Tits group. The local `ExceptionalModelSimplicity`
+module contains family-model transport interfaces, but the exceptional
+family-specific quasisimplicity and normal-subgroup arguments are not all
+ported. The local Suzuki port has since proved two-cell Bruhat coverage and
+exact point-stabilizer recognition, and assembles those with the faithful
+two-transitive ovoid action, solvable root–torus subgroup, and perfectness into
+`suzukiUpperMatrixGroup_isSimple`. External CFSG remains context only: the
+root toolchain and Mathlib pins were not changed, and no external source was
+edited.
+
+| External theorem owner | External family result | Local port boundary | Remaining theorem debt |
+|---|---|---|---|
+| `Simplicity/Exceptional.lean` | `fam_g2_simplicity`, `fam_f4_simplicity`, `fam_e6_simplicity`, `fam_e7_simplicity`, `fam_e8_simplicity` | `ExceptionalModelSimplicity` transports models from local adjoint central quotients; it has conditional G₂/F₄/E₈ interfaces and local perfectness for the six untwisted root tags | Family-specific central-or-total normal-subgroup dichotomies / quasisimplicity for the actual local root-operator carriers |
+| `Simplicity/Exceptional.lean` | `fam_2e6_simplicity` | `TwistTag.E6`, the twisted fixed-derived model, the field-cardinality square Frobenius lemma, and generic conditional simplicity transport are present locally | Quasisimplicity of the derived twisted-fixed `E₆` subgroup; the local adapter still requires this family theorem as an input |
+| `Simplicity/TrialityD4.lean` | `fam_3d4_simplicity` | `isSimpleGroup_of_twistedChevalleyModel` transports from the derived twisted-fixed subgroup | Quasisimplicity of the corresponding derived twisted-fixed operator subgroup |
+| `Simplicity/Suzuki.lean` and `LieType/Ree/SuzukiSimple.lean` | `fam_2b2_simplicity` | `suzukiUpperMatrixGroup_isSimple` assembles the local two-cell Bruhat coverage, faithful two-transitive ovoid action, exact point-stabilizer recognition, solvable root–torus subgroup, and perfectness under the finite-field and Tits endomorphism hypotheses | Comparison of the local upper-matrix operator group with the external `SuzukiModel` carrier |
+| `Simplicity/ReeSmall.lean` | `fam_2g2_simplicity` | `isSimpleGroup_of_ReeTitsRelationModel` transports from a derived root-generated subgroup | Quasisimplicity of the local twisted-Ree root-generated subgroup |
+| `Simplicity/ReeLargeModel.lean` | `fam_2f4_simplicity` | Same local Ree/Tits relation-model transport interface | Family-specific quasisimplicity proof for the ²F₄ carrier |
+| `Simplicity/TitsModel.lean` | `fam_tits_simplicity`, `fam_ree_tits_simplicity` | Same local Ree/Tits relation-model transport interface | Family-specific quasisimplicity proof for the Tits/paired-root carrier |
+
+### Refined G₂ commutator port boundary (2026-10-30)
+
+The local `ChevalleyCommutatorData.lean` and
+`ChevalleyCommutatorCertificate.lean` already port the per-family sparse
+factor tables. `g2_repsCheck` kernel-checks the G₂ factor identities,
+`exceptional_coverCheck` checks the finite Weyl-word cover, and
+`operator_polynomial_commutation_of_repCheck` turns each successful row into
+an equality of endomorphisms of the actual root module. `walkPair_root_spec`
+proves that the encoded simple-reflection walks act on the certified root
+vectors as specified. `ChevalleyRootOperatorMirror.entriesOp_eq_simpleRootCoefficients`
+identifies table operators with pinned coefficients for simple-root rows.
+
+`ChevalleyRootOperatorFamilyBridge.lean` now ports the external
+`PinnedBridge` argument connecting the checked root-operator family to the
+existing pinned root operators. It proves the general-root identity
+`pinnedX_eq_rootOperatorFamilyData`, including the pinned Weyl word and sign
+from `pinnedData`, without rebuilding local root groups. The sparse certificate
+tables are still identified with pinned coefficients only on the simple-root
+rows by `entriesOp_eq_simpleRootCoefficients`; the bridge does not yet prove
+the all-root certificate-to-family identification or transport the checked
+polynomial identity into the open-cone root subgroup. It therefore does not
+prove `SteinbergExtras.commutator_mem`, external
+`RootOps.CommAll.commContained_pos`, or G₂ quasisimplicity.
+
+### Tits simplicity support port (2026-10-31)
+
+`CFSGPort/TitsSimplicitySupport.lean` directly ports four generic lemmas from
+`external_refs/CFSG/CFSG/LieType/Simplicity/TitsSimple.lean`: commutator
+containment when a normal subgroup and cyclic subgroup generate the group,
+descent of the commutator into a nilpotent quotient kernel, the odd-power
+coset reduction `mul_inv_mem_of_sup_zpowers`, and the Sylow-normalizer
+contradiction `false_of_swapped_factors`. The source proofs were adapted to the
+root-pinned Lean 4.34.1 / Mathlib d13f23b environment and are exported through
+`CFSGPort.All`. The focused target and public CFSG umbrella passed locked
+builds. These are reusable inputs to the external Tits/²F₄ simplicity route;
+the local Tits relation-model quasisimplicity proof remains open.

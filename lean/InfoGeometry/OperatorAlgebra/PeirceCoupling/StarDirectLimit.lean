@@ -25,7 +25,11 @@ open InfoGeometry.Core.DualSeedPeirce
 
 variable {I : Type*} [Preorder I] [Nonempty I] [IsDirectedOrder I]
 variable {A : I → Type*} [∀ i, Ring (A i)] [∀ i, StarRing (A i)]
-variable (f : ∀ i j, i ≤ j → A i →⋆+* A j)
+variable {F : I → I → Type*}
+variable [∀ i j, FunLike (F i j) (A i) (A j)]
+variable [∀ i j, RingHomClass (F i j) (A i) (A j)]
+variable [∀ i j, StarHomClass (F i j) (A i) (A j)]
+variable (f : ∀ i j, i ≤ j → F i j)
 variable [DirectedSystem A (fun i j hij => f i j hij)]
 
 /-- The star of the quotient is constructed, not supplied as a witness field. -/

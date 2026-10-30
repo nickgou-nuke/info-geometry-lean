@@ -5,8 +5,12 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Probability.CausalDetailedBalanceObstruction
 import InfoGeometry.Probability.FiniteMarkovReversibilizationAudit
+import InfoGeometry.Probability.FiniteMarkovWeightedAdjointAudit
+import InfoGeometry.Probability.ReversibilizationCausalCriterion
 
 /-! Audit the causal obstruction together with its reversible-averaging alternative. -/
 
 #print axioms InfoGeometry.Probability.causal_detailedBalance_offDiagonal_zero
 #print axioms InfoGeometry.Probability.causal_detailedBalance_rowSumOne_eq_one
+#print axioms InfoGeometry.Physics.weightedSelfPart_causal_iff
+#print axioms InfoGeometry.Physics.weightedSelfPart_causal_rowSumOne_iff

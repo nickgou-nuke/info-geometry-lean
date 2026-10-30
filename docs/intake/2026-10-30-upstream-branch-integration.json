@@ -1,0 +1,346 @@
+{
+  "upstream_branches": [
+    {
+      "ref": "refs/heads/codex/chiral-dissipator-colimit",
+      "tip": "156a4a6aa739ed6d0edcc66e2491cba9ed8a31c4"
+    },
+    {
+      "ref": "refs/heads/codex/chiral-supertrace-localization",
+      "tip": "3254210e5e6e114d5c18e84e7de72741f24c8593"
+    },
+    {
+      "ref": "refs/heads/codex/clifford-peirce-products",
+      "tip": "a9fc6375c2f814876cf4e6a44a225602f186b9c6"
+    },
+    {
+      "ref": "refs/heads/codex/cyclic-curvature-discrete-frame",
+      "tip": "e6883d5f2db7610341105661f20d6b26bee0494f"
+    },
+    {
+      "ref": "refs/heads/codex/epistemic-clifford-dirac-20261028",
+      "tip": "e5ba7e1adcbfb3d747356934988d5064361dc174"
+    },
+    {
+      "ref": "refs/heads/codex/faithful-peirce-matrix-representation",
+      "tip": "bfeed50e9c1a8eee6896ca5ce40d1b23b5e4e14f"
+    },
+    {
+      "ref": "refs/heads/codex/graded-dmp-resolution",
+      "tip": "67fd0428b8888541aa85a2e0d90dddb921a4c428"
+    },
+    {
+      "ref": "refs/heads/codex/mass-spectrometry-validator",
+      "tip": "4f3306dea3cec396237486db7665473f5581c733"
+    },
+    {
+      "ref": "refs/heads/codex/matrix-peirce-zorn-proofs-20261028",
+      "tip": "9df96fa8480000753e14a2f8473247bebf2056fe"
+    },
+    {
+      "ref": "refs/heads/codex/native-peirce-hodge-20261028",
+      "tip": "59904bb5238bbfea3c849011daa8c8797b9a5848"
+    },
+    {
+      "ref": "refs/heads/codex/noncommutative-boundary-pairing",
+      "tip": "cc5b39dfc368796115633c1c8eaba9266791ad3a"
+    },
+    {
+      "ref": "refs/heads/codex/nuclear-sector-feshbach-inference",
+      "tip": "ef59526ea498c5985bc2e7ebffe1232d1d2372dc"
+    },
+    {
+      "ref": "refs/heads/codex/opposite-peirce-coupling",
+      "tip": "c192b99fdee5783915c247b35f64e8c32ab117a0"
+    },
+    {
+      "ref": "refs/heads/codex/peirce-source-completion-20261029",
+      "tip": "3ee4135b9adb19500e6e3e6330a003b5eb86ec10"
+    },
+    {
+      "ref": "refs/heads/codex/peirce-trace-crossover-20261028",
+      "tip": "3f472658c4a007677b43f8ce7b89366b08e3f821"
+    },
+    {
+      "ref": "refs/heads/codex/real-graded-boundary-compilation",
+      "tip": "fd11e1c052b69c98ff9533f97edc773e769fa9bb"
+    },
+    {
+      "ref": "refs/heads/codex/real-operator-content-network-20261029",
+      "tip": "63904e24dedfd10dc6234f76da0eb0450f95fcc9"
+    },
+    {
+      "ref": "refs/heads/codex/real-peirce-kernel-krein",
+      "tip": "02b2a2aa6fc03841e6d05d4d9117f5272fb63de2"
+    },
+    {
+      "ref": "refs/heads/codex/real-star-colimit-20261029",
+      "tip": "21615adf62957c00590d451ab73540c4262cd6da"
+    },
+    {
+      "ref": "refs/heads/codex/rectangular-peirce-drazin",
+      "tip": "eff3c64b95a2cb9e1cd79015cd3fdd9b12f2916f"
+    },
+    {
+      "ref": "refs/heads/codex/rindler-spin-torsion-trace-splitting",
+      "tip": "96334f33d22d71ac46267b535c12673e04e12c8b"
+    },
+    {
+      "ref": "refs/heads/codex/signed-peirce-transport",
+      "tip": "d61a6c93ee7d075df752c6f3b19b68974cc6b763"
+    },
+    {
+      "ref": "refs/heads/codex/square-zero-sandwich-action",
+      "tip": "b72dd9ed4632dea0ed6846d0ec7f148d57b7871c"
+    },
+    {
+      "ref": "refs/heads/codex/square-zero-tripotent-resolvent",
+      "tip": "b67208c58a877483a9476b71173c55ebef9abc4d"
+    },
+    {
+      "ref": "refs/heads/codex/sulfur37-configuration-mixing",
+      "tip": "fde47b6c2986134ca878456771f28e69dce18895"
+    },
+    {
+      "ref": "refs/heads/feat/balaban-operator-coarse-graining",
+      "tip": "7f5514c1c6c1671dbd82777723f4a19898c0f0f4"
+    },
+    {
+      "ref": "refs/heads/feat/bilateral-peirce-zorn-kernels",
+      "tip": "7dfcf03dcd9786d7aa34a572d93ea2b1341b3d7d"
+    },
+    {
+      "ref": "refs/heads/feat/grassmann-cayley-operators",
+      "tip": "5e83edbd6742152777425a9a76630dfde28480aa"
+    },
+    {
+      "ref": "refs/heads/feat/ms-experimental-evidence",
+      "tip": "756646098b235aa8b8a0111fea552d921634afd5"
+    },
+    {
+      "ref": "refs/heads/feat/ms-finite-absorption",
+      "tip": "f9a5c6d5a7e5bc9d1ae6b6f0f3e8c77ff67a5d6e"
+    },
+    {
+      "ref": "refs/heads/feat/ms-signature-spectral-geometry",
+      "tip": "674f6ec4d583aa00a36a30cfed24f6a1b6b7ad89"
+    },
+    {
+      "ref": "refs/heads/feat/noncommutative-lie-jordan-geometry",
+      "tip": "a477f2b2e2006db895b8ca7fc86f24f4f974a817"
+    },
+    {
+      "ref": "refs/heads/feat/noncommutative-star-colimit-transport",
+      "tip": "b8ae8ff5d75918dcf2fb76c3e132dee01680ec38"
+    },
+    {
+      "ref": "refs/heads/feat/noncommutative-yang-mills-dirichlet",
+      "tip": "9849972bf11c6afa85bc095fba1b77af2112ac4b"
+    },
+    {
+      "ref": "refs/heads/feat/operator-archetype-geometry",
+      "tip": "423762cd7128ada367735aeb2452f4c53bf192c7"
+    },
+    {
+      "ref": "refs/heads/feat/operator-archetypes-xiv-xviii",
+      "tip": "64460eeb7209e029178e53ec4609f16e044256e4"
+    },
+    {
+      "ref": "refs/heads/feat/operator-defect-lie-closure",
+      "tip": "21500b3ac90c0a3dd642e898ddd83f5052b2cd26"
+    },
+    {
+      "ref": "refs/heads/feat/operator-logdet-dikin-geometry",
+      "tip": "37c47ae5ddd9d00d700fe1df61b0c60ee80e2efc"
+    },
+    {
+      "ref": "refs/heads/feat/peirce-bdg-correlation-geometry",
+      "tip": "4e2c0ef69aced9dee6290d2c798940a704f893f4"
+    },
+    {
+      "ref": "refs/heads/feat/peirce-cartan-colimit-20261029",
+      "tip": "65fa4f70b74403448f699fff2c5f58b475a34013"
+    },
+    {
+      "ref": "refs/heads/feat/phase-flow-zorn-bdg-car",
+      "tip": "0b8f3258f56eb2c1c81aa036b8bd3e6c01a23958"
+    },
+    {
+      "ref": "refs/heads/feat/quadratic-oscillator-bk-bridge",
+      "tip": "8311db186fe9aa6e472ec3dab17fe417e1751acb"
+    },
+    {
+      "ref": "refs/heads/feat/real-operator-gap-criteria",
+      "tip": "61dd12e56dfe97d8f796e1cfd5ef31b899ba2bdf"
+    },
+    {
+      "ref": "refs/heads/feat/real-peirce-colimit-modes",
+      "tip": "98224b7ae3c35c91ecc0d3b2272aca03476df165"
+    },
+    {
+      "ref": "refs/heads/feat/real-twistor-constructs-20261027",
+      "tip": "fd397a4a58f17e56449ec9a9150cfd5e4192dfdc"
+    },
+    {
+      "ref": "refs/heads/feat/repository-evolution-explorer",
+      "tip": "272b93ab41e70523a898d80c3bbf73c0cec9a613"
+    },
+    {
+      "ref": "refs/heads/feat/seligman-jordan-operator-geometry",
+      "tip": "2bd54f6c353bff719019be16039181936ede4030"
+    },
+    {
+      "ref": "refs/heads/feat/star-colimit-chiral-transport",
+      "tip": "7ef833122ef2858e953d52d615360f25fd2c347c"
+    },
+    {
+      "ref": "refs/heads/feat/twisting-twistor-meier-viana",
+      "tip": "6a00d4c7df4edf05cd83b6fdeb8b04374c77c23e"
+    },
+    {
+      "ref": "refs/heads/feat/universal-grade-generator",
+      "tip": "68179839d1e48eb20d7fb9e0cbe6cb3d0ffaf6a8"
+    },
+    {
+      "ref": "refs/heads/feat/yang-mills-native-gauge-geometry",
+      "tip": "dbf21915b23c6f78305ec57a3d12b21c24ed1104"
+    },
+    {
+      "ref": "refs/heads/formalization/projective-operator-incidence-20261027",
+      "tip": "281e05b2fb12aa71143fb7140b6725a25aa34158"
+    },
+    {
+      "ref": "refs/heads/formalize/chiral-null-gauge-inversion",
+      "tip": "61ca97daaa3bfac333f7621fe103049e2c650f05"
+    },
+    {
+      "ref": "refs/heads/formalize/color-charge-polynomial-identities-20261025",
+      "tip": "54e21841e47f78cfa7f2a16a94894469832ab128"
+    },
+    {
+      "ref": "refs/heads/formalize/drazin-mp-kitaev-boundary-audit-20261025",
+      "tip": "a7b438ba0061c3d8d4bb7342dccaea26066f2d8f"
+    },
+    {
+      "ref": "refs/heads/formalize/lie-jordan-peirce-dual-transport",
+      "tip": "359aa65ea4d1cf93e1c2b95373416d5b71cad643"
+    },
+    {
+      "ref": "refs/heads/formalize/lie-jordan-peirce-duality-20261028",
+      "tip": "aa829406bfc262a789759766a407a004dbb1f93a"
+    },
+    {
+      "ref": "refs/heads/formalize/lie-jordan-peirce-operators-20261028",
+      "tip": "6577163b28f747b14dedd689be8a2eb905a524c0"
+    },
+    {
+      "ref": "refs/heads/formalize/peirce-coupling-exactness-20261028",
+      "tip": "bac4420d81458ae02f3e320a311b407217e890a7"
+    },
+    {
+      "ref": "refs/heads/formalize/penney-octonion-isospin-1971",
+      "tip": "f4988cd51c9281c6589555950507af57380285a9"
+    },
+    {
+      "ref": "refs/heads/formalize/perjes-klein-particle-completion",
+      "tip": "4383aa550df4ad749b6ba802c23a684bc7648bde"
+    },
+    {
+      "ref": "refs/heads/formalize/perjes-particle-klein-holonomy",
+      "tip": "fa183120e693a3d60f17260cf3067d50e9e7f463"
+    },
+    {
+      "ref": "refs/heads/formalize/perjes-particle-klein-spinor",
+      "tip": "dcd56a134735ac122926b747a189be446f65f55f"
+    },
+    {
+      "ref": "refs/heads/formalize/plucker-infinity-modular-bridge",
+      "tip": "feb80d28cd580eefcc525ed769feeff8f685a25e"
+    },
+    {
+      "ref": "refs/heads/formalize/positive-hodge-coercivity-20261029",
+      "tip": "05788b279ac7f90ff071ba89fa033ed5069c5d18"
+    },
+    {
+      "ref": "refs/heads/formalize/real-lie-jordan-hodge-coercivity",
+      "tip": "62fc484fd97a6267dd52e312cc68af1ec3f83867"
+    },
+    {
+      "ref": "refs/heads/formalize/zorn-chiral-archetype-conditional-20261025",
+      "tip": "59182a753233a548f171e8f8b6f4f4479efee122"
+    },
+    {
+      "ref": "refs/heads/formalize/zorn-traceless-two-mode-flow-20261025",
+      "tip": "78b227955e62ff8ce4d5d8cc6276368c73d301fa"
+    },
+    {
+      "ref": "refs/heads/main",
+      "tip": "0a888c5bac874a08cfeb804724fb20ebfd7820f6"
+    }
+  ],
+  "integration_head": "cd5e44fd6c332025738ec91c9a45c0b5893e0078",
+  "ancestry_check": "All 69 fetched tips are ancestors of integration_head.",
+  "publication_status": "Ready for publication: all 69 upstream tips integrated and verified. Push main before deleting the 68 non-main refs with exact-tip leases.",
+  "perjes_reconciliation_owners": [
+    "ConstituentColumnEquivalence",
+    "ConstituentMomentumTransport",
+    "ConstituentLinearStabilizer",
+    "ConstituentPolynomialEmbedding",
+    "PerjesIncidencePairing",
+    "PerjesMomentOperator"
+  ],
+  "validation_logs": [
+    "/tmp/upstream-integration-third-pass.log",
+    "/tmp/upstream-integration-fourth-pass.log",
+    "/tmp/upstream-integration-broad-build.log",
+    "/tmp/upstream-staged-python-tests.log",
+    "/tmp/upstream-scope-audit.log",
+    "/tmp/upstream-integration-repair-build.log",
+    "/tmp/upstream-staged-gate-third.log",
+    "/tmp/upstream-final-build.log",
+    "/tmp/upstream-final-build-2.log",
+    "/tmp/upstream-final-staged-gate-2.log",
+    "/tmp/upstream-final-axiom-audit.log",
+    "/tmp/upstream-final-semantic-content.log",
+    "/tmp/upstream-final-vacuity.log",
+    "/tmp/upstream-final-build-3.log",
+    "/tmp/upstream-final-build-4.log",
+    "/tmp/upstream-final-staged-gate-3.log",
+    "/tmp/upstream-final-build-5.log",
+    "/tmp/upstream-final-build-6.log",
+    "/tmp/upstream-final-build-7.log",
+    "/tmp/upstream-final-build-8.log",
+    "/tmp/upstream-final-build-9.log",
+    "/tmp/upstream-final-build-10.log",
+    "/tmp/upstream-release-build.log",
+    "/tmp/upstream-final-build-11.log",
+    "/tmp/upstream-final-build-12.log",
+    "/tmp/upstream-final-build-13.log",
+    "/tmp/upstream-final-build-14.log",
+    "/tmp/upstream-release-build-2.log",
+    "/tmp/upstream-final-staged-gate-7.log",
+    "/tmp/upstream-release-build-3.log",
+    "/tmp/upstream-final-staged-gate-8.log"
+  ],
+  "validation_status": "PASS: 205-target build (29,790 jobs), final aggregate/test-suite/audit recheck (29,789 jobs), staged-source gate, 58 Python tests, Perjes audit (196 declarations in nine owners), source debt, semantic-content, and active-scope semantic-vacuity checks.",
+  "staged_work_authorization": "User explicitly authorized inclusion of staged work after verification.",
+  "reconciliation_notes": [
+    "Preserved all fetched branch tips in main ancestry.",
+    "Reconciled Perjes variants through six native bridge modules and retained audit coverage.",
+    "Corrected Peirce coefficient formulas against focused owner theorems.",
+    "CausalPosetArchetypes now imports NonCommutativeHorizonCausalPoset to preserve shared public names without duplicate declarations.",
+    "Dependency revisions and toolchain remain unchanged.",
+    "Generated SO55NullSU5KleinSpectral imports its proofs owner for shared declarations and retains its additional declarations.",
+    "WeylDisplacement owns the general CommSemiring displacement API; DiscreteDisplacement forwards imports and SylvesterWeylBraidBridge retains its matrix braid proof.",
+    "Kept both absorbing-completion carriers; the Fin(n+1) carrier is named absorbingFinCompletion and the Option(Fin n) API is unchanged.",
+    "GraphExport, MassSpectrometry.JsonChecks, and MassSpectrometry.Validate retain standalone global main entry points and are built separately from the aggregate library.",
+    "LieJordanGradedDifferential reuses its byte-identical PeirceTwistedComplex owner.",
+    "FureyCAR reuses FureyLadderCAR and retains the existing namespace and signed identities.",
+    "The independent PureNonCommutativeOperatorSpine collection now has the module-qualified InfoGeometry.PureNonCommutativeOperatorSpine namespace; the established SteinbergBraidDefectSpine namespace and consumers are unchanged.",
+    "CausalPetzStiefelConservation imports the five shared block/Gram declarations from CausalPetzRecovery and retains its distinct conservation results and audit.",
+    "FresnelCl11MatrixIsomorphism uses its module-qualified namespace to preserve its distinct amplitude carrier alongside FresnelCl11Isomorphism.",
+    "SandboxCARBridge2/3/4/6/7 import their identical real-matrix owner; SandboxCARBridge5 shares only Dim8 and retains its integer-matrix construction.",
+    "GrandModularKleinAlbertSynthesis reuses H3ZornF4Basis.trace, the same diagonal sum.",
+    "BraidGroupPresentation reuses the existing proofs.BraidProject.BraidGroup owner used by categorical colimit consumers.",
+    "Removed redundant Fresnel/Grand synthesis Prop proof bundles in favor of direct owner audits; all twenty Grand synthesis owner axiom checks remain."
+  ]
+}

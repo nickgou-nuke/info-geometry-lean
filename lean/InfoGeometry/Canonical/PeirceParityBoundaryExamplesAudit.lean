@@ -4,6 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.PeirceParityBoundaryExamples
+import InfoGeometry.Algebra.PeirceParityTorsion
+import InfoGeometry.Singular.ProjectionDifferenceTripotence
+
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.grading_conjugation_fixed_iff_odd_two_torsion
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.grading_conjugation_neg_iff_even_two_torsion
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.grading_conjugation_both_signs_iff
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.parity_decomposition_unique
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.evenPart_eq_self_iff_grading_conjugation
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_eq_self_iff_grading_conjugation
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_zero_iff_commute
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_mul_oddPart_is_even
+#print axioms InfoGeometry.Singular.ProjectionSectors.difference_tripotent_iff_compressions
+#print axioms InfoGeometry.Singular.ProjectionSectors.difference_tripotent_iff_commute
+#print axioms InfoGeometry.Singular.ProjectionSectors.mp_support_difference_tripotent_iff
 
 #print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_projection_idempotent
 #print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_grading_eq_one

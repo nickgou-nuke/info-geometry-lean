@@ -475,4 +475,27 @@ theorem entriesOp_eq_simpleRootCoefficients {τ : Tag} {R : Type*} [CommRing R]
   exact ⟨entriesOp_eq_xCoeff (R := R) (j := j) (k := k) hx,
     entriesOp_eq_yCoeff (R := R) (j := j) (k := k) hy⟩
 
+/-- The positive simple-root group operator is exactly the finite sparse-row
+polynomial encoded by the checked exceptional table. The degree-zero term is
+the identity; all positive-degree coefficients are the actual sparse
+endomorphisms, so this equality lives in the noncommutative root-module
+operator algebra rather than only in the coefficient decoder. -/
+theorem xOp_eq_sparse_simpleRoot_polynomial {τ : Tag} {R : Type*} [CommRing R]
+    (j : Fin τ.rank) (c : R) :
+    xOp τ R j c =
+      ∑ k ∈ Finset.range 4, c ^ k •
+        (if k = 0 then (1 : Module.End R (RootModule τ R))
+         else entriesOp τ R (entries τ j k)) := by
+  rw [xOp_eq_sum_xCoeff]
+  refine Finset.sum_congr rfl fun k hk => ?_
+  by_cases hzero : k = 0
+  · subst k
+    simp [xCoeff_zero]
+  · have hkpos : k ∈ [1, 2, 3] := by
+      simp only [Finset.mem_range] at hk
+      simp
+      omega
+    rw [(entriesOp_eq_simpleRootCoefficients (τ := τ) (R := R) j hkpos).1]
+    simp [hzero]
+
 end InfoGeometry.Exceptional.CFSGPort.Chevalley.RootOps.Mirror

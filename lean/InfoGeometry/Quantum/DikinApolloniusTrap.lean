@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -91,10 +96,11 @@ theorem dikin_equilibrium_ellipsoid_iff (r y : ℝ) :
   unfold dikinEquilibriumEllipsoid
   rw [Set.mem_setOf_eq, dikin_scale_metric_at_zero]
 
-/-- 🏆 THEOREM 5 (Blahut-Arimoto Geometric Contraction Step):
-    If an operator 𝒯_BA contracts the scale coordinate by factor Kc ∈ [0, 1),
-    |𝒯_BA(ξ)| ≤ Kc * |ξ|, then the contracted state maps strictly into a smaller Dikin ellipsoid:
-    2 * (𝒯_BA(y))² ≤ Kc² * r² for all y in the r-ellipsoid. -/
+/-- THEOREM 5 (Weak Blahut-Arimoto Dikin Bound):
+    If `Kc ≥ 0`, `y` lies in the radius-`r` equilibrium ellipsoid, and
+    `|Ty| ≤ Kc * |y|`, then `2 * Ty² ≤ (Kc * r)²`. This is a non-strict
+    quadratic bound; strict shrinkage requires additional hypotheses such as
+    `Kc < 1` and `0 < r`. -/
 theorem blahut_arimoto_dikin_shrinkage
     (Kc r y : ℝ) (hKc_nonneg : 0 ≤ Kc)
     (hy_in : y ∈ dikinEquilibriumEllipsoid r)

@@ -219,6 +219,13 @@ class RefactoringMapTests(unittest.TestCase):
         self.assertEqual(manifest["role"], "repository_evolution_analysis")
         self.assertEqual(manifest["component"], "source_generation_provenance")
         self.assertEqual(manifest["componentStatus"], "repo_entrypoint_role_reviewed")
+        for filename, expected in (
+            ("context_transport.py", "balanced_context_transport"),
+            ("train_graph_context_encoder.py", "self_supervised_graph_context_encoder"),
+        ):
+            component = classify_file(f"tools/repository_evolution/{filename}")
+            self.assertEqual(component["component"], expected)
+            self.assertEqual(component["componentStatus"], "repo_entrypoint_role_reviewed")
         unknown = classify_file("tools/repository_evolution/future_module.py")
         self.assertEqual(unknown["component"], "unclassified_evolution_subsystem")
         self.assertEqual(unknown["componentStatus"], "uncertain_unmapped_entrypoint")

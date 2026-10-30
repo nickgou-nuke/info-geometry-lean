@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib
 
-namespace InfoGeometry.QuantumContext.FresnelCl11Isomorphism
+namespace InfoGeometry.QuantumContext.FresnelCl11MatrixIsomorphism
 
 variable {R : Type*} [CommRing R]
 
@@ -236,37 +236,11 @@ theorem ab_prob_from_cl11_invariants (ψ_pos ψ_neg : FresnelSlitAmp R) (c s : R
 
 end Cl11Op
 
-/-! ### 6. Главен Сертификат на Раздел 122 -/
+/-! Audit the proved coordinate equivalence and native identities directly. -/
+#print axioms Cl11Op.fresnelCl11Equiv
+#print axioms Cl11Op.det_embed_eq_yin_symplectic_H
+#print axioms Cl11Op.frobenius_norm_sq_embed_eq_intensity_sum
+#print axioms Cl11Op.gram_matrix_embed_explicit
+#print axioms Cl11Op.det_gram_embed_eq_yin_sq
 
-structure FresnelCl11IsomorphismCertificate (R : Type*) [CommRing R] : Prop where
-  left_inv : ∀ (ψ_pos ψ_neg : FresnelSlitAmp R),
-    Cl11Op.projSlitPos (Cl11Op.embedFresnelPair ψ_pos ψ_neg) = ψ_pos ∧
-    Cl11Op.projSlitNeg (Cl11Op.embedFresnelPair ψ_pos ψ_neg) = ψ_neg
-  right_inv : ∀ (M : Cl11Op R),
-    Cl11Op.embedFresnelPair (Cl11Op.projSlitPos M) (Cl11Op.projSlitNeg M) = M
-  det_is_yin_H : ∀ (ψ_pos ψ_neg : FresnelSlitAmp R),
-    Cl11Op.det (Cl11Op.embedFresnelPair ψ_pos ψ_neg) =
-      FresnelSlitAmp.yinSymplecticH ψ_pos ψ_neg
-  norm_is_intensity_sum : ∀ (ψ_pos ψ_neg : FresnelSlitAmp R),
-    Cl11Op.frobeniusNormSq (Cl11Op.embedFresnelPair ψ_pos ψ_neg) =
-      FresnelSlitAmp.intensity ψ_pos + FresnelSlitAmp.intensity ψ_neg
-  gram_offdiag_is_yang_G : ∀ (ψ_pos ψ_neg : FresnelSlitAmp R),
-    let M := Cl11Op.embedFresnelPair ψ_pos ψ_neg
-    (Cl11Op.mul M (Cl11Op.transpose M)).m12 = FresnelSlitAmp.yangSymmetricG ψ_pos ψ_neg
-  gram_det_is_brahmagupta : ∀ (ψ_pos ψ_neg : FresnelSlitAmp R),
-    let M := Cl11Op.embedFresnelPair ψ_pos ψ_neg
-    Cl11Op.det (Cl11Op.mul M (Cl11Op.transpose M)) =
-      Cl11Op.det M * Cl11Op.det M
-
-theorem compile_fresnel_cl11_isomorphism_certificate :
-    FresnelCl11IsomorphismCertificate R where
-  left_inv := fun _ _ => ⟨rfl, rfl⟩
-  right_inv := fun ⟨_, _, _, _⟩ => rfl
-  det_is_yin_H := Cl11Op.det_embed_eq_yin_symplectic_H
-  norm_is_intensity_sum := Cl11Op.frobenius_norm_sq_embed_eq_intensity_sum
-  gram_offdiag_is_yang_G := fun ψ_pos ψ_neg => by
-    dsimp [Cl11Op.embedFresnelPair, Cl11Op.mul, Cl11Op.transpose, FresnelSlitAmp.yangSymmetricG]
-  gram_det_is_brahmagupta := fun ψ_pos ψ_neg =>
-    (Cl11Op.det_gram_embed_eq_yin_sq ψ_pos ψ_neg).2
-
-end InfoGeometry.QuantumContext.FresnelCl11Isomorphism
+end InfoGeometry.QuantumContext.FresnelCl11MatrixIsomorphism

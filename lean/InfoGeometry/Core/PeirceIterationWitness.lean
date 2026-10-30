@@ -57,15 +57,17 @@ theorem arrows_not_commuting : u * v ≠ v * u := by
 /-- An off-diagonal entry forbids replacing the operator weight by a scalar. -/
 theorem weight_not_scalar : ¬ ∃ r : ℝ, 2 * (u * v + v * u) = r • (1 : Mat) := by
   rintro ⟨r, h⟩
+  simp only [two_mul] at h
   have h02 := congrArg (fun a : Mat => a 0 2) h
-  norm_num [two_mul, u, v, Matrix.mul_apply, Fin.sum_univ_succ] at h02
+  norm_num [u, v, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_succ] at h02
 
 /-- A nonzero first action rules out a vacuous constant frame. -/
 theorem first_action_ne_zero : LieAlgebra.ad ℝ Mat ⁅u, v⁆ (u + v) ≠ 0 := by
   rw [weighted_sum_step ℝ p_idempotent u_mem v_mem]
   intro h
+  simp only [two_mul] at h
   have h01 := congrArg (fun a : Mat => a 0 1) h
-  norm_num [two_mul, u, v, Matrix.mul_apply, Fin.sum_univ_succ] at h01
+  norm_num [u, v, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_succ] at h01
 
 /-- All orders specialize on the same dense, genuinely noncommuting carrier. -/
 theorem all_orders (n : ℕ) :

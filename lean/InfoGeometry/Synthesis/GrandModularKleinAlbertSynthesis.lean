@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.FiniteMatrixNoncommutativity
+import InfoGeometry.Algebra.H3ZornF4Basis
 import InfoGeometry.Exceptional.AlbertAlgebraSplitJordan
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -43,15 +50,12 @@ Formalizes in full native Mathlib in Lean 4:
    - Rank 1 candidate (1/2-BPS): det = 0, adjoint = 0.
    - Rank 2 candidate (1/4-BPS): det = 0, adjoint ≠ 0, (adjoint)# = 0.
    - Rank 3 horizon entropy: `S(1) = π`, `S(0) = 0`.
-5. Master Verification Certificate `GrandModularKleinAlbertSynthesisCertificate`.
+5. The companion audit checks each owner theorem directly.
 -/
 
 namespace InfoGeometry.Algebra.H3Zorn
 
 variable {R : Type*} [CommRing R]
-
-/-- Projection dot-notation alias for linear Jordan trace on `H3Zorn R`. -/
-noncomputable def trace (X : H3Zorn R) : R := jordanTrace X
 
 /-- Projection dot-notation alias for quadratic Jordan trace on `H3Zorn R`. -/
 noncomputable def quadTrace (X : H3Zorn R) : R := jordanQuadraticTrace X
@@ -101,7 +105,10 @@ theorem cartanChiral_casimir (θ : R) :
     casimirTwo (cartanChiral θ) = 2 * θ^2 := by
   dsimp [casimirTwo, Matrix.trace, Matrix.diag, cartanChiral, Matrix.mul_apply]
   simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons]
-  ring
+  simp only [mul_zero, zero_mul, add_zero, zero_add]
+  have scalar_identity : (θ * θ + -θ * -θ : R) = 2 * θ^2 := by
+    ring
+  exact scalar_identity
 
 /-! ### Section 2: Klein Crosscap Casimir Selection -/
 
@@ -188,7 +195,7 @@ noncomputable def chiralAlbert (θ : R) : AlbertElement R :=
 /-- Linear Jordan trace of the chiral Albert element is 3 θ. -/
 theorem chiralAlbert_trace (θ : R) :
     (chiralAlbert θ).trace = 3 * θ := by
-  dsimp [H3Zorn.trace, jordanTrace, linearTrace, chiralAlbert, diagonalAlbert]
+  dsimp [H3Zorn.trace, chiralAlbert, diagonalAlbert]
   ring
 
 /-- Quadratic Jordan trace of the chiral Albert element is 3 θ². -/
@@ -225,7 +232,7 @@ theorem chiralAlbert_adjoint (θ : R) :
 theorem casimir_albert_trace_coupling (θ : R) :
     2 * (chiralAlbert θ).freudenthalAdjoint.trace = 3 * (2 * θ^2) := by
   rw [chiralAlbert_adjoint]
-  dsimp [H3Zorn.trace, jordanTrace, linearTrace, diagonalAlbert]
+  dsimp [H3Zorn.trace, diagonalAlbert]
   ring
 
 /-! ### Section 4: Nilpotent BPS Orbit Stratification -/
@@ -318,69 +325,5 @@ theorem chiralEntropy_zero :
   rw [h0, abs_zero, Real.sqrt_zero, mul_zero]
 
 /-! ### Section 5: Master Verification Certificate -/
-
-/-- Master Verification Certificate bundling the complete Grand Modular-Klein-Albert Synthesis. -/
-structure GrandModularKleinAlbertSynthesisCertificate : Prop where
-  cartan_comm : ∀ (R : Type) [CommRing R] (θ₁ θ₂ : R),
-    cartanChiral θ₁ * cartanChiral θ₂ = cartanChiral θ₂ * cartanChiral θ₁
-  cartan_trace : ∀ (R : Type) [CommRing R] (θ : R),
-    Matrix.trace (cartanChiral θ) = 0
-  cartan_casimir : ∀ (R : Type) [CommRing R] (θ : R),
-    casimirTwo (cartanChiral θ) = 2 * θ^2
-  eta_sq : ∀ (R : Type) [CommRing R],
-    kreinEta R * kreinEta R = 1
-  crosscap_idem : ∀ (R : Type) [CommRing R] [Invertible (2 : R)] (X : Matrix (Fin 2) (Fin 2) R),
-    crosscapProj (crosscapProj X) = crosscapProj X
-  crosscap_filter : ∀ (R : Type) [CommRing R] [Invertible (2 : R)] (θ n k : R),
-    crosscapProj !![θ, n - k; k, -θ] = cartanChiral θ
-  crosscap_casimir : ∀ (R : Type) [CommRing R] [Invertible (2 : R)] (θ n k : R),
-    casimirTwo (crosscapProj !![θ, n - k; k, -θ]) = 2 * θ^2
-  chiral_trace : ∀ (R : Type) [CommRing R] (θ : R),
-    (chiralAlbert θ).trace = 3 * θ
-  chiral_quad_trace : ∀ (R : Type) [CommRing R] (θ : R),
-    (chiralAlbert θ).quadTrace = 3 * θ^2
-  chiral_det : ∀ (R : Type) [CommRing R] (θ : R),
-    (chiralAlbert θ).freudenthalDet = θ^3
-  chiral_adjoint : ∀ (R : Type) [CommRing R] (θ : R),
-    (chiralAlbert θ).freudenthalAdjoint = diagonalAlbert (θ^2) (θ^2) (θ^2)
-  coupling : ∀ (R : Type) [CommRing R] (θ : R),
-    2 * (chiralAlbert θ).freudenthalAdjoint.trace = 3 * (2 * θ^2)
-  chiral_zero : ∀ (R : Type) [CommRing R] (θ : R),
-    chiralAlbert θ = 0 ↔ θ = 0
-  rank1_det : ∀ (R : Type) [CommRing R] (k : R),
-    (rank1Candidate k).freudenthalDet = 0
-  rank1_adjoint : ∀ (R : Type) [CommRing R] (k : R),
-    (rank1Candidate k).freudenthalAdjoint = 0
-  rank2_det : ∀ (R : Type) [CommRing R] (k₁ k₂ : R),
-    (rank2Candidate k₁ k₂).freudenthalDet = 0
-  rank2_adjoint : ∀ (R : Type) [CommRing R] (k₁ k₂ : R),
-    (rank2Candidate k₁ k₂).freudenthalAdjoint = diagonalAlbert 0 0 (k₁ * k₂)
-  rank2_adjoint_adjoint : ∀ (R : Type) [CommRing R] (k₁ k₂ : R),
-    ((rank2Candidate k₁ k₂).freudenthalAdjoint).freudenthalAdjoint = 0
-  entropy_id : chiralEntropy 1 = Real.pi
-  entropy_zero : chiralEntropy 0 = 0
-
-theorem compile_grand_modular_klein_albert_synthesis :
-    GrandModularKleinAlbertSynthesisCertificate where
-  cartan_comm := fun _ _ θ₁ θ₂ => cartanChiral_comm θ₁ θ₂
-  cartan_trace := fun _ _ θ => cartanChiral_trace θ
-  cartan_casimir := fun _ _ θ => cartanChiral_casimir θ
-  eta_sq := fun _ _ => kreinEta_sq _
-  crosscap_idem := fun _ _ _ X => crosscapProj_idempotent X
-  crosscap_filter := fun _ _ _ θ n k => crosscap_filters_iwasawa θ n k
-  crosscap_casimir := fun _ _ _ θ n k => crosscap_filtered_casimir θ n k
-  chiral_trace := fun _ _ θ => chiralAlbert_trace θ
-  chiral_quad_trace := fun _ _ θ => chiralAlbert_quadTrace θ
-  chiral_det := fun _ _ θ => chiralAlbert_det θ
-  chiral_adjoint := fun _ _ θ => chiralAlbert_adjoint θ
-  coupling := fun _ _ θ => casimir_albert_trace_coupling θ
-  chiral_zero := fun _ _ θ => chiralAlbert_zero_iff θ
-  rank1_det := fun _ _ k => rank1_candidate_det k
-  rank1_adjoint := fun _ _ k => rank1_candidate_adjoint k
-  rank2_det := fun _ _ k₁ k₂ => rank2_candidate_det k₁ k₂
-  rank2_adjoint := fun _ _ k₁ k₂ => rank2_candidate_adjoint k₁ k₂
-  rank2_adjoint_adjoint := fun _ _ k₁ k₂ => rank2_candidate_adjoint_adjoint k₁ k₂
-  entropy_id := chiralEntropy_identity
-  entropy_zero := chiralEntropy_zero
 
 end InfoGeometry.Synthesis.GrandModularKleinAlbertSynthesis

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -113,10 +118,9 @@ theorem dikin_ellipsoid_nested_shrink (x y r Kc : ℝ) (hx : 0 < x) (hr : 0 ≤ 
     nlinarith [sq_nonneg r]
   exact le_trans h_in h_scale
 
-/-- 🏆 THEOREM 4 (Orbit Scale Invariance of the Dikin Metric):
-    Under the prime dilation map x ↦ p • x, corresponding to the orbit period T_p = ln(p),
-    the Dikin Riemannian volume form scales homothetiсally:
-      g_p(p * x) = p⁻² * g_p(x). -/
+/-- Under positive dilation by `p`, the coefficient of the one-dimensional
+Dikin metric scales by `p⁻²`. This is the metric coefficient; the associated
+one-dimensional Riemannian volume density scales by `p⁻¹`. -/
 theorem dikin_metric_prime_scale (p : ℕ) (hp : 0 < p) (x : ℝ) (hx : 0 < x) :
     dikinMetric ((p : ℝ) * x) = (1 / (p : ℝ) ^ 2) * dikinMetric x := by
   unfold dikinMetric

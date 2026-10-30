@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteMatrixNoncommutativity
 import InfoGeometry.Core.DualSeedCartan
 import InfoGeometry.OperatorAlgebra.PeirceCoupling.RealReflectionGeometry
 
@@ -43,7 +44,8 @@ theorem denseSeed_adjoint_sq : denseSeedᴴ * denseSeedᴴ = 0 := by
 theorem denseSeed_reflexive : denseSeed * denseSeedᴴ * denseSeed = denseSeed := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [denseSeed, Matrix.mul_apply, Matrix.conjTranspose_apply, Fin.sum_univ_succ]
+    norm_num [denseSeed, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Matrix.conjTranspose_apply, Fin.sum_univ_succ]
 
 theorem denseSeed_adjoint_reflexive :
     denseSeedᴴ * denseSeed * denseSeedᴴ = denseSeedᴴ := by

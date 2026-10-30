@@ -799,11 +799,59 @@ on the same module/owner holdouts, with train-only scaling and projection for
 each view. Validation is for method selection; test results are descriptive
 and must not be repeatedly tuned against. A structural ablation is marked
 unavailable when reviewed training artifacts have no graph/InfoTree features.
-This is a structural-feature fusion baseline, not learned graph attention; a
-typed message-passing layer remains a separate ablation. No reviewed corpus is
-currently available, so this is an executable training path and synthetic
-integration coverage, not a trained repository taxonomy model or a reported
-quality gain.
+`tools/repository_evolution/train_graph_context_encoder.py` adds a separate
+self-supervised, relation-aware message-passing ablation. It masks selected
+train-artifact source vectors and reconstructs them from two typed channels:
+dependency-to-dependent and dependent-to-dependency. The relation transforms
+are distinct for Lean imports, Python imports, and test imports. Training edges
+are induced only by train artifacts. At inference, deterministic disjoint
+masked-node batches cover the complete current dependency graph, so each
+connected artifact is predicted with its own source vector hidden. This is
+transductive at inference and must be reported separately from source-only
+generalization to unseen modules.
+The masked-node objective uses the scaled-cosine feature reconstruction
+approach of [GraphMAE](https://arxiv.org/abs/2205.10803), while its separate
+relation transforms follow the multi-relational modeling motivation of
+[R-GCN](https://arxiv.org/abs/1703.06103). [GraphCodeBERT](https://arxiv.org/abs/2009.08366)
+is a related structure-aware code-pretraining precedent, but its graph encodes
+intra-code data flow, unlike this repository's inter-artifact dependency graph.
+The graph objective reads no taxonomy labels, commit messages, or historical
+source copies. Its output packet concatenates the original source embedding
+with the encoder's latent graph context by default, so the existing taxonomy trainer can
+fit graph-context label heads under the same reviewed-label splits. Compare its
+validation report with a separate run on the unmodified source packet. This is
+a learned graph-context representation, not causal
+importance, proof of semantic equivalence, or a literal plabic embedding.
+The model exposes separate `encode` and `decode` operations: the decoder
+reconstructs masked source features to train the encoder. Use
+`--context-representation reconstruction` for the older decoded-feature
+comparison; the representation is recorded in the encoder version, checkpoint,
+training provenance, and report. Latent coordinates are learned features,
+not already identified semantic archetypes. This graph denoiser is not yet
+the structured Sinkhorn transformer or a source-token generation model.
+Version 3 adds optional `--edge-loss-weight 0.2` for joint feature and directed,
+typed edge reconstruction. Following the masked-edge pretext of
+[MaskGAE](https://arxiv.org/abs/2205.10053), the edge decoder uses a separate
+encoding with sampled target pairs removed in both directions across every
+relation. Each relation has an asymmetric bilinear decoder. Positive and
+sampled absent-edge examples come only from the train-induced graph, with a
+256-positive limit per relation and bounded sampling rather than a dense
+all-pairs matrix. Dense graphs with no sampled negatives are rejected when
+this objective is enabled. An absent edge is an observation-level negative,
+not a theorem that a dependency is impossible. The report records training
+binary cross entropy and sample counts, not held-out link accuracy. This
+objective is disabled by default until validated on real captured generations.
+The training report includes reconstruction error separately for train,
+validation, test, and unreviewed artifacts under the same masked-target
+inference policy. It counts isolated artifacts and excludes zero-norm
+standardized targets from cosine evaluation, reporting a null error when
+no target is evaluable. These are transductive feature-reconstruction
+measurements, not held-out taxonomy accuracy or unseen-graph generalization.
+
+The message-passing stage still requires a provenance-bound source packet and
+a ready reviewed corpus to define leakage-safe train groups. No current
+repository taxonomy model or graph-encoder quality gain is claimed until the
+reviewed corpus is ready and held-out comparisons have been run.
 Run it after constructing a ready corpus. When selecting rotary positions, pass
 `--position-encoding rotary` to the encoder command; the default remains
 `learned_absolute`.
@@ -815,6 +863,12 @@ python tools/repository_evolution/train_code_transformer.py \
   --embeddings-out /tmp/repository-encoder-embeddings.json.gz \
   --checkpoint-out /tmp/repository-source-transformer.json.gz \
   --report-out /tmp/repository-source-transformer-report.json
+python tools/repository_evolution/train_graph_context_encoder.py \
+  /tmp/refactoring-map.json.gz /tmp/reviewed-corpus.json \
+  /tmp/repository-encoder-embeddings.json.gz \
+  --embeddings-out /tmp/repository-graph-context-embeddings.json.gz \
+  --checkpoint-out /tmp/repository-graph-context-model.json.gz \
+  --report-out /tmp/repository-graph-context-report.json
 python tools/repository_evolution/generation_manifest.py \
   /tmp/refactoring-map.json.gz /tmp/current-infotree-dna.jsonl \
   --dna-rejections /tmp/current-infotree-rejections.json \
@@ -824,6 +878,11 @@ python tools/repository_evolution/generation_manifest.py \
 python tools/repository_evolution/train_taxonomy_baseline.py \
   /tmp/refactoring-map.json.gz /tmp/reviewed-corpus.json \
   /tmp/repository-encoder-embeddings.json.gz \
+  --model-out /tmp/reviewed-source-taxonomy-model.json \
+  --report-out /tmp/reviewed-source-taxonomy-evaluation.json
+python tools/repository_evolution/train_taxonomy_baseline.py \
+  /tmp/refactoring-map.json.gz /tmp/reviewed-corpus.json \
+  /tmp/repository-graph-context-embeddings.json.gz \
   --infotree-dna /tmp/current-infotree-dna.jsonl \
   --infotree-dna-rejections /tmp/current-infotree-rejections.json \
   --infotree-batch-report /tmp/infotree-capture-batch-1.json \
@@ -832,6 +891,57 @@ python tools/repository_evolution/train_taxonomy_baseline.py \
   --model-out /tmp/reviewed-taxonomy-model.json \
   --report-out /tmp/reviewed-taxonomy-evaluation.json
 ```
+
+Add `--edge-ablation` to graph-context training to measure fixed-model
+sensitivity to removing all inference dependency edges. The report records
+per-artifact mean squared changes in train-standardized embedding coordinates,
+with identical weights, source features, and target masks. It does not alter
+the embedding export, retrain a no-graph model, measure taxonomy accuracy,
+or identify a causal effect. Downstream held-out label evaluation remains
+necessary to determine whether the graph improves classification.
+
+The optional bounded context transport export reuses the numerical owner
+`tools/shape_sinkhorn_detector.py`. Select context artifacts explicitly;
+the command checks their live source hashes before exporting. For example,
+replace the example artifact IDs below with IDs in the embedding packet:
+
+```bash
+python -m tools.repository_evolution.context_transport \
+  /tmp/refactoring-map.json.gz /tmp/repository-graph-context-embeddings.json.gz \
+  --artifact lean/ExampleA.lean --artifact lean/ExampleB.lean \
+  --max-context-size 256 --iterations 100 --tolerance 1e-10 \
+  --out /tmp/repository-context-transport.json.gz
+```
+
+This stage computes cosine logits, alternates row/column Sinkhorn scaling,
+and rejects results outside the requested balance tolerance. It records the
+embedding packet digest, source snapshot, artifact order, source hashes, and
+both marginal residuals. Its square coupling describes context affinity;
+the joint probability matrix is the coupling divided by context size.
+Neither is recorded as a dependency edge or a proven taxonomy assignment.
+The export is currently diagnostic: the taxonomy classifier does not yet
+consume these weights. Birkhoff permutation decomposition, Clifford expert
+execution, and a planar/plabic realization are separate integration work,
+not consequences of this numerical export. The bound avoids automatically
+allocating a dense matrix over the entire repository.
+
+TCR-Former intake (2026-10-30): the
+[paper](https://arxiv.org/pdf/2610.34094) motivates keeping source facts
+available alongside compressed structural representations. Our existing
+concatenation of source and graph-context vectors serves that limited purpose;
+it is not an implementation of the paper's decoder. Inspection of the
+[published decoder](https://raw.githubusercontent.com/Translab-SCUT/TCR-Former/main/code/decoder.py)
+found that `_create_mixed_attention_mask` opens logic **rows** to all keys and
+allows prompt rows to read facts and logic. A proposed alternative containing
+only fact/prompt diagonal blocks and a visible logic column has no path from
+fact values to prompt outputs when logical inputs are held fixed. Composing
+that support pattern cannot create the missing factual bypass. Conversely,
+opening logic rows to future answer tokens requires an explicit multi-layer
+leakage test before using teacher-forced answer sequences. Neither mask
+interpretation is a kernel-verified theorem about this taxonomy pipeline.
+Keep causal/dependency masking separate from square bistochastic routing:
+a triangular doubly stochastic matrix is the identity, so imposing both on
+one square matrix removes nontrivial routing.
 
 `generation_manifest.py` binds the Lean source inventory and exact source
 hashes to the captured InfoTree DNA row fingerprints, current Git HEAD, scanner

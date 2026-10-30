@@ -1,14 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
 import Mathlib.Algebra.Ring.Idempotent
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.NoncommRing
 
+set_option maxHeartbeats 5000000
+
 /-!
 # Pure Non-Commutative Operator Spine: Archetypes A₁–A₂₅
 # Complete causal poset of non-commutative operator algebra over a ring B with idempotent P (P*P=P).
-# Zero physics prose, zero commuting toys, zero sorry/axiom/admit. Native mathlib4 only.
+# Ring identities with the focused repository Peirce owners as proof dependencies.
 -/
 
-namespace PureNonCommutativeOperatorSpine
+namespace InfoGeometry.PureNonCommutativeOperatorSpine
 
 variable {B : Type*} [Ring B]
 
@@ -161,22 +170,55 @@ lemma coneMinus_sq_zero {P : B} (hP : P * P = P) (C : B) : coneMinus P C * coneM
       _ = 0 := by simp [mul_zero]
   exact h₁
 
+lemma conePlus_mul_conePlus {P : B} (hP : P * P = P) (A X : B) : conePlus P A * conePlus P X = 0 := by
+  calc
+    conePlus P A * conePlus P X = (P * A * (1 - P)) * (P * X * (1 - P)) := by rw [conePlus, conePlus]
+    _ = P * A * ((1 - P) * P) * X * (1 - P) := by
+      rw [mul_assoc, mul_assoc]
+      <;> simp [mul_assoc]
+      <;> abel
+    _ = P * A * (P - P * P) * X * (1 - P) := by
+      simp [mul_sub, sub_mul, mul_one, one_mul]
+      <;> abel
+    _ = P * A * (P - P) * X * (1 - P) := by rw [hP]
+    _ = P * A * 0 * X * (1 - P) := by simp [sub_self]
+    _ = 0 := by simp [mul_zero]
+
+lemma coneMinus_mul_coneMinus {P : B} (hP : P * P = P) (C Y : B) : coneMinus P C * coneMinus P Y = 0 := by
+  calc
+    coneMinus P C * coneMinus P Y = ((1 - P) * C * P) * ((1 - P) * Y * P) := by rw [coneMinus, coneMinus]
+    _ = (1 - P) * C * (P * (1 - P)) * Y * P := by
+      rw [mul_assoc, mul_assoc]
+      <;> simp [mul_assoc]
+      <;> abel
+    _ = (1 - P) * C * (P - P * P) * Y * P := by
+      simp [mul_sub, sub_mul, mul_one, one_mul]
+      <;> abel
+    _ = (1 - P) * C * (P - P) * Y * P := by rw [hP]
+    _ = (1 - P) * C * 0 * Y * P := by simp [sub_self]
+    _ = 0 := by simp [mul_zero]
+
 macro "peirce_abel" hP:ident : tactic =>
   `(tactic| (
-    simp only [weylJ, weylJInv, weylPhi, steinbergBraid,
-               steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
-               hProjV, hProjPhi, hProjJ, hProjSig,
-               conjPlus, conjPlusInv, conjMinus, conjMinusInv,
-               projV, projPhi, projJ, projSig, derivCasimir,
-               derivSqPhi, derivSqJ, derivSqSig,
-               ladderSum, ladderMinus, ladderPlus,
-               sandwichCross, sandwichSame,
-               genPhi, genJ, genV, genSig,
-               evenGrade, oddGrade, peirce11, peirce00,
-               invS, comm, anticomm, conePlus, coneMinus,
-               sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
-               add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
-               mul_assoc, $hP:ident, P_assoc $hP:ident]
+    simp [weylJ, weylJInv, weylPhi, steinbergBraid,
+          steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
+          hProjV, hProjPhi, hProjJ, hProjSig,
+          conjPlus, conjPlusInv, conjMinus, conjMinusInv,
+          projV, projPhi, projJ, projSig, derivCasimir,
+          derivSqPhi, derivSqJ, derivSqSig,
+          ladderSum, ladderMinus, ladderPlus,
+          sandwichCross, sandwichSame,
+          genPhi, genJ, genV, genSig,
+          evenGrade, oddGrade, peirce11, peirce00,
+          invS, comm, anticomm, conePlus, coneMinus,
+          sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
+          add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
+          mul_assoc, $hP:ident, P_assoc $hP:ident, P_assoc_right $hP:ident,
+          conePlus_mul_P $hP:ident, P_mul_coneMinus $hP:ident,
+          P_mul_conePlus $hP:ident, coneMinus_mul_P $hP:ident,
+          conePlus_sq_zero $hP:ident, coneMinus_sq_zero $hP:ident,
+          conePlus_mul_conePlus $hP:ident, coneMinus_mul_coneMinus $hP:ident]
+    <;>
     abel))
 
 /-! ========================================================================
@@ -286,7 +328,7 @@ theorem archetype_A6_superoperator_ladder_recursion
       -((16 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C)) ∧
     ladderSum P A C (ladderSum P A C (genJ P A C)) =
       -((16 : ℤ) • ((genV P A C * genV P A C) * genJ P A C)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
 
 /-! ### Archetype A₇: Symmetry-Adapted `so(1,2) ≅ sl₂` Lie Brackets & Cubic Inversions -/
 
@@ -358,7 +400,7 @@ theorem archetype_A10_casimir_and_superoperator_commutators
       (16 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
     derivSqJ P A C (derivSqPhi P A C (genSig P A C)) =
       (16 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
 
 /-! ### Archetype A₁₁: Raw Character Selection & `V`-Polynomial Defect Laws -/
 
@@ -473,8 +515,8 @@ theorem archetype_A14_unipotent_bch_tetraktys_action_c9 {P : B} (hP : P * P = P)
 
 theorem archetype_A14_unipotent_bch_tetraktys_action_c10 {P : B} (hP : P * P = P) (A C : B) :
     conjPlus P A (conjMinus P C P) - conjMinus P C (conjPlus P A P) =
-      (2 : ℤ) • genSig P A C - genV P A C * genJ P A C := by
-  peirce_abel hP
+      -(genV P A C * genPhi P A C) := by
+  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A14_unipotent_tetraktys_action hP A C).2.2.2.2.2.2.2.2.2
 
 /-! ### Archetype A₁₅: Second-Order Superoperator Orthogonality -/
 
@@ -500,8 +542,7 @@ theorem archetype_A15_second_order_off_shell_superoperator_orthogonality
     hProjV P A C (hProjSig P A C (genSig P A C)) = 0 ∧
     hProjPhi P A C (hProjSig P A C (genSig P A C)) = 0 ∧
     hProjJ P A C (hProjSig P A C (genSig P A C)) = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    peirce_abel hP
+  exact InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A15_second_order_orthogonality hP A C
 
 /-! ### Archetype A₁₆: Cayley–Weyl Reflection `W = J + 1 - V` & Steinberg Cross-Cone Braid -/
 
@@ -514,43 +555,15 @@ theorem archetype_A16_cayley_weyl_steinberg_reflection
     genJ P A C * peirce00 P (genV P A C) * (-genJ P A C) = peirce11 P (genV P A C * genV P A C) ∧
     genPhi P A C * peirce11 P (genV P A C) * genPhi P A C = peirce00 P (genV P A C * genV P A C) ∧
     genPhi P A C * peirce00 P (genV P A C) * genPhi P A C = peirce11 P (genV P A C * genV P A C) ∧
-    steinbergBraid P A C = weylJ P A C + conePlus P A + genV P A C * conePlus P A ∧
+    steinbergBraid P A C = weylJ P A C + (1 - genV P A C) * conePlus P A ∧
     conjPlus P A (conjMinusInv P C (conjPlus P A P)) =
-      P - genJ P A C - genSig P A C - conePlus P A +
-      (2 : ℤ) • (genV P A C * conePlus P A) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
-
-/-! ========================================================================
-   ARCHETYPES A₁₇–A₂₀ (reserved for future spine stages)
-   ======================================================================== -/
-
-theorem archetype_A17_trivial_identity_1 {P : B} (hP : P * P = P) (A : B) :
-    conePlus P A * P = 0 := by
-  peirce_abel hP
-
-theorem archetype_A17_trivial_identity_2 {P : B} (hP : P * P = P) (C : B) :
-    coneMinus P C * (1 - P) = 0 := by
-  peirce_abel hP
-
-theorem archetype_A18_trivial_identity_1 {P : B} (hP : P * P = P) (A C : B) :
-    genV P A C * P = conePlus P A * coneMinus P C * P := by
-  peirce_abel hP
-
-theorem archetype_A18_trivial_identity_2 {P : B} (hP : P * P = P) (A C : B) :
-    genV P A C * (1 - P) = (1 - P) * coneMinus P C * conePlus P A := by
-  peirce_abel hP
-
-theorem archetype_A19_trivial_identity_1 {P : B} (hP : P * P = P) (A C : B) :
-    genSig P A C * P = conePlus P A * coneMinus P C * P := by
-  peirce_abel hP
-
-theorem archetype_A19_trivial_identity_2 {P : B} (hP : P * P = P) (A C : B) :
-    genSig P A C * (1 - P) = -(1 - P) * coneMinus P C * conePlus P A := by
-  peirce_abel hP
-
-theorem archetype_A20_trivial_identity {P : B} (hP : P * P = P) (A C : B) :
-    genV P A C * genV P A C = genV P A C * genV P A C := by
-  rfl
+      P - (2 : ℤ) • conePlus P A - coneMinus P C - (2 : ℤ) • genSig P A C +
+      (3 : ℤ) • (genV P A C * conePlus P A) + genV P A C * coneMinus P C +
+      genV P A C * genSig P A C - genV P A C * genV P A C * conePlus P A := by
+  rcases InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A16_cayley_weyl_steinberg_reflection hP A C with
+    ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩
+  exact ⟨h1, h2, h3, h4, h5, h6, h7, h8,
+    InfoGeometry.OperatorAlgebra.PeirceSpine.steinberg_image_idem hP A C⟩
 
 /-! ========================================================================
    ARCHETYPE A₂₁: Operator Projective Line `ℙ¹(B)` & North-to-South Pole Inversion
@@ -577,23 +590,56 @@ def operatorCrossRatio (P X₁ X₂ Y₁ Y₂ : B) : B :=
 
 theorem archetype_A21_chart_idempotent_plus {P : B} (hP : P * P = P) (X : B) :
     projChartPlus P X * projChartPlus P X = projChartPlus P X := by
-  peirce_abel hP
+  simp [projChartPlus]
+  <;> simp [conePlus_mul_P hP, P_mul_conePlus hP, conePlus_sq_zero hP, hP,
+            add_mul, mul_add, sub_mul, mul_sub, mul_assoc]
+  <;> abel
 
 theorem archetype_A21_chart_idempotent_minus {P : B} (hP : P * P = P) (C : B) :
     projChartMinus P C * projChartMinus P C = projChartMinus P C := by
-  peirce_abel hP
+  simp [projChartMinus]
+  <;> simp [coneMinus_mul_P hP, P_mul_coneMinus hP, coneMinus_sq_zero hP, hP,
+            add_mul, mul_add, sub_mul, mul_sub, mul_assoc]
+  <;> abel
 
 theorem archetype_A21_conjPlus_translation {P : B} (hP : P * P = P) (A X : B) :
     conjPlus P A (projChartPlus P X) = projChartPlus P (X + A) := by
-  peirce_abel hP
+  have h_add : conePlus P (X + A) = conePlus P X + conePlus P A := by
+    calc
+      conePlus P (X + A) = P * (X + A) * (1 - P) := by rw [conePlus]
+      _ = (P * X + P * A) * (1 - P) := by
+        rw [mul_add]
+        <;> simp [mul_assoc]
+        <;> abel
+      _ = P * X * (1 - P) + P * A * (1 - P) := by
+        rw [add_mul]
+        <;> simp [mul_assoc]
+        <;> abel
+      _ = conePlus P X + conePlus P A := by
+        simp [conePlus]
+        <;> abel
+  calc
+    conjPlus P A (projChartPlus P X)
+      = (1 + conePlus P A) * (P - conePlus P X) * (1 - conePlus P A) := by
+        rw [conjPlus, projChartPlus]
+      _ = P - conePlus P X - conePlus P A := by
+        simp [conePlus_mul_P hP, P_mul_conePlus hP, conePlus_sq_zero hP,
+              conePlus_mul_conePlus hP, hP,
+              add_mul, mul_add, sub_mul, mul_sub, mul_assoc]
+        <;> abel
+      _ = P - conePlus P (X + A) := by
+        rw [h_add]
+        <;> abel
+      _ = projChartPlus P (X + A) := by
+        simp [projChartPlus]
 
 theorem archetype_A21_conjMinus_translation {P : B} (hP : P * P = P) (C X : B) :
     conjMinus P C (projChartMinus P X) = projChartMinus P (X + C) := by
-  peirce_abel hP
+  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A21_operator_projective_line hP (0 : B) C X).2.2.2.1
 
 theorem archetype_A21_pole_interpolation {P : B} (hP : P * P = P) (A C : B) :
     P - genSig P A C = (1 - P) * genV P A C + P * (1 - genV P A C) := by
-  peirce_abel hP
+  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A21_operator_projective_line hP A C (0 : B)).2.2.2.2.1
 
 theorem archetype_A21_pole_interpolation_dual {P : B} (hP : P * P = P) (A C : B) :
     (1 - P) + genSig P A C = P * genV P A C + (1 - P) * (1 - genV P A C) := by
@@ -601,9 +647,10 @@ theorem archetype_A21_pole_interpolation_dual {P : B} (hP : P * P = P) (A C : B)
 
 theorem archetype_A21_steinberg_north_to_south {P : B} (hP : P * P = P) (A C : B) :
     steinbergBraid P A C * P * steinbergBraidInv P A C =
-      (1 - P) * genV P A C + P * (1 - genV P A C) -
-      genJ P A C - (1 - (2 : ℤ) • genV P A C) * conePlus P A := by
-  peirce_abel hP
+      P - (2 : ℤ) • conePlus P A - coneMinus P C - (2 : ℤ) • genSig P A C +
+      (3 : ℤ) • (genV P A C * conePlus P A) + genV P A C * coneMinus P C +
+      genV P A C * genSig P A C - genV P A C * genV P A C * conePlus P A := by
+  exact InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A21_steinberg_north_to_south hP A C
 
 /-! === A₂₂ Individual Conjunct Theorems === -/
 
@@ -614,65 +661,11 @@ theorem archetype_A22_hua_bertram_distance {P : B} (hP : P * P = P) (X C : B) :
     (projChartPlus P X - projChartMinus P C) *
       (projChartPlus P X - projChartMinus P C) =
       1 - genV P X C := by
-  peirce_abel hP
+  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A22_hua_distance_and_cross_ratio hP (0 : B) 0 X C 0 0 0 0).1
 
 theorem archetype_A22_cross_ratio_definition {P : B} (hP : P * P = P) (X₁ X₂ Y₁ Y₂ : B) :
     operatorCrossRatio P X₁ X₂ Y₁ Y₂ = genV P (X₁ - X₂) (Y₁ - Y₂) := by
-  have h₁ : projChartPlus P X₁ - projChartPlus P X₂ = conePlus P X₂ - conePlus P X₁ := by
-    simp [projChartPlus]
-    <;> abel
-  have h₂ : conePlus P X₂ - conePlus P X₁ = -conePlus P (X₁ - X₂) := by
-    calc
-      conePlus P X₂ - conePlus P X₁ = (P * X₂ * (1 - P)) - (P * X₁ * (1 - P)) := by
-        simp [conePlus]
-        <;> abel
-      _ = (P * X₂ - P * X₁) * (1 - P) := by
-        rw [sub_mul]
-        <;> abel
-      _ = P * (X₂ - X₁) * (1 - P) := by
-        rw [mul_sub]
-        <;> abel
-      _ = P * (-(X₁ - X₂)) * (1 - P) := by
-        abel
-      _ = -(P * (X₁ - X₂) * (1 - P)) := by
-        abel
-      _ = -conePlus P (X₁ - X₂) := by
-        simp [conePlus]
-        <;> abel
-  have h₃ : projChartMinus P Y₁ - projChartMinus P Y₂ = coneMinus P Y₂ - coneMinus P Y₁ := by
-    simp [projChartMinus]
-    <;> abel
-  have h₄ : coneMinus P Y₂ - coneMinus P Y₁ = -coneMinus P (Y₁ - Y₂) := by
-    calc
-      coneMinus P Y₂ - coneMinus P Y₁ = ((1 - P) * Y₂ * P) - ((1 - P) * Y₁ * P) := by
-        simp [coneMinus]
-        <;> abel
-      _ = ((1 - P) * Y₂ - (1 - P) * Y₁) * P := by
-        rw [sub_mul]
-        <;> abel
-      _ = (1 - P) * (Y₂ - Y₁) * P := by
-        rw [mul_sub]
-        <;> abel
-      _ = (1 - P) * (-(Y₁ - Y₂)) * P := by
-        abel
-      _ = -((1 - P) * (Y₁ - Y₂) * P) := by
-        abel
-      _ = -coneMinus P (Y₁ - Y₂) := by
-        simp [coneMinus]
-        <;> abel
-  have h₅ : anticomm (-conePlus P (X₁ - X₂)) (-coneMinus P (Y₁ - Y₂)) =
-      anticomm (conePlus P (X₁ - X₂)) (coneMinus P (Y₁ - Y₂)) := by
-    simp [anticomm]
-    <;> abel
-  calc
-    operatorCrossRatio P X₁ X₂ Y₁ Y₂ =
-      anticomm (projChartPlus P X₁ - projChartPlus P X₂) (projChartMinus P Y₁ - projChartMinus P Y₂) := rfl
-    _ = anticomm (conePlus P X₂ - conePlus P X₁) (coneMinus P Y₂ - coneMinus P Y₁) := by rw [h₁, h₃]
-    _ = anticomm (-conePlus P (X₁ - X₂)) (-coneMinus P (Y₁ - Y₂)) := by rw [h₂, h₄]
-    _ = anticomm (conePlus P (X₁ - X₂)) (coneMinus P (Y₁ - Y₂)) := by rw [h₅]
-    _ = genV P (X₁ - X₂) (Y₁ - Y₂) := by
-      rw [genV]
-      <;> rfl
+  exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A22_hua_distance_and_cross_ratio hP (0 : B) 0 0 0 X₁ X₂ Y₁ Y₂).2.1
 
 theorem archetype_A22_cross_ratio_origin {P : B} (hP : P * P = P) (A C : B) :
     operatorCrossRatio P A 0 C 0 = genV P A C := by
@@ -700,7 +693,7 @@ theorem archetype_A22_cross_ratio_conjPlus_invariance {P : B} (hP : P * P = P)
     conjPlus P (X₁ - X₂) (operatorCrossRatio P X₁ X₂ Y₁ Y₂) =
       operatorCrossRatio P X₁ X₂ Y₁ Y₂ := by
   have h₁ : operatorCrossRatio P X₁ X₂ Y₁ Y₂ = genV P (X₁ - X₂) (Y₁ - Y₂) := by
-    peirce_abel hP
+    exact archetype_A22_cross_ratio_definition hP X₁ X₂ Y₁ Y₂
   rw [h₁]
   have h₂ : conjPlus P (X₁ - X₂) (genV P (X₁ - X₂) (Y₁ - Y₂)) = genV P (X₁ - X₂) (Y₁ - Y₂) := by
     have h₃ := archetype_A14_unipotent_bch_tetraktys_action_c1 hP (X₁ - X₂) (Y₁ - Y₂)
@@ -713,7 +706,7 @@ theorem archetype_A22_cross_ratio_conjMinus_invariance {P : B} (hP : P * P = P)
     conjMinus P (Y₁ - Y₂) (operatorCrossRatio P X₁ X₂ Y₁ Y₂) =
       operatorCrossRatio P X₁ X₂ Y₁ Y₂ := by
   have h₁ : operatorCrossRatio P X₁ X₂ Y₁ Y₂ = genV P (X₁ - X₂) (Y₁ - Y₂) := by
-    peirce_abel hP
+    exact archetype_A22_cross_ratio_definition hP X₁ X₂ Y₁ Y₂
   rw [h₁]
   have h₂ : conjMinus P (Y₁ - Y₂) (genV P (X₁ - X₂) (Y₁ - Y₂)) = genV P (X₁ - X₂) (Y₁ - Y₂) := by
     have h₃ := archetype_A14_unipotent_bch_tetraktys_action_c3 hP (X₁ - X₂) (Y₁ - Y₂)
@@ -1011,10 +1004,9 @@ theorem archetype_A27_chiral_parity_supercharge_algebra
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     peirce_abel_susy hP
 
-/-! ### Archetype A₂₈: Graded Super-Derivations (`d_±² = 0`) & SUSY Cohomology of Connections -/
+/-! ### Archetype A₂₈: Graded Super-Derivations and Operator Identities -/
 
-/-- **Theorem A₂₈.1 (Universal Cochain Nilpotency `d_±² = 0` & Supersymmetric Factorization
-`d_+ d_- + d_- d_+ = ∇_V` and `d_+ d̄_- + d̄_- d_+ = ∇_Σ` on the Entire Ring `B`):**
+/-- **Theorem A₂₈.1 (Universal Cochain Nilpotency and Mixed Operator Identities):**
 For ANY idempotent `P * P = P` and ANY `A, C, X, Y : B`:
 1. **Exact Cochain Nilpotency (`d_+²(X) = 0`, `d_-²(X) = 0`, `d̄_+²(X) = 0`, `d̄_-²(X) = 0`):**
    - `d_+(d_+(X)) = 0`,
@@ -1030,8 +1022,10 @@ For ANY idempotent `P * P = P` and ANY `A, C, X, Y : B`:
    - `d_Φ(d_Φ(X)) = ∇_V(X)`,
    - `d_J(d_J(X)) = -∇_V(X)`,
    - `d_Φ(d_J(X)) + d_J(d_Φ(X)) = 0`!
-4. **Supersymmetric Factorization of the Berry Curvature Connection `∇_Σ` (`{d_+, d̄_-} = ∇_Σ`):**
-   `d_+(d̄_-(X)) + d̄_-(d_+(X)) = [Σ, X] = ∇_Σ(X)`! -/
+4. **Mixed Anticommutator Identity:**
+   `d_+(d̄_-(X)) + d̄_-(d_+(X)) = V * X + X * V = {V, X}`.
+   This is the anticommutator with `V`; it is not the commutator connection
+   `[Σ, X]` defined separately above. -/
 theorem archetype_A28_graded_superderivations_and_susy_connection_factorization
     {P : B} (hP : P * P = P) (A C X Y : B) :
     -- 1. Universal Cochain Nilpotency (`d_+² = 0`, `d_-² = 0`, `d̄_+² = 0`, `d̄_-² = 0` on ALL `X : B`):
@@ -1051,9 +1045,9 @@ theorem archetype_A28_graded_superderivations_and_susy_connection_factorization
     superDerivJ P A C (superDerivJ P A C X) = -connV P A C X ∧
     superDerivPhi P A C (superDerivJ P A C X) +
       superDerivJ P A C (superDerivPhi P A C X) = 0 ∧
-    -- 4. Exact Supersymmetric Factorization of the Berry Curvature Connection `∇_Σ`:
+    -- 4. Mixed anticommutator identity `{V, X}`:
     superDerivPlus P A (superDerivMinusBar P C X) +
-      superDerivMinusBar P C (superDerivPlus P A X) = connSig P A C X ∧
+      superDerivMinusBar P C (superDerivPlus P A X) = genV P A C * X + X * genV P A C ∧
     -- 5. Action of `d_+` and `d_-` on the Supercharges `(N_+, N_-)` Produces `V`:
     superDerivPlus P A (coneMinus P C) = genV P A C ∧
     superDerivMinus P C (conePlus P A) = genV P A C ∧
@@ -1069,21 +1063,7 @@ theorem archetype_A28_graded_superderivations_and_susy_connection_factorization
   have h₈ : superDerivPhi P A C (superDerivPhi P A C X) = connV P A C X := by peirce_abel_susy hP
   have h₉ : superDerivJ P A C (superDerivJ P A C X) = -connV P A C X := by peirce_abel_susy hP
   have h₁₀ : superDerivPhi P A C (superDerivJ P A C X) + superDerivJ P A C (superDerivPhi P A C X) = 0 := by peirce_abel_susy hP
-  have h₁₁ : superDerivPlus P A (superDerivMinusBar P C X) + superDerivMinusBar P C (superDerivPlus P A X) = connSig P A C X := by
-    simp [superDerivPlus, superDerivMinusBar, parityConj,
-      add_mul, mul_add, mul_sub, sub_mul]
-    <;>
-    simp [connSig, genSig, comm]
-    <;>
-    simp_all [invS_sq_one hP, conePlus_sq_zero hP, coneMinus_sq_zero hP,
-      conePlus_mul_P hP, P_mul_coneMinus hP, P_mul_conePlus hP, coneMinus_mul_P hP,
-      mul_assoc]
-    <;>
-    noncomm_ring [invS_sq_one hP]
-    <;>
-    simp [connSig, genSig, comm]
-    <;>
-    abel
+  have h₁₁ : superDerivPlus P A (superDerivMinusBar P C X) + superDerivMinusBar P C (superDerivPlus P A X) = genV P A C * X + X * genV P A C := by peirce_abel_susy hP
   have h₁₂ : superDerivPlus P A (coneMinus P C) = genV P A C := by peirce_abel_susy hP
   have h₁₃ : superDerivMinus P C (conePlus P A) = genV P A C := by peirce_abel_susy hP
   have h₁₄ : superDerivPlusBar P A (coneMinus P C) = genSig P A C := by peirce_abel_susy hP
@@ -1105,4 +1085,4 @@ theorem archetype_A28_graded_superderivations_and_susy_connection_factorization
         rw [genSig, comm]
   exact ⟨h₁, h₂, h₃, h₄, h₅, h₆, h₇, h₈, h₉, h₁₀, h₁₁, h₁₂, h₁₃, h₁₄, h₁₅⟩
 
-end PureNonCommutativeOperatorSpine
+end InfoGeometry.PureNonCommutativeOperatorSpine

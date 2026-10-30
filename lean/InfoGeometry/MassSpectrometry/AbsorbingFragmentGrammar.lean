@@ -35,7 +35,7 @@ variable {n : ℕ} {D : FragmentationDAG n} (G : StochasticGrammar D)
 
 /-- Complete the missing row mass by one absorbing state, using the existing
 row-stochastic matrix owner rather than requiring terminal fragments to emit. -/
-def absorbingCompletion :
+def absorbingFinCompletion :
     InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge.StochasticTransitionMatrix (n + 1) where
   A := Fin.cons (Fin.cons 1 (fun _ => 0))
     (fun u => Fin.cons (G.terminalWeight u) (G.weight u))
@@ -52,17 +52,17 @@ def absorbingCompletion :
     · simp [Fin.sum_univ_succ]
     · simp [Fin.sum_univ_succ, terminalWeight]
 
-@[simp] theorem absorbingCompletion_fragment (u v : Fin n) :
-    G.absorbingCompletion.A u.succ v.succ = G.weight u v := rfl
+@[simp] theorem absorbingFinCompletion_fragment (u v : Fin n) :
+    G.absorbingFinCompletion.A u.succ v.succ = G.weight u v := rfl
 
-@[simp] theorem absorbingCompletion_terminal (u : Fin n) :
-    G.absorbingCompletion.A u.succ 0 = G.terminalWeight u := rfl
+@[simp] theorem absorbingFinCompletion_terminal (u : Fin n) :
+    G.absorbingFinCompletion.A u.succ 0 = G.terminalWeight u := rfl
 
-@[simp] theorem absorbingCompletion_absorbs :
-    G.absorbingCompletion.A 0 0 = 1 := rfl
+@[simp] theorem absorbingFinCompletion_absorbs :
+    G.absorbingFinCompletion.A 0 0 = 1 := rfl
 
-@[simp] theorem absorbingCompletion_no_return (v : Fin n) :
-    G.absorbingCompletion.A 0 v.succ = 0 := rfl
+@[simp] theorem absorbingFinCompletion_no_return (v : Fin n) :
+    G.absorbingFinCompletion.A 0 v.succ = 0 := rfl
 
 /-- A fragment with no outgoing cleavage terminates with probability one. -/
 theorem terminalWeight_eq_one_of_sink {u : Fin n}
@@ -74,9 +74,9 @@ theorem terminalWeight_eq_one_of_sink {u : Fin n}
   simp [terminalWeight, hz]
 
 /-- Square-root amplitude normalization now applies to a usable completion. -/
-theorem absorbingCompletion_amplitude_normalized (u : Fin (n + 1)) :
-    ∑ v, (G.absorbingCompletion.amplitudeMatrix u v) ^ 2 = 1 :=
-  G.absorbingCompletion.amplitude_row_l2_normalization u
+theorem absorbingFinCompletion_amplitude_normalized (u : Fin (n + 1)) :
+    ∑ v, (G.absorbingFinCompletion.amplitudeMatrix u v) ^ 2 = 1 :=
+  G.absorbingFinCompletion.amplitude_row_l2_normalization u
 
 end StochasticGrammar
 end InfoGeometry.MassSpectrometry

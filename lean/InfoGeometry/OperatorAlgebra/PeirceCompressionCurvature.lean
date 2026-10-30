@@ -77,7 +77,7 @@ theorem compressedGram_sub_swap_eq_projectorCurvature {p x y : A}
       projectorCurvature p x y := by
   rw [← compressed_product_eq_compressedGram hp hx,
     ← compressed_product_eq_compressedGram hp hy]
-  unfold projectorCurvature commutator
+  unfold projectorCurvature InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
   noncomm_ring
 
 /-- The curvature coefficient acts inside the projective corner on the left. -/
@@ -128,7 +128,7 @@ theorem compressedGram_self_eq_star_mul_self {p x : A}
 theorem star_projectorCurvature_of_selfAdjoint {p x y : A}
     (hps : star p = p) (hxs : star x = x) (hys : star y = y) :
     star (projectorCurvature p x y) = -projectorCurvature p x y := by
-  unfold projectorCurvature commutator
+  unfold projectorCurvature InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator
   simp only [star_mul, star_sub, hps, hxs, hys]
   noncomm_ring
 
@@ -146,7 +146,8 @@ theorem map_compressedGram (f : A →+* B) (p x y : A) :
 /-- Projector-curvature coefficients are natural under native ring morphisms. -/
 theorem map_projectorCurvature (f : A →+* B) (p x y : A) :
     f (projectorCurvature p x y) = projectorCurvature (f p) (f x) (f y) := by
-  simp [projectorCurvature, commutator]
+  simp [projectorCurvature,
+    InfoGeometry.Clifford.ChiralProjectorBerryCurvature.commutator]
 
 end Naturality
 

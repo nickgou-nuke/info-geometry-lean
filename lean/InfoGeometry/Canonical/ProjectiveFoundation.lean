@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 InfoGeometry/Canonical/ProjectiveFoundation.lean
 
 Projective foundation for the modular bridge.
@@ -642,13 +648,18 @@ instance : Mul (PGL (K := K) (V := V)) where
       ext v
       simp [smul_smul, mul_comm])
 
-instance : MulOne (PGL (K := K) (V := V)) where
-  mul := (· * ·)
-  one := 1
+instance : Inv (PGL (K := K) (V := V)) where
+  inv := Quotient.map LinearEquiv.symm (by
+    intro e f h
+    rcases h with ⟨a, rfl⟩
+    refine ⟨a⁻¹, ?_⟩
+    ext v
+    simp)
 
-instance : Monoid (PGL (K := K) (V := V)) where
+instance : Group (PGL (K := K) (V := V)) where
   mul := (· * ·)
   one := 1
+  inv := Inv.inv
   mul_assoc := by
     intro x y z
     refine Quotient.inductionOn₃ x y z ?_
@@ -664,6 +675,15 @@ instance : Monoid (PGL (K := K) (V := V)) where
     refine Quotient.inductionOn x ?_
     intro e
     rfl
+  inv_mul_cancel := by
+    intro x
+    refine Quotient.inductionOn x ?_
+    intro e
+    change Quotient.mk _ (e.symm * e) = Quotient.mk _ 1
+    have he : e.symm * e = (1 : V ≃ₗ[K] V) := by
+      change e⁻¹ * e = 1
+      exact inv_mul_cancel e
+    rw [he]
 
 /-- The canonical quotient map to `PGL`. -/
 def toPGL : (V ≃ₗ[K] V) → PGL (K := K) (V := V) :=
@@ -724,6 +744,39 @@ theorem pglAction_comp (e f : V ≃ₗ[K] V) :
   exact congrArg (fun q => q ⟦v⟧)
     (Projectivization.map_comp (f := e.toLinearMap) (hf := e.injective)
       (g := f.toLinearMap) (hg := f.injective))
+
+/-- Multiplication in the projective linear group acts by composition on
+projective space. -/
+theorem pglAction_mul (g h : PGL (K := K) (V := V)) :
+    pglAction (K := K) (V := V) (g * h) =
+      pglAction (K := K) (V := V) g ∘ pglAction (K := K) (V := V) h := by
+  refine Quotient.inductionOn₂ g h ?_
+  intro e f
+  change pglAction (K := K) (V := V) (toPGL (K := K) (V := V) (e * f)) = _
+  rw [LinearEquiv.mul_eq_trans]
+  exact pglAction_comp f e
+
+/-- The identity projective transformation acts identically. -/
+theorem pglAction_one :
+    pglAction (K := K) (V := V) (1 : PGL (K := K) (V := V)) = id := by
+  funext p
+  refine Quotient.inductionOn p ?_
+  intro v
+  rfl
+
+/-- The projective linear quotient is a genuine symmetry group of projective
+space, with the action induced by its linear representatives. -/
+instance : MulAction (PGL (K := K) (V := V)) (ℙ K V) where
+  smul := pglAction (K := K) (V := V)
+  one_smul p := by
+    change pglAction (K := K) (V := V) (1 : PGL (K := K) (V := V)) p = p
+    rw [pglAction_one]
+    rfl
+  mul_smul g h p := by
+    change pglAction (K := K) (V := V) (g * h) p =
+      pglAction (K := K) (V := V) g (pglAction (K := K) (V := V) h p)
+    rw [pglAction_mul]
+    rfl
 
 /-- Honest linear equivalences act on projective space through their `PGL` image. -/
 theorem pglAction_toPGLHom (e : V ≃ₗ[K] V) :

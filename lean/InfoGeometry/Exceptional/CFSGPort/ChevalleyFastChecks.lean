@@ -1,6 +1,11 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
 Adapted from AxiomMath/CFSG RootOps/Check.lean.
 -/
 module
@@ -118,5 +123,20 @@ theorem conjRange_spec {lo hi : ℕ} (h : conjRange τ lo hi = true)
   exact h a ⟨a - lo, by omega, by omega⟩ i k hk
 
 theorem conjRange_G2 : conjRange .G2 0 12 = true := by decide +kernel
+theorem conjRange_F4 : conjRange .F4 0 48 = true := by decide +kernel
+theorem conjRange_D4 : conjRange .D4 0 24 = true := by decide +kernel
+theorem conjRange_E6 : conjRange .E6 0 72 = true := by decide +kernel
+theorem conjRange_E7 : conjRange .E7 0 126 = true := by decide +kernel
+
+/-- Transfer two adjacent checked root-table ranges to their union. This is
+the local port of `RootOps.CertTools.conjRange_trans`. -/
+theorem conjRange_trans {a b c : ℕ} (hab : a ≤ b) (hbc : b ≤ c)
+    (h₁ : conjRange τ a b = true) (h₂ : conjRange τ b c = true) :
+    conjRange τ a c = true := by
+  simp only [conjRange, List.all_eq_true, List.mem_range'] at h₁ h₂ ⊢
+  rintro x ⟨m, hm, rfl⟩
+  by_cases hx : a + m < b
+  · exact h₁ _ ⟨m, by omega, rfl⟩
+  · exact h₂ _ ⟨a + m - b, by omega, by omega⟩
 
 end InfoGeometry.Exceptional.CFSGPort.Chevalley.RootOps

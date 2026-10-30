@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.PosDef
@@ -62,6 +67,34 @@ def krausMap {ι : Type*} [Fintype ι] [DecidableEq ι]
     apply Finset.sum_congr rfl
     intro a ha
     simp [mul_assoc, mul_left_comm, mul_comm]
+
+/-- Every finite Kraus map preserves the matrix adjoint operation. -/
+theorem star_krausMap
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Mat) (A : Mat) :
+    star (krausMap V A) = krausMap V (star A) := by
+  change star (∑ i, V i * A * star (V i)) =
+    ∑ i, V i * star A * star (V i)
+  rw [star_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [star_mul, star_mul, star_star]
+  noncomm_ring
+
+/-- A Kraus map preserves the matrix trace when its operators satisfy the
+trace-preserving completeness relation `∑ Vᵢ† Vᵢ = 1`. -/
+theorem trace_krausMap_of_completeness
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (V : ι → Mat) (h_complete : (∑ i, star (V i) * V i) = 1) (A : Mat) :
+    Matrix.trace (krausMap V A) = Matrix.trace A := by
+  change Matrix.trace (∑ i, V i * A * star (V i)) = Matrix.trace A
+  rw [Matrix.trace_sum]
+  have h_cycle : ∀ i, Matrix.trace (V i * A * star (V i)) =
+      Matrix.trace ((star (V i) * V i) * A) := by
+    intro i
+    rw [Matrix.trace_mul_comm (V i * A) (star (V i)), ← Matrix.mul_assoc]
+  simp_rw [h_cycle]
+  rw [← Matrix.trace_sum, ← Finset.sum_mul, h_complete, Matrix.one_mul]
 
 private theorem kraus_term_matrixUnit_apply
     (V : Mat) (i j k l : n) :

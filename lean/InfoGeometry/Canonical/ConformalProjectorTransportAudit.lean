@@ -1,0 +1,26 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.ConformalProjectorAgreement
+import InfoGeometry.Singular.MoorePenroseSupportTransport
+
+open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Canonical.MetricTransport
+open InfoGeometry.Canonical.ConformalProjectorAgreement
+
+#print axioms IsMoorePenroseInverse.range_support_map_iff
+#print axioms IsMoorePenroseInverse.domain_support_map_iff
+#print axioms IsMoorePenroseInverse.transport
+#print axioms IsMoorePenroseInverse.similarity_iff
+#print axioms IsMoorePenroseInverse.target_ne_similarity_iff
+#print axioms penrose_projectors_similarity_iff
+#print axioms penrose_projectors_covariant
+#print axioms shear_metric_complements_are_penrose_projectors
+#print axioms shearCounterexample_G_mul_GInv
+#print axioms shearCounterexample_GInv_mul_G
+#print axioms shearCounterexample_Aprime_eq
+#print axioms shearCounterexample_drazin_ne_euclideanMP
+#print axioms shearCounterexample_fixedMetric_MP_transport_fails
+#print axioms moorePenrose_not_generic_similarity_equivariant_under_fixed_metric

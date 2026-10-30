@@ -3,7 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import InfoGeometry.Canonical.GramianInverseContracts
+import InfoGeometry.Canonical.GramianGroupInverse
 
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.projector_cross_zero_iff
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.adjoint_projector_cross_zero_iff
@@ -21,3 +21,6 @@ import InfoGeometry.Canonical.GramianInverseContracts
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.oblique_idempotent_counterexample
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.shear_transpose_noncommute
 #print axioms InfoGeometry.Canonical.GramianInverseContracts.commuting_gramians_not_normal
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_left_gramian_groupInverse
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_right_gramian_groupInverse
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.gramian_groupInverse_formulas_agree

@@ -1,0 +1,554 @@
+{
+  "authority": "Static import dependency poset only; not a fresh kernel verification or exhaustive source-claim coverage",
+  "modules": [
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargePowerMatrix",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargePowerMatrix.lean",
+      "predecessors": []
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean",
+      "predecessors": []
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Supercharge.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/InnerPullback.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ComplementSymmetry",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ComplementSymmetry.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Orientation.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralEulerFactors",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralEulerFactors.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityProducts.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectTower.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CentralizerDifferential",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CentralizerDifferential.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.UnitSquareAction",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/UnitSquareAction.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Homogenized.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichCharge.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.LeftRightActions",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/LeftRightActions.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Bridge",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Bridge.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.MixedDifferentials",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MixedDifferentials.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.LaplacianBoundaryAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/LaplacianBoundaryAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralDifferentials",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralDifferentials.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralEulerFactors",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingPerturbation",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GradingPerturbation.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralEulerFactors"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundary",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityCoboundary.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CentralizerCohomology",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CentralizerCohomology.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CentralizerDifferential"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.UnitSquareActionAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/UnitSquareActionAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.UnitSquareAction"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.KleinAction",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KleinAction.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.UnitSquareAction"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.LaplacianHomogenization",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/LaplacianHomogenization.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Unipotent.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.HomogenizedKernels",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/HomogenizedKernels.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtraction",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtraction.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichBrackets",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichBrackets.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismCharge",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndomorphismCharge.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullbackAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/InnerPullbackAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDifferentials",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GeneratorDifferentials.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralDifferentials"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.RingHomTransport",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/RingHomTransport.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingPerturbation",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundaryAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityCoboundaryAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundary"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityExactness",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityExactness.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundary"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.KleinActionAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KleinActionAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.KleinAction"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.PrimalDual",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PrimalDual.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Bergman.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.HomogenizedKernelsAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/HomogenizedKernelsAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.HomogenizedKernels"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBalances",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtractionBalances.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtraction"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtractionAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtraction",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichBrackets"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeSectors",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeSectors.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismChargeAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndomorphismChargeAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixColimitTransport",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MatrixColimitTransport.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.RingHomTransport"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityExactnessAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityExactnessAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityExactness"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PullbackTriple.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.LogarithmicPullback",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/LogarithmicPullback.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.BergmanTransportAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BergmanTransportAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TransferDefect.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeSectorsAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeSectorsAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeSectors"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectors",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CornerChargeSectors.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeSectors"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargePullbackAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargePullbackAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.InnerPullback",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.PullbackTriple",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicBridge",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicBridge.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferMoments",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TransferMoments.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSet",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectLevelSet.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingTransfer",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GradingTransfer.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingPerturbation",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectParity.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectorsAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CornerChargeSectorsAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectors"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndomorphismBlocks.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectors"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.CrossChargeBrackets",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CrossChargeBrackets.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectors",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSetAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectLevelSetAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSet"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelExclusions",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectLevelExclusions.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSet",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingTransferAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GradingTransferAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingTransfer"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinates",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ModeCoordinates.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GradingTransfer"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedDefect",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GradedDefect.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.BlockCharges",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BlockCharges.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocksAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/EndomorphismBlocksAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBracketAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtractionBracketAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtraction",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBalances",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ChargePowerMatrix",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.CrossChargeBrackets"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelExclusionsAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectLevelExclusionsAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelExclusions"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinatesAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ModeCoordinatesAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinates"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDefect",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GeneratorDefect.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedDefect",
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedDefectAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GradedDefectAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GradedDefect"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.BlockChargesAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BlockChargesAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.BlockCharges"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectors",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SupportedProjectors.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.BlockCharges"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDefectAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GeneratorDefectAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDefect"
+      ]
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectorsAudit",
+      "path": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SupportedProjectorsAudit.lean",
+      "predecessors": [
+        "InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectors"
+      ]
+    }
+  ]
+}

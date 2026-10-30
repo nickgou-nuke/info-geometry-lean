@@ -8,6 +8,39 @@ There is no universal five-pillar geometry theorem here. In particular, a
 conjunction of identities does not construct maps between exceptional groups,
 analytic operator algebras and differential geometry.
 
+## Source snapshot and stage coverage
+
+The primary source for the Peirce stream is the refreshed Drive export
+`cached/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_updated.json`
+(SHA-256 `4a1318e72e6807bfca2314dc7cc10bfd75b7474f08db6e90fe7b6ac75fe9b34d`).
+It contains 35 ordered chunks (18 user, 17 model), from
+`2026-10-29T15:50:56.358Z` through `2026-10-30T03:11:33.126Z`. The extracted
+transcript contains all labels A1–A44, 30 fenced blocks (20 Lean), and 2,235
+math-expression occurrences. These are source-occurrence counts, not counts of
+distinct claims. The extraction is indexed in
+`cached/aistudio_extracts/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_updated/`.
+
+The owner coverage is modular rather than a copy of the repeated monolithic
+Lean blocks: A1–A11 are in `Tetraktys`; A12–A22 are split between `Unipotent`
+and `Homogenized` (`Homogenized` owns the A17 sandwich character table, and `Unipotent` owns the A18 shear identities); A23–A25 are in `Bergman`; A26–A28 in `Supercharge`; A29–A32
+in `MixedDifferentials`, `ChiralDifferentials`, `GeneratorDifferentials`, and
+`LaplacianHomogenization`; A33–A38 are covered across `Orientation`,
+`ComplementSymmetry`, `GeneratorDefect`, `DefectParity`, `DefectLevelSet`,
+`DefectTower`, `TransferDefect`, and `ParityProducts`; A39–A44 are mapped in
+the sections below. A20 contributes only `x = x` and is intentionally omitted
+as a theorem target. The source's tagged Lean blocks remain untrusted input;
+owner declarations and their kernel builds are the verification evidence.
+
+The separate 1ofa continuation archive contains 232 ordered turns, 153 Lean
+fences, and declarations labeled through A85. Its labels are not unique node
+identifiers: source headings reuse A21–A22, A63–A64, A66, A68, A70, A72, and
+A73–A75 for distinct or later revised packages. Some later blocks explicitly
+say “audited,” “extended,” or “cleaned.” Therefore the dependency map must key
+claims by source turn and declaration, retaining the raw label only as source
+metadata. Transcript order plus the owner files—not a simple A-number
+sequence—determines the causal order. The 1ofa review ledger marks semantic
+coverage incomplete; lexical owner-name matches do not establish equivalence.
+
 ### 1. Associative inverse decomposition and Peirce corners
 
 Drazin nilpotence requires the Drazin hypotheses. The identity
@@ -180,6 +213,72 @@ axiom audit using only `propext` and `Quot.sound` (locked build, 3120 jobs).
 These memberships do not assert that five particular operators span every
 sector, or that coincident integer charges are independent.
 
+## A39–A44: defect, transfer, cyclotomic, and chiral-factor claims
+
+The later source snapshot's A39 defect iteration is represented by
+`DefectTower.lean`; A37 transfer-defect and A36 seed-level identities are
+owned by `TransferDefect.lean`, `DefectLevelSet.lean`, and `TransferMoments.lean`.
+`CyclotomicBridge.lean` records the ordered polynomial evaluations, and
+`PrimalDual.lean` owns the chord-potential identities. These are polynomial
+identities in the Peirce ring; analytic zeta, number-field splitting, and
+convex-analytic interpretations do not follow from the names.
+
+`ChiralEulerFactors.lean` proves the four ordered products of the two
+orthogonal Peirce cycles, their quadratic product, and the ordered
+four-supercharge product. Two accompanying prose claims need correction:
+
+* In A43, `superDerivPhiBar` annihilates `Σ`, but on the chiral factor
+  `1 - Σ` it has residual `2Φ`. `ChiralDifferentials.lean` proves the
+  residual and the exact iff condition for vanishing.
+* In A44, the mixed products have odd residuals in the `N₋` corner for the
+  stated factor orders. `Supercharge.lean` proves those expansions and the
+  condition under which replacing the residual by the `N₊` corner is valid.
+* The shortened A40 chiral Mangoldt identity omits a term in general.
+  `TransferDefect.lean` proves the corrected product and characterizes when
+  the shortened equality holds.
+
+These results justify the finite ordered ring factorizations only. The labels
+“Euler factor,” “Dirichlet factor,” “prime,” and “Mangoldt” add no analytic or
+arithmetic structure to the carrier.
+
+## A45–A50: grading perturbations, defect decompositions, and transport
+
+The pasted continuation reuses the labels A49 and A50 for two different
+packages. Preserve the mathematical dependency order rather than treating the
+labels as unique identifiers:
+
+```text
+A43–A44 chiral factors
+ └─ A45–A46 grading perturbations and commutator modes
+     ├─ A49b completed-square transfer identity
+     └─ A50b double-commutator mode equations
+A47 ring-hom naturality ──► A48 matrix-limit coherence
+A49a–A50a parity decomposition and defect anomaly
+```
+
+`GradingPerturbation.lean` proves the squares of `S ± Φ` and `S ± J`, their
+ordered products, and the grading sandwich identities. `GradingTransfer.lean`
+proves the transfer-defect/square relation, the completed-square identity,
+and the first commutators of `S + Φ` on `J` and `Σ`, together with second
+commutators on `J`, `Φ - Σ`, and the grading. These are operator-valued
+polynomial identities in an arbitrary associative ring. The coefficients
+multiplying modes are not scalar eigenvalues over a field, and no
+diagonalization is claimed.
+
+`DefectParity.lean` proves the general even/odd decomposition of the
+idempotency defect, the defect of an odd perturbation of `P`, and its
+commutator-square formula. It also proves the mixed `V + Φ` decomposition and
+the second-order derivation mismatch. These owner statements formalize the
+valid algebraic content of both A49/A50 versions without identifying the
+parity difference with a Hilbert 90 theorem or a field extension.
+
+`RingHomTransport.lean` proves naturality for the listed Peirce polynomial
+operators (including the four homogenized channels), while
+`MatrixColimitTransport.lean` proves the stated bonding-map coherence in the
+repository's existing matrix limit. This is not a theorem that every
+cohomology group or every object in the repository's operator spine is
+transported by a single declaration.
+
 ### Supported endomorphism decomposition
 
 `EndomorphismBlocks.lean` uses the negative-corner projection, the existing
@@ -223,7 +322,12 @@ D₄ - 5D₂ + 4D₀ = 4G₀
 `ChargeExtractionBalances` owns the paired sum/difference coefficients.
 The original factors 12 and 6 in the degree-one paired equations are incorrect.
 These are division-free scaled identities, not an inverse Vandermonde matrix
-over ℤ. Recovering unscaled operators requires appropriate invertibility.
+over ℤ: for the ordered charges `(-2, -1, 0, 1, 2)`, the power-matrix
+determinant is `288`, which is not a unit in ℤ. `ChargePowerMatrix.lean`
+contains the determinant and no-left/right-inverse theorem statements with
+proof terms. `ChargePowerMatrix.lean` passed the locked
+`ChargeExtractionBracketAudit` build. Recovering unscaled operators requires
+appropriate invertibility.
 The fifth-degree annihilator is already owned by `SandwichCharge` and, on all
 integer-linear endomorphisms, by `EndomorphismCharge`.
 
@@ -237,8 +341,144 @@ owned by `CornerChargeSectors.opposite_lie_comm`.
 
 Causal order: `SandwichCharge` → scaled extraction; `CornerChargeSectors` plus
 `LieJordanBoundaryComposition` → ordered bracket formulas and sector membership.
-`ChargeExtractionBracketAudit` audits these corrected statements. This does not
-identify the five sample operators with a full Kantor–Koecher–Tits algebra.
+`ChargeExtractionBracketAudit` audits these corrected statements. A combined
+locked build of `ChargePullbackAudit` and `ChargeExtractionBracketAudit` passed
+(exit 0), with
+axiom reports limited to standard foundations (`propext`, `Quot.sound`, and
+`Classical.choice` for the determinant/non-inverse results). The replay emitted
+warnings in unrelated `FiniteMatrixNoncommutativity` and
+`LieJordanEndomorphisms` dependencies. This does not identify the five sample
+operators with a full Kantor–Koecher–Tits algebra.
+
+The degree-one paired equations are scaled by 3, not 12 and 6:
+`4D₂-D₄ = 3(G₊₁+G₋₁)` and `4D₁-D₃ = 3(G₊₁-G₋₁)`. Combining them gives
+`6G₊₁` and `6G₋₁`, respectively. The degree-two combinations do give
+`24G±₂`. These are integer-scaled identities; the charge power matrix has
+determinant 288, so the proposed integer Vandermonde inverse is false.
+
+The A51 pullback owners were checked in the same audit run via
+`ChargePullbackAudit`. Their correction satisfies the
+idempotency-transport equation. The ordinary commutator expression is not
+asserted to satisfy `dΩ + Ω² = 0`; the matrix Maurer–Cartan cochain is a separate
+owner surface.
+
+## A55–A58: defect polarization, tripotents, and polynomial evaluations
+
+The later 232-turn export at
+`cached/aistudio_extracts/aistudio_prompt_1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f/`
+contains the A55–A85 continuation. Its lexical extraction is not a semantic
+or proof audit; the accompanying `cached/source_stream_1ofa/review_ledger.json`
+marks the review as incomplete.
+
+The sound A55 core starts with the universal identity
+
+```
+δ(x + y) - δ(x) - δ(y) = x*y + y*x.
+```
+
+`Core.IdempotentGraphGrassmannian.idempotencyDefect_add_polarization` now owns
+this identity over an arbitrary associative ring. The idempotent specialization
+is then connected to odd Peirce perturbations by
+`PeirceSpine.DefectParity.odd_perturbation_defect`; the generator cases and
+defect/commutator comparisons are in `GeneratorDefect` and `DefectParity`.
+This is defect polarization and a Peirce-grade formula; it does not make the
+defect a universal grading operator on the whole ring.
+
+`PeirceSpine.TripotentDefect` records the division-free polynomial identities
+for `τ(T) = T^3 - T` and the three scaled color expressions. Under `T^3 = T`,
+the zero-color expression is idempotent, while the other two satisfy scaled
+projector equations with factor 2. For orthogonal idempotents `R,G`, the
+difference `R-G` is tripotent and `1-R-G` is the complementary idempotent.
+This algebra alone does not construct an `su(3)` representation or prove a
+three-color symmetry algebra. The new owner passed its locked targeted build
+(exit 0; 620 jobs); only a LeanArchitect dependency warning remained.
+
+`PeirceSpine.CyclotomicBridge` owns finite polynomial evaluations on the
+transfer generators. Its Cayley–Weyl inverse statement is explicitly
+equivalent to vanishing of the metric idempotency defect; it does not assert
+unconditional roots of unity, a spectrum, or an analytic zeta function.
+
+### A63–A66: Peirce block invariance and the cone–sheet braiding core
+
+The A63–A64 continuation contains valid Peirce statements alongside physical
+interpretations. Self/anti-self-duality of `Q₊` and `Q₋`, and `[P,V]=[P,Σ]=0`,
+are already owned by `StarGrading`/`Basic`. The new `BoundaryDependence` owner
+proves that even Peirce additions to either input leave both cones, all four
+tetraktys generators, and the transfer defect unchanged. This is the precise
+algebraic content of “depends only on cross-corner data”; it does not prove an
+entropy or geometric area law.
+
+The transcript's `W₁₂`, `W₂₄`, and `mog24` operators are presented as
+integer-linear combinations of the charge maps. Those formulas alone do not
+construct Golay codes, the Leech lattice, or a quantum error-correcting code:
+such interpretations need a specified carrier, code submodule, and proved
+intertwining/correction property. The displayed four-link plaquette
+interpretation is also not promoted here; its claimed low-order expansion
+must be proved against the noncommutative Peirce normal form before it can be
+used as an archetype theorem.
+
+Dependency order: Peirce corner support → star/parity identities and
+`BoundaryDependence`; Peirce cycle orthogonality → finite defect splitting and
+`ConeSheetBraiding`; a code or lattice interpretation would require a further
+explicit map from these operators to the relevant finite carrier.
+
+The A65/A66 transcript gives six ordered relations between the Peirce cycles
+`Q₊ = N₊N₋`, `Q₋ = N₋N₊` and the cones `N₊`, `N₋`. The generic lemma
+`Core.idempotencyDefect_iterates_intertwines` propagates the two cross-sheet
+intertwiners through every finite defect iterate; one-sided annihilation is
+also preserved under iteration. The new `ConeSheetBraiding` owner packages
+these six consequences and the resulting commutation of the sum of the two
+iterated sheets with each cone and with `Φ` and `J`. It is staged, but its
+kernel build is pending.
+
+This establishes an algebraic precursor to the transcript's claimed error
+immunity. It does not establish the claimed Golay/Leech `W₂₄` or `mog24`
+recovery: no such map is defined by these Peirce relations, so that claim
+needs its own carrier and intertwining theorem. The archive reuses archetype
+labels in later blocks; this entry is identified by its transcript position
+and mathematical content, not by A65/A66 alone.
+
+Causal order: Core defect polynomial → defect polarization and Peirce
+decomposition (`DefectParity`) → generator specializations (`GeneratorDefect`)
+→ tripotent polynomial consequences (`TripotentDefect`). The selected
+cyclotomic evaluations depend on `Unipotent` and `TransferDefect`. The further
+A59–A62 group and coding-theory interpretations are not consequences of these
+polynomial identities alone; they require separate carrier maps and proofs.
+
+## A85: block-lower-triangular operators and orthogonal intervention
+
+The archived A85 block in the 1ofa continuation defines an operator as the
+sum of its `11`, `01`, and `00` Peirce corners. The corresponding abstract
+ring claims are: the upper-right corner vanishes; the three displayed corner
+projections recover their inputs; this class of operators is closed under
+multiplication with the stated block formula; and compression by the
+complement of an orthogonal idempotent is idempotent, annihilates that
+idempotent on both sides, and preserves the original `11` corner.
+`PeirceSpine.BlockTriangularIntervention` is the small owner for these claims.
+Its initial revision passed the targeted locked Lake build (613 jobs; exit 0),
+with unused-section-variable warnings on four compression lemmas. After a
+section refactor narrowed the compression theorem hypotheses, a combined
+locked build requested this module and `TripotentDefect` and exited 0; Lake
+rebuilt `TripotentDefect` and reported `BlockTriangularIntervention` already up
+to date. It proves algebraic block identities over an arbitrary ring;
+the causal-attention, token-mask, and intervention semantics in the source
+are not encoded by the ring alone. In particular, a Peirce block pattern does
+not model the row-normalized softmax attention map, learned time bias, or the
+paper's event-causality extractor. The connection is an algebraic analogy
+requiring an explicit representation map before it can be called an
+isomorphism. `idempotentCompression_removed_terms` isolates the exact
+noncommutative difference `T - (1-Q)T(1-Q) = QT + TQ - QTQ`; orthogonality
+then gives the separate `11`-corner nullity result for the intervention
+difference and preserves the factual corner under compression. The initial
+proof terms were kernel-checked by the targeted build; the current refactor
+was included in the combined locked build, which exited 0; the module was
+reported already up to date.
+
+Causal prerequisite: the Peirce corner normal form and idempotent complement
+identities in `PeirceSpine.Basic` precede the block multiplication and
+compression consequences. This local algebraic dependency does not establish
+the intervening A63–A84 source blocks, which require their own source-to-owner
+review.
 
 ### Supported component projectors
 
@@ -250,3 +490,186 @@ by the corresponding projectors (`supportedProjector_unique`). This is a
 characteristic-free support decomposition, not a claim that integer charge
 eigenspaces are distinct in characteristics 2 or 3. It does not identify the
 result with a Kantor–Koecher–Tits construction.
+
+### A58–A60: polynomial evaluations versus group structure
+
+`PeirceSpine.CyclotomicBridge` proves finite polynomial evaluations and an
+iff criterion relating the Cayley–Weyl pair to the defect-zero locus. These
+identities do not by themselves make `P + J` a root of unity off shell:
+its displayed cyclotomic evaluation is `1 - V`, which vanishes only under an
+additional condition such as `V = 1`.
+
+The transcript's proposed `S₃` and `V₄` terminology also needs a scope
+condition. The displayed rotation pair has product `V`, and the proposed
+reflections have squares involving `V` or `V²`; these are not group relations
+without appropriate unit-shell hypotheses. A claim about an abstract group
+requires an explicit group carrier and a verified multiplication action. The
+operators `(V, Φ, J, Σ)` alone do not define a Klein four group.
+
+### A61–A62: scaled charge maps and defect iteration
+
+The all-depth identity that the defect iterates split across two orthogonal
+inputs is owned by `Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_add_of_orthogonal`.
+It applies to the orthogonal Peirce products `Q₊` and `Q₋` and is a genuine
+finite algebraic iteration result.
+
+The transcript's proposed `W₁₂` and `W₂₄` charge frames do not have the stated
+sector coefficients: with the displayed definitions, `golay12Root` is three
+times the sum of the degree `±1` sectors, and the `golay24` degree `±1`
+expressions inherit the incorrect A53 coefficients. These formulas should not
+be called a Golay code, Leech lattice, MOG, or Knill–Laflamme correction
+statement without an explicit carrier and proved code/error conditions.
+
+The A55 comparison between the derivation mismatch/projector value and the
+second defect iterate is now exposed as two reusable lemmas in
+`PeirceSpine.GeneratorDefect`. The locked `GeneratorDefectAudit` build passed;
+the new declarations have only `propext` and, for the projector rewrite,
+`Quot.sound` among their reported axiom dependencies. This is a finite
+re-expression using `δ(P+Φ)=V`, not a proof of an infinite grading.
+
+### A63–A64: Peirce duality and boundary invariance
+
+`Orientation` proves eigen-equations for the repository's map
+`hodgeStar P X = invS P * X`; this is an algebraic involution and does not by
+itself provide metric Hodge theory. `BoundaryDependence` proves that even
+Peirce shifts of the inputs leave the cone generators, tetraktys, and transfer
+defect unchanged. That is an algebraic cross-corner dependence result, not an
+entropy or information-theoretic area law.
+
+The proposed Wilson loop identity is incorrect for the displayed words. With
+`a=N₊`, `b=N₋`, expansion gives `U=1+Σ−VJ+Q₊²` and the reversed word
+`Urev=1−Σ+VJ+Q₋²`. Hence the even Peirce component of
+`(1−U)+(1−Urev)` is `−V²`, not `2V`. A separate corrected loop observable
+would need its own definition and proof.
+
+The corrected ordered plaquette expansions now have a dedicated owner in
+`PeirceSpine.WilsonPlaquette`. The locked `WilsonPlaquetteAudit` build passed;
+both theorem axiom reports contain only `propext`.
+
+### A65–A67: all-depth two-sheet braiding
+
+`PeirceSpine.ConeSheetBraiding` proves the six ordered annihilation and
+intertwining relations for the two iterated QGT sheets at every natural defect
+depth. Their sum commutes with both cones and therefore with `Φ` and `J`.
+This is the operator-algebraic content of the all-scale protection claim.
+The related `W₂₄`/MOG decoder language is not supported by this owner: the
+transcript's degree `±1` sector maps retain the A53 coefficient error, and no
+logical code submodule, error set, or Knill–Laflamme criterion is supplied.
+
+### A68–A69: linear combinations of sandwich maps
+
+The A68 diffusion/focusing formulas are decompositions of existing double
+commutators into the cross-sandwich residual and same-sandwich term, both
+already represented in `PeirceSpine.Tetraktys`. Those are valid algebraic
+identities under the Peirce hypotheses. Their dynamical labels do not add a
+wave, horizon, or soliton model. A69's single-sheet decoder claims rely on the
+transcript's `W₂₄`/MOG sector formulas, including the A53 coefficient error,
+so no error-correction conclusion is promoted.
+
+### A70–A72: focusing labels and parity-reversed Steinberg conjugation
+
+The Peirce corner facts behind A70 are already covered by `Basic`, `Tetraktys`,
+and `ConeSheetBraiding`: same-corner products vanish; the two QGT corners have
+their stated two-sided support; the same-corner sandwich acts on the cones by
+the corresponding cubic words; and defect iterates retain the ordered
+intertwining relations. These facts are algebraic. The archive's separate names
+`focusingOp`, `diffusionOp`, `daughterIdemTower`, `mandelbrotTower`,
+`chiralFractalBranch`, and `mog24V` do not occur as definitions in the searched
+repo-owned Lean sources. In particular, no physical retrocausality or
+error-correction result follows from the corner identities.
+
+For A71–A72, `Unipotent` proves the Steinberg braid has the displayed inverse,
+and `Supercharge` proves that parity conjugation is an involutive ring action.
+The new `PhaseConjugateSteinberg` owner combines those existing facts to prove
+that parity conjugates the braid to its inverse and that the associated
+conjugation/parity round trip fixes every element of the ring. Its audit build
+passed; both declarations report only `propext`. The result is an associative
+ring identity and does not establish an optical medium, a turbulence model, or
+the archive's dual-Bruhat claim. The dual-Bruhat names have no corresponding
+definitions in the searched Peirce owner modules.
+
+Causal order: Peirce corner relations → Steinberg braid inverse and parity ring
+action → parity-conjugate braid identity → round-trip identity. A70's proposed
+all-scale “decoder” is downstream of the incorrectly scaled A53 sector maps
+and is not accepted as a code theorem.
+
+
+## A73-A84: operator dynamics and ideal/projective extensions
+
+The transcript contains several later uses of the A73 label and blocks A74-A84.
+The A73 core identity is owned by `PeirceSpine.ParityDoubleDerivation`:
+for all `X` over an arbitrary associative ring with an idempotent `P`,
+`comm P (derivSqPhi P A C X) = derivSqJ P A C (comm P X)`, and the reverse
+identity holds with `Φ` and `J` exchanged. The locked
+`ParityDoubleDerivationAudit` build passed (615 jobs, exit 0); both declarations
+report only `propext`. The module is imported by `PeirceSpine.lean`; the
+integrated locked build passed after both A73 and A74 integrations (3234 jobs, exit 0).
+
+A second A74 core is owned by `PeirceSpine.CurvatureDoubleCommutator`. It
+formalizes the sum of the `Σ` inner derivation and the signed `Φ` double
+commutator and proves its quadratic relation on both `Φ` and `J`. The locked
+audit build passed (615 jobs, exit 0), with axiom dependencies limited to
+`propext` and `Quot.sound`. The remaining A73/A74 statements and later A75-A84
+claims are not implied by these two extracted results.
+
+The A77-A79 ideal/chart subclaims have matching owners in `StarGrading` and
+`IdealChartPairing`: these prove the star reversal of Peirce corners, the
+grading-twisted anti-involution, the principal-ideal pairing, the chord square,
+and the ordered chart fidelity and defect equations. Their combined locked
+audit passed (677 jobs, exit 0). One A79 equation in the transcript is wrong:
+`(P_A + P_C - P)^2` is `P - J - V`; the shorter `P - V` form holds iff
+`J = 0`. The owners prove operator-valued algebra only, not probability or
+positivity. A80/A82 still depend on the unlocated all-scale tower APIs.
+
+Turn 229's finite ABL-style sandwich of the chart elements is now owned by
+`PeirceSpine.TwoStateSandwich`: writing `Q₊ = N₊N₋`, it proves
+`(P-N₊) Φ (P+N₋)=0`, `(P-N₊) J (P+N₋)=2Q₊`, and
+`(P-N₊) V (P+N₋)=Q₊-Q₊²`. The submitted equality for the `Σ` sandwich was
+incorrect: its value is `Q₊+Q₊²`, not `Q₊-Q₊²`. The locked audit build passed
+(615 jobs, exit 0), and the theorem reports only `propext`.
+
+The complementary-ideal pairing is also proved in `TwoStateSandwich`, under
+the explicit `StarRing` and `star P = P` assumptions. Its correction is
+`peirce00 P (star X) * peirce00 P X - Q₋(star X, X)`: reversing the two
+arguments of `Q₋` is necessary in the noncommutative product. The extended
+locked audit passed (676 jobs, exit 0); this theorem reports only standard
+foundational axioms (`propext`, `Classical.choice`, `Quot.sound`). It is an
+operator-valued pairing identity, not a positivity or Krein-space theorem.
+
+`chart_spinor_selection_products` proves the four ordered products of
+`Φ±J` with the two chart elements. The final product is `+2N₊`; the submitted
+`-2N₊` sign is false. The other three products match the corrected ring
+identities. This is a product table, not a representation of the Klein-four
+group.
+
+The finite chart-point product `(P-N₊)(P+N₋)=P-Q₊` is also proved by
+`chart_point_product`; its off-diagonal terms vanish by Peirce support.
+
+There is also a concrete A82 error already at defect depth `n = 0`:
+`(P-N₊) Σ (P+N₋)` differs from `(1-V)Q₊` by exactly `2Q₊²`.
+`chart_sigma_euler_compression_residual` proves this correction in the same
+noncommutative ring setting. Thus the proposed A82 `Σ` compression is false
+without an extra hypothesis forcing `2Q₊² = 0`; no such hypothesis is present
+in the transcript. The targeted audit passed (677 jobs, exit 0), and the new
+residual theorem reports only `propext`.
+
+The same turn's star-chart duality is covered by `StarGrading`; it remains
+conditional on a self-adjoint idempotent. The claimed Klein-four “group action”
+is not established by the displayed elements, and the proposed dual Bruhat
+map and complementary Krein signature need separately defined carriers and
+proofs. The all-scale A82 theorem is not promoted: it depends on the
+transcript-only `daughterIdemTower`, `mandelbrotTower`, and
+`chiralFractalBranch` APIs and their long proof does not substitute for owners
+of those constructions.
+
+The review also searched for the other proposed APIs (`daughterIdemTower`,
+`mandelbrotTower`, `chiralFractalBranch`, `focusingOp`, `diffusionOp`,
+`metriplecticOp`, `mog24Phi`, the exact alias `diracKreinAdj`, and the listed A73-A84 theorem
+identifiers) in the repo-owned Lean sources. Those exact declarations were not
+located in the searched areas. Separate Madelung, Dirac-Krein, Peirce, and ideal
+formalizations exist, but their terminology alone does not establish the
+remaining transcript claims. This is a scoped search result, not a repo-wide
+absence claim. The pasted code is not treated as kernel evidence. The remaining
+A73 packet and A74-A84 remain unreviewed statement-by-statement; any promotion
+requires a minimal owner theorem, its actual hypotheses, and a locked kernel
+check.

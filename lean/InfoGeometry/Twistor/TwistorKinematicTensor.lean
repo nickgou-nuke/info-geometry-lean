@@ -44,9 +44,42 @@ def infinitySharp : Module.Dual ℂ Twistor4 →ₗ[ℂ] Twistor4 where
   map_smul' c f := by ext a <;> fin_cases a <;> simp [smul_eq_mul]
 
 /-- The two infinity tensors annihilate each other; they are not inverses. -/
+theorem infinitySharp_alternating (f g : Module.Dual ℂ Twistor4) :
+    f (infinitySharp g) = -g (infinitySharp f) := by
+  have hexp (q : Module.Dual ℂ Twistor4) :
+      infinitySharp q = q (![0, 1], 0) • (![1, 0], (0 : Spinor2)) -
+        q (![1, 0], 0) • (![0, 1], (0 : Spinor2)) := by
+    apply Prod.ext <;> funext a <;> fin_cases a <;>
+      simp [infinitySharp, smul_eq_mul]
+  rw [hexp g, hexp f]
+  simp only [map_sub, map_smul, smul_eq_mul]
+  ring
+
+/-- The two infinity tensors annihilate each other; they are not inverses. -/
 theorem infinitySharp_covariant_zero (Z : Twistor4) :
     infinitySharp (infinityTwistor Z) = 0 := by
   ext a <;> fin_cases a <;> simp [infinitySharp, infinityTwistor]
+
+/-- The covariant infinity form also annihilates the image of the sharp map. -/
+theorem covariant_infinitySharp_zero (f : Module.Dual ℂ Twistor4) :
+    infinityTwistor (infinitySharp f) = 0 := by
+  apply LinearMap.ext
+  intro W
+  simp [infinityTwistor, infinitySharp]
+
+/-- The existing Witt dual bundled with its conjugate-linear dependence. -/
+def conjugateDual : Twistor4 →ₗ⋆[ℂ] Module.Dual ℂ Twistor4 where
+  toFun := wittDual
+  map_add' Z W := by
+    apply LinearMap.ext
+    intro V
+    simp [wittDual, wittPair, Fin.sum_univ_two, add_mul]
+    ring
+  map_smul' c Z := by
+    apply LinearMap.ext
+    intro V
+    simp [wittDual, wittPair, Fin.sum_univ_two, smul_eq_mul]
+    ring
 
 /-- Antilinear square-zero map Z ↦ I^(alpha beta) conjugate(Z)_beta. -/
 def infinityConjugate (Z : Twistor4) : Twistor4 :=

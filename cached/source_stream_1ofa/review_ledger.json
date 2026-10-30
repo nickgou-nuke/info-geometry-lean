@@ -1,0 +1,304 @@
+{
+  "source": "cached/aistudio_prompt_1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f.json",
+  "overall_status": "incomplete; extraction is not formalization",
+  "scope": "All ordered source turns and all fenced code preserved. Declaration inventory is lexical. Semantic review is incremental, not exhaustive.",
+  "reviews": [
+    {
+      "turns": [
+        227
+      ],
+      "topic": "finite-depth Peirce cycle support and left/right projection",
+      "candidate_owner": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectTower.lean",
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectTowerAudit.lean",
+      "verification": "Eight support/projection lemmas, including genPhi left/right projection, built and axiom-audited with exit 0; only propext and Quot.sound. Evidence: defect_tower_wave_build.log. Four further complementary-corner and off-diagonal input-selection proofs have since been added; their audit is queued in defect_tower_complement_build.log. Current extended file is pending re-verification."
+    },
+    {
+      "turns": [
+        227
+      ],
+      "topic": "finite defect iteration preserves intertwining and one-sided support",
+      "candidate_owner": "lean/InfoGeometry/Core/IdempotentDefectIteration.lean",
+      "audit": "lean/InfoGeometry/Core/IdempotentDefectIterationAudit.lean",
+      "verification": "Locked targeted build IdempotentDefectIterationAudit passed with exit 0; all four new lemmas axiom-audited with only propext and Quot.sound. Evidence: defect_iteration_build.log.",
+      "scope": "Arbitrary noncommutative ring; induction over all natural numbers. Does not establish fractal geometry, error correction, or analytic convergence."
+    },
+    {
+      "turns": [
+        222,
+        227
+      ],
+      "topic": "star reversal, grading-twisted anti-involution, and chart duality",
+      "candidate_owner": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGrading.lean",
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGradingAudit.lean",
+      "verification": "Locked targeted build StarGradingAudit passed with exit 0. All 17 theorems compiled and axiom-audited; dependencies are subsets of propext, Classical.choice, Quot.sound. Evidence: star_grading_build.log.",
+      "build_log": "cached/source_stream_1ofa/star_grading_build.log",
+      "corrections": [
+        "Star reversal requires self-adjointness of P; idempotence alone does not supply it.",
+        "Twisted multiplication reverses the product order.",
+        "Twisted involutivity and chart duality are algebraic identities, not a construction of Hilbert or Krein geometry."
+      ]
+    },
+    {
+      "turns": [
+        222,
+        224,
+        226,
+        227
+      ],
+      "topic": "principal ideals, ordered graph charts, and star pairings",
+      "candidate_owner": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/IdealChartPairing.lean",
+      "verification": "Fresh locked build of IdealChartPairingAudit and StarGradingAudit passed (677 jobs, exit 0). Ideal/chart theorem axiom sets are no axioms or propext; star theorem dependencies are subsets of propext, Classical.choice, Quot.sound. This verifies the current owner declarations for the matching A77-A79 algebraic subclaims.",
+      "corrections": [
+        "For U=P-Nplus and L=P+Nminus, (U+L-P)^2=P-J-V, not P-V.",
+        "The shorter formula holds exactly when J=0.",
+        "Pairings take values in P B P, not automatically in a scalar field.",
+        "Arbitrary star-ring identities do not establish positivity, Born probabilities, or a Krein-space structure.",
+        "The upper and lower triple products have different multiplication orders, which must be retained.",
+        "The A79 sum-square claim `(P_A + P_C - P)^2 = P - V` is false in general: the owner proves the corrected value `P - J - V`, and proves the shorter formula iff `J=0`.",
+        "The owners prove operator-valued ideal pairings and chart sandwich identities; they do not establish scalar Born probabilities or positivity."
+      ],
+      "remaining": [
+        "Complete star anti-involution dictionary from turn 222.",
+        "All-depth iteration claims from turn 227."
+      ],
+      "scope": "The owners support the bra/ket corner identities, grading-twisted star anti-involution, ordered chart products, chord-square and fidelity-defect formulas under the stated idempotence and self-adjointness hypotheses. The archive labels do not add Hilbert/Krein geometry."
+    },
+    {
+      "topic": "graded differential and Laplacian",
+      "owner_candidates": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CentralizerDifferential.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Orientation.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MixedDifferentials.lean"
+      ],
+      "verification": "source inspected; fresh compilation not completed in this session",
+      "corrections": [
+        "The total graded differential squares to [V,X]; square-zero requires restriction to the V-centralizer.",
+        "The mixed total anticommutator is 2(VX+XV), retaining right multiplication."
+      ]
+    },
+    {
+      "topic": "A51-A54 Maurer-Cartan pullback, Kantor triples, charge extraction, and cross-charge brackets",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/InnerPullback.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/LogarithmicPullback.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PullbackTriple.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/SandwichCharge.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtraction.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtractionBalances.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CrossChargeBrackets.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargePowerMatrix.lean"
+      ],
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtractionBracketAudit.lean",
+      "verification": "Fresh locked build of InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBracketAudit completed successfully (3126 jobs, exit 0). The audit printed the extraction, fifth-order annihilator, charge-power determinant/no-inverse, and cross-bracket declaration axiom sets; dependencies are limited to propext, Quot.sound, and Classical.choice for determinant statements. Build output included unrelated LieJordanEndomorphisms unused-simp-argument warnings and an existing LeanArchitect local-changes warning.",
+      "corrections": [
+        "A51 pullback identities are proved as ordered algebraic pullbacks; ordinary commutator flatness is not Maurer-Cartan flatness.",
+        "A52 proves charge equations for the specified corner maps, not a full Kantor-Koecher-Tits Lie algebra.",
+        "The fifth-degree charge polynomial belongs to the owner theorems; it was not an integer Vandermonde inverse.",
+        "A53 degree-one paired extraction has coefficient 3 in the sum/difference equations and yields 6 times each individual degree-one sector; the pasted 12/6 coefficients and 24-times individual degree-one conclusion are incorrect.",
+        "The integer charge power matrix has determinant 288, so the claimed inverse over the integers does not exist.",
+        "The A54 extremal bracket is Qplus X Qminus - Qminus X Qplus; the same-support expression has residual -V X Sigma."
+      ],
+      "build_log": "current tool output: locked target InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBracketAudit, 2026-10-31"
+    },
+    {
+      "topic": "A57 orthogonal three-corner tripotent charge table",
+      "candidate_owner": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentDefect.lean",
+      "verification": "Locked targeted build for InfoGeometry.OperatorAlgebra.PeirceSpine.TripotentDefect passed with exit 0 (620 jobs) after repairing the generic integer-scalar rewrite, tripotent square normalization, and zero-product branches. The corner-charge theorem and the pre-existing tripotent identities now kernel-check. Remaining output was only a LeanArchitect dependency warning.",
+      "scope": "For two orthogonal idempotents, the commutator by their difference acts on the seven displayed red/green/blue Peirce blocks with the stated integer charges. This does not assert an su(3) representation or group action."
+    },
+    {
+      "turns": [
+        231
+      ],
+      "topic": "lower Peirce block closure and orthogonal compression (A85)",
+      "candidate_owner": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BlockTriangularIntervention.lean",
+      "verification": "The initial version passed locked target InfoGeometry.OperatorAlgebra.PeirceSpine.BlockTriangularIntervention (exit 0, 613 jobs) with unused-section-variable warnings. After section-scoping the hypotheses, a combined locked build requested both BlockTriangularIntervention and TripotentDefect and exited 0 (620 jobs); Lake reported TripotentDefect rebuilt and BlockTriangularIntervention already up to date.",
+      "corrections": [
+        "The Peirce block form alone does not encode softmax attention, learned time bias, or the paper's causal event extraction.",
+        "The intervention difference is T-(1-Q)T(1-Q)=QT+TQ-QTQ without commutativity assumptions.",
+        "The zero factual 11-corner follows from two-sided orthogonality of the intervention idempotent to P."
+      ]
+    },
+    {
+      "topic": "A58-A60 operator cyclotomic evaluations and proposed S3/V4 group structures",
+      "candidate_owner": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicBridge.lean",
+      "verification": "Locked build of InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicBridge and TripotentDefect passed (3105 jobs). This confirms the existing finite polynomial and tripotent owners only; no S3/V4 group structure was added.",
+      "scope": "A58 polynomial identities can be read as off-shell polynomial relations. A59 braiding identities may be algebraic, but the group claim requires the additional unit-shell hypothesis genV=1 (or another explicit unit/involution contract). A60 group/V4 interpretation likewise needs a concrete group carrier and relations.",
+      "corrections": [
+        "Calling P+J and its companion a sixth-root pair off-shell is too strong: cyclotomic polynomial evaluation equal to 1-V is not vanishing unless V=1.",
+        "The proposed S3 generators are not group elements off-shell: omega*omegaBar=V, and the reflection squares include V or V^2 rather than 1.",
+        "The four operators (V, Phi, J, Sigma) are not automatically a Klein four group; a group structure, carrier, closure, and unit relations must be stated and proved."
+      ],
+      "remaining": [
+        "No formal S3 or V4 structure was found in the reviewed owner file; continue repo-wide owner search before claiming absence."
+      ]
+    },
+    {
+      "topic": "A61-A62 Golay/Leech frame labels and finite defect splitting",
+      "candidate_owners": [
+        "lean/InfoGeometry/Core/IdempotentDefectIteration.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChargeExtraction.lean",
+        "lean/InfoGeometry/Canonical/GolayLeechStabilizerCode.lean"
+      ],
+      "verification": "Inspected existing finite-iteration owner and transcript formulas. No fresh build was run for this review entry. The all-natural-number orthogonal defect splitting is already proved by idempotencyDefect_iterates_add_of_orthogonal.",
+      "scope": "The polynomial charge maps can be scaled and summed; those equations do not define a Golay code, a Leech lattice, an error model, or a Knill-Laflamme code subspace.",
+      "corrections": [
+        "The displayed golay12Root definition equals 3 times the sum of the degree ±1 charge sectors, not 12 times the Phi commutator; therefore the claimed W12 partition does not follow as written.",
+        "The displayed golay24 degree ±1 maps inherit the A53 coefficient error and do not equal 24 times the individual charge sectors.",
+        "Naming scaled charge maps W12, W24, or MOG does not establish a Golay/Leech combinatorial structure or quantum error correction."
+      ],
+      "remaining": [
+        "Assess any proposed operator-to-code carrier map and prove the code conditions separately."
+      ]
+    },
+    {
+      "topic": "A55 iterated transfer-defect reinterpretations",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GeneratorDefect.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GeneratorDefectAudit.lean"
+      ],
+      "verification": "Locked target InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDefectAudit passed (3109 jobs). New mismatch rewrite audited with [propext]; new projector rewrite audited with [propext, Quot.sound].",
+      "scope": "Re-expresses already-proved finite defect identities through δ(P+Φ)=V and δ²(P+Φ)=δ(V); does not assert a general renormalization grading.",
+      "corrections": [
+        "The transcript calls the defect a universal/infinite grade generator; only the displayed finite polynomial identities are asserted here."
+      ]
+    },
+    {
+      "topic": "A63-A64 duality, loop, and boundary-dependence claims",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Orientation.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BoundaryDependence.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/WilsonPlaquette.lean"
+      ],
+      "verification": "Locked build of WilsonPlaquetteAudit passed (3106 jobs). Both corrected Wilson expansion theorems have only [propext] in their printed axiom dependencies. Orientation and BoundaryDependence were inspected but not rebuilt in this pass.",
+      "scope": "Self/anti-self-dual identities are algebraic eigen-equations for the defined map hodgeStar(X)=S_P X; boundary invariance is strict invariance of cone generators under even Peirce shifts.",
+      "corrections": [
+        "The map called hodgeStar is left multiplication by S_P, not a Hodge operator arising from a metric or orientation structure.",
+        "The bulk-shift identities prove algebraic boundary dependence only; they do not define entropy or prove an information-theoretic area law.",
+        "For the displayed plaquette and its reversed word, the new owner proves U=1+Σ−VJ+Q₊² and Urev=1−Σ+VJ+Q₋², hence the proposed symmetric even component is −V², not 2V."
+      ],
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/WilsonPlaquetteAudit.lean"
+    },
+    {
+      "topic": "A65-A67 all-depth two-sheet defect braiding and scaled sector labels",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectTower.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ConeSheetBraiding.lean",
+        "lean/InfoGeometry/Core/IdempotentDefectIteration.lean"
+      ],
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ConeSheetBraidingAudit.lean",
+      "verification": "Locked build InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraidingAudit passed (3103 jobs). Six-relations and sum-centrality axiom prints use [propext] and Quot.sound only.",
+      "scope": "For each natural defect depth, upper/lower cycle iterates preserve the ordered corner annihilation/intertwining relations; their sum commutes with the two cone generators and hence Φ and J.",
+      "corrections": [
+        "Calling hProj or scaled charge formulas error-syndrome decoders does not prove a Knill-Laflamme code; no logical code submodule, error set, or correction criterion is specified here.",
+        "The claimed W24 sector recovery uses the incorrect degree ±1 coefficients already identified in A53; do not promote the Leech-sector conclusions."
+      ]
+    },
+    {
+      "topic": "A68-A69 diffusion/focusing operators and proposed single-sheet decoder",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ConeSheetBraiding.lean"
+      ],
+      "verification": "A4 in Tetraktys proves the sandwich/double-derivation decomposition; ConeSheetBraidingAudit passed in this turn. No A68/A69 transcript theorem was imported or separately built.",
+      "scope": "The proposed diffusion and focusing expressions are integer-linear combinations of already-owned sandwich and double-commutator maps. The two-sheet centrality/braiding facts are valid at finite defect depth.",
+      "corrections": [
+        "The words diffusion, focusing, horizon, soliton, and gap are labels on algebraic maps; they do not prove a dynamical or physical model.",
+        "A69 single-sheet recovery depends on the transcript W24/MOG maps, whose degree ±1 components have incorrect A53 coefficients; no decoder conclusion is promoted."
+      ]
+    },
+    {
+      "topic": "A70-A72 focusing, phase-conjugation, and Steinberg round-trip claims",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ConeSheetBraiding.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Unipotent.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Supercharge.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PhaseConjugateSteinberg.lean"
+      ],
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/PhaseConjugateSteinbergAudit.lean",
+      "verification": "Locked build InfoGeometry.OperatorAlgebra.PeirceSpine.PhaseConjugateSteinbergAudit passed (659 jobs). Both new theorem declarations print only [propext].",
+      "scope": "Peirce corner nilpotence/support and same-corner sandwich facts reuse existing owners. New A72 theorems prove parity conjugation sends the Steinberg braid to its inverse and that the induced conjugation/parity round trip fixes every element of an associative ring.",
+      "corrections": [
+        "The terms retrocausal, optical focusing, diffusion, horizon, and error correction do not follow from these ring identities.",
+        "The transcript's focusingOp, diffusionOp, daughterIdemTower, mandelbrotTower, chiralFractalBranch, mog24V, phaseConj, and dual-Bruhat APIs are not definitions in the searched repo-owned Peirce Lean sources; no theorem is promoted under those names.",
+        "The claimed A70 all-scale MOG decoder depends on A53 scaled sector formulas whose degree-one coefficients are incorrect.",
+        "The dual-Bruhat round-trip statement is not established by the new Steinberg theorem; its dual Bruhat definitions were not present in the searched Peirce owners."
+      ],
+      "causal_order": "Peirce corner relations -> Steinberg braid inverse and parity ring action -> parity-conjugate braid identity -> round-trip identity"
+    },
+    {
+      "turns": [
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227
+      ],
+      "topic": "A73-A84 operator dynamics, fractal towers, Dirac-Krein ideals, and projective transitions",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityDoubleDerivation.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CurvatureDoubleCommutator.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGrading.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/IdealChartPairing.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGrading.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/IdealChartPairing.lean"
+      ],
+      "verification": "A73 core: locked ParityDoubleDerivationAudit passed (615 jobs, exit 0), both declarations only propext. A74 core: locked CurvatureDoubleCommutatorAudit passed (615 jobs, exit 0), both quadratic declarations depend only on propext and Quot.sound. The integrated PeirceSpine aggregator passed again after both additions (3234 jobs, exit 0).",
+      "scope": "A73 core formalized: comm P intertwines derivSqPhi with derivSqJ and conversely for all X. A74 core formalized: the sum of the Sigma inner derivation and signed Phi double derivation satisfies the claimed quadratic equation on Phi and J. The remaining A73 packet and A74-A84 have not been reviewed statement-by-statement. No physical dynamics is asserted.",
+      "corrections": [
+        "The claimed all-scale results depend on tower and branch definitions whose exact declarations were not located in the searched Lean source areas.",
+        "A73’s all-X parity-intertwining subclaim has now been isolated and proved from the existing Peirce normal form; the full Madelung/Bohm/metriplectic packet has not been promoted.",
+        "A displayed name or phrase match in unrelated Madelung or Dirac-Krein modules is not semantic equivalence.",
+        "The pasted code is not evidence of kernel verification; only checked owner declarations and build logs support that claim."
+      ],
+      "remaining": [
+        "Review A80 and A82 all-scale assertions separately; their tower APIs were not located.",
+        "Review A81 claims individually; the dual-Bruhat names and a V4 group carrier are not established by the cited ring identities.",
+        "Continue chronological transcript audit after the A85 source block."
+      ],
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityDoubleDerivationAudit.lean; lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CurvatureDoubleCommutatorAudit.lean",
+      "build_log": "locked targeted ParityDoubleDerivationAudit: 615 jobs, exit 0; locked integrated PeirceSpine: 3233 jobs, exit 0 (2026-10-31)"
+    },
+    {
+      "turns": [
+        229
+      ],
+      "topic": "A81-A82 Dirac-Krein chart claims and two-state operator sandwich",
+      "candidate_owners": [
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGrading.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/IdealChartPairing.lean",
+        "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TwoStateSandwich.lean"
+      ],
+      "audit": "lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TwoStateSandwichAudit.lean",
+      "verification": "Fresh locked build of InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwichAudit passed (676 jobs, exit 0). chart_two_state_generator_sandwich and chart_spinor_selection_products report [propext]; complementary_twisted_ideal_pairing reports [propext, Classical.choice, Quot.sound]. The integrated InfoGeometry.OperatorAlgebra.PeirceSpine target passed after the previous extension (3235 jobs, exit 0). Semantic-vacuity gate reported 0 findings and source placeholder scan found no sorry/admit/axiom tokens. A subsequent locked rebuild of the integrated InfoGeometry.OperatorAlgebra.PeirceSpine target passed again after adding chart_spinor_selection_products (3235 jobs, exit 0). Added chart_sigma_euler_compression_residual and printed its axiom set; fresh locked TwoStateSandwichAudit passed (677 jobs, exit 0), residual theorem reports only propext. A fresh locked rebuild after adding chart_point_product and chart_sigma_euler_compression_residual passed (676 jobs, exit 0); both declarations report only propext.",
+      "corrections": [
+        "For the ordered charts P_A=P-Nplus and P_C=P+Nminus, the Φ sandwich is zero, the J sandwich is 2Qplus, and the V sandwich is Qplus-Qplus^2.",
+        "The claimed Σ sandwich equals Qplus-Qplus^2 is false; its correct value is Qplus+Qplus^2.",
+        "Star-chart duality requires star(P)=P and is an algebraic anti-involution statement, not a Krein-space construction.",
+        "The listed tetraktys elements do not by themselves define a Klein-four group action.",
+        "A82 all-scale claims remain open here because their tower operators and compatibility proofs are not established by the finite sandwich theorem.",
+        "For the complementary ideal pairing, the cross term is Qminus(star X, X); the transcript uses the reversed noncommutative order Qminus(X, star X).",
+        "The final spinor product (P-Nplus)(Phi+J) is +2Nplus, not -2Nplus; the corrected four-product table is kernel-checked in chart_spinor_selection_products.",
+        "A82 Sigma sandwich is already false at n=0: (P-Nplus) Sigma (P+Nminus) - (1-V)Qplus = 2 Qplus^2, now proved by chart_sigma_euler_compression_residual."
+      ],
+      "scope": "Finite noncommutative ring identities over an arbitrary associative ring with an idempotent. No positivity, Born probability, Krein geometry, group action, or all-scale fractal theorem is claimed. The finite chart-point product (P-Nplus)(P+Nminus)=P-Qplus is confirmed; the separate A82 Sigma sandwich discrepancy remains."
+    }
+  ],
+  "unreviewed_scope": "All other source statements remain unreviewed unless individually recorded above. Existing owner-name matches do not establish semantic equivalence."
+}

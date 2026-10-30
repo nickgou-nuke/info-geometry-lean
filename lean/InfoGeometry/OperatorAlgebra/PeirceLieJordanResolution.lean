@@ -166,4 +166,11 @@ theorem dual_ad_corner {p : A} (hp : p * p = p) (X : A) :
   have hn (x : A) : p * (p * x) = p * x := by rw [← mul_assoc, hp]
   noncomm_ring [hp, hn]
 
+/-- Corner extraction commutes with every algebra homomorphism. -/
+theorem map_corner {B : Type*} [Ring B] [Algebra R B]
+    (f : A →ₐ[R] B) (p X : A) (i j : Bool) :
+    f (corner R p i j X) = corner R (f p) i j (f X) := by
+  cases i <;> cases j <;>
+    simp [corner_apply, compIdempotent, map_mul, map_sub, map_one]
+
 end InfoGeometry.OperatorAlgebra.PeirceLieJordanResolution

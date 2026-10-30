@@ -3,18 +3,20 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-
 module
 
+import InfoGeometry.Algebra.FiniteMatrixNoncommutativity
 public import Mathlib.LinearAlgebra.Projectivization.Action
 public import Mathlib.Algebra.Pointwise.Stabilizer
 public import Mathlib.GroupTheory.GroupAction.SubMulAction
+public import Mathlib.GroupTheory.IsPerfect
 public import InfoGeometry.Exceptional.CFSGPort.ExceptionalCatalog
 
 public noncomputable section
 
 open scoped LinearAlgebra.Projectivization
 open scoped Pointwise
+open scoped commutatorElement
 
 namespace InfoGeometry.Exceptional.CFSGPort.Suzuki
 
@@ -23,16 +25,173 @@ open InfoGeometry.Exceptional.CFSGPort.Chevalley
 variable {K : Type} [Field K]
 
 /-- The distinguished point at infinity in the Suzuki projective ovoid. -/
-def ovoidInfinity : ℙ K (Fin 4 → K) :=
+@[expose] def ovoidInfinity : ℙ K (Fin 4 → K) :=
   Projectivization.mk K ![1, 0, 0, 0] (by simp)
 
 /-- The normalized finite-point chart of the Suzuki projective ovoid. -/
-def ovoidPoint (pi : K ≃+* K) (x y : K) : ℙ K (Fin 4 → K) :=
+@[expose] def ovoidPoint (pi : K ≃+* K) (x y : K) : ℙ K (Fin 4 → K) :=
   Projectivization.mk K ![x * y + pi x * x ^ 2 + pi y, y, x, 1] (by simp)
 
+/-- The finite ovoid chart's first coordinate is the Suzuki norm coordinate
+from the external lower-root presentation, with the same two field
+parameters. This is the coordinate identity needed to transport its ovoid
+kernel equations through the local projective chart. -/
+theorem ovoidPoint_vector_eq_suzukiN (a : ℕ) (pi : K ≃+* K)
+    (hpi : ∀ z : K, pi z = z ^ (2 ^ (a + 1))) (x y : K) :
+    (![x * y + pi x * x ^ 2 + pi y, y, x, 1] : Fin 4 → K) =
+      ![suzukiN a x y, y, x, 1] := by
+  have hpow (z : K) : z ^ (2 ^ (a + 1) + 2) = pi z * z ^ 2 := by
+    rw [pow_add, hpi]
+  funext i
+  fin_cases i <;> simp [suzukiN, hpow, hpi] <;> ring
+
 /-- The Suzuki ovoid carrier in projective three-space. -/
-def ovoid (pi : K ≃+* K) : Set (ℙ K (Fin 4 → K)) :=
+@[expose] def ovoid (pi : K ≃+* K) : Set (ℙ K (Fin 4 → K)) :=
   {ovoidInfinity} ∪ Set.range fun z : K × K => ovoidPoint pi z.1 z.2
+
+/-- A general-linear operator fixing a projective point represented by a
+nonzero vector acts on that vector by a field scalar. This is the local
+projectivization step needed to identify the kernel of the Suzuki ovoid
+action before using the explicit ovoid coordinates. -/
+theorem projective_fixed_vector_is_eigenvector
+    (A : Matrix.GeneralLinearGroup (Fin 4) K) (w : Fin 4 → K) (hw : w ≠ 0)
+    (hfix : (Matrix.GeneralLinearGroup.toLin A).toLinearEquiv •
+      Projectivization.mk K w hw = Projectivization.mk K w hw) :
+    ∃ k : K, ∀ i,
+      (A : Matrix (Fin 4) (Fin 4) K) i 0 * w 0 +
+        (A : Matrix (Fin 4) (Fin 4) K) i 1 * w 1 +
+        (A : Matrix (Fin 4) (Fin 4) K) i 2 * w 2 +
+        (A : Matrix (Fin 4) (Fin 4) K) i 3 * w 3 = k * w i := by
+  rw [Projectivization.smul_mk, Projectivization.mk_eq_mk_iff] at hfix
+  obtain ⟨k, hk⟩ := hfix
+  refine ⟨k, fun i => ?_⟩
+  have hi := congrFun hk i
+  change (k : K) * w i =
+    Matrix.mulVec (A : Matrix (Fin 4) (Fin 4) K) w i at hi
+  rw [hi, Matrix.mulVec, dotProduct, Fin.sum_univ_four]
+
+/-- In a Suzuki field of positive rank, the defining Frobenius power is not
+the identity map. Otherwise every field element would be `0` or `1`, contrary
+to the prescribed field cardinality. -/
+theorem existsSuzukiThetaNotFixed [Finite K] (a : ℕ) (ha : 1 ≤ a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) :
+    ∃ x : K, x ^ 2 ^ (a + 1) ≠ x := by
+  obtain ⟨_, _, hθθ⟩ := suzukiFrobData (a := a) hK
+  by_contra h
+  push Not at h
+  have h01 : ∀ x : K, x = 0 ∨ x = 1 := fun x => by
+    have hx : x * (x - 1) = 0 := by
+      have hsq : x ^ 2 = x := by rw [← hθθ x, h x, h x]
+      linear_combination hsq
+    rcases mul_eq_zero.mp hx with hx | hx
+    · exact Or.inl hx
+    · exact Or.inr (sub_eq_zero.mp hx)
+  have hsurj : Function.Surjective (fun b : Bool => if b then (1 : K) else 0) := by
+    intro x
+    rcases h01 x with rfl | rfl
+    · exact ⟨false, by simp⟩
+    · exact ⟨true, by simp⟩
+  have hcard : Nat.card K ≤ 2 := by
+    simpa using Nat.card_le_card_of_surjective _ hsurj
+  have h8 : 2 ^ 3 ≤ 2 ^ (2 * a + 1) :=
+    Nat.pow_le_pow_right (by norm_num) (by omega)
+  omega
+
+/-- The external Suzuki scalar-kernel elimination uses a nonzero Frobenius
+parameter, its difference from one, and its difference from its twisted
+power. All three nonvanishing facts follow from the local witness above. -/
+theorem existsSuzukiKernelParameter [Finite K] (a : ℕ) (ha : 1 ≤ a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) :
+    ∃ x : K, x ≠ 0 ∧ x - 1 ≠ 0 ∧ x - x ^ 2 ^ (a + 1) ≠ 0 := by
+  obtain ⟨x, hx⟩ := existsSuzukiThetaNotFixed a ha hK
+  have hx0 : x ≠ 0 := by
+    rintro rfl
+    exact hx (by simp)
+  have hx1 : x - 1 ≠ 0 := by
+    intro h
+    have hxEq : x = 1 := sub_eq_zero.mp h
+    subst x
+    exact hx (by simp)
+  have hxtheta : x - x ^ 2 ^ (a + 1) ≠ 0 := by
+    intro h
+    exact hx (sub_eq_zero.mp h).symm
+  exact ⟨x, hx0, hx1, hxtheta⟩
+
+/-- The Suzuki norm polynomial vanishes only at the zero pair over the
+standard finite Suzuki field. This is the local port of the external
+`suzuki_norm_nonzero` input used to make the ovoid Weyl action unconditional. -/
+theorem suzukiNorm_eq_zero_iff [Finite K] (a : ℕ)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) (u v : K) :
+    suzukiN a u v = 0 ↔ u = 0 ∧ v = 0 := by
+  obtain ⟨hchar, hadd, hθθ⟩ := suzukiFrobData (a := a) hK
+  have h2 : (2 : K) = 0 := hchar
+  have hθ0 : 2 ^ (a + 1) ≠ 0 := pow_ne_zero _ two_ne_zero
+  constructor
+  · intro hN
+    by_cases hu : u = 0
+    · subst hu
+      refine ⟨rfl, ?_⟩
+      rw [suzukiN, zero_pow (by positivity), zero_mul, zero_add, zero_add] at hN
+      exact pow_eq_zero_iff hθ0 |>.1 hN
+    · exfalso
+      haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+      let t := v / u ^ (2 ^ (a + 1) + 1)
+      have hu' : u ^ (2 ^ (a + 1) + 1) ≠ 0 := pow_ne_zero _ hu
+      have hv : v = u ^ (2 ^ (a + 1) + 1) * t := by
+        dsimp [t]
+        rw [mul_div_cancel₀ _ hu']
+      have huu : u ^ (2 ^ (a + 1) * 2 ^ (a + 1)) = u ^ 2 := by
+        rw [pow_mul, hθθ]
+      have e1 : (u ^ (2 ^ (a + 1) + 1) * t) ^ 2 ^ (a + 1) =
+          u ^ (2 ^ (a + 1) + 2) * t ^ 2 ^ (a + 1) := by
+        rw [mul_pow, ← pow_mul, add_mul, one_mul, pow_add, huu]
+        ring
+      have hkey : suzukiN a u v =
+          u ^ (2 ^ (a + 1) + 2) * (1 + t + t ^ 2 ^ (a + 1)) := by
+        rw [suzukiN, hv, e1]
+        ring
+      rw [hkey] at hN
+      have h3 : 1 + t + t ^ 2 ^ (a + 1) = 0 :=
+        (mul_eq_zero.mp hN).resolve_left (pow_ne_zero _ hu)
+      have htθ : t ^ 2 ^ (a + 1) = t + 1 := by
+        linear_combination h3 - h2 * (t + 1)
+      have htt : t ^ 2 = t := by
+        rw [← hθθ t, htθ, hadd, htθ, one_pow]
+        linear_combination h2
+      have h01 : t = 0 ∨ t = 1 := by
+        have hfactor : t * (t - 1) = 0 := by linear_combination htt
+        rcases mul_eq_zero.mp hfactor with ht | ht
+        · exact Or.inl ht
+        · exact Or.inr (sub_eq_zero.mp ht)
+      rcases h01 with ht | ht
+      · rw [ht, zero_pow hθ0, add_zero, add_zero] at h3
+        exact one_ne_zero h3
+      · rw [ht, one_pow] at h3
+        have hone : (1 : K) = 0 := by linear_combination h3 - h2
+        exact one_ne_zero hone
+  · rintro ⟨rfl, rfl⟩
+    rw [suzukiN, zero_pow (by positivity), zero_pow hθ0, mul_zero,
+      add_zero, add_zero]
+
+/-- The coordinate norm in the projective ovoid agrees with the Suzuki
+parameter polynomial. -/
+theorem ovoidNorm_eq_suzukiN (a : ℕ) (pi : K ≃+* K)
+    (hpi_formula : ∀ z : K, pi z = z ^ (2 ^ (a + 1))) (u v : K) :
+    u * v + pi u * u ^ 2 + pi v = suzukiN a u v := by
+  rw [hpi_formula u, hpi_formula v, suzukiN, pow_add]
+  ring
+
+/-- The local Suzuki norm-zero hypothesis required by the projective ovoid
+action follows from the finite Suzuki field axioms. -/
+theorem ovoidNorm_eq_zero_only_at_origin [Finite K] (a : ℕ)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) (pi : K ≃+* K)
+    (hpi_formula : ∀ z : K, pi z = z ^ (2 ^ (a + 1))) :
+    ∀ x y : K, x * y + pi x * x ^ 2 + pi y = 0 → x = 0 ∧ y = 0 := by
+  intro x y h
+  have hnorm : suzukiN a x y = 0 := by
+    rw [← ovoidNorm_eq_suzukiN a pi hpi_formula x y]
+    exact h
+  exact (suzukiNorm_eq_zero_iff a hK x y).mp hnorm
 
 /-- The normalized finite-point chart is injective: the last projective
 coordinate fixes its scalar, and the next two coordinates recover the pair. -/
@@ -111,15 +270,15 @@ theorem ovoid_card (pi : K ≃+* K) [Finite K] :
 
 /-- The upper-root Suzuki generator as an invertible linear operator. Its
 matrix is the transpose presentation of the locally owned lower-root matrix. -/
-def upperRootOperator (a : ℕ) (u v : K) : Matrix.GeneralLinearGroup (Fin 4) K :=
+@[expose] def upperRootOperator (a : ℕ) (u v : K) : Matrix.GeneralLinearGroup (Fin 4) K :=
   suzukiSGL a u v
 
 /-- The antidiagonal Suzuki Weyl matrix on the four-dimensional carrier. -/
-def suzukiWeylMatrix : Matrix (Fin 4) (Fin 4) K :=
+@[expose] def suzukiWeylMatrix : Matrix (Fin 4) (Fin 4) K :=
   Matrix.of fun i j => if i.val + j.val = 3 then 1 else 0
 
 /-- The antidiagonal Weyl generator as an invertible linear operator. -/
-def suzukiWeylOperator : Matrix.GeneralLinearGroup (Fin 4) K :=
+@[expose] def suzukiWeylOperator : Matrix.GeneralLinearGroup (Fin 4) K :=
   { val := suzukiWeylMatrix
     inv := suzukiWeylMatrix
     val_inv := by
@@ -131,12 +290,201 @@ def suzukiWeylOperator : Matrix.GeneralLinearGroup (Fin 4) K :=
       fin_cases i <;> fin_cases j <;>
         simp [suzukiWeylMatrix, Matrix.mul_apply, Fin.sum_univ_four] }
 
+/-- Every Suzuki root operator has determinant one. The lower-root
+presentation is triangular with unit diagonal, and transposition preserves
+the determinant. -/
+theorem upperRootOperator_det (a : ℕ) (u v : K) :
+    (upperRootOperator a u v).det = 1 := by
+  apply Units.ext
+  have htri : (Chevalley.suzukiS a u v).IsLowerTriangular := by
+    intro i j hij
+    change i < j at hij
+    fin_cases i <;> fin_cases j <;>
+      simp_all [Chevalley.suzukiS, Chevalley.suzukiN]
+  change (Chevalley.suzukiS a u v).transpose.det = 1
+  rw [Matrix.det_transpose, Matrix.det_of_isLowerTriangular _ htri]
+  simp [Chevalley.suzukiS, Fin.prod_univ_four]
+
+/-- The antidiagonal Weyl operator has determinant one in characteristic
+two, the field characteristic used by Suzuki groups. -/
+theorem suzukiWeylOperator_det :
+    (suzukiWeylOperator (K := K)).det = 1 := by
+  apply Units.ext
+  change (suzukiWeylMatrix (K := K)).det = 1
+  let r : Equiv.Perm (Fin 4) := Equiv.swap 0 3 * Equiv.swap 1 2
+  have hr : suzukiWeylMatrix (K := K) = r.permMatrix K := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [suzukiWeylMatrix, r, Equiv.Perm.permMatrix,
+        Equiv.Perm.mul_apply, Equiv.swap_apply_def]
+  rw [hr, Matrix.det_permutation]
+  simp [r]
+
 /-- The torus generator of the full Suzuki operator group, represented on the
 same four-dimensional carrier as its root and Weyl generators. -/
-def suzukiTorusOperator (a : ℕ) (l : Kˣ) : Matrix.GeneralLinearGroup (Fin 4) K :=
+@[expose] def suzukiTorusOperator (a : ℕ) (l : Kˣ) : Matrix.GeneralLinearGroup (Fin 4) K :=
   Matrix.GeneralLinearGroup.mkOfDetNeZero (suzukiD a l) (by
     rw [suzukiD_det]
     exact one_ne_zero)
+
+/-- Matrix readback for the upper-root operator presentation. -/
+theorem coe_upperRootOperator (a : ℕ) (u v : K) :
+    (upperRootOperator a u v : Matrix (Fin 4) (Fin 4) K) =
+      (Chevalley.suzukiS a u v).transpose := rfl
+
+/-- Matrix readback for the Suzuki Weyl operator. -/
+theorem coe_suzukiWeylOperator :
+    (suzukiWeylOperator (K := K) : Matrix (Fin 4) (Fin 4) K) =
+      suzukiWeylMatrix := rfl
+
+/-- Matrix readback for the Suzuki torus operator. -/
+theorem coe_suzukiTorusOperator (a : ℕ) (l : Kˣ) :
+    (suzukiTorusOperator a l : Matrix (Fin 4) (Fin 4) K) = Chevalley.suzukiD a l := rfl
+
+/-- The antidiagonal Weyl matrix is the matrix model used by the catalog. -/
+theorem suzukiWeylMatrix_eq_catalog :
+    suzukiWeylMatrix (K := K) = Chevalley.suzukiW K := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [suzukiWeylMatrix, Chevalley.suzukiW]
+
+/-- The torus generator also has determinant one, by the native determinant
+identity for the Suzuki diagonal weights. -/
+theorem suzukiTorusOperator_det (a : ℕ) (l : Kˣ) :
+    (suzukiTorusOperator a l).det = 1 := by
+  apply Units.ext
+  change (Chevalley.suzukiD a l).det = 1
+  exact Chevalley.suzukiD_det a K l
+
+/-- Every element of the full Suzuki matrix-operator group has determinant
+one. The determinant-one condition is checked on the actual transposed root,
+torus, and Weyl generators, then passed through subgroup closure. -/
+theorem suzukiUpperMatrixGroup_det_eq_one [CharP K 2] (a : ℕ)
+    (g : Chevalley.suzukiUpperMatrixGroup a K) :
+    (Matrix.GeneralLinearGroup.det
+      (g : Matrix.GeneralLinearGroup (Fin 4) K)) = 1 := by
+  let detHom := Matrix.GeneralLinearGroup.det
+    (n := Fin 4) (R := K)
+  have hgens : Chevalley.suzukiUpperMatrixGenerators a K ⊆ detHom.ker := by
+    intro A hA
+    change ((A : Matrix (Fin 4) (Fin 4) K).transpose) ∈
+      {M : Matrix (Fin 4) (Fin 4) K |
+        (∃ u v : K, M = Chevalley.suzukiS a u v) ∨
+          (∃ l : Kˣ, M = Chevalley.suzukiD a l) ∨ M = Chevalley.suzukiW K} at hA
+    have hdetA : detHom A = 1 := by
+      apply Units.ext
+      change (A : Matrix (Fin 4) (Fin 4) K).det = 1
+      rcases hA with ⟨u, v, hroot⟩ | ⟨l, htorus⟩ | hweyl
+      · have htri : (Chevalley.suzukiS a u v).IsLowerTriangular := by
+          intro i j hij
+          change i < j at hij
+          fin_cases i <;> fin_cases j <;>
+            simp_all [Chevalley.suzukiS, Chevalley.suzukiN]
+        rw [← Matrix.det_transpose, hroot,
+          Matrix.det_of_isLowerTriangular _ htri]
+        simp [Chevalley.suzukiS, Fin.prod_univ_four]
+      · rw [← Matrix.det_transpose, htorus, Chevalley.suzukiD_det]
+      · rw [← Matrix.det_transpose, hweyl]
+        have hw := congrArg (fun x : Kˣ => (x : K))
+          (suzukiWeylOperator_det (K := K))
+        simpa [Matrix.GeneralLinearGroup.det, suzukiWeylOperator,
+          suzukiWeylMatrix, Chevalley.suzukiW] using hw
+    exact MonoidHom.mem_ker.mpr hdetA
+  have hclosure : Chevalley.suzukiUpperMatrixGroup a K ≤ detHom.ker := by
+    rw [Chevalley.suzukiUpperMatrixGroup, Subgroup.closure_le]
+    exact hgens
+  exact MonoidHom.mem_ker.mp (hclosure g.2)
+
+/-- A four-dimensional scalar operator with determinant one is trivial over a
+field of characteristic two: its scalar satisfies `x^4 = 1`, hence
+`(x + 1)^4 = 0` and therefore `x = 1`. -/
+theorem scalar_eq_one_of_det_one [CharP K 2] (u : Kˣ)
+    (hdet : (Matrix.GeneralLinearGroup.scalar (Fin 4) u).det = 1) :
+    Matrix.GeneralLinearGroup.scalar (Fin 4) u = 1 := by
+  have hu4 : (u : K) ^ 4 = 1 := by
+    have h := congrArg (fun x : Kˣ => (x : K)) hdet
+    simpa [Matrix.GeneralLinearGroup.det_scalar] using h
+  have hfour : ((u : K) + 1) ^ 4 = (u : K) ^ 4 + 1 := by
+    have hsq : ((u : K) + 1) ^ 2 = (u : K) ^ 2 + 1 := by
+      simpa using (CharTwo.add_sq (u : K) (1 : K))
+    calc
+      ((u : K) + 1) ^ 4 = (((u : K) + 1) ^ 2) ^ 2 := by
+        rw [show (4 : ℕ) = 2 * 2 by norm_num, pow_mul]
+      _ = ((u : K) ^ 2 + 1) ^ 2 := congrArg (fun x : K => x ^ 2) hsq
+      _ = ((u : K) ^ 2) ^ 2 + 1 := by
+        simpa using (CharTwo.add_sq ((u : K) ^ 2) (1 : K))
+      _ = (u : K) ^ 4 + 1 := by
+        rw [show (4 : ℕ) = 2 * 2 by norm_num, pow_mul]
+  have hzero : ((u : K) + 1) ^ 4 = 0 := by
+    rw [hfour, hu4]
+    rw [one_add_one_eq_two]
+    exact CharP.cast_eq_zero K 2
+  have hu1 : (u : K) = 1 := by
+    have hsum : (u : K) + 1 = 0 := eq_zero_of_pow_eq_zero hzero
+    exact CharTwo.add_eq_zero.mp hsum
+  apply Units.ext
+  ext i j
+  simp [Matrix.GeneralLinearGroup.scalar, hu1]
+
+/-- The local Suzuki operator group has trivial intersection with the scalar
+center of `GL₄(K)`. This follows from determinant one and the characteristic-
+two scalar rigidity lemma. -/
+theorem suzukiUpperMatrixGroup_center_trivial [CharP K 2] (a : ℕ)
+    {g : Matrix.GeneralLinearGroup (Fin 4) K}
+    (hg : g ∈ Chevalley.suzukiUpperMatrixGroup a K)
+    (hc : g ∈ Subgroup.center (Matrix.GeneralLinearGroup (Fin 4) K)) :
+    g = 1 := by
+  rw [Matrix.GeneralLinearGroup.center_eq_range_scalar] at hc
+  rcases hc with ⟨u, hu⟩
+  have hdet := suzukiUpperMatrixGroup_det_eq_one (K := K) a ⟨g, hg⟩
+  change (Matrix.GeneralLinearGroup.det g) = 1 at hdet
+  rw [← hu] at hdet
+  calc
+    g = Matrix.GeneralLinearGroup.scalar (Fin 4) u := hu.symm
+    _ = 1 := scalar_eq_one_of_det_one (K := K) u hdet
+
+/-- The local Suzuki group embeds into `PGL₄(K)`. Its projective kernel is
+the intersection with the scalar center, which determinant one and
+characteristic-two scalar rigidity show is trivial. -/
+theorem suzukiUpperMatrixGroup_toPGL_injective [CharP K 2] (a : ℕ) :
+    Function.Injective
+      ((Matrix.ProjGenLinGroup.mk :
+        Matrix.GeneralLinearGroup (Fin 4) K →*
+          Matrix.ProjGenLinGroup (Fin 4) K).comp
+        (Chevalley.suzukiUpperMatrixGroup a K).subtype) := by
+  intro g h hgh
+  change Matrix.ProjGenLinGroup.mk
+      (g : Matrix.GeneralLinearGroup (Fin 4) K) =
+    Matrix.ProjGenLinGroup.mk
+      (h : Matrix.GeneralLinearGroup (Fin 4) K) at hgh
+  obtain ⟨u, hmul⟩ :=
+    (Matrix.ProjGenLinGroup.mk_eq_mk_iff
+      (g₁ := (g : Matrix.GeneralLinearGroup (Fin 4) K))
+      (g₂ := (h : Matrix.GeneralLinearGroup (Fin 4) K))).mp hgh
+  let z := (g : Matrix.GeneralLinearGroup (Fin 4) K)⁻¹ *
+    (h : Matrix.GeneralLinearGroup (Fin 4) K)
+  have hz : z = Matrix.GeneralLinearGroup.scalar (Fin 4) u := by
+    dsimp [z]
+    rw [← hmul]
+    group
+  have hzmem : z ∈ Chevalley.suzukiUpperMatrixGroup a K := by
+    dsimp [z]
+    exact (Chevalley.suzukiUpperMatrixGroup a K).mul_mem
+      ((Chevalley.suzukiUpperMatrixGroup a K).inv_mem g.property) h.property
+  have hzcenter : z ∈ Subgroup.center (Matrix.GeneralLinearGroup (Fin 4) K) := by
+    rw [Matrix.GeneralLinearGroup.center_eq_range_scalar]
+    exact ⟨u, hz.symm⟩
+  have hzone := suzukiUpperMatrixGroup_center_trivial (K := K) a hzmem hzcenter
+  have hval : (g : Matrix.GeneralLinearGroup (Fin 4) K) =
+      (h : Matrix.GeneralLinearGroup (Fin 4) K) := by
+    have hmul' := congrArg
+      (fun x : Matrix.GeneralLinearGroup (Fin 4) K =>
+        (g : Matrix.GeneralLinearGroup (Fin 4) K) * x) hzone
+    have hrev : (h : Matrix.GeneralLinearGroup (Fin 4) K) =
+        (g : Matrix.GeneralLinearGroup (Fin 4) K) := by
+      simpa [z] using hmul'
+    exact hrev.symm
+  exact Subtype.ext hval
 
 /-- Multiplication of torus operators follows multiplication in `Kˣ`. -/
 theorem suzukiTorusOperator_mul (a : ℕ) (l m : Kˣ) :
@@ -159,6 +507,19 @@ theorem suzukiTorusOperator_inv (a : ℕ) (l : Kˣ) :
     (suzukiTorusOperator a l)⁻¹ = suzukiTorusOperator a l⁻¹ := by
   rw [inv_eq_iff_mul_eq_one]
   rw [suzukiTorusOperator_mul, mul_inv_cancel, suzukiTorusOperator_one]
+
+/-- The antidiagonal Weyl operator conjugates each Suzuki torus operator to
+the operator indexed by the inverse unit. -/
+theorem suzukiWeylOperator_conj_torus (a : ℕ) (l : Kˣ) :
+    suzukiWeylOperator (K := K) * suzukiTorusOperator a l *
+        suzukiWeylOperator (K := K) = suzukiTorusOperator a l⁻¹ := by
+  apply Units.ext
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [suzukiWeylOperator, suzukiWeylMatrix, suzukiTorusOperator,
+      suzukiD, Matrix.diagonal_apply, Matrix.mul_apply,
+      Fin.sum_univ_four, Units.val_inv, zpow_neg]
+  all_goals congr 1 <;> ring
 
 set_option maxHeartbeats 1600000
 /-- Conjugation by a Suzuki torus operator rescales the two parameters of the
@@ -229,7 +590,7 @@ theorem suzukiTorusOperator_conj_upperRoot
     try rw [hpi_iter']
     try simp [x, mul_comm]
     try ring
-set_option maxHeartbeats 200000
+set_option maxHeartbeats 1600000
 
 /-- The subgroup generated by the Suzuki torus operators on the actual
 four-dimensional operator carrier. It is one component of the ovoid point
@@ -237,6 +598,13 @@ stabilizer used in the simplicity argument. -/
 def suzukiTorusOperatorGroup (a : ℕ) :
     Subgroup (Matrix.GeneralLinearGroup (Fin 4) K) :=
   Subgroup.closure (Set.range (suzukiTorusOperator a))
+
+/-- Every explicit Suzuki torus operator belongs to the generated torus
+subgroup. -/
+theorem suzukiTorusOperator_mem_torusOperatorGroup (a : ℕ) (l : Kˣ) :
+    suzukiTorusOperator a l ∈ suzukiTorusOperatorGroup (K := K) a := by
+  rw [suzukiTorusOperatorGroup]
+  exact Subgroup.subset_closure (Set.mem_range_self l)
 
 /-- The torus operators commute as endomorphism units, since their matrices
 are diagonal in the same operator basis. -/
@@ -719,18 +1087,220 @@ theorem upperRootOperator_commutator [Finite K] [CharP K 2] (a : ℕ)
         (upperRootOperator a u v)⁻¹ * (upperRootOperator a c d)⁻¹ =
       upperRootOperator a 0
         (c ^ (2 ^ (a + 1)) * u + u ^ (2 ^ (a + 1)) * c) := by
-  apply suzukiSGL_injective a
   simp only [upperRootOperator, suzukiSGL_mul a hK, suzukiSGL_inv a hK]
-  apply Prod.ext
-  · simp [CharP.cast_eq_zero (K := K) 2]
-  · have htwo : (2 : K) = 0 := CharP.cast_eq_zero (K := K) 2
-    linear_combination
-      (v + d + c ^ (2 ^ (a + 1)) * u +
-        v + u ^ (2 ^ (a + 1) + 1) +
-        u ^ (2 ^ (a + 1)) * (u + c) +
-        d + c ^ (2 ^ (a + 1) + 1) +
-        c ^ (2 ^ (a + 1)) * c +
-        c ^ (2 ^ (a + 1)) * (c + u)) * htwo
+  have hparams :
+      (u + c + u + c,
+        v + d + c ^ (2 ^ (a + 1)) * u +
+          (v + u ^ (2 ^ (a + 1) + 1)) +
+          u ^ (2 ^ (a + 1)) * (u + c) +
+          (d + c ^ (2 ^ (a + 1) + 1)) +
+          c ^ (2 ^ (a + 1)) * (u + c + u)) =
+        (0, c ^ (2 ^ (a + 1)) * u + u ^ (2 ^ (a + 1)) * c) := by
+    apply Prod.ext
+    · have htwo : (2 : K) = 0 := CharP.cast_eq_zero K 2
+      linear_combination (u + c) * htwo
+    · have htwo : (2 : K) = 0 := CharP.cast_eq_zero K 2
+      rw [pow_succ, pow_succ]
+      linear_combination
+        (v + d + c ^ (2 ^ (a + 1)) * u +
+          u ^ (2 ^ (a + 1)) * u + c ^ (2 ^ (a + 1)) * c) * htwo
+  exact congrArg (fun p : K × K => suzukiSGL a p.1 p.2) hparams
+
+/-- For a finite field with a Tits automorphism `pi` satisfying
+`pi (pi x) = x ^ 2`, the twisted norm `x ↦ x * pi x` permutes the nonzero
+elements. This is the arithmetic input that makes every central Suzuki root
+operator a root commutator. -/
+theorem suzukiTwistedNorm_surjective [Finite K] (pi : K ≃+* K)
+    (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2) :
+    ∀ y : Kˣ, ∃ x : Kˣ,
+      (x : K) * pi (x : K) = (y : K) := by
+  let N : Kˣ →* Kˣ :=
+    { toFun := fun x => x * Units.map pi.toMonoidHom x
+      map_one' := by simp
+      map_mul' x y := by
+        apply Units.ext
+        simp only [Units.val_mul, Units.coe_map, map_mul]
+        ring }
+  have hN_val (x : Kˣ) :
+      (N x : K) = (x : K) * pi (x : K) := rfl
+  have hker : N.ker = ⊥ := by
+    rw [Subgroup.eq_bot_iff_forall]
+    intro x hx
+    rw [MonoidHom.mem_ker] at hx
+    have hxval : (x : K) * pi (x : K) = 1 := by
+      rw [← hN_val]
+      exact congrArg Units.val hx
+    have hpi_norm := congrArg pi hxval
+    simp only [map_mul, map_one, hpi_sq] at hpi_norm
+    have hpix_ne : pi (x : K) ≠ 0 := (map_ne_zero pi).2 x.ne_zero
+    have hsquare : (x : K) ^ 2 = (x : K) := by
+      apply mul_left_cancel₀ hpix_ne
+      calc
+        pi (x : K) * (x : K) ^ 2 = 1 := hpi_norm
+        _ = pi (x : K) * (x : K) := by
+          simpa [mul_comm] using hxval.symm
+    apply Units.ext
+    apply mul_left_cancel₀ x.ne_zero
+    simpa [pow_two] using hsquare
+  have hinj : Function.Injective N := N.ker_eq_bot_iff.mp hker
+  let _ : Fintype Kˣ := Fintype.ofFinite Kˣ
+  have hsurj : Function.Surjective N := Finite.injective_iff_surjective.mp hinj
+  intro y
+  rcases hsurj y with ⟨x, hx⟩
+  refine ⟨x, ?_⟩
+  rw [← hN_val]
+  exact congrArg Units.val hx
+
+/-- For positive Suzuki rank, the Tits automorphism cannot be the identity:
+the fixed-point equation together with `pi²(x) = x²` would force every
+element of the field to be either zero or one. -/
+theorem suzukiTits_nontrivial [Finite K] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) (pi : K ≃+* K)
+    (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2) :
+    ∃ x : K, pi x ≠ x := by
+  classical
+  let _ : Fintype K := Fintype.ofFinite K
+  have hK_card : Fintype.card K = 2 ^ (2 * a + 1) := by
+    rw [← Nat.card_eq_fintype_card]
+    exact hK
+  have hcard_gt : 2 < Fintype.card K := by
+    rw [hK_card]
+    have hpow_lt := Nat.pow_lt_pow_right (a := 2) (by norm_num)
+      (show 1 < 2 * a + 1 by omega)
+    simpa using hpow_lt
+  have hexists : ∃ x : K, x ≠ 0 ∧ x ≠ 1 := by
+    by_contra h
+    push Not at h
+    have huniv : (Finset.univ : Finset K) ⊆ {0, 1} := by
+      intro x hx
+      by_cases hx0 : x = 0
+      · simp [hx0]
+      · simp [h x hx0]
+    have hle : Fintype.card K ≤ 2 := by
+      rw [← Finset.card_univ]
+      calc
+        Finset.univ.card ≤ ({0, 1} : Finset K).card := Finset.card_le_card huniv
+        _ = 2 := by simp
+    omega
+  rcases hexists with ⟨x, hx0, hx1⟩
+  refine ⟨x, ?_⟩
+  intro hpix
+  have hsq : x ^ 2 = x := by
+    calc
+      x ^ 2 = pi (pi x) := (hpi_sq x).symm
+      _ = x := by rw [hpix, hpix]
+  have hprod : x * (x - 1) = 0 := by
+    rw [mul_sub, mul_one, ← pow_two, hsq, sub_self]
+  rcases mul_eq_zero.mp hprod with hzero | hone
+  · exact hx0 hzero
+  · exact hx1 (sub_eq_zero.mp hone)
+
+/-- The torus parameter used in Suzuki's nonzero root/Weyl factorization has
+the two diagonal powers required by the local four-dimensional torus action.
+This is the field-arithmetic input to the Weyl-image step in perfectness. -/
+theorem suzukiBruhatTorusParameter_powers [CharP K 2]
+    (a : ℕ) (pi : K ≃+* K)
+    (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1)))
+    (n : K) (hn : n ≠ 0) :
+    let uval : K := pi n * n⁻¹ ^ 2
+    (uval ^ (2 ^ a) = n * (pi n)⁻¹) ∧
+      (uval ^ (1 + 2 ^ a) = n⁻¹) := by
+  let uval : K := pi n * n⁻¹ ^ 2
+  have hpin : pi n ≠ 0 := (map_ne_zero pi).2 hn
+  have huval : uval ≠ 0 :=
+    mul_ne_zero hpin (pow_ne_zero _ (inv_ne_zero hn))
+  change (uval ^ (2 ^ a) = n * (pi n)⁻¹) ∧
+    (uval ^ (1 + 2 ^ a) = n⁻¹)
+  have hpi_uval : pi uval = (n * (pi n)⁻¹) ^ 2 := by
+    dsimp only [uval]
+    simp only [map_mul, map_pow, map_inv₀, hpi_sq]
+    ring
+  have hq : uval ^ (2 ^ a) = n * (pi n)⁻¹ := by
+    apply CharTwo.sq_injective
+    calc
+      (uval ^ (2 ^ a)) ^ 2 = uval ^ (2 ^ (a + 1)) := by
+        rw [show 2 ^ (a + 1) = 2 ^ a * 2 by rw [pow_succ], pow_mul]
+      _ = pi uval := (hpi_formula uval).symm
+      _ = (n * (pi n)⁻¹) ^ 2 := hpi_uval
+  refine ⟨hq, ?_⟩
+  rw [pow_add, pow_one, hq]
+  dsimp only [uval]
+  calc
+    pi n * n⁻¹ ^ 2 * (n * (pi n)⁻¹) =
+        (pi n * (pi n)⁻¹) * (n⁻¹ * n) * n⁻¹ := by ring
+    _ = n⁻¹ := by
+      rw [mul_inv_cancel₀ hpin, inv_mul_cancel₀ hn]
+      simp
+
+/-- Assuming one nonfixed Tits parameter, every central upper-root operator
+is a commutator of two operators in the actual upper-root subgroup. The
+twisted norm surjectivity supplies the parameter; the preceding operator
+commutator formula verifies the equality in `GL(4,K)`. -/
+theorem upperRootCentralOperator_is_commutator [Finite K] [CharP K 2]
+    (a : ℕ) (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1)))
+    (t : K) (ht : pi t + t ≠ 0) (b : K) :
+    ∃ x y : upperRootMatrixGroup (K := K) a,
+      x * y * x⁻¹ * y⁻¹ =
+        (⟨upperRootOperator a 0 b,
+          by
+            apply Subgroup.subset_closure
+            exact ⟨0, b, rfl⟩⟩ : upperRootMatrixGroup (K := K) a) := by
+  by_cases hb : b = 0
+  · subst b
+    refine ⟨1, 1, ?_⟩
+    apply Subtype.ext
+    simp [upperRootOperator, suzukiSGL_zero_zero]
+  · let yNorm : Kˣ := Units.mk0 (b / (pi t + t)) (div_ne_zero hb ht)
+    rcases suzukiTwistedNorm_surjective (K := K) pi hpi_sq yNorm with
+      ⟨z, hz⟩
+    have hz_norm : (z : K) * pi (z : K) = b / (pi t + t) := by
+      simpa [yNorm] using hz
+    have hcentral :
+        (z * t) ^ (2 ^ (a + 1)) * (z : K) +
+          (z : K) ^ (2 ^ (a + 1)) * ((z : K) * t) = b := by
+      rw [← hpi_formula (z * t), ← hpi_formula (z : K), map_mul]
+      calc
+        pi (z : K) * pi t * (z : K) +
+            pi (z : K) * ((z : K) * t) =
+              ((z : K) * pi (z : K)) * (pi t + t) := by ring
+        _ = b := by rw [hz_norm, div_mul_cancel₀ b ht]
+    let x : upperRootMatrixGroup (K := K) a :=
+      ⟨upperRootOperator a (z : K) 0,
+        Subgroup.subset_closure ⟨(z : K), 0, rfl⟩⟩
+    let y : upperRootMatrixGroup (K := K) a :=
+      ⟨upperRootOperator a ((z : K) * t) 0,
+        Subgroup.subset_closure ⟨(z : K) * t, 0, rfl⟩⟩
+    refine ⟨x, y, ?_⟩
+    apply Subtype.ext
+    change upperRootOperator a (z : K) 0 *
+        upperRootOperator a ((z : K) * t) 0 *
+        (upperRootOperator a (z : K) 0)⁻¹ *
+        (upperRootOperator a ((z : K) * t) 0)⁻¹ =
+      upperRootOperator a 0 b
+    rw [upperRootOperator_commutator a hK]
+    exact congrArg (upperRootOperator a 0) hcentral
+
+/-- The standard Suzuki field hypotheses produce the nonfixed Tits parameter
+needed in `upperRootCentralOperator_is_commutator`. -/
+theorem upperRootCentralOperator_is_commutator_of_field [Finite K] [CharP K 2]
+    (a : ℕ) (ha : 0 < a) (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1))) (b : K) :
+    ∃ x y : upperRootMatrixGroup (K := K) a,
+      x * y * x⁻¹ * y⁻¹ =
+        (⟨upperRootOperator a 0 b,
+          by
+            apply Subgroup.subset_closure
+            exact ⟨0, b, rfl⟩⟩ : upperRootMatrixGroup (K := K) a) := by
+  obtain ⟨t, ht⟩ := suzukiTits_nontrivial (K := K) a ha hK pi hpi_sq
+  have hdelta : pi t + t ≠ 0 := by
+    intro hzero
+    exact ht (CharTwo.add_eq_zero.mp hzero)
+  exact upperRootCentralOperator_is_commutator a hK pi hpi_sq hpi_formula
+    t hdelta b
 
 /-- The two field parameters give a bijective coordinate system on the
 upper-root subgroup. -/
@@ -819,6 +1389,18 @@ root-torus subgroup appearing in the external Suzuki simplicity proof. -/
 def suzukiPointStabilizerOperatorGroup (a : ℕ) :
     Subgroup (Matrix.GeneralLinearGroup (Fin 4) K) :=
   upperRootMatrixGroup (K := K) a ⊔ suzukiTorusOperatorGroup (K := K) a
+
+/-- The upper-root operator subgroup is contained in the generated local
+root–torus point-stabilizer candidate. -/
+theorem upperRootMatrixGroup_le_suzukiPointStabilizerOperatorGroup (a : ℕ) :
+    upperRootMatrixGroup (K := K) a ≤ suzukiPointStabilizerOperatorGroup (K := K) a :=
+  le_sup_left
+
+/-- The torus operator subgroup is contained in the generated local
+root–torus point-stabilizer candidate. -/
+theorem suzukiTorusOperatorGroup_le_suzukiPointStabilizerOperatorGroup (a : ℕ) :
+    suzukiTorusOperatorGroup (K := K) a ≤ suzukiPointStabilizerOperatorGroup (K := K) a :=
+  le_sup_right
 
 /-- Each torus operator normalizes the generated upper-root subgroup. The
 finite Suzuki field hypothesis identifies that closure with its two-parameter
@@ -1409,6 +1991,608 @@ theorem rootWeylOperatorGroup_le_suzukiUpperMatrixGroup (a : ℕ) :
     simp [suzukiWeylOperator, suzukiWeylMatrix, Chevalley.suzukiW,
       Nat.add_comm]
 
+/-- A diagonal Suzuki torus operator is a generator of the same upper
+transpose-presentation operator group as the root and Weyl operators. -/
+theorem suzukiTorusOperator_mem_suzukiUpperMatrixGroup (a : ℕ) (l : Kˣ) :
+    suzukiTorusOperator a l ∈ Chevalley.suzukiUpperMatrixGroup a K := by
+  apply Subgroup.subset_closure
+  change ((suzukiTorusOperator a l : Matrix.GeneralLinearGroup (Fin 4) K) :
+      Matrix (Fin 4) (Fin 4) K).transpose ∈
+    {M : Matrix (Fin 4) (Fin 4) K |
+      (∃ u v : K, M = suzukiS a u v) ∨
+        (∃ m : Kˣ, M = suzukiD a m) ∨ M = Chevalley.suzukiW K}
+  right
+  left
+  refine ⟨l, ?_⟩
+  change (suzukiD a l).transpose = suzukiD a l
+  ext i j
+  by_cases hij : i = j
+  · subst j
+    simp [suzukiD, Matrix.diagonal_apply]
+  · have hji : j ≠ i := Ne.symm hij
+    simp [suzukiD, Matrix.diagonal_apply, hij, hji]
+
+/-- The local root–torus point-stabilizer subgroup embeds into the actual
+upper-orientation Suzuki operator group. -/
+theorem suzukiPointStabilizerOperatorGroup_le_suzukiUpperMatrixGroup
+    (a : ℕ) :
+    suzukiPointStabilizerOperatorGroup (K := K) a ≤
+      Chevalley.suzukiUpperMatrixGroup a K := by
+  rw [suzukiPointStabilizerOperatorGroup]
+  apply sup_le
+  · exact (upperRootMatrixGroup_le_rootWeylOperatorGroup (K := K) a).trans
+      (rootWeylOperatorGroup_le_suzukiUpperMatrixGroup (K := K) a)
+  · apply (Subgroup.closure_le
+      (Chevalley.suzukiUpperMatrixGroup a K)).2
+    rintro _ ⟨l, rfl⟩
+    exact suzukiTorusOperator_mem_suzukiUpperMatrixGroup (K := K) a l
+
+/-- The antidiagonal Weyl operator belongs to the same transpose-presentation
+Suzuki group as the upper-root and torus operators. -/
+theorem suzukiWeylOperator_mem_suzukiUpperMatrixGroup (a : ℕ) :
+    suzukiWeylOperator (K := K) ∈ Chevalley.suzukiUpperMatrixGroup a K := by
+  apply Subgroup.subset_closure
+  change ((suzukiWeylOperator (K := K) : Matrix.GeneralLinearGroup (Fin 4) K) :
+      Matrix (Fin 4) (Fin 4) K).transpose ∈
+    {M : Matrix (Fin 4) (Fin 4) K |
+      (∃ u v : K, M = suzukiS a u v) ∨
+        (∃ m : Kˣ, M = suzukiD a m) ∨ M = Chevalley.suzukiW K}
+  right
+  right
+  change suzukiWeylMatrix.transpose = Chevalley.suzukiW K
+  ext i j
+  simp [suzukiWeylMatrix, Chevalley.suzukiW, Matrix.transpose_apply,
+    Nat.add_comm]
+
+/-- The `(0,1)` root/Weyl factorization from the Suzuki Bruhat argument, in
+the local transpose presentation. Its torus factor is the identity because
+the associated norm parameter is `1`. -/
+theorem suzukiWeyl_root_weyl_bruhat_unit [CharP K 2] (a : ℕ) :
+    suzukiWeylOperator (K := K) * upperRootOperator a 0 1 *
+        suzukiWeylOperator (K := K) =
+      upperRootOperator a 1 1 * suzukiWeylOperator (K := K) *
+        upperRootOperator a 1 0 := by
+  have htwo : (2 : K) = 0 := CharP.cast_eq_zero K 2
+  have hfour : (4 : K) = 0 := by
+    calc
+      (4 : K) = (2 : K) + 2 := by norm_num
+      _ = 0 := CharTwo.add_self_eq_zero _
+  have hsix : (6 : K) = 0 := by
+    calc
+      (6 : K) = (4 : K) + 2 := by norm_num
+      _ = 0 := by rw [hfour, htwo]; simp
+  apply Units.ext
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [suzukiWeylOperator, suzukiWeylMatrix, upperRootOperator,
+      suzukiSGL, suzukiS, suzukiN, Matrix.mul_apply,
+      Fin.sum_univ_four]
+  all_goals try omega
+  all_goals norm_num <;> first
+    | exact htwo
+    | exact hfour
+    | exact hsix
+    | exact htwo.symm
+    | exact hfour.symm
+    | exact hsix.symm
+
+/-- The Weyl class in the abelianization of the local Suzuki operator group
+has order dividing two. This is the involution half of the external
+Weyl-image argument; identifying that class with a torus class still requires
+the root/Weyl Bruhat factorization. -/
+theorem suzukiWeylOperator_image_sq_eq_one (a : ℕ)
+    (g : Chevalley.suzukiUpperMatrixGroup a K)
+    (hg : (g : Matrix.GeneralLinearGroup (Fin 4) K) =
+      suzukiWeylOperator (K := K)) :
+    Abelianization.of g ^ 2 = 1 := by
+  have hw : suzukiWeylOperator (K := K) *
+      suzukiWeylOperator (K := K) = 1 := by
+    apply Units.ext
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [suzukiWeylOperator, suzukiWeylMatrix, Matrix.mul_apply,
+        Fin.sum_univ_four]
+  have hsq : g * g = 1 := by
+    apply Subtype.ext
+    change (g : Matrix.GeneralLinearGroup (Fin 4) K) *
+      (g : Matrix.GeneralLinearGroup (Fin 4) K) = 1
+    rw [hg, hw]
+  rw [pow_two, ← map_mul, hsq, map_one]
+
+/-- The image of a Suzuki torus operator in the full group's abelianization
+has exponent dividing the order of the multiplicative field group. -/
+theorem suzukiTorusOperator_image_pow_card_units_eq_one [Finite K] (a : ℕ)
+    (l : Kˣ) (g : Chevalley.suzukiUpperMatrixGroup a K)
+    (hg : (g : Matrix.GeneralLinearGroup (Fin 4) K) =
+      suzukiTorusOperator a l) :
+    Abelianization.of g ^ Nat.card Kˣ = 1 := by
+  let t : Kˣ →* Chevalley.suzukiUpperMatrixGroup a K := {
+    toFun := fun u => ⟨suzukiTorusOperator a u,
+      suzukiTorusOperator_mem_suzukiUpperMatrixGroup (K := K) a u⟩
+    map_one' := by
+      apply Subtype.ext
+      exact suzukiTorusOperator_one a
+    map_mul' := by
+      intro u v
+      apply Subtype.ext
+      change suzukiTorusOperator a (u * v) =
+        suzukiTorusOperator a u * suzukiTorusOperator a v
+      exact (suzukiTorusOperator_mul a u v).symm
+  }
+  have hpow : l ^ Nat.card Kˣ = 1 := pow_card_eq_one'
+  have htg : t l = g := by
+    apply Subtype.ext
+    exact hg.symm
+  calc
+    Abelianization.of g ^ Nat.card Kˣ =
+        Abelianization.of (t l) ^ Nat.card Kˣ := by rw [← htg]
+    _ = Abelianization.of (t l ^ Nat.card Kˣ) := by rw [map_pow]
+    _ = Abelianization.of (t (l ^ Nat.card Kˣ)) := by
+      congr 1
+      exact (map_pow t l (Nat.card Kˣ)).symm
+    _ = 1 := by rw [hpow, map_one, map_one]
+
+/-- If the Weyl class is identified with a torus class in the local Suzuki
+operator group's abelianization, the two coprime order bounds force that class
+to be trivial. The missing Bruhat theorem must provide `hwt`. -/
+theorem suzukiWeylOperator_image_eq_one_of_eq_torus_image [Finite K]
+    (a : ℕ) (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (w t : Chevalley.suzukiUpperMatrixGroup a K)
+    (hw : (w : Matrix.GeneralLinearGroup (Fin 4) K) =
+      suzukiWeylOperator (K := K))
+    (l : Kˣ)
+    (ht : (t : Matrix.GeneralLinearGroup (Fin 4) K) =
+      suzukiTorusOperator a l)
+    (hwt : Abelianization.of w = Abelianization.of t) :
+    Abelianization.of w = 1 := by
+  let q : ℕ := 2 ^ (2 * a + 1)
+  have hq_card : Nat.card K = q := by
+    dsimp [q]
+    exact hK
+  have h_units_card : Nat.card Kˣ = q - 1 := by
+    rw [Nat.card_units, hq_card]
+  have hq_even : Even q := by
+    refine ⟨2 ^ (2 * a), ?_⟩
+    dsimp only [q]
+    rw [show 2 * a + 1 = 1 + 2 * a by omega, pow_add]
+    omega
+  have hcoprime : Nat.Coprime 2 (q - 1) :=
+    (Nat.Even.sub_odd (m := q) (n := 1) (by
+      dsimp only [q]
+      exact one_le_pow₀ (by norm_num : (1 : ℕ) ≤ 2)) hq_even odd_one).coprime_two_left
+  have hw_two : Abelianization.of w ^ 2 = 1 :=
+    suzukiWeylOperator_image_sq_eq_one a w hw
+  have ht_q : Abelianization.of t ^ (q - 1) = 1 := by
+    rw [← h_units_card]
+    exact suzukiTorusOperator_image_pow_card_units_eq_one
+      (K := K) a l t ht
+  have hw_q : Abelianization.of w ^ (q - 1) = 1 := by
+    rw [hwt]
+    exact ht_q
+  have horder : orderOf (Abelianization.of w) = 1 :=
+    Nat.eq_one_of_dvd_coprimes hcoprime
+      (orderOf_dvd_of_pow_eq_one hw_two)
+      (orderOf_dvd_of_pow_eq_one hw_q)
+  exact orderOf_eq_one_iff.mp horder
+
+/-- Every central upper-root operator has trivial image in the abelianization
+of the full Suzuki upper-orientation operator group. The commutator is formed
+inside the upper-root subgroup and then transported to the full operator
+group. -/
+theorem upperRootCentralOperator_trivial_in_upperAbelianization
+    [Finite K] [CharP K 2] (a : ℕ)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) (ha : 0 < a)
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1))) (b : K)
+    (g : Chevalley.suzukiUpperMatrixGroup a K)
+    (hg : (g : Matrix.GeneralLinearGroup (Fin 4) K) = upperRootOperator a 0 b) :
+    Abelianization.of g = 1 := by
+  let U := upperRootMatrixGroup (K := K) a
+  let S := Chevalley.suzukiUpperMatrixGroup a K
+  have hU_le_S : U ≤ S :=
+    (upperRootMatrixGroup_le_rootWeylOperatorGroup (K := K) a).trans
+      (rootWeylOperatorGroup_le_suzukiUpperMatrixGroup (K := K) a)
+  let inc : U →* S := Subgroup.inclusion hU_le_S
+  let phi : ↥S →* Abelianization ↥S := Abelianization.of
+  let zU : U := ⟨upperRootOperator a 0 b,
+    by
+      apply Subgroup.subset_closure
+      exact ⟨0, b, rfl⟩⟩
+  let zS : S := inc zU
+  have hzS : zS = g := by
+    apply Subtype.ext
+    change upperRootOperator a 0 b = (g : Matrix.GeneralLinearGroup (Fin 4) K)
+    exact hg.symm
+  obtain ⟨x, y, hxy⟩ := upperRootCentralOperator_is_commutator_of_field
+    (K := K) a ha hK pi hpi_sq hpi_formula b
+  have hcomm : ⁅x, y⁆ = zU := by
+    apply Subtype.ext
+    simpa [commutatorElement_def] using congrArg Subtype.val hxy
+  have hzcomm : zU ∈ commutator U := by
+    rw [← hcomm]
+    exact Subgroup.commutator_mem_commutator
+      (Subgroup.mem_top x) (Subgroup.mem_top y)
+  have hzker : zU ∈ (phi.comp inc).ker :=
+    Abelianization.commutator_subset_ker (phi.comp inc) hzcomm
+  rw [← hzS]
+  change phi (inc zU) = 1
+  exact hzker
+
+set_option maxHeartbeats 5000000 in
+/-- Every upper-root generator has trivial image in the abelianization of the
+full Suzuki upper-orientation operator group. The diagonal torus rescales the
+first root parameter, while the root multiplication law makes its image have
+square one; writing `u = x + s*x` then kills that image. -/
+theorem upperRootOperator_trivial_in_upperAbelianization
+    [Finite K] [CharP K 2] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1)))
+    (u v : K) (g : Chevalley.suzukiUpperMatrixGroup a K)
+    (hg : (g : Matrix.GeneralLinearGroup (Fin 4) K) = upperRootOperator a u v) :
+    Abelianization.of g = 1 := by
+  let U := upperRootMatrixGroup (K := K) a
+  let S := Chevalley.suzukiUpperMatrixGroup a K
+  have hU_le_S : U ≤ S :=
+    (upperRootMatrixGroup_le_rootWeylOperatorGroup (K := K) a).trans
+      (rootWeylOperatorGroup_le_suzukiUpperMatrixGroup (K := K) a)
+  let inc : U →* S := Subgroup.inclusion hU_le_S
+  let phi : ↥S →* Abelianization ↥S := Abelianization.of
+  let rU : K → K → U := fun x y =>
+    ⟨upperRootOperator a x y, by
+      apply Subgroup.subset_closure
+      exact ⟨x, y, rfl⟩⟩
+  let r : K → K → S := fun x y => inc (rU x y)
+  have hr_mul (x y x' y' : K) :
+      r x y * r x' y' =
+        r (x + x') (y + y' + x' ^ (2 ^ (a + 1)) * x) := by
+    apply Subtype.ext
+    exact suzukiSGL_mul a hK x y x' y'
+  have hcentral (y : K) : phi (r 0 y) = 1 := by
+    exact upperRootCentralOperator_trivial_in_upperAbelianization
+      (K := K) a hK ha pi hpi_sq hpi_formula y (r 0 y) rfl
+  have hforget_second (x y : K) : phi (r x y) = phi (r x 0) := by
+    have hmul : r x 0 * r 0 y = r x y := by
+      simpa using hr_mul x 0 0 y
+    rw [← hmul, map_mul, hcentral, mul_one]
+  have hroot_sq (x : K) : phi (r x 0) ^ 2 = 1 := by
+    have hsq : r x 0 * r x 0 = r 0 (x ^ (2 ^ (a + 1)) * x) := by
+      simpa only [CharTwo.add_self_eq_zero, zero_add] using hr_mul x 0 x 0
+    rw [pow_two, ← map_mul, hsq, hcentral]
+  obtain ⟨t, ht⟩ := suzukiTits_nontrivial (K := K) a ha hK pi hpi_sq
+  have ht0 : t ≠ 0 := by
+    intro hzero
+    subst t
+    exact ht (by simp)
+  have ht1 : t ≠ 1 := by
+    intro hone
+    apply ht
+    simpa [hone] using (map_one pi : pi (1 : K) = 1)
+  let s : Kˣ := Units.mk0 t ht0
+  have hs : s ≠ 1 := by
+    intro hone
+    apply ht1
+    exact congrArg Units.val hone
+  have hs_add_one : (s : K) + 1 ≠ 0 := by
+    intro hzero
+    apply hs
+    apply Units.ext
+    simpa [CharTwo.neg_eq] using (add_eq_zero_iff_eq_neg.mp hzero)
+  let torus : S := ⟨suzukiTorusOperator a s,
+    suzukiTorusOperator_mem_suzukiUpperMatrixGroup (K := K) a s⟩
+  have hscale (x : K) : phi (r ((s : K) * x) 0) = phi (r x 0) := by
+    have hconj : torus * r x 0 * torus⁻¹ = r ((s : K) * x) 0 := by
+      apply Subtype.ext
+      change suzukiTorusOperator a s * upperRootOperator a x 0 *
+        (suzukiTorusOperator a s)⁻¹ = upperRootOperator a ((s : K) * x) 0
+      simpa only [mul_zero] using
+        suzukiTorusOperator_conj_upperRoot a pi hpi_sq hpi_formula s x 0
+    rw [← hconj, map_mul, map_mul, map_inv]
+    calc
+      phi torus * phi (r x 0) * (phi torus)⁻¹ =
+          phi (r x 0) * phi torus * (phi torus)⁻¹ := by
+            rw [mul_comm (phi torus) (phi (r x 0))]
+      _ = phi (r x 0) := mul_inv_cancel_right _ _
+  let x : K := ((s : K) + 1)⁻¹ * u
+  have hfirst : x + (s : K) * x = u := by
+    dsimp only [x]
+    rw [show ((s : K) + 1)⁻¹ * u + (s : K) *
+        (((s : K) + 1)⁻¹ * u) =
+      (((s : K) + 1)⁻¹ * ((s : K) + 1)) * u by ring]
+    rw [inv_mul_cancel₀ hs_add_one, one_mul]
+  have hproduct_image : phi (r x 0 * r ((s : K) * x) 0) = 1 := by
+    rw [map_mul, hscale, ← pow_two, hroot_sq]
+  rw [hr_mul, hfirst, hforget_second] at hproduct_image
+  have hroot_image : phi (r u 0) = 1 := hproduct_image
+  have htarget : phi (r u v) = 1 := by
+    rw [hforget_second]
+    exact hroot_image
+  have hr_eq : r u v = g := by
+    apply Subtype.ext
+    change upperRootOperator a u v = (g : Matrix.GeneralLinearGroup (Fin 4) K)
+    exact hg.symm
+  rw [hr_eq] at htarget
+  change phi g = 1
+  exact htarget
+
+/-- Under the standard positive-rank Suzuki field hypotheses, the Weyl
+operator has trivial image in the full operator group's abelianization. The
+local `(0,1)` Bruhat factorization has identity torus factor, and both root
+factors vanish in the abelianization. -/
+theorem suzukiWeylOperator_trivial_in_upperAbelianization
+    [Finite K] [CharP K 2] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1)))
+    (w : Chevalley.suzukiUpperMatrixGroup a K)
+    (hw : (w : Matrix.GeneralLinearGroup (Fin 4) K) =
+      suzukiWeylOperator (K := K)) :
+    Abelianization.of w = 1 := by
+  let S := Chevalley.suzukiUpperMatrixGroup a K
+  let U := upperRootMatrixGroup (K := K) a
+  have hU_le_S : U ≤ S :=
+    (upperRootMatrixGroup_le_rootWeylOperatorGroup (K := K) a).trans
+      (rootWeylOperatorGroup_le_suzukiUpperMatrixGroup (K := K) a)
+  let inc : U →* S := Subgroup.inclusion hU_le_S
+  let r : K → K → S := fun x y => inc
+    ⟨upperRootOperator a x y,
+      by
+        apply Subgroup.subset_closure
+        exact ⟨x, y, rfl⟩⟩
+  let phi : S →* Abelianization S := Abelianization.of
+  let w₀ : S := ⟨suzukiWeylOperator (K := K),
+    suzukiWeylOperator_mem_suzukiUpperMatrixGroup (K := K) a⟩
+  have hw_factor : w₀ * r 0 1 * w₀ = r 1 1 * w₀ * r 1 0 := by
+    apply Subtype.ext
+    exact suzukiWeyl_root_weyl_bruhat_unit (K := K) a
+  have hfactor_image := congrArg phi hw_factor
+  have hr_image (x y : K) : phi (r x y) = 1 := by
+    exact upperRootOperator_trivial_in_upperAbelianization
+      (K := K) a ha hK pi hpi_sq hpi_formula x y (r x y) rfl
+  have hw₀_eq : w = w₀ := by
+    apply Subtype.ext
+    exact hw
+  have hmul : phi w₀ * phi w₀ = phi w₀ := by
+    simpa only [map_mul, hr_image, one_mul, mul_one] using hfactor_image
+  rw [hw₀_eq]
+  exact mul_left_cancel (hmul.trans (mul_one _).symm)
+
+/-- Every local Suzuki torus generator also has trivial image in the full
+operator group's abelianization. Weyl conjugation identifies its image with
+its inverse, while the torus order divides the odd number `|Kˣ|`. -/
+theorem suzukiTorusOperator_trivial_in_upperAbelianization
+    [Finite K] [CharP K 2] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1)))
+    (l : Kˣ) (g : Chevalley.suzukiUpperMatrixGroup a K)
+    (hg : (g : Matrix.GeneralLinearGroup (Fin 4) K) =
+      suzukiTorusOperator a l) :
+    Abelianization.of g = 1 := by
+  let S := Chevalley.suzukiUpperMatrixGroup a K
+  let phi : S →* Abelianization S := Abelianization.of
+  let torus : Kˣ →* S := {
+    toFun := fun u => ⟨suzukiTorusOperator a u,
+      suzukiTorusOperator_mem_suzukiUpperMatrixGroup (K := K) a u⟩
+    map_one' := by
+      apply Subtype.ext
+      exact suzukiTorusOperator_one a
+    map_mul' := by
+      intro u v
+      apply Subtype.ext
+      change suzukiTorusOperator a (u * v) =
+        suzukiTorusOperator a u * suzukiTorusOperator a v
+      exact (suzukiTorusOperator_mul a u v).symm
+  }
+  let w : S := ⟨suzukiWeylOperator (K := K),
+    suzukiWeylOperator_mem_suzukiUpperMatrixGroup (K := K) a⟩
+  have hw : phi w = 1 :=
+    suzukiWeylOperator_trivial_in_upperAbelianization
+      (K := K) a ha hK pi hpi_sq hpi_formula w rfl
+  have hconj : w * torus l * w = torus l⁻¹ := by
+    apply Subtype.ext
+    exact suzukiWeylOperator_conj_torus (K := K) a l
+  have hconj_image := congrArg phi hconj
+  have himage_inv : phi (torus l) = (phi (torus l))⁻¹ := by
+    calc
+      phi (torus l) = phi w * phi (torus l) * phi w := by rw [hw]; simp
+      _ = phi (torus l⁻¹) := by
+        simpa only [map_mul, hw, one_mul, mul_one] using hconj_image
+      _ = (phi (torus l))⁻¹ := by simp [map_inv]
+  have hsq : phi (torus l) ^ 2 = 1 := by
+    calc
+      phi (torus l) ^ 2 = phi (torus l) * phi (torus l) := pow_two _
+      _ = phi (torus l) * (phi (torus l))⁻¹ :=
+        congrArg (fun z => phi (torus l) * z) himage_inv
+      _ = 1 := mul_inv_cancel _
+  let q : ℕ := 2 ^ (2 * a + 1)
+  have hq_card : Nat.card K = q := by
+    dsimp [q]
+    exact hK
+  have h_units_card : Nat.card Kˣ = q - 1 := by
+    rw [Nat.card_units, hq_card]
+  have hq_even : Even q := by
+    refine ⟨2 ^ (2 * a), ?_⟩
+    dsimp only [q]
+    rw [show 2 * a + 1 = 1 + 2 * a by omega, pow_add]
+    omega
+  have hcoprime : Nat.Coprime 2 (q - 1) :=
+    (Nat.Even.sub_odd (m := q) (n := 1) (by
+      dsimp only [q]
+      exact one_le_pow₀ (by norm_num : (1 : ℕ) ≤ 2)) hq_even odd_one).coprime_two_left
+  have ht_pow : phi (torus l) ^ (q - 1) = 1 := by
+    rw [← h_units_card]
+    exact suzukiTorusOperator_image_pow_card_units_eq_one
+      (K := K) a l (torus l) rfl
+  have horder : orderOf (phi (torus l)) = 1 :=
+    Nat.eq_one_of_dvd_coprimes hcoprime
+      (orderOf_dvd_of_pow_eq_one hsq)
+      (orderOf_dvd_of_pow_eq_one ht_pow)
+  have htorus : phi (torus l) = 1 := orderOf_eq_one_iff.mp horder
+  have htg : torus l = g := by
+    apply Subtype.ext
+    exact hg.symm
+  rw [← htg]
+  exact htorus
+
+/-- The local Suzuki upper-operator group is perfect under the standard
+positive-rank field hypotheses. The proof closes the root, torus, and Weyl
+generator cases in the abelianization, then propagates triviality over the
+actual closure presentation. -/
+theorem suzukiUpperMatrixGroup_isPerfect
+    [Finite K] [CharP K 2] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1))) :
+    Group.IsPerfect (Chevalley.suzukiUpperMatrixGroup a K) := by
+  let S := Chevalley.suzukiUpperMatrixGroup a K
+  let phi : S →* Abelianization S := Abelianization.of
+  have htrivial (g : S) : phi g = 1 := by
+    have hg : (g : Matrix.GeneralLinearGroup (Fin 4) K) ∈
+        Subgroup.closure (Chevalley.suzukiUpperMatrixGenerators a K) := by
+      change (g : Matrix.GeneralLinearGroup (Fin 4) K) ∈
+        Subgroup.closure (Chevalley.suzukiUpperMatrixGenerators a K)
+      exact g.property
+    have hclosure : ∃ y : S,
+        (y : Matrix.GeneralLinearGroup (Fin 4) K) =
+          (g : Matrix.GeneralLinearGroup (Fin 4) K) ∧ phi y = 1 := by
+      refine Subgroup.closure_induction
+        (k := Chevalley.suzukiUpperMatrixGenerators a K)
+        (p := fun x _ => ∃ y : S,
+          (y : Matrix.GeneralLinearGroup (Fin 4) K) = x ∧ phi y = 1)
+        ?_ ?_ ?_ ?_ hg
+      · intro x hx
+        let y : S := ⟨x, Subgroup.subset_closure hx⟩
+        change ((x : Matrix.GeneralLinearGroup (Fin 4) K) : Matrix (Fin 4) (Fin 4) K).transpose ∈
+          {M : Matrix (Fin 4) (Fin 4) K |
+            (∃ u v : K, M = suzukiS a u v) ∨
+              (∃ l : Kˣ, M = suzukiD a l) ∨ M = Chevalley.suzukiW K} at hx
+        rcases hx with ⟨u, v, hx⟩ | ⟨l, hx⟩ | hx
+        · have hval :
+            ((x : Matrix.GeneralLinearGroup (Fin 4) K) : Matrix (Fin 4) (Fin 4) K) =
+              (suzukiS a u v).transpose := by
+            calc
+              _ = (((x : Matrix.GeneralLinearGroup (Fin 4) K) :
+                  Matrix (Fin 4) (Fin 4) K).transpose).transpose := by simp
+              _ = (suzukiS a u v).transpose := congrArg Matrix.transpose hx
+          have hroot : x = upperRootOperator a u v := by
+            apply Units.ext
+            simpa [upperRootOperator, suzukiSGL] using hval
+          refine ⟨y, rfl, ?_⟩
+          exact upperRootOperator_trivial_in_upperAbelianization
+            (K := K) a ha hK pi hpi_sq hpi_formula u v y (by
+              change (y : Matrix.GeneralLinearGroup (Fin 4) K) = _
+              exact hroot)
+        · have hD : (suzukiD a l).transpose = suzukiD a l := by
+            ext i j
+            by_cases hij : i = j
+            · subst j
+              simp [suzukiD, Matrix.diagonal_apply]
+            · have hji : j ≠ i := Ne.symm hij
+              simp [suzukiD, hij, hji]
+          have hval :
+              ((x : Matrix.GeneralLinearGroup (Fin 4) K) : Matrix (Fin 4) (Fin 4) K) =
+                suzukiD a l := by
+            calc
+              _ = (((x : Matrix.GeneralLinearGroup (Fin 4) K) :
+                  Matrix (Fin 4) (Fin 4) K).transpose).transpose := by simp
+              _ = (suzukiD a l).transpose := congrArg Matrix.transpose hx
+              _ = suzukiD a l := hD
+          have htorus : x = suzukiTorusOperator a l := by
+            apply Units.ext
+            simpa [suzukiTorusOperator] using hval
+          refine ⟨y, rfl, ?_⟩
+          exact suzukiTorusOperator_trivial_in_upperAbelianization
+            (K := K) a ha hK pi hpi_sq hpi_formula l y (by
+              change (y : Matrix.GeneralLinearGroup (Fin 4) K) = _
+              exact htorus)
+        · have hW : (Chevalley.suzukiW K).transpose = Chevalley.suzukiW K := by
+            ext i j
+            simp [Chevalley.suzukiW, Matrix.transpose_apply, Nat.add_comm]
+          have hval :
+              ((x : Matrix.GeneralLinearGroup (Fin 4) K) : Matrix (Fin 4) (Fin 4) K) =
+                suzukiWeylMatrix := by
+            calc
+              _ = (((x : Matrix.GeneralLinearGroup (Fin 4) K) :
+                  Matrix (Fin 4) (Fin 4) K).transpose).transpose := by simp
+              _ = (Chevalley.suzukiW K).transpose := congrArg Matrix.transpose hx
+              _ = Chevalley.suzukiW K := hW
+              _ = suzukiWeylMatrix := by
+                ext i j
+                simp [Chevalley.suzukiW, suzukiWeylMatrix, Nat.add_comm]
+          have hw : x = suzukiWeylOperator (K := K) := by
+            apply Units.ext
+            simpa [suzukiWeylOperator] using hval
+          refine ⟨y, rfl, ?_⟩
+          exact suzukiWeylOperator_trivial_in_upperAbelianization
+            (K := K) a ha hK pi hpi_sq hpi_formula y (by
+              change (y : Matrix.GeneralLinearGroup (Fin 4) K) = _
+              exact hw)
+      · exact ⟨1, rfl, map_one phi⟩
+      · intro x z hx hz ⟨y, hy, hφy⟩ ⟨w, hw, hφw⟩
+        refine ⟨y * w, ?_, ?_⟩
+        · change ((y : Matrix.GeneralLinearGroup (Fin 4) K) *
+            (w : Matrix.GeneralLinearGroup (Fin 4) K)) = x * z
+          rw [hy, hw]
+        · rw [map_mul, hφy, hφw, one_mul]
+      · intro x hx ⟨y, hy, hφy⟩
+        refine ⟨y⁻¹, ?_, ?_⟩
+        · change ((y : Matrix.GeneralLinearGroup (Fin 4) K)⁻¹) = x⁻¹
+          rw [hy]
+        · rw [map_inv, hφy, inv_one]
+    rcases hclosure with ⟨y, hy, hphi⟩
+    have hEq : y = g := Subtype.ext hy
+    rw [← hEq]
+    exact hphi
+  have hker : phi.ker = (⊤ : Subgroup S) := by
+    ext g
+    simp [MonoidHom.mem_ker, htrivial g]
+  have hcomm : commutator S = ⊤ := by
+    calc
+      commutator S = phi.ker := by
+        exact (Abelianization.ker_of S).symm
+      _ = ⊤ := hker
+  exact Group.isPerfect_def.mpr hcomm
+
+/-- Perfectness transfers from the upper-orientation Suzuki presentation to
+the full matrix generator group through the proved inverse-transpose
+equivalence. -/
+theorem suzukiMatrixGroup_isPerfect
+    [Finite K] [CharP K 2] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1))) :
+    Group.IsPerfect (Chevalley.suzukiMatrixGroup a K) := by
+  letI : Group.IsPerfect ↥(Chevalley.suzukiUpperMatrixGroup a K) :=
+    suzukiUpperMatrixGroup_isPerfect (K := K) a ha hK pi hpi_sq hpi_formula
+  let e : Matrix.GeneralLinearGroup (Fin 4) K ≃*
+      Matrix.GeneralLinearGroup (Fin 4) K := Matrix.GeneralLinearGroup.inverseTranspose
+  have hp : Group.IsPerfect
+      ↥((Chevalley.suzukiUpperMatrixGroup a K).map e.toMonoidHom) :=
+    Group.IsPerfect.map e.toMonoidHom
+  change Group.IsPerfect
+    ↥((Chevalley.suzukiUpperMatrixGroup a K).map
+      Matrix.GeneralLinearGroup.inverseTranspose.toMonoidHom) at hp
+  rw [Chevalley.suzukiUpperMatrixGroup_inverseTranspose] at hp
+  exact hp
+
+/-- Perfectness also transfers to the faithful linear-operator Suzuki group
+on the four-dimensional coordinate module. -/
+theorem suzukiGroup_isPerfect
+    [Finite K] [CharP K 2] (a : ℕ) (ha : 0 < a)
+    (hK : Nat.card K = 2 ^ (2 * a + 1))
+    (pi : K ≃+* K) (hpi_sq : ∀ x : K, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x : K, pi x = x ^ (2 ^ (a + 1))) :
+    Group.IsPerfect ↥(Chevalley.suzukiGroup a K) := by
+  letI : Group.IsPerfect ↥(Chevalley.suzukiMatrixGroup a K) :=
+    suzukiMatrixGroup_isPerfect (K := K) a ha hK pi hpi_sq hpi_formula
+  let e := Matrix.GeneralLinearGroup.toLin' (Pi.basisFun K (Fin 4))
+  have hp : Group.IsPerfect
+      ↥((Chevalley.suzukiMatrixGroup a K).map e.toMonoidHom) :=
+    Group.IsPerfect.map e.toMonoidHom
+  change Group.IsPerfect ↥(Chevalley.suzukiGroup a K) at hp
+  exact hp
+
 /-- Two-transitivity transfers from the root-plus-Weyl subgroup to the full
 upper-orientation Suzuki operator group, which also contains the torus. -/
 theorem suzukiUpperMatrixGroup_two_transitive_on_ovoid
@@ -1434,6 +2618,27 @@ theorem suzukiUpperMatrixGroup_two_transitive_on_ovoid
   refine ⟨g', ?_, ?_⟩
   · simpa [g'] using hg₁
   · simpa [g'] using hg₂
+
+/-- The finite Suzuki field hypotheses discharge the norm condition in the
+two-transitivity theorem for the full upper-orientation operator group. -/
+theorem suzukiUpperMatrixGroup_two_transitive_on_ovoid_of_field
+    [Finite K] [CharP K 2] (a : ℕ)
+    (hK : Nat.card K = 2 ^ (2 * a + 1)) (pi : K ≃+* K)
+    (hpi_sq : ∀ x, pi (pi x) = x ^ 2)
+    (hpi_formula : ∀ x, pi x = x ^ (2 ^ (a + 1)))
+    (z₁ z₂ z₃ z₄ : ℙ K (Fin 4 → K))
+    (hz₁ : z₁ ∈ ovoid pi) (hz₂ : z₂ ∈ ovoid pi)
+    (hz₃ : z₃ ∈ ovoid pi) (hz₄ : z₄ ∈ ovoid pi)
+    (hne₁ : z₁ ≠ z₂) (hne₂ : z₃ ≠ z₄) :
+    ∃ g : Chevalley.suzukiUpperMatrixGroup a K,
+      (Matrix.GeneralLinearGroup.toLin
+        (g : Matrix.GeneralLinearGroup (Fin 4) K)).toLinearEquiv • z₁ = z₃ ∧
+      (Matrix.GeneralLinearGroup.toLin
+        (g : Matrix.GeneralLinearGroup (Fin 4) K)).toLinearEquiv • z₂ = z₄ := by
+  exact suzukiUpperMatrixGroup_two_transitive_on_ovoid
+    (K := K) a pi hpi_sq hpi_formula
+    (ovoidNorm_eq_zero_only_at_origin a hK pi hpi_formula)
+    z₁ z₂ z₃ z₄ hz₁ hz₂ hz₃ hz₄ hne₁ hne₂
 
 theorem rootWeylOperatorGroup_noncommuting_pair (a : ℕ) :
     ∃ g h : rootWeylOperatorGroup (K := K) a, g * h ≠ h * g := by
@@ -1481,6 +2686,20 @@ theorem suzukiUpperMatrixGroup_noncommuting_pair (a : ℕ) :
   apply hgh
   apply Subtype.ext
   exact hGL
+
+/-- The concrete root and Weyl matrices in the Suzuki operator construction
+do not commute, witnessed in their actual four-dimensional matrix carrier. -/
+theorem suzukiGeneratorMatrices_noncommute (a : ℕ) :
+    ∃ A B : Matrix (Fin 4) (Fin 4) K, A * B ≠ B * A := by
+  refine ⟨((upperRootOperator a (1 : K) (0 : K) :
+      Matrix.GeneralLinearGroup (Fin 4) K) : Matrix (Fin 4) (Fin 4) K),
+    ((suzukiWeylOperator (K := K) :
+      Matrix.GeneralLinearGroup (Fin 4) K) : Matrix (Fin 4) (Fin 4) K), ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) K => M 0 0) h
+  norm_num [upperRootOperator, suzukiSGL, suzukiS, suzukiN,
+    suzukiWeylOperator, suzukiWeylMatrix, Chevalley.suzukiW,
+    Matrix.mul_apply, Fin.sum_univ_four] at h00
 
 /-- The upper-root operator subgroup is genuinely noncommutative: the
 operators with parameters `(1,0)` and `(c,0)` have different `(0,2)` entries

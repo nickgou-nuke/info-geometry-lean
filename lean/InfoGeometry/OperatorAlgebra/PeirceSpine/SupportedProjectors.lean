@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.BlockCharges
 
 /-!
@@ -58,6 +63,33 @@ theorem supportedProjector_sum (P : B) :
   intro K
   simpa only [LinearMap.sum_apply, supportedProjector_apply, Module.End.one_apply] using
     fiveSupportedComponent_sum P K
+
+
+/-- Every reconstructed component is fixed by its own support projector. -/
+theorem supportedProjector_fixes_component {P : B} (hP : P * P = P)
+    (K : Module.End ℤ B) (d : Fin 5) :
+    supportedProjector P d (fiveSupportedComponent P K d) =
+      fiveSupportedComponent P K d := by
+  rw [← supportedProjector_apply]
+  rw [supportedProjector_extract hP]
+  simp
+
+/-- The image of a support projector is exactly its fixed-point submodule. -/
+theorem supportedProjector_range_iff_fixed {P : B} (hP : P * P = P)
+    (d : Fin 5) (K : Module.End ℤ B) :
+    (∃ L, supportedProjector P d L = K) ↔
+      supportedProjector P d K = K := by
+  constructor
+  · rintro ⟨L, rfl⟩
+    rw [← Module.End.mul_apply]
+    rw [supportedProjector_idempotent hP d]
+  · intro hK
+    exact ⟨K, hK⟩
+
+/-- The five fixed components reconstruct every endomorphism. -/
+theorem supportedComponent_decomposition {P : B} (K : Module.End ℤ B) :
+    ∑ d, supportedProjector P d K = K := by
+  simpa only [supportedProjector_apply] using fiveSupportedComponent_sum P K
 
 /-- A decomposition into fixed supported components is uniquely determined. -/
 theorem supportedProjector_unique {P : B} (hP : P * P = P)

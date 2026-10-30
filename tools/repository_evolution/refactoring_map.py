@@ -42,6 +42,7 @@ EVOLUTION_COMPONENT_BY_NAME = {
     "__init__.py": "package_boundary",
     "ancestry_hodge.py": "commit_graph_topology",
     "attention_scc.py": "directed_scc_attention",
+    "context_transport.py": "balanced_context_transport",
     "dna-affinity-viewer.html": "affinity_visualization",
     "dna_character_tree.py": "declaration_digest_affinity",
     "edge_attention_baseline.py": "typed_edge_attention",
@@ -60,6 +61,7 @@ EVOLUTION_COMPONENT_BY_NAME = {
     "taxonomy_adjudication_queue.py": "review_queue_management",
     "taxonomy_training_readiness.py": "reviewed_data_readiness",
     "train_code_transformer.py": "self_supervised_source_encoder",
+    "train_graph_context_encoder.py": "self_supervised_graph_context_encoder",
     "train_taxonomy_baseline.py": "supervised_taxonomy_training",
 }
 

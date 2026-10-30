@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.CausalPetzRecovery
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
@@ -24,7 +30,8 @@ This module formalizes:
    - Exact past preservation ($K^2 = 1$) forces future generation to zero ($L^2 = 0$).
    - Future dominance ($L^2 = 1$) forces prompt retention to zero ($K^2 = 0$).
 
-All proofs are native Mathlib with 0 sorry, 0 admit, and 0 custom axioms.
+The shared block reconstruction and Gram identities are imported from
+`CausalPetzRecovery`.
 -/
 
 namespace InfoGeometry.QuantumContext.CausalPetz
@@ -33,55 +40,11 @@ open Matrix
 
 variable {R : Type*} [CommRing R]
 
-/-- The $2 \times 2$ block intertwiner $V = \begin{pmatrix} K & 0 \\ L & 0 \end{pmatrix}$. -/
-def blockIntertwiner (K L : R) : Matrix (Fin 2) (Fin 2) R :=
-  !![K, 0;
-     L, 0]
-
-/-- The causal state on the retained past subspace $\sigma = \begin{pmatrix} s & 0 \\ 0 & 0 \end{pmatrix}$. -/
-def blockCausalState (s : R) : Matrix (Fin 2) (Fin 2) R :=
-  !![s, 0;
-     0, 0]
-
-/-- The Petz block reconstruction map $\mathcal{R}(\sigma) = V \sigma V^\top$. -/
-def petzBlockReconstruct (K L s : R) : Matrix (Fin 2) (Fin 2) R :=
-  blockIntertwiner K L * blockCausalState s * (blockIntertwiner K L)ᵀ
-
 /-- The 2×2 matrix trace. -/
 def trace2 (M : Matrix (Fin 2) (Fin 2) R) : R :=
   M 0 0 + M 1 1
 
 /-! ### 1. Gram Partial Isometry Constraint -/
-
-/-- **Theorem**: The Gram operator $V^\top V$ has diagonal entry $K^2 + L^2$ on support. -/
-theorem blockIntertwiner_gram (K L : R) :
-    (blockIntertwiner K L)ᵀ * blockIntertwiner K L =
-    !![K^2 + L^2, 0;
-       0,         0] := by
-  ext i j
-  fin_cases i <;> fin_cases j
-  · dsimp [blockIntertwiner]
-    simp [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
-    ring
-  · dsimp [blockIntertwiner]
-    simp [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
-  · dsimp [blockIntertwiner]
-    simp [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
-  · dsimp [blockIntertwiner]
-    simp [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
-
-/-- **Theorem**: The CPTP Stiefel condition: $V^\top V = P_{\mathrm{supp}} \iff K^2 + L^2 = 1$. -/
-theorem gram_isometry_iff_stiefel (K L : R) :
-    (blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![1, 0; 0, 0] ↔
-    K^2 + L^2 = 1 := by
-  rw [blockIntertwiner_gram]
-  constructor
-  · intro h
-    have h00 := congr_fun (congr_fun h 0) 0
-    exact h00
-  · intro h
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [h]
 
 /-! ### 2. Trace Conservation Law -/
 

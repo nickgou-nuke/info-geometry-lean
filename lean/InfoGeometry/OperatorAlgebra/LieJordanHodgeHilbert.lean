@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteMatrixNoncommutativity
 import InfoGeometry.OperatorAlgebra.LieJordanHodgePairing
 import InfoGeometry.OperatorAlgebra.BoundedHomotopyCoercivity
 import Mathlib.Analysis.InnerProductSpace.PiL2
@@ -74,17 +75,38 @@ def realize (T : Module.End ℝ (Mat × Mat)) : HS n →L[ℝ] HS n :=
 
 theorem realize_add (T U : Module.End ℝ (Mat × Mat)) :
     realize (T + U) = realize T + realize U := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
   change encode n (T ((encode n).symm x) + U ((encode n).symm x)) = _
   rw [map_add]
   rfl
 
 theorem realize_mul (T U : Module.End ℝ (Mat × Mat)) :
     realize (T * U) = realize T * realize U := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
   change encode n (T (U ((encode n).symm x))) =
     encode n (T ((encode n).symm (encode n (U ((encode n).symm x)))))
   rw [LinearEquiv.symm_apply_apply]
+
+/-- Left multiplication by a forward matrix unit on the first matrix copy. -/
+def realizedForward : HS 3 →L[ℝ] HS 3 :=
+  realize (LinearMap.mulLeft ℝ
+    (InfoGeometry.Algebra.FiniteMatrixNoncommutativity.forward3, 0))
+
+/-- The opposite matrix unit gives a second actual Hilbert-space operator. -/
+def realizedBackward : HS 3 →L[ℝ] HS 3 :=
+  realize (LinearMap.mulLeft ℝ
+    (InfoGeometry.Algebra.FiniteMatrixNoncommutativity.backward3, 0))
+
+/-- The Hilbert realization retains noncommutativity of the full matrix carrier. -/
+theorem realizedForward_backward_ne :
+    realizedForward * realizedBackward ≠ realizedBackward * realizedForward := by
+  intro h
+  have he := congrArg (fun T : HS 3 →L[ℝ] HS 3 =>
+    ((encode 3).symm (T (encode 3 (1, 0)))).1) h
+  apply InfoGeometry.Algebra.FiniteMatrixNoncommutativity.forward3_backward3_ne (R := ℝ)
+  simpa [realizedForward, realizedBackward, realize_apply] using he
 
 /-- Genuine positive Hilbert adjoint, not an assumed adjoint field. -/
 theorem adjoint_boundary (u : Mat) :

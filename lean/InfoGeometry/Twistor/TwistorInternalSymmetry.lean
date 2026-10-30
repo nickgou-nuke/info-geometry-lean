@@ -119,6 +119,15 @@ theorem totalKinematic_mix (U : Matrix ι ι ℂ) (hU : Uᴴ * U = 1) (Z : Packe
     _ = _ := by rw [transpose_unitary U hU, hV]; simp
 
 /-- Skewness cancels the actual quadratic shift defect. -/
+theorem shift_kinematic_defect (L : Matrix ι ι ℂ) (Z : Packet ι) :
+    totalKinematic (shift L Z) - totalKinematic Z =
+      (infinityMatrix Z)ᵀ * (Lᵀ + L) * infinityMatrix Z := by
+  simp only [totalKinematic_matrix, packetMatrix_shift, infinityMatrix_shift,
+    Matrix.transpose_add, Matrix.transpose_mul, Matrix.add_mul, Matrix.mul_add,
+    Matrix.mul_assoc]
+  abel
+
+/-- Skewness cancels the actual quadratic shift defect. -/
 theorem totalKinematic_shift (L : Matrix ι ι ℂ) (hL : Lᵀ = -L) (Z : Packet ι) :
     totalKinematic (shift L Z) = totalKinematic Z := by
   rw [totalKinematic_matrix, packetMatrix_shift, infinityMatrix_shift,

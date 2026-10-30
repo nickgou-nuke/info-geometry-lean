@@ -173,4 +173,15 @@ theorem chiral_generators_commute (n : ℕ) (a b c d : Fin 2) :
   simpa [leftGenerator, rightGenerator] using
     collective_commutator (σ := ChiralSlot) n (.inl a) (.inl b) (.inr c) (.inr d)
 
+/-- A nonzero CCR scalar forces genuine noncommutation on the polynomial carrier. -/
+theorem coordinate_noncommuting (h : ℂ) (hh : h ≠ 0) (i : σ) :
+    coordinate i * conjugateCoordinate h i ≠ conjugateCoordinate h i * coordinate i := by
+  intro hc
+  have he := coordinate_CCR h i i
+  rw [hc, sub_self, if_pos rfl] at he
+  have hp := congrArg (fun T : Operator σ => T 1) he
+  have hz : (MvPolynomial.C h : Wave σ) = 0 := by
+    simpa [Algebra.smul_def] using hp.symm
+  exact hh (by simpa using congrArg (MvPolynomial.eval (fun _ : σ => (0 : ℂ))) hz)
+
 end InfoGeometry.Twistor.TwistorConstituentCCR

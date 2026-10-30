@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
 
 /-!
 # Peirce spine A₁₂–A₂₂: unipotent conjugation, Steinberg braid, operator projective line
@@ -11,7 +12,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 * A₁₂ `Ad(1 ± N₊)`, `Ad(1 ± N₋)` form two additive one-parameter groups;
 * A₁₄ their action on the tetraktys; `V` is invariant;
 * A₁₆ the Cayley–Weyl element `W = J + 1 - V` and the Steinberg braid;
-* A₁₇–A₁₉ corner absorption on the right;
+* A₁₇/A₁₉ corner absorption and A₁₈ shear action on the homogenized channels;
 * A₂₁ the affine charts `P - N₊(X)`, `(1 - P) - N₋(Y)` of the operator projective line;
 * A₂₂ Hua's distance identity and the operator cross-ratio.
 
@@ -140,6 +141,27 @@ theorem archetype_A17_A19_right_corner_absorption (A C : B) :
     genSig P A C * P = conePlus P A * coneMinus P C * P ∧
     genSig P A C * (1 - P) = -(1 - P) * coneMinus P C * conePlus P A := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-! ### A₁₈: action of the unipotent shears on the homogenized channels -/
+
+theorem archetype_A18_unipotent_shear_tomography (A C : B) :
+    hProjV P A C (conjPlus P A (genSig P A C)) = 0 ∧
+    hProjV P A C (conjPlus P A (genPhi P A C)) = 0 ∧
+    hProjV P A C (conjPlus P A (genJ P A C)) = 0 ∧
+    hProjV P A C (conjMinus P C (genSig P A C)) = 0 ∧
+    hProjSig P A C (conjPlus P A (genSig P A C)) =
+      (8 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
+    hProjPhi P A C (conjPlus P A (genSig P A C)) =
+      -((8 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genPhi P A C)) ∧
+    hProjJ P A C (conjPlus P A (genSig P A C)) =
+      -((8 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genJ P A C)) ∧
+    hProjSig P A C (conjPlus P A (genPhi P A C)) =
+      (8 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
+    hProjJ P A C (conjPlus P A (genPhi P A C)) =
+      -((4 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genJ P A C)) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    (simp only [conjPlus, conjMinus, hProjV, hProjPhi, hProjJ, hProjSig,
+      derivSqPhi, derivSqJ, derivSqSig]; peirce_nf hP)
 
 /-! ### A₂₁ -/
 

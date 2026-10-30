@@ -182,6 +182,21 @@ flowchart TD
   is equality of input expressions implies equality of keys.
 - `DAG.TermDigest.compute` and `digestWithLctx` implement the versioned
   `lean-expr-debruijn-v4` encoding. Constants retain names and universe levels.
+- `DAG.TermDigest.computeWithConstDigests` adds the `lean-expr-debruijn-dependencies-v1`
+  encoding: bound-variable names are erased as before, and a caller-provided
+  declaration digest replaces a constant name. Its `0x0D` constant node tag
+  keeps this encoding distinct from v4. `DAG.ContentAddressable.declarationArtifactKey?`
+  then hashes the encoded type/value digests together with a caller-provided
+  environment fingerprint. It returns `none` when that fingerprint is empty or
+  a referenced declaration lacks a supplied digest. Dependency digests must be
+  established by the caller from the intended dependency closure; this API does
+  not construct or solve cyclic dependency graphs.
+- The contextual artifact key is a versioned content fingerprint, not evidence
+  that two declarations are definitionally equal or that a proof is valid. A
+  receiving peer must reconstruct the elaborated declaration in a compatible
+  Lean/mathlib environment and have Lean's kernel check it. The existing v4
+  `declContentKey` and `buildContentGraph` remain the legacy graph-index path;
+  they are not silently upgraded by the contextual API.
 - `Canonical.LambdaCausalNetNegativeGrammarBridge.LambdaTerm` owns de Bruijn
   variables, abstraction, application, binder lifting, and binder-removing
   substitution. `LambdaBetaStep.beta` uses that substitution directly.

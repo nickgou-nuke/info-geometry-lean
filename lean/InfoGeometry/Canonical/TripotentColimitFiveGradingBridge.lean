@@ -66,7 +66,9 @@ theorem iota_seq_proj_comm (n : ℕ) (k : FiveGrade) :
   | 0 => by
     dsimp [iota_seq]
   | m + 1 => by
-    dsimp [iota_seq]
+    change (proj (n + (m + 1)) k).comp
+        ((iota (n + m)).comp (iota_seq A iota n m)) =
+      ((iota (n + m)).comp (iota_seq A iota n m)).comp (proj n k)
     rw [← LinearMap.comp_assoc]
     have h_step : (proj (n + (m + 1)) k).comp (iota (n + m)) =
                   (iota (n + m)).comp (proj (n + m) k) := by

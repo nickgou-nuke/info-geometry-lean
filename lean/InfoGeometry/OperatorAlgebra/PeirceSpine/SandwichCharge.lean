@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
@@ -99,6 +104,34 @@ theorem charge_total_second :
       (4 : ℤ) • sandwich (coneMinus P C) (coneMinus P C) X +
       comm (coneMinus P C) X + comm (conePlus P A) X +
       (4 : ℤ) • sandwich (conePlus P A) (conePlus P A) X := by
+  simp only [chargeIter, charge, cornerOperatorSum, sandwichCross, sandwich]
+  peirce_nf hP
+
+/-- The third charge iterate has the same corner terms with weights `-8,-1,1,8`.
+This is the explicit odd-power row of the five-sector charge table. -/
+theorem charge_total_third :
+    chargeIter P (cornerOperatorSum P A C) 3 X =
+      -((8 : ℤ) • sandwich (coneMinus P C) (coneMinus P C) X) -
+      comm (coneMinus P C) X + comm (conePlus P A) X +
+      (8 : ℤ) • sandwich (conePlus P A) (conePlus P A) X := by
+  simp only [chargeIter, charge, cornerOperatorSum, sandwichCross, sandwich]
+  peirce_nf hP
+
+/-- The fourth charge iterate has the even-power weights `16,1,1,16`. -/
+theorem charge_total_fourth :
+    chargeIter P (cornerOperatorSum P A C) 4 X =
+      (16 : ℤ) • sandwich (coneMinus P C) (coneMinus P C) X +
+      comm (coneMinus P C) X + comm (conePlus P A) X +
+      (16 : ℤ) • sandwich (conePlus P A) (conePlus P A) X := by
+  simp only [chargeIter, charge, cornerOperatorSum, sandwichCross, sandwich]
+  peirce_nf hP
+
+/-- The fifth charge iterate has the odd-power weights `-32,-1,1,32`. -/
+theorem charge_total_fifth :
+    chargeIter P (cornerOperatorSum P A C) 5 X =
+      -((32 : ℤ) • sandwich (coneMinus P C) (coneMinus P C) X) -
+      comm (coneMinus P C) X + comm (conePlus P A) X +
+      (32 : ℤ) • sandwich (conePlus P A) (conePlus P A) X := by
   simp only [chargeIter, charge, cornerOperatorSum, sandwichCross, sandwich]
   peirce_nf hP
 

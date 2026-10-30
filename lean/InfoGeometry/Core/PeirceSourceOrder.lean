@@ -14,9 +14,13 @@ namespace InfoGeometry.Core.PeirceSourceOrder
 
 inductive Stage
   | algebra | support | octet | frame | trace | reflection | iteration | synthesis
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Stage
+
+instance : Fintype Stage where
+  elems := {algebra, support, octet, frame, trace, reflection, iteration, synthesis}
+  complete s := by cases s <;> simp
 
 def prerequisites : Stage → Finset Stage
   | algebra => {algebra}

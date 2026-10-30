@@ -1,0 +1,115 @@
+{
+  "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean",
+  "out_dir": "/tmp/current-dna-refresh-20261030/per_file/cfsg",
+  "status": "ok",
+  "returncode": 0,
+  "duration_sec": 355.2947278600004,
+  "validation": {
+    "schema": "info_geometry.raw_infotree_export_validation.v1",
+    "input_dir": "/tmp/current-dna-refresh-20261030/per_file/cfsg",
+    "ok": true,
+    "topology_ok": true,
+    "lossless_ok": false,
+    "lossless_errors": [
+      "metadata fully_lossless is not true",
+      "leakage rows present: 1894"
+    ],
+    "errors": [],
+    "counts": {
+      "roots": 9,
+      "nodes": 566,
+      "edges": 557,
+      "contexts": 196,
+      "payloads": 370,
+      "payload_fields": 2733,
+      "decl_links": 510,
+      "env_refs": 210,
+      "mctx_refs": 177,
+      "mctx_decls": 246,
+      "lctx_refs": 4583,
+      "lctx_decls": 118,
+      "goal_states": 42,
+      "fvar_lineage": 210,
+      "tactic_arguments": 0,
+      "messages": 0,
+      "leakage": 1894
+    },
+    "metadata": {
+      "tactic_argument_count": 0,
+      "stage": "stage_4_deep_semantic_audit",
+      "schema": "info_geometry.raw_infotree_export.v1",
+      "root_count": 9,
+      "payload_field_count": 2733,
+      "payload_count": 370,
+      "node_count": 566,
+      "module": "lean.InfoGeometry.Exceptional.CFSGPort.MatrixInverseTranspose",
+      "message_count": 0,
+      "mctx_ref_count": 177,
+      "mctx_decl_count": 246,
+      "loss_audited": true,
+      "leakage_count": 1894,
+      "lctx_ref_count": 4583,
+      "lctx_decl_count": 118,
+      "goal_state_count": 42,
+      "fvar_lineage_count": 210,
+      "fully_lossless": false,
+      "file": "lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean",
+      "env_ref_count": 210,
+      "edge_count": 557,
+      "decl_link_count": 510,
+      "context_count": 196
+    }
+  },
+  "stdout_tail": "{\n  \"schema\": \"info_geometry.raw_infotree_export_validation.v1\",\n  \"input_dir\": \"/tmp/current-dna-refresh-20261030/per_file/cfsg\",\n  \"ok\": true,\n  \"topology_ok\": true,\n  \"lossless_ok\": false,\n  \"lossless_errors\": [\n    \"metadata fully_lossless is not true\",\n    \"leakage rows present: 1894\"\n  ],\n  \"errors\": [],\n  \"counts\": {\n    \"roots\": 9,\n    \"nodes\": 566,\n    \"edges\": 557,\n    \"contexts\": 196,\n    \"payloads\": 370,\n    \"payload_fields\": 2733,\n    \"decl_links\": 510,\n    \"env_refs\": 210,\n    \"mctx_refs\": 177,\n    \"mctx_decls\": 246,\n    \"lctx_refs\": 4583,\n    \"lctx_decls\": 118,\n    \"goal_states\": 42,\n    \"fvar_lineage\": 210,\n    \"tactic_arguments\": 0,\n    \"messages\": 0,\n    \"leakage\": 1894\n  },\n  \"metadata\": {\n    \"tactic_argument_count\": 0,\n    \"stage\": \"stage_4_deep_semantic_audit\",\n    \"schema\": \"info_geometry.raw_infotree_export.v1\",\n    \"root_count\": 9,\n    \"payload_field_count\": 2733,\n    \"payload_count\": 370,\n    \"node_count\": 566,\n    \"module\": \"lean.InfoGeometry.Exceptional.CFSGPort.MatrixInverseTranspose\",\n    \"message_count\": 0,\n    \"mctx_ref_count\": 177,\n    \"mctx_decl_count\": 246,\n    \"loss_audited\": true,\n    \"leakage_count\": 1894,\n    \"lctx_ref_count\": 4583,\n    \"lctx_decl_count\": 118,\n    \"goal_state_count\": 42,\n    \"fvar_lineage_count\": 210,\n    \"fully_lossless\": false,\n    \"file\": \"lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean\",\n    \"env_ref_count\": 210,\n    \"edge_count\": 557,\n    \"decl_link_count\": 510,\n    \"context_count\": 196\n  }\n}\n",
+  "stderr_tail": "warning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nRawInfoTreeExport: phase=read_source file=lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean\nRawInfoTreeExport: phase=load_imports\nRawInfoTreeExport: phase=elaborate_commands\nRawInfoTreeExport: phase=walk_trees roots=9\nRawInfoTreeExport: phase=walk_root index=0 roots=9\nRawInfoTreeExport: phase=walk_root index=1 roots=9\nRawInfoTreeExport: phase=walk_root index=2 roots=9\nRawInfoTreeExport: phase=walk_root index=3 roots=9\nRawInfoTreeExport: phase=walk_root index=4 roots=9\nRawInfoTreeExport: phase=walk_root index=5 roots=9\nRawInfoTreeExport: phase=walk_root index=6 roots=9\nRawInfoTreeExport: phase=walk_root index=7 roots=9\nRawInfoTreeExport: phase=walk_root index=8 roots=9\nRawInfoTreeExport: phase=serialize_messages\nRawInfoTreeExport: phase=write_rows nodes=566\nRawInfoTreeExport: phase=complete\n",
+  "source_provenance": {
+    "sourcePath": "lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean",
+    "sourceSha256": "7c45c9a3b751af560e9823d1f3c2a465c0b966bb60704d08058511209ed0b3a7",
+    "leanContextFingerprint": "191657875e4247a88d32befc60f3368220f107a33ed0a8f93c0317e8e8a52a70",
+    "leanContext": {
+      "schema": "info_geometry.lean_source_context.v1",
+      "toolchainSha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "lakefileSha256": "32a2938feaa8e32f5306b9b7efbff198531b6bcbe361c734344b903523d02022",
+      "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+      "sourcePath": "lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.lean",
+      "sourceSha256": "7c45c9a3b751af560e9823d1f3c2a465c0b966bb60704d08058511209ed0b3a7",
+      "leanVersion": "Lean (version 4.34.1, aarch64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+      "lakeVersion": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+      "sourceLeanOleans": [
+        {
+          "path": "leanlib:Init.olean",
+          "sha256": "e350f457fb746028d5761304fd7df55a83b46ea56cdd7702fdee32600b57db22"
+        },
+        {
+          "path": "project:.lake/build/lib/lean/InfoGeometry/Exceptional/CFSGPort/MatrixInverseTranspose.olean",
+          "sha256": "b642d04a4b136f2717c77c893cf806aaa94d69075ce67e4d5ae9b0b6f2e7e626"
+        },
+        {
+          "path": "project:.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Equiv/Opposite.olean",
+          "sha256": "7a2a1cccff6218f2cc0c6922856ecd9d5ef36e997d719b1fd15f7493614a0dea"
+        },
+        {
+          "path": "project:.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Matrix/GeneralLinearGroup/Basic.olean",
+          "sha256": "eb18ce3eda8c90578aabe3b032806cd369a51c3de76233f9df72c32d5b449185"
+        }
+      ],
+      "fingerprint": "191657875e4247a88d32befc60f3368220f107a33ed0a8f93c0317e8e8a52a70"
+    },
+    "exporterSourceSha256": "b2e1521de3eadf18df336225cb94da2f60185146c2c3c2240d383473dd44ecd1",
+    "rawCaptureSha256": "0addddfdfc9543021a24c38448398a26c61871097da2457bc8aae2889b340dba"
+  },
+  "projectionLossByReason": {
+    "CommandContextInfo environment is not serialized in stage 1": 105,
+    "CommandContextInfo final command environment is not serialized in stage 1": 105,
+    "Metavariable context has reference/decl tables, but full expression/local-context structure is not serialized in stage 1": 105,
+    "Open declarations are exported as text/count only, not as structured OpenDecl values in stage 1": 105,
+    "Options are exported as text/count/trace summary only, not as typed OptionValue entries in stage 1": 105,
+    "Syntax is exported only by reprinted text; SourceInfo and full syntax tree structure are not serialized in stage 1": 380,
+    "Expression is exported only as text/decl links; the full Lean Expr graph is not serialized in stage 1": 597,
+    "LocalContext declaration rows are exported, but type/value expressions are text/hash projections and the full Lean LocalContext object graph is not serialized": 313,
+    "Dynamic custom value is not serialized in stage 1": 7,
+    "TacticInfo.mctxBefore has ref/decl/local-context tables, but full expression graph and assignment closure are not serialized": 36,
+    "TacticInfo.mctxAfter has ref/decl/local-context tables, but full expression graph and assignment closure are not serialized": 36
+  },
+  "authority": "Fresh capture and exporter validation; full expression graphs and environments remain projected. Not lossless or a theorem of semantic equivalence."
+}

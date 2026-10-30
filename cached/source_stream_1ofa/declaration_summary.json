@@ -1,0 +1,16 @@
+{
+  "turns": 232,
+  "lean_fences": 153,
+  "declaration_occurrences": 1483,
+  "unique_declaration_names": 742,
+  "by_kind": {
+    "def": 949,
+    "theorem": 374,
+    "structure": 27,
+    "lemma": 131,
+    "inductive": 1,
+    "abbrev": 1
+  },
+  "theorem_lemma_occurrences": 505,
+  "coverage_limit": "Lexical declaration inventory, not a Lean parse and not an exhaustive semantic claim inventory. All original turns and fenced source are preserved separately. No proof status inferred from name matches."
+}

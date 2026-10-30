@@ -1,0 +1,54 @@
+{
+  "schema": "info_geometry.commit_topology_archive.v1",
+  "files": {
+    "commits.json.gz": {
+      "sha256": "8d827013d5d095397f4d40bffcbb5fa3f50b9837da518482de44f07ddf4f9948",
+      "uncompressedSha256": "1214fb77a8042d315a420e494f96fbe1d80c681ec07e49515de68e1d149939fc",
+      "bytes": 1749757
+    },
+    "cycles.json.gz": {
+      "sha256": "e0ca6bc2dcf879ac4f925b6b1e2b3ba3cbe801b2be99a0c2984b4b53444f8fe6",
+      "uncompressedSha256": "0cf4b171d3c7559e57bb3858e49a20afdf95693da794823032c7b82c0feb294b",
+      "bytes": 594952
+    },
+    "hodge.json.gz": {
+      "sha256": "50512dda6b1f7d8771a680a3fd165ecec3666a2444382731f126031965e97b66",
+      "uncompressedSha256": "f40c7097806ddf8ea96ff69f5f79ef16f32a8a1474c8736ec237e39442198019",
+      "bytes": 8923
+    }
+  },
+  "metrics": {
+    "vertices": 13725,
+    "edges": 13981,
+    "record_count": 13725,
+    "boundary_vertex_count": 0,
+    "synthesized_boundary_vertex_count": 0,
+    "components": 1,
+    "rank_B": 13724,
+    "betti0": 1,
+    "betti1": 257,
+    "dirac_dimension": 27706,
+    "dirac_rank": 27448,
+    "dirac_kernel_dimension": 258,
+    "even_zero_modes": 1,
+    "odd_zero_modes": 257,
+    "chiral_index_even_to_odd": -256,
+    "euler_characteristic": -256,
+    "root_count": 1,
+    "terminal_tip_count": 27,
+    "root_minus_tip_count": -26,
+    "merge_commits": 232,
+    "extra_parent_edges": 257,
+    "forest_edges": 13724,
+    "cycle_basis_vectors": 257,
+    "cycle_basis_nonzero_entries": 58578,
+    "self_loop_edges": 0,
+    "incidence_nonzero_entries": 27962,
+    "dirac_nonzero_entries": 55924,
+    "commutator_nonzero_entries": 55924,
+    "commutator_is_nonzero": true,
+    "trace_laplacian0": 27962
+  },
+  "scope": "Current reachable local branches, remote-tracking branches and commit-valued tags through 2026-10-30 UTC; no reconstructed historical source.",
+  "authority": "Exact integer checks of the unfilled commit graph 1-complex. Undirected cycle space is not a directed cycle or a proof of semantic path equivalence. No InfoTree DNA snapshots joined."
+}

@@ -1,0 +1,62 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge
+
+/-!
+# Parity conjugation and the Steinberg braid
+
+For an idempotent Peirce decomposition, parity conjugation sends each
+off-diagonal corner to its negative. The palindromic three-factor braid is
+therefore sent to its explicitly defined inverse. This is an algebraic
+identity in an associative ring; no analytic phase-conjugation model is
+assumed.
+-/
+namespace InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B] {P : B} (hP : P * P = P)
+include hP
+
+/-- Parity conjugation sends the upper Steinberg braid to its inverse. -/
+theorem parityConj_steinbergBraid (A C : B) :
+    parityConj P (steinbergBraid P A C) = steinbergBraidInv P A C := by
+  simp only [parityConj, steinbergBraid, steinbergBraidInv, invS,
+    conePlus, coneMinus]
+  peirce_nf hP
+
+/-- Applying the braid conjugation, parity conjugation, and braid conjugation
+again returns the original element. -/
+theorem parityConj_steinberg_round_trip (A C X : B) :
+    parityConj P
+      (steinbergBraid P A C *
+        parityConj P (steinbergBraid P A C * X * steinbergBraidInv P A C) *
+        steinbergBraidInv P A C) = X := by
+  let b := steinbergBraid P A C
+  let bInv := steinbergBraidInv P A C
+  have hb : parityConj P b = bInv := parityConj_steinbergBraid hP A C
+  have hbInv : parityConj P bInv = b := by
+    rw [← hb]
+    exact (parityConj_involutive_ring_action hP b 1).1
+  have hmul (Y Z : B) : parityConj P (Y * Z) = parityConj P Y * parityConj P Z :=
+    (parityConj_involutive_ring_action hP Y Z).2.1
+  have hbinv := steinbergBraid_mul_inv hP A C
+  calc
+    parityConj P (b * parityConj P (b * X * bInv) * bInv) =
+        parityConj P b * parityConj P (parityConj P (b * X * bInv)) *
+          parityConj P bInv := by
+      rw [hmul, hmul]
+    _ = bInv * (b * X * bInv) * b := by
+      rw [hb, hbInv, (parityConj_involutive_ring_action hP (b * X * bInv) 1).1]
+    _ = X := by
+      rcases hbinv with ⟨h₁, h₂⟩
+      calc
+        bInv * (b * X * bInv) * b = bInv * (b * X) * (bInv * b) := by
+          noncomm_ring
+        _ = bInv * (b * X) := by rw [h₂, mul_one]
+        _ = (bInv * b) * X := by rw [← mul_assoc]
+        _ = X := by rw [h₂, one_mul]
+
+end InfoGeometry.OperatorAlgebra.PeirceSpine

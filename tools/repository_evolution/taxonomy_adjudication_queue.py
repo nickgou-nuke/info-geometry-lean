@@ -103,7 +103,8 @@ def _uncertainty_stratum(row: dict[str, Any]) -> str:
 
 
 def _sample(candidates: list[dict[str, Any]], *, limit: int, max_per_owner: int,
-            seed: str, eligible: Any = None) -> list[dict[str, Any]]:
+            seed: str, max_per_role: int | None = None,
+            eligible: Any = None) -> list[dict[str, Any]]:
     buckets: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in candidates:
         key = (str(row.get("role", "unknown")), _uncertainty_stratum(row))
@@ -114,6 +115,7 @@ def _sample(candidates: list[dict[str, Any]], *, limit: int, max_per_owner: int,
         ).hexdigest())
     selected = []
     owner_counts: Counter[str] = Counter()
+    role_counts: Counter[str] = Counter()
     cursors = {key: 0 for key in buckets}
     while len(selected) < limit:
         progressed = False
@@ -123,12 +125,16 @@ def _sample(candidates: list[dict[str, Any]], *, limit: int, max_per_owner: int,
                 row = rows[cursors[key]]
                 cursors[key] += 1
                 group = _owner_group(row)
+                role = str(row.get("role", "unknown"))
                 if owner_counts[group] >= max_per_owner:
+                    continue
+                if max_per_role is not None and role_counts[role] >= max_per_role:
                     continue
                 if eligible is not None and not eligible(row):
                     continue
                 selected.append(row)
                 owner_counts[group] += 1
+                role_counts[role] += 1
                 progressed = True
                 break
             if len(selected) >= limit:
@@ -173,6 +179,7 @@ def _source_spans(source_text: str, source_sha: str,
 
 def build_adjudication_queue(report: dict[str, Any], repo_root: Path = ROOT, *,
                              limit: int = 80, max_per_owner: int = 3,
+                             max_per_role: int | None = None,
                              seed: str = "taxonomy-review-v1",
                              infotree_dna: list[dict[str, Any]] | None = None,
                              allow_scoped_review: bool = False,
@@ -220,6 +227,10 @@ def build_adjudication_queue(report: dict[str, Any], repo_root: Path = ROOT, *,
         raise ValueError("limit must be a positive integer")
     if isinstance(max_per_owner, bool) or not isinstance(max_per_owner, int) or max_per_owner < 1:
         raise ValueError("max_per_owner must be a positive integer")
+    if (max_per_role is not None and
+            (isinstance(max_per_role, bool) or not isinstance(max_per_role, int)
+             or max_per_role < 1)):
+        raise ValueError("max_per_role must be a positive integer when specified")
     if not isinstance(seed, str) or not seed:
         raise ValueError("seed must be a non-empty string")
     files = report.get("files")
@@ -297,6 +308,7 @@ def build_adjudication_queue(report: dict[str, Any], repo_root: Path = ROOT, *,
         return True
 
     selected = _sample(candidates, limit=limit, max_per_owner=max_per_owner, seed=seed,
+                       max_per_role=max_per_role,
                        eligible=reviewable_source)
     declarations_by_path: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for declaration in declarations:
@@ -398,6 +410,7 @@ def build_adjudication_queue(report: dict[str, Any], repo_root: Path = ROOT, *,
         "seed": seed,
         "requestedArtifactLimit": limit,
         "maxArtifactsPerModuleOrOwner": max_per_owner,
+        "maxArtifactsPerRole": max_per_role,
         "candidateArtifactCount": candidate_count,
         "candidateArtifactCountAfterChangedPathExclusion": len(candidates),
         "observedUnreviewableTextCandidateCount": unreviewable_text_count,
@@ -428,6 +441,8 @@ def main() -> int:
     parser.add_argument("--repo-root", type=Path, default=ROOT)
     parser.add_argument("--limit", type=int, default=80)
     parser.add_argument("--max-per-owner", type=int, default=3)
+    parser.add_argument("--max-per-role", type=int,
+                        help="optional cap per observed artifact role in the sample")
     parser.add_argument("--seed", default="taxonomy-review-v1")
     parser.add_argument("--infotree-dna", type=Path,
                         help="optional source-bound InfoTree DNA JSONL feature rows")
@@ -443,6 +458,7 @@ def main() -> int:
     tasks, manifest = build_adjudication_queue(
         _read_json(args.refactoring_map), args.repo_root,
         limit=args.limit, max_per_owner=args.max_per_owner, seed=args.seed,
+        max_per_role=args.max_per_role,
         infotree_dna=_read_jsonl(args.infotree_dna) if args.infotree_dna else None,
         allow_scoped_review=args.allow_scoped_review_from_inconsistent_map,
     )

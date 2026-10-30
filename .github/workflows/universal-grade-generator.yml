@@ -1,0 +1,84 @@
+name: Noncommutative defect and tripotent geometry (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Core/IdempotencyDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceDefect.lean'
+      - 'lean/InfoGeometry/Core/PeirceDefectAdjoint.lean'
+      - 'lean/InfoGeometry/Core/DefectIteration.lean'
+      - 'lean/InfoGeometry/Core/TripotentDefect.lean'
+      - 'lean/InfoGeometry/Core/TripotentAdjoint.lean'
+      - 'lean/InfoGeometry/Core/TripotentEigenspaces.lean'
+      - 'lean/InfoGeometry/Canonical/TripotentMatrixExample.lean'
+      - 'lean/InfoGeometry/Core/IdempotentCartan.lean'
+      - 'lean/InfoGeometry/Core/Peirce*.lean'
+      - 'lean/InfoGeometry/Physics/TripotentAdjointDerivation.lean'
+      - 'lean/InfoGeometry/Physics/Algebra/Tripotent*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/*TKKConformalClosure.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/NCG/TripotentMatrixGeometry.lean'
+      - 'lean/InfoGeometry/Singular/MoorePenrose.lean'
+      - 'lean/InfoGeometry/Singular/Drazin.lean'
+      - 'lean/InfoGeometry/Meta/OwnerTarget.lean'
+      - 'tools/quality/check_universal_grade_generator.py'
+      - 'tools/quality/check_lie_jordan_geometry.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/universal-grade-generator.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: universal-grade-generator-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact PR head and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install repository-pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Strict source checks, exhaustive axiom audit, and native Lake build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_universal_grade_generator.py \
+            --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: universal-grade-generator-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/src

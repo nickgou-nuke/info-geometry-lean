@@ -1,0 +1,309 @@
+{
+  "schema_version": 2,
+  "disposition": "ACCEPTED",
+  "accepted_at_utc": "2026-10-30T11:01:49.353897+00:00",
+  "reviewer": "grade_owner_search",
+  "role": "QA-A independent runtime acceptance",
+  "independence": {
+    "authored_theorem_source": false,
+    "modified_live_repository_files": false,
+    "generation_agents": [
+      "root",
+      "grade_defect_proofs",
+      "grade_spectral_proofs"
+    ],
+    "independent_semantic_reviewer": "grade_claim_review"
+  },
+  "accepted_scope": "Eight new owners in full associative ring/real operator algebra, including the dense full real M4 instance; exact 26-module repository import closure. No root-package build or CI-success claim.",
+  "verification_strategy": {
+    "full_v1_run": {
+      "status": "passed",
+      "repository_modules": 26,
+      "audited_declarations": 1287,
+      "command": [
+        "python3",
+        "tools/quality/check_universal_grade_generator.py",
+        "--mathlib-root",
+        "/workspace/scratch/3c7848773029/grade-validation/mathlib",
+        "--output",
+        "/workspace/scratch/3c7848773029/grade-validation/final"
+      ],
+      "new_target_warning_errors": true,
+      "isolated_native_lake_build": "passed",
+      "evidence_directory": "/workspace/scratch/3c7848773029/grade-validation/final"
+    },
+    "v2_leaf_delta": {
+      "status": "passed",
+      "leaf": "InfoGeometry.Canonical.TripotentMatrixExample",
+      "source_sha256": "f188c713d38c2c7ad48e32fc0448ddb0ca431395606c1c13bd9feead9aadf195",
+      "strict_leaf": "passed",
+      "exhaustive_leaf_axiom_audit": 44,
+      "isolated_native_lake_build": "passed",
+      "unchanged_modules_reconciled": 25,
+      "dependent_modules_invalidated": 0,
+      "base_evidence_preserved": true,
+      "commands": [
+        {
+          "argv": [
+            "lake",
+            "env",
+            "printenv",
+            "LEAN_PATH"
+          ],
+          "cwd": "/workspace/scratch/3c7848773029/grade-validation/mathlib",
+          "log": null,
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "lean",
+            "-DwarningAsError=true",
+            "-o",
+            "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/lib/InfoGeometry/Canonical/TripotentMatrixExample.olean",
+            "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/src/InfoGeometry/Canonical/TripotentMatrixExample.lean"
+          ],
+          "cwd": "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/src",
+          "log": "strict-leaf.log",
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "lean",
+            "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/src/TripotentMatrixV2KernelAudit.lean"
+          ],
+          "cwd": "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/src",
+          "log": "leaf-axioms.log",
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "lake",
+            "build",
+            "InfoGeometry.Canonical.TripotentMatrixExample"
+          ],
+          "cwd": "/workspace/scratch/3c7848773029/grade-validation/final/lake",
+          "log": "lake-leaf-build.log",
+          "exit_code": 0
+        }
+      ],
+      "evidence_directory": "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry"
+    },
+    "count_reconciliation": "1287 - 43 + 44 = 1288",
+    "final_composite_audited_declarations": 1288,
+    "new_owner_audited_declarations": 143,
+    "explicit_theorems": 93,
+    "explicit_definitions": 5,
+    "explicit_abbreviations": 1
+  },
+  "environment": {
+    "path_prefix": "/tmp/operator-pr-toolchain/lean-4.34.1-linux/bin",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "build_lock": "/tmp/info-geometry-build.lock",
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+    "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612"
+  },
+  "allowed_axiom_footprint": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "source_gates": {
+    "semantic_vacuity": {
+      "command": [
+        "python3",
+        "tools/quality/semantic_vacuity_gate.py",
+        "lean/InfoGeometry/Core/IdempotencyDefect.lean",
+        "lean/InfoGeometry/Core/PeirceDefect.lean",
+        "lean/InfoGeometry/Core/PeirceDefectAdjoint.lean",
+        "lean/InfoGeometry/Core/DefectIteration.lean",
+        "lean/InfoGeometry/Core/TripotentDefect.lean",
+        "lean/InfoGeometry/Core/TripotentAdjoint.lean",
+        "lean/InfoGeometry/Core/TripotentEigenspaces.lean",
+        "lean/InfoGeometry/Canonical/TripotentMatrixExample.lean",
+        "--fail-on",
+        "error",
+        "--json-out",
+        "/workspace/scratch/3c7848773029/grade-candidates/acceptance/semantic-vacuity-v2.json"
+      ],
+      "exit_code": 0,
+      "files_scanned": 8,
+      "errors": 0,
+      "warnings": 4
+    },
+    "legacy_vacuity_linter": {
+      "commands": [
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/IdempotencyDefect.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/PeirceDefect.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/PeirceDefectAdjoint.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/DefectIteration.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/TripotentDefect.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/TripotentAdjoint.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Core/TripotentEigenspaces.lean"
+        ],
+        [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "scripts/vacuity-linter.py",
+          "--json",
+          "lean/InfoGeometry/Canonical/TripotentMatrixExample.lean"
+        ]
+      ],
+      "all_exit_codes": 0,
+      "files_scanned": 8,
+      "warning_groups": 2,
+      "implementation": "scripts/vacuity-linter.py",
+      "alias": "tools/scripts/vacuity-linter.py"
+    },
+    "constructivity_placeholders": {
+      "entrypoint": "tools.quality.audit_constructivity.scan_file for each selected owner, plus comment/string-masked forbidden-token and structure/class scans",
+      "files_scanned": 8,
+      "findings": 0,
+      "forbidden_pattern": "(?<![\\w.\u00ab])(?:sorry|admit|sorryAx|native_decide|unsafe|partial|axiom|postulate)(?![\\w'\u00bb])"
+    },
+    "staged_proof_gate": {
+      "command": [
+        "python3",
+        "tools/quality/proof_proxy_staged_gate.py"
+      ],
+      "exit_code": 0,
+      "gate_source_changed": false,
+      "screener_source_changed": false,
+      "evidence_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+    },
+    "diff_checks": [
+      {
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--check"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    ],
+    "exact_source_and_pin_reconciliation": "passed"
+  },
+  "diagnostics": {
+    "new_owner_strict_warnings": 0,
+    "inherited_warning_emissions": 84,
+    "inherited_warning_counts": {
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": 6,
+      "InfoGeometry.Physics.TripotentAdjointDerivation": 4,
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure": 26,
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": 34,
+      "InfoGeometry.Singular.MoorePenrose": 14
+    },
+    "reviewed_advisory_findings": [
+      {
+        "source": "semantic_vacuity_gate",
+        "subject": "defect_zero",
+        "classification": "advisory, nonblocking",
+        "reason": "The explicit zero-input normalization is an ordinary simp lemma; its complete statement is proved."
+      },
+      {
+        "source": "semantic_vacuity_gate",
+        "subject": "map_defect",
+        "classification": "advisory, nonblocking",
+        "reason": "Ring-hom naturality follows from map_sub and map_mul on the actual defect definition."
+      },
+      {
+        "source": "semantic_vacuity_gate",
+        "subject": "defect_mul_eq_zero",
+        "classification": "advisory, nonblocking",
+        "reason": "The proof explicitly uses its zero-product hypothesis and associativity."
+      },
+      {
+        "source": "semantic_vacuity_gate",
+        "subject": "mul_defect_eq_zero",
+        "classification": "advisory, nonblocking",
+        "reason": "The proof explicitly uses its ordered zero-product hypothesis and associativity."
+      },
+      {
+        "source": "legacy vacuity-linter",
+        "subject": "TripotentAdjoint.no_hyp_use",
+        "classification": "lexical false positive, nonblocking",
+        "reason": "The pattern examines the header/first proof line. adLinear_eq_ad is the intended definitional bridge; t occurs in both native operator expressions."
+      },
+      {
+        "source": "legacy vacuity-linter",
+        "subject": "TripotentMatrixExample.no_hyp_use",
+        "classification": "lexical false positive, nonblocking",
+        "reason": "The regex captures combined binders such as i j and does not parse multiline proofs. The inspected proofs explicitly case-split or use the individual indices and native results."
+      }
+    ]
+  },
+  "semantic_review": {
+    "verdict": "PASS",
+    "unresolved_nonconformances": [],
+    "receipts": {
+      "SEMANTIC_AUDIT_V2.md": "e1938038cd48d734f5ebd58a6d282759287818d92b15d80497b518ac37bb7218",
+      "SEMANTIC_AUDIT_V2.json": "7fc61ef89e36f0cea40d41807958e86c0fea90202f59900013dd480ebeb4cb02"
+    }
+  },
+  "closed_events": [
+    {
+      "event": "V1 staged gate T16 did not recognize the existing multi-argument frameUnit noncommutativity expressions.",
+      "resolution": "Author added the independently audited and kernel-checked reflection_tripotent_noncommute theorem for two dense full matrices. The unchanged staged gate then passed."
+    },
+    {
+      "event": "First V2 harness invocation failed at import resolution before theorem elaboration because the leading InfoGeometry artifact root was incomplete.",
+      "resolution": "A new retry harness made regular byte-checked copies of the 25 verified dependency artifact sets. No theorem/gate change was made; strict, exhaustive audit, and native build then passed. Failed attempt remains in grade-validation/final-v2."
+    }
+  ],
+  "residual_open_debt": [],
+  "scope_exclusions": [
+    "Unrelated root repository package and historical global CI failures.",
+    "Analytic completion/colimits/manifolds or physics classification claims.",
+    "A universal minimal polynomial or nonvanishing of all five grades in every algebra."
+  ],
+  "fingerprint_file": "FINAL_SOURCE_FINGERPRINT.json",
+  "fingerprint_sha256": "9e232ff09f8d2a9c4e3deda8f8c0ed4b8eeb47b6fa246782f781bed50de3063f",
+  "revalidation_policy": "Any change to an accepted Lean source hash requires renewed affected-source verification and semantic review. The completed V1 full run is not represented as a fresh full-checker run on the V2 leaf hash."
+}

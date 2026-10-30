@@ -1,0 +1,42 @@
+{
+  "source_url": "https://github.com/nickgou-nuke/info-geometry-lean/blob/f54b83da3756c3ded0decbf92fd887f8083949ed/AGENTS-Universal-Grade-Generator.md",
+  "source_commit": "f54b83da3756c3ded0decbf92fd887f8083949ed",
+  "source_blob": "1817347ef5f50f799912ba3bd7d03dc40c842bdc",
+  "source_sha256": "43d60af6f63ef7d9602a7d045668486dada37f4bdc2784a4bcddef05cadc9361",
+  "source_lines": 654,
+  "source_role": "informal mathematical intake, not executable instructions or proof evidence",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "scope": "full associative rings; full real associative algebras; dense noncommutative real 4-by-4 matrix instance",
+  "risk_classes": [
+    "R2",
+    "R1"
+  ],
+  "roles": {
+    "generation": [
+      "root",
+      "grade_defect_proofs",
+      "grade_spectral_proofs"
+    ],
+    "semantic_audit": "grade_claim_review",
+    "runtime_acceptance": "grade_owner_search"
+  },
+  "non_theorem_claims": [
+    "SU(3) or TKK classification",
+    "analytic differentiation or completion",
+    "infinitely many independent defect iterates",
+    "grade-zero commutativity",
+    "physics interpretations"
+  ],
+  "planned_acceptance": [
+    "Core.IdempotencyDefect.polarization",
+    "Core.PeirceDefect.tangent_iff_mixed_corners",
+    "Core.PeirceDefectAdjoint.negative_ad_squares_sum_eq_defect",
+    "Core.DefectIteration.adjoin_iterate_antitone",
+    "Core.TripotentDefect.defect_projZero",
+    "Core.TripotentAdjoint.ad_quintic",
+    "Core.TripotentAdjoint.fiveGradeRange_eq_eigenspace",
+    "Canonical.TripotentMatrixExample.all_five_weights_occur",
+    "Canonical.TripotentMatrixExample.zero_weight_noncommute"
+  ]
+}

@@ -1,0 +1,796 @@
+{
+  "schema_version": 2,
+  "checked_at_utc": "2026-10-30T11:01:49.353897+00:00",
+  "status": "passed",
+  "authority": "Composite native runtime evidence, exact source hashes, staged equality, and semantic declaration inventory.",
+  "base_revision": "f54b83da3756c3ded0decbf92fd887f8083949ed",
+  "branch": "feat/universal-grade-generator",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "unchanged_pin_file_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da"
+  },
+  "source_closure": [
+    {
+      "module": "InfoGeometry.Core.IdempotencyDefect",
+      "path": "lean/InfoGeometry/Core/IdempotencyDefect.lean",
+      "sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "staged_sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "native_package_copy_sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "path": "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+      "sha256": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+      "staged_sha256": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+      "native_package_copy_sha256": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "path": "lean/InfoGeometry/Core/PeirceDecomposition.lean",
+      "sha256": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+      "staged_sha256": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+      "native_package_copy_sha256": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceGrading",
+      "path": "lean/InfoGeometry/Core/PeirceGrading.lean",
+      "sha256": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+      "staged_sha256": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+      "native_package_copy_sha256": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceStarCharges",
+      "path": "lean/InfoGeometry/Core/PeirceStarCharges.lean",
+      "sha256": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+      "staged_sha256": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+      "native_package_copy_sha256": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceCoupledCorners",
+      "path": "lean/InfoGeometry/Core/PeirceCoupledCorners.lean",
+      "sha256": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+      "staged_sha256": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+      "native_package_copy_sha256": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceQuadraticFrame",
+      "path": "lean/InfoGeometry/Core/PeirceQuadraticFrame.lean",
+      "sha256": "40063d7217d5f3149bd291dcf29a984c6b3ec1614d9c1dc7feae15dacf4cb516",
+      "staged_sha256": "40063d7217d5f3149bd291dcf29a984c6b3ec1614d9c1dc7feae15dacf4cb516",
+      "native_package_copy_sha256": "40063d7217d5f3149bd291dcf29a984c6b3ec1614d9c1dc7feae15dacf4cb516",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDefect",
+      "path": "lean/InfoGeometry/Core/PeirceDefect.lean",
+      "sha256": "d26471b128136c2d0b54661a19490c0c132ba366aa91476b4e41c956fe84e9a2",
+      "staged_sha256": "d26471b128136c2d0b54661a19490c0c132ba366aa91476b4e41c956fe84e9a2",
+      "native_package_copy_sha256": "d26471b128136c2d0b54661a19490c0c132ba366aa91476b4e41c956fe84e9a2",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceAdjointCycle",
+      "path": "lean/InfoGeometry/Core/PeirceAdjointCycle.lean",
+      "sha256": "7edc7186f8030d3d1cae16ba4903de3f1e6bd9469b619b88756351e0f29798fe",
+      "staged_sha256": "7edc7186f8030d3d1cae16ba4903de3f1e6bd9469b619b88756351e0f29798fe",
+      "native_package_copy_sha256": "7edc7186f8030d3d1cae16ba4903de3f1e6bd9469b619b88756351e0f29798fe",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors",
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentPeirceProjectors.lean",
+      "sha256": "fba6d2cddddd44ceb1234f5c7b4c64b4d7823f706755a19478e7ddf297a3698e",
+      "staged_sha256": "fba6d2cddddd44ceb1234f5c7b4c64b4d7823f706755a19478e7ddf297a3698e",
+      "native_package_copy_sha256": "fba6d2cddddd44ceb1234f5c7b4c64b4d7823f706755a19478e7ddf297a3698e",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDefectAdjoint",
+      "path": "lean/InfoGeometry/Core/PeirceDefectAdjoint.lean",
+      "sha256": "fb42fa276d547283ebacd4557c43665e05481c6140dd0a3181816db0f6400315",
+      "staged_sha256": "fb42fa276d547283ebacd4557c43665e05481c6140dd0a3181816db0f6400315",
+      "native_package_copy_sha256": "fb42fa276d547283ebacd4557c43665e05481c6140dd0a3181816db0f6400315",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.DefectIteration",
+      "path": "lean/InfoGeometry/Core/DefectIteration.lean",
+      "sha256": "87608961261812f07eb3041eaf7827bc3a1793482a687a01ac0fdb527c4f0b4d",
+      "staged_sha256": "87608961261812f07eb3041eaf7827bc3a1793482a687a01ac0fdb527c4f0b4d",
+      "native_package_copy_sha256": "87608961261812f07eb3041eaf7827bc3a1793482a687a01ac0fdb527c4f0b4d",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.IdempotentCartan",
+      "path": "lean/InfoGeometry/Core/IdempotentCartan.lean",
+      "sha256": "774fcd4b531dbedd62fdf3ae21a5e56840ed83d55f9ed5a4b17607fb690aba82",
+      "staged_sha256": "774fcd4b531dbedd62fdf3ae21a5e56840ed83d55f9ed5a4b17607fb690aba82",
+      "native_package_copy_sha256": "774fcd4b531dbedd62fdf3ae21a5e56840ed83d55f9ed5a4b17607fb690aba82",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentDefect",
+      "path": "lean/InfoGeometry/Core/TripotentDefect.lean",
+      "sha256": "cd07bc3c2d975da1683860685b9bdce86c0a192702e6731fef054cf31f513c85",
+      "staged_sha256": "cd07bc3c2d975da1683860685b9bdce86c0a192702e6731fef054cf31f513c85",
+      "native_package_copy_sha256": "cd07bc3c2d975da1683860685b9bdce86c0a192702e6731fef054cf31f513c85",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Physics.TripotentAdjointDerivation",
+      "path": "lean/InfoGeometry/Physics/TripotentAdjointDerivation.lean",
+      "sha256": "a80c69a0f750b35172be7a54e8721f68966dc56eba90a16dece936acde54cb33",
+      "staged_sha256": "a80c69a0f750b35172be7a54e8721f68966dc56eba90a16dece936acde54cb33",
+      "native_package_copy_sha256": "a80c69a0f750b35172be7a54e8721f68966dc56eba90a16dece936acde54cb33",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentLeftRightPeirceProjectors.lean",
+      "sha256": "4c9802696a32015c784c17e6d80d1f6000e5c2b64cb87a0635cf263bd35f8165",
+      "staged_sha256": "4c9802696a32015c784c17e6d80d1f6000e5c2b64cb87a0635cf263bd35f8165",
+      "native_package_copy_sha256": "4c9802696a32015c784c17e6d80d1f6000e5c2b64cb87a0635cf263bd35f8165",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.TKKConformalClosure",
+      "path": "lean/InfoGeometry/OperatorAlgebra/TKKConformalClosure.lean",
+      "sha256": "c0a386a36337ff4ceae87f7d400f05f72c641f68a64bff51f7a6dd97ea18ba7b",
+      "staged_sha256": "c0a386a36337ff4ceae87f7d400f05f72c641f68a64bff51f7a6dd97ea18ba7b",
+      "native_package_copy_sha256": "c0a386a36337ff4ceae87f7d400f05f72c641f68a64bff51f7a6dd97ea18ba7b",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Meta.OwnerTarget",
+      "path": "lean/InfoGeometry/Meta/OwnerTarget.lean",
+      "sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "staged_sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "native_package_copy_sha256": "824ac23fa5a0f002b220a4547d7e26bb98fb4ddbe4b82f76f027aee02e3c6dab",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure",
+      "path": "lean/InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.lean",
+      "sha256": "d26baa60bf0f7d71c47d66b8dd2c9a978989f860ceaef8ab931ccf55162ff7fe",
+      "staged_sha256": "d26baa60bf0f7d71c47d66b8dd2c9a978989f860ceaef8ab931ccf55162ff7fe",
+      "native_package_copy_sha256": "d26baa60bf0f7d71c47d66b8dd2c9a978989f860ceaef8ab931ccf55162ff7fe",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition",
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentFiveGradingDecomposition.lean",
+      "sha256": "ecaa6ee264b35522231857be3bfba488ef8df628f3d21ceb08da2b5a05145a66",
+      "staged_sha256": "ecaa6ee264b35522231857be3bfba488ef8df628f3d21ceb08da2b5a05145a66",
+      "native_package_copy_sha256": "ecaa6ee264b35522231857be3bfba488ef8df628f3d21ceb08da2b5a05145a66",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentAdjoint",
+      "path": "lean/InfoGeometry/Core/TripotentAdjoint.lean",
+      "sha256": "c835f1b5f7e3a834b05beffc2951470e732981ea0ec5298ca2d1ce165f1ff1c0",
+      "staged_sha256": "c835f1b5f7e3a834b05beffc2951470e732981ea0ec5298ca2d1ce165f1ff1c0",
+      "native_package_copy_sha256": "c835f1b5f7e3a834b05beffc2951470e732981ea0ec5298ca2d1ce165f1ff1c0",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentEigenspaces",
+      "path": "lean/InfoGeometry/Core/TripotentEigenspaces.lean",
+      "sha256": "35cd9b4579d0cd9e21dfee7021b495fa57f357732b641c81c4cde753d4289353",
+      "staged_sha256": "35cd9b4579d0cd9e21dfee7021b495fa57f357732b641c81c4cde753d4289353",
+      "native_package_copy_sha256": "35cd9b4579d0cd9e21dfee7021b495fa57f357732b641c81c4cde753d4289353",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Singular.MoorePenrose",
+      "path": "lean/InfoGeometry/Singular/MoorePenrose.lean",
+      "sha256": "0fc09c7636869e801a51e4603e76620e051ac4953068e35d3652953876ae0fd3",
+      "staged_sha256": "0fc09c7636869e801a51e4603e76620e051ac4953068e35d3652953876ae0fd3",
+      "native_package_copy_sha256": "0fc09c7636869e801a51e4603e76620e051ac4953068e35d3652953876ae0fd3",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Singular.Drazin",
+      "path": "lean/InfoGeometry/Singular/Drazin.lean",
+      "sha256": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+      "staged_sha256": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+      "native_package_copy_sha256": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.NCG.TripotentMatrixGeometry",
+      "path": "lean/InfoGeometry/NCG/TripotentMatrixGeometry.lean",
+      "sha256": "c9f22e1984c52a82586ce9324013ab89ee5dc0e1467b8cd8a07db2bc11e830d1",
+      "staged_sha256": "c9f22e1984c52a82586ce9324013ab89ee5dc0e1467b8cd8a07db2bc11e830d1",
+      "native_package_copy_sha256": "c9f22e1984c52a82586ce9324013ab89ee5dc0e1467b8cd8a07db2bc11e830d1",
+      "matches_frozen_source": true,
+      "verification_run": "v1 complete closure"
+    },
+    {
+      "module": "InfoGeometry.Canonical.TripotentMatrixExample",
+      "path": "lean/InfoGeometry/Canonical/TripotentMatrixExample.lean",
+      "sha256": "f188c713d38c2c7ad48e32fc0448ddb0ca431395606c1c13bd9feead9aadf195",
+      "staged_sha256": "f188c713d38c2c7ad48e32fc0448ddb0ca431395606c1c13bd9feead9aadf195",
+      "native_package_copy_sha256": "f188c713d38c2c7ad48e32fc0448ddb0ca431395606c1c13bd9feead9aadf195",
+      "matches_frozen_source": true,
+      "verification_run": "v2 leaf delta"
+    }
+  ],
+  "unchanged_closure_module_count": 25,
+  "changed_leaf": "InfoGeometry.Canonical.TripotentMatrixExample",
+  "changed_leaf_dependents_in_closure": [],
+  "source_closure_dependency_edges": {
+    "InfoGeometry.Core.IdempotencyDefect": [],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceStarCharges": [
+      "InfoGeometry.Core.PeirceGrading"
+    ],
+    "InfoGeometry.Core.PeirceCoupledCorners": [
+      "InfoGeometry.Core.PeirceStarCharges"
+    ],
+    "InfoGeometry.Core.PeirceQuadraticFrame": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Core.PeirceDefect": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Core.PeirceQuadraticFrame"
+    ],
+    "InfoGeometry.Core.PeirceAdjointCycle": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceDefectAdjoint": [
+      "InfoGeometry.Core.PeirceDefect",
+      "InfoGeometry.Core.PeirceAdjointCycle",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors"
+    ],
+    "InfoGeometry.Core.DefectIteration": [
+      "InfoGeometry.Core.PeirceDefect"
+    ],
+    "InfoGeometry.Core.IdempotentCartan": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.TripotentDefect": [
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Core.IdempotentCartan",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors"
+    ],
+    "InfoGeometry.Physics.TripotentAdjointDerivation": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Physics.TripotentAdjointDerivation",
+      "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors"
+    ],
+    "InfoGeometry.OperatorAlgebra.TKKConformalClosure": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Meta.OwnerTarget": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.OperatorAlgebra.TKKConformalClosure",
+      "InfoGeometry.Meta.OwnerTarget"
+    ],
+    "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors",
+      "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure"
+    ],
+    "InfoGeometry.Core.TripotentAdjoint": [
+      "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition"
+    ],
+    "InfoGeometry.Core.TripotentEigenspaces": [
+      "InfoGeometry.Core.TripotentAdjoint"
+    ],
+    "InfoGeometry.Singular.MoorePenrose": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Singular.Drazin": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Singular.MoorePenrose"
+    ],
+    "InfoGeometry.NCG.TripotentMatrixGeometry": [
+      "InfoGeometry.Singular.Drazin"
+    ],
+    "InfoGeometry.Canonical.TripotentMatrixExample": [
+      "InfoGeometry.Core.IdempotentCartan",
+      "InfoGeometry.Core.TripotentDefect",
+      "InfoGeometry.Core.TripotentEigenspaces",
+      "InfoGeometry.NCG.TripotentMatrixGeometry"
+    ]
+  },
+  "new_owner_coverage": [
+    {
+      "module": "InfoGeometry.Core.IdempotencyDefect",
+      "explicit_theorems": 12,
+      "explicit_definitions": 1,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.IdempotencyDefect.defect_zero",
+        "InfoGeometry.Core.IdempotencyDefect.defect_eq_zero_iff",
+        "InfoGeometry.Core.IdempotencyDefect.map_defect",
+        "InfoGeometry.Core.IdempotencyDefect.polarization",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_add",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_sub",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_defect_neg",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect_neg",
+        "InfoGeometry.Core.IdempotencyDefect.defect_add_of_mul_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.mul_defect_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.defect"
+      ],
+      "audited_kernel_declarations": 23,
+      "kernel_names": [
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_add._abel_1_2",
+        "InfoGeometry.Core.IdempotencyDefect.defect_eq_zero_iff",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_add",
+        "InfoGeometry.Core.IdempotencyDefect.defect_eq_zero_iff._simp_1",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect",
+        "InfoGeometry.Core.IdempotencyDefect.polarization",
+        "InfoGeometry.Core.IdempotencyDefect.mul_defect_eq_zero._simp_1_2",
+        "InfoGeometry.Core.IdempotencyDefect.map_defect",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_defect_neg._abel_1_1",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_sub._abel_1_2",
+        "InfoGeometry.Core.IdempotencyDefect.defect",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect._abel_1_1",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect_neg",
+        "InfoGeometry.Core.IdempotencyDefect.polarization._abel_1_1",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_sub",
+        "InfoGeometry.Core.IdempotencyDefect.mul_defect_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_defect_neg",
+        "InfoGeometry.Core.IdempotencyDefect.defect_add_of_mul_eq_zero._abel_1_1",
+        "InfoGeometry.Core.IdempotencyDefect.defect.eq_1",
+        "InfoGeometry.Core.IdempotencyDefect.defect_zero",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect_neg._abel_1_1",
+        "InfoGeometry.Core.IdempotencyDefect.defect_add_of_mul_eq_zero"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDefect",
+      "explicit_theorems": 12,
+      "explicit_definitions": 0,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent_eq_square_iff",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent_eq_square",
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_diagonal_corners_zero",
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_mixed_corners",
+        "InfoGeometry.Core.PeirceDefect.commute_square_of_tangent",
+        "InfoGeometry.Core.PeirceDefect.defect_add_commutator",
+        "InfoGeometry.Core.PeirceDefect.defect_add_odd",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem10",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem01",
+        "InfoGeometry.Core.PeirceDefect.defect_add_coupled",
+        "InfoGeometry.Core.PeirceDefect.defect_add_difference"
+      ],
+      "audited_kernel_declarations": 17,
+      "kernel_names": [
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_mixed_corners",
+        "InfoGeometry.Core.PeirceDefect.defect_add_difference",
+        "InfoGeometry.Core.PeirceDefect.defect_add_commutator",
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_diagonal_corners_zero._abel_1_1",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent_eq_square_iff",
+        "InfoGeometry.Core.PeirceDefect.commute_square_of_tangent",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem10",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent_eq_square",
+        "InfoGeometry.Core.PeirceDefect.defect_add_coupled",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem01._abel_1_1",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent._abel_1_1",
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_diagonal_corners_zero",
+        "InfoGeometry.Core.PeirceDefect.defect_add_difference._abel_1_1",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem01",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem10._abel_1_1",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent",
+        "InfoGeometry.Core.PeirceDefect.defect_add_odd"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDefectAdjoint",
+      "explicit_theorems": 7,
+      "explicit_definitions": 0,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_sq_apply_of_anticommute",
+        "InfoGeometry.Core.PeirceDefectAdjoint.negative_ad_squares_sum_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_squares_sub_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.real_ad_cube_eq_ad",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projZero_ad_apply",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projPos_ad_apply",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projNeg_ad_apply"
+      ],
+      "audited_kernel_declarations": 12,
+      "kernel_names": [
+        "InfoGeometry.Core.PeirceDefectAdjoint.negative_ad_squares_sum_eq_defect._abel_1_1",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projNeg_ad_apply._abel_1_1",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projZero_ad_apply",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projNeg_ad_apply",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_squares_sub_eq_defect._abel_1_1",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projPos_ad_apply._abel_1_1",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_squares_sub_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.real_ad_cube_eq_ad",
+        "InfoGeometry.Core.PeirceDefectAdjoint.negative_ad_squares_sum_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_sq_apply_of_anticommute",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_sq_apply_of_anticommute._abel_1_1",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projPos_ad_apply"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Core.DefectIteration",
+      "explicit_theorems": 12,
+      "explicit_definitions": 0,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.DefectIteration.commute_defect",
+        "InfoGeometry.Core.DefectIteration.commute_iterate",
+        "InfoGeometry.Core.DefectIteration.iterate_mul_eq_zero",
+        "InfoGeometry.Core.DefectIteration.mul_iterate_eq_zero",
+        "InfoGeometry.Core.DefectIteration.iterate_mul_iterate_eq_zero",
+        "InfoGeometry.Core.DefectIteration.iterate_add_of_mul_eq_zero",
+        "InfoGeometry.Core.DefectIteration.map_iterate",
+        "InfoGeometry.Core.DefectIteration.commute_iterate_add_idempotent",
+        "InfoGeometry.Core.DefectIteration.iterate_mem_subalgebra",
+        "InfoGeometry.Core.DefectIteration.iterate_mem_adjoin",
+        "InfoGeometry.Core.DefectIteration.adjoin_defect_le",
+        "InfoGeometry.Core.DefectIteration.adjoin_iterate_antitone"
+      ],
+      "audited_kernel_declarations": 12,
+      "kernel_names": [
+        "InfoGeometry.Core.DefectIteration.iterate_mul_iterate_eq_zero",
+        "InfoGeometry.Core.DefectIteration.iterate_add_of_mul_eq_zero",
+        "InfoGeometry.Core.DefectIteration.map_iterate",
+        "InfoGeometry.Core.DefectIteration.adjoin_iterate_antitone",
+        "InfoGeometry.Core.DefectIteration.mul_iterate_eq_zero",
+        "InfoGeometry.Core.DefectIteration.iterate_mul_eq_zero",
+        "InfoGeometry.Core.DefectIteration.adjoin_defect_le",
+        "InfoGeometry.Core.DefectIteration.iterate_mem_subalgebra",
+        "InfoGeometry.Core.DefectIteration.commute_iterate_add_idempotent",
+        "InfoGeometry.Core.DefectIteration.iterate_mem_adjoin",
+        "InfoGeometry.Core.DefectIteration.commute_iterate",
+        "InfoGeometry.Core.DefectIteration.commute_defect"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentDefect",
+      "explicit_theorems": 9,
+      "explicit_definitions": 0,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.TripotentDefect.projPos_mul_projNeg",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projPos",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projNeg",
+        "InfoGeometry.Core.TripotentDefect.defect_projPos",
+        "InfoGeometry.Core.TripotentDefect.defect_projNeg",
+        "InfoGeometry.Core.TripotentDefect.defect_projZero",
+        "InfoGeometry.Core.TripotentDefect.projPos_sub_of_orthogonal",
+        "InfoGeometry.Core.TripotentDefect.projNeg_sub_of_orthogonal",
+        "InfoGeometry.Core.TripotentDefect.projZero_sub_of_orthogonal"
+      ],
+      "audited_kernel_declarations": 18,
+      "kernel_names": [
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projPos._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.projZero_sub_of_orthogonal",
+        "InfoGeometry.Core.TripotentDefect.projPos_sub_of_orthogonal",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projPos",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projNeg._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.projNeg_sub_of_orthogonal._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.defect_projNeg._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.defect_projNeg",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projNeg",
+        "InfoGeometry.Core.TripotentDefect.defect_projPos._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.projPos_mul_projNeg._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.defect_projZero._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.projPos_mul_projNeg",
+        "InfoGeometry.Core.TripotentDefect.projZero_sub_of_orthogonal._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.defect_projZero",
+        "InfoGeometry.Core.TripotentDefect.defect_projPos",
+        "InfoGeometry.Core.TripotentDefect.projPos_sub_of_orthogonal._abel_1_1",
+        "InfoGeometry.Core.TripotentDefect.projNeg_sub_of_orthogonal"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentAdjoint",
+      "explicit_theorems": 7,
+      "explicit_definitions": 0,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.TripotentAdjoint.adLinear_eq_ad",
+        "InfoGeometry.Core.TripotentAdjoint.adGrade_eq_eigenspace",
+        "InfoGeometry.Core.TripotentAdjoint.jointPeirceProjector_commute_ad",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_commute_ad",
+        "InfoGeometry.Core.TripotentAdjoint.ad_pow_apply_fiveGradeProjector",
+        "InfoGeometry.Core.TripotentAdjoint.ad_quintic_apply_fiveGradeProjector",
+        "InfoGeometry.Core.TripotentAdjoint.ad_quintic"
+      ],
+      "audited_kernel_declarations": 7,
+      "kernel_names": [
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_commute_ad",
+        "InfoGeometry.Core.TripotentAdjoint.ad_quintic_apply_fiveGradeProjector",
+        "InfoGeometry.Core.TripotentAdjoint.ad_pow_apply_fiveGradeProjector",
+        "InfoGeometry.Core.TripotentAdjoint.ad_quintic",
+        "InfoGeometry.Core.TripotentAdjoint.adGrade_eq_eigenspace",
+        "InfoGeometry.Core.TripotentAdjoint.jointPeirceProjector_commute_ad",
+        "InfoGeometry.Core.TripotentAdjoint.adLinear_eq_ad"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentEigenspaces",
+      "explicit_theorems": 10,
+      "explicit_definitions": 0,
+      "explicit_abbreviations": 0,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeValue_real_injective",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_eq_zero_of_eigen_ne",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeRange_eq_eigenspace",
+        "InfoGeometry.Core.TripotentAdjoint.eigenspace_eq_bot_of_not_mem_fiveGradeValue",
+        "InfoGeometry.Core.TripotentAdjoint.mul_mem_eigenspace_add",
+        "InfoGeometry.Core.TripotentAdjoint.lie_mem_eigenspace_add",
+        "InfoGeometry.Core.TripotentAdjoint.mul_mem_fiveGradeRange",
+        "InfoGeometry.Core.TripotentAdjoint.lie_mem_fiveGradeRange",
+        "InfoGeometry.Core.TripotentAdjoint.mul_eq_zero_of_weight_not_mem",
+        "InfoGeometry.Core.TripotentAdjoint.lie_eq_zero_of_weight_not_mem"
+      ],
+      "audited_kernel_declarations": 10,
+      "kernel_names": [
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeRange_eq_eigenspace",
+        "InfoGeometry.Core.TripotentAdjoint.eigenspace_eq_bot_of_not_mem_fiveGradeValue",
+        "InfoGeometry.Core.TripotentAdjoint.mul_mem_eigenspace_add",
+        "InfoGeometry.Core.TripotentAdjoint.lie_eq_zero_of_weight_not_mem",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_eq_zero_of_eigen_ne",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeValue_real_injective",
+        "InfoGeometry.Core.TripotentAdjoint.mul_eq_zero_of_weight_not_mem",
+        "InfoGeometry.Core.TripotentAdjoint.mul_mem_fiveGradeRange",
+        "InfoGeometry.Core.TripotentAdjoint.lie_mem_eigenspace_add",
+        "InfoGeometry.Core.TripotentAdjoint.lie_mem_fiveGradeRange"
+      ],
+      "missing_names": []
+    },
+    {
+      "module": "InfoGeometry.Canonical.TripotentMatrixExample",
+      "explicit_theorems": 24,
+      "explicit_definitions": 4,
+      "explicit_abbreviations": 1,
+      "reviewed_explicit_names": [
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_sq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_selfAdjoint",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_apply",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_sandwich_mul",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_mul",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_star",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_cube",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_selfAdjoint",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projPos_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projNeg_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projZero_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.ad_frameUnit",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_tripotent_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_forward",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_reverse",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.all_five_weights_occur",
+        "InfoGeometry.Canonical.TripotentMatrixExample.fiveGradeRange_ne_bot",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_self_moorePenrose",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent",
+        "InfoGeometry.Canonical.TripotentMatrixExample.weight",
+        "InfoGeometry.Canonical.TripotentMatrixExample.Mat"
+      ],
+      "audited_kernel_declarations": 44,
+      "kernel_names": [
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_star",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_cube",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit",
+        "InfoGeometry.Canonical.TripotentMatrixExample.all_five_weights_occur",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_apply",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection.eq_1",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_8",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_4",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_sq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.weight.eq_1",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projNeg_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_3",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_self_moorePenrose",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_tripotent_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_5",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_sandwich_mul",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_2",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_selfAdjoint",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_1",
+        "InfoGeometry.Canonical.TripotentMatrixExample.fiveGradeRange_ne_bot",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_reverse",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit.eq_1",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_selfAdjoint",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_9",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_mul",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent.eq_1",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent._proof_1",
+        "InfoGeometry.Canonical.TripotentMatrixExample.Mat",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projZero_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_forward",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projPos_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.weight",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_star._simp_1_2",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_7",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection._proof_6",
+        "InfoGeometry.Canonical.TripotentMatrixExample.ad_frameUnit"
+      ],
+      "missing_names": []
+    }
+  ],
+  "composite_module_counts": {
+    "InfoGeometry.Core.IdempotencyDefect": 23,
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": 83,
+    "InfoGeometry.Core.PeirceDecomposition": 58,
+    "InfoGeometry.Core.PeirceGrading": 59,
+    "InfoGeometry.Core.PeirceStarCharges": 26,
+    "InfoGeometry.Core.PeirceCoupledCorners": 34,
+    "InfoGeometry.Core.PeirceQuadraticFrame": 36,
+    "InfoGeometry.Core.PeirceDefect": 17,
+    "InfoGeometry.Core.PeirceAdjointCycle": 14,
+    "InfoGeometry.Physics.Algebra.TripotentPeirceProjectors": 50,
+    "InfoGeometry.Core.PeirceDefectAdjoint": 12,
+    "InfoGeometry.Core.DefectIteration": 12,
+    "InfoGeometry.Core.IdempotentCartan": 54,
+    "InfoGeometry.Core.TripotentDefect": 18,
+    "InfoGeometry.Physics.TripotentAdjointDerivation": 32,
+    "InfoGeometry.Physics.Algebra.TripotentLeftRightPeirceProjectors": 89,
+    "InfoGeometry.OperatorAlgebra.TKKConformalClosure": 254,
+    "InfoGeometry.Meta.OwnerTarget": 10,
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure": 156,
+    "InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition": 98,
+    "InfoGeometry.Core.TripotentAdjoint": 7,
+    "InfoGeometry.Core.TripotentEigenspaces": 10,
+    "InfoGeometry.Singular.MoorePenrose": 45,
+    "InfoGeometry.Singular.Drazin": 33,
+    "InfoGeometry.NCG.TripotentMatrixGeometry": 14,
+    "InfoGeometry.Canonical.TripotentMatrixExample": 44
+  },
+  "composite_audited_declarations": 1288,
+  "new_owner_audited_declarations": 143,
+  "explicit_theorems": 93,
+  "explicit_definitions": 5,
+  "explicit_abbreviations": 1,
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "reviewed_documentation": [
+    {
+      "path": "docs/intake/2026-10-30-universal-grade-generator/CONTRACT.md",
+      "sha256": "30b4e05365432d4fe6ea72c26a38c24ff26a68d532c1375084807daf73fc6ad9"
+    },
+    {
+      "path": "docs/intake/2026-10-30-universal-grade-generator/README.md",
+      "sha256": "61bae2f16a18582989c470d49b93a0550a37ecb4d75b4e7916b6352d01b67838"
+    },
+    {
+      "path": "docs/intake/2026-10-30-universal-grade-generator/PROVENANCE.json",
+      "sha256": "b85ae5e3a1251da779af6ecb25aeb43b3987dccc62a38d0656af4f5bcfb0df71"
+    }
+  ],
+  "semantic_receipt_sha256": {
+    "SEMANTIC_AUDIT_V2.md": "e1938038cd48d734f5ebd58a6d282759287818d92b15d80497b518ac37bb7218",
+    "SEMANTIC_AUDIT_V2.json": "7fc61ef89e36f0cea40d41807958e86c0fea90202f59900013dd480ebeb4cb02"
+  },
+  "unchanged_verification_source_sha256": {
+    "tools/quality/check_universal_grade_generator.py": "f184f73aaded0e4291502d2c8bcee80163b678d8cb9629f1a3b294cc290eaafd",
+    "tools/quality/check_lie_jordan_geometry.py": "7872a388a385136c9d6af1fe40927e0772973f388307d86d458a6b666c2cd7ea",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/audit_constructivity.py": "10218eaa5c05a2138d20bde74f34f27e67402a88296d1d426df23b5f238ae129",
+    "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+    "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+    "scripts/vacuity-linter.py": "76b0241f4e62dbd01c6e9b160ef1f8af9caf7bf2b6461ea713f4ca18a5dc8033",
+    "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+    "tools/infra/opengauss_screener.py": "54dba0a503b7a76c34a2c059f8b8251f62f30a64226bb9bb16befaf1ffb29648",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    ".github/workflows/universal-grade-generator.yml": "8aa78fbdd359c49c05127cc064dc2530bf63d5e18d1e9528ed3bc7482fce6948"
+  },
+  "native_evidence_sha256": {
+    "/workspace/scratch/3c7848773029/grade-validation/final/status.json": "48c9852d4cc3723d25d2c9235e6a11e2ce4b5e6b85d68bb6229d0237ef3e04e8",
+    "/workspace/scratch/3c7848773029/grade-validation/final/axioms.log": "50d1446c9a1713c4d7cc50f31858bb0c6884ef801e71487aa107847e2a6d5a58",
+    "/workspace/scratch/3c7848773029/grade-validation/final/lake-build.log": "11eddcaad96ce121a5b9e66629637f061e0a5ab338facfafaf0acb39269935a2",
+    "/workspace/scratch/3c7848773029/grade-validation/final/cache.log": "29e284dc7d8024aa6a333a92d0b23035028d78ada47b37f7dd77d8e1a0293483",
+    "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/status.json": "0db9c6f5946528d3ddd8152c6c2890706000a235a59fc4064e18936160c1ac17",
+    "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/strict-leaf.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/leaf-axioms.log": "811d0b1cbd62e6f7fcfba1d8116c52788b4de6acce35ef43bae5e80b45b02a3c",
+    "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/lake-leaf-build.log": "d06aa8b38af88cfc7e67ad644ff83558a8c7da7d572c1d555f23f0f4d36337c3"
+  },
+  "original_v1_leaf_backup": "/workspace/scratch/3c7848773029/grade-validation/final-v2-retry/original-v1-source/InfoGeometry/Canonical/TripotentMatrixExample.lean",
+  "original_v1_leaf_sha256": "2176fab4c5f1baed12ce5ac40b51aea4e27cf5ed00383e1084f18e6966847f7a",
+  "staged_name_status": "A\t.github/workflows/universal-grade-generator.yml\nA\tdocs/intake/2026-10-30-universal-grade-generator/CONTRACT.md\nA\tdocs/intake/2026-10-30-universal-grade-generator/PROVENANCE.json\nA\tdocs/intake/2026-10-30-universal-grade-generator/README.md\nA\tdocs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT.json\nA\tdocs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT.md\nA\tdocs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT_V2.json\nA\tdocs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT_V2.md\nA\tdocs/intake/2026-10-30-universal-grade-generator/context-preflight.json\nA\tlean/InfoGeometry/Canonical/TripotentMatrixExample.lean\nA\tlean/InfoGeometry/Core/DefectIteration.lean\nA\tlean/InfoGeometry/Core/IdempotencyDefect.lean\nA\tlean/InfoGeometry/Core/PeirceDefect.lean\nA\tlean/InfoGeometry/Core/PeirceDefectAdjoint.lean\nA\tlean/InfoGeometry/Core/TripotentAdjoint.lean\nA\tlean/InfoGeometry/Core/TripotentDefect.lean\nA\tlean/InfoGeometry/Core/TripotentEigenspaces.lean\nA\ttools/quality/check_universal_grade_generator.py\n",
+  "working_tree_status": "A  .github/workflows/universal-grade-generator.yml\nA  docs/intake/2026-10-30-universal-grade-generator/CONTRACT.md\nA  docs/intake/2026-10-30-universal-grade-generator/PROVENANCE.json\nA  docs/intake/2026-10-30-universal-grade-generator/README.md\nA  docs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT.json\nA  docs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT.md\nA  docs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT_V2.json\nA  docs/intake/2026-10-30-universal-grade-generator/SEMANTIC_AUDIT_V2.md\nA  docs/intake/2026-10-30-universal-grade-generator/context-preflight.json\nA  lean/InfoGeometry/Canonical/TripotentMatrixExample.lean\nA  lean/InfoGeometry/Core/DefectIteration.lean\nA  lean/InfoGeometry/Core/IdempotencyDefect.lean\nA  lean/InfoGeometry/Core/PeirceDefect.lean\nA  lean/InfoGeometry/Core/PeirceDefectAdjoint.lean\nA  lean/InfoGeometry/Core/TripotentAdjoint.lean\nA  lean/InfoGeometry/Core/TripotentDefect.lean\nA  lean/InfoGeometry/Core/TripotentEigenspaces.lean\nA  tools/quality/check_universal_grade_generator.py\n",
+  "index_stage_entries_sha256": "7b34bb4b86bbaffd6e4604e07dca203f3ce744ad9c030f07a951dd14abcf0300",
+  "staged_patch_sha256": "fb6fbb3549daef4f4fa25e4f1d8ce047824eb43f57fb2a83ad2e13ecbaa756d5",
+  "diff_checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "issues": []
+}

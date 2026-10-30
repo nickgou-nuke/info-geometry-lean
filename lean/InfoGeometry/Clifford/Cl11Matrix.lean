@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11
@@ -79,6 +84,12 @@ def Eplus  : Mat2 := !![(1 : ℝ), 0; 0, (-1 : ℝ)]  -- σ₃
 def Eminus : Mat2 := !![(0 : ℝ), 1; (-1 : ℝ), 0] -- ε = iσ₂
 def J1     : Mat2 := !![(0 : ℝ), 1; 1, 0]        -- σ₁
 
+/-- The two off-diagonal real matrix seeds have a nonzero commutator. -/
+theorem J1_mul_Eminus_ne : J1 * Eminus ≠ Eminus * J1 := by
+  intro h
+  have h00 := congrArg (fun A : Mat2 => A 0 0) h
+  norm_num [J1, Eminus, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
 lemma Eplus_sq : Eplus * Eplus = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [Eplus, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -140,7 +151,7 @@ theorem cl11ToMat_iota_pos_neg_anticomm :
   rw [cl11ToMat_iota_pos, cl11ToMat_iota_neg]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [Eplus, Eminus]
 
 -- Decomposition of any 2x2 matrix into the Pauli basis
 noncomputable def alpha (M : Mat2) : ℝ := (M 0 0 + M 1 1) / 2
@@ -195,7 +206,7 @@ noncomputable def cl11EquivMat : CliffordAlgebra q11 ≃ₐ[ℝ] Mat2 :=
       have h_surj : Function.Surjective (cl11ToMat.toLinearMap) := cl11ToMat_surjective
       let e1 : CliffordAlgebra q11 ≃ₐ[ℝ] ℍ[ℝ, 1, 0, -1] := CliffordAlgebraQuaternion.equiv
       let e2 : ℍ[ℝ, 1, 0, -1] ≃ₗ[ℝ] (Fin 4 → ℝ) := QuaternionAlgebra.linearEquivTuple 1 0 (-1)
-      haveI : FiniteDimensional ℝ (CliffordAlgebra q11) := 
+      have : FiniteDimensional ℝ (CliffordAlgebra q11) :=
         LinearEquiv.finiteDimensional (e1.toLinearEquiv.trans e2).symm
       exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank h_rank).mpr h_surj
     · -- Surjectivity

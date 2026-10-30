@@ -51,6 +51,14 @@ TARGETS = [
     'InfoGeometry.Canonical.RealLieJordanGap',
     'InfoGeometry.Canonical.RealLieJordanScaling',
     'InfoGeometry.Canonical.RealLieJordanGapExamples',
+    'InfoGeometry.Core.LieJordanSingleSquare',
+    'InfoGeometry.Core.PeirceStarNaturality',
+    'InfoGeometry.Canonical.Cl11StarAlgebraColimit',
+    'InfoGeometry.Canonical.Cl11StarAlgebraDimension',
+    'InfoGeometry.Canonical.Cl11PeirceStarColimit',
+    'InfoGeometry.Clifford.TowerMatrix',
+    'InfoGeometry.Canonical.TensorTowerColimit',
+    'InfoGeometry.Clifford.Cl11Matrix',
 ]
 
 

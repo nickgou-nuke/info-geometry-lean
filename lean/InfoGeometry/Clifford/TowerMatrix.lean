@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.MatrixNoncommutativity
+import InfoGeometry.Clifford.Cl11Matrix
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.Matrix.Notation

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -25,9 +30,9 @@ variable (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n)
 
 include psi_comm
 
-def iota_seq (n : ℕ) : ∀ m, A n →ₗ[R] A (n + m)
-| 0 => LinearMap.id
-| m + 1 => (iota (n + m)).comp (iota_seq n m)
+def iota_seq (n : ℕ) : ∀ m, A n →ₗ[R] A (n + m) :=
+  Nat.rec (motive := fun m => A n →ₗ[R] A (n + m))
+    LinearMap.id (fun m f => (iota (n + m)).comp f)
 
 theorem psi_comp_iota_seq (n m : ℕ) :
     (psi (n + m)).comp (iota_seq A iota n m) = psi n := by

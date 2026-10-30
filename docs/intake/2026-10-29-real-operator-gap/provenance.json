@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-10-29T10:19:08.025962+02:00",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "base_commit": "d23c9afe00275126fd4d4e25cb0842ee55fe82af",
+  "preceding_merged_pr": 253,
+  "scope": "Real full-matrix and operator mathematics; input verification claims and Millennium interpretations are not proof evidence.",
+  "streams": [
+    {
+      "input_order": 1,
+      "uploaded_name": "Pasted text(20261028-152208).txt",
+      "library_file_id": "libfile_d3f1b9fb06708191ad5cacee99383f8c",
+      "frozen_file": "stream-1.txt",
+      "bytes": 18722,
+      "lines": 268,
+      "sha256": "b8862b112c73ab8c607969d848e61309fe710d5ee454ad7f9c8b68e731f9a624"
+    },
+    {
+      "input_order": 2,
+      "uploaded_name": "Pasted text (2)(20261028-152723).txt",
+      "library_file_id": "libfile_e6d3413d7e048191bf5468c7c38eb772",
+      "frozen_file": "stream-2.txt",
+      "bytes": 23553,
+      "lines": 356,
+      "sha256": "1c54617a52944fd9b1415f481ec15ae8d34516debad6bef48e4be052c3465bf6"
+    },
+    {
+      "input_order": 3,
+      "source": "Subsequent user message, Jaffe–Witten claim",
+      "frozen_file": "message-claim.txt",
+      "capture_method": "Transcription with mathematical typography and paragraph spacing normalized; original message transport bytes unavailable.",
+      "bytes": 3200,
+      "lines": 41,
+      "sha256": "8912ebae6bce6dfe668246c20f8ee1547b88aa4db7a586cf37e9842a90b69419"
+    }
+  ]
+}

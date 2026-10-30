@@ -45,6 +45,12 @@ TARGETS = [
     'InfoGeometry.Canonical.LieJordanGeneratorTrace',
     'InfoGeometry.Canonical.RealLieJordanGeometry',
     'InfoGeometry.Canonical.RealLieJordanExamples',
+    'InfoGeometry.Analysis.RealPositiveOperatorGap',
+    'InfoGeometry.Analysis.RealPositiveOperatorScaling',
+    'InfoGeometry.Core.LieJordanModeActions',
+    'InfoGeometry.Canonical.RealLieJordanGap',
+    'InfoGeometry.Canonical.RealLieJordanScaling',
+    'InfoGeometry.Canonical.RealLieJordanGapExamples',
 ]
 
 

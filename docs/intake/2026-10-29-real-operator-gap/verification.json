@@ -1,0 +1,455 @@
+{
+  "status": "passed",
+  "checked_at_utc": "2026-10-29T08:32:02.911214+00:00",
+  "scope": "exact source closure and isolated native Lake package; not root package",
+  "base_revision": "d23c9afe00275126fd4d4e25cb0842ee55fe82af",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "target_count": 26,
+  "closure_module_count": 37,
+  "new_public_theorem_count": 61,
+  "audited_declarations": 1003,
+  "allowed_and_observed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "constructivity_findings": [],
+  "isolated_lake_build": "passed",
+  "targets": [
+    "InfoGeometry.Core.LieJordanComposition",
+    "InfoGeometry.Core.OperatorCliffordDouble",
+    "InfoGeometry.Core.PeirceStarCharges",
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry",
+    "InfoGeometry.Canonical.LieJordanMatrixExamples",
+    "InfoGeometry.Core.PeirceCoupledCorners",
+    "InfoGeometry.Canonical.PeirceCouplingGeometry",
+    "InfoGeometry.Canonical.PeirceCouplingPositivity",
+    "InfoGeometry.Canonical.PeirceCouplingExamples",
+    "InfoGeometry.Core.LieJordanBoundaryOperators",
+    "InfoGeometry.Core.PeirceAdjointCycle",
+    "InfoGeometry.Core.PeirceQuadraticFrame",
+    "InfoGeometry.Canonical.PeirceBoundaryComplex",
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+    "InfoGeometry.Canonical.LieJordanBoundaryExamples",
+    "InfoGeometry.Core.PeirceSandwichDuality",
+    "InfoGeometry.Core.LieJordanGenerators",
+    "InfoGeometry.Canonical.LieJordanGeneratorTrace",
+    "InfoGeometry.Canonical.RealLieJordanGeometry",
+    "InfoGeometry.Canonical.RealLieJordanExamples",
+    "InfoGeometry.Analysis.RealPositiveOperatorGap",
+    "InfoGeometry.Analysis.RealPositiveOperatorScaling",
+    "InfoGeometry.Core.LieJordanModeActions",
+    "InfoGeometry.Canonical.RealLieJordanGap",
+    "InfoGeometry.Canonical.RealLieJordanScaling",
+    "InfoGeometry.Canonical.RealLieJordanGapExamples"
+  ],
+  "module_results": [
+    {
+      "module": "InfoGeometry.Core.JordanAssociatorRing",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.JordanMultiplicationClosure",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanComposition",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.OperatorCliffordDouble",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceGrading",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceStarCharges",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanMatrixGeometry",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanMatrixExamples",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceCoupledCorners",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceMatrixTracePairing",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PeirceCouplingGeometry",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PeirceCouplingPositivity",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PeirceCouplingExamples",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceAdjointCycle",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceQuadraticFrame",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PeirceBoundaryComplex",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanBoundaryExamples",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceSandwichDuality",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanGenerators",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Modular.GKSLDissipatorAlgebraic",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanGeneratorTrace",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.EmergentGeometry.HodgeDiracFactorization",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.HodgeCohomology.HodgeDirac",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.RealLieJordanGeometry",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.RealLieJordanExamples",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.RealPositiveOperatorGap",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.RealPositiveOperatorScaling",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.MatrixTwoNoncommutativity",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.SquareZeroSandwich",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanModeActions",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.RealLieJordanGap",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.RealLieJordanScaling",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.RealLieJordanGapExamples",
+      "status": "passed",
+      "warnings": 0
+    }
+  ],
+  "module_declaration_counts": {
+    "InfoGeometry.Core.JordanAssociatorRing": 30,
+    "InfoGeometry.Core.JordanMultiplicationClosure": 12,
+    "InfoGeometry.Core.LieJordanComposition": 31,
+    "InfoGeometry.Core.OperatorCliffordDouble": 82,
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": 83,
+    "InfoGeometry.Core.PeirceDecomposition": 58,
+    "InfoGeometry.Core.PeirceGrading": 59,
+    "InfoGeometry.Core.PeirceStarCharges": 26,
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry": 28,
+    "InfoGeometry.Canonical.LieJordanMatrixExamples": 33,
+    "InfoGeometry.Core.PeirceCoupledCorners": 34,
+    "InfoGeometry.Core.PeirceMatrixTracePairing": 4,
+    "InfoGeometry.Canonical.PeirceCouplingGeometry": 17,
+    "InfoGeometry.Canonical.PeirceCouplingPositivity": 20,
+    "InfoGeometry.Canonical.PeirceCouplingExamples": 30,
+    "InfoGeometry.Core.LieJordanBoundaryOperators": 37,
+    "InfoGeometry.Core.PeirceAdjointCycle": 14,
+    "InfoGeometry.Core.PeirceQuadraticFrame": 36,
+    "InfoGeometry.Canonical.PeirceBoundaryComplex": 30,
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": 7,
+    "InfoGeometry.Canonical.LieJordanBoundaryExamples": 18,
+    "InfoGeometry.Core.PeirceSandwichDuality": 23,
+    "InfoGeometry.Core.LieJordanGenerators": 48,
+    "InfoGeometry.Modular.GKSLDissipatorAlgebraic": 8,
+    "InfoGeometry.Canonical.LieJordanGeneratorTrace": 21,
+    "InfoGeometry.EmergentGeometry.HodgeDiracFactorization": 6,
+    "InfoGeometry.HodgeCohomology.HodgeDirac": 11,
+    "InfoGeometry.Canonical.RealLieJordanGeometry": 26,
+    "InfoGeometry.Canonical.RealLieJordanExamples": 54,
+    "InfoGeometry.Analysis.RealPositiveOperatorGap": 8,
+    "InfoGeometry.Analysis.RealPositiveOperatorScaling": 6,
+    "InfoGeometry.Canonical.MatrixTwoNoncommutativity": 5,
+    "InfoGeometry.Core.SquareZeroSandwich": 42,
+    "InfoGeometry.Core.LieJordanModeActions": 24,
+    "InfoGeometry.Canonical.RealLieJordanGap": 8,
+    "InfoGeometry.Canonical.RealLieJordanScaling": 10,
+    "InfoGeometry.Canonical.RealLieJordanGapExamples": 14
+  },
+  "source_sha256": {
+    "InfoGeometry.Core.JordanAssociatorRing": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+    "InfoGeometry.Core.JordanMultiplicationClosure": "7a4bbf9a9c072f181b5fed9efc9e6fed3b4d6120d48f4435292001d0008cb5ba",
+    "InfoGeometry.Core.LieJordanComposition": "0bbab38efde19cea920df26cdd13f20a7fb2227b2a284e419016f645d0b933ee",
+    "InfoGeometry.Core.OperatorCliffordDouble": "80d3de08b09ed8d947eb77c8e11683b05dc307aa7fc213490553ea6cdf1388f0",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "InfoGeometry.Core.PeirceDecomposition": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+    "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+    "InfoGeometry.Core.PeirceStarCharges": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry": "dcafe51f30afcb952129c2c45e071a368bb0a93fa0f9e0398734ae4943383a05",
+    "InfoGeometry.Canonical.LieJordanMatrixExamples": "26327145ce70a1132f37ffc3e686b9b0a3bbed488134f168daf7f7d98b98139b",
+    "InfoGeometry.Core.PeirceCoupledCorners": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+    "InfoGeometry.Core.PeirceMatrixTracePairing": "26ee1aabbc17093f6a114b8c4cc221d98adaa037ee4d3ebcc34dba42da58e572",
+    "InfoGeometry.Canonical.PeirceCouplingGeometry": "167bbc6ec77f9c86e4938d9699cae3e061e16ba1c282d3364bdfea1ac380a869",
+    "InfoGeometry.Canonical.PeirceCouplingPositivity": "64d508dfce9d05b4ef8b0a0e8338be3cff2dfd4e48b32b2541282ec22330ea44",
+    "InfoGeometry.Canonical.PeirceCouplingExamples": "f710f1672eb927ccc9004136ca766a0a72d1a124afccd08e7ce04892261cedbd",
+    "InfoGeometry.Core.LieJordanBoundaryOperators": "e608a88c1ecc43de691726b3d36ca7c0eca0796ab34c2f1856b51ba66bd1e227",
+    "InfoGeometry.Core.PeirceAdjointCycle": "7edc7186f8030d3d1cae16ba4903de3f1e6bd9469b619b88756351e0f29798fe",
+    "InfoGeometry.Core.PeirceQuadraticFrame": "40063d7217d5f3149bd291dcf29a984c6b3ec1614d9c1dc7feae15dacf4cb516",
+    "InfoGeometry.Canonical.PeirceBoundaryComplex": "d2c48f960049b4c6ec7357f4e37975fb6e4e18dc0bb54b6c3f1b949dcdfe0a29",
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": "26124a189d2e8cd3b6eea6a5a3d7ca6a21fd1798191e25b18267c246f6e7a128",
+    "InfoGeometry.Canonical.LieJordanBoundaryExamples": "e8d394aab9cd1b7e7da9c925f6ff6361fa602b8a82a193da5637c1b020f79d6d",
+    "InfoGeometry.Core.PeirceSandwichDuality": "94238642521c3eba162ab79be630b4de370127859664a099d9691f5ad3a1a869",
+    "InfoGeometry.Core.LieJordanGenerators": "8caa1b840fc11201c2457db34485b4693e350ccb17028e5668fbd3ad8c333269",
+    "InfoGeometry.Modular.GKSLDissipatorAlgebraic": "570515da435fe80f1f1064f86dc2c37deaf2627ba38ed52eeabd3376fc74fbdc",
+    "InfoGeometry.Canonical.LieJordanGeneratorTrace": "42d1bb9067532d5e263c316660ae58d8f7f4d3afc0fa2c4b841e7533cc587395",
+    "InfoGeometry.EmergentGeometry.HodgeDiracFactorization": "7f3b45dd67e2b6534d44b91ee28af34285cdcc5634e77ac0614977b1e743da86",
+    "InfoGeometry.HodgeCohomology.HodgeDirac": "bb5ea26697c5c406d28e16f924ef5639652599009cca179020eddf3e376d36cd",
+    "InfoGeometry.Canonical.RealLieJordanGeometry": "2651426d3e35883a8ede622e41ec81f86041ec287d24fd3dfd6fc50bd388a4eb",
+    "InfoGeometry.Canonical.RealLieJordanExamples": "bf29be0451c8c6202ee576a3ebecb7852e3688e9b81d6f56b15b1f80d78ba957",
+    "InfoGeometry.Analysis.RealPositiveOperatorGap": "5d7a27865aec1b5dabd7183b80707926202d1709c0f20b8726fb51df4d1d560c",
+    "InfoGeometry.Analysis.RealPositiveOperatorScaling": "21bfe8cb2bcc6c976703b812587168299b0542065fea200221a59f20d48df1f0",
+    "InfoGeometry.Canonical.MatrixTwoNoncommutativity": "f177f661edb1f7cb9c0c55c2713cec89ec3800007fbefacd1f03545fefd2c731",
+    "InfoGeometry.Core.SquareZeroSandwich": "8d5f642445e89e4ac01479d9c7afadbe66d96439e3308087d1ea95c48e9e87f5",
+    "InfoGeometry.Core.LieJordanModeActions": "6cdd7b981db9cd29e168b62e42596cc696c1a5e1e638b0092c76207136422de6",
+    "InfoGeometry.Canonical.RealLieJordanGap": "8feefea0819381c6499419362faf5e4af3a700eba567928ec1bfcb909c80e759",
+    "InfoGeometry.Canonical.RealLieJordanScaling": "748739ce0153a246c566fa4ff6a61c5a9348b4bb30b5a2ec5c4e04e4cd2c9e88",
+    "InfoGeometry.Canonical.RealLieJordanGapExamples": "bd2e3863c1975971aa0c5912de5b3083b9412852516891870f08421b0cd94b59"
+  },
+  "repository_import_dependencies": {
+    "InfoGeometry.Core.JordanAssociatorRing": [],
+    "InfoGeometry.Core.JordanMultiplicationClosure": [
+      "InfoGeometry.Core.JordanAssociatorRing"
+    ],
+    "InfoGeometry.Core.LieJordanComposition": [
+      "InfoGeometry.Core.JordanMultiplicationClosure"
+    ],
+    "InfoGeometry.Core.OperatorCliffordDouble": [],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceStarCharges": [
+      "InfoGeometry.Core.PeirceGrading"
+    ],
+    "InfoGeometry.Canonical.LieJordanMatrixGeometry": [
+      "InfoGeometry.Core.LieJordanComposition",
+      "InfoGeometry.Core.OperatorCliffordDouble"
+    ],
+    "InfoGeometry.Canonical.LieJordanMatrixExamples": [
+      "InfoGeometry.Canonical.LieJordanMatrixGeometry",
+      "InfoGeometry.Core.PeirceStarCharges"
+    ],
+    "InfoGeometry.Core.PeirceCoupledCorners": [
+      "InfoGeometry.Core.PeirceStarCharges"
+    ],
+    "InfoGeometry.Core.PeirceMatrixTracePairing": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Canonical.PeirceCouplingGeometry": [
+      "InfoGeometry.Core.PeirceCoupledCorners",
+      "InfoGeometry.Core.PeirceMatrixTracePairing"
+    ],
+    "InfoGeometry.Canonical.PeirceCouplingPositivity": [
+      "InfoGeometry.Canonical.PeirceCouplingGeometry"
+    ],
+    "InfoGeometry.Canonical.PeirceCouplingExamples": [
+      "InfoGeometry.Canonical.PeirceCouplingPositivity",
+      "InfoGeometry.Canonical.LieJordanMatrixExamples"
+    ],
+    "InfoGeometry.Core.LieJordanBoundaryOperators": [
+      "InfoGeometry.Core.LieJordanComposition"
+    ],
+    "InfoGeometry.Core.PeirceAdjointCycle": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Core.PeirceQuadraticFrame": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Canonical.PeirceBoundaryComplex": [
+      "InfoGeometry.Core.PeirceCoupledCorners",
+      "InfoGeometry.Core.JordanMultiplicationClosure"
+    ],
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Canonical.LieJordanBoundaryExamples": [
+      "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "InfoGeometry.Canonical.PeirceBoundaryComplex",
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+      "InfoGeometry.Canonical.PeirceCouplingExamples"
+    ],
+    "InfoGeometry.Core.PeirceSandwichDuality": [
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry"
+    ],
+    "InfoGeometry.Core.LieJordanGenerators": [
+      "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "InfoGeometry.Core.PeirceQuadraticFrame",
+      "InfoGeometry.Core.PeirceSandwichDuality"
+    ],
+    "InfoGeometry.Modular.GKSLDissipatorAlgebraic": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.LieJordanGeneratorTrace": [
+      "InfoGeometry.Core.LieJordanGenerators",
+      "InfoGeometry.Core.PeirceSandwichDuality",
+      "InfoGeometry.Modular.GKSLDissipatorAlgebraic"
+    ],
+    "InfoGeometry.EmergentGeometry.HodgeDiracFactorization": [],
+    "InfoGeometry.HodgeCohomology.HodgeDirac": [
+      "InfoGeometry.EmergentGeometry.HodgeDiracFactorization"
+    ],
+    "InfoGeometry.Canonical.RealLieJordanGeometry": [
+      "InfoGeometry.Core.LieJordanGenerators",
+      "InfoGeometry.HodgeCohomology.HodgeDirac"
+    ],
+    "InfoGeometry.Canonical.RealLieJordanExamples": [
+      "InfoGeometry.Canonical.LieJordanGeneratorTrace"
+    ],
+    "InfoGeometry.Analysis.RealPositiveOperatorGap": [],
+    "InfoGeometry.Analysis.RealPositiveOperatorScaling": [],
+    "InfoGeometry.Canonical.MatrixTwoNoncommutativity": [],
+    "InfoGeometry.Core.SquareZeroSandwich": [
+      "InfoGeometry.Canonical.MatrixTwoNoncommutativity"
+    ],
+    "InfoGeometry.Core.LieJordanModeActions": [
+      "InfoGeometry.Core.LieJordanGenerators",
+      "InfoGeometry.Core.SquareZeroSandwich"
+    ],
+    "InfoGeometry.Canonical.RealLieJordanGap": [
+      "InfoGeometry.Analysis.RealPositiveOperatorGap",
+      "InfoGeometry.Canonical.RealLieJordanGeometry"
+    ],
+    "InfoGeometry.Canonical.RealLieJordanScaling": [
+      "InfoGeometry.Analysis.RealPositiveOperatorScaling",
+      "InfoGeometry.Canonical.RealLieJordanGap"
+    ],
+    "InfoGeometry.Canonical.RealLieJordanGapExamples": [
+      "InfoGeometry.Canonical.RealLieJordanScaling",
+      "InfoGeometry.Canonical.RealLieJordanExamples",
+      "InfoGeometry.Core.LieJordanModeActions"
+    ]
+  },
+  "artifact_sha256": {
+    "status.json": "9cf2d4a7cedb3dacd2c3fcbee5f4aac65a42b0f6f3fe0e3e56ab2822b8ffaf4c",
+    "axioms.log": "7d5d7b0329decd1d23fa50fec9986620c55bb81aa1b43ff0872d4559bc17e7f8",
+    "lake-build.log": "079f2d9bc9b7dd15bb3fc77242c5bd62762f4da7c84481142fca18bc8a6aab6d",
+    "cache.log": "3f45550678c2031d09c1529173d436a83f90817a10c4cd9d37d410b218914976"
+  },
+  "new_module_semantic_review": {
+    "status": "passed",
+    "reviewer_role": "independent semantic reviewer; no proof authorship or compilation",
+    "reviewed_source_sha256": {
+      "InfoGeometry.Analysis.RealPositiveOperatorGap": "5d7a27865aec1b5dabd7183b80707926202d1709c0f20b8726fb51df4d1d560c",
+      "InfoGeometry.Analysis.RealPositiveOperatorScaling": "21bfe8cb2bcc6c976703b812587168299b0542065fea200221a59f20d48df1f0",
+      "InfoGeometry.Core.LieJordanModeActions": "6cdd7b981db9cd29e168b62e42596cc696c1a5e1e638b0092c76207136422de6",
+      "InfoGeometry.Canonical.RealLieJordanGap": "8feefea0819381c6499419362faf5e4af3a700eba567928ec1bfcb909c80e759",
+      "InfoGeometry.Canonical.RealLieJordanScaling": "748739ce0153a246c566fa4ff6a61c5a9348b4bb30b5a2ec5c4e04e4cd2c9e88",
+      "InfoGeometry.Canonical.RealLieJordanGapExamples": "bd2e3863c1975971aa0c5912de5b3083b9412852516891870f08421b0cd94b59"
+    }
+  },
+  "verification_control_review": {
+    "status": "passed",
+    "change_scope": "six target entries and eight source path triggers only; all acceptance logic and dependency pins unchanged"
+  },
+  "verified_snapshot_kind": "Exact staged/working source snapshot based on base_revision, not a clean build of the base commit; publication is reconciled by the source hashes.",
+  "verifier_start_working_tree_status": "M  .github/workflows/lie-jordan-geometry.yml\nA  docs/intake/2026-10-29-real-operator-gap/contract.md\nA  docs/intake/2026-10-29-real-operator-gap/provenance.json\nA  docs/intake/2026-10-29-real-operator-gap/stream-1.txt\nA  docs/intake/2026-10-29-real-operator-gap/stream-2.txt\nA  lean/InfoGeometry/Analysis/RealPositiveOperatorGap.lean\nA  lean/InfoGeometry/Analysis/RealPositiveOperatorScaling.lean\nA  lean/InfoGeometry/Canonical/RealLieJordanGap.lean\nA  lean/InfoGeometry/Canonical/RealLieJordanGapExamples.lean\nA  lean/InfoGeometry/Canonical/RealLieJordanScaling.lean\nA  lean/InfoGeometry/Core/LieJordanModeActions.lean\nM  tools/quality/check_lie_jordan_geometry.py\n"
+}

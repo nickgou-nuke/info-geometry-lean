@@ -1,0 +1,17 @@
+{
+  "lean_kernel_checked": false,
+  "files": {
+    "ZornDefectLieClosure.lean": {
+      "sha256": "daefc6405b0a1ddb72d2768e7411e8d6296d0f918cfe199c8a72d259129b4bf2",
+      "direct_source_banned_tokens": []
+    },
+    "OperatorDefectCompletion.lean": {
+      "sha256": "3ffd95ab0343c8244a8c5471f6abe06c922e8060060e31bfb83aecad1f17dcca",
+      "direct_source_banned_tokens": []
+    },
+    "OperatorDefectCompletionAudit.lean": {
+      "sha256": "2a662814582396b942fe0d42a6ab6e3f92afe5ee265a737a099e670e89c256c2",
+      "direct_source_banned_tokens": []
+    }
+  }
+}

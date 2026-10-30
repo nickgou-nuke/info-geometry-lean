@@ -1,5 +1,12 @@
 name: Wheeler epilogue (scoped)
 on:
+  push:
+    branches: ['feat/noncommutative-star-colimit-transport']
+    paths:
+      - 'lean/InfoGeometry/WheelerEpilogue*.lean'
+      - 'tests/WheelerEpilogueAudit.lean'
+      - 'tools/quality/check_wheeler_epilogue.py'
+      - '.github/workflows/wheeler-epilogue.yml'
   pull_request:
     paths:
       - 'lean/InfoGeometry/WheelerEpilogue*.lean'

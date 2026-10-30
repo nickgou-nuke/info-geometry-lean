@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-30",
+  "reviewer": "grade_claim_review",
+  "role": "independent semantic audit",
+  "semantic_verdict": "PASS",
+  "result_label": "accepted_limited_scope",
+  "review_method": "Read full frozen intake, actual Lean definitions, statements and proof bodies, relevant imported owners, generation contract, mathematical README and provenance; independently matched all eight source SHA-256 hashes. V2 independently re-reviewed the single added dense-matrix noncommutativity theorem and the two-sentence README addition; exact deletion of those additions reproduces the V1 hashes. All eight V2 hashes were independently recomputed.",
+  "independence": {
+    "authored_lean_source": false,
+    "modified_live_repository": false,
+    "executed_compiler_build_or_tests": false,
+    "runtime_acceptance_is_separate": true
+  },
+  "frozen_intake": {
+    "path": "AGENTS-Universal-Grade-Generator.md",
+    "source_commit": "f54b83da3756c3ded0decbf92fd887f8083949ed",
+    "source_blob": "1817347ef5f50f799912ba3bd7d03dc40c842bdc",
+    "sha256": "43d60af6f63ef7d9602a7d045668486dada37f4bdc2784a4bcddef05cadc9361",
+    "line_count": 654
+  },
+  "reviewed_sources": [
+    {
+      "module": "InfoGeometry.Core.IdempotencyDefect",
+      "path": "lean/InfoGeometry/Core/IdempotencyDefect.lean",
+      "sha256": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+      "namespace": "InfoGeometry.Core.IdempotencyDefect",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.IdempotencyDefect.defect_zero",
+        "InfoGeometry.Core.IdempotencyDefect.defect_eq_zero_iff",
+        "InfoGeometry.Core.IdempotencyDefect.map_defect",
+        "InfoGeometry.Core.IdempotencyDefect.polarization",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_add",
+        "InfoGeometry.Core.IdempotencyDefect.defect_neg_sub",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_defect_neg",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect_neg",
+        "InfoGeometry.Core.IdempotencyDefect.defect_add_of_mul_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.defect_mul_eq_zero",
+        "InfoGeometry.Core.IdempotencyDefect.mul_defect_eq_zero"
+      ],
+      "reviewed_definitions": [
+        "InfoGeometry.Core.IdempotencyDefect.defect"
+      ],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDefect",
+      "path": "lean/InfoGeometry/Core/PeirceDefect.lean",
+      "sha256": "d26471b128136c2d0b54661a19490c0c132ba366aa91476b4e41c956fe84e9a2",
+      "namespace": "InfoGeometry.Core.PeirceDefect",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent_eq_square_iff",
+        "InfoGeometry.Core.PeirceDefect.defect_add_idempotent_eq_square",
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_diagonal_corners_zero",
+        "InfoGeometry.Core.PeirceDefect.tangent_iff_mixed_corners",
+        "InfoGeometry.Core.PeirceDefect.commute_square_of_tangent",
+        "InfoGeometry.Core.PeirceDefect.defect_add_commutator",
+        "InfoGeometry.Core.PeirceDefect.defect_add_odd",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem10",
+        "InfoGeometry.Core.PeirceDefect.defect_add_mem01",
+        "InfoGeometry.Core.PeirceDefect.defect_add_coupled",
+        "InfoGeometry.Core.PeirceDefect.defect_add_difference"
+      ],
+      "reviewed_definitions": [],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDefectAdjoint",
+      "path": "lean/InfoGeometry/Core/PeirceDefectAdjoint.lean",
+      "sha256": "fb42fa276d547283ebacd4557c43665e05481c6140dd0a3181816db0f6400315",
+      "namespace": "InfoGeometry.Core.PeirceDefectAdjoint",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_sq_apply_of_anticommute",
+        "InfoGeometry.Core.PeirceDefectAdjoint.negative_ad_squares_sum_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_squares_sub_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.real_ad_cube_eq_ad",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projZero_ad_apply",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projPos_ad_apply",
+        "InfoGeometry.Core.PeirceDefectAdjoint.projNeg_ad_apply"
+      ],
+      "reviewed_definitions": [],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Core.DefectIteration",
+      "path": "lean/InfoGeometry/Core/DefectIteration.lean",
+      "sha256": "87608961261812f07eb3041eaf7827bc3a1793482a687a01ac0fdb527c4f0b4d",
+      "namespace": "InfoGeometry.Core.DefectIteration",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.DefectIteration.commute_defect",
+        "InfoGeometry.Core.DefectIteration.commute_iterate",
+        "InfoGeometry.Core.DefectIteration.iterate_mul_eq_zero",
+        "InfoGeometry.Core.DefectIteration.mul_iterate_eq_zero",
+        "InfoGeometry.Core.DefectIteration.iterate_mul_iterate_eq_zero",
+        "InfoGeometry.Core.DefectIteration.iterate_add_of_mul_eq_zero",
+        "InfoGeometry.Core.DefectIteration.map_iterate",
+        "InfoGeometry.Core.DefectIteration.commute_iterate_add_idempotent",
+        "InfoGeometry.Core.DefectIteration.iterate_mem_subalgebra",
+        "InfoGeometry.Core.DefectIteration.iterate_mem_adjoin",
+        "InfoGeometry.Core.DefectIteration.adjoin_defect_le",
+        "InfoGeometry.Core.DefectIteration.adjoin_iterate_antitone"
+      ],
+      "reviewed_definitions": [],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentDefect",
+      "path": "lean/InfoGeometry/Core/TripotentDefect.lean",
+      "sha256": "cd07bc3c2d975da1683860685b9bdce86c0a192702e6731fef054cf31f513c85",
+      "namespace": "InfoGeometry.Core.TripotentDefect",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.TripotentDefect.projPos_mul_projNeg",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projPos",
+        "InfoGeometry.Core.TripotentDefect.projZero_mul_projNeg",
+        "InfoGeometry.Core.TripotentDefect.defect_projPos",
+        "InfoGeometry.Core.TripotentDefect.defect_projNeg",
+        "InfoGeometry.Core.TripotentDefect.defect_projZero",
+        "InfoGeometry.Core.TripotentDefect.projPos_sub_of_orthogonal",
+        "InfoGeometry.Core.TripotentDefect.projNeg_sub_of_orthogonal",
+        "InfoGeometry.Core.TripotentDefect.projZero_sub_of_orthogonal"
+      ],
+      "reviewed_definitions": [],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentAdjoint",
+      "path": "lean/InfoGeometry/Core/TripotentAdjoint.lean",
+      "sha256": "c835f1b5f7e3a834b05beffc2951470e732981ea0ec5298ca2d1ce165f1ff1c0",
+      "namespace": "InfoGeometry.Core.TripotentAdjoint",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.TripotentAdjoint.adLinear_eq_ad",
+        "InfoGeometry.Core.TripotentAdjoint.adGrade_eq_eigenspace",
+        "InfoGeometry.Core.TripotentAdjoint.jointPeirceProjector_commute_ad",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_commute_ad",
+        "InfoGeometry.Core.TripotentAdjoint.ad_pow_apply_fiveGradeProjector",
+        "InfoGeometry.Core.TripotentAdjoint.ad_quintic_apply_fiveGradeProjector",
+        "InfoGeometry.Core.TripotentAdjoint.ad_quintic"
+      ],
+      "reviewed_definitions": [],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Core.TripotentEigenspaces",
+      "path": "lean/InfoGeometry/Core/TripotentEigenspaces.lean",
+      "sha256": "35cd9b4579d0cd9e21dfee7021b495fa57f357732b641c81c4cde753d4289353",
+      "namespace": "InfoGeometry.Core.TripotentAdjoint",
+      "reviewed_theorems": [
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeValue_real_injective",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeProjector_eq_zero_of_eigen_ne",
+        "InfoGeometry.Core.TripotentAdjoint.fiveGradeRange_eq_eigenspace",
+        "InfoGeometry.Core.TripotentAdjoint.eigenspace_eq_bot_of_not_mem_fiveGradeValue",
+        "InfoGeometry.Core.TripotentAdjoint.mul_mem_eigenspace_add",
+        "InfoGeometry.Core.TripotentAdjoint.lie_mem_eigenspace_add",
+        "InfoGeometry.Core.TripotentAdjoint.mul_mem_fiveGradeRange",
+        "InfoGeometry.Core.TripotentAdjoint.lie_mem_fiveGradeRange",
+        "InfoGeometry.Core.TripotentAdjoint.mul_eq_zero_of_weight_not_mem",
+        "InfoGeometry.Core.TripotentAdjoint.lie_eq_zero_of_weight_not_mem"
+      ],
+      "reviewed_definitions": [],
+      "reviewed_abbreviations": []
+    },
+    {
+      "module": "InfoGeometry.Canonical.TripotentMatrixExample",
+      "path": "lean/InfoGeometry/Canonical/TripotentMatrixExample.lean",
+      "sha256": "f188c713d38c2c7ad48e32fc0448ddb0ca431395606c1c13bd9feead9aadf195",
+      "namespace": "InfoGeometry.Canonical.TripotentMatrixExample",
+      "reviewed_theorems": [
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_sq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_selfAdjoint",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_apply",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_sandwich_mul",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_mul",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit_star",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_cube",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_selfAdjoint",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_entry_ne_zero",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projPos_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projNeg_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.projZero_eq",
+        "InfoGeometry.Canonical.TripotentMatrixExample.ad_frameUnit",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection_tripotent_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_forward",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_reverse",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_noncommute",
+        "InfoGeometry.Canonical.TripotentMatrixExample.all_five_weights_occur",
+        "InfoGeometry.Canonical.TripotentMatrixExample.fiveGradeRange_ne_bot",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_self_moorePenrose"
+      ],
+      "reviewed_definitions": [
+        "InfoGeometry.Canonical.TripotentMatrixExample.reflection",
+        "InfoGeometry.Canonical.TripotentMatrixExample.frameUnit",
+        "InfoGeometry.Canonical.TripotentMatrixExample.tripotent",
+        "InfoGeometry.Canonical.TripotentMatrixExample.weight"
+      ],
+      "reviewed_abbreviations": [
+        "InfoGeometry.Canonical.TripotentMatrixExample.Mat"
+      ]
+    }
+  ],
+  "reviewed_theorem_count": 93,
+  "reviewed_definition_count": 5,
+  "reviewed_abbreviation_count": 1,
+  "reviewed_documentation": [
+    {
+      "path": "docs/intake/2026-10-30-universal-grade-generator/CONTRACT.md",
+      "sha256": "30b4e05365432d4fe6ea72c26a38c24ff26a68d532c1375084807daf73fc6ad9"
+    },
+    {
+      "path": "docs/intake/2026-10-30-universal-grade-generator/README.md",
+      "sha256": "61bae2f16a18582989c470d49b93a0550a37ecb4d75b4e7916b6352d01b67838"
+    },
+    {
+      "path": "docs/intake/2026-10-30-universal-grade-generator/PROVENANCE.json",
+      "sha256": "b85ae5e3a1251da779af6ecb25aeb43b3987dccc62a38d0656af4f5bcfb0df71"
+    }
+  ],
+  "existing_owner_declarations_traced": [
+    "InfoGeometry.Core.PeirceDecomposition.peirce10",
+    "InfoGeometry.Core.PeirceDecomposition.peirce01",
+    "InfoGeometry.Core.PeirceDecomposition.component10",
+    "InfoGeometry.Core.PeirceDecomposition.component01",
+    "InfoGeometry.Core.PeirceGrading.mem_odd_iff",
+    "InfoGeometry.Core.PeirceGrading.mem_even_iff",
+    "InfoGeometry.Core.PeirceGrading.odd_mul_odd",
+    "InfoGeometry.Core.PeirceGrading.odd_reconstruction",
+    "InfoGeometry.Core.PeirceCoupledCorners.coupled_square",
+    "InfoGeometry.Core.PeirceQuadraticFrame.difference_square",
+    "InfoGeometry.Core.PeirceQuadraticFrame.sum_difference_anticommute",
+    "InfoGeometry.Core.PeirceQuadraticFrame.double_bracket_sum",
+    "InfoGeometry.Core.PeirceQuadraticFrame.double_bracket_difference",
+    "InfoGeometry.Core.PeirceAdjointCycle.ad_cube_eq_ad",
+    "InfoGeometry.Core.IdempotentCartan.orthogonal_difference_powers",
+    "InfoGeometry.Physics.Algebra.projPos",
+    "InfoGeometry.Physics.Algebra.projNeg",
+    "InfoGeometry.Physics.Algebra.projZero",
+    "InfoGeometry.Physics.Algebra.jointPeirce_reconstruction",
+    "InfoGeometry.Physics.Algebra.jointPeirceProjector_adjoint_weight",
+    "InfoGeometry.Physics.Algebra.tripotentFiveGradeLinearEquiv",
+    "InfoGeometry.Physics.Algebra.mem_fiveGradeRange_implies_adjoint_eigen",
+    "InfoGeometry.Physics.Algebra.mem_fiveGradeRange_iff_projector_fixed",
+    "InfoGeometry.Physics.Algebra.adOp_mul",
+    "InfoGeometry.Physics.Algebra.commutatorAction_product_component",
+    "InfoGeometry.Physics.Algebra.commutatorAction_bracket_component",
+    "InfoGeometry.NCG.TripotentMatrixGeometry.self_moorePenrose_of_isSelfAdjoint"
+  ],
+  "closed_findings": [
+    {
+      "finding": "Raw zero-projector defect sign was negative; true identity has positive sign.",
+      "status": "closed",
+      "evidence": "InfoGeometry.Core.TripotentDefect.defect_projZero"
+    },
+    {
+      "finding": "Distinguish algebraic linearization from analytic differentiation.",
+      "status": "closed",
+      "evidence": "PeirceDefect module documentation and tangent_iff_diagonal_corners_zero comment"
+    },
+    {
+      "finding": "Expose mixed-corner reconstruction as an explicit equivalence.",
+      "status": "closed",
+      "evidence": "InfoGeometry.Core.PeirceDefect.tangent_iff_mixed_corners"
+    },
+    {
+      "finding": "Connect cubic obstruction to the new defect API in both signs.",
+      "status": "closed",
+      "evidence": [
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect",
+        "InfoGeometry.Core.IdempotencyDefect.cubic_sub_eq_mul_defect_neg"
+      ]
+    },
+    {
+      "finding": "Do not identify undefined intake macros with proved operators.",
+      "status": "closed",
+      "evidence": [
+        "InfoGeometry.Core.PeirceDefectAdjoint.negative_ad_squares_sum_eq_defect",
+        "InfoGeometry.Core.PeirceDefectAdjoint.ad_squares_sub_eq_defect",
+        "CONTRACT.md scope statement"
+      ]
+    },
+    {
+      "finding": "Require genuine nonzero occurrence of all five weights in the concrete full matrix algebra.",
+      "status": "closed",
+      "evidence": [
+        "InfoGeometry.Canonical.TripotentMatrixExample.all_five_weights_occur",
+        "InfoGeometry.Canonical.TripotentMatrixExample.fiveGradeRange_ne_bot",
+        "InfoGeometry.Canonical.TripotentMatrixExample.zero_weight_noncommute"
+      ]
+    },
+    {
+      "finding": "README double-adjoint prerequisite edge must refer to defect calculus rather than an unused new tangent theorem.",
+      "status": "closed",
+      "evidence": "README.md now has D --> A"
+    },
+    {
+      "finding": "Contract intake line count must match the frozen bytes.",
+      "status": "closed",
+      "evidence": "CONTRACT.md and PROVENANCE.json both identify 654 lines"
+    },
+    {
+      "finding": "The existing T16 lexical recognizer required a closed noncommutativity witness with simple named operands.",
+      "status": "closed_by_proof_addition",
+      "evidence": "InfoGeometry.Canonical.TripotentMatrixExample.reflection_tripotent_noncommute",
+      "gate_suppressed_or_modified": false
+    }
+  ],
+  "scope_boundaries": [
+    "Arbitrary associative rings for division-free defect and tangent calculus; explicit real algebra hypotheses for normalized projectors and eigenspace separation.",
+    "Native LieAlgebra.ad and Module.End.eigenspace; actual old ranges are proved equal to eigenspaces, not defined to be so.",
+    "The full M4(R) instance retains all matrix products and noncommuting operators; polynomial projector commutation does not restrict the ambient algebra.",
+    "Generic quintic is an annihilating polynomial with no universal minimality or all-weights-nonzero claim.",
+    "All five nonzero weights are proved in the specific dense M4(R) example, including a noncommutative zero-weight corner.",
+    "Defect iteration stays within the generated subalgebra and does not imply infinitely many independent operators or new horizontal grades.",
+    "No oriented-commutator recovery from the square map, analytic derivative, manifold, completion, colimit, SU(3)/TKK classification, positivity, mass gap or physical model is asserted.",
+    "README arrows describe mathematical proof prerequisites, not a separately formalized declaration-graph object.",
+    "Kernel, closure axiom, warning and isolated Lake acceptance belong to the independent runtime gate; this reviewer did not execute them."
+  ],
+  "unresolved_semantic_nonconformances": [],
+  "revalidation_policy": "Any change to a reviewed Lean source hash requires renewed semantic review.",
+  "receipt_revision": 2,
+  "supersedes": {
+    "json": "SEMANTIC_AUDIT.json",
+    "json_sha256": "141725f7bbf808782886e4bb17b12b824ecfd11745e701d26a37c7f79bcd4118",
+    "markdown": "SEMANTIC_AUDIT.md",
+    "markdown_sha256": "e0fa9d71817623e08b17e484667da03cbb15a8d36ccfd93f77b9e92b5ea45fb9",
+    "prior_files_preserved": true
+  },
+  "v2_delta_review": {
+    "semantic_verdict": "PASS",
+    "changed_lean_sources": [
+      {
+        "path": "lean/InfoGeometry/Canonical/TripotentMatrixExample.lean",
+        "previous_sha256": "2176fab4c5f1baed12ce5ac40b51aea4e27cf5ed00383e1084f18e6966847f7a",
+        "current_sha256": "f188c713d38c2c7ad48e32fc0448ddb0ca431395606c1c13bd9feead9aadf195"
+      }
+    ],
+    "changed_documentation": [
+      {
+        "path": "docs/intake/2026-10-30-universal-grade-generator/README.md",
+        "previous_sha256": "8c3820a7b97eb04e91ada6962edede30e11beb15df6dd7b620bc58103b38f463",
+        "current_sha256": "61bae2f16a18582989c470d49b93a0550a37ecb4d75b4e7916b6352d01b67838"
+      }
+    ],
+    "new_theorem": "InfoGeometry.Canonical.TripotentMatrixExample.reflection_tripotent_noncommute",
+    "exact_statement": "reflection * tripotent ≠ tripotent * reflection",
+    "carrier": "Matrix (Fin 4) (Fin 4) ℝ",
+    "proof_review": "Assuming equality of the full matrix products yields equality of their (0,1) entries. Exact rational matrix multiplication contradicts it. Both operands are existing actual dense self-adjoint matrix constants; no new carrier or noncommutativity assumption is introduced.",
+    "supporting_existing_declarations": [
+      "InfoGeometry.Canonical.TripotentMatrixExample.reflection_entry_ne_zero",
+      "InfoGeometry.Canonical.TripotentMatrixExample.reflection_selfAdjoint",
+      "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_entry_ne_zero",
+      "InfoGeometry.Canonical.TripotentMatrixExample.tripotent_selfAdjoint"
+    ],
+    "source_delta_is_only_the_reviewed_proof_addition": true,
+    "readme_delta_is_only_the_reviewed_two_sentence_addition": true,
+    "other_seven_new_lean_modules_unchanged": true,
+    "imports_definitions_other_theorems_unchanged": true,
+    "t16_handling": "A substantive closed noncommutativity theorem was added for the two already-defined dense self-adjoint constants. The existing simple-operand lexical recognizer, staged-gate wrapper and pre-commit hook are unchanged. This is a mathematical proof addition, not gate suppression or an exception.",
+    "gate_sources_unchanged_against_HEAD": [
+      {
+        "path": "tools/infra/opengauss_screener.py",
+        "sha256": "54dba0a503b7a76c34a2c059f8b8251f62f30a64226bb9bb16befaf1ffb29648"
+      },
+      {
+        "path": "tools/quality/proof_proxy_staged_gate.py",
+        "sha256": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9"
+      },
+      {
+        "path": ".githooks/pre-commit",
+        "sha256": "1d686a385aaa998a9777ed77ca8214a2b418e076d30e9abd089c383d69f993be"
+      }
+    ],
+    "gate_execution_by_this_reviewer": false,
+    "runtime_scope": "Independent QA must compile and re-audit the changed matrix leaf and bind its acceptance to the V2 hash; unchanged-source runtime evidence remains owned by QA."
+  }
+}

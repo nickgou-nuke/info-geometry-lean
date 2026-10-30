@@ -1,0 +1,423 @@
+{
+  "schema": "info_geometry.context_preflight.v1",
+  "query": "tripotentFiveGradeLinearEquiv mem_fiveGradeRange adLinear idemDefect projPhi derivSqSig PeirceQuadraticFrame",
+  "tokens": [
+    "tripotentFiveGradeLinearEquiv",
+    "mem_fiveGradeRange",
+    "adLinear",
+    "idemDefect",
+    "projPhi",
+    "derivSqSig",
+    "PeirceQuadraticFrame"
+  ],
+  "authority": {
+    "lean_source": "proof authority after lake env lean or locked Lake build",
+    "graph_rag_arango_leantrail_loogle_sympy": "navigation and evidence only",
+    "external_refs": "context only unless explicitly promoted",
+    "docs_docstrings_reports": "hints only"
+  },
+  "artifact_presence": {
+    "dag_decls": {
+      "path": "artifacts/dag/index/decls.jsonl",
+      "exists": false,
+      "size": null
+    },
+    "dag_types": {
+      "path": "artifacts/dag/index/types.jsonl",
+      "exists": false,
+      "size": null
+    },
+    "leansearch_records": {
+      "path": "artifacts/leansearch_local/records.jsonl",
+      "exists": false,
+      "size": null
+    },
+    "dag_manifest": {
+      "path": "artifacts/dag/index/manifest.json",
+      "exists": false,
+      "size": null
+    },
+    "raw_infotree_dir": {
+      "path": "artifacts/raw_infotree",
+      "exists": false,
+      "size": null
+    }
+  },
+  "observed_in_repo_owned_code": [
+    {
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentFiveGradingDecomposition.lean",
+      "hits": 7,
+      "samples": [
+        {
+          "line": 315,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "def tripotentFiveGradeLinearEquiv"
+        },
+        {
+          "line": 325,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "@[simp] theorem tripotentFiveGradeLinearEquiv_apply"
+        },
+        {
+          "line": 327,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "tripotentFiveGradeLinearEquiv e he x ="
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/TripotentAdjointDerivation.lean",
+      "hits": 6,
+      "samples": [
+        {
+          "line": 101,
+          "token": "adLinear",
+          "text": "def adLinear (e : A) : A \u2192\u2097[\u211d] A :="
+        },
+        {
+          "line": 105,
+          "token": "adLinear",
+          "text": "abbrev commutatorActionLinear (e : A) : A \u2192\u2097[\u211d] A := adLinear e"
+        },
+        {
+          "line": 110,
+          "token": "adLinear",
+          "text": "@[simp] theorem adLinear_apply (e x : A) :"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AlgebraicDerivations.lean",
+      "hits": 6,
+      "samples": [
+        {
+          "line": 72,
+          "token": "adLinear",
+          "text": "def adLinear (X : M2R) : M2R \u2192\u2097[\u211d] M2R where"
+        },
+        {
+          "line": 78,
+          "token": "adLinear",
+          "text": "theorem adLinear_zero :"
+        },
+        {
+          "line": 79,
+          "token": "adLinear",
+          "text": "adLinear (0 : M2R) = (0 : M2R \u2192\u2097[\u211d] M2R) := by"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentTopologicalFiveGrading.lean",
+      "hits": 4,
+      "samples": [
+        {
+          "line": 224,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "noncomputable def continuousTripotentFiveGradeLinearEquiv"
+        },
+        {
+          "line": 227,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "{ toLinearEquiv := tripotentFiveGradeLinearEquiv e he"
+        },
+        {
+          "line": 231,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "@[simp] theorem continuousTripotentFiveGradeLinearEquiv_apply"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Core/PeirceQuadraticFrame.lean",
+      "hits": 2,
+      "samples": [
+        {
+          "line": 21,
+          "token": "PeirceQuadraticFrame",
+          "text": "namespace InfoGeometry.Core.PeirceQuadraticFrame"
+        },
+        {
+          "line": 285,
+          "token": "PeirceQuadraticFrame",
+          "text": "end InfoGeometry.Core.PeirceQuadraticFrame"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Core/LieJordanGenerators.lean",
+      "hits": 2,
+      "samples": [
+        {
+          "line": 7,
+          "token": "PeirceQuadraticFrame",
+          "text": "import InfoGeometry.Core.PeirceQuadraticFrame"
+        },
+        {
+          "line": 28,
+          "token": "PeirceQuadraticFrame",
+          "text": "open PeirceQuadraticFrame PeirceSandwichDuality"
+        }
+      ]
+    },
+    {
+      "path": "tools/quality/check_lie_jordan_geometry.py",
+      "hits": 1,
+      "samples": [
+        {
+          "line": 39,
+          "token": "PeirceQuadraticFrame",
+          "text": "'InfoGeometry.Core.PeirceQuadraticFrame',"
+        }
+      ]
+    }
+  ],
+  "entrypoint_surfaces": [
+    {
+      "path": "lakefile.lean",
+      "hits": 20,
+      "samples": [
+        {
+          "line": 14,
+          "token": "script |lean_exe |package_facet |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:",
+          "text": "script shadowPlantWorker (args) do"
+        },
+        {
+          "line": 24,
+          "token": "script |lean_exe |package_facet |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:",
+          "text": "script strictCheck (args) do"
+        },
+        {
+          "line": 34,
+          "token": "script |lean_exe |package_facet |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:",
+          "text": "script smokeSpikes (args) do"
+        }
+      ]
+    }
+  ],
+  "graph_indexing_surfaces": [
+    {
+      "path": "lakefile.lean",
+      "hits": 17,
+      "samples": [
+        {
+          "line": 358,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "script blueprintArangoMatch (args) do"
+        },
+        {
+          "line": 361,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "args := #[\"tools/infra/blueprint_arango_match.py\"] ++ args.toArray,"
+        },
+        {
+          "line": 568,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "script leantrailArangoIngest (args) do"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "hits": 3,
+      "samples": [
+        {
+          "line": 16,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "\"aiclaw:arango:init\": \"python3 tools/infra/aiclaw_auto_arango.py init\","
+        },
+        {
+          "line": 17,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "\"aiclaw:arango:ingest\": \"python3 tools/infra/aiclaw_auto_arango.py ingest\","
+        },
+        {
+          "line": 46,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "\"arangojs\": \"^8.8.0\","
+        }
+      ]
+    }
+  ],
+  "lean_owner_candidates": [
+    {
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentFiveGradingDecomposition.lean",
+      "hits": 7,
+      "samples": [
+        {
+          "line": 315,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "def tripotentFiveGradeLinearEquiv"
+        },
+        {
+          "line": 325,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "@[simp] theorem tripotentFiveGradeLinearEquiv_apply"
+        },
+        {
+          "line": 327,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "tripotentFiveGradeLinearEquiv e he x ="
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/TripotentAdjointDerivation.lean",
+      "hits": 6,
+      "samples": [
+        {
+          "line": 101,
+          "token": "adLinear",
+          "text": "def adLinear (e : A) : A \u2192\u2097[\u211d] A :="
+        },
+        {
+          "line": 105,
+          "token": "adLinear",
+          "text": "abbrev commutatorActionLinear (e : A) : A \u2192\u2097[\u211d] A := adLinear e"
+        },
+        {
+          "line": 110,
+          "token": "adLinear",
+          "text": "@[simp] theorem adLinear_apply (e x : A) :"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AlgebraicDerivations.lean",
+      "hits": 6,
+      "samples": [
+        {
+          "line": 72,
+          "token": "adLinear",
+          "text": "def adLinear (X : M2R) : M2R \u2192\u2097[\u211d] M2R where"
+        },
+        {
+          "line": 78,
+          "token": "adLinear",
+          "text": "theorem adLinear_zero :"
+        },
+        {
+          "line": 79,
+          "token": "adLinear",
+          "text": "adLinear (0 : M2R) = (0 : M2R \u2192\u2097[\u211d] M2R) := by"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/Algebra/TripotentTopologicalFiveGrading.lean",
+      "hits": 4,
+      "samples": [
+        {
+          "line": 224,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "noncomputable def continuousTripotentFiveGradeLinearEquiv"
+        },
+        {
+          "line": 227,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "{ toLinearEquiv := tripotentFiveGradeLinearEquiv e he"
+        },
+        {
+          "line": 231,
+          "token": "tripotentFiveGradeLinearEquiv",
+          "text": "@[simp] theorem continuousTripotentFiveGradeLinearEquiv_apply"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Core/PeirceQuadraticFrame.lean",
+      "hits": 2,
+      "samples": [
+        {
+          "line": 21,
+          "token": "PeirceQuadraticFrame",
+          "text": "namespace InfoGeometry.Core.PeirceQuadraticFrame"
+        },
+        {
+          "line": 285,
+          "token": "PeirceQuadraticFrame",
+          "text": "end InfoGeometry.Core.PeirceQuadraticFrame"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Core/LieJordanGenerators.lean",
+      "hits": 2,
+      "samples": [
+        {
+          "line": 7,
+          "token": "PeirceQuadraticFrame",
+          "text": "import InfoGeometry.Core.PeirceQuadraticFrame"
+        },
+        {
+          "line": 28,
+          "token": "PeirceQuadraticFrame",
+          "text": "open PeirceQuadraticFrame PeirceSandwichDuality"
+        }
+      ]
+    }
+  ],
+  "tool_candidates": [
+    {
+      "path": "lakefile.lean",
+      "hits": 37,
+      "samples": [
+        {
+          "line": 14,
+          "token": "script |lean_exe |package_facet |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:",
+          "text": "script shadowPlantWorker (args) do"
+        },
+        {
+          "line": 24,
+          "token": "script |lean_exe |package_facet |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:",
+          "text": "script strictCheck (args) do"
+        },
+        {
+          "line": 34,
+          "token": "script |lean_exe |package_facet |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:",
+          "text": "script smokeSpikes (args) do"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "hits": 3,
+      "samples": [
+        {
+          "line": 16,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "\"aiclaw:arango:init\": \"python3 tools/infra/aiclaw_auto_arango.py init\","
+        },
+        {
+          "line": 17,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "\"aiclaw:arango:ingest\": \"python3 tools/infra/aiclaw_auto_arango.py ingest\","
+        },
+        {
+          "line": 46,
+          "token": "Arango|AQL|GraphRAG|LeanSearch|leansearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash|WL|ig_patch|raw_infotree",
+          "text": "\"arangojs\": \"^8.8.0\","
+        }
+      ]
+    },
+    {
+      "path": "tools/quality/check_lie_jordan_geometry.py",
+      "hits": 1,
+      "samples": [
+        {
+          "line": 39,
+          "token": "PeirceQuadraticFrame",
+          "text": "'InfoGeometry.Core.PeirceQuadraticFrame',"
+        }
+      ]
+    }
+  ],
+  "observed_in_external_refs": [],
+  "required_next_checks": [
+    "Inspect the highest-ranked Lean owner candidates before proof claims.",
+    "Run `lake env lean <owner-file>` before saying a theorem is proved.",
+    "Run GraphRAG/Arango/LeanTrail/Loogle as navigation, not authority.",
+    "Report external_refs separately from repo-owned code.",
+    "Name missing or stale docs as maintenance debt instead of filling gaps."
+  ]
+}

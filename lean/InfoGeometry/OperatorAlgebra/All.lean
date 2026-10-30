@@ -280,6 +280,12 @@ import InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel
 import InfoGeometry.OperatorAlgebra.NoncommutativeChiralChannels
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect
 
+import InfoGeometry.Clifford.Cl11StarAlgebraColimit
+import InfoGeometry.Clifford.Cl11StarAlgebraFiltration
+import InfoGeometry.Clifford.Cl11StarCoconeObstruction
+import InfoGeometry.OperatorAlgebra.PeirceStarColimitActions
+import InfoGeometry.OperatorAlgebra.PeirceStarColimitModes
+
 namespace InfoGeometry.OperatorAlgebra
 
 /-!

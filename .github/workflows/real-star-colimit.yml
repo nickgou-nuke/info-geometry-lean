@@ -1,0 +1,195 @@
+name: Real star-algebra colimit kernel check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/Cl11*.lean'
+      - 'lean/InfoGeometry/Clifford/TowerMatrix.lean'
+      - 'lean/InfoGeometry/Clifford/SplitQ11.lean'
+      - 'lean/InfoGeometry/Algebra/DirectLimitSuperClosureLemmas.lean'
+      - 'lean/InfoGeometry/Algebra/InductiveSuperClosureLemmas.lean'
+      - 'lean/InfoGeometry/Algebra/TensorAlgebraCanonical.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteTensorDeterminantStabilization.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Canonical/RealProjection*.lean'
+      - 'lean/InfoGeometry/Canonical/RealStage*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceStarColimit*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceCoupling/Algebra.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceSuperoperators/SquareZeroPair.lean'
+      - 'lean/InfoGeometry/Core/PeirceGrading.lean'
+      - 'lean/InfoGeometry/Core/PeirceDecomposition.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/All.lean'
+      - 'tools/quality/check_peirce_superoperators.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/quality/semantic_vacuity_patterns.json'
+      - 'tools/quality/proof_proxy_staged_gate.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/build_lock.py'
+      - '.githooks/pre-commit'
+      - 'docs/REAL_STAR_COLIMIT_CONTRACT.md'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/real-star-colimit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-star-colimit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      REAL_STAR_COLIMIT_TARGETS: >-
+        ["InfoGeometry.Clifford.Cl11StarAlgebraColimit",
+        "InfoGeometry.Clifford.Cl11StarAlgebraFiltration",
+        "InfoGeometry.Clifford.Cl11StarCoconeObstruction",
+        "InfoGeometry.OperatorAlgebra.PeirceStarColimitActions",
+        "InfoGeometry.OperatorAlgebra.PeirceStarColimitModes"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+      - name: Read exact dependency pins
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: real-star-colimit-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch pinned native imports
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          targets = json.loads(os.environ['REAL_STAR_COLIMIT_TARGETS'])
+          _, _, native = closure(Path('project'), targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'real-star-colimit-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile complete source closure and audit every new declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          targets = json.loads(os.environ['REAL_STAR_COLIMIT_TARGETS'])
+          command = [sys.executable, 'tools/quality/check_peirce_superoperators.py',
+                     '--mathlib-root', '../mathlib', '--output', '../real-star-colimit-report']
+          for target in targets:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Check placeholders and semantic findings
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          targets = json.loads(os.environ['REAL_STAR_COLIMIT_TARGETS'])
+          paths = ['lean/' + t.replace('.', '/') + '.lean' for t in targets]
+          paths.append('lean/InfoGeometry/OperatorAlgebra/All.lean')
+          for path in paths:
+              subprocess.run([sys.executable, 'tools/quality/placeholder_audit.py',
+                              '--root', path, '--strict'], check=True)
+          subprocess.run([sys.executable, 'tools/quality/semantic_vacuity_gate.py', *paths,
+                          '--fail-on', 'error', '--json-out',
+                          '../real-star-colimit-report/semantic-vacuity.json'], check=True)
+          PY
+      - name: Reconcile exact scope and bind all verification inputs
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          out = Path('../real-star-colimit-report')
+          targets = json.loads(os.environ['REAL_STAR_COLIMIT_TARGETS'])
+          report = json.loads((out / 'report.json').read_text())
+          assert report['status'] == 'passed'
+          assert report['targets'] == targets and report['target_override'] == targets
+          assert report['audit_required'] and not report['skip_audit'] and not report['incremental']
+          modules = {m['module']: m for m in report['modules']}
+          assert len(modules) == len(report['modules'])
+          assert all(m['returncode'] == 0 and not m['reused'] for m in modules.values())
+          assert all(modules[t]['warnings'] == 0 for t in targets)
+          assert set(report['declaration_counts']) == set(targets)
+          semantic = json.loads((out / 'semantic-vacuity.json').read_text())
+          assert semantic['coverage_complete'] and not semantic['read_failures']
+          expected_paths = {'lean/' + t.replace('.', '/') + '.lean' for t in targets}
+          expected_paths.add('lean/InfoGeometry/OperatorAlgebra/All.lean')
+          assert semantic['files_selected'] == semantic['files_scanned'] == len(expected_paths)
+          for field in ['source_paths', 'successfully_read_paths', 'scope_roots']:
+              assert len(semantic[field]) == len(expected_paths) and set(semantic[field]) == expected_paths
+          assert semantic['fail_on'] == 'error' and not semantic['fail_prefixes']
+          assert semantic['severity_counts'] == {'warning': 2}
+          expected = {
+              ('lean/InfoGeometry/Clifford/Cl11StarAlgebraColimit.lean',
+               'ofStageStarAlgHom_apply', 'warning', 'trivial_surface'),
+              ('lean/InfoGeometry/Clifford/Cl11StarAlgebraColimit.lean',
+               'lift_ofStage', 'warning', 'trivial_surface'),
+          }
+          actual = {(f['file'], f['subject'], f['severity'], f['category'])
+                    for f in semantic['findings']}
+          assert actual == expected and len(semantic['findings']) == len(expected)
+          index_path = out / 'evidence-sha256.json'
+          index = json.loads(index_path.read_text())
+          for name, expected_hash in index.items():
+              path = Path(name.removeprefix('repository/')) if name.startswith('repository/') else out / name
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == expected_hash, name
+          for name in ['.github/workflows/real-star-colimit.yml', 'docs/REAL_STAR_COLIMIT_CONTRACT.md']:
+              index['repository/' + name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          index['semantic-vacuity.json'] = hashlib.sha256((out / 'semantic-vacuity.json').read_bytes()).hexdigest()
+          index_path.write_text(json.dumps(index, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-star-colimit-kernel-evidence
+          path: |
+            real-star-colimit-report/report.json
+            real-star-colimit-report/evidence-sha256.json
+            real-star-colimit-report/environment.json
+            real-star-colimit-report/semantic-vacuity.json
+            real-star-colimit-report/src/PeirceSuperoperatorsAudit.lean
+            real-star-colimit-report/*.log
+          if-no-files-found: warn

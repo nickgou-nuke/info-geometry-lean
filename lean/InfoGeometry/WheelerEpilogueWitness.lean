@@ -75,7 +75,8 @@ theorem signed_phi_not_scaled_idempotent :
   simp only [signed_phi_on_z] at hz
   have he := congrArg (fun a : Stage 2 => a (((0 : Fin 1), 0), 0)
       (((0 : Fin 1), 0), 0)) hz
-  norm_num [z, Matrix.smul_apply] at he
+  change (1 / 4 : ℝ) = (8 : ℤ) • (1 / 4 : ℝ) at he
+  norm_num at he
 
 /-- Even division by eight does not turn the signed phi map into a projection. -/
 theorem normalized_signed_phi_not_idempotent :
@@ -86,6 +87,7 @@ theorem normalized_signed_phi_not_idempotent :
     signed_phi_on_z, smul_smul] at hz
   have he := congrArg (fun a : Stage 2 => a (((0 : Fin 1), 0), 0)
       (((0 : Fin 1), 0), 0)) hz
-  norm_num [z, Matrix.smul_apply] at he
+  change ((1 / 8 : ℝ) * (1 / 8)) * (1 / 4) = (1 / 8 : ℝ) * (1 / 4) at he
+  norm_num at he
 
 end InfoGeometry.WheelerEpilogueWitness

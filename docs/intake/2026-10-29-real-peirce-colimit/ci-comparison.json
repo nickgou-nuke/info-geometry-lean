@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "candidate_id": "pr274-ci-context-comparison-4468137-20261029T152922Z",
+  "reviewer": "/root/colimit_owner_search",
+  "observed_at_utc": "2026-10-29 15:29:22 UTC",
+  "repository": "nickgou-nuke/info-geometry-lean",
+  "pull_request": 274,
+  "source_commit": "4468137c6b9bfac71874188c816d3fb95b44867b",
+  "merge_test_commit": "950f8afbda490e76d9756ac40efba40aaf6a1d80",
+  "merge_base_branch_commit": "87bfa4567046db6f475a9df2903bd4060dc773ca",
+  "prior_source_commit": "2993176e98331ee2b37236a039a0ba5d8f248c53",
+  "prior_merge_test_commit": "6d8441ff1018324cf79b1b855da8fd34d9d10288",
+  "reference_document": {
+    "path": "docs/intake/2026-10-29-real-peirce-colimit/ci-context.md",
+    "sha256": "bc6c8b7c9033adc99028f6ffd1968e991d726fca808c1fd8715fdff29a6427d2"
+  },
+  "comparison_result": "CONFIRMED: all seven listed current failures match the previously evidenced external-dependency, configuration, collision, and tracked-debt causes.",
+  "methods": [
+    "Connected GitHub GET tools retrieved all seven current workflow metadata records and job logs.",
+    "The current run metadata individually verifies the exact requested source SHA and PR 274.",
+    "All seven prior job logs cited by ci-context.md were fetched again and compared.",
+    "The CI path-preflight JSON was compared after removing only its revision field.",
+    "The entire Sorry Gate report was compared after removing only log timestamps and ANSI formatting.",
+    "The connected GitHub compare endpoint verified the two intervening source commits and their complete five-file changed list."
+  ],
+  "workflows": [
+    {
+      "workflow": "CI",
+      "run_id": 40901169991,
+      "job_id": 123543623474,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Validate local Lake package checkouts",
+      "category": "inherited external path dependencies",
+      "verified_cause": "Atlas has no checked-out directory/configuration at external_refs/atlas-lean; GIFT has missing configuration and an uninitialized gitlink at external_refs/gift-framework-core.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901169991/job/123543623474",
+      "current_log_excerpt": [
+        "Path dependencies are not reproducible from this checkout. Restore the recorded sources; do not substitute an upstream branch or a stub package.",
+        "error: Atlas: package directory not found: /home/runner/work/info-geometry-lean/info-geometry-lean/external_refs/atlas-lean"
+      ],
+      "prior_run_id": 40895834320,
+      "prior_job_id": 123524608892,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895834320/job/123524608892",
+      "prior_log_excerpt": [
+        "Path dependencies are not reproducible from this checkout. Restore the recorded sources; do not substitute an upstream branch or a stub package.",
+        "error: Atlas: package directory not found: /home/runner/work/info-geometry-lean/info-geometry-lean/external_refs/atlas-lean"
+      ],
+      "same_cause_as_prior_logs": true,
+      "additional_observation": "The later always-run compiler-bridge smoke summary also reports the same missing Atlas package."
+    },
+    {
+      "workflow": "Build thesis, blueprint, and docs",
+      "run_id": 40901170032,
+      "job_id": 123543535582,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Configure GitHub Pages",
+      "category": "inherited repository configuration lookup failure",
+      "verified_cause": "GitHub Pages site lookup returns Not Found.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901170032/job/123543535582",
+      "current_log_excerpt": [
+        "##[error]Get Pages site failed. Please verify that the repository has Pages enabled and configured to build using GitHub Actions, or consider exploring the `enablement` parameter for this action. Error: Not Found - https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site",
+        "##[error]HttpError: Not Found - https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site"
+      ],
+      "prior_run_id": 40895834374,
+      "prior_job_id": 123524550516,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895834374/job/123524550516",
+      "prior_log_excerpt": [
+        "##[error]Get Pages site failed. Please verify that the repository has Pages enabled and configured to build using GitHub Actions, or consider exploring the `enablement` parameter for this action. Error: Not Found - https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site",
+        "##[error]HttpError: Not Found - https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site"
+      ],
+      "same_cause_as_prior_logs": true
+    },
+    {
+      "workflow": "Closure Debt + Superorganism Smoke",
+      "run_id": 40901170041,
+      "job_id": 123543537676,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Gate startup + summary verification tests",
+      "category": "inherited Python environment configuration",
+      "verified_cause": "The configured Python 3.11.17 interpreter has no pytest module.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901170041/job/123543537676",
+      "current_log_excerpt": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python3: No module named pytest"
+      ],
+      "prior_run_id": 40895834331,
+      "prior_job_id": 123524547127,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895834331/job/123524547127",
+      "prior_log_excerpt": [
+        "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python3: No module named pytest"
+      ],
+      "same_cause_as_prior_logs": true
+    },
+    {
+      "workflow": "Lean style lint",
+      "run_id": 40901169990,
+      "job_id": 123543534330,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Run mathlib style linter / nested Check Case Sensitivity",
+      "category": "inherited case-colliding repository paths",
+      "verified_cause": "The case-sensitivity phase rejects Physics/PellisFineStructure.lean and Physics/PellisfineStructure.lean before the style linter can proceed.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901169990/job/123543534330",
+      "current_log_excerpt": [
+        "./lean/InfoGeometry/Physics/PellisFineStructure.lean",
+        "./lean/InfoGeometry/Physics/PellisfineStructure.lean",
+        "Found files or folders with same name but different case."
+      ],
+      "prior_run_id": 40895833931,
+      "prior_job_id": 123524545903,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895833931/job/123524545903",
+      "prior_log_excerpt": [
+        "./lean/InfoGeometry/Physics/PellisFineStructure.lean",
+        "./lean/InfoGeometry/Physics/PellisfineStructure.lean",
+        "Found files or folders with same name but different case."
+      ],
+      "same_cause_as_prior_logs": true
+    },
+    {
+      "workflow": "Sorry Gate",
+      "run_id": 40901170046,
+      "job_id": 123543534981,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Repository-wide Lean debt audit",
+      "category": "inherited tracked nonpackage placeholder debt",
+      "verified_cause": "The tracked-scope audit reports 91 debt files and 878 findings: 867 forensic/fixture and 11 unclassified nonpackage, with zero lake_package findings.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901170046/job/123543534981",
+      "current_log_excerpt": [
+        "tracked Lean files: 28316",
+        "debt files: 91",
+        "debt findings: 878",
+        "lake_package: 0",
+        "forensic_or_fixture: 867",
+        "unclassified_nonpackage: 11"
+      ],
+      "prior_run_id": 40895834297,
+      "prior_job_id": 123524546663,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895834297/job/123524546663",
+      "prior_log_excerpt": [
+        "tracked Lean files: 28316",
+        "debt files: 91",
+        "debt findings: 878",
+        "lake_package: 0",
+        "forensic_or_fixture: 867",
+        "unclassified_nonpackage: 11"
+      ],
+      "same_cause_as_prior_logs": true
+    },
+    {
+      "workflow": "Reviewed PR Integration",
+      "run_id": 40901170062,
+      "job_id": 123543534768,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Run actions/checkout@v4",
+      "category": "inherited machine-local submodule URL",
+      "verified_cause": "Recursive checkout cannot clone the configured /home/goutev/repos/pure_math_lib repository, which does not exist on the hosted runner.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901170062/job/123543534768",
+      "current_log_excerpt": [
+        "##[error]fatal: repository '/home/goutev/repos/pure_math_lib' does not exist",
+        "##[error]fatal: repository '/home/goutev/repos/pure_math_lib' does not exist",
+        "Failed to clone 'pure_math_lib' a second time, aborting"
+      ],
+      "prior_run_id": 40895834223,
+      "prior_job_id": 123524561964,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895834223/job/123524561964",
+      "prior_log_excerpt": [
+        "##[error]fatal: repository '/home/goutev/repos/pure_math_lib' does not exist",
+        "##[error]fatal: repository '/home/goutev/repos/pure_math_lib' does not exist",
+        "Failed to clone 'pure_math_lib' a second time, aborting"
+      ],
+      "same_cause_as_prior_logs": true
+    },
+    {
+      "workflow": "Post-Build Quality Gate",
+      "run_id": 40901170003,
+      "job_id": 123543534214,
+      "run_attempt": 1,
+      "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Build",
+      "category": "inherited external path dependency",
+      "verified_cause": "The root Lake build cannot locate the Atlas package directory external_refs/atlas-lean.",
+      "current_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901170003/job/123543534214",
+      "current_log_excerpt": [
+        "error: Atlas: package directory not found: /home/runner/work/info-geometry-lean/info-geometry-lean/external_refs/atlas-lean"
+      ],
+      "prior_run_id": 40895834356,
+      "prior_job_id": 123524546767,
+      "prior_job_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40895834356/job/123524546767",
+      "prior_log_excerpt": [
+        "error: Atlas: package directory not found: /home/runner/work/info-geometry-lean/info-geometry-lean/external_refs/atlas-lean"
+      ],
+      "same_cause_as_prior_logs": true
+    }
+  ],
+  "exact_comparisons": {
+    "path_preflight": {
+      "identical_except_revision": true,
+      "prior": {
+        "schema": "info_geometry.ci_path_preflight.v1",
+        "revision": "6d8441ff1018324cf79b1b855da8fd34d9d10288",
+        "ok": false,
+        "packages": [
+          {
+            "name": "Atlas",
+            "dir": "external_refs/atlas-lean",
+            "config": "lakefile.toml",
+            "directory_exists": false,
+            "config_exists": false,
+            "source_kind": "untracked",
+            "errors": [
+              "missing_config",
+              "untracked_path_dependency"
+            ],
+            "ok": false
+          },
+          {
+            "name": "GIFT",
+            "dir": "external_refs/gift-framework-core",
+            "config": "lakefile.lean",
+            "directory_exists": true,
+            "config_exists": false,
+            "source_kind": "gitlink",
+            "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+            "errors": [
+              "missing_config",
+              "uninitialized_gitlink"
+            ],
+            "ok": false
+          },
+          {
+            "name": "InfoGeometryCore",
+            "dir": "lib/InfoGeometryCore",
+            "config": "lakefile.lean",
+            "directory_exists": true,
+            "config_exists": true,
+            "source_kind": "tracked",
+            "errors": [],
+            "ok": true
+          }
+        ],
+        "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+      },
+      "current": {
+        "schema": "info_geometry.ci_path_preflight.v1",
+        "revision": "950f8afbda490e76d9756ac40efba40aaf6a1d80",
+        "ok": false,
+        "packages": [
+          {
+            "name": "Atlas",
+            "dir": "external_refs/atlas-lean",
+            "config": "lakefile.toml",
+            "directory_exists": false,
+            "config_exists": false,
+            "source_kind": "untracked",
+            "errors": [
+              "missing_config",
+              "untracked_path_dependency"
+            ],
+            "ok": false
+          },
+          {
+            "name": "GIFT",
+            "dir": "external_refs/gift-framework-core",
+            "config": "lakefile.lean",
+            "directory_exists": true,
+            "config_exists": false,
+            "source_kind": "gitlink",
+            "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+            "errors": [
+              "missing_config",
+              "uninitialized_gitlink"
+            ],
+            "ok": false
+          },
+          {
+            "name": "InfoGeometryCore",
+            "dir": "lib/InfoGeometryCore",
+            "config": "lakefile.lean",
+            "directory_exists": true,
+            "config_exists": true,
+            "source_kind": "tracked",
+            "errors": [],
+            "ok": true
+          }
+        ],
+        "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+      }
+    },
+    "sorry_gate": {
+      "normalized_full_report_identical": true,
+      "compared_report_lines": 99,
+      "tracked_lean_files": 28316,
+      "debt_files": 91,
+      "debt_findings": 878,
+      "lake_package_findings": 0,
+      "forensic_or_fixture_findings": 867,
+      "unclassified_nonpackage_findings": 11,
+      "reported_debt_path_count": 91,
+      "proof_closure_source_count": 32,
+      "reported_debt_paths_in_proof_closure": []
+    }
+  },
+  "source_change_comparison": {
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/compare/2993176e98331ee2b37236a039a0ba5d8f248c53...4468137c6b9bfac71874188c816d3fb95b44867b",
+    "status": "ahead",
+    "ahead_by": 2,
+    "behind_by": 0,
+    "total_commits": 2,
+    "changed_files": [
+      ".github/workflows/real-peirce-colimit.yml",
+      "docs/intake/2026-10-29-real-peirce-colimit/README.md",
+      "lean/InfoGeometry/Causal/Cones.lean",
+      "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+      "tools/quality/check_real_peirce_colimit.py"
+    ],
+    "assessment": "The two intervening source commits change only the scoped proof workflow, intake README, TowerMatrix, Causal.Cones, and scoped verification selector. They do not change the seven failing broad-workflow definitions, root dependency configuration, submodule URL, colliding filenames, Python configuration, or listed debt files."
+  },
+  "interpretation_limits": [
+    "These broad workflows remain failed; identifying repeated inherited causes does not waive a gate or certify that the root package builds.",
+    "For GitHub Pages, the verified fact is a Not Found lookup response; this report does not independently diagnose all possible repository-setting or permission causes.",
+    "The dedicated scoped mathematical workflow and final local proof verification are separate acceptance evidence and are not certified by this comparison.",
+    "No unrelated CI repair, workflow rerun, repository mutation, index change, compilation, or test execution was performed."
+  ],
+  "write_scope": "New scratch evidence candidate under colimit-validation only; live ci-context.md is unchanged."
+}

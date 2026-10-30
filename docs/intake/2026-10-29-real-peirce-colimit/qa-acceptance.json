@@ -1,0 +1,1464 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/colimit_final_acceptance",
+  "reviewer_role": "Independent runtime acceptance QA; authored no theorem source and modified no repository file.",
+  "checked_at_utc": "2026-10-29T15:31:50.549075+00:00",
+  "status": "ACCEPTED",
+  "scope": "Exact 32-module repository source closure and isolated native Lake package; seven strict changed owners. This is not a root package/aggregator build.",
+  "repository_base": "dc3ebf12fdd9ef4e88eb37acffb919e81932061a",
+  "git_head_at_validation": "dc3ebf12fdd9ef4e88eb37acffb919e81932061a",
+  "snapshot_identity": "The staged/live/copied SHA-256 and Git blob maps identify the accepted source snapshot; the local HEAD remains the base commit.",
+  "maintained_command": "PATH=/tmp/operator-pr-toolchain/lean-4.34.1-linux/bin:$PATH python tools/quality/check_real_peirce_colimit.py --mathlib-root /workspace/scratch/3c7848773029/colimit-validation/mathlib --output /workspace/scratch/3c7848773029/colimit-validation/final-v3",
+  "maintained_exit_code": 0,
+  "shared_lock": "/tmp/info-geometry-build.lock",
+  "compiler_preflight_active_processes": [],
+  "targets": [
+    "InfoGeometry.Clifford.TowerMatrix",
+    "InfoGeometry.Causal.Cones",
+    "InfoGeometry.Core.PeirceDoubleCommutator",
+    "InfoGeometry.Clifford.Cl11StarUniversal",
+    "InfoGeometry.Clifford.Cl11ColimitDimension",
+    "InfoGeometry.Canonical.PeirceDissipatorColimit",
+    "InfoGeometry.Canonical.PeirceColimitExamples"
+  ],
+  "new_modules": [
+    "InfoGeometry.Core.PeirceDoubleCommutator",
+    "InfoGeometry.Clifford.Cl11StarUniversal",
+    "InfoGeometry.Clifford.Cl11ColimitDimension",
+    "InfoGeometry.Canonical.PeirceDissipatorColimit",
+    "InfoGeometry.Canonical.PeirceColimitExamples"
+  ],
+  "repaired_existing_modules": [
+    "InfoGeometry.Clifford.TowerMatrix",
+    "InfoGeometry.Causal.Cones"
+  ],
+  "closure": [
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Algebra.MatrixNoncommutativity",
+    "InfoGeometry.Clifford.TowerMatrix",
+    "InfoGeometry.Cartan.Involution",
+    "InfoGeometry.Clifford.Decomposition",
+    "InfoGeometry.Clifford.CartanInstance",
+    "InfoGeometry.Causal.Cones",
+    "InfoGeometry.Core.JordanAssociatorRing",
+    "InfoGeometry.Core.JordanMultiplicationClosure",
+    "InfoGeometry.Core.LieJordanComposition",
+    "InfoGeometry.Core.LieJordanBoundaryOperators",
+    "InfoGeometry.Core.PeirceDecomposition",
+    "InfoGeometry.Core.PeirceGrading",
+    "InfoGeometry.Core.PeirceStarCharges",
+    "InfoGeometry.Core.PeirceCoupledCorners",
+    "InfoGeometry.Core.PeirceQuadraticFrame",
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+    "InfoGeometry.Core.PeirceSandwichDuality",
+    "InfoGeometry.Core.LieJordanGenerators",
+    "InfoGeometry.Core.PeirceDoubleCommutator",
+    "InfoGeometry.Clifford.SplitQ11",
+    "InfoGeometry.Clifford.Cl11Matrix",
+    "InfoGeometry.Algebra.TensorAlgebraCanonical",
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization",
+    "InfoGeometry.Clifford.Cl11TensorTower",
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas",
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas",
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit",
+    "InfoGeometry.Clifford.Cl11StarUniversal",
+    "InfoGeometry.Clifford.Cl11ColimitDimension",
+    "InfoGeometry.Canonical.PeirceDissipatorColimit",
+    "InfoGeometry.Canonical.PeirceColimitExamples"
+  ],
+  "dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Algebra.MatrixNoncommutativity": [],
+    "InfoGeometry.Clifford.TowerMatrix": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.MatrixNoncommutativity"
+    ],
+    "InfoGeometry.Cartan.Involution": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Decomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.TowerMatrix"
+    ],
+    "InfoGeometry.Clifford.CartanInstance": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Cartan.Involution",
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Clifford.Decomposition"
+    ],
+    "InfoGeometry.Causal.Cones": [
+      "InfoGeometry.Clifford.CartanInstance",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.JordanAssociatorRing": [],
+    "InfoGeometry.Core.JordanMultiplicationClosure": [
+      "InfoGeometry.Core.JordanAssociatorRing"
+    ],
+    "InfoGeometry.Core.LieJordanComposition": [
+      "InfoGeometry.Core.JordanMultiplicationClosure"
+    ],
+    "InfoGeometry.Core.LieJordanBoundaryOperators": [
+      "InfoGeometry.Core.LieJordanComposition"
+    ],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceStarCharges": [
+      "InfoGeometry.Core.PeirceGrading"
+    ],
+    "InfoGeometry.Core.PeirceCoupledCorners": [
+      "InfoGeometry.Core.PeirceStarCharges"
+    ],
+    "InfoGeometry.Core.PeirceQuadraticFrame": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Core.PeirceSandwichDuality": [
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry"
+    ],
+    "InfoGeometry.Core.LieJordanGenerators": [
+      "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "InfoGeometry.Core.PeirceQuadraticFrame",
+      "InfoGeometry.Core.PeirceSandwichDuality"
+    ],
+    "InfoGeometry.Core.PeirceDoubleCommutator": [
+      "InfoGeometry.Core.LieJordanGenerators"
+    ],
+    "InfoGeometry.Clifford.SplitQ11": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Cl11Matrix": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.SplitQ11"
+    ],
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Cl11TensorTower": [
+      "InfoGeometry.Clifford.Cl11Matrix",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Algebra.TensorAlgebraCanonical",
+      "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization"
+    ],
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.InductiveSuperClosureLemmas"
+    ],
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit": [
+      "InfoGeometry.Clifford.Cl11TensorTower",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas"
+    ],
+    "InfoGeometry.Clifford.Cl11StarUniversal": [
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit"
+    ],
+    "InfoGeometry.Clifford.Cl11ColimitDimension": [
+      "InfoGeometry.Clifford.Cl11StarUniversal"
+    ],
+    "InfoGeometry.Canonical.PeirceDissipatorColimit": [
+      "InfoGeometry.Core.PeirceDoubleCommutator",
+      "InfoGeometry.Clifford.Cl11StarUniversal"
+    ],
+    "InfoGeometry.Canonical.PeirceColimitExamples": [
+      "InfoGeometry.Canonical.PeirceDissipatorColimit",
+      "InfoGeometry.Clifford.Cl11ColimitDimension"
+    ]
+  },
+  "direct_mathlib_import_roots": [
+    "Mathlib/Algebra/Algebra/Basic.lean",
+    "Mathlib/Algebra/Colimit/DirectLimit.lean",
+    "Mathlib/Algebra/Field/Basic.lean",
+    "Mathlib/Algebra/Group/Units/Basic.lean",
+    "Mathlib/Algebra/GroupWithZero/Invertible.lean",
+    "Mathlib/Algebra/Lie/OfAssociative.lean",
+    "Mathlib/Algebra/Lie/Subalgebra.lean",
+    "Mathlib/Algebra/Module/LinearMap/End.lean",
+    "Mathlib/Algebra/Module/Submodule/Range.lean",
+    "Mathlib/Algebra/Order/Star/Real.lean",
+    "Mathlib/Algebra/Quaternion.lean",
+    "Mathlib/Algebra/Ring/Basic.lean",
+    "Mathlib/Algebra/Star/StarAlgHom.lean",
+    "Mathlib/Algebra/Star/StarProjection.lean",
+    "Mathlib/Analysis/Complex/Order.lean",
+    "Mathlib/Basic/Real/Basic.lean",
+    "Mathlib/Data/Fintype/EquivFin.lean",
+    "Mathlib/Data/Real/Basic.lean",
+    "Mathlib/Data/Set/Basic.lean",
+    "Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean",
+    "Mathlib/LinearAlgebra/CliffordAlgebra/Contraction.lean",
+    "Mathlib/LinearAlgebra/CliffordAlgebra/Equivs.lean",
+    "Mathlib/LinearAlgebra/Dimension/Constructions.lean",
+    "Mathlib/LinearAlgebra/Dimension/Finrank.lean",
+    "Mathlib/LinearAlgebra/Eigenspace/Basic.lean",
+    "Mathlib/LinearAlgebra/ExteriorAlgebra/Basic.lean",
+    "Mathlib/LinearAlgebra/ExteriorPower/Basic.lean",
+    "Mathlib/LinearAlgebra/Matrix/ConjTranspose.lean",
+    "Mathlib/LinearAlgebra/Matrix/Kronecker.lean",
+    "Mathlib/LinearAlgebra/Matrix/NonsingularInverse.lean",
+    "Mathlib/LinearAlgebra/Matrix/Notation.lean",
+    "Mathlib/LinearAlgebra/Matrix/PosDef.lean",
+    "Mathlib/LinearAlgebra/Matrix/Rank.lean",
+    "Mathlib/LinearAlgebra/Matrix/Reindex.lean",
+    "Mathlib/LinearAlgebra/Matrix/Trace.lean",
+    "Mathlib/LinearAlgebra/Projection.lean",
+    "Mathlib/LinearAlgebra/QuadraticForm/Basic.lean",
+    "Mathlib/LinearAlgebra/SymmetricAlgebra/Basic.lean",
+    "Mathlib/LinearAlgebra/TensorAlgebra/Basic.lean",
+    "Mathlib/LinearAlgebra/TensorAlgebra/Grading.lean",
+    "Mathlib/LinearAlgebra/TensorAlgebra/ToTensorPower.lean",
+    "Mathlib/LinearAlgebra/TensorProduct/Map.lean",
+    "Mathlib/Tactic.lean",
+    "Mathlib/Tactic/Abel.lean",
+    "Mathlib/Tactic/FinCases.lean",
+    "Mathlib/Tactic/NoncommRing.lean"
+  ],
+  "source_reconciliation": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+      "path": "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+      "sha256": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+      "bytes": 5156,
+      "git_blob": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Algebra.MatrixNoncommutativity": {
+      "path": "lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean",
+      "sha256": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+      "bytes": 1591,
+      "git_blob": "51e5d4b98efafbf35d4eeaeec6ae81bf34b17648",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.TowerMatrix": {
+      "path": "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+      "sha256": "124a27a4a638a9af09ae2862d1a3e6f20f9f8e6d892d652c7473907dd2b8f0ea",
+      "bytes": 6923,
+      "git_blob": "0759ac5a45494617b765577631906df1ed9069bc",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Cartan.Involution": {
+      "path": "lean/InfoGeometry/Cartan/Involution.lean",
+      "sha256": "15a69aeab044436e9bac34ca6ead349a536f23d5e85d8a38be2db1a3090058a5",
+      "bytes": 6543,
+      "git_blob": "e65ac328912e7c531b579050f21a5b01a79e8e3a",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.Decomposition": {
+      "path": "lean/InfoGeometry/Clifford/Decomposition.lean",
+      "sha256": "fc25f01fc57b9e6e69ece2bcbe0f12e0ad1b668ce280afd06958285321cb4a9d",
+      "bytes": 2768,
+      "git_blob": "2b06adbb90ed616c4f5fed7ae7ffc444e71e779f",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.CartanInstance": {
+      "path": "lean/InfoGeometry/Clifford/CartanInstance.lean",
+      "sha256": "17cb36be9eeab61c4cd0f08b106a22bc210d3192ce6f505383083934b7e37ebb",
+      "bytes": 2532,
+      "git_blob": "c030ddf99c87eb6c7100ca3c3f92d6f017aafeb0",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Causal.Cones": {
+      "path": "lean/InfoGeometry/Causal/Cones.lean",
+      "sha256": "34b132ec64f91a51ce498afbbc76eb2921ed3d529d8741aba8c821d921064b56",
+      "bytes": 3211,
+      "git_blob": "a098b65c91bdcbdcfebe92e6d56721e8f18209e3",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.JordanAssociatorRing": {
+      "path": "lean/InfoGeometry/Core/JordanAssociatorRing.lean",
+      "sha256": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+      "bytes": 8091,
+      "git_blob": "3a329702761cc44db0b7684f94290d7d14252895",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.JordanMultiplicationClosure": {
+      "path": "lean/InfoGeometry/Core/JordanMultiplicationClosure.lean",
+      "sha256": "7a4bbf9a9c072f181b5fed9efc9e6fed3b4d6120d48f4435292001d0008cb5ba",
+      "bytes": 2905,
+      "git_blob": "38998c233ad47c8c872c5bebcd1aa5fccf204748",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.LieJordanComposition": {
+      "path": "lean/InfoGeometry/Core/LieJordanComposition.lean",
+      "sha256": "0bbab38efde19cea920df26cdd13f20a7fb2227b2a284e419016f645d0b933ee",
+      "bytes": 8777,
+      "git_blob": "eeb96b91c2cf813d48ee8c51e6ab67a0e450d52b",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.LieJordanBoundaryOperators": {
+      "path": "lean/InfoGeometry/Core/LieJordanBoundaryOperators.lean",
+      "sha256": "e608a88c1ecc43de691726b3d36ca7c0eca0796ab34c2f1856b51ba66bd1e227",
+      "bytes": 8649,
+      "git_blob": "82e56a419fc86806e88a48c981079b7463926939",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceDecomposition": {
+      "path": "lean/InfoGeometry/Core/PeirceDecomposition.lean",
+      "sha256": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+      "bytes": 13171,
+      "git_blob": "10ab08af18412be000fcac59c91b49d6b9ab9df8",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceGrading": {
+      "path": "lean/InfoGeometry/Core/PeirceGrading.lean",
+      "sha256": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+      "bytes": 12101,
+      "git_blob": "be8a70cd3b86892bd0b8a7b1ed9396c8296fd5f1",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceStarCharges": {
+      "path": "lean/InfoGeometry/Core/PeirceStarCharges.lean",
+      "sha256": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+      "bytes": 7281,
+      "git_blob": "80475299651cf880130a5a927f51c818c1f3f06b",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceCoupledCorners": {
+      "path": "lean/InfoGeometry/Core/PeirceCoupledCorners.lean",
+      "sha256": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+      "bytes": 10100,
+      "git_blob": "b78a50f1bca865b1ccd553f7816eebc5549abd93",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceQuadraticFrame": {
+      "path": "lean/InfoGeometry/Core/PeirceQuadraticFrame.lean",
+      "sha256": "40063d7217d5f3149bd291dcf29a984c6b3ec1614d9c1dc7feae15dacf4cb516",
+      "bytes": 11991,
+      "git_blob": "aa751621523a8568ea77905cb50e6f310d57ae57",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": {
+      "path": "lean/InfoGeometry/Canonical/LieJordanSandwichGeometry.lean",
+      "sha256": "26124a189d2e8cd3b6eea6a5a3d7ca6a21fd1798191e25b18267c246f6e7a128",
+      "bytes": 4581,
+      "git_blob": "ffcbd5871df64a3e83fb90b448de260ea4676117",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceSandwichDuality": {
+      "path": "lean/InfoGeometry/Core/PeirceSandwichDuality.lean",
+      "sha256": "94238642521c3eba162ab79be630b4de370127859664a099d9691f5ad3a1a869",
+      "bytes": 5578,
+      "git_blob": "b1971aa7f69030aba02f2fe693647ee266905ce8",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.LieJordanGenerators": {
+      "path": "lean/InfoGeometry/Core/LieJordanGenerators.lean",
+      "sha256": "8caa1b840fc11201c2457db34485b4693e350ccb17028e5668fbd3ad8c333269",
+      "bytes": 13514,
+      "git_blob": "5e6c000deee9de8c63f9d13bfed4b48604c4aa3b",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Core.PeirceDoubleCommutator": {
+      "path": "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+      "sha256": "fb6ef3686a37fbf814c7c4e24b3eef12d317570bffebeafa340b0736aefef4e2",
+      "bytes": 6758,
+      "git_blob": "45280ca39a10ae218b326a2b47a74c8a73a48c7f",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.SplitQ11": {
+      "path": "lean/InfoGeometry/Clifford/SplitQ11.lean",
+      "sha256": "a071dd78892818d197a0c187f901bf0cc7da3b3f13e201a14af1442affadacb0",
+      "bytes": 2146,
+      "git_blob": "6a2bac19fbae6f901c8e7ef7b53394dc60fb6fbc",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.Cl11Matrix": {
+      "path": "lean/InfoGeometry/Clifford/Cl11Matrix.lean",
+      "sha256": "d5372602016d91b0be7db8ff8a28a96ef7723727f99ce860007b3fa88c392658",
+      "bytes": 10182,
+      "git_blob": "753287965d990fa3631c6776abc74764dace1339",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": {
+      "path": "lean/InfoGeometry/Algebra/TensorAlgebraCanonical.lean",
+      "sha256": "5113f55b600724f212c9a5520a9e0f67b535dc8c90ebe52493bebbeaa4a6ec2b",
+      "bytes": 6586,
+      "git_blob": "de2b3f6f7876f941b20e11db0eb6eb8556fe5598",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": {
+      "path": "lean/InfoGeometry/Algebra/FiniteTensorDeterminantStabilization.lean",
+      "sha256": "bcc18fb0bada6b50b96d41ab37e3a01246c2da3421041a1ed74abd2e492d0fc4",
+      "bytes": 7137,
+      "git_blob": "7b1d12b7dd7e791d0932ce57465314b1616b55f6",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.Cl11TensorTower": {
+      "path": "lean/InfoGeometry/Clifford/Cl11TensorTower.lean",
+      "sha256": "1e08191d55b0c7827239332bcc9ba68b97d2c2004772d485ab0b19e2c00dc9ea",
+      "bytes": 20630,
+      "git_blob": "3c63459a362863f36a1d3e03871e50aee85808ea",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas": {
+      "path": "lean/InfoGeometry/Algebra/InductiveSuperClosureLemmas.lean",
+      "sha256": "98d0dd86179e785391421a5dec571700606bf2d6ef10f8d2f04145bd33982333",
+      "bytes": 10893,
+      "git_blob": "aeb0ec4ac117f072295115efdb2cfe9a740fb151",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": {
+      "path": "lean/InfoGeometry/Algebra/DirectLimitSuperClosureLemmas.lean",
+      "sha256": "576ed03a3e5c3ab26cb92bc426b2dc979325f42fd7a99d01735a68203c720a14",
+      "bytes": 33719,
+      "git_blob": "697a05524b8e08ad9e4d1a9032355e5b8a906d3e",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit": {
+      "path": "lean/InfoGeometry/Clifford/Cl11TensorTowerLimit.lean",
+      "sha256": "818b866a320ae15053a5fd76667551bb256e6e1f1575ab715854a5587b6466c1",
+      "bytes": 9075,
+      "git_blob": "ff08f7c45cdedc821a080f137ff5916be67ac35f",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": true,
+      "strict_target": false,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.Cl11StarUniversal": {
+      "path": "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+      "sha256": "b0fae59aab00aa1ee57b9215a9950eea71531f5eddbaad9dc42559d7d0c788c7",
+      "bytes": 4910,
+      "git_blob": "772a741db0184c9a2ec9f043d7e1e3df514e6cec",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Clifford.Cl11ColimitDimension": {
+      "path": "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+      "sha256": "fbda04122c715187bf079b50faf454dbb223f05a15d8ae3dee4b585e81b57ffc",
+      "bytes": 1859,
+      "git_blob": "99122eecc1d78b7469e84fba96ca0ad8a2d87efb",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Canonical.PeirceDissipatorColimit": {
+      "path": "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+      "sha256": "ac339f5a0d3b1db3a4d04edb9852931e18b46d83fddfcb8ef0b5411ff2b4f797",
+      "bytes": 11975,
+      "git_blob": "1700ed2dbf00b707de7c745ddf8f51afc9bf99a8",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    },
+    "InfoGeometry.Canonical.PeirceColimitExamples": {
+      "path": "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean",
+      "sha256": "2681f96524b8a546bc4f2cdd657e73801be2e533eac371495bf76f02487d13f8",
+      "bytes": 7453,
+      "git_blob": "9adb0f898d03b505314897425c6aef08f75ab4ff",
+      "live_index_copied_match": true,
+      "unchanged_inherited_source_from_base": null,
+      "strict_target": true,
+      "direct_olean_present": true,
+      "native_lake_olean_present": true
+    }
+  },
+  "frozen_selector_and_workflow": {
+    "tools/quality/check_real_peirce_colimit.py": {
+      "sha256": "82ee841d8527bd1596042d5ab9dc971d29260399e80bea6f55c1434a4c2f1f7e",
+      "bytes": 909,
+      "live_equals_index": true
+    },
+    ".github/workflows/real-peirce-colimit.yml": {
+      "sha256": "131f6ccef258a18f15715598144686257391bc50230acf04eb055e578f2bfcf5",
+      "bytes": 3668,
+      "live_equals_index": true
+    }
+  },
+  "unchanged_maintained_controls_sha256": {
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefile.lean": "1f839d17acfdc87e9550eb4bf13d12a5bdefe4ed7540a3090132cae0426a320c",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    "tools/pathing.py": "6827aaa8f308a9d56bde4cb07fce439293d861f12388df2d611eca5617fba2cb",
+    "tools/quality/common.py": "71f539f28be5fc4a1db8fbabfc19915de76542c81719f602904e1102615c2a80",
+    "tools/quality/check_lie_jordan_geometry.py": "7872a388a385136c9d6af1fe40927e0772973f388307d86d458a6b666c2cd7ea",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "df953460ee18e79606afa03f1634e0d299730582c24971888649cf68d18bcbf4",
+    "tools/quality/audit_constructivity.py": "10218eaa5c05a2138d20bde74f34f27e67402a88296d1d426df23b5f238ae129",
+    "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+    "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+    "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+    "tools/infra/opengauss_screener.py": "54dba0a503b7a76c34a2c059f8b8251f62f30a64226bb9bb16befaf1ffb29648"
+  },
+  "source_compilation": {
+    "modules_passed": 32,
+    "strict_target_count": 7,
+    "strict_target_logs_empty": true,
+    "strict_target_compiler_warning_count": 0,
+    "unchanged_inherited_module_count": 25,
+    "inherited_compiler_warning_count": 6,
+    "inherited_warning_details": {
+      "InfoGeometry.Algebra.MatrixNoncommutativity": {
+        "count": 1,
+        "text": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/InfoGeometry/Algebra/MatrixNoncommutativity.lean:33:2: warning: Try `simp at hentry` instead of `simpa using hentry`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`\n"
+      },
+      "InfoGeometry.Clifford.Decomposition": {
+        "count": 1,
+        "text": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/InfoGeometry/Clifford/Decomposition.lean:37:17: warning: This simp argument is unused:\n  Matrix.transpose_smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp only [Matrix.mul_smul, Matrix.smul_mul, smul_neg]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n"
+      },
+      "InfoGeometry.Clifford.SplitQ11": {
+        "count": 1,
+        "text": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/InfoGeometry/Clifford/SplitQ11.lean:3:0: warning: \n'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Real.Basic\n"
+      },
+      "InfoGeometry.Clifford.Cl11Matrix": {
+        "count": 3,
+        "text": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/InfoGeometry/Clifford/Cl11Matrix.lean:143:25: warning: This simp argument is unused:\n  Matrix.mul_apply\n\nHint: Omit it from the simp argument list.\n  [apply] simp [Eplus, Eminus, Fin.sum_univ_two]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/InfoGeometry/Clifford/Cl11Matrix.lean:143:43: warning: This simp argument is unused:\n  Fin.sum_univ_two\n\nHint: Omit it from the simp argument list.\n  [apply] simp [Eplus, Eminus, Matrix.mul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/InfoGeometry/Clifford/Cl11Matrix.lean:198:6: warning: Try this: \n  haveI\u0335\n\nThe goal is a proposition, so `have` is preferred over `haveI`.\nThe difference between `have` and `haveI` is that `haveI` inlines the value.\nBut this is not relevant for proofs because of proof irrelevance.\n\nNote: This linter can be disabled with `set_option linter.style.haveILetI false`\n"
+      }
+    }
+  },
+  "kernel_audit": {
+    "generated_source_matches_unchanged_generator": true,
+    "audited_declarations": 1104,
+    "unique_declaration_names": 1104,
+    "owner_counts_reconciled": true,
+    "module_counts": {
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": 83,
+      "InfoGeometry.Algebra.MatrixNoncommutativity": 7,
+      "InfoGeometry.Clifford.TowerMatrix": 35,
+      "InfoGeometry.Cartan.Involution": 20,
+      "InfoGeometry.Clifford.Decomposition": 21,
+      "InfoGeometry.Clifford.CartanInstance": 17,
+      "InfoGeometry.Causal.Cones": 26,
+      "InfoGeometry.Core.JordanAssociatorRing": 30,
+      "InfoGeometry.Core.JordanMultiplicationClosure": 12,
+      "InfoGeometry.Core.LieJordanComposition": 31,
+      "InfoGeometry.Core.LieJordanBoundaryOperators": 37,
+      "InfoGeometry.Core.PeirceDecomposition": 58,
+      "InfoGeometry.Core.PeirceGrading": 59,
+      "InfoGeometry.Core.PeirceStarCharges": 26,
+      "InfoGeometry.Core.PeirceCoupledCorners": 34,
+      "InfoGeometry.Core.PeirceQuadraticFrame": 36,
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry": 7,
+      "InfoGeometry.Core.PeirceSandwichDuality": 23,
+      "InfoGeometry.Core.LieJordanGenerators": 48,
+      "InfoGeometry.Core.PeirceDoubleCommutator": 17,
+      "InfoGeometry.Clifford.SplitQ11": 24,
+      "InfoGeometry.Clifford.Cl11Matrix": 65,
+      "InfoGeometry.Algebra.TensorAlgebraCanonical": 33,
+      "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": 24,
+      "InfoGeometry.Clifford.Cl11TensorTower": 120,
+      "InfoGeometry.Algebra.InductiveSuperClosureLemmas": 23,
+      "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": 53,
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit": 46,
+      "InfoGeometry.Clifford.Cl11StarUniversal": 18,
+      "InfoGeometry.Clifford.Cl11ColimitDimension": 3,
+      "InfoGeometry.Canonical.PeirceDissipatorColimit": 24,
+      "InfoGeometry.Canonical.PeirceColimitExamples": 44
+    },
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "observed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "unsafe_or_partial_declarations": 0,
+    "old_Idx_unsafe_helper_absent": true,
+    "public_new_declarations_all_resolved_under_expected_owner": true,
+    "new_owner_declarations_including_generated": 106,
+    "existing_api_names_resolved": {
+      "InfoGeometry.Clifford.TowerMatrix.Idx": "InfoGeometry.Clifford.TowerMatrix.Idx",
+      "InfoGeometry.Clifford.TowerMatrix.cartan_inv_of_isUnit": "InfoGeometry.Clifford.TowerMatrix.cartan_inv_of_isUnit",
+      "InfoGeometry.Causal.Cones.modularMirror_cartan_comm_of_isUnit": "InfoGeometry.Causal.modularMirror_cartan_comm_of_isUnit"
+    }
+  },
+  "new_public_api": {
+    "explicit_theorems": 71,
+    "explicit_definitions": 6,
+    "abbreviations": 0,
+    "modules": {
+      "InfoGeometry.Core.PeirceDoubleCommutator": {
+        "theorems": 13,
+        "definitions": 0,
+        "abbreviations": 0,
+        "declarations": [
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_sq_apply_of_commute"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_sq_apply_of_anticommute"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_sum_difference_trinity"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.neg_ad_sum_sq_quadratic"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.neg_ad_sum_sq_sum"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.neg_ad_sum_sq_difference"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.neg_ad_sum_sq_bracket"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.neg_ad_sum_sq_reflection"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_difference_sq_quadratic"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_difference_sq_sum"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_difference_sq_difference"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_difference_sq_bracket"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Core.PeirceDoubleCommutator.ad_difference_sq_reflection"
+          }
+        ],
+        "audited_owner_declarations_including_generated": 17
+      },
+      "InfoGeometry.Clifford.Cl11StarUniversal": {
+        "theorems": 9,
+        "definitions": 2,
+        "abbreviations": 0,
+        "declarations": [
+          {
+            "kind": "def",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.ofStageStarAlgHom"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.ofStageStarAlgHom_apply"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.ofStageStarAlgHom_bond"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.ofStageStarAlgHom_injective"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.hom_ext"
+          },
+          {
+            "kind": "def",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.lift"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.lift_of"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.lift_comp"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.lift_unique"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.existsUnique_lift"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11StarUniversal.existsUnique_lift_iff"
+          }
+        ],
+        "audited_owner_declarations_including_generated": 18
+      },
+      "InfoGeometry.Clifford.Cl11ColimitDimension": {
+        "theorems": 3,
+        "definitions": 0,
+        "abbreviations": 0,
+        "declarations": [
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11ColimitDimension.finrank_stage"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11ColimitDimension.stage_dimension_le"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Clifford.Cl11ColimitDimension.not_finiteDimensional"
+          }
+        ],
+        "audited_owner_declarations_including_generated": 3
+      },
+      "InfoGeometry.Canonical.PeirceDissipatorColimit": {
+        "theorems": 22,
+        "definitions": 0,
+        "abbreviations": 0,
+        "declarations": [
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.map_ad_sq"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.map_neg_ad_sq"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ad_sq_weighted_eq_iff"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_ad_sq_intertwines"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_ad_sq_eq_zero_iff"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_commute_iff"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_reflection"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_component10"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_component01"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_mem_peirce10"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_mem_peirce01"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.ofStage_opposite_corners"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_peirce_frame"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_stationary_modes"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_reflection_modes"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_neg_ad_sum_sq_difference"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_neg_ad_sum_sq_bracket"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_ad_difference_sq_sum"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_ad_difference_sq_bracket"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_reflected_star_corner"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.limit_reflected_gram"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceDissipatorColimit.lift_ad_sq"
+          }
+        ],
+        "audited_owner_declarations_including_generated": 24
+      },
+      "InfoGeometry.Canonical.PeirceColimitExamples": {
+        "theorems": 24,
+        "definitions": 4,
+        "abbreviations": 0,
+        "declarations": [
+          {
+            "kind": "def",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.P"
+          },
+          {
+            "kind": "def",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.S"
+          },
+          {
+            "kind": "def",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.P_idempotent"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.P_transpose"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.P_selfAdjoint"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.S_transpose"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.P_dense"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.S_dense"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.P_not_commute_S"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U_apply"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U_dense"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U_mem_peirce10"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U_star_mem_peirce01"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U_sq_zero"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.U_mul_star_ne_star_mul"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.gram_posSemidef"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.gram_not_commute_seed"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.gram_mul_U_ne_smul"
+          },
+          {
+            "kind": "def",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.stageU"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.stageU_sq_zero"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.stageU_star"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.stageU_not_commute_star"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.stage_gram_mul_U_ne_smul"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.limit_U_sq_zero"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.limit_U_not_commute_star"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.limit_gram_mul_U_ne_smul"
+          },
+          {
+            "kind": "theorem",
+            "name": "InfoGeometry.Canonical.PeirceColimitExamples.limit_noncommutative"
+          }
+        ],
+        "audited_owner_declarations_including_generated": 44
+      }
+    },
+    "excluded_candidate": "No kronPow_one_not_commute declaration is part of the delivered source."
+  },
+  "native_lake": {
+    "status": "passed",
+    "jobs": 3180,
+    "all32local_modules_built": true,
+    "exact_source_directory": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/src",
+    "exact_closure_declared_as_roots": true,
+    "compiler_warning_count": 6,
+    "scope": "Isolated native package with exact pinned path dependencies, not repository root package."
+  },
+  "dependency_integrity": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+    "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "mathlib_clean": true,
+    "native_transitive_packages": {
+      "plausible": {
+        "revision": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/plausible"
+      },
+      "LeanSearchClient": {
+        "revision": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/LeanSearchClient"
+      },
+      "importGraph": {
+        "revision": "e928b72544873815af278d38681b31c0293588e3",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/importGraph"
+      },
+      "proofwidgets": {
+        "revision": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/proofwidgets"
+      },
+      "aesop": {
+        "revision": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/aesop"
+      },
+      "Qq": {
+        "revision": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/Qq"
+      },
+      "batteries": {
+        "revision": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/batteries"
+      },
+      "Cli": {
+        "revision": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "clean": true,
+        "path": "/workspace/scratch/3c7848773029/colimit-validation/mathlib/.lake/packages/Cli"
+      }
+    },
+    "root_pins_and_package_configuration_unchanged": true
+  },
+  "staged_and_lexical_gates": {
+    "record": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/independent-gates-final-v3-20261029T152906Z.json",
+      "bytes": 9440,
+      "sha256": "af16c1a2dfb9bc278eeb924365ae450933de29fe6cc3aa222030df8dc9613eb5"
+    },
+    "staged_proxy_exit_code": 0,
+    "stable_index_signature": "e267b44f1fd2858c69e00a5ca7e6553bfa6eaa20fc0e9ce1467a025e54cd0ea9",
+    "vacuity_exit_code": 0,
+    "vacuity_files_scanned": 7,
+    "vacuity_errors": 0,
+    "vacuity_warning_count": 5,
+    "reviewed_warning_explanations": {
+      "map_neg_ad_sq": "Naturality of the negative squared native adjoint action follows from map_neg and the already proved map_ad_sq; the simp proof is a genuine homomorphism law.",
+      "ofStage_component10": "Preservation of the forward Peirce component follows by expanding its product/complement definition and applying native homomorphism laws.",
+      "ofStage_component01": "Preservation of the opposite Peirce component follows by expanding its product/complement definition and applying native homomorphism laws.",
+      "ofStageStarAlgHom_apply": "Definitional evaluation of the real star-algebra inclusion to its existing underlying canonical stage map.",
+      "lift_of": "Definitional evaluation of the constructed universal quotient lift on a canonical finite-stage element."
+    },
+    "constructivity_files_scanned": 32,
+    "constructivity_findings": [],
+    "lexical_authority": "Heuristic source checks; separate from the completed native declaration/axiom audit."
+  },
+  "independent_semantic_review": {
+    "record": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/independent-semantic-review-20261029T152247Z.json",
+      "bytes": 27931,
+      "sha256": "84b09d48ce7a3c3aea8dc29b7a64e1c762dd6de6521a20c017ba5d6bfbc93d28"
+    },
+    "status": "PASS",
+    "all12reviewed_path_hashes_reconciled": true,
+    "promoted_copy_exact": true,
+    "open_findings": []
+  },
+  "workflow_coverage": {
+    "all32local_owners_covered": true,
+    "per_owner": {
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": true,
+      "InfoGeometry.Algebra.MatrixNoncommutativity": true,
+      "InfoGeometry.Clifford.TowerMatrix": true,
+      "InfoGeometry.Cartan.Involution": true,
+      "InfoGeometry.Clifford.Decomposition": true,
+      "InfoGeometry.Clifford.CartanInstance": true,
+      "InfoGeometry.Causal.Cones": true,
+      "InfoGeometry.Core.JordanAssociatorRing": true,
+      "InfoGeometry.Core.JordanMultiplicationClosure": true,
+      "InfoGeometry.Core.LieJordanComposition": true,
+      "InfoGeometry.Core.LieJordanBoundaryOperators": true,
+      "InfoGeometry.Core.PeirceDecomposition": true,
+      "InfoGeometry.Core.PeirceGrading": true,
+      "InfoGeometry.Core.PeirceStarCharges": true,
+      "InfoGeometry.Core.PeirceCoupledCorners": true,
+      "InfoGeometry.Core.PeirceQuadraticFrame": true,
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry": true,
+      "InfoGeometry.Core.PeirceSandwichDuality": true,
+      "InfoGeometry.Core.LieJordanGenerators": true,
+      "InfoGeometry.Core.PeirceDoubleCommutator": true,
+      "InfoGeometry.Clifford.SplitQ11": true,
+      "InfoGeometry.Clifford.Cl11Matrix": true,
+      "InfoGeometry.Algebra.TensorAlgebraCanonical": true,
+      "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": true,
+      "InfoGeometry.Clifford.Cl11TensorTower": true,
+      "InfoGeometry.Algebra.InductiveSuperClosureLemmas": true,
+      "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": true,
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit": true,
+      "InfoGeometry.Clifford.Cl11StarUniversal": true,
+      "InfoGeometry.Clifford.Cl11ColimitDimension": true,
+      "InfoGeometry.Canonical.PeirceDissipatorColimit": true,
+      "InfoGeometry.Canonical.PeirceColimitExamples": true
+    },
+    "helpers_covered": [
+      "tools/quality/common.py",
+      "tools/pathing.py"
+    ]
+  },
+  "intake_provenance": {
+    "upload_matches_preserved_stream": true,
+    "bytes": 20218,
+    "sha256": "ed173d8b5378504778890883f318dae17a7c3cc9cbd17573668338d93375c1c4",
+    "base_markdown_is_stream_plus_final_LF": true
+  },
+  "staged_changed_files_hashes": {
+    ".github/workflows/real-peirce-colimit.yml": {
+      "sha256": "131f6ccef258a18f15715598144686257391bc50230acf04eb055e578f2bfcf5",
+      "git_blob": "d10cb3192e3c572b80e05075a56a0b7b6b890b97"
+    },
+    "docs/intake/2026-10-29-real-peirce-colimit/README.md": {
+      "sha256": "29b3254e82021fad87b381e0c70091f05c8399b2186c228a6b0997512067ce75",
+      "git_blob": "c946966f9c6f64e12caaf046052c56ff19ff8ce0"
+    },
+    "docs/intake/2026-10-29-real-peirce-colimit/ci-context.md": {
+      "sha256": "bc6c8b7c9033adc99028f6ffd1968e991d726fca808c1fd8715fdff29a6427d2",
+      "git_blob": "47723341d61e3358d0701048c1acb491dc61ba4d"
+    },
+    "docs/intake/2026-10-29-real-peirce-colimit/contract.md": {
+      "sha256": "e46c261d8cb0bb19a1945dea731c5cc924f69a94f4d9d48a00fb4c45ee58e7ee",
+      "git_blob": "b9e154085d6423124d502b4f08e084c663e2e8a9"
+    },
+    "docs/intake/2026-10-29-real-peirce-colimit/provenance.json": {
+      "sha256": "178dc0eb704b909b6eddd0e8a41975b6992aa42781885eba6bff75e7cfd46c14",
+      "git_blob": "cdd611e0e226605bef30adf8b8e5ce86017bae3b"
+    },
+    "docs/intake/2026-10-29-real-peirce-colimit/semantic-review.json": {
+      "sha256": "84b09d48ce7a3c3aea8dc29b7a64e1c762dd6de6521a20c017ba5d6bfbc93d28",
+      "git_blob": "b0901aa1aaab815af0d9aab7580f0c96fa4b8dd6"
+    },
+    "docs/intake/2026-10-29-real-peirce-colimit/stream.txt": {
+      "sha256": "ed173d8b5378504778890883f318dae17a7c3cc9cbd17573668338d93375c1c4",
+      "git_blob": "923d7079789e95220e6859acf1eb7e07022cd663"
+    },
+    "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean": {
+      "sha256": "2681f96524b8a546bc4f2cdd657e73801be2e533eac371495bf76f02487d13f8",
+      "git_blob": "9adb0f898d03b505314897425c6aef08f75ab4ff"
+    },
+    "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean": {
+      "sha256": "ac339f5a0d3b1db3a4d04edb9852931e18b46d83fddfcb8ef0b5411ff2b4f797",
+      "git_blob": "1700ed2dbf00b707de7c745ddf8f51afc9bf99a8"
+    },
+    "lean/InfoGeometry/Causal/Cones.lean": {
+      "sha256": "34b132ec64f91a51ce498afbbc76eb2921ed3d529d8741aba8c821d921064b56",
+      "git_blob": "a098b65c91bdcbdcfebe92e6d56721e8f18209e3"
+    },
+    "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean": {
+      "sha256": "fbda04122c715187bf079b50faf454dbb223f05a15d8ae3dee4b585e81b57ffc",
+      "git_blob": "99122eecc1d78b7469e84fba96ca0ad8a2d87efb"
+    },
+    "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean": {
+      "sha256": "b0fae59aab00aa1ee57b9215a9950eea71531f5eddbaad9dc42559d7d0c788c7",
+      "git_blob": "772a741db0184c9a2ec9f043d7e1e3df514e6cec"
+    },
+    "lean/InfoGeometry/Clifford/TowerMatrix.lean": {
+      "sha256": "124a27a4a638a9af09ae2862d1a3e6f20f9f8e6d892d652c7473907dd2b8f0ea",
+      "git_blob": "0759ac5a45494617b765577631906df1ed9069bc"
+    },
+    "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean": {
+      "sha256": "fb6ef3686a37fbf814c7c4e24b3eef12d317570bffebeafa340b0736aefef4e2",
+      "git_blob": "45280ca39a10ae218b326a2b47a74c8a73a48c7f"
+    },
+    "tools/quality/check_real_peirce_colimit.py": {
+      "sha256": "82ee841d8527bd1596042d5ab9dc971d29260399e80bea6f55c1434a4c2f1f7e",
+      "git_blob": "0483ec829f4627d09853d1d76ccddd653b928d9a"
+    }
+  },
+  "evidence_files": {
+    "status.json": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/status.json",
+      "bytes": 15039,
+      "sha256": "67fec00d04f943d39630dec74e126ae4549d3a33208a74a30e3c088a399e6154"
+    },
+    "cache.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/cache.log",
+      "bytes": 138,
+      "sha256": "e5ff50b0096553f88d56f308a1be228a6bc60d31bbeebc0fb95a5c9bebdc23e4"
+    },
+    "axioms.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/axioms.log",
+      "bytes": 128714,
+      "sha256": "9d378054b2b9b8149b2bf72528b964ace81896908b1aceadbf92d84fa9509748"
+    },
+    "lake-build.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/lake-build.log",
+      "bytes": 4224,
+      "sha256": "2532caf4a0425b16b0b9815eff3d0233d27a90de43e941c2b5ca85d1cea185be"
+    },
+    "src/LieJordanKernelAudit.lean": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/src/LieJordanKernelAudit.lean",
+      "bytes": 5545,
+      "sha256": "b5131450ab3741785602f8470421f010c0e69d265d860060cf40010a0c22cf06"
+    },
+    "lake/lakefile.lean": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/lake/lakefile.lean",
+      "bytes": 1629,
+      "sha256": "1c90dc93b79e1a10ee1de56bfea249c0aa49597375921eb49f1c61541b99d7eb"
+    },
+    "lake/lake-manifest.json": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/lake/lake-manifest.json",
+      "bytes": 2851,
+      "sha256": "44963d6b77cea0aec2a770e6c721e60d6e828a0a64224df3101c984b66035907"
+    },
+    "InfoGeometry.Algebra.FiniteSpinAlgebra.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Algebra.FiniteSpinAlgebra.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Algebra.MatrixNoncommutativity.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Algebra.MatrixNoncommutativity.log",
+      "bytes": 264,
+      "sha256": "3c171a5b8e7618a4c40becae440bc9326aff8b466b7d740bde1e58bd31a02695"
+    },
+    "InfoGeometry.Clifford.TowerMatrix.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.TowerMatrix.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Cartan.Involution.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Cartan.Involution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Clifford.Decomposition.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.Decomposition.log",
+      "bytes": 365,
+      "sha256": "926516cc5aaaab1552e2a25b9e51a57973dcd6f62c23b6f5a1f77e1e5d4644f2"
+    },
+    "InfoGeometry.Clifford.CartanInstance.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.CartanInstance.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Causal.Cones.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Causal.Cones.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.JordanAssociatorRing.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.JordanAssociatorRing.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.JordanMultiplicationClosure.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.JordanMultiplicationClosure.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.LieJordanComposition.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.LieJordanComposition.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.LieJordanBoundaryOperators.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.LieJordanBoundaryOperators.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceDecomposition.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceDecomposition.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceGrading.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceGrading.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceStarCharges.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceStarCharges.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceCoupledCorners.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceCoupledCorners.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceQuadraticFrame.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceQuadraticFrame.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Canonical.LieJordanSandwichGeometry.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceSandwichDuality.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceSandwichDuality.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.LieJordanGenerators.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.LieJordanGenerators.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Core.PeirceDoubleCommutator.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Core.PeirceDoubleCommutator.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Clifford.SplitQ11.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.SplitQ11.log",
+      "bytes": 225,
+      "sha256": "5e96f243cc51b586bb3b5b7a24cc0a312aa7977b6bd205e576ea35fcf7d37e81"
+    },
+    "InfoGeometry.Clifford.Cl11Matrix.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.Cl11Matrix.log",
+      "bytes": 1113,
+      "sha256": "90471c92092ad6f6e5132d6e1a4f01243c199b73d74b8241a682a1d80547c5e8"
+    },
+    "InfoGeometry.Algebra.TensorAlgebraCanonical.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Algebra.TensorAlgebraCanonical.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Algebra.FiniteTensorDeterminantStabilization.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Clifford.Cl11TensorTower.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.Cl11TensorTower.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Algebra.InductiveSuperClosureLemmas.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.Cl11TensorTowerLimit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Clifford.Cl11StarUniversal.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.Cl11StarUniversal.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Clifford.Cl11ColimitDimension.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Clifford.Cl11ColimitDimension.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Canonical.PeirceDissipatorColimit.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Canonical.PeirceDissipatorColimit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "InfoGeometry.Canonical.PeirceColimitExamples.log": {
+      "path": "/workspace/scratch/3c7848773029/colimit-validation/final-v3/InfoGeometry.Canonical.PeirceColimitExamples.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "earlier_evidence_preserved": {
+    "audit_failure_directory": "/workspace/scratch/3c7848773029/colimit-validation/final",
+    "native_pass_but_staged_gate_failure_directory": "/workspace/scratch/3c7848773029/colimit-validation/final-v2",
+    "failure_records": [
+      "/workspace/scratch/3c7848773029/colimit-validation/independent-acceptance-failed-20261029T145643Z.json",
+      "/workspace/scratch/3c7848773029/colimit-validation/independent-acceptance-gate-failed-20261029T151115Z.json"
+    ]
+  },
+  "limitations": [
+    "No repository-root aggregator build is claimed.",
+    "The result concerns the real algebraic tensor quotient, not an analytic completion or a physical field theory.",
+    "The operator-weighted mode identities do not establish a scalar spectral gap.",
+    "The prerequisite DAG is a documented proof-structure summary rather than a newly formalized causal-order carrier.",
+    "Remote GitHub status is outside this independent local acceptance record; published source hashes must remain identical."
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "source_commit": "4468137c6b9bfac71874188c816d3fb95b44867b",
+  "base_commit": "dc3ebf12fdd9ef4e88eb37acffb919e81932061a",
+  "source_blob_reconciliation": [
+    {
+      "path": ".github/workflows/real-peirce-colimit.yml",
+      "remote": "d10cb3192e3c572b80e05075a56a0b7b6b890b97",
+      "local": "d10cb3192e3c572b80e05075a56a0b7b6b890b97",
+      "matches": true
+    },
+    {
+      "path": "docs/intake/2026-10-29-real-peirce-colimit/README.md",
+      "remote": "c946966f9c6f64e12caaf046052c56ff19ff8ce0",
+      "local": "c946966f9c6f64e12caaf046052c56ff19ff8ce0",
+      "matches": true
+    },
+    {
+      "path": "docs/intake/2026-10-29-real-peirce-colimit/contract.md",
+      "remote": "b9e154085d6423124d502b4f08e084c663e2e8a9",
+      "local": "b9e154085d6423124d502b4f08e084c663e2e8a9",
+      "matches": true
+    },
+    {
+      "path": "docs/intake/2026-10-29-real-peirce-colimit/provenance.json",
+      "remote": "cdd611e0e226605bef30adf8b8e5ce86017bae3b",
+      "local": "cdd611e0e226605bef30adf8b8e5ce86017bae3b",
+      "matches": true
+    },
+    {
+      "path": "docs/intake/2026-10-29-real-peirce-colimit/stream.txt",
+      "remote": "923d7079789e95220e6859acf1eb7e07022cd663",
+      "local": "923d7079789e95220e6859acf1eb7e07022cd663",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean",
+      "remote": "9adb0f898d03b505314897425c6aef08f75ab4ff",
+      "local": "9adb0f898d03b505314897425c6aef08f75ab4ff",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+      "remote": "1700ed2dbf00b707de7c745ddf8f51afc9bf99a8",
+      "local": "1700ed2dbf00b707de7c745ddf8f51afc9bf99a8",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Causal/Cones.lean",
+      "remote": "a098b65c91bdcbdcfebe92e6d56721e8f18209e3",
+      "local": "a098b65c91bdcbdcfebe92e6d56721e8f18209e3",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+      "remote": "99122eecc1d78b7469e84fba96ca0ad8a2d87efb",
+      "local": "99122eecc1d78b7469e84fba96ca0ad8a2d87efb",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+      "remote": "772a741db0184c9a2ec9f043d7e1e3df514e6cec",
+      "local": "772a741db0184c9a2ec9f043d7e1e3df514e6cec",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+      "remote": "0759ac5a45494617b765577631906df1ed9069bc",
+      "local": "0759ac5a45494617b765577631906df1ed9069bc",
+      "matches": true
+    },
+    {
+      "path": "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+      "remote": "45280ca39a10ae218b326a2b47a74c8a73a48c7f",
+      "local": "45280ca39a10ae218b326a2b47a74c8a73a48c7f",
+      "matches": true
+    },
+    {
+      "path": "tools/quality/check_real_peirce_colimit.py",
+      "remote": "0483ec829f4627d09853d1d76ccddd653b928d9a",
+      "local": "0483ec829f4627d09853d1d76ccddd653b928d9a",
+      "matches": true
+    }
+  ],
+  "scoped_ci": {
+    "run_id": 40901170029,
+    "job_id": 123543535499,
+    "url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/40901170029",
+    "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b",
+    "status": "completed",
+    "conclusion": "success",
+    "merge_test_sha": "950f8afbda490e76d9756ac40efba40aaf6a1d80",
+    "merge_test_delta_from_source_head": [
+      {
+        "path": "REPOCONTENT.md",
+        "status": "added",
+        "git_blob_sha": "cddd625522d7d61070069689836ab00c20bb6bae"
+      },
+      {
+        "path": "Yang-Mills-Letter.md",
+        "status": "added",
+        "git_blob_sha": "6b20259b1544f088dfa4603462a54315751b244b"
+      }
+    ],
+    "observed_result": "PASSED 32 modules; 1104 audited declarations",
+    "artifacts": [
+      {
+        "id": 12908908892,
+        "name": "real-peirce-colimit-verification",
+        "size_in_bytes": 96134,
+        "url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/12908908892",
+        "archive_download_url": "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/12908908892/zip",
+        "expired": false,
+        "created_at": "2026-10-29T15:29:34Z",
+        "expires_at": "2027-01-27T15:24:06Z",
+        "updated_at": "2026-10-29T15:29:34Z",
+        "digest": "sha256:6e09b6dbfff12416cc9e4fc2cfdb1e4cf4f6653875d2ee70a44246bd164b0d12",
+        "workflow_run": {
+          "id": 40901170029,
+          "repository_id": 1156582666,
+          "head_repository_id": 1156582666,
+          "head_branch": "feat/real-peirce-colimit-modes",
+          "head_sha": "4468137c6b9bfac71874188c816d3fb95b44867b"
+        }
+      }
+    ]
+  },
+  "scope": "The code source commit and its CI merge snapshot; the final evidence-only commit does not change these audited sources."
+}

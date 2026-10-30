@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/colimit_final_acceptance",
+  "checked_at_utc": "2026-10-29T15:29:07.626915+00:00",
+  "status": "PASSED",
+  "scope": "seven changed Lean owners plus independent constructivity scan of exact 32-module closure",
+  "checks": {
+    "proxy_exit_zero": true,
+    "vacuity_exit_zero": true,
+    "vacuity_coverage_seven": true,
+    "constructivity_no_findings": true,
+    "index_stable": true,
+    "all32source_hashes_unchanged": true
+  },
+  "staged_proxy": {
+    "command": [
+      "python",
+      "tools/quality/proof_proxy_staged_gate.py"
+    ],
+    "exit_code": 0,
+    "stdout": "proof_proxy_staged_gate: ok\n",
+    "stderr": "",
+    "stable_index_signature": "e267b44f1fd2858c69e00a5ca7e6553bfa6eaa20fc0e9ce1467a025e54cd0ea9"
+  },
+  "semantic_vacuity": {
+    "command": [
+      "python",
+      "tools/quality/semantic_vacuity_gate.py",
+      "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+      "lean/InfoGeometry/Causal/Cones.lean",
+      "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+      "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+      "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+      "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+      "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean",
+      "--fail-on",
+      "error",
+      "--json-out",
+      "/workspace/scratch/3c7848773029/colimit-validation/lexical-vacuity-final-v3-20261029T152906Z.json"
+    ],
+    "exit_code": 0,
+    "stdout": "Semantic vacuity audit\n======================\nroots: lean/InfoGeometry/Clifford/TowerMatrix.lean, lean/InfoGeometry/Causal/Cones.lean, lean/InfoGeometry/Core/PeirceDoubleCommutator.lean, lean/InfoGeometry/Clifford/Cl11StarUniversal.lean, lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean, lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean, lean/InfoGeometry/Canonical/PeirceColimitExamples.lean\npatterns: /workspace/scratch/3c7848773029/info-geometry-lean/tools/quality/semantic_vacuity_patterns.json\nsemantic_vacuity: 5\nwarning: 5\ntrivial_surface: 5\n  - lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean:38 [warning/trivial_surface] map_neg_ad_sq: by\n  - lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean:83 [warning/trivial_surface] ofStage_component10: by\n  - lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean:87 [warning/trivial_surface] ofStage_component01: by\n  - lean/InfoGeometry/Clifford/Cl11StarUniversal.lean:37 [warning/trivial_surface] ofStageStarAlgHom_apply: rfl\n  - lean/InfoGeometry/Clifford/Cl11StarUniversal.lean:84 [warning/trivial_surface] lift_of: rfl\n",
+    "stderr": "",
+    "report_path": "/workspace/scratch/3c7848773029/colimit-validation/lexical-vacuity-final-v3-20261029T152906Z.json",
+    "report": {
+      "authority": "lexical heuristics; not a semantic or kernel proof",
+      "blocking_severity_counts": {
+        "warning": 5
+      },
+      "counts": {
+        "trivial_surface": 5
+      },
+      "coverage_complete": true,
+      "fail_on": "error",
+      "fail_prefixes": [],
+      "files_scanned": 7,
+      "files_selected": 7,
+      "findings": [
+        {
+          "category": "trivial_surface",
+          "detail": "by",
+          "file": "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+          "line": 38,
+          "severity": "warning",
+          "subject": "map_neg_ad_sq"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "by",
+          "file": "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+          "line": 83,
+          "severity": "warning",
+          "subject": "ofStage_component10"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "by",
+          "file": "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+          "line": 87,
+          "severity": "warning",
+          "subject": "ofStage_component01"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+          "line": 37,
+          "severity": "warning",
+          "subject": "ofStageStarAlgHom_apply"
+        },
+        {
+          "category": "trivial_surface",
+          "detail": "rfl",
+          "file": "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+          "line": 84,
+          "severity": "warning",
+          "subject": "lift_of"
+        }
+      ],
+      "pattern_version": 1,
+      "read_failures": [],
+      "scope_roots": [
+        "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+        "lean/InfoGeometry/Causal/Cones.lean",
+        "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+        "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+        "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+        "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+        "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean"
+      ],
+      "severity_counts": {
+        "warning": 5
+      },
+      "source_paths": [
+        "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean",
+        "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+        "lean/InfoGeometry/Causal/Cones.lean",
+        "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+        "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+        "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+        "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean"
+      ],
+      "successfully_read_paths": [
+        "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean",
+        "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+        "lean/InfoGeometry/Causal/Cones.lean",
+        "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+        "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+        "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+        "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean"
+      ],
+      "tracked": false
+    }
+  },
+  "constructivity": {
+    "scope": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Cartan.Involution",
+      "InfoGeometry.Clifford.Decomposition",
+      "InfoGeometry.Clifford.CartanInstance",
+      "InfoGeometry.Causal.Cones",
+      "InfoGeometry.Core.JordanAssociatorRing",
+      "InfoGeometry.Core.JordanMultiplicationClosure",
+      "InfoGeometry.Core.LieJordanComposition",
+      "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "InfoGeometry.Core.PeirceDecomposition",
+      "InfoGeometry.Core.PeirceGrading",
+      "InfoGeometry.Core.PeirceStarCharges",
+      "InfoGeometry.Core.PeirceCoupledCorners",
+      "InfoGeometry.Core.PeirceQuadraticFrame",
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+      "InfoGeometry.Core.PeirceSandwichDuality",
+      "InfoGeometry.Core.LieJordanGenerators",
+      "InfoGeometry.Core.PeirceDoubleCommutator",
+      "InfoGeometry.Clifford.SplitQ11",
+      "InfoGeometry.Clifford.Cl11Matrix",
+      "InfoGeometry.Algebra.TensorAlgebraCanonical",
+      "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization",
+      "InfoGeometry.Clifford.Cl11TensorTower",
+      "InfoGeometry.Algebra.InductiveSuperClosureLemmas",
+      "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas",
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit",
+      "InfoGeometry.Clifford.Cl11StarUniversal",
+      "InfoGeometry.Clifford.Cl11ColimitDimension",
+      "InfoGeometry.Canonical.PeirceDissipatorColimit",
+      "InfoGeometry.Canonical.PeirceColimitExamples"
+    ],
+    "files_read": 32,
+    "findings": [],
+    "authority": "Lexical source-pattern check; not a separate kernel proof"
+  },
+  "current_source_hashes_match_compiled": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": true,
+    "InfoGeometry.Algebra.MatrixNoncommutativity": true,
+    "InfoGeometry.Clifford.TowerMatrix": true,
+    "InfoGeometry.Cartan.Involution": true,
+    "InfoGeometry.Clifford.Decomposition": true,
+    "InfoGeometry.Clifford.CartanInstance": true,
+    "InfoGeometry.Causal.Cones": true,
+    "InfoGeometry.Core.JordanAssociatorRing": true,
+    "InfoGeometry.Core.JordanMultiplicationClosure": true,
+    "InfoGeometry.Core.LieJordanComposition": true,
+    "InfoGeometry.Core.LieJordanBoundaryOperators": true,
+    "InfoGeometry.Core.PeirceDecomposition": true,
+    "InfoGeometry.Core.PeirceGrading": true,
+    "InfoGeometry.Core.PeirceStarCharges": true,
+    "InfoGeometry.Core.PeirceCoupledCorners": true,
+    "InfoGeometry.Core.PeirceQuadraticFrame": true,
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": true,
+    "InfoGeometry.Core.PeirceSandwichDuality": true,
+    "InfoGeometry.Core.LieJordanGenerators": true,
+    "InfoGeometry.Core.PeirceDoubleCommutator": true,
+    "InfoGeometry.Clifford.SplitQ11": true,
+    "InfoGeometry.Clifford.Cl11Matrix": true,
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": true,
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": true,
+    "InfoGeometry.Clifford.Cl11TensorTower": true,
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas": true,
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": true,
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit": true,
+    "InfoGeometry.Clifford.Cl11StarUniversal": true,
+    "InfoGeometry.Clifford.Cl11ColimitDimension": true,
+    "InfoGeometry.Canonical.PeirceDissipatorColimit": true,
+    "InfoGeometry.Canonical.PeirceColimitExamples": true
+  }
+}

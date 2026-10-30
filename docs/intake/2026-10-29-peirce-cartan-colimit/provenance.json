@@ -1,0 +1,15 @@
+{
+  "base_commit": "d23c9afe00275126fd4d4e25cb0842ee55fe82af",
+  "lean": "leanprover/lean4:v4.34.1",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "sources": [
+    {
+      "name": "Pasted text(20261028-153212).txt",
+      "sha256": "e28349232f1b9b8ee053ac25f71065129976aa625e9cb2c85d24eedf3c4e5aa0"
+    },
+    {
+      "name": "Pasted text (2)(20261028-153417).txt",
+      "sha256": "16824043071571be6a76d371352ce246f3e3f5010b6e6d5fa94f176e12bc8a7c"
+    }
+  ]
+}

@@ -70,7 +70,8 @@ theorem fourteen_laws_by_normalization {P : B} (hP : P * P = P) (A C X : B) :
 /-- The last branch needs neither idempotence nor any multiplication law. -/
 theorem partition_without_idempotence (P A C X : B) :
     piV P A C X + piPhi P A C X + piJ P A C X + piSigma P A C X = (8 : ℤ) • X := by
-  simp only [piV, piPhi, piJ, piSigma] <;> abel
+  simp only [piV, piPhi, piJ, piSigma]
+  abel
 
 -- An absent second definition makes the multi-unfold fail. The following
 -- `try` must leave the syntactic target unchanged before selective unfolding.
@@ -81,8 +82,8 @@ example {P : B} (hP : P * P = P) (A : B) : zig P A * zig P A = 0 := by
   peirce_abel hP
 
 -- Internal unary negation is supported by the repaired rule set.
-example {P : B} (hP : P * P = P) (A X : B) : (-zig P A) * X = -(zig P A * X) := by
-  peirce_abel hP
+example {P : B} (_hP : P * P = P) (A X : B) : (-zig P A) * X = -(zig P A * X) := by
+  peirce_abel _hP
 
 -- No `no goals to be solved` error after the simplifier closes the goal.
 example {P : B} (hP : P * P = P) : P * P = P := by

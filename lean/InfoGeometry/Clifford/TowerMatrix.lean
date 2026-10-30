@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -13,7 +19,9 @@ namespace InfoGeometry.Clifford.TowerMatrix
 
 open Matrix
 
-def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2
+/-- The binary tensor index retains its defining equations without generating
+an executable recursive helper for this type-valued definition. -/
+noncomputable def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2
 
 instance (n : ℕ) : Fintype (Idx n) := by induction n with | zero => dsimp [Idx]; exact inferInstance | succ _ ih => dsimp [Idx]; exact @instFintypeProd _ _ ih _
 instance (n : ℕ) : DecidableEq (Idx n) := by induction n with | zero => dsimp [Idx]; exact inferInstance | succ _ ih => dsimp [Idx]; exact @instDecidableEqProd _ _ ih _
@@ -97,7 +105,7 @@ Cartan involution intertwines with the canonical matrix inverse.
 This is the matrix-level compatibility needed to connect `ModularMirror` and Cartan wiring.
 -/
 lemma cartan_inv_of_isUnit (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ)
-    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n)) (_hJt : (Jn J1 n)ᵀ = (Jn J1 n))
+    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n))
     {X : Mat n} (hX : IsUnit X.det) :
     cartan J1 n X⁻¹ = (cartan J1 n X)⁻¹ := by
   set J : Mat n := Jn J1 n

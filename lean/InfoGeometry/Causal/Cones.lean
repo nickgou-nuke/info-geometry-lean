@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -65,21 +70,16 @@ lemma modularMirror_cartan_comm_of_isUnit
     (hJJ : (InfoGeometry.Clifford.TowerMatrix.Jn J1 n)
       * (InfoGeometry.Clifford.TowerMatrix.Jn J1 n)
       = (1 : InfoGeometry.Clifford.TowerMatrix.Mat n))
-    (hJt : (InfoGeometry.Clifford.TowerMatrix.Jn J1 n)ᵀ
-      = (InfoGeometry.Clifford.TowerMatrix.Jn J1 n))
     {A : InfoGeometry.Clifford.TowerMatrix.Mat n}
     (hA : IsUnit A.det) :
     ModularMirror (n := n) (InfoGeometry.Clifford.TowerMatrix.cartan J1 n A)
       = InfoGeometry.Clifford.TowerMatrix.cartan J1 n (ModularMirror (n := n) A) := by
   simpa [ModularMirror] using
     (InfoGeometry.Clifford.TowerMatrix.cartan_inv_of_isUnit
-      (J1 := J1) (n := n) hJJ hJt (X := A) hA).symm
+      (J1 := J1) (n := n) hJJ (X := A) hA).symm
 
-/--
-The "Clifford Null-Cone" translation:
-A vector is on the causal lightcone boundary if and only if its representative
-squares to zero in the native Clifford Algebra.
--/
+/-- A vector in the quadratic zero locus has a square-zero image in the
+native Clifford algebra. -/
 theorem clifford_square_zero_of_mem_boundary {V : Type*} [AddCommGroup V] [Module ℝ V]
     (C : CausalStructure V) (v : V) (hv : v ∈ C.Boundary) :
     (CliffordAlgebra.ι C.Q v) * (CliffordAlgebra.ι C.Q v) = 0 := by

@@ -1,0 +1,362 @@
+{
+  "status": "passed",
+  "targets": [
+    "InfoGeometry.Clifford.TowerMatrix",
+    "InfoGeometry.Causal.Cones",
+    "InfoGeometry.Core.PeirceDoubleCommutator",
+    "InfoGeometry.Clifford.Cl11StarUniversal",
+    "InfoGeometry.Clifford.Cl11ColimitDimension",
+    "InfoGeometry.Canonical.PeirceDissipatorColimit",
+    "InfoGeometry.Canonical.PeirceColimitExamples"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "status": "passed",
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Clifford.TowerMatrix",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Cartan.Involution",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Decomposition",
+      "status": "passed",
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Clifford.CartanInstance",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Causal.Cones",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.JordanAssociatorRing",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.JordanMultiplicationClosure",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanComposition",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDecomposition",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceGrading",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceStarCharges",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceCoupledCorners",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceQuadraticFrame",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceSandwichDuality",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.LieJordanGenerators",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Core.PeirceDoubleCommutator",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.SplitQ11",
+      "status": "passed",
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11Matrix",
+      "status": "passed",
+      "warnings": 3
+    },
+    {
+      "module": "InfoGeometry.Algebra.TensorAlgebraCanonical",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11TensorTower",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.InductiveSuperClosureLemmas",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11TensorTowerLimit",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11StarUniversal",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Clifford.Cl11ColimitDimension",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PeirceDissipatorColimit",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PeirceColimitExamples",
+      "status": "passed",
+      "warnings": 0
+    }
+  ],
+  "scope": "exact source closure and isolated native Lake package; not root package",
+  "revision": "dc3ebf12fdd9ef4e88eb37acffb919e81932061a",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "working_tree_status": "A  .github/workflows/real-peirce-colimit.yml\nA  docs/intake/2026-10-29-real-peirce-colimit/README.md\nA  docs/intake/2026-10-29-real-peirce-colimit/ci-context.md\nA  docs/intake/2026-10-29-real-peirce-colimit/contract.md\nA  docs/intake/2026-10-29-real-peirce-colimit/provenance.json\nA  docs/intake/2026-10-29-real-peirce-colimit/semantic-review.json\nA  docs/intake/2026-10-29-real-peirce-colimit/stream.txt\nA  lean/InfoGeometry/Canonical/PeirceColimitExamples.lean\nA  lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean\nM  lean/InfoGeometry/Causal/Cones.lean\nA  lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean\nA  lean/InfoGeometry/Clifford/Cl11StarUniversal.lean\nM  lean/InfoGeometry/Clifford/TowerMatrix.lean\nA  lean/InfoGeometry/Core/PeirceDoubleCommutator.lean\nA  tools/quality/check_real_peirce_colimit.py\n",
+  "dependencies": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Algebra.MatrixNoncommutativity": [],
+    "InfoGeometry.Clifford.TowerMatrix": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.MatrixNoncommutativity"
+    ],
+    "InfoGeometry.Cartan.Involution": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Decomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.TowerMatrix"
+    ],
+    "InfoGeometry.Clifford.CartanInstance": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Cartan.Involution",
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Clifford.Decomposition"
+    ],
+    "InfoGeometry.Causal.Cones": [
+      "InfoGeometry.Clifford.CartanInstance",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.JordanAssociatorRing": [],
+    "InfoGeometry.Core.JordanMultiplicationClosure": [
+      "InfoGeometry.Core.JordanAssociatorRing"
+    ],
+    "InfoGeometry.Core.LieJordanComposition": [
+      "InfoGeometry.Core.JordanMultiplicationClosure"
+    ],
+    "InfoGeometry.Core.LieJordanBoundaryOperators": [
+      "InfoGeometry.Core.LieJordanComposition"
+    ],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Core.PeirceGrading": [
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.Core.PeirceStarCharges": [
+      "InfoGeometry.Core.PeirceGrading"
+    ],
+    "InfoGeometry.Core.PeirceCoupledCorners": [
+      "InfoGeometry.Core.PeirceStarCharges"
+    ],
+    "InfoGeometry.Core.PeirceQuadraticFrame": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": [
+      "InfoGeometry.Core.PeirceCoupledCorners"
+    ],
+    "InfoGeometry.Core.PeirceSandwichDuality": [
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry"
+    ],
+    "InfoGeometry.Core.LieJordanGenerators": [
+      "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "InfoGeometry.Core.PeirceQuadraticFrame",
+      "InfoGeometry.Core.PeirceSandwichDuality"
+    ],
+    "InfoGeometry.Core.PeirceDoubleCommutator": [
+      "InfoGeometry.Core.LieJordanGenerators"
+    ],
+    "InfoGeometry.Clifford.SplitQ11": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Cl11Matrix": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.SplitQ11"
+    ],
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Clifford.Cl11TensorTower": [
+      "InfoGeometry.Clifford.Cl11Matrix",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Algebra.TensorAlgebraCanonical",
+      "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization"
+    ],
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.InductiveSuperClosureLemmas"
+    ],
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit": [
+      "InfoGeometry.Clifford.Cl11TensorTower",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas"
+    ],
+    "InfoGeometry.Clifford.Cl11StarUniversal": [
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit"
+    ],
+    "InfoGeometry.Clifford.Cl11ColimitDimension": [
+      "InfoGeometry.Clifford.Cl11StarUniversal"
+    ],
+    "InfoGeometry.Canonical.PeirceDissipatorColimit": [
+      "InfoGeometry.Core.PeirceDoubleCommutator",
+      "InfoGeometry.Clifford.Cl11StarUniversal"
+    ],
+    "InfoGeometry.Canonical.PeirceColimitExamples": [
+      "InfoGeometry.Canonical.PeirceDissipatorColimit",
+      "InfoGeometry.Clifford.Cl11ColimitDimension"
+    ]
+  },
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "InfoGeometry.Algebra.MatrixNoncommutativity": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "InfoGeometry.Clifford.TowerMatrix": "124a27a4a638a9af09ae2862d1a3e6f20f9f8e6d892d652c7473907dd2b8f0ea",
+    "InfoGeometry.Cartan.Involution": "15a69aeab044436e9bac34ca6ead349a536f23d5e85d8a38be2db1a3090058a5",
+    "InfoGeometry.Clifford.Decomposition": "fc25f01fc57b9e6e69ece2bcbe0f12e0ad1b668ce280afd06958285321cb4a9d",
+    "InfoGeometry.Clifford.CartanInstance": "17cb36be9eeab61c4cd0f08b106a22bc210d3192ce6f505383083934b7e37ebb",
+    "InfoGeometry.Causal.Cones": "34b132ec64f91a51ce498afbbc76eb2921ed3d529d8741aba8c821d921064b56",
+    "InfoGeometry.Core.JordanAssociatorRing": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+    "InfoGeometry.Core.JordanMultiplicationClosure": "7a4bbf9a9c072f181b5fed9efc9e6fed3b4d6120d48f4435292001d0008cb5ba",
+    "InfoGeometry.Core.LieJordanComposition": "0bbab38efde19cea920df26cdd13f20a7fb2227b2a284e419016f645d0b933ee",
+    "InfoGeometry.Core.LieJordanBoundaryOperators": "e608a88c1ecc43de691726b3d36ca7c0eca0796ab34c2f1856b51ba66bd1e227",
+    "InfoGeometry.Core.PeirceDecomposition": "0ef61b4bcb868ad97ed6d6d832fae3de88e0d4d7b9f32e81fc69816e9f2ab813",
+    "InfoGeometry.Core.PeirceGrading": "f6fe99208f8d0947ff9f99b62625ad7a21a99b9a4f62908824ddb5c4c3a1b11c",
+    "InfoGeometry.Core.PeirceStarCharges": "dd628e051dc312c70fb503e534e0681c8669ad2ad447313fb40bccb84f2a53ea",
+    "InfoGeometry.Core.PeirceCoupledCorners": "e6b39c4cfbb3f875337acdd89fd6e5c2294f344db8bf9decfbfdfc2f40a4052f",
+    "InfoGeometry.Core.PeirceQuadraticFrame": "40063d7217d5f3149bd291dcf29a984c6b3ec1614d9c1dc7feae15dacf4cb516",
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": "26124a189d2e8cd3b6eea6a5a3d7ca6a21fd1798191e25b18267c246f6e7a128",
+    "InfoGeometry.Core.PeirceSandwichDuality": "94238642521c3eba162ab79be630b4de370127859664a099d9691f5ad3a1a869",
+    "InfoGeometry.Core.LieJordanGenerators": "8caa1b840fc11201c2457db34485b4693e350ccb17028e5668fbd3ad8c333269",
+    "InfoGeometry.Core.PeirceDoubleCommutator": "fb6ef3686a37fbf814c7c4e24b3eef12d317570bffebeafa340b0736aefef4e2",
+    "InfoGeometry.Clifford.SplitQ11": "a071dd78892818d197a0c187f901bf0cc7da3b3f13e201a14af1442affadacb0",
+    "InfoGeometry.Clifford.Cl11Matrix": "d5372602016d91b0be7db8ff8a28a96ef7723727f99ce860007b3fa88c392658",
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": "5113f55b600724f212c9a5520a9e0f67b535dc8c90ebe52493bebbeaa4a6ec2b",
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": "bcc18fb0bada6b50b96d41ab37e3a01246c2da3421041a1ed74abd2e492d0fc4",
+    "InfoGeometry.Clifford.Cl11TensorTower": "1e08191d55b0c7827239332bcc9ba68b97d2c2004772d485ab0b19e2c00dc9ea",
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas": "98d0dd86179e785391421a5dec571700606bf2d6ef10f8d2f04145bd33982333",
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": "576ed03a3e5c3ab26cb92bc426b2dc979325f42fd7a99d01735a68203c720a14",
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit": "818b866a320ae15053a5fd76667551bb256e6e1f1575ab715854a5587b6466c1",
+    "InfoGeometry.Clifford.Cl11StarUniversal": "b0fae59aab00aa1ee57b9215a9950eea71531f5eddbaad9dc42559d7d0c788c7",
+    "InfoGeometry.Clifford.Cl11ColimitDimension": "fbda04122c715187bf079b50faf454dbb223f05a15d8ae3dee4b585e81b57ffc",
+    "InfoGeometry.Canonical.PeirceDissipatorColimit": "ac339f5a0d3b1db3a4d04edb9852931e18b46d83fddfcb8ef0b5411ff2b4f797",
+    "InfoGeometry.Canonical.PeirceColimitExamples": "2681f96524b8a546bc4f2cdd657e73801be2e533eac371495bf76f02487d13f8"
+  },
+  "constructivity_findings": [],
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+  "audited_declarations": 1104,
+  "module_counts": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": 83,
+    "InfoGeometry.Algebra.MatrixNoncommutativity": 7,
+    "InfoGeometry.Clifford.TowerMatrix": 35,
+    "InfoGeometry.Cartan.Involution": 20,
+    "InfoGeometry.Clifford.Decomposition": 21,
+    "InfoGeometry.Clifford.CartanInstance": 17,
+    "InfoGeometry.Causal.Cones": 26,
+    "InfoGeometry.Core.JordanAssociatorRing": 30,
+    "InfoGeometry.Core.JordanMultiplicationClosure": 12,
+    "InfoGeometry.Core.LieJordanComposition": 31,
+    "InfoGeometry.Core.LieJordanBoundaryOperators": 37,
+    "InfoGeometry.Core.PeirceDecomposition": 58,
+    "InfoGeometry.Core.PeirceGrading": 59,
+    "InfoGeometry.Core.PeirceStarCharges": 26,
+    "InfoGeometry.Core.PeirceCoupledCorners": 34,
+    "InfoGeometry.Core.PeirceQuadraticFrame": 36,
+    "InfoGeometry.Canonical.LieJordanSandwichGeometry": 7,
+    "InfoGeometry.Core.PeirceSandwichDuality": 23,
+    "InfoGeometry.Core.LieJordanGenerators": 48,
+    "InfoGeometry.Core.PeirceDoubleCommutator": 17,
+    "InfoGeometry.Clifford.SplitQ11": 24,
+    "InfoGeometry.Clifford.Cl11Matrix": 65,
+    "InfoGeometry.Algebra.TensorAlgebraCanonical": 33,
+    "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization": 24,
+    "InfoGeometry.Clifford.Cl11TensorTower": 120,
+    "InfoGeometry.Algebra.InductiveSuperClosureLemmas": 23,
+    "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas": 53,
+    "InfoGeometry.Clifford.Cl11TensorTowerLimit": 46,
+    "InfoGeometry.Clifford.Cl11StarUniversal": 18,
+    "InfoGeometry.Clifford.Cl11ColimitDimension": 3,
+    "InfoGeometry.Canonical.PeirceDissipatorColimit": 24,
+    "InfoGeometry.Canonical.PeirceColimitExamples": 44
+  },
+  "isolated_lake_build": "passed"
+}

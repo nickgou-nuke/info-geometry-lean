@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "review_id": "real-peirce-colimit-independent-semantic-review-20261029T152247Z",
+  "reviewer": "/root/colimit_owner_search",
+  "reviewer_role": "independent semantic auditor; not an author of the reviewed Lean files",
+  "reviewed_at_utc": "2026-10-29 15:22:47 UTC",
+  "status": "PASS",
+  "status_scope": "Mathematical semantics, intake fidelity, hypotheses, actual-carrier reuse, and documentation accuracy at the recorded source hashes. This is not a compilation or kernel-audit result.",
+  "repository": "/workspace/scratch/3c7848773029/info-geometry-lean",
+  "review_base_commit": "dc3ebf12fdd9ef4e88eb37acffb919e81932061a",
+  "source_sha256": {
+    "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean": "fb6ef3686a37fbf814c7c4e24b3eef12d317570bffebeafa340b0736aefef4e2",
+    "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean": "b0fae59aab00aa1ee57b9215a9950eea71531f5eddbaad9dc42559d7d0c788c7",
+    "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean": "fbda04122c715187bf079b50faf454dbb223f05a15d8ae3dee4b585e81b57ffc",
+    "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean": "ac339f5a0d3b1db3a4d04edb9852931e18b46d83fddfcb8ef0b5411ff2b4f797",
+    "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean": "2681f96524b8a546bc4f2cdd657e73801be2e533eac371495bf76f02487d13f8",
+    "docs/intake/2026-10-29-real-peirce-colimit/README.md": "29b3254e82021fad87b381e0c70091f05c8399b2186c228a6b0997512067ce75",
+    "docs/intake/2026-10-29-real-peirce-colimit/contract.md": "e46c261d8cb0bb19a1945dea731c5cc924f69a94f4d9d48a00fb4c45ee58e7ee",
+    "lean/InfoGeometry/Clifford/TowerMatrix.lean": "124a27a4a638a9af09ae2862d1a3e6f20f9f8e6d892d652c7473907dd2b8f0ea",
+    "lean/InfoGeometry/Causal/Cones.lean": "34b132ec64f91a51ce498afbbc76eb2921ed3d529d8741aba8c821d921064b56",
+    "lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean": "3e743d3b84a0b0c0a228f57fd4c0d580eb99c7dbd759e89a5eb91cecc832f6f8",
+    "tools/quality/check_real_peirce_colimit.py": "82ee841d8527bd1596042d5ab9dc971d29260399e80bea6f55c1434a4c2f1f7e",
+    ".github/workflows/real-peirce-colimit.yml": "131f6ccef258a18f15715598144686257391bc50230acf04eb055e578f2bfcf5"
+  },
+  "claims_checked": [
+    {
+      "area": "Native squared inner actions",
+      "declarations": [
+        "ad_sq_apply_of_commute",
+        "ad_sq_apply_of_anticommute",
+        "ad_sum_difference_trinity",
+        "the ten Peirce frame mode theorems"
+      ],
+      "result": "PASS",
+      "reason": "The full D_E = -ad(E)^2 and D_J = ad(J)^2 table has the correct signs and operator-valued left factors. No normalized reflexivity, invertibility, scalar coefficient, diagonalization, or commuting-algebra hypothesis replaces the general opposite-corner setting."
+    },
+    {
+      "area": "Existing real quotient and genuine universal property",
+      "declarations": [
+        "ofStageStarAlgHom",
+        "ofStageStarAlgHom_bond",
+        "ofStageStarAlgHom_injective",
+        "hom_ext",
+        "lift",
+        "lift_of",
+        "lift_comp",
+        "lift_unique",
+        "existsUnique_lift",
+        "existsUnique_lift_iff"
+      ],
+      "result": "PASS",
+      "reason": "The definitions reuse the actual Cl11TensorTowerLimit Stage, Limit, ofStage, star, and real algebra structure. The universal ring lift is strengthened to native unital StarAlgHom over the reals; the actual tensor-bond compatibility is consumed. The unique factorization is proved rather than assumed. Faithfulness is established for canonical inclusions, not asserted for arbitrary universal lifts. Targets have the stated Type, Ring, StarRing, and Algebra over the reals hypotheses."
+    },
+    {
+      "area": "Infinite dimension",
+      "declarations": [
+        "finrank_stage",
+        "stage_dimension_le",
+        "not_finiteDimensional"
+      ],
+      "result": "PASS",
+      "reason": "Each full real matrix stage has dimension 4^n and injects real-linearly into the actual quotient. Assuming finite dimension d gives 4^d <= d, contradicting d < 4^d. No infinite-dimensionality assumption or analytic completion substitutes for this argument."
+    },
+    {
+      "area": "Naturality, fidelity, and full actual-limit frame",
+      "declarations": [
+        "map_ad_sq",
+        "map_neg_ad_sq",
+        "ad_sq_weighted_eq_iff",
+        "ofStage_ad_sq_intertwines",
+        "ofStage_ad_sq_eq_zero_iff",
+        "ofStage_commute_iff",
+        "ofStage_opposite_corners",
+        "limit_peirce_frame",
+        "limit_stationary_modes",
+        "limit_reflection_modes",
+        "the four nonzero E/J/C limit mode theorems",
+        "lift_ad_sq"
+      ],
+      "result": "PASS",
+      "reason": "The actual inclusions preserve the native squared actions and reflect the specified weighted equations and commutation through injectivity. The limit frame explicitly includes both nilpotences, odd E/J parity, even K/C parity, and C = s*K. Stationary, reflection, and four remaining nonzero modes cover the complete table. Universal descent acts on ad-squares through the given compatible stage family without an unjustified injectivity assertion. The added abel finish addresses the earlier additive-normalization proof-script concern for J parity."
+    },
+    {
+      "area": "Star reflection and Gram expression",
+      "declarations": [
+        "limit_reflected_star_corner",
+        "limit_reflected_gram"
+      ],
+      "result": "PASS",
+      "reason": "The star-paired specialization requires a self-adjoint idempotent, but no self-adjoint-seed assumption. The conclusion is an algebraic reflected Gram identity in the actual quotient. General positive-semidefiniteness of the quotient is not inferred."
+    },
+    {
+      "area": "Full real matrix nonscalar witness",
+      "declarations": [
+        "P_dense",
+        "S_dense",
+        "U_dense",
+        "P_not_commute_S",
+        "U_mul_star_ne_star_mul",
+        "gram_posSemidef",
+        "gram_not_commute_seed",
+        "gram_mul_U_ne_smul",
+        "stage_gram_mul_U_ne_smul",
+        "limit_gram_mul_U_ne_smul",
+        "limit_noncommutative"
+      ],
+      "result": "PASS",
+      "reason": "The current dense four-by-four real example proves actual noncommutation and K*U != r smul U for every real r. The stage transfer maps a hypothetical equality through the real matrix algebra equivalence, using the proved star identification. The limit transfer reflects a hypothetical equality through the injective real StarAlgHom, preserving products, addition, real scalars, and star. Thus the nonscalar-action certificate itself survives in the actual infinite-dimensional quotient. Finite matrix positive-semidefiniteness is correctly confined to the finite example."
+    },
+    {
+      "area": "README mathematical map and prerequisite partial order",
+      "declarations": [
+        "docs/intake/2026-10-29-real-peirce-colimit/README.md"
+      ],
+      "result": "PASS",
+      "reason": "The extraction table, exact operator table, universal-property formula, dimension contradiction, and witness claims match the actual source statements. The acyclic prerequisite diagram distinguishes the finite algebraic branch, actual tensor quotient and universal descent, dimension argument, and witness transport. It is explicitly a human proof-structure summary rather than a generated declaration graph or physical causal assertion. The revised node label 'Star-algebra inclusions and universal descent' removes the possible implication that arbitrary universal maps are injective."
+    },
+    {
+      "area": "Preserved binary index implementation and dependent carriers",
+      "declarations": [
+        "TowerMatrix.Idx",
+        "TowerMatrix.idx_card_pow_two",
+        "TowerMatrix.Mat",
+        "Cl11TensorTower matrix and bonding APIs",
+        "Cl11TensorTowerLimit quotient APIs"
+      ],
+      "result": "PASS",
+      "reason": "The exact original Idx recursive equations and cardinality proof are retained. Only code generation for this Type-valued family is disabled by noncomputable. Pinned Lean source confirms that this suppresses the generated recursive partial implementation while retaining the safe logical definition and equation metadata. The dependent product index, full real matrix stages, actual bonding maps, and existing quotient are unchanged; no carrier surrogate or mathematical axiom is introduced."
+    },
+    {
+      "area": "Strengthened inverse-intertwining APIs",
+      "declarations": [
+        "TowerMatrix.cartan_inv_of_isUnit",
+        "Causal.modularMirror_cartan_comm_of_isUnit"
+      ],
+      "result": "PASS",
+      "reason": "The inverse compatibility proof uses J*J = 1, hence inverse J = J, and invertibility of the matrix determinant; it never uses transpose symmetry of J. Removing that hypothesis from the theorem and its sole repository caller strengthens both statements. The caller is updated by removing the same unused argument. Symmetry hypotheses remain in the separate actual Cartan involutivity results, where they are used."
+    },
+    {
+      "area": "Existing shared noncommutative coefficient algebra witness",
+      "declarations": [
+        "Algebra.MatrixNoncommutativity.swapMatrix",
+        "Algebra.MatrixNoncommutativity.tiltedMatrix",
+        "Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne",
+        "TowerMatrix direct import of Algebra.MatrixNoncommutativity"
+      ],
+      "result": "PASS",
+      "reason": "The unchanged imported owner proves noncommutation of two explicitly nondiagonal full two-by-two matrices over every nontrivial coefficient ring, including the real coefficient algebra used by TowerMatrix. Its imports are confined to Mathlib, so the direct import creates no cycle. The imported result is a coefficient-algebra witness. Delivered actual tensor-stage and quotient noncommutation and nonscalar-action claims remain the already reviewed dense stage-two and Limit theorems in PeirceColimitExamples."
+    },
+    {
+      "area": "Additional existing owners and corrected Cones documentation",
+      "declarations": [
+        "Cartan.Involution",
+        "Clifford.Decomposition",
+        "Clifford.CartanInstance",
+        "Causal.Cones"
+      ],
+      "result": "PASS",
+      "reason": "Full source inspection found no sorry, admit, custom axiom, unsafe, partial, or native_decide in these four owners. Their formal statements use native endomorphism algebra, full real matrices and transpose, quadratic forms, and Mathlib CliffordAlgebra. The corrected final Cones comment now states only the forward square-zero implication actually proved. The inverse API change preserves all imports/reexports and does not introduce a physical interpretation or completion claim."
+    },
+    {
+      "area": "Seven strict targets and exhaustive 32-module closure",
+      "declarations": [
+        "tools/quality/check_real_peirce_colimit.py",
+        "tools/quality/check_lie_jordan_geometry.py",
+        "tools/quality/reviewed_audit_source.py"
+      ],
+      "result": "PASS",
+      "reason": "The selector contains the five new owners plus TowerMatrix and Causal.Cones as seven strict targets. Independent read-only enumeration with the maintained closure routine returns exactly 32 repository modules. The maintained verifier, unsafe/partial and axiom audit, source gate, and dependency configuration are unchanged. No generated-helper exemption, source-gate exception, or reduced acceptance condition was introduced."
+    },
+    {
+      "area": "Workflow and README fidelity",
+      "declarations": [
+        ".github/workflows/real-peirce-colimit.yml",
+        "docs/intake/2026-10-29-real-peirce-colimit/README.md"
+      ],
+      "result": "PASS",
+      "reason": "Every one of the 32 repository source paths in the exact closure is matched by a workflow trigger. The workflow fetches the selected source revision and pinned Mathlib revision, installs the pinned Lean toolchain, runs the same scoped verifier, and retains verification artifacts. README correctly states seven strict targets, the preserved index equations, the imported coefficient witness, the actual stage-two and Limit witnesses, and the removed public symmetry arguments. It retains the previously reviewed mathematical map, complete operator table, real universal property, dimension argument, and prerequisite DAG, without claiming successful pending verification."
+    }
+  ],
+  "resolved_review_findings": [
+    "The initial rank-one example was replaced by a dense example with an explicit theorem excluding every scalar action coefficient on U.",
+    "The frame parity, nilpotence, stationary modes, and reflection modes are now explicitly packaged on the actual limit images.",
+    "The additive-normalization finish was added to the J-parity proof.",
+    "The nonscalar-action certificate is explicitly transferred both to the tensor stage and to the quotient.",
+    "The README DAG label no longer suggests that arbitrary universal lifts are faithful.",
+    "The universal-action proof now exposes the native homomorphism coercion explicitly without changing its statement or hypotheses.",
+    "The matrix witness uses explicit native Matrix types, with the former abbreviation expanded definitionally.",
+    "The stage nonscalar-action proof applies its proved star identification before unfolding the stage witness.",
+    "The actual delivered index repair retains the original recursive equations with a noncomputable modifier; the earlier Nat.rec snapshot remains superseded.",
+    "The genuinely unused transpose-symmetry hypothesis is removed from the inverse-intertwining owner and sole repository caller, and the public arity change is documented.",
+    "TowerMatrix directly imports the unchanged matching full-matrix noncommutation witness; the delivered actual stage and quotient witnesses remain those already reviewed in PeirceColimitExamples.",
+    "The Cones documentation now matches the one-way Clifford square-zero theorem.",
+    "The selector has seven strict targets, and the workflow covers every source in the independently enumerated 32-module repository closure."
+  ],
+  "open_semantic_findings": [],
+  "interpretation_boundaries": [
+    "K remains an operator-valued factor; the mode laws do not establish a scalar spectral gap.",
+    "A Gram identity in the quotient is not an ordered-positivity or reflection-functional theorem.",
+    "The construction is the actual real algebraic quotient, with no analytic completion or complexification.",
+    "The result does not assert physical symmetry breaking, Yang-Mills theory, or all 52 narrative archetypes.",
+    "The universal theorem is stated for B : Type with the exact native StarAlgHom hypotheses; no arbitrary-universe generalization is claimed."
+  ],
+  "review_execution": {
+    "compiled": false,
+    "ran_builds": false,
+    "ran_tests": false,
+    "edited_repository_sources": false,
+    "wrote_only_new_untracked_review_artifact": true,
+    "method": "Independent read-only inspection of actual Lean sources, imported owners, exact Mathlib interfaces, intake text, contract, and README; source hashing for the reviewed snapshot. Final reconciliation additionally recovered the exact prior source hashes in memory by reversing only the reviewed proof/annotation edits; no source file was changed. The final extension inspected both existing-owner diffs, the shared witness source, the four additional imported owners, the public call graph, README, seven-target selector, and workflow. A read-only dependency inventory confirmed 32 modules and full trigger coverage; no source gate or compiler was run by this auditor."
+  },
+  "remaining_acceptance_work": [
+    "The parent must finish strict compilation of the seven targets, exhaustive declaration-axiom auditing of the exact 32-module repository import closure, and the isolated native Lake build.",
+    "The unchanged final gates must supply their actual execution results; this semantic record does not substitute for those results.",
+    "Any subsequent source, documentation, selector, or workflow changes must be reconciled with these twelve recorded hashes."
+  ],
+  "supersedes_review": {
+    "path": "/workspace/scratch/3c7848773029/colimit-validation/independent-semantic-review-20261029T150314Z.json",
+    "sha256": "7f10faf158830053330128d0635573674bbd3ce5e3bfb9d6c06106e640efe566",
+    "reason": "Expands the independent review to the final seven changed Lean files, existing shared matrix witness import, revised seven-target selector, and complete workflow coverage. The five principal new Lean owners and contract retain their previous hashes."
+  },
+  "verification_status": {
+    "semantic_review": "passed",
+    "compiler_or_kernel_acceptance_claimed_by_this_auditor": false,
+    "overall_verification": "pending separate parent final compilation, exhaustive audit, and isolated Lake acceptance at review time",
+    "parent_reported_context_not_independently_executed": "The parent reports that the unchanged staged proof-proxy gate passes and the seven-target development compilation is running.",
+    "audit_and_gate_policy": "Unchanged; no generated-helper exemption or source-gate exception."
+  },
+  "retained_prior_full_review": {
+    "path": "/workspace/scratch/3c7848773029/colimit-validation/independent-semantic-review-20261029T145143Z.json",
+    "sha256": "31b7c76a1d407a8990bc47208794e149cf5f76036a63cdeee7d8ab2129758c8f",
+    "reason": "The complete core, actual universal property, dimension, transport, and dense nonscalar witness assessment is retained because all five source hashes are unchanged."
+  },
+  "source_reconciliation_history": [
+    {
+      "result": "PASS",
+      "unchanged_paths": [
+        "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+        "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+        "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+        "docs/intake/2026-10-29-real-peirce-colimit/README.md",
+        "docs/intake/2026-10-29-real-peirce-colimit/contract.md"
+      ],
+      "changed_paths": [
+        "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+        "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean"
+      ],
+      "byte_exact_previous_snapshot_recovered_by_reversing_only_reviewed_repairs": {
+        "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean": true,
+        "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean": true
+      },
+      "old_hashes_for_changed_paths": {
+        "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean": "146d7e48be9c2a00e7a2c82ff84973b804d02e4687883cee74ef11accae83047",
+        "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean": "fa1d1f1bc377081753088bd0c9e88dd725dabec6a52f6f5975f1708b64aadf1c"
+      },
+      "repair_assessment": [
+        {
+          "declaration": "PeirceDissipatorColimit.lift_ad_sq",
+          "change": "Names the existing map_ad_sq result hm, changes the underlying AlgHom coercion to direct StarAlgHom applications, and rewrites using hm before the existing universal lift evaluation.",
+          "semantic_result": "PASS: statement, hypotheses, actual quotient, and universal-factorization argument are unchanged. The change only makes a definitional coercion explicit to the elaborator."
+        },
+        {
+          "declaration": "PeirceColimitExamples native matrix annotations",
+          "change": "Removes the local Mat4 abbreviation and writes Matrix (Fin 4) (Fin 4) real scalars explicitly in U, the entry formula, and congrArg type annotations.",
+          "semantic_result": "PASS: this expands the exact existing abbreviation. P, S, U, their entries, multiplication, star, real scalar action, theorem statements, and hypotheses retain their mathematical meaning."
+        },
+        {
+          "declaration": "PeirceColimitExamples.stage_gram_mul_U_ne_smul",
+          "change": "Rewrites stageU_star in a separate simp step before unfolding stageU and simplifying the algebra equivalence.",
+          "semantic_result": "PASS: the same established star compatibility is applied before definition unfolding can obstruct its syntactic match. No assumption or weaker conclusion is introduced; the nonscalar-action obstruction still transfers through the full real algebra equivalence."
+        }
+      ]
+    }
+  ],
+  "source_reconciliation": {
+    "result": "PASS",
+    "unchanged_principal_lean_sources": [
+      "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+      "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+      "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+      "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+      "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean"
+    ],
+    "unchanged_contract": "docs/intake/2026-10-29-real-peirce-colimit/contract.md",
+    "seven_changed_lean_files_reviewed": [
+      "lean/InfoGeometry/Core/PeirceDoubleCommutator.lean",
+      "lean/InfoGeometry/Clifford/Cl11StarUniversal.lean",
+      "lean/InfoGeometry/Clifford/Cl11ColimitDimension.lean",
+      "lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean",
+      "lean/InfoGeometry/Canonical/PeirceColimitExamples.lean",
+      "lean/InfoGeometry/Clifford/TowerMatrix.lean",
+      "lean/InfoGeometry/Causal/Cones.lean"
+    ],
+    "existing_imported_witness_reviewed": "lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean",
+    "actual_existing_owner_changes": [
+      "TowerMatrix: copyright header, explanatory comment, noncomputable modifier on the exact original Idx recursive equations, direct shared matrix-witness import, and removal of the unused transpose-symmetry hypothesis from cartan_inv_of_isUnit.",
+      "Causal.Cones: copyright header, removal of the corresponding symmetry hypothesis and call argument, and correction of the final Clifford square-zero comment to the implication actually proved. Original imports and reexports are retained."
+    ],
+    "maintained_gate_and_pin_files_unchanged_from_repository_base": [
+      "tools/quality/check_lie_jordan_geometry.py",
+      "tools/quality/reviewed_audit_source.py",
+      "tools/quality/audit_constructivity.py",
+      "tools/quality/proof_proxy_staged_gate.py",
+      "tools/infra/opengauss_screener.py",
+      "lakefile.lean",
+      "lake-manifest.json",
+      "lean-toolchain"
+    ],
+    "method": "Read-only inspection of exact current files and git diff HEAD, source hashing, repository-wide call-site search, and maintained read-only dependency closure enumeration. No compiler or gate execution by the auditor."
+  },
+  "public_api_changes": [
+    {
+      "declaration": "InfoGeometry.Clifford.TowerMatrix.cartan_inv_of_isUnit",
+      "removed_argument": "_hJt : (Jn J1 n).transpose = Jn J1 n",
+      "remaining_substantive_hypotheses": [
+        "Jn J1 n * Jn J1 n = 1",
+        "IsUnit X.det"
+      ],
+      "logical_effect": "Stronger theorem with one fewer unnecessary hypothesis.",
+      "call_compatibility": "Calls must omit the old positional or named symmetry argument; public arity is changed.",
+      "repository_callers": [
+        "InfoGeometry.Causal.modularMirror_cartan_comm_of_isUnit"
+      ],
+      "caller_update": "The sole repository source call now passes hJJ and hA without hJt."
+    },
+    {
+      "declaration": "InfoGeometry.Causal.modularMirror_cartan_comm_of_isUnit",
+      "removed_argument": "hJt : (Jn J1 n).transpose = Jn J1 n",
+      "remaining_substantive_hypotheses": [
+        "Jn J1 n * Jn J1 n = 1",
+        "IsUnit A.det"
+      ],
+      "logical_effect": "Stronger theorem with one fewer unnecessary hypothesis.",
+      "call_compatibility": "Calls must omit the old symmetry argument; public arity is changed.",
+      "repository_callers": [],
+      "external_scope_limit": "Repository search does not establish absence of consumers outside this repository."
+    }
+  ],
+  "verification_scope": {
+    "strict_targets": [
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Causal.Cones",
+      "InfoGeometry.Core.PeirceDoubleCommutator",
+      "InfoGeometry.Clifford.Cl11StarUniversal",
+      "InfoGeometry.Clifford.Cl11ColimitDimension",
+      "InfoGeometry.Canonical.PeirceDissipatorColimit",
+      "InfoGeometry.Canonical.PeirceColimitExamples"
+    ],
+    "repository_closure_count": 32,
+    "repository_closure": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Algebra.MatrixNoncommutativity",
+      "InfoGeometry.Clifford.TowerMatrix",
+      "InfoGeometry.Cartan.Involution",
+      "InfoGeometry.Clifford.Decomposition",
+      "InfoGeometry.Clifford.CartanInstance",
+      "InfoGeometry.Causal.Cones",
+      "InfoGeometry.Core.JordanAssociatorRing",
+      "InfoGeometry.Core.JordanMultiplicationClosure",
+      "InfoGeometry.Core.LieJordanComposition",
+      "InfoGeometry.Core.LieJordanBoundaryOperators",
+      "InfoGeometry.Core.PeirceDecomposition",
+      "InfoGeometry.Core.PeirceGrading",
+      "InfoGeometry.Core.PeirceStarCharges",
+      "InfoGeometry.Core.PeirceCoupledCorners",
+      "InfoGeometry.Core.PeirceQuadraticFrame",
+      "InfoGeometry.Canonical.LieJordanSandwichGeometry",
+      "InfoGeometry.Core.PeirceSandwichDuality",
+      "InfoGeometry.Core.LieJordanGenerators",
+      "InfoGeometry.Core.PeirceDoubleCommutator",
+      "InfoGeometry.Clifford.SplitQ11",
+      "InfoGeometry.Clifford.Cl11Matrix",
+      "InfoGeometry.Algebra.TensorAlgebraCanonical",
+      "InfoGeometry.Algebra.FiniteTensorDeterminantStabilization",
+      "InfoGeometry.Clifford.Cl11TensorTower",
+      "InfoGeometry.Algebra.InductiveSuperClosureLemmas",
+      "InfoGeometry.Algebra.DirectLimitSuperClosureLemmas",
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit",
+      "InfoGeometry.Clifford.Cl11StarUniversal",
+      "InfoGeometry.Clifford.Cl11ColimitDimension",
+      "InfoGeometry.Canonical.PeirceDissipatorColimit",
+      "InfoGeometry.Canonical.PeirceColimitExamples"
+    ],
+    "workflow_uncovered_repository_sources": [],
+    "closure_method": "Read-only call to the maintained closure function; Python bytecode writing disabled. This is source inventory, not compilation or test execution."
+  },
+  "owner_repair_assessment": {
+    "current_index_definition": "noncomputable def Idx : ℕ → Type | 0 => Fin 1 | n+1 => Idx n × Fin 2",
+    "cardinality_proof": "Unchanged from the repository base.",
+    "compiler_source_evidence": [
+      {
+        "path": "/tmp/operator-pr-toolchain/lean-4.34.1-linux/src/lean/Lean/Elab/PreDefinition/Basic.lean",
+        "observation": "shouldGenCodeFor excludes noncomputable definitions; addAndCompilePartialRec generates _unsafe_rec only if every predefinition passes that predicate. The logical definition remains DefinitionSafety.safe unless explicitly unsafe."
+      },
+      {
+        "path": "/tmp/operator-pr-toolchain/lean-4.34.1-linux/src/lean/Lean/Elab/PreDefinition/Structural/Main.lean",
+        "observation": "The original recursive logical definition and equation/smart-unfolding metadata remain registered independently of the guarded executable implementation."
+      },
+      {
+        "path": "/tmp/operator-pr-toolchain/lean-4.34.1-linux/src/lean/Lean/Compiler/NoncomputableAttr.lean",
+        "observation": "Noncomputable is a separate environment tag, not an added axiom."
+      }
+    ],
+    "acceptance_boundary": "These are source-level semantic findings. The final unchanged exhaustive audit must establish that the rebuilt closure contains no disallowed unsafe/partial declaration."
+  },
+  "preexisting_imported_owner_observations": [
+    {
+      "path": "lean/InfoGeometry/Cartan/Involution.lean",
+      "observation": "An existing unused-variable linter suppression and the redundant hθ binder in decompose remain unchanged. This binder is not used by the new inverse-intertwining proof and makes no formal theorem false. No new suppression or gate exception was introduced in this change.",
+      "scope": "Inherited source observation, separate from the changed API and delivered theorem scope."
+    }
+  ]
+}

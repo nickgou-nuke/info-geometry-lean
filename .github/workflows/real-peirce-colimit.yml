@@ -1,0 +1,82 @@
+name: Real Peirce colimit (scoped)
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Core/**'
+      - 'lean/InfoGeometry/Clifford/**'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Causal/Cones.lean'
+      - 'lean/InfoGeometry/Algebra/MatrixNoncommutativity.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Algebra/TensorAlgebraCanonical.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteTensorDeterminantStabilization.lean'
+      - 'lean/InfoGeometry/Algebra/InductiveSuperClosureLemmas.lean'
+      - 'lean/InfoGeometry/Algebra/DirectLimitSuperClosureLemmas.lean'
+      - 'lean/InfoGeometry/Canonical/LieJordanSandwichGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/PeirceDissipatorColimit.lean'
+      - 'lean/InfoGeometry/Canonical/PeirceColimitExamples.lean'
+      - 'tools/quality/check_real_peirce_colimit.py'
+      - 'tools/quality/check_lie_jordan_geometry.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/common.py'
+      - 'tools/pathing.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/real-peirce-colimit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: real-peirce-colimit-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact source and pinned Mathlib without external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install repository-pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile exact closure, audit every declaration, and build isolated Lake targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_real_peirce_colimit.py \
+            --mathlib-root pinned-mathlib --output verification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-peirce-colimit-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

@@ -78,6 +78,9 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.PhaseConjugateSteinberg
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichBrackets
 import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
 import InfoGeometry.OperatorAlgebra.PeirceSpine.WilsonPlaquette
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DirectedFlowMagneticResolvent
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CellularSheafOperatorPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MasterCausalPosetD1ToD15
 
 /-!
 # Peirce operator spine

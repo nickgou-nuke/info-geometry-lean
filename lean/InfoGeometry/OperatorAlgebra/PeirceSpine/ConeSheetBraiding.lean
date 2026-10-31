@@ -434,4 +434,226 @@ theorem sandwichSame_multipass_idempotencyDefect :
   refine ⟨?_, ?_, ?_⟩ <;>
     (unfold sandwichSame idempotencyDefect; peirce_nf hP)
 
+/-- Cross-sandwich `sandwichCross P A C` sheet-swapping on `δ^[n](Q₊)` and
+`δ^[n](Q₋)` and opposite eigenvalues `± genV P A C` on `δ^[n](V)` and
+`qgtDefectDiff P A C n` at every defect depth `n` (transcript labels A66–A68). -/
+theorem qgt_defect_iterates_sandwichCross (n : ℕ) :
+    sandwichCross P A C (idempotencyDefect^[n] (qgtPlus P A C)) =
+      genV P A C * idempotencyDefect^[n] (qgtMinus P A C) ∧
+    sandwichCross P A C (idempotencyDefect^[n] (qgtMinus P A C)) =
+      genV P A C * idempotencyDefect^[n] (qgtPlus P A C) ∧
+    sandwichCross P A C (idempotencyDefect^[n] (genV P A C)) =
+      genV P A C * idempotencyDefect^[n] (genV P A C) ∧
+    sandwichCross P A C (qgtDefectDiff P A C n) =
+      -(genV P A C * qgtDefectDiff P A C n) := by
+  rcases qgt_defect_iterates_cone_relations hP A C n with ⟨h1, _h2, h6, h3, _h4, h5⟩
+  have hOrth := qgt_defect_iterates_cross_orthogonal hP A C 0 n
+  simp only [Function.iterate_zero, id_eq] at hOrth
+  rcases hOrth with ⟨hXY, hYX⟩
+  have hV : genV P A C = conePlus P A * coneMinus P C + coneMinus P C * conePlus P A := by
+    simp only [genV, anticomm]
+  have hQp : qgtPlus P A C = conePlus P A * coneMinus P C := rfl
+  have hQm : qgtMinus P A C = coneMinus P C * conePlus P A := rfl
+  have hSX : sandwichCross P A C (idempotencyDefect^[n] (qgtPlus P A C)) =
+      genV P A C * idempotencyDefect^[n] (qgtMinus P A C) := by
+    unfold sandwichCross
+    rw [h1, zero_mul, zero_add, h5]
+    calc
+      idempotencyDefect^[n] (qgtMinus P A C) * coneMinus P C * conePlus P A =
+        (coneMinus P C * idempotencyDefect^[n] (qgtPlus P A C)) * conePlus P A := by rw [← h5]
+      _ = coneMinus P C * (idempotencyDefect^[n] (qgtPlus P A C) * conePlus P A) := by noncomm_ring
+      _ = coneMinus P C * (conePlus P A * idempotencyDefect^[n] (qgtMinus P A C)) := by rw [← h6]
+      _ = qgtMinus P A C * idempotencyDefect^[n] (qgtMinus P A C) := by
+        rw [hQm, mul_assoc]
+      _ = (qgtPlus P A C + qgtMinus P A C) * idempotencyDefect^[n] (qgtMinus P A C) := by
+        rw [add_mul, hXY, zero_add]
+      _ = genV P A C * idempotencyDefect^[n] (qgtMinus P A C) := by
+        rw [hV, hQp, hQm]
+  have hSY : sandwichCross P A C (idempotencyDefect^[n] (qgtMinus P A C)) =
+      genV P A C * idempotencyDefect^[n] (qgtPlus P A C) := by
+    unfold sandwichCross
+    rw [h3, zero_mul, add_zero]
+    calc
+      conePlus P A * idempotencyDefect^[n] (qgtMinus P A C) * coneMinus P C =
+        conePlus P A * (idempotencyDefect^[n] (qgtMinus P A C) * coneMinus P C) := by noncomm_ring
+      _ = conePlus P A * (coneMinus P C * idempotencyDefect^[n] (qgtPlus P A C)) := by rw [← h5]
+      _ = qgtPlus P A C * idempotencyDefect^[n] (qgtPlus P A C) := by
+        rw [hQp, mul_assoc]
+      _ = (qgtPlus P A C + qgtMinus P A C) * idempotencyDefect^[n] (qgtPlus P A C) := by
+        rw [add_mul, hYX, add_zero]
+      _ = genV P A C * idempotencyDefect^[n] (qgtPlus P A C) := by
+        rw [hV, hQp, hQm]
+  refine ⟨hSX, hSY, ?_, ?_⟩
+  · rw [genV_defect_iterates_cycle_split hP A C n]
+    calc
+      sandwichCross P A C
+          (idempotencyDefect^[n] (qgtPlus P A C) + idempotencyDefect^[n] (qgtMinus P A C)) =
+        sandwichCross P A C (idempotencyDefect^[n] (qgtPlus P A C)) +
+          sandwichCross P A C (idempotencyDefect^[n] (qgtMinus P A C)) := by
+        unfold sandwichCross; noncomm_ring
+      _ = genV P A C *
+          (idempotencyDefect^[n] (qgtPlus P A C) + idempotencyDefect^[n] (qgtMinus P A C)) := by
+        rw [hSX, hSY, mul_add, add_comm]
+  · unfold qgtDefectDiff
+    calc
+      sandwichCross P A C
+          (idempotencyDefect^[n] (qgtPlus P A C) - idempotencyDefect^[n] (qgtMinus P A C)) =
+        sandwichCross P A C (idempotencyDefect^[n] (qgtPlus P A C)) -
+          sandwichCross P A C (idempotencyDefect^[n] (qgtMinus P A C)) := by
+        unfold sandwichCross; noncomm_ring
+      _ = -(genV P A C *
+          (idempotencyDefect^[n] (qgtPlus P A C) - idempotencyDefect^[n] (qgtMinus P A C))) := by
+        rw [hSX, hSY, mul_sub]; abel
+
+/-- Square-zero property of the defect-scaled cones `N_± δ^[n](V)`, their
+handshake sum `V δ^[n](V)`, and the cubic relations for `Φ δ^[n](V)` and
+`J δ^[n](V)` at every defect depth `n` (transcript label A70). -/
+theorem qgt_defect_iterates_cone_echo_and_cubic (n : ℕ) :
+    (conePlus P A * idempotencyDefect^[n] (genV P A C)) *
+        (conePlus P A * idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    (coneMinus P C * idempotencyDefect^[n] (genV P A C)) *
+        (coneMinus P C * idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    (conePlus P A * idempotencyDefect^[n] (genV P A C)) * coneMinus P C +
+        (coneMinus P C * idempotencyDefect^[n] (genV P A C)) * conePlus P A =
+      genV P A C * idempotencyDefect^[n] (genV P A C) ∧
+    (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+        (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+        (genPhi P A C * idempotencyDefect^[n] (genV P A C)) =
+      (genV P A C * genPhi P A C) *
+        (idempotencyDefect^[n] (genV P A C) *
+          idempotencyDefect^[n] (genV P A C) *
+          idempotencyDefect^[n] (genV P A C)) ∧
+    (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+        (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+        (genJ P A C * idempotencyDefect^[n] (genV P A C)) =
+      -((genV P A C * genJ P A C) *
+        (idempotencyDefect^[n] (genV P A C) *
+          idempotencyDefect^[n] (genV P A C) *
+          idempotencyDefect^[n] (genV P A C))) := by
+  have hSplit := genV_defect_iterates_cycle_split hP A C n
+  have hCones := qgt_defect_iterate_sum_commutes_with_cones hP A C n
+  have hGens := qgt_defect_iterate_sum_commutes_with_generators hP A C n
+  have hNp : conePlus P A * idempotencyDefect^[n] (genV P A C) =
+      idempotencyDefect^[n] (genV P A C) * conePlus P A := by
+    rw [hSplit]; exact sub_eq_zero.mp hCones.1
+  have hNm : coneMinus P C * idempotencyDefect^[n] (genV P A C) =
+      idempotencyDefect^[n] (genV P A C) * coneMinus P C := by
+    rw [hSplit]; exact sub_eq_zero.mp hCones.2
+  have hPhi : genPhi P A C * idempotencyDefect^[n] (genV P A C) =
+      idempotencyDefect^[n] (genV P A C) * genPhi P A C := by
+    rw [hSplit]; exact sub_eq_zero.mp hGens.1
+  have hJ : genJ P A C * idempotencyDefect^[n] (genV P A C) =
+      idempotencyDefect^[n] (genV P A C) * genJ P A C := by
+    rw [hSplit]; exact sub_eq_zero.mp hGens.2
+  have hNpSq : conePlus P A * conePlus P A = 0 := conePlus_mul_conePlus hP A A
+  have hNmSq : coneMinus P C * coneMinus P C = 0 := coneMinus_mul_coneMinus hP C C
+  have hPhiSq : genPhi P A C * genPhi P A C = genV P A C := by peirce_nf hP
+  have hJSq : genJ P A C * genJ P A C = -genV P A C := by peirce_nf hP
+  have hPhiV2 : (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+      (genPhi P A C * idempotencyDefect^[n] (genV P A C)) =
+      genV P A C * (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+    calc
+      (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+          (genPhi P A C * idempotencyDefect^[n] (genV P A C)) =
+        genPhi P A C * (idempotencyDefect^[n] (genV P A C) * genPhi P A C) *
+          idempotencyDefect^[n] (genV P A C) := by noncomm_ring
+      _ = genPhi P A C * (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+          idempotencyDefect^[n] (genV P A C) := by rw [← hPhi]
+      _ = (genPhi P A C * genPhi P A C) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        noncomm_ring
+      _ = genV P A C *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        rw [hPhiSq]
+  have hJV2 : (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+      (genJ P A C * idempotencyDefect^[n] (genV P A C)) =
+      -(genV P A C * (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C))) := by
+    calc
+      (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+          (genJ P A C * idempotencyDefect^[n] (genV P A C)) =
+        genJ P A C * (idempotencyDefect^[n] (genV P A C) * genJ P A C) *
+          idempotencyDefect^[n] (genV P A C) := by noncomm_ring
+      _ = genJ P A C * (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+          idempotencyDefect^[n] (genV P A C) := by rw [← hJ]
+      _ = (genJ P A C * genJ P A C) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        noncomm_ring
+      _ = -(genV P A C *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C))) := by
+        rw [hJSq]; noncomm_ring
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · calc
+      (conePlus P A * idempotencyDefect^[n] (genV P A C)) *
+          (conePlus P A * idempotencyDefect^[n] (genV P A C)) =
+        conePlus P A * (idempotencyDefect^[n] (genV P A C) * conePlus P A) *
+          idempotencyDefect^[n] (genV P A C) := by noncomm_ring
+      _ = conePlus P A * (conePlus P A * idempotencyDefect^[n] (genV P A C)) *
+          idempotencyDefect^[n] (genV P A C) := by rw [← hNp]
+      _ = (conePlus P A * conePlus P A) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        noncomm_ring
+      _ = 0 := by rw [hNpSq, zero_mul]
+  · calc
+      (coneMinus P C * idempotencyDefect^[n] (genV P A C)) *
+          (coneMinus P C * idempotencyDefect^[n] (genV P A C)) =
+        coneMinus P C * (idempotencyDefect^[n] (genV P A C) * coneMinus P C) *
+          idempotencyDefect^[n] (genV P A C) := by noncomm_ring
+      _ = coneMinus P C * (coneMinus P C * idempotencyDefect^[n] (genV P A C)) *
+          idempotencyDefect^[n] (genV P A C) := by rw [← hNm]
+      _ = (coneMinus P C * coneMinus P C) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        noncomm_ring
+      _ = 0 := by rw [hNmSq, zero_mul]
+  · calc
+      (conePlus P A * idempotencyDefect^[n] (genV P A C)) * coneMinus P C +
+          (coneMinus P C * idempotencyDefect^[n] (genV P A C)) * conePlus P A =
+        conePlus P A * (idempotencyDefect^[n] (genV P A C) * coneMinus P C) +
+          coneMinus P C * (idempotencyDefect^[n] (genV P A C) * conePlus P A) := by
+        noncomm_ring
+      _ = conePlus P A * (coneMinus P C * idempotencyDefect^[n] (genV P A C)) +
+          coneMinus P C * (conePlus P A * idempotencyDefect^[n] (genV P A C)) := by
+        rw [← hNm, ← hNp]
+      _ = genV P A C * idempotencyDefect^[n] (genV P A C) := by
+        simp only [genV, anticomm]; noncomm_ring
+  · rw [hPhiV2]
+    calc
+      genV P A C * (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) *
+          (genPhi P A C * idempotencyDefect^[n] (genV P A C)) =
+        genV P A C * idempotencyDefect^[n] (genV P A C) *
+          (idempotencyDefect^[n] (genV P A C) * genPhi P A C) *
+          idempotencyDefect^[n] (genV P A C) := by noncomm_ring
+      _ = genV P A C * idempotencyDefect^[n] (genV P A C) *
+          (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+          idempotencyDefect^[n] (genV P A C) := by rw [← hPhi]
+      _ = genV P A C * (idempotencyDefect^[n] (genV P A C) * genPhi P A C) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        noncomm_ring
+      _ = genV P A C * (genPhi P A C * idempotencyDefect^[n] (genV P A C)) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
+        rw [← hPhi]
+      _ = (genV P A C * genPhi P A C) *
+          (idempotencyDefect^[n] (genV P A C) *
+            idempotencyDefect^[n] (genV P A C) *
+            idempotencyDefect^[n] (genV P A C)) := by noncomm_ring
+  · rw [hJV2]
+    calc
+      -(genV P A C * (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C))) *
+          (genJ P A C * idempotencyDefect^[n] (genV P A C)) =
+        -(genV P A C * idempotencyDefect^[n] (genV P A C) *
+          (idempotencyDefect^[n] (genV P A C) * genJ P A C) *
+          idempotencyDefect^[n] (genV P A C)) := by noncomm_ring
+      _ = -(genV P A C * idempotencyDefect^[n] (genV P A C) *
+          (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+          idempotencyDefect^[n] (genV P A C)) := by rw [← hJ]
+      _ = -(genV P A C * (idempotencyDefect^[n] (genV P A C) * genJ P A C) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C))) := by
+        noncomm_ring
+      _ = -(genV P A C * (genJ P A C * idempotencyDefect^[n] (genV P A C)) *
+          (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C))) := by
+        rw [← hJ]
+      _ = -((genV P A C * genJ P A C) *
+          (idempotencyDefect^[n] (genV P A C) *
+            idempotencyDefect^[n] (genV P A C) *
+            idempotencyDefect^[n] (genV P A C))) := by noncomm_ring
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

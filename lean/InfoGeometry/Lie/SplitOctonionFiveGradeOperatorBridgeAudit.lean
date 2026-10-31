@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge
+
+/-! Kernel-axiom audit for the native Zorn five-grade specialization. -/
+
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.peirceDefect_mul_cube
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGradeEquiv
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGrade_recompose_decompose
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGradeRange_eq_adjointEigenspace
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGrade_mul_mem
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGrade_lie_mem
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGrade_mul_eq_zero_of_weight_not_mem
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGrade_lie_eq_zero_of_weight_not_mem
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornPeirceDefect_ad_quintic
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zornFiveGradeProjector_commutes_with_ad
+#print axioms InfoGeometry.Lie.SplitOctonionFiveGradeOperatorBridge.zorn_tripotent_five_grade_operator_synthesis

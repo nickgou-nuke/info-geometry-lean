@@ -8,6 +8,7 @@ explicit because a strictly positive softmax on every edge preserves SCCs.
 from __future__ import annotations
 
 import argparse
+import cmath
 import gzip
 import hashlib
 import json
@@ -255,6 +256,12 @@ def build_attention_scc_overlay(
         aggregate["probabilityMass"] += row["probability"]
         aggregate["edgeRefs"].append(row["edgeRef"])
 
+    magnetic_taxonomy = build_magnetic_flow_imbalance_archetypes(
+        vertices,
+        normalized,
+        beta=beta,
+    )
+
     return {
         "schema": "info_geometry.attention_scc_overlay.v1",
         "status": "model_derived_navigation_candidate",
@@ -279,7 +286,267 @@ def build_attention_scc_overlay(
         "allEdgeFactors": normalized,
         "sourceAttentionStates": source_attention_states,
         "quotientEdges": [quotient[key] for key in sorted(quotient)],
+        "magneticArchetypeTaxonomy": magnetic_taxonomy,
         "authority": "source dependency witnesses plus supplied model logits; not semantic classification or proof evidence",
+    }
+
+
+def _classify_node_flow_role(imbalance: float, total_flow: float, frustration: float) -> str:
+    if total_flow <= 1e-12:
+        return "isolated_singleton"
+    if frustration >= 0.30 and abs(imbalance) < 0.75:
+        return "frustrated_spinglass_corridor"
+    if imbalance >= 0.45:
+        return "capstone_source_archetype"
+    if imbalance <= -0.45:
+        return "owner_sink_archetype"
+    return "bridge_intertwiner_archetype"
+
+
+def build_magnetic_flow_imbalance_archetypes(
+    vertices: list[str],
+    normalized_edges: list[dict[str, Any]],
+    *,
+    beta: float = 1.0,
+    q_charge: float = 0.25,
+    sinkhorn_iterations: int = 12,
+    multiscale_betas: tuple[float, ...] = (0.5, 2.0, 8.0),
+) -> dict[str, Any]:
+    """Extract directed DIGRAC flow-imbalance and MagNet Hermitian magnetic archetypes.
+
+    Unlike `tarjan_scc`, which collapses to 1-node singletons on any acyclic
+    dependency DAG, this operator builds the `mcbal` Sinkhorn-scaled Gibbs
+    coupling matrix P(beta), decomposes P into symmetric affinity S and
+    antisymmetric net flow F, constructs the Hermitian Magnetic Laplacian
+    L^{(q)}(beta) = I - D_s^{-1/2} A^{(q)} D_s^{-1/2}, and coarse-grains nodes
+    across multiple inverse-temperature scales beta.
+    """
+    n = len(vertices)
+    if n == 0:
+        return {
+            "schema": "info_geometry.magnetic_flow_archetypes.v1",
+            "qCharge": q_charge,
+            "hermitianResidualFrobenius": 0.0,
+            "totalSpinGlassFrustration": 0.0,
+            "nodeMetrics": [],
+            "archetypeClusters": [],
+            "multiscaleRegimes": [],
+        }
+
+    idx_by_v = {v: i for i, v in enumerate(vertices)}
+
+    def _run_scale(scale_beta: float) -> dict[str, Any]:
+        # Build raw Boltzmann coupling matrix W_uv(scale_beta) from logits
+        pair_logits: dict[tuple[int, int], list[float]] = defaultdict(list)
+        for row in normalized_edges:
+            u = idx_by_v.get(row["from"])
+            v = idx_by_v.get(row["to"])
+            if u is None or v is None or u == v:
+                continue
+            pair_logits[(u, v)].append(float(row["logit"]))
+
+        max_logit = max((max(vals) for vals in pair_logits.values()), default=0.0)
+        w_mat: dict[tuple[int, int], float] = {}
+        out_adj: dict[int, list[tuple[int, float]]] = defaultdict(list)
+        in_adj: dict[int, list[tuple[int, float]]] = defaultdict(list)
+        for (u, v), lvals in sorted(pair_logits.items()):
+            terms: list[float] = []
+            for lv in lvals:
+                if lv == max_logit:
+                    terms.append(1.0)
+                else:
+                    diff = (lv * 0.5 - max_logit * 0.5) * 2.0
+                    prod = scale_beta * diff if math.isfinite(diff) else -40.0
+                    if math.isnan(prod):
+                        prod = 0.0
+                    terms.append(math.exp(min(40.0, max(-40.0, prod))))
+            weight = math.fsum(terms)
+            if weight > 0.0:
+                w_mat[(u, v)] = weight
+                out_adj[u].append((v, weight))
+                in_adj[v].append((u, weight))
+
+        # Two-sided Sinkhorn Weyl gauge scaling P_uv = l_u * W_uv * r_v
+        left = [1.0] * n
+        right = [1.0] * n
+        for _ in range(max(1, sinkhorn_iterations)):
+            for u in range(n):
+                rsum = math.fsum(w * right[v] for v, w in out_adj.get(u, []))
+                left[u] = 1.0 / rsum if rsum > 1e-12 else 1.0
+            for v in range(n):
+                csum = math.fsum(w * left[u] for u, w in in_adj.get(v, []))
+                right[v] = 1.0 / csum if csum > 1e-12 else 1.0
+
+        p_mat: dict[tuple[int, int], float] = {
+            (u, v): left[u] * w * right[v] for (u, v), w in w_mat.items()
+        }
+
+        out_flow = [0.0] * n
+        in_flow = [0.0] * n
+        for (u, v), pval in p_mat.items():
+            out_flow[u] += pval
+            in_flow[v] += pval
+
+        imbalance = [
+            (out_flow[i] - in_flow[i]) / (out_flow[i] + in_flow[i])
+            if (out_flow[i] + in_flow[i]) > 1e-12 else 0.0
+            for i in range(n)
+        ]
+
+        # Symmetric affinity S_uv and Hermitian magnetic adjacency A^{(q)}_uv
+        undirected_pairs = sorted({(min(u, v), max(u, v)) for (u, v) in p_mat})
+        s_mat: dict[tuple[int, int], float] = {}
+        theta_mat: dict[tuple[int, int], float] = {}
+        a_mag: dict[tuple[int, int], complex] = {}
+        deg = [0.0] * n
+
+        for u, v in undirected_pairs:
+            p_uv = p_mat.get((u, v), 0.0)
+            p_vu = p_mat.get((v, u), 0.0)
+            s_val = 0.5 * (p_uv + p_vu)
+            if s_val <= 1e-15:
+                continue
+            f_uv = p_uv - p_vu
+            theta_uv = 2.0 * math.pi * q_charge * (f_uv / (2.0 * s_val))
+            s_mat[(u, v)] = s_val
+            s_mat[(v, u)] = s_val
+            theta_mat[(u, v)] = theta_uv
+            theta_mat[(v, u)] = -theta_uv
+            a_mag[(u, v)] = cmath.rect(s_val, theta_uv)
+            a_mag[(v, u)] = cmath.rect(s_val, -theta_uv)
+            deg[u] += s_val
+            deg[v] += s_val
+
+        inv_sqrt_deg = [1.0 / math.sqrt(d) if d > 1e-12 else 0.0 for d in deg]
+
+        # Verify exact Hermiticity of L^{(q)} = I - D^{-1/2} A^{(q)} D^{-1/2}
+        herm_sq = 0.0
+        for (u, v), a_uv in a_mag.items():
+            l_uv = -inv_sqrt_deg[u] * a_uv * inv_sqrt_deg[v]
+            l_vu = -inv_sqrt_deg[v] * a_mag[(v, u)] * inv_sqrt_deg[u]
+            diff = l_uv - l_vu.conjugate()
+            herm_sq += diff.real * diff.real + diff.imag * diff.imag
+        hermitian_res = math.sqrt(herm_sq)
+
+        # Deterministic magnetic phase propagation along normalized Hermitian adjacency
+        state = [
+            cmath.rect(1.0, 0.5 * math.pi * imbalance[i]) if deg[i] > 1e-12 else (1.0 + 0.0j)
+            for i in range(n)
+        ]
+        mag_neighbors: dict[int, list[tuple[int, complex]]] = defaultdict(list)
+        for (u, v), a_uv in a_mag.items():
+            mag_neighbors[u].append((v, inv_sqrt_deg[u] * a_uv * inv_sqrt_deg[v]))
+
+        for _ in range(16):
+            nxt_state: list[complex] = []
+            for u in range(n):
+                nb = mag_neighbors.get(u, [])
+                if not nb:
+                    nxt_state.append(state[u])
+                    continue
+                acc = 0.25 * state[u] + sum(w * state[v] for v, w in nb)
+                mag = abs(acc)
+                nxt_state.append(acc / mag if mag > 1e-12 else state[u])
+            state = nxt_state
+
+        # Gauge-fix phase relative to vertex 0
+        anchor_angle = cmath.phase(state[0]) if abs(state[0]) > 1e-12 else 0.0
+        phases = [
+            math.atan2(math.sin(cmath.phase(z) - anchor_angle), math.cos(cmath.phase(z) - anchor_angle))
+            for z in state
+        ]
+
+        # Spin-glass frustration per edge and per vertex
+        node_frust = [0.0] * n
+        total_frust = 0.0
+        for u, v in undirected_pairs:
+            s_val = s_mat.get((u, v), 0.0)
+            if s_val <= 1e-15:
+                continue
+            th = theta_mat[(u, v)]
+            delta = phases[u] - phases[v] - th
+            ef = s_val * (abs(1.0 - cmath.rect(1.0, delta)) ** 2)
+            total_frust += ef
+            node_frust[u] += 0.5 * ef
+            node_frust[v] += 0.5 * ef
+        norm_frust = [
+            node_frust[i] / (4.0 * deg[i]) if deg[i] > 1e-12 else 0.0
+            for i in range(n)
+        ]
+
+        # Group vertices into directed magnetic archetypes by (role, quantized phase/imbalance bin)
+        buckets: dict[tuple[str, int], list[str]] = defaultdict(list)
+        node_rows: list[dict[str, Any]] = []
+        for i, vertex in enumerate(vertices):
+            tot_f = out_flow[i] + in_flow[i]
+            role = _classify_node_flow_role(imbalance[i], tot_f, norm_frust[i])
+            # Finer phase binning at larger beta
+            n_bins = max(1, min(8, int(round(math.sqrt(max(0.25, scale_beta)) * 2.0))))
+            phase_bin = int(math.floor(((phases[i] + math.pi) / (2.0 * math.pi)) * n_bins)) % n_bins
+            buckets[(role, phase_bin)].append(vertex)
+            node_rows.append({
+                "vertex": vertex,
+                "outSinkhornFlow": round(out_flow[i], 8),
+                "inSinkhornFlow": round(in_flow[i], 8),
+                "flowImbalance": round(imbalance[i], 8),
+                "magneticPhaseRad": round(phases[i], 8),
+                "spinGlassFrustration": round(norm_frust[i], 8),
+                "archetypeRole": role,
+            })
+
+        clusters: list[dict[str, Any]] = []
+        for (role, pbin), members in sorted(buckets.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+            m_indices = [idx_by_v[m] for m in members]
+            payload = json.dumps({"role": role, "bin": pbin, "members": members}, separators=(",", ":"))
+            cid = "mag_" + hashlib.sha256(payload.encode("utf-8")).hexdigest()[:20]
+            clusters.append({
+                "id": cid,
+                "archetypeRole": role,
+                "phaseBin": pbin,
+                "members": members,
+                "memberCount": len(members),
+                "meanFlowImbalance": round(
+                    math.fsum(imbalance[i] for i in m_indices) / len(m_indices), 8
+                ),
+                "meanSpinGlassFrustration": round(
+                    math.fsum(norm_frust[i] for i in m_indices) / len(m_indices), 8
+                ),
+            })
+
+        return {
+            "inverseTemperature": scale_beta,
+            "hermitianResidualFrobenius": round(hermitian_res, 14),
+            "totalSpinGlassFrustration": round(total_frust, 8),
+            "archetypeClusterCount": len(clusters),
+            "archetypeClusters": clusters,
+            "nodeMetrics": node_rows,
+        }
+
+    primary = _run_scale(float(beta))
+    scales = sorted({round(float(b), 6) for b in (*multiscale_betas, float(beta)) if b > 0})
+    regimes = []
+    for sb in scales:
+        sc = _run_scale(sb)
+        regimes.append({
+            "inverseTemperature": sb,
+            "archetypeClusterCount": sc["archetypeClusterCount"],
+            "totalSpinGlassFrustration": sc["totalSpinGlassFrustration"],
+            "roleHistogram": {
+                role: sum(1 for c in sc["archetypeClusters"] if c["archetypeRole"] == role)
+                for role in sorted({c["archetypeRole"] for c in sc["archetypeClusters"]})
+            },
+        })
+
+    return {
+        "schema": "info_geometry.magnetic_flow_archetypes.v1",
+        "qCharge": q_charge,
+        "inverseTemperature": float(beta),
+        "hermitianResidualFrobenius": primary["hermitianResidualFrobenius"],
+        "totalSpinGlassFrustration": primary["totalSpinGlassFrustration"],
+        "archetypeClusterCount": primary["archetypeClusterCount"],
+        "archetypeClusters": primary["archetypeClusters"],
+        "nodeMetrics": primary["nodeMetrics"],
+        "multiscaleRegimes": regimes,
     }
 
 

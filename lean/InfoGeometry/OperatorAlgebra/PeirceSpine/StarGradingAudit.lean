@@ -24,3 +24,4 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms grading_star_genJ
 #print axioms grading_star_genV
 #print axioms grading_star_genSig
+#print axioms digrac_flow_imbalance_and_magnet_laplacian

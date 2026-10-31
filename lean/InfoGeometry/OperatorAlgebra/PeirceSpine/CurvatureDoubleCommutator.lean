@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding
 
 /-!
@@ -250,5 +251,119 @@ theorem madelung_vorticity_factorization_defect_iterates (n : ℕ) :
     _ = genSig P A C *
         (idempotencyDefect^[n] (genV P A C) * idempotencyDefect^[n] (genV P A C)) := by
       rw [hJPhi]
+
+/-- Double-derivation and homogenized-channel (`hProjV`, `hProjPhi`, `hProjJ`,
+`hProjSig`) evaluations on `δ^[n](V)` and `qgtDefectDiff P A C n` at every
+defect depth `n` (transcript labels A65/A67). -/
+theorem derivSq_and_hProj_defect_iterates (n : ℕ) :
+    derivSqPhi P A C (idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    derivSqJ P A C (idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    derivSqSig P A C (idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    hProjV P A C (idempotencyDefect^[n] (genV P A C)) =
+      (8 : ℤ) • ((genV P A C * genV P A C) * idempotencyDefect^[n] (genV P A C)) ∧
+    hProjPhi P A C (idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    hProjJ P A C (idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    hProjSig P A C (idempotencyDefect^[n] (genV P A C)) = 0 ∧
+    derivSqPhi P A C (qgtDefectDiff P A C n) =
+      -((4 : ℤ) • (genV P A C * qgtDefectDiff P A C n)) ∧
+    derivSqJ P A C (qgtDefectDiff P A C n) =
+      -((4 : ℤ) • (genV P A C * qgtDefectDiff P A C n)) ∧
+    derivSqSig P A C (qgtDefectDiff P A C n) = 0 ∧
+    hProjV P A C (qgtDefectDiff P A C n) = 0 ∧
+    hProjPhi P A C (qgtDefectDiff P A C n) = 0 ∧
+    hProjJ P A C (qgtDefectDiff P A C n) = 0 ∧
+    hProjSig P A C (qgtDefectDiff P A C n) =
+      (8 : ℤ) • ((genV P A C * genV P A C) * qgtDefectDiff P A C n) := by
+  rcases genV_defect_iterate_comm_tetraktys hP A C n with ⟨hPhi, hJ, hSig⟩
+  have hCommPhi : comm (genPhi P A C) (idempotencyDefect^[n] (genV P A C)) = 0 :=
+    sub_eq_zero.mpr hPhi
+  have hCommJ : comm (genJ P A C) (idempotencyDefect^[n] (genV P A C)) = 0 :=
+    sub_eq_zero.mpr hJ
+  have hCommSig : comm (genSig P A C) (idempotencyDefect^[n] (genV P A C)) = 0 :=
+    sub_eq_zero.mpr hSig
+  have hDPhiV : derivSqPhi P A C (idempotencyDefect^[n] (genV P A C)) = 0 := by
+    unfold derivSqPhi
+    rw [hCommPhi]
+    unfold comm
+    simp only [mul_zero, zero_mul, sub_self, neg_zero]
+  have hDJV : derivSqJ P A C (idempotencyDefect^[n] (genV P A C)) = 0 := by
+    unfold derivSqJ
+    rw [hCommJ]
+    unfold comm
+    simp only [mul_zero, zero_mul, sub_self]
+  have hDSigV : derivSqSig P A C (idempotencyDefect^[n] (genV P A C)) = 0 := by
+    unfold derivSqSig
+    rw [hCommSig]
+    unfold comm
+    simp only [mul_zero, zero_mul, sub_self, neg_zero]
+  have hAnticomm := qgtDefectDiff_anticomm_generators hP A C n
+  have hSPhi : qgtDefectDiff P A C n * genPhi P A C =
+      -(genPhi P A C * qgtDefectDiff P A C n) :=
+    eq_neg_of_add_eq_zero_right hAnticomm.1
+  have hSJ : qgtDefectDiff P A C n * genJ P A C =
+      -(genJ P A C * qgtDefectDiff P A C n) :=
+    eq_neg_of_add_eq_zero_right hAnticomm.2
+  have hSV := (qgt_defect_iterates_invS_and_parity hP A C n).2.2.1
+  have hSigInvS : genSig P A C * invS P = invS P * genSig P A C := by peirce_nf hP
+  have hSigS : genSig P A C * qgtDefectDiff P A C n =
+      qgtDefectDiff P A C n * genSig P A C := by
+    rw [← hSV, ← mul_assoc, hSigInvS, mul_assoc, hSig, ← mul_assoc]
+  have hDSigS : derivSqSig P A C (qgtDefectDiff P A C n) = 0 := by
+    have hCS : comm (genSig P A C) (qgtDefectDiff P A C n) = 0 := sub_eq_zero.mpr hSigS
+    unfold derivSqSig
+    rw [hCS]
+    unfold comm
+    simp only [mul_zero, zero_mul, sub_self, neg_zero]
+  have hPhiSq : genPhi P A C * genPhi P A C = genV P A C := by peirce_nf hP
+  have hJSq : genJ P A C * genJ P A C = -genV P A C := by peirce_nf hP
+  have hDPhiS : derivSqPhi P A C (qgtDefectDiff P A C n) =
+      -((4 : ℤ) • (genV P A C * qgtDefectDiff P A C n)) := by
+    have hCommPhiS : comm (genPhi P A C) (qgtDefectDiff P A C n) =
+        genPhi P A C * qgtDefectDiff P A C n + genPhi P A C * qgtDefectDiff P A C n := by
+      unfold comm; rw [hSPhi]; abel
+    have hPhiSPhi : (genPhi P A C * qgtDefectDiff P A C n) * genPhi P A C =
+        -(genV P A C * qgtDefectDiff P A C n) := by
+      rw [mul_assoc, hSPhi, mul_neg, ← mul_assoc, hPhiSq]
+    have hPhiPhiS : genPhi P A C * (genPhi P A C * qgtDefectDiff P A C n) =
+        genV P A C * qgtDefectDiff P A C n := by
+      rw [← mul_assoc, hPhiSq]
+    unfold derivSqPhi
+    rw [hCommPhiS]
+    unfold comm
+    simp only [mul_add, add_mul, hPhiPhiS, hPhiSPhi]
+    abel_nf
+  have hDJS : derivSqJ P A C (qgtDefectDiff P A C n) =
+      -((4 : ℤ) • (genV P A C * qgtDefectDiff P A C n)) := by
+    have hCommJS : comm (genJ P A C) (qgtDefectDiff P A C n) =
+        genJ P A C * qgtDefectDiff P A C n + genJ P A C * qgtDefectDiff P A C n := by
+      unfold comm; rw [hSJ]; abel
+    have hJSJ : (genJ P A C * qgtDefectDiff P A C n) * genJ P A C =
+        genV P A C * qgtDefectDiff P A C n := by
+      rw [mul_assoc, hSJ, mul_neg, ← mul_assoc, hJSq, neg_mul, neg_neg]
+    have hJJS : genJ P A C * (genJ P A C * qgtDefectDiff P A C n) =
+        -(genV P A C * qgtDefectDiff P A C n) := by
+      rw [← mul_assoc, hJSq, neg_mul]
+    unfold derivSqJ
+    rw [hCommJS]
+    unfold comm
+    simp only [mul_add, add_mul, hJJS, hJSJ]
+    abel_nf
+  refine ⟨hDPhiV, hDJV, hDSigV, ?_, ?_, ?_, ?_, hDPhiS, hDJS, hDSigS, ?_, ?_, ?_, ?_⟩
+  · simp only [hProjV, hDPhiV, hDJV, hDSigV, mul_zero, add_zero]
+  · simp only [hProjPhi, hDPhiV, hDJV, hDSigV, mul_zero, sub_self]
+  · simp only [hProjJ, hDPhiV, hDJV, hDSigV, mul_zero, sub_self]
+  · simp only [hProjSig, hDPhiV, hDJV, hDSigV, mul_zero, sub_self]
+  · unfold hProjV
+    rw [hDPhiS, hDJS, hDSigS]
+    noncomm_ring
+  · unfold hProjPhi
+    rw [hDPhiS, hDJS, hDSigS]
+    noncomm_ring
+  · unfold hProjJ
+    rw [hDPhiS, hDJS, hDSigS]
+    noncomm_ring
+  · unfold hProjSig
+    rw [hDPhiS, hDJS, hDSigS]
+    noncomm_ring
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

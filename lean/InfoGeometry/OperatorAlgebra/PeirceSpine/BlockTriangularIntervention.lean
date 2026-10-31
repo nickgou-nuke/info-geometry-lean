@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
+import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
 
 /-!
 # Block-triangular operators and idempotent compression
@@ -278,5 +279,103 @@ theorem idempotentCompression_comp_commute (Q R T : B)
 theorem idempotentCompression_add_removed (Q T : B) :
     idempotentCompression Q T + (T - idempotentCompression Q T) = T := by
   abel
+
+/-! ### Ranked 3-layer DAG path operator and finite Green resolvent -/
+
+/-- Three-layer strictly upper-triangular transition operator across mutually
+orthogonal idempotents `P₁`, `P₂`, and `P₃ = 1 - P₁ - P₂`. -/
+def dagEdge2 (P₁ P₂ A C : B) : B :=
+  P₁ * A * P₂ + P₂ * C * (1 - P₁ - P₂)
+
+/-- Truncated Neumann series `1 + W + W²` for the three-layer transition operator. -/
+def dagGreen2 (P₁ P₂ A C : B) : B :=
+  1 + dagEdge2 P₁ P₂ A C + dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C
+
+/-- For mutually orthogonal idempotents `P₁` and `P₂`, the three-layer strictly
+upper-triangular transition operator `W = dagEdge2 P₁ P₂ A C` has two-step
+path product `W² = P₁ A P₂ C (1 - P₁ - P₂)`, satisfies `W³ = 0`, and has
+exact two-sided inverse `dagGreen2 P₁ P₂ A C = 1 + W + W²` for `1 - W`. -/
+theorem ranked_dag_three_layer_resolvent
+    {P₁ P₂ : B} (h1 : P₁ * P₁ = P₁) (h2 : P₂ * P₂ = P₂)
+    (h12 : P₁ * P₂ = 0) (h21 : P₂ * P₁ = 0) (A C : B) :
+    dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C = P₁ * A * P₂ * C * (1 - P₁ - P₂) ∧
+    dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C = 0 ∧
+    (1 - dagEdge2 P₁ P₂ A C) * dagGreen2 P₁ P₂ A C = 1 ∧
+    dagGreen2 P₁ P₂ A C * (1 - dagEdge2 P₁ P₂ A C) = 1 := by
+  have h1z : ∀ z : B, P₁ * (P₁ * z) = P₁ * z := fun z => by rw [← mul_assoc, h1]
+  have h2z : ∀ z : B, P₂ * (P₂ * z) = P₂ * z := fun z => by rw [← mul_assoc, h2]
+  have h12z : ∀ z : B, P₁ * (P₂ * z) = 0 := fun z => by rw [← mul_assoc, h12, zero_mul]
+  have h21z : ∀ z : B, P₂ * (P₁ * z) = 0 := fun z => by rw [← mul_assoc, h21, zero_mul]
+  have hW2 : dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C =
+      P₁ * A * P₂ * C * (1 - P₁ - P₂) := by
+    unfold dagEdge2
+    simp only [mul_add, add_mul, sub_mul, mul_sub, mul_one, mul_assoc,
+      h1z, h2z, h12z, h21z, mul_zero]
+    abel
+  have hW3 : dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C = 0 := by
+    rw [hW2]
+    unfold dagEdge2
+    simp only [mul_add, sub_mul, mul_sub, mul_one, mul_assoc,
+      h1z, h2z, h12z, h21z, mul_zero]
+    abel
+  refine ⟨hW2, hW3, ?_, ?_⟩
+  · calc
+      (1 - dagEdge2 P₁ P₂ A C) * dagGreen2 P₁ P₂ A C =
+        1 - (dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C) := by
+          unfold dagGreen2; noncomm_ring
+      _ = 1 - 0 := by rw [hW3]
+      _ = 1 := sub_zero 1
+  · calc
+      dagGreen2 P₁ P₂ A C * (1 - dagEdge2 P₁ P₂ A C) =
+        1 - (dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C) := by
+          unfold dagGreen2; noncomm_ring
+      _ = 1 - 0 := by rw [hW3]
+      _ = 1 := sub_zero 1
+
+/-- **Stage D₁₅ (`stage_D15_digrac_magnet_dag_resolvent_and_tcr_former`)**:
+Combined synthesis of:
+1. DIGRAC directed adjacency symmetric/skew-adjoint split (`digracSym`, `digracImb`);
+2. MagNet grading-twisted self-adjoint adjacency and Laplacian (`magnetAdj`, `magnetLaplacian`);
+3. Ranked 3-layer DAG path square, nilpotency, and finite Green resolvent (`dagEdge2`, `dagGreen2`);
+4. Block-lower triangular subalgebra closure (`blockLower`) and orthogonal idempotent
+   compression (`idempotentCompression`). -/
+theorem stage_D15_digrac_magnet_dag_resolvent_and_tcr_former
+    {D : Type*} [Ring D] [StarRing D]
+    {P Q P₁ P₂ : D} (hP : P * P = P) (hPsym : star P = P)
+    (hQ : Q * Q = Q) (hPQ : P * Q = 0) (hQP : Q * P = 0)
+    (h1 : P₁ * P₁ = P₁) (h2 : P₂ * P₂ = P₂)
+    (h12 : P₁ * P₂ = 0) (h21 : P₂ * P₁ = 0)
+    (W A C Deg T F₁ L₁ D₁ F₂ L₂ D₂ : D) :
+    digracSym W + digracImb W = (2 : ℤ) • W ∧
+    star (digracSym W) = digracSym W ∧
+    star (digracImb W) = -digracImb W ∧
+    digracSym (conePlus P A) = genPhi P A (star A) ∧
+    digracImb (conePlus P A) = genJ P A (star A) ∧
+    digracImb (conePlus P A) * digracImb (conePlus P A) = -genV P A (star A) ∧
+    magnetAdj P A = invS P * genJ P A (star A) ∧
+    star (magnetAdj P A) = magnetAdj P A ∧
+    (star Deg = Deg → star (magnetLaplacian P Deg A) = magnetLaplacian P Deg A) ∧
+    magnetAdj P A * magnetAdj P A = genV P A (star A) ∧
+    dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C = P₁ * A * P₂ * C * (1 - P₁ - P₂) ∧
+    dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C * dagEdge2 P₁ P₂ A C = 0 ∧
+    (1 - dagEdge2 P₁ P₂ A C) * dagGreen2 P₁ P₂ A C = 1 ∧
+    dagGreen2 P₁ P₂ A C * (1 - dagEdge2 P₁ P₂ A C) = 1 ∧
+    P * blockLower P F₁ L₁ D₁ * (1 - P) = 0 ∧
+    blockLower P F₁ L₁ D₁ * blockLower P F₂ L₂ D₂ =
+      blockLower P (F₁ * P * F₂) (L₁ * P * F₂ + D₁ * (1 - P) * L₂) (D₁ * (1 - P) * D₂) ∧
+    (idempotentCompression Q (idempotentCompression Q T) = idempotentCompression Q T ∧
+     Q * idempotentCompression Q T = 0 ∧ idempotentCompression Q T * Q = 0) ∧
+    peirce11 P (idempotentCompression Q T) = peirce11 P T := by
+  rcases digrac_flow_imbalance_and_magnet_laplacian hPsym hP W A Deg with
+    ⟨hD1, hD2, hD3, hD4, hD5, hD6, hM1, hM2, hM3, hM4⟩
+  rcases ranked_dag_three_layer_resolvent h1 h2 h12 h21 A C with
+    ⟨hG1, hG2, hG3, hG4⟩
+  exact ⟨hD1, hD2, hD3, hD4, hD5, hD6, hM1, hM2, hM3, hM4, hG1, hG2, hG3, hG4,
+    blockLower_upper_right hP F₁ L₁ D₁,
+    blockLower_mul hP F₁ L₁ D₁ F₂ L₂ D₂,
+    ⟨idempotentCompression_idempotent hQ T,
+     idempotentCompression_left_zero hQ T,
+     idempotentCompression_right_zero hQ T⟩,
+    idempotentCompression_peirce11 hPQ hQP T⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

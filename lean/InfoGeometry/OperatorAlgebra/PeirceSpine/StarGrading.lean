@@ -101,4 +101,62 @@ theorem grading_star_genSig (A : B) :
   rw [star_genSig hPs]
   peirce_nf hP
 
+omit hPs hP
+
+/-- Symmetric part `W + W⋆` of an operator in a star-ring (DIGRAC symmetric component). -/
+def digracSym (W : B) : B := W + star W
+
+/-- Skew-adjoint part `W - W⋆` of an operator in a star-ring (DIGRAC flow-imbalance component). -/
+def digracImb (W : B) : B := W - star W
+
+/-- Parity-twisted self-adjoint sum `S N₊ + N₊⋆ S` (MagNet adjacency operator). -/
+def magnetAdj (P A : B) : B :=
+  invS P * conePlus P A + star (conePlus P A) * invS P
+
+/-- Operator difference `D - (S N₊ + N₊⋆ S)` (MagNet Laplacian operator). -/
+def magnetLaplacian (P D A : B) : B := D - magnetAdj P A
+
+include hPs hP
+
+/-- **DIGRAC Directed Adjacency Decomposition & MagNet Magnetic Laplacian**:
+1. Any operator `W` splits into its symmetric part `digracSym W = W + W⋆` and
+   skew-adjoint flow-imbalance part `digracImb W = W - W⋆`, with
+   `digracSym W + digracImb W = 2 W`, `(digracSym W)⋆ = digracSym W`, and
+   `(digracImb W)⋆ = -digracImb W`.
+2. On the directed corner `W = N₊ = P A (1 - P)` with self-adjoint `P`, the
+   symmetric and skew-adjoint components recover `Φ = N₊ + N₋` and `J = N₊ - N₋`
+   with `C = A⋆`, and `(digracImb N₊)² = -V`.
+3. Twisting `N₊` by the grading involution `S = 2P - 1` produces the self-adjoint
+   operator `magnetAdj P A = S N₊ + N₊⋆ S = J S` whose square is `+V`, and for
+   any self-adjoint degree operator `D⋆ = D`, `magnetLaplacian P D A` is
+   self-adjoint. -/
+theorem digrac_flow_imbalance_and_magnet_laplacian (W A D : B) :
+    digracSym W + digracImb W = (2 : ℤ) • W ∧
+    star (digracSym W) = digracSym W ∧
+    star (digracImb W) = -digracImb W ∧
+    digracSym (conePlus P A) = genPhi P A (star A) ∧
+    digracImb (conePlus P A) = genJ P A (star A) ∧
+    digracImb (conePlus P A) * digracImb (conePlus P A) = -genV P A (star A) ∧
+    magnetAdj P A = invS P * genJ P A (star A) ∧
+    star (magnetAdj P A) = magnetAdj P A ∧
+    (star D = D → star (magnetLaplacian P D A) = magnetLaplacian P D A) ∧
+    magnetAdj P A * magnetAdj P A = genV P A (star A) := by
+  have hMagStar : star (magnetAdj P A) = magnetAdj P A := by
+    simp only [magnetAdj, star_add, star_mul, star_invS hPs, star_star, add_comm]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, hMagStar, ?_, ?_⟩
+  · unfold digracSym digracImb
+    abel_nf
+  · simp only [digracSym, star_add, star_star, add_comm]
+  · simp only [digracImb, star_sub, star_star, neg_sub]
+  · rw [digracSym, star_conePlus hPs, genPhi]
+  · rw [digracImb, star_conePlus hPs, genJ]
+  · rw [digracImb, star_conePlus hPs]
+    peirce_nf hP
+  · rw [magnetAdj, star_conePlus hPs]
+    peirce_nf hP
+  · intro hD
+    simp only [magnetLaplacian, star_sub, hD, hMagStar]
+  · rw [magnetAdj, star_conePlus hPs]
+    peirce_nf hP
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -12,6 +12,7 @@ from unittest.mock import patch
 import pytest
 
 from tools.repository_evolution.infotree_dna import (
+    compute_multiscale_dna_affinity_clusters,
     extract_one,
     extract_tree,
     extract_tree_audited,
@@ -393,3 +394,44 @@ def test_audited_extraction_reports_invalid_metadata_without_aborting_other_file
         "reportedLeanContextFingerprint": None,
         "reportedExporterSourceSha256": None,
     }]
+
+
+def test_compute_multiscale_dna_affinity_clusters_groups_homologous_records():
+    rec_a1 = {
+        "artifactId": "lean/InfoGeometry/Canonical/HomologA1.lean",
+        "features": [
+            {"kind": "tacticName", "value": "simp", "count": 12},
+            {"kind": "path2", "value": "command->tactic->term", "count": 20},
+            {"kind": "goalShape", "value": "⊢_=_", "count": 15},
+        ],
+        "structuralSummary": {"totalNodes": 40, "maxDepth": 6, "branchingNodes": 8, "tacticSteps": 12},
+    }
+    rec_a2 = {
+        "artifactId": "lean/InfoGeometry/Canonical/HomologA2.lean",
+        "features": [
+            {"kind": "tacticName", "value": "simp", "count": 11},
+            {"kind": "path2", "value": "command->tactic->term", "count": 19},
+            {"kind": "goalShape", "value": "⊢_=_", "count": 16},
+        ],
+        "structuralSummary": {"totalNodes": 42, "maxDepth": 6, "branchingNodes": 8, "tacticSteps": 11},
+    }
+    rec_b1 = {
+        "artifactId": "lean/InfoGeometry/Canonical/DistinctB1.lean",
+        "features": [
+            {"kind": "tacticName", "value": "induction", "count": 10},
+            {"kind": "path2", "value": "command->context->completion", "count": 18},
+            {"kind": "goalShape", "value": "⊢∀_,_", "count": 14},
+        ],
+        "structuralSummary": {"totalNodes": 90, "maxDepth": 16, "branchingNodes": 30, "tacticSteps": 10},
+    }
+
+    report = compute_multiscale_dna_affinity_clusters([rec_a1, rec_a2, rec_b1], betas=(0.5, 4.0))
+    assert report["schema"] == "info_geometry.infotree_dna_multiscale_archetypes.v1"
+    assert report["recordCount"] == 3
+    assert len(report["scales"]) == 2
+    high_beta = report["scales"][-1]
+    member_sets = [set(c["members"]) for c in high_beta["clusters"]]
+    assert {
+        "lean/InfoGeometry/Canonical/HomologA1.lean",
+        "lean/InfoGeometry/Canonical/HomologA2.lean",
+    } in member_sets

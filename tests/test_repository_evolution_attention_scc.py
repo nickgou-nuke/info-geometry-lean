@@ -200,3 +200,54 @@ def test_attention_rejects_noncanonical_edge_kind_scope():
     packet["edgeKinds"] = ["python_import", "python_import"]
     with pytest.raises(ValueError, match="sorted unique"):
         build_attention_scc_overlay(graph, packet, {"kind": "top_k", "k": 1})
+
+
+def test_magnetic_flow_imbalance_archetypes_cluster_acyclic_dag_where_tarjan_collapses():
+    # Pure acyclic DAG: cap_1, cap_2 -> bridge_1, bridge_2 -> own_1, own_2
+    nodes = ("cap_1", "cap_2", "bridge_1", "bridge_2", "own_1", "own_2")
+    edges = [
+        {"from": "cap_1", "to": "bridge_1", "kind": "lean_source_import"},
+        {"from": "cap_1", "to": "bridge_2", "kind": "lean_source_import"},
+        {"from": "cap_2", "to": "bridge_1", "kind": "lean_source_import"},
+        {"from": "cap_2", "to": "bridge_2", "kind": "lean_source_import"},
+        {"from": "bridge_1", "to": "own_1", "kind": "lean_source_import"},
+        {"from": "bridge_1", "to": "own_2", "kind": "lean_source_import"},
+        {"from": "bridge_2", "to": "own_1", "kind": "lean_source_import"},
+        {"from": "bridge_2", "to": "own_2", "kind": "lean_source_import"},
+        {"from": "cap_1", "to": "own_1", "kind": "lean_source_import"},
+    ]
+    graph = {
+        "schema": "info_geometry.refactoring_map.v1",
+        "sourceSnapshot": {
+            "worktreeConsistentDuringScan": True,
+            "pathContentManifestSha256": "snapshot-dag",
+        },
+        "files": [{"path": n} for n in nodes],
+        "dependencyEdges": edges,
+    }
+    packet = {
+        "schema": "info_geometry.edge_attention_logits.v1",
+        "sourceSnapshotSha256": "snapshot-dag",
+        "modelVersion": "test-model-v1",
+        "featureVersion": "test-features-v1",
+        "inverseTemperature": 2.0,
+        "edgeKinds": ["lean_source_import"],
+        "edges": [{"edgeRef": edge_reference(e), "logit": 1.0} for e in edges],
+    }
+
+    result = build_attention_scc_overlay(graph, packet, {"kind": "top_k", "k": 2})
+    # Tarjan SCC collapses to 6 singleton components on any DAG
+    assert result["rawSccCount"] == 6
+    assert result["attentionSccCount"] == 6
+
+    mag = result["magneticArchetypeTaxonomy"]
+    assert mag["schema"] == "info_geometry.magnetic_flow_archetypes.v1"
+    assert mag["hermitianResidualFrobenius"] == pytest.approx(0.0, abs=1e-12)
+    # Magnetic flow-imbalance archetypes compress 6 DAG nodes into fewer role clusters
+    assert mag["archetypeClusterCount"] < 6
+    by_vertex = {row["vertex"]: row for row in mag["nodeMetrics"]}
+    assert by_vertex["cap_1"]["flowImbalance"] == pytest.approx(1.0)
+    assert by_vertex["own_1"]["flowImbalance"] == pytest.approx(-1.0)
+    assert by_vertex["cap_1"]["archetypeRole"] == "capstone_source_archetype"
+    assert by_vertex["own_1"]["archetypeRole"] == "owner_sink_archetype"
+    assert len(mag["multiscaleRegimes"]) >= 3

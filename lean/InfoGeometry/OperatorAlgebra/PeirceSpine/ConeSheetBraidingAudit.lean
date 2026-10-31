@@ -23,3 +23,5 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms qgt_defect_iterates_invS_and_parity
 #print axioms qgt_defect_iterates_chiral_eigenvalues
 #print axioms sandwichSame_multipass_idempotencyDefect
+#print axioms qgt_defect_iterates_sandwichCross
+#print axioms qgt_defect_iterates_cone_echo_and_cubic

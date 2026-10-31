@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import sys
 from collections import Counter
@@ -387,6 +388,143 @@ def extract_tree_audited(exports_root: Path, *, repo_root: Path = ROOT
     return records, rejected
 
 
+def compute_multiscale_dna_affinity_clusters(
+    records: list[dict[str, Any]],
+    *,
+    betas: tuple[float, ...] = (0.5, 2.0, 8.0),
+    sinkhorn_iterations: int = 10,
+) -> dict[str, Any]:
+    """Coarse-grain `raw_infotree_structural_dna.v4` records across beta scales.
+
+    Computes cosine similarity over TF-weighted structural DNA feature bags
+    (`path1`, `path2`, `tree1`, `goalShape`, `tacticName`, `elaboratedHead`,
+    `declarationCommand`) combined with normalized `structuralSummary` moments,
+    applies `mcbal` two-sided Sinkhorn Gibbs scaling at each inverse
+    temperature beta, and extracts connected affinity archetypes.
+    """
+    n = len(records)
+    if n == 0:
+        return {
+            "schema": "info_geometry.infotree_dna_multiscale_archetypes.v1",
+            "recordCount": 0,
+            "scales": [],
+        }
+
+    # Build sparse L2-normalized feature vectors per record
+    sparse_vecs: list[dict[str, float]] = []
+    for rec in records:
+        vec: dict[str, float] = {}
+        for frow in rec.get("features", []):
+            key = f"{frow.get('kind', 'k')}:{frow.get('value', '')}"
+            vec[key] = vec.get(key, 0.0) + math.log1p(max(0, int(frow.get("count", 1))))
+        summary = rec.get("structuralSummary", {})
+        total_nodes = max(1, int(summary.get("totalNodes", 1)))
+        vec["__summary:maxDepth"] = float(summary.get("maxDepth", 0)) / 32.0
+        vec["__summary:branching"] = float(summary.get("branchingNodes", 0)) / float(total_nodes)
+        vec["__summary:tacticRatio"] = float(summary.get("tacticSteps", 0)) / float(total_nodes)
+        norm = math.sqrt(math.fsum(v * v for v in vec.values())) or 1.0
+        sparse_vecs.append({k: v / norm for k, v in vec.items()})
+
+    # Pairwise cosine distances E_ij = 0.5 * (1 - cos(u_i, u_j))
+    cos_sim = [[1.0 if i == j else 0.0 for j in range(n)] for i in range(n)]
+    for i in range(n):
+        vi = sparse_vecs[i]
+        for j in range(i + 1, n):
+            vj = sparse_vecs[j]
+            small, large = (vi, vj) if len(vi) <= len(vj) else (vj, vi)
+            dot = math.fsum(val * large.get(k, 0.0) for k, val in small.items())
+            dot = min(1.0, max(-1.0, dot))
+            cos_sim[i][j] = dot
+            cos_sim[j][i] = dot
+
+    scale_reports: list[dict[str, Any]] = []
+    for beta in sorted({round(float(b), 6) for b in betas if b > 0}):
+        # Off-diagonal Gibbs kernel W_ij(beta) = exp(-beta * 0.5 * (1 - cos_ij))
+        w_mat = [[0.0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    w_mat[i][j] = 1.0 if n == 1 else 0.0
+                else:
+                    dist = 0.5 * (1.0 - cos_sim[i][j])
+                    w_mat[i][j] = math.exp(-beta * dist)
+
+        left = [1.0] * n
+        right = [1.0] * n
+        if n > 1:
+            for _ in range(max(1, sinkhorn_iterations)):
+                for i in range(n):
+                    rsum = math.fsum(w_mat[i][j] * right[j] for j in range(n) if i != j)
+                    left[i] = 1.0 / rsum if rsum > 1e-12 else 1.0
+                for j in range(n):
+                    csum = math.fsum(w_mat[i][j] * left[i] for i in range(n) if i != j)
+                    right[j] = 1.0 / csum if csum > 1e-12 else 1.0
+
+        p_mat = [
+            [left[i] * w_mat[i][j] * right[j] if i != j else 0.0 for j in range(n)]
+            for i in range(n)
+        ]
+
+        # Threshold coupling at beta-dependent quantile to form coarse-grained DNA species
+        off_vals = sorted(
+            p_mat[i][j] for i in range(n) for j in range(i + 1, n)
+        )
+        if off_vals:
+            # Higher beta -> stricter threshold -> finer clusters
+            quantile = min(0.90, max(0.15, 1.0 - 1.0 / (1.0 + 0.5 * beta)))
+            q_idx = min(len(off_vals) - 1, max(0, int(math.floor(quantile * len(off_vals)))))
+            thresh = off_vals[q_idx]
+        else:
+            thresh = 0.0
+
+        # Connected components under strong Sinkhorn DNA coupling AND high cosine similarity
+        cos_thresh = min(0.95, max(0.25, 1.0 - 1.2 / (1.0 + 0.6 * beta)))
+        visited = [False] * n
+        clusters: list[dict[str, Any]] = []
+        for start in range(n):
+            if visited[start]:
+                continue
+            visited[start] = True
+            queue = [start]
+            comp = [start]
+            while queue:
+                curr = queue.pop(0)
+                for nb in range(n):
+                    if not visited[nb] and p_mat[curr][nb] >= thresh and cos_sim[curr][nb] >= cos_thresh:
+                        visited[nb] = True
+                        queue.append(nb)
+                        comp.append(nb)
+            members = sorted(records[idx]["artifactId"] for idx in comp)
+            mean_cos = (
+                math.fsum(cos_sim[a][b] for a in comp for b in comp if a != b)
+                / max(1, len(comp) * (len(comp) - 1))
+                if len(comp) > 1 else 1.0
+            )
+            cid = "dna_" + hashlib.sha256(
+                json.dumps({"beta": beta, "members": members}, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()[:20]
+            clusters.append({
+                "id": cid,
+                "members": members,
+                "memberCount": len(members),
+                "meanInternalCosineSimilarity": round(mean_cos, 8),
+            })
+
+        scale_reports.append({
+            "inverseTemperature": beta,
+            "cosineThreshold": round(cos_thresh, 6),
+            "sinkhornCouplingThreshold": round(thresh, 8),
+            "clusterCount": len(clusters),
+            "clusters": clusters,
+        })
+
+    return {
+        "schema": "info_geometry.infotree_dna_multiscale_archetypes.v1",
+        "recordCount": n,
+        "scales": scale_reports,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("exports_root", type=Path)
@@ -394,6 +532,8 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--rejections-out", type=Path,
                         help="Write structured exclusions and continue past stale/invalid captures")
+    parser.add_argument("--clusters-out", type=Path,
+                        help="Write multi-scale Sinkhorn DNA affinity archetype clusters")
     args = parser.parse_args()
     if args.rejections_out:
         records, rejections = extract_tree_audited(args.exports_root, repo_root=args.repo_root)
@@ -411,6 +551,13 @@ def main() -> int:
             "rejections": rejections,
             "authority": "excluded captures only; rejected records contribute no DNA features",
         }, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    if args.clusters_out:
+        args.clusters_out.parent.mkdir(parents=True, exist_ok=True)
+        clusters_payload = compute_multiscale_dna_affinity_clusters(records)
+        args.clusters_out.write_text(
+            json.dumps(clusters_payload, sort_keys=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print(json.dumps({
         "schema": "info_geometry.infotree_structural_dna_manifest.v1",
         "sourceCount": len(records),

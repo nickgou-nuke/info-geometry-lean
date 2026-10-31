@@ -749,3 +749,28 @@ proofs.
    `evenGrade P A` to `genV P A A`, `qgtPlus P A A`, `qgtMinus P A A`, and
    `idempotencyDefect`. Separate concrete noncommuting `2 × 2` matrix
    witnesses are owned by `OperatorAlgebra.PeirceDefectMatrixWitness`.
+
+9. **A58–A60 Operator cyclotomic roots, `S₃` braiding, and Klein-four tomography (`PeirceSpine.CyclotomicBridge`):**
+   `archetype_A58_operator_cyclotomic_roots_and_discriminants`,
+   `archetype_A59_s3_operator_cyclotomic_braiding_and_reflections`, and
+   `archetype_A60_s3_klein_four_decomposition_and_tomography` formalize
+   `peirceTransferJComplement`, `cubeRootOp`, `cubeRootOpConj`, `s3Refl0`,
+   `s3Refl1`, and `s3Refl2` with two SymPy-verified sign corrections to the
+   `1ofaG` transcript (`cubeRootOp² - cubeRootOpConj = 1 - genV P A C` in A59,
+   and `s3Refl1 P A C - s3Refl2 P A C = -genJ P A C - (2 : ℤ) • genSig P A C`
+   with `hProjSig` coefficient `-16` in A60).
+   In addition, `unipotentPlus_double_pass_and_parityConj_round_trip` (`A71` in
+   `PhaseConjugateSteinberg`), `qgt_defect_iterates_sandwichCross` (`A66`–`A68`
+   in `ConeSheetBraiding`), `qgt_defect_iterates_cone_echo_and_cubic` (`A70` in
+   `ConeSheetBraiding`), and `derivSq_and_hProj_defect_iterates` (`A65`/`A67` in
+   `CurvatureDoubleCommutator`) complete the defect-tower operator identities.
+
+10. **Stage D₁₅ Directed adjacency split, grading-twisted Laplacian, and 3-layer DAG resolvent (`PeirceSpine.StarGrading`, `PeirceSpine.BlockTriangularIntervention`):**
+    `digrac_flow_imbalance_and_magnet_laplacian` in `StarGrading.lean` formalizes
+    `digracSym`, `digracImb`, `magnetAdj`, and `magnetLaplacian` over an arbitrary
+    `[Ring B] [StarRing B]` with self-adjoint idempotent `P`.
+    `ranked_dag_three_layer_resolvent` and
+    `stage_D15_digrac_magnet_dag_resolvent_and_tcr_former` in
+    `BlockTriangularIntervention.lean` formalize the three-layer transition
+    operator `dagEdge2`, its truncated Neumann inverse `dagGreen2`, and the
+    combined 18-conjunct synthesis with `blockLower` and `idempotentCompression`.

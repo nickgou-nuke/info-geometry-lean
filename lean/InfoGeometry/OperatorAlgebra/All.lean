@@ -279,6 +279,7 @@ import InfoGeometry.OperatorAlgebra.NoncommutativeConnesCalculus
 import InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel
 import InfoGeometry.OperatorAlgebra.NoncommutativeChiralChannels
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DirectedFlowMagneticResolvent
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 import InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness
 

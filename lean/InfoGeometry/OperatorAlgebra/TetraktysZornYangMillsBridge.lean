@@ -195,4 +195,31 @@ theorem innerFrame_tetraktys_covariance
     rw [hP] at h
     simpa only [innerConjugationRingEquiv_apply] using h
 
+/-- The square of a sum of two symmetric Peirce operators separates into the
+two individual quadratic terms and the mixed Jordan cross term. -/
+theorem symmetric_connection_square
+    (P A₁ C₁ A₂ C₂ : SheetAlgebra W)
+    (hP : P * P = P) :
+    (genPhi P A₁ C₁ + genPhi P A₂ C₂) *
+        (genPhi P A₁ C₁ + genPhi P A₂ C₂) =
+      genV P A₁ C₁ + genV P A₂ C₂ +
+        anticomm (conePlus P A₁) (coneMinus P C₂) +
+        anticomm (conePlus P A₂) (coneMinus P C₁) := by
+  simp only [genPhi, genV, anticomm, conePlus, coneMinus]
+  peirce_nf hP
+
+/-- Correct mixed square for a symmetric and a signed Peirce operator.  The
+cross term is a difference of Jordan products. Replacing it by commutator
+curvature is not a valid general identity. -/
+theorem symmetric_signed_connection_square
+    (P A₁ C₁ A₂ C₂ : SheetAlgebra W)
+    (hP : P * P = P) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      genV P A₁ C₁ - genV P A₂ C₂ -
+        (anticomm (conePlus P A₁) (coneMinus P C₂) -
+          anticomm (conePlus P A₂) (coneMinus P C₁)) := by
+  simp only [genPhi, genJ, genV, anticomm, conePlus, coneMinus]
+  peirce_nf hP
+
 end InfoGeometry.OperatorAlgebra.TetraktysZornYangMillsBridge

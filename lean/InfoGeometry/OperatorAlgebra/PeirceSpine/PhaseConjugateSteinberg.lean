@@ -73,4 +73,29 @@ theorem parityConj_steinbergBraidDual_and_bruhat_factors (A C : B) :
     (simp only [parityConj, steinbergBraidDual, steinbergBraidDualInv,
       invS, conePlus, coneMinus]; peirce_nf hP)
 
+/-- Unipotent single-pass and double-pass conjugation of `genPhi`, parity-conjugate
+round-trip cancellation for upper and lower unipotent shears, and invariance of
+`sandwichSame` under even `genV`/`genSig` shifts (`A71`). -/
+theorem unipotentPlus_double_pass_and_parityConj_round_trip (A C X : B) :
+    (1 + conePlus P A) * genPhi P A C * (1 - conePlus P A) =
+      genPhi P A C + genSig P A C -
+        conePlus P A * coneMinus P C * conePlus P A ∧
+    (1 + conePlus P A) *
+        ((1 + conePlus P A) * genPhi P A C * (1 - conePlus P A)) *
+        (1 - conePlus P A) =
+      genPhi P A C + (2 : ℤ) • genSig P A C -
+        (4 : ℤ) • (conePlus P A * coneMinus P C * conePlus P A) ∧
+    parityConj P
+      ((1 + conePlus P A) *
+        parityConj P ((1 + conePlus P A) * X * (1 - conePlus P A)) *
+        (1 - conePlus P A)) = X ∧
+    parityConj P
+      ((1 + coneMinus P C) *
+        parityConj P ((1 + coneMinus P C) * X * (1 - coneMinus P C)) *
+        (1 - coneMinus P C)) = X ∧
+    sandwichSame P A C (X + genV P A C + genSig P A C) =
+      sandwichSame P A C X := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    ((try simp only [parityConj, sandwichSame, invS]); peirce_nf hP)
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

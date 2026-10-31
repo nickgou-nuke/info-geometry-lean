@@ -14,5 +14,7 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms idempotentCompression_comp_commute
 #print axioms idempotentCompression_add_removed
 #print axioms blockLower_genV_defect_iterate
+#print axioms ranked_dag_three_layer_resolvent
+#print axioms stage_D15_digrac_magnet_dag_resolvent_and_tcr_former
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

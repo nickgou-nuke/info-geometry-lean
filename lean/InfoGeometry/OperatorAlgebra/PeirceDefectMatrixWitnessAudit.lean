@@ -12,6 +12,12 @@ namespace InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness
 #print axioms state_selfAdjoint
 #print axioms cut_state_noncommute
 #print axioms cut_state_mul_ne_swap
+#print axioms oneSidedIdempotent_idempotent
+#print axioms cut_mul_oneSidedIdempotent
+#print axioms oneSidedIdempotent_not_selfAdjoint
+#print axioms oneSidedIdempotent_has_nonzero_current
+#print axioms oneSidedIdempotent_zero_metric_nonzero_current
+#print axioms oneSidedIdempotent_pinch_idempotent_nonzero_current
 #print axioms boundary_metric_value
 #print axioms pinched_state_defect_value
 #print axioms pinched_state_defect_ne_zero

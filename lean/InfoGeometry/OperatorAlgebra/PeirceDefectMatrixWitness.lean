@@ -9,11 +9,14 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
 
 /-!
-# A noncommuting matrix witness for the Peirce defect bridge
+# Noncommuting matrix witnesses for the Peirce defect bridge
 
-The example lives in the full matrix algebra `M₂(ℚ)`.  The cut is a
-nontrivial idempotent and the state has nonzero entries in both off-diagonal
-corners; its pinching defect is therefore nonzero.
+The examples live in the full matrix algebra `M₂(ℚ)`.  The cut is a
+nontrivial idempotent.  A self-adjoint witness has nonzero entries in both
+off-diagonal corners; a one-sided idempotent separately shows why zero
+quadratic defect does not imply zero current without additional
+star/positivity hypotheses.  That calculation is reproduced by
+`scripts/cas/peirce_one_sided_zero_metric_witness.py`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness
@@ -29,6 +32,10 @@ def cut : Op := !![1, 0; 0, 0]
 
 /-- A self-adjoint idempotent with coherence across the cut. -/
 def state : Op := !![(1 : ℚ) / 2, 1 / 2; 1 / 2, 1 / 2]
+
+/-- A one-sided idempotent whose upper Peirce boundary is nonzero and whose
+lower Peirce boundary vanishes.  It is deliberately not self-adjoint. -/
+def oneSidedIdempotent : Op := !![1, 1; 0, 0]
 
 /-- The cut is idempotent. -/
 theorem cut_idempotent : cut * cut = cut := by
@@ -61,6 +68,64 @@ theorem cut_state_mul_ne_swap : cut * state ≠ state * cut := by
   unfold PeirceSpine.comm
   rw [h]
   simp
+
+/-- The one-sided witness is an idempotent. -/
+theorem oneSidedIdempotent_idempotent :
+    oneSidedIdempotent * oneSidedIdempotent = oneSidedIdempotent := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [oneSidedIdempotent, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The explicit CAS round-trip product of the cut and one-sided operator. -/
+theorem cut_mul_oneSidedIdempotent :
+    cut * oneSidedIdempotent = !![1, 1; 0, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cut, oneSidedIdempotent, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The one-sided idempotent is not self-adjoint under the matrix star. -/
+theorem oneSidedIdempotent_not_selfAdjoint :
+    star oneSidedIdempotent ≠ oneSidedIdempotent := by
+  intro h
+  have h01 := congrArg (fun M : Op => M 0 1) h
+  norm_num [oneSidedIdempotent] at h01
+
+/-- Its outward boundary is nonzero, despite the zero quadratic boundary
+metric. -/
+theorem oneSidedIdempotent_has_nonzero_current :
+    comm cut oneSidedIdempotent ≠ 0 := by
+  intro h
+  have h01 := congrArg (fun M : Op => M 0 1) h
+  norm_num [PeirceSpine.comm, cut, oneSidedIdempotent,
+    Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+/-- For a non-self-adjoint idempotent, the quadratic boundary metric can
+vanish while the commutator current is nonzero.  Thus `genV = 0` does not by
+itself characterize zero Peirce boundary or projectability in an arbitrary
+ring. -/
+theorem oneSidedIdempotent_zero_metric_nonzero_current :
+    genV cut oneSidedIdempotent oneSidedIdempotent = 0 ∧
+    comm cut oneSidedIdempotent ≠ 0 := by
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [genV, anticomm, conePlus, coneMinus, cut,
+        oneSidedIdempotent, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+        Matrix.add_apply, Matrix.sub_apply, Fin.sum_univ_two]
+  · exact oneSidedIdempotent_has_nonzero_current
+
+/-- Pinching this idempotent preserves idempotence although its boundary
+current is nonzero.  The self-adjointness hypothesis in state interpretations
+cannot be dropped when reading zero quadratic defect as zero boundary. -/
+theorem oneSidedIdempotent_pinch_idempotent_nonzero_current :
+    idempotencyDefect (evenGrade cut oneSidedIdempotent) = 0 ∧
+    comm cut oneSidedIdempotent ≠ 0 := by
+  constructor
+  · rw [idempotencyDefect_evenGrade_of_idempotent cut oneSidedIdempotent
+      cut_idempotent oneSidedIdempotent_idempotent,
+      oneSidedIdempotent_zero_metric_nonzero_current.1]
+    simp
+  · exact oneSidedIdempotent_has_nonzero_current
 
 /-- The quadratic boundary term is one quarter of the identity matrix. -/
 theorem boundary_metric_value : genV cut state state = (1 / 4 : ℚ) • (1 : Op) := by

@@ -106,6 +106,29 @@ theorem peirce00_idempotencyDefect_eq_neg_qgtMinus (X : B)
       rw [show 1 - (1 - P) = P by noncomm_ring] at hcomp
       rw [hcomp]
 
+section StarBoundary
+
+variable [StarRing B]
+
+/-- In a proper star ring, the upper Peirce quadratic term of a self-adjoint
+operator vanishes exactly when that operator commutes with the cut. Properness
+is stated explicitly because a general star ring need not detect zero through
+star-square products. -/
+theorem qgtPlus_selfAdjoint_eq_zero_iff_commute
+    (hproper : ∀ z : B, star z * z = 0 → z = 0)
+    (hPs : star P = P) (X : B) (hXs : star X = X) :
+    qgtPlus P X X = 0 ↔ P * X = X * P := by
+  have hCompression := InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect
+    P X hP
+  have hQgt : qgtPlus P X X =
+      P * (X * X) * P - (P * X * P) * (P * X * P) := by
+    simpa only [qgtPlus, conePlus, coneMinus, mul_assoc] using hCompression.symm
+  rw [hQgt, sub_eq_zero]
+  exact InfoGeometry.Core.PeirceCompressionDefect.compression_square_eq_iff_commute
+    hproper P X hP hPs hXs
+
+end StarBoundary
+
 theorem odd_idempotencyDefect (X : B) :
     oddGrade P (idempotencyDefect X) =
       anticomm (evenGrade P X) (oddGrade P X) - oddGrade P X := by

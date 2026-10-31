@@ -1,8 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.TransferInstance
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OperatorValuedJones
 import InfoGeometry.Canonical.CoordinateFreeConnectionChannels
 import InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio
+import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 
 /-!
 # The causal-coordinate carrier as an operator ring
@@ -110,6 +116,57 @@ theorem reconstruct_causal_rightOperatorRatio
     (A C : CausalOperatorCoordinates B) :
     reconstruct_causal (A * C) = reconstruct_causal A * reconstruct_causal C :=
   map_mul (causalOperatorCoordinatesRingEquiv (B := B)) A C
+
+section StarTransport
+
+variable [StarRing B]
+
+/-- The involution on causal coordinates transported from the adjoint on the
+full two-sheet operator matrix. -/
+noncomputable def causalCoordinatesStar (A : CausalOperatorCoordinates B) :
+    CausalOperatorCoordinates B :=
+  causalCoordinates (star (reconstruct_causal A))
+
+/-- The operator-valued causal packet inherits the full matrix star-ring
+structure, with no restriction on the internal operator coefficients. -/
+noncomputable instance causalOperatorCoordinatesStarRing :
+    StarRing (CausalOperatorCoordinates B) where
+  star := causalCoordinatesStar
+  star_involutive A := by
+    apply (causalOperatorCoordinatesRingEquiv (B := B)).injective
+    change reconstruct_causal (causalCoordinates
+      (star (reconstruct_causal (causalCoordinates
+        (star (reconstruct_causal A)))))) = reconstruct_causal A
+    simp only [reconstruct_causalCoordinates, star_star]
+  star_mul A C := by
+    apply (causalOperatorCoordinatesRingEquiv (B := B)).injective
+    change reconstruct_causal (causalCoordinates
+      (star (reconstruct_causal (A * C)))) =
+      reconstruct_causal (causalCoordinates (star (reconstruct_causal C)) *
+        causalCoordinates (star (reconstruct_causal A)))
+    simp only [reconstruct_causalCoordinates, reconstruct_causal_mul, star_mul]
+  star_add A C := by
+    apply (causalOperatorCoordinatesRingEquiv (B := B)).injective
+    change reconstruct_causal (causalCoordinates
+      (star (reconstruct_causal (A + C)))) =
+      reconstruct_causal (causalCoordinates (star (reconstruct_causal A)) +
+        causalCoordinates (star (reconstruct_causal C)))
+    simp only [reconstruct_causalCoordinates, reconstruct_causal_add, star_add]
+
+/-- Reconstruction intertwines the transported coordinate involution with
+the matrix adjoint. -/
+@[simp] theorem reconstruct_causal_star (A : CausalOperatorCoordinates B) :
+    reconstruct_causal (star A) = star (reconstruct_causal A) := by
+  exact reconstruct_causalCoordinates _
+
+/-- Reconstruction upgrades to a star-ring equivalence. -/
+noncomputable def causalOperatorCoordinatesStarRingEquiv :
+    CausalOperatorCoordinates B ≃⋆+* Matrix (Fin 2) (Fin 2) B :=
+  StarRingEquiv.mk (causalOperatorCoordinatesRingEquiv (B := B)) (by
+    intro A
+    exact reconstruct_causal_star A)
+
+end StarTransport
 
 /-- Reconstruction as the repository's coordinate-free connection channel. -/
 noncomputable def causalReconstructionChannel :

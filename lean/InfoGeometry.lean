@@ -8044,6 +8044,7 @@ import InfoGeometry.OperatorAlgebra.SugawaraVirasoroComm
 import InfoGeometry.OperatorAlgebra.SuperCartan
 import InfoGeometry.OperatorAlgebra.SuperKreinCuntz
 import InfoGeometry.OperatorAlgebra.SuperchargeNilpotence
+import InfoGeometry.OperatorAlgebra.TetraktysZornYangMillsBridge
 import InfoGeometry.OperatorAlgebra.TKKHamiltonian
 import InfoGeometry.OperatorAlgebra.ThreeModeChiralFockSplitOctonionBridge
 import InfoGeometry.OperatorAlgebra.TomitaTakesakiModularPrimeBridge

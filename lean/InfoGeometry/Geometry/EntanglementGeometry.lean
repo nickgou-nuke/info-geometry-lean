@@ -39,8 +39,8 @@ theorem starAdjacent_symmetric {i j : Fin 3}
 theorem starAdjacent_irreflexive (i : Fin 3) : ¬ starAdjacent i i := by
   intro h
   rcases h with ⟨_, hn⟩ | ⟨_, hn⟩
-  · exact hn rfl
-  · exact hn rfl
+  · exact hn ‹i = 0›
+  · exact hn ‹i = 0›
 
 /-- Symmetry and irreflexivity do not force a relation to be monogamous:
 vertex `0` is related to both `1` and `2`. -/

@@ -68,22 +68,22 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 open InfoGeometry.Core.IdempotentGraphGrassmannian
 
 /-!
-### 1. The 16-Stage Causal DAG (`D₁ → D₁₆`)
+### 1. The 18-Stage Causal DAG (`D₁ → D₁₈`)
 
-The rank and edge relation index all 16 stages. The master algebraic synthesis
-theorem below covers `D₁`–`D₁₅`; `D₁₆` has a separate sheaf-inspired operator
-theorem in `CellularSheafOperatorPoset.lean`.
+The rank and edge relation index all 18 stages. The master algebraic synthesis
+theorem below covers `D₁`–`D₁₅`; `D₁₆`–`D₁₈` (`S₁ → S₁₅`) have their complete
+sheaf-inspired operator synthesis theorems in `CellularSheafOperatorPoset.lean`.
 -/
 
-/-- Archetype stage labels `D₁` through `D₁₆`, ordered separately by their rank. -/
+/-- Archetype stage labels `D₁` through `D₁₈`, ordered separately by their rank. -/
 inductive ArchetypeStage : Type
   | D1 | D2 | D3 | D4 | D5 | D6 | D7 | D8
-  | D9 | D10 | D11 | D12 | D13 | D14 | D15 | D16
+  | D9 | D10 | D11 | D12 | D13 | D14 | D15 | D16 | D17 | D18
   deriving DecidableEq, Repr
 
 namespace ArchetypeStage
 
-/-- Integer topological rank (1 through 16) of each archetype stage. -/
+/-- Integer topological rank (1 through 18) of each archetype stage. -/
 def rank : ArchetypeStage → ℕ
   | D1 => 1
   | D2 => 2
@@ -101,6 +101,8 @@ def rank : ArchetypeStage → ℕ
   | D14 => 14
   | D15 => 15
   | D16 => 16
+  | D17 => 17
+  | D18 => 18
 
 theorem rank_injective : Function.Injective rank := by
   intro a b h
@@ -109,7 +111,7 @@ theorem rank_injective : Function.Injective rank := by
 instance : LinearOrder ArchetypeStage :=
   LinearOrder.lift' rank rank_injective
 
-/-- Directed edges of the 16-stage causal DAG (`D₁ → D₁₆`). -/
+/-- Directed edges of the 18-stage causal DAG (`D₁ → D₁₈`). -/
 def causalEdge : ArchetypeStage → ArchetypeStage → Prop
   | D1, D2 => True
   | D1, D3 => True
@@ -134,12 +136,15 @@ def causalEdge : ArchetypeStage → ArchetypeStage → Prop
   | D14, D15 => True
   | D14, D16 => True
   | D15, D16 => True
+  | D16, D17 => True
+  | D16, D18 => True
+  | D17, D18 => True
   | _, _ => False
 
 /-- Every direct edge in the 16-stage causal DAG strictly increases topological rank. -/
 theorem causalEdge_strict_rank_mono {s t : ArchetypeStage} (h : causalEdge s t) :
     rank s < rank t := by
-  cases s <;> cases t <;> first | contradiction | decide
+  cases s <;> cases t <;> simp_all [causalEdge, rank]
 
 /-- The 16-stage causal DAG has no self-loops. -/
 theorem causalEdge_irrefl (s : ArchetypeStage) : ¬ causalEdge s s := by
@@ -339,5 +344,64 @@ theorem selected_D15_D16_operator_synthesis
           twoStepResolvent_left_inv h1 h2 h12 h21 A C,
           idempotentCompression_blockLower_peirce11 hP hPQ hQP F₁ L₁ D₁⟩,
          ⟨hS1, hS2, hS3, hS6, hS11, hS12, hS13, hS14⟩⟩
+
+/-- Selected joint synthesis of `D₁₅` directed-flow/DAG identities with the full
+`D₁₆`–`D₁₈` (`S₁ → S₁₅`) cellular sheaf, horizon normality, curved Weitzenböck/Bianchi,
+and fractal Hodge sheet filtering identities. -/
+theorem selected_D15_to_D18_operator_synthesis
+    {B : Type*} [Ring B] [StarRing B]
+    {P Q P₁ P₂ R_u R_v U_gauge d₀ d₁ d₂ : B}
+    (hP : P * P = P) (hPs : star P = P)
+    (hPQ : P * Q = 0) (hQP : Q * P = 0)
+    (h1 : P₁ * P₁ = P₁) (h2 : P₂ * P₂ = P₂)
+    (h12 : P₁ * P₂ = 0) (h21 : P₂ * P₁ = 0)
+    (hU : star U_gauge * U_gauge = 1) (hd : d₁ * d₀ = 0)
+    (X W A C F₁ L₁ D₁ : B) (n : ℕ) :
+    -- D₁₅ + D₁₆ joint synthesis:
+    ((symAdj W + skewAdj W = (2 : ℤ) • W ∧
+      gradingTwistedAdj P A = genPhi P A (star A) ∧
+      (1 - twoStepUpper P₁ P₂ A C) * twoStepResolvent P₁ P₂ A C = 1 ∧
+      peirce11 P (idempotentCompression Q (blockLower P F₁ L₁ D₁)) = peirce11 P F₁) ∧
+     (star (sheafLaplacian0 P R_u R_v) = sheafLaplacian0 P R_u R_v ∧
+      sheafLaplacian0 P R_u R_v =
+        sheafBlock11 P R_u + sheafBlock10 P R_u R_v +
+        sheafBlock01 P R_u R_v + sheafBlock00 P R_v ∧
+      sheafDirichletForm P R_u R_v X =
+        star (sheafCoboundary0 P R_u R_v * X) * (sheafCoboundary0 P R_u R_v * X) ∧
+      sheafLaplacian0 P (U_gauge * R_u) (U_gauge * R_v) = sheafLaplacian0 P R_u R_v ∧
+      sheafHodgeLaplacian d₀ d₁ * sheafHodgeLaplacian d₀ d₁ =
+        sheafHodgeDown d₀ * sheafHodgeDown d₀ + sheafHodgeUp d₁ * sheafHodgeUp d₁ ∧
+      sheafCoboundary0 P (coneMinus P C) (conePlus P A) = -genJ P A C ∧
+      sheafCoboundary0 P (coneMinus P C) (-conePlus P A) = genPhi P A C ∧
+      sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) = genV P A (star A))) ∧
+    -- D₁₇ (S₈ → S₁₁) split-complex separation, edge Laplacian, horizon normality & QGT Hodge:
+    (sheafCoboundary0 P R_u R_v * invS P = sheafCoboundary0Sym P R_u R_v ∧
+     sheafEdgeLaplacian1 P R_u R_v = R_u * P * star R_u + R_v * (1 - P) * star R_v ∧
+     comm (star (sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A)))
+          (sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A)) = 0 ∧
+     star (sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A)) *
+       sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A) = genSig P A (star A) ∧
+     sheafHodgeDown (conePlus P A) = qgtPlus P A (star A) ∧
+     sheafHodgeUp (conePlus P A) = qgtMinus P A (star A)) ∧
+    -- D₁₈ (S₁₂ → S₁₅) curved Weitzenböck, Bianchi & fractal Hodge sheet filtering:
+    (d₂ * sheafCurvature2 d₀ d₁ = sheafCurvature2 d₁ d₂ * d₀ ∧
+     sheafHodgeUp (conePlus P A) * mandelbrotTower n (qgtPlus P A (star A)) = 0 ∧
+     sheafHodgeDown (conePlus P A) * mandelbrotTower n (qgtMinus P A (star A)) = 0 ∧
+     sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+       mandelbrotTower n (qgtPlus P A (star A)) =
+       qgtPlus P A (star A) * mandelbrotTower n (qgtPlus P A (star A)) ∧
+     sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+       mandelbrotTower n (qgtMinus P A (star A)) =
+       qgtMinus P A (star A) * mandelbrotTower n (qgtMinus P A (star A))) := by
+  have h1516 :=
+    selected_D15_D16_operator_synthesis (R_u := R_u) (R_v := R_v)
+      hP hPs hPQ hQP h1 h2 h12 h21 hU hd X W A C F₁ L₁ D₁
+  rcases stage_D17_extended_cellular_sheaf_hodge_and_tetraktys_synthesis
+    (R_u := R_u) (R_v := R_v) (U := U_gauge) (A := A) hP hPs with
+    ⟨hSC1, _, _, _, hEd1, _, _, _, hNorm, hSig1, _, hC2, hC3, _, _⟩
+  rcases stage_D18_curved_sheaf_bianchi_and_fractal_hodge_cohomology
+    (d₀ := d₀) (d₁ := d₁) (d₂ := d₂) (A := A) hP hPs n with
+    ⟨_, hBianchi1, _, hUpX, hDownY, hLapX, hLapY⟩
+  exact ⟨h1516, ⟨hSC1, hEd1, hNorm, hSig1, hC2, hC3⟩, ⟨hBianchi1, hUpX, hDownY, hLapX, hLapY⟩⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

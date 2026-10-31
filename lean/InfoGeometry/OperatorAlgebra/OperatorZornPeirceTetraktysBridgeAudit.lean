@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge
+
+/-!
+# Axiom Audit for `OperatorZornPeirceTetraktysBridge`
+-/
+
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.peirceSheetProj_idem
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.peirceSheetProj_mul_peirceRaisingUnit_ne
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.zornChiralPlane_genV
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.sum_zornChiralPlane_genV
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.zornMul_diagonal_from_peirce_genV
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.zornBracket_diagonal_from_peirce_genV
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.fieldStrength_diagonal_from_peirce_genV
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.zornChiralPlane_zero_mul_defect
+#print axioms InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge.fourPotential_chiralPlane_tetraktys_and_double_commutator

@@ -1,0 +1,19 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity
+
+/-!
+# Axiom Audit for `PeirceTetraktysColimitCoercivity`
+-/
+
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.genV_eq_conePlus_hodge_coefficient
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.stageEmbed_intertwines_two_sheeted_tetraktys
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.ofStage_intertwines_two_sheeted_tetraktys
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.ofStage_bond_two_sheeted_tetraktys
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.limit_two_sheeted_tetraktys_from_stage
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.peirce_tetraktys_hodge_identity_at_limit
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.peirce_genV_normalized_energy_bond
+#print axioms InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity.peirce_tetraktys_uniform_quadratic_bound_descends

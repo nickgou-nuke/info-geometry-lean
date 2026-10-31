@@ -74,6 +74,24 @@ theorem chart_bruhat_conjugation_transition :
   · unfold chartBruhatConjInv
     peirce_nf hP
 
+/-- The four Peirce corners of the two-sided chart conjugate of `P`.
+The lower-left block has a minus sign with the convention
+`chartBruhatConj = (1 + N₊)(1 - N₋) (·) (1 + N₋)(1 - N₊)`. -/
+theorem chart_bruhat_conjugate_peirce_blocks :
+    P * chartBruhatConj P A C P * P = P - qgtPlus P A C ∧
+    P * chartBruhatConj P A C P * (1 - P) =
+      -conePlus P A * (1 - qgtMinus P A C) ∧
+    (1 - P) * chartBruhatConj P A C P * P = -coneMinus P C ∧
+    (1 - P) * chartBruhatConj P A C P * (1 - P) = qgtMinus P A C := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> unfold chartBruhatConj <;> peirce_nf hP
+
+/-- The two corner complements multiply to `1 - genV`; this is an algebraic
+factorization and does not assert positivity or a determinant interpretation. -/
+theorem chart_corner_complement_product :
+    (1 - qgtPlus P A C) * (1 - qgtMinus P A C) = 1 - genV P A C := by
+  unfold genV qgtPlus qgtMinus anticomm
+  peirce_nf hP
+
 /-- The two-factor unipotent products `(1 + N₊)(1 - N₋)` and `(1 + N₋)(1 - N₊)`
 are two-sided inverses. -/
 theorem chart_bruhat_factor_mul_inv :
@@ -83,7 +101,7 @@ theorem chart_bruhat_factor_mul_inv :
         ((1 + conePlus P A) * (1 - coneMinus P C)) = 1 := by
   constructor <;> peirce_nf hP
 
-/-- `chartBruhatConj P A C` is a multiplicative homomorphism of `B`. -/
+/-- `chartBruhatConj P A C` preserves multiplication. -/
 theorem chartBruhatConj_mul (X Y : B) :
     chartBruhatConj P A C (X * Y) =
       chartBruhatConj P A C X * chartBruhatConj P A C Y := by

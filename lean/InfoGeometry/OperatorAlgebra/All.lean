@@ -279,6 +279,7 @@ import InfoGeometry.OperatorAlgebra.NoncommutativeConnesCalculus
 import InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel
 import InfoGeometry.OperatorAlgebra.NoncommutativeChiralChannels
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect
+import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 
 import InfoGeometry.Clifford.Cl11StarAlgebraColimit
 import InfoGeometry.Clifford.Cl11StarAlgebraFiltration

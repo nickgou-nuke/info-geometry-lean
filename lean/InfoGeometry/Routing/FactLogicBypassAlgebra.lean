@@ -33,6 +33,41 @@ def fullOperator (P_f P_l P_p F L Q : B) : B :=
 /-- Removing the fact corner by compression to the complementary two corners. -/
 def withoutFact (P_f T : B) : B := (1 - P_f) * T * (1 - P_f)
 
+/-- The remaining prompt idempotent when the fact and logic projections are
+orthogonal idempotents whose sum is a subprojection of `1`. -/
+def promptProj (P_f P_l : B) : B := 1 - P_f - P_l
+
+/-- The three-track decoder operator: diagonal fact and prompt corners, with a
+globally addressable logic column. This is an abstract support algebra, not a
+model of token embeddings or learned attention values. -/
+def decoderFullOp (P_f P_l F L Q : B) : B :=
+  P_f * F * P_f + L * P_l + promptProj P_f P_l * Q * promptProj P_f P_l
+
+/-- The three projections sum to the identity. -/
+theorem promptProj_partition (P_f P_l : B) :
+    P_f + P_l + promptProj P_f P_l = 1 := by
+  simp [promptProj]
+
+/-- Orthogonality and idempotence of the fact and logic projections make the
+derived prompt projection an idempotent orthogonal to both on either side. -/
+theorem promptProj_orthogonal_idempotent
+    {P_f P_l : B}
+    (hff : P_f * P_f = P_f) (hll : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0) :
+    promptProj P_f P_l * promptProj P_f P_l = promptProj P_f P_l ∧
+    P_f * promptProj P_f P_l = 0 ∧ promptProj P_f P_l * P_f = 0 ∧
+    P_l * promptProj P_f P_l = 0 ∧ promptProj P_f P_l * P_l = 0 := by
+  unfold promptProj
+  constructor
+  · noncomm_ring [hff, hll, hfl, hlf]
+  constructor
+  · noncomm_ring [hff, hfl]
+  constructor
+  · noncomm_ring [hff, hlf]
+  constructor
+  · noncomm_ring [hll, hlf]
+  · noncomm_ring [hll, hfl]
+
 /-- Support pattern read from the published TCR-Former decoder: factual rows
 are causal within their corner, logic rows may read every corner, and prompt
 rows may read facts and logic plus their causal prompt corner. The letters
@@ -137,6 +172,158 @@ theorem withoutFact_fullOperator
   simp only [mul_add, add_mul]
   simp [mul_assoc, hll, hpp, hlf, hpf, hlp, hpl,
     idempotent_left_mul, orthogonal_left_mul]
+
+/-- The decoder operator's complete logic column is `L * P_l`. -/
+theorem decoderFullOp_logic_column
+    {P_f P_l F L Q : B}
+    (hff : P_f * P_f = P_f) (hll : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0) :
+    decoderFullOp P_f P_l F L Q * P_l = L * P_l := by
+  obtain ⟨_, _, _, _, hpl⟩ :=
+    promptProj_orthogonal_idempotent hff hll hfl hlf
+  simpa [decoderFullOp, fullOperator] using
+    (fullOperator_logic_column (P_f := P_f) (P_l := P_l)
+      (P_p := promptProj P_f P_l) hfl hpl hll)
+
+/-- Neither the logic row nor the prompt/fact corners leak into the forbidden
+fact and prompt blocks of the block-diagonal support pattern. -/
+theorem decoderFullOp_mask_zeros
+    {P_f P_l F L Q : B}
+    (hff : P_f * P_f = P_f) (hll : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0) :
+    P_l * decoderFullOp P_f P_l F L Q * P_f = 0 ∧
+    P_l * decoderFullOp P_f P_l F L Q * promptProj P_f P_l = 0 ∧
+    P_f * decoderFullOp P_f P_l F L Q * promptProj P_f P_l = 0 ∧
+    promptProj P_f P_l * decoderFullOp P_f P_l F L Q * P_f = 0 := by
+  obtain ⟨hpp, hfp, hpf, hlp, hpl⟩ :=
+    promptProj_orthogonal_idempotent hff hll hfl hlf
+  have hrow := fullOperator_logic_row (P_f := P_f) (P_l := P_l)
+    (P_p := promptProj P_f P_l) (F := F) (L := L) (Q := Q) hlf hlp
+  have hfactPrompt :
+      P_f * fullOperator P_f P_l (promptProj P_f P_l) F L Q *
+          promptProj P_f P_l = 0 := by
+    unfold fullOperator
+    have hFact : P_f * (P_f * F * P_f) * promptProj P_f P_l = 0 := by
+      simp [mul_assoc, hfp]
+    have hLogic : P_f * (L * P_l) * promptProj P_f P_l = 0 := by
+      calc
+        P_f * (L * P_l) * promptProj P_f P_l = P_f * L * (P_l * promptProj P_f P_l) := by
+          noncomm_ring
+        _ = 0 := by rw [hlp]; simp
+    have hPrompt :
+        P_f * (promptProj P_f P_l * Q * promptProj P_f P_l) *
+          promptProj P_f P_l = 0 := by
+      calc
+        _ = (P_f * promptProj P_f P_l) * Q * promptProj P_f P_l *
+              promptProj P_f P_l := by noncomm_ring
+        _ = 0 := by rw [hfp]; simp
+    calc
+      P_f * (P_f * F * P_f + L * P_l + promptProj P_f P_l * Q * promptProj P_f P_l) *
+          promptProj P_f P_l =
+        P_f * (P_f * F * P_f) * promptProj P_f P_l +
+          P_f * (L * P_l) * promptProj P_f P_l +
+          P_f * (promptProj P_f P_l * Q * promptProj P_f P_l) *
+            promptProj P_f P_l := by noncomm_ring
+      _ = 0 := by rw [hFact, hLogic, hPrompt]; simp
+  have hpromptFact :
+      promptProj P_f P_l * fullOperator P_f P_l (promptProj P_f P_l) F L Q *
+          P_f = 0 := by
+    unfold fullOperator
+    have hFact : promptProj P_f P_l * (P_f * F * P_f) * P_f = 0 := by
+      calc
+        _ = (promptProj P_f P_l * P_f) * F * P_f * P_f := by noncomm_ring
+        _ = 0 := by rw [hpf]; simp
+    have hLogic : promptProj P_f P_l * (L * P_l) * P_f = 0 := by
+      calc
+        promptProj P_f P_l * (L * P_l) * P_f = promptProj P_f P_l * L * (P_l * P_f) := by
+          noncomm_ring
+        _ = 0 := by rw [hlf]; simp
+    have hPrompt :
+        promptProj P_f P_l * (promptProj P_f P_l * Q * promptProj P_f P_l) * P_f = 0 := by
+      calc
+        _ = promptProj P_f P_l * promptProj P_f P_l * Q *
+              (promptProj P_f P_l * P_f) := by noncomm_ring
+        _ = 0 := by rw [hpf]; simp
+    calc
+      promptProj P_f P_l *
+          (P_f * F * P_f + L * P_l + promptProj P_f P_l * Q * promptProj P_f P_l) *
+          P_f =
+        promptProj P_f P_l * (P_f * F * P_f) * P_f +
+          promptProj P_f P_l * (L * P_l) * P_f +
+          promptProj P_f P_l * (promptProj P_f P_l * Q * promptProj P_f P_l) * P_f := by
+            noncomm_ring
+      _ = 0 := by rw [hFact, hLogic, hPrompt]; simp
+  simpa [decoderFullOp] using ⟨hrow.1, hrow.2, hfactPrompt, hpromptFact⟩
+
+/-- Composition of two decoder operators has the same three-track support
+form. The three summands in the new logic operator are the fact-to-logic,
+logic-to-logic, and prompt-to-logic routes. -/
+theorem decoderFullOp_mul
+    {P_f P_l F₁ L₁ Q₁ F₂ L₂ Q₂ : B}
+    (hff : P_f * P_f = P_f) (hll : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0) :
+    decoderFullOp P_f P_l F₁ L₁ Q₁ * decoderFullOp P_f P_l F₂ L₂ Q₂ =
+      decoderFullOp P_f P_l
+        (F₁ * P_f * F₂)
+        (P_f * F₁ * P_f * L₂ + L₁ * P_l * L₂ +
+          promptProj P_f P_l * Q₁ * promptProj P_f P_l * L₂)
+        (Q₁ * promptProj P_f P_l * Q₂) := by
+  obtain ⟨hpp, hfp, hpf, hlp, _⟩ :=
+    promptProj_orthogonal_idempotent hff hll hfl hlf
+  simpa [decoderFullOp, fullOperator] using
+    (fullOperator_mul (P_f := P_f) (P_l := P_l)
+      (P_p := promptProj P_f P_l) hff hpp hlf hfp hpf hlp)
+
+/-- Removing the fact track by complementary-corner compression gives the
+exact algebraic ablation. This is a statement about the abstract operator. -/
+theorem decoderFullOp_withoutFact
+    {P_f P_l F L Q : B}
+    (hff : P_f * P_f = P_f) (hll : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0) :
+    withoutFact P_f (decoderFullOp P_f P_l F L Q) =
+      decoderFullOp P_f P_l 0 ((1 - P_f) * L) Q := by
+  obtain ⟨hpp, _, hpf, hlp, hpl⟩ :=
+    promptProj_orthogonal_idempotent hff hll hfl hlf
+  simpa [decoderFullOp, fullOperator] using
+    (withoutFact_fullOperator (P_f := P_f) (P_l := P_l)
+      (P_p := promptProj P_f P_l) hll hpp hlf hpf hlp hpl
+      (promptProj_partition P_f P_l))
+
+/-- A86's abstract decoder-mask laws in one certificate: a three-idempotent
+partition, globally selected logic column, forbidden block zeros, closure under
+two decoder layers, and the exact complementary-corner ablation. This is an
+algebraic theorem about the declared ring model only. -/
+theorem archetypeA86_factLogicBypass
+    {P_f P_l F L Q F₁ L₁ Q₁ F₂ L₂ Q₂ : B}
+    (hff : P_f * P_f = P_f) (hll : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0) :
+    let P_p := promptProj P_f P_l
+    P_f + P_l + P_p = 1 ∧
+    P_p * P_p = P_p ∧
+    P_f * P_p = 0 ∧ P_p * P_f = 0 ∧
+    P_l * P_p = 0 ∧ P_p * P_l = 0 ∧
+    decoderFullOp P_f P_l F L Q * P_l = L * P_l ∧
+    P_l * decoderFullOp P_f P_l F L Q * P_f = 0 ∧
+    P_l * decoderFullOp P_f P_l F L Q * P_p = 0 ∧
+    P_f * decoderFullOp P_f P_l F L Q * P_p = 0 ∧
+    P_p * decoderFullOp P_f P_l F L Q * P_f = 0 ∧
+    decoderFullOp P_f P_l F₁ L₁ Q₁ * decoderFullOp P_f P_l F₂ L₂ Q₂ =
+      decoderFullOp P_f P_l
+        (F₁ * P_f * F₂)
+        (P_f * F₁ * P_f * L₂ + L₁ * P_l * L₂ + P_p * Q₁ * P_p * L₂)
+        (Q₁ * P_p * Q₂) ∧
+    withoutFact P_f (decoderFullOp P_f P_l F L Q) =
+      decoderFullOp P_f P_l 0 ((1 - P_f) * L) Q := by
+  dsimp
+  obtain ⟨hpp, hfp, hpf, hlp, hpl⟩ :=
+    promptProj_orthogonal_idempotent hff hll hfl hlf
+  obtain ⟨hrowFact, hrowPrompt, hfactPrompt, hpromptFact⟩ :=
+    decoderFullOp_mask_zeros hff hll hfl hlf
+  exact ⟨promptProj_partition P_f P_l, hpp, hfp, hpf, hlp, hpl,
+    decoderFullOp_logic_column hff hll hfl hlf,
+    hrowFact, hrowPrompt, hfactPrompt, hpromptFact,
+    decoderFullOp_mul hff hll hfl hlf,
+    decoderFullOp_withoutFact hff hll hfl hlf⟩
 
 /-- Ablation annihilates a fact-corner operator supported by a nonzero
 idempotent. This is the exact algebraic loss statement; it does not identify

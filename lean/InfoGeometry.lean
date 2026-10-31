@@ -7924,6 +7924,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicBridge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSet
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSetAudit
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity
+import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
 import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks
 import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocksAudit

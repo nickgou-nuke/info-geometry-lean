@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 InfoGeometry/Geometry/EntanglementGeometry.lean
 
 Finite ER-incidence, monogamous pairing, and constructive witness complexity.
@@ -14,6 +20,42 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 noncomputable section
 
 namespace InfoGeometry.Geometry.EntanglementGeometry
+
+/-! ## 0. Relation data alone does not imply monogamy -/
+
+/-- The undirected three-vertex star: vertex `0` is related to each other
+vertex, while the two leaves are distinct. -/
+def starAdjacent (i j : Fin 3) : Prop :=
+  (i = 0 ∧ j ≠ 0) ∨ (j = 0 ∧ i ≠ 0)
+
+/-- The finite star relation is symmetric. -/
+theorem starAdjacent_symmetric {i j : Fin 3}
+    (h : starAdjacent i j) : starAdjacent j i := by
+  rcases h with h | h
+  · exact Or.inr ⟨h.1, h.2⟩
+  · exact Or.inl ⟨h.1, h.2⟩
+
+/-- The finite star relation has no self-loops. -/
+theorem starAdjacent_irreflexive (i : Fin 3) : ¬ starAdjacent i i := by
+  intro h
+  rcases h with ⟨_, hn⟩ | ⟨_, hn⟩
+  · exact hn rfl
+  · exact hn rfl
+
+/-- Symmetry and irreflexivity do not force a relation to be monogamous:
+vertex `0` is related to both `1` and `2`. -/
+theorem symmetric_irreflexive_relation_need_not_be_monogamous :
+    (∀ i j : Fin 3, starAdjacent i j → starAdjacent j i) ∧
+    (∀ i : Fin 3, ¬ starAdjacent i i) ∧
+    ∃ a b c : Fin 3, starAdjacent a b ∧ starAdjacent a c ∧ b ≠ c := by
+  refine ⟨?_, ?_, ⟨0, 1, 2, ?_, ?_, ?_⟩⟩
+  · intro i j h
+    exact starAdjacent_symmetric h
+  · intro i
+    exact starAdjacent_irreflexive i
+  · exact Or.inl ⟨rfl, by decide⟩
+  · exact Or.inl ⟨rfl, by decide⟩
+  · decide
 
 /-! ## 1. Monogamous maximal entanglement -/
 

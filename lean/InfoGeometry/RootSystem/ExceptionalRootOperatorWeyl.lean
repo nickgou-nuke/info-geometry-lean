@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import InfoGeometry.Cantor.PermutationOperator
 import InfoGeometry.RootSystem.ExceptionalRootLatticeWeyl
 
 /-!
@@ -19,6 +20,8 @@ noncomputable section
 namespace InfoGeometry.RootSystem.Exceptional
 
 open InfoGeometry.Exceptional.CFSGPort.Chevalley
+open InfoGeometry.Cantor.PermutationOperator
+open InfoGeometry.Cantor.CantorRandomWalk
 
 /-- The operator on root-lattice functions induced by a Weyl symmetry. -/
 def rootWeylOperator (τ : Tag) (w : rootLatticeWeylGroup τ) :
@@ -108,5 +111,22 @@ theorem simpleReflectionOperator_mem_rootOperatorWeylGroup
       Subgroup.subset_closure ⟨i, rfl⟩⟩ ∈ rootOperatorWeylGroup τ := by
   rw [rootOperatorWeylGroup, Subgroup.mem_map]
   exact ⟨⟨simpleReflection τ i, Subgroup.subset_closure ⟨i, rfl⟩⟩, trivial, rfl⟩
+
+/-- The exceptional Weyl action on binary Cantor words represented by units
+in the endomorphism algebra of real-valued Cantor-word functions. This uses
+the shared inverse-reindexing representation. -/
+def cantorWordOperatorUnitRep (τ : Tag) : rootLatticeWeylGroup τ →*
+    (Module.End ℝ (CantorWord → ℝ))ˣ :=
+  operatorUnitRep (X := CantorWord) (R := ℝ) |>.comp (cantorWordPermRep τ)
+
+theorem cantorWordOperatorUnitRep_injective (τ : Tag) :
+    Function.Injective (cantorWordOperatorUnitRep τ) := by
+  exact (operatorUnitRep_injective (X := CantorWord) (R := ℝ)).comp
+    (cantorWordPermRep_injective τ)
+
+/-- The exceptional Weyl subgroup on Cantor-word real function operators. -/
+def cantorWordOperatorGroup (τ : Tag) :
+    Subgroup (Module.End ℝ (CantorWord → ℝ))ˣ :=
+  (⊤ : Subgroup (rootLatticeWeylGroup τ)).map (cantorWordOperatorUnitRep τ)
 
 end InfoGeometry.RootSystem.Exceptional

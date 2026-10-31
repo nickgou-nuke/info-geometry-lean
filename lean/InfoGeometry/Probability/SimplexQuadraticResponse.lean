@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
@@ -56,6 +62,34 @@ theorem response_reflection (C B x : ℝ) (hB : B ≠ 0) :
   unfold response
   field_simp
   ring
+
+/-- Exact fibers of the quadratic response: equal outputs come either from
+equal inputs or from the reflection symmetry about `C / (2 * B)`. This
+factorization remains valid when either coefficient vanishes. -/
+theorem response_eq_iff (C B x y : ℝ) :
+    response C B x = response C B y ↔ x = y ∨ B * (x + y) = C := by
+  unfold response
+  have hfactor :
+      (C * x - B * x ^ 2) - (C * y - B * y ^ 2) =
+        (x - y) * (C - B * (x + y)) := by
+    ring
+  constructor
+  · intro heq
+    have hzero : (C * x - B * x ^ 2) - (C * y - B * y ^ 2) = 0 :=
+      sub_eq_zero.mpr heq
+    rw [hfactor] at hzero
+    rcases mul_eq_zero.mp hzero with hxy | hsum
+    · left
+      exact sub_eq_zero.mp hxy
+    · right
+      linarith
+  · rintro (hxy | hsum)
+    · subst y
+      rfl
+    · apply sub_eq_zero.mp
+      rw [hfactor]
+      have hzero : C - B * (x + y) = 0 := by linarith
+      simp [hzero]
 
 /-- Weighted variance of the binary values zero and one. -/
 theorem binary_variance (p : ℝ) :

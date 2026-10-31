@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Colimit.DirectLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -16,8 +22,8 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
 2. **Injective Inclusion Preservation Theorem**:
    Proves that if each transition bonding homomorphism `bond n : Stage n →+* Stage (n + 1)` is injective, then the canonical inclusion map into the colimit `directLimitOf bond n` is strictly injective.
 
-3. **Kernel Zero-Mode Protection in Colimit**:
-   Proves that if $v \in \text{Stage } n$ is a non-trivial zero-mode ($v \neq 0$), then its canonical image $v_\infty = \text{directLimitOf bond } n \, v$ in the direct limit colimit is topologically protected and cannot vanish ($v_\infty \neq 0$).
+3. **Algebraic Kernel Preservation in the Direct Limit**:
+   Proves that if $v \in \text{Stage } n$ is nonzero, then its canonical image in the algebraic direct limit remains nonzero under injective bonding maps.
 -/
 
 noncomputable section

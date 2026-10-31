@@ -3,6 +3,12 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Core.JordanAssociatorRing
 
 /-! Exact scopes for the proposed triple formula, on the original associative
@@ -37,5 +43,19 @@ theorem proposed_triple_unit_middle_iff (x z : R) (y : Rˣ) :
     exact sub_eq_zero.mp hc
   · intro h
     rw [h.eq, sub_self, zero_mul]
+
+/-- Any noncommuting endpoint pair gives a concrete failure witness for the
+proposed triple formula: the unit is a middle input for which the formula
+cannot hold. -/
+theorem proposed_triple_formula_fails_at_one_of_noncommuting
+    (x z : R) (h : z * x ≠ x * z) :
+    ((x * (1 : R)) * z + z * (x * (1 : R)) -
+        (x * (z * (1 : R)) - (z * (1 : R)) * x)) ≠
+      x * (1 : R) * z + z * (1 : R) * x := by
+  intro hFormula
+  have hObs :=
+    (proposed_triple_formula_iff_obstruction_vanishes x (1 : R) z).mp hFormula
+  have hComm : z * x - x * z = 0 := by simpa using hObs
+  exact h (sub_eq_zero.mp hComm)
 
 end InfoGeometry.Core.JordanAssociator

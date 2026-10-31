@@ -20,3 +20,4 @@ claim that a particular analytic function has or lacks the period.
 #print axioms InfoGeometry.Topology.KleinXiAutomorphyObstructionBridge.affineGlide_square
 #print axioms InfoGeometry.Topology.KleinXiAutomorphyObstructionBridge.scalarGlideInvariant_implies_vertical_periodicity
 #print axioms InfoGeometry.Topology.KleinXiAutomorphyObstructionBridge.scalarGlideInvariant_implies_vertical_periodicity_on_core
+#print axioms InfoGeometry.Topology.KleinXiAutomorphyObstructionBridge.verticalCoordinate_not_scalarGlideInvariant

@@ -8,6 +8,7 @@ import InfoGeometry.Cantor.CantorRandomWalk
 import InfoGeometry.Cantor.CliffordMarkovOperators
 import InfoGeometry.Cantor.CliffordSymmetryGroup
 import InfoGeometry.Cantor.CliffordMarkovDefect
+import InfoGeometry.Cantor.PermutationOperator
 import InfoGeometry.Cantor.SimpleCantorPermutationGroup
 import InfoGeometry.Cantor.SimpleCantorFiniteModeBridge
 import InfoGeometry.Cantor.SimpleCantorOperatorGroup

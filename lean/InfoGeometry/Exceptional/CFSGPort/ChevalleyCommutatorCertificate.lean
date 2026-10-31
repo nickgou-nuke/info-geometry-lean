@@ -111,14 +111,16 @@ theorem walkPair_root_spec (htab : tabCheck τ = true) (w : List (Fin τ.rank))
 @[expose] def repPair (rs : List (ℕ × ℕ × List Factor)) (r : ℕ) : ℕ × ℕ :=
   ((rs.getD r (0, 0, [])).1, (rs.getD r (0, 0, [])).2.1)
 
-@[expose] def coverCheck (τ : Tag) : Bool :=
-  let rs := reps τ
-  let cs := cover τ
+@[expose] def coverCheck (τ : Tag) (rs : List (ℕ × ℕ × List Factor))
+    (cs : List ℕ) : Bool :=
   cs.map coverPair == neededPairs τ &&
     cs.all fun e => Nat.blt (coverRep e) rs.length &&
       walkPair τ (decodeWord τ 64 (coverWord e)) (repPair rs (coverRep e)) == coverPair e
 
-theorem exceptional_coverCheck (τ : Tag) : coverCheck τ = true := by
+@[expose] def repsCheck (τ : Tag) (rs : List (ℕ × ℕ × List Factor)) : Bool :=
+  rs.all fun r => repCheck τ r.1 r.2.1 r.2.2
+
+theorem exceptional_coverCheck (τ : Tag) : coverCheck τ (reps τ) (cover τ) = true := by
   cases τ <;> decide +kernel
 
 theorem f4_repsCheck :
@@ -156,6 +158,16 @@ theorem g2_polynomialCheck :
 theorem g2_repsCheck :
     g2Reps.all (fun r => repCheck .G2 r.1 r.2.1 r.2.2) = true := by
   decide +kernel
+
+theorem exceptional_repsCheck (τ : Tag) :
+    repsCheck τ (reps τ) = true := by
+  cases τ with
+  | G2 => simpa only [reps, repsCheck] using g2_repsCheck
+  | F4 => simpa only [reps, repsCheck] using f4_repsCheck
+  | D4 => simpa only [reps, repsCheck] using d4_repsCheck
+  | E6 => simpa only [reps, repsCheck] using e6_repsCheck
+  | E7 => simpa only [reps, repsCheck] using e7_repsCheck
+  | E8 => simpa only [reps, repsCheck] using e8_repsCheck
 
 theorem operator_polynomial_commutation_of_repCheck {τ : Tag} {a b : ℕ}
     {fs : List Factor} (hrep : repCheck τ a b fs = true)

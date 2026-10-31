@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSourceBridge
@@ -127,6 +133,22 @@ theorem gaugeObstruction_eq_zero_of_commute
     gaugeObstruction (E := E) gauge observable = 0 := by
   unfold gaugeObstruction
   exact sub_eq_zero.mpr hcomm.eq
+
+/-- The gauge obstruction vanishes exactly when analyzer and observable
+commute. -/
+@[rep_depth transport, simp]
+theorem gaugeObstruction_eq_zero_iff_commute
+    (gauge : SpectroscopicGaugeData (E := E))
+    (observable : EndH) :
+    gaugeObstruction (E := E) gauge observable = 0
+      ↔ Commute gauge.chiralAnalyzer observable := by
+  change gauge.chiralAnalyzer * observable - observable * gauge.chiralAnalyzer = 0
+    ↔ Commute gauge.chiralAnalyzer observable
+  constructor
+  · intro h
+    exact sub_eq_zero.mp h
+  · intro h
+    exact sub_eq_zero.mpr h
 
 /-- Symmetric part is reciprocal; skew part flips sign under channel swap. -/
 @[rep_depth transport]

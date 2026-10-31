@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -46,5 +52,12 @@ theorem matrixEmbedId_law (n : ℕ) : matrixEmbedId n = StarAlgHom.id ℂ (Matri
 theorem matrixStage_cuntz_obstruction {n : ℕ} (hn : 0 < n)
     (C : CuntzAlgebra.Cuntz2Isometries (Matrix (Fin n) (Fin n) ℂ)) : False := by
   exact no_cuntz2_matrix hn C
+
+/-- No stage of the concrete `2^k × 2^k` matrix tower carries a Cuntz `O₂`
+family. This specializes the trace obstruction to the advertised tower. -/
+theorem concreteMatrixStage_cuntz_obstruction (k : ℕ)
+    (C : CuntzAlgebra.Cuntz2Isometries (MatrixStage k)) : False := by
+  apply matrixStage_cuntz_obstruction (n := 2 ^ k) (by positivity)
+  exact C
 
 end InfoGeometry.Canonical.MatrixCuntzStarTower

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
@@ -438,6 +444,30 @@ theorem ofStage_bond
   let b : MDPASJMStageCarrier Op := { stage := n, value := x }
   change Relation.EqvGen (OneStep T) a b
   exact Relation.EqvGen.rel a b (OneStep.bond (T := T) n x)
+
+/-- If a bonding map identifies two elements at one stage, their canonical
+images in the quotient carrier are identified as well. Thus injectivity of
+stage maps is not automatic for this set-level quotient construction. -/
+theorem ofStage_eq_of_bond_eq
+    (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual)
+    (n : ℕ) (x y : Op) (h : T.bond n x = T.bond n y) :
+    ofStage T n x = ofStage T n y := by
+  calc
+    ofStage T n x = ofStage T (n + 1) (T.bond n x) :=
+      (ofStage_bond T n x).symm
+    _ = ofStage T (n + 1) (T.bond n y) := congrArg (ofStage T (n + 1)) h
+    _ = ofStage T n y := ofStage_bond T n y
+
+/-- A noninjective bond forces the corresponding canonical stage map to be
+noninjective. This is the exact obstruction to treating that map as an
+embedding without an additional hypothesis. -/
+theorem ofStage_not_injective_of_bond_not_injective
+    (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual)
+    (n : ℕ) (x y : Op) (hxy : x ≠ y)
+    (h : T.bond n x = T.bond n y) :
+    ¬ Function.Injective (ofStage T n) := by
+  intro hinj
+  exact hxy (hinj (ofStage_eq_of_bond_eq T n x y h))
 
 /--
 Recursor for maps out of the direct-limit carrier.

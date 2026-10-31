@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Topology.ZetaCenteredCoordinateBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -101,5 +107,16 @@ theorem scalarGlideInvariant_implies_vertical_periodicity_on_core
     T F hF (criticalCore τ)
   simpa [affineVerticalTranslation, criticalCore, add_assoc,
     add_left_comm, add_comm] using h
+
+/-- The vertical coordinate is an explicit scalar obstruction to glide
+invariance whenever the glide parameter is nonzero. Thus the periodicity
+consequence above is a genuine restriction, not merely a formal identity. -/
+theorem verticalCoordinate_not_scalarGlideInvariant
+    (T : ℝ) (hT : T ≠ 0) :
+    ¬ ScalarGlideInvariant T (fun p : ZetaFlowPoint => p.tau) := by
+  intro h
+  have h0 := h (criticalCore 0)
+  simp [affineGlide, criticalCore] at h0
+  exact hT h0
 
 end InfoGeometry.Topology.KleinXiAutomorphyObstructionBridge

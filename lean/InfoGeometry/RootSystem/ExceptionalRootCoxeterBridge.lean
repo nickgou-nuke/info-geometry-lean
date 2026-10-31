@@ -367,5 +367,67 @@ theorem exceptionalTypeE_CoxeterToOperatorWeyl_surjective (τ : Tag)
   rw [hg]
   exact hw
 
+/-- The same E-type Coxeter presentations map onto the faithful Cantor-word
+operator images of the root-lattice Weyl groups. The construction reuses the
+existing root-lattice Coxeter map and the shared permutation-operator
+representation. -/
+noncomputable def simplyLacedCoxeterToCantorWordOperatorWeyl (τ : Tag)
+    (hdiag : ∀ i : Fin τ.rank, τ.cartan i i = 2)
+    (hsymm : ∀ i j : Fin τ.rank, τ.cartan i j = τ.cartan j i)
+    (hoff : ∀ i j : Fin τ.rank, i ≠ j →
+      τ.cartan i j = 0 ∨ τ.cartan i j = -1) :
+    (simplyLacedCoxeterMatrix τ).Group →*
+      ↥(cantorWordOperatorGroup τ) where
+  toFun g := ⟨cantorWordOperatorUnitRep τ
+    (simplyLacedCoxeterToWeyl τ hdiag hsymm hoff g), by
+      rw [cantorWordOperatorGroup, Subgroup.mem_map]
+      exact ⟨simplyLacedCoxeterToWeyl τ hdiag hsymm hoff g, trivial, rfl⟩⟩
+  map_one' := by apply Subtype.ext; simp
+  map_mul' g h := by apply Subtype.ext; simp
+
+@[simp] theorem simplyLacedCoxeterToCantorWordOperatorWeyl_simple
+    (τ : Tag) (hdiag : ∀ i : Fin τ.rank, τ.cartan i i = 2)
+    (hsymm : ∀ i j : Fin τ.rank, τ.cartan i j = τ.cartan j i)
+    (hoff : ∀ i j : Fin τ.rank, i ≠ j →
+      τ.cartan i j = 0 ∨ τ.cartan i j = -1) (i : Fin τ.rank) :
+    (simplyLacedCoxeterToCantorWordOperatorWeyl τ hdiag hsymm hoff
+      ((simplyLacedCoxeterMatrix τ).simple i) :
+        ↥(cantorWordOperatorGroup τ)).1 =
+      cantorWordOperatorUnitRep τ
+        ⟨simpleReflection τ i, Subgroup.subset_closure ⟨i, rfl⟩⟩ := by
+  simp [simplyLacedCoxeterToCantorWordOperatorWeyl, simplyLacedCoxeterToWeyl_simple]
+
+/-- For E₆, E₇, and E₈, the abstract Coxeter group surjects onto the
+faithful noncommutative Cantor-word operator image of the concrete
+root-lattice Weyl group. -/
+theorem exceptionalTypeE_CoxeterToCantorWordOperatorWeyl_surjective (τ : Tag)
+    (hτ : τ = .E6 ∨ τ = .E7 ∨ τ = .E8) :
+    Function.Surjective
+      (simplyLacedCoxeterToCantorWordOperatorWeyl τ
+        (fun i => Tag.cartan_self τ i)
+        (fun i j => by
+          rcases hτ with rfl | rfl | rfl
+          · exact cartanE_symmetric 6 i j
+          · exact cartanE_symmetric 7 i j
+          · exact cartanE_symmetric 8 i j)
+        (fun i j hij => by
+          rcases hτ with rfl | rfl | rfl
+          · exact cartanE_off_diagonal 6 i j hij
+          · exact cartanE_off_diagonal 7 i j hij
+          · exact cartanE_off_diagonal 8 i j hij)) := by
+  intro U
+  have hU := U.property
+  change U.1 ∈ (⊤ : Subgroup (rootLatticeWeylGroup τ)).map
+    (cantorWordOperatorUnitRep τ) at hU
+  rw [Subgroup.mem_map] at hU
+  obtain ⟨w, -, hw⟩ := hU
+  obtain ⟨g, hg⟩ := exceptionalTypeE_CoxeterToWeyl_surjective τ hτ w
+  refine ⟨g, ?_⟩
+  apply Subtype.ext
+  change cantorWordOperatorUnitRep τ
+      (simplyLacedCoxeterToWeyl τ _ _ _ g) = U.1
+  rw [hg]
+  exact hw
+
 
 end InfoGeometry.RootSystem.Exceptional

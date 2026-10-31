@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
@@ -13,7 +19,6 @@ product formula can be inverted one coupling at a time by dividing `Delta 1` by 
 later levels by dividing consecutive ladder values. -/
 theorem paper_conclusion_principal_shadow_mismatch_ladder_jacobi_coupling_inversion
     (u0 : ℝ) (Delta alpha : ℕ → ℝ) (hu0 : u0 ≠ 0) (halpha : ∀ n ≥ 1, 0 < alpha n)
-    (hDelta0 : Delta 0 = u0)
     (hDelta : ∀ n ≥ 1, Delta n = u0 * Finset.prod (Finset.Icc 1 n) (fun i => (alpha i)^2)) :
     alpha 1 ^ 2 = Delta 1 / u0 ∧ ∀ n ≥ 2, alpha n ^ 2 = Delta n / Delta (n - 1) := by
   have hDelta1 : Delta 1 = u0 * alpha 1 ^ 2 := by

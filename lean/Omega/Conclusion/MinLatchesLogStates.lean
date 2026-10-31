@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
@@ -11,6 +17,29 @@ We verify the clog₂ seed values and the encoding bound.
 -/
 
 namespace Omega.Conclusion.MinLatchesLogStates
+
+/-! ## General binary encoding theorem
+
+The finite seed checks below verify examples only.  The following statements give the
+general arithmetic characterization of the least number of binary digits needed to encode
+`n` states.  They do not assert a circuit-realization theorem.
+-/
+
+/-- `Nat.clog 2 n` is at most `m` exactly when `n` states fit in `m` binary digits. -/
+theorem binary_encoding_iff_clog_bound (n m : ℕ) :
+    Nat.clog 2 n ≤ m ↔ n ≤ 2 ^ m :=
+  Nat.clog_le_iff_le_pow (by decide : 1 < 2)
+
+/-- The ceiling binary logarithm is the least exponent whose power of two accommodates `n`. -/
+theorem binary_encoding_minimality (n : ℕ) :
+    n ≤ 2 ^ Nat.clog 2 n ∧
+      ∀ m, m < Nat.clog 2 n → ¬ n ≤ 2 ^ m := by
+  constructor
+  · exact (binary_encoding_iff_clog_bound n (Nat.clog 2 n)).mp le_rfl
+  · intro m hm hfits
+    have hlog : Nat.clog 2 n ≤ m :=
+      (binary_encoding_iff_clog_bound n m).mpr hfits
+    omega
 
 /-! ## Seed values for Nat.clog 2 -/
 

@@ -88,6 +88,25 @@ theorem isRoot_smul_single_iff {τ : Tag} (i : Fin τ.rank) (m : ℤ) :
   · simpa using isRoot_single τ i
   · simpa using isRoot_neg_single τ i
 
+/-- A root supported on only one simple coordinate is one of the two simple
+roots on that coordinate. This ports the support lemma used by the external
+Curtis--Tits root-group datum proof. -/
+theorem eq_single_or_neg_of_support {τ : Tag} {γ : Fin τ.rank → ℤ}
+    (hγ : IsRoot τ γ) {i : Fin τ.rank}
+    (h : ∀ k, k ≠ i → γ k = 0) :
+    γ = Pi.single i 1 ∨ γ = -Pi.single i 1 := by
+  have e : γ = γ i • Pi.single i 1 := by
+    ext k
+    by_cases hk : k = i
+    · subst hk
+      simp
+    · simp [h k hk, Pi.single_eq_of_ne hk]
+  rcases hγ.eq_one_or_neg_one_of_eq_smul e with h1 | h1
+  · left
+    rw [e, h1, one_smul]
+  · right
+    rw [e, h1, neg_one_smul]
+
 theorem single_ne_neg_single {τ : Tag} (i : Fin τ.rank) :
     (Pi.single i 1 : Fin τ.rank → ℤ) ≠ -Pi.single i 1 := by
   intro h

@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Cantor.CantorRandomWalk
+import InfoGeometry.Cantor.PermutationOperator
 import InfoGeometry.RootSystem.D4BitConfigurationAction
 
 /-!
@@ -22,6 +23,7 @@ noncomputable section
 namespace InfoGeometry.RootSystem.D4
 
 open InfoGeometry.Cantor.CantorRandomWalk
+open InfoGeometry.Cantor.PermutationOperator
 
 /-- Integer multiples of one simple root give an injective sequence in D₄. -/
 def natToLattice (n : ℕ) : Lattice := (n : ℤ) • simpleRootLattice 0
@@ -70,53 +72,25 @@ def cantorWordWeylGroup : Subgroup (Equiv.Perm CantorWord) :=
 /-- The D₄ Cantor-word permutation acts on real-valued Cantor-word states
 by inverse reindexing. -/
 def cantorWordOperator (g : d4WeylGroup) :
-    Module.End ℝ (CantorWord → ℝ) where
-  toFun f w := f ((cantorWordPermRep g)⁻¹ w)
-  map_add' f h := by funext w; rfl
-  map_smul' c f := by funext w; rfl
+    Module.End ℝ (CantorWord → ℝ) :=
+  operator (R := ℝ) (cantorWordPermRep g)
 
 /-- Package the Cantor-word action as an invertible linear operator. -/
 def cantorWordOperatorUnit (g : d4WeylGroup) :
-    (Module.End ℝ (CantorWord → ℝ))ˣ where
-  val := cantorWordOperator g
-  inv := cantorWordOperator g⁻¹
-  val_inv := by ext f w; simp [cantorWordOperator]
-  inv_val := by ext f w; simp [cantorWordOperator]
+    (Module.End ℝ (CantorWord → ℝ))ˣ :=
+  operatorUnit (R := ℝ) (cantorWordPermRep g)
 
 /-- The D₄ Weyl group represented by invertible operators on real-valued
 Cantor-word states. -/
 def cantorWordOperatorUnitRep : d4WeylGroup →*
-    (Module.End ℝ (CantorWord → ℝ))ˣ where
-  toFun := cantorWordOperatorUnit
-  map_one' := by apply Units.ext; ext f w; simp [cantorWordOperatorUnit,
-    cantorWordOperator]
-  map_mul' g h := by apply Units.ext; ext f w; simp [cantorWordOperatorUnit,
-    cantorWordOperator]
+    (Module.End ℝ (CantorWord → ℝ))ˣ :=
+  operatorUnitRep (X := CantorWord) (R := ℝ) |>.comp cantorWordPermRep
 
 /-- Function probes make the Cantor-word operator representation faithful. -/
 theorem cantorWordOperatorUnitRep_injective :
     Function.Injective cantorWordOperatorUnitRep := by
-  classical
-  intro g h he
-  have hop : cantorWordOperator g = cantorWordOperator h :=
-    congrArg Units.val he
-  have hinv : (cantorWordPermRep g)⁻¹ = (cantorWordPermRep h)⁻¹ := by
-    apply Equiv.ext
-    intro w
-    let gw := ((cantorWordPermRep g)⁻¹ w)
-    let hw := ((cantorWordPermRep h)⁻¹ w)
-    let δ : CantorWord → ℝ := fun z => if z = gw then 1 else 0
-    have hev := congrArg (fun T : Module.End ℝ (CantorWord → ℝ) => T δ w) hop
-    change δ gw = δ hw at hev
-    have hargs : hw = gw := by
-      by_cases hh : hw = gw
-      · exact hh
-      · simp [δ, gw, hw] at hev
-        exact False.elim (hh hev)
-    change gw = hw
-    exact hargs.symm
-  apply cantorWordPermRep_injective
-  exact inv_injective hinv
+  exact (operatorUnitRep_injective (X := CantorWord) (R := ℝ)).comp
+    cantorWordPermRep_injective
 
 /-- The D₄ Cantor-word Weyl group as an actual subgroup of invertible
 operators on the real state-function module. -/

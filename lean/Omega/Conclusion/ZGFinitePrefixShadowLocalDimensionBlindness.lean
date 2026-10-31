@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
+import Omega.Conclusion.FiniteObservationCollisionObstruction
 
 namespace Omega.Conclusion
 
@@ -55,15 +62,20 @@ theorem paper_conclusion_zg_finite_prefix_shadow_local_dimension_blindness
   refine ⟨?_, ?_⟩
   · intro hΦ
     rcases hΦ with ⟨Φ, hΦ⟩
-    have hα₀ : D.alpha₀ = Φ D.baseCertificate := by
-      simpa [D.realize_certificate, D.realize_localDimension] using
-        hΦ (D.realize D.baseCertificate D.baseShadow D.alpha₀)
-          (D.realize_defined D.baseCertificate D.baseShadow D.alpha₀)
-    have hα₁ : D.alpha₁ = Φ D.baseCertificate := by
-      simpa [D.realize_certificate, D.realize_localDimension] using
-        hΦ (D.realize D.baseCertificate D.baseShadow D.alpha₁)
-          (D.realize_defined D.baseCertificate D.baseShadow D.alpha₁)
-    exact D.alpha_ne (hα₀.trans hα₁.symm)
+    have hcertificate :
+        D.certificate (D.realize D.baseCertificate D.baseShadow D.alpha₀) =
+          D.certificate (D.realize D.baseCertificate D.baseShadow D.alpha₁) := by
+      simp only [D.realize_certificate]
+    have hvalues :
+        D.localDimension (D.realize D.baseCertificate D.baseShadow D.alpha₀) ≠
+          D.localDimension (D.realize D.baseCertificate D.baseShadow D.alpha₁) := by
+      simp only [D.realize_localDimension]
+      exact D.alpha_ne
+    exact no_valid_decoder_of_observation_collision D.certificate D.localDimension
+      D.localDimensionDefined
+      (D.realize_defined D.baseCertificate D.baseShadow D.alpha₀)
+      (D.realize_defined D.baseCertificate D.baseShadow D.alpha₁)
+      hcertificate hvalues ⟨Φ, hΦ⟩
   · intro C η α
     refine ⟨D.realize C η α, ?_, D.realize_localDimension C η α⟩
     simp [ZGFinitePrefixShadowLocalDimensionBlindnessData.certificateAtom,

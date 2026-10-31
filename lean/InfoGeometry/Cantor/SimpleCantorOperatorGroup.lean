@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Cantor.SimpleCantorPermutationGroup
 import InfoGeometry.Cantor.SimpleCantorFiniteModeBridge
+import InfoGeometry.Cantor.PermutationOperator
 import OAI.GroupTheory.BooneHigman.Generators
 
 /-!
@@ -25,64 +26,36 @@ open InfoGeometry.Cantor.SimpleCantorPermutationGroup
 open InfoGeometry.Cantor.SimpleCantorFiniteModeBridge
 open InfoGeometry.Cantor.CantorRandomWalk
 open OAI.FiniteAlgebraicEnvelopes.TwistedBrinThompson
+open InfoGeometry.Cantor.PermutationOperator
 
 /-- The permutation operator on functions, using inverse reindexing so
 operator composition agrees with permutation multiplication. -/
-def operator (g : ↥group) : Module.End ℝ (CantorWord → ℝ) where
-  toFun f x := f ((((g : Equiv.Perm CantorWord)⁻¹) x))
-  map_add' f h := by funext x; rfl
-  map_smul' c f := by funext x; rfl
+def operator (g : ↥group) : Module.End ℝ (CantorWord → ℝ) :=
+  InfoGeometry.Cantor.PermutationOperator.operator (R := ℝ)
+    (g : Equiv.Perm CantorWord)
 
 @[simp] theorem operator_apply (g : ↥group) (f : CantorWord → ℝ)
     (x : CantorWord) : operator g f x = f (((g : Equiv.Perm CantorWord)⁻¹) x) := rfl
 
 /-- The simple Cantor group represented in the endomorphism monoid. -/
-def operatorRep : ↥group →* Module.End ℝ (CantorWord → ℝ) where
-  toFun := operator
-  map_one' := by ext f x; rfl
-  map_mul' g h := by ext f x; rfl
+def operatorRep : ↥group →* Module.End ℝ (CantorWord → ℝ) :=
+  InfoGeometry.Cantor.PermutationOperator.operatorRep (R := ℝ) |>.comp group.subtype
 
 /-- The represented permutation, packaged as an invertible operator. -/
-def operatorUnit (g : ↥group) : (Module.End ℝ (CantorWord → ℝ))ˣ where
-  val := operator g
-  inv := operator g⁻¹
-  val_inv := by ext f x; simp [operator]
-  inv_val := by ext f x; simp [operator]
+def operatorUnit (g : ↥group) : (Module.End ℝ (CantorWord → ℝ))ˣ :=
+  InfoGeometry.Cantor.PermutationOperator.operatorUnit (R := ℝ)
+    (g : Equiv.Perm CantorWord)
 
 /-- The operator-unit representation of the simple Cantor group. -/
-def operatorUnitRep : ↥group →* (Module.End ℝ (CantorWord → ℝ))ˣ where
-  toFun := operatorUnit
-  map_one' := by apply Units.ext; ext f x; rfl
-  map_mul' g h := by apply Units.ext; ext f x; rfl
+def operatorUnitRep : ↥group →* (Module.End ℝ (CantorWord → ℝ))ˣ :=
+  InfoGeometry.Cantor.PermutationOperator.operatorUnitRep (X := CantorWord) (R := ℝ) |>.comp
+    group.subtype
 
 /-- Function probes separate distinct Cantor permutations, so the operator
 representation is faithful. -/
 theorem operatorUnitRep_injective : Function.Injective operatorUnitRep := by
-  classical
-  intro g h hgh
-  have hop : operator g = operator h := congrArg Units.val hgh
-  have hinv : ((g : Equiv.Perm CantorWord)⁻¹) =
-      ((h : Equiv.Perm CantorWord)⁻¹) := by
-    apply Equiv.ext
-    intro x
-    let gx := (((g : Equiv.Perm CantorWord)⁻¹) x)
-    let hx := (((h : Equiv.Perm CantorWord)⁻¹) x)
-    let δ : CantorWord → ℝ := fun y => if y = gx then 1 else 0
-    have heval := congrArg (fun T : Module.End ℝ (CantorWord → ℝ) => T δ x) hop
-    change δ gx = δ hx at heval
-    have hargs : hx = gx := by
-      by_cases h : hx = gx
-      · exact h
-      · simp [δ, gx, hx] at heval
-        exact False.elim (h heval)
-    change gx = hx
-    exact hargs.symm
-  apply Subtype.ext
-  apply Equiv.ext
-  intro x
-  have hsymm := congrArg (fun p : Equiv.Perm CantorWord => p x)
-    (congrArg Inv.inv hinv)
-  simpa using hsymm
+  exact (InfoGeometry.Cantor.PermutationOperator.operatorUnitRep_injective
+    (X := CantorWord) (R := ℝ)).comp Subtype.val_injective
 
 /-- The simple Cantor permutation group as an actual subgroup of
 endomorphism units. -/

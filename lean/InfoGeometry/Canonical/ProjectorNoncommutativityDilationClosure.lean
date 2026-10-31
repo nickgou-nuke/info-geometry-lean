@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinInfiniteCore
@@ -171,7 +177,9 @@ theorem anomaly_eq_commutator
 /-! ## Dilation from noncommutativity -/
 
 /--
-Dilation generator DGenerator emerging from non-normality.
+The obstruction operator exposed under the historical name `DGenerator`.
+This alias alone does not construct a dilation or derive one from
+noncommutativity.
 -/
 @[rep_depth transport]
 noncomputable def DGenerator (CI : ConformalInference H) : EndH :=

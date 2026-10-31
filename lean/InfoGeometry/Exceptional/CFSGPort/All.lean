@@ -8,6 +8,7 @@ module
 
 public import InfoGeometry.Exceptional.CFSGPort.ClassicalSimpleFamilyCatalog
 public import InfoGeometry.Exceptional.CFSGPort.QuasisimpleTransport
+public import InfoGeometry.Exceptional.CFSGPort.CoxeterMatsumoto.PositiveLift
 public import InfoGeometry.Exceptional.CFSGPort.RankOneSimplicity
 public import InfoGeometry.Exceptional.CFSGPort.TitsSimplicitySupport
 public import InfoGeometry.Exceptional.CFSGPort.ReeG2SimplicityArithmetic
@@ -23,6 +24,7 @@ public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparseCertificate
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparsePolynomial
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyCommutatorCertificate
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyCommutatorFamily
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyCommutatorGroup
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleySparseWeyl
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyFastWeylTables
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyFastChecks
@@ -32,6 +34,8 @@ public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorFamilyData
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorFamilyBridge
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootOperatorMirror
 public import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootHeightDescent
+public import InfoGeometry.Exceptional.CFSGPort.ChevalleyBraidWalk
+public import InfoGeometry.Exceptional.CFSGPort.OperatorCurtisTitsDatum
 public import InfoGeometry.Exceptional.CFSGPort.ExceptionalModelSimplicity
 public import InfoGeometry.Exceptional.CFSGPort.ExceptionalCartanHelpers
 public import InfoGeometry.Exceptional.CFSGPort.PrimitiveCoprimeSimplicity
@@ -58,7 +62,9 @@ The operator rank-one carriers include their simple-root Weyl and torus
 elements, proved containment of the torus in its rank-one group, and the
 torus-normalizer action on pinned root subgroups. The simple Weyl operator
 also exchanges the positive and negative pinned simple-root subgroups by
-conjugation. The adjoint groups on these root modules have explicit
+conjugation. Their alternating products satisfy the certified Coxeter braid
+relations for types G₂, F₄, D₄, E₆, E₇, and E₈. The adjoint groups on these
+root modules have explicit
 noncommuting pairs of endomorphism units, obtained from the opposite-root
 normalizer-triviality theorem. The generic rank-one
 normal-core simplicity criterion is also ported, but no exceptional model has

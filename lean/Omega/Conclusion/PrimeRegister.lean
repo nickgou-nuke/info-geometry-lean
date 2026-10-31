@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
@@ -25,7 +31,8 @@ def:conclusion-truncated-prime-register -/
     with k axes each bounded by E.
     def:conclusion-truncated-prime-register -/
 theorem truncatedPrimeRegister_card (k E : ℕ) :
-    (E + 1) ^ k = (E + 1) ^ k := rfl
+    Fintype.card (Fin k → Fin (E + 1)) = (E + 1) ^ k := by
+  simp
 
 /-! ## Gödel lift feasibility criterion
 
@@ -273,7 +280,7 @@ theorem paper_conclusion_side_info_length_lower_bound (m M L : ℕ) (hM : 2 ≤ 
   have hM' : 1 < M := by omega
   exact (Nat.clog_le_iff_le_pow hM').2 hpow
 
-private theorem fib_lower_bound (m : Nat) (_hm : 2 ≤ m) :
+private theorem fib_lower_bound (m : Nat) :
     2 ^ (m / 2) ≤ Nat.fib (m + 2) := by
   have h1 : Nat.fib 2 = 1 := by decide
   have h2 : 1 ≤ (2 : Nat) := by omega
@@ -287,7 +294,7 @@ private theorem fib_lower_bound (m : Nat) (_hm : 2 ≤ m) :
 theorem godelLift_binary_width_lower (m : Nat) (hm : 2 ≤ m) :
     m / 2 ≤ Nat.log 2 (Nat.fib (m + 2)) := by
   calc m / 2 = Nat.log 2 (2 ^ (m / 2)) := (Nat.log_pow (by norm_num) (m / 2)).symm
-    _ ≤ Nat.log 2 (Nat.fib (m + 2)) := Nat.log_mono_right (fib_lower_bound m hm)
+    _ ≤ Nat.log 2 (Nat.fib (m + 2)) := Nat.log_mono_right (fib_lower_bound m)
 
 /-- Paper package for divisor-lattice optimal bit scaling.
     thm:conclusion-divisor-lattice-optimal-bit-scaling -/
@@ -521,9 +528,11 @@ theorem godelLift_alphabet_threshold_mge5 {M : ℕ}
 
 /-- Binary auxiliary bits: D ≤ 2^k iff ⌈log₂ D⌉ ≤ k.
     cor:pom-injectivization-binary-auxbits-exact -/
-theorem binaryAuxBits_iff (D k : ℕ) (_hD : 0 < D) :
-    D ≤ 2 ^ k ↔ Nat.clog 2 D ≤ k :=
-  (Nat.clog_le_iff_le_pow (by norm_num : 1 < 2)).symm
+theorem binaryAuxBits_iff (D k : ℕ) (hD : 0 < D) :
+    D ≤ 2 ^ k ↔ Nat.clog 2 D ≤ k := by
+  rcases Nat.eq_zero_or_pos D with hzero | hpos
+  · exact False.elim (by omega)
+  · exact (Nat.clog_le_iff_le_pow (by norm_num : 1 < 2)).symm
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R252: Fibonacci growth bounds
@@ -828,8 +837,7 @@ private theorem godelEncodingFrom_coprime'
     thm:conclusion-godel-semidirect-law -/
 theorem godelEncoding_coprime_of_disjoint
     (primes : ℕ → ℕ) (offset : ℕ) (u v : List ℕ)
-    (hcop : ∀ i j, i ≠ j → Nat.Coprime (primes i) (primes j))
-    (_hp : ∀ i, 0 < primes i) :
+    (hcop : ∀ i j, i ≠ j → Nat.Coprime (primes i) (primes j)) :
     Nat.Coprime (godelEncoding primes offset u)
                 (godelEncoding primes (offset + u.length) v) := by
   simp only [godelEncoding]
@@ -1185,11 +1193,10 @@ theorem godelEncoding_double_cons (primes : ℕ → ℕ) (offset a b : ℕ) (res
     thm:conclusion-godel-semidirect-law -/
 theorem godelEncoding_append_coprime (primes : ℕ → ℕ) (offset : ℕ)
     (u v : List ℕ)
-    (hcop : ∀ i j, i ≠ j → Nat.Coprime (primes i) (primes j))
-    (hp : ∀ i, 0 < primes i) :
+    (hcop : ∀ i j, i ≠ j → Nat.Coprime (primes i) (primes j)) :
     Nat.Coprime (godelEncoding primes offset u)
       (godelEncoding primes (offset + u.length) v) :=
-  godelEncoding_coprime_of_disjoint primes offset u v hcop hp
+  godelEncoding_coprime_of_disjoint primes offset u v hcop
 
 /-- Paper seeds: cons decomposition for 2 and 3 elements.
     thm:conclusion-godel-semidirect-law -/

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import Omega.Conclusion.AffineRegisterBudget
 import Omega.Conclusion.PrimeRegister
@@ -13,7 +19,7 @@ def conclusion_rate_cdim_arithmetic_statement : Prop :=
       (Nat.fib 12 = 144 ∧ Nat.fib 22 = 17711)) ∧
     (0 : ℝ) = 0 ∧
     (∀ {k : ℕ}, 1 ≤ k → (PhaseLedgerBudgetRealizable Real.goldenRatio 0 k ↔ 2 ≤ k)) ∧
-    ∀ k E : ℕ, (E + 1) ^ k = (E + 1) ^ k
+    ∀ k E : ℕ, Fintype.card (Fin k → Fin (E + 1)) = (E + 1) ^ k
 
 /-- Paper label: `prop:conclusion-rate-cdim-arithmetic`. -/
 theorem paper_conclusion_rate_cdim_arithmetic :

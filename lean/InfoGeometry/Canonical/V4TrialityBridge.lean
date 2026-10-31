@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.V4RootSystem
@@ -110,6 +116,22 @@ theorem cocycle_as_triality_obstruction (θ₂ : ℝ) (p : BoundaryCoord) :
   | mk x y =>
       simp [coordSub, boundaryK, boundaryW]
       ring
+
+/-- The affine cocycle defect vanishes exactly at the exceptional translation
+parameter `θ₂ = -π`; the formula alone does not imply a nonzero obstruction
+for every parameter. -/
+theorem cocycle_as_triality_obstruction_eq_zero_iff (θ₂ : ℝ) (p : BoundaryCoord) :
+    coordSub (boundaryK θ₂ (boundaryW p)) (boundaryW (boundaryK θ₂ p)) = 0 ↔
+      θ₂ = -Real.pi := by
+  rw [cocycle_as_triality_obstruction]
+  constructor
+  · intro h
+    have hfst := congrArg Prod.fst h
+    change 2 * θ₂ + 2 * Real.pi = 0 at hfst
+    linarith
+  · intro h
+    rw [h]
+    norm_num
 
 /-- Finite Varlamov/V₄/trifactor statement: the closed content is only tripotent
     classification, the `A₁ × A₁` root action, and a triality-shaped 3-cycle on the

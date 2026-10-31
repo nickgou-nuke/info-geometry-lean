@@ -925,7 +925,7 @@ execution, and a planar/plabic realization are separate integration work,
 not consequences of this numerical export. The bound avoids automatically
 allocating a dense matrix over the entire repository.
 
-TCR-Former intake (2026-10-30): the
+TCR-Former intake (2026-10-30; source rechecked 2026-10-31): the
 [paper](https://arxiv.org/pdf/2610.34094) motivates keeping source facts
 available alongside compressed structural representations. Our existing
 concatenation of source and graph-context vectors serves that limited purpose;
@@ -941,7 +941,11 @@ leakage test before using teacher-forced answer sequences. Neither mask
 interpretation is a kernel-verified theorem about this taxonomy pipeline.
 Keep causal/dependency masking separate from square bistochastic routing:
 a triangular doubly stochastic matrix is the identity, so imposing both on
-one square matrix removes nontrivial routing.
+one square matrix removes nontrivial routing. The source-shaped algebraic
+support owner is `InfoGeometry.Routing.FactLogicBypassAlgebra`: its
+`publishedMaskSupport` operator models the broader row/column pattern and
+proves the prompt-to-fact support block. The original `fullOperator` theorem
+packet remains a distinct restricted pattern and is not the published mask.
 
 `generation_manifest.py` binds the Lean source inventory and exact source
 hashes to the captured InfoTree DNA row fingerprints, current Git HEAD, scanner

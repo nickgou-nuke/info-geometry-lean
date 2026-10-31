@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Topology.Category.TopCat.Limits.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Constructions
@@ -403,6 +409,25 @@ theorem prefixLimitCylinderSet_eq_projection_fiber (n : ℕ) (w : BitWord n) :
     (limit.π prefixDiagram (Opposite.op n)).hom x = w
   rw [prefixLimit_projection_eq_boundaryPrefix]
   rfl
+
+/-- Distinct points of the prefix inverse limit differ at a finite stage.
+This is the projection-level separation criterion underlying cylinder-set
+separation. -/
+theorem prefixLimit_projection_separates {x y : ↑(limit prefixDiagram)}
+    (hxy : x ≠ y) :
+    ∃ n : ℕ,
+      (limit.π prefixDiagram (Opposite.op n)).hom x ≠
+        (limit.π prefixDiagram (Opposite.op n)).hom y := by
+  obtain ⟨n, w, hx, hy⟩ := prefixLimitCylinderSet_separates hxy
+  have hx' : (limit.π prefixDiagram (Opposite.op n)).hom x = w := by
+    rw [prefixLimitCylinderSet_eq_projection_fiber n w] at hx
+    exact hx
+  have hy' : (limit.π prefixDiagram (Opposite.op n)).hom y ≠ w := by
+    rw [prefixLimitCylinderSet_eq_projection_fiber n w] at hy
+    exact hy
+  refine ⟨n, ?_⟩
+  intro hproj
+  exact hy' (hproj.symm.trans hx')
 
 theorem prefixLimitCylinderSet_disjoint {n : ℕ} {w v : BitWord n}
     (h : w ≠ v) :

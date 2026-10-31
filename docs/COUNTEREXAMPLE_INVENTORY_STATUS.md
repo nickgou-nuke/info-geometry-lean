@@ -270,6 +270,16 @@ kernel stability only with image anisotropy or positive symmetry-weighted
 pairing and commutation. Exactness of the separate null complex is proved, but
 indefinite harmonic vectors are not thereby identified with homology.
 
+The bounded test surface is now source-reviewed as well: its `Plane` witness
+confirms the negative norm of a null vector, and its axiom audit covers the
+nondegenerate Krein pairing, self-adjoint null differential, exact complex,
+and contraction. The exact general replacement is
+`KreinHodgeKernelCriterion.hodge_kernel_eq_iff`: for square-zero `d`, the
+Hodge-kernel equality holds iff the range of `d + kreinAdjoint d` is disjoint
+from its kernel. The locked build of
+`InfoGeometry.HodgeCohomology.KreinHodgeDiracBoundedTests` passed (3,292 jobs,
+exit 0); printed declarations depend only on standard foundational axioms.
+
 ## Creation-only vacuum contract: accepted (2026-10-24)
 
 Removed the contradictory Witt pairing interface and the misleading Cartan
@@ -1016,8 +1026,8 @@ theorem. I corrected the docstring and added
 `chiral_obstruction_trace_pos_iff`, the exact criterion
 `0 < trace (chiral_obstruction M) ↔ M 00 > M 11`. The existing equal-positive-
 diagonal witness shows strict positivity cannot be inferred from positivity of
-both entries. This follow-up source edit is staged; its focused build is pending
-the shared Lake build lock.
+both entries. The owner was replayed in the sequential locked build recorded
+below.
 
 The adjacent
 `FreudenthalFiveGradedLegacyJacobiCounterexample` (with the corresponding
@@ -2989,6 +2999,31 @@ not prove a KKS nonclosedness theorem. The focused locked build of
 confirms Lean validity of its propositions, not the octonion/KKS prose
 interpretation. Repository-wide counterexample discovery remains open.
 
+## `External/Auto/NonIsoConf3QuadricCompactification`: conditional disjunction only (2026-10-31)
+
+`compactification_obstruction_synthesis` assumes `hA : singular quadricA` and
+returns the disjunction whose first branch is exactly that assumption. The
+proof is valid, but the file defines no projective carrier, quadratic
+equations, singular-locus predicate, or singular point. The surrounding
+statement that the projective closures are singular is therefore not proved
+by this declaration. Repository search found no Lean consumer establishing
+`hA` or supplying a concrete singularity witness. The canonical statement is
+the existing conditional implication; a geometric singularity claim remains
+unformalized until its carrier and witness are given.
+
+## Entanglement pairing: deterministic partner model versus relation monogamy (2026-10-31)
+
+`Geometry/EntanglementGeometry.AMPS_two_partner_obstruction` is valid because
+`MonogamousPairing` stores a function `partner : Node → Option Node`; equality
+of two `some` outputs gives partner uniqueness. This does not prove a quantum
+monogamy inequality from a state or entanglement measure. Added
+`symmetric_irreflexive_relation_need_not_be_monogamous`: on `Fin 3`, the
+undirected star relation is symmetric and loop-free while node `0` has distinct
+neighbors `1` and `2`. This is the canonical counterexample to deriving
+monogamy from symmetry and irreflexivity alone. The new theorem's Lean check is
+pending behind pre-existing live locked-build session 9439; no concurrent
+build was started.
+
 ## Zorn regular action: CAR holds while multiplication transport fails (2026-10-30)
 
 `Algebra/Zorn/RegularCARVacuumSeparation.lean` separates three carriers that
@@ -4311,6 +4346,25 @@ their Lean statements. It does not independently re-evaluate every prose
 interpretation, prove each countermodel has an adequate canonical replacement,
 or certify the 13,126-row lexical inventory as exhaustive.
 
+## Indefinite Krein-Hodge kernel counterexample (2026-10-31)
+
+The standalone owner `HodgeCohomology.KreinHodgeDiracTests` also compiles as a
+direct target (locked build: 1,693 jobs, exit 0). Its `nullOperator` is
+self-adjoint for a symmetric nondegenerate indefinite pairing and has square
+zero, while its square has full kernel and the operator itself does not. Thus
+`ker(D²) = ker(D)` is false without additional hypotheses, even in the
+square-zero case. Its `hodge_counterexample` additionally exhibits a nonzero
+closed, coclosed vector for the resulting zero Hodge operator.
+
+The canonical replacement is the general theorem
+`KreinHodgeKernelCriterion.hodge_kernel_eq_iff`: for square-zero `d`, equality
+of the Hodge-Laplacian kernel with `ker(d + kreinAdjoint d)` is equivalent to
+disjointness of the range and kernel of `d + kreinAdjoint d`. A proved
+sufficient condition is commutation of a square-zero Krein-self-adjoint
+operator with the positive fundamental symmetry; under those hypotheses the
+operator is zero. These statements retain the bounded operator/Krein-space
+carriers and do not infer a general Hodge theorem from the finite witness.
+
 ## Fixed versus growing period in the local-density obstruction (2026-10-30)
 
 `Omega.Zeta.OperatorFixedKernelLocalDensityObstruction` proves positivity of
@@ -4845,3 +4899,2870 @@ focused locked build of `InfoGeometry.Core.IdempotentGraphGrassmannian` passed
 The additional A₃₅ claims about centrality, Peirce-sheet splitting, and
 invariance remain separate claims: this correction does not certify them or
 the aggregate `PureNonCommutativeOperatorSpine`.
+
+## MDPAS quotient and signed-pullback inventory reconciliation (2026-10-31)
+
+Two inventory labels were checked against their current owner sources. In
+`Physics.MDPASJMSouriauDigest.FiniteMDPASJMDirectSystem`,
+`DirectLimitCarrier` is a quotient type of stage-tagged values, with a
+set-valued lift/universal property; it has no ring operations or algebraic
+colimit structure in that owner. The digest now proves
+`ofStage_eq_of_bond_eq` and
+`ofStage_not_injective_of_bond_not_injective`: any collision under a bond
+descends to the quotient and prevents the corresponding canonical stage map
+from being injective. This is conditional and does not assert that a concrete
+bond in the system is noninjective. The audit target
+`InfoGeometry.Physics.MDPASJMSouriauGlobalObstructionAudit` passed its locked
+build (9,186 jobs); the new declarations report only `[propext,
+Classical.choice, Quot.sound]`.
+
+The lexical inventory marks
+`SuperGrassmannian.SignedPullbackMatrixBoundary` as requiring source audit,
+but its owner and audit already contain the canonical correction. On the
+triple of ring-valued functions, identity signed-pullback invariance is
+equivalent to `∀ x, 2 * f.odd1 x = 0`; in characteristic two every triple is
+invariant. The existing noncommuting `2 × 2` matrix witness over `ZMod 2`
+retains a nonzero middle component and a nonzero commutator, so invariance
+does not imply vanishing or commutativity. The locked build of
+`InfoGeometry.SuperGrassmannian.SignedPullbackMatrixBoundaryAudit` and
+`InfoGeometry.SuperGrassmannian.SuperSheafOddAnnihilationAudit` passed (3,198
+jobs). This is an inventory-status correction, not a new replacement theorem.
+The overall lexical inventory and independent semantic review remain open.
+
+## Quadratic Arnold numerator source-audit reconciliation (2026-10-31)
+
+The inventory marks `External.Auto.NonIsoConf3LogWedgeObstruction` as needing
+source audit, but its canonical replacement is already present in
+`Geometry.QuadraticArnoldNumerator` and `Geometry.QuadraticArnoldVanishing`.
+The owner proves an explicit integer evaluation with common-denominator
+numerator coefficient `52`, refuting the unrestricted literal polynomial
+identity on that witness. More generally, under
+`q4 (sub Y Z) ≠ 0`, the complete numerator vanishes in every coordinate pair
+iff all displacement minors of `sub X Y` and `sub Y Z` vanish. Necessity uses
+the `xx` coefficient formula and nonzero signature factors; sufficiency uses
+the decomposed coordinate formulas and the exact `mixedCore_zero` identity.
+
+Scope is important: the formal carrier is integer `Vec4` data and a polynomial
+numerator. The module does not construct differential forms, a logarithmic
+complex, or a cohomological quotient, so the counterexample is to the encoded
+numerator identity and does not establish a de Rham cohomology result. The
+locked build of `InfoGeometry.External.Auto.NonIsoConf3LogWedgeObstructionAudit`,
+`InfoGeometry.Geometry.QuadraticArnoldNumeratorAudit`, and
+`InfoGeometry.Geometry.QuadraticArnoldVanishingAudit` passed (3,101 jobs).
+Their audited declarations report only standard foundational axioms. This
+reconciles a stale inventory label; no duplicate theorem API was added.
+
+## Krein trace comparison source-audit reconciliation (2026-10-31)
+
+`Modular.KreinPotentialTrace` is marked as requiring source audit in the
+lexical inventory, but the owner already contains both the counterexample and
+the canonical replacement. On the finite doubled matrix carrier
+`Matrix (ι ⊕ ι) (ι ⊕ ι) R`, it proves
+`trace A = superTrace A + 2 * trace (A₂₂)`. For a block matrix
+`Z = fromBlocks A B C D`, the Krein-square correction is exactly
+`2 * (trace (Dᴴ * D) - trace (Bᴴ * B))`; over `ℂ`, equality of ordinary and
+graded traces is therefore equivalent to equality of those two Gram traces.
+The identity matrix at `ι = Fin 1` is a concrete disagreement witness. This
+does not identify Zorn multiplication with matrix multiplication or assert an
+infinite-dimensional trace statement.
+
+The locked build of `InfoGeometry.Modular.KreinPotentialTraceAudit` passed
+(3,094 jobs); all four declarations in that audit report only standard
+foundational axioms. One pre-existing linter warning notes an unused
+`DecidableEq ι` section variable on the generic trace conversion. This
+reconciles another stale inventory label without adding duplicate theorems.
+
+## Freudenthal five-grading/contact replacement reconciliation (2026-10-31)
+
+The inventory marks `Exceptional.FreudenthalSymplecticContactRepresentation`
+for source audit, while its surrounding owners already contain the complete
+counterexample/replacement chain. `legacy_fiveGradedBracket_not_jacobi` has an
+explicit nonzero extreme-charge Jacobi readout. Separately,
+`symplecticRankTwo_mixedTriple_counterexample` refutes the mixed-triple symmetry
+needed by the proposed TKK socket, and `tkk_mixed_jacobi_alpha_beta_alpha_ne_zero`
+locates a nonzero `minus1` Jacobi component for its stated witnesses. These do
+not prove that every homogeneous Jacobi component fails.
+
+The repaired statement is the faithful bracket representation
+`symplecticContactRepresentation_bracket` and its induced
+`symplecticContactLieAlgebra` on the existing five-graded carrier. The
+coefficient refinement in `FreudenthalContactNormalization` computes the
+actual mixed Jacobi defect for parameters `(c,d)` and proves that, when
+`[Nontrivial J]`, universal vanishing is equivalent to `c = 1 ∧ d = -2`.
+Fixing either standard coefficient gives the corresponding iff even without
+that nontriviality assumption. No identification with an exceptional simple
+Lie algebra or universal Jacobi theorem for the old bracket is inferred.
+
+The locked builds of `InfoGeometry.Exceptional.FreudenthalCounterexampleAudit`
+and `InfoGeometry.Exceptional.FreudenthalSymplecticContactAudit` passed
+(8,968 jobs). Their audited declarations report only standard foundational
+axioms. This reconciles an inventory label and records the boundary between
+the obstructed bracket and its corrected contact Lie algebra; no duplicate
+theorem API was needed.
+
+## Cobalt angular-model counterexample and dependency-poset audit (2026-10-31)
+
+The `Physics.CobaltAsymmetryDependency` inventory row is marked for source
+audit, but its paired mathematical owner and executable tests already make the
+counterexample and corrections explicit. For
+`gammaAngularModel amplitude anisotropy angle = amplitude^2 - anisotropy *
+sin(angle)^2`, nonzero anisotropy gives anisotropy while
+`sin(pi-angle) = sin(angle)` gives reflection invariance; the owner also proves
+a concrete nonnegative anisotropic invariant instance. Thus anisotropy alone
+does not imply reflection violation. In contrast,
+`beta_reflection_invariant_iff` proves that the beta model is reflection
+invariant exactly when its alignment parameter is zero.
+
+The owner further proves exact parameter domains:
+`betaAngularIntensity a` is nonnegative everywhere iff `|a| ≤ 1`, and
+`gammaAngularModel a k` is nonnegative everywhere iff `k ≤ a^2`, including
+negative `k`. The finite `Archetype` prerequisite poset is only a dependency
+encoding; it does not supply additional physical evidence. The locked build of
+`InfoGeometry.Physics.CobaltAsymmetryTests` and
+`InfoGeometry.Physics.CobaltPositivityCriteriaAudit` passed (1,962 jobs), and
+the audited declarations report only standard foundational axioms. This
+reconciles the stale inventory label; the full candidate inventory remains
+open.
+
+## Lee–Yang/Asano contraction claim scope reconciliation (2026-10-31)
+
+The `Canonical.LeeYangAsanoDigest` candidate is not itself the missing proof:
+it records the polynomial contract and both false and corrected theorem
+surfaces. The unrestricted source claim is refuted independently by
+`Analysis.AsanoRuelleObstruction.asanoRuelle_unrestricted_claim_false` and the
+nondegenerate explicit witness
+`Canonical.AsanoRuelleCounterexample.unrestricted_AsanoRuelle_contraction_statement_false`.
+The repaired positive route is precisely scoped: the closed-set source claim is
+equivalent to `AsanoNondegenerateTopologicalTheorem` in
+`Canonical.LeeYangAsanoFullReduction`, while
+`Canonical.LeeYangAsanoClosedBoundedNative.source_claim_closed_bounded_native`
+proves the bounded closed-set version through the native contraction theorem.
+The digest's endpoint-nondegenerate implication still consumes that endpoint
+alternative as a hypothesis; it is not an unconditional derivation of it.
+
+The locked build of `InfoGeometry.Canonical.AsanoCounterexampleRealignmentAudit`
+and `InfoGeometry.Canonical.LeeYangAsanoClosedBoundedNative` passed (8,974
+jobs). The audit reports only standard foundational axioms for the checked
+counterexamples, native bounded result, and equivalence. This resolves the
+candidate's scope classification without adding duplicate theorem statements;
+the broader counterexample inventory remains open.
+
+## Readout reversal/flow square obstruction audit (2026-10-31)
+
+The inventory marks
+`Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFlowObstructionCompHaus`
+as requiring source audit, although its paired audit module already names the
+three owner results. Source inspection confirms the precise implication:
+under the explicit readout-transport and reversal/flow-square hypotheses,
+`scalar_obstruction_of_reversal_flow_square` forces
+`(exp t - exp (-t)) * z = 0` for every observed scalar. For `t ≠ 0`,
+`stageObservationRange_zero_of_reversal_flow_square` forces the range to be
+zero, and `no_reversal_flow_square_on_nontrivial_range` rules out the square
+given a nonzero range witness. This is a conditional obstruction; the owner
+does not establish that every reversal has the readout-transport property or
+exhibit a particular nontrivial range and reversal satisfying all premises.
+
+The locked build of
+`InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeReversalFlowObstructionCompHausAudit`
+passed (8,993 jobs). All three audited theorems report only standard
+foundational axioms. The stale candidate status is reconciled; the full
+counterexample inventory and independent semantic review remain open.
+
+## Spin affine fixed-Cartan mixing counterexample (2026-10-31)
+
+The inventory marks `Physics.SpinAffineCasimirRigidity` for source audit, but
+the source and `Canonical.KreinSpinPositiveAudit` already provide a concrete
+counterexample and corrected criterion. In the owner's `2 × 2` complex matrix
+spin representation, `hyperbolic_counterexample` verifies that the
+nontrivial pair `(u,v)=(5/4,3/4)` preserves the ladder commutator while failing
+the fixed-Cartan raising relation. Thus the ladder bracket alone cannot
+certify preservation of the full spin relations.
+
+The canonical replacement is `fixed_cartan_spin_relations_iff`: for the
+stated ansatz, both relations hold exactly when `v = 0` and
+`Complex.normSq u = 1`. The separate `mixed_cartan_iff` identifies precisely
+which relation detects the unwanted lowering component. These results are
+specific to the existing finite spin matrix representation and do not claim a
+classification of general operator deformations. The locked build of
+`InfoGeometry.Canonical.KreinSpinPositiveAudit` passed (8,952 jobs), and its
+printed axiom dependencies for the counterexample and criterion were only
+standard foundations. This reconciles the candidate status without adding a
+duplicate theorem.
+
+## Projective null-boundary permutation/Jones monodromy obstruction (2026-10-31)
+
+The inventory marks
+`Projective.ProjectiveNullBoundaryJonesPermutationObstruction` for source
+audit, but its owner and paired audit already formalize the counterexample.
+For the presented braid group, the square of the first Artin generator maps
+to the identity under the finite permutation shadow, while the Jones
+representation sends it to `-I` in `GL₈(ℂ)`. The owner uses this kernel
+witness to prove that the Jones representation does not factor through the
+permutation shadow. The Cl₅₅ bridge further proves its stated exchange-square
+loop and non-factorization results. These theorems refute recovery from that
+finite permutation shadow; they do not rule out a richer monodromy/local
+system.
+
+The locked builds of
+`InfoGeometry.Projective.ProjectiveNullBoundaryJonesPermutationObstructionAudit`
+and `InfoGeometry.Projective.Cl55ProjectiveNullJonesDeckMonodromyObstructionAudit`
+passed (9,308 jobs). Their audited declarations report only standard
+foundational axioms. This reconciles the source-audit label without adding
+duplicate results; global inventory completeness remains open.
+
+## Klein glide scalar-descent witness (2026-10-31)
+
+The owner `Topology.KleinXiAutomorphyObstructionBridge` already proves that
+scalar invariance under the affine glide forces vertical periodicity by twice
+the glide parameter, while explicitly making no claim about the completed
+zeta function. I added the sharp elementary witness
+`verticalCoordinate_not_scalarGlideInvariant`: for every nonzero glide
+parameter, the vertical coordinate function fails scalar glide invariance.
+This supplies an actual counterexample to unrestricted scalar descent and
+confirms that the periodicity obstruction is non-vacuous, without making a
+claim about any particular analytic zeta function.
+
+The owner audit now prints the new theorem's axioms. The locked build of
+`InfoGeometry.Topology.KleinXiAutomorphyObstructionBridgeAudit` passed (3,097
+jobs), and the new theorem uses only standard foundational axioms. The
+correction is limited to this affine coordinate action; further analytic
+automorphy claims remain unproved.
+
+## Split-sedenion socle lift derivation obstruction and probe correction (2026-10-31)
+
+The inventory marks
+`Synthesis.SedenionSocleDirectSumSeparationBridge` for source audit. Its owner
+contains an explicit failure of the proposed single-slot lift: the
+`K13`-parameter `socleDerivationLift` fails the Leibniz rule on a named
+split-sedenion pair, and adding any diagonal `G₂` derivation does not repair
+that failure. The exact replacement is
+`socleDerivationLift_leibniz_iff_eq_zero`: this lift is a derivation of the
+actual split-sedenion product iff its matrix parameter is zero. This is a
+classification of that lift family, not of all split-sedenion derivations.
+
+The same owner proves joint zero-map injectivity for the verified diagonal
+`G₂` family plus the lift, and supplies a nonzero matrix annihilated by the
+first two reconstruction probes but detected by a third. Thus two probes are
+insufficient on the unrestricted `3 × 3` matrix space; the stated three-probe
+separation and joint injectivity are the corrected results. Locked builds of
+`InfoGeometry.Synthesis.SedenionSocleDirectSumSeparationBridgeAudit` and
+`InfoGeometry.Synthesis.ThreeProbeReconstructionAudit` passed (3,137 jobs).
+The audit checks the criterion, counterexample, joint injectivity, and probe
+witness. This reconciles the inventory label without asserting that the
+distinct-carrier 17-parameter product action is a derivation of one shared
+algebra.
+
+## Krein adjoint versus ordinary unitary counterexample (2026-10-31)
+
+The inventory marks `Canonical.SpinorialCore.KreinAdjoint` for source audit,
+but the owner and core axiom audit already separate the two notions. The
+rational `2 × 2` boost preserves the signature form while it does not commute
+with the signature matrix and is not ordinarily orthogonal. This refutes the
+unqualified claim that preservation of an indefinite form forces commutation
+or ordinary unitarity. The exact replacement in the generic owner is
+`isIsometry_iff_commute_of_unitary`: form preservation is equivalent to
+commutation when both ordinary unitary equations hold. With only the left
+isometry equation, `isIsometry_iff_adjoint_mul_commutator_zero` gives the
+precise condition that the adjoint annihilates the commutation defect.
+
+The locked build of `InfoGeometry.Canonical.SpinorialCore.AxiomAudit` passed
+(8,940 jobs). Its printed dependencies for the boost counterexample and
+Krein-adjoint results are only standard foundational axioms. This reconciles
+the stale candidate label; it does not identify indefinite and positive
+adjoints or make claims beyond the owner’s algebraic hypotheses.
+
+## MDPAS finite cellular non-exactness and global-scope boundary (2026-10-31)
+
+The inventory marks `Physics.MDPASJMSouriauGlobalObstruction` for source audit.
+Its owner proves the exact finite statement
+`sphereArea_closed ∧ ¬ Exact2 sphereArea` on the minimal cellular `S²`
+cochain model (`C¹ = Fin 0 → ℚ`, `C² = Fin 1 → ℚ`). This is a genuine
+closed-but-not-exact class in that discrete model, not a proof of smooth de
+Rham cohomology of the sphere. The same module's finite symplectic and
+Kaluza–Klein identities are separate finite-carrier results; its direct-limit
+readback concerns the quotient carrier and compatible identities only.
+
+The associated audit explicitly records the external global computation as a
+timeout and states that the finite statements do not supply the missing smooth
+or Hilbert-space constructions. The locked build of
+`InfoGeometry.Physics.MDPASJMSouriauGlobalObstructionAudit` passed (9,186
+jobs); checked declarations report only standard foundational axioms. This
+reconciles the candidate status while keeping the global analytic claims open.
+
+## Harmonic rectangle mean-value counterexample and exact criterion (2026-10-31)
+
+The inventory marks the `EmergentGeometry.HarmonicQuadraticRectangle` audit
+surface for source review. The owner gives an explicit harmonic counterexample
+to extending the disk/circle center mean-value property to general
+rectangles: for `quadraticHarmonic z = Re(z²)`, the rectangle with half-width
+2 and half-height 1 has normalized average 1 while the center value is 0.
+For the full quadratic family
+`harmonicQuadratic a b c z = Re(a z² + b z + c)`, the canonical exact formula
+is
+`average = c.re + a.re * (w² - h²) / 3`; the owner proves equality with the
+center value iff `a.re = 0 ∨ w = h` for positive half-width and half-height.
+Thus the failure is caused precisely by the anisotropic quadratic term on a
+nonsquare rectangle; affine terms do not change the centered average.
+
+The locked builds of `InfoGeometry.EmergentGeometry.HarmonicRectangleTests`
+and `InfoGeometry.EmergentGeometry.HarmonicQuadraticRectangleAudit` passed
+(3,548 jobs). The audited counterexample and general criterion depend only on
+standard foundational axioms. This reconciles the inventory candidate without
+claiming a rectangle mean-value theorem for arbitrary harmonic functions.
+
+## Fact/logic/prompt corner algebra and decoder-mask boundary (2026-10-31)
+
+The submitted A₈₆ narrative conflates an additive causal attention mask and
+token embeddings with algebraic support in a ring. The repository owner
+`Routing.FactLogicBypassAlgebra` formalizes only the latter: three orthogonal
+idempotent corners, a fact-diagonal plus globally addressed logic-column plus
+prompt-diagonal operator, its composition, and compression away from the fact
+corner. It proves `fullOperator_logic_column`, `fullOperator_logic_row`,
+`fullOperator_mul`, `withoutFact_fullOperator`, and the nonzero fact-corner
+erasure counterexample. These algebraic results do not prove neural-network
+equivalence, preservation of names or numbers, benchmark deltas, or the
+paper's specific decoder mask.
+
+The source-code orientation in the pasted table is false: the published
+`_create_mixed_attention_mask` opens all logic rows to every key and allows
+prompt rows to read facts and logic. The pre-existing `fullOperator` is a
+different, restricted support model and cannot be cited as a formalization of
+that implementation. The owner now also defines `publishedMaskSupport` and
+proves `publishedMaskSupport_prompt_fact_block`, identifying the allowed
+prompt-to-fact block as `P_p * R * P_f` under orthogonal idempotents. This is
+the corrected operator-support statement; it does not prove neural-network
+semantics, lossless factual retention, or experimental scores. The updated
+locked build of `InfoGeometry.Routing.FactLogicBypassAlgebraAudit` passed
+(606 jobs); all six audited declarations depend only on standard foundational
+axioms (`propext`).
+
+## Penrose circular-coordinate norm mismatch and Witt-polarized replacement (2026-10-31)
+
+The inventory labels `Twistor.PenroseExterior3PeirceQuadraticAudit` for
+source audit. Its concrete `twistorCoordinateZero` has
+`twistorRealQuadraticForm = 1` but its image under
+`twistorCircularPeirceEquiv` has circular-Zorn reduced norm `0`; hence the
+linear carrier equivalence is not a quadratic isometry. This is scoped to that
+specific direct coordinate map and does not refute the Penrose/Zorn
+null-boundary bridge.
+
+The corrected canonical statement uses Witt-polarized coordinates: the
+existing `Twistor.PenroseZornWittBoundary.penroseWittZornMap` proves exact
+equality of the Zorn norm and the Penrose split-signature form. The completed
+equivalence `Twistor.PenroseWittCompositionCompletion.wittZornEquiv` then
+proves norm preservation as `wittZornEquiv_norm`; its transported product
+preserves the original twistor quadratic form by `selectedMul_norm`. These
+are alternative, map-specific theorems; they do not turn the failing direct
+coordinate equivalence into an isometry or identify the transported product
+with the native pointwise product on spinor coordinates. The focused locked
+build of `InfoGeometry.Twistor.PenroseExterior3PeirceQuadraticAudit` passed
+(9,007 jobs, exit 0), verifying the counterexample and its source dependencies.
+The corrected owner `InfoGeometry.Twistor.PenroseWittCompositionCompletion`
+also passed its focused locked build (8,984 jobs, exit 0), directly checking
+`wittZornEquiv_norm` and `selectedMul_norm`.
+
+## Freudenthal mixed-triple obstruction and contact-Lie replacement (2026-10-31)
+
+The source inventory flags `Exceptional.FreudenthalContactRealignmentAudit`
+and `Exceptional.FreudenthalSymplecticContactAll` for review. Their owners
+exhibit two distinct structures. The legacy `tkkTotalBracket` has a mixed
+Jacobi component equal to
+`mixedSymplecticBracket D z y x - mixedSymplecticBracket D x y z`; its
+vanishing for every triple in a set is equivalent to pairwise vanishing of
+the Freudenthal symplectic form there (`tkk_mixed_jacobi_on_iff_pairing_zero`).
+The `alphaCharge` and `betaCharge` witnesses prove that the required
+mixed-triple identity fails in general and that the corresponding legacy
+Jacobiator is nonzero.
+
+The canonical replacement is the separate `symplecticContactBracket` on the
+existing five-graded carrier. Its faithful block representation into
+`Module.End ℝ (SymplecticContactModule ...)` identifies the bracket with the
+associative-operator commutator, yielding the Lie ring/Lie algebra laws and an
+injective Lie representation. The contact Euler operator supplies five
+adjoint grade spaces and their bracket-addition law. This does not make the
+legacy total TKK bracket a Lie bracket or identify it with the contact
+bracket. The locked build of
+`InfoGeometry.Exceptional.FreudenthalContactRealignmentAudit` passed (8,942
+jobs); audited declarations depend only on standard foundational axioms
+(`propext`, `Classical.choice`, `Quot.sound`). Existing linter warnings occur
+in imported Freudenthal owners. The repository-wide inventory remains open.
+
+## Spin-affine/exterior audit scope reconciliation (2026-10-31)
+
+The inventory flags `Canonical.SpinAffineExteriorAudit`, which is a
+transitive axiom-audit module rather than a new counterexample owner. Its
+source traces the existing hyperbolic spin-mixing counterexample and its
+fixed-Cartan criterion, then audits three separately typed packets: affine
+frame recovery, exterior-to-circular CAR intertwining, and negative Clifford
+reflection. The source does not identify those carriers except through the
+explicit maps and intertwining results. The locked build of
+`InfoGeometry.Canonical.SpinAffineExteriorAudit` passed (9,017 jobs); printed
+dependencies use standard foundational axioms. Imported owner warnings
+remain. This reconciles the audit row without asserting a cross-carrier
+equivalence.
+
+## Newly surfaced countermodel owners and focused replay (2026-10-31)
+
+The expanded tracked-tree lexical scan surfaced countermodel declarations in
+eight owner files not represented in the prior 168-entry source inventory.
+Those files are now recorded with their exact declaration names and source
+hashes in `artifacts/counterexample_audit/source_inventory_20261030.json`;
+the inventory contains 176 entries. The scan remains lexical and does not
+establish semantic completeness.
+
+The owner statements provide the following corrected scopes:
+
+- `Quantum.DikinApolloniusStrictnessAudit` and
+  `Quantum.DikinBlahutStrictnessAudit`: factor 1 can preserve a boundary point;
+  strict shrinkage follows under a genuine factor `Kc < 1` and positive
+  radius. Their `#print axioms` output reports only standard foundational
+  axioms.
+- `Omega.CircleDimension.MultiPrimeSpectrum`: equal singleton marginals do
+  not determine pair-support values; the owner also proves the exact
+  piecewise spectrum of the second finite support family.
+- `Omega.CircleDimension.ResidualEntropyLowerBound`: the finite-injection
+  statement fails when `k > r`; the corrected theorem requires `0 < t` and
+  `k ≤ r`.
+- `Omega.Conclusion.RanktwoSmithBlindclassBooleanPrimeblockTorsor`: the
+  divisor-count statement fails at `(a,b)=(0,0)` under natural-number total
+  division; the corrected count assumes both inputs are positive.
+- `Omega.POM.A4TCyclotomicAdjacencyInjection`: the proposed target sign pattern
+  fails at the order-four specialization; the owner proves a corrected core
+  identity for nonzero `v` and the paper specialization for `h ≥ 4`.
+- `Omega.POM.A4TNewmanLinearResponseConstant`: the displayed rational formula
+  does not imply the octic, as shown at `zStar=2`; the replacement includes
+  the Newman-root hypothesis.
+- `Omega.RecursiveAddressing.PrefixSiteMinVisibleQuotient`: killing the
+  listed `alpha` values and surjectivity of `pi` do not imply factorization
+  through `pi`; the canonical quotient uses all visible cocycle values.
+
+A single sequential locked build of all eight owner targets passed in 3,216
+jobs. The build emitted existing deprecation and linter warnings; it was not a
+warning-free repository build. Only the two Dikin audit modules print axioms
+for their named declarations in this batch, and those outputs list standard
+foundations. The other targets were kernel-checked by the build, but their
+axiom dependencies were not separately audited here. The wider objective of
+finding every semantic counterexample and proving every appropriate
+replacement remains open.
+
+## Refutation-category source reconciliation and replay (2026-10-31)
+
+The tracked lexical scan's seven `refutation` rows resolve to three actual
+counterexample families and four positive/conditional theorem surfaces (the
+Xi source contributes two declaration names). The Jordan sign witness, the
+`Fin 36` non-affine table refutation, and the exponential-scale recurrence
+counterexample are now recorded alongside their exact owner hashes in the
+maintained source inventory. The CP-visible contrapositive, Hecke coefficient
+evaluation, and Xi divisibility/size implication are recorded as name-based
+false positives, not counted as counterexamples. In particular, `2^n` is
+recurrent and has infinite range, refuting finite range as a criterion for
+C-finiteness.
+
+The six relevant owner modules were kernel-checked in one sequential locked
+build (9,287 jobs, exit 0). The umbrella dependency replay emitted numerous
+existing linter and deprecation warnings, so this is not a warning-free build
+or a per-theorem axiom audit. The source inventory now has 182 owner-file
+entries. This closes only the currently scanned countermodel and
+refutation-name slices: the scan still has large unreconciled obstruction,
+identifiability, and negative-boundary candidate families, and its lexical
+rules do not establish semantic completeness.
+
+## Initial obstruction-marker source batch and replay (2026-10-31)
+
+Six newly surfaced obstruction-marker owner files were read and replayed.
+Most markers are not counterexamples: the Akivis term is an exact
+associator-defect formula under its alternative-law hypothesis; the
+cyclotomic Peirce result is an ambient-unit boundary with an exact supported
+corner image; the Dihedral result is a conditional order criterion; the two
+`muPaper` declarations merely evaluate square-obstructed Möbius values; and
+the Krein result assumes an explicit certificate supplying its no-leakage
+premises. The genuine counterexample in this batch is the attention trace
+claim: `chiral_obstruction` has diagonal `(M₀₀, -M₁₁)`, so positive diagonal
+entries do not imply positive obstruction trace. The owner gives the exact
+criterion `M₀₀ > M₁₁`, a positive-diagonal zero-trace witness, and keeps the
+positive trace theorem scoped to the separate diagonal core.
+
+The six owner targets passed a sequential locked build (9,377 jobs, exit 0).
+The build emitted existing warnings in dependencies; it was not warning-free
+and did not separately print axioms for every declaration. The maintained
+source inventory now has 188 owner-file entries. This is an initial
+source-classified slice of the much larger obstruction-marker queue, not a
+complete audit of that category.
+
+## Conditional and positive obstruction-owner batch (2026-10-31)
+
+Six additional obstruction-marker owners were source-reviewed and kernel-checked: the Cayley–Hestenes intertwiner bridge, Chiral KMS owner, and four conformal-anomaly owners (degenerate, operator, readout, source). The intertwiner result is conditional on source commutation, alongside unrestricted commutator naturality; KMS chirality is an iff characterization and product closure; conformal zero/block/readout statements retain their explicit hypotheses and definitions. These are scoped positive or conditional results, not counterexamples.
+
+The six targets passed one sequential locked build (9,030 jobs, exit 0). Existing dependency warnings were emitted; this was not warning-free and did not separately print per-declaration axioms. The source inventory now has 194 owner-file entries. The obstruction-marker and other lexical queues remain incomplete, and lexical coverage is not semantic completeness.
+
+## Algebraic counterexample and replacement batch (2026-10-31)
+
+Seven owner/audit modules were reviewed. Two genuine counterexamples were confirmed: a positive-dimensional finite real matrix commutator cannot equal the identity (trace obstruction), and the right E22 tangent equation on off-diagonal Zorn directions holds as an operator only for the zero direction. The Zorn owner supplies an explicit U 0 witness and the valid left E11 replacement. A third concrete finite witness shows entropy change need not equal Massieu-potential change; its owner supplies the entropy expectation formula and KL/Bregman identity. The H3 sparse Jordan pair is explicitly positive (it satisfies the global law), and the full split Albert trace pairing is nondegenerate. Two audit wrappers print standard axiom dependencies.
+
+The five-target locked replay had a module-name typo for the experimental CCR audit target and exited 1 for that missing target; the other four targets replayed. The corrected CCR audit target then built successfully (3,093 jobs); the other batch replay had reached 3,131 jobs. No source edits were needed. The inventory now has 200 owner-file entries. This records a reviewed slice only; the remaining lexical queue is still under audit.
+
+## Analytic, arithmetic, and operator-obstruction batch (2026-10-31)
+
+Six more candidate paths were source-reviewed and kernel-checked. Confirmed counterexamples: the signed-reflection residue assertion fails for 1/z; balanced residues do not make either local pole removable; weakening the primitive-set threshold to x₀>0 fails at x₀=2, x=1, A={2}; and a nonzero ZZ boundary increment in the specified matrix-stage embedding breaks strict commutator transport. Their scoped alternatives are an analytic-extension iff criterion, the strict x₀>2 bound (with the separate large-divisor analytic input left as a Prop), and an iff compatibility criterion requiring zero coupling. The Asano–Ruelle bridge/closure theorems are conditional positive results under their explicit zero-free, nondegeneracy, endpoint, and boundedness assumptions. The algebraic alternatives audit is an axiom-readback wrapper for reusable noncommutative statements, not a counterexample.
+
+All six selected Lake targets passed a sequential locked build (9,014 jobs, exit 0); existing warnings remain. The maintained inventory now has 206 owner-file entries. The scan remains lexical and the full counterexample audit is still incomplete.
+
+## Spectral, commutator, and flow-compatibility batch (2026-10-31)
+
+Six further candidate owners/audits were reviewed. The concrete counterexample is the modular identity-kernel case, which refutes a universal super-Hamiltonian generator equality; the owner gives a corrected equivalence conditioned on the canonical-seed flow equation. A separate reversal-flow obstruction is conditional: the assumed square and readout transport force the observed range to zero at nonzero time. The Fibonacci/Jordan result is finite-carrier only (normality iff zero shear), the kernel-commutator implication retains its explicit bridge premise, the Kitaev boundary trace pairing is nondegenerate on its represented carrier, and Lee–Yang/Asano preparation lemmas explicitly stop before the topological closure step.
+
+All six targets passed the sequential locked Lake replay (9,415 jobs, exit 0), with existing dependency warnings. The source inventory now contains 212 paths. This remains an incremental source audit; the lexical scan still does not establish semantic completeness.
+
+## Carrier, cocone, and grading obstruction batch (2026-10-31)
+
+Six more owner/audit paths were source-reviewed and kernel-checked. Concrete failures: the proposed 3×3/4×4 matrix carrier identifications with Zorn/Albert carriers fail by dimension; native real Zorn multiplication cannot inject multiplicatively into an associative semigroup; a faithful compatible diagonal cocone into two copies of the Cl(1,1) limit fails the colimit uniqueness clause; and a nonzero Cl(5,5) creation word has occupation grade five, outside the proposed grade-two/five-grade window. The exact alternatives are carrier-scoped exclusions, a universal-property counterexample, and an explicit grade-five witness. The BKM positivity obstruction and transported Zorn polar nondegeneracy theorem are conditional/positive results, not counterexamples.
+
+All six targets passed one sequential locked Lake build (9,055 jobs, exit 0). The inventory now contains 218 paths; the remaining lexical candidate families still require source audit.
+
+## Jacobi, normalization, and carrier-metric counterexamples (2026-10-31)
+
+Six more owners/audits were source-reviewed and kernel-checked. Confirmed failures: the legacy Freudenthal five-graded bracket violates Jacobi and the symplectic rank-two operator fails the mixed-triple law (the corrected contact bracket is a separately proved, hypothesis-scoped alternative); the stated quadric logarithmic wedge identity has numerator 52 at a nonisotropic integer triple; the specified Zorn-to-doubled-Krein map is not an isometry at uPlus; and secondary normalization is not additive, with mass-weighted pooling as the corrected identity. The Fisher/para-symmetry obstruction is conditional on nonnegativity and fixed-symmetry hypotheses. The S² result is verified on the explicitly defined minimal CW model; the separate global de Rham computations are timeout records, not proofs.
+
+All six targets passed a sequential locked Lake build (9,395 jobs, exit 0). The inventory now contains 224 paths. This source-level candidate audit remains incomplete, and no claim of semantic exhaustiveness is made.
+
+## Projective, route, and low-dimensional obstruction batch (2026-10-31)
+
+Six more candidate owners/audits were checked. The finite permutation shadow loses braid phase: the first generator square maps to identity under permutation but to −I under the Jones representation; the Q55 result retains its explicit path/Artin-homotopy premises. Concrete routing matrices refute several automatic rules (sibling contrast persistence, support commutation, squared-charge idempotence, and core-transpose identification), with replacement results under synchronized-retraction/factorization hypotheses. The two-dimensional skew-map theorem is an exact one-parameter classification; the Klein glide theorem gives a conditional vertical-period requirement; and the circle-dimension equivalence applies only to its explicitly defined rank/torsion model.
+
+All six targets passed the sequential locked Lake build (9,327 jobs, exit 0). The inventory now contains 230 paths; the remaining lexical queue is incomplete.
+
+
+## Circle-dimension and quantitative obstruction batch (2026-10-31)
+
+Six further owners were reviewed and kernel-checked. The affine splitting theorem is limited to its explicit affine product model; the null-readout theorem only combines supplied implications; and the Stokes lattice theorem restates its two hypotheses rather than proving a general Stokes result. The ENNReal accumulation theorem proves that a positive per-step lower bound and a finite uniform upper bound are incompatible. The ambiguity-shell owner constructs a periodic nonconstant witness from its residue hypothesis, without establishing an analytic amplitude claim. The CRT owner derives a normalized linear-budget bound from its supplied witness and protocol assumptions, but does not generate those assumptions.
+
+All six targets passed a sequential locked Lake build (9,327 jobs, exit 0), with existing dependency warnings. The inventory now contains 236 paths. The lexical candidate queue remains incomplete and is not a semantic completeness claim.
+
+
+## Exponent threshold and finite additive ledger batch (2026-10-31)
+
+Two conclusion owners were reviewed and kernel-checked. The circle threshold result is a consequence of its encoded one-circle rank and exponent-gap hypotheses. The finite additive linearization result rules out an injective multiplicative-to-additive map on naturals under the supplied valuation/iteration data and imported finite-ledger lemmas; its conclusion is scoped to that algebraic setup.
+
+Both targets passed a sequential locked Lake build (8,927 jobs, exit 0), with an existing unused-simp warning in a dependency. The inventory now contains 238 paths. The source audit and lexical queue remain incomplete.
+
+
+## Schur-concavity counterexample and theorem-scope audit (2026-10-31)
+
+Six conclusion owners were checked and kernel-verified. `BlockConsistencyNotSchurConcave` contains a genuine explicit counterexample for its defined list majorization and block response; it also proves the reusable replacement that mutually majorizing inputs must receive equal values under Schur concavity. By contrast, the C6 result uses `PUnit` as every Jacobian carrier and type equivalence as isogeny, so it does not establish geometric nonsimplicity. The Binfold theorem proves a positive-baseline/equivalence witness but does not state or refute uniformization. The Abel–Mertens owner is an alias; the Cdim natural-code and bounded-order results retain their substantial hypotheses.
+
+All six targets passed one sequential locked Lake build (8,954 jobs, exit 0), with existing deprecation and simp warnings. The inventory now contains 244 paths. Audit completeness remains unestablished.
+
+
+## Finite models, matrix identities, and assumption-only owners (2026-10-31)
+
+Six more owners passed source review and locked kernel checking. The ambiguity Jordan-chain theorem proves existence and uniqueness for its explicit one-dimensional rational recurrence; the anchor theorem proves finite complex-matrix determinant and comparison identities under its rank/weight assumptions. The atomic-surgery tomography and single-congruence results follow from a coefficient function defined by the target residue and power law, so their proofs establish the constructed finite model rather than recover an independently specified process. The LDP owner is a direct consequence of supplied propositions, and the audit-budget owner assumes the exact negated bound it returns.
+
+All six targets passed one sequential locked Lake build (3,175 jobs, exit 0); existing dependency deprecation and simp warnings remain. The inventory now contains 250 paths. The audit remains incomplete.
+
+
+## Nilpotency, finite encoding, and growth-model batch (2026-10-31)
+
+Six more owners were reviewed and kernel-checked. The nilpotent matrix theorem gives the expected lower bound on vanishing exponent from a sharp power. The balanced natural-number profile proves a finite q-power inequality for q≥1; the BigWitt/Gödel owner proves encoding laws and equal-length recovery within its finite list model. The binary readout injectivity remains conditional on an explicit finite scalar-map injectivity premise. Two genuine counterexamples are model-specific: the Fibonacci-indexed constant-two model refutes its stated uniform near-lossless bound, and the sequences 1, m+1, (m+1)^2 admit no common normalization with three nonzero finite limits. These do not establish claims about unspecified external complexity measures.
+
+All six targets passed a sequential locked Lake build (3,686 jobs, exit 0), with inherited deprecation and style warnings. The inventory now contains 256 paths. The broader source audit remains incomplete.
+
+
+## Finite cardinality, boundary, and derivation-scope batch (2026-10-31)
+
+Six additional owners were source-reviewed and kernel-checked. The Blackwell-labelled result is the finite pigeonhole theorem for explicit `Fin` carriers. The Born-weight owner constructs normalized squared-norm weights from a nonzero finite vector; despite its name, it invokes no Hardy or fold-expectation result. The boundary dimension theorem is a conditional asymptotic lower bound from its stated volume and Lipschitz premises, while the finite-audit barrier projects an imported complexity trilemma under supplied hypotheses. The parity/Lie repair count is arithmetic on definitions (rank `3−1`, components `2^rank`) and does not construct a Lie repair. The prime-replay theorem is conditional on an assumed strong-subsequence vanishing principle.
+
+All six targets passed one sequential locked Lake build (8,935 jobs, exit 0), with existing style warnings. The inventory now contains 262 paths. The audit remains incomplete.
+
+
+## Reduction wrappers and finite support/crowding batch (2026-10-31)
+
+Six more owners were reviewed and kernel-checked. The two undecidability theorems are reduction wrappers whose source undecidability and reduction equivalences are assumptions. The carry-support result is a valid finite-mass concentration lemma under total-mass, support, and uniqueness hypotheses. The cdim power-law owner applies finite pigeonhole to a supplied same-cell bound; the geometric estimate is data, not derived. The precision-ledger owner is the direct transitivity consequence of separation and a crowded pair. The Ramanujan center/top owner projects an imported reconstruction after assuming the top coefficient and vanishing-above facts.
+
+All six targets passed a sequential locked Lake build (3,099 jobs, exit 0), with inherited style/deprecation warnings. The inventory now contains 268 paths. The wider candidate audit remains incomplete.
+
+
+## Prime-ledger and collision-claim scope audit (2026-10-31)
+
+Six more owners were source-reviewed and kernel-checked. The constant-circle-dimension theorem gives a genuine cardinality counterexample to any uniform support-size bound from that invariant; the cofinal-ledger theorem is the standard finite-dimensional rank obstruction. The circuit-output theorem instead uses the decidable predicate `M≤x`, an indicator defined from `C 0`, and a supplied identity/constant model, so it is not a Turing-halting or Renyi-entropy reduction. The collision blowup theorem is an order consequence from assumed divergence and domination. The generating-function radius theorem merely combines its two radius conclusions as hypotheses; its q, tail coefficients, and tail-shape hypotheses are unused. The affine-rank-one theorem is valid conditional algebra from its supplied factorization premise.
+
+All six targets passed one sequential locked Lake build (3,173 jobs, exit 0), with existing deprecation/unused-variable warnings. The inventory now contains 274 paths; source audit completeness remains unestablished.
+
+
+## Collision, comoving, and compact-kernel model audit (2026-10-31)
+
+Six more owners were reviewed and kernel-checked. The collision minimal-recurrence formula is conditional on a hand-specified sequence profile and an assumed characterization of its minimal order. The numerator owner proves a genuine polynomial root equation and a radius limit for its explicit polynomial. The comoving identifiability theorem only combines supplied propositions; the prefix-frontier theorem imports one identity and assumes its collision witness implication. The compact-Lie kernel is definitionally `Fin n`, so finite-ness is an instance fact rather than a compact-Lie theorem. The phase-ledger incompatibility is a valid arithmetic contradiction between rank one and rank at least two; its phase field plays no role.
+
+All six targets passed one sequential locked Lake build (3,101 jobs, exit 0). The inventory now contains 280 paths. The broader owner audit remains incomplete.
+
+
+## Finite-support, asymptotic, and topological-group batch (2026-10-31)
+
+Six more owners were reviewed and kernel-checked. The fiber/Lee–Yang encoding is a conditional algebraic bridge from divisor data to imported polynomial/root identities. The Euler-surgery theorem proves only eventual equality outside a finite coefficient change and returns its logarithmic formula as an assumption. The phase/prime-ledger result is the constant-function noninjectivity counterexample. The conductor prefactor theorem proves a genuine asymptotic sandwich invariance; the conductor-two nonrepairability file is only the explicit sequence `2^n` model and disclaims an arithmetic Ramanujan conclusion. The connected/profinite result is a substantive topological-group theorem under its explicit connectedness, total-disconnectedness, and bounded-exponent hypotheses.
+
+All six targets passed one sequential locked Lake build (3,109 jobs, exit 0), with existing deprecation/style warnings. The inventory now contains 286 paths. Audit coverage remains incomplete.
+
+## Consensus, finite-boundary, and arithmetic-model batch (2026-10-31)
+
+Six additional owners were source-reviewed. Five passed the sequential locked Lake build; `ConsensusFunctorSeparatedNotSheaf.lean` failed elaboration at its paper-facing theorem because its proof supplies three conjunction branches for a two-conjunct goal. Its exact finite criterion (`global_readout_iff_pairwise_agreement`) and explicit two-site disagreement witness are distinct claims and should not be conflated with that failed declaration. The outer-boundary owner proves a finite inclusion-exclusion support identity; the weighted-boundary owner proves minimum hitting-set optimality for pairwise-disjoint finite boundaries. The critical-comb owner studies explicitly defined divisibility-indicator averages, not Fourier transforms of independently constructed measures. The critical-kernel owner assumes the inverse-square formula for its output weights, so it is conditional algebraic reconstruction. The delay-three result is a natural-number inequality on definitions, not a model-level delay theorem.
+
+The batch build exited 1 due to the consensus owner failure (five other targets completed; 3,092 prerequisite/replay jobs were reached before failure). The inventory now contains 292 paths. Source audit coverage remains incomplete.
+
+## Finite density, pole-set, and scalar-model batch (2026-10-31)
+
+Six further owners were reviewed and passed the sequential locked build (3,176 jobs). The T₅ root-count owner defines the density as a three-value function, then verifies support and moments; the arithmetic distribution itself is not derived there. The diagonal-rate owner proves correct formulas for its stated scalar-collapse parametrization, which does not meet the noncommutative operator scope. The digital local-factor theorem is a genuine finite-set equivalence between finite pole union with finite multiplicities and finitely many active factors; its unit-circle premise is unused, and it contains no analytic rational-function construction. The even-modulus parity theorem directly unfolds its assumptions. The endpoint eigenpair theorem proves a finite algebraic consequence but assumes the output weights and atlas recovery. The entropy-gap theorem is a valid scalar estimate from supplied bounds, not an operator-algebra result. The inventory now contains 298 candidate paths; coverage remains incomplete.
+
+## Fibadic seed and definition-level claims batch (2026-10-31)
+
+Six additional owner files were source-reviewed. Their exact scopes are recorded in the inventory: prime-axis minimality is definition unfolding; the depth-slope identity is rational cancellation with an unused depth hypothesis; dominant-depth selection is a hard-coded `Fin 3` scalar example; the gcd kernel “spectrum” package unfolds supplied data; the gcd projector identities are divisor-set algebra with an identity readout and unused finite-support premise; and the purported Q₅ realization is defined as an integer root of `X²-X-1`, with a structure-field obstruction rather than a Q₅ carrier. The sequential locked build is still waiting for the shared lock, so these six records remain unverified by Lean in this batch. Inventory count: 304 candidates. Coverage remains incomplete.
+
+Another six source reviews are recorded but also await the shared build lock. The finite-depth chain uses an imported `ZMod` morphism/divisibility criterion and imports its profinite conclusion unchanged. The finite-package undecidability result reduces to finite decidability and a propositional contradiction. The fiber-Walsh theorem is a substantive finite Boolean-cube cancellation identity. The audit-dimension theorem assumes both regime bounds in its data structure. The finite-defect/Toeplitz theorem imports its reconstruction and negative witness and assumes the scale inequality it returns. The holography “triple incompatibility” theorem is propositional logic only. Inventory count: 310 candidates; these records are source-reviewed, not yet kernel-verified.
+
+Six more source reviews are now logged, likewise awaiting the shared lock. The selector result is conditional on an abstract necessary lower bound; the Busy Beaver theorem assumes its code-to-halting-time specification in the data; the complexity trilemma packages imported results; the collision/Hankel theorem defines its “exact rank” witness by setting all rank fields equal to the parameter; the double-obstruction file has an empty data structure and forwards imported claims; and the linear/nonlinear bifurcation combines imported statements with an injectivity bound. Inventory count: 322 candidates. All 24 records added since the last successful batch still need their queued locked-build result before being marked kernel-verified.
+
+Six more owner reviews are logged as pending kernel verification. The “no thermal singularity” statement is finite-sum positivity under explicit positivity/nonemptiness hypotheses. The prime-recognition obstruction is assumed in the protocol structure, and the pullback equality is unused; the adjacent postprocessing result is propositional identity. The fixed-scale moment theorem gives an actual three-moment uniqueness result and a two-moment collision witness. The conditional-expectation theorem proves noninjectivity from a supplied finite-fold collision. The prime-product encoding theorem proves subset/divisibility and intersection/gcd correspondences under injective prime labels. The Boolean-cube result is the elementary partition by fibers of a function. Inventory count: 328 candidates; 30 additions since the last successful build remain pending.
+
+Six further owners were source-reviewed while the lock remains occupied. The golden-resonance maxfiber lift proves divergence for a collision profile and maxfiber sequence chosen by formula, without a fold-map construction. The index-two quotient count is correct finite cardinality. The partition Walsh result aliases its H and W terms and imports the cancellation fact. The projective-simplex theorem is a valid coordinatewise phase quotient result, outside the noncommutative operator scope. The single-pair obstruction uses constant and witnessed equalities defined into the model. The TQFT sectorization theorem assumes its centrality, subalgebra, uniqueness, and partition-function claims. Inventory count: 334; 36 records since the last successful batch remain kernel-unverified.
+
+
+## Walsh, zero-set, and threshold-claim source review (2026-10-31)
+
+Six more conclusion owners were source-reviewed while the shared build lock remained occupied. The Walsh Gram/fiber theorem is a substantive finite orthogonality and average-energy result. The two zero-divisor files duplicate a definition-level set classification using an imported Fibonacci gcd fact; their Boolean flip witness does not act on kernel elements. The active-Fourier support bound assumes the sum-of-squares identity, the upper-envelope theorem returns its hypotheses, and the PI-degree threshold follows from an assumed iff characterization. These six entries remain pending kernel verification. Inventory count: 340; 42 additions since the last successful batch await locked-build results. Coverage remains incomplete.
+
+
+## Recurrence, truncation, and finite-decoder source review (2026-10-31)
+
+Six more owners were source-reviewed; all remain pending the locked kernel build. The S₂ and conditional S₃ sequence results are genuine minimal-recurrence arguments in their stated integer/rational models. The Borwein “analytic obstruction” assumes a conjugacy predicate that itself implies positive radius, so it establishes a logical incompatibility rather than an analytic theorem. The even-zeta first-difference result is a valid conditional coefficient-cancellation identity. The sufficient-statistic file proves a finite decoder success bound and a Fibonacci limit for its defined fiber model, without constructing an external fold map. The four-moment rigidity theorem is genuine recurrence identification under its nonzero Hankel determinant premise. Inventory count: 346; 48 records since the last successful batch await locked-build evidence. Coverage remains incomplete.
+
+
+## Monotone-gate counterexample and finite-model review (2026-10-31)
+
+Six further owners were source-reviewed and are pending locked verification. `FreeEnergyGatesMonotonicityObstruction` contains a genuine finite counterexample pair (NOT and odd parity) to expressibility in its monotone gate closure, with the monotonicity theorem as the canonical replacement. The interval non-approximability claim is conditional on abstract supplied energy/undecidability specifications. The frozen-phase conclusion only returns assumptions and leaves a parameter unused. The regular-simplex file proves finite rational coordinate identities. The three-mode gauge conclusion is the contrapositive of its hypothesis, and the super-Poisson file is a conditional quotient-limit calculation without encoded distributional semantics. Inventory count: 352; 54 source-reviewed additions await locked build evidence. Coverage remains incomplete.
+
+
+## Global-obstruction and resolution-tower source review (2026-10-31)
+
+Six additional owners were source-reviewed; all await the locked build. The common-clock theorem assumes the clock-to-obstruction implication in its data, the null-remainder theorem assumes the exact readability/obstruction equivalence it concludes by contraposition, and global-spectrum compatibility already includes the global descent conclusion. `GlobalMixedHiddenStateNoFaithfulFiniteAbelianObservation` is a genuine infinite-to-finite noninjectivity result, but its group/observation title adds no structure. The Gödel–Lee–Yang IFS file proves arithmetic seed equalities only. The resolution-tower file proves root-of-unity norm one; its degree identities are definitional and its primitive-root clause is not used. Inventory count: 358; 60 records since the last successful batch await locked-build evidence. Coverage remains incomplete.
+
+
+## Gödel-prefix, resonance, and halting-model source review (2026-10-31)
+
+Six further owners were reviewed and await locked kernel evidence. The Gödel prefix criterion is a valid encoding-injectivity result, and the golden alternating-constant formulas are algebraically correct but do not establish the broader narrative. `GoldenResonanceIntegerTraceNotL2` has a scope defect: “logarithmic divergence” is defined as positivity at each index, while its non-L² conclusion is obtained by contradiction between two clauses of a hand-built realization predicate; no summability or Parseval result is shown. The exact halting budget theorem returns structure fields, and the valuation/Walsh unification is a finite two-branch toy model. The Hankel file only combines imported owner theorems. Inventory count: 364; 66 additions since the last successful batch await locked-build evidence. Coverage remains incomplete.
+
+
+## Finite-threshold, hypercube, and coordinate-chart review (2026-10-31)
+
+Six more owners were source-reviewed; all await locked kernel checking. The Hankel finite-modulus owner proves periodicity for a finite permutation and a 2·rank threshold built into its locking predicate; its separate determinant-prime result assumes the determinant progression. The hidden-face classification assumes both substantive threshold premises. Hydrogenic pair collapse is a direct consequence of supplied invariances and a state-pair equation, with an unused nonzero-m premise. `HypercubePhase` is correct finite enumeration for five fixed dimensions. The dense-orbit theorem is an aggregator of independently owned results. The Joukowsky coordinate file proves explicit elementary chart and metric identities in its stated domain. Inventory count: 370; 72 entries since the last successful batch await locked build evidence. Coverage remains incomplete.
+
+
+## Finite audit, algebraic lifts, and resolvent source review (2026-10-31)
+
+Six further owners were source-reviewed; kernel verification remains queued. The joint finite-audit theorem composes three separately owned results. The Joukowsky lift is a valid finite real quadratic-root/sign-permutation model, not a Galois realization. The fixed-ray RH conclusion depends on both an assumed upper bound and an assumed necessary lower bound. The Kirchhoff “determinant” file is only scalar real algebra under a substitution premise, not a matrix determinant theorem. The layered depth result is a valid contradiction from explicit finite bounds, with a tautological unused branch premise. The Leyang edge result proves a finite-N product/log-derivative formula and does not prove a limit. Inventory count: 376; 78 entries since the last successful batch await locked-build evidence. Coverage remains incomplete.
+
+
+## Local-field labels, finite cube forms, and S₄ stabilizer review (2026-10-31)
+
+Six more owners were source-reviewed and await the queued build. The Q₅ cubic file verifies finite-field rootlessness and a discriminant calculation, but its extension invariants and cyclic Galois packet are definitions/constants rather than a local-field construction. The hyperbola closure result is a finite-union topological consequence of an imported dense-orbit theorem. The Boolean-cube exact-form identity is a genuine finite result with no Lattès dynamics. The local-doublezero “classification” is an exhaustive two-constructor model with imported seed values. The quadratic-factorization theorem forwards an imported primitive-cover certificate without constructing the cover here. The off-diagonal S₄ stabilizer theorem is a genuine finite permutation result. Inventory count: 382; 84 records since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+
+## Channel reconstruction, derivative, and sequence-source review (2026-10-31)
+
+Six more owners were source-reviewed and remain pending the shared locked build. The Rademacher/circle-ledger theorem proves imported cumulants plus a carrier-cardinality mismatch, not an orthogonality relation. The rho456 file gives valid finite log-derivative formulas, with the normalized “rho” functions defined as the target wall factors. The S₅ two-channel theorem is genuine finite rational linear algebra, including explicit noninjectivity witnesses for each channel separately and uniqueness from both together. The transposition/Jacobian result composes imported owners. The Lk first-zero sequence theorem contains substantive monotonicity and limit arguments for its explicit sinc formula. The Lmax theorem is conditional on an already supplied prime witness. Inventory count: 388; 90 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+
+## Ledger-domain correction and finite-observation source review (2026-10-31)
+
+Six additional owners were reviewed and remain pending locked verification. The macroscopic resonance example defines exactification as identity and chooses its collision profile by formula. The finite-consensus result inherits a global-clock obstruction field. `LocalizedColimitFiniteLedgerLinearizationObstruction` supplies a useful canonical correction: assuming multiplicativity on all naturals forces the ledger to vanish already from 0·n=0, so the prime-product relation is unnecessary; a positive-natural domain would require a different hypothesis. The Čech result only unpacks supplied exactness/implication premises. The localized-solenoid result is a valid finite prime-divisibility criterion but has no solenoid/zeta carrier. The Stokes-nonseparation theorem is a real counterexample in its explicit Fin 2 model, where the observable is defined independent of the point. Inventory count: 394; 96 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Objective arithmetic, finite Hilbert features, and factor-through counterexample review (2026-10-31)
+
+Six more source files were reviewed; all await the shared locked build. The M₂ conclusion only forwards imported exact-sequence/separation declarations. The metallic-integer result proves a substantive Pareto comparison for its defined real objectives. The latch file checks selected `Nat.clog` values and bounds, not the general transducer theorem in its prose. The mixed-collision owner proves finite power-feature Hilbert identities and equality criteria for normalized NNReal data. The mod-2 owner is a valid finite hard-coded counterexample to score recovery through the specified shadow map. The bad-prime support result merely unpacks its assumed implication into set inclusion. Inventory count: 400; 102 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Finite group classification, Boolean compilation, and abstract obstruction review (2026-10-31)
+
+Six further owners were source-reviewed; all are pending locked kernel evidence. The rank-two jump result is a genuine classification of homomorphisms on `Equiv.Perm (Fin 2)` to `ZMod 2`. The monotone Boolean owner contains a constructive finite-cube DNF embedding; its “exactly monotone” package is conditional on supplied hypotheses, and the free-energy seed portion is arithmetic only. The barrier/residue result correctly derives a ratio limit from two assumed sharp asymptotics. The two complete-invariant files prove standard abstract undecidability implications from supplied undecidability premises. The total-order-time-functor conclusion is propositional consequence of abstract clock-obstruction assumptions, with no local Cech construction. Inventory count: 406; 108 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Conditional audit packages and operator-rank claim review (2026-10-31)
+
+Six additional owners were source-reviewed and await the shared build. The universal two-axis obstruction stores its decisive profile split and both impossibility claims as structure fields. The restricted-DPI result unfolds its loss identity and imports the fiber-parity conclusion under supplied component hypotheses. The nonzero-spectrum theorem returns its spectral constancy premise and locally proves injectivity of the window budget on the stated range. The infinite-rank threshold and no-scalar-kernel files are contraposition wrappers over supplied implications. The ordered-Nevanlinna conclusion simply packages a supplied completeness implication and counterexample. Inventory count: 412; 114 records since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Finite update models, partition codes, and Gibbs bounds review (2026-10-31)
+
+Six further owners were source-reviewed; all await locked kernel verification. The RH-interface conclusion is propositional assumption packaging. The order-parameter theorem proves an equivalence for its explicitly defined finite-update-table notion, using an imported realization theorem; the term “Turing complete” here does not prove unbounded computation. The parameter-blind factorization is conditional scalar algebra. The prime-slice owners prove finite divisibility/support and pair-count identities, plus recovery of non-diagonal labels from all partition codes under injective prime encodings. The finite Gibbs owner proves exact factorization and exponential bounds from a uniform positive gap, but no zero-temperature limit. Inventory count: 418; 120 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Prefix ambiguity, Fourier toy model, and Poisson-labeled algebra review (2026-10-31)
+
+Six additional owners were source-reviewed. The prefix theorem is a valid abstract paired-readout noninjectivity criterion under deep-collision premises. The periodic-amplitude owner proves Parseval-style energy for its stipulated finite amplitude model, not a transform theorem for independently supplied data. The Pisot file proves a defined harmonic profile is nonsummable but does not connect that profile to coefficients of the imported boundary object, so its L² interpretation exceeds the formal bridge. The quartic null-cone statement is elementary real algebra. The M4 decoder solves assumed polynomial identities. The minimal-Laurent-order owner merely returns its nonvanishing assumptions; its order variable is unused. Inventory count: 424; 126 entries since the last successful batch await kernel-build evidence. The preceding six-owner batch is currently in the sequential locked build. Coverage remains incomplete.
+
+## Moment inversion and polynomial-spectrum label review (2026-10-31)
+
+Six more source files were reviewed while the preceding locked build runs. The Poisson moment owners prove real-algebraic inversion from assumed coefficient equations, with no local derivation of those coefficients from probability data. The polynomial mass theorem is valid for `Polynomial ℕ`, but its “spectral radius” is defined to equal evaluation at 1 rather than obtained from an operator spectrum. The power-divergence owner proves recurrence and strict log-convexity for a stipulated positive two-exponential sequence. The prime-adjunction and prime-log conclusions only apply abstract propositional implications. Inventory count: 430; 132 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Prime-register and support-chain source review (2026-10-31)
+
+Six additional owners were reviewed while the prior build remains active. The modulus-collapse theorem is a valid conditional consequence of a cofinal badness premise and infinitude of primes. `PrimeRegister.lean` is a 1,231-line owner with substantive finite injection/capacity, side-information, Fibonacci bounds, and list Gödel-encoding results; it also contains tautological seeds and relies on explicit coprimality/base hypotheses for encoding claims. The cross-resolution attractor proves the contraction dynamics but assumes layerwise action agreement. The fixed-rank carrier result proves a genuine noninjectivity theorem for a multiplicative-to-additive natural ledger; its “2-adic” carrier is just a function into integers. The K-stretch result is conditional on supplied density criteria. The omega support chain is the elementary range-chain witness. Inventory count: 436; 138 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Finite partition plateau and primorial proxy review (2026-10-31)
+
+Six more sources were reviewed; all await kernel evidence. The Smith-partition result uses genuine finite multiset identities imported from owner modules. The codimension-one sequence result is conditional on a functional that is stipulated to read one coordinate. The primorial/Gödel owner proves injectivity under pairwise-coprime bases, but its “infinite prime support” package proves only a finite list of prime examples. The axis-dimension owners prove ceiling properties of definitions, not primorial asymptotics; the second-order paper-facing name is only a proposition definition, while a helper proves its model statement. The principal-shadow owner constructs a genuine nonzero finite-coordinate kernel vector, but its Borel/analytic interpretation is unconnected to the model. Inventory count: 442; 144 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Finite shadow kernels and field/trace scope review (2026-10-31)
+
+Six further owners were source-reviewed. The fixed-depth shadow result is a genuine rank-nullity theorem for a finite real linear map. The coupling inversion is conditional on a supplied cumulative-product law. The “full matrix” file contains only integer arithmetic for dimension 21, not a matrix algebra. The q-local owner gives a valid finite packet collision for its explicitly defined rational host function, without constructing elliptic curves. The quadratic-field owner defines a discriminant-like function and proves divisibility facts, but its headline ledger theorem is excluded middle and no number field/ramification/étale carrier is formalized. The rank-one owner proves a finite-sum cross-term identity under equal secant hypotheses, but no matrix eigenproblem is stated. Inventory count: 448; 150 entries since the last successful batch await kernel-build evidence. Coverage remains incomplete.
+
+## Finite-rank, assumption wrappers, and quartic arithmetic review (2026-10-31)
+
+Six additional owners were source-reviewed while the shared locked build remains queued. The rank-two owner proves invariance of a gcd/lcm-derived audit tuple; the Readus result packages supplied disjunction/contradiction assumptions. The Jordan-tower file aggregates imported results. The Euler-jet owner proves explicit quartic arithmetic and irreducibility claims, without deriving its polynomial from an operator model. The ground-support theorem is a valid detailed-balance contradiction under positive-flow/zero-reverse-flow hypotheses; the half-entropy owner packages assumed witnesses. Inventory count: 454; 156 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Real-input-40 analytic wrappers and finite synchronization review (2026-10-31)
+
+Six more owners were source-reviewed. The open-strip file proves a golden-ratio quadratic factorization and imports a determinant identity, but merely packages assumed holomorphic/no-zero and quotient conditions. The slope-mismatch theorem is a valid abstract contradiction encoded in structure fields. The synchronization wrapper assembles substantive finite reset/minimality claims from imported owners. The typical-ghost result proves non-reproduction in its explicit cyclic-block model. The UV wall is elementary real algebra. The mod-Gaussian-cubic file proves an exact exponential identity for a stipulated cubic polynomial, with no probability law or convergence theorem. Inventory count: 460; 162 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Recursive-soliton wrappers and finite register obstructions review (2026-10-31)
+
+Six further owners were source-reviewed. The primitive-Ramanujan claim is only the elementary fact that r≥3 cannot divide 2. The recursive-solenoid owner contains constant Bool arithmetic and assumed pcdim values, without solenoids or quotient constructions. The register owner proves substantive prefix properties and a sequential-continuity obstruction for its explicit basis encoding. The rejection normal-form theorem ignores its defect and exclusivity premises and returns only the null disjunction; a truthful replacement should use both classification branches and keep exclusivity separate. The relative-homology wrapper proves finite fiber-cardinality consequences from its data/imports, but constructs no homology groups. The relative-zeta result is algebra for a stipulated Laurent model and constant divisor, not analytic pole-order invariance. Inventory count: 466; 168 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Residue algebra, abstract Renyi obstruction, and sequence-envelope review (2026-10-31)
+
+Six additional owners were reviewed. The Renyi2 theorem is abstract modus tollens with no local sequence/model. The one-functional repair is a genuine unique-solution theorem in a vector space. The pressure-drop identity is finite algebra from supplied weights; its m parameter is unused. The single-coordinate rank result imports a concrete Fibonacci cyclic Fourier theorem and proves its specialization. The slice-rigidity result is algebra on stipulated rational slice equations. The resonance-budget theorem proves a valid partial-square-sum domination obstruction, without constructing an L2 space. Inventory count: 472; 174 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Resonance arithmetic, finite budgets, and support-envelope review (2026-10-31)
+
+Six more owners were reviewed. The resonance window file is finite arithmetic only. The infinite-prime package is a valid Euclid argument from abstract Prime/Good predicates and a finite bad set. The reverse-KL exclusivity proof contains a substantive imported real-logarithm argument. The reversible-bit file proves finite injection/cardinality and Nat.clog facts, with no reversible-machine model. The Perron-named theorem is a conditional slope/counting contradiction. The right-edge file proves finite affine-envelope properties, while one packaged clause is definitional reflexivity; no analytic support function is defined. Inventory count: 478; 180 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Strongly-regular arithmetic and screen-rank abstractions review (2026-10-31)
+
+Six further owners were source-reviewed. The S4 parameters file verifies numerical compatibility but constructs no graph. The polarization file proves nonprincipality of a fixed divisor list and imports the carrier theorem. The scale-kernel file has a valid abstract factorization/blindness lemma; its fourth-order package assumes abstract propositions. The meet/additive theorem is a valid coordinatewise natural-number obstruction. The screen atomic-value owner proves useful finite submodular marginal-rank lemmas under explicit assumptions. The Joukowsky-named owner imports a real finite audit lower bound, but its radial map and reconstruction are both identities and its radialProfile input is unused. Inventory count: 484; 186 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Screen-code, finite-dimensional, and topology owner review (2026-10-31)
+
+Six additional owners were reviewed. The constant-weight code result proves finite basis-exchange facts from imported data. The optimal-audit theorem is rank-nullity plus a finite-dimensional complement decomposition for an arbitrary linear map. The finite-localization owner proves a genuine finite-vs-infinite prime-support contradiction, while its topological-dual interpretation is not constructed. The realizability theorem combines an imported cut-space identity with supplied rank/forest equivalences. The zero-one local-law owner mostly republishes its classification hypotheses. The connected-to-discrete theorem is a valid general topology result, with no screenphase-specific object. Inventory count: 490; 192 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Screenphase and sequence-layer claim review (2026-10-31)
+
+Six further owners were reviewed. The prime-singleton screenphase family has a substantive exact-spectrum separation argument, while its quotient interpretation comes from imported owners. The ninefold-field wrapper proves specialization properties and fixed arithmetic but does not state a non-generation conclusion despite its name. The self-dual Mellin theorem merely returns all three assumptions and supplies no consistency witness. The semantic-equivalence theorem is a valid abstract many-one reduction argument. The sequence-layer asymptotic inequality is elementary and contains no periodic model. The fiber-count/minimal-state package defines the fiber count constantly as one and gives no minimality lower bound or bridge from its ambiguity values; this is a concrete semantic counterexample to its docstring. Inventory count: 496; 198 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Serrin frontier wrappers and finite moment witnesses review (2026-10-31)
+
+Six more owners were reviewed. The thermodynamic-frontier owner imports a singleton collapse, but its pressure and purported dual clauses are definitional identities rather than a Legendre-Fenchel theorem. The exact-screen owner does construct a normalized linear functional recovering scale on an imported ray. The Wulff discriminator owner proves a substantive finite moment collision for order one. The positive-anomaly result is direct from its assumed zero-anomaly implications. The volume-normalization owner defines the normalized class as Unit, making the collapse/embedding claims tautological without a normalization map. The Choi-rank formula is a conditional finite fiber-count identity from an imported collision theorem. Inventory count: 502; 204 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Finite rigidity, register blindness, and moment coarsening review (2026-10-31)
+
+Six more owners were reviewed. The cube-edit theorem is a substantive sharp consequence of an imported isoperimetric bound. The Chebotarev-named wrapper gives an explicit first-register collision and imports the group/density facts. The single-Renyi theorem proves a finite fiber-count rigidity result from a q-moment equality. The singular-ring theorem is arithmetic prime/composition equivalence under an imported faithful semigroup law. The size-bias owner gives explicit logical-independence witnesses for abstract predicates. The squarefree-crowding owner is the ordinary finite pigeonhole collision theorem for a declared cardinality gap. Inventory count: 508; 210 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Canonical finite rejection normal form repair (2026-10-31)
+
+Added `lean/Omega/Conclusion/RejectNullFiniteNormalFormCanonical.lean` with reusable statements that preserve both independent classification disjunctions, derive the six-class disjunction from both, and separately prove pairwise exclusivity within the null and defect families. This repairs the source-reviewed scope defect in `RejectNullFiniteNormalForm.lean`. The new owner has not yet received locked kernel verification because the shared build session is still queued. It is not counted as an inventory candidate.
+
+## Stokes certificates, finite sketch collisions, and sync-kernel owners review (2026-10-31)
+
+Six more owners were reviewed. The Stokes certificate is only the contradiction between a strict inequality and a bound encoded as a field, with no Stokes object. The Schur variance result depends on an assumed hook-gap implication; hNonneg is unused. The isotropic certificate result is a finite injectivity/cardinality contradiction via an imported lower bound. The sublinear Toeplitz result is an abstract eventual-order contradiction. The sync finite-length polynomial is rational algebra with uniqueness imposed pointwise. The sync palindrome module includes a genuine finite disagreement-count/uniformity equivalence, alongside seed-only numerical claims. Inventory count: 514; 216 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Tail limits, computability wrappers, and three-end certificates review (2026-10-31)
+
+Six further owners were reviewed. The sync-tail theorem derives a global-limit contradiction solely from supplied implications/nonconstancy. The temperature-halting theorem is a conditional reduction; the defined schedule does not establish its free-energy branch hypotheses. The Omega uncomputability wrapper leaves its affine identity and log nonzero unused and assumes the computability transfer. The tent-kernel wrapper returns its moment identities from structure fields and proves only rational barycenter algebra. The three-end irreducibility theorem refutes Bool-coded verifier flags using assumed missing witnesses. The joint sufficiency/minimality theorem imports factorization fields and assumes the null/hidden-failure classification rather than deriving it from certificate mechanisms. Inventory count: 520; 222 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Three-end certificates, Toeplitz gauge, and toy RH review (2026-10-31)
+
+Six more owners were reviewed. The three-end orthogonality theorem consumes imported conclusions and aggregate proof fields. The time-register criterion depends on supplied fiber and cohomology hypotheses. The Carath-Pick gauge-blindness file contains a genuine explicit kernel-invariance/noninjectivity witness, with the profinite interpretation imported. The negative-geometry file proves a concrete diagonal Gram sign calculation but imports the wider certificate model. The strictification threshold is assembled from imported prefix-rigidity results plus gauge blindness. The ToyRH file proves correct abstract involution/field identities, without constructing a zeta or RH object. Inventory count: 526; 228 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Further defect, lattice, and finite-audit review (2026-10-31)
+
+Six more owners were source-reviewed. The trivial-twist file explicitly defines a four-value coefficient table whose value at 2 violates the claimed half-bound, without constructing the stated twist or jet bridge. The incommensurable-bases theorem proves that a shared positive vertical period forces a rational logarithm ratio. The two-adic first-deviation theorem is a conditional transfer from supplied depth equivalences and undecidability, not a machine encoding. The unbounded-prime-profile result obtains an infinite common kernel from observations that ignore one coordinate, so the infinite conclusion does not encode prime-profile information. The universal finite-audit theorem is a correct abstract contraposition from an assumed implication to P=NP. The visible-circle theorem only transfers a supplied implication between abstract propositions. Inventory count: 532; 234 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Visibility thresholds, Wallis ledger claims, and finite metric owners (2026-10-31)
+
+Six more owners were source-reviewed. The visible dual-scale threshold is valid arithmetic under its named hypotheses, but feasibility and scale are definitional predicates rather than a constructed audit. The strictification rank theorem transports equalities and a supplied no-second-obstruction proposition. The Wallis finite-ledger theorem gives a substantive general noninjectivity result for multiplicative-to-additive maps on ℕ, while its supposed Wallis coverage is just parity decomposition. The product-threshold owner repeats that ledger proof and adds a Boolean first-difference witness, without constructing a CMV/Toeplitz object. The weak-coherence result proves a conditional finite sum bound on edge-length vectors, not on encoded spanning trees. The weighted free-monoid result proves rigidity for its specific ℕ carrier and golden-ratio distance, not a general monoid theorem. Inventory count: 538; 240 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Weighted completion and finite boundary-channel review (2026-10-31)
+
+Six additional owners were source-reviewed. The weighted completion theorem is a sound abstract consequence of assumed pruning/deletion properties, but has no graph construction. The odd-prime staticization theorem uses only divisibility transitivity and A=-A over ℤ; its prime hypotheses are unused. The F8/F9 orthogonality theorem packages an imported finite boundary result and a definitional alias. The faithful connected-detector theorem is only the contradiction 1=components≥4. The anomaly-completeness result derives non-completability from assumed dimensions and implication. The F8 measurability theorem is a genuine counterexample within its explicit Fin 3 × Bool model, where one readout is constant and parity reads the Bool coordinate; it does not establish the external boundary interpretation. Inventory count: 544; 246 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Boundary invariance, finite-field rigidity, and endpoint claims (2026-10-31)
+
+Six more owners were source-reviewed. The no-equivariant-projector theorem is a valid invariant-image contradiction from a supplied moved-boundary witness; its idempotence hypothesis and any concrete action are unused. The Z6 extension result contradicts an orbit-count equation included in its extension predicate, relying on an imported mismatch. The center theorem proves a substantive (F₂)^8 invariant-subspace dichotomy under closure by every linear endomorphism, stronger than GL8 invariance; it does not instantiate a window-6 center. The choice-free parity theorem classifies three supplied finite tables. The cyclic escort theorem proves limits for explicit scalar sequences without defining the named shell/operator. The endpoint-atom theorem correctly shows exponent-two groups have no nonzero real additive homomorphisms; its imported boundary/anomaly facts are cleared and unused. Inventory count: 550; 252 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Window-6 scale gates, local/global packages, and tensor claims (2026-10-31)
+
+Six further owners were source-reviewed. The first-scale gate is finite computation on a locally defined three-case size function. The inversion/statistical theorem only conjoins imported results. The local-Morita package refutes constant orbit/coset size from supplied 2/3/4 counts, while contractibility and matrix-block clauses are structure fields, not constructions. The long/short-root theorem is finite lookup from twelve assumed values with no root-system action. The low-order tensor result proves the imported dimension-21 divisibility obstruction, without constructing invariant tensors or equivariant maps. The Markov/topological channel theorem is a Fin 2 model of two distinct constant functions, with no chain or topology. Inventory count: 556; 258 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Finite Weyl tables, moment ranks, and abstract obstruction wrappers (2026-10-31)
+
+Six more owners were source-reviewed. The maximal-degree Weyl-breaking file proves a finite subset/orbit-block mismatch on coordinate intervals, with no group action. The exact-replay theorem is propositional contraposition from supplied implications. The moment-tower owner proves explicit rational exponential sums, recurrences, and exact Hankel ranks by a reusable imported theorem. The inverse-limit parity-lift theorem assumes its obstruction as a predicate implication and constructs no inverse system. The no-linear-factorization owner forwards an imported theorem. The root-system/no-free-quotient result uses an Even cardinality predicate plus imported orbit obstructions; it does not construct or map a root system. Inventory count: 562; 264 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Affine predicate tables, finite projectors, and moment inversion (2026-10-31)
+
+Six additional owners were source-reviewed. The odd-prime affine/local/coarse theorem returns supplied predicate classifications and checks two memberships. The one-axis screen theorem rewrites supplied values 32/64/12. The Reynolds-named owner contains a genuine finite partition model: rational fiberwise averages project onto fiber-constant functions, preserve the weighted norm formula, and equal the given polynomial operator; it does not construct a group Reynolds action. The short-root owner proves a genuine explicit 6×6 integer matrix has nonzero square and zero cube, conditional on its displayed entries. The three-moment theorem gives exact inversion and congruence criteria for a finite histogram. The topological-closure owner only conjoins imported cardinality/orbit facts and a boundary witness. Inventory count: 568; 270 entries await locked kernel evidence. Coverage remains incomplete.
+
+## ZG finite-shadow, Markov, and correlation claims (2026-10-31)
+
+Six more owners were source-reviewed. The nonstationary Markov result assumes transition decay in exactly the form used to refute stationarity. The finite-prefix blindness and no-local-dimension-predicate theorems derive valid abstract counterexamples from a realization field that already permits every dimension at each certificate/shadow pair; no concrete ZG process is built. The completeness/factorization theorem combines two imported results. The positive-entropy obstruction is generic implication contradiction from supplied measure hypotheses. The prime-pair correlation theorem is valid rational algebra conditional on divisor equalities, positivity, and hard-core zero pair mass; prime status and the source divisor law are not established there. Inventory count: 574; 276 entries await locked kernel evidence. Coverage remains incomplete.
+
+## Final ZG correlation, finite test, and audit-spectrum review (2026-10-31)
+
+The final three owners in the current candidate snapshot were source-reviewed. The nearest-neighbor nonmultiplicativity result is conditional rational algebra from supplied scaling equations and a zero pair term. The zero-mean residue theorem proves a genuine finite coordinate-detection result using basis probes on complex vectors. The zeta audit/synchronization theorem is an abstract indistinguishability argument whose structure fields already impose equal spectral data and distinct budgets at levels 3 and 4; no zeta object is instantiated. Inventory count: 577; 279 entries await locked kernel evidence. The source snapshot has no remaining unreviewed candidates, but this is not yet a complete repository-wide audit or kernel verification of the pending set.
+
+## Locked-build verification update (2026-10-31)
+
+The previously queued six-module locked Lake build completed successfully (3099 jobs). Those six inventory records are now marked kernel-verified, reducing the pending count to 273. The new `RejectNullFiniteNormalFormCanonical.lean` repair was given the repository-required copyright header and is verified below.
+
+The canonical finite normal-form repair subsequently built successfully with `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock Omega.Conclusion.RejectNullFiniteNormalFormCanonical`. Its proof statements were tightened to remove unused classification assumptions and unused exclusivity hypotheses. The six-module build and this repair build are verified; the remaining inventory candidates are still pending.
+
+A further six-owner locked build completed successfully (8941 jobs): the trivial-twist, incommensurable-bases, two-adic first-deviation, unbounded-prime-profile, universal finite-audit, and visible-circle owners. Their inventory statuses now record kernel verification; 267 candidates remain pending.
+
+The next six-owner locked build also completed successfully (8950 jobs): the three-end certificate, time-register criterion, Toeplitz gauge blindness, negative-geometry split, strictification threshold, and ToyRH sign-center owners. Their statuses are verified; 261 candidates remain pending.
+
+Added `FiniteObservationCollisionObstruction.lean` with general decoder-fiber lemmas, including a valid-domain version and paired observations. Refactored the finite-prefix shadow blindness proof to use this canonical obstruction. These changes are staged and await locked kernel verification; the shared build lane remains occupied by the Curtis–Tits target.
+
+Inventory-status count clarification: 270 of 577 records have a status containing `kernel_verified`, 261 are `source_reviewed_pending_locked_build`, and 46 have other review statuses. A progress update counted only the exact status string `source_reviewed_and_kernel_verified` and reported 18; that was not the total kernel-verified count.
+
+## Expanded tracked-source discovery and decoder-fiber verification (2026-10-31)
+
+The repository's lexical inventory tool was run in tracked mode over the current checkout. It scanned 28,770 Lean files and emitted 13,329 declaration candidates (11,413 named declarations), with zero read errors and seven skipped paths. Of the candidates, 12,368 are classified by the tool as repo-owned, 959 require other-surface review, and two fall in runtime/generated surfaces. This is a substantially broader candidate surface than the curated 577-owner snapshot, but remains lexical navigation evidence: its own limitations include false positives, missed indirect counterexamples, and parser omissions. A matching-name comparison found only 160 of those declarations among the 1,273 names already listed as reviewed replacements, so the curated snapshot cannot be treated as exhaustive coverage of every lexical lead. High-density unmatched files now form a prioritized source-review queue; counts alone do not classify their theorems as counterexamples.
+
+The six-owner build acquired the lock and passed (3,106 jobs), reducing the pending set to 255. The canonical decoder-observation obstruction and its finite-prefix shadow consumer then both built successfully (8,925 jobs). The consumer record and replacement link now cite that kernel evidence. Current curated inventory counts: 277 records with a status containing `kernel_verified`, 254 awaiting locked builds, and 46 with other statuses. The three explicit counterexample modules checked during expanded discovery—`CornerCompressionTraceCounterexample`, `PeirceTangentCounterexample`, and `CharacteristicTwoOverlapCounterexample`—were already present in the curated snapshot with replacement/kernel evidence; their alternatives are the commutator criterion for compression cyclicity, the characteristic-free tangent characterization with its characteristic-two boundary, and the symmetric-support overlap decomposition, respectively.
+
+Initial source triage of the largest unmatched repo-owned lexical clusters is in progress: `Canonical/ConformalAnomalySource.lean` (47 candidate declarations), `Analysis/AsanoContractionNative.lean` (41), and `Topology/MobiusGeometry.lean` (40). Their opening sections were inspected, but full declaration/dependency review remains outstanding; these counts are prioritization signals only.
+
+The explicit owner-name cross-check found two files missed by the 577-file curated inventory: `lean/SelfReference/Counterexamples.lean` and `lean/Omega/Zeta/XiTimePart60abOddModesRecurrenceCounterexample.lean`. Both are now registered as source-reviewed, build-pending records. The SelfReference witnesses are supported by general constructors in `Core.lean` and `Memory.lean`: every `Agent` admits identity-based faithful reflection and lawful state-backed memory, while neither construction asserts operational introspection or persistence across arbitrary transitions. The Xi witness uses the constant-one sequence, a genuine order-one `LinearRecurrence` solution whose odd coefficients never vanish; it refutes eventual odd-mode vanishing as a characterization of ordinary C-finite sequences. Current curated inventory size is 579; 256 records await locked builds, 277 have kernel-marked statuses, and 46 have other statuses.
+
+Both newly registered owners passed the serialized locked build (3,097 jobs). Their records and replacement links now include the verified source hashes and build evidence. Updated counts: 279 kernel-marked, 254 awaiting locked builds, and 46 other statuses, out of 579 records.
+
+The following six pending owners then passed a locked build (8,930 jobs): `EssentialPrimeAxisMinimality`, `FibadicDepthPacketSlopeAtOne`, `FibadicFiniteLayerDominantDepthSelection`, `FibadicFiniteLayerGcdKernelImageSpectrumClosedform`, `FibadicGcdConvolutionDiagonalization`, and `FibadicGoldenExtensionNoIntrinsicQ5Realization`. Their inventory records carry the command and result. Updated counts: 285 kernel-marked, 248 awaiting locked builds, and 46 other statuses, out of 579 records.
+
+A repeatable filename cross-check over `lean/` found 46 modules whose paths contain `counterexample`, `obstructionaudit`, or `obstructionbridge`; all 46 now have records in the 579-file inventory. This closes only the named-owner surface for those three filename patterns. It does not close the broader declaration-level lexical surface or establish that all counterexamples use those names.
+
+The six next pending owners built successfully under the lock (3,145 jobs): `FibadicNaturalDepthChainObstruction`, `FibadicUndecidabilityNotFromFiniteDepthOrFinitePackage`, `FiberHologramIntegralityGlobalWalshConservation`, `FiniteAuditDimensionPhaseTransition`, `FiniteDefectRankVsMacroscopicToeplitzAuditScaleSplitting`, and `FinitePrecisionHolographyTripleIncompatibility`. The output included existing lint and deprecation warnings but exited successfully. Their inventory records now carry kernel evidence. Updated counts: 291 kernel-marked, 242 awaiting locked builds, and 46 other statuses, out of 579 records.
+
+## Continued pending-owner audit (2026-10-31)
+
+While the serialized Curtis–Tits build session remained live, six subsequent pending owners were inspected directly. `StokesExtensionObstructionCertificate` is a strict-versus-weak inequality contradiction with the claimed realizability bound stored as a field, not derived from a Stokes construction. `StrictGapForcesNonhookSchurVariance` combines an imported finite Schur variance decomposition with an explicit hypothesis that a nonzero hook channel forces zero gap; its `hNonneg` premise is unused in this wrapper. `SubcriticalIsotropicMomentCertificatesIncompleteAcrossResolutions` is a finite cardinality collision result using the imported incompressibility lower bound, with arbitrary maps standing in for the named moment sketch and postprocessing. `SublinearToeplitzAuditImpossible` is a valid eventual-inequality contradiction from three supplied asymptotic hypotheses, without a Toeplitz construction. `SyncKernelFiniteLengthSingleCoordinate` proves a concrete rational polynomial identity for `1 + u + u²` and a uniquely specified function, not a general sync-kernel classification. `SyncKernelPalindrome` includes finite matrix entry checks and several literal arithmetic seeds; its tower-uniformity theorem later in the file is a substantive finite combinatorial statement about fiber sizes. These are source-level classifications only; none gains new kernel evidence from this inspection.
+
+The queued six-owner build then acquired the serialized build lock and completed successfully (3,106 jobs): `SyncTailResidueClassLimitLaw`, `TemperatureKernelFreeEnergyHaltingEmbedding`, `TemperatureKernelFreeEnergyOmegaUncomputable`, `TentKernelLocalInvertibility`, `ThreeEndCertificateIrreducibility`, and `ThreeEndCertificateJointSufficiencyMinimality`. Their inventory records now include the exact locked-build command and result. Pending locked-build records decreased from 261 to 255.
+
+The next six reviewed owners also passed the locked build (3,214 jobs): `FinitePrimitiveSurgeryPoleFinitepartTransform`, `FiniteRankAdditiveLedgerPowerTowerCollision`, `FiniteRankAdditiveShadowObstruction`, `FiniteSliceStrictificationUniqueObstructionClass`, `FiniteSpectralMomentFingerprintNotComplete`, and `FiniteStateGateFragmentDecidableOrderGateRole`. Existing deprecation warnings were emitted; the build exited successfully. Their records now carry kernel evidence. Updated inventory counts: 297 kernel-marked, 236 awaiting locked builds, and 46 other statuses, out of 579 records. The wider lexical scan still exceeds the curated inventory, so repository-wide semantic closure is not established.
+
+The following six owners passed the next serialized build (8,953 jobs): `FiniteStateSelectorCannotSustainKernelRh`, `FiniteTestDepthBusybeaver`, `FiniteVerificationClosureComplexityTrilemma`, `FixedResolutionCollisionRationalHankelRank`, `FixedResolutionHolographyDoubleObstructionSynthesis`, and `FixedResolutionLinearVsNonlinearHolographyStrictBifurcation`. The build emitted existing linter/deprecation warnings and exited successfully. Their records now include the exact command and result. Updated counts: 303 kernel-marked, 230 awaiting locked builds, and 46 other statuses, out of 579. Source review indicates several titles overstate their actual scope: the finite-state selector result is a conditional bound argument, the Busy Beaver owner encodes the halting-time equality in its data, the complexity “trilemma” packages imported implications, and the double-obstruction synthesis composes imported results. Kernel success verifies these formal statements, not broader interpretations.
+
+The next six owners passed the locked build (3,121 jobs): `FixedResolutionNoThermalSingularity`, `FixedResolutionPrimeBarrierPostprocessingNeutrality`, `FixedscalePowerSumSharpThresholdMaxfiber`, `FoldCondexpQuantumOperationNoninvertible`, `FoldFiberFaceposetSquarefreeDivisibilityShadow`, and `FoldFiberHologramBooleanCubePartition`. The output contained existing lint and deprecation warnings; the build exited successfully. The inventory now records the command and result for each. Updated counts: 309 kernel-marked, 224 awaiting locked builds, and 46 other statuses, out of 579. In source scope, the fixed-resolution histogram theorem includes a concrete pair colliding on the first two moments and recovery from the first three; the fold-fiber partition statement is a general-function fiber partition identity, while fold noninvertibility requires a collision supplied as data.
+
+Six more pending owners passed a serialized build (3,190 jobs): `FoldGoldenResonanceMaxfiberLift`, `FoldNormalizerIndexTwoQuotients`, `FoldPartitionGlobalWalshBalance`, `FoldQuantumProjectiveSimplexQuotient`, `FoldSinglepairVisibleObstructions`, and `FoldSymtftPartitionFunctionSectorization`. Existing linter/deprecation warnings did not affect the successful result. Their inventory entries now include build evidence. Counts: 315 kernel-marked, 218 awaiting locked builds, and 46 other statuses, out of 579. The previously recorded Fact/Logic audit remains the relevant correction for the user's A86 paste: the published mask support permits prompt-to-fact blocks, while the restricted `fullOperator` model does not; neither algebraic model establishes neural semantics or factual losslessness.
+
+The next six pending owners were re-reviewed directly: `FoldWalshGramSimplexSignatureSection` proves finite Walsh orthogonality and fiber energy identities; `FoldZeroDivisorLatticeInvolution` and its witness module use a definitional zero-set union plus imported spectrum/coset facts, with a separate Bool flip attached as witness; `FoldbinActiveFourierModesDiverge` proves a finite support-cardinality bound from assumed energy and coefficient bounds (not divergence over growing dimensions); `FoldbinFibonacciUpperEnvelopeFiniteContact` simply returns its finite-contact premise; and `FoldbinGroupoidPIDegreeThreshold` derives a threshold from its assumed characterization. Their source-review notes were corrected in the inventory. Kernel replay is still pending: an unrelated `InfoGeometry.Exceptional.CFSGPort.All` build currently occupies the shared lane.
+
+## Asano nondegenerate endpoint counterexample (2026-10-31)
+
+Added `Analysis/AsanoNondegenerateEndpointNecessaryCounterexample.lean` as a
+concrete counterexample to dropping the endpoint hypothesis from the
+nondegenerate Asano branch. Set `K₁ = ℂ \ {0}`, `K₂ = ∅`, and
+`p(z₁,z₂) = 1 + z₁ z₂`. The polynomial is zero-free whenever
+`z₁ ∉ K₁` and `z₂ ∉ K₂`, while `D = 1`, `AD - BC = 1`, and the contraction
+`1 + z` vanishes at `z = -1`, which is outside the empty signed-product set.
+The endpoint disjunction fails because `B = C = 0`. The canonical positive
+replacement is the existing endpoint-conditioned localization theorem
+`contracted_zero_mem_signedProduct_of_nonDegenerate_endpoint` in
+`Analysis/AsanoContractionNative.lean`. The counterexample file is registered
+in the curated inventory; its locked kernel build remains pending because the
+shared lock is held by the external CFSG build.
+
+A fresh tracked-source lexical scan after adding the witness covered 28,771
+Lean files, emitted 13,333 declaration candidates, reported zero read errors,
+and listed seven skipped paths. The leading clusters remain
+`ConformalAnomalySource` (48), `AsanoContractionNative` (41), and
+`MobiusGeometry` (40), followed by `KingdonSplitOctonion` (33). These counts
+prioritize review; they are not semantic classifications. The curated ledger
+now contains 580 files: 315 kernel-marked, 219 build-pending, and 46 other
+statuses.
+
+## Fact/Logic decoder mask matrix witness (2026-10-31)
+
+Added `Routing/FactLogicBypassMatrixCounterexample.lean`, instantiating the published three-track support formula on `Matrix (Fin 3) (Fin 3) ℂ`. Matrix units at `(2,0)`, `(1,1)`, and `(0,0)` witness a nonzero prompt-to-fact block. This refutes the pasted A86 claim that this block is necessarily zero under the published support assumptions. It does not model the additive attention mask or establish neural performance or semantics. The owner theorem `publishedMaskSupport_prompt_fact_block` is the general support identity; the concrete matrix witness passed its locked build (1,203 jobs). The related Asano nondegenerate endpoint witness also passed its locked build (3,102 jobs); both ledger entries now carry build evidence.
+
+## Finite-contact implication countermodel (2026-10-31)
+
+The source theorem `FoldbinFibonacciUpperEnvelopeFiniteContact.lean` includes eventual strict separation as the premise `hfinite_contact` and returns it unchanged. Added `FoldbinFibonacciUpperEnvelopeFiniteContactCounterexample.lean`: equal zero sequences on the theorem's actual `ℕ → ℕ` carrier satisfy the pointwise upper bound but are equal for all indices, so the other premises do not imply finite contact. This is a countermodel to removing that premise, not a refutation of the conditional theorem. The locked build passed (136 jobs); the vacuity linter reported no findings and the axiom index found zero axioms. The replacement statement records the exact conditional boundary.
+
+## Finite monotone-gate expressivity witness (2026-10-31)
+
+`FreeEnergyGatesMonotonicityObstruction.lean` provides a genuine finite result: every gate generated from real coordinates, constants, addition, and `max` is monotone on the Boolean cube after threshold compilation. Its explicit witnesses show that one-bit NOT and two-bit odd parity are not monotone, hence cannot be compiled in this grammar. The locked build passed (3,093 jobs) with an existing `Mathlib.Data.Real.Basic` deprecation warning. This is a scoped finite expressivity theorem, not a claim about unrestricted neural or free-energy models; the inventory now records its kernel evidence.
+
+## Peirce homogenized-channel noninjectivity revalidation (2026-10-31)
+
+The current `PeirceSpine/Homogenized.lean` definitions and their kernel-checked canonical alternatives are grounded in `HomogenizedKernels.lean`: all four channels fail injectivity on any nontrivial ring (the `V` channel under an idempotent hypothesis), while A15 orthogonality is generator-restricted. Repository search found these declarations in the corresponding owner/audit surfaces. The locked `HomogenizedKernelsAudit` build passed (616 jobs); its axiom readback reported only standard foundations. The inventory source hash now matches the revalidated owner.
+
+## Dikin derivative counterexample source revalidation (2026-10-31)
+
+The current Dikin owner and derivative audit were rebuilt after detecting a stale inventory source hash. `DikinBarrierDerivativeBridgeAudit` passed (8,981 jobs) and read back the transformed-barrier self-concordance counterexample alongside the derivative and exact bound-criterion declarations. Existing deprecation/linter warnings remain. The ledger hash was refreshed only after this build.
+
+## Self-dual Mellin periodicity countermodel (2026-10-31)
+
+The source theorem assumes its nonperiodicity conclusion and returns it unchanged alongside two other premises. Added `SelfdualScaleMellinPeriodicityCounterexample.lean`: the zero function `X : ℂ → ℂ` satisfies `X s = X (1-s)`, takes real values on the designated critical-line points, and has nonzero vertical period `T=1`. Thus the first two properties do not imply the third. The locked build passed (814 jobs; an existing Complex import deprecation warning); vacuity scan was clean and the axiom audit found only standard foundational axioms. The original source is now classified as an assumption-repackaging wrapper, and the countermodel is recorded as the canonical scope correction.
+
+## Scale-kernel observation-factorization result revalidation (2026-10-31)
+
+The current `ScaleKernelTreeThirdOrderBlindness` source proves a conditional extensionality result: if a protocol factors through an observation map and two objects have equal observations, their outputs agree, contradicting any supplied faithful separator. Its separate fourth-order package assumes the proposition and implication hypotheses it returns. The owner build passed (3,092 jobs), and the inventory hash and scope status were refreshed. This verifies the conditional formal statements, not a concrete scale-kernel tree or cumulant construction.
+
+## Fold zero-mode involution scope counterexample (2026-10-31)
+
+The `FoldZeroDivisorLatticeInvolution` package attaches a fixed-point-free `Bool` flip to each zero-mode witness, but that flip has no action on the zero-mode index. At `m=0`, the actual owner definition gives an empty spectrum because its index set is `Finset.range 0`, while the separate Bool flip remains an involution. Added `FoldZeroDivisorLatticeInvolutionScopeCounterexample.lean` to establish this precise scope boundary. The locked build passed (3,096 jobs, including both source modules); vacuity check was clean and only standard foundational axioms were present. The canonical correction is to keep the Bool fact separate unless a mode-to-action map is defined and proved.
+
+## Frozen-phase localization countermodel (2026-10-31)
+
+Added `FrozenPhaseLocalizationCounterexample.lean`. The real parameter choice `alphaStar=0`, `alpha2=-1`, `aC=0`, `a=1`, `betaInv=1`, with a piecewise function `hTheta`, satisfies both inequality premises but violates the collapse identity and the beta equation. The source theorem assumes those equations as premises and never uses `h_frozen`; it is therefore conditional assumption transport, not a derivation from the inequalities. The locked build passed (1,960 jobs), the vacuity scan was clean, and the axiom audit found only standard foundations. The inventory records the countermodel and conditional replacement.
+
+## Hydrogenic pair-collapse hypothesis minimization (2026-10-31)
+
+Strengthened `HydrogenicPhaseblindPairCollapse.lean`: the conclusion now holds for every integer `m`; the previous `m ≠ 0` hypothesis was unused. The proof still assumes the state-pair equation and phase/conjugation invariances, and the class-count formula remains an input rather than a derived result. Repository search found no dependents of the theorem. Its locked build passed (3,092 jobs), and the inventory records the current source hash and conditional boundary.
+
+## Finite-support Fourier-mode bound scope counterexample (2026-10-31)
+
+The owner `FoldbinActiveFourierModesDiverge.lean` proves only a per-carrier support lower bound from an assumed coefficient-square sum and `0 ≤ a ≤ 1`; it does not establish divergence over a family of dimensions. Added `FoldbinActiveFourierModesBoundedSupportCounterexample.lean`: on every carrier `Fin (n+2)`, exactly one nonzero nonzero-mode coefficient has square-sum equal to the normalized excess in the owner's hypothesis. The support therefore remains one as carrier sizes grow, showing that the finite bound alone does not force support growth. The locked build passed (3,093 jobs). Axiom readback found only standard foundations; the heuristic vacuity scan reported `simp`/`omega` usages, reviewed as constructive parts of the finite witness. The inventory now has 586 records: 328 kernel-marked, 210 build-pending, and 48 other statuses.
+
+## Finite-contact assumption boundary revalidation (2026-10-31)
+
+Rebuilt `FoldbinFibonacciUpperEnvelopeFiniteContactCounterexample.lean` against its source owner. The theorem's eventual strict-separation proposition is explicitly an input and returned unchanged; the zero-sequence countermodel proves that the remaining abstract premises do not imply it. The locked build passed (136 jobs), the vacuity scan was clean, and the axiom index found no axioms. Updated the source-owner inventory status from build-pending to kernel-verified conditional scope. The inventory now has 586 records: 329 kernel-marked, 209 build-pending, and 48 other statuses.
+
+## PI-degree threshold conditional theorem verification (2026-10-31)
+
+`FoldbinGroupoidPIDegreeThreshold.lean` derives attainment at `D` and exclusion below `D` from the explicit premises `PIdeg = D` and `satisfiesStandard r ↔ D ≤ r`. The Lean statement is valid and adds no counterexample; its title's groupoid/PI-degree context is not constructed in this file. The locked build passed (3,092 jobs). Reclassified it as a kernel-verified conditional order-theoretic result. The inventory now has 586 records: 330 kernel-marked, 208 build-pending, and 48 other statuses.
+
+## Four conclusion-owner scope checks (2026-10-31)
+
+One locked build (3,158 jobs) verified four more pending owners. `FoldbinS2MinimalLinearComplexityThree` is a concrete recurrence/minimal-order result for the defined `momentSum 2` sequence using an imported recurrence; `FoldbinS3MinimalLinearComplexityThree` is conditional on its supplied rational recurrence; `GlobalMixedHiddenStateNoFaithfulFiniteAbelianObservation` is simply infinite-to-finite noninjectivity for an arbitrary function; and `HankelArithmeticTomographyFiniteBadPrimesCompletion` composes four imported theorems under explicit premises. The broader names do not add hidden-state dynamics or tomography constructions. Their ledger entries now state these scopes and include the shared build evidence. The inventory now has 586 records: 334 kernel-marked, 204 build-pending, and 48 other statuses.
+
+## Golden-resonance trace ℓ² counterexample (2026-10-31)
+
+Added `GoldenResonanceIntegerTraceSquareSummableCounterexample.lean`. For the source's exact trace `n ↦ 1/(Int.natAbs n + 1)`, the squared coefficient sequence is summable over `ℤ`, by the exponent-two p-series on its positive and negative tails. The module also constructs a coefficient model equal to that trace and proves its zero mode is one. Thus the source's “logarithmic divergence” predicate (pointwise positivity) is not divergence, while its no-realization claim follows from the contradictory extra requirement that this nonzero zero mode vanish. The locked build passed (3,123 jobs), the vacuity scan was clean, and the axiom index found only standard foundations. Scope is sequence-level ℓ² summability; no periodic function or Parseval theorem is asserted. The inventory now has 587 records: 336 kernel-marked, 203 build-pending, and 48 other statuses.
+
+## Finite Walsh Gram and fiber-energy owner verification (2026-10-31)
+
+The pending `FoldWalshGramSimplexSignatureSection.lean` owner passed its locked build (3,103 jobs). Its verified scope is finite Boolean-word Walsh character orthogonality, the exact Gram identity after removing the empty character, and an average-energy lower bound attained by some nonempty mode on each nontrivial finite fiber. It adds no counterexample; the result is not a general decoder or information-retention theorem. At that point the inventory had 587 records, with 337 kernel-marked, 202 build-pending, and 48 other statuses.
+
+## Borwein local analytic obstruction scope audit (2026-10-31)
+
+`FoldgaugePiBorweinLocalAnalyticObstruction.lean` passed its locked build (3,137 jobs). The theorem only refutes a `formalConjugacy` proposition defined as an implication to positive radius, by applying the imported zero-radius predicate. That imported result assumes a coefficient formula and uniform lower-growth bound in its data structure; this owner constructs no analytic germ, local ring, or conjugacy map. Classified as assumption repackaging, not an analytic obstruction or counterexample. The inventory now has 587 records: 338 kernel-marked, 201 build-pending, and 48 other statuses.
+
+## Even-zeta first-difference remainder cancellation (2026-10-31)
+
+Added `FoldgaugePiEvenzetaRemainderCancellationCounterexample.lean`. Its kernel-checked example has a nonzero coefficient difference at the first retained order (`r = 1`), while choosing the unrestricted remainder difference to cancel the finite-sum term makes the two expanded sequences equal for every truncation parameter. The source's exact difference identity remains correct; only the informal reading as a first nonzero total difference is unsupported absent an asymptotic remainder-dominance condition. The locked build passed (3,096 jobs). Inventory count: 587 candidates, 339 kernel-marked, 200 build-pending, and 48 other statuses.
+
+## Fold-π sufficient-statistic finite-fiber bound (2026-10-31)
+
+`FoldgaugePiSufficientStatisticFiberObstruction.lean` passed its locked build (3,670 jobs). Its finite pigeonhole argument is valid: for the explicitly defined fiber and degree, a residual into `Fin (d + 1)` cannot be injective when the fiber is larger, and deterministic decoding success is bounded by `(d + 1) / fiber-cardinality`. The single-path Fibonacci upper bound tends to zero. The fiber cardinality and degree are defined by Fibonacci and ceiling formulas in this owner; the file does not independently construct a fold map or empirical decoder. Reclassified as a verified finite-model result, not a counterexample. Inventory count: 587 candidates, 340 kernel-marked, 199 build-pending, and 48 other statuses.
+
+## Fold-π rank-two four-moment rigidity (2026-10-31)
+
+`FoldpiRanktwoFourMomentRigidity.lean` passed its locked build (3,092 jobs). Under the explicit assumptions that both real sequences satisfy order-two recurrences, agreement at indices 1–4 and a nonzero Hankel determinant identify the comparison recurrence coefficients; induction then proves equality at every index from 1 onward. This is a valid conditional sequence theorem, not a result for arbitrary sequences without recurrence hypotheses. No counterexample was found to the stated implication. Inventory count: 587 candidates, 341 kernel-marked, 198 build-pending, and 48 other statuses.
+
+## Free-energy interval non-approximability scope audit (2026-10-31)
+
+`FreeEnergyMonotoneHaltingFormulaNonapproximable.lean` passed its locked build (3,092 jobs). The abstract reduction is valid: if a supplied real-valued map takes exactly two separated values according to an undecidable predicate, a uniformly narrow rational interval enclosure decides that predicate. The owner provides no concrete encoding of halting programs into the map. Classified as a verified conditional obstruction with scope limits, not as a constructed computability result. Inventory count: 587 candidates, 342 kernel-marked, 197 build-pending, and 48 other statuses.
+
+## Full-residue regular-simplex finite-coordinate identities (2026-10-31)
+
+`FullResidueRegularSimplexOrbit.lean` passed its locked build (3,092 jobs). It verifies the standard finite rational model: centered coordinate vectors in `Fin m` have Gram entries `δᵣₛ - 1/m`, squared norms `(m - 1)/m`, and pairwise squared distance `2` for distinct indices. The proof is valid for `m > 0`; its scope is the explicit coordinate model, without a general orbit or representation theorem. No counterexample was found. Inventory count: 587 candidates, 343 kernel-marked, 196 build-pending, and 48 other statuses.
+
+## Gauge-anomaly no-three-mode emulator claim scope audit (2026-10-31)
+
+`GaugeAnomalyNoThreeModeEmulator.lean` passed its locked build (3,092 jobs). Its theorem directly contraposes the supplied premise that passing both predicates forces `carrierDim ≥ 4`. The owner defines no gauge-anomaly data, certificate semantics, or emulator model, so this is a verified logical wrapper rather than a constructed dimension obstruction. Inventory count: 587 candidates, 344 kernel-marked, 195 build-pending, and 48 other statuses.
+
+## Gauge-anomaly normalized ratio limit canonicalization (2026-10-31)
+
+`GaugeAnomalySuperpoissonFano.lean` passed its locked build (3,092 jobs). The normalized mean and variance limits imply the variance-to-mean ratio limit, while the owner separately assumes eventual nonvanishing of the mean. Added `GaugeAnomalySuperpoissonCanonical.lean`, proving that this premise follows from convergence of the normalized mean to `4/9` (and eventual positivity of `m`), then reusing the original theorem. The two limit hypotheses alone therefore suffice. This is a canonical strengthening of a valid real-sequence theorem; the source's Fano/super-Poisson interpretation is not represented. The new module passed its locked build (3,093 jobs). Inventory count: 587 candidates, 345 kernel-marked, 194 build-pending, and 48 other statuses.
+
+## Global-clock vanishing assumption audit (2026-10-31)
+
+`GlobalClockVanishing.lean` passed its locked build (3,092 jobs). The conclusion is exactly the contradiction between a nonzero obstruction integer and the structure field asserting that any shared local integer clock forces that integer to vanish. No Čech complex or cohomology class is built. Classified as assumption repackaging, not a cohomological obstruction theorem. Inventory count: 587 candidates, 346 kernel-marked, 193 build-pending, and 48 other statuses.
+
+## Global-null cohomological remainder scope audit (2026-10-31)
+
+`GlobalNullPureCohomologicalRemainder.lean` passed its locked build (3,092 jobs). Its conclusion is classical contraposition of an assumed equivalence between readability and absence of the named obstruction, conditional on local exhaustion. No cohomology carrier, differential, or obstruction class is constructed. Classified as propositional assumption repackaging. Inventory count: 587 candidates, 347 kernel-marked, 192 build-pending, and 48 other statuses.
+
+## Global terminal-spectrum compatibility tautology audit (2026-10-31)
+
+`GlobalTerminalStateForcesGlobalPrimitiveSpectrum.lean` passed its locked build (149 jobs). Its `compatibleGlobalTerminalState` predicate already includes local-to-global spectrum equality and vanishing of both integer obstruction fields. The theorem projects equality and contradicts either nonzero obstruction against the corresponding zero conjunct. Classified as definition-level assumption repackaging; no spectrum or gluing construction is present. Inventory count: 587 candidates, 348 kernel-marked, 191 build-pending, and 48 other statuses.
+
+## Gödel–Leyang IFS theorem-name scope audit (2026-10-31)
+
+`GodelLeyangIFS.lean` passed its locked build (3,092 jobs). Its declarations prove elementary base-2/base-5 arithmetic and logarithm identities; one package declaration is an alias of the seed theorem. The names about IFS dimension, Haar measure, and digit rigidity exceed the statements: no IFS, measure, Hausdorff dimension, or rigidity condition is formalized. Classified as verified scope limits. Inventory count: 587 candidates, 349 kernel-marked, 190 build-pending, and 48 other statuses.
+
+## Gödel–Leyang resolution-tower circle-law scope audit (2026-10-31)
+
+`GodelLeyangResolutionTowerCircleLaw.lean` passed its locked build (3,092 jobs). The only substantive result is the standard fact that a complex root of unity has norm one. The primitive-root exclusion and lower bound on `M` are unused, and tower degree/count equalities are reflexive unfoldings of definitions. No resolution-tower or primitive-root counting theorem is present. Classified as verified scope limits. Inventory count: 587 candidates, 350 kernel-marked, 189 build-pending, and 48 other statuses.
+
+## Gödel prefix arithmetic criterion verification (2026-10-31)
+
+`GodelPrefixArithmeticCriterion.lean` passed its locked build (3,129 jobs). The statement is a valid conditional list-prefix criterion: the imported injectivity theorem for equal-length prime-product encodings recovers the prefix, and `take_append_drop` supplies the extension. Classified as a verified sequence implication, not a counterexample. Inventory count: 587 candidates, 351 kernel-marked, 188 build-pending, and 48 other statuses.
+
+### Halting-time budget exactness verification (2026-10-31)
+
+`Omega.Conclusion.paper_conclusion_halting_time_external_budget_exact` in
+`lean/Omega/Conclusion/HaltingTimeExternalBudgetExact.lean` kernel-builds
+successfully (locked `lake build Omega.Conclusion.HaltingTimeExternalBudgetExact`,
+3092 jobs). The candidate is a tautological data projection: both budget
+formulas are fields of `HaltingTimeExternalBudgetExactData`, and the theorem
+returns those fields unchanged. It contains no halting-time construction or
+external-budget analysis. Marked as kernel-verified tautological packaging, not
+as a substantive counterexample theorem. The inventory had 188 candidates
+pending locked builds before this verification.
+
+### Alternating-constant convergence inference (2026-10-31)
+
+`Omega.Conclusion.GoldenAlternatingConstantsRecoverPhi` kernel-builds
+successfully (locked build, 3092 jobs). Its affine identities and its distinctness
+lemma under `a ≠ 1/30` are correct. The source does not formalize a sequence or
+prove the claimed two-phase non-convergence consequence. Added
+`Omega.Conclusion.not_tendsto_of_distinct_subsequential_limits` in
+`lean/Omega/Conclusion/DistinctSubsequentialLimits.lean`: if two subsequences
+with index maps tending to `atTop` converge to distinct limits, the original
+sequence cannot converge to either limit. The new theorem kernel-builds
+successfully (locked build, 8924 jobs).
+
+### Halting/valuation/Walsh ledger unification verification (2026-10-31)
+
+`Omega.Conclusion.paper_derived_halting_valuation_walsh_ledger_unification`
+kernel-builds successfully (locked build, 3092 jobs). Its two-constructor
+`diverges | haltsAt N` model supports the stated branch equations by case
+analysis. In this source, no machine/configuration transition or encoding is
+formalized, so these equations do not establish a result about machine
+halting or undecidability. The inventory classifies it as a verified finite
+model theorem with that scope.
+
+### Hankel finite-modulus threshold verification (2026-10-31)
+
+`Omega.Conclusion.HankelFiniteModSinglevaluedizationShortestLockingThreshold`
+kernel-builds successfully (locked build, 3092 jobs). Its periodicity result is
+a valid finite-equivalence orbit theorem. The asserted shortest threshold is
+built into the definition `locksFutureFrom D n := 2 * D.rank ≤ n`, then follows
+from `Nat.find`; it does not formalize a Hankel-window locking or
+singlevaluedization criterion. The determinant localization result is separate
+and conditional on its supplied determinant progression. The inventory now
+records these scopes independently.
+
+### Hidden-face budget threshold classification verification (2026-10-31)
+
+`Omega.Conclusion.paper_conclusion_hidden_face_budget_sharp_threshold_classification`
+builds successfully (locked build, 614 jobs). It validly propagates two explicit
+premises: injectivity below `2*n`, and a witness at exact distance `2*n`.
+It does not prove either premise from hidden-face geometry or an independent
+budget construction. Recorded as a conditional threshold transfer theorem.
+
+### Hypercube phase finite enumeration verification (2026-10-31)
+
+`Omega.Conclusion.HypercubePhase` builds successfully (locked build, 3092 jobs).
+Its image/value claims are correct finite enumerations in dimensions 4, 6, 8,
+10, and 12. Their scope is those listed dimensions; these declarations do not
+establish a general-dimensional classification. The inventory records this
+scope limit rather than treating finite enumeration as a general theorem.
+
+### JG Gödel dense-orbit aggregation verification (2026-10-31)
+
+`Omega.Conclusion.JGGodelDenseOrbitsOnHyperbolaLeaf` builds successfully
+(locked build, 3206 jobs). It is an aggregation theorem that delegates to the
+imported log-lattice approximation, two-prime orbit density, and orthogonal
+chart declarations; it adds no independent density proof. The dependency replay
+reported a deprecated Complex import warning in the chart module, unrelated to
+this candidate's theorem validity.
+
+### JG slit orthogonal-coordinate chart verification (2026-10-31)
+
+`Omega.Conclusion.JgSlitUniformizationOrthogonalCoordinates` builds
+successfully (locked build, 3201 jobs). It proves the explicit coordinate,
+conic-level, and differential identities under its stated positivity and
+nonvanishing assumptions. The declarations are chart-level calculations; they
+do not by themselves establish global uniformization or surjectivity onto a
+slit domain. Build replay reports the deprecated `Mathlib.Data.Complex.Basic`
+import warning.
+
+### Joukowsky transport wreath embedding verification (2026-10-31)
+
+`Omega.Conclusion.JoukowskyTransportWreathEmbedding` builds successfully
+(locked build, 3167 jobs). It proves a finite embedding and cardinality formula
+from explicit quadratic-root lifts and injective sign/permutation tagging under
+the stated `w > 2` condition. The formal scope is finite; the source does not
+establish global analytic uniformization or an infinite wreath-product result.
+
+### Kernel-RH fixed-ray exclusion verification (2026-10-31)
+
+`Omega.Conclusion.KernelRhOnlyFinitelyOftenOnFixedRay` builds successfully
+(locked build, 3093 jobs). It validly derives eventual exclusion along `a*b`
+from the strict slope gap, eventual upper bound, and assumed necessary lower
+bound. It does not prove those bounds or construct a kernel-RH predicate from
+an independent analytic object; classification is conditional.
+
+### Joint finite-audit aggregation verification (2026-10-31)
+
+`Omega.Conclusion.JointFiniteAuditIncompletenessPhasePrefixMultiscale` builds
+successfully (locked build, 3095 jobs). It combines imported finite
+address-cardinality, finite-codimension interpolation, and prime-avoidance
+results, conditional on the supplied injectivity and linear-independence
+hypotheses. The candidate does not add an independent multiscale
+phase-prefix or incompleteness argument. Dependency replay emits a `letI`
+style warning in the interpolation module.
+
+### Kirchhoff Green determinant scalar identity verification (2026-10-31)
+
+`Omega.Conclusion.KirchhoffGreenDeterminantIdentity` builds successfully
+(locked build, 3092 jobs). The scalar algebra is valid under `D ≠ 0`,
+`vol ≠ 0`, and `dOne = vol`. In this source, the definitions are real-valued
+scalar expressions; no graph incidence/Laplacian matrices, Green operator,
+cofactor theorem, or rank-one determinant lemma are constructed. The theorem is
+therefore recorded as a conditional scalar normal form, not a formal matrix-tree
+proof.
+
+### Layered primeslice finite-support depth ceiling verification (2026-10-31)
+
+`Omega.Conclusion.LayeredPrimesliceFiniteSupportDepthCeiling` builds
+successfully (locked build, 135 jobs). Its contradiction is valid given finite
+support, the supplied active-layer ≤ prime-slice bound, and faithfulness at
+every depth. The `branchesAtEveryDepth` premise is defined as `True` and is
+unused; the result is an abstract conditional obstruction, not a constructed
+primeslice model. This vacuous premise and the true assumptions are captured in
+the inventory scope notes.
+
+### Leyang finite Dirichlet resolvent identity verification (2026-10-31)
+
+`Omega.Conclusion.LeyangEdgeLogDerivativeDirichletResolventLimit` builds
+successfully (locked build, 3199 jobs). For each finite `N`, away from the first
+`N` poles, it proves the truncated product is nonzero and its logarithmic
+derivative equals the finite resolvent sum. Despite the name, this declaration
+does not prove convergence as `N → ∞` or identify an infinite resolvent limit.
+Build replay reports a deprecated Real import warning.
+
+### Leyang Q₅ cubic local-data verification (2026-10-31)
+
+`Omega.Conclusion.LeyangGlobalLocalQ5UnramifiedCubic` builds successfully
+(locked build, 8924 jobs). It proves finite polynomial facts (no roots in the
+three-element residue carrier and an integer discriminant calculation). The
+local degree, ramification index, residue degree, and three-element Galois group
+are assigned as model constants; this source does not construct a Q₅ extension
+or prove those local-field properties.
+
+### Leyang–Lattes finite hypercube exact-form verification (2026-10-31)
+
+`Omega.Conclusion.LeyangLattesHypercubeExactFormZeroCurvature` builds
+successfully (locked build, 3093 jobs). It proves the finite Boolean-cube
+potential's coordinate-weight edge increments and zero square boundary for
+distinct coordinates. These are valid exact combinatorial identities at the
+stated finite carrier; they do not imply broader geometric or arithmetic
+claims without a separately proved map.
+
+### Leyang global quadratic-factorization obstruction wrapper (2026-10-31)
+
+`Omega.Conclusion.LeyangNoGlobalQuadraticQuadraticFactorization` builds
+successfully (locked build, 3094 jobs). Its conclusion is obtained by duplicating
+the imported primitive-certificate obstruction into both components of the
+statement. It is valid conditional on that certificate, but contributes no
+quartic cover, monodromy action, equivalence, or independent factorization
+argument.
+
+### Leyang Rademacher circle anomaly aggregation verification (2026-10-31)
+
+`Omega.Conclusion.LeyangRademacherCircleAnomalyOrthogonalLedgers` builds
+successfully (locked build, 3152 jobs). It combines an imported Rademacher
+cumulant theorem with a circle-dimension value of 1 and a finite coordinate
+carrier cardinality of 21. The “orthogonal” conclusion is only inequality of
+these dimensions; no inner product or orthogonal subspaces are constructed.
+The dual-extension data is instantiated with an empty set.
+
+### Leyang rho 456 logarithmic-derivative verification (2026-10-31)
+
+`Omega.Conclusion.LeyangRho456LogDerivativeRationalization` builds
+successfully (locked build, 3256 jobs). It proves elementary derivatives of
+`log |u^4 - 1|` and `log |u^6 - 1|` away from their zeros and applies constant
+normalizations. The named rho combinations are defined from those expressions;
+no independent spectral, arithmetic, or asymptotic rationalization is proved.
+
+### Leyang S5 two-channel finite completeness verification (2026-10-31)
+
+`Omega.Conclusion.LeyangS5TwoChannelMinimalCompleteness` builds successfully
+(locked build, 3092 jobs). It reconstructs a finite seven-coordinate density
+vector and supplies explicit witnesses distinguishing two channels at selected
+small parameters. Its completeness/minimality scope is that finite observation
+model; it does not establish a general S5 representation or channel
+identifiability theorem.
+
+### Leyang off-diagonal transposition quotient verification (2026-10-31)
+
+`Omega.Conclusion.LeyangOffdiagonalTranspositionQuotient` builds successfully
+(locked build, 3092 jobs). It proves a finite `S₄` stabilizer description for
+an ordered distinct pair and uniquely solves a two-equation integer moment
+system. These are valid finite permutation and algebra statements; the source
+does not construct a curve, Frobenius action, or arithmetic-geometric
+realization.
+
+### LK first-zero monotone-approach sequence verification (2026-10-31)
+
+`Omega.Conclusion.LkFirstZeroMonotoneApproach` builds successfully (locked
+build, 8924 jobs). It proves strict monotonicity and limits for the explicitly
+defined sinc-based real sequence and its reciprocal ratio. These are substantive
+real-analysis theorems for those definitions; this file does not identify the
+sequence with a first zero of an independently defined L-function or prove a
+spectral interpretation. Build reports unused simp-argument warnings.
+
+### Leyang transposition quotient/Jacobian decomposition wrapper verification (2026-10-31)
+
+`Omega.Conclusion.LeyangTranspositionQuotientJacobianDecomposition` builds
+successfully (locked build, 3098 jobs). It composes the finite S4 stabilizer
+result with an imported quotient/Jacobian/Prym package. The conclusion follows
+from those dependencies, while the wrapper adds no independent bridge
+ equivalence or geometric construction.
+
+### Lmax finite-primeizability singleton witness verification (2026-10-31)
+
+`Omega.Conclusion.LmaxNotFinitePrimeizable` builds successfully (locked build,
+3094 jobs). Given an eligible prime outside `S`, it forms the singleton set
+`P = {p}` and delegates the orbit-length/product equality to
+`LmaxPrimeProgrammability`. The theorem does not establish its prime-existence
+premise or an unconditional global non-primeizability claim.
+
+### Leyang Gödel hyperbola orbit-closure wrapper verification (2026-10-31)
+
+`Omega.Conclusion.LeyangGodelHyperbolaOrbitClosure` builds successfully
+(locked build, 3207 jobs). The finite-union closure equality is derived from an
+imported two-prime dense-orbit theorem and continuity of the parametrization;
+this module adds no density proof. Dependency replay reports a deprecated
+Complex import warning in the Joukowsky chart module.
+
+### Leyang local double-zero two-case model verification (2026-10-31)
+
+`Omega.Conclusion.LeyangLocalDoublezeroBinaryClassification` builds successfully in a locked Lake run (3,095 jobs). The owner computes exact rational seed values and rescaling ratios for its two-constructor `sinh`/`cosh` model, then proves exhaustiveness by cases on that inductive type. This verifies the finite model arithmetic only; it does not classify analytic local double zeros.
+
+### Local exactification resonance model verification (2026-10-31)
+
+`Omega.Conclusion.LocalExactificationMacroscopicResonanceSeparation` builds successfully in a locked Lake run (3,172 jobs). The exactified profile and statistics are defined pointwise to equal the original ones, and the divergence conclusion specializes imported collision bounds to a selected profile. This is a model-specific consequence, not a theorem for an independently constructed exactification map. The build replay emitted an existing deprecated `Mathlib.Data.Real.Basic` import warning in `FoldSinglepairVisibleObstructions`.
+
+### Local finite-clock consensus obstruction verification (2026-10-31)
+
+`Omega.Conclusion.LocalFiniteHaltingNoGlobalFiniteConsensus` builds successfully in a locked Lake run (3,093 jobs). A uniform natural time for all local clocks implies the global terminal-readout premise, which the imported theorem rules out under the stated nonzero Cech-H2 obstruction. This is a conditional implication; the owner does not construct the obstruction or formalize computational halting.
+
+### Localized finite-ledger domain audit (2026-10-31)
+
+`Omega.Conclusion.LocalizedColimitFiniteLedgerLinearizationObstruction` builds successfully in a locked Lake run (3,092 jobs). The multiplicativity premise is quantified over all naturals, including zero, so its source establishes the identically-zero ledger consequence; the later prime-product collision statement is redundant under that stronger domain. A positive-input-only variant would be a different contract and is not proved by this owner.
+
+### Localized finite-cover Cech wrapper verification (2026-10-31)
+
+`Omega.Conclusion.LocalizedNoHighCechObstructionFiniteCover` builds successfully in a locked Lake run (3,093 jobs). Its theorem applies user-supplied implications from two exactness propositions to arbitrary target propositions. The chapter-local “no high Cech” predicates are aliases for exactness proxies; this owner does not construct homology carriers or prove exactness from cover geometry.
+
+### Localized solenoid prime-separation equivalence verification (2026-10-31)
+
+`Omega.Conclusion.LocalizedSolenoidCoprimeArtinMazurCompleteness` builds successfully in a locked Lake run (3,093 jobs). For a finite family of bases bounded below by two, it proves equivalence between primewise periodic-count separation, the defined prime-recovery predicate, and gcd-one separation. These are genuine arithmetic equivalences on the owner definitions; this file does not construct a topological solenoid or analytic Artin-Mazur zeta function. The replay emitted one unnecessary-`simpa` linter warning.
+
+### Low-degree Stokes observation collision verification (2026-10-31)
+
+`Omega.Conclusion.LowTotalDegreeStokesFamilyNonseparation` builds successfully in a locked Lake run (8,924 jobs). In its declared `Fin 2` model, the boundary map is injective while the defined low-degree moment and Stokes observables are constant, yielding an explicit collision. This is a genuine finite-observation counterexample; it does not establish a geometric polycube or Stokes theorem.
+
+### M2 level-3 exact-sequence separation wrapper verification (2026-10-31)
+
+`Omega.Conclusion.M2Level3IncidenceExactSequence15Separation` builds successfully in a locked Lake run (3,096 jobs). It projects two conclusions from the imported crossboundary-stability theorem: the exact-sequence proposition and a characteristic-polynomial inequality. The file adds no independent incidence construction or separation proof.
+
+### Metallic integer binary-collapse classification verification (2026-10-31)
+
+`Omega.Conclusion.MetallicIntegerBinaryCollapse` builds successfully in a locked Lake run (3,208 jobs). Under its integer parameter restriction A ≥ 1, the owner proves the objective comparison at A=1 and strict compression/certificate comparisons for each integer A>2 against A=2. This is a positive classification for the imported metallic Perron-root objectives, not a counterexample. The build replay emitted deprecated `Mathlib.Data.Real.Sqrt` imports and an unnecessary-`simpa` warning.
+
+### General binary-state capacity replacement (2026-10-31)
+
+`Omega.Conclusion.MinLatchesLogStates` previously verified only finitely many `Nat.clog` values despite a broad minimum-latches headline. Added general kernel-checked lemmas: `Nat.clog 2 n ≤ m ↔ n ≤ 2^m` and the resulting least-exponent characterization for every natural `n`, including edge cases. The owner now supports an arbitrary-state arithmetic capacity bound, but still does not define Boolean circuits or prove a circuit-realization minimum. The locked build passed (3,092 jobs).
+
+### Mixed-collision finite Hilbert feature characterization verification (2026-10-31)
+
+`Omega.Conclusion.MixedCollisionCharacteristicHilbertGeometry` builds successfully in a locked Lake run (3,158 jobs). For its finite normalized NNReal distribution model and positive exponent, it proves the kernel/feature-map Gram identity, squared MMD equals squared Euclidean feature distance, and Cauchy-Schwarz equality for the kernel is equivalent to equality of the distributions. This is a substantive positive result scoped to the explicit finite feature construction.
+
+### Mod-2 shadow score-recovery obstruction verification (2026-10-31)
+
+`Omega.Conclusion.Mod2ShadowInsufficientForArchimedeanInstability` builds successfully in a locked Lake run (3,092 jobs). The owner exhibits score pairs 12/14 and 13/15 that collide under its mod-2 shadow, then proves that any audit factoring through that shadow cannot recover the full score. This is a valid finite quotient-information obstruction; it does not prove an analytic instability theorem.
+
+### Moment-Hankel bad-prime stiffness inclusion audit (2026-10-31)
+
+`Omega.Conclusion.MomentHankelBadPrimeStiffnessSupport` builds successfully in a locked Lake run (3,092 jobs). Its conclusion is exactly the set-inclusion restatement of the premise that every bad prime has nonzero stiffness. It supplies no independent moment-Hankel or prime-distribution argument.
+
+### Two-sheet monoidal-jump torsion classification verification (2026-10-31)
+
+`Omega.Conclusion.MonoidalJumpA2TorsionClassification` builds successfully in a locked Lake run (3,092 jobs). For the declared homomorphisms `Equiv.Perm (Fin 2) → ZMod 2`, the transposition value determines the map, is 2-torsion, and both values are realized. This is an exact finite-group classification on that model, not a general torsion result.
+
+### Monotone Boolean finite-cube representation verification (2026-10-31)
+
+`Omega.Conclusion.MonotoneBooleanClone` builds successfully in a locked Lake run (3,094 jobs). It constructs, for every monotone Boolean function on `Fin n → Bool`, a DNF whose clauses are satisfying supports, proves each thresholded additive clause score equals its Boolean indicator, and proves the DNF represents the function. This is a general finite combinatorial representation, not a circuit complexity/resource bound. A replayed dependency emitted a deprecated `Mathlib.Data.Real.Basic` import warning.
+
+### Negative-sign barrier asymptotic-ratio verification (2026-10-31)
+
+`Omega.Conclusion.NegativeSignSameBarrierDifferentResidue` builds successfully in a locked Lake run (3,093 jobs). Given the explicit nonzero-parameter conditions and supplied `SharpAsymptotic` hypotheses for scan and time-reversal sequences, it derives the shared logarithmic barrier and limiting ratio `cc / ciota`. It does not prove the asymptotic hypotheses or an unconditional residue statement.
+
+### Complete normal-form decidability obstruction verification (2026-10-31)
+
+`Omega.Conclusion.NoComputableCompleteNormalForm` builds successfully in a locked Lake run (3,092 jobs). It proves the general implication that a sound and complete normal-form function makes its equivalence decidable, so this contradicts an explicitly supplied undecidability premise. The owner does not instantiate that premise with a concrete undecidable relation or prove a reduction.
+
+### Complete-invariant decidability implication scope audit (2026-10-31)
+
+`Omega.Conclusion.NoComputableFinitePrimeCompleteInvariant` builds successfully in a locked Lake run (3,092 jobs). Its proof correctly shows that any complete invariant into a type with decidable equality decides the underlying equivalence, contradicting a supplied undecidability premise. Despite the declaration name, the codomain has no finiteness instance or cardinality premise, and the owner supplies no concrete undecidable relation. The result is a general conditional decidability implication, not a finite-invariant pigeonhole obstruction.
+
+### Faithful total-order time-functor contradiction wrapper audit (2026-10-31)
+
+`Omega.Conclusion.NoFaithfulTotalOrderTimeFunctor` builds successfully in a locked Lake run (3,092 jobs). The result is an abstract contradiction from supplied implications: the faithful-time predicate yields a global clock, while the supplied no-clock premise excludes it under a supplied obstruction witness. This owner does not define the time-functor semantics, construct Cech cohomology, or prove the obstruction premise.
+
+## Two-axis audit abstraction review (2026-10-31)
+
+`Omega.Conclusion.NoUniversalTwoAxisAuditCompletion` builds successfully in a
+locked Lake run (3,093 jobs, exit 0). Its conclusion follows from fields of
+`TwoAxisAuditCompletionData`: a supplied dichotomy and supplied branch
+contradictions under three witness predicates. The module does not construct an
+audit scheme, derive those witnesses, or establish them from a concrete model.
+This is a valid abstract conditional no-go schema; the source does not prove a
+model-specific impossibility result.
+
+## Restricted DPI exactness wrapper review (2026-10-31)
+
+`Omega.Conclusion.NoncontractibleRestrictedDpiExact` builds successfully in a
+locked Lake run (3,098 jobs, exit 0). The owner proves the restricted-loss
+component by definitional equality and forwards supplied bad-mod-three and
+good-component implications to the imported fiber parity/homotopy theorem.
+Those implications carry the substantive classification assumptions; this
+file does not independently prove a DPI or homotopy classification result.
+
+## Nonzero-spectrum window-length wrapper review (2026-10-31)
+
+`Omega.Conclusion.NonzeroSpectrumCannotRecoverWindowLength` builds in a locked
+Lake run (3,095 jobs, exit 0). The theorem returns its invariant-constancy
+hypothesis unchanged and proves that the imported ambiguity-shell budget
+`m ↦ m - 1` is injective for `m ≥ 3`. The local arithmetic is valid; no
+spectral observation map or separate non-identifiability theorem is constructed
+in this owner.
+
+## Odd-tail finite-rank threshold wrapper review (2026-10-31)
+
+`Omega.Conclusion.OddtailArithmeticSensitivityInfiniteRankThreshold` builds
+successfully in a locked Lake run (3,092 jobs, exit 0). The finite-rank
+exclusion follows by contraposing the supplied `hblind` implication, while
+non-finiteness of the designated operator is supplied directly as `hinfinite`.
+The owner defines no concrete criterion, compressor, RH-equivalence relation,
+or operator construction; this is conditional logical packaging.
+
+## Odd-tail scalar-kernel wrapper review (2026-10-31)
+
+`Omega.Conclusion.OddtailNoScalarUnifyingPiKernel` builds successfully in a
+locked Lake run (3,093 jobs, exit 0). It derives `¬ scalarKernel` from three
+implications and a supplied contradiction among their conclusions. The kernel
+and shadow notions are opaque propositions in this owner; their constructions
+and incompatibility proof are not developed locally. This is a valid
+propositional schema, not a model-specific obstruction theorem.
+
+## Ordered Nevanlinna completeness wrapper review (2026-10-31)
+
+`Omega.Conclusion.OddtailOrderedNevanlinnaCompleteness` builds successfully in
+a locked Lake run (3,092 jobs, exit 0). Its theorem returns the supplied
+ordered-completeness implication and support-level counterexample unchanged.
+The file constructs neither the relevant function objects nor a counterexample;
+its formal content is assumption packaging.
+
+## Deep finite-prefix ambiguity criterion (2026-10-31)
+
+`Omega.Conclusion.PcdimLowerboundDeepAmbiguity` builds successfully in a
+locked Lake run (3,092 jobs, exit 0). It proves a reusable abstract criterion:
+if the auxiliary readout depends on one finite prefix and the primary readout
+has a collision at every prefix depth, then the paired readout is not injective.
+The proof is substantive and correct under its hypotheses; concrete instances
+of those hypotheses remain separate obligations.
+
+## Periodic-amplitude energy identity review (2026-10-31)
+
+`Omega.Conclusion.PeriodicAmplitudeResidueEnergySplitting` builds in a locked
+Lake run (3,168 jobs, exit 0). It constructs a finite complex amplitude model,
+sets its average to zero, scales nonzero coordinates by `sqrt p`, and proves a
+normalized norm-square identity plus positivity from a nonzero coefficient.
+This is a valid finite weighted identity; the owner does not define a Fourier
+transform or establish Parseval for arbitrary periodic signals. The imported
+complex-basic path also emits a deprecation warning.
+
+## Pisot boundary profile non-summability review (2026-10-31)
+
+`Omega.Conclusion.PisotBoundaryShadowNotL2` builds successfully in a locked
+Lake run (8,925 jobs, exit 0). It proves that the explicit profile
+`n ↦ 1/(|n|+1)` is not summable and forwards a pointwise Fourier identity from
+its imported owner. The file does not identify that profile with squared
+coefficients of the boundary object, so the advertised `L²` interpretation
+needs a separate coefficient-map theorem. The profile-level non-summability
+result itself is valid.
+
+## Bivariate quartic null-cone lemma review (2026-10-31)
+
+`Omega.Conclusion.PoissonBivariateQuarticNullConeFdivUniversal` builds
+successfully in a locked Lake run (3,092 jobs, exit 0). It proves the exact
+real-algebraic equivalence between vanishing of `c * (A^2 + 4 * B^2)` for
+nonzero `c` and `A = B = 0`. This is a valid canonical null-cone lemma; the
+theorem statement contains no Poisson or divergence structure.
+
+## Poisson Cauchy fourth-moment decoding review (2026-10-31)
+
+`Omega.Conclusion.PoissonCauchyM4Decode` builds successfully in a locked Lake
+run (3,092 jobs, exit 0). It algebraically solves the supplied `hA3`, `hB6`,
+and `hB8` polynomial identities for `mu4` and, under `mu3 = mu5 = 0`, for
+`mu6`, assuming `mu2 ≠ 0`. The inversion is valid; the moment interpretation
+and source identities remain hypotheses rather than derived results here.
+
+## Poisson Cauchy minimal Laurent-order claim review (2026-10-31)
+
+`Omega.Conclusion.PoissonCauchyMinimalLaurentOrderIdentifiability` builds
+successfully in a locked Lake run (3,092 jobs, exit 0). Its proof simply
+returns the assumptions that two coefficients are nonzero; the order parameter
+`m` is unused, and no Laurent polynomial or identifiability relation occurs in
+the conclusion. A canonical replacement needs an explicit polynomial/support
+model and a proved minimal-order criterion.
+
+## Poisson Cauchy moment tomography review (2026-10-31)
+
+`Omega.Conclusion.PoissonCauchyMomentTomography` builds successfully in a
+locked Lake run (3,092 jobs, exit 0). It proves explicit real-algebra
+inversions recovering `mu2`, `|mu3|`, and `mu4` from stipulated coefficients,
+and a two-model identifiability result under positivity and a nonzero
+2-by-2 determinant condition. These are substantive conditional theorems; the
+coefficient formulas are hypotheses here, not derived from Poisson data.
+
+## Two-KL minimal entropy moment tomography review (2026-10-31)
+
+`Omega.Conclusion.PoissonTwoKlMinimalEntropyMomentTomography` builds
+successfully in a locked Lake run (3,094 jobs, exit 0). It applies the imported
+CircleDimension moment-tomography theorem to supplied coefficient equations
+and uses nonnegativity to select the square-root branch for the variance.
+This is a valid corollary; KL divergence and asymptotic coefficient derivation
+are not modeled in this conclusion owner. The real-basic import emits a
+deprecation warning.
+
+## Window-six full-matrix title scope review (2026-10-31)
+
+`Omega.Conclusion.PushforwardFullMatrix` builds successfully in a locked Lake
+run (3,092 jobs, exit 0). It verifies `Nat.fib 8 = 21`, elementary arithmetic
+for 21 and 441, the factorization `21 = 3*7`, and nonsquareness of 21 among
+integers strictly between 1 and 21. Despite the title and module comment, the
+owner defines no 21-dimensional vector space, endomorphism algebra, or
+pushforward map. The canonical scope is the finite arithmetic package only.
+
+## Finite q-local wordtrace separation scope review (2026-10-31)
+
+`Omega.Conclusion.QLocalWordtraceNotCompleteForEllipticTraceFamily` builds
+successfully in a locked Lake run (3,111 jobs, exit 0). Its trace recurrence
+comes from an imported golden-mean matrix identity. The finite packet is
+independent of `y` by definition, and the rational function `(y^2+y+1)/(y+1)`
+separates the explicit values 0 and 1. This is a valid separation example for
+that defined packet and function, but no elliptic curve or elliptic trace
+family appears in the owner. The broader arithmetic-geometric interpretation
+is therefore not established.
+
+## Polynomial algorithm spectral-radius label review (2026-10-31)
+
+`Omega.Conclusion.PolynomialAlgorithmSpectralRadiusMass` builds successfully
+in a locked Lake run (3,093 jobs, exit 0). The coefficient-sum identity and
+positivity for nonzero `Polynomial ℕ` are valid. However, the purported
+spectral-radius quantity is defined as `f.eval 1`, so its equality with mass is
+reflexive; no operator, shift action, or spectrum appears. The imported
+shift-commuting polynomial module also encodes addition/composition through
+`+ 0` and `* 1`. A canonical statement here is the coefficient-mass identity;
+a spectral-radius theorem needs an actual operator model.
+
+## Power-divergence two-exponential recurrence review (2026-10-31)
+
+`Omega.Conclusion.PowerDivergenceSecondorderRecurrence` builds successfully
+in a locked Lake run (3,153 jobs, exit 0). For its explicitly defined positive
+two-exponential sequence with distinct rates, it proves the closed form, the
+characteristic second-order recurrence, and strict log-convexity by factoring
+the second difference as a positive mixed term. The theorem is substantive in
+that model; deriving the model from a power-divergence measure is outside this
+owner.
+
+## Prime-adjunction finite-rank wrapper review (2026-10-31)
+
+`Omega.Conclusion.PrimeAdjunctionNoFiniteRankAdditiveLinearization` builds
+successfully in a locked Lake run (3,092 jobs, exit 0). Its conclusion follows
+by applying a supplied obstruction to the second conjunct. No prime monoid,
+rank notion, or linearization map is formalized in this owner; the schema is
+valid but does not establish a concrete finite-rank impossibility result.
+
+## Prime-log infinite-rank register wrapper review (2026-10-31)
+
+`Omega.Conclusion.PrimeLogInfiniteRankRegister` builds successfully in a
+locked Lake run (3,092 jobs, exit 0). The proof is exactly the supplied
+implication applied to the supplied boundary witness. The route, factor,
+prime-log boundary, and finite visibility are abstract predicates; no concrete
+prime-log or rank argument is formalized in this owner.
+
+## Prime-modulus finite-exception obstruction review (2026-10-31)
+
+`Omega.Conclusion.PrimeModulusExceptionSchemeCollapse` builds successfully in
+a locked Lake run (3,092 jobs, exit 0). It proves that a predicate holding for
+every sufficiently large prime except 2 cannot have all non-bad primes contained
+in a finite set. The infinitude-of-primes argument is substantive and valid;
+the predicate remains abstract, so arithmetic classification is a separate
+obligation.
+
+## Prime-register carrier cardinality repair (2026-10-31)
+
+`Omega.Conclusion.PrimeRegister` contained a reflexive theorem for the claimed
+truncated-register cardinality. Replaced it with the actual function-space
+statement `Fintype.card (Fin k → Fin (E+1)) = (E+1)^k`, proved by `simp`, and
+updated its sole downstream use in `RateCdimArithmetic` to state the carrier
+cardinality. Both owner targets built successfully in a locked run (3,134
+jobs, exit 0). This repairs the finite exponent-vector cardinality claim; the
+rest of `PrimeRegister` remains a collection of finite combinatorial and
+conditional encoding results, not a general computational model theorem.
+
+## Prime-register cross-resolution contraction review (2026-10-31)
+
+`Omega.Conclusion.PrimeRegisterCrossresolutionRigidityAttractor` builds in a
+locked Lake run (3,092 jobs, exit 0). Under `|B^k| < 1`, the affine map has a
+unique fixed point and its explicitly defined geometric sequence converges to
+that point. The lifted/base action equality is supplied directly in the data
+and merely forwarded. Also, the sequence named `iterate` is defined in closed
+form; this owner does not prove a recursion identifying it with repeated
+application of `Psi`.
+
+## Prime-register additive-ledger obstruction review (2026-10-31)
+
+`Omega.Conclusion.PrimeRegisterFixed2adicAmbientVsFiniteLedger` builds in a
+locked Lake run (8,924 jobs, exit 0). It proves that no injective
+`f : ℕ → ℕ` can satisfy `f 1 = 0` and `f (m*n) = f m + f n`, using equal
+images of powers of 2 and 3 followed by a parity contradiction. It also proves
+injectivity of the explicit translation action on `Fin 2 → ℤ`. The phrase
+“2-adic ambient” here denotes only that integer function carrier; it is not a
+2-adic construction.
+
+## Prime-register K-stretch rigidity bound review (2026-10-31)
+
+`Omega.Conclusion.PrimeRegisterKStretchRigidityLb` builds successfully in a
+locked Lake run (3,098 jobs, exit 0). Given supplied necessary/sufficient
+density implications, it transfers them to the cdim normalization, derives a
+ratio bound when the target cdim is positive, and excludes embeddings when the
+target cdim is zero but the source cdim is positive. These conditional real
+inequalities are valid; the embedding-to-density premises are not constructed
+in this owner.
+
+## Primeslice support-chain countability review (2026-10-31)
+
+`Omega.Conclusion.PrimesliceOmegaSupportChainCountable` builds successfully
+in a locked Lake run (3,092 jobs, exit 0). It constructs the chain
+`range (N+1)`, proves its cardinality and strict growth, and shows no fixed
+finite set contains every chain member. This is a genuine elementary
+countability witness; prime-slice-specific structure is not represented in the
+owner theorem.
+
+## Finite-multiset entropy plateau review (2026-10-31)
+
+`Omega.Conclusion.PrimeslicePartitionPlateauDyadicSpread` builds successfully
+in a locked Lake run (3,097 jobs, exit 0). For a nonempty finite multiset of
+naturals, it proves a maximum support value, entropy increments from tail
+counts, exact multiplicity curvature via an imported identity, a plateau at
+the maximum, and strict growth below it. No dyadic-spread construction is
+formalized locally; the imported curvature owner emitted two linter warnings.
+
+## Primitive two-step coordinate blindness review (2026-10-31)
+
+`Omega.Conclusion.PrimitiveTwoStepCodimoneBlindness` builds successfully in
+a locked Lake run (3,092 jobs, exit 0). It proves a valid abstract
+support-one sensitivity statement: sequences agree off coordinate 2, and a
+functional stipulated to read that coordinate linearly changes by `a2*u`.
+No primitive-polynomial or codimension-one structure is formalized in this
+owner. The source uses a deprecated `if_neg` simp lemma.
+
+## Primorial additive versus Gödel multiplicative encoding review (2026-10-31)
+
+`Omega.Conclusion.PrimorialAdditiveVsGodelMultiplicative` builds successfully
+in a locked Lake run (3,092 jobs, exit 0). The multiplicative exponent map is
+injective under the stated pairwise-coprime bases-at-least-two hypothesis; the
+homomorphism result correctly says an injective homomorphism into a
+commutative semigroup forces its source to commute. The package named as an
+infinite-prime-support result proves only finitely many small-prime facts, so
+it does not prove the named infinitude claim. The canonical statement is the
+scoped injectivity theorem plus an explicit prime-support hypothesis for any
+future infinite-support conclusion. No owner theorem here proves injectivity
+of the mixed-radix map in general dimension; only dimensions zero and one are
+covered.
+
+## Primorial axis dimension proxy review (2026-10-31)
+
+`Omega.Conclusion.PrimorialAxisDimensionLaw` builds successfully in a locked
+Lake run (3,092 jobs, exit 0). It defines a real logarithmic proxy and takes
+its natural ceiling as `k_min`; it then proves the ceiling is the least
+natural threshold index and that the rounding error lies in `[0,1)`. These
+claims are correct for the stipulated proxy. Despite the paper-facing name,
+the owner derives no primorial estimate, asymptotic, or geometric axis
+dimension from an independent model.
+
+## Primorial axis second-order proxy review (2026-10-31)
+
+`Omega.Conclusion.PrimorialAxisSecondOrder` builds successfully in a locked
+Lake run (3,167 jobs, exit 0). It defines a proxy with a linear term and a
+square-root term, proves their exact algebraic split after division by the
+chosen logarithm, and proves ceiling minimality for nonnegative parameter
+`p`. The exported paper-facing name is a definition of a proposition, not a
+theorem deriving it from primorial data. No asymptotic expansion or
+primorial-threshold inversion is proved by this owner.
+
+## Finite principal-shadow kernel counterexample review (2026-10-31)
+
+`Omega.Conclusion.PrincipalShadowFiniteOfforiginBorelNotRigid` builds
+successfully in a locked Lake run (3,092 jobs, exit 0). For a coordinate
+space with more coordinates than the stipulated finite list of constraints,
+it constructs a nonzero vector supported at the first unconstrained index.
+It separately defines all finite sample data to be zero and the host signature
+to be `t ↦ t`. Thus this is a valid coordinate-kernel counterexample to
+finite-data rigidity in that constructed model. No Borel transform, analytic
+principal-shadow data, or analytic host family is represented, so those
+interpretations are not established by this owner.
+
+## Fixed-depth finite linear-kernel review (2026-10-31)
+
+`Omega.Conclusion.PrincipalShadowFixedDepthPointedHostInfiber` builds
+successfully in a locked Lake run (3,092 jobs, exit 0). It packages a real
+linear map from `Fin N → ℝ` to `Fin (2*n) → ℝ` and uses rank-nullity to show a
+nonzero kernel when `2*n < N`. This is a genuine finite-dimensional linear
+algebra statement. The owner does not define a principal-shadow analytic
+sampling map or a host/in-fiber object; connecting the result to those terms
+requires an additional construction and compatibility theorem.
+
+## Principal-shadow mismatch ladder inversion repair (2026-10-31)
+
+`Omega.Conclusion.PrincipalShadowMismatchLadderJacobiCouplingInversion` builds
+successfully in a locked Lake run (3,093 jobs, exit 0). The cumulative product
+formula and positivity hypotheses yield the first squared coupling and every
+later consecutive ratio. The original `Delta 0 = u0` premise was unused, so it
+has been removed from the theorem signature. The result remains conditional:
+this owner does not construct a Jacobi mismatch ladder or derive the product
+formula from one. The old `Mathlib.Data.Real.Basic` import also emits a
+deprecation warning.
+
+## Quadratic discriminant radicand-domain counterexample (2026-10-31)
+
+`Omega.Conclusion.QuadraticFieldRamification` now proves the explicit
+arithmetic witness `quadDisc 8 ≠ quadDisc 2`; its locked Lake build succeeds
+(3,092 jobs, exit 0). Since `ℚ(√8) = ℚ(√2)`, the unrestricted piecewise
+function is not a field-discriminant function on arbitrary radicands. The
+standard quadratic-field formula requires reducing to a squarefree radicand;
+the owner’s formula and divisibility lemmas do not encode that reduction. Its
+“minimal prime ledger” theorem is only excluded middle, and the Riccati
+ramification declaration is likewise a divisibility disjunction rather than
+a field-ramification result. The canonical scope is the exact integer
+function and its proved divisibility facts, not field ramification or étale
+lifting.
+
+## Rank-one Cauchy orthogonality scope review (2026-10-31)
+
+`Omega.Conclusion.RankoneCauchyOrthogonality` builds successfully in a locked
+Lake run (3,092 jobs, exit 0). It proves a finite-sum identity and the
+conditional implication that equal Cauchy secant values at distinct
+off-diagonal parameters force the associated cross term to vanish. The
+candidate vector’s coordinate equation is also verified. However, this owner
+does not define the advertised diagonal-plus-rank-one matrix action or prove
+that the candidate is an eigenvector of that action. The canonical statement
+is the proved finite-sum result; the matrix eigenproblem remains a separate
+formalization obligation.
+
+## Rank-two finite audit tuple hypothesis repair (2026-10-31)
+
+`Omega.Conclusion.RanktwoFiniteTruncationCannotSplitBooleanBlindcavity` builds
+successfully in a locked Lake run (8,925 jobs, exit 0). Its conclusion is
+definitional invariance of a tuple formed from `gcd` and `lcm` when those two
+values agree. The four positivity assumptions were unused and have been
+removed. This owner does not define a Boolean-blind cavity or prove a finite
+truncation separation result; the canonical theorem is the hypothesis-minimal
+invariance statement.
+
+## ReadUS null trichotomy wrapper hypothesis repair (2026-10-31)
+
+`Omega.Conclusion.ReadusNullTrichotomyNormalForm` and its sole consumer,
+`Omega.Conclusion.ThreeEndCertificateJointSufficiencyMinimality`, both build
+successfully in a locked Lake run (3,097 jobs, exit 0). The wrapper returns
+the supplied exhaustive disjunction and derives absence of `hiddenFailure`
+from the supplied contradiction premise; it does not establish either fact
+from a ReadUS model. Three unused mutual-exclusion hypotheses were removed
+from the wrapper and consumer. The canonical result is now stated with only
+the assumptions its proof actually uses.
+
+## RealInput40 Bowen–Franks/Jordan tower aggregator scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40BFJordanTowerSeparation` and its dependent
+`RealInput40FullEssentialPureZeroSpectrumStripping` build successfully in a
+locked Lake run (3,188 jobs, exit 0). The imported Bowen–Franks/K-theory owner
+does prove that its concrete `I - A` permutation matrix has a two-sided
+integer-matrix inverse. However, the displayed Bowen–Franks order and
+Cuntz–Krieger ranks are natural-number constants, and the nilpotent kernel
+dimensions are explicit functions with stipulated values; this aggregator
+only combines those declarations. The Lean owners do not construct the
+Bowen–Franks group or Cuntz–Krieger algebras and do not derive the K-theory
+invariants from the matrix. The canonical scope is matrix unimodularity plus
+the stated finite function values, not a derived operator-algebraic
+classification.
+
+## RealInput40 Euler-jet/Perron quartic scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40EulerJetZeroTempPerronFieldSplitting` builds
+successfully in a locked Lake run (3,096 jobs, exit 0). It proves that the
+explicitly defined real coefficients lie in `ℚ(√5)`, that one coefficient is
+irrational, and that the specified integer quartic has no factorization into
+two monic integer quadratics. These are genuine claims about the declared
+numbers and polynomial. The owner does not derive those coefficients or the
+quartic from an Euler jet or a Perron operator; that interpretation remains
+outside its theorem contract.
+
+## RealInput40 detailed-balance support obstruction review (2026-10-31)
+
+`Omega.Conclusion.RealInput40GroundSupportIrreversibility` builds
+successfully in a locked Lake run (782 jobs, exit 0). It proves the valid local
+implication that positive stationary mass and a positive forward rate cannot
+satisfy detailed balance when the reverse rate is zero; the second theorem
+repackages the same contradiction. No transition matrix constraints,
+stationary distribution, or self-dual completion are constructed, so the
+claim is a conditional detailed-balance obstruction rather than a result
+about a specific Markov model. The owner also has a deprecated real import.
+
+## RealInput40 half-entropy/self-duality wrapper review (2026-10-31)
+
+`Omega.Conclusion.RealInput40HalfentropySelfdualityNotDetailedBalance` builds
+successfully in a locked Lake run (2 jobs, exit 0). It reuses one supplied
+state satisfying assumed self-duality, half-entropy freezing, and
+non-detailed-balance predicates to witness two existential propositions. The
+proof is correct but entirely hypothesis packaging; no entropy, completion,
+or balance structure is defined. The canonical result is the generic
+existential-introduction lemma, while the RealInput40 interpretation requires
+an independent model instantiating the predicates.
+
+
+## RealInput40 open-strip single-source scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40OpenStripSingleSource` and its determinant factorization dependency build successfully in a locked Lake run (3,121 jobs, exit 0). The owner proves the golden-ratio quadratic factorization and imports a polynomial determinant factorization over rational coefficients. Its open-strip assertion is implication packaging: holomorphicity/nonvanishing of `H` and the formula for `zetaHat` over the chosen denominator are supplied as hypotheses and returned as the conclusion. No analytic zeta function is constructed, and the polynomial identity alone does not prove the analytic single-source claim.
+
+
+## RealInput40 slope-mismatch obstruction scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40SlopeMismatchContinuousModelObstruction` builds successfully in a locked Lake run (3,093 jobs, exit 0). It proves a valid abstract incompatibility: if all three Boolean flags hold, the supplied endpoint-lock field forces `alphaMax = 1/2`, contradicting the separately supplied mismatch field. The critical slice and semantic flags are structure fields; no continuous model, slope, or extension construction is defined. The canonical scope is the conditional inconsistency lemma, not a constructed continuous-model obstruction. The file also uses a deprecated real import.
+
+
+## RealInput40 synchronization/zero-spectrum alignment scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40SyncLengthZeroSpectrumAlignment` builds successfully in a locked Lake run (3,095 jobs, exit 0). The reset-word source gives a genuine finite 40-state transition model whose five zero symbols synchronize the product state, and proves no shorter word synchronizes it. The nilpotent-index owner instead defines essential/full kernel dimensions by explicit piecewise functions. The conclusion combines these facts but does not derive that synchronization length equals a kernel stabilization index; the numerical coincidence is across separate models.
+
+
+## RealInput40 two-typical ghost non-reproduction scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40TwoTypicalGhostIrreducibility` builds successfully in a locked Lake run (3,093 jobs, exit 0). It defines a cyclic p-block and trace tower, imports the p-typical Frobenius–Verschiebung identity, and proves that the tower cannot equal a profile required to vanish from index two onward: at index one the tower is `2 * u^2`, nonzero under the stated `u ≠ 0` assumption. This is a genuine finite algebraic non-reproduction theorem for the declared model and profile condition, not a general irreducibility theorem.
+
+
+## RealInput40 UV activation wall scope review (2026-10-31)
+
+`Omega.Conclusion.RealInput40UVUniversalActivationWall` builds successfully in a locked Lake run (3,092 jobs, exit 0). The substantive statement is the elementary real factorization equivalence `u² v³ (1-v)=0 ↔ v=1` under `u>0`, `v>0`; the remaining conjuncts are numeral arithmetic. It defines no activation model, so the canonical result is a conditional factorization lemma rather than a universal activation theorem.
+
+
+## RealInput40 gauge-difference cubic scope review (2026-10-31)
+
+`Omega.Conclusion.Realinput40GaugeDifferenceModgaussianCubic` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves an exact exponential cancellation identity for a stipulated cubic polynomial with fixed rational coefficients and nonzero complex scale. The Gaussian factor cancels the quadratic term after substitution. No probability distribution, moment generating function, convergence, or mod-Gaussian limit is formalized, and the coefficients are assumptions encoded as constants rather than derived cumulants.
+
+
+## RealInput40 primitive Ramanujan first-two-layers scope review (2026-10-31)
+
+`Omega.Conclusion.Realinput40PrimitiveRamanujanFirstTwoLayers` builds successfully in a locked Lake run (3,092 jobs, exit 0). Its complete content is the elementary divisibility fact that `r ≥ 3` implies `r ∤ 2`. No Ramanujan object or layer structure is defined by this declaration; the canonical statement is just the natural-number lemma.
+
+
+## Recursive solenoid Lie-shadow scope review (2026-10-31)
+
+`Omega.Conclusion.RecursiveSolenoidLieShadow` builds successfully in a locked Lake run (3,092 jobs, exit 0). Its local proofs are Boolean constant-function equalities and `0 ≠ 1`; the combined pcdim result assumes the two Boolean branch values and derives their inequality. The file defines no solenoid, Lie quotient, profinite kernel, or computability construction. Treat the named topological/halting interpretation as unsupported by this owner unless a separate constructed model supplies the bridge.
+
+
+## Register prefix-topology extension obstruction review (2026-10-31)
+
+`Omega.Conclusion.RegisterUltrametricLipschitzAndGodelNoRealExtension` builds successfully in a locked Lake run (3,092 jobs, exit 0). This owner contains a genuine concrete theorem: the defined Toeplitz map is prefix nonexpansive, its one-step prefix contraction property is equivalent to zero diagonal coefficient, basis streams converge to zero, and the prescribed unbounded values `n+2` rule out any sequentially continuous real extension at zero. Scope is the explicit product-prefix topology on natural-number streams; no general Gödel coding or metric is formalized.
+
+
+## Reject-null finite normal-form weakness review (2026-10-31)
+
+`Omega.Conclusion.RejectNullFiniteNormalForm` builds successfully in a locked Lake run (3,092 jobs, exit 0). The proof derives the six-way disjunction solely from `hnull`; the defect premise and all within-family exclusivity hypotheses are unused, and no run/classification datatype is defined. The theorem is valid but weaker than its docstring claim. A canonical coverage statement should use `hnull ∨ hdef`; an exclusivity claim additionally needs cross-family disjointness and a formal run coverage premise.
+
+
+## Relative-homology corank protocol-null scope review (2026-10-31)
+
+`Omega.Conclusion.RelativeHomologyCorankProtocolNull` builds successfully in a locked Lake run (3,094 jobs, exit 0; one style suggestion). It proves a conditional finite-fiber counting result: under uniform fiber cardinality `2^beta`, positive beta is equivalent to a nontrivial visible fiber; such a fiber cannot be made injective with a `Unit` side register, using the imported register lower bound. At beta zero, all fibers have size one and the screen map is injective. The source does not construct relative homology groups; its relative-Betti predicate is a scalar conditional-entropy alias, so that interpretation needs an external formal bridge.
+
+
+## Relative zeta quotient critical-order scope review (2026-10-31)
+
+`Omega.Conclusion.RelativeZetaQuotientCriticalOrderInvariance` builds successfully in a locked Lake run (3,093 jobs, exit 0; deprecated import warning). It proves algebra for a stipulated simple-pole-shaped expression and an indicator-valued pole order: division by a nonzero constant rescales the residue and preserves its nonzero status. No analytic zeta functions, Laurent expansion theorem, or analytic pole order are defined. The canonical scope is the model algebra lemma; analytic invariance needs those additional constructions.
+
+
+## Rényi-2 asymptotic uniformization wrapper review (2026-10-31)
+
+`Omega.Conclusion.Renyi2NoAsymptoticUniformizationSubsequence` builds successfully in a locked Lake run (3,092 jobs, exit 0). Its statement is generic modus tollens over arbitrary propositions. No Rényi functional, sequence, subsequence, or asymptotic condition appears. Keep it as a generic logical lemma or supply the concrete analytic premises; the file alone does not establish the paper-facing asymptotic claim.
+
+
+## Residue even-window one-functional repair review (2026-10-31)
+
+`Omega.Conclusion.ResidueEvenWindowOneFunctionalRepair` builds successfully in a locked Lake run (3,092 jobs, exit 0). The owner proves a constructive affine linear-algebra result: when `Lambda chi ≠ 0`, exactly one point on the line `b0 + c • chi` has functional value `Lambda target`, with coefficient `(Lambda target - Lambda b0) / Lambda chi`. This is a genuine reusable theorem; the paper-facing even-window residue application still needs a concrete vector-space model and functional instantiation.
+
+
+## Residue pressure-drop escort identity scope review (2026-10-31)
+
+`Omega.Conclusion.ResiduePressureDropEscortRenyiFreeEnergy` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves a valid finite normalized power-sum identity from the supplied equations for `Sq`, `SqP`, `p`, and `nu`, using nonzero denominators. The parameter `m` is unused, and no pressure, escort probability law, Rényi entropy, or free-energy function is constructed. Retain the identity with that algebraic scope; the named interpretation needs a concrete model.
+
+
+## Residue single-coordinate obstruction rank scope review (2026-10-31)
+
+`Omega.Conclusion.ResidueSingleCoordinateObstructionRank` builds successfully in a locked Lake run (3,096 jobs, exit 0; deprecated import and `if_pos`/`if_neg` warnings). It correctly instantiates an imported cardinality result using the Fibonacci gcd identity. The underlying frequencies are defined as a finite arithmetic progression when the quotient is even and empty otherwise, so the cardinality is combinatorial for that defined set. No operator matrix, eigenspace, or independently constructed character basis is formalized; interpreting this as spectral rank needs a proved identification with an actual kernel/eigenspace.
+
+
+## Residue slice single-orbit/double-slice rigidity review (2026-10-31)
+
+`Omega.Conclusion.ResidueSliceSingleOrbitDoubleSliceRigidity` builds successfully in a locked Lake run (3,092 jobs, exit 0). From explicit rational equations for residues `E*m` and `E*(tau*m)` with `E,m ≠ 0`, it proves invariance under reciprocal reparametrization `(E*u, m/u)`, equality of slices when `tau=1`, and recovery of `tau` from their ratio and of `E,m` by back-substitution. This is valid rational identifiability on the declared structure; a residue-generating model is not built here.
+
+
+## Resonance budget no-L2-envelope scope review (2026-10-31)
+
+`Omega.Conclusion.ResonanceBudgetNoL2Envelope` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves a sequence-level finite-sum obstruction: a nonnegative sequence with unbounded partial square sums cannot be pointwise bounded by `K*w` when `K>0` and `w` has uniformly bounded partial square sums. No measure space or L² function-space object is defined, so retain the exact sequence formulation and treat the L² terminology as interpretation only.
+
+
+## Resonance window arithmetic ledger scope review (2026-10-31)
+
+`Omega.Conclusion.ResonanceWindow` builds successfully in a locked Lake run (3,092 jobs, exit 0). It contains fixed numeral inequalities, `Nat.fib 8 = 21`, `Nat.fib 9 = 34`, and the lcm/universal divisibility facts for 8 and 18. Its function contradiction only rules out a function taking two conflicting values at the same input. No resonance process, terminal-type map, or mod-6 sequence is defined; keep these as arithmetic lemmas unless a concrete model supplies that bridge.
+
+
+## Resonance window infinite auditable primes scope review (2026-10-31)
+
+`Omega.Conclusion.ResonanceWindowInfinitelyManyFullyAuditablePrimes` builds successfully in a locked Lake run (3,092 jobs, exit 0). It is a correct abstract finite-exception lemma: an abstract Prime predicate with a Euclid property, finitely many bad cases, and a Good implication yields a Good element outside every finite set. The prime notion and audit predicates are hypotheses, not concrete natural-number arithmetic criteria. A paper-facing arithmetic result needs those predicates instantiated and the finiteness/goodness facts proved.
+
+
+## Reverse-KL single-frequency exclusivity scope review (2026-10-31)
+
+`Omega.Conclusion.ReverseKLSingleFrequencyExclusivity` builds successfully in a locked Lake run (8,926 jobs, exit 0). It proves a substantive scalar rigidity result using the imported expression `-log(1-r^(2n)c²)` and the coefficient profile defined by divisibility: equality at a distinct positive frequency forces `c=0`, hence the profile equals the defined Haar coefficient function. The imported ‘infimum’ is just this explicit scalar formula; no probability measure or Fourier transform construction appears in these owners. Keep the theorem at that scalar scope.
+
+
+## Reversible auxiliary-bits budget scope review (2026-10-31)
+
+`Omega.Conclusion.ReversibleAuxBitsBudget` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves the finite encoding-capacity iff (`Fin b` injects into `Fin (2^k)` exactly when `b ≤ 2^k`), standard `Nat.clog` bounds/monotonicity, and numerical seeds. It defines no reversible computation, external budget minimization, or model `b(π)`, so the statement `κ(π)=ceil(log₂ b(π))` is not established by this file.
+
+
+## RH-sharp Perron-purity scope review (2026-10-31)
+
+`Omega.Conclusion.RhsharpForcesPerronPureQuotient` builds successfully in a locked Lake run (3,093 jobs, exit 0). It proves the scalar critical-slope identity at `eta=sqrt(rho)`, then uses supplied inequalities `b ≤ k_b ≤ survivingExcitations ≤ b-1` to contradict the locally defined integer-count predicate. No RH predicate, Perron operator, quotient, or spectral kernel is defined in this owner; the imported filter theorem also assumes the key bounds. The canonical scope is the conditional counting contradiction.
+
+
+## Right-edge visible-phases support-function scope review (2026-10-31)
+
+`Omega.Conclusion.RightEdgeVisiblePhasesSupportFunctionClosure` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves finite affine-envelope facts for a foldr maximum with zero baseline: midpoint convexity, branch attainment, conditional antitonicity, and pairwise branch intersection formulas. The first packaged conjunct is just the defining equation by reflexivity. No geometric support-function carrier is defined, so the canonical scope is the finite affine upper envelope unless a geometric realization is added.
+
+
+## S4 40-block strongly regular parameters scope review (2026-10-31)
+
+`Omega.Conclusion.S4FortyBlocksStronglyRegularParameters` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves a Diophantine uniqueness fact for `4λ+9μ=44` under bounds, and checks specified eigenvalue polynomial and multiplicity equations for constants declared in the file. It constructs no graph, group action, adjacency matrix, or strongly regular structure; the canonical scope is an arithmetic compatibility certificate, not a graph existence theorem.
+
+
+## S4 universal boundary carrier nonprincipal polarization scope review (2026-10-31)
+
+`Omega.Conclusion.S4UniversalBoundaryCarrierNonprincipalPolarization` builds successfully in a locked Lake run (3,093 jobs, exit 0). Non-principality is established by list arithmetic on the stipulated elementary-divisor list `[1,1,1,1,2,2,2,2,2]` and its triple concatenation. Its imported unique-carrier theorem is case analysis over hard-coded finite boundary/rank tables. No curve, degeneration, representation, abelian variety, Prym, or polarization is constructed, so the geometric interpretation is not established by these owners.
+
+
+## Screen arithmetic shadow additive-linearization obstruction review (2026-10-31)
+
+`Omega.Conclusion.ScreenArithmeticShadowAdditiveLinearizationObstruction` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves a genuine universal algebra fact: an idempotent binary operation cannot map homomorphically to coordinatewise addition on `Fin k → ℕ` except via the zero map, since evaluating at `(x,x)` gives `n=n+n`. The screen interpretation is not otherwise modeled. This can be generalized to any cancellative additive monoid.
+
+
+## Screen atomic-value antitone scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenAtomicValueAntitone` builds successfully in a locked Lake run (3,093 jobs, exit 0). It proves generic set-function facts: monotonicity characterizes zero marginal, monotonicity plus unit-step growth characterizes one marginal, and submodularity yields diminishing marginal gains for nested sets. `InClosure` is defined as equality after insertion (zero gain); no concrete fixed-resolution screen or rank function is instantiated in this owner. The abstract finite-submodular result is substantive and reusable.
+
+
+## Screen Joukowsky additive minimal externalization scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenJoukowskyAdditiveMinimalExternalization` builds successfully in a locked Lake run (3,094 jobs, exit 0). Its imported binary-audit theorem is a genuine finite counting bound: uniform fibers of size `2^β` and joint injectivity require at least β bits. The wrapper’s radial observable and reconstruction are both identity maps, `radialProfile` is unused, and the minimality conjunct is only `card (Fin k)=k`. No Joukowsky transform or profile-dependent externalization is formalized. Keep the finite audit theorem and separate the identity facts from the advertised radial application.
+
+
+## Screen minimal exact-code constant-weight metric scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenMinimalExactCodeConstantWeightEvenMetric` builds successfully in a locked Lake run (3,093 jobs, exit 0). Its imported `IsBasis` is simply fixed cardinality, so the theorem concerns constant-weight finite subsets: equal-size sets have even symmetric-difference distance, and if distinct sets exist a one-element swap yields a pair at distance two. No matroid or screen-code constraints are formalized. Retain the constant-weight combinatorial result and qualify the stronger labels accordingly.
+
+
+## Screen optimal audit Kolmogorov isometry scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenOptimalAuditKolmogorovIsometry` builds successfully in a locked Lake run (8,924 jobs, exit 0). For an arbitrary finite-dimensional F₂-linear map, it uses rank-nullity to obtain a noncanonical linear equivalence `V ≃ range(f) × F₂^r`, with `r=finrank ker(f)`, and proves minimality of `r` by dimension. The equivalence comes from `LinearEquiv.ofFinrankEq`; no metric, isometry, or audit observation model is defined. The canonical description is a noncanonical linear splitting plus a dimension lower bound.
+
+
+## Screen phase object not-finitely-localizable scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenPhaseObjectNotFinitelyLocalizable` builds successfully in a locked Lake run (3,092 jobs, exit 0). It proves that the defined all-prime support for positive rank cannot be contained in any finite ledger, using infinitude of primes. The screen Pontryagin-dual abbreviation is unused; no groups, torsion quotients, localizations, or topological isomorphism invariant are constructed. The canonical conclusion is a set-support mismatch; a group non-isomorphism needs an explicit support-invariance theorem and group constructions.
+
+
+## Screen realizability cycle-space obstruction scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenRealizabilityCycleSpaceObstruction` builds successfully in a locked Lake run (3,093 jobs, exit 0). The imported trace/cut-space identification is definitional: `fS` is defined as `graphCoboundary (toVertexLabel u)`. The codimension and surjectivity/forest conclusion assumes the dimension formula, surjectivity-dimension equivalence, and numerical forest equivalence as inputs, then derives the arithmetic. No graph chain complex, cycle space, incidence rank, or forest criterion is independently constructed. Treat the theorem as conditional packaging pending those graph-theoretic proofs.
+
+
+## Screen zero-one local law/effective resistance scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenZeroOneLocalLawEffectiveResistance` builds successfully in a locked Lake run (3,092 jobs, exit 0). It assumes the rank and κ classification by cross/bridge status; three conclusion conjuncts are direct copies of those assumptions. The only derived fact is `κ=0 ↔ rankInc=0`, by contradiction in the cross case. No graph, network, electrical effective resistance, or derivation of the hypotheses is defined. Treat the result as conditional classification packaging.
+
+
+## Screenphase connected quotient/no binary anomaly register scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenphaseConnectedQuotientNoBinaryAnomalyRegister` builds successfully in a locked Lake run (3,093 jobs, exit 0). It proves the standard general fact that a continuous map from a connected space to a discrete space is constant, hence cannot surject onto a nontrivial discrete space. No screenphase quotient or anomaly-register construction is present; the canonical scope is the general topological obstruction.
+
+
+## Screenphase countably many nonisomorphic connected shadows scope review (2026-10-31)
+
+`Omega.Conclusion.ScreenphaseCountablyManyNonisomorphicConnectedShadows` builds successfully in a locked Lake run (3,097 jobs, exit 0; existing warnings). It constructs countably many singleton prime ledgers and separates them using a predicate defined as difference of a stipulated exact-order count. The imported ‘surjects’ statement is only an injection `ℚ → ℚ^r` plus a constant circle-dimension definition; `FinitePrimeLocalization` is just `Finset ℕ`. There are no localized groups, surjective homomorphisms, or theorem that the count is invariant under group isomorphism. The supported result is combinatorial ledger separation, not countably many nonisomorphic connected quotients.
+
+## Second-branch ninefold finite-generation label scope review (2026-10-31)
+
+`Omega.Conclusion.SecondBranchNinefoldFieldNotGeneratedByFinitelyManyCubicFibers` passed its locked Lake build (8,928 jobs, exit 0). Its conclusion is a finite-index package of defined root-free mod-3 predicates, nonsquare integer signatures, inequality from a fixed integer, and P9 arithmetic/cardinality facts. The specialization “Galois group is S3” predicate is defined as the root-free predicate plus nonsquareness of a linear integer signature; no field extension or Galois group is constructed. The owner states no field generation relation and does not rule out generation by any finite family. Canonical scope: conditional finite-list arithmetic/predicate packaging, not a finite-generation obstruction.
+
+## Semantic-equivalence undecidability reduction scope review (2026-10-31)
+
+`Omega.Conclusion.SemanticEquivalenceUndecidable` passed its locked Lake build (3,092 jobs, exit 0). It proves the standard reduction-transfer result: a pointwise decider for the target binary relation would decide the source predicate via the supplied equivalence on embedded inputs and a fixed reference. Both source undecidability and the reduction are assumptions; this module defines no concrete language, evaluator, semantic-equivalence problem, reference program, or halting reduction. The canonical result is the abstract reduction theorem, not a concrete undecidability proof.
+
+## Sequence-layer clarity-budget label scope review (2026-10-31)
+
+`Omega.Conclusion.SequenceLayerConstantPeriodicDefectCannotReplaceClarityBudget` passed its locked Lake build (3,092 jobs, exit 0). It proves an elementary tail estimate: for fixed `delta ≥ 0`, eventual positivity of `n`, and `n` eventually above every real bound, `delta / n` is eventually at most each positive tolerance. No periodic defect, sequence-layer model, or clarity-budget structure appears in the statement. The canonical result is the real-sequence estimate; the stronger label is not represented in Lean.
+
+## Sequence-layer finite-state/minimal-state counterexample scope review (2026-10-31)
+
+`Omega.Conclusion.SequenceLayerFiberCountingMinimalStateNotPeriodicallyRecoverable` passed its locked Lake build (3,093 jobs, exit 0). The owner does provide an explicit collision: its periodic signature is constantly zero while its declared ambiguity values distinguish `false` and `true`. It also realizes the stipulated constant-one `fiberCount` with identity transition matrices and matching boundary vectors. This is a valid counterexample to recovery from that signature. However, `fiberCount` is defined constantly as one, the “minimal state count” is just `card (Fin 2)`, and no link from the transition system to an actual fiber-count semantics or lower bound on automaton states is proved. The result should be cited only at the level of the explicit definitions.
+
+## Serrin thermodynamic-frontier affine scope review (2026-10-31)
+
+`Omega.Conclusion.SerrinRealizableThermodynamicFrontierAffine` passed its locked Lake build (3,093 jobs, exit 0). It derives the normalized-image singleton from the imported mean-cone-collapse theorem and carries over the representative identity. The “pressure” is defined as a finite dot product, while its statement repeats that definition; the purported Legendre-Fenchel dual is defined as the indicator of `{v}`, and its theorem clause also unfolds definitionally. No supremum defining a convex conjugate or thermodynamic pressure duality is proved. The canonical content is the normalized-image consequence plus these definitional formulas.
+
+## Serrin exact-screen collapse scope review (2026-10-31)
+
+`Omega.Conclusion.SerrinSupportExactScreenCollapse` passed its locked Lake build (3,093 jobs, exit 0; linter warnings only). For the explicitly defined scalar ray in `ℝ²`, the theorem constructs a linear functional recovering its scale when the generator is nonzero; the zero-generator case is a singleton, so a coordinate projection is injective there too. Its normalized slice is `{ΓWK}` because normalization is defined by `ρ = 1`. The phrase “zero exact screen cost” is defined as subsingleton, so this is not a separate optimization theorem. No PDE-derived Serrin support object is constructed. The canonical scope is exact linear recovery and singleton normalization for a stipulated ray.
+
+## Serrin–Wulff finite-moment discriminator scope review (2026-10-31)
+
+`Omega.Conclusion.SerrinWulffNoFinitePolynomialFluxDiscriminator` passed its locked Lake build (3,095 jobs, exit 0; imported linter warnings). Its imported finite pair consists of distinct subsets of `{0,…,11}` with equal power moments at orders zero and one and unequal order-two moments. The theorem correctly shows that no finite output vector factoring through the order-at-most-one moment map can distinguish that pair. This does not exclude higher-order moments or arbitrary flux families lacking the stated factorization, and the proxies are not constructed from Wulff geometry. The canonical statement is the precise finite moment indistinguishability result.
+
+## Serrin–Wulff positive gauge anomaly implication scope review (2026-10-31)
+
+`Omega.Conclusion.SerrinWulffPositiveGaugeAnomalyExcludes` passed its locked Lake build (3,092 jobs, exit 0). Given an assumed zero value on terminal inputs and an assumed implication from `intrinsic` to zero value, it proves that a positive value excludes `intrinsic`, by contradiction. These are the whole mathematical inputs; no gauge anomaly or Serrin model is constructed. Classified as a valid assumption-driven implication, not an independently established geometric exclusion.
+
+## Serrin–Wulff volume-normalization ledger scope review (2026-10-31)
+
+`Omega.Conclusion.SerrinWulffVolumeNormalizationCutsLedgerObstruction` passed its locked Lake build (3,098 jobs, exit 0). The normalized carrier is defined to be `Unit`; the cardinality, finite-ledger embedding, and unique factorization through a quotient of `Unit` then follow from that definition. There is no normalization map from the prime-register scale family or proof that the original family factors through this singleton. The imported finite-rank non-embedding result remains a separate theorem. The owner establishes singleton/quotient algebra, not that volume normalization removes the original ledger obstruction.
+
+## Single-collapse Choi-rank parameterization scope review (2026-10-31)
+
+`Omega.Conclusion.SingleCollapseChoiRankOneParameterization` passed its locked Lake build (3,094 jobs, exit 0; one style warning). For a finite map whose distinguished fiber has size `t` and all other fibers have size at most one, it proves the `q`-collision moment formula `t^q + (|Ω| - t)` for `q ≥ 2`. The imported Choi-rank theorem identifies this moment with the rank in its explicitly defined scalar direct-sum projector model. The fiber profile is assumed, and no independent classification of channels/folds or richer channel construction is included. Canonical scope: conditional finite fiber-counting and projector-rank identity.
+
+## Single-cube edit rigidity scope review (2026-10-31)
+
+`Omega.Conclusion.SingleCubeEditRigidity` passed its locked Lake build (8,927 jobs, exit 0). From the discrete isoperimetric lower bound, `Dist = F`, `|U △ V| = N`, and `n ≥ 2`, it correctly proves that `Dist < 2n` implies `U = V`, and that equality `Dist = 2n` with `U ≠ V` forces `|U △ V| = 1`. The imported isoperimetric data structure supplies the geometric counting inequalities as fields; the owner does not construct `U,V` as actual polycubes or derive the distance identifications. Canonical scope is conditional finite-set rigidity from the stated bound.
+
+## Single-register Chebotarev completeness scope review (2026-10-31)
+
+`Omega.Conclusion.SingleRegisterChebotarevCannotBeCompleteForDoubleBranchArithmetic` passed its locked Lake build (8,926 jobs, exit 0). It gives a concrete finite projection collision: every certificate reading only the `Fin 10` coordinate identifies `(0,0)` and `(0,1)` despite their distinct `Fin 9` coordinates. This validly shows that this projection is not injective. Its imported direct-product predicate is defined from unequal integer labels and stipulated factorials; its “Chebotarev densities” are rational formulas checked arithmetically. No number fields, Galois groups, Frobenius sets, or Chebotarev density theorem are constructed. Canonical scope: finite projection noninjectivity and arithmetic bookkeeping, not a number-theoretic completeness theorem.
+
+## Single Rényi-moment coarsening rigidity scope review (2026-10-31)
+
+`Omega.Conclusion.SingleRenyiRigidityForCoarsening` passed its locked Lake build (3,092 jobs, exit 0). For finite sets and deterministic maps `Ω → X → Y`, equality of the unweighted `q`th fiber-cardinality moments for `q ≥ 2` forces the coarsening map to be injective on occupied fibers. It then proves equality of every truncated fiber-count sum. This is a substantive finite counting result, not a general Rényi entropy theorem for arbitrary distributions or stochastic channels. Canonical scope: rigidity of deterministic finite coarsenings under equality of one power moment.
+
+## Singular-ring prime composition criterion scope review (2026-10-31)
+
+`Omega.Conclusion.SingularRingPrimeCompositionIrreducibility` passed its locked Lake build (3,094 jobs, exit 0). For its defined maps `z ↦ z^n`, it proves composition corresponds to multiplication of indices and equality of maps forces equal indices; therefore primality of `n ≥ 2` is equivalent to the absence of a factorization with both indices at least two. This is a valid arithmetic/composition criterion. The “singular ring” data only stores a normalization constant and the maps are monomials with denominator one; no singular ring or nontrivial rational-map geometry is constructed.
+
+## Size-bias/visible-anomaly logical-independence scope review (2026-10-31)
+
+`Omega.Conclusion.SizebiasVisibleAnomalyLogicalIndependence` passed its locked Lake build (3,093 jobs, exit 0). On a one-element index set, the explicit zero and one functions witness each direction of non-implication between zero total visible anomaly and zero total size-biased residual. This is a valid finite countermodel for the predicates as defined, which are sums of natural-valued functions. No process generating either quantity is formalized. Canonical scope: logical independence in a one-point finite model.
+
+## Squarefree crowding/phase-cell theorem scope review (2026-10-31)
+
+`Omega.Conclusion.SquarefreeCrowdingKphase` passed its locked Lake build (3,093 jobs, exit 0; one imported style warning). Its theorem is the finite pigeonhole principle for an arbitrary map `Fin (2^m) → Fin (Q^k)` when `Q^k < 2^m`. The Boolean-cube and torus-cell constructions are represented only by their cardinality formulas; no squarefree-ledger encoding, torus partition, or phase map is built. Canonical scope: finite collision under a cardinality inequality.
+
+## Stokes-extension obstruction certificate scope review (2026-10-31)
+
+`Omega.Conclusion.StokesExtensionObstructionCertificate` passed its locked Lake build (3,092 jobs, exit 0). From the field `phaseSamplingUpperBound < sampledImageValue`, it proves that the proposition `sampledImageValue ≤ phaseSamplingUpperBound` is impossible. This is a valid order-theoretic contradiction, but the alleged realizability bound is merely defined and not derived from a Stokes theorem; no extension, filling object, or sampling operation is formalized. Canonical scope: conditional strict-inequality contradiction.
+
+## Strict-gap/S₂ Schur-variance collapse scope review (2026-10-31)
+
+`Omega.Conclusion.StrictGapForcesNonhookSchurVariance` passed its locked Lake build (3,095 jobs, exit 0). In the two-element `S₂` index model, nonnegativity, a positive gap, and the explicit assumption that positive gap kills the split channel imply that channel vanishes; the imported exact variance decomposition then yields zero centered variance. The strict-gap implication is assumed, not derived from a spectral gap theorem. The defined `isNonhook` predicate is false on both indices, making the final filtered sum identically zero. `hNonneg` is used by the helper. Canonical scope: conditional S₂ variance collapse, not general Schur or spectral-gap rigidity.
+
+## Subcritical isotropic-moment certificate scope review (2026-10-31)
+
+`Omega.Conclusion.SubcriticalIsotropicMomentCertificatesIncompleteAcrossResolutions` passed its locked Lake build (8,931 jobs, exit 0). The theorem says that any composite of maps `Fin (2^(mn)) → Fin r_m → Y_m` has a collision when `r_m < 2^(mn)`, by finite-cardinality pigeonhole. Its postprocessing and moment map are arbitrary. The imported boundary-Gödel geometric model defines `DyadicPolycube` as `Unit` and its code/moment maps constantly, so no actual isotropic-moment construction or resolution family is present. Canonical scope: finite injectivity obstruction under a strict cardinality inequality.
+
+## Sublinear Toeplitz audit impossibility scope review (2026-10-31)
+
+`Omega.Conclusion.SublinearToeplitzAuditImpossible` passed its locked Lake build (3,092 jobs, exit 0). It proves that three supplied eventual inequalities—`detect ≤ audit`, `lower ≤ detect`, and `audit < lower`—are inconsistent at a common tail index, so `complete` is false. No Toeplitz operator, audit process, or sublinear growth condition is formalized. Canonical scope: an abstract asymptotic order contradiction.
+
+## Sync-kernel single-coordinate identity scope review (2026-10-31)
+
+`Omega.Conclusion.SyncKernelFiniteLengthSingleCoordinate` passed its locked Lake build (3,092 jobs, exit 0). It verifies the rational identity `Z(u)=u²Z(u⁻¹)` for `Z(u)=1+u+u²`, then proves `(r⁻¹)² Z(r²)=(r+r⁻¹)²−1` for nonzero `r`. The uniqueness of `Q` is imposed directly by the conjunct `∀ s, Q s = s²−1`, so that part follows immediately from the stipulated formula. No sync-kernel object is constructed. Canonical scope: two elementary rational identities and definitional uniqueness.
+
+## Sync-kernel palindrome and tower-defect scope review (2026-10-31)
+
+`Omega.Conclusion.SyncKernelPalindrome` passed its locked Lake build (3,098 jobs, exit 0). Its substantive theorem proves that, for finite `Z` and a nonnegative ordered-pair count, every tower defect vanishes exactly when `fiberSize` is constant on each fiber of `h`. The other declarations check two entries of a fixed matrix square and small arithmetic equalities; the “Edgeworth” checks are integer/natural arithmetic, including natural-number division. No general palindrome, cumulant, Edgeworth expansion, or sync-kernel object is established. Canonical scope: finite fiber-uniformity criterion plus isolated arithmetic/matrix seeds.
+
+## Visible dual-scale audit threshold scope review (2026-10-31)
+
+`Omega.Conclusion.VisibleCompleteDefectAuditDualScaleThreshold` passed its locked Lake build (3,111 jobs, exit 0; dependency warnings). It proves conditional natural-number arithmetic for the definitions `reconstruction feasible ↔ 2κ ≤ N` and `display feasible ↔ C·hminInv ≤ N`: the stated strict lower thresholds are infeasible, and both predicates hold at `max (2κ) (C·hminInv)`. The visible horizon imported here is simply `max (2κ) (2κ)`. The theorem does not establish minimality of the joint maximum or construct either audit task; the negative-direction lower exclusion only covers `N ≤ c·hminInv`. Canonical scope: threshold arithmetic for stipulated predicates.
+
+## Visible strictification obstruction-rank scope review (2026-10-31)
+
+`Omega.Conclusion.VisibleStrictificationFiniteObstructionRank` passed its locked Lake build (3,092 jobs, exit 0). Given three natural-number equalities to `κ`, it derives equality among the indices by transitivity and returns the supplied `noSecondFiniteObstruction` proposition unchanged. No spectral, Toeplitz, Blaschke, or obstruction-rank constructions are defined. Canonical scope: equality transitivity and assumption packaging.
+
+## Wallis finite-additive-ledger theorem scope review (2026-10-31)
+
+`Omega.Conclusion.WallisFiniteAdditiveLedgerImpossible` passed its locked Lake build (3,092 jobs, exit 0). Its substantive theorem proves any `f : ℕ → ℕ` satisfying `f 1 = 0` and `f (mn)=f m+f n` is noninjective: comparing powers of 2 and 3 gives equal values, so injectivity would equate an even power with an odd power. This is a valid multiplicative-to-additive noninjectivity result, but the codomain `ℕ` is infinite, so it is not a finite-codomain impossibility theorem. The “Wallis factor coverage” is only the even/odd decomposition of positive naturals; no distinct Wallis skeleton is formalized.
+
+## Wallis product completion-threshold scope review (2026-10-31)
+
+`Omega.Conclusion.WallisProductCompletionThreshold` passed its locked Lake build (3,092 jobs, exit 0). It repeats the valid noninjectivity proof for a multiplicative-to-additive map `ℕ → ℕ` with `f 1 = 0`. Its Boolean construction witnesses that any stipulated finite prefix can be followed by a first differing bit at index `2κ−1` (with natural subtraction). This is a prefix witness only: no CMV/Toeplitz operator, completion procedure, or link from an operator audit to the Boolean sequence is formalized. Canonical scope: an elementary monoid obstruction and explicit prefix nonuniqueness.
+
+## Weak-coherence chain/tree gap scope review (2026-10-31)
+
+`Omega.Conclusion.WeakCoherenceChainTreeGap` passed its locked Lake build (3,093 jobs, exit 0; deprecated real import and unnecessary-`simpa` warnings). Under the structure’s assumed bounds `κ(d) ≤ κ(1)` for `d ≥ 1` and `κ(d) ≤ κ(2)` for `d ≥ 2`, it proves a componentwise score bound for finite edge-length functions and the exact formal difference `κ(1) - κ(2) = A/(2r)`. The “trees” are only functions `Fin (vertexCount−1) → ℕ`; there is no graph incidence, connectivity, spanning-tree, or optimization model. Canonical scope: a finite edge-list inequality conditional on its kernel bounds.
+
+## Weighted free commutative monoid metric rigidity scope review (2026-10-31)
+
+`Omega.Conclusion.WeightedFreeCmonMetricRigidity` passed its locked Lake build (3,095 jobs, exit 0; unnecessary-`simpa` warnings only). The owner fixes the carrier to `ℕ`, radius `φx`, and distance `φ|x−y|`; within that model it proves the unique center with injective distance profile is zero, all bijective self-isometries are identity, and each pair has a unique sum with additive radius. Canonical scope: one-generator weighted metric rigidity, not a classification for arbitrary weighted free commutative monoids.
+
+## Weighted screen completion/MST theorem scope review (2026-10-31)
+
+`Omega.Conclusion.WeightedScreenCompletionMST` passed its locked Lake build (3,092 jobs, exit 0). The finite-set result is a valid conditional equivalence: `hPrune` supplies a feasible tree subset with no greater cost, and `hDelete` says every feasible non-tree set has a deletable element; from these assumptions it derives MST optimality and inclusion-minimality conclusions. Neither structural hypothesis is proved, and the file defines no graph, cycle, quotient, or pruning algorithm. Canonical scope: an abstract finite-set optimality lemma conditional on pruning and deletion properties.
+
+## Weighted synchronization odd-prime staticization scope review (2026-10-31)
+
+`Omega.Conclusion.WeightedSyncOddprimeUnitrootStaticization` passed its locked Lake build (3,092 jobs, exit 0). The divisibility conclusion follows from the tail premise by exponent comparison and transitivity; `A = -A` over `ℤ` gives `A = 0`. The prime and oddness hypotheses are unused, and no unit-root or weighted synchronization structure appears. Canonical scope: divisibility propagation plus integer self-negation.
+
+## Window6 F8/F9 channel orthogonality scope review (2026-10-31)
+
+`Omega.Conclusion.Window6BoundaryF8F9ChannelOrthogonality` passed its locked Lake build (3,111 jobs, exit 0; existing dependency deprecation/style warnings). This owner packages the imported finite-boundary fiber constancy and parity nonmeasurability result, plus terminal offset/alias equalities by reflexivity. Its substance resides in the imported source modules; this file adds no general channel orthogonality theorem. Canonical scope: the stated finite boundary separation package.
+
+## Window6 faithful connected detector impossibility scope review (2026-10-31)
+
+`Omega.Conclusion.Window6BoundaryFaithfulConnectedDetectorImpossible` passed its locked Lake build (3,092 jobs, exit 0). Its proof is exactly the arithmetic contradiction between `components = 1` and `4 ≤ components`. No detector, faithfulness property, connected graph, or component construction is formalized. Canonical scope: inconsistent natural-number constraints.
+
+## Window6 boundary parity non-completability scope review (2026-10-31)
+
+`Omega.Conclusion.Window6BoundaryParityNeverAnomalyComplete` passed its locked Lake build (3,092 jobs, exit 0). The theorem assumes dimensions 21 and 3 and the implication that completeness would force `21 ≤ 3`, then derives non-completability by arithmetic. The extension-count equality is passed through unchanged; there is no anomaly signature or extension construction. Canonical scope: a conditional contradiction from stipulated dimensions.
+
+## Window6 parity nonmeasurability from F8 scope review (2026-10-31)
+
+`Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8` passed its locked Lake build (3,092 jobs, exit 0). On the explicit finite carrier `Fin 3 × Bool`, the defined F8 readout is constant and canonical parity is the second coordinate, so parity cannot factor through that readout; the two sheets over any fixed fiber provide the contradiction. Canonical scope: a valid finite factorization obstruction, not a formal model of an external F8 channel.
+
+## Window6 boundary subspace projector obstruction scope review (2026-10-31)
+
+`Omega.Conclusion.Window6BoundarySubspaceNoAutEquivariantProjector` passed its locked Lake build (3,092 jobs, exit 0). Its abstract argument is valid: the range of an equivariant map is invariant, conflicting with the supplied boundary point moved outside. Idempotency is an unused extra hypothesis; no concrete Window6 space, automorphism group, or boundary representation is instantiated. Canonical scope: range invariance for equivariant maps and the resulting abstract obstruction.
+
+## Window6 Z6 global free-extension scope review (2026-10-31)
+
+`Omega.Conclusion.Window6BoundaryZ6NoGlobalFreeExtension` passed its locked Lake build (3,132 jobs, exit 0; imported deprecation/style warnings). The extension predicate itself includes `∃ m, 21*m=64`; the theorem refutes that arithmetic condition via the imported local/global mismatch theorem. No free group action or concrete ambient orbit partition is constructed. Canonical scope: impossibility of the stipulated orbit-cardinality equation.
+
+## Window6 center characteristic rigidity scope review (2026-10-31)
+
+`Omega.Conclusion.Window6CenterCharacteristicRigidity` passed its locked Lake build (3,092 jobs, exit 0; `push_neg` deprecation warnings). It proves that an additively closed subset of `(ZMod 2)^8` containing zero and invariant under every linear endomorphism is either `{0}` or the whole space, using a rank-one map. Invariance under all endomorphisms (including noninvertible maps) is stronger than invariance under `GL(8,2)`; the file does not establish that an external center/action has this property. Canonical scope: the stated finite-dimensional invariant-subspace dichotomy.
+
+## Window6 choice-free parity anchor scope review (2026-10-31)
+
+`Omega.Conclusion.Window6ChoicefreeParityAnchorIsolated` passed its locked Lake build (3,092 jobs, exit 0). Given the stipulated iff and three finite `Delta` tables, it proves uniqueness of the nonzero table entry at index 6 and failure of uniqueness at indices 7 and 8. It does not formalize a general parity construction or a comparison involving choice. Canonical scope: the supplied finite-table classification.
+
+## Window6 cyclic escort dual zero-temperature scope review (2026-10-31)
+
+`Omega.Conclusion.Window6CyclicEscortDualZeroTemp` passed its locked Lake build (3,092 jobs, exit 0; unnecessary sequence-focus warnings). It proves limits `1/9` and `−1/5` for two explicitly defined real sequences with rational-power terms, plus nonvanishing of the positive-branch sequence for positive indices. No cyclic shell, escort operator, or finite model is constructed. Canonical scope: limits of the displayed scalar sequences.
+
+## Window6 endpoint atom and 2-primary ledger scope review (2026-10-31)
+
+`Omega.Conclusion.Window6EndpointAtomNotAdditiveThroughTwoPrimaryLedger` passed its locked Lake build (8,930 jobs, exit 0). The core result is general and valid: every additive homomorphism from an exponent-two additive group to `ℝ` vanishes, since `2 f(g)=0` and `2≠0`. The endpoint consequence follows directly. Imported parity/anomaly theorems are bound then cleared and do not contribute; no extra-axis construction is formalized. Canonical scope: torsion-to-torsion-free homomorphism vanishing.
+
+## Window6 first scale-jump gate scope review (2026-10-31)
+
+`Omega.Conclusion.Window6FirstScaleJumpGateForcing` passed its locked Lake build (3,092 jobs, exit 0). It defines fiber-size values 2, 3, 3 at indices 6, 7, 8 and verifies finite arithmetic for binary readout capacity and `Nat.clog 2`. No fibers, readout map, or gate-forcing mechanism is constructed. Canonical scope: finite table and capacity threshold arithmetic.
+
+## Window6 inversion/linear/statistical triple scope review (2026-10-31)
+
+`Omega.Conclusion.Window6InversionLinearStatisticalTripleSeparation` passed its locked Lake build (8,963 jobs, exit 0; dependency deprecation/style warnings). Its theorem packages imported histogram values, the imported no-linear-factorization result, and an imported capacity/InfoNCE equivalence. No new implication or statistical inversion argument relates these conjuncts. Canonical scope: conjunction of the imported statements.
+
+## Window6 local-Morita/global-orbitability scope review (2026-10-31)
+
+`Omega.Conclusion.Window6LocalMoritaTrivialGlobalNonorbitizable` passed its locked Lake build (3,092 jobs, exit 0). The stipulated fiber sizes 2 and 3 refute a common fiber cardinality, hence both defined constant-size orbit/coset predicates. Positivity and “matrix block” witnesses are supplied as data fields; positivity alone is not contractibility or Morita equivalence. No topology or group action is modeled. Canonical scope: heterogeneous finite cardinalities obstruct a constant-size partition.
+
+## Window6 long-root/projective short-root defect scope review (2026-10-31)
+
+`Omega.Conclusion.Window6LongRootProjectiveShortRootDefect` passed its locked Lake build (3,092 jobs, exit 0). It derives comparisons from six supplied values for each of two `ℕ`-valued functions: a period-three equality for the long table, one short-table inequality, and two equalities. No root system, projective action, or defect construction is formalized. Canonical scope: finite table arithmetic under stipulated values.
+
+## Window6 low-order tensor vacuum scope review (2026-10-31)
+
+`Omega.Conclusion.Window6LowOrderTensorVacuum` passed its locked Lake build (3,093 jobs, exit 0; one imported tactic-style warning). It obtains the parameter 21 from an imported certificate and proves bounded nondivisibility facts. The named “vanishing” predicates are defined as nondivisibility; this owner constructs no tensor representation, invariant tensor, equivariant map, or center action. Canonical scope: bounded arithmetic nondivisibility conditional on the imported dimension certificate.
+
+## Window6 Markov/topological hidden-channel scope review (2026-10-31)
+
+`Omega.Conclusion.Window6MarkovTopologicalHiddenChannelSeparation` passed its locked Lake build (3,092 jobs, exit 0). On `Fin 2`, the defined F8 and F9 channels are constant false and constant true, so they differ. No Markov chain, topology, or channel extraction is modeled. Canonical scope: separation of two constant Boolean functions on a finite carrier.
+
+## Window6 maximal-degree Weyl-breaking scope review (2026-10-31)
+
+`Omega.Conclusion.Window6MaxdegWeylBreaking` passed its locked Lake build (3,098 jobs, exit 0). The explicit subset of `ℕ` has size 9 and intersects the declared short/long intervals in 5 and 4 coordinates, violating the predicate that each interval be wholly included or excluded. The “orbits” are intervals; no Weyl group action or root system is defined. Canonical scope: finite subset counterexample to an orbit-union predicate.
+
+## Window6 exact-replay symmetry-breaking scope review (2026-10-31)
+
+`Omega.Conclusion.Window6MinimalExactReplaySymmetryBreaking` passed its locked Lake build (3,092 jobs, exit 0). It is propositional contraposition from the assumed implication `ExactReplay → BoundaryEquivariant → FourValueBoundaryCompanion` and the assumed negation of that companion. No replay or symmetry structure is formalized. Canonical scope: the conditional logical implication only.
+
+## Window6 moment/Prony rank claim semantic audit (2026-10-31)
+
+`Omega.Conclusion.Window6MomentTowerPronyRankCompression` passed its locked Lake build (3,094 jobs, exit 0; imported unnecessary-`simpa` warning). The ordinary and binary finite exponential-sum formulas, recurrences, Hankel-to-Gram entry identities, and determinant witnesses are genuine algebraic results. However, the “exact Hankel rank” conjunct is not a matrix-rank statement: `fixedResolutionCollisionExactHankelRank` is defined using a data structure whose fields assume the rank and recurrence order equal the atom count, and the imported Prony theorem simply returns those fields. Canonical replacement scope: finite moment formulas/recurrences and Gram factorization; actual Hankel rank requires a matrix carrier and rank proof.
+
+## Window6 inverse-limit cylinder parity lift scope review (2026-10-31)
+
+`Omega.Conclusion.Window6NoInverseLimitCylinderParityLift` passed its locked Lake build (3,092 jobs, exit 0). The theorem simply applies the supplied obstruction implication to refute an object satisfying four predicates. Those predicates are uninterpreted, and the file constructs no inverse system, cylinder maps, involution, or parity lift. Canonical scope: consequence of an assumed obstruction.
+
+## Window6 no-linear-factorization scope review (2026-10-31)
+
+`Omega.Conclusion.Window6NoLinearFactorization` passed its locked Lake build (3,131 jobs, exit 0; imported deprecation/style warnings). The conclusion module forwards to an imported proof that nonzero histogram entries at sizes 2, 3, and 4 contradict a uniform coset-fiber-size predicate. It does not itself construct the fold map; the histogram-to-fold connection must be checked at its owner. Canonical scope here: nonuniform positive fiber sizes obstruct the defined uniform-coset model.
+
+## Window6 root-system/free-quotient scope review (2026-10-31)
+
+`Omega.Conclusion.Window6NotRootSystemNotFreeQuotient` passed its locked Lake build (3,135 jobs, exit 0; imported deprecation/style warnings). The “finite reduced root system cardinality” predicate is defined as `Even`; excluding cardinality 21 and 18+3 is then elementary parity arithmetic, not a theorem about a constructed root system. The free-orbit/coset clauses are imported, with no map from a group action or root system to the 21-point carrier. Canonical scope: parity arithmetic under the stated definition plus imported obstructions.
+
+## Window6 odd-prime affine/local/coarse translation scope review (2026-10-31)
+
+`Omega.Conclusion.Window6OddprimeAffineLocalCoarseTranslation` passed its locked Lake build (3,092 jobs, exit 0). It returns the three supplied predicate equivalences unchanged and derives the stipulated membership/nonmembership facts at 23 and 571. There is no affine map, local/coarse object, or odd-prime construction. Canonical scope: predicate restatement plus finite arithmetic consequences.
+
+## Window6 one-axis screen half-blind rigidity scope review (2026-10-31)
+
+`Omega.Conclusion.Window6OneaxisScreenHalfblindRigidity` passed its locked Lake build (3,092 jobs, exit 0). Its theorems rewrite supplied values 32, 64, and 12 as arithmetic equalities. No screen, one-axis observation map, replay process, or minimality/rigidity argument is formalized. Canonical scope: arithmetic restatement of stipulated values.
+
+## Window6 Reynolds average / zero-mode projector scope review (2026-10-31)
+
+`Omega.Conclusion.Window6ReynoldsAverageZeroModeProjector` passed its locked Lake build (3,092 jobs, exit 0). This is a substantive explicit finite dependent-sum model: fiberwise rational averaging is idempotent with fixed points exactly the fiber-constant observables, the microstate norm descends to a weighted visible norm, and a cubic polynomial selects the same average for fiber sizes 2, 3, 4. It is not a group Reynolds operator or a constructed window process. Canonical scope: finite partition averaging and its projection/norm identities.
+
+## Window6 short-root defect nilpotency scope review (2026-10-31)
+
+`Omega.Conclusion.Window6ShortRootDefectNilpotent` passed its locked Lake build (3,092 jobs, exit 0). For a concrete 6×6 integer matrix equal to the stated two matrix units, it proves `N² = −4 E₄₂ ≠ 0` and `N³ = 0`, a genuine nilpotency-index-three example. The root-theoretic “short-root” interpretation is not formalized. Canonical scope: explicit matrix nilpotency calculation.
+
+## Window6 three-moment spectrum inversion scope review (2026-10-31)
+
+`Omega.Conclusion.Window6ThreeMomentSpectrumInversion` passed its locked Lake build (3,137 jobs, exit 0; imported/style warnings). The exact inversion of three moments on fixed support `{2,3,4}`, the recovery `(8,4,9)` from supplied moments `(21,64,212)`, and the congruence characterization for integral recovered weights are genuine arithmetic results. The support and moments are inputs; the file does not identify an unknown support among arbitrary spectra. Canonical scope: inversion and integrality for the fixed three-atom support.
+
+## Window6 topological closure / anomaly closure scope review (2026-10-31)
+
+`Omega.Conclusion.Window6TopologicalClosureNotAnomalyClosure` passed its locked Lake build (3,151 jobs, exit 0; imported deprecation/style warnings). Its proof assembles imported orbit, coset, boundary, and completion-cardinality facts with `64 − 21 = 43`. The paper-labeled declaration is a proposition-valued `def`, while a separate helper proves it. No mathematical comparison between topological closure and anomaly closure is stated or derived. Canonical scope: conjunction of imported obstructions and finite cardinality data.
+
+## ZG density / stationary finite-order Markov scope review (2026-10-31)
+
+`Omega.Conclusion.ZGDensityNotStationaryFiniteOrderMarkov` passed its locked Lake build (494 jobs, exit 0). The result follows directly from a data field stating that every positive rational `c` fails to be the transition value at some index. The declared Markov order is unused; no transition law, process, or density is constructed. Canonical scope: a sequence with no persistent positive constant value cannot satisfy the defined constant-transition predicate.
+
+## ZG finite-shadow / Euler-factorization scope review (2026-10-31)
+
+`Omega.Conclusion.ZGFiniteShadowCompletenessDoesNotImplyEulerFactorization` passed its locked Lake build (3,096 jobs, exit 0). It combines transition recovery from an assumed cylinder-factor equation and positive zero-state marginals with a concrete nearest-neighbor covariance defect `−p_i p_j π_i π_j` under positivity assumptions. This proves that the specified pair shadow differs from the product of the two specified prime shadows. No Euler product or general factorization principle is formalized. Canonical scope: this finite recovery identity and this explicit nonmultiplicativity witness.
+
+## ZG certificate/shadow local-dimension blindness scope review (2026-10-31)
+
+`Omega.Conclusion.ZGNoNontrivialLocalDimensionPredicateFromFiniteCertificate` passed its locked Lake build (8,926 jobs, exit 0). The Boolean-classifier impossibility follows from the realization field: two inputs can share certificate and shadow while taking opposite values of the target local-dimension predicate. This is a valid conditional observational-collision theorem; the file does not construct a concrete process or certificate model.
+
+## ZG positive-entropy finite-state conclusion scope review (2026-10-31)
+
+`Omega.Conclusion.ZGPositiveEntropyFinitestateObstruction` passed its locked Lake build (3,092 jobs, exit 0). The conclusion follows by applying the supplied incompatibility predicate to the assumed positive-dimension property and the zero-dimension property transported along a hypothetical equality. This is a conditional abstract implication; no entropy or measure construction is present.
+
+## ZG prime-pair shadow correlation scope review (2026-10-31)
+
+`Omega.Conclusion.ZGPrimePairShadowCorrelationLaw` passed its locked Lake build (3,092 jobs, exit 0). Under explicit divisor-cylinder normalization and positive marginal assumptions, it derives the prime and pair rational shadow formulas, covariance defect, and strict negativity when the pair marginal is zero. Canonical scope: this finite rational identity under those assumptions, not a general prime-pair theorem.
+
+## ZG nearest-neighbor nonmultiplicativity scope review (2026-10-31)
+
+`Omega.Conclusion.ZGShadowNonmultiplicativityNearestNeighbor` passed its locked Lake build (3,093 jobs, exit 0). It specializes the verified prime-pair rational identity to a zero pair marginal and derives inequality from the product of prime shadows using the strict covariance sign. This is an imported finite corollary, with no separate process model.
+
+## Zero-mean residue test detection scope review (2026-10-31)
+
+`Omega.Conclusion.ZeroMeanResidueTestsCompleteDetection` passed its locked Lake build (3,093 jobs, exit 0; deprecated `Mathlib.Data.Complex.Basic` import warning). The finite proof uses a basis weight at each nonzero residue to isolate that Fourier coefficient, establishing equivalences with vanishing modes and equal residue limits. The defined q-power factorization predicate is precisely the same nontrivial-mode condition. Canonical scope: this explicit finite Fourier detection model.
+
+## Zeta audit versus synchronization decoder scope review (2026-10-31)
+
+`Omega.Conclusion.ZetaCompleteAuditNotSyncComplete` passed its locked Lake build (3,092 jobs, exit 0). The supplied package makes spectral observations equal at levels 3 and 4 while synchronization budgets are 2 and 3, so no decoder of spectral data alone can recover the budget at all levels ≥3. This is a valid conditional indistinguishability argument; it does not construct a zeta spectrum or synchronization process.
+
+## Fresh tracked-tree candidate delta (2026-10-31)
+
+A fresh tracked-worktree run of `tools/quality/counterexample_inventory.py` scanned 28,789 Lean files (zero read errors; seven skipped paths) and emitted 13,363 lexical declaration rows. Comparing against the prior 587-file ledger found 4,726 candidate files not represented there, most from broad negative-boundary matches. I filtered to repo-owned files with explicit obstruction or identifiability categories: 229 obstruction and 89 identifiability declaration rows, across 195 files (318 declarations total). These are now recorded with hashes and declaration locations as `source_candidate_unreviewed`; no semantic or proof status is inferred. The 11,062 generic negative-boundary rows remain lexical noise pending a stronger filter, and the broad inventory objective remains open.
+
+## G2 quotient representative collision and alignment-package refutation (2026-10-31)
+
+The owner `Algebra.Zorn.G2QuotientCollisionAudit` proves that indices 24 and 45 have the same image in the quotient by the concrete unipotent subgroup, while their residual coordinates are distinct; hence the `Fin 189` quotient representative map is not injective. I added two consequences: neither the abstract nor concrete `FactorizationAlignmentSystem` in `G2FactorizationAlignmentCertificate` can exist, because its fields imply injectivity. The canonical equality test remains `G2NativeQuotientRepresentative.quotientRepresentative_eq_iff`, reducing equality to subgroup membership of the representative difference. The focused locked build passed (9,004 jobs). This is specific to the concrete 189-entry table; it does not establish a general quotient-cardinality claim.
+
+## G2 cell-two residual-coordinate collision and paired replacement (2026-10-31)
+
+`G2ResidualCoordinateCellTwoBoundary` proves that the left-factor residual word has the same value at distinct indices 170 and 185, both in orbit cell 2, and therefore is not injective on that cell. The canonical owner-level replacement uses both gap-witness factors: `G2ResidualPairCoordinateCellTwo.residualPair_injective_on_cell_two` proves injectivity on cell 2, while `G2GapResidualPairCellAssembly.gapResidualPair_injective_on_cell` proves it on every cell. The counterexample owner passed its locked build (8,992 jobs); the all-cell paired replacement passed (9,016 jobs). The residual word remains valid as a one-sided coordinate; only its injectivity claim is refuted.
+
+## G2 explicit root-candidate family overlap (2026-10-31)
+
+`G2TwoExplicitGenerators.candidateRootFamily_not_injective` is an explicit collision: candidate labels 1 and 3 at `true` give the same automorphism, because `cycleConjugatedShort_one_eq_long_zero` identifies the short-family element at index 1 with the long-family element at index 0. This refutes any interpretation of the six labels as six distinct root elements. The owner already calls them candidates and explicitly disclaims distinctness or a completed BN-pair; its precise positive statement is that `cycleConjugatedLong` is injective. Downstream subgroup constructions use the generated set and membership lemmas, not a six-element distinctness theorem. The focused locked build passed (3,095 jobs, exit 0; imported unused-tactic warnings). This is a witnessed overlap, not a refutation of the generated subgroup or of the separately proved lower bound on its cardinality.
+
+## G2 cell-one quotient two-class classification (2026-10-31)
+
+`G2CellOneQuotientRelation` proves a second exact quotient collision in cell 1: indices 73 and 178 have the same coset, alongside the previously recorded 24/45 collision. All four cross-pairs are distinct, and `cell_one_quotient_eq_iff_same_pair` gives the exact equality relation on this cell; its quotient image has exactly two values. The canonical alternative to injectivity is this cell-scoped two-class classification. The 24/45 collision also refutes the generic and concrete global residual-alignment packages in this owner. The statement is specific to cell 1 and the finite 189-entry table. Focused locked build passed (9,023 jobs, exit 0; imported linter warnings).
+
+## G2 global quotient-injectivity route is conditional (2026-10-31)
+
+`G2GAPFlagWitnessAssembly` gives three sufficient-condition theorems for quotientRepresentative injectivity. They require explicit cross-cell disjointness and within-cell residual alignment plus residual-coordinate injectivity; the matrix form also requires an explicit matrix-separation premise. The file does not prove these global premises for the concrete 189-entry quotient table. The already verified 24/45 cell-one collision refutes unconditional injectivity and rules out the associated global alignment package. Canonical scope: keep these as conditional implications; do not promote them to a concrete global injectivity theorem. Focused locked build passed (9,013 jobs, exit 0; imported linter warnings).
+
+## G2 idempotent-to-isotropic-point cardinality obstruction (2026-10-31)
+
+`G2PeircePrefixCarrierFacts.no_injective_nontrivialIdempotent_to_octImIsotropicPoint` is a genuine finite-cardinality obstruction: the source carrier has 72 elements and the isotropic-point carrier has 63, so no injection exists. Its scope is exactly these carriers and does not rule out a larger encoding. The constructive alternative retains all prefix and residual data: `occurringPeirceCode` is injective into a dependent sigma carrier, and the owner proves the resulting cardinal lower bound. Focused locked build passed (8,940 jobs, exit 0; imported linter warnings).
+
+## G2 residual coordinate readback is a conditional criterion (2026-10-31)
+
+`G2ResidualCoordinateReadback.residualWord_injective_on_cell_of_coordinate_separation` assumes coordinate separation for every distinct pair in every cell and then derives injectivity. The owner does not claim the premise, and it fails for the raw residual word on cell 2 (indices 170 and 185). The paired gap-residual coordinate is the verified all-cell injective replacement. Focused locked build passed (8,992 jobs; imported linter warnings).
+
+## G2 paired-coordinate alignment premise is impossible globally (2026-10-31)
+
+`G2GapResidualPairCellAssembly.quotientRepresentative_injective_of_distinct_gapResidualPair_alignment` is conditional. Its premise requires each distinct pair with equal quotient representatives to have equal paired residual coordinates in a common cell. For the concrete table, indices 24 and 45 have equal quotient representatives but unequal paired residual coordinates, so that premise is false. The canonical statements already proved are `quotientRepresentative_not_injective` and `gapResidualPair_injective_on_cell`: quotient collisions exist, while the paired coordinate separates indices within each individual cell. The implication must not be promoted to global injectivity. The unchanged owner’s locked build passed previously (9,016 jobs, exit 0).
+
+## G2 Weyl double-coset injectivity is conditional (2026-10-31)
+
+`G2TitsRepresentativeInjectivity.orbitWeylRepresentative_doubleCoset_injective_of_quotientOrbit_separation` proves injectivity of the 12 Weyl representatives into double cosets under pairwise disjointness of distinct left quotient orbits. It does not assert the separation premise for every pair and does not concern the 189-entry quotientRepresentative function with its known within-cell collisions. The owner proves identity-orbit separation from each other orbit, but not the full premise in this module. Canonical scope remains the conditional implication and that partial separation theorem. Focused locked build passed (8,995 jobs; imported linter warnings).
+
+## Projective/Krein sandbox scope audit (2026-10-31)
+
+The lexical candidate `rayEquiv_separates_antipodal` is correct: under the defined positive-rescaling relation, a nonzero vector cannot be positively rescaled to its negative. The focused audit build passed (3,093 jobs). The module’s broader interpretation needs tighter scope: `RayEquiv` and `RealProjectiveEquiv` are relations on all of V, with no quotient of the punctured carrier constructed; `GL2NDecomposition` stores four natural-number fields and its theorem proves only an arithmetic sum, not a direct-sum decomposition of `gl(2N, ℝ)`; and the ring-only Majorana equations do not include an adjoint operation, so they do not establish self-adjointness. Canonical statement scope is the proved rescaling/ring/arithmetic identities unless those geometric structures are separately constructed.
+
+## Cartan–Souriau covariance candidate and exact kernel criterion (2026-10-31)
+
+`chargeCovariance_posDef_of_separatesDirections` is valid under the owner’s finite family and strictly positive weights; the lexical identifiability flag was not a counterexample. I added `chargeCovariance_quadratic_pos_iff_exists_charge_difference` and `chargeCovariance_positiveDef_iff_separatesDirections`, giving the exact fixed-direction and positive-definiteness criteria. The focused locked build passed (3,094 jobs, exit 0). Existing deprecation and unused-section-variable warnings remain.
+
+## Finite Vandermonde noncollision candidate (2026-10-31)
+
+`PrimonCrystallizationFactIndex.finite_vandermonde_nonzero_iff_injective` is a correct re-export of the Mathlib Vandermonde determinant criterion over a commutative domain. The neighboring theorem identifies the determinant-zero locus with pair collisions. No counterexample was found; the lexical negative-boundary hit is a false positive. Focused locked build passed (9,256 jobs, exit 0; imported warnings).
+
+## Mellin/Dirac readout species separation candidate (2026-10-31)
+
+`readoutSpecies_separate` is the valid disjointness of `Sum.inl` and `Sum.inr`; the adjacent theorems show each tagged injection is faithful. Its scope is separation of tags in an abstract sum carrier, not a constructed separation theorem for concrete Mellin and Dirac spectral readouts. No counterexample was found to the Lean statement. Focused locked build passed (3,095 jobs; two simp-head warnings remain).
+
+## Quasicrystal Vandermonde candidate is a duplicate re-export (2026-10-31)
+
+`QuasicrystalRHExplicitFormula.finite_vandermonde_nonzero_iff_injective` and its zero-locus companion re-export the same Mathlib-backed finite Vandermonde criteria as `PrimonCrystallizationFactIndex`. They are valid over a commutative domain and finite `Fin n` nodes; this lexical match is not a counterexample and not a separate theorem family. Focused locked build passed (9,260 jobs, exit 0; many imported warnings).
+
+## Winding-flux and finite-CCR conjunction is conditional and split-source (2026-10-31)
+
+`Canonical.ApolloniusWindingFluxBridge.winding_quantization_with_finite_ccr_obstruction` is a conjunction, not a deduction of the finite-CCR obstruction from winding quantization. For positive radius, the first conjunct is the circle integral identity giving the logarithmic phase; independently, for `c ≠ 0`, `no_exact_nonzero_scalar_commutator` rules out the designated scalar commutator on the repository’s finite Zorn carrier. Both hypotheses and carriers remain explicit. No counterexample is present in this declaration; the canonical reading is the two separately sourced conditional facts. The locked build of `InfoGeometry.Canonical.ApolloniusWindingFluxBridge` passed (9,295 jobs, exit 0). The wider inventory remains open.
+
+## Berry/QGT projector-agreement candidate is a valid conditional weld (2026-10-31)
+
+The lexical candidate `Canonical.BerryPhase.starCertifiedEinsteinAnomalyQGT_berry_eq_metricOfOperator_liftedProjectorObstructionOperator_of_projectorAgreement` forwards to the owner theorem in `Quantum.GeometricTensorOperatorLift`. The owner proves the equality using the QGT Berry/metric sign conversion and the lifted operator identity, which requires explicit equality of the Moore–Penrose right and left projectors. This is a conditional bridge, not an unconditional projector-agreement theorem and not a counterexample. The focused locked build of `InfoGeometry.Canonical.BerryConnection` passed (4,139 jobs, exit 0).
+
+## Bipolar two-coordinate skew obstruction has the stated finite scope (2026-10-31)
+
+Both lexical candidates `pristine_two_coordinate_obstruction_core` and `pristine_dimension_obstruction_core` forward to `Thermo.BipolarTwoDimensionalSkewObstruction.skew_operator_eq_zero_of_eta_casimir`. The owner carrier is the explicit two-coordinate `Vec2R`; `L` is a linear map from its algebraic covectors to its vectors. Evaluation-skewness and `L etaCovector2 = 0` imply `L = 0`, so also `L thetaCovector2 = 0`. The owner separately proves the nontrivial-theta-lane contradiction. This is a genuine finite-dimensional conditional obstruction, not a claim about unrestricted or higher-dimensional carriers. The shared locked build of the owner and both capstones passed (8,965 jobs, exit 0).
+
+## Bost–Connes Galois separation candidates require separating data (2026-10-31)
+
+In `Canonical.BostConnesSymmetryBreaking`, both lexical candidates are valid generator-level implications. `galois_branches_separate_on_generator` assumes the target cyclotomic generator values differ; `galoisTranslated_readouts_separate_on_generator` assumes the base readout distinguishes those values. The proofs rewrite with the action-on-generator/pullback equations and apply the premise. These do not prove unconditional branch separation, faithfulness from a single readout, or analytic KMS classification. The distinct fixed-every-observable theorem retains its explicit hypothesis. The focused locked build passed (9,000 jobs, exit 0).
+
+## Cantor prefix-cylinder separation is valid at the symbolic-boundary scope (2026-10-31)
+
+`Canonical.CantorCliffordFunctionModelTopological.prefixCylinder_separates` is not a false separation claim. For distinct boundary functions, function extensionality yields a differing coordinate `k`; the prefix of length `k + 1` determined by the first function contains it and excludes the second. The theorem concerns the product boundary `ChiralBoundary` and its finite-prefix cylinders only; it does not establish measure-theoretic, Cuntz-representation, or spectral-triple claims. The focused locked build passed (9,158 jobs, exit 0).
+
+## Catto–Gürsey associator obstruction is stronger than the characteristic-sensitive Jacobiator (2026-10-31)
+
+`Canonical.CattoGurseySplitBasis.no_injective_associative_realization` is a valid counterexample theorem under its exact hypotheses: over any nontrivial commutative coefficient ring, an additive multiplication-preserving injection from the Zorn carrier into an associative ring would force the explicit associator of `u 0, u 1, u 2` to vanish, contradicting `triple_associator = uZero - uStarZero`. This proof does not require `6 ≠ 0`. The downstream `CattoGurseyOctonionicHadronicSuperalgebra.characteristic_three_boundary` separately demonstrates that the commutator Jacobiator can vanish in characteristic three while that associator remains nonzero. The canonical distinction is associativity obstruction versus Jacobiator behavior; one cannot infer associativity from that Jacobiator coefficient. Both owner and downstream module passed the shared locked build (8,936 jobs, exit 0).
+
+## Conformal canopy scalar readout no longer carries an irrelevant KKT premise (2026-10-31)
+
+Review of `ConformalUnification` showed `canopy_obstructionOperatorOwner` genuinely needs the three KKT wing hypotheses, while its scalar-readout conclusion is already an unconditional `ConformalInference` owner theorem. The old wrapper accepted the canopy package but did not use it to prove the scalar equalities. I changed `canopy_obstructionScalarReadout` to take only `CI` and return `CI.obstructionScalarReadout`, and updated both `Cl44BridgeCandidate` consumers. The combined closure retains the KKT package only for the operator-owner conjunct. The locked build of the three audited owners and `Cl44BridgeCandidate` passed (9,392 jobs, exit 0).
+
+The related lexical candidates in `AlgebraicStationarity` and `BogoliubovOptimalTransport` are valid conditional laws: the former assumes exact negative operator agreement; the latter uses certified support and exact alignment characterizations on `CertifiedModularReduction`. Their inventory records now include the successful focused build.
+
+## De Rham obstruction declarations are predicate consequences, not an existence witness (2026-10-31)
+
+In `Canonical.DeRhamSymplecticKKQuantizationLimit`, `IsObstruction α` is defined as closed and not exact in an arbitrary two-step complex with `d₁ ∘ d₀ = 0`. The candidate theorems `obstruction_closed`, `obstruction_not_exact`, and `exact_not_obstruction` correctly unpack this definition; they do not exhibit a non-exact closed current or establish nontrivial cohomology for a concrete de Rham complex. The canonical scope is therefore definition-level logic until an explicit class and no-primitive proof are supplied. The focused locked build passed (3,097 jobs, exit 0).
+
+## Deformed-Idele scalar-node bridge keeps its missing theorem explicit (2026-10-31)
+
+`Canonical.DeformedIdeleDysonBridge.nodes_injective_of_range_defect` derives injectivity by applying the explicit field `range_defect_forces_injective_nodes` in `BranchDefectToDysonNodes`, given a range-projection defect. The subsequent pairwise noncollision, Vandermonde nonvanishing, and Dyson identity depend on that premise. The source documentation correctly says no scalar readout is derived from operator algebra alone. This is a conditional bridge package, not an unconditional spectrum construction; no counterexample is present in the stated theorem. The focused locked build passed (9,188 jobs, exit 0).
+
+
+## Dilated gap candidates are conditional identities (2026-10-31)
+
+Reviewed both lexical candidates in `Canonical.DilatedGapEquivariance`. The projector result assumes zero `projectorMismatch`; its owner theorem identifies the anomaly exactly as the mismatch commutator with the metric projector, and gives vanishing iff that mismatch commutes with the metric projector. The transported parity/modular residual follows from the seed decomposition under commutation of the phase-linear part with `modular_j`; the stronger owner result kills the seed when the full connection generator commutes with `modular_j`. These are conditional results, not counterexamples or unconditional vanishing claims. The focused locked build passed (4,182 jobs, exit 0).
+
+## Dirac zero-mode candidate is a kernel/injectivity equivalence (2026-10-31)
+
+`Canonical.DiracBerryKeatingFredholmBridge.not_hasZeroMode_iff_injective` is the standard exact linear-map criterion, proved from nontriviality of `LinearMap.ker D`. `kernel_protection_survival` separately requires an injective intertwining map. `zero_free_region_trivial_index` assumes the supplied `RHSpectralDuality` and yields only no zero mode; it does not calculate a Fredholm index. The repository search also found distinct zero-mode constructions, so this candidate supports no repo-wide absence claim. The focused locked build passed (3,093 jobs, exit 0).
+
+## Drazin defect obstruction is exactly a commutation criterion (2026-10-31)
+
+`Canonical.DrazinModularSingularityBridge.defectProjectionObstruction` is defined as the DrazinSupercharge commutator of `Y` with the spectral complementary projector. The candidate iff theorem unfolds this definition and applies `sub_eq_zero`; it is an exact operator criterion with no counterexample, and does not by itself establish a nontrivial singularity or spectral result. The focused locked build passed (4,211 jobs, exit 0).
+
+## Einstein anomaly naming preserves the left/right projector condition (2026-10-31)
+
+`Canonical.EinsteinAnomalyOperator` proves the lifted Einstein anomaly equals the negative lifted right chiral anomaly unconditionally on `CertifiedConformalInference`. The lexical candidate relating it to the left projector obstruction correctly assumes equality of the Moore-Penrose left and right projectors; the owner derives it from the left/right anomaly identification under that premise. This is a valid conditional bridge, not a counterexample. The focused locked build passed (4,111 jobs, exit 0).
+
+## Five-graded packet incidence is a finite-model consequence (2026-10-31)
+
+`Canonical.FiveGradedTwistorIncidence.incident_points_null_separated` correctly transfers incidence with a shared twistor and nonzero primary spinor to null separation. The imported `Twistor.Incidence` owner proves the stronger finite-model equivalence: `q22 (X - Y) = 0` iff a shared twistor exists with nonzero primary spinor. This uses the explicit real 2x2 soldering/determinant model and does not assert a geodesic, manifold, or infinite-dimensional twistor result. The focused locked build passed (3,212 jobs, exit 0).
+
+## G2 orbit candidate gets its sharp abstract-carrier criterion (2026-10-31)
+
+`Canonical.G2LeechCoxeterBoundaryBridge` states injectivity of a primitive-24th-root orbit under a nonzero seed and transfers it to any map satisfying explicit iterate equivariance. I added `planeOrbit_injective_on_range_iff`, proving on the actual complex carrier that first-cycle injectivity is equivalent to seed nonzeroness. The bridge does not construct a Coxeter projection from a Leech lattice; its own source keeps that missing carrier map explicit. The focused locked build passed (9,137 jobs, exit 0).
+
+## Generative inference obstruction is exactly projector commutation (2026-10-31)
+
+`GenerativeInferenceCore.spectralObstruction_eq_zero_iff_projectors_commute` is an exact operator criterion for its `CertifiedChiralSpectralTriple`: the obstruction is the commutator of the spectral and metric projectors. The neighboring `anomalyScale_eq_zero_of_projectors_commute` proves only the forward scalar implication here. A related conformal package has a scalar iff theorem, but the carriers differ, so I do not transfer that converse. Focused locked build passed (4,092 jobs, exit 0).
+
+## Grand synthesis anomaly term is a package norm readout (2026-10-31)
+
+The private `GrandSynthesis.anomalyTerm_eq_projectorObstruction_norm` follows from `SingularTransportSystem.anomalyTerm_eq_boundaryScale` and the boundary owner’s norm identity for the spectral/left-projector commutator. It is a valid exact readout inside a supplied package, not a separately constructed obstruction or counterexample. The module’s radial-closure statements remain conditional on boundary-scale/generator vanishing. Focused locked build passed (4,132 jobs, exit 0).
+
+## Incompressible Cramer-Rao collapse drops a redundant commutation premise (2026-10-31)
+
+The original zero-obstruction/dilation theorem required both right-projector agreement and left-projector commutation. Under the explicit negative-log-volume readout, incompressibility already forces zero chiral scale; the owner theorem then yields left-projector commutation, so the latter premise was redundant. I removed it from the zero-pair theorem and updated its internal callers. The larger semantic-collapse packet retains left commutation because its separate Weyl/KKT semantic conjunct consumes it. Focused locked build passed (4,182 jobs, exit 0).
+
+## Matrix Cuntz obstruction is now stated on the concrete tower carrier (2026-10-31)
+
+`FiniteMatrixCuntzObstruction.no_cuntz2_matrix` is a genuine finite-dimensional trace obstruction: two Cuntz isometry range projections each have trace `n`, while their sum is the identity of trace `n`, contradiction. The `MatrixCuntzStarTower` wrapper was generic in matrix dimension; I added `concreteMatrixStage_cuntz_obstruction` for `MatrixStage k` of size `2^k`. This says nothing against Cuntz families in the categorical/infinite colimit carrier; the imported rectangular branch construction is a distinct replacement. Focused locked build passed (3,687 jobs, exit 0).
+
+## Direct-limit kernel survival is already an algebraic iff (2026-10-31)
+
+The candidate theorem in `Canonical.ModuleCatDirectLimitKernelSurvivalBridge` is supported by `Algebra.DirectLimitSuperClosureLemmas.directLimitOf_eq_iff_of_injective` and its zero-specialized `directLimitOf_eq_zero_iff_of_injective`: under injective bonding ring homomorphisms, a canonical stage image in the algebraic direct limit is zero iff its source is zero. No topology is defined on this carrier; I corrected the stale “topologically protected” wording. A focused locked build was requested but stayed queued on the shared build lock, so this entry records source-level evidence only.
+
+## NC-Zorn alternativity failures are explicit matrix witnesses (2026-10-31)
+
+`Canonical.NCZornAlternativityAudit` computes a specific sigma-minus coordinate of each alternative-law associator. The left defect is `(a*b - b*a)*d`, and the right defect is `d*(a*b - b*a)`; it then specializes to matrix units `E₁₂`, `E₂₁` in `BdGBlock ℚ` with `d = 1`, where the coefficient commutator is nonzero. Thus both global alternative laws fail for this displayed multiplication over that noncommutative coefficient carrier. The theorem does not claim alternativity failure over every coefficient ring, nor sufficiency of coefficient commutativity. A focused locked build was requested but stayed queued on the shared build lock, so this entry records source-level evidence only.
+
+## Projector mismatch is weaker than noncommuting split (2026-10-31)
+
+`ProjectorPair.commutator_ne_zero_implies_projectorMismatch_ne_zero` is a valid one-way implication in any ring: equal projectors necessarily commute. Its converse is refuted by `commuting_projectors_can_have_nonzero_mismatch`, using two distinct complementary idempotents in `Matrix (Fin 2) (Fin 2) ℤ` with zero commutator and nonzero difference. The correct general statement is the one-way implication, not equivalence of mismatch with noncommutativity. Source-level review only; the shared build lock remained unavailable during this pass.
+
+## Weyl holonomy endpoint requires the explicit curvature bridge (2026-10-31)
+
+`PhaseSpaceWeylCausalBridge` transports theorems from `WeylTransportChiralBridge`. Its holonomy equals the projector-obstruction norm only when an explicit `FlatCurvatureProjectorObstructionBridge` and pointwise flatness are supplied; the bridge carries the integral-to-target relation. Flatness alone is not claimed to determine holonomy. The owner also proves zero holonomy iff the spectral and metric chiral projectors commute, and separately identifies the obstruction norm with `chiralScale`. The dilation source identities retain their required projector commutation/agreement hypotheses. No overstrong unconditional statement was found in the reviewed declarations. Source-level review only; build lock unavailable.
+
+## Plabic Gram transport is correctly limited to nonzero eigenvalues (2026-10-31)
+
+`mulVec_gram_eigenvector_injective` and its concrete edge-sum wrapper require a shared eigenvalue `λ ≠ 0`; under that premise, applying `Aᴴ` to equality of transported vectors and cancelling `λ` proves source equality. The owner separately identifies `ker(AᴴA)` with `ker(A)`, so the zero eigenspace is explicitly treated without claiming injectivity there. Adjacent results state geometric eigenspace dimension equality and nonzero characteristic-root multiplicity, without generalizing to generalized eigenspaces or SVD. Source-level review only; no focused build yet.
+
+## Primon/Dirac readout separation is scalar only (2026-10-31)
+
+`dirac_heat_kernel_readouts_separate` is a valid real-scalar consequence of injectivity of `Real.exp`; its theorem in fact needs no positivity of the energies despite the narrower docstring. `primon_thermal_readouts_separate` is likewise valid because `E > 0` makes `β ↦ βE` injective. Neither theorem formalizes a matrix/operator heat kernel or uses primality of the energy parameter; their exact scope is elementary scalar readout separation. Source-level review only.
+
+## Projector obstruction is not itself a dilation (2026-10-31)
+
+`ProjectorNoncommutativityDilationClosure` has a valid ring-level implication from noncommuting idempotents to nonzero mismatch. Its module header correctly states that this alone yields no dilation or conformal closure; those require supplied `DilationClosureData`, transport, and canopy packages. The historical `DGenerator` was merely an alias of `projectorObstruction`, so I revised its docstring to state that it does not itself construct a dilation. Source-level review only; the shared build lock was unavailable.
+
+## Reflexive Klein representation has an explicit nontrivial kernel (2026-10-31)
+
+Under the supplied reflexive-pair relations `d² = B² = 0`, `dBd = d`, and `BdB = B`, the presented glide has infinite order by its integer coordinate in the native semidirect-product model. Its image under `reflexiveKleinRep` has fourth power one, for every scalar unit `t`. Thus the nonidentity fourth power is an explicit kernel element and the representation is not injective. This is conditional on the reflexive-pair data and concerns this representation specifically. Source-level review only; no build result claimed.
+
+## Relational transport obstruction is precisely Jacobi's identity (2026-10-31)
+
+`transportObstruction X Y A` is `[X,[Y,A]] - [Y,[X,A]] - [[X,Y],A]` on the continuous endomorphism Lie algebra. Its zero theorem is exactly the Jacobi identity. This establishes flatness only for the primitive inner-derivation construction defined there, not for any independent geometric connection; the source and dynamics consumer keep that distinction. Source-level review only.
+
+## Singular transport norm theorem is derived in its boundary owner (2026-10-31)
+
+`SingularBoundaryCorrection.boundaryScale_eq_projectorObstruction_norm` unfolds the certified kernel’s `chiralScale` and `chiralAnomaly` definitions and proves the boundary scale is the norm of the spectral/metric left-projector commutator. `SingularTransportSystem` delegates to this theorem; the anomaly scalar equality and transport split are package fields, and radial closure remains conditional on vanishing boundary scale. The norm identity is genuinely derived in the boundary owner, not supplied as a package field. Focused locked build passed (3,848 jobs, exit 0), with existing deprecation and linter warnings.
+
+## Response determinant bridge retains its readout premise (2026-10-31)
+
+`ResponseWeylAnomalyBridge` assumes an explicit equality from the thermodynamic response determinant to the flat Weyl holonomy before identifying the determinant with the projector-obstruction norm. Its nonzero and non-spinodal consequences also depend on that readout; `Spinodal2D` is definitionally determinant zero. No unconditional thermodynamic-to-Weyl identification is made. Source-level review only.
+
+## Spectroscopic gauge obstruction has an exact commutation criterion (2026-10-31)
+
+`gaugeObstruction` is the commutator of the analyzer and observable. I added `gaugeObstruction_eq_zero_iff_commute`, making explicit that its vanishing is equivalent to commutation. The bridge to `CertifiedInverseKernel.chiralAnomaly` continues to require `hAnalyzer`; it identifies the left-projector anomaly only under that equality. Focused locked build passed (4,217 jobs, exit 0), with existing warnings.
+
+## Zorn split-octonion product cannot embed injectively into an associative semigroup (2026-10-31)
+
+The source exhibits a primal basis triple with nonzero associator. If an injective multiplicative map into any semigroup existed, associativity in the target would force the two source bracketings to have equal images, contradicting injectivity. This valid obstruction rules out injective multiplicative realizations in ordinary associative matrix algebras, while allowing noninjective maps and linear carrier equivalences. Source-level review only.
+
+## TKK Möbius/parity separation uses an explicit vector witness (2026-10-31)
+
+`mobius_parity_separate` is the standard extensionality witness principle: disagreement at one vector proves two `Module.End` maps differ. The specialized TKK inversion theorem supplies the necessary fixed negative-grade witness and a positive/negative grade inequality; it does not assert inversion differs from every parity map unconditionally. Source-level review only.
+
+## SO(3) angular momentum now states injectivity directly (2026-10-31)
+
+For nonzero scalar inertia, the existing theorem provides a left inverse to `ω ↦ I • ω`, which implies injectivity. I added `angularMomentum_function_injective` with the direct `Function.Injective` conclusion, derived from that left inverse. The focused locked build passed (3,162 jobs, exit 0); compiler output reported existing linter warnings.
+
+## Theorem-honest kernel bridge scope audit (2026-10-31)
+
+`Canonical.TheoremHonestSpectralKernelToeplitzBridge.intertwining_injective_kernel_survival` is a valid abstract lemma: an injective zero-preserving map that intertwines two endomorphisms carries each nonzero kernel vector to a nonzero kernel vector. The file itself contains only this result and the corresponding kernel-membership preservation lemma. Its header claims formalization of self-adjoint/chiral index, Toeplitz argument-principle zero counting, antiunitary fixed-locus rigidity, and a unified master duality; those claims are not supported by declarations in this file. Repository-wide search found related topic references/declarations, but did not establish that one theorem assembles them. This is a scope/documentation mismatch, not a counterexample to the kernel-survival theorem. Source inspection only; no fresh build was run.
+
+## Thermodynamic Massieu obstruction lexical-hit audit (2026-10-31)
+
+The two obstruction-name hits in `Canonical.ThermodynamicGenerator` are valid conditional operator identities, not counterexamples. `liftedProjectorObstructionMassieuPotential_normalizedInfinitesimalLaw` specializes the generic normalized operator Massieu derivative theorem. `liftedEinsteinAnomalyMassieuExpectation_eq_neg_liftedProjectorObstructionMassieuExpectation_of_projectorAgreement` uses the existing operator equality under explicit Moore–Penrose right/left projector agreement. This sign relation is not stated unconditionally. Source inspection only; no fresh build was run.
+
+## Twistor operatorial-incidence equivalence audit (2026-10-31)
+
+`CertifiedConformalInference.operatorialIncidence_iff_projectorObstructionOperator_zero` is mathematically consistent but redundant: its proposition is identical to the immediately preceding `operatorialIncidence_iff_chiralAnomalyOperator_zero`, and its proof delegates both directions to that result. The incidence predicate is definitionally vanishing of the lifted projector-obstruction operator; `dualSheetLift_eq_zero_iff` supplies the lift-to-base equivalence. Repository search found no other consumers of the duplicate declaration. The canonical reusable statement is the preceding iff theorem, with the lift zero criterion for its operator interpretation. This is a redundant API surface, not a counterexample. Source inspection only; no fresh build was run.
+
+## Fact–Logic support counterexample and exact replacement (2026-10-31)
+
+The finite `M₃(ℚ)` matrix-unit witness in `Routing.FactLogicBypassMatrixCounterexample` shows that the support pattern permits a prompt-to-fact block. The reusable replacement is the exact equation `publishedMaskSupport_prompt_fact_block`, together with the new necessary-and-sufficient criterion `publishedMaskSupport_prompt_fact_block_eq_zero_iff`: the block is zero iff `P_p * R * P_f = 0`. Thus orthogonality of the diagonal track idempotents alone does not force zero leakage when the support expression contains a free prompt-to-fact route. The locked build of the algebra, matrix witness, and axiom audit passed (1204 jobs); new theorem axiom readback reports `[propext]`.
+
+## Cantor-prefix inverse-limit separation audit (2026-10-31)
+
+`prefixLimitCylinderSet_separates` is valid in its stated topological inverse-limit scope and is not a counterexample. Added `prefixLimit_projection_separates`: any distinct points in the `TopCat` limit differ under some finite-prefix projection. The proof uses the existing cylinder-separation theorem and `prefixLimitCylinderSet_eq_projection_fiber`. The locked owner build passed (3125 jobs).
+
+## Finite-cylinder Cantor separation audit (2026-10-31)
+
+`cylinderSet_separates` is a valid separation theorem, not a counterexample. Extracted the core statement as `boundaryPrefix_separates`: distinct binary boundary points differ at a finite prefix. Refactored `cylinderSet_separates` to reuse this criterion. Locked builds of `UHFInductiveColimitBoundaryTopology` and its inverse-limit dependent module passed (3125 jobs).
+
+## Pauli quaternion basis sign audit (2026-10-31)
+
+The literal assignment `i ↦ Iσ₁`, `j ↦ Iσ₂`, `k ↦ Iσ₃` is a concrete finite counterexample to the claimed Hamilton relation `ij=k`: `quaternion_literal_i_j_sign_obstruction` proves the product is `−Iσ₃`. The canonical corrected basis in the same owner is `qI=Iσ₁`, `qJ=Iσ₂`, `qK=−Iσ₃`; the file proves each square is `−1` and the cyclic products `qI*qJ=qK`, `qJ*qK=qI`, `qK*qI=qJ`. The locked owner build passed (3094 jobs); only the existing deprecated complex import warning appeared. Scope is the stated finite matrix assignment, not all quaternion representations.
+
+## Matsubara index-injectivity scope audit (2026-10-31)
+
+`matsubaraFrequency_injective` correctly proves injectivity of `n ↦ (2πn)/β` for `β ≠ 0`, and the owner proves the corresponding zero-mode iff. The former docstring said “discrete/injective,” although this module defines no image topology and proves no topological discreteness. Narrowed the documentation to the algebraic injectivity result. The locked owner build passed (4226 jobs) with existing linter warnings.
+
+## Poisson intensity scale identifiability audit (2026-10-31)
+
+The existing injectivity result is correctly conditional on a nonzero entry of the kernel matrix. Added `poissonIntensity_scale_injective_iff`, the exact criterion: with fixed background, the scale map is injective iff the kernel has a nonzero entry. If the kernel is zero, the intensity map is constant. The source argument is reviewed; the new declaration remains build-pending because the repository locked-build session has not returned a terminal result.
+
+## V4 affine cocycle obstruction scope audit (2026-10-31)
+
+The formula `cocycle_as_triality_obstruction` correctly computes the affine defect as `(2 * θ₂ + 2 * π, 0)`, but the defect is not universally nonzero. Added `cocycle_as_triality_obstruction_eq_zero_iff`: it vanishes exactly when `θ₂ = -π`, for every boundary point. The file separately scopes the available finite V₄ statement and acknowledges the full Weyl decomposition as closure debt. Source-reviewed; new lemma build pending.
+
+## Vandermonde determinant criterion audit (2026-10-31)
+
+`determinant_ne_zero_iff_injective` is a valid domain-level criterion inherited from the Mathlib Vandermonde determinant theorem; its companion collision equivalence is exact. The collision consequence and packet theorem reuse these statements, and arithmetic owners consume the criteria. No counterexample or additional replacement was needed. Source review only.
+
+## Finite D4 character/Vandermonde packet audit (2026-10-31)
+
+`denominator_ne_zero_iff_injective` and the collision criterion are sound packaging: the packet identifies witness nodes with denominator nodes, then reuses the finite Vandermonde owner. Downstream cancellation modules consume these exact criteria. The module explicitly disclaims the full Weyl character formula and quotient regularity. No counterexample found; source review only.
+
+## Weyl/KKT anomaly closure assumptions audit (2026-10-31)
+
+The readout/norm equality is a valid alias through owned identities. Dilation-source identities require the explicit projector compatibility and commutation hypotheses (or their bundled witness); zero-scale collapse uses the existing zero-scale-to-projector-commutation theorem. The transported Einstein nonzero result assumes the source equation and a nonzero obstruction, while its companion proves residual zero iff the chiral projectors commute under that source equation. These are appropriately conditional. No counterexample found; source review only.
+
+## Local Weyl cancellation shadow audit (2026-10-31)
+
+The denominator criterion correctly delegates to the finite D4 Vandermonde packet. Numerator vanishing on collisions is explicitly assumed in the packet, while the quotient is defined only when the denominator is nonzero. The file clearly disclaims quotient regularity and the full Weyl character formula. No counterexample found; the conditional local theorem is accurately scoped. Source review only.
+
+## Weyl transport holonomy bridge assumption audit (2026-10-31)
+
+The flat-holonomy statements are valid compositions, but `FlatCurvatureValueBridge` already assumes both flatness-to-zero-curvature-integral and zero-integral-to-target-holonomy. The projector-obstruction norm endpoint is therefore supplied by the bridge, not derived from flatness alone. Scalar retargeting uses the existing norm identity; the finite-sum constructor carries the same endpoint premise. The exact zero-holonomy iff projector-commutation result is conditional on that bridge. No counterexample to the stated implications; source review identifies a strong assumption that should remain explicit.
+
+## Winding-orbit obstruction faithfulness audit (2026-10-31)
+
+The winding obstruction is the difference of two exponential values. Clock-axis commutation gives zero via integer `2π` periodicity. The reverse equivalence explicitly assumes `IsClockFaithfulExponentialBranch`, defined only as the selected branch equality implying commutation; it does not claim global exponential injectivity. A local gauge certificate supplies this branch premise through its response-faithfulness field. Clock-equilibrium equivalence also uses the owner defect-zero iff commutation theorem. No counterexample found; the reverse implications are properly conditional. Source review only.
+
+## Krein/RH odd-obstruction capstone audit (2026-10-31)
+
+`translated_krein_rh_from_odd_obstruction` is a valid implication from a chart certificate: off-throat zero states produce an obstruction, while zero states also force that obstruction to vanish. Contradiction gives chart-local no-leakage. The theorem does not construct the certificate or prove a concrete spectral chart/classical RH; the module header says so explicitly. No counterexample to the conditional result. Source review only.
+
+## Jordan triple formula exact defect and counterexample witness (2026-10-31)
+
+The owner proves the proposed triple formula defect is `(z*x - x*z)*y`; its pointwise iff and companion all-middle iff give the exact criterion (the latter is endpoint commutation). The invertible-middle criterion also detects commutation. Added `proposed_triple_formula_fails_at_one_of_noncommuting` in `JordanTripleFormulaCriterion`: any noncommuting endpoint pair fails the proposed formula at the unit middle input. This is a general noncommutative counterexample schema. The new corollary awaits the locked build.
+
+## Peirce matrix representation faithfulness audit (2026-10-31)
+
+`representation_injective` correctly requires `X ≠ 0`; the exact `representation_injective_iff` proves this condition necessary and sufficient over a field. Matrix-unit sandwiches recover the coefficients in the nonzero case, while the `(0,1)` matrix unit witnesses kernel when `X = 0`. The module accurately distinguishes the full matrix target from the supported nonunital image. No counterexample found; source review only.
+
+## DAG-Majorana package scope audit (2026-10-31)
+
+`central_residue_binary_for_obstruction_readout` duplicates the preceding `central_residue_binary` theorem, both re-exporting the structure field. The structure assumes the ±1 range; it does not derive a residue law. The old module header claimed a path-to-operator projective representation, but no path map or homomorphism law exists in the owner. Narrowed the module and structure documentation to the actual graph/net/residue package and marked the theorem as a compatibility alias. This is a scope/documentation correction, not a kernel counterexample.
+
+## Positive-slice norm noninjectivity counterexample (2026-10-31)
+
+`positiveSlice_norm_not_injective` gives distinct spatial basis vectors with equal norm at temporal parameter 1. The exact fiber theorem says equality is equivalent to equal squared Euclidean norms: the scalar readout preserves radius and loses direction. The owner also exhibits a Zorn element with negative norm, so positivity is restricted to the declared positive slice. Source-inspected; no fresh build in this turn.
+
+## Epistemic gradient/Dirac prerequisite model audit (2026-10-31)
+
+`dirac_obstruction_is_separate` proves incomparability in the file’s hand-authored finite poset, where the Dirac node is assigned only itself. It does not establish independence in the actual Lean import/declaration graph. Added module and theorem documentation making this model boundary explicit. No false result in the declared order; source scope clarified.
+
+## Chevalley root-subgroup product injectivity audit (2026-10-31)
+
+The positive/negative height declarations correctly specialize the generic ordered-product injectivity theorem. They require a nodup list exactly described by root membership, sign of height, and exclusion of roots twice another root, plus a nontrivial domain with no zero divisors. The proof uses the height filtration and uniqueness of pinned-root parameters; the negative branch reduces to the positive branch at `-height`. These are scoped results, not arbitrary-list injectivity. No counterexample found; source review only.
+
+## Interval projection noninjectivity witness (2026-10-31)
+
+`interval_projection_not_injective` uses the explicit pair `-1` and `0`, both mapping to `0`. The owner also proves the fixed-point iff for `[0,1]`, idempotence, and surjectivity onto that interval. Thus this is the expected information loss outside the projection target, with an exact fixed-point characterization. Source review only.
+
+## Concrete Zorn Cartan weight separation audit (2026-10-31)
+
+`CanonicalZornCartanRootSystem.nativeRootWeights_separate` is valid for the
+specified embedded three-coordinate axial Cartan: three explicit entries in
+the fourteen-index weight list recover each coordinate, so a nonzero Cartan
+vector has a nonzero listed weight. `CanonicalZornSemisimple` consumes this
+lemma. This statement is model-specific and does not alone classify abstract
+root systems. The repository's downstream `CanonicalZornIsKilling` separately
+constructs `canonicalZornRootSystem` using Mathlib's `IsKilling.rootSystem`;
+the prerequisite module's header should not be read as saying that downstream
+construction is absent. Source reviewed; no counterexample to the candidate.
+
+## Fisher–Souriau positivity under charge separation audit (2026-10-31)
+
+`fisherSouriauQuadratic_pos_of_charge_separates` is a valid conditional
+positive-definiteness result. Its hypothesis says every nonzero direction
+separates at least one pair of moment-map values; the owner proves the form is
+a Gibbs-weighted sum of centered squares and that such a pair forces one
+centered value to be nonzero. `CanonicalZornG2CartanMassieuConvexity` supplies
+the premise from its explicit charge-affine-nondegeneracy hypothesis. The
+result does not claim strict positivity for arbitrary charge data. No
+counterexample to the stated implication; source review only.
+
+## Native Clifford representation dimension obstruction audit (2026-10-31)
+
+`splitOctonionLeftCliffordRepresentation_not_injective` follows from the
+proved real dimensions 128 for the full Clifford algebra and 64 for the
+endomorphisms of the native eight-dimensional Zorn module. The companion
+rank-nullity theorem gives kernel dimension at least 64. The owner explicitly
+notes that this does not contradict injectivity of the imaginary-generator
+map. The conclusion is limited to faithfulness of this full representation;
+it is not an obstruction to arbitrary operator representations. No
+counterexample to the theorem's stated scope; source review only.
+
+## Chiral null-gauge positive-source obstruction audit (2026-10-31)
+
+`ChiralNullGaugeTests.positive_source_obstruction` specializes the generic
+`InnerDivergenceCharge.nonzero_gramian_not_divergence` theorem to the concrete
+nonzero matrix `couplingBlock`. The generic proof uses trace zero for finite
+sums of commutators and positive trace for a nonzero real Gramian. This
+excludes that source from the declared boundary-free finite inner-divergence
+form; it does not make a universal claim about boundary terms or other
+notions of divergence. No counterexample to the scoped result; source review
+only.
+
+## Cole–Fury aggregate readout kernel audit (2026-10-31)
+
+`ColeFuryEmbedding.embed_not_injective` and
+`quadrantReadout_not_injective` are witnessed by a nonzero contrast whose
+aggregated upper-horizon coordinate is `1 + (-1) = 0`. The companion
+`ColeFuryReadoutFibers` module gives the exact readout equality and kernel
+criteria. Thus the map is accurately treated as an aggregate linear readout,
+not an embedding; multiplication compatibility is separately restricted to
+the first-generation subspace. No counterexample to the scoped noninjectivity
+claims; source review only.
+
+## Horizon terminal-collapse identifiability audit (2026-10-31)
+
+`PralayaDissolutionDatum.not_injective_of_distinct_memories` assumes the
+structure field that every memory maps to one terminal state. Under that
+constant-image premise, two distinct memories have equal images, proving
+noninjectivity and the companion impossibility of decoding both exactly. This
+is a valid conditional consequence; it does not assert that an evaporation
+map satisfies the premise. No counterexample to the declared implication;
+source review only.
+
+## Jones flat-sector zero-locus audit (2026-10-31)
+
+`JonesObstructionCalibration.flat_obstruction_zero` follows directly from
+membership in `Flat`, which is defined as `{x | obstruction x = 0}`. It is
+valid but only unpacks the zero-locus definition; it proves no analytic
+flatness criterion. The conserved-flow constructor separately takes an
+obstruction-preservation premise. No false statement found; source review
+only.
+
+## Operator Zorn self-cross obstruction audit (2026-10-31)
+
+`native_self_cross_obstruction` forwards the exact owner criterion
+`operatorCross_self_eq_zero_iff`: the self-cross product vanishes exactly when
+the three coordinates commute pairwise. The statement is a valid equivalence
+on the declared ring carrier, not a blanket noncommutativity claim. No
+counterexample to the criterion; source review only.
+
+## Partner generalized-eigenspace injectivity audit (2026-10-31)
+
+`injective_partnerGenEigenspaceMap` restricts `A` to the generalized
+eigenspace of `BA`. Under `μ ≠ 0`, a vector in its kernel is also in the zero
+generalized eigenspace of `BA`; Mathlib's disjointness of zero and nonzero
+generalized eigenspaces forces it to vanish. The companion theorem establishes
+surjectivity using invertibility of the restricted `AB`, producing an
+isomorphism at finite and maximal depth. This is not global injectivity of A.
+No counterexample to the scoped result; source review only.
+
+## Homogenized Peirce channel noninjectivity audit (2026-10-31)
+
+The four declarations in `PeirceSpine.HomogenizedKernels` establish genuine
+noninjectivity of the channel maps on any nontrivial ring. Three maps agree
+at 0 and 1 directly. For `hProjV`, the proof uses the value at Φ when Φ is
+nonzero; when Φ is zero, the A3 identity forces V=0 and the map again agrees
+at 0 and 1. The owner correctly describes these as additive channels, not
+automorphisms. No counterexample to the scoped results; source review only.
+
+## Signed transport positive-input obstruction audit (2026-10-31)
+
+`skewTransport_positive_input_obstruction` assumes a nonzero square-zero real
+matrix `a`. It proves that `a aᴴ` is positive semidefinite while its image
+under the declared signed transport is not, using the preceding
+`skewTransport_not_positive` theorem. This is a conditional positivity
+counterexample; the file does not claim such an `a` exists in every dimension
+or infer a complete-positivity result. Source review only.
+
+## Split-octonion left-multiplication nonmultiplicativity audit (2026-10-31)
+
+`nonmultiplicativity_obstruction` uses a concrete nonzero associator: assuming
+left multiplication preserves the product for the displayed pair and applying
+the operator identity to the third element forces the associator to vanish.
+`pseudoReal_nonmultiplicativity_obstruction` transports the same witness
+through the faithful matrix-to-linear-map representation. This disproves
+multiplication preservation for the stated representation; it does not rule
+out faithful linear representations or the separate Clifford square law.
+Source review only.
+
+## Split-octonion Peirce–Witt associator audit (2026-10-31)
+
+`peirceWitt_nonassociative_obstruction` re-exports the concrete multiplication
+owner's nonzero associator witness for `(up0, up1, down1)`. The bridge states
+its Yang–Baxter result only for finite permutation braid-word evaluations
+combined with Peirce compression. The obstruction therefore refutes automatic
+associative cancellation for this selected triple; it is not a counterexample
+to the finite braid rewrite theorem or a claim about all triples. Source
+review only.
+
+## MDPASJM direct-limit stage-map injectivity audit (2026-10-31)
+
+`ofStage_not_injective_of_bond_not_injective` is a valid quotient consequence:
+if a bonding map identifies distinct elements at a specified stage, the
+bonding relation identifies their classes in the set-level direct-limit
+carrier, so the canonical stage map is not injective. The theorem assumes an
+explicit bond collision and makes no claim that a particular system has one.
+The companion direct-limit lift separately states the compatibility condition
+for maps out of the quotient. Source review only.
+
+## Signed particle–photon correlation separation audit (2026-10-31)
+
+`correlation_separates_iff` follows from the exact difference formula: the two
+sign readouts differ exactly when the dot product is nonzero. The concrete
+orthogonal unit vectors in `nonzero_vectors_need_not_separate` are both
+nonzero but give equal sign readouts, refuting separation from nonzeroness
+alone. This is the stated finite `Vec3R` algebra, not an empirical model
+claim. Source review only.
+
+## Quadratic response exact-fiber replacement (2026-10-31)
+
+The response difference factors as `(x-y) * (C - B*(x+y))`. Added
+`response_eq_iff`, proving for all real coefficients that two inputs have the
+same response exactly when they are equal or their sum is the reflection
+center equation `B*(x+y)=C`. This strengthens the existing conditional
+noninjectivity witness by describing all fibers, including degenerate
+coefficient cases. The source is staged. Kernel verification passed with `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Probability.SimplexQuadraticResponse`; the build emitted existing warnings in unrelated modules.
+
+## Attention kernel-line injectivity audit (2026-10-31)
+
+`kernel_line_injective` is valid: a nonzero direction function has a nonzero
+coordinate, and equality along the affine line at that coordinate forces the
+real parameters to agree. This injectivity is for the parameterization of a
+single line, not for the homogeneous attention decoder; the surrounding owner
+states the latter's kernel and affine-independence criteria separately.
+Source review only.
+
+## Five-graded spin-obstruction Boolean marker audit (2026-10-31)
+
+`w2_obstruction_cases` is a case split on a stored `Bool`. The owner states
+that this field is only a marker, not an actual cohomological
+Stiefel–Whitney class; the concrete two-dimensional packet chooses `false` by
+construction. Ribbon and trace results are conditional on stored closure
+fields. The candidate is valid finite bookkeeping and establishes no
+spin-structure classification. Source review only.
+
+## Geometric tensor operator-lift bridge audit (2026-10-31)
+
+The derivative transport candidates require explicit commutation with the
+modular gauge part and specialize the general source-channel identity. The
+Berry sign and QGT bridge candidates require equality of the Moore–Penrose
+left/right projectors; the latter also uses the star-certified carrier and
+operator-to-form sign identities. These premises are present in the exact
+theorem statements and are used in the proofs. They are conditional transport
+identities, not unconditional geometric classification results. No
+counterexample to the stated implications; source review only.
+
+## Hestenes–Kähler operator readout bridge audit (2026-10-31)
+
+The bidegree claims unfold parity fields. Incidence vanishing assumes the
+operatorial-incidence premise and obtains a zero seed; the Berry readout then
+vanishes by linearity. State dynamics split and paired-source cancellation
+forward general transport results, with the cancellation premise explicit.
+Readout identities are definitional or follow from linearity. The anomaly to
+projector-obstruction metric weld requires Moore–Penrose projector agreement
+and star certification. These are valid conditional finite operator/readout
+identities, not independent Hestenes or topological classification theorems.
+Source review only.
+
+## Quantum geometry projector bridge audit (2026-10-31)
+
+The phase-readout theorem identifies the second operator-pair component under the explicit Moore–Penrose projector-agreement premise, by specializing the Hestenes–Kähler bridge. The derivative theorem specializes the comparison-transport derivative law; its seed phase-axis identity is proved by unfolding the seed and applying the channel-phase-axis theorem. Both source statements are valid as conditional/definitional bridge identities. They do not establish the external TCR-Former attention-mask claims or its reported ablation metrics. Source review only.
+
+## Welded projector correlation bridge audit (2026-10-31)
+
+The phase-axis seed identity follows because the channel phase-axis map squares to minus the identity and the seed is its negative image. The welded phase equals the K-shifted two-state correlation under the explicit Moore–Penrose projector-agreement premise; same-state and comparison-state results specialize it. The derivative-at-zero statement specializes the general comparison-transport derivative identity and rewrites the seed phase axis to the lifted obstruction operator. These are valid bridge identities under their stated premises, not topological classification claims. Source review only.
+
+## Finite archetype prerequisite-poset audit (2026-10-31)
+
+The flagged inclusion and branch-incomparability statements reduce by `decide` to the explicit Finset prerequisite assignment. The partial order is lifted from that assignment after proving it injective. The source explicitly limits “causal” to this encoded prerequisite order and disclaims physical causation or downstream analytic/geometric claims. The finite-poset statements are valid within that scope. Source review only.
+
+## Finite-stage mass-predicate persistence audit (2026-10-31)
+
+`obstruction_persists_in_tower` is a valid nonzero-witness transport result via the injective stage inclusion. The predicate itself is only existence of a nonzero matrix; its Planck parameter is unused and it encodes neither a Heisenberg relation nor a spectral gap. `TopologicalMassGapZeroStageAudit` proves there is no witness at stage zero and refutes the universal all-stages mass-gap predicate. This is a valid persistence lemma over an overnamed finite-carrier predicate, with the scope limitation and counterexample made explicit by the owner modules. Source review only.
+
+## Zero-stage mass-predicate counterexample audit (2026-10-31)
+
+The seven flagged claims establish a stage-one nonzero matrix, impossibility at stage zero, propagation along injective inclusions, and the exact characterization `finite_obstruction_class n ↔ 0 < n`. The universal all-stages predicate is therefore false. This is an explicit finite-carrier counterexample to the encoded universal predicate, not a theorem about an actual colimit or spectral mass gap; the owner says so directly. Source review only.
+
+## Twistor mass finite-stage inclusion audit (2026-10-31)
+
+`colimit_injection_preserves_obstruction` is the injectivity-based transport of a nonzero rectangular matrix witness. Its predicate contains no Heisenberg relation, spectral estimate, or colimit-level content, and its universal all-stage variant is false at stage zero as proved by the companion audit. The implication itself is correct under its finite-stage scope. Source review only.
+
+## Two-point averaging noninjectivity audit (2026-10-31)
+
+`twoPointAverage_not_injective` is witnessed by the distinct inputs `[1,-1]` and `0`, both mapped to zero. The exact kernel and reconstruction results in the owner distinguish this averaging map from invertible frame/link transport; gauge covariance is proved separately with transported inputs and links. The counterexample is valid for the stated two-point real averaging map and does not imply a claim about general attention or noncommutative operator maps. Source review only.
+
+## Odd graph reduction noninjectivity audit (2026-10-31)
+
+`reduction_not_injective` has an explicit witness in the actual exterior algebra on one generator: the odd graph differs from the zero graph, but augmentation kills the generator and makes the reductions equal. The proof uses the native exterior-algebra generator, its nonzero/square-zero facts, and graph-map injectivity. The result is valid for nontrivial coefficient rings, including characteristic two, as a base-change noninjectivity statement for this chart. Source review only.
+
+## Split-octonion monopole polynomial audit (2026-10-31)
+
+`stokes_abelian_obstruction_vs_octonionic_monopole` is a valid expansion of the hand-defined split-octonion product and trace: the modeled derivative has zero trace/supertrace and the modeled curvature supertrace is `-4 det`. The owner contains no differential-form complex, integration, bundle, sphere cohomology, or independently established monopole charge. The charge-quantization formula additionally assumes winding and normalization equations. The polynomial identities are kernel-level algebra; the Stokes/monopole interpretation is not established by them. Source review only.
+
+## Dirac/Hopf integer audit examples (2026-10-31)
+
+The flagged `decide` theorem verifies the trace and supertrace vanish for one explicit integer derivative vector. Sibling checks evaluate the Hopf polynomial and modeled curvature supertrace at selected integer vectors. These are correct finite arithmetic instances and sanity checks; they do not independently certify a Stokes theorem, topological charge, or monopole interpretation. Source review only.
+
+## Finite Cuntz trace obstruction audit (2026-10-31)
+
+`cuntz_finite_matrix_trace_obstruction` validly applies cyclicity of the real matrix trace to force `2·card(m)=card(m)`, hence the finite carrier must be empty; the nonempty-carrier corollary follows. The module explicitly avoids claiming an exact O₂ representation on the UHF colimit. A separate noncommutative owner generalizes the obstruction to cyclic additive traces on associative rings. The flagged result is a valid impossibility theorem, not a false claim/counterexample. Source review only.
+
+## Recovered-invariants repeated Cuntz obstruction audit (2026-10-31)
+
+The flagged theorem is a correct cyclic-trace proof of the finite real-matrix Cuntz obstruction, but duplicates `BohmianCuntzHolomovementPoset.cuntz_finite_matrix_trace_obstruction` with the same conclusion. It adds no distinct mathematical result. The surrounding claim correctly limits the obstruction to finite carriers and does not assert an O₂ action on the UHF colimit. Source review only.
+
+## Negative Clifford lift periodicity obstruction audit (2026-10-31)
+
+`negative_lift_periodic_obstruction` is valid: equivariance twice gives a minus sign under the double glide, while the additional periodicity hypothesis gives equality, forcing each complex field value to zero since `2 ≠ 0`. The result is conditional on both equivariance and periodicity and does not classify Pin bundles or assert a nonzero field exists. Source review only.
+
+## Finite twistor incidence/null equivalence audit (2026-10-31)
+
+`incident_points_null_separated` and its iff companion are valid for the declared 2×2 real soldering map: a shared incidence with nonzero spinor makes the difference matrix singular, while determinant zero supplies a nonzero kernel spinor and hence shared incidence. The owner explicitly limits the result to this finite algebraic model and does not construct geodesics or a light-ray manifold. Source review only.
+
+## Infinity-twistor noninjectivity audit (2026-10-31)
+
+`infinityTwistor_not_injective` is valid: contraction with the lower-spinor determinant has the entire upper-spinor plane as its nontrivial radical, and a concrete nonzero vector there maps to zero. The owner gives the exact kernel and correctly distinguishes this degenerate form from an invertible transformation. Its frame-preservation theorem is restricted to determinant-one frames. Source review only.
+
+## Penrose CCR triple and candidate-product obstruction audit (2026-10-31)
+
+`source_triple_and_obstruction` combines a valid CCR-reduced triple-closure theorem with an explicit failure of left alternativity for the proposed scalar/vector product at `k=1/2`. The witness relies on proved products for a fixed pair. The same owner distinguishes this formula from a separately chosen alternative composition product transported from Zorn and proves the products differ. The result is a valid counterexample to the candidate formula, not to the chosen composition algebra; scope is the stated algebraic carrier. Source review only.
+
+## Real infinity-twistor degeneracy audit (2026-10-31)
+
+The real-carrier theorem has the explicit nonzero upper-spinor vector in the exact radical, so the linear map to the real dual is noninjective. The pairing is also identified with the p23 Plücker minor and a native Clifford anticommutator readout. This is a valid degeneracy statement on the intrinsically real carrier, not an invertible origin/infinity transformation. Source review only.
+
+## Rolling-spinor null-separation forwarding audit (2026-10-31)
+
+`twistor_incident_points_null_separated` forwards the existing finite soldering incidence/null-separation theorem through the `twistorIncidenceGeometry.Inc` interface, retaining the nonzero-spinor premise; the common-point result immediately specializes it. This is a valid interface bridge rather than an independent geometric derivation. It stays in the finite `Vec22` model and does not establish a global rolling/twistor equivalence or de Rham result. Source review only.
+
+## Finite pigeonhole noninjectivity audit (2026-10-31)
+
+`not_injective_of_card_lt` is a correct contrapositive of the finite pigeonhole theorem for maps `Fin M → α`. It is a generic collision result; the theorem alone does not establish a model-specific coherence-time lower bound, which depends on the separate counting estimate and decoder-map instantiation. Source review only.
+
+## Log-auditable phase-circle minimality model audit (2026-10-31)
+
+The flagged deficit exclusion is valid Nat arithmetic: both `auditExponent` and `circleDim` are defined by free rank, so a strict lower value cannot equal the target. The attained ‘witness’ is only an equality proposition in this bookkeeping model; there is no phase-circle object or topological realization in the owner. Thus the formal internal minimality statement is correct, while any topological existence/minimality interpretation is not established. Source review only.
+
+## Fibonacci word append injectivity audit (2026-10-31)
+
+`appendFalse_injective` is valid: restriction is a left inverse to appending `false`, so equality after append implies equality before append. This is a routine constructor injectivity lemma, not an obstruction or noninjectivity counterexample. Source review only.
+
+## Artin visible-hull and entropy-shadow synthesis audit (2026-10-31)
+
+The theorem is valid conditional logic, but the data structure carries determinant-minimality content and the imported ‘Chebotarev witness’ is a custom parity selector with term `c·(±1)`, not a prime-counting statement. Also `dominantCoeff` is not related to `dominantChannel` or `dominantHidden`. So the proposition combines independent hypotheses and proves its declared model statement, but it does not derive an entropy/Chebotarev obstruction for that Artin channel. Source review only.
+
+## Solenoid/finite-ledger synthesis scope audit (2026-10-31)
+
+The theorem validly aggregates the generic-monotheticity package and the prime-register package, but the two inputs are independent and no map or relation connects D to E. `SSolenoidGenericMonotheticData` stores propositions/proofs rather than a concrete topological group, and the localization obstruction is a rank-contradiction predicate that ignores its finite set argument. The source proves this bookkeeping conjunction, not a new analytic interaction between a solenoid and an arithmetic ledger. Source review only.
+
+## Finite operation-table count audit (2026-10-31)
+
+The flagged declarations correctly count all binary operation tables on `Fin n` as `n^(n²)`, giving 16 for order 2 and 19,683 for order 3. They explicitly count arbitrary operations and impose no associativity/group axioms, so they should not be read as counts of algebraic structures. The declarations themselves assert no obstruction. Source review only.
+\n## Candidate review: window-6 BinFold `SU(5)` obstruction label\n\n`Omega.Folding.BinFold.conclusion_window6_su5_obstruction` follows from the exact finite fiber maximum `cBinFiberMax 6 = 4`; its paper package states that bound and maximum. The owner defines `cBinFold` as `X.ofNat` and fibers by preimages among `range (2^m)`, with finite extrema evaluated by `native_decide`. Consumers use these multiplicities for combinatorial classifications. The inspected owner and references do not define an `SU(5)` factor or prove a relation that would turn the fiber bound into an obstruction to one. Classification: finite combinatorial theorem verified from source; `SU(5)` interpretation unsupported here.\n
+## Candidate review: window-6 BinFold `SU(5)` obstruction label
+
+`Omega.Folding.BinFold.conclusion_window6_su5_obstruction` follows from the exact finite fiber maximum `cBinFiberMax 6 = 4`; its paper package states that bound and maximum. The owner defines `cBinFold` as `X.ofNat` and fibers by preimages among `range (2^m)`, with finite extrema evaluated by `native_decide`. Consumers use these multiplicities for combinatorial classifications. The inspected owner and references do not define an `SU(5)` factor or prove a relation that would turn the fiber bound into an obstruction to one. Classification: finite combinatorial theorem verified from source; `SU(5)` interpretation unsupported here.
+
+## Candidate review: Fold constructibility/rigidity/obstruction package
+
+`Omega.Folding.paper_fold_constructibility_rigidity_obstruction` reuses the actual owner results `Fold_surjective`, `Fold_stable`, and `Rewrite.irreducible_eq_of_value_eq`, then specializes the residual-window reachability theorem to a point mass. The residual profile is explicitly chosen as `t * log (fiberMultiplicity y)`; the final bounds express affine interpolation over `t ∈ [0,1]`. The conjuncts are individually supported, but no implication connects them into a trichotomy, and the residual clause is reachability rather than an obstruction. Classification: correct bundled statements, overstated obstruction/trichotomy naming.
+
+## Candidate review: Fold constructibility/rigidity/obstruction package
+
+`Omega.Folding.paper_fold_constructibility_rigidity_obstruction` reuses the actual owner results `Fold_surjective`, `Fold_stable`, and `Rewrite.irreducible_eq_of_value_eq`, then specializes the residual-window reachability theorem to a point mass. The residual profile is explicitly chosen as `t * log (fiberMultiplicity y)`; the final bounds express affine interpolation over `t ∈ [0,1]`. The conjuncts are individually supported, but no implication connects them into a trichotomy, and the residual clause is reachability rather than an obstruction. Classification: correct bundled statements, overstated obstruction/trichotomy naming.
+
+## Candidate review: exponential-scale injectivity and C-finite surrogate
+
+The lexical candidate `fold_bin_gauge_constant_not_c_finite_exponentialScale_injective` is a valid private helper: strict monotonicity of `r ↦ 2^r` implies injectivity. Context and consumer review found a concrete semantic counterexample in `FoldBinGaugeConstantRecurrenceCounterexample.lean`: this same sequence satisfies an order-one `LinearRecurrence` while its range is infinite. The owner’s `isCFinite` predicate is defined as finite range, and its “generating-function rationality” predicate is definitionally set equal to that surrogate. Therefore the helper is sound, while the surrounding claimed finite-range criterion is false for genuine C-finite sequences. Classification: helper verified; contextual surrogate refuted by a repo-owned counterexample.
+
+## Candidate review: noninjectivity of the constrained left shift
+
+`Omega.X.shift_not_injective` is an explicit valid counterexample on `XInfinity`: the all-false sequence and the sequence true only at index 0 both satisfy `No11Inf`, are distinct at coordinate 0, and have equal shifts. The theorem’s scope is exactly the defined left shift on this carrier.
+
+## Candidate review: signed-companion coefficient mismatch at q=6
+
+`paper_signed_companion_fusion_obstruction` proves the literal finite inequality between the encoded second coefficient at q=6 and `lucasNum 6`; unfolding and `norm_num` verify it. The declaration establishes a mismatch in this table entry only. It neither proves a general fusion obstruction nor independently validates the table against an external recurrence source. The neighboring q=2..23 certificate is exhaustive computation over the declared finite table.
+
+## Candidate review: injectivity of the two-prime Euler phase map
+
+`paper_group_jg_two_prime_euler_phase_injective` proves injectivity of the paired map `t ↦ (exp(i t log p), exp(i t log q))` for distinct primes. Its proof turns equality into integer period equations; a nonzero parameter difference forces both integer periods nonzero, giving a rational logarithm ratio, which contradicts the file’s prime-log irrationality lemma (derived from prime-power uniqueness). Scope is the paired phase map on `ℝ`; no single-coordinate injectivity is asserted.
+
+## Candidate review: scale-lift triple obstruction package
+
+`paper_sm_scale_lift_triple_obstruction` is valid as an implication from the supplied `SmScaleLiftTripleObstructionData`: its tail-patch fields contradict the explicit tail witness, its invariant/nontrivial parity fields contradict permutation invariance on `Fin 3`, its injection field contradicts `Fin 3 ↪ Fin 2`, and its `so(10)` rank-retention field contradicts the supplied rank-at-most-one bound. The record has no proved inhabitant or concrete scale-lift model; notably, `intrinsicChirality` already entails an impossible injection. The proof needs only the tail branch to refute the conjunction. Classification: valid conditional packaging with no instantiated joint model; broad trilemma interpretation exceeds this result.
+
+## Candidate review: window-6 pure F8 Markov-obstruction package
+
+`paper_window6_minimal_markov_obstruction_pure_f8_tail` proves finite indicator values at inputs 0 and 21, the identity `21 = fib 8`, and nonmembership of 21 in the computed two-point fiber-direction spectrum `{34,38,62}`. The imported strong-lumpability theorem separately provides the equal-fold/unequal-transition witness for 0 and 21, but this candidate proposition omits that witness and contains no minimal-memory or Markov-obstruction conclusion. Classification: finite components verified; the proposition does not establish the broader obstruction named in its label.
+
+## Candidate review: `Fin 3` parity obstruction and the m=7 carrier
+
+The abstract theorem is correct: a map `Fin 3 → Fin 2` invariant under all permutations is constant, by the explicit swap argument in `BoundaryLayer`. The purported m=7 fiber, however, is only `abbrev ... := Fin 3` inside a structure containing a parity function; there is no map from a concrete boundary carrier or proof that this is the relevant fiber. In the owner `BoundaryLayer`, `cBoundaryCount` counts stable words with both endpoint bits true and `cBoundaryCount_seven` proves its size is 5. Thus the Fin-3 symmetry statement is an available canonical replacement, but its m=7 boundary application lacks carrier alignment (and would conflict if it means the endpoint-boundary carrier).
+
+## Candidate review: determinant-mod-3 edge-flux obstruction
+
+The generic result in `EdgeFluxMod3Obstruction.lean` is sound: if `3 ∣ det E`, reduction modulo 3 is singular and supplies a nonzero left-kernel functional; linearity makes that functional invariant under adding reduced image vectors. The `n=1` specialization is the coordinate projection. Repo-owned search found no concrete Window-6 edge-flux matrix with a proved determinant-divisibility hypothesis; the named theorems remain conditional on an arbitrary E and h. Classification: valid canonical conditional linear-algebra statement; Window-6 application uninstantiated.
+
+## Candidate review: center 2-torsion dimension obstruction at M2
+
+The reusable lemma `no_injective_linearMap_fin_fun_of_finrank_lt` is the standard finite-dimensional rank obstruction and is proved from the Mathlib injective finrank inequality. The paper-facing corollary specializes it to `ZMod 2`, dimension three, under the hypothesis `finrank V ≤ 1`. Repo-owned search found no actual center 2-torsion module or proved dimension bound connected to the named Foldbin M2 object; the declaration quantifies over arbitrary V and assumes the key bound. Classification: generic theorem verified; domain-specific application remains conditional/uninstantiated.
+
+## Candidate review: Window-6 direction-spectrum linear-kernel label
+
+The implication in `Window6DirectionSpectrumLinearKernelObstruction.lean` is true for its stipulated constants `(1,0)`, `(1,1)`, `(2,1)`: pairwise distinctness contradicts a common value. The file neither imports nor maps from the actual Window-6 fiber-direction data, whose computed spectrum consists of naturals `{34,38,62}`; it also defines no linear map or kernel beyond a proposition asserting one common pair. Classification: elementary surrogate implication verified; the advertised Window-6 linear-kernel obstruction is not derived from the actual spectrum.
+
+## Candidate review: F8 repair channel versus boundary parity
+
+The theorem proves distinctness of two functions on the stipulated `Fin 3 × Bool` carrier: the F8 channel is defined as constantly false and canonical parity is defined as the Bool coordinate. The imported no-covariant-extension result follows from the same definitions. The owner calls constancy a paper input and provides no map from this synthetic carrier to a concrete Window-6 boundary system, nor a theorem identifying an actual F8 repair bit with this constant function. Classification: exact abstract channel separation; concrete boundary application unsupported.
+
+## Candidate review: degree-6 visible coefficient isotropy obstruction
+
+For any supplied `Window6VisibleDegree6Data`, the theorem is correct: each support vector has a zero coordinate, forcing the mixed coefficient to vanish; equality with the radial coefficient pair forces λ=0, contradicting the assumed nonzero axis-six mass. This is a valid coefficient obstruction on the abstract structure. Repo-wide search found no concrete Window-6 support/weight construction or consumer instantiating the data record. Classification: conditional algebraic result verified; application to concrete Window-6 visible data is unverified.
+
+## Candidate review: curvature/carry/Z2 propositional schema
+
+The proof of `paper_pom_curvature_carry_defect_z2_obstruction_principle` is valid as propositional logic: both propositions imply a shared obstruction, and that obstruction realizes both. But the three concepts are only unconstrained `Prop` parameters, with no POM carrier or curvature/valuation/Z2 definitions; the assumptions already encode the desired equivalence. Repo-wide search found no instantiating consumer. Classification: valid generic schema, not a formalized mathematical obstruction principle.
+
+## Candidate review: Lucas polynomial for rational golden powers
+
+`paper_derived_fold_golden_rational_power_unit_obstruction` correctly proves that `u = φ^(a/b)` satisfies `u^(2b) - L_a u^b + (-1)^a = 0` and that the constant term is ±1, via the Lucas Binet formula and `φψ = -1`. This is a genuine algebraic-unit polynomial identity for positive b. By itself it proves no transcendence or irrationality claim; its proposition is generic and does not involve a Fold construction. Downstream wrapper theorems use the parity clause together with separate norm computations. Classification: valid generic lemma; derived-fold interpretation requires additional bridge assumptions/results.
+
+## Candidate review: parity split with vacuous mod-3 criterion
+
+The signed-parity identities are sound and come from `FiberArithmeticProperties`. The extra hypothesis `hmod3` equates signed-sum zero with `∃ ℓ : Nat, ℓ % 3 = 1`, but the existential is always true by `ℓ = 1`. Consequently `hmod3` forces every instance to have signed sum zero, and the final equivalence reduces to `A = B ↔ True`; for unbalanced ±1 data the hypothesis is simply impossible. Classification: parity split verified; the claimed mod-3 obstruction is vacuous/overstrong and needs a nontrivial condition depending on the data.
+
+## Ground-truth contract: exact signed-parity balance
+
+Claim: for a finite set S with sgn(x) ∈ {+1,-1}, let A and B count the +1 and -1 fibers. The canonical identities are `2A = |S| + Σ sgn`, `2B = |S| - Σ sgn`, and `A = B ↔ Σ sgn = 0`. Carrier/operations: `Finset α`, integer-valued signs, and integer casts of finite cardinalities. Owner facts: `Omega.parity_split_identity` and `Omega.parity_split_identity_odd` in `FiberArithmeticProperties.lean`; the defective POM wrapper has no external consumer. Gap: the predicate `∃ ℓ : Nat, ℓ % 3 = 1` is always inhabited by 1 and cannot encode a mod-3 condition on S. Adjacent unproved claims: no mod-3 obstruction follows absent a nontrivial data-dependent congruence. Replace the malformed paper-facing wrapper with the exact parity-balance theorem, with a proof derived from the existing owner lemmas.
+
+## Candidate review: occupancy symmetric-quotient RH wrapper
+
+The wrapper is a valid composition of the generic first-variation growth lemma and the excitation-filter logarithmic bound. Its RH-breaking conclusion is conditional on a supplied spectral implication and on an abstract occupancy predicate holding at every order; it does not instantiate a concrete occupancy quotient. The second clause is conditional on the logarithmic inequality supplied in its hypothesis. Classification: sound conditional composition; broad “occupancy obstruction” interpretation is unsupported without a concrete model and spectral bridge. No in-file theorem consumers were found beyond the POM umbrella import.
+
+## Candidate reviews: right-edge, null-readout, and finite-moment wrappers
+
+- `RightEdgeHeightFreezingObstruction`: proves the finite-list maximum bound for a supplied phase and its immediate positive-gap consequence; the lower bound on `a` is unused. It does not prove freezing or asymptotics.
+- `NullAsH2Obstruction`: valid conditional implication from assumed transition-triviality and an assumed vanishing predicate to empty global section/fiber and NULL readout. Its `Cech2` carrier and transitions have no cohomological axioms, so this is not an H² theorem.
+- `NullAsLocalSectionObstruction`: correctly combines the readout/fiber criterion with uniqueness from injective restriction data; no concrete cover geometry is supplied.
+- `ProuhetThueMorseFluxMoments`: the fixed pair `{0,3}` and `{1,2}` is a valid distinct witness matching moments 0 and 1; `n,r` are decorative hypotheses in the package. Its downstream affine-image result proves degree-2 separation, but the source alone is not a general dyadic/polycube or arbitrary-order theorem.
+
+## Candidate reviews: Galois–Möbius arithmetic wrappers
+
+- Real-input relative-gap theorem: positive twist gap and affine transfer inequality are structure inputs; the conclusion is a valid immediate bound, not a derived obstruction. The resonant split field is unused.
+- Real-input and weighted “Smith compute” theorems: each proves the gcd-fold of absolute list weights divides every listed weight. Correct, but not a Smith normal form computation.
+- Weighted relative-gap theorem: directly returns the uniform-gap field established by the imported gcd-gap result; “removing obstruction” is packaging language.
+- Modular cycle theorem: correctly proves potential iff all directed triangle sums vanish on a complete directed graph under skew weights, constructing the potential from a base vertex. General graph versions need more hypotheses.
+
+## Candidate reviews: character-blind and typed-address packages
+
+- The three character-blind Topos declarations assume all equivalences and implication bridges as propositional hypotheses; two are forwarding wrappers. They are valid propositional packages but do not instantiate a topos, kernel, quotient, or gluing construction.
+- Typed-address globalization proves global section ⇒ balanced-loop flatness by commutative-group telescoping; its reverse witness is definitional from obstruction := ¬loopFlat. The minimal model has no Cech class.
+- Typed-address instantiation extraction copies four structure fields and proves the projections by `rfl`; it is record projection rather than a derived spacetime theorem.
+
+## Candidate reviews: finite symmetry and abstract Zeta wrappers
+
+- The boundary-free involution theorem correctly proves each compatible finite fiber has even cardinality by restricting a free involution; its named Xi/minimum-cover interpretation has no concrete instance here.
+- The DFA quantitative package is only a valid real-inequality consequence of supplied recall/precision bounds; it has no DFA or language model.
+- The finite-kernel lattice result is sound inside its explicitly defined toy model, comparing a linear assumed bound to a quadratic toy profile.
+- The major-arc equivalence loop composes four assumed implications; it contains no analytic/cyclotomic construction.
+- The infinite-rank result is the standard contradiction from requiredRank(k) ≥ k, with no concrete ledger instance.
+- The transcendence wrapper assumes the key “algebraic quotient is not transcendental” predicate fact; it does not derive it from algebraicity closure.

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConformalAnomalySource
@@ -45,11 +51,8 @@ Scalar-readout canopy surface: the operator owner projects to the canonical
 readout package.
 -/
 theorem canopy_obstructionScalarReadout
-    {CI : ConformalInference E}
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (P : ConformalCanopyPackage (E := E) CI X) :
+    (CI : ConformalInference E) :
     (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
-  have _ := canopy_obstructionOperatorOwner (E := E) (CI := CI) (X := X) P
   exact CI.obstructionScalarReadout
 
 /--
@@ -64,7 +67,7 @@ theorem canopy_operator_and_scalar
       (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   refine ⟨?_, ?_⟩
   · exact canopy_obstructionOperatorOwner (E := E) (CI := CI) (X := X) P
-  · exact canopy_obstructionScalarReadout (E := E) (CI := CI) (X := X) P
+  · exact canopy_obstructionScalarReadout (E := E) (CI := CI)
 
 end CanopyAssembly
 

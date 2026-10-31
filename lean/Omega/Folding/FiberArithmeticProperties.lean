@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Omega.Folding.FiberArithmetic
 import Omega.Folding.MaxFiberTwoStep
 import Omega.Folding.FiberRing
@@ -600,7 +606,7 @@ theorem stableValue_stableSucc (x : X m) (hm : 1 ≤ m) :
 
 /-- succ(0) = 1.
     thm:successor-structure -/
-theorem stableSucc_zero (_hm : 1 ≤ m) :
+theorem stableSucc_zero :
     stableSucc (stableZero (m := m)) = stableOne := by
   simp only [stableSucc, stableAdd_zero_left]
 
@@ -699,7 +705,7 @@ theorem stableValue_iteratedStableAdd (x : X m) (n : Nat) :
 
 /-- Iterated addition equals multiplication: n·x via iteration = stableMul.
     thm:mul-by-iterated-add -/
-theorem iteratedStableAdd_eq_stableMul (x y : X m) (_hm : 1 ≤ m) :
+theorem iteratedStableAdd_eq_stableMul (x y : X m) :
     iteratedStableAdd x (stableValue y) = stableMul y x := by
   apply eq_of_stableValue_eq
   rw [stableValue_iteratedStableAdd, stableValue_stableMul]
@@ -754,9 +760,9 @@ theorem iterate_iterate_mul {α : Type*} (f : α → α) (m n : Nat) :
 
 /-- Iterated addition by stableValue equals stableMul: multiplication from successor.
     thm:mul-from-successor -/
-theorem stableMul_from_successor {m : Nat} (x y : X m) (hm : 1 ≤ m) :
+theorem stableMul_from_successor {m : Nat} (x y : X m) :
     X.iteratedStableAdd x (stableValue y) = X.stableMul y x :=
-  X.iteratedStableAdd_eq_stableMul x y hm
+  X.iteratedStableAdd_eq_stableMul x y
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R35: Cross-resolution ring homomorphism existence
@@ -766,7 +772,7 @@ theorem stableMul_from_successor {m : Nat} (x y : X m) (hm : 1 ≤ m) :
     (→) f exists ⟹ F_d ∣ F_e (since f maps n↦n mod F_d and F_e ≡ 0) ⟹ d ∣ e by fib_dvd_iff.
     (←) d ∣ e ⟹ F_d ∣ F_e ⟹ ZMod.castHom gives the canonical quotient map.
     cor:cross-resolution-morphism-existence -/
-theorem restrict_ringHom_exists_iff (d e : Nat) (hd : 3 ≤ d) (_he : 3 ≤ e) :
+theorem restrict_ringHom_exists_iff (d e : Nat) (hd : 3 ≤ d) :
     (∃ f : ZMod (Nat.fib e) →+* ZMod (Nat.fib d), f 1 = 1) ↔ d ∣ e := by
   constructor
   · -- (→) existence of ring hom implies d ∣ e
@@ -792,7 +798,7 @@ maps exist exactly along divisibility relations between the Fibonacci moduli.
     thm:finite-resolution-morphism-divisibility-rigidity -/
 theorem paper_finite_resolution_morphism_divisibility_rigidity (d e : Nat) (hd : 3 ≤ d)
     (he : 3 ≤ e) : (∃ f : ZMod (Nat.fib e) →+* ZMod (Nat.fib d), f 1 = 1) ↔ d ∣ e := by
-  exact restrict_ringHom_exists_iff d e hd he
+  exact restrict_ringHom_exists_iff d e hd
 
 /-- Carry in stable addition: the quotient (sv(x)+sv(y))/F_{m+2} is at most 1.
     Since sv(x) < F and sv(y) < F, their sum < 2F, so the quotient is 0 or 1.
@@ -807,7 +813,7 @@ theorem stableAdd_carry_binary (x y : X m) :
 
 /-- X_m has exactly F_{m+2} elements and characteristic F_{m+2}.
     prop:pom-fold-as-section -/
-theorem X_card_eq_char (m : Nat) (_hm : 1 ≤ m) :
+theorem X_card_eq_char (m : Nat) :
     Fintype.card (X m) = ringChar (X m) := by
   rw [X.card_eq_fib]
   exact (ringChar.eq_iff.mpr X.instCharP).symm
@@ -914,6 +920,31 @@ theorem parity_split_identity_odd {α : Type*} [DecidableEq α] {S : Finset α} 
     rw [← Finset.card_union_of_disjoint hdisj, ← hpart]
   push_cast [hcard] at h1 ⊢; linarith
 
+/-- The positive and negative sign fibers have equal cardinality exactly when
+the signed sum vanishes. -/
+theorem parity_split_balanced_iff_sum_zero {α : Type*} [DecidableEq α]
+    {S : Finset α} {f : α → ℤ}
+    (hf : ∀ x ∈ S, f x = 1 ∨ f x = -1) :
+    (S.filter (fun x => f x = 1)).card =
+      (S.filter (fun x => f x = -1)).card ↔
+      (∑ x ∈ S, f x) = 0 := by
+  have hplus := parity_split_identity hf
+  have hminus := parity_split_identity_odd hf
+  constructor
+  · intro h
+    have hcast :
+        2 * ((S.filter (fun x => f x = 1)).card : ℤ) =
+          2 * ((S.filter (fun x => f x = -1)).card : ℤ) := by
+      exact_mod_cast congrArg (fun n : ℕ => 2 * n) h
+    rw [hplus, hminus] at hcast
+    linarith
+  · intro hsum
+    have hcast :
+        ((S.filter (fun x => f x = 1)).card : ℤ) =
+          ((S.filter (fun x => f x = -1)).card : ℤ) := by
+      linarith [hplus, hminus]
+    exact_mod_cast hcast
+
 /-- Fold is the unique map Ω_m → X_m satisfying the Zeckendorf congruence condition.
     prop:discussion-zeckendorf-congruence-address-rigidity -/
 theorem Fold_unique_of_stableValue_mod (Φ : Word m → X m)
@@ -938,11 +969,11 @@ theorem paper_ea_stable_arithmetic_extended :
 /-- EA two-layer readout audit.
     thm:composition-two-layer, thm:mul-by-iterated-add -/
 theorem paper_ea_two_layer_readout :
-    (∀ (m : Nat) (_hm : 1 ≤ m) (x y : X m),
+    (∀ (m : Nat) (x y : X m),
       iteratedStableAdd x (stableValue y) = stableMul y x) ∧
-    (∀ (m : Nat) (_hm : 1 ≤ m), stableSucc (stableZero (m := m)) = stableOne) :=
-  ⟨fun _ hm x y => iteratedStableAdd_eq_stableMul x y hm,
-   fun _ hm => stableSucc_zero hm⟩
+    (∀ (m : Nat), stableSucc (stableZero (m := m)) = stableOne) :=
+  ⟨fun _ x y => iteratedStableAdd_eq_stableMul x y,
+   fun _ => stableSucc_zero⟩
 
 /-- EA core: value injective + range + modular addition.
     thm:monoid-quotient-is-N -/
@@ -960,10 +991,10 @@ theorem paper_ea_ring_iso_core :
 theorem paper_ea_successor_arithmetic :
     (∀ m : Nat, Function.Bijective (stableSucc (m := m))) ∧
     (∀ (m : Nat) (x : X m), stablePred (stableSucc x) = x) ∧
-    (∀ (m : Nat) (_hm : 1 ≤ m) (x y : X m),
+    (∀ (m : Nat) (x y : X m),
       iteratedStableAdd x (stableValue y) = stableMul y x) :=
   ⟨fun m => stableSucc_bijective m, fun _ x => stablePred_stableSucc x,
-   fun _ hm x y => iteratedStableAdd_eq_stableMul x y hm⟩
+   fun _ x y => iteratedStableAdd_eq_stableMul x y⟩
 
 end X
 

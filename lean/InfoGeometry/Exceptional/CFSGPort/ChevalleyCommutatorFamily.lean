@@ -18,6 +18,8 @@ public noncomputable section
 
 namespace InfoGeometry.Exceptional.CFSGPort.Chevalley.RootOps
 
+open Chevalley
+
 variable {τ : Tag} {R : Type*} [CommRing R]
 
 @[expose] def rootAt (τ : Tag) (a : ℕ)
@@ -27,6 +29,22 @@ variable {τ : Tag} {R : Type*} [CommRing R]
 theorem rootPos_rootAt {a : ℕ} (ha : a < τ.rootCertificate.roots.length) :
     rootPos (rootAt τ a ha) = a :=
   rootPos_eq ha rfl
+
+theorem mem_neededPairs (i : Fin τ.rank) (β : RootCarrier τ)
+    (hβ : 0 < height β.1)
+    (hne : β ≠ (⟨Pi.single i 1, IsRoot.basis i⟩ : RootCarrier τ)) :
+    ((i : ℕ), rootPos β) ∈ neededPairs τ := by
+  have hm : rootPos β ≠ (i : ℕ) := by
+    intro h
+    apply hne
+    have hroot := root_rootPos β
+    rw [h] at hroot
+    obtain ⟨-, hb, -⟩ := rootCertificate_basis_table (τ := τ)
+    exact Subtype.ext (hroot.symm.trans (hb i))
+  refine List.mem_flatMap.2 ⟨i, by simp, List.mem_filterMap.2
+    ⟨rootPos β, List.mem_range.2 (rootPos_lt β), ?_⟩⟩
+  rw [root_rootPos]
+  simp [hβ, hm]
 
 theorem validP_nilpE (h : allValid τ = true) {g : ℕ}
     (hg : g < τ.rootCertificate.roots.length) (C : ℤ) (ea eb : ℕ) :

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
@@ -33,6 +39,31 @@ theorem fisher_diagonal_eq_zero_of_nonneg
         sys.paraDatum.metric_anti_compat X X
       _ = -sys.fisherMetric.cov X X := by
         rw [sys.metric_compat X X, hfixed X]
+  have hX := hnonneg X
+  have hKX := hnonneg KX
+  rw [hanti] at hKX
+  linarith
+
+theorem fisher_diagonal_eq_zero_of_fixed_nonneg
+    (sys : ParaKahlerMetriplecticSystem ℝ g)
+    (hnonneg : ∀ X : g, 0 ≤ sys.fisherMetric.cov X X)
+    (X : g)
+    (hfixed : sys.fundamentalSymmetry X = X)
+    (hfixedK : sys.fundamentalSymmetry (sys.paraDatum.para.K X) =
+      sys.paraDatum.para.K X) :
+    sys.fisherMetric.cov X X = 0 := by
+  let KX : g := sys.paraDatum.para.K X
+  have hfixedKX : sys.fundamentalSymmetry KX = KX := hfixedK
+  have hanti : sys.fisherMetric.cov KX KX =
+      -sys.fisherMetric.cov X X := by
+    calc
+      sys.fisherMetric.cov KX KX = sys.paraDatum.metric KX KX := by
+        symm
+        rw [sys.metric_compat KX KX, hfixedKX]
+      _ = -sys.paraDatum.metric X X :=
+        sys.paraDatum.metric_anti_compat X X
+      _ = -sys.fisherMetric.cov X X := by
+        rw [sys.metric_compat X X, hfixed]
   have hX := hnonneg X
   have hKX := hnonneg KX
   rw [hanti] at hKX
@@ -94,5 +125,42 @@ theorem no_global_paraMetric_fisher_variance_identification
     lt_of_le_of_ne hnonneg (Ne.symm hne)
   rw [← hmatch, hz] at hp
   exact (lt_irrefl 0) hp
+
+theorem no_global_paraMetric_fisher_hessian_identification_of_fixed
+    {α : Type*} [Fintype α] [Nonempty α]
+    (K : α → ℝ) (β : ℝ) {i j : α} (hij : K i ≠ K j)
+    (sys : ParaKahlerMetriplecticSystem ℝ g)
+    (hnonneg : ∀ X : g, 0 ≤ sys.fisherMetric.cov X X)
+    (X : g) (hfixed : sys.fundamentalSymmetry X = X)
+    (hfixedK : sys.fundamentalSymmetry (sys.paraDatum.para.K X) =
+      sys.paraDatum.para.K X)
+    (hmatch : sys.fisherMetric.cov X X = GrandCanonical.hessian (canonicalParams K) β) :
+    False := by
+  have hz := fisher_diagonal_eq_zero_of_fixed_nonneg sys hnonneg X hfixed hfixedK
+  have hp := finite_logPartition_hessian_pos_of_generator_ne K β hij
+  rw [← hmatch, hz] at hp
+  exact (lt_irrefl 0) hp
+
+theorem no_global_paraMetric_fisher_variance_identification_of_fixed
+    {α : Type*} [Fintype α] [Nonempty α]
+    (K : α → ℝ) (β : ℝ) {i j : α} (hij : K i ≠ K j)
+    (sys : ParaKahlerMetriplecticSystem ℝ g)
+    (hnonneg : ∀ X : g, 0 ≤ sys.fisherMetric.cov X X)
+    (X : g) (hfixed : sys.fundamentalSymmetry X = X)
+    (hfixedK : sys.fundamentalSymmetry (sys.paraDatum.para.K X) =
+      sys.paraDatum.para.K X)
+    (hmatch : sys.fisherMetric.cov X X = GrandCanonical.variance (canonicalParams K) β) :
+    False := by
+  have hz := fisher_diagonal_eq_zero_of_fixed_nonneg sys hnonneg X hfixed hfixedK
+  have hnonnegVariance := GrandCanonical.variance_nonneg (canonicalParams K) β
+  have hvarianceNe : GrandCanonical.variance (canonicalParams K) β ≠ 0 := by
+    intro hzVariance
+    have hall := GrandCanonical.variance_eq_zero_iff_energy_eq_mean
+      (canonicalParams K) β |>.mp hzVariance
+    exact hij (hall i |>.trans (hall j |>.symm))
+  have hpositive : 0 < GrandCanonical.variance (canonicalParams K) β :=
+    lt_of_le_of_ne hnonnegVariance (Ne.symm hvarianceNe)
+  rw [← hmatch, hz] at hpositive
+  exact (lt_irrefl 0) hpositive
 
 end InfoGeometry.Physics.ParaKahlerFisherCompatibilityObstruction

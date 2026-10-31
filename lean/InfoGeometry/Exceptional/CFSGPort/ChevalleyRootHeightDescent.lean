@@ -32,6 +32,14 @@ private theorem rootCertificate_height_descent :
   intro τ
   cases τ <;> decide +kernel
 
+private theorem rootCertificate_reflect_height_pos :
+    ∀ (τ : Tag) (k : Fin τ.rootCertificate.roots.length) (i : Fin τ.rank),
+      0 < height (τ.rootCertificate.root k) →
+      τ.rootCertificate.root k ≠ Pi.single i 1 →
+      0 < height (reflect τ i (τ.rootCertificate.root k)) := by
+  intro τ
+  cases τ <;> decide +kernel
+
 /-- Height descent for the inductively generated root predicate, transported
 from the finite root certificate to the native root vector. -/
 theorem exists_reflect_height_lt {τ : Tag} {α : Fin τ.rank → ℤ}
@@ -53,6 +61,22 @@ theorem exists_reflect_height_lt {τ : Tag} {α : Fin τ.rank → ℤ}
     rootCertificate_height_descent τ ⟨k, hk⟩ hpos' hns'
   exact ⟨i, IsRoot.reflect i hα, by simpa [hroot] using hiPos,
     by simpa [hroot] using hiLt⟩
+
+/-- A positive root remains positive under a simple reflection unless it is
+that positive simple root. The finite certificate proves this uniformly for
+the six exceptional root systems in the local port. -/
+theorem height_reflect_pos {τ : Tag} {i : Fin τ.rank} {α : Fin τ.rank → ℤ}
+    (hα : IsRoot τ α) (hpos : 0 < height α)
+    (hne : α ≠ Pi.single i 1) : 0 < height (reflect τ i α) := by
+  obtain ⟨k, hk, hroot⟩ := RootCertificate.exists_root_eq τ.rootCertificate_check hα
+  have hpos' : 0 < height (τ.rootCertificate.root k) := by
+    rw [hroot]
+    exact hpos
+  have hne' : τ.rootCertificate.root k ≠ Pi.single i 1 := by
+    intro h
+    exact hne (hroot.symm.trans h)
+  simpa only [hroot] using
+    rootCertificate_reflect_height_pos τ ⟨k, hk⟩ i hpos' hne'
 
 end InfoGeometry.Exceptional.CFSGPort.Chevalley
 

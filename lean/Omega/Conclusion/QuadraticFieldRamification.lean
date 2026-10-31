@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
@@ -71,14 +77,14 @@ theorem odd_prime_dvd_4d_iff (d : ℤ) (p : ℕ) (hp : Nat.Prime p) (hodd : p �
 
     The key algebraic fact: O_K ⊗ Z_p is étale over Z_p iff p ∤ disc(K).
     thm:conclusion-quadratic-field-min-prime-ledger-discriminant -/
-theorem minPrimeLedger_eq_disc_support (d : ℤ) (p : ℕ) (_hp : Nat.Prime p) :
+theorem minPrimeLedger_eq_disc_support (d : ℤ) (p : ℕ) :
     (↑p ∣ quadDisc d) ∨ ¬(↑p ∣ quadDisc d) := em _
 
 /-- For the Riccati parameter t, the quadratic field K_t = Q(√(t(4+t)))
     has discriminant support determined by quadDisc applied to the
     squarefree part of t(4+t).
     cor:conclusion-riccati-quadratic-field-ramification-ledger -/
-theorem riccati_quadratic_ramification (t : ℤ) (_ht : 0 < t) (p : ℕ) (_hp : Nat.Prime p) :
+theorem riccati_quadratic_ramification (t : ℤ) (p : ℕ) :
     (↑p ∣ quadDisc (t * (4 + t))) ∨ ¬(↑p ∣ quadDisc (t * (4 + t))) := em _
 
 /-! ## Discriminant examples -/
@@ -98,6 +104,13 @@ theorem disc_sqrt3 : quadDisc 3 = 12 := by simp [quadDisc]
 /-- disc(Q(√(-1))) = -4 since -1 ≡ 3 (mod 4).
     thm:conclusion-quadratic-field-min-prime-ledger-discriminant -/
 theorem disc_sqrt_neg1 : quadDisc (-1) = -4 := by simp [quadDisc]
+
+/-- The raw piecewise function is not invariant under replacing a radicand by
+its squarefree part: `8` and `2` define the same quadratic field, but this
+unrestricted function assigns different values. The standard field-discriminant
+interpretation therefore needs a squarefree-radicand hypothesis. -/
+theorem quadDisc_eight_ne_quadDisc_two : quadDisc 8 ≠ quadDisc 2 := by
+  norm_num [quadDisc]
 
 /-- 5 is the only prime dividing disc(Q(√5)) = 5.
     thm:conclusion-quadratic-field-min-prime-ledger-discriminant -/

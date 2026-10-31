@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.CoxeterPort.MatrixGroup
+import InfoGeometry.Cantor.PermutationOperator
 import Coxeter.PermutationRepresentation
 import Mathlib.Basic.Real.Basic
 
@@ -29,53 +30,26 @@ private abbrev ReflectionCarrier := Coxeter.AbstractRootSet M.Group
 
 /-- The operator on functions induced by a signed-reflection permutation. -/
 def coxeterOperator (w : M.Group) :
-    Module.End ℝ (ReflectionCarrier M → ℝ) where
-  toFun f x := f ((Coxeter.permRep w)⁻¹ x)
-  map_add' f g := by funext x; rfl
-  map_smul' c f := by funext x; rfl
+    Module.End ℝ (ReflectionCarrier M → ℝ) :=
+  InfoGeometry.Cantor.PermutationOperator.operator (R := ℝ) (Coxeter.permRep w)
 
 /-- The invertible operator represented by a Coxeter element. -/
 def coxeterOperatorUnit (w : M.Group) :
-    (Module.End ℝ (ReflectionCarrier M → ℝ))ˣ where
-  val := coxeterOperator M w
-  inv := coxeterOperator M w⁻¹
-  val_inv := by ext f x; simp [coxeterOperator]
-  inv_val := by ext f x; simp [coxeterOperator]
+    (Module.End ℝ (ReflectionCarrier M → ℝ))ˣ :=
+  InfoGeometry.Cantor.PermutationOperator.operatorUnit (R := ℝ) (Coxeter.permRep w)
 
 /-- The Coxeter group homomorphism into endomorphism-algebra units. -/
 def coxeterOperatorUnitRep :
-    M.Group →* (Module.End ℝ (ReflectionCarrier M → ℝ))ˣ where
-  toFun := coxeterOperatorUnit M
-  map_one' := by apply Units.ext; ext f x; rfl
-  map_mul' g h := by
-    apply Units.ext
-    ext f x
-    change f ((Coxeter.permRep (g * h))⁻¹ x) =
-      f ((Coxeter.permRep h)⁻¹ ((Coxeter.permRep g)⁻¹ x))
-    rw [map_mul, mul_inv_rev]
-    rfl
+    M.Group →* (Module.End ℝ (ReflectionCarrier M → ℝ))ˣ :=
+  InfoGeometry.Cantor.PermutationOperator.operatorUnitRep (R := ℝ) |>.comp
+    Coxeter.permRep
 
 /-- The signed-reflection permutation action remains faithful after passage to
 operators on the full function space. -/
 theorem coxeterOperatorUnitRep_injective :
     Function.Injective (coxeterOperatorUnitRep M) := by
-  classical
-  intro g h hgh
-  have hval : coxeterOperator M g = coxeterOperator M h :=
-    congrArg (fun u : (Module.End ℝ (ReflectionCarrier M → ℝ))ˣ =>
-      (u : Module.End ℝ (ReflectionCarrier M → ℝ))) hgh
-  have hinv : (Coxeter.permRep g)⁻¹ = (Coxeter.permRep h)⁻¹ := by
-    apply Equiv.ext
-    intro x
-    let δ : ReflectionCarrier M → ℝ :=
-      fun y => if y = (Coxeter.permRep g)⁻¹ x then (1 : ℝ) else 0
-    have heval := congrArg
-      (fun T : Module.End ℝ (ReflectionCarrier M → ℝ) => T δ x) hval
-    have hpoint : (Coxeter.permRep h)⁻¹ x = (Coxeter.permRep g)⁻¹ x := by
-      simpa [δ, coxeterOperator] using heval.symm
-    exact hpoint.symm
-  apply Coxeter.permRep_inj
-  exact congrArg Inv.inv hinv
+  exact (InfoGeometry.Cantor.PermutationOperator.operatorUnitRep_injective
+    (R := ℝ)).comp Coxeter.permRep_inj
 
 /-- Faithfulness preserves every noncommuting pair as noncommuting operator
 units. -/

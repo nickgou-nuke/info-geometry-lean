@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2MasterRootSynthesis
@@ -52,6 +58,18 @@ theorem planeOrbit_injective_on_range
     exact mul_right_cancel₀ hz hab
   exact zeta24_isPrimitiveRoot.pow_inj
     (Finset.mem_range.mp ha) (Finset.mem_range.mp hb) hp
+
+/-- The first 24 orbit positions are distinct exactly when the seed is
+nonzero. This gives the sharp criterion on the abstract complex orbit carrier. -/
+theorem planeOrbit_injective_on_range_iff {z : ℂ} :
+    Set.InjOn (planeOrbit z) (↑(Finset.range 24) : Set ℕ) ↔ z ≠ 0 := by
+  constructor
+  · intro hinj hz
+    have h0 : (0 : ℕ) ∈ (↑(Finset.range 24) : Set ℕ) := by simp
+    have h1 : (1 : ℕ) ∈ (↑(Finset.range 24) : Set ℕ) := by simp
+    have h01 := hinj h0 h1 (by simp [planeOrbit, hz])
+    norm_num at h01
+  · exact planeOrbit_injective_on_range
 
 /-- The 12-gon phase subsequence is obtained by taking every second point of
 the primitive 24-gon.  This is a cyclotomic containment only; it is not an

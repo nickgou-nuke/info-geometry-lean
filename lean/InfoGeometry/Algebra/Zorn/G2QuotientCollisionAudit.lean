@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Algebra.Zorn.G2FlagCellQuotientWitness
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2ResidualCoordinateCellOne
+import InfoGeometry.Algebra.Zorn.G2FactorizationAlignmentCertificate
 
 namespace InfoGeometry.Algebra.Zorn.G2QuotientCollisionAudit
 
@@ -9,6 +16,7 @@ open InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
 open InfoGeometry.Algebra.Zorn.G2ResidualCoordinateCellOne
 open InfoGeometry.Algebra.Zorn.G2FlagWordCertificate
 open InfoGeometry.Algebra.Zorn.G2QuotientResidualInjectivity
+open InfoGeometry.Algebra.Zorn.G2FactorizationAlignmentCertificate
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoMatrixCarrier
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -33,5 +41,22 @@ theorem quotientRepresentative_not_injective :
   have hindex : (24 : Fin 189) = 45 :=
     hinj quotientRepresentative_24_eq_45
   omega
+
+/-- The full factorization/alignment package cannot coexist with the concrete
+collision above: its residual-alignment and within-cell injectivity fields
+would force `quotientRepresentative` to be injective. -/
+theorem no_factorization_alignment_system :
+    ¬ Nonempty FactorizationAlignmentSystem := by
+  rintro ⟨C⟩
+  have hinj := quotientRepresentative_injective C
+  exact quotientRepresentative_not_injective hinj
+
+/-- The concrete-generator variant of the alignment package is likewise
+inconsistent with the exhibited quotient collision. -/
+theorem no_concrete_factorization_alignment_system :
+    ¬ Nonempty ConcreteFactorizationAlignmentSystem := by
+  rintro ⟨C⟩
+  have hinj := concrete_quotientRepresentative_injective C
+  exact quotientRepresentative_not_injective hinj
 
 end InfoGeometry.Algebra.Zorn.G2QuotientCollisionAudit

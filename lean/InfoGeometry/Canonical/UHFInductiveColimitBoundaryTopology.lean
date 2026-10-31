@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Topology.Constructions
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Clopen
@@ -285,17 +291,25 @@ theorem cylinderSet_disjoint {n : ℕ} {w v : BitWord n} (h : w ≠ v) :
   change boundaryPrefix n x = v at hy
   exact h (hx.symm.trans hy)
 
+/-- Distinct boundary points already differ in some finite prefix. -/
+theorem boundaryPrefix_separates {x y : CantorBoundary} (hxy : x ≠ y) :
+    ∃ n : ℕ, boundaryPrefix n x ≠ boundaryPrefix n y := by
+  obtain ⟨i, hi⟩ := Function.ne_iff.mp hxy
+  refine ⟨i + 1, ?_⟩
+  intro hprefix
+  have hcoord := congrFun hprefix ⟨i, Nat.lt_succ_self i⟩
+  exact hi (by simpa [boundaryPrefix] using hcoord)
+
 theorem cylinderSet_separates {x y : CantorBoundary} (hxy : x ≠ y) :
     ∃ n : ℕ, ∃ w : BitWord n,
       x ∈ cylinderSet n w ∧ y ∉ cylinderSet n w := by
-  obtain ⟨i, hi⟩ := Function.ne_iff.mp hxy
-  refine ⟨i + 1, boundaryPrefix (i + 1) x, ?_, ?_⟩
-  · change boundaryPrefix (i + 1) x = boundaryPrefix (i + 1) x
+  obtain ⟨n, hprefix⟩ := boundaryPrefix_separates hxy
+  refine ⟨n, boundaryPrefix n x, ?_, ?_⟩
+  · change boundaryPrefix n x = boundaryPrefix n x
     rfl
   · intro hy
-    change boundaryPrefix (i + 1) y = boundaryPrefix (i + 1) x at hy
-    have hi' := congrFun hy ⟨i, Nat.lt_succ_self i⟩
-    exact hi (by simpa [boundaryPrefix] using hi'.symm)
+    change boundaryPrefix n y = boundaryPrefix n x at hy
+    exact hprefix hy.symm
 
 /-- Add a fixed leading bit to a finite word. -/
 def prependWord (n : ℕ) (b : Bool) (w : BitWord n) : BitWord (n + 1) :=

@@ -49,6 +49,31 @@ theorem mem_rootSubgroup {α : Fin τ.rank → ℤ} {g : (Module.End R (RootModu
   rw [rootSubgroup_eq_range]
   exact ⟨fun ⟨c, hc⟩ => ⟨c.toAdd, hc⟩, fun ⟨c, hc⟩ => ⟨Multiplicative.ofAdd c, hc⟩⟩
 
+/-- Conjugation transports a pinned root subgroup when it transports its
+parameterization surjectively. This is the local pinned-root form of the
+external `RootOperatorFamily.map_conj_rootSubgroup` API. -/
+theorem map_conj_rootSubgroup {α β : Fin τ.rank → ℤ}
+    (g : (Module.End R (RootModule τ R))ˣ) {u : R → R}
+    (hu : Function.Surjective u)
+    (h : ∀ c, g * pinnedX τ R α c * g⁻¹ = pinnedX τ R β (u c)) :
+    (rootSubgroup τ R α).map (MulAut.conj g).toMonoidHom = rootSubgroup τ R β := by
+  rw [rootSubgroup_eq_range, MonoidHom.map_range, rootSubgroup_eq_range]
+  apply Subgroup.ext
+  intro x
+  change (∃ c : Multiplicative R,
+      (MulAut.conj g).toMonoidHom (pinnedHom τ R α c) = x) ↔
+    ∃ d : Multiplicative R, pinnedHom τ R β d = x
+  constructor
+  · rintro ⟨c, rfl⟩
+    refine ⟨Multiplicative.ofAdd (u c.toAdd), ?_⟩
+    change pinnedX τ R β (u c.toAdd) = g * pinnedX τ R α c.toAdd * g⁻¹
+    exact (h c.toAdd).symm
+  · rintro ⟨d, rfl⟩
+    obtain ⟨c, rfl⟩ := hu d.toAdd
+    refine ⟨Multiplicative.ofAdd c, ?_⟩
+    change g * pinnedX τ R α c * g⁻¹ = pinnedX τ R β (u c)
+    exact h c
+
 /-- Every pinned root subgroup over a nontrivial coefficient ring is
 nontrivial. Injectivity of the root parameter map distinguishes parameters
 `1` and `0` inside the actual endomorphism-unit carrier. -/

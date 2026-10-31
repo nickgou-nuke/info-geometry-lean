@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DilationKKTBridge
@@ -213,10 +219,9 @@ theorem candidate_conformal_scalar_readout
   letI := instAdd
   letI := instInner
   letI := instComp
-  rcases hP with ⟨P⟩
   refine ⟨E, instAdd, instInner, instComp, CI, ?_⟩
   exact InfoGeometry.Canonical.ConformalUnification.canopy_obstructionScalarReadout
-    (E := E) (CI := CI) (X := X) P
+    (E := E) CI
 
 /-- The conformal canopy package closes both the operator-owner and scalar-readout branches. -/
 theorem candidate_conformal_branch_closure
@@ -234,7 +239,7 @@ theorem candidate_conformal_branch_closure
   refine ⟨InfoGeometry.Canonical.ConformalUnification.canopy_obstructionOperatorOwner
     (E := E) (CI := CI) (X := X) P, ?_⟩
   exact InfoGeometry.Canonical.ConformalUnification.canopy_obstructionScalarReadout
-    (E := E) (CI := CI) (X := X) P
+    (E := E) CI
 
 /-- The real Clifford representation data are nonempty. -/
 theorem candidate_realCliffordRepresentation_nonempty

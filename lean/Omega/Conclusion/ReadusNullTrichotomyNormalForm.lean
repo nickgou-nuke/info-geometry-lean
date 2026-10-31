@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -10,14 +16,8 @@ ruled out explicitly.
 theorem paper_conclusion_readus_null_trichotomy_normal_form
     (semanticNull protocolNull collisionNull hiddenFailure : Prop)
     (hexhaustive : semanticNull ∨ protocolNull ∨ collisionNull)
-    (hsem : semanticNull → ¬ protocolNull ∧ ¬ collisionNull)
-    (hprot : protocolNull → ¬ semanticNull ∧ ¬ collisionNull)
-    (hcoll : collisionNull → ¬ semanticNull ∧ ¬ protocolNull)
     (hnohidden : hiddenFailure → False) :
     (semanticNull ∨ protocolNull ∨ collisionNull) ∧ ¬ hiddenFailure := by
-  let _ := hsem
-  let _ := hprot
-  let _ := hcoll
   refine ⟨hexhaustive, ?_⟩
   intro hHidden
   exact hnohidden hHidden

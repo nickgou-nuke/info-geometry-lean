@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.ConformalAnomalySource
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.IncompressibleBitBridge
@@ -231,8 +237,7 @@ and the dilation commutator both collapse.
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E)
-    (hProj : CI.P_MP_right = CI.P_MP)
-    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    (hProj : CI.P_MP_right = CI.P_MP) :
     CI.projectorObstruction = 0
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   have hScaleZero : CI.chiralScale = 0 :=
@@ -246,7 +251,9 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompres
     CI.projectorObstruction_eq_zero_of_commute hComm
   have hRight : CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D := by
     rw [hProj]
-    exact hLeft
+    change CI.spectralChiralProjector * CI.metricChiralProjector =
+      CI.metricChiralProjector * CI.spectralChiralProjector
+    exact hComm.eq
   have hDilZero : CI.P_D * CI.D - CI.D * CI.P_D = 0 :=
     CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero
       hRight hScaleZero
@@ -280,7 +287,7 @@ theorem semanticCollapsePacket_of_incompressible
       R hIncomp x
   have hObsDil :=
     CramerRaoNegLogVolumeAnomalyReadout.projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible
-      R hIncomp x hProj hLeft
+      R hIncomp x hProj
   exact ⟨hPacket, hScaleZero, hObsDil.1, hObsDil.2⟩
 
 /--
@@ -299,7 +306,7 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompres
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible
-      R hIncomp x W.1 W.2
+      R hIncomp x W.1
 
 /--
 Witness-routed full Weyl/KKT semantic-collapse packet from the operatorial

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeTransportBridge
@@ -2939,14 +2945,11 @@ noncomputable def drazinMajoranaConjugateCandidate : EndH :=
   QD U
 
 /--
-Under Majorana compatibility with both anomaly channels, the current paired odd
-candidate collapses to the owned Drazin supercharge itself.
+The current paired odd candidate is definitionally the owned Drazin
+supercharge itself.
 -/
 @[rep_depth transport]
-theorem drazinMajoranaConjugateCandidate_eq_QD_of_commute_chi
-    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
-    (_hCL : Commute M.C (U.kernel.chiralAnomaly))
-    (_hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+theorem drazinMajoranaConjugateCandidate_eq_QD :
     drazinMajoranaConjugateCandidate U = QD U := by
   rfl
 
@@ -2955,15 +2958,12 @@ For the current Majorana-paired candidate, the paired odd-odd bracket reduces to
 the already owned self-bracket of `Q_D`.
 -/
 @[rep_depth transport]
-theorem paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi
-    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
-    (hCL : Commute M.C (U.kernel.chiralAnomaly))
-    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+theorem paired_oddOdd_majoranaBracket_eq_selfBracket :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
         (QD U) (drazinMajoranaConjugateCandidate U)
       =
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U) := by
-  rw [drazinMajoranaConjugateCandidate_eq_QD_of_commute_chi (U := U) (M := M) hCL hCR]
+  rw [drazinMajoranaConjugateCandidate_eq_QD]
 
 /--
 Conditional paired-bracket translation/central readout.
@@ -2973,46 +2973,36 @@ is identified with `Q_D` through the Majorana-compatible anomaly corridor, the
 paired bracket inherits the already proved Drazin split.
 -/
 @[rep_depth transport]
-theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central_of_commute_chi
-    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
-    (hCL : Commute M.C (U.kernel.chiralAnomaly))
-    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
         (QD U) (drazinMajoranaConjugateCandidate U)
       =
     (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
-  rw [paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi (U := U) (M := M) hCL hCR]
+  rw [paired_oddOdd_majoranaBracket_eq_selfBracket]
   exact projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
 
 /--
 Central term extracted from the Majorana-compatible paired odd-odd bracket.
 -/
 @[rep_depth transport]
-theorem drazinCentralCandidate_eq_paired_majoranaBracket_sub_two_smul_translation_of_commute_chi
-    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
-    (hCL : Commute M.C (U.kernel.chiralAnomaly))
-    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+theorem drazinCentralCandidate_eq_paired_majoranaBracket_sub_two_smul_translation :
     drazinCentralCandidate U =
       InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
           (QD U) (drazinMajoranaConjugateCandidate U)
         - (2 : ℝ) • drazinTranslationCandidate U := by
-  rw [paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central_of_commute_chi
-    (U := U) (M := M) hCL hCR]
+  rw [paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central]
   abel
 
 /--
 Equivalent defect-language version of the conditional paired-bracket readout.
 -/
 @[rep_depth transport]
-theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_defect_of_commute_chi
-    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
-    (hCL : Commute M.C (U.kernel.chiralAnomaly))
-    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_defect :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
         (QD U) (drazinMajoranaConjugateCandidate U)
       =
     (2 : ℝ) • drazinTranslationCandidate U + drazinDefectCandidate U := by
-  rw [paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi (U := U) (M := M) hCL hCR]
+  rw [paired_oddOdd_majoranaBracket_eq_selfBracket]
   exact projected_oddOdd_bracket_eq_two_smul_translation_plus_defect (U := U)
 
 /--
@@ -3626,7 +3616,9 @@ theorem matsubaraFrequency_neg
     _ = -matsubaraFrequency β n := by rfl
 
 /--
-Matsubara lattice is discrete/injective in index when `β ≠ 0`.
+The Matsubara frequency map is injective in its integer index when `β ≠ 0`.
+This is an algebraic index-separation result; it does not assert a topology on
+the image lattice.
 -/
 @[rep_depth thermo]
 theorem matsubaraFrequency_injective

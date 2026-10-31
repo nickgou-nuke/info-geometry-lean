@@ -443,6 +443,59 @@ theorem torusElt_mul (i : Fin τ.rank) (t u : Rˣ) :
     congr 1
     ring
 
+private theorem sum_cartan_mul_reflect_apply (i j : Fin τ.rank) (v : Fin τ.rank → ℤ) :
+    ∑ k, τ.cartan j k * reflect τ i v k =
+      ∑ k, τ.cartan j k * v k - τ.cartan j i * ∑ k, τ.cartan i k * v k := by
+  simp only [reflect, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite,
+    mul_one, mul_zero, mul_sub, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.mem_univ,
+    ite_true]
+
+/-- Moving a simple Weyl representative past a simple torus generator
+introduces the Cartan-matrix correction factor. -/
+theorem weylElt_mul_torusElt (i j : Fin τ.rank) (s t : Rˣ) :
+    weylElt τ R i s * torusElt τ R j t =
+      torusElt τ R j t * torusElt τ R i (t ^ (-τ.cartan j i)) * weylElt τ R i s := by
+  refine Units.ext (end_ext (fun k => ?_) (fun α hα => ?_))
+  · simp only [Units.val_mul, Module.End.mul_apply, torusElt_hVec, weylElt_hVec, map_sub,
+      map_smul]
+  · simp only [Units.val_mul, Module.End.mul_apply, torusElt_rootVec _ _ hα, map_smul,
+      weylElt_rootVec _ _ hα, torusElt_rootVec _ _ (hα.reflect i), smul_smul]
+    congr 1
+    rw [sum_cartan_mul_reflect, sum_cartan_mul_reflect_apply]
+    have key : (((t ^ (-τ.cartan j i)) ^ (-∑ k, τ.cartan i k * α k) : Rˣ) : R) *
+        ((t ^ (∑ k, τ.cartan j k * α k - τ.cartan j i * ∑ k, τ.cartan i k * α k) : Rˣ) : R) =
+          ((t ^ (∑ k, τ.cartan j k * α k) : Rˣ) : R) := by
+      rw [← Units.val_mul, ← zpow_mul, ← zpow_add]
+      congr 2
+      ring
+    rw [key]
+    ring
+
+/-- A simple Weyl representative conjugates a simple-coroot torus generator
+by the Cartan exponent. This is the external Curtis--Tits `conj_H_mem`
+calculation, on the local root-module operators. -/
+theorem weylElt_one_mul_torusElt_mul_inv (i j : Fin τ.rank) (t : Rˣ) :
+    weylElt τ R i 1 * torusElt τ R j t * (weylElt τ R i 1)⁻¹ =
+      torusElt τ R j t * torusElt τ R i (t ^ (-τ.cartan j i)) := by
+  rw [weylElt_mul_torusElt, mul_inv_cancel_right]
+
+/-- The simple Weyl representative squares to the torus element at `-1`.
+This is the `sq_mem` relation in the external Curtis--Tits datum, on the
+local root-module operator carrier. -/
+theorem weylElt_one_mul_self (i : Fin τ.rank) :
+    weylElt τ R i 1 * weylElt τ R i 1 = torusElt τ R i (-1) := by
+  have h₁ : torusElt τ R i (-1) = (weylElt τ R i 1 * weylElt τ R i 1)⁻¹ := by
+    rw [mul_inv_rev, weylElt_inv, torusElt]
+  have h₂ : torusElt τ R i (-1) * torusElt τ R i (-1) = 1 := by
+    rw [← torusElt_mul, neg_one_mul, neg_neg, torusElt_one]
+  rw [h₁] at h₂ ⊢
+  rw [eq_inv_of_mul_eq_one_left h₂, inv_inv]
+
+/-- The square form of `weylElt_one_mul_self`. -/
+theorem weylElt_one_sq (i : Fin τ.rank) :
+    weylElt τ R i 1 ^ 2 = torusElt τ R i (-1) := by
+  rw [sq, weylElt_one_mul_self]
+
 theorem torusElt_mul_comm (i j : Fin τ.rank) (t u : Rˣ) :
     torusElt τ R i t * torusElt τ R j u = torusElt τ R j u * torusElt τ R i t := by
   refine Units.ext (end_ext (fun k => ?_) (fun α hα => ?_))

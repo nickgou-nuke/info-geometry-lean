@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.Zorn.G2RootSubgroup
 
 /-!
 # Root subgroup conjugation and the Weyl-equivariant bridge
@@ -21,24 +28,11 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2
 open InfoGeometry.Algebra.Zorn.G2TwoRootSystem
 
-/-- The root subgroup `X_α` as a two-element subgroup of `SplitOctF2Aut`.
-    Over `𝔽₂`, this is `{1, x_α(1)} ≅ ℤ₂`. -/
-noncomputable def rootSubgroup (α : G2Root) : Subgroup SplitOctF2Aut where
-  carrier := { g | g = 1 ∨ g = rootAut α }
-  one_mem' := Or.inl rfl
-  mul_mem' := by
-    rintro a b (rfl | rfl) (rfl | rfl)
-    · exact Or.inl (mul_one 1)
-    · exact Or.inr (one_mul _)
-    · exact Or.inr (mul_one _)
-    · left; exact rootAut_sq α
-  inv_mem' := by
-    rintro g (rfl | rfl)
-    · exact Or.inl (inv_one)
-    · right
-      show (rootAut α)⁻¹ = rootAut α
-      -- If a*a = 1, then a⁻¹ = a
-      exact inv_eq_of_mul_eq_one_left (rootAut_sq α)
+/-- Compatibility name for the canonical two-element root subgroup. The
+carrier and subgroup laws are owned by `G2RootSubgroup.rootSubgroup`; this
+module only adds its Coxeter-conjugation API. -/
+abbrev rootSubgroup (α : G2Root) : Subgroup SplitOctF2Aut :=
+  InfoGeometry.Algebra.Zorn.G2RootSubgroup.rootSubgroup α
 
 /-- The generator of the root subgroup `X_α`. -/
 noncomputable def rootGenerator (α : G2Root) : SplitOctF2Aut :=
@@ -46,7 +40,9 @@ noncomputable def rootGenerator (α : G2Root) : SplitOctF2Aut :=
 
 theorem rootGenerator_mem_rootSubgroup (α : G2Root) :
     rootGenerator α ∈ rootSubgroup α := by
-  simp [rootGenerator, rootSubgroup]
+  change rootAut α ∈ InfoGeometry.Algebra.Zorn.G2RootSubgroup.rootSubgroup α
+  change rootAut α = 1 ∨ rootAut α = rootAut α
+  exact Or.inr rfl
 
 /-- Conjugation by the Coxeter element `c` sends generators of `X_α`
     to generators of `X_{cAction α}`. -/

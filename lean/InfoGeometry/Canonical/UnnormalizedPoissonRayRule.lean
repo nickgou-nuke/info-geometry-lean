@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PowerVarianceCumulants
@@ -101,6 +107,28 @@ theorem poissonIntensity_scale_injective
   have hdiff : (R - S) * K i j = 0 := by
     linarith
   exact sub_eq_zero.mp ((mul_eq_zero.mp hdiff).resolve_right hij)
+
+/-- Exact identifiability criterion for the retained scale: with fixed
+background, the Poisson intensity map is injective precisely when the kernel
+has a nonzero entry. -/
+theorem poissonIntensity_scale_injective_iff
+    (K B : Matrix m n ℝ) :
+    Function.Injective (fun R : ℝ => poissonIntensity R K B) ↔
+      ∃ i j, K i j ≠ 0 := by
+  constructor
+  · intro hinj
+    by_contra hK
+    have hzero : ∀ i j, K i j = 0 := by
+      intro i j
+      by_contra h
+      exact hK ⟨i, j, h⟩
+    have heq : poissonIntensity 0 K B = poissonIntensity 1 K B := by
+      ext i j
+      simp [poissonIntensity_apply, hzero i j]
+    have h01 : (0 : ℝ) = 1 := hinj heq
+    norm_num at h01
+  · intro hK R S hRS
+    exact poissonIntensity_scale_injective hK hRS
 
 /-- A normalized kernel alone does not encode the retained intensity. -/
 theorem poissonIntensity_same_kernel_different_scale

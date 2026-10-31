@@ -479,6 +479,53 @@ theorem chargeCovariance_posDef_of_separatesDirections
   exact hmn ((covariance_quadratic_eq_zero_iff_charge_differences F β v).mp
     hzero m n)
 
+/-- For a fixed direction, the covariance quadratic form is strictly positive
+exactly when that direction detects at least one pairwise charge difference.
+This gives the precise kernel criterion underlying `ChargesSeparateDirections`.
+-/
+theorem chargeCovariance_quadratic_pos_iff_exists_charge_difference
+    (F : Family ι) (β v : Fin 2 → ℝ) :
+    0 < ∑ a : Fin 2, ∑ b : Fin 2,
+      v a * chargeCovariance F β a b * v b ↔
+    ∃ m n : ι, ∑ a : Fin 2,
+      v a * (F.charge m a - F.charge n a) ≠ 0 := by
+  have hnonneg := chargeCovariance_posSemidefinite F β v
+  constructor
+  · intro hpos
+    by_contra hnone
+    have hall : ∀ m n : ι, ∑ a : Fin 2,
+        v a * (F.charge m a - F.charge n a) = 0 := by
+      intro m n
+      by_contra hdiff
+      exact hnone ⟨m, n, hdiff⟩
+    have hzero :=
+      (covariance_quadratic_eq_zero_iff_charge_differences F β v).2 hall
+    linarith
+  · rintro ⟨m, n, hdiff⟩
+    have hne : (∑ a : Fin 2, ∑ b : Fin 2,
+        v a * chargeCovariance F β a b * v b) ≠ 0 := by
+      intro hzero
+      have hall :=
+        (covariance_quadratic_eq_zero_iff_charge_differences F β v).1 hzero
+      exact hdiff (hall m n)
+    exact lt_of_le_of_ne hnonneg (Ne.symm hne)
+
+/-- The covariance quadratic form is positive definite exactly when the
+charge differences separate every nonzero direction. -/
+theorem chargeCovariance_positiveDef_iff_separatesDirections
+    (F : Family ι) (β : Fin 2 → ℝ) :
+    (∀ v : Fin 2 → ℝ, v ≠ 0 →
+      0 < ∑ a : Fin 2, ∑ b : Fin 2,
+        v a * chargeCovariance F β a b * v b) ↔
+      ChargesSeparateDirections F := by
+  constructor
+  · intro h v hv
+    exact (chargeCovariance_quadratic_pos_iff_exists_charge_difference
+      F β v).mp (h v hv)
+  · intro h v hv
+    exact (chargeCovariance_quadratic_pos_iff_exists_charge_difference
+      F β v).mpr (h v hv)
+
 theorem chargeCovarianceMatrix_posSemidefinite
     (F : Family ι) (β v : Fin 2 → ℝ) :
     0 ≤ ∑ a : Fin 2, ∑ b : Fin 2,

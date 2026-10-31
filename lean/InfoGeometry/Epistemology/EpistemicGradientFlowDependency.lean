@@ -1,5 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Epistemology.EpistemicGradientFlow
 import InfoGeometry.Epistemology.DiracRelativeEntropyBoundary
+
+/-! This is a hand-authored finite prerequisite model for the listed
+archetypes. The relation is inclusion between the declared prerequisite sets;
+it is not computed from Lean imports or declaration dependencies. -/
 
 namespace InfoGeometry.Epistemology.EpistemicGradientFlow.ProofDependency
 
@@ -52,6 +62,9 @@ theorem dissipation_and_rate_incomparable :
     ¬ dissipation ≤ decayBound ∧ ¬ decayBound ≤ dissipation := by
   decide
 
+/-- In this declared prerequisite model, the standalone Dirac node is
+incomparable with the equilibrium-limit node. This states nothing about the
+repository's import graph. -/
 theorem dirac_obstruction_is_separate :
     ¬ diracObstruction ≤ equilibriumLimit ∧ ¬ equilibriumLimit ≤ diracObstruction := by
   decide

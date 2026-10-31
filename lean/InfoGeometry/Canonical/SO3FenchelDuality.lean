@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.FiniteMatrixNoncommutativity
 import Mathlib.LinearAlgebra.CrossProduct
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.Analysis.InnerProductSpace.PiL2
@@ -97,6 +104,11 @@ def angularMomentum (I : ℝ) (ω : V3) : V3 := I • ω
 theorem angularMomentum_injective (I : ℝ) (hI : I ≠ 0) : Function.LeftInverse (fun L : V3 => (1 / I) • L) (angularMomentum I) := by
   intro ω
   simp [angularMomentum, hI, smul_smul]
+
+/-- Nonzero isotropic inertia makes the angular-momentum map injective. -/
+theorem angularMomentum_function_injective (I : ℝ) (hI : I ≠ 0) :
+    Function.Injective (angularMomentum I) :=
+  (angularMomentum_injective I hI).injective
 
 theorem momentum_from_velocity_pairing (I : ℝ) (ω : V3) :
     angularMomentum I ω ⬝ᵥ ω = (2 : ℝ) * kinetic I ω := by

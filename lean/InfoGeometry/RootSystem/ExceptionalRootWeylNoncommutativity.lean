@@ -17,6 +17,7 @@ real-valued root-lattice functions.
 namespace InfoGeometry.RootSystem.Exceptional
 
 open InfoGeometry.Exceptional.CFSGPort.Chevalley
+open InfoGeometry.Cantor.CantorRandomWalk
 
 private theorem reflect_coord_of_ne (τ : Tag) (i j : Fin τ.rank)
     (v : RootLattice τ) (hij : i ≠ j) :
@@ -142,5 +143,25 @@ theorem exceptionalRootOperatorWeyl_has_noncommuting_pair (τ : Tag) :
   · rw [rootOperatorWeylGroup, Subgroup.mem_map]
     exact ⟨h, trivial, rfl⟩
   · exact rootWeylOperatorUnitRep_ne_mul_swap τ g h hgh
+
+/-- The Cantor-word operator image of each exceptional Weyl group retains an
+explicit noncommuting pair from its root-lattice action. -/
+theorem exceptionalCantorWordOperatorWeyl_has_noncommuting_pair (τ : Tag) :
+    ∃ U V : ↥(cantorWordOperatorGroup τ), U * V ≠ V * U := by
+  obtain ⟨g, h, hgh⟩ := exceptionalRootWeyl_has_noncommuting_pair τ
+  refine ⟨⟨cantorWordOperatorUnitRep τ g, ?_⟩,
+    ⟨cantorWordOperatorUnitRep τ h, ?_⟩, ?_⟩
+  · rw [cantorWordOperatorGroup, Subgroup.mem_map]
+    exact ⟨g, trivial, rfl⟩
+  · rw [cantorWordOperatorGroup, Subgroup.mem_map]
+    exact ⟨h, trivial, rfl⟩
+  · intro hcomm
+    apply hgh
+    apply cantorWordOperatorUnitRep_injective τ
+    have hval := congrArg (fun x : ↥(cantorWordOperatorGroup τ) =>
+      (x : (Module.End ℝ (CantorWord → ℝ))ˣ)) hcomm
+    change cantorWordOperatorUnitRep τ g * cantorWordOperatorUnitRep τ h =
+      cantorWordOperatorUnitRep τ h * cantorWordOperatorUnitRep τ g at hval
+    simpa only [map_mul] using hval
 
 end InfoGeometry.RootSystem.Exceptional

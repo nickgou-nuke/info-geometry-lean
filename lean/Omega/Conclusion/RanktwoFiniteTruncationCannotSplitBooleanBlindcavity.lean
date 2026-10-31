@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import Omega.Conclusion.RanktwoSmithBlindclassBooleanPrimeblockTorsor
 
@@ -17,13 +23,9 @@ def ranktwoFiniteAuditData (P K M : Finset Nat) (a b : Nat) :
 the finite audit tuple is a function of the shared `gcd/lcm` normal form, so the tuple is constant
 on each rank-two blind cavity. -/
 theorem paper_conclusion_ranktwo_finite_truncation_cannot_split_boolean_blindcavity
-    (P K M : Finset Nat) (a b c d : Nat) (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d) :
+    (P K M : Finset Nat) (a b c d : Nat) :
     (Nat.gcd c d = Nat.gcd a b /\ Nat.lcm c d = Nat.lcm a b) ->
       ranktwoFiniteAuditData P K M c d = ranktwoFiniteAuditData P K M a b := by
-  let _ := ha
-  let _ := hb
-  let _ := hc
-  let _ := hd
   intro h
   rcases h with ⟨hg, hl⟩
   simp [ranktwoFiniteAuditData, hg, hl]

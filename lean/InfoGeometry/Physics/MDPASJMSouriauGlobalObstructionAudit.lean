@@ -19,5 +19,7 @@ explicitly treating unavailable global de Rham computations as timeouts.
 
 #print axioms InfoGeometry.Physics.MDPASJMSouriauGlobalObstruction.sphereArea_not_exact
 #print axioms InfoGeometry.Physics.MDPASJMSouriauGlobalObstruction.kk5_null_implies_four_mass_shell
+#print axioms InfoGeometry.Physics.MDPASJMSouriauDigest.FiniteMDPASJMDirectSystem.ofStage_eq_of_bond_eq
+#print axioms InfoGeometry.Physics.MDPASJMSouriauDigest.FiniteMDPASJMDirectSystem.ofStage_not_injective_of_bond_not_injective
 #print axioms InfoGeometry.Physics.MDPASJMSouriauExternalAudit.observed_timeout_audit_packet
 #print axioms InfoGeometry.Physics.MDPASJMSouriauExternalAudit.finite_global_story_packet

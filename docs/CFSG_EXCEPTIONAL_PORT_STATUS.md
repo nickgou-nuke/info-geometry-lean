@@ -9,12 +9,112 @@ The root remains on Lean `v4.34.1` and Mathlib
 imply that external modules are root-importable or kernel-checked under the
 root toolchain.
 
-**Latest verification (2026-10-30):** the locked
-`InfoGeometry.Exceptional.CFSGPort.All` build passed with 8,995 jobs after
-adding the unconditional Suzuki model-simplicity adapter; the locked
-`InfoGeometry.All` build then passed with 28,245 jobs. The root Lean 4.34.1
-and Mathlib pins and the build cache were preserved. Historical entries below
-are chronological and are superseded where they conflict with this update.
+**Latest verification (2026-10-31):** the locked
+`InfoGeometry.Exceptional.CFSGPort.All` build passed with 9,009 jobs after
+porting `CommContained.symm`, the certificate-backed reflected-height
+positivity lemma, and the `RootOps.CommAll.commContained_pos` height induction.
+The group owner now also proves the subgroup-level positive-root-cone
+containment using Mathlib's `Subgroup.commutator_le`; the focused owner and
+aggregate both pass under Lean 4.34.1. The locked `InfoGeometry` target then
+passed with 29,760 jobs, including `InfoGeometry.All` and
+`InfoGeometry.AllExhaustive`. This supersedes the earlier
+`Canonical.OpenAIFrontierUnificationAudit` failure recorded in the history
+below. The root Lean 4.34.1 and Mathlib pins and build cache were preserved.
+Historical entries below are chronological and are superseded where they
+conflict with this update.
+
+The port has now added `ChevalleyBraidWalk.lean`, adapting the external
+`CFSG.LieType.Chevalley.RootWalk` mechanism to the root repository's checked
+root-table and actual root-module Weyl operators. The local certificates
+verify each alternating rank-two root walk and Cartan reflection word for
+G₂, F₄, D₄, E₆, E₇, and E₈. The file derives equality of the corresponding
+noncommutative alternating products of simple Weyl operators. It is exposed
+through `CFSGPort.All`. Both the focused owner build and the locked
+`InfoGeometry.Exceptional.CFSGPort.All` build passed on 2026-10-31; the latter
+completed with 9,010 jobs. This supplies the braid-relation component needed
+for the local Curtis–Tits datum assembly. `OperatorCurtisTitsDatum.lean` now
+ports `Steinberg.Adjoint.adjDatum_isCTGroupDatum` field by field, using the
+existing root-module subgroups, Weyl conjugation, Cartan braid, torus, and
+adjoint-generation results. Its focused locked build passed with 8,985 jobs on
+2026-10-31. The aggregate locked build then passed with 9,011 jobs.
+This assembles the Curtis–Tits hypotheses; it does not yet port the external
+Tits normal-subgroup argument or prove exceptional quasisimplicity.
+
+The local Weyl API now also proves `weylElt_one_mul_self` and
+`weylElt_one_sq`: each simple Weyl representative squares to its torus element
+at parameter `-1`, porting the external `Chevalley.weylElt_one_sq` identity.
+`CurtisTitsRankOne.lean` places that square in the corresponding simple-root
+torus subgroup, giving the external Curtis–Tits `sq_mem` field on the actual
+root-module operator carrier. It now also ports
+`Chevalley.weylElt_one_mul_torusElt_mul_inv`, using the existing Weyl and torus
+root-vector actions to prove the external `conj_H_mem` formula with its Cartan
+exponent. The focused `ChevalleyWeyl` and `CurtisTitsRankOne` locked builds
+passed on 2026-10-31, and the fresh locked `InfoGeometry.Exceptional.CFSGPort.All`
+build passed with 9,010 jobs after these additions. `OperatorCurtisTitsDatum`
+now assembles these fields with the existing root-group generation,
+conjugation, braid, and rank-one results. The remaining theorem-level work is
+the external Tits normal-subgroup argument and exceptional quasisimplicity.
+`CurtisTitsRankOne.lean` now also closes the Weyl--torus
+conjugation identity under the generated simple-root torus using
+`MonoidHom.map_closure`; its focused locked build passed with 8,948 jobs.
+The root-support lemma `eq_single_or_neg_of_support` is now ported from the
+existing local root-scaling theorem and supplies the operator `le_rankOne`
+inclusion for supported root subgroups. The focused
+`ChevalleyStringsInputs` and `CurtisTitsRankOne` builds passed with 8,928 and
+8,948 jobs respectively. Those ingredients are now assembled in the local
+datum theorem above.
+
+The next external Tits proof layer depends on `CurtisTits.posLift`, whose
+well-definedness uses `TauCeti.existsUnique_reducedWordLift` (Matsumoto's
+theorem). The installed TauCeti source under `.lake/packages/TauCeti` targets
+Lean 4.35.0-rc3 and is not a root Lake dependency, so its module cannot be
+imported by the Lean 4.34.1 root. No dependency or Mathlib pin was changed. A
+faithful local reduced-word-lift port is needed before the external Bruhat
+descent and normal-subgroup proof can be assembled.
+
+The local port of `CFSG.LieType.Chevalley.RootOps.Poly` now includes
+`rootAt`, `validP_nilpE`, `pOp_map_deg`, `one_add_pOp_nilpE`,
+`factorsProd`, `one_add_pOp_factorsN`, `validP_factorsN`, and
+`elt_mul_elt_of_repCheck`, and `commContained_of_repCheck`. These reuse the
+local sparse certificates, `rootOperatorFamilyData`, the pinned-root sign
+identity, and existing `Chevalley.rootSubgroup`; they establish both the
+operator factor identity and its root-subgroup containment for every checked
+factor row. The group layer now ports `mem_neededPairs`, parameter-level
+Weyl conjugation, root-subgroup conjugation, transport of `CommContained`
+through a single reflection and a reflection list, and the external
+`commContained_of_checks` cover theorem. `commContained_simpleRoot` combines
+the checked row tables and covers to prove the simple-root/positive-root
+commutator case for all six local exceptional tags. The port now also follows
+the external `CommAll.commContained_pos` induction: `CommContained.symm`
+handles the reversed simple-root case, and local root-certificate checks prove
+the positivity needed to reflect both roots while lowering the first root's
+height. The focused group module and public CFSGPort aggregate pass. The
+family-specific quasisimplicity and normal-subgroup arguments remain open; no
+exceptional simplicity conclusion follows from these commutator results alone.
+
+### Ground-truth contract for the cover-level continuation (completed)
+
+The next target is the external `RootOps.Cover.commContained_of_checks`
+theorem, adapted to the local pinned-unit carrier. For a simple root `αᵢ` and
+a distinct positive root `β`, it should prove that the commutator of arbitrary
+elements of `Chevalley.rootSubgroup τ K αᵢ` and
+`Chevalley.rootSubgroup τ K β` lies in the supremum of root subgroups indexed
+by roots `γ = a • αᵢ + b • β` with positive natural coefficients. The carrier
+is the unit group of endomorphisms of `RootModule τ K`; multiplication and
+inversion are unit operations, and the root subgroups are the existing pinned
+subgroups.
+
+Inputs already proved locally are `repCheck`, `exceptional_repsCheck`,
+`exceptional_coverCheck`, `mem_neededPairs`, `walkPair_root_spec`,
+`walkCarrier_coe`, `comm_transport_list`, and `commContained_of_repCheck`.
+The external cover theorem and its simple-root specialization compile, as does
+the following positive-root height induction.
+Relevant owners are `ChevalleyCommutatorCertificate.lean`,
+`ChevalleyCommutatorGroup.lean`, `ChevalleyRootGroups.lean`,
+`ChevalleyRootOperatorFamilyBridge.lean`, and
+`CurtisTitsRankOne.lean`. The remaining gap is exceptional-family
+quasisimplicity and normal-subgroup analysis.
+
 An isolated `#print axioms` check reports only
 `[propext, Classical.choice, Quot.sound]` for both the field-level Suzuki
 simplicity theorem and the exceptional-model adapter; semantic-vacuity checks

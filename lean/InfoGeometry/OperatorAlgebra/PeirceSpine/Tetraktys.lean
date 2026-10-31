@@ -296,6 +296,33 @@ theorem phi_j_sign_flip_difference (A₁ C₁ A₂ C₂ : B) :
           anticomm (conePlus P A₁) (coneMinus P C₂)) := by
   peirce_nf hP
 
+/-- Equivalent form of `phi_add_j_square` written directly in terms of the mixed
+quadratic Peirce metrics `genV P A₁ C₂` and `genV P A₂ C₁`, contrasting
+against the false commutator-curvature claim in A83. -/
+theorem phi_add_j_square_genV_form (A₁ C₁ A₂ C₂ : B) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      (genV P A₁ C₁ - genV P A₂ C₂) -
+        (genV P A₁ C₂ - genV P A₂ C₁) := by
+  peirce_nf hP
+
+/-- The commutator of `Φ₁` and `J₂` is minus the sum of the two mixed
+chiral curvatures `genSig P A₁ C₂` and `genSig P A₂ C₁`. -/
+theorem phi_j_comm_expansion (A₁ C₁ A₂ C₂ : B) :
+    comm (genPhi P A₁ C₁) (genJ P A₂ C₂) =
+      -(genSig P A₁ C₂ + genSig P A₂ C₁) := by
+  peirce_nf hP
+
+/-- Multiplying `Φ₁ + J₂` by its sign-flipped companion `Φ₁ - J₂` produces
+the sum of the diagonal Peirce metrics plus the mixed chiral curvatures
+`genSig P A₁ C₂ + genSig P A₂ C₁`. -/
+theorem phi_add_j_mul_phi_sub_j (A₁ C₁ A₂ C₂ : B) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ - genJ P A₂ C₂) =
+      genV P A₁ C₁ + genV P A₂ C₂ +
+        (genSig P A₁ C₂ + genSig P A₂ C₁) := by
+  peirce_nf hP
+
 /-! ### A₁₀ -/
 
 theorem archetype_A10_casimir_and_superoperator_commutators (A C : B) :

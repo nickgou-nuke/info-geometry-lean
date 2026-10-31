@@ -14,3 +14,12 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms qgt_defect_iterates_cone_relations
 #print axioms qgt_defect_iterate_sum_commutes_with_cones
 #print axioms qgt_defect_iterate_sum_commutes_with_generators
+#print axioms comm_idempotencyDefect_iterate
+#print axioms qgtDefectDiff_zero
+#print axioms qgtDefectDiff_anticomm_cones
+#print axioms qgtDefectDiff_anticomm_generators
+#print axioms qgt_defect_iterates_cross_orthogonal
+#print axioms qgt_defect_iterates_graded_products
+#print axioms qgt_defect_iterates_invS_and_parity
+#print axioms qgt_defect_iterates_chiral_eigenvalues
+#print axioms sandwichSame_multipass_idempotencyDefect

@@ -59,4 +59,18 @@ theorem parityConj_steinberg_round_trip (A C X : B) :
         _ = (bInv * b) * X := by rw [← mul_assoc]
         _ = X := by rw [h₂, one_mul]
 
+/-- Parity conjugation sends the dual Steinberg braid to its inverse and maps
+each displayed Bruhat factor to its one-factor inverse (`A72`–`A73`). The
+factor order is retained, so this statement does not identify the image of a
+two-factor product with the group inverse of that product. -/
+theorem parityConj_steinbergBraidDual_and_bruhat_factors (A C : B) :
+    parityConj P (steinbergBraidDual P A C) = steinbergBraidDualInv P A C ∧
+    parityConj P ((1 + conePlus P A) * (1 - coneMinus P C)) =
+      (1 - conePlus P A) * (1 + coneMinus P C) ∧
+    parityConj P ((1 + coneMinus P C) * (1 - conePlus P A)) =
+      (1 - coneMinus P C) * (1 + conePlus P A) := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+    (simp only [parityConj, steinbergBraidDual, steinbergBraidDualInv,
+      invS, conePlus, coneMinus]; peirce_nf hP)
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

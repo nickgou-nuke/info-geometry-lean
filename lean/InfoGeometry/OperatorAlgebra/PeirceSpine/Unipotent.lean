@@ -45,6 +45,12 @@ def steinbergBraid (P A C : B) : B :=
 def steinbergBraidInv (P A C : B) : B :=
   (1 - conePlus P A) * (1 + coneMinus P C) * (1 - conePlus P A)
 
+/-- The dual Steinberg braid `(1 - N₋)(1 + N₊)(1 - N₋)` and its inverse. -/
+def steinbergBraidDual (P A C : B) : B :=
+  (1 - coneMinus P C) * (1 + conePlus P A) * (1 - coneMinus P C)
+def steinbergBraidDualInv (P A C : B) : B :=
+  (1 + coneMinus P C) * (1 - conePlus P A) * (1 + coneMinus P C)
+
 /-- Upper chart of the operator projective line, centred at `P`. -/
 def projChartPlus (P X : B) : B := P - conePlus P X
 /-- Lower chart of the operator projective line, centred at `1 - P`. -/
@@ -116,6 +122,28 @@ theorem steinbergBraid_mul_inv (A C : B) :
     steinbergBraid P A C * steinbergBraidInv P A C = 1 ∧
     steinbergBraidInv P A C * steinbergBraid P A C = 1 := by
   refine ⟨?_, ?_⟩ <;> ((try simp only [steinbergBraid, steinbergBraidInv]); peirce_nf hP)
+
+theorem steinbergBraidDual_mul_inv (A C : B) :
+    steinbergBraidDual P A C * steinbergBraidDualInv P A C = 1 ∧
+    steinbergBraidDualInv P A C * steinbergBraidDual P A C = 1 := by
+  refine ⟨?_, ?_⟩ <;> ((try simp only [steinbergBraidDual, steinbergBraidDualInv]); peirce_nf hP)
+
+/-- An expansion of the dual Steinberg word, its difference from the upper
+word, and the two palindromic element sums (`A18` of `1E6iR`, `A73` of
+`1ofa`). These are ring identities; no Yang–Baxter or trace structure is
+asserted here. -/
+theorem steinbergBraid_dual_expansion_and_difference (A C : B) :
+    steinbergBraidDual P A C =
+      weylJ P A C - (1 - genV P A C) * coneMinus P C ∧
+    steinbergBraid P A C - steinbergBraidDual P A C =
+      (1 - genV P A C) * genPhi P A C ∧
+    steinbergBraid P A C + steinbergBraidInv P A C =
+      (2 : ℤ) • (1 - genV P A C) ∧
+    steinbergBraidDual P A C + steinbergBraidDualInv P A C =
+      (2 : ℤ) • (1 - genV P A C) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    ((try simp only [steinbergBraid, steinbergBraidInv,
+      steinbergBraidDual, steinbergBraidDualInv, weylJ]); peirce_nf hP)
 
 omit hP in
 /-- Conjugation by the braid is the composite of the three unipotent conjugations. -/

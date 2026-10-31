@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
 
 /-!
 # Block-triangular operators and idempotent compression
@@ -14,10 +15,12 @@ are closed under multiplication. A second idempotent orthogonal to `P`
 defines a bilateral compression whose square is itself and whose `11` block
 is unchanged.
 
-This is the algebraic content of the A85 intake. No attention, token, or
+This is the algebraic content of the A85–A86 intake. No attention, token, or
 causal interpretation is part of these statements.
 -/
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
+
+open InfoGeometry.Core.IdempotentGraphGrassmannian
 
 variable {B : Type*} [Ring B]
 
@@ -112,6 +115,52 @@ theorem blockLower_mul (F₁ L₁ D₁ F₂ L₂ D₂ : B) :
         (D₁ * (1 - P) * D₂) := by
   unfold blockLower coneMinus peirce11 peirce00
   peirce_nf hP
+
+/-- At every defect depth `n`, the lower-triangular Peirce assembly with
+diagonal input `δ^[n](V)` and cross-corner input `Φ δ^[n](V)` equals
+`(1 + N₋) δ^[n](V)` (`A86`). -/
+theorem blockLower_genV_defect_iterate (A C : B) (n : ℕ) :
+    blockLower P
+      (idempotencyDefect^[n] (genV P A C))
+      (genPhi P A C * idempotencyDefect^[n] (genV P A C))
+      (idempotencyDefect^[n] (genV P A C)) =
+    idempotencyDefect^[n] (genV P A C) +
+      coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+  have h11 : peirce11 P (idempotencyDefect^[n] (genV P A C)) =
+      idempotencyDefect^[n] (qgtPlus P A C) := by
+    unfold peirce11
+    rw [genV_defect_iterates_left_projection hP A C n,
+      qgtPlus_defect_iterates_right hP A C n]
+  have h00 : peirce00 P (idempotencyDefect^[n] (genV P A C)) =
+      idempotencyDefect^[n] (qgtMinus P A C) := by
+    unfold peirce00
+    rw [genV_defect_iterates_complement_left hP A C n,
+      qgtMinus_defect_iterates_right hP A C n]
+  have h01 : coneMinus P (genPhi P A C * idempotencyDefect^[n] (genV P A C)) =
+      coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+    have h1P : (1 - P) * coneMinus P C = coneMinus P C := by peirce_nf hP
+    calc
+      coneMinus P (genPhi P A C * idempotencyDefect^[n] (genV P A C)) =
+        (1 - P) * ((genPhi P A C * idempotencyDefect^[n] (genV P A C)) * P) := by
+        unfold coneMinus; noncomm_ring
+      _ = (1 - P) * (coneMinus P C * idempotencyDefect^[n] (genV P A C)) := by
+        rw [genPhi_defect_iterates_right hP A C n]
+      _ = ((1 - P) * coneMinus P C) * idempotencyDefect^[n] (genV P A C) := by
+        noncomm_ring
+      _ = coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+        rw [h1P]
+  unfold blockLower
+  rw [h11, h01, h00]
+  calc
+    idempotencyDefect^[n] (qgtPlus P A C) +
+        coneMinus P C * idempotencyDefect^[n] (genV P A C) +
+        idempotencyDefect^[n] (qgtMinus P A C) =
+      (idempotencyDefect^[n] (qgtPlus P A C) +
+          idempotencyDefect^[n] (qgtMinus P A C)) +
+        coneMinus P C * idempotencyDefect^[n] (genV P A C) := by abel
+    _ = idempotencyDefect^[n] (genV P A C) +
+        coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+      rw [← genV_defect_iterates_cycle_split hP A C n]
 
 end BlockLower
 

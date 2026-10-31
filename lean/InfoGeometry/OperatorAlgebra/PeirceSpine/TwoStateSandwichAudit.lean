@@ -15,4 +15,10 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms chartBruhatConj_genV
 #print axioms chart_point_product
 #print axioms chart_sigma_euler_compression_residual
+#print axioms chart_two_state_qgtPlus_defect_iterate
+#print axioms genV_mul_qgtPlus_defect_iterate
+#print axioms chart_two_state_qgtMinus_defect_iterate
+#print axioms chart_two_state_genV_and_qgtDefectDiff_iterates
+#print axioms genV_defect_iterate_comm_chart_right
+#print axioms chart_two_state_odd_defect_iterates
 #print axioms complementary_twisted_ideal_pairing

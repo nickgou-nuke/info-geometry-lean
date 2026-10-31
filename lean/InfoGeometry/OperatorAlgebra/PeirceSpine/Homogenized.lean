@@ -211,4 +211,121 @@ theorem archetype_A15_second_order_orthogonality (A C : B) :
       (m _).1, (m _).2.1, (m _).2.2.1, (m _).2.2.2,
       hV2, hV3, hV4, hF2, hF3, hF4, hJ2, hJ3, hJ4, hS2, hS3, hS4, mul_zero, smul_zero]
 
+/-! ### A₂₀: equivariance of the homogenized channels under Peirce sandwiches -/
+
+/-- A two-sided multiplication expansion of the `V`-homogenized channel. -/
+theorem hProjV_expansion (A C X : B) :
+    hProjV P A C X =
+      (5 : ℤ) • ((genV P A C * genV P A C) * X) -
+        (2 : ℤ) • (genV P A C * X * genV P A C) -
+        X * (genV P A C * genV P A C) +
+        (2 : ℤ) • (genV P A C * genPhi P A C * X * genPhi P A C) -
+        (2 : ℤ) • (genV P A C * genJ P A C * X * genJ P A C) +
+        (2 : ℤ) • (genSig P A C * X * genSig P A C) := by
+  simp only [hProjV, derivSqPhi, derivSqJ, derivSqSig, comm]
+  peirce_nf hP
+
+theorem hProjPhi_sandwichJ (A C X : B) :
+    hProjPhi P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjPhi P A C X * (-genJ P A C) := by
+  simp only [hProjPhi, derivSqPhi, derivSqJ, derivSqSig]
+  peirce_nf hP
+
+theorem hProjJ_sandwichJ (A C X : B) :
+    hProjJ P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjJ P A C X * (-genJ P A C) := by
+  simp only [hProjJ, derivSqPhi, derivSqJ, derivSqSig]
+  peirce_nf hP
+
+theorem hProjSig_sandwichJ (A C X : B) :
+    hProjSig P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjSig P A C X * (-genJ P A C) := by
+  simp only [hProjSig, derivSqPhi, derivSqJ, derivSqSig]
+  peirce_nf hP
+
+theorem hProjPhi_sandwichPhi (A C X : B) :
+    hProjPhi P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjPhi P A C X * genPhi P A C := by
+  simp only [hProjPhi, derivSqPhi, derivSqJ, derivSqSig]
+  peirce_nf hP
+
+theorem hProjJ_sandwichPhi (A C X : B) :
+    hProjJ P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjJ P A C X * genPhi P A C := by
+  simp only [hProjJ, derivSqPhi, derivSqJ, derivSqSig]
+  peirce_nf hP
+
+theorem hProjSig_sandwichPhi (A C X : B) :
+    hProjSig P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjSig P A C X * genPhi P A C := by
+  simp only [hProjSig, derivSqPhi, derivSqJ, derivSqSig]
+  peirce_nf hP
+
+omit hP in
+theorem hProjV_decomp (A C Y : B) :
+    hProjV P A C Y =
+      (8 : ℤ) • ((genV P A C * genV P A C) * Y) -
+        (hProjPhi P A C Y + hProjJ P A C Y + hProjSig P A C Y) := by
+  simp only [hProjV, hProjPhi, hProjJ, hProjSig]
+  abel
+
+theorem grpId_sandwichJ (A C X : B) :
+    (genV P A C * genV P A C) * (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * ((genV P A C * genV P A C) * X) * (-genJ P A C) := by
+  peirce_nf hP
+
+theorem grpId_sandwichPhi (A C X : B) :
+    (genV P A C * genV P A C) * (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * ((genV P A C * genV P A C) * X) * genPhi P A C := by
+  peirce_nf hP
+
+omit hP in
+theorem zsmul_mul_left_right (n : ℤ) (U V : B) :
+    (n • U) * V = n • (U * V) ∧
+    U * (n • V) = n • (U * V) :=
+  ⟨map_zsmul (AddMonoidHom.mk' (fun u => u * V) (fun x y => add_mul x y V)) n U,
+   map_zsmul (AddMonoidHom.mk' (fun v => U * v) (fun x y => mul_add U x y)) n V⟩
+
+/-- The `V`-homogenized channel intertwines with the sandwich by `J`. -/
+theorem hProjV_sandwichJ (A C X : B) :
+    hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjV P A C X * (-genJ P A C) := by
+  rw [hProjV_decomp, hProjV_decomp, grpId_sandwichJ hP,
+    hProjPhi_sandwichJ hP, hProjJ_sandwichJ hP, hProjSig_sandwichJ hP]
+  simp only [mul_sub, sub_mul, mul_add, add_mul,
+    (zsmul_mul_left_right _ _ _).1, (zsmul_mul_left_right _ _ _).2]
+
+/-- The `V`-homogenized channel intertwines with the sandwich by `Φ`. -/
+theorem hProjV_sandwichPhi (A C X : B) :
+    hProjV P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjV P A C X * genPhi P A C := by
+  rw [hProjV_decomp, hProjV_decomp, grpId_sandwichPhi hP,
+    hProjPhi_sandwichPhi hP, hProjJ_sandwichPhi hP, hProjSig_sandwichPhi hP]
+  simp only [mul_sub, sub_mul, mul_add, add_mul,
+    (zsmul_mul_left_right _ _ _).1, (zsmul_mul_left_right _ _ _).2]
+
+/-- Theorem A20 combines the two families of explicit sandwich intertwiners.
+These are polynomial maps, not asserted to be automorphisms or group actions. -/
+theorem archetype_A20_weyl_clifford_covariance_of_homogenized_projectors (A C X : B) :
+    hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjV P A C X * (-genJ P A C) ∧
+    hProjPhi P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjPhi P A C X * (-genJ P A C) ∧
+    hProjJ P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjJ P A C X * (-genJ P A C) ∧
+    hProjSig P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjSig P A C X * (-genJ P A C) ∧
+    hProjV P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjV P A C X * genPhi P A C ∧
+    hProjPhi P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjPhi P A C X * genPhi P A C ∧
+    hProjJ P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjJ P A C X * genPhi P A C ∧
+    hProjSig P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjSig P A C X * genPhi P A C := by
+  exact ⟨hProjV_sandwichJ hP A C X, hProjPhi_sandwichJ hP A C X,
+    hProjJ_sandwichJ hP A C X, hProjSig_sandwichJ hP A C X,
+    hProjV_sandwichPhi hP A C X, hProjPhi_sandwichPhi hP A C X,
+    hProjJ_sandwichPhi hP A C X, hProjSig_sandwichPhi hP A C X⟩
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

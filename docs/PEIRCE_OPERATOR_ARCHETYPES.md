@@ -657,19 +657,95 @@ The same turn's star-chart duality is covered by `StarGrading`; it remains
 conditional on a self-adjoint idempotent. The claimed Klein-four “group action”
 is not established by the displayed elements, and the proposed dual Bruhat
 map and complementary Krein signature need separately defined carriers and
-proofs. The all-scale A82 theorem is not promoted: it depends on the
-transcript-only `daughterIdemTower`, `mandelbrotTower`, and
-`chiralFractalBranch` APIs and their long proof does not substitute for owners
-of those constructions.
+proofs.
 
-The review also searched for the other proposed APIs (`daughterIdemTower`,
-`mandelbrotTower`, `chiralFractalBranch`, `focusingOp`, `diffusionOp`,
-`metriplecticOp`, `mog24Phi`, the exact alias `diracKreinAdj`, and the listed A73-A84 theorem
-identifiers) in the repo-owned Lean sources. Those exact declarations were not
-located in the searched areas. Separate Madelung, Dirac-Krein, Peirce, and ideal
-formalizations exist, but their terminology alone does not establish the
-remaining transcript claims. This is a scoped search result, not a repo-wide
-absence claim. The pasted code is not treated as kernel evidence. The remaining
-A73 packet and A74-A84 remain unreviewed statement-by-statement; any promotion
-requires a minimal owner theorem, its actual hypotheses, and a locked kernel
-check.
+### Full all-depth extensions and misconception corrections (A65–A86 and PeirceDefectBridge)
+
+1. **A20 homogenized-channel sandwich intertwiners (`PeirceSpine.Homogenized`):**
+   `archetype_A20_weyl_clifford_covariance_of_homogenized_projectors` proves
+   all eight displayed identities for arbitrary `A`, `C`, and `X` in a ring
+   with an idempotent `P`: each of the four polynomial channels intertwines
+   with the specified `J` sandwich and the specified `Φ` sandwich. These are
+   identities of polynomial maps under those sandwiches; the theorem does not
+   assert that either sandwich is invertible or defines a group action.
+
+2. **A18/A72–A73 Dual Steinberg products (`PeirceSpine.Unipotent`, `PeirceSpine.PhaseConjugateSteinberg`):**
+   `steinbergBraidDual` and `steinbergBraidDualInv` formalize the lower
+   three-factor product `(1 - N₋)(1 + N₊)(1 - N₋)` and its two-sided inverse
+   (`steinbergBraidDual_mul_inv`). `steinbergBraid_dual_expansion_and_difference`
+   proves its Cayley–Weyl decomposition `W - (1 - V) N₋`, the product-difference
+   identity `steinbergBraid - steinbergBraidDual = (1 - V) Φ`, and the associated
+   ring-element sum identities. These are not a Yang–Baxter equation or trace
+   statements. `parityConj_steinbergBraidDual_and_bruhat_factors`
+   proves that parity conjugation sends `steinbergBraidDual` to its inverse and
+   exchanges the two-factor Bruhat chart factors with their inverses.
+
+3. **A66/A74/A75 Chiral defect-iterate sheet `qgtDefectDiff` (`PeirceSpine.ConeSheetBraiding`):**
+   `qgtDefectDiff P A C n = δ^[n](Q₊) - δ^[n](Q₋)` formalizes the chiral
+   cycle difference at arbitrary defect depth `n : ℕ`.
+   - `qgtDefectDiff_anticomm_cones` and `qgtDefectDiff_anticomm_generators`
+     prove that `qgtDefectDiff P A C n` anticommutes with `N₊`, `N₋`, `Φ`, and
+     `J` at every depth `n`.
+   - `qgt_defect_iterates_cross_orthogonal` proves multi-depth cross-sheet
+     orthogonality `δ^[n](Q₊) δ^[m](Q₋) = 0 = δ^[n](Q₋) δ^[m](Q₊)` for all
+     `(n, m : ℕ)`.
+   - `qgt_defect_iterates_graded_products` proves the multi-depth product table
+     for `δ^[n](V)` and `qgtDefectDiff P A C n`.
+   - `qgt_defect_iterates_invS_and_parity` proves the all-depth `invS P` grading
+     action (`invS P * δ^[n](V) = qgtDefectDiff P A C n` and
+     `invS P * qgtDefectDiff P A C n = δ^[n](V)`) and `parityConj P` invariance.
+   - `qgt_defect_iterates_chiral_eigenvalues` records the all-depth left action
+     of `Σ` on the two defect sheets and their sum/difference.
+   - `sandwichSame_multipass_idempotencyDefect` identifies the three multipass
+     differences with `-δ(V)` times the corresponding cone or `Φ`; the sign is
+     part of the proved statement.
+
+4. **A75b/A76 All-depth curvature double commutator (`PeirceSpine.CurvatureDoubleCommutator`):**
+   `curvatureDoubleCommutator_mul_genV_defect_iterate` proves that
+   `curvatureDoubleCommutator P A C` commutes with right multiplication by
+   `δ^[n](V)`. Consequently, `curvatureDoubleCommutator_even_defect_iterates`
+   and `curvatureDoubleCommutator_quadratic_odd_defect_iterates` extend the
+   first-order relaxation law on `qgtDefectDiff P A C n` and the second-order
+   telegrapher quadratic relation on `Φ δ^[n](V)` and `J δ^[n](V)` to all
+   depths `n : ℕ`. `madelung_vorticity_factorization_defect_iterates` further
+   identifies the two commutator actions with the paired `J` and `Φ` modes and
+   factors their product through `Σ` and the squared symmetric defect iterate.
+
+5. **A80 local-chart all-depth two-state sandwiches (`PeirceSpine.TwoStateSandwich`):**
+   `chart_two_state_qgtPlus_defect_iterate`, `chart_two_state_qgtMinus_defect_iterate`,
+   `chart_two_state_genV_and_qgtDefectDiff_iterates`, and
+   `chart_two_state_odd_defect_iterates` prove the two-state chart sandwiches
+   at every defect depth `n : ℕ`:
+   - `(P - N₊) δ^[n](Q₊) (P + N₋) = δ^[n](Q₊)`
+   - `(P - N₊) δ^[n](Q₋) (P + N₋) = -V δ^[n](Q₊)`
+   - `(P - N₊) δ^[n](V) (P + N₋) = (1 - V) δ^[n](Q₊)`
+   - `(P - N₊) (qgtDefectDiff P A C n) (P + N₋) = (1 + V) δ^[n](Q₊)`
+   - `(P - N₊) (Φ δ^[n](V)) (P + N₋) = 0` and `(P - N₊) (J δ^[n](V)) (P + N₋) = 2 V δ^[n](Q₊)`.
+   These are identities for the local chart factors defined in that file. They
+   do not identify those factors with the separate transcript tower symbols
+   `P_{k+1}` and `P_{C,k}`; that bridge remains unformalized. Within the local
+   chart, the chiral sheet difference is compressed by `1 + V`, with residual
+   `2 V δ^[n](Q₊)`. Similarly, in `TwoStateSandwich`, `chart_bruhat_factor_mul_inv`,
+   `chartBruhatConj_mul`, and `chartBruhatConj_genV` prove that the two-factor
+   chart map preserves multiplication and fixes `genV P A C`; no identification
+   with the transcript's distinct multiscale map is asserted here.
+
+6. **A83 Two-connection Jordan vs. Lie cross-terms (`PeirceSpine.Tetraktys`):**
+   `phi_add_j_square_genV_form`, `phi_j_comm_expansion`, and
+   `phi_add_j_mul_phi_sub_j` prove that the cross-term in `(Φ₁ + J₂)²` is the
+   Jordan anticommutator difference `-(genV P A₁ C₂ - genV P A₂ C₁)`, whereas
+   the chiral curvature sum `genSig P A₁ C₂ + genSig P A₂ C₁` appears in the
+   commutator `-[Φ₁, J₂]` and in the conjugate product `(Φ₁ + J₂)(Φ₁ - J₂)`.
+
+7. **A86 All-depth lower-triangular Peirce assembly (`PeirceSpine.BlockTriangularIntervention`):**
+   `blockLower_genV_defect_iterate` proves that at every defect depth `n : ℕ`,
+   `blockLower P (δ^[n](V)) (Φ δ^[n](V)) (δ^[n](V)) = (1 + N₋) δ^[n](V)`.
+
+8. **Multiscale unipotent idempotent tower and Peirce defect bridge (`PeirceSpine.Unipotent`, `OperatorAlgebra.PeirceDefectBridge`):**
+   `unipotentIdempotentTower` formalizes the recursive unipotent shear tower
+   `P_{k+1} = (1 + N_{+,k}) P_k (1 - N_{+,k})` with idempotence, parent–child
+   absorption, and edge-commutator theorems at every scale `k : ℕ`.
+   `PeirceDefectBridge` proves the exact bridge from `oddGrade P A` and
+   `evenGrade P A` to `genV P A A`, `qgtPlus P A A`, `qgtMinus P A A`, and
+   `idempotencyDefect`. Separate concrete noncommuting `2 × 2` matrix
+   witnesses are owned by `OperatorAlgebra.PeirceDefectMatrixWitness`.

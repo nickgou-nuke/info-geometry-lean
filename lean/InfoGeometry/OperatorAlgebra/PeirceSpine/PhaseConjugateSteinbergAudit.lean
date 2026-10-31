@@ -9,5 +9,6 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 
 #print axioms parityConj_steinbergBraid
 #print axioms parityConj_steinberg_round_trip
+#print axioms parityConj_steinbergBraidDual_and_bruhat_factors
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

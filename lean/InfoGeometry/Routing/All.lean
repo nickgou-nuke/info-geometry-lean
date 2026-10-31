@@ -23,6 +23,7 @@ import InfoGeometry.Routing.PlanarRotation
 import InfoGeometry.Routing.TypedProofRealization
 import InfoGeometry.Routing.AttentionPolytopeSoftmax
 import InfoGeometry.Routing.FactLogicBypassAlgebra
+import InfoGeometry.Routing.CounterfactualPeirce
 import InfoGeometry.Routing.DeterministicDrazinBridge
 import InfoGeometry.Routing.CausalRouteDynamics
 import InfoGeometry.Routing.CausalCoreTrace

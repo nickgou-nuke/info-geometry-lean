@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts
+import InfoGeometry.Core.PeirceCompressionDefect
 
 /-!
 # Peirce components of the idempotency defect
@@ -66,6 +67,44 @@ theorem even_idempotencyDefect_eq_neg_genV_of_idempotent (X : B)
   have h := even_idempotencyDefect_sub_eq_genV hP X
   rw [hzero] at h
   exact neg_eq_iff_eq_neg.mp (by simpa using h)
+
+/-- The defect of the interior compression of an idempotent is the negative
+of its ordered upper Peirce cycle. -/
+theorem peirce11_idempotencyDefect_eq_neg_qgtPlus (X : B)
+    (hX : idempotencyDefect X = 0) :
+    idempotencyDefect (peirce11 P X) = -qgtPlus P X X := by
+  have hX2 : X * X = X := by
+    exact sub_eq_zero.mp hX
+  have hcomp := InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect P X hP
+  rw [hX2] at hcomp
+  simp only [idempotencyDefect, peirce11, qgtPlus, conePlus, coneMinus]
+  calc
+    (P * X * P) * (P * X * P) - P * X * P =
+        -(P * X * P - (P * X * P) * (P * X * P)) := by noncomm_ring
+    _ = -((P * X * (1 - P)) * ((1 - P) * X * P)) := by rw [hcomp]
+
+/-- The defect of the exterior compression of an idempotent is the negative
+of its ordered lower Peirce cycle. -/
+theorem peirce00_idempotencyDefect_eq_neg_qgtMinus (X : B)
+    (hX : idempotencyDefect X = 0) :
+    idempotencyDefect (peirce00 P X) = -qgtMinus P X X := by
+  have hX2 : X * X = X := by
+    exact sub_eq_zero.mp hX
+  have hQ : (1 - P) * (1 - P) = 1 - P := by
+    noncomm_ring [hP]
+  have hcomp := InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect
+    (1 - P) X hQ
+  rw [hX2] at hcomp
+  simp only [idempotencyDefect, peirce00, qgtMinus, conePlus, coneMinus]
+  calc
+    ((1 - P) * X * (1 - P)) * ((1 - P) * X * (1 - P)) -
+        (1 - P) * X * (1 - P) =
+      -((1 - P) * X * (1 - P) -
+        ((1 - P) * X * (1 - P)) * ((1 - P) * X * (1 - P))) := by
+          noncomm_ring
+    _ = -(((1 - P) * X * P) * (P * X * (1 - P))) := by
+      rw [show 1 - (1 - P) = P by noncomm_ring] at hcomp
+      rw [hcomp]
 
 theorem odd_idempotencyDefect (X : B) :
     oddGrade P (idempotencyDefect X) =

@@ -35,6 +35,46 @@ theorem idempotentCompression_removed_terms (Q T : B) :
   unfold idempotentCompression
   noncomm_ring
 
+section RemovedCorner
+
+variable {Q : B} (hQ : Q * Q = Q)
+include hQ
+
+/-- Left multiplication by the target idempotent recovers the entire left
+incident part removed by complementary-corner compression. -/
+theorem idempotentCompression_removed_left (T : B) :
+    Q * (T - idempotentCompression Q T) = Q * T := by
+  have hcomp : Q * (1 - Q) = 0 := by noncomm_ring [hQ]
+  unfold idempotentCompression
+  calc
+    Q * (T - (1 - Q) * T * (1 - Q)) =
+        Q * T - (Q * (1 - Q)) * T * (1 - Q) := by noncomm_ring
+    _ = Q * T := by rw [hcomp]; simp
+
+/-- Right multiplication by the target idempotent recovers the entire right
+incident part removed by complementary-corner compression. -/
+theorem idempotentCompression_removed_right (T : B) :
+    (T - idempotentCompression Q T) * Q = T * Q := by
+  have hcomp : (1 - Q) * Q = 0 := by noncomm_ring [hQ]
+  unfold idempotentCompression
+  calc
+    (T - (1 - Q) * T * (1 - Q)) * Q =
+        T * Q - (1 - Q) * T * ((1 - Q) * Q) := by noncomm_ring
+    _ = T * Q := by rw [hcomp]; simp
+
+/-- Compression to the complementary corner annihilates the removed part. -/
+theorem idempotentCompression_removed_complementary_corner (T : B) :
+    (1 - Q) * (T - idempotentCompression Q T) * (1 - Q) = 0 := by
+  have hcomp : (1 - Q) * (1 - Q) = 1 - Q := by noncomm_ring [hQ]
+  unfold idempotentCompression
+  calc
+    (1 - Q) * (T - (1 - Q) * T * (1 - Q)) * (1 - Q) =
+        (1 - Q) * T * (1 - Q) - ((1 - Q) * (1 - Q)) * T *
+          ((1 - Q) * (1 - Q)) := by noncomm_ring
+    _ = 0 := by rw [hcomp]; simp
+
+end RemovedCorner
+
 section BlockLower
 
 variable {P Q : B} (hP : P * P = P)
@@ -150,6 +190,44 @@ theorem idempotentCompression_removed_peirce11 (T : B) :
       rw [idempotentCompression_peirce11 hPQ hQP T]
       exact sub_self _
 
+/-- Compression of the removed part to an orthogonal outer corner is zero.
+Orthogonality is imposed on both sides; no commutativity is assumed. -/
+theorem idempotentCompression_removed_orthogonal_corner (T : B) :
+    P * (T - idempotentCompression Q T) * P = 0 := by
+  have hPQ_compl : P * (1 - Q) = P := by
+    calc
+      P * (1 - Q) = P - P * Q := by noncomm_ring
+      _ = P := by rw [hPQ]; simp
+  have hCompl_P : (1 - Q) * P = P := by
+    calc
+      (1 - Q) * P = P - Q * P := by noncomm_ring
+      _ = P := by rw [hQP]; simp
+  unfold idempotentCompression
+  calc
+    P * (T - (1 - Q) * T * (1 - Q)) * P =
+        P * T * P - (P * (1 - Q)) * T * ((1 - Q) * P) := by noncomm_ring
+    _ = 0 := by rw [hPQ_compl, hCompl_P]; simp
+
 end CornerPreservation
+
+/-- Repeated complementary-corner interventions commute when their target
+idempotents commute. -/
+theorem idempotentCompression_comp_commute (Q R T : B)
+    (hQR : Q * R = R * Q) :
+    idempotentCompression Q (idempotentCompression R T) =
+      idempotentCompression R (idempotentCompression Q T) := by
+  have hcomp : (1 - Q) * (1 - R) = (1 - R) * (1 - Q) := by
+    noncomm_ring [hQR]
+  unfold idempotentCompression
+  calc
+    (1 - Q) * ((1 - R) * T * (1 - R)) * (1 - Q) =
+        ((1 - Q) * (1 - R)) * T * ((1 - R) * (1 - Q)) := by noncomm_ring
+    _ = ((1 - R) * (1 - Q)) * T * ((1 - Q) * (1 - R)) := by rw [hcomp]
+    _ = (1 - R) * ((1 - Q) * T * (1 - Q)) * (1 - R) := by noncomm_ring
+
+/-- The retained compression and removed part sum to the original operator. -/
+theorem idempotentCompression_add_removed (Q T : B) :
+    idempotentCompression Q T + (T - idempotentCompression Q T) = T := by
+  abel
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
 import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
@@ -80,6 +86,38 @@ spinorial operators `Ψ` and `Φ`.
 def emergentSpacetimeDerivation 
     (P : FierzGradeProjections 𝒜) (Ψ Φ : 𝒜) : OperatorDerivation 𝒜 :=
   innerDerivation (P.grade1 (Ψ * star Φ))
+
+/-- The pointwise action of two Fierz-generated inner derivations agrees exactly
+when the difference of their grade-one generators is central.  This is the
+Fierz specialization of the generic kernel theorem for inner derivations; it
+does not identify the generators themselves. -/
+theorem emergentSpacetimeDerivation_eq_iff_central_difference
+    (P Q : FierzGradeProjections 𝒜) (Ψ Φ Ψ' Φ' : 𝒜) :
+    (∀ X : 𝒜,
+      emergentSpacetimeDerivation P Ψ Φ X =
+        emergentSpacetimeDerivation Q Ψ' Φ' X) ↔
+      ∀ X : 𝒜,
+        (P.grade1 (Ψ * star Φ) - Q.grade1 (Ψ' * star Φ')) * X =
+          X * (P.grade1 (Ψ * star Φ) - Q.grade1 (Ψ' * star Φ')) := by
+  let K := P.grade1 (Ψ * star Φ)
+  let L := Q.grade1 (Ψ' * star Φ')
+  constructor
+  · intro h
+    apply (InfoGeometry.Modular.NoncommutativeRN.innerDerivationOf_eq_iff_central_difference
+      K L).mp
+    apply InfoGeometry.Modular.NoncommutativeRN.NoncommutativeDerivation.ext
+    intro X
+    simpa [K, L, emergentSpacetimeDerivation, innerDerivation,
+      InfoGeometry.Modular.NoncommutativeRN.innerDerivationOf_apply] using h X
+  · intro h X
+    have hDer :=
+      (InfoGeometry.Modular.NoncommutativeRN.innerDerivationOf_eq_iff_central_difference
+        K L).mpr (by simpa [K, L] using h)
+    have hX := congrArg
+      (fun D : InfoGeometry.Modular.NoncommutativeRN.NoncommutativeDerivation 𝒜 => D X)
+      hDer
+    simpa [K, L, emergentSpacetimeDerivation, innerDerivation,
+      InfoGeometry.Modular.NoncommutativeRN.innerDerivationOf_apply] using hX
 
 /--
 The Thermodynamic Gravity Equivalence:

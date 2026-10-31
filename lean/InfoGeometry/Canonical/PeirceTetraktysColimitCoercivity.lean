@@ -166,9 +166,19 @@ theorem limit_two_sheeted_tetraktys_from_stage
       (4 : ℤ) • ((genV Pinf A C * genV Pinf A C) * genPhi Pinf A C) = 0 := by
   dsimp only
   have hPinf : ofStage n P * ofStage n P = ofStage n P := map_idempotent (ofStage n) hP
-  rcases directed_components_square_zero hPinf A C with ⟨hZig, hZag⟩
-  rcases two_sheet_tetraktys hPinf A C with ⟨hEl, hAx, hDip⟩
-  exact ⟨hZig, hZag, hEl, hAx, hDip, curvatureDoubleCommutator_quadratic_phi hPinf A C⟩
+  have hA3 := archetype_A3_nilpotent_cones_and_tetraktys_table hPinf A C
+  have hZig := hA3.1
+  have hZag := hA3.2.1
+  have hPhi := hA3.2.2.1
+  have hJ := hA3.2.2.2.1
+  have hDip := hA3.2.2.2.2.2.1
+  have hEl : opElectron (ofStage n P) A C * opElectron (ofStage n P) A C =
+      opQuadraticCoupling (ofStage n P) A C := hPhi
+  have hAx : opAxial (ofStage n P) A C * opAxial (ofStage n P) A C =
+      -opQuadraticCoupling (ofStage n P) A C := hJ
+  have hDip' : opAxial (ofStage n P) A C * opElectron (ofStage n P) A C =
+      opSpinDipole (ofStage n P) A C := hDip
+  exact ⟨hZig, hZag, hEl, hAx, hDip', curvatureDoubleCommutator_quadratic_phi hPinf A C⟩
 
 /-! ## 3. Hodge Boundary–Coboundary Identity and Coercivity Descent at `Limit` -/
 

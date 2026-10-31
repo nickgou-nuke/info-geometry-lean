@@ -82,6 +82,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.DirectedFlowMagneticResolvent
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CellularSheafOperatorPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MasterCausalPosetD1ToD15
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ParpicOperatorSpine
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PositroidClusterTwistPoset
 
 /-!
 # Peirce operator spine

@@ -18,14 +18,15 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding
 import InfoGeometry.OperatorAlgebra.PeirceSpine.BoundaryDependence
 import InfoGeometry.OperatorAlgebra.PeirceSpine.IdealChartPairing
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DirectedFlowMagneticResolvent
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ParpicOperatorSpine
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CellularSheafOperatorPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PositroidClusterTwistPoset
 
 /-!
-# 15-Stage Master Causal Poset of Non-Commutative Operator Archetypes (`D₁ → D₁₅`)
+# 20-Stage Ranked DAG Index of Non-Commutative Operator Archetypes (`D₁ → D₂₀`)
 
-This file proves the 15-stage algebraic synthesis of non-commutative
-associative and star-ring operator archetypes in native Mathlib. It also indexes
-stages `D₁`–`D₁₆` by rank and records a separate directed acyclic edge relation;
+This file proves the algebraic synthesis through `D₁₅` and indexes stages
+`D₁`–`D₂₀` by rank. It records a separate directed acyclic edge relation;
 those edges are not claimed to generate a partial order or to be cover relations:
 
 * `D₁`: Dual Lie–Jordan Leibniz identity and dyadic defect factorization
@@ -68,22 +69,26 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine
 open InfoGeometry.Core.IdempotentGraphGrassmannian
 
 /-!
-### 1. The 18-Stage Causal DAG (`D₁ → D₁₈`)
+### 1. The 20-Stage Ranked DAG Index (`D₁ → D₂₀`)
 
-The rank and edge relation index all 18 stages. The master algebraic synthesis
+The rank and edge relation index all 20 stages. The master algebraic synthesis
 theorem below covers `D₁`–`D₁₅`; `D₁₆`–`D₁₈` (`S₁ → S₁₅`) have their complete
 sheaf-inspired operator synthesis theorems in `CellularSheafOperatorPoset.lean`.
+`D₁₉` (`S₁₆ → S₁₉`) is owned by `CellularSheafOperatorPoset.lean`, while `D₂₀` (`P₁ → P₁₀`) is owned by
+`PositroidClusterTwistPoset.lean`. The CellularSheaf file also contains supplemental
+`S₂₀`–`S₂₄` identities and codebase bridges. The edge relation is a DAG index,
+not a partial order defined by reachability.
 -/
 
-/-- Archetype stage labels `D₁` through `D₁₈`, ordered separately by their rank. -/
+/-- Archetype stage labels `D₁` through `D₂₀`, ordered separately by their rank. -/
 inductive ArchetypeStage : Type
   | D1 | D2 | D3 | D4 | D5 | D6 | D7 | D8
-  | D9 | D10 | D11 | D12 | D13 | D14 | D15 | D16 | D17 | D18
+  | D9 | D10 | D11 | D12 | D13 | D14 | D15 | D16 | D17 | D18 | D19 | D20
   deriving DecidableEq, Repr
 
 namespace ArchetypeStage
 
-/-- Integer topological rank (1 through 18) of each archetype stage. -/
+/-- Integer topological rank (1 through 20) of each archetype stage. -/
 def rank : ArchetypeStage → ℕ
   | D1 => 1
   | D2 => 2
@@ -103,6 +108,8 @@ def rank : ArchetypeStage → ℕ
   | D16 => 16
   | D17 => 17
   | D18 => 18
+  | D19 => 19
+  | D20 => 20
 
 theorem rank_injective : Function.Injective rank := by
   intro a b h
@@ -111,7 +118,7 @@ theorem rank_injective : Function.Injective rank := by
 instance : LinearOrder ArchetypeStage :=
   LinearOrder.lift' rank rank_injective
 
-/-- Directed edges of the 18-stage causal DAG (`D₁ → D₁₈`). -/
+/-- Directed edges of the 20-stage causal DAG (`D₁ → D₂₀`). -/
 def causalEdge : ArchetypeStage → ArchetypeStage → Prop
   | D1, D2 => True
   | D1, D3 => True
@@ -139,14 +146,17 @@ def causalEdge : ArchetypeStage → ArchetypeStage → Prop
   | D16, D17 => True
   | D16, D18 => True
   | D17, D18 => True
+  | D17, D19 => True
+  | D18, D19 => True
+  | D18, D20 => True
   | _, _ => False
 
-/-- Every direct edge in the 16-stage causal DAG strictly increases topological rank. -/
+/-- Every direct edge in the 20-stage DAG strictly increases topological rank. -/
 theorem causalEdge_strict_rank_mono {s t : ArchetypeStage} (h : causalEdge s t) :
     rank s < rank t := by
-  cases s <;> cases t <;> simp_all [causalEdge, rank]
+  cases s <;> cases t <;> first | decide | cases h
 
-/-- The 16-stage causal DAG has no self-loops. -/
+/-- The 20-stage DAG has no self-loops. -/
 theorem causalEdge_irrefl (s : ArchetypeStage) : ¬ causalEdge s s := by
   intro h
   exact Nat.lt_irrefl (rank s) (causalEdge_strict_rank_mono h)
@@ -403,5 +413,133 @@ theorem selected_D15_to_D18_operator_synthesis
     (d₀ := d₀) (d₁ := d₁) (d₂ := d₂) (A := A) hP hPs n with
     ⟨_, hBianchi1, _, hUpX, hDownY, hLapX, hLapY⟩
   exact ⟨h1516, ⟨hSC1, hEd1, hNorm, hSig1, hC2, hC3⟩, ⟨hBianchi1, hUpX, hDownY, hLapX, hLapY⟩⟩
+
+/-- Selected joint synthesis of `D₁₅`–`D₁₉` (`S₁ → S₁₉`) together with the pure operator-ring
+`S₂₀`–`S₂₄` identities from `CellularSheafOperatorPoset`, formulated purely in
+`[Ring B] [StarRing B]` without scalar rings, scalar functionals, or duplicate pinching defs. -/
+theorem selected_D15_to_D19_and_supplemental_operator_synthesis
+    {B : Type*} [Ring B] [StarRing B]
+    (hProper : ∀ Y : B, star Y * Y = 0 → Y = 0)
+    {ι : Type*} (E : Finset ι) (P_edge R_u_edge R_v_edge U_edge : ι → B)
+    (hU_edge : ∀ e ∈ E, star (U_edge e) * U_edge e = 1)
+    {P Q P₁ P₂ R_u R_v U_gauge U₀ U₂ d₀ d₁ d₂ M G η : B}
+    (hP : P * P = P) (hPs : star P = P)
+    (hPQ : P * Q = 0) (hQP : Q * P = 0)
+    (h1 : P₁ * P₁ = P₁) (h2 : P₂ * P₂ = P₂)
+    (h12 : P₁ * P₂ = 0) (h21 : P₂ * P₁ = 0)
+    (hU : star U_gauge * U_gauge = 1) (hd : d₁ * d₀ = 0)
+    (hU₀ : U₀ * star U₀ = 1) (hU₂ : star U₂ * U₂ = 1)
+    (hη_sym : star η = η) (hη_sq : η * η = 1) (hEx : η * P * η = 1 - P)
+    (X W A C F₁ L₁ D₁ : B) (n : ℕ) :
+    -- D₁₅ → D₁₈:
+    (symAdj W + skewAdj W = (2 : ℤ) • W ∧
+     gradingTwistedAdj P A = genPhi P A (star A) ∧
+     (1 - twoStepUpper P₁ P₂ A C) * twoStepResolvent P₁ P₂ A C = 1 ∧
+     peirce11 P (idempotentCompression Q (blockLower P F₁ L₁ D₁)) = peirce11 P F₁ ∧
+     sheafLaplacian0 P (U_gauge * R_u) (U_gauge * R_v) = sheafLaplacian0 P R_u R_v ∧
+     sheafHodgeLaplacian d₀ d₁ * sheafHodgeLaplacian d₀ d₁ =
+       sheafHodgeDown d₀ * sheafHodgeDown d₀ + sheafHodgeUp d₁ * sheafHodgeUp d₁ ∧
+     d₂ * sheafCurvature2 d₀ d₁ = sheafCurvature2 d₁ d₂ * d₀ ∧
+     sheafHodgeUp (conePlus P A) * mandelbrotTower n (qgtPlus P A (star A)) = 0 ∧
+     sheafHodgeDown (conePlus P A) * mandelbrotTower n (qgtMinus P A (star A)) = 0) ∧
+    -- D₁₉ (`S₁₆ → S₁₉`): Curved Clifford complex, Weitzenböck gauge invariance, Bianchi braiding & chiral Hodge intertwining:
+    (sheafCurvature2 (genPhi P A (star A)) (genJ P A (star A)) = genSig P A (star A) ∧
+     sheafHodgeLaplacian (genPhi P A (star A)) (genJ P A (star A)) =
+       (2 : ℤ) • genV P A (star A) ∧
+     sheafWeitzenboeckDefect (genPhi P A (star A)) (genJ P A (star A)) =
+       (2 : ℤ) • (genV P A (star A) * genV P A (star A)) ∧
+     sheafCurvature2 (d₀ * U₀) (U₂ * d₁) = U₂ * sheafCurvature2 d₀ d₁ * U₀ ∧
+     sheafHodgeLaplacian (d₀ * U₀) (U₂ * d₁) = sheafHodgeLaplacian d₀ d₁ ∧
+     sheafWeitzenboeckDefect (d₀ * U₀) (U₂ * d₁) = sheafWeitzenboeckDefect d₀ d₁ ∧
+     coneMinus P C * qgtPlus P A C = qgtMinus P A C * coneMinus P C ∧
+     conePlus P A * qgtMinus P A C = qgtPlus P A C * conePlus P A ∧
+     (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) *
+       (mandelbrotTower n (qgtPlus P A (star A)) + mandelbrotTower n (qgtMinus P A (star A))) =
+       sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+       (mandelbrotTower n (qgtPlus P A (star A)) - mandelbrotTower n (qgtMinus P A (star A))) ∧
+     (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) *
+       (mandelbrotTower n (qgtPlus P A (star A)) - mandelbrotTower n (qgtMinus P A (star A))) =
+       sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+       (mandelbrotTower n (qgtPlus P A (star A)) + mandelbrotTower n (qgtMinus P A (star A))) ∧
+     comm (sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A))
+       (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 ∧
+     comm (sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A))
+       (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0) ∧
+    -- Supplemental operator-ring `S₂₀ → S₂₄`: Bergman–Euler polynomial factors, multi-edge proper-star kernel, supplied-factor identities, Krein exchange & deduplicated `evenGrade` / `Parpic` bridge:
+    (bergmanOp P A (star A) 1 =
+       1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+     (1 - sheafHodgeDown (conePlus P A)) * (1 - sheafHodgeUp (conePlus P A)) =
+       1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+     (1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)) *
+       (1 + sheafHodgeLaplacian (conePlus P A) (conePlus P A)) =
+       1 - (sheafHodgeDown (conePlus P A) * sheafHodgeDown (conePlus P A) +
+            sheafHodgeUp (conePlus P A) * sheafHodgeUp (conePlus P A)) ∧
+     star (multiEdgeSheafLaplacian E P_edge R_u_edge R_v_edge) =
+       multiEdgeSheafLaplacian E P_edge R_u_edge R_v_edge ∧
+     multiEdgeSheafLaplacian E P_edge (fun e => U_edge e * R_u_edge e)
+       (fun e => U_edge e * R_v_edge e) =
+       multiEdgeSheafLaplacian E P_edge R_u_edge R_v_edge ∧
+     (sheafDirichletForm P R_u R_v X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) ∧
+     (sheafLaplacian0 P R_u R_v * X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) ∧
+     (sheafDirichletForm P R_u R_v X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)) ∧
+     (sheafCurvatureEnergy d₀ d₁ X = 0 ↔ d₁ * (d₀ * X) = 0) ∧
+     (sheafHodgeSqForm d₀ d₁ X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = 0) ∧
+     (G * sheafHodgeLaplacian d₀ d₁ = M →
+       sheafOperatorMassForm M X =
+         star (sheafHodgeLaplacian d₀ d₁ * X) * (star G * G) *
+           (sheafHodgeLaplacian d₀ d₁ * X)) ∧
+     (G * sheafHodgeLaplacian d₀ d₁ = M → M * X ≠ 0 →
+       sheafHodgeLaplacian d₀ d₁ * X ≠ 0 ∧ sheafHodgeSqForm d₀ d₁ X ≠ 0) ∧
+     genPhi P η η = η ∧
+     genV P η η = 1 ∧
+     sheafLaplacian0 P (coneMinus P η) (conePlus P η) = 1 ∧
+     sheafHodgeLaplacian (conePlus P η) (conePlus P η) = 1 ∧
+     sheafHodgeDown (conePlus P η) - sheafHodgeUp (conePlus P η) = invS P ∧
+     evenGrade P (idempotencyDefect X) - idempotencyDefect (evenGrade P X) = genV P X X ∧
+     evenGrade P (idempotencyDefect (genPhi P A (star A))) =
+       sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) ∧
+     evenGrade P (idempotencyDefect (genPhi P A (star A))) =
+       sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+     peirce11 P (idempotencyDefect (genPhi P A (star A))) =
+       sheafHodgeDown (conePlus P A) ∧
+     peirce00 P (idempotencyDefect (genPhi P A (star A))) =
+       sheafHodgeUp (conePlus P A) ∧
+     (star X = X →
+       sheafHodgeDown (conePlus P X) = P * (X * X) * P - (P * X * P) * (P * X * P)) ∧
+     (star X = X → (sheafHodgeDown (conePlus P X) = 0 ↔ P * X = X * P)) ∧
+     sheafCoboundary0 P (coneMinus P (star A)) (-conePlus P A) =
+       parpicFlux 1 (conePlus P A) ∧
+     sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A) =
+       -parpicCirc 1 (conePlus P A) ∧
+     sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A) =
+       parpicFlux (invS P) (conePlus P A)) := by
+  rcases selected_D15_to_D18_operator_synthesis
+    (R_u := R_u) (R_v := R_v) (d₂ := d₂)
+    hP hPs hPQ hQP h1 h2 h12 h21 hU hd X W A C F₁ L₁ D₁ n with
+    ⟨⟨⟨h15a, h15b, h15c, h15d⟩, ⟨_, _, _, h16g, h16h, _, _, _⟩⟩, _, ⟨h18a, h18b, h18c, _, _⟩⟩
+  exact ⟨⟨h15a, h15b, h15c, h15d, h16g, h16h, h18a, h18b, h18c⟩,
+    stage_D19_curved_clifford_sheaf_gauge_invariance_and_fractal_intertwining
+      (d₀ := d₀) (d₁ := d₁) (A := A) (C := C) hP hPs hU₀ hU₂ n,
+    supplemental_S20_to_S24_operator_synthesis
+      hProper E P_edge R_u_edge R_v_edge U_edge hU_edge hP hPs hη_sym hη_sq hEx⟩
+
+/-- **Pre-Existing Codebase & Poset Bridge (`master_poset_bridge_to_zorn_tripotent_and_parpic`)**:
+Connects the `PeirceSpine` poset modules (`MasterCausalPosetD1ToD15`, `ParpicOperatorSpine`,
+`CellularSheafOperatorPoset`, `PositroidClusterTwistPoset`) directly to
+`DirectedFlowMagneticResolvent.lean`, `TwoStateSandwich.lean`, and `Bergman.lean`. -/
+theorem master_poset_bridge_to_zorn_tripotent_and_parpic
+    {B : Type*} [Ring B] [StarRing B]
+    {P : B} (hP : P * P = P) (hPs : star P = P) (Deg A C X : B) :
+    parpicFlux (invS P) (conePlus P A) = gradingTwistedAdj P A ∧
+    parpicLaplacian Deg (invS P) (conePlus P A) = gradingTwistedLaplacian P Deg A ∧
+    bergmanOp P A C X = plabicFrozenTarget P A C * X * plabicFrozenSource P A C ∧
+    chartBruhatConj P A C X = plabicTripWB P A C * X * plabicTripBW P (-A) (-C) ∧
+    seedPositivityForm P A X =
+      sheafDirichletForm P (coneMinus P (star A)) (conePlus P A) X ∧
+    peircePermutedTwist P A C X =
+      steinbergBraid P A C * parityConj P X * steinbergBraidInv P A C := by
+  rcases plabic_frozen_and_trip_spine_bridge hP A C X with ⟨hBerg, hBruhat, _, _, _⟩
+  exact ⟨rfl, rfl, hBerg, hBruhat,
+    (seedPositivityForm_bridge_to_sheafDirichlet_and_bergman hP hPs A X).1, rfl⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

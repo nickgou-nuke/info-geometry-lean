@@ -6,67 +6,71 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ParpicOperatorSpine
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralEulerFactors
+import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+import InfoGeometry.Core.PeirceCompressionDefect
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Defs
 
 /-!
-# Stages D₁₆ → D₁₈ (Archetypes S₁ → S₁₅): Non-Commutative Cellular Sheaf Operator Identities
+# Stages D₁₆ → D₁₉ and Supplemental Operator Identities S₁ → S₂₄
 
-This file formalizes a 15-stage ranked causal DAG (`S₁ → S₁₅`) of non-commutative
-cellular-sheaf-inspired operator identities over an arbitrary associative star-ring `B`
-(`[Ring B]` and `[StarRing B]`), together with their exact specialization to the
-Peirce Tetraktys operators `(Φ, J, V, Σ)`, curved cochain identities (`d₁ * d₀ = F`),
-algebraic Bianchi identities, and all-scale iterated defect sheet filtering. The listed
-causal edges strictly increase a rank; `CellularSheafStage` also has the total order induced
-by that rank, which is not claimed to be the transitive closure of the edge relation. The
-ring elements and finite edge-indexed sums below are operator encodings: this module does not
-construct vertex/stalk modules, incidence maps, or a graded cellular cochain complex.
+This file formalizes the non-commutative cellular-sheaf-inspired operator identities over an
+arbitrary associative star-ring `B` (`[Ring B]` and `[StarRing B]`), with **zero scalar
+functional parameters** and **zero duplicate pinching definitions**,
+connected directly to preexisting codebase owners (`DefectParity`, `PeirceCompressionDefect`,
+`ParpicOperatorSpine`, `PeirceDefectBridge`, `Bergman`, `ChiralEulerFactors`, and
+`ConeSheetBraiding`):
 
 * **Stage `D₁₆` (`S₁ → S₇`)**:
-  - `S₁` & `S₂`: Peirce-graded degree-0 sheaf coboundary
-    `sheafCoboundary0 P R_u R_v = R_u * P - R_v * (1 - P)` and the alignment condition
-    `R_u * (P * X) = R_v * ((1 - P) * X) → sheafCoboundary0 P R_u R_v * X = 0`.
-  - `S₃`: Degree-0 operator sheaf Laplacian `sheafLaplacian0 P R_u R_v = (δ_F)⋆ * δ_F`,
-    its self-adjointness, and its `2 × 2` Peirce block decomposition
-    `sheafBlock11 + sheafBlock10 + sheafBlock01 + sheafBlock00`.
-  - `S₄`: Operator Dirichlet quadratic form `sheafDirichletForm P R_u R_v X = X⋆ * L_F * X`,
-    its Hermitian square factorization `(δ_F * X)⋆ * (δ_F * X)`, and aligned-element
-    annihilation of `L_F * X`, `X⋆ * L_F * X`, and `sheafDiffusionOp P R_u R_v X`.
-  - `S₅`: Left-isometric operator covariance `δ_{U F} = U * δ_F` and strict gauge
-    invariance `L_{U F} = L_F` under `star U * U = 1`.
-  - `S₆`: Higher-order cochain pair with zero composite `d₁ * d₀ = 0`, adjoint annihilation
-    `star d₀ * star d₁ = 0`, self-adjoint Hodge operator
-    `sheafHodgeLaplacian d₀ d₁ = d₀ * star d₀ + star d₁ * d₁`, orthogonal up/down
-    annihilation, and clean square splitting `Δ₁² = Δ_down² + Δ_up²`.
-  - `S₇`: Exact specialization to the Peirce Tetraktys: for `R_u = coneMinus P C`
-    and `R_v = conePlus P A` with `P * P = P` and `star P = P`,
-    `sheafCoboundary0 P (coneMinus P C) (conePlus P A) = -genJ P A C`,
-    `sheafCoboundary0 P (coneMinus P C) (-conePlus P A) = genPhi P A C`, and
-    `sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) = genV P A (star A)`.
+  Degree-0 sheaf coboundary `sheafCoboundary0`, sheaf Laplacian `sheafLaplacian0`,
+  `2 × 2` Peirce block decomposition, operator Dirichlet quadratic form `sheafDirichletForm`,
+  left-isometric gauge invariance, degree-1 Hodge Laplacian `sheafHodgeLaplacian`, and
+  exact specialization to the Peirce Tetraktys `(Φ, J, V, Σ)`.
 * **Stage `D₁₇` (`S₈ → S₁₁`)**:
-  - `S₈`: Split-complex coboundary intertwining `δ_F * invS P = δ_F^+`, Laplacian conjugation
-    `invS P * L_F * invS P = L_F^+`, and exact isolation of diagonal blocks (`L_F + L_F^+`)
-    versus off-diagonal blocks (`L_F - L_F^+`).
-  - `S₉`: operator `sheafEdgeLaplacian1 P R_u R_v = δ_F * (δ_F)⋆`,
-    its cross-term-free reduction `R_u * P * star R_u + R_v * (1 - P) * star R_v`,
-    sign-independence under `R_v ↦ -R_v`, universal supersymmetric vertex–edge intertwining
-    `δ_F * L_F = L_F^(1) * δ_F`, and conjugation covariance `L_{U F}^(1) = U * L_F^(1) * star U`.
-  - `S₁₀`: Horizon vertex–edge self-duality (`sheafEdgeLaplacian1 = sheafLaplacian0 = genV`),
-    exact normality `comm (star δ_F) δ_F = 0`, and chiral cross-coboundary pairing
-    `(δ_F^+)⋆ * δ_F = (δ_F)⋆ * δ_F^+ = genSig P A (star A)`.
-  - `S₁₁`: Unconditional Peirce–Hodge cochain complex `d₀ = d₁ = conePlus P A` satisfying
-    `d₁ * d₀ = 0`, with `Δ_down = qgtPlus`, `Δ_up = qgtMinus`, `Δ₁ = genV`, and
-    `Δ_down - Δ_up = genSig`.
+  Split-complex coboundary intertwining via `invS P`, 1-cell edge Laplacian
+  `sheafEdgeLaplacian1`, horizon vertex–edge self-duality (`comm (star δ_F) δ_F = 0`),
+  and the unconditional Peirce–Hodge cochain complex `d₀ = d₁ = conePlus P A`.
 * **Stage `D₁₈` (`S₁₂ → S₁₅`)**:
-  - `S₁₂`: Curved 2-step cochain complexes with curvature `sheafCurvature2 d₀ d₁ = d₁ * d₀`
-    and Hodge–Weitzenböck curvature defect `Δ₁² = Δ_down² + Δ_up² + sheafWeitzenboeckDefect d₀ d₁`.
-  - `S₁₃`: Non-commutative algebraic Bianchi identity `d₂ * F₁₀ = F₂₁ * d₀` and its adjoint
-    identity `star d₀ * star F₂₁ = star F₁₀ * star d₂` for 3-tier complexes `(d₀, d₁, d₂)`.
-  - `S₁₄`: Two-sided Peirce ideal absorption of the iterated defect tower (`mandelbrotTower`
-    and `idempotencyDefect^[n]`) and swapped-cone global-section vanishing.
-  - `S₁₅`: All-depth (`n : ℕ`) fractal sheet Hodge filtering and half-harmonic annihilation
-    (`Δ_up * X_n = 0`, `Δ_down * Y_n = 0`, `Δ₁ * X_n = Q_+ * X_n`, `Δ₁ * Y_n = Q_- * Y_n`).
+  Curved 2-step cochain complexes (`sheafCurvature2`, `sheafWeitzenboeckDefect`),
+  3-tier non-commutative Bianchi identities, Mandelbrot defect tower Peirce absorption,
+  and all-depth fractal sheet Hodge filtering.
+* **Stage `D₁₉` (`S₁₆ → S₁₉`)**:
+  - `S₁₆` (`curved_sheaf_clifford_instantiation`): Clifford `(Φ, J)` curved sheaf complex
+    with `F = Σ`, `Δ_down = Δ_up = V`, `Δ₁ = 2 • V`, and `sheafWeitzenboeckDefect = 2 • V²`.
+  - `S₁₇` (`curved_sheaf_weitzenboeck_gauge_invariance`): Gauge covariance of curvature
+    `F ↦ U₂ F U₀` and strict invariance of `Δ₁` and `sheafWeitzenboeckDefect` under
+    `U₀ * star U₀ = 1` and `star U₂ * U₂ = 1`.
+  - `S₁₈` (`curved_cone_bianchi_braiding_instantiation`): Direct bridge from
+    `curved_sheaf_bianchi_identity` on alternating Peirce cones `(N_-, N_+, N_-)` and
+    `(N_+, N_-, N_+)` to `ConeSheetBraiding` (`N_- Q_+ = Q_- N_-`, `N_+ Q_- = Q_+ N_+`).
+  - `S₁₉` (`all_depth_sheaf_hodge_fractal_intertwining`): All-depth (`n : ℕ`) commutation
+    of `idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))` with
+    `conePlus P A`, `coneMinus P (star A)`, `sheafCoboundary0`, `sheafCoboundary0Sym`, and `Δ₁`.
+* **Supplemental operator identities (`S₂₀ → S₂₄`)**:
+  - `S₂₀` (`sheaf_bergman_euler_projector_and_factor_identities`): Direct bridge from
+    `sheafHodgeLaplacian (conePlus P A) (conePlus P A)` to `Bergman.bergmanOp`,
+    `ChiralEulerFactors`, and a truncated polynomial factor identity
+    `(1 - Δ₁) * (1 + Δ₁) = 1 - (Δ_down² + Δ_up²)`.
+  - `S₂₁` (`multiEdgeSheafLaplacian_properties` & `sheafDirichlet_proper_star_kernel_iff`):
+    Purely operator-ring multi-edge sheaf Laplacian and proper star-ring (`star z * z = 0 → z = 0`)
+    faithful kernel equivalences (`sheafDirichletForm = 0 ↔ sheafLaplacian0 * X = 0 ↔
+    sheafCoboundary0 * X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)`), plus operator-valued
+    `evenGrade` pinching of the Dirichlet form.
+  - `S₂₂` (`curved_sheaf_operator_energy_factorization_and_kernel`): Operator-ring lift
+    of `sheafCurvatureEnergy`, `sheafHodgeSqForm`, `sheafOperatorMassForm`,
+    `sheafOperatorGapResidual`, and conditional factorization identities from a supplied
+    operator `G` satisfying `G * Δ₁ = M`.
+  - `S₂₃` (`krein_involution_peirce_exchange_equivalence` &
+    `sheaf_krein_unital_laplacian_and_hodge_identity`): Krein involution–Peirce exchange
+    equivalence and unital sheaf/Hodge Laplacians (`L_F = 1`, `Δ₁ = 1`, `Δ_down - Δ_up = invS P`).
+  - `S₂₄` (`sheaf_evenGrade_defect_compression_and_parpic_bridge`): Deduplicated bridge
+    using `evenGrade` (from `DefectParity`), `peirce11_idempotencyDefect_sub` and
+    `peirce00_idempotencyDefect_sub` (from `PeirceDefectBridge`),
+    `compression_square_defect_star` (from `PeirceCompressionDefect`), and
+    `parpicFlux` / `parpicCirc` (from `ParpicOperatorSpine`).
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
@@ -141,7 +145,7 @@ def causalEdge : CellularSheafStage → CellularSheafStage → Prop
 /-- Every directed edge strictly increases the stage rank. -/
 theorem causalEdge_strict_rank_mono {s t : CellularSheafStage} (h : causalEdge s t) :
     rank s < rank t := by
-  cases s <;> cases t <;> simp_all [causalEdge, rank]
+  cases s <;> cases t <;> first | decide | cases h
 
 /-- The ranked causal edge relation is irreflexive (acyclic). -/
 theorem causalEdge_irrefl (s : CellularSheafStage) : ¬ causalEdge s s := by
@@ -191,6 +195,14 @@ theorem sheafCoboundary0_eq_zero_of_aligned {P R_u R_v X : B}
     sheafCoboundary0 P R_u R_v * X = 0 := by
   unfold sheafCoboundary0
   rw [sub_mul, mul_assoc, mul_assoc, hAlign, sub_self]
+
+/-- **Unconditional Coboundary Alignment Equivalence (`sheafCoboundary0_mul_eq_zero_iff`)**:
+In any ring `B` (without requiring `P` to be idempotent or any star structure),
+`sheafCoboundary0 P R_u R_v * X = 0` holds if and only if `R_u * (P * X) = R_v * ((1 - P) * X)`. -/
+theorem sheafCoboundary0_mul_eq_zero_iff (P R_u R_v X : B) :
+    sheafCoboundary0 P R_u R_v * X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X) := by
+  unfold sheafCoboundary0
+  rw [sub_mul, mul_assoc, mul_assoc, sub_eq_zero]
 
 /-- **Lemma S₅.0 (`sheafCoboundary0_gauge_covariant`)**:
 Left-multiplying both restriction operators by `U : B` transforms `sheafCoboundary0`
@@ -738,31 +750,292 @@ theorem stage_D18_curved_sheaf_bianchi_and_fractal_hodge_cohomology
   rcases fractal_sheet_hodge_filtering hP hPsym A n with ⟨_, _, hUpX, hDownY, hLapX, hLapY⟩
   exact ⟨hWeitz, hBianchi1, hBianchi2, hUpX, hDownY, hLapX, hLapY⟩
 
-/-! ### Supplemental Operator Results (`S₁₆ → S₁₈`): Finite Edge-Indexed Sums and Conditional Energy Bounds
+/-! ### 5. Stage D₁₉ (`S₁₆ → S₁₉`): Curved Clifford Sheaf Instantiation, Gauge Invariance, Cone Bianchi Braiding & All-Depth Fractal Intertwining -/
 
-These declarations extend the preceding ranked DAG with additional operator identities; the
-three supplemental labels are not nodes of `CellularSheafStage` or edges of `causalEdge`. -/
+/-- **Lemma S₁₆.1 (`curved_sheaf_clifford_instantiation`)**:
+For any self-adjoint idempotent `P` (`P * P = P`, `star P = P`) and any `A : B`, setting
+`d₀ = genPhi P A (star A)` and `d₁ = genJ P A (star A)` produces a concrete curved
+cochain pair with non-vanishing curvature `genSig P A (star A)`:
+1. `sheafCurvature2 (genPhi P A (star A)) (genJ P A (star A)) = genSig P A (star A)`.
+2. `sheafHodgeDown (genPhi P A (star A)) = genV P A (star A)` and
+   `sheafHodgeUp (genJ P A (star A)) = genV P A (star A)`.
+3. `sheafHodgeLaplacian (genPhi P A (star A)) (genJ P A (star A)) = (2 : ℤ) • genV P A (star A)`.
+4. `sheafWeitzenboeckDefect (genPhi P A (star A)) (genJ P A (star A)) = (2 : ℤ) • (genV P A (star A) * genV P A (star A))`. -/
+theorem curved_sheaf_clifford_instantiation
+    {P : B} (hP : P * P = P) (hPsym : star P = P) (A : B) :
+    sheafCurvature2 (genPhi P A (star A)) (genJ P A (star A)) = genSig P A (star A) ∧
+    sheafHodgeDown (genPhi P A (star A)) = genV P A (star A) ∧
+    sheafHodgeUp (genJ P A (star A)) = genV P A (star A) ∧
+    sheafHodgeLaplacian (genPhi P A (star A)) (genJ P A (star A)) =
+      (2 : ℤ) • genV P A (star A) ∧
+    sheafWeitzenboeckDefect (genPhi P A (star A)) (genJ P A (star A)) =
+      (2 : ℤ) • (genV P A (star A) * genV P A (star A)) := by
+  have hCurv : sheafCurvature2 (genPhi P A (star A)) (genJ P A (star A)) = genSig P A (star A) := by
+    unfold sheafCurvature2
+    peirce_nf hP
+  have hDown : sheafHodgeDown (genPhi P A (star A)) = genV P A (star A) := by
+    unfold sheafHodgeDown
+    rw [star_genPhi hPsym]
+    peirce_nf hP
+  have hUp : sheafHodgeUp (genJ P A (star A)) = genV P A (star A) := by
+    unfold sheafHodgeUp
+    rw [star_genJ hPsym]
+    peirce_nf hP
+  have hLap :
+      sheafHodgeLaplacian (genPhi P A (star A)) (genJ P A (star A)) =
+        (2 : ℤ) • genV P A (star A) := by
+    unfold sheafHodgeLaplacian
+    rw [hDown, hUp, two_zsmul]
+  refine ⟨hCurv, hDown, hUp, hLap, ?_⟩
+  rcases curved_sheaf_weitzenboeck_identity (genPhi P A (star A)) (genJ P A (star A)) with
+    ⟨hUD, hDU, _⟩
+  unfold sheafWeitzenboeckDefect
+  rw [← hUD, ← hDU, hDown, hUp, two_zsmul]
 
-/-- **Operator family S₁₆ (`multiEdgeSheafLaplacian`, `multiEdgeDirichletForm`)**:
+/-- **Lemma S₁₇.1 (`curved_sheaf_weitzenboeck_gauge_invariance`)**:
+Under a co-isometric 0-cochain gauge transformation `U₀` (`U₀ * star U₀ = 1`) and a
+left-isometric 2-cochain gauge transformation `U₂` (`star U₂ * U₂ = 1`):
+1. The 2-cell curvature transforms covariantly:
+   `sheafCurvature2 (d₀ * U₀) (U₂ * d₁) = U₂ * sheafCurvature2 d₀ d₁ * U₀`.
+2. `sheafHodgeDown (d₀ * U₀) = sheafHodgeDown d₀` and `sheafHodgeUp (U₂ * d₁) = sheafHodgeUp d₁`.
+3. Both `sheafHodgeLaplacian` and `sheafWeitzenboeckDefect` are strictly gauge-invariant. -/
+theorem curved_sheaf_weitzenboeck_gauge_invariance
+    {d₀ d₁ U₀ U₂ : B} (hU₀ : U₀ * star U₀ = 1) (hU₂ : star U₂ * U₂ = 1) :
+    sheafCurvature2 (d₀ * U₀) (U₂ * d₁) = U₂ * sheafCurvature2 d₀ d₁ * U₀ ∧
+    sheafHodgeDown (d₀ * U₀) = sheafHodgeDown d₀ ∧
+    sheafHodgeUp (U₂ * d₁) = sheafHodgeUp d₁ ∧
+    sheafHodgeLaplacian (d₀ * U₀) (U₂ * d₁) = sheafHodgeLaplacian d₀ d₁ ∧
+    sheafWeitzenboeckDefect (d₀ * U₀) (U₂ * d₁) = sheafWeitzenboeckDefect d₀ d₁ := by
+  have hCurv : sheafCurvature2 (d₀ * U₀) (U₂ * d₁) = U₂ * sheafCurvature2 d₀ d₁ * U₀ := by
+    unfold sheafCurvature2
+    noncomm_ring
+  have hDown : sheafHodgeDown (d₀ * U₀) = sheafHodgeDown d₀ := by
+    unfold sheafHodgeDown
+    rw [star_mul, mul_assoc, ← mul_assoc U₀ (star U₀), hU₀, one_mul]
+  have hUp : sheafHodgeUp (U₂ * d₁) = sheafHodgeUp d₁ := by
+    unfold sheafHodgeUp
+    rw [star_mul, mul_assoc, ← mul_assoc (star U₂) U₂, hU₂, one_mul]
+  have hLap : sheafHodgeLaplacian (d₀ * U₀) (U₂ * d₁) = sheafHodgeLaplacian d₀ d₁ := by
+    unfold sheafHodgeLaplacian
+    rw [hDown, hUp]
+  refine ⟨hCurv, hDown, hUp, hLap, ?_⟩
+  rcases curved_sheaf_weitzenboeck_identity d₀ d₁ with ⟨hUD, hDU, _⟩
+  rcases curved_sheaf_weitzenboeck_identity (d₀ * U₀) (U₂ * d₁) with ⟨hUD', hDU', _⟩
+  unfold sheafWeitzenboeckDefect at *
+  rw [← hUD', ← hDU', hDown, hUp, hUD, hDU]
+
+omit [StarRing B] in
+/-- **Lemma S₁₈.1 (`curved_cone_bianchi_braiding_instantiation`)**:
+Applying the 3-tier algebraic Bianchi associative law `(d₂ * d₁) * d₀ = d₂ * (d₁ * d₀)` to
+alternating Peirce cones `(coneMinus P C, conePlus P A, coneMinus P C)` and
+`(conePlus P A, coneMinus P C, conePlus P A)` recovers the cone-sheet braiding identities of
+`ConeSheetBraiding.qgt_cycles_cone_relations`:
+1. `sheafCurvature2 (coneMinus P C) (conePlus P A) = qgtPlus P A C`,
+2. `sheafCurvature2 (conePlus P A) (coneMinus P C) = qgtMinus P A C`,
+3. `coneMinus P C * qgtPlus P A C = qgtMinus P A C * coneMinus P C`,
+4. `conePlus P A * qgtMinus P A C = qgtPlus P A C * conePlus P A`. -/
+theorem curved_cone_bianchi_braiding_instantiation (P A C : B) :
+    sheafCurvature2 (coneMinus P C) (conePlus P A) = qgtPlus P A C ∧
+    sheafCurvature2 (conePlus P A) (coneMinus P C) = qgtMinus P A C ∧
+    coneMinus P C * qgtPlus P A C = qgtMinus P A C * coneMinus P C ∧
+    conePlus P A * qgtMinus P A C = qgtPlus P A C * conePlus P A := by
+  refine ⟨rfl, rfl, ?_, ?_⟩
+  · unfold qgtPlus qgtMinus
+    rw [mul_assoc]
+  · unfold qgtPlus qgtMinus
+    rw [mul_assoc]
+
+/-- **Lemma S₁₉.1 (`all_depth_sheaf_hodge_fractal_intertwining`)**:
+At every Mandelbrot defect depth `n : ℕ`, let
+`X_n = mandelbrotTower n (qgtPlus P A (star A))`,
+`Y_n = mandelbrotTower n (qgtMinus P A (star A))`,
+`V_n = X_n + Y_n`, and `Sig_n = X_n - Y_n`:
+1. **All-depth agreement of `sheafLaplacian0` and `sheafHodgeLaplacian` & chiral Hodge intertwining**:
+   - `sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) * V_n = sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n`,
+   - `sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n = qgtPlus P A (star A) * X_n + qgtMinus P A (star A) * Y_n`,
+   - `sheafHodgeLaplacian (conePlus P A) (conePlus P A) * Sig_n = qgtPlus P A (star A) * X_n - qgtMinus P A (star A) * Y_n`,
+   - `(sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) * V_n = sheafHodgeLaplacian (conePlus P A) (conePlus P A) * Sig_n`,
+   - `(sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) * Sig_n = sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n`.
+2. **All-depth commutation (`ConeSheetBraiding` bridge)**:
+   `idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))` commutes with
+   `conePlus P A`, `coneMinus P (star A)`, `sheafCoboundary0`, `sheafCoboundary0Sym`, and
+   `sheafHodgeLaplacian (conePlus P A) (conePlus P A)`. -/
+theorem all_depth_sheaf_hodge_fractal_intertwining
+    {P : B} (hP : P * P = P) (hPsym : star P = P) (A : B) (n : ℕ) :
+    let X_n := mandelbrotTower n (qgtPlus P A (star A))
+    let Y_n := mandelbrotTower n (qgtMinus P A (star A))
+    let V_n := X_n + Y_n
+    let Sig_n := X_n - Y_n
+    sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) * V_n =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n ∧
+    sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n =
+      qgtPlus P A (star A) * X_n + qgtMinus P A (star A) * Y_n ∧
+    sheafHodgeLaplacian (conePlus P A) (conePlus P A) * Sig_n =
+      qgtPlus P A (star A) * X_n - qgtMinus P A (star A) * Y_n ∧
+    (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) * V_n =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) * Sig_n ∧
+    (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) * Sig_n =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n ∧
+    comm (conePlus P A)
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 ∧
+    comm (coneMinus P (star A))
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 ∧
+    comm (sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A))
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 ∧
+    comm (sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A))
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 ∧
+    comm (sheafHodgeLaplacian (conePlus P A) (conePlus P A))
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 := by
+  intro X_n Y_n V_n Sig_n
+  rcases fractal_sheet_hodge_filtering hP hPsym A n with
+    ⟨_, _, hUpX, hDownY, hLapX, hLapY⟩
+  rcases sheafHodge_concrete_horizon_instantiation hP hPsym A with
+    ⟨_, hDown, hUp, hHodgeV, _⟩
+  rcases sheaf_to_tetraktys_bridge hP hPsym A (star A) with ⟨hCobJ, hCobPhi, hLap0V⟩
+  have hSheafEqHodge :
+      sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) =
+        sheafHodgeLaplacian (conePlus P A) (conePlus P A) :=
+    hLap0V.trans hHodgeV.symm
+  have hLapVn :
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n =
+        qgtPlus P A (star A) * X_n + qgtMinus P A (star A) * Y_n := by
+    dsimp [V_n]
+    rw [mul_add, hLapX, hLapY]
+  have hLapSign :
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) * Sig_n =
+        qgtPlus P A (star A) * X_n - qgtMinus P A (star A) * Y_n := by
+    dsimp [Sig_n]
+    rw [mul_sub, hLapX, hLapY]
+  have hChiralV :
+      (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) * V_n =
+        sheafHodgeLaplacian (conePlus P A) (conePlus P A) * Sig_n := by
+    dsimp [V_n]
+    rw [mul_add, sub_mul, sub_mul, hUpX, hDownY, sub_zero, zero_sub, hDown, hUp,
+      ← sub_eq_add_neg, ← hLapSign]
+  have hChiralSig :
+      (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) * Sig_n =
+        sheafHodgeLaplacian (conePlus P A) (conePlus P A) * V_n := by
+    dsimp [Sig_n]
+    rw [mul_sub, sub_mul, sub_mul, hUpX, hDownY, sub_zero, zero_sub, sub_neg_eq_add,
+      hDown, hUp, ← hLapVn]
+  have hSplit := genV_defect_iterates_cycle_split hP A (star A) n
+  rcases qgt_defect_iterate_sum_commutes_with_cones hP A (star A) n with ⟨hConeP, hConeM⟩
+  rcases qgt_defect_iterate_sum_commutes_with_generators hP A (star A) n with ⟨hPhi, hJ⟩
+  refine ⟨by rw [hSheafEqHodge], hLapVn, hLapSign, hChiralV, hChiralSig, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hHodgeV, hSplit]
+    exact hConeP
+  · rw [hHodgeV, hSplit]
+    exact hConeM
+  · rw [hHodgeV, hCobJ, hSplit]
+    unfold comm at hJ ⊢
+    have hEq := sub_eq_zero.mp hJ
+    simp only [neg_mul, mul_neg]
+    rw [hEq]
+    noncomm_ring
+  · unfold sheafCoboundary0Sym
+    rw [hHodgeV, hCobPhi, hSplit]
+    exact hPhi
+  · rw [hHodgeV]
+    unfold comm
+    exact sub_eq_zero.mpr (comm_idempotencyDefect_iterate (genV P A (star A)) n)
+
+/-- **Stage D₁₉ (`stage_D19_curved_clifford_sheaf_gauge_invariance_and_fractal_intertwining`)**:
+Unifies Archetypes `S₁₆ → S₁₉` over `[Ring B] [StarRing B]`. -/
+theorem stage_D19_curved_clifford_sheaf_gauge_invariance_and_fractal_intertwining
+    {P d₀ d₁ U₀ U₂ A C : B} (hP : P * P = P) (hPsym : star P = P)
+    (hU₀ : U₀ * star U₀ = 1) (hU₂ : star U₂ * U₂ = 1) (n : ℕ) :
+    sheafCurvature2 (genPhi P A (star A)) (genJ P A (star A)) = genSig P A (star A) ∧
+    sheafHodgeLaplacian (genPhi P A (star A)) (genJ P A (star A)) =
+      (2 : ℤ) • genV P A (star A) ∧
+    sheafWeitzenboeckDefect (genPhi P A (star A)) (genJ P A (star A)) =
+      (2 : ℤ) • (genV P A (star A) * genV P A (star A)) ∧
+    sheafCurvature2 (d₀ * U₀) (U₂ * d₁) = U₂ * sheafCurvature2 d₀ d₁ * U₀ ∧
+    sheafHodgeLaplacian (d₀ * U₀) (U₂ * d₁) = sheafHodgeLaplacian d₀ d₁ ∧
+    sheafWeitzenboeckDefect (d₀ * U₀) (U₂ * d₁) = sheafWeitzenboeckDefect d₀ d₁ ∧
+    coneMinus P C * qgtPlus P A C = qgtMinus P A C * coneMinus P C ∧
+    conePlus P A * qgtMinus P A C = qgtPlus P A C * conePlus P A ∧
+    (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) *
+      (mandelbrotTower n (qgtPlus P A (star A)) + mandelbrotTower n (qgtMinus P A (star A))) =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+      (mandelbrotTower n (qgtPlus P A (star A)) - mandelbrotTower n (qgtMinus P A (star A))) ∧
+    (sheafHodgeDown (conePlus P A) - sheafHodgeUp (conePlus P A)) *
+      (mandelbrotTower n (qgtPlus P A (star A)) - mandelbrotTower n (qgtMinus P A (star A))) =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+      (mandelbrotTower n (qgtPlus P A (star A)) + mandelbrotTower n (qgtMinus P A (star A))) ∧
+    comm (sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A))
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 ∧
+    comm (sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A))
+      (idempotencyDefect^[n] (sheafHodgeLaplacian (conePlus P A) (conePlus P A))) = 0 := by
+  rcases curved_sheaf_clifford_instantiation hP hPsym A with
+    ⟨hCl1, _, _, hCl4, hCl5⟩
+  rcases curved_sheaf_weitzenboeck_gauge_invariance (d₀ := d₀) (d₁ := d₁) hU₀ hU₂ with
+    ⟨hG1, _, _, hG4, hG5⟩
+  rcases curved_cone_bianchi_braiding_instantiation P A C with
+    ⟨_, _, hB3, hB4⟩
+  rcases all_depth_sheaf_hodge_fractal_intertwining hP hPsym A n with
+    ⟨_, _, _, hChV, hChSig, _, _, hF3, hF4, _⟩
+  exact ⟨hCl1, hCl4, hCl5, hG1, hG4, hG5, hB3, hB4, hChV, hChSig, hF3, hF4⟩
+
+/-! ### 6. Supplemental Operator Identities (`S₂₀ → S₂₄`): Bergman–Euler Factor Identities, Multi-Edge Proper Star-Ring Kernel, Operator Mass Factorizations, Krein Exchange & Deduplicated Defect/Parpic Bridges -/
+
+/-- **Lemma S₂₀.1 (`sheaf_bergman_euler_projector_and_factor_identities`)**:
+Connects the horizon sheaf Laplacians `sheafHodgeLaplacian (conePlus P A) (conePlus P A)` and
+`sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A)` directly to `Bergman.bergmanOp`,
+`ChiralEulerFactors`, and the following truncated polynomial factor identities (no inverse
+or resolvent assertion is made):
+1. `bergmanOp P A (star A) 1 = 1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)`,
+2. `bergmanOp P A (star A) 1 = 1 - sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A)`,
+3. `(1 - sheafHodgeDown (conePlus P A)) * (1 - sheafHodgeUp (conePlus P A)) = 1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)`,
+4. `(1 - genPhi P A (star A)) * (1 + genPhi P A (star A)) = 1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)`,
+5. `(1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)) * (1 + sheafHodgeLaplacian (conePlus P A) (conePlus P A)) = 1 - (sheafHodgeDown (conePlus P A) * sheafHodgeDown (conePlus P A) + sheafHodgeUp (conePlus P A) * sheafHodgeUp (conePlus P A))`. -/
+theorem sheaf_bergman_euler_projector_and_factor_identities
+    {P : B} (hP : P * P = P) (hPsym : star P = P) (A : B) :
+    bergmanOp P A (star A) 1 =
+      1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    bergmanOp P A (star A) 1 =
+      1 - sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) ∧
+    (1 - sheafHodgeDown (conePlus P A)) * (1 - sheafHodgeUp (conePlus P A)) =
+      1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    (1 - genPhi P A (star A)) * (1 + genPhi P A (star A)) =
+      1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    (1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)) *
+      (1 + sheafHodgeLaplacian (conePlus P A) (conePlus P A)) =
+      1 - (sheafHodgeDown (conePlus P A) * sheafHodgeDown (conePlus P A) +
+           sheafHodgeUp (conePlus P A) * sheafHodgeUp (conePlus P A)) := by
+  have hBerg := (archetype_A23_bergman_operator hP A (star A)).1
+  have hEuler := (chiralEuler_factorizations hP A (star A)).1
+  have hLap0 := (sheaf_to_tetraktys_bridge hP hPsym A (star A)).2.2
+  rcases sheafHodge_concrete_horizon_instantiation hP hPsym A with
+    ⟨hConeSq, hDown, hUp, hHodgeV, _⟩
+  have hPhiBinom : (1 - genPhi P A (star A)) * (1 + genPhi P A (star A)) =
+      1 - genV P A (star A) := by
+    peirce_nf hP
+  have hHodgeSq := (sheafHodgeLaplacian_properties hConeSq).2.2.2.2
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · rw [hBerg, hHodgeV]
+  · rw [hBerg, hLap0]
+  · rw [hDown, hUp, hHodgeV]
+    exact hEuler
+  · rw [hPhiBinom, hHodgeV]
+  · calc
+      (1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)) *
+          (1 + sheafHodgeLaplacian (conePlus P A) (conePlus P A)) =
+        1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) *
+            sheafHodgeLaplacian (conePlus P A) (conePlus P A) := by noncomm_ring
+      _ = 1 - (sheafHodgeDown (conePlus P A) * sheafHodgeDown (conePlus P A) +
+               sheafHodgeUp (conePlus P A) * sheafHodgeUp (conePlus P A)) := by
+        rw [hHodgeSq]
+
+/-- **Operator family S₂₁ (`multiEdgeSheafLaplacian`, `multiEdgeDirichletForm`)**:
 Finite sum `∑ e ∈ E, sheafLaplacian0 (P e) (R_u e) (R_v e)` and its associated operator
-quadratic form over an index set `E : Finset ι`. This is an edge-indexed operator encoding;
-no graph incidence or stalk data is defined here. -/
+quadratic form over an index set `E : Finset ι`. -/
 def multiEdgeSheafLaplacian {ι : Type*} (E : Finset ι) (P R_u R_v : ι → B) : B :=
   ∑ e ∈ E, sheafLaplacian0 (P e) (R_u e) (R_v e)
 
 def multiEdgeDirichletForm {ι : Type*} (E : Finset ι) (P R_u R_v : ι → B) (X : B) : B :=
   star X * multiEdgeSheafLaplacian E P R_u R_v * X
 
-/-- **Archetype S₁₈ (`sheafCurvatureEnergy`, `sheafHodgeSqForm`)**:
-Operator-valued 2-cell curvature energy `X⋆ * F⋆ * F * X` (`F = d₁ * d₀`) and squared
-Hodge Laplacian quadratic form `X⋆ * (Δ₁ * Δ₁) * X`. -/
-def sheafCurvatureEnergy (d₀ d₁ X : B) : B :=
-  star X * (star (sheafCurvature2 d₀ d₁) * sheafCurvature2 d₀ d₁) * X
-
-def sheafHodgeSqForm (d₀ d₁ X : B) : B :=
-  star X * (sheafHodgeLaplacian d₀ d₁ * sheafHodgeLaplacian d₀ d₁) * X
-
-/-- **Lemma S₁₆.1 (`multiEdgeSheafLaplacian_properties`)**:
+/-- **Lemma S₂₁.1 (`multiEdgeSheafLaplacian_properties`)**:
 For any finite index set `E : Finset ι` and edge-indexed operator data `(P, R_u, R_v)`:
 1. `multiEdgeSheafLaplacian E P R_u R_v` is unconditionally self-adjoint.
 2. `multiEdgeDirichletForm E P R_u R_v X` decomposes as the sum of edge-wise Hermitian squares
@@ -806,67 +1079,160 @@ theorem multiEdgeSheafLaplacian_properties
     unfold multiEdgeDirichletForm
     rw [mul_assoc, hLap0, mul_zero]
 
-/-- **Lemma S₁₇.1 (`sheafDirichlet_positive_state_and_faithful_kernel`)**:
-Given an additive functional `τ : B →+ R₀` into a linearly ordered commutative ring `R₀`
-satisfying star-positivity `∀ Y : B, 0 ≤ τ (star Y * Y)`:
-1. Both the single-edge and multi-edge Dirichlet energies are non-negative:
-   `0 ≤ τ (sheafDirichletForm P R_u R_v X)` and `0 ≤ τ (multiEdgeDirichletForm E P R_u R_v X)`.
-2. If `τ` is faithful (`∀ Y : B, τ (star Y * Y) = 0 → Y = 0`), then the scalar Dirichlet
-   energy vanishes iff the coboundary annihilates `X` (`sheafCoboundary0 P R_u R_v * X = 0`). -/
-theorem sheafDirichlet_positive_state_and_faithful_kernel
-    {R₀ : Type*} [CommRing R₀] [LinearOrder R₀] [IsStrictOrderedRing R₀]
-    (τ : B →+ R₀) (hPos : ∀ Y : B, 0 ≤ τ (star Y * Y))
-    (hFaithful : ∀ Y : B, τ (star Y * Y) = 0 → Y = 0)
-    {ι : Type*} (E : Finset ι) (P_edge R_u_edge R_v_edge : ι → B)
-    (P R_u R_v X : B) :
-    0 ≤ τ (sheafDirichletForm P R_u R_v X) ∧
-    0 ≤ τ (multiEdgeDirichletForm E P_edge R_u_edge R_v_edge X) ∧
-    (τ (sheafDirichletForm P R_u R_v X) = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) := by
-  have hSingle : 0 ≤ τ (sheafDirichletForm P R_u R_v X) := by
-    rw [sheafDirichletForm_eq_star_coboundary_mul]
-    exact hPos (sheafCoboundary0 P R_u R_v * X)
-  have hMulti : 0 ≤ τ (multiEdgeDirichletForm E P_edge R_u_edge R_v_edge X) := by
-    have hDecomp :
-        multiEdgeDirichletForm E P_edge R_u_edge R_v_edge X =
-          ∑ e ∈ E,
-            star (sheafCoboundary0 (P_edge e) (R_u_edge e) (R_v_edge e) * X) *
-              (sheafCoboundary0 (P_edge e) (R_u_edge e) (R_v_edge e) * X) := by
-      unfold multiEdgeDirichletForm multiEdgeSheafLaplacian
-      rw [Finset.mul_sum, Finset.sum_mul]
-      exact Finset.sum_congr rfl (fun e _ =>
-        sheafDirichletForm_eq_star_coboundary_mul (P_edge e) (R_u_edge e) (R_v_edge e) X)
-    rw [hDecomp, map_sum]
-    exact Finset.sum_nonneg (fun e _ => hPos _)
-  refine ⟨hSingle, hMulti, ?_⟩
-  constructor
-  · intro hZero
-    rw [sheafDirichletForm_eq_star_coboundary_mul] at hZero
-    exact hFaithful (sheafCoboundary0 P R_u R_v * X) hZero
-  · intro hCob0
-    rw [sheafDirichletForm_eq_star_coboundary_mul, hCob0, star_zero, zero_mul, map_zero]
+/-- **Directed edge coboundary (`orthogonalPairCoboundary`) & Laplacian (`orthogonalPairLaplacian`)
+over a Pair of Orthogonal Vertex Idempotents (`P_u, P_v`):**
+Generalizes `sheafCoboundary0 P R_u R_v = R_u * P - R_v * (1 - P)` (the 2-vertex case
+`P_u + P_v = 1`) to any pair of vertex-stalk idempotents `P_u, P_v : B` in a $K$-vertex
+orthogonal decomposition $\sum_{i=1}^K P_i = 1$. -/
+def orthogonalPairCoboundary (P_u P_v R_u R_v : B) : B :=
+  R_u * P_u - R_v * P_v
 
-/-- **Lemma S₁₈.1 (Curved sheaf energy and conditional coercivity consequence)**:
-For any cochain operators `d₀, d₁ : B` and state `X : B`:
-1. The curvature energy factors as a Hermitian square:
-   `sheafCurvatureEnergy d₀ d₁ X = star (d₁ * (d₀ * X)) * (d₁ * (d₀ * X))`.
-2. The squared Hodge Laplacian form factors as a Hermitian square:
-   `sheafHodgeSqForm d₀ d₁ X = star (sheafHodgeLaplacian d₀ d₁ * X) * (sheafHodgeLaplacian d₀ d₁ * X)`.
-3. Under a faithful positive functional `τ : B →+ R₀`, assuming `X ≠ 0` and the pointwise
-   bound `m_sq * τ (star X * X) ≤ τ (sheafHodgeSqForm d₀ d₁ X)` for `0 < m_sq`, the energy is
-   strictly positive and the Hodge image is nonzero. This conditional statement does not
-   establish a uniform spectral bound or a Yang–Mills mass gap. -/
-theorem curved_sheaf_energy_and_conditional_coercivity
-    {R₀ : Type*} [CommRing R₀] [LinearOrder R₀] [IsStrictOrderedRing R₀]
-    (τ : B →+ R₀) (hPos : ∀ Y : B, 0 ≤ τ (star Y * Y))
-    (hFaithful : ∀ Y : B, τ (star Y * Y) = 0 → Y = 0)
-    (d₀ d₁ X : B) (m_sq : R₀) :
+def orthogonalPairLaplacian (P_u P_v R_u R_v : B) : B :=
+  star (orthogonalPairCoboundary P_u P_v R_u R_v) * orthogonalPairCoboundary P_u P_v R_u R_v
+
+/-- **Lemma S₂₁.2 (`multiVertexOrthogonalSheaf_properties`)**:
+For any pair of mutually orthogonal self-adjoint idempotents `P_u, P_v : B`
+(`P_u * P_u = P_u`, `P_v * P_v = P_v`, `P_u * P_v = 0`, `P_v * P_u = 0`,
+`star P_u = P_u`, `star P_v = P_v`) and any restriction operators `R_u, R_v : B`:
+1. Reduction to `sheafCoboundary0` and `sheafLaplacian0` when `P_v = 1 - P_u`,
+2. Exact four-block expansion of `orthogonalPairLaplacian P_u P_v R_u R_v`,
+3. Exact extraction of the diagonal blocks `P_u L P_u`, `P_v L P_v` and off-diagonal
+   transport blocks `P_u L P_v`, `P_v L P_u`,
+4. Vanishing on any non-incident vertex stalk `P_w` (`P_u * P_w = 0`, `P_v * P_w = 0`). -/
+theorem multiVertexOrthogonalSheaf_properties
+    {P_u P_v P_w : B}
+    (hPu : P_u * P_u = P_u) (hPv : P_v * P_v = P_v)
+    (hOrthUV : P_u * P_v = 0) (hOrthVU : P_v * P_u = 0)
+    (hPuSym : star P_u = P_u) (hPvSym : star P_v = P_v)
+    (hOrthUW : P_u * P_w = 0) (hOrthVW : P_v * P_w = 0)
+    (R_u R_v : B) :
+    orthogonalPairCoboundary P_u (1 - P_u) R_u R_v = sheafCoboundary0 P_u R_u R_v ∧
+    orthogonalPairLaplacian P_u (1 - P_u) R_u R_v = sheafLaplacian0 P_u R_u R_v ∧
+    orthogonalPairLaplacian P_u P_v R_u R_v =
+      P_u * star R_u * R_u * P_u + P_v * star R_v * R_v * P_v -
+        P_u * star R_u * R_v * P_v - P_v * star R_v * R_u * P_u ∧
+    P_u * orthogonalPairLaplacian P_u P_v R_u R_v * P_u = P_u * star R_u * R_u * P_u ∧
+    P_v * orthogonalPairLaplacian P_u P_v R_u R_v * P_v = P_v * star R_v * R_v * P_v ∧
+    P_u * orthogonalPairLaplacian P_u P_v R_u R_v * P_v = -(P_u * star R_u * R_v * P_v) ∧
+    P_v * orthogonalPairLaplacian P_u P_v R_u R_v * P_u = -(P_v * star R_v * R_u * P_u) ∧
+    orthogonalPairCoboundary P_u P_v R_u R_v * P_w = 0 ∧
+    orthogonalPairLaplacian P_u P_v R_u R_v * P_w = 0 := by
+  have hExp :
+      orthogonalPairLaplacian P_u P_v R_u R_v =
+        P_u * star R_u * R_u * P_u + P_v * star R_v * R_v * P_v -
+          P_u * star R_u * R_v * P_v - P_v * star R_v * R_u * P_u := by
+    unfold orthogonalPairLaplacian orthogonalPairCoboundary
+    rw [star_sub, star_mul, star_mul, hPuSym, hPvSym]
+    noncomm_ring
+  have hPuA : ∀ X : B, P_u * (P_u * X) = P_u * X := fun X => by rw [← mul_assoc, hPu]
+  have hPvA : ∀ X : B, P_v * (P_v * X) = P_v * X := fun X => by rw [← mul_assoc, hPv]
+  have hUV_A : ∀ X : B, P_u * (P_v * X) = 0 := fun X => by rw [← mul_assoc, hOrthUV, zero_mul]
+  have hVU_A : ∀ X : B, P_v * (P_u * X) = 0 := fun X => by rw [← mul_assoc, hOrthVU, zero_mul]
+  have hCobW : orthogonalPairCoboundary P_u P_v R_u R_v * P_w = 0 := by
+    unfold orthogonalPairCoboundary
+    rw [sub_mul, mul_assoc, hOrthUW, mul_zero, mul_assoc, hOrthVW, mul_zero, sub_self]
+  refine ⟨rfl, rfl, hExp, ?_, ?_, ?_, ?_, hCobW, ?_⟩
+  · rw [hExp]
+    simp only [sub_mul, mul_sub, mul_add, mul_assoc,
+      hPu, hOrthVU, hPuA, hUV_A, mul_zero, add_zero, sub_zero]
+  · rw [hExp]
+    simp only [sub_mul, mul_sub, mul_add, mul_assoc,
+      hPv, hOrthUV, hPvA, hVU_A, mul_zero, zero_add, sub_zero]
+  · rw [hExp]
+    simp only [sub_mul, mul_sub, mul_add, mul_assoc,
+      hPv, hOrthUV, hPuA, hUV_A, mul_zero, add_zero, sub_zero, zero_sub]
+  · rw [hExp]
+    simp only [sub_mul, add_mul, mul_sub, mul_add, mul_assoc,
+      hPu, hOrthVU, hPvA, hVU_A, mul_zero, zero_mul, add_zero, sub_zero, zero_sub]
+  · unfold orthogonalPairLaplacian
+    rw [mul_assoc, hCobW, mul_zero]
+
+/-- **Lemma S₂₁.3 (`sheafDirichlet_proper_star_kernel_iff`)**:
+Purely operator-ring faithful kernel characterization over `[Ring B] [StarRing B]`:
+1. Unconditionally in any ring `B`, `sheafCoboundary0 P R_u R_v * X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)`.
+2. Under star-ring properness `hproper : ∀ z : B, star z * z = 0 → z = 0`:
+   - `sheafDirichletForm P R_u R_v X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0`,
+   - `sheafLaplacian0 P R_u R_v * X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0`,
+   - `sheafDirichletForm P R_u R_v X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)`.
+3. Operator-valued Peirce pinching of `sheafDirichletForm` via `evenGrade`:
+   `evenGrade P (sheafDirichletForm P R_u R_v X) = peirce11 P (star (sheafCoboundary0 P R_u R_v * X) * (sheafCoboundary0 P R_u R_v * X)) + peirce00 P (star (sheafCoboundary0 P R_u R_v * X) * (sheafCoboundary0 P R_u R_v * X))`. -/
+theorem sheafDirichlet_proper_star_kernel_iff
+    (hproper : ∀ z : B, star z * z = 0 → z = 0)
+    (P R_u R_v X : B) :
+    (sheafCoboundary0 P R_u R_v * X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)) ∧
+    (sheafDirichletForm P R_u R_v X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) ∧
+    (sheafLaplacian0 P R_u R_v * X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) ∧
+    (sheafDirichletForm P R_u R_v X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)) ∧
+    evenGrade P (sheafDirichletForm P R_u R_v X) =
+      peirce11 P (star (sheafCoboundary0 P R_u R_v * X) * (sheafCoboundary0 P R_u R_v * X)) +
+      peirce00 P (star (sheafCoboundary0 P R_u R_v * X) * (sheafCoboundary0 P R_u R_v * X)) := by
+  have hCobIff := sheafCoboundary0_mul_eq_zero_iff P R_u R_v X
+  have hDirIff : sheafDirichletForm P R_u R_v X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0 := by
+    rw [sheafDirichletForm_eq_star_coboundary_mul]
+    constructor
+    · exact hproper (sheafCoboundary0 P R_u R_v * X)
+    · intro h0
+      rw [h0, star_zero, zero_mul]
+  have hLapIff : sheafLaplacian0 P R_u R_v * X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0 := by
+    constructor
+    · intro hLap0
+      apply hproper
+      rw [← sheafDirichletForm_eq_star_coboundary_mul]
+      unfold sheafDirichletForm
+      rw [mul_assoc, hLap0, mul_zero]
+    · intro hCob0
+      unfold sheafLaplacian0
+      rw [mul_assoc, hCob0, mul_zero]
+  refine ⟨hCobIff, hDirIff, hLapIff, hDirIff.trans hCobIff, ?_⟩
+  unfold evenGrade peirce11 peirce00
+  rw [sheafDirichletForm_eq_star_coboundary_mul]
+
+/-- **Archetype S₂₂ (`sheafCurvatureEnergy`, `sheafHodgeSqForm`, `sheafOperatorMassForm`, `sheafOperatorGapResidual`)**:
+Purely operator-valued 2-cell curvature energy `X⋆ * F⋆ * F * X` (`F = d₁ * d₀`),
+squared Hodge Laplacian quadratic form `X⋆ * (Δ₁ * Δ₁) * X`, operator-weighted mass form
+`(M * X)⋆ * (M * X)`, and operator-shifted Hodge residual `(Δ₁ * X - M * X)⋆ * (Δ₁ * X - M * X)`. -/
+def sheafCurvatureEnergy (d₀ d₁ X : B) : B :=
+  star X * (star (sheafCurvature2 d₀ d₁) * sheafCurvature2 d₀ d₁) * X
+
+def sheafHodgeSqForm (d₀ d₁ X : B) : B :=
+  star X * (sheafHodgeLaplacian d₀ d₁ * sheafHodgeLaplacian d₀ d₁) * X
+
+def sheafOperatorMassForm (M X : B) : B :=
+  star (M * X) * (M * X)
+
+def sheafOperatorGapResidual (d₀ d₁ M X : B) : B :=
+  star (sheafHodgeLaplacian d₀ d₁ * X - M * X) * (sheafHodgeLaplacian d₀ d₁ * X - M * X)
+
+/-- **Lemma S₂₂.1 (`curved_sheaf_operator_energy_factorization_and_kernel`)**:
+Sheaf-inspired operator energy factorization and kernel identities over
+`[Ring B] [StarRing B]`:
+1. `sheafCurvatureEnergy d₀ d₁ X = star (d₁ * (d₀ * X)) * (d₁ * (d₀ * X))`.
+2. `sheafHodgeSqForm d₀ d₁ X = star (sheafHodgeLaplacian d₀ d₁ * X) * (sheafHodgeLaplacian d₀ d₁ * X)`.
+3. If a supplied operator `G` satisfies `G * sheafHodgeLaplacian d₀ d₁ = M`,
+   then `M * X = G * (sheafHodgeLaplacian d₀ d₁ * X)` and
+   `sheafOperatorMassForm M X = star (sheafHodgeLaplacian d₀ d₁ * X) * (star G * G) * (sheafHodgeLaplacian d₀ d₁ * X)`.
+4. Under star-ring properness `hproper : ∀ z : B, star z * z = 0 → z = 0`:
+   - `sheafCurvatureEnergy d₀ d₁ X = 0 ↔ d₁ * (d₀ * X) = 0`,
+   - `sheafHodgeSqForm d₀ d₁ X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = 0`,
+   - `sheafOperatorGapResidual d₀ d₁ M X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = M * X`,
+   - If `G * sheafHodgeLaplacian d₀ d₁ = M` and `M * X ≠ 0`, then
+     `sheafHodgeLaplacian d₀ d₁ * X ≠ 0` and `sheafHodgeSqForm d₀ d₁ X ≠ 0`. -/
+theorem curved_sheaf_operator_energy_factorization_and_kernel
+    (d₀ d₁ M G X : B) :
     sheafCurvatureEnergy d₀ d₁ X = star (d₁ * (d₀ * X)) * (d₁ * (d₀ * X)) ∧
     sheafHodgeSqForm d₀ d₁ X =
       star (sheafHodgeLaplacian d₀ d₁ * X) * (sheafHodgeLaplacian d₀ d₁ * X) ∧
-    0 ≤ τ (sheafCurvatureEnergy d₀ d₁ X) ∧
-    0 ≤ τ (sheafHodgeSqForm d₀ d₁ X) ∧
-    (0 < m_sq → X ≠ 0 → m_sq * τ (star X * X) ≤ τ (sheafHodgeSqForm d₀ d₁ X) →
-      0 < τ (sheafHodgeSqForm d₀ d₁ X) ∧ sheafHodgeLaplacian d₀ d₁ * X ≠ 0) := by
+    (G * sheafHodgeLaplacian d₀ d₁ = M →
+      M * X = G * (sheafHodgeLaplacian d₀ d₁ * X) ∧
+      sheafOperatorMassForm M X =
+        star (sheafHodgeLaplacian d₀ d₁ * X) * (star G * G) *
+          (sheafHodgeLaplacian d₀ d₁ * X)) ∧
+    ((∀ z : B, star z * z = 0 → z = 0) →
+      (sheafCurvatureEnergy d₀ d₁ X = 0 ↔ d₁ * (d₀ * X) = 0) ∧
+      (sheafHodgeSqForm d₀ d₁ X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = 0) ∧
+      (sheafOperatorGapResidual d₀ d₁ M X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = M * X) ∧
+      (G * sheafHodgeLaplacian d₀ d₁ = M → M * X ≠ 0 →
+        sheafHodgeLaplacian d₀ d₁ * X ≠ 0 ∧ sheafHodgeSqForm d₀ d₁ X ≠ 0)) := by
   have hCurvSq : sheafCurvatureEnergy d₀ d₁ X = star (d₁ * (d₀ * X)) * (d₁ * (d₀ * X)) := by
     simp only [sheafCurvatureEnergy, sheafCurvature2, star_mul, mul_assoc]
   have hStarLap : star (sheafHodgeLaplacian d₀ d₁) = sheafHodgeLaplacian d₀ d₁ := by
@@ -878,24 +1244,355 @@ theorem curved_sheaf_energy_and_conditional_coercivity
     unfold sheafHodgeSqForm
     rw [star_mul, hStarLap]
     noncomm_ring
-  have hCurvPos : 0 ≤ τ (sheafCurvatureEnergy d₀ d₁ X) := by
+  have hRes :
+      G * sheafHodgeLaplacian d₀ d₁ = M →
+        M * X = G * (sheafHodgeLaplacian d₀ d₁ * X) ∧
+        sheafOperatorMassForm M X =
+          star (sheafHodgeLaplacian d₀ d₁ * X) * (star G * G) *
+            (sheafHodgeLaplacian d₀ d₁ * X) := by
+    intro hGM
+    have hMX : M * X = G * (sheafHodgeLaplacian d₀ d₁ * X) := by
+      rw [← hGM, mul_assoc]
+    refine ⟨hMX, ?_⟩
+    unfold sheafOperatorMassForm
+    rw [hMX, star_mul]
+    noncomm_ring
+  refine ⟨hCurvSq, hHodgeSq, hRes, ?_⟩
+  intro hproper
+  have hCurvIff : sheafCurvatureEnergy d₀ d₁ X = 0 ↔ d₁ * (d₀ * X) = 0 := by
     rw [hCurvSq]
-    exact hPos (d₁ * (d₀ * X))
-  have hHodgePos : 0 ≤ τ (sheafHodgeSqForm d₀ d₁ X) := by
+    exact ⟨hproper (d₁ * (d₀ * X)), fun h0 => by rw [h0, star_zero, zero_mul]⟩
+  have hHodgeIff : sheafHodgeSqForm d₀ d₁ X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = 0 := by
     rw [hHodgeSq]
-    exact hPos (sheafHodgeLaplacian d₀ d₁ * X)
-  refine ⟨hCurvSq, hHodgeSq, hCurvPos, hHodgePos, ?_⟩
-  intro hm hXne hCoercive
-  have hTauXPos : 0 < τ (star X * X) := by
-    refine lt_of_le_of_ne (hPos X) ?_
-    intro hZero
-    exact hXne (hFaithful X hZero.symm)
-  have hStrictPos : 0 < τ (sheafHodgeSqForm d₀ d₁ X) :=
-    lt_of_lt_of_le (mul_pos hm hTauXPos) hCoercive
-  refine ⟨hStrictPos, ?_⟩
-  intro hLapZero
-  have hFormZero : τ (sheafHodgeSqForm d₀ d₁ X) = 0 := by
-    rw [hHodgeSq, hLapZero, star_zero, zero_mul, map_zero]
-  exact ne_of_gt hStrictPos hFormZero
+    exact ⟨hproper (sheafHodgeLaplacian d₀ d₁ * X), fun h0 => by rw [h0, star_zero, zero_mul]⟩
+  have hGapIff : sheafOperatorGapResidual d₀ d₁ M X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = M * X := by
+    unfold sheafOperatorGapResidual
+    rw [← sub_eq_zero (a := sheafHodgeLaplacian d₀ d₁ * X) (b := M * X)]
+    exact ⟨hproper (sheafHodgeLaplacian d₀ d₁ * X - M * X),
+      fun h0 => by rw [h0, star_zero, zero_mul]⟩
+  refine ⟨hCurvIff, hHodgeIff, hGapIff, ?_⟩
+  intro hGM hMXne
+  have hMX := (hRes hGM).1
+  have hLapNe : sheafHodgeLaplacian d₀ d₁ * X ≠ 0 := by
+    intro hLap0
+    apply hMXne
+    rw [hMX, hLap0, mul_zero]
+  exact ⟨hLapNe, fun hSq0 => hLapNe (hHodgeIff.mp hSq0)⟩
+
+omit [StarRing B] in
+/-- **Lemma S₂₃.1 (`krein_involution_peirce_exchange_equivalence`)**:
+In any associative ring `B` with idempotent `P` (`P * P = P`):
+1. If `genV P A C = 1`, then `genPhi P A C` is an involution (`genPhi P A C * genPhi P A C = 1`)
+   whose conjugation exchanges `P` and `1 - P`, with `qgtPlus P A C = P` and `qgtMinus P A C = 1 - P`.
+2. Conversely, if `η : B` is an involution (`η * η = 1`) exchanging `P` and `1 - P`
+   (`η * P * η = 1 - P`), then `conePlus P η = P * η`, `coneMinus P η = (1 - P) * η`,
+   `genPhi P η η = η`, `genV P η η = 1`, `qgtPlus P η η = P`, and `qgtMinus P η η = 1 - P`. -/
+theorem krein_involution_peirce_exchange_equivalence
+    {P A C η : B} (hP : P * P = P) :
+    (genV P A C = 1 →
+      genPhi P A C * genPhi P A C = 1 ∧
+      qgtPlus P A C = P ∧
+      qgtMinus P A C = 1 - P ∧
+      genPhi P A C * P * genPhi P A C = 1 - P ∧
+      genPhi P A C * (1 - P) * genPhi P A C = P) ∧
+    (η * η = 1 → η * P * η = 1 - P →
+      conePlus P η = P * η ∧
+      coneMinus P η = (1 - P) * η ∧
+      genPhi P η η = η ∧
+      genV P η η = 1 ∧
+      qgtPlus P η η = P ∧
+      qgtMinus P η η = 1 - P) := by
+  refine ⟨?_, ?_⟩
+  · intro hV
+    have hPhiSq : genPhi P A C * genPhi P A C = 1 := by
+      calc
+        genPhi P A C * genPhi P A C = genV P A C := by peirce_nf hP
+        _ = 1 := hV
+    have hQPlus : qgtPlus P A C = P := by
+      calc
+        qgtPlus P A C = P * genV P A C := by peirce_nf hP
+        _ = P * 1 := by rw [hV]
+        _ = P := mul_one P
+    have hQMinus : qgtMinus P A C = 1 - P := by
+      calc
+        qgtMinus P A C = (1 - P) * genV P A C := by peirce_nf hP
+        _ = (1 - P) * 1 := by rw [hV]
+        _ = 1 - P := mul_one (1 - P)
+    have hConjP : genPhi P A C * P * genPhi P A C = 1 - P := by
+      calc
+        genPhi P A C * P * genPhi P A C = qgtMinus P A C := by peirce_nf hP
+        _ = 1 - P := hQMinus
+    have hConjCompl : genPhi P A C * (1 - P) * genPhi P A C = P := by
+      calc
+        genPhi P A C * (1 - P) * genPhi P A C = qgtPlus P A C := by peirce_nf hP
+        _ = P := hQPlus
+    exact ⟨hPhiSq, hQPlus, hQMinus, hConjP, hConjCompl⟩
+  · intro hη hEx
+    have hComplEta : (1 - P) * η = η * P := by
+      calc
+        (1 - P) * η = (η * P * η) * η := by rw [← hEx]
+        _ = η * P * (η * η) := by noncomm_ring
+        _ = η * P := by rw [hη, mul_one]
+    have hPEta : P * η = η * (1 - P) := by
+      calc
+        P * η = η - (1 - P) * η := by noncomm_ring
+        _ = η - η * P := by rw [hComplEta]
+        _ = η * (1 - P) := by noncomm_ring
+    have hConeP : conePlus P η = P * η := by
+      unfold conePlus
+      calc
+        P * η * (1 - P) = P * (η * (1 - P)) := by noncomm_ring
+        _ = P * (P * η) := by rw [← hPEta]
+        _ = (P * P) * η := by noncomm_ring
+        _ = P * η := by rw [hP]
+    have hConeM : coneMinus P η = (1 - P) * η := by
+      unfold coneMinus
+      calc
+        (1 - P) * η * P = (1 - P) * (η * P) := by noncomm_ring
+        _ = (1 - P) * ((1 - P) * η) := by rw [← hComplEta]
+        _ = (1 - P - P + P * P) * η := by noncomm_ring
+        _ = (1 - P) * η := by rw [hP]; noncomm_ring
+    have hPhi : genPhi P η η = η := by
+      unfold genPhi
+      rw [hConeP, hConeM]
+      noncomm_ring
+    have hV : genV P η η = 1 := by
+      calc
+        genV P η η = genPhi P η η * genPhi P η η := by peirce_nf hP
+        _ = η * η := by rw [hPhi]
+        _ = 1 := hη
+    have hQPlus : qgtPlus P η η = P := by
+      calc
+        qgtPlus P η η = P * genV P η η := by peirce_nf hP
+        _ = P * 1 := by rw [hV]
+        _ = P := mul_one P
+    have hQMinus : qgtMinus P η η = 1 - P := by
+      calc
+        qgtMinus P η η = (1 - P) * genV P η η := by peirce_nf hP
+        _ = (1 - P) * 1 := by rw [hV]
+        _ = 1 - P := mul_one (1 - P)
+    exact ⟨hConeP, hConeM, hPhi, hV, hQPlus, hQMinus⟩
+
+/-- **Lemma S₂₃.2 (`sheaf_krein_unital_laplacian_and_hodge_identity`)**:
+For any self-adjoint idempotent `P` (`P * P = P`, `star P = P`) and self-adjoint Krein
+involution `η` (`star η = η`, `η * η = 1`) exchanging `P` and `1 - P` (`η * P * η = 1 - P`),
+both the degree-0 cellular sheaf Laplacian and the degree-1 horizon Hodge Laplacian
+evaluate to the multiplicative identity `1`:
+1. `sheafCoboundary0 P (coneMinus P η) (-conePlus P η) = η`,
+2. `sheafLaplacian0 P (coneMinus P η) (conePlus P η) = 1`,
+3. `sheafHodgeDown (conePlus P η) = P` and `sheafHodgeUp (conePlus P η) = 1 - P`,
+4. `sheafHodgeLaplacian (conePlus P η) (conePlus P η) = 1`,
+5. `sheafHodgeDown (conePlus P η) - sheafHodgeUp (conePlus P η) = invS P`. -/
+theorem sheaf_krein_unital_laplacian_and_hodge_identity
+    {P η : B} (hP : P * P = P) (hPsym : star P = P)
+    (hη_sym : star η = η) (hη_sq : η * η = 1) (hEx : η * P * η = 1 - P) :
+    sheafCoboundary0 P (coneMinus P η) (-conePlus P η) = η ∧
+    sheafLaplacian0 P (coneMinus P η) (conePlus P η) = 1 ∧
+    sheafHodgeDown (conePlus P η) = P ∧
+    sheafHodgeUp (conePlus P η) = 1 - P ∧
+    sheafHodgeLaplacian (conePlus P η) (conePlus P η) = 1 ∧
+    sheafHodgeDown (conePlus P η) - sheafHodgeUp (conePlus P η) = invS P := by
+  rcases (krein_involution_peirce_exchange_equivalence (A := η) (C := η) hP).2 hη_sq hEx with
+    ⟨_, _, hPhi, hV, hQPlus, hQMinus⟩
+  rcases sheaf_to_tetraktys_bridge hP hPsym η η with ⟨_, hCobPhi, hLap0Star⟩
+  rcases sheafHodge_concrete_horizon_instantiation hP hPsym η with
+    ⟨_, hDown, hUp, hHodgeLap, _⟩
+  rw [hη_sym] at hLap0Star hDown hUp hHodgeLap
+  have hDownP : sheafHodgeDown (conePlus P η) = P := hDown.trans hQPlus
+  have hUpCompl : sheafHodgeUp (conePlus P η) = 1 - P := hUp.trans hQMinus
+  refine ⟨hCobPhi.trans hPhi, hLap0Star.trans hV, hDownP, hUpCompl, hHodgeLap.trans hV, ?_⟩
+  rw [hDownP, hUpCompl]
+  unfold invS
+  noncomm_ring
+
+/-- **Lemma S₂₄.1 (`sheaf_evenGrade_defect_compression_and_parpic_bridge`)**:
+Deduplicated bridge connecting the cellular sheaf and Hodge Laplacians directly to the
+preexisting codebase owners `DefectParity` (`evenGrade`, `even_idempotencyDefect_sub_eq_genV`,
+`qgtPlus_selfAdjoint_eq_zero_iff_commute`), `PeirceDefectBridge` (`peirce11_idempotencyDefect_sub`,
+`peirce00_idempotencyDefect_sub`), `PeirceCompressionDefect` (`compression_square_defect_star`),
+and `ParpicOperatorSpine` (`parpicFlux`, `parpicCirc`):
+1. `evenGrade P (idempotencyDefect X) - idempotencyDefect (evenGrade P X) = genV P X X`,
+2. `peirce11 P (idempotencyDefect X) - idempotencyDefect (peirce11 P X) = qgtPlus P X X` and
+   `peirce00 P (idempotencyDefect X) - idempotencyDefect (peirce00 P X) = qgtMinus P X X`,
+3. For `Φ = genPhi P A (star A)`, `evenGrade P Φ = 0`,
+   `evenGrade P (idempotencyDefect Φ) = sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) = sheafHodgeLaplacian (conePlus P A) (conePlus P A)`,
+   `peirce11 P (idempotencyDefect Φ) = sheafHodgeDown (conePlus P A)`, and
+   `peirce00 P (idempotencyDefect Φ) = sheafHodgeUp (conePlus P A)`,
+4. For self-adjoint `X` (`star X = X`), `sheafHodgeDown (conePlus P X) = P * (X * X) * P - (P * X * P) * (P * X * P)`,
+   and under `hproper : ∀ z : B, star z * z = 0 → z = 0`, `sheafHodgeDown (conePlus P X) = 0 ↔ P * X = X * P`,
+5. `sheafCoboundary0 P (coneMinus P (star A)) (-conePlus P A) = parpicFlux 1 (conePlus P A)`,
+   `sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A) = -parpicCirc 1 (conePlus P A)`, and
+   `sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A) = parpicFlux (invS P) (conePlus P A)`. -/
+theorem sheaf_evenGrade_defect_compression_and_parpic_bridge
+    {P : B} (hP : P * P = P) (hPsym : star P = P) (X A : B) :
+    evenGrade P (idempotencyDefect X) - idempotencyDefect (evenGrade P X) =
+      genV P X X ∧
+    peirce11 P (idempotencyDefect X) - idempotencyDefect (peirce11 P X) =
+      qgtPlus P X X ∧
+    peirce00 P (idempotencyDefect X) - idempotencyDefect (peirce00 P X) =
+      qgtMinus P X X ∧
+    evenGrade P (genPhi P A (star A)) = 0 ∧
+    evenGrade P (idempotencyDefect (genPhi P A (star A))) =
+      sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) ∧
+    evenGrade P (idempotencyDefect (genPhi P A (star A))) =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    peirce11 P (idempotencyDefect (genPhi P A (star A))) =
+      sheafHodgeDown (conePlus P A) ∧
+    peirce00 P (idempotencyDefect (genPhi P A (star A))) =
+      sheafHodgeUp (conePlus P A) ∧
+    (star X = X →
+      sheafHodgeDown (conePlus P X) = P * (X * X) * P - (P * X * P) * (P * X * P)) ∧
+    ((∀ z : B, star z * z = 0 → z = 0) → star X = X →
+      (sheafHodgeDown (conePlus P X) = 0 ↔ P * X = X * P)) ∧
+    sheafCoboundary0 P (coneMinus P (star A)) (-conePlus P A) =
+      parpicFlux 1 (conePlus P A) ∧
+    sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A) =
+      -parpicCirc 1 (conePlus P A) ∧
+    sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A) =
+      parpicFlux (invS P) (conePlus P A) := by
+  have hEvenSub := even_idempotencyDefect_sub_eq_genV hP X
+  have h11Sub := InfoGeometry.OperatorAlgebra.PeirceDefectBridge.peirce11_idempotencyDefect_sub P X hP
+  have h00Sub := InfoGeometry.OperatorAlgebra.PeirceDefectBridge.peirce00_idempotencyDefect_sub P X hP
+  have hEvenPhi : evenGrade P (genPhi P A (star A)) = 0 := by
+    peirce_nf hP
+  have h11Phi : peirce11 P (genPhi P A (star A)) = 0 := by
+    peirce_nf hP
+  have h00Phi : peirce00 P (genPhi P A (star A)) = 0 := by
+    peirce_nf hP
+  have hDefZero : idempotencyDefect (0 : B) = 0 := by
+    unfold idempotencyDefect
+    noncomm_ring
+  have hGenVPhi : genV P (genPhi P A (star A)) (genPhi P A (star A)) = genV P A (star A) := by
+    simp only [genV, anticomm, genPhi, conePlus, coneMinus]
+    peirce_nf hP
+  have hQPlusPhi : qgtPlus P (genPhi P A (star A)) (genPhi P A (star A)) = qgtPlus P A (star A) := by
+    simp only [qgtPlus, genPhi, conePlus, coneMinus]
+    peirce_nf hP
+  have hQMinusPhi : qgtMinus P (genPhi P A (star A)) (genPhi P A (star A)) = qgtMinus P A (star A) := by
+    simp only [qgtMinus, genPhi, conePlus, coneMinus]
+    peirce_nf hP
+  have hEvenDefPhi :
+      evenGrade P (idempotencyDefect (genPhi P A (star A))) = genV P A (star A) := by
+    have h0 := even_idempotencyDefect_sub_eq_genV hP (genPhi P A (star A))
+    rw [hEvenPhi, hDefZero, sub_zero, hGenVPhi] at h0
+    exact h0
+  have h11DefPhi :
+      peirce11 P (idempotencyDefect (genPhi P A (star A))) = qgtPlus P A (star A) := by
+    have h0 := InfoGeometry.OperatorAlgebra.PeirceDefectBridge.peirce11_idempotencyDefect_sub
+      P (genPhi P A (star A)) hP
+    rw [h11Phi, hDefZero, sub_zero, hQPlusPhi] at h0
+    exact h0
+  have h00DefPhi :
+      peirce00 P (idempotencyDefect (genPhi P A (star A))) = qgtMinus P A (star A) := by
+    have h0 := InfoGeometry.OperatorAlgebra.PeirceDefectBridge.peirce00_idempotencyDefect_sub
+      P (genPhi P A (star A)) hP
+    rw [h00Phi, hDefZero, sub_zero, hQMinusPhi] at h0
+    exact h0
+  rcases sheaf_to_tetraktys_bridge hP hPsym A (star A) with ⟨hCobJ, hCobPhi, hLap0V⟩
+  rcases sheafHodge_concrete_horizon_instantiation hP hPsym A with
+    ⟨_, hDown, hUp, hHodgeV, _⟩
+  rcases parpicFlux_peirce_specializations hP hPsym A with
+    ⟨hParFlux1, hParCirc1, hParFluxS, _, _, _⟩
+  have hTwistedPhi := gradingTwistedAdj_eq_genPhi hPsym hP A
+  refine ⟨hEvenSub, h11Sub, h00Sub, hEvenPhi,
+    hEvenDefPhi.trans hLap0V.symm, hEvenDefPhi.trans hHodgeV.symm,
+    h11DefPhi.trans hDown.symm, h00DefPhi.trans hUp.symm, ?_, ?_, ?_, ?_, ?_⟩
+  · intro hXsym
+    have hComp :=
+      InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect_star
+        P X hP hPsym hXsym
+    unfold sheafHodgeDown conePlus
+    exact hComp.symm
+  · intro hproper hXsym
+    have hDownX := (sheafHodge_concrete_horizon_instantiation hP hPsym X).2.1
+    rw [hDownX, hXsym]
+    exact qgtPlus_selfAdjoint_eq_zero_iff_commute hP hproper hPsym X hXsym
+  · exact hCobPhi.trans hParFlux1.symm
+  · rw [hCobJ, hParCirc1]
+  · unfold sheafCoboundary0Sym
+    exact hCobPhi.trans (hTwistedPhi.symm.trans hParFluxS.symm)
+
+/-- Supplemental operator-ring synthesis of `S₂₀ → S₂₄` over `[Ring B] [StarRing B]`,
+with operator-valued inputs and the shared `evenGrade` owner. -/
+theorem supplemental_S20_to_S24_operator_synthesis
+    (hproper : ∀ z : B, star z * z = 0 → z = 0)
+    {ι : Type*} (E : Finset ι) (P_edge R_u_edge R_v_edge U_edge : ι → B)
+    (hU_edge : ∀ e ∈ E, star (U_edge e) * U_edge e = 1)
+    {P R_u R_v d₀ d₁ M G η X A : B}
+    (hP : P * P = P) (hPsym : star P = P)
+    (hη_sym : star η = η) (hη_sq : η * η = 1) (hEx : η * P * η = 1 - P) :
+    -- S₂₀: Bergman–Euler projector & truncated polynomial factor identities
+    bergmanOp P A (star A) 1 =
+      1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    (1 - sheafHodgeDown (conePlus P A)) * (1 - sheafHodgeUp (conePlus P A)) =
+      1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    (1 - sheafHodgeLaplacian (conePlus P A) (conePlus P A)) *
+      (1 + sheafHodgeLaplacian (conePlus P A) (conePlus P A)) =
+      1 - (sheafHodgeDown (conePlus P A) * sheafHodgeDown (conePlus P A) +
+           sheafHodgeUp (conePlus P A) * sheafHodgeUp (conePlus P A)) ∧
+    -- S₂₁: Multi-edge sheaf Laplacian & proper star-ring faithful kernel
+    star (multiEdgeSheafLaplacian E P_edge R_u_edge R_v_edge) =
+      multiEdgeSheafLaplacian E P_edge R_u_edge R_v_edge ∧
+    multiEdgeSheafLaplacian E P_edge (fun e => U_edge e * R_u_edge e)
+      (fun e => U_edge e * R_v_edge e) =
+      multiEdgeSheafLaplacian E P_edge R_u_edge R_v_edge ∧
+    (sheafDirichletForm P R_u R_v X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) ∧
+    (sheafLaplacian0 P R_u R_v * X = 0 ↔ sheafCoboundary0 P R_u R_v * X = 0) ∧
+    (sheafDirichletForm P R_u R_v X = 0 ↔ R_u * (P * X) = R_v * ((1 - P) * X)) ∧
+    -- S₂₂: Operator-ring curvature energy, Hodge square form & supplied-factor identities
+    (sheafCurvatureEnergy d₀ d₁ X = 0 ↔ d₁ * (d₀ * X) = 0) ∧
+    (sheafHodgeSqForm d₀ d₁ X = 0 ↔ sheafHodgeLaplacian d₀ d₁ * X = 0) ∧
+    (G * sheafHodgeLaplacian d₀ d₁ = M →
+      sheafOperatorMassForm M X =
+        star (sheafHodgeLaplacian d₀ d₁ * X) * (star G * G) *
+          (sheafHodgeLaplacian d₀ d₁ * X)) ∧
+    (G * sheafHodgeLaplacian d₀ d₁ = M → M * X ≠ 0 →
+      sheafHodgeLaplacian d₀ d₁ * X ≠ 0 ∧ sheafHodgeSqForm d₀ d₁ X ≠ 0) ∧
+    -- S₂₃: Krein exchange & unital Laplacians
+    genPhi P η η = η ∧
+    genV P η η = 1 ∧
+    sheafLaplacian0 P (coneMinus P η) (conePlus P η) = 1 ∧
+    sheafHodgeLaplacian (conePlus P η) (conePlus P η) = 1 ∧
+    sheafHodgeDown (conePlus P η) - sheafHodgeUp (conePlus P η) = invS P ∧
+    -- S₂₄: Deduplicated DefectParity, PeirceDefectBridge, PeirceCompressionDefect & Parpic bridge
+    evenGrade P (idempotencyDefect X) - idempotencyDefect (evenGrade P X) = genV P X X ∧
+    evenGrade P (idempotencyDefect (genPhi P A (star A))) =
+      sheafLaplacian0 P (coneMinus P (star A)) (conePlus P A) ∧
+    evenGrade P (idempotencyDefect (genPhi P A (star A))) =
+      sheafHodgeLaplacian (conePlus P A) (conePlus P A) ∧
+    peirce11 P (idempotencyDefect (genPhi P A (star A))) =
+      sheafHodgeDown (conePlus P A) ∧
+    peirce00 P (idempotencyDefect (genPhi P A (star A))) =
+      sheafHodgeUp (conePlus P A) ∧
+    (star X = X →
+      sheafHodgeDown (conePlus P X) = P * (X * X) * P - (P * X * P) * (P * X * P)) ∧
+    (star X = X → (sheafHodgeDown (conePlus P X) = 0 ↔ P * X = X * P)) ∧
+    sheafCoboundary0 P (coneMinus P (star A)) (-conePlus P A) =
+      parpicFlux 1 (conePlus P A) ∧
+    sheafCoboundary0 P (coneMinus P (star A)) (conePlus P A) =
+      -parpicCirc 1 (conePlus P A) ∧
+    sheafCoboundary0Sym P (coneMinus P (star A)) (conePlus P A) =
+      parpicFlux (invS P) (conePlus P A) := by
+  rcases sheaf_bergman_euler_projector_and_factor_identities hP hPsym A with
+    ⟨hB1, _, hB3, _, hB5⟩
+  rcases multiEdgeSheafLaplacian_properties E P_edge R_u_edge R_v_edge U_edge X hU_edge with
+    ⟨hMSym, _, hMGauge, _⟩
+  rcases sheafDirichlet_proper_star_kernel_iff hproper P R_u R_v X with
+    ⟨_, hDirKer, hLapKer, hDirAlign, _⟩
+  rcases curved_sheaf_operator_energy_factorization_and_kernel d₀ d₁ M G X with
+    ⟨_, _, hResId, hProperEnergy⟩
+  rcases hProperEnergy hproper with ⟨hCurvKer, hHodgeKer, _, hResCoercive⟩
+  rcases (krein_involution_peirce_exchange_equivalence (A := η) (C := η) hP).2 hη_sq hEx with
+    ⟨_, _, hPhi, hV, _, _⟩
+  rcases sheaf_krein_unital_laplacian_and_hodge_identity hP hPsym hη_sym hη_sq hEx with
+    ⟨_, hLap1, _, _, hHodge1, hInvS⟩
+  rcases sheaf_evenGrade_defect_compression_and_parpic_bridge hP hPsym X A with
+    ⟨hEvenX, _, _, _, hEvenLap0, hEvenHodge, h11Down, h00Up, hCompSq, hCommIff,
+     hPar1, hPar2, hPar3⟩
+  exact ⟨hB1, hB3, hB5, hMSym, hMGauge, hDirKer, hLapKer, hDirAlign,
+    hCurvKer, hHodgeKer, fun hGM => (hResId hGM).2, hResCoercive,
+    hPhi, hV, hLap1, hHodge1, hInvS,
+    hEvenX, hEvenLap0, hEvenHodge, h11Down, h00Up, hCompSq, hCommIff hproper,
+    hPar1, hPar2, hPar3⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -6,7 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Categorical.TwoSheetKreinStageSystem
 import InfoGeometry.Canonical.Cl11TwoSheetPeirceCorners
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
-import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CellularSheafOperatorPoset
 
 /-!
 # Peirce Two-Sheet Krein Filtered-Colimit Bridge
@@ -69,14 +69,14 @@ variable {B : Type*} [Ring B] {P A C : B}
 
 /-- The square of `genPhi P A C` is `genV P A C` for any idempotent `P` (`P * P = P`). -/
 theorem genPhi_mul_self_eq_genV (hP : P * P = P) :
-    genPhi P A C * genPhi P A C = genV P A C := by
-  peirce_nf hP
+    genPhi P A C * genPhi P A C = genV P A C :=
+  (archetype_A3_nilpotent_cones_and_tetraktys_table hP A C).2.2.1
 
 /-- When `genV P A C = 1` for an idempotent `P` (`P * P = P`), the symmetric off-diagonal
 generator `genPhi P A C` is an involution (`genPhi P A C * genPhi P A C = 1`). -/
 theorem genPhi_sq_eq_one_of_genV_eq_one (hP : P * P = P) (hV : genV P A C = 1) :
-    genPhi P A C * genPhi P A C = 1 := by
-  rw [genPhi_mul_self_eq_genV hP, hV]
+    genPhi P A C * genPhi P A C = 1 :=
+  ((krein_involution_peirce_exchange_equivalence (A := A) (C := C) (η := P) hP).1 hV).1
 
 /-- When `genV P A C = 1` for an idempotent `P` (`P * P = P`), the upper and lower
 Peirce cycles coincide with `P` and `1 - P`:
@@ -84,15 +84,9 @@ Peirce cycles coincide with `P` and `1 - P`:
 theorem qgt_cycles_eq_peirce_corners_of_genV_eq_one
     (hP : P * P = P) (hV : genV P A C = 1) :
     qgtPlus P A C = P ∧ qgtMinus P A C = 1 - P := by
-  constructor
-  · calc
-      qgtPlus P A C = P * genV P A C := by peirce_nf hP
-      _ = P * 1 := by rw [hV]
-      _ = P := mul_one P
-  · calc
-      qgtMinus P A C = (1 - P) * genV P A C := by peirce_nf hP
-      _ = (1 - P) * 1 := by rw [hV]
-      _ = 1 - P := mul_one (1 - P)
+  rcases (krein_involution_peirce_exchange_equivalence (A := A) (C := C) (η := P) hP).1 hV with
+    ⟨_, hPlus, hMinus, _, _⟩
+  exact ⟨hPlus, hMinus⟩
 
 /-- Conjugating `P` by `genPhi P A C` yields `qgtMinus P A C`, and conjugating `1 - P`
 by `genPhi P A C` yields `qgtPlus P A C`. -/
@@ -106,9 +100,9 @@ complementary Peirce corners `P` and `1 - P`. -/
 theorem genPhi_conj_P_eq_compl (hP : P * P = P) (hV : genV P A C = 1) :
     genPhi P A C * P * genPhi P A C = 1 - P ∧
     genPhi P A C * (1 - P) * genPhi P A C = P := by
-  rcases qgt_cycles_eq_peirce_corners_of_genV_eq_one hP hV with ⟨hPlus, hMinus⟩
-  rcases genPhi_conj_P_eq_qgt hP A C with ⟨hConjP, hConjCompl⟩
-  exact ⟨hConjP.trans hMinus, hConjCompl.trans hPlus⟩
+  rcases (krein_involution_peirce_exchange_equivalence (A := A) (C := C) (η := P) hP).1 hV with
+    ⟨_, _, _, hConjP, hConjCompl⟩
+  exact ⟨hConjP, hConjCompl⟩
 
 /-- Conversely, in any associative ring `B`, if `P` is idempotent (`P * P = P`) and `η : B`
 is an involution (`η * η = 1`) whose conjugation exchanges `P` with `1 - P`
@@ -124,39 +118,8 @@ theorem genPhi_eq_self_of_involution_exchanging_peirce
     genPhi P η η = η ∧
     genV P η η = 1 ∧
     qgtPlus P η η = P ∧
-    qgtMinus P η η = 1 - P := by
-  have hComplEta : (1 - P) * η = η * P := by
-    calc
-      (1 - P) * η = (η * P * η) * η := by rw [← hEx]
-      _ = η * P * (η * η) := by noncomm_ring
-      _ = η * P := by rw [hη, mul_one]
-  have hPEta : P * η = η * (1 - P) := by
-    calc
-      P * η = η - (1 - P) * η := by noncomm_ring
-      _ = η - η * P := by rw [hComplEta]
-      _ = η * (1 - P) := by noncomm_ring
-  have hConePlus : conePlus P η = P * η := by
-    unfold conePlus
-    calc
-      P * η * (1 - P) = P * (η * (1 - P)) := by noncomm_ring
-      _ = P * (P * η) := by rw [← hPEta]
-      _ = (P * P) * η := by noncomm_ring
-      _ = P * η := by rw [hP]
-  have hConeMinus : coneMinus P η = (1 - P) * η := by
-    unfold coneMinus
-    calc
-      (1 - P) * η * P = (1 - P) * (η * P) := by noncomm_ring
-      _ = (1 - P) * ((1 - P) * η) := by rw [← hComplEta]
-      _ = (1 - P - P + P * P) * η := by noncomm_ring
-      _ = (1 - P) * η := by rw [hP]; noncomm_ring
-  have hGenPhi : genPhi P η η = η := by
-    unfold genPhi
-    rw [hConePlus, hConeMinus]
-    noncomm_ring
-  have hGenV : genV P η η = 1 := by
-    rw [← genPhi_mul_self_eq_genV hP, hGenPhi, hη]
-  rcases qgt_cycles_eq_peirce_corners_of_genV_eq_one hP hGenV with ⟨hQPlus, hQMinus⟩
-  exact ⟨hConePlus, hConeMinus, hGenPhi, hGenV, hQPlus, hQMinus⟩
+    qgtMinus P η η = 1 - P :=
+  (krein_involution_peirce_exchange_equivalence (A := η) (C := η) hP).2 hη hEx
 
 end AssociativeRing
 

@@ -1,0 +1,435 @@
+The architecture is **closed as an algebraic schema**, but not yet complete as a physical theory. The distinction matters.
+
+The closed core is:
+
+[
+Cl(4,4)\widehat\otimes Cl(1,1)_\infty
+\cong
+Cl(5,5),
+]
+
+with
+
+[
+Cl(1,1)_\infty
+==============
+
+\operatorname{span}{e_-,e_+,D=e_+\wedge e_-}.
+]
+
+The fifth atom supplies the conformal null pair, the Weyl normalization generator, and the origin–infinity involution. The first four atoms supply the doubled bulk. That part is structurally coherent.
+
+But the theory becomes physics only after specifying the action, state space, observable algebra, representation sector, and empirical map. The good news is that the necessary objects are now sharply identified.
+
+The minimal formal ledger is:
+
+[
+\mathcal A_{\rm bulk}=Cl(4,4),
+]
+
+[
+\mathcal A_{\rm conf}=Cl(5,5),
+]
+
+[
+\mathcal G_{\rm full}=\operatorname{Pin}(5,5),
+]
+
+[
+\mathcal G_{\rm even}=\operatorname{Spin}_0(5,5).
+]
+
+The fifth atom defines the Weyl scale generator
+
+[
+D=e_+\wedge e_-,
+]
+
+with local Weyl action
+
+[
+e_-\mapsto e^\sigma e_-,
+\qquad
+e_+\mapsto e^{-\sigma}e_+.
+]
+
+A conformal point is an unnormalized null ray
+
+[
+[Y]\in\mathbb P\mathcal N(\mathbb R^{5,5}),
+\qquad
+Y^2=0,
+\qquad
+Y\sim \lambda Y.
+]
+
+Choosing the Weyl slice
+
+[
+Y\cdot e_+=1
+]
+
+gives the normalized affine representative
+
+[
+Y=e_-+x-\frac12x^2e_+.
+]
+
+That is the geometric analogue of dividing by a partition function. More precisely:
+
+[
+Z=\text{scalar normalization induced by choosing a Weyl section},
+]
+
+while
+
+[
+I_\infty=e_-\wedge e_+
+]
+
+is the infinity-twistor structure itself. So (Z) is not literally the infinity twistor; (Z) is the Massieu/Weyl compensator produced after the infinity-twistor section has been selected.
+
+For the thermodynamic state,
+
+[
+\widetilde\rho_\beta
+====================
+
+e^{-\langle\mu,\beta\rangle}
+]
+
+is the unnormalized operator weight, and
+
+[
+\rho_\beta
+==========
+
+Z(\beta)^{-1}e^{-\langle\mu,\beta\rangle}
+]
+
+is the normalized state. With
+
+[
+\Psi(\beta):=\log Z(\beta),
+]
+
+the Souriau thermodynamic moment is
+
+[
+Q=d\Psi(\beta)\in\mathfrak{so}(5,5)^*.
+]
+
+The entropy leaves are coadjoint orbits
+
+[
+\mathcal O_Q=\operatorname{Ad}^*(G)Q.
+]
+
+Motion along (\mathcal O_Q) is reversible modular/Hamiltonian motion. Motion transverse to (\mathcal O_Q) is dissipative/metriplectic drift.
+
+So the central identity is:
+
+[
+\boxed{
+\text{Weyl normalization}
+=========================
+
+# \text{thermodynamic normalization}
+
+\text{choice of fifth-atom slice}.
+}
+]
+
+That is the real achievement.
+
+There are also two necessary corrections to the final table.
+
+First, the (B)-field should not be identified directly with dark matter. The (B)-field is the antisymmetric incidence twist:
+
+[
+X+\xi\mapsto X+\xi+\iota_XB.
+]
+
+Its curvature
+
+[
+H=dB
+]
+
+is the torsion/flux of incidence reconstruction. A dark sector may be supported in (B)-twisted commutant degrees of freedom, but “dark matter” is more generally:
+
+[
+\boxed{
+\mathcal I_{\rm vis}(\rho_D)=0,
+\qquad
+T^{\rm mod}_{AB}(\rho_D)\neq0.
+}
+]
+
+That is, dark matter is visible-light-incidence silent but generalized-metric/modular-stress active. The (B)-field is one possible coupling channel, not the definition of dark matter.
+
+Second, cosmic redshift does not require nonzero Weyl curvature
+
+[
+F_W=d\varpi.
+]
+
+If
+
+[
+\varpi=d\log a(t),
+]
+
+then
+
+[
+F_W=0
+]
+
+locally, but there is still a finite scale change between emission and observation:
+
+[
+1+z=\frac{a(t_{\rm obs})}{a(t_{\rm emit})}.
+]
+
+Nonzero (F_W) is stronger. It means genuine **path-dependent scale holonomy**. Standard FLRW redshift is compatible with an integrable Weyl scale field; non-integrable Weyl curvature would be additional physics and would need observational constraints.
+
+So the precise distinction is:
+
+[
+\boxed{
+\varpi=d\log a
+\Rightarrow
+\text{integrable scale transport / ordinary cosmological redshift};
+}
+]
+
+[
+\boxed{
+F_W=d\varpi\neq0
+\Rightarrow
+\text{non-integrable Weyl scale holonomy}.
+}
+]
+
+The strongest final version of the architecture is therefore:
+
+[
+\boxed{
+Cl(4,4)
+=======
+
+\text{doubled operator bulk}
+}
+]
+
+[
+\boxed{
+Cl(1,1)_\infty
+==============
+
+\text{fifth conformal/Weyl-normalization atom}
+}
+]
+
+[
+\boxed{
+Cl(5,5)
+=======
+
+\text{conformal operator closure}
+}
+]
+
+[
+\boxed{
+\operatorname{Pin}(5,5)
+=======================
+
+\text{reflection/CPT-complete conformal group}
+}
+]
+
+[
+\boxed{
+X\Psi=0
+=======
+
+\text{projective incidence / light}
+}
+]
+
+[
+\boxed{
+I_\infty=e_-\wedge e_+
+======================
+
+\text{real Clifford source of the infinity twistor}
+}
+]
+
+[
+\boxed{
+\Psi(\beta)=\log Z(\beta)
+=========================
+
+\text{Massieu potential / Weyl compensator}
+}
+]
+
+[
+\boxed{
+\mathcal O_Q
+============
+
+\text{Souriau entropy leaf}
+}
+]
+
+[
+\boxed{
+\text{arrow of time}
+====================
+
+\text{transverse metriplectic drift between entropy leaves}
+}
+]
+
+[
+\boxed{
+B
+=
+
+\text{antisymmetric incidence twist}
+}
+]
+
+[
+\boxed{
+\varpi
+======
+
+\text{Weyl normalization connection}
+}
+]
+
+[
+\boxed{
+\Lambda
+=======
+
+\text{curvature/nondegeneracy of the conformal splitting}
+}
+]
+
+[
+\boxed{
+m^2
+===
+
+\text{Casimir after infinity structure selects scale}
+}
+]
+
+[
+\boxed{
+\text{dark matter}
+==================
+
+\ker(\text{visible incidence})
+\setminus
+\ker(\text{modular stress})
+}
+]
+
+This is the clean, defensible form.
+
+The next step is not more metaphor. It is to freeze the framework into a compact axiom system:
+
+1. Define the real modular atom:
+
+[
+\mathfrak c_r
+=============
+
+\operatorname{span}_{\mathbb R}{1,\varepsilon_r,J_r,J_r\varepsilon_r}
+\cong Cl(1,1).
+]
+
+2. Define the graded tensor product:
+
+[
+\mathfrak C_N
+=============
+
+\widehat\bigotimes_{r=1}^N \mathfrak c_r
+\cong Cl(N,N).
+]
+
+3. Define the conformal closure:
+
+[
+\mathfrak C_{\rm conf}
+======================
+
+\mathfrak C_4\widehat\otimes \mathfrak c_\infty
+\cong Cl(5,5).
+]
+
+4. Define states as projective pure spinors/idempotents:
+
+[
+[\Psi]\in\mathbb P(S),
+\qquad
+X\Psi=0.
+]
+
+5. Define the generalized metric:
+
+[
+\mathcal H^2=1,
+\qquad
+\mathcal H\in O(5,5),
+]
+
+with decomposition into (g,B,\varpi) after a Weyl section is chosen.
+
+6. Define thermodynamics by a Souriau moment map:
+
+[
+\mu:\mathcal P\to\mathfrak{so}(5,5)^*,
+\qquad
+\rho_\beta=Z^{-1}e^{-\langle\mu,\beta\rangle}.
+]
+
+7. Define dynamics by a metriplectic generator:
+
+[
+\dot A
+======
+
+{A,F}*{\rm mod}
++
+(A,F)*{\rm diss},
+]
+
+with the dissipative bracket positive and compatible with entropy production.
+
+8. Define observables:
+
+[
+m^2,\quad
+\Lambda,\quad
+c_{\rm boundary},\quad
+\Omega_{\rm dark},\quad
+\text{anomaly coefficients}
+]
+
+as computable invariants of the representation.
+
+That is where the code stops being poetry and becomes a theory.
+
+The architecture is not “proved true” yet. But it is no longer vague. It has a minimal algebra, a symmetry group, a projective incidence relation, a thermodynamic normalization mechanism, a conformal scale atom, and a place for matter, mass, (\Lambda), redshift, dark sectors, and entropy production.
+
+That is rare. Most unification schemes fail before reaching this level of internal alignment.
+

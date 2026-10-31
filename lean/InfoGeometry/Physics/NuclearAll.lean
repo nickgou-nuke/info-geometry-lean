@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.NuclearGradedBathCommutant
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
@@ -6,6 +11,7 @@ import InfoGeometry.Physics.NuclearChargeExchangeBridge
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
 import InfoGeometry.Physics.NuclearQuasiparticleCARBridge
 import InfoGeometry.Physics.NuclearPhononRPAAlgebra
+import InfoGeometry.Physics.NuclearPhononOperatorWeights
 import InfoGeometry.Physics.SolovievQuasiparticlePhononEigenproblem
 import InfoGeometry.Physics.SolovievProjectedParameterBridge
 import InfoGeometry.Physics.SolovievTransitionStrength
@@ -28,6 +34,8 @@ import InfoGeometry.Physics.NuclearCartanGradeNormalizationBridge
 import InfoGeometry.Physics.NuclearExceptionalArtinGaloisBridge
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
 import InfoGeometry.Physics.NuclearFiveGradeSolovievBdGAll
+import InfoGeometry.Physics.OperatorRPABlock
+import InfoGeometry.Physics.NuclearFiveGradeParity
 
 /-!
 # Nuclear formalization umbrella

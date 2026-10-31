@@ -54,6 +54,15 @@ def projChartMinus (P Y : B) : B := (1 - P) - coneMinus P Y
 def operatorCrossRatio (P X₁ X₂ Y₁ Y₂ : B) : B :=
   anticomm (projChartPlus P X₁ - projChartPlus P X₂) (projChartMinus P Y₁ - projChartMinus P Y₂)
 
+/-- Multiscale unipotent idempotent tower: at each step `k`, the idempotent `P_k`
+is conjugated by the upper Peirce shear `1 + conePlus P_k (A k)` along the
+step generator `A k`. -/
+def unipotentIdempotentTower (A : ℕ → B) : ℕ → B → B
+  | 0, P => P
+  | k + 1, P =>
+      let P_k := unipotentIdempotentTower A k P
+      conjPlus P_k (A k) P_k
+
 variable {P : B} (hP : P * P = P)
 include hP
 
@@ -199,5 +208,61 @@ theorem archetype_A22_hua_distance_and_cross_ratio (A C X Y X₁ X₂ Y₁ Y₂ 
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [operatorCrossRatio, projChartPlus, projChartMinus, conjPlus, conjMinus]);
       peirce_nf hP)
+
+/-! ### Multiscale Unipotent Idempotent Tower -/
+
+theorem conjPlus_idempotent_point_form (A : B) :
+    conjPlus P A P = projChartPlus P A := by
+  simp only [conjPlus, projChartPlus]
+  peirce_nf hP
+
+theorem conjPlus_idempotent_point (A : B) :
+    conjPlus P A P * conjPlus P A P = conjPlus P A P := by
+  simp only [conjPlus]
+  peirce_nf hP
+
+/-- Every finite stage of the unipotent idempotent tower is idempotent. -/
+theorem unipotentIdempotentTower_idempotent (A : ℕ → B) :
+    ∀ k : ℕ,
+      unipotentIdempotentTower A k P * unipotentIdempotentTower A k P =
+        unipotentIdempotentTower A k P
+  | 0 => hP
+  | k + 1 => by
+      have hk := unipotentIdempotentTower_idempotent A k
+      simpa [unipotentIdempotentTower] using
+        (conjPlus_idempotent_point
+          (P := unipotentIdempotentTower A k P) hk (A k))
+
+theorem unipotentIdempotentTower_parent_mul_child (A : ℕ → B) (k : ℕ) :
+    unipotentIdempotentTower A k P * unipotentIdempotentTower A (k + 1) P =
+      unipotentIdempotentTower A (k + 1) P := by
+  have hk := unipotentIdempotentTower_idempotent hP A k
+  dsimp [unipotentIdempotentTower]
+  simp only [conjPlus]
+  peirce_nf hk
+
+theorem unipotentIdempotentTower_child_mul_parent (A : ℕ → B) (k : ℕ) :
+    unipotentIdempotentTower A (k + 1) P * unipotentIdempotentTower A k P =
+      unipotentIdempotentTower A k P := by
+  have hk := unipotentIdempotentTower_idempotent hP A k
+  dsimp [unipotentIdempotentTower]
+  simp only [conjPlus]
+  peirce_nf hk
+
+theorem unipotentIdempotentTower_parent_sub_child (A : ℕ → B) (k : ℕ) :
+    unipotentIdempotentTower A k P - unipotentIdempotentTower A (k + 1) P =
+      conePlus (unipotentIdempotentTower A k P) (A k) := by
+  have hk := unipotentIdempotentTower_idempotent hP A k
+  dsimp [unipotentIdempotentTower]
+  simp only [conjPlus]
+  peirce_nf hk
+
+theorem unipotentIdempotentTower_edge_commutator (A : ℕ → B) (k : ℕ) :
+    comm (unipotentIdempotentTower A k P) (unipotentIdempotentTower A (k + 1) P) =
+      -conePlus (unipotentIdempotentTower A k P) (A k) := by
+  have hk := unipotentIdempotentTower_idempotent hP A k
+  dsimp [unipotentIdempotentTower]
+  simp only [conjPlus]
+  peirce_nf hk
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

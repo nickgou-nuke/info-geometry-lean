@@ -71,6 +71,44 @@ theorem chart_bruhat_conjugation_transition :
   · unfold chartBruhatConjInv
     peirce_nf hP
 
+/-- The two-factor unipotent products `(1 + N₊)(1 - N₋)` and `(1 + N₋)(1 - N₊)`
+are two-sided inverses. -/
+theorem chart_bruhat_factor_mul_inv :
+    ((1 + conePlus P A) * (1 - coneMinus P C)) *
+        ((1 + coneMinus P C) * (1 - conePlus P A)) = 1 ∧
+    ((1 + coneMinus P C) * (1 - conePlus P A)) *
+        ((1 + conePlus P A) * (1 - coneMinus P C)) = 1 := by
+  constructor <;> peirce_nf hP
+
+/-- `chartBruhatConj P A C` is a multiplicative homomorphism of `B`. -/
+theorem chartBruhatConj_mul (X Y : B) :
+    chartBruhatConj P A C (X * Y) =
+      chartBruhatConj P A C X * chartBruhatConj P A C Y := by
+  have hInv := (chart_bruhat_factor_mul_inv hP A C).2
+  unfold chartBruhatConj
+  calc
+    (1 + conePlus P A) * (1 - coneMinus P C) * (X * Y) *
+        (1 + coneMinus P C) * (1 - conePlus P A) =
+      (1 + conePlus P A) * (1 - coneMinus P C) * X * 1 * Y *
+        (1 + coneMinus P C) * (1 - conePlus P A) := by
+      rw [mul_one]; simp only [mul_assoc]
+    _ = (1 + conePlus P A) * (1 - coneMinus P C) * X *
+        (((1 + coneMinus P C) * (1 - conePlus P A)) *
+          ((1 + conePlus P A) * (1 - coneMinus P C))) * Y *
+        (1 + coneMinus P C) * (1 - conePlus P A) := by
+      rw [hInv]
+    _ = ((1 + conePlus P A) * (1 - coneMinus P C) * X *
+          (1 + coneMinus P C) * (1 - conePlus P A)) *
+        ((1 + conePlus P A) * (1 - coneMinus P C) * Y *
+          (1 + coneMinus P C) * (1 - conePlus P A)) := by
+      simp only [mul_assoc]
+
+/-- `chartBruhatConj P A C` fixes the quadratic Peirce metric `genV P A C`. -/
+theorem chartBruhatConj_genV :
+    chartBruhatConj P A C (genV P A C) = genV P A C := by
+  unfold chartBruhatConj
+  peirce_nf hP
+
 /-- The `Σ` chart sandwich differs from the Euler-compressed `Q₊` value by
 exactly twice the quadratic cycle. This is the finite-depth obstruction to
 the A82 transcript's proposed `Σ` sandwich formula at depth zero. -/

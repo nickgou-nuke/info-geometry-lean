@@ -10,6 +10,9 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine
 #print axioms chart_two_state_generator_sandwich
 #print axioms chart_spinor_selection_products
 #print axioms chart_bruhat_conjugation_transition
+#print axioms chart_bruhat_factor_mul_inv
+#print axioms chartBruhatConj_mul
+#print axioms chartBruhatConj_genV
 #print axioms chart_point_product
 #print axioms chart_sigma_euler_compression_residual
 #print axioms complementary_twisted_ideal_pairing

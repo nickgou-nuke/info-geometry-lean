@@ -63,6 +63,12 @@ Lean owner files decide truth.
 Only kernel-checked source edits count.
 ```
 
+For the current source-grounded status and dependency order of the two-sheeted
+Yang–Mills / Peirce-defect bridge, see
+[`docs/TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md`](docs/TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md).
+That note distinguishes established ring identities from the still-unproved
+carrier maps to Yang–Mills and two-sheet Krein colimit structures.
+
 For aiClaw/ChatGPT-assisted proof repair, use:
 
 ```text

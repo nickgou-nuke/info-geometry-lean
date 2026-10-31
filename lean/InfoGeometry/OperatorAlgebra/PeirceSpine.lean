@@ -69,6 +69,15 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargePowerMatrix
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ChargeExtractionBalances
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CrossChargeBrackets
 import InfoGeometry.OperatorAlgebra.PeirceSpine.BlockTriangularIntervention
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelExclusions
+import InfoGeometry.OperatorAlgebra.PeirceSpine.GradedDefect
+import InfoGeometry.OperatorAlgebra.PeirceSpine.HomogenizedKernels
+import InfoGeometry.OperatorAlgebra.PeirceSpine.IdealChartPairing
+import InfoGeometry.OperatorAlgebra.PeirceSpine.LogarithmicPullback
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PhaseConjugateSteinberg
+import InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichBrackets
+import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
+import InfoGeometry.OperatorAlgebra.PeirceSpine.WilsonPlaquette
 
 /-!
 # Peirce operator spine

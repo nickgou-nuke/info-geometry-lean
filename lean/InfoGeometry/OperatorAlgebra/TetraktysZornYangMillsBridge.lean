@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Clifford.OperatorValuedJonesProduct
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.OperatorAlgebra.PeirceSpine.RingHomTransport
+import InfoGeometry.OperatorAlgebra.InnerConjugation
 import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
@@ -111,5 +113,86 @@ theorem tetraktys_causal_reconstruction
   · simp only [genSig, PeirceSpine.comm, hPlus x, hMinus y]
     ext i j
     fin_cases i <;> fin_cases j <;> simp
+
+/-- An internal frame change transports the complete Peirce tetraktys whenever
+it preserves the chosen sheet cut.  The hypothesis is explicit because a
+general unit conjugation need not fix that cut. -/
+theorem innerFrame_tetraktys_covariance
+    (u : (SheetAlgebra W)ˣ)
+    (x y : CausalOperatorCoordinates (Operator W))
+    (hCut : innerConjugation u (firstSheetProjection (W := W)) =
+      firstSheetProjection (W := W)) :
+    genPhi (firstSheetProjection (W := W))
+        (innerConjugation u (reconstruct_causal x))
+        (innerConjugation u (reconstruct_causal y)) =
+      innerConjugation u
+        (genPhi (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) ∧
+    genJ (firstSheetProjection (W := W))
+        (innerConjugation u (reconstruct_causal x))
+        (innerConjugation u (reconstruct_causal y)) =
+      innerConjugation u
+        (genJ (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) ∧
+    genV (firstSheetProjection (W := W))
+        (innerConjugation u (reconstruct_causal x))
+        (innerConjugation u (reconstruct_causal y)) =
+      innerConjugation u
+        (genV (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) ∧
+    genSig (firstSheetProjection (W := W))
+        (innerConjugation u (reconstruct_causal x))
+        (innerConjugation u (reconstruct_causal y)) =
+      innerConjugation u
+        (genSig (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) := by
+  have hP : innerConjugationRingEquiv u (firstSheetProjection (W := W)) =
+      firstSheetProjection (W := W) := by
+    simpa only [innerConjugationRingEquiv_apply] using hCut
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have h := (PeirceSpine.map_genPhi (innerConjugationRingEquiv u).toRingHom
+      (firstSheetProjection (W := W))
+      (reconstruct_causal x) (reconstruct_causal y)).symm
+    change genPhi (innerConjugationRingEquiv u (firstSheetProjection (W := W)))
+      (innerConjugationRingEquiv u (reconstruct_causal x))
+      (innerConjugationRingEquiv u (reconstruct_causal y)) =
+      innerConjugationRingEquiv u
+        (genPhi (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) at h
+    rw [hP] at h
+    simpa only [innerConjugationRingEquiv_apply] using h
+  · have h := (PeirceSpine.map_genJ (innerConjugationRingEquiv u).toRingHom
+      (firstSheetProjection (W := W))
+      (reconstruct_causal x) (reconstruct_causal y)).symm
+    change genJ (innerConjugationRingEquiv u (firstSheetProjection (W := W)))
+      (innerConjugationRingEquiv u (reconstruct_causal x))
+      (innerConjugationRingEquiv u (reconstruct_causal y)) =
+      innerConjugationRingEquiv u
+        (genJ (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) at h
+    rw [hP] at h
+    simpa only [innerConjugationRingEquiv_apply] using h
+  · have h := (PeirceSpine.map_genV (innerConjugationRingEquiv u).toRingHom
+      (firstSheetProjection (W := W))
+      (reconstruct_causal x) (reconstruct_causal y)).symm
+    change genV (innerConjugationRingEquiv u (firstSheetProjection (W := W)))
+      (innerConjugationRingEquiv u (reconstruct_causal x))
+      (innerConjugationRingEquiv u (reconstruct_causal y)) =
+      innerConjugationRingEquiv u
+        (genV (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) at h
+    rw [hP] at h
+    simpa only [innerConjugationRingEquiv_apply] using h
+  · have h := (PeirceSpine.map_genSig (innerConjugationRingEquiv u).toRingHom
+      (firstSheetProjection (W := W))
+      (reconstruct_causal x) (reconstruct_causal y)).symm
+    change genSig (innerConjugationRingEquiv u (firstSheetProjection (W := W)))
+      (innerConjugationRingEquiv u (reconstruct_causal x))
+      (innerConjugationRingEquiv u (reconstruct_causal y)) =
+      innerConjugationRingEquiv u
+        (genSig (firstSheetProjection (W := W))
+          (reconstruct_causal x) (reconstruct_causal y)) at h
+    rw [hP] at h
+    simpa only [innerConjugationRingEquiv_apply] using h
 
 end InfoGeometry.OperatorAlgebra.TetraktysZornYangMillsBridge

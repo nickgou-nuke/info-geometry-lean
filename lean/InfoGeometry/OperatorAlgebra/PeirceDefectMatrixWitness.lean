@@ -85,4 +85,58 @@ theorem pinched_state_defect_ne_zero :
   have h00 := congrArg (fun M : Op => M 0 0) h
   norm_num at h00
 
+/-- First connection with only an upper-corner component. -/
+def connectionUpper : Op := !![0, 1; 0, 0]
+
+/-- Second connection with only a lower-corner component. -/
+def connectionLower : Op := !![0, 0; 1, 0]
+
+/-- The mixed Dirac square is `-1` for this pair of noncommuting matrix
+connections. -/
+theorem mixed_dirac_square_value :
+    (genPhi cut connectionUpper 0 + genJ cut 0 connectionLower) *
+        (genPhi cut connectionUpper 0 + genJ cut 0 connectionLower) =
+      -((1 : Op)) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genPhi, genJ, conePlus, coneMinus, cut, connectionUpper,
+      connectionLower, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+      Fin.sum_univ_two]
+
+/-- The proposed commutator-curvature replacement for that mixed square
+returns `diag(-1,1)`, so it is not a valid universal identity. -/
+theorem commutator_cross_term_wrong_value :
+    genV cut connectionUpper 0 - genV cut 0 connectionLower -
+        (genSig cut connectionUpper connectionLower - genSig cut 0 0) =
+      !![-1, 0; 0, 1] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genV, genSig, anticomm, PeirceSpine.comm, conePlus, coneMinus,
+      cut, connectionUpper, connectionLower, Matrix.mul_apply,
+      Matrix.vecMul_apply_eq_sum, Fin.sum_univ_two]
+
+/-- The corrected anticommutator cross term agrees with the actual mixed
+square on the same witness. -/
+theorem mixed_dirac_corrected_formula_value :
+    genV cut connectionUpper 0 - genV cut 0 connectionLower -
+        (anticomm (conePlus cut connectionUpper) (coneMinus cut connectionLower) -
+          anticomm (conePlus cut 0) (coneMinus cut 0)) =
+      -((1 : Op)) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genV, anticomm, conePlus, coneMinus, cut, connectionUpper,
+      connectionLower, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+      Fin.sum_univ_two]
+
+/-- Directly certifies the failure of the earlier commutator-based formula. -/
+theorem mixed_square_disproves_commutator_formula :
+    (genPhi cut connectionUpper 0 + genJ cut 0 connectionLower) *
+        (genPhi cut connectionUpper 0 + genJ cut 0 connectionLower) ≠
+      genV cut connectionUpper 0 - genV cut 0 connectionLower -
+        (genSig cut connectionUpper connectionLower - genSig cut 0 0) := by
+  rw [mixed_dirac_square_value, commutator_cross_term_wrong_value]
+  intro h
+  have h11 := congrArg (fun M : Op => M 1 1) h
+  norm_num at h11
+
 end InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness

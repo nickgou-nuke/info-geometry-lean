@@ -206,6 +206,96 @@ theorem archetype_A9_peirce_block_diagonal_splits (A C X : B) :
   · simp only [peirce11, peirce00, conePlus, coneMinus]; noncomm_ring
   all_goals peirce_nf hP
 
+/-! ### Two-connection composition
+
+The mixed term in a square is a Jordan cross term.  It cannot in general be
+replaced by the commutator (curvature) cross term: the two carry different
+Peirce-corner information.
+-/
+
+/-- The anticommutator of two `Φ` operators is the sum of their mixed
+upper/lower Peirce contractions. -/
+theorem twoPhi_anticomm_expansion (A₁ C₁ A₂ C₂ : B) :
+    anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) =
+      anticomm (conePlus P A₁) (coneMinus P C₂) +
+        anticomm (conePlus P A₂) (coneMinus P C₁) := by
+  peirce_nf hP
+
+/-- Ordered product formula for two symmetric boundary operators. -/
+theorem twoPhi_mul_expansion (A₁ C₁ A₂ C₂ : B) :
+    genPhi P A₁ C₁ * genPhi P A₂ C₂ =
+      conePlus P A₁ * coneMinus P C₂ +
+        coneMinus P C₁ * conePlus P A₂ := by
+  peirce_nf hP
+
+/-- The commutator of two `Φ` operators is the corresponding mixed
+commutator, with the second connection entering with reversed order. -/
+theorem twoPhi_comm_expansion (A₁ C₁ A₂ C₂ : B) :
+    comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) =
+      comm (conePlus P A₁) (coneMinus P C₂) -
+        comm (conePlus P A₂) (coneMinus P C₁) := by
+  peirce_nf hP
+
+/-- Correct mixed square for a symmetric first boundary operator and a
+skew-signed second one. Its cross term is a difference of anticommutators. -/
+theorem phi_add_j_square (A₁ C₁ A₂ C₂ : B) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      genV P A₁ C₁ - genV P A₂ C₂ -
+        (anticomm (conePlus P A₁) (coneMinus P C₂) -
+          anticomm (conePlus P A₂) (coneMinus P C₁)) := by
+  peirce_nf hP
+
+/-- Elliptic sum square, with its mixed term written as the symmetric
+two-connection Jordan pairing. -/
+theorem twoPhi_sum_square (A₁ C₁ A₂ C₂ : B) :
+    (genPhi P A₁ C₁ + genPhi P A₂ C₂) *
+        (genPhi P A₁ C₁ + genPhi P A₂ C₂) =
+      genV P A₁ C₁ + genV P A₂ C₂ +
+        anticomm (conePlus P A₁) (coneMinus P C₂) +
+          anticomm (conePlus P A₂) (coneMinus P C₁) := by
+  peirce_nf hP
+
+/-- The ordered product of two odd Peirce operators is even and therefore
+commutes with the cut idempotent. -/
+theorem twoPhi_mul_commutes_cut (A₁ C₁ A₂ C₂ : B) :
+    comm P (genPhi P A₁ C₁ * genPhi P A₂ C₂) = 0 := by
+  peirce_nf hP
+
+/-- The symmetric Jordan pairing of two odd Peirce operators lies in the even
+subalgebra and commutes with the cut idempotent. -/
+theorem twoPhi_anticomm_commutes_cut (A₁ C₁ A₂ C₂ : B) :
+    comm P (anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂)) = 0 := by
+  peirce_nf hP
+
+/-- The antisymmetric Lie pairing of two odd Peirce operators also lies in
+the even subalgebra and commutes with the cut idempotent. -/
+theorem twoPhi_comm_commutes_cut (A₁ C₁ A₂ C₂ : B) :
+    comm P (comm (genPhi P A₁ C₁) (genPhi P A₂ C₂)) = 0 := by
+  peirce_nf hP
+
+/-- The sign-flip sum isolates the difference of the two diagonal quadratic
+terms, without imposing commutativity on the ambient ring. -/
+theorem phi_j_sign_flip_sum (A₁ C₁ A₂ C₂ : B) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ + genJ P A₂ C₂) +
+      (genPhi P A₁ C₁ - genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ - genJ P A₂ C₂) =
+      (2 : ℤ) • (genV P A₁ C₁ - genV P A₂ C₂) := by
+  peirce_nf hP
+
+/-- The sign-flip difference isolates twice the mixed Jordan cross term.
+This is the correction to the proposed commutator-curvature formula. -/
+theorem phi_j_sign_flip_difference (A₁ C₁ A₂ C₂ : B) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ + genJ P A₂ C₂) -
+      (genPhi P A₁ C₁ - genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ - genJ P A₂ C₂) =
+      (2 : ℤ) •
+        (anticomm (coneMinus P C₁) (conePlus P A₂) -
+          anticomm (conePlus P A₁) (coneMinus P C₂)) := by
+  peirce_nf hP
+
 /-! ### A₁₀ -/
 
 theorem archetype_A10_casimir_and_superoperator_commutators (A C : B) :

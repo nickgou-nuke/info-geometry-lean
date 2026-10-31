@@ -15,5 +15,9 @@ namespace InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness
 #print axioms boundary_metric_value
 #print axioms pinched_state_defect_value
 #print axioms pinched_state_defect_ne_zero
+#print axioms mixed_dirac_square_value
+#print axioms commutator_cross_term_wrong_value
+#print axioms mixed_dirac_corrected_formula_value
+#print axioms mixed_square_disproves_commutator_formula
 
 end InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness

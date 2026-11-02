@@ -1,3 +1,27 @@
+# Two-sheeted operator algebra: revised historical manuscript
+
+> [!NOTE]
+> **Status: an expository LaTeX manuscript, revised against source.** Reviewed
+> against [214f7bc](https://github.com/nickgou-nuke/info-geometry-lean/tree/214f7bcf733eaf4720913bc2c082936f2480d3fc) on 2026-11-02. The seven-stage presentation is retained below,
+> with its operator, positivity, colimit, and automation claims scoped to the
+> named owners. This review did not compile the manuscript or rerun Lean builds.
+
+The current source map is
+[LieJordanDuality.lean](lean/InfoGeometry/OperatorAlgebra/LieJordanDuality.lean),
+[PeirceLieJordanResolution.lean](lean/InfoGeometry/OperatorAlgebra/PeirceLieJordanResolution.lean),
+[PeirceDissipatorTrinity.lean](lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean),
+[InnerDerivationSpectra.lean](lean/InfoGeometry/OperatorAlgebra/SquareZeroPairSpectral/InnerDerivationSpectra.lean),
+[StarGrading.lean](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/StarGrading.lean),
+[GramGeometry.lean](lean/InfoGeometry/OperatorAlgebra/PeirceCoupling/GramGeometry.lean),
+[LieJordanPeirceColimit.lean](lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceColimit.lean),
+and the [`peirce_nf` implementation](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean).
+For the hypotheses of a separate finite positive-gap package see
+[YangMillsFiniteBridge.lean](lean/InfoGeometry/Canonical/YangMillsFiniteBridge.lean);
+that package does not identify its scalar gap with the Peirce operator `M²`.
+
+## LaTeX manuscript
+
+```latex
 \documentclass[11pt,a4paper]{article}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{hyperref}
@@ -10,7 +34,7 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 
-\title{\textbf{InfoGeometry-Lean4: A Machine-Verified Non-Commutative Operator Algebra Library for Exploring Two-Sheeted Spectral Gaps and Inductive Colimits}}
+\title{\textbf{InfoGeometry-Lean4: Non-Commutative Operator Identities and Algebraic Inductive Limits}}
 
 \author{
   Nikolay Goutev & Dimitar Tonev \\
@@ -23,7 +47,7 @@
 \maketitle
 
 \begin{abstract}
-We present \texttt{InfoGeometry-Lean4}, an open-source, axiom-free library in Lean~4 (\texttt{Mathlib}) designed as a formal exploration laboratory for non-commutative matrix operator algebra, $\mathbb{Z}_2$-graded Peirce--DeWitt geometry, generalized inverses, and open quantum system dynamics. Rather than claiming an analytical solution to infinite-dimensional continuum field theory conjectures, this communication introduces a verified algebraic toolkit for testing hypotheses on finite-dimensional non-commutative operator rings $\mathrm{Mat}_n(R)$ and their categorical inductive $\star$-ring colimits. Starting from a single binary idempotent $P^2 = P$ without scalar, diagonal, or commutativity simplifications, the library formalizes a 7-stage causal poset of operator identities connecting Lie--Jordan derivations, Drazin--Moore--Penrose spectral resolutions, split-quaternion $\mathcal{C}\ell_{1,1}$ algebras, Osterwalder--Schrader reflection positivity, and Gorini--Kossakowski--Sudarshan--Lindblad (GKSL) dissipators. We also describe a confluent right-associative Knuth--Bendix rewrite normalizer in Lean~4 that reduces non-commutative polynomial identities modulo $P^2 = P$ to a two-line automated decision procedure.
+We present selected formal developments in \texttt{InfoGeometry-Lean4}, a Lean~4 library using \texttt{Mathlib}. The reusable algebraic layer starts with Peirce corners of an idempotent in an associative ring and develops Lie--Jordan identities, square-zero pairs, graded operator actions, and transport along explicit ring homomorphisms. Star, trace, reflexive-pair, scalar, and positivity hypotheses are added where the individual statements require them. The seven-stage overview below organizes these related results; it does not claim that one idempotence hypothesis proves every geometric or physical interpretation. In particular, an operator identity such as $\mathcal D(J)=-4M^2J$ retains the operator $M^2$ and is not by itself a positive scalar spectral gap. The library also provides the proof-producing \texttt{peirce\_nf} tactic macro for selected non-commutative identities. This communication describes the source-level scope of those results, without asserting a complete decision procedure or a continuum Yang--Mills construction.
 \end{abstract}
 
 \section{Introduction and Scope}
@@ -32,15 +56,15 @@ In mathematical physics and operator theory, related algebraic structures freque
 When exploring structural hypotheses regarding chiral symmetry breaking, decoherence-free subspaces, or algebraic mass-gap models (such as two-sheeted discretizations or matrix truncations inspired by Yang--Mills orbit geometry~\cite{JaffeWitten2000}), researchers must routinely verify intricate non-commutative operator identities. Manual calculations are prone to subtle sign and associativity errors—especially when distinguishing cross-branch Kraus channels from phase-conjugate Bogoliubov channels.
 
 \paragraph{Contribution as an Exploration Tool.}
-To support rigorous experimentation in this domain, we have developed \texttt{InfoGeometry-Lean4}, a machine-verified library built natively on Lean~4's \texttt{Mathlib}. We emphasize that \textbf{this library is an algebraic exploration tool, not a proof of the continuum 4D Yang--Mills Millennium Problem}. Its purpose is to provide a zero-\texttt{sorry}, machine-checked environment where:
+To support rigorous experimentation in this domain, \texttt{InfoGeometry-Lean4} provides formal theorem statements and proofs built on Lean~4's \texttt{Mathlib}. We emphasize that \textbf{the algebraic identities described here do not prove the continuum 4D Yang--Mills Millennium Problem}. Their reusable scope includes:
 \begin{enumerate}
-    \item Every identity is proved over an arbitrary non-commutative square matrix ring $\mathrm{Mat}_n(R)$ (over a commutative star-ring $R$) with \textbf{no commuting, diagonal, or scalar toy simplifications}.
-    \item Candidate algebraic mechanisms for chiral symmetry breaking, quadratic symmetry restoration, and dissipative spectral gaps can be stress-tested and audited by the Lean~4 kernel.
-    \item Finite-scale algebraic invariants can be functorially lifted along directed systems of unital $\star$-ring homomorphisms $\mathcal{A}_k \to_{\star} \mathcal{A}_{k+1}$ to infinite tensor towers and inductive colimit rings $\mathcal{A}_\infty$.
+    \item Peirce identities in arbitrary associative rings, with finite-matrix instances. Each trace, adjoint, generalized-inverse, or ordered statement retains its own additional hypotheses.
+    \item Odd/even grading and dissipator-action formulas that can serve as inputs to a physical model once its states, dynamics, and spectral interpretation are specified.
+    \item Transport of named algebraic identities along ring homomorphisms, with star preservation when needed, including the concrete full-matrix algebraic direct limit owned by \texttt{Cl11TensorTowerLimit}.
 \end{enumerate}
 
-\section{The 7-Stage Causal Poset of Verified Archetypes}
-The core spine of the library is organized as a topologically sorted poset of seven modular stages (\texttt{Archetypes M1--M7}), generated from a single binary idempotent $P^2 = P$ in $\mathcal{A} = \mathrm{Mat}_n(R)$:
+\section{A Seven-Stage Algebraic Overview}
+The following seven stages organize related owner modules. The Peirce starting point is $P^2=P$ in an associative ring; the matrix, star, trace, and reflexive-pair specializations below add the hypotheses they use. The labels M1--M7 are expository labels, not a replacement for the maintained archetype ledger:
 
 \begin{enumerate}
     \item \textbf{Lie--Jordan $\star$-Bifurcation ($\mathcal{M}_1$--$\mathcal{M}_2$):}
@@ -48,7 +72,7 @@ The core spine of the library is organized as a topologically sorted poset of se
     \begin{equation}
         [H, UV] = \{H, U\}V - U\{H, V\},
     \end{equation}
-    and the mixed Lie--Jordan Jacobi identity $[H, \{S, X\}] - \{S, [H, X]\} = \{[H, S], X\}$, which underpins dual affine metric compatibility in operatorial information geometry.
+    and the mixed Lie--Jordan Jacobi identity $[H, \{S, X\}] - \{S, [H, X]\} = \{[H, S], X\}$, which is an algebraic input to comparisons with geometric constructions; a metric compatibility statement needs the corresponding metric and carrier map.
 
     \item \textbf{Peirce--Cartan $\mathbb{Z}_2$-Grading and Tripotency of $\mathrm{ad}_P$ ($\mathcal{M}_3$):}
     An idempotent $P^2 = P$ induces the Cartan involution $S_P = P - (1 - P)$ ($S_P^2 = 1$) and splits $\mathrm{Mat}_n(R)$ into four Peirce--DeWitt sectors:
@@ -63,9 +87,9 @@ The core spine of the library is organized as a topologically sorted poset of se
     \begin{equation}
         [P, [P, A][P, B]] = \{P, [P, A]\}[P, B] - [P, A]\{P, [P, B]\} = 0.
     \end{equation}
-    This splits the Quantum Geometric Tensor $2[P, A][P, B]$ into a block-diagonal Fubini--Study metric $\{[P, A], [P, B]\} \in \mathfrak{k}$ and a block-diagonal Berry curvature $[[P, A], [P, B]] \in \mathfrak{k}$ whose core and complement traces cancel identically.
+    This splits $2[P,A][P,B]$ into the block-diagonal symmetric product $\{[P,A],[P,B]\}$ and commutator $[[P,A],[P,B]]$. Interpreting these as a Fubini--Study metric or Berry curvature requires additional geometric data and a theorem relating that data to these products.
 
-    \item \textbf{Nilpotent Cones and the Split-Quaternion Tetraktys ($\mathcal{M}_5$):}
+    \item \textbf{Nilpotent Cones and the Operator-Valued Tetraktys ($\mathcal{M}_5$):}
     The off-diagonal boundary operators $N_+ = P A (1 - P)$ and $N_- = (1 - P) B P$ satisfy $N_+^2 = N_-^2 = 0$ ($\partial^2 = 0$). Their symmetric and antisymmetric combinations
     \begin{equation}
         E = N_+ + N_-, \qquad J_5 = N_+ - N_-, \qquad M^2 = \{N_+, N_-\}, \qquad \Sigma_{\mathrm{spin}} = [N_+, N_-]
@@ -74,26 +98,26 @@ The core spine of the library is organized as a topologically sorted poset of se
     \begin{equation}
         [N_\pm, M^2] = 0, \qquad \{N_\pm, \Sigma_{\mathrm{spin}}\} = 0.
     \end{equation}
-    Whereas $E$ and $J_5$ break chiral parity linearly ($S_P E S_P = -E$), $M^2$ and $\Sigma_{\mathrm{spin}}$ restore chiral parity quadratically ($S_P M^2 S_P = +M^2$). Under the Osterwalder--Schrader reflection $\Theta_P(X) = S_P X^\dagger S_P$ (for $P^\dagger = P, B = A^\dagger$), $\Theta_P(N_+) = -N_+^\dagger$, so $-\{\Theta_P(N_+), N_+\} = N_+ N_+^\dagger + N_+^\dagger N_+ = M^2 \succeq 0$.
+    The operators $E$ and $J_5$ are odd under grading conjugation ($S_P E S_P=-E$), whereas $M^2$ and $\Sigma_{\mathrm{spin}}$ are even. For $P^\dagger=P$ and $B=A^\dagger$, the grading-star sandwich $\Theta_P(X)=S_P X^\dagger S_P$ gives $\Theta_P(N_+)=-N_+^\dagger$ and the algebraic identity $-\{\Theta_P(N_+),N_+\}=N_+N_+^\dagger+N_+^\dagger N_+=M^2$. Positivity of this sum uses an ordered or Hilbert-space representation. On full finite complex matrices, \texttt{PeirceCoupling/GramGeometry} proves positive semidefiniteness of this sum and characterizes positive definiteness by the triviality of the common kernel of $N_+$ and $N_+^\dagger$. Neither a positive physical mass gap nor Osterwalder--Schrader reflection positivity follows from the star-ring identity alone.
 
-    \item \textbf{The Chiral Dissipator Trinity and Spectral Gap Split ($\mathcal{M}_6$):}
-    The cross-branch Kraus map $\Phi_{\mathrm{sym}}(X) = N_+ X N_- + N_- X N_+$ and phase-conjugate map $\Psi_{\mathrm{pc}}(X) = N_+ X N_+ + N_- X N_-$ act on complementary Cartan grades and sum to $\Phi_{\mathrm{sym}}(X) + \Psi_{\mathrm{pc}}(X) = E X E$. This yields three exact double-commutator Lindblad dissipators satisfying $2\mathcal{D}_{\mathrm{sym}}(X) = \mathcal{D}_{\mathrm{Dirac}}(X) + \mathcal{D}_{\mathrm{Axial}}(X)$, whose spectra on the Tetraktys $(1, M^2, E, J_5, \Sigma_{\mathrm{spin}})$ are completely diagonalized in Lean~4 (Table~\ref{tab:spectra}).
+    \item \textbf{The Chiral Dissipator Trinity and Operator Actions ($\mathcal{M}_6$):}
+    The cross-branch map $\Phi_{\mathrm{sym}}(X) = N_+ X N_- + N_- X N_+$ and phase-conjugate map $\Psi_{\mathrm{pc}}(X) = N_+ X N_+ + N_- X N_-$ act on complementary Cartan grades and sum to $\Phi_{\mathrm{sym}}(X) + \Psi_{\mathrm{pc}}(X) = E X E$. The associated double-commutator operators satisfy $2\mathcal{D}_{\mathrm{sym}}(X)=\mathcal{D}_{\mathrm{Dirac}}(X)+\mathcal{D}_{\mathrm{Axial}}(X)$. Table~\ref{tab:spectra} gives their action on five named elements. A Lindblad-generator interpretation needs the adjoint, positivity, and evolution hypotheses of the chosen representation.
 
-    \item \textbf{Drazin--Moore--Penrose Resolution and Inductive Colimits ($\mathcal{M}_7$):}
-    When $(N_+, N_-)$ is a reflexive generalized inverse pair ($N_+ N_- N_+ = N_+$, $N_- N_+ N_- = N_-$), $(N_+, N_-, \Sigma_{\mathrm{spin}})$ forms an exact $\mathfrak{sl}_2$ triad, $E^3 = E$, and $V = (1 - M^2) + E$ is a global unital involution ($V^2 = 1$). Finally, all identities are lifted functorially along directed towers of unital $\star$-ring homomorphisms $\mathcal{A}_k \to_{\star} \mathcal{A}_\infty$.
+    \item \textbf{Reflexive-Pair Resolution and Algebraic Inductive Limits ($\mathcal{M}_7$):}
+    When $(N_+, N_-)$ is a reflexive generalized inverse pair ($N_+ N_- N_+ = N_+$, $N_- N_+ N_- = N_-$), $(N_+, N_-, \Sigma_{\mathrm{spin}})$ forms an exact $\mathfrak{sl}_2$ triad, $E^3 = E$, and $V = (1 - M^2) + E$ is a global unital involution ($V^2 = 1$). The owner \texttt{LieJordanPeirceColimit} transports named identities through the actual stage maps of \texttt{Cl11TensorTowerLimit}. Compatibility of maps into a target ring is distinct from proving that the target has a colimit universal property; an algebraic direct limit is also distinct from its analytic completion.
 \end{enumerate}
 
 \begin{table}[h]
 \centering
-\caption{Machine-verified eigenvalue action of the three horizon dissipators on the Tetraktys basis.}
+\caption{Operator-valued action identities on five named elements of a square-zero pair. No basis or positive scalar spectral-gap assertion is made.}
 \label{tab:spectra}
 \vspace{4pt}
 \begin{tabular}{lccc}
 \toprule
-\textbf{Basis Operator $X$} & $\mathcal{D}_{\mathrm{sym}}(X) = -([N_+,[N_-,X]]+[N_-,[N_+,X]])$ & $\mathcal{D}_{\mathrm{Dirac}}(X) = -[E,[E,X]]$ & $\mathcal{D}_{\mathrm{Axial}}(X) = +[J_5,[J_5,X]]$ \\
+\textbf{Operator $X$} & $\mathcal{D}_{\mathrm{sym}}(X) = -([N_+,[N_-,X]]+[N_-,[N_+,X]])$ & $\mathcal{D}_{\mathrm{Dirac}}(X) = -[E,[E,X]]$ & $\mathcal{D}_{\mathrm{Axial}}(X) = +[J_5,[J_5,X]]$ \\
 \midrule
 Identity ($1$) & $0$ & $0$ & $0$ \\
-Mass Core ($M^2$) & $0$ & $0$ & $0$ \\
+Quadratic Coupling ($M^2$) & $0$ & $0$ & $0$ \\
 Symmetric Wave ($E$) & $-2 M^2 E$ & $\mathbf{0}$ & $-4 M^2 E$ \\
 Axial Wave ($J_5$) & $-2 M^2 J_5$ & $-4 M^2 J_5$ & $\mathbf{0}$ \\
 Spin Dipole ($\Sigma_{\mathrm{spin}}$) & $-4 M^2 \Sigma_{\mathrm{spin}}$ & $-4 M^2 \Sigma_{\mathrm{spin}}$ & $-4 M^2 \Sigma_{\mathrm{spin}}$ \\
@@ -101,15 +125,17 @@ Spin Dipole ($\Sigma_{\mathrm{spin}}$) & $-4 M^2 \Sigma_{\mathrm{spin}}$ & $-4 M
 \end{tabular}
 \end{table}
 
-\section{Automated Proof Engineering: The Knuth--Bendix Normalizer}
+Here $M^2=\{N_+,N_-\}$ is an operator, not a real number. For example, the entry $-4M^2J_5$ is an ordered product. A scalar eigenvalue statement needs a nonzero vector or operator on which multiplication by $M^2$ acts by the specified scalar; a positive gap needs a further spectral lower bound. No linear-independence or spanning assertion for the five listed elements is implied.
+
+\section{Automated Proof Engineering: Peirce Rewriting}
 A practical obstacle in formalizing non-commutative matrix identities in Lean~4 is that \texttt{Matrix.mul\_assoc} normalizes products into right-associated trees $X_1 * (X_2 * (\dots * X_k))$. Consequently, a naive rewrite \texttt{rw [hP]} (where \texttt{hP : P * P = P}) only matches at a rightmost leaf and misses internal nodes of the form \texttt{P * (P * X)}.
 
-By adjoining the single confluence lemma
+The elementary nested-product lemma illustrates the rewrite needed:
 \begin{verbatim}
 lemma P_mul_P_assoc {P : Matrix n n R} (hP : P * P = P) (X : Matrix n n R) :
     P * (P * X) = P * X := by rw [← Matrix.mul_assoc, hP]
 \end{verbatim}
-the rewrite set \texttt{\{Matrix.mul\_assoc, hP, P\_mul\_P\_assoc hP\}} forms a terminating, confluent Knuth--Bendix completion for the idempotent ideal $\langle P^2 - P \rangle$. Calling \texttt{simp only [..., Matrix.mul\_assoc, hP, P\_mul\_P\_assoc hP]; abel} automatically decides every ring-level identity in the library without manual parenthesis management.
+The maintained \texttt{peirce\_nf hP} macro is defined in \texttt{OperatorAlgebra/PeirceSpine/Basic.lean}. It unfolds selected generators, distributes products, right-associates multiplication, rewrites idempotence and corner-annihilation lemmas, and finishes with \texttt{abel}. Callers may unfold additional definitions before invoking it. Each successful invocation produces a proof of that goal; this implementation does not by itself supply a formal theorem of termination, confluence, or completeness for all non-commutative ring identities.
 
 \section{Availability}
 The complete Lean~4 source code, modular archetype files, and documentation are publicly available at \url{https://github.com/nickgou-nuke/info-geometry-lean}.
@@ -126,3 +152,4 @@ The complete Lean~4 source code, modular archetype files, and documentation are 
 \end{thebibliography}
 
 \end{document}
+```

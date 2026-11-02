@@ -1,10 +1,15 @@
-# Current mathematical scope: CAR, Krein symmetry, and projectivization
+# Topic note: CAR, Krein symmetry, and projectivization
+
+> **Source review:** 2026-11-02 at [214f7bc](https://github.com/nickgou-nuke/info-geometry-lean/tree/214f7bcf733eaf4720913bc2c082936f2480d3fc). This note reviews the named
+> carriers and theorem statements below; it is not a repository-wide proof
+> inventory or a report of fresh Lean compilation.
 
 This note separates a finite algebraic model that can be stated precisely from
 geometric connections that require additional definitions and proofs. The
-repository contains useful pieces of this architecture, but it does not
-currently establish one theorem deriving a three-mode projective metric from
-fermionic nilpotency.
+repository contains useful pieces of this architecture. Nilpotency, CAR,
+a Krein symmetry, and a projective quotient require explicit connecting
+maps and metric hypotheses before they can support a single three-mode
+projective-metric theorem.
 
 ## 1. Nilpotent generators and the doubled space
 
@@ -126,7 +131,7 @@ off-diagonal block, and a diagonal block of the form
 its subspaces, dimensions, metric, and orthogonality proved explicitly.
 
 The repository now also formalizes a finite 2×2 matrix analogue in
-`lean/InfoGeometry/Projective/ProjectiveKreinDecomposition.lean`: every real
+[lean/InfoGeometry/Projective/ProjectiveKreinDecomposition.lean](lean/InfoGeometry/Projective/ProjectiveKreinDecomposition.lean): every real
 2×2 matrix is a sum of a scalar-diagonal part, an off-diagonal part, and a
 traceless-diagonal part, and these parts are pairwise orthogonal for the
 Frobenius inner product `Tr(AᵀB)`. This is a concrete low-dimensional linear
@@ -149,42 +154,57 @@ it does not follow from a quotient or block decomposition alone.
 
 ## 6. What the cited Lean modules establish
 
-The repository contains kernel-checked pieces, with narrower scopes than the
-full proposed synthesis:
+The cited source modules supply formal statements with the following
+carriers and hypotheses:
 
 | Area | Lean owner | Formalized scope |
 |---|---|---|
-| Nilpotency versus CAR | `lean/InfoGeometry/Canonical/LightConeCARFockBridge.lean` | Explicitly distinguishes a nilpotent light-cone pair from a CAR pair and requires a CAR realization. |
-| Split `Cl(1,1)` example | `lean/InfoGeometry/Krein/DoubledKreinMobiusTwist.lean` | Proves nilpotency and a mixed CAR relation for concrete split-Clifford generators. |
-| Fundamental symmetry | `lean/InfoGeometry/Krein/DoubledKreinMobiusTwist.lean` | Defines an involutive self-adjoint symmetry and the induced Krein adjoint. |
-| Common and relative sheet scales | `lean/InfoGeometry/Canonical/RestrictedVolumeCharacter.lean` | Splits two scalar sheet parameters into common and relative parts. |
-| Finite projective quotient | `proofs/ProjectiveSheetV4.lean` | Quotients a finite Pin extension by a central sign; it is not the positive-ray quotient of a real vector space. |
-| Pfaffian layer | `lean/InfoGeometry/Volume/Pfaffian.lean` | Uses a square-root-of-absolute-determinant definition and states a 2D identity; it is not a general Pfaffian construction. |
-| Horizontal/vertical split | `lean/InfoGeometry/Epistemology/RiemannianSubmersion.lean` and `lean/InfoGeometry/Canonical/NaturalGradientSubmersionFlow.lean` | Gives projector and metric-collapse lemmas; it does not establish the proposed projective three-mode metric. |
-| 2×2 matrix analogue | `lean/InfoGeometry/Projective/ProjectiveKreinDecomposition.lean` | Proves scalar ratio homogeneity, a 2×2 matrix reconstruction, pairwise Frobenius orthogonality, and the resulting Pythagorean identity. It does not prove the general Krein/projective metric claim. |
+| Nilpotency versus CAR | [lean/InfoGeometry/Canonical/LightConeCARFockBridge.lean](lean/InfoGeometry/Canonical/LightConeCARFockBridge.lean) | Explicitly distinguishes a nilpotent light-cone pair from a CAR pair and requires a CAR realization. |
+| Split `Cl(1,1)` example | [lean/InfoGeometry/Krein/DoubledKreinMobiusTwist.lean](lean/InfoGeometry/Krein/DoubledKreinMobiusTwist.lean) | Proves nilpotency and a mixed CAR relation for concrete split-Clifford generators. |
+| Fundamental symmetry | [lean/InfoGeometry/Krein/DoubledKreinMobiusTwist.lean](lean/InfoGeometry/Krein/DoubledKreinMobiusTwist.lean) | Defines an involutive self-adjoint symmetry and the induced Krein adjoint. |
+| Common and relative sheet scales | [lean/InfoGeometry/Canonical/RestrictedVolumeCharacter.lean](lean/InfoGeometry/Canonical/RestrictedVolumeCharacter.lean) | Splits two scalar sheet parameters into common and relative parts. |
+| Finite projective quotient | [proofs/ProjectiveSheetV4.lean](proofs/ProjectiveSheetV4.lean) | Quotients a finite Pin extension by a central sign; it is not the positive-ray quotient of a real vector space. |
+| Pfaffian layer | [lean/InfoGeometry/Volume/Pfaffian.lean](lean/InfoGeometry/Volume/Pfaffian.lean) | Uses a square-root-of-absolute-determinant definition and states a 2D identity; it is not a general Pfaffian construction. |
+| Horizontal/vertical split | [lean/InfoGeometry/Epistemology/RiemannianSubmersion.lean](lean/InfoGeometry/Epistemology/RiemannianSubmersion.lean) and [lean/InfoGeometry/Canonical/NaturalGradientSubmersionFlow.lean](lean/InfoGeometry/Canonical/NaturalGradientSubmersionFlow.lean) | Gives projector and metric-collapse lemmas; it does not establish the proposed projective three-mode metric. |
+| 2×2 matrix analogue | [lean/InfoGeometry/Projective/ProjectiveKreinDecomposition.lean](lean/InfoGeometry/Projective/ProjectiveKreinDecomposition.lean) | Proves scalar ratio homogeneity, a 2×2 matrix reconstruction, pairwise Frobenius orthogonality, and the resulting Pythagorean identity. It does not prove the general Krein/projective metric claim. |
+
+### Conditional tripotent parity and kernel results
+
+The reviewed revision also contains the following results. They concern
+specified real-algebra or endomorphism carriers; they do not identify an odd
+CAR Majorana generator with an operator commuting with fermion parity.
+
+| Owner and result | Hypotheses and established conclusion | Boundary |
+|---|---|---|
+| [PeirceSpine/TripotentParity.lean](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentParity.lean): `oddGrade_projZero`, `evenGrade_projZero`, `parityConj_projZero_of_mem_fiveGradeRange` | In `[Ring A] [Algebra ℝ A]`, the odd part for `P₀ = 1 - T*T` is the sum of adjoint grades `−1,+1`; the even part is the sum of grades `−2,0,+2`. The polynomial regroupings need no tripotence. With `T*T*T = T`, conjugation by `invS P₀` acts on each grade range with the corresponding sign. | The zero-mode cut differs from the positive/negative spectral cut. `T*T` remains an operator. |
+| [Core/TripotentChiralRestriction.lean](lean/InfoGeometry/Core/TripotentChiralRestriction.lean): `anticommute_endProjZero`, `zeroModeRestriction_sq_of_anticommute`, `zeroModeChiralEquiv` | For `T Γ : Module.End ℝ V`, anticommutation `Γ*T = -(T*Γ)` implies commutation with `1 - T*T` and exchange of the positive/negative polynomial projectors. With `T^3 = T` and `Γ*Γ = 1`, the restriction of `Γ` to `zeroModeCarrier T = ker T` is an involution and a real linear equivalence. | The result preserves the existing kernel; it does not produce a nonzero kernel vector, identify `Γ` with a CAR Majorana, or prove topological protection. |
+| [Physics/NuclearFiveGradeParity.lean](lean/InfoGeometry/Physics/NuclearFiveGradeParity.lean): `totalParity_invariant_of_fiveGrade`, `totalParity_invariant_projected_block` | For a tripotent `T` in an associative real algebra, diagonal coefficients in grade `0` and transition coefficients in grades `+1,−1` make the block Hamiltonian invariant under the combined internal/external parity. Applying the five-grade projectors constructs such a block from arbitrary four inputs. | The theorem is a parity-invariance statement for this block Hamiltonian. It does not assert that an individual odd CAR generator commutes with fermion parity. |
+
+The kernel involution and the zero-mode Peirce parity are distinct actions.
+Their relation to a Hamiltonian, CAR representation, or projective metric
+must be stated through a map and theorem on the chosen carrier. These
+conditional positive results preserve the qualifications in Sections 2–5.
 
 ## 7. Existing Madelung and chiral-fluid lanes
 
-A repository-wide source pass finds more of this architecture than the
-projective discussion alone suggests. These modules provide useful, separately
-proved pieces; their names and shared vocabulary do not make them one derived
+The following Madelung and chiral-fluid owners provide separately stated
+results. Their names and shared vocabulary do not make them one derived
 quantum-fluid theorem.
 
 | Lane | Lean owner(s) | What the source proves, and its boundary |
 |---|---|---|
-| Differential Madelung calculus | `lean/InfoGeometry/Algebra/MadelungDerivation.lean`, `lean/InfoGeometry/Algebra/MadelungLogDensityCalculus.lean` | Derivation-algebra identities for amplitude curvature, logarithmic density score, Hamilton–Jacobi residual to Euler residual, quantum Euler, and amplitude transport to continuity. The continuity theorem assumes the transport equation; it does not derive it from Schrödinger evolution. |
-| Fisher–Rao/amplitude relation | `lean/InfoGeometry/Information/FisherRaoMadelungIsometry.lean`, `lean/InfoGeometry/Canonical/MadelungFisherRaoSynthesisBridge.lean` | Square-root density identities and the scalar line-element identity under `dρ = 2u du`; the synthesis bridge assumes the amplitude/density and quantum-potential equations in its hypotheses. It does not construct a full infinite-dimensional Riemannian isometry. |
-| Discrete Madelung state | `lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean`, `lean/InfoGeometry/Canonical/MadelungHydrodynamic.lean` | A finite lattice state with positive density and phase gradient, velocity proportional to that gradient, and a quantum-potential expression using a supplied Laplacian of `√ρ`. The synthesis theorem reduces to the velocity identity and the zero-Laplacian special case; no discrete evolution or continuity law is defined there. |
-| Spinor density and current | `lean/InfoGeometry/Canonical/SpinorHydrodynamicReadout.lean` and its consumers `SpinorReadoutRegularity.lean`, `SpinorReadoutOscillation.lean` | Defines density as norm square, current as the imaginary part of a complex inner product, and current/density readout away from zero density; proves bounds and derivative formulas. It explicitly does not posit wave evolution or derive a continuity equation. |
-| Doubled amplitude and Krein sheets | `lean/InfoGeometry/Canonical/PolarizedMadelungBridge.lean`, `lean/InfoGeometry/Canonical/MadelungMoebiusChiralBridge.lean`, `lean/InfoGeometry/Krein/FiniteMadelungPhaseRotation.lean` | Uses the existing doubled real carrier, Hilbert normalization, positive/negative sheet projections, sheet densities, phase orbit, and finite real phase rotations. The Möbius/chiral bridge transports the sheet decomposition to existing idempotents; this is not a fluid-current evolution theorem. |
-| Chiral BdG and Krein compatibility | `lean/InfoGeometry/Physics/BdGChiralBlockMatrix.lean`, `lean/InfoGeometry/EmergentVacuum/SplitChiralBdGCompatibility.lean` | Finite matrix identities for chiral grading, off-diagonal Dirac/BdG blocks, and a split-Krein/Peirce compatibility model. These modules do not identify their matrix state with the discrete Madelung state or the spinor current above. |
-| Vorticity/chirality and Navier–Stokes-labelled results | `lean/InfoGeometry/Canonical/MadelungTopologicalSpin.lean`, `lean/InfoGeometry/Canonical/MadelungNavierStokesClosure.lean`, `lean/InfoGeometry/Physics/ArnoldHydrodynamicsBeltrami.lean`, `lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimir.lean` | The spin/vorticity equivalence assumes the operator identity `V = c • ChiralityOp`. The closure theorem assumes a skew-adjoint velocity field and applies the existing residual lemma; the Beltrami and helicity results are algebraic or conditional identities. These assumptions do not establish a PDE solution, fluid existence theorem, or derivation of vorticity from the Madelung current. |
-| Finite-to-colimit observable lane | `lean/InfoGeometry/Canonical/MadelungMetriplecticTomitaFrame.lean`, `lean/InfoGeometry/Canonical/MadelungMetriplecticColimitBridge.lean`, consumed by `lean/InfoGeometry/TraceFormula/OperatorialISColimitFramework.lean` | Packages finite trace/action data and transports an observable action into the algebraic UHF colimit. It does not transport a continuity equation, chiral current, or Navier–Stokes evolution through that colimit. |
+| Differential Madelung calculus | [lean/InfoGeometry/Algebra/MadelungDerivation.lean](lean/InfoGeometry/Algebra/MadelungDerivation.lean), [lean/InfoGeometry/Algebra/MadelungLogDensityCalculus.lean](lean/InfoGeometry/Algebra/MadelungLogDensityCalculus.lean) | Derivation-algebra identities for amplitude curvature, logarithmic density score, Hamilton–Jacobi residual to Euler residual, quantum Euler, and amplitude transport to continuity. The continuity theorem assumes the transport equation; it does not derive it from Schrödinger evolution. |
+| Fisher–Rao/amplitude relation | [lean/InfoGeometry/Information/FisherRaoMadelungIsometry.lean](lean/InfoGeometry/Information/FisherRaoMadelungIsometry.lean), [lean/InfoGeometry/Canonical/MadelungFisherRaoSynthesisBridge.lean](lean/InfoGeometry/Canonical/MadelungFisherRaoSynthesisBridge.lean) | Square-root density identities and the scalar line-element identity under `dρ = 2u du`; the synthesis bridge assumes the amplitude/density and quantum-potential equations in its hypotheses. It does not construct a full infinite-dimensional Riemannian isometry. |
+| Discrete Madelung state | [lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean](lean/InfoGeometry/Canonical/MadelungHydrodynamicPressureBridge.lean), [lean/InfoGeometry/Canonical/MadelungHydrodynamic.lean](lean/InfoGeometry/Canonical/MadelungHydrodynamic.lean) | A finite lattice state with positive density and phase gradient, velocity proportional to that gradient, and a quantum-potential expression using a supplied Laplacian of `√ρ`. The synthesis theorem reduces to the velocity identity and the zero-Laplacian special case; no discrete evolution or continuity law is defined there. |
+| Spinor density and current | [lean/InfoGeometry/Canonical/SpinorHydrodynamicReadout.lean](lean/InfoGeometry/Canonical/SpinorHydrodynamicReadout.lean) and its consumers `SpinorReadoutRegularity.lean`, `SpinorReadoutOscillation.lean` | Defines density as norm square, current as the imaginary part of a complex inner product, and current/density readout away from zero density; proves bounds and derivative formulas. It explicitly does not posit wave evolution or derive a continuity equation. |
+| Doubled amplitude and Krein sheets | [lean/InfoGeometry/Canonical/PolarizedMadelungBridge.lean](lean/InfoGeometry/Canonical/PolarizedMadelungBridge.lean), [lean/InfoGeometry/Canonical/MadelungMoebiusChiralBridge.lean](lean/InfoGeometry/Canonical/MadelungMoebiusChiralBridge.lean), [lean/InfoGeometry/Krein/FiniteMadelungPhaseRotation.lean](lean/InfoGeometry/Krein/FiniteMadelungPhaseRotation.lean) | Uses the existing doubled real carrier, Hilbert normalization, positive/negative sheet projections, sheet densities, phase orbit, and finite real phase rotations. The Möbius/chiral bridge transports the sheet decomposition to existing idempotents; this is not a fluid-current evolution theorem. |
+| Chiral BdG and Krein compatibility | [lean/InfoGeometry/Physics/BdGChiralBlockMatrix.lean](lean/InfoGeometry/Physics/BdGChiralBlockMatrix.lean), [lean/InfoGeometry/EmergentVacuum/SplitChiralBdGCompatibility.lean](lean/InfoGeometry/EmergentVacuum/SplitChiralBdGCompatibility.lean) | Finite matrix identities for chiral grading, off-diagonal Dirac/BdG blocks, and a split-Krein/Peirce compatibility model. These modules do not identify their matrix state with the discrete Madelung state or the spinor current above. |
+| Vorticity/chirality and Navier–Stokes-labelled results | [lean/InfoGeometry/Canonical/MadelungTopologicalSpin.lean](lean/InfoGeometry/Canonical/MadelungTopologicalSpin.lean), [lean/InfoGeometry/Canonical/MadelungNavierStokesClosure.lean](lean/InfoGeometry/Canonical/MadelungNavierStokesClosure.lean), [lean/InfoGeometry/Physics/ArnoldHydrodynamicsBeltrami.lean](lean/InfoGeometry/Physics/ArnoldHydrodynamicsBeltrami.lean), [lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimir.lean](lean/InfoGeometry/Physics/SDiffCoadjointHelicityCasimir.lean) | The spin/vorticity equivalence assumes the operator identity `V = c • ChiralityOp`. The closure theorem assumes a skew-adjoint velocity field and applies the existing residual lemma; the Beltrami and helicity results are algebraic or conditional identities. These assumptions do not establish a PDE solution, fluid existence theorem, or derivation of vorticity from the Madelung current. |
+| Finite-to-colimit observable lane | [lean/InfoGeometry/Canonical/MadelungMetriplecticTomitaFrame.lean](lean/InfoGeometry/Canonical/MadelungMetriplecticTomitaFrame.lean), [lean/InfoGeometry/Canonical/MadelungMetriplecticColimitBridge.lean](lean/InfoGeometry/Canonical/MadelungMetriplecticColimitBridge.lean), consumed by [lean/InfoGeometry/TraceFormula/OperatorialISColimitFramework.lean](lean/InfoGeometry/TraceFormula/OperatorialISColimitFramework.lean) | Packages finite trace/action data and transports an observable action into the algebraic UHF colimit. It does not transport a continuity equation, chiral current, or Navier–Stokes evolution through that colimit. |
 
-The practical gap is therefore not “no Madelung or chiral-fluid mathematics.”
-Several local identities and conditional bridges already exist. The missing
-work is a sequence of explicit carrier maps and evolution theorems joining
-them. A defensible order is:
+Several local identities and conditional bridges already exist. To join
+the models in this note, a connecting construction must provide explicit
+carrier maps and evolution theorems. A useful dependency order is:
 
 1. Choose one finite graph or lattice carrier and define a complex state,
    self-adjoint Hamiltonian, density, and edge current on that same carrier.
@@ -251,9 +271,12 @@ a general four-way `gl(2N,ℝ)` split are only a numerical identity unless
 actual subspaces, a direct-sum theorem, and the relevant projections are
 provided.
 
-Accordingly, links in the proposed chain should be presented as separate
-models unless an explicit map and theorem connect their carriers. In
-particular, the repository does not currently prove the parity-commutation,
-Majorana-kernel, Berezinian/Pfaffian projectivization, or three-mode metric
-claims stated in the broader synthesis. The new 2×2 result is limited to the
-explicit matrix carrier and Frobenius product named above.
+Accordingly, a link in the proposed chain needs an explicit map and theorem
+connecting its carriers. The conditional parity and kernel results in
+Section 6 establish a symmetry of a specified block Hamiltonian and an
+involution on the kernel of a specified tripotent; neither changes the odd
+CAR anticommutation law or supplies a nonzero, topologically protected
+Majorana mode. The volume constructions and quotient data cited here also
+do not by themselves yield a Berezinian/Pfaffian projectivization or a
+general three-mode metric. The 2×2 result remains a statement about its
+explicit matrix carrier and Frobenius product.

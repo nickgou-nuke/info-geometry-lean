@@ -3,7 +3,7 @@
 > the context. Search existing implementation and trace its real definitions,
 > imports, instances, theorems, and uses before declaring a structure missing
 > or incorrect. A finding in one file is not a repo-wide finding. See
-> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](../../docs/REPO_DEEP_SEARCH_PROTOCOL.md).
 
 # Docs Tools
 
@@ -27,8 +27,10 @@ This directory contains maintained documentation refresh helpers.
 - `update_repo_docs.py`
   refreshes selected derived documentation artifacts
 - `refresh_markdown_status.py`
-  relabels the wider Markdown corpus so stale files stop reading like current
-  repository authority
+  is a legacy status-labeling helper. At the 2026-11-03 source review it still
+  hardcodes `2026-05-02` and several old root paths. Review and update that
+  behavior before applying it to newly maintained guides; a generated label
+  does not establish a semantic source audit.
 
 ## Rule
 

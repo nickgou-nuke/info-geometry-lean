@@ -1,184 +1,86 @@
-# Peirce Ladder Operators & SU(3) Color: Multi-System Formalization
+# Peirce projectors and ladder research packet
 
-## Overview
+The original owner for this packet is
+[Peirce/PeirceLadderOperators.lean](../../../lean/InfoGeometry/Peirce/PeirceLadderOperators.lean),
+in namespace `PeirceLadder`. It contains a concrete real 2×2 complex structure
+and complementary matrix projectors, alongside scalar and dimension metadata.
+Its current types do not establish three fermionic modes, an SU(3) group action,
+or a Standard Model representation.
 
-This directory contains a complete cross-system formalization of the connection between:
+Source reviewed on 2026-11-03 at commit
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`. The related owner paths below were
+also inspected for the stated declarations. No fresh backend runs are recorded.
+Follow the [repository search protocol](../../../docs/REPO_DEEP_SEARCH_PROTOCOL.md)
+to distinguish this packet's scope from other noncommutative owners.
 
-1. **Complex structure** `J = e₁` with `J² = -1` in split octonions
-2. **Nilpotent ladder operators** `uᵢ, dᵢ` from Peirce decomposition
-3. **Complex ladder operators** `αᵢ = (uᵢ + J·dᵢ)/√2`
-4. **Zorn matrix projectors** `OP1, OP2` for color isolation
-5. **SU(3) color gauge symmetry** acting on 3 ladder operators
+## Original owner's actual contents
 
-The key insight: **3 fermionic ladder operators generate the Standard Model color triplet** through the Peirce decomposition mechanism.
+| Surface | Current content and boundary |
+|---|---|
+| `ComplexStructure`, `standardComplexStructure` | A real 2×2 matrix `J` with `J * J = -1`, using `standardJ = [[0,-1],[1,0]]`. |
+| `OP1`, `OP2` | The diagonal real matrix projectors onto the two coordinate axes. |
+| `OP1_idempotent`, `OP2_idempotent`, `OP1_OP2_orthogonal`, `OP1_OP2_complete` | Concrete matrix proofs of idempotence, orthogonality, and sum equal to the identity. |
+| `NilpotentLadder` | A record requiring real scalars `u`, `d` with `u² = d² = 0` and `u*d + d*u = 1`; no inhabitant is supplied. Over the reals these requirements are inconsistent, since square-zero real scalars are zero. This is not a noncommutative ladder witness. |
+| `complexLadder` | The scalar expression `(u + J*d) / sqrt 2`; its scalar `J` is not the preceding matrix complex structure. |
+| `fermionicFockDim`, `colorTripletDim` | Natural-number definitions `2^3` and `3`, without a Fock-space or representation construction. |
+| `SU3ColorAction`, `standardSU3Color` | A type-and-dimension record whose supplied `gaugeGroup` is `Unit`; it has no group action or SU(3) laws. |
+| `TripotentEigenvalue`, `tripotentToProjector` | A finite label type and a map to the named projectors. |
+| `sandwichColorIsolation` | Ordinary matrix multiplication `OP1 * X * OP2`; no Zorn multiplication is used in this definition. |
 
-## Files by System
+The projector identities are concrete algebraic results. The scalar ladder
+record and dimension labels do not extend them to the physical interpretation
+of the original narrative.
 
-### SageMath / SymPy
-- `tools/infra/peirce_ladder_formalization.py` - Main Python script
-- `tools/infra/galgebra_clifford_peirce.py` - GaAlgebra + Clifford computation
-- `tools/infra/bridge_data/peirce_ladder_bridge.json` - Bridge data export
+## Related noncommutative owners
 
-### Lean 4
-- `lean/InfoGeometry/Peirce/PeirceLadderOperators.lean` - Formal proof with Mathlib
+There are more substantial algebraic constructions elsewhere in the repository.
+Use their carriers and hypotheses directly rather than inferring a global gap
+from the original packet.
 
-### Coq
-- `tools/infra/bridge_data/PeirceLadder.v` - Coq/MathComp formalization
+| Owner | Reviewed scope |
+|---|---|
+| [Algebra/PeirceLadderOperators.lean](../../../lean/InfoGeometry/Algebra/PeirceLadderOperators.lean) | Clifford-algebra expressions over `Cl(1,1)`, including a `J` with square `-1`, and ladder square-zero identities under explicit hypotheses. Its header explicitly limits split-octonion and particle-representation interpretations. |
+| [OperatorAlgebra/LieJordanPeirceColimit.lean](../../../lean/InfoGeometry/OperatorAlgebra/LieJordanPeirceColimit.lean) | Native stage-one Witt creation/annihilation elements; `witt_pair_noncommutative_reflexive` proves square-zero, reflexive-pair identities, and noncommutation. It transports associated support, involution, and Casimir identities to the algebraic matrix-tower limit. |
+| [Core/SuperGrassmannianSusy.lean](../../../lean/InfoGeometry/Core/SuperGrassmannianSusy.lean) | Conditional supercolor and color-boson identities over a ring, with explicit Moore–Penrose, cross-annihilation, or star-duality assumptions as required. These types do not by themselves construct a physical supersymmetry representation. |
 
-### Isabelle/HOL
-- `tools/infra/bridge_data/PeirceLadderOperators.thy` - Isabelle formalization
+For the wider owner map, see [REPOCONTENT.md](../../../REPOCONTENT.md).
 
-### Macaulay2
-- `tools/infra/bridge_data/peirce_dmodule.m2` - D-module structure computation
+## Tracked companion files
 
-## Mathematical Structure
+| File | Role |
+|---|---|
+| [peirce_ladder_formalization.py](../peirce_ladder_formalization.py) | Python research companion. |
+| [galgebra_clifford_peirce.py](../galgebra_clifford_peirce.py) | GaAlgebra/Clifford computation companion. |
+| [peirce_ladder_bridge.json](peirce_ladder_bridge.json) | Stored bridge data. |
+| [PeirceLadder.v](PeirceLadder.v) | Coq source companion. |
+| [PeirceLadderOperators.thy](PeirceLadderOperators.thy) | Isabelle/HOL source companion. |
+| [peirce_dmodule.m2](peirce_dmodule.m2) | Macaulay2 source companion. |
 
-### 1. Complex Structure
-```
-J = e₁  (first imaginary unit in split octonions)
-J² = -1
-```
+The inventory does not certify matching semantics or successful execution in
+every backend.
 
-### 2. Nilpotent Ladder Operators (Peirce Decomposition)
-```
-uᵢ² = 0      (nilpotent creation)
-dᵢ² = 0      (nilpotent annihilation)
-{uᵢ, dᵢ} = 1  (canonical anticommutation)
-```
+## Historical research goals
 
-### 3. Complex Ladder Operators
-```
-αᵢ = (uᵢ + J·dᵢ)/√2
+The original packet proposed connecting Peirce decomposition, nilpotent
+ladders, Clifford/split-octonion expressions, and a color representation with
+dimensions `1 + 3 + 3 + 1`. These remain research motivations. A fermionic CAR
+statement uses an **anticommutator** and needs an actual operator carrier,
+adjoint, and the requisite relations. A color interpretation needs a defined
+group and representation action, not only the number three.
 
-These satisfy:
-[αᵢ, αⱼ†] = δᵢⱼ
-```
+The complete earlier narrative remains in the
+[historical packet](https://github.com/nickgou-nuke/info-geometry-lean/blob/214f7bcf733eaf4720913bc2c082936f2480d3fc/tools/infra/bridge_data/README_PEIRCE_LADDER.md).
+Its full cross-system and physical completion claims are not current proof
+status.
 
-### 4. Fermionic Fock Space
-```
-Dimension: 2³ = 8
-Decomposition: 1 ⊕ 3 ⊕ 3̄ ⊕ 1
-  - Vacuum |0⟩: singlet 1
-  - αᵢ†|0⟩: triplet 3 (quark)
-  - αᵢ†αⱼ†|0⟩: antitriplet 3̄ (antiquark)
-  - α₀†α₁†α₂†|0⟩: singlet 1 (baryon)
-```
+## Targeted verification
 
-### 5. Zorn Matrix Projectors
-```
-OP1 = [[1,0],[0,0]]  (projects onto a, left)
-OP2 = [[0,0],[0,1]]  (projects onto b, right)
+From the repository root, after dependency setup:
 
-Properties:
-- OP1² = OP1  (idempotent)
-- OP2² = OP2  (idempotent)
-- OP1·OP2 = 0  (orthogonal)
-- OP1 + OP2 = I  (complete)
-```
-
-### 6. Sandwich Formula
-```
-X_color = OP1 · X · OP2
-
-This strips vacuum/lepton sectors (a, b),
-isolating pure SU(3) color off-diagonals (𝑥⃗, 𝑦⃗)
-```
-
-### 7. Peirce Decomposition Theorem
-```
-Tripotent eigenvalue λ ∈ {+1, -1, 0} determines projector:
-
-λ = +1 → OP1 (left, acts on 𝑥⃗ quark)
-λ = -1 → OP2 (right, acts on 𝑦⃗ antiquark)
-λ = 0  → OP1+OP2 (bilateral, acts on a,b vacuum)
-```
-
-## Usage
-
-### Run SageMath/SymPy Formalization
 ```bash
-cd /home/goutev/repos/info-geometry-lean
-python3 tools/infra/peirce_ladder_formalization.py
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Peirce.PeirceLadderOperators
 ```
 
-### Compile Lean 4 Proof
-```bash
-cd /home/goutev/repos/info-geometry-lean
-lake build PeirceLadderOperators
-```
-
-### Check Coq Proof
-```bash
-cd tools/infra/bridge_data
-coqc PeirceLadder.v
-```
-
-### Check Isabelle Proof
-```bash
-isabelle build -d . PeirceLadderOperators
-```
-
-### Run Macaulay2 D-Module Computation
-```bash
-M2 < tools/infra/bridge_data/peirce_dmodule.m2
-```
-
-## Cross-System Verification Chain
-
-```
-SageMath/SymPy (computation)
-      ↓
-GaAlgebra/Clifford (geometric algebra)
-      ↓
-Macaulay2 (D-modules, Weyl algebra)
-      ↓
-Lean4 (kernel-checked proofs)
-      ↓
-Coq (independent verification)
-      ↓
-Isabelle/HOL (independent verification)
-```
-
-## Key Theorems
-
-### Lean4: `OP1_idempotent`, `OP2_idempotent`
-```lean
-theorem OP1_idempotent : OP1 * OP1 = OP1
-theorem OP2_idempotent : OP2 * OP2 = OP2
-```
-
-### Coq: `peirce_ladder_color_theorem`
-```coq
-Theorem peirce_ladder_color_theorem :
-  forall J u d,
-  J * J = -1 →
-  (∀ i, nilpotent_ladder (u i) (d i)) →
-  ∃ fock_space color_action,
-    fock_space ≠ ∅ ∧ su3_dim color_action = 3.
-```
-
-### Isabelle: `peirce_ladder_color_theorem`
-```isabelle
-theorem peirce_ladder_color_theorem:
-  fixes J :: real and u d :: "nat ⇒ real"
-  assumes "J * J = -1"
-    and "∀i∈{0,1,2}. nilpotent_ladder (u i) (d i)"
-  shows "∃fock_space color_action.
-          fock_space ≠ {} ∧ su3_dim color_action = 3"
-```
-
-## Physics Connection
-
-This formalization captures the **Günaydin-Gürsey construction**:
-- Split octonions → quark color via Zorn matrices
-- 3 ladder operators → 3 colors (red, green, blue)
-- Diagonal projectors → isolate color from lepton/vacuum sectors
-
-The fermionic Fock space structure `1 ⊕ 3 ⊕ 3̄ ⊕ 1` matches the Standard Model representation content for a single generation.
-
-## References
-
-- PeirceLadderOperators.lean: Main Lean4 formalization
-- peirce_ladder_bridge.json: Bridge data for cross-system ingestion
-- AQL functorial bridge: tools/infra/aql/aql_functorial_bridge.py
-- SplitOctonionZorn.lean: lean/InfoGeometry/Exceptional/SplitOctonionZorn.lean
+Build related owners separately if they are part of the intended change. See
+the [root build guide](../../../README.md); do not equate a successful build of
+this limited owner with a proof of the broader research goals.

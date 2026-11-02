@@ -1,55 +1,80 @@
-# Project: Global Codebase Refactor & CAS O(1) Optimization
+# Historical CAS proof-refactor campaign
 
-## Architecture
-- **CAS Computation & Certificate Generation**: Python/SymPy/Sage scripts compute exact polynomial, block-matrix, and projector identities externally, emitting deterministic mathematical certificates.
-- **Lean 4 Structural & Definitional Equality Verification**: Target Lean files import or define certificate structures verified by kernel $O(1)$ definitional equality (`rfl`) or direct term unifications (`exact`), eliminating brute-force search tactics (`native_decide`, `simpa using`, `decide`, `simp` storms).
-- **Categorical Inductive Colimit & Homotopy Alignment**: In accordance with `TensorTowerColimit.lean` and `ChiralDirectedGraphHomotopy.lean`, all limits and equivalences are established via direct inductive colimits and explicit 2-cell homotopy witnesses without unverified VM escapes or non-algebraic continuations.
-- **Sequential Build Locking**: All verification passes execute sequentially under `/tmp/info-geometry-build.lock` via `tools/infra/run_locked_lake_build.py`.
-- **Subagent Sandbox Isolation**: All modifications must be generated and verified in `.agents/sandbox_<target>/` before any live promotion.
+This page records the CAS-assisted refactor campaign whose later milestones
+were dated 2026-09-22. It is a project history and navigation aid, not the current
+repository-wide architecture, operating policy, or build-status report. Start
+with [README.md](README.md), [AGENTS.md](AGENTS.md), and
+[docs/README.md](docs/README.md) for those roles.
 
-## Feature Inventory
-| # | Feature | Description | Milestone | Source |
-|---|---------|-------------|-----------|--------|
-| 1 | CAS Dirac Laplacian Certificate Generator | Python CAS script computing exact $D, D^2, \Delta_0, \partial_1 \partial_1^T, \mathrm{Tr}(D^2)$ certificates | M1 | ORIGINAL_REQUEST §R2 |
-| 2 | Dirac Laplacian O(1) Proof Replacement | Eliminate all 10 `native_decide` in `lean/DAG/DiracLaplacian.lean` via CAS certificates and $O(1)$ proofs | M1 | ORIGINAL_REQUEST §R1, §R3 |
-| 3 | Re-enable DiracLaplacian in DAG Module | Restore `import DAG.DiracLaplacian` in `lean/DAG.lean` and ensure clean compilation | M1 | ORIGINAL_REQUEST Acceptance |
-| 4 | Noncommutative Fock Bridge O(1) Replacement | Replace 5 `simpa using` chains with `exact` in `lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean` | M2 | ORIGINAL_REQUEST §R1, §R3 |
-| 5 | CAS Fock Projector Idempotence Certificate | Attach CAS Clifford projector certificate ($P_\pm^2 = P_\pm$, $P_+ P_- = 0$) | M2 | ORIGINAL_REQUEST §R2 |
-| 6 | E2E Test Suite & Build Verification | Verify target files compile with locked lake build, no warnings, zero `native_decide` / `simpa using` | M3 | ORIGINAL_REQUEST Acceptance |
-| 7 | Victory Audit & Handoff | Conduct integrity audit and deliver comprehensive report to Sentinel for independent victory audit | M4 | ORIGINAL_REQUEST Acceptance |
-| 8 | Surgical Refactoring of Moore-Penrose Bottleneck | Eliminate all 26 `native_decide` in `lean/InfoGeometry/Canonical/Hartwig1976SVDMoorePenroseBorder.lean` via CAS certificates and O(1) proofs | M5 | 2026-09-22T03:53:52Z Mandate |
-| 9 | Final Independent Victory Audit 3 | Full independent forensic, axiomatic, and E2E verification confirming unconditional victory | M5 | 2026-09-22T03:53:52Z Mandate |
-| 10 | DAG Dominators O(1) Refactor | Eliminate 3 `native_decide` in `lean/DAG/Dominators.lean` via O(1) kernel evaluation, purging all `native_decide` from `DAG.lean` | M6 | 2026-09-22T05:17:23Z Mandate |
-| 11 | Campbell-Meyer Weak Drazin CAS O(1) Refactor | Eliminate 22 `native_decide` in `CampbellMeyerWeakDrazin.lean` via SymPy integer scaling and structural unit conjugation | M7 | 2026-09-22T05:17:23Z Mandate |
-| 12 | Promotion, E2E Test Suite & Test 2.5 Verification | Promote verified sandbox files to live repo, run locked build and E2E suite | M8 | 2026-09-22T05:17:23Z Mandate |
-| 13 | Final Victory Audit 4 & Sentinel Report | Independent forensic integrity audit across all promoted targets | M8 | 2026-09-22T05:17:23Z Mandate |
-| 14 | FieldCorrelatorProjection Discovery & Compression | Phase 0 discovery, OpenGauss /golf & /refactor, CAS O(1) certificates in sandbox for FieldCorrelatorProjection | M9 | 2026-09-22T12:06:12Z Mandate |
-| 15 | KreinAttentionEnergy Compression | OpenGauss /golf & /refactor, CAS O(1) certificates in sandbox for KreinAttentionEnergy | M10 | 2026-09-22T12:06:12Z Mandate |
-| 16 | ConnesHodgeBridge Compression | OpenGauss /golf & /refactor, CAS O(1) certificates in sandbox for ConnesHodgeBridge | M11 | 2026-09-22T12:06:12Z Mandate |
-| 17 | 5-Agent Gate Panel & Sentinel Report | Reviewers, Challengers, Auditor gate verification, promotion, and report to Sentinel | M12 | 2026-09-22T12:06:12Z Mandate |
+The file inventory and runner behavior below were source-reviewed on 2026-11-03
+at commit `214f7bcf733eaf4720913bc2c082936f2480d3fc`. The historical milestone
+outcomes were not re-executed or independently re-certified in that review.
 
-## Milestones
-| # | Name | Scope | Dependencies | Status |
-|---|------|-------|-------------|--------|
-| 1 | M1: Dirac Laplacian CAS & O(1) Refactor | `scripts/cas_dirac_laplacian_certificate.py`, `lean/DAG/DiracLaplacian.lean`, `lean/DAG.lean` | none | DONE |
-| 2 | M2: Noncommutative Fock Bridge O(1) Refactor | `lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean` | none | DONE |
-| 3 | M3: E2E Verification & Test Suite | Full target compilation via `run_locked_lake_build.py`, tactic elimination verification | M1, M2 | DONE |
-| 4 | M4: Final Victory Audit 2 & Sentinel Reporting | Forensic integrity audit & victory reporting to Sentinel | M3 | DONE |
-| 5 | M5: Surgical Compression Swarm & Victory Audit 3 | Surgical elimination of 26 `native_decide` bottlenecks in `Hartwig1976SVDMoorePenroseBorder.lean` & final victory audit | M4 | DONE |
-| 6 | M6: DAG Dominators O(1) Refactor | `lean/DAG/Dominators.lean` (3 `native_decide` -> 0) | M5 | DONE |
-| 7 | M7: Campbell-Meyer Weak Drazin CAS O(1) Refactor | `lean/InfoGeometry/Canonical/CampbellMeyerWeakDrazin.lean` (22 `native_decide` -> 0) | M6 | DONE |
-| 8 | M8: Global Verification & Victory Audit 4 | E2E suite verification, Test 2.5 proposition fidelity, independent Victory Auditor | M6, M7 | DONE (VICTORY) |
-| 9 | M9: FieldCorrelatorProjection Compression | `lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean` sandbox compression & 5-agent Gate Panel | M8 | DONE (PROMOTED) |
-| 10 | M10: KreinAttentionEnergy Compression | `lean/InfoGeometry/LLM/KreinAttentionEnergy.lean` sandbox compression & 5-agent Gate Panel | M9 | DONE (PROMOTED) |
-| 11 | M11: ConnesHodgeBridge Compression | `lean/DAG/ConnesHodgeBridge.lean` sandbox compression | M10 | DONE (PROMOTED) |
-| 12 | M12: 5-Agent Gate Panel & Sentinel Report | Final global promotion, E2E suite verification, and report to Sentinel | M9, M10, M11 | DONE (VICTORY) |
+## Campaign objective and current implementation
 
-## Code Layout
-- `scripts/cas_dirac_laplacian_certificate.py`: CAS certificate generator script for Dirac Laplacian.
-- `.agents/sandbox_correlator/`: Sandbox environment for FieldCorrelatorProjection compression (M9, promoted).
-- `.agents/sandbox_krein/`: Sandbox environment for KreinAttentionEnergy compression (M10, promoted).
-- `.agents/sandbox_connes_hodge/`: Sandbox environment for ConnesHodgeBridge compression (M11).
-- `lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean`: Target bottleneck 1 (compressed, 0 tactics, live).
-- `lean/InfoGeometry/LLM/KreinAttentionEnergy.lean`: Target bottleneck 2 (compressed, 0 tactics, live promoted).
-- `lean/DAG/ConnesHodgeBridge.lean`: Target bottleneck 3 (compressed, 0 tactics, live promoted).
-- `tools/infra/run_locked_lake_build.py`: Shared lock compilation wrapper.
+The campaign aimed to reduce costly elaboration in selected Lean modules by
+using exact small-example calculations and reusing existing structural
+theorems. Its historical label was “CAS O(1) Optimization.” The present source
+supports narrower descriptions:
+
+| Component | Current source and scope |
+|---|---|
+| Graph matrix diagnostic | [cas_dirac_laplacian_certificate.py](scripts/cas_dirac_laplacian_certificate.py) constructs exact rational matrices and asserts block/trace identities for a fixed chain, triangle, and digon. |
+| Lean graph owner | [DiracLaplacian.lean](lean/DAG/DiracLaplacian.lean) contains the graph examples, arithmetic definitions, and graph-Dirac theorem statements targeted by the runner. |
+| Fock bridge | [NoncommutativeFockBridge.lean](lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean) reuses projector and CAR declarations from its imported owners through Lean proof terms. CAS references in comments do not themselves import certificates into Lean. |
+| Integration source | [DAG.lean](lean/DAG.lean) is the aggregate whose Dirac import is checked. |
+| E2E runner | [e2e_cas_o1_suite.sh](tools/e2e_cas_o1_suite.sh) combines two owner builds, source-pattern checks, the fixed CAS examples, import/elaboration checks, and two timing thresholds. |
+| Compiler serialization | [run_locked_lake_build.py](tools/infra/run_locked_lake_build.py) and [run_locked_lean.py](tools/infra/run_locked_lean.py) provide shared-lock entrypoints. The E2E runner uses the build wrapper in tier 1 but still makes direct unlocked Lean calls in tiers 3 and 4. |
+
+There is no asymptotic O(1) proof in the timing test. `rfl`, `exact`, and the
+absence of selected tactics do not establish a general complexity bound. The
+runner measures two fixed files with a **35-second timeout** and a separate
+**15-second maximum passing elapsed time**. Its proposition checks use source
+tokens and regexes, not an AST or a comparison against git HEAD. See
+[TEST_INFRA.md](TEST_INFRA.md) for exact behavior and
+[TEST_READY.md](TEST_READY.md) for the outstanding locking limitation.
+
+## Historical milestones
+
+The earlier project record marked these milestones done, promoted, or
+“victory.” Those labels describe the historical report. The table retains the
+work sequence without treating those labels as evidence that the current
+checkout passes every gate or proves each original research interpretation.
+
+| Milestone | Historical objective | Current source or report route |
+|---|---|---|
+| M1 | Dirac certificate calculations, proof refactor, and restored aggregate import. | [CAS script](scripts/cas_dirac_laplacian_certificate.py), [Dirac owner](lean/DAG/DiracLaplacian.lean), [DAG aggregate](lean/DAG.lean). |
+| M2 | Fock bridge proof reuse and projector-certificate packaging. | [NoncommutativeFockBridge.lean](lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean). |
+| M3 | E2E compilation and selected tactic-pattern checks. | [Runner](tools/e2e_cas_o1_suite.sh), [TEST_INFRA.md](TEST_INFRA.md). |
+| M4 | Independent audit and handoff, historically named “Victory Audit 2.” | Historical project record linked below; no new audit outcome is asserted here. |
+| M5 | Refactor of the Hartwig Moore–Penrose example owner and another audit. | [Hartwig1976SVDMoorePenroseBorder.lean](lean/InfoGeometry/Canonical/Hartwig1976SVDMoorePenroseBorder.lean). |
+| M6 | Refactor of DAG dominator examples. | [Dominators.lean](lean/DAG/Dominators.lean). |
+| M7 | Refactor of Campbell–Meyer weak-Drazin examples. | [CampbellMeyerWeakDrazin.lean](lean/InfoGeometry/Canonical/CampbellMeyerWeakDrazin.lean). |
+| M8 | Promotion, E2E checks, and the selected theorem-statement pattern check. | [Runner](tools/e2e_cas_o1_suite.sh); tier 2.5 has the heuristic scope described above. |
+| M9 | Field-correlator proof compression and review. | [FieldCorrelatorProjection.lean](lean/InfoGeometry/Detector/FieldCorrelatorProjection.lean). |
+| M10 | Krein-attention proof compression and review. | [KreinAttentionEnergy.lean](lean/InfoGeometry/LLM/KreinAttentionEnergy.lean). |
+| M11 | Connes–Hodge bridge proof compression and review. | [ConnesHodgeBridge.lean](lean/DAG/ConnesHodgeBridge.lean). |
+| M12 | Final campaign review, promotion, and handoff. | Historical project record; current gate results require commit-specific logs. |
+
+M5–M12 carry 2026-09-22 request timestamps in the prior record. The named
+subagent sandboxes and reviewer roles there describe that workflow, not a
+portable checkout layout or new operating requirements.
+
+The complete prior feature list, reported tactic counts, milestone labels,
+and request timestamps remain in the
+[historical PROJECT.md](https://github.com/nickgou-nuke/info-geometry-lean/blob/214f7bcf733eaf4720913bc2c082936f2480d3fc/PROJECT.md).
+
+## Continuing this work
+
+For a new refactor, identify the owning declaration and its consumers, preserve
+the proposition and necessary hypotheses, and compare the actual proof and
+dependency changes. Use the
+[repository search protocol](docs/REPO_DEEP_SEARCH_PROTOCOL.md). Report exact
+targeted build commands and results, keeping mathematical review separate from
+text-pattern checks and finite-example timings.
+
+Use the current shared-lock wrappers and preserve the shared cache. Follow
+[AGENTS.md](AGENTS.md) for workspace coordination instead of copying the old
+campaign's machine paths or sandbox naming conventions. A historical milestone
+label is not a substitute for verification of the changed owners at the new
+commit.

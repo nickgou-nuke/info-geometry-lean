@@ -1,217 +1,122 @@
-<!-- repository-context-rule -->
-> **Repository grounding:** For repository work, the checked-out codebase is
-> the context. Search existing implementation and trace its real definitions,
-> imports, instances, theorems, and uses before declaring a structure missing
-> or incorrect. A finding in one file is not a repo-wide finding. See
-> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
-
-# Documentation Map
+# Documentation map
 
 > Status: `current authority`
-> Audited: 2026-07-09
-> Note: Maintained against the live code surface.
-> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
-> **LLM agents: before writing categorical/Grothendieck code, read
-> [CATEGORICAL_INFRASTRUCTURE_MAP.md](CATEGORICAL_INFRASTRUCTURE_MAP.md).
-> Open math problems are in [OPEN_DEBT_PROBLEMS.md](OPEN_DEBT_PROBLEMS.md).**
+> Source reviewed: 2026-11-03 at `214f7bcf733eaf4720913bc2c082936f2480d3fc`.
+> Scope: maintained entry points and source routing. Linked research notes and
+> historical reports retain their own scope and verification dates.
 
-This file serves as an active routing map. It was verified against the live code surface in July 2026, conforming to the successful compilation of `InfoGeometry.All`.
+Start with the [project README](../README.md),
+[getting-started guide](GETTING_STARTED.md), and [AGENTS.md](../AGENTS.md).
+For mathematical or implementation questions, use the
+[deep-search protocol](REPO_DEEP_SEARCH_PROTOCOL.md) and inspect actual source.
+An index entry, graph relation, or filename does not establish a theorem.
 
-This directory is mixed on purpose.
+## Maintained operating guides
 
-Only a small subset is maintained as current operational documentation. Most
-other Markdown here is reference memory, research synthesis, backlog, or
-historical thinking that must be re-audited against code before use.
+| Guide | Role |
+|---|---|
+| [AGENTS.md](../AGENTS.md) | Source authority, proof acceptance, ownership, build serialization, and dependency preservation |
+| [Getting started](GETTING_STARTED.md) | Checkout, pinned dependencies, and scoped validation commands |
+| [Canonical pipeline](CANONICAL_AGENT_PIPELINE.md) | Implementation-backed commands and optional runtime prerequisites |
+| [Hive agent commandments](HIVE_AGENT_COMMANDMENTS.md) | Compact operating checklist subordinate to root policy |
+| [Deep-search protocol](REPO_DEEP_SEARCH_PROTOCOL.md) | Multi-lane discovery and precise absence/novelty claims |
+| [Cache policy](../WARNING_DO_NOT_RUN_CACHE.md) | Cache preservation and the build helper's hydration behavior |
+| [Markdown governance](MarkdownCorpusGovernance.md) | Documentation status, provenance, and evidence requirements |
+| [Source audit, 2026-11-03](DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md) | Bounded source findings, baseline CI evidence, and remaining integration limitations |
 
-## Documentation Philosophy
+## Mathematical source maps
 
-We turned the docs from a Markdown heap into an epistemic routing system.
+| Topic | Read first |
+|---|---|
+| Main Lean library | [InfoGeometry.All](../lean/InfoGeometry/All.lean), [Lake targets](../lakefile.lean) |
+| Operator algebra and Peirce constructions | [OperatorAlgebra guide](../lean/InfoGeometry/OperatorAlgebra/README.md), [Peirce archetype ledger](PEIRCE_OPERATOR_ARCHETYPES.md) |
+| Categorical owners and finite-to-limit interfaces | [Categorical infrastructure map](CATEGORICAL_INFRASTRUCTURE_MAP.md) |
+| CAR, Krein carriers, and projectivization | [Topic scope note](../README-CURRENT.md) |
+| Nuclear operator parity, RPA, and phonon commutators | [Nuclear operator synthesis](NUCLEAR_OPERATOR_SYNTHESIS.md), [theorem contract](NUCLEAR_OPERATOR_PARITY_CONTRACT.md) |
+| Two-sheeted operator transport and its remaining bridges | [Framework progress note](TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md) |
+| Souriau/Bost–Connes claims | [Transition status](SOURIAU_BOST_CONNES_TRANSITION_STATUS.md) |
+| Owner/translator separation | [Bilingual spine policy](BILINGUAL_SPINE_POLICY.md) |
 
-We did not just clean up prose. We rewrote the documentation as an authority
-system that distinguishes live guidance from reference memory, generated
-reports, archive, and handover material, so a reader can tell what to trust
-first.
+Read each map's stated revision and follow it to the owner declarations,
+imports, and consumers. Distinguish a supplied interface from an inhabited
+model, a compatible cone from a universal colimit, and an algebraic identity
+from an additional analytic or physical interpretation.
 
-The maintained front door now runs through:
+## Proof discipline and review
 
-- `README.md`
-- `docs/README.md`
-- `docs/CODEBASE_STATUS.md`
-- `docs/ModuleMap.md`
-- `docs/OperationalIntent.md`
-- `docs/ToolingMethodology.md`
-- `docs/FORMULA_FUNCTION_POLICY.md`
-- `NEWCOMER_PATH.md`
+- [Constructive closure mandate](CONSTRUCTIVE_CLOSURE_MANDATE.md)
+- [Formula/function policy](FORMULA_FUNCTION_POLICY.md)
+- [Formalization discipline](FormalizationDiscipline.md)
+- [Independent agent audit SOP](INDEPENDENT_AGENT_AUDIT_SOP.md)
+- [Generated-artifact policy](GeneratedArtifactsPolicy.md)
+- [Open debt problems](OPEN_DEBT_PROBLEMS.md)
 
-Those docs describe the repository as three coupled systems at once:
+Native proofs establish their stated conditional conclusions. Unproved witness
+existence, certificate discharge, or carrier-identification obligations must
+remain visible as separate debt. A narrow compilation result must not be
+reported as verification of the whole repository or a proposed physical theory.
 
-- a Lean theorem library
-- an artifact, graph, and tooling system
-- a generative discovery machine with strict closure gates
+## Tooling and configured services
 
-The project can still speak in its full physics, information-geometric, and
-analytic-psychology language, but now every claim has a lane, a status, an
-authority level, and a route back to code, artifact, or proof.
+- [Tools overview](../tools/README.md)
+- [Infrastructure guide](../tools/infra/README.md)
+- [Documentation tools](../tools/docs/README.md)
+- [LeanTrail guide](../leantrail/README.md)
+- [LeanTrail topic documentation](LeanTrail.md)
+- [AST/AQL/hash navigation](ASTAQLHASH-HOWTO.md)
+- [Arango refresh methodology](ARANGO_DAG_REFRESH_METHODOLOGY.md)
+- [aiClaw review runbook](AICLAW_CHATGPT_REVIEW_RUNBOOK.md)
+- [Pi agent-team operations](PI_AGENT_TEAMS_OPERATIONS.md)
+- [AI Studio transcript export](AI_STUDIO_TRANSCRIPT_EXPORT.md)
 
-If documentation and code disagree, trust:
+These guides route to source and configured services. They do not establish
+that a service is running or that an imported graph matches the current
+revision. The canonical pipeline records the known Pi/Archon prerequisites;
+the infra guide records local DAG configuration requirements.
 
-1. `lean/` and `lakefile.lean`
-2. `src/igf/` and maintained scripts under `tools/`
-3. [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
-4. the maintained docs listed below
+## Additional inventories and topic ledgers
 
-## Constructive Closure Mandate
+The following documents are useful discovery inputs. Their dates, source
+revisions, and generated-artifact provenance must be checked before treating
+counts, completion claims, or operational commands as current:
 
-[CONSTRUCTIVE_CLOSURE_MANDATE.md](CONSTRUCTIVE_CLOSURE_MANDATE.md) is current
-policy for all repo agents, skills, proof workflows, and closure-debt audits.
-Replacing witness-gated and external-certificate leftovers with native Lean 4
-proofs is the highest mandate. Unformalized witnesses, certificates,
-literature references, physics analogies, and graph edges remain closure debt
-until discharged by kernel-checked Lean or mathlib proofs.
+- [Codebase status](CODEBASE_STATUS.md)
+- [Repository memory map](RepositoryMemoryMap.md)
+- [Module map](ModuleMap.md)
+- [Operational intent](OperationalIntent.md)
+- [Generative discovery architecture](GenerativeDiscoveryArchitecture.md)
+- [Tooling methodology](ToolingMethodology.md)
+- [Induction systematics](InductionSystematics.md)
+- [Induction how-to](InductionHowTo.md)
+- [Kasparov/Krein/DIII runbook](KASPAROV_KREIN_DIII_RUNBOOK.md)
+- [Kasparov/Krein/DIII ledger](KASPAROV_KREIN_DIII_LEDGER.md)
+- [Topology/projective closure ledger](TOPOLOGY_PROJECTIVE_CLOSURE_LEDGER.md)
+- [Evidence ledger](EVIDENCE_LEDGER.md)
 
-[FORMULA_FUNCTION_POLICY.md](FORMULA_FUNCTION_POLICY.md) is current policy for
-definitional formulas. Formulas must be plain functions, not prose labels or
-field aliases, and downstream code must call them directly.
+## Research history and deployment plans
 
-## Maintained Entry Docs
+Long research transcripts, design targets, old task briefs, and generated
+reports are preserved for provenance. They can contain proposed Lean code,
+earlier interfaces, or interpretations superseded by current owners.
 
-Use these first:
+- [Universal grade-generator transcript](../AGENTS-Universal-Grade-Generator.md)
+- [Two-sheeted research transcript](../Two-Sheeted-Yang-Mills-Inductive-Colimit.md)
+- [Historical research review](reviews/2026-10-21-research-and-agent-accessibility.md)
+- [Historical CAS task brief](../PROJECT.md)
+- [Historical seven-stage synthesis](../REPOCONTENT.md)
+- [Hive architecture](hive_greenfield_architecture.md), [migration plan](hive_migration_plan.md), and [operator runbook](hive_beehive_operator_runbook.md)
+- [Archived installation guide](root-archive/Installation.md)
+- [Archived newcomer path](root-archive/NEWCOMER_PATH.md)
+- [Archived Pauli mandate](root-archive/PAULI_MANDATE.md)
 
-- [../README.md](../README.md)
-- [CONSTRUCTIVE_CLOSURE_MANDATE.md](CONSTRUCTIVE_CLOSURE_MANDATE.md)
-- [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
-- [OPEN_DEBT_PROBLEMS.md](OPEN_DEBT_PROBLEMS.md)
-- [RESEARCH_AND_CHAINS_OF_THOUGHT.md](RESEARCH_AND_CHAINS_OF_THOUGHT.md)
-- [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
-- [ModuleMap.md](ModuleMap.md)
-- [OperationalIntent.md](OperationalIntent.md)
-- [GenerativeDiscoveryArchitecture.md](GenerativeDiscoveryArchitecture.md)
-- [FormalizationDiscipline.md](FormalizationDiscipline.md)
-- [InductionSystematics.md](InductionSystematics.md)
-- [InductionHowTo.md](InductionHowTo.md)
-- [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
-- [GeneratedArtifactsPolicy.md](GeneratedArtifactsPolicy.md)
-- [MarkdownCorpusGovernance.md](MarkdownCorpusGovernance.md)
-- [INDEPENDENT_AGENT_AUDIT_SOP.md](INDEPENDENT_AGENT_AUDIT_SOP.md)
-- [AICLAW_CHATGPT_REVIEW_RUNBOOK.md](AICLAW_CHATGPT_REVIEW_RUNBOOK.md)
-- [DEBATE_ORACLE_CONVERGENCE_MAP.md](DEBATE_ORACLE_CONVERGENCE_MAP.md)
-- [ACADEMIC_RESEARCH_SKILLS_AUDIT.md](ACADEMIC_RESEARCH_SKILLS_AUDIT.md)
-- [P2PCLAW_PUBLICATION_PIPELINE_AUDIT.md](P2PCLAW_PUBLICATION_PIPELINE_AUDIT.md)
-- [MaldacenaLectureTheoremMap.md](MaldacenaLectureTheoremMap.md)
-- [ToolingInventory.md](ToolingInventory.md)
-- [OperatorQuickstart.md](OperatorQuickstart.md)
-- [DAGTroubleshooting.md](DAGTroubleshooting.md)
-- [KASPAROV_KREIN_DIII_RUNBOOK.md](KASPAROV_KREIN_DIII_RUNBOOK.md)
-- [KASPAROV_KREIN_DIII_SYNTHESIS.md](KASPAROV_KREIN_DIII_SYNTHESIS.md)
-- [KASPAROV_KREIN_DIII_LEDGER.md](KASPAROV_KREIN_DIII_LEDGER.md)
-- [KASPAROV_KREIN_DIII_EVIDENCE_SCHEMAS.md](KASPAROV_KREIN_DIII_EVIDENCE_SCHEMAS.md)
-- [KASPAROV_KREIN_DIII_FIBONACCI_FOLLOWUP.md](KASPAROV_KREIN_DIII_FIBONACCI_FOLLOWUP.md)
-- [CANONICAL_ARCHITECTURE_MANIFEST.md](CANONICAL_ARCHITECTURE_MANIFEST.md)
-- [TOPOLOGY_PROJECTIVE_CLOSURE_LEDGER.md](TOPOLOGY_PROJECTIVE_CLOSURE_LEDGER.md)
-- [EVIDENCE_LEDGER.md](EVIDENCE_LEDGER.md)
-- [FIBONACCI_MZM_FOLLOWUP_ROADMAP.md](FIBONACCI_MZM_FOLLOWUP_ROADMAP.md)
-- [LeanTrail.md](LeanTrail.md)
-- [../Installation.md](../Installation.md)
-- [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
-- [../tools/README.md](../tools/README.md)
-- [../tools/infra/README.md](../tools/infra/README.md)
-- [../leantrail/README.md](../leantrail/README.md)
+Use [Getting started](GETTING_STARTED.md) for the maintained setup route. The
+archived guides above are not substitutes for current dependency checks.
 
-## Beehive Architecture Docs
+## Corpus status and protected content
 
-These are the current design target for the local-first swarm / beehive layer.
-They are not theorem authority, but they are the best map for the runtime:
-
-- [hive_greenfield_architecture.md](hive_greenfield_architecture.md)
-- [hive_migration_plan.md](hive_migration_plan.md)
-- [hive_beehive_implementation_checklist.md](hive_beehive_implementation_checklist.md)
-- [hive_beehive_operator_runbook.md](hive_beehive_operator_runbook.md)
-- [hive_beehive_systemd_units.md](hive_beehive_systemd_units.md)
-- [hive_beehive_overrides.md](hive_beehive_overrides.md)
-- [../scripts/install_hive_beehive_systemd_units.sh](../scripts/install_hive_beehive_systemd_units.sh)
-- [../scripts/uninstall_hive_beehive_systemd_units.sh](../scripts/uninstall_hive_beehive_systemd_units.sh)
-- [hive_graph_resident_os.md](hive_graph_resident_os.md)
-- [hermes_recursive_hive_architecture.md](hermes_recursive_hive_architecture.md)
-- [hive_neural_backbone_architecture.md](hive_neural_backbone_architecture.md)
-- [hive_beehive_swarm_implementation_plan.md](hive_beehive_swarm_implementation_plan.md)
-
-## Reference Notes
-
-These are useful routing notes, but they are not current authority:
-
-- [gromov_jaynes_probability_note.md](gromov_jaynes_probability_note.md)
-
-## Protected Markdown
-
-These paths are intentionally excluded from content-rewrite cleanup:
-
-- `docs/black_books/`
-- `docs/black_books_refactor/`
-
-They may still be linked, but they are not auto-rewritten into repository
-policy.
-
-## Status Classes
-
-- `current authority`
-  Maintained entry docs that describe the live codebase
-- `maintained local guide`
-  Current for a subsystem, but subordinate to repo-wide authority docs
-- `reference memory`
-  Potentially useful notes that are not current authority
-- `generated/historical report`
-  A report snapshot that must be regenerated before use
-- `archival reference`
-  Kept for provenance or archaeology
-- `historical handover`
-  Packet/runbook history, not current policy
-
-## Generated Documentation
-
-The only script-owned doc surface under `docs/` is:
-
-- `docs/auto/`
-
-Its maintained generators live under:
-
-- `tools/docs/`
-
-Generated Markdown also appears heavily under:
-
-- `reports/`
-- selected artifact/run directories
-
-Do not hand-curate those surfaces as if they were source of truth.
-
-## Practical Reading Order
-
-1. [../README.md](../README.md)
-2. [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
-3. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
-4. [ModuleMap.md](ModuleMap.md)
-5. [OperationalIntent.md](OperationalIntent.md)
-6. [GenerativeDiscoveryArchitecture.md](GenerativeDiscoveryArchitecture.md)
-7. [FormalizationDiscipline.md](FormalizationDiscipline.md)
-8. [InductionSystematics.md](InductionSystematics.md)
-9. [InductionHowTo.md](InductionHowTo.md)
-10. [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
-11. [../Installation.md](../Installation.md)
-12. [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
-13. [OperatorQuickstart.md](OperatorQuickstart.md)
-14. [DAGTroubleshooting.md](DAGTroubleshooting.md)
-15. [LeanTrail.md](LeanTrail.md)
-16. [black_books/231_the_moebius_topology_of_information.md](black_books/231_the_moebius_topology_of_information.md)
-
-## What Changed In This Audit
-
-On 2026-07-09, `InfoGeometry.All` successfully compiled. The Markdown corpus was reclassified so old notes and generated reports stop presenting themselves as current repository truth. Duplicate namespaces were completely removed to stabilize the Lean build structure.
-
-## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding
-
-Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
-
-Policy requirements:
-- Witness packets, certificate fields, external certificates, and assumption interfaces are temporary scaffolding only.
-- They are not final mathematical closure and not promotion authority.
-- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
-- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
+Follow [Markdown governance](MarkdownCorpusGovernance.md) for status labels.
+The protected `docs/black_books/` and `docs/black_books_refactor/` research
+collections are excluded from cleanup rewrites. Generated documents under
+`docs/auto/`, `reports/`, and artifact directories require their generation
+revision and inputs before reuse. A generation timestamp is not a semantic
+review date.

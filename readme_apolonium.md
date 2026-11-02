@@ -25,7 +25,7 @@ Here $L_{ij} = R_{ij} + K_i X_j^2$ denotes the coincidence-restored rate for tra
   $$h_{ij} = -\ln(L_{ij} / L_{\rm unit}) \;\longmapsto\; h_{ij} - \omega_j.$$
   The negative log rates transform with the opposite sign as additive potentials.
 * **Formal Implementation:**
-  This scalar multiplicative action and its logarithmic generator are implemented in [`lean/InfoGeometry/Projective/WeylLogScaleBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Projective/WeylLogScaleBridge.lean) (`scaleLog`, `weylMetricAction`, `weylFieldAction`). Identifying this scalar spectral rescaling with a spacetime conformal metric requires additional physical and geometric field structure.
+  This scalar multiplicative action and its logarithmic generator are implemented in [`lean/InfoGeometry/Projective/WeylLogScaleBridge.lean`](lean/InfoGeometry/Projective/WeylLogScaleBridge.lean) (`scaleLog`, `weylMetricAction`, `weylFieldAction`). Identifying this scalar spectral rescaling with a spacetime conformal metric requires additional physical and geometric field structure.
 
 ---
 
@@ -84,7 +84,7 @@ On the interior $0 < p < 1$, the simplex supports three distinct Riemannian metr
 
 * **Algebraic Identity:**
   $$\boxed{b''(p) = 2\,g_{\rm Aitchison}(p) - 2\,g_{\rm FR}(p).}$$
-  Verified constructively in [`lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean).
+  Verified constructively in [`lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean`](lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean).
 
 ---
 
@@ -130,7 +130,7 @@ In the microscopic interaction model:
   $$S_{{\rm v}, j} = P(i\mid j)\,\overline{W}_{pt}\,\eta_{t, i} S_{\rm geom}.$$
 * Then the intrinsic peak-to-total ratio $(P/T)_i = \eta_{p, i} / \eta_{t, i}$ is recovered via:
   $$\boxed{\left(\frac{P}{T}\right)_i = P(i\mid j)\,\overline{W}_{pt} \frac{S_i^{(\rm peak)}}{S_{{\rm v}, j}}.}$$
-* **Consistency Requirement:** The angular factor $\overline{W}_{pt}$ for peak–total summing loss must be defined consistently with the peak–peak factor $\overline{W}_{pp}$ appearing in the coincidence activity formula $A = \frac{C_1 C_2}{Q} \frac{P_{12}}{P_1 P_2} \overline{W}_{pp}$. In the simplified module [`Probability/DetectorCrossSectionDuality.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorCrossSectionDuality.lean), $\overline{W}_{pt}$ is set to unity ($W = 1$). When angular correlations are retained, $\overline{W}_{pt}$ must multiply the ratio as derived above.
+* **Consistency Requirement:** The angular factor $\overline{W}_{pt}$ for peak–total summing loss must be defined consistently with the peak–peak factor $\overline{W}_{pp}$ appearing in the coincidence activity formula $A = \frac{C_1 C_2}{Q} \frac{P_{12}}{P_1 P_2} \overline{W}_{pp}$. In the simplified module [`Probability/DetectorCrossSectionDuality.lean`](lean/InfoGeometry/Probability/DetectorCrossSectionDuality.lean), $\overline{W}_{pt}$ is set to unity ($W = 1$). When angular correlations are retained, $\overline{W}_{pt}$ must multiply the ratio as derived above.
 
 ---
 
@@ -154,23 +154,23 @@ The Virtual Point Detector (VPD) model $r = d + d_0$ defines a static two-pole b
 
 | File Path | Status | Formally Proved Scope |
 | :--- | :--- | :--- |
-| [`lean/InfoGeometry/Projective/WeylLogScaleBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Projective/WeylLogScaleBridge.lean) | Verified | Scalar multiplicative action, log generator, group hom |
-| [`lean/InfoGeometry/Probability/DetectorScaleInvariance.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorScaleInvariance.lean) | Verified | Gauge zero-sum $\sum \widetilde{s}_j = 0$, $\prod e^{\widetilde{s}_j} = 1$, residual vanishing |
-| [`lean/InfoGeometry/Probability/BinaryAitchisonMoments.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/BinaryAitchisonMoments.lean) | Verified | CLR transform, centered moments, Fisher variance |
-| [`lean/InfoGeometry/Probability/BinaryAitchisonLogOdds.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/BinaryAitchisonLogOdds.lean) | Verified | Metric relation $d\ell^2 = 2\,ds_{\rm A}^2$, log-odds geodesic |
-| [`lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean) | Verified | Barrier Hessian identity $b'' = 2 g_{\rm Aitchison} - 2 g_{\rm FR}$ |
-| [`lean/InfoGeometry/Convex/BinaryBarrierSurprisal.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Convex/BinaryBarrierSurprisal.lean) | Verified | Dual readouts $b = \operatorname{tr} K$, $S = \operatorname{tr}(\rho K)$, self-concordance |
-| [`lean/InfoGeometry/Geometry/BinaryLegendreEntropyFlow.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Geometry/BinaryLegendreEntropyFlow.lean) | Verified | Bernoulli Legendre contact, monotonic entropy flow $\dot{S} \ge 0$ |
-| [`lean/InfoGeometry/Thermo/BinaryEntropyMetriplectic.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Thermo/BinaryEntropyMetriplectic.lean) | Verified | Concrete GENERIC system, energy conservation, entropy production |
-| [`lean/InfoGeometry/Modular/FiniteSimplexModularTime.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Modular/FiniteSimplexModularTime.lean) | Verified | $\sigma_t$ automorphism group, $-i[K, A]$ generator, frequency $\omega = \theta$ |
-| [`lean/InfoGeometry/Nuclear/ApollonianBipolarField.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Nuclear/ApollonianBipolarField.lean) | Verified | Two poles $A, B$, separation $r_{AB}$, linearizer vanishing at $-d_0$ |
-| [`lean/InfoGeometry/Probability/DetectorCrossSectionDuality.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/DetectorCrossSectionDuality.lean) | Verified | Activity cancellation, $(P/T)_i$ recovery formula under explicit hypotheses |
+| [`lean/InfoGeometry/Projective/WeylLogScaleBridge.lean`](lean/InfoGeometry/Projective/WeylLogScaleBridge.lean) | Verified | Scalar multiplicative action, log generator, group hom |
+| [`lean/InfoGeometry/Probability/DetectorScaleInvariance.lean`](lean/InfoGeometry/Probability/DetectorScaleInvariance.lean) | Verified | Gauge zero-sum $\sum \widetilde{s}_j = 0$, $\prod e^{\widetilde{s}_j} = 1$, residual vanishing |
+| [`lean/InfoGeometry/Probability/BinaryAitchisonMoments.lean`](lean/InfoGeometry/Probability/BinaryAitchisonMoments.lean) | Verified | CLR transform, centered moments, Fisher variance |
+| [`lean/InfoGeometry/Probability/BinaryAitchisonLogOdds.lean`](lean/InfoGeometry/Probability/BinaryAitchisonLogOdds.lean) | Verified | Metric relation $d\ell^2 = 2\,ds_{\rm A}^2$, log-odds geodesic |
+| [`lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean`](lean/InfoGeometry/Convex/BinaryBarrierCoordinateHessian.lean) | Verified | Barrier Hessian identity $b'' = 2 g_{\rm Aitchison} - 2 g_{\rm FR}$ |
+| [`lean/InfoGeometry/Convex/BinaryBarrierSurprisal.lean`](lean/InfoGeometry/Convex/BinaryBarrierSurprisal.lean) | Verified | Dual readouts $b = \operatorname{tr} K$, $S = \operatorname{tr}(\rho K)$, self-concordance |
+| [`lean/InfoGeometry/Geometry/BinaryLegendreEntropyFlow.lean`](lean/InfoGeometry/Geometry/BinaryLegendreEntropyFlow.lean) | Verified | Bernoulli Legendre contact, monotonic entropy flow $\dot{S} \ge 0$ |
+| [`lean/InfoGeometry/Thermo/BinaryEntropyMetriplectic.lean`](lean/InfoGeometry/Thermo/BinaryEntropyMetriplectic.lean) | Verified | Concrete GENERIC system, energy conservation, entropy production |
+| [`lean/InfoGeometry/Modular/FiniteSimplexModularTime.lean`](lean/InfoGeometry/Modular/FiniteSimplexModularTime.lean) | Verified | $\sigma_t$ automorphism group, $-i[K, A]$ generator, frequency $\omega = \theta$ |
+| [`lean/InfoGeometry/Nuclear/ApollonianBipolarField.lean`](lean/InfoGeometry/Nuclear/ApollonianBipolarField.lean) | Verified | Two poles $A, B$, separation $r_{AB}$, linearizer vanishing at $-d_0$ |
+| [`lean/InfoGeometry/Probability/DetectorCrossSectionDuality.lean`](lean/InfoGeometry/Probability/DetectorCrossSectionDuality.lean) | Verified | Activity cancellation, $(P/T)_i$ recovery formula under explicit hypotheses |
 
 ---
 
 ## 9. Slide Presentation Alignment (`conference.pdf`)
 
-* **Slide 13 ([`virtual_benchmark.tex`](file:///home/goutev/Varna/presentation/60Co/New%20Project/slides/main/virtual_benchmark.tex)):** Virtual equivalent disk diameters ($65.8\text{ mm}$ for Canberra GC5019 vs $65.7\text{ mm}$ factory; $66.9\text{ mm}$ for ORTEC GEM50 vs $64.1\text{--}68\text{ mm}$ crystal).
-* **Slide 37 ([`log_transport.tex`](file:///home/goutev/Varna/presentation/60Co/New%20Project/slides/main/log_transport.tex)):** Ensemble geometric-mean baseline, median shifts, and the exact CLR coordinate connection ($\prod_j e^{\widetilde{s}_j} = 1$).
-* **Slides 145–150 ([`advanced_foundations.tex`](file:///home/goutev/Varna/presentation/60Co/New%20Project/slides/backup/advanced_foundations.tex)):** Complete Apollonian 10 cm detector vector diagram and bipolar field streamlines.
-* **Slides 160–163 ([`simplex_extension.tex`](file:///home/goutev/Varna/presentation/60Co/New%20Project/slides/backup/simplex_extension.tex)):** Metric table (Fisher-Rao, Aitchison, Dikin barrier), surprisal dual readouts ($b(p) = \operatorname{tr} K$ vs $S(p) = \operatorname{tr}(\rho K)$), and the metriplectic/modular flows.
+* **Slide 13 (``virtual_benchmark.tex`` (local presentation source, outside this repository)):** Virtual equivalent disk diameters ($65.8\text{ mm}$ for Canberra GC5019 vs $65.7\text{ mm}$ factory; $66.9\text{ mm}$ for ORTEC GEM50 vs $64.1\text{--}68\text{ mm}$ crystal).
+* **Slide 37 (``log_transport.tex`` (local presentation source, outside this repository)):** Ensemble geometric-mean baseline, median shifts, and the exact CLR coordinate connection ($\prod_j e^{\widetilde{s}_j} = 1$).
+* **Slides 145–150 (``advanced_foundations.tex`` (local presentation source, outside this repository)):** Complete Apollonian 10 cm detector vector diagram and bipolar field streamlines.
+* **Slides 160–163 (``simplex_extension.tex`` (local presentation source, outside this repository)):** Metric table (Fisher-Rao, Aitchison, Dikin barrier), surprisal dual readouts ($b(p) = \operatorname{tr} K$ vs $S(p) = \operatorname{tr}(\rho K)$), and the metriplectic/modular flows.

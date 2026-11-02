@@ -1,206 +1,126 @@
-# Canonical Agent Pipeline
+# Canonical agent pipeline
 
-> Status: `authoritative quickstart`
-> Scope: repository location, tool routing, aiClaw/ChatGPT lane discipline,
-> Lean proof authority, graph tooling, Pi extensions, and GEPA prompt evolution.
-> Rule: if another generated note conflicts with this file, this file wins.
+Source reviewed on 2026-11-03 against
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`. This is an operational map of the
+tracked implementation, not a claim that optional services are running or that
+the complete repository has passed a fresh build.
 
-## Repository
+The [root agent policy](../AGENTS.md) governs acceptance and changes.
+[RUNBOOK.md](../RUNBOOK.md) defines validation coverage. Use this page for
+command routing; treat archived transcripts as historical context.
 
-The canonical working tree is:
+## Checkout and source authority
 
-```bash
-cd /home/goutev/repos/info-geometry-lean
-```
-
-Do not use `/home/goutev/auto`.
-
-Do not infer another workspace from stale notes, generated examples, generated
-transcripts, or external submodules. If an agent starts elsewhere, it must
-return here before touching repo-owned code.
-
-## Authority Stack
-
-1. The current checked-out repository context, discovered by source search.
-2. Lean source in the actual owner file and its imported definitions,
-   instances, theorem statements, and dependents.
-3. `lake env lean <file>` or the locked Lake build for kernel verification.
-4. Repo docs and skills as workflow guidance, not evidence that a declaration
-   exists or is absent.
-5. Arango, DAG, RAG, SymPy, LeanTrail, Hodge, WL, de Bruijn, and ChatGPT as
-   evidence only.
-
-ChatGPT does not prove anything. It audits and suggests. The coding agent edits.
-Lean decides.
-
-### OpenGauss Protocol & Kernel Truth Boundary (QMS-SOP-IAA-001)
-
-- **Zero fake proofs:** 0 `sorry`, 0 `admit`, 0 custom axioms. Only standard foundational Lean 4 axioms (`[propext, Classical.choice, Quot.sound]`).
-- **Trap T16 Permanent Prohibition (Zero Scalar Toy Proxies):** Non-commutative operator algebras ($\mathcal{M}$), infinite-dimensional spectral triples, and spacetime soldering forms must never be replaced by coordinate/scalar surrogates.
-- **Wavefront Duality & Operator-Algebraic Root:** Retarded/Advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$ and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$ intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$, Klein bottle glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$, KMS thermal boundary periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
-- **Safe Build Discipline:** Never run `lake clean`. Acquire `/tmp/info-geometry-build.lock` via `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock`. Proactively stage all edits with `git add -A`.
-
-Oracle outputs are advice artifacts, not source edits. Browser-harness and
-aiClaw tools may write response logs, JSON reports, and candidate files under
-`tmp/oracle_candidates` or `artifacts/oracle`, but they must not overwrite Lean,
-Python, or other repo source files. A coding agent must inspect the candidate,
-apply an ordinary patch, and verify it locally. This rule exists because older
-auto-edit loops corrupted files and then encouraged unjustified deletion of
-damaged modules.
-
-## First Files To Read
-
-For every agent session:
-
-```text
-AGENTS.md
-docs/CANONICAL_AGENT_PIPELINE.md
-docs/HIVE_AGENT_COMMANDMENTS.md
-docs/REPO_DEEP_SEARCH_PROTOCOL.md
-```
-
-For categorical/tower/colimit work, also read:
-
-```text
-docs/CATEGORICAL_INFRASTRUCTURE_MAP.md
-```
-
-For Souriau-Bost-Connes capstone or crystallization claims, also read:
-
-```text
-docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md
-```
-
-For detailed ChatGPT/aiClaw operation, also read:
-
-```text
-docs/AICLAW_CHATGPT_REVIEW_RUNBOOK.md
-```
-
-## Correct Tool Routing
-
-### Lean Verification
-
-Use a narrow file check while editing:
+Start in the current checkout root:
 
 ```bash
-lake env lean lean/InfoGeometry/Path/To/File.lean
+git rev-parse --show-toplevel
+git rev-parse HEAD
+git status --short
 ```
 
-Use the locked build wrapper for module builds:
+Use that root as the working directory for commands below. Check the remote
+before repository edits. `/home/goutev/repos/info-geometry-lean` is a maintainer
+environment example, not a required location for clones or hosted sessions.
+The implementation already derives roots through
+[tools/pathing.py](../tools/pathing.py) and related configuration helpers.
 
-```bash
-python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
-```
+Read [AGENTS.md](../AGENTS.md), the
+[Hive checklist](HIVE_AGENT_COMMANDMENTS.md), and the
+[repository search protocol](REPO_DEEP_SEARCH_PROTOCOL.md). Lean owner source,
+its imported definitions, hypotheses, and compiler results determine what is
+formalized. Documentation, graph results, CAS witnesses, and model responses
+are evidence or candidates whose claims must be checked against those owners.
 
-### Context Preflight
+## Context and theorem contract
 
-Before answering nontrivial repository-content questions, build a bounded
-context packet instead of relying on stale docs or filenames:
+The [context preflight](../tools/infra/context_preflight.py) builds a bounded
+navigation packet:
 
 ```bash
 python3 tools/infra/context_preflight.py "question or target theorem" --include-external
 ```
 
-This packet separates repo-owned code, external references, graph/indexing
-surfaces, Lean owner candidates, and generated artifact presence. It is
-navigation evidence only; proof claims still require Lean owner validation.
+Its current root list still names old root TypeScript files and omits
+`extensions/`. Supplement it with direct searches of the actual relevant
+directories. A missing preflight hit is not evidence of repository-wide
+absence. Keep repo-owned, external-reference, generated-artifact, and runtime
+evidence separate, and inspect owner declarations before answering.
 
-Do not declare a mathematical structure missing or incorrect based on a
-heuristic expectation, a single name search, a single candidate module, a
-summary, or a docstring. Search related carriers and alternate formulations
-throughout repo-owned source, then trace their definitions, imports, instances,
-theorems, and uses. A result scoped to one file must be reported as scoped to
-that file; repository-wide absence requires the multi-lane procedure in
-`docs/REPO_DEEP_SEARCH_PROTOCOL.md`.
+Before editing a mathematical owner, record the exact claim, carrier,
+operations, reused declarations, hypotheses, imports, consumers, smallest
+unproved implication, and adjacent claims not established. Follow
+[epistemic compilation](../skills/epistemic-compilation/SKILL.md) and the
+[theorem-contract workflow](ALCHEMICAL_QMS_SOP.md). A proof of a conditional
+statement does not discharge its assumptions. A finite algebraic identity does
+not supply a topology, colimit universal property, completion, physical law,
+or classification theorem without the corresponding construction and proof.
 
-Before drafting or editing a Lean owner, write a Ground-Truth Theorem Contract
-in the task record: (1) the precise mathematical claim without metaphor; (2)
-the actual carrier, operations, and conventions; (3) cited owner declarations
-and their exact theorem statements, separating proved facts from assumptions;
-(4) relevant imports and consumers; (5) the smallest source-confirmed gap; and
-(6) adjacent claims not established. Use the archetype ladder to reconcile two
-paths: concept input → candidate symbolic archetype, and compiler-backed Lean
-declarations/dependency edges → AST/AQL fingerprints and hash navigation →
-forward/backward causal cones and multi-apex cone cross-sections →
-graph/SCC/topology layers → code-derived archetype candidates. SCCs are one
-layer of this deeper DAG analysis, not the full discovery mechanism. Follow
-`docs/ASTAQLHASH-HOWTO.md` and `docs/ARANGO_DAG_REFRESH_METHODOLOGY.md` for
-generation/source provenance, cone seed provenance, shared cross-section
-nodes, and raw-to-overlay descent. Then inspect the exact owned declarations
-and prove the formal claim. Hash matches, SCC membership, graph proximity, and
-derived scores reveal candidates and granularity, not semantic equivalence or
-interpretation. Record what each translation preserves or discards. The
-ladder is a refinement/filtering workflow, not an assumed functor or
-equivalence. A carrier change requires an explicit map and proved compatibility
-result. `discover`,
-graph search, user-provided code, agent summaries, and successful compilation
-are not substitutes for reading owner source; compilation validates the proof
-at its Lean type, not the relationship between that type and its prose
-interpretation. Gate 2 must independently check that relationship.
+For declaration-DAG and archetype work, use
+[AST/AQL/hash navigation](ASTAQLHASH-HOWTO.md) and
+[graph refresh methodology](ARANGO_DAG_REFRESH_METHODOLOGY.md). Preserve source
+and seed provenance. Fingerprints, SCC membership, and causal-cone intersections
+identify candidates; inspect the actual types and maps to determine their
+meaning. Do not refresh a graph just to begin a search or claim freshness
+without evidence.
 
-### Epistemic Compilation Gate
+## Lean verification
 
-When intake contains generated prose, metaphor, physical interpretation, or
-confabulated code, agents must first apply
-`skills/epistemic-compilation/SKILL.md` and
-`docs/ALCHEMICAL_QMS_SOP.md`:
-
-```text
-preserve provenance
-→ extract atomic claims
-→ classify theorem / conditional / evidence / open debt
-→ search and read repository owners
-→ write the ground-truth theorem contract
-→ order only proved dependencies in a causal DAG
-→ choose the smallest owner-aligned statement
-→ prove it with native Lean and Mathlib
-→ run kernel, build, vacuity, placeholder, and axiom gates
-→ report the exact proved scope and remaining debt
-```
-
-Narrative similarity, graph proximity, CAS output, successful compilation, and
-agent summaries are not semantic equivalence. A finite algebraic identity does
-not become a topology, quotient, colimit, completion, physical law, or
-classification theorem without the corresponding carrier and proof. An
-overstrong claim must be downgraded or rejected rather than hidden behind a
-wrapper, witness, `True` theorem, alias, or conditional structure field.
-
-The OpenGauss CLI enforces a file-backed handoff: `/discover --output` writes
-a versioned navigation receipt; a contract conforming to
-`tools/schema/ground_truth_theorem_contract.schema.json` binds that receipt to
-current owner-file hashes, qualified declaration heads, quoted statements,
-and separate declaration-signature and Pantograph-proposition fields. `/draft`
-requires this contract unless `--scratch` is explicitly selected for
-exploratory non-source output. A contract-bound file draft writes a
-source-hashed receipt. The Hive theorem-candidate builder can embed and hash
-the full contract; with a validated draft receipt, it also binds the generated
-source snapshot and proposition to Pantograph. Without that receipt, the
-candidate is not bound to a Pantograph session. Pantograph evidence
-revalidates these bindings and keeps navigation-only authority. These
-fingerprints detect stale or mismatched inputs; they do not
-verify human semantic assertions, Lean typing, proof status, or graph freshness.
-
-### aiClaw / ChatGPT Oracle
-
-The ChatGPT browser lane is single-flight per platform. Always check it before
-sending:
+Inspect active compiler processes and serialize builds and tests. Use the
+[file wrapper](../tools/infra/run_locked_lean.py) for one source file and the
+[Lake wrapper](../tools/infra/run_locked_lake_build.py) for a module:
 
 ```bash
-python3 tools/infra/aiclaw_chat.py status
-python3 tools/infra/aiclaw_chat.py queue-status --platform chatgpt
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/To/File.lean
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
 
-For proof repair, dry-run first:
+Replace the example path/module with the actual owner. Both use the shared
+lock in [tools/build_lock.py](../tools/build_lock.py). The file check consumes
+available imported artifacts; a targeted Lake build manages dependencies.
+Keep validation narrow while editing, then run the checks required for the
+change's integration and acceptance.
+
+| Requested coverage | Lake wrapper selection |
+|---|---|
+| Specific owner and dependencies | Explicit module target |
+| Changed `InfoGeometry` owners | `--changed`, also the no-target default |
+| Registered `proofs` library | Explicit `proofs` target |
+| Every Lake default target | Explicit `--all-default-targets` |
+
+`--wfail` requests warnings-as-errors. Extra Lake arguments belong after `--`
+and require explicit target/default-target mode; changed-owner mode rejects
+them. A successful build certifies only the selected build surface. Separately
+review proof holes, axiom dependencies, vacuity, and the relationship between
+the Lean statement and the reported claim.
+
+Preserve [dependency pins](../lake-manifest.json) and
+[the toolchain](../lean-toolchain). Never clean/delete Lake caches as a repair;
+follow [the cache policy](../WARNING_DO_NOT_RUN_CACHE.md). Builds reject linked
+worktrees and symlinked Lake roots. Do not kill a running Lake process without
+explicit user authorization.
+
+## Browser oracle adapters
+
+Oracle results are candidate/report artifacts. A coding agent reviews and
+applies a patch; Lean and semantic review determine acceptance. Use an oracle
+only when the task and environment authorize that external interaction.
+
+The current [socratic_clawbot.py](../tools/infra/socratic_clawbot.py) sends
+through [chatgpt_browser_harness_driver.py](../tools/infra/chatgpt_browser_harness_driver.py),
+which uses [chatgpt_lane_guard.py](../tools/infra/chatgpt_lane_guard.py).
+It does not currently delegate its transport to `aiclaw_chat.py`; its legacy
+aiClaw platform/base-url/queue options are ignored or deprecated. Its dry-run
+prints send metadata and does not contact ChatGPT or validate a proof:
 
 ```bash
 python3 tools/infra/socratic_clawbot.py \
   --file lean/InfoGeometry/Path/To/File.lean \
-  --theorem theorem_name \
-  --dry-run --json
+  --theorem theorem_name --dry-run --json
 ```
 
-If a candidate is requested, write it explicitly as an artifact:
+For an authorized repair request with configured browser access, explicit
+artifact outputs are available:
 
 ```bash
 python3 tools/infra/socratic_clawbot.py \
@@ -211,271 +131,130 @@ python3 tools/infra/socratic_clawbot.py \
   --json-out artifacts/oracle/theorem_name.json
 ```
 
-Do not let ChatGPT/browser-harness promote the candidate into the owner file.
-Only the coding agent may edit source, and only after local inspection.
+Keep the complete owner context and relevant errors in the request. Do not
+let a generated replacement overwrite an owner automatically, stack prompts
+after a possible send, use the old direct port-1956 bridge, inject a prompt
+outside the guard, or use Enter as a substitute for a disabled send button.
+Recover uncertain final readback before submitting another request.
 
-Then send one prompt, with complete owner file and full relevant build output:
-
-```bash
-python3 tools/infra/socratic_clawbot.py \
-  --file lean/InfoGeometry/Path/To/File.lean \
-  --theorem theorem_name \
-  --response-out artifacts/oracle/theorem_name.md \
-  --json-out artifacts/oracle/theorem_name.json
-```
-
-If aiClaw returns `Thinking`, times out after a possible send, or leaves the
-browser tab mid-generation, do not send another prompt. Recover the final
-visible browser answer read-only, record it, then release:
+[aiclaw_chat.py](../tools/infra/aiclaw_chat.py) remains a separate adapter with
+explicit queue controls:
 
 ```bash
-python3 tools/infra/aiclaw_chat.py queue-release \
-  --platform chatgpt \
-  --reason final_visible_answer_recorded
+python3 tools/infra/aiclaw_chat.py status
+python3 tools/infra/aiclaw_chat.py queue-status --platform chatgpt
 ```
 
-### Pi Extension Stack
+Follow its returned `queue_state` and `agent_action`: `active` requires waiting;
+`needs_readback` requires recovery of the visible final response and recorded
+readback before release; `ready` permits one send. Use its prune/release
+operations only for the corresponding observed state. See the
+[aiClaw runbook](AICLAW_CHATGPT_REVIEW_RUNBOOK.md), checking its commands against
+the selected adapter. Google AI Mode has a separate
+[browser-harness entrypoint](../scripts/google-ai-search.sh); do not conflate
+its state with aiClaw Gemini or ChatGPT.
 
-Use:
+## Optional Arango and graph services
 
-```bash
-./run.sh "Use local Lean checks first. If blocked, call ask_chatgpt_compiler with the owner file and exact build error."
-```
+Resolve configuration from [igf.config](../src/igf/config/env_aliases.py),
+the [Hive queue](../tools/infra/hive_arango_queue.py), and
+the [aiClaw memory adapter](../tools/infra/aiclaw_auto_arango.py).
 
-Minimal Pi invocation:
+| Lane | Source default | Configuration |
+|---|---|---|
+| Declaration/InfoTree DAG | `infogeometry`, port 8530 | `ARANGO_*` |
+| Hive task queue | `hive_live`, port 8540 | `HIVE_ARANGO_*` and the documented aliases |
+| aiClaw proof/text memory | `aiclaw_auto_rag`, port 8540 | `AICLAW_ARANGO_*` |
+| Alexandria literature | `alexandria`, port 8532 in shared configuration | `ALEXANDRIA_ARANGO_*` |
 
-```bash
-pi --model deepseek/deepseek-v4-flash \
-  -e ./chatgpt-oracle.ts \
-  -e ./lean-prover-tool.ts \
-  "Run a narrow Lean proof repair. Use ask_chatgpt_compiler only after local debugging stalls."
-```
+These are defaults, not observed running services. Explicit environment values
+can override them. Do not print credentials, assume graph freshness, or claim
+complete transcript ingestion without an ingestion record. The
+[search protocol](REPO_DEEP_SEARCH_PROTOCOL.md#arangodb-schema-families)
+describes collection families; graph evidence remains navigation evidence.
 
-`chatgpt-oracle.ts` must route through `tools/infra/aiclaw_chat.py` first and
-only then fall back to an OpenAI-compatible API.
+## Pi integration status
 
-`agent-orchestrator.ts` is an interactive Pi tool surface. It is not merely a
-prompt template: `queue_run_next` must execute the concrete local worker
-sequence and archive a report. Its queue contract is:
+**The old root Pi launcher instructions are not runnable from the tracked
+source at the reviewed revision.** Root `run.sh`, `lean-prover-tool.ts`, and
+`agent-orchestrator.ts` are absent. Although copies exist under `proofs/`,
+[extensions/lean-prover-tool.ts](../extensions/lean-prover-tool.ts) and
+[extensions/agent-orchestrator.ts](../extensions/agent-orchestrator.ts) forward
+to absent root implementations. Adding `extensions/` to the old invocation
+does not repair those imports.
 
-```text
-task_queue.json
-proofs/<task-id>.lean
-proofs/<task-id>.sp
-artifacts/agent_orchestrator/*.json
-```
+[extensions/chatgpt-oracle.ts](../extensions/chatgpt-oracle.ts) contains an
+implementation and resolves `tools/infra/aiclaw_chat.py` from the working
+directory. The older [proofs/run.sh](../proofs/run.sh) changes into `proofs/`
+and contains older environment assumptions. Do not present it as a verified
+replacement launcher. Repair the owners and verify the resulting invocation
+before restoring an end-to-end Pi quickstart. The Python verification wrappers
+above remain separately inspectable entrypoints.
 
-The required execution sequence is:
+## Python theorem queue and optional Archon wrapper
 
-```text
-Researcher + Algebraist(SymPy) in parallel
-then Formalist(Lean)
-then Critic(vacuity linter)
-then Archivist(report artifact)
-```
-
-`tools/infra/automath_pipeline_main.py` is a candidate adapter for explicit
-hypothesis batches, not a separate queue or promotion path. Its roles,
-provenance requirements, and candidate-only boundary are documented in
-`docs/AUTOMATH_COLLECTIVE_PIPELINE.md`.
-
-SymPy witnesses are persistent source artifacts. Do not use fixed temp files
-such as `.temp_witness.py`; store the witness side-by-side with the Lean file as
-`proofs/<task-id>.sp`.
-
-### Archon Definite Sequences
-
-Archon owns repeatable, deterministic DAG/loop execution. The Archon repo
-describes workflows as YAML with deterministic bash/script nodes plus AI nodes,
-so this repo routes long-running theorem queue execution through:
+The [Python queue](../tools/infra/agent_orchestrator_queue.py) reads
+`task_queue.json`, uses `proofs/<task-id>.lean` and `proofs/<task-id>.sp`, and
+writes reports under `artifacts/agent_orchestrator/`. Run from the repository
+root. Its `status` command inspects the queue; `run-next` executes a queued
+task and writes state/artifacts:
 
 ```bash
 python3 tools/infra/agent_orchestrator_queue.py status
 python3 tools/infra/agent_orchestrator_queue.py run-next
 ```
 
-The matching workflow is:
+Its implemented order is Researcher and Algebraist, then Formalist, Critic,
+and Archivist. Inspect stage outcomes, skipped checks, source hashes, and the
+actual Lean result before reporting completion. SymPy results support the
+investigation; they do not prove the Lean proposition. The
+[AutoMath adapter](AUTOMATH_COLLECTIVE_PIPELINE.md) is another candidate path,
+not a new proof authority or implicit promotion mechanism.
 
-```text
-.archon/workflows/agent-orchestrator-definite-sequence.yaml
-```
+The tracked [Archon workflow](../.archon/workflows/agent-orchestrator-definite-sequence.yaml)
+calls this Python queue. Its [shell wrapper](../scripts/run_agent_orchestrator_archon.sh)
+requires a separately provisioned checkout at `<repo>/archon` and a compatible
+Bun/Archon CLI. That root directory is ignored and not supplied by a normal
+clone. The [`tools/archon` submodule declaration](../.gitmodules) does not
+establish that it is the same runtime or a drop-in replacement.
 
-Run it from this repository root with the repo wrapper:
+The wrapper derives `INFO_GEOMETRY_RUNTIME_DIR`, `ARCHON_HOME`, and
+`PI_RUNTIME_HOME` from the checkout with environment overrides, then passes
+`HOME="$PI_RUNTIME_HOME"` to its child. These are wrapper behaviors, not
+requirements to modify a host account. Confirm the prerequisite checkout and
+provider configuration before using the wrapper; a provider/authentication
+failure is separate from a Lean proof failure.
 
-```bash
-./scripts/run_agent_orchestrator_archon.sh
-```
+Native session agent teams, Pi teams, the persistent Hive swarm, and the
+Archon/Python queue are separate schedulers. Use the
+[native-team protocol](CODEX_AGENT_SWARM_PROTOCOL.md) or
+[Pi operations guide](PI_AGENT_TEAMS_OPERATIONS.md) for the chosen runtime.
+Do not run competing schedulers against one task or report a queued assignment
+as a running worker without checking its state.
 
-The wrapper sets:
+## GEPA, observations, and domain-specific routing
 
-```text
-ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home
-```
+GEPA operates on recorded outcomes and candidate profiles. The
+[package scripts](../package.json) expose `ai:oracle:record`, `ai:oracle:gepa`,
+`ai:oracle:gepa:gate`, and `ai:messages:observe`; inspect their owners and
+required inputs before running them. The
+[message observer](../tools/infra/gepa_agent_message_observer.py) writes review
+evidence. Proposed changes to prompts, SOPs, or workflows remain candidates
+until reviewed; they must not silently replace maintained source or acceptance
+criteria.
 
-If you call Archon manually, set `ARCHON_HOME` yourself before invoking the CLI:
+For categorical/tower work, read the
+[infrastructure map](CATEGORICAL_INFRASTRUCTURE_MAP.md). For DAG/refactor work,
+use the [wire-refactor workflow](../skills/lean-dag-wire-refactor/SKILL.md).
+For Souriau/Bost–Connes claims, read the
+[transition status](SOURIAU_BOST_CONNES_TRANSITION_STATUS.md). Other domain
+routing is in [AGENTS.md](../AGENTS.md#optional-services-and-domain-routing).
 
-```bash
-cd archon
-ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home \
-  bun run cli workflow run agent-orchestrator-definite-sequence --cwd /home/goutev/repos/info-geometry-lean
-```
+## Completion record
 
-Do not create a second theorem queue for Archon. Archon calls the Python bridge;
-Pi calls the TypeScript extension; both use the same queue files and artifacts.
-
-### Codex Native Agent Teams
-
-When the user requests parallel Codex agents, use the active session's native
-`collaboration.spawn_agent` API and follow
-[`CODEX_AGENT_SWARM_PROTOCOL.md`](CODEX_AGENT_SWARM_PROTOCOL.md). This is
-session-level coordination, not a shell entry point. The protocol adapts the
-TeamAntigravity Leader / Orchestrator / Worker tiers, assume-and-recurse proof
-loop, paired refuter, and independent gate panels. The repository also has a
-persistent Hive swarm (`hive_motherbee.py`, `hive_swarm.py`, packet/role
-workers) and a vendored Antigravity SDK; these are distinct runtimes. The
-Archon/Python queue above is another separate deterministic local pipeline and
-does not spawn Codex agents. Select one scheduler for a theorem task; do not
-run multiple orchestration paths against it concurrently.
-
-`run.sh` also defaults runtime state to:
-
-```text
-INFO_GEOMETRY_RUNTIME_DIR=/home/goutev/repos/info-geometry-lean/.runtime
-PI_RUNTIME_HOME=/home/goutev/repos/info-geometry-lean/.runtime/pi-home
-ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home
-```
-
-The final Pi command is launched with `HOME="$PI_RUNTIME_HOME"` so Pi writes
-`.pi` state under `.runtime/pi-home/.pi` rather than `/home/goutev/.pi`.
-
-### GEPA Prompt Evolution
-
-GEPA is archive-first. It scores recorded outcomes and prompt profiles; it does
-not replace the stable oracle prompt just because a generated note says so.
-
-```bash
-npm run ai:oracle:gepa
-npm run ai:oracle:gepa:gate
-```
-
-Record proof-repair outcomes before trusting prompt mutations:
-
-```bash
-npm run ai:oracle:record -- --event-json artifacts/oracle/target_theorem_name.json
-```
-
-### GEPA Review Mode For Archon SOPs
-
-GEPA may optimize Archon SOPs only in review mode. The intended loop is:
-
-```text
-Archon workflow run
-  -> observed task outcomes, timings, failures, vacuity findings, build verdicts
-  -> thermodynamic scoring / statistical variability analysis
-  -> GEPA proposes candidate SOP mutation
-  -> candidate is written to quarantine/review, not to .archon/workflows
-  -> human or explicit promotion gate reviews the candidate
-  -> only accepted candidates become maintained SOP/workflow source
-```
-
-The reason is operational, not cosmetic: agents introduce statistical
-variability even when they are told to follow an SOP. GEPA is useful because it
-can observe that variability empirically and propose better instructions. It is
-not authority to replace the stable Archon reflex by itself.
-
-Hard boundaries:
-
-- GEPA output is a proposal until reviewed.
-- `.archon/workflows/*.yaml` remains stable reflex source.
-- `quarantine/hermes_skills/`, `artifacts/`, and reports are evidence, not
-  promoted commandment text.
-- Promotion requires the same evidence as any other workflow change: source diff,
-  rollback path, representative run artifact, policy/vacuity result, and Lean or
-  Lake verdict for touched proof surfaces.
-- If a mutation only improves prose but does not improve measured execution, it
-  stays archived.
-
-### GEPA Agent Message Observer
-
-The default observer watches communication payloads, not SOP text. It records
-what agents submit to model/oracle/collaborator lanes and what those lanes
-return. This includes aiClaw/ChatGPT, Pi/DeepSeek, Hermes, Gemini CLI, Google AI
-browser lanes, and OpenAI-compatible advisory calls when the maintained sender
-script is instrumented.
-
-Append-only redacted ledger:
-
-```bash
-python3 tools/infra/agent_message_ledger.py \
-  --source-tool manual \
-  --channel manual_external_oracle \
-  --prompt-file /tmp/prompt.txt \
-  --response-file /tmp/response.txt
-```
-
-GEPA review packet from observed traffic:
-
-```bash
-python3 tools/infra/gepa_agent_message_observer.py --json
-```
-
-Outputs:
-
-```text
-artifacts/agent_messages/YYYYMMDD_agent_messages.jsonl
-artifacts/gepa_agent_message_observer/*_message_observations.jsonl
-artifacts/gepa_agent_message_observer/*_message_report.json
-quarantine/agent_message_reviews/*_message_review.md
-```
-
-The ledger stores redacted text excerpts plus full prompt/response hashes. It
-is empirical evidence for prompt/process improvement. It is not proof authority
-and it must not silently mutate Archon workflows, commandments, skills, or Lean
-source.
-
-### Graph / DAG / Arango
-
-Graph tools identify candidate wires only. They do not prove theorem content.
-
-For DAG/Arango/LeanTrail/Hodge/de Bruijn/WL cleanup tasks, use:
-
-```text
-skills/lean-dag-wire-refactor/SKILL.md
-```
-
-Keep aiClaw proof memory separate from the repo theorem-DAG Arango brain.
-
-## Forbidden Routes
-
-Do not use these for repo-owned ChatGPT work:
-
-- direct `ws://localhost:1956` WebSocket bridge;
-- raw browser-harness DOM prompt injection without
-  `tools/infra/chatgpt_lane_guard.py`;
-- manual Enter-key fallback when the ChatGPT send button is disabled;
-- stacked prompts while a prior answer may still be generating;
-- archived generated transcripts as implementation sources;
-- ChatGPT full-file replacement without a subsequent Lean check;
-- SymPy/RAG/graph evidence as proof authority;
-- generated wrappers, `axiom`, `sorry`, `admit`, `unsafe`, or `: True`
-  theorem surfaces to hide proof debt.
-
-## Minimal Correct Proof-Repair Loop
-
-```text
-1. cd /home/goutev/repos/info-geometry-lean
-2. Read AGENTS.md and this file.
-3. Locate the Lean owner file and owner theorem.
-4. Run lake env lean on the owner file.
-5. If local repair is possible, edit only the owner surface and recheck.
-6. If blocked, run socratic_clawbot.py --dry-run --json.
-7. Check aiClaw status and queue-status.
-8. Send one complete owner-file oracle prompt through socratic_clawbot.py.
-9. If the lane is suspect, recover read-only final browser output before release.
-10. Apply only source changes the coding agent understands.
-11. Re-run lake env lean or the locked Lake build.
-12. Record oracle outcome if GEPA will use it.
-```
-
-This is the pipeline future agents should follow. Long generated transcripts
-are historical context, not routing authority.
+Report the checkout revision, changed files, precise theorem or operational
+scope, exact commands and results, axiom/placeholder/semantic checks where
+applicable, and remaining failures or unrun checks. Preserve relevant report
+provenance without committing generated debris indiscriminately. A read-only
+documentation audit should say that it inspected source and did not run a
+full Lean build or certify optional runtime services.

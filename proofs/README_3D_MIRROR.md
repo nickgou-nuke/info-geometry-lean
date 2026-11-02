@@ -1,173 +1,81 @@
-# 3D Mirror Symmetry for Instanton Moduli Spaces
-## Multi-System Formalization of arXiv:2105.00588v3
+# 3D mirror-symmetry research companions
 
-This directory contains formal implementations of 3D mirror symmetry for instanton moduli spaces across **seven different formal systems**:
+This directory contains a historical collection of scripts and proof-language
+files inspired by Koroteev–Zeitlin's mirror-symmetry research. The Lean file
+in this packet is [ThreeDMirrorSymmetry.lean](ThreeDMirrorSymmetry.lean).
+It currently proves three elementary commutativity statements. It does not
+construct instanton moduli spaces or prove a mirror equivalence.
 
-- **SymPy** (Python) - Symbolic computation of Bethe equations, QQ-systems
-- **Lean 4** - Type-theoretic formalization with proofs
-- **SageMath** - D-modules, Weyl algebras, holonomic systems
-- **Macaulay2** - Groebner bases for QQ-system ideals
-- **Coq** - Constructive proofs in Gallina
-- **Isabelle/HOL** - Higher-order logic formalization
-- **GAP + QPA** - Quiver representations, path algebras
+Source reviewed on 2026-11-03 at commit
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`. This review records the Lean
+declarations and tracked companion paths; it is not a fresh execution report
+for the seven backends. Use the
+[repository search protocol](../docs/REPO_DEEP_SEARCH_PROTOCOL.md) when looking
+for related results elsewhere.
 
-## Mathematical Content
+## Exact Lean content
 
-Based on Koroteev & Zeitlin, "3D Mirror Symmetry for Instanton Moduli Spaces" (arXiv:2105.00588v3, Sept 2023):
+All three theorems are in namespace `ThreeDMirrorSymmetry`.
 
-### Key Structures Implemented:
+| Theorem | Statement |
+|---|---|
+| `complex_add_comm` | `a + b = b + a` for complex numbers. |
+| `complex_mul_comm` | `a * b = b * a` for complex numbers. |
+| `matrix_add_comm` | `A + B = B + A` for complex matrices. |
 
-1. **Quiver varieties X_{k,l}** (type A)
-   - Adjacency matrices
-   - Dimension vectors
-   - Framing data
+The filename is `ThreeDMirrorSymmetry.lean`; the older spelling
+`3DMirrorSymmetry.lean` is not the owner. The more extensive quiver-side packet
+is documented in [README_KOROTEEV_ZEITLIN.md](../tools/infra/README_KOROTEEV_ZEITLIN.md),
+which also explains its current limitations. Imports and similarly named files
+must not be treated as evidence that this small module proves their subject.
 
-2. **XXZ Bethe Ansatz equations**
-   - Bethe roots {t_i}
-   - Kähler parameters {z_i}
-   - Equivariant parameters {a_i}
-   - Deformation ℏ
+## Companion inventory
 
-3. **QQ-system**
-   - Q-operators (generating functions)
-   - Nonlinear difference equations
-   - Relation to Bethe equations
+| File | Backend / intended research role |
+|---|---|
+| [3d_mirror_symmetry_sympy.py](3d_mirror_symmetry_sympy.py) | SymPy computations around Bethe and QQ data. |
+| [ThreeDMirrorSymmetry.lean](ThreeDMirrorSymmetry.lean) | The three Lean statements listed above. |
+| [3d_mirror_dmodules.sage](3d_mirror_dmodules.sage) | SageMath D-module and Weyl-algebra exploration. |
+| [qq_system_m2.m2](qq_system_m2.m2) | Macaulay2 QQ-ideal exploration. |
+| [3d_mirror_symmetry.v](3d_mirror_symmetry.v) | Coq source companion. |
+| [3d_mirror_symmetry.thy](3d_mirror_symmetry.thy) | Isabelle/HOL source companion; see [ROOT](ROOT) for session configuration. |
+| [3d_mirror_gap.g](3d_mirror_gap.g) | GAP quiver exploration. |
 
-4. **(G,ℏ)-opers**
-   - Z-twisted Miura opers
-   - SL(r+1) connections
-   - Oper/Bethe correspondence
+These are source entries, not a table of completed mathematical equivalences.
+Before reporting a cross-system result, state the proposition checked by each
+backend, the translation between representations, and the run provenance.
 
-5. **Quantum K-theory ring**
-   - Generators: Λ_i (exterior powers)
-   - Relations from QQ-system asymptotics
-   - Ring isomorphism under mirror map
+## Research context
 
-6. **Mirror transformation**
-   - Exchange: z_i ↔ a_i (Kähler ↔ equivariant)
-   - Inversion: ℏ → ℏ⁻¹
-   - Self-duality of Hilb^k(C²)
+The historical intake lists quiver dimension/framing data, XXZ Bethe equations,
+QQ systems, twisted Miura opers, quantum K-theory, and exchange of Kähler and
+equivariant parameters. Preserve these as research topics. The present Lean
+owner supplies none of the maps or compatibility theorems needed to conclude
+the full mirror-symmetry statement.
 
-## File Inventory
+The complete original narrative and bibliographic references are available in
+the [historical README](https://github.com/nickgou-nuke/info-geometry-lean/blob/214f7bcf733eaf4720913bc2c082936f2480d3fc/proofs/README_3D_MIRROR.md).
+Its blanket verification and completion claims are not current build evidence.
 
-| File | System | Purpose |
-|------|--------|---------|
-| `3d_mirror_symmetry_sympy.py` | SymPy | Symbolic Bethe/QQ computations |
-| `3DMirrorSymmetry.lean` | Lean 4 | Type-theoretic definitions + theorems |
-| `3d_mirror_dmodules.sage` | SageMath | D-modules, Weyl algebras |
-| `qq_system_m2.m2` | Macaulay2 | Groebner bases for QQ ideals |
-| `3d_mirror_symmetry.v` | Coq | Constructive proofs |
-| `3d_mirror_symmetry.thy` | Isabelle/HOL | Higher-order logic |
-| `3d_mirror_gap.g` | GAP | Quiver representations |
+## Targeted local checks
 
-## Running the Code
+Use the repository-root environment and shared lock for Lean elaboration:
 
-### SymPy
 ```bash
-cd proofs
-python3 3d_mirror_symmetry_sympy.py
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock proofs/ThreeDMirrorSymmetry.lean
 ```
 
-### Lean 4
+This checks the source against the prepared dependency environment. It does
+not build missing imports automatically. Follow the [root build guide](../README.md)
+for setup and owner builds. The nested [lakefile.toml](lakefile.toml) describes
+the separate proofs package; a blanket `lake build` inside this directory is a
+broader operation than checking this packet.
+
+The Python companion can be examined and run separately when its dependencies
+are available:
+
 ```bash
-cd proofs
-lake build
-# Or check syntax:
-lake lean 3DMirrorSymmetry.lean
+python3 proofs/3d_mirror_symmetry_sympy.py
 ```
 
-### SageMath
-```bash
-cd proofs
-sage 3d_mirror_dmodules.sage
-```
-
-### Macaulay2
-```bash
-cd proofs
-M2 < qq_system_m2.m2
-```
-
-### Coq
-```bash
-cd proofs
-coqc 3d_mirror_symmetry.v
-# Or interactively:
-coqtop -l 3d_mirror_symmetry.v
-```
-
-### Isabelle/HOL
-```bash
-cd proofs
-isabelle build -d . ThreeDMirrorSymmetry
-```
-
-### GAP
-```bash
-cd proofs
-gap 3d_mirror_gap.g
-# Or with QPA:
-gap -q 3d_mirror_gap.g
-```
-
-## Key Theorems (All Systems)
-
-### Theorem 1: XXZ Bethe Ansatz Equations
-```
-∏_{j≠i} (t_i - t_j - ℏ)/(t_i - t_j + ℏ) = 
-  - ∏_f (t_i - a_f - ℏ/2)/(t_i - a_f + ℏ/2) · z_i
-```
-**Status:** ✓ All systems
-
-### Theorem 2: QQ-System Relations
-```
-Q_i(w+ℏ)Q_i(w-ℏ) - Q_i(w)² = -z_i · Q_{i-1}Q_{i+1}
-```
-**Status:** ✓ All systems
-
-### Theorem 3: Mirror Isomorphism
-```
-K^q_T(X) ≅ K^q_T(X^!)  under  z_i ↔ a_i, ℏ → ℏ⁻¹
-```
-**Status:** ✓ Lean, Coq, Isabelle
-
-### Theorem 4: Hilbert Scheme Self-Duality
-```
-Hilb^k(C²) ≅ Hilb^k(C²)^!
-```
-**Status:** ✓ All systems (proofs in Lean 4)
-
-## Integration with TKK Framework
-
-These implementations integrate directly with our Grand Unified TKK framework:
-
-- **Bethe roots** ↔ TKK weight vectors
-- **Kähler parameters** ↔ TKK triality phases
-- **QQ-system** ↔ TKK tripotent relations
-- **Mirror map** ↔ TKK vacuum horizon transitions
-- **Hilb^k(C²)** ↔ TKK V₁₆ Fock space (k points = k particles)
-
-## Verification Status
-
-All implementations have been verified to produce consistent results for:
-- Bethe equations (n=2,3 roots)
-- QQ-system solutions (A_2, A_3 quivers)
-- Mirror map transformations
-- Self-duality checks
-
-**Cross-system agreement:** 100% ✓
-
-## References
-
-1. P. Koroteev & A.M. Zeitlin, "3D Mirror Symmetry for Instanton Moduli Spaces", arXiv:2105.00588v3 [math.AG] (2023)
-2. N. Nekrasov et al., "BPS/CFT Correspondence V: BPZ Equations from PSG Bethe Ansatz", arXiv:1803.05971
-3. A. Okounkov & V. Pestun, "Seiberg-Witten Geometry of Four-Dimensional N=2 Quiver Gauge Theories", arXiv:1303.4541
-
-## Authors
-
-Multi-system formalization project
-Date: June 23, 2026
-
----
-
-**This completes the integration of 3D mirror symmetry into the Grand Unified TKK framework.**
+A successful script run does not add a theorem to the Lean owner.

@@ -41,6 +41,21 @@ noncomputable def splitCliffordStep (n : ℕ) :
     (GradedTensorProduct.includeRight (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)
       (CliffordAlgebra.evenOdd (Qsplit n)))
 
+/-- Under the canonical Bott factorization, the actual tower transition is
+the inclusion into the tail factor. This is the stagewise compatibility law
+needed to compare the tower with a fixed Clifford head tensored against its
+remaining tail. -/
+@[simp, rep_depth krein]
+theorem splitCliffordStep_tensorFactor (n : ℕ) (x : SplitClNNAlg n) :
+    splitCliffordTensorStepEquiv n (splitCliffordStep n x) =
+      (1 : CliffordAlgebra InfoGeometry.CliffordTower.Q11) ᵍ⊗ₜ x := by
+  change splitCliffordTensorStepEquiv n
+      ((splitCliffordTensorStepEquiv n).symm
+        (GradedTensorProduct.includeRight
+          (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)
+          (CliffordAlgebra.evenOdd (Qsplit n)) x)) = _
+  exact (splitCliffordTensorStepEquiv n).apply_symm_apply _
+
 /-- The canonical split-Clifford one-step map is injective. -/
 theorem splitCliffordStep_injective (n : ℕ) : Function.Injective (splitCliffordStep n) := by
   classical

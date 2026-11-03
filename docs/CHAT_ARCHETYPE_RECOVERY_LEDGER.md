@@ -1873,3 +1873,24 @@ The updated owner passed `run_locked_lean.py` and a locked Lake build of
 `InfoGeometry.Canonical.NilpotentQGTCartanBridge` (9,180 jobs, exit 0). Strict
 OpenGauss screening reported zero traps, the staged proof-proxy gate passed,
 and the semantic-vacuity audit reported zero findings on 2026-11-04.
+
+To match the source's all-powers nilpotent trace claim, the owner additionally
+proves `finiteOperatorTrace_eq_zero_of_isNilpotent` and
+`finiteOperatorTrace_pow_eq_zero_of_isNilpotent`: for a finite-dimensional
+complex space, any nilpotent endomorphism and every positive natural power of
+it have zero linear trace. The pre-existing square-zero theorem now reuses the
+generic nilpotent trace lemma. The updated owner again passed the locked Lean
+check and targeted Lake build (9,180 jobs, exit 0); strict OpenGauss screening
+reported zero traps, proof-proxy passed, and semantic-vacuity reported zero
+findings. Lean emits one linter warning that the generic theorem inherits the
+unused `CompleteSpace H` section instance; it does not affect the kernel proof.
+
+The operator-level invariance layer now includes
+`finiteOperatorTrace_similarity`: for finite-dimensional `H`,
+`Tr(G T Ginv) = Tr(T)` whenever `Ginv * G = 1`. This is the exact similarity
+invariant supplied by trace cyclicity, stated on bounded operators on `H` and
+without a commutativity assumption. It does not by itself assert invariance of
+the adjoint Gramian under arbitrary similarities; that stronger statement
+requires a unitary conjugator. The owner passed its locked Lean check and
+targeted Lake build (9,180 jobs, exit 0) on 2026-11-04. The check reports the
+unused `CompleteSpace H` section-instance linter warning on this theorem.

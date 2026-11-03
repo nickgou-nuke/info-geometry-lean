@@ -71,6 +71,27 @@ theorem finiteOperatorTrace_pow_eq_zero_of_isNilpotent
   apply finiteOperatorTrace_eq_zero_of_isNilpotent
   simpa only [ContinuousLinearMap.toLinearMap_pow] using hN.pow_of_pos hk
 
+/-- The finite-dimensional operator trace is invariant under conjugation by a
+map equipped with a left inverse. This inverse law is sufficient for
+cyclicity in the displayed orientation. -/
+theorem finiteOperatorTrace_similarity
+    [Module.Finite ℂ H] (G T Ginv : EndH)
+    (hInv : Ginv * G = 1) :
+    finiteOperatorTrace (G * T * Ginv) = finiteOperatorTrace T := by
+  change LinearMap.trace ℂ H
+      (G.toLinearMap * T.toLinearMap * Ginv.toLinearMap) = _
+  calc
+    LinearMap.trace ℂ H
+        ((G.toLinearMap * T.toLinearMap) * Ginv.toLinearMap) =
+      LinearMap.trace ℂ H
+        (Ginv.toLinearMap * (G.toLinearMap * T.toLinearMap)) :=
+      LinearMap.trace_mul_comm ℂ _ _
+    _ = LinearMap.trace ℂ H
+        ((Ginv * G * T).toLinearMap) := by
+      congr 1
+    _ = LinearMap.trace ℂ H T.toLinearMap := by
+      rw [hInv, one_mul]
+
 /-- In finite dimension, a square-zero operator has zero trace, the two
 adjoint Gramian terms have equal trace by cyclicity, and both the Cartan
 commutator and the Gramian trace reduce to these cyclic identities. -/

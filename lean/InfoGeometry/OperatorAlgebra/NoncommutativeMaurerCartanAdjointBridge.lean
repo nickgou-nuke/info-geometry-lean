@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Canonical.TransportLieDerivative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Bilinear
 import Mathlib.Algebra.Lie.OfAssociative
@@ -112,6 +113,95 @@ theorem adCLM_flow_generator (a x : A) :
       (adCLM a) x 0).hasDerivAt.deriv
   simpa [InfoGeometry.Lie.ContinuousDerivationExponential.flow_zero,
     adCLM_apply] using h
+
+/-- Exponential conjugation intertwines the inner derivation with itself. -/
+theorem expTransport_adCLM_apply [NormedAlgebra ℚ A] (a x : A) (t : ℝ) :
+    InfoGeometry.Canonical.expTransport a (adCLM a x) t =
+      adCLM a (InfoGeometry.Canonical.expTransport a x t) := by
+  simp [adCLM_apply,
+      InfoGeometry.Canonical.expTransport_sub_seed,
+      InfoGeometry.Canonical.expTransport_mul_seed,
+      InfoGeometry.Canonical.expTransport_eq_self_of_commute
+        a a t (Commute.refl a)]
+
+/-- Pulling an inner-derivation flow backward cancels the derivative of its
+exponential-conjugation orbit. -/
+theorem hasDerivAt_adCLM_flow_interaction [NormedAlgebra ℚ A]
+    (a x : A) (t : ℝ) :
+    HasDerivAt
+      (fun s => InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        (-adCLM a) s (InfoGeometry.Canonical.expTransport a x s))
+      0 t := by
+  let D := adCLM a
+  let p : ℝ → A := fun s => InfoGeometry.Canonical.expTransport a x s
+  have hp (s : ℝ) : HasDerivAt p (D (p s)) s := by
+    have h := InfoGeometry.Canonical.hasDerivAt_expTransport a x s
+    have hval :
+        InfoGeometry.Canonical.expTransport a ⁅a, x⁆ s = D (p s) := by
+      rw [Ring.lie_def, ← adCLM_apply]
+      exact expTransport_adCLM_apply a x s
+    exact hval ▸ h
+  let q : ℝ → A := fun s =>
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s (p s)
+  let evalOp : (A →L[ℝ] A) →L[ℝ] A →L[ℝ] A :=
+    (ContinuousLinearMap.apply ℝ A).flip
+  have hq (s : ℝ) : HasDerivAt q 0 s := by
+    have hback_s : HasDerivAt
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D))
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s * (-D)) s :=
+      (InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_flow_right
+        (-D) s).hasDerivAt
+    have h := evalOp.hasDerivAt_of_bilinear
+      (fun _ => hback_s) (fun _ => hp s)
+    have hzero :
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s) (D (p s)) +
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s * (-D)) (p s) = 0 := by
+      rw [mul_apply_eq_comp]
+      simp
+    have hzero' :
+        (evalOp (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s))
+            (D (p s)) +
+          (evalOp (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s * (-D))
+            (p s)) = 0 := by
+      simpa [evalOp, mul_apply_eq_comp] using hzero
+    rw [hzero'] at h
+    simpa [q, evalOp, mul_apply_eq_comp] using h
+  simpa [q, p, D] using hq t
+
+/-- The exponential flow of the inner derivation is exactly conjugation by
+the algebra exponential. This identifies the derivation-algebra flow with
+the existing operator transport, with the sign fixed by `adCLM_apply`. -/
+theorem adCLM_flow_eq_expTransport [NormedAlgebra ℚ A] (a x : A) (t : ℝ) :
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow (adCLM a) t x =
+      InfoGeometry.Canonical.expTransport a x t := by
+  let D := adCLM a
+  let p : ℝ → A := fun s => InfoGeometry.Canonical.expTransport a x s
+  let q : ℝ → A := fun s =>
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) s (p s)
+  have hq_const : ∀ s : ℝ, HasDerivAt q 0 s := by
+    intro s
+    simpa [q, p, D] using hasDerivAt_adCLM_flow_interaction a x s
+  have hq_diff : Differentiable ℝ q := fun s => (hq_const s).differentiableAt
+  have hq_deriv_zero : ∀ s : ℝ, deriv q s = 0 := fun s => (hq_const s).deriv
+  have hconst := is_const_of_deriv_eq_zero hq_diff hq_deriv_zero t 0
+  have hq_initial : q 0 = x := by
+    simp [q, p, D, InfoGeometry.Canonical.expTransport]
+  have hq_value : q t = x := by
+    simpa [hq_initial] using hconst
+  have htransport := congrArg
+    (InfoGeometry.Lie.ContinuousDerivationExponential.flow D t) hq_value
+  have hflow :
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow D t x = p t := by
+    calc
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow D t x =
+          InfoGeometry.Lie.ContinuousDerivationExponential.flow D t (q t) :=
+        htransport.symm
+      _ = p t := by
+        change InfoGeometry.Lie.ContinuousDerivationExponential.flow D t
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow (-D) t (p t)) = p t
+        exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_apply_flow_neg
+          D t (p t)
+  exact hflow
 
 /-! ## Maurer--Cartan form for an invertible operator -/
 

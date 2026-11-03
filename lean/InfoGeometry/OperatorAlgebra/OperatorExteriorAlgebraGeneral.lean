@@ -118,6 +118,40 @@ def derivN (n : ℕ) (D : FormDerivation R A) (ω : OpForm R V A n) : OpForm R V
 theorem derivN_apply (n : ℕ) (D : FormDerivation R A) (ω : OpForm R V A n) (v : Fin n → V) :
     derivN n D ω v = D (ω v) := rfl
 
+/-- Transport an arbitrary-degree operator-valued form through an algebra
+homomorphism on its coefficient algebra. -/
+def mapN {C : Type*} [Ring C] [Algebra R C] (n : ℕ)
+    (f : A →ₐ[R] C) (ω : OpForm R V A n) : OpForm R V C n :=
+  f.toLinearMap.compAlternatingMap ω
+
+@[simp] theorem mapN_apply {C : Type*} [Ring C] [Algebra R C] (n : ℕ)
+    (f : A →ₐ[R] C) (ω : OpForm R V A n) (v : Fin n → V) :
+    mapN n f ω v = f (ω v) := rfl
+
+@[simp] theorem mapN_id (n : ℕ) (ω : OpForm R V A n) :
+    mapN n (AlgHom.id R A) ω = ω := by
+  ext v
+  rfl
+
+/-- Arbitrary-degree coefficient transport is functorial under composition of
+algebra homomorphisms. -/
+theorem mapN_comp {C D : Type*} [Ring C] [Algebra R C]
+    [Ring D] [Algebra R D] (n : ℕ)
+    (f : A →ₐ[R] C) (g : C →ₐ[R] D) (ω : OpForm R V A n) :
+    mapN n (g.comp f) ω = mapN n g (mapN n f ω) := by
+  ext v
+  rfl
+
+/-- An algebra homomorphism intertwining two coefficient derivations induces a
+map of their arbitrary-degree operator-valued form derivation actions. -/
+theorem mapN_derivN {C : Type*} [Ring C] [Algebra R C]
+    (n : ℕ) (f : A →ₐ[R] C) (D : FormDerivation R A)
+    (E : FormDerivation R C)
+    (hDE : ∀ a, f (D a) = E (f a)) (ω : OpForm R V A n) :
+    mapN n f (derivN n D ω) = derivN n E (mapN n f ω) := by
+  ext v
+  exact hDE (ω v)
+
 /-- Applying a coefficient derivation to an operator-valued form commutes with
 pullback along a linear map. This is the naturality square relating the
 operator derivation action to changes of parameter coordinates. -/

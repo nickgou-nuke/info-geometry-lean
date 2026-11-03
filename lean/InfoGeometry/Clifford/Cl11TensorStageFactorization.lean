@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Clifford.Cl11StarAlgebraColimit
 import Mathlib.RingTheory.MatrixAlgebra
 
 /-!
@@ -24,6 +25,8 @@ namespace InfoGeometry.Clifford.Cl11TensorStageFactorization
 open scoped Kronecker TensorProduct
 
 open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Clifford.Cl11TensorTowerLimit
+open InfoGeometry.Clifford.Cl11StarAlgebraColimit
 open InfoGeometry.Clifford.TowerMatrix
 
 /-- Split a binary tensor index at the `n`-th position. -/
@@ -75,5 +78,84 @@ directions, which is useful when transporting finite-stage tower maps. -/
   apply (stageTensorFactorization n m).injective
   rw [(stageTensorFactorization n m).apply_symm_apply]
   exact (stageTensorFactorization_reindex_kronecker n m A B).symm
+
+/-- The finite-stage binary split is compatible with appending one tensor
+factor to its right component. -/
+theorem stageTensorFactorization_stageEmbed_tmul
+    (n m : ℕ) (A : MatStage n) (B : MatStage m) :
+    stageTensorFactorization n (m + 1)
+      (stageEmbed (n + m) ((stageTensorFactorization n m).symm (A ⊗ₜ[ℝ] B))) =
+        A ⊗ₜ[ℝ] stageEmbed m B := by
+  apply (Matrix.kroneckerAlgEquiv (Idx n) (Idx (m + 1)) ℝ).injective
+  rw [stageTensorFactorization_symm_tmul]
+  simp only [stageTensorFactorization, AlgEquiv.trans_apply,
+    AlgEquiv.apply_symm_apply]
+  change Matrix.reindex (idxAddEquiv n (m + 1)) (idxAddEquiv n (m + 1))
+      (matStageEmbed (n + m)
+        (Matrix.reindex (idxAddEquiv n m).symm (idxAddEquiv n m).symm (A ⊗ₖ B))) =
+    A ⊗ₖ matStageEmbed m B
+  ext i j
+  rcases i with ⟨i₁, i₂⟩
+  rcases i₂ with ⟨i₂, i₃⟩
+  rcases j with ⟨j₁, j₂⟩
+  rcases j₂ with ⟨j₂, j₃⟩
+  simp only [Matrix.reindex_apply, Matrix.submatrix_apply]
+  have hidx (a : Idx n) (b : Idx m) (c : Fin 2) :
+      (idxAddEquiv n (m + 1)).symm (a, (b, c)) = ((idxAddEquiv n m).symm (a, b), c) := by
+    change ((idxAddEquiv n m).prodCongr (Equiv.refl (Fin 2))).symm
+      ((Equiv.prodAssoc (Idx n) (Idx m) (Fin 2)).symm (a, (b, c))) = _
+    rfl
+  rw [hidx i₁ i₂ i₃, hidx j₁ j₂ j₃]
+  simp [matStageEmbed, Matrix.submatrix, Matrix.one_apply,
+    Matrix.kroneckerMap_apply]
+  change (if i₃ = j₃ then A i₁ j₁ * B i₂ j₂ else 0) =
+    A i₁ j₁ * (B i₂ j₂ * (if i₃ = j₃ then (1 : ℝ) else 0))
+  simp
+
+/-- Naturality of the finite-stage split on the entire tensor-product
+carrier: the successor embedding on the combined stage is the identity on the
+left factor tensored with the successor embedding on the right factor. -/
+theorem stageTensorFactorization_stageEmbed_map
+    (n m : ℕ) (z : TensorProduct ℝ (MatStage n) (MatStage m)) :
+    stageTensorFactorization n (m + 1)
+      (stageEmbed (n + m) ((stageTensorFactorization n m).symm z)) =
+    TensorProduct.map (LinearMap.id : MatStage n →ₗ[ℝ] MatStage n)
+      (stageEmbed m).toLinearMap z := by
+  induction z using TensorProduct.inductionOn with
+  | add x y hx hy => simp only [map_add, hx, hy]
+  | tmul A B =>
+      simpa using stageTensorFactorization_stageEmbed_tmul n m A B
+
+/-- The factorized finite matrix stage maps canonically into the existing
+direct-limit operator algebra. -/
+noncomputable def factorizedStageToLimit (n m : ℕ) :
+    TensorProduct ℝ (MatStage n) (MatStage m) →ₐ[ℝ] Limit :=
+  (ofStageStarAlgHom (n + m)).toAlgHom.comp
+    (stageTensorFactorization n m).symm.toAlgHom
+
+/-- The maps from the factorized finite stages into the direct limit are
+compatible with advancing the right tensor factor. -/
+theorem factorizedStageToLimit_stageEmbed
+    (n m : ℕ) (z : TensorProduct ℝ (MatStage n) (MatStage m)) :
+    factorizedStageToLimit n (m + 1)
+      (TensorProduct.map (LinearMap.id : MatStage n →ₗ[ℝ] MatStage n)
+        (stageEmbed m).toLinearMap z) =
+      factorizedStageToLimit n m z := by
+  change ofStage (n + (m + 1))
+      ((stageTensorFactorization n (m + 1)).symm
+        (TensorProduct.map (LinearMap.id : MatStage n →ₗ[ℝ] MatStage n)
+          (stageEmbed m).toLinearMap z)) =
+    ofStage (n + m) ((stageTensorFactorization n m).symm z)
+  have hcompat := stageTensorFactorization_stageEmbed_map n m z
+  have hstage :
+      stageEmbed (n + m) ((stageTensorFactorization n m).symm z) =
+        (stageTensorFactorization n (m + 1)).symm
+          (TensorProduct.map (LinearMap.id : MatStage n →ₗ[ℝ] MatStage n)
+            (stageEmbed m).toLinearMap z) := by
+    simpa using congrArg (stageTensorFactorization n (m + 1)).symm hcompat
+  rw [← hstage]
+  change ofStage ((n + m) + 1)
+      (stageEmbed (n + m) ((stageTensorFactorization n m).symm z)) = _
+  exact ofStage_apply_bond (n + m) ((stageTensorFactorization n m).symm z)
 
 end InfoGeometry.Clifford.Cl11TensorStageFactorization

@@ -57,9 +57,11 @@ theorem partI_cut_odd_negated (X : B) :
   peirce_nf hP
 
 /- The even/odd decomposition is the Peirce grading split of every element. -/
+omit hP in
 theorem partI_cut_decomposition (X : B) :
     evenGrade P X + oddGrade P X = X := by
-  peirce_nf hP
+  unfold evenGrade oddGrade
+  noncomm_ring
 
 /-! =======================================================================
     Part II: Fourfold anatomy — the four Peirce sectors
@@ -125,15 +127,15 @@ theorem partIV_weyl_inv_defect_off_shell :
     ======================================================================= -/
 
 /- The strict causal lineage of the five Jungian archetypes:
-  `primaMateria ≤ shadowProjection ≤ animusLogos ≤ chiralSyzygy ≤ selfIndividuation`.
+  `primaMateria < shadowProjection < animusLogos < chiralSyzygy < selfIndividuation`.
   This is acyclic by `archetype_acyclic`. -/
 omit [Ring B] hP in
 theorem partV_archetype_strict_chain :
-    (UnconsciousArchetype.primaMateria ≤ UnconsciousArchetype.shadowProjection) ∧
-    (UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos) ∧
-    (UnconsciousArchetype.animusLogos ≤ UnconsciousArchetype.chiralSyzygy) ∧
-    (UnconsciousArchetype.chiralSyzygy ≤ UnconsciousArchetype.selfIndividuation) := by
-  exact archetype_strict_chain
+    (UnconsciousArchetype.primaMateria < UnconsciousArchetype.shadowProjection) ∧
+    (UnconsciousArchetype.shadowProjection < UnconsciousArchetype.animusLogos) ∧
+    (UnconsciousArchetype.animusLogos < UnconsciousArchetype.chiralSyzygy) ∧
+    (UnconsciousArchetype.chiralSyzygy < UnconsciousArchetype.selfIndividuation) := by
+  decide
 
 /- The master structural synthesis: all five parts coagulate into one
 kernel-verified theorem, with no causal feedback loops. -/
@@ -143,12 +145,12 @@ theorem partV_master_synthesis (X : B) :
     invS P * evenGrade P X * invS P = evenGrade P X ∧
     invS P * oddGrade P X * invS P = -oddGrade P X ∧
     weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C ∧
-    (UnconsciousArchetype.primaMateria ≤ UnconsciousArchetype.shadowProjection) ∧
-    (UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos) ∧
-    (UnconsciousArchetype.animusLogos ≤ UnconsciousArchetype.chiralSyzygy) ∧
-    (UnconsciousArchetype.chiralSyzygy ≤ UnconsciousArchetype.selfIndividuation) := by
+    (UnconsciousArchetype.primaMateria < UnconsciousArchetype.shadowProjection) ∧
+    (UnconsciousArchetype.shadowProjection < UnconsciousArchetype.animusLogos) ∧
+    (UnconsciousArchetype.animusLogos < UnconsciousArchetype.chiralSyzygy) ∧
+    (UnconsciousArchetype.chiralSyzygy < UnconsciousArchetype.selfIndividuation) := by
   have h1 : evenGrade P X + oddGrade P X = X := by
-    exact partI_cut_decomposition hP X
+    exact partI_cut_decomposition X
   have h2 : peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X := by
     exact partII_fourfold_partition X
   have h3 : invS P * evenGrade P X * invS P = evenGrade P X := by
@@ -157,14 +159,14 @@ theorem partV_master_synthesis (X : B) :
     exact partI_cut_odd_negated hP X
   have h5 : weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C := by
     exact partIV_weyl_defect_off_shell hP
-  have h6 : UnconsciousArchetype.primaMateria ≤ UnconsciousArchetype.shadowProjection := by
-    exact (archetype_strict_chain).1
-  have h7 : UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos := by
-    exact (archetype_strict_chain).2.1
-  have h8 : UnconsciousArchetype.animusLogos ≤ UnconsciousArchetype.chiralSyzygy := by
-    exact (archetype_strict_chain).2.2.1
-  have h9 : UnconsciousArchetype.chiralSyzygy ≤ UnconsciousArchetype.selfIndividuation := by
-    exact (archetype_strict_chain).2.2.2
+  have h6 : UnconsciousArchetype.primaMateria < UnconsciousArchetype.shadowProjection := by
+    exact (partV_archetype_strict_chain).1
+  have h7 : UnconsciousArchetype.shadowProjection < UnconsciousArchetype.animusLogos := by
+    exact (partV_archetype_strict_chain).2.1
+  have h8 : UnconsciousArchetype.animusLogos < UnconsciousArchetype.chiralSyzygy := by
+    exact (partV_archetype_strict_chain).2.2.1
+  have h9 : UnconsciousArchetype.chiralSyzygy < UnconsciousArchetype.selfIndividuation := by
+    exact (partV_archetype_strict_chain).2.2.2
   exact ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

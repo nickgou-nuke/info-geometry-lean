@@ -12659,6 +12659,7 @@ import InfoGeometry.Epistemology.HolographicTensorNetwork
 import InfoGeometry.Epistemology.HolographicTensorNetworkAudit
 import InfoGeometry.Epistemology.IsometricCutState
 import InfoGeometry.Epistemology.JungianEpistemicCompiler
+import InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis
 import InfoGeometry.Epistemology.LogosMatterSynthesis
 import InfoGeometry.Epistemology.LogosMatterSynthesisAudit
 import InfoGeometry.Epistemology.NaturalGradientDissipation

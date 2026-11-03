@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis
 
 /-!
 # Nilpotent Directions and the State-Level QGT
@@ -159,7 +160,7 @@ theorem nilpotent_first_casimir_qgt_robertson_synthesis
     (hNil : N * N = 0)
     (hVNR : N * adjoint N * N = N) :
     let M := adjoint N
-    let hCartan := N * M - M * N
+    let hCartan := InfoGeometry.OperatorAlgebra.PeirceSpine.comm N M
     let V := N * M + M * N
     let C₂ := InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.casimir2
       N M hCartan
@@ -169,6 +170,16 @@ theorem nilpotent_first_casimir_qgt_robertson_synthesis
       (M * N) * (M * N) = M * N ∧
       (N * M) * (M * N) = 0 ∧
       (M * N) * (N * M) = 0) ∧
+    (hCartan ^ 3 = hCartan ∧
+      ((hCartan * hCartan + hCartan = (2 : ℤ) • (N * M) ∧
+        hCartan * hCartan - hCartan = (2 : ℤ) • (M * N) ∧
+        1 - hCartan * hCartan = 1 - N * M - M * N) ∧
+       ((1 - hCartan * hCartan) * (1 - hCartan * hCartan) =
+            1 - hCartan * hCartan ∧
+          (1 - hCartan * hCartan) * (N * M) = 0 ∧
+          (N * M) * (1 - hCartan * hCartan) = 0 ∧
+          (1 - hCartan * hCartan) * (M * N) = 0 ∧
+          (M * N) * (1 - hCartan * hCartan) = 0))) ∧
     (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.comm
         hCartan N = InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.twoOp N ∧
       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.comm
@@ -201,6 +212,8 @@ theorem nilpotent_first_casimir_qgt_robertson_synthesis
           (1 / 4 : ℝ) * Complex.normSq
             (⟪ψ.vec, (((-2 * Complex.I) • hCartan) ψ.vec)⟫_ℂ)) := by
   dsimp only
+  let M := adjoint N
+  let hCartan := InfoGeometry.OperatorAlgebra.PeirceSpine.comm N M
   have hNilM : adjoint N * adjoint N = 0 := by
     have hs := congrArg star hNil
     simpa [ContinuousLinearMap.star_eq_adjoint, star_mul] using hs
@@ -212,8 +225,24 @@ theorem nilpotent_first_casimir_qgt_robertson_synthesis
       hNil hNilM hVNR hVNRM
   rcases hCasimir with
     ⟨hP, hQ, hPQ, hQP, _, _, _, hHN, hHM, hNM, _, _, hParabolic, hC₂H, hC₂N, hC₂M⟩
+  have hSpectral :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.nilpotent_first_tripotent_spectral_sheets
+      hNil hVNR
+  have hSpectral' :
+      hCartan ^ 3 = hCartan ∧
+        ((hCartan * hCartan + hCartan = (2 : ℤ) • (N * M) ∧
+          hCartan * hCartan - hCartan = (2 : ℤ) • (M * N) ∧
+          1 - hCartan * hCartan = 1 - N * M - M * N) ∧
+         ((1 - hCartan * hCartan) * (1 - hCartan * hCartan) =
+              1 - hCartan * hCartan ∧
+            (1 - hCartan * hCartan) * (N * M) = 0 ∧
+            (N * M) * (1 - hCartan * hCartan) = 0 ∧
+            (1 - hCartan * hCartan) * (M * N) = 0 ∧
+            (M * N) * (1 - hCartan * hCartan) = 0)) := by
+    simpa [hCartan, M, ContinuousLinearMap.star_eq_adjoint, pow_two] using hSpectral
   exact ⟨⟨hVNR, hVNRM, hNil, hNilM⟩,
     ⟨hP, hQ, hPQ, hQP⟩,
+    hSpectral',
     ⟨hHN, hHM, hNM, hParabolic, hC₂H, hC₂N, hC₂M⟩,
     ⟨⟨InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.onsager_QGT_split
          ψ (Complex.I • nilpotentDirac N) (nilpotentCurrent N),

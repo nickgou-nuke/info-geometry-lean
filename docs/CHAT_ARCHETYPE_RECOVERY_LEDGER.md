@@ -1292,6 +1292,11 @@ infinite-colimit compatibility statement. In the checked-out owners:
   ledger summary that mentioned only the matrix-tower ring shift. The tail is
   the direct limit of stages `n + k`; this equivalence alone does not exhibit
   a finite Clifford head as a tensor factor.
+- The owner now also proves `splitCliffordTailInfinity_ring_shift_equiv k l`
+  for every pair of shifts and proves that this equivalence intertwines the
+  two tail grade involutions. Thus the cofinal-tail self-similarity is
+  explicitly grading-preserving on any pair of tails, while still not
+  identifying a finite head as a graded tensor factor.
 - On the distinct matrix tower carrier,
   `Canonical/Cl11MatrixTowerTailShift.lean::cl11MatrixLimit_tailRingEquiv`
   proves a ring equivalence between the matrix-tower limit and the limit of

@@ -113,6 +113,32 @@ theorem two_link_chain_quadratic_split {n m o p : B}
   refine ⟨?_, ?_, ?_⟩ <;>
     noncomm_ring [hnn, hmm, hoo, hpp, hnp, hmo, hmp, hon, hom, hpn]
 
+/-- The bipartite twist on a two-link chain separates the endpoint phase
+current from the difference of the two link metrics. In particular, the
+commutator is twice the antisymmetric edge coordinate; it is not twice the
+symmetric endpoint bridge. -/
+theorem two_link_twist_bracket_split {n m o p : B}
+    (hnn : n * n = 0) (hmm : m * m = 0)
+    (hoo : o * o = 0) (hpp : p * p = 0)
+    (hnp : n * p = 0) (hmo : m * o = 0) (hmp : m * p = 0)
+    (hon : o * n = 0) (hom : o * m = 0) (hpn : p * n = 0) :
+    bracket (phi n m - phi o p) (phi n m + phi o p) =
+        (2 : ℤ) • edgeJ (n * o) (p * m) ∧
+    antibracket (phi n m - phi o p) (phi n m + phi o p) =
+        (2 : ℤ) • (metric n m - metric o p) := by
+  rcases adjacent_link_products hnp hmo hmp hon hom hpn with
+    ⟨_, _, _, _, _, hEdge, _, _⟩
+  rcases directed_pair_tetraktys hnn hmm with ⟨hPhi₁₂, _, _, _⟩
+  rcases directed_pair_tetraktys hoo hpp with ⟨hPhi₂₃, _, _, _⟩
+  constructor
+  · unfold bracket at hEdge ⊢
+    calc
+      _ = (2 : ℤ) •
+          (phi n m * phi o p - phi o p * phi n m) := by noncomm_ring
+      _ = (2 : ℤ) • edgeJ (n * o) (p * m) := by rw [hEdge]
+  · unfold antibracket
+    noncomm_ring [hPhi₁₂, hPhi₂₃]
+
 /-- A parity element acting with opposite signs on the two supporting corners
 anticommutes with every operator between those corners. -/
 theorem corner_parity_anticommutes {s e f x : B}

@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import InfoGeometry.Canonical.ConnesSpectralTripleBridge
+import InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis
 
@@ -69,6 +70,26 @@ theorem nilpotent_generated_spectral_lipschitz_iff (N X : EndH) :
   rw [ConnesSpectral.SpectralTriple.LipschitzFunction,
     ConnesSpectral.SpectralTriple.commutatorNorm,
     nilpotent_generated_spectral_commutator]
+
+/-- An observable in the nilpotent-generated Dirac unit ball contributes its
+state-readout difference to the existing Connes spectral-distance supremum.
+Finiteness is stated as the exact boundedness premise required by the
+supremum owner. -/
+theorem nilpotent_generated_observable_le_spectral_distance_supremum
+    (N X : EndH) (ω₁ ω₂ : EndH → ℝ)
+    (hLip : ‖opCommutator N X + opCommutator (adjoint N) X‖ ≤ 1)
+    (hBdd : BddAbove
+      (InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum.spectralDistanceSet
+        (nilpotentDirac N) ω₁ ω₂)) :
+    |ω₁ X - ω₂ X| ≤
+      InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum.supremumSpectralDist
+        (nilpotentDirac N) ω₁ ω₂ := by
+  apply InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum.pointwise_le_supremum_spectral_dist
+    (nilpotentDirac N) ω₁ ω₂ X ?_ hBdd
+  change ConnesSpectral.SpectralTriple.LipschitzFunction
+    (nilpotentGeneratedSpectralTriple N) X
+  rw [nilpotent_generated_spectral_lipschitz_iff]
+  exact hLip
 
 /-- The directions `iΦ` and `J` are skew-adjoint. -/
 theorem nilpotent_generated_directions_skew_adjoint (N : EndH) :

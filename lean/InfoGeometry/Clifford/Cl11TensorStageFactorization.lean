@@ -65,4 +65,15 @@ operators is sent to the corresponding elementary tensor. -/
   apply (Matrix.kroneckerAlgEquiv (Idx n) (Idx m) ℝ).injective
   simp
 
+/-- The inverse factorization sends a pure tensor to the reindexed
+Kronecker operator. This gives the stage split a normal form in both
+directions, which is useful when transporting finite-stage tower maps. -/
+@[simp] theorem stageTensorFactorization_symm_tmul
+    (n m : ℕ) (A : MatStage n) (B : MatStage m) :
+    (stageTensorFactorization n m).symm (A ⊗ₜ[ℝ] B) =
+      Matrix.reindex (idxAddEquiv n m).symm (idxAddEquiv n m).symm (A ⊗ₖ B) := by
+  apply (stageTensorFactorization n m).injective
+  rw [(stageTensorFactorization n m).apply_symm_apply]
+  exact (stageTensorFactorization_reindex_kronecker n m A B).symm
+
 end InfoGeometry.Clifford.Cl11TensorStageFactorization

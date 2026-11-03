@@ -68,6 +68,18 @@ theorem innerConjugation_idempotent_iff (u : Aˣ) (x : A) :
     x * x = x ↔ innerConjugation u x * innerConjugation u x = innerConjugation u x := by
   simpa only [pow_two] using innerConjugation_npotent_iff u x 2
 
+/-- Inner conjugation preserves each specified root-of-unity equation. -/
+theorem innerConjugation_rootOfUnity_iff (u : Aˣ) (x : A) (n : ℕ) :
+    x ^ n = 1 ↔ innerConjugation u x ^ n = 1 := by
+  constructor
+  · intro hx
+    simpa only [innerConjugationRingEquiv_apply, map_pow, map_one] using
+      congrArg (innerConjugationRingEquiv u) hx
+  · intro hx
+    have h := congrArg (innerConjugationRingEquiv (u⁻¹)) hx
+    rw [map_pow] at h
+    simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h
+
 /-- Inner conjugation preserves nilpotency of each specified exponent. -/
 theorem innerConjugation_nilpotent_iff (u : Aˣ) (x : A) (n : ℕ) :
     x ^ n = 0 ↔ innerConjugation u x ^ n = 0 := by
@@ -79,6 +91,15 @@ theorem innerConjugation_nilpotent_iff (u : Aˣ) (x : A) (n : ℕ) :
     have h := congrArg (innerConjugationRingEquiv (u⁻¹)) hx
     rw [map_pow] at h
     simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h
+
+/-- Integer polynomial evaluation is equivariant under inner conjugation.  This
+includes every integer cyclotomic polynomial evaluated at an operator. -/
+theorem innerConjugation_map_intPolynomial_eval₂
+    (u : Aˣ) (p : Polynomial ℤ) (x : A) :
+    innerConjugationRingEquiv u (Polynomial.eval₂ (Int.castRingHom A) x p) =
+      Polynomial.eval₂ (Int.castRingHom A) (innerConjugation u x) p := by
+  exact Polynomial.ringHom_eval₂_intCastRingHom p
+    (innerConjugationRingEquiv u).toRingHom x
 
 theorem innerConjugation_map_quadraticCommutator
     (u : Aˣ) (x y : A) :

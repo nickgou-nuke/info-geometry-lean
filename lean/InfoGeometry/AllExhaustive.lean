@@ -13438,7 +13438,6 @@ import InfoGeometry.Volume.IwasawaScaleParityBridge
 import InfoGeometry.Volume.RealUnitScaleParity
 import InfoGeometry.Algebra.CubicNilpotentAdjoint
 import InfoGeometry.Algebra.HodgeStarSignatureFour
-import InfoGeometry.Algebra.OmegaSpectrum
 import InfoGeometry.Algebra.SteinbergBraidCrossStage
 import InfoGeometry.Algebra.TestFieldAccess
 import InfoGeometry.Algebra.TestMinimal

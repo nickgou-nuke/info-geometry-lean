@@ -169,4 +169,134 @@ theorem partV_master_synthesis (X : B) :
     exact (partV_archetype_strict_chain).2.2.2
   exact ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
 
+/-! =======================================================================
+    Part VI: Dual Steinberg Braids — Yang–Baxter defect & universal invertibility
+    ======================================================================= -/
+
+/- The dual Steinberg word `B₋ = (1 - N₋)(1 + N₊)(1 - N₋)` differs from the
+positive word `B₊` by the exact Yang–Baxter defect `(1 - V) Φ`, and both words
+are universally invertible off shell (`B₊ B₊⁻¹ = 1`, `B₋ B₋⁻¹ = 1`) regardless
+of whether `V` is idempotent. -/
+theorem partVI_steinberg_dual_and_yang_baxter_defect :
+    steinbergBraidDual P A C = weylJ P A C - (1 - genV P A C) * coneMinus P C ∧
+    steinbergBraid P A C - steinbergBraidDual P A C =
+      (1 - genV P A C) * genPhi P A C ∧
+    steinbergBraid P A C * steinbergBraidInv P A C = 1 ∧
+    steinbergBraidInv P A C * steinbergBraid P A C = 1 ∧
+    steinbergBraidDual P A C * steinbergBraidDualInv P A C = 1 ∧
+    steinbergBraidDualInv P A C * steinbergBraidDual P A C = 1 := by
+  have h₁ := @steinbergBraid_dual_expansion_and_difference B _ P hP A C
+  have h₂ := @steinbergBraid_mul_inv B _ P hP A C
+  have h₃ := @steinbergBraidDual_mul_inv B _ P hP A C
+  refine ⟨h₁.1, ⟨h₁.2.1, ⟨h₂.1, ⟨h₂.2, ⟨h₃.1, h₃.2⟩⟩⟩⟩⟩
+
+/-! =======================================================================
+    Part VII: Group-sandwich character table & Lie-to-group Fourier duality
+    ======================================================================= -/
+
+/- The four sandwich channels `grpId`, `grpPhi`, `grpJ`, `grpSig` act on the
+Tetraktys generators `(V, Φ, J, Σ)` with the Klein–Hadamard character table
+(±1), and the homogenized projectors `hProj` agree with the Fourier combinations
+on their matching generators. -/
+theorem partVII_group_sandwich_character_table :
+    grpPhi P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpPhi P A C (genPhi P A C) = grpId P A C (genPhi P A C) ∧
+    grpPhi P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    grpPhi P A C (genSig P A C) = -grpId P A C (genSig P A C) ∧
+    grpJ P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpJ P A C (genPhi P A C) = -grpId P A C (genPhi P A C) ∧
+    grpJ P A C (genJ P A C) = grpId P A C (genJ P A C) ∧
+    grpJ P A C (genSig P A C) = -grpId P A C (genSig P A C) ∧
+    grpSig P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpSig P A C (genPhi P A C) = -grpId P A C (genPhi P A C) ∧
+    grpSig P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    grpSig P A C (genSig P A C) = grpId P A C (genSig P A C) ∧
+    hProjV P A C (genV P A C) = fourierV P A C (genV P A C) ∧
+    hProjPhi P A C (genPhi P A C) = fourierPhi P A C (genPhi P A C) ∧
+    hProjJ P A C (genJ P A C) = fourierJ P A C (genJ P A C) ∧
+    hProjSig P A C (genSig P A C) = fourierSig P A C (genSig P A C) := by
+  exact @archetype_A17_group_sandwich_character_table B _ P hP A C
+
+/-! =======================================================================
+    Part VIII: Weyl–Clifford covariance of homogenized projectors
+    ======================================================================= -/
+
+/- Every homogenized Klein–Hadamard projector `hProj_α` commutes with the
+Weyl–Clifford sandwich actions `X ↦ J X (-J)` and `X ↦ Φ X Φ` on any element
+`X : B`, proving the harmonic decomposition is invariant under the discrete
+Weyl reflections of the Cartan geometry. -/
+theorem partVIII_weyl_clifford_covariance_of_homogenized_projectors (X : B) :
+    hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjV P A C X * (-genJ P A C) ∧
+    hProjPhi P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjPhi P A C X * (-genJ P A C) ∧
+    hProjJ P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjJ P A C X * (-genJ P A C) ∧
+    hProjSig P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjSig P A C X * (-genJ P A C) ∧
+    hProjV P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjV P A C X * genPhi P A C ∧
+    hProjPhi P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjPhi P A C X * genPhi P A C ∧
+    hProjJ P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjJ P A C X * genPhi P A C ∧
+    hProjSig P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjSig P A C X * genPhi P A C := by
+  exact @archetype_A20_weyl_clifford_covariance_of_homogenized_projectors B _ P hP A C X
+
+/-! =======================================================================
+    Part VIII+: Full master synthesis — all eight parts coagulated
+    ======================================================================= -/
+
+/- The complete master structural synthesis: Parts I–VIII coagulate into one
+kernel-verified theorem, with no causal feedback loops. -/
+theorem partVIII_full_master_synthesis (X : B) :
+    evenGrade P X + oddGrade P X = X ∧
+    peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X ∧
+    invS P * evenGrade P X * invS P = evenGrade P X ∧
+    invS P * oddGrade P X * invS P = -oddGrade P X ∧
+    weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C ∧
+    (UnconsciousArchetype.primaMateria < UnconsciousArchetype.shadowProjection) ∧
+    (UnconsciousArchetype.shadowProjection < UnconsciousArchetype.animusLogos) ∧
+    (UnconsciousArchetype.animusLogos < UnconsciousArchetype.chiralSyzygy) ∧
+    (UnconsciousArchetype.chiralSyzygy < UnconsciousArchetype.selfIndividuation) ∧
+    steinbergBraid P A C - steinbergBraidDual P A C =
+      (1 - genV P A C) * genPhi P A C ∧
+    steinbergBraid P A C * steinbergBraidInv P A C = 1 ∧
+    steinbergBraidDual P A C * steinbergBraidDualInv P A C = 1 ∧
+    grpPhi P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjV P A C X * (-genJ P A C) := by
+  have h1 : evenGrade P X + oddGrade P X = X := by
+    exact partI_cut_decomposition X
+  have h2 : peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X := by
+    exact partII_fourfold_partition X
+  have h3 : invS P * evenGrade P X * invS P = evenGrade P X := by
+    exact partI_cut_even_preserved hP X
+  have h4 : invS P * oddGrade P X * invS P = -oddGrade P X := by
+    exact partI_cut_odd_negated hP X
+  have h5 : weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C := by
+    exact partIV_weyl_defect_off_shell hP
+  have h6 : UnconsciousArchetype.primaMateria < UnconsciousArchetype.shadowProjection := by
+    exact (partV_archetype_strict_chain).1
+  have h7 : UnconsciousArchetype.shadowProjection < UnconsciousArchetype.animusLogos := by
+    exact (partV_archetype_strict_chain).2.1
+  have h8 : UnconsciousArchetype.animusLogos < UnconsciousArchetype.chiralSyzygy := by
+    exact (partV_archetype_strict_chain).2.2.1
+  have h9 : UnconsciousArchetype.chiralSyzygy < UnconsciousArchetype.selfIndividuation := by
+    exact (partV_archetype_strict_chain).2.2.2
+  have h10 : steinbergBraid P A C - steinbergBraidDual P A C =
+      (1 - genV P A C) * genPhi P A C := by
+    exact (@steinbergBraid_dual_expansion_and_difference B _ P hP A C).2.1
+  have h11 : steinbergBraid P A C * steinbergBraidInv P A C = 1 := by
+    exact (@steinbergBraid_mul_inv B _ P hP A C).1
+  have h12 : steinbergBraidDual P A C * steinbergBraidDualInv P A C = 1 := by
+    exact (@steinbergBraidDual_mul_inv B _ P hP A C).1
+  have h13 : grpPhi P A C (genJ P A C) = -grpId P A C (genJ P A C) := by
+    exact (@archetype_A17_group_sandwich_character_table B _ P hP A C).2.2.1
+  have h14 : hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjV P A C X * (-genJ P A C) := by
+    exact (@archetype_A20_weyl_clifford_covariance_of_homogenized_projectors B _ P hP A C X).1
+  exact ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14⟩
+
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

@@ -157,6 +157,19 @@ theorem hodgeSectorSwap_mul (A B : ZornNC R) :
   cases B
   rfl
 
+/-- The sector swap commutes with the partial bar operation. -/
+theorem hodgeSectorSwap_conj (A : ZornNC R) :
+    hodgeSectorSwap (conj A) = conj (hodgeSectorSwap A) := by
+  cases A
+  rfl
+
+/-- The sector swap preserves the right-composition norm formed from the
+defined partial bar. -/
+theorem hodgeSectorSwap_normRight (A : ZornNC R) :
+    hodgeSectorSwap (normRight A) = normRight (hodgeSectorSwap A) := by
+  unfold normRight
+  rw [hodgeSectorSwap_mul, hodgeSectorSwap_conj]
+
 /-- The simultaneous three-coordinate rotation preserves the ordered
 Zorn-type multiplication, including the order of every coefficient product.
 Thus it is an algebra automorphism of this explicitly defined carrier. -/
@@ -178,6 +191,19 @@ theorem cyclicZorn_mul (A B : ZornNC R) :
               all_goals abel_nf
               all_goals trivial
 
+/-- The cyclic action preserves the sectorwise partial bar operation. -/
+theorem cyclicZorn_conj (A : ZornNC R) :
+    cyclicZorn (conj A) = conj (cyclicZorn A) := by
+  cases A
+  rfl
+
+/-- Consequently, the cyclic action preserves the defined right-composition
+norm `A * conj A`. -/
+theorem cyclicZorn_normRight (A : ZornNC R) :
+    cyclicZorn (normRight A) = normRight (cyclicZorn A) := by
+  unfold normRight
+  rw [cyclicZorn_mul, cyclicZorn_conj]
+
 /-- The multiplicative automorphism `cyclicZorn` has order three. -/
 theorem cyclicZorn_order_three {R : Type*} (A : ZornNC R) :
     cyclicZorn (cyclicZorn (cyclicZorn A)) = A := by
@@ -188,6 +214,21 @@ theorem cyclicZorn_order_three {R : Type*} (A : ZornNC R) :
       cases y with
       | mk y0 y1 y2 =>
         rfl
+
+omit [Ring R] in
+/-- Exchanging the two vector sectors commutes with their simultaneous
+coordinate cycle. This is a commuting pair of symmetries on this carrier. -/
+theorem hodgeSectorSwap_cyclicZorn (A : ZornNC R) :
+    hodgeSectorSwap (cyclicZorn A) = cyclicZorn (hodgeSectorSwap A) := by
+  cases A
+  rfl
+
+/-- The cyclic action preserves the componentwise additive difference. -/
+theorem cyclicZorn_sub (A B : ZornNC R) :
+    cyclicZorn (sub A B) = sub (cyclicZorn A) (cyclicZorn B) := by
+  cases A
+  cases B
+  rfl
 
 /-- The sector swap preserves the ungraded diagonal trace. -/
 theorem ungradedTrace_hodgeSectorSwap (A : ZornNC R) :
@@ -200,6 +241,16 @@ theorem superTrace_hodgeSectorSwap (A : ZornNC R) :
     superTrace (hodgeSectorSwap A) = -superTrace A := by
   cases A
   simp [superTrace, hodgeSectorSwap, sub_eq_add_neg]
+
+/-- The cyclic action preserves both diagonal trace functionals because it
+leaves the two scalar sectors fixed. -/
+theorem ungradedTrace_cyclicZorn (A : ZornNC R) :
+    ungradedTrace (cyclicZorn A) = ungradedTrace A := by
+  rfl
+
+theorem superTrace_cyclicZorn (A : ZornNC R) :
+    superTrace (cyclicZorn A) = superTrace A := by
+  rfl
 
 /-- Ordered sum of component commutators pairing the two vector slots. -/
 def vectorCommutatorDivergence (x y : Vec3 R) : R :=
@@ -241,6 +292,13 @@ def psiCov (a : R) (p : Vec3 R) : ZornNC R := ⟨a, p, p, a⟩
 /-- Associator with convention `(A * B) * C - A * (B * C)`. -/
 def associator (A B C : ZornNC R) : ZornNC R :=
   sub (mul (mul A B) C) (mul A (mul B C))
+
+/-- The multiplicative cyclic action preserves the ordered associator. -/
+theorem cyclicZorn_associator (A B C : ZornNC R) :
+    cyclicZorn (associator A B C) =
+      associator (cyclicZorn A) (cyclicZorn B) (cyclicZorn C) := by
+  unfold associator
+  simp only [cyclicZorn_sub, cyclicZorn_mul]
 
 /-- Pure upper-cone element with vector coordinate `p`. -/
 def pureUpper (p : Vec3 R) : ZornNC R :=
@@ -324,6 +382,13 @@ theorem nambu_eq_cyclic_commutator (p : Vec3 R) :
     nambu p = p.x0 * comm p.x1 p.x2 +
       p.x1 * comm p.x2 p.x0 + p.x2 * comm p.x0 p.x1 := by
   simp [nambu, dot, cross, comm]
+
+/-- Simultaneous cyclic rotation preserves the ordered Nambu cubic. -/
+theorem nambu_cyclicRotate (p : Vec3 R) :
+    nambu (cyclicRotate p) = nambu p := by
+  rw [nambu_eq_cyclic_commutator, nambu_eq_cyclic_commutator]
+  simp only [cyclicRotate, comm]
+  abel
 
 /-- The commutator Jacobi sum vanishes in every associative coefficient ring.
 This is an algebraic consequence of associativity, not an extra hypothesis. -/
@@ -520,6 +585,23 @@ theorem self_associator_diagonal_nambu (A : ZornNC R) :
   simp [associator, mul, sub, dot, cross, nambu]
   <;> noncomm_ring
   <;> trivial
+
+/-- The diagonal Nambu readout of the self-associator is invariant under the
+order-three cyclic action on both vector slots. -/
+theorem cyclicZorn_self_associator_diagonal (A : ZornNC R) :
+    (associator (cyclicZorn A) (cyclicZorn A) (cyclicZorn A)).α =
+      (associator A A A).α ∧
+    (associator (cyclicZorn A) (cyclicZorn A) (cyclicZorn A)).β =
+      (associator A A A).β := by
+  have h := self_associator_diagonal_nambu (cyclicZorn A)
+  have h₀ := self_associator_diagonal_nambu A
+  constructor
+  · rw [h.1, h₀.1]
+    simp only [cyclicZorn]
+    rw [nambu_cyclicRotate, nambu_cyclicRotate]
+  · rw [h.2, h₀.2]
+    simp only [cyclicZorn]
+    rw [nambu_cyclicRotate, nambu_cyclicRotate]
 
 /-- The upper-vector component of the full four-sector self-associator.
 All dot, cross, and scalar actions retain their displayed order; this is the

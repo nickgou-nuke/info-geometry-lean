@@ -68,6 +68,7 @@ def classification(path: Path) -> str:
         return "lake_package"
     if (
         rel.startswith(FORENSIC_PREFIXES)
+        or rel.startswith("sandbox/")
         or "/sandbox" in rel.lower()
         or "/" not in rel
     ):

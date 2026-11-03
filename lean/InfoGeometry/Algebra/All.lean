@@ -214,15 +214,9 @@ import InfoGeometry.Algebra.SuperselectionSectors
 import InfoGeometry.Algebra.CliffordSymmetries
 import InfoGeometry.Algebra.NonInvertibleSymmetry
 import InfoGeometry.Algebra.ReflectionPositivity
-import InfoGeometry.Algebra.QuantumSpinSystem
-import InfoGeometry.Algebra.HolographyBulkBoundary
-import InfoGeometry.Algebra.InvertiblePhases
 import InfoGeometry.Algebra.PrefactorizationAlgebra
 import InfoGeometry.Algebra.StateSpaceTopology
 import InfoGeometry.Algebra.SphericalFusionCategory
-import InfoGeometry.Algebra.CategoricalSpectrumTQFT
-import InfoGeometry.Algebra.VecNTQFT
-import InfoGeometry.Algebra.ProjectiveTQFT
 /-!
 # InfoGeometry.Algebra.All
 

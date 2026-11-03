@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
@@ -44,6 +50,35 @@ def innerConjugationRingEquiv (u : Aˣ) : A ≃+* A :=
 @[simp] theorem innerConjugationRingEquiv_apply
     (u : Aˣ) (x : A) :
     innerConjugationRingEquiv u x = innerConjugation u x := rfl
+
+/-- Inner conjugation preserves the equation defining an `n`-potent. -/
+theorem innerConjugation_npotent_iff (u : Aˣ) (x : A) (n : ℕ) :
+    x ^ n = x ↔ innerConjugation u x ^ n = innerConjugation u x := by
+  constructor
+  · intro hx
+    simpa only [innerConjugationRingEquiv_apply, map_pow] using
+      congrArg (innerConjugationRingEquiv u) hx
+  · intro hx
+    have h := congrArg (innerConjugationRingEquiv (u⁻¹)) hx
+    rw [map_pow] at h
+    simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h
+
+/-- Inner conjugation preserves idempotency in both directions. -/
+theorem innerConjugation_idempotent_iff (u : Aˣ) (x : A) :
+    x * x = x ↔ innerConjugation u x * innerConjugation u x = innerConjugation u x := by
+  simpa only [pow_two] using innerConjugation_npotent_iff u x 2
+
+/-- Inner conjugation preserves nilpotency of each specified exponent. -/
+theorem innerConjugation_nilpotent_iff (u : Aˣ) (x : A) (n : ℕ) :
+    x ^ n = 0 ↔ innerConjugation u x ^ n = 0 := by
+  constructor
+  · intro hx
+    simpa only [innerConjugationRingEquiv_apply, map_pow, map_zero] using
+      congrArg (innerConjugationRingEquiv u) hx
+  · intro hx
+    have h := congrArg (innerConjugationRingEquiv (u⁻¹)) hx
+    rw [map_pow] at h
+    simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h
 
 theorem innerConjugation_map_quadraticCommutator
     (u : Aˣ) (x y : A) :

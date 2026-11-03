@@ -1283,6 +1283,15 @@ infinite-colimit compatibility statement. In the checked-out owners:
   has representatives arbitrarily far out in the tower. These support finite
   windows inside the colimit, but do not identify the colimit with a tensor
   product of a finite head and an infinite tail.
+- `Canonical/SplitCliffordDirectLimitRingShift.lean` also proves the Clifford
+  colimit's own cofinal-tail **ring** self-similarity:
+  `splitCliffordInfinity_ring_shift_equiv k : SplitCliffordInfinity ≃+*
+  SplitCliffordTailInfinity k`. The owner gives formulas on finite-stage
+  representatives and proves compatibility with the lifted grade involution.
+  This is stronger than the analogous module shift and corrects the earlier
+  ledger summary that mentioned only the matrix-tower ring shift. The tail is
+  the direct limit of stages `n + k`; this equivalence alone does not exhibit
+  a finite Clifford head as a tensor factor.
 - On the distinct matrix tower carrier,
   `Canonical/Cl11MatrixTowerTailShift.lean::cl11MatrixLimit_tailRingEquiv`
   proves a ring equivalence between the matrix-tower limit and the limit of
@@ -1297,8 +1306,8 @@ infinite-colimit compatibility statement. In the checked-out owners:
   Its `matrixLimitMap` remains conditional on `BondCoherence`; that condition
   is not supplied by the obstructed recursive spinor route.
 
-Accordingly, the finite head/tail law and matrix-limit tail shift are genuine
-owners; the stronger claim
+Accordingly, the finite graded head/tail law and both Clifford- and
+matrix-limit cofinal-tail shifts are genuine owners; the stronger claim
 `SplitCliffordInfinity ≃ₐ[ℝ] Cl(k,k) ᵍ⊗ SplitCliffordInfinity` (or an equivalent
 operator-level infinite tensor decomposition) remains an open bridge. The
 separate carriers and transition maps must first be connected by an actual

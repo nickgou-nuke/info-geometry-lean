@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Ring.Hom.Defs
+
 /-!
 # Commutator covariance under ring homomorphisms
 
@@ -12,8 +15,6 @@ commutation relations. It does not assert a quantitative Lieb–Robinson bound:
 that requires a norm, a metric on supports, and a proved estimate for the
 chosen dynamics.
 -/
-
-import Mathlib.Algebra.Ring.Basic
 
 namespace InfoGeometry.Algebra.LiebRobinsonBounds
 

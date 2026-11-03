@@ -95,6 +95,38 @@ def splitCliffordFiniteHeadTailEquiv (k n : ℕ) :
   (CliffordAlgebra.equivOfIsometry (splitSpaceAppendIsometry k n)).trans
     (CliffordAlgebra.prodEquiv (Qsplit k) (Qsplit n))
 
+/-- The finite head--tail equivalence sends each Clifford generator to the
+sum of its head and tail generators in the graded tensor product. -/
+@[simp]
+theorem splitCliffordFiniteHeadTailEquiv_ι (k n : ℕ)
+    (x : SplitSpace (k + n)) :
+    splitCliffordFiniteHeadTailEquiv k n
+        (CliffordAlgebra.ι (Qsplit (k + n)) x) =
+      (CliffordAlgebra.ι (Qsplit k) (splitSpaceAppendEquiv k n x).1)
+          ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit n)) +
+        (1 : CliffordAlgebra (Qsplit k)) ᵍ⊗ₜ
+          CliffordAlgebra.ι (Qsplit n) (splitSpaceAppendEquiv k n x).2 := by
+  have hpair : splitSpaceAppendEquiv k n x =
+      ((splitSpaceAppendEquiv k n x).1, (splitSpaceAppendEquiv k n x).2) := by
+    cases splitSpaceAppendEquiv k n x
+    rfl
+  simp [splitCliffordFiniteHeadTailEquiv, splitSpaceAppendIsometry]
+  rw [hpair, CliffordAlgebra.ofProd_ι_mk]
+  rfl
+
+/-- Under the finite head--tail factorization, the tower's recursive
+one-coordinate inclusion changes only the tail coordinate. -/
+theorem splitCliffordFiniteHeadTailEquiv_inr (k n : ℕ)
+    (x : SplitSpace (k + n)) :
+    splitCliffordFiniteHeadTailEquiv k (n + 1)
+        (CliffordAlgebra.ι (Qsplit (k + (n + 1))) (0, x)) =
+      (CliffordAlgebra.ι (Qsplit k) (splitSpaceAppendEquiv k n x).1)
+          ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit (n + 1))) +
+        (1 : CliffordAlgebra (Qsplit k)) ᵍ⊗ₜ
+          CliffordAlgebra.ι (Qsplit (n + 1))
+            (0, (splitSpaceAppendEquiv k n x).2) := by
+  rw [splitCliffordFiniteHeadTailEquiv_ι, splitSpaceAppendEquiv_inr]
+
 end InfoGeometry.Canonical.SplitCliffordFiniteHeadTail
 
 end

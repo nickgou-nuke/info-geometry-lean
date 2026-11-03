@@ -258,6 +258,194 @@ theorem splitCliffordHeadTailInfinity_stage_injective (k n : ℕ) :
     (f := fun i j h => splitCliffordHeadTailMap k i j h)
     (fun i j hij => splitCliffordHeadTailMap_injective k i j hij) n
 
+/-- Canonical finite-stage maps for the original split-Clifford limit. -/
+private noncomputable def splitCliffordInfinityOf (n : ℕ) :
+    SplitClNNAlg n →+* SplitCliffordInfinity :=
+  DirectLimit.Ring.of SplitClNNAlg
+    (fun i j h => (splitCliffordMap i j h).toRingHom) n
+
+/-- Map the fixed-head graded-tensor direct limit to the original Clifford
+direct limit by the finite head--tail equivalences. -/
+noncomputable def splitCliffordHeadTailToInfinity (k : ℕ) :
+    SplitCliffordHeadTailInfinity k →+* SplitCliffordInfinity :=
+  DirectLimit.Ring.lift (SplitCliffordHeadTailStage k)
+    (fun m n h => (splitCliffordHeadTailMap k m n h).toRingHom)
+    SplitCliffordInfinity
+    (fun n => (splitCliffordInfinityOf (k + n)).comp
+      (splitCliffordFiniteHeadTailEquiv k n).symm.toAlgHom.toRingHom)
+    (by
+      intro m n h x
+      simp only [RingHom.comp_apply, splitCliffordHeadTailMap]
+      change splitCliffordInfinityOf (k + n)
+          ((splitCliffordFiniteHeadTailEquiv k n).symm
+            (splitCliffordFiniteHeadTailEquiv k n
+              (splitCliffordMap (k + m) (k + n)
+                (Nat.add_le_add_left h k)
+                ((splitCliffordFiniteHeadTailEquiv k m).symm x)))) = _
+      rw [AlgEquiv.symm_apply_apply]
+      exact DirectLimit.Ring.of_f
+        (G := SplitClNNAlg)
+        (f := fun i j hij => (splitCliffordMap i j hij).toRingHom)
+        (hij := Nat.add_le_add_left h k)
+        (x := (splitCliffordFiniteHeadTailEquiv k m).symm x))
+
+/-- On a finite fixed-head stage, the induced map is the finite algebra
+equivalence followed by the canonical map from stage `k+n`. -/
+@[simp]
+theorem splitCliffordHeadTailToInfinity_of (k n : ℕ)
+    (x : SplitCliffordHeadTailStage k n) :
+    splitCliffordHeadTailToInfinity k (splitCliffordHeadTailOf k n x) =
+      splitCliffordInfinityOf (k + n)
+        ((splitCliffordFiniteHeadTailEquiv k n).symm x) := by
+  change DirectLimit.Ring.lift (SplitCliffordHeadTailStage k)
+      (fun m l h => (splitCliffordHeadTailMap k m l h).toRingHom)
+      SplitCliffordInfinity
+      (fun j => (splitCliffordInfinityOf (k + j)).comp
+        (splitCliffordFiniteHeadTailEquiv k j).symm.toAlgHom.toRingHom) _
+      (DirectLimit.Ring.of (SplitCliffordHeadTailStage k)
+        (fun i j h => (splitCliffordHeadTailMap k i j h).toRingHom) n x) = _
+  rw [DirectLimit.Ring.lift_of]
+  rfl
+
+/-- The reverse finite-stage map adds the fixed head to the original tower
+stage and then applies the finite head--tail algebra equivalence. -/
+private noncomputable def splitCliffordInfinityIntoHeadTailAlgHom
+    (k n : ℕ) : SplitClNNAlg n →ₐ[ℝ] SplitCliffordHeadTailStage k n :=
+  (splitCliffordFiniteHeadTailEquiv k n).toAlgHom.comp
+    (splitCliffordMap n (k + n) (Nat.le_add_left n k))
+
+/-- The reverse finite-stage maps intertwine the original tower transitions
+with the transported fixed-head transitions. -/
+private theorem splitCliffordInfinityIntoHeadTailAlgHom_natural
+    (k m n : ℕ) (h : m ≤ n) :
+    (splitCliffordHeadTailMap k m n h).comp
+        (splitCliffordInfinityIntoHeadTailAlgHom k m) =
+      (splitCliffordInfinityIntoHeadTailAlgHom k n).comp
+        (splitCliffordMap m n h) := by
+  apply AlgHom.ext
+  intro x
+  change splitCliffordFiniteHeadTailEquiv k n
+      (splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k)
+        ((splitCliffordFiniteHeadTailEquiv k m).symm
+          (splitCliffordFiniteHeadTailEquiv k m
+            (splitCliffordMap m (k + m) (Nat.le_add_left m k) x)))) =
+    splitCliffordFiniteHeadTailEquiv k n
+      (splitCliffordMap n (k + n) (Nat.le_add_left n k)
+        (splitCliffordMap m n h x))
+  rw [AlgEquiv.symm_apply_apply]
+  congr 1
+  calc
+    splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k)
+        (splitCliffordMap m (k + m) (Nat.le_add_left m k) x) =
+      splitCliffordMap m (k + n)
+        ((Nat.le_add_left m k).trans (Nat.add_le_add_left h k)) x :=
+          (splitCliffordMap_apply_trans m (k + m) (k + n)
+            (Nat.le_add_left m k) (Nat.add_le_add_left h k) x).symm
+    _ = splitCliffordMap n (k + n) (Nat.le_add_left n k)
+        (splitCliffordMap m n h x) := by
+          rw [splitCliffordMap_apply_trans m n (k + n) h
+            (Nat.le_add_left n k)]
+
+/-- The canonical stage maps induce a ring hom from the original limit to
+the fixed-head graded-tensor limit. -/
+noncomputable def splitCliffordInfinityToHeadTail (k : ℕ) :
+    SplitCliffordInfinity →+* SplitCliffordHeadTailInfinity k :=
+  DirectLimit.Ring.lift SplitClNNAlg
+    (fun m n h => (splitCliffordMap m n h).toRingHom)
+    (SplitCliffordHeadTailInfinity k)
+    (fun n => (splitCliffordHeadTailOf k n).comp
+      (splitCliffordInfinityIntoHeadTailAlgHom k n).toRingHom)
+    (by
+      intro m n h x
+      have hn := congrArg (fun f : SplitClNNAlg m →ₐ[ℝ]
+          SplitCliffordHeadTailStage k n => f x)
+        (splitCliffordInfinityIntoHeadTailAlgHom_natural k m n h).symm
+      rw [AlgHom.comp_apply] at hn
+      calc
+        splitCliffordHeadTailOf k n
+            (splitCliffordInfinityIntoHeadTailAlgHom k n
+              (splitCliffordMap m n h x)) =
+          splitCliffordHeadTailOf k n
+            (splitCliffordHeadTailMap k m n h
+              (splitCliffordInfinityIntoHeadTailAlgHom k m x)) := by
+                exact congrArg (splitCliffordHeadTailOf k n) hn
+        _ = splitCliffordHeadTailOf k m
+            (splitCliffordInfinityIntoHeadTailAlgHom k m x) :=
+              DirectLimit.Ring.of_f
+                (G := SplitCliffordHeadTailStage k)
+                (f := fun i j hij => (splitCliffordHeadTailMap k i j hij).toRingHom)
+                (hij := h) (x := splitCliffordInfinityIntoHeadTailAlgHom k m x))
+
+/-- On a finite original stage, the reverse limit map is the canonical
+fixed-head stage map after adjoining the chosen finite head. -/
+@[simp]
+theorem splitCliffordInfinityToHeadTail_of (k n : ℕ)
+    (x : SplitClNNAlg n) :
+    splitCliffordInfinityToHeadTail k (splitCliffordInfinityOf n x) =
+      splitCliffordHeadTailOf k n
+        (splitCliffordInfinityIntoHeadTailAlgHom k n x) := by
+  change DirectLimit.Ring.lift SplitClNNAlg
+      (fun i j h => (splitCliffordMap i j h).toRingHom)
+      (SplitCliffordHeadTailInfinity k)
+      (fun j => (splitCliffordHeadTailOf k j).comp
+        (splitCliffordInfinityIntoHeadTailAlgHom k j).toRingHom) _
+      (DirectLimit.Ring.of SplitClNNAlg
+        (fun i j h => (splitCliffordMap i j h).toRingHom) n x) = _
+  rw [DirectLimit.Ring.lift_of]
+  rfl
+
+/-- The two comparison maps compose to the identity on each fixed-head stage
+in the direct limit. -/
+private theorem splitCliffordHeadTail_roundTrip_of (k n : ℕ)
+    (x : SplitCliffordHeadTailStage k n) :
+    splitCliffordInfinityToHeadTail k
+        (splitCliffordHeadTailToInfinity k (splitCliffordHeadTailOf k n x)) =
+      splitCliffordHeadTailOf k n x := by
+  rw [splitCliffordHeadTailToInfinity_of,
+    splitCliffordInfinityToHeadTail_of]
+  change splitCliffordHeadTailOf k (k + n)
+      (splitCliffordHeadTailMap k n (k + n) (Nat.le_add_left n k) x) = _
+  exact DirectLimit.Ring.of_f
+    (G := SplitCliffordHeadTailStage k)
+    (f := fun i j h => (splitCliffordHeadTailMap k i j h).toRingHom)
+    (hij := Nat.le_add_left n k) x
+
+/-- The two comparison maps compose to the identity on each original
+finite Clifford stage in the direct limit. -/
+private theorem splitCliffordInfinity_roundTrip_of (k n : ℕ)
+    (x : SplitClNNAlg n) :
+    splitCliffordHeadTailToInfinity k
+        (splitCliffordInfinityToHeadTail k (splitCliffordInfinityOf n x)) =
+      splitCliffordInfinityOf n x := by
+  rw [splitCliffordInfinityToHeadTail_of,
+    splitCliffordHeadTailToInfinity_of]
+  change splitCliffordInfinityOf (k + n)
+      ((splitCliffordFiniteHeadTailEquiv k n).symm
+        (splitCliffordFiniteHeadTailEquiv k n
+          (splitCliffordMap n (k + n) (Nat.le_add_left n k) x))) = _
+  rw [AlgEquiv.symm_apply_apply]
+  exact DirectLimit.Ring.of_f
+    (G := SplitClNNAlg)
+    (f := fun i j h => (splitCliffordMap i j h).toRingHom)
+    (hij := Nat.le_add_left n k) x
+
+/-- Fixed-head factorization induces a ring equivalence between its graded
+tensor direct limit and the original algebraic split-Clifford direct limit. -/
+noncomputable def splitCliffordHeadTailInfinity_ringEquiv (k : ℕ) :
+    SplitCliffordHeadTailInfinity k ≃+* SplitCliffordInfinity :=
+  RingEquiv.ofRingHom (splitCliffordHeadTailToInfinity k)
+    (splitCliffordInfinityToHeadTail k)
+    (by
+      apply DirectLimit.Ring.hom_ext
+      intro n
+      ext x
+      exact splitCliffordInfinity_roundTrip_of k n x)
+    (by
+      apply DirectLimit.Ring.hom_ext
+      intro n
+      ext x
+      exact splitCliffordHeadTail_roundTrip_of k n x)
+
 end InfoGeometry.Canonical.SplitCliffordHeadTailTower
 
 end

@@ -1325,17 +1325,21 @@ infinite-colimit compatibility statement. In the checked-out owners:
   proves `splitCliffordHeadTailMap_succ` agrees with the explicit one-step
   graded-tensor map. It defines the algebraic direct limit
   `SplitCliffordHeadTailInfinity k`, proves the transported bonds injective,
-  and proves every finite tensor stage embeds in that direct limit. The targeted
-  locked build kernel-checked these declarations. This gives a faithful
-  fixed-head graded-tensor colimit, but it does not identify that colimit with
-  the existing `SplitCliffordInfinity` or with a graded tensor product whose
-  tail is `SplitCliffordTailInfinity`.
+  and proves every finite tensor stage embeds in that direct limit. It now also
+  constructs canonical ring homomorphisms in both directions between
+  `SplitCliffordHeadTailInfinity k` and `SplitCliffordInfinity`, proves their
+  stage formulas and both inverse laws, and packages the result as
+  `splitCliffordHeadTailInfinity_ringEquiv`. The targeted locked build
+  kernel-checked these declarations. This is an algebraic direct-limit ring
+  equivalence; it does not yet identify the limit with a graded tensor product
+  of a finite head and `SplitCliffordTailInfinity`.
 
-Accordingly, the finite graded head/tail law and both Clifford- and
-matrix-limit cofinal-tail shifts are genuine owners; the stronger claim
-`SplitCliffordInfinity ≃ₐ[ℝ] Cl(k,k) ᵍ⊗ SplitCliffordInfinity` (or an equivalent
-operator-level infinite tensor decomposition) remains an open bridge. The
-finite-stage map and bonding compatibility now exist, but a colimit-level
+Accordingly, the finite graded head/tail law, the fixed-head direct-limit ring
+equivalence, and both Clifford- and matrix-limit cofinal-tail shifts are
+genuine owners; the stronger claim
+`SplitCliffordInfinity ≃ₐ[ℝ] Cl(k,k) ᵍ⊗ SplitCliffordTailInfinity k` (or an
+equivalent operator-level infinite tensor decomposition) remains an open
+bridge. The fixed-head colimit comparison now exists, but a colimit-level
 construction and proof of the claimed infinite tensor decomposition are still
 required. The transcript’s “Cantor fractal” wording supplies no such theorem
 and is not promoted as one.

@@ -2388,6 +2388,7 @@ import InfoGeometry.Canonical.Cl11JordanWignerCARUHFReadout
 import InfoGeometry.Canonical.Cl11JordanWignerSiteCARLimit
 import InfoGeometry.Canonical.Cl11LocalTrifactorFlows
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalCyclicTransport
+import InfoGeometry.Canonical.Cl11MatrixTowerTailShift
 import InfoGeometry.Canonical.Cl11MoritaNeutralStabilization
 import InfoGeometry.Canonical.Cl11MoritaUnimodularPairs
 import InfoGeometry.Canonical.Cl11PeirceOrbitColimit

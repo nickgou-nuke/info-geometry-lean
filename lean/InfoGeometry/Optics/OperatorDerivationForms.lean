@@ -19,6 +19,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.Core.PeirceDecomposition
 import InfoGeometry.Optics.OperatorValuedConnection
 import InfoGeometry.NCG.DerivationDifferential
 import InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge
@@ -197,6 +198,60 @@ theorem flow_preserves_idempotent
       InfoGeometry.Lie.ContinuousDerivationExponential.flow
         D.toContinuousLinearMap t P := by
   rw [← flow_mul D t P P, hP]
+
+/-- Exponential derivation flow transports all four associative Peirce
+components by applying the same flow to the cut and the operator. No
+idempotency assumption is needed for this coordinate identity; the
+idempotency hypotheses enter only when the components are interpreted as
+orthogonal Peirce sectors. -/
+theorem flow_transports_peirce_components
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (D : FrechetOperatorDerivation ℝ A) (t : ℝ) (P X : A) :
+    let φ := InfoGeometry.Lie.ContinuousDerivationExponential.flow
+      D.toContinuousLinearMap t
+    φ (InfoGeometry.Core.PeirceDecomposition.component11 P X) =
+        InfoGeometry.Core.PeirceDecomposition.component11 (φ P) (φ X) ∧
+    φ (InfoGeometry.Core.PeirceDecomposition.component10 P X) =
+        InfoGeometry.Core.PeirceDecomposition.component10 (φ P) (φ X) ∧
+    φ (InfoGeometry.Core.PeirceDecomposition.component01 P X) =
+        InfoGeometry.Core.PeirceDecomposition.component01 (φ P) (φ X) ∧
+    φ (InfoGeometry.Core.PeirceDecomposition.component00 P X) =
+        InfoGeometry.Core.PeirceDecomposition.component00 (φ P) (φ X) := by
+  dsimp
+  let φ : A →ₗ[ℝ] A :=
+    (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+      D.toContinuousLinearMap t).toLinearMap
+  have hD : InfoGeometry.Lie.ContinuousDerivationExponential.IsDerivation
+      (ContinuousLinearMap.mul ℝ A) D.toContinuousLinearMap := by
+    intro a b
+    simpa [ContinuousLinearMap.mul_apply] using D.leibniz a b
+  have hmul (a b : A) : φ (a * b) = φ a * φ b := by
+    change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t (a * b) = _
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_map_mul
+      (mul := ContinuousLinearMap.mul ℝ A) D.toContinuousLinearMap hD t a b
+  have hD1 : D.toContinuousLinearMap 1 = 0 := by
+    have h := D.leibniz (1 : A) 1
+    have h' : D.toContinuousLinearMap 1 + 0 =
+        D.toContinuousLinearMap 1 + D.toContinuousLinearMap 1 := by
+      simpa using h
+    exact (add_left_cancel h').symm
+  have hφ1 : φ 1 = 1 := by
+    change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t 1 = 1
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_apply_eq_self_of_apply_eq_zero
+      D.toContinuousLinearMap 1 hD1 t
+  have hφcomp (a : A) : φ (1 - a) = 1 - φ a := by
+    rw [φ.map_sub, hφ1]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · change φ (P * X * P) = φ P * φ X * φ P
+    rw [hmul, hmul]
+  · change φ (P * X * (1 - P)) = φ P * φ X * (1 - φ P)
+    rw [hmul, hmul, hφcomp]
+  · change φ ((1 - P) * X * P) = (1 - φ P) * φ X * φ P
+    rw [hmul, hmul, hφcomp]
+  · change φ ((1 - P) * X * (1 - P)) = (1 - φ P) * φ X * (1 - φ P)
+    rw [hmul, hmul, hφcomp]
 
 /-- The exponential automorphism of a continuous operator derivation
 transports the Peirce tetraktys spin, and hence its canonical

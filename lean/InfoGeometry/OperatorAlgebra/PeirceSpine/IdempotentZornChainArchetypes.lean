@@ -2127,6 +2127,34 @@ theorem nested_zorn_plabic_twisted_phi_chain_brackets
   exact zorn_plabic_twisted_phi_chain_brackets
     h12 h21 h13 h31 h23 h32
 
+/-- The corrected twisted-`J` bracket law specialized to the three shells
+of a nested idempotent pair. The commutator retains the symmetric endpoint
+bridge, and the anticommutator is zero. -/
+theorem nested_zorn_plabic_twisted_chain_brackets
+    {P₁ P₂ A Bc C D : B}
+    (hP₁ : P₁ * P₁ = P₁) (hP₂ : P₂ * P₂ = P₂)
+    (hChain : idemLe P₁ P₂) :
+    let E₁ := shell1 P₁
+    let E₂ := shell2 P₁ P₂
+    let E₃ := shell3 P₂
+    (majoranaJ12 E₁ E₂ A Bc - majoranaJ23 E₂ E₃ C D) *
+        (majoranaPhi12 E₁ E₂ A Bc + majoranaPhi23 E₂ E₃ C D) =
+      linkSpin12 E₁ E₂ A Bc - linkSpin23 E₂ E₃ C D +
+        edgeMajoranaPhi13 E₁ E₂ E₃ A Bc C D ∧
+    ringComm (majoranaJ12 E₁ E₂ A Bc - majoranaJ23 E₂ E₃ C D)
+        (majoranaPhi12 E₁ E₂ A Bc + majoranaPhi23 E₂ E₃ C D) =
+      (2 : ℤ) • (linkSpin12 E₁ E₂ A Bc - linkSpin23 E₂ E₃ C D +
+        edgeMajoranaPhi13 E₁ E₂ E₃ A Bc C D) ∧
+    (majoranaJ12 E₁ E₂ A Bc - majoranaJ23 E₂ E₃ C D) *
+        (majoranaPhi12 E₁ E₂ A Bc + majoranaPhi23 E₂ E₃ C D) +
+      (majoranaPhi12 E₁ E₂ A Bc + majoranaPhi23 E₂ E₃ C D) *
+        (majoranaJ12 E₁ E₂ A Bc - majoranaJ23 E₂ E₃ C D) = 0 := by
+  intro E₁ E₂ E₃
+  rcases three_shell_partition hP₁ hP₂ hChain with
+    ⟨_, _, _, _, h12, h21, h13, h31, h23, h32⟩
+  exact zorn_plabic_twisted_chain_brackets
+    h12 h21 h13 h31 h23 h32
+
 /-- Four-arrow path calculation for the spin actions. The hypotheses say
 that each arrow is square-zero and that every cross-composition vanishes
 except the two directed length-two paths `x*u` and `v*y`. -/

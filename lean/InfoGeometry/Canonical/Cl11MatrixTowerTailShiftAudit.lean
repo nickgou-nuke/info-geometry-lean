@@ -6,4 +6,5 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.Cl11MatrixTowerTailShift
 
 #print axioms InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv
+#print axioms InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv_star
 #print axioms InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv_ofStage

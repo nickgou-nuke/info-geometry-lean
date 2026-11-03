@@ -35,23 +35,25 @@ product, a completion, or a graded tensor product of a finite Clifford algebra
 with a limit. The finite-stage `Cl(1,1)` graded factorizations remain owned by
 `Canonical/SplitCliffordTensorBridge.lean`.
 
-## Refinement under investigation: operator star structure
+## Proved refinement: operator star structure
 - Existing stage fact: `Cl11TensorTower.stageEmbed_star` proves that every
   matrix-tower bond preserves the stage involution.
 - Existing limit fact: `Cl11TensorTowerLimit.limitStarRing` equips the original
   direct limit with the descended star operation.
-- Missing statement: equip the shifted `TailLimit k` with the star operation
-  descended from its actual iterated bonds, then prove that
-  `cl11MatrixLimit_tailRingEquiv k` preserves star. This is an algebraic
-  `StarRing` compatibility statement; it does not identify a graded tensor
-  product or an analytic infinite tensor product.
-- Proposed proof route: descend star along `tailMap` using the existing
-  `bondMap_star` theorem, then check the stage maps of `toTail`/`fromTail`.
+- `Cl11MatrixTowerTailShift.tailLimitStarRing` descends the involution to each
+  shifted direct limit using the actual iterated bonds.
+- `cl11MatrixLimit_tailRingEquiv_star` proves the cofinal-tail ring
+  equivalence preserves that involution, using `bondMap_star` on stage
+  representatives. This remains an algebraic `StarRing` compatibility
+  theorem; it does not identify a graded tensor product or an analytic
+  infinite tensor product.
 
 Adjacent claim not established: a graded algebra equivalence
 `Cl(1,1) ᵍ⊗ Cl(∞,∞) ≃ Cl(∞,∞)`. The ring tail shift alone does not supply the
 graded tensor-product map or its compatibility with the grading.
 
 ## Verification
-Compile the new owner through the repository's shared locked Lake build; check
-for placeholders and inspect `#print axioms` for the ring equivalence.
+The owner was checked with the repository's shared locked Lake build for
+`InfoGeometry.Canonical.Cl11MatrixTowerTailShift`. The audit module prints
+axioms for the ring equivalence, the star-preservation theorem, and the
+stage-representative formula.

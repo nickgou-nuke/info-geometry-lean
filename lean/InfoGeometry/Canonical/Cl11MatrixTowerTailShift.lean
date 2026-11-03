@@ -20,6 +20,12 @@ private def tailMap (k m n : ℕ) (h : m ≤ n) :
     Stage (m + k) →+* Stage (n + k) :=
   bondMap stageBond (m + k) (n + k) (Nat.add_le_add_right h k)
 
+private theorem tailMap_star (k m n : ℕ) (h : m ≤ n)
+    (x : Stage (m + k)) :
+    tailMap k m n h (star x) = star (tailMap k m n h x) := by
+  simpa [tailMap] using
+    (bondMap_star (m + k) (n + k) (Nat.add_le_add_right h k) x)
+
 private instance tailDirectedSystem (k : ℕ) :
     DirectedSystem (fun n : ℕ => Stage (n + k))
       (fun m n h => tailMap k m n h) where
@@ -40,9 +46,46 @@ abbrev TailLimit (k : ℕ) :=
   _root_.DirectLimit (fun n : ℕ => Stage (n + k))
     (fun m n h => tailMap k m n h)
 
+noncomputable def tailStar (k : ℕ) : TailLimit k → TailLimit k :=
+  DirectLimit.map
+    (fun m n h => tailMap k m n h)
+    (fun m n h => tailMap k m n h)
+    (fun _ x => star x)
+    (by
+      intro m n h x
+      exact tailMap_star k m n h x)
+
+noncomputable instance tailLimitStar (k : ℕ) : Star (TailLimit k) where
+  star := tailStar k
+
 private def tailOf (k n : ℕ) : Stage (n + k) →+* TailLimit k :=
   DirectLimit.Ring.of (fun n : ℕ => Stage (n + k))
     (fun m n h => tailMap k m n h) n
+
+@[simp] private theorem tailStar_of (k n : ℕ) (x : Stage (n + k)) :
+    tailStar k (tailOf k n x) = tailOf k n (star x) := rfl
+
+@[simp] theorem tailStar_mk (k n : ℕ) (x : Stage (n + k)) :
+    star (⟦⟨n, x⟩⟧ : TailLimit k) =
+      (⟦⟨n, star x⟩⟧ : TailLimit k) := rfl
+
+noncomputable instance tailLimitStarRing (k : ℕ) : StarRing (TailLimit k) where
+  star_involutive := by
+    intro x
+    induction x using DirectLimit.induction with
+    | _ n x => simp
+  star_add := by
+    intro x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ n x y =>
+        rw [DirectLimit.add_def, tailStar_mk, tailStar_mk,
+          tailStar_mk, DirectLimit.add_def, star_add]
+  star_mul := by
+    intro x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ n x y =>
+        rw [DirectLimit.mul_def, tailStar_mk, tailStar_mk,
+          tailStar_mk, DirectLimit.mul_def, star_mul]
 
 private def limitOf (n : ℕ) : Stage n →+* BaseLimit :=
   directLimitOf stageBond n
@@ -130,6 +173,23 @@ def cl11MatrixLimit_tailRingEquiv (k : ℕ) :
     BaseLimit ≃+* TailLimit k :=
   RingEquiv.ofRingHom (toTail k) (fromTail k)
     (toTail_fromTail k) (fromTail_toTail k)
+
+private theorem toTail_map_star (k : ℕ) (x : BaseLimit) :
+    toTail k (star x) = tailStar k (toTail k x) := by
+  induction x using DirectLimit.induction with
+  | _ n x =>
+      simp only [limit_star_mk, toTail]
+      change tailOf k n (intoTail k n (star x)) =
+        tailOf k n (star (intoTail k n x))
+      congr 1
+      exact bondMap_star n (n + k) (Nat.le_add_right n k) x
+
+/-- The cofinal-tail ring equivalence preserves the involution induced from
+the actual stage involutions and iterated tower embeddings. -/
+theorem cl11MatrixLimit_tailRingEquiv_star (k : ℕ) (x : BaseLimit) :
+    cl11MatrixLimit_tailRingEquiv k (star x) =
+      star (cl11MatrixLimit_tailRingEquiv k x) := by
+  exact toTail_map_star k x
 
 /-- On a finite-stage representative, the shift is the canonical transition
 from stage `n` to stage `n + k` in the tail system. -/

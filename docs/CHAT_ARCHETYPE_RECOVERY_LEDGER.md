@@ -1310,14 +1310,21 @@ infinite-colimit compatibility statement. In the checked-out owners:
   matrix bond: `gradedTensorSuccessor_not_algHom` rules out that algebra map.
   Its `matrixLimitMap` remains conditional on `BondCoherence`; that condition
   is not supplied by the obstructed recursive spinor route.
+- `Canonical/SplitCliffordHeadTailTower.lean::splitCliffordHeadTail_transition_generator`
+  now connects the finite graded head--tail equivalence to the actual
+  recursive tower transition on every Clifford generator. It identifies the
+  image with the head generator plus the one-coordinate tail generator. This
+  is generator-level compatibility; it does not yet construct a map on the
+  whole graded tensor product that commutes with the bonding maps.
 
 Accordingly, the finite graded head/tail law and both Clifford- and
 matrix-limit cofinal-tail shifts are genuine owners; the stronger claim
 `SplitCliffordInfinity ≃ₐ[ℝ] Cl(k,k) ᵍ⊗ SplitCliffordInfinity` (or an equivalent
 operator-level infinite tensor decomposition) remains an open bridge. The
 separate carriers and transition maps must first be connected by an actual
-compatible algebra map. The transcript’s “Cantor fractal” wording supplies no
-such map and is not promoted as a theorem.
+graded tensor-product algebra map and a compatible colimit construction. The
+transcript’s “Cantor fractal” wording supplies no such map and is not promoted
+as a theorem.
 
 ### Shared-link source batch: Bogoliubov, naturality, and defect A45–A50
 

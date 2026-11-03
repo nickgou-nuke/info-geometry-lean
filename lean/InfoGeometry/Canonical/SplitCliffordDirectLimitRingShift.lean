@@ -39,7 +39,9 @@ private instance tailDirectedSystem (k : ℕ) :
 abbrev SplitCliffordTailInfinity (k : ℕ) :=
   _root_.DirectLimit (fun n : ℕ => Stage (n + k)) (fun m n h => tailMap k m n h)
 
-private def tailOf (k n : ℕ) : Stage (n + k) →+* SplitCliffordTailInfinity k :=
+/-- Canonical map from a finite tail stage into its direct limit. -/
+noncomputable def splitCliffordTailOf (k n : ℕ) :
+    SplitClNNAlg (n + k) →+* SplitCliffordTailInfinity k :=
   DirectLimit.Ring.of (fun n : ℕ => Stage (n + k)) (fun m n h => tailMap k m n h) n
 
 private def splitOf (n : ℕ) : Stage n →+* SplitCliffordInfinity :=
@@ -69,15 +71,15 @@ private def toTail (k : ℕ) : SplitCliffordInfinity →+* SplitCliffordTailInfi
   DirectLimit.Ring.lift Stage
     (fun m n h => splitCliffordMap m n h)
     (SplitCliffordTailInfinity k)
-    (fun n => (tailOf k n).comp (intoTail k n))
+    (fun n => (splitCliffordTailOf k n).comp (intoTail k n))
     (by
       intro m n h x
-      change tailOf k n (intoTail k n (splitCliffordMap m n h x)) =
-        tailOf k m (intoTail k m x)
+      change splitCliffordTailOf k n (intoTail k n (splitCliffordMap m n h x)) =
+        splitCliffordTailOf k m (intoTail k m x)
       calc
-        _ = tailOf k n
+        _ = splitCliffordTailOf k n
             (tailMap k m n h (intoTail k m x)) := by
-              exact congrArg (tailOf k n)
+              exact congrArg (splitCliffordTailOf k n)
                 (RingHom.congr_fun (intoTail_natural k m n h) x)
         _ = _ := DirectLimit.Ring.of_f
           (G := fun n : ℕ => Stage (n + k))
@@ -101,10 +103,10 @@ private theorem toTail_fromTail (k : ℕ) :
   apply DirectLimit.Ring.hom_ext
   intro n
   ext x
-  change toTail k (fromTail k (tailOf k n x)) = tailOf k n x
+  change toTail k (fromTail k (splitCliffordTailOf k n x)) = splitCliffordTailOf k n x
   simp only [fromTail, toTail, DirectLimit.Ring.lift_of, RingHom.comp_apply,
-    tailOf, splitOf, intoTail]
-  change tailOf k (n + k) (intoTail k (n + k) x) = tailOf k n x
+    splitCliffordTailOf, splitOf, intoTail]
+  change splitCliffordTailOf k (n + k) (intoTail k (n + k) x) = splitCliffordTailOf k n x
   exact DirectLimit.Ring.of_f
     (G := fun n : ℕ => Stage (n + k))
     (f := fun i j h => tailMap k i j h)
@@ -117,7 +119,7 @@ private theorem fromTail_toTail (k : ℕ) :
   ext x
   change fromTail k (toTail k (splitOf n x)) = splitOf n x
   simp only [toTail, fromTail, DirectLimit.Ring.lift_of, RingHom.comp_apply,
-    tailOf, splitOf, intoTail]
+    splitCliffordTailOf, splitOf, intoTail]
   change splitOf (n + k) (intoTail k n x) = splitOf n x
   exact DirectLimit.Ring.of_f
     (G := Stage)
@@ -140,9 +142,9 @@ transition to the stage `n + k` in the tail system. -/
       DirectLimit.Ring.of (fun i : ℕ => Stage (i + k))
         (fun i j h => tailMap k i j h) n
         (splitCliffordMap n (n + k) (Nat.le_add_right n k) x) := by
-  change toTail k (splitOf n x) = tailOf k n (intoTail k n x)
+  change toTail k (splitOf n x) = splitCliffordTailOf k n (intoTail k n x)
   simp only [toTail, splitOf, DirectLimit.Ring.lift_of, RingHom.comp_apply,
-    tailOf, intoTail]
+    splitCliffordTailOf, intoTail]
 
 /-- The inverse shift sends a tail-stage image back to the same element at
 the corresponding original stage. -/
@@ -153,27 +155,29 @@ the corresponding original stage. -/
           (fun i j h => tailMap k i j h) n x) =
       DirectLimit.Ring.of Stage (fun i j h => splitCliffordMap i j h)
         (n + k) x := by
-  change fromTail k (tailOf k n x) = splitOf (n + k) x
-  simp only [fromTail, tailOf, splitOf, DirectLimit.Ring.lift_of]
+  change fromTail k (splitCliffordTailOf k n x) = splitOf (n + k) x
+  simp only [fromTail, splitCliffordTailOf, splitOf, DirectLimit.Ring.lift_of]
 
-private def tailGradeInvolution (k : ℕ) :
+/-- The grade involution induced on the algebraic direct limit of the tail
+beginning at stage `k`. -/
+noncomputable def splitCliffordTailInfinityInvolute (k : ℕ) :
     SplitCliffordTailInfinity k →+* SplitCliffordTailInfinity k :=
   DirectLimit.Ring.lift (fun n : ℕ => Stage (n + k))
     (fun m n h => tailMap k m n h)
     (SplitCliffordTailInfinity k)
-    (fun n => (tailOf k n).comp
+    (fun n => (splitCliffordTailOf k n).comp
       (CliffordAlgebra.involute (Q := Qsplit (n + k))).toRingHom)
     (by
       intro m n h x
-      change tailOf k n
+      change splitCliffordTailOf k n
           (CliffordAlgebra.involute (Q := Qsplit (n + k))
             (tailMap k m n h x)) =
-        tailOf k m (CliffordAlgebra.involute (Q := Qsplit (m + k)) x)
+        splitCliffordTailOf k m (CliffordAlgebra.involute (Q := Qsplit (m + k)) x)
       calc
-        _ = tailOf k n
+        _ = splitCliffordTailOf k n
             (tailMap k m n h
               (CliffordAlgebra.involute (Q := Qsplit (m + k)) x)) := by
-                exact congrArg (tailOf k n)
+                exact congrArg (splitCliffordTailOf k n)
                   (splitCliffordMap_involute (m + k) (n + k)
                     (Nat.add_le_add_right h k) x)
         _ = _ := DirectLimit.Ring.of_f
@@ -181,29 +185,43 @@ private def tailGradeInvolution (k : ℕ) :
           (f := fun i j h => tailMap k i j h)
           (hij := h) (CliffordAlgebra.involute (Q := Qsplit (m + k)) x))
 
+/-- The induced grade involution on every cofinal tail is involutive. -/
+theorem splitCliffordTailInfinityInvolute_involutive (k : ℕ)
+    (x : SplitCliffordTailInfinity k) :
+    splitCliffordTailInfinityInvolute k
+        (splitCliffordTailInfinityInvolute k x) = x := by
+  induction x using DirectLimit.induction with
+  | _ n a =>
+      calc
+        splitCliffordTailInfinityInvolute k
+            (splitCliffordTailInfinityInvolute k (splitCliffordTailOf k n a)) =
+          splitCliffordTailOf k n
+            (CliffordAlgebra.involute (Q := Qsplit (n + k))
+              (CliffordAlgebra.involute (Q := Qsplit (n + k)) a)) := rfl
+        _ = splitCliffordTailOf k n a := by
+          rw [CliffordAlgebra.involute_involute]
+
 /-- The cofinal-tail ring equivalence intertwines the lifted Clifford grade
 involutions on the original and shifted algebraic direct limits. -/
 theorem splitCliffordInfinity_ring_shift_equiv_grade_involution (k : ℕ) :
-    (tailGradeInvolution k).comp
+    (splitCliffordTailInfinityInvolute k).comp
         (splitCliffordInfinity_ring_shift_equiv k).toRingHom =
       (splitCliffordInfinity_ring_shift_equiv k).toRingHom.comp
         splitCliffordInfinityInvolute.toRingHom := by
   apply DirectLimit.Ring.hom_ext
   intro n
   ext x
-  change tailGradeInvolution k
+  change splitCliffordTailInfinityInvolute k
       (splitCliffordInfinity_ring_shift_equiv k (splitOf n x)) =
     splitCliffordInfinity_ring_shift_equiv k
       (splitOf n (CliffordAlgebra.involute (Q := Qsplit n) x))
-  simp only [splitCliffordInfinity_ring_shift_equiv_ofStage,
-    tailGradeInvolution, DirectLimit.Ring.lift_of]
-  change tailOf k n
+  change splitCliffordTailOf k n
       (CliffordAlgebra.involute (Q := Qsplit (n + k))
         (splitCliffordMap n (n + k) (Nat.le_add_right n k) x)) =
-    tailOf k n
+    splitCliffordTailOf k n
       (splitCliffordMap n (n + k) (Nat.le_add_right n k)
         (CliffordAlgebra.involute (Q := Qsplit n) x))
-  exact congrArg (tailOf k n)
+  exact congrArg (splitCliffordTailOf k n)
     (splitCliffordMap_involute n (n + k) (Nat.le_add_right n k) x)
 
 end InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift

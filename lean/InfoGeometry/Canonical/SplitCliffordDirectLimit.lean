@@ -165,6 +165,18 @@ theorem splitCliffordMap_apply_trans (m n k : ℕ) (hmn : m ≤ n) (hnk : n ≤ 
         splitCliffordMap_succ (m := n) (n := k) (h := hk)]
       exact congrArg (fun y => splitCliffordStep k y) ih
 
+/-- Every finite transition in the split Clifford tower is injective. -/
+@[rep_depth krein]
+theorem splitCliffordMap_injective {m n : ℕ} (h : m ≤ n) :
+    Function.Injective (splitCliffordMap m n h) := by
+  induction n, h using Nat.le_induction with
+  | base =>
+      rw [splitCliffordMap_refl]
+      intro a b hab
+      exact hab
+  | succ n hn ih =>
+      rw [splitCliffordMap_succ m n hn]
+      exact (splitCliffordStep_injective n).comp ih
 
 /-- The recursive split tower is a directed system in the `Mathlib` sense. -/
 @[rep_depth krein]
@@ -181,6 +193,45 @@ instance splitCliffordDirectedSystem :
 /-- The direct limit of the split `Cl(n,n)` tower, as a ring object. -/
 @[rep_depth krein]
 abbrev SplitCliffordInfinity := _root_.DirectLimit SplitClNNAlg (fun m n h => splitCliffordMap m n h)
+
+/-- The canonical map from every finite `Cl(n,n)` stage into the algebraic
+infinite tower is injective. Thus finite-stage operator identities remain
+faithful after passage to the colimit. -/
+@[rep_depth krein]
+theorem splitCliffordInfinity_stage_injective (n : ℕ) :
+    Function.Injective
+      (DirectLimit.Ring.of SplitClNNAlg
+        (fun m j h => (splitCliffordMap m j h).toRingHom) n) := by
+  change Function.Injective
+    (fun x : SplitClNNAlg n => (⟦⟨n, x⟩⟧ : SplitCliffordInfinity))
+  exact DirectLimit.mk_injective
+    (f := fun i j h => splitCliffordMap i j h)
+    (fun i j hij => splitCliffordMap_injective hij) n
+
+/-- Commutation of two finite-stage operators is reflected faithfully in the
+infinite split-Clifford tower. In particular, passage to the colimit cannot
+turn a genuinely noncommuting finite pair into a commuting pair. -/
+@[rep_depth krein]
+theorem splitCliffordInfinity_ofStage_commute_iff
+    (n : ℕ) (x y : SplitClNNAlg n) :
+    DirectLimit.Ring.of SplitClNNAlg
+        (fun m j h => (splitCliffordMap m j h).toRingHom) n x *
+      DirectLimit.Ring.of SplitClNNAlg
+        (fun m j h => (splitCliffordMap m j h).toRingHom) n y =
+    DirectLimit.Ring.of SplitClNNAlg
+        (fun m j h => (splitCliffordMap m j h).toRingHom) n y *
+      DirectLimit.Ring.of SplitClNNAlg
+        (fun m j h => (splitCliffordMap m j h).toRingHom) n x ↔
+      x * y = y * x := by
+  constructor
+  · intro h
+    apply splitCliffordInfinity_stage_injective n
+    simpa only [map_mul] using h
+  · intro h
+    simpa only [map_mul] using
+      congrArg
+        (DirectLimit.Ring.of SplitClNNAlg
+          (fun m j h => (splitCliffordMap m j h).toRingHom) n) h
 
 noncomputable instance : Module ℝ SplitCliffordInfinity :=
   DirectLimit.instModule

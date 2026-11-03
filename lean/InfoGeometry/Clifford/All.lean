@@ -45,6 +45,7 @@ import InfoGeometry.Clifford.Cl11CliffordMapIsometryBridge
 import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Clifford.Cl11TensorStageFactorization
 import InfoGeometry.Clifford.Cl11GeometricCompass
 import InfoGeometry.Clifford.JordanWignerBridge
 import InfoGeometry.Clifford.JordanWignerCAR

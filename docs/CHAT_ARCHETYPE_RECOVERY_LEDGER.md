@@ -1859,3 +1859,17 @@ positive volume theorem. The owner passed the locked Lean check and locked Lake
 build (9,177 jobs); strict OpenGauss screening reported zero traps, the staged
 proof-proxy gate passed, and the semantic-vacuity audit reported zero findings
 on 2026-11-04.
+
+The same owner now proves `nilpotent_finite_volume_nonneg` and
+`nilpotent_finite_volume_pos_iff`. For every finite-dimensional complex Hilbert
+space and bounded operator `N`, the real trace of `N N†` is nonnegative and is
+strictly positive exactly when `N ≠ 0`. The proof transports the existing
+positive-definite matrix Hilbert–Schmidt trace pairing through an orthonormal
+basis and the injective `LinearMap.toMatrix` representation. These statements
+do not require square-zero nilpotency; nilpotency is used by the separate trace
+identities above. This is a finite trace positivity result, not a Dixmier trace
+or an infinite-dimensional volume construction.
+The updated owner passed `run_locked_lean.py` and a locked Lake build of
+`InfoGeometry.Canonical.NilpotentQGTCartanBridge` (9,180 jobs, exit 0). Strict
+OpenGauss screening reported zero traps, the staged proof-proxy gate passed,
+and the semantic-vacuity audit reported zero findings on 2026-11-04.

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.GroupTheory.Exponent
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.SpecificGroups.KleinFour
@@ -42,6 +48,15 @@ theorem complex_conj_primitive_twelfth_root_inversion {ζ : ℂˣ}
 noncomputable def cyclotomic12_galEquivUnits :
     Gal(CyclotomicField 12 ℚ / ℚ) ≃* (ZMod 12)ˣ :=
   IsCyclotomicExtension.Rat.galEquivZMod 12 (CyclotomicField 12 ℚ)
+
+/-- The native Galois action on any twelfth root of unity is the power action
+indexed by the corresponding unit modulo twelve. -/
+theorem cyclotomic12_gal_action_on_twelfth_root
+    (σ : Gal(CyclotomicField 12 ℚ / ℚ))
+    {x : CyclotomicField 12 ℚ} (hx : x ^ 12 = 1) :
+    σ x = x ^ (cyclotomic12_galEquivUnits σ).val.val := by
+  exact IsCyclotomicExtension.Rat.galEquivZMod_apply_of_pow_eq
+    12 (CyclotomicField 12 ℚ) σ hx
 
 theorem cyclotomic12_gal_card :
     Nat.card (Gal(CyclotomicField 12 ℚ / ℚ)) = 4 := by

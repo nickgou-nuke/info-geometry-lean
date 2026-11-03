@@ -80,6 +80,25 @@ theorem peirceTransfer_defect_and_vieta (A C : B) :
       InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect]);
      peirce_nf hP)
 
+/-- The ordered primal and dual QGT factors give the zeta and Euler
+polynomials of the total metric.  Both multiplication orders agree because
+the two Peirce cycles annihilate one another; this is an identity in the
+generated Peirce subalgebra, not a commutativity assumption on `B`. -/
+theorem qgt_primal_dual_euler_zeta_factorization (A C : B) :
+    (1 + conePlus P A * coneMinus P C) *
+        (1 + coneMinus P C * conePlus P A) =
+        1 + genV P A C ∧
+    (1 + coneMinus P C * conePlus P A) *
+        (1 + conePlus P A * coneMinus P C) =
+        1 + genV P A C ∧
+    (1 - conePlus P A * coneMinus P C) *
+        (1 - coneMinus P C * conePlus P A) =
+        1 - genV P A C ∧
+    (1 - coneMinus P C * conePlus P A) *
+        (1 - conePlus P A * coneMinus P C) =
+        1 - genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
 /-- The transfer element satisfies `T² = T + V`. This is the precise
 operator-valued quadratic relation arising from the Peirce multiplication. -/
 theorem peirceTransfer_quadratic_relation (A C : B) :
@@ -103,6 +122,26 @@ theorem genV_commute_peirceTransfer (A C : B) :
     comm (genV P A C) (peirceTransfer P A C) = 0 := by
   simp only [peirceTransfer]
   peirce_nf hP
+
+/-- Closed low-degree transfer identities and the first two symmetric power
+sums. These are polynomial consequences in the Peirce subalgebra; they do not
+assert a Binet formula or identify the transfer with a shift-space operator. -/
+theorem peirceTransfer_low_power_and_moment_sums (A C : B) :
+    peirceTransfer P A C * peirceTransfer P A C * peirceTransfer P A C =
+      (1 + genV P A C) * peirceTransfer P A C + genV P A C ∧
+    peirceTransfer P A C * peirceTransfer P A C *
+        peirceTransfer P A C * peirceTransfer P A C =
+      (1 + (2 : ℤ) • genV P A C) * peirceTransfer P A C +
+        genV P A C + genV P A C * genV P A C ∧
+    (peirceTransfer P A C * peirceTransfer P A C +
+        peirceTransferComplement P A C * peirceTransferComplement P A C) =
+      1 + (2 : ℤ) • genV P A C ∧
+    (peirceTransfer P A C * peirceTransfer P A C * peirceTransfer P A C +
+        peirceTransferComplement P A C * peirceTransferComplement P A C *
+          peirceTransferComplement P A C) =
+      1 + (3 : ℤ) • genV P A C := by
+  simp only [peirceTransfer, peirceTransferComplement]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
 
 /-- The defect values of the two signs of the odd Peirce generator. -/
 theorem genPhi_defect_pair (A C : B) :

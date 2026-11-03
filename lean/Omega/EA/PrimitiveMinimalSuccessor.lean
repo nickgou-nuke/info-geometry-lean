@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Omega.EA.MulNoNewPrimitive
 import Omega.Folding.FiberArithmeticProperties
 
@@ -15,6 +20,6 @@ theorem paper_ea_primitive_minimal_successor {m : ℕ} (hm : 1 ≤ m) :
   · intro x y
     exact X.stableSucc_iterate_eq_stableAdd x y hm
   · intro x y
-    exact Omega.EA.MulNoNewPrimitive.paper_mul_no_new_primitive hm x y
+    exact Omega.EA.MulNoNewPrimitive.paper_mul_no_new_primitive x y
 
 end Omega.EA

@@ -92,6 +92,30 @@ theorem innerConjugation_nilpotent_iff (u : Aˣ) (x : A) (n : ℕ) :
     rw [map_pow] at h
     simpa [innerConjugationRingEquiv, innerConjugation, mul_assoc] using h
 
+/-- `x` has exact nilpotency index `n`: its `n`th power vanishes and no
+smaller natural power does. This distinguishes exact index from the common
+upper-bound condition `x ^ n = 0`. -/
+def HasExactNilpotencyIndex (x : A) (n : ℕ) : Prop :=
+  x ^ n = 0 ∧ ∀ m < n, x ^ m ≠ 0
+
+/-- Unit conjugation preserves the exact nilpotency index, including the
+nonvanishing of every smaller power. -/
+theorem innerConjugation_exactNilpotencyIndex_iff
+    (u : Aˣ) (x : A) (n : ℕ) :
+    HasExactNilpotencyIndex x n ↔
+      HasExactNilpotencyIndex (innerConjugation u x) n := by
+  constructor
+  · rintro ⟨hn, hmin⟩
+    refine ⟨(innerConjugation_nilpotent_iff u x n).mp hn, ?_⟩
+    intro m hm hzero
+    apply hmin m hm
+    exact ((innerConjugation_nilpotent_iff u x m).mpr hzero)
+  · rintro ⟨hn, hmin⟩
+    refine ⟨(innerConjugation_nilpotent_iff u x n).mpr hn, ?_⟩
+    intro m hm hzero
+    apply hmin m hm
+    exact ((innerConjugation_nilpotent_iff u x m).mp hzero)
+
 /-- Integer polynomial evaluation is equivariant under inner conjugation.  This
 includes every integer cyclotomic polynomial evaluated at an operator. -/
 theorem innerConjugation_map_intPolynomial_eval₂
@@ -100,6 +124,23 @@ theorem innerConjugation_map_intPolynomial_eval₂
       Polynomial.eval₂ (Int.castRingHom A) (innerConjugation u x) p := by
   exact Polynomial.ringHom_eval₂_intCastRingHom p
     (innerConjugationRingEquiv u).toRingHom x
+
+/-- An operator is a root of an integer polynomial exactly when every inner
+conjugate is a root of that same polynomial.  Taking `p` to be
+`Polynomial.cyclotomic n ℤ` gives the corresponding cyclotomic-root invariant. -/
+theorem innerConjugation_intPolynomial_root_iff
+    (u : Aˣ) (p : Polynomial ℤ) (x : A) :
+    Polynomial.eval₂ (Int.castRingHom A) x p = 0 ↔
+      Polynomial.eval₂ (Int.castRingHom A) (innerConjugation u x) p = 0 := by
+  constructor
+  · intro hx
+    have h := congrArg (innerConjugationRingEquiv u) hx
+    rw [innerConjugation_map_intPolynomial_eval₂] at h
+    simpa [innerConjugation] using h
+  · intro hx
+    apply (innerConjugationRingEquiv u).injective
+    rw [innerConjugation_map_intPolynomial_eval₂]
+    simpa [innerConjugation] using hx
 
 theorem innerConjugation_map_quadraticCommutator
     (u : Aˣ) (x y : A) :

@@ -253,8 +253,37 @@ theorem projection_commutator_geometry (X : B) :
   refine ⟨hcompress, ?_, ?_⟩
   · rw [hcomm]
     noncomm_ring
-  · rw [hcomm]
+  · rw [hcomm, two_zsmul]
     noncomm_ring
+
+/-- A cut can fail to reproduce the whole input even when its double
+commutator vanishes: the complementary diagonal corner `1 - P` is discarded
+by compression but commutes with `P`. Thus `P * X * P ≠ X` is not equivalent
+to a nonzero Peirce boundary (the double commutator). -/
+theorem complementary_corner_disproves_compression_aporia_equivalence
+    (hP_ne_one : P ≠ 1) :
+    P * (1 - P) * P ≠ 1 - P ∧
+      comm P (comm P (1 - P)) = 0 := by
+  have hPcomp : P * (1 - P) = 0 := by
+    calc
+      P * (1 - P) = P - P * P := by noncomm_ring
+      _ = 0 := by rw [hP]; noncomm_ring
+  have hcompP : (1 - P) * P = 0 := by
+    calc
+      (1 - P) * P = P - P * P := by noncomm_ring
+      _ = 0 := by rw [hP]; noncomm_ring
+  have hcomm : comm P (1 - P) = 0 := by
+    unfold comm
+    rw [hPcomp, hcompP]
+    simp
+  constructor
+  · intro h
+    have hzero : P * (1 - P) * P = 0 := by rw [hPcomp]; simp
+    rw [hzero] at h
+    apply hP_ne_one
+    exact (sub_eq_zero.mp h.symm).symm
+  · rw [hcomm]
+    simp [comm]
 
 /-- Squaring the even-plus-odd decomposition preserves the grading: the
 even square is the sum of the even-even and odd-odd products, while the odd

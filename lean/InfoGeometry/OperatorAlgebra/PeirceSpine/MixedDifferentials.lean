@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Mixed graded derivation identities
@@ -26,6 +27,33 @@ theorem superDerivPhiBar_square (A C X : B) :
 theorem superDerivJBar_square (A C X : B) :
     superDerivJBar P A C (superDerivJBar P A C X) = -connV P A C X := by
   simp only [superDerivJBar, superDerivPlusBar, superDerivMinusBar, parityConj, connV]
+  peirce_nf hP
+
+/-- Recover the signed second commutator of `Φ` from its boundary and
+parity-conjugated coboundary. This is the first exact A₃₁ homological
+reconstruction law. -/
+theorem superDerivPhi_mass_reconstruction (A C X : B) :
+    superDerivPhi P A C (superDerivPhi P A C X) -
+      superDerivPhiBar P A C
+        (superDerivPhi P A C (parityConj P X)) =
+      derivSqPhi P A C X + (2 : ℤ) • (genV P A C * X) -
+        genV P A C * parityConj P X - parityConj P X * genV P A C := by
+  simp only [superDerivPhi, superDerivPhiBar,
+    superDerivPlus, superDerivMinus, superDerivPlusBar, superDerivMinusBar,
+    parityConj, derivSqPhi]
+  peirce_nf hP
+
+/-- Recover the double commutator of `J` from its boundary and
+parity-conjugated coboundary. -/
+theorem superDerivJ_mass_reconstruction (A C X : B) :
+    superDerivJBar P A C
+        (superDerivJ P A C (parityConj P X)) -
+      superDerivJ P A C (superDerivJ P A C X) =
+      derivSqJ P A C X + (2 : ℤ) • (genV P A C * X) -
+        genV P A C * parityConj P X - parityConj P X * genV P A C := by
+  simp only [superDerivJ, superDerivJBar,
+    superDerivPlus, superDerivMinus, superDerivPlusBar, superDerivMinusBar,
+    parityConj, derivSqJ]
   peirce_nf hP
 
 /-- A boundary differential and its same-cone codifferential have vanishing

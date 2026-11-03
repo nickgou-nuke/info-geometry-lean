@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Omega.Conclusion.CofinalSparsificationSemanticCompleteness
 import Omega.Conclusion.RejectNullFiniteNormalForm
@@ -55,6 +60,11 @@ theorem paper_conclusion_deterministic_offline_verification_minimal_closure
   have hNull :
       D.nullClass = .semantic ∨ D.nullClass = .protocol ∨ D.nullClass = .collision := by
     cases D.nullClass <;> simp
+  rcases
+      paper_conclusion_three_end_certificate_joint_sufficiency_minimality D.threeEnd
+        (D.nullClass = .semantic) (D.nullClass = .protocol) (D.nullClass = .collision) False
+        hNull (by intro h; exact h) with
+    ⟨hThreeEndFactors, hThreeEndOrthogonal, _hThreeEndComplete, _hNoHidden⟩
   have hSemantic :
       D.nullClass = .semantic → ¬ D.nullClass = .protocol ∧ ¬ D.nullClass = .collision := by
     intro h
@@ -73,11 +83,6 @@ theorem paper_conclusion_deterministic_offline_verification_minimal_closure
     constructor <;> intro h'
     · cases h.symm.trans h'
     · cases h.symm.trans h'
-  rcases
-      paper_conclusion_three_end_certificate_joint_sufficiency_minimality D.threeEnd
-        (D.nullClass = .semantic) (D.nullClass = .protocol) (D.nullClass = .collision) False
-        hNull hSemantic hProtocol hCollision (by intro h; exact h) with
-    ⟨hThreeEndFactors, hThreeEndOrthogonal, _hThreeEndComplete, _hNoHidden⟩
   have hDefect :
       D.defectClass = .radius ∨ D.defectClass = .depth ∨ D.defectClass = .endpoint := by
     cases D.defectClass <;> simp

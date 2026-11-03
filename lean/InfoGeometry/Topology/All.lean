@@ -118,6 +118,7 @@ import InfoGeometry.Topology.GeneralizedCircleMobius
 import InfoGeometry.Topology.MobiusDeRhamMonodromy
 import InfoGeometry.Topology.CliffordMobiusDeRhamMonodromy
 import InfoGeometry.Topology.MobiusGeometry
+import InfoGeometry.Topology.WittenJonesOperatorPhase
 import InfoGeometry.Topology.MobiusCantorTKKClosure
 import InfoGeometry.Topology.MobiusSouriauThermodynamicFlow
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow

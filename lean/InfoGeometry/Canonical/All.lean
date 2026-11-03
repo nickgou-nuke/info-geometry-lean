@@ -69,6 +69,7 @@ import InfoGeometry.Canonical.SuperPoincareCasimirCapstone
 import InfoGeometry.Canonical.SuperPoincareWignerCapstone
 import InfoGeometry.Canonical.LeeYangAsanoPoincareContractionCapstone
 import InfoGeometry.Canonical.Cyclotomic24OperatorSpine
+import InfoGeometry.Canonical.Cyclotomic24GaloisNative
 import InfoGeometry.Canonical.CyclotomicExplicitMatrixRealizations
 import InfoGeometry.Canonical.Cl55SourceReconstructionAll
 import InfoGeometry.Canonical.OperatorZornFourfoldPeirce
@@ -1679,6 +1680,8 @@ import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.OddDefectFunctional
 import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
+import InfoGeometry.Canonical.NilpotentQGTCartanBridge
 import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OnsagerSpineBridge
 import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage

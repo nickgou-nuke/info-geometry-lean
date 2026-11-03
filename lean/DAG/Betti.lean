@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import DAG.Basic
 import DAG.Disassembler
+import DAG.Hydrate
 import DAG.TwoComplex
 
 open Lean
@@ -32,15 +38,7 @@ def computeExprHomology (e : Expr) : MetaM Unit := do
 
   -- 3. "Hydrate" the graph (compute SCCs, topo sort etc needed for TwoComplex)
   -- Note: Since Expr is a DAG, SCCs will be trivial, but we need the structure.
-  let h : HydratedGraph Nat := {
-    toGraph := g,
-    sccs := g.nodes.map (fun i => #[i]),
-    sccOf := g.nodes.map (fun i => i),
-    dag := g.forward.map (fun arr => arr.map (·.1)),
-    preds := Array.replicate n #[], -- simplified
-    topo := Array.range n, -- simplified
-    doms := #[] -- not needed for Betti
-  }
+  let h : HydratedGraph Nat := hydrate g
 
   -- 4. Build the 2-Complex
   let tc := buildTwoComplex h

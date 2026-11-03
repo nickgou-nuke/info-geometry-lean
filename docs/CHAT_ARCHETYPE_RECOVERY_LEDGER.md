@@ -304,7 +304,137 @@ present as exact reusable declarations in `MixedDifferentials.lean`; added
 `superDerivPlus_same_cone_anticomm_bar`, and
 `superDerivMinus_same_cone_anticomm_bar`. These state the full A28 differential
 packet without assuming that `V` is central; all three were kernel-checked in
-the owner file. A29–A44 remain to be compared source by source.
+the owner file. The following source-order entries reconcile A29–A32; A33–A44
+remain to be compared source by source.
+
+### Source-order continuation: `1ofa...`, A29–A32 (Hodge and homological reconstruction)
+
+This is the A29–A32 occurrence in the `1ofa...` transcript near lines
+24170–24380. Its labels differ from the later shared-link A31–A34 packet.
+
+- A29's displayed left-only Hodge Laplacian is false for arbitrary operators.
+  `Orientation.hodgeLaplacianPhi_eq` gives the valid identity
+  `ΔΦ(X) = 2 • (V * X + X * V)`. Its `hodgeLaplacianPhi_add_connection`
+  and `_sub_connection` lemmas isolate the left and right actions after adding
+  or subtracting twice the inner connection.
+- A30's source calls a pointwise sequence a de Rham–Hodge cochain complex.
+  Existing owners prove the stated operator identities and closure relations,
+  but this source fence does not define a graded module of forms and differential
+  maps whose composition law would establish a cochain complex. That stronger
+  interpretation is not promoted.
+- A31's two “mass reconstruction” equations omit a noncommutative parity
+  residual. In `MixedDifferentials.lean`, added
+  `superDerivPhi_mass_reconstruction` and `superDerivJ_mass_reconstruction`
+  with the corrected right side `derivSqΦ/J(X) + 2 • (V * X) - V * (SXS) -
+  (SXS) * V`, where `SXS = parityConj P X`. The equalities follow from the
+  existing Peirce normalizer and retain multiplication order; both compile
+  over an arbitrary ring with an idempotent cut.
+- A32's submitted `ΔΦ = 2 L_V` premise and its unadjusted projector coefficients
+  have the same left-only error. The verified replacement is
+  `KantorBogoliubovSpinePoset.archetype_A32_laplacian_left_weight_generation_of_homogenized_channels`,
+  using `laplacianLeftWeight = ΔΦ + 2 • connV = 4 L_V` and the corresponding
+  coefficient-four channel identities. The source's unadjusted formulas are
+  not asserted.
+
+The two new A31 identities passed the locked `MixedDifferentials.lean` check.
+The source-order audit continues beyond A36; this entry does not close A37–A44.
+
+### Source-order continuation: `1ofa...`, A33–A34 (orientation and Hodge duality)
+
+- A33's tetraktys duality and half-twist/double-cover multiplication claims are
+  already owned by `Orientation.archetype_A33_hodge_star_and_half_twists` and
+  `Orientation.double_half_twist_eq_spin_sandwich`. The source omits the
+  `genJ * V * (-genJ) = V²` conjunct present in the owner packet; the stronger
+  owner statement is available.
+- A34's codifferential conjugacy, including the inverse identities for `Φ` and
+  `J`, is owned by
+  `Orientation.archetype_A34_hodge_conjugate_codifferentials`. Its Hodge-star
+  Laplacian consequence is split across `hodgeLaplacianPhi_from_star` and
+  `hodgeStar_hodgeLaplacianPhi`. The source's claim that the former equals only
+  `2 • (V * X)` drops the right action: the checked formula is
+  `2 • (V * X + X * V)`, consistent with `hodgeLaplacianPhi_eq`.
+
+These source claims needed no duplicate Lean declarations. Their imported owner
+file was covered by the successful locked build of `MixedDifferentials`.
+
+### Source-order continuation: `1ofa...`, A35–A36 (defect and unit level set)
+
+- A35's complement symmetry, two-sheet defect split, Tetraktys centrality,
+  unipotent conjugation, parity-product norm, Cayley–Weyl defect, and
+  Klein–Hadamard leakage are covered by
+  `KantorBogoliubovSpinePoset.archetype_A37_idempotency_defect_calculus_and_unipotent_invariance`
+  and its named dependencies. The source's `moebiusConj` operator is not
+  defined in this checkout. Added
+  `Unipotent.moebius_bruhat_idempotency_defect_invariance`, stating the
+  corresponding precise result for the existing ordered unit
+  `g = (1 + N₊)(1 - N₋)` and its explicit inverse. It derives defect
+  invariance from the existing theorem `g V g⁻¹ = V`.
+- A36's two-sided products and the conditional `δ(V)=1` inverse/power
+  recurrence are covered by
+  `KantorBogoliubovSpinePoset.archetype_A38_defect_level_set_units_and_power_recurrence`
+  and `DefectLevelSet.defect_level_power_recurrence`. The submitted universal
+  cubic remainder is incorrect: the owner proves
+  `V³ - V² - V = V * (δ(V) - 1)`, which yields `V³ = 2V + 1` when
+  `δ(V)=1`. The transcript's separate `Φ⁵ = 2Φ + VΦ` claim also has a
+  coefficient error; from `Φ²=V` and `V²=V+1`, the consequence is
+  `Φ⁵=(V+1)Φ`. The conditional Weyl and projector readouts follow from the
+  A37 defect and leakage identities; no separate aggregate wrapper is needed.
+
+The new conjugation-defect lemma passed the locked `Unipotent.lean` check.
+The source-order audit continues with A39 onward; A39–A44 remain open.
+
+### Source-order continuation: `1ofa...`, A37–A38 (transfer powers and parity orbit)
+
+- A37's ring identities are owned by `TransferDefect.peirceTransfer_defect_and_vieta`,
+  `peirceTransfer_quadratic_relation`, `peirceTransfer_power_recurrence`, and
+  `genV_commute_peirceTransfer`, together with the A37 defect packet in
+  `KantorBogoliubovSpinePoset.lean`. Added
+  `peirceTransfer_low_power_and_moment_sums` for the displayed cubic and
+  quartic formulas and the `L₂`, `L₃` symmetric sums. These remain identities
+  in the generated operator subalgebra. The transcript does not provide a
+  homomorphism from `Omega.Graph.TransferMatrix` or another shift-space
+  carrier, so the “golden-mean shift” identification and analytic Binet
+  interpretation are not asserted.
+- A38's involutive parity action is formalized by
+  `Supercharge.parityConjRingEquiv` and its downstream Klein/Fourier action
+  owners. The displayed identities are finite ring calculations and norm-like
+  products; they do not define an extension of fields or prove a
+  noncommutative Galois group isomorphic to `ℤ₂ × ℤ₂`. That group-theoretic
+  interpretation remains unestablished by this source packet.
+
+The low-power and moment-sum additions passed the locked `TransferDefect.lean`
+check; the source-order audit continues with A39–A44.
+
+### Source-order batch: `1ofa...`, A39–A44 (defect, Euler/cyclotomic, and transfer factors)
+
+- A39's universal second-defect recurrence, dyadic telescope, and orthogonal
+  defect splitting are already owned by `Core.IdempotentGraphGrassmannian`
+  (`idempotencyDefect_iterate_recurrence`,
+  `idempotencyDefectBar_square_tower`,
+  `idempotencyDefect_iterates_add_of_orthogonal`) and the Peirce defect-tower
+  owners, including `genV_defect_iterates_cycle_split`. No duplicate packet
+  was added.
+- A40's arbitrary-ring Euler/Mangoldt identities are covered by
+  `TransferDefect.euler_mangoldt_polynomial_remainders`. The source's proposed
+  quadratic remainder for `(1 - V)(1 + V + V²) - 1` is false in general: the
+  exact value is `-V³`; the owner documents this correction. A41's universal
+  `Φ₃`/`Φ₆` calculus and divisor product are covered in
+  `Algebra.IsotropicCyclotomicGalois.cyclotomic_polynomial_calculus`.
+- A42's ordered primal/dual partition factorizations were missing as a named
+  Peirce result. Added `qgt_primal_dual_euler_zeta_factorization` to
+  `TransferDefect.lean`; it records both orders of `(1 ± Q₊)(1 ± Q₋) = 1 ± V`
+  under the idempotent cut, without assuming ambient commutativity.
+- A43's Cayley–Weyl defect products are covered by the existing Weyl product
+  theorem in `Unipotent.lean`; A44's transfer first/second defect identities
+  are covered by `peirceTransfer_defect_and_vieta` and
+  `GeneratorDefect.defect_transfer_second_iterate`. Cyclotomic polynomial
+  definitions themselves do not establish a root-of-unity or analytic zeta
+  interpretation; those interpretations are not inferred from these ring
+  identities.
+
+The new A42 factorization lemma passed `run_locked_lean.py` and the locked
+Lake build of `InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect`
+(3,103 jobs, exit 0) on 2026-11-04.
 
 ### Source-order batch: `1ofa...`, A45–A48
 
@@ -370,6 +500,14 @@ The source-facing corrected synthesis is
 it combines the fifth-order annihilator, grade-zero readout, corrected ±1
 readouts, and the ±2 readouts in one statement.
 
+The exported `1ofa...` transcript jumps from its A50 discussion to a later
+reference to A52; it contains no recoverable A51 theorem contract. The
+recoverable A52 claim `Δ₃ - Δ₁ = 6 (G₊₂ - G₋₂)` is proved in
+`archetype_A52_corner_sandwich_charge_spectrum` as
+`chargeIter ... 3 X - chargeIter ... 1 X = 6 • (sandwich N₊ N₊ X -
+sandwich N₋ N₋ X)`. This source gap is recorded rather than filled by
+inventing an A51 claim.
+
 For A54, `SandwichBrackets` proves the first raising/lowering derivation
 identities and the general two-sided sandwich commutator rule. Its
 `extremal_sandwich_commutator` gives the corrected last bracket:
@@ -380,6 +518,9 @@ Lie algebra from these identities alone. The cross-grade commutator table is
 assembled in `KantorCrossGradeBrackets.kantor_cross_grade_brackets`; the
 corrected crossed-support composition and its residual are collected in
 `KantorBogoliubovSpinePoset.archetype_A54_A55_crossed_support_extremal_brackets`.
+The A52/A53/A54 owner file passed the locked Lake build on 2026-11-04
+(9,018 jobs, exit 0); its strict OpenGauss screener reported zero traps and
+the staged proof-proxy gate passed.
 
 ### Source-order batch: shared-link transcript, A105–A108 (Zorn cyclotomic paths)
 
@@ -1528,3 +1669,132 @@ semantic-vacuity audit reported zero. A full Lean-source content scan after
 this repair fell from 26 blocking findings in nine modules to 23 in eight;
 those remaining modules are separate open cleanup work, not evidence against
 this theorem.
+
+### Six-source epistemic compilation and non-commutative operator Galois/Sylvester batch, 2026-11-03
+
+Six Google Drive, AI Studio, and Google Docs sources were freshly downloaded and
+audited on 2026-11-03:
+
+| Source ID | Kind | Size (bytes) | SHA-256 |
+|---|---|---:|---|
+| `1E6iRChkkEszjN_UBwp9DhW6sOTe-0YEU` | Drive Markdown (`Peirce_Tetraktys_Origin_of_Gamma5.md`) | 6,356 | `69b11ac18229d399c72aa7b2cecdbdcc351d5265aa2d0eb4a989b412516dc2ab` |
+| `1PO_i6oQvcMXHygqCDANTy2w8y4JO_IGH` | Drive Markdown (`Tetraktys_to_Dirac_and_Chiral_Anomaly.md`) | 10,879 | `e79a26d35455dc9154719816b6260b4ef5bc0490f2f0047ed175f4a53d9637a9` |
+| `1ewrpkhcDRw_Xs7ryH6tWgKOjy7Yu-jBN` | Drive Markdown (`Alternativity_and_Chiral_Anomaly.md`) | 9,854 | `f754ffdddf09427025107cf55c06df97a035ef71506b821bf5503f4dfcc27788` |
+| `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` | AI Studio JSON prompt (217 turns: 109 user, 108 model) | 6,161,440 | `72f66113fc0464bc4f1c9aa047de1310862b9321b544be055b7059a5b6bb2867` |
+| `1sWXuMYQXfyNiZtuhfkqDkB3Ia2INL311` | Drive Markdown (`Tetraktys_Unified_Field_Equations.md`) | 7,059 | `81177d429758d5d1a38ed895fd80c1759d045e310a3f97cc2ba1252938d7b210` |
+| `1uG9PjXKgmJvgIZ6jyIfPv4beB-fDHJdQy7q7OmGNX5E` | Google Doc export (1,924 lines; 10-theme dialogue) | 127,760 | `812921e0d9433d9d61f84980f9b4cb9e674618de39006b2d032a27d32c37435f` |
+
+#### Epistemic compilation and owner routing (`solve et coagula`)
+
+1. **Threefold Chiral $\gamma_5$ Origin, Walsh–Hadamard Peirce Projectors, & Non-Associative Associator Chain**
+   (`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TetraktysChiralGamma5DiracBridge.lean`):
+   - `tetraktys_gamma5_threefold_origin` (`𝓣₀`): Over any non-commutative ring `[Ring A]` on the non-associative Zorn operator algebra `OperatorZornMatrix A` (`NCZornElement A`), proves `zornEL + zornER = zornOne`, `zornEL - zornER = zornGamma5`, `zornEL * zornEL = zornEL`, `zornER * zornER = zornER`, `zornGamma5 * zornGamma5 = zornOne`, the directional CAR identities `bracket (zornEPlus i) (zornEMinus i) = zornGamma5` and `zornAnticomm (zornEPlus i) (zornEMinus i) = zornOne` (`i : Fin 3`), and the Triadic Cone Associator `associator (zornEPlus 0) (zornEPlus 1) (zornEPlus 2) = -zornGamma5`.
+   - `tetraktys_klein_four_group_identities` (`𝓚₁`) & `tetraktys_walsh_hadamard_peirce_projectors` (`𝓗₂`): Proves chiral middle-associativity `associator zornGamma5 X zornGamma5 = 0`, the Klein four-group `C₂ × C₂` involution and composition laws of `(id, zornLeftGamma5, zornRightGamma5, zornAdGamma5)`, and the `4 × 4` Walsh–Hadamard isolation of the four Peirce sectors `(zornEL * X) * zornEL`, `(zornEL * X) * zornER`, `(zornER * X) * zornEL`, `(zornER * X) * zornER`.
+   - `tetraktys_mass_protection_and_chiral_charge_duality` (`𝓜₃`) & `tetraktys_hodge_vs_bar_intertwining_duality` (`𝓓₄`): Proves that `zornAnticomm zornGamma5` annihilates `zornMassConeSector X` and doubles `zornChiralCharge X`, and proves the Upside-Down Tetraktys Hodge swap `zornHodgeSwap` vs. octonionic bar-conjugation `zornBarConj` intertwining identities.
+   - `alternating_gamma5_associator_chain_and_chromomagnetic_anomaly` (`𝓐₅`) & `associative_peirce_dual_chiral_gamma5_bridge`: Proves `associator zornGamma5 X Y = -associator X zornGamma5 Y = associator X Y zornGamma5 = (2 : ℤ) • zornCrossCurvature X Y` and the associative Peirce dual-chirality bridge between `invS P` and `genSig P A C = genJ P A C * genPhi P A C`.
+   - `ncZornWitness_noncomm_and_nonzero_associator`: Concrete `OperatorZornMatrix (Matrix (Fin 2) (Fin 2) ℤ)` non-commutativity (`T16`) and non-zero associator (`T17`) witness.
+
+2. **DMP/QGT, Tensor-Train Bonds, Daughter Aporia Tower, $n$-Potents/$n$-Nilpotents, $W_{12}$ ($V_4$) & $W_{24}$ ($C_2^3$) Cyclotomic Operator Galois Sandwiches, and Sylvester Operator Matrices**
+   (`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicGaloisNilpotentSylvesterSynthesis.lean`):
+   - `drazin_mp_universal_sandwich_collapse` (`CNS₀.1`) & `dmp_residual_qgt_and_anamnesis_tetraktys_closure` (`CNS₀.2`): Formalizes the Drazin–Moore–Penrose bipartite forward/backward operators `dmpOp P Mdag = P * Mdag` and `mpdOp P Mdag = Mdag * P`, universal sandwich collapse `P * Mdag * P = B_inv`, `dmpOp P Mdag * mpdOp P Mdag = peirce11 P Mdag * peirce11 P Mdag + qgtPlus P Mdag Mdag`, and Anamnesis commutator closure (`comm P (dmpOp P Mdag) ∓ comm P (mpdOp P Mdag)` generating `genPhi`, `genJ`, `genV`, `genSig`).
+   - `recursive_peirce_jordan_wigner_fermionization` (`CNS₁.1`), `tensor_train_peirce_decomposition` (`CNS₁.2`), `rope_tetraktys_and_tcr_former_causal_unrolling` (`CNS₁.3`), & `recursive_daughter_tetraktys_confinement` (`CNS₁.4`): Proves Jordan–Wigner chiral string fermionization, the 3-site Tensor-Train / MPS Peirce bond decomposition (`M - mpsApprox3 P1 P2 P3 M = ttBond P1 P3 M + ttBond P3 P1 M`), TCR-Former causal truncation, and recursive confinement of the daughter Tetraktys (`conePlus (projChartPlus P A)`, `coneMinus (projChartPlus P A)`, `genPhi (projChartPlus P A)`, `genV (projChartPlus P A)`) inside `P B P`.
+   - `fubini_study_bkm_star_gramian_and_unipotent_exponential_coordinates` (`CNS₂.1`): Over `[Ring B] [StarRing B]`, proves the star-Gramian identities `qgtPlus P X X = conePlus P X * star (conePlus P X)`, `qgtMinus P X X = star (conePlus P X) * conePlus P X`, `star (genV P X X) = genV P X X`, `star (genSig P X X) = genSig P X X`, `star (genJ P X X) = -genJ P X X` (correcting the raw chat sign conflation between `genSig` and `genJ`), and the unipotent exponential coordinate group laws for `expConePlus P A t` and `expConeMinus P C s`.
+   - `nilpotent_first_peirce_sl2_reconstruction` (`CNS₃.1`) & `nilpotency_exponent_bound_ladder_and_unipotent_inverse` (`CNS₃.2`): Formalizes nilpotent-first `𝔰𝔩₂` reconstruction, `IsNPotent X n` (`X ^ n = X`), `IsNilpotentOfIndexAtMost N n` (`N ^ n = 0`), and the truncated geometric inverse `(1 - N) * unipotentGeomSum N n = 1 - N ^ n`. For a directed three-term bond sum `L = ttBond P1 P2 M + ttBond P2 P3 M`, it proves `L ^ 2 = ttBond P1 P2 M * ttBond P2 P3 M` and `L ^ 3 = 0` under the stated annihilation relations. The square is not assumed nonzero, so this is an exponent bound, not a proof of exact nilpotency index 3.
+   - `nilpotent_first_star_qgt_and_peirce_emergence` (`CNS₃.1b`) derives the dual nilpotence and regularity of `star N` from `N ^ 2 = 0` and `N * star N * N = N`, then proves the self-adjoint orthogonal Peirce idempotents and the stated Tetraktys identities. `weight_one_commutator_ladder_and_tripotent_channel_shift` (`CNS₃.1c`) assumes the actual relation `[H,N] = N`; it proves the all-natural-power ladder and its tripotent three-channel stepping result. The reusable `weight_one_integer_polynomial_shift` now proves `f(H) N^k = N^k f(H+k)` for integer polynomials in any associative ring under that same relation. These conditional consequences do not prove existence of a Jacobson–Morozov triple or arbitrary-order Sylvester–Lagrange projectors.
+   - `symmetry_sandwich_preserves_powers_npotents_and_nilpotency_bounds` (`CNS₄.1`) and `symmetry_sandwich_preserves_exact_nilpotency_index`: Prove that `symmetrySandwich G G_inv X = G * X * G_inv` (`G * G_inv = 1`, `G_inv * G = 1`) transports all powers `X ^ n`, preserves idempotents, `n`-potents, exponent bounds, and exact nilpotency indices, and acts covariantly on the entire Peirce Tetraktys `(conePlus, coneMinus, genPhi, genV, genSig)`.
+   - `w12_w24_galois_groups_klein_v4_and_c2_cube` (`CNS₅.1`) & `w12_w24_cyclotomic_operator_galois_conjugates_and_symmetry_invariance` (`CNS₅.2`): Proves that `(ZMod 12)ˣ = {1, 5, 7, 11} ≅ C₂ × C₂ = V₄` (`∀ u : (ZMod 12)ˣ, u ^ 2 = 1`) and `(ZMod 24)ˣ = {1, 5, 7, 11, 13, 17, 19, 23} ≅ C₂ × C₂ × C₂` (`∀ u : (ZMod 24)ˣ, u ^ 2 = 1`), proves exact symmetry-sandwich covariance `opPhi12 (symmetrySandwich G G_inv Z) = symmetrySandwich G G_inv (opPhi12 Z)` and `opPhi24 (symmetrySandwich G G_inv Z) = symmetrySandwich G G_inv (opPhi24 Z)`, and proves that all 4 Klein-four Galois power conjugates `X, X^5, X^7, X^{11}` (for `W₁₂`) and all 8 `C₂ × C₂ × C₂` Galois power conjugates `X^k` (`k ∈ {1, 5, 7, 11, 13, 17, 19, 23}`, for `W₂₄`)—together with all their `G (·) G⁻¹` symmetry sandwiches—remain exact roots of `opPhi12` and `opPhi24` in any non-commutative ring `B`.
+   - `operator_polynomials_over_idempotents_tripotents_and_nilpotents` (`CNS₆.1`): Proves polynomial degree collapse over idempotents and the Sylvester–Lagrange spectral projector algebra `(U_plus, U_minus, P_zero)` over any tripotent `T ^ 3 = T` (`IsNPotent T 3`).
+   - `sylvester_operator_matrix_unipotent_diagonalization_and_powers` (`CNS₇.1`): Proves the Roth–Sylvester unipotent block-diagonalization identity `sylvesterUnipotentG (-X) * sylvesterBlockMat A C Y * sylvesterUnipotentG X = sylvesterBlockMat A C (Y + (A * X - X * C))` in `Matrix (Fin 2) (Fin 2) B`, the all-power Sylvester intertwining formula `(sylvesterBlockMat A C (X * C - A * X)) ^ k = sylvesterBlockMat (A ^ k) (C ^ k) (X * C ^ k - A ^ k * X)`, and the resulting `opPhi12` and `opPhi24` block-operator polynomial formulas.
+   - `cnsWitness_noncomm_and_cyclotomic_galois_nonvacuity`: Concrete `Matrix (Fin 2) (Fin 2) ℤ` and `Matrix (Fin 4) (Fin 4) ℤ` non-commutativity (`T16`) and non-vacuity (`T17`) witness.
+
+3. **Master Coagulated Archetype Synthesis Wiring**
+   (`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`):
+   - `partIX_six_source_epistemic_compiler_master_synthesis`: Coagulates all stages above into the top-level `solve et coagula` poset synthesis.
+
+### Final-turn A85 candidate: lower block closure and idempotent intervention
+
+The 2026-10-30 `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` snapshot ends with a TCR-Former-inspired A85 candidate (user turn 231; model turn 232; source SHA-256 `e4140cbac7483310d341877bfb1e47b927d56c9b9ef36a5a9c29eb4666ead64d`). Its exact ring-algebraic content is now combined by `blockLower_idempotent_intervention_synthesis` in `OperatorAlgebra/PeirceSpine/BlockTriangularIntervention.lean`: the upper-right Peirce corner vanishes, two lower-block operators multiply by the stated block formula, and bilateral compression by an orthogonal idempotent is idempotent, annihilated on both sides by the target idempotent, and preserves the factual `11` corner. The hypotheses explicitly include idempotence of both cuts and both ordered orthogonality equations. This formalizes the algebraic block pattern only; it does not construct a neural attention model, causal graph, or empirical result from the source paper.
+
+### Batch 2 (10 sources: Stages D₆₄–D₇₈ — Zorn Split-Octonion Moufang & Kantor Chiral Cocycle Meta-Abelian Posets), 2026-11-03
+
+Ten Google Drive and AI Studio sources (`13-f9cWZ7HLtm-Tq1OI2eIVJzhJAbvVXO`, `19DXJkQAS_iNU6hR_Wu5ncHKGT8CXYkWg`, `19yG30rSWjqg0exjDw5IZWKN5epFQgicf`, `1Bvl7qhwX1T3xBd_G5_VFKx6eyEjb8My1`, `1ajg3yeZUwdeM9VNBWMFNbOcbTQ9ZLaZX`, `1bNr6SGn6999wXtTi6JyMbPot48_58AAH`, `1h0lYNVmXQ1-r6IgKrb_rptDlWbSLtOX-`, `1s8ZL3IlrIAttjp2SoDNcA29ZtCw7M1rn`, `1uad8LcvWj3UMV5vTXHxd70sReiWWxo24`, `1ut4nLftRpZYEvOVBe1SSd5me8dr1bUce`) covering `Stages D₆₄–D₇₈` were extracted, stripped of metaphorical prose, and formalized with 0 `sorry` / 0 `admit` across two owner modules:
+
+1. **Zorn Split-Octonion Moufang, Fano 7-Plane, & 3D Operator Vector Calculus Poset (`Stages D₆₅–D₆₆` & `D₇₀–D₇₆`)**
+   (`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornSplitOctonionMoufangPoset.lean`):
+   - `ZO₁ → ZO₁₀`: Over `[CommRing R]`, proves the Zorn vector-matrix split-octonion algebra `ZornOct R`, the quadratic composition law `N(A * B) = N(A) * N(B)` (`zorn_norm_multiplicative`), full 4-variable linearized norm composition (`zorn_four_variable_norm_polar`), left/right/flexible alternativity (`[X, X, Y] = [Y, X, X] = [X, Y, X] = 0`), left/right/middle Moufang identities (`zorn_moufang_left`, `zorn_moufang_right`, `zorn_moufang_middle`), the Fano 7-plane quaternion subalgebras (`zorn_fano_plane_seven_quaternion_triads`), the `G₂` inner derivation annihilator of `1`, and the Malcev identity (`zorn_malcev_identity`).
+   - `ZM₁ → ZM₂₅`: Over any non-commutative `[Ring R]`, formalizes the 3D operator vector algebra `Vec3 R` and non-commutative Zorn matrix `ZornNC R`: operator cross-product self-non-triviality `p × p ≠ 0`, operator BAC–CAB identity with non-commutative defect, operator Lagrange identity, Jacobi–Leibniz curls, non-commutative convective derivatives, Bochner–Weitzenböck Laplacian decomposition, Nambu 3-bracket and 4-bracket identities, non-associative Zorn associator anomaly `[A, B, C]` over `[Ring R]`, and non-commutative Moufang defects.
+   - `ZS₁ → ZS₅`: Over `[Ring R] [StarRing R]`, proves star-involution reversals `(u × v)⋆ = -(v⋆ × u⋆)`, Hermitian curl/divergence adjointness, and Zorn star-conjugation anti-automorphism laws.
+
+2. **Kantor Chiral Cocycle, Dyson–Schwinger, Matrix-of-Matrices, & Meta-Abelian Nilpotent Poset (`Stages D₆₄`, `D₇₁–D₇₂`, `D₇₆–D₇₈`)**
+   (`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KantorChiralCocycleMetaAbelianPoset.lean`):
+   - `DY₁ → DY₅` (`Stage D₆₄`): Non-commutative Dyson–Schwinger resolvent identities, Wood's / Sherman–Morrison–Woodbury Peirce inversion, and exact self-energy Schur complement closure over `[Ring B]`.
+   - `KC₁ → KC₁₀` (`Stages D₇₁–D₇₂`): Kantor 5-grading chiral cocycle laws, cross-grade bracket closure, and exact non-commutative 2-cocycle Bianchi identities over `[Ring B]`.
+   - `MK₁ → MK₁₀` (`Stage D₇₆`): Matrix-of-Matrices (`2 × 2` block matrices over a non-commutative operator ring `B`) Peirce–Kantor–Dirac synthesis.
+   - `MA₁ → MA₅` (`Stages D₇₇–D₇₈`): Meta-abelian commutator ideal `[[X, Y], [Z, W]]`, Baker–Campbell–Hausdorff truncation on index-2/3 nilpotent ideals, and exact Heisenberg/step-2 nilpotent group laws over `[Ring B]`.
+
+### Batch 3 (12 sources: Zorn–Nambu–De Rham–Dirac–Kähler, Malik–Thome DMP–MPD, Plato–Voevodsky–Gödel, Reflexive Compiler, & Nilpotent-to-Cramér–Rao Synthesis), 2026-11-03
+
+Twelve Google Drive and AI Studio sources (`10VJyRVd3fKau8zB_JvrNpftbq-XP0gSp`, `1LtuF7FL-_BoHwf4w-NXmlItDSMJ8nSEF`, `1R4cSvtth2-5VDZ3YwrK0vq8p9_hze1Lj`, `1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi`, `1X7tkGR-aemsGa4Pu5-r2B-vVTr6qblJi`, `1byXiUlykdbNMsfArjR5k4MRBj0AAWWUX`, `1en-oJDgiG8txvxi_IOxKtWOwgI0B-Tva`, `1fFi1wFgRFE8gfMwLKHVD6VY0LKhd4zQE`, `1iUvTlsUdZfBMgTHBGd__big54dTLpiFY`, `1lxzolfFvjI6VylIT2c79B0BeOaROB_LP`, `1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1`, `1zXzGnI4RiEWiVOk4NU3SuZe1LumRJbBu`), together with the Reflexive Epistemic Compiler self-application and the Nilpotent → Casimir → Metriplectic Cramér–Rao synthesis, were formalized and kernel-checked with 0 `sorry` / 0 `admit`:
+
+1. **Zorn Tetraktys `γ₅`, Four-Pillar Rosetta Stone, 3D Operator De Rham / Dirac–Kähler Complex, Operator Pell Equation, Malik–Thome DMP–MPD Duality, & `sl₂` Casimir Centrality**
+   (`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean`):
+   - **Stage ZND₁ (`ZornMatrix R` & `ZornNC R` over `[Ring R]`)**:
+     - `tetraktys_gamma5_threefold_origin` (`ZS_G1`), `tetraktys_klein_four_group_identities` (`ZS_G2`), `tetraktys_walsh_hadamard_peirce_projectors` (`ZS_G3`), `tetraktys_mass_protection_and_chiral_charge_duality` (`ZS_G4`), `tetraktys_hodge_inversion_dihedral_duality` (`ZS_G5`),
+     - `universal_alternating_gamma5_associator_chain` (`ZS_A1`: `[γ₅, X, Y] = -[X, γ₅, Y] = [X, Y, γ₅] = ⟨0, 2(v_X × v_Y), 2(u_X × u_Y), 0⟩`), `universal_tetraktys_spine_unification` (`ZS_A2`),
+     - `archetype_A88_zorn_tetraktys_diquark_baryon_and_chromomagnetic_anomaly` (`ZS_A3`), `archetype_A89_baryon_parity_partner_pure_quark_vacuum_and_cyclic_jacobi` (`ZS_A4`),
+     - `four_pillar_rosetta_stone_master_synthesis` (`ZS_R1..R5`: Maxwell–Yang–Mills field strength, Nambu 3-bracket, Euler rigid-body top, and Beltrami/Navier–Stokes vortex stretch unified on `ZornNC R`), `universal_total_tensor_involution_is_anti_automorphism` (`ZS_R6`), `universal_chiral_factorization_and_dirac_gauss_ampere` (`ZS_R7_R8`).
+   - **Stage ZND₂ (`ZornForms R = Ω⁰ ⊕ Ω¹ ⊕ Ω² ⊕ Ω³` over `[Ring R]`)**:
+     - `frechet_commutator_leibniz_bridge` (`DK_1`), `hodge_duality_of_generalized_div_and_curl` (`DK_2`), `graded_leibniz_rule_for_operator_forms` (`DK_3`), `interior_leibniz_rule_for_generalized_div` (`DK_4`),
+     - `curvature_square_of_extCurl_and_hodge_laplacian` (`DK_5`: `d_∇²`, `Div_∇²`, and Weitzenböck–Bochner magnetic curvature twist on `Ω¹` and `Ω²`),
+     - `bv_second_order_convective_rule_for_extDiv` (`DK_6`), `dirac_kaehler_square_three_channel_decomposition` (`DK_7`), `wedge_vs_zorn_split_octonion_anomaly` (`DK_8`), `dirac_kaehler_maxwell_yang_mills_and_self_dual_beltrami` (`DK_9`).
+   - **Stage ZND₃ (`PeirceOperatorSpine` over `[Ring B]` & `[StarRing B]`)**:
+     - `archetype_A81_operator_pell_equation_and_wavelet_scaling` (`MT_1`: Operator Pell identity `invS P * invS P - 4(P² - P) = 1`, wavelet two-scale dilation, and cubic Newton–Raphson defect factorization `idempDefect (3P² - 2P³) = (P² - P)² (4(P² - P) - 3)` without assuming `P² = P`),
+     - `archetype_A83_metriplectic_weak_measurement_duality` (`MT_2`: non-commutative Aharonov–Albert–Vaidman weak-value amplification `weakNum P A X * coneMinus P C = weakDen P A C * secMP P X + weakRem P A C X`),
+     - `archetype_A86_tetraktys_dirac_clifford_and_chiral_gamma5_duality` (`MT_3a`) & `archetype_A87_chiral_berry_mass_commutator_and_anomaly` (`MT_3b`),
+     - `campbell_meyer_drazin_and_superoperator_tetraktys` (`MT_4a`), `monad_sandwich_master_mp_and_row4_nilpotent_inversion` (`MT_4b`: `T_DMP = B_d + N_+`, `T_MPD = B_d + N_-`, `T_DMP * C * T_MPD = B_d`, `M† = B_d + S_{--} + Φ`, `N * S_{--} * N = N`), `malik_thome_commutator_bipartite_attention_and_transformer_duality` (`MT_4c`: `T_DMP * T_MPD = B_d² + Q_+`, `Q_+ * N_+ = N_+ * Q_- = V * N_+`),
+     - `jordan_moufang_and_three_idempotent_five_grading` (`MT_5`: McCrimmon quadratic Jordan fundamental identity `U_{U_X(Y)} = U_X ∘ U_Y ∘ U_X` and 9-sector Kantor–Koecher–Tits 5-grading),
+     - `peirce_star_algebra_geometry_and_grassmannian_variation_norm` (`MT_6`: `(δP)⋆ (δP) = J⋆ J = V = N_+ N_+⋆ + N_+⋆ N_+`),
+     - `nilpotent_first_sl2_casimir_invariants_and_projector_precipitation` (`MT_7`) & `universal_sl2_casimir_centrality_any_index` (`MT_8`: arbitrary-index `sl₂` Quadratic Casimir centrality `[C₂, H] = [C₂, N] = [C₂, M] = 0` and parabolic metric law `2V = C₂ - H²`).
+
+2. **Onsager Metriplectic QGT Split & Operator Cramér–Rao / Robertson–Schrödinger Uncertainty**
+   (`lean/InfoGeometry/Canonical/CramerRaoOnsagerCommutatorUncertainty.lean`):
+   - `cramerRao_QGT_bound`, `onsager_QGT_split`, `cramerRao_metriplectic_full_bound` (`g(X,X) g(Y,Y) ≥ g(X,Y)² + (1/4) Ω(X,Y)²`), `cramerRao_classical_covariance_bound` (`g(X,X) g(Y,Y) ≥ g(X,Y)²`), `cramerRao_commutator_uncertainty_bound` (`g(X,X) g(Y,Y) ≥ (1/4) Ω(X,Y)²`), and `cramerRao_robertson_schrodinger_bound`.
+
+3. **Plato's *Sophist*, Voevodsky Univalence vs. Parmenidean `Prop` UIP, Constructive Curry–Howard–Lawvere–Gödel, Reflexive Epistemic Compiler (`D ≺ R ≺ A ≺ T ≺ X ≺ M ≺ P ≺ S`), & Master Nilpotent-to-Cramér–Rao Synthesis (`𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅ ≺ 𝔭₆`)**
+   (`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`):
+   - **Part X**: `promiscuous_blending_refuted`, `parricide_of_parmenides`, `motionTransport`, `rest_is_reflexive_stasis`, `theaetetus_flies_is_false_speech`, `parmenidean_uip_in_prop`, `naive_prop_univalence_inconsistent`, `p_not_ne_refl`, `p_not_trans_self_eq_refl`, `boolTwist_homotopical_idempotent_deficit`, `p_not_half_adjoint_coherence`, `triple_negation_iff`, `double_negation_idempotent`, `constructive_glivenko_em`, `no_self_negating_proposition`, `cantor_lawvere_no_surjection`, `goedel_commutator_nonzero`, `partX_plato_sophist_voevodsky_univalence_goedel_master_synthesis`.
+   - **Part XI**: `ReflexiveCompilerArchetype`, `reflexive_compiler_strict_causal_chain`, `partXI_reflexive_epistemic_compiler_self_application_synthesis`.
+   - **Part XII**: `NilpotentMetriplecticPoset`, `nilpotent_metriplectic_strict_causal_chain`, `master_structural_synthesis`.
+
+### Same-operator Casimir/QGT bridge, 2026-11-04
+
+`InfoGeometry.Canonical.NilpotentQGTCartanBridge.nilpotent_first_casimir_qgt_robertson_synthesis`
+now connects the square-zero, von Neumann regular operator `N` on a complex Hilbert
+space to both existing theorem families using that same `N` and `M = adjoint N`.
+It reuses the arbitrary-ring `sl₂` Casimir theorem and returns its ladder/Casimir
+identities together with the state-level QGT norm split, the full metriplectic
+Cramér–Rao inequality, and the Berry-curvature/Cartan expectation and Robertson
+bound. The operator anticommutator `N N† + N† N` is not identified with the
+state-dependent Fubini–Study metric. This finite operator/state bridge does not
+assert a general spectral-triple reconstruction or Dixmier-trace formula.
+
+The bridge passed `run_locked_lean.py` and a locked Lake build of
+`InfoGeometry.Canonical.NilpotentQGTCartanBridge` on 2026-11-04 (4,271 jobs,
+exit 0). Its imported owner `ZornNambuDeRhamDiracKahlerPoset` also passed a
+direct locked Lean check. A failed earlier build exposed an invalid `simp`
+proof in the zero Moore–Penrose witness; that witness is now proved for every
+`[StarRing B]` by explicit zero-product and `star_zero` calculations, avoiding
+a scalar-only specialization. Strict OpenGauss screening reported zero traps,
+the staged proof-proxy gate passed, and neither changed Lean file contains
+`sorry`, `admit`, or a custom `axiom` declaration.
+
+The same nilpotent-first owner now also proves
+`nilpotent_first_tripotent_spectral_sheets` in
+`CyclotomicGaloisNilpotentSylvesterSynthesis.lean`: the Cartan element is
+tripotent, its two division-free outer Lagrange numerators are exactly `2P`
+and `2Q`, and the middle sheet `1 - H²` is the idempotent orthogonal
+complement of both supports. This uses the existing tripotent projector laws;
+it does not claim arbitrary-order Jacobson–Morozov existence or divide by two.
+The owner passed a locked Lean check and locked Lake build (8,944 jobs), the
+strict OpenGauss screener (zero traps), the staged proof-proxy gate, and the
+semantic-vacuity audit (zero findings) on 2026-11-04.

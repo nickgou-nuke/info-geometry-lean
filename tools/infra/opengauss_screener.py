@@ -873,6 +873,10 @@ def _typeclass_binder_supplies_target(source: str, class_name: str, target: str)
         "Neg", "Sub", "Pow", "SMul", "Module", "Finite",
         "DecidableEq", "Decidable", "BEq", "Hashable", "LawfulBEq", "LinearOrder",
         "PartialOrder", "Preorder", "LE", "LT", "LT.lt", "LE.le",
+        # Involution structure supplies only the star operation and its
+        # algebraic laws; it cannot supply an inhabitant of an unrelated
+        # predicate such as the Moore–Penrose equations.
+        "Star", "InvolutiveStar", "StarMul", "StarAddMonoid", "StarRing",
         "Inhabited",
     }
     clean_source = _strip_lean_comments_and_strings(source)

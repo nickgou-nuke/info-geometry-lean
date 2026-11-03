@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
+import InfoGeometry.Core.IdempotentGraphGrassmannian
 
 /-!
 # Peirce spine A₁₂–A₂₂: unipotent conjugation, Steinberg braid, operator projective line
@@ -293,6 +294,48 @@ theorem moebius_bruhat_idempotent_orbit_and_metric_invariance (A C : B) :
         (2 : ℤ) • coneMinus P C := by
   dsimp
   peirce_nf hP; trivial
+
+/-- The ordered Möbius–Bruhat conjugation also fixes the polynomial defect of
+the metric. This is the defect-level consequence of its metric invariance. -/
+theorem moebius_bruhat_idempotency_defect_invariance (A C : B) :
+    let g := (1 + conePlus P A) * (1 - coneMinus P C)
+    let gInv := (1 + coneMinus P C) * (1 - conePlus P A)
+    g * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect
+      (genV P A C) * gInv =
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect
+        (genV P A C) := by
+  let g := (1 + conePlus P A) * (1 - coneMinus P C)
+  let gInv := (1 + coneMinus P C) * (1 - conePlus P A)
+  have hInv : gInv * g = 1 := by
+    dsimp [g, gInv]
+    exact (moebius_bruhat_factor_expansions hP A C).2.2.2
+  have hMetric : g * genV P A C * gInv = genV P A C := by
+    simpa [g, gInv] using
+      (moebius_bruhat_idempotent_orbit_and_metric_invariance hP A C).2.1
+  have hDefect :
+      g * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect
+        (genV P A C) * gInv =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect
+          (g * genV P A C * gInv) := by
+    have hCancelProduct :
+        (g * genV P A C * gInv) * (g * genV P A C * gInv) =
+          g * genV P A C * genV P A C * gInv := by
+      calc
+        (g * genV P A C * gInv) * (g * genV P A C * gInv) =
+            g * genV P A C * (gInv * g) * genV P A C * gInv := by
+              noncomm_ring
+        _ = g * genV P A C * genV P A C * gInv := by
+              rw [hInv]; noncomm_ring
+    dsimp only [InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect]
+    calc
+      g * (genV P A C * genV P A C - genV P A C) * gInv =
+          g * genV P A C * genV P A C * gInv -
+            g * genV P A C * gInv := by noncomm_ring
+      _ = (g * genV P A C * gInv) *
+            (g * genV P A C * gInv) - g * genV P A C * gInv := by
+          rw [← hCancelProduct]
+  dsimp only [g, gInv] at hDefect hMetric ⊢
+  rw [hDefect, hMetric]
 
 theorem archetype_A21_operator_projective_line (A C X : B) :
     projChartPlus P X * projChartPlus P X = projChartPlus P X ∧

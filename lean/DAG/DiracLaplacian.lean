@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import DAG.GraphHodge
 
 namespace DAG.DiracLaplacian
@@ -18,7 +23,8 @@ def chainComplex : TwoComplex Nat :=
       dag := #[#[1], #[2], #[]],
       preds := #[#[], #[0], #[1]],
       topo := #[0, 1, 2],
-      doms := #[]
+      idom := #[none, some 0, some 1],
+      idomDepth := #[0, 1, 2]
     },
     edges := #[(0, 1), (1, 2)],
     faces := #[],
@@ -36,7 +42,8 @@ def triangleComplex : TwoComplex Nat :=
       dag := #[#[1, 2], #[2], #[]],
       preds := #[#[], #[0], #[0, 1]],
       topo := #[0, 1, 2],
-      doms := #[]
+      idom := #[none, some 0, some 0],
+      idomDepth := #[0, 1, 1]
     },
     edges := #[(0, 1), (0, 2), (1, 2)],
     faces := #[(0, 2, 1)],
@@ -54,7 +61,8 @@ def digonComplex : TwoComplex Nat :=
       dag := #[#[]],
       preds := #[#[]],
       topo := #[0],
-      doms := #[]
+      idom := #[none],
+      idomDepth := #[0]
     },
     edges := #[(0, 1), (1, 0)],
     faces := #[],

@@ -348,6 +348,34 @@ theorem idempotentCompression_removed_orthogonal_corner (T : B) :
         P * T * P - (P * (1 - Q)) * T * ((1 - Q) * P) := by noncomm_ring
     _ = 0 := by rw [hPQ_compl, hCompl_P]; simp
 
+omit hPQ hQP in
+/-- Combined lower-block and idempotent-intervention laws for the A85
+algebraic contract. The result captures triangular closure under composition,
+idempotence and annihilation of the complementary-corner compression, and
+preservation of the factual `11` Peirce block. It makes no attention-model or
+causal-graph assertion. -/
+theorem blockLower_idempotent_intervention_synthesis
+    {P Q : B} (hP : P * P = P) (hQ : Q * Q = Q)
+    (hPQ : P * Q = 0) (hQP : Q * P = 0)
+    (F L D F₁ L₁ D₁ F₂ L₂ D₂ T : B) :
+    P * blockLower P F L D * (1 - P) = 0 ∧
+    blockLower P F₁ L₁ D₁ * blockLower P F₂ L₂ D₂ =
+      blockLower P (F₁ * P * F₂)
+        (L₁ * P * F₂ + D₁ * (1 - P) * L₂)
+        (D₁ * (1 - P) * D₂) ∧
+    idempotentCompression Q (idempotentCompression Q T) =
+      idempotentCompression Q T ∧
+    Q * idempotentCompression Q T = 0 ∧
+    idempotentCompression Q T * Q = 0 ∧
+    peirce11 P (idempotentCompression Q (blockLower P F L D)) =
+      peirce11 P F := by
+  exact ⟨blockLower_upper_right hP F L D,
+    blockLower_mul hP F₁ L₁ D₁ F₂ L₂ D₂,
+    idempotentCompression_idempotent hQ T,
+    idempotentCompression_left_zero hQ T,
+    idempotentCompression_right_zero hQ T,
+    by rw [idempotentCompression_peirce11 hPQ hQP, blockLower_peirce11 hP]⟩
+
 end CornerPreservation
 
 /-- Repeated complementary-corner interventions commute when their target

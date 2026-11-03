@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Omega.Folding.FiberArithmeticProperties
 
 namespace Omega.EA
@@ -5,7 +10,6 @@ namespace Omega.EA
 /-- Concrete finite-resolution data for reading multiplication from successor-iterated addition. -/
 structure mul_from_successor_data where
   m : ℕ
-  hm : 1 ≤ m
   x : Omega.X m
   y : Omega.X m
 
@@ -20,6 +24,6 @@ end mul_from_successor_data
 /-- Paper label: `thm:mul-from-successor`. Stable multiplication is successor-generated. -/
 theorem paper_mul_from_successor (D : mul_from_successor_data) :
     D.successor_mul_eq_stable_mul := by
-  exact Omega.stableMul_from_successor D.x D.y D.hm
+  exact Omega.stableMul_from_successor D.x D.y
 
 end Omega.EA

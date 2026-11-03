@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
@@ -134,6 +139,24 @@ private theorem bracket_zero_outside
   have hsum' := gradeAdd_none_index_impossible hji r c
   rw [product_entry_zero_of_grade_sum_ne hB hA r c hsum']
   simp
+
+/-- Products of homogeneous conformal matrices occupy the sum grade whenever
+that grade lies in the five-grade window. This is the associative product
+counterpart of `bracket_grade_closed` and supports both Lie and Jordan
+readouts. -/
+theorem product_mem_conformalGrade
+    {i j k : TKKGrade} (hijk : gradeAdd i j = some k)
+    {A B : ConformalMatrix}
+    (hA : A ∈ conformalGrade i) (hB : B ∈ conformalGrade j) :
+    A * B ∈ conformalGrade k := by
+  rw [mem_conformalGrade_iff]
+  intro r c hrc
+  have hw := gradeAdd_weight hijk
+  have hsum : indexWeight r - indexWeight c ≠ weight i + weight j := by
+    intro h
+    apply hrc
+    rw [hw, h]
+  exact product_entry_zero_of_grade_sum_ne hA hB r c hsum
 
 /-- The concrete `|2|`-graded matrix Lie algebra on `1 ⊕ 8 ⊕ 1`. -/
 def canonicalFiveGradedLieAlgebra : FiveGradedLieAlgebra ℂ where
@@ -330,6 +353,23 @@ theorem zorn_mixed_bracket_mem_grade_zero (X Y : Zorn) :
     ⁅zornNegative X, zornPositive Y⁆ ∈ conformalGrade z0 := by
   exact bracket_grade_closed canonicalFiveGradedLieAlgebra gradeAdd_m1_p1
     (zornNegative_mem X) (zornPositive_mem Y)
+
+/-- The mixed grade `(-1,+1)` pair has both its ordered Jordan and Lie
+contributions in grade zero. Thus the metric/defect channel and the curvature
+channel share the same five-grade target. -/
+theorem zorn_mixed_jordan_and_lie_terms_mem_grade_zero (X Y : Zorn) :
+    zornNegative X * zornPositive Y + zornPositive Y * zornNegative X ∈
+        conformalGrade z0 ∧
+    zornNegative X * zornPositive Y - zornPositive Y * zornNegative X ∈
+        conformalGrade z0 := by
+  have hxy : zornNegative X * zornPositive Y ∈ conformalGrade z0 :=
+    product_mem_conformalGrade gradeAdd_m1_p1
+      (zornNegative_mem X) (zornPositive_mem Y)
+  have hyx : zornPositive Y * zornNegative X ∈ conformalGrade z0 :=
+    product_mem_conformalGrade (show gradeAdd p1 m1 = some z0 by rfl)
+      (zornPositive_mem Y) (zornNegative_mem X)
+  exact ⟨(conformalGrade z0).add_mem hxy hyx,
+    (conformalGrade z0).sub_mem hxy hyx⟩
 
 /-- The concrete closure simultaneously realizes the five grade window and
 injects both canonical Zorn lanes into the corresponding odd grades. -/

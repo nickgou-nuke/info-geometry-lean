@@ -234,4 +234,47 @@ theorem mixed_higher_grades_are_nonzero :
     have h00 := congrArg (fun M : Op => M 0 0) h
     norm_num at h00
 
+/-! ### A21 Bruhat orbit sign audit -/
+
+def a21BruhatUnit : Op :=
+  (1 + conePlus cut connectionUpper) * (1 - coneMinus cut connectionLower)
+
+def a21BruhatUnitInv : Op :=
+  (1 + coneMinus cut connectionLower) * (1 - conePlus cut connectionUpper)
+
+def a21BruhatOrbit : Op := a21BruhatUnit * cut * a21BruhatUnitInv
+
+/-- The transcript's A21 orbit expansion has the wrong lower-left sign on
+the first-coordinate cut with identity corner generators. -/
+theorem a21_submitted_bruhat_orbit_formula_counterexample :
+    a21BruhatOrbit ≠
+      cut - genJ cut connectionUpper connectionLower -
+        genSig cut connectionUpper connectionLower +
+        genV cut connectionUpper connectionLower *
+          conePlus cut connectionUpper := by
+  have hOrbit : a21BruhatOrbit = !![(0 : ℚ), 0; -1, 1] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [a21BruhatOrbit, a21BruhatUnit, a21BruhatUnitInv,
+        conePlus, coneMinus, cut, connectionUpper, connectionLower,
+        Matrix.mul_apply,
+        Matrix.vecMul_apply_eq_sum, Fin.sum_univ_two]
+  have hClaim :
+      cut - genJ cut connectionUpper connectionLower -
+        genSig cut connectionUpper connectionLower +
+        genV cut connectionUpper connectionLower *
+          conePlus cut connectionUpper =
+          !![(0 : ℚ), 0; 1, 1] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [genJ, genSig, genV, anticomm, PeirceSpine.comm,
+        conePlus, coneMinus, cut, connectionUpper, connectionLower,
+        Matrix.mul_apply,
+        Matrix.vecMul_apply_eq_sum, Matrix.add_apply, Matrix.sub_apply,
+        Fin.sum_univ_two]
+  rw [hOrbit, hClaim]
+  intro h
+  have h10 := congrArg (fun M : Op => M 1 0) h
+  norm_num at h10
+
 end InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness

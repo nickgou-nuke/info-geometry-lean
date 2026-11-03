@@ -1051,9 +1051,18 @@ the factor and reverse-ordered inverse explicitly, preserves the distinct
 diagonal Peirce terms, and proves both inverse products. The A21 orbit's exact Bruhat-conjugated
 idempotent formula, idempotency, and metric invariance are now grouped in
 `moebius_bruhat_idempotent_orbit_and_metric_invariance`, using the same ordered
-factor and inverse. The broader
-A21 orbit and A22 cross-ratio packets still need conjunct-by-conjunct
-reconciliation with the projective-line and Hua/cross-ratio owners.
+factor and inverse. The A21/A22 shared-link packet has now been reconciled
+conjunct by conjunct against the transcript fence. The transcript's A21 orbit
+conjunct omits `-(2 : ℤ) • coneMinus P C`: in `M₂(ℚ)`, with the
+first-coordinate cut and upper/lower matrix-unit corners, the actual
+conjugated cut has lower-left entry `-1`, while the submitted right-hand side
+has entry `+1`. This failure is kernel-checked by
+`a21_submitted_bruhat_orbit_formula_counterexample` in
+`PeirceDefectMatrixWitness.lean`; the corrected identity is the final
+conjunct of `moebius_bruhat_idempotent_orbit_and_metric_invariance` in
+`Unipotent.lean`. The projective-line and Steinberg statements remain owned
+by `archetype_A21_operator_projective_line` and
+`archetype_A21_steinberg_north_to_south`.
 
 The A22 convention was checked against `operatorCrossRatio` in `Unipotent.lean`:
 the owner proves its value is `+genV` and is translation invariant, while the
@@ -1066,9 +1075,10 @@ is `genSig` and that `invS * operatorSymplecticForm = operatorCrossRatio`.
 The three A22 simultaneous-conjugation equations for the displacement Jordan
 bracket are now recorded in `translated_idempotent_displacement_jordan_invariance`.
 The two ordered Hua corner products, with their sum and difference readouts,
-are now exposed as `translated_idempotent_hua_cross_ratio_products`. These ring
-identities remain distinct from the source's broader interpretation as a
-universal projective cross-ratio invariant.
+are now exposed as `translated_idempotent_hua_cross_ratio_products`. Thus the
+displayed A22 ring identities and simultaneous conjugations are accounted for;
+they remain distinct from the source's broader interpretation as a universal
+projective cross-ratio invariant.
 
 The A23 translated-idempotent chord equations are now stated as the
 ring-level `translated_idempotent_chord_readout` in `Unipotent.lean`. It

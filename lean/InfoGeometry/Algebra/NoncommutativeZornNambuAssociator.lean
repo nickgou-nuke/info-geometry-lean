@@ -175,8 +175,8 @@ theorem cyclicZorn_mul (A B : ZornNC R) :
             cases v with
             | mk v0 v1 v2 =>
               simp [cyclicZorn, cyclicRotate, mul, dot, cross]
-              <;> abel_nf
-              <;> trivial
+              all_goals abel_nf
+              all_goals trivial
 
 /-- The multiplicative automorphism `cyclicZorn` has order three. -/
 theorem cyclicZorn_order_three {R : Type*} (A : ZornNC R) :

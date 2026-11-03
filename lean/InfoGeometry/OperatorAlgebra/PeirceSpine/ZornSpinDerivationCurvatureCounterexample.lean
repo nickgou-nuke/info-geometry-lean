@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Data.Matrix.Basis
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentZornChainArchetypes
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PlabicVertexContraction
 
 /-!
 # A concrete obstruction to universal flatness of Zorn link-spin derivations
@@ -143,5 +144,76 @@ theorem zorn_link_spin_covariant_derivations_do_not_commute :
   · intro h
     have hentry := congrArg (fun M : Mat => M 1 3) h
     norm_num [e] at hentry
+
+/-- The signed middle-vertex contraction retains the negative *symmetric*
+sum of its two endpoint paths. It cannot in general be rewritten using the
+skew edge coordinate `edgeMajoranaJ13`: this nested-idempotent matrix
+instance has `x*u = 0` and `v*y = e₃₀`, so the two proposed right sides differ
+by `2 * e₃₀`. -/
+theorem signed_plabic_contraction_is_not_skew_edge_rhs :
+    let E₁ := e (0 : Fin 4) 0
+    let E₂ := e (1 : Fin 4) 1 + e 2 2
+    let E₃ := e (3 : Fin 4) 3
+    let x := root12 E₁ E₂ (0 : Mat)
+    let y := root21 E₂ E₁ (e 1 0)
+    let u := root23 E₂ E₃ (0 : Mat)
+    let v := root32 E₃ E₂ (e 3 1)
+    (1 - x + v) * (E₂ + x - y + u - v) * (1 + y - u) = E₂ - e 3 0 ∧
+    E₂ + (x * y + v * u) - edgeMajoranaJ13 E₁ E₂ E₃ (0 : Mat) (e 1 0)
+        (0 : Mat) (e 3 1) = E₂ + e 3 0 ∧
+    (1 - x + v) * (E₂ + x - y + u - v) * (1 + y - u) ≠
+      E₂ + (x * y + v * u) - edgeMajoranaJ13 E₁ E₂ E₃ (0 : Mat) (e 1 0)
+        (0 : Mat) (e 3 1) := by
+  dsimp
+  have hleft :
+      (1 - root12 (e (0 : Fin 4) 0) (e 1 1 + e 2 2) (0 : Mat) +
+          root32 (e 3 3) (e 1 1 + e 2 2) (e 3 1)) *
+        (e 1 1 + e 2 2 + root12 (e 0 0) (e 1 1 + e 2 2) (0 : Mat) -
+            root21 (e 1 1 + e 2 2) (e 0 0) (e 1 0) +
+            root23 (e 1 1 + e 2 2) (e 3 3) (0 : Mat) -
+            root32 (e 3 3) (e 1 1 + e 2 2) (e 3 1)) *
+        (1 + root21 (e 1 1 + e 2 2) (e 0 0) (e 1 0) -
+            root23 (e 1 1 + e 2 2) (e 3 3) (0 : Mat)) =
+        e 1 1 + e 2 2 - e 3 0 := by
+    have h₂y : (e 1 1 + e 2 2) * e 1 0 = e 1 0 := by
+      simp [e_mul, add_mul]
+    have hv₂ : e 3 1 * (e 1 1 + e 2 2) = e 3 1 := by
+      simp [e_mul, mul_add]
+    have hySq : e 1 0 * e 1 0 = 0 := by simp [e_mul]
+    have hvSq : e 3 1 * e 3 1 = 0 := by simp [e_mul]
+    have hcontract :=
+      PlabicVertexContraction.middle_vertex_signed_contraction
+        (e := e 1 1 + e 2 2) (q := -e 3 1) (s := e 1 0)
+        (by rw [neg_mul, hv₂]) h₂y (by rw [neg_mul, mul_neg, hvSq]; simp)
+        hySq
+    have horder : e 1 1 + e 2 2 - e 1 0 - e 3 1 =
+        e 1 1 + e 2 2 - e 3 1 - e 1 0 := by abel
+    rw [show root12 (e (0 : Fin 4) 0) (e 1 1 + e 2 2) (0 : Mat) = 0 by
+        simp [root12],
+      show root21 (e 1 1 + e 2 2) (e 0 0) (e 1 0) = e 1 0 by
+        simp [root21, e_mul, add_mul],
+      show root23 (e 1 1 + e 2 2) (e 3 3) (0 : Mat) = 0 by
+        simp [root23],
+      show root32 (e 3 3) (e 1 1 + e 2 2) (e 3 1) = e 3 1 by
+        simp [root32, e_mul, mul_add]]
+    simp only [zero_add, add_zero, sub_zero]
+    rw [horder]
+    simpa [sub_eq_add_neg, e_mul] using hcontract
+  have hright :
+      e 1 1 + e 2 2 +
+          (root12 (e 0 0) (e 1 1 + e 2 2) (0 : Mat) *
+              root21 (e 1 1 + e 2 2) (e 0 0) (e 1 0) +
+            root32 (e 3 3) (e 1 1 + e 2 2) (e 3 1) *
+              root23 (e 1 1 + e 2 2) (e 3 3) (0 : Mat)) -
+          edgeMajoranaJ13 (e 0 0) (e 1 1 + e 2 2) (e 3 3)
+            (0 : Mat) (e 1 0) (0 : Mat) (e 3 1) =
+        e 1 1 + e 2 2 + e 3 0 := by
+    simp [edgeMajoranaJ13, edgeRoot13, edgeRoot31,
+      root12, root21, root23, root32, e_mul, add_mul, mul_add]
+  refine ⟨hleft, hright, ?_⟩
+  rw [hleft, hright]
+  intro h
+  have hentry := congrArg (fun M : Mat => M 3 0) h
+  norm_num [e] at hentry
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.ZornSpinDerivationCurvatureCounterexample

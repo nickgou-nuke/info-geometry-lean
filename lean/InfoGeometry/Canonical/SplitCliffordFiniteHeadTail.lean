@@ -36,6 +36,17 @@ def splitSpaceAppendEquiv (k : ℕ) : (n : ℕ) →
             (LinearEquiv.prodAssoc ℝ (SplitSpace k) (ℝ × ℝ)
               (SplitSpace n))))
 
+/-- Appending one recursive split coordinate acts only on the tail under the
+head--tail regrouping. This is the quadratic-space compatibility underlying a
+fixed-head comparison of the Clifford tower transitions. -/
+theorem splitSpaceAppendEquiv_inr (k n : ℕ) (x : SplitSpace (k + n)) :
+    splitSpaceAppendEquiv k (n + 1) (0, x) =
+      ((splitSpaceAppendEquiv k n x).1,
+        (0, (splitSpaceAppendEquiv k n x).2)) := by
+  simp [splitSpaceAppendEquiv, LinearEquiv.trans_apply,
+    LinearEquiv.prodCongr_apply, LinearEquiv.prodComm_apply,
+    LinearEquiv.prodAssoc, Equiv.prodAssoc]
+
 /-- The recursive quadratic form on `SplitSpace (k+n)` is the orthogonal sum
 of the forms on the selected head and tail coordinates. -/
 theorem splitSpaceAppend_quadratic (k n : ℕ) (x : SplitSpace (k + n)) :

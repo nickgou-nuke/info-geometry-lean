@@ -1894,3 +1894,14 @@ the adjoint Gramian under arbitrary similarities; that stronger statement
 requires a unitary conjugator. The owner passed its locked Lean check and
 targeted Lake build (9,180 jobs, exit 0) on 2026-11-04. The check reports the
 unused `CompleteSpace H` section-instance linter warning on this theorem.
+
+The owner now proves `nilpotent_finite_volume_unitary_conjugate`: if both
+`U U† = 1` and `U† U = 1`, then
+`Tr((U N U†)(U N U†)†) = Tr(N N†)` for every bounded operator `N` on a
+finite-dimensional complex Hilbert space. The proof expands the adjoint of the
+conjugate, collapses the middle `U†U`, and applies the similarity trace law.
+This establishes the finite-dimensional unitary invariance of the positive
+Gramian trace. It makes no infinite-dimensional trace-class or Dixmier-trace
+claim. The owner passed its locked Lean check and targeted Lake build (9,180
+jobs, exit 0); OpenGauss, semantic-vacuity, and staged proof-proxy gates passed
+with zero findings on 2026-11-04.

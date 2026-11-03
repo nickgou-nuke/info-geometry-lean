@@ -101,6 +101,30 @@ theorem finiteOperatorTrace_commutator_eq_zero
   rw [map_sub, LinearMap.trace_mul_comm ℂ X.toLinearMap Y.toLinearMap,
     sub_self]
 
+/-- Trace duality for an inner derivation: moving the commutator across the
+trace pairing transfers it from the second factor to the first factor. -/
+theorem finiteOperatorTrace_innerDerivation_duality
+    [Module.Finite ℂ H] (X Y Z : EndH) :
+    finiteOperatorTrace (X * opCommutator Y Z) =
+      finiteOperatorTrace (opCommutator X Y * Z) := by
+  change LinearMap.trace ℂ H
+      (X.toLinearMap *
+        (Y.toLinearMap * Z.toLinearMap - Z.toLinearMap * Y.toLinearMap)) =
+    LinearMap.trace ℂ H
+      ((X.toLinearMap * Y.toLinearMap - Y.toLinearMap * X.toLinearMap) *
+        Z.toLinearMap)
+  rw [mul_sub, sub_mul, map_sub, map_sub]
+  have hCyclic :
+      LinearMap.trace ℂ H
+          (X.toLinearMap * (Z.toLinearMap * Y.toLinearMap)) =
+        LinearMap.trace ℂ H
+          (Y.toLinearMap * (X.toLinearMap * Z.toLinearMap)) := by
+    simpa only [mul_assoc] using
+      (LinearMap.trace_mul_comm ℂ
+        (X.toLinearMap * Z.toLinearMap) Y.toLinearMap)
+  simp only [mul_assoc]
+  rw [hCyclic]
+
 /-- In finite dimension, a square-zero operator has zero trace, the two
 adjoint Gramian terms have equal trace by cyclicity, and both the Cartan
 commutator and the Gramian trace reduce to these cyclic identities. -/

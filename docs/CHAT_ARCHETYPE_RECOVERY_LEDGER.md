@@ -1921,3 +1921,13 @@ passed `run_locked_lean.py` and a targeted Lake build of
 OpenGauss reported zero traps, semantic-vacuity reported zero findings, and
 the staged proof-proxy gate passed. The new general lemma has only the
 inherited unused `CompleteSpace H` section-instance warning.
+
+The operator trace owner also now proves
+`finiteOperatorTrace_innerDerivation_duality`:
+`Tr(X [Y,Z]) = Tr([X,Y] Z)` for arbitrary bounded operators on finite-
+dimensional `H`. This is the source's trace-pairing adjointness law for inner
+derivations, obtained solely from associativity and cyclicity of the native
+linear trace. The locked Lean check and targeted Lake build passed (9,180 jobs,
+exit 0); strict OpenGauss screening reported zero traps, semantic-vacuity
+reported zero findings, and proof-proxy passed. The theorem carries the same
+unused `CompleteSpace H` section-instance warning as the other trace helpers.

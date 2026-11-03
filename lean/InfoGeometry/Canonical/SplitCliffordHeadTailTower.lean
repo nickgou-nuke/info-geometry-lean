@@ -26,6 +26,7 @@ namespace InfoGeometry.Canonical.SplitCliffordHeadTailTower
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.CliffordTower
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
+open InfoGeometry.Canonical.SplitCliffordSuperGradeColimit
 open InfoGeometry.Canonical.SplitCliffordFiniteHeadTail
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Clifford.Cl11Matrix
@@ -261,8 +262,8 @@ theorem splitCliffordHeadTailInfinity_stage_injective (k n : ℕ) :
 /-- Canonical finite-stage maps for the original split-Clifford limit. -/
 private noncomputable def splitCliffordInfinityOf (n : ℕ) :
     SplitClNNAlg n →+* SplitCliffordInfinity :=
-  DirectLimit.Ring.of SplitClNNAlg
-    (fun i j h => (splitCliffordMap i j h).toRingHom) n
+  (DirectLimit.Algebra.of SplitClNNAlg
+    (fun i j h => splitCliffordMap i j h) n).toRingHom
 
 /-- Map the fixed-head graded-tensor direct limit to the original Clifford
 direct limit by the finite head--tail equivalences. -/
@@ -445,6 +446,135 @@ noncomputable def splitCliffordHeadTailInfinity_ringEquiv (k : ℕ) :
       intro n
       ext x
       exact splitCliffordHeadTail_roundTrip_of k n x)
+
+/-- The finite Clifford grade involution transported to a fixed-head graded
+tensor stage, viewed as an endomorphism of its underlying algebra. -/
+private noncomputable def splitCliffordHeadTailStageInvolute (k n : ℕ) :
+    SplitCliffordHeadTailStage k n →ₐ[ℝ] SplitCliffordHeadTailStage k n :=
+  ((splitCliffordFiniteHeadTailEquiv k n).toAlgHom.comp
+    (CliffordAlgebra.involute (Q := Qsplit (k + n)))).comp
+      (splitCliffordFiniteHeadTailEquiv k n).symm.toAlgHom
+
+/-- The transported stage involutions commute with fixed-head transitions,
+since those transitions are conjugates of the original split-Clifford bonds. -/
+private theorem splitCliffordHeadTailMap_involute (k m n : ℕ) (h : m ≤ n) :
+    (splitCliffordHeadTailMap k m n h).comp
+        (splitCliffordHeadTailStageInvolute k m) =
+      (splitCliffordHeadTailStageInvolute k n).comp
+        (splitCliffordHeadTailMap k m n h) := by
+  apply AlgHom.ext
+  intro x
+  let Eₘ := splitCliffordFiniteHeadTailEquiv k m
+  let Eₙ := splitCliffordFiniteHeadTailEquiv k n
+  change Eₙ ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k))
+      (Eₘ.symm (Eₘ (CliffordAlgebra.involute (Eₘ.symm x))))) =
+    Eₙ (CliffordAlgebra.involute (Eₙ.symm (Eₙ
+      ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k))
+        (Eₘ.symm x)))))
+  calc
+    Eₙ ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k))
+        (Eₘ.symm (Eₘ (CliffordAlgebra.involute (Eₘ.symm x))))) =
+      Eₙ ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k))
+        (CliffordAlgebra.involute (Eₘ.symm x))) := by
+          congr 2
+          exact Eₘ.symm_apply_apply _
+    _ = Eₙ (CliffordAlgebra.involute
+          ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k))
+            (Eₘ.symm x))) := by
+          exact congrArg Eₙ
+            (splitCliffordMap_involute (k + m) (k + n)
+              (Nat.add_le_add_left h k) (Eₘ.symm x)).symm
+    _ = Eₙ (CliffordAlgebra.involute (Eₙ.symm (Eₙ
+          ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k))
+            (Eₘ.symm x))))) := by
+          congr 2
+          exact (Eₙ.symm_apply_apply _).symm
+
+/-- The stagewise Clifford grade involutions induce an involution on the
+fixed-head graded-tensor algebraic direct limit. -/
+noncomputable def splitCliffordHeadTailInfinityInvolute (k : ℕ) :
+    SplitCliffordHeadTailInfinity k →+* SplitCliffordHeadTailInfinity k :=
+  DirectLimit.Ring.lift (SplitCliffordHeadTailStage k)
+    (fun m n h => (splitCliffordHeadTailMap k m n h).toRingHom)
+    (SplitCliffordHeadTailInfinity k)
+    (fun n => (splitCliffordHeadTailOf k n).comp
+      (splitCliffordHeadTailStageInvolute k n).toRingHom)
+    (by
+      intro m n h x
+      calc
+        splitCliffordHeadTailOf k n
+            (splitCliffordHeadTailStageInvolute k n
+              (splitCliffordHeadTailMap k m n h x)) =
+          splitCliffordHeadTailOf k n
+            (splitCliffordHeadTailMap k m n h
+              (splitCliffordHeadTailStageInvolute k m x)) := by
+                exact congrArg (splitCliffordHeadTailOf k n)
+                  (AlgHom.congr_fun
+                    (splitCliffordHeadTailMap_involute k m n h).symm x)
+        _ = splitCliffordHeadTailOf k m
+              (splitCliffordHeadTailStageInvolute k m x) :=
+                DirectLimit.Ring.of_f
+                  (G := SplitCliffordHeadTailStage k)
+                  (f := fun i j hij => (splitCliffordHeadTailMap k i j hij).toRingHom)
+                  (hij := h) (x := splitCliffordHeadTailStageInvolute k m x))
+
+@[simp] theorem splitCliffordHeadTailInfinityInvolute_ofStage
+    (k n : ℕ) (x : SplitCliffordHeadTailStage k n) :
+    splitCliffordHeadTailInfinityInvolute k (splitCliffordHeadTailOf k n x) =
+      splitCliffordHeadTailOf k n
+        (splitCliffordHeadTailStageInvolute k n x) := by
+  change DirectLimit.Ring.lift (SplitCliffordHeadTailStage k)
+      (fun m n h => (splitCliffordHeadTailMap k m n h).toRingHom)
+      (SplitCliffordHeadTailInfinity k)
+      (fun n => (splitCliffordHeadTailOf k n).comp
+        (splitCliffordHeadTailStageInvolute k n).toRingHom) _
+      (DirectLimit.Ring.of (SplitCliffordHeadTailStage k)
+        (fun m n h => (splitCliffordHeadTailMap k m n h).toRingHom) n x) = _
+  rw [DirectLimit.Ring.lift_of]
+  rfl
+
+/-- The induced grading involution on the fixed-head direct limit is
+involutive. -/
+theorem splitCliffordHeadTailInfinityInvolute_involutive (k : ℕ)
+    (x : SplitCliffordHeadTailInfinity k) :
+    splitCliffordHeadTailInfinityInvolute k
+        (splitCliffordHeadTailInfinityInvolute k x) = x := by
+  induction x using DirectLimit.induction with
+  | _ n a =>
+      change splitCliffordHeadTailInfinityInvolute k
+          (splitCliffordHeadTailInfinityInvolute k
+            (splitCliffordHeadTailOf k n a)) = _
+      rw [splitCliffordHeadTailInfinityInvolute_ofStage,
+        splitCliffordHeadTailInfinityInvolute_ofStage]
+      exact congrArg (splitCliffordHeadTailOf k n) (by
+        simp [splitCliffordHeadTailStageInvolute,
+          CliffordAlgebra.involute_involute])
+
+/-- The fixed-head limit involution agrees under the head--tail ring
+equivalence with the canonical involution on the split-Clifford limit. -/
+theorem splitCliffordHeadTailInfinity_ringEquiv_grade_involution (k : ℕ) :
+    (InfoGeometry.Canonical.SplitCliffordSuperGradeColimit.splitCliffordInfinityInvolute.toRingHom).comp
+        (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom =
+      (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom.comp
+        (splitCliffordHeadTailInfinityInvolute k) := by
+  apply DirectLimit.Ring.hom_ext
+  intro n
+  ext x
+  change InfoGeometry.Canonical.SplitCliffordSuperGradeColimit.splitCliffordInfinityInvolute
+      (splitCliffordHeadTailToInfinity k (splitCliffordHeadTailOf k n x)) =
+    splitCliffordHeadTailToInfinity k
+      (splitCliffordHeadTailInfinityInvolute k (splitCliffordHeadTailOf k n x))
+  change splitCliffordInfinityInvolute
+      (DirectLimit.Algebra.of SplitClNNAlg
+        (fun i j hij => splitCliffordMap i j hij) (k + n)
+        ((splitCliffordFiniteHeadTailEquiv k n).symm x)) =
+    splitCliffordHeadTailToInfinity k
+      (splitCliffordHeadTailInfinityInvolute k
+        (splitCliffordHeadTailOf k n x))
+  rw [splitCliffordInfinityInvolute_ofStage,
+    splitCliffordHeadTailInfinityInvolute_ofStage,
+    splitCliffordHeadTailToInfinity_of]
+  simp [splitCliffordHeadTailStageInvolute, splitCliffordInfinityOf]
 
 end InfoGeometry.Canonical.SplitCliffordHeadTailTower
 

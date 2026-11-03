@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ClNNSuperGrassmannianBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.SplitCliffordExteriorTowerBridge
@@ -195,6 +200,34 @@ theorem directLimit_of_even_fixed (n : ℕ) {x : Alg n}
         (fun i j hij => splitCliffordMap i j hij) n x := by
   rw [splitCliffordInfinityInvolute_ofStage,
     CliffordAlgebra.involute_eq_of_mem_even hx]
+
+/-- The fixed-point subalgebra of the algebraic split-Clifford colimit is
+exactly the union of the finite-stage even parts.  The converse uses
+injectivity of the canonical stage maps, so fixedness in the limit reflects
+back to the representative's native Clifford grading. -/
+theorem splitCliffordInfinity_fixed_iff_exists_even_stage
+    (x : SplitCliffordInfinity) :
+    splitCliffordInfinityInvolute x = x ↔
+      ∃ n, ∃ a : Alg n,
+        DirectLimit.Algebra.of SplitClNNAlg
+          (fun i j hij => splitCliffordMap i j hij) n a = x ∧
+        a ∈ CliffordAlgebra.evenOdd (Qsplit n) 0 := by
+  constructor
+  · intro hx
+    induction x using DirectLimit.induction with
+    | _ n a =>
+        refine ⟨n, a, rfl, ?_⟩
+        apply (clifford_involute_eq_self_iff_mem_even (Qsplit n) a).mp
+        apply splitCliffordInfinity_stage_injective n
+        change DirectLimit.Algebra.of SplitClNNAlg
+            (fun i j hij => splitCliffordMap i j hij) n
+            (CliffordAlgebra.involute a) =
+          DirectLimit.Algebra.of SplitClNNAlg
+            (fun i j hij => splitCliffordMap i j hij) n a
+        rw [← splitCliffordInfinityInvolute_ofStage]
+        exact hx
+  · rintro ⟨n, a, rfl, ha⟩
+    exact directLimit_of_even_fixed n ha
 
 /-- Every finite odd Clifford element maps to a negative eigenvector of the
 colimit grade involution. -/

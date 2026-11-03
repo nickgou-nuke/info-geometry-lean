@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Dual.Basis
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import InfoGeometry.Clifford.ClNN
@@ -296,53 +301,6 @@ theorem neutralCliffordEquiv_involute (n : ℕ)
       CliffordAlgebra.involute_ι, map_neg, neutralCliffordEquiv_ι]
   exact congrArg (fun f => f x) hhom
 
-/-- Over `ℝ`, the minus-eigenspace of the native Clifford grade involution is
-exactly Mathlib's odd Clifford component. -/
-theorem involute_eq_neg_iff_mem_odd
-    {M : Type*} [AddCommGroup M] [Module ℝ M]
-    (Q : QuadraticForm ℝ M) (x : CliffordAlgebra Q) :
-    CliffordAlgebra.involute x = -x ↔
-      x ∈ CliffordAlgebra.evenOdd Q 1 := by
-  constructor
-  · intro hneg
-    obtain ⟨e, o, heo, _⟩ :=
-      Submodule.existsUnique_add_of_isCompl
-        (CliffordAlgebra.evenOdd_isCompl (Q := Q)) x
-    have hinvol : CliffordAlgebra.involute x =
-        (e : CliffordAlgebra Q) - o := by
-      rw [← heo, map_add,
-        CliffordAlgebra.involute_eq_of_mem_even e.property,
-        CliffordAlgebra.involute_eq_of_mem_odd o.property]
-      simp only [sub_eq_add_neg]
-    have hdecomp :
-        (e : CliffordAlgebra Q) - o = -((e : CliffordAlgebra Q) + o) := by
-      calc
-        (e : CliffordAlgebra Q) - o = CliffordAlgebra.involute x := hinvol.symm
-        _ = -x := hneg
-        _ = -((e : CliffordAlgebra Q) + o) := by rw [heo]
-    have hneg_e : (e : CliffordAlgebra Q) = -(e : CliffordAlgebra Q) := by
-      have h' : (e : CliffordAlgebra Q) + -(o : CliffordAlgebra Q) =
-          -(e : CliffordAlgebra Q) + -(o : CliffordAlgebra Q) := by
-        simpa only [sub_eq_add_neg, neg_add] using hdecomp
-      exact add_right_cancel h'
-    have htwo : (e : CliffordAlgebra Q) + e = 0 := by
-      calc
-        (e : CliffordAlgebra Q) + e =
-            (e : CliffordAlgebra Q) + (-(e : CliffordAlgebra Q)) :=
-          congrArg (fun z : CliffordAlgebra Q => (e : CliffordAlgebra Q) + z) hneg_e
-        _ = 0 := add_neg_cancel _
-    have hezero : (e : CliffordAlgebra Q) = 0 := by
-      have hscalar : (2 : ℝ) • (e : CliffordAlgebra Q) = 0 := by
-        simpa [two_smul] using htwo
-      exact (smul_eq_zero.mp hscalar).resolve_left (by norm_num)
-    have hx : x = o := by
-      calc
-        x = (e : CliffordAlgebra Q) + o := heo.symm
-        _ = o := by rw [hezero, zero_add]
-    rw [hx]
-    exact o.property
-  · exact CliffordAlgebra.involute_eq_of_mem_odd
-
 /-- The all-rank neutral-to-tower Clifford equivalence preserves the native
 even super-grade. -/
 theorem neutralCliffordEquiv_mem_even (n : ℕ)
@@ -362,7 +320,8 @@ theorem neutralCliffordEquiv_mem_odd (n : ℕ)
     (hx : x ∈ CliffordAlgebra.evenOdd
       (InfoGeometry.Clifford.Qsplit (Vector n)) 1) :
     neutralCliffordEquiv n x ∈ CliffordAlgebra.evenOdd (TowerForm n) 1 := by
-  apply (involute_eq_neg_iff_mem_odd (TowerForm n) _).mp
+  apply (InfoGeometry.Canonical.SplitCliffordSuperGradeColimit.clifford_involute_eq_neg_iff_mem_odd
+    (TowerForm n) _).mp
   rw [neutralCliffordEquiv_involute,
     CliffordAlgebra.involute_eq_of_mem_odd hx, map_neg]
 

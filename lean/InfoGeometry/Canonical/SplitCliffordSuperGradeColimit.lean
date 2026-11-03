@@ -72,6 +72,53 @@ theorem clifford_involute_eq_self_iff_mem_even
     exact e.property
   · exact CliffordAlgebra.involute_eq_of_mem_even
 
+/-- Over `ℝ`, the negative eigenspace of Mathlib's Clifford grade
+involution is exactly its odd submodule. -/
+theorem clifford_involute_eq_neg_iff_mem_odd
+    {M : Type*} [AddCommGroup M] [Module ℝ M]
+    (Q : QuadraticForm ℝ M) (x : CliffordAlgebra Q) :
+    CliffordAlgebra.involute x = -x ↔
+      x ∈ CliffordAlgebra.evenOdd Q 1 := by
+  constructor
+  · intro hneg
+    obtain ⟨e, o, heo, _⟩ :=
+      Submodule.existsUnique_add_of_isCompl
+        (CliffordAlgebra.evenOdd_isCompl (Q := Q)) x
+    have hinvol : CliffordAlgebra.involute x =
+        (e : CliffordAlgebra Q) - o := by
+      rw [← heo, map_add,
+        CliffordAlgebra.involute_eq_of_mem_even e.property,
+        CliffordAlgebra.involute_eq_of_mem_odd o.property]
+      simp only [sub_eq_add_neg]
+    have hdecomp :
+        (e : CliffordAlgebra Q) - o = -((e : CliffordAlgebra Q) + o) := by
+      calc
+        (e : CliffordAlgebra Q) - o = CliffordAlgebra.involute x := hinvol.symm
+        _ = -x := hneg
+        _ = -((e : CliffordAlgebra Q) + o) := by rw [heo]
+    have hneg_e : (e : CliffordAlgebra Q) = -(e : CliffordAlgebra Q) := by
+      have h' : (e : CliffordAlgebra Q) + -(o : CliffordAlgebra Q) =
+          -(e : CliffordAlgebra Q) + -(o : CliffordAlgebra Q) := by
+        simpa only [sub_eq_add_neg, neg_add] using hdecomp
+      exact add_right_cancel h'
+    have htwo : (e : CliffordAlgebra Q) + e = 0 := by
+      calc
+        (e : CliffordAlgebra Q) + e =
+            (e : CliffordAlgebra Q) + (-(e : CliffordAlgebra Q)) :=
+          congrArg (fun z : CliffordAlgebra Q => (e : CliffordAlgebra Q) + z) hneg_e
+        _ = 0 := add_neg_cancel _
+    have hezero : (e : CliffordAlgebra Q) = 0 := by
+      have hscalar : (2 : ℝ) • (e : CliffordAlgebra Q) = 0 := by
+        simpa [two_smul] using htwo
+      exact (smul_eq_zero.mp hscalar).resolve_left (by norm_num)
+    have hx : x = o := by
+      calc
+        x = (e : CliffordAlgebra Q) + o := heo.symm
+        _ = o := by rw [hezero, zero_add]
+    rw [hx]
+    exact o.property
+  · exact CliffordAlgebra.involute_eq_of_mem_odd
+
 /-- The canonical one-step split-Clifford bond commutes with Mathlib's grade
 involution. The proof is checked on the recursively embedded tail generators. -/
 theorem splitCliffordStep_involute (n : ℕ) (x : Alg n) :
@@ -240,6 +287,32 @@ theorem directLimit_of_odd_negated (n : ℕ) {x : Alg n}
         (fun i j hij => splitCliffordMap i j hij) n x := by
   rw [splitCliffordInfinityInvolute_ofStage,
     CliffordAlgebra.involute_eq_of_mem_odd hx, map_neg]
+
+/-- The negative eigenspace of the algebraic split-Clifford colimit is
+exactly the union of the finite-stage odd parts. -/
+theorem splitCliffordInfinity_negated_iff_exists_odd_stage
+    (x : SplitCliffordInfinity) :
+    splitCliffordInfinityInvolute x = -x ↔
+      ∃ n, ∃ a : Alg n,
+        DirectLimit.Algebra.of SplitClNNAlg
+          (fun i j hij => splitCliffordMap i j hij) n a = x ∧
+        a ∈ CliffordAlgebra.evenOdd (Qsplit n) 1 := by
+  constructor
+  · intro hx
+    induction x using DirectLimit.induction with
+    | _ n a =>
+        refine ⟨n, a, rfl, ?_⟩
+        apply (clifford_involute_eq_neg_iff_mem_odd (Qsplit n) a).mp
+        apply splitCliffordInfinity_stage_injective n
+        change DirectLimit.Algebra.of SplitClNNAlg
+            (fun i j hij => splitCliffordMap i j hij) n
+            (CliffordAlgebra.involute a) =
+          DirectLimit.Algebra.of SplitClNNAlg
+            (fun i j hij => splitCliffordMap i j hij) n (-a)
+        rw [← splitCliffordInfinityInvolute_ofStage, map_neg]
+        exact hx
+  · rintro ⟨n, a, rfl, ha⟩
+    exact directLimit_of_odd_negated n ha
 
 /-- The transported exterior super-grade-zero component maps to the fixed
 eigenspace of the canonical split-Clifford colimit involution. -/

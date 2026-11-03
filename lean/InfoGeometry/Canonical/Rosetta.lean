@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RedLine
@@ -14,7 +20,6 @@ import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
-import InfoGeometry.Canonical.ChiralTorsionRelativeVolume
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
 import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.ChiralTorsionState
@@ -244,8 +249,6 @@ export InfoGeometry.Canonical.CliffordBridge (
 )
 
 export InfoGeometry.Canonical.ChiralTorsionBridge (
-  boltzmannRelativeVolumeEntropy
-  boltzmannRelativeVolumeEntropy_eq_divergence
   gibbsSmoothingOnGeneralizedKL
   gibbsSmoothingOnGeneralizedKL_pos
   IsVacuumApexNull

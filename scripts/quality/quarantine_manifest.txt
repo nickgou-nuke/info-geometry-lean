@@ -1,7 +1,6 @@
 # module | reason
 InfoGeometry.Canonical.AQFTOperatorInterface | downgraded to a preparation layer, but still only packages readiness certificates beside compression/interpretation surrogates
 InfoGeometry.Canonical.AnomalyDilationBridge | bridge theorem layer depends on quarantined conformal synthesis and cannot yet live on the stable surface
-InfoGeometry.Canonical.BeliefDynamics | finite scaffold hardcodes identity transport and metric replacement semantics
 InfoGeometry.Canonical.BerryPhase | canonical bridge remains on the vacuity quarantine surface
 InfoGeometry.Canonical.CalabiYauBridge | closure state stores the Ricci-flat/constant-density witness it later reprojects
 InfoGeometry.Canonical.ChiralAction | canonical bridge remains on the vacuity quarantine surface
@@ -22,7 +21,6 @@ InfoGeometry.Prequantum.Quotient | quotient layer is a thin descent wrapper over
 InfoGeometry.Projective.TwistorBridge | twistor bridge is discharged by `zeroNullQuadraticForm := 0` and a scaled-zero anomaly form
 InfoGeometry.Unstable.YangMillsBridge | bridge stores QFT obligations and later projects them out
 
-InfoGeometry.Canonical.ChiralTorsionRelativeVolume | imports quarantined BeliefDynamics and still sits on the review-surface facade path
 InfoGeometry.Canonical.CuntzCanonicalKMSFunctional | legacy owner depends on the missing Algebra.CuntzAlgebra and assumes a diagonal coefficient projection absent from the native quotient API
 InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization | Hodge wedge characterization requires explicit metricStar34 basis-action theorems not present in the native owner; former file contained sorry-based zero and uniqueness wrappers
 InfoGeometry.Exploration.Symphony.Basic | exploratory symphony lane is intentionally outside the authoritative `InfoGeometry.All` coverage spine

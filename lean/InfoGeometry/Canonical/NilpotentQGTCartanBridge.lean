@@ -368,18 +368,6 @@ theorem nilpotent_first_casimir_qgt_robertson_synthesis
      ⟨nilpotent_generated_berry_curvature_eq_cartan_expectation ψ N,
        nilpotent_generated_robertson_bound ψ N⟩⟩⟩
 
-/-- Finite-dimensional capstone joining the nilpotent trace/volume identities
-to the same-operator Casimir, QGT, and Robertson synthesis. -/
-theorem nilpotent_finite_trace_casimir_qgt_robertson_synthesis
-    [Module.Finite ℂ H]
-    (ψ : NormalizedState H) (N : EndH)
-    (hNil : N * N = 0)
-    (hVNR : N * adjoint N * N = N) :
-    nilpotent_finite_trace_invariants N hNil ∧
-      nilpotent_first_casimir_qgt_robertson_synthesis ψ N hNil hVNR := by
-  exact ⟨nilpotent_finite_trace_invariants N hNil,
-    nilpotent_first_casimir_qgt_robertson_synthesis ψ N hNil hVNR⟩
-
 end InfoGeometry.Canonical.NilpotentQGTCartanBridge
 
 end noncomputable section

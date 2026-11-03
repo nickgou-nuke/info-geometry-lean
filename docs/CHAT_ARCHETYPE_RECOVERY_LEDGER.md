@@ -1845,3 +1845,17 @@ kernel suffices for finite distance. The owner checks passed for both files;
 the combined locked Lake build passed (9,177 jobs), strict OpenGauss screening
 reported zero traps, the staged proof-proxy gate passed, and the semantic-
 vacuity audit reported zero findings on 2026-11-04.
+
+### Finite-dimensional nilpotent trace/volume invariant
+
+`NilpotentQGTCartanBridge.nilpotent_finite_trace_invariants` now formalizes
+the trace portion of the source's “birth of volume” claim for a finite-
+dimensional complex Hilbert space and a square-zero bounded operator `N`. It
+proves `Tr(N)=0`, `Tr(NN†)=Tr(N†N)`, `Tr([N,N†])=0`, and
+`Tr(NN†+N†N)=2 Tr(NN†)` using the native `LinearMap.trace` and its cyclicity.
+This identifies the cyclic scalar invariant of the adjoint Gramian without
+asserting a Dixmier trace, infinite-dimensional trace-class property, or
+positive volume theorem. The owner passed the locked Lean check and locked Lake
+build (9,177 jobs); strict OpenGauss screening reported zero traps, the staged
+proof-proxy gate passed, and the semantic-vacuity audit reported zero findings
+on 2026-11-04.

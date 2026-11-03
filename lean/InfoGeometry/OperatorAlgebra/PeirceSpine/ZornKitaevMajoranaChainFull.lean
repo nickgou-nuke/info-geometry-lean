@@ -632,8 +632,19 @@ theorem directed_plabic_twisted_connection_laws {x y u v : B}
       (2 : ℤ) • ((x * y - y * x) + (u * v - v * u)) ∧
     comm ((x - y) + (u - v)) ((x + y) + (u + v)) =
       (2 : ℤ) • ((x * y - y * x) + (u * v - v * u)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    (try simp only [comm, anticomm]) <;>
+  have hTwist := two_link_twist_bracket_split hxx hyy huu hvv
+    hxv hyu hyv hux huy hvx
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · noncomm_ring [hxx, hyy, huu, hvv, hxv, hyu, hux, huy, hvx, hyv]
+  · simp only [comm]
+    noncomm_ring [hxx, hyy, huu, hvv, hxv, hyu, hux, huy, hvx, hyv]
+  · simp only [anticomm]
+    noncomm_ring [hxx, hyy, huu, hvv, hxv, hyu, hux, huy, hvx, hyv]
+  · simpa [phi, edgeJ, bracket, comm] using hTwist.1
+  · simpa [phi, metric, antibracket, anticomm] using hTwist.2
+  · simp only [comm]
+    noncomm_ring [hxx, hyy, huu, hvv, hxv, hyu, hux, huy, hvx, hyv]
+  · simp only [comm]
     noncomm_ring [hxx, hyy, huu, hvv, hxv, hyu, hux, huy, hvx, hyv]
 
 /-- The two oriented spin generators act on the endpoint arrows by the sum

@@ -148,7 +148,8 @@ the four character maps are mutually orthogonal under that hypothesis. The
 new reusable `Tetraktys.tetraktys_tripotency_defect_readout` records the exact
 cubic defects as `V * Φ - Φ` and `-(V * J - J)`, isolating the additional
 range equations involved in the proposed tripotency conclusions. A1–A12
-source correspondence is now audited; later A13–A44 occurrences remain open.
+source correspondence is audited; the following entries reconcile A13–A25,
+with A26–A44 still open.
 
 #### Focused source audit: shared-link A13–A16
 
@@ -170,8 +171,8 @@ source correspondence is now audited; later A13–A44 occurrences remain open.
 
 These source-to-owner matches were included in the successful locked builds of
 `InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized` and
-`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03. Later
-A17–A44 source occurrences remain unaudited.
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03. The
+following entries reconcile A17–A25; A26–A44 remain unaudited.
 
 #### Focused source audit: shared-link A17–A20
 
@@ -194,8 +195,116 @@ A17–A44 source occurrences remain unaudited.
 These source-to-owner matches and corrections were kernel-checked by the
 successful locked builds of `InfoGeometry.Algebra.SteinbergBraidDefectSpine`,
 `InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized`, and
-`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03. Later
-A21–A44 source occurrences remain unaudited.
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03.
+
+### Source-order batch: `1ofa...`, A21–A25 (projective charts and Bergman operators)
+
+This is the A21–A25 occurrence following the `1ofa...` A17–A20 packet. Its
+ring-level content has owners in `Algebra/SteinbergMoebiusProjectiveLine.lean`
+and `OperatorAlgebra/PeirceSpine/Bergman.lean`; repeated A21–A25 labels in
+the shared-link export refer to separately sourced claims and are not covered
+by this correspondence alone.
+
+- A21's chart idempotency, unipotent translation, and two Peirce mass-splitting
+  identities are owned by `projChartPlus_idem`, `projChartMinus_idem`,
+  `conjPlus_chartPlus`, `conjMinus_chartMinus`, `mass_split_upper`, and
+  `mass_split_lower`. Its claimed factored formula for
+  `steinbergBraid * P * steinbergBraidInv` is not the checked result: the owner
+  `braid_action_chain` gives the full ordered word expansion. The similar
+  `archetype_A21_steinberg_north_to_south` in the compatibility spine forwards
+  to that corrected result rather than proving the transcript's shorter
+  expression.
+- A22's cross-ratio-as-`genV`, base value, simultaneous translation, and
+  unipotent invariance are represented by `crossRatio_eq_genV`,
+  `crossRatio_base`, `crossRatio_shift`, `conjPlus_crossRatio`, and
+  `conjMinus_crossRatio`. The submitted Hua-distance sign is wrong: the owner
+  `hua_distance_sq` proves `(P(X) - Q(Y))^2 = 1 - genV P X Y`, not `1 + V`.
+  The older monolithic `PureNonCommutativeOperatorSpine` bridge also records
+  this corrected minus sign. This “cross-ratio” is the explicitly defined
+  Jordan bracket of chart displacements; the ring identity alone does not
+  construct a projective-line space or prove its geometric axioms.
+- A23's Bergman packet has an owner in `Bergman.archetype_A23_bergman_operator`,
+  but four displayed actions in the transcript are false as written. The
+  checked formulas are `B(N₊) = (1 - V)^2 N₊`, `B(N₋) = N₋`, and
+  `B(Φ) = (1 - V)^2 N₊ + N₋`; the two proposed unipotent transports are
+  distinct in general. `bergman_transport_difference` gives their exact
+  difference, and `bergman_transports_eq_iff_genV_zero` characterizes equality
+  by `V = 0`.
+- A24's commutator-valued chart form is owned by
+  `archetype_A24_commutator_form_on_projective_line`, including its reduction
+  to `genSig`, translation invariance, `invS` conversion to the defined
+  cross-ratio, and the two ordered sandwiches. These operator equations do
+  not by themselves establish a separately axiomatized geometric symplectic
+  structure.
+- A25's Jordan triple and grade-inversion norm identities are owned by
+  `archetype_A25_jordan_triple_and_grade_inversion`. They are associative-ring
+  formulas and do not by themselves instantiate a JB-algebra or a
+  Zorn–Krein representation.
+
+No new Lean declaration was added: the valid source claims already have
+owners, and the discrepant formulas are corrected or explicitly characterized
+there. This is a source-to-owner reconciliation, not a fresh build result.
+
+### Source-order continuation: `1ofa...`, A26 (ordered Bruhat factors)
+
+The forward two-factor transform is already owned as `boundaryBruhat` in
+`OperatorAlgebra/PeirceSpine/ReducedPeirceState.lean`; it is distinct from the
+three-factor `steinbergBraidDual`. Added the reverse-order map
+`boundaryBruhatDual`, its explicit inverse, and the substantive theorem
+`boundaryBruhatDual_inverse_and_order_defect`, proving both inverse products
+and `boundaryBruhat - boundaryBruhatDual = -genSig` from `P² = P`. The first
+locked Lean check exposed an unfinished conjunction after normalization; the
+proof was closed with simplification and the rerun passed. A26's four
+conjugated Peirce corners are covered by
+`TwoStateSandwich.chart_bruhat_conjugate_peirce_blocks`; the transcript's
+lower-left corner has the wrong sign for that owner's explicitly stated
+conjugation convention (the checked corner is `-coneMinus P C`). The other
+three terms agree after rewriting `qgtPlus = P * genV` and
+`qgtMinus = (1-P) * genV`. Metric invariance is owned by
+`chartBruhatConj_genV`. I found no general four-point equivariance theorem in
+the relevant repo-owned search, and the current cross-ratio is the chart
+displacement Jordan product; no broad equivariance claim is inferred from the
+base-point invariance result.
+
+### Source-order continuation: `1ofa...`, A27 (two translated idempotents)
+
+The archive's A27 aggregate is not a missing owner theorem: its independent
+ring identities are already distributed across the Peirce spine. The exact
+translated-state chord and phase readouts are in
+`Unipotent.translated_idempotent_chord_readout`; the tetraktys square and
+commutator laws are in `Tetraktys.archetype_A3_nilpotent_cones_and_tetraktys_table`,
+and the two operator-valued second-derivation eigenvalue formulas are in
+`Tetraktys.archetype_A5_klein_hadamard_spectra_and_partition`. The two Peirce
+corner formulas for `V` are in `Tetraktys.archetype_A9_peirce_block_diagonal_splits`.
+
+Added two missing, narrowly scoped A27 identities:
+`Tetraktys.peirce_adjoint_chord_two_form_is_closed` proves
+`[P, Φ · [P, Φ]] = 0`, and `TwoStateSandwich.chartBruhatConj_one_sub_genV`
+proves invariance of `1 - V` under the existing chart conjugation. The
+partition unit value `bergmanOp P A C 1 = 1 - V` is already in
+`Bergman.archetype_A23_bergman_operator`, and the translated chord's `1 - V`
+identity is in `Unipotent.translated_reflection_and_bergman_hua_laws`. The
+source's macro comment mentions homogenized `hProj` identities that do not
+appear in its displayed A27 proposition; those independent operators and
+their decomposition laws are owned in `Homogenized.lean`. Its prose calls the
+displayed result 16-conjunct, while the displayed conjunction has 14 leaves.
+
+No 14-conjunct master wrapper was added: the existing facts remain in their
+small reusable owners, and the added closure and complement-invariance laws
+are individually kernel-checked.
+
+### Source-order continuation: `1ofa...`, A28 (graded boundary differentials)
+
+The four individual square-zero laws and the unbarred cross-cone anticommutator
+are covered by `Supercharge.archetype_A28_graded_derivations` (along with its
+graded Leibniz and generator-action laws). The complementary barred cross-cone
+identity and both same-cone boundary/codifferential cancellations were not
+present as exact reusable declarations in `MixedDifferentials.lean`; added
+`superDerivPlusBar_anticomm_superDerivMinusBar`,
+`superDerivPlus_same_cone_anticomm_bar`, and
+`superDerivMinus_same_cone_anticomm_bar`. These state the full A28 differential
+packet without assuming that `V` is central; all three were kernel-checked in
+the owner file. A29–A44 remain to be compared source by source.
 
 ### Source-order batch: `1ofa...`, A45–A48
 
@@ -224,16 +333,22 @@ every construction in the archive.
   `archetype_A49_golden_bogoliubov_defect_and_square` in
   `KantorBogoliubovSpinePoset.lean`, using prefixed transfer/Nambu operators to
   avoid colliding with the separate `goldenOp` definition in the
-  Sylvester–Wigner–DeWitt owner. The declaration is staged and awaits the
-  shared locked Lean build.
-- The archive's A50 double-commutator oscillator channel is partly covered by
-  `gradingPerturbOscChannel` and
-  `archetype_A58_grading_double_commutator_projectors_and_mode_reconstruction`.
-  These establish the named `J` and `Φ − Σ` channel values in the Peirce
-  carrier. The transcript's Nambu vocabulary (`nambuBogoliubov`, dark mode,
-  amplitude mode, and `zetaSum1`) has no repo-owned definitions; the existing
-  channel result is the exact algebraic content, not evidence for a physical
-  oscillator or frequency interpretation.
+  Sylvester–Wigner–DeWitt owner. A serialized `run_locked_lean.py` elaboration
+  of that owner completed successfully on 2026-11-03 with zero Lean errors;
+  Lake reported the existing local-change warning for LeanArchitect.
+- The archive's A50 double-commutator packet is covered algebraically by
+  `archetype_A57_grading_perturbation_commutator_modes` and
+  `archetype_A58_grading_double_commutator_projectors_and_mode_reconstruction`
+  in `KantorBogoliubovSpinePoset.lean`, reusing the named lemmas in
+  `GradingTransfer.lean`. Under the direct identifications from the source,
+  `nambuBogoliubov = invS + Φ`, `bogoliubovDarkMode = V Φ + Σ`,
+  `bogoliubovAmpMode = Φ − Σ`, and `zetaSum1 = 1 + V`, A57 supplies the
+  ordered product and first commutators while A58 supplies the double-
+  commutator channels on `V`, `V Φ + Σ`, `J`, and `Φ − Σ`, including the
+  `invS + J` dual channel with `1 − V`. The Nambu names are transcript-local
+  notation, not additional repo definitions. This establishes the finite
+  Peirce-ring identities, not a physical oscillator or frequency
+  interpretation.
 
 ### Source-order batch: `1ofa...`, A53–A54
 
@@ -1074,6 +1189,12 @@ formula is therefore formalized without identifying it with
 is `genSig` and that `invS * operatorSymplecticForm = operatorCrossRatio`.
 The three A22 simultaneous-conjugation equations for the displacement Jordan
 bracket are now recorded in `translated_idempotent_displacement_jordan_invariance`.
+The corresponding oriented Lie bracket is not invariant in general; its exact
+transport under the three same conjugations is now recorded by
+`translated_idempotent_displacement_lie_covariance`, with each value equal to
+the conjugate of `-genSig`. The first attempted fixed-`-genSig` formulation
+left nonzero ordered triple-corner terms in the kernel goal and was replaced
+by this covariance statement.
 The two ordered Hua corner products, with their sum and difference readouts,
 are now exposed as `translated_idempotent_hua_cross_ratio_products`. Thus the
 displayed A22 ring identities and simultaneous conjugations are accounted for;

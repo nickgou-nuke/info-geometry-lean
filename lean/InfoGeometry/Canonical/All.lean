@@ -419,6 +419,7 @@ import InfoGeometry.Canonical.AQFTHilbertCompression
 import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.AQFTOperatorSignatures
 import InfoGeometry.Canonical.AQFTReadiness
+import InfoGeometry.Canonical.AnomalyDilationBridge
 import InfoGeometry.Canonical.ArnoldApproximationCore
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
 import InfoGeometry.Canonical.ArnoldNetworkIntertwiner
@@ -1166,7 +1167,6 @@ import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.ChiralRadiationCones
 import InfoGeometry.Canonical.ChiralRGFlow
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
-import InfoGeometry.Canonical.ChiralTorsionState
 import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.TorsionStructure
 import InfoGeometry.Canonical.EmergentGravity

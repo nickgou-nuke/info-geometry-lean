@@ -94,6 +94,13 @@ theorem archetype_A3_nilpotent_cones_and_tetraktys_table (A C : B) :
     anticomm (coneMinus P C) (genSig P A C) = 0 := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
 
+/-- The inner differential of the ordered chord-phase product vanishes:
+`[P, Φ · [P, Φ]] = 0`. This is a ring-valued degree-two closure law, without
+assuming a separate scalar differential-form carrier. -/
+theorem peirce_adjoint_chord_two_form_is_closed (A C : B) :
+    comm P (genPhi P A C * comm P (genPhi P A C)) = 0 := by
+  peirce_nf hP
+
 /-- The nested anticommutator/commutator expression has a universal ordered
 normal form. In particular it is right multiplication by `V`, not the
 crossed-corner sandwich `N₊ X N₋ + N₋ X N₊` in general. -/

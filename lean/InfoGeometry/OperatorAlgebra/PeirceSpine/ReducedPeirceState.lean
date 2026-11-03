@@ -24,6 +24,25 @@ def boundaryBruhat (P A C : B) : B :=
 def boundaryBruhatInv (P A C : B) : B :=
   (1 + coneMinus P C) * (1 - conePlus P A)
 
+/-- Reverse-order two-factor transform, dual to `boundaryBruhat`. -/
+def boundaryBruhatDual (P A C : B) : B :=
+  (1 - coneMinus P C) * (1 + conePlus P A)
+
+/-- Explicit inverse of `boundaryBruhatDual`. -/
+def boundaryBruhatDualInv (P A C : B) : B :=
+  (1 - conePlus P A) * (1 + coneMinus P C)
+
+/-- The reverse-order Bruhat transform is invertible, and its difference from
+the forward transform is the negative Peirce commutator. -/
+theorem boundaryBruhatDual_inverse_and_order_defect
+    (P A C : B) (hP : P * P = P) :
+    boundaryBruhatDual P A C * boundaryBruhatDualInv P A C = 1 ∧
+    boundaryBruhatDualInv P A C * boundaryBruhatDual P A C = 1 ∧
+    boundaryBruhat P A C - boundaryBruhatDual P A C = -genSig P A C := by
+  simp only [boundaryBruhat, boundaryBruhatDual, boundaryBruhatDualInv,
+    genSig, comm, conePlus, coneMinus]
+  peirce_nf hP <;> simp
+
 def coupledPeirceState (P A C : B) : B :=
   boundaryBruhat P A C * P * boundaryBruhatInv P A C
 

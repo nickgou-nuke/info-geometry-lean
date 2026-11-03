@@ -359,6 +359,30 @@ theorem translated_idempotent_displacement_jordan_invariance (A C : B) :
   simp only [conjPlus, conjMinus]
   refine ⟨?_, ?_, ?_⟩ <;> peirce_nf hP
 
+/-- The Lie-bracket companion to
+`translated_idempotent_displacement_jordan_invariance`: applying each of the
+three source-listed inner conjugations to all four idempotent arguments
+transports the oriented displacement commutator by that same conjugation.
+Unlike the Jordan bracket, the resulting curvature need not be fixed. -/
+theorem translated_idempotent_displacement_lie_covariance (A C : B) :
+    let g := (1 + conePlus P A) * (1 - coneMinus P C)
+    let gInv := (1 + coneMinus P C) * (1 - conePlus P A)
+    comm
+        (conjPlus P A P - conjPlus P A (conjPlus P A P))
+        (conjPlus P A P - conjPlus P A (conjMinus P C P)) =
+          -(conjPlus P A (genSig P A C)) ∧
+    comm
+        (conjMinus P C P - conjMinus P C (conjPlus P A P))
+        (conjMinus P C P - conjMinus P C (conjMinus P C P)) =
+          -(conjMinus P C (genSig P A C)) ∧
+    comm
+        (g * P * gInv - g * (conjPlus P A P) * gInv)
+        (g * P * gInv - g * (conjMinus P C P) * gInv) =
+          -(g * genSig P A C * gInv) := by
+  dsimp
+  simp only [conjPlus, conjMinus]
+  refine ⟨?_, ?_, ?_⟩ <;> peirce_nf hP
+
 /-- The ordered A22 Hua products isolate the two diagonal Peirce corners
 of the metric `V`; adding and subtracting them recovers `V` and `Σ`. The
 conjugation order matters: `conjPlus P A P = P - conePlus P A`. -/

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PerelmanWCore
@@ -55,23 +61,18 @@ private theorem W_constant_of_spinorialClosureState
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)
-    (hW : ∀ s : ℝ, deriv W s = spinorialWDissipation flow IST s)
+    (hW : ∀ s : ℝ, deriv W s = scalarRicciWDissipation flow s)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     (hTrack : ∀ t : ℝ, flow t = spinorialScalarCurvature IST)
     (hCY : MongeAmpereSpinorialClosure IST) :
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
-  refine ⟨W 0, ?_⟩
-  intro s
-  have hDerivZero : ∀ t : ℝ, deriv W t = 0 := by
+  have hBeta : ∀ t : ℝ, scalarRicciBetaFunction (E := E) flow t = 0 := by
     intro t
-    calc
-      deriv W t = |spinorialScalarCurvature IST| := by
-        rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
-          (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack t]
-      _ = 0 := by
-        rw [hCY.2]
-        simp
-  simpa using is_const_of_deriv_eq_zero (f := W) hDiff hDerivZero s 0
+    rw [normalizedKaehlerRicci_beta_eq_neg_spinorial
+      (E := E) flow IST t hNorm hTrack, hCY.2]
+    ring
+  exact w_constant_of_zero_scalarRicci_beta
+    (flow := flow) (W := W) hDiff hW hBeta
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -82,23 +83,18 @@ private theorem W_constant_of_spinorialState
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)
-    (hW : ∀ s : ℝ, deriv W s = spinorialWDissipation flow IST s)
+    (hW : ∀ s : ℝ, deriv W s = scalarRicciWDissipation flow s)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     (hTrack : ∀ t : ℝ, flow t = spinorialScalarCurvature IST)
     (hSpin0 : CalabiYauSpinorialState IST) :
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
-  refine ⟨W 0, ?_⟩
-  intro s
-  have hDerivZero : ∀ t : ℝ, deriv W t = 0 := by
+  have hBeta : ∀ t : ℝ, scalarRicciBetaFunction (E := E) flow t = 0 := by
     intro t
-    calc
-      deriv W t = |spinorialScalarCurvature IST| := by
-        rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
-          (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack t]
-      _ = 0 := by
-        rw [hSpin0]
-        simp
-  simpa using is_const_of_deriv_eq_zero (f := W) hDiff hDerivZero s 0
+    rw [normalizedKaehlerRicci_beta_eq_neg_spinorial
+      (E := E) flow IST t hNorm hTrack, hSpin0]
+    ring
+  exact w_constant_of_zero_scalarRicci_beta
+    (flow := flow) (W := W) hDiff hW hBeta
 
 end WBridge
 

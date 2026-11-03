@@ -1,10 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.FieldSimp
-import InfoGeometry.Canonical.BerryPhase
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -13,7 +18,6 @@ open Real
 
 namespace InfoGeometry.Canonical.SouriauBerryPhaseMonodromyBridge
 
-open InfoGeometry.Canonical.BerryPhase
 
 /-- 1. Quantized Berry Phase Holonomy: γ(w) = 2π w for Topological Winding Number w ∈ ℤ -/
 noncomputable def berryQuantizedHolonomy (w : ℤ) : ℝ :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation
 
 /-!
@@ -21,6 +26,30 @@ theorem superDerivPhiBar_square (A C X : B) :
 theorem superDerivJBar_square (A C X : B) :
     superDerivJBar P A C (superDerivJBar P A C X) = -connV P A C X := by
   simp only [superDerivJBar, superDerivPlusBar, superDerivMinusBar, parityConj, connV]
+  peirce_nf hP
+
+/-- A boundary differential and its same-cone codifferential have vanishing
+operator anticommutator. -/
+theorem superDerivPlus_same_cone_anticomm_bar (A X : B) :
+    superDerivPlus P A (superDerivPlusBar P A X) +
+      superDerivPlusBar P A (superDerivPlus P A X) = 0 := by
+  simp only [superDerivPlus, superDerivPlusBar, parityConj]
+  peirce_nf hP
+
+/-- The lower-cone boundary differential and codifferential likewise have
+vanishing operator anticommutator. -/
+theorem superDerivMinus_same_cone_anticomm_bar (C X : B) :
+    superDerivMinus P C (superDerivMinusBar P C X) +
+      superDerivMinusBar P C (superDerivMinus P C X) = 0 := by
+  simp only [superDerivMinus, superDerivMinusBar, parityConj]
+  peirce_nf hP
+
+/-- The two barred boundary differentials close on the inner derivation by
+the Peirce metric `V`. -/
+theorem superDerivPlusBar_anticomm_superDerivMinusBar (A C X : B) :
+    superDerivPlusBar P A (superDerivMinusBar P C X) +
+      superDerivMinusBar P C (superDerivPlusBar P A X) = connV P A C X := by
+  simp only [superDerivPlusBar, superDerivMinusBar, parityConj, connV]
   peirce_nf hP
 
 theorem superDerivJ_anticomm_bar (A C X : B) :

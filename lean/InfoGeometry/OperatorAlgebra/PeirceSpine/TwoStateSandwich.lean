@@ -130,6 +130,14 @@ theorem chartBruhatConj_genV :
   unfold chartBruhatConj
   peirce_nf hP
 
+/-- Conjugation fixes the complementary Peirce partition operator `1 - V`.
+This is the ring-level Möbius invariance used by the Bergman–Hua partition
+identity. -/
+theorem chartBruhatConj_one_sub_genV :
+    chartBruhatConj P A C (1 - genV P A C) = 1 - genV P A C := by
+  unfold chartBruhatConj
+  peirce_nf hP
+
 /-- The `Σ` chart sandwich differs from the Euler-compressed `Q₊` value by
 exactly twice the quadratic cycle. This is the finite-depth obstruction to
 the A82 transcript's proposed `Σ` sandwich formula at depth zero. -/

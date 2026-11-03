@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RedLine
+import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
@@ -22,21 +23,18 @@ import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
 import InfoGeometry.Canonical.ChiralTorsionTwistor
-import InfoGeometry.Canonical.ChiralTorsionState
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.WeylTransportChiralBridge
-import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Experimental.ModularSpinorBridge
 import InfoGeometry.Twistor.NullProjective
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Canonical.TwistorOperatorialIncidence
 import InfoGeometry.Canonical.BerryConnection
-import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Canonical.RosettaSourceBridge
 import InfoGeometry.Canonical.RosettaScaleTransport
@@ -239,7 +237,7 @@ export InfoGeometry.Canonical.ChiralCliffordBridge (
   generalizedChiralMinus
   IsCompactBeliefUpdate
   IsNonCompactBeliefUpdate
-  anomaly_as_structure_constant
+  chiralAnomaly_eq_projector_commutator
   cartan_collapse_of_normal
 )
 
@@ -253,9 +251,6 @@ export InfoGeometry.Canonical.ChiralTorsionBridge (
   gibbsSmoothingOnGeneralizedKL_pos
   IsVacuumApexNull
   vacuumApexTwistor
-  ChiralTorsionChentsovGibbsState
-  chentsov_and_gibbs_of_state
-  torsion_nonzero_of_chiral
 )
 
 export InfoGeometry.Canonical.AnomalyInflow (
@@ -270,11 +265,6 @@ export InfoGeometry.Canonical.AnomalyInflow (
 
 export InfoGeometry.Canonical.BerryPhase (
   berryConnection
-  informationBerryPhase
-  informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
-  informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
-  informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
-  berry_phase_vanishes_for_normal
 )
 
 export InfoGeometry.Canonical.ChiralEinsteinBridge (
@@ -388,22 +378,6 @@ export InfoGeometry.Krein (
   modular_j
   spectral_epsilon
   complex_i
-)
-
-export InfoGeometry.Canonical.WilsonLoop (
-  DiracField
-  diracReg
-  wilsonStep
-  wilsonPropagatorDiscrete
-  wilsonLoopDiscrete
-  continuousWilsonLoop
-  chiralPathWeight
-  chiralPathIntegral
-  expectedHolonomy
-  BeliefSystem
-  gaussianDiracField
-  gaussianWilsonLoopDiscrete
-  gaussian_holonomy_flat
 )
 
 export InfoGeometry.Canonical.BeliefAlgebra.BeliefSystem (

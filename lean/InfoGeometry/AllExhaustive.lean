@@ -1890,11 +1890,9 @@ import InfoGeometry.Canonical.BerezinianTrace
 import InfoGeometry.Canonical.BernsteinSatoMonodromy
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryDrazin
-import InfoGeometry.Canonical.BerryHolonomy
 import InfoGeometry.Canonical.BerryKeatingOperatorBridge
 import InfoGeometry.Canonical.BerryKeatingSpectralDilationsCapstone
 import InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
-import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.BetaDivergence
 import InfoGeometry.Canonical.BetaSplitBridge
@@ -2620,7 +2618,6 @@ import InfoGeometry.Canonical.ChiralTensorSectorLift
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
 import InfoGeometry.Canonical.ChiralTorsionRelativeVolume
-import InfoGeometry.Canonical.ChiralTorsionState
 import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.ChiralTracelessColorTensorLift
 import InfoGeometry.Canonical.ChiralVolumePfaffianDiracKahlerBridge
@@ -2892,7 +2889,6 @@ import InfoGeometry.Canonical.ConformalSL2GeneratorBridge
 import InfoGeometry.Canonical.ConformalSpectralBridge
 import InfoGeometry.Canonical.ConformalSubalgebraDebt
 import InfoGeometry.Canonical.ConformalUnification
-import InfoGeometry.Canonical.ConformalWard
 import InfoGeometry.Canonical.ConformalZetaEquilibriumCapstone
 import InfoGeometry.Canonical.ConnectionAlgebraicBianchi
 import InfoGeometry.Canonical.ConnesAdeleTraceCapstone
@@ -3135,7 +3131,6 @@ import InfoGeometry.Canonical.DeRhamThermodynamicPotential
 import InfoGeometry.Canonical.DeRhamUnifiedCorridor
 import InfoGeometry.Canonical.DeWittPeirceCommutingProjectors
 import InfoGeometry.Canonical.DecellCayleyHamiltonInverse
-import InfoGeometry.Canonical.DeepHorizon
 import InfoGeometry.Canonical.DeficiencyIndicesCapstone
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Canonical.DeformedIdeleAction
@@ -3178,7 +3173,6 @@ import InfoGeometry.Canonical.DiracKreinMaurerCartanBridge
 import InfoGeometry.Canonical.DiracLaplacianSquareRootBridge
 import InfoGeometry.Canonical.DiracMetricCompatibility
 import InfoGeometry.Canonical.DiracPauliCl13Bridge
-import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.DiracSea
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin
 import InfoGeometry.Canonical.DiracSouriauKKTChiralContext
@@ -5003,7 +4997,6 @@ import InfoGeometry.Canonical.PositiveHomogeneousBarrier
 import InfoGeometry.Canonical.PositiveHomogeneousHestenesKreinBridge
 import InfoGeometry.Canonical.PositiveMeasureSpectrum
 import InfoGeometry.Canonical.PositiveRayCore
-import InfoGeometry.Canonical.PositiveRayProjectiveBridge
 import InfoGeometry.Canonical.Positivity
 import InfoGeometry.Canonical.PositroidCell
 import InfoGeometry.Canonical.PowerStructure
@@ -6474,7 +6467,6 @@ import InfoGeometry.Canonical.WiesbrockLieBracketCommutator
 import InfoGeometry.Canonical.WiesbrockModularInclusionBridge
 import InfoGeometry.Canonical.WiesbrockSUSYPoincareBridge
 import InfoGeometry.Canonical.WilsonHooftDefectsCapstone
-import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.WilsonOctonionicLeechShell
 import InfoGeometry.Canonical.WilsonSchwingerBridge
 import InfoGeometry.Canonical.WindingOrbitClosure

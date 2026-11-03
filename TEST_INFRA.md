@@ -1,126 +1,146 @@
-# Test Infrastructure: CAS O(1) Optimization Project
+# CAS refactor test infrastructure
 
-## 1. Architectural Overview
+[tools/e2e_cas_o1_suite.sh](tools/e2e_cas_o1_suite.sh) is a Bash runner combining
+Lean compilation, Python/SymPy diagnostics, static source checks, and elapsed
+time measurements. Its historical “CAS O(1) Optimization” name is a campaign
+label. The runner does not prove asymptotic constant-time kernel checking.
 
-The CAS O(1) Optimization Project replaces computationally intensive brute-force search tactics (`native_decide`, `simpa using`, unguided `simp` storms) across target Lean 4 modules with exact mathematical Computer Algebra System (CAS) certificates and kernel-level $O(1)$ definitional equality (`rfl`) or term unification (`exact`).
+Source reviewed on 2026-11-03 at commit
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`, including the runner, CAS script,
+targeted source surfaces, and lock wrappers. This is an implementation guide,
+not a fresh passing-run report. Start with [TEST_READY.md](TEST_READY.md) for
+readiness and [AGENTS.md](AGENTS.md) for repository operating rules.
 
-To verify that these optimizations maintain complete mathematical correctness, eliminate compiler bottlenecks, and avoid regressions, the test infrastructure is organized into a deterministic, multi-tiered End-to-End (E2E) Test Suite executed via:
+## Owners and evidence
+
+| Source | Role in this suite |
+|---|---|
+| [lean/DAG/DiracLaplacian.lean](lean/DAG/DiracLaplacian.lean) | Lean graph-Dirac declarations and the selected theorem statements scanned by tier 2. |
+| [lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean](lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean) | A bridge to projector theorems owned by `Fock` and the CAR witness owned by `RealMajorana`. The bridge uses Lean proof terms; comments referring to CAS scripts are not a runtime import of their output. |
+| [lean/DAG.lean](lean/DAG.lean) | Aggregate source whose active Dirac import and elaboration are checked. |
+| [scripts/cas_dirac_laplacian_certificate.py](scripts/cas_dirac_laplacian_certificate.py) | Exact rational SymPy matrix diagnostics on a chain, triangle, and digon. |
+| [tools/infra/run_locked_lake_build.py](tools/infra/run_locked_lake_build.py) | Shared-lock build wrapper used by tier 1. |
+| [tools/infra/run_locked_lean.py](tools/infra/run_locked_lean.py) | Existing shared-lock wrapper for individual Lean source elaboration; the suite's tier 3/4 direct calls do not currently use it. |
+
+The toolchain is pinned by [lean-toolchain](lean-toolchain), and package/build
+configuration is in [lakefile.lean](lakefile.lean). Follow those files and the
+[root build guide](README.md) rather than a version copied into this guide.
+
+## Tier 1: owner builds and source presence
+
+The runner executes these commands sequentially:
+
 ```bash
-tools/e2e_cas_o1_suite.sh
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock DAG.DiracLaplacian
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Quantum.NoncommutativeFockBridge
 ```
 
-All test execution complies with the repository commandments defined in `AGENTS.md`:
-- **Sequential Build Locking**: All Lake builds are routed through `tools/infra/run_locked_lake_build.py --wait-for-build-lock` to serialize access to the Lean compiler and prevent race conditions on `.lake/build`.
-- **Cache Preservation**: Destructive cache operations (`lake clean`, `rm -rf .lake/build`) are strictly prohibited.
-- **Bash-Only Tooling**: Tests and verification pipelines are strictly managed via bash runners, bypassing interactive prompt barriers.
-- **Strict Anti-Facade & Integrity Mandate**: Tests execute genuine compiler, CAS, and static analysis commands without dummy mocks or hardcoded falsifications.
+It logs a pass for each zero exit status. It also checks that the two source
+files exist and each has at least ten lines. The latter check does not parse
+namespaces or assess substantive mathematical coverage. The runner does not
+independently reject compiler warnings or inspect generated `.olean` files.
+The wrapper's workspace-integrity checks reject linked worktrees or symlinked
+Lake roots. It attempts cache hydration when needed, without requiring that
+subprocess to succeed. Unavailable dependencies can prevent the subsequent
+Lake command from succeeding; this wrapper does not perform the separate
+package-checkout validation described in the setup guide.
 
----
+## Tier 2: selected text checks and standard CAS execution
 
-## 2. 4-Tier Verification Hierarchy
+| Check | Implementation | Interpretation |
+|---|---|---|
+| 2.1 | `grep` for `native_decide` in the Dirac owner. | A literal source-pattern policy for that file. |
+| 2.2 | `grep` for `simpa using` in the Fock bridge. | A literal source-pattern policy, not a general classification of that tactic as brute-force search. |
+| 2.3 | Regex for `sorry` or `admit` in the two existing target files. | A local text check; it does not inspect imported axioms or establish repository-wide completeness. |
+| 2.4 | Runs the CAS script with no arguments and checks the exit code. | Standard fixed-input execution; no invalid-input or boundary-parameter matrix is supplied. |
+| 2.5 | Uses `awk` to extract ten named theorem statements, checks required tokens, and applies several negative regexes for known unwanted patterns. | A heuristic source audit. It does not use Lean's AST, compare propositions with git HEAD, or establish arbitrary semantic equivalence. |
 
-The test runner `tools/e2e_cas_o1_suite.sh` implements a 4-tier verification pipeline:
+The pattern checks can be affected by source layout and comments. Theorem
+types, hypotheses, proof dependencies, and targeted builds remain the evidence
+for what Lean actually establishes. Passing the token checks cannot rule out
+all weakened or unrelated propositions.
 
-### Tier 1: Feature Coverage (Locked Lake Builds)
-- **Objective**: Validate that both primary target modules compile successfully in the Lean 4.34.1 environment under the repository build lock.
-- **Target 1**: `DAG.DiracLaplacian` (`lean/DAG/DiracLaplacian.lean`)
-  - Command: `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock DAG.DiracLaplacian`
-  - Success Criterion: Exit code 0, clean compiler termination, valid olean artifact generation.
-- **Target 2**: `InfoGeometry.Quantum.NoncommutativeFockBridge` (`lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean`)
-  - Command: `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Quantum.NoncommutativeFockBridge`
-  - Success Criterion: Exit code 0, clean compiler termination.
-- **Structural Integrity**: Confirms both source files exist, contain non-trivial declaration content (> 10 lines), and define valid module namespace boundaries.
+## Tier 3: CAS examples and DAG integration
 
-### Tier 2: Boundary & Corner Cases (Brute-Force Elimination & Proof Completeness)
-- **Objective**: Ensure that the target files contain zero brute-force tactics and zero unproven gaps (`sorry` / `admit`).
-- **Test 2.1 (`native_decide` Elimination)**:
-  - Audits `lean/DAG/DiracLaplacian.lean` for any occurrence of `native_decide`.
-  - In the unoptimized state, 10 occurrences existed.
-  - Requirement: Strictly 0 occurrences.
-- **Test 2.2 (`simpa using` Elimination)**:
-  - Audits `lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean` for any occurrence of `simpa using`.
-  - In the unoptimized state, 5 occurrences existed.
-  - Requirement: Strictly 0 occurrences.
-- **Test 2.3 (Proof Completeness & Rigor)**:
-  - Audits both files for incomplete proof placeholders (`\b(sorry|admit)\b`).
-  - Requirement: Strictly 0 occurrences.
-- **Test 2.4 (Boundary Parameter & Error Resilience)**:
-  - Validates that the CAS certificate generator script executes cleanly and handles edge/boundary parameters without unhandled exceptions.
+The Python script builds an incidence matrix `B` for each of three fixed
+graphs: a three-vertex chain, a three-vertex triangle, and a two-edge digon.
+It constructs
 
-### Tier 3: CAS & Integration Verification
-- **Objective**: Verify mathematical agreement between external CAS certificates and Lean modules, and confirm top-level module integration.
-- **Test 3.1 (Python CAS Certificate Oracle)**:
-  - Executes `python3 scripts/cas_dirac_laplacian_certificate.py`.
-  - Verifies exit code 0.
-  - Confirms output certifies:
-    1. `canonicalChainComplex`
-    2. `canonicalTriangleComplex`
-    3. `canonicalDigonComplex`
-    4. Block-diagonal decomposition: $D^2 = \Delta_0 \oplus \Delta_1^{\text{down}}$
-    5. Trace conservation law: $\mathrm{Tr}(D^2) = \mathrm{Tr}(\Delta_0) + \mathrm{Tr}(\partial_1 \partial_1^T)$.
-- **Test 3.2 (Export Wiring in `lean/DAG.lean`)**:
-  - Validates that `lean/DAG.lean` contains an active, uncommented `import DAG.DiracLaplacian`.
-- **Test 3.3 (DAG Aggregate Module Build)**:
-  - Executes `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock DAG`.
-  - Ensures no cyclic imports, unresolved symbols, or module breakages in downstream consumers.
+\[
+D=\begin{pmatrix}0&B^{\mathsf T}\\B&0\end{pmatrix},\qquad
+D^2=\begin{pmatrix}B^{\mathsf T}B&0\\0&BB^{\mathsf T}\end{pmatrix}.
+\]
 
-### Tier 4: Compilation Performance & O(1) Verification
-- **Objective**: Empirically prove that the refactored proofs achieve $O(1)$ definitional equality checking without CPU hangs or exponential elaboration blowups.
-- **Test 4.1 (`DAG.DiracLaplacian` Kernel Benchmark)**:
-  - Compiles `lean/DAG/DiracLaplacian.lean` under an explicit 20-second timeout.
-  - Measures wall-clock execution time.
-  - Enforces a strict $O(1)$ threshold ($\le 15$ seconds, including full Mathlib environment load).
-- **Test 4.2 (`NoncommutativeFockBridge` Elaboration Benchmark)**:
-  - Compiles `lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean` under an explicit 20-second timeout.
-  - Enforces a strict $O(1)$ threshold ($\le 15$ seconds).
-- **Test 4.3 (Concurrency & Lock Hygiene)**:
-  - Verifies that `/tmp/info-geometry-build.lock` is properly released.
-  - Confirms no orphaned or zombie compiler processes are left running.
+The script asserts exact block agreement, zero off-diagonal blocks, and the
+trace identity for those examples. The Bash runner checks its exit code and
+output keywords. This is an external finite-example diagnostic; the Lean
+proofs must establish their own propositions.
 
----
+The runner then searches for an active `import DAG.DiracLaplacian` in
+`lean/DAG.lean` and directly executes:
 
-## 3. Authoritative Mathematical Oracles
-
-| Identity | Mathematical Formula | Oracle Source | Lean Verification |
-| :--- | :--- | :--- | :--- |
-| **Dirac Square Block Decomposition** | $D^2 = \begin{pmatrix} \Delta_0 & 0 \\ 0 & \Delta_1^{\text{down}} \end{pmatrix}$ | `scripts/cas_dirac_laplacian_certificate.py` (SymPy) | `DAG.DiracLaplacian.dirac_squared_block_diagonal_*` via `rfl` / CAS certificates |
-| **Dirac Square Trace Identity** | $\mathrm{Tr}(D^2) = \mathrm{Tr}(\Delta_0) + \mathrm{Tr}(\partial_1 \partial_1^T)$ | `scripts/cas_dirac_laplacian_certificate.py` (SymPy) | `DAG.DiracLaplacian.trace_D_sq_equals_trace_laplacians_chain` |
-| **Dirac Nilpotency Check** | $\mathrm{diracSquareCheck}(K) = \mathrm{true}$ | Exact graph Dirac formula | `DAG.dirac_square_check_*` via `rfl` |
-| **Fock Projector Idempotence** | $P_\pm^2 = P_\pm,\; P_+ P_- = 0$ | `tools/gap/clifford_braiding_center.g`, `tools/infra/galgebra_clifford_peirce.py` | `InfoGeometry.Quantum.NoncommutativeFockBridge` via `exact` |
-| **Majorana CAR Witness** | $\{\gamma(u), \gamma(v)\} = 2\langle u, v\rangle I$ | Clifford algebraic relations | `RealMajoranaDatum.car_realization_of_clifford` via `exact` |
-
----
-
-## 4. Execution Commands
-
-### Run Complete Suite (All Tiers)
 ```bash
-./tools/e2e_cas_o1_suite.sh
+lake env lean lean/DAG.lean
 ```
 
-### Run Individual Tiers
+That is the current implementation, not a locked Lake build of `DAG`. It does
+not acquire the repository build lock. A serialized manual source check is:
+
 ```bash
-# Tier 1: Feature Coverage only
-./tools/e2e_cas_o1_suite.sh --tier 1
-
-# Tier 2: Boundary & Corner Cases only
-./tools/e2e_cas_o1_suite.sh --tier 2
-
-# Tier 3: CAS & Integration Verification only
-./tools/e2e_cas_o1_suite.sh --tier 3
-
-# Tier 4: Compilation Performance & O(1) Verification only
-./tools/e2e_cas_o1_suite.sh --tier 4
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/DAG.lean
 ```
 
-### Verbose Mode
+This replacement command does not repair the suite itself or build missing
+imports; use the locked Lake wrapper when dependencies need building.
+
+## Tier 4: fixed-file elapsed-time gate
+
+The runner measures each of the same two target source files using
+`date +%s` around `timeout 35s lake env lean FILE`.
+
+| Condition | Current result |
+|---|---|
+| Exit code 124 | Failure: the 35-second timeout expired. |
+| Another nonzero exit code | Failure: the command did not complete successfully. |
+| Exit zero and measured elapsed time at most 15 seconds | Pass. |
+| Exit zero and measured elapsed time over 15 seconds | Failure, even if the 35-second timeout was not reached. |
+
+The measured command includes Lake/Lean startup and environment loading. It is
+not an isolated measurement of kernel reduction. A timeout establishes a missed
+deadline; the runner's “CPU hang detected” wording does not diagnose the cause.
+
+Neither timed invocation acquires the shared build lock. Check 4.3 only tests
+whether `/tmp/info-geometry-build.lock` exists and logs a pass in either case.
+It does not inspect a held lock, prove release, or search for orphaned compiler
+processes. Tiers 3/4 therefore need a runner change before they meet the
+repository's shared-workspace serialization rule. Do not wrap the whole suite
+in an outer lock: tier 1 takes that lock internally.
+
+These two fixed-case timings can detect some performance regressions under a
+specified environment. They cannot prove an O(1) bound as input or proof size
+grows. `rfl` and `exact` describe proof construction steps; their presence alone
+does not establish the cost of elaboration or kernel checking.
+
+## Invocation and result contract
+
+The accepted interface is:
+
 ```bash
-./tools/e2e_cas_o1_suite.sh --verbose
+bash tools/e2e_cas_o1_suite.sh --tier 1
+bash tools/e2e_cas_o1_suite.sh --tier 2
+bash tools/e2e_cas_o1_suite.sh --tier 3
+bash tools/e2e_cas_o1_suite.sh --tier 4
+bash tools/e2e_cas_o1_suite.sh --tier all --verbose
 ```
 
----
+Apply the locking limitation above to tier 3, tier 4, and `all`; these examples
+document the interface rather than asserting operational readiness of those
+paths. Python/SymPy and the prepared pinned Lean dependencies are prerequisites.
 
-## 5. Exit Code & Reporting Contract
-
-- **Exit Code 0**: All executed tests passed successfully across all selected tiers.
-- **Exit Code 1**: One or more assertions failed. Detailed error descriptions, file paths, line numbers, and command outputs are printed to stdout/stderr.
+A normal successful `all` run logs 15 successes. Individual failing branches
+can log multiple failures, so the total is an implementation counter. Exit zero
+means no failures were logged among the selected checks; exit one reports a
+failed check or rejected CLI selection. Save the command, commit, dirty-tree
+state, versions, log, exit code, and timing environment with every result.
+Warnings, semantic fidelity, axioms, and unselected owners require their own
+review.

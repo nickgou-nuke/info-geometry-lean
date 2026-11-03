@@ -1,82 +1,73 @@
-# Test Suite Readiness: CAS O(1) Optimization Project
+# CAS refactor test suite: readiness and limits
 
-## 1. Status & Location
-- **Status**: READY FOR AUDIT & EXECUTION (15/15 TESTS VERIFIED PASSING)
-- **Runner Path**: `/home/goutev/info-geometry-lean/tools/e2e_cas_o1_suite.sh`
-- **Permissions**: Executable (`chmod +x tools/e2e_cas_o1_suite.sh`)
-- **Documentation**: `/home/goutev/info-geometry-lean/TEST_INFRA.md`
-- **Milestone Scope**: Milestone 3 (E2E Verification & Test Suite)
+The runner is [tools/e2e_cas_o1_suite.sh](tools/e2e_cas_o1_suite.sh). It checks
+two Lean owners, a small graph-matrix certificate script, selected source
+patterns, DAG import wiring, and two elapsed-time thresholds. This page does
+not assert that the suite passes on the current checkout.
 
----
+Source reviewed on 2026-11-03 at commit
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`. No new suite execution was performed
+for this documentation review. The earlier “15/15 verified passing” statement
+is historical and was not tied here to a reproducible run at this commit.
 
-## 2. Verification Capabilities (The 4 Tiers, 15 Tests)
+## What is ready to inspect or run
 
-The E2E Test Suite comprehensively verifies the CAS O(1) optimization across 4 distinct tiers:
+| Tier | Implemented behavior | Material limit |
+|---|---|---|
+| 1 | Builds `DAG.DiracLaplacian` and `InfoGeometry.Quantum.NoncommutativeFockBridge` with the shared locked wrapper; checks source existence and a minimum line count. | Success is based on exit codes and file checks, not a separate warning-free or namespace audit. The wrapper checks workspace layout and attempts cache hydration; package-checkout validation is a separate step. |
+| 2 | Searches for `native_decide`, `simpa using`, `sorry`, and `admit` in the selected files; runs the CAS script on its fixed inputs; checks theorem-statement text and selected patterns. | This is text/regex analysis, not an AST or git-HEAD comparison. It does not prove semantic equivalence or exhaustively test invalid inputs. |
+| 3 | Runs the CAS script and checks its output keywords, checks the active DAG import, and invokes `lake env lean lean/DAG.lean`. | The direct Lean invocation does not acquire the shared build lock. |
+| 4 | Runs two direct `lake env lean` commands under `timeout 35s`, requiring measured elapsed time of at most 15 seconds; inspects whether the lock file exists. | The commands do not acquire the shared lock. Fixed-case timings do not prove asymptotic O(1) complexity. The lock-file test passes in both branches and does not establish lock ownership or process cleanup. |
 
-| Tier | Name | Target / Focus | Verification Method |
-| :--- | :--- | :--- | :--- |
-| **Tier 1** | Feature Coverage (3 tests) | `DAG.DiracLaplacian`, `InfoGeometry.Quantum.NoncommutativeFockBridge` | Locked Lake build (`tools/infra/run_locked_lake_build.py`) verifying clean compilation (exit code 0) |
-| **Tier 2** | Boundary & Corner Cases (5 tests) | Brute-force elimination (`native_decide`, `simpa using`), proof completeness (`sorry`/`admit`), parameter handling, and **Test 2.5: Proposition Fidelity & Anti-Facade Audit** | Static & AST token analysis auditing: 0 `native_decide`, 0 `simpa using`, 0 `sorry`/`admit`, mandatory combinatorial graph operands, and active ban on facade patterns |
-| **Tier 3** | CAS & Integration Verification (4 tests) | `scripts/cas_dirac_laplacian_certificate.py` & `lean/DAG.lean` | Python execution of CAS certificate generator verifying polynomial block decomposition ($D^2 = \Delta_0 \oplus \Delta_1^{\text{down}}$), trace conservation, active `import DAG.DiracLaplacian` in `lean/DAG.lean`, and full DAG module compilation |
-| **Tier 4** | Compilation Performance & O(1) Verification (3 tests) | Elaboration speed & timeout enforcement | Strict timeout limit ($\le 15\text{s}$) kernel evaluation testing, proving O(1) definitional checking without CPU hangs; build lock hygiene |
+See [TEST_INFRA.md](TEST_INFRA.md) for the exact checks and interpretation.
+The normal all-pass path logs 15 successes; the counter is not an independent
+coverage guarantee and can vary when multiple failures are logged.
 
----
+## Recommended initial checks
 
-## 3. How to Run the Tests
+Run from the repository root after following the [build setup](README.md) and
+[AGENTS.md](AGENTS.md):
 
-### Option A: Complete E2E Test Suite (All 4 Tiers, 15 Tests)
 ```bash
-cd /home/goutev/info-geometry-lean
-./tools/e2e_cas_o1_suite.sh --tier all
+bash tools/e2e_cas_o1_suite.sh --tier 1
+bash tools/e2e_cas_o1_suite.sh --tier 2
 ```
 
-### Option B: Selective Tier Execution
+For a separately serialized check of the DAG aggregate source:
+
 ```bash
-# Tier 1 only (Feature Coverage)
-./tools/e2e_cas_o1_suite.sh --tier 1
-
-# Tier 2 only (Boundary & Corner Cases, including Test 2.5 Anti-Facade Audit)
-./tools/e2e_cas_o1_suite.sh --tier 2
-
-# Tier 3 only (CAS & Integration Verification)
-./tools/e2e_cas_o1_suite.sh --tier 3
-
-# Tier 4 only (Compilation Performance & O(1) Verification)
-./tools/e2e_cas_o1_suite.sh --tier 4
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/DAG.lean
 ```
 
----
+The locked source check requires its imported artifacts to be prepared; use
+the locked Lake build wrapper for missing owner dependencies. Preserve the
+shared `.lake` cache.
 
-## 4. Pass / Fail Acceptance Criteria
+## Full-suite interface and outstanding runner work
 
-A test run is considered passing (`exit code 0`) if and only if:
-1. `DAG.DiracLaplacian` and `InfoGeometry.Quantum.NoncommutativeFockBridge` compile with 0 warnings/errors under `run_locked_lake_build.py`.
-2. Static audit verifies strictly **0** occurrences of `native_decide` in `lean/DAG/DiracLaplacian.lean`.
-3. Static audit verifies strictly **0** occurrences of `simpa using` in `lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean`.
-4. Static audit verifies strictly **0** occurrences of `sorry` or `admit` across target files.
-5. Anti-facade audit (Test 2.5) verifies 100% proposition fidelity against git HEAD and rejects all tautological dummy patterns.
-6. CAS certificate script (`scripts/cas_dirac_laplacian_certificate.py`) runs with exit code 0 and verifies matrix certificates for `chain`, `triangle`, and `digon` complexes.
-7. `lean/DAG.lean` contains active `import DAG.DiracLaplacian` and compiles under locked build with 0 errors.
-8. Kernel compilation time for both target files completes within $\le 15$ seconds without timing out.
+The existing CLI accepts `--tier 1`, `2`, `3`, `4`, or `all`, plus `--verbose`:
 
----
-
-## 5. Auditor Verification Checklist
-
-The independent victory auditor (`teamwork_preview_auditor` / `sentinel`) should execute:
 ```bash
-# 1. Run full E2E test suite (15/15 tests must pass)
-./tools/e2e_cas_o1_suite.sh --tier all
-
-# 2. Check exit code
-echo "Exit code: $?"
-
-# 3. Confirm zero native_decide
-grep -n "native_decide" lean/DAG/DiracLaplacian.lean || echo "VERIFIED: Zero native_decide"
-
-# 4. Confirm zero simpa using
-grep -n "simpa using" lean/InfoGeometry/Quantum/NoncommutativeFockBridge.lean || echo "VERIFIED: Zero simpa using"
-
-# 5. Confirm CAS script execution
-python3 scripts/cas_dirac_laplacian_certificate.py
+bash tools/e2e_cas_o1_suite.sh --tier all --verbose
 ```
+
+Before using tiers 3/4 or `all` as a shared-workspace gate, route their direct
+Lean calls through the repository locking mechanism. This documentation update
+does not repair those calls. Wrapping the entire suite in an outer lock is not
+a substitute: tier 1 acquires the same lock internally. Until the runner is
+repaired, report the limitation alongside any historical or separately
+scheduled full-suite run.
+
+The historical name “CAS O(1)” describes the refactor campaign. The implemented
+performance gate uses a **35-second termination timeout** and a separate
+**15-second maximum passing elapsed time**. Timing two fixed source files,
+or replacing a proof with `rfl`/`exact`, does not establish a complexity bound
+over a growing family of inputs.
+
+## Evidence to attach to a result
+
+Record the commit and working-tree changes, exact command and selected tier,
+toolchain and dependency state, exit code, output log, and any measured times.
+State whether locking was provided. An exit code of zero means the checks
+actually executed by that invocation logged no failure; it is not a global
+proof-completeness, semantic-equivalence, or all-backend certificate.

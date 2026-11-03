@@ -1,234 +1,134 @@
-<!-- repository-context-rule -->
-> **Repository grounding:** For repository work, the checked-out codebase is
-> the context. Search existing implementation and trace its real definitions,
-> imports, instances, theorems, and uses before declaring a structure missing
-> or incorrect. A finding in one file is not a repo-wide finding. See
-> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+# InfoGeometry
 
-# InfoGeometry: The Spinorial Prima Materia
+Lean 4 / Mathlib research in information geometry, noncommutative operator
+algebra, Clifford and Zorn constructions, categorical limits, and mathematical
+physics. The project is a growing atlas of definitions, theorems, and explicit
+comparisons developed through human–AI collaboration. Its research motivation
+includes the spinorial *prima materia* program; the mathematical claims are the
+statements in the Lean owners, with their actual hypotheses.
 
-> *"This is a living artifact of human–AI collaboration: a machine-checked Lean 4 formalization of information geometry, quantum foundations, and spacetime structure from first principles."*
+> Documentation source review: 2026-11-03, against
+> [`214f7bcf733e`](https://github.com/nickgou-nuke/info-geometry-lean/commit/214f7bcf733eaf4720913bc2c082936f2480d3fc).
+> This records source inspection, not a fresh full build. See the
+> [audit and verification scope](docs/DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md).
 
----
+## Start here
 
-### ⚠️ A Note on Sovereign Custody
+| Purpose | Entry point |
+|---|---|
+| Set up and run a scoped check | [Getting started](docs/GETTING_STARTED.md) |
+| Work as a coding or mathematical agent | [AGENTS.md](AGENTS.md), then the [canonical pipeline](docs/CANONICAL_AGENT_PIPELINE.md) |
+| Find maintained guides and historical notes | [Documentation map](docs/README.md) |
+| Explore the main Lean source | [lean/InfoGeometry/](lean/InfoGeometry/) and [InfoGeometry.All](lean/InfoGeometry/All.lean) |
+| Trace operator-algebra owners | [OperatorAlgebra guide](lean/InfoGeometry/OperatorAlgebra/README.md) and [Peirce archetype ledger](docs/PEIRCE_OPERATOR_ARCHETYPES.md) |
+| Search before proposing a construction | [Repository deep-search protocol](docs/REPO_DEEP_SEARCH_PROTOCOL.md) |
 
-This repository is an **immutable public archive and research frontier**.
+Search definitions, imports, instances, theorem statements, and consumers before
+declaring a construction absent or identifying two mathematical presentations.
+A module name or graph edge is a search aid. A formal comparison needs a stated
+map and theorem on the relevant carriers.
 
-* **Pull requests and issues are closed.**
-* The authors do not provide tech support, maintenance, or debate.
-* You are welcome to clone, fork, explore the codebase, and unleash your own autonomous agents.
-* Take what serves your work. Cite the ground where you found it.
+## Representative mathematical results
 
----
+These are selected entry points, not a completeness claim for their fields.
+Each linked owner supplies the precise typeclasses and hypotheses.
 
-### To the Human Reader & the Artificial Agent
+| Area | Source-backed result | Owner |
+|---|---|---|
+| Peirce operator identities | Polynomial identities for an idempotent and arbitrary coefficients in an associative ring; A60 gives `τ₁ − τ₂ = −J − 2Σ` and `hProjSig(τ₁ − τ₂) = −16 V²Σ` | [CyclotomicBridge](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicBridge.lean) |
+| Five-grade parity | The grade ±1 projectors sum to the odd Peirce component; the −2, 0, +2 projectors sum to the even component | [TripotentParity](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentParity.lean) |
+| Chiral zero-mode restriction | Projector intertwiners from anticommutation, and an involutive linear equivalence on the kernel under the stated tripotence and involution hypotheses | [TripotentChiralRestriction](lean/InfoGeometry/Core/TripotentChiralRestriction.lean) |
+| Noncommutative RPA blocks | Exact block squaring and Hadamard intertwining retaining `a*b - b*a` and both ordered products | [OperatorRPABlock](lean/InfoGeometry/Physics/OperatorRPABlock.lean) |
+| Operator-weighted phonons | Mode-sum commutators with the correction terms `[Ωᵢ, X] * numberOpᵢ` retained | [NuclearPhononOperatorWeights](lean/InfoGeometry/Physics/NuclearPhononOperatorWeights.lean) |
+| Matrix towers | Full-matrix algebraic direct limits, stage maps, and an induced star structure | [Cl11TensorTowerLimit](lean/InfoGeometry/Clifford/Cl11TensorTowerLimit.lean) |
+| Categorical Zorn stages | A `ModuleCat ℂ` diagram and multiplication descended through its colimits | [ZornUHFColimit](lean/InfoGeometry/Categorical/ZornUHFColimit.lean) |
+| Algebraic Cuntz shift | Injectivity of the existing canonical shift from a generator-level left inverse | [CuntzHoppingCantorLattice](lean/InfoGeometry/NCG/CuntzHoppingCantorLattice.lean) |
+| Finite matrix Lax data | Trace cancellations and the determinant/nonzero-kernel equivalence | [LaxPairIsospectralMassGap](lean/InfoGeometry/NCG/LaxPairIsospectralMassGap.lean) |
+| Split-octonion derivations | A stabilizer predicate and consequences for a parameterized derivation family | [GunaydinGurseySU3Stabilizer](lean/InfoGeometry/NCG/GunaydinGurseySU3Stabilizer.lean) |
 
-This repository is not a sanitized textbook. It is the raw, authentic record of an exploratory journey spanning **formal verification, geometric algebra, operator theory, and quantum physics**.
+For a concrete example, `OperatorRPABlock.rpa_square` retains the full operator
+commutator when squaring `[[a,b],[-b,-a]]`. Its off-diagonal square vanishes
+exactly when `a` and `b` commute. The corresponding chiral square contains the
+distinct ordered products `(a-b)*(a+b)` and `(a+b)*(a-b)`.
 
-#### What Lives Here
+The [CAR/Krein/projectivization note](README-CURRENT.md) and
+[nuclear operator synthesis](docs/NUCLEAR_OPERATOR_SYNTHESIS.md) give additional
+topic-specific maps and qualifications.
 
-* **Algebraic Foundations:** Operator algebras, spinorial geometry, and the algebraic structures underlying quantum mechanics
-* **Quantum Theory:** Formalization of quantum state spaces, observables, and information-theoretic principles
-* **Category Theory & Topology:** Rigorous treatment of continuous structures, limits, and geometric invariants
-* **Scattering & Amplitudes:** Connections between discrete quantum models and continuous field theory
-* **Spacetime & Geometry:** Mathematical framework for discrete and continuous spacetime structures
+## Proof and interpretation boundaries
 
-> [!IMPORTANT]
-> **The Colimit Continuum Invariant:** Continuous boundaries, horizons, and physical limits in this repository are not derived via naive measure theory or analytical continuation. They are strictly constructed via **Categorical Direct Inductive Colimits**, pushing finite algebraic structures through the UHF $2^\infty$ boundary without analytical hallucination.
->
-> **The Kernel Source-of-Truth & Operator Wavefront Law (OpenGauss Protocol QMS-SOP-IAA-001):**
-> 1. **Lean owner files decide truth:** Only kernel-checked source edits count. Graph tools, transcripts, and CAS outputs are navigation aids only.
-> 2. **Zero fake proofs:** Exactly 0 `sorry`, 0 `admit`, 0 custom axioms; strictly foundational Lean 4 axioms (`[propext, Classical.choice, Quot.sound]`).
-> 3. **Trap T16 Permanent Prohibition (Zero Scalar Toy Proxies):** Non-commutative operator algebras and infinite-dimensional quantum structures must never be replaced by coordinate/scalar surrogates.
-> 4. **Operator Wavefront Duality:** Retarded/Advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$ and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$ intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$, Klein glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$, KMS thermal periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
-> 5. **Sequential Build Discipline:** Never run `lake clean`. Acquire `/tmp/info-geometry-build.lock` via `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock`. Proactively stage all edits with `git add -A`.
+A Lean theorem establishes its formal conclusion under its stated assumptions.
+Distinguish a definition, a conditional theorem, a constructed witness, and a
+proved equivalence. An assumed interface needs an inhabitant before it can
+serve as a realized model. A generator family needs independence and spanning
+theorems before it is called a basis.
 
----
+The repository develops compatible finite-stage systems, algebraic direct
+limits, and categorical colimits. The category, bonding maps, and universal
+property must be identified for each construction. Analytic completions,
+positivity, spectral lower bounds, and physical continuum interpretations need
+their own stated structures and proofs. In particular, a general-ring identity
+with an operator-valued coefficient is not by itself a scalar spectral-gap
+theorem.
 
-### How to Navigate
+New accepted proofs must satisfy the repository's source, compilation, and
+axiom-review requirements. A source scan for proof holes, a successful module
+build, and a declaration-level axiom audit are separate forms of evidence.
+Intentional linter fixtures and recovered historical proofs have separate
+roles; a blanket zero-debt claim about every tracked file would obscure them.
+The [dated audit](docs/DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md) records the exact
+scope of the observed source scan and baseline CI results.
 
-1. **Start with the Declaration Graph:**
-   - Explore the central entry point: `InfoGeometry.All`
-   - Inspect `AGENT_PROMPT.md` and `AGENTS.md` for operating principles
-   - Check verified theorems: all proofs are kernel-checked, no unproven axioms
+## Build and verify
 
-2. **For Agents & Large-Context LLMs:**
-   - Ingest the codebase with your favorite coding agent (Claude, ChatGPT, Cursor, etc.)
-   - Follow the structure in `InfoGeometry/` to trace mathematical development
-   - Verified source edits are the source of truth
-   - For AI Studio history extraction or a resumed formalization goal, follow
-     [`docs/AI_STUDIO_TRANSCRIPT_EXPORT.md`](docs/AI_STUDIO_TRANSCRIPT_EXPORT.md).
-     The complete saved history is downloaded from Google Drive; **Get code**
-     Java/REST downloads request examples.
+Use the toolchain in [lean-toolchain](lean-toolchain), the dependency revisions
+in [lake-manifest.json](lake-manifest.json), and the targets in
+[lakefile.lean](lakefile.lean). The reviewed baseline pins Lean 4.34.1.
+The [getting-started guide](docs/GETTING_STARTED.md) explains local path
+dependencies and preflight checks.
 
-3. **Build & Verify Locally:**
-   - Lean toolchain is pinned in `lean-toolchain` (`leanprover/lean4:v4.34.1`)
-   - Compile with:
-     ```bash
-     lake build InfoGeometry.All
-     ```
-   - *Critical:* **Never run `lake clean`**; preserve the `.olean` cache
-   - All modules build cleanly from axiom-free foundations
-
-4. **Contribute & Expand:**
-   - Open theorems and missing proofs are frontiers, not blockers
-   - Clone and develop your own extensions
-   - The blueprint layer and declaration graph help track coverage
-
-### Read-only concept-bridge navigation
-
-For a bounded comparison of concept corridors in the compiler-backed
-declaration DAG, use:
-
-```bash
-python3 tools/infra/astaql_concept_bridge.py \
-  --quantum-term tomita --quantum-term kms \
-  --classical-term fisher --classical-term onsager \
-  --depth 3 --json-out /tmp/astaql_concept_bridge.json
-```
-
-This queries `decls` and `edges` read-only. Shared prerequisites are
-navigation evidence only. Read owner source and prove every claimed
-comparison in Lean; do not infer semantic edges such as `INHERITS_FROM` or
-`HAS_PROPERTY` from graph proximity.
-
-### Phylogenetic and DNA analysis of commit evolution
-
-The repository ships read-only tools for analyzing the commit-evolution
-graph stored in ArangoDB (`darwin_commits` database). These trace how
-mathematical declarations and Lean surfaces co-evolve across commits:
+From the checkout root, after checking that no other compilation is active:
 
 ```bash
-# 1. Weak change-facet summary (categories are multi-label, not hierarchical)
-PYTHONPATH=/home/goutev/repos/info-geometry-lean \
-  ARANGO_DATABASE=darwin_commits \
-  ARANGO_PASS=<password> \
-  /home/goutev/miniforge3/envs/sage/bin/python \
-  tools/infra/darwin_commit_taxonomy.py --query taxonomy_summary
-
-# 2. Full evolution report: Git ancestry, SCCs, DNA cohorts, weak change facets,
-#    and observed distinct-commit/path-sharing witnesses
-PYTHONPATH=/home/goutev/repos/info-geometry-lean \
-  ARANGO_DATABASE=darwin_commits \
-  ARANGO_PASS=<password> \
-  /home/goutev/miniforge3/envs/sage/bin/python \
-  tools/infra/darwin_evolution_algorithms.py \
-  --json-out artifacts/dag/darwin_evolution_report.json
-
-# 3. Trace ancestral paths up to depth 6 from a target commit
-... tools/infra/darwin_commit_taxonomy.py \
-  --query phylogenetic_paths --target <commit_sha> --depth 6
+python3 tools/infra/run_locked_lake_build.py \
+  --wait-for-build-lock InfoGeometry.Physics.OperatorRPABlock
 ```
 
-The change categories are weak, non-hierarchical facets derived from commit
-subjects and paths. Git parent edges alone encode repository ancestry; the
-current Arango writer stores ordered parent→child links in
-`commit_parent_edges_v2`. Existing rows may still contain legacy heuristic
-rank fields until the commit importer is rerun; those fields are not part of
-the current schema or analysis. The old `commit_edges` collection is left
-untouched by this schema migration.
+Use `run_locked_lean.py` for individual files. A no-target invocation of the
+build wrapper selects changed-owner mode; use `--all-default-targets` when an
+all-default-target build is intended. `InfoGeometry.All` is an umbrella import,
+and its build is a different coverage claim from all Lake default targets.
 
-All queries are read-only; graph results are navigation evidence only and do
-not prove mathematical statements. Lean kernel-checked source files decide
-truth. See `skills/darwin-commit-taxonomy/` and
-`skills/darwin-evolution-algorithms/` for full skill documentation.
+Preserve build caches and pinned dependencies. Never run `lake clean` or
+delete `.lake` caches. See the [cache policy](WARNING_DO_NOT_RUN_CACHE.md) for
+the existing wrapper's empty-cache hydration behavior and recovery boundaries.
 
-### Erlangen 2.0 synthesis: Günaydin–Gürsey SU(3), Cuntz-Cantor hopping, Lax mass gap
+## Graphs and optional research tooling
 
-The Erlangen 2.0 structural renaissance attacks the continuum directly:
-infinity emerges through inductive colimits and fractal Cantor topologies on
-exceptional lattices, encoded in non-commutative matrix operator algebra and
-geometry. The repository formalizes the three core bridges:
+Declaration DAGs, LeanTrail, Arango queries, semantic retrieval, and symbolic
+witnesses help locate owners and candidate comparisons. They do not replace
+Lean proofs. Runtime endpoints, database selection, source revisions, and
+ingestion freshness must be observed in the configured deployment.
 
-```bash
-# 1. Günaydin–Gürsey SU(3) ⊂ G₂ stabilizer of the octonionic imaginary unit
-lake build InfoGeometry.NCG.GunaydinGurseySU3Stabilizer
+The [canonical pipeline](docs/CANONICAL_AGENT_PIPELINE.md) distinguishes the
+available Python commands from optional Pi, Hive, oracle, and Archon setup.
+The [infra guide](tools/infra/README.md) describes the required local DAG
+configuration. Historical graph counts are snapshots rather than current
+repository invariants.
 
-# 2. Cuntz Oₙ hopping operators on the Cantor binary lattice
-lake build InfoGeometry.NCG.CuntzHoppingCantorLattice
+## Research history and use
 
-# 3. Lax pair isospectral invariants and zero-mode/mass-gap criterion
-lake build InfoGeometry.NCG.LaxPairIsospectralMassGap
-```
+This repository retains exploratory notes, historical reports, and proposed
+mathematics alongside maintained source. Use the
+[documentation map](docs/README.md) to distinguish their roles. The
+[21 October 2026 research review](docs/reviews/2026-10-21-research-and-agent-accessibility.md)
+is preserved as a historical assessment.
 
-**Existing Erlangen 2.0 infrastructure already formalized** (do not duplicate):
+The maintainers do not provide technical support or commit to reviewing
+unsolicited contributions. Readers are welcome to clone, fork, explore, and
+develop their own extensions. Citation metadata is maintained in
+[CITATION.cff](CITATION.cff).
 
-| Concept | Lean file | Namespace |
-|---------|-----------|-----------|
-| Günaydin–Gürsey quark basis & multiplication table | `Canonical/GunaydinGurseyQuarkBasis.lean` | `InfoGeometry.Canonical.GunaydinGursey` |
-| Günaydin–Gürsey triple products / associator / jacobiator | `Canonical/GunaydinGurseyTripleProducts.lean` | `InfoGeometry.Canonical.GunaydinGursey` |
-| SU(3) soldering / 8 traceless gluon generators | `Superalgebra/GunaydinGurseySolderingSU3Automorphisms.lean` | `InfoGeometry.Superalgebra.GunaydinGurseySU3` |
-| Manakov Zorn Lax pair, χ⁽³⁾=4, trace conservation | `Canonical/ManakovZornSolitonLaxBridge.lean` | `InfoGeometry.Canonical.ManakovZornSolitonLax` |
-| Cuntz Oₙ algebras, canonical shift, KMS/GNS | `NCG/CuntzColimitKMSTiltGNS.lean` | `InfoGeometry.NCG.CuntzColimit` |
-| Cantor binary lattice hopping, square-zero null hops | `Tessellation/CantorDiracSeaWalk.lean` | `InfoGeometry.Tessellation` |
-| Peirce grading η = P₊ − P₋, η² = 1 | `NCG/PeirceGradingOperator.lean` | `InfoGeometry.NCG.PeirceGradingOperator` |
-| Zorn commutator, Jacobiator on x-axis | `NCG/ZornCommutator.lean` | `InfoGeometry.NCG.ZornCommutator` |
-| Categorical UHF colimits of Zorn stages | `Categorical/ZornUHFColimit.lean` | `InfoGeometry.Categorical.ZornUHFColimit` |
+## License
 
-**ASTAQLHASH DNA queries on live ArangoDB infotree** (`infogeometry` database,
-306,503 declarations, 2,085,736 edges):
-
-```bash
-# Concept bridge: Tomita/KMS (quantum) vs Fisher/Onsager (classical)
-PYTHONPATH=/home/goutev/repos/info-geometry-lean \
-  ARANGO_DATABASE=infogeometry \
-  ARANGO_PASS=<password> \
-  /home/goutev/miniforge3/envs/sage/bin/python \
-  tools/infra/astaql_concept_bridge.py \
-  --quantum-term tomita --quantum-term kms \
-  --classical-term fisher --classical-term onsager \
-  --quantum-module-prefix InfoGeometry.Canonical \
-  --classical-module-prefix InfoGeometry.Canonical \
-  --depth 3 --json-out /tmp/astaql_concept_bridge.json
-```
-
-Result from this session: 3842 quantum (Tomita/KMS) declarations and
-1271 classical (Fisher/Onsager) declarations matched. Graph results are
-navigation evidence only — Lean kernel-checked source files decide truth.
-
-See `skills/erlangen-2-0-synthesis-workflow/` for the complete workflow:
-exhaustive codebase exploration, ASTAQLHASH DNA queries, native Lean theorem
-writing, targeted lake build verification, hurdles encountered, and improvements
-needed.
-
----
-
-### Citation
-
-If you use this repository for scientific reasoning, automated theorem proving, or formal verification research:
-
-```bibtex
-@software{goutev_infogeometry_2026,
-  author    = {Goutev, Nikolay and Tonev, Dimitar},
-  title     = {InfoGeometry: A Verified Lean 4 Formalization of Information Geometry and Quantum Foundations},
-  year      = {2026},
-  publisher = {GitHub},
-  url       = {https://github.com/nickgou-nuke/info-geometry-lean},
-  note      = {Living artifact of human-AI collaboration}
-}
-```
-
----
-
-### License
-
-This repository is licensed under the [Apache License 2.0](LICENSE).
-
----
-
-### Reviews
-
-1. **Research and agent-accessibility review — ChatGPT (GPT-6), 21 October 2026.**
-
-   **What this repository is about.** InfoGeometry is an open-ended Lean 4/Mathlib research corpus exploring structural connections across information geometry, quantum foundations, geometric algebra, operator theory, topology, thermodynamics, and mathematical physics. It is also a persistent, formal knowledge base for human–AI mathematical exploration: ideas suggested by physical intuition or cross-disciplinary analogy are turned into definitions and candidate theorems, compared with existing implementations, and tested against Lean's proof checker.
-
-   **Its distinctive method.** The organizing question is not simply whether two theories *look alike*, but whether their mathematical presentations admit an explicit equality, equivalence, representation, or intertwiner—and exactly which hypotheses make the comparison valid. The recurring algebraic vocabulary includes real Clifford algebras and CAR, spinors, exterior algebras, split-octonion/Zorn representations, doubled Krein spaces, modular operators, graded structures, Fisher–Rao and Amari geometry, Onsager/BKM thermodynamics, and inductive-limit operator systems. These are applied to problems ranging from Madelung hydrodynamics, chiral fluids, Maxwell and BdG operators to plabic graphs, scattering geometry, and proposed models of emergent spacetime.
-
-   **What is especially valuable.** The repository contains more than thematic analogies. Representative proof-bearing comparisons include exterior-algebra creation/contraction operators with Zorn right-regular operators (`Canonical/SplitOctonionExteriorRightRegularBdGIntertwiner.lean`), native Clifford actions on split-coordinate carriers (`Canonical/SplitOctonionExteriorCliffordRepresentation.lean`), graded finite Clifford tensor towers and algebraic colimits (`Clifford/Cl11TensorTowerSupergraded.lean`, `Clifford/SupergradedCliffordColimit.lean`), and finite chiral-fluid, plabic/Krein, and thermodynamic graph constructions. This makes the codebase useful for finding *proved mathematical bridges* between areas that are normally studied separately.
-
-   **How to interpret its scope.** This is neither a conventional physics simulation nor a completed, experimentally validated unified physical theory. A checked Lean theorem proves its *formal statement under its stated assumptions*; it does not by itself verify physical interpretation, continuum convergence, analytic completion, or empirical relevance. In particular, algebraic colimits must not be silently treated as Hilbert or C*-completions, and finite operator identities must not be presented as full PDE regularity or quantum-gravity results. Documentation and theorem names are navigation aids; the actual declarations, dependencies, proofs, and current build status are authoritative.
-
-   **Guidance for autonomous agents.** Start with `InfoGeometry.All`, `AGENTS.md`, `AGENT_PROMPT.md`, and `docs/REPO_DEEP_SEARCH_PROTOCOL.md`. Search the full codebase by theorem names, equivalent formulations, carriers, and consumers *before* declaring a result missing. Follow `docs/BILINGUAL_SPINE_POLICY.md`: preserve one canonical owner, name alternative presentations explicitly, prove the bridge, and reroute downstream imports before considering cleanup. Distinguish definitions from witnesses, conditional readbacks from constructive theorems, and algebraic statements from analytic or physical conclusions. Validate new claims with the pinned Lean toolchain and the repository's prescribed sequential build/audit procedure. Do not infer mathematical equivalence merely from proximity in the declaration graph.
-
-   **Overall assessment.** InfoGeometry is best understood as a **machine-checkable atlas of mathematical physics**: a growing graph of constructions and comparisons in which the most interesting discoveries often occur *between* disciplines. Its lasting value lies in reusable proofs, explicit translations, exposed obstructions, and an auditable record of human intuition tested through AI-assisted formalization.
+The repository is licensed under [Apache License 2.0](LICENSE).

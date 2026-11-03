@@ -1,209 +1,113 @@
-# Hive Agent Commandments
+# Hive agent checklist
 
-> Status: `current authority`
-> Scope: operational law for agents working in `info-geometry-lean`.
-> Rule: if a transcript, archived note, or generated report conflicts with this
-> file, this file wins.
+This checklist applies the [root agent policy](../AGENTS.md). Use the
+[canonical pipeline](CANONICAL_AGENT_PIPELINE.md) for current commands and
+integration status, and the [runbook](../RUNBOOK.md) for validation coverage.
+It does not grant permission to contact services, publish changes, or schedule
+work outside the active task.
 
-## The Ten Commandments
+## Working rules
 
-1. **Work in the one true repository.**
-   Always start from `/home/goutev/repos/info-geometry-lean`. Do not use stale
-   paths such as `/home/goutev/auto`, generated handover paths, or external
-   submodules as the working tree for repo-owned edits.
+1. **Identify the checkout.** Work from its root, inspect the commit/remote and
+   current changes, and preserve unrelated work. A workstation path is an
+   example rather than a repository invariant.
+2. **Read source before making a claim.** Follow the
+   [deep-search protocol](REPO_DEEP_SEARCH_PROTOCOL.md), inspect actual owners,
+   imports, hypotheses, instances, and consumers, and qualify the search scope.
+   Graphs and reports guide discovery; they do not establish a theorem.
+3. **Write an exact theorem contract.** State the carrier, operations, reused
+   results, assumptions, intended implication, and remaining debt. A field
+   assuming a conclusion is not a construction of that conclusion. Compilation
+   validates the declared proposition, not its prose interpretation.
+4. **Preserve mathematical acceptance.** Do not introduce proof holes, custom
+   axioms, `native_decide`, unsafe proof bypasses, vacuous wrappers, or scalar
+   surrogates for requested noncommutative content. Check actual axiom
+   dependencies; the permitted foundational axioms are `propext`,
+   `Classical.choice`, and `Quot.sound`. State any finite-model or conditional
+   restriction explicitly.
+5. **Reuse the correct owner.** Consult the
+   [categorical map](CATEGORICAL_INFRASTRUCTURE_MAP.md) for categorical work.
+   Distinguish finite-stage algebra, categorical colimits, completions, and
+   analytic consequences. A name or analogy does not supply a missing map.
+6. **Serialize validation and preserve caches.** Inspect active compiler
+   processes. Use the shared-lock wrappers and keep builds/tests sequential.
+   Never clean/delete Lake caches, alter pins incidentally, or build through a
+   linked worktree/symlinked Lake root. See the
+   [cache policy](../WARNING_DO_NOT_RUN_CACHE.md).
+7. **Checkpoint only task-owned work.** Review the diff and stage the intended
+   paths. Do not stage unrelated files or commit generated debris by default.
+   Delegate repairs to new candidate files; review before integrating them.
+8. **Treat runtime capabilities as optional.** Resolve Arango endpoints and
+   credentials from configuration; observe availability and provenance. Keep
+   the DAG, Hive queue, and aiClaw memory lanes distinct. The
+   [Pi integration is currently blocked](CANONICAL_AGENT_PIPELINE.md#pi-integration-status)
+   by tracked-path/import problems; the Archon wrapper has additional local
+   prerequisites. Do not present either as a successful runtime from source
+   inspection alone.
+9. **Keep candidate and source roles separate.** Guard browser sends through
+   the selected adapter's shared lane; do not stack prompts or overwrite an
+   owner from an oracle response. SymPy witnesses, GEPA output, and graph
+   candidates require review. Confirm worker state and stage outcomes before
+   reporting progress.
+10. **Report exactly what was checked.** Name the revision, affected owners,
+    commands, exit results, proof/axiom/semantic scope, and unresolved issues.
+    A changed-owner build is not a full default-target build, and neither
+    certifies every historical file or a physical interpretation.
 
-2. **Read the routing law before touching code.**
-   Read `AGENTS.md`, `docs/CANONICAL_AGENT_PIPELINE.md`, and this file first.
-   For categorical, colimit, tower, Fibonacci, Grothendieck, or tensor work,
-   also read `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md`.
+## Lean checks
 
-3. **Lean owner files decide truth.**
-   GraphRAG, Arango, LeanTrail, Hodge/WL/de Bruijn scans, SymPy, GEPA, Pi,
-   Archon, and ChatGPT are navigation or suggestion layers only. A claim counts
-   only after the owner Lean source compiles through `lake env lean <file>` or a
-   targeted Lake build.
-
-   Before answering repository-content questions, follow
-   `docs/REPO_DEEP_SEARCH_PROTOCOL.md`. Search executable code surfaces, Lake
-   scripts, Python/TypeScript entrypoints, graph ingesters, and Lean owners.
-   Treat docs, docstrings, transcripts, and generated reports as hints until
-   code or build output confirms them.
-
-4. **Do not fake closure (Zero-Cheat Law & Trap T16 Prohibition).**
-   Never hide proof debt behind `axiom`, `admit`, `unsafe`, `: True`, vacuous
-   theorem wrappers, renamed placeholders, or prose saying "verified" when the
-   owner theorem is not proved. If debt remains, name it as closure debt.
-   Strictly use standard Lean 4 foundational axioms `[propext, Classical.choice, Quot.sound]`.
-   
-   **Trap T16 (Scalar Toy Proxies / Semantic Surrogates) is permanently forbidden:**
-   Never replace non-commutative operator algebras ($\mathcal{M}$), infinite-dimensional
-   spectral triples, or spacetime soldering forms with scalar/matrix toy proxies.
-   Retarded/advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$
-   and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$
-   intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$,
-   Klein bottle glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$,
-   KMS thermal boundary periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
-   High-risk capstone narratives such as the Souriau-Bost-Connes transition
-   lane must obey `docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md`.
-
-   The pre-commit proof-proxy gate is repository-owned at
-   `.githooks/pre-commit` and runs `tools/quality/proof_proxy_staged_gate.py`.
-   For every staged Lean source blob (added, copied, modified, renamed, or
-   type-changed), the gate requires this exact byte-zero header:
-
-   ```lean
-   /-
-   Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-   Released under Apache 2.0 license as described in the file LICENSE.
-   Authors: InfoGeometry Engine Contributors
-   -/
-   ```
-
-   The gate reads staged index blobs using NUL-delimited Git paths, so the
-   check applies to the staged content rather than an unstaged worktree copy.
-   After cloning, install tracked hooks with:
-
-   ```bash
-   scripts/install_git_hooks.sh
-   ```
-
-5. **Use the owner layer, not a duplicate bridge.**
-   Do not rebuild categorical infrastructure. The categorical owners include
-   `Algebra/Grothendieck.lean`, `Canonical/TensorTowerColimit.lean`, and
-   `Categorical/FibonacciBraiding.lean`. Matrix-level files are readouts or
-   instances, not replacements.
-
-6. **Run the canonical pipeline, not improvised tools.**
-   Use the maintained entry points:
-
-   ```bash
-   ./run.sh "Use local Lean checks first. If blocked, call ask_chatgpt_compiler with the owner file and exact build error."
-   ./scripts/run_agent_orchestrator_archon.sh
-   tools/infra/gepa_categorical_projection.py --evolve --generations 10
-   ```
-
-   GEPA may observe Archon runs, score empirical variability, and propose new
-   SOPs. Those proposals belong in quarantine/review until a human or explicit
-   promotion gate accepts them. GEPA must not silently rewrite stable Archon
-   workflows or commandments.
-
-   The agent-message observer watches generated prompt/response traffic, not
-   SOP files. Instrumented model/oracle/collaborator lanes write redacted,
-   hash-bearing events to `artifacts/agent_messages/`. Run:
-
-   ```bash
-   python3 tools/infra/gepa_agent_message_observer.py --json
-   ```
-
-   The output is review evidence in `quarantine/agent_message_reviews/`, not an
-   automatic promotion into Archon workflows, skills, commandments, or Lean
-   source.
-
-   For Lean checks:
-
-   ```bash
-   lake env lean lean/InfoGeometry/Path/To/File.lean
-   python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
-   ```
-
-   Browser oracle lanes are single-flight state machines, not free-form chat
-   tabs. Before using aiClaw, run:
-
-   ```bash
-   python3 tools/infra/aiclaw_chat.py queue-status --platform chatgpt
-   ```
-
-   Follow `queue_state` and `agent_action`. `ready` permits exactly one send.
-   `active` means wait. `needs_readback` means recover the final visible answer
-   with read-only browser inspection, record it, then run `queue-release`; it is
-   not a hard provider block. `stale_active` with dead process markers can be
-   archived with `queue-prune-active`. Do not stack prompts behind a held lane.
-   Google AI Mode uses the browser-harness lane `scripts/google-ai-search.sh`;
-   do not mix it with aiClaw Gemini or ChatGPT queues.
-
-7. **Keep runtime state isolated.**
-   Pi and Archon state live under repo-local `.runtime/`:
-
-   ```text
-   .runtime/pi-home/.pi
-   .runtime/archon-home
-   ```
-
-   Do not depend on `/home/goutev/.pi` or `/home/goutev/.archon`. The Archon
-   definite-sequence wrapper defaults to Pi with
-   `deepseek/deepseek-v4-flash` and skips title generation so it does not fall
-   back to `openai-codex`.
-
-8. **Do not leak or guess credentials.**
-   Presence checks are allowed; printing key values is not. The local DeepSeek
-   key source is `.DEEPSEEK_API_KEY`, and the runtime wrapper loads it without
-   exposing it. If Pi reports a provider-auth issue, inspect provider routing
-   and env-var mapping before changing models.
-
-9. **Preserve SymPy and Lean evidence side by side.**
-   Researcher and Algebraist context may run before the Formalist, but SymPy
-   witnesses are persistent artifacts, not temp scratch. Store them as
-   `proofs/<task-id>.sp` next to `proofs/<task-id>.lean`. Do not use fixed temp
-   names such as `.temp_witness.py`.
-
-10. **Archive artifacts, commit sources.**
-    Do not commit generated run debris from `artifacts/`, `reports/`,
-    `.runtime/`, or scratch folders unless explicitly requested. Track source
-    files, maintained docs, tests, scripts, and theorem-owner files. Do not edit
-    dirty external submodules unless explicitly asked.
-
-## Canonical Definite Sequence
-
-The theorem-queue workflow is:
-
-```text
-Researcher + Algebraist(SymPy) in parallel
-then Formalist(Lean)
-then Critic(vacuity and theorem-honesty audit)
-then Archivist(report artifact)
-```
-
-The queue contract is:
-
-```text
-task_queue.json
-proofs/<task-id>.lean
-proofs/<task-id>.sp
-artifacts/agent_orchestrator/*.json
-```
-
-The maintained command is:
+Run from the repository root, substituting an actual owner:
 
 ```bash
-./scripts/run_agent_orchestrator_archon.sh
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/To/File.lean
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
 
-Successful provider resolution must look like:
+The [Lake wrapper](../tools/infra/run_locked_lake_build.py) selects changed
+`InfoGeometry` owners when no target is supplied. Use an explicit module or
+library for the task; request `--all-default-targets` only when that broader
+coverage is needed. The current [lakefile](../lakefile.lean), rather than a
+historical job count, defines the default targets.
 
-```text
-provider: pi
-model: deepseek/deepseek-v4-flash
-ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home
+## Staged proof header and hooks
+
+The [pre-commit hook](../.githooks/pre-commit) runs
+[proof_proxy_staged_gate.py](../tools/quality/proof_proxy_staged_gate.py).
+Its current header rule checks staged Lean source blobs and requires this
+header at byte zero:
+
+```lean
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 ```
 
-If a run reports `openai-codex` auth during this pipeline, that is a routing
-bug, not a proof failure. Check `scripts/run_agent_orchestrator_archon.sh`,
-`.archon/workflows/agent-orchestrator-definite-sequence.yaml`, and the local
-Archon Pi provider mapping before retrying.
+Install tracked hooks in a development checkout with:
 
-## Minimal Session Checklist
-
-```text
-1. cd /home/goutev/repos/info-geometry-lean
-2. Read AGENTS.md, docs/CANONICAL_AGENT_PIPELINE.md, docs/HIVE_AGENT_COMMANDMENTS.md.
-   For repository-content questions, also read docs/REPO_DEEP_SEARCH_PROTOCOL.md.
-3. Identify the owner Lean module or maintained script.
-4. Inspect current git status and do not revert unrelated changes.
-5. Make the smallest source edit with apply_patch.
-6. Run the narrow validation command.
-7. Scan touched files for fake closure markers.
-8. If using ChatGPT, use the aiClaw single-flight lane only and obey
-   `queue_state`.
-9. Put SymPy witnesses beside Lean witnesses.
-10. Report exact changed files and validation evidence.
+```bash
+scripts/install_git_hooks.sh
 ```
+
+The installer sets `core.hooksPath` to `.githooks`. The
+[pre-push hook](../.githooks/pre-push) separately checks the commit/worktree
+relationship and invokes the [post-build gate](../scripts/quality/post_build_gate.sh).
+A hook's presence in the tree does not show that it is installed or that a
+particular change passed. Do not bypass a failing gate; report and resolve the
+concrete failure within the task's scope.
+
+## Queue and evidence ownership
+
+The [Python theorem queue](../tools/infra/agent_orchestrator_queue.py) uses
+`task_queue.json`, paired `proofs/<task-id>.lean` / `proofs/<task-id>.sp`
+files, and reports under `artifacts/agent_orchestrator/`. Preserve the paired
+witnesses and source hashes, and inspect the actual Formalist/Critic outcomes.
+The [canonical pipeline](CANONICAL_AGENT_PIPELINE.md#python-theorem-queue-and-optional-archon-wrapper)
+documents the separate Python, Archon, Hive, and native-session routes.
+Select one scheduler for a task; keep all Lean compilation serialized.
+
+Do not infer a running memory service, successful authentication, complete
+ingestion, or current graph from a configuration default. Do not print secret
+values. A service failure and a mathematical proof failure are distinct facts
+and must be reported separately.

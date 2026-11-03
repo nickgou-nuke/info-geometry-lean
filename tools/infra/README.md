@@ -3,13 +3,16 @@
 > the context. Search existing implementation and trace its real definitions,
 > imports, instances, theorems, and uses before declaring a structure missing
 > or incorrect. A finding in one file is not a repo-wide finding. See
-> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](../../docs/REPO_DEEP_SEARCH_PROTOCOL.md).
 
 # Infra Tools
 
-> Status: `maintained local guide`
-> Audited: 2026-05-02
-> Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
+> Status: `local tooling guide`
+> Configuration and compiler-entrypoint source review: 2026-11-03 at commit
+> `214f7bcf733eaf4720913bc2c082936f2480d3fc`.
+> The wider catalog is a navigation aid retained from the earlier guide; this
+> review did not execute all tools or services. Source and repo-wide authority
+> docs determine current behavior.
 > See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
 
 This directory contains the maintained DAG, reporting, and build orchestration entrypoints.
@@ -29,9 +32,9 @@ Its purpose is to:
 
 It is not here to replace source reading or to legislate mathematical truth from Python alone.
 
-## Current Anchor Corridor
+## Example Anchor Corridor
 
-The current benchmark corridor for the infra layer is:
+The benchmark corridor documented by this guide is:
 - `PositiveMeasure -> Projective.Normalize -> PositiveRayCore -> RelativePotentialCore -> RelativePotentialCountBridge -> RelativeSurprisalOperatorLift`
 
 The infra reports should make four facts recoverable about that corridor:
@@ -42,8 +45,27 @@ The infra reports should make four facts recoverable about that corridor:
 
 ## Managed Operator Surface
 
-Checked-in DAG policy now lives in [dag-toolchain.json](../../dag-toolchain.json).
-The preferred operator entrypoints are:
+The managed DAG lane requires a JSON configuration. At the reviewed commit,
+**no `dag-toolchain.json`, `dag-toolchain.local.json`, or tracked template with
+that name is present**. Provision a valid local configuration before treating
+this lane as runnable from a fresh checkout; this guide does not claim that
+setup is complete.
+
+[dag_config.py](dag_config.py) resolves the file in this order:
+
+1. An explicit `--config` argument to a managed command.
+2. `DAG_TOOLCHAIN_CONFIG` when no explicit argument was supplied.
+3. Repository-root `dag-toolchain.local.json`, if present.
+4. Repository-root `dag-toolchain.json`.
+
+The schema is defined by `load_dag_toolchain_config` in that source. It includes
+`schemaVersion`, `build`, `authoritativeArtifacts`, `derivedReports`, and
+`policies`; build targets, import roots, coverage/leakage policy, and report
+sequence must be chosen explicitly. A file's existence alone does not validate
+those choices or establish fresh artifacts.
+
+Once configuration and the pinned Lean environment are available, the managed
+entrypoints registered in [lakefile.lean](../../lakefile.lean) are:
 - `lake script run dagStatus`
 - `lake script run dagRefresh`
 - `lake script run dagReports`
@@ -52,8 +74,18 @@ The preferred operator entrypoints are:
 - `lake script run changedVerify`
 - `lake script run bilingualSpineReport`
 
-These are thin wrappers over the current Python corridor. `dagReports` also sets a repo-local Matplotlib cache under `.artifacts/matplotlib` so managed report runs do not depend on a writable home-directory config path. The underlying script lane remains maintained, but the pinned config and authoritative status surface now live above it.
-The current managed report sequence keeps the repository-surface index (Lean/Markdown/Python/config tracking), theorem-surface index, bilingual RedLine spine report, source-sink compression, causal coverage report, theorem-significance report, sorry-equivalence report, NetworkX graph exports, and replacement-frontier outputs in sync with the authoritative DAG artifacts.
+These are thin wrappers over Python entrypoints. `dagReports` also sets a
+repo-local Matplotlib cache under `.artifacts/matplotlib`. The five managed
+`dag*` commands listed above accept a configuration override, for example
+`lake script run dagStatus --config /path/to/prepared-dag-config.json`.
+`changedVerify` and `bilingualSpineReport` are separate entrypoints; consult
+their own options rather than assuming they share the DAG configuration API.
+
+The report sequence is configuration-driven. The catalog below includes
+repository-surface, theorem-surface, bilingual spine, source-sink, causal,
+significance, sorry-equivalence, graph-export, and replacement-frontier tools.
+Their presence does not mean every local configuration runs all of them or that
+stored outputs are synchronized with the current source.
 `bilingualSpineReport` can also emit per-module docstring stubs with reference seeds via `--stub-out-dir reports/dag/bilingual-docstring-stubs`.
 The managed lane also records timing sidecars for the last authoritative refresh (`artifacts/dag/index/indexer-timing.json`) and the last managed report run (`artifacts/dag/report-timing.json`), which `dagStatus` and `dagDoctor` surface as operator-facing performance summaries.
 
@@ -66,12 +98,28 @@ For the compressed operator surface, see
 For the end-to-end local topology (authority layer, managed DAG lane, Expr/Arango lane, LeanTrail parity lane, and hypothesis/training lane), see
 [docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md](../../docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md).
 
-The first authoritative Lake facet experiment is also available:
-- `lake build :dagMeta`
-- `lake build :dagArtifactsManifest`
+The experimental Lake facets `:dagMeta` and `:dagArtifactsManifest` are also
+defined in [lakefile.lean](../../lakefile.lean). Both explicitly track and pass
+repository-root `dag-toolchain.json`; the Python resolver's environment/local
+fallback does not remove that facet prerequisite. Inspect the facet and use the
+source boundaries below before selecting this heavier lane.
 
-It currently delegates to the same managed refresh lane underneath and exists to validate stronger dependency semantics on `artifacts/dag/index/meta.json` without changing the user-facing operator path.
-The manifest-style facet writes `artifacts/dag/index/manifest.json`, which is a single small stamp for the whole authoritative refresh set (`meta.json`, `full_graph.json`, `structural-topology.json`) plus coverage/leakage sidecar state.
+The facet route also needs lock-handoff support before it is a ready locked
+entrypoint. When either facet reaches its refresh action through
+`run_locked_lake_build.py`, the outer build holds the shared lock while
+[refresh_decl_graph.py](refresh_decl_graph.py) acquires it again in a child
+process. `--skip-prebuild` skips a build step, not that lock acquisition;
+[BuildLock](../build_lock.py) has no cross-process reentry in this route.
+Source inspection therefore predicts a self-wait if the refresh action runs.
+This was not reproduced by execution, and an up-to-date facet that skips its
+refresh action does not exercise that path. Treat lock handoff as separate
+implementation work rather than recommending the wrapper as a sufficient fix.
+
+The metadata facet targets `artifacts/dag/index/meta.json`. The manifest facet
+writes `artifacts/dag/index/manifest.json` as a stamp for `meta.json`,
+`full_graph.json`, `structural-topology.json`, and coverage/leakage sidecar state.
+These declarations describe intended outputs, not a successful refresh at the
+reviewed commit.
 
 ## Canonical Entrypoints
 
@@ -143,8 +191,9 @@ Gemini passthrough arg guard:
   Gemini/OpenAI-compatible backends.
 - This guard protects repo-side Gemini invocations only. If Codex itself emits
   `Error running remote compact task` for `prompt_cache_retention`, that
-  failure is in Codex's remote compaction path; see
-  [docs/CodexTroubleshooting.md](../../docs/CodexTroubleshooting.md).
+  failure is outside this repo-side guard. Preserve the error and environment
+  details for diagnosis; the former `docs/CodexTroubleshooting.md` pointer is
+  not a tracked document at the reviewed commit.
 
 Stable spine supplements:
 - `check_representation_depth.py`
@@ -468,9 +517,12 @@ python3 tools/infra/hypothesis_fuser_and_lean_gate.py \
   --out reports/training/hypothesis/fused-gated.json
 ```
 
-## Authoritative Inputs
+## Generated DAG inputs
 
-Public authoritative DAG inputs live under [artifacts/dag](../../artifacts/dag):
+The DAG tools use generated declaration artifacts under
+[artifacts/dag](../../artifacts/dag). Treat an artifact as current only when its
+source revision, generation command, coverage, and freshness agree with the
+checkout. Expected artifact names include:
 - `full_graph.json`
 - `index/decls.jsonl`
 - `index/edges.jsonl`
@@ -482,12 +534,13 @@ Public authoritative DAG inputs live under [artifacts/dag](../../artifacts/dag):
 - `representation-depth-tags.json`
 - `process-flow/` — Lean-authoritative exports: `flow-edges`, `process-events`, `lawful-path-candidates`, `defects`; Python-derived supplements: `flow-cocycles`, `comparison-candidates`
 
-Derived readable outputs live under [reports/dag](../../reports/dag).
+Derived readable outputs are written under `reports/dag/`. This is an output
+location, not a guaranteed tracked directory in a fresh checkout.
 
 ## Maintained Refresh Order
 
-For normal use, prefer the managed exact sequence from
-[docs/ToolingMethodology.md](../../docs/ToolingMethodology.md):
+After provisioning the configuration described above, the managed sequence
+from [docs/ToolingMethodology.md](../../docs/ToolingMethodology.md) is:
 
 ```bash
 lake script run dagAll
@@ -524,10 +577,10 @@ Use the raw order below only when narrowing or repairing a tool failure.
 Strict-coverage raw runbook (fails if graph coverage is partial):
 
 ```bash
-python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
-python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.BlueprintTags
 python3 tools/infra/generate_theorem_surface_index.py
 python3 tools/infra/generate_hypothesis_debt_report.py
 python3 tools/infra/generate_source_sink_compression.py
@@ -558,7 +611,7 @@ python3 tools/infra/dag_doctor.py
 Process-flow refresh (Lean export + Python derivation):
 
 ```bash
-lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
 python3 tools/infra/generate_process_flow_report.py
 python3 tools/infra/generate_semantic_flow_report.py
 ```
@@ -608,14 +661,15 @@ emits the expected schema keys:
 python3 tools/infra/check_semantic_flow_report.py
 ```
 
-Full end-to-end audit snapshot (build + DAG + doctor + debt surfaces):
+Explicit broad audit sequence (build + DAG + doctor + debt surfaces; use only
+when this scope is intended, after configuration and dependencies are ready):
 
 ```bash
-lake build -R
-python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --all-default-targets -- -R
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
-python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.BlueprintTags
 python3 tools/infra/generate_theorem_surface_index.py
 python3 tools/infra/generate_source_sink_compression.py
 python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage --allow-uncovered-debt
@@ -625,11 +679,11 @@ python3 tools/infra/generate_structural_fibers.py
 python3 tools/infra/generate_semantic_quotient.py
 python3 tools/infra/generate_projection_coloring.py
 python3 tools/infra/select_openclaw_target.py
-python3 tools/infra/canonical_policy_lint.py || true
+python3 tools/infra/canonical_policy_lint.py
 python3 tools/infra/generate_replacement_frontier.py
 python3 tools/infra/check_representation_depth.py
 python3 tools/infra/generate_representation_depth_graph.py
-lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
 python3 tools/infra/generate_process_flow_report.py
 python3 tools/infra/dag_doctor.py
 python3 tools/theorem_significance.py --out reports/theorem-significance-current.json --md reports/theorem-significance-current.md
@@ -652,8 +706,16 @@ Run the native audit before trusting the representation-depth reports. Run the m
   owner modules incrementally. Use `--changed` for the explicit spelling; use
   `--all-default-targets` or a named umbrella only when a repository-wide gate
   is intentional.
-- use `run_locked_lake_build.py` for umbrella builds
-- if `.lake` was cleaned or a worktree is fresh, hydrate the precompiled mathlib cache first (`lake exe cache get`); the locked build wrapper also auto-hydrates when `Mathlib.olean` is missing
+- use `run_locked_lake_build.py --wait-for-build-lock` for explicit owner or
+  umbrella builds, and `run_locked_lean.py --wait-for-build-lock` for individual
+  Lean elaboration or `--run` script execution
+- preserve `.lake`; do not clean the shared cache to solve a build failure
+- follow the [root setup guide](../../README.md) for pinned local dependencies;
+  the build wrapper checks workspace layout and attempts cache hydration before
+  invoking Lake. The hydration subprocess uses `check=False`; its invocation
+  does not guarantee success. Package-checkout validation is a separate step,
+  and unavailable dependencies can prevent the subsequent Lake command from
+  succeeding
 - `refresh_decl_graph.py` now prebuilds `dagIndexer` for `--run-mode exe` and `DAG.Indexer` for `--run-mode run`, together with the import root, under the build lock
 - do not run concurrent umbrella builds
 - do not hand-edit `artifacts/dag/*`
@@ -673,9 +735,14 @@ Run the native audit before trusting the representation-depth reports. Run the m
 It is a source-level policy pass. Generated or internal declarations without a
 valid source line are not part of its public-theorem scan.
 
-## Current Codebase Status
+## Build and audit evidence
 
-Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+See [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for recorded status
+and [README.md](../../README.md) for the current entrypoint. A report date alone
+does not establish the state of a later commit. Attach the source revision,
+command, exit code, and relevant coverage/freshness information to a new audit.
+This guide's source review did not run the managed refresh or certify a clean
+repository-wide build.
 
 - `external_refs/LeanMillenniumPrizeProblems/` mirror: searchable theorem corpus for the Clay problems.
 

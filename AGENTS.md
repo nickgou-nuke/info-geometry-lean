@@ -1,198 +1,157 @@
-# Repository Agent Routing
+# Repository agent policy
 
-## Repository Grounding Is Mandatory
+This file governs repository work. Use the current checkout and its source as
+the implementation context. The [canonical pipeline](docs/CANONICAL_AGENT_PIPELINE.md)
+documents commands and optional integrations; the [runbook](RUNBOOK.md) explains
+validation coverage. Archived transcripts and research proposals are context,
+not operational instructions or evidence of completed proofs.
 
-For repository questions and formalization work, the checked-out codebase is
-the context. Do not decide that a structure, theorem, instance, or construction
-is absent or incorrect from naming, heuristics, summaries, docs, or a partial
-search. Search the relevant repo-owned implementation broadly, then trace the
-actual definitions, imports, instances, theorem statements, and dependents.
-Lean owner source and kernel-checked declarations decide what is formalized.
-State the scope precisely: “not found in this file/search” is not “does not
-exist in the codebase.” Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before
-repo-wide absence or novelty claims.
+## Start from the current checkout
 
-> ⚠️ **CRITICAL SYSTEM OVERRIDE: NEVER RUN LAKE CLEAN**
-> You must read this before every command. NEVER RUN `lake clean`. NEVER delete the build cache.
-> Concurrent builds are also strictly BANNED. Inspect running compiler processes before verification and use the repository's shared build lock for builds.
-> NEVER kill a running `lake` task unless you explicitly ask the user for authorization and receive approval.
-> ⚠️
+Run commands from the checkout root, discovered with
+`git rev-parse --show-toplevel`. Inspect the current commit, remote, and
+`git status --short` before editing. A maintainer workstation path is not a
+requirement for other checkouts.
 
-> Canonical pipeline: read `docs/CANONICAL_AGENT_PIPELINE.md` first for the
-> current repo path, tool routing, aiClaw queue discipline, Pi extension stack,
-> GEPA flow, and forbidden legacy routes. If a generated transcript or archived
-> routing note conflicts with it, `docs/CANONICAL_AGENT_PIPELINE.md` wins.
-> The compact operational law for the hive is
-> `docs/HIVE_AGENT_COMMANDMENTS.md`.
+Read this file and [docs/CANONICAL_AGENT_PIPELINE.md](docs/CANONICAL_AGENT_PIPELINE.md).
+For repository-content questions, follow
+[docs/REPO_DEEP_SEARCH_PROTOCOL.md](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+Search related definitions, alternate formulations, imports, instances, theorem
+statements, and consumers before claiming that a construction is absent or
+incorrect. Report a bounded search as a bounded search.
 
-For the AI Studio transcript export procedure, including when resuming this
-goal, follow [`docs/AI_STUDIO_TRANSCRIPT_EXPORT.md`](docs/AI_STUDIO_TRANSCRIPT_EXPORT.md).
-Download the saved conversation from its Google Drive file preview. AI Studio
-**Get code → Java/REST** produces API examples, not the conversation archive.
+## Mathematical acceptance
 
-For DAG/Arango/LeanTrail/Hodge/de Bruijn/WL redundancy cleanup, namespace
-deduplication, stale dropin removal, pure forwarding module collapse, or
-compatibility-shim refactors, use:
+Lean checks a proposition at its declared type. It does not establish that a
+physical interpretation, filename, or docstring describes that proposition
+faithfully. Read the owner source and record:
 
-```text
-skills/lean-dag-wire-refactor/SKILL.md
+1. The precise claim and the actual carrier, operations, and conventions.
+2. Reused declarations and their hypotheses, including structure fields that
+   supply assumptions rather than construct the desired result.
+3. Relevant imports, consumers, and the smallest missing implication.
+4. The exact statement proved, validation performed, and remaining debt.
+
+For generated prose or proposed mathematics, use
+[epistemic compilation](skills/epistemic-compilation/SKILL.md) and the
+[theorem-contract workflow](docs/ALCHEMICAL_QMS_SOP.md). Preserve provenance,
+separate proved/conditional/open claims, and order dependencies only when the
+corresponding maps or implications have been established. Write incomplete
+targets in the task contract; do not insert proof holes into promoted owners.
+
+Do not introduce `sorry`, `admit`, custom axioms, `native_decide`, unsafe proof
+bypasses, or vacuous wrappers to obtain acceptance. Audit declaration axiom
+dependencies; permitted foundational axioms are `propext`, `Classical.choice`,
+and `Quot.sound`. A clean text scan, a successful compilation, and a semantic
+review are different checks. Report each at its actual scope. These are
+acceptance requirements, not a claim that every tracked historical file passes.
+
+Preserve noncommutative operator content when it is part of the target claim.
+Do not replace it with scalar, diagonal, or commuting surrogates. A concrete
+finite matrix result must be described with its actual dimension and
+hypotheses. Moving to another carrier, a quotient, a categorical colimit,
+a completion, or an analytic limit requires the corresponding construction and
+compatibility proof.
+
+Reuse existing owners before introducing another bridge. Consult the
+[categorical infrastructure map](docs/CATEGORICAL_INFRASTRUCTURE_MAP.md), then
+inspect the declarations it points to. Distinguish finite-stage compatibility,
+conditional cone transport, a colimit universal property, and analytic
+consequences. Native Mathlib analysis remains appropriate when required by the
+theorem. Keep owner files focused and expose reusable intermediate lemmas.
+
+## Build, dependency, and cache discipline
+
+[lean-toolchain](lean-toolchain) and [lake-manifest.json](lake-manifest.json)
+determine the environment. At source review revision
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`, Lean is `v4.34.1` and Mathlib is
+`d13f23b723b8a846827a245b89c10fc7d3f11612`. Dependency or toolchain changes require
+explicit user authorization. Do not run `lake update` as a routine repair or
+change pinned dependencies incidentally.
+
+Inspect running compiler processes before validation. Serialize build, test,
+and compilation commands. Use the maintained wrappers:
+
+```bash
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/To/File.lean
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
 
-> ⚠️ **CRITICAL: CATEGORICAL INFRASTRUCTURE EXISTS BEFORE YOU REWRITE**
-> Read `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md` first.
-> The categorical layer (`Algebra/Grothendieck.lean`,
-> `Canonical/TensorTowerColimit.lean`, `Categorical/FibonacciBraiding.lean`)
-> is the owner. Matrix-level code is an *instance*, never a replacement.
-> Do not rebuild what already exists.
+Replace the example path/module with the actual owner. Both wrappers use
+[the shared build lock](tools/build_lock.py). A no-target invocation of
+`run_locked_lake_build.py` selects changed owners; an explicit
+`--all-default-targets` request selects Lake's default targets. Neither a narrow
+check nor a default-target build establishes coverage of every tracked file.
+See [RUNBOOK.md](RUNBOOK.md) before making a build-status claim.
 
-For categorical-infrastructure-projection tasks, see the central
-skill library at:
+Never run `lake clean` or delete `.lake`, `.lake/build`, or `.lake/packages` as a
+repair. Do not make dependency directories read-only: normal builds must write
+generated artifacts. Follow the source-backed
+[cache policy](WARNING_DO_NOT_RUN_CACHE.md) for missing artifacts.
+The [build validator](tools/infra/build.py),
+[file-check wrapper](tools/infra/run_locked_lean.py), and
+[pre-push hook](.githooks/pre-push) reject linked Git worktrees and symlinked
+`.lake` or `.lake/packages` roots. Use an independent checkout for builds.
+Do not kill a running Lake process without explicit user authorization.
 
-```text
-skills/lean-skill-library/
-```
+## Changes, checkpoints, and collaboration
 
-The skill is `categorical-infrastructure-projection` in the local catalog.
-GEPA: `tools/infra/gepa_categorical_projection.py --evolve --generations 10`
+Preserve unrelated work. Make the smallest owner-aligned change and review its
+diff. Checkpoint task-owned edits promptly with `git add -- <paths>` after
+reviewing status; do not stage every workspace change indiscriminately.
+Staging is not a backup or permission to restore, reset, delete, or overwrite
+someone else's work. Keep generated run debris out of source commits unless
+the task explicitly calls for it. Do not edit dirty external submodules unless
+requested.
 
-Core law:
+Delegate source-repair proposals to new files in an isolated candidate area.
+Give workers the exact owner context and theorem contract. The parent reviews
+and integrates candidates into existing owners. Independent read-only analysis
+may proceed in parallel; builds and tests remain serialized. Follow the
+[native agent-team protocol](docs/CODEX_AGENT_SWARM_PROTOCOL.md) or
+[Pi team operations](docs/PI_AGENT_TEAMS_OPERATIONS.md) for the selected runtime.
+Confirm actual worker state before reporting that work has started.
 
-```text
-Graph tools identify candidate wires.
-Lean owner files decide truth.
-Only kernel-checked source edits count.
-```
+Install tracked hooks for a development checkout with
+`scripts/install_git_hooks.sh`. The
+[staged proof gate](tools/quality/proof_proxy_staged_gate.py) and
+[push gate](.githooks/pre-push) check different surfaces; do not bypass them or
+describe their presence as evidence that they ran. The
+[Hive policy checklist](docs/HIVE_AGENT_COMMANDMENTS.md) records the required
+Lean header and the reporting checklist.
 
-For the current source-grounded status and dependency order of the two-sheeted
-Yang–Mills / Peirce-defect bridge, see
-[`docs/TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md`](docs/TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md).
-That note distinguishes established ring identities from the still-unproved
-carrier maps to Yang–Mills and two-sheet Krein colimit structures.
+## Optional services and domain routing
 
-For aiClaw/ChatGPT-assisted proof repair, use:
+Arango, graph indexes, Loogle, SymPy, browser oracles, Pi, Hive, Archon, and GEPA
+provide navigation, candidates, or execution support. They do not replace Lean
+proofs. Their availability, contents, and freshness must be observed for the
+current environment; do not assume a running service or complete transcript
+ingestion. Resolve endpoints and credentials through maintained configuration,
+and keep the declaration DAG, Hive queue, and aiClaw memory lanes distinct.
 
-```text
-skills/socratic-oracle-proof-repair/SKILL.md
-docs/AICLAW_CHATGPT_REVIEW_RUNBOOK.md
-```
+Oracle outputs belong in candidate/report artifacts. A coding agent inspects
+and applies source changes, then runs the relevant checks. Do not stack browser
+prompts or bypass the shared ChatGPT lane. Consult the
+[canonical transport instructions](docs/CANONICAL_AGENT_PIPELINE.md#browser-oracle-adapters)
+before using an optional oracle; older runbooks may describe a different
+adapter. Do not claim recovery of hidden reasoning.
 
-ChatGPT is a Socratic auditor and repair suggester only. Do not stack prompts;
-poll aiClaw status, send the complete owner file plus all relevant build errors
-in one prompt, wait/read the final visible answer, then use the answer as a
-full-file replacement candidate only if it survives Lean checking. Keep the
-corrected file small and mathlib-style. Do not claim hidden chain-of-thought
-recovery. Prefer
-`tools/infra/socratic_clawbot.py --dry-run --json` for Lean owner-file oracle
-prompts; it delegates transport safety to `tools/infra/aiclaw_chat.py`.
+| Task | Read before changing owners |
+|---|---|
+| DAG, namespace, or forwarding-module cleanup | [DAG wire-refactor workflow](skills/lean-dag-wire-refactor/SKILL.md) |
+| Categorical, tensor-tower, or colimit work | [Categorical infrastructure map](docs/CATEGORICAL_INFRASTRUCTURE_MAP.md) and [skill catalog](skills/lean-skill-library/) |
+| Peirce defects and two-sheet Yang–Mills claims | [Source-grounded framework progress](docs/TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md) |
+| Souriau, Bost–Connes, or crystallization claims | [Transition status](docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md) |
+| Oracle-assisted proof repair | [Repair workflow](skills/socratic-oracle-proof-repair/SKILL.md), checked against the current adapter source |
+| Debate/convergence interpretations | [Formal precedent map](docs/DEBATE_ORACLE_CONVERGENCE_MAP.md) |
+| AI Studio transcript export | [Transcript export procedure](docs/AI_STUDIO_TRANSCRIPT_EXPORT.md) |
 
-The aiClaw lane is single-flight per platform. Check
-`python3 tools/infra/aiclaw_chat.py queue-status --platform chatgpt` before
-sending and follow the machine-readable `queue_state` / `agent_action` fields.
-`queue_state=needs_readback` is not a provider outage and not a hard block: it
-means a prompt may already be in the browser but the final answer was not
-captured safely. Recover the final visible answer with a read-only browser
-view, record it in the work log, then release the lane with `queue-release`.
-If `queue_state=active`, wait. If `queue_state=ready`, send exactly one prompt.
-If `queue_state=stale_active` with only dead process markers, run
-`python3 tools/infra/aiclaw_chat.py queue-prune-active --platform chatgpt` or
-send one prompt if the lane reports `lane_available=true`.
+For exterior-algebra constructions, make coefficient types explicit where
+needed, such as `Finsupp.single (i, j) (1 : R)`, and use `noncomputable` when
+required by the chosen construction. Keep Arnold relations, BCFW recursion,
+Klein-quadric decomposability, operator nilpotency, and Bost–Connes partition
+functions distinct unless an explicit map and theorem relate them.
 
-All repo-owned ChatGPT browser senders must use this same lane. Do not call the
-old port-1956 WebSocket bridge directly, do not use raw browser-harness DOM
-injection without `tools/infra/chatgpt_lane_guard.py`, and do not press Enter as
-a fallback when ChatGPT has not exposed an enabled send button.
-
-Google AI Mode is a separate browser-harness lane through
-`scripts/google-ai-search.sh`; do not route Google AI Mode through aiClaw unless
-that lane is explicitly re-enabled and tested. Gemini aiClaw remains Gemini;
-Google AI Mode browser-harness remains Google AI Mode.
-
-For the external formal precedent, read:
-
-```text
-docs/DEBATE_ORACLE_CONVERGENCE_MAP.md
-```
-
-`external_refs/deepmind-debate` is an adversarial stochastic debate correctness
-source, not a blanket chatbot-convergence theorem.
-
-Keep graph evidence as navigation evidence only. Do not edit dirty external
-submodules unless explicitly requested.
-
-## Amplituhedron and Bost-Connes Formalization Guidelines
-
-When formalizing the cohomological shadow of the Amplituhedron or the Bost-Connes partition function, strictly adhere to the following Lean 4 patterns:
-
-1. **Finsupp Type Inference Trap:** When defining generators for a free module using `Finsupp.single`, you MUST explicitly type the value to match the base ring. 
-   * **Incorrect:** `Finsupp.single (i, j) 1` (Lean infers `1 : ℕ`, causing `AddCommGroup` resolution to fail).
-   * **Correct:** `Finsupp.single (i, j) (1 : R)` where `R` is the `CommRing`.
-2. **ExteriorAlgebra & RingQuot Imports:** When building exterior algebras over free modules, prefer `import Mathlib` or explicitly ensure `Mathlib.Data.Finsupp.Basic` and `Mathlib.LinearAlgebra.Basis` are imported to guarantee `Module` and `AddCommGroup` instances are available for `(ι × ι) →₀ R`.
-3. **Noncomputable Contexts:** Functions returning `ExteriorAlgebra` elements generated by `Finsupp.single` must be marked `noncomputable` to satisfy the Lean 4 IR checker, as `Finsupp.single` lacks executable code.
-4. **The Synthesis Dictionary (Conceptual Invariant):** 
-   * **BCFW / Grassmannian relations**: Arnold-type exterior relations are algebraic inputs used in some on-shell constructions; they are not, by themselves, the full BCFW recursion theorem.
-   * **On-shell decomposability in four dimensions**: the Klein quadric equation characterizes decomposable bivectors in the projective bivector carrier. Nilpotency of chiral ladder/Cuntz operators is a separate operator-algebra fact; identify the carriers only through an explicit map and proved theorem.
-   * **Amplituhedron and Bost–Connes**: keep the positive-Grassmannian geometry and the Bost–Connes KMS partition function as distinct structures unless a specific, proved map relates them. Do not treat either slogan as an established equality of amplitudes and zeta values.
-
-## The Hive Memory (ArangoDB RAG)
-The AI agent has its own persistent "Hive Memory" ArangoDB container running on port `8540`.
-- **Address**: `http://localhost:8540`
-- **Database**: `hive_memory`
-- **Credentials**: `root` / `hive_brain`
-- **Collections**: `Thoughts` (Document), `CausalLinks` (Edge)
-- **Function**: Contains the complete JSONL transcript DAG of all past agent thoughts, generated code, and reasoning steps.
-- **Action**: When starting a new session or encountering a forgotten concept, the agent should connect to this ArangoDB instance using `python-arango` or write AQL queries to retrieve its old memories and code from previous transcripts. The memory population script is at `scratch/populate_arangodb.py`.
-
-## Pi Agent Teams Operational Safety
-When using `@codexstar/pi-agent-teams`, follow `docs/PI_AGENT_TEAMS_OPERATIONS.md`.
-A task assignment, queued message, or tool response is not proof that a worker
-started: confirm the live panel/task state before reporting progress. Do not
-broadcast shutdowns while workers are needed; unassign pending work from stopped
-agents and reconcile conflicting state before retrying or spawning.
-
-## Continuous Tracking Mandate
-**CRITICAL**: To prevent destructive data loss from rogue `git restore` operations, all agents MUST proactively track their work.
-- **Action**: Whenever an agent creates or modifies a file, they MUST immediately run `git add -A` to stage the changes into the Git index. Uncommitted work that is staged is protected from `git restore`. Do not wait until the end of a session to stage files.
-
-## Subagent Sandbox Mandate
-**CRITICAL**: Subagents SHALL NEVER be given a task to fix or rewrite an existing file.
-- **Action**: When delegating work to a subagent, they must be given a task to write to a **new file** always located within a sandbox environment.
-- **Context**: The parent agent MUST provide the subagent with sufficient mathematical context from the old file so the subagent can perform the task safely without touching the live owner file.
-
-## Lean file size and lemma reuse mandate
-**CRITICAL**: Lean owner files shall be kept small, modular, and reusable.
-- **Action**: Prefer division into focused helper lemmas rather than long monolithic proofs or oversized theorem packets.
-- **Reuse**: When a proof pattern or intermediate fact may be used again, expose it as a named lemma with a truthful scope instead of burying it inside one large proof.
-- **Structure**: New bridge files and owner repairs should take the smallest theorem-safe shape that improves downstream reuse and keeps local verification narrow.
-
-## The Colimit Continuum Mandate
-**CRITICAL**: The repository does NOT rely on classical measure theory or brute-force real analysis to cross from finite quantum models to the continuum. It strictly uses **Categorical Direct Inductive Colimits**.
-- **Action**: When formalizing infinite topological boundaries or physical limits, you MUST project finite algebraic models (e.g., Cuntz quotients, Plücker coordinates) natively through `UHFInductiveColimitBoundary.lean`, `TensorTowerColimit.lean`, and `ErlangenColimitResolution.lean`.
-- **Prohibition**: Do NOT hallucinate analytical continuations. Do NOT use physical rhetoric (like "CPT Symmetry" or "Gromov Non-Squeezing") to justify missing proofs. Physics concepts are strictly the shadows cast by the finite algebraic base being pushed through the $A_\infty$ colimit limit.
-
-## Structural Vacuum Prohibition
-**CRITICAL**: Do not dispatch subagents blindly into massive structural vacuums (e.g., files full of `False := sorry` claims).
-- **Action**: Before attempting any proofs in the Canonical or Topological subsystems, the parent Orchestrator MUST extract the pure algebraic math problem via Socratic discussion and formulate explicit, narrowly-typed `sorry` propositions based on existing finite algebraic structures.
-
-## Structural Dependency Protection Mandate
-**CRITICAL**: Protect the pinned dependency graph without making the build cache
-immutable. Normal Lake builds and native dependency repairs must be able to write
-their generated artifacts, lock files, and intermediate outputs.
-- **Action**: Agents must not modify dependency source or metadata deliberately;
-  however, `.lake/packages/` remains writable so Lake can complete reproducible
-  builds and repair incomplete native targets such as LeanCopilot/OpenBLAS.
-- **Policy**: Any dependency updates to `lakefile.lean` or `lake-manifest.json`
-  require explicit human approval. Agents shall NOT blindly run `lake update` or
-  change pinned dependency revisions. This does not prohibit ordinary build writes.
-- **Enforcement**: Never make `.lake/packages/` read-only as a repository-wide
-  safeguard. If a dependency build is broken, work within the pinned `v4.34.1`
-  environment and repair only the affected target without changing the manifest or
-  toolchain.
-
-## Sequential Build and Test Mandate
-**CRITICAL**: To prevent compilation race conditions, lock file contention, and resource saturation:
-- **Action**: You MUST never execute concurrent build, test, or compilation commands (e.g., `lake build`, `lake test`, `lake env lean`, `pytest`, `cargo`, `npm run dev`) at the same time.
-- **Pre-check**: Before executing any command that builds, compiles, or runs tests, inspect running processes to verify no other compiler-related task is active. Run Lake builds through `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock <targets>` so they acquire the shared build lock.
-
-## Strict Build Cache Protection Mandate
-**CRITICAL**: You MUST never execute cache-destructive commands (e.g., `lake clean`, `rm -rf .lake/build`, `rm -rf .lake/packages`, `rm -rf .lake`) under any circumstances. Nuking the build cache deletes precompiled dependency oleans and breaks the environment, forcing long and unnecessary compilation loops. If you need to clean up build warnings, use targeted compiler commands or rebuild specific files. Never use global clean commands.
-- **No Linked Worktrees or Symlinked `.lake`**: You MUST NEVER create a `git worktree` and symlink `.lake` or `.lake/packages` to the main repository. Lake treats symlinked package roots across worktrees as a package URL reconfiguration and deletes/re-clones `.lake/packages/mathlib`. `tools/infra/build.py`, `tools/infra/run_locked_lean.py`, and `.githooks/pre-push` enforce this as a hard error.
+End a task with the changed files, exact validation commands and results,
+proved or observed scope, and unresolved issues. Do not turn an old report or
+a successful local check into a current whole-repository certificate.

@@ -1,267 +1,92 @@
-# 3D Mirror Symmetry for Instanton Moduli Spaces
-## Complete Cross-System Formalization
+# Koroteev–Zeitlin mirror-symmetry research packet
 
-**Paper:** Koroteev, P. & Zeitlin, A. "3D Mirror Symmetry for Instanton Moduli Spaces"  
-**Published:** Communications in Mathematical Physics (2023)  
-**DOI:** 10.1007/s00220-023-04831-5
+This packet collects source inspired by the research topic “3D Mirror Symmetry
+for Instanton Moduli Spaces.” Its Lean owner is
+[KoroteevZeitlinMirror.lean](../../lean/InfoGeometry/Quiver/KoroteevZeitlinMirror.lean),
+in namespace `KoroteevZeitlin`. That owner currently provides metadata records,
+explicit formulas, and limited witness theorems. It does not establish a full
+formalization of the paper merely by using its terminology or theorem names.
 
----
+Source reviewed on 2026-11-03 at commit
+`214f7bcf733eaf4720913bc2c082936f2480d3fc`. No new Lean or companion-backend
+execution is recorded here. Read actual types and hypotheses using the
+[repository search protocol](../../docs/REPO_DEEP_SEARCH_PROTOCOL.md).
 
-## OVERVIEW
+## Current Lean scope
 
-This repository now contains a **complete formalization** of the Koroteev-Zeitlin paper on 3D mirror symmetry for instanton moduli spaces across **8 independent computational systems**:
+The distinctions below follow declarations and proof terms. Some source
+docstrings retain broader research descriptions; use the types to determine
+what a theorem establishes.
 
-| # | System | File | Key Contribution |
-|---|--------|------|------------------|
-| 1 | **SageMath** | `tools/infra/koroteev_zeitlin_sage.sage` | Explicit dimension formulas, quiver variety construction |
-| 2 | **GAP** | `tools/infra/koroteev_zeitlin_gap.g` | Quiver automorphism groups, ℤ_r symmetry |
-| 3 | **Macaulay2** | `tools/infra/koroteev_zeitlin_macaulay2.m2` | D-modules, q-difference operators, quantum K-theory |
-| 4 | **SymPy** | `tools/sympy/koroteev_zeitlin_sympy.py` | Symplectic geometry, moment maps, explicit matrices |
-| 5 | **Lean4** | `lean/InfoGeometry/Quiver/KoroteevZeitlinMirror.lean` | Type-theoretic foundation, hyperkähler structure |
-| 6 | **Coq** | `tools/infra/bridge_data/KoroteevZeitlinMirror.v` | Categorical equivalence, functoriality |
-| 7 | **Isabelle/HOL** | `tools/infra/bridge_data/KoroteevZeitlinMirror.thy` | Hyperkähler quotients, Bethe correspondence |
-| 8 | **Clifford/GAlgebra** | `tools/infra/koroteev_zeitlin_galgebra.py` | Spinor representations, mirror as involution |
+| Surface | What is present in this owner |
+|---|---|
+| `NakajimaQuiverVariety`, `quiverDim` | Dimension/framing vectors, parameters, and numerical dimension metadata. The dimension formula uses natural-number subtraction. The record does not construct a hyperkähler quotient. |
+| `X_kl`, `X_kk_selfMirror` | A metadata family with `dimℂ := 0`; the named self-mirror theorem states reflexive equalities of its vectors. |
+| `MirrorPair`, `X_kl_mirror_pair` | Two metadata records with equal recorded dimension and parameter functions. The supplied parameter functions are zero; no mutually inverse geometric maps are fields. |
+| `QQSystem`, `QQRelation` | Polynomial and parameter data plus a separately defined predicate. The current predicate subtracts `Q i * Q_tilde i` from itself and equates the result to a neighbor product. It is not the shifted q-difference relation described in the research narrative. |
+| `MiuraHbarOper.is_miura` | The reflexive equality `M.connection = M.connection`. |
+| `qLanglands_QQ_to_opers` | Existence of an oper record with a matching `hbar`, using zero twist and connection. Its conclusion contains no bijection. |
+| `XXZBetheData`, `BAE_ratio`, `IsBetheState` | An explicit finite-product ratio and the predicate that each ratio equals one. These definitions do not by themselves prove correspondence with geometric objects. |
+| `HilbK_dim`, `HilbK_selfMirror` | The dimension recorded as `2 * k`, and a `MirrorPair` using the same record on both sides. |
+| `quantum_K_mirror_iso`, `instanton_qK_mirror` | Ring equivalences between carriers both defined as `ℂ`, constructed with `RingEquiv.refl ℂ`. A curve-counting quantum product is not constructed by these declarations. |
+| `trsLaxMatrix`, `trs_RLL` | An explicit matrix formula and existence of an `R` satisfying the displayed relation, witnessed by the zero matrix. The theorem does not require an invertible or nonzero R-matrix. |
+| `instantonModuli_dim_sym`, `instanton_mirror_duality` | Symmetry of the recorded dimension `2 * N * k` and a metadata `MirrorPair`; no isomorphism of moduli spaces is the conclusion. |
+| `X_kl_vertex_qKZ` | Returns the recurrence already supplied in the `VertexFunction.is_qkz` field. |
+| `QQ_Bethe_bijection` | Repackages a supplied Bethe state and its assumed properties. Its type does not provide a bijection or construct a Bethe state from a QQ solution alone. |
+| `X_kl_vw_swap` | Two constant-value statements about the `v` vectors. |
 
----
+These are useful starting data and local algebraic statements. A clean build
+would verify those statements as written; it would not strengthen their
+conclusions into the corresponding geometric or physical interpretations.
 
-## KEY MATHEMATICAL RESULTS FORMALIZED
+## Tracked companion inventory
 
-### 1. Nakajima Quiver Varieties M(v,w)
+The inventory records source availability. Backend-specific scope and
+successful execution require separate reviews and logs.
 
-**Construction:** Hyperkähler quotient of representation space by gauge group
+| System | File |
+|---|---|
+| SageMath | [koroteev_zeitlin_sage.sage](koroteev_zeitlin_sage.sage) |
+| GAP | [koroteev_zeitlin_gap.g](koroteev_zeitlin_gap.g) |
+| Macaulay2 | [koroteev_zeitlin_macaulay2.m2](koroteev_zeitlin_macaulay2.m2) |
+| SymPy | [koroteev_zeitlin_sympy.py](../sympy/koroteev_zeitlin_sympy.py) |
+| Coq | [KoroteevZeitlinMirror.v](bridge_data/KoroteevZeitlinMirror.v) |
+| Isabelle/HOL | [KoroteevZeitlinMirror.thy](bridge_data/KoroteevZeitlinMirror.thy) |
+| GaAlgebra | [koroteev_zeitlin_galgebra.py](koroteev_zeitlin_galgebra.py) |
 
-```sage
-# SageMath example
-def nakajima_quiver_variety_Ar(r, v, w):
-    """
-    M(v,w) for A_r quiver
-    dim_ℂ = 2(∑ bi-fund + ∑ flavor - ∑ gauge)
-    """
-    dim_complex = 2 * (dim_bifund + dim_flavor - dim_gauge)
-```
+The separate [proofs packet](../../proofs/README_3D_MIRROR.md) has a much
+smaller Lean owner, `proofs/ThreeDMirrorSymmetry.lean`. Do not interchange its
+status with the quiver owner above.
 
-**Verified:** A₂ with v=(1,2), w=(1,0) in all 8 systems
+## Historical research goals
 
----
+The original intake connected quiver varieties, QQ systems, Bethe equations,
+Miura opers, quantum K-theory, tRS matrices, and mirror parameter exchange. It
+also proposed explicit mirror isomorphisms, qKZ monodromy, an A∞ enhancement,
+a Bethe/oper bijection, and a quantum product. These remain a useful list of
+research obligations to check against actual owners and maps. They are not
+completion claims supported by the limited declarations summarized here.
 
-### 2. 3D Mirror Symmetry: X ≅ X!
+To strengthen this packet, specify the intended geometric carriers, define the
+relevant relations with their nondegeneracy hypotheses, and construct maps
+whose inverse, compatibility, and transport laws are theorem conclusions.
+Record each such result beside its owner and exact hypotheses. Symbolic
+examples or dimension equalities alone do not supply these maps.
 
-**Mirror Map:**
-- z_i (Kähler) ↔ a_i (equivariant)
-- Preserves dim_ℂ(X) = dim_ℂ(X!)
+The original bibliography and broader narrative are retained in the
+[historical packet](https://github.com/nickgou-nuke/info-geometry-lean/blob/214f7bcf733eaf4720913bc2c082936f2480d3fc/tools/infra/README_KOROTEEV_ZEITLIN.md).
+That version's cross-system completion percentages and physical identifications
+are historical assertions, not current verification evidence.
 
-```python
-# SymPy: Symplectic transformation
-def mirror_map(X):
-    z, a = a, z  # Swap parameters
-    return symplectic_transform(X)
+## Targeted verification
 
-# Clifford: α∘~ involution
-def mirror_map(multivector):
-    return multivector.gradeInvolution().reverse()
-```
+From the repository root, with the pinned dependencies prepared:
 
----
-
-### 3. Self-Mirror Quivers X_{k,l}
-
-**Property:** X_{k,l} ≅ X_{l,k}
-- **Self-mirror** when k = l
-- Periodic boundary conditions
-
-```lean4
-theorem self_mirror_isomorphism (k l : ℕ) : 
-  k = l → selfMirrorQuiver k l ≃ selfMirrorQuiver l k
-```
-
-**Examples verified:**
-- ✓ X_{2,2} self-mirror
-- ✓ X_{2,3} not self-mirror
-- ✓ Hilb^n(ℂ²) self-mirror (A_∞ limit)
-
----
-
-### 4. Vertex Functions & qKZ Equations
-
-**Vertex Function:**
-```
-V(z,a,q) = ∑_{d≥0} z^d · [M_d]_K
-```
-
-**qKZ Equation:**
-```
-V(qz) = M(z) · V(z)
-```
-
-```python
-# SymPy expansion (verified)
-V = 1 + z*a/(1-q) + z**2*a**2/((1-q)*(1-q**2))
-```
-
----
-
-### 5. Hilbert Scheme as Self-Mirror Limit
-
-**Theorem:** Hilb^n(ℂ²) is SELF-MIRROR
-
-```isabelle
-theorem hilb_self_mirror:
-  "Hilb_n n ≅ Hilb_n n"  -- ‹Identity isomorphism›
-```
-
-**Proof:** Hilb^n arises as A_∞ limit with symmetric framing → automatically self-dual
-
----
-
-### 6. ρ-Opers ↔ Bethe Ansatz Correspondence
-
-**Main Correspondence:**
-```
-Vertex functions ↔ Bethe ansatz solutions
-Quiver varieties ↔ Twisted ρ-opers on ℂ×
-```
-
-**Bethe Equations (A₁ with 2 flavors):**
-```
-∏_{j≠i} (u_i - u_j + 1)/(u_i - u_j - 1) = 
-    ∏_f (u_i - m_f + 1/2)/(u_i - m_f - 1/2)
-```
-
----
-
-### 7. Instanton Mirror Duality (MAIN THEOREM)
-
-**Theorem (Koroteev-Zeitlin):**
-```
-M_{N,k} (instanton moduli) has mirror dual
-M_{N,k}! = M_{k,N}  (rank ↔ degree)
-```
-
-```coq
-Theorem instanton_mirror_duality :
-  forall N k,
-  ∃ mirror : M_{N,k} → M_{k,N},
-    Function.Bijective mirror ∧
-    (kahler ↔ equivariant)
-```
-
----
-
-## CONNECTIONS TO EXISTING WORK
-
-### Jones Calculus ↔ Spinor Optics
-```
-Jones matrices ∈ SL(2,ℂ) ≅ Spin⁺(1,3)
-    ↓
-Mirror map = Lorentz transformation on spinors
-    ↓
-Cl(4) ⊃ Cl(1,3) (spacetime algebra)
-```
-
-**Implication:** 3D mirror symmetry IS the same mathematical structure as:
-- Polarization optics (Poincaré sphere)
-- Quantum fluid dynamics (divergence-free flow)
-- Attention mechanisms (unitary transport)
-
----
-
-### Bost-Connes ↔ Quantum K-Theory
-```
-Liouville grading Γ = (-1)^Ω(n)
-    ↓
-q-parameter in qKZ equations
-    ↓
-Modular flow = q-difference operator
-```
-
-**Unification:** Thermal time hypothesis meets quantum cohomology
-
----
-
-### E₈ Triality ↔ Quiver Symmetry
-```
-E₈ triality: S₃ automorphism
-    ↓
-A_r quiver: ℤ_r symmetry (periodic)
-    ↓
-S₃ ≅ ℤ_3 ⊂ ℤ_r (r ≥ 3)
-```
-
-**Connection:** Exceptional symmetries arise as quiver automorphisms
-
----
-
-## VERIFICATION STATUS
-
-✅ **SYMPY:** Runs successfully, moment maps computed
-✅ **SAGE:** Constructive dimension formulas
-✅ **GAP:** Automorphism groups characterized
-✅ **MACAULAY2:** D-module structure defined
-✅ **LEAN4:** Type-theoretic foundation (compiles)
-✅ **COQ:** Categorical equivalence proved
-✅ **ISABELLE:** Hyperkähler structure formalized
-✅ **CLIFFORD:** Spinor interpretation complete
-
-**Total:** 8/8 systems (100% coverage)
-
----
-
-## HOW TO USE
-
-### Run SymPy Verification
 ```bash
-cd /home/goutev/repos/info-geometry-lean
-python3 tools/sympy/koroteev_zeitlin_sympy.py
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Quiver.KoroteevZeitlinMirror
 ```
 
-### Run SageMath (requires Sage)
-```bash
-sage tools/infra/koroteev_zeitlin_sage.sage
-```
-
-### Compile Lean4
-```bash
-lake build InfoGeometry.Quiver.KoroteevZeitlinMirror
-```
-
-### Check Coq Proof
-```bash
-coqc tools/infra/bridge_data/KoroteevZeitlinMirror.v
-```
-
----
-
-## OPEN PROBLEMS
-
-1. **Explicit Mirror Isomorphism:** Construct concrete map X → X! (not just existence)
-2. **qKZ Monodromy Matrix:** Compute M(z) explicitly for higher rank
-3. **A_∞ Limit:** Formalize as colimit of A_r as r→∞
-4. **Bethe/Oper Bijection:** Construct explicit 1-1 correspondence
-5. **Quantum Product:** Compute full quantum cohomology ring structure
-
----
-
-## CONCLUSION
-
-The **Koroteev-Zeitlin paper** "3D Mirror Symmetry for Instanton Moduli Spaces" has been **completely formalized** across 8 independent systems, making it one of the most thoroughly verified results in this repository.
-
-**This achievement demonstrates:**
-- ✅ Multi-engine consensus (8/8 systems agree)
-- ✅ Cross-paradigm verification (symbolic, numeric, type-theoretic, categorical)
-- ✅ Integration with existing work (Jones, Bost-Connes, E₈)
-- ✅ Computational readiness (code runs, theorems compile)
-
-**Instanton moduli spaces** are now **kernel-certified** mathematical objects with verified mirror symmetry properties.
-
-**Status:** COMPLETE ✓  
-**Coverage:** 100% (8/8 systems)  
-**Date:** 2026-06-23
-
----
-
-## REFERENCES
-
-- Koroteev, P., Zeitlin, A. (2023). "3D Mirror Symmetry for Instanton Moduli Spaces." *Comm. Math. Phys.* DOI: 10.1007/s00220-023-04831-5
-- Nakajima, H. (1994). "Instantons on ALE spaces, quiver varieties, and Kac-Moody algebras"
-- Braverman, A., Maulik, D., Okounkov, A. (2016). "Quantum cohomology of Nakajima quiver varieties"
-- Aganagic, M., Okounkov, A. (2023). "Elliptic stable envelopes and 3d mirror symmetry"
+Consult the [root build guide](../../README.md). Record the commit, command,
+backend versions, and exit status when reporting a new run. Distinguish a
+successful build of the current declarations from completion of the research
+goals above.

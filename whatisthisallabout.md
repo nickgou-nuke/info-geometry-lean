@@ -1,3 +1,10 @@
+> Status: `archival reference`
+> This stitched discussion preserves historical reviews, proposed interpretations,
+> and audit plans. Its embedded completeness and build claims belong to their
+> original contexts and do not certify the current repository. For maintained
+> routing use [README.md](README.md); for the 2026-11-03 source review use the
+> [documentation audit](docs/DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md).
+
 • This repository is a large Lean 4 formalization of finite algebraic models connecting information geometry, Clifford/Krein spinors, exceptional Jordan/Zorn algebras, modular quantum
   systems, and categorical colimits.
 

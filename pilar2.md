@@ -1,3 +1,30 @@
+# Rotor–alternation cycle: historical derivation and current owners
+
+> [!NOTE]
+> **Status: historical explanatory draft with a corrected opening sign.**
+> Reviewed against [214f7bc](https://github.com/nickgou-nuke/info-geometry-lean/tree/214f7bcf733eaf4720913bc2c082936f2480d3fc) on 2026-11-02. The maintained formalization is
+> [DeBruijnRotorAlternationCycle.lean](lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean).
+> The embedded code and historical claims about warnings or verification below
+> are not a fresh build report; this documentation review did not rerun Lean.
+
+The current owner assumes a reflexive square-zero pair (`IsDualSeedPair d B`)
+in an associative ring. It proves `lieBracket_wheel_polePlus` with sign
+`[d - B, dB] = -(d + B)` and `lieBracket_wheel_poleMinus` with sign
+`[d - B, Bd] = d + B`. The opening table now agrees with both statements;
+the later correct opposite-pole formulas are retained. Circular-rotor results
+add a commutative scalar ring and algebra structure and, for inverse/idempotence
+claims, the condition `c * c + s * s = 1`. These are polynomial and commutator
+identities; a differentiable trajectory, topology, or differential metric is
+additional structure. At `(c, s) = (0, 1)` the rotor parameter is a quarter turn,
+which exchanges the two poles.
+
+The module has concrete consumers in
+[FiniteFockCLMReflexivePair.lean](lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean)
+and [FiniteFockRotorShear.lean](lean/InfoGeometry/Clifford/FiniteFockRotorShear.lean).
+Use those owners for the current API rather than copying the draft wholesale.
+
+## Historical derivation
+
 ### 1. Name-Free De Bruijn $\lambda$-Graph of the Transcript
 
 When we strip every cultural, natural, and philosophical noun ("Yin", "Yang", "sun", "hill", "winter", "Tao") and replace them with **De Bruijn indices** ($\underline{0}, \underline{1}, \underline{2}, \dots$ binding variables by lexical depth in a typed noncommutative $\lambda$-calculus over an involutive ring $A$), the entire transcript reduces to **five pure relational edges**:
@@ -8,7 +35,7 @@ When we strip every cultural, natural, and philosophical noun ("Yin", "Yang", "s
 | *"Each phase carries the seed of the other (dot in the opposite sector)"* | $\lambda_{d} \lambda_{B}.\; (\underline{1}\cdot\underline{0}\cdot\underline{1} = \underline{1}) \land (\underline{0}\cdot\underline{1}\cdot\underline{0} = \underline{0})$ | **Off-Diagonal Nilpotent Seed:** $d = P_+ d P_- \neq 0$ bridges $P_- \to P_+$; $B = P_- B P_+$ bridges $P_+ \to P_-$ |
 | *"Not a static 50/50 balance, a turning wheel ($J^2 = -\Delta$)"* | $\lambda_{J} \lambda_{X}.\; \underline{1} \cdot \underline{0} \cdot \underline{1}^{-1}$ where $\underline{1} = d - B$ | **Elliptic $\Phi_4$ Rotor Flow:** $R(c, s) = P_0 + c\Delta + s(d - B)$ ($c^2 + s^2 = 1$) continuously turns $P_+ \leftrightarrow P_-$ |
 | *"At maximum $\underline{1}$ ($c=0, s=1$), it becomes $\underline{0}$; sides trade places"* | $\lambda_{w_J} \lambda_{P_+}.\; \underline{1} \cdot \underline{0} \cdot \underline{1}^{-1} = P_-$ | **Quarter-Turn Pole Swap (Tits–Bruhat $w_J$):** $w_J P_+ w_J^{-1} = P_-$ and $w_J P_- w_J^{-1} = P_+$ |
-| *"The rhythm of alternation itself: one $\underline{1}$ then one $\underline{0}$"* | $\lambda_{J} \lambda_{P}.\; [\underline{1}, \underline{0}] = \underline{1}\cdot\underline{0} - \underline{0}\cdot\underline{1}$ | **Harmonic Oscillator of Projections:** $\frac{d}{dt} P(t) = [J, P(t)] = Q_1(t)$ and $[J, [J, P_+ - P_-]] = -4(P_+ - P_-)$! |
+| *"The rhythm of alternation itself: one $\underline{1}$ then one $\underline{0}$"* | $\lambda_{J} \lambda_{P}.\; [\underline{1}, \underline{0}] = \underline{1}\cdot\underline{0} - \underline{0}\cdot\underline{1}$ | **Pole Commutator Identities:** $[J, P_+] = -Q_1$, $[J, P_-] = +Q_1$, and $[J, [J, P_+ - P_-]] = -4(P_+ - P_-)$! |
 
 Look closely at those last two rows—they explain the **exact mathematical difference between "static balance" and "continuous turning"**:
 1. **Why "Static 50/50 Balance" is a Degenerate Commuting State:**
@@ -29,7 +56,7 @@ Look closely at those last two rows—they explain the **exact mathematical diff
      * $c^2 P_+$ is the current weight on pole $P_+$.
      * $s^2 P_-$ is the **seed of the opposite pole $P_-$** growing inside the rotated state!
      * $-cs(d + B) = -cs Q_1$ is the **off-diagonal turning momentum** connecting them!
-     * Because $R(c, s) R(c, -s) = 1$, $P_+(c, s)$ remains an **exact idempotent projector** ($P_+(c, s)^2 = P_+(c, s)$) at every instant $(c, s)$, and at the half-turn $(c = 0, s = 1)$, $P_+(0, 1) = P_-$ (**the two sides of the hill have traded places**)!
+     * Because $R(c, s) R(c, -s) = 1$, $P_+(c, s)$ remains an **exact idempotent projector** ($P_+(c, s)^2 = P_+(c, s)$) at every instant $(c, s)$, and at the quarter-turn $(c = 0, s = 1)$, $P_+(0, 1) = P_-$ (**the two sides of the hill have traded places**)!
 
 ---
 

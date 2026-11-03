@@ -39,7 +39,7 @@ Use these labels consistently when searching and reporting:
 
 | Surface | Meaning | Default authority |
 |---|---|---|
-| `repo-owned` | `lean/`, `tools/`, `scripts/`, `src/`, root TypeScript tools, `lakefile.lean`, `package.json` | authoritative for implementation |
+| `repo-owned` | `lean/`, `tools/`, `scripts/`, `src/`, `extensions/`, `lakefile.lean`, `package.json` | authoritative for implementation |
 | `external-ref` | `external_refs/**`, mirrored repos, vendored examples | context only unless explicitly promoted |
 | `generated-artifact` | `artifacts/`, `reports/`, `paper_node/`, `witnesses/auto_sympy/`, cached graph exports | evidence only |
 | `runtime-state` | `.runtime/`, `.hermes/tmp/`, provider caches | never proof authority |
@@ -73,9 +73,10 @@ navigation evidence only; do not refresh a graph merely to begin a search, and
 do not claim freshness when metadata does not establish it. Lean owner source
 and kernel-checked proofs remain the authority.
 
-## Current Code-Derived Inventory Snapshot
+## Historical code-derived inventory snapshot
 
-Regenerate these counts when precision matters. They intentionally overlap
+These counts are preserved from an earlier inventory and are not certified at
+the 2026-11-03 reviewed revision. Regenerate them when precision matters. They intentionally overlap
 because one tool can serve multiple lanes.
 
 Scan basis: repo-owned tool surfaces excluding `external_refs/**`,
@@ -86,7 +87,7 @@ archives, and docs.
 |---|---:|---|
 | Python tool files | 578 | Python scripts/modules in repo-owned tool surfaces |
 | Shell tool files | 62 | shell entrypoints/wrappers |
-| Root TypeScript Pi tools | 8 | Pi/aiClaw/Arango extension tools at repo root |
+| TypeScript Pi tool inventory (historical) | 8 | Earlier root-path inventory; inspect current `extensions/` and the canonical pipeline before use |
 | AQL/query assets | 11 | AQL query assets for graph/RAG layers |
 | JSON schema/config assets | 56 | tool schemas, graph schemas, query configs |
 | Lake scripts | 67 | `script ...` entrypoints in `lakefile.lean` |
@@ -121,7 +122,7 @@ lean/InfoGeometry/*
 Core commands:
 
 ```bash
-lake env lean lean/InfoGeometry/Path/Owner.lean
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/Owner.lean
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.Owner
 lake script run dagStatus
 lake script run dagRefresh
@@ -159,6 +160,12 @@ repo-owned owner theorem claims.
 
 ### 3. Text/Literature GraphRAG Brain
 
+The TypeScript root paths in the historical inventory below are earlier
+locations. Current tracked extension files are under `extensions/`; some are
+forwarding modules with missing root implementations. Inspect them and the
+[canonical integration status](CANONICAL_AGENT_PIPELINE.md#pi-integration-status)
+before using this inventory as an execution route.
+
 Semantic text/library memory. This is good for context, citations, external
 source retrieval, and prior-art recall.
 
@@ -193,7 +200,8 @@ answer "what has Lean proved?" without a Lean owner check.
 
 ## ArangoDB Schema Families
 
-As of the current code scan, repo-owned scripts expose at least four physical
+The inventory below documents source defaults, not observed running services.
+The reviewed schema inventory lists at least four physical
 database defaults and fourteen logical Arango schema families. These families
 overlap by design; some are overlays inside the same database.
 
@@ -201,7 +209,7 @@ Physical database defaults:
 
 | Default | Evidence | Role |
 |---|---|---|
-| `aiclaw_auto_rag` on `http://127.0.0.1:8540` | `tools/infra/aiclaw_auto_arango.py`, root Pi tools | isolated natural-language/proof-memory RAG |
+| `aiclaw_auto_rag` on `http://127.0.0.1:8540` | `tools/infra/aiclaw_auto_arango.py`, Pi extension files | isolated natural-language/proof-memory RAG |
 | `infogeometry` on `http://127.0.0.1:8530` | `src/igf/config/env_aliases.py` | repo DAG, InfoTree, graph overlays, scheduling sidecars |
 | `alexandria` | `tools/alexandria/arango_ingest.py`, `tools/alexandria/automathtext_arango_ingest.py` | literature and AutoMathText ingestion |
 | `hive_live` on `http://127.0.0.1:8540` | `tools/infra/hive_arango_queue.py` and Hive workers | live Hive queue/packet memory, separate from the AST/AQL DAG |
@@ -359,6 +367,11 @@ owner-surface drift.
 
 ### 8. SymPy, Witness, Pi, aiClaw, And Archon Orchestration
 
+The root TypeScript names below are historical references. The maintained
+Python queue and guarded oracle adapters have separate entrypoints, and the
+Pi integration is currently incomplete; see the
+[canonical pipeline](CANONICAL_AGENT_PIPELINE.md).
+
 Agent execution lane. It produces suggestions, witnesses, and reports; Lean
 still decides.
 
@@ -388,7 +401,10 @@ artifacts/agent_orchestrator/*.json
 
 ## Mandatory Multi-Lane Search Before Answering
 
-For a bounded automatic packet, use:
+For a bounded automatic packet, use the command below. Its root list still
+contains old TypeScript paths and omits `extensions/` at the reviewed revision;
+inspect that directory explicitly for Pi questions. The packet is navigation
+evidence, not an exhaustive source inventory:
 
 ```bash
 python3 tools/infra/context_preflight.py "your repo question" --include-external
@@ -410,14 +426,14 @@ For any nontrivial repo question, run at least these five checks:
 ```bash
 rg -n --glob '!external_refs/**' --glob '!node_modules/**' --glob '!.lake/**' \
   --glob '!.runtime/**' --glob '!artifacts/**' --glob '!reports/**' \
-  'QUERY|RELATED_SYMBOL|RELATED_COMMAND' lean tools scripts src cli lakefile.lean package.json '*.ts'
+  'QUERY|RELATED_SYMBOL|RELATED_COMMAND' lean tools scripts src cli extensions lakefile.lean package.json
 ```
 
 ### 2. Entrypoint search
 
 ```bash
 rg -n 'script |lean_exe |def main|if __name__ == .__main__.|argparse|process.argv|Bun.argv|name:' \
-  lakefile.lean package.json tools scripts src cli *.ts \
+  lakefile.lean package.json tools scripts src cli extensions \
   --glob '!external_refs/**' --glob '!node_modules/**' --glob '!.runtime/**'
 ```
 
@@ -425,7 +441,7 @@ rg -n 'script |lean_exe |def main|if __name__ == .__main__.|argparse|process.arg
 
 ```bash
 rg -n 'Arango|AQL|GraphRAG|LeanSearch|loogle|infotree|decl_graph|deBruijn|debruijn|embedding|hash' \
-  tools scripts src lean lakefile.lean package.json *.ts \
+  tools scripts src lean extensions lakefile.lean package.json \
   --glob '!external_refs/**' --glob '!node_modules/**' --glob '!.runtime/**'
 ```
 
@@ -440,7 +456,7 @@ Report this separately as `external-ref` evidence.
 ### 5. Lean owner validation
 
 ```bash
-lake env lean lean/InfoGeometry/Path/Owner.lean
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/Owner.lean
 ```
 
 If you cannot identify an owner file, say that. Do not promote GraphRAG,

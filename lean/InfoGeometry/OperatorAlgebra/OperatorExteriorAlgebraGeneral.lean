@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Alternating.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
@@ -112,6 +117,15 @@ def derivN (n : ℕ) (D : FormDerivation R A) (ω : OpForm R V A n) : OpForm R V
 @[simp]
 theorem derivN_apply (n : ℕ) (D : FormDerivation R A) (ω : OpForm R V A n) (v : Fin n → V) :
     derivN n D ω v = D (ω v) := rfl
+
+/-- Applying a coefficient derivation to an operator-valued form commutes with
+pullback along a linear map. This is the naturality square relating the
+operator derivation action to changes of parameter coordinates. -/
+theorem derivN_pullbackN (n : ℕ) (D : FormDerivation R A)
+    (ϕ : W →ₗ[R] V) (ω : OpForm R V A n) :
+    derivN n D (pullbackN n ϕ ω) = pullbackN n ϕ (derivN n D ω) := by
+  ext v
+  rfl
 
 /-!
 =============================================================================

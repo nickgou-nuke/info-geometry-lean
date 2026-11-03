@@ -21,6 +21,8 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.Cl11TensorStageFactorization
 
+open scoped Kronecker TensorProduct
+
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.TowerMatrix
 
@@ -42,5 +44,25 @@ def stageTensorFactorization (n m : ℕ) :
     MatStage (n + m) ≃ₐ[ℝ] TensorProduct ℝ (MatStage n) (MatStage m) :=
   (Matrix.reindexAlgEquiv ℝ ℝ (idxAddEquiv n m)).trans
     (Matrix.kroneckerAlgEquiv (Idx n) (Idx m) ℝ).symm
+
+/-- Under the binary-index reindexing, a Kronecker product of finite-stage
+operators is sent to the corresponding elementary tensor. -/
+@[simp] theorem stageTensorFactorization_reindex_kronecker
+    (n m : ℕ) (A : MatStage n) (B : MatStage m) :
+    stageTensorFactorization n m
+      (Matrix.reindex (idxAddEquiv n m).symm (idxAddEquiv n m).symm (A ⊗ₖ B)) =
+      A ⊗ₜ[ℝ] B := by
+  change (Matrix.kroneckerAlgEquiv (Idx n) (Idx m) ℝ).symm
+    (Matrix.reindexAlgEquiv ℝ ℝ (idxAddEquiv n m)
+      (Matrix.reindex (idxAddEquiv n m).symm (idxAddEquiv n m).symm (A ⊗ₖ B))) = _
+  have hreindex :
+      Matrix.reindexAlgEquiv ℝ ℝ (idxAddEquiv n m)
+        (Matrix.reindex (idxAddEquiv n m).symm (idxAddEquiv n m).symm (A ⊗ₖ B)) =
+        A ⊗ₖ B := by
+    ext i j
+    simp [Matrix.reindex]
+  rw [hreindex]
+  apply (Matrix.kroneckerAlgEquiv (Idx n) (Idx m) ℝ).injective
+  simp
 
 end InfoGeometry.Clifford.Cl11TensorStageFactorization

@@ -21,6 +21,22 @@ variable {B : Type*} [Ring B]
 abbrev OperatorMatrix := Matrix (Fin 2) (Fin 2) B
 abbrev OperatorRow := Fin 2 → B
 
+/-- Forward matrix unit in the operator-valued chart. -/
+def rowForwardUnit : Matrix (Fin 2) (Fin 2) B :=
+  InfoGeometry.OperatorAlgebra.mobiusForwardUnit (A := B)
+
+/-- Backward matrix unit in the operator-valued chart. -/
+def rowBackwardUnit : Matrix (Fin 2) (Fin 2) B :=
+  InfoGeometry.OperatorAlgebra.mobiusBackwardUnit (A := B)
+
+/-- The operator-matrix carrier has a genuine noncommutativity witness over
+every nontrivial coefficient ring. -/
+theorem operatorMatrix_noncommutative [Nontrivial B] :
+    rowForwardUnit (B := B) * rowBackwardUnit (B := B) ≠
+      rowBackwardUnit (B := B) * rowForwardUnit (B := B) := by
+  simpa [rowForwardUnit, rowBackwardUnit] using
+    InfoGeometry.OperatorAlgebra.operatorMatrix_noncommutative (A := B)
+
 /-- The operator matrix with four independently ordered coefficients. -/
 def rowMobiusGenerator (a b c d : B) : OperatorMatrix (B := B) :=
   !![a, b; c, d]
@@ -29,6 +45,34 @@ def rowMobiusGenerator (a b c d : B) : OperatorMatrix (B := B) :=
 def rowMobiusAction (v : OperatorRow (B := B))
     (g : OperatorMatrix (B := B)) : OperatorRow (B := B) :=
   fun j => ∑ i, v i * g i j
+
+/-- Sequential right actions compose in the same order as multiplication of
+the operator matrices. -/
+theorem rowMobiusAction_mul (v : OperatorRow (B := B))
+    (g h : OperatorMatrix (B := B)) :
+    rowMobiusAction v (g * h) = rowMobiusAction (rowMobiusAction v g) h := by
+  change Matrix.vecMul v (g * h) = Matrix.vecMul (Matrix.vecMul v g) h
+  exact (Matrix.vecMul_vecMul v g h).symm
+
+@[simp] theorem rowMobiusAction_one (v : OperatorRow (B := B)) :
+    rowMobiusAction v (1 : OperatorMatrix (B := B)) = v := by
+  change Matrix.vecMul v (1 : OperatorMatrix (B := B)) = v
+  exact Matrix.vecMul_one v
+
+/-- An invertible operator matrix induces an invertible right action on rows. -/
+theorem rowMobiusAction_unit_inverse_right (g : (OperatorMatrix (B := B))ˣ)
+    (v : OperatorRow (B := B)) :
+    rowMobiusAction (rowMobiusAction v (↑g : OperatorMatrix (B := B)))
+      (↑(g⁻¹) : OperatorMatrix (B := B)) = v := by
+  rw [← rowMobiusAction_mul]
+  rw [Units.mul_inv g, rowMobiusAction_one]
+
+theorem rowMobiusAction_unit_inverse_left (g : (OperatorMatrix (B := B))ˣ)
+    (v : OperatorRow (B := B)) :
+    rowMobiusAction (rowMobiusAction v (↑(g⁻¹) : OperatorMatrix (B := B)))
+      (↑g : OperatorMatrix (B := B)) = v := by
+  rw [← rowMobiusAction_mul]
+  rw [Units.inv_mul g, rowMobiusAction_one]
 
 /-- The first-order affine-chart velocity, with multiplication order retained. -/
 def rowRiccatiVelocity (a b c d T : B) : B :=

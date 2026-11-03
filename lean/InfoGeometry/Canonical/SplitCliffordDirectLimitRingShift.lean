@@ -201,6 +201,28 @@ theorem splitCliffordTailInfinityInvolute_involutive (k : ℕ)
         _ = splitCliffordTailOf k n a := by
           rw [CliffordAlgebra.involute_involute]
 
+/-- A finite even Clifford element gives a fixed element in every tail
+direct limit. -/
+theorem splitCliffordTailInfinity_of_even_fixed
+    (k n : ℕ) {x : SplitClNNAlg (n + k)}
+    (hx : x ∈ CliffordAlgebra.evenOdd (Qsplit (n + k)) 0) :
+    splitCliffordTailInfinityInvolute k (splitCliffordTailOf k n x) =
+      splitCliffordTailOf k n x := by
+  change splitCliffordTailOf k n
+      (CliffordAlgebra.involute (Q := Qsplit (n + k)) x) = _
+  rw [CliffordAlgebra.involute_eq_of_mem_even hx]
+
+/-- A finite odd Clifford element gives a negative eigenvector in every tail
+direct limit. -/
+theorem splitCliffordTailInfinity_of_odd_negated
+    (k n : ℕ) {x : SplitClNNAlg (n + k)}
+    (hx : x ∈ CliffordAlgebra.evenOdd (Qsplit (n + k)) 1) :
+    splitCliffordTailInfinityInvolute k (splitCliffordTailOf k n x) =
+      -splitCliffordTailOf k n x := by
+  change splitCliffordTailOf k n
+      (CliffordAlgebra.involute (Q := Qsplit (n + k)) x) = _
+  rw [CliffordAlgebra.involute_eq_of_mem_odd hx, map_neg]
+
 /-- The cofinal-tail ring equivalence intertwines the lifted Clifford grade
 involutions on the original and shifted algebraic direct limits. -/
 theorem splitCliffordInfinity_ring_shift_equiv_grade_involution (k : ℕ) :

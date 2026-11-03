@@ -475,57 +475,104 @@ theorem flow_transports_peirce_tetraktys
         InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a)
     rw [φ.map_sub, hmul, hmul, hplus, hminus]
 
-/-- The Peirce Tetraktys spin along an exponential derivation orbit has the
-orbit derivative prescribed by that same derivation. This composes the
-algebraic transport of `genSig` with the generator equation for the flow. -/
-theorem hasStrictDerivAt_flow_peirce_spin
+/-- Every component of the Peirce Tetraktys has the derivative prescribed by
+the same derivation along its exponential orbit. -/
+theorem hasStrictDerivAt_flow_peirce_tetraktys
     {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
     (D : FrechetOperatorDerivation ℝ A) (t : ℝ) (P a c : A) :
     HasStrictDerivAt
       (fun s : ℝ =>
-        InfoGeometry.OperatorAlgebra.PeirceSpine.genSig
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s P)
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s a)
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s c))
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c))
       (D.toContinuousLinearMap
-        (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-          D.toContinuousLinearMap t
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap t
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P a c))) t ∧
+    HasStrictDerivAt
+      (fun s : ℝ =>
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genJ
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c))
+      (D.toContinuousLinearMap
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap t
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P a c))) t ∧
+    HasStrictDerivAt
+      (fun s : ℝ =>
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genV
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c))
+      (D.toContinuousLinearMap
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap t
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P a c))) t ∧
+    HasStrictDerivAt
+      (fun s : ℝ =>
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genSig
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c))
+      (D.toContinuousLinearMap
+        (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap t
           (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c))) t := by
-  have hspin (s : ℝ) :
+  have hPhi (s : ℝ) :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c) =
+        InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P a c) := by
+    have h := flow_transports_peirce_tetraktys D s P a c
+    dsimp at h
+    exact h.1.symm
+  have hJ (s : ℝ) :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.genJ
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c) =
+        InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P a c) := by
+    have h := flow_transports_peirce_tetraktys D s P a c
+    dsimp at h
+    exact h.2.1.symm
+  have hV (s : ℝ) :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.genV
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c) =
+        InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P a c) := by
+    have h := flow_transports_peirce_tetraktys D s P a c
+    dsimp at h
+    exact h.2.2.1.symm
+  have hSig (s : ℝ) :
       InfoGeometry.OperatorAlgebra.PeirceSpine.genSig
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s P)
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s a)
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s c) =
-        InfoGeometry.Lie.ContinuousDerivationExponential.flow
-          D.toContinuousLinearMap s
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s a)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s c) =
+        InfoGeometry.Lie.ContinuousDerivationExponential.flow D.toContinuousLinearMap s
           (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) := by
     have h := flow_transports_peirce_tetraktys D s P a c
     dsimp at h
     exact h.2.2.2.symm
-  have hEq :
-      (fun s : ℝ =>
-        InfoGeometry.OperatorAlgebra.PeirceSpine.genSig
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s P)
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s a)
-          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
-            D.toContinuousLinearMap s c)) =
-      (fun s : ℝ =>
-        InfoGeometry.Lie.ContinuousDerivationExponential.flow
-          D.toContinuousLinearMap s
-          (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c)) :=
-    funext hspin
-  rw [hEq]
-  exact InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_orbit
-    D.toContinuousLinearMap
-    (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) t
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [funext hPhi]
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_orbit
+      D.toContinuousLinearMap
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P a c) t
+  · rw [funext hJ]
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_orbit
+      D.toContinuousLinearMap
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P a c) t
+  · rw [funext hV]
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_orbit
+      D.toContinuousLinearMap
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P a c) t
+  · rw [funext hSig]
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_orbit
+      D.toContinuousLinearMap
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) t
 
 /-- A Fréchet derivation differentiates the full noncommutative curvature
 two-operator form by the product rule in both wedge terms. -/

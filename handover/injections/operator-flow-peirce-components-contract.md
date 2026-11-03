@@ -43,11 +43,13 @@ curvature or mass, classify Möbius transformations, or pass to an infinite
 tensor/direct-limit carrier. Those require their own existing owners and
 explicit compatibility theorems.
 
-## Follow-up bridge: infinitesimal spin transport
+## Follow-up bridge: infinitesimal Tetraktys transport
 
 The same Optics owner proves both that `genSig` is transported by the
 exponential flow (`flow_transports_peirce_tetraktys`) and that a flow orbit
 has derivative `D (flow D t x)` (`ContinuousDerivationExponential.hasStrictDerivAt_orbit`).
-The additional theorem `hasStrictDerivAt_flow_peirce_spin` composes these exact
-statements. Its derivative is the native operator `D (φₜ (genSig P a c))`;
-it does not claim a scalar Riccati law or an analytic classification result.
+The theorem `hasStrictDerivAt_flow_peirce_tetraktys` composes these exact
+statements and gives the orbit derivative for all four components
+`genPhi`, `genJ`, `genV`, and `genSig`, each as the native operator
+`D (φₜ component(P,a,c))`. It does not claim a scalar Riccati law or an
+analytic classification result.

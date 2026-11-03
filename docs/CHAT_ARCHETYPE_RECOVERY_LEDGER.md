@@ -1265,6 +1265,46 @@ counterexample. Existing linter warnings were emitted by dependency modules
 `Supercharge`, `ChiralEulerFactors`, and `Unipotent`; this is not a
 warning-free quality-gate result.
 
+### Current-thread source batch: finite Clifford heads and the infinite tower
+
+The current-thread claim that the operator tower has self-similar factors of
+the form `Cl(k,k) ⊗ Cl(∞,∞)` must be split into finite-stage facts and an
+infinite-colimit compatibility statement. In the checked-out owners:
+
+- `Canonical/SplitCliffordTensorBridge.lean::splitCliffordTensorStepEquiv`
+  proves the one-step finite-stage algebra equivalence from
+  `SplitClNNAlg (n + 1)` to the **graded** tensor product of the `Cl(1,1)` head
+  and the `Qsplit n` tail. `SplitCliffordDirectLimit.lean::splitCliffordStep_tensorFactor`
+  proves that the actual transition maps agree with inclusion into that tail
+  factor. The word “graded” is essential; replacing this by an ordinary tensor
+  product would not preserve the Clifford multiplication convention.
+- `SplitCliffordDirectLimit.lean` defines the algebraic `SplitCliffordInfinity`,
+  proves injectivity of every finite-stage map, and proves that every element
+  has representatives arbitrarily far out in the tower. These support finite
+  windows inside the colimit, but do not identify the colimit with a tensor
+  product of a finite head and an infinite tail.
+- On the distinct matrix tower carrier,
+  `Canonical/Cl11MatrixTowerTailShift.lean::cl11MatrixLimit_tailRingEquiv`
+  proves a ring equivalence between the matrix-tower limit and the limit of
+  every `k`-shifted tail; its star compatibility and finite-stage formula are
+  also proved. This is a cofinal-tail self-similarity result, not the requested
+  finite-head tensor decomposition.
+- `Clifford/CliffordBitWordEquivalence.lean::cliffordBitWordColimitEquiv`
+  identifies the separate bit-word Clifford colimit with the Primon UHF
+  colimit. `Canonical/SplitCliffordMatrixLimitSoldering.lean` records why the
+  recursive spinor representation does not directly intertwine the untwisted
+  matrix bond: `gradedTensorSuccessor_not_algHom` rules out that algebra map.
+  Its `matrixLimitMap` remains conditional on `BondCoherence`; that condition
+  is not supplied by the obstructed recursive spinor route.
+
+Accordingly, the finite head/tail law and matrix-limit tail shift are genuine
+owners; the stronger claim
+`SplitCliffordInfinity ≃ₐ[ℝ] Cl(k,k) ᵍ⊗ SplitCliffordInfinity` (or an equivalent
+operator-level infinite tensor decomposition) remains an open bridge. The
+separate carriers and transition maps must first be connected by an actual
+compatible algebra map. The transcript’s “Cantor fractal” wording supplies no
+such map and is not promoted as a theorem.
+
 ### Shared-link source batch: Bogoliubov, naturality, and defect A45–A50
 
 The latest `1t9...` snapshot repeats A45–A50 labels used by the `1ofa...`

@@ -7,6 +7,7 @@ import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 import InfoGeometry.OperatorAlgebra.OperatorMobiusAction
 import InfoGeometry.OperatorAlgebra.OperatorRiccatiRowChart
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!
 # Operator-valued matrix lift of the thermodynamic Möbius flow
@@ -202,6 +203,40 @@ def thermodynamicOperatorMatrixFlow
     (translation dilation specialConformal : ℝ) (t : ℂ) : OperatorMatrix A :=
   fun i j => algebraMap ℂ A
     (thermodynamicSL2MatrixFlow translation dilation specialConformal t i j)
+
+section DifferentiableOperatorFlow
+
+variable {B : Type*} [NormedRing B] [NormedAlgebra ℂ B]
+
+/-- Each entry of the operator-valued thermodynamic exponential flow has the
+generator derivative obtained by mapping the scalar matrix-flow derivative
+through the continuous complex algebra map. The generator and flow multiply
+in the displayed order in `M₂(A)`. -/
+theorem thermodynamicOperatorMatrixFlow_entry_hasDerivAt
+    (translation dilation specialConformal : ℝ) (t : ℂ) (i j : Fin 2) :
+    HasDerivAt
+      (fun z : ℂ =>
+        thermodynamicOperatorMatrixFlow (A := B)
+          translation dilation specialConformal z i j)
+      (algebraMap ℂ B
+        (((thermodynamicSL2Generator translation dilation specialConformal).matrix *
+          thermodynamicSL2MatrixFlow translation dilation specialConformal t) i j)) t := by
+  let G := (thermodynamicSL2Generator translation dilation specialConformal).matrix
+  have hScalar :=
+    InfoGeometry.Canonical.MatrixDetExpTraceJacobi.hasDerivAt_matrixEntry_matrixExpFlow_left
+      G t i j
+  let L : ℂ →L[ℂ] B :=
+    { toFun := algebraMap ℂ B
+      map_add' := map_add (algebraMap ℂ B)
+      map_smul' := fun c x => by
+        simp [RingHom.id_apply, Algebra.smul_def]
+      cont := continuous_algebraMap ℂ B }
+  have hMapped := hScalar.comp_semilinear (RingHom.id ℂ) L
+  simpa [L, Function.comp_def, thermodynamicOperatorMatrixFlow,
+    thermodynamicSL2MatrixFlow, G,
+    InfoGeometry.Canonical.MatrixDetExpTraceJacobi.matrixExpFlow] using hMapped
+
+end DifferentiableOperatorFlow
 
 /-- The operator-valued coefficient matrices inherit the finite
 one-parameter group law. -/

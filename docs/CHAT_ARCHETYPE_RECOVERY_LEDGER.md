@@ -1895,13 +1895,29 @@ requires a unitary conjugator. The owner passed its locked Lean check and
 targeted Lake build (9,180 jobs, exit 0) on 2026-11-04. The check reports the
 unused `CompleteSpace H` section-instance linter warning on this theorem.
 
-The owner now proves `nilpotent_finite_volume_unitary_conjugate`: if both
-`U U† = 1` and `U† U = 1`, then
+The owner now proves `nilpotent_finite_volume_isometric_conjugate`: assuming
+`U† U = 1`, then
 `Tr((U N U†)(U N U†)†) = Tr(N N†)` for every bounded operator `N` on a
 finite-dimensional complex Hilbert space. The proof expands the adjoint of the
 conjugate, collapses the middle `U†U`, and applies the similarity trace law.
-This establishes the finite-dimensional unitary invariance of the positive
+Only the isometry equation is needed in the proof; in finite dimension it also
+forces surjectivity, but the theorem does not need to state that consequence.
+This establishes finite-dimensional isometric invariance of the positive
 Gramian trace. It makes no infinite-dimensional trace-class or Dixmier-trace
 claim. The owner passed its locked Lean check and targeted Lake build (9,180
 jobs, exit 0); OpenGauss, semantic-vacuity, and staged proof-proxy gates passed
 with zero findings on 2026-11-04.
+
+The source-order trace-invariant packet now exposes
+`finiteOperatorTrace_commutator_eq_zero` for arbitrary bounded operators `X`
+and `Y` on finite-dimensional `H`, with no nilpotency or commutativity
+assumption. The Cartan trace-zero conjunct in
+`nilpotent_finite_trace_invariants` now reuses this general commutator law.
+This is the finite-dimensional operator version of the transcript's cyclic
+trace premise for commutator-generated curvature/dissipators; it does not
+assert a trace on infinite-dimensional or non-trace-class operators. The owner
+passed `run_locked_lean.py` and a targeted Lake build of
+`InfoGeometry.Canonical.NilpotentQGTCartanBridge` (9,180 jobs, exit 0). Strict
+OpenGauss reported zero traps, semantic-vacuity reported zero findings, and
+the staged proof-proxy gate passed. The new general lemma has only the
+inherited unused `CompleteSpace H` section-instance warning.

@@ -92,6 +92,15 @@ theorem finiteOperatorTrace_similarity
     _ = LinearMap.trace ℂ H T.toLinearMap := by
       rw [hInv, one_mul]
 
+/-- Every commutator has zero finite-dimensional linear trace. -/
+theorem finiteOperatorTrace_commutator_eq_zero
+    [Module.Finite ℂ H] (X Y : EndH) :
+    finiteOperatorTrace (opCommutator X Y) = 0 := by
+  change LinearMap.trace ℂ H
+      (X.toLinearMap * Y.toLinearMap - Y.toLinearMap * X.toLinearMap) = 0
+  rw [map_sub, LinearMap.trace_mul_comm ℂ X.toLinearMap Y.toLinearMap,
+    sub_self]
+
 /-- In finite dimension, a square-zero operator has zero trace, the two
 adjoint Gramian terms have equal trace by cyclicity, and both the Cartan
 commutator and the Gramian trace reduce to these cyclic identities. -/
@@ -119,11 +128,7 @@ theorem nilpotent_finite_trace_invariants
       LinearMap.trace ℂ H ((adjoint N).toLinearMap * N.toLinearMap)
     exact LinearMap.trace_mul_comm ℂ N.toLinearMap (adjoint N).toLinearMap
   have hCartan : finiteOperatorTrace (nilpotentCartan N) = 0 := by
-    change LinearMap.trace ℂ H
-        (N.toLinearMap * (adjoint N).toLinearMap -
-          (adjoint N).toLinearMap * N.toLinearMap) = 0
-    rw [map_sub, LinearMap.trace_mul_comm ℂ N.toLinearMap
-      (adjoint N).toLinearMap, sub_self]
+    exact finiteOperatorTrace_commutator_eq_zero N (adjoint N)
   have hGramian :
       finiteOperatorTrace (nilpotentGramian N) =
         2 * finiteOperatorTrace (N * adjoint N) := by

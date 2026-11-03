@@ -36,6 +36,32 @@ theorem middle_vertex_signed_contraction {e q s : B}
     (1 - q) * (e + q - s) * (1 + s) = e + q * s := by
   noncomm_ring [hqe, hes, hq, hs]
 
+/-- The signed three-corner contraction has a symmetric endpoint bridge
+`-(x*u + v*y)`. Replacing it by the antisymmetric bridge `-(x*u - v*y)` is
+valid exactly when the reverse endpoint path is 2-torsion. This records the
+precise obstruction to the alternate signed formula. -/
+theorem signed_contraction_edge_j_characterization {e x y u v : B} :
+    (e + (x * y + v * u) - (x * u + v * y) =
+      e + (x * y + v * u) - (x * u - v * y)) ↔
+      v * y + v * y = 0 := by
+  have hDifference :
+      (e + (x * y + v * u) - (x * u + v * y)) -
+        (e + (x * y + v * u) - (x * u - v * y)) =
+      -(v * y + v * y) := by
+    noncomm_ring
+  constructor
+  · intro h
+    have hzero :
+        (e + (x * y + v * u) - (x * u + v * y)) -
+          (e + (x * y + v * u) - (x * u - v * y)) = 0 :=
+      sub_eq_zero.mpr h
+    rw [hDifference] at hzero
+    exact neg_eq_zero.mp hzero
+  · intro h
+    apply sub_eq_zero.mp
+    rw [hDifference, h]
+    simp
+
 /-- Contraction of the four directed arrows around an orthogonal middle
 corner. The endpoint self-products and both parallel two-hop paths are
 retained explicitly. -/

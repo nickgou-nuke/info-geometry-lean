@@ -183,6 +183,21 @@ theorem flow_mul
       simpa [ContinuousLinearMap.mul_apply] using D.leibniz x y)
     t a b
 
+/-- Exponential flow transports idempotents to idempotents. This is the
+cut-preservation fact needed before transporting a Peirce decomposition along
+an operator derivation flow. -/
+theorem flow_preserves_idempotent
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (D : FrechetOperatorDerivation ℝ A) (t : ℝ) {P : A}
+    (hP : P * P = P) :
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t P *
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t P =
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t P := by
+  rw [← flow_mul D t P P, hP]
+
 /-- The exponential automorphism of a continuous operator derivation
 transports the Peirce tetraktys spin, and hence its canonical
 Chevalley--Eilenberg curvature, to the spin of the transported cut and

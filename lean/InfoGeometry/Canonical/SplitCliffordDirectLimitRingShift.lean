@@ -246,6 +246,38 @@ theorem splitCliffordInfinity_ring_shift_equiv_grade_involution (k : ℕ) :
   exact congrArg (splitCliffordTailOf k n)
     (splitCliffordMap_involute n (n + k) (Nat.le_add_right n k) x)
 
+/-- Any two fixed cofinal tails of the split Clifford tower are canonically
+ring-equivalent, by transporting through the original direct limit. -/
+noncomputable def splitCliffordTailInfinity_ring_shift_equiv (k l : ℕ) :
+    SplitCliffordTailInfinity k ≃+* SplitCliffordTailInfinity l :=
+  (splitCliffordInfinity_ring_shift_equiv k).symm.trans
+    (splitCliffordInfinity_ring_shift_equiv l)
+
+/-- The canonical equivalence between two cofinal tails intertwines their
+induced Clifford grade involutions. -/
+theorem splitCliffordTailInfinity_ring_shift_equiv_grade_involution
+    (k l : ℕ) :
+    (splitCliffordTailInfinityInvolute l).comp
+        (splitCliffordTailInfinity_ring_shift_equiv k l).toRingHom =
+      (splitCliffordTailInfinity_ring_shift_equiv k l).toRingHom.comp
+        (splitCliffordTailInfinityInvolute k) := by
+  apply DirectLimit.Ring.hom_ext
+  intro n
+  ext x
+  simp only [RingHom.comp_apply, DirectLimit.Ring.lift_of,
+    splitCliffordTailInfinityInvolute]
+  change splitCliffordTailOf l (n + k)
+      (CliffordAlgebra.involute (Q := Qsplit ((n + k) + l))
+        (splitCliffordMap (n + k) ((n + k) + l)
+          (Nat.le_add_right (n + k) l) x)) =
+    splitCliffordTailOf l (n + k)
+      (splitCliffordMap (n + k) ((n + k) + l)
+        (Nat.le_add_right (n + k) l)
+        (CliffordAlgebra.involute (Q := Qsplit (n + k)) x))
+  exact congrArg (splitCliffordTailOf l (n + k))
+    (splitCliffordMap_involute (n + k) ((n + k) + l)
+      (Nat.le_add_right (n + k) l) x)
+
 end InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift
 
 end

@@ -162,6 +162,55 @@ theorem hasFDerivAt (D : FrechetOperatorDerivation 𝕜 A) (a : A) :
     HasFDerivAt D D.toContinuousLinearMap a :=
   D.toContinuousLinearMap.hasFDerivAt
 
+/-- The derivative of an idempotent cut lies entirely in its two
+off-diagonal Peirce corners. This is the infinitesimal tangent constraint
+behind the finite-time theorem that derivation flows preserve idempotents. -/
+theorem map_idempotent_is_offDiagonal
+    (D : FrechetOperatorDerivation 𝕜 A) {P : A}
+    (hP : P * P = P) :
+    D P = P * D P * (1 - P) + (1 - P) * D P * P := by
+  have hLeib : D P = D P * P + P * D P := by
+    calc
+      D P = D (P * P) := congrArg D.toContinuousLinearMap hP.symm
+      _ = D P * P + P * D P := D.leibniz P P
+  let Q : A := 1 - P
+  have hPQ : P * Q = 0 := by
+    dsimp [Q]
+    rw [mul_sub, mul_one, hP, sub_self]
+  have hQP : Q * P = 0 := by
+    dsimp [Q]
+    rw [sub_mul, one_mul, hP, sub_self]
+  have hDiagP : P * D P * P = 0 := by
+    have hTwice : P * D P * P = P * D P * P + P * D P * P := by
+      calc
+        P * D P * P = P * (D P * P + P * D P) * P :=
+          congrArg (fun z : A => P * z * P) hLeib
+        _ = (P * (D P * P)) * P + (P * (P * D P)) * P := by
+          rw [mul_add, add_mul]
+        _ = P * D P * (P * P) + (P * P) * D P * P := by noncomm_ring
+        _ = P * D P * P + P * D P * P := by rw [hP]
+    have hCancel :
+        (P * D P * P) + (0 : A) = (P * D P * P) + (P * D P * P) := by
+      simpa using hTwice
+    exact (add_left_cancel hCancel).symm
+  have hDiagQ : Q * D P * Q = 0 := by
+    calc
+      Q * D P * Q = Q * (D P * P + P * D P) * Q :=
+        congrArg (fun z : A => Q * z * Q) hLeib
+      _ = (Q * (D P * P)) * Q + (Q * (P * D P)) * Q := by
+        rw [mul_add, add_mul]
+      _ = Q * D P * (P * Q) + (Q * P) * D P * Q := by noncomm_ring
+      _ = 0 := by rw [hPQ, hQP]; simp
+  have hSum : P + Q = 1 := by
+    dsimp [Q]
+    abel
+  calc
+    D P = (P + Q) * D P * (P + Q) := by rw [hSum, one_mul, mul_one]
+    _ = P * D P * P + P * D P * Q + Q * D P * P + Q * D P * Q := by
+      noncomm_ring
+    _ = P * D P * Q + Q * D P * P := by rw [hDiagP, hDiagQ]; abel
+    _ = P * D P * (1 - P) + (1 - P) * D P * P := by rfl
+
 /-- The Banach exponential of a continuous Fréchet operator derivation
 preserves the associative operator product. This connects the explicit
 Leibniz structure in this file to the generic continuous derivation flow,

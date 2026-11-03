@@ -18,7 +18,6 @@ InfoGeometry.Canonical.SUSYBayes | canonical SUSY/Bayesian facade is theorem-sha
 InfoGeometry.Canonical.WilsonLoop | canonical Wilson-loop surface is only a facade/API layer with definitional wrapper theorems and no unique constructive load
 InfoGeometry.Prequantum.Connection | scalarized covariant-derivative interface is mostly readback from stored prequantum bundle data plus universal Weyl scaling packaging
 InfoGeometry.Prequantum.Quotient | quotient layer is a thin descent wrapper over the quarantined scalarized connection interface
-InfoGeometry.Projective.TwistorBridge | twistor bridge is discharged by `zeroNullQuadraticForm := 0` and a scaled-zero anomaly form
 InfoGeometry.Unstable.YangMillsBridge | bridge stores QFT obligations and later projects them out
 
 InfoGeometry.Canonical.CuntzCanonicalKMSFunctional | legacy owner depends on the missing Algebra.CuntzAlgebra and assumes a diagonal coefficient projection absent from the native quotient API

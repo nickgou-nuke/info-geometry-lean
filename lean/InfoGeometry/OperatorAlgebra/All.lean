@@ -9,6 +9,7 @@ import InfoGeometry.OperatorAlgebra.CoisometricCoarseGraining
 import InfoGeometry.OperatorAlgebra.FiniteParametrix
 import InfoGeometry.OperatorAlgebra.PeirceCoupling
 import InfoGeometry.OperatorAlgebra.FinitePairingImplementer
+import InfoGeometry.OperatorAlgebra.OperatorMatrixExponentialFlow
 import InfoGeometry.OperatorAlgebra.CliffordDirac
 import InfoGeometry.OperatorAlgebra.FinitePairingReducedVacuum
 import InfoGeometry.OperatorAlgebra.TracialCARDensity

@@ -4,71 +4,45 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
-import InfoGeometry.Core.SquareZeroSandwich
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Algebra.Group.Units.Defs
 
 /-!
-# Non-Invertible Symmetry — Fidkowski's Z_N Remnant
+# Noninvertible operators from idempotents
 
-Fidkowski's lectures on non-invertible chiral symmetry describe:
-- Non-invertible symmetries: co-dimension one defects with non-group-like fusion
-- Z_N remnant of chiral U(1) symmetry broken by ABJ anomaly
-- Fusion rules: not group-like (elements may not have inverses)
-- Lattice representation: unitary times projector (almost unitary)
-- Nielsen-Ninomiya theorem connection
-
-Key archetype from Fidkowski's lectures:
-- Non-invertible symmetry defects with fusion rules C × C = 1 + ...
-- Z_N remnant of anomalous chiral symmetry
-- Operator representation: unitary × projector
-- Fusion categories (not group-like)
-
-Real-linear non-commutative operator algebra. No complex numbers.
+This module records two elementary operator-algebra facts that can be stated
+without importing unformalized claims about lattice fermions or fusion
+categories: a proper idempotent has no two-sided inverse, while an element of
+positive finite multiplicative order is a unit.
 -/
-
-noncomputable section
 
 namespace InfoGeometry.Algebra.NonInvertibleSymmetry
 
-/-! A non-invertible symmetry defect: fusion is not group-like,
-  i.e., C × C ≠ 1 in general. -/
-structure NonInvertibleDefect {R : Type*} [Ring R] where
-  name : String
-  fusion_self : R  -- C × C = fusion_self (not necessarily 1)
-  has_inverse : Bool  -- false for non-invertible defects
+variable {R : Type*} [Ring R]
 
-/-! The Z_N remnant of chiral U(1) symmetry:
-  survives ABJ anomaly as a non-invertible Z_N symmetry. -/
-structure ZNRemnant (R : Type*) [Ring R] (N : ℕ) where
-  generator : R
-  hN : generator = 1  -- Placeholder: generator^N = 1
-  h_non_invertible : Bool  -- true: not group-like
+/-- An idempotent different from the identity. -/
+def IsProperIdempotent (e : R) : Prop := e * e = e ∧ e ≠ 1
 
-/-! Lattice representation: unitary × projector.
-  Non-invertible operators are close to unitary but not invertible. -/
-structure UnitaryTimesProjector {R : Type*} [Ring R] where
-  unitary_part : R
-  projector_part : R
-  h_projector_idem : projector_part * projector_part = projector_part
+/-- A proper idempotent cannot have a two-sided multiplicative inverse. -/
+theorem proper_idempotent_no_two_sided_inverse {e : R} (he : IsProperIdempotent e) :
+    ¬ ∃ u : R, u * e = 1 ∧ e * u = 1 := by
+  rintro ⟨u, hu_left, hu_right⟩
+  apply he.2
+  calc
+    e = (u * e) * e := by rw [hu_left, one_mul]
+    _ = u * (e * e) := by rw [mul_assoc]
+    _ = u * e := by rw [he.1]
+    _ = 1 := hu_left
 
-/-! Fusion rules: C₁ × C₂ = ⊕ N_{12}^k C_k (not group-like in general). -/
-def fusion_rule {R : Type*} [Ring R]
-    (C₁ C₂ : R) (k : ℕ) : Prop := True
+variable {M : Type*} [Monoid M]
 
-/-! Nielsen-Ninomiya theorem: chiral fermions on the lattice
-  require fermion doubling (no exact chiral symmetry without doubling). -/
-theorem nielsen_ninomiya {R : Type*} [Ring R] :
-    True := by
-  trivial
+/-- A positive finite-order element is a unit, with inverse the preceding power. -/
+theorem finite_order_element_isUnit {x : M} {n : ℕ} (hn : 0 < n)
+    (hpow : x ^ n = 1) : IsUnit x := by
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hn)
+  apply (isUnit_iff_exists).2
+  refine ⟨x ^ k, ?_, ?_⟩
+  · simpa [pow_succ'] using hpow
+  · simpa [pow_succ] using hpow
 
-/-! Z_N fusion: generator^N = 1 but generator × generator ≠ generator
-  in general (non-group-like for N > 2). -/
-theorem zn_fusion {R : Type*} [Ring R] {N : ℕ}
-    (z : ZNRemnant R N) :
-    True := by
-  trivial
-
-/-! Non-invertible fusion categories: fusion is not group-like,
-  unlike invertible symmetries which form groups. -/
-theorem non_group_like_fusion {R : Type*} [Ring R] :
-    True := by
-  trivial
+end InfoGeometry.Algebra.NonInvertibleSymmetry

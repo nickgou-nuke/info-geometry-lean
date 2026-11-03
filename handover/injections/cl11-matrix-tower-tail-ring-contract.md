@@ -35,6 +35,23 @@ product, a completion, or a graded tensor product of a finite Clifford algebra
 with a limit. The finite-stage `Cl(1,1)` graded factorizations remain owned by
 `Canonical/SplitCliffordTensorBridge.lean`.
 
+## Refinement under investigation: operator star structure
+- Existing stage fact: `Cl11TensorTower.stageEmbed_star` proves that every
+  matrix-tower bond preserves the stage involution.
+- Existing limit fact: `Cl11TensorTowerLimit.limitStarRing` equips the original
+  direct limit with the descended star operation.
+- Missing statement: equip the shifted `TailLimit k` with the star operation
+  descended from its actual iterated bonds, then prove that
+  `cl11MatrixLimit_tailRingEquiv k` preserves star. This is an algebraic
+  `StarRing` compatibility statement; it does not identify a graded tensor
+  product or an analytic infinite tensor product.
+- Proposed proof route: descend star along `tailMap` using the existing
+  `bondMap_star` theorem, then check the stage maps of `toTail`/`fromTail`.
+
+Adjacent claim not established: a graded algebra equivalence
+`Cl(1,1) ᵍ⊗ Cl(∞,∞) ≃ Cl(∞,∞)`. The ring tail shift alone does not supply the
+graded tensor-product map or its compatibility with the grading.
+
 ## Verification
 Compile the new owner through the repository's shared locked Lake build; check
 for placeholders and inspect `#print axioms` for the ring equivalence.

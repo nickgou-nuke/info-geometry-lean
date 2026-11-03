@@ -1319,8 +1319,17 @@ infinite-colimit compatibility statement. In the checked-out owners:
   applies the canonical recursive transition to the tail.
   `splitCliffordHeadTailStep_compatible` is kernel-checked and proves that this
   map intertwines the finite Clifford bonding maps under the head--tail
-  equivalences. This is a compatible finite-stage construction; it does not
-  itself construct the colimit-level equivalence.
+  equivalences. The owner now transports every interval map
+  `splitCliffordMap (k + m) (k + n)` into fixed-head coordinates as
+  `splitCliffordHeadTailMap`, proves these maps form a `DirectedSystem`, and
+  proves `splitCliffordHeadTailMap_succ` agrees with the explicit one-step
+  graded-tensor map. It defines the algebraic direct limit
+  `SplitCliffordHeadTailInfinity k`, proves the transported bonds injective,
+  and proves every finite tensor stage embeds in that direct limit. The targeted
+  locked build kernel-checked these declarations. This gives a faithful
+  fixed-head graded-tensor colimit, but it does not identify that colimit with
+  the existing `SplitCliffordInfinity` or with a graded tensor product whose
+  tail is `SplitCliffordTailInfinity`.
 
 Accordingly, the finite graded head/tail law and both Clifford- and
 matrix-limit cofinal-tail shifts are genuine owners; the stronger claim

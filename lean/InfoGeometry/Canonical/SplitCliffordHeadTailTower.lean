@@ -151,6 +151,113 @@ theorem splitCliffordHeadTailStep_compatible (k n : ℕ) :
     GradedTensorProduct.tmul_one_mul_one_tmul]
   congr 2
 
+/-- The `n`th fixed-head stage is the native graded tensor product of the
+first `k` split coordinates and the remaining `n` coordinates. -/
+abbrev SplitCliffordHeadTailStage (k n : ℕ) :=
+  CliffordAlgebra.evenOdd (Qsplit k) ᵍ⊗[ℝ]
+    CliffordAlgebra.evenOdd (Qsplit n)
+
+/-- Transport an actual split-Clifford tower transition into fixed-head
+coordinates. -/
+noncomputable def splitCliffordHeadTailMap (k m n : ℕ) (h : m ≤ n) :
+    SplitCliffordHeadTailStage k m →ₐ[ℝ]
+      SplitCliffordHeadTailStage k n :=
+  (splitCliffordFiniteHeadTailEquiv k n).toAlgHom.comp
+    ((splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k)).comp
+      (splitCliffordFiniteHeadTailEquiv k m).symm.toAlgHom)
+
+/-- The transported bonds form a directed system because they are the actual
+`Cl(n,n)` bonds conjugated by the finite head--tail algebra equivalences. -/
+instance splitCliffordHeadTailDirectedSystem (k : ℕ) :
+    DirectedSystem (SplitCliffordHeadTailStage k)
+      (fun m n h => splitCliffordHeadTailMap k m n h) where
+  map_self := by
+    intro n x
+    simp [splitCliffordHeadTailMap, splitCliffordMap_refl]
+  map_map := by
+    intro i j l hij hjl x
+    change
+      splitCliffordFiniteHeadTailEquiv k i
+          (splitCliffordMap (k + j) (k + i)
+            (Nat.add_le_add_left hjl k)
+            ((splitCliffordFiniteHeadTailEquiv k j).symm
+              (splitCliffordFiniteHeadTailEquiv k j
+                (splitCliffordMap (k + l) (k + j)
+                  (Nat.add_le_add_left hij k)
+                  ((splitCliffordFiniteHeadTailEquiv k l).symm x))))) =
+        splitCliffordFiniteHeadTailEquiv k i
+          (splitCliffordMap (k + l) (k + i)
+            (Nat.add_le_add_left (hij.trans hjl) k)
+            ((splitCliffordFiniteHeadTailEquiv k l).symm x))
+    simp only [AlgEquiv.symm_apply_apply]
+    exact congrArg (splitCliffordFiniteHeadTailEquiv k i)
+      (splitCliffordMap_apply_trans (k + l) (k + j) (k + i)
+        (Nat.add_le_add_left hij k) (Nat.add_le_add_left hjl k)
+        ((splitCliffordFiniteHeadTailEquiv k l).symm x)).symm
+
+/-- Successor bonds in fixed-head coordinates agree with the directly
+constructed graded-tensor transition. -/
+theorem splitCliffordHeadTailMap_succ (k n : ℕ) :
+    splitCliffordHeadTailMap k n (n + 1) (Nat.le_succ n) =
+      splitCliffordHeadTailStep k n := by
+  apply AlgHom.ext
+  intro x
+  change splitCliffordFiniteHeadTailEquiv k (n + 1)
+      (splitCliffordMap (k + n) (k + (n + 1))
+        (Nat.add_le_add_left (Nat.le_succ n) k)
+        ((splitCliffordFiniteHeadTailEquiv k n).symm x)) = _
+  have hmap :
+      splitCliffordMap (k + n) (k + (n + 1))
+        (Nat.add_le_add_left (Nat.le_succ n) k) =
+      splitCliffordStep (k + n) := by
+    have hproof : Nat.add_le_add_left (Nat.le_succ n) k =
+        Nat.le_trans le_rfl (Nat.le_succ (k + n)) := Subsingleton.elim _ _
+    simpa only [Nat.add_succ, Nat.add_zero, hproof,
+      splitCliffordMap_refl, AlgHom.comp_id] using
+      (splitCliffordMap_succ (k + n) (k + n) le_rfl)
+  rw [hmap]
+  simpa using AlgHom.congr_fun
+    (splitCliffordHeadTailStep_compatible k n)
+    ((splitCliffordFiniteHeadTailEquiv k n).symm x)
+
+/-- Every transported head--tail transition is injective because the original
+Clifford tower transition is injective and both coordinate changes are
+algebra equivalences. -/
+theorem splitCliffordHeadTailMap_injective (k m n : ℕ) (h : m ≤ n) :
+    Function.Injective (splitCliffordHeadTailMap k m n h) := by
+  intro x y hxy
+  have hStage :
+      splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k)
+          ((splitCliffordFiniteHeadTailEquiv k m).symm x) =
+        splitCliffordMap (k + m) (k + n) (Nat.add_le_add_left h k)
+          ((splitCliffordFiniteHeadTailEquiv k m).symm y) := by
+    apply (splitCliffordFiniteHeadTailEquiv k n).injective
+    simpa [splitCliffordHeadTailMap] using hxy
+  have hSource :=
+    (splitCliffordMap_injective (Nat.add_le_add_left h k)) hStage
+  exact (splitCliffordFiniteHeadTailEquiv k m).symm.injective hSource
+
+/-- Algebraic direct limit of the fixed-head graded tensor stages. -/
+abbrev SplitCliffordHeadTailInfinity (k : ℕ) :=
+  _root_.DirectLimit (SplitCliffordHeadTailStage k)
+    (fun m n h => splitCliffordHeadTailMap k m n h)
+
+/-- The canonical map from each fixed-head graded tensor stage to its direct
+limit. -/
+noncomputable def splitCliffordHeadTailOf (k n : ℕ) :
+    SplitCliffordHeadTailStage k n →+*
+      SplitCliffordHeadTailInfinity k :=
+  DirectLimit.Ring.of (SplitCliffordHeadTailStage k)
+    (fun m l h => (splitCliffordHeadTailMap k m l h).toRingHom) n
+
+/-- Every finite fixed-head tensor stage embeds faithfully into its algebraic
+direct limit. -/
+theorem splitCliffordHeadTailInfinity_stage_injective (k n : ℕ) :
+    Function.Injective (splitCliffordHeadTailOf k n) := by
+  exact DirectLimit.mk_injective
+    (f := fun i j h => splitCliffordHeadTailMap k i j h)
+    (fun i j hij => splitCliffordHeadTailMap_injective k i j hij) n
+
 end InfoGeometry.Canonical.SplitCliffordHeadTailTower
 
 end

@@ -1334,3 +1334,37 @@ reconciled with existing owners and were included in the successful locked
 builds of `InfoGeometry.OperatorAlgebra.PeirceSpine.KantorBogoliubovSpinePoset`
 and `InfoGeometry.OperatorAlgebra.PeirceSpine.KantorCrossGradeBrackets` on
 2026-11-03. Other source batches retain their own verification status.
+
+### Ground-truth contract: Clifford chiral symmetry on even words
+
+The source-level semantic gate identified `Algebra/CliffordSymmetries.lean`
+as containing `True`-valued periodicity/reduction claims and a tautological
+remainder, rather than formalizing the advertised classification. The
+source-confirmed useful operator statement to retain is narrower and exact:
+for an associative ring `B`, a family `e : ι → B`, and an operator `C : B`,
+if `C * e i = -(e i * C)` for every generator, then `C` commutes with every
+length-two word `e i * e j`. This uses no commutativity, scalar, matrix, or
+finite-dimensional representation assumption.
+
+The former `CliffordAlgebra` and `AnticommutingMatrix` structures in that file
+were local assumption bundles, not Mathlib's universal Clifford algebra. Its
+`clifford_periodicity_table`, `clifford_reduction`, and
+`free_fermion_spectrum` declarations had type `True`; none proved the named
+classification. Repo-owned native Clifford owners include
+`Krein/Clifford.lean`, `Optics/QuaternionCl44DiracOperatorBridge.lean`, and
+`Twistor/CliffordBridge.lean`; these have specific carriers and do not turn
+the old `True` declarations into periodicity or KO-spectrum results. The
+replacement lemma is an even-word centralizer fact only; Bott periodicity,
+the reduction isomorphism, and the KO-spectrum classification remain outside
+its scope.
+
+The replacement declaration
+`CliffordSymmetries.chiral_operator_commutes_with_even_generator_products`
+kernel-checked in the locked build of
+`InfoGeometry.Algebra.CliffordSymmetries`; its downstream aggregator
+`InfoGeometry.Algebra.All` also built successfully. The targeted semantic
+content audit selected one file and reported zero findings, and the targeted
+semantic-vacuity audit reported zero. A full Lean-source content scan after
+this repair fell from 26 blocking findings in nine modules to 23 in eight;
+those remaining modules are separate open cleanup work, not evidence against
+this theorem.

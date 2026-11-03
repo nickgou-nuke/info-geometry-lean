@@ -91,6 +91,22 @@ theorem nilpotent_generated_observable_le_spectral_distance_supremum
   rw [nilpotent_generated_spectral_lipschitz_iff]
   exact hLip
 
+/-- If two additive readouts distinguish an observable annihilated by the
+paired nilpotent/adjoint derivation, their distance for the nilpotent Dirac
+operator is unbounded. This is the kernel obstruction to finite distance. -/
+theorem nilpotent_spectral_distance_unbounded_of_derivation_kernel
+    (N c : EndH) (ω₁ ω₂ : EndH →+ ℝ)
+    (hComm : opCommutator N c + opCommutator (adjoint N) c = 0)
+    (hReadout : ω₁ c ≠ ω₂ c) :
+    ¬ BddAbove
+      (InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum.spectralDistanceSet
+        (nilpotentDirac N) ω₁ ω₂) := by
+  apply InfoGeometry.Canonical.ConnesNCSpectralMetricSupremum.spectralDistanceSet_not_bddAbove_of_commuting_readouts
+    (nilpotentDirac N) ω₁ ω₂ c ?_ hReadout
+  change (nilpotentGeneratedSpectralTriple N).commutator c = 0
+  rw [nilpotent_generated_spectral_commutator]
+  exact hComm
+
 /-- The directions `iΦ` and `J` are skew-adjoint. -/
 theorem nilpotent_generated_directions_skew_adjoint (N : EndH) :
     adjoint (Complex.I • nilpotentDirac N) = -(Complex.I • nilpotentDirac N) ∧

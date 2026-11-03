@@ -1821,3 +1821,26 @@ supremum, or Dixmier-trace integration. The updated bridge passed the locked
 Lean check, locked Lake build (9,174 jobs), strict OpenGauss screening (zero
 traps), staged proof-proxy gate, and semantic-vacuity audit (zero findings) on
 2026-11-04.
+
+The same bridge now reaches the existing supremum-distance owner through
+`nilpotent_generated_observable_le_spectral_distance_supremum`: an observable
+whose paired nilpotent/adjoint commutator norm is at most one contributes its
+state-readout difference to `supremumSpectralDist`. The theorem retains the
+exact `BddAbove` premise required by the supremum definition; it does not prove
+boundedness for arbitrary readouts or finiteness without additional
+state-continuity and spectral hypotheses. This update passed a locked Lean
+check and Lake build (9,177 jobs), strict OpenGauss screening (zero traps), the
+staged proof-proxy gate, and the semantic-vacuity audit (zero findings) on
+2026-11-04.
+
+The supremum owner now also proves
+`spectralDistanceSet_not_bddAbove_of_commuting_readouts`: if additive
+readouts differ on any observable commuting with `D`, its integer multiples
+stay in the Lip-1 ball and force the spectral-distance value set to be
+unbounded. `nilpotent_spectral_distance_unbounded_of_derivation_kernel` applies
+this directly to `D = N + N†` when the paired derivation
+`[N, ·] + [N†, ·]` annihilates the distinguishing observable. This is a
+necessary obstruction only; it does not claim that agreement on the derivation
+kernel suffices for finite distance. The owner checks passed for both files;
+the combined locked Lake build and quality gates are being run in this
+continuation.

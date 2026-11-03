@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.OperatorMobiusAction
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Ordered operator Riccati tangent in the row-affine Möbius chart
@@ -92,6 +93,52 @@ theorem rowMobiusGenerator_projective_tangent (a b c d T : B) :
     (a + T * c) * T + rowRiccatiVelocity a b c d T = b + T * d := by
   simp only [rowRiccatiVelocity]
   noncomm_ring
+
+section DifferentiableChart
+
+variable {B : Type*} [NormedRing B] [NormedAlgebra ℝ B]
+
+/-- Differentiating a pointwise factorization `X(t) * T(t) = Y(t)` preserves
+the operator order in the product rule. -/
+theorem rowChart_product_derivative
+    {X T Y : ℝ → B} {x' t' y' : B}
+    (hXT : ∀ t, X t * T t = Y t)
+    (hX : HasDerivAt X x' 0) (hT : HasDerivAt T t' 0)
+    (hY : HasDerivAt Y y' 0) :
+    x' * T 0 + X 0 * t' = y' := by
+  have hProduct : HasDerivAt (fun t : ℝ => X t * T t)
+      (x' * T 0 + X 0 * t') 0 := by
+    change HasDerivAt (X * T) (x' * T 0 + X 0 * t') 0
+    exact hX.mul hT
+  have hFunctions : X * T = Y := funext hXT
+  have hProductY : HasDerivAt Y (x' * T 0 + X 0 * t') 0 := by
+    rw [← hFunctions]
+    exact hProduct
+  exact (hY.unique hProductY).symm
+
+/-- A normalized differentiable chart `T = X⁻¹Y`, expressed without using an
+inverse, has the ordered Riccati derivative forced by its homogeneous
+coordinate derivatives. The hypotheses specify the local curve data; no
+global flow or invertibility claim is implicit. -/
+theorem rowRiccati_chart_curve_derivative
+    {X T Y : ℝ → B} {a b c d t' : B}
+    (hXT : ∀ t, X t * T t = Y t)
+    (hX0 : X 0 = 1)
+    (hX : HasDerivAt X (a + T 0 * c) 0)
+    (hT : HasDerivAt T t' 0)
+    (hY : HasDerivAt Y (b + T 0 * d) 0) :
+    t' = rowRiccatiVelocity a b c d (T 0) := by
+  have hProduct := rowChart_product_derivative hXT hX hT hY
+  have hChart : (a + T 0 * c) * T 0 + t' = b + T 0 * d := by
+    simpa [hX0] using hProduct
+  have hTangent := rowMobiusGenerator_projective_tangent a b c d (T 0)
+  have hEq :
+      (a + T 0 * c) * T 0 + t' =
+        (a + T 0 * c) * T 0 + rowRiccatiVelocity a b c d (T 0) :=
+    hChart.trans hTangent.symm
+  exact add_left_cancel hEq
+
+end DifferentiableChart
 
 /-- The tangent polynomial commutes with every ring representation. -/
 theorem rowRiccatiVelocity_map

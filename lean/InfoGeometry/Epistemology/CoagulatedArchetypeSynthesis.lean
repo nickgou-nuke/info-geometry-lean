@@ -127,7 +127,6 @@ theorem partIV_weyl_inv_defect_off_shell :
 /- The strict causal lineage of the five Jungian archetypes:
   `primaMateria ≤ shadowProjection ≤ animusLogos ≤ chiralSyzygy ≤ selfIndividuation`.
   This is acyclic by `archetype_acyclic`. -/
-omit hP in
 theorem partV_archetype_strict_chain :
     (UnconsciousArchetype.primaMateria ≤ UnconsciousArchetype.shadowProjection) ∧
     (UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos) ∧
@@ -136,7 +135,8 @@ theorem partV_archetype_strict_chain :
   exact archetype_strict_chain
 
 /- The master structural synthesis: all five parts coagulate into one
-kernel-verified theorem, with no causal feedback loops. -/
+kernel-verified theorem, with no causal feedback loops. All proofs are inlined
+to avoid section-variable parameter-ordering issues. -/
 theorem partV_master_synthesis (X : B) :
     evenGrade P X + oddGrade P X = X ∧
     peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X ∧
@@ -147,23 +147,25 @@ theorem partV_master_synthesis (X : B) :
     (UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos) ∧
     (UnconsciousArchetype.animusLogos ≤ UnconsciousArchetype.chiralSyzygy) ∧
     (UnconsciousArchetype.chiralSyzygy ≤ UnconsciousArchetype.selfIndividuation) := by
-  have h1 : evenGrade P X + oddGrade P X = X := partI_cut_decomposition hP X
+  have h1 : evenGrade P X + oddGrade P X = X :=
+    partI_cut_decomposition hP X
   have h2 : peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X :=
     partII_fourfold_partition X
-  have h3 : invS P * evenGrade P X * invS P = evenGrade P X :=
-    partI_cut_even_preserved hP X
-  have h4 : invS P * oddGrade P X * invS P = -oddGrade P X :=
-    partI_cut_odd_negated hP X
-  have h5 : weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C :=
-    partIV_weyl_defect_off_shell hP
-  have h6 : UnconsciousArchetype.primaMateria ≤ UnconsciousArchetype.shadowProjection :=
-    partV_archetype_strict_chain.1
-  have h7 : UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos :=
-    partV_archetype_strict_chain.2.1
-  have h8 : UnconsciousArchetype.animusLogos ≤ UnconsciousArchetype.chiralSyzygy :=
-    partV_archetype_strict_chain.2.2.1
-  have h9 : UnconsciousArchetype.chiralSyzygy ≤ UnconsciousArchetype.selfIndividuation :=
-    partV_archetype_strict_chain.2.2.2
+  have h3 : invS P * evenGrade P X * invS P = evenGrade P X := by
+    peirce_nf hP
+  have h4 : invS P * oddGrade P X * invS P = -oddGrade P X := by
+    peirce_nf hP
+  have h5 : weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C := by
+    dsimp [weylJ, weylJInv]
+    peirce_nf hP
+  have h6 : UnconsciousArchetype.primaMateria ≤ UnconsciousArchetype.shadowProjection := by
+    exact (archetype_strict_chain).1
+  have h7 : UnconsciousArchetype.shadowProjection ≤ UnconsciousArchetype.animusLogos := by
+    exact (archetype_strict_chain).2.1
+  have h8 : UnconsciousArchetype.animusLogos ≤ UnconsciousArchetype.chiralSyzygy := by
+    exact (archetype_strict_chain).2.2.1
+  have h9 : UnconsciousArchetype.chiralSyzygy ≤ UnconsciousArchetype.selfIndividuation := by
+    exact (archetype_strict_chain).2.2.2
   exact ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

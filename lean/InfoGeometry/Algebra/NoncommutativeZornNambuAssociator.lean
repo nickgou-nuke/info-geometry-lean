@@ -38,6 +38,15 @@ def cross (u v : Vec3 R) : Vec3 R :=
    u.x2 * v.x0 - u.x0 * v.x2,
    u.x0 * v.x1 - u.x1 * v.x0⟩
 
+/-- The cyclic coordinate rotation on the ordered three-slot carrier. -/
+def cyclicRotate (u : Vec3 R) : Vec3 R := ⟨u.x1, u.x2, u.x0⟩
+
+/-- The coordinate rotation has order three. -/
+theorem cyclicRotate_order_three {R : Type*} (u : Vec3 R) :
+    cyclicRotate (cyclicRotate (cyclicRotate u)) = u := by
+  cases u
+  rfl
+
 /-- Coefficient-ring commutator with the displayed factor order. -/
 def comm (a b : R) : R := a * b - b * a
 
@@ -100,6 +109,12 @@ proved separately from this definition. -/
 def hodgeSectorSwap (A : ZornNC R) : ZornNC R :=
   ⟨A.β, A.y, A.x, A.α⟩
 
+/-- Simultaneous cyclic rotation of the two vector slots of the ordered
+four-sector carrier. This is defined over an arbitrary associative
+coefficient ring; no commutation of coefficient entries is built in. -/
+def cyclicZorn (A : ZornNC R) : ZornNC R :=
+  ⟨A.α, cyclicRotate A.x, cyclicRotate A.y, A.β⟩
+
 /-- Ungraded diagonal trace on the four-coordinate carrier. -/
 def ungradedTrace (A : ZornNC R) : R := A.α + A.β
 
@@ -141,6 +156,38 @@ theorem hodgeSectorSwap_mul (A B : ZornNC R) :
   cases A
   cases B
   rfl
+
+/-- The simultaneous three-coordinate rotation preserves the ordered
+Zorn-type multiplication, including the order of every coefficient product.
+Thus it is an algebra automorphism of this explicitly defined carrier. -/
+theorem cyclicZorn_mul (A B : ZornNC R) :
+    cyclicZorn (mul A B) = mul (cyclicZorn A) (cyclicZorn B) := by
+  cases A with
+  | mk α x y β =>
+    cases B with
+    | mk γ u v δ =>
+      cases x with
+      | mk x0 x1 x2 =>
+        cases y with
+        | mk y0 y1 y2 =>
+          cases u with
+          | mk u0 u1 u2 =>
+            cases v with
+            | mk v0 v1 v2 =>
+              simp [cyclicZorn, cyclicRotate, mul, dot, cross]
+              <;> abel_nf
+              <;> trivial
+
+/-- The multiplicative automorphism `cyclicZorn` has order three. -/
+theorem cyclicZorn_order_three {R : Type*} (A : ZornNC R) :
+    cyclicZorn (cyclicZorn (cyclicZorn A)) = A := by
+  cases A with
+  | mk α x y β =>
+    cases x with
+    | mk x0 x1 x2 =>
+      cases y with
+      | mk y0 y1 y2 =>
+        rfl
 
 /-- The sector swap preserves the ungraded diagonal trace. -/
 theorem ungradedTrace_hodgeSectorSwap (A : ZornNC R) :

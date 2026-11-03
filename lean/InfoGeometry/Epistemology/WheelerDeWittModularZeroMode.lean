@@ -11,6 +11,7 @@ import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Abel
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 set_option linter.deprecated false
 
@@ -425,6 +426,30 @@ theorem compile_wheeler_dewitt_modular_zero_mode
   thermal_time_equivalence := fun bridge psi => thermal_time_wdw_equivalence bridge psi
   crossed_product_reduction := fun cp psi h_no_boundary => closed_cosmology_zero_boundary_momentum cp psi h_no_boundary
   zero_defect_individuation := zero_defect_forces_self_individuation
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def wdwEpistemicArchetypeOperator (P A C X : B) : EpistemicArchetype → B
+  | .primaMateria => oddGrade P X
+  | .selfIndividuation => evenGrade P X + genV P A C - genPhi P A C * genPhi P A C
+
+theorem wdwEpistemicArchetype_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    wdwEpistemicArchetypeOperator P A C X .selfIndividuation = evenGrade P X ∧
+    wdwEpistemicArchetypeOperator P A C X .primaMateria +
+      wdwEpistemicArchetypeOperator P A C X .selfIndividuation = X ∧
+    invS P * wdwEpistemicArchetypeOperator P A C X .primaMateria * invS P =
+      -wdwEpistemicArchetypeOperator P A C X .primaMateria ∧
+    invS P * wdwEpistemicArchetypeOperator P A C X .selfIndividuation * invS P =
+      wdwEpistemicArchetypeOperator P A C X .selfIndividuation := by
+  dsimp only [wdwEpistemicArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end
 

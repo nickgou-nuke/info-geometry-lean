@@ -78,6 +78,43 @@ theorem fiveGradeRange_eq_eigenspace {t : A} (ht : t * t * t = t)
         simpa only [hz .negTwo (by decide), hz .negOne (by decide),
           hz .zero (by decide), hz .posOne (by decide), zero_add] using hrec
 
+/-- A nonzero commutator with a tripotent has a nonzero component in one of
+the four nonzero adjoint grades. Thus failure to commute is detected by the
+existing five-projector decomposition; this does not specify which nonzero
+grade occurs. -/
+theorem exists_nonzero_nonzero_grade_component_of_ad_ne_zero {t x : A}
+    (ht : t * t * t = t)
+    (hcomm : LieAlgebra.ad ℝ A t x ≠ 0) :
+    ∃ k : FiveGrade, k ≠ .zero ∧ fiveGradeProjector t k x ≠ 0 := by
+  change t * x - x * t ≠ 0 at hcomm
+  by_contra hnone
+  have hNegTwo : fiveGradeProjector t .negTwo x = 0 := by
+    by_contra h
+    exact hnone ⟨.negTwo, by decide, h⟩
+  have hNegOne : fiveGradeProjector t .negOne x = 0 := by
+    by_contra h
+    exact hnone ⟨.negOne, by decide, h⟩
+  have hPosOne : fiveGradeProjector t .posOne x = 0 := by
+    by_contra h
+    exact hnone ⟨.posOne, by decide, h⟩
+  have hPosTwo : fiveGradeProjector t .posTwo x = 0 := by
+    by_contra h
+    exact hnone ⟨.posTwo, by decide, h⟩
+  have hrec := fiveGrade_recompose_decompose t x
+  change fiveGradeProjector t .negTwo x + fiveGradeProjector t .negOne x +
+      fiveGradeProjector t .zero x + fiveGradeProjector t .posOne x +
+      fiveGradeProjector t .posTwo x = x at hrec
+  rw [hNegTwo, hNegOne, hPosOne, hPosTwo] at hrec
+  simp only [zero_add, add_zero] at hrec
+  have hzero : t * fiveGradeProjector t .zero x -
+      fiveGradeProjector t .zero x * t = 0 := by
+    have heig := mem_fiveGradeRange_implies_adjoint_eigen ht .zero
+      ⟨x, rfl⟩
+    simpa [fiveGradeValue] using heig
+  apply hcomm
+  rw [← hrec]
+  exact hzero
+
 /-- No eigenspace at a weight outside the five labels contains a nonzero element. -/
 theorem eigenspace_eq_bot_of_not_mem_fiveGradeValue {t : A} {r : ℝ}
     (ht : t * t * t = t)

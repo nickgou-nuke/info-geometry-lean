@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Arithmetic.LiouvilleFiniteCorrelation
 import InfoGeometry.Arithmetic.SarnakLocalCertification
 import Mathlib.NumberTheory.GaussSum
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Arithmetic structure and finite statistical observations
@@ -11,8 +18,8 @@ The dependency poset records the organization of this corridor, not implications
 between conjectures. Spectral statistics requires spectral input independently
 of functional symmetry.
 
-Gauss sums and reciprocity use Mathlib directly. Liouville counting and local
-zero certification retain their existing owners. No asymptotic cancellation,
+Gauss sums and reciprocity use Mathlib directly. Liouville counting and zero
+reflection pairing retain their existing owners. No asymptotic cancellation,
 normality of pi, Riemann hypothesis, quantum gate optimality, or random-matrix
 universality theorem is asserted here.
 -/
@@ -28,11 +35,13 @@ export LiouvilleFiniteCorrelation
     liouville_correlation_abs_le liouville_correlation_ne_zero_of_odd_card)
 
 export SarnakLocalCertification
-  (critical_reflection critical_reflection_involutive critical_reflection_fixed_iff
-    RiemannSymmetric CertifiedRegion covered_zeros_on_critical_line
-    finite_height_certificate global_confinement_of_certificates_at_every_height
-    counterexample_f counterexample_is_symmetric
-    zero_reflection_does_not_imply_confinement)
+  (critical_reflection_involutive
+    entireRiemannXi_zero_reflection
+    entireRiemannXi_zero_reflection_iff counterexample_f
+    counterexample_reflection_zero symmetric_zero_can_be_off_horizon)
+
+export InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
+  (antiunitaryCriticalReflection)
 
 inductive Archetype
   | finiteFields
@@ -214,5 +223,44 @@ theorem finite_checks_do_not_imply_universal (bound : ℕ) :
   · intro universal
     have impossible := universal (bound + 1)
     omega
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def lectureArchetypeOperator (P A C X : B) : Archetype → B
+  | .finiteFields => P
+  | .characters => invS P
+  | .gaussIdentities => invS P * invS P
+  | .primeFactorization => conePlus P A
+  | .liouvilleParity => coneMinus P C
+  | .finiteCounting => evenGrade P X + oddGrade P X
+  | .finiteCorrelations => genSig P A C
+  | .functionalSymmetry => genPhi P A C
+  | .zeroPairing => genJ P A C
+  | .spectralRealization => genV P A C
+  | .spectralStatistics => genSig P A C * genSig P A C - genV P A C * genV P A C
+
+theorem lecture_structure_and_randomness_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C X : B) :
+    lectureArchetypeOperator P A C X .gaussIdentities = (1 : B) ∧
+    lectureArchetypeOperator P A C X .primeFactorization *
+      lectureArchetypeOperator P A C X .primeFactorization = 0 ∧
+    lectureArchetypeOperator P A C X .liouvilleParity *
+      lectureArchetypeOperator P A C X .liouvilleParity = 0 ∧
+    lectureArchetypeOperator P A C X .finiteCounting = X ∧
+    lectureArchetypeOperator P A C X .functionalSymmetry *
+      lectureArchetypeOperator P A C X .functionalSymmetry =
+      lectureArchetypeOperator P A C X .spectralRealization ∧
+    lectureArchetypeOperator P A C X .zeroPairing *
+      lectureArchetypeOperator P A C X .functionalSymmetry =
+      lectureArchetypeOperator P A C X .finiteCorrelations ∧
+    lectureArchetypeOperator P A C X .spectralStatistics = 0 := by
+  dsimp only [lectureArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Arithmetic.LectureStructureAndRandomness

@@ -67,6 +67,16 @@ theorem archetype_A33_hodge_star_and_half_twists (A C X : B) :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [hodgeStar]); peirce_nf hP)
 
+/-- The Hodge grading sends the two factors `1 ± V` to the corresponding
+`invS ± Σ` factors. Their ordered product is unchanged and equals `1 - V²`.
+This is the finite Peirce identity behind the A40 chiral parity product; it
+does not assert an analytic zeta or Möbius interpretation. -/
+theorem hodgeStar_metric_factor_product (A C : B) :
+    hodgeStar P (1 - genV P A C) * hodgeStar P (1 + genV P A C) =
+      (1 - genV P A C) * (1 + genV P A C) := by
+  simp only [hodgeStar]
+  peirce_nf hP
+
 /-- The double loop: sandwiching by `Φ` and then by `J` is sandwiching by `Σ`. -/
 theorem double_half_twist_eq_spin_sandwich (A C X : B) :
     genJ P A C * (genPhi P A C * X * genPhi P A C) * (-genJ P A C) =

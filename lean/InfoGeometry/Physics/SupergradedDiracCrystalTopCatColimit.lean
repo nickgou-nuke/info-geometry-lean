@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Topology.Category.TopCat.Limits.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # `TopCat` colimit for a two-stage supergraded Dirac crystal tower
@@ -234,5 +241,39 @@ theorem supergradedDiracCrystalTopCatCompatibleReadout_extended
         supergradedDiracCrystalTopCatCompatibleReadout f hf a0 a1 hcompat = a1 :=
   supergradedDiracCrystalTopCatCompatibleReadout_stage f hf a0 a1 hcompat
     DiracCrystalStage.extended
+
+/-! ### Non-Commutative Operator Realization of `DiracCrystalStage` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `DiracCrystalStage` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def diracCrystalStageOperator (P A C : B) : DiracCrystalStage → B
+  | .initial => genPhi P A C
+  | .extended => genV P A C
+
+/-- **Theorem (Non-Commutative Supergraded Dirac Crystal Identities across `DiracCrystalStage`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the odd Dirac
+supercharge `initial = Φ = a₊ + c₋` squares to the even Hamiltonian `extended = V = {a₊, c₋}`,
+is negated under conjugation by the grading involution `S = 2 P - 1`, and commutes with `V`. -/
+theorem diracCrystalStage_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    diracCrystalStageOperator P A C .initial *
+      diracCrystalStageOperator P A C .initial =
+      diracCrystalStageOperator P A C .extended ∧
+    invS P * diracCrystalStageOperator P A C .initial * invS P =
+      -diracCrystalStageOperator P A C .initial ∧
+    invS P * diracCrystalStageOperator P A C .extended * invS P =
+      diracCrystalStageOperator P A C .extended ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (diracCrystalStageOperator P A C .extended)
+      (diracCrystalStageOperator P A C .initial) = 0 := by
+  dsimp only [diracCrystalStageOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Physics.SupergradedDiracCrystalTopCatColimit

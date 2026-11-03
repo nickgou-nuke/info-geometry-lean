@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSuperoperators.HilbertSchmidt
+import InfoGeometry.Analysis.OperatorDirichletSpectralGap
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -25,10 +26,18 @@ open scoped ComplexOrder
 open InfoGeometry.Core.JordanMultiplicationClosure
 open InfoGeometry.OperatorAlgebra.IntrinsicGradedAdjoint
 
+attribute [-instance] instTopologicalSpaceMatrix Matrix.addCommGroup Matrix.module
+
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 local instance : NormedAddCommGroup (Matrix n n ℂ) :=
   Matrix.toMatrixNormedAddCommGroup 1 Matrix.PosDef.one
+
+local instance : UniformSpace (Matrix n n ℂ) :=
+  (inferInstance : NormedAddCommGroup (Matrix n n ℂ)).toUniformSpace
+
+local instance : TopologicalSpace (Matrix n n ℂ) :=
+  (inferInstance : UniformSpace (Matrix n n ℂ)).toTopologicalSpace
 
 local instance : InnerProductSpace ℂ (Matrix n n ℂ) :=
   Matrix.toMatrixInnerProductSpace 1 Matrix.PosSemidef.one
@@ -183,5 +192,79 @@ theorem hs_jordan_gram_ker_eq_inf (N : Matrix n n ℂ) :
   intro X
   simpa only [Submodule.mem_inf, LinearMap.mem_ker, LinearMap.mulLeft_apply,
     LinearMap.mulRight_apply] using hs_jordan_gram_eq_zero_iff_left_right N X
+
+/-! ## Finite-dimensional Dirichlet gap on the actual Gram-kernel complement -/
+
+/-- The four left/right Gram actions whose Dirichlet Laplacian is the Jordan
+Gram operator. The four coordinates are, in order, left multiplication by
+`N`, left multiplication by `Nᴴ`, right multiplication by `N`, and right
+multiplication by `Nᴴ`. -/
+def hsGramDirichletFamily (N : Matrix n n ℂ) :
+    Fin 4 → Matrix n n ℂ →L[ℂ] Matrix n n ℂ :=
+  Fin.cases (LinearMap.mulLeft ℂ N).toContinuousLinearMap
+    (Fin.cases (LinearMap.mulLeft ℂ Nᴴ).toContinuousLinearMap
+      (Fin.cases (LinearMap.mulRight ℂ N).toContinuousLinearMap
+        (Fin.cases (LinearMap.mulRight ℂ Nᴴ).toContinuousLinearMap Fin.elim0)))
+
+/-- The Dirichlet Laplacian of the four action maps is exactly the existing
+Hilbert–Schmidt Jordan Gram operator; this identifies both owner constructions
+on the same finite matrix Hilbert space. -/
+theorem hsGramDirichletFamily_laplacian (N : Matrix n n ℂ) :
+    InfoGeometry.Analysis.OperatorDirichletLaplacian.laplacian
+        (E := Matrix n n ℂ) (F := Matrix n n ℂ)
+        (hsGramDirichletFamily N) =
+      LinearMap.toContinuousLinearMap
+        (jordanLeft (R := ℂ) (N * Nᴴ + Nᴴ * N)) := by
+  apply ContinuousLinearMap.ext
+  intro X
+  simp [InfoGeometry.Analysis.OperatorDirichletLaplacian.laplacian,
+    hsGramDirichletFamily, Fin.sum_univ_succ,
+    ← LinearMap.adjoint_toContinuousLinearMap,
+    hs_adjoint_mulLeft, hs_adjoint_mulRight, hs_jordan_gram_eq];
+    noncomm_ring
+
+/-- Every fixed finite-dimensional Peirce/Hodge Gram operator has a strictly
+positive quadratic and spectral gap after its genuine harmonic kernel is
+removed. The coercive energy is the sum of the four noncommutative left/right
+action norms, and the spectral statement uses the same constant. -/
+theorem hs_jordan_gram_finite_dirichlet_gap (N : Matrix n n ℂ) :
+    ∃ c : ℝ, 0 < c ∧
+      (∀ X ∈ (jordanLeft (R := ℂ) (N * Nᴴ + Nᴴ * N)).kerᗮ,
+        c * ‖X‖ ^ 2 ≤
+          InfoGeometry.Analysis.OperatorDirichletLaplacian.energy
+            (E := Matrix n n ℂ) (F := Matrix n n ℂ)
+            (hsGramDirichletFamily N) X) ∧
+      (∀ μ ∈ spectrum ℂ
+          (LinearMap.toContinuousLinearMap
+            (jordanLeft (R := ℂ) (N * Nᴴ + Nᴴ * N))),
+        μ = 0 ∨ c ≤ μ.re) := by
+  let T := hsGramDirichletFamily N
+  have hLap := hsGramDirichletFamily_laplacian N
+  obtain ⟨c, hc, hbound⟩ :=
+    InfoGeometry.Analysis.OperatorDirichletLaplacian.exists_positive_coercive_bound
+      (E := Matrix n n ℂ) (F := Matrix n n ℂ) T
+  have hkernel :
+      InfoGeometry.Analysis.OperatorDirichletLaplacian.kernelOrthogonal T =
+        (jordanLeft (R := ℂ) (N * Nᴴ + Nᴴ * N)).kerᗮ := by
+    unfold InfoGeometry.Analysis.OperatorDirichletLaplacian.kernelOrthogonal
+    rw [hLap]
+    rfl
+  refine ⟨c, hc, ?_, ?_⟩
+  · intro X hX
+    exact hbound X (hkernel ▸ hX)
+  · intro μ hμ
+    by_cases hμ0 : μ = 0
+    · exact Or.inl hμ0
+    · right
+      have hspec : μ ∈ spectrum ℂ
+          (InfoGeometry.Analysis.OperatorDirichletLaplacian.laplacian
+            (E := Matrix n n ℂ) (F := Matrix n n ℂ) T) := by
+        rw [hLap]
+        exact hμ
+      rw [ContinuousLinearMap.spectrum_eq] at hspec
+      obtain ⟨X, hX⟩ :=
+        (Module.End.HasEigenvalue.of_mem_spectrum hspec).exists_hasEigenvector
+      exact InfoGeometry.Analysis.OperatorDirichletLaplacian.re_eigenvalue_ge_of_coercive_bound
+        T hbound hμ0 hX.2 hX.apply_eq_smul
 
 end InfoGeometry.OperatorAlgebra.PeirceSuperoperators

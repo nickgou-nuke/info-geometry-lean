@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.GraphDiracSupercarrierEmbedding
 
 /-!
@@ -27,4 +32,3 @@ open InfoGeometry.SuperGrassmannian.GraphDiracSupercarrierEmbedding
 #print axioms balanced_berezinian_homothety
 #print axioms unbalanced_berezinian_factor
 #print axioms balanced_graph_berezinian_homothety
-#print axioms compile_graph_dirac_supercarrier_embedding

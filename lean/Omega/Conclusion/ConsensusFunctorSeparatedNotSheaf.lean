@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -38,7 +44,8 @@ def conclusion_consensus_functor_separated_not_sheaf_effective_descent_failure
   conclusion_consensus_functor_separated_not_sheaf_compatible_local_readouts C ∧
     ¬ ∃ t : ℤ, conclusion_consensus_functor_separated_not_sheaf_global_readout C t
 
-/-- Paper-facing separated-but-not-sheaf statement for the concrete consensus functor package. -/
+/-- The obstruction interface implies the stated finite readout properties.
+This is conditional on the fields of `C`; it is not a sheaf theorem. -/
 def conclusion_consensus_functor_separated_not_sheaf_statement
     (C : conclusion_consensus_functor_separated_not_sheaf_data) : Prop :=
   conclusion_consensus_functor_separated_not_sheaf_separated C ∧
@@ -95,8 +102,10 @@ theorem twoSiteConsensusData_has_no_global_readout :
     ¬ ∃ t : ℤ,
       conclusion_consensus_functor_separated_not_sheaf_global_readout
         twoSiteConsensusData t := by
-  exact (no_global_readout_iff_pairwise_disagreement twoSiteConsensusData).2
-    ⟨0, 1, by norm_num [twoSiteConsensusData, twoSiteLocalReadout]⟩
+  apply (no_global_readout_iff_pairwise_disagreement twoSiteConsensusData).2
+  intro hpair
+  have h := hpair ⟨0, by decide⟩ ⟨1, by decide⟩
+  simp [twoSiteConsensusData, twoSiteLocalReadout] at h
 
 lemma conclusion_consensus_functor_separated_not_sheaf_separated_of_anchor
     (C : conclusion_consensus_functor_separated_not_sheaf_data) :
@@ -116,13 +125,26 @@ lemma conclusion_consensus_functor_separated_not_sheaf_no_global_readout
   intro hglobal
   exact C.obstruction_ne_zero (C.global_readout_forces_obstruction_zero hglobal)
 
-/-- Paper label: `prop:conclusion-consensus-functor-separated-not-sheaf`. -/
-theorem paper_conclusion_consensus_functor_separated_not_sheaf
+/-- Conditional consequence of the supplied obstruction interface. -/
+theorem consensus_obstruction_interface_conclusion
     (C : conclusion_consensus_functor_separated_not_sheaf_data) :
     conclusion_consensus_functor_separated_not_sheaf_statement C := by
-  refine ⟨?_, ?_, ?_⟩
+  refine ⟨?_, ?_⟩
   · exact conclusion_consensus_functor_separated_not_sheaf_separated_of_anchor C
-  · exact conclusion_consensus_functor_separated_not_sheaf_compatible C
-  · exact conclusion_consensus_functor_separated_not_sheaf_no_global_readout C
+  · exact ⟨conclusion_consensus_functor_separated_not_sheaf_compatible C,
+      conclusion_consensus_functor_separated_not_sheaf_no_global_readout C⟩
+
+/-- Concrete two-site failure of global consensus: the local values are `0` and `1`.
+The conclusion concerns this finite constant-readout model only. -/
+theorem twoSiteConsensusData_separated_compatible_no_global_readout :
+    conclusion_consensus_functor_separated_not_sheaf_separated twoSiteConsensusData ∧
+    conclusion_consensus_functor_separated_not_sheaf_compatible_local_readouts
+      twoSiteConsensusData ∧
+    ¬ ∃ t : ℤ,
+      conclusion_consensus_functor_separated_not_sheaf_global_readout
+        twoSiteConsensusData t := by
+  exact ⟨conclusion_consensus_functor_separated_not_sheaf_separated_of_anchor _,
+    conclusion_consensus_functor_separated_not_sheaf_compatible _,
+    twoSiteConsensusData_has_no_global_readout⟩
 
 end Omega.Conclusion

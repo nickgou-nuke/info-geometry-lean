@@ -92,12 +92,38 @@ theorem traceDensityLinear_eq_zero_iff (P X : Mat)
 /-- The unnormalized mass of a trace density. -/
 def traceMass (P : Mat) : ℝ := (Matrix.trace P).re
 
+/-- Logarithmic generating potential of a positive operator weight, using the
+finite trace as the partition readout. -/
+noncomputable def operatorLogPartitionPotential (P : Mat) : ℝ :=
+  Real.log (traceMass P)
+
 theorem traceMass_pos [Nonempty n] (P : Mat) (hP : IsStrictlyPositive P) :
     0 < traceMass P :=
   (RCLike.pos_iff.mp hP.posDef.trace_pos).1
 
 /-- Normalization uses the trace mass and preserves the matrix carrier. -/
 def normalizedDensity (P : Mat) : Mat := (traceMass P)⁻¹ • P
+
+/-- Positive Weyl rescaling changes the unnormalized representative but not
+the normalized operator state.  Thus trace normalization descends to the
+positive projective ray of a strictly positive finite matrix. -/
+theorem normalizedDensity_scale [Nonempty n]
+    (P : Mat) (hP : IsStrictlyPositive P) (c : ℝ) (hc : 0 < c) :
+    normalizedDensity (c • P) = normalizedDensity P := by
+  have hmass : traceMass (c • P) = c * traceMass P := by
+    simp [traceMass, Matrix.trace_smul]
+  rw [normalizedDensity, normalizedDensity, hmass, smul_smul]
+  congr 1
+  have hm : traceMass P ≠ 0 := (traceMass_pos P hP).ne'
+  field_simp
+
+/-- Under the same positive Weyl rescaling, the negative logarithm of the
+normalized state changes by the opposite central log-scale. -/
+theorem neg_log_normalizedDensity_scale [Nonempty n]
+    (P : Mat) (hP : IsStrictlyPositive P) (c : ℝ) (hc : 0 < c) :
+    -CFC.log (normalizedDensity (c • P)) =
+      -CFC.log (normalizedDensity P) := by
+  rw [normalizedDensity_scale P hP c hc]
 
 theorem normalizedDensity_isStrictlyPositive [Nonempty n]
     (P : Mat) (hP : IsStrictlyPositive P) :
@@ -129,6 +155,14 @@ theorem neg_log_normalizedDensity [Nonempty n]
   rw [normalizedDensity, CFC.log_smul' P (inv_pos.mpr (traceMass_pos P hP)) hP,
     Real.log_inv, map_neg, Algebra.algebraMap_eq_smul_one]
   abel
+
+/-- The local surprisal operator of the normalized state is the unnormalized
+operator surprisal plus the scalar log-partition potential. -/
+theorem neg_log_normalizedDensity_eq_logPartitionPotential [Nonempty n]
+    (P : Mat) (hP : IsStrictlyPositive P) :
+    -CFC.log (normalizedDensity P) =
+      -CFC.log P + operatorLogPartitionPotential P • (1 : Mat) := by
+  simpa [operatorLogPartitionPotential] using neg_log_normalizedDensity P hP
 
 /-- The central normalization shift leaves every operator commutator unchanged. -/
 theorem neg_log_normalizedDensity_commutator [Nonempty n]

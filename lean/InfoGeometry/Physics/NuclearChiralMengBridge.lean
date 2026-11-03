@@ -1,9 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Physics.BiWaveRamanujanBridge
 import InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure
 import InfoGeometry.Physics.NuclearOperatorSuperSoloviev
 import InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge
 import InfoGeometry.Physics.Thermodynamics.ChiralGrandCanonicalFiniteKMS
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # A conservative formal bridge for nuclear chiral and quasiparticle models
@@ -206,5 +213,36 @@ theorem operator_zorn_super_soloviev_packet {A : Type*} [Ring A] [StarRing A]
   exact ⟨dirac_internal_odd Delta,
     dirac_square_internal_even Delta,
     diracSuperHamiltonian_invariant Delta⟩
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def nuclearChiralMengArchetypeOperator (P A C X : B) : Archetype → B
+  | .chpInvolutions => invS P
+  | .fiveGradeCarrier => evenGrade P X + oddGrade P X
+  | .quasiparticlePhonon => conePlus P A
+  | .solovievCompression => coneMinus P C
+  | .twinWaveKMS => genPhi P A C
+  | .operatorZornReadout => genV P A C
+
+theorem nuclearChiralMengArchetype_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    nuclearChiralMengArchetypeOperator P A C X .chpInvolutions *
+      nuclearChiralMengArchetypeOperator P A C X .chpInvolutions = (1 : B) ∧
+    nuclearChiralMengArchetypeOperator P A C X .fiveGradeCarrier = X ∧
+    nuclearChiralMengArchetypeOperator P A C X .quasiparticlePhonon *
+      nuclearChiralMengArchetypeOperator P A C X .quasiparticlePhonon = 0 ∧
+    nuclearChiralMengArchetypeOperator P A C X .solovievCompression *
+      nuclearChiralMengArchetypeOperator P A C X .solovievCompression = 0 ∧
+    nuclearChiralMengArchetypeOperator P A C X .twinWaveKMS *
+      nuclearChiralMengArchetypeOperator P A C X .twinWaveKMS =
+      nuclearChiralMengArchetypeOperator P A C X .operatorZornReadout := by
+  dsimp only [nuclearChiralMengArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Physics.NuclearChiralMengBridge

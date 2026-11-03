@@ -61,6 +61,8 @@ import InfoGeometry.Synthesis.SplitSedenionParameterEndomorphism
 import InfoGeometry.Synthesis.SplitSedenionParameterEndomorphismAudit
 import InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation
 import InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentationAudit
+import InfoGeometry.Synthesis.EpistemicOperatorPoset
+import InfoGeometry.Synthesis.EpistemicOperatorPosetAudit
 
 
 

@@ -1,6 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
+import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Geometry.NullConeAlgebra
 
@@ -153,5 +161,57 @@ theorem null_vectors_can_have_timelike_sum :
     norm_num
   · rw [minkowski_polarization]
     norm_num [Minkowski4.q, minkowskiPairing]
+
+/-! ### Non-Commutative Operator Realization of `NullConeAlgebra.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `NullConeAlgebra.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def nullConeArchetypeOperator (P A C X : B) : Archetype → B
+  | .matrix => evenGrade P X + oddGrade P X
+  | .determinant => genV P A C
+  | .hermitian => genPhi P A C
+  | .lorentz => genSig P A C
+  | .nilpotence => conePlus P A
+  | .nullAddition => conePlus P A + coneMinus P C
+
+/-- **Theorem (Non-Commutative Operator Null-Cone Polarization over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the two null-cone
+generators `a₊ = conePlus P A` and `c₋ = coneMinus P C` are individually square-zero
+(`a₊² = 0`, `c₋² = 0`), while their sum `nullAddition = a₊ + c₋ = Φ` has non-zero
+quadratic square `(a₊ + c₋)² = V = {a₊, c₋}`, and the Lorentz boost generator `Σ = [a₊, c₋]`
+satisfies `Σ² = V²`. -/
+theorem nullConeArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    nullConeArchetypeOperator P A C X .matrix = X ∧
+    nullConeArchetypeOperator P A C X .nilpotence *
+      nullConeArchetypeOperator P A C X .nilpotence = 0 ∧
+    coneMinus P C * coneMinus P C = 0 ∧
+    nullConeArchetypeOperator P A C X .nullAddition =
+      nullConeArchetypeOperator P A C X .hermitian ∧
+    nullConeArchetypeOperator P A C X .nullAddition *
+      nullConeArchetypeOperator P A C X .nullAddition =
+      nullConeArchetypeOperator P A C X .determinant ∧
+    nullConeArchetypeOperator P A C X .lorentz *
+      nullConeArchetypeOperator P A C X .lorentz =
+      nullConeArchetypeOperator P A C X .determinant *
+      nullConeArchetypeOperator P A C X .determinant ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 := by
+  dsimp only [nullConeArchetypeOperator]
+  have hGrade := archetype_A2_peirce_cartan_grading_and_tangent_closure (P := P) hP X X
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨_, _, hPhiSq, _, _, _, _, hAnti, _, _, hSigSq, _, _, _, _⟩
+  have hPlus := (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).1
+  have hMinus := (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).2.1
+  have hEvenOdd : evenGrade P X + oddGrade P X = X := by
+    rw [← hGrade.2.2.1, hGrade.2.1]
+    abel
+  exact ⟨hEvenOdd, hPlus, hMinus, rfl, hPhiSq, hSigSq, hAnti⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Geometry.NullConeAlgebra

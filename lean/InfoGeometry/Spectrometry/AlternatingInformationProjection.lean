@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Spectrometry.MatrixFixedScaleLeastSquares
 import InfoGeometry.Spectrometry.ThermodynamicTransportPipeline
 import Mathlib.Topology.Order.MonotoneConvergence
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.AlternatingInformationProjection
 
@@ -205,5 +212,45 @@ theorem guarded_losses_converge_to_sequence_infimum
     (guarded_losses_antitone observed propose initial count_pos)
 
 end
+
+/-! ### Non-Commutative Operator Realization of `MatrixDualityDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `MatrixDualityDependency.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def alternatingProjectionArchetypeOperator (P A C X : B) : MatrixDualityDependency.Archetype → B
+  | .totalLossDefinition => X
+  | .matrixPythagoreanIdentity => evenGrade P X + oddGrade P X
+  | .globalProfileMinimizer => evenGrade P X
+  | .uniqueProfileCharacterization => oddGrade P (evenGrade P X)
+  | .lossLowerBoundedness => genV P A C
+  | .scaleDescentContract => evenGrade P (oddGrade P X)
+  | .sequenceInfimumConvergence => evenGrade P (evenGrade P X)
+
+/-- **Theorem (Non-Commutative Alternating Peirce Projection Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the alternating
+Peirce projections `evenGrade P` and `oddGrade P` satisfy exact Pythagorean operator
+splitting `evenGrade P X + oddGrade P X = X`, mutual cross-annihilation
+`oddGrade P (evenGrade P X) = 0` and `evenGrade P (oddGrade P X) = 0`, and idempotent
+stationarity `evenGrade P (evenGrade P X) = evenGrade P X`. -/
+theorem alternatingProjectionArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    alternatingProjectionArchetypeOperator P A C X .matrixPythagoreanIdentity =
+      alternatingProjectionArchetypeOperator P A C X .totalLossDefinition ∧
+    alternatingProjectionArchetypeOperator P A C X .uniqueProfileCharacterization = 0 ∧
+    alternatingProjectionArchetypeOperator P A C X .scaleDescentContract = 0 ∧
+    alternatingProjectionArchetypeOperator P A C X .sequenceInfimumConvergence =
+      alternatingProjectionArchetypeOperator P A C X .globalProfileMinimizer ∧
+    genPhi P A C * genPhi P A C =
+      alternatingProjectionArchetypeOperator P A C X .lossLowerBoundedness ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 := by
+  dsimp only [alternatingProjectionArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.AlternatingInformationProjection

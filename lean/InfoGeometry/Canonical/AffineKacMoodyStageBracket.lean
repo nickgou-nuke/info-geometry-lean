@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Bracket closure for affine Kac--Moody mode cutoffs
@@ -129,6 +136,41 @@ theorem affineFiniteModeStage_bracket_mem
   | smul c X hX ihX =>
       rw [smul_lie]
       exact (affineFiniteModeStage Φ hΦ hΦs (N + M)).smul_mem c ihX
+
+/-! ### Non-Commutative Operator Realization of `BracketClosureArchetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `BracketClosureArchetype` node
+to its canonical operator in `[Ring B]`. -/
+def bracketClosureArchetypeOperator (P A C X : B) : BracketClosureArchetype → B
+  | .affineCarrier => peirce11 P X + peirce00 P X
+  | .modeCutoff => conePlus P A + coneMinus P C
+  | .generatorBracket => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (conePlus P A) (coneMinus P C)
+  | .spanClosure => InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (conePlus P A) (coneMinus P C)
+  | .colimitBracket => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Identities across `BracketClosureArchetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the five stages
+satisfy even-grade projection, nilpotent mode-cutoff brackets, and exact Tetraktys
+`𝔰𝔩₂` commutator closure `[Φ, J] = 2 Σ`. -/
+theorem bracketClosureArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    bracketClosureArchetypeOperator P A C X .affineCarrier = evenGrade P X ∧
+    bracketClosureArchetypeOperator P A C X .modeCutoff = genPhi P A C ∧
+    bracketClosureArchetypeOperator P A C X .generatorBracket = genSig P A C ∧
+    bracketClosureArchetypeOperator P A C X .spanClosure = genV P A C ∧
+    bracketClosureArchetypeOperator P A C X .colimitBracket = -((2 : ℤ) • genSig P A C) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C) (genPhi P A C) =
+      (2 : ℤ) • (genV P A C * genJ P A C) := by
+  refine ⟨rfl, rfl, rfl, rfl, ?_, (archetype_A7_so12_lie_brackets_and_cubic_inversions hP A C).2.1⟩
+  dsimp only [bracketClosureArchetypeOperator]
+  exact (archetype_A7_so12_lie_brackets_and_cubic_inversions hP A C).1
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit
 

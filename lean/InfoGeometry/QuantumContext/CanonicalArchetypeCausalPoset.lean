@@ -1,5 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Finset.Order
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # A Finite Poset of Repository Archetype Labels
@@ -280,5 +288,76 @@ theorem soldering_and_obstruction_incomparable :
 theorem causal_poset_acyclic (left right : CanonicalArchetype)
     (forward : left ≤ right) (backward : right ≤ left) : left = right :=
   le_antisymm forward backward
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- **Branch 1 (`bivectorRotor` → `zornChiralBilateral` → `fourVectorSoldering` → `contactVariationalFlow`):**
+Non-commutative Peirce–Zorn bivector rotor `Σ = [N_+, N_-]`, bilateral grading `S_P = 2P - 1`,
+and soldering quartet `(Φ, J, V, Σ)` over `[Ring B]`. -/
+theorem branch_1_bivector_zorn_and_soldering_identities
+    {P : B} (hP : P * P = P) (A C : B) :
+    invS P * invS P = 1 ∧
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    comm (genPhi P A C) (genJ P A C) = -((2 : ℤ) • genSig P A C) ∧
+    genSig P A C = invS P * genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- **Branch 2 (`carNilpotentBase` → `carPeirceInvolution` → `chevalleySpinorDyad` → `kreinHyperbolicRotation` → `logCFTSymplecticMaster`):**
+CAR nilpotent corners `N_+² = 0`, `N_-² = 0`, Chevalley spinor dyad anticommutator
+`{N_+, N_-} = V`, and symplectic master eigenvalue `derivSqSig P A C Φ = -4 • ((V * V) * Φ)`. -/
+theorem branch_2_car_chevalley_krein_and_logcft_identities
+    {P : B} (hP : P * P = P) (A C : B) :
+    conePlus P A * conePlus P A = 0 ∧
+    coneMinus P C * coneMinus P C = 0 ∧
+    anticomm (conePlus P A) (coneMinus P C) = genV P A C ∧
+    comm (genSig P A C) (genPhi P A C) = (2 : ℤ) • (genV P A C * genJ P A C) ∧
+    derivSqSig P A C (genPhi P A C) = -((4 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C)) := by
+  refine ⟨?_, ?_, rfl, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · simp only [derivSqSig]; peirce_nf hP
+
+/-- **Branch 3 (`noncommutativeOperatorRing` → `noncommutativeBdGBlocks` → `noncommutativeZornMultiplication` → `zornBdGCurvatureReadout`):**
+Non-commutative Zorn–Peirce curvature readout `[N_+, [N_-, X]] - [N_-, [N_+, X]] = [Σ, X]`
+and Leibniz derivation closure over `[Ring B]`. -/
+theorem branch_3_noncommutative_zorn_bdg_curvature_identities
+    {P : B} (hP : P * P = P) (A C X Y Z : B) :
+    comm X (Y * Z) = comm X Y * Z + Y * comm X Z ∧
+    comm (conePlus P A) (comm (coneMinus P C) X) -
+        comm (coneMinus P C) (comm (conePlus P A) X) =
+      comm (genSig P A C) X ∧
+    (2 : ℤ) • (comm (conePlus P A) (comm (coneMinus P C) X) +
+        comm (coneMinus P C) (comm (conePlus P A) X)) =
+      -(derivSqPhi P A C X + derivSqJ P A C X) := by
+  refine ⟨?_, ?_, ?_⟩
+  · dsimp only [InfoGeometry.OperatorAlgebra.PeirceSpine.comm]; noncomm_ring
+  · peirce_nf hP
+  · simp only [derivSqPhi, derivSqJ]; peirce_nf hP
+
+/-- **Master Synthesis (`canonical_archetype_causal_poset_master_synthesis`):**
+Unites the 27-stage `CanonicalArchetype` poset theorems with all three non-commutative
+`[Ring B]` operator branches. -/
+theorem canonical_archetype_causal_poset_master_synthesis
+    {P : B} (hP : P * P = P) (A C X Y Z : B) :
+    (∀ a : CanonicalArchetype, CanonicalArchetype.colimitLoom ≤ a) ∧
+    (genPhi P A C * genPhi P A C = genV P A C ∧
+      genJ P A C * genJ P A C = -genV P A C) ∧
+    (comm (genSig P A C) (genPhi P A C) = (2 : ℤ) • (genV P A C * genJ P A C) ∧
+      derivSqSig P A C (genPhi P A C) = -((4 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C))) ∧
+    (comm (conePlus P A) (comm (coneMinus P C) X) -
+        comm (coneMinus P C) (comm (conePlus P A) X) =
+      comm (genSig P A C) X) := by
+  have h1 := branch_1_bivector_zorn_and_soldering_identities hP A C
+  have h2 := branch_2_car_chevalley_krein_and_logcft_identities hP A C
+  have h3 := branch_3_noncommutative_zorn_bdg_curvature_identities hP A C X Y Z
+  exact ⟨colimit_precedes_all, ⟨h1.2.1, h1.2.2.1⟩, ⟨h2.2.2.2.1, h2.2.2.2.2⟩, h3.2.1⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.QuantumContext.CanonicalArchetypeCausalPoset

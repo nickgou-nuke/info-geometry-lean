@@ -1,12 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 import InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 import InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge
+import InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 import InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 import InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
-import InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge
-import InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 import Mathlib.Tactic.NoncommRing
 
 noncomputable section
@@ -17,14 +22,13 @@ open ExteriorAlgebra
 open InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 open InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 open InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge
+open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 open InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
-open InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge
-open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Theorem**: Matrix Exterior Derivative Operator Nilpotency d^2 A = 0 Derived Structurally from D.sq_zero. -/
 theorem matrixExteriorDerivative_sq_zero
@@ -39,7 +43,7 @@ theorem matrixExteriorDerivative_sq_zero
 theorem matrix_one_form_square_leibniz
     (D : ExteriorDifferentialData R V)
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (hA : MatrixIsHomogeneous 1 A) :
+    (hA : InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge.MatrixIsHomogeneous 1 A) :
     matrixExteriorDerivative D.d (A * A) =
       matrixExteriorDerivative D.d A * A - A * matrixExteriorDerivative D.d A := by
   ext i j
@@ -54,7 +58,7 @@ theorem matrix_one_form_square_leibniz
 theorem graded_connection_curvature_bianchi
     (D : ExteriorDifferentialData R V)
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (hA : MatrixIsHomogeneous 1 A) :
+    (hA : InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge.MatrixIsHomogeneous 1 A) :
     covariantDerivative A D.d (curvatureFromConnection D.d A) = 0 := by
   have hd2_A := matrixExteriorDerivative_sq_zero D A
   have h_d_A_square := matrix_one_form_square_leibniz D A hA
@@ -68,7 +72,7 @@ theorem graded_connection_curvature_bianchi
 theorem master_graded_connection_bianchi_synthesis
     (D : ExteriorDifferentialData R V)
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (hA : MatrixIsHomogeneous 1 A) :
+    (hA : InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge.MatrixIsHomogeneous 1 A) :
     (matrixExteriorDerivative D.d (matrixExteriorDerivative D.d A) = 0) ∧
     (matrixExteriorDerivative D.d (A * A) =
       matrixExteriorDerivative D.d A * A - A * matrixExteriorDerivative D.d A) ∧

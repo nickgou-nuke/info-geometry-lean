@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -26,7 +32,7 @@ open InfoGeometry.Algebra.CliffordBraidingTheorem
 open InfoGeometry.Canonical
 open AnyonTopological
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
 variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 /-!
@@ -121,7 +127,7 @@ theorem core_gauge_current_protection (z : CentralCore) :
 
 /-! ### 5. Master Anyonic Yang-Mills Synthesis Packet -/
 
-structure BraidedYangMillsLoomPacket (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] (n : ℕ)
+structure BraidedYangMillsLoomPacket (R V : Type*) [Field R] [AddCommGroup V] [Module R V] (n : ℕ)
     (E : Type*) [AddCommGroup E] [Module ℝ E] where
   artin_shuttle : ∀ (w : CuntzWord3), braidSigma1Action (braidSigma2Action (braidSigma1Action w)) = braidSigma2Action (braidSigma1Action (braidSigma2Action w))
   bogomolnyi : ∀ (D : HodgeTwoFormData E) (F : E), |topologicalPairing D F| ≤ yangMillsEnergy D F

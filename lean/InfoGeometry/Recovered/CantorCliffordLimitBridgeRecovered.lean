@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.MatToCantorOperator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.RealCantorOpLimit
@@ -64,5 +70,46 @@ def revHom : RealCantorOpLimit.Limit →+* Cl11TensorTowerLimit.Limit :=
       rw [h2]
       exact directLimitOf_bond Cl11TensorTowerLimit.stageBond n
         ((MatToCantorOperator.matToCantor n).symm x))
+
+@[simp] theorem fwdHom_ofStage (n : ℕ) (x : Cl11TensorTowerLimit.Stage n) :
+    fwdHom (Cl11TensorTowerLimit.ofStage n x) =
+      RealCantorOpLimit.ofStage n (MatToCantorOperator.matToCantor n x) := by
+  exact directLimitLift_of _ _ _ n x
+
+@[simp] theorem revHom_ofStage (n : ℕ) (x : RealCantorOpLimit.Stage n) :
+    revHom (RealCantorOpLimit.ofStage n x) =
+      Cl11TensorTowerLimit.ofStage n ((MatToCantorOperator.matToCantor n).symm x) := by
+  exact directLimitLift_of _ _ _ n x
+
+/-- The two direct-limit maps are inverse on the matrix-tower carrier. -/
+theorem revHom_fwdHom (x : Cl11TensorTowerLimit.Limit) :
+    revHom (fwdHom x) = x := by
+  induction x using DirectLimit.induction with
+  | _ n x =>
+      change revHom (fwdHom (Cl11TensorTowerLimit.ofStage n x)) = _
+      rw [fwdHom_ofStage, revHom_ofStage]
+      exact congrArg (Cl11TensorTowerLimit.ofStage n)
+        ((MatToCantorOperator.matToCantor n).symm_apply_apply x)
+
+/-- The two direct-limit maps are inverse on the Cantor-operator carrier. -/
+theorem fwdHom_revHom (x : RealCantorOpLimit.Limit) :
+    fwdHom (revHom x) = x := by
+  induction x using DirectLimit.induction with
+  | _ n x =>
+      change fwdHom (revHom (RealCantorOpLimit.ofStage n x)) = _
+      rw [revHom_ofStage, fwdHom_ofStage]
+      exact congrArg (RealCantorOpLimit.ofStage n)
+        ((MatToCantorOperator.matToCantor n).apply_symm_apply x)
+
+/-- The matrix tower limit and the Cantor-operator limit are isomorphic as
+unital rings, via the finite-stage matrix/operator equivalences. -/
+noncomputable def limitRingEquiv :
+    Cl11TensorTowerLimit.Limit ≃+* RealCantorOpLimit.Limit where
+  toFun := fwdHom
+  invFun := revHom
+  left_inv := revHom_fwdHom
+  right_inv := fwdHom_revHom
+  map_mul' := map_mul fwdHom
+  map_add' := map_add fwdHom
 
 end InfoGeometry.Recovered.CantorCliffordLimitBridge

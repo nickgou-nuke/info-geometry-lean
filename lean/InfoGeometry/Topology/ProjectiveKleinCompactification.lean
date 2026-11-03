@@ -127,6 +127,20 @@ theorem mobius_refocus_vector (t : ℚ) :
   ext i
   fin_cases i <;> norm_num [mobiusS, Matrix.mulVec, Fin.sum_univ_two]
 
+/-- On homogeneous projective coordinates, the modular inversion sends the
+point at infinity `[1, 0]` to the origin `[0, 1]`. -/
+theorem mobius_refocus_infinity_vector :
+    mobiusS.mulVec ![1, 0] = ![0, 1] := by
+  ext i
+  fin_cases i <;> norm_num [mobiusS, Matrix.mulVec, Fin.sum_univ_two]
+
+/-- The reverse endpoint action differs from the infinity vector only by the
+central projective sign, consistently with `mobiusS² = -I`. -/
+theorem mobius_refocus_origin_vector :
+    mobiusS.mulVec ![0, 1] = ![-1, 0] := by
+  ext i
+  fin_cases i <;> norm_num [mobiusS, Matrix.mulVec, Fin.sum_univ_two]
+
 /-- The inversion square is the central negative sign, hence projectively trivial. -/
 theorem mobius_square_projectively_identity :
     ProjectivelyEqual (mobiusS * mobiusS) I2 := by

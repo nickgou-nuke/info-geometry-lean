@@ -222,4 +222,28 @@ theorem symmetric_signed_connection_square
   simp only [genPhi, genJ, genV, anticomm, conePlus, coneMinus]
   peirce_nf hP
 
+/-- The cross-sheet obstruction left by the mixed symmetric/signed square.
+Its order records the two paths from the lower sheet back to the upper sheet. -/
+def symmetricSignedSquareObstruction
+    (P A₁ C₁ A₂ C₂ : SheetAlgebra W) : SheetAlgebra W :=
+  coneMinus P C₁ * conePlus P A₂ - coneMinus P C₂ * conePlus P A₁
+
+/-- The mixed-square discrepancy is an ordered cross-sheet term.  In
+particular, it cannot in general be replaced by the commutator curvature
+`[N₊₁,N₋₂] - [N₊₂,N₋₁]` alone. -/
+theorem symmetric_signed_square_commutator_anomaly
+    (P A₁ C₁ A₂ C₂ : SheetAlgebra W)
+    (hP : P * P = P) :
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) *
+        (genPhi P A₁ C₁ + genJ P A₂ C₂) -
+      (genV P A₁ C₁ - genV P A₂ C₂ -
+        (PeirceSpine.comm (conePlus P A₁) (coneMinus P C₂) -
+          PeirceSpine.comm (conePlus P A₂) (coneMinus P C₁))) =
+      symmetricSignedSquareObstruction P A₁ C₁ A₂ C₂ +
+        symmetricSignedSquareObstruction P A₁ C₁ A₂ C₂ := by
+  rw [symmetric_signed_connection_square P A₁ C₁ A₂ C₂ hP]
+  simp only [symmetricSignedSquareObstruction, genV, anticomm,
+    conePlus, coneMinus, PeirceSpine.comm]
+  peirce_nf hP
+
 end InfoGeometry.OperatorAlgebra.TetraktysZornYangMillsBridge

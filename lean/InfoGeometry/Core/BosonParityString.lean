@@ -33,6 +33,99 @@ def parity (d B : Fin N → A) (j : Fin N) : A := d j * B j - B j * d j
 /-- Select either local mode without duplicating the string arguments. -/
 def mode (d B : Fin N → A) (c : Bool) (j : Fin N) : A := if c then B j else d j
 
+/-- An odd first-site operator and an even second-site operator anticommute
+after the second-site operator is dressed by the first site's parity. -/
+lemma jordan_wigner_cross_site_anticommutator_zero (x y s : A)
+    (hxs : s * x = -(x * s)) (hsy : s * y = y * s)
+    (hxy : x * y = y * x) :
+    x * (s * y) + (s * y) * x = 0 := by
+  have hleft : x * (s * y) = x * s * y := by rw [mul_assoc]
+  have hright : (s * y) * x = y * (s * x) := by
+    calc
+      (s * y) * x = (y * s) * x := by rw [hsy]
+      _ = y * (s * x) := by noncomm_ring
+  have hmove : x * y * s = x * (s * y) := by
+    calc
+      x * y * s = x * (y * s) := by rw [mul_assoc]
+      _ = x * (s * y) := by rw [hsy.symm]
+  calc
+    x * (s * y) + (s * y) * x = x * s * y + y * (s * x) := by
+      rw [hleft, hright]
+    _ = x * s * y + y * (-(x * s)) := by rw [hxs]
+    _ = x * s * y - y * x * s := by noncomm_ring
+    _ = x * s * y - x * y * s := by rw [hxy]
+    _ = x * s * y - x * (s * y) := by rw [hmove]
+    _ = 0 := by noncomm_ring
+
+/-- Two-site Jordan--Wigner sum law in an associative, possibly
+noncommutative ring. The parity `s` anticommutes with the first site's
+nilpotent modes and commutes with the second site's modes. The resulting
+total modes remain square-zero, and their anticommutator is the sum of the
+two site anticommutators; neither local metric is required to equal `1`. -/
+theorem jordan_wigner_two_site_nilpotent_metric_additivity
+    (a b c d s : A)
+    (ha : a * a = 0) (hb : b * b = 0)
+    (hc : c * c = 0) (hd : d * d = 0)
+    (hs : s * s = 1)
+    (hsa : s * a = -(a * s)) (hsb : s * b = -(b * s))
+    (hsc : s * c = c * s) (hsd : s * d = d * s)
+    (hac : a * c = c * a) (had : a * d = d * a)
+    (hbc : b * c = c * b) (hbd : b * d = d * b) :
+    (a + s * c) * (a + s * c) = 0 ∧
+    (b + s * d) * (b + s * d) = 0 ∧
+    ((a + s * c) * (b + s * d) + (b + s * d) * (a + s * c)) =
+      (a * b + b * a) + (c * d + d * c) := by
+  have hcs : c * s = s * c := hsc.symm
+  have hds : d * s = s * d := hsd.symm
+  have hscsq : (s * c) * (s * c) = 0 := by
+    calc
+      (s * c) * (s * c) = s * (c * s) * c := by noncomm_ring
+      _ = s * (s * c) * c := by rw [hcs]
+      _ = (s * s) * (c * c) := by noncomm_ring
+      _ = 0 := by rw [hs, hc]; simp
+  have hsdsq : (s * d) * (s * d) = 0 := by
+    calc
+      (s * d) * (s * d) = s * (d * s) * d := by noncomm_ring
+      _ = s * (s * d) * d := by rw [hds]
+      _ = (s * s) * (d * d) := by noncomm_ring
+      _ = 0 := by rw [hs, hd]; simp
+  have hacross := jordan_wigner_cross_site_anticommutator_zero a c s hsa hsc hac
+  have hadcross := jordan_wigner_cross_site_anticommutator_zero a d s hsa hsd had
+  have hbcross := jordan_wigner_cross_site_anticommutator_zero b c s hsb hsc hbc
+  have hbdcross := jordan_wigner_cross_site_anticommutator_zero b d s hsb hsd hbd
+  have htwisted :
+      (s * c) * (s * d) + (s * d) * (s * c) = c * d + d * c := by
+    have hleft : (s * c) * (s * d) = c * d := by
+      calc
+        (s * c) * (s * d) = (c * s) * (s * d) := by rw [hsc]
+        _ = c * (s * s) * d := by noncomm_ring
+        _ = c * d := by rw [hs]; noncomm_ring
+    have hright : (s * d) * (s * c) = d * c := by
+      calc
+        (s * d) * (s * c) = (d * s) * (s * c) := by rw [hsd]
+        _ = d * (s * s) * c := by noncomm_ring
+        _ = d * c := by rw [hs]; noncomm_ring
+    rw [hleft, hright]
+  refine ⟨?_, ?_, ?_⟩
+  · have hexpand : (a + s * c) * (a + s * c) =
+        a * a + (a * (s * c) + (s * c) * a) + (s * c) * (s * c) := by
+      noncomm_ring
+    rw [hexpand, ha, hacross, hscsq]
+    simp
+  · have hexpand : (b + s * d) * (b + s * d) =
+        b * b + (b * (s * d) + (s * d) * b) + (s * d) * (s * d) := by
+      noncomm_ring
+    rw [hexpand, hb, hbdcross, hsdsq]
+    simp
+  · calc
+      (a + s * c) * (b + s * d) + (b + s * d) * (a + s * c) =
+          (a * b + b * a) + (a * (s * d) + (s * d) * a) +
+            (b * (s * c) + (s * c) * b) +
+            ((s * c) * (s * d) + (s * d) * (s * c)) := by noncomm_ring
+      _ = (a * b + b * a) + (c * d + d * c) := by
+        rw [hadcross, hbcross, htwisted]
+        simp
+
 namespace IsCommutingBosonSystem
 
 variable {d B : Fin N → A} (h : IsCommutingBosonSystem d B)

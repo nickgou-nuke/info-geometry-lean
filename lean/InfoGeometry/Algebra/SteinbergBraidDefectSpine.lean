@@ -137,15 +137,15 @@ theorem coneMinus_sq_zero {P : B} (hP : P * P = P) (C : B) :
   simp only [coneMinus]
   noncomm_ring [hP, P_assoc hP]
 
-private lemma sq_zero_left_mul {u : B} (hu : u * u = 0) (X : B) :
+lemma sq_zero_left_mul {u : B} (hu : u * u = 0) (X : B) :
     u * (u * X) = 0 := by
   rw [← mul_assoc, hu, zero_mul]
 
-private lemma left_mul_zero_of_mul_eq {u v : B} (huv : u * v = 0) (X : B) :
+lemma left_mul_zero_of_mul_eq {u v : B} (huv : u * v = 0) (X : B) :
     u * (v * X) = 0 := by
   rw [← mul_assoc, huv, zero_mul]
 
-private lemma right_mul_zero_of_mul_eq {u v : B} (huv : u * v = 0) (X : B) :
+lemma right_mul_zero_of_mul_eq {u v : B} (huv : u * v = 0) (X : B) :
     (X * u) * v = 0 := by
   rw [mul_assoc, huv, mul_zero]
 
@@ -443,6 +443,87 @@ theorem genSig_mul_invS {P : B} (hP : P * P = P) (A C : B) :
   simp only [invS, genPhi, genJ, conePlus, coneMinus, genV, anticomm, genSig, comm,
     add_mul, mul_add, sub_mul]
   noncomm_ring [hP, P_assoc hP]
+
+/-! ### Split-conjugation differential pair
+
+These are algebraic superoperators built from the already-defined Peirce grading
+and tetraktys element.  Their Laplacian is an anticommutator with `V`; it is not
+left multiplication by `2 * V` in general.
+-/
+
+/-- Conjugation by the Peirce grading involution. -/
+def splitConj (P X : B) : B := invS P * X * invS P
+
+/-- The difference operator `X ↦ Φ X - (S X S) Φ`. -/
+def splitDiff (P A C X : B) : B :=
+  genPhi P A C * X - splitConj P X * genPhi P A C
+
+/-- The sum operator `X ↦ Φ X + (S X S) Φ`. -/
+def splitCodiff (P A C X : B) : B :=
+  genPhi P A C * X + splitConj P X * genPhi P A C
+
+/-- The anticommutator Laplacian of `splitDiff` and `splitCodiff`. -/
+def splitLaplacian (P A C X : B) : B :=
+  splitDiff P A C (splitCodiff P A C X) +
+    splitCodiff P A C (splitDiff P A C X)
+
+theorem splitConj_mul {P : B} (hP : P * P = P) (X Y : B) :
+    splitConj P (X * Y) = splitConj P X * splitConj P Y := by
+  unfold splitConj
+  calc
+    invS P * (X * Y) * invS P = invS P * X * Y * invS P := by
+      simp only [mul_assoc]
+    _ = invS P * X * (invS P * invS P) * Y * invS P := by
+      rw [invS_sq hP]
+      simp only [one_mul, mul_one, mul_assoc]
+    _ = (invS P * X * invS P) * (invS P * Y * invS P) := by
+      simp only [mul_assoc]
+
+theorem splitConj_add (P X Y : B) :
+    splitConj P (X + Y) = splitConj P X + splitConj P Y := by
+  unfold splitConj
+  simp only [mul_add, add_mul]
+
+theorem splitConj_sub (P X Y : B) :
+    splitConj P (X - Y) = splitConj P X - splitConj P Y := by
+  unfold splitConj
+  simp only [mul_sub, sub_mul]
+
+theorem splitConj_involutive {P : B} (hP : P * P = P) (X : B) :
+    splitConj P (splitConj P X) = X := by
+  unfold splitConj
+  calc
+    invS P * (invS P * X * invS P) * invS P =
+        (invS P * invS P) * X * (invS P * invS P) := by simp [mul_assoc]
+    _ = X := by rw [invS_sq hP]; simp
+
+theorem splitConj_genPhi {P : B} (hP : P * P = P) (A C : B) :
+    splitConj P (genPhi P A C) = -genPhi P A C := by
+  unfold splitConj
+  calc
+    invS P * genPhi P A C * invS P =
+        invS P * (genPhi P A C * invS P) := by simp only [mul_assoc]
+    _ = invS P * (-genJ P A C) := by rw [genPhi_mul_invS hP]
+    _ = -(invS P * genJ P A C) := by rw [mul_neg]
+    _ = -genPhi P A C := by rw [invS_mul_genJ hP]
+
+/-- Exact split-operator Laplacian.  Both left and right multiplication by the
+Peirce mass occur; the often-claimed `2 * V * X` formula needs extra hypotheses. -/
+theorem splitLaplacian_eq_mass_anticommutator {P : B}
+    (hP : P * P = P) (A C X : B) :
+    splitLaplacian P A C X =
+      (2 : ℤ) • (genV P A C * X + X * genV P A C) := by
+  have hPhiSq := genPhi_sq hP A C
+  have hConjMul := splitConj_mul hP
+  have hConjInvol := splitConj_involutive hP
+  have hConjPhi := splitConj_genPhi hP A C
+  have hPhiX : genPhi P A C * (genPhi P A C * X) = genV P A C * X := by
+    rw [← mul_assoc, hPhiSq]
+  unfold splitLaplacian splitDiff splitCodiff
+  simp only [splitConj_add, splitConj_sub, hConjMul, hConjInvol, hConjPhi,
+    mul_add, add_mul, sub_mul, mul_sub]
+  rw [hPhiX]
+  noncomm_ring [hPhiSq]
 
 /-! ### Nilpotent-BCH conjugation group (A12) -/
 

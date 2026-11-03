@@ -1,9 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.Cl11GeometricSynthesis
 import InfoGeometry.Clifford.SplitQ11CausalCone
 import InfoGeometry.Clifford.Cl11GeometricBiquaternionBridge
 import InfoGeometry.Clifford.Cl11SplitQuaternions
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Canonical Causal Poset of Cl(1,1) Split-Quaternions and Geometric Biquaternions
@@ -392,6 +399,72 @@ theorem chiral_grading_nontrivial :
         InfoGeometry.Clifford.Cl11.e₂, Matrix.mul_apply, Fin.sum_univ_two]
   norm_num
 
+/-! ### Abstract Non-Commutative Ring Realization of `Archetype` over `[Ring R_op]` -/
 
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {R_op : Type*} [Ring R_op]
+
+/-- Non-commutative operator realization mapping each `Cl(1,1)` `Archetype` node
+to its canonical Peirce operator in `[Ring R_op]`. -/
+def cl11ArchetypeOperator (P A C X : R_op) : Archetype → R_op
+  | .splitAlgebra => evenGrade P X + oddGrade P X
+  | .generatorRelations => InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (genPhi P A C) (genJ P A C)
+  | .planarTriad => genPhi P A C + genJ P A C + conePlus P A
+  | .planarMultiplication => genPhi P A C * genPhi P A C
+  | .chiralGrading => invS P
+  | .rawOrthogonalPair => peirce11 P X * peirce00 P X
+  | .coquaternionMatrixMap => evenGrade P X
+  | .nativeCliffordMatrixEquivalence => oddGrade P X
+  | .synthesisMatrixModel => genPhi P A C
+  | .normalizedMatrixPeirce => P * (1 - P)
+  | .nullRayProducts => conePlus P A * coneMinus P C + coneMinus P C * conePlus P A
+  | .kreinProjectorPair => P + (1 - P)
+  | .causalNullHopClosure => genSig P A C
+  | .spinorKreinAction => P * conePlus P A
+  | .geometricBiquaternionCarrier => genJ P A C
+  | .centralI3Extension => genV P A C
+  | .complexCliffordMatrixGenerators => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .doubledRealMatrixMap => derivSqPhi P A C (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Identities across `Cl11CanonicalArchetypePoset.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring R_op]`, the `Cl(1,1)`
+archetypes satisfy generator anticommutativity `{Φ, J} = 0`, chiral grading involution
+`S² = 1`, orthogonal Peirce block annihilation, null-ray anticommutator recovery of `V`,
+left projector absorption `P a₊ = a₊`, and double-commutator recursion. -/
+theorem cl11Archetype_operator_identities {P : R_op} (hP : P * P = P) (A C X : R_op) :
+    cl11ArchetypeOperator P A C X .splitAlgebra = X ∧
+    cl11ArchetypeOperator P A C X .generatorRelations = 0 ∧
+    cl11ArchetypeOperator P A C X .planarMultiplication =
+      cl11ArchetypeOperator P A C X .centralI3Extension ∧
+    cl11ArchetypeOperator P A C X .chiralGrading *
+      cl11ArchetypeOperator P A C X .chiralGrading = 1 ∧
+    cl11ArchetypeOperator P A C X .rawOrthogonalPair = 0 ∧
+    cl11ArchetypeOperator P A C X .normalizedMatrixPeirce = 0 ∧
+    cl11ArchetypeOperator P A C X .nullRayProducts =
+      cl11ArchetypeOperator P A C X .centralI3Extension ∧
+    cl11ArchetypeOperator P A C X .kreinProjectorPair = 1 ∧
+    cl11ArchetypeOperator P A C X .spinorKreinAction = conePlus P A ∧
+    cl11ArchetypeOperator P A C X .complexCliffordMatrixGenerators =
+      -((2 : ℤ) • cl11ArchetypeOperator P A C X .causalNullHopClosure) ∧
+    cl11ArchetypeOperator P A C X .doubledRealMatrixMap =
+      -((4 : ℤ) • (genV P A C * genJ P A C)) := by
+  dsimp only [cl11ArchetypeOperator]
+  have hA2 := archetype_A2_peirce_cartan_grading_and_tangent_closure (P := P) hP X X
+  have hA3 := archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C
+  have hA5 := archetype_A5_klein_hadamard_spectra_and_partition (P := P) hP A C X
+  rcases hA3 with ⟨_, _, hPhiSq, _, _, _, _, hAnti, _, _, _, _, _, _, _⟩
+  rcases hA5 with ⟨_, _, _, hDerivPhiJ, _, _, _, _, _, _, _, _, _⟩
+  have hEvenOdd : evenGrade P X + oddGrade P X = X := by
+    rw [← hA2.2.2.1, hA2.2.1]
+    abel
+  exact ⟨hEvenOdd, hAnti, hPhiSq, hA2.1, by peirce_nf hP, by peirce_nf hP, rfl,
+    by simp, by peirce_nf hP,
+    (archetype_A7_so12_lie_brackets_and_cubic_inversions (P := P) hP A C).1,
+    hDerivPhiJ⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Clifford.Cl11CanonicalArchetypePoset

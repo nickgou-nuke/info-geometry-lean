@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Causal.CertifiedDependencyCompiler
 import InfoGeometry.Causal.VerifiedDevelopmentState
 import InfoGeometry.Meta.DeclaredResearchDependencies
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.MetaCompiler
 
@@ -187,5 +194,40 @@ theorem executable_certified_compilation {Node : Type*} [PartialOrder Node]
   intro target
   apply resultProofs target
   simp [complete]
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def declaredProtocolOperatorWitness (P A C : B) : DeclaredProtocol.Archetype → B
+  | .statementSpecification => P
+  | .dependencyOrder => conePlus P A
+  | .admissibility => coneMinus P C
+  | .topologicalSchedule => genPhi P A C
+  | .proofEvidence => genSig P A C
+  | .certifiedCompilation => genV P A C
+
+theorem meta_epistemic_compiler_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    declaredProtocolOperatorWitness P A C .statementSpecification *
+      declaredProtocolOperatorWitness P A C .statementSpecification =
+      declaredProtocolOperatorWitness P A C .statementSpecification ∧
+    declaredProtocolOperatorWitness P A C .dependencyOrder *
+      declaredProtocolOperatorWitness P A C .dependencyOrder = 0 ∧
+    declaredProtocolOperatorWitness P A C .admissibility *
+      declaredProtocolOperatorWitness P A C .admissibility = 0 ∧
+    declaredProtocolOperatorWitness P A C .topologicalSchedule *
+      declaredProtocolOperatorWitness P A C .topologicalSchedule =
+      declaredProtocolOperatorWitness P A C .certifiedCompilation ∧
+    declaredProtocolOperatorWitness P A C .proofEvidence *
+      declaredProtocolOperatorWitness P A C .proofEvidence -
+      declaredProtocolOperatorWitness P A C .certifiedCompilation *
+        declaredProtocolOperatorWitness P A C .certifiedCompilation = 0 := by
+  dsimp only [declaredProtocolOperatorWitness]
+  refine ⟨hP, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.MetaCompiler

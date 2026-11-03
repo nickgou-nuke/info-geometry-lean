@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import proofs.ChiralIsospinEOMSU2
 import proofs.PrimonCuntzTower
 import proofs.ContinuumAsColimitCounting
@@ -85,8 +91,9 @@ on the Cantor boundary.
 At tree level: V_{ij} ∼ (p_i/p_j)^{1/2} · exp(i·γ_n·ln(p_i/p_j))
 where γ_n are the Riemann zeros (phase condensation attractors).
 
-The diagonal elements V_{ii} = 1 by normalization.
-The off-diagonal elements encode the flavor mixing. -/
+The asymptotic factors `ckm_matrix_element_inf i i` are normalized to `1`.
+The finite-cutoff definition below multiplies this factor by a correction that
+vanishes on the diagonal whenever the scale parameter is nonzero. -/
 
 
 /-- The Cabibbo angle at tree level from the prime ratio:
@@ -114,6 +121,13 @@ theorem ckm_runs_with_cutoff (i j : ℕ) (K : ℕ) (p_i p_j : ℝ) :
     ckm_matrix_element i j K p_i p_j =
       ckm_matrix_element_inf i j * (1 - (p_i / p_j) ^ (-(K : ℝ) / 2)) := by
   rfl
+
+/-- The finite-cutoff formula has zero diagonal whenever its common scale is
+nonzero. Thus the diagonal normalization belongs to `ckm_matrix_element_inf`,
+not to `ckm_matrix_element` as currently defined. -/
+theorem ckm_matrix_element_diag_eq_zero (i K : ℕ) (p : ℝ) (hp : p ≠ 0) :
+    ckm_matrix_element i i K p p = 0 := by
+  simp [ckm_matrix_element, ckm_matrix_element_inf, div_self hp]
 
 /-! ## 4. Renormalization Group flow = colimit scaling -/
 

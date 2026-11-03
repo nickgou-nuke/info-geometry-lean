@@ -9,6 +9,7 @@ import Mathlib.Algebra.Ring.Aut
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Non-Commutative Operator Continuum: Cuntz Carriers, Braid Flow, and Modular Invariance
@@ -243,5 +244,36 @@ theorem causalPast_monotone (a b : NoncommutativeArchetype) :
   · intro h
     have ha : a ∈ causalPast a := by simp [causalPast]
     exact (mem_causalPast b a).mp (h ha)
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def noncommutativeContinuumArchetypeOperator (P A C : B) : NoncommutativeArchetype → B
+  | .cuntzIsometryCarrier => conePlus P A
+  | .artinBraidInvariance => genPhi P A C
+  | .tomitaModularFlow => genJ P A C
+  | .colimitContinuum => genV P A C
+
+theorem noncommutativeContinuumArchetype_operator_identities
+    {P : B} (hP : P * P = P) (A C : B) :
+    noncommutativeContinuumArchetypeOperator P A C .cuntzIsometryCarrier *
+      noncommutativeContinuumArchetypeOperator P A C .cuntzIsometryCarrier = 0 ∧
+    noncommutativeContinuumArchetypeOperator P A C .artinBraidInvariance *
+      noncommutativeContinuumArchetypeOperator P A C .artinBraidInvariance =
+      noncommutativeContinuumArchetypeOperator P A C .colimitContinuum ∧
+    noncommutativeContinuumArchetypeOperator P A C .tomitaModularFlow *
+      noncommutativeContinuumArchetypeOperator P A C .tomitaModularFlow =
+      -noncommutativeContinuumArchetypeOperator P A C .colimitContinuum ∧
+    noncommutativeContinuumArchetypeOperator P A C .artinBraidInvariance *
+      noncommutativeContinuumArchetypeOperator P A C .tomitaModularFlow +
+      noncommutativeContinuumArchetypeOperator P A C .tomitaModularFlow *
+        noncommutativeContinuumArchetypeOperator P A C .artinBraidInvariance = 0 := by
+  dsimp only [noncommutativeContinuumArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.NoncommutativeContinuum

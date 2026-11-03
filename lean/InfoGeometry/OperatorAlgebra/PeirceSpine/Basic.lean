@@ -145,6 +145,26 @@ theorem coneMinus_neg (C : B) : coneMinus P (-C) = -coneMinus P C := by
 theorem coneMinus_zero : coneMinus P (0 : B) = 0 := by
   simp only [coneMinus, mul_zero, zero_mul]
 
+theorem evenGrade_add (P X Y : B) :
+    evenGrade P (X + Y) = evenGrade P X + evenGrade P Y := by
+  calc
+    evenGrade P (X + Y) = P * (X + Y) * P + (1 - P) * (X + Y) * (1 - P) := rfl
+    _ = (P * X * P + P * Y * P) + ((1 - P) * X * (1 - P) + (1 - P) * Y * (1 - P)) := by
+      simp [add_mul, mul_add]
+    _ = evenGrade P X + evenGrade P Y := by
+      simp only [evenGrade]
+      abel
+
+theorem oddGrade_add (P X Y : B) :
+    oddGrade P (X + Y) = oddGrade P X + oddGrade P Y := by
+  calc
+    oddGrade P (X + Y) = P * (X + Y) * (1 - P) + (1 - P) * (X + Y) * P := rfl
+    _ = (P * X * (1 - P) + P * Y * (1 - P)) + ((1 - P) * X * P + (1 - P) * Y * P) := by
+      simp [add_mul, mul_add]
+    _ = oddGrade P X + oddGrade P Y := by
+      simp only [oddGrade]
+      abel
+
 end Linearity
 
 /-- Base rewriting set of the corner normal form. Callers add the definitions
@@ -166,5 +186,104 @@ macro "peirce_nf" hP:ident : tactic =>
       conePlus_mul_conePlus $hP:ident, conePlus_mul_conePlus' $hP:ident,
       coneMinus_mul_coneMinus $hP:ident, coneMinus_mul_coneMinus' $hP:ident]
     <;> abel))
+
+section GradedMultiplication
+
+variable {P : B} (hP : P * P = P)
+include hP
+
+/-- The even component of a product is the sum of the even-even and
+odd-odd products. This is the multiplication law for the Peirce
+`ℤ/2`-grading, in an arbitrary associative ring. -/
+theorem evenGrade_mul (X Y : B) :
+    evenGrade P (X * Y) =
+      evenGrade P X * evenGrade P Y + oddGrade P X * oddGrade P Y := by
+  peirce_nf hP
+
+/-- The odd component of a product is the sum of its even-odd and
+odd-even products. -/
+theorem oddGrade_mul (X Y : B) :
+    oddGrade P (X * Y) =
+      evenGrade P X * oddGrade P Y + oddGrade P X * evenGrade P Y := by
+  peirce_nf hP
+
+/-- The two Peirce components are complementary projections: each is
+idempotent, and applying either projection to the other component gives zero. -/
+theorem grade_projection_laws (X : B) :
+    evenGrade P (evenGrade P X) = evenGrade P X ∧
+    evenGrade P (oddGrade P X) = 0 ∧
+    oddGrade P (evenGrade P X) = 0 ∧
+    oddGrade P (oddGrade P X) = oddGrade P X ∧
+    evenGrade P X + oddGrade P X = X := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- A projection commutator has no diagonal compression, and its second
+commutator is exactly the off-diagonal Peirce component. These are the
+projection-geometric identities used by the matrix source packet, stated for
+an arbitrary associative ring and without a star or matrix assumption. -/
+theorem projection_commutator_geometry (X : B) :
+    P * comm P X * P = 0 ∧
+    comm P (comm P X) = P * X * (1 - P) + (1 - P) * X * P ∧
+    comm P (comm P X) = P * X + X * P - (2 : ℤ) • (P * X * P) := by
+  have hleft : P * (P * X) = P * X := by
+    rw [← mul_assoc, hP]
+  have hright : (X * P) * P = X * P := by
+    rw [mul_assoc, hP]
+  have hcomm : comm P (comm P X) =
+      P * X - P * X * P - (P * X * P - X * P) := by
+    unfold comm
+    calc
+      P * (P * X - X * P) - (P * X - X * P) * P =
+          P * (P * X) - P * (X * P) - ((P * X) * P - (X * P) * P) := by
+            noncomm_ring
+      _ = P * X - P * X * P - (P * X * P - X * P) := by
+            rw [hleft, hright]
+            noncomm_ring
+  have hcompress : P * comm P X * P = 0 := by
+    unfold comm
+    have h₁ : P * (P * X) * P = P * X * P := by rw [hleft]
+    have h₂ : P * (X * P) * P = P * X * P := by
+      calc
+        P * (X * P) * P = P * X * (P * P) := by noncomm_ring
+        _ = P * X * P := by rw [hP]
+    calc
+      P * (P * X - X * P) * P =
+          P * (P * X) * P - P * (X * P) * P := by noncomm_ring
+      _ = 0 := by rw [h₁, h₂, sub_self]
+  refine ⟨hcompress, ?_, ?_⟩
+  · rw [hcomm]
+    noncomm_ring
+  · rw [hcomm]
+    noncomm_ring
+
+/-- Squaring the even-plus-odd decomposition preserves the grading: the
+even square is the sum of the even-even and odd-odd products, while the odd
+square is the mixed anticommutator. This is the general Peirce form of the
+square split used by the Zorn-potential archetype. -/
+theorem even_odd_square_decomposition (X : B) :
+    evenGrade P (X * X) =
+      evenGrade P X * evenGrade P X + oddGrade P X * oddGrade P X ∧
+    oddGrade P (X * X) =
+      evenGrade P X * oddGrade P X + oddGrade P X * evenGrade P X := by
+  exact ⟨evenGrade_mul hP X X, oddGrade_mul hP X X⟩
+
+/-- Squaring a sum of a Peirce-even element `D` and a Peirce-odd element `O`
+separates into an even diagonal term and an odd mixed term. The four support
+equalities state exactly which Peirce summands `D` and `O` occupy. -/
+theorem even_odd_sum_square (D O : B)
+    (hDe : evenGrade P D = D) (hDo : oddGrade P D = 0)
+    (hOe : evenGrade P O = 0) (hOo : oddGrade P O = O) :
+    evenGrade P ((D + O) * (D + O)) = D * D + O * O ∧
+    oddGrade P ((D + O) * (D + O)) = D * O + O * D := by
+  have hEven : evenGrade P (D + O) = D := by
+    rw [evenGrade_add, hDe, hOe]
+    simp
+  have hOdd : oddGrade P (D + O) = O := by
+    rw [oddGrade_add, hDo, hOo]
+    simp
+  rw [evenGrade_mul hP, oddGrade_mul hP, hEven, hOdd]
+  exact ⟨rfl, rfl⟩
+
+end GradedMultiplication
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

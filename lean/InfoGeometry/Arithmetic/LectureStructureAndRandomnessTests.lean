@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Arithmetic.LectureStructureAndRandomness
 
 namespace InfoGeometry.Arithmetic.LectureStructureAndRandomnessTests
@@ -44,13 +50,12 @@ local instance factPrimeThirteen : Fact (Nat.Prime 13) := ⟨by decide⟩
 example : legendreSym 13 5 = legendreSym 5 13 :=
   quadratic_reciprocity_one_mod_four 5 13 (by decide) (by decide)
 
-example (region : CertifiedRegion
-    InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge.entireRiemannXi)
-    {point : ℂ} (member : point ∈ region.carrier)
+example {point : ℂ}
     (zero_at :
       InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge.entireRiemannXi point = 0) :
-    point.re = 1 / 2 :=
-  region.zero_on_critical_line member zero_at
+    InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge.entireRiemannXi
+      (InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.antiunitaryCriticalReflection point) = 0 :=
+  SarnakLocalCertification.entireRiemannXi_zero_reflection zero_at
 
 example : ∃ predicate : ℕ → Prop,
     (∀ index ≤ 1000000, predicate index) ∧ ¬ ∀ index, predicate index :=

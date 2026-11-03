@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
+import InfoGeometry.Canonical.OperatorZornMaxwellDivergence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornRepresentationCurvatureBridge
 import InfoGeometry.Canonical.OperatorZornRealModule
@@ -116,6 +123,39 @@ theorem mapCoefficients_bianchi (f : A →+* B) (p : Fin 4 → A) (Phi : FourPot
   unfold bianchi
   simp only [mapCoefficients_add, mapCoefficients_adjointCovariant,
     mapCoefficients_fieldStrength]
+
+/-- A coefficient-ring homomorphism transports the full operator-Zorn
+Maxwell equation, including its four-term covariant divergence and source. -/
+theorem mapCoefficients_maxwell_solution (f : A →+* B)
+    (p : Fin 4 → A) (Phi : FourPotential A) (J : FourCurrent A)
+    (hMaxwell : IsMaxwellZornSolution p Phi J) :
+    IsMaxwellZornSolution
+      (fun k => f (p k))
+      (fun k => mapCoefficients f (Phi k))
+      (fun k => mapCoefficients f (J k)) := by
+  intro nu
+  have hadd (X Y : OperatorZornMatrix A) :
+      mapCoefficients f (X + Y) = mapCoefficients f X + mapCoefficients f Y :=
+    mapCoefficients_add f X Y
+  have hneg (X : OperatorZornMatrix A) :
+      mapCoefficients f (-X) = -mapCoefficients f X := by
+    apply operatorZornMatrix_ext
+    all_goals first | (funext i; fin_cases i) | skip
+    all_goals simp [mapCoefficients, mapOperatorVector, operatorZornCoordinates]
+  have hadj (mu : Fin 4) (X : OperatorZornMatrix A) :
+      mapCoefficients f (adjointCovariant p Phi mu X) =
+        adjointCovariant (fun i => f (p i))
+          (fun i => mapCoefficients f (Phi i)) mu (mapCoefficients f X) :=
+    mapCoefficients_adjointCovariant f p Phi mu X
+  have hdiv :
+      mapCoefficients f (adjointDivergenceMinkowski p Phi nu) =
+        adjointDivergenceMinkowski
+          (fun k => f (p k))
+          (fun k => mapCoefficients f (Phi k)) nu := by
+    unfold adjointDivergenceMinkowski
+    rw [hadd, hadd, hadd, hneg]
+    simp only [hadj, mapCoefficients_fieldStrength]
+  rw [← hdiv, hMaxwell nu]
 
 /-- Conjugation in the coefficient algebra, not conjugation of Zorn elements. -/
 def coefficientConjugation (g : Aˣ) : A →+* A where

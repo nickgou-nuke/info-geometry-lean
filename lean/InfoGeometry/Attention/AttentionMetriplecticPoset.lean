@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Finset.Basic
 import Mathlib.Order.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Attention.AttentionMetriplecticPoset
 
@@ -151,5 +158,85 @@ theorem motivic_chain :
 theorem kinetic_conservation_le_lyapunov :
     kineticEnergyConservation ≤ lyapunovLatentStability := by
   decide
+
+/-! ### Non-Commutative Operator Realization of `MetriplecticArchetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `MetriplecticArchetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def metriplecticArchetypeOperator (P A C X : B) : MetriplecticArchetype → B
+  | .metriplecticSplit => evenGrade P X + oddGrade P X
+  | .frobeniusOrthogonality => peirce11 P X * peirce00 P X
+  | .casimirGradingInvariance => invS P * evenGrade P X * invS P
+  | .metriplecticDiracDispersion => genPhi P A C * genPhi P A C
+  | .softmaxEntropySecondLaw => evenGrade P X
+  | .latentCurvatureLieHolonomy => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .multiHeadSymplecticReduction => InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (genPhi P A C) (genJ P A C)
+  | .residualEulerIntegrator => 1 + oddGrade P X
+  | .metriplecticPropagator => (1 + evenGrade P X) + oddGrade P X
+  | .kineticEnergyConservation => genJ P A C * genJ P A C
+  | .dissipativeRadialContraction => peirce11 P X + peirce00 P X
+  | .lyapunovLatentStability => genSig P A C * genSig P A C
+  | .symplecticDefectIdentity => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C) (genPhi P A C)
+  | .symplecticTracelessEquivalence => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C) (genJ P A C)
+  | .tracelessCanonicalProjection => oddGrade P (evenGrade P X)
+  | .operatorTetradDecomposition => projV P A C X + projPhi P A C X + projJ P A C X + projSig P A C X
+  | .tetradPairwiseOrthogonality => projPhi P A C (genV P A C)
+  | .polylogOne => conePlus P A
+  | .oddsRatioDeriv => coneMinus P C
+  | .motivicNilpotent => conePlus P A * conePlus P A
+  | .dilogarithmSeam => genV P A C
+  | .carnotShannonUnification => genSig P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `MetriplecticArchetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the metriplectic
+attention archetypes satisfy exact Peirce splitting, diagonal-block orthogonality,
+grading invariance, Tetraktys Dirac dispersion `Φ² = V` and `J² = -V`, the owner-convention
+Lie bracket `[Φ, J] = -2 Σ`, symplectic anticommutativity `{Φ, J} = 0`, Casimir equality
+`Σ² = V²`, and the Peirce-spine Klein character decomposition. -/
+theorem metriplecticArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    metriplecticArchetypeOperator P A C X .metriplecticSplit = X ∧
+    metriplecticArchetypeOperator P A C X .frobeniusOrthogonality = 0 ∧
+    metriplecticArchetypeOperator P A C X .casimirGradingInvariance = evenGrade P X ∧
+    metriplecticArchetypeOperator P A C X .metriplecticDiracDispersion =
+      metriplecticArchetypeOperator P A C X .dilogarithmSeam ∧
+    metriplecticArchetypeOperator P A C X .latentCurvatureLieHolonomy =
+      -((2 : ℤ) • metriplecticArchetypeOperator P A C X .carnotShannonUnification) ∧
+    metriplecticArchetypeOperator P A C X .multiHeadSymplecticReduction = 0 ∧
+    metriplecticArchetypeOperator P A C X .kineticEnergyConservation =
+      -metriplecticArchetypeOperator P A C X .dilogarithmSeam ∧
+    metriplecticArchetypeOperator P A C X .lyapunovLatentStability =
+      metriplecticArchetypeOperator P A C X .dilogarithmSeam *
+        metriplecticArchetypeOperator P A C X .dilogarithmSeam ∧
+    metriplecticArchetypeOperator P A C X .tracelessCanonicalProjection = 0 ∧
+    metriplecticArchetypeOperator P A C X .operatorTetradDecomposition =
+      (8 : ℤ) • X ∧
+    metriplecticArchetypeOperator P A C X .tetradPairwiseOrthogonality = 0 ∧
+    metriplecticArchetypeOperator P A C X .motivicNilpotent = 0 := by
+  dsimp only [metriplecticArchetypeOperator]
+  have hA3 := archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C
+  have hA5 := archetype_A5_klein_hadamard_spectra_and_partition (P := P) hP A C X
+  have hA11 := archetype_A11_klein_hadamard_character_selection (P := P) hP A C
+  rcases hA3 with ⟨hPlus, _, hPhiSq, hJSq, _, _, _, hAnti, _, _, hSigSq, _, _, _, _⟩
+  have hSplit := (archetype_A9_peirce_block_diagonal_splits (P := P) hP A C X).1
+  refine ⟨?_, ?_, ?_, hPhiSq,
+    (archetype_A7_so12_lie_brackets_and_cubic_inversions (P := P) hP A C).1,
+    hAnti, hJSq, hSigSq, ?_, hA5.1, hA11.2.1, hPlus⟩
+  · calc
+      evenGrade P X + oddGrade P X =
+          peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X := by
+            dsimp [evenGrade, oddGrade]
+            abel
+      _ = X := hSplit
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Attention.AttentionMetriplecticPoset

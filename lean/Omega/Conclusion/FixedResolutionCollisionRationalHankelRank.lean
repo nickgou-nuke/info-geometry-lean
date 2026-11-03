@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Field.GeomSum
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.POM.FiberSpectrumPronyHankelRank
+import Omega.POM.FiniteMomentHankelRank
 
 open scoped BigOperators
 
@@ -34,37 +40,34 @@ def fixedResolutionCollisionGramEntry {r : ℕ} (δ μ : Fin r → ℚ) (i j : �
   ∑ k, μ k * fixedResolutionCollisionVandermondeEntry δ i k *
     fixedResolutionCollisionVandermondeEntry δ j k
 
+/-- The concrete square moment Hankel matrix at a fixed finite spectrum. -/
+def fixedResolutionCollisionHankelMatrix {r : ℕ} (δ μ : Fin r → ℚ) :
+    Matrix (Fin r) (Fin r) ℚ := fun i j =>
+  fixedResolutionCollisionMoment δ μ (i.1 + j.1)
+
+private theorem fixedResolutionCollisionHankelMatrix_eq_canonical {r : ℕ}
+    (δ μ : Fin r → ℚ) :
+    fixedResolutionCollisionHankelMatrix δ μ =
+      Omega.POM.finiteMomentHankel δ μ := by
+  rfl
+
+/-- Distinct finite support and nonzero weights imply the actual moment Hankel matrix
+has full rank. -/
+theorem fixedResolutionCollisionHankelMatrix_rank {r : ℕ} (δ μ : Fin r → ℚ)
+    (hδ : StrictMono δ) (hμ : ∀ i, μ i ≠ 0) :
+    (fixedResolutionCollisionHankelMatrix δ μ).rank = r := by
+  rw [fixedResolutionCollisionHankelMatrix_eq_canonical]
+  exact Omega.POM.finiteMomentHankel_rank δ μ hδ.injective hμ
+
 /-- Distinct support values and nonzero weights provide the determinant-side witness. -/
 def fixedResolutionCollisionDeterminantWitness {r : ℕ} (δ μ : Fin r → ℚ) : Prop :=
   (∀ i, μ i ≠ 0) ∧ ∀ i j, i < j → δ i ≠ δ j
 
-/-- Chapter-local exact-rank witness obtained from the Prony/Hankel wrapper. -/
-def fixedResolutionCollisionExactHankelRank (r : ℕ) : Prop :=
-  let D : Omega.POM.FiberSpectrumPronyHankelRankData :=
-    { atomCount := r
-      hankelRank := r
-      minimalRecurrenceOrder := r
-      hankelRank_eq_atomCount := rfl
-      minimalRecurrenceOrder_eq_atomCount := rfl }
-  D.atomCount = D.hankelRank ∧ D.atomCount = D.minimalRecurrenceOrder
-
-lemma fixedResolutionCollisionExactHankelRank_holds (r : ℕ) :
-    fixedResolutionCollisionExactHankelRank r := by
-  unfold fixedResolutionCollisionExactHankelRank
-  let D : Omega.POM.FiberSpectrumPronyHankelRankData :=
-    { atomCount := r
-      hankelRank := r
-      minimalRecurrenceOrder := r
-      hankelRank_eq_atomCount := rfl
-      minimalRecurrenceOrder_eq_atomCount := rfl }
-  have hD := Omega.POM.paper_pom_fiber_spectrum_prony_hankel_rank D
-  simpa [D] using hD
-
 /-- Paper label: `thm:conclusion-fixedresolution-collision-rational-hankel-rank`.
 The fixed-resolution moment prefix is a finite sum of geometric series, hence a rational
 partial-fraction expression; the Hankel entries factor through the Vandermonde Gram expansion;
-distinct support values give the determinant witness, and the exact rank package is imported from
-the chapter's Prony/Hankel wrapper. -/
+distinct support values and nonzero weights imply the full rank of the concrete moment Hankel
+matrix by its Vandermonde Gram factorization. -/
 theorem paper_conclusion_fixedresolution_collision_rational_hankel_rank
     (r N : ℕ) (δ μ : Fin r → ℚ) (z : ℚ) (hδ : StrictMono δ) (hμ : ∀ i, μ i ≠ 0)
     (hz : ∀ i, δ i * z ≠ 1) :
@@ -73,7 +76,7 @@ theorem paper_conclusion_fixedresolution_collision_rational_hankel_rank
     (∀ i j, fixedResolutionCollisionHankelEntry δ μ i j =
       fixedResolutionCollisionGramEntry δ μ i j) ∧
     fixedResolutionCollisionDeterminantWitness δ μ ∧
-    fixedResolutionCollisionExactHankelRank r := by
+    (fixedResolutionCollisionHankelMatrix δ μ).rank = r := by
   have hprefix :
       fixedResolutionCollisionGeneratingPrefix δ μ z N =
         fixedResolutionCollisionPartialFraction δ μ z N := by
@@ -105,7 +108,8 @@ theorem paper_conclusion_fixedresolution_collision_rational_hankel_rank
     intro i j
     simp [fixedResolutionCollisionHankelEntry, fixedResolutionCollisionGramEntry,
       fixedResolutionCollisionMoment, fixedResolutionCollisionVandermondeEntry, pow_add, mul_assoc]
-  refine ⟨hprefix, hhankel, ?_, fixedResolutionCollisionExactHankelRank_holds r⟩
-  exact ⟨hμ, fun i j hij => ne_of_lt (hδ hij)⟩
+  refine ⟨hprefix, hhankel, ?_, ?_⟩
+  · exact ⟨hμ, fun i j hij => ne_of_lt (hδ hij)⟩
+  · exact fixedResolutionCollisionHankelMatrix_rank δ μ hδ hμ
 
 end Omega.Conclusion

@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
+import InfoGeometry.Clifford.Cl55WittCircularAxes
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralCuntzSUSYNative
 
@@ -20,19 +26,83 @@ open InfoGeometry.OperatorAlgebra.ChiralCuntzSUSYNative
 
 abbrev Cl55ChiralMatrix := Matrix (Fin 2) (Fin 2) Cl55
 
+/-- Matrix units witness noncommutativity of the native Cl(5,5) chiral carrier. -/
+def cl55ChiralE01 : Cl55ChiralMatrix :=
+  fun i j => if i = 0 ∧ j = 1 then 1 else 0
+
+def cl55ChiralE10 : Cl55ChiralMatrix :=
+  fun i j => if i = 1 ∧ j = 0 then 1 else 0
+
+theorem cl55ChiralMatrix_noncommutative_witness :
+    cl55ChiralE01 * cl55ChiralE10 ≠ cl55ChiralE10 * cl55ChiralE01 := by
+  intro h
+  have h00 := congrArg (fun M : Cl55ChiralMatrix => M 0 0) h
+  have hOne : (1 : Cl55) = 0 := by
+    simpa [cl55ChiralE01, cl55ChiralE10, Matrix.mul_apply, Fin.sum_univ_two] using h00
+  exact one_ne_zero hOne
+
+/-! The two real Clifford axes are the starting operator generators for this
+bridge. Their half-sum and half-difference recover the isotropic CAR modes. -/
+
+def cl55MajoranaPlusAxis (i : Fin 5) : Cl55 := ι55 (e_pos i)
+
+def cl55MajoranaMinusAxis (i : Fin 5) : Cl55 := -(ι55 (f_neg i))
+
+theorem cl55MajoranaPlusAxis_eq_hyperbolic (i : Fin 5) :
+    cl55MajoranaPlusAxis i = hyperbolicAxis55 i := by
+  simp [cl55MajoranaPlusAxis, hyperbolicAxis55, creation55,
+    annihilation55, nbar_pair, n_pair]
+  module
+
+theorem cl55MajoranaMinusAxis_eq_elliptic (i : Fin 5) :
+    cl55MajoranaMinusAxis i = ellipticAxis55 i := by
+  simp [cl55MajoranaMinusAxis, ellipticAxis55, creation55,
+    annihilation55, nbar_pair, n_pair]
+  module
+
+def cl55NullPlusFromMajorana (i : Fin 5) : Cl55 :=
+  ((2 : ℝ)⁻¹) • (cl55MajoranaPlusAxis i + cl55MajoranaMinusAxis i)
+
+def cl55NullMinusFromMajorana (i : Fin 5) : Cl55 :=
+  ((2 : ℝ)⁻¹) • (cl55MajoranaPlusAxis i - cl55MajoranaMinusAxis i)
+
+@[simp] theorem cl55NullPlusFromMajorana_eq_creation (i : Fin 5) :
+    cl55NullPlusFromMajorana i = creation55 i := by
+  change ((2 : ℝ)⁻¹) •
+    (cl55MajoranaPlusAxis i + cl55MajoranaMinusAxis i) = creation55 i
+  rw [cl55MajoranaPlusAxis_eq_hyperbolic,
+    cl55MajoranaMinusAxis_eq_elliptic]
+  simp [hyperbolicAxis55, ellipticAxis55]
+  module
+
+@[simp] theorem cl55NullMinusFromMajorana_eq_annihilation (i : Fin 5) :
+    cl55NullMinusFromMajorana i = annihilation55 i := by
+  change ((2 : ℝ)⁻¹) •
+    (cl55MajoranaPlusAxis i - cl55MajoranaMinusAxis i) = annihilation55 i
+  rw [cl55MajoranaPlusAxis_eq_hyperbolic,
+    cl55MajoranaMinusAxis_eq_elliptic]
+  simp [hyperbolicAxis55, ellipticAxis55]
+  module
+
 def cl55QPlus (i : Fin 5) : Cl55ChiralMatrix :=
-  qPlus (creation55 i)
+  qPlus (cl55NullPlusFromMajorana i)
 
 def cl55QMinus (i : Fin 5) : Cl55ChiralMatrix :=
-  qMinus (annihilation55 i)
+  qMinus (cl55NullMinusFromMajorana i)
 
 @[simp] theorem cl55QPlus_sq (i : Fin 5) :
     cl55QPlus i * cl55QPlus i = 0 := by
-  exact qPlus_sq (creation55 i)
+  change qPlus (cl55NullPlusFromMajorana i) *
+    qPlus (cl55NullPlusFromMajorana i) = 0
+  rw [cl55NullPlusFromMajorana_eq_creation]
+  exact qPlus_sq _
 
 @[simp] theorem cl55QMinus_sq (i : Fin 5) :
     cl55QMinus i * cl55QMinus i = 0 := by
-  exact qMinus_sq (annihilation55 i)
+  change qMinus (cl55NullMinusFromMajorana i) *
+    qMinus (cl55NullMinusFromMajorana i) = 0
+  rw [cl55NullMinusFromMajorana_eq_annihilation]
+  exact qMinus_sq _
 
 theorem cl55QPlus_mul_QPlus (i j : Fin 5) :
     cl55QPlus i * cl55QPlus j = 0 := by
@@ -45,26 +115,30 @@ theorem cl55QMinus_mul_QMinus (i j : Fin 5) :
 theorem cl55QPlus_mul_QMinus (i : Fin 5) :
     cl55QPlus i * cl55QMinus i =
       !![creation55 i * annihilation55 i, 0; 0, 0] := by
-  exact qPlus_mul_qMinus _ _
+  simpa [cl55QPlus, cl55QMinus] using
+    qPlus_mul_qMinus (creation55 i) (annihilation55 i)
 
 theorem cl55QMinus_mul_QPlus (i : Fin 5) :
     cl55QMinus i * cl55QPlus i =
       !![0, 0; 0, annihilation55 i * creation55 i] := by
-  exact qMinus_mul_qPlus _ _
+  simpa [cl55QPlus, cl55QMinus] using
+    qMinus_mul_qPlus (creation55 i) (annihilation55 i)
 
 theorem cl55Q_anticomm_same (i : Fin 5) :
     cl55QPlus i * cl55QMinus i +
         cl55QMinus i * cl55QPlus i =
       !![creation55 i * annihilation55 i, 0;
          0, annihilation55 i * creation55 i] := by
-  exact qAnticomm_eq_partnerHamiltonian _ _
+  simpa [cl55QPlus, cl55QMinus, qAnticomm] using
+    qAnticomm_eq_partnerHamiltonian (creation55 i) (annihilation55 i)
 
 theorem cl55Q_anticomm (i j : Fin 5) :
     cl55QPlus i * cl55QMinus j +
         cl55QMinus j * cl55QPlus i =
       !![creation55 i * annihilation55 j, 0;
          0, annihilation55 j * creation55 i] := by
-  exact qAnticomm_eq_partnerHamiltonian _ _
+  simpa [cl55QPlus, cl55QMinus, qAnticomm] using
+    qAnticomm_eq_partnerHamiltonian (creation55 i) (annihilation55 j)
 
 theorem cl55Q_dirac_square (i : Fin 5) :
     (cl55QPlus i + cl55QMinus i) *

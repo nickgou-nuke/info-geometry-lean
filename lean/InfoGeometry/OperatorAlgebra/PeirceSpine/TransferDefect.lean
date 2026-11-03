@@ -46,6 +46,20 @@ theorem quadratic_power_recurrence {R : Type*} [Semiring R]
       rw [show n + 1 = 1 + n by omega, pow_add]
       simp
 
+/-- Exact finite Euler and Mangoldt polynomial remainders for an arbitrary
+element of an associative ring. The cubic partial-sum remainder is `-X³`;
+the related `(1 + X) * δ(X)` expression differs by the missing `X` term.
+-/
+theorem euler_mangoldt_polynomial_remainders {R : Type*} [Ring R] (X : R) :
+    (1 - X) * (1 + X) = 1 - X * X ∧
+    (1 - X) * (1 + X) = (1 - X) -
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect X ∧
+    (1 - X) * (1 + X + X * X) - 1 = -(X * X * X) ∧
+    (1 - X) * (X + X * X) = -((1 + X) *
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect X) := by
+  simp only [InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> noncomm_ring
+
 variable {P : B} (hP : P * P = P)
 include hP
 

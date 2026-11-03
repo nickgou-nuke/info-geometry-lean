@@ -54,6 +54,22 @@ noncomputable def coverEquiv :
     simp only [affineToBrillouinCover, brillouinToAffineCover, Prod.mk.injEq]
     constructor <;> field_simp
 
+/-- The affine covering-coordinate change is a homeomorphism, not only a
+bijection: it is diagonal scaling followed by the coordinate exchange. -/
+noncomputable def coverHomeomorph :
+    KleinAffineOrbitQuotient.Plane ≃ₜ KleinBrillouinBase.Cover where
+  toEquiv := coverEquiv
+  continuous_toFun := by
+    change Continuous (fun p : ℝ × ℝ =>
+      (Real.pi * p.2, (2 * Real.pi) * p.1))
+    exact (continuous_const.mul continuous_snd).prodMk
+      (continuous_const.mul continuous_fst)
+  continuous_invFun := by
+    change Continuous (fun p : ℝ × ℝ =>
+      (p.2 / (2 * Real.pi), p.1 / Real.pi))
+    exact (continuous_snd.div_const (2 * Real.pi)).prodMk
+      (continuous_fst.div_const Real.pi)
+
 private theorem circle_add_int_period (x : ℝ) (n : ℤ) :
     ((x + (n : ℝ) * (2 * Real.pi) : ℝ) : MomentumCircle) =
       (x : MomentumCircle) := by
@@ -367,5 +383,56 @@ theorem affineQuotientToBrillouinQuotient_bijective :
     Function.Bijective affineQuotientToBrillouinQuotient :=
   ⟨affineQuotientToBrillouinQuotient_injective,
     affineQuotientToBrillouinQuotient_surjective⟩
+
+/-- The affine-plane Klein quotient and the Brillouin-torus Klein quotient are
+homeomorphic. The inverse is continuous because the Brillouin projection
+composed with the covering-coordinate homeomorphism is a quotient map. -/
+noncomputable def affineQuotientToBrillouinQuotientHomeomorph :
+    KleinAffineOrbitQuotient.KleinAffineQuotient ≃ₜ
+      KleinBottleOrbitQuotient.KleinBrillouinQuotient := by
+  let f := affineQuotientToBrillouinQuotient
+  let e : KleinAffineOrbitQuotient.KleinAffineQuotient ≃
+      KleinBottleOrbitQuotient.KleinBrillouinQuotient :=
+    Equiv.ofBijective f affineQuotientToBrillouinQuotient_bijective
+  have hcover : Topology.IsQuotientMap coverToTorus := by
+    change Topology.IsQuotientMap
+      (Prod.map (fun x : ℝ => (x : MomentumCircle))
+        (fun x : ℝ => (x : MomentumCircle)))
+    have hcircle : IsOpenQuotientMap (fun x : ℝ => (x : MomentumCircle)) := by
+      change IsOpenQuotientMap
+        (QuotientAddGroup.mk' (AddSubgroup.zmultiples (2 * Real.pi)))
+      exact QuotientAddGroup.isOpenQuotientMap_mk
+    exact (hcircle.prodMap hcircle).isQuotientMap
+  have hquot : Topology.IsQuotientMap
+      (fun p : KleinAffineOrbitQuotient.Plane =>
+        KleinBottleOrbitQuotient.quotientMap
+          (coverToTorus (affineToBrillouinCover p))) := by
+    change Topology.IsQuotientMap
+      (KleinBottleOrbitQuotient.quotientMap ∘ coverToTorus ∘
+        affineToBrillouinCover)
+    exact KleinBottleOrbitQuotient.quotientMap_isQuotient.comp
+      (hcover.comp coverHomeomorph.isQuotientMap)
+  have hfactor : e.symm ∘
+      (KleinBottleOrbitQuotient.quotientMap ∘ coverToTorus ∘
+        affineToBrillouinCover) =
+        KleinAffineOrbitQuotient.quotientMap := by
+    funext p
+    apply e.injective
+    change e (e.symm
+        (KleinBottleOrbitQuotient.quotientMap
+          (coverToTorus (affineToBrillouinCover p)))) =
+      e (KleinAffineOrbitQuotient.quotientMap p)
+    rw [e.apply_symm_apply]
+    rfl
+  refine
+    { toEquiv := e
+      continuous_toFun := affineQuotientToBrillouinQuotient_continuous
+      continuous_invFun := ?_ }
+  apply (hquot.continuous_iff).2
+  change Continuous (e.symm ∘
+    (KleinBottleOrbitQuotient.quotientMap ∘ coverToTorus ∘
+      affineToBrillouinCover))
+  rw [hfactor]
+  exact KleinAffineOrbitQuotient.quotientMap_continuous
 
 end InfoGeometry.Topology.KleinAffineBrillouinConjugacy

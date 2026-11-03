@@ -30,6 +30,7 @@ open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 open InfoGeometry.Clifford.Cl55WittCalibratedRepresentation
+open InfoGeometry.Canonical.Cl55WittCAR
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.CliffordBitWordEquivalence
 open InfoGeometry.Canonical.CliffordCARGeneratorTopological
@@ -84,6 +85,38 @@ theorem cl55WittColimit_lift {A : Type} [Semiring A]
 @[simp] theorem cl55WittColimit_origin :
     cl55WittColimit originClifford55 = algebraicAnnihilationElement 5 4 := by
   rw [originClifford55_eq_annihilation55, cl55WittColimit_annihilation55]
+
+/-- The infinity/origin Peirce cut is the mode-four occupation cut in the
+actual UHF direct limit.  The Witt-calibrated orientation sends `infinity *
+origin` to `creation * annihilation`; the reverse product is its complementary
+CAR projection. -/
+theorem infinity_origin_projectors_are_mode_four_occupations_in_limit :
+    cl55WittColimit infinityProjector55 =
+        algebraicCreationElement 5 4 * algebraicAnnihilationElement 5 4 ∧
+    cl55WittColimit originProjector55 =
+        algebraicAnnihilationElement 5 4 * algebraicCreationElement 5 4 ∧
+    algebraicAnnihilationElement 5 4 * algebraicCreationElement 5 4 =
+      1 - algebraicCreationElement 5 4 * algebraicAnnihilationElement 5 4 := by
+  have hCAR := congrArg cl55WittColimit
+    (annihilation55_creation55_anticommutator 4)
+  have hCARLimit :
+      algebraicAnnihilationElement 5 4 * algebraicCreationElement 5 4 +
+        algebraicCreationElement 5 4 * algebraicAnnihilationElement 5 4 = 1 := by
+    simpa only [map_add, map_mul, map_one, cl55WittColimit_creation55,
+      cl55WittColimit_annihilation55] using hCAR
+  refine ⟨?_, ?_, ?_⟩
+  · rw [infinityProjector55, map_mul, cl55WittColimit_infinity,
+      cl55WittColimit_origin]
+  · rw [originProjector55, map_mul, cl55WittColimit_origin,
+      cl55WittColimit_infinity]
+  · calc
+      algebraicAnnihilationElement 5 4 * algebraicCreationElement 5 4 =
+          (algebraicAnnihilationElement 5 4 * algebraicCreationElement 5 4 +
+            algebraicCreationElement 5 4 * algebraicAnnihilationElement 5 4) -
+            algebraicCreationElement 5 4 * algebraicAnnihilationElement 5 4 := by
+              abel
+      _ = 1 - algebraicCreationElement 5 4 *
+          algebraicAnnihilationElement 5 4 := by rw [hCARLimit]
 
 @[simp] theorem cl55WittColimit_sourcePair (i : Fin 5) :
     cl55WittColimit (sourcePair55 i) =

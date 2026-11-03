@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Spectrometry.AitchisonGeometricMedian
 import InfoGeometry.Spectrometry.FixedScaleLeastSquares
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.ThermodynamicTransportPipeline
 
@@ -194,5 +201,45 @@ theorem limit_scales_product_one
     ⟨limit, trajectory_limit_mem observed initial cutoff temperature limit converges⟩
 
 end
+
+/-! ### Non-Commutative Operator Realization of `PipelineDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `PipelineDependency.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def transportPipelineArchetypeOperator (P A C X : B) : PipelineDependency.Archetype → B
+  | .centeredGeometry => oddGrade P X
+  | .exponentiatedScales => invS P
+  | .leastSquaresProjection => evenGrade P X
+  | .logMeanInvariance => invS P * evenGrade P X * invS P
+  | .separableModel => peirce11 P X * peirce00 P X
+  | .rankOneExactness => evenGrade P X + oddGrade P X
+  | .iteratePreservation => evenGrade P (evenGrade P X)
+
+/-- **Theorem (Non-Commutative Operator Identities across `PipelineDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the transport
+pipeline archetypes satisfy reflection involution `S² = 1`, even-grade conjugation
+invariance `S (evenGrade P X) S = evenGrade P X`, diagonal block decoupling
+`peirce11 P X * peirce00 P X = 0`, exact Peirce reconstruction, and idempotent
+iterate preservation. -/
+theorem transportPipelineArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    transportPipelineArchetypeOperator P A C X .exponentiatedScales *
+      transportPipelineArchetypeOperator P A C X .exponentiatedScales = 1 ∧
+    transportPipelineArchetypeOperator P A C X .logMeanInvariance =
+      transportPipelineArchetypeOperator P A C X .leastSquaresProjection ∧
+    transportPipelineArchetypeOperator P A C X .separableModel = 0 ∧
+    transportPipelineArchetypeOperator P A C X .rankOneExactness = X ∧
+    transportPipelineArchetypeOperator P A C X .iteratePreservation =
+      transportPipelineArchetypeOperator P A C X .leastSquaresProjection ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 := by
+  dsimp only [transportPipelineArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.ThermodynamicTransportPipeline

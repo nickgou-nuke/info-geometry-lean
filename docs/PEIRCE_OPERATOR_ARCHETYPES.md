@@ -130,6 +130,22 @@ It specializes to the actual parity ring equivalence. This is an additive
 statement with a stated hypothesis, not multiplicative Hilbert 90.
 `ParityExactnessAudit.lean` audits its four theorem declarations.
 
+## Tripotent five-grade parity on operator Hom spaces
+
+`OperatorAlgebra/PeirceSpine/TripotentParity.lean` groups the five adjoint
+grades into the even grades `{-2, 0, 2}` and odd grades `{-1, 1}` for the
+zero-mode Peirce cut. `TripotentGradedHom.lean` lifts its reflection to
+rectangular real-linear Hom spaces. It proves involutivity, compatibility
+with composition/evaluation, the even-intertwiner criterion, closure of even
+morphisms under composition, and homogeneous composition sign multiplication.
+The Hom space has the induced left and right endomorphism actions, and the
+parity involution is real-linear.
+
+These results establish operator-level `Z₂` parity compatibility. They do
+not construct a balanced tensor-product bimodule equivalence, graded Morita
+functors, or graded unit/counit isomorphisms. In particular, no fullness or
+generation property of the zero-mode cut is inferred from five-grade parity.
+
 ## A51–A52: ordered pullbacks, Jordan triples, and sandwich charges
 
 The mathematical dependency order is:
@@ -159,6 +175,12 @@ the cubic difference, and the advertised fifth-degree polynomial
 `Δ⁵ K - 5 Δ³ K + 4 Δ K = 0` for the specified sum of five corner operators.
 The intake's displayed A52 theorem did not contain this fifth-degree claim.
 `ChargePullbackAudit.lean` audits the declarations in these three owners.
+The current locked replay of `ChargePullbackAudit` passed (3,106 jobs, exit 0);
+the printed axiom dependencies for the pullback and charge declarations are
+within standard foundations (`propext`, with `Quot.sound` on selected
+endomorphism-action results). The separate `ChargeExtractionBracketAudit`
+replay passed (3,126 jobs, exit 0), including the determinant-288 obstruction
+to an integer inverse and the corrected crossed-support extremal bracket.
 
 These results make no claim of a direct-sum eigenbasis in arbitrary
 characteristic, a full Kantor–Koecher–Tits Lie algebra, or differential
@@ -355,6 +377,20 @@ The degree-one paired equations are scaled by 3, not 12 and 6:
 `6G₊₁` and `6G₋₁`, respectively. The degree-two combinations do give
 `24G±₂`. These are integer-scaled identities; the charge power matrix has
 determinant 288, so the proposed integer Vandermonde inverse is false.
+
+`KantorFifthChargeClosure` adds pointwise notation for the fifth iterate of
+the specified total Kantor operator and proves `Δ₅ - 5 Δ₃ + 4 Δ₁ = 0` by the
+existing Peirce normal form. `KantorCrossGradeBrackets` computes the four
+sample brackets and their charges. Its extremal formula uses crossed supports,
+in agreement with `CrossChargeBrackets`; the source's
+`Q₊ X Q₊ - Q₋ X Q₋` expression is false for these compositions.
+
+`KantorFifthChargeClosure` adds pointwise notation for the fifth iterate of
+the specified total Kantor operator and proves `Δ₅ - 5 Δ₃ + 4 Δ₁ = 0` by the
+existing Peirce normal form. `KantorCrossGradeBrackets` computes the four
+sample brackets and their charges. Its extremal formula uses crossed supports,
+in agreement with `CrossChargeBrackets`; the source's
+`Q₊ X Q₊ - Q₋ X Q₋` expression is false for these compositions.
 
 The A51 pullback owners were checked in the same audit run via
 `ChargePullbackAudit`. Their correction satisfies the
@@ -721,14 +757,21 @@ proofs.
    - `(P - N₊) δ^[n](V) (P + N₋) = (1 - V) δ^[n](Q₊)`
    - `(P - N₊) (qgtDefectDiff P A C n) (P + N₋) = (1 + V) δ^[n](Q₊)`
    - `(P - N₊) (Φ δ^[n](V)) (P + N₋) = 0` and `(P - N₊) (J δ^[n](V)) (P + N₋) = 2 V δ^[n](Q₊)`.
-   These are identities for the local chart factors defined in that file. They
-   do not identify those factors with the separate transcript tower symbols
-   `P_{k+1}` and `P_{C,k}`; that bridge remains unformalized. Within the local
-   chart, the chiral sheet difference is compressed by `1 + V`, with residual
-   `2 V δ^[n](Q₊)`. Similarly, in `TwoStateSandwich`, `chart_bruhat_factor_mul_inv`,
-   `chartBruhatConj_mul`, and `chartBruhatConj_genV` prove that the two-factor
-   chart map preserves multiplication and fixes `genV P A C`; no identification
-   with the transcript's distinct multiscale map is asserted here.
+   Within `TwoStateSandwich.lean`, these are identities for the local chart
+   factors defined in that file. The separate bridge identifying those local
+   chart factors with the multiscale unipotent tower stage
+   `P_{k+1} = unipotentIdempotentTower A (k + 1) P = P_k - conePlus P_k (A k)`,
+   the UHF affine tower `uhfIdemTower k P A₀`, and the dual lower-shear stage
+   `P_{C,k} = conjMinus P_k (C k) P_k = P_k + coneMinus P_k (C k)` at every
+   scale `k : ℕ` and defect depth `n : ℕ` is proved in
+   `PeirceSpine.UHFHeisenbergSugawaraVirasoroPoset`
+   (`unipotentIdempotentTower_const_eq_uhfIdemTower` and
+   `stage_D31_uhf_unipotent_tower_and_two_state_chart_sandwich_soldering`).
+   Within the local chart, the chiral sheet difference is compressed by `1 + V`,
+   with residual `2 V δ^[n](Q₊)`. Similarly, in `TwoStateSandwich`,
+   `chart_bruhat_factor_mul_inv`, `chartBruhatConj_mul`, and
+   `chartBruhatConj_genV` prove that the two-factor chart map preserves
+   multiplication and fixes `genV P A C`.
 
 6. **A83 Two-connection Jordan vs. Lie cross-terms (`PeirceSpine.Tetraktys`):**
    `phi_add_j_square_genV_form`, `phi_j_comm_expansion`, and
@@ -774,3 +817,77 @@ proofs.
     `BlockTriangularIntervention.lean` formalize the three-layer transition
     operator `dagEdge2`, its truncated Neumann inverse `dagGreen2`, and the
     combined 18-conjunct synthesis with `blockLower` and `idempotentCompression`.
+
+### Ground-truth contract: A62 finite Peirce array
+
+- **Claim:** Four homogenized maps applied to six Peirce decomposition maps
+  satisfy the stated column partitions, doubled row totals, and total
+  `16 • (V² * X)` identity.
+- **Carrier and operations:** An associative ring `B`, an idempotent `P`,
+  the Peirce corners and grading maps, and the four `hProj` additive maps.
+- **Owners and dependencies:** `PeirceSpine.Homogenized` defines the maps;
+  `PeirceSpine.Tetraktys` owns the homogenized maps; the A62 theorem is used by
+  `MasterCausalPosetD1ToD15` and the cellular-sheaf axiom audit. The cyclotomic
+  array also reuses the row-channel map in `CyclotomicBridge`.
+- **Smallest proved scope:** A finite sum identity for these explicitly
+  defined maps. No octad, MOG, Hadamard matrix, error-correcting code, or
+  attention-mask interpretation occurs in the theorem statement.
+- **Adjacent claims not established:** A coding-theory carrier, code submodule,
+  distance, decoder, and correction criterion are absent from this identity.
+
+### Ground-truth contract: M5 scaled chiral array
+
+- **Claim:** Six explicitly defined left-multiplication column operators sum to
+  three times the identity on any input. Applied to the four homogenized
+  channels, this gives the stated row sums, alternating differences, and the
+  displayed row-zero response.
+- **Carrier and operations:** The associative ring, idempotent `P`, the
+  `hProj` maps, and the six definitions in `PeirceSpine.CyclotomicBridge`.
+- **Smallest proved scope:** The exact finite operator identities in
+  `stage_M5_scaled_chiral_array_identities`.
+- **Adjacent claims not established:** A Curtis–Turyn array, MOG, `S₃` code,
+  or error-correction theorem. The proved response invariance alone does not
+  define a code space, error set, distance, or correction procedure.
+
+### Ground-truth contract: three-track A86 operator
+
+The algebraic core of the proposed A86 operator is already represented by
+`ThreeCornerColumnAlgebra.columnOp p l F L Q`, namely
+`p * F * p + L * l + third p l * Q * third p l`, with `third p l = 1-p-l`.
+Its owner proves column extraction, the four forbidden corners, exact
+multiplication closure, and compression by `1-p`. The master theorem
+`stage_M7_block_lower_and_three_corner_column_algebra` packages these results
+with the separate two-corner block-lower identities. This is an exact
+noncommutative ring model of the stated three-corner support pattern. It does
+not encode sequence positions, a causal lower-triangular mask within tracks,
+softmax attention, learned embeddings, decoder layers, or empirical metrics.
+The new A86 theorem as pasted is therefore duplicate algebra at this level;
+its additional transformer interpretation is not a consequence of the ring
+identities.
+
+### Latest 49-turn source snapshot and carrier boundaries
+
+The downloaded Drive export
+`cached/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_latest.json`
+has 49 ordered chunks (25 user, 24 model), 29 tagged Lean fences, and one
+unterminated fence. Its SHA-256 is
+`c488ce340aef94579006bc284cf40162b6763cb72a59dd0513a9bf90641cde76`.
+These counts describe source occurrences, not distinct or verified theorems.
+The extraction directory is
+`cached/aistudio_extracts/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_latest/`.
+
+The D25–D27 ring-level claims are owned by `RelationalDressingPoset` and
+`QuantumAffineFlagClusterPoset`; D30's star-ring computations are in
+`CayleyDicksonHopfPoset`. D27 formalizes specialized identities in a Peirce
+ring, not the general quantum affine algebra or a category-wide T-system.
+The corrected D30 theorem gives zero transverse coordinate on `(P, N₊)`;
+the `Φ` coordinate is for `(P, N₋)`. Neither star-ring module is a model of
+the split-octonions.
+
+For split-octonions, `Lie.SplitOctonionFureyOperatorLift` uses the native
+nonassociative split-Zorn carrier and proves that the associator is the
+obstruction to multiplicativity of left regular operators. Its associative
+endomorphism algebra is a representation carrier, not an identification of
+the split-octonion multiplication with associative matrix multiplication.
+The D30 Hopf-coordinate formulas have no established map to this carrier;
+no such split-octonion Hopf theorem is claimed here.

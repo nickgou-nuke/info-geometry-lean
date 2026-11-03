@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.NativeCuntzO3TriSupersymmetry
@@ -48,6 +54,73 @@ theorem lambda8_squared_casimir :
     Lambda8 * Lambda8 = rangeProjection 0 + rangeProjection 1 +
       4 * rangeProjection 2 :=
   lambda8_squared
+
+/-- In the native tensor-algebra quotient, the quadratic expression is the
+embedded scalar `2 + 1/2 + 1/6`. -/
+theorem casimir2_eq_scalar :
+    casimir2 = 2 + invTwo + invSix := by
+  have hfour : (4 : Carrier) = algebraMap ℂ Carrier (4 : ℂ) :=
+    (map_natCast (algebraMap ℂ Carrier) 4).symm
+  have hcoeff : invTwo + invSix = 4 * invSix := by
+    change algebraMap ℂ Carrier ((2 : ℂ)⁻¹) +
+        algebraMap ℂ Carrier ((6 : ℂ)⁻¹) =
+      4 * algebraMap ℂ Carrier ((6 : ℂ)⁻¹)
+    rw [hfour, ← map_mul, ← map_add]
+    norm_num
+  dsimp [casimir2]
+  rw [cuntz_off_diagonal_root_sum,
+    lambda3_squared_casimir, lambda8_squared_casimir]
+  have hcomplete : rangeProjection 0 + rangeProjection 1 +
+      rangeProjection 2 = 1 := by
+    rw [← q12_q21_product, ← q23_q32_product, ← q31_q13_product]
+    exact tri_susy_hamiltonian_completeness
+  have hcentralTwo (x : Carrier) : invTwo * x = x * invTwo := by
+    dsimp [invTwo]
+    exact Algebra.commutes ((2 : ℂ)⁻¹) x
+  have hcentralSix (x : Carrier) : invSix * x = x * invSix := by
+    dsimp [invSix]
+    exact Algebra.commutes ((6 : ℂ)⁻¹) x
+  have hcentralFour : invSix * (4 : Carrier) =
+      (4 : Carrier) * invSix := by
+    rw [hfour]
+    dsimp [invSix]
+    exact Algebra.commutes ((6 : ℂ)⁻¹) (algebraMap ℂ Carrier (4 : ℂ))
+  calc
+    2 + invTwo * (rangeProjection 0 + rangeProjection 1) +
+        invSix * (rangeProjection 0 + rangeProjection 1 +
+          4 * rangeProjection 2) =
+      2 + (invTwo + invSix) *
+          (rangeProjection 0 + rangeProjection 1) +
+          (4 * invSix) * rangeProjection 2 := by
+          simp only [mul_add, add_mul]
+          rw [show invSix * (4 * rangeProjection 2) =
+              4 * (invSix * rangeProjection 2) by
+                calc
+                  invSix * (4 * rangeProjection 2) =
+                      (invSix * 4) * rangeProjection 2 := by rw [mul_assoc]
+                  _ = (4 * invSix) * rangeProjection 2 := by rw [hcentralFour]
+                  _ = 4 * (invSix * rangeProjection 2) := by rw [mul_assoc]]
+          noncomm_ring
+    _ = 2 + (4 * invSix) *
+          (rangeProjection 0 + rangeProjection 1 + rangeProjection 2) := by
+            rw [hcoeff]
+            noncomm_ring
+    _ = 2 + 4 * invSix := by rw [hcomplete, mul_one]
+    _ = 2 + invTwo + invSix := by rw [← hcoeff]; abel
+
+/-- The native quotient Casimir is central in its entire carrier. -/
+theorem casimir2_commutes (x : Carrier) :
+    lieBracket casimir2 x = 0 := by
+  rw [casimir2_eq_scalar]
+  dsimp [lieBracket]
+  have hcentralTwo : invTwo * x = x * invTwo := by
+    dsimp [invTwo]
+    exact Algebra.commutes ((2 : ℂ)⁻¹) x
+  have hcentralSix : invSix * x = x * invSix := by
+    dsimp [invSix]
+    exact Algebra.commutes ((6 : ℂ)⁻¹) x
+  simp only [add_mul, mul_add, hcentralTwo, hcentralSix]
+  noncomm_ring
 
 theorem p3_q12_ortho :
     rangeProjection 2 * Q12 = 0 ∧ Q12 * rangeProjection 2 = 0 := by

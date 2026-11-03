@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.InformationCarnotCycle
 
@@ -116,5 +123,38 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `InformationCarnotCycle.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def informationCarnotOperator (P A C : B) : Archetype → B
+  | .carnotEfficiency => 1 - P
+  | .maximumPowerSummit => P * (1 - P)
+  | .enclosedCapacity => genV P A C
+  | .equipartition => genPhi P A C * genPhi P A C + genJ P A C * genJ P A C
+  | .cycleClosure => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Carnot Cycle Closure over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the complementary
+efficiency projector `1 - P` is idempotent, `P (1 - P) = 0`, the equipartition sum
+`Φ² + J² = 0` balances, and the cycle commutator closes as `[Φ, J] = 2 Σ`. -/
+theorem informationCarnot_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    informationCarnotOperator P A C .carnotEfficiency *
+      informationCarnotOperator P A C .carnotEfficiency =
+      informationCarnotOperator P A C .carnotEfficiency ∧
+    informationCarnotOperator P A C .maximumPowerSummit = 0 ∧
+    genPhi P A C * genPhi P A C =
+      informationCarnotOperator P A C .enclosedCapacity ∧
+    informationCarnotOperator P A C .equipartition = 0 ∧
+    informationCarnotOperator P A C .cycleClosure = -((2 : ℤ) • genSig P A C) := by
+  dsimp only [informationCarnotOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.InformationCarnotCycle

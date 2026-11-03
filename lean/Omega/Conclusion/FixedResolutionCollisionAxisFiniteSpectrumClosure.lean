@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Omega.Conclusion.CofinalPrimeSupportNoUniformBoundedRankLedger
 import Omega.Conclusion.FixedResolutionCollisionRationalHankelRank
 import Omega.Conclusion.FixedresolutionTopdownPeeling
@@ -17,11 +23,11 @@ def conclusion_fixedresolution_collision_axis_finitespectrum_closure_statement :
       (∀ i j, fixedResolutionCollisionHankelEntry δ μ i j =
         fixedResolutionCollisionGramEntry δ μ i j) ∧
       fixedResolutionCollisionDeterminantWitness δ μ ∧
-      fixedResolutionCollisionExactHankelRank r) ∧
+      (fixedResolutionCollisionHankelMatrix δ μ).rank = r) ∧
     (∀ (D : Omega.POM.FiberSpectrumPronyHankelRankData), 2 ≤ D.atomCount →
       Omega.POM.pom_fiber_spectrum_finite_reconstruction_sharp_window D.atomCount =
           2 * D.atomCount ∧
-        Omega.POM.pom_fiber_spectrum_finite_reconstruction_sharp_reconstructs D ∧
+        Omega.POM.pom_fiber_spectrum_finite_reconstruction_sharp_rank D ∧
         (∀ k : ℕ,
           k ≤ Omega.POM.pom_fiber_spectrum_finite_reconstruction_sharp_window D.atomCount - 2 →
             Omega.POM.pomPronyHankelThresholdGap D.atomCount k = 0) ∧

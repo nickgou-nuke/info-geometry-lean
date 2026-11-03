@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -11,6 +17,7 @@ import InfoGeometry.Probability.ExpLogRNDerivation
 import InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Algebra.PeirceFrameAutomorphismTransport
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -142,5 +149,22 @@ def masterArchetypeTheoremBundle : MasterArchetypeTheoremBundle where
     exact toNonAssocAlgEquiv mul one D hD hD2 h_one h_cross t
   peirce_stabilizer := fun mul one D hD_one t I hDI =>
     universal_peirce_frame_stabilizer mul one D hD_one t I hDI
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem master_archetype_noncommutative_peirce_duality
+    {P : B} (hP : P * P = P) (A C X : B) :
+    evenGrade P X + oddGrade P X = X ∧
+    invS P * X * invS P = evenGrade P X - oddGrade P X ∧
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    genSig P A C * genSig P A C = genV P A C * genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Information.MasterArchetypeConvexDuality

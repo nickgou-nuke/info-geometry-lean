@@ -1,25 +1,34 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireSchwarzBridge
 import InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
+import InfoGeometry.Topology.KleinBottleQuotient
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Arithmetic.SarnakLocalCertification
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
 
 open InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
 open InfoGeometry.Arithmetic.ActualRiemannXiEntireSchwarzBridge
 open InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
+open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
+open InfoGeometry.Topology.KleinBottleQuotient
 
 inductive Archetype
   | arithmetic
   | continuation
   | reflection
-  | localCounting
-  | localCertification
-  | globalCoverage
+  | finitePairing
   deriving DecidableEq
 
 instance : Fintype Archetype where
-  elems := {.arithmetic, .continuation, .reflection, .localCounting,
-    .localCertification, .globalCoverage}
+  elems := {.arithmetic, .continuation, .reflection, .finitePairing}
   complete x := by
     cases x <;> decide
 
@@ -28,134 +37,33 @@ abbrev DependencyContext := Finset Archetype
 def reflectionContext : DependencyContext :=
   {.continuation, .reflection}
 
-def countingContext : DependencyContext :=
-  {.continuation, .localCounting}
+def finitePairingContext : DependencyContext :=
+  {.continuation, .reflection, .finitePairing}
 
-def certificationContext : DependencyContext :=
-  reflectionContext ∪ countingContext ∪ {.localCertification}
-
-def globalContext : DependencyContext :=
-  certificationContext ∪ {.arithmetic, .globalCoverage}
-
-theorem reflection_precedes_certification :
-    reflectionContext ≤ certificationContext := by
+theorem reflection_precedes_finite_pairing :
+    reflectionContext ≤ finitePairingContext := by
   decide
-
-theorem counting_precedes_certification :
-    countingContext ≤ certificationContext := by
-  decide
-
-theorem certification_precedes_global :
-    certificationContext ≤ globalContext := by
-  decide
-
-theorem reflection_and_counting_are_incomparable :
-    ¬ reflectionContext ≤ countingContext ∧
-      ¬ countingContext ≤ reflectionContext := by
-  decide
-
-def critical_reflection (point : ℂ) : ℂ :=
-  1 - star point
 
 theorem critical_reflection_involutive :
-    Function.Involutive critical_reflection := by
+    Function.Involutive antiunitaryCriticalReflection := by
   intro point
-  simp [critical_reflection]
+  simp [antiunitaryCriticalReflection]
 
-theorem critical_reflection_fixed_iff (point : ℂ) :
-    critical_reflection point = point ↔ point.re = 1 / 2 := by
+theorem entireRiemannXi_zero_reflection {point : ℂ}
+    (zeroAt : entireRiemannXi point = 0) :
+    entireRiemannXi (antiunitaryCriticalReflection point) = 0 := by
+  change entireRiemannXi (1 - star point) = 0
+  rw [entireRiemannXi_one_sub, ← entireRiemannXi_conj, zeroAt, star_zero]
+
+theorem entireRiemannXi_zero_reflection_iff (point : ℂ) :
+    entireRiemannXi point = 0 ↔
+      entireRiemannXi (antiunitaryCriticalReflection point) = 0 := by
   constructor
-  · intro fixed
-    have realFixed : 1 - point.re = point.re := by
-      simpa [critical_reflection] using congrArg Complex.re fixed
-    linarith
-  · intro onLine
-    apply Complex.ext
-    · simp only [critical_reflection, Complex.sub_re, Complex.one_re,
-        Complex.star_def, Complex.conj_re]
-      linarith
-    · simp [critical_reflection]
-
-class RiemannSymmetric (function : ℂ → ℂ) : Prop where
-  zero_reflection : ∀ point,
-    function point = 0 ↔ function (critical_reflection point) = 0
-
-instance entireRiemannXi_riemannSymmetric : RiemannSymmetric entireRiemannXi where
-  zero_reflection point := by
-    change entireRiemannXi point = 0 ↔ entireRiemannXi (1 - star point) = 0
-    rw [entireRiemannXi_one_sub, ← entireRiemannXi_conj, star_eq_zero]
-
-structure CertifiedRegion (function : ℂ → ℂ) where
-  carrier : Set ℂ
-  reflectionInvariant :
-    Set.MapsTo critical_reflection carrier carrier
-  uniqueZero :
-    (carrier ∩ {point | function point = 0}).Subsingleton
-
-variable {function : ℂ → ℂ} [RiemannSymmetric function]
-
-namespace CertifiedRegion
-
-theorem zero_on_critical_line
-    (region : CertifiedRegion function) {point : ℂ}
-    (member : point ∈ region.carrier)
-    (zeroAt : function point = 0) :
-    point.re = 1 / 2 := by
-  apply (critical_reflection_fixed_iff point).mp
-  exact region.uniqueZero
-    ⟨region.reflectionInvariant member,
-      (RiemannSymmetric.zero_reflection point).mp zeroAt⟩
-    ⟨member, zeroAt⟩
-
-theorem nonzero_off_critical_line
-    (region : CertifiedRegion function) {point : ℂ}
-    (member : point ∈ region.carrier)
-    (offLine : point.re ≠ 1 / 2) :
-    function point ≠ 0 := by
-  intro zeroAt
-  exact offLine (region.zero_on_critical_line member zeroAt)
-
-end CertifiedRegion
-
-theorem covered_zeros_on_critical_line
-    {Index : Type*}
-    (regions : Index → CertifiedRegion function)
-    (domain : Set ℂ)
-    (coverage :
-      ∀ point ∈ domain, function point = 0 →
-        ∃ index, point ∈ (regions index).carrier) :
-    ∀ point ∈ domain, function point = 0 →
-      point.re = 1 / 2 := by
-  intro point member zeroAt
-  obtain ⟨index, inRegion⟩ := coverage point member zeroAt
-  exact (regions index).zero_on_critical_line inRegion zeroAt
-
-theorem finite_height_certificate
-    {count : ℕ}
-    (regions : Fin count → CertifiedRegion function)
-    (height : ℝ)
-    (coverage :
-      ∀ point : ℂ, |point.im| ≤ height →
-        function point = 0 →
-        ∃ index, point ∈ (regions index).carrier) :
-    ∀ point : ℂ, |point.im| ≤ height →
-      function point = 0 → point.re = 1 / 2 := by
-  exact covered_zeros_on_critical_line regions
-    {point : ℂ | |point.im| ≤ height} coverage
-
-theorem global_confinement_of_certificates_at_every_height
-    (certificates :
-      ∀ height : ℝ, ∃ count : ℕ,
-        ∃ regions : Fin count → CertifiedRegion function,
-          ∀ point : ℂ, |point.im| ≤ height →
-            function point = 0 →
-            ∃ index, point ∈ (regions index).carrier) :
-    ∀ point : ℂ, function point = 0 →
-      point.re = 1 / 2 := by
-  intro point zeroAt
-  obtain ⟨count, regions, coverage⟩ := certificates |point.im|
-  exact finite_height_certificate regions |point.im| coverage
-    point le_rfl zeroAt
+  · exact entireRiemannXi_zero_reflection
+  · intro reflectedZero
+    have := entireRiemannXi_zero_reflection reflectedZero
+    rw [critical_reflection_involutive point] at this
+    exact this
 
 theorem symmetric_functions_need_not_have_critical_zeros :
     ¬ (∀ function : ℂ → ℂ, EvenCentered function →
@@ -168,21 +76,45 @@ theorem symmetric_functions_need_not_have_critical_zeros :
 def counterexample_f (point : ℂ) : ℂ :=
   point * (point - 1)
 
-theorem counterexample_is_symmetric : RiemannSymmetric counterexample_f := by
-  constructor
-  intro point
-  have reflected : counterexample_f (critical_reflection point) =
+theorem counterexample_reflection_zero (point : ℂ) :
+    counterexample_f point = 0 ↔
+      counterexample_f (antiunitaryCriticalReflection point) = 0 := by
+  have reflected : counterexample_f (antiunitaryCriticalReflection point) =
       star (counterexample_f point) := by
-    simp only [counterexample_f, critical_reflection, star_mul, star_sub, star_one]
+    simp only [counterexample_f, antiunitaryCriticalReflection, star_mul, star_sub, star_one]
     ring
   rw [reflected, star_eq_zero]
 
-theorem zero_reflection_does_not_imply_confinement :
-    ¬ (∀ candidate : ℂ → ℂ, RiemannSymmetric candidate →
-      ∀ point : ℂ, candidate point = 0 → point.re = 1 / 2) := by
-  intro claimedConfinement
-  have forced := claimedConfinement counterexample_f counterexample_is_symmetric
-    0 (by simp [counterexample_f])
-  norm_num at forced
+theorem symmetric_zero_can_be_off_horizon :
+    counterexample_f 0 = 0 ∧ (0 : ℂ).re ≠ 1 / 2 := by
+  norm_num [counterexample_f]
+
+section NonCommutativeOperatorRealization
+
+variable {B : Type*} [Ring B]
+
+def sarnakCertificationArchetypeOperator (P A C : B) : Archetype → B
+  | .arithmetic => conePlus P A
+  | .continuation => genPhi P A C
+  | .reflection => invS P
+  | .finitePairing => genJ P A C
+
+theorem sarnak_local_certification_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    sarnakCertificationArchetypeOperator P A C .arithmetic *
+      sarnakCertificationArchetypeOperator P A C .arithmetic = 0 ∧
+    sarnakCertificationArchetypeOperator P A C .reflection *
+      sarnakCertificationArchetypeOperator P A C .reflection = (1 : B) ∧
+    sarnakCertificationArchetypeOperator P A C .reflection *
+      sarnakCertificationArchetypeOperator P A C .continuation =
+      sarnakCertificationArchetypeOperator P A C .finitePairing ∧
+    sarnakCertificationArchetypeOperator P A C .continuation *
+      sarnakCertificationArchetypeOperator P A C .continuation +
+      sarnakCertificationArchetypeOperator P A C .finitePairing *
+        sarnakCertificationArchetypeOperator P A C .finitePairing = 0 := by
+  dsimp only [sarnakCertificationArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Arithmetic.SarnakLocalCertification

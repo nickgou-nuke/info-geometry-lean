@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 InfoGeometry/Optics/OperatorDerivationForms.lean
 
 Derivation-valued forms for the operator-polarization connection.
@@ -12,9 +18,11 @@ import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import InfoGeometry.Optics.OperatorValuedConnection
 import InfoGeometry.NCG.DerivationDifferential
 import InfoGeometry.OperatorAlgebra.NoncommutativeMaurerCartanAdjointBridge
+import InfoGeometry.Lie.ContinuousDerivationExponential
 
 noncomputable section
 
@@ -75,6 +83,25 @@ theorem applyDerivationField_curvature
   rw [(D p).toLinearMap.map_add]
   rw [applyDerivationField_wedgeSquare]
 
+/-- The CE curvature of the identity operator-valued one-form, evaluated on
+the two directed Peirce cones, is twice their Tetraktys spin
+`Σ = [N₊, N₋]`. This realizes the Peirce spin as an actual degree-two
+derivation-form value in the canonical inner-derivation system. -/
+theorem peirceTetraktys_spin_as_innerCE_curvature
+    {B : Type*} [Ring B] (P A C : B) :
+    InfoGeometry.NCG.DerivationDifferential.curvature
+        InfoGeometry.NCG.DerivationDifferential.innerSystem
+        (fun X : B => X)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C) =
+      (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C := by
+  simpa [InfoGeometry.NCG.bracket,
+    InfoGeometry.OperatorAlgebra.PeirceSpine.genSig,
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm] using
+      (InfoGeometry.NCG.DerivationDifferential.innerSystem_identityForm_curvature
+        (D := InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A)
+        (E := InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C))
+
 /-- The Onsager response contract already owned by the thermo subsystem. -/
 abbrev OnsagerForm : Type _ := OnsagerTwoOperatorForm Value
 
@@ -133,6 +160,250 @@ point because the derivation itself is linear. -/
 theorem hasFDerivAt (D : FrechetOperatorDerivation 𝕜 A) (a : A) :
     HasFDerivAt D D.toContinuousLinearMap a :=
   D.toContinuousLinearMap.hasFDerivAt
+
+/-- The Banach exponential of a continuous Fréchet operator derivation
+preserves the associative operator product. This connects the explicit
+Leibniz structure in this file to the generic continuous derivation flow,
+without assuming commutativity of `A`. -/
+theorem flow_mul
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (D : FrechetOperatorDerivation ℝ A)
+    (t : ℝ) (a b : A) :
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t (a * b) =
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t a *
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t b := by
+  exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_map_mul
+    (mul := ContinuousLinearMap.mul ℝ A)
+    D.toContinuousLinearMap
+    (by
+      intro x y
+      simpa [ContinuousLinearMap.mul_apply] using D.leibniz x y)
+    t a b
+
+/-- The exponential automorphism of a continuous operator derivation
+transports the Peirce tetraktys spin, and hence its canonical
+Chevalley--Eilenberg curvature, to the spin of the transported cut and
+cones. This identifies the operator-flow and derivation-form descriptions
+without replacing the operator algebra by commuting coordinates. -/
+theorem flow_transports_peirce_tetraktys_CE_curvature
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (D : FrechetOperatorDerivation ℝ A) (t : ℝ) (P a c : A) :
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t
+        (InfoGeometry.NCG.DerivationDifferential.curvature
+          InfoGeometry.NCG.DerivationDifferential.innerSystem
+          (fun x : A => x)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c)) =
+      InfoGeometry.NCG.DerivationDifferential.curvature
+        InfoGeometry.NCG.DerivationDifferential.innerSystem
+        (fun x : A => x)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+            D.toContinuousLinearMap t P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+            D.toContinuousLinearMap t a))
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+            D.toContinuousLinearMap t P)
+          (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+            D.toContinuousLinearMap t c)) := by
+  let φ : A →ₗ[ℝ] A :=
+    (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+      D.toContinuousLinearMap t).toLinearMap
+  have hD : InfoGeometry.Lie.ContinuousDerivationExponential.IsDerivation
+      (ContinuousLinearMap.mul ℝ A) D.toContinuousLinearMap := by
+    intro x y
+    simpa [ContinuousLinearMap.mul_apply] using D.leibniz x y
+  have hmul (x y : A) : φ (x * y) = φ x * φ y := by
+    change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t (x * y) =
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t x *
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t y
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_map_mul
+        (mul := ContinuousLinearMap.mul ℝ A)
+        D.toContinuousLinearMap hD t x y
+  have hDone : D.toContinuousLinearMap 1 = 0 := by
+    have h := D.leibniz (1 : A) 1
+    have h' : D.toContinuousLinearMap 1 + 0 =
+        D.toContinuousLinearMap 1 + D.toContinuousLinearMap 1 := by
+      simpa using h
+    exact (add_left_cancel h').symm
+  have hφone : φ 1 = 1 := by
+    change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t 1 = 1
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_apply_eq_self_of_apply_eq_zero
+      D.toContinuousLinearMap 1 hDone t
+  have hφcomp (x : A) : φ (1 - x) = 1 - φ x := by
+    calc
+      φ (1 - x) = φ 1 - φ x := φ.map_sub 1 x
+      _ = 1 - φ x := by rw [hφone]
+  have hplus (x y : A) :
+      φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus x y) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ x) (φ y) := by
+    change φ (x * y * (1 - x)) = φ x * φ y * (1 - φ x)
+    calc
+      φ (x * y * (1 - x)) = φ (x * y) * φ (1 - x) := hmul (x * y) (1 - x)
+      _ = (φ x * φ y) * φ (1 - x) := by rw [hmul]
+      _ = φ x * φ y * (1 - φ x) := by rw [hφcomp]
+  have hminus (x y : A) :
+      φ (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus x y) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ x) (φ y) := by
+    change φ ((1 - x) * y * x) = (1 - φ x) * φ y * φ x
+    calc
+      φ ((1 - x) * y * x) = φ ((1 - x) * y) * φ x := hmul ((1 - x) * y) x
+      _ = (φ (1 - x) * φ y) * φ x := by rw [hmul]
+      _ = ((1 - φ x) * φ y) * φ x := by rw [hφcomp]
+  have hsig :
+      φ (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genSig (φ P) (φ a) (φ c) := by
+    change φ
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c -
+         InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a) *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c) -
+        InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c) *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a)
+    calc
+      _ = φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c) -
+          φ (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a) :=
+        φ.map_sub _ _
+      _ = φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a) *
+            φ (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c) -
+          φ (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c) *
+            φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a) := by
+        rw [hmul, hmul]
+      _ = _ := by rw [hplus, hminus]
+  calc
+    InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t
+        (InfoGeometry.NCG.DerivationDifferential.curvature
+          InfoGeometry.NCG.DerivationDifferential.innerSystem
+          (fun x : A => x)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c)) =
+        φ (InfoGeometry.NCG.DerivationDifferential.curvature
+          InfoGeometry.NCG.DerivationDifferential.innerSystem
+          (fun x : A => x)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c)) := rfl
+    _ = φ ((2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) := by
+      rw [peirceTetraktys_spin_as_innerCE_curvature]
+    _ = (2 : ℤ) • φ (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) :=
+      (φ : A →+ A).map_zsmul (2 : ℤ)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c)
+    _ = (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.genSig (φ P) (φ a) (φ c) := by
+      rw [hsig]
+    _ = InfoGeometry.NCG.DerivationDifferential.curvature
+          InfoGeometry.NCG.DerivationDifferential.innerSystem
+          (fun x : A => x)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a))
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c)) := by
+      rw [peirceTetraktys_spin_as_innerCE_curvature]
+
+/-- The exponential flow transports the complete Peirce tetraktys, not just
+its spin component: parity, chirality, Jordan metric, and Lie curvature are
+all computed from the transported cut and directed cones. -/
+theorem flow_transports_peirce_tetraktys
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (D : FrechetOperatorDerivation ℝ A) (t : ℝ) (P a c : A) :
+    let φ := InfoGeometry.Lie.ContinuousDerivationExponential.flow
+      D.toContinuousLinearMap t
+    φ (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P a c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi (φ P) (φ a) (φ c) ∧
+    φ (InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P a c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genJ (φ P) (φ a) (φ c) ∧
+    φ (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P a c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genV (φ P) (φ a) (φ c) ∧
+    φ (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P a c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genSig (φ P) (φ a) (φ c) := by
+  dsimp
+  let φ : A →ₗ[ℝ] A :=
+    (InfoGeometry.Lie.ContinuousDerivationExponential.flow
+      D.toContinuousLinearMap t).toLinearMap
+  have hD : InfoGeometry.Lie.ContinuousDerivationExponential.IsDerivation
+      (ContinuousLinearMap.mul ℝ A) D.toContinuousLinearMap := by
+    intro x y
+    simpa [ContinuousLinearMap.mul_apply] using D.leibniz x y
+  have hmul (x y : A) : φ (x * y) = φ x * φ y := by
+    change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t (x * y) =
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t x *
+      InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        D.toContinuousLinearMap t y
+    exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_map_mul
+      (mul := ContinuousLinearMap.mul ℝ A) D.toContinuousLinearMap hD t x y
+  have hplus (x y : A) :
+      φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus x y) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ x) (φ y) := by
+    change φ (x * y * (1 - x)) = φ x * φ y * (1 - φ x)
+    calc
+      φ (x * y * (1 - x)) = φ (x * y) * φ (1 - x) := hmul (x * y) (1 - x)
+      _ = φ x * φ y * φ (1 - x) := by rw [hmul]
+      _ = φ x * φ y * (1 - φ x) := by rw [φ.map_sub, show φ 1 = 1 by
+        change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+          D.toContinuousLinearMap t 1 = 1
+        exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_apply_eq_self_of_apply_eq_zero
+          D.toContinuousLinearMap 1 (by
+            have h := D.leibniz (1 : A) 1
+            have h' : D.toContinuousLinearMap 1 + 0 =
+                D.toContinuousLinearMap 1 + D.toContinuousLinearMap 1 := by simpa using h
+            exact (add_left_cancel h').symm) t]
+  have hminus (x y : A) :
+      φ (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus x y) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ x) (φ y) := by
+    change φ ((1 - x) * y * x) = (1 - φ x) * φ y * φ x
+    calc
+      φ ((1 - x) * y * x) = φ ((1 - x) * y) * φ x := hmul ((1 - x) * y) x
+      _ = φ (1 - x) * φ y * φ x := by rw [hmul]
+      _ = (1 - φ x) * φ y * φ x := by rw [φ.map_sub, show φ 1 = 1 by
+        change InfoGeometry.Lie.ContinuousDerivationExponential.flow
+          D.toContinuousLinearMap t 1 = 1
+        exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_apply_eq_self_of_apply_eq_zero
+          D.toContinuousLinearMap 1 (by
+            have h := D.leibniz (1 : A) 1
+            have h' : D.toContinuousLinearMap 1 + 0 =
+                D.toContinuousLinearMap 1 + D.toContinuousLinearMap 1 := by simpa using h
+            exact (add_left_cancel h').symm) t]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · change φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a) +
+          InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c)
+    rw [φ.map_add, hplus, hminus]
+  · change φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a -
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a) -
+          InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c)
+    rw [φ.map_sub, hplus, hminus]
+  · change φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a *
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a) *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c) +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c) *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a)
+    rw [φ.map_add, hmul, hmul, hplus, hminus]
+  · change φ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a *
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c -
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P c *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P a) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a) *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c) -
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus (φ P) (φ c) *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus (φ P) (φ a)
+    rw [φ.map_sub, hmul, hmul, hplus, hminus]
 
 /-- A Fréchet derivation differentiates the full noncommutative curvature
 two-operator form by the product rule in both wedge terms. -/

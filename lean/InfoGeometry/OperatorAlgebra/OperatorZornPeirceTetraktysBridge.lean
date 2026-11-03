@@ -5,6 +5,9 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CurvatureDoubleCommutator
+import InfoGeometry.OperatorAlgebra.PeirceSpine.RingHomTransport
+import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
+import InfoGeometry.Physics.BdGChiralBlockMatrix
 
 /-!
 # Carrier Bridge from `OperatorZornFourPotentialGauge` to the Peirce Tetraktys
@@ -305,5 +308,214 @@ theorem fourPotential_chiralPlane_tetraktys_and_double_commutator
     curvatureDoubleCommutator_quadratic_phi hP
       (zornChiralPlaneMatrix i (Phi mu)) (zornChiralPlaneMatrix i (Phi nu)),
     curvatureAction_eq p Phi mu nu X⟩
+
+/-! ## 5. Non-Commutative Peirce–BdG Massive Hamiltonian & Zorn–Dirac Intertwining
+
+Over any associative ring `[Ring B]`, we define the general non-commutative Peirce–BdG massive
+operator `peirceBdGHamiltonian P D A C := evenGrade P D * invS P + genPhi P A C`, prove its
+universal non-commutative square `evenGrade P D * evenGrade P D + genV P A C + comm (evenGrade P D) (genJ P A C)`
+(without assuming `D` commutes with `A` or `C`), prove its homomorphism transport and `StarRing`
+quadratic decomposition, and identify its `Matrix (Fin 2) (Fin 2) A` realizations with
+`zornChiralPlaneMatrix`, `massiveBdGHamiltonian`, `diracOperator`, and `diracSquare`. -/
+
+section PeirceBdG
+
+variable {B C_ring : Type*} [Ring B] [Ring C_ring]
+
+/-- **Definition (`peirceBdGHamiltonian`)**:
+The general non-commutative Peirce–BdG massive operator
+`evenGrade P D * invS P + genPhi P A C = (P * D * P - (1 - P) * D * (1 - P)) + (conePlus P A + coneMinus P C)`. -/
+def peirceBdGHamiltonian (P D A C : B) : B :=
+  evenGrade P D * invS P + genPhi P A C
+
+/-- Every ring homomorphism `f : B →+* C_ring` intertwines `evenGrade`, `oddGrade`, and
+`peirceBdGHamiltonian`. -/
+theorem map_peirceBdGHamiltonian (f : B →+* C_ring) (P D A C : B) :
+    f (evenGrade P D) = evenGrade (f P) (f D) ∧
+    f (oddGrade P D) = oddGrade (f P) (f D) ∧
+    f (peirceBdGHamiltonian P D A C) = peirceBdGHamiltonian (f P) (f D) (f A) (f C) := by
+  have hEven : f (evenGrade P D) = evenGrade (f P) (f D) := by
+    unfold evenGrade
+    simp only [map_add, map_sub, map_mul, map_one]
+  have hOdd : f (oddGrade P D) = oddGrade (f P) (f D) := by
+    unfold oddGrade
+    simp only [map_add, map_sub, map_mul, map_one]
+  refine ⟨hEven, hOdd, ?_⟩
+  unfold peirceBdGHamiltonian
+  rw [map_add, map_mul, hEven, map_invS, map_genPhi]
+
+/-- **Lemma (`peirceBdGHamiltonian_grading_relations`)**:
+For any idempotent `P` (`P * P = P`) and any `D, A, C : B`:
+1. `evenGrade P (peirceBdGHamiltonian P D A C) = evenGrade P D * invS P`;
+2. `oddGrade P (peirceBdGHamiltonian P D A C) = genPhi P A C`;
+3. `anticomm (peirceBdGHamiltonian P D A C) (invS P) = (2 : ℤ) • evenGrade P D`;
+4. `PeirceSpine.comm (peirceBdGHamiltonian P D A C) (invS P) = -(2 : ℤ) • genJ P A C`. -/
+theorem peirceBdGHamiltonian_grading_relations {P : B} (hP : P * P = P) (D A C : B) :
+    evenGrade P (peirceBdGHamiltonian P D A C) = evenGrade P D * invS P ∧
+    oddGrade P (peirceBdGHamiltonian P D A C) = genPhi P A C ∧
+    anticomm (peirceBdGHamiltonian P D A C) (invS P) = (2 : ℤ) • evenGrade P D ∧
+    PeirceSpine.comm (peirceBdGHamiltonian P D A C) (invS P) = -(2 : ℤ) • genJ P A C := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    (simp only [peirceBdGHamiltonian]; peirce_nf hP)
+
+/-- **Theorem (`peirceBdGHamiltonian_sq`)**:
+For any idempotent `P` (`P * P = P`) and any `D, A, C : B` (with zero commutativity assumptions),
+the square of `peirceBdGHamiltonian P D A C` decomposes into the even-grade mass square
+`evenGrade P D * evenGrade P D`, the Peirce horizon operator `genV P A C`, and the odd-grade
+commutator obstruction `PeirceSpine.comm (evenGrade P D) (genJ P A C)`:
+`peirceBdGHamiltonian P D A C * peirceBdGHamiltonian P D A C =
+  evenGrade P D * evenGrade P D + genV P A C + PeirceSpine.comm (evenGrade P D) (genJ P A C)`. -/
+theorem peirceBdGHamiltonian_sq {P : B} (hP : P * P = P) (D A C : B) :
+    peirceBdGHamiltonian P D A C * peirceBdGHamiltonian P D A C =
+      evenGrade P D * evenGrade P D + genV P A C +
+        PeirceSpine.comm (evenGrade P D) (genJ P A C) := by
+  simp only [peirceBdGHamiltonian]
+  peirce_nf hP
+
+/-- **Corollary (`peirceBdGHamiltonian_sq_of_comm_genJ`)**:
+When `evenGrade P D` commutes with the chiral generator `genJ P A C`
+(`PeirceSpine.comm (evenGrade P D) (genJ P A C) = 0`), the off-diagonal interference vanishes and
+`peirceBdGHamiltonian P D A C * peirceBdGHamiltonian P D A C = evenGrade P D * evenGrade P D + genV P A C`. -/
+theorem peirceBdGHamiltonian_sq_of_comm_genJ {P : B} (hP : P * P = P) (D A C : B)
+    (hComm : PeirceSpine.comm (evenGrade P D) (genJ P A C) = 0) :
+    peirceBdGHamiltonian P D A C * peirceBdGHamiltonian P D A C =
+      evenGrade P D * evenGrade P D + genV P A C := by
+  rw [peirceBdGHamiltonian_sq hP D A C, hComm, add_zero]
+
+/-- **Theorem (`peirceBdGHamiltonian_selfAdjoint_and_quadratic_form`)**:
+In any `[Ring B] [StarRing B]`, if `P * P = P`, `star P = P`, and `star D = D`:
+1. `star (evenGrade P D) = evenGrade P D` and
+   `star (peirceBdGHamiltonian P D A (star A)) = peirceBdGHamiltonian P D A (star A)`;
+2. The horizon quadratic form factors into non-negative Gram squares:
+   `star X * genV P A (star A) * X =
+     star (coneMinus P (star A) * X) * (coneMinus P (star A) * X) +
+     star (conePlus P A * X) * (conePlus P A * X)`;
+3. When `PeirceSpine.comm (evenGrade P D) (genJ P A (star A)) = 0`, the massive BdG squared
+   quadratic form splits into the sum of the mass Gram square and the horizon quadratic form:
+   `star X * (peirceBdGHamiltonian P D A (star A) * peirceBdGHamiltonian P D A (star A)) * X =
+     star (evenGrade P D * X) * (evenGrade P D * X) + star X * genV P A (star A) * X`. -/
+theorem peirceBdGHamiltonian_selfAdjoint_and_quadratic_form
+    [StarRing B] {P D : B} (hP : P * P = P) (hPs : star P = P) (hDs : star D = D)
+    (A X : B) (hComm : PeirceSpine.comm (evenGrade P D) (genJ P A (star A)) = 0) :
+    star (evenGrade P D) = evenGrade P D ∧
+    star (peirceBdGHamiltonian P D A (star A)) = peirceBdGHamiltonian P D A (star A) ∧
+    star X * genV P A (star A) * X =
+      star (coneMinus P (star A) * X) * (coneMinus P (star A) * X) +
+        star (conePlus P A * X) * (conePlus P A * X) ∧
+    star X * (peirceBdGHamiltonian P D A (star A) * peirceBdGHamiltonian P D A (star A)) * X =
+      star (evenGrade P D * X) * (evenGrade P D * X) +
+        star X * genV P A (star A) * X := by
+  have hStarOneSub : star (1 - P) = 1 - P := by
+    rw [star_sub, star_one, hPs]
+  have hStarEven : star (evenGrade P D) = evenGrade P D := by
+    unfold evenGrade
+    simp only [star_add, star_mul, hPs, hDs, hStarOneSub, mul_assoc]
+  have hEvenCommS : evenGrade P D * invS P = invS P * evenGrade P D := by
+    peirce_nf hP
+  have hStarBdG : star (peirceBdGHamiltonian P D A (star A)) = peirceBdGHamiltonian P D A (star A) := by
+    unfold peirceBdGHamiltonian
+    rw [star_add, star_mul, star_invS hPs, hStarEven, ← hEvenCommS, star_genPhi hPs A]
+  have hGramV :
+      star X * genV P A (star A) * X =
+        star (coneMinus P (star A) * X) * (coneMinus P (star A) * X) +
+          star (conePlus P A * X) * (conePlus P A * X) := by
+    unfold genV anticomm
+    rw [star_mul, star_mul, star_coneMinus hPs (star A), star_star, star_conePlus hPs A]
+    noncomm_ring
+  have hQuad :
+      star X * (peirceBdGHamiltonian P D A (star A) * peirceBdGHamiltonian P D A (star A)) * X =
+        star (evenGrade P D * X) * (evenGrade P D * X) +
+          star X * genV P A (star A) * X := by
+    rw [peirceBdGHamiltonian_sq_of_comm_genJ hP D A (star A) hComm, star_mul, hStarEven]
+    noncomm_ring
+  exact ⟨hStarEven, hStarBdG, hGramV, hQuad⟩
+
+end PeirceBdG
+
+section MatrixAndZornBdGRealization
+
+theorem one_sub_peirceSheetProj :
+    (1 : Matrix (Fin 2) (Fin 2) A) - peirceSheetProj = !![(0 : A), 0; 0, 1] := by
+  ext r s
+  fin_cases r <;> fin_cases s <;>
+    simp [peirceSheetProj]
+
+/-- The Peirce grading involution `invS (peirceSheetProj (A := A))` on `Matrix (Fin 2) (Fin 2) A`
+is identically `InfoGeometry.Physics.chiralGrading = !![1, 0; 0, -1]`. -/
+theorem invS_peirceSheetProj_eq_chiralGrading :
+    invS (peirceSheetProj (A := A)) = InfoGeometry.Physics.chiralGrading := by
+  ext r s
+  fin_cases r <;> fin_cases s <;>
+    simp [invS, peirceSheetProj, InfoGeometry.Physics.chiralGrading]
+
+/-- Every spatial chiral plane `zornChiralPlaneMatrix i X` of an `OperatorZornMatrix A` is an
+instance of `peirceBdGHamiltonian` with diagonal sheet operator `!![X.n_plus, 0; 0, -X.n_minus]`. -/
+theorem zornChiralPlaneMatrix_eq_peirceBdGHamiltonian
+    (i : Fin 3) (X : OperatorZornMatrix A) :
+    zornChiralPlaneMatrix i X =
+      peirceBdGHamiltonian (peirceSheetProj (A := A))
+        !![X.n_plus, 0; 0, -X.n_minus]
+        (zornChiralPlaneMatrix i X)
+        (zornChiralPlaneMatrix i X) := by
+  rw [peirceBdGHamiltonian, zornChiralPlane_genPhi, evenGrade,
+    invS_peirceSheetProj_eq_chiralGrading, one_sub_peirceSheetProj]
+  ext r s
+  fin_cases r <;> fin_cases s <;>
+    simp [zornChiralPlaneMatrix, peirceSheetProj, InfoGeometry.Physics.chiralGrading]
+
+/-- The mass-coupled BdG block Hamiltonian `massiveBdGHamiltonian D M = !![D, M; M, -D]` is the
+exact `peirceBdGHamiltonian` of `D_diag = !![D, 0; 0, D]` and `M_off = !![0, M; M, 0]`, and its
+general non-commutative square (without assuming `D * M = M * D`) separates into the diagonal
+`!![D * D + M * M, 0; 0, M * M + D * D]` plus the off-diagonal Connes commutator differential
+`connesDifferential !![D, 0; 0, D] !![0, M; -M, 0]`. -/
+theorem massiveBdGHamiltonian_peirce_and_noncomm_sq [StarRing A] (D M : A) :
+    InfoGeometry.Physics.massiveBdGHamiltonian D M =
+      peirceBdGHamiltonian (peirceSheetProj (A := A))
+        !![D, 0; 0, D] !![0, M; 0, 0] !![0, 0; M, 0] ∧
+    InfoGeometry.Physics.massiveBdGHamiltonian D M *
+        InfoGeometry.Physics.massiveBdGHamiltonian D M =
+      !![D * D + M * M, D * M - M * D;
+         M * D - D * M, M * M + D * D] ∧
+    InfoGeometry.Physics.massiveBdGHamiltonian D M *
+        InfoGeometry.Physics.massiveBdGHamiltonian D M =
+      !![D * D + M * M, 0; 0, M * M + D * D] +
+        InfoGeometry.Physics.connesDifferential !![D, 0; 0, D] !![0, M; -M, 0] := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [peirceBdGHamiltonian, evenGrade, invS_peirceSheetProj_eq_chiralGrading,
+      genPhi, conePlus, coneMinus, one_sub_peirceSheetProj]
+    ext r s
+    fin_cases r <;> fin_cases s <;>
+      simp [InfoGeometry.Physics.massiveBdGHamiltonian, peirceSheetProj,
+        InfoGeometry.Physics.chiralGrading]
+  · ext r s
+    fin_cases r <;> fin_cases s <;>
+      simp [InfoGeometry.Physics.massiveBdGHamiltonian, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      noncomm_ring
+  · ext r s
+    fin_cases r <;> fin_cases s <;>
+      simp [InfoGeometry.Physics.massiveBdGHamiltonian, InfoGeometry.Physics.connesDifferential,
+        Matrix.mul_apply, Fin.sum_univ_two] <;>
+      abel
+
+/-- In any `[Ring A] [StarRing A]`, when an `OperatorZornMatrix A` element `X` satisfies the
+Hermitian pairing relation `X.sigma_minus i = star (X.sigma_plus i)` on spatial axis `i : Fin 3`,
+its Peirce Tetraktys chiral operator `genPhi` and horizon metric `genV` coincide with
+`InfoGeometry.Physics.diracOperator (X.sigma_plus i)` and
+`InfoGeometry.Physics.diracSquare (X.sigma_plus i)`. -/
+theorem zornChiralPlane_genPhi_and_genV_eq_dirac [StarRing A]
+    (i : Fin 3) (X : OperatorZornMatrix A)
+    (hAdj : X.sigma_minus i = star (X.sigma_plus i)) :
+    genPhi (peirceSheetProj (A := A))
+        (zornChiralPlaneMatrix i X) (zornChiralPlaneMatrix i X) =
+      InfoGeometry.Physics.diracOperator (X.sigma_plus i) ∧
+    genV (peirceSheetProj (A := A))
+        (zornChiralPlaneMatrix i X) (zornChiralPlaneMatrix i X) =
+      InfoGeometry.Physics.diracSquare (X.sigma_plus i) := by
+  refine ⟨?_, ?_⟩
+  · rw [zornChiralPlane_genPhi, hAdj]
+    rfl
+  · rw [zornChiralPlane_genV, InfoGeometry.Physics.diracSquare_eq_diagonal, hAdj]
+
+end MatrixAndZornBdGRealization
 
 end InfoGeometry.OperatorAlgebra.OperatorZornPeirceTetraktysBridge

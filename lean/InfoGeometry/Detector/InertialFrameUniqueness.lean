@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.InertialFrameUniqueness
 
@@ -107,5 +114,35 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `InertialFrameUniqueness.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def inertialFrameOperator (P A C X : B) : Archetype → B
+  | .powerChart => genPhi P A C
+  | .metricPullback => genPhi P A C * genPhi P A C
+  | .connection => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genV P A C) (genPhi P A C)
+  | .uniqueInertial => invS P * evenGrade P X * invS P
+  | .accelerationAnnihilation => conePlus P A * conePlus P A
+
+/-- **Theorem (Non-Commutative Operator Inertial-Frame Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the quadratic
+metric pullback satisfies `Φ² = V`, the connection commutator `[V, Φ] = 0` vanishes,
+the inertial even-grade frame is fixed by `S`, and the null-cone acceleration `a₊² = 0`
+vanishes identically. -/
+theorem inertialFrame_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    inertialFrameOperator P A C X .metricPullback = genV P A C ∧
+    inertialFrameOperator P A C X .connection = 0 ∧
+    inertialFrameOperator P A C X .uniqueInertial = evenGrade P X ∧
+    inertialFrameOperator P A C X .accelerationAnnihilation = 0 := by
+  dsimp only [inertialFrameOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.InertialFrameUniqueness

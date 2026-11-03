@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Causal.CertifiedDependencyCompiler
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.MetaCompiler.DeclaredResearchGraph
 
@@ -176,5 +183,43 @@ theorem successful_scheduling_does_not_supply_proofs :
   refine ⟨schedule_compilation_fixed, ?_⟩
   intro evidence
   exact Nat.zero_ne_one (evidence qedTwoPoint (by decide))
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def repoArchetypeOperatorWitness (P A C : B) : RepoArchetype → B
+  | .qedTwoPoint => P
+  | .matheronCovariogram => conePlus P A
+  | .fisherRaoIsometry => coneMinus P C
+  | .carnotInformation => genPhi P A C
+  | .souriauKMS => genSig P A C
+  | .metaEpistemicCompiler => genV P A C
+
+theorem declared_research_dependencies_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    repoArchetypeOperatorWitness P A C .qedTwoPoint *
+      repoArchetypeOperatorWitness P A C .qedTwoPoint =
+      repoArchetypeOperatorWitness P A C .qedTwoPoint ∧
+    (repoArchetypeOperatorWitness P A C .matheronCovariogram) ^ 2 = 0 ∧
+    (repoArchetypeOperatorWitness P A C .fisherRaoIsometry) ^ 2 = 0 ∧
+    (repoArchetypeOperatorWitness P A C .carnotInformation) ^ 2 =
+      repoArchetypeOperatorWitness P A C .metaEpistemicCompiler ∧
+    (repoArchetypeOperatorWitness P A C .souriauKMS) ^ 2 -
+      (repoArchetypeOperatorWitness P A C .metaEpistemicCompiler) ^ 2 = 0 := by
+  dsimp only [repoArchetypeOperatorWitness]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨_, _, hPhiSq, _, _, _, _, _, _, _, hSigmaSq, _, _, _⟩
+  refine ⟨hP, ?_, ?_, ?_, ?_⟩
+  · simpa [pow_two] using
+      (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).1
+  · simpa [pow_two] using
+      (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).2.1
+  · simpa [pow_two] using hPhiSq
+  · simpa [pow_two] using sub_eq_zero.mpr hSigmaSq
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.MetaCompiler.DeclaredResearchGraph

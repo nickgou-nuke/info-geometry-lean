@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.QuantumFieldProjector
 
@@ -103,5 +110,37 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `QuantumFieldProjector.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def quantumFieldProjectorOperator (P A C X : B) : Archetype → B
+  | .fluxConservation => evenGrade P X + oddGrade P X
+  | .depletion => peirce11 P X * peirce00 P X
+  | .projectorInversion => invS P * invS P
+  | .reconstruction => evenGrade P (evenGrade P X) + oddGrade P (oddGrade P X)
+  | .unbrokenRay => conePlus P A
+
+/-- **Theorem (Non-Commutative Quantum Field Projector Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the even and odd
+Peirce grades conserve the total operator `evenGrade P X + oddGrade P X = X`, cross-block
+depletion `peirce11 P X * peirce00 P X = 0` vanishes, reflection inversion satisfies
+`S² = 1`, and idempotent grade projections reconstruct `X`. -/
+theorem quantumFieldProjector_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    quantumFieldProjectorOperator P A C X .fluxConservation = X ∧
+    quantumFieldProjectorOperator P A C X .depletion = 0 ∧
+    quantumFieldProjectorOperator P A C X .projectorInversion = 1 ∧
+    quantumFieldProjectorOperator P A C X .reconstruction = X ∧
+    quantumFieldProjectorOperator P A C X .unbrokenRay *
+      quantumFieldProjectorOperator P A C X .unbrokenRay = 0 := by
+  dsimp only [quantumFieldProjectorOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.QuantumFieldProjector

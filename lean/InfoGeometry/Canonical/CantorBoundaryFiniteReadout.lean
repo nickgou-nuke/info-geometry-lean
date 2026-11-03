@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutBounds
@@ -407,6 +413,20 @@ def finitePrefixReadout : List Bool → ℝ
   | b :: bs =>
       (if b then (1 / 2 : ℝ) else 0) +
         (1 / 2 : ℝ) * finitePrefixReadout bs
+
+/-- Complementing every bit in a finite prefix reflects its readout inside
+the prefix's dyadic interval. The residual width term is retained explicitly,
+so this statement is valid at both endpoints and at every finite depth. -/
+theorem finitePrefixReadout_complement (bs : List Bool) :
+    finitePrefixReadout (bs.map fun b => !b) + finitePrefixReadout bs +
+      (1 / 2 : ℝ) ^ bs.length = 1 := by
+  induction bs with
+  | nil => norm_num [finitePrefixReadout]
+  | cons b bs ih =>
+      cases b <;>
+        simp only [List.map, finitePrefixReadout, List.length_cons, pow_succ] at * <;>
+        norm_num at * <;>
+        nlinarith [ih]
 
 theorem realBinaryReadout_boundaryConsList
     (bs : List Bool) (w : InfiniteBinaryWordSpace) :

@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.RankOneSpectralExtraction
 
@@ -85,5 +92,36 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `RankOneSpectralExtraction.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def rankOneSpectralOperator (P A C X : B) : Archetype → B
+  | .perLineParabola => P * (1 - P)
+  | .quadraticRemoval => evenGrade P (oddGrade P X)
+  | .universalRootScale => genPhi P A C
+  | .rankOneSpectrum => genV P A C
+  | .scaleInvariantField => invS P * evenGrade P X * invS P
+
+/-- **Theorem (Non-Commutative Rank-One Spectral Extraction over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the quadratic
+parabola defect `P (1 - P) = 0` and off-diagonal removal `evenGrade P (oddGrade P X) = 0`
+vanish, `Φ² = V`, and `evenGrade P X` is invariant under reflection conjugation. -/
+theorem rankOneSpectral_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    rankOneSpectralOperator P A C X .perLineParabola = 0 ∧
+    rankOneSpectralOperator P A C X .quadraticRemoval = 0 ∧
+    rankOneSpectralOperator P A C X .universalRootScale *
+      rankOneSpectralOperator P A C X .universalRootScale =
+      rankOneSpectralOperator P A C X .rankOneSpectrum ∧
+    rankOneSpectralOperator P A C X .scaleInvariantField = evenGrade P X := by
+  dsimp only [rankOneSpectralOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.RankOneSpectralExtraction

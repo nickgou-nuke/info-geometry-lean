@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SouriauOnsagerBKMIntegrability
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
@@ -191,6 +196,29 @@ theorem finiteOperatorTrace_innerConjugation
       simp only [mul_assoc]
     _ = finiteOperatorTrace A := by
       rw [Units.inv_mul, one_mul]
+
+/-- The trace pairing of two operators is invariant when both entries are
+transported by the same inner frame change. This is the exact matrix-algebra
+invariance of a readout `Tr(ρ K)` under simultaneous conjugation; no
+commutation relation between `ρ` and `K` is required. -/
+theorem finiteOperatorTrace_pairing_innerConjugation
+    (n : ℕ) (u : (FiniteOperatorAlgebra n)ˣ)
+    (rho K : FiniteOperatorAlgebra n) :
+    finiteOperatorTrace
+        (innerConjugation u rho * innerConjugation u K) =
+      finiteOperatorTrace (rho * K) := by
+  have hmul :
+      innerConjugation u rho * innerConjugation u K =
+        innerConjugation u (rho * K) := by
+    simpa only [innerConjugationRingEquiv_apply] using
+      (map_mul (innerConjugationRingEquiv u) rho K).symm
+  calc
+    finiteOperatorTrace
+        (innerConjugation u rho * innerConjugation u K) =
+      finiteOperatorTrace (innerConjugation u (rho * K)) := by
+        rw [hmul]
+    _ = finiteOperatorTrace (rho * K) :=
+      finiteOperatorTrace_innerConjugation n u (rho * K)
 
 /-- Every analytic finite Chern-character power is exactly invariant under
 finite inner frame changes. -/

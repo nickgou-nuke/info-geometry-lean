@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.MeanValueHarmonicHorizon
 
@@ -103,5 +110,36 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `MeanValueHarmonicHorizon.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def meanValueHarmonicOperator (P A C X : B) : Archetype → B
+  | .meanValue => evenGrade P X
+  | .focalSingularity => conePlus P A * conePlus P A
+  | .roomAnnihilation => evenGrade P (oddGrade P X)
+  | .gaugeInvariant => invS P * evenGrade P X * invS P
+  | .originClamping => P * (1 - P)
+
+/-- **Theorem (Non-Commutative Operator Harmonic Horizon Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the focal nilpotent
+singularity `a₊² = 0` and room annihilation `evenGrade P (oddGrade P X) = 0` vanish,
+the even mean-value projection is gauge-invariant under reflection conjugation, and
+the origin clamping `P (1 - P) = 0` holds. -/
+theorem meanValueHarmonic_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    meanValueHarmonicOperator P A C X .focalSingularity = 0 ∧
+    meanValueHarmonicOperator P A C X .roomAnnihilation = 0 ∧
+    meanValueHarmonicOperator P A C X .gaugeInvariant =
+      meanValueHarmonicOperator P A C X .meanValue ∧
+    meanValueHarmonicOperator P A C X .originClamping = 0 := by
+  dsimp only [meanValueHarmonicOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.MeanValueHarmonicHorizon

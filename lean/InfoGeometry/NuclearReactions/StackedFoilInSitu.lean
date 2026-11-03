@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.NuclearReactions.ActivationKinetics
 import InfoGeometry.NuclearReactions.InSituCascadeCalibration
 import InfoGeometry.NuclearReactions.FoilAlignment
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.NuclearReactions.StackedFoilInSitu
 
@@ -211,5 +218,61 @@ theorem measurement_chain
 end Observation
 
 end
+
+/-! ### Non-Commutative Operator Realization of `StackedFoilInSitu.ProofDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ProofDependency.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def stackedFoilArchetypeOperator (P A C X : B) : ProofDependency.Archetype → B
+  | .activationModel => peirce11 P X
+  | .rateRestoration => peirce00 P X
+  | .cascadeModel => conePlus P A
+  | .efficiencyRatio => coneMinus P C
+  | .distanceModel => invS P
+  | .activityReconstruction => genPhi P A C
+  | .crossSectionRecovery => genV P A C
+  | .offsetRecovery => genJ P A C
+  | .measurementChain => genSig P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `StackedFoilInSitu.ProofDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the stacked-foil
+archetypes satisfy diagonal Peirce orthogonality, cascade nilpotency, and the Tetraktys
+`𝔰𝔩₂` commutator-anticommutator identities. -/
+theorem stackedFoilArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    stackedFoilArchetypeOperator P A C X .activationModel *
+      stackedFoilArchetypeOperator P A C X .rateRestoration = 0 ∧
+    stackedFoilArchetypeOperator P A C X .cascadeModel *
+      stackedFoilArchetypeOperator P A C X .cascadeModel = 0 ∧
+    stackedFoilArchetypeOperator P A C X .efficiencyRatio *
+      stackedFoilArchetypeOperator P A C X .efficiencyRatio = 0 ∧
+    stackedFoilArchetypeOperator P A C X .distanceModel *
+      stackedFoilArchetypeOperator P A C X .distanceModel = 1 ∧
+    stackedFoilArchetypeOperator P A C X .activityReconstruction *
+      stackedFoilArchetypeOperator P A C X .activityReconstruction =
+      stackedFoilArchetypeOperator P A C X .crossSectionRecovery ∧
+    stackedFoilArchetypeOperator P A C X .offsetRecovery *
+      stackedFoilArchetypeOperator P A C X .offsetRecovery =
+      -stackedFoilArchetypeOperator P A C X .crossSectionRecovery ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (stackedFoilArchetypeOperator P A C X .activityReconstruction)
+      (stackedFoilArchetypeOperator P A C X .offsetRecovery) =
+      -((2 : ℤ) • stackedFoilArchetypeOperator P A C X .measurementChain) := by
+  dsimp only [stackedFoilArchetypeOperator]
+  have hOrth : peirce11 P X * peirce00 P X = 0 := by peirce_nf hP
+  have hS := (archetype_A2_peirce_cartan_grading_and_tangent_closure (P := P) hP A C).1
+  have hPlus := (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).1
+  have hMinus := (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).2.1
+  have hPhi := (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).2.2.1
+  have hJ := (archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C).2.2.2.1
+  have hBracket := (archetype_A7_so12_lie_brackets_and_cubic_inversions (P := P) hP A C).1
+  exact ⟨hOrth, hPlus, hMinus, hS, hPhi, hJ, hBracket⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.NuclearReactions.StackedFoilInSitu

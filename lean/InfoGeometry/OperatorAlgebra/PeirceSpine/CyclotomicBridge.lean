@@ -25,6 +25,22 @@ def cyclotomicThree (X : B) : B := X * X + X + 1
 /-- The polynomial `X² - X + 1`, evaluated without commuting the ambient ring. -/
 def cyclotomicSix (X : B) : B := X * X - X + 1
 
+/-- Universal ordered polynomial identities for the third and sixth
+cyclotomic polynomials in one element of an associative ring. The factors are
+kept in the displayed order; no commutativity of the ambient ring is assumed.
+-/
+theorem cyclotomic_three_six_polynomial_identities (X : B) :
+    cyclotomicSix X = X * X - X + 1 ∧
+    cyclotomicThree X = X * X + X + 1 ∧
+    cyclotomicThree X - cyclotomicSix X = (2 : ℤ) • X ∧
+    (X - 1) * cyclotomicThree X = X * X * X - 1 ∧
+    (X + 1) * cyclotomicSix X = X * X * X + 1 ∧
+    cyclotomicThree X * cyclotomicSix X = cyclotomicThree (X * X) ∧
+    (X - 1) * (X + 1) * cyclotomicThree X * cyclotomicSix X =
+      (X * X * X) * (X * X * X) - 1 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp only [cyclotomicThree, cyclotomicSix] <;> noncomm_ring
+
 /-- The complementary chiral transfer element `(1 - P) - J`. -/
 def peirceTransferJComplement (P A C : B) : B := (1 - P) - genJ P A C
 
@@ -189,5 +205,116 @@ theorem archetype_A60_s3_klein_four_decomposition_and_tomography (A C : B) :
     (simp only [cubeRootOp, cubeRootOpConj, s3Refl1, s3Refl2,
       hProjV, hProjPhi, hProjJ, hProjSig, derivSqPhi, derivSqJ, derivSqSig];
      peirce_nf hP)
+
+/-- Explicit Peirce-cone/chirality decomposition, squares (`V` vs `V²`), and
+anticommutator (`V - 2 • V²`) of the three `S₃` reflection channels (`M₅`). -/
+theorem s3Refl_components_squares_and_anticomm (A C : B) :
+    s3Refl1 P A C = -conePlus P A - genSig P A C ∧
+    s3Refl2 P A C = -coneMinus P C + genSig P A C ∧
+    s3Refl0 P A C * s3Refl0 P A C = genV P A C ∧
+    s3Refl1 P A C * s3Refl1 P A C = genV P A C * genV P A C ∧
+    s3Refl2 P A C * s3Refl2 P A C = genV P A C * genV P A C ∧
+    anticomm (s3Refl1 P A C) (s3Refl2 P A C) =
+      genV P A C - (2 : ℤ) • (genV P A C * genV P A C) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    (simp only [s3Refl0, s3Refl1, s3Refl2, cubeRootOp, cubeRootOpConj];
+     peirce_nf hP)
+
+/-! ### Stage M₅: scaled chiral array identities -/
+
+/-- Threefold scaled homogenized channel maps. -/
+def scaledHProjV3   (P A C X : B) : B := (3 : ℤ) • hProjV P A C X
+def scaledHProjPhi3 (P A C X : B) : B := (3 : ℤ) • hProjPhi P A C X
+def scaledHProjJ3   (P A C X : B) : B := (3 : ℤ) • hProjJ P A C X
+def scaledHProjSig3 (P A C X : B) : B := (3 : ℤ) • hProjSig P A C X
+
+/-- Six explicitly defined chiral column operators. -/
+def chiralArrayColumnWeight : Fin 6 → B → B → B → B → B
+  | ⟨0, _⟩, P, _, _, Y => P * Y
+  | ⟨1, _⟩, P, _, _, Y => (1 - P) * Y
+  | ⟨2, _⟩, P, A, C, Y => -cubeRootOp P A C * (P * Y)
+  | ⟨3, _⟩, P, A, C, Y => -cubeRootOpConj P A C * ((1 - P) * Y)
+  | ⟨4, _⟩, P, A, C, Y => (P - genJ P A C * P) * Y
+  | ⟨5, _⟩, P, A, C, Y => (1 - P + genJ P A C * (1 - P)) * Y
+
+/-- Entry `(r, c)` of the finite chiral array. -/
+def chiralArrayEntry (r : Fin 4) (c : Fin 6) (P A C X : B) : B :=
+  chiralArrayColumnWeight c P A C (homogenizedChannel P A C r X)
+
+/-- Sum across the six columns of row `r`. -/
+def chiralArrayRowSum (r : Fin 4) (P A C X : B) : B :=
+  chiralArrayEntry r 0 P A C X + chiralArrayEntry r 1 P A C X +
+  chiralArrayEntry r 2 P A C X + chiralArrayEntry r 3 P A C X +
+  chiralArrayEntry r 4 P A C X + chiralArrayEntry r 5 P A C X
+
+/-- **Stage M₅ (`stage_M5_scaled_chiral_array_identities`)**:
+1. The four row sums over the six defined chiral columns equal the threefold-scaled
+   homogenized channels `scaledHProjV3`, `scaledHProjPhi3`, `scaledHProjJ3`, and `scaledHProjSig3`.
+2. Alternating column differences recover the grading involution `invS P` and chiral current
+   `2 • genJ` on every row `r : Fin 4`.
+3. The grand sum of the array entries equals `24 • (V² * X)`.
+4. The row-zero response to the displayed sum of operators equals
+   `24 • (V² * V)`. This is an operator identity; no code or error-correction
+   structure is asserted. -/
+theorem stage_M5_scaled_chiral_array_identities
+    (A C X : B) (r : Fin 4) :
+    chiralArrayRowSum 0 P A C X = scaledHProjV3 P A C X ∧
+    chiralArrayRowSum 1 P A C X = scaledHProjPhi3 P A C X ∧
+    chiralArrayRowSum 2 P A C X = scaledHProjJ3 P A C X ∧
+    chiralArrayRowSum 3 P A C X = scaledHProjSig3 P A C X ∧
+    chiralArrayEntry r 0 P A C X - chiralArrayEntry r 1 P A C X =
+      invS P * homogenizedChannel P A C r X ∧
+    (chiralArrayEntry r 2 P A C X - chiralArrayEntry r 4 P A C X) +
+      (chiralArrayEntry r 5 P A C X - chiralArrayEntry r 3 P A C X) =
+      (2 : ℤ) • (genJ P A C * homogenizedChannel P A C r X) ∧
+    chiralArrayRowSum 0 P A C X + chiralArrayRowSum 1 P A C X +
+      chiralArrayRowSum 2 P A C X + chiralArrayRowSum 3 P A C X =
+      (24 : ℤ) • ((genV P A C * genV P A C) * X) ∧
+    chiralArrayRowSum 0 P A C
+      (genV P A C + conjPlus P A (genPhi P A C) +
+       conjMinus P C (genJ P A C) + s3Refl1 P A C + s3Refl2 P A C) =
+      (24 : ℤ) • ((genV P A C * genV P A C) * genV P A C) := by
+  have hColSum : ∀ Y : B,
+      chiralArrayColumnWeight 0 P A C Y + chiralArrayColumnWeight 1 P A C Y +
+      chiralArrayColumnWeight 2 P A C Y + chiralArrayColumnWeight 3 P A C Y +
+      chiralArrayColumnWeight 4 P A C Y + chiralArrayColumnWeight 5 P A C Y =
+      (3 : ℤ) • Y := by
+    intro Y
+    simp only [chiralArrayColumnWeight, cubeRootOp, cubeRootOpConj]
+    peirce_nf hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact hColSum (hProjV P A C X)
+  · exact hColSum (hProjPhi P A C X)
+  · exact hColSum (hProjJ P A C X)
+  · exact hColSum (hProjSig P A C X)
+  · simp only [chiralArrayEntry, chiralArrayColumnWeight, invS, sub_mul]
+  · simp only [chiralArrayEntry, chiralArrayColumnWeight, cubeRootOp, cubeRootOpConj]
+    peirce_nf hP
+  · rw [show chiralArrayRowSum 0 P A C X = (3 : ℤ) • hProjV P A C X from
+          hColSum (hProjV P A C X),
+        show chiralArrayRowSum 1 P A C X = (3 : ℤ) • hProjPhi P A C X from
+          hColSum (hProjPhi P A C X),
+        show chiralArrayRowSum 2 P A C X = (3 : ℤ) • hProjJ P A C X from
+          hColSum (hProjJ P A C X),
+        show chiralArrayRowSum 3 P A C X = (3 : ℤ) • hProjSig P A C X from
+          hColSum (hProjSig P A C X)]
+    have h8 := (archetype_A13_homogenized_projectors hP A C X).1
+    calc
+      (3 : ℤ) • hProjV P A C X + (3 : ℤ) • hProjPhi P A C X +
+          (3 : ℤ) • hProjJ P A C X + (3 : ℤ) • hProjSig P A C X =
+        (3 : ℤ) • (hProjV P A C X + hProjPhi P A C X +
+          hProjJ P A C X + hProjSig P A C X) := by abel
+      _ = (3 : ℤ) • ((8 : ℤ) • ((genV P A C * genV P A C) * X)) := by rw [h8]
+      _ = (24 : ℤ) • ((genV P A C * genV P A C) * X) := by rw [smul_smul]; norm_num
+  · rw [show chiralArrayRowSum 0 P A C
+          (genV P A C + conjPlus P A (genPhi P A C) +
+           conjMinus P C (genJ P A C) + s3Refl1 P A C + s3Refl2 P A C) =
+        (3 : ℤ) • hProjV P A C
+          (genV P A C + conjPlus P A (genPhi P A C) +
+           conjMinus P C (genJ P A C) + s3Refl1 P A C + s3Refl2 P A C) from
+        hColSum _]
+    simp only [hProjV, derivSqPhi, derivSqJ, derivSqSig, conjPlus, conjMinus,
+      s3Refl1, s3Refl2, cubeRootOp, cubeRootOpConj]
+    peirce_nf hP
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

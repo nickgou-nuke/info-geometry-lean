@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import Omega.POM.FiberSpectrumPronyHankelRank
 import Omega.POM.FiberSpectrumPronyHankelThresholdSharp
@@ -8,19 +14,18 @@ namespace Omega.POM
 def pom_fiber_spectrum_finite_reconstruction_sharp_window (R : ℕ) : ℕ :=
   2 * R
 
-/-- Concrete reconstruction package extracted from the Hankel-rank and recurrence-order
-identification. -/
-def pom_fiber_spectrum_finite_reconstruction_sharp_reconstructs
+/-- Rank identification for the concrete finite-spectrum Hankel matrix. -/
+def pom_fiber_spectrum_finite_reconstruction_sharp_rank
     (D : FiberSpectrumPronyHankelRankData) : Prop :=
-  D.atomCount = D.hankelRank ∧ D.atomCount = D.minimalRecurrenceOrder
+  D.hankelRank = D.atomCount
 
-/-- Paper label: `thm:pom-fiber-spectrum-finite-reconstruction-sharp`. The first `2R` power sums
-recover the finite fiber spectrum through the Prony/Hankel rank package, and the sharp-threshold
-gap shows that dropping the last moment leaves a generic ambiguity witness. -/
+/-- Paper label: `thm:pom-fiber-spectrum-finite-reconstruction-sharp`. This package proves the
+finite-spectrum Hankel rank and the stated threshold-gap identities. It does not formalize an
+injective reconstruction map from the first `2R` power sums to spectral data. -/
 theorem paper_pom_fiber_spectrum_finite_reconstruction_sharp
     (D : FiberSpectrumPronyHankelRankData) (hR : 2 ≤ D.atomCount) :
     pom_fiber_spectrum_finite_reconstruction_sharp_window D.atomCount = 2 * D.atomCount ∧
-      pom_fiber_spectrum_finite_reconstruction_sharp_reconstructs D ∧
+      pom_fiber_spectrum_finite_reconstruction_sharp_rank D ∧
       (∀ k : ℕ, k ≤ pom_fiber_spectrum_finite_reconstruction_sharp_window D.atomCount - 2 →
         pomPronyHankelThresholdGap D.atomCount k = 0) ∧
       pomPronyHankelThresholdGap D.atomCount

@@ -131,4 +131,79 @@ theorem unipotentIdempotentTower_defect_and_bruhat_fix
   exact ⟨even_idempotencyDefect_sub Pk X hPk,
     chartBruhatConj_genV hPk X X⟩
 
+/-! ## 2. Peirce Non-Abelian Maurer–Cartan Curvature, Covariant Derivative & Self-Dual Yang–Mills -/
+
+/-- **Peirce Inner Grading Derivation (`peirceGradingDeriv`)**:
+In any associative ring `B`, `d_P(X) = [P, X] = P * X - X * P = genJ P X X`. -/
+def peirceGradingDeriv (P X : B) : B :=
+  PeirceSpine.comm P X
+
+/-- The inner Peirce map is a genuine Leibniz derivation on the underlying
+noncommutative ring. This is the ungraded algebraic derivation; the exterior
+graded differential is represented separately by `ExteriorDifferentialData`. -/
+theorem peirceGradingDeriv_leibniz (P X Y : B) :
+    peirceGradingDeriv P (X * Y) =
+      peirceGradingDeriv P X * Y + X * peirceGradingDeriv P Y := by
+  unfold peirceGradingDeriv PeirceSpine.comm
+  noncomm_ring
+
+/-- **Peirce Non-Abelian Covariant Derivative (`peirceCovariantDeriv`)**:
+With Peirce grading derivation `d_P = [P, ·]` and off-diagonal chiral connection
+`A_conn = genPhi P A C = N₊ + N₋`, acts on `X : B` by `d_P(X) + [genPhi P A C, X]`. -/
+def peirceCovariantDeriv (P A C X : B) : B :=
+  peirceGradingDeriv P X + PeirceSpine.comm (genPhi P A C) X
+
+/-- **Peirce Maurer–Cartan Curvature (`peirceMaurerCartanCurvature`)**:
+The Maurer–Cartan curvature `F_P(A, C) = d_P(genPhi P A C) + (genPhi P A C)²` of the
+off-diagonal Peirce connection `genPhi P A C`. -/
+def peirceMaurerCartanCurvature (P A C : B) : B :=
+  peirceGradingDeriv P (genPhi P A C) + genPhi P A C * genPhi P A C
+
+/-- **Peirce Maurer–Cartan Curvature Decomposition, Covariant Bianchi & Self-Dual Yang–Mills**:
+For any idempotent `P` (`P * P = P`) and any `A, C, X, Y : B` in an associative ring `B`:
+1. **Leibniz Rule & Nilpotency on Even Sector:**
+   `peirceGradingDeriv P (X * Y) = peirceGradingDeriv P X * Y + X * peirceGradingDeriv P Y`
+   and `peirceGradingDeriv P (evenGrade P X) = 0`;
+2. **Exact Maurer–Cartan Decomposition into Even (`genV`) and Odd (`genJ`) Curvature:**
+   `peirceMaurerCartanCurvature P A C = genJ P A C + genV P A C`, with
+   `evenGrade P (peirceMaurerCartanCurvature P A C) = genV P A C` and
+   `oddGrade P (peirceMaurerCartanCurvature P A C) = genJ P A C`;
+3. **Self-Duality / Anti-Self-Duality under the Peirce Hodge-Parity Star `parityConj P`:**
+   `parityConj P (genV P A C) = genV P A C` (even curvature is self-dual) and
+   `parityConj P (genJ P A C) = -genJ P A C` (odd curvature is anti-self-dual);
+4. **Covariant Bianchi & Vacuum Self-Dual Yang–Mills Identity for `genV P A C`:**
+   Both the grading derivation and connection commutator vanish on `genV P A C`:
+   `peirceGradingDeriv P (genV P A C) = 0`, `PeirceSpine.comm (genPhi P A C) (genV P A C) = 0`,
+   `peirceCovariantDeriv P A C (genV P A C) = 0`, and
+   `peirceCovariantDeriv P A C (parityConj P (genV P A C)) = 0`. -/
+theorem peirce_maurer_cartan_curvature_bianchi_and_self_dual_yang_mills
+    {P : B} (hP : P * P = P) (A C X Y : B) :
+    peirceGradingDeriv P (X * Y) =
+      peirceGradingDeriv P X * Y + X * peirceGradingDeriv P Y ∧
+    peirceGradingDeriv P (evenGrade P X) = 0 ∧
+    peirceMaurerCartanCurvature P A C = genJ P A C + genV P A C ∧
+    evenGrade P (peirceMaurerCartanCurvature P A C) = genV P A C ∧
+    oddGrade P (peirceMaurerCartanCurvature P A C) = genJ P A C ∧
+    parityConj P (genV P A C) = genV P A C ∧
+    parityConj P (genJ P A C) = -genJ P A C ∧
+    peirceGradingDeriv P (genV P A C) = 0 ∧
+    PeirceSpine.comm (genPhi P A C) (genV P A C) = 0 ∧
+    peirceCovariantDeriv P A C (genV P A C) = 0 ∧
+    peirceCovariantDeriv P A C (parityConj P (genV P A C)) = 0 := by
+  have hSD : parityConj P (genV P A C) = genV P A C := by
+    unfold parityConj; peirce_nf hP
+  have hCovV : peirceCovariantDeriv P A C (genV P A C) = 0 := by
+    unfold peirceCovariantDeriv peirceGradingDeriv
+    peirce_nf hP
+  refine ⟨?_, ?_, ?_, ?_, ?_, hSD, ?_, ?_, ?_, hCovV, ?_⟩
+  · unfold peirceGradingDeriv PeirceSpine.comm; noncomm_ring
+  · unfold peirceGradingDeriv; peirce_nf hP
+  · unfold peirceMaurerCartanCurvature peirceGradingDeriv; peirce_nf hP
+  · unfold peirceMaurerCartanCurvature peirceGradingDeriv; peirce_nf hP
+  · unfold peirceMaurerCartanCurvature peirceGradingDeriv; peirce_nf hP
+  · unfold parityConj; peirce_nf hP
+  · unfold peirceGradingDeriv; peirce_nf hP
+  · peirce_nf hP
+  · rw [hSD, hCovV]
+
 end InfoGeometry.OperatorAlgebra.PeirceDefectBridge

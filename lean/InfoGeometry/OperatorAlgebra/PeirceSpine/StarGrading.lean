@@ -126,10 +126,11 @@ include hPs hP
 2. On the directed corner `W = N₊ = P A (1 - P)` with self-adjoint `P`, the
    symmetric and skew-adjoint components recover `Φ = N₊ + N₋` and `J = N₊ - N₋`
    with `C = A⋆`, and `(digracImb N₊)² = -V`.
-3. Twisting `N₊` by the grading involution `S = 2P - 1` produces the self-adjoint
-   operator `magnetAdj P A = S N₊ + N₊⋆ S = J S` whose square is `+V`, and for
-   any self-adjoint degree operator `D⋆ = D`, `magnetLaplacian P D A` is
-   self-adjoint. -/
+3. Twisting `N₊` and its adjoint on opposite sides by the grading involution
+   `S = 2P - 1` produces the self-adjoint operator
+   `magnetAdj P A = S N₊ + N₊⋆ S = S J = -J S = Φ`, whose square is `+V`.
+   (The order and sign matter: `J S` alone is `-Φ`.) For any self-adjoint
+   degree operator `D⋆ = D`, `magnetLaplacian P D A` is self-adjoint. -/
 theorem digrac_flow_imbalance_and_magnet_laplacian (W A D : B) :
     digracSym W + digracImb W = (2 : ℤ) • W ∧
     star (digracSym W) = digracSym W ∧

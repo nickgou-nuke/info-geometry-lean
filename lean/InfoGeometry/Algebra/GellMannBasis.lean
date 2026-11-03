@@ -1,6 +1,13 @@
 /-
-Phase 2: Normalized Gell-Mann basis for 𝔰𝔲(3)
-- 8 generators gellMann1…8 with Tr(λₐλ_b) = 2δ_{ab}
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
+Phase 2: Anti-Hermitian Gell-Mann basis for 𝔰𝔲(3)
+- The stored generators are `i` times the conventional Hermitian Gell-Mann matrices,
+  so their trace pairing is `Tr(gellMann a * gellMann b) = -2 δ_ab`.
 - Computable data for Lie algebra generators
 -/
 

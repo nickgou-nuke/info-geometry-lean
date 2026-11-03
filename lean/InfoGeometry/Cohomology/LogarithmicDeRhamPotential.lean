@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 import InfoGeometry.ExponentialFamily.Analytic.Softmax
 import InfoGeometry.Detector.AmariHessianDuality
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Tactic
 
@@ -107,5 +114,38 @@ theorem logsumexp_derivative_reuses_owner
     deriv (logSumExp w a) θ =
       softmaxMean (w := w) (a := a) hw θ :=
   deriv_logSumExp_eq_softmaxMean w a hw θ
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def archetypeOperatorWitness (P A C : B) : Archetype → B
+  | .logForm => P
+  | .logPotential => conePlus P A
+  | .residue => genPhi P A C
+  | .fisherHessian => genSig P A C
+  | .dilogarithm => genV P A C
+
+theorem logarithmic_de_rham_potential_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    archetypeOperatorWitness P A C .logForm *
+      archetypeOperatorWitness P A C .logForm =
+      archetypeOperatorWitness P A C .logForm ∧
+    (archetypeOperatorWitness P A C .logPotential) ^ 2 = 0 ∧
+    (archetypeOperatorWitness P A C .residue) ^ 2 =
+      archetypeOperatorWitness P A C .dilogarithm ∧
+    (archetypeOperatorWitness P A C .fisherHessian) ^ 2 -
+      (archetypeOperatorWitness P A C .dilogarithm) ^ 2 = 0 := by
+  dsimp only [archetypeOperatorWitness]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, _, hPhiSq, _, _, _, _, _, _, _, hSigmaSq, _, _, _⟩
+  refine ⟨hP, ?_, ?_, ?_⟩
+  · simpa [pow_two] using hPlus
+  · simpa [pow_two] using hPhiSq
+  · simpa [pow_two] using sub_eq_zero.mpr hSigmaSq
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Cohomology.LogarithmicDeRhamPotential

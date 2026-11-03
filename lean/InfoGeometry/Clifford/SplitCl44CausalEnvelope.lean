@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ClNNBilinear
@@ -136,22 +142,93 @@ noncomputable def projectiveNullBoundary44_mk
     ProjectiveNullBoundary44 :=
   InfoGeometry.Twistor.twistorMk SplitCl44Quad v hv hQ
 
-/-
-Honest boundary debt:
-the repo still lacks a source theorem identifying the Penrose twistor carrier
-`ℂ^4` with the split `Cl(4,4)` carrier in a way that preserves the null
-quadratic readout.  The next theorem states exactly that missing model as
-explicit debt, rather than hiding it behind a wrapper.
--/
-/-- Explicit source-side debt surface for the Penrose-to-split `Cl(4,4)` null model. -/
+/-- Explicit ℝ-linear soldering equivalence between the Penrose twistor carrier `ℂ^4`
+(`Fin 4 → ℂ`) and `SplitCl44Carrier` (`HyperbolicSpace 4`), pairing the positive-helicity
+coordinates `(z 0, z 1)` with the negative-helicity coordinates `(z 2, z 3)` across the
+four split `(1, 1)` hyperbolic planes. -/
+@[rep_depth krein]
+noncomputable def penroseTwistorToSplitCl44Equiv :
+    InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier ≃ₗ[ℝ] SplitCl44Carrier where
+  toFun z :=
+    (((z 0).re, (z 2).re),
+      (((z 0).im, (z 2).im),
+        (((z 1).re, (z 3).re),
+          (((z 1).im, (z 3).im), 0))))
+  invFun v := fun i : Fin 4 =>
+    match i.val with
+    | 0 => ⟨v.1.1, v.2.1.1⟩
+    | 1 => ⟨v.2.2.1.1, v.2.2.2.1.1⟩
+    | 2 => ⟨v.1.2, v.2.1.2⟩
+    | _ => ⟨v.2.2.1.2, v.2.2.2.1.2⟩
+  left_inv z := by
+    funext i
+    fin_cases i <;> (apply Complex.ext <;> rfl)
+  right_inv v := by
+    rcases v with ⟨⟨a0, b0⟩, ⟨⟨a1, b1⟩, ⟨⟨a2, b2⟩, ⟨⟨a3, b3⟩, v0⟩⟩⟩⟩
+    have hv0 : v0 = 0 := Subsingleton.elim v0 0
+    subst hv0
+    rfl
+  map_add' z w := by
+    refine Prod.ext (Prod.ext (by simp) (by simp))
+      (Prod.ext (Prod.ext (by simp) (by simp))
+        (Prod.ext (Prod.ext (by simp) (by simp))
+          (Prod.ext (Prod.ext (by simp) (by simp)) (Subsingleton.elim _ _))))
+  map_smul' r z := by
+    refine Prod.ext (Prod.ext (by simp [smul_eq_mul]) (by simp [smul_eq_mul]))
+      (Prod.ext (Prod.ext (by simp [smul_eq_mul]) (by simp [smul_eq_mul]))
+        (Prod.ext (Prod.ext (by simp [smul_eq_mul]) (by simp [smul_eq_mul]))
+          (Prod.ext (Prod.ext (by simp [smul_eq_mul]) (by simp [smul_eq_mul]))
+            (Subsingleton.elim _ _))))
+
+/-- The real-linear soldering `penroseTwistorToSplitCl44Equiv` is an exact quadratic
+isometry between the Penrose helicity form on `ℂ^4` and `SplitCl44Quad` on `SplitCl44Carrier`. -/
+@[rep_depth krein]
+theorem penroseTwistorToSplitCl44Equiv_quad
+    (z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier) :
+    SplitCl44Quad (penroseTwistorToSplitCl44Equiv z) =
+      InfoGeometry.Twistor.PenroseTwistor.helicity z := by
+  change hyperbolicQuadratic 4 (penroseTwistorToSplitCl44Equiv z) =
+    Complex.re (InfoGeometry.Twistor.PenroseTwistor.twistorHermitian z z)
+  rw [hyperbolicQuadratic_succ_apply 3, hyperbolicQuadratic_succ_apply 2,
+      hyperbolicQuadratic_succ_apply 1, hyperbolicQuadratic_succ_apply 0,
+      hyperbolicQuadratic_zero_apply]
+  simp only [penroseTwistorToSplitCl44Equiv, LinearEquiv.coe_mk,
+    InfoGeometry.Clifford.splitQ11_apply,
+    InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_apply,
+    Fin.sum_univ_four, Fin.isValue]
+  norm_num [Complex.add_re, Complex.neg_re, Complex.mul_re, Complex.conj_re, Complex.conj_im]
+  ring
+
+/-- Explicit proposition for the Penrose-to-split `Cl(4,4)` null model, now constructively
+proved below by `penroseTwistorHasSplitCl44NullModel`. -/
 def PenroseTwistorHasSplitCl44NullModel : Prop :=
   ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
     Function.Injective L ∧
       ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
         SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z
 
+/-- Constructive resolution of `PenroseTwistorHasSplitCl44NullModel` via
+`penroseTwistorToSplitCl44Equiv`. -/
+@[rep_depth krein]
+theorem penroseTwistorHasSplitCl44NullModel : PenroseTwistorHasSplitCl44NullModel :=
+  ⟨penroseTwistorToSplitCl44Equiv.toLinearMap,
+    penroseTwistorToSplitCl44Equiv.injective,
+    penroseTwistorToSplitCl44Equiv_quad⟩
+
+/-- Unconditional projective null-boundary transport from a nonzero null Penrose twistor
+to `ProjectiveNullBoundary44` using `penroseTwistorToSplitCl44Equiv`. -/
+@[rep_depth krein]
+noncomputable def penroseNullTwistor_toProjectiveNullBoundary44_soldered
+    (z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier)
+    (hz : z ≠ 0)
+    (hnull : InfoGeometry.Twistor.PenroseTwistor.helicity z = 0) :
+    ProjectiveNullBoundary44 :=
+  projectiveNullBoundary44_mk (penroseTwistorToSplitCl44Equiv z)
+    (fun hzero => hz (penroseTwistorToSplitCl44Equiv.injective (by simpa using hzero)))
+    (by rw [penroseTwistorToSplitCl44Equiv_quad]; exact hnull)
+
 /--
-If the missing Penrose-to-split `Cl(4,4)` null model is supplied, any nonzero
+If the Penrose-to-split `Cl(4,4)` null model is supplied, any nonzero
 Penrose null representative yields a projective split-null boundary point.
 -/
 noncomputable def penroseNullTwistor_toProjectiveNullBoundary44

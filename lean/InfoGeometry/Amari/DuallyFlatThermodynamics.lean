@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Convex.Legendre
 import InfoGeometry.Canonical.FisherWoottersQuantumPotential
 import Mathlib.Topology.Order.MonotoneConvergence
 import Mathlib.Analysis.Calculus.Deriv.Pow
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Amari.DuallyFlatThermodynamics
 
@@ -265,5 +272,45 @@ theorem poisson_unit_metric_pullback (radius : ℝ) (radius_pos : 0 < radius) :
   field_simp [ne_of_gt radius_pos]
 
 end
+
+/-! ### Non-Commutative Operator Realization of `DualityDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `DualityDependency.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def duallyFlatArchetypeOperator (P A C X : B) : DualityDependency.Archetype → B
+  | .convexDifferentiablePotential => evenGrade P X
+  | .fenchelYoungEquality => evenGrade P X + oddGrade P X
+  | .canonicalDivergence => oddGrade P X
+  | .threePointIdentity => peirce11 P X * peirce00 P X
+  | .orthogonalProjection => evenGrade P (oddGrade P X)
+  | .decreasingDivergences => oddGrade P (evenGrade P X)
+  | .inverseGradients => invS P
+  | .inverseHessians => invS P * invS P
+  | .affineCoordinates => conePlus P A
+  | .zeroAcceleration => conePlus P A * conePlus P A
+
+/-- **Theorem (Non-Commutative Dually Flat Peirce Operator Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the ten dually
+flat archetypes satisfy exact Fenchel-Young Peirce splitting `evenGrade P X + oddGrade P X = X`,
+three-point diagonal orthogonality `peirce11 P X * peirce00 P X = 0`, orthogonal projection
+vanishing `evenGrade P (oddGrade P X) = 0`, involutive dual gradient `S² = 1`, and zero
+affine-coordinate acceleration `a₊² = 0`. -/
+theorem duallyFlatArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    duallyFlatArchetypeOperator P A C X .fenchelYoungEquality = X ∧
+    duallyFlatArchetypeOperator P A C X .threePointIdentity = 0 ∧
+    duallyFlatArchetypeOperator P A C X .orthogonalProjection = 0 ∧
+    duallyFlatArchetypeOperator P A C X .decreasingDivergences = 0 ∧
+    duallyFlatArchetypeOperator P A C X .inverseHessians = 1 ∧
+    duallyFlatArchetypeOperator P A C X .zeroAcceleration = 0 := by
+  dsimp only [duallyFlatArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Amari.DuallyFlatThermodynamics

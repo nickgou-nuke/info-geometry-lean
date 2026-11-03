@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation
 
 /-!
@@ -69,6 +74,24 @@ theorem diracRightPhi_square (A C X : B) :
   simp only [diracRightPhi_eq, parityConj]
   simp only [two_zsmul]
   peirce_nf hP
+
+/-- On the principal right ideal `B P` (elements represented as `X * P`),
+the squared left Dirac interaction remains in that ideal. The order of the
+operator-valued mass term is retained. -/
+theorem diracLeftPhi_square_right_principal_ideal (A C X : B) :
+    diracLeftPhi P A C (diracLeftPhi P A C (X * P)) =
+      (4 : ℤ) • (genV P A C * X * P) := by
+  rw [diracLeftPhi_square hP]
+  simp only [mul_assoc]
+
+/-- On the principal left ideal `P B` (elements represented as `P * X`),
+the squared parity-twisted right Dirac interaction remains in that ideal.
+The right multiplication by the operator-valued mass term is kept on the
+right. -/
+theorem diracRightPhi_square_left_principal_ideal (A C X : B) :
+    diracRightPhi P A C (diracRightPhi P A C (P * X)) =
+      -((4 : ℤ) • (P * X * genV P A C)) := by
+  rw [diracRightPhi_square hP]
 
 theorem diracLeftRightPhi_anticommute (A C X : B) :
     diracLeftPhi P A C (diracRightPhi P A C X) +

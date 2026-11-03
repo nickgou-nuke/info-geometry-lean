@@ -5,6 +5,7 @@ the Cartan grading core A19, and the operator Moebius projective line A21-A22)
 of the repository modules
 
     lean/InfoGeometry/Algebra/SteinbergBraidDefectSpine.lean
+  lean/InfoGeometry/Algebra/SteinbergBraidCrossStage.lean
     lean/InfoGeometry/Algebra/SteinbergMoebiusProjectiveLine.lean
 
 Everything is derived from a SINGLE hypothesis: an idempotent P (P*P = P) of an
@@ -654,6 +655,61 @@ check("A19.4-corrected  B+ S B+' transcribed chain form (9 chains + S)",
                         coneMinus(xC)), conePlus(xA)))),
 ]))
 
+# ---------------------------------------------------------------------------
+# Part A4: cross products (A18 corrected), A20 tetraktys sandwiches, and the
+# commutant center.  Transcribed to
+#     lean/InfoGeometry/Algebra/SteinbergBraidCrossStage.lean
+# ---------------------------------------------------------------------------
+print("=" * 74)
+print("PART A4 - cross products (A18-corrected), A20 sandwiches, center commutant")
+print("=" * 74)
+u_, v_ = conePlus(xA), coneMinus(xC)
+CHAIN = {
+    0: u_, 1: v_, 2: mul(u_, v_), 3: mul(v_, u_), 4: mul(mul(u_, v_), u_),
+    5: mul(mul(v_, u_), v_), 6: mul(mul(mul(u_, v_), u_), v_),
+    7: mul(mul(mul(v_, u_), v_), u_), 8: mul(mul(mul(mul(u_, v_), u_), v_), u_),
+    9: mul(mul(mul(mul(v_, u_), v_), u_), v_),
+    10: mul(mul(mul(mul(mul(u_, v_), u_), v_), u_), v_),
+    11: mul(mul(mul(mul(mul(v_, u_), v_), u_), v_), u_),
+}
+
+
+def chain_sum(terms):
+    acc = ZERO
+    for sgn, kind in terms:
+        acc = add(acc, smul(sgn, CHAIN[kind]))
+    return acc
+
+
+a18c = [
+    ("A18.e   B+ * B-' - 1 = 11-chain (corrected cross-product form)",
+     sub(mul(steinbergBraid(xA, xC), steinbergBraidDualInv(xA, xC)), ONE),
+     chain_sum([(1, 0), (1, 1), (2, 2), (-1, 3), (-2, 4), (-2, 5), (-3, 6),
+                (1, 7), (1, 8), (1, 9), (1, 10)])),
+    ("A18.f   B- * B+' - 1 = 11-chain (corrected dual cross-product form)",
+     sub(mul(steinbergBraidDual(xA, xC), steinbergBraidInv(xA, xC)), ONE),
+     chain_sum([(-1, 0), (-1, 1), (-1, 2), (2, 3), (2, 4), (2, 5), (1, 6),
+                (-3, 7), (-1, 8), (-1, 9), (1, 11)])),
+]
+a20 = [
+    ("A20.a   J V (-J) = V^2", mul(mul(J1, V1), neg(J1)), mul(V1, V1)),
+    ("A20.b   (-J) V J = V^2", mul(mul(neg(J1), V1), J1), mul(V1, V1)),
+    ("A20.c   Phi V Phi = V^2", mul(mul(Ph1, V1), Ph1), mul(V1, V1)),
+    ("A20.d   J J (-J) = V J", mul(mul(J1, J1), neg(J1)), mul(V1, J1)),
+    ("A20.e   Phi J Phi = -V J", mul(mul(Ph1, J1), Ph1), neg(mul(V1, J1))),
+    ("A20.f   J Phi (-J) = -V Phi", mul(mul(J1, Ph1), neg(J1)), neg(mul(V1, Ph1))),
+    ("A20.g   Phi Phi Phi = V Phi", mul(mul(Ph1, Ph1), Ph1), mul(V1, Ph1)),
+    ("A20.h   J Sig (-J) = -V Sig", mul(mul(J1, Sg1), neg(J1)), neg(mul(V1, Sg1))),
+    ("A20.i   Phi Sig Phi = -V Sig", mul(mul(Ph1, Sg1), Ph1), neg(mul(V1, Sg1))),
+]
+ctr = [
+    ("A20.j   comm(J, V) = 0", comm_(J1, V1), ZERO),
+    ("A20.k   comm(Phi, V) = 0", comm_(Ph1, V1), ZERO),
+    ("A20.l   comm(Sig, V) = 0", comm_(Sg1, V1), ZERO),
+]
+for name, a, b in a18c + a20 + ctr:
+    check(name, a, b)
+
 
 # ---------------------------------------------------------------------------
 # Part B: numeric witness on Mat_3(Q)
@@ -748,6 +804,22 @@ draft_rhs = msub(madd(madd(mmul(q3, Vw), mmul(p3, msub(I3, Vw))),
                       msub(Nm3, Np3)),
                  mmul(msub(I3, msc(2, Vw)), Np3))
 print(f"  B+ P B+' = draft rhs       ?  {msub(act3, draft_rhs) == Z3}   (want False: draft refuted)")
+
+bXp = mmul(mmul(madd(I3, Np3), msub(I3, Nm3)), madd(I3, Np3))
+bXdI = mmul(mmul(madd(I3, Nm3), msub(I3, Np3)), madd(I3, Nm3))
+bXe1 = msub(mmul(bXp, bXdI), I3)
+print(f"  B+ * B-' - 1 = [[6,4,8],[4,2,4],[4,2,4]] ?  "
+      f"{bXe1 == mat([[6, 4, 8], [4, 2, 4], [4, 2, 4]])}   (want True)")
+bXd = mmul(mmul(msub(I3, Nm3), madd(I3, Np3)), msub(I3, Nm3))
+bXpI = mmul(mmul(msub(I3, Np3), madd(I3, Nm3)), msub(I3, Np3))
+bXe2 = msub(mmul(bXd, bXpI), I3)
+print(f"  B- * B+' - 1 = [[6,-4,-8],[-4,2,4],[-4,2,4]] ?  "
+      f"{bXe2 == mat([[6, -4, -8], [-4, 2, 4], [-4, 2, 4]])}   (want True)")
+bWX = (bXe1 == mat([[6, 4, 8], [4, 2, 4], [4, 2, 4]])
+       and bXe2 == mat([[6, -4, -8], [-4, 2, 4], [-4, 2, 4]]))
+if not bWX:
+    print("GROUND TRUTH FAILURE - cross-defect witness mismatch")
+    exit(1)
 
 # ---------------------------------------------------------------------------
 # summary

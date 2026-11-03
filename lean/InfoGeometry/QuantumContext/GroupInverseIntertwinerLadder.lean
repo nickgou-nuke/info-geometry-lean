@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Tactic
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctoriality
 import InfoGeometry.QuantumContext.GroupInverseIntertwinerAlgebra
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Composition lemmas for the rectangular group-inverse intertwining
@@ -187,6 +188,42 @@ theorem stochastic_conclusion_and_stationaryProjector_imply_markovRegularized
   IntertwinerAlgebra.regularized_groupInverse_intertwines
     G (MarkovDrazin.stationaryMeanMatrix π) H (MarkovDrazin.stationaryMeanMatrix μ)
     C hsharp hstat
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def groupInverseLadderStageOperator (P A C X : B) : Stage → B
+  | .core => invS P
+  | .poissonGreen => conePlus P A
+  | .regularized => coneMinus P C
+  | .stochastic => genPhi P A C
+  | .stationaryProjector => evenGrade P X + oddGrade P X
+  | .markovPoisson => genJ P A C
+  | .markovRegularized => genSig P A C
+  | .markovMeanZero => genV P A C
+
+theorem groupInverseLadderStage_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    groupInverseLadderStageOperator P A C X .core *
+      groupInverseLadderStageOperator P A C X .core = (1 : B) ∧
+    groupInverseLadderStageOperator P A C X .poissonGreen *
+      groupInverseLadderStageOperator P A C X .poissonGreen = 0 ∧
+    groupInverseLadderStageOperator P A C X .regularized *
+      groupInverseLadderStageOperator P A C X .regularized = 0 ∧
+    groupInverseLadderStageOperator P A C X .stationaryProjector = X ∧
+    groupInverseLadderStageOperator P A C X .stochastic *
+      groupInverseLadderStageOperator P A C X .stochastic =
+      groupInverseLadderStageOperator P A C X .markovMeanZero ∧
+    groupInverseLadderStageOperator P A C X .markovPoisson *
+      groupInverseLadderStageOperator P A C X .stochastic =
+      groupInverseLadderStageOperator P A C X .markovRegularized := by
+  dsimp only [groupInverseLadderStageOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder
 

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import Omega.Folding.BinFold
 
@@ -26,11 +32,11 @@ theorem paper_typed_address_biaxial_completion_window6_two_hidden_channels :
   refine ⟨?_, ?_, ?_⟩
   · intro w
     have hlo := cBinFiberMult_six_ge_two w
-    have hhi := conclusion_window6_su5_obstruction w
+    have hhi := cBinFiberMult_le_four_six w
     interval_cases hmult : cBinFiberMult 6 w <;> simp [window6HiddenOffsets, hmult]
   · intro w
     have hlo := cBinFiberMult_six_ge_two w
-    have hhi := conclusion_window6_su5_obstruction w
+    have hhi := cBinFiberMult_le_four_six w
     interval_cases hmult : cBinFiberMult 6 w <;> simp [window6HiddenOffsets, hmult]
   · intro w hw
     simp [window6HiddenOffsets, hw]

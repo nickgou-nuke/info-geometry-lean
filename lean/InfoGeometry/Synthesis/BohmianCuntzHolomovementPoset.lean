@@ -9,6 +9,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Order.Basic
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
 import InfoGeometry.QuantumContext.AttentionColimitStateCoherence
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Bohm–Hiley Implicate/Explicate Order, Cuntz $\mathcal{O}_2$ Trace Obstruction, and Holomovement Poset
@@ -577,5 +578,48 @@ theorem bohmCuntz_endToEnd_strict_chains :
   have hne : BohmCuntzStage.cuntzTraceObstruction ≠ BohmCuntzStage.implicateColimitHorizon := by
     decide
   exact ⟨lt_of_le_of_ne h04 hne, h12a, h12b, h2a3, h2b3⟩
+
+/-! ### Non-Commutative Operator Realization of `BohmCuntzStage` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `BohmCuntzStage` node to its
+canonical Peirce operator in `[Ring B]`. -/
+def bohmCuntzStageOperator (P A C X : B) : BohmCuntzStage → B
+  | .cuntzTraceObstruction => InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (oddGrade P X)
+  | .explicateEnfoldment => X
+  | .unfoldChannel1 => peirce11 P X
+  | .unfoldChannel2 => peirce00 P X
+  | .holomovementPinching => evenGrade P X
+  | .implicateColimitHorizon => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `BohmCuntzStage`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the two Cuntz-like
+unfoldment channels `P X P` and `(1 - P) X (1 - P)` are mutually orthogonal, sum to the
+idempotent holomovement pinching channel `evenGrade P X`, and commute with `P`, while
+the off-diagonal obstruction `[P, oddGrade P X] = conePlus P X - coneMinus P X` satisfies
+the Tetraktys square `Φ² = V`. -/
+theorem bohmCuntzStage_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    bohmCuntzStageOperator P A C X .unfoldChannel1 +
+      bohmCuntzStageOperator P A C X .unfoldChannel2 =
+      bohmCuntzStageOperator P A C X .holomovementPinching ∧
+    bohmCuntzStageOperator P A C X .unfoldChannel1 *
+      bohmCuntzStageOperator P A C X .unfoldChannel2 = 0 ∧
+    bohmCuntzStageOperator P A C X .unfoldChannel2 *
+      bohmCuntzStageOperator P A C X .unfoldChannel1 = 0 ∧
+    evenGrade P (bohmCuntzStageOperator P A C X .holomovementPinching) =
+      bohmCuntzStageOperator P A C X .holomovementPinching ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+      (bohmCuntzStageOperator P A C X .holomovementPinching) = 0 ∧
+    genPhi P A C * genPhi P A C =
+      bohmCuntzStageOperator P A C X .implicateColimitHorizon := by
+  dsimp only [bohmCuntzStageOperator]
+  refine ⟨rfl, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset

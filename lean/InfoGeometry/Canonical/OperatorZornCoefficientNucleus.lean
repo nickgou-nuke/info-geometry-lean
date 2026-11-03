@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.OperatorZornRealModule
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornExchangeAutomorphism
@@ -178,6 +184,43 @@ theorem corner_product_zero (p q r s : A) (hqr : q*r = 0)
   apply operatorZornMatrix_ext
   all_goals first | (funext i; fin_cases i) | skip
   all_goals simp [operatorZornCoordinates]
+
+/-- Two successive upper transition corners vanish across a complementary
+idempotent cut. This holds for the full nonassociative Zorn carrier over an
+arbitrary, possibly noncommutative coefficient ring. -/
+theorem upper_transition_product_zero (P : A) (hP : P * P = P)
+    (X Y : OperatorZornMatrix A) :
+    corner P (1 - P) X * corner P (1 - P) Y = 0 := by
+  apply corner_product_zero
+  simp [sub_mul, hP]
+
+/-- The reverse transition corner is likewise square-zero. -/
+theorem lower_transition_product_zero (P : A) (hP : P * P = P)
+    (X Y : OperatorZornMatrix A) :
+    corner (1 - P) P X * corner (1 - P) P Y = 0 := by
+  apply corner_product_zero
+  simp [mul_sub, hP]
+
+/-- A forward transition followed by a reverse transition lands in the
+`P`-corner. The coefficient order through the shared complementary sector is
+retained explicitly. -/
+theorem upper_lower_transition_product (P : A) (hP : P * P = P)
+    (X Y : OperatorZornMatrix A) :
+    corner P (1 - P) X * corner (1 - P) P Y =
+      corner P P (X * (diagonalCoefficient (1 - P) * Y)) := by
+  rw [corner_product]
+  have hcomp : (1 - P) * (1 - P) = 1 - P := by
+    simp [sub_mul, mul_sub, hP]
+  rw [hcomp]
+
+/-- A reverse transition followed by a forward transition lands in the
+complementary diagonal corner, with the intermediate `P` coefficient kept in
+its original position. -/
+theorem lower_upper_transition_product (P : A) (hP : P * P = P)
+    (X Y : OperatorZornMatrix A) :
+    corner (1 - P) P X * corner P (1 - P) Y =
+      corner (1 - P) (1 - P) (X * (diagonalCoefficient P * Y)) := by
+  rw [corner_product, hP]
 
 /-- The finite matrix family in the next module discharges this resolution premise. -/
 theorem corner_reconstruction {J : Type*} [Fintype J]

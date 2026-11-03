@@ -34,6 +34,9 @@ set_option linter.unusedVariables false
 #check @bdgHamiltonian_sq_off_diagonal_01
 #check @crossNC_self_commutators
 #check @crossNC_self_comm_ring
+#check @innerGradient3_mul
+#check @commutator_curvature_divergence_eq_zero
+#check @negative_curl_crossNC_eq_divergence_convection
 #check @embedMat2_mul
 #check @embedMat2_injective
 #check @embedMat2_mul_assoc
@@ -50,6 +53,9 @@ set_option linter.unusedVariables false
 #print axioms bdgHamiltonian_sq_off_diagonal_01
 #print axioms crossNC_self_commutators
 #print axioms crossNC_self_comm_ring
+#print axioms innerGradient3_mul
+#print axioms commutator_curvature_divergence_eq_zero
+#print axioms negative_curl_crossNC_eq_divergence_convection
 #print axioms embedMat2_mul
 #print axioms embedMat2_injective
 #print axioms embedMat2_mul_assoc

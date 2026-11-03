@@ -145,6 +145,51 @@ theorem steinbergBraid_dual_expansion_and_difference (A C : B) :
     ((try simp only [steinbergBraid, steinbergBraidInv,
       steinbergBraidDual, steinbergBraidDualInv, weylJ]); peirce_nf hP)
 
+/-- The two Steinberg words both collapse to the Weyl element exactly when
+the two oriented mass-weighted corner shears vanish. The criterion keeps the
+two corner equations separate, so no cancellation between Peirce corners is
+assumed. -/
+theorem steinberg_braids_collapse_iff_corner_absorption (A C : B) :
+    (steinbergBraid P A C = weylJ P A C ∧
+      steinbergBraidDual P A C = weylJ P A C) ↔
+    ((1 - genV P A C) * conePlus P A = 0 ∧
+      (1 - genV P A C) * coneMinus P C = 0) := by
+  rcases steinbergBraid_dual_expansion_and_difference hP A C with
+    ⟨hMinus, hDiff, _, _⟩
+  have hPlus : steinbergBraid P A C =
+      weylJ P A C + (1 - genV P A C) * conePlus P A := by
+    calc
+      steinbergBraid P A C =
+          (steinbergBraid P A C - steinbergBraidDual P A C) +
+            steinbergBraidDual P A C := by noncomm_ring
+      _ = (1 - genV P A C) * genPhi P A C +
+            (weylJ P A C - (1 - genV P A C) * coneMinus P C) := by
+              rw [hDiff, hMinus]
+      _ = weylJ P A C + (1 - genV P A C) * conePlus P A := by
+              dsimp [genPhi]
+              noncomm_ring
+  constructor
+  · rintro ⟨hPlusEq, hMinusEq⟩
+    constructor
+    · calc
+        (1 - genV P A C) * conePlus P A =
+            (weylJ P A C + (1 - genV P A C) * conePlus P A) - weylJ P A C := by
+              noncomm_ring
+        _ = steinbergBraid P A C - weylJ P A C := by rw [hPlus]
+        _ = 0 := by rw [hPlusEq]; simp
+    · calc
+        (1 - genV P A C) * coneMinus P C =
+            weylJ P A C - (weylJ P A C - (1 - genV P A C) * coneMinus P C) := by
+              noncomm_ring
+        _ = weylJ P A C - steinbergBraidDual P A C := by rw [hMinus]
+        _ = 0 := by rw [hMinusEq]; simp
+  · rintro ⟨hPlusZero, hMinusZero⟩
+    constructor
+    · rw [hPlus]
+      simp [hPlusZero]
+    · rw [hMinus]
+      simp [hMinusZero]
+
 omit hP in
 /-- Conjugation by the braid is the composite of the three unipotent conjugations. -/
 theorem steinbergBraid_conj (A C X : B) :
@@ -167,6 +212,23 @@ theorem archetype_A16_cayley_weyl_steinberg_reflection (A C : B) :
     steinbergBraid P A C = weylJ P A C + (1 - genV P A C) * conePlus P A := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [weylJ, weylJInv, steinbergBraid]); peirce_nf hP)
+
+/-- The Peirce grading separates the even Weyl-scale component of the
+Steinberg braid from its odd component.  The odd component retains both the
+phase generator and the scale-weighted upper-cone shear; this statement makes
+no assumption that the shear or the defect vanishes. -/
+theorem steinberg_braid_peirce_scale_and_shear (A C : B) :
+    evenGrade P (steinbergBraid P A C) = 1 - genV P A C ∧
+    oddGrade P (steinbergBraid P A C) =
+      genJ P A C + (1 - genV P A C) * conePlus P A := by
+  have hExpansion : steinbergBraid P A C =
+      weylJ P A C + (1 - genV P A C) * conePlus P A := by
+    exact (archetype_A16_cayley_weyl_steinberg_reflection hP A C).2.2.2.2.2.2.2
+  rw [hExpansion]
+  constructor <;> simp only [evenGrade_add, oddGrade_add] <;>
+    simp only [evenGrade, oddGrade, weylJ, genJ, genV, anticomm,
+      conePlus, coneMinus, add_mul, mul_add, sub_mul, mul_sub,
+      one_mul, mul_one, mul_assoc] <;> peirce_nf hP
 
 /-! ### A₁₇–A₁₉ -/
 
@@ -202,6 +264,36 @@ theorem archetype_A18_unipotent_shear_tomography (A C : B) :
 
 /-! ### A₂₁ -/
 
+/-- Ordered Möbius–Bruhat factor and inverse expansions from the A21 source.
+The factors are kept in their noncommutative order; the two Peirce diagonal
+terms in the expansions are generally distinct. -/
+theorem moebius_bruhat_factor_expansions (A C : B) :
+    (1 + conePlus P A) * (1 - coneMinus P C) =
+      1 + genJ P A C - peirce11 P (genV P A C) ∧
+    (1 + coneMinus P C) * (1 - conePlus P A) =
+      1 - genJ P A C - peirce00 P (genV P A C) ∧
+    ((1 + conePlus P A) * (1 - coneMinus P C)) *
+        ((1 + coneMinus P C) * (1 - conePlus P A)) = 1 ∧
+    ((1 + coneMinus P C) * (1 - conePlus P A)) *
+        ((1 + conePlus P A) * (1 - coneMinus P C)) = 1 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- The ordered Möbius–Bruhat unit acts on the cut by conjugation. Its orbit
+point remains idempotent, the tetraktys metric is fixed, and the point has
+the exact Peirce expansion from the A21 source. This is a ring identity for
+the displayed unit and inverse; it does not assert a group action or a
+Grassmannian structure on the carrier. -/
+theorem moebius_bruhat_idempotent_orbit_and_metric_invariance (A C : B) :
+    let g := (1 + conePlus P A) * (1 - coneMinus P C)
+    let gInv := (1 + coneMinus P C) * (1 - conePlus P A)
+    (g * P * gInv) * (g * P * gInv) = g * P * gInv ∧
+    g * genV P A C * gInv = genV P A C ∧
+    g * P * gInv =
+      P - genJ P A C - genSig P A C + genV P A C * conePlus P A -
+        (2 : ℤ) • coneMinus P C := by
+  dsimp
+  peirce_nf hP; trivial
+
 theorem archetype_A21_operator_projective_line (A C X : B) :
     projChartPlus P X * projChartPlus P X = projChartPlus P X ∧
     projChartMinus P C * projChartMinus P C = projChartMinus P C ∧
@@ -236,6 +328,82 @@ theorem archetype_A22_hua_distance_and_cross_ratio (A C X Y X₁ X₂ Y₁ Y₂ 
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [operatorCrossRatio, projChartPlus, projChartMinus, conjPlus, conjMinus]);
       peirce_nf hP)
+
+/-- The A22 source's displacement brackets of the two translated cut points.
+For these exact arguments the Jordan and Lie brackets are `-V` and `-Σ`.
+This definition-level calculation is kept separate from
+`operatorCrossRatio`, whose owner convention gives `+V`. -/
+theorem translated_idempotent_displacement_brackets (A C : B) :
+    anticomm (P - conjPlus P A P) (P - conjMinus P C P) = -genV P A C ∧
+    comm (P - conjPlus P A P) (P - conjMinus P C P) = -genSig P A C := by
+  refine ⟨?_, ?_⟩ <;>
+    (simp only [conjPlus, conjMinus]; peirce_nf hP)
+
+/-- The A22 displacement Jordan bracket is invariant under the three
+source-listed conjugations when each conjugation is applied to all four
+arguments. The statement uses the source's explicit displacement formula,
+not the separately defined `operatorCrossRatio`. -/
+theorem translated_idempotent_displacement_jordan_invariance (A C : B) :
+    let g := (1 + conePlus P A) * (1 - coneMinus P C)
+    let gInv := (1 + coneMinus P C) * (1 - conePlus P A)
+    anticomm
+        (conjPlus P A P - conjPlus P A (conjPlus P A P))
+        (conjPlus P A P - conjPlus P A (conjMinus P C P)) = -genV P A C ∧
+    anticomm
+        (conjMinus P C P - conjMinus P C (conjPlus P A P))
+        (conjMinus P C P - conjMinus P C (conjMinus P C P)) = -genV P A C ∧
+    anticomm
+        (g * P * gInv - g * (conjPlus P A P) * gInv)
+        (g * P * gInv - g * (conjMinus P C P) * gInv) = -genV P A C := by
+  dsimp
+  simp only [conjPlus, conjMinus]
+  refine ⟨?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- The ordered A22 Hua products isolate the two diagonal Peirce corners
+of the metric `V`; adding and subtracting them recovers `V` and `Σ`. The
+conjugation order matters: `conjPlus P A P = P - conePlus P A`. -/
+theorem translated_idempotent_hua_cross_ratio_products (A C : B) :
+    P * (1 - conjPlus P A P) * (1 - P) * conjMinus P C P * P =
+      peirce11 P (genV P A C) ∧
+    (1 - P) * conjMinus P C P * P * (1 - conjPlus P A P) * (1 - P) =
+      peirce00 P (genV P A C) ∧
+    P * (1 - conjPlus P A P) * (1 - P) * conjMinus P C P * P +
+      (1 - P) * conjMinus P C P * P * (1 - conjPlus P A P) * (1 - P) =
+        genV P A C ∧
+    P * (1 - conjPlus P A P) * (1 - P) * conjMinus P C P * P -
+      (1 - P) * conjMinus P C P * P * (1 - conjPlus P A P) * (1 - P) =
+        genSig P A C := by
+  have hPlus : conjPlus P A P = P - conePlus P A := by
+    unfold conjPlus
+    peirce_nf hP
+  have hMinus : conjMinus P C P = P + coneMinus P C := by
+    unfold conjMinus
+    peirce_nf hP
+  rw [hPlus, hMinus]
+  peirce_nf hP; trivial
+
+/-! ### A₂₃: translated idempotent chords -/
+
+/-- Ordered chord reconstruction for the two unipotently translated copies
+of an idempotent. The statement is only a ring identity: it makes no claim
+about a positive Grassmannian or a geometric embedding. -/
+theorem translated_idempotent_chord_readout (A A₁ A₂ C C₁ C₂ : B) :
+    (P - conePlus P A₁) * (P - conePlus P A₂) = P - conePlus P A₂ ∧
+    (P + coneMinus P C₁) * (P + coneMinus P C₂) = P + coneMinus P C₁ ∧
+    P * (P - conePlus P A) = P - conePlus P A ∧
+    (P - conePlus P A) * P = P ∧
+    (P + coneMinus P C) * P = P + coneMinus P C ∧
+    P * (P + coneMinus P C) = P ∧
+    (P + coneMinus P C) - (P - conePlus P A) = genPhi P A C ∧
+    (P - (P - conePlus P A)) - ((P + coneMinus P C) - P) = genJ P A C ∧
+    ((P + coneMinus P C) - (P - conePlus P A)) *
+        ((P + coneMinus P C) - (P - conePlus P A)) = genV P A C ∧
+    comm (P - (P - conePlus P A)) ((P + coneMinus P C) - P) =
+      genSig P A C ∧
+    comm (P - conePlus P A) (P + coneMinus P C) =
+      genJ P A C - genSig P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    peirce_nf hP
 
 /-! ### Multiscale Unipotent Idempotent Tower -/
 

@@ -864,6 +864,8 @@ require «GIFT» from
   "external_refs/gift-framework-core"
 require Atlas from
   "external_refs/atlas-lean"
+require HomotopyHypothesis from
+  "external_refs/homotopy-hypothesis-lean4"
 require LeanCopilot from git "https://github.com/lean-dojo/LeanCopilot.git"
   @ "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53"
 

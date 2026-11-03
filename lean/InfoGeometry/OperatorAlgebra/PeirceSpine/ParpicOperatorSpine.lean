@@ -137,4 +137,48 @@ theorem parpicFlux_peirce_specializations
     rw [hStarCone]
     peirce_nf hP
 
+/-- With the Peirce grading as both the vertex measure and the inverse total measure,
+the normalized reversible transition is the skew-adjoint current `J`, while its
+measure-weighted flux is the self-adjoint MagNet adjacency `Φ`. The current squares
+to `-V`, and every power iterate remains reversible with respect to the grading. -/
+theorem parpic_chiral_transition_iterates
+    {P : B} (hP : P * P = P) (hPs : star P = P) (A : B) :
+    parpicFlux (invS P) (conePlus P A) = magnetAdj P A ∧
+    parpicOp (invS P) (invS P) (conePlus P A) = genJ P A (star A) ∧
+    parpicOp (invS P) (invS P) (conePlus P A) *
+      parpicOp (invS P) (invS P) (conePlus P A) = -genV P A (star A) ∧
+    ∀ n : ℕ,
+      invS P * parpicPowerIter n (parpicOp (invS P) (invS P) (conePlus P A)) =
+        star (parpicPowerIter n (parpicOp (invS P) (invS P) (conePlus P A))) * invS P := by
+  let S := invS P
+  let W := conePlus P A
+  have hSstar : star S = S := by
+    dsimp [S]
+    exact star_invS hPs
+  have hSsq : S * S = 1 := by
+    dsimp [S]
+    exact (archetype_A2_peirce_cartan_grading_and_tangent_closure hP A (star A)).1
+  have hFlux : parpicFlux S W = genPhi P A (star A) := by
+    calc
+      parpicFlux S W = gradingTwistedAdj P A := (parpicFlux_peirce_specializations hP hPs A).2.2.1
+      _ = genPhi P A (star A) := gradingTwistedAdj_eq_genPhi hPs hP A
+  have hFluxMag : parpicFlux S W = magnetAdj P A := by
+    calc
+      parpicFlux S W = gradingTwistedAdj P A := (parpicFlux_peirce_specializations hP hPs A).2.2.1
+      _ = magnetAdj P A := rfl
+  have hTransition : parpicOp S S W = genJ P A (star A) := by
+    unfold parpicOp
+    rw [hFlux]
+    dsimp [S, invS]
+    peirce_nf hP
+  have hSquare : parpicOp S S W * parpicOp S S W = -genV P A (star A) := by
+    rw [hTransition]
+    peirce_nf hP
+  have hRev := parpicOp_detailed_balance
+    (M := S) (pi := S) (piInv := S) hSstar hSstar hSstar hSsq W
+  refine ⟨?_, hTransition, hSquare, ?_⟩
+  · simpa [S, W] using hFluxMag
+  · intro n
+    simpa [S, W] using parpicPowerIter_detailed_balance hRev.2 n
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

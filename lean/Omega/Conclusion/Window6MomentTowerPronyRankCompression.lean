@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 import Omega.Conclusion.FixedResolutionCollisionRationalHankelRank
+import Omega.POM.FiniteMomentHankelRank
 
 namespace Omega.Conclusion
 
@@ -31,6 +38,30 @@ def conclusion_window6_moment_tower_prony_rank_compression_binary_moment (q : �
   fixedResolutionCollisionMoment
     conclusion_window6_moment_tower_prony_rank_compression_binary_support
     conclusion_window6_moment_tower_prony_rank_compression_binary_weights q
+
+/-- The actual ordinary `5 × 5` moment Hankel matrix. -/
+def conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel :
+    Matrix (Fin 5) (Fin 5) ℚ := fun i j =>
+  conclusion_window6_moment_tower_prony_rank_compression_ordinary_moment (i.1 + j.1)
+
+/-- The actual binary `3 × 3` moment Hankel matrix. -/
+def conclusion_window6_moment_tower_prony_rank_compression_binary_hankel :
+    Matrix (Fin 3) (Fin 3) ℚ := fun i j =>
+  conclusion_window6_moment_tower_prony_rank_compression_binary_moment (i.1 + j.1)
+
+private lemma conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel_eq_canonical :
+    conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel =
+      Omega.POM.finiteMomentHankel
+        conclusion_window6_moment_tower_prony_rank_compression_ordinary_support
+        conclusion_window6_moment_tower_prony_rank_compression_ordinary_weights := by
+  rfl
+
+private lemma conclusion_window6_moment_tower_prony_rank_compression_binary_hankel_eq_canonical :
+    conclusion_window6_moment_tower_prony_rank_compression_binary_hankel =
+      Omega.POM.finiteMomentHankel
+        conclusion_window6_moment_tower_prony_rank_compression_binary_support
+        conclusion_window6_moment_tower_prony_rank_compression_binary_weights := by
+  rfl
 
 /-- Paper-facing package for the explicit exponential sums, annihilating recurrences, and exact
 Prony/Hankel ranks of the ordinary and binary window-`6` moment towers. -/
@@ -73,8 +104,8 @@ def conclusion_window6_moment_tower_prony_rank_compression_statement : Prop :=
     fixedResolutionCollisionDeterminantWitness
       conclusion_window6_moment_tower_prony_rank_compression_binary_support
       conclusion_window6_moment_tower_prony_rank_compression_binary_weights ∧
-    fixedResolutionCollisionExactHankelRank 5 ∧
-    fixedResolutionCollisionExactHankelRank 3
+    conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel.rank = 5 ∧
+    conclusion_window6_moment_tower_prony_rank_compression_binary_hankel.rank = 3
 
 private lemma conclusion_window6_moment_tower_prony_rank_compression_ordinary_formula
     (q : ℕ) :
@@ -148,7 +179,7 @@ private lemma conclusion_window6_moment_tower_prony_rank_compression_ordinary_ha
       fixedResolutionCollisionDeterminantWitness
         conclusion_window6_moment_tower_prony_rank_compression_ordinary_support
         conclusion_window6_moment_tower_prony_rank_compression_ordinary_weights ∧
-      fixedResolutionCollisionExactHankelRank 5 := by
+      conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel.rank = 5 := by
   have hpack :=
     paper_conclusion_fixedresolution_collision_rational_hankel_rank 5 0
       conclusion_window6_moment_tower_prony_rank_compression_ordinary_support
@@ -156,7 +187,13 @@ private lemma conclusion_window6_moment_tower_prony_rank_compression_ordinary_ha
       conclusion_window6_moment_tower_prony_rank_compression_ordinary_support_strictMono
       conclusion_window6_moment_tower_prony_rank_compression_ordinary_weight_nonzero
       (by intro i; simp)
-  rcases hpack with ⟨_, hHankel, hDet, hRank⟩
+  rcases hpack with ⟨_, hHankel, hDet, _⟩
+  have hRank := Omega.POM.finiteMomentHankel_rank
+    conclusion_window6_moment_tower_prony_rank_compression_ordinary_support
+    conclusion_window6_moment_tower_prony_rank_compression_ordinary_weights
+    (conclusion_window6_moment_tower_prony_rank_compression_ordinary_support_strictMono.injective)
+    conclusion_window6_moment_tower_prony_rank_compression_ordinary_weight_nonzero
+  rw [← conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel_eq_canonical] at hRank
   exact ⟨hHankel, hDet, hRank⟩
 
 private lemma conclusion_window6_moment_tower_prony_rank_compression_binary_hankel_package :
@@ -170,7 +207,7 @@ private lemma conclusion_window6_moment_tower_prony_rank_compression_binary_hank
       fixedResolutionCollisionDeterminantWitness
         conclusion_window6_moment_tower_prony_rank_compression_binary_support
         conclusion_window6_moment_tower_prony_rank_compression_binary_weights ∧
-      fixedResolutionCollisionExactHankelRank 3 := by
+      conclusion_window6_moment_tower_prony_rank_compression_binary_hankel.rank = 3 := by
   have hpack :=
     paper_conclusion_fixedresolution_collision_rational_hankel_rank 3 0
       conclusion_window6_moment_tower_prony_rank_compression_binary_support
@@ -178,13 +215,18 @@ private lemma conclusion_window6_moment_tower_prony_rank_compression_binary_hank
       conclusion_window6_moment_tower_prony_rank_compression_binary_support_strictMono
       conclusion_window6_moment_tower_prony_rank_compression_binary_weight_nonzero
       (by intro i; simp)
-  rcases hpack with ⟨_, hHankel, hDet, hRank⟩
+  rcases hpack with ⟨_, hHankel, hDet, _⟩
+  have hRank := Omega.POM.finiteMomentHankel_rank
+    conclusion_window6_moment_tower_prony_rank_compression_binary_support
+    conclusion_window6_moment_tower_prony_rank_compression_binary_weights
+    (conclusion_window6_moment_tower_prony_rank_compression_binary_support_strictMono.injective)
+    conclusion_window6_moment_tower_prony_rank_compression_binary_weight_nonzero
+  rw [← conclusion_window6_moment_tower_prony_rank_compression_binary_hankel_eq_canonical] at hRank
   exact ⟨hHankel, hDet, hRank⟩
 
-/-- Paper label: `thm:conclusion-window6-moment-tower-prony-rank-compression`. The ordinary and
-binary window-`6` moment towers are explicit finite exponential sums with annihilating
-recurrences coming from `(E - 1)(E - 2)(E - 3)(E - 4)(E - 5)` and `(E - 2)(E - 3)(E - 4)`;
-their Hankel/Prony ranks are exactly `5` and `3`. -/
+/-- The ordinary and binary window-`6` moment towers are explicit finite exponential sums with
+annihilating recurrences; their explicitly defined finite moment Hankel matrices have ranks `5`
+and `3`, proved from the Vandermonde Gram determinant criterion. -/
 theorem paper_conclusion_window6_moment_tower_prony_rank_compression :
     conclusion_window6_moment_tower_prony_rank_compression_statement := by
   rcases conclusion_window6_moment_tower_prony_rank_compression_ordinary_hankel_package with

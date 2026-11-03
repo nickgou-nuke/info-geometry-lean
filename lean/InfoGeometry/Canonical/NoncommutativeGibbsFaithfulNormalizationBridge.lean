@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.NoncommutativeGibbsDuhamelTwoPointBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoncommutativeGibbsRpowNormalizationBridge
@@ -124,6 +129,24 @@ theorem faithfulGibbsDensity_rho_eq_normalizedExponential
   rw [real_smul_eq_complex_smul]
   congr 1
   norm_num
+
+/-- The scalar partition function reconstructs the unnormalized operator
+exponential from the normalized Gibbs density. Thus the operator-valued Gibbs
+weight is `Z • ρ`, while `Z` remains the scalar trace readout. -/
+theorem partitionFunction_smul_faithfulGibbsDensity_eq_exponential
+    {n : ℕ} (H : Operator n) (hH : IsSelfAdjoint H)
+    (hZ : 0 < gibbsPartitionReal H) :
+    gibbsPartitionReal H • (faithfulGibbsDensity H hH hZ).rho =
+      NormedSpace.exp H := by
+  rw [faithfulGibbsDensity_rho_eq_normalizedExponential H hH hZ]
+  change gibbsPartitionReal H •
+      ((tracedExponential H)⁻¹ • NormedSpace.exp H) = NormedSpace.exp H
+  rw [real_smul_eq_complex_smul]
+  rw [smul_smul]
+  rw [tracedExponential_eq_gibbsPartitionReal H hH]
+  have hZne : (gibbsPartitionReal H : ℂ) ≠ 0 := by
+    exact_mod_cast hZ.ne'
+  rw [mul_inv_cancel₀ hZne, one_smul]
 
 /-- Final CFC-to-Banach transport for the normalized Gibbs power law. -/
 theorem normalizedGibbsCFC_rpow_eq_smul_exp

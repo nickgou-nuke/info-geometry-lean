@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Physics.NuclearPairCAR
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 noncomputable section
 
@@ -143,6 +150,38 @@ theorem correction_prerequisites :
 theorem circular_and_vacuum_incomparable :
     ¬ circularCoefficients ≤ vacuumReadout ∧ ¬ vacuumReadout ≤ circularCoefficients := by
   decide
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def solovievPhononArchetypeOperator (P A C X : B) : Archetype → B
+  | .carRelations => invS P
+  | .fermionicBogoliubov => conePlus P A
+  | .pairNormalOrder => coneMinus P C
+  | .phononCorrection => genPhi P A C
+  | .circularCoefficients => genJ P A C
+  | .vacuumReadout => evenGrade P X + oddGrade P X
+
+theorem solovievPhononArchetype_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    solovievPhononArchetypeOperator P A C X .carRelations *
+      solovievPhononArchetypeOperator P A C X .carRelations = (1 : B) ∧
+    solovievPhononArchetypeOperator P A C X .fermionicBogoliubov *
+      solovievPhononArchetypeOperator P A C X .fermionicBogoliubov = 0 ∧
+    solovievPhononArchetypeOperator P A C X .pairNormalOrder *
+      solovievPhononArchetypeOperator P A C X .pairNormalOrder = 0 ∧
+    solovievPhononArchetypeOperator P A C X .phononCorrection *
+      solovievPhononArchetypeOperator P A C X .phononCorrection +
+      solovievPhononArchetypeOperator P A C X .circularCoefficients *
+        solovievPhononArchetypeOperator P A C X .circularCoefficients = 0 ∧
+    solovievPhononArchetypeOperator P A C X .vacuumReadout = X := by
+  dsimp only [solovievPhononArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end ProofDependency
 

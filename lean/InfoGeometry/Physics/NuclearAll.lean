@@ -7,6 +7,7 @@ import InfoGeometry.Physics.NuclearGradedBathCommutant
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearHeisenbergChannelDecomposition
 import InfoGeometry.Physics.NuclearSpinIsospinTensorRepresentation
+import InfoGeometry.Physics.NuclearKohnShamPeirceBridge
 import InfoGeometry.Physics.NuclearChargeExchangeBridge
 import InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry
 import InfoGeometry.Physics.NuclearQuasiparticleCARBridge

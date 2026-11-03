@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Colimit.DirectLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.Module
@@ -227,13 +233,27 @@ theorem splitCliffordInfinity_unbounded_representatives
   · simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using htail N
 
 /--
-Finite `Cl(5,5)` window absorption in the split direct limit:
-adding any finite split-Clifford tail after stage `5` does not change the
-represented direct-limit element.
-
-This is the direct-limit form of the scale-invariance slogan
-`Cl(5,5) ⊗ Cl(∞,∞) ≅ Cl(∞,∞)` that is supported by the current tower API.
+Finite-window absorption in the split direct limit: advancing a stage-`n`
+representative by any finite number of tower bonds preserves its colimit
+image. This is the precise stagewise statement used for finite Clifford
+windows; it does not assert a tensor-product equivalence with an analytic
+infinite tensor product.
 -/
+@[rep_depth krein]
+theorem splitCliffordInfinity_window_absorbs_finite_tail
+    (n : ℕ) (x : SplitClNNAlg n) (k : ℕ) :
+    DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m j h => splitCliffordMap m j h) (n + k)
+        (splitCliffordMap n (n + k) (Nat.le_add_right n k) x)
+      =
+    DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m j h => splitCliffordMap m j h) n x := by
+  exact
+    (DirectLimit.Module.of_f
+      (f := fun m n h => splitCliffordMap m n h)
+      (i := n) (j := n + k) (hij := Nat.le_add_right n k) (x := x))
+
+/-- The finite `Cl(5,5)` window specialization of the general stage-tail law. -/
 @[rep_depth krein]
 theorem splitCliffordInfinity_cl55_window_absorbs_finite_tail
     (x : SplitClNNAlg 5) (k : ℕ) :
@@ -242,11 +262,8 @@ theorem splitCliffordInfinity_cl55_window_absorbs_finite_tail
         (splitCliffordMap 5 (5 + k) (Nat.le_add_right 5 k) x)
       =
     DirectLimit.Module.of ℝ ℕ SplitClNNAlg
-        (fun m n h => splitCliffordMap m n h) 5 x := by
-  exact
-    (DirectLimit.Module.of_f
-      (f := fun m n h => splitCliffordMap m n h)
-      (i := 5) (j := 5 + k) (hij := Nat.le_add_right 5 k) (x := x))
+        (fun m n h => splitCliffordMap m n h) 5 x :=
+  splitCliffordInfinity_window_absorbs_finite_tail 5 x k
 
 /--
 Every split direct-limit element has a representative at or beyond the finite

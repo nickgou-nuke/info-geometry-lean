@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Omega.Folding.CollisionZetaOperator
 import Mathlib.Tactic
 import Mathlib.Data.Fintype.EquivFin
@@ -73,11 +79,10 @@ theorem paper_rate_cdim_budget_witness :
 /-- Rate circle dimension product additivity witness.
     prop:conclusion-rate-cdim-arithmetic -/
 theorem paper_rate_cdim_product_additivity :
-    (∀ a b : ℕ, a * b = a * b) ∧
     (∀ m : ℕ, 2 ^ m * Nat.fib (m + 2) = Nat.fib (m + 2) * 2 ^ m) ∧
     (10 ^ 2 < Nat.fib 12 ∧ 20 ^ 2 < Nat.fib 22) ∧
     (Nat.fib 12 = 144 ∧ Nat.fib 22 = 17711) :=
-  ⟨fun _ _ => rfl, fun _ => Nat.mul_comm _ _,
+  ⟨fun _ => Nat.mul_comm _ _,
    ⟨by decide, by decide⟩,
    ⟨by decide, by decide⟩⟩
 

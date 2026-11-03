@@ -1,14 +1,155 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55WittPinProjectiveNullAction
+import InfoGeometry.Clifford.Cl55RealSplitPinNullPairProjective
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55WittCartanDieudonneReduction
 import InfoGeometry.Canonical.PACSplit55Cl55CoordinateBridge
+import InfoGeometry.Clifford.ConformalReflection55
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Canonical.Cl55WittPinConformalBoundaryBridge
 
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Canonical.ProjectiveFoundation
+open InfoGeometry.Twistor
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+open InfoGeometry.Clifford.ConformalReflection55
 open PACSplit55Cl55CoordinateBridge
 open scoped LinearAlgebra.Projectivization
+
+/-! ## The Witt null pair as the affine point and infinity of the native chart -/
+
+/-- In the canonical split basis, the distinguished conformal infinity vector is
+the negative Witt ray `e₄ - f₄`. This identifies the independently defined
+PAC infinity vector with the native Clifford/Witt frame. -/
+theorem nativeInfinityVector_eq_nbar_pair4 :
+    nativeInfinityVector = nbar_pair 4 := by
+  apply Prod.ext
+  · funext i
+    fin_cases i <;>
+      norm_num [nativeInfinityVector, pacSplit55ToV55, pacSplit55Infinity,
+        nbar_pair, e_pos, f_neg]
+  · funext i
+    fin_cases i <;>
+      norm_num [nativeInfinityVector, pacSplit55ToV55, pacSplit55Infinity,
+        nbar_pair, e_pos, f_neg]
+
+/-- The native projective infinity is exactly the negative member of the
+crosscap Witt null pair. -/
+theorem nativeInfinityProjectivePoint_eq_nbarPairProjective4 :
+    nativeInfinityProjectivePoint = (nbarPairProjective 4).1 := by
+  unfold nativeInfinityProjectivePoint nbarPairProjective twistorMk
+    InfoGeometry.Canonical.Cl55ProjectiveBoundary.pointAtInfinity
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  refine ⟨1, ?_⟩
+  simp only [one_smul]
+  exact nativeInfinityVector_eq_nbar_pair4.symm
+
+/-- The negative Witt ray is on the selected conformal boundary. -/
+theorem nbarPairProjective4_mem_nativeConformalBoundary :
+    nativeConformalBoundary55 (nbarPairProjective 4).1 := by
+  rw [← nativeInfinityProjectivePoint_eq_nbarPairProjective4]
+  exact nativeInfinityProjectivePoint_mem_conformalBoundary55
+
+/-- The positive Witt ray is in the complementary affine chart. -/
+theorem nPairProjective4_mem_nativeAffineChart :
+    nativeAffineChart55 (nPairProjective 4).1 := by
+  change chartCoordinate55 (n_pair 4) ≠ 0
+  norm_num [chartCoordinate55, n_pair, e_pos, f_neg]
+
+/-- The two Witt rays are distinct: one is the selected infinity point and the
+other lies in its affine complement. -/
+theorem nPairProjective4_ne_nativeInfinityProjectivePoint :
+    (nPairProjective 4).1 ≠ nativeInfinityProjectivePoint := by
+  intro h
+  have ha := nPairProjective4_mem_nativeAffineChart
+  have hb := nbarPairProjective4_mem_nativeConformalBoundary
+  rw [← nativeInfinityProjectivePoint_eq_nbarPairProjective4, ← h] at hb
+  exact (nativeAffineChart55_not_nativeConformalBoundary55
+    (nPairProjective 4).1 ha) hb
+
+/-! ## The normalized Witt pair as a Peirce Tetraktys with Pin inversion -/
+
+/-- The normalized Clifford null pair determines its Peirce idempotent `P = uv`.
+The two directed Peirce cones recover the null generators themselves. Consequently
+the Tetraktys current agrees with the conformal Pin inversion generator, its mass
+is the unit anticommutator of the normalized pair, and its spin dipole is the
+Peirce grading. -/
+theorem conformalNullPair_tetraktys_pin_mass_coupling
+    (p : InfoGeometry.Clifford.ConformalLift55.ConformalNullPair) :
+    let P := p.u * p.v
+    P * P = P ∧
+    conePlus P p.u = p.u ∧
+    coneMinus P p.v = p.v ∧
+    genPhi P p.u p.v = p.u + p.v ∧
+    genJ P p.u p.v = J p ∧
+    genV P p.u p.v = 1 ∧
+    genSig P p.u p.v = invS P := by
+  dsimp only
+  have hu : p.u * p.u = 0 := by simpa [pow_two] using p.u_square
+  have hv : p.v * p.v = 0 := by simpa [pow_two] using p.v_square
+  have huv : p.u * p.v + p.v * p.u = 1 := p.anticomm
+  have huv' : p.u * p.v = 1 - p.v * p.u := by
+    rw [eq_sub_iff_add_eq]
+    exact huv
+  have hvu' : p.v * p.u = 1 - p.u * p.v := by
+    rw [eq_sub_iff_add_eq, add_comm]
+    exact huv
+  have hP : (p.u * p.v) * (p.u * p.v) = p.u * p.v := by
+    calc
+      (p.u * p.v) * (p.u * p.v) = p.u * (p.v * p.u) * p.v := by noncomm_ring
+      _ = p.u * (1 - p.u * p.v) * p.v := by rw [hvu']
+      _ = p.u * p.v - (p.u * p.u) * (p.v * p.v) := by noncomm_ring
+      _ = p.u * p.v := by rw [hu, hv]; noncomm_ring
+  have hUvu : p.u * p.v * p.u = p.u := by
+    calc
+      p.u * p.v * p.u = (1 - p.v * p.u) * p.u := by rw [huv']
+      _ = p.u - p.v * (p.u * p.u) := by noncomm_ring
+      _ = p.u := by rw [hu]; noncomm_ring
+  have hVuv : p.v * p.u * p.v = p.v := by
+    calc
+      p.v * p.u * p.v = (1 - p.u * p.v) * p.v := by rw [hvu']
+      _ = p.v - p.u * (p.v * p.v) := by noncomm_ring
+      _ = p.v := by rw [hv]; noncomm_ring
+  have hPlus : conePlus (p.u * p.v) p.u = p.u := by
+    unfold conePlus
+    rw [show (1 : InfoGeometry.Clifford.ConformalLift55.Cl55) - p.u * p.v = p.v * p.u
+      by rw [← huv]; noncomm_ring]
+    calc
+      p.u * p.v * p.u * (p.v * p.u) = (p.u * p.v * p.u) * (p.v * p.u) := by noncomm_ring
+      _ = p.u * (p.v * p.u) := by rw [hUvu]
+      _ = p.u := by calc
+        p.u * (p.v * p.u) = p.u * p.v * p.u := by noncomm_ring
+        _ = p.u := hUvu
+  have hMinus : coneMinus (p.u * p.v) p.v = p.v := by
+    unfold coneMinus
+    rw [show (1 : InfoGeometry.Clifford.ConformalLift55.Cl55) - p.u * p.v = p.v * p.u
+      by rw [← huv]; noncomm_ring]
+    calc
+      p.v * p.u * p.v * (p.u * p.v) = (p.v * p.u * p.v) * (p.u * p.v) := by noncomm_ring
+      _ = p.v * (p.u * p.v) := by rw [hVuv]
+      _ = p.v := by calc
+        p.v * (p.u * p.v) = p.v * p.u * p.v := by noncomm_ring
+        _ = p.v := hVuv
+  have hInvS : InfoGeometry.OperatorAlgebra.PeirceSpine.invS (p.u * p.v) =
+      p.u * p.v - p.v * p.u := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.invS
+    rw [show (1 : InfoGeometry.Clifford.ConformalLift55.Cl55) - p.u * p.v = p.v * p.u
+      by rw [← huv]; noncomm_ring]
+  refine ⟨hP, hPlus, hMinus, ?_, ?_, ?_, ?_⟩
+  · rw [InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi, hPlus, hMinus]
+  · rw [InfoGeometry.OperatorAlgebra.PeirceSpine.genJ, hPlus, hMinus,
+      InfoGeometry.Clifford.ConformalReflection55.J]
+  · rw [InfoGeometry.OperatorAlgebra.PeirceSpine.genV,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm, hPlus, hMinus]
+    exact huv
+  · rw [InfoGeometry.OperatorAlgebra.PeirceSpine.genSig,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm, hPlus, hMinus,
+      hInvS]
 
 noncomputable def pinInfinityStabilizer : Subgroup Pin55 where
   carrier := {g | pinNativeOrthogonalAction g nativeInfinityVector = nativeInfinityVector}

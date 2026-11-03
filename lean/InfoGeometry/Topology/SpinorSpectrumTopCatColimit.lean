@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Topology.Category.TopCat.Limits.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # TopCat colimit template for a two-stage spectral tower
@@ -210,5 +217,37 @@ theorem spinorSpectrumTopCatCompatibleReadout_extended
   simpa [spinorSpectrumTopCatCompatibleCocone] using
     spinorSpectrumTopCatCompatibleReadout_stage f hf a0 a1 hcompat
       SpinorStage.extended
+
+/-! ### Non-Commutative Operator Realization of `SpinorStage` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `SpinorStage` node to its
+canonical Peirce operator in `[Ring B]`. -/
+def spinorStageOperator (P A C : B) : SpinorStage → B
+  | .initial => genPhi P A C
+  | .extended => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Transition across `SpinorStage`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the initial odd
+spinor generator `Φ = a₊ + c₋` squares to the extended even Casimir operator `V = {a₊, c₋}`,
+anticommutes with the reflection involution `S Φ S = -Φ`, and commutes with `V`. -/
+theorem spinorStage_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    spinorStageOperator P A C .initial * spinorStageOperator P A C .initial =
+      spinorStageOperator P A C .extended ∧
+    invS P * spinorStageOperator P A C .initial * invS P =
+      -spinorStageOperator P A C .initial ∧
+    invS P * spinorStageOperator P A C .extended * invS P =
+      spinorStageOperator P A C .extended ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (spinorStageOperator P A C .extended) (spinorStageOperator P A C .initial) = 0 := by
+  dsimp only [spinorStageOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Topology.SpinorSpectrumTopCatColimit

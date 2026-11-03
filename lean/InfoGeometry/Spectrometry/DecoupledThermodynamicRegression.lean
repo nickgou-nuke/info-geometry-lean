@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Spectrometry.RobustThermodynamicRegression
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.DecoupledThermodynamics
 
@@ -424,5 +431,47 @@ theorem active_support_at_cutoff (cutoff temperature : ℝ) :
 end RetainedSupport
 
 end
+
+/-! ### Non-Commutative Operator Realization of `DecoupledThermodynamics.ProofDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ProofDependency.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def decoupledRegressionArchetypeOperator (P A C X : B) : ProofDependency.Archetype → B
+  | .clrProjection => oddGrade P X
+  | .twoStatePartition => peirce11 P X + peirce00 P X
+  | .logisticWeight => conePlus P A
+  | .additiveFreeEnergy => genPhi P A C
+  | .freeEnergyDerivative => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .retainedSupport => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `DecoupledThermodynamics.ProofDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the CLR off-diagonal
+projection and two-state diagonal partition sum to `X`, the logistic step `a₊` is nilpotent,
+and the free-energy generator `Φ` satisfies `Φ² = V` and `[Φ, J] = -2 Σ`. -/
+theorem decoupledRegressionArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    decoupledRegressionArchetypeOperator P A C X .twoStatePartition +
+      decoupledRegressionArchetypeOperator P A C X .clrProjection = X ∧
+    decoupledRegressionArchetypeOperator P A C X .logisticWeight *
+      decoupledRegressionArchetypeOperator P A C X .logisticWeight = 0 ∧
+    decoupledRegressionArchetypeOperator P A C X .additiveFreeEnergy *
+      decoupledRegressionArchetypeOperator P A C X .additiveFreeEnergy =
+      decoupledRegressionArchetypeOperator P A C X .retainedSupport ∧
+    decoupledRegressionArchetypeOperator P A C X .freeEnergyDerivative =
+      -((2 : ℤ) • genSig P A C) ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 := by
+  dsimp only [decoupledRegressionArchetypeOperator]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, _, hPhiSq, _, _, _, _, hAnti, _, _, _, _, _, _⟩
+  refine ⟨?_, hPlus, hPhiSq, ?_, hAnti⟩
+  · peirce_nf hP
+  · exact (archetype_A7_so12_lie_brackets_and_cubic_inversions (P := P) hP A C).1
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.DecoupledThermodynamics

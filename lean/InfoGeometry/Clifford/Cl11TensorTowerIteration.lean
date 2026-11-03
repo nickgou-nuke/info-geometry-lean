@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.IterativeExponentiation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupergradedBracket
@@ -235,6 +240,30 @@ theorem ofStage_iteratedStageEmbed (m k : ℕ) (A : Stage m) :
     InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (m + k) (iteratedStageEmbed m k A) = InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage m A := by
   exact directLimitOf_bondMap (Stage := Stage) InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond m (m + k)
     (Nat.le_add_right m k) A
+
+/-- Every element of the algebraic `Cl(1,1)` tower has representatives at
+arbitrarily late finite stages. The representative is obtained by iterating
+the actual tensor-with-identity bonding maps, not by adjoining a new limit
+factor. -/
+theorem ofStage_exists_representative_beyond
+    (z : InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit) :
+    ∀ N : ℕ, ∃ n ≥ N, ∃ A : Stage n,
+      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n A = z := by
+  intro N
+  rcases DirectLimit.exists_eq_mk
+      (f := fun i j h =>
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap
+          (Stage := Stage) InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond i j h)
+      z with ⟨m, A, hA⟩
+  refine ⟨m + N, Nat.le_add_left N m, iteratedStageEmbed m N A, ?_⟩
+  calc
+    InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (m + N)
+        (iteratedStageEmbed m N A) =
+        InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage m A :=
+          ofStage_iteratedStageEmbed m N A
+    _ = z := by
+      simpa [InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage,
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf] using hA.symm
 
 /-- Superbracket identities transported by finite iteration are the same in the direct limit. -/
 theorem ofStage_iteratedStageEmbed_superBracket_eq

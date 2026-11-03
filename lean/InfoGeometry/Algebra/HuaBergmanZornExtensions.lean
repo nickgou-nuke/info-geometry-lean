@@ -243,6 +243,26 @@ theorem zorn_norm_genPhi {P : B} (hP : P * P = P) (A C : B) :
   simp only [zornConj, invS, genPhi, genV, anticomm, conePlus, coneMinus]
   noncomm_ring [hP, P_assoc hP]
 
+/-- The unipotent shift has the expected quadratic Peirce norm. This is the
+ordered product `(1 - Φ)(1 + Φ)`; the equality uses only the Peirce support
+relations, not commutativity of the ambient ring. -/
+theorem zorn_norm_one_sub_genPhi {P : B} (hP : P * P = P) (A C : B) :
+    (1 - genPhi P A C) * zornConj P (1 - genPhi P A C) =
+      1 - genV P A C := by
+  simp only [zornConj, invS, genPhi, genV, anticomm, conePlus, coneMinus]
+  noncomm_ring [hP, P_assoc hP]
+
+/-- The `P + Φ` shift does not have norm `P - Q₊` in general. Its exact
+Peirce norm is `P - J - V`, where `J = N₊ - N₋` and `V = N₊N₋ + N₋N₊`.
+This records the ordered conjugate product without imposing extra equations
+on either off-diagonal block. -/
+theorem zorn_norm_P_add_genPhi {P : B} (hP : P * P = P) (A C : B) :
+    (P + genPhi P A C) * zornConj P (P + genPhi P A C) =
+      P - genJ P A C - genV P A C := by
+  simp only [zornConj, invS, genPhi, genJ, genV,
+    anticomm, conePlus, coneMinus]
+  noncomm_ring [hP, P_assoc hP]
+
 /-- **A25.8**: `S`-norm of `V + J` is `V² + V`. -/
 theorem zorn_norm_genJ {P : B} (hP : P * P = P) (A C : B) :
     (genV P A C + genJ P A C) * zornConj P (genV P A C + genJ P A C)

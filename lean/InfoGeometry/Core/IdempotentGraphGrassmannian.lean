@@ -40,6 +40,26 @@ theorem idempotencyDefect_add_polarization (x y : B) :
   unfold idempotencyDefect
   noncomm_ring
 
+/-- If `p` is idempotent and the ordered cross terms with `y` sum to `y`,
+then translating `p` by `y` has defect exactly `y²`. This is the algebraic
+form of the odd-to-even defect jump; the grading condition is explicit. -/
+theorem idempotencyDefect_idempotent_add_of_cross_sum
+    {p y : B} (hp : p * p = p) (hcross : p * y + y * p = y) :
+    idempotencyDefect (p + y) = y * y := by
+  have hpDef : idempotencyDefect p = 0 := by
+    simp [idempotencyDefect, hp]
+  calc
+    idempotencyDefect (p + y) =
+        (idempotencyDefect (p + y) - idempotencyDefect p -
+          idempotencyDefect y) + idempotencyDefect p + idempotencyDefect y := by
+      abel
+    _ = (p * y + y * p) + idempotencyDefect p + idempotencyDefect y := by
+      rw [idempotencyDefect_add_polarization]
+    _ = y * y := by
+      rw [hcross, hpDef]
+      simp only [idempotencyDefect]
+      abel
+
 /-- The companion defect polynomial `x² + x`, equal to the defect of `-x`. -/
 def idempotencyDefectBar (x : B) : B := x * x + x
 
@@ -103,6 +123,24 @@ theorem one_sub_mul_dyadic_geometricSum (x : B) :
 theorem idempotencyDefect_iterate (x : B) :
     idempotencyDefect (idempotencyDefect x) =
       x * x * x * x - (2 : ℤ) • (x * x * x) + x := by
+  unfold idempotencyDefect
+  noncomm_ring
+
+/-- The defect map obeys its defining quadratic recurrence at the second
+iterate: applying `δ` to `δ(x)` is `δ(x)^2 - δ(x)`. This is the recursive
+form of the quartic expansion above and holds in every associative ring. -/
+theorem idempotencyDefect_iterate_recurrence (x : B) :
+    idempotencyDefect (idempotencyDefect x) =
+      idempotencyDefect x * idempotencyDefect x - idempotencyDefect x := by
+  unfold idempotencyDefect
+  noncomm_ring
+
+/-- An alternative expansion isolates the square input. In particular the
+linear remainder is `+x`; replacing it by `+x * x` is not a polynomial
+identity without an additional hypothesis on `x`. -/
+theorem idempotencyDefect_iterate_via_square (x : B) :
+    idempotencyDefect (idempotencyDefect x) =
+      idempotencyDefect (x * x) - (2 : ℤ) • (x * x * x) + x * x + x := by
   unfold idempotencyDefect
   noncomm_ring
 

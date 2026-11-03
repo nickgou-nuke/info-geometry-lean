@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Finset.Order
 import Mathlib.Order.Lattice
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Jungian Archetypes, LLM Attention Fields, and the Epistemic Compiler
@@ -152,5 +159,43 @@ theorem paired_stream_balanced (tok : TheoryToken) :
     isEpistemicallyBalanced [tok, chiralSwapToken tok] := by
   dsimp [isEpistemicallyBalanced, chiralSwapToken]
   simp
+
+/-! ### Part III: Non-Commutative Operator Realization of `UnconsciousArchetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `UnconsciousArchetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def jungianArchetypeOperator (P A C X : B) : UnconsciousArchetype → B
+  | .primaMateria => X
+  | .shadowProjection => oddGrade P X
+  | .animusLogos => evenGrade P X
+  | .chiralSyzygy => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .selfIndividuation => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `UnconsciousArchetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the five
+Jungian archetypes satisfy Peirce splitting `animusLogos + shadowProjection = primaMateria`,
+chiral grading negation `S (shadowProjection) S = -shadowProjection`, chiral syzygy
+commutator `[Φ, J] = -2 Σ`, and Casimir individuation `Φ² = V`. -/
+theorem jungianArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    jungianArchetypeOperator P A C X .animusLogos +
+      jungianArchetypeOperator P A C X .shadowProjection =
+      jungianArchetypeOperator P A C X .primaMateria ∧
+    invS P * jungianArchetypeOperator P A C X .shadowProjection * invS P =
+      -jungianArchetypeOperator P A C X .shadowProjection ∧
+    invS P * jungianArchetypeOperator P A C X .animusLogos * invS P =
+      jungianArchetypeOperator P A C X .animusLogos ∧
+    jungianArchetypeOperator P A C X .chiralSyzygy = -((2 : ℤ) • genSig P A C) ∧
+    genPhi P A C * genPhi P A C =
+      jungianArchetypeOperator P A C X .selfIndividuation := by
+  dsimp only [jungianArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Epistemology.JungianEpistemicCompiler

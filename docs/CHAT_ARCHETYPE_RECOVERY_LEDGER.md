@@ -16,17 +16,40 @@ Counts and hashes below come from each archive's `manifest.json`.
 |---|---:|---:|---:|---|
 | `1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe` | 33 | 19 | 2,067 | `e2bc80e2de27707bfbb6f301ef751b2d94190460cadbaf11f5111a6c42991c5b` |
 | `1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_updated` | 35 | 20 | 2,235 | `4a1318e72e6807bfca2314dc7cc10bfd75b7474f08db6e90fe7b6ac75fe9b34d` |
+| `1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_latest` (2026-10-31) | 49 | 29 | 3,413 | `c488ce340aef94579006bc284cf40162b6763cb72a59dd0513a9bf90641cde76` |
+| `1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_2026_11_03_shared_link` | 82 | 46 | 6,409 | `56e936e51400fd307d22ec3337f21443689e52e08412ed1114a90fbbecb50054` |
 | `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` | 232 | 153 | 12,542 | `e4140cbac7483310d341877bfb1e47b927d56c9b9ef36a5a9c29eb4666ead64d` |
 | `17Kj7oLBHPfoWvQLKPwwve8pcsDezqpkG` | 158 | 107 | 8,095 | `676135681123147b3385cb3fce80214a499bf969683dfed1d3775511a3f36f98` |
 | `1SSh9Kruyv8BNCpXiC5g0he9V4e7j_4Dr` | 365 | 109 | 6,446 | `04608b5c6b7f1d4ebd8cfeb532fd851a3eb208ef86420b8880e4793a74d132ae` |
 | `1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or` | 311 | 121 | 5,310 | `16f536331c07aef669ebf28759ef54102852e9900aa3e3ac96c042e163673cb8` |
+| `1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1` (split-octonion chat, 2026-11-02) | 76 | 31 | 3,804 | `4df940f75f1e756ab38dd19c7d9e92a2a986cac3075347e63b0a86a25653f2af` |
 | `1YHHorO_scroll_extract` | 93 | 0 | 170 | `17172828248554f44ef30f01ffb0a594626ebed6171ec14e52b5b33b5d5026` |
 
 The first and second entries are separate exports of overlapping conversations;
 the updated export has a later final timestamp. No archive is designated the
 single source of truth for every mathematical claim. The `1YHH...` item is a
 scroll extraction sourced from `tmp/`, not a canonical full conversation
-export.
+export. The Nov. 2 split-octonion export and its ten linked Drive text
+attachments have a separate source audit at
+[`aistudio_split_octonion_archetype_audit_20261102.md`](../artifacts/context/aistudio_split_octonion_archetype_audit_20261102.md);
+that audit records which algebraic claims have owners and which cross-carrier
+physics or type-theory interpretations remain open.
+
+### Shared-link refresh: `1t9Q...`, 2026-11-03
+
+The public AI Studio link supplied on 2026-11-03 was downloaded from its Drive
+file ID and preserved as
+`cached/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_2026_11_03_shared_link.json`.
+It is byte-identical to the already preserved
+`..._2026_11_03.json` snapshot (3,998,962 bytes; SHA-256
+`56e936e51400fd307d22ec3337f21443689e52e08412ed1114a90fbbecb50054`), so the
+link did not supply newer turns. The extracted snapshot has 82 ordered chunks
+(41 user, 41 model), 46 tagged Lean fences, and ends at
+`2026-11-03T00:11:44.906Z`. Its reading/indexing artifacts are under the
+matching `cached/aistudio_extracts/..._2026_11_03_shared_link/` directory.
+
+The final A113–A116 turns repeat the current-thread Plabic/Kitaev material
+audited below. The transcript's prose and code fence are candidate input only.
 
 ## Causal order of theorem-safe operator content
 
@@ -71,6 +94,109 @@ Lean fences and many unrelated topics; each fence needs independent
 normalization, owner search, compilation, and semantic audit before it can be
 promoted.
 
+### Shared-link source inventory, A1–A44 (Peirce/Tetraktys and derived channels)
+
+The shared-link export repeats early Lean fences, and later turns reuse the
+same A-numbers for different propositions. Thus this is an owner-routing
+inventory by mathematical family, not evidence that every repeated source
+conjunct has been matched or compiled:
+
+- The core Lie/Jordan, Peirce grading, nilpotent cone, tetraktys, sandwich,
+  ladder, and Klein-channel declarations are in
+  `OperatorAlgebra/PeirceSpine/Tetraktys.lean` (A1–A11 family). The later
+  orthogonality statements distinguish the on-shell `V² = V` assumption from
+  off-shell character-selection identities.
+- Nilpotent conjugation, unipotent actions, Cayley/Steinberg operations, and
+  projective-line formulas are routed through `Unipotent.lean`; homogenized
+  projectors and their channel actions are in `Homogenized.lean`. These are
+  ordered ring identities, not by themselves a group, projective quotient, or
+  analytic geometry.
+- Bergman/Hua and commutator-form formulas route through `Bergman.lean`;
+  QGT/supercharge and graded derivations through `Supercharge.lean`;
+  orientation/Hodge formulas through `Orientation.lean`;
+  primal/dual potential formulas through `PrimalDual.lean`.
+- The later defect, tower, cyclotomic, chiral-factor, and related declarations
+  route through `KantorBogoliubovSpinePoset.lean`. The labels A17–A44 overlap
+  with other turns and other owner declarations, so exact theorem names,
+  hypotheses, and source-turn provenance must be checked individually before
+  treating one owner theorem as coverage of a transcript occurrence.
+
+The source contains algebraic claims alongside stronger uses of terms such as
+`sl₂`, `so(1,2)`, Hodge cohomology, projective Grassmannian, Euler/zeta, and
+Virasoro. The cited ring-level owners establish only their Lean statements;
+they do not promote those interpretations without the required carrier and
+structure maps. The A1–A44 source-specific conjunct audit and serialized
+kernel verification remain open.
+
+#### Focused source audit: shared-link A1–A12
+
+The first source fence in the 2026-11-03 shared-link extract has been checked
+against the owners. A1–A10 map to the same source-facing declarations in
+`PeirceSpine/Tetraktys.lean`; A12 maps to
+`PeirceSpine/Unipotent.lean::archetype_A12_nilpotent_conjugation_group`.
+The owner declarations were kernel-checked in the successful locked builds of
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys` and
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03. This is
+kernel evidence for the stated ring identities, not for broader geometric
+interpretations.
+
+A11 needs a correction rather than literal promotion. Its candidate Lean
+proof ends in `sorry` after trying to infer mode tripotency from `V² = V`.
+The owner `Tetraktys.archetype_A11_klein_hadamard_character_selection`
+records the full operator-valued character responses without asserting that
+the four character maps are mutually orthogonal under that hypothesis. The
+new reusable `Tetraktys.tetraktys_tripotency_defect_readout` records the exact
+cubic defects as `V * Φ - Φ` and `-(V * J - J)`, isolating the additional
+range equations involved in the proposed tripotency conclusions. A1–A12
+source correspondence is now audited; later A13–A44 occurrences remain open.
+
+#### Focused source audit: shared-link A13–A16
+
+- A13's homogenized partition and four channel readouts match
+  `Homogenized.archetype_A13_homogenized_projectors`.
+- A14's ordered unipotent action, including the cross-conjugation difference
+  `-V * Φ`, matches `Unipotent.archetype_A14_unipotent_tetraktys_action`.
+- A15's source form follows from `Homogenized.archetype_A13_homogenized_projectors`,
+  `hProj_mass_mul`, and `archetype_A15_second_order_orthogonality`: the first
+  application is `8 • V²` times the mode, and projector covariance gives the
+  stated `64 • V⁴` second iterate. Its general pairwise-annihilation form is
+  already stronger than the four displayed examples.
+- A16's Weyl product, metric centralization, corner exchange, and Steinberg
+  factorization are covered by
+  `Unipotent.archetype_A16_cayley_weyl_steinberg_reflection`. The source's
+  additional phase-centralization and exact conjugation formula for `P` are
+  now exposed together as
+  `Unipotent.weylJ_phase_centralizer_and_idempotent_conjugation`.
+
+These source-to-owner matches were included in the successful locked builds of
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized` and
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03. Later
+A17–A44 source occurrences remain unaudited.
+
+#### Focused source audit: shared-link A17–A20
+
+- A17's six ordered braid/inverse expansions match
+  `Unipotent.steinbergBraid_dual_expansion_and_difference`. The source's
+  additional collapse criterion is now exposed as
+  `Unipotent.steinberg_braids_collapse_iff_corner_absorption`.
+- A18's two-sided inverse laws are already owned by
+  `Unipotent.steinbergBraid_mul_inv` and
+  `Unipotent.steinbergBraidDual_mul_inv`; its displayed cross-product defect
+  now has the direct reusable statement
+  `Unipotent.steinberg_braid_cross_product_defect`.
+- A19's Weyl reflection formula is covered by
+  `Algebra.SteinbergBraidDefectSpine.weyl_sandwich_s`. The transcript's short
+  Steinberg-reflection polynomial is not the verified word expansion;
+  `braid_reflection_s` records the corrected ordered expression.
+- A20's full-ring intertwining laws match
+  `Homogenized.archetype_A20_weyl_clifford_covariance_of_homogenized_projectors`.
+
+These source-to-owner matches and corrections were kernel-checked by the
+successful locked builds of `InfoGeometry.Algebra.SteinbergBraidDefectSpine`,
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized`, and
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` on 2026-11-03. Later
+A21–A44 source occurrences remain unaudited.
+
 ### Source-order batch: `1ofa...`, A45–A48
 
 This transcript reuses labels already used by the `1t9...` conversation. For
@@ -90,6 +216,25 @@ the existing limit carrier. This supports the named polynomial channels and
 bonding maps; it does not promote a generic DAG into a colimit or transport
 every construction in the archive.
 
+### Source-order batch: `1ofa...`, A49–A50 (Golden–Bogoliubov claims)
+
+- The archive's A49 Golden–Bogoliubov defect/square identities were not
+  present under their archive-specific contracts after repository-wide owner
+  search. They are now stated as
+  `archetype_A49_golden_bogoliubov_defect_and_square` in
+  `KantorBogoliubovSpinePoset.lean`, using prefixed transfer/Nambu operators to
+  avoid colliding with the separate `goldenOp` definition in the
+  Sylvester–Wigner–DeWitt owner. The declaration is staged and awaits the
+  shared locked Lean build.
+- The archive's A50 double-commutator oscillator channel is partly covered by
+  `gradingPerturbOscChannel` and
+  `archetype_A58_grading_double_commutator_projectors_and_mode_reconstruction`.
+  These establish the named `J` and `Φ − Σ` channel values in the Peirce
+  carrier. The transcript's Nambu vocabulary (`nambuBogoliubov`, dark mode,
+  amplitude mode, and `zetaSum1`) has no repo-owned definitions; the existing
+  channel result is the exact algebraic content, not evidence for a physical
+  oscillator or frequency interpretation.
+
 ### Source-order batch: `1ofa...`, A53–A54
 
 The A53 fifth-order annihilator is already proved in
@@ -105,6 +250,10 @@ formulas do not follow. New declarations
 corrected identities without division. The separate support decomposition in
 `PeirceSpine.SupportedProjectors` uses actual orthogonal endomorphism
 projections and is not inferred from division by the charge coefficients.
+The source-facing corrected synthesis is
+`KantorBogoliubovSpinePoset.archetype_A53_corner_charge_extraction_and_fifth_annihilator`;
+it combines the fifth-order annihilator, grade-zero readout, corrected ±1
+readouts, and the ±2 readouts in one statement.
 
 For A54, `SandwichBrackets` proves the first raising/lowering derivation
 identities and the general two-sided sandwich commutator rule. Its
@@ -112,7 +261,569 @@ identities and the general two-sided sandwich commutator rule. Its
 `Q₊ X Q₋ − Q₋ X Q₊`. The archive's proposed diagonal expression
 `Q₊ X Q₊ − Q₋ X Q₋` is false in general. The owner module also explicitly
 declines to infer closure of the selected operators as a Kantor–Koecher–Tits
-Lie algebra from these identities alone.
+Lie algebra from these identities alone. The cross-grade commutator table is
+assembled in `KantorCrossGradeBrackets.kantor_cross_grade_brackets`; the
+corrected crossed-support composition and its residual are collected in
+`KantorBogoliubovSpinePoset.archetype_A54_A55_crossed_support_extremal_brackets`.
+
+### Source-order batch: shared-link transcript, A105–A108 (Zorn cyclotomic paths)
+
+This batch is the A105–A108 occurrence in the 2026-11-03 shared-link export;
+the labels are reused elsewhere (for example, `TelegrapherTwoStateMasterPoset.lean`
+has different A105–A108 contracts). The current owner is
+`PeirceSpine/IdempotentZornChainArchetypes.lean`.
+
+- A105's chain-level reverse/forward factorization is now stated as
+  `zorn_adjacent_cyclotomic_factorization`. It derives square-zero arrows and
+  reverse annihilation from the finite three-shell partition, and records
+  `A² = N₁₂N₂₃`, `A³ = A⁴ = 0`, the ordered linear factors, two quadratic
+  cyclotomic factorizations, and the one-sided unipotent inverse identities.
+  The additional product identity
+  `Φ₃(A) Φ₆(A) = 1 + A²` is supported by
+  `chainCyclo3_mul_chainCyclo6_of_fourth_power_eq_zero`. The nested-chain
+  specialization and its generic helper declarations were checked by the
+  locked build of
+  `InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentZornChainArchetypes`
+  on 2026-11-03; it completed successfully (930 jobs, zero errors).
+- A106's closed-cycle cube and cyclotomic remainder are owned by
+  `zorn_cycle3_square`, `zorn_cycle3_cube`,
+  `zorn_cycle3_cyclotomic_remainders`,
+  `zorn_cycle3_cyclotomic_norm_remainder`,
+  `zorn_cycle3_mass_commutes_with_arrows`, and the explicit unit/anti-periodic
+  shell corollaries. The return mass is not assumed to be `1` or `-1`; those
+  root-of-unity conclusions require an explicit shell hypothesis. These
+  declarations were included in the same successful locked build. The direct nested-flag wrapper
+  `nested_zorn_cycle3_cube_and_mass_centralizer` specializes the cube, all
+  three arrow-centrality laws, and commutation of the cycle mass with the full
+  cycle operator to the shells of `P₁ ≤ P₂`;
+  `nested_zorn_cycle3_cyclotomic_remainders` exposes both cyclotomic remainder
+  identities at that same flag interface, retaining the operator-valued
+  return mass.
+- A107's Reynolds operation is `zornCycleReynolds3`. Its site readout theorem
+  `zorn_cycle_reynolds3_site_readout` states the directed path conditions
+  explicitly; it does not divide by three or assert an averaging projector
+  over arbitrary characteristic. The cycle-prime orthogonality claims need
+  their own exact hypotheses and are not implied merely by the Reynolds
+  identity. The missing path-level factorizations are now stated as
+  `cyclic_path_primes_pairwise_annihilate` and
+  `cyclic_path_prime_euler_product`, with the Zorn-corner specialization
+  `zorn_cycle3_prime_euler_product`; six Peirce-corner annihilation laws are
+  now exposed by `zorn_cycle3_primes_pairwise_orthogonal`, and the combined
+  nested-flag statement is `nested_zorn_cycle3_prime_euler_and_orthogonality`.
+  The unit evaluation and its commutation law are `zorn_cycle_reynolds3_one` and
+  `zorn_cycle_reynolds3_one_commutes`. The site readout now also has the
+  nested-flag specialization `nested_zorn_cycle_reynolds3_site_readout`.
+  These declarations were included in the same successful locked build.
+- A108's four-vertex path algebra is stated generically in
+  `three_step_path_cyclotomic_factorization` and now realized from a nested
+  three-idempotent flag by `four_step_shell_partition` and
+  `four_step_zorn_path_cyclotomic_factorization`. Three ordered square-zero
+  arrows yield the cubic path term, fourth-power vanishing, forward/reverse
+  products, and two-sided inverse. It is finite directed corner algebra; the
+  name “Zorn chain” does not invoke Zorn's lemma. This specialization was
+  included in the same successful locked build.
+
+### Source-order batch: current thread, A109–A116 (Zorn–Kitaev–Plabic)
+
+The three-corner chain and its directed arrows are owned in
+`PeirceSpine/IdempotentZornChainArchetypes.lean`,
+`PeirceSpine/ZornKitaevMajoranaChain.lean`, and
+`PeirceSpine/ZornKitaevMajoranaChainFull.lean`. These are ring identities over
+an associative unital ring with the stated corner orthogonality/absorption
+hypotheses; they do not require scalar diagonal models.
+
+- The local link tetraktys and the two-link square/edge-defect laws are proved
+  by `directed_pair_tetraktys`, `directed_two_link_square_laws`,
+  `zorn_shell_kitaev_defect_laws`, and
+  `total_chain_squares_and_anticommutator`. The surviving length-two edge paths
+  must be retained in the total squares; they are not generally zero.
+  `nested_zorn_shell_kitaev_defect_laws` now provides the direct nested-flag
+  specialization through `three_shell_partition`.
+- The endpoint long-root Majorana tetraktys is now connected directly to a
+  nested idempotent flag by `nested_zorn_edge_majorana_tetraktys`, which
+  specializes the square-zero and split-signature laws from
+  `zorn_edge_majorana_tetraktys` through `three_shell_partition`.
+- Boundary edge operators have zero support in the middle corner and commute
+  with its compressed observables by `zorn_edge_modes_are_invisible_to_interior_corner`
+  (also specialized as `edge_bulk_decoupling`). This is algebraic decoupling
+  from that corner, not by itself a dynamical zero-mode or protection theorem
+  for arbitrary perturbations on the full chain. The nested-flag instance is
+  now exposed as `nested_zorn_edge_modes_are_invisible_to_interior_corner`.
+  The explicit anticommutator readout with every compressed middle-corner
+  observable is exposed as `zorn_edge_modes_anticommute_with_interior_corner`,
+  derived from the stronger two-sided zero-product theorem; its direct nested
+  flag interface is `nested_zorn_edge_modes_anticommute_with_interior_corner`.
+  The same zero-product argument now covers the complete endpoint tetraktys:
+  `zorn_edge_tetraktys_anticommutes_with_interior_corner` and its nested-flag
+  specialization include both `edgeMetric13` and `edgeSpin13` as well as the
+  two Majorana modes.
+- Full-chain conservation is conditional: `zorn_edge_bridge_is_chain_zero_mode_iff_path_balance`
+  identifies it with equality of the two directed three-hop return paths.
+  Orthogonality alone does not establish the transcript’s unconditional
+  “boundary zero mode” claim.
+- The Kasteleyn-twisted bracket is corrected in
+  `zorn_plabic_twisted_chain_brackets`: its commutator contains the surviving
+  edge bridge as well as the twisted spin term, and its anticommutator is zero.
+  Thus the transcript’s proposed pure-spin commutator and pure-boundary
+  anticommutator split does not hold under these hypotheses.
+- Middle-corner elimination is the ring identity
+  `zorn_three_corner_middle_contraction_readout`; it leaves diagonal return
+  products and the edge bridge. The theorem makes no planarity, positive
+  Grassmannian, boundary-measurement, or cluster-mutation assertion.
+  `nested_zorn_three_corner_contraction_readouts` now specializes both the
+  symmetric and alternating contraction identities to shells of `P₁ ≤ P₂`.
+- For the repeated A113–A116 occurrence in the shared-link snapshot, A113's
+  alternating parity law is already owned by
+  `zorn_plabic_parity_link_and_edge_action` and
+  `zorn_plabic_parity_grading`. Its hypotheses are orthogonal idempotent
+  corners summing to one; it establishes the stated left parity action,
+  link anticommutation, and fixed edge modes. The complementary left-action
+  identities on the two `J` link generators are now exposed as
+  `zorn_plabic_parity_j_link_action`, derived from the parity involution and
+  the `Φ` actions. `nested_zorn_plabic_parity_grading` now specializes these
+  conclusions directly to the shell partition of `P₁ ≤ P₂`. It does not
+  define a Postnikov network or a positive Grassmannian point.
+- A114's displayed product identity labels the edge bridge incorrectly, and
+  its proposed commutator/anticommutator split is false under the stated
+  orthogonality assumptions. `zorn_plabic_twisted_chain_brackets` proves the
+  corrected ordered product
+  `J̃_K * Φ_K = Σ₁₂ - Σ₂₃ + Φ₁₃`, commutator equal to twice that entire term,
+  and zero anticommutator. The related two-link total-chain formulas are
+  separately owned by `total_chain_squares_and_anticommutator`. The omitted
+  companion twist `Φ̃_K = Φ₁₂ - Φ₂₃` is now recorded by
+  `zorn_plabic_twisted_phi_chain_brackets`: its product with `Φ_K` is
+  `V₁₂ - V₂₃ + J₁₃`, its commutator is `2 • J₁₃`, and its
+  anticommutator is `2 • (V₁₂ - V₂₃)`. This corrects the transcript's
+  claim that the commutator is `-2 • Φ₁₃`. The nested-flag specialization
+  `nested_zorn_plabic_twisted_phi_chain_brackets` now derives this result
+  directly from `P₁ ≤ P₂` via `three_shell_partition`, rather than leaving
+  the connection at abstract orthogonal-shell hypotheses.
+- A115's four-arrow spin action has the reusable owner
+  `two_link_spin_action_on_paths`; its hypotheses explicitly retain the
+  surviving path products. The unconditional zero-curvature assertion is
+  corrected by `zorn_link_spin_derivation_curvature`, which reduces the
+  commutator of the sum/difference inner derivations to
+  `-2 • ad_[Σ₁₂,Σ₂₃](X)`. Thus vanishing needs an additional annihilation
+  hypothesis on this correction; it does not follow from the path setup.
+  `nested_zorn_link_spin_action_on_boundary_paths` specializes these
+  identities to the shells of a nested idempotent pair.
+  `nested_zorn_balanced_twisted_spin_parallel_edge_modes` derives pair-level
+  parallelism for both boundary Majorana combinations under the two explicit
+  oriented path-balance equations; balance on only one path is insufficient.
+  The endpoint modes' two-sided zero-product action on all compressed middle
+  corner observables is exposed at the nested-flag level by
+  `nested_zorn_edge_modes_annihilate_interior_corner`, strengthening the
+  already available nested commutator/anticommutator readouts.
+  The owner semantic-vacuity scan reports zero findings. The placeholder trust
+  audit reports zero hard findings and three soft tactic-only notices on
+  explicit `noncomm_ring` proofs; separately, the locked build of
+  `InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentZornChainArchetypes`
+  and `InfoGeometry.OperatorAlgebra.PeirceSpine.ZornKitaevMajoranaChainFull`
+  completed successfully on 2026-11-03 (930 jobs, zero errors).
+- A116's first contraction is already proved by
+  `zorn_three_corner_middle_contraction_readout`. It leaves two diagonal
+  return products and both directed end-to-end paths. The supplied dual
+  contraction's claimed `... - J₁₃` boundary term has a sign/path error.
+  `zorn_three_corner_twisted_middle_contraction_readout` proves the corrected
+  expression `E₂ + Q₁₂ + Q₃₂ - Φ₁₃` from the four displayed orthogonality
+  relations and middle idempotency. Both directed end-to-end paths therefore
+  occur with negative sign. No general square-move law follows:
+  `PlabicKreinMatrixBridge.lean` expressly limits its conjugation
+  result, and `PlabicKreinTwistedClusterMutation.lean` uses a finite
+  four-coordinate carrier over a commutative ring.
+
+The related finite Majorana dimerization contract is implemented separately
+in `Quantum/KitaevDimerizationSwitch.lean`, with its exact finite matrix
+instance routed through `Quantum/All.lean`. Its contract explicitly excludes
+spectral-gap, parameter-loop, and parity-pump conclusions. The source-order
+labels A109–A116 are provenance labels, not eight independent theorem
+statements; the owner declarations above are the kernel-facing units to audit.
+
+### Source-order batch: `1ofa...`, A55–A65 (defect, tripotent, cyclotomic, and channel frames)
+
+These labels are reused elsewhere in the exports, so this batch refers only to
+their occurrence in `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`.
+
+- A55's defect polarization, Peirce odd-grade specializations, and transfer
+  iterate formulas are already represented by
+  `GeneratorDefect.archetype_A55_idempotency_defect_grade_generator` and its
+  named component lemmas. The transcript's longer theorem name is not the
+  repository declaration name; compare exact propositions rather than
+  assuming label/name identity.
+- A56's tripotent polynomial and scaled color expressions are formalized in
+  `TripotentDefect.lean`. In arbitrary characteristic the positive/negative
+  expressions are twice idempotent, not automatically idempotents; the factor
+  `2` remains in the theorem. The tripotent identities for `ad_P` are
+  separate operator statements, and neither collection by itself proves an
+  `su(3)` Lie-algebra realization.
+- A58–A60 cyclotomic/reflection calculations have ring-level owners in
+  `CyclotomicBridge.lean`; their group-like relations carry explicit powers
+  of `genV` off shell. The S3 specialization is conditional on the unit shell
+  and does not establish an ambient Galois group or field extension.
+- A61–A65 are owned as operator channel decompositions and defect recursions in
+  `GolayLeechMOGSheetPoset.lean`. The checked theorem contracts resolve
+  scaled sums of named operators and their compression formulas. Their types
+  do not construct classical Golay codes, the Leech lattice, a Miracle Octad
+  Generator, a code space, or a Knill–Laflamme error-correction system; those
+  interpretations require additional carriers and maps. Likewise, the
+  all-scale recursion is an algebraic iteration, not a physical
+  renormalization-group or fractal theorem.
+
+The additional A55/A57/A58 summary pasted in the current thread was checked
+against those owners. Its A55 prose overstates the extremal Kantor result:
+`KantorBogoliubovSpinePoset.lean` proves the crossed-support formulas and
+`extremal_kantor_anticommutator_annihilates_even_core`; it does not prove that
+the anticommutator scales both `V` and `Σ` by `V²` or that the commutator is a
+`V²`-scaled Hodge star. Those asserted actions conflict with the proved
+annihilation on the even core and must not be promoted. The pasted A57
+Bogoliubov/NJL vocabulary is also not the source contract represented by
+`archetype_A57_grading_perturbation_commutator_modes`: that owner states
+commutator and double-commutator identities for the grading perturbation, not
+the named Nambu modes or a physical spectrum. Likewise A58's exact owner is
+`archetype_A58_grading_double_commutator_projectors_and_mode_reconstruction`;
+its proved projectors and reconstruction laws are algebraic and do not supply
+the physical “dark vacuum” or “quasiparticle” interpretations. No duplicate
+theorems were added because these valid algebraic contracts already have
+owners; the extra claims are retained here as rejected scope, not silently
+folded into them.
+
+A57's occurrence is a particularly strong example of why the prose must be
+filtered: although `orthogonal_idempotents_color_tripotent` and
+`colorTripotent_corner_charge` prove tripotency, scaled color readouts, and
+corner charges, the retrieved Lean source does not establish the advertised
+`su(3)` identification or “gluon” interpretation. Preserve the ring identities
+as proved and leave those representation claims unpromoted.
+
+### Source-order batch: `1ofa...`, A66–A69 (braiding and sheet operators)
+
+- A66, A67, and the sheet-swap/decoder A68–A69 claims have owner declarations
+  in `GolayLeechMOGSheetPoset.lean`. They are operator channel identities over
+  `[Ring B]`; names such as “Leech”, “MOG”, and “decoder” do not add a lattice,
+  code, or error-correction structure to their types.
+- The same transcript reuses A68 for a distinct diffusion/focusing statement.
+  The repository's A68 label already names the single-sheet swap theorem, so
+  the additional base decomposition is recorded as
+  `archetype_A68_diffusion_focusing_decomposition`. It states the two
+  second-derivation decompositions and their actions on `genPhi` and `genJ`.
+  Its all-scale extension is now recorded as
+  `archetype_A68_all_scale_diffusion_focusing_balance`, using the existing A64
+  tower decomposition and A66 cone-sheet commutation theorem. Both declarations
+  were included in the successful locked build of
+  `InfoGeometry.OperatorAlgebra.PeirceSpine.GolayLeechMOGSheetPoset` on
+  2026-11-03 (9,019 jobs, zero errors).
+- The extracted prose's “soliton”, “mass gap”, and “wave” readings are not
+  consequences about dynamics from these ring identities. Only the displayed
+  algebraic equalities are retained.
+
+### Shared-link source batch, A84–A87 (Cartan norm and DeWitt factorization)
+
+This is the A84–A87 occurrence in the 2026-11-03 shared-link snapshot, not the
+unrelated A84–A87 labels in the longer `1ofa...` export. It now has the focused
+owner `PeirceSpine/PolarDeWittIwasawa.lean`, imported by
+`OperatorAlgebra/PeirceSpine.lean`.
+
+- `archetype_A84_cartan_clifford_norm` proves the stated Cartan action and
+  quadratic norm identities over `[Ring B]` with an idempotent cut.
+- `archetype_A85_parity_scale_factorizations` proves the exact parity-times-
+  metric factorizations and defect-square formulas. These are algebraic
+  factorizations; they do not establish a positive radial scale or a general
+  polar decomposition for arbitrary ring elements.
+- `archetype_A86_chiral_scale_corner_actions` proves the block-diagonal scale
+  action on both Peirce cones. The source's bilinear rescaling statement for
+  arbitrary independent scales needs extra compatibility hypotheses and is
+  not included as written. The later shared-link A86 source variant also
+  specifies the `V - 1` and `V + 1` polynomial scales. Its self-adjointness,
+  block multiplication, identity/parity specializations, and concrete
+  Clifford-metric rescaling are now recorded in
+  `archetype_A86_chiral_scale_theta_multiplication_and_special_values` and
+  `archetype_A86_chiral_scale_clifford_metric_rescaling`.
+- `archetype_A87_bruhat_and_dewitt_factorizations` proves the Bruhat inverse,
+  Steinberg factorization, and DeWitt sandwich identities. The `K·A·N` name
+  is treated as an algebraic factorization, not a Lie-group Iwasawa theorem.
+  The source A87 fence's final Clifford-norm readout is now exposed separately
+  as `archetype_A87_dewitt_scale_clifford_norm`. The omitted Cartan conjugation and
+  expanded Steinberg identities are now stated in
+  `archetype_A87_cartan_and_expanded_iwasawa_readout`. The source prose's
+  `(1 - V, 1)` chiral-scale product is not the claimed short expression in a
+  general ring: `archetype_A87_chiral_scale_factorization_with_residual`
+  retains the `N₊N₋N₊`, `N₋N₊N₋`, and `Q₋²` terms.
+
+The source-specific owner
+`InfoGeometry.OperatorAlgebra.PeirceSpine.PolarDeWittIwasawa` was checked by
+the locked build on 2026-11-03; it completed successfully (954 jobs, zero
+errors).
+
+### Shared-link source batch, A88–A96 (boundary spinors and bulk/boundary channels)
+
+This is the A88–A96 occurrence in the 2026-11-03 shared-link snapshot. The
+numbers collide with the telegrapher/BDG labels in
+`TelegrapherTwoStateMasterPoset.lean`; the source-specific names and contracts
+must therefore be used.
+
+- A88's full source-specific package is now stated in
+  `archetype_A88_zero_volume_nilpotent_boundary_and_stokes_law` in
+  `BoundaryProjectiveSpinorClosure.lean`; it composes the existing boundary
+  evaluations with the polar owner's zero Clifford norms and derived
+  coboundary readouts. A89 now also has `archetype_A89_affine_chart_nambu_factor_identities`,
+  which connects chart displacements, the existing Bergman factor, and the
+  Nambu Clifford norm/square formulas. It does not construct a conformal
+  compactification or a projective horizon. A90's right annihilation and full
+  two-state generator actions are collected in `internal_two_state_spinor_action`;
+  this establishes an algebraic module action, not a pure state or GNS
+  representation.
+- A91's proposed universal projective scaling needs commutation hypotheses;
+  `archetype_A91_scaled_sandwich_commutator_residual` now records the exact
+  defect as a sandwich of `[X,V]`, refining the generic conditional
+  `ordered_sandwich_scale_factorization`. A projective quotient, GNS state, or
+  Plücker embedding is not inferred from that ring identity. A92's source
+  packet is now collected in
+  `archetype_A92_chiral_harmonic_and_parafermion_boundary_zero_modes`, reusing
+  the existing top-power annihilation lemma and recording the four chiral
+  corner equations.
+- The A88–A92 owner had been staged but was not reachable from the
+  `PeirceSpine.lean` umbrella. It is now imported there. Its umbrella build
+  remains separate from the direct owner build recorded below.
+- The source-facing algebraic A93–A96 declarations are identified individually
+  below and the two direct owners were built. This does not promote the
+  “holographic”, entanglement, Weyl-anomaly, density-matrix, or error-correction
+  interpretations: those require state, trace, metric, or code carriers and
+  maps not supplied by the ring identities.
+- A93's proposed reconstruction
+  `{V,E} - [Φ,{Φ,E}] = 2 (N₊ E N₋ + N₋ E N₊)` is false in general. The
+  identity `[Φ,{Φ,E}] = [V,E]` and expansion of the left side give the exact
+  ordered result `2 E V`. The reusable theorem
+  `Tetraktys.tetraktys_nested_bulk_expression` and the source-facing
+  `BoundaryProjectiveSpinorClosure.boundary_bulk_nested_bracket_readout` now
+  record the corrected laws over `[Ring B]`; the crossed-corner transfer
+  remains a distinct operator. The source-facing A93 conjunction is now
+  assembled in `BulkBoundaryTransfer.archetype_A93_bulk_boundary_transfer_corrected`:
+  it combines the cross-sandwich support/filter, the two parity intertwiners,
+  the `{Φ,[Φ,E]}` connection identity, the corrected `2 E V` remainder, and
+  the distinct double-commutator reconstruction of the crossed-corner transfer.
+  Its direct locked build completed successfully on 2026-11-03
+  (`InfoGeometry.OperatorAlgebra.PeirceSpine.BulkBoundaryTransfer`, 614 jobs,
+  zero errors), separately from the `BoundaryProjectiveSpinorClosure` build.
+- A94's advertised left-only Laplacian `ΔΦ(X)=2 V X` is likewise false for
+  arbitrary `X`: the owner `Orientation.hodgeLaplacianPhi_eq` proves
+  `2 (V X + X V)`, while `LaplacianHomogenization` supplies the corrected
+  connection-adjusted left-weight identity. The source's operator anomaly
+  formulas are covered separately by `GeneratorDefect`; they do not establish
+  a Fefferman–Graham geometry. The corrected two-sided Laplacian, corrected
+  Hodge-star Laplacian, exact defect mismatches, and the two compensated
+  cancellations are now assembled in
+  `archetype_A94_corrected_radial_laplacian_and_defect_cancellation` in
+  `BoundaryProjectiveSpinorClosure.lean`.
+- A95's ring-level reduced-state calculation is now represented by
+  `BoundaryProjectiveSpinorClosure.boundary_bruhat_reduced_state_readout`.
+  It proves idempotency of the conjugated operator, both Peirce compressions,
+  the signed `V`/`Σ` readouts, and the defect sum. “Density matrix,” trace,
+  and entanglement entropy interpretations still need their own carriers. The
+  source contract is also stated directly as
+  `moebius_bruhat_cut_reduced_readout`, using the actual conjugated cut and
+  its two Peirce diagonal compressions; the proof reduces this statement to
+  the existing ordered Möbius–Bruhat and Peirce readout definitions and also
+  states the global idempotency defect and summed reduced-defect law directly.
+- A96's source-facing `boundary_bulk_error_filter` now states the ordered
+  Bruhat invariance and the displayed `hProjV` shear-kernel identities. Its
+  scope is these specified conjugations and generators; it is not a general
+  quantum error-correcting code or a theorem about arbitrary boundary errors.
+
+The direct locked build of
+`InfoGeometry.OperatorAlgebra.PeirceSpine.BoundaryProjectiveSpinorClosure`
+completed successfully on 2026-11-03 (8,999 jobs, zero errors). This verifies
+the declarations owned in that module and its imported dependencies; it does
+not build `BulkBoundaryTransfer.archetype_A93_bulk_boundary_transfer_corrected`
+or the `PeirceSpine.lean` umbrella.
+
+### Shared-link source batch, A97–A104 (Klein channels and Krein glide)
+
+The shared-link transcript reuses A97–A100 for a separate exponential,
+loxodromic, modular-flow, and master-synthesis sequence (documented below).
+The Klein/Krein A97–A104 contracts here are another occurrence, with owners in
+`OperatorAlgebra/PeirceSpine/TelegrapherTwoStateMasterPoset.lean`; labels alone
+do not identify a transcript turn. The source-specific contracts are:
+
+- A97 `archetype_A97_klein_four_sandwich_channel_realization_and_plabic_parity_transport`
+  gives the four sandwich-channel equalities conditionally on `V = 1`, plus
+  parity transport for the defined boundary and twistor operators. The shell
+  hypothesis is necessary for the automorphism interpretation.
+- A98 `archetype_A98_all_mode_tetraktys_sandwich_covariance_and_center_commutant`
+  and A99 `archetype_A99_all_mode_group_sandwich_fourier_character_eigenspaces`
+  are arbitrary-ring statements indexed by `r : ℕ`. They prove the displayed
+  `V` commutants, ordered sandwich character laws, and integer-scaled Fourier
+  channel readouts; these do not construct a Virasoro representation or divide
+  by the Fourier coefficient `8`.
+- A100–A104 are in the `StarRing` tier with explicit `star P = P`. A100 proves
+  the centered-chart/carrier inverse laws and Krein reflection's
+  anti-multiplicativity. A101 gives fixed/off-seam characterizations and mode
+  classifications. A102 gives carrier/chart glide intertwining and the
+  double-glide formula under its seam hypothesis. A103 proves identities for
+  the specifically defined `xiCenteredOp` and transports its zero set through
+  the stated reflections. A104 records the single- and double-glide defect
+  formulas and the same-seed mode shift.
+- Names such as “Krein,” “wallpaper glide,” “Euler/Bergman,” and “Virasoro”
+  denote these definitions and equations in the owner. They do not by
+  themselves supply an analytic zeta function, an ambient group action,
+  spacetime geometry, or a continuum theorem.
+
+The source-specific owner
+`InfoGeometry.OperatorAlgebra.PeirceSpine.TelegrapherTwoStateMasterPoset` was
+checked by the locked build on 2026-11-03; it completed successfully (9,039
+jobs, zero errors). The build emitted existing linter warnings, so this is
+kernel evidence for the declarations' types, not a warning-free quality-gate
+result.
+
+### Archive batch: `17Kj7o...`, first matrix-operator packet (2026-11-03)
+
+The first Lean fence in `cached/aistudio_extracts/aistudio_prompt_17Kj7oLBHPfoWvQLKPwwve8pcsDezqpkG/lean_fences.md`
+organizes five foundational matrix archetypes: Lie/Jordan and star identities,
+inner derivations, projection compression, trace pairing, and unitary/Kraus
+maps. Repository-wide owner search finds the following theorem-level coverage:
+
+- Lie/Jordan and derivation laws are in
+  `OperatorAlgebra/PeirceSpine/Tetraktys.lean`,
+  `Canonical/OperatorLeibnizDerivationSimplexCapstone.lean`, and
+  `OperatorAlgebra/EpistemicCompilerPeirceBridge.lean`.
+- Star reversal of the Lie/Jordan brackets and the self-adjoint/skew-adjoint
+  corollaries are in
+  `OperatorAlgebra/NoncommutativeContextInteraction.lean` as
+  `star_commutator`, `star_anticommutator`,
+  `selfAdjoint_anticommutator`, and `selfAdjoint_commutator_skew`.
+- The source packet's projection compression identities now have the pair of
+  arbitrary-ring / arbitrary-star-ring owners
+  `PeirceSpine.projection_commutator_geometry` and
+  `PeirceSpine.star_compression_eq_of_selfAdjoint`.
+- The trace-adjoint identity for the commutator action is owned by
+  `Physics/MatrixTraceBimodulePairingNative.lean` as
+  `commutator_tracePairing_native`; finite trace-preserving Kraus sums are in
+  `Quantum/ChoiCompletePositivity.lean` as
+  `trace_krausMap_of_completeness`.
+- Noncommutative unitary conjugation preserving commutators and
+  anticommutators is in `OperatorAlgebra/NoncommutativeKrausChannel.lean`.
+  The arbitrary-star-ring result needs only the left inverse equation for
+  multiplicativity, while unitality has its own right-inverse hypothesis.
+- The first packet's finite matrix hypotheses (`CommRing` coefficients plus
+  matrix multiplication) still allow noncommuting operators. Exact-name search
+  found no owner for its projection sandwich-zero and double-commutator
+  readouts, so `PeirceSpine/Basic.lean` now adds the reusable arbitrary-ring
+  theorem `projection_commutator_geometry`. The compression-self-adjoint
+  statement is now generalized to arbitrary star rings by
+  `PeirceSpine/StarCompression.lean` (`star_compression_eq_of_selfAdjoint`)
+  and imported by `OperatorAlgebra/All.lean`.
+
+The two new Peirce owners were kernel-checked by the locked build on
+2026-11-03: `InfoGeometry.OperatorAlgebra.PeirceSpine.Basic` and
+`InfoGeometry.OperatorAlgebra.PeirceSpine.StarCompression` completed
+successfully (674 jobs, zero errors). This verifies the Lean statements in
+their declared arbitrary-ring and arbitrary-star-ring scopes; it does not
+promote the source packet's broader physical interpretations.
+
+The same archive's later LXXVI–LXXX operator packet maps to
+`PeirceSpine/ParaKahlerBregmanModularNoetherPoset.lean`, which owns the
+source-facing corrected stages M₁–M₅. In particular M₁ covers the curvature
+commutator and Hessian, M₂ the ordered quadratic Bregman identity and
+`Σ² = V²`, and M₄–M₅ the chiral eigenmode and four-wave/Lax identities. M₃
+records sign corrections to the archive's Einstein/Onsager display:
+`F_J * F_Φ = -4 • ((V * V) * Σ)` and
+`L_{Φ,J}(Φ) = -4 • (V * J)`; the source has positive signs for both. The
+owner's theorem statements and proofs supply the corrected ring identities;
+physical interpretations in the transcript do not assert analytic transport
+or an actual NLS evolution.
+
+The following LXXXI fence (turn 0134) is already covered by
+`PeirceSpine.Tetraktys.archetype_A6_superoperator_ladder_recursion`: its six
+ladder actions, universal Jacobi difference, invariant annihilations, and
+negative `16 • V²` sum-square actions appear together in that theorem. The
+source's final displayed positive-square clause is not included in its Lean
+conclusion. The missing ordered formula is now stated as
+`Tetraktys.archetype_A81_doubled_spin_derivation_positive_square`, derived from
+the A₅ `ad_Σ²` spectrum and the additive scaling law for the inner derivation.
+
+Turn 0136's A₁–A₈ packet is source-matched by the corresponding declarations
+in `lean/InfoGeometry/PureNonCommutativeOperatorSpine.lean`; the reusable
+Peirce lemmas are independently owned in `PeirceSpine/Basic.lean` and
+`PeirceSpine/Tetraktys.lean`. The submitted code fence contains the malformed
+token `defpeirce11`, so it is not itself a compilable owner file. This is a
+duplicate formulation, not eight new independent algebraic structures.
+The packet's `trace_mul_comm_assoc` proof is particularly suspect: its final
+cyclic rewrite sequence should be checked against Lean and reduced to the
+standard trace-cyclicity theorem if that is its only content.
+
+### Shared-link source batch, exponential/loxodromic/modular A97–A100
+
+The single A97 occurrence in the 82-chunk shared-link transcript is
+`archetype_A97_dually_flat_affine_conformal_exponential_family`, followed by
+the A98 loxodromic sandwich and A99 modular-time/KMS claims. These labels
+collide with the separate A97–A100 occurrence above; use source theorem names
+and turn content rather than the integers.
+
+- A97's arbitrary-ring Peirce content is now stated as
+  `BoundaryProjectiveSpinorClosure.archetype_A97_unipotent_families_and_two_sheeted_cumulant_laws`.
+  It records exact group laws for `1 + N₊` and `1 + N₋`, their ordered
+  cross-sheet Lie/Jordan products, and the Bregman metric, skew, and two-sheet
+  kernel identities. This avoids treating a finite unipotent unit as an
+  analytic exponential.
+- A98 is now stated as
+  `PeirceExponentialModularSynthesis.archetype_A98_loxodromic_sigma_sandwich_and_bruhat_actions`.
+  It reuses the ordered `Σ`-sandwich mode lemmas and records the full forward /
+  reverse action and composition. The named analytic “loxodromic flow” is
+  represented only by these exact algebraic sandwiches.
+- A99 is now stated as
+  `PeirceExponentialModularSynthesis.archetype_A99_modular_time_and_phase_correlation_exchange`.
+  Its mixed graded term is corrected to `{V, X}`. The transcript's equation
+  identifying that mixed term with `[Σ, X]` is false in general; the repository
+  already records and proves the correction in `Supercharge.archetype_A28`.
+  Phase conjugation is a finite algebraic identity, not a state-dependent KMS
+  theorem or a construction of analytic Tomita–Takesaki flow.
+- A100's dependency graph is now represented by
+  `PeirceSpine.archetype_A100_corrected_centennial_master` in
+  `PeirceCentennialCorrectedSynthesis.lean`. It composes the A13/A17
+  homogenized channels, A34 Hodge duality, the A95 Bruhat readout, and the
+  source-facing A98/A99 packets, alongside the tetraktys, affine chord,
+  defect, and Nambu identities.
+- Two source clauses are deliberately corrected in that synthesis: the
+  Hodge Laplacian is `2 • (V * X + X * V)`, as proved by `hodgeLaplacianPhi_eq`,
+  and the mixed graded term is `{V, X}`, as proved in Supercharge A28. The
+  source's left-only `2 V X` and equality with modular time `[Σ, X]` are not
+  true for arbitrary noncommutative `X`. “KMS” remains only a label for the
+  finite conjugation identity; no state or analytic KMS condition is claimed.
+  The A98–A100 source-facing owners and master synthesis were kernel-checked
+  by a successful locked build of
+  `InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceExponentialModularSynthesis`
+  and `InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceCentennialCorrectedSynthesis`
+  on 2026-11-03 (9,036 jobs, zero errors). Existing linter warnings were
+  emitted, including in these target modules; this is not a warning-free
+  quality-gate result.
+
+### Source-order batch: `1ofa...`, A70–A86 (defect modes, ideal charts, and Zorn wedges)
+
+The archive reuses labels A70–A86 across several turns. The current owner
+surface is `OperatorAlgebra/PeirceSpine/TelegrapherTwoStateMasterPoset.lean`,
+with supporting results in `CurvatureDoubleCommutator.lean`,
+`TwoStateSandwich.lean`, `Tetraktys.lean`, and
+`BlockTriangularIntervention.lean`. The master owner declares source-specific
+contracts A70–A86 over ring or star-ring carriers; its header states that the
+formalization uses no `sorry` or custom axioms. This inventory records source
+coverage, not a fresh kernel build of that large owner.
+
+- A70–A76 cover defect-iterate cone relations, parity/unipotent conjugations,
+  double-derivation intertwining, telegrapher polynomial identities, and
+  all-depth mode formulas. The formal conclusions are operator equalities;
+  “retrocausal correction,” “soliton,” and “wave propagation” are not dynamics
+  supplied by these types.
+- A77–A82 cover homogenized channels, parity perturbations, two-state chart
+  sandwiches, star reversal, and compressed decoder operators. The chart and
+  decoder names do not by themselves construct a statistical model, code, or
+  error-correction guarantee.
+- A83's proposed commutator-curvature expression is corrected by the exact
+  mixed-curvature formulas in `Tetraktys.lean`, including
+  `phi_j_sign_flip_difference` and `phi_j_comm_expansion`; the advertised
+  formula should not be promoted as stated. A84's Zorn-wedge selectivity and
+  induced tetraktys laws have a source-specific theorem in the master owner.
+- A85's nearby explanatory comment used `+4` for `derivSqJ`, while its theorem
+  statement and proof use `-4`. I corrected the comment to match the actual
+  declaration. A86's all-mode channel ladder is likewise an operator theorem,
+  not by naming alone a Virasoro representation or a Golay/Leech/MOG code.
 
 ## Tetraktys and emergent spacetime/particles: current theorem boundary
 
@@ -134,6 +845,56 @@ matrix representation, or nearby import.
 
 ## Recovery status
 
+## Current-thread source batch: Stage `D₃₇` / `I₁–I₅`
+
+The user's D37 table is represented in the ring-level Tier 10 owner
+`OperatorAlgebra/PeirceSpine/TelegrapherTwoStateMasterPoset.lean` by
+`archetype_A120_logistic_bit_variance_partition_and_defect_duality`,
+`archetype_A121_nilpotent_idempotent_peirce_split_and_all_mode_virasoro_emergence`,
+`archetype_A122_on_shell_bit_crystallization_and_daughter_idempotent_equivalence`,
+`archetype_A123_multi_channel_bit_counting_and_orthogonal_defect_additivity`,
+and `archetype_A124_five_way_full_circle_unification_and_stage_D37_synthesis`.
+
+- `I₁` records the logistic partition, the variance/defect equalities, and
+  both product orders. The ring-only core is now exposed as
+  `logistic_bit_variance_and_defect_duality_ring`. A120's additional
+  self-adjointness conjunct has explicit `StarRing` and `star P = P`
+  hypotheses; A124 reuses the ring-only core for its D37 synthesis without
+  those hypotheses.
+- `I₂` gives square-zero Peirce cones and the stated idempotency-defect laws,
+  including mode-indexed defect identities.
+- `I₃` proves each crystallization equivalence through
+  `idempotencyDefect (genV P A C) = 0`, together with the daughter-defect
+  split.
+- `I₄` assumes both ordered zero products for channel orthogonality and
+  proves defect additivity. The integer counter uses the existing unipotent
+  winding extractor and its explicit gate/inverse.
+- `I₅` is the five displayed operator equalities in A124. Its “full circle”
+  and time-stationarity language is limited to those identities and the
+  defined `modularTimeDeriv` / `dissipativeTimeDeriv`; it establishes no
+  probabilistic variance, cohomology, or physical dynamics.
+
+The D37 owner was kernel-checked by the successful locked build of
+`InfoGeometry.OperatorAlgebra.PeirceSpine.TelegrapherTwoStateMasterPoset` on
+2026-11-03 (9,039 jobs, zero errors). The build emitted existing linter
+warnings; this is kernel evidence for the stated ring/star-ring theorem
+contracts, not a warning-free quality-gate result.
+
+### Current-thread bridge: Fréchet derivations and operator-valued forms
+
+`Optics/OperatorDerivationForms.lean` already adapts continuous Leibniz maps to
+the canonical derivation-form system and identifies inner CE curvature with
+the Peirce commutator spin. The new theorem
+`FrechetOperatorDerivation.flow_mul` feeds its explicit Leibniz law into
+`ContinuousDerivationExponential.flow_map_mul`, proving that the exponential
+flow preserves the associative product. Its scope is a complete real normed
+algebra with a continuous real-linear derivation; it does not assert an
+equivalence between arbitrary ring operators and differential forms, nor a
+Riccati or Noether theorem. The locked build of
+`InfoGeometry.Optics.OperatorDerivationForms` succeeded on 2026-11-03 (9,178
+jobs, zero errors), with existing dependency linter warnings and a deprecation
+warning in the owner.
+
 This is an initial archive-wide inventory and causal routing pass, not a claim
 that every chat archetype has been individually accepted. The detailed ledger
 must grow by source-order batches, retaining rejected formulas and corrections
@@ -141,3 +902,385 @@ as provenance. In particular, transcript claims that a vanishing quadratic
 corner product forces a vanishing boundary operator, or that a generic ring
 identity establishes entanglement, positivity, or analytic flux, are not
 accepted without additional hypotheses and a matching owner theorem.
+
+### Shared-link source batch: Plabic/Kasteleyn A113–A116 (2026-11-03)
+
+Source: the user-supplied AI Studio shared link, preserved as the 82-chunk
+snapshot `cached/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_2026_11_03_shared_link.json`.
+The final user/model pair (chunks 80–81) contains the Plabic/Kasteleyn claims.
+The corresponding owner is
+`OperatorAlgebra/PeirceSpine/IdempotentZornChainArchetypes.lean`; these
+declarations are already present in the checked-out source, so this batch does
+not create a parallel API.
+
+- A113's three-shell parity action is represented by
+  `nested_zorn_plabic_parity_grading` and its orthogonal-shell helpers. It
+  proves the involution and link/edge actions on the actual nested-idempotent
+  shells. The plabic name here means this parity grading; these identities do
+  not construct a positive Grassmannian or a Postnikov boundary-measurement
+  map.
+- A114's ordered link products and twisted brackets are covered by
+  `zorn_interlink_majorana_products`, `zorn_plabic_twisted_chain_brackets`,
+  and `zorn_plabic_twisted_phi_chain_brackets`, with nested-shell specializations.
+  The complementary parity exchange on link metric/spin operators is now
+  stated generically as `left_parity_swaps_product_sum_difference` and
+  specialized to both links by `zorn_plabic_parity_metric_spin_duality`, with
+  `nested_zorn_plabic_parity_metric_spin_duality` as the nested-flag interface.
+  The specialization also states the combined laws
+  `S (V₁₂ + V₂₃) = Σ₁₂ - Σ₂₃` and
+  `S (Σ₁₂ + Σ₂₃) = V₁₂ - V₂₃` explicitly.
+  The separate concrete nested-chain owner
+  `ZornKitaevMajoranaChainFull.corrected_plabic_twisted_connection_split`
+  states the corrected ordered product, commutator, anticommutator, and both
+  twisted-chain bracket laws directly over `[Ring B]`; it is a cross-check,
+  not a replacement for the generic shell theorem.
+  The submitted connection-split formulas require correction: for
+  `J̃ = J₁₂ - J₂₃`,
+  `J̃ * ΦK = Σ₁₂ - Σ₂₃ + Φ₁₃`, so its commutator retains the `2 Φ₁₃` bridge
+  and its anticommutator is zero. For `Φ̃ = Φ₁₂ - Φ₂₃`,
+  `Φ̃ * ΦK = V₁₂ - V₂₃ + J₁₃`; its commutator is `2 J₁₃` and its
+  anticommutator is `2(V₁₂ - V₂₃)`. These are the owner theorem's exact
+  multiplication-order/sign conventions, not the prompt's claimed pure-spin
+  or pure-bridge split.
+- A115's boundary-path spin actions are covered by
+  `zorn_link_spin_action_on_boundary_paths` and its nested specialization.
+  `nested_zorn_balanced_twisted_spin_parallel_edge_modes` proves parallelism
+  only under both displayed endpoint balance hypotheses. The proposed
+  commutation of the two inner-derivation connections on every `X : B` is not
+  established and is not a consequence of the stated data. The owner gives the
+  exact obstruction in `sum_difference_inner_derivation_curvature`: the
+  commutator of the derivations generated by `s + t` and `s - t` is
+  `-2 • [ad_s, ad_t]`, expressed as the inner derivation generated by
+  `[s,t]`. It vanishes on every `X` only with an additional centrality or
+  annihilation condition; no such condition follows from the flag alone.
+- A116's ordinary middle-corner contraction is covered by
+  `unipotent_middle_corner_contraction`,
+  `zorn_three_corner_middle_contraction_readout`, and
+  `nested_zorn_three_corner_contraction_readouts`. The alternating-sign
+  contraction is explicitly corrected in
+  `zorn_three_corner_twisted_middle_contraction_readout`: the result is
+  `E₂ + Q₁₂ + Q₃₂ - Φ₁₃`, not the submitted `... - J₁₃`, because both directed
+  length-two paths have coefficient `-1`. The owner currently proves the
+  contraction readouts. Their sign-sensitive sum and difference are now
+  exposed by `nested_zorn_three_corner_contraction_even_odd_readouts`: the
+  sum cancels the self-energy and retains the common negative bridge, while
+  the difference isolates twice the self-energy. The new
+  `nested_zorn_three_corner_readouts_fixed_by_path_parity` statement records
+  that both contraction outputs are fixed by conjugation with the actual
+  alternating-shell parity `E₁ - E₂ + E₃`; the source proof gives the
+  path-grading reflection on the A116 outputs. The owner module passes its
+  serialized locked build (928 jobs), staged proof-proxy gate, and
+  semantic-vacuity audit (zero findings). The build succeeds with existing
+  linter warnings in the owner file and a local-change warning for the
+  LeanArchitect dependency. It does not identify that involution with
+  the star-based wallpaper glide. The shared-link source also has a distinct
+  operator glide in
+  `archetype_A102_carrier_glide_wallpaper_glide_intertwining_and_double_glide_translation`:
+  its Krein reflection reverses the off-seam component and its square is a
+  translation under the seam hypothesis. The A116 readouts are not currently
+  connected to that glide: the repo search found no proved Krein-fixed law for
+  their even component or Krein-odd law for their odd component. The equal
+  bridge signs in the two contractions establish an algebraic sign pattern,
+  but do not by themselves establish the A102 reflection law or a topological
+  Möbius structure. A different, already-proved reflection is owned by
+  `PlabicKleinActionBridge.parity_transports_plabic_boundary_and_nullspace`
+  and is included in the A97 master theorem: `parityConj` is an involutive ring
+  action that transports the plabic boundary operator under `A,C ↦ -A,-C`.
+  That exact parameter-reflection law is genuine, but its carrier/definitions
+  differ from A116's three-corner contraction and A102's star-based glide;
+  no theorem currently identifies these actions. The A116
+  packet's specific two-sided inverse equations
+  for the incoming/outgoing sums are now exposed by
+  `nested_zorn_three_corner_contraction_strippers_are_inverses`, using the
+  reusable `square_zero_elementary_unipotent_inverse` lemma. The matching
+  two-sided inverse theorem for the alternating-sign incoming/outgoing
+  strippers in the twisted contraction is now exposed as
+  `nested_zorn_three_corner_twisted_contraction_strippers_are_inverses`; it
+  derives square-zero of each signed sum from the same corner relations and
+  reuses that elementary inverse lemma.
+
+The transcript's references to “positive Grassmannian,” “cluster mutation,”
+“topological protection,” and physical connections are interpretations here;
+the owner theorems prove finite ring identities and corner support only. The
+locked builds of `IdempotentZornChainArchetypes` and
+`ZornKitaevMajoranaChainFull` completed successfully on 2026-11-03 (930 jobs,
+zero errors).
+
+### Shared-link source batch: Kantor/Maurer–Cartan A51–A52 (2026-11-03)
+
+Source: the same shared-link archive, in its earlier A51–A52 code fences.
+These labels are repeated in the archive; the later occurrences are not to be
+confused with the compact A51/A52 declarations in the 58-stage spine.
+
+- A51's two ordered pullbacks are already proved by `two_cone_left_pullback`
+  and `two_cone_right_pullback` in `InnerPullback.lean`; their sum and
+  difference formulas are `two_cone_pullback_sum` and
+  `two_cone_pullback_difference` in `PullbackTriple.lean`. The Jordan triple
+  self-identity is also present as `jordanTriple_j_self`. The transcript's
+  “Maurer–Cartan” names are alternate notation for these explicit ordered
+  products; no differential-form or Maurer–Cartan equation is being claimed.
+- A52's five charge eigen-equations are covered by
+  `superChargeP_kantor_eigen` in `GolayLeechMOGSheetPoset.lean`; the first
+  through fourth iterated-charge expansions are covered by
+  `kantorDelta_expansions` there. The compact stage theorem
+  `archetype_A52_corner_sandwich_charge_spectrum` in
+  `KantorBogoliubovSpinePoset.lean` and the fifth-order/extraction results in
+  `SandwichCharge.lean` cover the companion corner-charge claims.
+- The archive's expanded A51/A52 theorem declarations are not present under
+  their transcript names in the Lean owners. This is currently an integration
+  gap, not evidence that each identity is missing: most displayed conjuncts
+  have individual owner lemmas. The newly added
+  `kantor_extremal_roundtrip_on_transition_cones` and
+  `kantor_same_sign_extremal_closure` in `KantorCrossGradeBrackets.lean`
+  formalize the A51 opposite-grade transition round trips and A52 same-sign
+  extremal closure in reusable form. The A51 packet is now assembled in
+  `KantorBogoliubovSpinePoset.lean` as
+  `archetype_A51_maurer_cartan_and_kantor_ladder_complete`. It includes the
+  Maurer–Cartan pullback sum/difference, both cone triple identities, the
+  grade-jump actions, both ordered round trips, and the `Φ`/`J` triple laws.
+  This source-facing theorem was included in the successful locked build of
+  `KantorCrossGradeBrackets` and `KantorBogoliubovSpinePoset` on 2026-11-03
+  (9,019 jobs, zero errors); it does not assert differential-form
+  Maurer–Cartan flatness.
+
+### Shared-link source batch: Möbius–Bruhat A21 factor (2026-11-03)
+
+The source's ordered A21 element and inverse expansions are now exposed in the
+existing `Unipotent.lean` owner as `moebius_bruhat_factor_expansions`. It states
+the factor and reverse-ordered inverse explicitly, preserves the distinct
+diagonal Peirce terms, and proves both inverse products. The A21 orbit's exact Bruhat-conjugated
+idempotent formula, idempotency, and metric invariance are now grouped in
+`moebius_bruhat_idempotent_orbit_and_metric_invariance`, using the same ordered
+factor and inverse. The broader
+A21 orbit and A22 cross-ratio packets still need conjunct-by-conjunct
+reconciliation with the projective-line and Hua/cross-ratio owners.
+
+The A22 convention was checked against `operatorCrossRatio` in `Unipotent.lean`:
+the owner proves its value is `+genV` and is translation invariant, while the
+source fence brackets displacements of the translated idempotent points and
+gets `-genV` and `-genSig`. These are distinct expressions, now recorded by
+`translated_idempotent_displacement_brackets`; the source's displacement
+formula is therefore formalized without identifying it with
+`operatorCrossRatio`. `Bergman.lean` separately proves that the commutator form
+is `genSig` and that `invS * operatorSymplecticForm = operatorCrossRatio`.
+The three A22 simultaneous-conjugation equations for the displacement Jordan
+bracket are now recorded in `translated_idempotent_displacement_jordan_invariance`.
+The two ordered Hua corner products, with their sum and difference readouts,
+are now exposed as `translated_idempotent_hua_cross_ratio_products`. These ring
+identities remain distinct from the source's broader interpretation as a
+universal projective cross-ratio invariant.
+
+The A23 translated-idempotent chord equations are now stated as the
+ring-level `translated_idempotent_chord_readout` in `Unipotent.lean`. It
+records the ordered products, endpoint actions, and the `Φ`, `J`, `V`, `Σ`
+readouts without asserting a Grassmannian embedding. A24's commutator-form result is already
+present as `archetype_A24_commutator_form_on_projective_line`; the newly added
+`translated_reflection_and_bergman_hua_laws` in `Bergman.lean` records the ten
+ring identities for translated involutions, Bergman–Hua products, and ordered
+reflection products, without asserting a metric space or dihedral group. The
+locked build of `InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent` and
+`InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman` completed successfully on
+2026-11-03 (826 jobs, zero errors).
+
+### Shared-link source batch: chiral QGT and Hodge operators A25–A30
+
+The A25 QGT corner decomposition and A26 inner-connection splitting are
+already represented by `Tetraktys`/`Supercharge` owner theorems. A27's original
+`archetype_A27_grading_parities` covered the left actions and parity
+conjugation; the additional right eigenvalues of `Q₊, Q₋` and explicit grading
+commutators are now stated by `chiral_parity_right_charge_and_commutator_actions`
+in `Supercharge.lean`.
+
+A28 is corrected in the owner: the transcript's mixed coboundary/codifferential
+claim equating a superoperator anticommutator with `[Σ, ·]` is false in general;
+the proved result is the Jordan multiplication `{V, ·}`. A29's source packet
+also includes left-only Laplacian formulas that are not valid as written; the
+repository's `MixedDifferentials.lean` and `KantorBogoliubovSpinePoset.lean`
+record the corrected two-sided identities and exclusions. A30's pointwise
+operator identities are covered across `Supercharge`, `MixedDifferentials`,
+and `CentralizerDifferential`; those do not alone establish a differential
+graded algebra on an independently specified space of forms. The added A27
+lemma was kernel-checked as part of the successful locked build of
+`InfoGeometry.OperatorAlgebra.PeirceSpine.TelegrapherTwoStateMasterPoset` on
+2026-11-03.
+
+### Shared-link source batch: Hodge differential and orientation A31–A34
+
+The transcript's A31 generator packet is represented by
+`archetype_A31_graded_derivations_on_peirce_generators` in
+`KantorBogoliubovSpinePoset.lean`; its detailed pointwise identities are also
+owned by the generator differential modules. This overlaps the separately
+numbered A31 de Rham-style package in the shared-link archive, so the label is
+not treated as a unique theorem identifier.
+
+A32 requires a correction at its premise. `hodgeLaplacianPhi` is the
+anticommutator of the two differential operators and its general identity is
+`2 • (V * X + X * V)`, proved as `hodgeLaplacianPhi_eq` in `Orientation.lean`.
+The archive's asserted `2 • (V * X)` formula is not valid for arbitrary
+noncommuting operators. The owner isolates the left action by defining
+`laplacianLeftWeight = hodgeLaplacianPhi + 2 • connV`; the corresponding
+homogenized-channel identities are assembled in
+`archetype_A32_laplacian_left_weight_generation_of_homogenized_channels` in
+`KantorBogoliubovSpinePoset.lean`. Thus the displayed source theorem using the
+unadjusted Laplacian is not promoted as stated.
+
+A33's half-twist and sandwich identities are covered by
+`archetype_A33_hodge_star_and_half_twists` and
+`double_half_twist_eq_spin_sandwich` in `Orientation.lean`. A34's conjugation
+identities are covered by `archetype_A34_hodge_conjugate_codifferentials`.
+The neighboring Laplacian claims are corrected there as well: the operator is
+two-sided Jordan multiplication, and its Hodge dual has the ordered
+right-action term. These owner declarations are source-confirmed; this audit
+does not add fresh kernel evidence. The A31–A34 packet is reconciled, with no
+new Lean declaration needed in this pass.
+
+### Shared-link source batch: orientation, Dirac actions, and defect tower A35–A38
+
+The shared-link archive repeats A35/A36 labels for unrelated later claims, so
+the expanded statements are tracked by source occurrence and content. The
+orientation A35 package is represented by
+`archetype_A35_chiral_self_duality_and_complement_symmetry` in
+`KantorBogoliubovSpinePoset.lean`, including the cone and QGT Hodge-star
+eigenrelations and complement transformation. A36's valid algebraic content
+is represented by `archetype_A36_left_right_parity_twisted_clifford_actions`
+and the `LeftRightActions` owner: left and parity-twisted right actions,
+their squares, and the stated cross-anticommutation. The label does not
+establish an exterior calculus or a geometric Clifford bundle.
+
+The later A35/A36 defect-level-set occurrence is reconciled with
+`DefectLevelSet.lean`, `DefectParity.lean`, and
+`DefectLevelExclusions.lean`. The source's claimed Fibonacci recurrence under
+`δ(V) = 1` is rejected: the owner proves that the submitted cubic recurrence
+would force `V = 0`, contradicting the unit-defect hypothesis in a nontrivial
+ring. The geometric truncation claim is likewise excluded by a named owner
+lemma. These are obstruction results, not an existence theorem for that level
+set.
+
+The A37 defect identities are covered in the existing defect tower owners;
+the source's generic identity `δ(-X) * δ(X) = δ(X²)` is available as an
+associative-ring algebraic law, while the Peirce-specific conjugate and norm
+claims are represented by `archetype_A37_idempotency_defect_calculus_and_unipotent_invariance`
+and its dependencies. A38's unit-level and power-recurrence content is
+represented by `archetype_A38_defect_level_set_units_and_power_recurrence`,
+with recurrence conditional on `δ(V) = 1` and the relevant theorem exclusions
+in `DefectLevelExclusions.lean`. The transcript's broader labels “Klein
+four-Galois group” and “Hilbert 90” are not established by the displayed
+resolvent equations: those equations prove explicit sandwich outputs, not a
+group action or a Hilbert 90 theorem. No new Lean declaration was needed in
+this source pass; kernel verification status remains governed by the existing
+build session.
+
+### Shared-link source batch: defect, Euler, and cyclotomic operators A39–A44
+
+The archive has multiple A39–A44 packets with shifting labels. The first
+expanded packet (latest shared-link snapshot, fences around source lines
+6708–7092) is compared by theorem content, not label, with the owner files.
+
+- **A39:** Existing owners cover the universal defect product and Peirce
+  defect iterates (`TransferDefect.lean`, `DefectTower.lean`, and the
+  `archetype_A39_*` spine theorem). `idempotencyDefect_iterate_recurrence`
+  states `δ(δ(x)) = δ(x)^2 - δ(x)`, and
+  `idempotencyDefect_iterate_via_square` gives the equivalent expansion
+  `δ(x²) - 2x³ + x`. The source's displayed expanded Peirce-cycle formula
+  instead ends with `+2(Q₊² + Q₋²)`; that does not match the polynomial
+  expansion, whose final term is `Q₊ + Q₋`, and is not promoted. The formal
+  A39 theorem's unsquared split `δ²(V) = δ²(Q₊) + δ²(Q₋)` is covered by
+  `DefectTower.genV_defect_iterate_cycle_split`; the all-depth version is
+  `genV_defect_iterates_cycle_split`. These source conjuncts are owned across
+  the generic core, Peirce specialization, and grouped spine theorem rather
+  than one transcript-shaped packet.
+- **A40:** The Euler/chiral factor products have direct coverage in
+  `ChiralEulerFactors.lean` (`chiralEuler_factorizations` and
+  `chiral_factor_product`). The generic finite Euler/Mangoldt remainders are
+  now stated as `euler_mangoldt_polynomial_remainders` in `TransferDefect.lean`.
+  One submitted partial-sum remainder is corrected there: `(1 - X) *
+  (1 + X + X²) - 1 = -X³`, not `-(X + 1) * δ(X)` (the latter equals
+  `X - X³`). The claimed analytic zeta, Möbius, and von
+  Mangoldt meanings are only names for finite ring polynomials here. The
+  Hodge-star parity product is now stated in
+  `Orientation.hodgeStar_metric_factor_product`, using the owner convention
+  `hodgeStar P X = invS P * X`; it proves the ordered product of the images of
+  `1 - V` and `1 + V` equals `(1 - V)(1 + V)`. This is a finite ring identity,
+  not an analytic Liouville or zeta theorem.
+- **A41:** The operator cyclotomic evaluations are represented in
+  `CyclotomicBridge.lean`, while `IdempotentZornChainArchetypes.lean` owns
+  path and cycle remainder identities. The ordered generic six-factor product
+  is covered by `cyclotomic_three_six_polynomial_identities`:
+  `(X - 1) * (X + 1) * cyclotomicThree X * cyclotomicSix X = X^6 - 1`.
+  The theorem statement preserves the transcript's factor order and signs
+  over `[Ring B]`. The declaration was replayed successfully in the locked
+  builds of `IdempotentZornChainArchetypes` and
+  `TelegrapherTwoStateMasterPoset` on 2026-11-03.
+- **A42:** Primal/dual chord products are covered by
+  `PrimalDual.archetype_A42_primal_dual_chord_potentials`; the grouped
+  stage theorem in `KantorBogoliubovSpinePoset.lean` records the current
+  owner-aligned factor identities. The transcript's Bregman/convexity
+  terminology does not define a convex structure in the ring carrier.
+- **A43–A44:** `ChiralEulerFactors.lean` and its consumers prove the ordered
+  chiral Euler products, even-grade supercharge projections, and four-factor
+  product. The corresponding stage theorems A43/A44 in
+  `KantorBogoliubovSpinePoset.lean` are intentionally owner-aligned and differ
+  from some transcript claims. In particular the actual codifferential
+  evaluation is `superDerivPhiBar ... (chiralFactor ...) = 2 • Φ`, not the
+  submitted zero; no analytic Dirichlet L-function or Dedekind zeta theorem is
+  asserted.
+
+The A41 generic packet is stated as
+`cyclotomic_three_six_polynomial_identities` in `CyclotomicBridge.lean`. It
+records the universal degree-three/six factorizations and the ordered
+six-factor product over `[Ring B]`, without commuting assumptions. It was
+replayed successfully in the locked builds of `IdempotentZornChainArchetypes`
+and `TelegrapherTwoStateMasterPoset` on 2026-11-03.
+
+
+### Current-thread source batch: Zitterbewegung and the two-connection `SA₃–SA₄` packet
+
+The concrete `[Ring B]` owner is
+`OperatorAlgebra/PeirceSpine/ZitterbewegungVelocity.lean`, built on
+`DiracPolynomialAction.lean` and `Tetraktys.lean`. The already-owned laws
+`zitterVelocity_genJ` (`[D, invS] = -2J`),
+`zitterVelocity_square` (`velocity² = -4V`), the unexpanded oscillation law,
+and the matrix counterexample were reused rather than restated.
+
+The current source addition exposes the first commutator
+`peirceMassDirac_comm_genJ` (`[D,J] = 2Φ - 2Σ`), retains both cubic path terms
+in `zitter_velocity_oscillation_expanded`, and gives the explicit bottom-right
+witness values `1` and `-1` in
+`field_strength_witness_bottom_right_entries`. This distinguishes the raw
+`SA₄` field-strength formula from the corrected two-connection square. The
+owner contains no `sorry`, `admit`, or custom axiom in this scan. Its locked
+build completed successfully on 2026-11-03 (3,118 jobs, zero errors),
+kernel-checking the commutator, expanded oscillation identity, and explicit
+counterexample. Existing linter warnings were emitted by dependency modules
+`Supercharge`, `ChiralEulerFactors`, and `Unipotent`; this is not a
+warning-free quality-gate result.
+
+### Shared-link source batch: Bogoliubov, naturality, and defect A45–A50
+
+The latest `1t9...` snapshot repeats A45–A50 labels used by the `1ofa...`
+conversation, but with different propositions. For this latest occurrence:
+
+- A45–A46's ring-level square, sandwich, and commutator identities are
+  represented by `GradingPerturbation` and the grouped stage declarations in
+  `KantorBogoliubovSpinePoset.lean`. The extra `nambuBogoliubov*` notation in
+  the submitted fence has no matching repo definition; the existing operators
+  are the grading perturbations `S ± Φ` and `S ± J`. Their identities do not
+  prove the named physical dispersion or symmetry-breaking interpretations.
+- A47's ring-homomorphism equations are already grouped in
+  `archetype_A47_ring_hom_intertwining_of_peirce_operator_spine`; its scope is
+  algebraic naturality of the listed expressions.
+- A48's two-map composition statement is represented by
+  `archetype_A48_ring_hom_composition_and_homogenized_channel_transport`.
+  This proves finite composition compatibility; the transcript's generic
+  “DAG/inductive colimit closure” wording is not a colimit theorem.
+- The latest A49 first-order defect packet and A50 metric-defect packet are
+  covered by `archetype_A49_first_order_defect_parity_and_commutator_squares`
+  and `archetype_A50_second_order_defect_and_derivation_mismatch`. Their
+  equalities are ring identities; “skew-grade anomaly” and “Galois cocycle”
+  are not additional structures established by those declarations.
+
+No new Lean source was needed for this source occurrence. Its claims are
+reconciled with existing owners and were included in the successful locked
+builds of `InfoGeometry.OperatorAlgebra.PeirceSpine.KantorBogoliubovSpinePoset`
+and `InfoGeometry.OperatorAlgebra.PeirceSpine.KantorCrossGradeBrackets` on
+2026-11-03. Other source batches retain their own verification status.

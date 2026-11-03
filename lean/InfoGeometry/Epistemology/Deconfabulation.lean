@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Order.Monoid.Defs
 import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # The "Drunken Professor" Deconfabulation Pipeline
@@ -167,29 +168,43 @@ theorem distillation_monotone (e1 e2 : ℝ) (h : e2 ≤ e1) :
   · change Archetype.rank Archetype.primaMateria ≤ Archetype.rank Archetype.selfIndividuation; decide
   · exact le_rfl
 
-/-! ### 5. Master Certificate: Deconfabulation Pipeline -/
-
-/-- Master certificate bundling the verified components of the Deconfabulation Pipeline. -/
-structure DeconfabulationCertificate : Prop where
-  poset_root : ∀ a : Archetype, Archetype.primaMateria ≤ a
-  apex_realization : ∀ (C K : ℝ) (_hK : K ≠ 0),
-    C * (optimalCoordinate C K) - K * (optimalCoordinate C K)^2 = (C * C) / (4 * K)
-  response_invariance : ∀ (X C K scale : ℝ) (_hscale : scale ≠ 0),
-    (C / scale) * (scale * X) - (K / (scale * scale)) * (scale * X)^2 = C * X - K * X^2
-  activity_invariance : ∀ (X C K scale : ℝ) (_hscale : scale ≠ 0) (_hK : K ≠ 0),
-    (DeconfabulationModel.activity (styleShift (X := X) (C := C) (K := K) ⟨C * X - K * X^2, (C * C) / (4 * K)⟩ scale _hscale)) = 
-    (C * C) / (4 * K)
-  syzygy_balance : ∀ t : Token, IsBalanced [t, chiralSwap t]
-  monotonic_distillation : ∀ (e1 e2 : ℝ), e2 ≤ e1 → distill e1 ≤ distill e2
-
-theorem compile_deconfabulation : DeconfabulationCertificate where
-  poset_root := Archetype.primaMateria_precedes_all
-  apex_realization := response_at_optimal
-  response_invariance := response_gauge_invariant
-  activity_invariance := activity_gauge_invariant
-  syzygy_balance := swap_restores_balance
-  monotonic_distillation := distillation_monotone
-
 end
+
+/-! ### 6. Non-Commutative Operator Realization of `Deconfabulation.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `Deconfabulation.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def deconfabulationArchetypeOperator (P A C X : B) : Archetype → B
+  | .primaMateria => X
+  | .shadowProjection => oddGrade P X
+  | .animusLogos => evenGrade P X
+  | .chiralSyzygy => InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (genPhi P A C) (genJ P A C)
+  | .selfIndividuation => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Deconfabulation Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the raw operator
+`primaMateria = X` decomposes into `animusLogos + shadowProjection = X`, the shadow
+is annihilated by the logos projector (`evenGrade P (oddGrade P X) = 0`), the chiral
+syzygy anticommutator `{Φ, J} = 0` balances, and `Φ² = V`. -/
+theorem deconfabulationArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    deconfabulationArchetypeOperator P A C X .animusLogos +
+      deconfabulationArchetypeOperator P A C X .shadowProjection =
+      deconfabulationArchetypeOperator P A C X .primaMateria ∧
+    evenGrade P (deconfabulationArchetypeOperator P A C X .shadowProjection) = 0 ∧
+    deconfabulationArchetypeOperator P A C X .chiralSyzygy = 0 ∧
+    genPhi P A C * genPhi P A C =
+      deconfabulationArchetypeOperator P A C X .selfIndividuation ∧
+    genJ P A C * genJ P A C =
+      -deconfabulationArchetypeOperator P A C X .selfIndividuation := by
+  dsimp only [deconfabulationArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Epistemology.Deconfabulation

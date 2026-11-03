@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Exceptional.CuntzArchimedeanColimit
 import InfoGeometry.Canonical.SplitQuaternionMatrixModel
 import InfoGeometry.Probability.SimplexQuadraticResponse
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Exceptional.CuntzFiniteSynthesis
 
@@ -161,6 +168,35 @@ theorem quadratic_balance_equality_iff (point : ℝ) :
     exact (centered_square_zero_iff point).mp squareZero
   · rintro rfl
     norm_num
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def cuntzFiniteSynthesisArchetypeOperator (P A C X : B) : Archetype → B
+  | .cuntzRelations => invS P
+  | .branchOrthogonality => conePlus P A
+  | .splitMatrixAlgebra => genPhi P A C
+  | .determinantFormula => genSig P A C * genSig P A C - genV P A C * genV P A C
+  | .nullFamily => coneMinus P C
+  | .intervalProjection => evenGrade P X + oddGrade P X
+
+theorem cuntzFiniteSynthesisArchetype_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    cuntzFiniteSynthesisArchetypeOperator P A C X .cuntzRelations *
+      cuntzFiniteSynthesisArchetypeOperator P A C X .cuntzRelations = (1 : B) ∧
+    cuntzFiniteSynthesisArchetypeOperator P A C X .branchOrthogonality *
+      cuntzFiniteSynthesisArchetypeOperator P A C X .branchOrthogonality = 0 ∧
+    cuntzFiniteSynthesisArchetypeOperator P A C X .nullFamily *
+      cuntzFiniteSynthesisArchetypeOperator P A C X .nullFamily = 0 ∧
+    cuntzFiniteSynthesisArchetypeOperator P A C X .determinantFormula = 0 ∧
+    cuntzFiniteSynthesisArchetypeOperator P A C X .intervalProjection = X := by
+  dsimp only [cuntzFiniteSynthesisArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end
 

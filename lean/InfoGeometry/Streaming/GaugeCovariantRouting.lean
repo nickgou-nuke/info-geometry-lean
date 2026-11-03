@@ -31,9 +31,20 @@ def routed (K : Matrix ι ι ℝ) (U : Links ι V) (x : ι → V) : ι → V :=
 /-- Change the frame at each node without identifying node labels. -/
 def gaugeValues (g : ι → V ≃ₗ[ℝ] V) (x : ι → V) : ι → V := fun i => g i (x i)
 
-/-- Standard endpoint action: U'_ij = g_i U_ij g_j inverse. -/
+/-- Standard endpoint action: `U'ᵢⱼ = gᵢ ∘ Uᵢⱼ ∘ gⱼ⁻¹`.
+
+The `LinearEquiv.trans` order below is right-to-left function composition, so
+the source-frame change at `j` is undone first and the target-frame change at
+`i` is applied last. -/
 def gaugeLinks (g : ι → V ≃ₗ[ℝ] V) (U : Links ι V) : Links ι V :=
   fun i j => (g j).symm.trans ((U i j).trans (g i))
+
+/-- A transformed link takes a vector in the transformed `j`-frame to the
+transformed `i`-frame after applying the original link. -/
+theorem gaugeLinks_apply (g : ι → V ≃ₗ[ℝ] V) (U : Links ι V)
+    (i j : ι) (v : V) :
+    gaugeLinks g U i j (g j v) = g i (U i j v) := by
+  simp [gaugeLinks]
 
 /-- An actual all-node equivariance theorem for connection-equipped attention. -/
 theorem routed_gauge_covariant (K : Matrix ι ι ℝ) (g : ι → V ≃ₗ[ℝ] V)

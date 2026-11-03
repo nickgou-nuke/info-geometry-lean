@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
 import InfoGeometry.Arithmetic.MatrixDirichletInversion
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -24,6 +30,7 @@ import InfoGeometry.Arithmetic.IntegerModularPosition
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyBridge
 import InfoGeometry.Arithmetic.LongPrimeGapsPrimonEnergyAudit
+import InfoGeometry.Arithmetic.KreinCenteredXiGlideBridge
 
 namespace InfoGeometry.Arithmetic.All
 

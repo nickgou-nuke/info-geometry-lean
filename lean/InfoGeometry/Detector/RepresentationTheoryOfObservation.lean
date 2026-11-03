@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.RepresentationTheoryOfObservation
 
@@ -138,5 +145,47 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `RepresentationTheoryOfObservation.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def observationRepresentationOperator (P A C X : B) : Archetype → B
+  | .rankRepresentation => evenGrade P X + oddGrade P X
+  | .poissonFlattening => genPhi P A C * genPhi P A C
+  | .boundaryReflection => invS P
+  | .selfDualMidpoint => invS P * evenGrade P X * invS P
+  | .canonicalPeriod => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .observationSynthesis => projV P A C X + projPhi P A C X + projJ P A C X + projSig P A C X
+
+/-- **Theorem (Non-Commutative Operator Representation Theory of Observation over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the six archetypes
+satisfy Peirce completeness, quadratic flattening `Φ² = V`, involutive reflection `S² = 1`,
+self-dual midpoint invariance `S (evenGrade P X) S = evenGrade P X`, commutator period
+`[Φ, J] = 2 Σ`, and Fierz synthesis completeness. -/
+theorem observationRepresentation_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    observationRepresentationOperator P A C X .rankRepresentation = X ∧
+    observationRepresentationOperator P A C X .poissonFlattening = genV P A C ∧
+    observationRepresentationOperator P A C X .boundaryReflection *
+      observationRepresentationOperator P A C X .boundaryReflection = 1 ∧
+    observationRepresentationOperator P A C X .selfDualMidpoint = evenGrade P X ∧
+    observationRepresentationOperator P A C X .canonicalPeriod = -((2 : ℤ) • genSig P A C) ∧
+    observationRepresentationOperator P A C X .observationSynthesis =
+      (8 : ℤ) • X := by
+  dsimp only [observationRepresentationOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A5_klein_hadamard_spectra_and_partition
+      (P := P) hP A C X).1
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.RepresentationTheoryOfObservation

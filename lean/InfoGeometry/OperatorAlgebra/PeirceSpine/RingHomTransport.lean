@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.GradingPerturbation
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized
 import Mathlib.Algebra.Ring.Hom.Defs
@@ -101,7 +106,7 @@ theorem map_idempotent (f : B →+* D) {P : B} (hP : P * P = P) :
 
 @[simp] theorem map_hProjV (f : B →+* D) (P A C X : B) :
     f (hProjV P A C X) = hProjV (f P) (f A) (f C) (f X) := by
-  simp [hProjV]
+  simp [hProjV, map_ofNat]
 
 @[simp] theorem map_hProjPhi (f : B →+* D) (P A C X : B) :
     f (hProjPhi P A C X) = hProjPhi (f P) (f A) (f C) (f X) := by

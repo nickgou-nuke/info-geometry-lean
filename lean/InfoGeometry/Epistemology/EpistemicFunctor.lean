@@ -1,9 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Finset.Order
 import Mathlib.Order.Lattice
 import Mathlib.Tactic
 import InfoGeometry.Causal.FiniteDependencySchedule
 import InfoGeometry.Causal.FiniteDependencyCompiler
 import InfoGeometry.Causal.CertifiedDependencyCompiler
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Epistemic Functor & Knowledge Compilation: From Unconscious Stream to Certified Kernel Truth
@@ -159,5 +166,42 @@ owned by `InfoGeometry.MetaCompiler.executable_certified_compilation` in
 its own poset and scheduling results above instead of exporting a forwarding
 theorem with a weaker conclusion.
 -/
+
+/-! ### Part IV: Non-Commutative Operator Realization of `CompilationArchetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `CompilationArchetype` stage
+to its canonical Peirce operator in `[Ring B]`. -/
+def compilationArchetypeOperator (P A C X : B) : CompilationArchetype → B
+  | .rawStreamToken => X
+  | .causalPrerequisiteOrder => invS P
+  | .topologicalSchedule => evenGrade P X
+  | .proofEvidence => oddGrade P X
+  | .kernelCertifiedAdmission => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Compilation Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the dual
+branches `topologicalSchedule = evenGrade P X` and `proofEvidence = oddGrade P X`
+are mutually orthogonal under grade projection and sum to `rawStreamToken = X`,
+while `causalPrerequisiteOrder = S` satisfies `S² = 1`. -/
+theorem compilationArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    compilationArchetypeOperator P A C X .causalPrerequisiteOrder *
+      compilationArchetypeOperator P A C X .causalPrerequisiteOrder = 1 ∧
+    compilationArchetypeOperator P A C X .topologicalSchedule +
+      compilationArchetypeOperator P A C X .proofEvidence =
+      compilationArchetypeOperator P A C X .rawStreamToken ∧
+    oddGrade P (compilationArchetypeOperator P A C X .topologicalSchedule) = 0 ∧
+    evenGrade P (compilationArchetypeOperator P A C X .proofEvidence) = 0 ∧
+    genPhi P A C * genPhi P A C =
+      compilationArchetypeOperator P A C X .kernelCertifiedAdmission := by
+  dsimp only [compilationArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Epistemology.EpistemicFunctor

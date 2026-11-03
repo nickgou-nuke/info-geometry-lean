@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge
@@ -41,8 +47,9 @@ theorem abelian_bianchi
 /-- The Yang--Mills curvature reduces to the Abelian field strength when its
 quadratic connection term vanishes. -/
 theorem curvatureFromConnection_eq_abelianFieldStrength
-    (d : Module.End R (ExteriorAlgebra R V))
-    (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
+    {R' V' : Type*} [Field R'] [AddCommGroup V'] [Module R' V'] {n' : ℕ}
+    (d : Module.End R' (ExteriorAlgebra R' V'))
+    (A : Matrix (Fin n') (Fin n') (ExteriorAlgebra R' V'))
     (hAA : A * A = 0) :
     curvatureFromConnection d A = abelianFieldStrength d A := by
   simp [curvatureFromConnection, abelianFieldStrength, hAA]

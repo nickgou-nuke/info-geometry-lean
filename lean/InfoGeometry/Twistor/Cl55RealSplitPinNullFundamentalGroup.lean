@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.Cl55RealSplitPinNullConfigurationTopology
+import HomotopyHypothesis.Blueprint.Henry.Topology
 
 /-!
 # Split-Pin transport on the `Q55` null-configuration fundamental groupoid
@@ -14,6 +21,13 @@ at a point and at its image.
 The basepoint is deliberately allowed to move.  These maps are induced by
 global configuration-space symmetries; they are not exchange loops, braid
 monodromy, or anyon data.
+
+The same configuration homeomorphism also satisfies the external
+`HomotopyHypothesis.Henry.Top` homotopy-equivalence and disk-compression
+predicates.  The latter has an explicit strict lift obtained by composing
+with the inverse homeomorphism.  This does not assert that the configuration
+space is a finite cell complex or construct a TQFT or an infinity-groupoid
+comparison functor.
 -/
 
 noncomputable section
@@ -128,5 +142,39 @@ theorem realSplitPinNullFundamentalGroupEquiv_apply
         (unorderedConfigurationTopology Q55 n)
         (realSplitPinUnorderedNullHomeomorph g n) p q := by
   rfl
+
+/-- The existing split-Pin configuration action is a homotopy equivalence in
+Henry's topological interface, with its actual inverse as homotopy inverse. -/
+theorem realSplitPinNull_homotopyEquivalence (g : realSplitPin55) (n : ℕ) :
+    let _ := unorderedConfigurationTopology Q55 n
+    HomotopyHypothesis.Henry.Top.homotopyEquivalences
+      (TopCat.ofHom (realSplitPinUnorderedNullHomeomorph g n :
+        ContinuousMap (Unordered Q55 n) (Unordered Q55 n))) := by
+  let : TopologicalSpace (Unordered Q55 n) := unorderedConfigurationTopology Q55 n
+  let X : TopCat := TopCat.of (Unordered Q55 n)
+  let e : X ≅ X := TopCat.isoOfHomeo (realSplitPinUnorderedNullHomeomorph g n)
+  change HomotopyHypothesis.Henry.Top.homotopyEquivalences e.hom
+  refine ⟨e.inv, ?_, ?_⟩
+  · simpa only [e.hom_inv_id] using ContinuousMap.Homotopic.refl (𝟙 X : X ⟶ X).hom
+  · simpa only [e.inv_hom_id] using ContinuousMap.Homotopic.refl (𝟙 X : X ⟶ X).hom
+
+/-- Every boundary-disk square against the split-Pin configuration action
+has a strict lift through the inverse action.  In particular, the action
+satisfies Henry's weak-equivalence compression criterion in every dimension. -/
+theorem realSplitPinNull_weakEquivalence (g : realSplitPin55) (n : ℕ) :
+    let _ := unorderedConfigurationTopology Q55 n
+    HomotopyHypothesis.Henry.Top.weakEquivalences
+      (TopCat.ofHom (realSplitPinUnorderedNullHomeomorph g n :
+        ContinuousMap (Unordered Q55 n) (Unordered Q55 n))) := by
+  let : TopologicalSpace (Unordered Q55 n) := unorderedConfigurationTopology Q55 n
+  let X : TopCat := TopCat.of (Unordered Q55 n)
+  let e : X ≅ X := TopCat.isoOfHomeo (realSplitPinUnorderedNullHomeomorph g n)
+  change HomotopyHypothesis.Henry.Top.weakEquivalences e.hom
+  intro k a b hab
+  refine ⟨b ≫ e.inv, ?_, ?_⟩
+  · rw [← Category.assoc, ← hab]
+    simp only [Category.assoc, e.hom_inv_id, Category.comp_id]
+  · simpa only [Category.assoc, e.inv_hom_id, Category.comp_id] using
+      (ContinuousMap.HomotopicRel.refl b.hom)
 
 end InfoGeometry.Twistor.Cl55RealSplitPinNullFundamentalGroup

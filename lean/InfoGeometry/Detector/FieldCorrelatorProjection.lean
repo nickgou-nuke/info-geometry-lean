@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.FieldCorrelatorProjection
 
@@ -111,5 +118,37 @@ theorem canonical_chain :
   ⟨Nat.le_succ 195, Nat.le_succ 196, Nat.le_succ 197, Nat.le_succ 198⟩
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `FieldCorrelatorProjection.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def fieldCorrelatorOperator (P A C X : B) : Archetype → B
+  | .fieldCorrelator => X
+  | .detectorProjector => evenGrade P X
+  | .modeNullspace => evenGrade P (oddGrade P X)
+  | .rankHierarchy => genPhi P A C * genPhi P A C
+  | .scaleInvariantObservable => invS P * evenGrade P X * invS P
+
+/-- **Theorem (Non-Commutative Operator Field-Correlator Projection over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the detector
+projector `evenGrade P` annihilates oscillatory off-diagonal modes (`evenGrade P (oddGrade P X) = 0`),
+is invariant under reflection conjugation (`S (evenGrade P X) S = evenGrade P X`), and maps
+the quadratic rank-two square `Φ²` to `V`. -/
+theorem fieldCorrelator_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    fieldCorrelatorOperator P A C X .detectorProjector + oddGrade P X =
+      fieldCorrelatorOperator P A C X .fieldCorrelator ∧
+    fieldCorrelatorOperator P A C X .modeNullspace = 0 ∧
+    fieldCorrelatorOperator P A C X .rankHierarchy = genV P A C ∧
+    fieldCorrelatorOperator P A C X .scaleInvariantObservable =
+      fieldCorrelatorOperator P A C X .detectorProjector := by
+  dsimp only [fieldCorrelatorOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.FieldCorrelatorProjection

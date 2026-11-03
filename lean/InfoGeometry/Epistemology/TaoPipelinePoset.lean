@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Finset.Order
 import Mathlib.Order.Lattice
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Terence Tao's Epistemic Lifecycle & Mathematical Archetypes Causal Poset
@@ -179,5 +186,58 @@ theorem bottleneck_gap :
     (causalPrerequisites TaoEpistemicArchetype.formalKernelVerification ⊂
      causalPrerequisites TaoEpistemicArchetype.pedagogicalCanonicalization) := by
   decide
+
+/-! ### Non-Commutative Operator Realization of `TaoEpistemicArchetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `TaoEpistemicArchetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def taoPipelineArchetypeOperator (P A C X : B) : TaoEpistemicArchetype → B
+  | .curiosityOpenProblem => X
+  | .rawMachineSolution => oddGrade P X
+  | .formalKernelVerification => evenGrade P X
+  | .humanExposition => genPhi P A C
+  | .communityPeerReview => genJ P A C
+  | .pedagogicalCanonicalization => genV P A C
+  | .equationalDistillation => genSig P A C
+  | .collaborativeSuperTeam => projV P A C X + projPhi P A C X + projJ P A C X + projSig P A C X
+
+/-- **Theorem (Non-Commutative Operator Identities across `TaoEpistemicArchetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the eight
+pipeline archetypes satisfy Peirce splitting `formalKernelVerification + rawMachineSolution = X`,
+Tetraktys exposition/review squares `Φ² = V` and `J² = -V`, distillation commutator
+`[Φ, J] = -2 Σ`, and the operator-valued Klein–Hadamard completeness identity. -/
+theorem taoPipelineArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    taoPipelineArchetypeOperator P A C X .formalKernelVerification +
+      taoPipelineArchetypeOperator P A C X .rawMachineSolution =
+      taoPipelineArchetypeOperator P A C X .curiosityOpenProblem ∧
+    taoPipelineArchetypeOperator P A C X .humanExposition *
+      taoPipelineArchetypeOperator P A C X .humanExposition =
+      taoPipelineArchetypeOperator P A C X .pedagogicalCanonicalization ∧
+    taoPipelineArchetypeOperator P A C X .communityPeerReview *
+      taoPipelineArchetypeOperator P A C X .communityPeerReview =
+      -taoPipelineArchetypeOperator P A C X .pedagogicalCanonicalization ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (taoPipelineArchetypeOperator P A C X .humanExposition)
+      (taoPipelineArchetypeOperator P A C X .communityPeerReview) =
+      -((2 : ℤ) • taoPipelineArchetypeOperator P A C X .equationalDistillation) ∧
+    taoPipelineArchetypeOperator P A C X .collaborativeSuperTeam =
+      (8 : ℤ) • X := by
+  dsimp only [taoPipelineArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A7_so12_lie_brackets_and_cubic_inversions
+      (P := P) hP A C).1
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A5_klein_hadamard_spectra_and_partition
+      (P := P) hP A C X).1
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Epistemology.TaoPipelinePoset

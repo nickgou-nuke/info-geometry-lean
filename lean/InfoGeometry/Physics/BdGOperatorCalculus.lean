@@ -16,16 +16,6 @@ namespace InfoGeometry.Physics
 
 variable {A : Type*} [Ring A]
 
-/-- The exact square before any kinetic-pairing commutation assumption. -/
-theorem massiveBdGHamiltonian_sq_with_commutator (D M : A) :
-    massiveBdGHamiltonian D M * massiveBdGHamiltonian D M =
-      !![D * D + M * M, D * M - M * D;
-         M * D - D * M, D * D + M * M] := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [massiveBdGHamiltonian, Matrix.mul_apply, Fin.sum_univ_two,
-      sub_eq_add_neg, add_comm]
-
 /-- A block-diagonal square is equivalent to vanishing of the actual
 kinetic-pairing commutator. -/
 theorem massiveBdGHamiltonian_square_diagonal_iff (D M : A) :

@@ -147,6 +147,23 @@ theorem orthogonal_idempotents_color_tripotent
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
     noncomm_ring [hR, hG, hRG, hGR]
 
+/-- The complementary third color is orthogonal to the retained red and
+green idempotents on both sides, and the three colors partition the unit.
+This identifies the tripotent's zero-color polynomial with a genuine
+three-corner decomposition in the ambient noncommutative ring. -/
+theorem colorBlue_three_corner_decomposition
+    {P_R P_G : B}
+    (hR : P_R * P_R = P_R) (hG : P_G * P_G = P_G)
+    (hRG : P_R * P_G = 0) (hGR : P_G * P_R = 0) :
+    P_R * colorBlue P_R P_G = 0 ∧
+    colorBlue P_R P_G * P_R = 0 ∧
+    P_G * colorBlue P_R P_G = 0 ∧
+    colorBlue P_R P_G * P_G = 0 ∧
+    P_R + P_G + colorBlue P_R P_G = 1 := by
+  simp only [colorBlue]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    noncomm_ring [hR, hG, hRG, hGR]
+
 /-- The commutator with the difference of two orthogonal idempotents has
 charges `2`, `-2`, `1`, `1`, `-1`, `-1`, and `0` on the corresponding
 red/green/blue Peirce blocks. This is an associative-ring corner identity;
@@ -174,5 +191,49 @@ theorem colorTripotent_corner_charge
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     noncomm_ring [hR, hG, hRG, hGR] <;>
     simp only [← mul_assoc, hR, hG, hRG, hGR, zero_mul, zero_add, add_zero] <;> abel
+
+/-- The color-tripoten acts by a scalar sign on each retained diagonal
+corner, so it commutes with arbitrary red and green diagonal operators. -/
+theorem colorTripotent_commutes_with_diagonal_corners
+    {P_R P_G X Y : B}
+    (hR : P_R * P_R = P_R) (hG : P_G * P_G = P_G)
+    (hRG : P_R * P_G = 0) (hGR : P_G * P_R = 0) :
+    comm (colorTripotent P_R P_G) (P_R * X * P_R) = 0 ∧
+    comm (colorTripotent P_R P_G) (P_G * Y * P_G) = 0 := by
+  have hTR : colorTripotent P_R P_G * P_R = P_R := by
+    unfold colorTripotent
+    calc
+      (P_R - P_G) * P_R = P_R * P_R - P_G * P_R := by rw [sub_mul]
+      _ = P_R := by rw [hR, hGR]; simp
+  have hRT : P_R * colorTripotent P_R P_G = P_R := by
+    unfold colorTripotent
+    calc
+      P_R * (P_R - P_G) = P_R * P_R - P_R * P_G := by rw [mul_sub]
+      _ = P_R := by rw [hR, hRG]; simp
+  have hTG : colorTripotent P_R P_G * P_G = -P_G := by
+    unfold colorTripotent
+    calc
+      (P_R - P_G) * P_G = P_R * P_G - P_G * P_G := by rw [sub_mul]
+      _ = -P_G := by rw [hRG, hG]; simp
+  have hGT : P_G * colorTripotent P_R P_G = -P_G := by
+    unfold colorTripotent
+    calc
+      P_G * (P_R - P_G) = P_G * P_R - P_G * P_G := by rw [mul_sub]
+      _ = -P_G := by rw [hGR, hG]; simp
+  constructor
+  · unfold comm
+    calc
+      colorTripotent P_R P_G * (P_R * X * P_R) -
+          (P_R * X * P_R) * colorTripotent P_R P_G =
+        (colorTripotent P_R P_G * P_R) * X * P_R -
+          P_R * X * (P_R * colorTripotent P_R P_G) := by noncomm_ring
+      _ = 0 := by rw [hTR, hRT]; noncomm_ring
+  · unfold comm
+    calc
+      colorTripotent P_R P_G * (P_G * Y * P_G) -
+          (P_G * Y * P_G) * colorTripotent P_R P_G =
+        (colorTripotent P_R P_G * P_G) * Y * P_G -
+          P_G * Y * (P_G * colorTripotent P_R P_G) := by noncomm_ring
+      _ = 0 := by rw [hTG, hGT]; noncomm_ring
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

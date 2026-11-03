@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Thermodynamics.MassieuPlanckArithmetics
 
@@ -75,5 +82,45 @@ theorem negentropy_at_half :
   have hinv : (1 / 2 : ℝ) = (2 : ℝ)⁻¹ := by norm_num
   rw [hinv, Real.log_inv]
   ring
+
+/-! ### Non-Commutative Operator Realization of `MassieuPlanckArithmetics.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `MassieuPlanckArithmetics.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def massieuPlanckArchetypeOperator (P A C : B) : Archetype → B
+  | .massieuPotential => genPhi P A C
+  | .primeMode => conePlus P A
+  | .negentropy => genJ P A C
+  | .fisherCurvature => genV P A C
+  | .seamVertex => P * (1 - P)
+
+/-- **Theorem (Non-Commutative Operator Identities across `MassieuPlanckArithmetics.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the prime-mode
+step `a₊` is square-zero, the Massieu potential generator `Φ` and negentropy generator `J`
+anticommute (`{Φ, J} = 0`) and square to opposite signs of the Fisher curvature operator
+`V` (`Φ² = V`, `J² = -V`), and the idempotent seam defect `P (1 - P)` vanishes. -/
+theorem massieuPlanckArchetype_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    massieuPlanckArchetypeOperator P A C .primeMode *
+      massieuPlanckArchetypeOperator P A C .primeMode = 0 ∧
+    massieuPlanckArchetypeOperator P A C .massieuPotential *
+      massieuPlanckArchetypeOperator P A C .massieuPotential =
+      massieuPlanckArchetypeOperator P A C .fisherCurvature ∧
+    massieuPlanckArchetypeOperator P A C .negentropy *
+      massieuPlanckArchetypeOperator P A C .negentropy =
+      -massieuPlanckArchetypeOperator P A C .fisherCurvature ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+      (massieuPlanckArchetypeOperator P A C .massieuPotential)
+      (massieuPlanckArchetypeOperator P A C .negentropy) = 0 ∧
+    massieuPlanckArchetypeOperator P A C .seamVertex = 0 := by
+  dsimp only [massieuPlanckArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Thermodynamics.MassieuPlanckArithmetics

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -12,8 +18,10 @@ import InfoGeometry.Canonical.MatrixCurvatureWedgeSquareBridge
 import InfoGeometry.Canonical.CovariantBianchiMatrixChernWeilBridge
 import InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
 import InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
+import InfoGeometry.Canonical.ChernSimonsTransgressionKernel
 import InfoGeometry.Canonical.YangMillsSelfDualInstantonBridge
 import InfoGeometry.Canonical.NonAbelianCurvatureSquareBianchiBridge
+import InfoGeometry.Canonical.ExteriorEvenTraceChernWeil
 import Mathlib.Tactic.NoncommRing
 
 noncomputable section
@@ -30,9 +38,28 @@ open InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
 open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 open InfoGeometry.Canonical.YangMillsSelfDualInstantonBridge
 open InfoGeometry.Canonical.NonAbelianCurvatureSquareBianchiBridge
+open InfoGeometry.Canonical.ExteriorEvenTraceChernWeil
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+
+/-- The Chern--Simons transgression identity for a degree-raising differential
+over a characteristic-zero field. The degree hypothesis is explicit because
+the graded-derivation interface alone does not assert that `d` raises degree. -/
+theorem chern_simons_transgression_derivation
+    [CharZero R] [Module.IsTorsionFree R (ExteriorAlgebra R V)]
+    (d : Module.End R (ExteriorAlgebra R V))
+    (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
+    (h_d_sq : d.comp d = 0)
+    (h_graded : InfoGeometry.Canonical.ExteriorGradedDerivationBridge.IsGradedDerivation d)
+    (hA : InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge.MatrixIsHomogeneous 1 A)
+    (h_dA : InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge.MatrixIsHomogeneous 2
+      (matrixExteriorDerivative d A)) :
+    d (chernSimonsDensityForm d A) =
+      matrixTraceForm (curvatureFromConnection d A * curvatureFromConnection d A) := by
+  unfold chernSimonsDensityForm curvatureFromConnection
+  exact InfoGeometry.Canonical.ChernSimonsTransgressionKernel.transgression_kernel
+    d A h_d_sq h_graded hA h_dA
 
 /-- **Theorem**: Automatic Derivation Closedness d(d CS(A)) = 0 from Operator Nilpotency d² = 0. -/
 theorem transgression_density_automatically_closed

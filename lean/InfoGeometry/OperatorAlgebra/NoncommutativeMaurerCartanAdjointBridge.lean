@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Lie.ContinuousDerivationExponential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Operator.Bilinear
@@ -94,6 +100,18 @@ theorem adCLM_flow_is_multiplicative (a : A) (t : ℝ) (x y : A) :
         InfoGeometry.Lie.ContinuousDerivationExponential.flow (adCLM a) t y := by
   exact InfoGeometry.Lie.ContinuousDerivationExponential.flow_map_mul
     (ContinuousLinearMap.mul ℝ A) (adCLM a) (adCLM_isDerivation a) t x y
+
+/-- The tangent at the identity of the inner-derivation flow is the operator
+commutator. This fixes the Lie-flow sign convention explicitly. -/
+theorem adCLM_flow_generator (a x : A) :
+    deriv
+      (fun t : ℝ => InfoGeometry.Lie.ContinuousDerivationExponential.flow
+        (adCLM a) t x) 0 = a * x - x * a := by
+  have h :=
+    (InfoGeometry.Lie.ContinuousDerivationExponential.hasStrictDerivAt_orbit
+      (adCLM a) x 0).hasDerivAt.deriv
+  simpa [InfoGeometry.Lie.ContinuousDerivationExponential.flow_zero,
+    adCLM_apply] using h
 
 /-! ## Maurer--Cartan form for an invertible operator -/
 

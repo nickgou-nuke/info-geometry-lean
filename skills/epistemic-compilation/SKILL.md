@@ -8,6 +8,9 @@ description: Convert informal or confabulated mathematical intake into repositor
 Use this skill whenever the input mixes mathematical notation, physical
 interpretation, metaphor, generated code, or claims of verification.
 
+For a copy-ready operator workflow, claim ledger, theorem-contract form, and
+review checklist, use [`docs/EPISTEMIC_COMPILER_FIELD_PROTOCOL.md`](../../docs/EPISTEMIC_COMPILER_FIELD_PROTOCOL.md).
+
 ## Authority
 
 The authority order is:
@@ -46,6 +49,25 @@ Only the first three levels can promote a theorem claim.
    audit, and acceptance must be separate roles.
 10. **Report honestly.** State the exact theorem, file, commit, commands,
     axiom footprint, warnings, and remaining open debt.
+
+## Practical operating rule
+
+Treat “solve → coniunctio → causal poset → coagula” as an organization for
+work products, not as a proof method or guarantee:
+
+- **Solve:** produce atomic, source-linked claim candidates and mark
+  interpretation separately.
+- **Coniunctio:** identify the actual common carrier, operations, hypotheses,
+  and owner declarations. Add a bridge only when its map and compatibility
+  laws are explicit.
+- **Causal poset:** order claims by actual theorem dependencies. An edge means
+  the downstream Lean statement uses a proved upstream fact.
+- **Coagula:** formalize the smallest useful statements in the existing owner
+  layer, then verify and report their exact scope.
+
+Do not provide hidden chain-of-thought. Provide the claim ledger, owner
+references, dependency graph, proof artifacts, and verification results needed
+to audit the work.
 
 ## Repository-specific graph grounding
 

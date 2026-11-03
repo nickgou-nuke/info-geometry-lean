@@ -100,6 +100,25 @@ theorem apply_operatorialGibbsWeight_eq_informationPartitionFunction
     informationPartitionFunction ω (-souriauTemperatureVector (E := E) P ψ) β := by
   simp [operatorialGibbsWeight, informationPartitionFunction]
 
+/-- The logarithmic readout of the operatorial Gibbs weight has the
+Massieu derivative determined by the unnormalized readout at the identity.
+The nonzero condition is the domain condition for differentiating `log`; no
+normalization `ω 1 = 1` is imposed. -/
+@[rep_depth transport]
+theorem hasDerivAt_log_apply_operatorialGibbsWeight_zero
+    (ω : EndH →L[ℝ] ℝ)
+    (P : PotentialDatum (E := E)) (ψ : H₂)
+    (hω1 : ω (1 : EndH) ≠ 0) :
+    HasDerivAt
+      (fun β : ℝ => Real.log (ω (operatorialGibbsWeight (E := E) P ψ β)))
+      ((ω (1 : EndH))⁻¹ * ω (-souriauTemperatureVector (E := E) P ψ)) 0 := by
+  simpa [apply_operatorialGibbsWeight_eq_informationPartitionFunction,
+    logInformationPartitionFunction, informationPartitionFunction,
+    operatorExponentialChart] using
+    (hasDerivAt_logInformationPartitionFunction_zero
+      (E := E) (ω := ω)
+      (K := -souriauTemperatureVector (E := E) P ψ) hω1)
+
 /--
 The operatorial Gibbs expectation has infinitesimal value given by the negated
 Souriau temperature vector.

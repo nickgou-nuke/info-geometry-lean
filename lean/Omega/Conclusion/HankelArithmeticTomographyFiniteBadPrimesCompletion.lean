@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Omega.Zeta.HankelDiscriminantUnavoidableBadPrimes
 import Omega.Zeta.XiHankelExplicitGoodPrimeBound
 import Omega.Zeta.XiHankelFinitefieldDeterministicCompletion
@@ -5,7 +11,12 @@ import Omega.Zeta.XiHankelFinitefieldRandomCompletionLasVegasExpected
 
 namespace Omega.Conclusion
 
-/-- Paper label: `thm:conclusion-hankel-arithmetic-tomography-finite-bad-primes-completion`. -/
+/-- Paper label: `thm:conclusion-hankel-arithmetic-tomography-finite-bad-primes-completion`.
+
+The deterministic clause supplies a nonvanishing polynomial evaluation, but its
+`uniqueExtension` is only uniqueness for the freely chosen graph-valued
+`extensionValue`; see `Omega.Zeta.xiHankel_completion_graph_does_not_determine_output`.
+-/
 theorem paper_conclusion_hankel_arithmetic_tomography_finite_bad_primes_completion
     (D : Omega.Zeta.XiHankelBadPrimeData) (Delta : Nat) (hDelta : 3 ≤ Delta)
     {p d δ : Nat} [Fact p.Prime] (hpd : d < p)

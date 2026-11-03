@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Combinatorics.Nullstellensatz
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
@@ -21,9 +27,8 @@ lemma xiHankelDeterministicGrid_card {p d : ℕ} [Fact p.Prime] (hpd : d < p) :
     rw [Nat.ModEq, Nat.mod_eq_of_lt ha_lt, Nat.mod_eq_of_lt hb_lt] at hab'
     exact hab'
 
-/-- Concrete finite-field data for deterministic Hankel completion. The determinant is encoded by
-an actual multivariate polynomial, while the extension channel is a concrete function whose graph
-provides the uniqueness package once a nonvanishing grid point has been found. -/
+/-- Finite-field data for a nonzero determinant polynomial together with an output function.
+The output function is independent data; its graph alone defines `completionEq`. -/
 structure XiHankelFinitefieldDeterministicCompletionData
     (p d δ : Nat) [Fact p.Prime] where
   detPolynomial : MvPolynomial (Fin δ) (ZMod p)
@@ -79,11 +84,40 @@ end XiHankelFinitefieldDeterministicCompletionData
 
 open XiHankelFinitefieldDeterministicCompletionData
 
-/-- Paper label: `prop:xi-hankel-finitefield-deterministic-completion`. -/
+/-- Paper label: `prop:xi-hankel-finitefield-deterministic-completion`.
+
+This proves existence of a nonvanishing grid evaluation and uniqueness for the
+declared graph relation only. It does not derive an extension from Hankel data;
+`xiHankel_completion_graph_does_not_determine_output` exhibits the gap. -/
 theorem paper_xi_hankel_finitefield_deterministic_completion {p d δ : Nat} [Fact p.Prime]
     (hpd : d < p) (D : XiHankelFinitefieldDeterministicCompletionData p d δ) :
     ∃ x : Fin δ → ZMod p, D.onGrid x ∧ D.detPoly x ≠ 0 ∧ D.uniqueExtension x := by
   rcases D.exists_grid_point_detPoly_ne_zero hpd with ⟨x, hxGrid, hxDet⟩
   exact ⟨x, hxGrid, hxDet, D.uniqueExtension_of_graph x⟩
+
+/-- The graph-based uniqueness field does not determine an extension from the determinant data:
+two data records with the same nonzero polynomial and degree bound can have different unique
+outputs because `extensionValue` is unconstrained. -/
+theorem xiHankel_completion_graph_does_not_determine_output {p d δ : Nat} [Fact p.Prime]
+    (hpd : d < p) (P : MvPolynomial (Fin δ) (ZMod p))
+    (hdegree : P.totalDegree ≤ d) (hP : P ≠ 0) :
+    ∃ x : Fin δ → ZMod p,
+      (let Dzero : XiHankelFinitefieldDeterministicCompletionData p d δ :=
+        ⟨P, hdegree, hP, fun _ => 0⟩
+       let Done : XiHankelFinitefieldDeterministicCompletionData p d δ :=
+        ⟨P, hdegree, hP, fun _ => 1⟩
+       Dzero.onGrid x ∧ Dzero.detPoly x ≠ 0 ∧ Dzero.uniqueExtension x ∧
+         Done.onGrid x ∧ Done.detPoly x ≠ 0 ∧ Done.uniqueExtension x ∧
+         Dzero.extensionValue x ≠ Done.extensionValue x) := by
+  let Dzero : XiHankelFinitefieldDeterministicCompletionData p d δ :=
+    ⟨P, hdegree, hP, fun _ => 0⟩
+  let Done : XiHankelFinitefieldDeterministicCompletionData p d δ :=
+    ⟨P, hdegree, hP, fun _ => 1⟩
+  obtain ⟨x, hxGrid, hxDet⟩ := Dzero.exists_grid_point_detPoly_ne_zero hpd
+  refine ⟨x, hxGrid, hxDet, Dzero.uniqueExtension_of_graph x,
+    ?_, ?_, Done.uniqueExtension_of_graph x, ?_⟩
+  · exact hxGrid
+  · simpa [Done, detPoly] using hxDet
+  · norm_num
 
 end Omega.Zeta

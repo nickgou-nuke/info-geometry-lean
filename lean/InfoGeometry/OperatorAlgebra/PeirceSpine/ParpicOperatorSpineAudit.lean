@@ -15,3 +15,4 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ParpicOperatorSpine
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.star_parpicSymKernel
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.star_parpicLaplacian
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.parpicFlux_peirce_specializations
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.parpic_chiral_transition_iterates

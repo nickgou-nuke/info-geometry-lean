@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Twistor.RealTwistorFockPairing
+import InfoGeometry.OperatorAlgebra.OperatorDefectCompletion
 import Mathlib.Data.Matrix.Mul
 
 /-!
@@ -26,6 +27,8 @@ namespace InfoGeometry.Twistor.RealPolynomialCCR
 open scoped BigOperators
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+attribute [local instance] LieRing.ofAssociativeRing
 
 /-- Native extraction of the degree-one coefficients. -/
 def oneParticleCoeff : WavePolynomial ι →ₗ[ℝ] Coordinates ι where
@@ -183,6 +186,100 @@ theorem euler_oneParticleProjector (p : WavePolynomial ι) :
 theorem annihilate_linearForm (i : ι) (a : Coordinates ι) :
     annihilate i (linearForm a) = a i • (1 : WavePolynomial ι) := by
   simp [linearForm, annihilate_apply, map_sum, MvPolynomial.pderiv_X, Pi.single_apply]
+
+/-- Creation sends a degree-one polynomial to degree two, which the
+degree-one coefficient map removes. -/
+theorem oneParticleProjector_create_linearForm (i : ι) (a : Coordinates ι) :
+    oneParticleProjector (create i (linearForm a)) = 0 := by
+  rw [oneParticleProjector_apply]
+  have hcoeff : oneParticleCoeff (create i (linearForm a)) = 0 := by
+    ext k
+    rw [oneParticleCoeff_apply, create_apply, MvPolynomial.coeff_X_mul']
+    by_cases hik : i = k
+    · subst k
+      simp [linearForm]
+    · have hi : i ∉ (Finsupp.single k 1 : ι →₀ ℕ).support := by
+        simp [hik]
+      rw [ite_eq_right hi]
+      simp
+  rw [hcoeff, linearForm_zero]
+
+/-- Annihilation sends a degree-one polynomial to the vacuum, also removed by
+the degree-one coefficient map. -/
+theorem oneParticleProjector_annihilate_linearForm (i : ι) (a : Coordinates ι) :
+    oneParticleProjector (annihilate i (linearForm a)) = 0 := by
+  rw [annihilate_linearForm]
+  simp
+
+/-- Both individual CCR ladders vanish after compression to the one-particle
+range; their ordered cross-sector excursions carry the commutator. -/
+theorem oneParticle_compressed_ladders_vanish (i : ι) :
+    oneParticleProjector * create i * oneParticleProjector = 0 ∧
+    oneParticleProjector * annihilate i * oneParticleProjector = 0 := by
+  constructor
+  · apply LinearMap.ext
+    intro p
+    simpa only [Module.End.mul_apply, oneParticleProjector_apply,
+      LinearMap.zero_apply] using
+      oneParticleProjector_create_linearForm i (oneParticleCoeff p)
+  · apply LinearMap.ext
+    intro p
+    simpa only [Module.End.mul_apply, oneParticleProjector_apply,
+      LinearMap.zero_apply] using
+      oneParticleProjector_annihilate_linearForm i (oneParticleCoeff p)
+
+/-! ## The polynomial CCR at the finite one-particle boundary
+
+The one-particle range is not invariant under either individual ladder
+operator: creation leaves it toward degree two, while annihilation leaves it
+toward the vacuum.  The exact polynomial CCR therefore appears on this finite
+sector as the difference of those two ordered excursions. -/
+
+/-- Compressing the exact polynomial creation/annihilation commutator to the
+degree-one projector produces precisely the two cross-sector leakage terms.
+The right side is an operator identity on the full polynomial module, so it
+retains noncommutative operator order rather than reducing to matrix entries. -/
+theorem oneParticle_CCR_is_boundary_leakage (i j : ι) :
+    (if i = j then oneParticleProjector else 0) -
+        ((oneParticleProjector * annihilate i * oneParticleProjector) *
+            (oneParticleProjector * create j * oneParticleProjector) -
+          (oneParticleProjector * create j * oneParticleProjector) *
+            (oneParticleProjector * annihilate i * oneParticleProjector)) =
+      oneParticleProjector * annihilate i * (1 - oneParticleProjector) *
+          create j * oneParticleProjector -
+        oneParticleProjector * create j * (1 - oneParticleProjector) *
+          annihilate i * oneParticleProjector := by
+  have hprojector := oneParticleProjector_idempotent (ι := ι)
+  have hcompression :=
+    InfoGeometry.OperatorAlgebra.DefectCompletion.compressed_commutator_defect
+      (oneParticleProjector (ι := ι)) (annihilate i) (create j) hprojector
+  have hCCR := annihilate_create_commutator i j
+  have hcompressed :
+      oneParticleProjector *
+          (annihilate i * create j - create j * annihilate i) *
+          oneParticleProjector =
+        (if i = j then oneParticleProjector else 0) := by
+    rw [hCCR]
+    by_cases hij : i = j
+    · subst j
+      simp
+    · simp [hij]
+  simpa only [Ring.lie_def, hcompressed] using hcompression
+
+/-- On the degree-one sector the compressed ladder commutator is zero, so the
+full canonical CCR is carried exactly by excursions out of and back into that
+sector.  This gives the boundary term lost by a finite-sector restriction. -/
+theorem oneParticle_CCR_is_entirely_cross_sector (i j : ι) :
+    oneParticleProjector * annihilate i * (1 - oneParticleProjector) *
+        create j * oneParticleProjector -
+      oneParticleProjector * create j * (1 - oneParticleProjector) *
+        annihilate i * oneParticleProjector =
+      (if i = j then oneParticleProjector else 0) := by
+  rcases oneParticle_compressed_ladders_vanish i with ⟨_, hAnnihilate⟩
+  rcases oneParticle_compressed_ladders_vanish j with ⟨hCreate, _⟩
+  have h := oneParticle_CCR_is_boundary_leakage i j
+  rw [hAnnihilate, hCreate] at h
+  simpa using h.symm
 
 theorem create_annihilate_linearForm (i j : ι) (a : Coordinates ι) :
     (create i * annihilate j) (linearForm a) = a j • MvPolynomial.X i := by

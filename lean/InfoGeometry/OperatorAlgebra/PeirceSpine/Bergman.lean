@@ -102,6 +102,29 @@ theorem archetype_A24_commutator_form_on_projective_line (A C X₁ X₂ Y₁ Y�
     ((try simp only [operatorSymplecticForm, operatorCrossRatio, projChartPlus, projChartMinus]);
       peirce_nf hP)
 
+/-- Point reflections and Bergman–Hua products for the two translated
+idempotent corners. This is the ring-algebraic content of the A24
+reflection packet; it asserts no metric-space or dihedral-group structure. -/
+theorem translated_reflection_and_bergman_hua_laws (A C : B) :
+    invS (P - conePlus P A) * invS (P - conePlus P A) = 1 ∧
+    invS (P + coneMinus P C) * invS (P + coneMinus P C) = 1 ∧
+    1 - (P - (P - conePlus P A)) * (P - (P - conePlus P A)) = 1 ∧
+    1 - (P - (P + coneMinus P C)) * (P - (P + coneMinus P C)) = 1 ∧
+    1 - ((P - conePlus P A) - (P + coneMinus P C)) *
+        ((P - conePlus P A) - (P + coneMinus P C)) = 1 - genV P A C ∧
+    invS P * invS (P - conePlus P A) =
+      1 - (2 : ℤ) • conePlus P A ∧
+    invS P * invS (P + coneMinus P C) =
+      1 - (2 : ℤ) • coneMinus P C ∧
+    invS (P - conePlus P A) * invS (P + coneMinus P C) =
+      1 + (2 : ℤ) • genJ P A C - (2 : ℤ) • genV P A C -
+        (2 : ℤ) • genSig P A C ∧
+    anticomm (invS (P - conePlus P A)) (invS (P + coneMinus P C)) =
+      (2 : ℤ) • (1 - (2 : ℤ) • genV P A C) ∧
+    comm (invS (P - conePlus P A)) (invS (P + coneMinus P C)) =
+      (4 : ℤ) • (genJ P A C - genSig P A C) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
 /-! ### A₂₅ -/
 
 theorem archetype_A25_jordan_triple_and_grade_inversion (A C : B) :

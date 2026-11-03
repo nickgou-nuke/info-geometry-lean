@@ -847,6 +847,7 @@ import InfoGeometry.Algebra.SplitQuaternionFlows
 import InfoGeometry.Algebra.SplitQuaternionIndefiniteBridge
 import InfoGeometry.Algebra.SplitQuaternionZornTrialityFactIndex
 import InfoGeometry.Algebra.SquareRootLogarithmicInfoMetricBridge
+import InfoGeometry.Algebra.SteinbergBraidCrossStage
 import InfoGeometry.Algebra.SteinbergBraidDefectSpine
 import InfoGeometry.Algebra.SteinbergMoebiusProjectiveLine
 import InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge
@@ -3684,6 +3685,7 @@ import InfoGeometry.Canonical.OperatorZornBilayerDefect
 import InfoGeometry.Canonical.OperatorZornChiralProjection
 import InfoGeometry.Canonical.OperatorZornDiracRepresentation
 import InfoGeometry.Canonical.OperatorZornMaxwellDivergence
+import InfoGeometry.Canonical.OperatorZornElectromagneticTetraktys
 import InfoGeometry.Canonical.OperatorZornSpinCasimirLift
 import InfoGeometry.Canonical.OperatorialItakuraSaitoFramework
 import InfoGeometry.Canonical.Orthogonal55Components
@@ -4741,6 +4743,8 @@ import InfoGeometry.Canonical.ZetaLogDerivativeV4ZeroActionBridge
 import InfoGeometry.Canonical.ZetaMetriplecticSymmetryBridge
 import InfoGeometry.Canonical.ZetaSouriauMetriplecticFlowMasterBridge
 import InfoGeometry.Canonical.ZetaStandardRealizations
+import InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge
+import InfoGeometry.Canonical.KMSStripMobiusKreinNibelungRing
 import InfoGeometry.Canonical.ZetaTrace
 import InfoGeometry.Canonical.ZetaTraceBridge
 import InfoGeometry.Canonical.ZornAdjointTraceTransport
@@ -5298,6 +5302,10 @@ import InfoGeometry.Clifford.FiniteRealFockAdjoint
 import InfoGeometry.Clifford.FiniteRealFockMetric
 import InfoGeometry.Clifford.FiniteRealFockNormBounds
 import InfoGeometry.Clifford.FiniteRealFockStageIsometry
+import InfoGeometry.Clifford.FockOccupationCarrierEquiv
+import InfoGeometry.Canonical.CliffordFockSuperTwistorBridge
+import InfoGeometry.Canonical.FiniteCARCCRCommonCarrier
+import InfoGeometry.Canonical.FiniteCARCCRPeirceBridge
 import InfoGeometry.Clifford.FiniteTiltDiracShell
 import InfoGeometry.Clifford.FiniteTiltDiracShellBridge
 import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
@@ -6671,6 +6679,11 @@ import InfoGeometry.GrandUnification.UVCoordinateSymmetry
 import InfoGeometry.GrandUnification.VirasoroDrazinWittenUnification
 import InfoGeometry.GrandUnification.WeylCharacterCantorBridge
 import InfoGeometry.Graph.DarwinCommitTaxonomy
+import InfoGeometry.Graph.DarwinPeirceKernel
+import InfoGeometry.Graph.CategoricalCharacterDistance
+import InfoGeometry.Graph.CategoricalCharacterAlignment
+import InfoGeometry.Graph.CategoricalFourPoint
+import InfoGeometry.Graph.FiniteDirectedGraphHodge
 -- Standalone executable (global main); build separately: InfoGeometry.GraphExport
 import InfoGeometry.GromovConcentration
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
@@ -7928,6 +7941,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSet
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectLevelSetAudit
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+import InfoGeometry.Canonical.PeirceFrechetOperatorArchetypes
 import InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
 import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks
@@ -7955,6 +7969,12 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixColimitTransport
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MixedDifferentials
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinates
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinatesAudit
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NonCommutativeItFromBitLogisticPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NonCommutativeItFromBitLogisticPosetAudit
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NonCommutativeKMSStripKleinMonodromyPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NonCommutativeKMSStripKleinMonodromyPosetAudit
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NonCommutativeOperatorTimePoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NonCommutativeOperatorTimePosetAudit
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Orientation
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundary
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ParityCoboundaryAudit
@@ -7968,6 +7988,8 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichBrackets
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SandwichCharge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectors
 import InfoGeometry.OperatorAlgebra.PeirceSpine.SupportedProjectorsAudit
+import InfoGeometry.OperatorAlgebra.PeirceSpine.SylvesterWignerDeWittCompleteSpine
+import InfoGeometry.OperatorAlgebra.PeirceSpine.SylvesterWignerDeWittCompleteSpineAudit
 import InfoGeometry.OperatorAlgebra.PeirceSpine.TransferMoments
 import InfoGeometry.OperatorAlgebra.PeirceSpine.UnitSquareAction
 import InfoGeometry.OperatorAlgebra.PeirceSpine.UnitSquareActionAudit

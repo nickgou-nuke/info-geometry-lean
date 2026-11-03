@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Data.Fintype.Order
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # A finite causal synthesis of recurring repository archetypes
@@ -63,6 +70,23 @@ theorem normalized_eq_of_common_shift_exp (s : ι → ℝ) (a : ℝ)
 theorem normalized_pos (w : ι → ℝ) (hw : ∀ i, 0 < w i)
     (i : ι) : 0 < normalized w i := by
   exact div_pos (hw i) (partition_pos w hw)
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem archetype_causal_synthesis_operator_partition
+    {P : B} (hP : P * P = P) (A C X : B) :
+    peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X ∧
+    evenGrade P X + oddGrade P X = X ∧
+    projV P A C X + projPhi P A C X + projJ P A C X + projSig P A C X = (8 : ℤ) • X ∧
+    invS P * invS P = (1 : B) := by
+  refine ⟨(archetype_A9_peirce_block_diagonal_splits hP A C X).1, ?_,
+    (archetype_A5_klein_hadamard_spectra_and_partition hP A C X).1, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end
 end InfoGeometry.Canonical.ArchetypeCausalSynthesis

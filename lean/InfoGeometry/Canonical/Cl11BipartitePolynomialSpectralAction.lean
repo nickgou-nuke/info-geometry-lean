@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
 import InfoGeometry.Canonical.Cl11BipartiteDiracBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DiracPolynomialAction
 
 /-!
 # Finite polynomial spectral action on the bipartite Cl(1,1) stage
@@ -197,5 +204,26 @@ theorem mixed_quadratic_trace_term
   rw [Matrix.trace_smul, Matrix.trace_kronecker]
   simp only [smul_eq_mul]
   ring
+
+/-! ## Peirce Dirac polynomial trace bridge -/
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+open InfoGeometry.Core.IdempotentGraphGrassmannian
+
+/-- Evaluating the finite quadratic trace polynomial at the square of the
+Peirce massive Dirac operator gives the trace of its algebraic quartic split.
+This connects the Peirce ring identity to the existing finite matrix trace
+action; it does not assert an analytic spectral-action formula. -/
+theorem peirceDirac_quadraticPolynomialTrace
+    (P A C : StageTwo) (hP : P * P = P) :
+    polynomialSpectralAction 0 (-1) 1
+      (peirceMassDirac P A C * peirceMassDirac P A C) =
+      Matrix.trace ((2 : ℤ) • genV P A C + idempotencyDefect (genV P A C)) := by
+  let D := peirceMassDirac P A C
+  have hPoly : spectralPolynomial 0 (-1) 1 (D * D) = diracQuarticPolynomial D := by
+    simp [spectralPolynomial, diracQuarticPolynomial]
+    noncomm_ring
+  unfold polynomialSpectralAction
+  rw [hPoly, dirac_quartic_polynomial_split hP A C]
 
 end InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction

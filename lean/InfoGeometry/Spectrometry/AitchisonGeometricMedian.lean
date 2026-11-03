@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Spectrometry.GeometricMedianCore
 import InfoGeometry.Spectrometry.DecoupledThermodynamics
 import Mathlib.Analysis.InnerProductSpace.Dual
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.AitchisonGeometricMedian
 
@@ -232,5 +239,50 @@ theorem annealed_stationary_iff_fixed [Nonempty Line]
 end Stationarity
 
 end
+
+/-! ### Non-Commutative Operator Realization of `AitchisonGeometricMedian.ProofDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ProofDependency.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def aitchisonMedianArchetypeOperator (P A C X : B) : ProofDependency.Archetype → B
+  | .centeredGeometry => oddGrade P X
+  | .inverseDistance => invS P
+  | .thermalWeights => genPhi P A C
+  | .subspacePreservation => evenGrade P (evenGrade P X)
+  | .outlierDamping => evenGrade P (oddGrade P X)
+
+/-- **Theorem (Non-Commutative Operator Identities across `AitchisonGeometricMedian.ProofDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the centered
+off-diagonal projection `oddGrade P X` is damped to `0` by the even-grade projector
+(`evenGrade P (oddGrade P X) = 0`), the even subspace is idempotent, and the reflection
+involution `S` satisfies `S² = 1` and negates the centered geometry `S (oddGrade P X) S = -oddGrade P X`. -/
+theorem aitchisonMedianArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    aitchisonMedianArchetypeOperator P A C X .inverseDistance *
+      aitchisonMedianArchetypeOperator P A C X .inverseDistance = 1 ∧
+    aitchisonMedianArchetypeOperator P A C X .subspacePreservation = evenGrade P X ∧
+    aitchisonMedianArchetypeOperator P A C X .outlierDamping = 0 ∧
+    aitchisonMedianArchetypeOperator P A C X .inverseDistance *
+      aitchisonMedianArchetypeOperator P A C X .centeredGeometry *
+      aitchisonMedianArchetypeOperator P A C X .inverseDistance =
+      -aitchisonMedianArchetypeOperator P A C X .centeredGeometry ∧
+    aitchisonMedianArchetypeOperator P A C X .thermalWeights *
+      aitchisonMedianArchetypeOperator P A C X .thermalWeights = genV P A C := by
+  dsimp only [aitchisonMedianArchetypeOperator]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨_, _, hPhiSq, _, _, _, _, _, _, _, _, _, _, _⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact (archetype_A2_peirce_cartan_grading_and_tangent_closure (P := P) hP A C).1
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · simpa [pow_two] using hPhiSq
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.AitchisonGeometricMedian

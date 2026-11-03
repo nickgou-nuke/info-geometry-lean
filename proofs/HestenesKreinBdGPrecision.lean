@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import proofs.Clifford55
 
@@ -28,6 +34,13 @@ def e2 : M2R := Kcpx
 def P_R : M2R := !![1, 0; 0, 0]
 
 def P_L : M2R := !![0, 0; 0, 1]
+
+/-- The real Krein matrix carrier is genuinely noncommutative: the first-sheet
+projection and the off-diagonal involution do not commute. -/
+theorem realMatrixCarrier_noncommutative_witness : P_R * Jmod ≠ Jmod * P_R := by
+  intro h
+  have h01 := congrArg (fun M : M2R => M 0 1) h
+  norm_num [P_R, Jmod, Matrix.mul_apply, Fin.sum_univ_two] at h01
 
 @[simp] theorem η_sq : η * η = (1 : M2R) := by
   ext i j
@@ -224,6 +237,14 @@ theorem finite_CCR_trace_obstruction (Q P : M2R) :
   unfold comm
   rw [Matrix.trace_sub, Matrix.trace_mul_comm Q P]
   simp
+
+/-- The trace identity gives the precise finite `2 × 2` obstruction: no pair
+of real matrices can have commutator equal to the identity matrix. -/
+theorem no_finite_CCR_identity (Q P : M2R) : comm Q P ≠ 1 := by
+  intro h
+  have ht := finite_CCR_trace_obstruction Q P
+  rw [h, Matrix.trace_one] at ht
+  norm_num at ht
 
 /-! ## Supergraded real super-Lie interface -/
 

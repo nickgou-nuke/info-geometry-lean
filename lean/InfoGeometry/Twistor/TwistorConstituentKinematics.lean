@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Twistor.TwistorKinematicTensor
+import InfoGeometry.Twistor.InfinityTwistor
 
 /-! # Finite constituent sums and their mass invariant
 
@@ -18,6 +19,7 @@ namespace InfoGeometry.Twistor.TwistorConstituentKinematics
 open InfoGeometry.Twistor.PenroseIncidence
 open InfoGeometry.Twistor.TwistorKinematicTensor
 open InfoGeometry.Twistor.SpinorOuterProduct
+open InfoGeometry.Twistor.InfinityTwistor
 open scoped BigOperators Matrix
 
 abbrev Packet (ι : Type*) := ι → Twistor4
@@ -82,6 +84,26 @@ def spinorMinor (pi rho : Spinor2) : ℂ := pi 0 * rho 1 - pi 1 * rho 0
 
 def pairMassSq (Z W : Twistor4) : ℝ := Complex.normSq (spinorMinor Z.2 W.2)
 
+/-- A pair has zero mass exactly when its infinity-twistor pairing vanishes. -/
+theorem pairMassSq_zero_iff_infinityTwistor_pairing_zero (Z W : Twistor4) :
+    pairMassSq Z W = 0 ↔ infinityTwistor Z W = 0 := by
+  rw [pairMassSq, Complex.normSq_eq_zero, infinityTwistor_apply]
+  simp [spinorMinor]
+
+/-- If one constituent lies in the radical of the infinity twistor, its pair
+with every constituent has zero mass. -/
+theorem pairMassSq_eq_zero_of_first_constituent_in_infinity_radical
+    (Z W : Twistor4) (hZ : infinityTwistor Z = 0) :
+    pairMassSq Z W = 0 := by
+  apply (pairMassSq_zero_iff_infinityTwistor_pairing_zero Z W).2
+  exact congrArg (fun f : Module.Dual ℂ Twistor4 => f W) hZ
+
+/-- The radical criterion gives the equivalent lower-spinor rank condition. -/
+theorem pairMassSq_eq_zero_of_first_lower_spinor_zero
+    (Z W : Twistor4) (hZ : Z.2 = 0) : pairMassSq Z W = 0 := by
+  apply pairMassSq_eq_zero_of_first_constituent_in_infinity_radical
+  exact (infinityTwistor_radical Z).2 hZ
+
 /-- Existing Hermitian-dyad theorem, specialized to the paper's conjugate spinors. -/
 theorem pairMomentum_determinant (Z W : Twistor4) :
     (momentum Z + momentum W).det = (pairMassSq Z W : ℂ) := by
@@ -90,6 +112,21 @@ theorem pairMomentum_determinant (Z W : Twistor4) :
   simp only [star_star] at h
   rw [h]
   simp [pairMassSq, spinorMinor, Complex.normSq_eq_conj_mul_self]
+
+/-- The total momentum is null exactly when the infinity-twistor pairing of its
+two null constituents vanishes. This joins the momentum determinant and the
+native degenerate twistor form on the same carrier. -/
+theorem pairMomentum_determinant_zero_iff_infinityTwistor_pairing_zero
+    (Z W : Twistor4) :
+    (momentum Z + momentum W).det = 0 ↔ infinityTwistor Z W = 0 := by
+  rw [pairMomentum_determinant]
+  constructor
+  · intro h
+    apply (pairMassSq_zero_iff_infinityTwistor_pairing_zero Z W).mp
+    exact_mod_cast h
+  · intro h
+    have hm := (pairMassSq_zero_iff_infinityTwistor_pairing_zero Z W).mpr h
+    exact_mod_cast hm
 
 theorem pairMassSq_nonneg (Z W : Twistor4) : 0 ≤ pairMassSq Z W :=
   Complex.normSq_nonneg _
@@ -100,7 +137,9 @@ theorem pairMassSq_pos_iff (Z W : Twistor4) :
 
 theorem pairMassSq_zero_iff (Z W : Twistor4) :
     pairMassSq Z W = 0 ↔ Z.2 0 * W.2 1 = Z.2 1 * W.2 0 := by
-  rw [pairMassSq, Complex.normSq_eq_zero, spinorMinor, sub_eq_zero]
+  rw [pairMassSq_zero_iff_infinityTwistor_pairing_zero,
+    infinityTwistor_apply]
+  exact sub_eq_zero
 
 /-- The paper's normalization reads mass squared as twice this determinant. -/
 theorem paper_pair_mass (Z W : Twistor4) :

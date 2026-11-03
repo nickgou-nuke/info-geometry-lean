@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 
@@ -39,6 +47,28 @@ private theorem no_fixed_points_of_twist_translation (n : ℕ) (hn : 2 ≤ n) :
   have h1 : (1 : ZMod n) = 0 := by
     exact add_left_cancel (a := x) (by simpa using hx)
   exact one_ne_zero h1
+
+/-- Translation by one on `ZMod n` has a fixed point exactly for the trivial
+quotient. This is the carrier-level fact underlying the model's splitting
+predicate; it makes no assertion about an external bundle or section. -/
+theorem twistTranslation_has_fixedPoint_iff_torsionTrivial
+    (D : CdimAnomalyFunctorialSplittingObstructionData) :
+    (∃ x : ZMod D.torsionOrder, D.twistTranslation x = x) ↔ D.torsionTrivial := by
+  constructor
+  · rintro ⟨x, hx⟩
+    by_contra hnot
+    have hneq : 1 ≠ D.torsionOrder := by
+      intro h
+      exact hnot h.symm
+    have hlt : 1 < D.torsionOrder := lt_of_le_of_ne D.torsionPositive hneq
+    exact no_fixed_points_of_twist_translation D.torsionOrder
+      (Nat.succ_le_of_lt hlt) ⟨x, by simpa [twistTranslation] using hx⟩
+  · intro htrivial
+    cases D with
+    | mk freeRank torsionOrder torsionPositive =>
+      change torsionOrder = 1 at htrivial
+      subst torsionOrder
+      exact ⟨0, Subsingleton.elim _ _⟩
 
 /-- Paper label: `thm:cdim-anomaly-functorial-splitting-obstruction-rge2-tor`.
 In the chapter-local model, the only obstruction to a natural splitting is the presence of a

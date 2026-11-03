@@ -1,4 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.D6ReciprocalLatticeBrillouinZone
+import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Expand
@@ -194,5 +202,41 @@ theorem prime_energy_reflection_invariant_iff (first second : Nat.Primes) :
     exact prime_energy_reflection_covariance first first point
 
 end
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def archetypeOperatorWitness (P A C : B) : ProofDependency.Archetype → B
+  | .primeLogEnergy => P
+  | .reciprocalRotation => conePlus P A
+  | .invariantMetric => coneMinus P C
+  | .cyclotomicSpectrum => genPhi P A C
+  | .voronoiCell => genSig P A C
+  | .primeLabelCovariance => genV P A C
+
+theorem prime_hexagonal_geometry_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    archetypeOperatorWitness P A C .primeLogEnergy *
+      archetypeOperatorWitness P A C .primeLogEnergy =
+      archetypeOperatorWitness P A C .primeLogEnergy ∧
+    (archetypeOperatorWitness P A C .reciprocalRotation) ^ 2 = 0 ∧
+    (archetypeOperatorWitness P A C .cyclotomicSpectrum) ^ 2 =
+      archetypeOperatorWitness P A C .primeLabelCovariance ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 ∧
+    (archetypeOperatorWitness P A C .voronoiCell) ^ 2 -
+      (archetypeOperatorWitness P A C .primeLabelCovariance) ^ 2 = 0 := by
+  dsimp only [archetypeOperatorWitness]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, _, hPhiSq, _, _, _, _, hAnti, _, _, hSigmaSq, _, _, _⟩
+  refine ⟨hP, ?_, ?_, ?_, ?_⟩
+  · simpa [pow_two] using hPlus
+  · simpa [pow_two] using hPhiSq
+  · simpa [anticomm] using hAnti
+  · simpa [pow_two] using sub_eq_zero.mpr hSigmaSq
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Arithmetic.PrimeHexagonalGeometry

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -13,6 +18,7 @@ import InfoGeometry.Canonical.CovariantBianchiMatrixChernWeilBridge
 import InfoGeometry.Canonical.NonAbelianCovariantBianchiChernWeilBridge
 import InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 import InfoGeometry.Canonical.YangMillsSelfDualInstantonBridge
+import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 import Mathlib.Tactic.NoncommRing
 
 noncomputable section
@@ -30,7 +36,7 @@ open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 open InfoGeometry.Canonical.YangMillsSelfDualInstantonBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Lemma**: Covariant Derivative Negation Linearity D_A (-M) = - D_A M. -/
 theorem covariantDerivative_neg
@@ -84,5 +90,66 @@ theorem master_self_dual_connection_curvature_yang_mills_synthesis
   self_dual_connection_curvature_solves_yang_mills star A d h_self_dual h_bianchi,
   covariantDerivative_neg A d (curvatureFromConnection d A)
 ⟩
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+open InfoGeometry.Core.IdempotentGraphGrassmannian
+
+/-- **Theorem (`peirce_defect_connection_curvature_and_yang_mills_bridge`)**:
+Explicit carrier bridge on `Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)` connecting
+the Peirce boundary defect `genV P A_op C_op`, the chiral connection `A_conn = genPhi P A_op C_op`,
+and the Yang–Mills connection curvature `curvatureFromConnection`:
+1. For any idempotent matrix `P` (`P * P = P`), pinching `idempotencyDefect X` differs from
+   `idempotencyDefect (evenGrade P X)` by `genV P X X`;
+2. With `A_conn = genPhi P A_op C_op`, whenever `matrixExteriorDerivative d A_conn = peirceGradingDeriv P A_conn`,
+   the Yang–Mills curvature `curvatureFromConnection d A_conn` equals
+   `peirceMaurerCartanCurvature P A_op C_op = genJ P A_op C_op + genV P A_op C_op`,
+   with even Peirce part `evenGrade P (curvatureFromConnection d A_conn) = genV P A_op C_op`;
+3. For the algebraic connection curvature (`d = 0`), `curvatureFromConnection 0 A_conn = genV P A_op C_op`,
+   `covariantDerivative A_conn 0 (genV P A_op C_op) = 0`, and for any self-dual Hodge star `star` on
+   `genV P A_op C_op` (`isSelfDualCurvature star (genV P A_op C_op)`),
+   `covariantDerivative A_conn 0 (matrixHodgeStar star (curvatureFromConnection 0 A_conn)) = 0`. -/
+theorem peirce_defect_connection_curvature_and_yang_mills_bridge
+    (star d : Module.End R (ExteriorAlgebra R V))
+    {P : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)} (hP : P * P = P)
+    (A_op C_op X : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) :
+    let A_conn := genPhi P A_op C_op
+    evenGrade P (idempotencyDefect X) - idempotencyDefect (evenGrade P X) = genV P X X ∧
+    (matrixExteriorDerivative d A_conn = peirceGradingDeriv P A_conn →
+      curvatureFromConnection d A_conn = genJ P A_op C_op + genV P A_op C_op ∧
+      evenGrade P (curvatureFromConnection d A_conn) = genV P A_op C_op) ∧
+    curvatureFromConnection 0 A_conn = genV P A_op C_op ∧
+    covariantDerivative A_conn 0 (genV P A_op C_op) = 0 ∧
+    (isSelfDualCurvature star (genV P A_op C_op) →
+      covariantDerivative A_conn 0 (matrixHodgeStar star (curvatureFromConnection 0 A_conn)) = 0) := by
+  dsimp only
+  let A_conn := genPhi P A_op C_op
+  rcases peirce_maurer_cartan_curvature_bianchi_and_self_dual_yang_mills hP A_op C_op X X with
+    ⟨_, _, hMC, hEvenMC, _, _, _, _, hCommV, _, _⟩
+  have hZeroDeriv : ∀ M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V),
+      matrixExteriorDerivative (0 : Module.End R (ExteriorAlgebra R V)) M = 0 := by
+    intro M
+    ext i j
+    rfl
+  have hPhiSq : A_conn * A_conn = genV P A_op C_op := by
+    dsimp [A_conn]
+    peirce_nf hP
+  have hCurv0 : curvatureFromConnection 0 A_conn = genV P A_op C_op := by
+    unfold curvatureFromConnection
+    rw [hZeroDeriv, zero_add, hPhiSq]
+  have hCov0 : covariantDerivative A_conn 0 (genV P A_op C_op) = 0 := by
+    unfold covariantDerivative matrixCommutator
+    rw [hZeroDeriv, zero_add]
+    exact hCommV
+  refine ⟨even_idempotencyDefect_sub P X hP, ?_, hCurv0, hCov0, ?_⟩
+  · intro hd
+    have hCurv : curvatureFromConnection d A_conn = peirceMaurerCartanCurvature P A_op C_op := by
+      unfold curvatureFromConnection peirceMaurerCartanCurvature
+      rw [hd]
+    rw [hCurv]
+    exact ⟨hMC, hEvenMC⟩
+  · intro hSD
+    rw [hCurv0]
+    exact self_dual_solves_yang_mills star A_conn 0 (genV P A_op C_op) hSD hCov0
 
 end InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge

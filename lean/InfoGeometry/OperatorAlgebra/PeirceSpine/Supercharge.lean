@@ -99,6 +99,22 @@ theorem archetype_A27_grading_parities (A C : B) :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [qgtPlus, qgtMinus, parityConj]); peirce_nf hP)
 
+/-- The complementary right actions and commutator weights of the chiral
+charges. These complete the A27 eigenvalue table without imposing any
+characteristic restriction on the coefficient ring. -/
+theorem chiral_parity_right_charge_and_commutator_actions (A C : B) :
+    qgtPlus P A C * invS P = qgtPlus P A C ∧
+    qgtMinus P A C * invS P = -qgtMinus P A C ∧
+    comm (invS P) (conePlus P A) = (2 : ℤ) • conePlus P A ∧
+    comm (invS P) (coneMinus P C) = -((2 : ℤ) • coneMinus P C) ∧
+    comm (invS P) (genV P A C) = 0 ∧
+    comm (invS P) (genSig P A C) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  all_goals
+    first
+    | (simp only [qgtPlus, qgtMinus]; peirce_nf hP <;> abel_nf)
+    | (peirce_nf hP <;> abel_nf)
+
 /-- Ordered mixed-supercharge products. Their odd residuals lie in the
 `N₋` corner for these factor orders; replacing them by `N₊` is false. -/
 theorem mixed_supercharge_product_expansions (A C : B) :
@@ -220,6 +236,26 @@ theorem parityConj_fixed_iff_commutes_with_grading (X : B) :
 theorem parityConj_fixed_iff_commutator_zero (X : B) :
     parityConj P X = X ↔ comm (invS P) X = 0 := by
   rw [parityConj_fixed_iff_commutes_with_grading hP, comm, sub_eq_zero]
+
+/-- The inner derivation by the Peirce grading involution is annihilated by
+`t (t² - 4)`. The displayed channel formulas are scaled
+Peirce-component identities; they do not require division by `2` or `4`. -/
+theorem invS_commutator_cubic_and_scaled_peirce_channels (X : B) :
+    comm (invS P) (comm (invS P) (comm (invS P) X)) =
+      (4 : ℤ) • comm (invS P) X ∧
+    (4 : ℤ) • X - comm (invS P) (comm (invS P) X) =
+      (4 : ℤ) • evenGrade P X ∧
+    comm (invS P) (comm (invS P) X) +
+        (2 : ℤ) • comm (invS P) X = (8 : ℤ) • conePlus P X ∧
+    comm (invS P) (comm (invS P) X) -
+        (2 : ℤ) • comm (invS P) X = (8 : ℤ) • coneMinus P X := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · rw [conePlus]
+    peirce_nf hP
+  · rw [coneMinus]
+    peirce_nf hP
 
 /-! ### A₂₈ -/
 

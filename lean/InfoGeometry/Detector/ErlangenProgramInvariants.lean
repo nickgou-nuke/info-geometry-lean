@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.ErlangenProgramInvariants
 
@@ -118,5 +125,44 @@ theorem master_invariants (s a V x p : ℝ) (hs : 0 < s) :
     nullTriad_casimir x p,
     (reflection_fixed_iff (1 / 2)).mpr rfl,
     carnotPrimitive_unit_interval⟩
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ErlangenProgramInvariants.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def erlangenArchetypeOperator (P A C X : B) : Archetype → B
+  | .erlangenGeometry => invS P
+  | .dilationInvariant => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genV P A C) (genSig P A C)
+  | .nullCasimir => genSig P A C * genSig P A C - genV P A C * genV P A C
+  | .modularFixedPoint => invS P * evenGrade P X * invS P
+  | .masterSynthesis => projV P A C X + projPhi P A C X + projJ P A C X + projSig P A C X
+
+/-- **Theorem (Non-Commutative Erlangen Operator Invariants over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the Erlangen
+reflection involution satisfies `S² = 1`, `[V, Σ] = 0`, the null Casimir difference
+`Σ² - V² = 0` vanishes, the modular fixed-point subspace `evenGrade P X` is fixed under
+conjugation by `S`, and the Fierz master synthesis holds. -/
+theorem erlangenArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    erlangenArchetypeOperator P A C X .erlangenGeometry *
+      erlangenArchetypeOperator P A C X .erlangenGeometry = 1 ∧
+    erlangenArchetypeOperator P A C X .dilationInvariant = 0 ∧
+    erlangenArchetypeOperator P A C X .nullCasimir = 0 ∧
+    erlangenArchetypeOperator P A C X .modularFixedPoint = evenGrade P X ∧
+    erlangenArchetypeOperator P A C X .masterSynthesis =
+      (8 : ℤ) • X := by
+  dsimp only [erlangenArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A5_klein_hadamard_spectra_and_partition
+      (P := P) hP A C X).1
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.ErlangenProgramInvariants

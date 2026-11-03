@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.GromovWittenQuantumCohomologyWDVVCapstone
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.QuantumGeometry.GromovWittenGrothendieck
 
@@ -220,5 +227,56 @@ theorem quantum_cohomology_associative (q : ℝ) (i j k l : Fin 2) :
   p1_quantum_ring_associativity q i j k l
 
 end ConifoldParabola
+
+/-! ### Non-Commutative Operator Realization of `GromovWittenGrothendieck.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `GromovWittenGrothendieck.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def gwGrothendieckArchetypeOperator (P A C : B) : Archetype → B
+  | .erlangen => invS P
+  | .motive => conePlus P A
+  | .langlands => coneMinus P C
+  | .quantumCohomology => genPhi P A C
+  | .wdvv => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Quantum Cohomology Deformation over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, while the classical
+nilpotent generators `motive = a₊` and `langlands = c₋` satisfy `a₊² = 0` and `c₋² = 0`,
+their sum `quantumCohomology = Φ = a₊ + c₋` satisfies the deformed quantum hyperplane
+relation `Φ² = V = a₊ c₋ + c₋ a₊`, is negated by the Erlangen reflection involution
+`S Φ S = -Φ` (whose square `(-Φ)² = Φ² = V` is invariant), and commutes with `V`. -/
+theorem gwGrothendieckArchetype_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    gwGrothendieckArchetypeOperator P A C .erlangen *
+      gwGrothendieckArchetypeOperator P A C .erlangen = 1 ∧
+    gwGrothendieckArchetypeOperator P A C .motive *
+      gwGrothendieckArchetypeOperator P A C .motive = 0 ∧
+    gwGrothendieckArchetypeOperator P A C .langlands *
+      gwGrothendieckArchetypeOperator P A C .langlands = 0 ∧
+    gwGrothendieckArchetypeOperator P A C .quantumCohomology *
+      gwGrothendieckArchetypeOperator P A C .quantumCohomology =
+      gwGrothendieckArchetypeOperator P A C .wdvv ∧
+    gwGrothendieckArchetypeOperator P A C .erlangen *
+      gwGrothendieckArchetypeOperator P A C .quantumCohomology *
+      gwGrothendieckArchetypeOperator P A C .erlangen =
+      -gwGrothendieckArchetypeOperator P A C .quantumCohomology ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (gwGrothendieckArchetypeOperator P A C .wdvv)
+      (gwGrothendieckArchetypeOperator P A C .quantumCohomology) = 0 := by
+  dsimp only [gwGrothendieckArchetypeOperator]
+  have hA2 := archetype_A2_peirce_cartan_grading_and_tangent_closure (P := P) hP A C
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, hMinus, hPhiSq, _, _, _, _, _, _, _, _, _, _, _, _⟩
+  refine ⟨hA2.1, hPlus, hMinus, hPhiSq, ?_, ?_⟩
+  · dsimp only [invS, genPhi]
+    peirce_nf hP
+  · peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.QuantumGeometry.GromovWittenGrothendieck

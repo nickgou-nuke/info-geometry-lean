@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
@@ -100,5 +107,38 @@ theorem causal_antisymm {a b : Archetype} :
   cases a <;> cases b <;> simp [causallyPrecedes, causalRank] at hab hba ⊢
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def archetypeOperatorWitness (P A C : B) : Archetype → B
+  | .qedCorrelation => P
+  | .separability => conePlus P A
+  | .monopoleProjection => genPhi P A C
+  | .rankHierarchy => genSig P A C
+  | .squareRootInversion => genV P A C
+
+theorem two_point_quantum_field_genesis_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    archetypeOperatorWitness P A C .qedCorrelation *
+      archetypeOperatorWitness P A C .qedCorrelation =
+      archetypeOperatorWitness P A C .qedCorrelation ∧
+    (archetypeOperatorWitness P A C .separability) ^ 2 = 0 ∧
+    (archetypeOperatorWitness P A C .monopoleProjection) ^ 2 =
+      archetypeOperatorWitness P A C .squareRootInversion ∧
+    (archetypeOperatorWitness P A C .rankHierarchy) ^ 2 -
+      (archetypeOperatorWitness P A C .squareRootInversion) ^ 2 = 0 := by
+  dsimp only [archetypeOperatorWitness]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, _, hPhiSq, _, _, _, _, _, _, _, hSigmaSq, _, _, _⟩
+  refine ⟨hP, ?_, ?_, ?_⟩
+  · simpa [pow_two] using hPlus
+  · simpa [pow_two] using hPhiSq
+  · simpa [pow_two] using sub_eq_zero.mpr hSigmaSq
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.TwoPointQuantumFieldGenesis

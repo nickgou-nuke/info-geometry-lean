@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FinCases
@@ -963,6 +964,23 @@ theorem quadratic_dispersion_nonneg_of_toomre
   exact add_nonneg h_sq1 h_div
 
 end ArchetypeV_ColimitKMSAndDispersion
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem canonical_pure_math_poset_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    invS P * invS P = (1 : B) ∧
+    evenGrade P X + oddGrade P X = X ∧
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    genSig P A C * genSig P A C = genV P A C * genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Synthesis.CanonicalPureMathPoset
 

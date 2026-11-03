@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Quantum.AntiunitaryKramers
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.ComplexKramersAntiunitary
@@ -27,6 +33,7 @@ import InfoGeometry.Quantum.CommutingInvolutionCore
 import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.KitaevChain
 import InfoGeometry.Quantum.KitaevPauliBraiding
+import InfoGeometry.Quantum.KitaevDimerizationSwitch
 import InfoGeometry.Quantum.MajoranaKramersPairingCanonical
 import InfoGeometry.Quantum.MajoranaVacuumWickFour
 import InfoGeometry.Quantum.Monodromy

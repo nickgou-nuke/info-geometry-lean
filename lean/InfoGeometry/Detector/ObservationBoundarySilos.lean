@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.ObservationBoundarySilos
 
@@ -82,5 +89,31 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ObservationBoundarySilos.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def observationBoundaryOperator (P A C X : B) : Archetype → B
+  | .observationBoundary => peirce11 P X * peirce00 P X
+  | .substrateIndependence => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genV P A C) (genPhi P A C)
+
+/-- **Theorem (Non-Commutative Operator Boundary Silo Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the two diagonal
+Peirce silos `P X P` and `(1 - P) X (1 - P)` are mutually orthogonal and the quadratic
+substrate operator `V = Φ²` commutes with `Φ`. -/
+theorem observationBoundary_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    observationBoundaryOperator P A C X .observationBoundary = 0 ∧
+    peirce00 P X * peirce11 P X = 0 ∧
+    observationBoundaryOperator P A C X .substrateIndependence = 0 ∧
+    genPhi P A C * genPhi P A C = genV P A C := by
+  dsimp only [observationBoundaryOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.ObservationBoundarySilos

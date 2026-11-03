@@ -1,5 +1,19 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.IsotropicCyclotomicGenesis
+import InfoGeometry.Algebra.IsotropicCyclotomicGalois
+import InfoGeometry.Algebra.NoncommutativeZornNambuAssociator
+import InfoGeometry.Algebra.OperatorCyclotomicParafermions
+import InfoGeometry.Algebra.JordanWignerCyclotomicBridge
+import InfoGeometry.Algebra.OperatorCyclotomicCoxeterBridge
+import InfoGeometry.Algebra.PeirceDeWittChiralSplit
+import InfoGeometry.Algebra.DeWittPeirceChiralBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 open InfoGeometry.Topology

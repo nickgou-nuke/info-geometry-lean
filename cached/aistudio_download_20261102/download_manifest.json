@@ -1,0 +1,134 @@
+{
+  "export_date_utc": "2026-11-02",
+  "inputs": [
+    {
+      "id": "10VJyRVd3fKau8zB_JvrNpftbq-XP0gSp",
+      "url": "https://drive.google.com/file/d/10VJyRVd3fKau8zB_JvrNpftbq-XP0gSp/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/10VJyRVd3fKau8zB_JvrNpftbq-XP0gSp__Paste_November_02_2026_-_5_08PM.txt",
+      "bytes": 51751,
+      "sha256": "a4c4e8dde2da71b5c0afe904e0031567e6d7c34db615c115ff1620cfd23cbd0d",
+      "duplicate_of": null
+    },
+    {
+      "id": "1LtuF7FL-_BoHwf4w-NXmlItDSMJ8nSEF",
+      "url": "https://drive.google.com/file/d/1LtuF7FL-_BoHwf4w-NXmlItDSMJ8nSEF/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1LtuF7FL-_BoHwf4w-NXmlItDSMJ8nSEF__Paste_November_02_2026_-_11_12AM.txt",
+      "bytes": 34717,
+      "sha256": "7f6ce98a7de0b6e141e79ba1e51ca15264333adbdc54f120d307c44ba57d8aa8",
+      "duplicate_of": null
+    },
+    {
+      "id": "1R4cSvtth-2-5VDZ3YwrK0vq8p9_hze1Lj",
+      "url": "https://drive.google.com/file/d/1R4cSvtth-2-5VDZ3YwrK0vq8p9_hze1Lj/view?usp=sharing",
+      "status": "http_404",
+      "path": null,
+      "error": "Google Drive public download endpoint returned 404"
+    },
+    {
+      "id": "1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi",
+      "url": "https://drive.google.com/file/d/1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi__Paste_November_02_2026_-_5_19PM.txt",
+      "bytes": 41766,
+      "sha256": "e3639590bc7ed2eef95278954d30b8fe9d24b4149e1e624f9f4655e57e431aae",
+      "duplicate_of": null
+    },
+    {
+      "id": "1X7tkGR-aemsGa4Pu5-r2B-vVTr6qblJi",
+      "url": "https://drive.google.com/file/d/1X7tkGR-aemsGa4Pu5-r2B-vVTr6qblJi/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1X7tkGR-aemsGa4Pu5-r2B-vVTr6qblJi__Paste_November_02_2026_-_11_08AM.txt",
+      "bytes": 54319,
+      "sha256": "1fae629815f05b7011c4db94ce99b8e60c59b933685f814a6939bb5c97ffb6c8",
+      "duplicate_of": null
+    },
+    {
+      "id": "1byXiUlykdbNMsfArjR5k4MRBj0AAWWUX",
+      "url": "https://drive.google.com/file/d/1byXiUlykdbNMsfArjR5k4MRBj0AAWWUX/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1byXiUlykdbNMsfArjR5k4MRBj0AAWWUX__Paste_November_02_2026_-_10_23AM.txt",
+      "bytes": 39691,
+      "sha256": "fad73845e081f8688d0b5b5c5d1bf58d32efc1fa59085280f72f6da8181fde1f",
+      "duplicate_of": null
+    },
+    {
+      "id": "1en-oJDgiG8txvxi_IOxKtWOwgI0B-Tva",
+      "url": "https://drive.google.com/file/d/1en-oJDgiG8txvxi_IOxKtWOwgI0B-Tva/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1en-oJDgiG8txvxi_IOxKtWOwgI0B-Tva__Paste_November_02_2026_-_1_17PM.txt",
+      "bytes": 46627,
+      "sha256": "54840e44eaa01ccbc384b5194df5d0e2a650da2f45a2b4708e1b57cc385296cb",
+      "duplicate_of": null
+    },
+    {
+      "id": "1fFi1wFgRFE8gfMwLKHVD6VY0LKhd4zQE",
+      "url": "https://drive.google.com/file/d/1fFi1wFgRFE8gfMwLKHVD6VY0LKhd4zQE/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1fFi1wFgRFE8gfMwLKHVD6VY0LKhd4zQE__Paste_November_02_2026_-_10_12AM.txt",
+      "bytes": 33760,
+      "sha256": "520b9b73e1fecc753c97e73b0de7274ec384e5bec1c61b090bffc8e9f9cce291",
+      "duplicate_of": null
+    },
+    {
+      "id": "1iUvTlsUdZfBMgTHBGd__big54dTLpiFY",
+      "url": "https://drive.google.com/file/d/1iUvTlsUdZfBMgTHBGd__big54dTLpiFY/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1iUvTlsUdZfBMgTHBGd__big54dTLpiFY__Paste_November_02_2026_-_5_21PM.txt",
+      "bytes": 41766,
+      "sha256": "e3639590bc7ed2eef95278954d30b8fe9d24b4149e1e624f9f4655e57e431aae",
+      "duplicate_of": "1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi"
+    },
+    {
+      "id": "1lxzolfFvjI6VylIT2c79B0BeOaROB_LP",
+      "url": "https://drive.google.com/file/d/1lxzolfFvjI6VylIT2c79B0BeOaROB_LP/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1lxzolfFvjI6VylIT2c79B0BeOaROB_LP__Paste_November_02_2026_-_10_59AM.txt",
+      "bytes": 42228,
+      "sha256": "e88befd2756f58923c570c9073bd3d87747c74fe18b09343eea7fafafacb9eb5",
+      "duplicate_of": null
+    },
+    {
+      "id": "1zXzGnI4RiEWiVOk4NU3SuZe1LumRJbBu",
+      "url": "https://drive.google.com/file/d/1zXzGnI4RiEWiVOk4NU3SuZe1LumRJbBu/view?usp=sharing",
+      "status": "downloaded",
+      "path": "cached/aistudio_download_20261102/1zXzGnI4RiEWiVOk4NU3SuZe1LumRJbBu__Paste_November_02_2026_-_9_35AM.txt",
+      "bytes": 25438,
+      "sha256": "bc4b3688aab26b79e3f440f983b3c2bb3c034fcf9b35cd9b63199a1507b54007",
+      "duplicate_of": null
+    },
+    {
+      "id": "1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1",
+      "url": "https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1%22%5D,%22action%22:%22open%22%7D",
+      "status": "downloaded_json",
+      "path": "cached/aistudio_download_20261102/1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1__Algebraic_Framework_of_Split-Octonions.json",
+      "bytes": 2893812,
+      "sha256": "4df940f75f1e756ab38dd19c7d9e92a2a986cac3075347e63b0a86a25653f2af",
+      "chunks": 76,
+      "roles": {
+        "user": 26,
+        "model": 50
+      },
+      "first_timestamp": "2026-11-02T07:21:05.473Z",
+      "last_timestamp": "2026-11-02T15:24:33.973Z"
+    }
+  ],
+  "inline_attachments": [
+    {
+      "turn": 35,
+      "role": "user",
+      "displayName": "Paste November 02, 2026 - 10:35AM",
+      "mimeType": "text/plain",
+      "file": "cached/aistudio_download_20261102/inline_attachments/035__Paste_November_02_2026_-_10_35AM.txt",
+      "bytes": 36498,
+      "sha256": "9e6308c18894d123a6c902e8172cd3680b5f9a5b672ff850749097aa75b2c295"
+    }
+  ],
+  "transcript_extraction": {
+    "path": "cached/aistudio_download_20261102/full_transcript_with_attachments.md",
+    "visible_chunks": 76,
+    "has_separate_thought_field": false,
+    "raw_json_authority": "cached/aistudio_download_20261102/1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1__Algebraic_Framework_of_Split-Octonions.json"
+  }
+}

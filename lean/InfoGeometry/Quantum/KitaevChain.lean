@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.Pfaffian
@@ -450,6 +456,127 @@ noncomputable def boundaryDiracFermion {A : Type*} [Ring A] {N : ℕ} (hN : 0 < 
 /-- Majorana Clifford operators with normalization `γ_i² = 1`. -/
 structure MajoranaCliffordOperators (N : ℕ) (A : Type*) [Ring A] extends MajoranaOperators N A where
   h_sq : ∀ i, γ i * γ i = 1
+
+/-- A bond made from two distinct normalized Majorana generators is an
+invertible-square operator: its square is `-1`. This distinguishes a Kitaev
+dimer bond from a square-zero Peirce root step in a Zorn flag. -/
+theorem majorana_bond_square {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaCliffordOperators N A) (i j : Fin (2 * N)) (hij : i ≠ j) :
+    (ops.γ i * ops.γ j) * (ops.γ i * ops.γ j) = -1 := by
+  have hanti : ops.γ j * ops.γ i = -(ops.γ i * ops.γ j) :=
+    eq_neg_of_add_eq_zero_right (ops.h_ortho i j hij)
+  calc
+    (ops.γ i * ops.γ j) * (ops.γ i * ops.γ j) =
+        -(ops.γ i * ops.γ i * (ops.γ j * ops.γ j)) := by
+          calc
+            _ = ops.γ i * (ops.γ j * ops.γ i) * ops.γ j := by
+              noncomm_ring
+            _ = ops.γ i * (-(ops.γ i * ops.γ j)) * ops.γ j := by rw [hanti]
+            _ = -(ops.γ i * ops.γ i * (ops.γ j * ops.γ j)) := by noncomm_ring
+    _ = -1 := by rw [ops.h_sq i, ops.h_sq j]; simp
+
+/-- Majorana dimer bonds with disjoint mode supports commute. This is the
+pair-chain law used by the inter-cell and intra-cell finite Kitaev pairings. -/
+theorem disjoint_majorana_bonds_commute {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaOperators N A) (i j k l : Fin (2 * N))
+    (hki : k ≠ i) (hkj : k ≠ j) (hli : l ≠ i) (hlj : l ≠ j) :
+    (ops.γ i * ops.γ j) * (ops.γ k * ops.γ l) =
+      (ops.γ k * ops.γ l) * (ops.γ i * ops.γ j) := by
+  have hk := gamma_comm_product_of_avoids ops k i j hki hkj
+  have hl := gamma_comm_product_of_avoids ops l i j hli hlj
+  calc
+    (ops.γ i * ops.γ j) * (ops.γ k * ops.γ l) =
+        ((ops.γ i * ops.γ j) * ops.γ k) * ops.γ l := by noncomm_ring
+    _ = (ops.γ k * (ops.γ i * ops.γ j)) * ops.γ l := by rw [← hk]
+    _ = ops.γ k * ((ops.γ i * ops.γ j) * ops.γ l) := by noncomm_ring
+    _ = ops.γ k * (ops.γ l * (ops.γ i * ops.γ j)) := by rw [← hl]
+    _ = (ops.γ k * ops.γ l) * (ops.γ i * ops.γ j) := by noncomm_ring
+
+/-- Distinct sweet-spot Kitaev bonds have disjoint Majorana supports, so their
+unweighted pair operators commute. This records the matching structure of
+the chain; a Zorn flag's adjacent corner roots instead compose into a long
+root when their Peirce indices match. -/
+theorem sweetSpot_bonds_pairwise_commute {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaOperators N A) (j k : Fin (N - 1)) (hjk : j ≠ k) :
+    (ops.γ ⟨2 * j.val + 1, by omega⟩ * ops.γ ⟨2 * j.val + 2, by omega⟩) *
+      (ops.γ ⟨2 * k.val + 1, by omega⟩ * ops.γ ⟨2 * k.val + 2, by omega⟩) =
+    (ops.γ ⟨2 * k.val + 1, by omega⟩ * ops.γ ⟨2 * k.val + 2, by omega⟩) *
+      (ops.γ ⟨2 * j.val + 1, by omega⟩ * ops.γ ⟨2 * j.val + 2, by omega⟩) := by
+  apply disjoint_majorana_bonds_commute ops
+  all_goals
+    intro h
+    have hv := congrArg Fin.val h
+    have hj' := j.isLt
+    have hk' := k.isLt
+    dsimp at hv
+    omega
+
+/-! ## Complementary finite dimerization -/
+
+/-- The complementary, intra-cell pairing on `N + 1` Majorana sites.  Its
+first bond contains the left boundary generator, unlike
+`sweetSpotHamiltonian`, whose first bond starts at index `1`. -/
+noncomputable def intraCellDimerHamiltonian {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaCliffordOperators (N + 1) A) : A :=
+  ops.γ ⟨0, by omega⟩ * ops.γ ⟨1, by omega⟩ +
+    ∑ j : Fin N,
+      ops.γ ⟨2 * j.val + 2, by omega⟩ * ops.γ ⟨2 * j.val + 3, by omega⟩
+
+/-- The intra-cell pairing has the exact boundary commutator determined by its
+first bond.  Every remaining bond commutes with the left boundary generator
+because it contains two distinct Majoranas neither of which is `γ₀`. -/
+theorem intraCellDimer_left_boundary_commutator {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaCliffordOperators (N + 1) A) :
+    commutator (intraCellDimerHamiltonian ops) (ops.γ ⟨0, by omega⟩) =
+      -(ops.γ ⟨1, by omega⟩ + ops.γ ⟨1, by omega⟩) := by
+  let g0 := ops.γ ⟨0, by omega⟩
+  let g1 := ops.γ ⟨1, by omega⟩
+  let tail : A := ∑ j : Fin N,
+      ops.γ ⟨2 * j.val + 2, by omega⟩ * ops.γ ⟨2 * j.val + 3, by omega⟩
+  have h01 : (⟨0, by omega⟩ : Fin (2 * (N + 1))) ≠ ⟨1, by omega⟩ := by
+    intro h
+    have hv := congrArg Fin.val h
+    simp at hv
+  have hanti : g1 * g0 = -(g0 * g1) := by
+    exact eq_neg_of_add_eq_zero_left (ops.h_ortho _ _ h01.symm)
+  have hsq0 : g0 * g0 = 1 := ops.h_sq ⟨0, by omega⟩
+  have hfirstProduct : g0 * g1 * g0 = -g1 := by
+    calc
+      g0 * g1 * g0 = g0 * (g1 * g0) := by rw [mul_assoc]
+      _ = -(g0 * (g0 * g1)) := by rw [hanti, mul_neg]
+      _ = -g1 := by rw [← mul_assoc, hsq0]; simp
+  have hfirst : (g0 * g1) * g0 - g0 * (g0 * g1) = -(g1 + g1) := by
+    calc
+      (g0 * g1) * g0 - g0 * (g0 * g1)
+          = -g1 - g1 := by
+              rw [hfirstProduct, ← mul_assoc, hsq0, one_mul]
+      _ = -(g1 + g1) := by abel
+  have htail : tail * g0 = g0 * tail := by
+    dsimp [tail]
+    rw [Finset.sum_mul, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro j _
+    have havoidA : (⟨0, by omega⟩ : Fin (2 * (N + 1))) ≠
+        ⟨2 * j.val + 2, by omega⟩ := by
+      intro h
+      have hv := congrArg Fin.val h
+      simp at hv
+    have havoidB : (⟨0, by omega⟩ : Fin (2 * (N + 1))) ≠
+        ⟨2 * j.val + 3, by omega⟩ := by
+      intro h
+      have hv := congrArg Fin.val h
+      simp at hv
+    simpa [g0] using
+      (gamma_comm_product_of_avoids ops.toMajoranaOperators
+        ⟨0, by omega⟩ ⟨2 * j.val + 2, by omega⟩
+        ⟨2 * j.val + 3, by omega⟩ havoidA havoidB).symm
+  change commutator ((g0 * g1) + tail) g0 = -(g1 + g1)
+  unfold commutator
+  rw [mul_add, add_mul, htail]
+  calc
+    g0 * g1 * g0 + g0 * tail - (g0 * (g0 * g1) + g0 * tail)
+        = (g0 * g1 * g0 - g0 * (g0 * g1)) + (g0 * tail - g0 * tail) := by abel
+    _ = -(g1 + g1) := by rw [hfirst]; simp
 
 /-- Elementary Majorana braid generator: `U_ij = inv_sqrt2 * (1 + γ_i * γ_j)`. -/
 def braidOperator {A : Type*} [Ring A] {N : ℕ} (inv_sqrt2 : A)

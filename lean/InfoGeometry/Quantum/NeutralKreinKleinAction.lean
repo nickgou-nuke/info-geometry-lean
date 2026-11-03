@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.NeutralKreinMajoranaFrame
+import InfoGeometry.Geometry.HelicalCovering
 
 /-!
 # Neutral Krein carrier and the Klein-bottle group relation
@@ -45,6 +52,23 @@ end
 section AffineModel
 
 abbrev AffinePoint := ℤ × ℤ
+
+open InfoGeometry.Geometry.HelicalCovering
+
+/-- The affine Klein cover, with its second coordinate as the integer sheet index. -/
+def affineHelicalCovering : HelicalCovering ℤ AffinePoint where
+  project := Prod.fst
+  winding := Prod.snd
+  branchLocus := ∅
+  branch_requires_nonzero_winding := by simp
+
+/-- The helical deck shifts on the affine Klein cover. -/
+def affineHelicalDeckAction : DeckAction affineHelicalCovering where
+  deck := fun n p => (p.1, p.2 + n)
+  project_deck := by intro n p; rfl
+  winding_deck := by intro n p; rfl
+  deck_zero := by intro p; ext <;> simp
+  deck_add := by intro m n p; ext <;> simp; omega
 
 /-- The vertical winding translation. -/
 def windingTranslation : AffinePoint ≃ AffinePoint where
@@ -107,6 +131,13 @@ theorem affineGlide_conjugates_windingBy (n : ℤ) :
     affineGlide.symm.trans ((windingTranslationBy n).trans affineGlide) =
       windingTranslationBy (-n) := by
   ext p <;> simp [affineGlide, windingTranslationBy] <;> omega
+
+/-- Conjugating any helical deck shift by the Klein glide reverses its index. -/
+theorem affineGlide_conjugates_helical_deck (n : ℤ) (p : AffinePoint) :
+    affineGlide (affineHelicalDeckAction.deck n (affineGlide.symm p)) =
+      affineHelicalDeckAction.deck (-n) p := by
+  simp [affineGlide, affineHelicalDeckAction]
+  omega
 
 /-- The glide has no fixed point on the affine universal-cover model. -/
 theorem affineGlide_no_fixed (p : AffinePoint) : affineGlide p ≠ p := by

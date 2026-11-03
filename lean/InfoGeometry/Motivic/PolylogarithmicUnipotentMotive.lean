@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -185,5 +193,40 @@ theorem fisher_ceiling (p : ℝ) :
   nlinarith [sq_nonneg (p - 1 / 2)]
 
 end DilogarithmSeamIdentity
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def archetypeOperatorWitness (P A C : B) : Archetype → B
+  | .polylogOne => P
+  | .oddsRatio => conePlus P A
+  | .nilpotentConnection => genPhi P A C
+  | .seamValue => genSig P A C
+  | .carnotShannon => genV P A C
+
+theorem polylogarithmic_unipotent_motive_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    archetypeOperatorWitness P A C .polylogOne *
+      archetypeOperatorWitness P A C .polylogOne =
+      archetypeOperatorWitness P A C .polylogOne ∧
+    (archetypeOperatorWitness P A C .oddsRatio) ^ 2 = 0 ∧
+    (archetypeOperatorWitness P A C .nilpotentConnection) ^ 2 =
+      archetypeOperatorWitness P A C .carnotShannon ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 ∧
+    (archetypeOperatorWitness P A C .seamValue) ^ 2 -
+      (archetypeOperatorWitness P A C .carnotShannon) ^ 2 = 0 := by
+  dsimp only [archetypeOperatorWitness]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, _, hPhiSq, _, _, _, _, hAnti, _, _, hSigmaSq, _, _, _⟩
+  refine ⟨hP, ?_, ?_, ?_, ?_⟩
+  · simpa [pow_two] using hPlus
+  · simpa [pow_two] using hPhiSq
+  · simpa [anticomm] using hAnti
+  · simpa [pow_two] using sub_eq_zero.mpr hSigmaSq
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Motivic.PolylogarithmicUnipotentMotive

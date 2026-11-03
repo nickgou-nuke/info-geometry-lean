@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Optics.OperatorQGTBogoliubovNaturality
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Optics.OperatorDerivationForms
@@ -205,8 +210,8 @@ def innerFrechetOperatorDerivation
     innerFrechetOperatorDerivation (𝕜 := 𝕜) X A₀ = X * A₀ - A₀ * X :=
   rfl
 
-/-- The inner derivation differentiates curvature as the commutator with the
-curvature itself. -/
+/-- The inner derivation acts on curvature by its defining commutator. This is
+the value of the Leibniz derivation on the curvature operator. -/
 theorem innerFrechetOperatorDerivation_curvature
     {Point Tangent : Type*}
     (X : A)
@@ -216,8 +221,8 @@ theorem innerFrechetOperatorDerivation_curvature
       X * curvature C p U V - curvature C p U V * X :=
   rfl
 
-/-- Expanded Fréchet product rule for the curvature two-operator form under
-an infinitesimal inner Bogoliubov generator. -/
+/-- Expanded Leibniz action of an inner derivation on the curvature
+two-operator form. -/
 theorem innerFrechetOperatorDerivation_curvature_explicit
     {Point Tangent : Type*}
     (X : A)

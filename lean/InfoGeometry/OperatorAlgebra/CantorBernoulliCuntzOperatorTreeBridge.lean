@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
@@ -269,6 +275,45 @@ theorem operatorCylinderProjection_idempotent (w : List Bool) :
       (operatorWord w (operatorWordDag w f)) = operatorWordDag w f := by
     simpa using h
   rw [h']
+
+/-- Prefix cylinders are nested at the operator level: the projection for
+`u ++ v` is a subprojection of the projection for `u`.  This proves both
+orders of composition using only the prefix factorization and the exact
+partial-isometry law for `operatorWord u`. -/
+theorem operatorCylinderProjection_prefix_mul (u v : List Bool) :
+    (operatorCylinderProjection u).comp (operatorCylinderProjection (u ++ v)) =
+        operatorCylinderProjection (u ++ v) ∧
+      (operatorCylinderProjection (u ++ v)).comp (operatorCylinderProjection u) =
+        operatorCylinderProjection (u ++ v) := by
+  have hIso (f : L2Boundary) : operatorWordDag u (operatorWord u f) = f :=
+    ContinuousLinearMap.ext_iff.mp (operatorWordDag_comp_operatorWord u) f
+  constructor
+  · apply ContinuousLinearMap.ext
+    intro f
+    change operatorWord u
+        (operatorWordDag u
+          (operatorWord (u ++ v) (operatorWordDag (u ++ v) f))) =
+      operatorWord (u ++ v) (operatorWordDag (u ++ v) f)
+    rw [operatorWord_append, operatorWordDag_append]
+    change operatorWord u
+        (operatorWordDag u
+          (operatorWord u
+            (operatorWord v (operatorWordDag v (operatorWordDag u f))))) =
+      operatorWord u (operatorWord v (operatorWordDag v (operatorWordDag u f)))
+    rw [hIso]
+  · apply ContinuousLinearMap.ext
+    intro f
+    change operatorWord (u ++ v)
+        (operatorWordDag (u ++ v)
+          (operatorWord u (operatorWordDag u f))) =
+      operatorWord (u ++ v) (operatorWordDag (u ++ v) f)
+    rw [operatorWord_append, operatorWordDag_append]
+    change operatorWord u
+        (operatorWord v
+          (operatorWordDag v
+            (operatorWordDag u (operatorWord u (operatorWordDag u f))))) =
+      operatorWord u (operatorWord v (operatorWordDag v (operatorWordDag u f)))
+    rw [hIso]
 
 theorem operatorCylinderProjection_selfAdjoint (w : List Bool) :
     star (operatorCylinderProjection w) = operatorCylinderProjection w := by

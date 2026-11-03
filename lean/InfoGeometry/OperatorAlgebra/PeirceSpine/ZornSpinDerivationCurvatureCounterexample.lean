@@ -1,0 +1,116 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Data.Matrix.Basis
+import Mathlib.Tactic.NoncommRing
+import InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentZornChainArchetypes
+
+/-!
+# A concrete obstruction to universal flatness of Zorn link-spin derivations
+
+Ground-truth contract: the owner `IdempotentZornChainArchetypes` defines
+`ringComm`, `linkSpin12`, and `linkSpin23`, and proves
+`zorn_link_spin_derivation_curvature`: the commutator of the two inner
+derivations is controlled by the inner derivation of the link-spin
+commutator. This file supplies a concrete finite matrix instance where that
+correction is nonzero. It refutes universal zero curvature; it does not assert
+a general classification of when the correction vanishes.
+
+Carrier: `Matrix (Fin 4) (Fin 4) ℤ`, with mutually orthogonal diagonal
+Peirce shells of ranks 1, 2, and 1. The left and right link-spin generators
+are respectively `e₀₀ - e₁₁` and `e₁₂`; their commutator acts nontrivially on
+`e₂₃`.
+-/
+
+namespace InfoGeometry.OperatorAlgebra.PeirceSpine.ZornSpinDerivationCurvatureCounterexample
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentZornChainArchetypes
+
+abbrev Mat := Matrix (Fin 4) (Fin 4) ℤ
+
+def e (i j : Fin 4) : Mat := Matrix.single i j 1
+
+def zornSpinE01 : Matrix (Fin 4) (Fin 4) ℤ := Matrix.single 0 1 1
+
+def zornSpinE10 : Matrix (Fin 4) (Fin 4) ℤ := Matrix.single 1 0 1
+
+/-- Opposite matrix units witness noncommutativity in this exact `Fin 4`
+operator carrier. -/
+theorem matrix_noncommutative_witness :
+    zornSpinE01 * zornSpinE10 ≠ zornSpinE10 * zornSpinE01 := by
+  intro h
+  simp only [zornSpinE01, zornSpinE10] at h
+  rw [Matrix.single_mul_single_same, Matrix.single_mul_single_same] at h
+  have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℤ => M 0 0) h
+  norm_num [Matrix.single] at h00
+
+private lemma e_mul (i j k l : Fin 4) :
+    e i j * e k l = if j = k then e i l else 0 := by
+  by_cases h : j = k
+  · subst k
+    simp [e]
+  · rw [ite_eq_right h]
+    simpa [e] using
+      (@Matrix.single_mul_single_of_ne (Fin 4) (Fin 4) (Fin 4) ℤ
+        inferInstance inferInstance inferInstance inferInstance inferInstance
+        1 i j k l h 1)
+
+/-- The Zorn link-spin curvature correction is nonzero in a genuine
+noncommutative operator matrix algebra. -/
+theorem zorn_link_spin_derivation_curvature_nonzero :
+    let E₁ := e (0 : Fin 4) 0
+    let E₂ := e (1 : Fin 4) 1 + e 2 2
+    let E₃ := e (3 : Fin 4) 3
+    let A₁ := e (0 : Fin 4) 1
+    let C₁ := e (1 : Fin 4) 0
+    let A₂ := e (1 : Fin 4) 3
+    let C₂ := e (3 : Fin 4) 2
+    let X := e (2 : Fin 4) 3
+    ringComm
+        (ringComm (linkSpin12 E₁ E₂ A₁ C₁)
+          (linkSpin23 E₂ E₃ A₂ C₂)) X = -e 1 3 ∧
+      ringComm
+        (ringComm (linkSpin12 E₁ E₂ A₁ C₁)
+          (linkSpin23 E₂ E₃ A₂ C₂)) X ≠ 0 := by
+  dsimp
+  have hcurv :
+      ringComm
+          (ringComm
+            (linkSpin12 (e (0 : Fin 4) 0) (e 1 1 + e 2 2) (e 0 1) (e 1 0))
+            (linkSpin23 (e 1 1 + e 2 2) (e 3 3) (e 1 3) (e 3 2)))
+          (e 2 3) = -e 1 3 := by
+    have h₁₂ :
+        linkSpin12 (e (0 : Fin 4) 0) (e 1 1 + e 2 2) (e 0 1) (e 1 0) =
+          e 0 0 - e 1 1 := by
+      simp [linkSpin12, root12, root21, e_mul, add_mul, mul_add]
+    have h₂₃ :
+        linkSpin23 (e (1 : Fin 4) 1 + e 2 2) (e 3 3) (e 1 3) (e 3 2) =
+          e 1 2 := by
+      simp [linkSpin23, root23, root32, e_mul, add_mul, mul_add]
+    rw [h₁₂, h₂₃]
+    have hst : (e 0 0 - e 1 1) * e 1 2 = -e 1 2 := by
+      simp [sub_mul, e_mul]
+    have hts : e 1 2 * (e 0 0 - e 1 1) = 0 := by
+      simp [mul_sub, e_mul]
+    have hspin : ringComm (e 0 0 - e 1 1) (e 1 2) = -e 1 2 := by
+      unfold ringComm
+      rw [hst, hts]
+      simp
+    have hleft : (-e 1 2) * e 2 3 = -e 1 3 := by
+      simp [e_mul]
+    have hright : e 2 3 * (-e 1 2) = 0 := by
+      simp [e_mul]
+    rw [hspin]
+    unfold ringComm
+    rw [hleft, hright]
+    simp
+  constructor
+  · exact hcurv
+  · intro h
+    have hentry := congrArg (fun M : Mat => M 1 3) h
+    rw [hcurv] at hentry
+    norm_num [e] at hentry
+
+end InfoGeometry.OperatorAlgebra.PeirceSpine.ZornSpinDerivationCurvatureCounterexample

@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.EpistemologicalMassGap
 
@@ -109,5 +116,37 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `EpistemologicalMassGap.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def epistemologicalMassGapOperator (P A C : B) : Archetype → B
+  | .scaleFreeField => conePlus P A
+  | .measurementGap => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .dimensionalTransmutation => genPhi P A C * genPhi P A C
+  | .substrateMetric => genV P A C
+  | .susyVacuum => InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (genPhi P A C) (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Mass-Gap & Transmutation over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, while the scale-free
+null field `a₊` is square-zero (`a₊² = 0`), the dimensional transmutation square `Φ² = V`
+recovers the substrate metric `V`, the measurement-gap commutator satisfies `[Φ, J] = 2 Σ`,
+and the supersymmetric anticommutator `{Φ, J} = 0` vanishes. -/
+theorem epistemologicalMassGap_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    epistemologicalMassGapOperator P A C .scaleFreeField *
+      epistemologicalMassGapOperator P A C .scaleFreeField = 0 ∧
+    epistemologicalMassGapOperator P A C .measurementGap = -((2 : ℤ) • genSig P A C) ∧
+    epistemologicalMassGapOperator P A C .dimensionalTransmutation =
+      epistemologicalMassGapOperator P A C .substrateMetric ∧
+    epistemologicalMassGapOperator P A C .susyVacuum = 0 := by
+  dsimp only [epistemologicalMassGapOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.EpistemologicalMassGap

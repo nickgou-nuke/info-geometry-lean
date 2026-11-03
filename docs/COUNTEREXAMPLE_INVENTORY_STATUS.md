@@ -49,6 +49,92 @@ codebase-epistemology skills already exist under `skills/`; this entry applies
 their source-grounding rules. The broader counterexample inventory and
 independent semantic QA remain open.
 
+## Peirce--Plabic, Fock, DAG, and twistor bridge review (2026-10-31)
+
+The supplied bridge claims were checked against the current owner files and
+the targeted axiom-audit module. The locked build of
+`InfoGeometry.Canonical.PeircePolygonKreinBottMasterSynthesisAudit` completed
+successfully with 9,527 jobs and exit code 0. Its `#print axioms` output for
+the named bridge declarations contains only the standard foundations
+`propext`, `Classical.choice`, and `Quot.sound`; no custom axiom appeared.
+
+The source supports these specific results:
+
+- `SplitCl44CausalEnvelope` defines an explicit real-linear equivalence from
+  the complex four-coordinate twistor carrier to `HyperbolicSpace 4`, proves
+  the stated quadratic-form equality, and uses it to transport nonzero null
+  representatives to the projective null boundary. This is a quadratic-space
+  carrier equivalence, not an algebra isomorphism from the vector carrier to
+  `SplitCl44Algebra` or to the Peirce operator ring.
+- `dag_resolvent_peirce_plabic_and_twoNodeDAG_soldering_bridge` proves the
+  finite geometric-sum identities, inverse shear identities, and the listed
+  two-node matrix instance. `finiteGreen T 2 = 1 + T` is unconditional; the
+  inverse claims depend on the proved nilpotence of the relevant cones or
+  concrete adjacency matrix.
+- `fock_chiral_projector_peirce_operator_ring_intertwining_bridge` constructs
+  endomorphisms on each finite Fock stage and on the algebraic direct-limit
+  carrier. It proves idempotence, reflection, and the stated map
+  intertwining. Its projectors use real scalars and Clifford involution.
+- `transportTwistorRingEquiv` is a complex algebra equivalence between
+  `Matrix (Fin 4) (Fin 4) ℂ` and endomorphisms of `Twistor4`. The twistor to
+  split-Clifford equivalence is a separate real-linear quadratic isometry;
+  the bridge theorem relates selected operators by explicit equations, not by
+  identifying those underlying carriers.
+- The Eisenstein and Cl(5,5) theorem statements include explicit hypotheses
+  and stage maps. The colimit theorem derives its transports from those maps
+  and the owner sequence lemmas; its conclusions are the listed identities,
+  not a blanket classification of all period or colimit structures.
+
+The semantic-vacuity scanner reported six `rfl` recurrence equations in the
+synthesis file and two definitional/alias surfaces in `SplitCl44CausalEnvelope`.
+They are scanner warnings attached to base/step definitions and an `abbrev`,
+not an independent proof that every prose interpretation is accurate. No
+warning-free vacuity closure is claimed. This review is limited to the named
+owners and declarations; it does not validate the reported broader
+“carrier-mismatch debt” inventory or its completeness. Repository-wide
+counterexample discovery and independent semantic QA remain open.
+
+## Structure-constant and coupling-scale census check (2026-10-31)
+
+The supplied census counts do not match simple current-checkout enumerations,
+so they are not recorded as a repository-wide AST census. `rg --files` finds
+16,301 Lean files below `lean/InfoGeometry` and 1,078 below `proofs`; the
+corresponding `git ls-files` patterns return 16,114 and 33 tracked files.
+`rg --files external_refs` enumerates 246,811 files under its default ignore
+rules, while an unrestricted recursive filesystem walk also sees ignored and
+generated content. No `output.txt` census artifacts were found by the
+repo-owned `rg --files --hidden` search. These counts depend on enumeration and
+ignore policy and do not validate the supplied per-subsystem AST-term totals.
+
+A concrete prose/definition mismatch was found in `proofs/PrimonFlavorCKM.lean`.
+The comment says the CKM diagonal entries are normalized to one, but the
+finite-cutoff definition multiplies the asymptotic entry by
+`1 - (p_i / p_j)^(-K/2)`. The new owner theorem
+`ckm_matrix_element_diag_eq_zero` proves that for every `i`, cutoff `K`, and
+nonzero real `p`, the implemented diagonal value at `(p,p)` is zero. The
+comment now distinguishes the asymptotic normalization from the finite-cutoff
+formula; the formula itself is preserved. The locked build of
+`proofs.PrimonFlavorCKM` passed (8,998 jobs, exit 0), with existing warnings in
+imported modules. This is a finite formula-level result; it establishes no
+CKM phenomenology or physical interaction-strength claim.
+
+The named `StructureConstants` source provides a universal theorem over
+`Fin 8 × Fin 8` for its declared `su (Fin 3)` basis and tabulated coefficients,
+as well as the stated `d`-coefficient normalization. The Cuntz Casimir source
+proves commutation with `Q12`; that declaration alone does not establish
+centrality against every generator. `SMNormalizedGaugeEmbedding` defines a
+rational diagonal matrix model and derives its ratios from its trace norms,
+while the `PrimonFlavorCKM` cutoff formula and the Yukawa coefficient theorem
+are finite definitions/evaluations. These exact Lean scopes do not by
+themselves prove empirical running couplings, a physical CKM matrix, or a
+continuum interaction model.
+
+This census review used source searches, tracked-file enumeration, the
+`context_preflight.py --include-external` packet, and direct owner reads. The
+external-reference search returned context files only; no external result was
+promoted to repo-owned proof. A complete semantic review of all matching
+declarations and validation of the quoted AST totals remain open.
+
 ## Source-grounded candidate batch (2026-10-27)
 
 A fresh run of `tools/quality/counterexample_inventory.py --json` scanned
@@ -2994,7 +3080,15 @@ carrier: `Algebra/Zorn/AssociatorObstruction.associator_e11_u1_u2_eq_v3` and
 the generic `ZornAlternativeLaws` owner supplies the corresponding
 characteristic-aware commutator/Jacobi relation. No map from the rational
 proxy to a KKS structure on this Zorn carrier is present, so these results do
-not prove a KKS nonclosedness theorem. The focused locked build of
+not prove a KKS nonclosedness theorem. The additional canonical owner
+`Canonical/ZornAssociativeCarrierObstruction.lean` specializes the witness to
+the theorem that no injective multiplicative map sends the native `ZornMatrix ℝ`
+carrier into an associative semigroup. Its focused audit target
+`InfoGeometry.Canonical.ZornAssociativeCarrierObstructionAudit` passed a fresh
+locked build (8,929 jobs, exit 0; only standard Mathlib axioms). The embedding
+obstruction does not exclude noninjective representations, operator actions,
+or transported products, and it does not establish a KKS structure or
+nonclosedness theorem. The focused locked build of
 `InfoGeometry.External.Auto.FusOctonionKKS` passed (3,093 jobs, exit 0), which
 confirms Lean validity of its propositions, not the octonion/KKS prose
 interpretation. Repository-wide counterexample discovery remains open.
@@ -3684,17 +3778,16 @@ is needed. This entry records source inspection only; no new build was run.
 
 The lexical obstruction candidate
 `Canonical.IncompressibleCramerRaoActionBridge.projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible`
-is a conditional consequence, not a witnessed counterexample or an
-unconditional collapse. Its inputs include a
-`CramerRaoNegLogVolumeAnomalyReadout`, an
-`IncompressibleMongeAmpere` proof, equality of the two Moore–Penrose right
-projectors, and commutation of the dilation operator with the left projector.
-The proof obtains zero chiral scale from the incompressibility readout, derives
-projector commutation and vanishing obstruction, then transports the explicit
-left-projector commutation through the supplied right-projector agreement to
-the dilation-commutator zero theorem. This is consistent with the stated
-hypotheses; no replacement Lean declaration was needed. Source inspection
-only, with no fresh build in this pass.
+is conditional on the explicit `CramerRaoNegLogVolumeAnomalyReadout`, an
+`IncompressibleMongeAmpere` proof, and equality of the two Moore–Penrose right
+projectors. The theorem does not require a separate left-projector commutation
+premise: zero chiral scale follows from the readout, implies commutation of the
+spectral and metric projectors, and gives zero obstruction; right-projector
+agreement then supplies the premise for dilation-commutator vanishing. The
+separate full semantic-collapse packet still requires left-projector
+commutation for its Weyl/KKT semantic conjunct. This is conditional, not an
+unconditional incompressibility claim. Fresh locked kernel build succeeded
+(4,182 jobs); no further replacement declaration was needed.
 
 ## Exact finite Krein-connection compatibility criterion (2026-10-30)
 
@@ -5764,6 +5857,15 @@ replacement is the existing endpoint-conditioned localization theorem
 in the curated inventory; its locked kernel build remains pending because the
 shared lock is held by the external CFSG build.
 
+The pending note is superseded: on 2026-10-31 the current source passed
+`python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock
+InfoGeometry.Analysis.AsanoNondegenerateEndpointNecessaryCounterexample`
+(3,102 jobs, exit 0). The replay emitted the existing unused-simp-argument
+warning in the counterexample module and unused-variable warnings in the
+imported `AsanoRuelle.TopologicalEndpoint` owner. The proof status is now
+kernel-checked for the current source hash; no CAS was needed for this direct
+complex-polynomial witness.
+
 A fresh tracked-source lexical scan after adding the witness covered 28,771
 Lean files, emitted 13,333 declaration candidates, reported zero read errors,
 and listed seven skipped paths. The leading clusters remain
@@ -5775,7 +5877,7 @@ statuses.
 
 ## Fact/Logic decoder mask matrix witness (2026-10-31)
 
-Added `Routing/FactLogicBypassMatrixCounterexample.lean`, instantiating the published three-track support formula on `Matrix (Fin 3) (Fin 3) ℂ`. Matrix units at `(2,0)`, `(1,1)`, and `(0,0)` witness a nonzero prompt-to-fact block. This refutes the pasted A86 claim that this block is necessarily zero under the published support assumptions. It does not model the additive attention mask or establish neural performance or semantics. The owner theorem `publishedMaskSupport_prompt_fact_block` is the general support identity; the concrete matrix witness passed its locked build (1,203 jobs). The related Asano nondegenerate endpoint witness also passed its locked build (3,102 jobs); both ledger entries now carry build evidence.
+Added `Routing/FactLogicBypassMatrixCounterexample.lean`, instantiating the published three-track support formula on `Matrix (Fin 3) (Fin 3) ℚ`. Matrix units at `(2,0)`, `(1,1)`, and `(0,0)` witness a nonzero prompt-to-fact block. This refutes a zero-block claim for the support formula that includes a free prompt-to-fact route. It does not contradict the narrower `decoderFullOp` definition, which omits that route and proves the corresponding block zero. Neither owner models additive attention masks, neural semantics, or benchmark performance. The reusable replacement is `publishedMaskSupport_prompt_fact_block`, with the exact zero criterion `publishedMaskSupport_prompt_fact_block_eq_zero_iff`. The current locked build of the algebra, matrix witness, and axiom audit passed (1,204 jobs); the audited declarations depend only on `propext`.
 
 ## Finite-contact implication countermodel (2026-10-31)
 
@@ -7211,11 +7313,11 @@ The candidate theorem in `Canonical.ModuleCatDirectLimitKernelSurvivalBridge` is
 
 ## NC-Zorn alternativity failures are explicit matrix witnesses (2026-10-31)
 
-`Canonical.NCZornAlternativityAudit` computes a specific sigma-minus coordinate of each alternative-law associator. The left defect is `(a*b - b*a)*d`, and the right defect is `d*(a*b - b*a)`; it then specializes to matrix units `E₁₂`, `E₂₁` in `BdGBlock ℚ` with `d = 1`, where the coefficient commutator is nonzero. Thus both global alternative laws fail for this displayed multiplication over that noncommutative coefficient carrier. The theorem does not claim alternativity failure over every coefficient ring, nor sufficiency of coefficient commutativity. A focused locked build was requested but stayed queued on the shared build lock, so this entry records source-level evidence only.
+`Canonical.NCZornAlternativityAudit` computes a specific sigma-minus coordinate of each alternative-law associator. The left defect is `(a*b - b*a)*d`, and the right defect is `d*(a*b - b*a)`; it then specializes to matrix units `E₁₂`, `E₂₁` in `BdGBlock ℚ` with `d = 1`, where the coefficient commutator is nonzero. Thus both global alternative laws fail for this displayed multiplication over that noncommutative coefficient carrier. The theorem does not claim alternativity failure over every coefficient ring, nor sufficiency of coefficient commutativity. The current focused locked build passed (3,097 jobs, exit 0); an earlier build request had remained queued, and that historical state is superseded.
 
 ## Projector mismatch is weaker than noncommuting split (2026-10-31)
 
-`ProjectorPair.commutator_ne_zero_implies_projectorMismatch_ne_zero` is a valid one-way implication in any ring: equal projectors necessarily commute. Its converse is refuted by `commuting_projectors_can_have_nonzero_mismatch`, using two distinct complementary idempotents in `Matrix (Fin 2) (Fin 2) ℤ` with zero commutator and nonzero difference. The correct general statement is the one-way implication, not equivalence of mismatch with noncommutativity. Source-level review only; the shared build lock remained unavailable during this pass.
+`ProjectorPair.commutator_ne_zero_implies_projectorMismatch_ne_zero` is a valid one-way implication in any ring: equal projectors necessarily commute. Its converse is refuted by `commuting_projectors_can_have_nonzero_mismatch`, using two distinct complementary idempotents in `Matrix (Fin 2) (Fin 2) ℤ` with zero commutator and nonzero difference. The correct general statement is the one-way implication, not equivalence of mismatch with noncommutativity. Fresh locked owner build passed (3,095 jobs, exit 0); no wider equivalence claim is supported.
 
 ## Weyl holonomy endpoint requires the explicit curvature bridge (2026-10-31)
 
@@ -7223,7 +7325,7 @@ The candidate theorem in `Canonical.ModuleCatDirectLimitKernelSurvivalBridge` is
 
 ## Plabic Gram transport is correctly limited to nonzero eigenvalues (2026-10-31)
 
-`mulVec_gram_eigenvector_injective` and its concrete edge-sum wrapper require a shared eigenvalue `λ ≠ 0`; under that premise, applying `Aᴴ` to equality of transported vectors and cancelling `λ` proves source equality. The owner separately identifies `ker(AᴴA)` with `ker(A)`, so the zero eigenspace is explicitly treated without claiming injectivity there. Adjacent results state geometric eigenspace dimension equality and nonzero characteristic-root multiplicity, without generalizing to generalized eigenspaces or SVD. Source-level review only; no focused build yet.
+`mulVec_gram_eigenvector_injective` and its concrete edge-sum wrapper require a shared eigenvalue `λ ≠ 0`; under that premise, applying `Aᴴ` to equality of transported vectors and cancelling `λ` proves source equality. The owner separately identifies `ker(AᴴA)` with `ker(A)`, so the zero eigenspace is explicitly treated without claiming injectivity there. Adjacent results state geometric eigenspace dimension equality and nonzero characteristic-root multiplicity, without generalizing to generalized eigenspaces or SVD. The focused locked build passed (8,926 jobs, exit 0); the reviewed scope is the stated finite complex matrix carrier.
 
 ## Primon/Dirac readout separation is scalar only (2026-10-31)
 
@@ -7231,7 +7333,7 @@ The candidate theorem in `Canonical.ModuleCatDirectLimitKernelSurvivalBridge` is
 
 ## Projector obstruction is not itself a dilation (2026-10-31)
 
-`ProjectorNoncommutativityDilationClosure` has a valid ring-level implication from noncommuting idempotents to nonzero mismatch. Its module header correctly states that this alone yields no dilation or conformal closure; those require supplied `DilationClosureData`, transport, and canopy packages. The historical `DGenerator` was merely an alias of `projectorObstruction`, so I revised its docstring to state that it does not itself construct a dilation. Source-level review only; the shared build lock was unavailable.
+`ProjectorNoncommutativityDilationClosure` has a valid ring-level implication from noncommuting idempotents to nonzero mismatch. Its module header correctly states that this alone yields no dilation or conformal closure; those require supplied `DilationClosureData`, transport, and canopy packages. The historical `DGenerator` was merely an alias of `projectorObstruction`, so I revised its docstring to state that it does not itself construct a dilation. The focused locked build passed (4,300 jobs, exit 0); imported linter warnings remain.
 
 ## Reflexive Klein representation has an explicit nontrivial kernel (2026-10-31)
 
@@ -7263,7 +7365,7 @@ The source exhibits a primal basis triple with nonzero associator. If an injecti
 
 ## SO(3) angular momentum now states injectivity directly (2026-10-31)
 
-For nonzero scalar inertia, the existing theorem provides a left inverse to `ω ↦ I • ω`, which implies injectivity. I added `angularMomentum_function_injective` with the direct `Function.Injective` conclusion, derived from that left inverse. The focused locked build passed (3,162 jobs, exit 0); compiler output reported existing linter warnings.
+For nonzero scalar inertia, the existing theorem provides a left inverse to `ω ↦ I • ω`, which implies injectivity. I added `angularMomentum_function_injective` with the direct `Function.Injective` conclusion, derived from that left inverse. The fresh focused locked build passed (3,163 jobs, exit 0); compiler output reported existing linter warnings.
 
 ## Theorem-honest kernel bridge scope audit (2026-10-31)
 
@@ -7287,7 +7389,7 @@ The finite `M₃(ℚ)` matrix-unit witness in `Routing.FactLogicBypassMatrixCoun
 
 ## Finite-cylinder Cantor separation audit (2026-10-31)
 
-`cylinderSet_separates` is a valid separation theorem, not a counterexample. Extracted the core statement as `boundaryPrefix_separates`: distinct binary boundary points differ at a finite prefix. Refactored `cylinderSet_separates` to reuse this criterion. Locked builds of `UHFInductiveColimitBoundaryTopology` and its inverse-limit dependent module passed (3125 jobs).
+`cylinderSet_separates` is a valid separation theorem, not a counterexample. Extracted the core statement as `boundaryPrefix_separates`: distinct binary boundary points differ at a finite prefix. Refactored `cylinderSet_separates` to reuse this criterion. Fresh locked build of `UHFInductiveColimitBoundaryInverseLimit` and its topology dependency passed (3,125 jobs, exit 0). Both finite-prefix separation results remain valid, not counterexamples.
 
 ## Pauli quaternion basis sign audit (2026-10-31)
 
@@ -7299,11 +7401,11 @@ The literal assignment `i ↦ Iσ₁`, `j ↦ Iσ₂`, `k ↦ Iσ₃` is a concr
 
 ## Poisson intensity scale identifiability audit (2026-10-31)
 
-The existing injectivity result is correctly conditional on a nonzero entry of the kernel matrix. Added `poissonIntensity_scale_injective_iff`, the exact criterion: with fixed background, the scale map is injective iff the kernel has a nonzero entry. If the kernel is zero, the intensity map is constant. The source argument is reviewed; the new declaration remains build-pending because the repository locked-build session has not returned a terminal result.
+The existing injectivity result is correctly conditional on a nonzero entry of the kernel matrix. Added `poissonIntensity_scale_injective_iff`, the exact criterion: with fixed background, the scale map is injective iff the kernel has a nonzero entry. If the kernel is zero, the intensity map is constant. The owner target passed its locked build (3,689 jobs, exit 0); the kernel-verified status in the inventory supersedes the earlier pending note.
 
 ## V4 affine cocycle obstruction scope audit (2026-10-31)
 
-The formula `cocycle_as_triality_obstruction` correctly computes the affine defect as `(2 * θ₂ + 2 * π, 0)`, but the defect is not universally nonzero. Added `cocycle_as_triality_obstruction_eq_zero_iff`: it vanishes exactly when `θ₂ = -π`, for every boundary point. The file separately scopes the available finite V₄ statement and acknowledges the full Weyl decomposition as closure debt. Source-reviewed; new lemma build pending.
+The formula `cocycle_as_triality_obstruction` correctly computes the affine defect as `(2 * θ₂ + 2 * π, 0)`, but the defect is not universally nonzero. Added `cocycle_as_triality_obstruction_eq_zero_iff`: it vanishes exactly when `θ₂ = -π`, for every boundary point. The file separately scopes the available finite V₄ statement and acknowledges the full Weyl decomposition as closure debt. The owner target passed its locked build (8,943 jobs, exit 0); the inventory records kernel verification, superseding the earlier pending note.
 
 ## Vandermonde determinant criterion audit (2026-10-31)
 
@@ -7657,18 +7759,18 @@ The theorem validly aggregates the generic-monotheticity package and the prime-r
 ## Finite operation-table count audit (2026-10-31)
 
 The flagged declarations correctly count all binary operation tables on `Fin n` as `n^(n²)`, giving 16 for order 2 and 19,683 for order 3. They explicitly count arbitrary operations and impose no associativity/group axioms, so they should not be read as counts of algebraic structures. The declarations themselves assert no obstruction. Source review only.
-\n## Candidate review: window-6 BinFold `SU(5)` obstruction label\n\n`Omega.Folding.BinFold.conclusion_window6_su5_obstruction` follows from the exact finite fiber maximum `cBinFiberMax 6 = 4`; its paper package states that bound and maximum. The owner defines `cBinFold` as `X.ofNat` and fibers by preimages among `range (2^m)`, with finite extrema evaluated by `native_decide`. Consumers use these multiplicities for combinatorial classifications. The inspected owner and references do not define an `SU(5)` factor or prove a relation that would turn the fiber bound into an obstruction to one. Classification: finite combinatorial theorem verified from source; `SU(5)` interpretation unsupported here.\n
-## Candidate review: window-6 BinFold `SU(5)` obstruction label
+## Candidate review: window-6 BinFold `SU(5)` obstruction label\n\n`Omega.Folding.BinFold.conclusion_window6_su5_obstruction` follows from the exact finite fiber maximum `cBinFiberMax 6 = 4`; its paper package states that bound and maximum. The owner defines `cBinFold` as `X.ofNat` and fibers by preimages among `range (2^m)`, with finite extrema evaluated by `native_decide`. Consumers use these multiplicities for combinatorial classifications. The inspected owner and references do not define an `SU(5)` factor or prove a relation that would turn the fiber bound into an obstruction to one. Classification: finite combinatorial theorem verified from source; `SU(5)` interpretation unsupported here.\n
+## Candidate review: window-6 BinFold fiber bound label correction
 
-`Omega.Folding.BinFold.conclusion_window6_su5_obstruction` follows from the exact finite fiber maximum `cBinFiberMax 6 = 4`; its paper package states that bound and maximum. The owner defines `cBinFold` as `X.ofNat` and fibers by preimages among `range (2^m)`, with finite extrema evaluated by `native_decide`. Consumers use these multiplicities for combinatorial classifications. The inspected owner and references do not define an `SU(5)` factor or prove a relation that would turn the fiber bound into an obstruction to one. Classification: finite combinatorial theorem verified from source; `SU(5)` interpretation unsupported here.
+The owner proves the exact finite statement `cBinFiberMult 6 x ≤ 4` and that this maximum is attained. It does not define an `SU(5)` factor or formalize a map from such a factor to fiber multiplicity. Renamed the results to `cBinFiberMult_le_four_six` and `window6_bin_fiber_multiplicity_bound_package`, and updated the two hidden-channel consumers. The finite bound remains the mathematical content; no `SU(5)` obstruction is claimed by these Lean declarations.
 
-## Candidate review: Fold constructibility/rigidity/obstruction package
+## Candidate review: Fold constructibility and point-mass residual window
 
-`Omega.Folding.paper_fold_constructibility_rigidity_obstruction` reuses the actual owner results `Fold_surjective`, `Fold_stable`, and `Rewrite.irreducible_eq_of_value_eq`, then specializes the residual-window reachability theorem to a point mass. The residual profile is explicitly chosen as `t * log (fiberMultiplicity y)`; the final bounds express affine interpolation over `t ∈ [0,1]`. The conjuncts are individually supported, but no implication connects them into a trichotomy, and the residual clause is reachability rather than an obstruction. Classification: correct bundled statements, overstated obstruction/trichotomy naming.
+The former obstruction/trichotomy label was inaccurate. The canonical theorem `fold_structure_and_point_mass_residual_window` packages `Fold_surjective`, `Fold_stable`, irreducible-value uniqueness, and the full point-mass residual-window specialization. Its conclusion now retains pointwise bounds, the weighted identity, the scaled interval, the entropy decomposition, and the entropy interval. It claims reachability and structural properties, not an impossibility result.
 
-## Candidate review: Fold constructibility/rigidity/obstruction package
+## Candidate review: Fold constructibility and point-mass residual window
 
-`Omega.Folding.paper_fold_constructibility_rigidity_obstruction` reuses the actual owner results `Fold_surjective`, `Fold_stable`, and `Rewrite.irreducible_eq_of_value_eq`, then specializes the residual-window reachability theorem to a point mass. The residual profile is explicitly chosen as `t * log (fiberMultiplicity y)`; the final bounds express affine interpolation over `t ∈ [0,1]`. The conjuncts are individually supported, but no implication connects them into a trichotomy, and the residual clause is reachability rather than an obstruction. Classification: correct bundled statements, overstated obstruction/trichotomy naming.
+The former obstruction/trichotomy label was inaccurate. The canonical theorem `fold_structure_and_point_mass_residual_window` packages `Fold_surjective`, `Fold_stable`, irreducible-value uniqueness, and the full point-mass residual-window specialization. Its conclusion now retains pointwise bounds, the weighted identity, the scaled interval, the entropy decomposition, and the entropy interval. It claims reachability and structural properties, not an impossibility result.
 
 ## Candidate review: exponential-scale injectivity and C-finite surrogate
 
@@ -7766,3 +7868,673 @@ The wrapper is a valid composition of the generic first-variation growth lemma a
 - The major-arc equivalence loop composes four assumed implications; it contains no analytic/cyclotomic construction.
 - The infinite-rank result is the standard contradiction from requiredRank(k) ≥ k, with no concrete ledger instance.
 - The transcendence wrapper assumes the key “algebraic quotient is not transcendental” predicate fact; it does not derive it from algebraicity closure.
+
+## Candidate reviews: Xi counting, winding, and ideal-class labels
+
+- Fixed-kernel local-density wrapper: establishes a finite set of periodic gaps and positivity/nonconvergence of the constant Δ/B; the positive Δ is independent input and the actual gap values do not enter the mean-gap estimate.
+- Xi addressability counting: the superlinear-to-not-eventually-linear implication is correct, but superlinear zero-count growth is assumed in the data structure, not proved analytically.
+- Anomaly/winding quotient: zero-descent equivalence is valid given quotient surjectivity and winding descent, but no topological winding or concrete quotient is instantiated.
+- Hankel ideal-class kernelization: the claimed equivalence follows by transferring nonnegativity across an assumed equality of the two matrices; no polynomial, ideal class, or basis transport is formalized.
+- Lee–Yang coupling: the proof yields irrationality-based exclusion of rational multiples and a non-rational quotient. It does not prove transcendence; algebraic real scalars are not restricted to rationals by general mathematics.
+
+## Candidate reviews: Xi/Markov and radial seed models
+
+- Markov bad-prime package specializes to one state: corrected matrix and derivative both equal 1, so the bad-prime set is empty and the denominator implication is vacuous.
+- Off-critical “nonnormality” theorem is a Boolean definitional equivalence on `horizonDefect`; the other fields are unused and no operator/spectral structure appears.
+- Output-potential theorem is only transitivity of an eventual bound through a pointwise inequality.
+- Radial-dimension theorem re-exports its premise unchanged.
+- Radial Stokes result proves a ring identity for a hand-defined affine rectangle model; it is not a general differential-form Stokes theorem.
+
+## Candidate reviews: remaining finite Xi seed packages
+
+- Reverse-KL four-site profile: the numeric strict drop is correct; the equality iff is vacuous for the fixed profile (both sides false), not a general criterion.
+- Scale-time seed sets all values to zero and repackages the resulting equivalences/witnesses; no nontrivial bicomplex is built.
+- Gauge-constant OGF theorem refutes a custom eventual-tail-zero predicate from assumed odd-mode nonvanishing; it does not establish non-C-finiteness in the standard recurrence sense.
+- Ambient-infinity theorem assumes the dimension-to-truncation principle and returns its structural antecedent; the key finite-certificate bridge is not proved.
+- Finite-dimensional Lie-model wrapper proves finite-prefix maps on the infinite binary register are noninjective; the Lie-model-to-prefix factorization is not established.
+- Circle/solenoid ledger types are aliases and duality is reflexive equality; threshold claims are delegated to the imported axis theorem.
+- Lee–Yang binary-statistic file proves the elementary three-state/two-bit encoding and one-bit noninjectivity, without polynomial semantics.
+- Visibility-extinction theorem is a correct conditional arithmetic consequence of an assumed Fourier-zero/uniformity equivalence and total count.
+- Localized additive ledger file proves a Nat-to-Int coordinate embedding and reuses an imported threshold bound; no duality or multiplicative host is constructed.
+- Dyadic bulk file proves finite prefix facts plus an imported primorial lower bound; no asymptotic comparison/encoding theorem is derived.
+- Window-6 root-closure file applies the fixed-point-free-involution parity lemma to supplied odd cardinalities 21 and 21; it supplies no actual root closure data.
+
+## Candidate reviews: final proof-directory slice
+
+- Braid list-tagging maps are injective by preservation of the original list entries.
+- CP3/Cantor connectedness contradiction and finite lane relations are valid, but the capstone receives proof-carrying interface fields for quotient/topology/completion claims; it does not construct those layers.
+- Cuntz matrix-unit nonzero follows from an assumed injective corner map and assumed nonzero tensor input; the lemma does not prove map injectivity.
+- FusOctonionKKS is a substantive model mismatch: `Q=ℚ` with ordinary multiplication has zero associator, while the purported obstruction is separately defined as 2. Its “octonion” claims are not established by the formal carrier.
+- Hestenes finite trace and balanced supertrace identities are valid; the explicit `[Q,P]=1` impossibility is an immediate corollary but is not itself stated there. Weyl relations are an abstract interface.
+- NonIsoConf3 compactification theorem assumes a singularity premise and returns it in a disjunction; no singularity computation occurs.
+- Split-octonion circular identities forward the Zorn algebra facts; the nonzero Jacobi defect correctly blocks a Lie-bracket interpretation, while the synthesis theorem only collects those facts.
+
+## C₆ Jacobian type-model canonical alternative (2026-10-31)
+
+`Omega.Conclusion.C6JacobianNotSimple` defines every Jacobian carrier as
+`PUnit` and defines isogeny as an equivalence of types. Its conclusion is not
+a geometric statement about Jacobians. The companion
+`C6JacobianTypeModelCanonical.lean` proves the precise consequence of those
+definitions: `PUnit ≃ PUnit × PUnit`, so the defined nonsimplicity predicate
+holds without the source theorem's isogeny premise. Its focused locked build
+passed (3,106 jobs, exit 0). This is an exact type-model result; no abelian
+variety, geometric Jacobian, or geometric isogeny is constructed.
+
+## Möbius finite-chart injectivity candidate reclassification (2026-10-31)
+
+`Experimental/Sandbox/Mobius/FiniteInjective.lean` was a lexical negative-name
+candidate, but source review finds no counterexample. For a
+`MobiusTransform`, `det_ne_zero` and nonzero denominators make the difference
+of the two fractional-linear values equal to
+`(a*d - b*c) * (z - w) / (den_z * den_w)`. Thus equality forces `z = w`;
+`eval_some_injective_of_den_ne_zero` transfers that result through the
+`Option ℂ` evaluation formula on finite inputs. This is only a finite-chart
+claim: the denominator-zero point maps to `none`, and these lemmas do not
+state a separate global injectivity theorem on the extended plane. The
+inventory records a successful locked integration build (9,013 jobs, exit 0)
+covering this owner alongside two other targets.
+
+## V₄ affine cocycle exact zero criterion replay (2026-10-31)
+
+The corrected `V4TrialityBridge` owner proves that the coordinate defect `(2 * θ₂ + 2 * Real.pi, 0)` vanishes iff `θ₂ = -Real.pi`, uniformly in the point. This rules out interpreting the named cocycle as universally nonzero. The focused locked build passed (8,943 jobs, exit 0); existing lint/deprecation warnings came from imported modules. The theorem remains scoped to the finite affine calculation; the file does not prove the advertised full Weyl-group decomposition or Spin(8) triality bridge. The inventory entry now records the current source hash and build evidence.
+
+## Jordan triple formula obstruction replay (2026-10-31)
+
+The proposed triple identity has exact defect `(z * x - x * z) * y`. The owner criterion shows it holds for every middle input, or for an invertible middle input, exactly when the endpoints commute; for any noncommuting endpoints, `y = 1` is a concrete failure witness. The locked build of `InfoGeometry.Core.JordanTripleFormulaCriterion` passed (606 jobs, exit 0), checking the new counterexample corollary and its imported exact criterion. The result is an associative-ring theorem with no commuting or scalar specialization.
+
+## Relation-only monogamy counterexample replay (2026-10-31)
+
+The three-vertex star in `EntanglementGeometry` is symmetric and irreflexive, yet its center relates to two distinct leaves. Thus those relation axioms alone do not imply monogamy. The separate `MonogamousPairing` type stores a single optional partner per node, so its uniqueness theorem follows from the functional encoding. The locked owner build passed (3,093 jobs, exit 0); the result is finite relation data, not a quantum-state or entropy theorem. The inventory now records the refreshed source hash and build evidence.
+
+## Poisson intensity exact scale-identifiability replay (2026-10-31)
+
+For fixed kernel `K` and background `B`, the owner proves `R ↦ R • K + B` is injective exactly when `K` has a nonzero entry. A zero kernel is the counterexample: all scales yield `B`. The locked build of `InfoGeometry.Canonical.UnnormalizedPoissonRayRule` passed (3,689 jobs, exit 0); existing deprecation/linter warnings appeared in dependencies. This criterion is limited to the declared matrix-valued affine map. The ledger now records the source hash and build evidence.
+
+## Direct-limit kernel-survival replay (2026-10-31)
+
+The bridge theorem follows from the owner’s exact equality criterion for canonical stage maps: under injective one-step semiring bonds, equality in the algebraic direct limit reflects to equality at the source. Its nonzero-image theorem is therefore valid in that stated algebraic scope; it does not establish topological kernel survival. The focused locked build passed (3,097 jobs, exit 0). The ledger now carries the current source hash and build evidence.
+
+## Peirce-array interpretation correction replay (2026-10-31)
+
+The A62 statement proves a finite sum identity for four homogenized maps on six
+Peirce decomposition maps. The M5 statement proves scaled row sums,
+alternating-difference identities, and a specified row-zero response. Neither
+proposition defines a code carrier or proves an octad, MOG, Curtis–Turyn, or
+error-correction property. The declarations and their consumers were renamed
+to reflect those exact algebraic claims; proofs were retained. The locked build
+of `InfoGeometry.OperatorAlgebra.PeirceSpine.CellularSheafOperatorPosetAudit`
+passed (9,253 jobs, exit 0), compiling both owner modules and the master
+synthesis. Follow-up source tracing found the proposed A86 three-track operator
+already represented by `ThreeCornerColumnAlgebra.columnOp`; its owner proves the
+same logical-column extraction, forbidden-corner, multiplication, and
+compression formulas. The M7 synthesis wrapper was renamed to describe its
+two-corner and three-corner ring content. A second locked build after that
+rename also passed (9,253 jobs, exit 0).
+
+## Finite consensus obstruction boundary (2026-10-31)
+
+`Omega.Conclusion.ConsensusFunctorSeparatedNotSheaf` now kernel-checks the
+exact finite criterion that a global constant readout exists iff every pair
+of local readouts agrees. Its two-site datum assigns `0` and `1`, proving
+separatedness, tautological self-overlap compatibility, and failure of a
+global constant readout together. The earlier malformed proof shape has been
+repaired. The general obstruction-interface theorem is explicitly conditional
+on the data structure's nonzero-obstruction and implication fields; it is not
+a sheaf or general descent theorem. The locked owner build passed (3,092 jobs,
+exit 0). This is kernel replay evidence, not independent semantic QA.
+
+## Gell-Mann trace-convention documentation correction (2026-10-31)
+
+`GellMannBasis.lean` described the stored `su (Fin 3)` generators as having
+trace pairing `+2 δ`, although the matrices are anti-Hermitian (`i` times the
+conventional Hermitian basis). The existing `gellmann_trace_orthogonality`
+theorem in `GellMannTraceOrthogonality.lean` proves the actual pairing is
+`-2 δ` for every pair of basis indices. Corrected the basis-file header to
+state that convention; the theorem and matrices are unchanged. The locked
+build of `InfoGeometry.Algebra.GellMannTraceOrthogonality` passed (3,106 jobs,
+exit 0). This is a documentation counterexample/correction, not a defect in
+the kernel-checked trace theorem.
+
+## Cuntz O₃ quadratic element scalar reduction (2026-10-31)
+
+The generic Cuntz `casimir2` owner now proves `casimir2_eq_scalar`:
+`casimir2 g = 2 + ⅟(2 : R) + ⅟(6 : R)` under its stated `CommRing` and
+invertibility assumptions. Hence `casimir2_commutes` proves commutation with
+every carrier element, strengthening the prior single-`Q12` result. The proof
+uses the owner’s root-sum, Cartan-square, and completeness lemmas; Sage exact
+rational arithmetic in `scripts/cas/cuntz_o3_casimir_scalar_check.sage`
+independently checked the coefficient reduction to `8/3` over `ℚ`. The locked
+build passed (8,926 jobs, exit 0). This is centrality in
+the declared associative ring model, not a claim about unformalized
+representation theory. The separate native tensor-quotient owner now proves
+the corresponding `casimir2_eq_scalar` and `casimir2_commutes` statements in
+`CuntzAlg 3`; its locked build passed (3,100 jobs, exit 0). Existing
+unused-simp-argument warnings remain in the imported supersymmetry module and
+later portions of the native Casimir file.
+
+## Fresh identifiability-hit review: twistor wrapper and decoder name collision (2026-10-31)
+
+The lexical candidate `FiveGradedTwistorIncidencePacket.incident_points_null_separated`
+is a conditional forwarding theorem: it requires both incidence witnesses and
+the nonzero spinor coordinate, then delegates to the owner theorem in
+`Twistor.Incidence`. Source inspection found no missing hypothesis or stronger
+scope claim in this wrapper. The fresh-scan label alone does not make it a
+counterexample.
+
+The repository's `PeirceSpine.BlockTriangularIntervention.tcrDecoderFullOp`
+also does not implement the three-track attention operator described in the
+conversation. Its actual definition is a `blockLower` assembly of iterates of
+the idempotency defect of `genV`; its closure theorem is about that object.
+The repository search found no declaration named `tcrDecoderFullOp` with
+three factual, logical, and prompt tracks. Therefore no cross-model
+identification or attention-mask result follows from the name match. This is a
+scope/identity boundary, not a refutation of the repository's block-lower
+closure theorem.
+
+## Stale-owner audit refresh (2026-10-31)
+
+Refreshed the source fingerprints and locked-build evidence for 11 previously stale owners: `IncompressibleCramerRaoActionBridge` (4,182 jobs), `SO3FenchelDuality` (3,163), `SpectroscopicGauge` (4,217), the UHF inverse-limit/topology pair (3,125), `UnifiedSuperchargeAlgebra` (4,226), `DAGMajorana` (3,094), `EpistemicGradientFlowDependency` (8,986), `MDPASJMSouriauDigest` (9,182), `SimplexQuadraticResponse` (3,446), and `FiberRewriteParityExactSplitMod3Obstruction` (3,108). These audits confirm conditional hypotheses, model-local scope, or exact replacement criteria; none of the 11 inspections established a new counterexample. The inventory has 782 candidates and zero stale source hashes. However, 395 candidate records still lack a recorded build exit code, so zero stale hashes is not full kernel-verification or completion of the repository-wide counterexample audit. `git diff --check` passed.
+
+
+## Focused counterexample replay batch (2026-10-31, continuation)
+
+Eleven source modules were replayed through four shared-lock Lake builds and
+their source fingerprints and build evidence were added to the inventory: the
+reflexive Klein representation kernel, positive-slice Zorn norm fibers, interval
+projection, the Cole–Fury aggregate readout, conditional NC-Zorn alternativity,
+signed transport, the literal Penrose candidate product, the denominator-guarded
+Möbius evaluation map, the total-natural ledger obstruction, the finite Mod-2
+shadow counterexample, and the finite sequence-layer package. The four replays
+passed with 8,958, 8,953, 9,013, and 3,095 jobs respectively. This resolves
+eleven missing-build records.
+
+The sequence-layer owner is only a finite constructed proposition: its state,
+periodic, ambiguity, and fiber-count functions are constant placeholders. Its
+kernel-checked theorem does not establish a general automata-theoretic
+minimality result. No independent semantic QA is claimed.
+
+Inventory snapshot: 782 candidates; 448 have a recorded successful build
+result, 334 still lack a recorded build result, and 181 lack the newer
+`replacement_evidence` field. The latter includes records with legacy
+verification formats and must not be read as 181 unverified files. Source hashes
+match for all inventoried candidates. `git diff --check` passed.
+
+
+## Continued counterexample owner replay (2026-10-31)
+
+Eleven further modules were replayed in three locked builds: five operator,
+streaming, and twistor owners (8,953 jobs), four graph-chart and dynamics
+owners (8,942 jobs), and two arithmetic obstruction owners (3,096 jobs). Each
+build exited successfully. The inventory records current hashes and theorem
+names for the audited claims. The scopes remain local: twistor noninjectivity
+comes from the upper-spinor radical, graph-chart reduction is over the specified
+one-generator exterior algebra, and the Wallis theorem concerns maps
+`ℕ → ℕ` obeying multiplicative-to-additive compatibility on all naturals.
+
+A current inventory recount finds 459 of 782 candidates with recorded
+successful-build evidence, 323 without such a record, 172 without the new
+`replacement_evidence` field, and zero stale hashes. Legacy verification
+records account for some missing new fields. Compilation records are not
+independent semantic review; the repository-wide audit remains incomplete.
+`git diff --check` passed.
+
+
+## Finite-prefix register obstruction scope (2026-10-31)
+
+The `XiTimePart60f2NoFaithfulFiniteDimensionalLieModel` owner builds
+successfully (3,092 jobs, exit 0). Its constructive kernel witness proves
+noninjectivity for maps from `ℕ → ZMod 2` that factor through a finite prefix.
+The module encodes “factors through a finite prefix” as its explicit hypothesis;
+the proof does not derive that property for every finite-dimensional or
+compact-Lie representation. The inventory records this boundary.
+
+Current snapshot: 460/782 entries have recorded successful-build evidence,
+322 lack a recorded result, 171 lack the newer evidence field, and all recorded
+source fingerprints match. The repository-wide audit remains incomplete.
+
+
+## Finite carrier and operator obstruction replay (2026-10-31)
+
+Four further owners passed a shared-lock replay (9,168 jobs, exit 0): the G₂
+nontrivial-idempotent versus imaginary-isotropic-point cardinality obstruction,
+a Zorn multiplication map obstruction to associative-semigroup preservation,
+conditional Weyl/KKT projector-obstruction identities, and noninjectivity of
+the full seven-generator Clifford action on the eight-dimensional Zorn module.
+The Clifford claim is dimension-scoped: 128-dimensional source versus a
+64-dimensional endomorphism target; no injectivity claim is made for the
+generator map.
+
+Inventory snapshot: 464 of 782 candidates have recorded successful-build
+evidence, 318 lack a recorded result, 167 lack the newer evidence field, and
+all recorded source hashes match. The audit remains incomplete; build replay is
+not independent semantic QA.
+
+
+## Conditional obstruction owner replay (2026-10-31)
+
+Seven additional source-reviewed owners passed two locked replays: the
+G₂/cardinality, Zorn associativity, Weyl/KKT, and Clifford representation
+modules (9,168 jobs), followed by the concrete gauge witnesses, finite Cuntz
+trace obstruction, and negative-lift periodicity obstruction (9,417 jobs),
+then four conditional conclusion modules (3,098 jobs). The Godel/register
+result is limited to sequential continuity in the explicit prefix topology; the
+relative-homology theorem assumes uniform finite-fiber data; the resonance
+bound assumes divergent squared partial sums. These are not promoted to broader
+claims than their Lean hypotheses.
+
+Inventory snapshot: 471 of 782 candidates have recorded successful-build
+evidence; 311 lack a recorded build result; 163 lack the new evidence field;
+all recorded source hashes match. `git diff --check` passed.
+
+
+## Finite and topological obstruction replay (2026-10-31)
+
+Five additional conclusion owners passed a locked replay (8,936 jobs). The
+proofs establish an all-prime versus finite-ledger support mismatch, the
+connected-to-discrete continuous-image obstruction, a finite sketch collision,
+a Wallis prefix ambiguity and ℕ-valued ledger result, and a finite Window6
+factorization obstruction. The Wallis map is not formalized as an arbitrary
+finite-rank ledger; the Window6 input channel is explicitly constant on
+`Fin 3 × Bool`. The theorem is valid for that declared model, not evidence for
+an external F8 data source.
+
+Inventory snapshot: 476/782 candidates have a recorded successful build, 306
+lack one, 163 lack the newer evidence field, and recorded source hashes match.
+`git diff --check` passed; the complete repository-wide counterexample audit
+remains open.
+
+## Hankel rank metadata counterexample and canonical replacement (2026-10-31)
+
+Source review found that `fixedResolutionCollisionExactHankelRank r` is a
+metadata tautology: the record sets the atom count, Hankel rank, and recurrence
+order all to `r`, then proves their equalities by reflexivity. It does not state
+or establish the rank of a Hankel matrix. The generating-function identity and
+the entrywise finite-sum Gram identity in the same owner remain separate valid
+claims under their stated hypotheses.
+
+Added `CanonicalFinitePronyHankelRank.lean`. It defines the weighted finite
+moment Hankel matrix in Vandermonde Gram form `Vᵀ D V`; over a field, injective
+nodes and nonzero weights imply nonzero determinant and full matrix rank. The
+new owner passed its shared-lock Lean build (1,815 jobs, exit 0). This generic replacement was subsequently applied to the fixed-resolution
+owner and its dependents. The Window6 ordinary and binary moment matrices now
+have kernel-proved ranks 5 and 3. Independent semantic review remains
+outstanding. The inventory includes the canonical owner and continues to
+represent only the reviewed search scope.
+
+## Frozen-phase localization assumption counterexample (2026-10-31)
+
+The declaration `paper_conclusion_frozen_phase_peak_obstruction_localization`
+returns `hcollapse` and `hbeta` unchanged; the frozen and separation inequalities
+are not used to derive either conclusion. Its owner documentation now states this
+scope. The companion `frozen_phase_inequalities_do_not_force_localization`
+constructs a real-valued model satisfying both inequalities while violating
+collapse and the beta identity. The two-owner locked build passed (1,960 jobs).
+The conditional repackaging theorem remains valid under its explicit collapse
+and beta assumptions; only the stronger implication from the inequalities is
+refuted.
+
+## Finite-field “unique completion” output unconstrained by Hankel data (2026-10-31)
+
+In `XiHankelFinitefieldDeterministicCompletion`, `completionEq` is defined as
+`y = extensionValue x`; `extensionValue` is an unconstrained field of the data
+record. Therefore `uniqueExtension_of_graph` proves only uniqueness for a
+chosen graph. Added `xiHankel_completion_graph_does_not_determine_output`: for
+any admissible nonzero polynomial, two records with identical polynomial and
+degree data have the same nonvanishing grid witness, yet their graph relations
+select outputs `0` and `1`. The finite-grid nonvanishing theorem remains valid.
+The conclusion wrapper’s “deterministic completion” claim is limited to that
+nonvanishing witness and graph uniqueness; it does not establish reconstruction
+from Hankel data. The composite owner passed the locked build (3,127 jobs).
+
+## Dressing-field intake and Peirce sign convention (2026-10-31)
+
+The supplied `F₁`–`F₅` dressing-field package was compared with the existing
+owner section `InfoGeometry.Canonical.PeircePolygonKreinBottMasterSynthesis`
+(`NonCommutativeDressingFieldCocycleAndBRSTPoset`). The repository already
+contains the noncommutative cocycle composition rule, the Maurer–Cartan
+curvature identity with its explicit `d²(U)` remainder, gauge invariance,
+BRST ghost cancellation, second-kind frame composition, and the unipotent and
+Bruhat–Postnikov Peirce bridges. The owner module built successfully in a
+locked Lake run (9,557 jobs, exit 0; existing warnings were emitted).
+The separate `InfoGeometry.OperatorAlgebra.PeirceSpine.RelationalDressingPoset`
+owner also passed a focused locked build (3,418 jobs, exit 0); imported
+deprecation and unused-section-variable warnings remain.
+
+One sign in the supplied causal-poset summary conflicts with its own theorem
+and the owner. For `d = comm P` and `N₊ = P*A*(1-P)`, the defining inner
+derivation gives `d(1+N₊)=N₊`, hence
+`(1-N₊)*d(1+N₊)=N₊`. The owner proves the Maurer–Cartan cocycle is `+N₊`.
+The value `−N₊` is obtained with the separately displayed convention
+`d = fun X => -comm P X`; under that convention, the dressed connection at
+`P` is `P`. Thus the F₅ parenthetical `Λ_adP(1+N₊) = -N₊` should be corrected
+to `+N₊`, or explicitly attached to the opposite-derivation convention.
+
+The supplied formalization is not a new missing owner: it duplicates existing
+declarations and understates the owner’s curvature result. The owner proves
+`dω + ω² = U⁻¹*d(dU)` under explicit product-rule hypotheses, and flatness
+follows when `d(dU)=0`; it does not assert flatness for an arbitrary map `d`.
+This review is limited to the displayed DFM claims and owner declarations.
+
+## Window-6 strong-lumpability witness included in the owner proposition (2026-10-31)
+
+The paper-facing `paper_window6_minimal_markov_obstruction_pure_f8_tail`
+wrapper retained the equal-fold pair, its differing first discarded
+Zeckendorf bit, and direction-spectrum exclusion, but discarded the imported
+unequal transition-count witness. Consequently that proposition alone did not
+establish the strong-lumpability failure suggested by its name. Replaced it
+with `window6_tail_bit_mismatch_and_strong_lumpability_failure`, whose
+conclusion includes the actual existential fiber `y` where the two
+transition-count cardinalities differ. The documentation explicitly states
+that this finite witness is not a minimal-memory theorem. The targeted locked
+build passed (3,132 jobs, exit 0). The exact witness and spectrum calculations
+remain those of the imported owner theorems; this wrapper now preserves rather
+than drops the failure witness.
+
+## Tracked-tree lexical refresh and Asano endpoint counterexample (2026-10-31)
+
+A fresh `counterexample_inventory.py --tracked --json` scan read 28,865 Lean
+files, emitted 13,430 lexical candidate rows, and reported zero read errors.
+The scanner labels these results “lexical navigation only”; the count includes
+repo-owned, runtime-state, and other review-required surfaces, so it is not a
+semantic counterexample count. This refreshed tracked-tree result supersedes
+the older 47,911-file broad scan only for its narrower tracked/staged/unignored
+scope; neither scan certifies completeness of semantic review.
+
+The Asano endpoint counterexample already had two separate facts: a
+nondegenerate zero-free block whose contracted root lies outside the signed
+product, and failure of the endpoint alternative for the chosen coefficients.
+Strengthened `nondegenerate_zero_free_does_not_localize_contracted_root` so
+the same existential witness now also proves that the endpoint alternative is
+false. The canonical positive theorem remains the existing localization
+result under the explicit endpoint disjunction. The targeted locked build
+passed (3,102 jobs, exit 0); the only owner warning was an unused simp
+argument, with existing unused-variable warnings from an imported file.
+
+## Dressing, affine-flag, and Amari statement audit (2026-10-31)
+
+The `D₂₇` quantum-affine intake was also checked against `QuantumAffineFlagClusterPoset.lean`. Correction to the preceding conversational audit: the owner does prove `drinfeldXPlus n * drinfeldXPlus m = 0` and the corresponding minus identity for arbitrary modes, and proves the two-mode mixed products, commutator, and anticommutator. The proof uses commutation of powers of `genV` with both Peirce cones. The owner target passed the locked build (8,992 jobs, exit 0); no counterexample was found to these stated identities. This verification is limited to that owner theorem and does not certify the broader representation-theoretic interpretations in the prose.
+
+The DFM intake was compared with the checked-in `D₂₆` owner. Its point-
+coincidence, full/partial ghost, second-kind frame, and horizon identities are
+already stated in the owner. In particular, the owner’s generic symbol
+rationalization theorem includes mutual commutation of the two coefficients as
+well as their commutation with the square-root operator; the broader prose
+statement omitting that condition is false.
+
+Added `one_sided_idempotent_inclusion_not_two_sided` and
+`symbol_rationalization_requires_mutual_coefficient_commutation` in
+`PartialFlagOneSidedInclusionCounterexample.lean`. The first uses two explicit
+non-self-adjoint idempotents in `M₂(ℤ)`: `P₂P₁=P₁` and the generated right ideals
+are nested, but `P₁P₂=P₂≠P₁`. This refutes the unqualified one-sided-to-two-sided
+flag equivalence in the prose. The existing flag theorem itself assumes both
+products and remains correct; the matrix witness does not refute the
+self-adjoint projection case. The second witness takes the square-root factor
+to be the identity and uses `E₁₂`, `E₂₁`: both coefficients commute with that
+factor, but their product does not commute, so the difference of factors is
+`diag(-1,1)` while the proposed rationalized expression is zero. SymPy
+confirmed both exact matrix computations. The new Lean witness module passed
+the locked target build (1,199 jobs, exit 0).
+
+The positive boundary is now formalized in `PartialFlagSelfAdjointCompletion.lean`: for self-adjoint idempotents, `P₂P₁=P₁` implies `P₁P₂=P₁` by applying the star anti-homomorphism. The new `selfAdjoint_partial_flag_corner_embedding` then invokes the existing two-sided flag theorem, deriving the relative-stratum idempotency and top-corner formula from the one-sided input plus self-adjointness. The owner is imported by the PeirceSpine umbrella. Both owner and umbrella passed the focused locked build (9,324 jobs); a separate axiom audit passed (8,994 jobs; only `propext`).
+
+The fresh Amari candidate `midpointBregman_is_not_fenchelGap` was only a
+definitional restatement, not a theorem asserting inequality. Replaced it with
+the substantive identity `midpointBregman_eq_fenchelGap_at_zero`, proved in
+the owner: for every real `s`, the midpoint Bregman defect equals the Fenchel
+gap at natural parameter zero. The corrected owner target built successfully
+(8,965 jobs, exit 0).
+
+
+## Gauge-link endpoint convention correction (2026-10-31)
+
+Review of `GaugeCovariantRouting.lean` found that the `gaugeLinks` implementation
+was correct but its endpoint-action docstring stated the inverse convention.
+Because `LinearEquiv.trans` composes right-to-left, the implemented law is
+`U'ᵢⱼ = gᵢ ∘ Uᵢⱼ ∘ gⱼ⁻¹`. Added `gaugeLinks_apply` to state the transported
+vector identity directly. The routing covariance and path-defect theorems then
+match the implementation. This is a documentation/convention correction; no
+counterexample to those theorems was found. The owner target passed a locked
+build (8,930 jobs, exit 0).
+
+
+## Binfold uniformization claim-name correction (2026-10-31)
+
+The owner theorem `paper_conclusion_binfold_sufficiency_does_not_imply_uniformization`
+only proved the golden-ratio escort datum's positive `χ²` baseline and asymptotic
+Blackwell equivalence. Repository search found no dependents, and the statement
+did not define or negate uniformization. Renamed it to
+`binfold_escort_golden_ratio_chi2_baseline_and_blackwell_equivalence` and made
+the docstring explicit about scope. The mathematical proposition and complete
+proof are unchanged; no counterexample to a formalized uniformization
+implication is claimed. The targeted locked build passed (3,226 jobs, exit 0).
+
+
+## Fold constructibility/residual-window package scope correction (2026-10-31)
+
+The paper-facing declaration `paper_fold_constructibility_rigidity_obstruction`
+was a bundle of surjectivity, stability, uniqueness of irreducible
+representatives, and a point-mass specialization of the residual-window
+theorem. Those are valid facts, but they do not by themselves constitute an
+obstruction trichotomy. Renamed the declaration
+`fold_structure_and_point_mass_residual_window` and strengthened its final
+clause to retain the imported theorem's pointwise residual bounds, weighted
+identity, entropy decomposition, and both interval bounds. The targeted locked
+build passed (3,106 jobs, exit 0). This correction makes no claim of an
+impossibility result.
+
+
+## Window-6 BinFold `SU(5)` label correction (2026-10-31)
+
+Renamed the owner’s finite multiplicity bound and its package to match their
+actual statements: every window-6 fiber has size at most four, and the maximum
+is attained. The two repo-owned hidden-channel dependents now use the truthful
+name. The `SU(5)` interpretation remains unformalized and is not asserted by
+the Lean declarations. Verification is recorded after the targeted owner and
+dependent builds complete.
+
+
+## NC-Zorn alternativity counterexample replay (2026-10-31)
+
+The owner `Canonical.NCZornAlternativityAudit` gives exact witnessing
+coordinates for the left and right alternative-law defects of the displayed
+operator-valued Zorn product: `(a * b - b * a) * d` and
+`d * (a * b - b * a)`, respectively. Its specialization to
+`BdGBlockQ`, `a = matrixE12`, `b = matrixE21`, and `d = 1` proves that both
+global alternative laws fail for this concrete coefficient carrier. This is
+a counterexample to alternativity of that displayed multiplication over this
+noncommutative carrier, not a universal statement over all coefficient rings
+and not a claim that coefficient commutativity is sufficient. The focused
+locked build passed (3,097 jobs, exit 0); upstream dependency warnings were
+reported.
+
+
+## Circle-dimension translation model scope correction (2026-10-31)
+
+In `Omega.CircleDimension.AnomalyFunctorialSplittingObstructionRge2Tor`,
+`naturalSplitting` is defined as the disjunction of rank at most one, trivial
+torsion, or a fixed point of translation by `1` on `ZMod torsionOrder`.
+Consequently, the paper-labeled equivalence for this predicate does not by
+itself prove a natural section or a bundle-level obstruction. Added the
+carrier-level characterization that this translation has a fixed point iff
+`torsionOrder = 1`, using the existing positivity hypothesis. The owner and its
+two direct dependents passed a locked build (3,094 jobs, exit 0); the staged
+proof gate passed. The semantic-vacuity scan reports only the intentional
+positivity field. The chapter interpretation remains outside the proved
+carrier-level scope.
+
+
+## Common finite-additive-linearization package audit (2026-10-31)
+
+`paper_conclusion_common_finite_additive_linearization_obstruction` proves the
+nonexistence of a faithful map `f : ℕ → ℕ` with `f 1 = 0` and
+`f (m * n) = f m + f n`. Its realization arguments `X`, `zeroX`, `S`, `Z`,
+`Val`, `hValZ`, and `hIter` do not contribute to that conclusion; the local
+`hStableFaithful` result is computed but unused. The canonical underlying
+theorem already exists as
+`PrimeRegisterFixed2adicAmbientVsFiniteLedger.no_faithful_single_register_additive_ledger`.
+No replacement wrapper was added because it would duplicate that owner API.
+The paper theorem is valid at its stated type, while its “two realizations
+coexist” gloss is supported only by its explicit hypotheses and the separately
+imported prime-register theorem. This is a source-level scope audit, not a new
+kernel verification.
+
+A refreshed tracked lexical scan read 28,875 files and returned 13,431
+candidates with zero scanner errors. These are navigation counts, not a
+semantic completeness claim.
+
+
+## Split-octonion operator envelope and Peirce curvature counterexample (2026-10-31)
+
+For the split-octonion paper translation, the repository's carrier is the
+real Zorn split-octonion algebra. Its left-regular maps are linear operators,
+but composition is not a multiplicative representation of the nonassociative
+product: `SplitOctonionMultiplication.leftRegular_mul_defect` identifies the
+defect with the negative associator, and
+`SplitOctonionNonmultiplicativity.nonmultiplicativity_obstruction` supplies a
+nonzero witness. Added
+`SplitOctonionMultiplicationOperatorAlgebra.lean`, defining the unital
+associative subalgebra generated by these left-multiplication endomorphisms.
+Its generator-membership and associativity declarations passed the targeted
+locked Lean build (8,952 jobs, exit 0). No division-algebra consequence from
+the ordinary octonions is inferred for the split form.
+
+The Peirce inner derivation example also separates the abstract Maurer–Cartan
+flatness condition from the specific operator differential. For
+`d = [P, ·]`, `N = P A (1-P)`, and `U = 1+N`, the left form is `ω=N` and
+`dω + ω²=N`; it is nonzero when `N` is nonzero. A concrete `M₂(ℤ)` witness
+was added to `PeirceMaurerCartanCurvatureWitness.lean`. Its semantic-vacuity
+scan reports zero findings, and its locked Lean build passed (1,204 jobs,
+exit 0). The theorem `peirce_unipotent_maurer_cartan_curvature_eq_conePlus`
+proves the corrected formula for every idempotent in an associative ring;
+`peirce_matrix_unipotent_maurer_cartan_nonflat` instantiates it at a nonzero
+integer matrix unit. This is a counterexample to the specific flatness claim
+for `d = ad_P`, not to the conditional differential-algebra identity requiring
+the appropriate square-zero differential hypothesis. An unrelated
+finite-carrier audit initially failed on a missing `Mathlib.Data.Fintype.Card`
+import. This item was subsequently resolved: the corrected split-octonion
+`Canonical.HopfTest` replacement and its imported interfaces passed the
+locked build, as recorded in the later D₃₀ audit below.
+
+
+## D₃₀ star-ring draft scope audit (2026-10-31)
+
+The displayed D₃₀ identities N₁–N₄ are conditional associative-star-ring
+identities of the stated kind; their assumptions do not construct a
+split-octonion algebra. In particular, the split-Zorn carrier is not a `Ring`
+because its product is nonassociative. Its valid operator translation uses
+left/right regular endomorphisms and operator composition. The owner
+`SplitOctonionFureyOperatorLift` proves both that the generated endomorphism
+algebra is associative and that left-regular multiplicativity fails by the
+associator, with a concrete nonzero root-frame witness. Its exact defect and
+necessary-and-sufficient associator criteria passed a fresh focused locked
+build (9,350 jobs, exit 0). Thus the `N₄`
+conjugation calculation may be used in an associative operator algebra, but it
+does not assert multiplicativity of the split-octonion regular action.
+
+The N₅ statements formalize selected self-adjoint coordinate identities for
+the displayed map. They do not define a projective-line bundle, prove a
+fibration, or define a tangent space; those geometric labels exceed the
+proposition types. The theorem statement also omits the prose-claimed
+self-adjointness of `hopfRadiusSq`. No replacement global Hopf-fibration
+claim is promoted. The repository's split-quaternionic motivic Hopf owner is a
+separate, explicitly defined construction and does not supply an
+octonionic-identification theorem.
+
+The repo-owned `CayleyDicksonHopfPoset.lean` is the source corresponding to
+the D₃₀ draft. Its N₅ theorem advertised self-adjointness of all three
+coordinates, but its type contained only the `Z` and `Perp` clauses. Added and
+used `hopfRadiusSq_selfAdjoint` to make that type match its documented
+algebraic claim. This is a conditional star-ring identity only; it does not
+upgrade the split-octonion regular action to an associative ring map. For N₄,
+the owner now also proves injectivity of `inducedEndoRep` from
+`ι_inv * ι = 1`. This states the precise conclusion: a multiplicative corner
+embedding, whose image of `1` is `ι * ι_inv`, without asserting unitality in
+the ambient ring. The injectivity conclusion and corrected radial-coordinate
+self-adjointness are propagated into the D₃₀ colimit theorem in
+`PeircePolygonKreinBottMasterSynthesis.lean`. That large
+owner's repository-wide semantic scan reports six existing `rfl` trivial
+surface warnings on sequence equations outside the modified D₃₀ section; it
+reports no new D₃₀-specific finding. The D₃₀ owner and dependent synthesis
+audit passed their locked build (9,563 jobs, exit 0); the separate HopfTest
+replacement below is also now kernel-checked.
+
+The former `Canonical.HopfTest.octonionic_hopf_fibration_s8` theorem was a
+scope counterexample: despite its name, it depended only on scalars `n1`,
+`n2` with `n1 + n2 = 1`, and never used the ordinary-octonion carrier declared
+in the same file. It proved neither an ordinary- nor split-octonion
+fibration. Replaced that surface in `Canonical.HopfTest` with three split
+composition-algebra statements: multiplicativity of the split quadratic norm,
+the two ordered conjugation-norm identities, and nullity of both nonzero
+zero-divisor factors. These reuse the native proved composition-algebra and
+conjugation interfaces. It also transports the split norm-zero locus exactly
+to the canonical Zorn determinant cone by the existing carrier equivalence;
+no projective fibration equivalence is asserted. The new owner passes the
+semantic-vacuity scan with zero findings and its locked build passed (8,975
+jobs, exit 0). Existing imported warnings remain; no warning-free claim is
+made.
+
+The remaining split geometric owners include `Canonical.SplitOctonionNullCone`,
+which proves closure and rescaling of its Zorn determinant-zero locus; it does
+not construct a projective Hopf fibration.
+Concrete split-octonion replacements already present in the repository are
+`SplitOctonion.splitConj_mul_self` and `SplitOctonion.self_mul_splitConj` in
+`Canonical.SplitOctonionConjugation`, which identify both ordered products
+with the split quadratic norm times `1`; `Canonical.SplitOctonionNullCone`
+then proves closure of the norm-zero locus under multiplication and scalar
+rescaling. These are the supported split algebra and null-cone statements.
+
+The supplied D₃₀ north-pole formula also claimed
+`hopfCoordPerp P (conePlus P A) = genPhi P A (star A)`. This is false for the
+defined coordinate `a₁ * star a₂ + a₂ * star a₁`: the Peirce corner relations
+give zero for `(P, conePlus P A)`. The `N₅` owner now states and proves that
+zero value. The claimed `genPhi` value belongs to the distinct input pair
+`(P, coneMinus P (star A))`, proved by `hopfCoord_north_pole_coneMinus`.
+The focused locked build of `InfoGeometry.OperatorAlgebra.PeirceSpine.CayleyDicksonHopfPoset`
+passed (8,998 jobs, exit 0), including its `ZornPeirceTetradPoset` dependency;
+the run also caught and repaired a missing `hPsym` argument in the Hermitian
+square identity proof.
+
+
+## Universal finite-audit obstruction wrapper scope (2026-10-31)
+
+`Omega.Conclusion.UniversalFiniteAuditLayerCollapseObstruction` proves the
+valid proposition-level implication `P → Q → (¬Q → ¬P)` by modus tollens.
+The owner defines neither a finite-audit-layer carrier nor an instance of the
+premise `UniversalFiniteAuditLayer → P_eq_NP`; its result is conditional
+propositional logic, not a constructed computational-complexity obstruction.
+The canonical statement is already exactly the theorem type, equivalent to
+`mt hcollapse hnot_eq`; no duplicate replacement was added. The focused locked
+build passed (3,092 jobs, exit 0). Classification: theorem verified in its
+generic logical scope; paper interpretation remains uninstantiated.
+
+
+## Finite real `2 × 2` CCR obstruction packaged (2026-10-31)
+
+The reviewed `proofs.HestenesKreinBdGPrecision` source already proved that the
+matrix trace annihilates every commutator. Its prose also stated the resulting
+identity-CCR obstruction, but did not expose that consequence as a theorem.
+Added `no_finite_CCR_identity`, proving `comm Q P ≠ 1` for arbitrary
+`Q P : Matrix (Fin 2) (Fin 2) ℝ` by applying the existing trace lemma and
+using `trace(1) = 2`. The focused locked build passed (8,925 jobs, exit 0).
+This closes the packaging gap for the concrete real `2 × 2` carrier; the
+separate canonical finite-dimensional theorem remains the general result.
+
+## Kantor grade-projector scaling and master-stage rank offset (2026-10-31)
+
+The submitted grade-`+1` identity omitted an outer factor of four. In
+`M₂(ℤ)`, with `P = E₀₀`, `A = E₀₁`, `C = 0`, and `X = E₁₀`, the proposed
+unscaled expression `4 Δ₂ - Δ₄ = 12 (G₊₁ + G₋₁)` is false: the two sides are
+`3 (E₀₀ - E₁₁)` and `12 (E₀₀ - E₁₁)`. The corrected generic channel is the
+existing `golay12Root = 4 (4 Δ₂ - Δ₄) = 12 [genPhi, X]`, reused through
+`corrected_scale12_grade_plus_one_channel`. The concrete counterexample and
+generic replacement compile in the locked audit build (9,033 jobs); the
+counterexample is decided on actual noncommuting integer matrices.
+
+The 58-stage embedding into the 82-stage master poset has rank `s.rank + 1`,
+not `s.rank`: the source enumeration starts at rank 0 while the master stages
+start at rank 1. `rank_ofSpine58` now states the exact offset, and
+`ofSpine58_strictMono` proves strict monotonicity from that formula. The same
+locked audit build passed; `#print axioms` reports no axioms for the rank
+formula and only standard Lean foundations for the other declarations. These
+findings cover the named claims and files only; they do not constitute a
+repository-wide completeness claim.

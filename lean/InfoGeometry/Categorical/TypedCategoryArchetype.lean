@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -25,6 +31,7 @@ import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import InfoGeometry.Canonical.CategoryTheoryConeUniqueness
 import InfoGeometry.Algebra.Grothendieck
 import InfoGeometry.Information.MasterArchetypeConvexDuality
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -133,5 +140,47 @@ theorem convexDualityDatum_legendre_pairing (D : ConvexDualityDatum) :
       D.theta * D.eta :=
   InfoGeometry.Information.MasterArchetypeConvexDuality.universal_legendre_fenchel_pairing
     D.psi D.theta D.eta
+
+/-!
+## 5. Non-Commutative Operator Realization of `ArchetypeStatus` over `[Ring B]`
+-/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ArchetypeStatus` stage
+to its canonical Peirce operator in `[Ring B]`. -/
+def archetypeStatusOperator (P A C : B) : ArchetypeStatus → B
+  | .candidate => genPhi P A C
+  | .validated => genJ P A C
+  | .proved => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Realization of `ArchetypeStatus` over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the candidate
+generator `Φ = a₊ + c₋` and validated generator `J = a₊ - c₋` anticommute (`{Φ, J} = 0`)
+and square to the proved central operator `±V` (`Φ² = V`, `J² = -V`). -/
+theorem archetypeStatus_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    archetypeStatusOperator P A C .candidate *
+      archetypeStatusOperator P A C .candidate =
+      archetypeStatusOperator P A C .proved ∧
+    archetypeStatusOperator P A C .validated *
+      archetypeStatusOperator P A C .validated =
+      -archetypeStatusOperator P A C .proved ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+      (archetypeStatusOperator P A C .candidate)
+      (archetypeStatusOperator P A C .validated) = 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (archetypeStatusOperator P A C .candidate)
+      (archetypeStatusOperator P A C .validated) = -((2 : ℤ) • genSig P A C) := by
+  dsimp only [archetypeStatusOperator]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨_, _, hPhiSq, hJSq, _, _, _, hAnti, _, _, _, _, _, _, _⟩
+  exact ⟨hPhiSq, hJSq, hAnti,
+    (archetype_A7_so12_lie_brackets_and_cubic_inversions (P := P) hP A C).1⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Categorical

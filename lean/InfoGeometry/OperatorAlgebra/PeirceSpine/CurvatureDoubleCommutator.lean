@@ -366,4 +366,244 @@ theorem derivSq_and_hProj_defect_iterates (n : ℕ) :
     rw [hDPhiS, hDJS, hDSigS]
     noncomm_ring
 
+/-! ### Stage M₉: 4th-Order Master Metriplectic Cayley–Hamilton Polynomial & All-Scale `(ℕ × ℕ)` Fractal Tower -/
+
+omit hP in
+/-- Second-order telegrapher polynomial `(L² + 4 V L - 4 V²)(X)` of `curvatureDoubleCommutator`. -/
+def metriplecticTelegrapher (P A C X : B) : B :=
+  curvatureDoubleCommutator P A C (curvatureDoubleCommutator P A C X) +
+    (4 : ℤ) • (genV P A C * curvatureDoubleCommutator P A C X) -
+    (4 : ℤ) • ((genV P A C * genV P A C) * X)
+
+omit hP in
+/-- Third-order metriplectic polynomial `L (L² + 4 V L - 4 V²)(X)`. -/
+def metriplecticCubic (P A C X : B) : B :=
+  curvatureDoubleCommutator P A C (metriplecticTelegrapher P A C X)
+
+omit hP in
+/-- 4th-order master metriplectic Cayley–Hamilton polynomial `(L + 4 V) L (L² + 4 V L - 4 V²)(X)`. -/
+def metriplecticMasterPoly4Op (P A C X : B) : B :=
+  curvatureDoubleCommutator P A C (metriplecticCubic P A C X) +
+    (4 : ℤ) • (genV P A C * metriplecticCubic P A C X)
+
+omit hP in
+/-- Two-sided bimodule coboundary operator `R_u * X - X * R_v`. -/
+def sheafBimodCoboundary (R_u R_v X : B) : B :=
+  R_u * X - X * R_v
+
+omit hP in
+/-- Recursive daughter-idempotent tower `P_{k+1} = P_k - conePlus P_k A`. -/
+def daughterIdemTower : ℕ → B → B → B
+  | 0, P, _ => P
+  | k + 1, P, A =>
+      let P_k := daughterIdemTower k P A
+      P_k - conePlus P_k A
+
+/-- Right-multiplication by `δ^[n](V)` commutes with `metriplecticMasterPoly4Op`. -/
+theorem metriplecticMasterPoly4Op_mul_genV_defect_iterate (n : ℕ) :
+    metriplecticMasterPoly4Op P A C (X * idempotencyDefect^[n] (genV P A C)) =
+      metriplecticMasterPoly4Op P A C X * idempotencyDefect^[n] (genV P A C) := by
+  have hL : ∀ Z : B,
+      curvatureDoubleCommutator P A C (Z * idempotencyDefect^[n] (genV P A C)) =
+        curvatureDoubleCommutator P A C Z * idempotencyDefect^[n] (genV P A C) :=
+    fun Z => curvatureDoubleCommutator_mul_genV_defect_iterate hP A C Z n
+  have hTel : ∀ Z : B,
+      metriplecticTelegrapher P A C (Z * idempotencyDefect^[n] (genV P A C)) =
+        metriplecticTelegrapher P A C Z * idempotencyDefect^[n] (genV P A C) := by
+    intro Z
+    unfold metriplecticTelegrapher
+    rw [hL Z, hL (curvatureDoubleCommutator P A C Z)]
+    simp only [add_mul, sub_mul, smul_mul_assoc, mul_assoc]
+  have hCub : ∀ Z : B,
+      metriplecticCubic P A C (Z * idempotencyDefect^[n] (genV P A C)) =
+        metriplecticCubic P A C Z * idempotencyDefect^[n] (genV P A C) := by
+    intro Z
+    unfold metriplecticCubic
+    rw [hTel Z, hL]
+  unfold metriplecticMasterPoly4Op
+  rw [hCub X, hL]
+  simp only [add_mul, smul_mul_assoc, mul_assoc]
+
+set_option maxHeartbeats 1000000 in
+/-- **Stage M₉ (`stage_M9_all_scale_fractal_braiding_instanton_duality_and_master_metriplectic_poly4`)**:
+Across all two-parameter scales `(k, n) ∈ ℕ × ℕ` with `P_k = daughterIdemTower k P A`:
+1. `P_k` is idempotent, `V_{k,n} = X_n + Y_n` with `X_n * Y_n = Y_n * X_n = 0`, and
+   `invS P_k` acts by `+1` on `X_n`, `-1` on `Y_n`, and maps `V_{k,n}` to `Sig_{k,n}`.
+2. `V_{k,n}` is a two-sided bimodule global section (`sheafBimodCoboundary N_{±,k} N_{±,k} V_{k,n} = 0`)
+   and satisfies the chiral product laws `Sig_k * V_{k,n} = V_k * Sig_{k,n}` and
+   `Sig_k * Sig_{k,n} = V_k * V_{k,n}`.
+3. The 4th-order master metriplectic polynomial `metriplecticMasterPoly4Op P_k A C`
+   annihilates all four fractal Tetraktys states `V_{k,n}`, `Φ_k * V_{k,n}`, `J_k * V_{k,n}`,
+   and `V_k * Sig_{k,n}`. -/
+theorem stage_M9_all_scale_fractal_braiding_instanton_duality_and_master_metriplectic_poly4
+    (k n : ℕ) :
+    let P_k := daughterIdemTower k P A
+    let N_p := conePlus P_k A
+    let N_m := coneMinus P_k C
+    let V_k := genV P_k A C
+    let Φ_k := genPhi P_k A C
+    let J_k := genJ P_k A C
+    let Sig_k := genSig P_k A C
+    let X_n := idempotencyDefect^[n] (qgtPlus P_k A C)
+    let Y_n := idempotencyDefect^[n] (qgtMinus P_k A C)
+    let V_kn := idempotencyDefect^[n] V_k
+    let Sig_kn := qgtDefectDiff P_k A C n
+    P_k * P_k = P_k ∧
+    V_kn = X_n + Y_n ∧
+    X_n * Y_n = 0 ∧
+    Y_n * X_n = 0 ∧
+    invS P_k * X_n = X_n ∧
+    invS P_k * Y_n = -Y_n ∧
+    invS P_k * V_kn = Sig_kn ∧
+    sheafBimodCoboundary N_p N_p V_kn = 0 ∧
+    sheafBimodCoboundary N_m N_m V_kn = 0 ∧
+    Sig_k * V_kn = V_k * Sig_kn ∧
+    Sig_k * Sig_kn = V_k * V_kn ∧
+    metriplecticMasterPoly4Op P_k A C V_kn = 0 ∧
+    metriplecticMasterPoly4Op P_k A C (Φ_k * V_kn) = 0 ∧
+    metriplecticMasterPoly4Op P_k A C (J_k * V_kn) = 0 ∧
+    metriplecticMasterPoly4Op P_k A C (V_k * Sig_kn) = 0 := by
+  intro P_k N_p N_m V_k Φ_k J_k Sig_k X_n Y_n V_kn Sig_kn
+  have hPk : P_k * P_k = P_k := by
+    dsimp [P_k]
+    induction k with
+    | zero => exact hP
+    | succ k ih =>
+      dsimp [daughterIdemTower]
+      peirce_nf ih
+  have hSplit := genV_defect_iterates_cycle_split hPk A C n
+  rcases qgt_defect_iterates_orthogonal hPk A C n with ⟨hXY, hYX⟩
+  rcases qgt_defect_iterates_invS_and_parity hPk A C n with ⟨hSX, hSY, hSV, _⟩
+  rcases qgt_defect_iterate_sum_commutes_with_cones hPk A C n with ⟨hCommNp, hCommNm⟩
+  rcases qgt_defect_iterates_chiral_eigenvalues hPk A C n with
+    ⟨_, _, _, _, hSigSigkn, hSigVkn⟩
+  have hPull : ∀ Z : B,
+      metriplecticMasterPoly4Op P_k A C (Z * V_kn) =
+        metriplecticMasterPoly4Op P_k A C Z * V_kn :=
+    fun Z => metriplecticMasterPoly4Op_mul_genV_defect_iterate hPk A C Z n
+  have hL0 : curvatureDoubleCommutator P_k A C 0 = 0 := by
+    simp [curvatureDoubleCommutator, derivSqPhi, comm]
+  have hLV : ∀ Z : B,
+      curvatureDoubleCommutator P_k A C (Z * V_k) =
+        curvatureDoubleCommutator P_k A C Z * V_k :=
+    fun Z => curvatureDoubleCommutator_mul_genV_defect_iterate hPk A C Z 0
+  have hL1 : curvatureDoubleCommutator P_k A C 1 = 0 := by
+    simp only [curvatureDoubleCommutator, derivSqPhi]; peirce_nf hPk
+  have hLVk : curvatureDoubleCommutator P_k A C V_k = 0 :=
+    (curvatureDoubleCommutator_even_defect_iterates hPk A C 0).1
+  have hLVk2 : curvatureDoubleCommutator P_k A C (V_k * V_k) = 0 := by
+    have h := hLV V_k
+    rw [hLVk, zero_mul] at h
+    exact h
+  have hTelPhi : metriplecticTelegrapher P_k A C Φ_k = 0 :=
+    curvatureDoubleCommutator_quadratic_phi hPk A C
+  have hTelJ : metriplecticTelegrapher P_k A C J_k = 0 :=
+    curvatureDoubleCommutator_quadratic_j hPk A C
+  have hNeg4 : ∀ Y : B,
+      curvatureDoubleCommutator P_k A C (-((4 : ℤ) • Y)) =
+        -((4 : ℤ) • curvatureDoubleCommutator P_k A C Y) := by
+    intro Y
+    unfold curvatureDoubleCommutator derivSqPhi comm
+    noncomm_ring
+  have hPos16 : ∀ Y : B,
+      curvatureDoubleCommutator P_k A C ((16 : ℤ) • Y) =
+        (16 : ℤ) • curvatureDoubleCommutator P_k A C Y := by
+    intro Y
+    unfold curvatureDoubleCommutator derivSqPhi comm
+    noncomm_ring
+  have hCub1 : metriplecticCubic P_k A C 1 = 0 := by
+    have hT1 : metriplecticTelegrapher P_k A C 1 = -((4 : ℤ) • (V_k * V_k)) := by
+      unfold metriplecticTelegrapher
+      rw [hL1, hL0]
+      dsimp [V_k]
+      noncomm_ring
+    unfold metriplecticCubic
+    rw [hT1, hNeg4 (V_k * V_k), hLVk2, smul_zero, neg_zero]
+  have hPoly1 : metriplecticMasterPoly4Op P_k A C 1 = 0 := by
+    unfold metriplecticMasterPoly4Op
+    rw [hCub1, hL0]
+    noncomm_ring
+  have hPolyPhi : metriplecticMasterPoly4Op P_k A C Φ_k = 0 := by
+    have hCubPhi : metriplecticCubic P_k A C Φ_k = 0 := by
+      unfold metriplecticCubic
+      rw [hTelPhi, hL0]
+    unfold metriplecticMasterPoly4Op
+    rw [hCubPhi, hL0]
+    noncomm_ring
+  have hPolyJ : metriplecticMasterPoly4Op P_k A C J_k = 0 := by
+    have hCubJ : metriplecticCubic P_k A C J_k = 0 := by
+      unfold metriplecticCubic
+      rw [hTelJ, hL0]
+    unfold metriplecticMasterPoly4Op
+    rw [hCubJ, hL0]
+    noncomm_ring
+  have hPolySig : metriplecticMasterPoly4Op P_k A C Sig_k = 0 := by
+    have hSigVk : Sig_k * V_k = V_k * Sig_k := by
+      dsimp [Sig_k, V_k]; peirce_nf hPk
+    have hLSig : curvatureDoubleCommutator P_k A C Sig_k = -((4 : ℤ) • (Sig_k * V_k)) := by
+      have h0 := (curvatureDoubleCommutator_even_defect_iterates hPk A C 0).2
+      have hDiff0 : qgtDefectDiff P_k A C 0 = Sig_k := by
+        change qgtPlus P_k A C - qgtMinus P_k A C = genSig P_k A C
+        peirce_nf hPk
+      rw [hDiff0] at h0
+      have h0' : curvatureDoubleCommutator P_k A C Sig_k = -((4 : ℤ) • (V_k * Sig_k)) :=
+        eq_neg_of_add_eq_zero_left h0
+      rw [h0', hSigVk]
+    have hTelSig : metriplecticTelegrapher P_k A C Sig_k =
+        -((4 : ℤ) • (Sig_k * V_k * V_k)) := by
+      unfold metriplecticTelegrapher
+      rw [hLSig, hNeg4 (Sig_k * V_k), hLV Sig_k, hLSig]
+      change -((4 : ℤ) • (-((4 : ℤ) • (Sig_k * V_k)) * V_k)) +
+          (4 : ℤ) • (V_k * -((4 : ℤ) • (Sig_k * V_k))) -
+          (4 : ℤ) • ((V_k * V_k) * Sig_k) =
+        -((4 : ℤ) • (Sig_k * V_k * V_k))
+      have hVV : (V_k * V_k) * Sig_k = Sig_k * V_k * V_k := by
+        calc
+          (V_k * V_k) * Sig_k = V_k * (V_k * Sig_k) := by noncomm_ring
+          _ = V_k * (Sig_k * V_k) := by rw [← hSigVk]
+          _ = (V_k * Sig_k) * V_k := by noncomm_ring
+          _ = (Sig_k * V_k) * V_k := by rw [← hSigVk]
+      have hVS : V_k * -((4 : ℤ) • (Sig_k * V_k)) = -((4 : ℤ) • (Sig_k * V_k * V_k)) := by
+        calc
+          V_k * -((4 : ℤ) • (Sig_k * V_k)) = -((4 : ℤ) • ((V_k * Sig_k) * V_k)) := by noncomm_ring
+          _ = -((4 : ℤ) • (Sig_k * V_k * V_k)) := by rw [← hSigVk]
+      rw [hVV, hVS]
+      noncomm_ring
+    have hCubSig : metriplecticCubic P_k A C Sig_k =
+        (16 : ℤ) • (Sig_k * V_k * V_k * V_k) := by
+      unfold metriplecticCubic
+      rw [hTelSig, hNeg4 (Sig_k * V_k * V_k), hLV (Sig_k * V_k), hLV Sig_k, hLSig]
+      noncomm_ring
+    have hLCubSig : curvatureDoubleCommutator P_k A C (metriplecticCubic P_k A C Sig_k) =
+        -((64 : ℤ) • (Sig_k * V_k * V_k * V_k * V_k)) := by
+      rw [hCubSig, hPos16 (Sig_k * V_k * V_k * V_k),
+          hLV (Sig_k * V_k * V_k), hLV (Sig_k * V_k), hLV Sig_k, hLSig]
+      noncomm_ring
+    have hVCub : V_k * (Sig_k * V_k * V_k * V_k) = Sig_k * V_k * V_k * V_k * V_k := by
+      calc
+        V_k * (Sig_k * V_k * V_k * V_k) = (V_k * Sig_k) * V_k * V_k * V_k := by noncomm_ring
+        _ = (Sig_k * V_k) * V_k * V_k * V_k := by rw [← hSigVk]
+        _ = Sig_k * V_k * V_k * V_k * V_k := by noncomm_ring
+    unfold metriplecticMasterPoly4Op
+    rw [hLCubSig, hCubSig]
+    change -((64 : ℤ) • (Sig_k * V_k * V_k * V_k * V_k)) +
+        (4 : ℤ) • (V_k * (16 : ℤ) • (Sig_k * V_k * V_k * V_k)) = 0
+    have h4_16 : (4 : ℤ) • (V_k * (16 : ℤ) • (Sig_k * V_k * V_k * V_k)) =
+        (64 : ℤ) • (V_k * (Sig_k * V_k * V_k * V_k)) := by noncomm_ring
+    rw [h4_16, hVCub]
+    noncomm_ring
+  refine ⟨hPk, hSplit, hXY, hYX, hSX, hSY, ?_, ?_, ?_, hSigVkn, hSigSigkn, ?_, ?_, ?_, ?_⟩
+  · dsimp [V_kn, Sig_kn]
+    exact hSV
+  · dsimp [sheafBimodCoboundary, N_p, V_kn]
+    rw [hSplit]
+    exact hCommNp
+  · dsimp [sheafBimodCoboundary, N_m, V_kn]
+    rw [hSplit]
+    exact hCommNm
+  · rw [← one_mul V_kn, hPull 1, hPoly1, zero_mul]
+  · rw [hPull Φ_k, hPolyPhi, zero_mul]
+  · rw [hPull J_k, hPolyJ, zero_mul]
+  · rw [← hSigVkn, hPull Sig_k, hPolySig, zero_mul]
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

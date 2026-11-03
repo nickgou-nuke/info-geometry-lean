@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Spectrometry.SvdClrEquivalence
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.RobustThermodynamics
 
@@ -351,5 +358,49 @@ theorem effective_support_single_line [DecidableEq Line] (selected : Line) :
 end EffectiveSupport
 
 end
+
+/-! ### Non-Commutative Operator Realization of `RobustThermodynamics.ProofDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ProofDependency.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def robustRegressionArchetypeOperator (P A C X : B) : ProofDependency.Archetype → B
+  | .clrProjection => oddGrade P X
+  | .devianceEnergy => evenGrade P X
+  | .gibbsEnsemble => genPhi P A C
+  | .energyShift => invS P * genPhi P A C * invS P
+  | .freeEnergyDerivative => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+  | .effectiveSupport => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `RobustThermodynamics.ProofDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the deviance
+energy and CLR projection sum to `X`, the Gibbs ensemble generator `Φ` is negated by
+the reflection involution `S Φ S = -Φ`, and `Φ² = V`. -/
+theorem robustRegressionArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    robustRegressionArchetypeOperator P A C X .devianceEnergy +
+      robustRegressionArchetypeOperator P A C X .clrProjection = X ∧
+    robustRegressionArchetypeOperator P A C X .gibbsEnsemble *
+      robustRegressionArchetypeOperator P A C X .gibbsEnsemble =
+      robustRegressionArchetypeOperator P A C X .effectiveSupport ∧
+    robustRegressionArchetypeOperator P A C X .energyShift =
+      -robustRegressionArchetypeOperator P A C X .gibbsEnsemble ∧
+    robustRegressionArchetypeOperator P A C X .freeEnergyDerivative =
+      -((2 : ℤ) • genSig P A C) ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 := by
+  dsimp only [robustRegressionArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A7_so12_lie_brackets_and_cubic_inversions
+      (P := P) hP A C).1
+  · peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.RobustThermodynamics

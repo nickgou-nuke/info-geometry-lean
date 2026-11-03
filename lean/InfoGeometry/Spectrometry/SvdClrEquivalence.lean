@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.SvdClrEquivalence
 
@@ -225,7 +232,7 @@ theorem positive_factorization_iff_common_clr
     intro row column
     have equality := common_clr row column
     dsimp [rowClr, center] at equality
-    linarith
+    rw [← equality, add_sub_cancel]
 
 theorem row_clr_invariant_under_row_scaling
     (observed : Matrix (Fin rowCount) (Fin columnCount) ℝ)
@@ -298,5 +305,42 @@ theorem transport_residual
   field_simp [scales_ne column]
 
 end
+
+/-! ### Non-Commutative Operator Realization of `SvdClrEquivalence.ProofDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ProofDependency.Archetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def svdClrArchetypeOperator (P A C X : B) : ProofDependency.Archetype → B
+  | .positiveScale => peirce11 P X + peirce00 P X
+  | .positiveFactorization => conePlus P A * coneMinus P C + coneMinus P C * conePlus P A
+  | .logarithmicRepresentation => genPhi P A C
+  | .transportEquivalence => invS P * evenGrade P X * invS P
+  | .centeredNormalization => oddGrade P (evenGrade P X)
+  | .commonProfileRecovery => evenGrade P X + oddGrade P X
+
+/-- **Theorem (Non-Commutative Operator Identities across `SvdClrEquivalence.ProofDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the SVD/CLR
+archetypes satisfy reflection transport invariance `S (evenGrade P X) S = evenGrade P X`,
+centered normalization vanishing `oddGrade P (evenGrade P X) = 0`, quadratic factorization
+`Φ² = V = a₊ c₋ + c₋ a₊`, and full Peirce profile recovery `evenGrade P X + oddGrade P X = X`. -/
+theorem svdClrArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    svdClrArchetypeOperator P A C X .transportEquivalence =
+      svdClrArchetypeOperator P A C X .positiveScale ∧
+    svdClrArchetypeOperator P A C X .centeredNormalization = 0 ∧
+    svdClrArchetypeOperator P A C X .commonProfileRecovery = X ∧
+    svdClrArchetypeOperator P A C X .logarithmicRepresentation *
+      svdClrArchetypeOperator P A C X .logarithmicRepresentation =
+      svdClrArchetypeOperator P A C X .positiveFactorization ∧
+    genPhi P A C * genJ P A C + genJ P A C * genPhi P A C = 0 := by
+  dsimp only [svdClrArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.SvdClrEquivalence

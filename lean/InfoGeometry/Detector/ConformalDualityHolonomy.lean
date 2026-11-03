@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.ConformalDualityHolonomy
 
@@ -136,5 +143,37 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ConformalDualityHolonomy.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def conformalDualityOperator (P A C X : B) : Archetype → B
+  | .reflectionDuality => invS P
+  | .criticalFixedPoint => invS P * evenGrade P X * invS P
+  | .baselCapacity => genV P A C
+  | .physicalDuality => invS P * oddGrade P X * invS P
+  | .selfDualManifold => genSig P A C * genSig P A C - genV P A C * genV P A C
+
+/-- **Theorem (Non-Commutative Operator Conformal Duality & Holonomy over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the reflection
+involution `S = 2 P - 1` satisfies `S² = 1`, fixes the even-grade subspace, negates
+the odd-grade subspace, and preserves the self-dual Casimir balance `Σ² - V² = 0`. -/
+theorem conformalDuality_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    conformalDualityOperator P A C X .reflectionDuality *
+      conformalDualityOperator P A C X .reflectionDuality = 1 ∧
+    conformalDualityOperator P A C X .criticalFixedPoint = evenGrade P X ∧
+    conformalDualityOperator P A C X .physicalDuality = -oddGrade P X ∧
+    conformalDualityOperator P A C X .selfDualManifold = 0 ∧
+    genPhi P A C * genPhi P A C =
+      conformalDualityOperator P A C X .baselCapacity := by
+  dsimp only [conformalDualityOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.ConformalDualityHolonomy

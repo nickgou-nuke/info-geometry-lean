@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Six-prime cyclotomic Galois-tower certificates
@@ -177,5 +184,53 @@ theorem galoisDegree_values :
     (galoisDegree .p2, galoisDegree .p3, galoisDegree .p5,
       galoisDegree .p7, galoisDegree .p11, galoisDegree .p13) =
       (1, 2, 8, 48, 480, 5760) := rfl
+
+/-! ### Non-Commutative Operator Realization of `PrimeStage` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `PrimeStage` to its canonical
+Peirce spine operator in `[Ring B]`. -/
+def primeStageOperator (P A C X : B) : PrimeStage → B
+  | .p2 => invS P
+  | .p3 => evenGrade P X + oddGrade P X
+  | .p5 => genPhi P A C
+  | .p7 => genJ P A C
+  | .p11 => genV P A C
+  | .p13 => genSig P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `PrimeStage`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the six prime
+stages realize the reflection involution `S² = 1`, exact Peirce grading completeness,
+and the Tetraktys `𝔰𝔩₂` commutator-anticommutator algebra. -/
+theorem primeStage_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    primeStageOperator P A C X .p2 * primeStageOperator P A C X .p2 = 1 ∧
+    primeStageOperator P A C X .p3 = X ∧
+    primeStageOperator P A C X .p5 * primeStageOperator P A C X .p5 =
+      primeStageOperator P A C X .p11 ∧
+    primeStageOperator P A C X .p7 * primeStageOperator P A C X .p7 =
+      -primeStageOperator P A C X .p11 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (primeStageOperator P A C X .p5) (primeStageOperator P A C X .p7) =
+      -((2 : ℤ) • primeStageOperator P A C X .p13) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+      (primeStageOperator P A C X .p5) (primeStageOperator P A C X .p7) = 0 := by
+  dsimp only [primeStageOperator]
+  have hA2 := archetype_A2_peirce_cartan_grading_and_tangent_closure hP A C
+  have hA3 := archetype_A3_nilpotent_cones_and_tetraktys_table hP A C
+  have hA7 := archetype_A7_so12_lie_brackets_and_cubic_inversions hP A C
+  rcases hA3 with ⟨_, _, hPhiSq, hJSq, _, _, _, hAnti, _, _, _, _, _, _, _⟩
+  have hPeirce : evenGrade P X + oddGrade P X = X := by
+    rcases archetype_A2_peirce_cartan_grading_and_tangent_closure hP X C with
+      ⟨_, hOdd, hEven, _, _, _, _⟩
+    rw [← hEven, ← hOdd]
+    abel
+  exact ⟨hA2.1, hPeirce, hPhiSq, hJSq, hA7.1, hAnti⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates

@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.DirectSum.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Canonical Mathematical Archetypes of Chiral Non-Degeneracy
@@ -97,5 +104,25 @@ theorem strict_positivity_of_biased_dispersion
   linarith
 
 end TorsionalVolume
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem canonical_nuclear_archetypes_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    invS P * invS P = (1 : B) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P X)) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P X ∧
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    genSig P A C * genSig P A C = genV P A C * genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Nuclear.CanonicalArchetypes

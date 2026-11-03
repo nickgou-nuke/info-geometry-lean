@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Logic.Relation
 import Mathlib.Order.Defs.PartialOrder
 import Mathlib.Tactic.DeriveFintype
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # The dependency partial order
@@ -180,5 +182,92 @@ theorem operator_precedes_pathCorrection : operatorAlgebra ≤ pathCorrection :=
 theorem independent_rotation_and_cross_branches :
     ¬ rotationOrder ≤ crossIdentities ∧ ¬ crossIdentities ≤ rotationOrder :=
   distinct_equal_rank_incomparable (by decide) rfl
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- **Rank 0–1 (`operatorAlgebra`, `additiveBilinearity`, `peirceCorners`, `operatorTriples`, `jordanProduct`, `universalDefects`, `expressionSyntax`):**
+Universal Lie–Jordan bilinearity, Peirce corner nilpotency, and operator triple sandwiches
+over `[Ring B]`. -/
+theorem rank_0_to_1_operator_peirce_jordan_triples
+    {P : B} (hP : P * P = P) (A C X Y Z : B) :
+    comm X (Y * Z) = comm X Y * Z + Y * comm X Z ∧
+    anticomm X (anticomm Y Z) - anticomm Y (anticomm X Z) = comm (comm X Y) Z ∧
+    conePlus P A * conePlus P A = 0 ∧
+    coneMinus P C * coneMinus P C = 0 ∧
+    conePlus P A * coneMinus P C * conePlus P A = genV P A C * conePlus P A ∧
+    coneMinus P C * conePlus P A * coneMinus P C = genV P A C * coneMinus P C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · dsimp only [InfoGeometry.OperatorAlgebra.PeirceSpine.comm]; noncomm_ring
+  · dsimp only [InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm]; noncomm_ring
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+
+/-- **Rank 2–3 (`peirceGeometry`, `crossIdentities`, `zornProduct`, `jordanGeometry`, `rotationOrder`, `zornCorners`, `channelAssociators`, `reflection`, `numberDefect`, `oddGeneration`, `expressionEvaluation`):**
+Zorn corner multiplication table, cross-sandwich identities, grading reflection `S_P`, and
+odd-grade cubic generation over `[Ring B]`. -/
+theorem rank_2_to_3_zorn_corners_reflection_and_odd_generation
+    {P : B} (hP : P * P = P) (A C X : B) :
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    sandwichCross P A C X + sandwichSame P A C X = genPhi P A C * X * genPhi P A C ∧
+    sandwichCross P A C X - sandwichSame P A C X = -(genJ P A C * X * genJ P A C) ∧
+    invS P * genPhi P A C * invS P = -genPhi P A C ∧
+    genPhi P A C * genPhi P A C * genPhi P A C = genV P A C * genPhi P A C ∧
+    genJ P A C * genJ P A C * genJ P A C = -(genV P A C * genJ P A C) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · peirce_nf hP
+  · peirce_nf hP
+  · simp only [sandwichCross, sandwichSame]; peirce_nf hP
+  · simp only [sandwichCross, sandwichSame]; peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+
+/-- **Rank 4–5 (`jacobiatorResolution`, `reflectionCancellation`, `braidingDefect`, `evenAssociatorRange`, `contextPropagation`, `pathCorrection`, `signObstruction`):**
+Jacobiator vanishing, reflection cancellation `X + S_P * X * S_P = 2 • evenGrade P X`,
+braiding commutator `[N_+, [N_-, X]] - [N_-, [N_+, X]] = [Σ, X]`, and sign obstruction
+`[Φ, J] = -2 • Σ`. -/
+theorem rank_4_to_5_jacobiator_reflection_and_braiding_obstruction
+    {P : B} (hP : P * P = P) (A C X Y Z : B) :
+    comm X (comm Y Z) + comm Y (comm Z X) + comm Z (comm X Y) = 0 ∧
+    X + invS P * X * invS P = (2 : ℤ) • evenGrade P X ∧
+    comm (conePlus P A) (comm (coneMinus P C) X) -
+        comm (coneMinus P C) (comm (conePlus P A) X) =
+      comm (genSig P A C) X ∧
+    comm (genPhi P A C) (genJ P A C) = -((2 : ℤ) • genSig P A C) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · dsimp only [InfoGeometry.OperatorAlgebra.PeirceSpine.comm]; noncomm_ring
+  · simp only [evenGrade]; peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+
+/-- **Master Synthesis (`matrix_peirce_zorn_dependency_poset_master_synthesis`):**
+Unites the 25-stage `Archetype` poset theorems with the non-commutative `[Ring B]`
+Peirce–Zorn operator spine across all 6 ranks (`0 → 5`). -/
+theorem matrix_peirce_zorn_dependency_poset_master_synthesis
+    {P : B} (hP : P * P = P) (A C X Y Z : B) :
+    (operatorAlgebra ≤ reflectionCancellation ∧
+      additiveBilinearity ≤ jacobiatorResolution ∧
+      operatorAlgebra ≤ pathCorrection) ∧
+    (conePlus P A * coneMinus P C * conePlus P A = genV P A C * conePlus P A) ∧
+    (sandwichCross P A C X + sandwichSame P A C X = genPhi P A C * X * genPhi P A C) ∧
+    (comm (conePlus P A) (comm (coneMinus P C) X) -
+        comm (coneMinus P C) (comm (conePlus P A) X) =
+      comm (genSig P A C) X) := by
+  have h1 := rank_0_to_1_operator_peirce_jordan_triples hP A C X Y Z
+  have h2 := rank_2_to_3_zorn_corners_reflection_and_odd_generation hP A C X
+  have h3 := rank_4_to_5_jacobiator_reflection_and_braiding_obstruction hP A C X Y Z
+  exact ⟨⟨operator_precedes_cancellation, defects_precede_jacobiator,
+      operator_precedes_pathCorrection⟩,
+    h1.2.2.2.2.1, h2.2.2.1, h3.2.2.1⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.MatrixPeirceZorn.DependencyPoset

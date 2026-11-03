@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.ApollonianBalanceParabola
 
@@ -110,5 +117,33 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ApollonianBalanceParabola.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def apollonianBalanceOperator (P A C : B) : Archetype → B
+  | .vacuumPole => P * (1 - P)
+  | .summingPole => (1 - P) * P
+  | .equipartitionPeak => P + (1 - P) - invS P * invS P
+  | .crossRatio => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Apollonian Balance over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, both boundary poles
+`P (1 - P) = 0` and `(1 - P) P = 0` vanish, the equipartition balance identity
+`P + (1 - P) - S² = 0` holds, and the cross-ratio commutator satisfies `[Φ, J] = -2 Σ`. -/
+theorem apollonianBalance_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    apollonianBalanceOperator P A C .vacuumPole = 0 ∧
+    apollonianBalanceOperator P A C .summingPole = 0 ∧
+    apollonianBalanceOperator P A C .equipartitionPeak = 0 ∧
+    apollonianBalanceOperator P A C .crossRatio = -((2 : ℤ) • genSig P A C) := by
+  dsimp only [apollonianBalanceOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.ApollonianBalanceParabola

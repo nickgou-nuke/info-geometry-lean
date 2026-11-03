@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CantorBoundaryReadoutDyadicRange
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
@@ -40,6 +46,14 @@ theorem finitePrefixReadout_prependBit {n : ℕ} (b : Bool) (w : BitWord n) :
         (1 / 2 : ℝ) * finitePrefixReadout (List.ofFn w) := by
   rw [list_ofFn_prependBit]
   rfl
+
+/-- The bitwise complement of a length-`n` word starts the reflected dyadic
+cell, with the cell width retained as its finite-tail correction. -/
+theorem finitePrefixReadout_complementBitWord {n : ℕ} (w : BitWord n) :
+    finitePrefixReadout (List.ofFn (fun i => !w i)) +
+      finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n = 1 := by
+  rw [List.ofFn_comp' w (fun b => !b)]
+  simpa using finitePrefixReadout_complement (List.ofFn w)
 
 theorem finitePrefixReadout_add_pow_le_one (bs : List Bool) :
     finitePrefixReadout bs + (1 / 2 : ℝ) ^ bs.length ≤ 1 := by

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.Cl55CAROperatorTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -245,6 +251,96 @@ theorem cl55_leftAction_bogoliubov_isCARPair
       h_ann_sq h_cre_sq h_cross_ann_cre
   · exact real_bogoliubov_creator_nilpotent _ _ u v
       h_cre_sq_i h_ann_sq_j h_cross_cre_ann
+
+/-- The occupation operator of the Bogoliubov-transformed CAR pair is an
+idempotent in the noncommutative Cl(5,5) left-operator ring.  The normalized
+Bogoliubov coefficients preserve the CAR pair, and the self-anticommutators
+give square-zero of each transformed mode over the real operator algebra. -/
+theorem cl55_bogoliubov_occupation_idempotent
+    {i j : Fin 5} (hij : i ≠ j) (u v : ℝ)
+    (huv : u ^ 2 + v ^ 2 = 1) :
+    let n := cl55BogoliubovCreator i j u v *
+      cl55BogoliubovAnnihilator i j u v
+    n * n = n := by
+  dsimp
+  rcases cl55_leftAction_bogoliubov_isCARPair hij u v huv with
+    ⟨hAnn, hCre, hCAR⟩
+  have hAnnSq :
+      cl55BogoliubovAnnihilator i j u v *
+        cl55BogoliubovAnnihilator i j u v = 0 := by
+    have h := hAnn
+    change cl55BogoliubovAnnihilator i j u v *
+        cl55BogoliubovAnnihilator i j u v +
+      cl55BogoliubovAnnihilator i j u v *
+        cl55BogoliubovAnnihilator i j u v = 0 at h
+    have h' : (2 : ℝ) •
+        (cl55BogoliubovAnnihilator i j u v *
+          cl55BogoliubovAnnihilator i j u v) = 0 := by
+      simpa only [two_smul] using h
+    exact (smul_eq_zero.mp h').resolve_left (by norm_num)
+  have hCreSq :
+      cl55BogoliubovCreator i j u v * cl55BogoliubovCreator i j u v = 0 := by
+    have h := hCre
+    change cl55BogoliubovCreator i j u v * cl55BogoliubovCreator i j u v +
+        cl55BogoliubovCreator i j u v * cl55BogoliubovCreator i j u v = 0 at h
+    have h' : (2 : ℝ) •
+        (cl55BogoliubovCreator i j u v * cl55BogoliubovCreator i j u v) = 0 := by
+      simpa only [two_smul] using h
+    exact (smul_eq_zero.mp h').resolve_left (by norm_num)
+  have hSwap :
+      cl55BogoliubovAnnihilator i j u v * cl55BogoliubovCreator i j u v =
+        1 - cl55BogoliubovCreator i j u v *
+          cl55BogoliubovAnnihilator i j u v := by
+    have hCAR' :
+        cl55BogoliubovAnnihilator i j u v * cl55BogoliubovCreator i j u v +
+          cl55BogoliubovCreator i j u v *
+            cl55BogoliubovAnnihilator i j u v = 1 := by
+      simpa [realAnticommutator] using hCAR
+    calc
+      cl55BogoliubovAnnihilator i j u v * cl55BogoliubovCreator i j u v =
+          (cl55BogoliubovAnnihilator i j u v * cl55BogoliubovCreator i j u v +
+            cl55BogoliubovCreator i j u v *
+              cl55BogoliubovAnnihilator i j u v) -
+            cl55BogoliubovCreator i j u v *
+              cl55BogoliubovAnnihilator i j u v := by abel
+      _ = 1 - cl55BogoliubovCreator i j u v *
+          cl55BogoliubovAnnihilator i j u v := by rw [hCAR']
+  have hTerm :
+      cl55BogoliubovCreator i j u v *
+        (cl55BogoliubovCreator i j u v *
+          cl55BogoliubovAnnihilator i j u v) *
+          cl55BogoliubovAnnihilator i j u v = 0 := by
+    calc
+      _ = (cl55BogoliubovCreator i j u v *
+          cl55BogoliubovCreator i j u v) *
+          (cl55BogoliubovAnnihilator i j u v *
+            cl55BogoliubovAnnihilator i j u v) := by noncomm_ring
+      _ = 0 := by rw [hCreSq, hAnnSq]; simp
+  calc
+    (cl55BogoliubovCreator i j u v * cl55BogoliubovAnnihilator i j u v) *
+        (cl55BogoliubovCreator i j u v * cl55BogoliubovAnnihilator i j u v) =
+      cl55BogoliubovCreator i j u v *
+        (cl55BogoliubovAnnihilator i j u v *
+          cl55BogoliubovCreator i j u v) *
+          cl55BogoliubovAnnihilator i j u v := by simp only [mul_assoc]
+    _ = cl55BogoliubovCreator i j u v *
+        (1 - cl55BogoliubovCreator i j u v *
+          cl55BogoliubovAnnihilator i j u v) *
+          cl55BogoliubovAnnihilator i j u v := by rw [hSwap]
+    _ = cl55BogoliubovCreator i j u v *
+        cl55BogoliubovAnnihilator i j u v := by
+      calc
+        _ = cl55BogoliubovCreator i j u v *
+            cl55BogoliubovAnnihilator i j u v -
+          cl55BogoliubovCreator i j u v *
+            (cl55BogoliubovCreator i j u v *
+              cl55BogoliubovAnnihilator i j u v) *
+              cl55BogoliubovAnnihilator i j u v := by
+                rw [mul_sub, mul_one, sub_mul]
+        _ = cl55BogoliubovCreator i j u v *
+            cl55BogoliubovAnnihilator i j u v := by
+              rw [hTerm]
+              simp
 
 theorem cl55_leftAction_bogoliubov_car_preserved_reverse
     (i j : Fin 5) (u v : ℝ) (huv : u ^ 2 + v ^ 2 = 1) :

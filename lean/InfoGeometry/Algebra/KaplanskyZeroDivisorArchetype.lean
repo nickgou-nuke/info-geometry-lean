@@ -56,8 +56,8 @@ theorem complement_mul_idempotent_self {e : R} (he : IsIdempotent e) : (1 - e) *
     _ = e - e := by rw [one_mul, he]
     _ = 0 := sub_self e
 
-/-- If an idempotent $e$ is non-trivial ($e \neq 0$ and $e \neq 1$), both $e$ and $1 - e$ are non-zero. -/
-theorem idempotent_non_trivial_factors {e : R} (_he : IsIdempotent e) (h0 : e ≠ 0) (h1 : e ≠ 1) :
+/-- If an element $e$ is non-trivial ($e \neq 0$ and $e \neq 1$), both $e$ and $1 - e$ are non-zero. -/
+theorem idempotent_non_trivial_factors {e : R} (h0 : e ≠ 0) (h1 : e ≠ 1) :
     e ≠ 0 ∧ (1 - e) ≠ 0 := by
   refine ⟨h0, ?_⟩
   intro h
@@ -135,7 +135,7 @@ def IsRightZeroDivisor (β : R) : Prop :=
 theorem idempotent_yields_zero_divisor_pair {e : R}
     (he : IsIdempotent e) (h0 : e ≠ 0) (h1 : e ≠ 1) :
     IsZeroDivisorPair e (1 - e) := by
-  obtain ⟨he0, he1⟩ := idempotent_non_trivial_factors he h0 h1
+  obtain ⟨he0, he1⟩ := idempotent_non_trivial_factors h0 h1
   exact ⟨idempotent_mul_complement_self he, he0, he1⟩
 
 /-- In characteristic 2, a non-trivial involution yields a self-annihilating zero divisor pair. -/

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzO3TriSupersymmetry
@@ -82,6 +88,48 @@ theorem lambda8_squared {R : Type*} [CommRing R] (g : CuntzO3Generators R) :
         2 * (g.S1 * g.S1star * (g.S3 * g.S3star)) - 2 * (g.S3 * g.S3star * (g.S1 * g.S1star)) -
         2 * (g.S2 * g.S2star * (g.S3 * g.S3star)) - 2 * (g.S3 * g.S3star * (g.S2 * g.S2star)) := by ring
     _ = g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star) := by rw [t1, t2, t3, z1, z2, z3, z4, z5, z6]; ring
+
+/-- The displayed quadratic expression reduces to a scalar in the Cuntz
+representation. This gives the full centrality statement, not only commutation
+with one selected root operator. -/
+theorem casimir2_eq_scalar {R : Type*} [CommRing R]
+    [Invertible (2 : R)] [Invertible (6 : R)] (g : CuntzO3Generators R) :
+    casimir2 g = 2 + ⅟(2 : R) + ⅟(6 : R) := by
+  have h2 : ⅟(2 : R) * 2 = 1 := invOf_mul_self (2 : R)
+  have h6 : (6 : R) * ⅟(6 : R) = 1 := mul_invOf_self (6 : R)
+  have hcoeff : ⅟(2 : R) + ⅟(6 : R) = 4 * ⅟(6 : R) := by
+    have hhalf : ⅟(2 : R) = 3 * ⅟(6 : R) := by
+      calc
+        ⅟(2 : R) = ⅟(2 : R) * (6 * ⅟(6 : R)) := by rw [h6, mul_one]
+        _ = (⅟(2 : R) * 2) * (3 * ⅟(6 : R)) := by ring
+        _ = 3 * ⅟(6 : R) := by rw [h2, one_mul]
+    rw [hhalf]
+    ring
+  dsimp [casimir2]
+  rw [cuntz_off_diagonal_root_sum, lambda3_squared, lambda8_squared]
+  calc
+    2 + ⅟(2 : R) * (g.S1 * g.S1star + g.S2 * g.S2star) +
+        ⅟(6 : R) * (g.S1 * g.S1star + g.S2 * g.S2star +
+          4 * (g.S3 * g.S3star)) =
+      2 + (⅟(2 : R) + ⅟(6 : R)) *
+          (g.S1 * g.S1star + g.S2 * g.S2star) +
+          (4 * ⅟(6 : R)) * (g.S3 * g.S3star) := by ring
+    _ = 2 + (4 * ⅟(6 : R)) *
+          (g.S1 * g.S1star + g.S2 * g.S2star + g.S3 * g.S3star) := by
+      rw [hcoeff]
+      ring
+    _ = 2 + 4 * ⅟(6 : R) := by rw [g.completeness, mul_one]
+    _ = 2 + ⅟(2 : R) + ⅟(6 : R) := by rw [← hcoeff]; ring
+
+/-- The Cuntz quadratic element commutes with every carrier element because
+it is the scalar identified by `casimir2_eq_scalar`. -/
+theorem casimir2_commutes {R : Type*} [CommRing R]
+    [Invertible (2 : R)] [Invertible (6 : R)] (g : CuntzO3Generators R)
+    (x : R) :
+    lieBracket (casimir2 g) x = 0 := by
+  rw [casimir2_eq_scalar]
+  dsimp [lieBracket]
+  ring
 
 /-- **Theorem**: Projection P3 Orthogonality to Q12 Root Generator.
     P3 Q12 = 0 and Q12 P3 = 0. -/

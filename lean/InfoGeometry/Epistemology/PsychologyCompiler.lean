@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Basic.Real.Basic
 import Mathlib.Order.Monotone.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # The Psychology Compiler: Epistemic Distillation in Lean 4
@@ -190,27 +191,41 @@ theorem distillation_is_monotone : Antitone distill := by
     | exact EpistemicStage.chiral_syzygy_le_individuation
     | exact EpistemicStage.prima_materia_is_bottom _
 
-/-! ### 5. Master Certificate: The Psychology Compiler -/
-
-/-- Master certificate bundling the verified components of the Psychology Compiler. -/
-structure PsychologyCompilerCertificate : Prop where
-  poset_bottom : ∀ a : EpistemicStage, EpistemicStage.prima_materia ≤ a
-  apex_realization : ∀ q : QuadraticResponse, q.responseAt q.optimalCoordinate = q.activity
-  activity_invariance : ∀ (q : QuadraticResponse) (scale : ℝ) (hscale : scale ≠ 0),
-    (q.gauge_transform scale hscale).activity = q.activity
-  response_invariance : ∀ (q : QuadraticResponse) (scale : ℝ) (hscale : scale ≠ 0) (X : ℝ),
-    (q.gauge_transform scale hscale).responseAt (scale * X) = q.responseAt X
-  syzygy_balance : ∀ t : ChiralToken, is_balanced [t, verify_token t]
-  distillation_monotone : Antitone distill
-
-theorem compile_psychology_compiler : PsychologyCompilerCertificate where
-  poset_bottom := EpistemicStage.prima_materia_is_bottom
-  apex_realization := QuadraticResponse.response_at_optimal
-  activity_invariance := QuadraticResponse.activity_is_gauge_invariant
-  response_invariance := QuadraticResponse.response_is_gauge_invariant
-  syzygy_balance := syzygy_balance
-  distillation_monotone := distillation_is_monotone
-
 end
+
+/-! ### 6. Non-Commutative Operator Realization of `EpistemicStage` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `EpistemicStage` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def psychologyStageOperator (P A C X : B) : EpistemicStage → B
+  | .prima_materia => X
+  | .shadow_filter => evenGrade P (oddGrade P X)
+  | .logos_invariance => invS P * evenGrade P X * invS P
+  | .chiral_syzygy => InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (genPhi P A C) (genJ P A C)
+  | .individuation => genV P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `EpistemicStage`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the shadow filter
+annihilates the off-diagonal component (`evenGrade P (oddGrade P X) = 0`), the logos
+even-grade projection is gauge-invariant under reflection conjugation (`S (evenGrade P X) S = evenGrade P X`),
+the chiral syzygy anticommutator `{Φ, J} = 0` vanishes, and `Φ² = V`. -/
+theorem psychologyStage_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    psychologyStageOperator P A C X .shadow_filter = 0 ∧
+    psychologyStageOperator P A C X .logos_invariance = evenGrade P X ∧
+    psychologyStageOperator P A C X .chiral_syzygy = 0 ∧
+    genPhi P A C * genPhi P A C =
+      psychologyStageOperator P A C X .individuation ∧
+    genJ P A C * genJ P A C =
+      -psychologyStageOperator P A C X .individuation := by
+  dsimp only [psychologyStageOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Epistemology.PsychologyCompiler

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Volume.ModularSurprisalDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
@@ -60,5 +66,31 @@ theorem modular_surprisal_flow_derivative
       (modularHamiltonianAction (H := H) K ⁅K, A⁆ t)
       t := by
   exact modularHamiltonianAction_hasDerivAt K A t
+
+/-- The modular-surprisal orbit fixes an observable for every time exactly
+when its infinitesimal Noether variation vanishes.  In this inner-flow
+realization, that condition is precisely commutation with the generator. -/
+theorem modular_surprisal_noether_fixed_iff_commutes
+    (K A : AlgebraEnd H) :
+    (∀ t : ℝ, modularHamiltonianAction (H := H) K A t = A) ↔
+      ⁅K, A⁆ = 0 := by
+  constructor
+  · intro hfixed
+    have hflow :
+        HasDerivAt
+          (fun t : ℝ => modularHamiltonianAction (H := H) K A t)
+          ⁅K, A⁆ 0 :=
+      modularHamiltonianAction_hasDerivAt_zero K A
+    have hconstant :
+        HasDerivAt
+          (fun t : ℝ => modularHamiltonianAction (H := H) K A t)
+          0 0 := by
+      convert (hasDerivAt_const (x := (0 : ℝ)) (c := A)) using 1
+      funext t
+      exact hfixed t
+    exact hflow.unique hconstant
+  · intro hvariation t
+    apply modularHamiltonianAction_eq_self_of_commute K A t
+    exact (sub_eq_zero.mp hvariation).symm
 
 end InfoGeometry.Volume.ModularSurprisalKillingReadback

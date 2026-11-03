@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Lie.ContinuousDerivationExponential
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
 
 /-!
@@ -20,6 +27,25 @@ variable {A : Type*} [Semiring A]
 
 abbrev OperatorPair (A : Type*) := Fin 2 → A
 abbrev OperatorMatrix (A : Type*) := Matrix (Fin 2) (Fin 2) A
+
+/-- Directed matrix units in the operator-valued Möbius matrix carrier. -/
+def mobiusForwardUnit : OperatorMatrix A := Matrix.single 0 1 1
+
+def mobiusBackwardUnit : OperatorMatrix A := Matrix.single 1 0 1
+
+/-- The full operator-matrix carrier is noncommutative whenever its coefficient
+semiring is nontrivial: the two directed matrix units multiply to different
+diagonal matrix units. -/
+theorem operatorMatrix_noncommutative [Nontrivial A] :
+    mobiusForwardUnit (A := A) * mobiusBackwardUnit (A := A) ≠
+      mobiusBackwardUnit (A := A) * mobiusForwardUnit (A := A) := by
+  intro h
+  change (Matrix.single 0 1 (1 : A) * Matrix.single 1 0 (1 : A)) =
+    Matrix.single 1 0 (1 : A) * Matrix.single 0 1 (1 : A) at h
+  rw [Matrix.single_mul_single_same, Matrix.single_mul_single_same] at h
+  have h00 := congrArg (fun M : OperatorMatrix A => M 0 0) h
+  have hOne : (1 : A) = 0 := by simpa [Matrix.single] using h00
+  exact one_ne_zero hOne
 
 def operatorMobiusAction (g : OperatorMatrix A) (v : OperatorPair A) : OperatorPair A :=
   Matrix.mulVec g v
@@ -82,6 +108,36 @@ theorem operatorMobiusAction_map
   apply Finset.sum_congr rfl
   intro j hj
   exact map_mul φ (g i j) (v j)
+
+section DerivationFlowTransport
+
+variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+
+/-- A continuous derivation flow transports the operator-valued Möbius action
+entrywise. Each coefficient remains on the left of its operator coordinate. -/
+theorem derivationFlow_operatorMobiusAction
+    (D : A →L[ℝ] A)
+    (hD : InfoGeometry.Lie.ContinuousDerivationExponential.IsDerivation
+      (ContinuousLinearMap.mul ℝ A) D)
+    (t : ℝ) (g : OperatorMatrix A) (v : OperatorPair A) (i : Fin 2) :
+    InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv D t
+        (operatorMobiusAction g v i) =
+      operatorMobiusAction
+        (fun r c => InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv D t (g r c))
+        (fun r => InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv D t (v r)) i := by
+  change InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv D t
+      (∑ j, g i j * v j) =
+    ∑ j,
+      InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv D t (g i j) *
+        InfoGeometry.Lie.ContinuousDerivationExponential.flowLinearEquiv D t (v j)
+  rw [map_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  simpa using
+    (InfoGeometry.Lie.ContinuousDerivationExponential.exponential_derivation_is_automorphism
+      (ContinuousLinearMap.mul ℝ A) D hD t (g i j) (v j))
+
+end DerivationFlowTransport
 
 section ThermalBogoliubovTransport
 

@@ -94,6 +94,19 @@ theorem archetype_A3_nilpotent_cones_and_tetraktys_table (A C : B) :
     anticomm (coneMinus P C) (genSig P A C) = 0 := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
 
+/-- The nested anticommutator/commutator expression has a universal ordered
+normal form. In particular it is right multiplication by `V`, not the
+crossed-corner sandwich `N₊ X N₋ + N₋ X N₊` in general. -/
+theorem tetraktys_nested_bulk_expression (A C X : B) :
+    anticomm (genV P A C) X -
+        comm (genPhi P A C) (anticomm (genPhi P A C) X) =
+      (2 : ℤ) • (X * genV P A C) := by
+  have hPhiSq : genPhi P A C * genPhi P A C = genV P A C :=
+    (archetype_A3_nilpotent_cones_and_tetraktys_table hP A C).2.2.1
+  rw [← hPhiSq]
+  simp only [anticomm, comm]
+  noncomm_ring
+
 /-! ### A₄ -/
 
 theorem archetype_A4_sandwich_complementarity_and_trinity (A C X : B) :
@@ -157,6 +170,39 @@ theorem archetype_A6_superoperator_ladder_recursion (A C X : B) :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [ladderSum, ladderMinus, ladderPlus]); peirce_nf hP)
 
+/-- The positive square of the doubled spin derivation, the final
+LXXXI readout. It follows from the `ad_Σ²` eigenvalue in A₅; its scalar order
+is made explicit rather than inferred from the physical “boost” description. -/
+theorem archetype_A81_doubled_spin_derivation_positive_square (A C : B) :
+    (2 : ℤ) • comm (genSig P A C)
+        ((2 : ℤ) • comm (genSig P A C) (genPhi P A C)) =
+      (16 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C) := by
+  rcases archetype_A5_klein_hadamard_spectra_and_partition
+      (P := P) hP A C (genPhi P A C) with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, hSpectrum, _⟩
+  have hDouble :
+      comm (genSig P A C) (comm (genSig P A C) (genPhi P A C)) =
+        (4 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C) := by
+    have hNeg := congrArg (fun Y : B => -Y) hSpectrum
+    simpa [derivSqSig] using hNeg
+  let adSig : B →+ B :=
+    { toFun := comm (genSig P A C)
+      map_zero' := by simp [comm]
+      map_add' := by
+        intro X Y
+        simp only [comm, mul_add, add_mul]
+        abel }
+  have hScale :
+      comm (genSig P A C)
+          ((2 : ℤ) • comm (genSig P A C) (genPhi P A C)) =
+        (2 : ℤ) • comm (genSig P A C)
+          (comm (genSig P A C) (genPhi P A C)) := by
+    change adSig ((2 : ℤ) • comm (genSig P A C) (genPhi P A C)) = _
+    rw [map_zsmul]
+    rfl
+  rw [hScale, hDouble]
+  abel
+
 /-! ### A₇ -/
 
 theorem archetype_A7_so12_lie_brackets_and_cubic_inversions (A C : B) :
@@ -170,6 +216,78 @@ theorem archetype_A7_so12_lie_brackets_and_cubic_inversions (A C : B) :
     genPhi P A C * genPhi P A C * genPhi P A C = genV P A C * genPhi P A C ∧
     genJ P A C * genJ P A C * genJ P A C = -(genV P A C * genJ P A C) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- The cubic tripotency defects are exactly the failure of the mass
+operator to act as the identity on the corresponding odd mode. Thus
+`V² = V` alone does not erase these defects; the range equations
+`V * Φ = Φ` and `V * J = J` are what the cubic laws require. -/
+theorem tetraktys_tripotency_defect_readout (A C : B) :
+    genPhi P A C * genPhi P A C * genPhi P A C - genPhi P A C =
+      genV P A C * genPhi P A C - genPhi P A C ∧
+    genJ P A C * genJ P A C * genJ P A C + genJ P A C =
+      -(genV P A C * genJ P A C - genJ P A C) := by
+  rcases archetype_A7_so12_lie_brackets_and_cubic_inversions
+      (P := P) hP A C with ⟨_, _, _, _, _, _, _, hPhiCube, hJCube⟩
+  exact ⟨by rw [hPhiCube], by rw [hJCube]; noncomm_ring⟩
+
+/-- The nested bracket of the even commutator with either odd Peirce cone is
+the corresponding cubic round trip. It is not universally a scalar multiple
+of the cone itself. -/
+theorem sigma_bracket_cones_as_cubic_round_trips (A C : B) :
+    comm (genSig P A C) (conePlus P A) =
+      (2 : ℤ) • (conePlus P A * coneMinus P C * conePlus P A) ∧
+    comm (genSig P A C) (coneMinus P C) =
+      -((2 : ℤ) • (coneMinus P C * conePlus P A * coneMinus P C)) := by
+  constructor <;> peirce_nf hP
+
+/-- The even element `Σ` generates an inner derivation that preserves the
+Peirce parity decomposition. This is the exact grading statement: its action
+does not, by itself, imply ascent through finer grades. -/
+theorem sigma_inner_derivation_preserves_peirce_parity (A C X : B) :
+    evenGrade P (comm (genSig P A C) X) =
+      comm (genSig P A C) (evenGrade P X) ∧
+    oddGrade P (comm (genSig P A C) X) =
+      comm (genSig P A C) (oddGrade P X) := by
+  constructor <;>
+    (simp only [evenGrade, oddGrade, genSig, comm, conePlus, coneMinus]; peirce_nf hP)
+
+/-- For the two opposite Peirce cones, the Jordan interaction and the Lie
+commutator vanish together. Thus a nonzero interaction has a nonzero chiral
+commutator, and conversely. This is an algebraic equivalence, not a claim that
+an arbitrary obstruction creates new grades or models a logical incompleteness
+theorem. -/
+theorem tetraktys_interaction_iff_chiral_obstruction (A C : B) :
+    genV P A C = 0 ↔ genSig P A C = 0 := by
+  have hPplus : P * genV P A C = conePlus P A * coneMinus P C := by
+    peirce_nf hP
+  have hCompplus : P * genSig P A C = conePlus P A * coneMinus P C := by
+    peirce_nf hP
+  have hCompminus : (1 - P) * genSig P A C =
+      -(coneMinus P C * conePlus P A) := by
+    peirce_nf hP
+  have hVminus : (1 - P) * genV P A C = coneMinus P C * conePlus P A := by
+    peirce_nf hP
+  constructor
+  · intro hV
+    have hPlus : conePlus P A * coneMinus P C = 0 := by
+      have h := congrArg (fun Z : B => P * Z) hV
+      rw [hPplus] at h
+      simpa using h
+    have hMinus : coneMinus P C * conePlus P A = 0 := by
+      have h := congrArg (fun Z : B => (1 - P) * Z) hV
+      rw [hVminus] at h
+      simpa using h
+    simp only [genSig, comm, hPlus, hMinus, sub_zero]
+  · intro hSig
+    have hPlus : conePlus P A * coneMinus P C = 0 := by
+      have h := congrArg (fun Z : B => P * Z) hSig
+      rw [hCompplus] at h
+      simpa using h
+    have hMinus : coneMinus P C * conePlus P A = 0 := by
+      have h := congrArg (fun Z : B => (1 - P) * Z) hSig
+      rw [hCompminus] at h
+      simpa using h
+    simp only [genV, anticomm, hPlus, hMinus, zero_add]
 
 /-! ### A₈ -/
 

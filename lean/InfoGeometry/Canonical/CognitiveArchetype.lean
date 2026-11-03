@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TessellationCocycleBridge
 import InfoGeometry.Canonical.ProofCausalityBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # InfoGeometry.Canonical.CognitiveArchetype
@@ -126,5 +133,21 @@ def detectArchetypes (observedTerms : Array String) : Array String :=
 def detectedArchetypes (observedTerms : Array String) : Array DetectedArchetype :=
   knownArchetypes.filter (fun T => T.detects observedTerms) |>.map (fun T =>
     { template := T, observedTerms := observedTerms })
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem cognitive_archetype_involution_projector_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    invS P * invS P = (1 : B) ∧
+    evenGrade P X + oddGrade P X = X ∧
+    invS P * X * invS P = evenGrade P X - oddGrade P X ∧
+    genPhi P A C * genPhi P A C + genJ P A C * genJ P A C = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.CognitiveArchetype

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -5,6 +11,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.NoncommRing
 
 open scoped InnerProductSpace Topology
@@ -138,6 +145,100 @@ theorem deriv_expTransport_at_zero_eq_zero_of_commute
     expTransport X (A₁ + A₂) t = expTransport X A₁ t + expTransport X A₂ t := by
   unfold expTransport
   simp [mul_assoc, mul_add, add_mul]
+
+@[simp] theorem expTransport_sub_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X A₁ A₂ : A) (t : ℝ) :
+    expTransport X (A₁ - A₂) t =
+      expTransport X A₁ t - expTransport X A₂ t := by
+  unfold expTransport
+  simp [sub_eq_add_neg, mul_assoc, mul_add, add_mul]
+
+/-- Exponential conjugation preserves products. The inverse exponential in
+the middle cancels, so this is an algebra transport rather than a change of
+the multiplication law. -/
+theorem expTransport_mul_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+    [CompleteSpace A]
+    (X A₁ A₂ : A) (t : ℝ) :
+    expTransport X (A₁ * A₂) t =
+      expTransport X A₁ t * expTransport X A₂ t := by
+  let ePos : A := NormedSpace.exp (t • X)
+  let eNeg : A := NormedSpace.exp (t • (-X))
+  have hcomm : Commute (t • X) (t • (-X)) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_right
+  have hsum : t • (-X) + t • X = 0 := by module
+  have hinv : eNeg * ePos = 1 := by
+    dsimp [eNeg, ePos]
+    rw [← NormedSpace.exp_add_of_commute hcomm.symm, hsum,
+      NormedSpace.exp_zero]
+  unfold expTransport
+  calc
+    (NormedSpace.exp (t • X) * (A₁ * A₂)) * NormedSpace.exp (t • (-X)) =
+        (NormedSpace.exp (t • X) * A₁) * 1 *
+          (A₂ * NormedSpace.exp (t • (-X))) := by simp [mul_assoc]
+    _ = (NormedSpace.exp (t • X) * A₁) *
+          (NormedSpace.exp (t • (-X)) * NormedSpace.exp (t • X)) *
+          (A₂ * NormedSpace.exp (t • (-X))) := by rw [← hinv]
+    _ = (NormedSpace.exp (t • X) * A₁ * NormedSpace.exp (t • (-X))) *
+          (NormedSpace.exp (t • X) * A₂ * NormedSpace.exp (t • (-X))) := by
+          noncomm_ring
+
+/-- Exponential conjugation fixes the multiplicative unit. -/
+@[simp] theorem expTransport_one_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+    [CompleteSpace A]
+    (X : A) (t : ℝ) : expTransport X (1 : A) t = 1 := by
+  let ePos : A := NormedSpace.exp (t • X)
+  let eNeg : A := NormedSpace.exp (t • (-X))
+  have hcomm : Commute (t • X) (t • (-X)) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_right
+  have hsum : t • X + t • (-X) = 0 := by module
+  have hinv : ePos * eNeg = 1 := by
+    dsimp [ePos, eNeg]
+    rw [← NormedSpace.exp_add_of_commute hcomm, hsum,
+      NormedSpace.exp_zero]
+  change ePos * 1 * eNeg = 1
+  simpa [ePos, eNeg] using hinv
+
+/-- Exponential conjugation commutes with real scalar multiplication. -/
+@[simp] theorem expTransport_smul_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X : A) (r : ℝ) (A₀ : A) (t : ℝ) :
+    expTransport X (r • A₀) t = r • expTransport X A₀ t := by
+  unfold expTransport
+  simp [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, mul_assoc]
+
+/-- A q-deformed Heisenberg relation, including a scalar central term, is
+transported with the same deformation parameter. Thus inner Bogoliubov
+conjugation changes the frame but does not change the algebra parameter. -/
+theorem expTransport_preserves_qHeisenberg_relation
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+    [CompleteSpace A]
+    (X U V : A) (q c t : ℝ)
+    (h : U * V - q • (V * U) = c • (1 : A)) :
+    expTransport X U t * expTransport X V t -
+        q • (expTransport X V t * expTransport X U t) = c • (1 : A) := by
+  have ht := congrArg (fun z : A => expTransport X z t) h
+  simpa only [expTransport_sub_seed, expTransport_smul_seed,
+    expTransport_mul_seed, expTransport_one_seed] using ht
+
+/-- Exponential conjugation transports an operator-valued braid parameter as
+part of the relation. This is the covariant form needed when the coefficient
+is a Gibbs operator rather than a scalar Boltzmann weight. -/
+theorem expTransport_preserves_operator_qHeisenberg_relation
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A]
+    [CompleteSpace A]
+    (X U V Q : A) (c t : ℝ)
+    (h : U * V - Q * (V * U) = c • (1 : A)) :
+    expTransport X U t * expTransport X V t -
+        expTransport X Q t * (expTransport X V t * expTransport X U t) =
+      c • (1 : A) := by
+  have ht := congrArg (fun z : A => expTransport X z t) h
+  simpa only [expTransport_sub_seed, expTransport_mul_seed,
+    expTransport_smul_seed, expTransport_one_seed] using ht
 
 /--
 Exact exponential conjugation fixes a seed that commutes with the generator.

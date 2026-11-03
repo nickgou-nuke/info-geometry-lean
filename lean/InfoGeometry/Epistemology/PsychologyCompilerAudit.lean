@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Epistemology.PsychologyCompiler
 
 /-!
@@ -20,6 +25,5 @@ open InfoGeometry.Epistemology.PsychologyCompiler
 #print axioms QuadraticResponse.response_is_gauge_invariant
 #print axioms syzygy_balance
 #print axioms distillation_is_monotone
-#print axioms compile_psychology_compiler
 
 end InfoGeometry.Epistemology.PsychologyCompilerAudit

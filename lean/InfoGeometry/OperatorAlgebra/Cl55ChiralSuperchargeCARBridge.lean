@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.Cl55ChiralSuperchargeBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -33,12 +39,14 @@ theorem cl55QMinus_mul_QMinus (i j : Fin 5) :
 theorem cl55QPlus_mul_QMinus (i j : Fin 5) :
     cl55QPlus i * cl55QMinus j =
       !![creation55 i * annihilation55 j, 0; 0, 0] := by
-  exact qPlus_mul_qMinus _ _
+  simpa [cl55QPlus, cl55QMinus] using
+    qPlus_mul_qMinus (creation55 i) (annihilation55 j)
 
 theorem cl55QMinus_mul_QPlus (i j : Fin 5) :
     cl55QMinus i * cl55QPlus j =
       !![0, 0; 0, annihilation55 i * creation55 j] := by
-  exact qMinus_mul_qPlus _ _
+  simpa [cl55QPlus, cl55QMinus] using
+    qMinus_mul_qPlus (creation55 j) (annihilation55 i)
 
 theorem cl55Q_anticomm (i j : Fin 5) :
     cl55QPlus i * cl55QMinus j +

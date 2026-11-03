@@ -121,6 +121,62 @@ theorem genPhi_eq_self_of_involution_exchanging_peirce
     qgtMinus P η η = 1 - P :=
   (krein_involution_peirce_exchange_equivalence (A := η) (C := η) hP).2 hη hEx
 
+/-- For any idempotent `Q` (`Q * Q = Q`), every Mandelbrot defect-tower stage
+`mandelbrotTower k Q` (`k ∈ ℕ`) vanishes identically. -/
+theorem mandelbrotTower_eq_zero_of_idempotent {Q : B} (hQ : Q * Q = Q) (k : ℕ) :
+    mandelbrotTower k Q = 0 := by
+  induction k with
+  | zero =>
+    unfold mandelbrotTower idempotencyDefect
+    exact sub_eq_zero.mpr hQ
+  | succ k ih =>
+    change idempotencyDefect (mandelbrotTower k Q) = 0
+    rw [ih]
+    unfold idempotencyDefect
+    noncomm_ring
+
+/-- On the unital Krein horizon (`P * P = P`, `η * η = 1`, `η * P * η = 1 - P`),
+all Mandelbrot defect-tower sheets vanish (`mandelbrotTower k (qgtPlus P η η) = 0`,
+`mandelbrotTower k (qgtMinus P η η) = 0`) and `fractalHodgeComplement k P η η = 1`
+for every `k : ℕ`. -/
+theorem krein_horizon_fractal_tower_and_complement
+    {η : B} (hP : P * P = P) (hη : η * η = 1) (hEx : η * P * η = 1 - P) (k : ℕ) :
+    mandelbrotTower k (qgtPlus P η η) = 0 ∧
+    mandelbrotTower k (qgtMinus P η η) = 0 ∧
+    fractalHodgeComplement k P η η = 1 := by
+  rcases genPhi_eq_self_of_involution_exchanging_peirce hP hη hEx with
+    ⟨_, _, _, _, hQPlus, hQMinus⟩
+  have hComplIdem : (1 - P) * (1 - P) = 1 - P := by peirce_nf hP
+  have hX : mandelbrotTower k (qgtPlus P η η) = 0 := by
+    rw [hQPlus]
+    exact mandelbrotTower_eq_zero_of_idempotent hP k
+  have hY : mandelbrotTower k (qgtMinus P η η) = 0 := by
+    rw [hQMinus]
+    exact mandelbrotTower_eq_zero_of_idempotent hComplIdem k
+  refine ⟨hX, hY, ?_⟩
+  unfold fractalHodgeComplement
+  rw [hX, hY, add_zero, sub_zero]
+
+/-- In any star-ring `B` on the self-adjoint Krein horizon (`P * P = P`, `star P = P`,
+`star η = η`, `η * η = 1`, `η * P * η = 1 - P`), the cellular sheaf and Hodge Laplacians
+equal `1`, the Hodge complement `sheafHodgeComplement (conePlus P η) (conePlus P η)`
+vanishes, and `sheafGreenPolynomial2 (conePlus P η) (conePlus P η) = (3 : ℤ) • 1`. -/
+theorem krein_horizon_sheaf_hodge_complement_and_green [StarRing B]
+    {η : B} (hP : P * P = P) (hPsym : star P = P)
+    (hη_sym : star η = η) (hη_sq : η * η = 1) (hEx : η * P * η = 1 - P) :
+    sheafLaplacian0 P (coneMinus P η) (conePlus P η) = 1 ∧
+    sheafHodgeLaplacian (conePlus P η) (conePlus P η) = 1 ∧
+    sheafHodgeComplement (conePlus P η) (conePlus P η) = 0 ∧
+    sheafGreenPolynomial2 (conePlus P η) (conePlus P η) = (3 : ℤ) • (1 : B) := by
+  rcases sheaf_krein_unital_laplacian_and_hodge_identity hP hPsym hη_sym hη_sq hEx with
+    ⟨_, hLap0, _, _, hHodge1, _⟩
+  refine ⟨hLap0, hHodge1, ?_, ?_⟩
+  · unfold sheafHodgeComplement
+    rw [hHodge1, sub_self]
+  · unfold sheafGreenPolynomial2
+    rw [hHodge1]
+    noncomm_ring
+
 end AssociativeRing
 
 /-! ### 2. Categorical Filtered-Colimit Transport for Any `ℝ`-Algebra Peirce Spine -/
@@ -347,6 +403,17 @@ theorem cl11_dyadic_tower_peirce_krein_bridge (n : ℕ) (a : Stage n) :
   rw [one_sub_fPlusElem_eq_fMinusElem n] at hConeM hQMinus
   exact ⟨hConeP, hConeM, hPhi, hV, hQPlus, hQMinus,
          even_idempotencyDefect_sub (fPlusElem n) a (fPlusElem_idempotent n)⟩
+
+/-- At every stage `n : ℕ` of the dyadic `Cl(1,1)` tensor tower `Stage n` and every
+fractal depth `k : ℕ`, the Krein horizon defect sheets vanish and the fractal Hodge
+complement equals `1 : Stage n`. -/
+theorem cl11_dyadic_tower_fractal_hodge_complement (n k : ℕ) :
+    mandelbrotTower k (qgtPlus (fPlusElem n) (etaElem n) (etaElem n)) = 0 ∧
+    mandelbrotTower k (qgtMinus (fPlusElem n) (etaElem n) (etaElem n)) = 0 ∧
+    fractalHodgeComplement k (fPlusElem n) (etaElem n) (etaElem n) = (1 : Stage n) := by
+  have hEx : etaElem n * fPlusElem n * etaElem n = (1 : Stage n) - fPlusElem n := by
+    rw [etaElem_fPlusElem_etaElem n, one_sub_fPlusElem_eq_fMinusElem n]
+  exact krein_horizon_fractal_tower_and_complement (fPlusElem_idempotent n) (etaElem_sq n) hEx k
 
 end Cl11DyadicTowerBridge
 

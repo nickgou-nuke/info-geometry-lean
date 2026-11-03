@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.NCG.NoncommutativeDifferentialCalculus
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.NCG.NoncommutativeNoetherPoisson
@@ -800,6 +806,16 @@ theorem nativeCE_inner_differential2
 
 def curvature (S : System A 𝔤) (Γ : Form1 𝔤 A) : Form2 𝔤 A :=
   fun D E => differential1 S Γ D E + (Γ D * Γ E - Γ E * Γ D)
+
+/-- For the canonical inner-derivation system, the identity one-form has
+curvature twice the coefficient Lie bracket.  This identifies the bracket
+geometry of operators with an actual degree-two Chevalley--Eilenberg form. -/
+theorem innerSystem_identityForm_curvature (D E : A) :
+    curvature innerSystem (fun X : A => X) D E =
+      (2 : ℤ) • InfoGeometry.NCG.bracket D E := by
+  simp only [curvature, differential1, innerSystem, innerDerivation,
+    InfoGeometry.NCG.adLie_apply, InfoGeometry.NCG.bracket]
+  noncomm_ring
 
 theorem curvature_isAlternating2 (S : System A 𝔤) (Γ : Form1 𝔤 A)
     (hΓ : ∀ D, Γ (-D) = -Γ D)

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireSchwarzBridge
 import InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
 import InfoGeometry.Arithmetic.RiemannLectureDependencies
@@ -8,13 +14,9 @@ namespace InfoGeometry.Arithmetic.ActualRiemannXiLocalZeroTests
 open ActualRiemannXiEntireBridge ActualRiemannXiEntireSchwarzBridge
 open ZetaSymmetryHeuristicComplement
 
-example {region : Set ℂ} {point : ℂ}
-    (invariant : Set.MapsTo (fun value : ℂ => 1 - star value) region region)
-    (unique : (region ∩ {value | entireRiemannXi value = 0}).Subsingleton)
-    (member : point ∈ region) (zero_at_point : entireRiemannXi point = 0) :
-    point.re = 1 / 2 :=
-  SarnakLocalCertification.CertifiedRegion.zero_on_critical_line
-    ⟨region, invariant, unique⟩ member zero_at_point
+example {point : ℂ} (zero_at_point : entireRiemannXi point = 0) :
+    entireRiemannXi (InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.antiunitaryCriticalReflection point) = 0 :=
+  SarnakLocalCertification.entireRiemannXi_zero_reflection zero_at_point
 
 example : ∃ function : ℂ → ℂ, ∃ point : ℂ,
     EvenCentered function ∧ ZeroAt function point ∧
@@ -24,15 +26,11 @@ example : ∃ function : ℂ → ℂ, ∃ point : ℂ,
 #print axioms even_symmetry_allows_off_axis_zero_pair
 #print axioms RiemannLectureDependencies.arithmetic_branch
 #print axioms RiemannLectureDependencies.symmetry_branch
-#print axioms RiemannLectureDependencies.local_certificate_branch
-#print axioms RiemannLectureDependencies.arithmetic_and_local_certificate_incomparable
-#print axioms RiemannLectureDependencies.symmetry_does_not_supply_uniqueness
+#print axioms RiemannLectureDependencies.finite_zero_pairing_branch
+#print axioms RiemannLectureDependencies.arithmetic_and_finite_zero_pairing_incomparable
 #print axioms RiemannLectureDependencies.no_cycle
-#print axioms SarnakLocalCertification.CertifiedRegion.zero_on_critical_line
-#print axioms SarnakLocalCertification.CertifiedRegion.nonzero_off_critical_line
-#print axioms SarnakLocalCertification.covered_zeros_on_critical_line
-#print axioms SarnakLocalCertification.finite_height_certificate
-#print axioms SarnakLocalCertification.global_confinement_of_certificates_at_every_height
+#print axioms SarnakLocalCertification.entireRiemannXi_zero_reflection
+#print axioms SarnakLocalCertification.entireRiemannXi_zero_reflection_iff
 #print axioms SarnakLocalCertification.symmetric_functions_need_not_have_critical_zeros
 
 end InfoGeometry.Arithmetic.ActualRiemannXiLocalZeroTests

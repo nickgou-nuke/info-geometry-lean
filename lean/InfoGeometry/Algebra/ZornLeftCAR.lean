@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.ZornPinorReconstruction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -145,12 +150,12 @@ def splitBilin : LinearMap.BilinForm ℝ (V × V) where
       map_add' q r := by
         change ZornVec3.dot p.2 (q.2 + r.2) - ZornVec3.dot p.1 (q.1 + r.1) = _
         rw [ZornVec3.dot_add_right, ZornVec3.dot_add_right]
-        ring
+        abel
       map_smul' c q := by
         change ZornVec3.dot p.2 (c • q.2) - ZornVec3.dot p.1 (c • q.1) =
           c * (ZornVec3.dot p.2 q.2 - ZornVec3.dot p.1 q.1)
         rw [ZornVec3.dot_smul_right, ZornVec3.dot_smul_right]
-        ring }
+        rw [mul_sub] }
   map_add' p q := by
     apply LinearMap.ext
     intro r
@@ -196,6 +201,35 @@ theorem cliffordGenerator_square (p : V × V) :
       splitQuadratic p • (1 : Module.End ℝ Z) := by
   change leftMultiplication (cliffordVector p) * leftMultiplication (cliffordVector p) = _
   rw [leftMultiplication_square, cliffordVector_square, map_smul, leftMultiplication_one]
+
+/-- Polarization of the Clifford square relation gives the full CAR
+anticommutator for arbitrary vectors in the six-dimensional split carrier. -/
+theorem cliffordGenerator_anticommutator (p q : V × V) :
+    cliffordGenerator p * cliffordGenerator q + cliffordGenerator q * cliffordGenerator p =
+      QuadraticMap.polar splitQuadratic p q • (1 : Module.End ℝ Z) := by
+  have hpq := cliffordGenerator_square (p + q)
+  have hlin : cliffordGenerator (p + q) = cliffordGenerator p + cliffordGenerator q :=
+    map_add cliffordGenerator p q
+  rw [hlin] at hpq
+  simp only [add_mul, mul_add] at hpq
+  rw [QuadraticMap.map_add splitQuadratic p q, add_smul] at hpq
+  rw [add_smul] at hpq
+  have hp := cliffordGenerator_square p
+  have hq := cliffordGenerator_square q
+  rw [← hp, ← hq] at hpq
+  abel_nf at hpq
+  have h1 := add_left_cancel hpq
+  have h2 :
+      (cliffordGenerator p * cliffordGenerator q +
+        cliffordGenerator q * cliffordGenerator p) +
+        (cliffordGenerator q * cliffordGenerator q) =
+      QuadraticMap.polar splitQuadratic p q • (1 : Module.End ℝ Z) +
+        (cliffordGenerator q * cliffordGenerator q) := by
+    simpa [add_assoc, add_comm (cliffordGenerator p * cliffordGenerator q)
+      (cliffordGenerator q * cliffordGenerator p), add_comm
+        (QuadraticMap.polar splitQuadratic p q • (1 : Module.End ℝ Z))
+        (cliffordGenerator q * cliffordGenerator q)] using h1
+  exact add_right_cancel h2
 
 /-- The universal property is used only with the associative endomorphism target. -/
 def cliffordRepresentation : CliffordAlgebra splitQuadratic →ₐ[ℝ] Module.End ℝ Z :=

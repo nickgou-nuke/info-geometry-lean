@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import Omega.Conclusion.BinfoldSinglePowerdivAsymptoticStatisticalCompleteness
 
@@ -5,8 +11,12 @@ namespace Omega.Conclusion
 
 noncomputable section
 
-/-- Paper label: `thm:conclusion-binfold-sufficiency-does-not-imply-uniformization`. -/
-theorem paper_conclusion_binfold_sufficiency_does_not_imply_uniformization :
+/-- The golden-ratio escort datum has the stated positive `χ²` baseline and is
+asymptotically Blackwell equivalent to the explicit limiting Bernoulli datum.
+
+This statement records those two properties only; it does not formalize a
+notion of uniformization or prove a non-implication about one. -/
+theorem binfold_escort_golden_ratio_chi2_baseline_and_blackwell_equivalence :
     twoAtomScalar2 Real.goldenRatio =
         BinfoldEscortCsiszarBlackwellPhiDatum.chi2UniformBaseline ∧
       BinfoldEscortCsiszarBlackwellPhiDatum.chi2UniformBaseline =

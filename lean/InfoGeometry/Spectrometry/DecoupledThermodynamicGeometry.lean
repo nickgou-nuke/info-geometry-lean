@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Spectrometry.DecoupledThermodynamicsFluctuations
 import InfoGeometry.Spectrometry.FiniteWeightDispersion
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Spectrometry.DecoupledThermodynamics
 
@@ -232,5 +239,47 @@ theorem shift_susceptibility_at_cutoff (cutoff temperature : ℝ) (temperature_p
   ring
 
 end
+
+/-! ### Non-Commutative Operator Realization of `ThermodynamicGeometryDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ThermodynamicGeometryDependency.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def thermodynamicGeometryArchetypeOperator (P A C X : B) :
+    ThermodynamicGeometryDependency.Archetype → B
+  | .varianceDecomposition => evenGrade P X + oddGrade P X
+  | .dispersion => genSig P A C
+  | .stateEnvelope => genV P A C
+  | .quadraticPeak => conePlus P X * conePlus P X
+  | .universalBound => genSig P A C * genSig P A C - genV P A C * genV P A C
+  | .freeEnergyCalculus => genPhi P A C
+  | .shiftHessian => derivSqPhi P A C (genJ P A C)
+  | .susceptibilityBound => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Identities across `ThermodynamicGeometryDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the thermodynamic
+geometry archetypes satisfy exact Peirce decomposition, nilpotent cone vanishing
+`N_+² = 0`, Casimir envelope identity `Σ² - V² = 0`, double-commutator Hessian
+shift `ad_Φ²(J) = -4 V J`, and susceptibility commutator `[Φ, J] = -2 Σ`. -/
+theorem thermodynamicGeometryArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    thermodynamicGeometryArchetypeOperator P A C X .varianceDecomposition = X ∧
+    thermodynamicGeometryArchetypeOperator P A C X .quadraticPeak = 0 ∧
+    thermodynamicGeometryArchetypeOperator P A C X .universalBound = 0 ∧
+    thermodynamicGeometryArchetypeOperator P A C X .freeEnergyCalculus *
+      thermodynamicGeometryArchetypeOperator P A C X .freeEnergyCalculus =
+      thermodynamicGeometryArchetypeOperator P A C X .stateEnvelope ∧
+    thermodynamicGeometryArchetypeOperator P A C X .shiftHessian =
+      -((4 : ℤ) • (genV P A C * genJ P A C)) ∧
+    thermodynamicGeometryArchetypeOperator P A C X .susceptibilityBound =
+      -((2 : ℤ) • thermodynamicGeometryArchetypeOperator P A C X .dispersion) := by
+  dsimp only [thermodynamicGeometryArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> ((try simp only [derivSqPhi]); peirce_nf hP)
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Spectrometry.DecoupledThermodynamics

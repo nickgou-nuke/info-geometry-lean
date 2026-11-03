@@ -1,0 +1,23 @@
+{
+  "math_expression_count": 3804,
+  "source_name": "1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1__Algebraic_Framework_of_Split-Octonions.json",
+  "source_path": "cached/aistudio_download_20261102/1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1__Algebraic_Framework_of_Split-Octonions.json",
+  "source_bytes": 2893812,
+  "source_sha256": "4df940f75f1e756ab38dd19c7d9e92a2a986cac3075347e63b0a86a25653f2af",
+  "turn_count": 76,
+  "role_counts": {
+    "user": 26,
+    "model": 50
+  },
+  "transcript_characters": 815870,
+  "fence_count": 31,
+  "fence_languages": {
+    "lean": 31
+  },
+  "tagged_lean_fences": 31,
+  "unterminated_fences": 0,
+  "unlabelled_lean_candidates": 0,
+  "first_timestamp": "2026-11-02T07:21:05.473Z",
+  "last_timestamp": "2026-11-02T15:24:33.973Z",
+  "authority": "transcript extraction only; no theorem or proof is promoted"
+}

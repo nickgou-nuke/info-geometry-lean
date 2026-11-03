@@ -87,10 +87,24 @@ def steinbergBraidInv (P A C : B) : B :=
   (1 - conePlus P A) * (1 + coneMinus P C) * (1 - conePlus P A)
 
 def steinbergBraidDual (P A C : B) : B :=
-  (1 + coneMinus P C) * (1 - conePlus P A) * (1 + coneMinus P C)
+  (1 - coneMinus P C) * (1 + conePlus P A) * (1 - coneMinus P C)
 
 def steinbergBraidDualInv (P A C : B) : B :=
-  (1 - coneMinus P C) * (1 + conePlus P A) * (1 - coneMinus P C)
+  (1 + coneMinus P C) * (1 - conePlus P A) * (1 + coneMinus P C)
+
+def grpId  (P A C X : B) : B := (genV P A C * genV P A C) * X
+def grpPhi (P A C X : B) : B := genV P A C * (genPhi P A C * X * genPhi P A C)
+def grpJ   (P A C X : B) : B := -(genV P A C * (genJ P A C * X * genJ P A C))
+def grpSig (P A C X : B) : B := genSig P A C * X * genSig P A C
+
+def fourierV (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X + grpPhi P A C X + grpJ P A C X + grpSig P A C X)
+def fourierPhi (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X + grpPhi P A C X - grpJ P A C X - grpSig P A C X)
+def fourierJ (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X - grpPhi P A C X + grpJ P A C X - grpSig P A C X)
+def fourierSig (P A C X : B) : B :=
+  (2 : ℤ) • (grpId P A C X - grpPhi P A C X - grpJ P A C X + grpSig P A C X)
 
 lemma P_assoc {P : B} (hP : P * P = P) (X : B) : P * (P * X) = P * X := by
   rw [← mul_assoc, hP]
@@ -200,7 +214,8 @@ lemma coneMinus_mul_coneMinus {P : B} (hP : P * P = P) (C Y : B) : coneMinus P C
 
 macro "peirce_abel" hP:ident : tactic =>
   `(tactic| (
-    simp [weylJ, weylJInv, weylPhi, steinbergBraid,
+    simp [-zsmul_eq_mul,
+          weylJ, weylJInv, weylPhi, steinbergBraid,
           steinbergBraidInv, steinbergBraidDual, steinbergBraidDualInv,
           hProjV, hProjPhi, hProjJ, hProjSig,
           conjPlus, conjPlusInv, conjMinus, conjMinusInv,
@@ -211,6 +226,7 @@ macro "peirce_abel" hP:ident : tactic =>
           genPhi, genJ, genV, genSig,
           evenGrade, oddGrade, peirce11, peirce00,
           invS, comm, anticomm, conePlus, coneMinus,
+          smul_mul_assoc, mul_smul_comm, smul_add, smul_sub, smul_neg, smul_smul, smul_zero,
           sub_neg_eq_add, neg_mul, mul_neg, neg_neg,
           add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
           mul_assoc, $hP:ident, P_assoc $hP:ident, P_assoc_right $hP:ident,
@@ -564,6 +580,95 @@ theorem archetype_A16_cayley_weyl_steinberg_reflection
     ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩
   exact ⟨h1, h2, h3, h4, h5, h6, h7, h8,
     InfoGeometry.OperatorAlgebra.PeirceSpine.steinberg_image_idem hP A C⟩
+
+/-! ========================================================================
+   ARCHETYPES A₁₇–A₂₀: Context-Aligned Canonical Group-Sandwich Character Table,
+   Unipotent Shear Tomography, Steinberg Braid Difference & Inverse Identities,
+   and Weyl–Clifford Covariance of Homogenized Projectors
+   ======================================================================== -/
+
+/-! ### Archetype A₁₇: Group-Sandwich Character Table & Lie-to-Group Fourier Duality Diamond -/
+
+theorem archetype_A17_lie_to_group_fourier_duality_diamond
+    {P : B} (hP : P * P = P) (A C : B) :
+    grpPhi P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpPhi P A C (genPhi P A C) = grpId P A C (genPhi P A C) ∧
+    grpPhi P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    grpPhi P A C (genSig P A C) = -grpId P A C (genSig P A C) ∧
+    grpJ P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpJ P A C (genPhi P A C) = -grpId P A C (genPhi P A C) ∧
+    grpJ P A C (genJ P A C) = grpId P A C (genJ P A C) ∧
+    grpJ P A C (genSig P A C) = -grpId P A C (genSig P A C) ∧
+    grpSig P A C (genV P A C) = grpId P A C (genV P A C) ∧
+    grpSig P A C (genPhi P A C) = -grpId P A C (genPhi P A C) ∧
+    grpSig P A C (genJ P A C) = -grpId P A C (genJ P A C) ∧
+    grpSig P A C (genSig P A C) = grpId P A C (genSig P A C) ∧
+    hProjV P A C (genV P A C) = fourierV P A C (genV P A C) ∧
+    hProjPhi P A C (genPhi P A C) = fourierPhi P A C (genPhi P A C) ∧
+    hProjJ P A C (genJ P A C) = fourierJ P A C (genJ P A C) ∧
+    hProjSig P A C (genSig P A C) = fourierSig P A C (genSig P A C) :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A17_group_sandwich_character_table hP A C
+
+/-! ### Archetype A₁₈: Unipotent Shear Tomography on Homogenized Projectors -/
+
+theorem archetype_A18_unipotent_shear_tomography
+    {P : B} (hP : P * P = P) (A C : B) :
+    hProjV P A C (conjPlus P A (genSig P A C)) = 0 ∧
+    hProjV P A C (conjPlus P A (genPhi P A C)) = 0 ∧
+    hProjV P A C (conjPlus P A (genJ P A C)) = 0 ∧
+    hProjV P A C (conjMinus P C (genSig P A C)) = 0 ∧
+    hProjSig P A C (conjPlus P A (genSig P A C)) =
+      (8 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
+    hProjPhi P A C (conjPlus P A (genSig P A C)) =
+      -((8 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genPhi P A C)) ∧
+    hProjJ P A C (conjPlus P A (genSig P A C)) =
+      -((8 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genJ P A C)) ∧
+    hProjSig P A C (conjPlus P A (genPhi P A C)) =
+      (8 : ℤ) • ((genV P A C * genV P A C) * genSig P A C) ∧
+    hProjJ P A C (conjPlus P A (genPhi P A C)) =
+      -((4 : ℤ) • ((genV P A C * genV P A C * genV P A C) * genJ P A C)) :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A18_unipotent_shear_tomography hP A C
+
+/-! ### Archetype A₁₉: Dual Steinberg Braid Difference & Exact Two-Sided Invertibility -/
+
+theorem archetype_A19_steinberg_braid_yang_baxter_and_invertibility
+    {P : B} (hP : P * P = P) (A C : B) :
+    steinbergBraidDual P A C = weylJ P A C - (1 - genV P A C) * coneMinus P C ∧
+    steinbergBraid P A C - steinbergBraidDual P A C =
+      (1 - genV P A C) * genPhi P A C ∧
+    steinbergBraid P A C * steinbergBraidInv P A C = 1 ∧
+    steinbergBraidInv P A C * steinbergBraid P A C = 1 ∧
+    steinbergBraidDual P A C * steinbergBraidDualInv P A C = 1 ∧
+    steinbergBraidDualInv P A C * steinbergBraidDual P A C = 1 ∧
+    steinbergBraid P A C + steinbergBraidInv P A C = (2 : ℤ) • (1 - genV P A C) ∧
+    steinbergBraidDual P A C + steinbergBraidDualInv P A C = (2 : ℤ) • (1 - genV P A C) := by
+  rcases InfoGeometry.OperatorAlgebra.PeirceSpine.steinbergBraid_dual_expansion_and_difference hP A C with
+    ⟨h1, h2, h7, h8⟩
+  rcases InfoGeometry.OperatorAlgebra.PeirceSpine.steinbergBraid_mul_inv hP A C with ⟨h3, h4⟩
+  rcases InfoGeometry.OperatorAlgebra.PeirceSpine.steinbergBraidDual_mul_inv hP A C with ⟨h5, h6⟩
+  exact ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩
+
+/-! ### Archetype A₂₀: Weyl–Clifford Covariance of Homogenized Projectors -/
+
+theorem archetype_A20_universal_weyl_clifford_equivariance
+    {P : B} (hP : P * P = P) (A C X : B) :
+    hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjV P A C X * (-genJ P A C) ∧
+    hProjPhi P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjPhi P A C X * (-genJ P A C) ∧
+    hProjJ P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjJ P A C X * (-genJ P A C) ∧
+    hProjSig P A C (genJ P A C * X * (-genJ P A C)) =
+      genJ P A C * hProjSig P A C X * (-genJ P A C) ∧
+    hProjV P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjV P A C X * genPhi P A C ∧
+    hProjPhi P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjPhi P A C X * genPhi P A C ∧
+    hProjJ P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjJ P A C X * genPhi P A C ∧
+    hProjSig P A C (genPhi P A C * X * genPhi P A C) =
+      genPhi P A C * hProjSig P A C X * genPhi P A C :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A20_weyl_clifford_covariance_of_homogenized_projectors hP A C X
 
 /-! ========================================================================
    ARCHETYPE A₂₁: Operator Projective Line `ℙ¹(B)` & North-to-South Pole Inversion
@@ -1084,5 +1189,62 @@ theorem archetype_A28_graded_superderivations_and_susy_connection_factorization
       _ = -genSig P A C := by
         rw [genSig, comm]
   exact ⟨h₁, h₂, h₃, h₄, h₅, h₆, h₇, h₈, h₉, h₁₀, h₁₁, h₁₂, h₁₃, h₁₄, h₁₅⟩
+
+/-! ### Algebraic Sigma-sandwich actions and two-corner correlation transport
+
+These are associative-ring identities for the Peirce generators. The sandwich is
+not asserted to be a one-parameter group or an automorphism, and the correlation
+transport identity is not a Tomita--Takesaki or KMS theorem. -/
+
+theorem sigma_sandwich_generator_actions
+    {P : B} (hP : P * P = P) (A C : B) :
+    (1 + genSig P A C) * conePlus P A * (1 - genSig P A C) =
+      ((1 + genV P A C) * (1 + genV P A C)) * conePlus P A ∧
+    (1 + genSig P A C) * coneMinus P C * (1 - genSig P A C) =
+      ((1 - genV P A C) * (1 - genV P A C)) * coneMinus P C ∧
+    (1 - genSig P A C) * conePlus P A * (1 + genSig P A C) =
+      ((1 - genV P A C) * (1 - genV P A C)) * conePlus P A ∧
+    (1 - genSig P A C) * coneMinus P C * (1 + genSig P A C) =
+      ((1 + genV P A C) * (1 + genV P A C)) * coneMinus P C ∧
+    (1 + genSig P A C) * genPhi P A C * (1 - genSig P A C) =
+      (1 + genV P A C * genV P A C) * genPhi P A C +
+        (2 : ℤ) • (genV P A C * genJ P A C) ∧
+    (1 + genSig P A C) * genJ P A C * (1 - genSig P A C) =
+      (1 + genV P A C * genV P A C) * genJ P A C +
+        (2 : ℤ) • (genV P A C * genPhi P A C) ∧
+    (1 + genSig P A C) * genV P A C * (1 - genSig P A C) =
+      (1 - genV P A C * genV P A C) * genV P A C ∧
+    (1 + genSig P A C) * genSig P A C * (1 - genSig P A C) =
+      (1 - genV P A C * genV P A C) * genSig P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_abel hP
+
+theorem genJ_conjugation_transports_corner_correlations
+    {P : B} (hP : P * P = P) (A C X : B) :
+    genJ P A C * (conePlus P A * X * coneMinus P C) * (-genJ P A C) =
+      qgtMinus P A C * X * qgtMinus P A C ∧
+    genJ P A C * (coneMinus P C * X * conePlus P A) * (-genJ P A C) =
+      qgtPlus P A C * X * qgtPlus P A C := by
+  constructor
+  · have hLeft : genJ P A C * conePlus P A = -qgtMinus P A C := by
+      simp only [genJ, qgtMinus, conePlus, coneMinus]
+      peirce_nf hP
+    have hRight : coneMinus P C * (-genJ P A C) = -qgtMinus P A C := by
+      simp only [genJ, qgtMinus, conePlus, coneMinus]
+      peirce_nf hP
+    calc
+      genJ P A C * (conePlus P A * X * coneMinus P C) * (-genJ P A C) =
+          (genJ P A C * conePlus P A) * X * (coneMinus P C * (-genJ P A C)) := by noncomm_ring
+      _ = (-qgtMinus P A C) * X * (-qgtMinus P A C) := by rw [hLeft, hRight]
+      _ = qgtMinus P A C * X * qgtMinus P A C := by noncomm_ring
+  · have hLeft : genJ P A C * coneMinus P C = qgtPlus P A C := by
+      simp only [genJ, qgtPlus, conePlus, coneMinus]
+      peirce_nf hP
+    have hRight : conePlus P A * (-genJ P A C) = qgtPlus P A C := by
+      simp only [genJ, qgtPlus, conePlus, coneMinus]
+      peirce_nf hP
+    calc
+      genJ P A C * (coneMinus P C * X * conePlus P A) * (-genJ P A C) =
+          (genJ P A C * coneMinus P C) * X * (conePlus P A * (-genJ P A C)) := by noncomm_ring
+      _ = qgtPlus P A C * X * qgtPlus P A C := by rw [hLeft, hRight]
 
 end InfoGeometry.PureNonCommutativeOperatorSpine

@@ -336,9 +336,12 @@ theorem fenchelGap_contact (θ : ℝ) :
   field_simp [ne_of_gt h]
   ring
 
-theorem midpointBregman_is_not_fenchelGap (s : ℝ) :
-    midpointBregman s =
-      negativeEntropy s - negativeEntropy midpoint := rfl
+theorem midpointBregman_eq_fenchelGap_at_zero (s : ℝ) :
+    midpointBregman s = fenchelGap 0 s := by
+  rw [midpointBregman_eq_negativeEntropy_add_log_two]
+  unfold fenchelGap massieu
+  simp only [Real.exp_zero]
+  ring_nf
 
 /-! The real binary owner and the arithmetic Amari owner have the same
 finite seam potential.  These are equalities of the existing definitions,

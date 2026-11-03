@@ -1,0 +1,25 @@
+{
+  "math_expression_count": 3413,
+  "source_name": "aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_latest.json",
+  "source_path": "cached/aistudio_prompt_1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe_latest.json",
+  "source_bytes": 2259779,
+  "source_sha256": "c488ce340aef94579006bc284cf40162b6763cb72a59dd0513a9bf90641cde76",
+  "turn_count": 49,
+  "role_counts": {
+    "user": 25,
+    "model": 24
+  },
+  "transcript_characters": 893312,
+  "fence_count": 44,
+  "fence_languages": {
+    "(unlabelled)": 3,
+    "lean": 29,
+    "text": 12
+  },
+  "tagged_lean_fences": 29,
+  "unterminated_fences": 1,
+  "unlabelled_lean_candidates": 0,
+  "first_timestamp": "2026-10-29T15:50:56.358Z",
+  "last_timestamp": "2026-10-31T18:36:35.427Z",
+  "authority": "transcript extraction only; no theorem or proof is promoted"
+}

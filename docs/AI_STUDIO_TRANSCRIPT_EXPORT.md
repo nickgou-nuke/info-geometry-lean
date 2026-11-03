@@ -119,6 +119,7 @@ records `math_expression_count`. Counts for the five current source snapshots
 | Source ID | Turns | Extracted math regions |
 |---|---:|---:|
 | `1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe` (updated) | 35 | 2235 |
+| `1t9Q3cbWphRcmuigvp9LZomzS7Q8Pclxe` (latest, 2026-10-31) | 49 | 3413 |
 | `17Kj7oLBHPfoWvQLKPwwve8pcsDezqpkG` | 158 | 8095 |
 | `1SSh9Kruyv8BNCpXiC5g0he9V4e7j_4Dr` | 365 | 6446 |
 | `1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or` | 311 | 5310 |

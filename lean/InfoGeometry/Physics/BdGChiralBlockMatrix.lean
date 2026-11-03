@@ -23,13 +23,10 @@ or Zorn pairing.  The results below are purely matrix identities.
 
 abbrev BdGBlock (A : Type*) := Matrix (Fin 2) (Fin 2) A
 
-variable {A : Type*} [Ring A] [StarRing A]
+variable {A : Type*} [Ring A]
 
 def chiralGrading : BdGBlock A :=
   !![1, 0; 0, -1]
-
-def diracOperator (Delta : A) : BdGBlock A :=
-  !![0, Delta; star Delta, 0]
 
 /-- The mass-coupled BdG block matrix over a possibly noncommutative ring.
 Its entries are operators when `A` is an endomorphism ring. -/
@@ -47,7 +44,177 @@ theorem massiveBdGHamiltonian_sq (D M : A) (hcomm : D * M = M * D) :
     simp [massiveBdGHamiltonian, Matrix.mul_apply, Fin.sum_univ_two,
       hcomm, mul_neg, neg_mul, neg_neg] <;> abel
 
+/-- The particle--hole swap on the two operator sectors. -/
+def andreevSwap : BdGBlock A := !![0, 1; 1, 0]
+
+@[simp] theorem andreevSwap_sq :
+    andreevSwap (A := A) * andreevSwap = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [andreevSwap, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Conjugation by the Andreev swap exchanges particle and hole blocks. -/
+theorem andreevSwap_conj (X : BdGBlock A) :
+    andreevSwap * X * andreevSwap = !![X 1 1, X 1 0; X 0 1, X 0 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [andreevSwap, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two]
+
+/-- The massive BdG square has a precisely identified off-diagonal commutator
+obstruction. This statement keeps both operator orders in the diagonal blocks. -/
+theorem massiveBdGHamiltonian_sq_with_commutator (D M : A) :
+    massiveBdGHamiltonian D M * massiveBdGHamiltonian D M =
+      !![D * D + M * M, D * M - M * D;
+         M * D - D * M, M * M + D * D] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [massiveBdGHamiltonian, Matrix.mul_apply, Fin.sum_univ_two,
+      mul_neg, neg_mul, neg_neg] <;> abel
+
+/-- The swap-even part of the massive square, retaining the two ordered
+operator products on its two sectors. -/
+def massiveBdGSquareEven (D M : A) : BdGBlock A :=
+  !![D * D + M * M, 0; 0, M * M + D * D]
+
+/-- The swap-odd commutator anomaly in the massive BdG square. -/
+def massiveBdGCommutatorAnomaly (D M : A) : BdGBlock A :=
+  !![0, D * M - M * D; M * D - D * M, 0]
+
+/-- The BdG interaction anomaly vanishes exactly when the kinetic and mass
+operators commute. -/
+theorem massiveBdGCommutatorAnomaly_eq_zero_iff_commute (D M : A) :
+    massiveBdGCommutatorAnomaly D M = 0 ↔ D * M = M * D := by
+  constructor
+  · intro h
+    have h01 := congrArg (fun X : BdGBlock A => X 0 1) h
+    have hcomm : D * M - M * D = 0 := by
+      simpa [massiveBdGCommutatorAnomaly] using h01
+    exact sub_eq_zero.mp hcomm
+  · intro h
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [massiveBdGCommutatorAnomaly, h]
+
+/-- The full square is the sum of its ordered even part and its commutator
+anomaly. -/
+theorem massiveBdGHamiltonian_sq_split (D M : A) :
+    massiveBdGHamiltonian D M * massiveBdGHamiltonian D M =
+      massiveBdGSquareEven D M + massiveBdGCommutatorAnomaly D M := by
+  rw [massiveBdGHamiltonian_sq_with_commutator]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [massiveBdGSquareEven, massiveBdGCommutatorAnomaly,
+      Matrix.add_apply, add_assoc]
+
+/-- Andreev reflection changes the sign of the commutator anomaly. -/
+theorem andreev_reflect_mass_commutator_anomaly (D M : A) :
+    andreevSwap * massiveBdGCommutatorAnomaly D M * andreevSwap =
+      -massiveBdGCommutatorAnomaly D M := by
+  rw [andreevSwap_conj]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [massiveBdGCommutatorAnomaly, andreevSwap]
+
+/-- Andreev-reflecting the square reverses the two off-diagonal commutator
+terms. Adding particle and hole contributions cancels the anomaly without a
+commutativity hypothesis; the diagonal operator orders remain explicit. -/
+theorem massiveBdGHamiltonian_andreev_anomaly_cancellation (D M : A) :
+    massiveBdGHamiltonian D M * massiveBdGHamiltonian D M +
+      andreevSwap * (massiveBdGHamiltonian D M * massiveBdGHamiltonian D M) * andreevSwap =
+        !![D * D + M * M + (M * M + D * D), 0;
+           0, M * M + D * D + (D * D + M * M)] := by
+  rw [massiveBdGHamiltonian_sq_with_commutator, andreevSwap_conj]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two] <;> abel
+
+/-- Exact criterion for Andreev invariance of the squared massive operator.
+In an arbitrary coefficient ring, the criterion is that twice the ordered
+commutator vanish; identifying this with commutation requires excluding
+2-torsion. -/
+theorem massiveBdGHamiltonian_square_andreev_invariant_iff_twice_commutator_eq_zero
+    (D M : A) :
+    andreevSwap * (massiveBdGHamiltonian D M * massiveBdGHamiltonian D M) * andreevSwap =
+      massiveBdGHamiltonian D M * massiveBdGHamiltonian D M ↔
+        (D * D + M * M = M * M + D * D) ∧
+          (D * M - M * D) + (D * M - M * D) = 0 := by
+  rw [massiveBdGHamiltonian_sq_with_commutator, andreevSwap_conj]
+  constructor
+  · intro h
+    have h00 := congrArg (fun X : BdGBlock A => X 0 0) h
+    have h01 := congrArg (fun X : BdGBlock A => X 0 1) h
+    constructor
+    · simpa using h00.symm
+    · change M * D - D * M = D * M - M * D at h01
+      nth_rewrite 2 [← h01]
+      abel
+  · intro h
+    rcases h with ⟨hdiag, hcomm⟩
+    have hcross : M * D - D * M = D * M - M * D := by
+      calc
+        M * D - D * M = -(D * M - M * D) := by noncomm_ring
+        _ = D * M - M * D := (eq_neg_iff_add_eq_zero).2 hcomm |>.symm
+    ext i j
+    fin_cases i <;> fin_cases j
+    · simpa using hdiag.symm
+    · simpa using hcross
+    · simpa using hcross.symm
+    · simpa using hdiag
+
+/-- The operator-valued twelfth cyclotomic polynomial. This is a polynomial
+in the full operator, with no diagonalization or spectral-coordinate choice. -/
+def operatorCyclotomicHiggs (H : BdGBlock A) : BdGBlock A := H ^ 4 - H ^ 2 + 1
+
+/-- Polynomial evaluation is covariant under the Andreev involution. -/
+theorem andreev_operatorCyclotomicHiggs (H : BdGBlock A) :
+    andreevSwap * operatorCyclotomicHiggs H * andreevSwap =
+      operatorCyclotomicHiggs (andreevSwap * H * andreevSwap) := by
+  have hS := andreevSwap_sq (A := A)
+  have hmul (X Y : BdGBlock A) :
+      andreevSwap * (X * Y) * andreevSwap =
+        (andreevSwap * X * andreevSwap) * (andreevSwap * Y * andreevSwap) := by
+    calc
+      andreevSwap * (X * Y) * andreevSwap =
+          andreevSwap * X * (1 : BdGBlock A) * Y * andreevSwap := by noncomm_ring
+      _ = andreevSwap * X * (andreevSwap * andreevSwap) * Y * andreevSwap := by rw [hS]
+      _ = (andreevSwap * X * andreevSwap) * (andreevSwap * Y * andreevSwap) := by noncomm_ring
+  have hpow (n : ℕ) :
+      andreevSwap * H ^ n * andreevSwap = (andreevSwap * H * andreevSwap) ^ n := by
+    induction n with
+    | zero => simp [hS]
+    | succ n ih =>
+        calc
+          andreevSwap * H ^ (n + 1) * andreevSwap =
+              andreevSwap * (H ^ n * H) * andreevSwap := by rw [pow_succ]
+          _ = (andreevSwap * H ^ n * andreevSwap) *
+                (andreevSwap * H * andreevSwap) := hmul _ _
+          _ = (andreevSwap * H * andreevSwap) ^ (n + 1) := by
+                rw [ih, pow_succ]
+  unfold operatorCyclotomicHiggs
+  calc
+    andreevSwap * (H ^ 4 - H ^ 2 + 1) * andreevSwap =
+        andreevSwap * H ^ 4 * andreevSwap - andreevSwap * H ^ 2 * andreevSwap +
+          andreevSwap * 1 * andreevSwap := by noncomm_ring
+    _ = (andreevSwap * H * andreevSwap) ^ 4 -
+          (andreevSwap * H * andreevSwap) ^ 2 + 1 := by
+      rw [hpow 4, hpow 2]
+      simp [hS]
+
+/-- For the massive operator, the cyclotomic Higgs polynomial transforms by
+the same hole reflection that cancels the commutator anomaly in its square. -/
+theorem massiveBdGHamiltonian_higgs_reflection (D M : A) :
+    andreevSwap * operatorCyclotomicHiggs (massiveBdGHamiltonian D M) * andreevSwap =
+      operatorCyclotomicHiggs
+        (andreevSwap * massiveBdGHamiltonian D M * andreevSwap) :=
+  andreev_operatorCyclotomicHiggs (massiveBdGHamiltonian D M)
+
 /-! The square below is defined by the native matrix multiplication. -/
+
+variable [StarRing A]
+
+def diracOperator (Delta : A) : BdGBlock A :=
+  !![0, Delta; star Delta, 0]
 
 def diracSquare (Delta : A) : BdGBlock A :=
   diracOperator Delta * diracOperator Delta
@@ -119,6 +286,7 @@ abbrev bdgStar (M : BdGBlock A) : BdGBlock A := star M
     bdgStar M i j = star (M j i) := by
   simp [bdgStar]
 
+omit [StarRing A] in
 @[simp] theorem chiralGrading_sq :
     chiralGrading * chiralGrading = (1 : BdGBlock A) := by
   ext i j

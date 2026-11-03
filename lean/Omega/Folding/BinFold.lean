@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Omega.Folding.FiberSpectrum
 import Omega.Folding.HammingDist
 
@@ -315,9 +321,8 @@ theorem cBinFiberMin_six : cBinFiberMin 6 = 2 :=
 theorem cBinFiberMax_six : cBinFiberMax 6 = 4 :=
   cached_cBinFiberExtrema_six.2
 
-/-- Window-6 BinFold fibers have size at most 4, obstructing an `SU(5)` factor.
-    thm:conclusion-window6-su5-obstruction -/
-theorem conclusion_window6_su5_obstruction (x : X 6) :
+/-- Every window-6 BinFold fiber has multiplicity at most four. -/
+theorem cBinFiberMult_le_four_six (x : X 6) :
     cBinFiberMult 6 x ≤ 4 := by
   calc
     cBinFiberMult 6 x ≤ cBinFiberMax 6 := by
@@ -327,11 +332,10 @@ theorem conclusion_window6_su5_obstruction (x : X 6) :
           simp)
     _ = 4 := cBinFiberMax_six
 
-/-- Paper packaging of the window-6 `SU(5)` obstruction bound.
-    thm:conclusion-window6-su5-obstruction -/
-theorem paper_conclusion_window6_su5_obstruction_package (x : X 6) :
+/-- Window-6 fiber multiplicity bound together with the attained maximum. -/
+theorem window6_bin_fiber_multiplicity_bound_package (x : X 6) :
     cBinFiberMult 6 x ≤ 4 ∧ cBinFiberMax 6 = 4 := by
-  exact ⟨conclusion_window6_su5_obstruction x, cBinFiberMax_six⟩
+  exact ⟨cBinFiberMult_le_four_six x, cBinFiberMax_six⟩
 
 /-- Local index < global compression: min_mult × |X_6| < 2^6.
     thm:conclusion-window6-local-index-lt-global-compression -/

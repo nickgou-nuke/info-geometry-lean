@@ -1,12 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Modular.ConnesCocycle
 import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
 import InfoGeometry.Prequantum.JaynesKLPotential
 import InfoGeometry.Thermodynamics.FiniteConnesCocycle
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace InfoGeometry.Canonical.ConnesRadonNikodymLogBridge
 
 open InfoGeometry.Modular.ConnesCocycle
 open InfoGeometry.Modular.NoncommutativeRN
+open InfoGeometry.OperatorAlgebra.PeirceSpine
 
 inductive Archetype
   | modularFlow
@@ -131,5 +139,35 @@ theorem logit_fisher_eq_quarter_iff (p : ℝ) :
   · intro h
     rw [h]
     norm_num
+
+section NonCommutativeOperatorRealization
+
+variable {B : Type*} [Ring B]
+
+def connesRadonNikodymArchetypeOperator (P A C : B) : Archetype → B
+  | .modularFlow => invS P
+  | .connesCocycle => genPhi P A C
+  | .relativeLogarithm => genJ P A C
+  | .logarithmicForm => genSig P A C
+  | .fisherPairing => genV P A C
+
+theorem connesRadonNikodymArchetype_operator_identities
+    {P : B} (hP : P * P = P) (A C : B) :
+    connesRadonNikodymArchetypeOperator P A C .modularFlow *
+      connesRadonNikodymArchetypeOperator P A C .modularFlow = (1 : B) ∧
+    connesRadonNikodymArchetypeOperator P A C .connesCocycle *
+      connesRadonNikodymArchetypeOperator P A C .connesCocycle =
+      connesRadonNikodymArchetypeOperator P A C .fisherPairing ∧
+    connesRadonNikodymArchetypeOperator P A C .relativeLogarithm *
+      connesRadonNikodymArchetypeOperator P A C .connesCocycle =
+      connesRadonNikodymArchetypeOperator P A C .logarithmicForm ∧
+    connesRadonNikodymArchetypeOperator P A C .logarithmicForm *
+      connesRadonNikodymArchetypeOperator P A C .logarithmicForm =
+      connesRadonNikodymArchetypeOperator P A C .fisherPairing *
+        connesRadonNikodymArchetypeOperator P A C .fisherPairing := by
+  dsimp only [connesRadonNikodymArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.ConnesRadonNikodymLogBridge

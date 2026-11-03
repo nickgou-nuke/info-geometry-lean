@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.AmariHolographicTransmutation
 
@@ -116,5 +123,40 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `AmariHolographicTransmutation.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def holographicTransmutationOperator (P A C X : B) : Archetype → B
+  | .amariFlattening => derivSqPhi P A C (genJ P A C)
+  | .rgInvariant => invS P * evenGrade P X * invS P
+  | .transmutation => genPhi P A C * genPhi P A C
+  | .geodesicVacuum => conePlus P A * conePlus P A
+
+/-- **Theorem (Non-Commutative Operator Holographic Transmutation over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the Amari flattening
+double-commutator satisfies `ad_Φ²(J) = -4 V J`, the RG-invariant even projection is
+fixed under reflection conjugation, the transmutation square satisfies `Φ² = V`, and the
+geodesic null vacuum is square-zero (`a₊² = 0`). -/
+theorem holographicTransmutation_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    holographicTransmutationOperator P A C X .amariFlattening =
+      -((4 : ℤ) • (genV P A C * genJ P A C)) ∧
+    holographicTransmutationOperator P A C X .rgInvariant = evenGrade P X ∧
+    holographicTransmutationOperator P A C X .transmutation = genV P A C ∧
+    holographicTransmutationOperator P A C X .geodesicVacuum = 0 := by
+  dsimp only [holographicTransmutationOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A5_klein_hadamard_spectra_and_partition
+      (P := P) hP A C X).2.2.2.1
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.AmariHolographicTransmutation

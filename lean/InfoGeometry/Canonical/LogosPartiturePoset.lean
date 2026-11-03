@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Logos-Partiture: a theorem-honest archetypal index
@@ -209,5 +216,22 @@ theorem ownerLedger_modules_nonempty :
 theorem ownerLedger_declarations_nonempty :
     ∀ entry ∈ ownerLedger, entry.declarations ≠ [] := by
   decide
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem logos_partiture_poset_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    invS P * invS P = (1 : B) ∧
+    evenGrade P X + oddGrade P X = X ∧
+    genPhi P A C * genPhi P A C = genV P A C ∧
+    genJ P A C * genJ P A C = -genV P A C ∧
+    genSig P A C * genSig P A C = genV P A C * genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.LogosPartiturePoset

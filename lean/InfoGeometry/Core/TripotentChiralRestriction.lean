@@ -97,12 +97,6 @@ def zeroModeChiralEquiv
     change (R * R) x = x
     exact congrArg (fun A : Module.End ℝ (zeroModeCarrier T) => A x) hR
 
-@[simp] theorem zeroModeChiralEquiv_apply
-    (T Γ : Module.End ℝ V) (hT : T ^ 3 = T)
-    (hanti : Γ * T = -(T * Γ)) (hΓ : Γ * Γ = 1)
-    (x : zeroModeCarrier T) :
-    (zeroModeChiralEquiv T Γ hT hanti hΓ x).1 = Γ x.1 := rfl
-
 end InfoGeometry.Physics.Algebra
 
 end noncomputable section

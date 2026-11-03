@@ -7,6 +7,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Causal Poset Synthesis: 2×2 Algebraic Spinor Model
@@ -221,8 +222,7 @@ theorem stabilizesVacuumRay_iff_parabolic (g : Matrix (Fin 2) (Fin 2) ℝ) :
       dsimp [IsSL2] at hSL2
       rw [det_fin_two] at hSL2
       dsimp [IsParabolicUpper] at hP
-      rw [hz, hP] at hSL2
-      linarith
+      simp [hz, hP] at hSL2
     · ext i
       fin_cases i
       · simp [mulVec, dotProduct, cyclicVacuum, Fin.sum_univ_two]
@@ -264,6 +264,18 @@ theorem projector_frobNormSq (u : Fin 2 → ℝ) (hu : (u 0)^2 + (u 1)^2 = 1) :
 noncomputable def boostGenerator : Matrix (Fin 2) (Fin 2) ℝ :=
   !![(1/2 : ℝ), 0; 0, -(1/2 : ℝ)]
 
+/-- The upper-triangular nilpotent raising matrix in the parabolic radical. -/
+def nilpotentRaising : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![0, 1; 0, 0]
+
+/-- Explicit non-commutativity of the Krein metric and the parabolic nilpotent raising generator. -/
+theorem kreinMetric_mul_nilpotentRaising_ne :
+    kreinMetric * nilpotentRaising ≠ nilpotentRaising * kreinMetric := by
+  intro h
+  have h01 : (kreinMetric * nilpotentRaising) 0 1 = (nilpotentRaising * kreinMetric) 0 1 := by
+    rw [h]
+  norm_num [kreinMetric, nilpotentRaising, Matrix.mul_apply, Fin.sum_univ_two] at h01
+
 /-- Matrix commutator [A, B] = A B - B A. -/
 def commutator (A B : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   A * B - B * A
@@ -285,5 +297,22 @@ theorem commutator_boost_projector_bound (u : Fin 2 → ℝ) (hu : (u 0)^2 + (u 
   have h_exp : ((u 0)^2 - (u 1)^2)^2 = ((u 0)^2 + (u 1)^2)^2 - 4 * (u 0 * u 1)^2 := by ring
   rw [hu] at h_exp
   linarith
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem causal_poset_synthesis_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    invS P * invS P = (1 : B) ∧
+    conePlus P A * conePlus P A = 0 ∧
+    coneMinus P C * coneMinus P C = 0 ∧
+    evenGrade P X + oddGrade P X = X ∧
+    genSig P A C * genSig P A C = genV P A C * genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.CausalPoset

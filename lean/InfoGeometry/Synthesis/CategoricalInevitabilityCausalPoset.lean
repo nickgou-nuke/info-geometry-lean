@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Order.Hom.Basic
 import InfoGeometry.Synthesis.CategoricalInevitabilityPosetSynthesis
 import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesis
 
 /-!
@@ -656,5 +657,51 @@ theorem not_forall_le_or_le_artifact : ¬ ∀ a b : Artifact, a ≤ b ∨ b ≤ 
   rcases hall Artifact.fisherClassification Artifact.universalCl11Cell with h₁ | h₂
   · exact fisherClassification_incomparable_universalCell.1 h₁
   · exact fisherClassification_incomparable_universalCell.2 h₂
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def artifactOperatorRealization (P A C X : B) : Artifact → B
+  | .fisherClassification => evenGrade P X + oddGrade P X
+  | .universalCl11Cell => invS P
+  | .cl11MatrixUnit => conePlus P A
+  | .cl11PeirceProjector => P
+  | .wittCreationBase => coneMinus P C
+  | .finiteJordanWigner => genSig P A C
+  | .colimitJordanWigner => genPhi P A C
+  | .colimitMixedCAR => genJ P A C
+  | .paraKahlerNullSheets => genV P A C
+  | .paraProjectorLaws => P + (1 - P)
+  | .mobiusSetQuotient => 1 + conePlus P A
+  | .mobiusCrossSheetPairingDescent => 1 - conePlus P A
+  | .flowAndKMSBoundaryLemmas => invS P * X * invS P
+  | .crossStageKMSReadout => evenGrade P X
+  | .prunedStageReadoutAndAnchorBound => oddGrade P X
+  | .prunedCrossStageSinkBound => X
+
+theorem categorical_inevitability_causal_poset_operator_identities
+    {P : B} (hP : P * P = P) (A C X : B) :
+    artifactOperatorRealization P A C X .fisherClassification =
+      artifactOperatorRealization P A C X .prunedCrossStageSinkBound ∧
+    artifactOperatorRealization P A C X .universalCl11Cell *
+      artifactOperatorRealization P A C X .universalCl11Cell = (1 : B) ∧
+    artifactOperatorRealization P A C X .cl11MatrixUnit *
+      artifactOperatorRealization P A C X .cl11MatrixUnit = 0 ∧
+    artifactOperatorRealization P A C X .colimitJordanWigner *
+      artifactOperatorRealization P A C X .colimitJordanWigner =
+      artifactOperatorRealization P A C X .paraKahlerNullSheets ∧
+    artifactOperatorRealization P A C X .finiteJordanWigner *
+      artifactOperatorRealization P A C X .finiteJordanWigner =
+      artifactOperatorRealization P A C X .paraKahlerNullSheets *
+        artifactOperatorRealization P A C X .paraKahlerNullSheets ∧
+    artifactOperatorRealization P A C X .mobiusSetQuotient *
+      artifactOperatorRealization P A C X .mobiusCrossSheetPairingDescent = (1 : B) := by
+  dsimp only [artifactOperatorRealization]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Synthesis.CategoricalInevitabilityCausalPoset

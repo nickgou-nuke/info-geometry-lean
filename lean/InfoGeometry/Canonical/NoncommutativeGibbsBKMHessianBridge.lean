@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.NoncommutativeGibbsCenteredFrechetBKMBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NoncommutativeGibbsSecondDerivativeCenteredBridge
@@ -160,6 +166,19 @@ theorem secondFDeriv_logPartition_apply_eq_centeredBKM
     H hH hZ A B hA]
   exact centeredFrechetResponse_eq_centeredBKMRealCovariance
     H hH hZ A B hA
+
+/-- The real Hessian of the finite noncommutative Gibbs log-partition is
+nonnegative on every self-adjoint operator direction.  This follows from the
+kernel-checked BKM covariance identity, not from a supplied convexity datum. -/
+theorem secondFDeriv_logPartition_nonneg_selfAdjoint
+    {n : ℕ} (H : Operator n) (hH : IsSelfAdjoint H)
+    (hZ : 0 < gibbsPartitionReal H)
+    (A : Operator n) (hA : IsSelfAdjoint A) :
+    0 ≤ (secondFDerivLogPartitionReadout H A A).re := by
+  rw [secondFDeriv_logPartition_apply_eq_centeredBKM H hH hZ A A hA,
+    ← centeredFrechetResponse_eq_centeredBKMRealCovariance
+      H hH hZ A A hA]
+  exact centeredFrechetResponse_nonneg_selfAdjoint H hH hZ A hA
 
 /-! ## Reconciliation with the operator-form and Onsager layers -/
 

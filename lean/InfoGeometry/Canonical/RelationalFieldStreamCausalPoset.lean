@@ -9,6 +9,7 @@ import Mathlib.Data.Fintype.Order
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Relational Field Archetype Poset, Gibbs Distribution, and Bistochastic Transport
@@ -203,7 +204,7 @@ theorem one_is_bistochastic :
   refine ⟨?_, ?_, ?_⟩
   · intro i j
     dsimp [Matrix.one_apply]
-    split_ifs <;> linarith
+    split_ifs <;> norm_num
   · intro i
     dsimp [Matrix.one_apply]
     rw [Finset.sum_eq_single i]
@@ -229,7 +230,7 @@ theorem convex_combination_bistochastic
     (h1 : IsBistochastic M1) (h2 : IsBistochastic M2)
     (α : ℝ) (hα0 : 0 ≤ α) (hα1 : α ≤ 1) :
     IsBistochastic (α • M1 + (1 - α) • M2) := by
-  have h1_sub_α : 0 ≤ 1 - α := by linarith
+  have h1_sub_α : 0 ≤ 1 - α := sub_nonneg.mpr hα1
   rcases h1 with ⟨h1_nonneg, h1_row, h1_col⟩
   rcases h2 with ⟨h2_nonneg, h2_row, h2_col⟩
   refine ⟨?_, ?_, ?_⟩
@@ -237,17 +238,15 @@ theorem convex_combination_bistochastic
     dsimp [Matrix.add_apply, Matrix.smul_apply]
     have p1 : 0 ≤ α * M1 i j := mul_nonneg hα0 (h1_nonneg i j)
     have p2 : 0 ≤ (1 - α) * M2 i j := mul_nonneg h1_sub_α (h2_nonneg i j)
-    linarith
+    exact add_nonneg p1 p2
   · intro i
     dsimp [Matrix.add_apply, Matrix.smul_apply]
     rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
-    rw [h1_row i, h2_row i]
-    linarith
+    rw [h1_row i, h2_row i, mul_one, mul_one, add_sub_cancel]
   · intro j
     dsimp [Matrix.add_apply, Matrix.smul_apply]
     rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
-    rw [h1_col j, h2_col j]
-    linarith
+    rw [h1_col j, h2_col j, mul_one, mul_one, add_sub_cancel]
 
 /-! ### IV. Discrete Monotone Potential Dissipation -/
 
@@ -280,5 +279,62 @@ theorem kernelVerification_causal_precedence (a : StreamArchetype)
     a ≤ .kernelVerification := by
   change archetypeRank a ≤ archetypeRank .kernelVerification
   cases a <;> first | decide | contradiction
+
+/-! ### VI. Non-Commutative Operator Realization of `StreamArchetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `StreamArchetype` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def streamArchetypeOperator (P A C X : B) : StreamArchetype → B
+  | .contextDAG => P
+  | .latentCarrier => invS P
+  | .energyLandscape => evenGrade P X
+  | .gibbsPartition => oddGrade P X
+  | .birkhoffTransport => genPhi P A C
+  | .meanFieldAttractor => genJ P A C
+  | .kernelVerification => genV P A C
+  | .newContextField => genSig P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `StreamArchetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the eight
+stream archetypes satisfy the Peirce reflection involution, diagonal/off-diagonal
+orthogonality, and the Tetraktys `𝔰𝔩₂` bracket and Casimir identities. -/
+theorem streamArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    streamArchetypeOperator P A C X .latentCarrier *
+      streamArchetypeOperator P A C X .latentCarrier = 1 ∧
+    streamArchetypeOperator P A C X .energyLandscape +
+      streamArchetypeOperator P A C X .gibbsPartition = X ∧
+    streamArchetypeOperator P A C X .birkhoffTransport *
+      streamArchetypeOperator P A C X .birkhoffTransport =
+      streamArchetypeOperator P A C X .kernelVerification ∧
+    streamArchetypeOperator P A C X .meanFieldAttractor *
+      streamArchetypeOperator P A C X .meanFieldAttractor =
+      -streamArchetypeOperator P A C X .kernelVerification ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (streamArchetypeOperator P A C X .birkhoffTransport)
+      (streamArchetypeOperator P A C X .meanFieldAttractor) =
+      -((2 : ℤ) • streamArchetypeOperator P A C X .newContextField) ∧
+    streamArchetypeOperator P A C X .newContextField *
+      streamArchetypeOperator P A C X .newContextField =
+      streamArchetypeOperator P A C X .kernelVerification *
+      streamArchetypeOperator P A C X .kernelVerification := by
+  dsimp only [streamArchetypeOperator]
+  have hA2 := archetype_A2_peirce_cartan_grading_and_tangent_closure hP A C
+  have hA3 := archetype_A3_nilpotent_cones_and_tetraktys_table hP A C
+  have hA7 := archetype_A7_so12_lie_brackets_and_cubic_inversions hP A C
+  rcases hA3 with ⟨_, _, hPhiSq, hJSq, _, _, _, _, _, _, hSigSq, _, _, _, _⟩
+  have hPeirce : evenGrade P X + oddGrade P X = X := by
+    rcases archetype_A2_peirce_cartan_grading_and_tangent_closure hP X C with
+      ⟨_, hOdd, hEven, _, _, _, _⟩
+    rw [← hEven, ← hOdd]
+    abel
+  exact ⟨hA2.1, hPeirce, hPhiSq, hJSq, hA7.1, hSigSq⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Canonical.RelationalFieldStream

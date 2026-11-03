@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ConformalReflection55
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalProjectiveEmbedding55
@@ -28,6 +33,24 @@ def S (p : ConformalNullPair) : Cl55 :=
 def spinorPlus (p : ConformalNullPair) : Cl55 := p.u + p.v
 
 def spinorMinus (p : ConformalNullPair) : Cl55 := p.u - p.v
+
+private theorem sandwich_mul_of_square_one {R : Type*} [Ring R]
+    {s x y : R} (hs : s * s = 1) :
+    s * (x * y) * s = (s * x * s) * (s * y * s) := by
+  calc
+    s * (x * y) * s = s * x * (s * s) * y * s := by
+      rw [hs]
+      noncomm_ring
+    _ = (s * x * s) * (s * y * s) := by noncomm_ring
+
+private theorem sandwich_mul_of_square_neg_one {R : Type*} [Ring R]
+    {s x y : R} (hs : s * s = -1) :
+    s * (x * y) * s = -((s * x * s) * (s * y * s)) := by
+  calc
+    s * (x * y) * s = -(s * x * (s * s) * y * s) := by
+      rw [hs]
+      noncomm_ring
+    _ = -((s * x * s) * (s * y * s)) := by noncomm_ring
 
 /-- `J` swaps `u` and `v`. -/
 theorem J_sandwich_u (p : ConformalNullPair) : J p * p.u * J p = p.v := by
@@ -86,6 +109,47 @@ theorem spinorMinus_anti_by_S (p : ConformalNullPair) :
     _ = p.v + -p.u := by simp [S_sandwich_u p, S_sandwich_v p]
     _ = -spinorMinus p := by
       simp [spinorMinus, sub_eq_add_neg]
+
+/-- The commutator of the conformal null pair is its boundary grading element. -/
+def nullPairGrading (p : ConformalNullPair) : Cl55 := p.u * p.v - p.v * p.u
+
+/-- The conformal inversion sandwich fixes the null-pair grading element.
+The minus sign in `J^2 = -1` compensates for the exchange of the two null
+generators in each product. -/
+theorem J_sandwich_nullPairGrading (p : ConformalNullPair) :
+    J p * nullPairGrading p * J p = nullPairGrading p := by
+  have hJJ : J p * J p = -(1 : Cl55) := by
+    simpa [J, pow_two] using InfoGeometry.Clifford.ConformalReflection55.J_sq p
+  have hUV : J p * (p.u * p.v) * J p = -(p.v * p.u) := by
+    rw [sandwich_mul_of_square_neg_one hJJ, J_sandwich_u, J_sandwich_v]
+  have hVU : J p * (p.v * p.u) * J p = -(p.u * p.v) := by
+    rw [sandwich_mul_of_square_neg_one hJJ, J_sandwich_v, J_sandwich_u]
+  unfold nullPairGrading
+  calc
+    J p * (p.u * p.v - p.v * p.u) * J p =
+        J p * (p.u * p.v) * J p - J p * (p.v * p.u) * J p := by
+          noncomm_ring
+    _ = -(p.v * p.u) - (-(p.u * p.v)) := by rw [hUV, hVU]
+    _ = p.u * p.v - p.v * p.u := by abel
+
+/-- The projective involution has the opposite action on the same grading:
+its square is `+1`, so exchanging the two null generators reverses their
+commutator. -/
+theorem S_sandwich_nullPairGrading (p : ConformalNullPair) :
+    S p * nullPairGrading p * S p = -nullPairGrading p := by
+  have hSS : S p * S p = 1 := by
+    simpa [S] using InfoGeometry.Clifford.ConformalProjectiveEmbedding55.S_sq p
+  have hUV : S p * (p.u * p.v) * S p = p.v * p.u := by
+    rw [sandwich_mul_of_square_one hSS, S_sandwich_u, S_sandwich_v]
+  have hVU : S p * (p.v * p.u) * S p = p.u * p.v := by
+    rw [sandwich_mul_of_square_one hSS, S_sandwich_v, S_sandwich_u]
+  unfold nullPairGrading
+  calc
+    S p * (p.u * p.v - p.v * p.u) * S p =
+        S p * (p.u * p.v) * S p - S p * (p.v * p.u) * S p := by
+          noncomm_ring
+    _ = p.v * p.u - p.u * p.v := by rw [hUV, hVU]
+    _ = -(p.u * p.v - p.v * p.u) := by abel
 
 /-- The `J`-sandwich involution. -/
 theorem J_sandwich_involution (p : ConformalNullPair) (x : Cl55) :

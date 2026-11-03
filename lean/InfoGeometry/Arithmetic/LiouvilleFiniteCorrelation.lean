@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Arithmetic.LiouvilleParity
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 import Mathlib.Data.Finset.Order
 
 namespace InfoGeometry.Arithmetic.LiouvilleFiniteCorrelation
@@ -155,5 +162,41 @@ theorem liouville_correlation_ne_zero_of_odd_card
   have balance := (liouville_correlation_zero_iff samples shift).mp zero_correlation
   obtain ⟨half, cardinality⟩ := odd_card
   omega
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+def archetypeOperatorWitness (P A C : B) : Archetype → B
+  | .factorization => P
+  | .multiplicativity => conePlus P A
+  | .signValues => coneMinus P C
+  | .finiteCounting => genPhi P A C
+  | .finiteCorrelation => genSig P A C
+  | .asymptoticCancellation => genV P A C
+
+theorem liouville_finite_correlation_operator_tetraktys
+    {P : B} (hP : P * P = P) (A C : B) :
+    archetypeOperatorWitness P A C .factorization *
+      archetypeOperatorWitness P A C .factorization =
+      archetypeOperatorWitness P A C .factorization ∧
+    (archetypeOperatorWitness P A C .multiplicativity) ^ 2 = 0 ∧
+    (archetypeOperatorWitness P A C .signValues) ^ 2 = 0 ∧
+    (archetypeOperatorWitness P A C .finiteCounting) ^ 2 =
+      archetypeOperatorWitness P A C .asymptoticCancellation ∧
+    (archetypeOperatorWitness P A C .finiteCorrelation) ^ 2 -
+      (archetypeOperatorWitness P A C .asymptoticCancellation) ^ 2 = 0 := by
+  dsimp only [archetypeOperatorWitness]
+  rcases archetype_A3_nilpotent_cones_and_tetraktys_table (P := P) hP A C with
+    ⟨hPlus, hMinus, hPhiSq, _, _, _, _, _, _, _, hSigmaSq, _, _, _⟩
+  refine ⟨hP, ?_, ?_, ?_, ?_⟩
+  · simpa [pow_two] using hPlus
+  · simpa [pow_two] using hMinus
+  · simpa [pow_two] using hPhiSq
+  · simpa [pow_two] using sub_eq_zero.mpr hSigmaSq
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Arithmetic.LiouvilleFiniteCorrelation

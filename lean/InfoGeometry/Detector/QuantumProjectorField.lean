@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.QuantumProjectorField
 
@@ -103,5 +110,37 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `QuantumProjectorField.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def quantumProjectorFieldOperator (P A C X : B) : Archetype → B
+  | .fieldProjector => evenGrade P X
+  | .sqrtInversion => genPhi P A C
+  | .rankOneSVD => conePlus P A * coneMinus P C
+  | .fluxMeter => genV P A C
+
+/-- **Theorem (Non-Commutative Quantum Projector Field Identities over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the field projector
+`evenGrade P` is idempotent, the square-root generator `Φ = a₊ + c₋` squares to the
+flux meter `V = a₊ c₋ + c₋ a₊`, and the rank-one upper block `a₊ c₋` is absorbed on both
+sides by `P`. -/
+theorem quantumProjectorField_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    evenGrade P (quantumProjectorFieldOperator P A C X .fieldProjector) =
+      quantumProjectorFieldOperator P A C X .fieldProjector ∧
+    quantumProjectorFieldOperator P A C X .sqrtInversion *
+      quantumProjectorFieldOperator P A C X .sqrtInversion =
+      quantumProjectorFieldOperator P A C X .fluxMeter ∧
+    P * quantumProjectorFieldOperator P A C X .rankOneSVD * P =
+      quantumProjectorFieldOperator P A C X .rankOneSVD := by
+  dsimp only [quantumProjectorFieldOperator]
+  refine ⟨?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.QuantumProjectorField

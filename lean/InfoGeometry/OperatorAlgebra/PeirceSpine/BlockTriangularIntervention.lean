@@ -5,7 +5,9 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding
 import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
+import InfoGeometry.OperatorAlgebra.ThreeCornerColumnAlgebra
 
 /-!
 # Block-triangular operators and idempotent compression
@@ -162,6 +164,94 @@ theorem blockLower_genV_defect_iterate (A C : B) (n : ℕ) :
     _ = idempotencyDefect^[n] (genV P A C) +
         coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
       rw [← genV_defect_iterates_cycle_split hP A C n]
+
+omit hP in
+/-- Three-corner block-lower operator assembled from `δ^[n](Q₊)`, `N₋ * δ^[n](V)`,
+and `δ^[n](Q₋)` (`M₈`). -/
+def tcrDecoderFullOp (P A C : B) (n : ℕ) : B :=
+  blockLower P
+    (idempotencyDefect^[n] (qgtPlus P A C))
+    (coneMinus P C * idempotencyDefect^[n] (genV P A C))
+    (idempotencyDefect^[n] (qgtMinus P A C))
+
+/-- At every defect depth `n, m : ℕ`:
+1. `tcrDecoderFullOp P A C n = (1 + coneMinus P C) * idempotencyDefect^[n] (genV P A C)`
+   and agrees with `blockLower_genV_defect_iterate`;
+2. Its upper-right Peirce corner vanishes (`P * tcrDecoderFullOp P A C n * (1 - P) = 0`);
+3. Its `(1,1)` and `(0,0)` Peirce blocks are `δ^[n](Q₊)` and `δ^[n](Q₋)`;
+4. Across arbitrary depths `(n, m)`, the product `tcrDecoderFullOp P A C n * tcrDecoderFullOp P A C m`
+   expands cleanly via `blockLower_mul` and has vanishing upper-right corner (`M₈`). -/
+theorem all_scale_tcr_decoder_full_block_triangular_closure (A C : B) (n m : ℕ) :
+    tcrDecoderFullOp P A C n =
+      (1 + coneMinus P C) * idempotencyDefect^[n] (genV P A C) ∧
+    tcrDecoderFullOp P A C n =
+      blockLower P
+        (idempotencyDefect^[n] (genV P A C))
+        (genPhi P A C * idempotencyDefect^[n] (genV P A C))
+        (idempotencyDefect^[n] (genV P A C)) ∧
+    P * tcrDecoderFullOp P A C n * (1 - P) = 0 ∧
+    peirce11 P (tcrDecoderFullOp P A C n) = idempotencyDefect^[n] (qgtPlus P A C) ∧
+    peirce00 P (tcrDecoderFullOp P A C n) = idempotencyDefect^[n] (qgtMinus P A C) ∧
+    tcrDecoderFullOp P A C n * tcrDecoderFullOp P A C m =
+      blockLower P
+        (idempotencyDefect^[n] (qgtPlus P A C) * P * idempotencyDefect^[m] (qgtPlus P A C))
+        ((coneMinus P C * idempotencyDefect^[n] (genV P A C)) * P * idempotencyDefect^[m] (qgtPlus P A C) +
+          idempotencyDefect^[n] (qgtMinus P A C) * (1 - P) *
+            (coneMinus P C * idempotencyDefect^[m] (genV P A C)))
+        (idempotencyDefect^[n] (qgtMinus P A C) * (1 - P) * idempotencyDefect^[m] (qgtMinus P A C)) ∧
+    P * (tcrDecoderFullOp P A C n * tcrDecoderFullOp P A C m) * (1 - P) = 0 := by
+  have h11 : peirce11 P (idempotencyDefect^[n] (qgtPlus P A C)) =
+      idempotencyDefect^[n] (qgtPlus P A C) := by
+    unfold peirce11
+    rw [qgtPlus_defect_iterates_left hP A C n, qgtPlus_defect_iterates_right hP A C n]
+  have h00 : peirce00 P (idempotencyDefect^[n] (qgtMinus P A C)) =
+      idempotencyDefect^[n] (qgtMinus P A C) := by
+    unfold peirce00
+    rw [qgtMinus_defect_iterates_left hP A C n, qgtMinus_defect_iterates_right hP A C n]
+  have h01 : coneMinus P (coneMinus P C * idempotencyDefect^[n] (genV P A C)) =
+      coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+    have h1P : (1 - P) * coneMinus P C = coneMinus P C := by peirce_nf hP
+    calc
+      coneMinus P (coneMinus P C * idempotencyDefect^[n] (genV P A C)) =
+        (1 - P) * (coneMinus P C * (idempotencyDefect^[n] (genV P A C) * P)) := by
+          unfold coneMinus; noncomm_ring
+      _ = (1 - P) * (coneMinus P C * idempotencyDefect^[n] (qgtPlus P A C)) := by
+          rw [genV_defect_iterates_right_projection hP A C n]
+      _ = (1 - P) * (coneMinus P C * idempotencyDefect^[n] (genV P A C)) := by
+          rw [← coneMinus_defect_iterates_upper hP A C n]
+      _ = ((1 - P) * coneMinus P C) * idempotencyDefect^[n] (genV P A C) := by
+          noncomm_ring
+      _ = coneMinus P C * idempotencyDefect^[n] (genV P A C) := by rw [h1P]
+  have hEq : tcrDecoderFullOp P A C n =
+      idempotencyDefect^[n] (genV P A C) +
+        coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+    unfold tcrDecoderFullOp blockLower
+    rw [h11, h01, h00]
+    calc
+      idempotencyDefect^[n] (qgtPlus P A C) +
+          coneMinus P C * idempotencyDefect^[n] (genV P A C) +
+          idempotencyDefect^[n] (qgtMinus P A C) =
+        (idempotencyDefect^[n] (qgtPlus P A C) + idempotencyDefect^[n] (qgtMinus P A C)) +
+          coneMinus P C * idempotencyDefect^[n] (genV P A C) := by abel
+      _ = idempotencyDefect^[n] (genV P A C) +
+          coneMinus P C * idempotencyDefect^[n] (genV P A C) := by
+        rw [← genV_defect_iterates_cycle_split hP A C n]
+  have hMul := blockLower_mul hP
+    (idempotencyDefect^[n] (qgtPlus P A C))
+    (coneMinus P C * idempotencyDefect^[n] (genV P A C))
+    (idempotencyDefect^[n] (qgtMinus P A C))
+    (idempotencyDefect^[m] (qgtPlus P A C))
+    (coneMinus P C * idempotencyDefect^[m] (genV P A C))
+    (idempotencyDefect^[m] (qgtMinus P A C))
+  refine ⟨?_, ?_, ?_, ?_, ?_, hMul, ?_⟩
+  · rw [hEq]; noncomm_ring
+  · rw [hEq, blockLower_genV_defect_iterate hP A C n]
+  · exact blockLower_upper_right hP _ _ _
+  · rw [tcrDecoderFullOp, blockLower_peirce11 hP, h11]
+  · rw [tcrDecoderFullOp, blockLower_peirce00 hP, h00]
+  · change P * (blockLower P _ _ _ * blockLower P _ _ _) * (1 - P) = 0
+    rw [hMul]
+    exact blockLower_upper_right hP _ _ _
 
 end BlockLower
 
@@ -377,5 +467,47 @@ theorem stage_D15_digrac_magnet_dag_resolvent_and_tcr_former
      idempotentCompression_left_zero hQ T,
      idempotentCompression_right_zero hQ T⟩,
     idempotentCompression_peirce11 hPQ hQP T⟩
+
+/-- **Stage M₇ (`stage_M7_block_lower_and_three_corner_column_algebra`)**:
+Combines two-corner block-lower multiplication, orthogonal compression, and the
+three-corner column subalgebra (`ThreeCornerColumnAlgebra.columnOp`, `third`)
+over an arbitrary ring `B`. These are ring identities; no neural decoder or
+attention mechanism is defined here:
+1. Encoder triangularity (`P * blockLower P F B_time D * (1 - P) = 0`), multiplicative closure,
+   and `11`-block preservation under orthogonal compression `idempotentCompression P_psi`;
+2. Three-corner column extraction (`columnOp P_f P_l F L Q * P_l = L * P_l`), forbidden
+   corner vanishing (`P_l * columnOp P_f P_l F L Q * P_f = 0`), multiplicative closure,
+   and compression by `1 - P_f` (`idempotentCompression P_f`). -/
+theorem stage_M7_block_lower_and_three_corner_column_algebra
+    {P P_psi P_f P_l : B}
+    (hP : P * P = P)
+    (hOrth1 : P * P_psi = 0) (hOrth2 : P_psi * P = 0)
+    (hPf : P_f * P_f = P_f) (hPl : P_l * P_l = P_l)
+    (hfl : P_f * P_l = 0) (hlf : P_l * P_f = 0)
+    (F B_time D F₁ B₁ D₁ F₂ B₂ D₂ L Q L₁ Q₁ L₂ Q₂ : B) :
+    let P_p := ThreeCornerColumnAlgebra.third P_f P_l
+    P * blockLower P F B_time D * (1 - P) = 0 ∧
+    blockLower P F₁ B₁ D₁ * blockLower P F₂ B₂ D₂ =
+      blockLower P (F₁ * P * F₂) (B₁ * P * F₂ + D₁ * (1 - P) * B₂) (D₁ * (1 - P) * D₂) ∧
+    peirce11 P (idempotentCompression P_psi (blockLower P F B_time D)) = peirce11 P F ∧
+    ThreeCornerColumnAlgebra.columnOp P_f P_l F L Q * P_l = L * P_l ∧
+    P_l * ThreeCornerColumnAlgebra.columnOp P_f P_l F L Q * P_f = 0 ∧
+    ThreeCornerColumnAlgebra.columnOp P_f P_l F₁ L₁ Q₁ *
+        ThreeCornerColumnAlgebra.columnOp P_f P_l F₂ L₂ Q₂ =
+      ThreeCornerColumnAlgebra.columnOp P_f P_l
+        (F₁ * P_f * F₂)
+        (P_f * F₁ * P_f * L₂ + L₁ * P_l * L₂ + P_p * Q₁ * P_p * L₂)
+        (Q₁ * P_p * Q₂) ∧
+    idempotentCompression P_f (ThreeCornerColumnAlgebra.columnOp P_f P_l F L Q) =
+      ThreeCornerColumnAlgebra.columnOp P_f P_l 0 ((1 - P_f) * L) Q := by
+  intro P_p
+  refine ⟨blockLower_upper_right hP F B_time D,
+          blockLower_mul hP F₁ B₁ D₁ F₂ B₂ D₂,
+          ?_,
+          ThreeCornerColumnAlgebra.column_eq hPf hPl hfl hlf F L Q,
+          (ThreeCornerColumnAlgebra.forbidden_corners hPf hPl hfl hlf F L Q).1,
+          ThreeCornerColumnAlgebra.columnOp_mul hPf hPl hfl hlf F₁ L₁ Q₁ F₂ L₂ Q₂,
+          ThreeCornerColumnAlgebra.compression hPf hPl hfl hlf F L Q⟩
+  rw [idempotentCompression_peirce11 hOrth1 hOrth2, blockLower_peirce11 hP]
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

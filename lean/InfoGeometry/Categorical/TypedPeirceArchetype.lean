@@ -7,6 +7,7 @@ import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Preadditive.Basic
 import Mathlib.CategoryTheory.Preadditive.Biproducts
 import Mathlib.Tactic.Abel
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Pure Categorical Split Involutions and Peirce Projectors
@@ -288,5 +289,21 @@ theorem two_smul_peirce_minus {X X_plus X_minus : C}
     rw [two_zsmul]
   rw [h2]
   abel
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+theorem typed_peirce_archetype_ring_realization
+    {P : B} (hP : P * P = P) (A C X : B) :
+    invS P * invS P = (1 : B) ∧
+    evenGrade P X + oddGrade P X = X ∧
+    invS P * X * invS P = evenGrade P X - oddGrade P X ∧
+    genPhi P A C * genPhi P A C + genJ P A C * genJ P A C = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Categorical

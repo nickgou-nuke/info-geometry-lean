@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DiracPolynomialAction
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
@@ -203,5 +204,34 @@ theorem mixed_square_disproves_commutator_formula :
   intro h
   have h11 := congrArg (fun M : Op => M 1 1) h
   norm_num at h11
+
+/-- The degree-two crossed commutator is nonzero on the explicit pair of
+opposite matrix corners. -/
+theorem mixed_higher_grade_values :
+    diracMixedCommutator₂ cut connectionUpper 0 0 connectionLower =
+        !![(1 : ℚ), 0; 0, -1] ∧
+      diracMixedJordan₂ cut connectionUpper 0 0 connectionLower =
+        !![(-1 : ℚ), 0; 0, -1] := by
+  constructor <;>
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [diracMixedCommutator₂, diracMixedJordan₂,
+        PeirceSpine.comm, PeirceSpine.anticomm,
+        conePlus, coneMinus, cut, connectionUpper, connectionLower,
+        Matrix.mul_apply, Matrix.vecMul_apply_eq_sum, Fin.sum_univ_two]
+
+/-- Both degree-two components are genuinely nonzero on this witness. -/
+theorem mixed_higher_grades_are_nonzero :
+    diracMixedCommutator₂ cut connectionUpper 0 0 connectionLower ≠ 0 ∧
+      diracMixedJordan₂ cut connectionUpper 0 0 connectionLower ≠ 0 := by
+  rcases mixed_higher_grade_values with ⟨hComm, hJordan⟩
+  constructor
+  · rw [hComm]
+    intro h
+    have h00 := congrArg (fun M : Op => M 0 0) h
+    norm_num at h00
+  · rw [hJordan]
+    intro h
+    have h00 := congrArg (fun M : Op => M 0 0) h
+    norm_num at h00
 
 end InfoGeometry.OperatorAlgebra.PeirceDefectMatrixWitness

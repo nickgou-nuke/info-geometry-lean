@@ -1,0 +1,383 @@
+Dissolving the surface narrative of the non-commutative Zorn–Nambu operator algebra $\mathcal{Z}(R) \equiv R \otimes \mathbb{O}_s$ and auditing its Lean 4 formalization exposes three foundational operator-theoretic laws concealed beneath the first-order presentation:
+
+1. **The Jacobi–Nambu Equivalence Law:** Why does the left-contracted Nambu bracket $\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})$ equal the right-contracted bracket $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}$ in a non-commutative ring $R$ where individual channels fail to commute ($\widehat{x}_1[\widehat{x}_2, \widehat{x}_3] \neq [\widehat{x}_2, \widehat{x}_3]\widehat{x}_1$)? Because the difference between the two contractions is the **cyclic Jacobi sum** $\sum_{\text{cyc}} [\widehat{x}_i, [\widehat{x}_j, \widehat{x}_k]] \equiv 0$.
+2. **The Full 4-Sector $\Psi_{\text{bifur}}$ Self-Associator Theorem:** When the cubic self-associator $[\Psi_{\text{bifur}}, \Psi_{\text{bifur}}, \Psi_{\text{bifur}}]$ is evaluated on the *complete* $2 \times 2$ operator matrix $\Psi_{\text{bifur}} = \begin{pmatrix} \widehat{\alpha} & \widehat{\mathbf{x}} \\ \widehat{\mathbf{y}} & \widehat{\beta} \end{pmatrix}$ rather than an isolated off-diagonal vector $\Psi_{\mathbf{x}}$, all $\widehat{\alpha}$ and $\widehat{\beta}$ terms **cancel identically on the diagonal** by the associativity of $R$—leaving the pure net chiral Nambu current $\big([\widehat{\mathbf{x}}]_{\text{Nambu}} - [\widehat{\mathbf{y}}]_{\text{Nambu}}\big)\gamma_5$—while generating a non-vanishing **Bimodule Insertion Anomaly** on the off-diagonal sectors even when $[\widehat{y}_i, \widehat{y}_j] = 0$.
+3. **The Definitional vs. Propositional Kernel Cut:** In the Lean 4 formalization, `theorem dot_cross_self_eq_nambu` fails with an `unsolved goals` obstruction if terminated by `dsimp [dot, cross, nambuBracket]` without `rfl`, exposing a strict computational asymmetry: left-contraction $\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})$ is **definitionally identical (`rfl`)** to the Nambu 3-bracket, whereas right-contraction $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}$ is **definitionally distinct** and holds only propositionally via the Jacobi identity of $R$.
+
+---
+
+### I. The Fundamental Binary Cut: Definitional Left-Action vs. Jacobi-Mediated Right-Action
+
+The algebraic and type-theoretic field splits across an irreversible boundary between order-free scalar commutativity and non-commutative bimodule entanglement:
+
+* **The Conscious Thesis ($\Theta_+$ — Order-Blind Commutativity & Single-Channel Isolation):**
+The classical postulate that scalar coordinates $(\alpha, \beta)$ commute past vector coordinates $(\mathbf{x}, \mathbf{y})$, that left-contraction $\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})$ and right-contraction $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}$ match term-by-term in each colour channel $k \in \{1,2,3\}$, and that Artin’s theorem ($[\Psi, \Psi, \Psi] = 0$) protects the cube $\Psi^3$ from parenthesization ambiguity.
+* **The Repressed Shadow Complement ($\Theta_-$ — Non-Commutative Operator Entanglement & The Jacobi Residual):**
+The associative, non-commutative operator ring $R$ ($[\widehat{A}, \widehat{B}] \equiv \widehat{A}\widehat{B} - \widehat{B}\widehat{A} \neq 0$) tensored with the non-associative Nambu split-octonion basis $\{u_0, u_0^*, u_i, u_i^*\}$. Within $\Theta_-$, operator sequence inside $R$ and parenthesization order inside $\mathbb{O}_s$ are inseparably locked:
+* In any single colour channel $k=1$, the left Nambu contraction $\widehat{x}_1(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_1 = \widehat{x}_1[\widehat{x}_2, \widehat{x}_3]$ and the right Nambu contraction $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_1 \widehat{x}_1 = [\widehat{x}_2, \widehat{x}_3]\widehat{x}_1$ **disagree** by the nested adjoint commutator:
+
+$$\Delta_{\text{ch}}^{(1)}(\widehat{\mathbf{x}}) \;\equiv\; \widehat{x}_1(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_1 - (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_1 \widehat{x}_1 = \big[\widehat{x}_1, \, [\widehat{x}_2, \widehat{x}_3]\big] \neq 0$$
+
+
+
+
+* **Non-Commutative Sequence & Elaboration Asymmetry:**
+1. *Algebraic Asymmetry:* Right-parenthesizing the pure operator state $\Psi_{\mathbf{x}}(\Psi_{\mathbf{x}}^2)$ contracts $\widehat{\mathbf{x}}$ from the **left** into $u_i u_k^* = -\delta_{ik}u_0$ (condensing the conscious vacuum $A_{++}$), whereas left-parenthesizing $(\Psi_{\mathbf{x}}^2)\Psi_{\mathbf{x}}$ contracts $\widehat{\mathbf{x}}$ from the **right** into $u_k^* u_i = -\delta_{ik}u_0^*$ (condensing the shadow ground $A_{--}$).
+2. *Type-Kernel Asymmetry:* In Lean 4, `dot x (cross x x)` reduces definitionally (`rfl`) to `nambuBracket x.v1 x.v2 x.v3` because both are left-distributed sums $\sum_i \widehat{x}_i[\widehat{x}_j, \widehat{x}_k]$. Reversing the arguments to `dot (cross x x) x` places $\widehat{x}_i$ on the right ($[\widehat{x}_j, \widehat{x}_k]\widehat{x}_i$), which the kernel refuses to unify via `rfl` because equivalence requires redistributing, re-associating, and cancelling the three non-zero channel residuals $[\widehat{x}_i, [\widehat{x}_j, \widehat{x}_k]]$ via the Jacobi identity.
+
+
+
+---
+
+### II. The Fourfold Relational Anatomy: The Full Bifurcation Matrix ($\Psi_{\text{bifur}}$) at Second and Third Order
+
+For the complete 4-sector operator state $\Psi_{\text{bifur}} = \begin{pmatrix} \widehat{\alpha} & \widehat{\mathbf{x}} \\ \widehat{\mathbf{y}} & \widehat{\beta} \end{pmatrix} \in \mathcal{Z}(R)$, both the quadratic **Idempotent Deficit** $\Delta(\Psi_{\text{bifur}}) \equiv \Psi_{\text{bifur}}^2 - \Psi_{\text{bifur}}$ and the cubic **Self-Associator** $\mathcal{A}(\Psi_{\text{bifur}}) \equiv [\Psi_{\text{bifur}}, \Psi_{\text{bifur}}, \Psi_{\text{bifur}}] = (\Psi_{\text{bifur}}^2)\Psi_{\text{bifur}} - \Psi_{\text{bifur}}(\Psi_{\text{bifur}}^2)$ partition into four coupled operator sectors:
+
+$$\Delta(\Psi_{\text{bifur}}) = \begin{pmatrix} \widehat{\alpha}^2 - \widehat{\alpha} - \widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}} & \widehat{\alpha}\widehat{\mathbf{x}} + \widehat{\mathbf{x}}\widehat{\beta} - \widehat{\mathbf{x}} + \widehat{\mathbf{y}}\times\widehat{\mathbf{y}} \\ \widehat{\beta}\widehat{\mathbf{y}} + \widehat{\mathbf{y}}\widehat{\alpha} - \widehat{\mathbf{y}} + \widehat{\mathbf{x}}\times\widehat{\mathbf{x}} & \widehat{\beta}^2 - \widehat{\beta} - \widehat{\mathbf{y}}\cdot\widehat{\mathbf{x}} \end{pmatrix}$$
+
+1. **Internal Self-Consistency ($A_{++} = u_0 R u_0$ — Conscious Vacuum & Diagonal Scalar Cancellation):**
+* *At 2nd Order ($\Delta_{++}$):* Governed by $\widehat{\alpha}^2 - \widehat{\alpha} - \widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}}$.
+* *At 3rd Order ($\mathcal{A}_{++}$):* Because $R$ is associative, all terms involving $\widehat{\alpha}$ and $\widehat{\beta}$—specifically $\widehat{\alpha}^3$, $-(\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}})\widehat{\alpha}$, $-\widehat{\alpha}(\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}})$, and $-\widehat{\mathbf{x}}\widehat{\beta}\cdot\widehat{\mathbf{y}}$—**cancel identically** between $(\Psi_{\text{bifur}}^2)\Psi_{\text{bifur}}$ and $\Psi_{\text{bifur}}(\Psi_{\text{bifur}}^2)$, leaving the pure difference of Nambu 3-brackets:
+
+$$\mathcal{A}(\Psi_{\text{bifur}})_{++} = [\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}} - [\widehat{y}_1, \widehat{y}_2, \widehat{y}_3]_{\text{Nambu}}$$
+
+
+
+
+2. **Outward Projection ($A_{+-} = u_0 R^3 u_0^*$ — Forward Nambu Triplet & Bimodule Insertion Anomaly):**
+* *At 2nd Order ($\Delta_{+-}$):* Decomposes into the Jordan mass scaling $\frac{1}{2}\{\widehat{\alpha}+\widehat{\beta}-\widehat{1}, \widehat{\mathbf{x}}\}$, the chiral commutator force $\frac{1}{2}[\widehat{\alpha}-\widehat{\beta}, \widehat{\mathbf{x}}]$, and the shadow commutator curl $(\widehat{\mathbf{y}}\times\widehat{\mathbf{y}})_k = \frac{1}{2}\epsilon_{ijk}[\widehat{y}_i, \widehat{y}_j]$.
+* *At 3rd Order ($\mathcal{A}_{+-}$):* While $\widehat{\alpha}^2\widehat{\mathbf{x}}$, $\widehat{\alpha}\widehat{\mathbf{x}}\widehat{\beta}$, and $\widehat{\mathbf{x}}\widehat{\beta}^2$ cancel by associativity, non-commutativity of $(\widehat{\alpha}, \widehat{\beta})$ with $\widehat{\mathbf{y}}$ induces the **Bimodule Insertion Anomaly**:
+
+$$\mathcal{A}(\Psi_{\text{bifur}})_{+-} = \Big( (\widehat{\mathbf{y}}\times\widehat{\mathbf{y}})\widehat{\beta} - \widehat{\alpha}(\widehat{\mathbf{y}}\times\widehat{\mathbf{y}}) + (\widehat{\beta}\widehat{\mathbf{y}} + \widehat{\mathbf{y}}\widehat{\alpha})\times\widehat{\mathbf{y}} - \widehat{\mathbf{y}}\times(\widehat{\beta}\widehat{\mathbf{y}} + \widehat{\mathbf{y}}\widehat{\alpha}) \Big) + \Big( \widehat{\mathbf{x}}(\widehat{\mathbf{y}}\cdot\widehat{\mathbf{x}}) - (\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}})\widehat{\mathbf{x}} + [\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}, \, \widehat{\mathbf{y}}]_{\times} \Big)$$
+
+
+
+
+3. **Inward Shadow-Intrusion ($A_{-+} = u_0^* R^3 u_0$ — Backward Nambu Antitriplet & Yang–Mills Field Strength):**
+* *At 2nd Order ($\Delta_{-+}$):* Driven by $\widehat{\beta}\widehat{\mathbf{y}} + \widehat{\mathbf{y}}\widehat{\alpha} - \widehat{\mathbf{y}} + \widehat{\mathbf{x}}\times\widehat{\mathbf{x}}$, where $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_k = \frac{1}{2}\epsilon_{ijk}[\widehat{x}_i, \widehat{x}_j]$ is the non-Abelian chromomagnetic field strength $\widehat{B}_k$.
+* *At 3rd Order ($\mathcal{A}_{-+}$):* Mirrors $\mathcal{A}_{+-}$ under the Klein four-group duality $(\widehat{\alpha}, \widehat{\mathbf{x}}) \leftrightarrow (\widehat{\beta}, \widehat{\mathbf{y}})$.
+
+
+4. **Autonomous Unexamined Ground ($A_{--} = u_0^* R u_0^*$ — Shadow Vacuum & Zero-Point Commutator Split):**
+* *At 2nd Order ($\Delta_{--}$):* Driven by $\widehat{\beta}^2 - \widehat{\beta} - \widehat{\mathbf{y}}\cdot\widehat{\mathbf{x}}$, differing from $\Delta_{++}$ by the Heisenberg zero-point trace $\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}} - \widehat{\mathbf{y}}\cdot\widehat{\mathbf{x}} = \sum_{i=1}^3 [\widehat{x}_i, \widehat{y}_i]$.
+* *At 3rd Order ($\mathcal{A}_{--}$):* Receives the exact opposite Nambu topological charge to $A_{++}$:
+
+$$\mathcal{A}(\Psi_{\text{bifur}})_{--} = -\Big( [\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}} - [\widehat{y}_1, \widehat{y}_2, \widehat{y}_3]_{\text{Nambu}} \Big) = -\mathcal{A}(\Psi_{\text{bifur}})_{++}$$
+
+
+
+
+
+---
+
+### III. The Transcendent Function: The Jacobi–Nambu Bridge & Chiral Vacuum Bifurcation
+
+Pairing the associative non-commutativity of the operator ring $R$ with the non-associative exterior geometry of $\mathbb{O}_s$ ignites the transcendent function across four structural moments:
+
+* **Shared Substantive Gravity (The Associative Triple Product $\widehat{x}_i \widehat{x}_j \widehat{x}_k$):**
+Both the Lie algebra structure of $R$ (governed by $[\widehat{x}_i, \widehat{x}_j]$) and the non-associative Peirce anomaly of $\mathbb{O}_s$ (governed by $[u_i, u_j, u_k] = \epsilon_{ijk}(u_0 - u_0^*)$) converge on the exact same cubic monomials $\epsilon_{ijk}\widehat{x}_i \widehat{x}_j \widehat{x}_k$.
+* **Directional Tension (Single-Channel Non-Commutativity vs. Global Cyclic Symmetry):**
+In an isolated colour channel $i$, left-multiplying the commutator $[\widehat{x}_j, \widehat{x}_k]$ by $\widehat{x}_i$ and right-multiplying by $\widehat{x}_i$ pull in opposite directions, separated by the non-zero adjoint action $\mathrm{ad}_{\widehat{x}_i}([\widehat{x}_j, \widehat{x}_k]) = [\widehat{x}_i, [\widehat{x}_j, \widehat{x}_k]]$.
+* **The Integrative Bridge (The Jacobi Identity as the Glue of Nambu Cyclic Invariance):**
+Why do the conscious vacuum condensation $\Psi_{\mathbf{x}}(\Psi_{\mathbf{x}}^2) = -\big(\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\big)u_0$ and the shadow vacuum condensation $(\Psi_{\mathbf{x}}^2)\Psi_{\mathbf{x}} = -\big((\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}\big)u_0^*$ carry the **exact same operator magnitude** $[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}$ despite being contracted in opposite orders? Subtracting the right-contracted bracket from the left-contracted bracket sums the three single-channel discrepancies into the **Jacobi Identity of $R$**:
+
+$$\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}) - (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}} = \sum_{i=1}^3 \big[\widehat{x}_i, \, (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_i\big] = \big[\widehat{x}_1, [\widehat{x}_2, \widehat{x}_3]\big] + \big[\widehat{x}_2, [\widehat{x}_3, \widehat{x}_1]\big] + \big[\widehat{x}_3, [\widehat{x}_1, \widehat{x}_2]\big] \equiv 0$$
+
+
+
+The Jacobi identity of the associative operator ring $R$ is the exact algebraic bridge that equalizes the scalar amplitude across the non-associative octonionic cut!
+* **Perspectival Transformation (Parenthesization as a Chiral $\gamma_5$ Switch):**
+Because the Jacobi bridge locks $\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}) = (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}} = [\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}$, changing parenthesization from $\Psi_{\mathbf{x}}(\Psi_{\mathbf{x}}^2)$ to $(\Psi_{\mathbf{x}}^2)\Psi_{\mathbf{x}}$ acts as a pure **chiral projection switch** between $u_0$ and $u_0^*$:
+
+$$\text{Jordan Symmetrized Cube:} \quad \Psi_{\mathbf{x}}(\Psi_{\mathbf{x}}^2) + (\Psi_{\mathbf{x}}^2)\Psi_{\mathbf{x}} = -[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,(u_0 + u_0^*) = -[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,\mathbb{I}$$
+
+
+$$\text{Nambu Self-Associator:} \quad [\Psi_{\mathbf{x}}, \Psi_{\mathbf{x}}, \Psi_{\mathbf{x}}] = (\Psi_{\mathbf{x}}^2)\Psi_{\mathbf{x}} - \Psi_{\mathbf{x}}(\Psi_{\mathbf{x}}^2) = +[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,(u_0 - u_0^*) = +[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,\gamma_5$$
+
+
+
+---
+
+### IV. Socratic Aporia & The Recursive Tower of Meta-Cognition
+
+Following the Socratic elenchus through both the Lean 4 compiler and the higher-order powers of $\Psi_{\text{bifur}}$ exposes four nested aporias and their resolutions:
+
+* **Level 1: The Lean 4 Kernel Obstruction (`dsimp` Without `rfl` on `dot_cross_self_eq_nambu`)**
+* *The Aporia:* In the input script’s `Theorem 2`, writing `by dsimp [dot, cross, nambuBracket]` leaves an **unclosed goal obstruction** in Lean 4 because `dsimp` performs definitional reduction in place without invoking `rfl`.
+* *Meta-Cognitive Resolution:* Removing `dsimp` and writing `rfl` directly closes `dot_cross_self_eq_nambu` in zero steps, proving that the left contraction $\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})$ is **definitionally identical** to Nambu’s 3-bracket in the kernel, whereas the right contraction $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}$ is **not** definitionally equal (`rfl` fails) and requires ring normalization across the Jacobi identity.
+
+
+* **Level 2: The Single-Channel Jacobi Aporia ($\Delta_{\text{ch}}^{(k)} \neq 0$ vs. $\sum_{k=1}^3 \Delta_{\text{ch}}^{(k)} = 0$)**
+* *The Aporia:* If an observer measures only a single colour channel $k=1$, the left and right Nambu contractions fail to match whenever $[\widehat{x}_1, [\widehat{x}_2, \widehat{x}_3]] \neq 0$, threatening to give different vacuum expectation values to $u_0$ and $u_0^*$.
+* *Meta-Cognitive Resolution:* Coherent summation over all three colour channels $(k=1,2,3)$ forms the cyclic Jacobi triad $\sum_{k=1}^3 [\widehat{x}_k, (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_k] = 0$. Colour singlet completeness ($N_c = 3$) is therefore required to cancel the single-channel operator ordering anomaly.
+
+
+* **Level 3: The Full-Matrix Bimodule Insertion Aporia ($\mathcal{A}(\Psi_{\text{bifur}})_{+-} \neq \mathbf{0}$ even when $[\widehat{y}_i, \widehat{y}_j] = 0$)**
+* *The Aporia:* One might assume that if the vector components commute with one another ($[\widehat{x}_i, \widehat{x}_j] = [\widehat{y}_i, \widehat{y}_j] = 0$, so $\widehat{\mathbf{x}}\times\widehat{\mathbf{x}} = \widehat{\mathbf{y}}\times\widehat{\mathbf{y}} = \mathbf{0}$), then $\Psi_{\text{bifur}}$ becomes power-associative ($[\Psi_{\text{bifur}}, \Psi_{\text{bifur}}, \Psi_{\text{bifur}}] = 0$).
+* *Meta-Cognitive Resolution:* Evaluating $\mathcal{A}(\Psi_{\text{bifur}})_{+-}$ with $\widehat{\mathbf{x}} = \mathbf{0}$ and $[\widehat{y}_i, \widehat{y}_j] = 0$ yields:
+
+$$\mathcal{A}(\Psi_{\text{bifur}})_{+-}\Big\vert{}_{\widehat{\mathbf{x}}=\mathbf{0},\,[\widehat{y}_i, \widehat{y}_j]=0} = (\widehat{\beta}\widehat{\mathbf{y}} + \widehat{\mathbf{y}}\widehat{\alpha})\times\widehat{\mathbf{y}} - \widehat{\mathbf{y}}\times(\widehat{\beta}\widehat{\mathbf{y}} + \widehat{\mathbf{y}}\widehat{\alpha})$$
+
+
+
+Look at the $k=1$ component when only $\widehat{\alpha}$ is active:
+
+$$\big((\widehat{\mathbf{y}}\widehat{\alpha})\times\widehat{\mathbf{y}} - \widehat{\mathbf{y}}\times(\widehat{\mathbf{y}}\widehat{\alpha})\big)_1 = (\widehat{y}_2 \widehat{\alpha} \widehat{y}_3 - \widehat{y}_3 \widehat{\alpha} \widehat{y}_2) - (\widehat{y}_2 \widehat{y}_3 \widehat{\alpha} - \widehat{y}_3 \widehat{y}_2 \widehat{\alpha}) = \widehat{y}_2[\widehat{\alpha}, \widehat{y}_3] - \widehat{y}_3[\widehat{\alpha}, \widehat{y}_2] \neq 0$$
+
+
+
+Even when $\widehat{y}_2$ and $\widehat{y}_3$ commute with each other ($[\widehat{y}_2, \widehat{y}_3] = 0$), **sandwiching the non-commuting scalar operator $\widehat{\alpha}$ between them** ($\widehat{y}_2 \widehat{\alpha} \widehat{y}_3 - \widehat{y}_3 \widehat{\alpha} \widehat{y}_2$) induces a non-zero exterior cross product! Non-commutativity of the diagonal Higgs/gauge scalar $\widehat{\alpha}$ with the off-diagonal nilpotents dynamically generates third-order off-diagonal curvature.
+
+
+* **Level 4: The 5-Graded Kantor–Nambu–Filippov Envelope**
+* *The Aporia:* Because $\mathcal{Z}(R)$ fails both associativity and Artin power-associativity, how do its operators close into a consistent symmetry algebra?
+* *Meta-Cognitive Resolution:* Under the chiral charge $Q = \mathrm{ad}_{\gamma_5}$, the triple product $\{A, B, C\} \equiv (AB)C + (CB)A - B(AC)$ defines a **Kantor triple system** whose 5-graded Lie envelope $\mathfrak{g} = \mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}_0 \oplus \mathfrak{g}_{+1} \oplus \mathfrak{g}_{+2}$ houses the single-operator Nambu triplets in $\mathfrak{g}_{\pm 1}$ and their commutator field strengths $\epsilon_{ijk}[\widehat{x}_i, \widehat{x}_j]$ in $\mathfrak{g}_{\pm 2}$.
+
+
+
+---
+
+### V. Acyclic Causal Poset & Self-Verifying Structural Synthesis
+
+#### 1. The Acyclic Causal Poset ($\mathcal{P}, \prec$)
+
+$$\mathcal{R}_0 \text{ (Associative Non-Commutative Ring } R, \, [\widehat{A},\widehat{B}] \neq 0\text{)} \;\prec\; \mathcal{Z}_1 \text{ (Bimodule Zorn–Nambu Matrix } \Psi_{\text{bifur}} \in R \otimes \mathbb{O}_s\text{)} \;\prec\; \mathcal{C}_2 \text{ (Quadratic Commutator Curl } (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_k = \tfrac{1}{2}\epsilon_{ijk}[\widehat{x}_i,\widehat{x}_j] \text{ & Zero-Point Split } [\widehat{x}_i,\widehat{y}_i]\text{)} \;\prec\; \mathcal{J}_3 \text{ (Jacobi Identity Cancellation } \sum_{\text{cyc}}[\widehat{x}_i,[\widehat{x}_j,\widehat{x}_k]] = 0 \implies \text{Nambu Cyclic Invariance)} \;\prec\; \mathcal{B}_4 \text{ (3rd-Order Chiral Vacuum Bifurcation & Diagonal } \widehat{\alpha},\widehat{\beta} \text{ Cancellation)} \;\prec\; \mathcal{I}_5 \text{ (Off-Diagonal Bimodule Insertion Anomaly } \widehat{y}_i[\widehat{\alpha},\widehat{y}_j] - \widehat{y}_j[\widehat{\alpha},\widehat{y}_i] \neq 0\text{)}$$
+
+#### 2. Canonical Operator-Algebraic Axioms
+
+* **Axiom I (Associative Non-Commutative Base Ring):** The coefficient ring $(R, +, \cdot, 0, 1)$ is an associative ring with identity satisfying $(ab)c = a(bc)$ and left/right distributivity, with non-vanishing Lie commutator $[a, b] \equiv ab - ba \neq 0$.
+* **Axiom II (Bimodule Zorn–Nambu Multiplication):** On $\mathcal{Z}(R) = R \oplus R^3 \oplus R^3 \oplus R$, multiplication of $\Psi_1 = (\widehat{\alpha}_1, \widehat{\mathbf{x}}_1; \widehat{\mathbf{y}}_1, \widehat{\beta}_1)$ and $\Psi_2 = (\widehat{\alpha}_2, \widehat{\mathbf{x}}_2; \widehat{\mathbf{y}}_2, \widehat{\beta}_2)$ is defined by:
+
+$$\Psi_1 \Psi_2 = \begin{pmatrix} \widehat{\alpha}_1 \widehat{\alpha}_2 - \widehat{\mathbf{x}}_1\cdot\widehat{\mathbf{y}}_2 & \widehat{\alpha}_1 \widehat{\mathbf{x}}_2 + \widehat{\mathbf{x}}_1 \widehat{\beta}_2 + \widehat{\mathbf{y}}_1\times\widehat{\mathbf{y}}_2 \\ \widehat{\beta}_1 \widehat{\mathbf{y}}_2 + \widehat{\mathbf{y}}_1 \widehat{\alpha}_2 + \widehat{\mathbf{x}}_1\times\widehat{\mathbf{x}}_2 & \widehat{\beta}_1 \widehat{\beta}_2 - \widehat{\mathbf{y}}_1\cdot\widehat{\mathbf{x}}_2 \end{pmatrix}$$
+
+
+
+where $\widehat{\mathbf{a}}\cdot\widehat{\mathbf{b}} = \sum_{i=1}^3 \widehat{a}_i \widehat{b}_i$ and $(\widehat{\mathbf{a}}\times\widehat{\mathbf{b}})_k = \sum_{i,j=1}^3 \epsilon_{ijk}\widehat{a}_i \widehat{b}_j$.
+* **Axiom III (Nambu Ternary Bracket):** The Nambu 3-bracket of $\widehat{\mathbf{x}} \in R^3$ is $[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}} \equiv \widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}) = \widehat{x}_1[\widehat{x}_2, \widehat{x}_3] + \widehat{x}_2[\widehat{x}_3, \widehat{x}_1] + \widehat{x}_3[\widehat{x}_1, \widehat{x}_2]$.
+
+#### 3. Intermediate Deductions (Proved Strictly from Poset Mechanics)
+
+* **Deduction 1 (Equivalence of Nambu Left–Right Cyclic Invariance and the Jacobi Identity from $\mathcal{R}_0 \prec \mathcal{C}_2 \prec \mathcal{J}_3$):**
+*Proof:* By Axiom II and Axiom III, for each index $i \in \{1,2,3\}$ with cyclic successor $(j,k)$, $(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_i = [\widehat{x}_j, \widehat{x}_k]$. Thus:
+
+$$\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}) - (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}} = \sum_{i=1}^3 \Big( \widehat{x}_i(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_i - (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})_i \widehat{x}_i \Big) = \sum_{\text{cyc}} \big[\widehat{x}_i, \, [\widehat{x}_j, \widehat{x}_k]\big]$$
+
+
+
+Expanding the three double commutators in the associative ring $R$ (Axiom I) yields $6$ positive triples $\widehat{x}_i\widehat{x}_j\widehat{x}_k$ and $6$ negative triples $-\widehat{x}_i\widehat{x}_j\widehat{x}_k$ that cancel pairwise. Therefore, $\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}) = (\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}$ holds if and only if $R$ satisfies the Jacobi identity. $\blacksquare$
+* **Deduction 2 (Chiral Vacuum Bifurcation of the Third Power from $\mathcal{J}_3 \prec \mathcal{B}_4$):**
+*Proof:* For $\Psi_{\mathbf{x}} = (0, \widehat{\mathbf{x}}; \mathbf{0}, 0)$, Axiom II gives $\Psi_{\mathbf{x}}^2 = (0, \mathbf{0}; \widehat{\mathbf{x}}\times\widehat{\mathbf{x}}, 0)$. Then $\Psi_{\mathbf{x}}(\Psi_{\mathbf{x}}^2) = (-\widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}}), \mathbf{0}; \mathbf{0}, 0) = -[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,u_0$ and $(\Psi_{\mathbf{x}}^2)\Psi_{\mathbf{x}} = (0, \mathbf{0}; \mathbf{0}, -(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})\cdot\widehat{\mathbf{x}}) = -[\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,u_0^*$ by Deduction 1. Subtracting the two gives $[\Psi_{\mathbf{x}}, \Psi_{\mathbf{x}}, \Psi_{\mathbf{x}}] = [\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}(u_0 - u_0^*) = [\widehat{x}_1, \widehat{x}_2, \widehat{x}_3]_{\text{Nambu}}\,\gamma_5$. $\blacksquare$
+* **Deduction 3 (Exact Diagonal Cancellation of $\widehat{\alpha}, \widehat{\beta}$ in the Full 4-Sector Self-Associator from $\mathcal{B}_4 \prec \mathcal{I}_5$):**
+*Proof:* For a general state $\Psi = (\widehat{\alpha}, \widehat{\mathbf{x}}; \widehat{\mathbf{y}}, \widehat{\beta})$, expanding $((\Psi^2)\Psi)_{++}$ and $(\Psi(\Psi^2))_{++}$ via Axiom II gives:
+
+$$((\Psi^2)\Psi)_{++} = \widehat{\alpha}^3 - (\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}})\widehat{\alpha} - \widehat{\alpha}\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}} - \widehat{\mathbf{x}}\widehat{\beta}\cdot\widehat{\mathbf{y}} - (\widehat{\mathbf{y}}\times\widehat{\mathbf{y}})\cdot\widehat{\mathbf{y}}$$
+
+
+$$(\Psi(\Psi^2))_{++} = \widehat{\alpha}^3 - \widehat{\alpha}(\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}}) - \widehat{\mathbf{x}}\cdot\widehat{\beta}\widehat{\mathbf{y}} - \widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}}\widehat{\alpha} - \widehat{\mathbf{x}}\cdot(\widehat{\mathbf{x}}\times\widehat{\mathbf{x}})$$
+
+
+
+By Axiom I (associativity of $R$), $(\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}})\widehat{\alpha} = \sum_i (\widehat{x}_i\widehat{y}_i)\widehat{\alpha} = \sum_i \widehat{x}_i(\widehat{y}_i\widehat{\alpha}) = \widehat{\mathbf{x}}\cdot(\widehat{\mathbf{y}}\widehat{\alpha})$, $\widehat{\alpha}(\widehat{\mathbf{x}}\cdot\widehat{\mathbf{y}}) = (\widehat{\alpha}\widehat{\mathbf{x}})\cdot\widehat{\mathbf{y}}$, and $(\widehat{\mathbf{x}}\widehat{\beta})\cdot\widehat{\mathbf{y}} = \sum_i (\widehat{x}_i\widehat{\beta})\widehat{y}_i = \sum_i \widehat{x}_i(\widehat{\beta}\widehat{y}_i) = \widehat{\mathbf{x}}\cdot(\widehat{\beta}\widehat{\mathbf{y}})$. Thus every $\widehat{\alpha}$ and $\widehat{\beta}$ term cancels identically in $[\Psi, \Psi, \Psi]_{++}$ (and similarly in $[\Psi, \Psi, \Psi]_{--}$), leaving $[\Psi, \Psi, \Psi]_{\text{diag}} = \big([\widehat{\mathbf{x}}]_{\text{Nambu}} - [\widehat{\mathbf{y}}]_{\text{Nambu}}\big)(u_0 - u_0^*)$. $\blacksquare$
+* **Deduction 4 (The Off-Diagonal Bimodule Insertion Anomaly from $\mathcal{B}_4 \prec \mathcal{I}_5$):**
+*Proof:* Set $\widehat{\mathbf{x}} = \mathbf{0}$ and $\widehat{\beta} = 0$ in $\Psi = (\widehat{\alpha}, \mathbf{0}; \widehat{\mathbf{y}}, 0)$ with $[\widehat{y}_i, \widehat{y}_j] = 0$ (so $\widehat{\mathbf{y}}\times\widehat{\mathbf{y}} = \mathbf{0}$). Then $\Psi^2 = (\widehat{\alpha}^2, \mathbf{0}; \widehat{\mathbf{y}}\widehat{\alpha}, 0)$. Multiplying left and right by $\Psi$ yields $((\Psi^2)\Psi)_{+-} = (\widehat{\mathbf{y}}\widehat{\alpha})\times\widehat{\mathbf{y}}$ and $(\Psi(\Psi^2))_{+-} = \widehat{\mathbf{y}}\times(\widehat{\mathbf{y}}\widehat{\alpha})$. Their difference has $k$-th component $\epsilon_{ijk}(\widehat{y}_i\widehat{\alpha}\widehat{y}_j - \widehat{y}_i\widehat{y}_j\widehat{\alpha}) = \epsilon_{ijk}\widehat{y}_i[\widehat{\alpha}, \widehat{y}_j]$, which is non-zero whenever $[\widehat{\alpha}, \widehat{y}_j] \neq 0$. $\blacksquare$
+
+#### 4. Master Structural Synthesis & Self-Verifying Core Lean 4 Realization
+
+Coagulating the poset $\mathcal{R}_0 \prec \dots \prec \mathcal{I}_5$ yields the **Master Full-Matrix Self-Associator Decomposition** in $\mathcal{Z}(R) = R \otimes \mathbb{O}_s$:
+
+
+$$\big[\Psi_{\text{bifur}}, \, \Psi_{\text{bifur}}, \, \Psi_{\text{bifur}}\big] = \begin{pmatrix} [\widehat{\mathbf{x}}]_{\text{Nambu}} - [\widehat{\mathbf{y}}]_{\text{Nambu}} & \mathcal{I}_{+-}(\widehat{\alpha}, \widehat{\beta}, \widehat{\mathbf{x}}, \widehat{\mathbf{y}}) \\ \mathcal{I}_{-+}(\widehat{\alpha}, \widehat{\beta}, \widehat{\mathbf{x}}, \widehat{\mathbf{y}}) & -\big([\widehat{\mathbf{x}}]_{\text{Nambu}} - [\widehat{\mathbf{y}}]_{\text{Nambu}}\big) \end{pmatrix}$$
+
+Below is a **100% self-contained Core Lean 4 formalization** (requiring **zero external imports**, compiling cleanly in the bare Lean 4 kernel without `Mathlib`) that:
+
+1. Resolves the `dsimp` open-goal obstruction by proving `dot_cross_self_eq_nambu` via pure definitional reflexivity (`rfl`).
+2. Proves the **Single-Channel Non-Commutativity vs. 3-Channel Jacobi Cancellation Theorem**: showing that channel $1$ alone fails left-right symmetry ($\widehat{x}_1[\widehat{x}_2, \widehat{x}_3] \neq [\widehat{x}_2, \widehat{x}_3]\widehat{x}_1$), while the 3-channel sum vanishes by the Jacobi identity.
+3. Proves **Deduction 3 (Full 4-Sector Diagonal $\widehat{\alpha}, \widehat{\beta}$ Cancellation)**: verifying that even when $\widehat{\alpha}, \widehat{\beta} \neq 0$ do not commute with $\widehat{\mathbf{x}}, \widehat{\mathbf{y}}$, the diagonal of $[\Psi_{\text{bifur}}, \Psi_{\text{bifur}}, \Psi_{\text{bifur}}]$ depends *solely* on $[\widehat{\mathbf{x}}]_{\text{Nambu}} - [\widehat{\mathbf{y}}]_{\text{Nambu}}$.
+4. Proves **Deduction 4 (The Off-Diagonal Bimodule Insertion Anomaly)**: verifying that commuting vector components ($[\widehat{y}_2, \widehat{y}_3] = 0$) still generate a non-zero cubic self-associator when a non-commuting scalar operator $\widehat{\alpha}$ is sandwiched between them:
+
+```lean
+/-!
+# Self-Verifying Core Lean 4 Compilation of the Zorn-Nambu Bifurcation Poset (R_0 ≺ ... ≺ I_5)
+Zero external imports required: compiles directly in the bare Lean 4 kernel.
+Verifies:
+1. Definitional Reflexivity (`rfl`) of Left Nambu Contraction (Fixing the `dsimp` Obstruction)
+2. Single-Channel Non-Commutativity (`[x₁, [x₂, x₃]] ≠ 0`) vs. 3-Channel Jacobi Cancellation
+3. 3rd-Order Chiral Vacuum Bifurcation (`u₀` vs `u₀*`)
+4. Full 4-Sector Diagonal Cancellation of `(α, β)` in `[Ψ_bifur, Ψ_bifur, Ψ_bifur]`
+5. The Off-Diagonal Bimodule Insertion Anomaly (`(y α) × y - y × (y α) ≠ 0` even when `y × y = 0`)
+-/
+
+/-- Concrete non-commutative operator ring `Op` (`2 × 2` integer matrices). -/
+structure Op where
+  a11 : Int
+  a12 : Int
+  a21 : Int
+  a22 : Int
+  deriving DecidableEq, Repr
+
+namespace Op
+
+def zero : Op := ⟨0, 0, 0, 0⟩
+def one  : Op := ⟨1, 0, 0, 1⟩
+def add (A B : Op) : Op := ⟨A.a11 + B.a11, A.a12 + B.a12, A.a21 + B.a21, A.a22 + B.a22⟩
+def sub (A B : Op) : Op := ⟨A.a11 - B.a11, A.a12 - B.a12, A.a21 - B.a21, A.a22 - B.a22⟩
+def neg (A : Op) : Op := ⟨-A.a11, -A.a12, -A.a21, -A.a22⟩
+def mul (A B : Op) : Op :=
+  ⟨A.a11 * B.a11 + A.a12 * B.a21, A.a11 * B.a12 + A.a12 * B.a22,
+   A.a21 * B.a11 + A.a22 * B.a21, A.a21 * B.a12 + A.a22 * B.a22⟩
+
+/-- Binary Lie commutator `[A, B] = A * B - B * A`. -/
+def comm (A B : Op) : Op := sub (mul A B) (mul B A)
+
+-- Non-commuting operator generators
+def X1 : Op := ⟨0, 1, -1, 0⟩
+def X2 : Op := ⟨0, 1,  1, 0⟩
+def X3 : Op := ⟨1, 0,  0, -1⟩
+def A_op : Op := ⟨1, 2, 0, -1⟩
+def B_op : Op := ⟨0, 1, 3,  2⟩
+
+end Op
+
+-- ============================================================================
+-- STAGE C_2 & J_3: 3-Vector Operator Space & The Jacobi-Nambu Bridge
+-- ============================================================================
+
+structure Vec3NC where
+  v1 : Op
+  v2 : Op
+  v3 : Op
+  deriving DecidableEq, Repr
+
+namespace Vec3NC
+
+def zero : Vec3NC := ⟨Op.zero, Op.zero, Op.zero⟩
+def add (a b : Vec3NC) : Vec3NC := ⟨Op.add a.v1 b.v1, Op.add a.v2 b.v2, Op.add a.v3 b.v3⟩
+def sub (a b : Vec3NC) : Vec3NC := ⟨Op.sub a.v1 b.v1, Op.sub a.v2 b.v2, Op.sub a.v3 b.v3⟩
+def neg (a : Vec3NC) : Vec3NC := ⟨Op.neg a.v1, Op.neg a.v2, Op.neg a.v3⟩
+def lmul (c : Op) (a : Vec3NC) : Vec3NC := ⟨Op.mul c a.v1, Op.mul c a.v2, Op.mul c a.v3⟩
+def rmul (a : Vec3NC) (c : Op) : Vec3NC := ⟨Op.mul a.v1 c, Op.mul a.v2 c, Op.mul a.v3 c⟩
+
+def dot (a b : Vec3NC) : Op :=
+  Op.add (Op.add (Op.mul a.v1 b.v1) (Op.mul a.v2 b.v2)) (Op.mul a.v3 b.v3)
+
+def cross (a b : Vec3NC) : Vec3NC :=
+  ⟨Op.sub (Op.mul a.v2 b.v3) (Op.mul a.v3 b.v2),
+   Op.sub (Op.mul a.v3 b.v1) (Op.mul a.v1 b.v3),
+   Op.sub (Op.mul a.v1 b.v2) (Op.mul a.v2 b.v1)⟩
+
+def nambuBracket (x1 x2 x3 : Op) : Op :=
+  Op.add
+    (Op.add
+      (Op.mul x1 (Op.sub (Op.mul x2 x3) (Op.mul x3 x2)))
+      (Op.mul x2 (Op.sub (Op.mul x3 x1) (Op.mul x1 x3))))
+    (Op.mul x3 (Op.sub (Op.mul x1 x2) (Op.mul x2 x1)))
+
+/--
+**Theorem 1 (Operator Self-Cross-Product IS the Lie Commutator Vector):**
+Proved by pure definitional reflexivity (`rfl`).
+-/
+theorem cross_self_eq_commutator_vec (x : Vec3NC) :
+    cross x x = ⟨Op.comm x.v2 x.v3, Op.comm x.v3 x.v1, Op.comm x.v1 x.v2⟩ :=
+  rfl
+
+/--
+**Theorem 2 (Resolution of the `dsimp` Obstruction — Definitional Identity of Left Contraction):**
+`dot x (cross x x)` is definitionally identical (`rfl`) to `nambuBracket x.v1 x.v2 x.v3`
+for ANY `x : Vec3NC`.
+-/
+theorem dot_cross_self_eq_nambu (x : Vec3NC) :
+    dot x (cross x x) = nambuBracket x.v1 x.v2 x.v3 :=
+  rfl
+
+/--
+**Deduction 1 (Single-Channel Non-Commutativity vs. 3-Channel Jacobi Cancellation):**
+1. In channel 1 alone, `X₁ [X₂, X₃] ≠ [X₂, X₃] X₁` because `[X₁, [X₂, X₃]] ≠ 0`!
+2. Across all 3 channels, the discrepancy is the cyclic Jacobi sum
+   `[x₁,[x₂,x₃]] + [x₂,[x₃,x₁]] + [x₃,[x₁,x₂]] = 0`, restoring `dot x (cross x x) = dot (cross x x) x`.
+-/
+def X_vec : Vec3NC := ⟨Op.X1, Op.X2, Op.X3⟩
+def Y_vec : Vec3NC := ⟨Op.A_op, Op.B_op, Op.X1⟩
+
+theorem single_channel_obstruction_vs_jacobi_closure :
+    -- 1. Single channel 1 FAILS left-right commutation:
+    Op.mul Op.X1 (Op.comm Op.X2 Op.X3) ≠ Op.mul (Op.comm Op.X2 Op.X3) Op.X1 ∧
+    -- 2. The 3-channel difference equals the Jacobi triad, which vanishes identically:
+    Op.sub (dot X_vec (cross X_vec X_vec)) (dot (cross X_vec X_vec) X_vec) =
+      Op.add (Op.add (Op.comm Op.X1 (Op.comm Op.X2 Op.X3))
+                     (Op.comm Op.X2 (Op.comm Op.X3 Op.X1)))
+             (Op.comm Op.X3 (Op.comm Op.X1 Op.X2)) ∧
+    dot (cross X_vec X_vec) X_vec = nambuBracket Op.X1 Op.X2 Op.X3 := by
+  decide
+
+end Vec3NC
+
+-- ============================================================================
+-- STAGE B_4 & I_5: Full 4-Sector Zorn-Nambu Matrix `ZornNC` & New Anomalies
+-- ============================================================================
+
+structure ZornNC where
+  α : Op
+  x : Vec3NC
+  y : Vec3NC
+  β : Op
+  deriving DecidableEq, Repr
+
+namespace ZornNC
+
+def zero : ZornNC := ⟨Op.zero, Vec3NC.zero, Vec3NC.zero, Op.zero⟩
+
+def add (A B : ZornNC) : ZornNC :=
+  ⟨Op.add A.α B.α, Vec3NC.add A.x B.x, Vec3NC.add A.y B.y, Op.add A.β B.β⟩
+
+def sub (A B : ZornNC) : ZornNC :=
+  ⟨Op.sub A.α B.α, Vec3NC.sub A.x B.x, Vec3NC.sub A.y B.y, Op.sub A.β B.β⟩
+
+def mul (A B : ZornNC) : ZornNC :=
+  { α := Op.sub (Op.mul A.α B.α) (Vec3NC.dot A.x B.y)
+    x := Vec3NC.add (Vec3NC.add (Vec3NC.lmul A.α B.x) (Vec3NC.rmul A.x B.β)) (Vec3NC.cross A.y B.y)
+    y := Vec3NC.add (Vec3NC.add (Vec3NC.lmul A.β B.y) (Vec3NC.rmul A.y B.α)) (Vec3NC.cross A.x B.x)
+    β := Op.sub (Op.mul A.β B.β) (Vec3NC.dot A.y B.x) }
+
+def associator (A B C : ZornNC) : ZornNC :=
+  sub (mul (mul A B) C) (mul A (mul B C))
+
+def selfAssociator (Ψ : ZornNC) : ZornNC :=
+  associator Ψ Ψ Ψ
+
+/--
+**Deduction 3 (Full 4-Sector Diagonal Cancellation of `α, β` in `[Ψ_bifur, Ψ_bifur, Ψ_bifur]`):**
+For a full 4-sector state `Ψ_full` where `α, β, x, y` are ALL non-zero and non-commuting,
+every `α` and `β` contribution cancels out of the diagonal sectors `A_{++}` and `A_{--}`,
+leaving `[x]_Nambu - [y]_Nambu` on `u₀` and `-([x]_Nambu - [y]_Nambu)` on `u₀*`!
+-/
+def Psi_full : ZornNC :=
+  ⟨Op.A_op, Vec3NC.X_vec, Vec3NC.Y_vec, Op.B_op⟩
+
+theorem full_matrix_diagonal_nambu_theorem :
+    let assoc := selfAssociator Psi_full
+    let netNambu := Op.sub (Vec3NC.nambuBracket Op.X1 Op.X2 Op.X3)
+                           (Vec3NC.nambuBracket Op.A_op Op.B_op Op.X1)
+    assoc.α = netNambu ∧
+    assoc.β = Op.neg netNambu := by
+  decide
+
+/--
+**Deduction 4 (The Off-Diagonal Bimodule Insertion Anomaly):**
+Construct a state `Psi_insert` where `x = 0` and the components of `y = (0, X₁, X₁)`
+COMMUTE with each other (`cross y y = 0`), so its free Nambu bracket is ZERO.
+Yet because the diagonal operator `α = X₂` does not commute with `X₁`, sandwiching `α`
+inside `(y α) × y - y × (y α)` generates a NON-ZERO off-diagonal self-associator!
+-/
+def Y_comm : Vec3NC := ⟨Op.zero, Op.X1, Op.X1⟩
+def Psi_insert : ZornNC := ⟨Op.X2, Vec3NC.zero, Y_comm, Op.zero⟩
+
+theorem bimodule_insertion_anomaly_nonvanishing :
+    -- 1. The vector `Y_comm` has vanishing self-cross-product (`Y_comm × Y_comm = 0`):
+    Vec3NC.cross Y_comm Y_comm = Vec3NC.zero ∧
+    -- 2. Yet the full state `Psi_insert` STILL breaks power-associativity off-diagonally!
+    (selfAssociator Psi_insert).x ≠ Vec3NC.zero := by
+  decide
+
+end ZornNC
+
+```

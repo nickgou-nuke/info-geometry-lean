@@ -353,6 +353,9 @@ import InfoGeometry.Information.DeRhamScore
 import InfoGeometry.Library
 import InfoGeometry.MassSpectrometry.GPUExecutionContracts
 import InfoGeometry.NCG.CuntzColimitKMSTiltGNS
+import InfoGeometry.NCG.KMSStripKleinMonodromy
+import InfoGeometry.NCG.KMSKleinTopologicalEndGlue
+import InfoGeometry.Canonical.KMSCantorLogisticBridge
 import InfoGeometry.NCG.ChiralMatrixTrace
 import InfoGeometry.NCG.CuntzColimitShiftKMSGNSBridge
 import InfoGeometry.NCG.NonCommutativeFlagHierarchy

@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 namespace DetectorGeometry.CriticalBalanceStability
 
@@ -149,5 +156,41 @@ theorem canonical_chain :
   norm_num [causallyPrecedes, rank]
 
 end CausalPoset
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `CriticalBalanceStability.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def criticalBalanceOperator (P A C X : B) : Archetype → B
+  | .stability => derivSqPhi P A C (genJ P A C)
+  | .pairingCondensate => genV P A C
+  | .souriauLightCone => conePlus P A * conePlus P A
+  | .rgFixedPoint => invS P * evenGrade P X * invS P
+
+/-- **Theorem (Non-Commutative Operator Critical Balance & Stability over `[Ring B]`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the double-commutator
+stability operator satisfies `ad_Φ²(J) = -4 V J`, the Souriau light-cone ray `a₊` is
+square-zero (`a₊² = 0`), the pairing condensate satisfies `Φ² = V`, and the RG fixed-point
+even projection is invariant under reflection conjugation. -/
+theorem criticalBalance_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    criticalBalanceOperator P A C X .stability =
+      -((4 : ℤ) • (genV P A C * genJ P A C)) ∧
+    genPhi P A C * genPhi P A C =
+      criticalBalanceOperator P A C X .pairingCondensate ∧
+    criticalBalanceOperator P A C X .souriauLightCone = 0 ∧
+    criticalBalanceOperator P A C X .rgFixedPoint = evenGrade P X := by
+  dsimp only [criticalBalanceOperator]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact (InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A5_klein_hadamard_spectra_and_partition
+      (P := P) hP A C X).2.2.2.1
+  · peirce_nf hP
+  · peirce_nf hP
+  · peirce_nf hP
+
+end NonCommutativeOperatorRealization
 
 end DetectorGeometry.CriticalBalanceStability

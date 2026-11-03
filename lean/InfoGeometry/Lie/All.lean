@@ -24,4 +24,7 @@ import InfoGeometry.Lie.SplitOctonion235Distribution
 import InfoGeometry.Lie.ZornPeirceDerivationStabilizer
 import InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge
 import InfoGeometry.Lie.CanonicalZornPeirceSL3BridgeAudit
+import InfoGeometry.Lie.SplitOctonionTetraktysAutomorphismCovariance
+import InfoGeometry.Lie.SplitOctonionFureyOperatorLift
+import InfoGeometry.Lie.SplitOctonionCARPeirceSL3Bridge
 

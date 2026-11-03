@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralDifferentials
 
 /-!
@@ -68,6 +74,22 @@ theorem superDerivPhi_genV (A C : B) :
     superDerivPhi P A C (genV P A C) = 0 := by
   simp only [superDerivPhi, superDerivPlus, superDerivMinus, parityConj]
   peirce_nf hP
+
+/-- The generator action relevant to the proposed obstruction-killing
+interpretation. The unit is closed, but the cut `P` is sent to `-J`, so this
+operator is not zero on the proposed base span `{1, P}`. It sends `Φ` to `2V`
+and annihilates `V`; its square is a differential only after restriction to
+the centralizer of `V` (see `CentralizerDifferential`). -/
+theorem superDerivPhi_core_and_tetraktys_action (A C : B) :
+    superDerivPhi P A C 1 = 0 ∧
+    superDerivPhi P A C P = -genJ P A C ∧
+    superDerivPhi P A C (genPhi P A C) = (2 : ℤ) • genV P A C ∧
+    superDerivPhi P A C (genV P A C) = 0 := by
+  refine ⟨?_, ?_, superDerivPhi_genPhi hP A C, superDerivPhi_genV hP A C⟩
+  · simp only [superDerivPhi, superDerivPlus, superDerivMinus, parityConj]
+    peirce_nf hP
+  · simp only [superDerivPhi, superDerivPlus, superDerivMinus, parityConj]
+    peirce_nf hP
 
 theorem superDerivJ_genV (A C : B) :
     superDerivJ P A C (genV P A C) = 0 := by

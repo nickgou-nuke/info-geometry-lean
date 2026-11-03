@@ -10,6 +10,7 @@ import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
 import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
 import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!
 # Categorical Synthesis: Five Theorem Corridors
@@ -1847,6 +1848,51 @@ def inevitabilityStageEquivFin5 : InevitabilityStage ≃ Fin 5 where
   right_inv := inevitabilityStageRank_ofRank
 
 end InevitabilityPosetOrder
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `InevitabilityStage` node
+to its canonical Peirce operator in `[Ring B]`. -/
+def inevitabilityStageOperator (P A C : B) : InevitabilityStage → B
+  | .metric => genV P A C
+  | .cell => conePlus P A
+  | .nullSheet => coneMinus P C
+  | .mobiusCPT => invS P
+  | .risingSeaColimit => genSig P A C
+
+/-- **Theorem (Non-Commutative Operator Identities across `InevitabilityStage`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the five stages
+satisfy the nilpotent cell/null-sheet laws, the chiral reflection involution `S² = 1`
+and `S Φ S = -Φ`, and the Tetraktys metric/colimit Casimir identity `Σ² = V²`. -/
+theorem inevitabilityStage_operator_identities {P : B} (hP : P * P = P) (A C : B) :
+    inevitabilityStageOperator P A C .cell * inevitabilityStageOperator P A C .cell = 0 ∧
+    inevitabilityStageOperator P A C .nullSheet * inevitabilityStageOperator P A C .nullSheet = 0 ∧
+    inevitabilityStageOperator P A C .mobiusCPT * inevitabilityStageOperator P A C .mobiusCPT = 1 ∧
+    inevitabilityStageOperator P A C .mobiusCPT * genPhi P A C *
+      inevitabilityStageOperator P A C .mobiusCPT = -genPhi P A C ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+      (inevitabilityStageOperator P A C .cell) (inevitabilityStageOperator P A C .nullSheet) =
+      inevitabilityStageOperator P A C .metric ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (inevitabilityStageOperator P A C .cell) (inevitabilityStageOperator P A C .nullSheet) =
+      inevitabilityStageOperator P A C .risingSeaColimit ∧
+    inevitabilityStageOperator P A C .risingSeaColimit *
+      inevitabilityStageOperator P A C .risingSeaColimit =
+      inevitabilityStageOperator P A C .metric * inevitabilityStageOperator P A C .metric := by
+  dsimp only [inevitabilityStageOperator]
+  have hA2 := archetype_A2_peirce_cartan_grading_and_tangent_closure hP A C
+  have hA3 := archetype_A3_nilpotent_cones_and_tetraktys_table hP A C
+  rcases hA3 with ⟨hPlusSq, hMinusSq, _, _, _, _, _, _, _, _, hSigSq, _, _, _, _⟩
+  have hParity : invS P * genPhi P A C * invS P = -genPhi P A C := by
+    dsimp [invS, genPhi]
+    peirce_nf hP
+  exact ⟨hPlusSq, hMinusSq, hA2.1, hParity, rfl, rfl, hSigSq⟩
+
+end NonCommutativeOperatorRealization
 
 end InfoGeometry.Synthesis.CategoricalInevitabilityPosetSynthesis
 

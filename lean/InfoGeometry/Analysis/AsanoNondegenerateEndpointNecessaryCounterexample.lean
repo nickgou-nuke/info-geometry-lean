@@ -20,15 +20,17 @@ private def counterexampleK₁ : Set ℂ := {z | z ≠ 0}
 private def counterexampleK₂ : Set ℂ := ∅
 
 /-- A zero-free two-variable polynomial with nonzero determinant whose
-contracted polynomial has a root outside the signed-product set. -/
+contracted polynomial has a root outside the signed-product set, while the
+endpoint alternative of the localization theorem fails for this same data. -/
 theorem nondegenerate_zero_free_does_not_localize_contracted_root :
     ∃ K₁ K₂ : Set ℂ, ∃ A B C D z : ℂ,
       (0 : ℂ) ∉ K₁ ∧ (0 : ℂ) ∉ K₂ ∧
       ZeroFreeOutside K₁ K₂ A B C D ∧
       D ≠ 0 ∧ A * D - B * C ≠ 0 ∧
-      IsContractedZero A D z ∧ z ∉ signedProductSet K₁ K₂ := by
+      IsContractedZero A D z ∧ z ∉ signedProductSet K₁ K₂ ∧
+      ¬ ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂)) := by
   refine ⟨counterexampleK₁, counterexampleK₂, 1, 0, 0, 1, -1, ?_⟩
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · simp [counterexampleK₁]
   · simp [counterexampleK₂]
   · intro z₁ z₂ hz₁ hz₂
@@ -39,6 +41,7 @@ theorem nondegenerate_zero_free_does_not_localize_contracted_root :
   · norm_num
   · norm_num [IsContractedZero, asanoContract]
   · simp [signedProductSet, counterexampleK₂]
+  · simp [counterexampleK₁, counterexampleK₂]
 
 /-- The endpoint alternative genuinely fails in the counterexample: both
 cross-coefficients vanish. -/

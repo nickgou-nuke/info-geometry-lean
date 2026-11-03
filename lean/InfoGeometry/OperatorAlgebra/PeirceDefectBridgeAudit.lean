@@ -18,4 +18,5 @@ namespace InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 #print axioms peirce00_genV_eq_qgtMinus
 #print axioms genV_eq_zero_iff_qgt_zero
 #print axioms unipotentIdempotentTower_defect_and_bruhat_fix
+#print axioms peirce_maurer_cartan_curvature_bianchi_and_self_dual_yang_mills
 end InfoGeometry.OperatorAlgebra.PeirceDefectBridge

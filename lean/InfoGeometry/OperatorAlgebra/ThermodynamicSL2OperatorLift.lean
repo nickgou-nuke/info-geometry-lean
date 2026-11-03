@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 import InfoGeometry.OperatorAlgebra.OperatorMobiusAction
+import InfoGeometry.OperatorAlgebra.OperatorRiccatiRowChart
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
 /-!

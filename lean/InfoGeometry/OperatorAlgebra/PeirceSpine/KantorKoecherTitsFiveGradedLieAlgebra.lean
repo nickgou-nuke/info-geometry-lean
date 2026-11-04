@@ -901,7 +901,7 @@ theorem peirce_z0_m1_bracket_mem_m1 (N_plus X Y : B)
   let T := N_plus * Y + Y * N_plus
   let A := N_plus * X * star N_plus * T - T * peirceR N_plus * X
   let C := X * peirceR N_plus * T - T * star N_plus * X * N_plus
-  have hclosure := comm_G_0_G_minus1_closed N_plus X T h_nil h_reg
+  have hclosure := comm_G_0_G_minus1_closed N_plus T X h_nil h_reg
   have hnormal :
       InfoGeometry.OperatorAlgebra.PeirceSpine.comm
           (peirceGradeZero N_plus X) (peirceGradeMinus1 N_plus Y) =

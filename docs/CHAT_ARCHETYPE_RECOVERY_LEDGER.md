@@ -3990,3 +3990,18 @@ in Part XV.d's synthesis. The focused owner and synthesis audit builds are
 recorded with this update. The audit build also exposed and corrected a stale
 `#print axioms` reference to a nonexistent aggregate name; it now targets the
 current finite weighted chiral supercolor synthesis declaration.
+
+### 2026-11-04: Concrete split-Clifford realization of the anomaly-first block
+
+The finite split Clifford atom now has a concrete anomaly-first chiral-block
+readout in [`SplitAtomInvolutions.lean`](../lean/InfoGeometry/Clifford/SplitAtomInvolutions.lean):
+`raising_regular_nilpotent` verifies square-zero and von Neumann regularity of
+the existing upper-triangular seed, while `raising_anomaly_gap_realization`
+identifies its commutator with the split generator and proves that both the
+commutator square and symmetric chiral-block square equal the identity of
+`M₂(ℝ)`. This closes the explicit finite-matrix realization of the nilpotent
+pair mechanism on this carrier. It does not identify arbitrary regular
+nilpotent pairs with the Clifford algebra or prove a representation theorem.
+The locked owner build passed (3,129 jobs); the staged proof-proxy gate passed.
+The semantic-vacuity scan reported only three surface warnings: the existing
+`Mat2` alias and the two existing `rfl` projector formulas.

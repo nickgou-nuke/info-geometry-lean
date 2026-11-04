@@ -1932,6 +1932,18 @@ exit 0); strict OpenGauss screening reported zero traps, semantic-vacuity
 reported zero findings, and proof-proxy passed. The theorem carries the same
 unused `CompleteSpace H` section-instance warning as the other trace helpers.
 
+The trace-pairing adjointness now extends to every iterate through
+`iteratedInnerDerivation` and
+`finiteOperatorTrace_iteratedInnerDerivation_duality`:
+`Tr(X ad_K^n(Y)) = (-1)^n Tr(ad_K^n(X) Y)` on finite-dimensional complex
+Hilbert spaces. This makes odd iterates skew and even iterates self-adjoint
+for the bilinear trace pairing; the order-two result is a special case. The
+owner passed its locked Lean check on 2026-11-04. The theorem imposes no
+Hermiticity, nilpotency, or commutativity condition on `K`. The targeted Lake
+build completed successfully (9,180 jobs); strict OpenGauss found zero traps,
+the semantic-vacuity audit found zero issues, and the staged proof-proxy gate
+passed on 2026-11-04.
+
 Using that duality twice, the owner now proves
 `finiteOperatorTrace_doubleInnerDerivation_selfAdjoint`:
 `Tr(X [K,[K,Y]]) = Tr([K,[K,X]] Y)` for arbitrary bounded operators on a

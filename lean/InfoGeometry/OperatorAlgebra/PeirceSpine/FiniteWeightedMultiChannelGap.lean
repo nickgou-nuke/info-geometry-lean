@@ -403,6 +403,57 @@ def weightedFiniteSigma (s : Finset ι) (c N : ι → B) : B :=
 def weightedFiniteGap (s : Finset ι) (c N : ι → B) : B :=
   ∑ i ∈ s, (c i * c i) * Gap (N i)
 
+/-- If each quadratic weight is an idempotent commuting with every selected
+channel gap, and the unweighted channel gaps are pairwise orthogonal, then the
+finite weighted gap is itself an idempotent. Channel-local weight commutation
+alone proves the weighted block-square identity, but does not imply these
+cross-support hypotheses. -/
+theorem weightedFiniteGap_idem_of_orthogonal_supports
+    (s : Finset ι) (c N : ι → B)
+    (h_gap_idem : ∀ i ∈ s, Gap (N i) * Gap (N i) = Gap (N i))
+    (h_weight_sq_idem : ∀ i ∈ s,
+      (c i * c i) * (c i * c i) = c i * c i)
+    (h_weight_comm_gap : ∀ i ∈ s, ∀ j ∈ s,
+      (c j * c j) * Gap (N i) = Gap (N i) * (c j * c j))
+    (h_gap_orthog : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      Gap (N i) * Gap (N j) = 0) :
+    weightedFiniteGap s c N * weightedFiniteGap s c N =
+      weightedFiniteGap s c N := by
+  classical
+  let f : ι → B := fun i => (c i * c i) * Gap (N i)
+  have hterm : ∀ i ∈ s, f i * f i = f i := by
+    intro i hi
+    dsimp [f]
+    calc ((c i * c i) * Gap (N i)) * ((c i * c i) * Gap (N i))
+        = (c i * c i) * ((Gap (N i) * (c i * c i)) * Gap (N i)) := by
+          simp only [mul_assoc]
+      _ = (c i * c i) * (((c i * c i) * Gap (N i)) * Gap (N i)) := by
+          rw [h_weight_comm_gap i hi i hi]
+      _ = ((c i * c i) * (c i * c i)) *
+          (Gap (N i) * Gap (N i)) := by
+          simp only [mul_assoc]
+      _ = (c i * c i) * Gap (N i) := by
+          rw [h_weight_sq_idem i hi, h_gap_idem i hi]
+  have hcross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j → f i * f j = 0 := by
+    intro i hi j hj hij
+    dsimp [f]
+    calc ((c i * c i) * Gap (N i)) * ((c j * c j) * Gap (N j))
+        = (c i * c i) *
+          ((Gap (N i) * (c j * c j)) * Gap (N j)) := by
+          simp only [mul_assoc]
+      _ = (c i * c i) *
+          (((c j * c j) * Gap (N i)) * Gap (N j)) := by
+          rw [h_weight_comm_gap i hi j hj]
+      _ = ((c i * c i) * (c j * c j)) *
+          (Gap (N i) * Gap (N j)) := by
+          simp only [mul_assoc]
+      _ = 0 := by rw [h_gap_orthog i hi j hj hij, mul_zero]
+  change (∑ i ∈ s, f i) * (∑ i ∈ s, f i) = ∑ i ∈ s, f i
+  rw [sum_sq_of_pairwise_mul_zero s f hcross]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact hterm i hi
+
 def weightedFiniteJ3 (s : Finset ι) (c N : ι → B) : B :=
   ∑ i ∈ s, cube (c i) * J (N i)
 

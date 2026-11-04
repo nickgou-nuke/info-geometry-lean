@@ -417,6 +417,10 @@ def G_minus1_L (N_plus X : B) : B := R N_plus * X * P N_plus
 /-- Right Grade `-1` Peirce subspace `G_{-1}^R(X) = Q X R`. -/
 def G_minus1_R (N_plus X : B) : B := Q N_plus * X * R N_plus
 
+/-- Grade-zero diagonal Peirce sector `P X P + Q X Q + R X R`. -/
+def G_zero (N_plus X : B) : B :=
+  P N_plus * X * P N_plus + Q N_plus * X * Q N_plus + R N_plus * X * R N_plus
+
 /-- Von Neumann regularity makes the positive nilpotent a left identity for
 its positive Peirce support. -/
 theorem P_mul_N_plus (N_plus : B)
@@ -551,6 +555,25 @@ theorem comm_Sigma_G_minus2 (N_plus X : B)
   dsimp [comm, G_minus2]
   rw [h_left, h_right, sub_eq_add_neg, ← neg_add]
 
+/-- Opposite extremal Peirce grades bracket into the grade-zero centralizer.
+This is an instance of the general adjoint-grade addition law. -/
+theorem comm_Sigma_comm_G_plus2_G_minus2 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (Sigma N_plus) (comm (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0 := by
+  have h_plus : comm (Sigma N_plus) (G_plus2 N_plus X) =
+      (2 : ℤ) • G_plus2 N_plus X := by
+    simpa only [two_zsmul] using comm_Sigma_G_plus2 N_plus X h_nil h_reg
+  have h_minus : comm (Sigma N_plus) (G_minus2 N_plus Y) =
+      (-2 : ℤ) • G_minus2 N_plus Y := by
+    rw [comm_Sigma_G_minus2 N_plus Y h_nil h_reg]
+    simp only [neg_zsmul, two_zsmul]
+  have h_grade := comm_grade_addition (Sigma N_plus)
+    (G_plus2 N_plus X) (G_minus2 N_plus Y) (2 : ℤ) (-2 : ℤ) h_plus h_minus
+  change comm (Sigma N_plus)
+    (comm (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0
+  rw [h_grade]
+  simp
+
 theorem Q_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     Q N_plus * P N_plus = 0 := by
   dsimp [P, Q]
@@ -622,6 +645,47 @@ theorem R_mul_Sigma (N_plus : B)
     R N_plus * Sigma N_plus = 0 := by
   dsimp [R]
   rw [sub_mul, one_mul, Gap_mul_Sigma N_plus h_nil h_reg, sub_self]
+
+/-- The diagonal `P/Q/R` Peirce sector has adjoint grade zero and hence
+centralizes the anomaly `Σ`. -/
+theorem comm_Sigma_G_zero (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (Sigma N_plus) (G_zero N_plus X) = 0 := by
+  have hLP : Sigma N_plus * (P N_plus * X * P N_plus) =
+      P N_plus * X * P N_plus := by
+    rw [← mul_assoc (Sigma N_plus) (P N_plus * X) (P N_plus),
+      ← mul_assoc (Sigma N_plus) (P N_plus) X,
+      Sigma_mul_P N_plus h_nil h_reg]
+  have hLQ : Sigma N_plus * (Q N_plus * X * Q N_plus) =
+      -(Q N_plus * X * Q N_plus) := by
+    rw [← mul_assoc (Sigma N_plus) (Q N_plus * X) (Q N_plus),
+      ← mul_assoc (Sigma N_plus) (Q N_plus) X,
+      Sigma_mul_Q N_plus h_nil h_reg, neg_mul, neg_mul]
+  have hLR : Sigma N_plus * (R N_plus * X * R N_plus) = 0 := by
+    rw [← mul_assoc (Sigma N_plus) (R N_plus * X) (R N_plus),
+      ← mul_assoc (Sigma N_plus) (R N_plus) X,
+      Sigma_mul_R N_plus h_nil h_reg, zero_mul, zero_mul]
+  have hRP : (P N_plus * X * P N_plus) * Sigma N_plus =
+      P N_plus * X * P N_plus := by
+    rw [mul_assoc (P N_plus * X) (P N_plus) (Sigma N_plus),
+      P_mul_Sigma N_plus h_nil h_reg]
+  have hRQ : (Q N_plus * X * Q N_plus) * Sigma N_plus =
+      -(Q N_plus * X * Q N_plus) := by
+    rw [mul_assoc (Q N_plus * X) (Q N_plus) (Sigma N_plus),
+      Q_mul_Sigma N_plus h_nil h_reg, mul_neg]
+  have hRR : (R N_plus * X * R N_plus) * Sigma N_plus = 0 := by
+    rw [mul_assoc (R N_plus * X) (R N_plus) (Sigma N_plus),
+      R_mul_Sigma N_plus h_nil h_reg, mul_zero]
+  have hL : Sigma N_plus * G_zero N_plus X =
+      P N_plus * X * P N_plus - Q N_plus * X * Q N_plus := by
+    dsimp [G_zero]
+    rw [mul_add, mul_add, hLP, hLQ, hLR, add_zero, ← sub_eq_add_neg]
+  have hR : G_zero N_plus X * Sigma N_plus =
+      P N_plus * X * P N_plus - Q N_plus * X * Q N_plus := by
+    dsimp [G_zero]
+    rw [add_mul, add_mul, hRP, hRQ, hRR, add_zero, ← sub_eq_add_neg]
+  dsimp [comm]
+  rw [hL, hR, sub_self]
 
 /-- **`KKT₈` Grade `+1` Eigenvalue Equations (`[Σ, G_{+1}^{L,R}(X)] = +G_{+1}^{L,R}(X)`):** -/
 theorem comm_Sigma_G_plus1_L (N_plus X : B)

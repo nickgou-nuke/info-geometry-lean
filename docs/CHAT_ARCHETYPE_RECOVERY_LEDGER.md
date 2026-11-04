@@ -3159,6 +3159,14 @@ channel's nilpotent. The assumptions remain channel-local; no weight needs to
 commute with another channel. Its locked owner build passed (845 jobs), as did
 the staged proof-proxy gate and semantic-vacuity check.
 
+The same finite owner now distinguishes the weighted block square from a
+weighted support projection. `weightedFiniteGap_idem_of_orthogonal_supports`
+proves idempotency when the unweighted channel gaps are pairwise orthogonal,
+each squared weight is idempotent, and every selected squared weight commutes
+with every selected gap. Channel-local commutation alone does not establish
+this stronger projection property. The updated locked build passed (845 jobs),
+with zero semantic-vacuity findings and a passing staged proof-proxy gate.
+
 The same reduced-hypothesis interface now covers finite channel-selective gap
 filtering and the corresponding secular annihilation equation, through
 `weighted_finite_gap_mul_channel_of_self_adjoint_weights` and

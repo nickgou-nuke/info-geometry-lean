@@ -1647,7 +1647,14 @@ theorem partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis
      _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
        (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
        (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
-         (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0) :=
+         (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0) ∧
+    (comm (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
+       G_0_P N_plus (X * peirceR N_plus * Y) -
+       G_0_Q N_plus (Y * peirceR N_plus * X) +
+       peirceR N_plus *
+         (X * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.Q N_plus * Y -
+          Y * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.P N_plus * X) *
+         peirceR N_plus) :=
   kantor_koecher_tits_five_graded_closure_poset_master_synthesis N_plus X Y h_nil h_reg
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

@@ -690,6 +690,35 @@ theorem kkt_ad_zgrade_bracket_add (S A C : B) (m n : ℤ)
   rw [kkt_commutator_derivation, hA, hC,
     kkt_comm_zsmul_left, kkt_comm_zsmul_right, add_zsmul]
 
+/-- The integer-grade eigenspace of the inner derivation `ad(S)`, bundled as
+an additive subgroup of the underlying ring. -/
+def kktAdjointGrade (S : B) (k : ℤ) : AddSubgroup B where
+  carrier := {X | comm S X = k • X}
+  zero_mem' := by simp [comm]
+  add_mem' := by
+    intro X Y hX hY
+    change comm S X = k • X at hX
+    change comm S Y = k • Y at hY
+    change comm S (X + Y) = k • (X + Y)
+    rw [kkt_comm_add_right, hX, hY, ← zsmul_add]
+  neg_mem' := by
+    intro X hX
+    change comm S X = k • X at hX
+    change comm S (-X) = k • (-X)
+    have hneg : comm S (-X) = -comm S X := by
+      dsimp [comm]
+      noncomm_ring
+    rw [hneg, hX, zsmul_neg]
+
+/-- The commutator of homogeneous elements has the sum of their adjoint grades. -/
+theorem kktAdjointGrade_bracket {S X Y : B} {m n : ℤ}
+    (hX : X ∈ kktAdjointGrade S m) (hY : Y ∈ kktAdjointGrade S n) :
+    comm X Y ∈ kktAdjointGrade S (m + n) := by
+  change comm S X = m • X at hX
+  change comm S Y = n • Y at hY
+  change comm S (comm X Y) = (m + n) • comm X Y
+  exact kkt_ad_zgrade_bracket_add S X Y m n hX hY
+
 /-- Peirce-block composition: matching middle support idempotents compose,
 and orthogonal outer supports kill the reverse product. -/
 theorem kkt_peirce_bracket_composable (A E D X Y : B)
@@ -733,6 +762,73 @@ theorem kkt_diagonal_peirce_bracket (P Q R X Y : B)
   have hRQ₁ := kkt_peirce_bracket_orthogonal R R Q Q X Y hRQ hQR
   simp only [kkt_comm_add_left, kkt_comm_add_right,
     hPQ₁, hQP₁, hPR₁, hRP₁, hQR₁, hRQ₁, add_zero, zero_add]
+
+/-- The mixed bracket between the `+1` and `-1` Peirce sectors is a sum of
+diagonal blocks when the middle support `R` is orthogonal to `P` and `Q`. -/
+theorem kkt_mixed_peirce_grade_bracket (P Q R X Y : B)
+    (hP : P * P = P) (hQ : Q * Q = Q) (hR : R * R = R)
+    (hPR : P * R = 0) (hRP : R * P = 0)
+    (hQR : Q * R = 0) (hRQ : R * Q = 0) :
+    comm (P * X * R + R * X * Q) (R * Y * P + Q * Y * R) =
+      (P * X * R * Y * P - R * Y * P * X * R) +
+      (R * X * Q * Y * R - Q * Y * R * X * Q) := by
+  have hPR_QR := kkt_peirce_bracket_orthogonal P R Q R X Y hRQ hRP
+  have hRQ_RP := kkt_peirce_bracket_orthogonal R Q R P X Y hQR hPR
+  have hPR_RP : comm (P * X * R) (R * Y * P) =
+      P * X * R * Y * P - R * Y * P * X * R := by
+    dsimp [comm]
+    have h₁ : (P * X * R) * (R * Y * P) = P * X * R * Y * P := by
+      calc (P * X * R) * (R * Y * P)
+          = (P * X) * (R * R) * (Y * P) := by noncomm_ring
+        _ = P * X * R * Y * P := by rw [hR]; noncomm_ring
+    have h₂ : (R * Y * P) * (P * X * R) = R * Y * P * X * R := by
+      calc (R * Y * P) * (P * X * R)
+          = (R * Y) * (P * P) * (X * R) := by noncomm_ring
+        _ = R * Y * P * X * R := by rw [hP]; noncomm_ring
+    rw [h₁, h₂]
+  have hRQ_QR : comm (R * X * Q) (Q * Y * R) =
+      R * X * Q * Y * R - Q * Y * R * X * Q := by
+    dsimp [comm]
+    have h₁ : (R * X * Q) * (Q * Y * R) = R * X * Q * Y * R := by
+      calc (R * X * Q) * (Q * Y * R)
+          = (R * X) * (Q * Q) * (Y * R) := by noncomm_ring
+        _ = R * X * Q * Y * R := by rw [hQ]; noncomm_ring
+    have h₂ : (Q * Y * R) * (R * X * Q) = Q * Y * R * X * Q := by
+      calc (Q * Y * R) * (R * X * Q)
+          = (Q * Y) * (R * R) * (X * Q) := by noncomm_ring
+        _ = Q * Y * R * X * Q := by rw [hR]; noncomm_ring
+    rw [h₁, h₂]
+  calc comm (P * X * R + R * X * Q) (R * Y * P + Q * Y * R)
+      = (comm (P * X * R) (R * Y * P) +
+          comm (P * X * R) (Q * Y * R)) +
+        (comm (R * X * Q) (R * Y * P) +
+          comm (R * X * Q) (Q * Y * R)) := by
+            simp only [kkt_comm_add_left, kkt_comm_add_right]
+            abel
+    _ = (P * X * R * Y * P - R * Y * P * X * R) +
+        (R * X * Q * Y * R - Q * Y * R * X * Q) := by
+          rw [hPR_RP, hPR_QR, hRQ_RP, hRQ_QR]
+          simp
+
+/-- The top Peirce grade brackets trivially with the adjacent positive grade. -/
+theorem kkt_plus_two_plus_one_bracket_zero (P Q R X Y : B)
+    (hQP : Q * P = 0) (hRP : R * P = 0)
+    (hQR : Q * R = 0) :
+    comm (P * X * Q) (P * Y * R + R * Y * Q) = 0 := by
+  rw [kkt_comm_add_right,
+    kkt_peirce_bracket_orthogonal P Q P R X Y hQP hRP,
+    kkt_peirce_bracket_orthogonal P Q R Q X Y hQR hQP,
+    add_zero]
+
+/-- The bottom Peirce grade brackets trivially with the adjacent negative grade. -/
+theorem kkt_minus_two_minus_one_bracket_zero (P Q R X Y : B)
+    (hPQ : P * Q = 0) (hPR : P * R = 0)
+    (hRQ : R * Q = 0) :
+    comm (Q * X * P) (R * Y * P + Q * Y * R) = 0 := by
+  rw [kkt_comm_add_right,
+    kkt_peirce_bracket_orthogonal Q P R P X Y hPR hPQ,
+    kkt_peirce_bracket_orthogonal Q P Q R X Y hPQ hRQ,
+    add_zero]
 
 end RingHelpers
 
@@ -839,6 +935,47 @@ theorem Gap_eq_P_add_Q (N_plus : B)
   rw [Gap_eq_anticomm N_plus h_nil h_reg]
   rfl
 
+/-- The two chiral supports are orthogonal to the complementary Peirce support
+on both sides. -/
+theorem peirce_chiral_neutral_orthogonal (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    (P N_plus * peirceR N_plus = 0) ∧
+    (peirceR N_plus * P N_plus = 0) ∧
+    (Q N_plus * peirceR N_plus = 0) ∧
+    (peirceR N_plus * Q N_plus = 0) := by
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPG : P N_plus * Gap N_plus = P N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, mul_add, hP2, hPQ]
+    exact add_zero _
+  have hGP : Gap N_plus * P N_plus = P N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, add_mul, hP2, hQP]
+    exact add_zero _
+  have hQG : Q N_plus * Gap N_plus = Q N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, mul_add, hQP, hQ2]
+    exact zero_add _
+  have hGQ : Gap N_plus * Q N_plus = Q N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, add_mul, hPQ, hQ2]
+    exact zero_add _
+  constructor
+  · dsimp [peirceR]
+    rw [mul_sub, mul_one, hPG, sub_self]
+  constructor
+  · dsimp [peirceR]
+    rw [sub_mul, one_mul, hGP, sub_self]
+  constructor
+  · dsimp [peirceR]
+    rw [mul_sub, mul_one, hQG, sub_self]
+  · dsimp [peirceR]
+    rw [sub_mul, one_mul, hGQ, sub_self]
+
 /-- The three diagonal support pieces `P`, `Q`, and `1 - Gap` sum to the ambient
 identity; here `1` is the ring unit required by this unital Peirce decomposition. -/
 theorem peirce_idempotents_sum_one (N_plus : B)
@@ -943,6 +1080,94 @@ theorem comm_peirceGradeZero_closed (N_plus X Y : B)
       comm (peirceR N_plus * X * peirceR N_plus)
         (peirceR N_plus * Y * peirceR N_plus)
   exact hDiag
+
+/-- The mixed bracket of grades `+1` and `-1` lands in grade zero. Its three
+diagonal components are the `P`, `Q`, and neutral Peirce blocks. -/
+theorem comm_peirceGradePlus1_minus1_closed (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
+      G_0_P N_plus (X * peirceR N_plus * Y) -
+      G_0_Q N_plus (Y * peirceR N_plus * X) +
+      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus := by
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPG : P N_plus * Gap N_plus = P N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, mul_add, hP2, hPQ]
+    exact add_zero (P N_plus)
+  have hGP : Gap N_plus * P N_plus = P N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, add_mul, hP2, hQP]
+    exact add_zero (P N_plus)
+  have hQG : Q N_plus * Gap N_plus = Q N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, mul_add, hQP, hQ2]
+    exact zero_add (Q N_plus)
+  have hGQ : Gap N_plus * Q N_plus = Q N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, add_mul, hPQ, hQ2]
+    exact zero_add (Q N_plus)
+  have hPR : P N_plus * peirceR N_plus = 0 := by
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, hPG, sub_self]
+  have hRP : peirceR N_plus * P N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul, hGP, sub_self]
+  have hQR : Q N_plus * peirceR N_plus = 0 := by
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, hQG, sub_self]
+  have hRQ : peirceR N_plus * Q N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul, hGQ, sub_self]
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  have hMix := kkt_mixed_peirce_grade_bracket
+    (P N_plus) (Q N_plus) (peirceR N_plus) X Y hP2 hQ2 hR2
+    hPR hRP hQR hRQ
+  change comm (P N_plus * X * peirceR N_plus + peirceR N_plus * X * Q N_plus)
+      (peirceR N_plus * Y * P N_plus + Q N_plus * Y * peirceR N_plus) = _
+  rw [hMix]
+  dsimp [G_0_P, G_0_Q]
+  noncomm_ring
+
+/-- The `+2` and `+1` Peirce sectors commute, expressing truncation above the
+top grade of the five-grade decomposition. -/
+theorem comm_peirceGradePlus2_plus1 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (peirceGradePlus2 N_plus X) (peirceGradePlus1 N_plus Y) = 0 := by
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPR : P N_plus * peirceR N_plus = 0 :=
+    (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRP : peirceR N_plus * P N_plus = 0 :=
+    (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
+  have hQR : Q N_plus * peirceR N_plus = 0 :=
+    (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.1
+  rw [peirceGradePlus2, peircePQ, peirceGradePlus1, peircePR, peirceRQ]
+  exact kkt_plus_two_plus_one_bracket_zero
+    (P N_plus) (Q N_plus) (peirceR N_plus) X Y hQP hRP hQR
+
+/-- The `-2` and `-1` Peirce sectors commute, expressing truncation below the
+bottom grade of the five-grade decomposition. -/
+theorem comm_peirceGradeMinus2_minus1 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (peirceGradeMinus2 N_plus X) (peirceGradeMinus1 N_plus Y) = 0 := by
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hPR : P N_plus * peirceR N_plus = 0 :=
+    (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRQ : peirceR N_plus * Q N_plus = 0 :=
+    (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
+  rw [peirceGradeMinus2, peirceQP, peirceGradeMinus1, peirceRP, peirceQR]
+  exact kkt_minus_two_minus_one_bracket_zero
+    (P N_plus) (Q N_plus) (peirceR N_plus) X Y hPQ hPR hRQ
 
 omit [StarRing B] in
 /-- **Theorem `KKT₁` (Positive Jordan Quadratic Triple Sandwich)**:
@@ -1812,10 +2037,28 @@ theorem kkt_peirce_five_grade_completion (N_plus X : B)
     (K_plus2 N_plus (star N_plus * X * star N_plus) =
         (2 : ℕ) • peirceGradePlus2 N_plus X ∧
      K_minus2 N_plus (N_plus * X * N_plus) =
-        (2 : ℕ) • peirceGradeMinus2 N_plus X) := by
+        (2 : ℕ) • peirceGradeMinus2 N_plus X) ∧
+    (comm (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
+      G_0_P N_plus (X * peirceR N_plus * Y) -
+      G_0_Q N_plus (Y * peirceR N_plus * X) +
+      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus) ∧
+    comm (peirceGradePlus2 N_plus X) (peirceGradePlus1 N_plus Y) = 0 ∧
+    comm (peirceGradeMinus2 N_plus X) (peirceGradeMinus1 N_plus Y) = 0 ∧
+    (comm (G_plus2 N_plus X) (G_minus2 N_plus Y) =
+      G_0_P N_plus (N_plus * X * P N_plus * Y * star N_plus) -
+      G_0_Q N_plus (star N_plus * Y * Q N_plus * X * N_plus)) ∧
+    (comm (peirceGradeZero N_plus X) (peirceGradeZero N_plus Y) =
+      comm (G_0_P N_plus X) (G_0_P N_plus Y) +
+      comm (G_0_Q N_plus X) (G_0_Q N_plus Y) +
+      comm (G_0_neutral N_plus X) (G_0_neutral N_plus Y)) := by
   exact ⟨peirce_five_grade_decomposition N_plus X h_nil h_reg,
     comm_Sigma_peirce_five_grades N_plus X h_nil h_reg,
-    K_extremals_cover_peirce_grades N_plus X h_nil⟩
+    K_extremals_cover_peirce_grades N_plus X h_nil,
+    comm_peirceGradePlus1_minus1_closed N_plus X Y h_nil h_reg,
+    comm_peirceGradePlus2_plus1 N_plus X Y h_nil h_reg,
+    comm_peirceGradeMinus2_minus1 N_plus X Y h_nil h_reg,
+    comm_G_plus2_G_minus2_in_G_0 N_plus X Y h_reg,
+    comm_peirceGradeZero_closed N_plus X Y h_nil h_reg⟩
 
 /-- **Theorem `KKT₉` (Opposite Extremal Commutator Has Adjoint Grade `0`)**:
 `[Σ, [G_{+2}(N_+, X), G_{-2}(N_+, Y)]] = 0`. -/
@@ -1882,7 +2125,11 @@ theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
      comm (Sigma N_plus) (G_0_P N_plus X) = 0 ∧
      comm (Sigma N_plus) (G_0_Q N_plus X) = 0 ∧
      comm (Sigma N_plus) (G_0_neutral N_plus X) = 0 ∧
-     comm (Sigma N_plus) (comm (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0) :=
+     comm (Sigma N_plus) (comm (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0) ∧
+    (comm (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
+      G_0_P N_plus (X * peirceR N_plus * Y) -
+      G_0_Q N_plus (Y * peirceR N_plus * X) +
+      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus) :=
   ⟨⟨KantorKoecherTitsStage.causalEdge_KKT1_KKT2,
     KantorKoecherTitsStage.causalEdge_KKT2_KKT3,
     KantorKoecherTitsStage.causalEdge_KKT3_KKT4,
@@ -1910,6 +2157,7 @@ theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
     comm_Sigma_G_0_P N_plus X h_nil h_reg,
     comm_Sigma_G_0_Q N_plus X h_nil h_reg,
     comm_Sigma_G_0_neutral N_plus X h_nil h_reg,
-    comm_Sigma_comm_G_plus2_G_minus2 N_plus X Y h_nil h_reg⟩⟩
+    comm_Sigma_comm_G_plus2_G_minus2 N_plus X Y h_nil h_reg⟩,
+    (kkt_peirce_five_grade_completion N_plus X h_nil h_reg).2.2.2.1⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset

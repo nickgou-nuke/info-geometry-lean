@@ -3026,3 +3026,36 @@ imported by `InfoGeometry.All`.
 This audit records the existing source coverage and the newly added inverse
 bridge separately. The build result certifies this owner target; it does not
 verify the transcript's broader analytic or physical interpretations.
+
+### 2026-11-04: Weighted multi-channel chiral gap prompt
+
+The weighted-channel construction in the prompt is already formalized in
+[`MultiChannelChiralBlockAnomalyGapPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MultiChannelChiralBlockAnomalyGapPoset.lean), namespace `WeightedMultiChannelGapPoset`:
+
+- `weighted_Phi_mul_orthog` slides only the right channel's weight through its
+  own `Phi`; it assumes no commutation between weights and the opposite
+  channel. `weighted_Phi_mul_orthog_self_adjoint_right` derives commutation
+  with the adjoint from `star c_b = c_b` and `c_b * N_b = N_b * c_b`.
+- `Phi_w₂_sq_eq_Gap_w₂` proves the two-channel weighted square for channel-local
+  commutation assumptions; its self-adjoint corollary uses one commutation
+  assumption per weight. The weighted channel filter, secular equation,
+  three-channel square, and cyclotomic weight reduction are also present.
+- `CoagulatedArchetypeSynthesis.lean` imports this owner directly, alongside
+  the separate `WeightedMultiChannelJordanAnomalyPoset` module. The request
+  therefore required no new
+  weighted-channel owner or duplicate API. This is source inspection evidence;
+  the exact weighted owner target was built after this audit and passed; see
+  the verification entry below.
+
+In the same work session, the KKT owner gained a mixed `+1`/`-1` bracket
+decomposition into its three diagonal Peirce blocks, plus top/bottom grade
+truncation identities, exposed through the Part XV.g synthesis theorem. The
+locked build of `InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsFiveGradedClosurePoset`
+and `InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis` succeeded (9,266
+jobs). Existing warnings appeared in replayed dependencies; the KKT target
+itself built, and its synthesis consumer compiled.
+
+The direct locked build of
+`InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelChiralBlockAnomalyGapPoset`
+also succeeded (1,549 jobs), confirming the weighted declarations above at
+their owner target.

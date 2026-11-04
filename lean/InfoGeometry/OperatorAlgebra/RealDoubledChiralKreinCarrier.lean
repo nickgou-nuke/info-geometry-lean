@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Carrier.HestenesKrein
+import InfoGeometry.Carrier.HestenesKreinHilbertization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
 
@@ -37,7 +44,7 @@ noncomputable def chiralKreinBilin : LinearMap.BilinForm ℝ (Carrier (E := E)) 
       intro c u v
       simp [chiralKreinForm, WithLp.smul_fst, WithLp.smul_snd,
         real_inner_smul_left]
-      ring)
+      linear_combination)
     (by
       intro u v₁ v₂
       simp [chiralKreinForm, WithLp.add_fst, WithLp.add_snd,
@@ -47,7 +54,7 @@ noncomputable def chiralKreinBilin : LinearMap.BilinForm ℝ (Carrier (E := E)) 
       intro c u v
       simp [chiralKreinForm, WithLp.smul_fst, WithLp.smul_snd,
         real_inner_smul_right]
-      ring)
+      linear_combination)
 
 @[simp] theorem chiralKreinBilin_apply (u v : Carrier (E := E)) :
     chiralKreinBilin (E := E) u v = chiralKreinForm u v := rfl
@@ -85,6 +92,30 @@ theorem chiralHestenesKreinSpace_induced_hilbert (u : Carrier (E := E)) :
         ((chiralHestenesKreinSpace (E := E)).J u) =
       chiralHilbertForm (E := E) u u := by
   rfl
+
+/-- The abstract symmetrized positive form agrees on all pairs with the
+concrete real Hilbert pairing on the doubled chiral carrier. -/
+theorem chiralHestenesKreinSpace_positiveBilinForm (u v : Carrier (E := E)) :
+    (chiralHestenesKreinSpace (E := E)).positiveBilinForm u v =
+      chiralHilbertForm (E := E) u v := by
+  have hsym : chiralHilbertForm (E := E) v u =
+      chiralHilbertForm (E := E) u v := by
+    rw [chiralHilbertForm_eq_inner, chiralHilbertForm_eq_inner]
+    exact real_inner_comm _ _
+  simp only [InfoGeometry.Carrier.HestenesKreinSpace.positiveBilinForm,
+    LinearMap.smul_apply, LinearMap.add_apply, LinearMap.BilinForm.flip_apply,
+    LinearMap.BilinForm.compRight_apply,
+    chiralHestenesKreinSpace_krein_form, chiralHestenesKreinSpace_J]
+  rw [← chiralHilbertForm, ← chiralHilbertForm, hsym]
+  linear_combination
+
+/-- The `InnerProductSpace.Core` constructed from the chiral Krein data has
+exactly the pre-existing ambient real inner product as its pairing. -/
+theorem chiralHestenesKreinSpace_core_inner (u v : Carrier (E := E)) :
+    (chiralHestenesKreinSpace (E := E)).inducedInnerProductCore.inner u v =
+      inner ℝ u v := by
+  change (chiralHestenesKreinSpace (E := E)).positiveBilinForm u v = _
+  rw [chiralHestenesKreinSpace_positiveBilinForm, chiralHilbertForm_eq_inner]
 
 theorem chiralKreinBilin_nondegenerate :
     IsNondegeneratePairing (chiralKreinBilin (E := E)) := by

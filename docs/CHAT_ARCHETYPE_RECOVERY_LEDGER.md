@@ -2602,6 +2602,13 @@ pairing when it also commutes with the fundamental involution. This extra
 compatibility is an explicit hypothesis because `BogoliubovTilt` itself only
 encodes preservation of the Krein form. The Hilbertization and carrier-bridge
 targets both built successfully after this addition.
+On the concrete `RealDoubledChiralKreinCarrier`,
+`chiralHestenesKreinSpace_positiveBilinForm` proves that this symmetrization
+agrees on every vector pair with the already-defined `chiralHilbertForm`, and
+`chiralHestenesKreinSpace_core_inner` identifies the resulting core pairing
+with the carrier's native real inner product. This is a real-carrier
+identification; complex projective QGT transport and an abstract Clifford
+operator representation remain open.
 
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 

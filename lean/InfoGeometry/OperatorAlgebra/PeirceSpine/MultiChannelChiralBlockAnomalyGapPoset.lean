@@ -816,6 +816,43 @@ theorem comm_weight_J (c N : B)
   dsimp [J]
   rw [mul_sub, sub_mul, hc, hcs]
 
+/-- `WMC₁` A channel-local weight commuting with both chiral generators
+    also commutes with their parity anomaly `Σ(N) = [N, N*]`. -/
+theorem comm_weight_Sigma (c N : B)
+    (hc : c * N = N * c) (hcs : c * star N = star N * c) :
+    c * Sigma N = Sigma N * c := by
+  dsimp [Sigma, comm]
+  rw [mul_sub, sub_mul]
+  have h₁ : c * (N * star N) = (N * star N) * c := by
+    calc c * (N * star N)
+        = (c * N) * star N := by rw [mul_assoc]
+      _ = (N * c) * star N := by rw [hc]
+      _ = N * (c * star N) := by rw [mul_assoc]
+      _ = N * (star N * c) := by rw [hcs]
+      _ = (N * star N) * c := by rw [mul_assoc]
+  have h₂ : c * (star N * N) = (star N * N) * c := by
+    calc c * (star N * N)
+        = (c * star N) * N := by rw [mul_assoc]
+      _ = (star N * c) * N := by rw [hcs]
+      _ = star N * (c * N) := by rw [mul_assoc]
+      _ = star N * (N * c) := by rw [hc]
+      _ = (star N * N) * c := by rw [mul_assoc]
+  rw [h₁, h₂]
+
+/-- `WMC₁` A channel-local weight commuting with the parity anomaly also
+    commutes with its squared support `Gap(N) = Σ(N)²`. -/
+theorem comm_weight_Gap (c N : B)
+    (hc : c * N = N * c) (hcs : c * star N = star N * c) :
+    c * Gap N = Gap N * c := by
+  have hSig := comm_weight_Sigma c N hc hcs
+  dsimp [Gap]
+  calc c * (Sigma N * Sigma N)
+      = (c * Sigma N) * Sigma N := by rw [mul_assoc]
+    _ = (Sigma N * c) * Sigma N := by rw [hSig]
+    _ = Sigma N * (c * Sigma N) := by rw [mul_assoc]
+    _ = Sigma N * (Sigma N * c) := by rw [hSig]
+    _ = (Sigma N * Sigma N) * c := by rw [mul_assoc]
+
 /-- **`WMC₂` Single-Channel Weighted Rotor–Block Product:**
     `(c * J(N)) * (c * Φ(N)) = c² * Σ(N)`. -/
 theorem weighted_single_J_mul_Phi (c N : B)
@@ -845,6 +882,16 @@ theorem weighted_single_Phi_sq (c N : B)
     _ = c * (c * (Phi N * Phi N)) := by rw [mul_assoc c (Phi N) (Phi N)]
     _ = (c * c) * (Phi N * Phi N) := by rw [← mul_assoc c c (Phi N * Phi N)]
     _ = (c * c) * Gap N := by rw [Phi_sq_eq_Gap N h_nil h_reg]
+
+/-- `WMC₂` Self-adjoint-weight form of the weighted chiral block square.
+    Commutation with `N` alone suffices because `star c = c` derives the
+    required commutation with `star N`. -/
+theorem weighted_single_Phi_sq_self_adjoint (c N : B)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N)
+    (hc_star : star c = c) (hc : c * N = N * c) :
+    (c * Phi N) * (c * Phi N) = (c * c) * Gap N := by
+  exact weighted_single_Phi_sq c N h_nil h_reg hc
+    (comm_star_of_self_adjoint c N hc_star hc)
 
 /-!
 ### 2. Cross-Channel Orthogonality of Weighted Chiral Blocks (`WMC₃`)
@@ -908,6 +955,16 @@ theorem weighted_Phi_mul_orthog (c_a N_a c_b N_b : B)
     _ = c_a * ((Phi N_a * Phi N_b) * c_b) := by rw [← mul_assoc (Phi N_a) (Phi N_b) c_b]
     _ = c_a * (0 * c_b) := by rw [Phi_mul_Phi_orthog N_a N_b h_ab h_ba h_asb h_sab]
     _ = 0 := by rw [zero_mul, mul_zero]
+
+/-- `WMC₃` Self-adjoint right-weight form of weighted cross-channel
+    annihilation. No commutation between `c_b` and channel `N_a` is needed. -/
+theorem weighted_Phi_mul_orthog_self_adjoint_right (c_a N_a c_b N_b : B)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_b_star : star c_b = c_b) (hc_b : c_b * N_b = N_b * c_b) :
+    (c_a * Phi N_a) * (c_b * Phi N_b) = 0 := by
+  exact weighted_Phi_mul_orthog c_a N_a c_b N_b h_ab h_ba h_asb h_sab
+    hc_b (comm_star_of_self_adjoint c_b N_b hc_b_star hc_b)
 
 /-- **`WMC₃` Weighted Cross-Channel Rotor–Block Annihilation:**
     `(c_a * J(N_a)) * (c_b * Φ(N_b)) = 0`. -/

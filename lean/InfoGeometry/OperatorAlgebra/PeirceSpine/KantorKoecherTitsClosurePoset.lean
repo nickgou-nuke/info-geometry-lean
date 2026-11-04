@@ -291,6 +291,7 @@ theorem sandwich_minus_mul_sandwich_minus (N_plus X Y : B)
     (star N_plus * X * star N_plus) * (star N_plus * Y * star N_plus) = 0 :=
   sandwich_plus_mul_sandwich_plus (star N_plus) X Y (star_N_plus_sq N_plus h_nil)
 
+omit [StarRing B] in
 /-- **`KKT₅` Grade `+2` Associative & Lie Abelian Closure (`[K_{+2}(X), K_{+2}(Y)] = 0`):**
     Grades higher than `+2` vanish identically. -/
 theorem K_plus2_mul_K_plus2 (N_plus X Y : B) (h_nil : N_plus * N_plus = 0) :
@@ -301,6 +302,7 @@ theorem K_plus2_mul_K_plus2 (N_plus X Y : B) (h_nil : N_plus * N_plus = 0) :
       sandwich_plus_mul_sandwich_plus N_plus X Y h_nil,
       add_zero, add_zero]
 
+omit [StarRing B] in
 theorem comm_K_plus2_K_plus2 (N_plus X Y : B) (h_nil : N_plus * N_plus = 0) :
     comm (K_plus2 N_plus X) (K_plus2 N_plus Y) = 0 := by
   dsimp [comm]

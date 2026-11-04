@@ -1416,7 +1416,11 @@ theorem partXVe_multi_channel_and_weighted_chiral_block_anomaly_gap_synthesis
          (c_a * WeightedMultiChannelGapPoset.Phi N_a) = 0 ∧
      (u * WeightedMultiChannelGapPoset.Phi N_a) *
        (u * WeightedMultiChannelGapPoset.Phi N_a) =
-         (u - 1) * WeightedMultiChannelGapPoset.Gap N_a) :=
+         (u - 1) * WeightedMultiChannelGapPoset.Gap N_a ∧
+     c_a * WeightedMultiChannelGapPoset.Sigma N_a =
+       WeightedMultiChannelGapPoset.Sigma N_a * c_a ∧
+     c_b * WeightedMultiChannelGapPoset.Gap N_b =
+       WeightedMultiChannelGapPoset.Gap N_b * c_b) :=
   ⟨⟨MultiChannelAnomalyGapPoset.MultiChannelAnomalyGapStage.poset_chain_and_acyclicity.1.1,
     MultiChannelAnomalyGapPoset.N_tot_sq_eq_zero N_a N_b h_nil_a h_nil_b h_ab h_ba,
     MultiChannelAnomalyGapPoset.N_tot_reg N_a N_b h_reg_a h_reg_b h_asb h_sab,
@@ -1432,7 +1436,9 @@ theorem partXVe_multi_channel_and_weighted_chiral_block_anomaly_gap_synthesis
     WeightedMultiChannelGapPoset.Phi_w₂_sq_eq_Gap_w₂ c_a N_a c_b N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
     WeightedMultiChannelGapPoset.Gap_left_filter_Phi_w₂ c_a N_a c_b N_b h_nil_a h_reg_a h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
     WeightedMultiChannelGapPoset.Phi_w₂_sq_eigenmode_a c_a N_a c_b N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
-    WeightedMultiChannelGapPoset.cyclotomic_weighted_Phi_sq u N_a h_cyc h_nil_a h_reg_a hu hus⟩⟩
+    WeightedMultiChannelGapPoset.cyclotomic_weighted_Phi_sq u N_a h_cyc h_nil_a h_reg_a hu hus,
+    WeightedMultiChannelGapPoset.comm_weight_Sigma c_a N_a hc_a hcs_a,
+    WeightedMultiChannelGapPoset.comm_weight_Gap c_b N_b hc_b hcs_b⟩⟩
 
 /-!
 ## Part XVI: Archetype XX — 5-Graded Superconformal Élie Cartan Gravity & 3rd-Order Zorn Bimodule Insertion Anomaly (`Kantor5Graded`)

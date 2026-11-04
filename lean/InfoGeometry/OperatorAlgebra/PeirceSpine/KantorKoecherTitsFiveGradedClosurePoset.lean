@@ -508,6 +508,15 @@ theorem kkt_comm_add_right (S A C : B) :
   dsimp [comm]
   noncomm_ring
 
+theorem kkt_comm_add_left (A C S : B) :
+    comm (A + C) S = comm A S + comm C S := by
+  dsimp [comm]
+  noncomm_ring
+
+theorem kkt_comm_antisymm (A C : B) : comm A C = -comm C A := by
+  dsimp [comm]
+  noncomm_ring
+
 theorem kkt_comm_block_plus2 (S E F X : B)
     (hSE : S * E = E) (hFS : F * S = -F) :
     comm S (E * X * F) = (2 : ℕ) • (E * X * F) := by
@@ -585,6 +594,36 @@ theorem kkt_comm_block_minus2 (S E F X : B)
   rw [hL, hR, two_nsmul]
   noncomm_ring
 
+/-- The inner commutator is a derivation of the Lie bracket. This identity is
+the general mechanism behind addition of `ad(S)`-grades under commutators. -/
+theorem kkt_commutator_derivation (S A C : B) :
+    comm S (comm A C) = comm (comm S A) C + comm A (comm S C) := by
+  dsimp [comm]
+  noncomm_ring
+
+/-- Peirce-block composition: matching middle support idempotents compose,
+and orthogonal outer supports kill the reverse product. -/
+theorem kkt_peirce_bracket_composable (A E D X Y : B)
+    (hE : E * E = E) (hDA : D * A = 0) :
+    comm (A * X * E) (E * Y * D) = A * X * E * Y * D := by
+  dsimp [comm]
+  calc (A * X * E) * (E * Y * D) - (E * Y * D) * (A * X * E)
+      = (A * X) * (E * E) * (Y * D) - (E * Y) * (D * A) * (X * E) := by
+          noncomm_ring
+    _ = (A * X) * E * (Y * D) - 0 := by rw [hE, hDA, mul_zero, zero_mul]
+    _ = A * X * E * Y * D := by noncomm_ring
+
+/-- Mismatched orthogonal Peirce endpoints make both block products vanish. -/
+theorem kkt_peirce_bracket_orthogonal (A E F D X Y : B)
+    (hEF : E * F = 0) (hDA : D * A = 0) :
+    comm (A * X * E) (F * Y * D) = 0 := by
+  dsimp [comm]
+  calc (A * X * E) * (F * Y * D) - (F * Y * D) * (A * X * E)
+      = (A * X) * (E * F) * (Y * D) - (F * Y) * (D * A) * (X * E) := by
+          noncomm_ring
+    _ = 0 - 0 := by rw [hEF, hDA, mul_zero, zero_mul, mul_zero, zero_mul]
+    _ = 0 := by rw [sub_self]
+
 end RingHelpers
 
 /-!
@@ -592,14 +631,6 @@ end RingHelpers
 -/
 
 variable {B : Type u} [Ring B] [StarRing B]
-
-/-- The inner commutator is a derivation of the Lie bracket. This identity is
-the general mechanism behind addition of `ad(S)`-grades under commutators. -/
-omit [StarRing B] in
-theorem kkt_commutator_derivation (S A C : B) :
-    comm S (comm A C) = comm (comm S A) C + comm A (comm S C) := by
-  dsimp [comm]
-  noncomm_ring
 
 /-- Negative extremal Jordan triple sandwich `G_{-2}(N_+, X) := N_- X N_-`. -/
 def G_minus2 (N_plus X : B) : B := star N_plus * X * star N_plus
@@ -618,6 +649,12 @@ def G_minus1_L (N_plus X : B) : B := star N_plus * X * (1 - Gap N_plus)
 
 /-- Right odd Grade `-1` carrier `G_{-1}^R(N_+, X) := (1 - Gap(N_+)) X N_-`. -/
 def G_minus1_R (N_plus X : B) : B := (1 - Gap N_plus) * X * star N_plus
+
+/-- The full Peirce grade `+1`, combining its two matrix blocks. -/
+def G_plus1 (N_plus X : B) : B := G_plus1_L N_plus X + G_plus1_R N_plus X
+
+/-- The full Peirce grade `-1`, combining its two matrix blocks. -/
+def G_minus1 (N_plus X : B) : B := G_minus1_L N_plus X + G_minus1_R N_plus X
 
 /-- Grade `0` positive sheet diagonal carrier `G_0^P(N_+, X) := P(N_+) X P(N_+)`. -/
 def G_0_P (N_plus X : B) : B := P N_plus * X * P N_plus
@@ -897,6 +934,146 @@ theorem comm_G_minus1_into_G_minus2 (N_plus X Y : B)
     rw [mul_sub, mul_one, sub_mul, one_mul, hGap_idem, sub_self, sub_zero]
   exact kkt_comm_G1_into_G2_helper (star N_plus) (Gap N_plus) X Y
     (star_N_plus_sq N_plus h_nil) hR
+
+/-- The aggregated grade `+1` is closed under the Lie bracket into grade `+2`.
+The antisymmetric difference records the two possible block compositions. -/
+theorem comm_G_plus1_into_G_plus2_aggregate (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_plus1 N_plus X) (G_plus1 N_plus Y) =
+      G_plus2 N_plus (X * (1 - Gap N_plus) * Y) -
+      G_plus2 N_plus (Y * (1 - Gap N_plus) * X) := by
+  have hGapN : Gap N_plus * N_plus = N_plus :=
+    Gap_mul_N_plus N_plus h_nil h_reg
+  have hNSigma : N_plus * Sigma N_plus = -N_plus :=
+    N_plus_mul_Sigma N_plus h_nil h_reg
+  have hNGap : N_plus * Gap N_plus = N_plus := by
+    calc N_plus * Gap N_plus
+        = N_plus * (Sigma N_plus * Sigma N_plus) := rfl
+      _ = (N_plus * Sigma N_plus) * Sigma N_plus := by rw [← mul_assoc]
+      _ = (-N_plus) * Sigma N_plus := by rw [hNSigma]
+      _ = - (N_plus * Sigma N_plus) := by rw [neg_mul]
+      _ = -(-N_plus) := by rw [hNSigma]
+      _ = N_plus := by rw [neg_neg]
+  have hRN : (1 - Gap N_plus) * N_plus = 0 := by
+    rw [sub_mul, one_mul, hGapN, sub_self]
+  have hNR : N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hNGap, sub_self]
+  have hLL : comm (G_plus1_L N_plus X) (G_plus1_L N_plus Y) = 0 := by
+    have hxy : G_plus1_L N_plus X * G_plus1_L N_plus Y = 0 := by
+      dsimp [G_plus1_L]
+      calc (N_plus * X * (1 - Gap N_plus)) *
+           (N_plus * Y * (1 - Gap N_plus))
+          = (N_plus * X) * ((1 - Gap N_plus) * N_plus) *
+              (Y * (1 - Gap N_plus)) := by noncomm_ring
+        _ = 0 := by rw [hRN, mul_zero, zero_mul]
+    have hyx : G_plus1_L N_plus Y * G_plus1_L N_plus X = 0 := by
+      dsimp [G_plus1_L]
+      calc (N_plus * Y * (1 - Gap N_plus)) *
+           (N_plus * X * (1 - Gap N_plus))
+          = (N_plus * Y) * ((1 - Gap N_plus) * N_plus) *
+              (X * (1 - Gap N_plus)) := by noncomm_ring
+        _ = 0 := by rw [hRN, mul_zero, zero_mul]
+    dsimp [comm]
+    rw [hxy, hyx, sub_self]
+  have hRR : comm (G_plus1_R N_plus X) (G_plus1_R N_plus Y) = 0 := by
+    have hxy : G_plus1_R N_plus X * G_plus1_R N_plus Y = 0 := by
+      dsimp [G_plus1_R]
+      calc ((1 - Gap N_plus) * X * N_plus) *
+           ((1 - Gap N_plus) * Y * N_plus)
+          = ((1 - Gap N_plus) * X) *
+              (N_plus * (1 - Gap N_plus)) * (Y * N_plus) := by noncomm_ring
+        _ = 0 := by rw [hNR, mul_zero, zero_mul]
+    have hyx : G_plus1_R N_plus Y * G_plus1_R N_plus X = 0 := by
+      dsimp [G_plus1_R]
+      calc ((1 - Gap N_plus) * Y * N_plus) *
+           ((1 - Gap N_plus) * X * N_plus)
+          = ((1 - Gap N_plus) * Y) *
+              (N_plus * (1 - Gap N_plus)) * (X * N_plus) := by noncomm_ring
+        _ = 0 := by rw [hNR, mul_zero, zero_mul]
+    dsimp [comm]
+    rw [hxy, hyx, sub_self]
+  have hRL : comm (G_plus1_R N_plus X) (G_plus1_L N_plus Y) =
+      -G_plus2 N_plus (Y * (1 - Gap N_plus) * X) := by
+    rw [kkt_comm_antisymm,
+      comm_G_plus1_into_G_plus2 N_plus Y X h_nil h_reg]
+  dsimp [G_plus1]
+  rw [kkt_comm_add_left, kkt_comm_add_right,
+    kkt_comm_add_right, hLL,
+    comm_G_plus1_into_G_plus2 N_plus X Y h_nil h_reg,
+    hRL, hRR]
+  noncomm_ring
+
+/-- The aggregated grade `-1` is closed under the Lie bracket into grade `-2`. -/
+theorem comm_G_minus1_into_G_minus2_aggregate (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_minus1 N_plus X) (G_minus1 N_plus Y) =
+      G_minus2 N_plus (X * (1 - Gap N_plus) * Y) -
+      G_minus2 N_plus (Y * (1 - Gap N_plus) * X) := by
+  have hGapM : Gap N_plus * star N_plus = star N_plus :=
+    Gap_mul_star_N_plus N_plus h_nil h_reg
+  have hMSigma : star N_plus * Sigma N_plus = star N_plus :=
+    star_N_plus_mul_Sigma N_plus h_nil h_reg
+  have hMGap : star N_plus * Gap N_plus = star N_plus := by
+    calc star N_plus * Gap N_plus
+        = star N_plus * (Sigma N_plus * Sigma N_plus) := rfl
+      _ = (star N_plus * Sigma N_plus) * Sigma N_plus := by rw [← mul_assoc]
+      _ = star N_plus * Sigma N_plus :=
+        congrArg (fun t : B => t * Sigma N_plus) hMSigma
+      _ = star N_plus := hMSigma
+  have hRM : (1 - Gap N_plus) * star N_plus = 0 := by
+    rw [sub_mul, one_mul, hGapM, sub_self]
+  have hMR : star N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hMGap, sub_self]
+  have hLL : comm (G_minus1_L N_plus X) (G_minus1_L N_plus Y) = 0 := by
+    have hxy : G_minus1_L N_plus X * G_minus1_L N_plus Y = 0 := by
+      dsimp [G_minus1_L]
+      calc (star N_plus * X * (1 - Gap N_plus)) *
+           (star N_plus * Y * (1 - Gap N_plus))
+          = (star N_plus * X) *
+              ((1 - Gap N_plus) * star N_plus) * (Y * (1 - Gap N_plus)) := by
+                  noncomm_ring
+        _ = 0 := by rw [hRM, mul_zero, zero_mul]
+    have hyx : G_minus1_L N_plus Y * G_minus1_L N_plus X = 0 := by
+      dsimp [G_minus1_L]
+      calc (star N_plus * Y * (1 - Gap N_plus)) *
+           (star N_plus * X * (1 - Gap N_plus))
+          = (star N_plus * Y) *
+              ((1 - Gap N_plus) * star N_plus) * (X * (1 - Gap N_plus)) := by
+                  noncomm_ring
+        _ = 0 := by rw [hRM, mul_zero, zero_mul]
+    dsimp [comm]
+    rw [hxy, hyx, sub_self]
+  have hRR : comm (G_minus1_R N_plus X) (G_minus1_R N_plus Y) = 0 := by
+    have hxy : G_minus1_R N_plus X * G_minus1_R N_plus Y = 0 := by
+      dsimp [G_minus1_R]
+      calc ((1 - Gap N_plus) * X * star N_plus) *
+           ((1 - Gap N_plus) * Y * star N_plus)
+          = ((1 - Gap N_plus) * X) *
+              (star N_plus * (1 - Gap N_plus)) * (Y * star N_plus) := by
+                  noncomm_ring
+        _ = 0 := by rw [hMR, mul_zero, zero_mul]
+    have hyx : G_minus1_R N_plus Y * G_minus1_R N_plus X = 0 := by
+      dsimp [G_minus1_R]
+      calc ((1 - Gap N_plus) * Y * star N_plus) *
+           ((1 - Gap N_plus) * X * star N_plus)
+          = ((1 - Gap N_plus) * Y) *
+              (star N_plus * (1 - Gap N_plus)) * (X * star N_plus) := by
+                  noncomm_ring
+        _ = 0 := by rw [hMR, mul_zero, zero_mul]
+    dsimp [comm]
+    rw [hxy, hyx, sub_self]
+  have hRL : comm (G_minus1_R N_plus X) (G_minus1_L N_plus Y) =
+      -G_minus2 N_plus (Y * (1 - Gap N_plus) * X) := by
+    rw [kkt_comm_antisymm,
+      comm_G_minus1_into_G_minus2 N_plus Y X h_nil h_reg]
+  dsimp [G_minus1]
+  rw [kkt_comm_add_left, kkt_comm_add_right,
+    kkt_comm_add_right, hLL,
+    comm_G_minus1_into_G_minus2 N_plus X Y h_nil h_reg,
+    hRL, hRR]
+  noncomm_ring
 
 /-- **Theorem `KKT₇` (Opposite Extremal Commutator Lands in Grade `0`, `[g_{+2}, g_{-2}] ⊆ g_0`)**:
 `[G_{+2}(N_+, X), G_{-2}(N_+, Y)] = G_0^P(N_+, N_+ X P Y N_-) - G_0^Q(N_+, N_- Y Q X N_+)`. -/

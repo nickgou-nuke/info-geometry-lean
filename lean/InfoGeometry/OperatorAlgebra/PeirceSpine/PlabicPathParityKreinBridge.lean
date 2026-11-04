@@ -158,4 +158,44 @@ theorem nested_zorn_three_corner_readouts_krein_fixed
   exact ⟨kreinReflect_fixed_of_pathParity_fixed hP₁ hP₂ hChain hStar₁ hPath₁,
     kreinReflect_fixed_of_pathParity_fixed hP₁ hP₂ hChain hStar₂ hPath₂⟩
 
+
+/-- The A116 ordinary and alternating-sign contraction outputs acquire the
+same seam translation under the full A102 wallpaper glide. Consequently their
+difference is invariant under that glide. The assumptions make the shell
+involution self-adjoint and pair the coefficients on each reversed link. -/
+theorem nested_zorn_three_corner_readouts_wallpaper_glide
+    {B : Type*} [Ring B] [StarRing B] {P₁ P₂ A₁ C₁ A₂ C₂ T : B}
+    (hP₁ : P₁ * P₁ = P₁) (hP₂ : P₂ * P₂ = P₂)
+    (hP₁star : star P₁ = P₁) (hP₂star : star P₂ = P₂)
+    (hChain : idemLe P₁ P₂)
+    (hA₁ : star A₁ = C₁) (hA₂ : star A₂ = C₂)
+    (hSeamT : kreinReflect (shell2 P₁ P₂) T = T) :
+    let E₁ := shell1 P₁
+    let E₂ := shell2 P₁ P₂
+    let E₃ := shell3 P₂
+    let ordinary := E₂ - (root12 E₁ E₂ A₁ * root21 E₂ E₁ C₁ +
+      root32 E₃ E₂ C₂ * root23 E₂ E₃ A₂) -
+      edgeMajoranaPhi13 E₁ E₂ E₃ A₁ C₁ A₂ C₂
+    let alternating := E₂ + (root12 E₁ E₂ A₁ * root21 E₂ E₁ C₁ +
+      root32 E₃ E₂ C₂ * root23 E₂ E₃ A₂) -
+      edgeMajoranaPhi13 E₁ E₂ E₃ A₁ C₁ A₂ C₂
+    wallpaperGlide E₂ T ordinary = ordinary + T ∧
+    wallpaperGlide E₂ T alternating = alternating + T ∧
+    wallpaperGlide E₂ T ordinary - wallpaperGlide E₂ T alternating =
+      ordinary - alternating := by
+  intro E₁ E₂ E₃ ordinary alternating
+  rcases nested_zorn_three_corner_readouts_krein_fixed
+      hP₁ hP₂ hP₁star hP₂star hChain hA₁ hA₂ with ⟨hOrdinary, hAlternating⟩
+  have hOrdinary' : kreinReflect E₂ ordinary = ordinary := by
+    simpa [ordinary] using hOrdinary
+  have hAlternating' : kreinReflect E₂ alternating = alternating := by
+    simpa [alternating] using hAlternating
+  have hOrdinaryGlide : wallpaperGlide E₂ T ordinary = ordinary + T := by
+    simp [wallpaperGlide, hOrdinary']
+  have hAlternatingGlide : wallpaperGlide E₂ T alternating = alternating + T := by
+    simp [wallpaperGlide, hAlternating']
+  refine ⟨hOrdinaryGlide, hAlternatingGlide, ?_⟩
+  rw [hOrdinaryGlide, hAlternatingGlide]
+  abel
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine

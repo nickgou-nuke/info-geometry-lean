@@ -3964,3 +3964,11 @@ The companion `finite_channel_gap_right_filters_phi_sum` proves the right
 action as well. Thus the selected gap acts on either side of the finite chiral
 sum by projecting onto the selected channel block; both directions are
 kernel-checked and listed in the axiom audit.
+
+`finite_channel_gaps_pairwise_orthogonal` now proves that distinct channels in
+the finite pairwise orthogonal family have mutually annihilating anomaly-gap
+supports, `Gap(Nᵢ) * Gap(Nⱼ) = 0` for `i ≠ j`. This follows from the already
+formalized annihilation of the channel anomalies and associativity; the new
+lemma is listed in the axiom audit. The focused owner build passed (1,553
+jobs); the proof-proxy and semantic-vacuity gates are recorded with this
+extension.

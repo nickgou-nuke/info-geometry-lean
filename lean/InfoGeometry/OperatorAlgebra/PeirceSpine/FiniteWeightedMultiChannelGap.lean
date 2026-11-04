@@ -204,6 +204,32 @@ theorem finite_channel_sum_gap_add (s : Finset ι) (N : ι → B)
       (h_cross i hi j hj hij).2.2.1
       (h_cross i hi j hj hij).2.2.2
 
+omit [DecidableEq ι] in
+/-- Distinct channels in a finite pairwise orthogonal family have mutually
+annihilating anomaly-generated gap supports. -/
+theorem finite_channel_gaps_pairwise_orthogonal (s : Finset ι) (N : ι → B)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (i j : ι) (hi : i ∈ s) (hj : j ∈ s) (hij : i ≠ j) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+        (N i) *
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+        (N j) = 0 := by
+  let σ : B → B :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma
+  have hσ := InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_Sigma_orthog
+    (N i) (N j)
+    (h_cross i hi j hj hij).1
+    (h_cross i hi j hj hij).2.1
+    (h_cross i hi j hj hij).2.2.1
+    (h_cross i hi j hj hij).2.2.2
+  change (σ (N i) * σ (N i)) * (σ (N j) * σ (N j)) = 0
+  calc
+    (σ (N i) * σ (N i)) * (σ (N j) * σ (N j)) =
+        σ (N i) * ((σ (N i) * σ (N j)) * σ (N j)) := by noncomm_ring
+    _ = 0 := by rw [hσ, zero_mul, mul_zero]
+
 /-- The anomaly-generated gap of a finite orthogonal channel sum is
 idempotent when each channel is square-zero and von Neumann regular. -/
 theorem finite_channel_sum_gap_idem (s : Finset ι) (N : ι → B)

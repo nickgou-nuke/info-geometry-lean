@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Star.Basic
+import Mathlib.Tactic.NoncommRing
 
 namespace OperatorAlgebra.PeirceSpine.YangMillsTHooftWilsonBraiding
 
@@ -117,6 +118,13 @@ def Z_center (N_plus : B) : B := P N_plus + P N_plus - 1
 
 /-- The core-vs-vacuum `ℤ₂` vortex monodromy `Z_vortex = 1 - 2V`. -/
 def Z_vortex (N_plus : B) : B := 1 - (V N_plus + V N_plus)
+
+/-- The center disorder operator is self-adjoint. -/
+theorem Z_center_star (N_plus : B) : star (Z_center N_plus) = Z_center N_plus := by
+  dsimp [Z_center, P]
+  rw [star_sub, star_add, star_one]
+  congr 1
+  all_goals rw [star_mul, star_star]
 
 /-!
 ### 2. Foundational Sheet & Off-Diagonal Wilson Link Identities
@@ -261,6 +269,39 @@ theorem Z_center_sq_eq_one (N_plus : B) (h_reg : N_plus * star N_plus * N_plus =
     _ = ((P N_plus + P N_plus - 1) + 1) - (P N_plus + P N_plus - 1) := by
         rw [sub_add_self (P N_plus + P N_plus) 1]
     _ = 1 := by rw [add_sub_self_left]
+
+/-- On the two-sheet support, the center disorder involution restricts to the
+intrinsic flux: `Z_center * V = Σ`. -/
+theorem Z_center_mul_V_eq_Sigma (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Z_center N_plus * V N_plus = Sigma N_plus := by
+  have hV : V N_plus = P N_plus + Q N_plus := rfl
+  rw [hV, mul_add, Z_center_mul_P N_plus h_reg,
+    Z_center_mul_Q N_plus h_nil, ← sub_eq_add_neg]
+  rfl
+
+/-- The support and center disorder operator commute, with the same intrinsic
+flux as their product: `V * Z_center = Σ`. -/
+theorem V_mul_Z_center_eq_Sigma (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    V N_plus * Z_center N_plus = Sigma N_plus := by
+  have hV : V N_plus = P N_plus + Q N_plus := rfl
+  have hP : P N_plus * Z_center N_plus = P N_plus := by
+    dsimp [Z_center]
+    rw [mul_sub, mul_add, mul_one, P_idem N_plus h_reg]
+    exact add_sub_self_right (P N_plus) (P N_plus)
+  have hQ : Q N_plus * Z_center N_plus = -Q N_plus := by
+    dsimp [Z_center]
+    calc Q N_plus * (P N_plus + P N_plus - 1) =
+        (Q N_plus * P N_plus + Q N_plus * P N_plus) - Q N_plus := by
+          rw [mul_sub, mul_add, mul_one]
+      _ = -Q N_plus := by
+          rw [Q_mul_P N_plus h_nil]
+          simp
+  rw [hV, add_mul, hP, hQ, ← sub_eq_add_neg]
+  rfl
 
 /-- Left action of `Z_center` on `N_plus`: `Z_center * N_+ = +N_+`. -/
 theorem Z_center_mul_N_plus (N_plus : B)
@@ -531,6 +572,31 @@ theorem V_idem (N_plus : B)
         rw [P_idem N_plus h_reg, Q_mul_P N_plus h_nil,
             P_mul_Q N_plus h_nil, Q_idem N_plus h_reg]
     _ = P N_plus + Q N_plus := by rw [add_zero, zero_add]
+
+/-- The vortex core/vacuum monodromy is a `ℤ₂` involution whenever the
+two-sheet support is idempotent. -/
+theorem Z_vortex_sq_eq_one (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Z_vortex N_plus * Z_vortex N_plus = 1 := by
+  dsimp [Z_vortex]
+  noncomm_ring [V_idem N_plus h_nil h_reg]
+
+/-- The vortex monodromy assigns charge `-1` to its core support. -/
+theorem Z_vortex_mul_V (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Z_vortex N_plus * V N_plus = -V N_plus := by
+  dsimp [Z_vortex]
+  noncomm_ring [V_idem N_plus h_nil h_reg]
+
+/-- The vortex monodromy assigns charge `+1` to the exterior complement. -/
+theorem Z_vortex_mul_complement (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Z_vortex N_plus * (1 - V N_plus) = 1 - V N_plus := by
+  dsimp [Z_vortex]
+  noncomm_ring [V_idem N_plus h_nil h_reg]
 
 /-- **Vortex Boundary Braiding Theorem (`Z_vortex * W_edge + W_edge * Z_vortex = 0`):**
     Any Wilson link `W_edge(X) = V X (1 - V)` crossing the vortex core boundary

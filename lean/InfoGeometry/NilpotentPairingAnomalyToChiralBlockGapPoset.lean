@@ -51,6 +51,13 @@ def anticomm (X Y : B) : B := X * Y + Y * X
     The non-commuting nilpotent pairing / parity anomaly `Σ = [N_+, N_-]`. -/
 def Sigma (N_plus : B) : B := comm N_plus (star N_plus)
 
+/-- The commutator anomaly is self-adjoint under the ring involution. -/
+theorem Sigma_star (N_plus : B) : star (Sigma N_plus) = Sigma N_plus := by
+  dsimp [Sigma, comm]
+  rw [star_sub]
+  congr 1
+  all_goals rw [star_mul, star_star]
+
 /-- Dual nilpotency `(N_-)^2 = 0`. -/
 theorem star_N_plus_sq (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     star N_plus * star N_plus = 0 := by
@@ -241,6 +248,11 @@ theorem comm_Sigma_Phi (N_plus : B)
     Defined directly as the square of the parity anomaly `Gap := Σ * Σ`. -/
 def Gap (N_plus : B) : B := Sigma N_plus * Sigma N_plus
 
+/-- The anomaly-square support is self-adjoint. -/
+theorem Gap_star (N_plus : B) : star (Gap N_plus) = Gap N_plus := by
+  dsimp [Gap]
+  rw [star_mul, Sigma_star]
+
 /-- `NPA₅` `Gap` acts as the identity on `N_+`: `Gap * N_+ = N_+`. -/
 theorem Gap_mul_N_plus (N_plus : B)
     (h_nil : N_plus * N_plus = 0)
@@ -326,6 +338,50 @@ theorem Gap_mul_Phi (N_plus : B)
     _ = Sigma N_plus * (Sigma N_plus * Phi N_plus) := by dsimp [Gap]; rw [mul_assoc]
     _ = Sigma N_plus * J N_plus := by rw [Sigma_mul_Phi N_plus h_nil h_reg]
     _ = Phi N_plus := Sigma_mul_J N_plus h_nil h_reg
+
+/-- The anomaly support acts as a right identity on the chiral block as well:
+`Φ * Gap = Φ`. -/
+theorem Phi_mul_Gap (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Phi N_plus * Gap N_plus = Phi N_plus := by
+  calc Phi N_plus * Gap N_plus
+    _ = (Phi N_plus * Sigma N_plus) * Sigma N_plus := by
+        dsimp [Gap]
+        rw [← mul_assoc]
+    _ = (-J N_plus) * Sigma N_plus := by
+        rw [Phi_mul_Sigma N_plus h_nil h_reg]
+    _ = -(J N_plus * Sigma N_plus) := by rw [neg_mul]
+    _ = -(-Phi N_plus) := by rw [J_mul_Sigma N_plus h_nil h_reg]
+    _ = Phi N_plus := by rw [neg_neg]
+
+/-- The anomaly support fixes the rotor on the left: `Gap * J = J`. -/
+theorem Gap_mul_J (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Gap N_plus * J N_plus = J N_plus := by
+  calc Gap N_plus * J N_plus
+    _ = Sigma N_plus * (Sigma N_plus * J N_plus) := by
+        dsimp [Gap]
+        rw [mul_assoc]
+    _ = Sigma N_plus * Phi N_plus := by
+        rw [Sigma_mul_J N_plus h_nil h_reg]
+    _ = J N_plus := Sigma_mul_Phi N_plus h_nil h_reg
+
+/-- The anomaly support fixes the rotor on the right: `J * Gap = J`. -/
+theorem J_mul_Gap (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    J N_plus * Gap N_plus = J N_plus := by
+  calc J N_plus * Gap N_plus
+    _ = (J N_plus * Sigma N_plus) * Sigma N_plus := by
+        dsimp [Gap]
+        rw [← mul_assoc]
+    _ = (-Phi N_plus) * Sigma N_plus := by
+        rw [J_mul_Sigma N_plus h_nil h_reg]
+    _ = -(Phi N_plus * Sigma N_plus) := by rw [neg_mul]
+    _ = -(-J N_plus) := by rw [Phi_mul_Sigma N_plus h_nil h_reg]
+    _ = J N_plus := by rw [neg_neg]
 
 theorem Phi_cube_eq_Phi (N_plus : B)
     (h_nil : N_plus * N_plus = 0)

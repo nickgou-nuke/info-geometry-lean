@@ -1931,3 +1931,14 @@ linear trace. The locked Lean check and targeted Lake build passed (9,180 jobs,
 exit 0); strict OpenGauss screening reported zero traps, semantic-vacuity
 reported zero findings, and proof-proxy passed. The theorem carries the same
 unused `CompleteSpace H` section-instance warning as the other trace helpers.
+
+Using that duality twice, the owner now proves
+`finiteOperatorTrace_doubleInnerDerivation_selfAdjoint`:
+`Tr(X [K,[K,Y]]) = Tr([K,[K,X]] Y)` for arbitrary bounded operators on a
+finite-dimensional complex Hilbert space. Thus the double inner derivation is
+self-adjoint for the bilinear trace pairing, without a star or a Hermiticity
+assumption on `K`. The owner passed the locked Lean check and targeted Lake
+build (9,180 jobs, exit 0); strict OpenGauss screening reported zero traps,
+semantic-vacuity reported zero findings, and the staged proof-proxy gate
+passed on 2026-11-04. The pointwise commutator normalization uses the
+continuous linear maps' subtraction law followed by additive normalization.

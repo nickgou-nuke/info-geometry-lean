@@ -125,6 +125,27 @@ theorem finiteOperatorTrace_innerDerivation_duality
   simp only [mul_assoc]
   rw [hCyclic]
 
+/-- The trace-pairing adjoint of a double inner derivation is the same
+double derivation. This follows by transferring each commutator across the
+finite-dimensional trace pairing; the final equality uses the reversed
+commutator order. -/
+theorem finiteOperatorTrace_doubleInnerDerivation_selfAdjoint
+    [Module.Finite ℂ H] (K X Y : EndH) :
+    finiteOperatorTrace (X * opCommutator K (opCommutator K Y)) =
+      finiteOperatorTrace (opCommutator K (opCommutator K X) * Y) := by
+  calc
+    finiteOperatorTrace (X * opCommutator K (opCommutator K Y)) =
+        finiteOperatorTrace (opCommutator X K * opCommutator K Y) :=
+      finiteOperatorTrace_innerDerivation_duality X K (opCommutator K Y)
+    _ = finiteOperatorTrace (opCommutator (opCommutator X K) K * Y) :=
+      finiteOperatorTrace_innerDerivation_duality (opCommutator X K) K Y
+    _ = finiteOperatorTrace (opCommutator K (opCommutator K X) * Y) := by
+      congr 1
+      congr 1
+      ext v
+      simp only [opCommutator_apply, map_sub]
+      abel
+
 /-- In finite dimension, a square-zero operator has zero trace, the two
 adjoint Gramian terms have equal trace by cyclicity, and both the Cartan
 commutator and the Gramian trace reduce to these cyclic identities. -/

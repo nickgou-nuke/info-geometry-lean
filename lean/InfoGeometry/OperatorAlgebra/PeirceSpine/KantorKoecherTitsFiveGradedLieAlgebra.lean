@@ -250,6 +250,98 @@ theorem peirce_m2_bracket_eq_zero (N_plus x y : B)
   rcases hy with ⟨Y, rfl⟩
   exact comm_peirceGradeMinus2_self N_plus X Y h_nil
 
+/-- The mixed `(+2,-1)` bracket lands in grade `+1` by direct Peirce-corner
+composition, without additive torsion-freeness. -/
+theorem peirce_p2_m1_bracket_mem_p1 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p2)
+    (hy : y ∈ tkkPeirceGrade N_plus .m1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p1 := by
+  change x ∈ peirceGradePlus2Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus2 N_plus X) (peirceGradeMinus1 N_plus Y) ∈
+        peirceGradePlus1Subgroup N_plus
+  exact comm_peirceGradePlus2_minus1_mem N_plus X Y h_nil h_reg
+
+/-- The mixed `(+1,-2)` bracket lands in grade `-1` by direct Peirce-corner
+composition, without additive torsion-freeness. -/
+theorem peirce_p1_m2_bracket_mem_m1 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p1)
+    (hy : y ∈ tkkPeirceGrade N_plus .m2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m1 := by
+  change x ∈ peirceGradePlus1Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus2Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus1 N_plus X) (peirceGradeMinus2 N_plus Y) ∈
+        peirceGradeMinus1Subgroup N_plus
+  exact comm_peirceGradePlus1_minus2_mem N_plus X Y h_nil h_reg
+
+/-- The mixed `(-2,+1)` bracket lands in grade `-1` by direct Peirce-corner
+composition, without additive torsion-freeness. -/
+theorem peirce_m2_p1_bracket_mem_m1 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m2)
+    (hy : y ∈ tkkPeirceGrade N_plus .p1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m1 := by
+  change x ∈ peirceGradeMinus2Subgroup N_plus at hx
+  change y ∈ peirceGradePlus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeMinus2 N_plus X) (peirceGradePlus1 N_plus Y) ∈
+        peirceGradeMinus1Subgroup N_plus
+  rw [comm_peirceGradeMinus2_plus1_closed N_plus X Y h_nil h_reg]
+  exact ⟨X * P N_plus * Y * peirceR N_plus -
+    Y * Q N_plus * X * P N_plus, rfl⟩
+
+/-- The mixed `(+2,0)` bracket stays in grade `+2` by Peirce-corner
+composition, without additive torsion-freeness. -/
+theorem peirce_p2_z0_bracket_mem_p2 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p2)
+    (hy : y ∈ tkkPeirceGrade N_plus .z0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p2 := by
+  change x ∈ peirceGradePlus2Subgroup N_plus at hx
+  change y ∈ peirceGradeZeroSubgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+        peirceGradePlus2Subgroup N_plus
+  exact comm_peirceGradePlus2_zero_mem N_plus X Y h_nil h_reg
+
+/-- The mixed `(-2,0)` bracket stays in grade `-2` by Peirce-corner
+composition, without additive torsion-freeness. -/
+theorem peirce_m2_z0_bracket_mem_m2 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m2)
+    (hy : y ∈ tkkPeirceGrade N_plus .z0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m2 := by
+  change x ∈ peirceGradeMinus2Subgroup N_plus at hx
+  change y ∈ peirceGradeZeroSubgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeMinus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+        peirceGradeMinus2Subgroup N_plus
+  exact comm_peirceGradeMinus2_zero_mem N_plus X Y h_nil h_reg
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion
 freeness ensures the integer adjoint grades identify those components. -/

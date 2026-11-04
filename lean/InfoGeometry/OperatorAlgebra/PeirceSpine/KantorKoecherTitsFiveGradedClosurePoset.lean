@@ -1188,23 +1188,28 @@ theorem peirceFiveGradeSpan_eq_top (N_plus : B)
     peirceGradePlus1Subgroup N_plus ⊔ peirceGradeZeroSubgroup N_plus ⊔
     peirceGradeMinus1Subgroup N_plus ⊔ peirceGradeMinus2Subgroup N_plus
   rw [AddSubgroup.mem_sup]
-  refine ⟨peirceGradePlus2 N_plus X, h2,
-    peirceGradePlus1 N_plus X + peirceGradeZero N_plus X +
-      peirceGradeMinus1 N_plus X + peirceGradeMinus2 N_plus X, ?_, ?_⟩
+  refine ⟨peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+      peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X, ?_,
+    peirceGradeMinus2 N_plus X, hm2, ?_⟩
   · rw [AddSubgroup.mem_sup]
-    refine ⟨peirceGradePlus1 N_plus X, h1,
-      peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
-        peirceGradeMinus2 N_plus X, ?_, ?_⟩
+    refine ⟨peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+        peirceGradeZero N_plus X, ?_, peirceGradeMinus1 N_plus X, hm1, ?_⟩
     · rw [AddSubgroup.mem_sup]
-      refine ⟨peirceGradeZero N_plus X, h0,
-        peirceGradeMinus1 N_plus X + peirceGradeMinus2 N_plus X, ?_, ?_⟩
+      refine ⟨peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X, ?_,
+        peirceGradeZero N_plus X, h0, ?_⟩
       · rw [AddSubgroup.mem_sup]
-        exact ⟨peirceGradeMinus1 N_plus X, hm1,
-          peirceGradeMinus2 N_plus X, hm2, rfl⟩
+        exact ⟨peirceGradePlus2 N_plus X, h2,
+          peirceGradePlus1 N_plus X, h1, rfl⟩
       · rfl
     · rfl
-  · rw [hsum]
-    abel
+  · calc
+      peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+          peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+          peirceGradeMinus2 N_plus X =
+        peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+          peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+          peirceGradeMinus2 N_plus X := rfl
+      _ = X := hsum.symm
 
 /-- The five grouped Peirce components jointly determine the operator. Thus the
 canonical five-sector reconstruction is unique as a decomposition induced by

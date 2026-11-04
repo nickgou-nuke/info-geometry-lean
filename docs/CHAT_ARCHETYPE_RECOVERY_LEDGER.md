@@ -3562,3 +3562,10 @@ nonvanishing persistence; arbitrary cones remain conditional on transition
 injectivity. This proves neither a uniform numerical gap nor the transcript's
 separate tensor-product/block-doubling construction. The targeted locked owner
 build passed (956 jobs); existing linter warnings remain in that owner.
+
+The same concrete model now also proves `towerToColimit_injective` and
+`towerToColimit_preserves_nonzero_two_sheet_coupling`: the finite prefix and
+the stabilized tail are recoverable from the image sequence, so a nonzero
+stage coupling cannot vanish in this algebraic sequence colimit. This result
+is specific to `TowerColimit R` as defined here; it is not a theorem for every
+abstract cone or for an analytic completion.

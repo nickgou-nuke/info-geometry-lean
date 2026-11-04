@@ -616,6 +616,34 @@ def towerToColimit (k : ℕ) : StarRingHom (TowerLevel R k) (TowerColimit R) whe
   map_add' x y := by funext n; by_cases h : n < k <;> simp [towerColimitFn, h]
   map_star' x := by funext n; by_cases h : n < k <;> simp [towerColimitFn, h]
 
+/-- The canonical map from a finite tail-stabilized stage into the sequence
+colimit is injective: the first `k` coordinates recover the finite block and
+coordinate `k` recovers the stable tail. -/
+theorem towerToColimit_injective (k : ℕ) :
+    Function.Injective (towerToColimit (R := R) k).toRingHom := by
+  intro x y h
+  change towerColimitFn k x = towerColimitFn k y at h
+  apply Prod.ext
+  · funext i
+    have hi := congrFun h i.val
+    simpa [towerColimitFn, i.isLt] using hi
+  · have hk := congrFun h k
+    simpa [towerColimitFn] using hk
+
+/-- A nonzero finite-stage two-sheet coupling remains nonzero in the concrete
+tail-stabilized sequence colimit. This is algebraic injective transport only. -/
+theorem towerToColimit_preserves_nonzero_two_sheet_coupling
+    (k : ℕ) (P Aop C : TowerLevel R k)
+    (hMass : opQuadraticCoupling P Aop C ≠ 0) :
+    opQuadraticCoupling
+      ((towerToColimit (R := R) k).toRingHom P)
+      ((towerToColimit (R := R) k).toRingHom Aop)
+      ((towerToColimit (R := R) k).toRingHom C) ≠ 0 := by
+  exact starRingHom_preserves_nonzero_two_sheet_coupling
+    (towerToColimit (R := R) k).toRingHom
+    (towerToColimit_injective (R := R) k)
+    (towerToColimit (R := R) k).map_star' P Aop C hMass
+
 /-- Concrete instance of `InductiveStarColimitCone` over `R`. -/
 def tailTowerCone (R : Type*) [Ring R] [StarRing R] :
     InductiveStarColimitCone (TowerLevel R) (TowerColimit R) where

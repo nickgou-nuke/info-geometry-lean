@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
@@ -170,6 +176,94 @@ theorem kms_modular_condition (ρ ρ_inv A B : Mat)
     _ = Matrix.trace ((ρ * B) * A) := by
         rw [Matrix.trace_mul_comm]
     _ = Matrix.trace (ρ * (B * A)) := by simp only [mul_assoc]
+
+/-- The expectation of a commutator is exactly the modular displacement of
+its first entry, paired against the second entry. This is the commutator
+defect form of the finite KMS identity. -/
+theorem kms_expectation_commutator_eq_modular_defect
+    (ρ ρ_inv A B : Mat) (h_left : ρ_inv * ρ = 1) :
+    expectation ρ (A * B - B * A) =
+      expectation ρ (B * (modularAutomorphism ρ ρ_inv A - A)) := by
+  calc
+    expectation ρ (A * B - B * A) =
+        expectation ρ (A * B) - expectation ρ (B * A) := by
+          exact expectation_sub ρ (A * B) (B * A)
+    _ = expectation ρ (B * modularAutomorphism ρ ρ_inv A) -
+        expectation ρ (B * A) := by
+          rw [← kms_modular_condition ρ ρ_inv B A h_left]
+    _ = expectation ρ (B * (modularAutomorphism ρ ρ_inv A - A)) := by
+          rw [mul_sub, expectation_sub]
+
+/-- A matrix trace weight commuting with an idempotent cut annihilates its
+inner derivation. The associated odd Peirce grade has zero readout, even
+pinching preserves the readout, and products of two tangent directions are
+fixed by even pinching. This is an algebraic trace statement: no positivity,
+normalization, or KMS modular condition is assumed. -/
+theorem traceWeight_peirce_tangent_qgt_synthesis
+    (K P X A B : Mat) (hP : P * P = P) (hKP : K * P = P * K) :
+    expectation K (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P X) = 0 ∧
+    expectation K (InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P X) = 0 ∧
+    expectation K (InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade P X) =
+      expectation K X ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P B) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm P B := by
+  let opComm : Mat → Mat → Mat := InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+  have hStationary (Y : Mat) : expectation K (opComm P Y) = 0 := by
+    dsimp [expectation, opComm, InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+    have hTraceCycle : Matrix.trace (K * (P * Y)) =
+        Matrix.trace (K * (Y * P)) := by
+      calc
+        Matrix.trace (K * (P * Y)) = Matrix.trace ((K * P) * Y) := by
+          rw [Matrix.mul_assoc]
+        _ = Matrix.trace ((P * K) * Y) := by rw [hKP]
+        _ = Matrix.trace (P * (K * Y)) := by rw [Matrix.mul_assoc]
+        _ = Matrix.trace ((K * Y) * P) := Matrix.trace_mul_comm P (K * Y)
+        _ = Matrix.trace (K * (Y * P)) := by rw [Matrix.mul_assoc]
+    calc
+      Matrix.trace (K * (P * Y - Y * P)) =
+          Matrix.trace (K * (P * Y) - K * (Y * P)) := by rw [mul_sub]
+      _ = Matrix.trace (K * (P * Y)) - Matrix.trace (K * (Y * P)) :=
+          Matrix.trace_sub _ _
+      _ = 0 := sub_eq_zero.mpr hTraceCycle
+  have hOddFormula (Y : Mat) :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P Y =
+        opComm P (opComm P Y) := by
+    dsimp [opComm]
+    peirce_nf hP
+  have hEven : InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade P X =
+      X - opComm P (opComm P X) := by
+    calc
+      InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade P X =
+          X - InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P X := by
+            have hSum :=
+              (InfoGeometry.OperatorAlgebra.PeirceSpine.grade_projection_laws hP X).2.2.2.2
+            calc
+              _ = (_ + InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P X) -
+                    InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P X := by abel
+              _ = _ := by rw [hSum]
+      _ = X - opComm P (opComm P X) := by rw [hOddFormula]
+  have hTangent : opComm P (opComm P A * opComm P B) = 0 := by
+    dsimp [opComm]
+    peirce_nf hP
+  have hTangentOdd :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P
+          (opComm P A * opComm P B) = 0 := by
+    rw [hOddFormula, hTangent]
+    simp [opComm, InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+  have hTangentEven :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.evenGrade P
+          (opComm P A * opComm P B) = opComm P A * opComm P B := by
+    simpa [hTangentOdd] using
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.grade_projection_laws hP
+        (opComm P A * opComm P B)).2.2.2.2
+  refine ⟨hStationary X, ?_, ?_, ?_⟩
+  · rw [hOddFormula]
+    exact hStationary (opComm P X)
+  · rw [hEven, expectation_sub, hStationary, sub_zero]
+  · exact hTangentEven
 
 /-- THEOREM: Stationarity of the KMS state under its own Modular Flow:
     ω_ρ(σ_ρ(A)) = ω_ρ(A). -/

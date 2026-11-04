@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.LinearAlgebra.Matrix.Permutation
 import Mathlib.Tactic
 
 /-!
@@ -95,6 +96,51 @@ theorem trace_krausMap_of_completeness
     rw [Matrix.trace_mul_comm (V i * A) (star (V i)), ← Matrix.mul_assoc]
   simp_rw [h_cycle]
   rw [← Matrix.trace_sum, ← Finset.sum_mul, h_complete, Matrix.one_mul]
+
+/-- A finite normalized weighted sum of unitary conjugations. The weights
+are algebraic coefficients; this definition alone does not assert their
+nonnegativity or complete positivity. -/
+def unitaryMixtureChannel {ι : Type*} [Fintype ι]
+    (w : ι → ℂ) (U : ι → Mat) (A : Mat) : Mat :=
+  ∑ i, w i • (U i * A * star (U i))
+
+/-- A normalized weighted sum of two-sided unitary conjugations is unital
+and preserves the finite matrix trace. -/
+theorem unitaryMixtureChannel_unital_tracePreserving
+    {ι : Type*} [Fintype ι] (w : ι → ℂ) (hw : ∑ i, w i = 1)
+    (U : ι → Mat)
+    (hU : ∀ i, U i * star (U i) = 1 ∧ star (U i) * U i = 1)
+    (A : Mat) :
+    unitaryMixtureChannel w U 1 = 1 ∧
+      Matrix.trace (unitaryMixtureChannel w U A) = Matrix.trace A := by
+  constructor
+  · rw [unitaryMixtureChannel]
+    have hterm : ∀ i, U i * 1 * star (U i) = 1 := by
+      intro i
+      rw [Matrix.mul_one, (hU i).1]
+    simp_rw [hterm, ← Finset.sum_smul, hw, one_smul]
+  · rw [unitaryMixtureChannel, Matrix.trace_sum]
+    have hterm : ∀ i,
+        Matrix.trace (U i * A * star (U i)) = Matrix.trace A := by
+      intro i
+      calc
+        Matrix.trace (U i * A * star (U i)) =
+            Matrix.trace ((star (U i) * U i) * A) := by
+              rw [Matrix.trace_mul_comm (U i * A) (star (U i)), ← Matrix.mul_assoc]
+        _ = Matrix.trace A := by rw [(hU i).2, Matrix.one_mul]
+    simp_rw [Matrix.trace_smul, hterm]
+    rw [← Finset.sum_smul, hw, one_smul]
+
+/-- The permutation matrix representation sends every finite permutation to
+a two-sided unitary matrix over `ℂ`. -/
+theorem permutationMatrix_unitary (σ : Equiv.Perm n) :
+    σ.permMatrix ℂ * Matrix.conjTranspose (σ.permMatrix ℂ) = 1 ∧
+      Matrix.conjTranspose (σ.permMatrix ℂ) * σ.permMatrix ℂ = 1 := by
+  constructor
+  · rw [Matrix.conjTranspose_permMatrix, ← Matrix.permMatrix_mul]
+    simp
+  · rw [Matrix.conjTranspose_permMatrix, ← Matrix.permMatrix_mul]
+    simp
 
 private theorem kraus_term_matrixUnit_apply
     (V : Mat) (i j k l : n) :
@@ -220,4 +266,4 @@ left as a separate owner because its index/type transport is nontrivial. -/
 
 end InfoGeometry.Quantum.Choi
 
-end noncomputable section
+end

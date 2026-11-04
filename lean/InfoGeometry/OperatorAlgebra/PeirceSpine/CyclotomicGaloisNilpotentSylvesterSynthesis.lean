@@ -269,6 +269,41 @@ theorem drazin_mp_universal_sandwich_collapse
             dsimp [qgtMinus]; noncomm_ring
       _ = 0 := by rw [hMConeMinus, zero_mul]
 
+/-- The Drazin--Moore--Penrose sandwich is fixed by the Cartan reflection
+of its spectral idempotent. The proof uses the exact collapse to
+`P * Mdag * P`, so it is valid in an arbitrary associative ring. -/
+theorem drazin_mp_sandwich_invS_invariant
+    {M P B_inv Mdag : B}
+    (hBMB : B_inv * M * B_inv = B_inv)
+    (hBM : B_inv * M = P)
+    (hMB : M * B_inv = P)
+    (hMP1 : M * Mdag * M = M) :
+    invS P * ((B_inv * M * Mdag) * M * (Mdag * M * B_inv)) * invS P =
+      (B_inv * M * Mdag) * M * (Mdag * M * B_inv) := by
+  have hInvComm : B_inv * M = M * B_inv := hBM.trans hMB.symm
+  have hP : P * P = P := by
+    calc
+      P * P = (B_inv * M) * P := by rw [hBM]
+      _ = (B_inv * M) * (M * B_inv) := by rw [← hMB]
+      _ = (B_inv * M) * (B_inv * M) := by rw [hInvComm.symm]
+      _ = (B_inv * M * B_inv) * M := by noncomm_ring
+      _ = B_inv * M := by rw [hBMB]
+      _ = P := hBM
+  have hCollapse := drazin_mp_universal_sandwich_collapse hBMB hBM hMB hMP1
+  rcases hCollapse with ⟨_, _, hSand, _, _, _, _, _⟩
+  have hSP : invS P * P = P := by
+    dsimp [invS]
+    noncomm_ring [hP]
+  have hPS : P * invS P = P := by
+    dsimp [invS]
+    noncomm_ring [hP]
+  calc
+    invS P * ((B_inv * M * Mdag) * M * (Mdag * M * B_inv)) * invS P =
+        invS P * (P * Mdag * P) * invS P := by rw [hSand]
+    _ = (invS P * P) * Mdag * (P * invS P) := by noncomm_ring
+    _ = P * Mdag * P := by rw [hSP, hPS]
+    _ = (B_inv * M * Mdag) * M * (Mdag * M * B_inv) := hSand.symm
+
 /-- **Theorem `CNS₀.2` (`dmp_residual_qgt_and_anamnesis_tetraktys_closure`)**:
 For any idempotent `P * P = P` and any `Mdag : B` in a non-commutative ring `[Ring B]`:
 1. `dmpOp P Mdag = peirce11 P Mdag + conePlus P Mdag` and

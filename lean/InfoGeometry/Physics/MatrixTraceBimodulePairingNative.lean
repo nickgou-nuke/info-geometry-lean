@@ -1,9 +1,48 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Physics
 
 variable {n : Type*} [Fintype n]
+
+variable {R : Type*} [CommRing R]
+
+/-- Cyclicity of the finite matrix trace makes the commutator action
+skew-adjoint for the trace pairing. This coefficient-general form is the
+matrix identity underlying the real-valued trace pairing below. -/
+theorem matrix_trace_commutator_pairing (A X Y : Matrix n n R) :
+    Matrix.trace ((A * X - X * A) * Y) =
+      - Matrix.trace (X * (A * Y - Y * A)) := by
+  rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.trace_sub, Matrix.trace_sub]
+  have h₁ : Matrix.trace (A * X * Y) = Matrix.trace (X * (Y * A)) := by
+    calc
+      Matrix.trace (A * X * Y) = Matrix.trace (A * (X * Y)) := by rw [Matrix.mul_assoc]
+      _ = Matrix.trace ((X * Y) * A) := Matrix.trace_mul_comm A (X * Y)
+      _ = Matrix.trace (X * (Y * A)) := by rw [Matrix.mul_assoc]
+  have h₂ : Matrix.trace (X * A * Y) = Matrix.trace (X * (A * Y)) := by
+    rw [Matrix.mul_assoc]
+  rw [h₁, h₂]
+  abel
+
+/-- The cyclic-trace form of invariance under an inner derivation, stated
+directly as in the matrix-operator source packet. -/
+theorem matrix_trace_inner_derivation_cyclic (A B C : Matrix n n R) :
+    Matrix.trace (A * (B * C - C * B)) =
+      Matrix.trace ((A * B - B * A) * C) := by
+  rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.trace_sub, Matrix.trace_sub]
+  have h₁ : Matrix.trace (A * (B * C)) = Matrix.trace ((A * B) * C) := by
+    rw [Matrix.mul_assoc]
+  have h₂ : Matrix.trace (A * (C * B)) = Matrix.trace ((B * A) * C) := by
+    calc
+      Matrix.trace (A * (C * B)) = Matrix.trace ((A * C) * B) := by rw [← Matrix.mul_assoc]
+      _ = Matrix.trace (B * (A * C)) := Matrix.trace_mul_comm (A * C) B
+      _ = Matrix.trace ((B * A) * C) := by rw [Matrix.mul_assoc]
+  rw [h₁, h₂]
 
 abbrev TraceOperatorSpace (n : Type*) := Matrix n n ℝ
 

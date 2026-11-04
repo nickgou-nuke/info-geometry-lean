@@ -17,8 +17,8 @@ open InfoGeometry.CliffordTower
 private abbrev Stage := SplitClNNAlg
 
 private def tailMap (k m n : ℕ) (h : m ≤ n) :
-    Stage (m + k) →+* Stage (n + k) :=
-  (splitCliffordMap (m + k) (n + k) (Nat.add_le_add_right h k)).toRingHom
+    Stage (m + k) →ₐ[ℝ] Stage (n + k) :=
+  splitCliffordMap (m + k) (n + k) (Nat.add_le_add_right h k)
 
 private instance tailDirectedSystem (k : ℕ) :
     DirectedSystem (fun n : ℕ => Stage (n + k))
@@ -39,10 +39,22 @@ private instance tailDirectedSystem (k : ℕ) :
 abbrev SplitCliffordTailInfinity (k : ℕ) :=
   _root_.DirectLimit (fun n : ℕ => Stage (n + k)) (fun m n h => tailMap k m n h)
 
+noncomputable instance splitCliffordTailInfinityModule (k : ℕ) :
+    Module ℝ (SplitCliffordTailInfinity k) := DirectLimit.instModule
+
 /-- Canonical map from a finite tail stage into its direct limit. -/
 noncomputable def splitCliffordTailOf (k n : ℕ) :
     SplitClNNAlg (n + k) →+* SplitCliffordTailInfinity k :=
-  DirectLimit.Ring.of (fun n : ℕ => Stage (n + k)) (fun m n h => tailMap k m n h) n
+  DirectLimit.Ring.of (fun n : ℕ => Stage (n + k))
+    (fun m n h => tailMap k m n h) n
+
+/-- Every canonical finite-stage map into a cofinal tail is injective. -/
+theorem splitCliffordTailInfinity_stage_injective (k n : ℕ) :
+    Function.Injective (splitCliffordTailOf k n) := by
+  exact DirectLimit.mk_injective
+    (f := fun i j h => tailMap k i j h)
+    (fun i j hij => splitCliffordMap_injective
+      (Nat.add_le_add_right hij k)) n
 
 private def splitOf (n : ℕ) : Stage n →+* SplitCliffordInfinity :=
   DirectLimit.Ring.of Stage (fun m n h => splitCliffordMap m n h) n
@@ -52,7 +64,7 @@ private def intoTail (k n : ℕ) : Stage n →+* Stage (n + k) :=
 
 private theorem intoTail_natural (k m n : ℕ) (h : m ≤ n) :
     (intoTail k n).comp ((splitCliffordMap m n h).toRingHom) =
-      (tailMap k m n h).comp (intoTail k m) := by
+      (tailMap k m n h).toRingHom.comp (intoTail k m) := by
   ext x
   change splitCliffordMap n (n + k) (Nat.le_add_right n k)
       (splitCliffordMap m n h x) =
@@ -158,6 +170,32 @@ the corresponding original stage. -/
   change fromTail k (splitCliffordTailOf k n x) = splitOf (n + k) x
   simp only [fromTail, splitCliffordTailOf, splitOf, DirectLimit.Ring.lift_of]
 
+/-- The cofinal-tail ring equivalence preserves the canonical real scalar
+maps, so it is an equivalence of real algebras. -/
+theorem splitCliffordInfinity_ring_shift_equiv_commutes (k : ℕ) (r : ℝ) :
+    splitCliffordInfinity_ring_shift_equiv k
+        (algebraMap ℝ SplitCliffordInfinity r) =
+      algebraMap ℝ (SplitCliffordTailInfinity k) r := by
+  rw [DirectLimit.algebraMap_def (G := Stage)
+        (f := fun i j h => splitCliffordMap i j h) 0 r,
+      DirectLimit.algebraMap_def (G := fun n : ℕ => Stage (n + k))
+        (f := fun i j h => tailMap k i j h) 0 r]
+  change splitCliffordInfinity_ring_shift_equiv k
+      (DirectLimit.Ring.of Stage (fun i j h => splitCliffordMap i j h) 0
+        (algebraMap ℝ (Stage 0) r)) =
+    DirectLimit.Ring.of (fun n : ℕ => Stage (n + k))
+      (fun m n h => tailMap k m n h) 0
+      (algebraMap ℝ (Stage (0 + k)) r)
+  rw [splitCliffordInfinity_ring_shift_equiv_ofStage]
+  congr 1
+  exact (splitCliffordMap 0 (0 + k) (Nat.le_add_right 0 k)).commutes r
+
+/-- The canonical cofinal-tail identification is an `ℝ`-algebra equivalence. -/
+noncomputable def splitCliffordInfinity_alg_shift_equiv (k : ℕ) :
+    SplitCliffordInfinity ≃ₐ[ℝ] SplitCliffordTailInfinity k :=
+  AlgEquiv.ofRingEquiv (f := splitCliffordInfinity_ring_shift_equiv k)
+    (splitCliffordInfinity_ring_shift_equiv_commutes k)
+
 /-- The grade involution induced on the algebraic direct limit of the tail
 beginning at stage `k`. -/
 noncomputable def splitCliffordTailInfinityInvolute (k : ℕ) :
@@ -184,6 +222,45 @@ noncomputable def splitCliffordTailInfinityInvolute (k : ℕ) :
           (G := fun n : ℕ => Stage (n + k))
           (f := fun i j h => tailMap k i j h)
           (hij := h) (CliffordAlgebra.involute (Q := Qsplit (m + k)) x))
+
+/-- The tail grade involution acts stagewise by Mathlib's Clifford grade
+involution. -/
+@[simp] theorem splitCliffordTailInfinityInvolute_ofStage
+    (k n : ℕ) (x : SplitClNNAlg (n + k)) :
+    splitCliffordTailInfinityInvolute k (splitCliffordTailOf k n x) =
+      splitCliffordTailOf k n (CliffordAlgebra.involute (Q := Qsplit (n + k)) x) := by
+  change DirectLimit.Ring.lift (fun n : ℕ => Stage (n + k))
+      (fun m n h => tailMap k m n h)
+      (SplitCliffordTailInfinity k)
+      (fun n => (splitCliffordTailOf k n).comp
+        (CliffordAlgebra.involute (Q := Qsplit (n + k))).toRingHom) _
+      (DirectLimit.Ring.of (fun n : ℕ => Stage (n + k))
+        (fun m n h => tailMap k m n h) n x) = _
+  rw [DirectLimit.Ring.lift_of]
+  rfl
+
+/-- The cofinal-tail grade involution is compatible with the direct-limit
+real module structure, since each finite Clifford grade involution is an
+`ℝ`-algebra homomorphism. -/
+theorem splitCliffordTailInfinityInvolute_smul (k : ℕ) (r : ℝ)
+    (x : SplitCliffordTailInfinity k) :
+    splitCliffordTailInfinityInvolute k (r • x) =
+      r • splitCliffordTailInfinityInvolute k x := by
+  induction x using DirectLimit.induction with
+  | _ n a =>
+      change splitCliffordTailInfinityInvolute k
+          (splitCliffordTailOf k n (r • a)) =
+        r • splitCliffordTailInfinityInvolute k
+          (splitCliffordTailOf k n a)
+      rw [splitCliffordTailInfinityInvolute_ofStage,
+        splitCliffordTailInfinityInvolute_ofStage]
+      change DirectLimit.Module.of ℝ ℕ (fun i : ℕ => Stage (i + k))
+          (fun i j h => tailMap k i j h) n
+          (CliffordAlgebra.involute (Q := Qsplit (n + k)) (r • a)) =
+        r • DirectLimit.Module.of ℝ ℕ (fun i : ℕ => Stage (i + k))
+          (fun i j h => tailMap k i j h) n
+          (CliffordAlgebra.involute (Q := Qsplit (n + k)) a)
+      rw [map_smul, map_smul]
 
 /-- The induced grade involution on every cofinal tail is involutive. -/
 theorem splitCliffordTailInfinityInvolute_involutive (k : ℕ)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.QuadraticDiscriminant
@@ -50,6 +55,28 @@ theorem clifford_product_sq_eq_neg_one_of_orthonormal
     _ = -((ι Q u * ι Q u) * (ι Q v * ι Q v)) := by noncomm_ring
     _ = -(1 * 1) := by rw [huSq, hvSq]
     _ = -1 := by simp
+
+/-- The square of an oriented Clifford plane element records the product of
+the two vector signatures. In particular, the plane squares to `-1` when the
+vectors have equal unit signature and to `+1` when their unit signatures are
+opposite. This is a statement about the Clifford algebra's real scalar image;
+it does not identify that bivector with a central scalar imaginary unit. -/
+theorem clifford_product_sq_eq_neg_quadratic_product_of_orthogonal
+    (u v : M) (horth : QuadraticMap.polar Q u v = 0) :
+    (ι Q u * ι Q v) ^ 2 =
+      algebraMap R (CliffordAlgebra Q) (-(Q u * Q v)) := by
+  have hcomm := clifford_orthogonal_vectors_anticommute Q u v horth
+  calc
+    (ι Q u * ι Q v) ^ 2 = ι Q u * (ι Q v * ι Q u) * ι Q v := by
+      simp only [pow_two, mul_assoc]
+    _ = -((ι Q u * ι Q u) * (ι Q v * ι Q v)) := by
+      rw [hcomm]
+      noncomm_ring
+    _ = -(algebraMap R (CliffordAlgebra Q) (Q u) *
+          algebraMap R (CliffordAlgebra Q) (Q v)) := by
+      rw [ι_sq_scalar, ι_sq_scalar]
+    _ = algebraMap R (CliffordAlgebra Q) (-(Q u * Q v)) := by
+      simp only [map_mul, map_neg]
 
 /-- Multiplication by a positive unit generator twice recovers the other
 orthogonal unit generator; this is the first oriented-plane quarter-turn law. -/

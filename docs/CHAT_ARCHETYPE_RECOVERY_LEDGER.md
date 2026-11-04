@@ -1001,9 +1001,93 @@ Peirce lemmas are independently owned in `PeirceSpine/Basic.lean` and
 `PeirceSpine/Tetraktys.lean`. The submitted code fence contains the malformed
 token `defpeirce11`, so it is not itself a compilable owner file. This is a
 duplicate formulation, not eight new independent algebraic structures.
-The packet's `trace_mul_comm_assoc` proof is particularly suspect: its final
-cyclic rewrite sequence should be checked against Lean and reduced to the
-standard trace-cyclicity theorem if that is its only content.
+The source packet's `trace_mul_comm_assoc` statement is now directly owned by
+`Physics/MatrixTraceBimodulePairingNative.lean` as
+`matrix_trace_inner_derivation_cyclic`, generalized from its finite-matrix
+`CommRing` carrier. The same owner adds
+`matrix_trace_commutator_pairing`, the equivalent skew-adjoint trace-pairing
+law over the same carrier. Both declarations passed the locked single-file
+Lean check on 2026-11-04. `Matrix.trace_mul_cycle` is available in Mathlib;
+the archive proof's particular rewrite sequence was not itself checked as a
+standalone module, so this audit relies on the new direct kernel-checked owner
+for the claimed identity.
+
+The next source-order fence in the same archive (turn 0008, Archetype VII)
+concerns the Cartan reflection and Drazin--Moore--Penrose split. Its reflection
+involution, conjugation grading, and Peirce kernel/range decomposition are
+already covered by `Tetraktys.archetype_A2_peirce_cartan_grading_and_tangent_closure`
+and its dependencies. The curvature clause is now stated directly as
+`Tetraktys.peirce_tangent_commutator_is_even`, proving
+`[P, [[P,A], [P,C]]] = 0` for an arbitrary associative ring and idempotent
+`P`. The DMP sandwich fixed by the Cartan reflection is now owned by
+`CyclotomicGaloisNilpotentSylvesterSynthesis.drazin_mp_sandwich_invS_invariant`;
+it uses only the Drazin equations and the inner-inverse law `M * Mdag * M = M`,
+then reuses the exact collapse to `P * Mdag * P`. Both owner files passed
+locked single-file Lean checks on 2026-11-04. This verifies these ring
+identities; the source's broader geometric interpretation still requires an
+identified geometric carrier.
+
+### 2026-11-04: `17Kj7o...` turn 0015 Cartan/QGT fence
+
+Turn 0015's Archetypes VII–VIII are owner matches, so no duplicate
+matrix-specific theorem packet was added. The source's `cartanReflection`
+equals the existing `PeirceSpine.invS`; its involution, even-minus-odd
+conjugation, and kernel/range split are covered by
+`Tetraktys.archetype_A2_peirce_cartan_grading_and_tangent_closure` and the
+division-free projection/decomposition results in `Core/PeirceGrading.lean`.
+For the orthogonal-projection variant, `StarGrading.star_invS` proves
+self-adjointness when `P` is self-adjoint, while the same involution theorem
+supplies the square-one law used for unitarity.
+
+The DMP reflection invariance is generalized from finite matrices to an
+associative ring by
+`CyclotomicGaloisNilpotentSylvesterSynthesis.drazin_mp_sandwich_invS_invariant`;
+its exact Drazin/inner-inverse hypotheses and collapse to `P * Mdag * P`
+remain explicit. The source's tangent-product evenness, curvature and metric
+evenness, and Lie/Jordan decomposition are already covered by
+`PeirceQuantumGeometricTensor.tangent_product_mem_even`,
+`tangent_lie_jordan_products_mem_even`, and `lie_jordan_product_split`.
+The metric commutator-zero statement follows directly from even-grade
+membership and `mem_even_iff`, so adding a matrix-only duplicate would narrow
+the existing result. The curvature commutator has also been made explicit in
+the staged `Tetraktys.peirce_tangent_commutator_is_even` theorem over an
+arbitrary associative ring.
+
+Finally, the finite-matrix trace cancellation is an instance of
+`PeirceQuantumGeometricTensor.cyclicFunctional_tangent_curvature_core_complement_cancel`,
+which works for any cyclic additive functional; the matrix trace specialization
+is separately named `tangent_curvature_core_complement_trace_cancel`. This
+audit matches the algebraic claims and their actual carriers. It does not
+promote the source's Berry/Chern terminology to a topological Chern-class
+theorem. The `Tetraktys` change was staged before this audit; this ledger
+addition records the full fence correspondence.
+
+### 2026-11-04: `17Kj7o...` turn 0016 contextual/KMS fence
+
+Turn 0016 repeats the turn 0014 contextual-dressing, permutation-channel,
+Clifford-pair, and modular-defect material. Those source clauses are already
+matched by `NoncommutativeContextInteraction`'s star-ring dressing,
+self-adjoint Jordan / skew-adjoint Lie, cyclic contextual-duality, and
+pinching results; `ChoiCompletePositivity.unitaryMixtureChannel_unital_tracePreserving`
+and `permutationMatrix_unitary`; `anticommuting_involutions_spinor_laws`; and
+`MatrixKMSModularState.kms_expectation_commutator_eq_modular_defect`. As
+recorded in the turn 0014 entry, channel weights establish unitality and trace
+preservation, not positivity or complete positivity, and the Clifford trace
+consequence is only two-torsion without cancellation assumptions.
+
+The fence's final `master_kms_qgt_synthesis` bundle had no single owner match.
+`MatrixKMSModularState.traceWeight_peirce_tangent_qgt_synthesis` now proves
+its four concrete conclusions for finite matrices: a trace weight `Tr(K·)`
+annihilates `[P,X]` when `K` commutes with idempotent `P`; the odd grade has
+zero readout; the even Peirce compression preserves the readout; and the
+product `[P,A][P,B]` is fixed by even compression. The proof uses trace
+cyclicity and the existing ring-level Peirce grading. Its hypotheses do not
+assert positivity, normalization, or invertibility of `K`, so the theorem is
+reported as a commuting trace-weight identity rather than a full KMS-state
+claim. The owner passed its locked single-file check and OpenGauss Gate 4
+kernel/axiom audit (zero sorries, admits, and traps). No independent A-A or
+QA-A review was available in this session because the agent-thread limit was
+exhausted.
 
 ### Shared-link source batch, exponential/loxodromic/modular A97–A100
 
@@ -1254,6 +1338,11 @@ not create a parallel API.
   `nested_zorn_three_corner_twisted_contraction_strippers_are_inverses`; it
   derives square-zero of each signed sum from the same corner relations and
   reuses that elementary inverse lemma.
+  A source-facing equality test is now also available as
+  `nested_zorn_signed_edge_j_bridge_iff_two_torsion`: replacing the symmetric
+  two-path bridge by the claimed antisymmetric `J₁₃` bridge is valid exactly
+  when twice the reverse endpoint path is zero. This specialization passed
+  the locked single-file Lean check on 2026-11-04.
 
 The transcript's references to “positive Grassmannian,” “cluster mutation,”
 “topological protection,” and physical connections are interpretations here;
@@ -1591,20 +1680,102 @@ infinite-colimit compatibility statement. In the checked-out owners:
   constructs canonical ring homomorphisms in both directions between
   `SplitCliffordHeadTailInfinity k` and `SplitCliffordInfinity`, proves their
   stage formulas and both inverse laws, and packages the result as
-  `splitCliffordHeadTailInfinity_ringEquiv`. The targeted locked build
-  kernel-checked these declarations. This is an algebraic direct-limit ring
-  equivalence; it does not yet identify the limit with a graded tensor product
-  of a finite head and `SplitCliffordTailInfinity`.
+`splitCliffordHeadTailInfinity_ringEquiv`. The targeted locked build
+kernel-checked these declarations. This is an algebraic direct-limit ring
+equivalence; the graded tensor product identification is recorded below with
+its precise tail offset.
 
 Accordingly, the finite graded head/tail law, the fixed-head direct-limit ring
 equivalence, and both Clifford- and matrix-limit cofinal-tail shifts are
-genuine owners; the stronger claim
-`SplitCliffordInfinity ≃ₐ[ℝ] Cl(k,k) ᵍ⊗ SplitCliffordTailInfinity k` (or an
-equivalent operator-level infinite tensor decomposition) remains an open
-bridge. The fixed-head colimit comparison now exists, but a colimit-level
-construction and proof of the claimed infinite tensor decomposition are still
-required. The transcript’s “Cantor fractal” wording supplies no such theorem
-and is not promoted as one.
+genuine owners. The fixed-head owner also proves arbitrary-interval
+compatibility with `id ⊗ splitCliffordMap` and a module equivalence from
+`Cl(k,k) ⊗ SplitCliffordInfinity` to
+`SplitCliffordHeadTailInfinity k`. The module equivalence alone is not
+multiplicative. The stronger graded algebra result for the actual offset-zero
+tail and fixed-head limit is now proved below. The transcript’s “Cantor
+fractal” wording supplies no additional theorem and is not promoted as one.
+
+#### Follow-up: native parity grading on the cofinal tail, 2026-11-04
+
+`Canonical/SplitCliffordTailParity.lean` now constructs the even and odd
+eigensubmodules of the actual cofinal Clifford tail under its lifted grade
+involution. The division-by-two projections are proved to land in the two
+sectors, reconstruct each tail element, vanish on the opposite sector, and
+uniquely recover both components. Consequently the sectors are an internal
+direct complement. Their multiplication laws are proved in all four ordered
+parity cases, giving a native `SetLike.GradedMonoid` and
+`GradedAlgebra (splitCliffordTailGrade k)` over `ZMod 2`. The canonical maps
+from every finite tail stage preserve its Clifford grade.
+
+The owner passed `run_locked_lean.py` and the locked Lake target
+`InfoGeometry.Canonical.SplitCliffordTailParity` (3,552 jobs, exit 0). This
+closes the missing tail grading structure identified above.
+
+`Canonical/SplitCliffordHeadTailTower.lean` now additionally proves
+`splitCliffordHeadTailStep_toLinearMap`: the fixed-head successor is the
+ordinary module tensor of the head identity with `splitCliffordStep`. The
+transported tower bond has the corresponding theorem
+`splitCliffordHeadTailMap_succ_toLinearMap`. The owner now proves composition
+of arbitrary fixed-head interval bonds and
+`splitCliffordHeadTailMap_toLinearMap`, identifying each interval bond on the
+underlying modules with `id ⊗ splitCliffordMap m n`. These are diagram-level
+linear compatibility results. The separate graded-algebra equivalence below
+now supplies the multiplicative tensor/direct-limit identification. It
+additionally proves the canonical module
+equivalences between each explicit ring direct limit and its real-module
+quotient, then constructs `splitCliffordHeadTailModuleEquiv` with source
+`CliffordAlgebra (Qsplit k) ⊗[ℝ] SplitCliffordInfinity` and target
+`SplitCliffordHeadTailInfinity k`. This module theorem is not multiplicative.
+The final inverse proofs use linear-map extensionality on whole graded-tensor
+stage elements, avoiding recursive extensionality through tensor factors.
+Validation after this extension: locked single-file Lean check passed; locked
+Lake target `InfoGeometry.Canonical.SplitCliffordHeadTailTower` passed (3,566
+jobs); OpenGauss strict screener passed with 0 traps; staged proof-proxy gate
+passed; Gate 4 kernel and axiom audit passed for 28 declarations. The module
+equivalence itself is linear; the subsequent graded-algebra equivalence
+upgrades the comparison using the graded tensor multiplication.
+
+The fixed-head colimit now also has an induced `ZMod 2` grading in
+`Canonical/SplitCliffordHeadTailParity.lean`: its even and odd involution
+eigensubmodules are complementary, multiplication respects the grading, and
+the resulting type has a `GradedAlgebra` instance. The tower bonds preserve
+the finite-stage eigensubmodules, and every canonical stage map preserves
+parity in the colimit. The module passes a locked Lean check and the locked
+Lake target `InfoGeometry.Canonical.SplitCliffordHeadTailParity` (3,567 jobs),
+OpenGauss strict screening (0 traps), staged proof-proxy gate, and Gate 4
+kernel/axiom audit (28 declarations). This closes the grading structure on
+the target.
+
+#### Follow-up: fixed-head graded tensor algebra equivalence, 2026-11-04
+
+`Canonical/SplitCliffordHeadTailParity.lean` now proves
+`splitCliffordHeadTailGradedTensorAlgEquiv`: the graded tensor algebra of the
+finite head `CliffordAlgebra (Qsplit k)` and `splitCliffordTailGrade 0` is
+algebra-equivalent over `ℝ` to `SplitCliffordHeadTailInfinity k`. The proof
+constructs the graded tensor lift, identifies its underlying linear map with
+the already-proved module equivalence on every finite stage, and obtains
+bijectivity from that equivalence. This is a multiplicative result with the
+graded sign encoded by the graded tensor product.
+
+The owner passed `run_locked_lean.py` and the locked Lake target
+`InfoGeometry.Canonical.SplitCliffordHeadTailParity` (3,569 jobs, exit 0);
+the companion tower owner passed its locked Lean check and Lake target (3,567
+jobs, exit 0). The tower and cofinal-tail shift owners also prove that their
+ring equivalences preserve real scalars and package them as `AlgEquiv`s. Their
+new declarations passed `run_locked_lean.py`; the tower target passed the
+locked Lake build (3,567 jobs), and the parity target passed the locked Lake
+build (3,569 jobs, exit 0).
+
+The composite theorem
+`splitCliffordInfinity_headTailGradedTensorAlgEquiv` gives a genuine
+`ℝ`-algebra equivalence
+`Cl(k,k) ᵍ⊗ splitCliffordTailGrade 0 ≃ₐ[ℝ] SplitCliffordInfinity`.
+The formerly open offset-`k` variant is now constructed by
+`splitCliffordHeadTailTailAlgEquiv`: it lifts the cofinal-tail `AlgEquiv` to the
+graded tensor product, proves the reverse transport is its inverse, and fixes
+the finite head factor. The owner passed the locked single-file Lean check;
+the older Gate 4 and Lake results above cover the earlier offset-zero source
+snapshot only.
 
 ### Shared-link source batch: Bogoliubov, naturality, and defect A45–A50
 
@@ -1810,6 +1981,17 @@ traps), staged proof-proxy gate, and semantic-vacuity audit (zero findings)
 on 2026-11-04. The bridge still assumes the square-zero von Neumann regular
 pair; it does not infer that regularity from nilpotency alone.
 
+Normalization boundary for the accompanying Casimir narrative: the
+associative-ring owner uses the division-free scaled element
+`C₂ = H² + 2V`, so the usual characteristic-zero normalization
+`C = ½H² + V` is `C₂/2`. In the square-zero reflexive-pair theorem the checked
+value is `C₂ = 3V`, with `V = NM + MN` the support idempotent; the theorem does
+not identify this with `3 • 1` unless the support is separately proved to be
+the unit. For arbitrary-order triples the owner proves centrality and the
+parabolic identity, but does not prove a universal scalar Casimir value from
+nilpotency order alone. Such a value requires additional representation and
+spectrum hypotheses.
+
 The bridge also defines `nilpotentGeneratedSpectralTriple` using the existing
 `ConnesSpectral.SpectralTriple` commutator-seminorm owner, with Dirac element
 `N + N†`. `nilpotent_generated_spectral_commutator` proves its commutator is
@@ -1968,3 +2150,330 @@ strict OpenGauss (zero traps), and staged proof-proxy gate. The file-wide
 semantic-vacuity audit reports 87 pre-existing warnings (record-field and
 trivial projection lemmas); neither new theorem appears among the reported
 findings. Verified on 2026-11-04.
+
+### 2026-11-04: Inner-conjugation covariance of the `sl₂` Casimir
+
+`Canonical/InnerConjugationSL2Casimir.lean` now connects the existing
+associative-ring `sl₂` Casimir owner to the existing unit-conjugation
+equivalence. `innerConjugation_map_sl2Casimir` proves that the division-free
+quadratic Casimir of a triple is sent to the same Casimir expression on the
+conjugated generators. `innerConjugation_preserves_sl2_casimir_centrality`
+transports the three triple relations and derives centrality against each
+transported generator from `universal_sl2_casimir_centrality_any_index`.
+This is an algebraic unit-conjugation result; it does not construct an
+analytic one-parameter flow or assert norm continuity.
+
+The owner passed the locked Lean check, its targeted Lake build (8,930 jobs),
+OpenGauss Gate 4 axiom/kernel audit (2 declarations), strict screening (zero
+traps), and the staged proof-proxy gate. `Canonical/All.lean` now imports the
+owner; the umbrella build completed successfully (13,598 jobs, exit 0), with
+many linter warnings in unrelated replayed modules. This does not close the
+separate fixed-head graded-tensor/tail-colimit identification described above.
+
+The same umbrella build also includes the committed additions in
+`Canonical/ConnesNCSpectralMetricSupremum.lean`:
+`lipschitzBall_isometric_ringEquiv_iff`,
+`spectralDistanceSet_isometric_ringEquiv`, and
+`supremumSpectralDist_isometric_ringEquiv`. They establish exact invariance
+under an isometric ring equivalence with contravariantly transported
+readouts. This remains a normed-algebra supremum result and does not establish
+a Dixmier trace, a spectral-dimension theorem, or an analytic spectral-triple
+classification.
+
+### 2026-11-04: Fixed-head graded tensor transport across cofinal tails
+
+`splitCliffordHeadTailTailAlgEquiv h k l` now proves that reindexing the
+cofinal split-Clifford tail from offset `k` to `l` induces an `ℝ`-algebra
+equivalence while preserving the finite head of size `h`. The construction uses
+the actual graded tensor inclusions and the tail grading-preservation theorem;
+`splitCliffordHeadTailTailTransport_left_inverse` proves the reverse map is a
+two-sided inverse, and the result is packaged by `AlgEquiv.ofBijective`. The
+owner passed `python3 tools/infra/run_locked_lean.py
+lean/InfoGeometry/Canonical/SplitCliffordHeadTailParity.lean`; strict OpenGauss
+screening found zero traps and both staged and diff proof-proxy gates passed.
+The targeted locked Lake build completed successfully (3,569 jobs, exit 0).
+Lean reports one pre-existing unnecessary-`simpa` warning at line 359. No
+independent A-A/QA-A review was run for this latest change.
+
+### 2026-11-04: Shared-link A26–A28 connection and superderivation audit
+
+The source-order follow-up for A26–A28 required no new theorem API. A26's
+17 displayed inner-derivation identities are already proved by
+`PeirceSpine.archetype_A26_qgt_inner_derivations` and the matching
+`PureNonCommutativeOperatorSpine.archetype_A26_amari_nagaoka_dually_flat_connections`.
+They concern the specific commutator maps generated by `Q₊`, `Q₋`, `V`, and
+`Σ` in an associative ring with an idempotent cut; their names do not construct
+a manifold, affine connection, or geometric curvature tensor. A27's chiral
+grading identities are already owned by
+`PeirceSpine.archetype_A27_grading_parities`.
+
+A28's source theorem incorrectly states that the mixed superderivation
+anticommutator equals `connSig X = [Σ, X]`. The checked declarations
+`PeirceSpine.archetype_A28_graded_derivations` and
+`PureNonCommutativeOperatorSpine.archetype_A28_graded_superderivations_and_susy_connection_factorization`
+instead prove the mixed value is `{V, X} = V X + X V`; the latter owner
+documents the correction explicitly. The focused `Supercharge.lean` and
+`PureNonCommutativeOperatorSpine.lean` locked Lean checks both exited 0. They
+reported existing tactic/linter warnings; this audit did not run Lake builds
+or independent A-A/QA-A review for those owners. This resolves the A26–A28
+source correspondence only, not the remaining shared-link A29–A44 audit or
+the complete multi-archive objective.
+
+### 2026-11-04: `17Kj7o...` turn 0012 contextual density / cross-correlation fence
+
+This packet is already covered by reusable owners; no duplicate matrix-only
+theorem packet was added. The matrix contextual-dressing self-adjointness
+claim is the specialization of
+`OperatorAlgebra.NoncommutativeContextInteraction.contextualDress_selfAdjoint`
+for arbitrary star rings. Its cyclic-readout and sharp-projector affinity
+claims are generalized by `cyclic_contextualDress` and
+`cyclicFunctional_projectionDress_affinity`, respectively, for arbitrary
+cyclic additive functionals. Self-adjoint Jordan affinity and skew-adjoint Lie
+order defect are `anticommutator_selfAdjoint` and
+`commutator_skewAdjoint`; finite-matrix trace order invariance and vanishing
+commutator readout are instances of `Matrix.trace_mul_comm`.
+
+The exact contextual trace identity is owned without matrix coordinates by
+`contextual_commutator_cyclic_duality`:
+`τ (p * [a,b]) = τ ([p,a] * b)`. The Peirce refinement
+`contextual_peirce_coherence_crosscorr` identifies `[p,a]` with the difference
+of its directed off-diagonal corners, and
+`contextual_commutator_zero_of_pinched` proves vanishing when `[p,a]=0`.
+Thus the archive's displayed duality and pinching corollary are established;
+the question-marked stronger formula involving only a product of two
+coherences is not promoted. The source's `IsDensityMatrix` record carries
+self-adjointness and unit trace only, not positivity, so its probability and
+Born-rule terminology adds no positivity theorem. These are source-to-owner
+matches, not fresh kernel checks in this audit; the earlier targeted build
+for `Tetraktys` and `CyclotomicGaloisNilpotentSylvesterSynthesis` completed
+successfully (8,944 jobs, exit 0).
+
+### 2026-11-04: `17Kj7o...` turn 0014 permutation / Clifford / KMS packet
+
+The first fence ends with two `sorry`s and is not a complete Lean proof. Its
+KMS twist is also oriented as `K⁻¹ A K`, which does not yield the displayed
+trace identity for the stated expectation `Tr(K ·)`. Fence 002 corrects the
+convention to `σ(A) = K A K⁻¹` and supplies a complete proof. The existing
+finite KMS owner `Modular.MatrixKMSModularState.kms_modular_condition`
+already proves the equivalent dual form
+`E(B * σ(A)) = E(A * B)`. It now additionally owns
+`kms_expectation_commutator_eq_modular_defect`, deriving
+`E([A,B]) = E(B * (σ(A)-A))` from that identity. The separate stationarity
+claim under a commuting modular generator is already present as
+`ModularCocycleKMSBridge.kms_stationarity_commutator_zero`.
+
+For permutation channels, the repository already owns the real Birkhoff
+decomposition and permutation-matrix doubly-stochastic laws in
+`Routing/BirkhoffVonNeumann.lean`, plus trace-preserving Kraus maps under their
+completeness equation in `Quantum/ChoiCompletePositivity.lean`. The source's
+operator-level weighted unitary-conjugation channel was not the same theorem;
+that owner now proves `unitaryMixtureChannel_unital_tracePreserving` for
+normalized complex weights and `permutationMatrix_unitary`. The normalized
+weights are not assumed nonnegative, so the new theorem asserts unitality and
+trace preservation only, not stochastic positivity or complete positivity.
+
+The Clifford source packet's four identities are now generalized in
+`OperatorAlgebra.NoncommutativeContextInteraction` as
+`anticommuting_involutions_spinor_laws`, over an arbitrary associative ring,
+with no division by two. Its cyclic-readout consequence is
+`cyclicFunctional_clifford_spinor_two_torsion`; accordingly the trace statement
+is `2 • τ (x*y) = 0`, not unconditional trace-zero unless 2-torsion can be
+cancelled. All three changed Lean owners passed their locked single-file
+checks; the last checks reported only pre-existing linter warnings. The new
+results are staged. The combined locked Lake build of
+`InfoGeometry.Quantum.ChoiCompletePositivity`,
+`InfoGeometry.Modular.MatrixKMSModularState`, and
+`InfoGeometry.OperatorAlgebra.NoncommutativeContextInteraction` completed
+successfully (3,194 jobs, exit 0). No independent A-A/QA-A review was run for
+this packet. After replacing the unsupported closing command `end noncomputable
+section` with the ordinary anonymous `end`, Gate 4 accepted all three owners;
+the source still has its `noncomputable section` opening. Each generated axiom
+audit passed, with zero sorries, admits, or traps.
+
+### 2026-11-04: `17Kj7o...` turn 0020 Drazin / Moore–Penrose packet
+
+The transcript's Campbell–Meyer equations are now owned by
+`ZornNambuDeRhamDiracKahlerPoset.campbell_meyer_drazin_equations`; they are
+derived from the repository's `DrazinResolution` and existing
+`campbell_meyer_drazin_and_superoperator_tetraktys` theorem, with multiplication
+order preserved. The Malik–Thome clauses are owned by
+`malik_thome_dmp_characterization`, conditional on the existing Drazin and
+Moore–Penrose structures. These additions do not assert existence or
+uniqueness of either structure. The focused locked Lean check exited 0 and
+OpenGauss Gate 4 accepted the owner with kernel and axiom audits passing.
+
+The subsequent geometry/invariant prose is treated as a claim inventory, not
+as an established equivalence: its links among Lorentz representations,
+Poincaré/SUSY, super-Grassmannians, twistor/amplituhedron constructions, and
+Cartan curvature require explicit carrier maps and theorem statements. Existing
+repository owners must be traced before adding any bridge. In particular, the
+uncertainty/QGT results concern state-space scalar inequalities; they alone do
+not prove that uncertainty generates Cartan curvature or a higher-graded
+symmetry algebra.
+
+The accompanying proposed “Archetype XVII” code is being audited against the
+actual Lean owners rather than copied verbatim. Its Peirce para-grading,
+square-zero corners, tetraktys products, and commutator/Jordan decompositions
+are already represented by the `PeirceSpine` owners. One proposed extension
+must be rejected on its stated carrier: for every associative ring and
+idempotent `P`, the off-diagonal Peirce element `N₊ = P * X * (1 - P)` obeys
+`N₊ * N₊ = 0`, regardless of whether coefficients of `X` fail to commute.
+Thus the claimed `N₊(u)^2 = N₋(u × u) ≠ 0` cannot be a theorem about this
+associative Peirce corner. The repository's A89 result
+`TelegrapherTwoStateMasterPoset.archetype_A89_peirce_bdg_square_commutator_anomaly_and_grading_symmetrization`
+concerns squares of grading-plus-mode operators; it does not identify such a
+square with the square of `N₊`. A Zorn-vector or non-associative carrier would
+need its own explicit construction and map before that claim could be
+transferred.
+
+The other displayed formulas separate into an associative-ring Cartan
+commutator split (an algebraic identity), a Hilbert-space QGT bound, and
+twistor/Grassmannian coordinate constructions. Their conjunction alone does
+not provide a common representation or prove that uncertainty generates
+Einstein–Cartan curvature. A newly staged
+`ChiralLorentzTwistorCartanUncertaintyPoset.lean` draft failed its first
+locked Lean check; edits to that staged file were subsequently observed in the
+shared worktree, so this audit leaves that file untouched pending a stable
+review. The initial compiler output included unsolved goals, a missing
+`hProper` argument to an existing seed-form theorem, and an unknown A60
+identifier.
+
+### 2026-11-04: Current-thread chiral twistor / uncertainty-curvature packet
+
+The repository already owns several independent algebraic components of this
+proposal:
+
+- `OperatorAlgebra.SL2CTwinWeylZornAction` proves a group action of
+  `SL(2,ℂ) × SL(2,ℂ)` on the existing twin-Weyl Zorn block and invariance of
+  its two determinant readouts. This is the implemented chiral action, with
+  its actual carrier and action law.
+- `Quantum.PoincareSupercharge` reuses the Pauli-paravector super-Poincaré
+  anticommutator, determinant, trace, and null-cone results. It is not a
+  derivation of the Poincaré algebra from the Peirce nilpotent pair.
+- `Twistor.TwoTwistorPlucker` and
+  `GrandUnification.AmplituhedronTwistorPluckerDictionary` prove Plücker/Klein
+  relations for twistor pairs or arbitrary two-row matrices. The latter
+  explicitly does not define positive-Grassmannian cells or amplituhedron
+  membership; no super-Grassmannian or para-Kähler carrier is supplied by that
+  theorem.
+- `Canonical.EinsteinHilbertPalatiniActionBridge` defines torsion and
+  curvature two-forms in an exterior algebra and proves algebraic properties
+  under its stated hypotheses. It does not identify those forms with
+  commutators of the QGT Hilbert-space operators.
+- `QuantumGeometry.Projective.QGT.berryCurvature_eq_commutator` and
+  `Canonical.CramerRaoOnsagerCommutatorUncertainty` do prove the uncertainty
+  bound and, for skew-adjoint bounded operators, the scalar identity between
+  Berry curvature and the state expectation of their operator commutator.
+
+Accordingly, the proposed final implication “uncertainty creates
+Einstein–Cartan curvature” is not promoted: the current owners have different
+carriers (exterior forms, Pauli/twistor coordinates, and bounded Hilbert-space
+operators), and the required representation/intertwining map is absent from
+these declarations. The boxed identification of the Cartan curvature operator
+with a scalar multiple of the Berry form also needs an explicit representation
+and expectation map; an equality to a scalar expectation alone cannot identify
+an operator-valued curvature with a real number. Likewise, a central anomaly
+or infinite higher-grade closure requires a specified cocycle and a proved
+cocycle/closure theorem; it does not follow from a nonzero commutator or the
+Cramér–Rao inequality by itself. This is a carrier-by-carrier source audit,
+not a claim that these constructions are absent elsewhere in the repository.
+
+### 2026-11-04: Current-thread real Clifford / Krein QGT packet
+
+The Clifford proposal is not a repository-wide replacement of complex scalars
+by bivectors. The owner `Clifford.DiracPauliGamma` gives a concrete finite
+matrix witness: `gamma23_mul_self` proves the selected spatial bivector
+`γ²γ³` squares to `-1`, and `gamma23_anticomm_gamma2` /
+`gamma23_anticomm_gamma3` prove anticommutation with its two plane vectors;
+`gamma23_comm_gamma0` and `gamma23_comm_gamma1` show it commutes with vectors
+outside that plane. Thus the correct statement is plane-relative, not that a
+bivector anticommutes with every vector. `Clifford.SplitAtom` separately owns
+the split-signature matrix units `I_sq`, `J_sq`, and `K_sq`, with signs `-1`,
+`+1`, and `+1`. These are distinct concrete carriers and do not establish a
+universal identification of the central scalar `Complex.I` with a bivector.
+
+The proposed geometric-product split is valid at the vector level when stated
+through the Clifford relation: scalar inner product plus bivector wedge part.
+It does not imply that the grade-two part of every product is a scalar multiple
+of one fixed bivector, nor that reversion gives a scalar nonnegative norm for
+every multivector in indefinite signature. Consequently the claimed
+signature-dependent Cramér–Rao inequality is not accepted from a Krein form:
+the repository's QGT/Robertson owners derive Cauchy–Schwarz using a positive
+complex Hilbert inner product, while a general indefinite form has no such
+positivity. A valid bridge needs an explicit positive fundamental-symmetry
+inner product and a theorem connecting its QGT to the Clifford/Krein data.
+The claimed “perfect squeezing” consequence is likewise not derived.
+
+The existing owner search also found `Carrier.HestenesKrein` (an indefinite
+bilinear form with a fundamental symmetry and a positivity field on the
+induced form), `Clifford.SplitAtomInvolutions`, the split Clifford algebra
+owners under `Algebraic`, and the positive-Hilbert QGT owners
+`Quantum.QuantumGeometricUncertaintyPrinciple` and
+`Canonical.CramerRaoOnsagerCommutatorUncertainty`. They are not yet tied by a
+proved map for the proposed Clifford-valued QGT. The in-progress
+`ChiralLorentzTwistorCartanUncertaintyPoset.lean` and
+`UncertaintyToCartanCurvatureBridge.lean` files were concurrently modified in
+the shared tree during this audit; no edits were made to either. Their staged
+presence and descriptive theorem names are not treated as proof of the
+Clifford/Krein claims. No compiler check was launched while the shared drafts
+were changing.
+
+### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
+
+- Owner module [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean) (`InfoGeometry.OperatorAlgebra.PeirceSpine`, `0` `sorry`, `0` `admit`, `0` OpenGauss traps) formalizes over any non-commutative ring `[Ring B]` (and `[StarRing B]` / `H →L[ℂ] H` where stated):
+  - **Stage `CL₁` (`archetype_CL1_primordial_chiral_cut_and_fourfold_peirce_anatomy`)**: fourfold Peirce partition `P X P + conePlus P X + coneMinus P X + (1 - P) X (1 - P) = X`, grading involution `invS P * invS P = 1`, nilpotent chiral cones, and boost eigenvalue ladder `[S_P, N_±] = ±2 N_±`.
+  - **Stage `CL₂` (`archetype_CL2_chiral_dual_real_lorentz_representation`, `hestenes_krein_real_doubled_geometric_algebra_and_krein_adjoint`, `clifford_krein_geometric_product_and_jordan_associator_law`)**: chiral duality `S_P Φ = J`, `S_P J = Φ`, two-mode Lorentz closure `[Φ₁, Φ₂] = -[J₁, J₂] = zornTetradSkew P A₁ C₁ A₂ C₂`, `[Φ₁, J₂] = -[J₁, Φ₂] = -S_P zornTetradSym P A₁ C₁ A₂ C₂`, orthogonal chiral ideal split, Hestenes–Krein operator bivector product `J * Φ = Σ`, `Φ * J = -Σ`, `[J, Φ] = 2 Σ`, real QGT split `2 Q_± = V ± Σ = Φ² ± J Φ`, Krein–Dirac involution `kreinAdjoint P X = S_P X⋆ S_P` (proving `kreinAdjoint P (genV P A (star A)) = genV P A (star A)` and `kreinAdjoint P (genSig P A (star A)) = genSig P A (star A)`), universal geometric product split `2 X Y = {X, Y} + [X, Y]`, and Clifford–Krein reversion modulus `(g + I Ω)(g - I Ω) = g² - (I Ω)² - [g, I Ω]`.
+  - **Stage `CL₃` (`archetype_CL3_poincare_semidirect_and_susy_superalgebra`)**: abelian translation cones `[N_+(A₁), N_+(A₂)] = 0`, semidirect action of even-grade generators on `conePlus`/`coneMinus`, SUSY anticommutators `{N_+, N_-} = V` and `{Φ₁, Φ₂} = -{J₁, J₂} = zornTetradSym`, and centrality `[V, N_±] = [V, Φ] = [V, J] = 0`.
+  - **Stage `CL₄` (`archetype_CL4_super_grassmannian_parakahler_structure`)**: first-order Socratic aporia `(P + Φ)² - (P + Φ) = V`, unipotent super-Grassmannian chart idempotency `superGrassmannChartPlus² = superGrassmannChartPlus`, chart commutator `[superGrassmannChartPlus P A, superGrassmannChartMinus P C] = Σ + Φ`, and Para-Kähler curvature/Hessian identities `[δ_+, δ_-](X) = [Σ, X]` and `-2({δ_+, δ_-}(X)) = derivSqPhi + derivSqJ`.
+  - **Stage `CL₅` (`archetype_CL5_twistor_incidence_and_positive_amplituhedron`)**: bicolored plabic shear commutator `[U_+, U_-] = -Σ`, three-term non-commutative Plücker exchange `opPluckerBivector`, and Hermitian amplituhedron seed positivity `seedPositivityForm P A X = (N_-(A⋆) X)⋆ (N_-(A⋆) X) + (N_+(A) X)⋆ (N_+(A) X)`.
+  - **Stage `CL₆` (`archetype_CL6_uncertainty_as_creator_of_metric_and_spin_curvature` & `nilpotent_first_chiral_lorentz_twistor_cartan_gravity`)**: exact equivalence `genSig P A C = 0 ↔ genV P A C = 0 ↔ (qgtPlus P A C = 0 ∧ qgtMinus P A C = 0)`, universal Grade-3 Jordan Associator identity `JordanAssoc X Y Z = comm (comm Z X) Y`, and the nilpotent-first Uncertainty–Curvature Anomaly Theorem `JordanAssoc (star N_plus) N_plus N_plus = comm (Sigma_op N_plus) N_plus`, together with the two-index metric/Cartan tensors `G_metric` and `R_cartan`.
+  - **Stage `CL₇` (`archetype_CL7_elie_cartan_torsion_and_spin_connection_gravity` & `cartanEhresmann_commutator_and_chiral_gamma5_anomaly_cocycle`)**: soldered Maurer–Cartan curvature `cartanCurvature2Form P Φ = J + V`, spin-connection curvature `cartanCurvature2Form P Σ = V²`, covariant torsion `cartanCovariantTorsion P Σ Φ = (1 + 2V) J`, Bianchi identities, Cartan–Ehresmann commutator `[Σ + Φ, Σ + J] = -2Σ + 2V(Φ - J)`, and chiral `γ₅ = S_P` anomaly cocycle `S_P [Φ, J] = -2V`.
+  - **Stage `CL₈` (`archetype_CL8_higher_grade_uncertainty_anomaly_in_symmetry_closure`)**: higher-grade (`±2`) Kantor uncertainty anomaly `Σ_{A,C} N_+(Z) - Σ_{Z,C} N_+(A) = upperHomotopeBracket P C A Z`, Jacobi identity, square-zero law, and bilateral uncertainty sandwich `kantorG0²(X) - {kantorGp2, kantorGm2}(X) = Σ X Σ`.
+  - **Stage `CL₉`–`CL₁₀` (`archetype_CL9_recursive_meta_tower_and_hilbert_cramer_rao_curvature_bound`, `stage_CL10_master_chiral_lorentz_twistor_cartan_uncertainty_synthesis`, `cltcWitness_noncomm_and_nonvanishing_uncertainty_curvature`)**: Newton–Peirce quadratic defect compression, Hilbert-space Cramér–Rao commutator uncertainty bound `g(X,X) g(Y,Y) ≥ g(X,Y)² + Ω(X,Y)²/4`, and concrete `2 × 2` integer matrix non-commutativity/non-vacuity witnesses (`T16`/`T17`), wired into [`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean) (**Part XIII**).
+
+### 2026-11-04: Zorn / twistor Plücker / baryon-volume packet
+
+Repo-owned source search found established components on distinct carriers:
+
+- `Twistor.TwoTwistorPlucker.twistorPairPlucker_on_klein` maps a pair in the
+  native `Twistor4` carrier to six complex Plücker coordinates and proves the
+  Klein quadric equation. `GrandUnification.AmplituhedronTwistorPluckerDictionary.extracted_blade_satisfies_klein_relation`
+  proves the same decomposability relation for minors of a two-row matrix over
+  a commutative linearly ordered ring. That dictionary explicitly does not
+  supply amplituhedron membership or positivity.
+- `Canonical.ZornDiracKahlerSU3.cross3_self` proves `cross3 u u = 0` under
+  `[CommRing R]`; its Zorn multiplication and quark/antiquark products use
+  that commutative coefficient carrier. `Canonical.ZornColorConfinementBaryon.baryonState_eq_scalar`
+  proves that its three-quark Zorn product is the diagonal scalar
+  `dot3 (cross3 u v) w`.
+- `ZornAlternativeLaws` proves Nambu determinant / associator identities for
+  its native split-octonion Zorn vector carrier. Those results do not make the
+  associative coefficient ring of the preceding Zorn model noncommutative,
+  nor do they identify those Zorn vectors with the native twistor Plücker map.
+
+The inference from `[R,R] ≠ 0` to `u × u ≠ 0`, followed by the claimed
+twistor-line, diquark, color-confinement and amplituhedron-volume
+identifications, is not established by combining these owners. A componentwise
+cross-product formula over noncommutative coefficients can contain
+commutators, but this alone does not furnish a valid alternative Zorn algebra,
+a Plücker map, a determinant, positivity data, or an S-matrix/amplituhedron
+construction. The standard determinant and current Zorn baryon owner use
+commutative carriers. A search in `lean/InfoGeometry` did not find declarations
+named `twistorBracket4` or `baryonDet3`; related declarations above are not an
+equivalence theorem. This statement is scoped to that source search, not a
+claim that no differently named bridge exists elsewhere in the checkout.
+
+The user subsequently reported a green 9,246-job build for the chiral poset
+and its Part XIII wiring. The source imports/wiring are present in the checkout,
+but the cited job count and Gate 4 result were not found in local report paths
+and were not rerun in this audit. A green build certifies the compiled theorem
+statements; it does not by itself prove the stronger cross-carrier physical
+identifications in this packet.
+
+### 2026-11-04: Kernel-verified Stage ZND₄ (`ZornAmplituhedronPluckerBaryon`) & Part XIV of `CoagulatedArchetypeSynthesis`
+
+- Added **Stage ZND₄ (`ZornAmplituhedronBaryonStage`: `𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅`)** in [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean) (`0` `sorry`, `0` `admit`, `0` OpenGauss traps) and wired it into **Part XIV** (`partXIV_zorn_amplituhedron_plucker_baryon_synthesis`) of [`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean):
+  - **Carriers & Definitions over `[Ring R]`**: `Twistor4 R` (`z0 : R`, `u : Vec3 R`), `affineOrigin`, `spatialTwistor`, `affineTwistor`, `pluckerElectricVec`, `pluckerMagneticVec`, `hodgePluckerBoundary` (explicit row-0 / col-0 evaluation of `-(P₄(u, v) · ⋆P₄(u, v))`), `zornPluckerPhi`, `zornPluckerLine`, `baryonDet3 u₁ u₂ u₃ = Vec3.dot (Vec3.cross u₁ u₂) u₃`, and `twistorBracket4 Z₀ Z₁ Z₂ Z₃` (defined via first-column cofactor expansion across the four 3-vector baryon facets).
+  - **Lemma 1 (`lemma1_non_abelian_chromomagnetic_hodge_plucker_and_nambu_anomaly`)**: proves over any `[Ring R]` that `hodgePluckerBoundary u v = ⟨Vec3.dot u v, -Vec3.cross u u, Vec3.cross v v⟩`, `(hodgePluckerBoundary u (Vec3.cross u u)).entry00 = Vec3.nambu3 u`, `((psiPlus u * psiPlus u) * psiPlus u).d = Vec3.nambu3 u`, `(psiPlus u * (psiPlus u * psiPlus u)).a = Vec3.nambu3 u`, and that pairwise commutation of `(u.x, u.y, u.z)` forces `Vec3.cross u u = 0 ∧ Vec3.nambu3 u = 0`.
+  - **Lemma 2 (`lemma2_baryon_amplituhedron_zorn_anticommutator_equivalence`)**: proves over any `[Ring R]` that `baryonDet3 u₁ u₂ u₃ = Vec3.dot u₁ (Vec3.cross u₂ u₃)`, `zornPluckerLine (spatialTwistor u₁) (spatialTwistor u₂) = psiPlus u₁ * psiPlus u₂`, `(anticommZorn (zornPluckerLine (spatialTwistor u₁) (spatialTwistor u₂)) (zornPluckerLine affineOrigin (spatialTwistor u₃))).d = baryonDet3 u₁ u₂ u₃`, `twistorBracket4 affineOrigin (spatialTwistor u₁) (spatialTwistor u₂) (spatialTwistor u₃) = baryonDet3 u₁ u₂ u₃`, `twistorBracket4 (affineTwistor 0) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) = baryonDet3 u₁ u₂ u₃`, and `((psiPlus u₁ * psiPlus u₂) * psiPlus u₃ + psiPlus u₁ * (psiPlus u₂ * psiPlus u₃)) = ⟨twistorBracket4 affineOrigin (spatialTwistor u₁) (spatialTwistor u₂) (spatialTwistor u₃), 0, 0, twistorBracket4 affineOrigin (spatialTwistor u₁) (spatialTwistor u₂) (spatialTwistor u₃)⟩`.
+  - **Theorem 3 (`theorem3_holographic_simplex_boundary_sum_of_matter`) & Master Synthesis (`zorn_amplituhedron_plucker_baryon_master_synthesis`)**: proves over any `[Ring R]` the 4-facet boundary expansion `twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) = baryonDet3 u₁ u₂ u₃ - baryonDet3 u₀ u₂ u₃ + baryonDet3 u₀ u₁ u₃ - baryonDet3 u₀ u₁ u₂`, the exact 5-simplex homological closure `∂² = 0` on five affine twistors (`twistorBracket4 Z₁ Z₂ Z₃ Z₄ - twistorBracket4 Z₀ Z₂ Z₃ Z₄ + twistorBracket4 Z₀ Z₁ Z₃ Z₄ - twistorBracket4 Z₀ Z₁ Z₂ Z₄ + twistorBracket4 Z₀ Z₁ Z₂ Z₃ = 0`), and over `[CommRing R_comm]` the relative-chord identity `baryonDet3 (v₁ - v₀) (v₂ - v₀) (v₃ - v₀) = twistorBracket4 (affineTwistor v₀) (affineTwistor v₁) (affineTwistor v₂) (affineTwistor v₃)`.

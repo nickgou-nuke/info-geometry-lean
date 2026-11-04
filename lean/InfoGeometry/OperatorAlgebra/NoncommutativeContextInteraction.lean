@@ -186,6 +186,43 @@ theorem functional_commutator_zero {R : Type*} [AddCommGroup R]
   rw [hτ a b]
   exact sub_self _
 
+/-- The spinor product of two anticommuting involutions squares to `-1`;
+conjugation by the second generator flips the first. The commutator is twice
+the ordered product, with no assumption that `2` is invertible. -/
+theorem anticommuting_involutions_spinor_laws {x y : A}
+    (hx : x * x = 1) (hy : y * y = 1)
+    (hxy : anticommutator x y = 0) :
+    commutator x y = 2 • (x * y) ∧
+    (x * y) * (x * y) = -1 ∧
+    y * x * y = -x := by
+  have hyx : y * x = -(x * y) := by
+    exact eq_neg_of_add_eq_zero_right hxy
+  refine ⟨?_, ?_, ?_⟩
+  · simp only [commutator, hyx, sub_neg_eq_add, two_nsmul]
+  · calc
+      (x * y) * (x * y) = x * (y * x) * y := by noncomm_ring
+      _ = x * (-(x * y)) * y := by rw [hyx]
+      _ = -((x * x) * (y * y)) := by noncomm_ring
+      _ = -1 := by rw [hx, hy]; simp
+  · calc
+      y * x * y = (-(x * y)) * y := by rw [hyx]
+      _ = -(x * (y * y)) := by noncomm_ring
+      _ = -x := by rw [hy]; simp
+
+/-- For a cyclic additive functional, the trace/readout of the Clifford
+spinor product is annihilated by `2`. No cancellation by `2` is assumed. -/
+theorem cyclicFunctional_clifford_spinor_two_torsion
+    {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) (hτ : IsCyclicFunctional τ) {x y : A}
+    (hx : x * x = 1) (hy : y * y = 1)
+    (hxy : anticommutator x y = 0) :
+    2 • τ (x * y) = 0 := by
+  have hcomm := functional_commutator_zero τ hτ x y
+  rw [(anticommuting_involutions_spinor_laws hx hy hxy).1] at hcomm
+  rw [two_nsmul] at hcomm
+  rw [map_add] at hcomm
+  simpa only [two_nsmul] using hcomm
+
 /-- Every finite sum of inner-derivation fluxes has zero readout under a
 cyclic additive functional.  This is the operator-algebraic divergence law;
 it requires neither matrix coordinates nor commutation among the generators. -/

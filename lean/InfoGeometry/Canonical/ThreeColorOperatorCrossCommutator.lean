@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NCG.NoncommutativeChiralZornAlgebra
@@ -34,7 +39,7 @@ def operatorWedge2 (U V : OperatorVector A) : Fin 3 → Fin 3 → A :=
 theorem operatorWedge2_swap_indices
     (U V : OperatorVector A) (j k : Fin 3) :
     operatorWedge2 U V k j = -operatorWedge2 U V j k := by
-  simp [operatorWedge2, sub_eq_add_neg, add_comm]
+  simp [operatorWedge2, sub_eq_add_neg]
 
 /-- The oriented three-dimensional Hodge readout of a bivector.
 
@@ -92,8 +97,7 @@ theorem operatorBivectorChannel_swap
     (U V : OperatorVector A) :
     operatorBivectorChannel V U = -operatorBivectorChannel U V := by
   funext j k
-  simp [operatorBivectorChannel, sub_eq_add_neg, add_comm, add_left_comm,
-    add_assoc]
+  simp [operatorBivectorChannel, sub_eq_add_neg, add_comm]
 
 theorem operatorHodgeDual2_bivectorChannel_eq_cross_difference
     (U V : OperatorVector A) :
@@ -148,7 +152,7 @@ theorem operatorCross_swap_defect (U V : OperatorVector A) :
     (operatorCross U V + operatorCross V U) 2 =
         (U 0 * V 1 - U 1 * V 0) + (V 0 * U 1 - V 1 * U 0) := by
   simp [operatorCross, NCZornElement.zornCross, sub_eq_add_neg,
-    add_assoc, add_left_comm, add_comm]
+    add_assoc, add_left_comm]
 
 abbrev OperatorZornMatrix (A : Type*) [Ring A] := NCZornElement A
 
@@ -378,5 +382,71 @@ theorem sigmaPlus_sq_eq_zero_of_pairwise_commute
       (0 : OperatorZornMatrix A) := by
   rw [sigmaPlus_sq, operatorCross_self_eq_zero_iff U |>.2 h]
   rfl
+
+/-! ### A concrete operator-valued self-cross witness
+
+The generic theorem above says precisely that the self-cross vanishes iff the
+three coefficient pairs commute.  The following example realizes a nonzero
+self-cross with off-diagonal matrix units as coefficients. -/
+
+abbrev OperatorMatrix3Z := Matrix (Fin 3) (Fin 3) ℤ
+
+def operatorMatrixUnit12 : OperatorMatrix3Z :=
+  !![0, 1, 0; 0, 0, 0; 0, 0, 0]
+
+def operatorMatrixUnit23 : OperatorMatrix3Z :=
+  !![0, 0, 0; 0, 0, 1; 0, 0, 0]
+
+def operatorMatrixUnit13 : OperatorMatrix3Z :=
+  !![0, 0, 1; 0, 0, 0; 0, 0, 0]
+
+/-- Adjacent off-diagonal matrix units fail to commute in `M₃(ℤ)`. -/
+theorem operatorMatrixUnits_noncommute :
+    operatorMatrixUnit12 * operatorMatrixUnit23 ≠
+      operatorMatrixUnit23 * operatorMatrixUnit12 := by
+  have hmul : operatorMatrixUnit12 * operatorMatrixUnit23 = operatorMatrixUnit13 := by
+    decide
+  have hzero : operatorMatrixUnit23 * operatorMatrixUnit12 = 0 := by
+    decide
+  rw [hmul, hzero]
+  intro h
+  have hentry := congrArg (fun M : OperatorMatrix3Z => M 0 2) h
+  norm_num [operatorMatrixUnit13] at hentry
+
+/-- Two noncommuting off-diagonal matrix operators occupy adjacent color slots. -/
+def operatorCrossMatrixWitness : OperatorVector OperatorMatrix3Z := fun i =>
+  if i = 0 then operatorMatrixUnit12
+  else if i = 1 then operatorMatrixUnit23
+  else 0
+
+/-- The coefficient commutator in the third self-cross slot is the nonzero
+matrix unit `E₁₃`. -/
+theorem operatorCrossMatrixWitness_blue :
+    operatorCross operatorCrossMatrixWitness operatorCrossMatrixWitness 2 =
+      operatorMatrixUnit13 := by
+  have hmul : operatorMatrixUnit12 * operatorMatrixUnit23 = operatorMatrixUnit13 := by
+    decide
+  have hzero : operatorMatrixUnit23 * operatorMatrixUnit12 = 0 := by
+    decide
+  simp [operatorCross_self_blue, operatorCrossMatrixWitness, hmul, hzero]
+
+/-- The operator-valued self-cross is nonzero in the concrete noncommutative
+matrix algebra `M₃(ℤ)`. -/
+theorem operatorCrossMatrixWitness_self_ne_zero :
+    operatorCross operatorCrossMatrixWitness operatorCrossMatrixWitness ≠ 0 := by
+  intro h
+  have h13 := congrFun h 2
+  rw [operatorCrossMatrixWitness_blue] at h13
+  have hentry := congrArg (fun M : OperatorMatrix3Z => M 0 2) h13
+  norm_num [operatorMatrixUnit13] at hentry
+
+/-- The corresponding upper Zorn channel has nonzero square, so the commuting
+coefficient nilpotence law does not extend to arbitrary operator coefficients. -/
+theorem sigmaPlus_matrixWitness_sq_ne_zero :
+    operatorZornMul (sigmaPlus operatorCrossMatrixWitness)
+        (sigmaPlus operatorCrossMatrixWitness) ≠ 0 := by
+  intro h
+  rw [sigmaPlus_sq] at h
+  exact operatorCrossMatrixWitness_self_ne_zero (congrArg NCZornElement.sigma_minus h)
 
 end InfoGeometry.Canonical

@@ -13,6 +13,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvest
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornSplitOctonionMoufangPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.KantorChiralCocycleMetaAbelianPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralLorentzTwistorCartanUncertaintyPoset
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import Mathlib.Tactic
 
@@ -905,5 +906,122 @@ theorem master_structural_synthesis
           InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.cramerRao_metriplectic_full_bound ψ X_op Y_op,
           InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.cramerRao_classical_covariance_bound ψ X_op Y_op,
           InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.cramerRao_commutator_uncertainty_bound ψ X_op Y_op⟩
+
+/-!
+## Part XIII: Chiral Dual Real Lorentz Representation, Clifford–Krein Geometric Product, Twistor-Amplituhedron Incidence, & Élie Cartan Uncertainty–Curvature Anomaly Synthesis
+-/
+
+/-- **Part XIII Master Theorem (`partXIII_chiral_lorentz_clifford_krein_twistor_cartan_uncertainty_synthesis`)**:
+Coagulates the 10-stage Chiral-Lorentz-Twistor-Cartan-Uncertainty Poset (`CL₁ → CL₁₀`) with the
+Clifford–Krein Geometric Product (`2 X Y = {X, Y} + [X, Y]`), the Krein–Dirac Adjoint (`kreinAdjoint`),
+and the Grade-3 Jordan Associator Uncertainty–Curvature Anomaly (`JordanAssoc (star N_+) N_+ N_+ = [Σ, N_+]`). -/
+theorem partXIII_chiral_lorentz_clifford_krein_twistor_cartan_uncertainty_synthesis
+    [StarRing B] (hPstar : star P = P) (A₁ C₁ A₂ C₂ Z X : B)
+    {H_hilb : Type*} [NormedAddCommGroup H_hilb] [InnerProductSpace ℂ H_hilb] [CompleteSpace H_hilb]
+    (ψ : InfoGeometry.QuantumGeometry.Projective.NormalizedState H_hilb)
+    (X_op Y_op : H_hilb →L[ℂ] H_hilb) :
+    let g := InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.onsagerDissipativeMetric ψ
+    let Ω := InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.onsagerReversibleBracket ψ
+    (∀ u : ChiralLorentzTwistorCartanStage,
+      ¬ Relation.TransGen ChiralLorentzTwistorCartanStage.causalEdge u u) ∧
+    (genJ P A₁ C₁ * genPhi P A₁ C₁ = genSig P A₁ C₁ ∧
+      (2 : ℤ) • qgtPlus P A₁ C₁ = genPhi P A₁ C₁ * genPhi P A₁ C₁ + genJ P A₁ C₁ * genPhi P A₁ C₁ ∧
+      kreinAdjoint P (genV P A₁ (star A₁)) = genV P A₁ (star A₁) ∧
+      kreinAdjoint P (genSig P A₁ (star A₁)) = genSig P A₁ (star A₁)) ∧
+    (JordanAssoc X Z A₁ = comm (comm A₁ X) Z ∧
+      JordanAssoc (coneMinus P C₁) (conePlus P A₁) (conePlus P A₁) =
+        comm (genSig P A₁ C₁) (conePlus P A₁)) ∧
+    ((genSig P A₁ C₁ = 0 ↔ genV P A₁ C₁ = 0) ∧
+      cartanCurvature2Form P (genPhi P A₁ C₁) = genJ P A₁ C₁ + genV P A₁ C₁ ∧
+      cartanCovariantTorsion P (genSig P A₁ C₁) (genPhi P A₁ C₁) =
+        (1 + (2 : ℤ) • genV P A₁ C₁) * genJ P A₁ C₁) ∧
+    (genSig P A₁ C₁ * conePlus P Z - genSig P Z C₁ * conePlus P A₁ =
+      upperHomotopeBracket P C₁ A₁ Z ∧
+      kantorG0 P A₁ C₁ (kantorG0 P A₁ C₁ X) -
+        (kantorGp2 P A₁ (kantorGm2 P C₁ X) + kantorGm2 P C₁ (kantorGp2 P A₁ X)) =
+        genSig P A₁ C₁ * X * genSig P A₁ C₁) ∧
+    (g X_op X_op * g Y_op Y_op ≥ (g X_op Y_op) ^ 2 + (1 / 4 : ℝ) * (Ω X_op Y_op) ^ 2) := by
+  have hCL10 :=
+    stage_CL10_master_chiral_lorentz_twistor_cartan_uncertainty_synthesis
+      hP hPstar A₁ C₁ A₂ C₂ Z X ψ X_op Y_op
+  have hHK :=
+    hestenes_krein_real_doubled_geometric_algebra_and_krein_adjoint
+      hP hPstar A₁ C₁ X Z
+  have hCK :=
+    clifford_krein_geometric_product_and_jordan_associator_law
+      hP A₁ C₁ X Z A₁ X Z A₁
+  exact ⟨hCL10.1,
+    ⟨hHK.2.2.2.1, hHK.2.2.2.2.2.2.2.1, hHK.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+     hHK.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2⟩,
+    ⟨hCK.2.2.2.2.2.1, hCK.2.2.2.2.2.2.1⟩,
+    ⟨hCL10.2.2.2.2.2.1.2, hCL10.2.2.2.2.2.2.1.1, hCL10.2.2.2.2.2.2.1.2⟩,
+    hCL10.2.2.2.2.2.2.2.1,
+    hCL10.2.2.2.2.2.2.2.2⟩
+
+/-!
+## Part XIV: The Non-Commutative Zorn–Amplituhedron–Plücker–Baryon Poset (`𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅`)
+-/
+
+omit [Ring B] hP in
+/-- **Part XIV Master Theorem (`partXIV_zorn_amplituhedron_plucker_baryon_synthesis`)**:
+Coagulates the 6-stage Zorn–Amplituhedron–Plücker–Baryon Poset (`𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅`)
+over any non-commutative ring `[Ring R]`:
+1. **Strict Causal Chain (`𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅`)**,
+2. **Non-Abelian Chromomagnetic Hodge–Plücker Anomaly & Nambu 3-Bracket (`-(P₄ · ⋆P₄)`, `⟦u⟧ = u · (u × u)`)**:
+   `hodgePluckerBoundary u v = ⟨u · v, -(u × u), v × v⟩` and
+   `(hodgePluckerBoundary u (u × u)).entry00 = Vec3.nambu3 u`,
+3. **Baryon–Amplituhedron Equivalence (`⟨Z₀ Z₁ Z₂ Z₃⟩ = (u₁ × u₂) · u₃`) & Zorn Singlet Pairing**:
+   `twistorBracket4 affineOrigin (spatialTwistor u₁) (spatialTwistor u₂) (spatialTwistor u₃) = baryonDet3 u₁ u₂ u₃`
+   and `((psiPlus u₁ * psiPlus u₂) * psiPlus u₃ + psiPlus u₁ * (psiPlus u₂ * psiPlus u₃)) = ⟨⟨Z₀ Z₁ Z₂ Z₃⟩, 0, 0, ⟨Z₀ Z₁ Z₂ Z₃⟩⟩`,
+4. **Holographic 4-Simplex Boundary Sum & Exact 5-Simplex Homological Closure (`∂² = 0`)**:
+   `⟨Z₀ Z₁ Z₂ Z₃⟩ = B(u₁, u₂, u₃) - B(u₀, u₂, u₃) + B(u₀, u₁, u₃) - B(u₀, u₁, u₂)` and
+   `⟨Z₁ Z₂ Z₃ Z₄⟩ - ⟨Z₀ Z₂ Z₃ Z₄⟩ + ⟨Z₀ Z₁ Z₃ Z₄⟩ - ⟨Z₀ Z₁ Z₂ Z₄⟩ + ⟨Z₀ Z₁ Z₂ Z₃⟩ = 0`. -/
+theorem partXIV_zorn_amplituhedron_plucker_baryon_synthesis
+    {R : Type u} [Ring R]
+    (u v u₀ u₁ u₂ u₃ u₄ :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3 R) :
+    let ZStage :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage
+    let hodgeB :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.hodgePluckerBoundary
+    let dot3 :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.dot
+    let cross3 :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.cross
+    let nambu3 :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.nambu3
+    let psiPlus :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.psiPlus
+    let twistor4 :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.twistorBracket4
+    let baryon3 :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.baryonDet3
+    let orig :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.affineOrigin
+    let spat :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.spatialTwistor
+    let aff :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.affineTwistor
+    (ZStage.causalEdge .p0_nonCommTwistorSpace .p1_pluckerBivectorSplit ∧
+     ZStage.causalEdge .p1_pluckerBivectorSplit .p2_nambuKleinQuadricAnomaly ∧
+     ZStage.causalEdge .p2_nambuKleinQuadricAnomaly .p3_zornPluckerAnticommutator ∧
+     ZStage.causalEdge .p3_zornPluckerAnticommutator .p4_baryonDeterminantSinglet ∧
+     ZStage.causalEdge .p4_baryonDeterminantSinglet .p5_holographicSimplexBoundary) ∧
+    (hodgeB u v = ⟨dot3 u v, -cross3 u u, cross3 v v⟩ ∧
+     (hodgeB u (cross3 u u)).entry00 = nambu3 u) ∧
+    (twistor4 orig (spat u₁) (spat u₂) (spat u₃) = baryon3 u₁ u₂ u₃ ∧
+     ((psiPlus u₁ * psiPlus u₂) * psiPlus u₃ + psiPlus u₁ * (psiPlus u₂ * psiPlus u₃)) =
+       ⟨twistor4 orig (spat u₁) (spat u₂) (spat u₃),
+        0, 0,
+        twistor4 orig (spat u₁) (spat u₂) (spat u₃)⟩) ∧
+    (twistor4 (aff u₀) (aff u₁) (aff u₂) (aff u₃) =
+      baryon3 u₁ u₂ u₃ - baryon3 u₀ u₂ u₃ + baryon3 u₀ u₁ u₃ - baryon3 u₀ u₁ u₂ ∧
+     twistor4 (aff u₁) (aff u₂) (aff u₃) (aff u₄) -
+      twistor4 (aff u₀) (aff u₂) (aff u₃) (aff u₄) +
+      twistor4 (aff u₀) (aff u₁) (aff u₃) (aff u₄) -
+      twistor4 (aff u₀) (aff u₁) (aff u₂) (aff u₄) +
+      twistor4 (aff u₀) (aff u₁) (aff u₂) (aff u₃) = 0) :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.zorn_amplituhedron_plucker_baryon_master_synthesis
+    u v u₀ u₁ u₂ u₃ u₄
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

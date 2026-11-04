@@ -197,4 +197,26 @@ theorem nested_zorn_plabic_vertex_contraction
     ⟨_, _, hE₂, _, h₁₂, h₂₁, _, _, h₂₃, h₃₂⟩
   exact three_corner_plabic_contraction hE₂ h₁₂ h₂₁ h₂₃ h₃₂
 
+/-- The antisymmetric endpoint bridge in the signed contraction can replace
+the actual symmetric bridge only when twice the reverse path vanishes. This
+specializes the exact obstruction to the paths of a nested Zorn chain. -/
+theorem nested_zorn_signed_edge_j_bridge_iff_two_torsion
+    {P₁ P₂ A C₁ C₂ D : B}
+    :
+    let E₁ := shell1 P₁
+    let E₂ := shell2 P₁ P₂
+    let E₃ := shell3 P₂
+    let x := root12 E₁ E₂ A
+    let y := root21 E₂ E₁ C₁
+    let u := root23 E₂ E₃ C₂
+    let v := root32 E₃ E₂ D
+    (E₂ + (x * y + v * u) - (x * u + v * y) =
+      E₂ + (x * y + v * u) -
+        edgeMajoranaJ13 E₁ E₂ E₃ A C₁ C₂ D) ↔
+      edgeRoot31 E₁ E₂ E₃ C₁ D + edgeRoot31 E₁ E₂ E₃ C₁ D = 0 := by
+  intro E₁ E₂ E₃ x y u v
+  simpa [edgeMajoranaJ13, edgeRoot13, edgeRoot31] using
+    (signed_contraction_edge_j_characterization
+      (e := E₂) (x := x) (y := y) (u := u) (v := v))
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine.PlabicVertexContraction

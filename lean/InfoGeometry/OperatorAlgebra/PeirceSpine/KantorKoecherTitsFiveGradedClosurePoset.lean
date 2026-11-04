@@ -1413,6 +1413,196 @@ theorem peirce_five_grade_sum_zero_plus1 (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
   simp only [peirceGradePlus1_zero, add_zero, zero_add] at hproject
   exact hproject
 
+/-- The grade-zero projection preserves its diagonal sector and annihilates
+the four off-diagonal grades. -/
+theorem peirceGradeZero_comp_filter (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradeZero N_plus (peirceGradePlus2 N_plus X) = 0 ∧
+    peirceGradeZero N_plus (peirceGradePlus1 N_plus X) = 0 ∧
+    peirceGradeZero N_plus (peirceGradeZero N_plus X) =
+      peirceGradeZero N_plus X ∧
+    peirceGradeZero N_plus (peirceGradeMinus1 N_plus X) = 0 ∧
+    peirceGradeZero N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+  have hPP : P N_plus * P N_plus = P N_plus := YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQQ : Q N_plus * Q N_plus = Q N_plus := YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 := YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 := YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hRR : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap, sub_self, sub_zero]
+  rcases peirce_chiral_neutral_orthogonal N_plus h_nil h_reg with
+    ⟨hPR, hRP, hQR, hRQ⟩
+  have h2 : peirceGradeZero N_plus (peirceGradePlus2 N_plus X) = 0 := by
+    dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+      peirceGradePlus2, peircePQ]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hQP, hPR, hQR, hRQ]
+  have h1 : peirceGradeZero N_plus (peirceGradePlus1 N_plus X) = 0 := by
+    dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+      peirceGradePlus1, peircePR, peirceRQ]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hQP, hPR, hRP, hQR, hRQ]
+  have h0 : peirceGradeZero N_plus (peirceGradeZero N_plus X) =
+      peirceGradeZero N_plus X := by
+    dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPP, hQQ, hRR, hPQ, hQP, hPR, hRP, hQR, hRQ]
+  have hm1 : peirceGradeZero N_plus (peirceGradeMinus1 N_plus X) = 0 := by
+    dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+      peirceGradeMinus1, peirceRP, peirceQR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hQP, hPR, hRP, hQR, hRQ]
+  have hm2 : peirceGradeZero N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+    dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+      peirceGradeMinus2, peirceQP]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hQP, hRP, hRQ]
+  exact ⟨h2, h1, h0, hm1, hm2⟩
+
+/-- In a zero-sum relation among canonical grade outputs, the grade `0`
+component vanishes. -/
+theorem peirce_five_grade_sum_zero_zero (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hsum : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0) :
+    peirceGradeZero N_plus X₀ = 0 := by
+  rcases peirceGradeZero_comp_filter N_plus X₂ h_nil h_reg with ⟨h2, _, _, _, _⟩
+  rcases peirceGradeZero_comp_filter N_plus X₁ h_nil h_reg with ⟨_, h1, _, _, _⟩
+  rcases peirceGradeZero_comp_filter N_plus X₀ h_nil h_reg with ⟨_, _, hself, _, _⟩
+  rcases peirceGradeZero_comp_filter N_plus Xm₁ h_nil h_reg with ⟨_, _, _, hm1, _⟩
+  rcases peirceGradeZero_comp_filter N_plus Xm₂ h_nil h_reg with ⟨_, _, _, _, hm2⟩
+  have hproject := congrArg (peirceGradeZero N_plus) hsum
+  simp only [peirceGradeZero_add, h2, h1, hself, hm1, hm2] at hproject
+  simp only [peirceGradeZero_zero, add_zero, zero_add] at hproject
+  exact hproject
+
+/- The opposite extremal corner gives a parallel filter. -/
+theorem peirceGradeMinus2_comp_filter (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradeMinus2 N_plus (peirceGradePlus2 N_plus X) = 0 ∧
+    peirceGradeMinus2 N_plus (peirceGradePlus1 N_plus X) = 0 ∧
+    peirceGradeMinus2 N_plus (peirceGradeZero N_plus X) = 0 ∧
+    peirceGradeMinus2 N_plus (peirceGradeMinus1 N_plus X) = 0 ∧
+    peirceGradeMinus2 N_plus (peirceGradeMinus2 N_plus X) =
+      peirceGradeMinus2 N_plus X := by
+  have hPP : P N_plus * P N_plus = P N_plus := YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQQ : Q N_plus * Q N_plus = Q N_plus := YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 := YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 := YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hRR : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap, sub_self, sub_zero]
+  rcases peirce_chiral_neutral_orthogonal N_plus h_nil h_reg with
+    ⟨hPR, hRP, hQR, hRQ⟩
+  have h2 : peirceGradeMinus2 N_plus (peirceGradePlus2 N_plus X) = 0 := by
+    dsimp [peirceGradeMinus2, peirceQP, peirceGradePlus2, peircePQ]
+    rw [peirce_corner_comp]
+    simp [hQP]
+  have h1 : peirceGradeMinus2 N_plus (peirceGradePlus1 N_plus X) = 0 := by
+    dsimp [peirceGradeMinus2, peirceQP, peirceGradePlus1, peircePR, peirceRQ]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hQP, hQR]
+  have h0 : peirceGradeMinus2 N_plus (peirceGradeZero N_plus X) = 0 := by
+    dsimp [peirceGradeMinus2, peirceQP, peirceGradeZero, peircePP, peirceQQ,
+      peirceRR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hQP, hQR]
+  have hm1 : peirceGradeMinus2 N_plus (peirceGradeMinus1 N_plus X) = 0 := by
+    dsimp [peirceGradeMinus2, peirceQP, peirceGradeMinus1, peirceRP, peirceQR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hQP, hQR, hRP]
+  have hm2 : peirceGradeMinus2 N_plus (peirceGradeMinus2 N_plus X) =
+      peirceGradeMinus2 N_plus X := by
+    dsimp [peirceGradeMinus2, peirceQP]
+    rw [peirce_corner_comp, hQQ, hPP]
+  exact ⟨h2, h1, h0, hm1, hm2⟩
+
+theorem peirce_five_grade_sum_zero_minus2 (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hsum : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0) :
+    peirceGradeMinus2 N_plus Xm₂ = 0 := by
+  rcases peirceGradeMinus2_comp_filter N_plus X₂ h_nil h_reg with ⟨h2, _, _, _, _⟩
+  rcases peirceGradeMinus2_comp_filter N_plus X₁ h_nil h_reg with ⟨_, h1, _, _, _⟩
+  rcases peirceGradeMinus2_comp_filter N_plus X₀ h_nil h_reg with ⟨_, _, h0, _, _⟩
+  rcases peirceGradeMinus2_comp_filter N_plus Xm₁ h_nil h_reg with ⟨_, _, _, hm1, _⟩
+  rcases peirceGradeMinus2_comp_filter N_plus Xm₂ h_nil h_reg with ⟨_, _, _, _, hself⟩
+  have hproject := congrArg (peirceGradeMinus2 N_plus) hsum
+  simp only [peirceGradeMinus2_add, h2, h1, h0, hm1, hself] at hproject
+  simp only [peirceGradeMinus2_zero, add_zero, zero_add] at hproject
+  exact hproject
+
+theorem peirceGradeMinus1_comp_filter (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradeMinus1 N_plus (peirceGradePlus2 N_plus X) = 0 ∧
+    peirceGradeMinus1 N_plus (peirceGradePlus1 N_plus X) = 0 ∧
+    peirceGradeMinus1 N_plus (peirceGradeZero N_plus X) = 0 ∧
+    peirceGradeMinus1 N_plus (peirceGradeMinus1 N_plus X) =
+      peirceGradeMinus1 N_plus X ∧
+    peirceGradeMinus1 N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+  have hPP : P N_plus * P N_plus = P N_plus := YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQQ : Q N_plus * Q N_plus = Q N_plus := YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 := YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 := YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hRR : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap, sub_self, sub_zero]
+  rcases peirce_chiral_neutral_orthogonal N_plus h_nil h_reg with
+    ⟨hPR, hRP, hQR, hRQ⟩
+  have h2 : peirceGradeMinus1 N_plus (peirceGradePlus2 N_plus X) = 0 := by
+    dsimp [peirceGradeMinus1, peirceRP, peirceQR,
+      peirceGradePlus2, peircePQ]
+    simp only [peirce_corner_comp]
+    simp [hRP, hQP]
+  have h1 : peirceGradeMinus1 N_plus (peirceGradePlus1 N_plus X) = 0 := by
+    dsimp [peirceGradeMinus1, peirceRP, peirceQR,
+      peirceGradePlus1, peircePR, peirceRQ]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hRP, hQP, hQR, hPQ, hPR]
+  have h0 : peirceGradeMinus1 N_plus (peirceGradeZero N_plus X) = 0 := by
+    dsimp [peirceGradeMinus1, peirceRP, peirceQR, peirceGradeZero,
+      peircePP, peirceQQ, peirceRR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hRP, hQP, hQR, hPQ]
+  have hm1 : peirceGradeMinus1 N_plus (peirceGradeMinus1 N_plus X) =
+      peirceGradeMinus1 N_plus X := by
+    dsimp [peirceGradeMinus1, peirceRP, peirceQR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPP, hQQ, hRR, hPR, hRP, hQR, hRQ]
+  have hm2 : peirceGradeMinus1 N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+    dsimp [peirceGradeMinus1, peirceRP, peirceQR,
+      peirceGradeMinus2, peirceQP]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hRP, hRQ, hPR]
+  exact ⟨h2, h1, h0, hm1, hm2⟩
+
+theorem peirce_five_grade_sum_zero_minus1 (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hsum : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0) :
+    peirceGradeMinus1 N_plus Xm₁ = 0 := by
+  rcases peirceGradeMinus1_comp_filter N_plus X₂ h_nil h_reg with ⟨h2, _, _, _, _⟩
+  rcases peirceGradeMinus1_comp_filter N_plus X₁ h_nil h_reg with ⟨_, h1, _, _, _⟩
+  rcases peirceGradeMinus1_comp_filter N_plus X₀ h_nil h_reg with ⟨_, _, h0, _, _⟩
+  rcases peirceGradeMinus1_comp_filter N_plus Xm₁ h_nil h_reg with ⟨_, _, _, hself, _⟩
+  rcases peirceGradeMinus1_comp_filter N_plus Xm₂ h_nil h_reg with ⟨_, _, _, _, hm2⟩
+  have hproject := congrArg (peirceGradeMinus1 N_plus) hsum
+  simp only [peirceGradeMinus1_add, h2, h1, h0, hself, hm2] at hproject
+  simp only [peirceGradeMinus1_zero, add_zero, zero_add] at hproject
+  exact hproject
+
 /-- The grade-zero sector is closed under the commutator: its bracket is the
 sum of the three diagonal Peirce-block brackets. -/
 theorem comm_peirceGradeZero_closed (N_plus X Y : B)

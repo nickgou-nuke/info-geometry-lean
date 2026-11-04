@@ -251,6 +251,42 @@ theorem superChargeP_kantor_eigen
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
     (dsimp only [superChargeP]; peirce_abel_golay hP)
 
+/-- The cross-grade commutators of the five Kantor–Peirce endomorphisms.
+The commutator of the two grade-one maps is the inner action of the chiral
+curvature; the two grade-one/extremal brackets are the stated triple products,
+and the opposite extremal bracket is the difference of the two QGT sandwiches.
+-/
+theorem archetype_A54_kantor_koecher_tits_cross_grade_lie_brackets
+    {P : B} (hP : P * P = P) (A C X : B) :
+    kantorGp1 P A (kantorGm1 P C X) - kantorGm1 P C (kantorGp1 P A X) =
+      comm (genSig P A C) X ∧
+    kantorGp1 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp1 P A X) =
+      kantorTriple (genSig P A C) X (coneMinus P C) ∧
+    superChargeP (fun Y => kantorGp1 P A (kantorGm2 P C Y) -
+      kantorGm2 P C (kantorGp1 P A Y)) P X =
+      -(kantorGp1 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp1 P A X)) ∧
+    kantorGm1 P C (kantorGp2 P A X) - kantorGp2 P A (kantorGm1 P C X) =
+      -kantorTriple (genSig P A C) X (conePlus P A) ∧
+    superChargeP (fun Y => kantorGm1 P C (kantorGp2 P A Y) -
+      kantorGp2 P A (kantorGm1 P C Y)) P X =
+      kantorGm1 P C (kantorGp2 P A X) - kantorGp2 P A (kantorGm1 P C X) ∧
+    kantorGp2 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp2 P A X) =
+      qgtPlus P A C * X * qgtMinus P A C -
+        qgtMinus P A C * X * qgtPlus P A C ∧
+    superChargeP (fun Y => kantorGp2 P A (kantorGm2 P C Y) -
+      kantorGm2 P C (kantorGp2 P A Y)) P X = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · peirce_abel_golay hP
+  · peirce_abel_golay hP
+  · dsimp only [superChargeP]
+    peirce_abel_golay hP
+  · peirce_abel_golay hP
+  · dsimp only [superChargeP]
+    peirce_abel_golay hP
+  · peirce_abel_golay hP
+  · dsimp only [superChargeP]
+    peirce_abel_golay hP
+
 /-- Linear expansion of `kantorDelta1`, `kantorDelta2`, `kantorDelta3`, and `kantorDelta4`
 in terms of the five graded Kantor–Peirce components. -/
 theorem kantorDelta_expansions

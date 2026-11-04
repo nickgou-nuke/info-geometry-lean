@@ -525,6 +525,16 @@ The A52/A53/A54 owner file passed the locked Lake build on 2026-11-04
 (9,018 jobs, exit 0); its strict OpenGauss screener reported zero traps and
 the staged proof-proxy gate passed.
 
+The independent Archetype XX A54 cross-grade table is also formalized as
+`GolayLeechMOGSheetPoset.archetype_A54_kantor_koecher_tits_cross_grade_lie_brackets`.
+It proves the five-grade composition identities directly for the existing
+Kantor–Peirce endomorphisms and the derived supercharge signs. For the opposite
+extremal composition, the exact factors are `Q₊ X Q₋ − Q₋ X Q₊`; each QGT
+factor is paired with the opposite one because the identity is a composition
+of the two endomorphisms. The owner target passed its locked Lake build on
+2026-11-04 (8,994 jobs, exit 0). This formalizes the bracket table, not a
+closure theorem for an independently postulated Lie superalgebra.
+
 ### Source-order batch: shared-link transcript, A105–A108 (Zorn cyclotomic paths)
 
 This batch is the A105–A108 occurrence in the 2026-11-03 shared-link export;

@@ -3959,3 +3959,8 @@ channel resolution statement: for `k ∈ s`, left multiplication by `Gap(Nₖ)`
 projects `∑ᵢ Φ(Nᵢ)` to `Φ(Nₖ)`. It uses only the primitive pairwise
 orthogonality conditions plus channelwise nilpotency and regularity. Its
 declaration is included in the axiom-audit module.
+
+The companion `finite_channel_gap_right_filters_phi_sum` proves the right
+action as well. Thus the selected gap acts on either side of the finite chiral
+sum by projecting onto the selected channel block; both directions are
+kernel-checked and listed in the axiom audit.

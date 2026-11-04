@@ -1095,6 +1095,38 @@ theorem comm_G_0_neutral_G_plus1_L (N_plus X Y : B)
   congr 1
   noncomm_ring
 
+/-- The neutral grade-zero Peirce block brackets with the right `+1` block
+back into grade `+1` by composition through the neutral support. -/
+theorem comm_G_0_neutral_G_plus1_R (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_neutral N_plus X) (G_plus1_R N_plus Y) =
+      G_plus1_R N_plus (X * (1 - Gap N_plus) * Y) := by
+  have hGapIdem := Gap_idem N_plus h_nil h_reg
+  have hR : (1 - Gap N_plus) * (1 - Gap N_plus) = 1 - Gap N_plus := by
+    dsimp [Gap] at hGapIdem ⊢
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGapIdem, sub_self, sub_zero]
+  have hNSigma := N_plus_mul_Sigma N_plus h_nil h_reg
+  have hNGap : N_plus * Gap N_plus = N_plus := by
+    calc N_plus * Gap N_plus
+        = (N_plus * Sigma N_plus) * Sigma N_plus := by
+            dsimp [Gap]
+            rw [← mul_assoc]
+      _ = (-N_plus) * Sigma N_plus := by rw [hNSigma]
+      _ = -(N_plus * Sigma N_plus) := by rw [neg_mul]
+      _ = -(-N_plus) := by rw [hNSigma]
+      _ = N_plus := by rw [neg_neg]
+  have hNR : N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hNGap, sub_self]
+  have hBracket := kkt_peirce_bracket_composable (1 - Gap N_plus)
+    (1 - Gap N_plus) N_plus X Y hR hNR
+  dsimp [G_0_neutral, G_plus1_R]
+  calc (comm ((1 - Gap N_plus) * X * (1 - Gap N_plus))
+      ((1 - Gap N_plus) * Y * N_plus)) =
+      (1 - Gap N_plus) * X * (1 - Gap N_plus) * Y * N_plus := hBracket
+    _ = (1 - Gap N_plus) * (X * (1 - Gap N_plus) * Y) * N_plus := by
+          noncomm_ring
+
 /-- The neutral grade-zero Peirce block brackets with the left `-1` block
 back into grade `-1`. -/
 theorem comm_G_0_neutral_G_minus1_L (N_plus X Y : B)
@@ -1235,6 +1267,40 @@ theorem comm_G_0_Q_G_plus1_L (N_plus X Y : B)
   dsimp [comm]
   rw [hForward, hBackward, sub_self]
 
+/-- The positive diagonal block annihilates the right `+1` carrier, whose
+source and target supports are orthogonal to the positive sheet endpoints. -/
+theorem comm_G_0_P_G_plus1_R (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_P N_plus X) (G_plus1_R N_plus Y) = 0 := by
+  have hGapP : P N_plus * Gap N_plus = P N_plus := by
+    have hPS := P_mul_Sigma_eq_P N_plus h_nil h_reg
+    calc P N_plus * Gap N_plus
+        = (P N_plus * Sigma N_plus) * Sigma N_plus := by
+            dsimp [Gap]
+            rw [← mul_assoc]
+      _ = P N_plus * Sigma N_plus := congrArg (fun z : B => z * Sigma N_plus) hPS
+      _ = P N_plus := hPS
+  have hPR : P N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hGapP, sub_self]
+  have hNP : N_plus * P N_plus = 0 := by
+    dsimp [P]
+    rw [← mul_assoc, h_nil, zero_mul]
+  have hForward : G_0_P N_plus X * G_plus1_R N_plus Y = 0 := by
+    dsimp [G_0_P, G_plus1_R]
+    calc (P N_plus * X * P N_plus) * ((1 - Gap N_plus) * Y * N_plus)
+        = (P N_plus * X) * (P N_plus * (1 - Gap N_plus)) * (Y * N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hPR, mul_zero, zero_mul]
+  have hBackward : G_plus1_R N_plus Y * G_0_P N_plus X = 0 := by
+    dsimp [G_0_P, G_plus1_R]
+    calc ((1 - Gap N_plus) * Y * N_plus) * (P N_plus * X * P N_plus)
+        = ((1 - Gap N_plus) * Y) * (N_plus * P N_plus) * (X * P N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hNP, mul_zero, zero_mul]
+  dsimp [comm]
+  rw [hForward, hBackward, sub_self]
+
 /-- Helper: `Sigma N_plus * Q N_plus = -Q N_plus`. -/
 theorem Sigma_mul_Q_eq_neg_Q (N_plus : B)
     (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
@@ -1248,6 +1314,47 @@ theorem Q_mul_Sigma_eq_neg_Q (N_plus : B)
     Q N_plus * Sigma N_plus = -Q N_plus := by
   dsimp [Q]
   rw [mul_assoc, N_plus_mul_Sigma N_plus h_nil h_reg, mul_neg]
+
+/-- The negative diagonal grade-zero block acts on the right `+1` carrier
+within that carrier, with the action given by Peirce block composition. -/
+theorem comm_G_0_Q_G_plus1_R (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_Q N_plus X) (G_plus1_R N_plus Y) =
+      -G_plus1_R N_plus (Y * N_plus * X * star N_plus) := by
+  have hQS := Q_mul_Sigma_eq_neg_Q N_plus h_nil h_reg
+  have hQGap : Q N_plus * Gap N_plus = Q N_plus := by
+    calc Q N_plus * Gap N_plus
+        = (Q N_plus * Sigma N_plus) * Sigma N_plus := by
+            dsimp [Gap]
+            rw [← mul_assoc]
+      _ = (-Q N_plus) * Sigma N_plus := by rw [hQS]
+      _ = -(Q N_plus * Sigma N_plus) := by rw [neg_mul]
+      _ = -(-Q N_plus) := by rw [hQS]
+      _ = Q N_plus := by rw [neg_neg]
+  have hQR : Q N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hQGap, sub_self]
+  have hNQ : N_plus * Q N_plus = N_plus := by
+    dsimp [Q]
+    rw [← mul_assoc, h_reg]
+  have hForward : G_0_Q N_plus X * G_plus1_R N_plus Y = 0 := by
+    dsimp [G_0_Q, G_plus1_R]
+    calc (Q N_plus * X * Q N_plus) * ((1 - Gap N_plus) * Y * N_plus)
+        = (Q N_plus * X) * (Q N_plus * (1 - Gap N_plus)) * (Y * N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hQR, mul_zero, zero_mul]
+  have hBackward : G_plus1_R N_plus Y * G_0_Q N_plus X =
+      G_plus1_R N_plus (Y * N_plus * X * star N_plus) := by
+    dsimp [G_0_Q, G_plus1_R]
+    calc ((1 - Gap N_plus) * Y * N_plus) * (Q N_plus * X * Q N_plus)
+        = ((1 - Gap N_plus) * Y) * (N_plus * Q N_plus) * (X * Q N_plus) := by
+            noncomm_ring
+      _ = ((1 - Gap N_plus) * Y) * N_plus * (X * Q N_plus) := by rw [hNQ]
+      _ = (1 - Gap N_plus) * (Y * N_plus * X * star N_plus) * N_plus := by
+            dsimp [Q]
+            noncomm_ring
+  dsimp [comm]
+  rw [hForward, hBackward, zero_sub]
 
 /-- **Theorem `KKT₈` (Grade `0` Positive Sheet Centralizes `Σ`)**:
 `[Σ, G_0^P(N_+, X)] = 0`. -/

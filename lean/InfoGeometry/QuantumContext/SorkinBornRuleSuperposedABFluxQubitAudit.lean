@@ -18,7 +18,7 @@ namespace InfoGeometry.QuantumContext.SorkinFluxQubitAudit
 
 open InfoGeometry.QuantumContext.SorkinFluxQubit
 
-/-- Concrete verification of triple-slit interference (`I₁₂₃ = 149`) and `κ₃ = 0` over `ℤ`. -/
+/-- Concrete verification of triple-slit interference (`I₁₂₃ = 113`) and `κ₃ = 0` over `ℤ`. -/
 theorem sample_triple_slit_sorkin_kappa3_int :
     let ψ₁ : FresnelWave ℤ := ⟨3, 4⟩
     let ψ₂ : FresnelWave ℤ := ⟨1, 2⟩

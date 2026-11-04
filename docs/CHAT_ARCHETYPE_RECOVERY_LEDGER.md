@@ -2622,3 +2622,79 @@ remaining Section 121 formalization work is to supply honest carriers and
 maps for any desired operator/spectral or geometric claims, and to prove exact
 potential minimizers only under assumptions that make the characterization
 true. No new theorem is inferred from the source's certificate labels.
+
+### 2026-11-04: Section 122 Sorkin / superposed-flux source-to-owner audit
+
+I compared the Section 122 proposal and embedded Lean listing in
+`cached/aistudio_extracts/aistudio_prompt_1SSh9Kruyv8BNCpXiC5g0he9V4e7j_4Dr/transcript.md`
+(source proposal around lines 42364–42557) with
+[`SorkinBornRuleSuperposedABFluxQubit.lean`](../lean/InfoGeometry/QuantumContext/SorkinBornRuleSuperposedABFluxQubit.lean)
+and its concrete integer instance in
+[`SorkinBornRuleSuperposedABFluxQubitAudit.lean`](../lean/InfoGeometry/QuantumContext/SorkinBornRuleSuperposedABFluxQubitAudit.lean).
+Both modules are wired through `InfoGeometry.All`.
+
+- **What the owner proves:** over `[CommRing R]`, `FresnelWave R` is a pair
+  `(cQuad, sQuad)`, intensity is the quadratic polynomial `C² + S²`, and
+  `superposed_ab_flux_qubit_readout` expands the weighted average of the two
+  opposite-sign scalar AB formulas, assuming only `w_plus + w_minus = 1`.
+  `balanced_flux_cat_state_cancels_yin_asymmetry` is its balanced-weight
+  specialization. The coefficients are not required to be nonnegative and
+  `c,s` are not required to lie on the unit circle; these are ring identities,
+  not a normalized quantum-state or physical probability construction.
+- **Sorkin theorem scope:** `sorkin_kappa3_identically_zero` is the quadratic
+  norm cancellation for coordinatewise additive, unphased wave pairs. The
+  source says the theorem covers arbitrary magnetic phases, but its owner
+  defines no phase action on the three slit amplitudes and does not include
+  phase parameters in `sorkinKappa3`. The module docstring correctly discloses
+  this limitation. The claimed arbitrary-phase extension is therefore not
+  established by that theorem.
+- **Concrete example correction:** the audit proposition computes
+  `tripleSlitIntensity = 113` from intensities `25, 5, 13` and pair intensities
+  `52, 32, 72`. Its doc comment said `149`; I corrected that comment to `113`.
+  The proposition itself already stated `113` and is unchanged.
+- The transcript's “open problem solved,” macroscopic current readout, quantum
+  collapse/non-collapse interpretation, Gate 4 telemetry, and global test/build
+  counts exceed what these scalar polynomial owners construct or prove.
+
+The theorem declarations were not changed. The edited audit module requires a
+fresh targeted Lean build before claiming current kernel verification. This
+entry records source-to-owner scope and does not promote the unsupported
+phase-dependent Sorkin claim.
+
+### 2026-11-04: Section 123 Wu–Yang / dual Aharonov–Bohm scope audit
+
+I compared the Section 123 proposal and displayed Lean listing in
+`cached/aistudio_extracts/aistudio_prompt_1SSh9Kruyv8BNCpXiC5g0he9V4e7j_4Dr/transcript.md`
+(proposal around lines 43017–43285) with
+[`WuYangNonAbelianDualABInterferometry.lean`](../lean/InfoGeometry/QuantumContext/WuYangNonAbelianDualABInterferometry.lean)
+and its integer examples in
+[`WuYangNonAbelianDualABInterferometryAudit.lean`](../lean/InfoGeometry/QuantumContext/WuYangNonAbelianDualABInterferometryAudit.lean).
+Both modules are wired through `InfoGeometry.All`.
+
+- **Duality identity present:** `dualCrossProductDifference_maxwell_invariant`
+  proves invariance of one explicitly defined finite cross-product expression
+  under the two stated coordinate transformations. `maxwell_duality_order_four`
+  proves the field-doublet transformation has fourth power identity. Neither
+  declaration includes derivatives, field equations, particle trajectories,
+  or path integrals, so AC/HMW topological phase and Maxwell dynamics are not
+  derived.
+- **Quaternion identity present:** the owner uses Mathlib's `Quaternion R`.
+  `unit_quaternion_left_mul_preserves_normSq` assumes `Quaternion.normSq U = 1`
+  and proves norm preservation; `quaternion_interference_normSq_expansion` and
+  `quaternion_interference_normSq_nonneg` establish finite norm identities.
+  These do not construct an `SU(2)` group representation, a Wu–Yang gauge
+  connection/holonomy, a spin action, Wilson loops, or a normalized Born
+  probability. The transcript's four-coordinate `SU(2) ≅ S³` and Berry–Anandan
+  interpretations require those missing maps and structures.
+- The source listing's generic four-coordinate multiplication is not the
+  current owner API: the checked-in owner instead delegates quaternion
+  multiplication and norm facts to Mathlib's `Quaternion` carrier. Its
+  `scalar_minus_one_interference_cancellation` is a finite algebraic identity
+  at quaternion `-1`, not evidence of a physical central-flux experiment.
+- The audit file gives concrete integer evaluations. The transcript's Gate 4
+  telemetry, certified-section counts, and physical conclusions are not local
+  Lean evidence and are not promoted by the examples.
+
+This is a source-to-owner scope audit; no theorem was changed in Section 123.
+The finite algebraic identities are represented, while their gauge-theoretic
+and topological interpretations remain outside the current formalization.

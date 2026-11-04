@@ -1075,6 +1075,46 @@ theorem comm_G_minus1_into_G_minus2_aggregate (N_plus X Y : B)
     hRL, hRR]
   noncomm_ring
 
+/-- The neutral grade-zero Peirce block brackets with the left `+1` block
+back into grade `+1`. -/
+theorem comm_G_0_neutral_G_plus1_L (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_neutral N_plus X) (G_plus1_L N_plus Y) =
+      -G_plus1_L N_plus (Y * (1 - Gap N_plus) * X) := by
+  have hGapIdem := Gap_idem N_plus h_nil h_reg
+  have hR : (1 - Gap N_plus) * (1 - Gap N_plus) = 1 - Gap N_plus := by
+    dsimp [Gap] at hGapIdem ⊢
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGapIdem, sub_self, sub_zero]
+  have hRN : (1 - Gap N_plus) * N_plus = 0 := by
+    rw [sub_mul, one_mul, Gap_mul_N_plus N_plus h_nil h_reg, sub_self]
+  have hBracket := kkt_peirce_bracket_composable N_plus (1 - Gap N_plus)
+    (1 - Gap N_plus) Y X hR hRN
+  dsimp [G_0_neutral, G_plus1_L]
+  rw [kkt_comm_antisymm, hBracket]
+  congr 1
+  noncomm_ring
+
+/-- The neutral grade-zero Peirce block brackets with the left `-1` block
+back into grade `-1`. -/
+theorem comm_G_0_neutral_G_minus1_L (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_neutral N_plus X) (G_minus1_L N_plus Y) =
+      -G_minus1_L N_plus (Y * (1 - Gap N_plus) * X) := by
+  have hGapIdem := Gap_idem N_plus h_nil h_reg
+  have hR : (1 - Gap N_plus) * (1 - Gap N_plus) = 1 - Gap N_plus := by
+    dsimp [Gap] at hGapIdem ⊢
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGapIdem, sub_self, sub_zero]
+  have hRM : (1 - Gap N_plus) * star N_plus = 0 := by
+    rw [sub_mul, one_mul, Gap_mul_star_N_plus N_plus h_nil h_reg, sub_self]
+  have hBracket := kkt_peirce_bracket_composable (star N_plus)
+    (1 - Gap N_plus) (1 - Gap N_plus) Y X hR hRM
+  dsimp [G_0_neutral, G_minus1_L]
+  rw [kkt_comm_antisymm, hBracket]
+  congr 1
+  noncomm_ring
+
 /-- **Theorem `KKT₇` (Opposite Extremal Commutator Lands in Grade `0`, `[g_{+2}, g_{-2}] ⊆ g_0`)**:
 `[G_{+2}(N_+, X), G_{-2}(N_+, Y)] = G_0^P(N_+, N_+ X P Y N_-) - G_0^Q(N_+, N_- Y Q X N_+)`. -/
 theorem comm_G_plus2_G_minus2_in_G_0 (N_plus X Y : B)

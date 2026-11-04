@@ -342,6 +342,50 @@ theorem peirce_m2_z0_bracket_mem_m2 (N_plus x y : B)
         peirceGradeMinus2Subgroup N_plus
   exact comm_peirceGradeMinus2_zero_mem N_plus X Y h_nil h_reg
 
+/-- The mixed `(+1,-1)` bracket belongs to grade zero: its `P`, `Q`, and
+neutral Peirce corners are exactly the three terms of the owner's closure
+formula. This direct inclusion does not use additive torsion-freeness. -/
+theorem peirce_p1_m1_bracket_mem_z0 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p1)
+    (hy : y ∈ tkkPeirceGrade N_plus .m1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .z0 := by
+  change x ∈ peirceGradePlus1Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) ∈
+        peirceGradeZeroSubgroup N_plus
+  rw [comm_peirceGradePlus1_minus1_closed N_plus X Y h_nil h_reg]
+  change _ ∈ Set.range (peirceGradeZero N_plus)
+  refine ⟨X * peirceR N_plus * Y - Y * peirceR N_plus * X +
+      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus, ?_⟩
+  -- Each summand is already supported in a single diagonal Peirce corner.
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRP := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
+  have hQR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.1
+  have hRQ := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR]
+  simp only [sub_mul, add_mul, mul_sub, mul_add, hP2, hQ2, hR2,
+    hPQ, hQP, hPR, hRP, hQR, hRQ, zero_mul, mul_zero,
+    zero_add, add_zero, sub_zero, zero_sub]
+  noncomm_ring
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion
 freeness ensures the integer adjoint grades identify those components. -/

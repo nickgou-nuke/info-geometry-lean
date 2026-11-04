@@ -3858,3 +3858,17 @@ its reflexivity binders were unused. The theorem now states the weaker true
 hypotheses, and its three call sites were updated. The staged proof-proxy gate
 rejected the old vacuous binders; the four affected owner targets passed their
 combined locked build after the interface correction.
+
+### 2026-11-04: Modular rapidity composition on chiral sectors
+
+`tomita_takesaki_quark_rapidity_add` and
+`tomita_takesaki_antiquark_rapidity_add` in
+[`TomitaTakesakiModularEvolution.lean`](../lean/InfoGeometry/Superalgebra/TomitaTakesakiModularEvolution.lean)
+prove that successive `cosh/sinh` modular-flow formulas compose by adding their
+real rapidity parameters on the quark and antiquark sectors. The proofs use the
+existing sector shift identities and `Real.exp_add`; the forward and backward
+weights multiply as `exp (2(s+t))` and `exp (-2(s+t))`, respectively. This is
+a sectorwise one-parameter action law for the defined flow. It does not assert
+composition on arbitrary split-octonion elements, identify the rotor with an
+operator exponential of `modularHamiltonian`, or establish an analytic KMS
+state. The targeted locked Lake build passed (1,958 jobs).

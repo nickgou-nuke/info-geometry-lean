@@ -238,6 +238,57 @@ theorem tomita_takesaki_antiquark_rapidity_shift (t : ℝ) (v : ColorVec3 ℝ) :
       antiquark (ColorVec3.smul (Real.exp (-2 * t)) v) := by
   rw [tomita_takesaki_antiquark_red_shift, real_rapidity_backward_weight]
 
+/-- Successive rapidity flows compose additively on the forward chiral sector.
+This proves the one-parameter action law on quarks for the algebraic flow
+defined above; it does not assert a modular group on the full split-octonion
+algebra. -/
+theorem tomita_takesaki_quark_rapidity_add (s t : ℝ) (u : ColorVec3 ℝ) :
+    tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
+      (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (quark u)) =
+        tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (quark u) := by
+  have h_exp : Real.exp (2 * s) * Real.exp (2 * t) = Real.exp (2 * (s + t)) := by
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  calc tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
+        (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (quark u))
+      = tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
+          (quark (ColorVec3.smul (Real.exp (2 * t)) u)) := by
+            rw [tomita_takesaki_quark_rapidity_shift]
+    _ = quark (ColorVec3.smul (Real.exp (2 * s))
+          (ColorVec3.smul (Real.exp (2 * t)) u)) := by
+            rw [tomita_takesaki_quark_rapidity_shift]
+    _ = quark (ColorVec3.smul (Real.exp (2 * (s + t))) u) := by
+          congr 1
+          ext <;> dsimp [ColorVec3.smul] <;> rw [← mul_assoc, h_exp]
+    _ = tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (quark u) := by
+          rw [tomita_takesaki_quark_rapidity_shift]
+
+/-- Successive rapidity flows compose additively on the backward chiral sector.
+The opposite exponent is forced by the antiquark red-shift formula. -/
+theorem tomita_takesaki_antiquark_rapidity_add (s t : ℝ) (v : ColorVec3 ℝ) :
+    tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
+      (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (antiquark v)) =
+        tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (antiquark v) := by
+  have h_exp : Real.exp (-2 * s) * Real.exp (-2 * t) =
+      Real.exp (-2 * (s + t)) := by
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  calc tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
+        (tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (antiquark v))
+      = tomitaTakesakiFlow (Real.cosh s) (Real.sinh s)
+          (antiquark (ColorVec3.smul (Real.exp (-2 * t)) v)) := by
+            rw [tomita_takesaki_antiquark_rapidity_shift]
+    _ = antiquark (ColorVec3.smul (Real.exp (-2 * s))
+          (ColorVec3.smul (Real.exp (-2 * t)) v)) := by
+            rw [tomita_takesaki_antiquark_rapidity_shift]
+    _ = antiquark (ColorVec3.smul (Real.exp (-2 * (s + t))) v) := by
+          congr 1
+          ext <;> dsimp [ColorVec3.smul] <;> rw [← mul_assoc, h_exp]
+    _ = tomitaTakesakiFlow (Real.cosh (s + t)) (Real.sinh (s + t)) (antiquark v) := by
+          rw [tomita_takesaki_antiquark_rapidity_shift]
+
 end SplitOctonion
 
 /-! ### 4. Concrete Integer Instantiations and Non-Commutativity -/

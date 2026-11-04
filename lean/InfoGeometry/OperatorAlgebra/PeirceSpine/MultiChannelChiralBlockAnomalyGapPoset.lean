@@ -1203,6 +1203,51 @@ theorem Gap_left_filter_Phi_w₃_channel1 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
       h13_ab h13_ba h13_asb h13_sab hc3 hcs3,
     add_zero]
 
+/-- The support of channel two extracts its weighted block from the
+three-channel sum. -/
+theorem Gap_left_filter_Phi_w₃_channel2 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h2_nil : N₂ * N₂ = 0) (h2_reg : N₂ * star N₂ * N₂ = N₂)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    Gap N₂ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ = c₂ * Phi N₂ := by
+  dsimp [Phi_w₃, Phi_w₂]
+  rw [mul_add, mul_add,
+    Gap_mul_weighted_Phi_orthog N₂ c₁ N₁ h12_ba h12_ab
+      (N_b_mul_star_N_a N₁ N₂ h12_asb)
+      (star_N_b_mul_N_a N₁ N₂ h12_sab) hc1 hcs1,
+    Gap_mul_weighted_Phi_same c₂ N₂ h2_nil h2_reg hc2 hcs2,
+    Gap_mul_weighted_Phi_orthog N₂ c₃ N₃
+      h23_ab h23_ba h23_asb h23_sab hc3 hcs3,
+    zero_add, add_zero]
+
+/-- The support of channel three extracts its weighted block from the
+three-channel sum. -/
+theorem Gap_left_filter_Phi_w₃_channel3 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h3_nil : N₃ * N₃ = 0) (h3_reg : N₃ * star N₃ * N₃ = N₃)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    Gap N₃ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ = c₃ * Phi N₃ := by
+  dsimp [Phi_w₃, Phi_w₂]
+  rw [mul_add, mul_add,
+    Gap_mul_weighted_Phi_orthog N₃ c₁ N₁ h13_ba h13_ab
+      (N_b_mul_star_N_a N₁ N₃ h13_asb)
+      (star_N_b_mul_N_a N₁ N₃ h13_sab) hc1 hcs1,
+    Gap_mul_weighted_Phi_orthog N₃ c₂ N₂ h23_ba h23_ab
+      (N_b_mul_star_N_a N₂ N₃ h23_asb)
+      (star_N_b_mul_N_a N₂ N₃ h23_sab) hc2 hcs2,
+    Gap_mul_weighted_Phi_same c₃ N₃ h3_nil h3_reg hc3 hcs3,
+    zero_add, zero_add]
+
 /-- **Three-channel weighted rotor–block product:**
     `J_w₃ * Φ_w₃` is the sum of the three squared-weight channel anomalies.
     Each weight commutes only with its own channel; cross-channel products use

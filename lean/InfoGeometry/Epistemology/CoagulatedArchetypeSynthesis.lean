@@ -1461,8 +1461,10 @@ Coagulates Archetype XX (`Kantor5Graded` 5-Graded Superconformal Élie Cartan Gr
 3. **3rd-Order Zorn Bimodule Insertion Anomaly IS 5-Graded Élie Cartan Torsion & Curvature**:
    `(ZornMatrix.cubicAssociator X).u = ZornMatrix.upperBimoduleAnomaly X` and equals
    `(kantorBracket V_X Qp).gp1 + (-(kantorBracket Ω_X κm).gm2 - (kantorBracket (injM2 wv) (injP1 X.v)).gm1) + (kantorBracket κp Qm).gp1`,
-4. **5-Graded Bianchi–Cartan Differential Jacobi Closure**:
-   cyclic Jacobi sums across `(Ω₁, Ω₂, Ω₃)`, `(Ω₁, Ω₂, E₁)`, and `(Ω₁, Ω₂, K₂)` vanish identically. -/
+4. **Selected 5-Graded Bianchi–Cartan Cyclic Identities**:
+   the stated cyclic sums for `(Ω₁, Ω₂, Ω₃)`, `(Ω₁, Ω₂, E₁)`, and `(Ω₁, Ω₂, K₂)` vanish.
+   These restricted identities do not establish a general Lie-superalgebra Jacobi law;
+   `Kantor5GradedJacobiAudit` proves that law fails for the proposed operation. -/
 theorem partXVI_superconformal_cartan_5graded_gravity_synthesis
     {R : Type u} [Ring R]
     (A₁ A₂ : Kantor5Graded R)

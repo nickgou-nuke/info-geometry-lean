@@ -1095,6 +1095,28 @@ theorem comm_G_plus2_G_minus2_in_G_0 (N_plus X Y : B)
   exact kkt_comm_extremal_into_G0_helper N_plus (star N_plus) (P N_plus) (Q N_plus) X Y
     rfl rfl hPN hMP hQM hNQ
 
+omit [StarRing B] in
+/-- The extremal `+2` sandwich sector is abelian because each product contains
+the square-zero generator in the middle. -/
+theorem comm_G_plus2_G_plus2 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0) :
+    comm (G_plus2 N_plus X) (G_plus2 N_plus Y) = 0 := by
+  dsimp [comm, G_plus2]
+  rw [kkt_sandwich_mul_sandwich_zero N_plus X Y h_nil,
+    kkt_sandwich_mul_sandwich_zero N_plus Y X h_nil,
+    sub_self]
+
+/-- The extremal `-2` sandwich sector is abelian by adjoint nilpotency. -/
+theorem comm_G_minus2_G_minus2 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0) :
+    comm (G_minus2 N_plus X) (G_minus2 N_plus Y) = 0 := by
+  dsimp [comm, G_minus2]
+  rw [kkt_sandwich_mul_sandwich_zero (star N_plus) X Y
+      (star_N_plus_sq N_plus h_nil),
+    kkt_sandwich_mul_sandwich_zero (star N_plus) Y X
+      (star_N_plus_sq N_plus h_nil),
+    sub_self]
+
 /-- Helper: `Sigma N_plus * P N_plus = P N_plus`. -/
 theorem Sigma_mul_P_eq_P (N_plus : B)
     (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :

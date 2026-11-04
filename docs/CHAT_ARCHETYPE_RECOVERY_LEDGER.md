@@ -2698,3 +2698,93 @@ Both modules are wired through `InfoGeometry.All`.
 This is a source-to-owner scope audit; no theorem was changed in Section 123.
 The finite algebraic identities are represented, while their gauge-theoretic
 and topological interpretations remain outside the current formalization.
+
+### 2026-11-04: Section 122 Fresnel / `Cl(1,1)` duplicate-occurrence audit
+
+The same transcript labels a later, distinct proposal “Section 122” (Turn
+0364, around lines 43318–43500): a two-row Fresnel matrix, Gram/determinant
+identities, and an Aharonov–Bohm matrix action. I compared that occurrence with
+both the transcript-era
+[`FresnelCl11MatrixIsomorphism.lean`](../lean/InfoGeometry/QuantumContext/FresnelCl11MatrixIsomorphism.lean)
+and the newer
+[`FresnelCl11Isomorphism.lean`](../lean/InfoGeometry/QuantumContext/FresnelCl11Isomorphism.lean),
+which also imports the native
+[`Cl11Matrix.lean`](../lean/InfoGeometry/Clifford/Cl11Matrix.lean) owner.
+
+- **Existing coordinate results:** both Fresnel modules define a four-entry
+  record and prove the coordinate equivalence, determinant, Frobenius norm,
+  and Gram identities. The Section 124 module additionally proves a real
+  algebra-operation bridge from that record to the existing native
+  `CliffordAlgebra q11 ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ` equivalence. The generic
+  record by itself is not a generic-ring Clifford algebra isomorphism.
+- **Flux-rotation sign convention:** the Section 122 source uses
+  `U(c,s) = [[c,-s],[s,c]]` and states that the upper off-diagonal entry of
+  `M U Mᵀ` is `cG + sH`. The transcript-era owner proves `cG - sH` for that
+  matrix. The Section 124 owner instead uses `[[c,s],[-s,c]]` and proves
+  `cG + sH`; the two statements use opposite rotation conventions. These
+  conventions must not be silently merged.
+- **Normalization hypothesis:** the Section 122 prose says the simplified
+  transition formula is for unit holonomy, but its displayed Lean theorem has
+  no `c²+s² = 1` hypothesis. Section 124 proves the general formula with the
+  correction `((c²+s²)-1) I₋` and separately derives the simplified formula
+  under the unit-circle condition.
+- The finite coordinate identities do not themselves establish geometric
+  Berry curvature, a physical holonomy, or a normalized transition
+  probability. The source's archive-wide certification claims are not local
+  verification evidence.
+
+This occurrence is routed to the Section 124 owner and its native Clifford
+bridge; no duplicate owner or compatibility layer is needed. This entry is a
+source-to-owner audit, not a fresh build result.
+
+### 2026-11-04: Section 148 Jones / Chern–Simons / cosmological-constant audit
+
+I compared Section 148 (Turn 0311 and the following code fence, around lines
+43615–44080) in
+`cached/aistudio_extracts/aistudio_prompt_1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or/transcript.md`
+with
+[`WittenJonesChernSimonsKnots.lean`](../lean/InfoGeometry/Topology/WittenJonesChernSimonsKnots.lean),
+its integer audit, the repo-native
+[`JonesPolynomial.lean`](../lean/InfoGeometry/Topological/JonesPolynomial.lean)
+interface, and the related
+[`ChernSimonsJonesWittenVerlindeCapstone.lean`](../lean/InfoGeometry/Canonical/ChernSimonsJonesWittenVerlindeCapstone.lean).
+The Section 148 owner and audit are imported by `InfoGeometry.All`; the
+transcript's claimed test counts and global certification status are not
+verification evidence for this checkout.
+
+- **Section 148's scalar identity is present:** the owner defines
+  `topologicalCosmoConstant CS = A² + A_inv² - 2` and proves
+  `(A - A_inv)²` equals it under `A * A_inv = 1`. This is a ring identity for
+  the declared scalars. The transcript puts invertibility into the phase
+  structure; the owner makes it an explicit theorem hypothesis.
+- **The “unknot” equation is definitional algebra:**
+  `unknotVacuumLoop = -A² - A_inv²` and the theorem that this equals
+  `-topologicalCosmoConstant - 2` follows by expansion. Neither this value nor
+  `skeinCrossResolution` is evaluated on a constructed link or knot: the
+  crossing resolutions are arbitrary ring elements, and no diagram, isotopy,
+  Reidemeister move, framing, or link invariant is defined by this owner.
+- **The phase/level and cosmology claims are not derived:** no `k`, exponential
+  phase, root-of-unity condition, Chern–Simons action or expectation value is
+  connected to `A`; no spacetime or cosmological observable is constructed.
+  The source's implication “`A ≠ 1` therefore `Λ ≠ 0`” is false under the
+  owner's hypotheses: `A = A_inv = -1` satisfies invertibility and `A ≠ 1`,
+  while the defined `Λ` is zero. (The source's forward implication `A = 1`
+  implies `Λ = 0` does follow algebraically.)
+- **Additional checked-in owner content:** the Section 148 module also proves
+  finite split-octonion coordinate identities and `Mat3` Temperley–Lieb /
+  Kauffman braid relations, including an inverse and a Yang–Baxter equation.
+  These are concrete algebraic representations; the octonion “skein” map is
+  not shown to be an evaluation of link diagrams. The Section 148 audit gives
+  integer evaluations only.
+- **More honest Jones interface elsewhere:** `Topological.JonesPolynomial`
+  explicitly says it does not construct diagrams, Reidemeister moves, a
+  Markov trace, or a Reshetikhin–Turaev functor. Its `JonesPolynomialModel`
+  takes unknot normalization and a skein law as fields, so its consequences
+  remain conditional on that supplied data. The Chern–Simons/Jones/Verlinde
+  capstone proves selected scalar, matrix, and fusion calculations, not the
+  claimed physical equality between knotting and dark energy.
+
+Section 148 therefore has formalized finite algebraic fragments, but its
+headline knot-to-cosmological-constant and Chern–Simons TQFT interpretations
+are not established. This is a source-to-owner scope audit; no Lean theorem was
+changed or newly built in this entry.

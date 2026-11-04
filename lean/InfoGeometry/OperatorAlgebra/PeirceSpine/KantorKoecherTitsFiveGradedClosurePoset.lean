@@ -1147,6 +1147,36 @@ theorem comm_G_0_neutral_G_minus1_L (N_plus X Y : B)
   congr 1
   noncomm_ring
 
+/-- The neutral grade-zero Peirce block brackets with the right `-1` block
+back into grade `-1` by composition through the neutral support. -/
+theorem comm_G_0_neutral_G_minus1_R (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_neutral N_plus X) (G_minus1_R N_plus Y) =
+      G_minus1_R N_plus (X * (1 - Gap N_plus) * Y) := by
+  have hGapIdem := Gap_idem N_plus h_nil h_reg
+  have hR : (1 - Gap N_plus) * (1 - Gap N_plus) = 1 - Gap N_plus := by
+    dsimp [Gap] at hGapIdem ⊢
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGapIdem, sub_self, sub_zero]
+  have hMSigma := star_N_plus_mul_Sigma N_plus h_nil h_reg
+  have hMGap : star N_plus * Gap N_plus = star N_plus := by
+    calc star N_plus * Gap N_plus
+        = (star N_plus * Sigma N_plus) * Sigma N_plus := by
+            dsimp [Gap]
+            rw [← mul_assoc]
+      _ = star N_plus * Sigma N_plus := congrArg (fun z : B => z * Sigma N_plus) hMSigma
+      _ = star N_plus := hMSigma
+  have hMR : star N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hMGap, sub_self]
+  have hBracket := kkt_peirce_bracket_composable (1 - Gap N_plus)
+    (1 - Gap N_plus) (star N_plus) X Y hR hMR
+  dsimp [G_0_neutral, G_minus1_R]
+  calc (comm ((1 - Gap N_plus) * X * (1 - Gap N_plus))
+      ((1 - Gap N_plus) * Y * star N_plus)) =
+      (1 - Gap N_plus) * X * (1 - Gap N_plus) * Y * star N_plus := hBracket
+    _ = (1 - Gap N_plus) * (X * (1 - Gap N_plus) * Y) * star N_plus := by
+          noncomm_ring
+
 /-- **Theorem `KKT₇` (Opposite Extremal Commutator Lands in Grade `0`, `[g_{+2}, g_{-2}] ⊆ g_0`)**:
 `[G_{+2}(N_+, X), G_{-2}(N_+, Y)] = G_0^P(N_+, N_+ X P Y N_-) - G_0^Q(N_+, N_- Y Q X N_+)`. -/
 theorem comm_G_plus2_G_minus2_in_G_0 (N_plus X Y : B)

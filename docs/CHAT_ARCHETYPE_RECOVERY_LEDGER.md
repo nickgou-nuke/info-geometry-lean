@@ -3944,3 +3944,12 @@ four pairwise primitive orthogonality relations, the sum is square-zero and
 von Neumann regular. The proofs use finite-sum cross-term annihilation and
 state no ambient spacetime or analytic spectral-gap conclusion. The targeted
 locked build passed (845 jobs).
+
+The same finite-family construction now continues downstream: `finite_channel_sum_gap_idem`
+proves idempotency of `Gap(∑ Nᵢ)` from channelwise square-zero, regularity, and
+pairwise orthogonality; `finite_channel_sum_phi_sq_eq_gap_add` proves
+`Φ(∑ Nᵢ)² = ∑ Gap(Nᵢ)`; and `finite_channel_sum_chiral_spectral_gap` proves
+`Φ_tot * (Φ_tot² - 1) = 0`. These use the anomaly-first `Gap := Σ²` owner
+explicitly. The targeted locked build passed (1,553 jobs); axiom inspection,
+the staged proof-proxy gate, and the semantic-vacuity audit are recorded with
+the corresponding audit module.

@@ -204,6 +204,86 @@ theorem finite_channel_sum_gap_add (s : Finset ι) (N : ι → B)
       (h_cross i hi j hj hij).2.2.1
       (h_cross i hi j hj hij).2.2.2
 
+/-- The anomaly-generated gap of a finite orthogonal channel sum is
+idempotent when each channel is square-zero and von Neumann regular. -/
+theorem finite_channel_sum_gap_idem (s : Finset ι) (N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+        (∑ i ∈ s, N i) *
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+        (∑ i ∈ s, N i) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+        (∑ i ∈ s, N i) := by
+  exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap_idem
+    (∑ i ∈ s, N i)
+    (finite_channel_sum_sq_zero s N h_nil h_cross)
+    (finite_channel_sum_regular s N h_reg h_cross)
+
+/-- The chiral block built from the finite channel sum squares to the additive
+anomaly-generated gap. -/
+theorem finite_channel_sum_phi_sq_eq_gap_add (s : Finset ι) (N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi
+        (∑ i ∈ s, N i) *
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi
+        (∑ i ∈ s, N i) =
+      ∑ i ∈ s,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+          (N i) := by
+  rw [InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi_sq_eq_Gap
+      (∑ i ∈ s, N i)
+      (finite_channel_sum_sq_zero s N h_nil h_cross)
+      (finite_channel_sum_regular s N h_reg h_cross)]
+  exact finite_channel_sum_gap_add s N h_cross
+
+/-- The finite-sum chiral block obeys the same supported spectral polynomial
+as a single channel: `Φ_tot * (Φ_tot² - 1) = 0`. -/
+theorem finite_channel_sum_chiral_spectral_gap (s : Finset ι) (N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi
+        (∑ i ∈ s, N i) *
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi
+        (∑ i ∈ s, N i) *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi
+        (∑ i ∈ s, N i) - 1) = 0 := by
+  let Ntot := ∑ i ∈ s, N i
+  have hcube :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot *
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot := by
+    calc
+      _ =
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot) *
+              InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot := by
+        rw [mul_assoc]
+      _ = InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap Ntot *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot := by
+        rw [InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi_sq_eq_Gap
+          Ntot (finite_channel_sum_sq_zero s N h_nil h_cross)
+          (finite_channel_sum_regular s N h_reg h_cross)]
+      _ = InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot :=
+        InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap_mul_Phi
+          Ntot (finite_channel_sum_sq_zero s N h_nil h_cross)
+          (finite_channel_sum_regular s N h_reg h_cross)
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot *
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot - 1) = 0
+  rw [mul_sub, mul_one, hcube, sub_self]
+
 /-- A self-adjoint weight commuting with its channel generator also commutes
 with that generator's adjoint. This removes the redundant second local
 commutation hypothesis from weighted channel interfaces. -/

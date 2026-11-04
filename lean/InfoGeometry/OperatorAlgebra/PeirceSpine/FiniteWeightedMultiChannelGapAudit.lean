@@ -8,6 +8,9 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.FiniteWeightedMultiChannelGap
 
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.finite_channel_sum_sigma_add
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.finite_channel_sum_gap_add
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.finite_channel_sum_gap_idem
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.finite_channel_sum_phi_sq_eq_gap_add
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.finite_channel_sum_chiral_spectral_gap
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_block_sq_eq_gap_sum
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_J_mul_Phi_eq_sigma
 #print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_Phi_mul_J_eq_neg_sigma

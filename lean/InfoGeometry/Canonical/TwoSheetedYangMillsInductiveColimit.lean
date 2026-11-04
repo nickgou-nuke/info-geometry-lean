@@ -365,6 +365,43 @@ def stepHomIter {A : ℕ → Type*} [∀ k, Ring (A k)] [∀ k, StarRing (A k)]
   | 0 => StarRingHom.id (A k)
   | m + 1 => (Cone.stepHom (k + m)).comp (stepHomIter Cone k m)
 
+/-- A composite transition in an injective tower is injective. The abstract
+cone itself does not assume injectivity, so it is supplied as a hypothesis. -/
+theorem stepHomIter_injective
+    {A : ℕ → Type*} [∀ k, Ring (A k)] [∀ k, StarRing (A k)]
+    {A_inf : Type*} [Ring A_inf] [StarRing A_inf]
+    (Cone : InductiveStarColimitCone A A_inf)
+    (hstep : ∀ j, Function.Injective (Cone.stepHom j).toRingHom)
+    (k m : ℕ) :
+    Function.Injective (stepHomIter Cone k m).toRingHom := by
+  induction m with
+  | zero =>
+      intro x y h
+      exact h
+  | succ m ih =>
+      change Function.Injective
+        ((Cone.stepHom (k + m)).toRingHom.comp (stepHomIter Cone k m).toRingHom)
+      exact (hstep (k + m)).comp ih
+
+/-- Injective star-preserving transitions preserve nonvanishing of the
+two-sheet quadratic coupling at every finite later stage. This is an
+algebraic nonzero statement, not a uniform numerical gap estimate. -/
+theorem stepHomIter_preserves_nonzero_two_sheet_coupling
+    {A : ℕ → Type*} [∀ k, Ring (A k)] [∀ k, StarRing (A k)]
+    {A_inf : Type*} [Ring A_inf] [StarRing A_inf]
+    (Cone : InductiveStarColimitCone A A_inf)
+    (hstep : ∀ j, Function.Injective (Cone.stepHom j).toRingHom)
+    (k m : ℕ) (P Aop C : A k)
+    (hMass : opQuadraticCoupling P Aop C ≠ 0) :
+    opQuadraticCoupling
+      ((stepHomIter Cone k m).toRingHom P)
+      ((stepHomIter Cone k m).toRingHom Aop)
+      ((stepHomIter Cone k m).toRingHom C) ≠ 0 := by
+  exact starRingHom_preserves_nonzero_two_sheet_coupling
+    (stepHomIter Cone k m).toRingHom
+    (stepHomIter_injective Cone hstep k m)
+    (stepHomIter Cone k m).map_star' P Aop C hMass
+
 /-- **Theorem `LIII.1` (`colimit_renormalization_scale_invariance`):**
 Multi-step colimit cocycle invariance (`k → k + m → ∞`) of `opQuadraticCoupling`, `opSpinDipole`,
 `opGradingStarSandwich`, and `opNegativeAdjointSquare`. -/
@@ -553,6 +590,18 @@ def towerStepHom (k : ℕ) : StarRingHom (TowerLevel R k) (TowerLevel R (k + 1))
     refine Prod.ext (funext fun i => ?_) rfl; by_cases h : i.val < k <;> simp [towerStepFn, h]
   map_star' x := by
     refine Prod.ext (funext fun i => ?_) rfl; by_cases h : i.val < k <;> simp [towerStepFn, h]
+
+/-- Every concrete tail-replication transition is injective: the old finite
+coordinates remain in the first block and the tail coordinate is retained. -/
+theorem towerStepHom_injective (k : ℕ) :
+    Function.Injective (towerStepHom (R := R) k).toRingHom := by
+  intro x y h
+  change towerStepFn k x = towerStepFn k y at h
+  apply Prod.ext
+  · funext i
+    have hi := congrFun (congrArg Prod.fst h) i.castSucc
+    simpa [towerStepFn] using hi
+  · simpa [towerStepFn] using congrArg Prod.snd h
 
 /-- Colimit evaluation map `A_k → A_∞`. -/
 def towerColimitFn (k : ℕ) (x : TowerLevel R k) (n : ℕ) : R :=

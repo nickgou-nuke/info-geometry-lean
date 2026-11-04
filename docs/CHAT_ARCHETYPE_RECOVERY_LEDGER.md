@@ -3547,3 +3547,18 @@ eigenspaces over arbitrary base rings. Its targeted locked owner build passed
 (8,998 jobs). The staged proof-proxy gate and `git diff --cached --check`
 passed. The semantic audits reported only the owner files' existing
 proof-like-field and trivial-surface heuristic warnings.
+
+### 2026-11-04: XLVIII injective transition persistence
+
+`stepHomIter_injective` in
+[`TwoSheetedYangMillsInductiveColimit.lean`](../lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean)
+proves that every finite composite transition of an `InductiveStarColimitCone`
+is injective when each one-step star-ring map is injective. The companion
+`stepHomIter_preserves_nonzero_two_sheet_coupling` transports nonvanishing of
+the quadratic coupling to every such later finite stage. The concrete
+tail-replication model now supplies the needed hypothesis through
+`towerStepHom_injective`. Thus the concrete tower has finite-stage algebraic
+nonvanishing persistence; arbitrary cones remain conditional on transition
+injectivity. This proves neither a uniform numerical gap nor the transcript's
+separate tensor-product/block-doubling construction. The targeted locked owner
+build passed (956 jobs); existing linter warnings remain in that owner.

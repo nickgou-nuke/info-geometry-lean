@@ -3273,6 +3273,16 @@ with this proposed horizon reflection. Treat this as a formalization gap and
 keep the OS positivity/spectral interpretation unclaimed pending an explicit
 positive-cone or inner-product bridge.
 
+The reflection owner now closes the narrower positivity bridge: under
+`[PartialOrder B] [StarOrderedRing B]`,
+`osPeirce_reflection_form_nonneg` proves the negative reflected Jordan pairing
+nonnegative, and for a C*-algebra every positive complex-linear functional
+maps that pairing to a scalar with nonnegative real part via
+`osPeirce_reflection_state_nonneg`. These statements strengthen the algebraic
+pairing result but do not supply the full Osterwalder--Schrader axiom set, a
+transfer-matrix contraction, or a spectral-gap inequality. The module overview
+was updated to state this scope precisely.
+
 ### 2026-11-04: Transcript Archetypes XLV--XLVIII root and tower claims
 
 The XLV root-weight and reflexive-pair `sl₂` identities already have generic

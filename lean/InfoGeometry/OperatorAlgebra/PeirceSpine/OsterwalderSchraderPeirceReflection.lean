@@ -16,8 +16,10 @@ open scoped ComplexOrder
 
 For a self-adjoint idempotent, the grading-twisted star operation is an
 involution and sends the forward Peirce corner to the negative adjoint corner.
-The resulting Jordan pairing is the algebraic Gram expression. This file
-does not assert positivity, reflection positivity, or a transfer-matrix gap.
+The resulting Jordan pairing is the algebraic Gram expression. Under an
+ordered star-ring structure it is nonnegative, and a positive functional on a
+C*-algebra sends it to a nonnegative scalar. This does not assert the full
+Osterwalder--Schrader axiom system or a transfer-matrix gap.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Star.Basic
 
 namespace OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset
 
 variable {B : Type*} [Ring B] [StarRing B]
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-!
 ### 0. Universal Additive & Ring Helpers
@@ -33,6 +36,24 @@ def quad (x : B) : B := (x + x) + (x + x)
 
 /-- Ring commutator `[X, Y] = X Y - Y X` (Lie bracket). -/
 def comm (X Y : B) : B := X * Y - Y * X
+
+omit [StarRing B] in
+/-- The adjoint action of any element of an associative ring is a derivation
+of the commutator bracket. -/
+theorem comm_ad_derivation (S X Y : B) :
+    comm S (comm X Y) = comm (comm S X) Y + comm X (comm S Y) := by
+  simpa [comm, LieRing.of_associative_ring_bracket] using
+    (LieRing.leibniz_lie S X Y)
+
+omit [StarRing B] in
+/-- Eigenvalues of the adjoint action add under the commutator bracket.
+This is the reusable grading-closure law behind the concrete KKT sectors. -/
+theorem comm_grade_addition (S X Y : B) (m n : ℤ)
+    (hX : comm S X = m • X) (hY : comm S Y = n • Y) :
+    comm S (comm X Y) = (m + n) • comm X Y := by
+  rw [comm_ad_derivation, hX, hY]
+  change ⁅m • X, Y⁆ + ⁅X, n • Y⁆ = (m + n) • ⁅X, Y⁆
+  rw [zsmul_lie, lie_zsmul, ← add_zsmul]
 
 /-- Ring anticommutator `{X, Y} = X Y + Y X` (Jordan product). -/
 def anticomm (X Y : B) : B := X * Y + Y * X

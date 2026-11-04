@@ -3183,6 +3183,14 @@ The direct locked build of
 also succeeded (1,549 jobs), confirming the weighted declarations above at
 their owner target.
 
+The anomaly-first KKT owner
+[`KantorKoecherTitsClosurePoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KantorKoecherTitsClosurePoset.lean)
+now states the reusable associative-ring identities `comm_ad_derivation` and
+`comm_grade_addition`: the commutator adjoint action obeys the derivation rule,
+and eigenweights add under the bracket. Its targeted locked build passed
+(1,608 jobs). These supplement the concrete KKT sector closure results without
+claiming a graded Lie algebra beyond the actual commutator action proved.
+
 ### 2026-11-04: Archetype XXXI orbit mass-gap channel sum
 
 The XXXI Yang--Mills orbit proposal in
@@ -3298,10 +3306,16 @@ for arbitrary associative-algebra directed corners of an idempotent, the
 signed spin dissipator fixes the Cartan reflection, sends `1` to four times
 the commutator spin, and the mass dissipator sends the reflection to minus
 four times that spin. The same owner has cyclic-functional trace-zero results
-for both dissipator divergences. The searched owners do not expose the
-transcript's trace-pairing self-adjointness theorem for the symmetric mass
-dissipator; that clause remains an explicit formalization gap. This audit
-does not promote the full XLI package as complete.
+for both dissipator divergences. The generic owner
+[`NoncommutativeChiralChannels.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeChiralChannels.lean)
+now proves `cyclicFunctional_symmetricDissipator_selfAdjoint`: for any
+associative ring and cyclic additive functional, the symmetric dissipator is
+self-adjoint under the bilinear trace pairing. The proof uses integration by
+parts for inner commutators and the mixed-double-commutator form; no
+square-zero/reflexivity hypotheses or matrix trace are required. The targeted
+locked owner build passed (8,924 jobs). This closes the algebraic pairing
+clause, while the full XLI master-generator statement and its stationarity
+claims remain separately scoped.
 
 ### 2026-11-04: Archetype XXXVII single-bit Tetraktys master theorem
 

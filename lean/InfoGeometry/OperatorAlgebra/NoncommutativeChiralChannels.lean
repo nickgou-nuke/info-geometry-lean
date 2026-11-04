@@ -101,6 +101,40 @@ theorem symmetricDissipator_eq_mixed_commutators (u v x : A) :
     commutator
   noncomm_ring
 
+/-- A cyclic additive functional makes the symmetric dissipator self-adjoint
+for the bilinear trace pairing. This holds for arbitrary channel operators;
+no square-zero or regularity assumptions are needed. -/
+theorem cyclicFunctional_symmetricDissipator_selfAdjoint
+    {S : Type*} [AddCommGroup S] (τ : A →+ S)
+    (hτ : ∀ a b : A, τ (a * b) = τ (b * a))
+    (u v x y : A) :
+    τ (y * symmetricDissipator u v x) =
+      τ (symmetricDissipator u v y * x) := by
+  have hIBP (r s t : A) :
+      τ (r * commutator s t) = -τ (commutator s r * t) := by
+    calc
+      τ (r * commutator s t) = τ ((r * s) * t) - τ ((r * t) * s) := by
+        unfold commutator
+        rw [mul_sub, map_sub]
+        congr 1 <;> noncomm_ring
+      _ = τ ((r * s) * t) - τ ((s * r) * t) := by
+        rw [hτ (r * t) s]
+        congr 1
+        noncomm_ring
+      _ = -τ ((s * r - r * s) * t) := by
+        rw [sub_mul, map_sub]
+        abel
+      _ = -τ (commutator s r * t) := by rw [commutator]
+  have hDouble (a b : A) :
+      τ (y * commutator a (commutator b x)) =
+        τ (commutator b (commutator a y) * x) := by
+    rw [hIBP y a (commutator b x), hIBP (commutator a y) b x, neg_neg]
+  rw [symmetricDissipator_eq_mixed_commutators,
+      symmetricDissipator_eq_mixed_commutators]
+  simp only [mul_neg, neg_mul, map_neg, map_add, mul_add, add_mul]
+  rw [hDouble u v, hDouble v u]
+  abel
+
 /-- The axial dissipator is the positive double commutator by the axial mode
 for square-zero channel operators. -/
 theorem axialDissipator_eq_double_commutator {u v : A}

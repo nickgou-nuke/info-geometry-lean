@@ -2553,6 +2553,11 @@ proves that the support projection has operator norm exactly one, using the
 fixed-vector identity `Gap(N) N = N` and the existing contraction bound. This
 is a norm statement for the projection, not a uniform spectral lower bound.
 
+`anomaly_expectation_sq_le_norm_sq_mul_gap_expectation` now gives the
+state-dependent Cauchy--Schwarz estimate
+`‖⟨ψ, Sigma(N) ψ⟩‖² ≤ ‖ψ‖² · Re⟨ψ, Gap(N) ψ⟩`. It uses the proven norm identity
+for the gap expectation and does not assert a uniform positive spectral gap.
+
 The dedicated owner
 [`QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean`](../lean/InfoGeometry/QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean)
 now closes the scalar QGT-component map for every normalized state: the
@@ -3154,6 +3159,10 @@ filtering and the corresponding secular annihilation equation, through
 `weighted_finite_block_secular_channel_of_self_adjoint_weights`. These reuse
 the general theorems after deriving adjoint commutation from each weight's
 self-adjointness; they add no cross-channel weight commutation premise.
+The finite owner also exposes the complete four-placement chiral Jordan
+associator quartet under these same reduced assumptions through
+`weighted_finite_JordanAssoc_chiral_quartet_of_self_adjoint_weights`. Its
+locked build passed (845 jobs).
 
 In the same work session, the KKT owner gained a mixed `+1`/`-1` bracket
 decomposition into its three diagonal Peirce blocks, plus top/bottom grade

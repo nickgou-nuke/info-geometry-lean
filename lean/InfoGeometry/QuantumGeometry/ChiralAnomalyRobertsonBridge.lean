@@ -78,6 +78,20 @@ theorem gap_expectation_nonneg (N : EndH) (ψ : H) :
   rw [gap_expectation_eq_anomaly_norm_sq]
   exact sq_nonneg _
 
+/-- Cauchy–Schwarz bounds the squared parity-anomaly expectation by the
+state norm square times the positive `Gap` expectation. -/
+theorem anomaly_expectation_sq_le_norm_sq_mul_gap_expectation (N : EndH) (ψ : H) :
+    Complex.normSq (inner ℂ ψ (Sigma N ψ)) ≤
+      ‖ψ‖ ^ 2 * (inner ℂ ψ (Gap N ψ)).re := by
+  have h_cs : ‖inner ℂ ψ (Sigma N ψ)‖ ≤ ‖ψ‖ * ‖Sigma N ψ‖ :=
+    norm_inner_le_norm ψ (Sigma N ψ)
+  calc Complex.normSq (inner ℂ ψ (Sigma N ψ))
+      = ‖inner ℂ ψ (Sigma N ψ)‖ ^ 2 := by rw [Complex.normSq_eq_norm_sq]
+    _ ≤ (‖ψ‖ * ‖Sigma N ψ‖) ^ 2 := by gcongr
+    _ = ‖ψ‖ ^ 2 * ‖Sigma N ψ‖ ^ 2 := by ring
+    _ = ‖ψ‖ ^ 2 * (inner ℂ ψ (Gap N ψ)).re := by
+      rw [gap_expectation_eq_anomaly_norm_sq]
+
 /-- The anomaly-square operator is self-adjoint. -/
 theorem Gap_selfAdjoint (N : EndH) : star (Gap N) = Gap N := by
   change star (Sigma N * Sigma N) = Sigma N * Sigma N

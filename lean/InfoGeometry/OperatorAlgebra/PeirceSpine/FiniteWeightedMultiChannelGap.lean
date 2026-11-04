@@ -777,6 +777,30 @@ theorem weighted_finite_JordanAssoc_chiral_quartet
     (weighted_finite_gap_mul_Phi_eq_Phi3 s c N h_nil h_reg h_comm h_comm_star h_cross)
     (weighted_finite_Phi_mul_gap_eq_Phi3 s c N h_nil h_reg h_comm h_comm_star h_cross)
 
+/-- Self-adjoint-weight interface for the complete finite chiral Jordan
+associator quartet. Each weight commutes only with its own channel generator;
+self-adjointness supplies commutation with the adjoint generator. -/
+theorem weighted_finite_JordanAssoc_chiral_quartet_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    JordanAssoc (weightedFinitePhi s c N) (weightedFinitePhi s c N)
+        (weightedFiniteJ s c N) = quad (weightedFiniteJ3 s c N) ∧
+    JordanAssoc (weightedFiniteJ s c N) (weightedFinitePhi s c N)
+        (weightedFinitePhi s c N) = -quad (weightedFiniteJ3 s c N) ∧
+    JordanAssoc (weightedFiniteJ s c N) (weightedFiniteJ s c N)
+        (weightedFinitePhi s c N) = -quad (weightedFinitePhi3 s c N) ∧
+    JordanAssoc (weightedFinitePhi s c N) (weightedFiniteJ s c N)
+        (weightedFiniteJ s c N) = quad (weightedFinitePhi3 s c N) := by
+  exact weighted_finite_JordanAssoc_chiral_quartet s c N h_nil h_reg h_comm
+    (self_adjoint_weights_commute_with_channel_adjoints s c N
+      h_selfadjoint h_comm) h_cross
+
 /-- If every finite-channel weight is a sixth-cyclotomic root, its cube is
 `-1` and the weighted cubic Jordan anomaly synchronizes to the unweighted
 channel sum. -/

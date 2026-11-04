@@ -1285,6 +1285,134 @@ theorem peirce_five_grade_components_injective (N_plus X Y : B)
       peirce_five_grade_decomposition N_plus Y h_nil h_reg,
       h2, h1, h0, hm1, hm2]
 
+omit [StarRing B] in
+/-- Associativity-only rule for composing two Peirce corners. -/
+private theorem peirce_corner_comp (A C D E X : B) :
+    A * (C * X * D) * E = (A * C) * X * (D * E) := by
+  noncomm_ring
+
+/-- The grade `+2` projection annihilates every other canonical Peirce grade. -/
+theorem peirceGradePlus2_comp_other (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradePlus2 N_plus (peirceGradePlus1 N_plus X) = 0 ∧
+    peirceGradePlus2 N_plus (peirceGradeZero N_plus X) = 0 ∧
+    peirceGradePlus2 N_plus (peirceGradeMinus1 N_plus X) = 0 ∧
+    peirceGradePlus2 N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+  have hPP : P N_plus * P N_plus = P N_plus := YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQQ : Q N_plus * Q N_plus = Q N_plus := YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 := YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 := YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  rcases peirce_chiral_neutral_orthogonal N_plus h_nil h_reg with
+    ⟨hPR, hRP, hQR, hRQ⟩
+  have h1 : peirceGradePlus2 N_plus (peirceGradePlus1 N_plus X) = 0 := by
+    dsimp [peirceGradePlus2, peircePQ, peirceGradePlus1, peircePR, peirceRQ]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPR, hRQ]
+  have h0 : peirceGradePlus2 N_plus (peirceGradeZero N_plus X) = 0 := by
+    dsimp [peirceGradePlus2, peircePQ, peirceGradeZero, peircePP, peirceQQ,
+      peirceRR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hPR, hRQ]
+  have hm1 : peirceGradePlus2 N_plus (peirceGradeMinus1 N_plus X) = 0 := by
+    dsimp [peirceGradePlus2, peircePQ, peirceGradeMinus1, peirceRP, peirceQR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hPR]
+  have hm2 : peirceGradePlus2 N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+    dsimp [peirceGradePlus2, peircePQ, peirceGradeMinus2, peirceQP]
+    rw [peirce_corner_comp]
+    simp [hPQ]
+  exact ⟨h1, h0, hm1, hm2⟩
+
+/-- In a zero-sum relation among canonical grade outputs, the grade `+2`
+component vanishes. This is a corner-projection component of directness. -/
+theorem peirce_five_grade_sum_zero_plus2 (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hsum : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0) :
+    peirceGradePlus2 N_plus X₂ = 0 := by
+  have hself : peirceGradePlus2 N_plus (peirceGradePlus2 N_plus X₂) =
+      peirceGradePlus2 N_plus X₂ := by
+    have hPP : P N_plus * P N_plus = P N_plus := YangMillsVortexPoset.P_idem N_plus h_reg
+    have hQQ : Q N_plus * Q N_plus = Q N_plus := YangMillsVortexPoset.Q_idem N_plus h_reg
+    dsimp [peirceGradePlus2, peircePQ]
+    rw [peirce_corner_comp, hPP, hQQ]
+  rcases peirceGradePlus2_comp_other N_plus X₁ h_nil h_reg with ⟨h1, _, _, _⟩
+  rcases peirceGradePlus2_comp_other N_plus X₀ h_nil h_reg with ⟨_, h0, _, _⟩
+  rcases peirceGradePlus2_comp_other N_plus Xm₁ h_nil h_reg with ⟨_, _, hm1, _⟩
+  rcases peirceGradePlus2_comp_other N_plus Xm₂ h_nil h_reg with ⟨_, _, _, hm2⟩
+  have hproject := congrArg (peirceGradePlus2 N_plus) hsum
+  simp only [peirceGradePlus2_add, hself, h1, h0, hm1, hm2] at hproject
+  simp only [peirceGradePlus2_zero, add_zero] at hproject
+  exact hproject
+
+/-- The grade `+1` projection preserves its own Peirce sector and annihilates
+the other four canonical sectors. -/
+theorem peirceGradePlus1_comp_filter (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradePlus1 N_plus (peirceGradePlus2 N_plus X) = 0 ∧
+    peirceGradePlus1 N_plus (peirceGradePlus1 N_plus X) =
+      peirceGradePlus1 N_plus X ∧
+    peirceGradePlus1 N_plus (peirceGradeZero N_plus X) = 0 ∧
+    peirceGradePlus1 N_plus (peirceGradeMinus1 N_plus X) = 0 ∧
+    peirceGradePlus1 N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+  have hPP : P N_plus * P N_plus = P N_plus := YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQQ : Q N_plus * Q N_plus = Q N_plus := YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 := YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 := YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hRR : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap, sub_self, sub_zero]
+  rcases peirce_chiral_neutral_orthogonal N_plus h_nil h_reg with
+    ⟨hPR, hRP, hQR, hRQ⟩
+  have h2 : peirceGradePlus1 N_plus (peirceGradePlus2 N_plus X) = 0 := by
+    dsimp [peirceGradePlus1, peircePR, peirceRQ, peirceGradePlus2, peircePQ]
+    simp only [peirce_corner_comp]
+    simp [hRP, hQR]
+  have h1 : peirceGradePlus1 N_plus (peirceGradePlus1 N_plus X) =
+      peirceGradePlus1 N_plus X := by
+    dsimp [peirceGradePlus1, peircePR, peirceRQ]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPP, hQQ, hRR, hPR, hRP, hQR, hRQ]
+  have h0 : peirceGradePlus1 N_plus (peirceGradeZero N_plus X) = 0 := by
+    dsimp [peirceGradePlus1, peircePR, peirceRQ, peirceGradeZero,
+      peircePP, peirceQQ, peirceRR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPP, hQQ, hRR, hPQ, hPR, hRP, hQR, hRQ]
+  have hm1 : peirceGradePlus1 N_plus (peirceGradeMinus1 N_plus X) = 0 := by
+    dsimp [peirceGradePlus1, peircePR, peirceRQ, peirceGradeMinus1,
+      peirceRP, peirceQR]
+    simp only [mul_add, add_mul, peirce_corner_comp]
+    simp [hPQ, hPR, hRQ]
+  have hm2 : peirceGradePlus1 N_plus (peirceGradeMinus2 N_plus X) = 0 := by
+    dsimp [peirceGradePlus1, peircePR, peirceRQ, peirceGradeMinus2, peirceQP]
+    simp only [peirce_corner_comp]
+    simp [hPQ, hRQ]
+  exact ⟨h2, h1, h0, hm1, hm2⟩
+
+/-- In a zero-sum relation among canonical grade outputs, the grade `+1`
+component vanishes. -/
+theorem peirce_five_grade_sum_zero_plus1 (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hsum : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0) :
+    peirceGradePlus1 N_plus X₁ = 0 := by
+  rcases peirceGradePlus1_comp_filter N_plus X₂ h_nil h_reg with ⟨h2, _, _, _, _⟩
+  rcases peirceGradePlus1_comp_filter N_plus X₁ h_nil h_reg with ⟨_, hself, _, _, _⟩
+  rcases peirceGradePlus1_comp_filter N_plus X₀ h_nil h_reg with ⟨_, _, h0, _, _⟩
+  rcases peirceGradePlus1_comp_filter N_plus Xm₁ h_nil h_reg with ⟨_, _, _, hm1, _⟩
+  rcases peirceGradePlus1_comp_filter N_plus Xm₂ h_nil h_reg with ⟨_, _, _, _, hm2⟩
+  have hproject := congrArg (peirceGradePlus1 N_plus) hsum
+  simp only [peirceGradePlus1_add, h2, hself, h0, hm1, hm2] at hproject
+  simp only [peirceGradePlus1_zero, add_zero, zero_add] at hproject
+  exact hproject
+
 /-- The grade-zero sector is closed under the commutator: its bracket is the
 sum of the three diagonal Peirce-block brackets. -/
 theorem comm_peirceGradeZero_closed (N_plus X Y : B)
@@ -2519,7 +2647,9 @@ theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
     (comm (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
       G_0_P N_plus (X * peirceR N_plus * Y) -
       G_0_Q N_plus (Y * peirceR N_plus * X) +
-      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus) :=
+      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus) ∧
+    comm (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
+      (4 : ℕ) • Sigma N_plus :=
   ⟨⟨KantorKoecherTitsStage.causalEdge_KKT1_KKT2,
     KantorKoecherTitsStage.causalEdge_KKT2_KKT3,
     KantorKoecherTitsStage.causalEdge_KKT3_KKT4,
@@ -2548,6 +2678,7 @@ theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
     comm_Sigma_G_0_Q N_plus X h_nil h_reg,
     comm_Sigma_G_0_neutral N_plus X h_nil h_reg,
     comm_Sigma_comm_G_plus2_G_minus2 N_plus X Y h_nil h_reg⟩,
-    (kkt_peirce_five_grade_completion N_plus X h_nil h_reg).2.2.2.1⟩
+    ⟨(kkt_peirce_five_grade_completion N_plus X h_nil h_reg).2.2.2.1,
+      comm_K_plus2_seed_K_minus2_seed N_plus h_nil h_reg⟩⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset

@@ -3596,3 +3596,15 @@ extremal Jordan-associator seed generators with `4 • Sigma N_plus`. This fixes
 the seed-level normalization in grade-zero closure; it is an algebraic identity
 under the stated nilpotency and regularity hypotheses. The locked KKT owner
 build passed (8,998 jobs).
+
+### 2026-11-04: A116 path parity to A102 Krein reflection
+
+`PlabicPathParityKreinBridge.lean` proves that the alternating parity of a
+nested three-shell partition is `-invS` of its middle shell. Consequently,
+any self-adjoint readout fixed under the A116 path-parity conjugation is fixed
+under the A102 star-based `kreinReflect` for that middle shell. This is an
+action-compatibility theorem, not a wallpaper-glide theorem. Applying it to
+the concrete A116 contraction readouts still requires deriving their
+self-adjointness from suitable adjoint-compatible input data. The targeted
+bridge build and umbrella `PeirceSpine` build passed; staged proof-proxy and
+semantic-vacuity checks passed.

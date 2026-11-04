@@ -539,10 +539,17 @@ the executable-path lookup; it does not alter the kernel or elaborator.
 The independent QA driver, logs, source snapshots, hashes, and axiom records
 are in `/workspace/scratch/e5b2bf2848d3/verification-runtime/qa-structured-final/`.
 The prior rejected attempt remains in the separate `qa-structured/` directory.
-The final driver invocation was:
+The final driver was invoked with the following modes, in this order:
 
 ```bash
-python3 /workspace/scratch/e5b2bf2848d3/verification-runtime/qa-structured-final/verify_structured.py
+qa_driver=/workspace/scratch/e5b2bf2848d3/verification-runtime/qa-structured-final/verify_structured.py
+python3 "$qa_driver" prepare
+python3 "$qa_driver" closure
+python3 "$qa_driver" axioms
+python3 "$qa_driver" parse-axioms
+python3 "$qa_driver" gates
+python3 "$qa_driver" root
+python3 "$qa_driver" snapshot-after
 ```
 
 Each source compilation uses the maintained wrapper with the shared lock:
@@ -559,7 +566,7 @@ The same wrapper checked the generated ignored probe
 per-file commands for the other nineteen modules. The maintained source gates
 include `tools/quality/proof_proxy_staged_gate.py`,
 `tools/quality/semantic_vacuity_gate.py`, and
-`tools/scripts/vacuity-linter.py`, all at their actual selected eight-file scope.
+`scripts/vacuity-linter.py`, all at their actual selected eight-file scope.
 
 The separate root-package command was also executed:
 

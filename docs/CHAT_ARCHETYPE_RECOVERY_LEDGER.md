@@ -3618,3 +3618,18 @@ the concrete A116 contraction readouts still requires deriving their
 self-adjointness from suitable adjoint-compatible input data. The targeted
 bridge build and umbrella `PeirceSpine` build passed; staged proof-proxy and
 semantic-vacuity checks passed.
+
+### 2026-11-04: KKT five-grade directness and synthesis contract alignment
+
+`peirce_five_grade_sum_zero_all` in
+[`KantorKoecherTitsFiveGradedClosurePoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KantorKoecherTitsFiveGradedClosurePoset.lean)
+assembles the five component-filter lemmas to prove directness of the
+canonical Peirce grade sum. Part XV.g in
+[`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean)
+now also exports the KKT master theorem's seed normalization
+`[K₊₂(N,N*), K₋₂(N,N)] = 4Σ`; this repaired a stale aggregate proposition
+that omitted the final master-theorem conjunct. The KKT owner build passed
+(8,998 jobs), and the integrated synthesis build passed (9,267 jobs). The
+staged proof-proxy gate passed. Semantic-vacuity scans reported only existing
+heuristic warnings; the no-hypothesis scan found an unrelated banned-name
+pattern in `Algebra/ZornAlternativeLaws.lean`.

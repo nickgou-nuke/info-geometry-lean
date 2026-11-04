@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
@@ -98,6 +103,47 @@ theorem hilbertInnerJ_nonneg (K : KreinSpaceDatum V) (C : CartanInvolution K) (v
     dsimp [hilbertInnerJ]
     rw [map_zero, LinearMap.zero_apply]
   · exact le_of_lt (C.pos_def v hv)
+
+/-- The positive pairing induced by a fundamental symmetry, packaged as the
+native real inner-product core. The underlying indefinite form remains `K.eta`;
+positivity belongs to this induced pairing. -/
+def hilbertInnerJCore (K : KreinSpaceDatum V) (C : CartanInvolution K) :
+    InnerProductSpace.Core ℝ V where
+  inner := fun u v => hilbertInnerJ K C u v
+  conj_inner_symm := by
+    intro u v
+    simpa using (hilbertInnerJ_symm K C u v).symm
+  re_inner_nonneg := by
+    intro u
+    change 0 ≤ hilbertInnerJ K C u u
+    exact hilbertInnerJ_nonneg K C u
+  add_left := by
+    intro u₁ u₂ v
+    exact hilbertInnerJ_add_left K C u₁ u₂ v
+  smul_left := by
+    intro u v r
+    exact hilbertInnerJ_smul_left K C r u v
+  definite := by
+    intro u hu
+    by_contra hne
+    have hpos := hilbertInnerJ_pos K C u hne
+    change hilbertInnerJ K C u u = 0 at hu
+    rw [hu] at hpos
+    exact (lt_self_iff_false 0).mp hpos
+
+/-- Cauchy–Schwarz for the positive Cartan-twisted pairing. This conclusion
+does not assert Cauchy–Schwarz for the original indefinite Krein form. -/
+theorem hilbertInnerJ_cauchy_schwarz (K : KreinSpaceDatum V)
+    (C : CartanInvolution K) (u v : V) :
+    hilbertInnerJ K C u v * hilbertInnerJ K C u v ≤
+      hilbertInnerJ K C u u * hilbertInnerJ K C v v := by
+  letI : InnerProductSpace.Core ℝ V := hilbertInnerJCore K C
+  letI : PreInnerProductSpace.Core ℝ V := inferInstance
+  have h := InnerProductSpace.Core.inner_mul_inner_self_le (𝕜 := ℝ) u v
+  change |hilbertInnerJ K C u v| * |hilbertInnerJ K C v u| ≤
+    hilbertInnerJ K C u u * hilbertInnerJ K C v v at h
+  rw [hilbertInnerJ_symm K C v u] at h
+  simpa [abs_mul_abs_self] using h
 
 /-!
 =============================================================================

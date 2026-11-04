@@ -3872,3 +3872,23 @@ a sectorwise one-parameter action law for the defined flow. It does not assert
 composition on arbitrary split-octonion elements, identify the rotor with an
 operator exponential of `modularHamiltonian`, or establish an analytic KMS
 state. The targeted locked Lake build passed (1,958 jobs).
+
+### 2026-11-04: Finite-family cyclotomic reduction of the weighted block gap
+
+`cyclotomic_weighted_finite_block_sq_eq_gap_sum` in
+[`FiniteWeightedMultiChannelGap.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/FiniteWeightedMultiChannelGap.lean)
+extends the channelwise `Φ₆` coefficient reduction to an arbitrary finite
+family: if each `cᵢ` satisfies `cᵢ² − cᵢ + 1 = 0`, then the weighted chiral
+block sum squares to `∑ᵢ (cᵢ − 1) Gap(Nᵢ)`. It reuses the proven finite weighted
+square theorem, with regular square-zero channels, pairwise primitive
+orthogonality, and channel-local weight commutation; it introduces no
+cross-channel weight commutation condition. The targeted locked Lake build
+passed (845 jobs), the staged proof-proxy gate passed, and the semantic-vacuity
+audit reported zero findings.
+
+The KKT owner also now exposes `peirceGradeZero_P_corner_mem`, showing that
+every positive diagonal Peirce corner lies in the grade-zero range under the
+nilpotency and regularity hypotheses. Its proof uses the explicit Peirce
+corner annihilations and support complement idempotency. The KKT owner target
+built successfully (9,000 jobs); this is a range-containment lemma, not a
+claim that the full grade-zero subspace equals the positive corner.

@@ -41,9 +41,34 @@ theorem peirceFiveGradeDegree_tkkGradeIndex (i : TKKGrade) :
 def tkkPeirceGrade (N_plus : B) (i : TKKGrade) : Submodule ℤ B :=
   peirceFiveGradeSubmodule N_plus (tkkGradeIndex i)
 
+omit [StarRing B] in
 private theorem corner_sandwich_outer (e f x : B) :
     e * (f * x * f) * e = (e * f) * x * (f * e) := by
   noncomm_ring
+
+/-- The positive-sheet diagonal corner belongs to the grade-zero range. -/
+theorem peirceGradeZero_P_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_0_P N_plus X ∈ peirceGradeZeroSubgroup N_plus := by
+  change G_0_P N_plus X ∈ Set.range (peirceGradeZero N_plus)
+  refine ⟨G_0_P N_plus X, ?_⟩
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRP := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
+  change P N_plus * (P N_plus * X * P N_plus) * P N_plus +
+      Q N_plus * (P N_plus * X * P N_plus) * Q N_plus +
+      peirceR N_plus * (P N_plus * X * P N_plus) * peirceR N_plus =
+    P N_plus * X * P N_plus
+  rw [corner_sandwich_outer, corner_sandwich_outer, corner_sandwich_outer]
+  simp [hP2, hQP, hPQ, hRP, hPR]
 
 /-- The regular nilpotent generator belongs to the extremal positive Peirce
 grade, without any additive-torsion-freeness assumption. -/

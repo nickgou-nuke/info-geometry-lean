@@ -159,6 +159,33 @@ theorem weighted_finite_block_sq_eq_gap_sum_of_self_adjoint_weights
       (h_selfadjoint i hi) (h_comm i hi)
   · exact h_cross
 
+/-- If each channel weight is a sixth-cyclotomic root, the finite weighted
+chiral block square has the linearly reduced coefficient `cᵢ - 1` on each
+channel gap. This is the finite-family form of the single-channel `Φ₆`
+specialization; weights still commute only with their own channels. -/
+theorem cyclotomic_weighted_finite_block_sq_eq_gap_sum
+    (s : Finset ι) (c N : ι → B)
+    (h_cyc : ∀ i ∈ s, Phi6 (c i) = 0)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_comm_star : ∀ i ∈ s, c i * star (N i) = star (N i) * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    (∑ i ∈ s, c i * Phi (N i)) * (∑ i ∈ s, c i * Phi (N i)) =
+      ∑ i ∈ s, (c i - 1) * Gap (N i) := by
+  rw [weighted_finite_block_sq_eq_gap_sum s c N h_nil h_reg h_comm
+    h_comm_star h_cross]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hsq : c i * c i = c i - 1 := by
+    calc c i * c i = Phi6 (c i) + (c i - 1) := by
+          dsimp [Phi6]
+          noncomm_ring
+      _ = c i - 1 := by rw [h_cyc i hi, zero_add]
+  rw [hsq]
+
 omit [DecidableEq ι] in
 /-- A family of self-adjoint weights that commute with their own channel
 generators automatically commutes with the adjoint generators. -/

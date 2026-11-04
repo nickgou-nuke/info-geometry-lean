@@ -1879,6 +1879,8 @@ theorem comm_K_plus2_seed_K_minus2_seed (N_plus : B)
     comm (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
       (4 : ℕ) • Sigma N_plus := by
   rw [K_plus2_seed N_plus h_nil h_reg, K_minus2_seed N_plus h_nil h_reg]
+  rw [show comm (2 • N_plus) (2 • star N_plus) =
+      (2 • N_plus) * (2 • star N_plus) - (2 • star N_plus) * (2 • N_plus) by rfl]
   dsimp only [OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm,
     OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma]
   simp only [two_nsmul]

@@ -3589,3 +3589,10 @@ injectivity theorem for the matrix tower, and it intertwines
 the specified algebraic direct limit. This is conditional on a nonzero finite
 stage input and says nothing about a numerical or analytic spectral gap. The
 updated locked owner build passed (9,121 jobs).
+
+The KKT five-grade owner also exposes
+`comm_K_plus2_seed_K_minus2_seed`, identifying the bracket of its opposite
+extremal Jordan-associator seed generators with `4 • Sigma N_plus`. This fixes
+the seed-level normalization in grade-zero closure; it is an algebraic identity
+under the stated nilpotency and regularity hypotheses. The locked KKT owner
+build passed (8,998 jobs).

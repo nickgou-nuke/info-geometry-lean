@@ -190,6 +190,22 @@ theorem stageEmbed_intertwines_two_sheeted_tetraktys (n : ℕ) (P A C X : Stage 
     map_genPhi f P A C, map_genJ f P A C, map_genV f P A C,
     map_genSig f P A C, map_derivSqPhi f P A C X⟩
 
+/-- The concrete block-doubling transition preserves nonvanishing of the
+two-sheeted quadratic coupling.  This is stagewise algebraic persistence in
+the matrix tower; it makes no claim about a numerical spectral gap. -/
+theorem stageEmbed_preserves_nonzero_two_sheeted_quadratic_coupling
+    (n : ℕ) (P A C : Stage n)
+    (hV : opQuadraticCoupling P A C ≠ 0) :
+    opQuadraticCoupling (stageEmbed n P) (stageEmbed n A) (stageEmbed n C) ≠ 0 := by
+  intro hzero
+  apply hV
+  apply (stageEmbed n).injective
+  calc stageEmbed n (opQuadraticCoupling P A C)
+      = opQuadraticCoupling (stageEmbed n P) (stageEmbed n A) (stageEmbed n C) :=
+          (stageEmbed_intertwines_two_sheeted_tetraktys n P A C 0).2.2.2.2.2.1
+    _ = 0 := hzero
+    _ = stageEmbed n 0 := by simp
+
 /-- The canonical stage-to-colimit homomorphism `ofStage n : Stage n →+* Limit` intertwines
 all seven two-sheeted Tetraktys operators and the curvature double commutator `derivSqPhi`. -/
 theorem ofStage_intertwines_two_sheeted_tetraktys (n : ℕ) (P A C X : Stage n) :

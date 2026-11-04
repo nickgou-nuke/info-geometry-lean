@@ -1211,6 +1211,63 @@ theorem peirceFiveGradeSpan_eq_top (N_plus : B)
           peirceGradeMinus2 N_plus X := rfl
       _ = X := hsum.symm
 
+/-- The extremal Peirce corners are disjoint: a grade `+2` component cannot
+equal a grade `-2` component unless both vanish. -/
+theorem peirce_extremal_grade_intersection_zero (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (h_eq : peirceGradePlus2 N_plus X = peirceGradeMinus2 N_plus Y) :
+    peirceGradePlus2 N_plus X = 0 := by
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hfix : P N_plus * peirceGradePlus2 N_plus X * Q N_plus =
+      peirceGradePlus2 N_plus X := by
+    dsimp [peirceGradePlus2, peircePQ]
+    calc P N_plus * (P N_plus * X * Q N_plus) * Q N_plus
+        = (P N_plus * P N_plus) * X * (Q N_plus * Q N_plus) := by noncomm_ring
+      _ = P N_plus * X * Q N_plus := by rw [hP2, hQ2]
+  have hkill : P N_plus * peirceGradeMinus2 N_plus Y * Q N_plus = 0 := by
+    dsimp [peirceGradeMinus2, peirceQP]
+    calc P N_plus * (Q N_plus * Y * P N_plus) * Q N_plus
+        = (P N_plus * Q N_plus) * Y * (P N_plus * Q N_plus) := by noncomm_ring
+      _ = 0 := by rw [hPQ, zero_mul, zero_mul]
+  calc peirceGradePlus2 N_plus X
+      = P N_plus * peirceGradePlus2 N_plus X * Q N_plus := hfix.symm
+    _ = P N_plus * peirceGradeMinus2 N_plus Y * Q N_plus := by rw [h_eq]
+    _ = 0 := hkill
+
+/-- The native additive subgroups of the two extremal Peirce grades have zero
+intersection. -/
+theorem peirce_extremal_subgroups_inf_eq_bot (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradePlus2Subgroup N_plus ⊓ peirceGradeMinus2Subgroup N_plus = ⊥ := by
+  apply SetLike.ext
+  intro x
+  change (x ∈ peirceGradePlus2Subgroup N_plus ∧
+    x ∈ peirceGradeMinus2Subgroup N_plus) ↔ x = 0
+  constructor
+  · rintro ⟨hplus, hminus⟩
+    change x ∈ Set.range (peirceGradePlus2 N_plus) at hplus
+    change x ∈ Set.range (peirceGradeMinus2 N_plus) at hminus
+    obtain ⟨X, hX⟩ := hplus
+    obtain ⟨Y, hY⟩ := hminus
+    have hXY : peirceGradePlus2 N_plus X = peirceGradeMinus2 N_plus Y :=
+      hX.trans hY.symm
+    have hzero := peirce_extremal_grade_intersection_zero
+      N_plus X Y h_nil h_reg hXY
+    calc x = peirceGradePlus2 N_plus X := hX.symm
+      _ = 0 := hzero
+  · rintro rfl
+    exact ⟨(peirceGradePlus2Subgroup N_plus).zero_mem,
+      (peirceGradeMinus2Subgroup N_plus).zero_mem⟩
+
 /-- The five grouped Peirce components jointly determine the operator. Thus the
 canonical five-sector reconstruction is unique as a decomposition induced by
 the Peirce projections (without asserting that abstract adjoint eigenspaces

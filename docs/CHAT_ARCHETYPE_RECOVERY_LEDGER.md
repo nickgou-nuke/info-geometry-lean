@@ -3569,3 +3569,14 @@ the stabilized tail are recoverable from the image sequence, so a nonzero
 stage coupling cannot vanish in this algebraic sequence colimit. This result
 is specific to `TowerColimit R` as defined here; it is not a theorem for every
 abstract cone or for an analytic completion.
+
+### 2026-11-04: Concrete Cl(1,1) tower preserves nonzero Peirce coupling
+
+`stageEmbed_preserves_nonzero_two_sheeted_quadratic_coupling` in
+[`PeirceTetraktysColimitCoercivity.lean`](../lean/InfoGeometry/Canonical/PeirceTetraktysColimitCoercivity.lean)
+combines the actual matrix block-doubling map's injectivity with the existing
+Tetraktys intertwining theorem. A nonzero `opQuadraticCoupling` at stage `n`
+therefore remains nonzero after one `A ↦ A ⊗ I₂` transition. This is a
+stage-to-stage algebraic result; it does not establish nonvanishing in the
+separate `Cl11TensorTowerLimit.Limit`, nor any numerical or analytic gap.
+The targeted locked build of the canonical owner passed (9,121 jobs).

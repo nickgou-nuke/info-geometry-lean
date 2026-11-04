@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
 import InfoGeometry.QuantumGeometry.Projective.QGT
+import InfoGeometry.QuantumGeometry.TensorBridge
 
 /-!
 # Chiral nilpotent anomaly and Robertson uncertainty
@@ -22,6 +23,7 @@ noncomputable section
 namespace InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
 
 open InfoGeometry.QuantumGeometry.Projective
+open InfoGeometry.QuantumGeometry.TensorBridge
 open OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -91,5 +93,32 @@ theorem chiral_anomaly_robertson_bound (N : EndH)
         (1 / 4 : ℝ) *
           (berryCurvature ψ (Complex.I • Phi N) (J N)) ^ 2 := by
   exact berry_curvature_uncertainty_bound ψ (Complex.I • Phi N) (J N)
+
+/-- Robertson's commutator form gives a bound directly on the norm square of
+the parity-anomaly expectation. The factor `1/4` cancels the squared `2i`
+coefficient in `[i Φ, J] = -2i Σ`. -/
+theorem chiral_anomaly_expectation_norm_bound (N : EndH)
+    (h_nil : N * N = 0) (ψ : NormalizedState H) :
+    fubiniStudyMetric ψ (Complex.I • Phi N) (Complex.I • Phi N) *
+      fubiniStudyMetric ψ (J N) (J N) ≥
+        Complex.normSq (inner ℂ ψ.vec (Sigma N ψ.vec)) := by
+  have h_bound :=
+    InfoGeometry.QuantumGeometry.TensorBridge.robertson_schrodinger_full_uncertainty
+      ψ (Complex.I • Phi N) (J N)
+      (imaginaryPhi_skewAdjoint N) (J_skewAdjoint N)
+  have h_norm :
+      Complex.normSq
+        (inner ℂ ψ.vec (opCommutator (Complex.I • Phi N) (J N) ψ.vec)) =
+        4 * Complex.normSq (inner ℂ ψ.vec (Sigma N ψ.vec)) := by
+    rw [imaginaryPhi_commutator_eq_anomaly N h_nil]
+    rw [smul_apply, inner_smul_right, Complex.normSq_mul, Complex.normSq_mul,
+      Complex.normSq_I]
+    simp only [mul_one]
+    have h_neg_two : Complex.normSq (-2 : ℂ) = 4 := by
+      norm_num [Complex.normSq]
+    rw [h_neg_two, mul_comm]
+  have h_ineq := h_bound.2
+  rw [h_norm] at h_ineq
+  nlinarith [h_ineq]
 
 end InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge

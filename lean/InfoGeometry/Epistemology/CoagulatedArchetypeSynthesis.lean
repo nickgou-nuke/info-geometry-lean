@@ -20,6 +20,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelChiralBlockAnomalyGa
 import InfoGeometry.OperatorAlgebra.PeirceSpine.WeightedMultiChannelJordanAnomalyPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsFiveGradedClosurePoset
 import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
+import InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
 import Mathlib.Tactic
@@ -1656,5 +1657,39 @@ theorem partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis
           Y * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.P N_plus * X) *
          peirceR N_plus) :=
   kantor_koecher_tits_five_graded_closure_poset_master_synthesis N_plus X Y h_nil h_reg
+
+open InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
+open InfoGeometry.QuantumGeometry.Projective
+open _root_.InfoGeometry.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset
+
+omit [Ring B] hP in
+/-- **Part XV.h (`partXVh_chiral_anomaly_qgt_robertson_synthesis`)**:
+Connects the anomaly-first nilpotent chiral block on a complex Hilbert space to
+the existing QGT Berry-curvature commutator identity and Robertson bound. This
+is a positive-Hilbert-space realization; it makes no claim about positivity of
+an indefinite Krein form. -/
+theorem partXVh_chiral_anomaly_qgt_robertson_synthesis
+    {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    [CompleteSpace H] (N : H →L[ℂ] H) (h_nil : N * N = 0)
+    (ψ : InfoGeometry.QuantumGeometry.Projective.NormalizedState H) :
+    (ContinuousLinearMap.adjoint (Complex.I • Phi N) =
+       -(Complex.I • Phi N) ∧
+     ContinuousLinearMap.adjoint (J N) = -J N) ∧
+    opCommutator (Complex.I • Phi N) (J N) =
+      ((-2 : ℂ) * Complex.I) • Sigma N ∧
+    (InfoGeometry.QuantumGeometry.Projective.berryCurvature
+       ψ (Complex.I • Phi N) (J N) : ℂ) * Complex.I =
+      ((-2 : ℂ) * Complex.I) * inner ℂ ψ.vec (Sigma N ψ.vec) ∧
+    InfoGeometry.QuantumGeometry.Projective.fubiniStudyMetric
+        ψ (Complex.I • Phi N) (Complex.I • Phi N) *
+      InfoGeometry.QuantumGeometry.Projective.fubiniStudyMetric
+        ψ (J N) (J N) ≥
+      (1 / 4 : ℝ) *
+        (InfoGeometry.QuantumGeometry.Projective.berryCurvature
+          ψ (Complex.I • Phi N) (J N)) ^ 2 := by
+  exact ⟨⟨imaginaryPhi_skewAdjoint N, J_skewAdjoint N⟩,
+    imaginaryPhi_commutator_eq_anomaly N h_nil,
+    berryCurvature_eq_neg_two_anomaly_expectation N h_nil ψ,
+    chiral_anomaly_robertson_bound N ψ⟩
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

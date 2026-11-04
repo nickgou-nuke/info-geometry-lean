@@ -39,6 +39,54 @@ raising seed. This makes the chosen dual operation explicit on the carrier. -/
 noncomputable def loweringCl : Cl11 :=
   Cl11Matrix.cl11EquivMat.symm (star raising)
 
+/-- The transpose involution transported from the real matrix model to the
+Clifford carrier. This is an explicit alternative involution; it is not
+silently identified with Mathlib's Clifford conjugation. -/
+noncomputable def transposeDual (x : Cl11) : Cl11 :=
+  Cl11Matrix.cl11EquivMat.symm (star (Cl11Matrix.cl11EquivMat x))
+
+/-- The transported dual reverses products. -/
+theorem transposeDual_mul (x y : Cl11) :
+    transposeDual (x * y) = transposeDual y * transposeDual x := by
+  apply Cl11Matrix.cl11EquivMat.injective
+  simp only [map_mul, transposeDual, AlgEquiv.apply_symm_apply]
+  rw [star_mul]
+
+/-- The transported transpose dual is involutive. -/
+theorem transposeDual_involutive (x : Cl11) :
+    transposeDual (transposeDual x) = x := by
+  apply Cl11Matrix.cl11EquivMat.injective
+  simp [transposeDual]
+
+/-- On the seed, the transported dual is exactly the selected lowering
+operator. -/
+theorem transposeDual_raising : transposeDual raisingCl = loweringCl := by
+  simp [transposeDual, raisingCl, loweringCl]
+
+/-- The transported matrix transpose fixes the positive Clifford generator. -/
+theorem transposeDual_iota_pos :
+    transposeDual (CliffordAlgebra.ι Cl11Matrix.q11 (1, 0)) =
+      CliffordAlgebra.ι Cl11Matrix.q11 (1, 0) := by
+  apply Cl11Matrix.cl11EquivMat.injective
+  simp only [transposeDual, Cl11Matrix.cl11EquivMat_iota_pos,
+    AlgEquiv.apply_symm_apply]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Cl11Matrix.Eplus, Matrix.star_apply, Matrix.transpose_apply]
+
+/-- The transported transpose is not Mathlib's canonical Clifford
+conjugation: it fixes a vector generator, while `CliffordAlgebra.star`
+negates every vector generator. -/
+theorem transposeDual_ne_cliffordStar :
+    ∃ x : Cl11, transposeDual x ≠ star x := by
+  refine ⟨CliffordAlgebra.ι Cl11Matrix.q11 (1, 0), ?_⟩
+  rw [transposeDual_iota_pos, CliffordAlgebra.star_ι]
+  intro h
+  have hm := congrArg Cl11Matrix.cl11EquivMat h
+  rw [Cl11Matrix.cl11EquivMat_iota_pos] at hm
+  have h00 := congrArg (fun A : Mat2 => A 0 0) hm
+  norm_num [Cl11Matrix.Eplus] at h00
+
 /-- The split generator transported into the native Clifford carrier. -/
 noncomputable def splitGeneratorCl : Cl11 := Cl11Matrix.cl11EquivMat.symm J
 

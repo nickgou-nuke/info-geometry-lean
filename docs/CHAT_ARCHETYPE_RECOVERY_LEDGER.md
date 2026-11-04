@@ -4016,3 +4016,14 @@ transporting the matrix transpose; the statement does not assume this is a
 pre-existing Clifford star operation. The locked owner build passed (3,129
 jobs), and the staged proof-proxy gate passed. The semantic scan's three
 warnings are the same pre-existing alias and projector formula findings.
+
+The matrix-transpose dual is now formalized as an involutive
+product-reversing operation `transposeDual` on the Clifford carrier, with
+`transposeDual_raising` identifying the selected lowering seed. The audit also
+proves `transposeDual_ne_cliffordStar`: on a positive vector generator, the
+transported matrix transpose fixes it, while Mathlib's canonical Clifford
+conjugation negates it. Thus the chiral matrix realization uses a precisely
+specified alternative dual and does not conflate it with the standard
+Clifford-algebra star. The updated owner build passed (3,129 jobs), and the
+staged proof-proxy gate passed. The semantic scan reports the same alias and
+projector warnings plus a trivial-surface warning for the seed reduction.

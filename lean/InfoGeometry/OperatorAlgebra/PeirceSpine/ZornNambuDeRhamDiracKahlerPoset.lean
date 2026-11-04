@@ -2347,7 +2347,9 @@ populates Grade `±2` with the Plücker–Zorn uncertainty anomalies `κ_+ = u �
 @[simp] def superParity (A : Kantor5Graded R) : Kantor5Graded R :=
   ⟨A.gm2, -A.gm1, A.g0L, A.g0R, -A.gp1, A.gp2⟩
 
-/-- The 5-Graded Kantor–Conformal Lie Super-Bracket `kantorBracket A₁ A₂`. -/
+/-- The proposed 5-graded Kantor–conformal bilinear operation.
+    It supports the explicitly proved component identities below, but the
+    general Lie-superalgebra Jacobi law fails; see `Kantor5GradedJacobiAudit`. -/
 @[simp] def kantorBracket (X Y : Kantor5Graded R) : Kantor5Graded R where
   gm2 :=
     (Vec3.smulLeft X.g0L Y.gm2 - Vec3.smulRight Y.gm2 X.g0R) -
@@ -2500,9 +2502,11 @@ theorem bimodule_insertion_anomaly_is_5graded_cartan_torsion (X : ZornMatrix R) 
 
 set_option linter.unusedSimpArgs false in
 /-- **Theorem XX.4 (`five_graded_bianchi_cartan_jacobi_identities`)**:
-Over any non-commutative associative ring `[Ring R]`, the 5-graded Cartan curvature `kantorBracket`
-satisfies exact Bianchi–Cartan Jacobi closure across Grade `0` spin connections, Grade `±1` tetrads,
-and Grade `±2` uncertainty connections. -/
+Over any non-commutative associative ring `[Ring R]`, these three specified cyclic sums
+vanish: three grade-zero spin inputs, two grade-zero inputs with one grade `±1` input,
+and two grade-zero inputs with one grade `±2` input. These restricted identities do not
+assert a general Jacobi law for `kantorBracket`; that law fails in the counterexample
+proved by `Kantor5GradedJacobiAudit`. -/
 theorem five_graded_bianchi_cartan_jacobi_identities
     (a₁ d₁ a₂ d₂ a₃ d₃ : R) (u v κp κm : Vec3 R) :
     let Ω₁ := inj0 a₁ d₁

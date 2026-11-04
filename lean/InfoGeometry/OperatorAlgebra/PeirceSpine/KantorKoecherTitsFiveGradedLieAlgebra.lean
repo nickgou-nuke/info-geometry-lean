@@ -47,11 +47,6 @@ private theorem corner_sandwich_outer (e f x : B) :
   noncomm_ring
 
 omit [StarRing B] in
-private theorem corner_chain (a b x c d : B) :
-    a * (b * x * c) * d = (a * b) * x * (c * d) := by
-  noncomm_ring
-
-omit [StarRing B] in
 private theorem comm_sandwich_corner (e x y : B)
     (hee : e * e = e) :
     (e * x * e) * (e * y * e) - (e * y * e) * (e * x * e) =
@@ -139,52 +134,6 @@ theorem peirceGradeZero_R_corner_mem (N_plus X : B)
     peirceR N_plus * X * peirceR N_plus
   rw [corner_sandwich_outer, corner_sandwich_outer, corner_sandwich_outer]
   simp [hR2, hPR, hRP, hQR, hRQ]
-
-/-- A left `P`-to-exterior corner belongs to grade `+1`. -/
-theorem peirceGradePlus1_L_corner_mem (N_plus X : B)
-    (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    G_plus1_L N_plus X ∈ peirceGradePlus1Subgroup N_plus := by
-  change G_plus1_L N_plus X ∈ Set.range (peirceGradePlus1 N_plus)
-  refine ⟨G_plus1_L N_plus X, ?_⟩
-  have hP2 : P N_plus * P N_plus = P N_plus :=
-    YangMillsVortexPoset.P_idem N_plus h_reg
-  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
-    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
-      N_plus h_nil h_reg
-    dsimp [peirceR]
-    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
-  have hRP := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
-  have hRQ := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
-  dsimp [G_plus1_L, peirceGradePlus1, peircePR, peirceRQ]
-  change P N_plus * (P N_plus * X * peirceR N_plus) * peirceR N_plus +
-      peirceR N_plus * (P N_plus * X * peirceR N_plus) * Q N_plus =
-    P N_plus * X * peirceR N_plus
-  rw [corner_chain, corner_chain]
-  simp [hP2, hR2, hRP, hRQ]
-
-/-- A right exterior-to-`Q` corner belongs to grade `+1`. -/
-theorem peirceGradePlus1_R_corner_mem (N_plus X : B)
-    (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
-    G_plus1_R N_plus X ∈ peirceGradePlus1Subgroup N_plus := by
-  change G_plus1_R N_plus X ∈ Set.range (peirceGradePlus1 N_plus)
-  refine ⟨G_plus1_R N_plus X, ?_⟩
-  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
-    YangMillsVortexPoset.Q_idem N_plus h_reg
-  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
-    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
-      N_plus h_nil h_reg
-    dsimp [peirceR]
-    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
-  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
-  have hRP := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
-  dsimp [G_plus1_R, peirceGradePlus1, peircePR, peirceRQ]
-  change P N_plus * (peirceR N_plus * X * Q N_plus) * peirceR N_plus +
-      peirceR N_plus * (peirceR N_plus * X * Q N_plus) * Q N_plus =
-    peirceR N_plus * X * Q N_plus
-  rw [corner_chain, corner_chain]
-  simp [hQ2, hR2, hPR, hRP]
 
 /-- Direct grade-zero self-bracket closure from its three diagonal corners. -/
 theorem peirce_z0_bracket_mem_z0 (N_plus x y : B)

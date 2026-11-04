@@ -2380,6 +2380,9 @@ import InfoGeometry.Canonical.SplitOctonionCl55CARRestrictionBridge
 import InfoGeometry.Canonical.SplitOctonionCl55ZornActionBridge
 import InfoGeometry.Canonical.FiniteCARCCRPeirceBridge
 import InfoGeometry.Canonical.Cl55CARRepresentationCalibration
+import InfoGeometry.Canonical.SplitCliffordTailParity
+import InfoGeometry.Canonical.SplitCliffordHeadTailParity
+import InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
 
 namespace InfoGeometry
 

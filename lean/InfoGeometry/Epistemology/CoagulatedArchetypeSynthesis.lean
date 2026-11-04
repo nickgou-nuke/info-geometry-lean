@@ -14,7 +14,14 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornSplitOctonionMoufangPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.KantorChiralCocycleMetaAbelianPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ChiralLorentzTwistorCartanUncertaintyPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsNilpotentUnipotentVortexMassPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.RealBdGKreinChiralIdealTwoSheetBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelChiralBlockAnomalyGapPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.WeightedMultiChannelJordanAnomalyPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsFiveGradedClosurePoset
+import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
+import InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
 import Mathlib.Tactic
 
 /-!
@@ -980,8 +987,6 @@ theorem partXIV_zorn_amplituhedron_plucker_baryon_synthesis
     {R : Type u} [Ring R]
     (u v u₀ u₁ u₂ u₃ u₄ :
       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3 R) :
-    let ZStage :=
-      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage
     let hodgeB :=
       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.hodgePluckerBoundary
     let dot3 :=
@@ -1002,11 +1007,11 @@ theorem partXIV_zorn_amplituhedron_plucker_baryon_synthesis
       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.spatialTwistor
     let aff :=
       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.affineTwistor
-    (ZStage.causalEdge .p0_nonCommTwistorSpace .p1_pluckerBivectorSplit ∧
-     ZStage.causalEdge .p1_pluckerBivectorSplit .p2_nambuKleinQuadricAnomaly ∧
-     ZStage.causalEdge .p2_nambuKleinQuadricAnomaly .p3_zornPluckerAnticommutator ∧
-     ZStage.causalEdge .p3_zornPluckerAnticommutator .p4_baryonDeterminantSinglet ∧
-     ZStage.causalEdge .p4_baryonDeterminantSinglet .p5_holographicSimplexBoundary) ∧
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage.causalEdge .p0_nonCommTwistorSpace .p1_pluckerBivectorSplit ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage.causalEdge .p1_pluckerBivectorSplit .p2_nambuKleinQuadricAnomaly ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage.causalEdge .p2_nambuKleinQuadricAnomaly .p3_zornPluckerAnticommutator ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage.causalEdge .p3_zornPluckerAnticommutator .p4_baryonDeterminantSinglet ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornAmplituhedronBaryonStage.causalEdge .p4_baryonDeterminantSinglet .p5_holographicSimplexBoundary) ∧
     (hodgeB u v = ⟨dot3 u v, -cross3 u u, cross3 v v⟩ ∧
      (hodgeB u (cross3 u u)).entry00 = nambu3 u) ∧
     (twistor4 orig (spat u₁) (spat u₂) (spat u₃) = baryon3 u₁ u₂ u₃ ∧
@@ -1023,5 +1028,620 @@ theorem partXIV_zorn_amplituhedron_plucker_baryon_synthesis
       twistor4 (aff u₀) (aff u₁) (aff u₂) (aff u₃) = 0) :=
   InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.zorn_amplituhedron_plucker_baryon_master_synthesis
     u v u₀ u₁ u₂ u₃ u₄
+
+/-!
+## Part XV: Two-Sheeted Yang–Mills Nilpotent-to-Unipotent Condensate, Möbius–Bruhat / Steinberg Braid Vortices, & Vortex Mass `m² = 4V` (`YM₁ ≺ YM₂ ≺ YM₃ ≺ YM₄ ≺ YM₅ ≺ YM₆ ≺ YM₇`)
+-/
+
+open InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
+  _root_.CanonicalTwoSheetedInductiveColimit
+  InfoGeometry.OperatorAlgebra.PeirceDefectBridge in
+/-- **Part XV Master Theorem (`partXV_two_sheeted_nilpotent_condensate_vortex_mass_synthesis`)**:
+Coagulates the 7-stage Two-Sheeted Yang–Mills Nilpotent-to-Unipotent Condensate & Vortex Mass Poset
+(`YM₁ ≺ YM₂ ≺ YM₃ ≺ YM₄ ≺ YM₅ ≺ YM₆ ≺ YM₇`) over any non-commutative ring `[Ring B]` with
+idempotent `P * P = P`:
+1. **Strict 7-Stage Causal Chain (`YM₁ ≺ YM₂ ≺ YM₃ ≺ YM₄ ≺ YM₅ ≺ YM₆ ≺ YM₇`)**,
+2. **Nilpotent-to-Unipotent Exponential Condensation (`YM₁`)**:
+   `opUnipotentPlus P A₁ * opUnipotentPlus P A₂ = opUnipotentPlus P (A₁ + A₂)` and
+   `opUnipotentMinus P C₁ * opUnipotentMinus P C₂ = opUnipotentMinus P (C₁ + C₂)`,
+3. **Fourfold Ordered Möbius–Bruhat Vortex Anatomy & Metric Invariance (`YM₂`)**:
+   `opCondensateDisplacement P A C + opCondensateDisplacementDual P A C = (2 : ℤ) • genJ P A C - genV P A C`,
+   `comm (opUnipotentPlus P A) (opUnipotentMinus P C) = -genSig P A C`,
+   `opMoebiusBruhatVortex P A C * opMoebiusBruhatVortexInv P A C = 1`, and
+   `opMoebiusBruhatVortex P A C * genV P A C * opMoebiusBruhatVortexInv P A C = genV P A C`,
+4. **Steinberg 3-Factor Braid Vortices & Maurer–Cartan Self-Dual Yang–Mills (`YM₃`)**:
+   `steinbergBraid P A C - steinbergBraidDual P A C = (1 - genV P A C) * genPhi P A C`,
+   `peirceMaurerCartanCurvature P A C = genJ P A C + genV P A C`, and
+   `peirceCovariantDeriv P A C (genV P A C) = 0`,
+5. **Mexican-Hat / IHHS Vortex Mass Generation `m² = 4V` (`YM₄`)**:
+   `opHiggsMassOperator P A C (opHiggsField P A C) = 0`,
+   `opHiggsMassOperator P A C (opHiggsVEVSq P A C) = 0`,
+   `opHiggsMassOperator P A C (opAxial P A C) = -(opVortexMassSq P A C * opAxial P A C)`, and
+   `opHiggsMassOperator P A C (opSpinDipole P A C) = -(opVortexMassSq P A C * opSpinDipole P A C)`,
+6. **Cyclotomic `Φ₁₂`/`Φ₂₄` Vortex Reduction & Möbius–Bruhat Equivariance (`YM₅`)**:
+   `opCyclotomicPhi12 (opAxial P A C) = opQuadraticCoupling P A C ^ 2 + opQuadraticCoupling P A C + 1`,
+   `opCyclotomicPhi12 (opSpinDipole P A C) = opCyclotomicPhi24 (opAxial P A C)`, and
+   `opCyclotomicPhi12 (symmetrySandwich (opMoebiusBruhatVortex P A C) (opMoebiusBruhatVortexInv P A C) X) = symmetrySandwich (opMoebiusBruhatVortex P A C) (opMoebiusBruhatVortexInv P A C) (opCyclotomicPhi12 X)`,
+7. **Non-Commutative `2 × 2` Matrix Vortex Witness (`YM₇`)**:
+   `comm (opUnipotentPlus ymMatrixP ymMatrixA) (opUnipotentMinus ymMatrixP ymMatrixC) ≠ 0` and
+   `opVortexMassSq ymMatrixP ymMatrixA ymMatrixC ≠ 0`. -/
+theorem partXV_two_sheeted_nilpotent_condensate_vortex_mass_synthesis
+    (A A₁ A₂ C C₁ C₂ X : B) :
+    (TwoSheetedCondensateVortexStage.causalEdge
+       .ym1_nilpotentToUnipotentCut .ym2_fourfoldMoebiusBruhatVortexAnatomy ∧
+     TwoSheetedCondensateVortexStage.causalEdge
+       .ym2_fourfoldMoebiusBruhatVortexAnatomy .ym3_steinbergBraidAndMaurerCartanSelfDual ∧
+     TwoSheetedCondensateVortexStage.causalEdge
+       .ym3_steinbergBraidAndMaurerCartanSelfDual .ym4_mexicanHatIhhsVortexMassGeneration ∧
+     TwoSheetedCondensateVortexStage.causalEdge
+       .ym4_mexicanHatIhhsVortexMassGeneration .ym5_cyclotomicVortexLockingAndEquivariance ∧
+     TwoSheetedCondensateVortexStage.causalEdge
+       .ym5_cyclotomicVortexLockingAndEquivariance .ym6_inductiveColimitAndMultiChannelVortexDescent ∧
+     TwoSheetedCondensateVortexStage.causalEdge
+       .ym6_inductiveColimitAndMultiChannelVortexDescent
+       .ym7_masterCondensateVortexSynthesisAndMatrixWitness) ∧
+    (opUnipotentPlus P A₁ * opUnipotentPlus P A₂ = opUnipotentPlus P (A₁ + A₂) ∧
+     opUnipotentMinus P C₁ * opUnipotentMinus P C₂ = opUnipotentMinus P (C₁ + C₂)) ∧
+    (opCondensateDisplacement P A C + opCondensateDisplacementDual P A C =
+       (2 : ℤ) • genJ P A C - genV P A C ∧
+     _root_.InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (opUnipotentPlus P A) (opUnipotentMinus P C) = -genSig P A C ∧
+     opMoebiusBruhatVortex P A C * opMoebiusBruhatVortexInv P A C = 1 ∧
+     opMoebiusBruhatVortex P A C * genV P A C * opMoebiusBruhatVortexInv P A C = genV P A C) ∧
+    (steinbergBraid P A C - steinbergBraidDual P A C = (1 - genV P A C) * genPhi P A C ∧
+     peirceMaurerCartanCurvature P A C = genJ P A C + genV P A C ∧
+     peirceCovariantDeriv P A C (genV P A C) = 0) ∧
+    (opHiggsMassOperator P A C (opHiggsField P A C) = 0 ∧
+     opHiggsMassOperator P A C (opHiggsVEVSq P A C) = 0 ∧
+     opHiggsMassOperator P A C (opAxial P A C) = -(opVortexMassSq P A C * opAxial P A C) ∧
+     opHiggsMassOperator P A C (opSpinDipole P A C) = -(opVortexMassSq P A C * opSpinDipole P A C)) ∧
+    (opCyclotomicPhi12 (opAxial P A C) = opQuadraticCoupling P A C ^ 2 + opQuadraticCoupling P A C + 1 ∧
+     opCyclotomicPhi12 (opSpinDipole P A C) = opCyclotomicPhi24 (opAxial P A C) ∧
+     opCyclotomicPhi12 (symmetrySandwich (opMoebiusBruhatVortex P A C) (opMoebiusBruhatVortexInv P A C) X) =
+       symmetrySandwich (opMoebiusBruhatVortex P A C) (opMoebiusBruhatVortexInv P A C) (opCyclotomicPhi12 X)) ∧
+    (_root_.InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (opUnipotentPlus ymMatrixP ymMatrixA) (opUnipotentMinus ymMatrixP ymMatrixC) ≠ 0 ∧
+     opVortexMassSq ymMatrixP ymMatrixA ymMatrixC ≠ 0) :=
+  two_sheeted_nilpotent_condensate_vortex_mass_master_synthesis hP A A₁ A₂ C C₁ C₂ X
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+omit [Ring B] hP in
+/-- **Part XV.b (`partXVb_yang_mills_unipotent_center_vortex_mass_poset_synthesis`)**:
+Coagulates the 10-Stage Yang–Mills Nilpotent-to-Unipotent Center Vortex Mass Poset (`YM₁`–`YM₁₀`
+in `YangMillsNilpotentUnipotentVortexMassPoset.lean`) over `[Ring R] [StarRing R]` for a
+nilpotent Von Neumann regular gluon/ghost mode `N_+ * N_+ = 0`, `N_+ * star N_+ * N_+ = N_+`:
+1. **`YM₁`–`YM₂`**: `U_+ U_+⁻¹ = 1`, `U_- U_-⁻¹ = 1`, `star U_+ = U_-`, and `[U_+, U_-] = Σ`,
+2. **`YM₃`–`YM₄`**: `𝒞_+ = 2P`, `𝒞_- = 2Q`, `𝒞_+ + 𝒞_- = 2V`, and `𝒞_+ - 𝒞_- = 2Σ`,
+3. **`YM₅`**: `Σ - U_+ Σ U_+⁻¹ = 2N_+` and `U_- Σ U_-⁻¹ - Σ = 2N_-`,
+4. **`YM₆`–`YM₇`**: `W_vortex = (1 - V) + J`, `W_vortex² = Z_center = 1 - 2V`, and `Z_center² = 1`,
+5. **`YM₈`–`YM₁₀`**: `Φ² = V`, `V Φ = Φ`, `V² - [U_+, U_-]² = 0`, `Z_center V = -V`, and `Z_center Φ = -Φ`. -/
+theorem partXVb_yang_mills_unipotent_center_vortex_mass_poset_synthesis
+    {R : Type u} [Ring R] [StarRing R] (N_plus : R)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    (YangMillsVortexPoset.YangMillsVortexStage.causalEdge
+       .YM1_NilpotentToUnipotentCayleyLift .YM2_UnipotentFieldStrengthCommutator ∧
+     YangMillsVortexPoset.YangMillsVortexStage.causalEdge
+       .YM9_BogomolnyBPSVortexMassSaturation .YM10_CenterVortexHolonomyMasterSynthesis) ∧
+    (YangMillsVortexPoset.U_plus N_plus * YangMillsVortexPoset.U_plus_inv N_plus = 1 ∧
+     YangMillsVortexPoset.U_minus N_plus * YangMillsVortexPoset.U_minus_inv N_plus = 1 ∧
+     star (YangMillsVortexPoset.U_plus N_plus) = YangMillsVortexPoset.U_minus N_plus) ∧
+    YangMillsVortexPoset.comm (YangMillsVortexPoset.U_plus N_plus) (YangMillsVortexPoset.U_minus N_plus) =
+      YangMillsVortexPoset.Sigma N_plus ∧
+    (YangMillsVortexPoset.C_plus N_plus = YangMillsVortexPoset.P N_plus + YangMillsVortexPoset.P N_plus ∧
+     YangMillsVortexPoset.C_minus N_plus = YangMillsVortexPoset.Q N_plus + YangMillsVortexPoset.Q N_plus) ∧
+    (YangMillsVortexPoset.C_plus N_plus + YangMillsVortexPoset.C_minus N_plus =
+       YangMillsVortexPoset.V N_plus + YangMillsVortexPoset.V N_plus ∧
+     YangMillsVortexPoset.C_plus N_plus - YangMillsVortexPoset.C_minus N_plus =
+       YangMillsVortexPoset.Sigma N_plus + YangMillsVortexPoset.Sigma N_plus) ∧
+    (YangMillsVortexPoset.Sigma N_plus -
+       YangMillsVortexPoset.U_plus N_plus * YangMillsVortexPoset.Sigma N_plus *
+         YangMillsVortexPoset.U_plus_inv N_plus = N_plus + N_plus ∧
+     YangMillsVortexPoset.U_minus N_plus * YangMillsVortexPoset.Sigma N_plus *
+       YangMillsVortexPoset.U_minus_inv N_plus - YangMillsVortexPoset.Sigma N_plus =
+         star N_plus + star N_plus) ∧
+    YangMillsVortexPoset.W_vortex N_plus =
+      (1 - YangMillsVortexPoset.V N_plus) + YangMillsVortexPoset.J N_plus ∧
+    (YangMillsVortexPoset.W_vortex N_plus * YangMillsVortexPoset.W_vortex N_plus =
+       YangMillsVortexPoset.Z_center N_plus ∧
+     YangMillsVortexPoset.Z_center N_plus * YangMillsVortexPoset.Z_center N_plus = 1) ∧
+    (YangMillsVortexPoset.Phi N_plus * YangMillsVortexPoset.Phi N_plus =
+       YangMillsVortexPoset.V N_plus ∧
+     YangMillsVortexPoset.V N_plus * YangMillsVortexPoset.Phi N_plus =
+       YangMillsVortexPoset.Phi N_plus) ∧
+    YangMillsVortexPoset.V N_plus * YangMillsVortexPoset.V N_plus -
+      YangMillsVortexPoset.comm (YangMillsVortexPoset.U_plus N_plus) (YangMillsVortexPoset.U_minus N_plus) *
+        YangMillsVortexPoset.comm (YangMillsVortexPoset.U_plus N_plus) (YangMillsVortexPoset.U_minus N_plus) = 0 ∧
+    (YangMillsVortexPoset.Z_center N_plus * YangMillsVortexPoset.V N_plus =
+       -YangMillsVortexPoset.V N_plus ∧
+     YangMillsVortexPoset.Z_center N_plus * YangMillsVortexPoset.Phi N_plus =
+       -YangMillsVortexPoset.Phi N_plus) :=
+  YangMillsVortexPoset.yang_mills_nilpotent_unipotent_vortex_mass_poset_master_synthesis
+    N_plus h_nil h_reg
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+omit [Ring B] hP in
+/-- **Part XV.c (`partXVc_real_bdg_krein_chiral_ideal_and_thooft_wilson_braiding_synthesis`)**:
+Coagulates the Background-Free Real BdG / Krein Chiral Ideal Two-Sheet Bridge (`BDG₁`–`BDG₁₀` in
+`RealBdGKreinChiralIdealTwoSheetBridge.lean`) and ’t Hooft–Wilson loop braiding (`Z_thooft * U_plus_off + U_plus_off * Z_thooft = 0`) over `[Ring R] [StarRing R]`:
+1. **`BDG₁`–`BDG₂`**: Mutual chiral ideal reconstruction `(X * N_+) * N_- = X * P`, `(X * P) * N_+ = X * N_+`,
+   `(X * N_-) * N_+ = X * Q`, `(X * Q) * N_- = X * N_-`,
+2. **`BDG₃`–`BDG₅`**: Real BdG particle–hole symmetry `S_P * Φ = J`, `Φ * S_P = -J`, `{S_P, Φ} = 0`,
+   `S_P * Σ = V`, and `Φ² = V`,
+3. **`BDG₆`–`BDG₈`**: Steinberg–Bogoliubov unitary `W_Bog = (1 - V) + J`, `W_Bog * star W_Bog = 1`,
+   non-perturbative sheet exchange `W_Bog * P * star W_Bog = Q`, `W_Bog * Q * star W_Bog = P`,
+   `W_Bog * Σ * star W_Bog = -Σ`, and gap invariance `W_Bog * V * star W_Bog = V`,
+4. **`BDG₉`–`BDG₁₀`**: Emergent two-sheeted Peirce decomposition `V * X * V = D_diag(X) + D_off(X)`,
+   `[S_P, D_diag(X)] = 0`, `{S_P, D_off(X)} = 0`, and lightcone null saturation `(V + Σ) * (V - Σ) = 0`,
+5. **’t Hooft–Wilson Braiding**: `Z_thooft * U_plus_off + U_plus_off * Z_thooft = 0`,
+   `Z_thooft * U_+ * Z_thooft = U_+⁻¹`, and `W_+ + Z_thooft W_+ Z_thooft = 2P`. -/
+theorem partXVc_real_bdg_krein_chiral_ideal_and_thooft_wilson_braiding_synthesis
+    {R : Type u} [Ring R] [StarRing R] (N_plus X : R)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    ((RealBdGKreinChiralIdealBridge.RealBdGKreinChiralStage.causalEdge
+        .BDG1_ChiralNilpotentLeftIdealCarriers .BDG2_OrthogonalPeirceSheetIdempotents ∧
+      RealBdGKreinChiralIdealBridge.RealBdGKreinChiralStage.causalEdge
+        .BDG9_EmergentTwoSheetPeirceDecomposition .BDG10_EmergentCausalGradingAndLightconeOutput) ∧
+     ((X * N_plus) * star N_plus = X * RealBdGKreinChiralIdealBridge.P N_plus ∧
+      (X * RealBdGKreinChiralIdealBridge.P N_plus) * N_plus = X * N_plus ∧
+      (X * star N_plus) * N_plus = X * RealBdGKreinChiralIdealBridge.Q N_plus ∧
+      (X * RealBdGKreinChiralIdealBridge.Q N_plus) * star N_plus = X * star N_plus) ∧
+     (RealBdGKreinChiralIdealBridge.S_P N_plus * RealBdGKreinChiralIdealBridge.Phi N_plus =
+        RealBdGKreinChiralIdealBridge.J N_plus ∧
+      RealBdGKreinChiralIdealBridge.Phi N_plus * RealBdGKreinChiralIdealBridge.S_P N_plus =
+        -RealBdGKreinChiralIdealBridge.J N_plus ∧
+      RealBdGKreinChiralIdealBridge.anticomm
+        (RealBdGKreinChiralIdealBridge.S_P N_plus) (RealBdGKreinChiralIdealBridge.Phi N_plus) = 0 ∧
+      RealBdGKreinChiralIdealBridge.S_P N_plus * RealBdGKreinChiralIdealBridge.Sigma N_plus =
+        RealBdGKreinChiralIdealBridge.V N_plus ∧
+      RealBdGKreinChiralIdealBridge.Phi N_plus * RealBdGKreinChiralIdealBridge.Phi N_plus =
+        RealBdGKreinChiralIdealBridge.V N_plus) ∧
+     (RealBdGKreinChiralIdealBridge.W_Bog N_plus =
+        (1 - RealBdGKreinChiralIdealBridge.V N_plus) + RealBdGKreinChiralIdealBridge.J N_plus ∧
+      RealBdGKreinChiralIdealBridge.W_Bog N_plus *
+        star (RealBdGKreinChiralIdealBridge.W_Bog N_plus) = 1 ∧
+      RealBdGKreinChiralIdealBridge.W_Bog N_plus * RealBdGKreinChiralIdealBridge.P N_plus *
+        star (RealBdGKreinChiralIdealBridge.W_Bog N_plus) =
+          RealBdGKreinChiralIdealBridge.Q N_plus ∧
+      RealBdGKreinChiralIdealBridge.W_Bog N_plus * RealBdGKreinChiralIdealBridge.Q N_plus *
+        star (RealBdGKreinChiralIdealBridge.W_Bog N_plus) =
+          RealBdGKreinChiralIdealBridge.P N_plus ∧
+      RealBdGKreinChiralIdealBridge.W_Bog N_plus * RealBdGKreinChiralIdealBridge.Sigma N_plus *
+        star (RealBdGKreinChiralIdealBridge.W_Bog N_plus) =
+          -RealBdGKreinChiralIdealBridge.Sigma N_plus ∧
+      RealBdGKreinChiralIdealBridge.W_Bog N_plus * RealBdGKreinChiralIdealBridge.V N_plus *
+        star (RealBdGKreinChiralIdealBridge.W_Bog N_plus) =
+          RealBdGKreinChiralIdealBridge.V N_plus) ∧
+     (RealBdGKreinChiralIdealBridge.V N_plus * X * RealBdGKreinChiralIdealBridge.V N_plus =
+        RealBdGKreinChiralIdealBridge.D_diag N_plus X + RealBdGKreinChiralIdealBridge.D_off N_plus X ∧
+      RealBdGKreinChiralIdealBridge.comm
+        (RealBdGKreinChiralIdealBridge.S_P N_plus) (RealBdGKreinChiralIdealBridge.D_diag N_plus X) = 0 ∧
+      RealBdGKreinChiralIdealBridge.anticomm
+        (RealBdGKreinChiralIdealBridge.S_P N_plus) (RealBdGKreinChiralIdealBridge.D_off N_plus X) = 0 ∧
+      (RealBdGKreinChiralIdealBridge.V N_plus + RealBdGKreinChiralIdealBridge.Sigma N_plus) *
+        (RealBdGKreinChiralIdealBridge.V N_plus - RealBdGKreinChiralIdealBridge.Sigma N_plus) = 0)) ∧
+    (YangMillsVortexPoset.Z_thooft N_plus * YangMillsVortexPoset.U_plus_off N_plus +
+       YangMillsVortexPoset.U_plus_off N_plus * YangMillsVortexPoset.Z_thooft N_plus = 0 ∧
+     YangMillsVortexPoset.Z_thooft N_plus * YangMillsVortexPoset.U_plus N_plus *
+       YangMillsVortexPoset.Z_thooft N_plus = YangMillsVortexPoset.U_plus_inv N_plus ∧
+     YangMillsVortexPoset.W_wilson_plus N_plus +
+       YangMillsVortexPoset.Z_thooft N_plus * YangMillsVortexPoset.W_wilson_plus N_plus *
+         YangMillsVortexPoset.Z_thooft N_plus =
+           YangMillsVortexPoset.P N_plus + YangMillsVortexPoset.P N_plus ∧
+     YangMillsVortexPoset.Z_center N_plus * YangMillsVortexPoset.W_edge N_plus X +
+       YangMillsVortexPoset.W_edge N_plus X * YangMillsVortexPoset.Z_center N_plus = 0) :=
+  ⟨RealBdGKreinChiralIdealBridge.real_bdg_krein_chiral_ideal_two_sheet_bridge_master_synthesis
+     N_plus X h_nil h_reg,
+   ⟨YangMillsVortexPoset.Z_thooft_braid_U_plus_off N_plus h_nil h_reg,
+    YangMillsVortexPoset.Z_thooft_conj_U_plus N_plus h_nil h_reg,
+    YangMillsVortexPoset.wilson_thooft_condensate_sum N_plus h_nil h_reg,
+    YangMillsVortexPoset.Z_center_braid_W_edge N_plus X h_nil h_reg⟩⟩
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+omit [Ring B] hP in
+/-- **Part XV.d (`partXVd_higgs_frame_dragging_emergent_cartan_and_nilpotent_anomaly_gap_synthesis`)**:
+Coagulates the three downstream background-free `[Ring R] [StarRing R]` chapters in
+`RealBdGKreinChiralIdealTwoSheetBridge.lean`:
+1. **Higgs Frame-Dragging, Cyclotomic Minima, & Supercolor Poincaré Emergence (`HFD₁`–`HFD₁₀`)**:
+   - Mexican-hat stationarity `(Φ²)² - Φ² = 0`,
+   - Frame-dragging vacuum selection `H_crank⁻ * P = 0`, `H_crank⁻ * Q = 2Q`, `H_crank⁺ * H_crank⁻ = 0`,
+   - Cyclotomic eigenvalue selection `C_cyc(u) H_crank⁺ = u H_crank⁺`, `C_cyc(u) H_crank⁻ = (1 - u) H_crank⁻`,
+   - Galois–spin locking `C_cyc(u) - C_cyc(1 - u) = (u - (1 - u)) Σ`,
+   - Higgs vs. Goldstone splitting `{P, Φ} = Φ`, `[P, Φ] = J`, `[J, Φ] = 2Σ`,
+   - Supercolor chiral parity `{Γ_chiral, N_+} = 0` and emergent Poincaré translation `[P_poincare, N_+] = 0`.
+2. **Emergent Two-Sheet BdG / Krein / Cartan Bridge Without Ambient `1` (`E₁`–`E₆`)**:
+   - Intrinsic Krein grading `Σ P = P`, `Σ Q = -Q`, `Σ² = V`,
+   - Emergent two-sheet filtration `restrictV N_plus X = spinConnV N_plus X + framePhiV N_plus X`,
+   - Universal mode hyperbolic null squeezing `(metricGV + curvSigmaV) * (metricGV - curvSigmaV) = 0`,
+   - Emergent Élie Cartan curvature–torsion split `[cartanConnV W₁ X₁, cartanConnV W₂ X₂] = riemannCurvV + cartanTorsionV`.
+3. **Nilpotent Pairing Anomaly `Σ = [N_+, N_-]` to Chiral Block Gap `Gap = Σ²` (`NPA₁`–`NPA₈`)**:
+   - Generator parity anomaly `Σ N_+ = N_+`, `N_+ Σ = -N_+`, `{Σ, N_+} = 0`,
+   - Chiral block rotation `Σ Φ = J`, `Σ J = Φ`, `J Φ = Σ`, `{Σ, Φ} = 0`,
+   - Downstream support `Gap = Σ²` idempotency `Gap * Gap = Gap`, `Φ² = Gap`, `S_P * Σ = Gap`,
+     `Gap * Φ = Φ`, and exact spectral gap equation `Φ * (Φ * Φ - 1) = 0`. -/
+theorem partXVd_higgs_frame_dragging_emergent_cartan_and_nilpotent_anomaly_gap_synthesis
+    {R : Type u} [Ring R] [StarRing R] (u N_plus W₁ X₁ W₂ X₂ : R)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    ((HiggsFrameDraggingSupercolorPoset.Phi N_plus * HiggsFrameDraggingSupercolorPoset.Phi N_plus) *
+       (HiggsFrameDraggingSupercolorPoset.Phi N_plus * HiggsFrameDraggingSupercolorPoset.Phi N_plus) -
+       (HiggsFrameDraggingSupercolorPoset.Phi N_plus * HiggsFrameDraggingSupercolorPoset.Phi N_plus) = 0 ∧
+     HiggsFrameDraggingSupercolorPoset.H_crank_minus N_plus *
+       HiggsFrameDraggingSupercolorPoset.P N_plus = 0 ∧
+     HiggsFrameDraggingSupercolorPoset.H_crank_minus N_plus *
+       HiggsFrameDraggingSupercolorPoset.Q N_plus =
+         HiggsFrameDraggingSupercolorPoset.Q N_plus + HiggsFrameDraggingSupercolorPoset.Q N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.H_crank_plus N_plus *
+       HiggsFrameDraggingSupercolorPoset.H_crank_minus N_plus = 0 ∧
+     HiggsFrameDraggingSupercolorPoset.C_cyc u N_plus *
+       HiggsFrameDraggingSupercolorPoset.H_crank_plus N_plus =
+         u * HiggsFrameDraggingSupercolorPoset.H_crank_plus N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.C_cyc u N_plus *
+       HiggsFrameDraggingSupercolorPoset.H_crank_minus N_plus =
+         (1 - u) * HiggsFrameDraggingSupercolorPoset.H_crank_minus N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.C_cyc u N_plus -
+       HiggsFrameDraggingSupercolorPoset.C_cyc (1 - u) N_plus =
+         (u - (1 - u)) * HiggsFrameDraggingSupercolorPoset.Sigma N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.anticomm
+       (HiggsFrameDraggingSupercolorPoset.P N_plus) (HiggsFrameDraggingSupercolorPoset.Phi N_plus) =
+         HiggsFrameDraggingSupercolorPoset.Phi N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.comm
+       (HiggsFrameDraggingSupercolorPoset.P N_plus) (HiggsFrameDraggingSupercolorPoset.Phi N_plus) =
+         HiggsFrameDraggingSupercolorPoset.J N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.comm
+       (HiggsFrameDraggingSupercolorPoset.J N_plus) (HiggsFrameDraggingSupercolorPoset.Phi N_plus) =
+         HiggsFrameDraggingSupercolorPoset.Sigma N_plus +
+           HiggsFrameDraggingSupercolorPoset.Sigma N_plus ∧
+     HiggsFrameDraggingSupercolorPoset.anticomm
+       (HiggsFrameDraggingSupercolorPoset.Gamma_chiral N_plus) N_plus = 0 ∧
+     HiggsFrameDraggingSupercolorPoset.comm
+       (HiggsFrameDraggingSupercolorPoset.P_poincare N_plus) N_plus = 0) ∧
+    (EmergentTwoSheetBridge.Sigma N_plus * EmergentTwoSheetBridge.P N_plus =
+       EmergentTwoSheetBridge.P N_plus ∧
+     EmergentTwoSheetBridge.Sigma N_plus * EmergentTwoSheetBridge.Q N_plus =
+       -EmergentTwoSheetBridge.Q N_plus ∧
+     EmergentTwoSheetBridge.restrictV N_plus X₁ =
+       EmergentTwoSheetBridge.spinConnV N_plus X₁ + EmergentTwoSheetBridge.framePhiV N_plus X₁ ∧
+     EmergentTwoSheetBridge.wingPlus N_plus (EmergentTwoSheetBridge.Phi N_plus) = N_plus ∧
+     (EmergentTwoSheetBridge.metricGV N_plus X₁ + EmergentTwoSheetBridge.curvSigmaV N_plus X₁) *
+       (EmergentTwoSheetBridge.metricGV N_plus X₁ - EmergentTwoSheetBridge.curvSigmaV N_plus X₁) = 0 ∧
+     EmergentTwoSheetBridge.comm
+       (EmergentTwoSheetBridge.cartanConnV N_plus W₁ X₁)
+       (EmergentTwoSheetBridge.cartanConnV N_plus W₂ X₂) =
+         EmergentTwoSheetBridge.riemannCurvV N_plus W₁ X₁ W₂ X₂ +
+           EmergentTwoSheetBridge.cartanTorsionV N_plus W₁ X₁ W₂ X₂) ∧
+    (NilpotentPairingAnomalyGapPoset.anticomm
+       (NilpotentPairingAnomalyGapPoset.Sigma N_plus) N_plus = 0 ∧
+     NilpotentPairingAnomalyGapPoset.anticomm
+       (NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (NilpotentPairingAnomalyGapPoset.Phi N_plus) = 0 ∧
+     NilpotentPairingAnomalyGapPoset.Gap N_plus *
+       NilpotentPairingAnomalyGapPoset.Gap N_plus =
+         NilpotentPairingAnomalyGapPoset.Gap N_plus ∧
+     NilpotentPairingAnomalyGapPoset.Phi N_plus *
+       NilpotentPairingAnomalyGapPoset.Phi N_plus =
+         NilpotentPairingAnomalyGapPoset.Gap N_plus ∧
+     NilpotentPairingAnomalyGapPoset.S_P N_plus *
+       NilpotentPairingAnomalyGapPoset.Sigma N_plus =
+         NilpotentPairingAnomalyGapPoset.Gap N_plus ∧
+     NilpotentPairingAnomalyGapPoset.Gap N_plus *
+       NilpotentPairingAnomalyGapPoset.Phi N_plus =
+         NilpotentPairingAnomalyGapPoset.Phi N_plus ∧
+     NilpotentPairingAnomalyGapPoset.Phi N_plus *
+       (NilpotentPairingAnomalyGapPoset.Phi N_plus *
+         NilpotentPairingAnomalyGapPoset.Phi N_plus - 1) = 0) :=
+  ⟨⟨HiggsFrameDraggingSupercolorPoset.higgs_quartic_stationarity N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.H_crank_minus_mul_P N_plus h_nil,
+    HiggsFrameDraggingSupercolorPoset.H_crank_minus_mul_Q N_plus h_reg,
+    HiggsFrameDraggingSupercolorPoset.H_crank_secular_product N_plus h_nil,
+    HiggsFrameDraggingSupercolorPoset.C_cyc_mul_H_crank_plus u N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.C_cyc_mul_H_crank_minus u N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.C_cyc_galois_spin_locking u N_plus,
+    HiggsFrameDraggingSupercolorPoset.anticomm_P_Phi_eq_Phi N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.comm_P_Phi_eq_J N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.comm_J_Phi_eq_two_Sigma N_plus h_nil,
+    HiggsFrameDraggingSupercolorPoset.anticomm_Gamma_chiral_N_plus N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.comm_P_poincare_N_plus N_plus h_nil h_reg⟩,
+   ⟨EmergentTwoSheetBridge.Sigma_mul_P N_plus h_nil h_reg,
+    EmergentTwoSheetBridge.Sigma_mul_Q N_plus h_nil h_reg,
+    EmergentTwoSheetBridge.restrictV_decomp N_plus X₁,
+    EmergentTwoSheetBridge.wingPlus_Phi_eq_N_plus N_plus h_nil h_reg,
+    EmergentTwoSheetBridge.universal_mode_hyperbolic_null_squeezing N_plus X₁ h_nil,
+    EmergentTwoSheetBridge.emergent_cartan_curvature_torsion_split N_plus W₁ X₁ W₂ X₂⟩,
+   ⟨NilpotentPairingAnomalyGapPoset.anticomm_Sigma_N_plus N_plus h_nil h_reg,
+    NilpotentPairingAnomalyGapPoset.anticomm_Sigma_Phi N_plus h_nil h_reg,
+    NilpotentPairingAnomalyGapPoset.Gap_idem N_plus h_nil h_reg,
+    NilpotentPairingAnomalyGapPoset.Phi_sq_eq_Gap N_plus h_nil h_reg,
+    NilpotentPairingAnomalyGapPoset.S_P_mul_Sigma_eq_Gap N_plus h_nil h_reg,
+    NilpotentPairingAnomalyGapPoset.Gap_mul_Phi N_plus h_nil h_reg,
+    NilpotentPairingAnomalyGapPoset.chiral_block_spectral_gap_eq N_plus h_nil h_reg⟩⟩
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+omit [Ring B] hP in
+/-- **Part XV.e (`partXVe_multi_channel_and_weighted_chiral_block_anomaly_gap_synthesis`)**:
+Coagulates the Multi-Channel & Weighted Chiral Block Anomaly-to-Gap Poset (`MC₁`–`MC₁₀` & `WMC₁`–`WMC₁₀` in
+`MultiChannelChiralBlockAnomalyGapPoset.lean`) over `[Ring R] [StarRing R]`:
+1. **`MC₁`–`MC₆`**: Closure of multi-channel nilpotency `(N_a + N_b)² = 0` and Von Neumann regularity
+   `(N_a + N_b) (N_a + N_b)* (N_a + N_b) = N_a + N_b`, anomaly additivity `Σ(N_a + N_b) = Σ(N_a) + Σ(N_b)`,
+   mutual anomaly annihilation `Σ(N_a) * Σ(N_b) = 0`, gap additivity `Gap(N_a + N_b) = Gap(N_a) + Gap(N_b)`,
+   gap orthogonality `Gap(N_a) * Gap(N_b) = 0`, and composite idempotency `Gap(N_a + N_b)² = Gap(N_a + N_b)`.
+2. **`MC₇`–`MC₁₀`**: Channel-resolved filtering `Gap(N_a) * Φ(N_a + N_b) = Φ(N_a)`,
+   `Φ(N_a + N_b)² = Gap(N_a) + Gap(N_b)`, `Φ(N_a + N_b) * (Φ(N_a + N_b)² - 1) = 0`,
+   and 3-channel supercolor closure `Gap(N₁ + N₂ + N₃) = Gap N₁ + Gap N₂ + Gap N₃`.
+3. **`WMC₁`–`WMC₁₀`**: Weighted multi-channel chiral block square `Φ_w₂ * Φ_w₂ = Gap_w₂`,
+   channel-selective filtering `Gap(N_a) * Φ_w₂ = c_a * Φ(N_a)`, eigenmode secular equation
+   `(Φ_w₂² - c_a²) * (c_a * Φ(N_a)) = 0`, and cyclotomic `Φ₆(u) = u² - u + 1 = 0` reduction
+   `(u * Φ(N_a))² = (u - 1) * Gap(N_a)`. -/
+theorem partXVe_multi_channel_and_weighted_chiral_block_anomaly_gap_synthesis
+    {R : Type u} [Ring R] [StarRing R] (c_a N_a c_b N_b u : R)
+    (h_nil_a : N_a * N_a = 0) (h_reg_a : N_a * star N_a * N_a = N_a)
+    (h_nil_b : N_b * N_b = 0) (h_reg_b : N_b * star N_b * N_b = N_b)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_a : c_a * N_a = N_a * c_a) (hcs_a : c_a * star N_a = star N_a * c_a)
+    (hc_b : c_b * N_b = N_b * c_b) (hcs_b : c_b * star N_b = star N_b * c_b)
+    (h_cyc : u * u - u + 1 = 0)
+    (hu : u * N_a = N_a * u) (hus : u * star N_a = star N_a * u) :
+    (MultiChannelAnomalyGapPoset.MultiChannelAnomalyGapStage.causalEdge
+       .MC1_SingleChannelAnomalyFoundation .MC2_MultiChannelNilpotencyAndRegularityClosure ∧
+     (N_a + N_b) * (N_a + N_b) = 0 ∧
+     (N_a + N_b) * star (N_a + N_b) * (N_a + N_b) = N_a + N_b ∧
+     MultiChannelAnomalyGapPoset.Sigma (N_a + N_b) =
+       MultiChannelAnomalyGapPoset.Sigma N_a + MultiChannelAnomalyGapPoset.Sigma N_b ∧
+     MultiChannelAnomalyGapPoset.Sigma N_a * MultiChannelAnomalyGapPoset.Sigma N_b = 0 ∧
+     MultiChannelAnomalyGapPoset.Gap (N_a + N_b) =
+       MultiChannelAnomalyGapPoset.Gap N_a + MultiChannelAnomalyGapPoset.Gap N_b ∧
+     MultiChannelAnomalyGapPoset.Gap N_a * MultiChannelAnomalyGapPoset.Gap N_b = 0 ∧
+     MultiChannelAnomalyGapPoset.Gap (N_a + N_b) * MultiChannelAnomalyGapPoset.Gap (N_a + N_b) =
+       MultiChannelAnomalyGapPoset.Gap (N_a + N_b) ∧
+     MultiChannelAnomalyGapPoset.Gap N_a * MultiChannelAnomalyGapPoset.Phi (N_a + N_b) =
+       MultiChannelAnomalyGapPoset.Phi N_a ∧
+     MultiChannelAnomalyGapPoset.Phi (N_a + N_b) * MultiChannelAnomalyGapPoset.Phi (N_a + N_b) =
+       MultiChannelAnomalyGapPoset.Gap N_a + MultiChannelAnomalyGapPoset.Gap N_b ∧
+     MultiChannelAnomalyGapPoset.Phi (N_a + N_b) *
+       (MultiChannelAnomalyGapPoset.Phi (N_a + N_b) *
+         MultiChannelAnomalyGapPoset.Phi (N_a + N_b) - 1) = 0) ∧
+    (WeightedMultiChannelGapPoset.J_w₂ c_a N_a c_b N_b *
+       WeightedMultiChannelGapPoset.Phi_w₂ c_a N_a c_b N_b =
+         WeightedMultiChannelGapPoset.Sigma_w₂ c_a N_a c_b N_b ∧
+     WeightedMultiChannelGapPoset.Phi_w₂ c_a N_a c_b N_b *
+       WeightedMultiChannelGapPoset.Phi_w₂ c_a N_a c_b N_b =
+         WeightedMultiChannelGapPoset.Gap_w₂ c_a N_a c_b N_b ∧
+     WeightedMultiChannelGapPoset.Gap N_a *
+       WeightedMultiChannelGapPoset.Phi_w₂ c_a N_a c_b N_b =
+         c_a * WeightedMultiChannelGapPoset.Phi N_a ∧
+     (WeightedMultiChannelGapPoset.Phi_w₂ c_a N_a c_b N_b *
+       WeightedMultiChannelGapPoset.Phi_w₂ c_a N_a c_b N_b - c_a * c_a) *
+         (c_a * WeightedMultiChannelGapPoset.Phi N_a) = 0 ∧
+     (u * WeightedMultiChannelGapPoset.Phi N_a) *
+       (u * WeightedMultiChannelGapPoset.Phi N_a) =
+         (u - 1) * WeightedMultiChannelGapPoset.Gap N_a) :=
+  ⟨⟨MultiChannelAnomalyGapPoset.MultiChannelAnomalyGapStage.poset_chain_and_acyclicity.1.1,
+    MultiChannelAnomalyGapPoset.N_tot_sq_eq_zero N_a N_b h_nil_a h_nil_b h_ab h_ba,
+    MultiChannelAnomalyGapPoset.N_tot_reg N_a N_b h_reg_a h_reg_b h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Sigma_add N_a N_b h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Sigma_mul_Sigma_orthog N_a N_b h_ab h_ba h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Gap_add N_a N_b h_ab h_ba h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Gap_mul_Gap_orthog N_a N_b h_ab h_ba h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Gap_tot_idem N_a N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Gap_left_proj_Phi_tot N_a N_b h_nil_a h_reg_a h_ab h_ba h_asb h_sab,
+    MultiChannelAnomalyGapPoset.Phi_tot_sq_eq_Gap_sum N_a N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab,
+    MultiChannelAnomalyGapPoset.multi_channel_spectral_gap_eq N_a N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab⟩,
+   ⟨WeightedMultiChannelGapPoset.J_w₂_mul_Phi_w₂ c_a N_a c_b N_b h_nil_a h_nil_b h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
+    WeightedMultiChannelGapPoset.Phi_w₂_sq_eq_Gap_w₂ c_a N_a c_b N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
+    WeightedMultiChannelGapPoset.Gap_left_filter_Phi_w₂ c_a N_a c_b N_b h_nil_a h_reg_a h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
+    WeightedMultiChannelGapPoset.Phi_w₂_sq_eigenmode_a c_a N_a c_b N_b h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b,
+    WeightedMultiChannelGapPoset.cyclotomic_weighted_Phi_sq u N_a h_cyc h_nil_a h_reg_a hu hus⟩⟩
+
+/-!
+## Part XVI: Archetype XX — 5-Graded Superconformal Élie Cartan Gravity & 3rd-Order Zorn Bimodule Insertion Anomaly (`Kantor5Graded`)
+-/
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset in
+omit [Ring B] hP in
+/-- **Part XVI Master Theorem (`partXVI_superconformal_cartan_5graded_gravity_synthesis`)**:
+Coagulates Archetype XX (`Kantor5Graded` 5-Graded Superconformal Élie Cartan Gravity &
+3rd-Order Zorn Bimodule Insertion Anomaly) over any non-commutative ring `[Ring R]`:
+1. **`ℤ₂` Super-Parity Curvature–Torsion Decomposition**:
+   `projEven A₁ + projOdd A₁ = A₁`,
+   `cartanCurvature5D A₁ A₂ = riemannConformalCurv5D A₁ A₂ + elieCartanTorsion5D A₁ A₂`,
+   `superParity (riemannConformalCurv5D A₁ A₂) = riemannConformalCurv5D A₁ A₂`, and
+   `superParity (elieCartanTorsion5D A₁ A₂) = -elieCartanTorsion5D A₁ A₂`,
+2. **Spontaneous Grade `±2` Plücker–Zorn Uncertainty Curvature from 3-Graded Connections**:
+   `(cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)).gp2 = Vec3.symCross u₁ u₂`
+   and `.gm2 = -Vec3.symCross v₁ v₂`,
+3. **3rd-Order Zorn Bimodule Insertion Anomaly IS 5-Graded Élie Cartan Torsion & Curvature**:
+   `(ZornMatrix.cubicAssociator X).u = ZornMatrix.upperBimoduleAnomaly X` and equals
+   `(kantorBracket V_X Qp).gp1 + (-(kantorBracket Ω_X κm).gm2 - (kantorBracket (injM2 wv) (injP1 X.v)).gm1) + (kantorBracket κp Qm).gp1`,
+4. **5-Graded Bianchi–Cartan Differential Jacobi Closure**:
+   cyclic Jacobi sums across `(Ω₁, Ω₂, Ω₃)`, `(Ω₁, Ω₂, E₁)`, and `(Ω₁, Ω₂, K₂)` vanish identically. -/
+theorem partXVI_superconformal_cartan_5graded_gravity_synthesis
+    {R : Type u} [Ring R]
+    (A₁ A₂ : Kantor5Graded R)
+    (ω₁L ω₁R ω₂L ω₂R a₃ d₃ : R)
+    (u₁ v₁ u₂ v₂ κp κm : Vec3 R)
+    (X : ZornMatrix R) :
+    let Ω_X := Kantor5Graded.inj0 X.a X.d
+    let V_X := Kantor5Graded.inj0 (Vec3.dot X.u X.v) (Vec3.dot X.v X.u)
+    let Qp  := Kantor5Graded.injP1 X.u
+    let Qm  := Kantor5Graded.injM1 X.v
+    let κpX := Kantor5Graded.injP2 (Vec3.cross X.u X.u)
+    let κmX := Kantor5Graded.injM2 (-Vec3.cross X.v X.v)
+    let wv  := Vec3.smulRight X.v X.a + Vec3.smulLeft X.d X.v
+    let Ω₁  := Kantor5Graded.inj0 ω₁L ω₁R
+    let Ω₂  := Kantor5Graded.inj0 ω₂L ω₂R
+    let Ω₃  := Kantor5Graded.inj0 a₃ d₃
+    (Kantor5Graded.projEven A₁ + Kantor5Graded.projOdd A₁ = A₁ ∧
+     Kantor5Graded.cartanCurvature5D A₁ A₂ =
+       Kantor5Graded.riemannConformalCurv5D A₁ A₂ + Kantor5Graded.elieCartanTorsion5D A₁ A₂ ∧
+     Kantor5Graded.superParity (Kantor5Graded.riemannConformalCurv5D A₁ A₂) =
+       Kantor5Graded.riemannConformalCurv5D A₁ A₂ ∧
+     Kantor5Graded.superParity (Kantor5Graded.elieCartanTorsion5D A₁ A₂) =
+       -Kantor5Graded.elieCartanTorsion5D A₁ A₂) ∧
+    ((Kantor5Graded.cartanCurvature5D
+        (Kantor5Graded.cartan3Grade ω₁L ω₁R u₁ v₁)
+        (Kantor5Graded.cartan3Grade ω₂L ω₂R u₂ v₂)).gp2 = Vec3.symCross u₁ u₂ ∧
+     (Kantor5Graded.cartanCurvature5D
+        (Kantor5Graded.cartan3Grade ω₁L ω₁R u₁ v₁)
+        (Kantor5Graded.cartan3Grade ω₂L ω₂R u₂ v₂)).gm2 = -Vec3.symCross v₁ v₂) ∧
+    ((ZornMatrix.cubicAssociator X).u = ZornMatrix.upperBimoduleAnomaly X ∧
+     (ZornMatrix.cubicAssociator X).u =
+       (Kantor5Graded.kantorBracket V_X Qp).gp1 +
+       (-(Kantor5Graded.kantorBracket Ω_X κmX).gm2 -
+          (Kantor5Graded.kantorBracket (Kantor5Graded.injM2 wv) (Kantor5Graded.injP1 X.v)).gm1) +
+       (Kantor5Graded.kantorBracket κpX Qm).gp1) ∧
+    (Kantor5Graded.kantorBracket Ω₁ (Kantor5Graded.kantorBracket Ω₂ Ω₃) +
+     Kantor5Graded.kantorBracket Ω₂ (Kantor5Graded.kantorBracket Ω₃ Ω₁) +
+     Kantor5Graded.kantorBracket Ω₃ (Kantor5Graded.kantorBracket Ω₁ Ω₂) = 0) := by
+  have h1 := Kantor5Graded.superconformal_cartan_curvature_torsion_decomposition A₁ A₂
+  have h2 := Kantor5Graded.spontaneous_grade_pm2_curvature_from_3grade_cartan_connection ω₁L ω₁R ω₂L ω₂R u₁ v₁ u₂ v₂
+  have h3 := Kantor5Graded.bimodule_insertion_anomaly_is_5graded_cartan_torsion X
+  have h4 := Kantor5Graded.five_graded_bianchi_cartan_jacobi_identities ω₁L ω₁R ω₂L ω₂R a₃ d₃ u₁ v₁ κp κm
+  exact ⟨⟨h1.1, h1.2.1, h1.2.2.1, h1.2.2.2.1⟩,
+    ⟨h2.1, h2.2.1⟩,
+    ⟨h3.2.2.2.1, h3.2.2.2.2⟩,
+    h4.1⟩
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+open InfoGeometry.OperatorAlgebra.PeirceSpine.WeightedMultiChannelJordanAnomalyPoset in
+omit [Ring B] hP in
+/-- **Part XV.f (`partXVf_weighted_jordan_anomaly_poset_synthesis`)**:
+Coagulates the 10-stage Weighted Multi-Channel Grade-3 Jordan Associator Anomaly Poset
+(`WJA₁`–`WJA₁₀` in `WeightedMultiChannelJordanAnomalyPoset.lean`) over `[Ring R] [StarRing R]`. -/
+theorem partXVf_weighted_jordan_anomaly_poset_synthesis
+    {R : Type u} [Ring R] [StarRing R] (c_a N_a c_b N_b u : R)
+    (h_nil_a : N_a * N_a = 0) (h_reg_a : N_a * star N_a * N_a = N_a)
+    (h_nil_b : N_b * N_b = 0) (h_reg_b : N_b * star N_b * N_b = N_b)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_a : c_a * N_a = N_a * c_a) (hcs_a : c_a * star N_a = star N_a * c_a)
+    (hc_b : c_b * N_b = N_b * c_b) (hcs_b : c_b * star N_b = star N_b * c_b)
+    (h_cyc : Phi6 u = 0)
+    (hu_a : u * N_a = N_a * u) (hus_a : u * star N_a = star N_a * u)
+    (hu_b : u * N_b = N_b * u) (hus_b : u * star N_b = star N_b * u) :
+    (WeightedMultiChannelJordanAnomalyStage.causalEdge
+       .WJA1_SingleChannelJordanAssociatorBaseline .WJA2_WeightedSingleChannelCubicScaling ∧
+     WeightedMultiChannelJordanAnomalyStage.causalEdge
+       .WJA9_ChannelSelectiveProjectiveFiltering .WJA10_CyclotomicGrade3GaloisSynchronization) ∧
+    (WeightedMultiChannelJordanAnomalyPoset.anticomm
+       (Phi_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) = 0 ∧
+     WeightedMultiChannelJordanAnomalyPoset.comm
+       (J_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) =
+       Sigma_w₂ c_a N_a c_b N_b + Sigma_w₂ c_a N_a c_b N_b ∧
+     Phi_w₂ c_a N_a c_b N_b * Phi_w₂ c_a N_a c_b N_b = Gap_w₂ c_a N_a c_b N_b ∧
+     J_w₂ c_a N_a c_b N_b * J_w₂ c_a N_a c_b N_b = -Gap_w₂ c_a N_a c_b N_b) ∧
+    (WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+       (Phi_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) =
+       quad (J_w₂_cube c_a N_a c_b N_b) ∧
+     WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+       (J_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) =
+       -quad (J_w₂_cube c_a N_a c_b N_b) ∧
+     WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+       (J_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) =
+       -quad (Phi_w₂_cube c_a N_a c_b N_b) ∧
+     WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+       (Phi_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) =
+       quad (Phi_w₂_cube c_a N_a c_b N_b)) ∧
+    (WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+       (Phi_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) =
+       WeightedMultiChannelJordanAnomalyPoset.JordanAssoc (c_a * Phi N_a) (c_a * Phi N_a) (c_a * J N_a) +
+       WeightedMultiChannelJordanAnomalyPoset.JordanAssoc (c_b * Phi N_b) (c_b * Phi N_b) (c_b * J N_b) ∧
+     WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+       (Phi_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) =
+       WeightedMultiChannelJordanAnomalyPoset.comm
+         (WeightedMultiChannelJordanAnomalyPoset.comm
+           (J_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b))
+         (Phi_w₂ c_a N_a c_b N_b) ∧
+     Gap N_a *
+       WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+         (Phi_w₂ c_a N_a c_b N_b) (Phi_w₂ c_a N_a c_b N_b) (J_w₂ c_a N_a c_b N_b) =
+       WeightedMultiChannelJordanAnomalyPoset.JordanAssoc (c_a * Phi N_a) (c_a * Phi N_a) (c_a * J N_a)) ∧
+    WeightedMultiChannelJordanAnomalyPoset.JordanAssoc
+      (Phi_w₂ u N_a (1 - u) N_b)
+      (Phi_w₂ u N_a (1 - u) N_b)
+      (J_w₂ u N_a (1 - u) N_b) =
+      -quad (J N_a + J N_b) :=
+  weighted_multi_channel_jordan_anomaly_poset_master_synthesis
+    c_a N_a c_b N_b u h_nil_a h_reg_a h_nil_b h_reg_b
+    h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b
+    h_cyc hu_a hus_a hu_b hus_b
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset in
+omit [Ring B] P hP in
+/-- **Part XV.g (`partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis`)**:
+Coagulates the 10-stage Kantor–Koecher–Tits 5-Graded Closure Poset (`KKT₁`–`KKT₁₀`
+in `KantorKoecherTitsFiveGradedClosurePoset.lean`) over `[Ring R] [StarRing R]`. -/
+theorem partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis
+    {R : Type u} [Ring R] [StarRing R] (N_plus X Y : R)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    (KantorKoecherTitsStage.causalEdge
+       .KKT1_JordanQuadraticTripleSandwich .KKT2_ExtremalGradePlusMinusTwo ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT2_ExtremalGradePlusMinusTwo .KKT3_ExtremalAbelianNilpotency ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT3_ExtremalAbelianNilpotency .KKT4_RegularNilpotentSeedFixedPoint ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT4_RegularNilpotentSeedFixedPoint .KKT5_OddGradePlusMinusOneCarriers ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT5_OddGradePlusMinusOneCarriers .KKT6_OddToExtremalBracketClosure ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT6_OddToExtremalBracketClosure .KKT7_ExtremalOppositeGradeToZero ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT7_ExtremalOppositeGradeToZero .KKT8_ZeroGradeDiagonalNeutralCentralizer ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT8_ZeroGradeDiagonalNeutralCentralizer .KKT9_ExtremalCommutatorZeroGradeClosure ∧
+     KantorKoecherTitsStage.causalEdge
+       .KKT9_ExtremalCommutatorZeroGradeClosure
+       .KKT10_MasterFiveGradedKantorKoecherTitsSynthesis) ∧
+    (K_plus2 N_plus X = (2 : ℕ) • G_plus2 N_plus X ∧
+     K_minus2 N_plus X = (2 : ℕ) • G_minus2 N_plus X ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (K_plus2 N_plus X) = (2 : ℕ) • K_plus2 N_plus X ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (K_minus2 N_plus X) = -((2 : ℕ) • K_minus2 N_plus X)) ∧
+    (K_plus2 N_plus X * K_plus2 N_plus Y = 0 ∧
+     K_minus2 N_plus X * K_minus2 N_plus Y = 0 ∧
+     K_plus2 N_plus (star N_plus) = (2 : ℕ) • N_plus ∧
+     K_minus2 N_plus N_plus = (2 : ℕ) • star N_plus) ∧
+    (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_plus1_L N_plus X) = G_plus1_L N_plus X ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_plus1_R N_plus X) = G_plus1_R N_plus X ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_minus1_L N_plus X) = -G_minus1_L N_plus X ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_minus1_R N_plus X) = -G_minus1_R N_plus X) ∧
+    (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (G_plus1_L N_plus X) (G_plus1_R N_plus Y) =
+       G_plus2 N_plus (X * (1 - _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap N_plus) * Y) ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (G_minus1_L N_plus X) (G_minus1_R N_plus Y) =
+       G_minus2 N_plus (X * (1 - _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap N_plus) * Y)) ∧
+    (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (G_plus2 N_plus X) (G_minus2 N_plus Y) =
+       G_0_P N_plus (N_plus * X * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.P N_plus * Y * star N_plus) -
+       G_0_Q N_plus (star N_plus * Y * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.Q N_plus * X * N_plus) ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_0_P N_plus X) = 0 ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_0_Q N_plus X) = 0 ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (G_0_neutral N_plus X) = 0 ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+       (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+         (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0) :=
+  kantor_koecher_tits_five_graded_closure_poset_master_synthesis N_plus X Y h_nil h_reg
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

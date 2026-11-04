@@ -2172,4 +2172,398 @@ theorem zorn_amplituhedron_plucker_baryon_master_synthesis
 
 end ZornAmplituhedronPluckerBaryon
 
+-- ============================================================================
+-- STAGE ZND₅: ARCHETYPE XX — 5-GRADED SUPERCONFORMAL ÉLIE CARTAN GRAVITY &
+-- 3RD-ORDER ZORN BIMODULE INSERTION ANOMALY (`Kantor5Graded`)
+-- ============================================================================
+
+namespace Vec3
+variable {R : Type u} [Ring R]
+
+/-- Symmetric non-commutative Plücker–Zorn frame uncertainty `u ×_sym v = u × v + v × u`. -/
+@[simp] def symCross (u v : Vec3 R) : Vec3 R :=
+  cross u v + cross v u
+
+/-- Antisymmetric Lie cross commutator `u ×_ad v = u × v - v × u`. -/
+@[simp] def adCross (u v : Vec3 R) : Vec3 R :=
+  cross u v - cross v u
+
+@[simp] theorem symCross_zero_left (v : Vec3 R) : symCross 0 v = 0 := by
+  ext <;> simp [symCross, cross]
+
+@[simp] theorem symCross_zero_right (u : Vec3 R) : symCross u 0 = 0 := by
+  ext <;> simp [symCross, cross]
+
+@[simp] theorem adCross_zero_left (v : Vec3 R) : adCross 0 v = 0 := by
+  ext <;> simp [adCross, cross]
+
+@[simp] theorem adCross_zero_right (u : Vec3 R) : adCross u 0 = 0 := by
+  ext <;> simp [adCross, cross]
+
+@[simp] theorem dot_zero_left (v : Vec3 R) : dot 0 v = 0 := by
+  simp [dot]
+
+@[simp] theorem dot_zero_right (u : Vec3 R) : dot u 0 = 0 := by
+  simp [dot]
+
+@[simp] theorem smulLeft_zero (r : R) : smulLeft r 0 = 0 := by
+  ext <;> simp [smulLeft]
+
+@[simp] theorem zero_smulLeft (v : Vec3 R) : smulLeft 0 v = 0 := by
+  ext <;> simp [smulLeft]
+
+@[simp] theorem smulRight_zero (r : R) : smulRight 0 r = 0 := by
+  ext <;> simp [smulRight]
+
+@[simp] theorem zero_smulRight (v : Vec3 R) : smulRight v 0 = 0 := by
+  ext <;> simp [smulRight]
+
+@[simp] theorem add_zero_vec (u : Vec3 R) : u + 0 = u := by
+  ext <;> simp
+
+@[simp] theorem zero_add_vec (u : Vec3 R) : 0 + u = u := by
+  ext <;> simp
+
+@[simp] theorem sub_zero_vec (u : Vec3 R) : u - 0 = u := by
+  ext <;> simp
+
+@[simp] theorem zero_sub_vec (u : Vec3 R) : 0 - u = -u := by
+  ext <;> simp
+
+@[simp] theorem neg_zero_vec : -(0 : Vec3 R) = 0 := by
+  ext <;> simp
+
+end Vec3
+
+namespace ZornMatrix
+variable {R : Type u} [Ring R]
+
+/-- The upper-right off-diagonal 3rd-order Bimodule Insertion Anomaly of `[X, X, X]_assoc`:
+`dotDefect + insertionDefect + crossCommutator`. -/
+@[simp] def upperBimoduleAnomaly (X : ZornMatrix R) : Vec3 R :=
+  let dotDefect := Vec3.smulLeft (Vec3.dot X.u X.v) X.u - Vec3.smulRight X.u (Vec3.dot X.v X.u)
+  let wv := Vec3.smulRight X.v X.a + Vec3.smulLeft X.d X.v
+  let insertionDefect :=
+    Vec3.smulLeft X.a (Vec3.cross X.v X.v) - Vec3.smulRight (Vec3.cross X.v X.v) X.d -
+    (Vec3.cross wv X.v - Vec3.cross X.v wv)
+  let crossCommutator := Vec3.cross X.v (Vec3.cross X.u X.u) - Vec3.cross (Vec3.cross X.u X.u) X.v
+  dotDefect + insertionDefect + crossCommutator
+
+end ZornMatrix
+
+/-- A 5-Graded Superconformal Cartan Connection `A ∈ g_{-2} ⊕ g_{-1} ⊕ g_0 ⊕ g_{+1} ⊕ g_{+2}`:
+- `gm2`: Grade `-2` lower uncertainty / dual special-conformal connection `κ_-`
+- `gm1`: Grade `-1` backward chiral tetrad / dual-twistor solder form `e_-`
+- `g0L, g0R`: Grade `0` left/right Lorentz–Weyl spin connection `(ω_L, ω_R)`
+- `gp1`: Grade `+1` forward chiral tetrad / twistor solder form `e_+`
+- `gp2`: Grade `+2` upper uncertainty / special-conformal connection `κ_+` -/
+@[ext]
+structure Kantor5Graded (R : Type u) where
+  gm2 : Vec3 R
+  gm1 : Vec3 R
+  g0L : R
+  g0R : R
+  gp1 : Vec3 R
+  gp2 : Vec3 R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace Kantor5Graded
+
+section NonCommutativeRing
+variable {R : Type u} [Ring R]
+
+@[simp] def zero : Kantor5Graded R := ⟨0, 0, 0, 0, 0, 0⟩
+
+@[simp] def add (X Y : Kantor5Graded R) : Kantor5Graded R :=
+  ⟨X.gm2 + Y.gm2, X.gm1 + Y.gm1, X.g0L + Y.g0L,
+   X.g0R + Y.g0R, X.gp1 + Y.gp1, X.gp2 + Y.gp2⟩
+
+@[simp] def sub (X Y : Kantor5Graded R) : Kantor5Graded R :=
+  ⟨X.gm2 - Y.gm2, X.gm1 - Y.gm1, X.g0L - Y.g0L,
+   X.g0R - Y.g0R, X.gp1 - Y.gp1, X.gp2 - Y.gp2⟩
+
+@[simp] def neg (X : Kantor5Graded R) : Kantor5Graded R :=
+  ⟨-X.gm2, -X.gm1, -X.g0L, -X.g0R, -X.gp1, -X.gp2⟩
+
+instance instZero : Zero (Kantor5Graded R) := ⟨zero⟩
+instance instAdd : Add (Kantor5Graded R) := ⟨add⟩
+instance instSub : Sub (Kantor5Graded R) := ⟨sub⟩
+instance instNeg : Neg (Kantor5Graded R) := ⟨neg⟩
+
+@[simp] lemma zero_gm2 : (0 : Kantor5Graded R).gm2 = 0 := rfl
+@[simp] lemma zero_gm1 : (0 : Kantor5Graded R).gm1 = 0 := rfl
+@[simp] lemma zero_g0L : (0 : Kantor5Graded R).g0L = 0 := rfl
+@[simp] lemma zero_g0R : (0 : Kantor5Graded R).g0R = 0 := rfl
+@[simp] lemma zero_gp1 : (0 : Kantor5Graded R).gp1 = 0 := rfl
+@[simp] lemma zero_gp2 : (0 : Kantor5Graded R).gp2 = 0 := rfl
+
+@[simp] lemma add_gm2 (X Y : Kantor5Graded R) : (X + Y).gm2 = X.gm2 + Y.gm2 := rfl
+@[simp] lemma add_gm1 (X Y : Kantor5Graded R) : (X + Y).gm1 = X.gm1 + Y.gm1 := rfl
+@[simp] lemma add_g0L (X Y : Kantor5Graded R) : (X + Y).g0L = X.g0L + Y.g0L := rfl
+@[simp] lemma add_g0R (X Y : Kantor5Graded R) : (X + Y).g0R = X.g0R + Y.g0R := rfl
+@[simp] lemma add_gp1 (X Y : Kantor5Graded R) : (X + Y).gp1 = X.gp1 + Y.gp1 := rfl
+@[simp] lemma add_gp2 (X Y : Kantor5Graded R) : (X + Y).gp2 = X.gp2 + Y.gp2 := rfl
+
+@[simp] lemma sub_gm2 (X Y : Kantor5Graded R) : (X - Y).gm2 = X.gm2 - Y.gm2 := rfl
+@[simp] lemma sub_gm1 (X Y : Kantor5Graded R) : (X - Y).gm1 = X.gm1 - Y.gm1 := rfl
+@[simp] lemma sub_g0L (X Y : Kantor5Graded R) : (X - Y).g0L = X.g0L - Y.g0L := rfl
+@[simp] lemma sub_g0R (X Y : Kantor5Graded R) : (X - Y).g0R = X.g0R - Y.g0R := rfl
+@[simp] lemma sub_gp1 (X Y : Kantor5Graded R) : (X - Y).gp1 = X.gp1 - Y.gp1 := rfl
+@[simp] lemma sub_gp2 (X Y : Kantor5Graded R) : (X - Y).gp2 = X.gp2 - Y.gp2 := rfl
+
+@[simp] lemma neg_gm2 (X : Kantor5Graded R) : (-X).gm2 = -X.gm2 := rfl
+@[simp] lemma neg_gm1 (X : Kantor5Graded R) : (-X).gm1 = -X.gm1 := rfl
+@[simp] lemma neg_g0L (X : Kantor5Graded R) : (-X).g0L = -X.g0L := rfl
+@[simp] lemma neg_g0R (X : Kantor5Graded R) : (-X).g0R = -X.g0R := rfl
+@[simp] lemma neg_gp1 (X : Kantor5Graded R) : (-X).gp1 = -X.gp1 := rfl
+@[simp] lemma neg_gp2 (X : Kantor5Graded R) : (-X).gp2 = -X.gp2 := rfl
+
+/-! ### Grade Injections, Even/Odd Connection Projectors & Super-Parity -/
+
+@[simp] def injM2 (κ_m : Vec3 R) : Kantor5Graded R := ⟨κ_m, 0, 0, 0, 0, 0⟩
+@[simp] def injM1 (e_m : Vec3 R) : Kantor5Graded R := ⟨0, e_m, 0, 0, 0, 0⟩
+@[simp] def inj0  (ω_L ω_R : R)  : Kantor5Graded R := ⟨0, 0, ω_L, ω_R, 0, 0⟩
+@[simp] def injP1 (e_p : Vec3 R) : Kantor5Graded R := ⟨0, 0, 0, 0, e_p, 0⟩
+@[simp] def injP2 (κ_p : Vec3 R) : Kantor5Graded R := ⟨0, 0, 0, 0, 0, κ_p⟩
+
+/-- Purely 3-graded Cartan connection `A_3grade ∈ g_{-1} ⊕ g_0 ⊕ g_{+1}` (`κ_{±} = 0`). -/
+@[simp] def cartan3Grade (ω_L ω_R : R) (e_p e_m : Vec3 R) : Kantor5Graded R :=
+  ⟨0, e_m, ω_L, ω_R, e_p, 0⟩
+
+/-- Uncertainty-Dressed 5-Graded Cartan Connection associated to a Zorn matrix `X = ⟨a, u, v, d⟩`:
+populates Grade `±2` with the Plücker–Zorn uncertainty anomalies `κ_+ = u × u` and `κ_- = -v × v`. -/
+@[simp] def cartanDressed (X : ZornMatrix R) : Kantor5Graded R :=
+  ⟨-Vec3.cross X.v X.v, X.v, X.a, X.d, X.u, Vec3.cross X.u X.u⟩
+
+/-- Even Bosonic Connection Projector `projEven : g → g_{-2} ⊕ g_0 ⊕ g_{+2}`. -/
+@[simp] def projEven (A : Kantor5Graded R) : Kantor5Graded R :=
+  ⟨A.gm2, 0, A.g0L, A.g0R, 0, A.gp2⟩
+
+/-- Odd Fermionic / Frame Solder-Form Projector `projOdd : g → g_{-1} ⊕ g_{+1}`. -/
+@[simp] def projOdd (A : Kantor5Graded R) : Kantor5Graded R :=
+  ⟨0, A.gm1, 0, 0, A.gp1, 0⟩
+
+/-- `ℤ₂` Super-Parity Involution `superParity Γ` (`+1` on `g_even`, `-1` on `g_odd`). -/
+@[simp] def superParity (A : Kantor5Graded R) : Kantor5Graded R :=
+  ⟨A.gm2, -A.gm1, A.g0L, A.g0R, -A.gp1, A.gp2⟩
+
+/-- The 5-Graded Kantor–Conformal Lie Super-Bracket `kantorBracket A₁ A₂`. -/
+@[simp] def kantorBracket (X Y : Kantor5Graded R) : Kantor5Graded R where
+  gm2 :=
+    (Vec3.smulLeft X.g0L Y.gm2 - Vec3.smulRight Y.gm2 X.g0R) -
+    (Vec3.smulLeft Y.g0L X.gm2 - Vec3.smulRight X.gm2 Y.g0R) -
+    Vec3.symCross X.gm1 Y.gm1
+  gm1 :=
+    (Vec3.smulLeft X.g0R Y.gm1 - Vec3.smulRight Y.gm1 X.g0L) -
+    (Vec3.smulLeft Y.g0R X.gm1 - Vec3.smulRight X.gm1 Y.g0L) +
+    (Vec3.adCross X.gm2 Y.gp1 - Vec3.adCross Y.gm2 X.gp1)
+  g0L :=
+    (X.g0L * Y.g0L - Y.g0L * X.g0L) +
+    (Vec3.dot X.gp1 Y.gm1 + Vec3.dot Y.gp1 X.gm1) +
+    (Vec3.dot X.gm2 Y.gp2 - Vec3.dot Y.gm2 X.gp2)
+  g0R :=
+    (X.g0R * Y.g0R - Y.g0R * X.g0R) +
+    (Vec3.dot X.gm1 Y.gp1 + Vec3.dot Y.gm1 X.gp1) +
+    (Vec3.dot X.gp2 Y.gm2 - Vec3.dot Y.gp2 X.gm2)
+  gp1 :=
+    (Vec3.smulLeft X.g0L Y.gp1 - Vec3.smulRight Y.gp1 X.g0R) -
+    (Vec3.smulLeft Y.g0L X.gp1 - Vec3.smulRight X.gp1 Y.g0R) -
+    (Vec3.adCross X.gp2 Y.gm1 - Vec3.adCross Y.gp2 X.gm1)
+  gp2 :=
+    (Vec3.smulLeft X.g0R Y.gp2 - Vec3.smulRight Y.gp2 X.g0L) -
+    (Vec3.smulLeft Y.g0R X.gp2 - Vec3.smulRight X.gp2 Y.g0L) +
+    Vec3.symCross X.gp1 Y.gp1
+
+/-- Full 5-Graded Superconformal Cartan Curvature Multiplet `𝓕_5D(A₁, A₂) = kantorBracket A₁ A₂`. -/
+@[simp] def cartanCurvature5D (A₁ A₂ : Kantor5Graded R) : Kantor5Graded R :=
+  kantorBracket A₁ A₂
+
+/-- Even Bosonic Superconformal Curvature `𝓡_5D(A₁, A₂) ∈ g_{-2} ⊕ g_0 ⊕ g_{+2}`:
+combines Grade `0` Riemann–MacDowell–Mansouri–Gluon curvature and Grade `±2` Plücker–Zorn curvature. -/
+@[simp] def riemannConformalCurv5D (A₁ A₂ : Kantor5Graded R) : Kantor5Graded R :=
+  projEven (kantorBracket A₁ A₂)
+
+/-- Odd Élie Cartan Super-Torsion `𝓣_5D(A₁, A₂) ∈ g_{-1} ⊕ g_{+1}`:
+combines classical spin-frame torsion `D_ω e` with Grade `±2` uncertainty backreaction `[κ_{±}, e_{∓}]`. -/
+@[simp] def elieCartanTorsion5D (A₁ A₂ : Kantor5Graded R) : Kantor5Graded R :=
+  projOdd (kantorBracket A₁ A₂)
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.1 (`superconformal_cartan_curvature_torsion_decomposition`)**:
+5-Graded Superconformal Curvature–Torsion Splitting & `ℤ₂` Super-Symmetry over `[Ring R]`. -/
+theorem superconformal_cartan_curvature_torsion_decomposition
+    (A₁ A₂ : Kantor5Graded R) :
+    projEven A₁ + projOdd A₁ = A₁ ∧
+    cartanCurvature5D A₁ A₂ = riemannConformalCurv5D A₁ A₂ + elieCartanTorsion5D A₁ A₂ ∧
+    superParity (riemannConformalCurv5D A₁ A₂) = riemannConformalCurv5D A₁ A₂ ∧
+    superParity (elieCartanTorsion5D A₁ A₂) = -elieCartanTorsion5D A₁ A₂ ∧
+    riemannConformalCurv5D A₁ A₂ =
+      kantorBracket (projEven A₁) (projEven A₂) +
+      kantorBracket (projOdd A₁) (projOdd A₂) ∧
+    elieCartanTorsion5D A₁ A₂ =
+      kantorBracket (projEven A₁) (projOdd A₂) +
+      kantorBracket (projOdd A₁) (projEven A₂) ∧
+    elieCartanTorsion5D A₁ A₂ = -elieCartanTorsion5D A₂ A₁ ∧
+    kantorBracket (projEven A₁) (projEven A₂) =
+      -kantorBracket (projEven A₂) (projEven A₁) ∧
+    kantorBracket (projOdd A₁) (projOdd A₂) =
+      kantorBracket (projOdd A₂) (projOdd A₁) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  · (try ext) <;>
+    · simp only [cartanCurvature5D, riemannConformalCurv5D, elieCartanTorsion5D,
+        kantorBracket, projEven, projOdd, superParity,
+        zero_gm2, zero_gm1, zero_g0L, zero_g0R, zero_gp1, zero_gp2,
+        add_gm2, add_gm1, add_g0L, add_g0R, add_gp1, add_gp2,
+        sub_gm2, sub_gm1, sub_g0L, sub_g0R, sub_gp1, sub_gp2,
+        neg_gm2, neg_gm1, neg_g0L, neg_g0R, neg_gp1, neg_gp2,
+        Vec3.symCross, Vec3.adCross, Vec3.cross, Vec3.dot,
+        Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+        Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+      try abel
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.2 (`spontaneous_grade_pm2_curvature_from_3grade_cartan_connection`)**:
+Spontaneous Grade `±2` Plücker–Zorn uncertainty curvature from two purely 3-graded Cartan
+connections (`κ_{±} = 0`) over any non-commutative ring `[Ring R]`. -/
+theorem spontaneous_grade_pm2_curvature_from_3grade_cartan_connection
+    (ω₁L ω₁R ω₂L ω₂R : R) (u₁ v₁ u₂ v₂ : Vec3 R) :
+    let A₁ := cartan3Grade ω₁L ω₁R u₁ v₁
+    let A₂ := cartan3Grade ω₂L ω₂R u₂ v₂
+    let F  := cartanCurvature5D A₁ A₂
+    F.gp2 = Vec3.symCross u₁ u₂ ∧
+    F.gm2 = -Vec3.symCross v₁ v₂ ∧
+    F.g0L = (ω₁L * ω₂L - ω₂L * ω₁L) + (Vec3.dot u₁ v₂ + Vec3.dot u₂ v₁) ∧
+    F.g0R = (ω₁R * ω₂R - ω₂R * ω₁R) + (Vec3.dot v₁ u₂ + Vec3.dot v₂ u₁) ∧
+    F.gp1 = (Vec3.smulLeft ω₁L u₂ - Vec3.smulRight u₂ ω₁R) -
+            (Vec3.smulLeft ω₂L u₁ - Vec3.smulRight u₁ ω₂R) ∧
+    F.gm1 = (Vec3.smulLeft ω₁R v₂ - Vec3.smulRight v₂ ω₁L) -
+            (Vec3.smulLeft ω₂R v₁ - Vec3.smulRight v₁ ω₂L) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  · (try ext) <;>
+    · simp only [cartanCurvature5D, kantorBracket, cartan3Grade,
+        Vec3.symCross, Vec3.adCross, Vec3.cross, Vec3.dot,
+        Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+        Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub, sub_self]
+      try abel
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.3 (`bimodule_insertion_anomaly_is_5graded_cartan_torsion`)**:
+Unifies the 3rd-Order Zorn Bimodule Insertion Anomaly `ZornMatrix.upperBimoduleAnomaly X`
+(`= (ZornMatrix.cubicAssociator X).u`) with 5-graded Superconformal Élie Cartan Torsion & Curvature:
+1. `(kantorBracket V_X Qp).gp1 = (u · v) u - u (v · u)` (`dotDefect`),
+2. `(kantorBracket κp Qm).gp1 = v × (u × u) - (u × u) × v` (`crossCommutator`),
+3. `-(kantorBracket Ω_X κm).gm2 - (kantorBracket (injM2 wv) (injP1 X.v)).gm1 = a(v × v) - (v × v)d - (wv × v - v × wv)` (`insertionDefect`),
+4. `(ZornMatrix.cubicAssociator X).u = ZornMatrix.upperBimoduleAnomaly X` and equals the sum of those
+   three 5-graded Élie Cartan Torsion and Curvature brackets! -/
+theorem bimodule_insertion_anomaly_is_5graded_cartan_torsion (X : ZornMatrix R) :
+    let Ω_X := inj0 X.a X.d
+    let V_X := inj0 (Vec3.dot X.u X.v) (Vec3.dot X.v X.u)
+    let Qp  := injP1 X.u
+    let Qm  := injM1 X.v
+    let κp  := injP2 (Vec3.cross X.u X.u)
+    let κm  := injM2 (-Vec3.cross X.v X.v)
+    let wv  := Vec3.smulRight X.v X.a + Vec3.smulLeft X.d X.v
+    (kantorBracket V_X Qp).gp1 =
+      Vec3.smulLeft (Vec3.dot X.u X.v) X.u - Vec3.smulRight X.u (Vec3.dot X.v X.u) ∧
+    (kantorBracket κp Qm).gp1 =
+      Vec3.cross X.v (Vec3.cross X.u X.u) - Vec3.cross (Vec3.cross X.u X.u) X.v ∧
+    -(kantorBracket Ω_X κm).gm2 - (kantorBracket (injM2 wv) (injP1 X.v)).gm1 =
+      Vec3.smulLeft X.a (Vec3.cross X.v X.v) - Vec3.smulRight (Vec3.cross X.v X.v) X.d -
+      (Vec3.cross wv X.v - Vec3.cross X.v wv) ∧
+    (ZornMatrix.cubicAssociator X).u = ZornMatrix.upperBimoduleAnomaly X ∧
+    (ZornMatrix.cubicAssociator X).u =
+      (kantorBracket V_X Qp).gp1 +
+      (-(kantorBracket Ω_X κm).gm2 - (kantorBracket (injM2 wv) (injP1 X.v)).gm1) +
+      (kantorBracket κp Qm).gp1 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  · ext <;>
+    · simp only [kantorBracket, inj0, injP1, injM1, injP2, injM2,
+        ZornMatrix.upperBimoduleAnomaly, ZornMatrix.cubicAssociator,
+        ZornMatrix.associator, ZornMatrix.sub_u, ZornMatrix.mul_def, ZornMatrix.mul,
+        Vec3.symCross, Vec3.adCross, Vec3.cross, Vec3.dot,
+        Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+        Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub,
+        neg_mul, mul_neg, add_mul, mul_add, sub_mul, mul_sub, mul_assoc]
+      try abel
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.4 (`five_graded_bianchi_cartan_jacobi_identities`)**:
+Over any non-commutative associative ring `[Ring R]`, the 5-graded Cartan curvature `kantorBracket`
+satisfies exact Bianchi–Cartan Jacobi closure across Grade `0` spin connections, Grade `±1` tetrads,
+and Grade `±2` uncertainty connections. -/
+theorem five_graded_bianchi_cartan_jacobi_identities
+    (a₁ d₁ a₂ d₂ a₃ d₃ : R) (u v κp κm : Vec3 R) :
+    let Ω₁ := inj0 a₁ d₁
+    let Ω₂ := inj0 a₂ d₂
+    let Ω₃ := inj0 a₃ d₃
+    let E1 := injP1 u + injM1 v
+    let K2 := injP2 κp + injM2 κm
+    kantorBracket Ω₁ (kantorBracket Ω₂ Ω₃) +
+    kantorBracket Ω₂ (kantorBracket Ω₃ Ω₁) +
+    kantorBracket Ω₃ (kantorBracket Ω₁ Ω₂) = 0 ∧
+    kantorBracket Ω₁ (kantorBracket Ω₂ E1) +
+    kantorBracket Ω₂ (kantorBracket E1 Ω₁) +
+    kantorBracket E1 (kantorBracket Ω₁ Ω₂) = 0 ∧
+    kantorBracket Ω₁ (kantorBracket Ω₂ K2) +
+    kantorBracket Ω₂ (kantorBracket K2 Ω₁) +
+    kantorBracket K2 (kantorBracket Ω₁ Ω₂) = 0 := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext <;>
+    · simp only [kantorBracket, inj0, injP1, injM1, injP2, injM2,
+        zero_gm2, zero_gm1, zero_g0L, zero_g0R, zero_gp1, zero_gp2,
+        add_gm2, add_gm1, add_g0L, add_g0R, add_gp1, add_gp2,
+        Vec3.add_zero_vec, Vec3.zero_add_vec, Vec3.sub_zero_vec,
+        Vec3.zero_sub_vec, Vec3.neg_zero_vec,
+        Vec3.symCross_zero_left, Vec3.symCross_zero_right,
+        Vec3.adCross_zero_left, Vec3.adCross_zero_right,
+        Vec3.dot_zero_left, Vec3.dot_zero_right,
+        Vec3.smulLeft_zero, Vec3.zero_smulLeft,
+        Vec3.smulRight_zero, Vec3.zero_smulRight,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+      try simp only [Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+        Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z]
+      try noncomm_ring
+
+end NonCommutativeRing
+
+section CommutativeCollapse
+variable {K : Type u} [CommRing K]
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.2b (`commutative_3grade_cartan_curvature_closure`)**:
+Over any commutative ring `[CommRing K]`, the curvature of two 3-graded Cartan connections
+has identically zero Grade `+2` and Grade `-2` components. -/
+theorem commutative_3grade_cartan_curvature_closure
+    (ω₁L ω₁R ω₂L ω₂R : K) (u₁ v₁ u₂ v₂ : Vec3 K) :
+    let F := cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)
+    F.gp2 = 0 ∧ F.gm2 = 0 := by
+  refine ⟨?_, ?_⟩ <;>
+  · ext <;>
+    · simp only [cartanCurvature5D, kantorBracket, cartan3Grade,
+        Vec3.symCross, Vec3.cross, Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+        Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z]
+      ring
+
+end CommutativeCollapse
+
+end Kantor5Graded
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset

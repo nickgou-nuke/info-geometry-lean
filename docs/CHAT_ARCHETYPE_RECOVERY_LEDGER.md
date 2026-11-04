@@ -2491,7 +2491,11 @@ expectation of `Σ(N)`, and the existing QGT Robertson theorem bounds the
 curvature. The locked owner build succeeded. This supplies a concrete
 Hilbert-space realization of the anomaly-first block algebra; it does not yet
 construct an intertwining representation from the distinct Clifford/Krein
-owners or establish a Krein-valued QGT inequality.
+owners or establish a Krein-valued QGT inequality. The same owner also proves
+that `Σ(N)` is self-adjoint and that the expectation of `Gap(N) = Σ(N)^2` is
+`‖Σ(N) ψ‖²` for every Hilbert-space vector, hence nonnegative. This is positivity
+of the quadratic operator expectation on the positive Hilbert carrier, not a
+claim of a uniform spectral lower bound or a gap for the separate Krein form.
 
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 

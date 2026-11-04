@@ -93,6 +93,19 @@ theorem sum_mul_sum_of_pairwise_cross_zero (s : Finset ι) (f g : ι → B)
 
 variable [StarRing B]
 
+/-- A self-adjoint weight commuting with its channel generator also commutes
+with that generator's adjoint. This removes the redundant second local
+commutation hypothesis from weighted channel interfaces. -/
+theorem self_adjoint_weight_comm_star (c N : B)
+    (hc_star : star c = c) (hc : c * N = N * c) :
+    c * star N = star N * c := by
+  calc c * star N
+      = star c * star N := by rw [hc_star]
+    _ = star (N * c) := by rw [← star_mul]
+    _ = star (c * N) := by rw [hc]
+    _ = star N * star c := by rw [star_mul]
+    _ = star N * c := by rw [hc_star]
+
 /-- For any finite pairwise orthogonal family of regular nilpotent channels,
 the weighted chiral block square is the sum of the channel gaps weighted by
 the squares of their own weights. No weight is required to commute with another
@@ -124,6 +137,27 @@ theorem weighted_finite_block_sq_eq_gap_sum
   rw [weight_mul_weight (c i) (Phi (N i)) (Phi (N i))
       (comm_weight_Phi (c i) (N i) (h_comm i hi) (h_comm_star i hi)),
     Phi_sq_eq_Gap (N i) (h_nil i hi) (h_reg i hi)]
+
+/-- Self-adjoint-weight form of `weighted_finite_block_sq_eq_gap_sum`.
+Each weight commutes only with its own channel generator; self-adjointness
+supplies commutation with that channel's adjoint. No cross-channel weight
+commutation is assumed. -/
+theorem weighted_finite_block_sq_eq_gap_sum_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    (∑ i ∈ s, c i * Phi (N i)) * (∑ i ∈ s, c i * Phi (N i)) =
+      ∑ i ∈ s, (c i * c i) * Gap (N i) := by
+  apply weighted_finite_block_sq_eq_gap_sum s c N h_nil h_reg h_comm
+  · intro i hi
+    exact self_adjoint_weight_comm_star (c i) (N i)
+      (h_selfadjoint i hi) (h_comm i hi)
+  · exact h_cross
 
 /-- A channel's own gap fixes its weighted chiral block. -/
 theorem gap_mul_weighted_phi_self (c N : B)

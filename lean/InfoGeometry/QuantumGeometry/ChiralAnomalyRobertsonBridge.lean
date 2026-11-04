@@ -38,7 +38,7 @@ theorem Sigma_selfAdjoint (N : EndH) : star (Sigma N) = Sigma N := by
   change star (N * star N - star N * N) = N * star N - star N * N
   simp only [star_sub, star_mul, star_star]
 
-/-- The expectation of the anomaly-square support is the squared Hilbert norm
+/-- The expectation of the anomaly-square operator is the squared Hilbert norm
 of the anomalous state vector. In particular, it is nonnegative. -/
 theorem gap_expectation_eq_anomaly_norm_sq (N : EndH) (ψ : H) :
     (inner ℂ ψ (Gap N ψ)).re = ‖Sigma N ψ‖ ^ 2 := by
@@ -58,6 +58,26 @@ theorem gap_expectation_nonneg (N : EndH) (ψ : H) :
     0 ≤ (inner ℂ ψ (Gap N ψ)).re := by
   rw [gap_expectation_eq_anomaly_norm_sq]
   exact sq_nonneg _
+
+/-- The anomaly-square operator is self-adjoint. -/
+theorem Gap_selfAdjoint (N : EndH) : star (Gap N) = Gap N := by
+  simp [Gap, star_mul, Sigma_selfAdjoint]
+
+/-- When the chiral anomaly is a regular nilpotent pair, `Gap` is idempotent
+and its state expectation is the squared norm of the projected state. -/
+theorem regular_gap_expectation_eq_norm_sq (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    (inner ℂ ψ (Gap N ψ)).re = ‖Gap N ψ‖ ^ 2 := by
+  have h_adj : ContinuousLinearMap.adjoint (Gap N) = Gap N := by
+    rw [← ContinuousLinearMap.star_eq_adjoint]
+    exact Gap_selfAdjoint N
+  have h_inner := adjoint_inner_right (Gap N) ψ (Gap N ψ)
+  rw [h_adj, ← Gap_idem N h_nil h_reg] at h_inner
+  change (inner ℂ ψ (Gap N (Gap N ψ))).re = ‖Gap N ψ‖ ^ 2
+  rw [h_inner, inner_self_eq_norm_sq_to_K]
+  change (Complex.ofReal (‖Gap N ψ‖) ^ 2).re = ‖Gap N ψ‖ ^ 2
+  rw [← Complex.ofReal_pow]
+  exact Complex.ofReal_re _
 
 /-- The imaginary multiple of the symmetric chiral block is skew-adjoint. -/
 theorem imaginaryPhi_skewAdjoint (N : EndH) :

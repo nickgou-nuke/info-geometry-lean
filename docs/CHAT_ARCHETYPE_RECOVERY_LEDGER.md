@@ -4005,3 +4005,14 @@ nilpotent pairs with the Clifford algebra or prove a representation theorem.
 The locked owner build passed (3,129 jobs); the staged proof-proxy gate passed.
 The semantic-vacuity scan reported only three surface warnings: the existing
 `Mat2` alias and the two existing `rfl` projector formulas.
+
+The same finite realization is now transported back through
+`Cl11Matrix.cl11EquivMat` into the native `CliffordAlgebra q11` carrier.
+`raisingCl_regular_nilpotent` proves square-zero and regularity there, and
+`raisingCl_anomaly_gap_realization` proves the commutator identifies with the
+transported split generator and that its square and the symmetric block square
+are the Clifford carrier's unit. `loweringCl` is explicitly defined by
+transporting the matrix transpose; the statement does not assume this is a
+pre-existing Clifford star operation. The locked owner build passed (3,129
+jobs), and the staged proof-proxy gate passed. The semantic scan's three
+warnings are the same pre-existing alias and projector formula findings.

@@ -22,12 +22,25 @@ noncomputable section
 namespace InfoGeometry.Clifford.SplitAtom
 
 abbrev Mat2 := Cl11Matrix.Mat2
+abbrev Cl11 := CliffordAlgebra Cl11Matrix.q11
 abbrev I : Mat2 := Cl11Matrix.Eminus
 abbrev J : Mat2 := Cl11Matrix.Eplus
 abbrev K : Mat2 := -Cl11Matrix.J1
 abbrev Pplus : Mat2 := InfoGeometry.Algebra.HypercomplexTriad.Pplus
 abbrev Pminus : Mat2 := InfoGeometry.Algebra.HypercomplexTriad.Pminus
 abbrev raising : Mat2 := InfoGeometry.Algebra.HypercomplexTriad.N
+
+/-- The nilpotent seed transported from the matrix model into the native
+`Cl(1,1)` carrier by the existing algebra equivalence. -/
+noncomputable def raisingCl : Cl11 := Cl11Matrix.cl11EquivMat.symm raising
+
+/-- The opposite chiral seed, transported from the matrix transpose of the
+raising seed. This makes the chosen dual operation explicit on the carrier. -/
+noncomputable def loweringCl : Cl11 :=
+  Cl11Matrix.cl11EquivMat.symm (star raising)
+
+/-- The split generator transported into the native Clifford carrier. -/
+noncomputable def splitGeneratorCl : Cl11 := Cl11Matrix.cl11EquivMat.symm J
 
 @[simp] theorem I_sq : I * I = -(1 : Mat2) := by
   simpa using Cl11Matrix.Eminus_sq
@@ -123,6 +136,46 @@ theorem raising_anomaly_gap_realization :
     norm_num [raising, J, Cl11Matrix.Eplus,
       InfoGeometry.Algebra.HypercomplexTriad.N,
       Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Transporting the concrete seed pair through `Cl(1,1) ≃ₐ[ℝ] M₂(ℝ)`
+preserves square-zero and von Neumann regularity in the native Clifford
+carrier. The dual here is the matrix-transpose dual transported by the
+equivalence, not an assumed Clifford conjugation. -/
+theorem raisingCl_regular_nilpotent :
+    raisingCl * raisingCl = 0 ∧
+      raisingCl * loweringCl * raisingCl = raisingCl := by
+  apply And.intro
+  · apply Cl11Matrix.cl11EquivMat.injective
+    simp only [map_mul, map_zero, raisingCl,
+      AlgEquiv.apply_symm_apply]
+    exact InfoGeometry.Algebra.HypercomplexTriad.N_sq
+  · apply Cl11Matrix.cl11EquivMat.injective
+    simp only [map_mul, raisingCl, loweringCl,
+      AlgEquiv.apply_symm_apply]
+    exact raising_regular_nilpotent.2
+
+/-- The anomaly-first block identities hold in the native `Cl(1,1)` carrier:
+the commutator of the transported nilpotent pair is the split generator, and
+both its square and the symmetric chiral block square are the carrier unit. -/
+theorem raisingCl_anomaly_gap_realization :
+    (raisingCl * loweringCl - loweringCl * raisingCl) = splitGeneratorCl ∧
+      (raisingCl * loweringCl - loweringCl * raisingCl) *
+        (raisingCl * loweringCl - loweringCl * raisingCl) = 1 ∧
+      (raisingCl + loweringCl) * (raisingCl + loweringCl) = 1 := by
+  apply And.intro
+  · apply Cl11Matrix.cl11EquivMat.injective
+    simp only [map_sub, map_mul, raisingCl, loweringCl, splitGeneratorCl,
+      AlgEquiv.apply_symm_apply]
+    exact (raising_anomaly_gap_realization).1
+  apply And.intro
+  · apply Cl11Matrix.cl11EquivMat.injective
+    simp only [map_sub, map_mul, map_one, raisingCl, loweringCl,
+      AlgEquiv.apply_symm_apply]
+    exact (raising_anomaly_gap_realization).2.1
+  · apply Cl11Matrix.cl11EquivMat.injective
+    simp only [map_add, map_mul, map_one, raisingCl, loweringCl,
+      AlgEquiv.apply_symm_apply]
+    exact (raising_anomaly_gap_realization).2.2
 
 theorem Pplus_formula : Pplus = (1 / 2 : ℝ) • ((1 : Mat2) + J) := rfl
 

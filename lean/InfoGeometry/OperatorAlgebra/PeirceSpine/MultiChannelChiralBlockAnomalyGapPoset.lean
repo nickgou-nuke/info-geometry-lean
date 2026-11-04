@@ -1182,6 +1182,27 @@ def Sigma_w₃ (c₁ N₁ c₂ N₂ c₃ N₃ : B) : B :=
 def Gap_w₃ (c₁ N₁ c₂ N₂ c₃ N₃ : B) : B :=
   Gap_w₂ c₁ N₁ c₂ N₂ + (c₃ * c₃) * Gap N₃
 
+/-- Three-channel channel-selective filtering. The support of channel one
+extracts its weighted block from the full three-channel sum. Only each weight's
+commutation with its own nilpotent channel is required. -/
+theorem Gap_left_filter_Phi_w₃_channel1 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h1_nil : N₁ * N₁ = 0) (h1_reg : N₁ * star N₁ * N₁ = N₁)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    Gap N₁ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ = c₁ * Phi N₁ := by
+  dsimp [Phi_w₃]
+  rw [mul_add,
+    Gap_left_filter_Phi_w₂ c₁ N₁ c₂ N₂ h1_nil h1_reg
+      h12_ab h12_ba h12_asb h12_sab hc1 hcs1 hc2 hcs2,
+    Gap_mul_weighted_Phi_orthog N₁ c₃ N₃
+      h13_ab h13_ba h13_asb h13_sab hc3 hcs3,
+    add_zero]
+
 /-- **Three-channel weighted rotor–block product:**
     `J_w₃ * Φ_w₃` is the sum of the three squared-weight channel anomalies.
     Each weight commutes only with its own channel; cross-channel products use

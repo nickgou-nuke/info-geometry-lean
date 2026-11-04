@@ -118,6 +118,40 @@ theorem K_minus2_mem_tkkGrade_m2 (N_plus X : B)
   rw [K_minus2_eq_two_sandwich N_plus X h_nil]
   exact (peirceGradeMinus2Subgroup N_plus).nsmul_mem hG 2
 
+/-- The closure owner's positive Jordan-associator generator is homogeneous
+of adjoint degree `+2`, without additive torsion-freeness. -/
+theorem closure_K_plus2_mem_adjoint_grade (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.K_plus2 N_plus X ∈
+      OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.KKTAdjointGradeSubmodule
+        N_plus 2 := by
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+      (OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.K_plus2 N_plus X) =
+      (2 : ℤ) •
+        OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.K_plus2 N_plus X
+  simpa [two_nsmul] using
+    (OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.comm_Sigma_K_plus2
+      N_plus X h_nil h_reg)
+
+/-- The closure owner's negative Jordan-associator generator is homogeneous
+of adjoint degree `-2`, without additive torsion-freeness. -/
+theorem closure_K_minus2_mem_adjoint_grade (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.K_minus2 N_plus X ∈
+      OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.KKTAdjointGradeSubmodule
+        N_plus (-2) := by
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
+      (OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.K_minus2 N_plus X) =
+      (-2 : ℤ) •
+        OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.K_minus2 N_plus X
+  simpa [two_nsmul] using
+    (OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.comm_Sigma_K_minus2
+      N_plus X h_nil h_reg)
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion
 freeness ensures the integer adjoint grades identify those components. -/

@@ -262,6 +262,20 @@ theorem Sigma_mul_V_eq_Sigma (N_plus : B)
           change P N_plus - Q N_plus = P N_plus - Q N_plus
           rfl
 
+/-- The emergent support is also a right identity for the intrinsic grading:
+`V * Σ = Σ`, without introducing an ambient unit. -/
+theorem V_mul_Sigma_eq_Sigma (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    V N_plus * Sigma N_plus = Sigma N_plus := by
+  calc V N_plus * Sigma N_plus
+      = P N_plus * Sigma N_plus + Q N_plus * Sigma N_plus := by
+          rw [V, add_mul]
+    _ = P N_plus + -Q N_plus := by
+          rw [P_mul_Sigma N_plus h_nil h_reg, Q_mul_Sigma N_plus h_nil h_reg]
+    _ = Sigma N_plus := by
+          rw [Sigma, ← sub_eq_add_neg]
+
 /-!
 ### 2. Deriving the Two-Sheet Peirce Filtration, Spin Connection & Solder Frame from `N_+`
 -/
@@ -445,6 +459,43 @@ theorem framePhiV_mul_Sigma (N_plus X : B)
       wingMinus_mul_Sigma N_plus X h_nil h_reg,
       add_comm (-wingPlus N_plus X) (wingMinus N_plus X),
       ← sub_eq_add_neg, neg_sub]
+
+/-- Left multiplication by the intrinsic grading rotates the skew frame back
+to the symmetric frame: `Σ * J_V(X) = Φ_V(X)`. -/
+theorem Sigma_mul_frameJV_eq_framePhiV (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    Sigma N_plus * frameJV N_plus X = framePhiV N_plus X := by
+  dsimp [frameJV, framePhiV]
+  rw [mul_sub,
+      Sigma_mul_wingPlus N_plus X h_nil h_reg,
+      Sigma_mul_wingMinus N_plus X h_nil h_reg]
+  calc wingPlus N_plus X - -wingMinus N_plus X
+      = wingPlus N_plus X + wingMinus N_plus X := by
+          rw [sub_eq_add_neg, neg_neg]
+
+/-- Right multiplication by the intrinsic grading sends the skew frame to
+the negative symmetric frame: `J_V(X) * Σ = -Φ_V(X)`. -/
+theorem frameJV_mul_Sigma_eq_neg_framePhiV (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    frameJV N_plus X * Sigma N_plus = -framePhiV N_plus X := by
+  dsimp [frameJV, framePhiV]
+  rw [sub_mul,
+      wingPlus_mul_Sigma N_plus X h_nil h_reg,
+      wingMinus_mul_Sigma N_plus X h_nil h_reg,
+      sub_eq_add_neg,
+      ← neg_add]
+
+/-- The skew inter-sheet frame also has odd intrinsic Krein parity. -/
+theorem anticomm_Sigma_frameJV (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    anticomm (Sigma N_plus) (frameJV N_plus X) = 0 := by
+  dsimp [anticomm]
+  rw [Sigma_mul_frameJV_eq_framePhiV N_plus X h_nil h_reg,
+      frameJV_mul_Sigma_eq_neg_framePhiV N_plus X h_nil h_reg]
+  exact add_neg_cancel (framePhiV N_plus X)
 
 theorem anticomm_Sigma_framePhiV (N_plus X : B)
     (h_nil : N_plus * N_plus = 0)

@@ -2655,12 +2655,15 @@ polynomial identities.
   spectral triple, or spectral action. The transcript's assertion that this
   establishes Connes noncommutative geometry and a geometric mass mechanism is
   therefore stronger than the owner theorem.
-- **Potential claim narrowed:** `higgs_vacuum_minima_zero` proves the polynomial
-  vanishes at `ϕ = ±v`; `spectralHiggsPotential_nonneg` proves nonnegativity
-  when `λ ≥ 0`. The owner does not prove that these are the only zeros or
-  characterize global minimizers, and does not derive the polynomial from a
-  spectral action. The exact-minima and spontaneous-symmetry-breaking wording
-  in the transcript is not established by those two lemmas.
+- **Potential claim:** `higgs_vacuum_minima_zero` proves vanishing at `ϕ = ±v`,
+  and `spectralHiggsPotential_nonneg` proves nonnegativity when `λ ≥ 0`. I
+  added `spectralHiggsPotential_eq_zero_iff` and
+  `spectralHiggsPotential_global_minimizers`: for `λ > 0` in a linearly ordered
+  strict commutative ring, the zero set and global-minimizer set are exactly
+  `{v, -v}`. This characterizes the defined scalar polynomial; it does not
+  derive that polynomial from a spectral action or establish physical
+  spontaneous symmetry breaking. The locked owner build passed on 2026-11-04
+  (881 jobs, exit 0).
 - **Raychaudhuri claim reduced to arithmetic:**
   `raychaudhuriFocusingRate2` is a scalar expression and
   `raychaudhuri_scalar_rhs_nonpos` proves its sign under scalar inequalities.
@@ -2676,13 +2679,14 @@ polynomial identities.
   certification table, and repository-wide cleanliness assertions are
   transcript text, not local build evidence. The integer audit file checks
   examples and prints axiom dependencies but does not discharge the missing
-  geometric constructions.
+  geometric constructions. Remaining Section 121 formalization requires actual
+  carriers and maps for the claimed spectral/operator and light-sheet/entropy
+  geometry; the finite matrix record and scalar inequalities do not provide
+  those constructions.
 
-This is a source-to-owner audit, not a fresh kernel/build verification. The
-remaining Section 121 formalization work is to supply honest carriers and
-maps for any desired operator/spectral or geometric claims, and to prove exact
-potential minimizers only under assumptions that make the characterization
-true. No new theorem is inferred from the source's certificate labels.
+This entry combines source-to-owner audit with the targeted build evidence
+above. No analytic or geometric theorem is inferred from the source's
+certificate labels.
 
 ### 2026-11-04: Section 122 Sorkin / superposed-flux source-to-owner audit
 

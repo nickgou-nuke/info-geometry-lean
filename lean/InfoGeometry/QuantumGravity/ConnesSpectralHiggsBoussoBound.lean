@@ -103,6 +103,49 @@ theorem spectralHiggsPotential_nonneg [LinearOrder R] [IsStrictOrderedRing R]
   dsimp [spectralHiggsPotential]
   exact mul_nonneg h_lambda (sq_nonneg (ϕ^2 - v_vev^2))
 
+/-- For a strictly positive coupling, the potential vanishes exactly at the two
+algebraic vacuum values. This is a scalar polynomial characterization; it does
+not derive the potential from a spectral action. -/
+theorem spectralHiggsPotential_eq_zero_iff [LinearOrder R] [IsStrictOrderedRing R]
+    (lam_coupling v_vev ϕ : R) (h_lambda : 0 < lam_coupling) :
+    spectralHiggsPotential lam_coupling v_vev ϕ = 0 ↔
+      ϕ = v_vev ∨ ϕ = -v_vev := by
+  constructor
+  · intro h
+    have hprod : lam_coupling * (ϕ^2 - v_vev^2)^2 = 0 := by
+      simpa [spectralHiggsPotential] using h
+    have hfactor := mul_eq_zero.mp hprod
+    have hsquare : (ϕ^2 - v_vev^2)^2 = 0 := by
+      rcases hfactor with hzero | hzero
+      · exact (False.elim (h_lambda.ne' hzero))
+      · exact hzero
+    have hdiff : ϕ^2 - v_vev^2 = 0 := (sq_eq_zero_iff).mp hsquare
+    have hsq : ϕ^2 = v_vev^2 := sub_eq_zero.mp hdiff
+    exact sq_eq_sq_iff_eq_or_eq_neg.mp hsq
+  · rintro (rfl | rfl) <;> simp [spectralHiggsPotential]
+
+/-- With positive coupling, the global minimizers of the scalar potential are
+exactly `v` and `-v`. Nonnegativity gives the global bound, while the preceding
+zero characterization gives the converse. -/
+theorem spectralHiggsPotential_global_minimizers [LinearOrder R] [IsStrictOrderedRing R]
+    (lam_coupling v_vev ϕ : R) (h_lambda : 0 < lam_coupling) :
+    (∀ ψ, spectralHiggsPotential lam_coupling v_vev ϕ ≤
+      spectralHiggsPotential lam_coupling v_vev ψ) ↔
+      ϕ = v_vev ∨ ϕ = -v_vev := by
+  constructor
+  · intro hmin
+    have hvac : spectralHiggsPotential lam_coupling v_vev v_vev = 0 :=
+      (higgs_vacuum_minima_zero lam_coupling v_vev).1
+    have hle : spectralHiggsPotential lam_coupling v_vev ϕ ≤ 0 := by
+      simpa [hvac] using hmin v_vev
+    have hnonneg := spectralHiggsPotential_nonneg lam_coupling v_vev ϕ
+      (le_of_lt h_lambda)
+    exact (spectralHiggsPotential_eq_zero_iff lam_coupling v_vev ϕ h_lambda).mp
+      (le_antisymm hle hnonneg)
+  · intro hroot ψ
+    rw [spectralHiggsPotential_eq_zero_iff lam_coupling v_vev ϕ h_lambda |>.mpr hroot]
+    exact spectralHiggsPotential_nonneg lam_coupling v_vev ψ (le_of_lt h_lambda)
+
 /-! ### 3. Scalar Inequalities -/
 
 /-- Scalar polynomial appearing as a doubled Raychaudhuri right-hand side.

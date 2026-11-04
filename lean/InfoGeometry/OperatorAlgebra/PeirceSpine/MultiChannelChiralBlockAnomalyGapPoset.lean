@@ -1140,6 +1140,126 @@ def Sigma_w₂ (c_a N_a c_b N_b : B) : B :=
 def Gap_w₂ (c_a N_a c_b N_b : B) : B :=
   (c_a * c_a) * Gap N_a + (c_b * c_b) * Gap N_b
 
+/-- The unweighted total anomaly rotates the weighted two-channel block into
+    the corresponding weighted rotor. The weights need commute only with
+    their own channel generators. -/
+theorem Sigma_tot_mul_Phi_w₂ (c_a N_a c_b N_b : B)
+    (h_nil_a : N_a * N_a = 0) (h_reg_a : N_a * star N_a * N_a = N_a)
+    (h_nil_b : N_b * N_b = 0) (h_reg_b : N_b * star N_b * N_b = N_b)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_a : c_a * N_a = N_a * c_a) (hcs_a : c_a * star N_a = star N_a * c_a)
+    (hc_b : c_b * N_b = N_b * c_b) (hcs_b : c_b * star N_b = star N_b * c_b) :
+    Sigma (N_a + N_b) * Phi_w₂ c_a N_a c_b N_b =
+      J_w₂ c_a N_a c_b N_b := by
+  have hSigmaAdd : Sigma (N_a + N_b) = Sigma N_a + Sigma N_b := by
+    exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_add
+      N_a N_b h_asb h_sab
+  have hOwnA : Sigma N_a * (c_a * Phi N_a) = c_a * J N_a := by
+    have hcPhi := comm_weight_Phi c_a N_a hc_a hcs_a
+    have hcJ := comm_weight_J c_a N_a hc_a hcs_a
+    calc Sigma N_a * (c_a * Phi N_a)
+        = Sigma N_a * (Phi N_a * c_a) := by rw [hcPhi]
+      _ = (Sigma N_a * Phi N_a) * c_a := by rw [← mul_assoc]
+      _ = J N_a * c_a := by rw [Sigma_mul_Phi N_a h_nil_a h_reg_a]
+      _ = c_a * J N_a := by rw [← hcJ]
+  have hOwnB : Sigma N_b * (c_b * Phi N_b) = c_b * J N_b := by
+    have hcPhi := comm_weight_Phi c_b N_b hc_b hcs_b
+    have hcJ := comm_weight_J c_b N_b hc_b hcs_b
+    calc Sigma N_b * (c_b * Phi N_b)
+        = Sigma N_b * (Phi N_b * c_b) := by rw [hcPhi]
+      _ = (Sigma N_b * Phi N_b) * c_b := by rw [← mul_assoc]
+      _ = J N_b * c_b := by rw [Sigma_mul_Phi N_b h_nil_b h_reg_b]
+      _ = c_b * J N_b := by rw [← hcJ]
+  have hCrossAB : Sigma N_a * (c_b * Phi N_b) = 0 := by
+    have hcPhi := comm_weight_Phi c_b N_b hc_b hcs_b
+    have hCross : Sigma N_a * Phi N_b = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_Phi_orthog
+        N_a N_b h_ab h_ba h_asb h_sab
+    calc Sigma N_a * (c_b * Phi N_b)
+        = Sigma N_a * (Phi N_b * c_b) := by rw [hcPhi]
+      _ = (Sigma N_a * Phi N_b) * c_b := by rw [← mul_assoc]
+      _ = 0 := by rw [hCross, zero_mul]
+  have hCrossBA : Sigma N_b * (c_a * Phi N_a) = 0 := by
+    have hcPhi := comm_weight_Phi c_a N_a hc_a hcs_a
+    have hCross : Sigma N_b * Phi N_a = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_Phi_orthog
+        N_b N_a h_ba h_ab (N_b_mul_star_N_a N_a N_b h_asb)
+        (star_N_b_mul_N_a N_a N_b h_sab)
+    calc Sigma N_b * (c_a * Phi N_a)
+        = Sigma N_b * (Phi N_a * c_a) := by rw [hcPhi]
+      _ = (Sigma N_b * Phi N_a) * c_a := by rw [← mul_assoc]
+      _ = 0 := by rw [hCross, zero_mul]
+  rw [hSigmaAdd]
+  dsimp [Phi_w₂, J_w₂]
+  rw [mul_add, add_mul, add_mul, hOwnA, hCrossBA, hCrossAB, hOwnB]
+  abel
+
+/-- The same total anomaly rotates the weighted rotor back into the weighted
+    block, completing the two-channel anomaly action. -/
+theorem Sigma_tot_mul_J_w₂ (c_a N_a c_b N_b : B)
+    (h_nil_a : N_a * N_a = 0) (h_reg_a : N_a * star N_a * N_a = N_a)
+    (h_nil_b : N_b * N_b = 0) (h_reg_b : N_b * star N_b * N_b = N_b)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_a : c_a * N_a = N_a * c_a) (hcs_a : c_a * star N_a = star N_a * c_a)
+    (hc_b : c_b * N_b = N_b * c_b) (hcs_b : c_b * star N_b = star N_b * c_b) :
+    Sigma (N_a + N_b) * J_w₂ c_a N_a c_b N_b =
+      Phi_w₂ c_a N_a c_b N_b := by
+  have hSigmaAdd : Sigma (N_a + N_b) = Sigma N_a + Sigma N_b := by
+    exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_add
+      N_a N_b h_asb h_sab
+  have hOwnA : Sigma N_a * (c_a * J N_a) = c_a * Phi N_a := by
+    have hcJ := comm_weight_J c_a N_a hc_a hcs_a
+    have hcPhi := comm_weight_Phi c_a N_a hc_a hcs_a
+    calc Sigma N_a * (c_a * J N_a)
+        = Sigma N_a * (J N_a * c_a) := by rw [hcJ]
+      _ = (Sigma N_a * J N_a) * c_a := by rw [← mul_assoc]
+      _ = Phi N_a * c_a := by rw [Sigma_mul_J N_a h_nil_a h_reg_a]
+      _ = c_a * Phi N_a := by rw [← hcPhi]
+  have hOwnB : Sigma N_b * (c_b * J N_b) = c_b * Phi N_b := by
+    have hcJ := comm_weight_J c_b N_b hc_b hcs_b
+    have hcPhi := comm_weight_Phi c_b N_b hc_b hcs_b
+    calc Sigma N_b * (c_b * J N_b)
+        = Sigma N_b * (J N_b * c_b) := by rw [hcJ]
+      _ = (Sigma N_b * J N_b) * c_b := by rw [← mul_assoc]
+      _ = Phi N_b * c_b := by rw [Sigma_mul_J N_b h_nil_b h_reg_b]
+      _ = c_b * Phi N_b := by rw [← hcPhi]
+  have hCrossAB : Sigma N_a * (c_b * J N_b) = 0 := by
+    have hcJ := comm_weight_J c_b N_b hc_b hcs_b
+    have hCrossN : Sigma N_a * N_b = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_orthog
+        N_a N_b h_ab h_sab
+    have hCrossStar : Sigma N_a * star N_b = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_star_orthog
+        N_a N_b h_ba h_asb
+    have hCross : Sigma N_a * J N_b = 0 := by
+      dsimp [J]
+      rw [mul_sub, hCrossN, hCrossStar, sub_self]
+    calc Sigma N_a * (c_b * J N_b)
+        = Sigma N_a * (J N_b * c_b) := by rw [hcJ]
+      _ = (Sigma N_a * J N_b) * c_b := by rw [← mul_assoc]
+      _ = 0 := by rw [hCross, zero_mul]
+  have hCrossBA : Sigma N_b * (c_a * J N_a) = 0 := by
+    have hcJ := comm_weight_J c_a N_a hc_a hcs_a
+    have hCrossN : Sigma N_b * N_a = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_orthog
+        N_b N_a h_ba (star_N_b_mul_N_a N_a N_b h_sab)
+    have hCrossStar : Sigma N_b * star N_a = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_star_orthog
+        N_b N_a h_ab (N_b_mul_star_N_a N_a N_b h_asb)
+    have hCross : Sigma N_b * J N_a = 0 := by
+      dsimp [J]
+      rw [mul_sub, hCrossN, hCrossStar, sub_self]
+    calc Sigma N_b * (c_a * J N_a)
+        = Sigma N_b * (J N_a * c_a) := by rw [hcJ]
+      _ = (Sigma N_b * J N_a) * c_a := by rw [← mul_assoc]
+      _ = 0 := by rw [hCross, zero_mul]
+  rw [hSigmaAdd]
+  dsimp [Phi_w₂, J_w₂]
+  rw [mul_add, add_mul, add_mul, hOwnA, hCrossBA, hCrossAB, hOwnB]
+  abel
+
 /-- **`WMC₄` Weighted Rotor–Block Product Generates the Quadratic Weighted Anomaly:**
     `J_w₂ * Φ_w₂ = c_a² Σ(N_a) + c_b² Σ(N_b) = Σ_w₂`. -/
 theorem J_w₂_mul_Phi_w₂ (c_a N_a c_b N_b : B)
@@ -1264,6 +1384,56 @@ theorem Gap_left_filter_Phi_w₂ (c_a N_a c_b N_b : B)
       Gap_mul_weighted_Phi_same c_a N_a h_nil_a h_reg_a hc_a hcs_a,
       Gap_mul_weighted_Phi_orthog N_a c_b N_b h_ab h_ba h_asb h_sab hc_b hcs_b,
       add_zero]
+
+/-- **`WMC₆` Weighted spectral-support filter:** the unweighted support of
+    channel `a` extracts its squared weight from the weighted block square:
+    `Gap(N_a) * Φ_w₂² = c_a² * Gap(N_a)`. No weight commutes with the
+    opposite channel. -/
+theorem Gap_left_filter_Phi_w₂_sq (c_a N_a c_b N_b : B)
+    (h_nil_a : N_a * N_a = 0) (h_reg_a : N_a * star N_a * N_a = N_a)
+    (h_nil_b : N_b * N_b = 0) (h_reg_b : N_b * star N_b * N_b = N_b)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_a : c_a * N_a = N_a * c_a) (hcs_a : c_a * star N_a = star N_a * c_a)
+    (hc_b : c_b * N_b = N_b * c_b) (hcs_b : c_b * star N_b = star N_b * c_b) :
+    Gap N_a * (Phi_w₂ c_a N_a c_b N_b * Phi_w₂ c_a N_a c_b N_b) =
+      (c_a * c_a) * Gap N_a := by
+  rw [Phi_w₂_sq_eq_Gap_w₂ c_a N_a c_b N_b
+      h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab hc_a hcs_a hc_b hcs_b]
+  dsimp [Gap_w₂]
+  have hGapA : Gap N_a * ((c_a * c_a) * Gap N_a) =
+      (c_a * c_a) * Gap N_a := by
+    have hComm := comm_weight_Gap c_a N_a hc_a hcs_a
+    have hCommSq : (c_a * c_a) * Gap N_a = Gap N_a * (c_a * c_a) := by
+      calc (c_a * c_a) * Gap N_a
+          = c_a * (c_a * Gap N_a) := by rw [mul_assoc]
+        _ = c_a * (Gap N_a * c_a) := by rw [hComm]
+        _ = (c_a * Gap N_a) * c_a := by rw [← mul_assoc]
+        _ = (Gap N_a * c_a) * c_a := by rw [hComm]
+        _ = Gap N_a * (c_a * c_a) := by rw [← mul_assoc]
+    calc Gap N_a * ((c_a * c_a) * Gap N_a)
+        = (Gap N_a * (c_a * c_a)) * Gap N_a := by rw [← mul_assoc]
+      _ = ((c_a * c_a) * Gap N_a) * Gap N_a := by rw [hCommSq]
+      _ = (c_a * c_a) * (Gap N_a * Gap N_a) := by rw [← mul_assoc]
+      _ = (c_a * c_a) * Gap N_a := by
+        rw [Gap_idem N_a h_nil_a h_reg_a]
+  have hCross : Gap N_a * ((c_b * c_b) * Gap N_b) = 0 := by
+    have hComm := comm_weight_Gap c_b N_b hc_b hcs_b
+    have hGapOrth : Gap N_a * Gap N_b = 0 := by
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap_mul_Gap_orthog
+        N_a N_b h_ab h_ba h_asb h_sab
+    have hCommSq : (c_b * c_b) * Gap N_b = Gap N_b * (c_b * c_b) := by
+      calc (c_b * c_b) * Gap N_b
+          = c_b * (c_b * Gap N_b) := by rw [mul_assoc]
+        _ = c_b * (Gap N_b * c_b) := by rw [hComm]
+        _ = (c_b * Gap N_b) * c_b := by rw [← mul_assoc]
+        _ = (Gap N_b * c_b) * c_b := by rw [hComm]
+        _ = Gap N_b * (c_b * c_b) := by rw [← mul_assoc]
+    calc Gap N_a * ((c_b * c_b) * Gap N_b)
+        = Gap N_a * (Gap N_b * (c_b * c_b)) := by rw [hCommSq]
+      _ = (Gap N_a * Gap N_b) * (c_b * c_b) := by rw [← mul_assoc]
+      _ = 0 := by rw [hGapOrth, zero_mul]
+  rw [mul_add, hGapA, hCross, add_zero]
 
 /-- **`WMC₇` Action of `Gap_w₂` on the `a`-th Weighted Channel Mode:**
     `Gap_w₂ * (c_a * Φ(N_a)) = c_a² * (c_a * Φ(N_a))`. -/
@@ -1843,6 +2013,135 @@ theorem weighted_J_sum_mul_Phi_sum {ι : Type*}
       exact weighted_single_J_mul_Phi (c i) (N i) (h_nil i hi)
         (h_weight i hi) (h_weight_star i hi)
 
+/-- The unweighted finite anomaly sum rotates the weighted block sum into
+the weighted rotor sum. The coefficient is only required to commute with
+its own channel. -/
+theorem Sigma_sum_mul_weighted_Phi_sum {ι : Type*}
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_orth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+        N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (h_weight : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_weight_star : ∀ i ∈ s, c i * star (N i) = star (N i) * c i) :
+    (∑ i ∈ s, Sigma (N i)) * (∑ i ∈ s, c i * Phi (N i)) =
+      ∑ i ∈ s, c i * J (N i) := by
+  calc
+    (∑ i ∈ s, Sigma (N i)) * (∑ i ∈ s, c i * Phi (N i)) =
+        ∑ i ∈ s, Sigma (N i) * (c i * Phi (N i)) :=
+      sum_mul_sum_of_pairwise_cross_annihilating s
+        (fun i => Sigma (N i)) (fun i => c i * Phi (N i)) (by
+          intro i hi j hj hij
+          obtain ⟨hij₁, hji₁, hij₂, hij₃⟩ := h_orth i hi j hj hij
+          have hcross := Sigma_mul_Phi_orthog (N i) (N j)
+            hij₁ hji₁ hij₂ hij₃
+          calc Sigma (N i) * (c j * Phi (N j)) =
+              (Sigma (N i) * Phi (N j)) * c j := by
+                rw [comm_weight_Phi (c j) (N j) (h_weight j hj)
+                  (h_weight_star j hj), ← mul_assoc]
+            _ = 0 := by rw [hcross, zero_mul])
+    _ = ∑ i ∈ s, c i * J (N i) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      have hcSigma := comm_weight_Sigma (c i) (N i)
+        (h_weight i hi) (h_weight_star i hi)
+      calc Sigma (N i) * (c i * Phi (N i)) =
+          c i * (Sigma (N i) * Phi (N i)) := by
+            calc Sigma (N i) * (c i * Phi (N i)) =
+                (Sigma (N i) * c i) * Phi (N i) := by rw [mul_assoc]
+              _ = (c i * Sigma (N i)) * Phi (N i) := by rw [hcSigma]
+              _ = c i * (Sigma (N i) * Phi (N i)) := by rw [mul_assoc]
+        _ = c i * J (N i) := by
+          rw [Sigma_mul_Phi (N i) (h_nil i hi) (h_reg i hi)]
+
+/-- The same finite anomaly sum rotates the weighted rotor sum back into
+the weighted block sum. -/
+theorem Sigma_sum_mul_weighted_J_sum {ι : Type*}
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_orth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+        N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (h_weight : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_weight_star : ∀ i ∈ s, c i * star (N i) = star (N i) * c i) :
+    (∑ i ∈ s, Sigma (N i)) * (∑ i ∈ s, c i * J (N i)) =
+      ∑ i ∈ s, c i * Phi (N i) := by
+  calc
+    (∑ i ∈ s, Sigma (N i)) * (∑ i ∈ s, c i * J (N i)) =
+        ∑ i ∈ s, Sigma (N i) * (c i * J (N i)) :=
+      sum_mul_sum_of_pairwise_cross_annihilating s
+        (fun i => Sigma (N i)) (fun i => c i * J (N i)) (by
+          intro i hi j hj hij
+          obtain ⟨hij₁, hji₁, hij₂, hij₃⟩ := h_orth i hi j hj hij
+          have hcross : Sigma (N i) * J (N j) = 0 := by
+            have hN : Sigma (N i) * N j = 0 := by
+              simpa [Sigma, MultiChannelAnomalyGapPoset.Sigma,
+                MultiChannelAnomalyGapPoset.comm] using
+                (MultiChannelAnomalyGapPoset.Sigma_mul_orthog
+                  (N i) (N j) hij₁ hij₃)
+            have hSN : Sigma (N i) * star (N j) = 0 := by
+              simpa [Sigma, MultiChannelAnomalyGapPoset.Sigma,
+                MultiChannelAnomalyGapPoset.comm] using
+                (MultiChannelAnomalyGapPoset.Sigma_mul_star_orthog
+                  (N i) (N j) hji₁ hij₂)
+            dsimp [J]
+            rw [mul_sub, hN, hSN, sub_self]
+          calc Sigma (N i) * (c j * J (N j)) =
+              (Sigma (N i) * J (N j)) * c j := by
+                rw [comm_weight_J (c j) (N j) (h_weight j hj)
+                  (h_weight_star j hj), ← mul_assoc]
+            _ = 0 := by rw [hcross, zero_mul])
+    _ = ∑ i ∈ s, c i * Phi (N i) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      have hcSigma := comm_weight_Sigma (c i) (N i)
+        (h_weight i hi) (h_weight_star i hi)
+      calc Sigma (N i) * (c i * J (N i)) =
+          c i * (Sigma (N i) * J (N i)) := by
+            calc Sigma (N i) * (c i * J (N i)) =
+                (Sigma (N i) * c i) * J (N i) := by rw [mul_assoc]
+              _ = (c i * Sigma (N i)) * J (N i) := by rw [hcSigma]
+              _ = c i * (Sigma (N i) * J (N i)) := by rw [mul_assoc]
+        _ = c i * Phi (N i) := by
+          rw [Sigma_mul_J (N i) (h_nil i hi) (h_reg i hi)]
+
+/-- Self-adjoint channel-local weights suffice for anomaly rotation: commutation
+with each adjoint channel follows from commutation with that channel's
+nilpotent. No cross-channel weight commutation is required. -/
+theorem Sigma_sum_mul_weighted_Phi_sum_self_adjoint {ι : Type*}
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_orth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+        N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (h_weight_star : ∀ i ∈ s, star (c i) = c i)
+    (h_weight : ∀ i ∈ s, c i * N i = N i * c i) :
+    (∑ i ∈ s, Sigma (N i)) * (∑ i ∈ s, c i * Phi (N i)) =
+      ∑ i ∈ s, c i * J (N i) := by
+  exact Sigma_sum_mul_weighted_Phi_sum s c N h_nil h_reg h_orth h_weight
+    (fun i hi => comm_star_of_self_adjoint (c i) (N i)
+      (h_weight_star i hi) (h_weight i hi))
+
+/-- Self-adjoint channel-local weights also suffice for the reverse anomaly
+rotation from weighted rotors to weighted blocks. -/
+theorem Sigma_sum_mul_weighted_J_sum_self_adjoint {ι : Type*}
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_orth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+        N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (h_weight_star : ∀ i ∈ s, star (c i) = c i)
+    (h_weight : ∀ i ∈ s, c i * N i = N i * c i) :
+    (∑ i ∈ s, Sigma (N i)) * (∑ i ∈ s, c i * J (N i)) =
+      ∑ i ∈ s, c i * Phi (N i) := by
+  exact Sigma_sum_mul_weighted_J_sum s c N h_nil h_reg h_orth h_weight
+    (fun i hi => comm_star_of_self_adjoint (c i) (N i)
+      (h_weight_star i hi) (h_weight i hi))
+
 /-- The reversed finite weighted product is the negative of the summed
 quadratic anomaly. -/
 theorem weighted_Phi_sum_mul_J_sum {ι : Type*}
@@ -1993,6 +2292,49 @@ theorem Gap_mul_weighted_J_same (c N : B)
     _ = (Gap N * J N) * c := by rw [← mul_assoc]
     _ = J N * c := by rw [Gap_mul_J N h_nil h_reg]
     _ = c * J N := by rw [← hcJ]
+
+/-- **Finite weighted block support action.** The sum of channel gaps with
+    quadratic weights sends the weighted block sum to its cubic-weighted
+    form. Each weight commutes only with its own channel and adjoint. -/
+theorem weighted_gap_sum_mul_Phi_sum {ι : Type*}
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_orth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+        N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (h_weight : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_weight_star : ∀ i ∈ s, c i * star (N i) = star (N i) * c i) :
+    (∑ i ∈ s, (c i * c i) * Gap (N i)) *
+      (∑ i ∈ s, c i * Phi (N i)) =
+      ∑ i ∈ s, cube (c i) * Phi (N i) := by
+  calc
+    (∑ i ∈ s, (c i * c i) * Gap (N i)) *
+        (∑ i ∈ s, c i * Phi (N i)) =
+        ∑ i ∈ s, ((c i * c i) * Gap (N i)) * (c i * Phi (N i)) :=
+      sum_mul_sum_of_pairwise_cross_annihilating s
+        (fun i => (c i * c i) * Gap (N i))
+        (fun i => c i * Phi (N i)) (by
+          intro i hi j hj hij
+          obtain ⟨hij₁, hji₁, hij₂, hij₃⟩ := h_orth i hi j hj hij
+          exact weighted_cross_zero (c i * c i) (Gap (N i)) (c j) (Phi (N j))
+            (Gap_mul_Phi_orthog (N i) (N j) hij₁ hji₁ hij₂ hij₃)
+            (comm_weight_Phi (c j) (N j) (h_weight j hj) (h_weight_star j hj)))
+    _ = ∑ i ∈ s, cube (c i) * Phi (N i) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      calc
+        ((c i * c i) * Gap (N i)) * (c i * Phi (N i)) =
+            (c i * c i) * (c i * Phi (N i)) := by
+          calc
+            ((c i * c i) * Gap (N i)) * (c i * Phi (N i)) =
+                (c i * c i) * (Gap (N i) * (c i * Phi (N i))) := by rw [mul_assoc]
+            _ = (c i * c i) * (c i * Phi (N i)) := by
+              rw [Gap_mul_weighted_Phi_same (c i) (N i) (h_nil i hi) (h_reg i hi)
+                (h_weight i hi) (h_weight_star i hi)]
+        _ = cube (c i) * Phi (N i) := by
+          dsimp [cube]
+          noncomm_ring
 
 theorem weighted_gap_sum_mul_J_sum {ι : Type*}
     (s : Finset ι) (c N : ι → B)

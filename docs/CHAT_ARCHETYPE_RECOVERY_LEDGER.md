@@ -3282,6 +3282,15 @@ associator quartet under these same reduced assumptions through
 `weighted_finite_JordanAssoc_chiral_quartet_of_self_adjoint_weights`. Its
 locked build passed (845 jobs).
 
+The multi-channel owner now also proves the finite anomaly action on weighted
+block and rotor sums: `Sigma_sum_mul_weighted_Phi_sum` and
+`Sigma_sum_mul_weighted_J_sum`. Their self-adjoint-weight variants derive
+commutation with each channel adjoint from self-adjointness and commutation
+with that channel's nilpotent. Cross-channel terms use only primitive channel
+orthogonality; no weight is required to commute with a different channel.
+The locked owner build passed (1,550 jobs). These statements concern the
+algebraic left action of the summed anomaly, not analytic spectral data.
+
 ### 2026-11-04: Finite-family anomaly-first support and gap additivity
 
 `finite_channel_sum_sigma_add` and `finite_channel_sum_gap_add` in

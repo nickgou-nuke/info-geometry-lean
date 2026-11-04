@@ -3282,6 +3282,22 @@ associator quartet under these same reduced assumptions through
 `weighted_finite_JordanAssoc_chiral_quartet_of_self_adjoint_weights`. Its
 locked build passed (845 jobs).
 
+### 2026-11-04: Finite-family anomaly-first support and gap additivity
+
+`finite_channel_sum_sigma_add` and `finite_channel_sum_gap_add` in
+[`FiniteWeightedMultiChannelGap.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/FiniteWeightedMultiChannelGap.lean)
+give the arbitrary-finite-family version of the anomaly-first dependency
+`Σ(N) = [N,N*]`, `Gap(N) = Σ(N)²`: under pairwise primitive orthogonality,
+both the anomaly and its square add over the family. The theorem statements
+qualify `MultiChannelAnomalyGapPoset` explicitly because this owner also opens
+the separate weighted-Jordan namespace, which defines homonymous operators.
+The new declarations were added to
+[`FiniteWeightedMultiChannelGapAudit.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/FiniteWeightedMultiChannelGapAudit.lean)
+for axiom inspection. This is finite associative-ring algebra; it does not
+assert analytic spectrum, positivity, or a physical gap. The targeted locked
+build passed (1,553 jobs), the staged proof-proxy gate passed, and the
+semantic-vacuity audit reported zero findings.
+
 The current-thread weighted-gap continuation claimed extension from three
 channels to arbitrary finite families. The previous PeirceSpine owner had an
 explicit three-channel theorem but no `Finset`-indexed weighted square. It now

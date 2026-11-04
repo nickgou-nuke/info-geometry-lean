@@ -226,6 +226,22 @@ theorem ofStage_intertwines_two_sheeted_tetraktys (n : ℕ) (P A C X : Stage n) 
     map_genPhi (ofStage n) P A C, map_genJ (ofStage n) P A C, map_genV (ofStage n) P A C,
     map_genSig (ofStage n) P A C, map_derivSqPhi (ofStage n) P A C X⟩
 
+/-- The canonical map into the actual Cl(1,1) algebraic direct limit preserves
+nonvanishing of the two-sheeted quadratic coupling. This uses injectivity of
+the matrix block-doubling bonds and the established colimit intertwining law. -/
+theorem ofStage_preserves_nonzero_two_sheeted_quadratic_coupling
+    (n : ℕ) (P A C : Stage n)
+    (hV : opQuadraticCoupling P A C ≠ 0) :
+    opQuadraticCoupling (ofStage n P) (ofStage n A) (ofStage n C) ≠ 0 := by
+  intro hzero
+  apply hV
+  apply directLimitOf_injective stageBond (fun k => matStageEmbed_injective k) n
+  calc ofStage n (opQuadraticCoupling P A C)
+      = opQuadraticCoupling (ofStage n P) (ofStage n A) (ofStage n C) :=
+          (ofStage_intertwines_two_sheeted_tetraktys n P A C 0).2.2.2.2.2.1
+    _ = 0 := hzero
+    _ = ofStage n 0 := by simp
+
 /-- Stage-bonding coherence in `Limit` for the two-sheeted Peirce Tetraktys and its
 double-commutator operator `derivSqPhi`. -/
 theorem ofStage_bond_two_sheeted_tetraktys (n : ℕ) (P A C X : Stage n) :

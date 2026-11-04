@@ -1870,6 +1870,20 @@ theorem comm_G_plus2_G_minus2_in_G_0 (N_plus X Y : B)
   exact kkt_comm_extremal_into_G0_helper N_plus (star N_plus) (P N_plus) (Q N_plus) X Y
     rfl rfl hPN hMP hQM hNQ
 
+/-- The opposite extremal Jordan-associator seed generators bracket back to
+four times the parity anomaly. This is the seed-level normalization of the
+grade-zero closure formula. -/
+theorem comm_K_plus2_seed_K_minus2_seed (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
+      (4 : ℕ) • Sigma N_plus := by
+  rw [K_plus2_seed N_plus h_nil h_reg, K_minus2_seed N_plus h_nil h_reg]
+  dsimp only [OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm,
+    OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma]
+  simp only [two_nsmul]
+  noncomm_ring
+
 omit [StarRing B] in
 /-- The extremal `+2` sandwich sector is abelian because each product contains
 the square-zero generator in the middle. -/

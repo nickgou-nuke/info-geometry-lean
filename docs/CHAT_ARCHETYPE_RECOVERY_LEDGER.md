@@ -3580,3 +3580,12 @@ therefore remains nonzero after one `A ↦ A ⊗ I₂` transition. This is a
 stage-to-stage algebraic result; it does not establish nonvanishing in the
 separate `Cl11TensorTowerLimit.Limit`, nor any numerical or analytic gap.
 The targeted locked build of the canonical owner passed (9,121 jobs).
+
+The canonical owner now also proves
+`ofStage_preserves_nonzero_two_sheeted_quadratic_coupling`: the actual map
+`Cl11TensorTowerLimit.ofStage n` is injective by the existing direct-limit
+injectivity theorem for the matrix tower, and it intertwines
+`opQuadraticCoupling`. Thus a nonzero finite-stage coupling remains nonzero in
+the specified algebraic direct limit. This is conditional on a nonzero finite
+stage input and says nothing about a numerical or analytic spectral gap. The
+updated locked owner build passed (9,121 jobs).

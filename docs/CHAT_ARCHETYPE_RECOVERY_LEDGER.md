@@ -3375,3 +3375,21 @@ covered by `blockLower_idempotent_intervention_synthesis` in
 [`BlockTriangularIntervention.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BlockTriangularIntervention.lean),
 as recorded above; that owner does not formalize a learned attention model or
 the paper's empirical claims.
+
+### 2026-11-04: XLVIII stagewise gap factorization and dissipator stationarity
+
+The injective tower owner
+[`PeirceOperatorTower.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceOperatorTower.lean)
+now includes `shifted_mass_factorization` and
+`reflexive_pair_gap_factorization_and_stationarity`. At each finite stage of an
+injective ring tower, the reflexive square-zero pair has a nonzero idempotent
+Jordan mass, the shifted quadratic product factors as
+`(μ - E)(μ + E) = μ²(1 - M) + (μ² - 1)M` for integer `μ`, and the existing
+cross-branch dissipator annihilates that mass. This is an algebraic polynomial
+factorization, not an analytic resolvent or a spectral-pole theorem.
+
+The injectivity hypothesis is essential for the nonzero conclusion: the
+separate `InductiveStarColimitCone` permits noninjective maps, so the XLVIII
+claim that a nonzero base mass persists through every such cone is not promoted
+without an image-nonzero assumption. Nor does this tower formalize a specific
+tensor-product/block-doubling functor or prove an analytic continuum mass gap.

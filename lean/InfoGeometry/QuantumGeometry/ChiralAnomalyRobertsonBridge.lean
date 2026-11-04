@@ -25,11 +25,39 @@ namespace InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
 open InfoGeometry.QuantumGeometry.Projective
 open InfoGeometry.QuantumGeometry.TensorBridge
 open OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset
+open ContinuousLinearMap
+open InnerProductSpace
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
   [CompleteSpace H]
 
 local notation "EndH" => H →L[ℂ] H
+
+/-- The parity anomaly `[N, N*]` is self-adjoint on the Hilbert operator space. -/
+theorem Sigma_selfAdjoint (N : EndH) : star (Sigma N) = Sigma N := by
+  change star (N * star N - star N * N) = N * star N - star N * N
+  simp only [star_sub, star_mul, star_star]
+
+/-- The expectation of the anomaly-square support is the squared Hilbert norm
+of the anomalous state vector. In particular, it is nonnegative. -/
+theorem gap_expectation_eq_anomaly_norm_sq (N : EndH) (ψ : H) :
+    (inner ℂ ψ (Gap N ψ)).re = ‖Sigma N ψ‖ ^ 2 := by
+  have h_adj : ContinuousLinearMap.adjoint (Sigma N) = Sigma N := by
+    rw [← ContinuousLinearMap.star_eq_adjoint]
+    exact Sigma_selfAdjoint N
+  have h_inner := adjoint_inner_right (Sigma N) ψ (Sigma N ψ)
+  rw [h_adj] at h_inner
+  change (inner ℂ ψ (Sigma N (Sigma N ψ))).re = ‖Sigma N ψ‖ ^ 2
+  rw [h_inner, inner_self_eq_norm_sq_to_K]
+  change (Complex.ofReal (‖Sigma N ψ‖) ^ 2).re = ‖Sigma N ψ‖ ^ 2
+  rw [← Complex.ofReal_pow]
+  exact Complex.ofReal_re _
+
+/-- Positivity of the anomaly-square gap on every Hilbert-space vector. -/
+theorem gap_expectation_nonneg (N : EndH) (ψ : H) :
+    0 ≤ (inner ℂ ψ (Gap N ψ)).re := by
+  rw [gap_expectation_eq_anomaly_norm_sq]
+  exact sq_nonneg _
 
 /-- The imaginary multiple of the symmetric chiral block is skew-adjoint. -/
 theorem imaginaryPhi_skewAdjoint (N : EndH) :

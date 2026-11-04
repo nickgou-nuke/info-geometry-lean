@@ -27,6 +27,25 @@ namespace NoncommutativeOperatorTower
 
 variable {A : ℕ → Type*} [∀ k, Ring (A k)]
 
+/-- The shifted quadratic factorization determined by an idempotent support
+and a square-root mode. This is an algebraic identity; it does not assert
+that either factor is invertible or define an analytic resolvent. -/
+theorem shifted_mass_factorization {B : Type*} [Ring B]
+    (mass dirac : B) (hDirac : dirac * dirac = mass) (μ : ℤ) :
+    ((μ : B) - dirac) * ((μ : B) + dirac) =
+      (μ : B) * (μ : B) * (1 - mass) +
+        ((μ : B) * (μ : B) - 1) * mass := by
+  have hDiracCentral : (μ : B) * dirac = dirac * (μ : B) :=
+    Int.cast_commute μ dirac
+  calc
+    ((μ : B) - dirac) * ((μ : B) + dirac) =
+        (μ : B) * (μ : B) - mass := by
+          noncomm_ring [hDirac, hDiracCentral]
+    _ = (μ : B) * (μ : B) * (1 - mass) +
+        ((μ : B) * (μ : B) - 1) * mass := by
+          simp only [mul_sub, sub_mul, one_mul, mul_one]
+          abel
+
 /-- The composite embedding from the base operator algebra to stage `k`. -/
 def embedFromBase (T : NoncommutativeOperatorTower A) :
     (k : ℕ) → A 0 →+* A k
@@ -84,6 +103,49 @@ theorem reflexive_pair_mass_and_root_persistence
       f u v hu hv huv hvu
   exact ⟨hMassIdem, hMassNe, hDirac.1, hDirac.2.1, hDirac.2.2.1,
     hDirac.2.2.2, hRoot.1, hRoot.2.1, hRoot.2.2⟩
+
+/-- At each injective stage, the nonzero idempotent Jordan mass retains its
+shifted quadratic factorization and remains stationary under the existing
+cross-branch dissipator. The nonzero clause uses injectivity of the tower
+maps. -/
+theorem reflexive_pair_gap_factorization_and_stationarity
+    (T : NoncommutativeOperatorTower A) (k : ℕ)
+    (u v : A 0)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (huv : u * v * u = u) (hvu : v * u * v = v)
+    (hMass : u * v + v * u ≠ 0) (μ : ℤ) :
+    let uk := embedFromBase T k u
+    let vk := embedFromBase T k v
+    let mass := uk * vk + vk * uk
+    let dirac := uk + vk
+    mass * mass = mass ∧ mass ≠ 0 ∧
+      ((μ : A k) - dirac) * ((μ : A k) + dirac) =
+        (μ : A k) * (μ : A k) * (1 - mass) +
+          ((μ : A k) * (μ : A k) - 1) * mass ∧
+      InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity.crossDissipator
+        (R := ℤ) uk vk mass = 0 := by
+  dsimp
+  let f := embedFromBase T k
+  let mass := f u * f v + f v * f u
+  let dirac := f u + f v
+  have hMassIdem :=
+    InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity.ringHom_preserves_reflexive_pair_mass_idempotent
+      f u v hu hv huv hvu
+  have hMassNe :=
+    InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity.ringHom_preserves_nonzero_jordan_mass
+      f (embedFromBase_injective T k) u v hMass
+  have hDirac :=
+    InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity.ringHom_preserves_reflexive_pair_dirac_support
+      f u v hu hv huv hvu
+  have hu' : f u * f u = 0 := by rw [← map_mul, hu, map_zero]
+  have hv' : f v * f v = 0 := by rw [← map_mul, hv, map_zero]
+  have huv' : f u * f v * f u = f u := by rw [← map_mul, ← map_mul, huv]
+  have hvu' : f v * f u * f v = f v := by rw [← map_mul, ← map_mul, hvu]
+  have hStationary :=
+    InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity.crossDissipator_apply_mass_of_reflexive
+      (R := ℤ) hu' hv' huv' hvu'
+  have hFactor := shifted_mass_factorization mass dirac hDirac.1 μ
+  exact ⟨hMassIdem, hMassNe, hFactor, hStationary⟩
 
 /-- A compatible, injective ring cocone from the operator tower to an apex.
 This packages the algebraic data needed to transport operator identities to

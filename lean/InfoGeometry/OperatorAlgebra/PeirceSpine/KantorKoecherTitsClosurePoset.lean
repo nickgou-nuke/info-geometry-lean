@@ -417,6 +417,70 @@ def G_minus1_L (N_plus X : B) : B := R N_plus * X * P N_plus
 /-- Right Grade `-1` Peirce subspace `G_{-1}^R(X) = Q X R`. -/
 def G_minus1_R (N_plus X : B) : B := Q N_plus * X * R N_plus
 
+/-- Von Neumann regularity makes the positive nilpotent a left identity for
+its positive Peirce support. -/
+theorem P_mul_N_plus (N_plus : B)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    P N_plus * N_plus = N_plus := h_reg
+
+/-- Von Neumann regularity makes the negative Peirce support a right identity
+for the positive nilpotent. -/
+theorem N_plus_mul_Q (N_plus : B)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    N_plus * Q N_plus = N_plus := by
+  dsimp [Q]
+  rw [← mul_assoc, h_reg]
+
+/-- The Jordan `+2` sandwich is supported in the Peirce corner `P B Q`.
+This is a containment statement; the sandwich need not equal an arbitrary
+element of that corner. -/
+theorem K_plus2_in_G_plus2 (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_plus2 N_plus (K_plus2 N_plus X) = K_plus2 N_plus X := by
+  have h_left : P N_plus * (N_plus * X * N_plus) = N_plus * X * N_plus := by
+    have hPN : P N_plus * N_plus = N_plus := by
+      dsimp [P]
+      exact h_reg
+    calc P N_plus * (N_plus * X * N_plus)
+        = P N_plus * (N_plus * (X * N_plus)) := by rw [mul_assoc N_plus X N_plus]
+      _ = (P N_plus * N_plus) * (X * N_plus) := by rw [← mul_assoc]
+      _ = N_plus * (X * N_plus) := by rw [hPN]
+      _ = N_plus * X * N_plus := by rw [← mul_assoc N_plus X N_plus]
+  have h_right : (N_plus * X * N_plus) * Q N_plus = N_plus * X * N_plus := by
+    have hNQ := N_plus_mul_Q N_plus h_reg
+    calc (N_plus * X * N_plus) * Q N_plus
+        = (N_plus * X) * (N_plus * Q N_plus) := by rw [mul_assoc]
+      _ = (N_plus * X) * N_plus := by rw [hNQ]
+  change P N_plus * K_plus2 N_plus X * Q N_plus = K_plus2 N_plus X
+  rw [K_plus2_eq_two_sandwich N_plus X h_nil, mul_add, add_mul]
+  simp only [h_left, h_right]
+
+/-- The adjoint Jordan `-2` sandwich is supported in the Peirce corner
+`Q B P`. -/
+theorem K_minus2_in_G_minus2 (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_minus2 N_plus (K_minus2 N_plus X) = K_minus2 N_plus X := by
+  have h_left : Q N_plus * (star N_plus * X * star N_plus) =
+      star N_plus * X * star N_plus := by
+    calc Q N_plus * (star N_plus * X * star N_plus)
+        = Q N_plus * (star N_plus * (X * star N_plus)) := by rw [mul_assoc]
+      _ = (Q N_plus * star N_plus) * (X * star N_plus) := by rw [← mul_assoc]
+      _ = star N_plus * (X * star N_plus) := by
+        dsimp [Q]
+        rw [star_N_plus_reg N_plus h_reg]
+      _ = star N_plus * X * star N_plus := by rw [← mul_assoc]
+  have h_right : (star N_plus * X * star N_plus) * P N_plus =
+      star N_plus * X * star N_plus := by
+    have hsNP : star N_plus * P N_plus = star N_plus := by
+      dsimp [P]
+      rw [← mul_assoc, star_N_plus_reg N_plus h_reg]
+    calc (star N_plus * X * star N_plus) * P N_plus
+        = (star N_plus * X) * (star N_plus * P N_plus) := by rw [mul_assoc]
+      _ = (star N_plus * X) * star N_plus := by rw [hsNP]
+  change Q N_plus * K_minus2 N_plus X * P N_plus = K_minus2 N_plus X
+  rw [K_minus2_eq_two_sandwich N_plus X h_nil, mul_add, add_mul]
+  simp only [h_left, h_right]
+
 theorem Sigma_mul_P (N_plus : B)
     (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     Sigma N_plus * P N_plus = P N_plus := by
@@ -440,6 +504,52 @@ theorem Q_mul_Sigma (N_plus : B)
     Q N_plus * Sigma N_plus = -Q N_plus := by
   dsimp [Q]
   rw [mul_assoc, N_plus_mul_Sigma N_plus h_nil h_reg, mul_neg]
+
+/-- The `P B Q` Peirce corner has adjoint grade `+2`. -/
+theorem comm_Sigma_G_plus2 (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (Sigma N_plus) (G_plus2 N_plus X) =
+      G_plus2 N_plus X + G_plus2 N_plus X := by
+  have h_left : Sigma N_plus * (P N_plus * X * Q N_plus) =
+      P N_plus * X * Q N_plus := by
+    calc Sigma N_plus * (P N_plus * X * Q N_plus)
+        = Sigma N_plus * (P N_plus * (X * Q N_plus)) := by
+          rw [mul_assoc (P N_plus) X (Q N_plus)]
+      _ = (Sigma N_plus * P N_plus) * (X * Q N_plus) := by rw [← mul_assoc]
+      _ = P N_plus * (X * Q N_plus) := by rw [Sigma_mul_P N_plus h_nil h_reg]
+      _ = P N_plus * X * Q N_plus := by rw [← mul_assoc]
+  have h_right : (P N_plus * X * Q N_plus) * Sigma N_plus =
+      -(P N_plus * X * Q N_plus) := by
+    calc (P N_plus * X * Q N_plus) * Sigma N_plus
+        = (P N_plus * X) * (Q N_plus * Sigma N_plus) := by rw [mul_assoc]
+      _ = (P N_plus * X) * (-Q N_plus) := by rw [Q_mul_Sigma N_plus h_nil h_reg]
+      _ = -(P N_plus * X * Q N_plus) := by rw [mul_neg]
+  dsimp [comm, G_plus2]
+  rw [h_left, h_right, sub_eq_add_neg, neg_neg]
+
+/-- The `Q B P` Peirce corner has adjoint grade `-2`. -/
+theorem comm_Sigma_G_minus2 (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (Sigma N_plus) (G_minus2 N_plus X) =
+      -(G_minus2 N_plus X + G_minus2 N_plus X) := by
+  have h_left : Sigma N_plus * (Q N_plus * X * P N_plus) =
+      -(Q N_plus * X * P N_plus) := by
+    calc Sigma N_plus * (Q N_plus * X * P N_plus)
+        = Sigma N_plus * (Q N_plus * (X * P N_plus)) := by
+          rw [mul_assoc (Q N_plus) X (P N_plus)]
+      _ = (Sigma N_plus * Q N_plus) * (X * P N_plus) := by rw [← mul_assoc]
+      _ = (-Q N_plus) * (X * P N_plus) := by rw [Sigma_mul_Q N_plus h_nil h_reg]
+      _ = -(Q N_plus * (X * P N_plus)) := by rw [neg_mul]
+      _ = -(Q N_plus * X * P N_plus) := by
+        congr 1
+        rw [← mul_assoc]
+  have h_right : (Q N_plus * X * P N_plus) * Sigma N_plus =
+      Q N_plus * X * P N_plus := by
+    calc (Q N_plus * X * P N_plus) * Sigma N_plus
+        = (Q N_plus * X) * (P N_plus * Sigma N_plus) := by rw [mul_assoc]
+      _ = (Q N_plus * X) * P N_plus := by rw [P_mul_Sigma N_plus h_nil h_reg]
+  dsimp [comm, G_minus2]
+  rw [h_left, h_right, sub_eq_add_neg, ← neg_add]
 
 theorem Q_mul_P (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     Q N_plus * P N_plus = 0 := by

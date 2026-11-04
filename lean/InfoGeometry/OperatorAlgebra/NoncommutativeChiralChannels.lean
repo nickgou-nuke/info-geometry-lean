@@ -135,6 +135,47 @@ theorem cyclicFunctional_symmetricDissipator_selfAdjoint
   rw [hDouble u v, hDouble v u]
   abel
 
+/-- The symmetric dissipator has zero readout under every cyclic additive
+functional. -/
+theorem cyclicFunctional_symmetricDissipator_zero
+    {S : Type*} [AddCommGroup S] (τ : A →+ S)
+    (hτ : ∀ a b : A, τ (a * b) = τ (b * a))
+    (u v x : A) :
+    τ (symmetricDissipator u v x) = 0 := by
+  have hcomm (a b : A) : τ (commutator a b) = 0 := by
+    unfold commutator
+    rw [map_sub, hτ a b, sub_self]
+  rw [symmetricDissipator_eq_mixed_commutators, map_neg, map_add,
+    hcomm, hcomm]
+  simp
+
+/-- Hamiltonian commutator plus symmetric channel generator. -/
+def symmetricMasterGenerator (h u v x : A) : A :=
+  commutator h x + symmetricDissipator u v x
+
+/-- The symmetric master generator is trace-preserving under a cyclic additive
+functional, for arbitrary Hamiltonian and channel coefficients. -/
+theorem cyclicFunctional_symmetricMasterGenerator_zero
+    {S : Type*} [AddCommGroup S] (τ : A →+ S)
+    (hτ : ∀ a b : A, τ (a * b) = τ (b * a))
+    (h u v x : A) :
+    τ (symmetricMasterGenerator h u v x) = 0 := by
+  unfold symmetricMasterGenerator
+  rw [map_add]
+  have hcomm (a b : A) : τ (commutator a b) = 0 := by
+    unfold commutator
+    rw [map_sub, hτ a b, sub_self]
+  rw [hcomm, cyclicFunctional_symmetricDissipator_zero τ hτ]
+  simp
+
+/-- The symmetric master generator fixes the identity vacuum at zero, with no
+nilpotency assumption on its channels. -/
+theorem symmetricMasterGenerator_one (h u v : A) :
+    symmetricMasterGenerator h u v 1 = 0 := by
+  unfold symmetricMasterGenerator
+  rw [symmetricDissipator_eq_mixed_commutators]
+  simp [commutator]
+
 /-- The axial dissipator is the positive double commutator by the axial mode
 for square-zero channel operators. -/
 theorem axialDissipator_eq_double_commutator {u v : A}

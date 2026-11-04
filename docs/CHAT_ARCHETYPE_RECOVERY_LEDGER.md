@@ -3190,6 +3190,10 @@ now states the reusable associative-ring identities `comm_ad_derivation` and
 and eigenweights add under the bracket. Its targeted locked build passed
 (1,608 jobs). These supplement the concrete KKT sector closure results without
 claiming a graded Lie algebra beyond the actual commutator action proved.
+The owner also records `K_plus2_in_G_plus2` and `K_minus2_in_G_minus2`, proving
+the extremal Jordan sandwiches land in the corresponding Peirce corners under
+nilpotency and regularity. The updated owner source was compiled successfully;
+the support claim is containment, not surjectivity onto either corner.
 
 ### 2026-11-04: Archetype XXXI orbit mass-gap channel sum
 
@@ -3312,10 +3316,15 @@ now proves `cyclicFunctional_symmetricDissipator_selfAdjoint`: for any
 associative ring and cyclic additive functional, the symmetric dissipator is
 self-adjoint under the bilinear trace pairing. The proof uses integration by
 parts for inner commutators and the mixed-double-commutator form; no
-square-zero/reflexivity hypotheses or matrix trace are required. The targeted
-locked owner build passed (8,924 jobs). This closes the algebraic pairing
-clause, while the full XLI master-generator statement and its stationarity
-claims remain separately scoped.
+square-zero/reflexivity hypotheses or matrix trace are required. The same
+owner now proves `cyclicFunctional_symmetricDissipator_zero` and defines
+`symmetricMasterGenerator` as a Hamiltonian commutator plus that dissipator;
+`cyclicFunctional_symmetricMasterGenerator_zero` proves trace preservation,
+and `symmetricMasterGenerator_one` proves identity stationarity, all for
+arbitrary associative-ring coefficients. The targeted locked owner build
+passed (8,924 jobs). These close the generic algebraic parts of XLI. The
+transcript's full matrix-specific bundle, including its chiral-vacuum
+spin-pumping term, remains separately scoped.
 
 ### 2026-11-04: Archetype XXXVII single-bit Tetraktys master theorem
 

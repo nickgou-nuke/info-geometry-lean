@@ -1325,6 +1325,64 @@ theorem Phi_w₃_sq_eq_Gap_w₃ (c₁ N₁ c₂ N₂ c₃ N₃ : B)
         h1_nil h1_reg h2_nil h2_reg h12_ab h12_ba h12_asb h12_sab hc1 hcs1 hc2 hcs2,
       weighted_single_Phi_sq c₃ N₃ h3_nil h3_reg hc3 hcs3]
 
+/-- The three-channel weighted gap acts on channel one's weighted block by
+its squared weight. -/
+theorem Gap_w₃_mul_channel1 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h1_nil : N₁ * N₁ = 0) (h1_reg : N₁ * star N₁ * N₁ = N₁)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁) :
+    Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * (c₁ * Phi N₁) =
+      (c₁ * c₁) * (c₁ * Phi N₁) := by
+  dsimp [Gap_w₃, Gap_w₂]
+  have h1 : ((c₁ * c₁) * Gap N₁) * (c₁ * Phi N₁) =
+      (c₁ * c₁) * (c₁ * Phi N₁) := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_same c₁ N₁ h1_nil h1_reg hc1 hcs1]
+  have h2 : ((c₂ * c₂) * Gap N₂) * (c₁ * Phi N₁) = 0 := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_orthog N₂ c₁ N₁ h12_ba h12_ab
+        (N_b_mul_star_N_a N₁ N₂ h12_asb)
+        (star_N_b_mul_N_a N₁ N₂ h12_sab) hc1 hcs1,
+      mul_zero]
+  have h3 : ((c₃ * c₃) * Gap N₃) * (c₁ * Phi N₁) = 0 := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_orthog N₃ c₁ N₁ h13_ba h13_ab
+        (N_b_mul_star_N_a N₁ N₃ h13_asb)
+        (star_N_b_mul_N_a N₁ N₃ h13_sab) hc1 hcs1,
+      mul_zero]
+  rw [add_mul, add_mul, h1, h2, h3, add_zero, add_zero]
+
+/-- The channel-one weighted block satisfies the three-channel secular
+equation at squared weight `c₁²`. -/
+theorem Phi_w₃_sq_eigenmode_channel1 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h1_nil : N₁ * N₁ = 0) (h1_reg : N₁ * star N₁ * N₁ = N₁)
+    (h2_nil : N₂ * N₂ = 0) (h2_reg : N₂ * star N₂ * N₂ = N₂)
+    (h3_nil : N₃ * N₃ = 0) (h3_reg : N₃ * star N₃ * N₃ = N₃)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    (Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ - c₁ * c₁) *
+      (c₁ * Phi N₁) = 0 := by
+  rw [sub_mul,
+    Phi_w₃_sq_eq_Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃
+      h1_nil h1_reg h2_nil h2_reg h3_nil h3_reg
+      h12_ab h12_ba h12_asb h12_sab
+      h13_ab h13_ba h13_asb h13_sab
+      h23_ab h23_ba h23_asb h23_sab hc1 hcs1 hc2 hcs2 hc3 hcs3,
+    Gap_w₃_mul_channel1 c₁ N₁ c₂ N₂ c₃ N₃
+      h1_nil h1_reg h12_ab h12_ba h12_asb h12_sab
+      h13_ab h13_ba h13_asb h13_sab hc1 hcs1,
+    sub_self]
+
 /-- **`WMC₁₀` Cyclotomic Root Weight Specialization (`Φ₆(u) = u² - u + 1 = 0`):**
     When a channel weight `u` is a root of `u² - u + 1 = 0`, its squared chiral block
     `(u * Φ(N))²` reduces linearly to `(u - 1) * Gap(N)`. -/

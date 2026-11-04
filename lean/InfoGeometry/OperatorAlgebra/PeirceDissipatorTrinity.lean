@@ -676,6 +676,18 @@ theorem reflexive_pair_spin_square {u v : A}
   rw [hUV, hUVVU, hVUUV, hVU]
   abel
 
+/-- The symmetric block, spin commutator, and antisymmetric block obey a
+Lorentzian quadratic sum for every reflexive square-zero pair. The two
+positive mass terms cancel against the negative square of the difference. -/
+theorem reflexive_pair_lorentzian_quadratic_sum {u v : A}
+    (hu : u * u = 0) (hv : v * v = 0)
+    (huv : u * v * u = u) (hvu : v * u * v = v) :
+    (u + v) * (u + v) + (u * v - v * u) * (u * v - v * u) +
+      (u - v) * (u - v) = u * v + v * u := by
+  rw [even_coefficient_sq hu hv, reflexive_pair_spin_square hu hv huv hvu,
+    odd_coefficient_sq hu hv]
+  abel
+
 /-- The spin commutator rotates the Dirac sum into the axial difference for a
 reflexive square-zero pair. This is an identity in the ambient associative
 algebra, with no matrix-coordinate or commutativity assumptions. -/
@@ -900,10 +912,10 @@ theorem crossDissipator_apply_spin_of_squareZero {u v : A}
   rw [hCross, hMassComm, two_nsmul]
   abel
 
-/-- Compatibility form for callers that already have a reflexive pair. -/
+/-- The mass annihilation law needs only square-zero of the two generators;
+reflexivity is unnecessary for this particular conclusion. -/
 theorem crossDissipator_apply_mass_of_reflexive {u v : A}
-    (hu : u * u = 0) (hv : v * v = 0)
-    (_huv : u * v * u = u) (_hvu : v * u * v = v) :
+    (hu : u * u = 0) (hv : v * v = 0) :
     crossDissipator (R := R) u v (u * v + v * u) = 0 :=
   crossDissipator_apply_mass_of_squareZero (R := R) hu hv
 
@@ -994,7 +1006,7 @@ theorem crossDissipator_reflexive_pair_actions {u v : A}
     simp only [mul_one, one_mul]
     rw [two_nsmul]
     abel
-  have hMass := crossDissipator_apply_mass_of_reflexive (R := R) hu hv huv hvu
+  have hMass := crossDissipator_apply_mass_of_reflexive (R := R) hu hv
   have hMu : (u * v + v * u) * u = u := by
     have hVUU : v * u * u = 0 := by rw [mul_assoc, hu, mul_zero]
     calc
@@ -1679,7 +1691,7 @@ theorem map_reflexive_pair_mass_stationary {B : Type*} [Ring B] [Algebra R B]
   have hvu' : f v * f u * f v = f v := by
     rw [← map_mul, ← map_mul, hvu]
   rw [map_add, map_mul, map_mul]
-  exact crossDissipator_apply_mass_of_reflexive (R := R) hu' hv' huv' hvu'
+  exact crossDissipator_apply_mass_of_reflexive (R := R) hu' hv'
 
 /-- Every ring-homomorphic stage image inherits the Dirac support and global
 involution identities of a reflexive horizon pair. -/

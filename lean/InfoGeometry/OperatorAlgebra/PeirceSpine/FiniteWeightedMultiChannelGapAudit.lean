@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.OperatorAlgebra.PeirceSpine.FiniteWeightedMultiChannelGap
+
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_block_sq_eq_gap_sum
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_J_mul_Phi_eq_sigma
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_Phi_mul_J_eq_neg_sigma
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_gap_mul_J_eq_J3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_J_mul_gap_eq_J3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_gap_mul_Phi_eq_Phi3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_Phi_mul_gap_eq_Phi3
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_JordanAssoc_Phi_Phi_J
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_curvature_double_commutator
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_JordanAssoc_chiral_quartet
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.weighted_finite_JordanAssoc_chiral_quartet_of_self_adjoint_weights
+#print axioms InfoGeometry.OperatorAlgebra.PeirceSpine.cyclotomic_weighted_finite_JordanAssoc_singlet

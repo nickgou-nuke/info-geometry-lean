@@ -145,6 +145,24 @@ theorem hilbertInnerJ_cauchy_schwarz (K : KreinSpaceDatum V)
   rw [hilbertInnerJ_symm K C v u] at h
   simpa [abs_mul_abs_self] using h
 
+/-- The original Krein pairing is bounded by the positive norm induced by a
+Cartan involution. This is Cauchy--Schwarz for the Hilbertized pairing, with
+`J v` in the second slot; it does not assert Cauchy--Schwarz using the
+possibly indefinite diagonal values `η(u,u)` and `η(v,v)`. -/
+theorem krein_pairing_sq_le_hilbert_norms (K : KreinSpaceDatum V)
+    (C : CartanInvolution K) (u v : V) :
+    (K.eta u v) ^ 2 ≤
+      hilbertInnerJ K C u u * hilbertInnerJ K C v v := by
+  have hcs := hilbertInnerJ_cauchy_schwarz K C u (C.J v)
+  calc
+    (K.eta u v) ^ 2 = hilbertInnerJ K C u (C.J v) ^ 2 := by
+      simp [hilbertInnerJ, C.involutive]
+    _ ≤ hilbertInnerJ K C u u * hilbertInnerJ K C (C.J v) (C.J v) := by
+      simpa [pow_two] using hcs
+    _ = hilbertInnerJ K C u u * hilbertInnerJ K C v v := by
+      congr 1
+      simp [hilbertInnerJ, C.involutive, K.eta_symm]
+
 /-!
 =============================================================================
 PART 3: Krein-to-Hilbert Operator Soldering

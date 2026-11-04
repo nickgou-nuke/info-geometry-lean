@@ -143,7 +143,7 @@ theorem reflexive_pair_gap_factorization_and_stationarity
   have hvu' : f v * f u * f v = f v := by rw [← map_mul, ← map_mul, hvu]
   have hStationary :=
     InfoGeometry.OperatorAlgebra.PeirceDissipatorTrinity.crossDissipator_apply_mass_of_reflexive
-      (R := ℤ) hu' hv' huv' hvu'
+      (R := ℤ) hu' hv'
   have hFactor := shifted_mass_factorization mass dirac hDirac.1 μ
   exact ⟨hMassIdem, hMassNe, hFactor, hStationary⟩
 

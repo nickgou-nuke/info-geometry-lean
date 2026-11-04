@@ -53,6 +53,45 @@ theorem brahmagupta_fibonacci_fresnel_norm_identity (ψ₁ ψ₂ : FresnelWave R
   dsimp [intensity, yangG, yinH]
   ring
 
+/-- The real-coordinate action of a phase with quadratures `(c,s)` on a wave. -/
+def phaseRotate (c s : R) (ψ : FresnelWave R) : FresnelWave R :=
+  ⟨c * ψ.cQuad - s * ψ.sQuad, s * ψ.cQuad + c * ψ.sQuad⟩
+
+/-- A normalized phase rotation preserves the quadratic intensity. -/
+theorem phaseRotate_intensity (c s : R) (ψ : FresnelWave R)
+    (hphase : c * c + s * s = 1) :
+    intensity (phaseRotate c s ψ) = intensity ψ := by
+  dsimp [intensity, phaseRotate]
+  calc
+    _ = (c * c + s * s) *
+        (ψ.cQuad * ψ.cQuad + ψ.sQuad * ψ.sQuad) := by ring
+    _ = ψ.cQuad * ψ.cQuad + ψ.sQuad * ψ.sQuad := by rw [hphase, one_mul]
+
+/-- Sorkin's third-order cancellation remains valid after independently
+phase-rotating each slit amplitude. Each phase can differ; normalized phase
+parameters preserve each slit intensity. This is a finite quadratic identity,
+not a model of a gauge connection or a path-dependent magnetic holonomy. -/
+theorem sorkin_kappa3_after_independent_phase_rotations
+    (ψ₁ ψ₂ ψ₃ : FresnelWave R)
+    (c₁ s₁ c₂ s₂ c₃ s₃ : R) :
+    sorkinKappa3 (phaseRotate c₁ s₁ ψ₁)
+      (phaseRotate c₂ s₂ ψ₂) (phaseRotate c₃ s₃ ψ₃) = 0 := by
+  exact sorkin_kappa3_identically_zero _ _ _
+
+/-- Each individually phase-rotated slit has unchanged intensity when its
+rotation parameters are normalized. -/
+theorem phaseRotate_three_intensities (ψ₁ ψ₂ ψ₃ : FresnelWave R)
+    (c₁ s₁ c₂ s₂ c₃ s₃ : R)
+    (h₁ : c₁ * c₁ + s₁ * s₁ = 1)
+    (h₂ : c₂ * c₂ + s₂ * s₂ = 1)
+    (h₃ : c₃ * c₃ + s₃ * s₃ = 1) :
+    intensity (phaseRotate c₁ s₁ ψ₁) = intensity ψ₁ ∧
+    intensity (phaseRotate c₂ s₂ ψ₂) = intensity ψ₂ ∧
+    intensity (phaseRotate c₃ s₃ ψ₃) = intensity ψ₃ := by
+  exact ⟨phaseRotate_intensity c₁ s₁ ψ₁ h₁,
+    phaseRotate_intensity c₂ s₂ ψ₂ h₂,
+    phaseRotate_intensity c₃ s₃ ψ₃ h₃⟩
+
 /-- The canonical Sorkin-owner transition expression is a sum of two squares. -/
 theorem ab_probability_plus_sum_of_squares (ψ₁ ψ₂ : FresnelWave R) (c s : R) :
     abProb ψ₁ ψ₂ c s =

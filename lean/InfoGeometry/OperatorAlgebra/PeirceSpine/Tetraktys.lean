@@ -41,6 +41,8 @@ def projSig (P A C X : B) : B := derivSqSig P A C X - derivSqPhi P A C X - deriv
 
 def sandwichCross (P A C X : B) : B :=
   conePlus P A * X * coneMinus P C + coneMinus P C * X * conePlus P A
+def sandwichSkew (P A C X : B) : B :=
+  conePlus P A * X * coneMinus P C - coneMinus P C * X * conePlus P A
 def sandwichSame (P A C X : B) : B :=
   conePlus P A * X * conePlus P A + coneMinus P C * X * coneMinus P C
 
@@ -142,6 +144,27 @@ theorem archetype_A4_sandwich_complementarity_and_trinity (A C X : B) :
     sandwichSame P A C (genJ P A C) = -(genV P A C * genJ P A C) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [sandwichCross, sandwichSame, derivSqPhi, derivSqJ]); peirce_nf hP)
+
+/-- Archetype LXVIII Aharonov sign inversion for the symmetric cross-sheet
+readout. Inserting the Peirce grading into the observable reverses the sign
+relative to acting by the grading after the readout. The three unit-observable
+specializations recover the spin dipole and the negative mass. -/
+theorem archetype_LXVIII_aharonov_sign_inversion (A C X : B) :
+    sandwichCross P A C (invS P * X) =
+      -(invS P * sandwichCross P A C X) ∧
+    invS P * sandwichCross P A C 1 = genSig P A C ∧
+    sandwichCross P A C (invS P) = -genSig P A C ∧
+    invS P * sandwichCross P A C (invS P) = -genV P A C := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    ((try simp only [sandwichCross, invS, genSig, genV, comm, anticomm]); peirce_nf hP)
+
+/-- Archetype LXIX vertex-level form of the same sign inversion. The Higgs
+vertex reverses sign when the Peirce grading is inserted between its two
+chiral factors. This is an algebraic identity for every observable. -/
+theorem archetype_LXIX_higgs_vertex_sign_inversion (A C X : B) :
+    genPhi P A C * (invS P * X) * genPhi P A C =
+      -(invS P * (genPhi P A C * X * genPhi P A C)) := by
+  peirce_nf hP
 
 /-! ### A₅ -/
 

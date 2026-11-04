@@ -1651,16 +1651,31 @@ theorem partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis
        (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus)
        (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
          (G_plus2 N_plus X) (G_minus2 N_plus Y)) = 0) ∧
-    (comm (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
+    (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (peirceGradePlus1 N_plus X) (peirceGradeMinus1 N_plus Y) =
        G_0_P N_plus (X * peirceR N_plus * Y) -
        G_0_Q N_plus (Y * peirceR N_plus * X) +
        peirceR N_plus *
          (X * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.Q N_plus * Y -
           Y * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.P N_plus * X) *
          peirceR N_plus) ∧
-    comm (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
+    (_root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (peirceGradePlus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+         peirceGradePlus2Subgroup N_plus ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (peirceGradeMinus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+         peirceGradeMinus2Subgroup N_plus ∧
+     _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+       (peirceGradePlus1 N_plus X) (peirceGradeMinus2 N_plus Y) ∈
+         peirceGradeMinus1Subgroup N_plus) ∧
+    _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm
+      (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
       (4 : ℕ) • _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus :=
-  kantor_koecher_tits_five_graded_closure_poset_master_synthesis N_plus X Y h_nil h_reg
+  by
+    simpa [OperatorAlgebra.PeirceSpine.comm,
+      _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.comm] using
+      kantor_koecher_tits_five_graded_closure_poset_master_synthesis
+        N_plus X Y h_nil h_reg
 
 open InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
 open InfoGeometry.QuantumGeometry.Projective

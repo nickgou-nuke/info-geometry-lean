@@ -2522,8 +2522,17 @@ bilinear form with a fundamental symmetry and a positivity field on the
 induced form), `Clifford.SplitAtomInvolutions`, the split Clifford algebra
 owners under `Algebraic`, and the positive-Hilbert QGT owners
 `Quantum.QuantumGeometricUncertaintyPrinciple` and
-`Canonical.CramerRaoOnsagerCommutatorUncertainty`. They are not yet tied by a
-proved map for the proposed Clifford-valued QGT. The in-progress
+`Canonical.CramerRaoOnsagerCommutatorUncertainty`. The new theorem
+`ChiralAnomalyQGTComponentBridge.chiralKrein_phase_readout_eq_anomaly_expectation`
+now connects the anomaly expectation to the positive real Hestenes–Krein core
+pairing on the existing doubled chiral carrier, by composing the concrete
+Tomita/Hestenes-to-projective-QGT soldering with the chiral anomaly/QGT
+identity. Its hypotheses explicitly require positive clock polarization of
+the state and preservation of that polarization by the phase-rotated first
+tangent generator. This proves a specific operator anomaly readout; it does
+not yet identify the separate `Clifford.SplitAtom` or split Clifford algebra
+carriers with this doubled representation, construct a general
+Clifford-valued QGT, or establish a Krein-valued uncertainty inequality. The in-progress
 `ChiralLorentzTwistorCartanUncertaintyPoset.lean` and
 `UncertaintyToCartanCurvatureBridge.lean` files were concurrently modified in
 the shared tree during this audit; no edits were made to either. Their staged
@@ -2585,7 +2594,17 @@ not required for this component identity. The locked target build passed
 vacuity audit reported zero findings. This supplies the explicit scalar
 Hilbert-QGT readout of the operator anomaly. An intertwiner from the distinct
 abstract Clifford/Krein carriers into this Hilbert realization, and an
-indefinite-form Robertson inequality, remain unproved.
+indefinite-form Robertson inequality, remain unproved. The owner
+[`QuantumGeometry/KreinToHilbertCartanBridge.lean`](../lean/InfoGeometry/QuantumGeometry/KreinToHilbertCartanBridge.lean)
+now proves `krein_pairing_sq_le_hilbert_norms`: the square of the original
+Krein pairing is bounded by the product of the positive Cartan-Hilbertized
+diagonal norms. This follows by applying the Hilbertized Cauchy--Schwarz
+inequality to `(u, J v)` and using the Cartan involution laws. It is explicitly
+not Cauchy--Schwarz for the possibly indefinite diagonal values `η(u,u)` and
+`η(v,v)`, and does not close the abstract Clifford-to-Hilbert intertwiner.
+The owner built successfully (3,179 jobs); the staged proof-proxy gate and
+`git diff --check` passed. The semantic-vacuity scanner reported four warnings
+on proposition-valued fields that define the existing Krein/Cartan structures.
 
 `Carrier.HestenesKreinHilbertization` now derives a symmetric bilinear form
 from the positive diagonal `krein_form x (J x)` and packages it as a native
@@ -2854,11 +2873,14 @@ Both modules are wired through `InfoGeometry.All`.
   not a normalized quantum-state or physical probability construction.
 - **Sorkin theorem scope:** `sorkin_kappa3_identically_zero` is the quadratic
   norm cancellation for coordinatewise additive, unphased wave pairs. The
-  source says the theorem covers arbitrary magnetic phases, but its owner
-  defines no phase action on the three slit amplitudes and does not include
-  phase parameters in `sorkinKappa3`. The module docstring correctly discloses
-  this limitation. The claimed arbitrary-phase extension is therefore not
-  established by that theorem.
+  owner now also defines `phaseRotate`, the real two-coordinate action of a
+  phase parameter pair, and proves `phaseRotate_intensity` under the unit-circle
+  equation. `sorkin_kappa3_after_independent_phase_rotations` applies the
+  universal cancellation to three independently transformed slit amplitudes;
+  `phaseRotate_three_intensities` records preservation of the individual
+  intensities under normalized phases. This makes the algebraic phase
+  parameterization explicit, but does not model path-dependent gauge
+  holonomy, magnetic flux, or a spatial interference experiment.
 - **Concrete example correction:** the audit proposition computes
   `tripleSlitIntensity = 113` from intensities `25, 5, 13` and pair intensities
   `52, 32, 72`. Its doc comment said `149`; I corrected that comment to `113`.
@@ -2867,10 +2889,12 @@ Both modules are wired through `InfoGeometry.All`.
   collapse/non-collapse interpretation, Gate 4 telemetry, and global test/build
   counts exceed what these scalar polynomial owners construct or prove.
 
-The theorem declarations were not changed. The edited audit module requires a
-fresh targeted Lean build before claiming current kernel verification. This
-entry records source-to-owner scope and does not promote the unsupported
-phase-dependent Sorkin claim.
+The targeted build of
+[`AharonovBohmFresnelDivergenceResolution.lean`](../lean/InfoGeometry/QuantumContext/AharonovBohmFresnelDivergenceResolution.lean)
+passed (771 jobs). The staged proof-proxy gate passed, the semantic-vacuity
+audit reported zero findings, and `git diff --cached --check` passed. This
+entry records only the phase-parameterized finite quadratic identity and its
+normalization law, not the stronger physical interpretation.
 
 ### 2026-11-04: Section 123 Wu–Yang / dual Aharonov–Bohm scope audit
 
@@ -3234,6 +3258,19 @@ with every selected gap. Channel-local commutation alone does not establish
 this stronger projection property. The updated locked build passed (845 jobs),
 with zero semantic-vacuity findings and a passing staged proof-proxy gate.
 
+The current multi-channel owner additionally proves the weighted block-square
+identity for an arbitrary finite index set:
+`weighted_Phi_sum_sq_eq_weighted_Gap`. Its hypotheses give pairwise
+annihilation of the unweighted channel blocks and channel-local weight
+commutation. `weighted_Phi_sum_sq_eq_weighted_Gap_self_adjoint` reduces the
+per-channel adjoint commutation premise to self-adjointness plus commutation
+with that channel's nilpotent. The locked audit target
+`MultiChannelChiralBlockAnomalyGapPosetAudit` built successfully (1551 jobs);
+`#print axioms` reports only `[propext, Classical.choice, Quot.sound]` for both
+generic finite-family theorems and the pairwise-sum helper. The theorem concerns
+finite sums in an associative ring; it does not assert convergence or an
+infinite-channel extension.
+
 The same reduced-hypothesis interface now covers finite channel-selective gap
 filtering and the corresponding secular annihilation equation, through
 `weighted_finite_gap_mul_channel_of_self_adjoint_weights` and
@@ -3244,6 +3281,18 @@ The finite owner also exposes the complete four-placement chiral Jordan
 associator quartet under these same reduced assumptions through
 `weighted_finite_JordanAssoc_chiral_quartet_of_self_adjoint_weights`. Its
 locked build passed (845 jobs).
+
+The current-thread weighted-gap continuation claimed extension from three
+channels to arbitrary finite families. The previous PeirceSpine owner had an
+explicit three-channel theorem but no `Finset`-indexed weighted square. It now
+proves `WeightedMultiChannelGapPoset.weighted_Phi_sum_sq_eq_weighted_Gap`:
+for any finite family of regular square-zero channels with the four ordered
+pairwise primitive annihilation laws, the weighted chiral block sum squares
+to `∑ i, (c i * c i) * Gap (N i)`. Each weight commutes only with its own
+nilpotent and adjoint; the cross-term proof uses only the right summand's
+channel-local commutation. The reusable pairwise-annihilator sum lemma and a
+companion `#print axioms` audit were added. This is finite algebra over
+`[Ring B] [StarRing B]`, not a physical or analytic gap theorem.
 
 In the same work session, the KKT owner gained a mixed `+1`/`-1` bracket
 decomposition into its three diagonal Peirce blocks, plus top/bottom grade
@@ -3434,6 +3483,28 @@ The ring-level Leibniz rule then gives conservation of the quadratic products.
 These results prove algebraic superoperator and commutator identities, not a
 time-dependent Maxwell or Dirac field equation. No duplicate XXXVIII module
 is required.
+
+### 2026-11-04: First transcript occurrence of Archetype XXXIX, spin--mass precession
+
+The XXXIX two-cycle conservation equivalences are covered by the more general
+`commutator_two_cycle_product_identities` in
+[`NoncommutativeContextInteraction.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeContextInteraction.lean),
+which assumes only an associative operator ring and the two stated commutator
+relations. The square-zero-pair mass/spin relations are covered by
+`squareZeroPair_spin_mass_precession` in
+[`PeirceNambuGorkov.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceNambuGorkov.lean).
+For the idempotent Peirce construction, `archetype_A7_so12_lie_brackets_and_cubic_inversions`
+in [`Tetraktys.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean)
+proves the spin action on `genPhi` and `genJ` with the operator-valued mass
+`genV`; `archetype_A5_klein_hadamard_spectra_and_partition` supplies the
+iterated spin action. The related velocity formulation is independently
+covered by `zitter_velocity_oscillation` in
+[`ZitterbewegungVelocity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZitterbewegungVelocity.lean).
+These are ring identities and operator-valued precession laws. They do not
+derive a time-dependent oscillator, an observable frequency, or the transcript's
+physical interpretation. The three relevant owners built successfully in the
+targeted locked build (3,119 jobs); the build emitted existing linter warnings
+in `NoncommutativeContextInteraction.lean` and `Supercharge.lean`.
 
 ### 2026-11-04: Archetype XL Lindblad--Wheeler dissipator identities
 
@@ -3664,6 +3735,15 @@ the seed-level normalization in grade-zero closure; it is an algebraic identity
 under the stated nilpotency and regularity hypotheses. The locked KKT owner
 build passed (8,998 jobs).
 
+The finite weighted multi-channel owner now has a dedicated axiom-audit module,
+[`FiniteWeightedMultiChannelGapAudit.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/FiniteWeightedMultiChannelGapAudit.lean).
+Its locked build checks the finite-family block-gap identity, cubic Jordan
+associator, full chiral quartet, double-commutator form, self-adjoint-weight
+interface, and cyclotomic singlet. The audit target passed (846 jobs); the
+reported dependencies are `propext`, `Classical.choice`, and `Quot.sound`, with
+no `sorryAx` reported. This is an audit of the finite algebraic statements and
+does not turn their physical interpretations into formal consequences.
+
 ### 2026-11-04: A116 path parity to A102 Krein reflection
 
 `PlabicPathParityKreinBridge.lean` proves that the alternating parity of a
@@ -3701,3 +3781,70 @@ that omitted the final master-theorem conjunct. The KKT owner build passed
 staged proof-proxy gate passed. Semantic-vacuity scans reported only existing
 heuristic warnings; the no-hypothesis scan found an unrelated banned-name
 pattern in `Algebra/ZornAlternativeLaws.lean`.
+
+The same owner now proves `kkt_adjoint_grades_disjoint`: on an additive-
+torsion-free ring, distinct integer eigenspaces of `ad(Σ)` have trivial
+intersection. This supplies the eigenvalue-separation fact needed for a genuine
+integer grading, under the explicit torsion-free hypothesis; it does not claim
+that hypothesis for every ring or identify all adjoint eigenspaces with the five
+Peirce sectors. The KKT owner and its axiom audit built successfully (8,999
+jobs); the new theorem reports only `propext`, `Classical.choice`, and
+`Quot.sound`.
+
+The XLVIII shifted factorization in
+[`TwoSheetedYangMillsInductiveColimit.lean`](../lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean)
+is also available as `two_sheet_shifted_resolvent_factorization` for an
+arbitrary ring element `μ`, assuming only that `μ` commutes with the electron
+block. The identity follows from the existing `E² = V` theorem and is
+transported by `starRingHom_transports_two_sheet_shifted_resolvent`; no
+whole-ring centrality, analytic resolvent, or pole existence is asserted.
+The owner and axiom-audit targets passed together in a locked build (957 jobs).
+
+### 2026-11-04: Reflexive-pair Lorentzian quadratic sum
+
+`reflexive_pair_lorentzian_quadratic_sum` in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean)
+formalizes the quadratic identity for a square-zero reflexive pair: the even
+sum square and spin commutator square each equal the Jordan mass, while the
+odd difference square is its negative. The theorem is a finite identity in the
+existing associative algebra, and makes no representation-level claim about
+`PSL(2,R)` or Möbius transformations. The owner passed its locked Lake build;
+existing warnings in dependencies and the owner remain outside this change.
+
+### 2026-11-04: Archetype LXVIII Aharonov sign inversion
+
+`archetype_LXVIII_aharonov_sign_inversion` in
+[`Tetraktys.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean)
+proves that inserting the idempotent's Peirce grading into the observable of
+the symmetric cross-sheet sandwich reverses its sign relative to applying the
+grading after the readout. Its three unit-observable cases recover the spin
+dipole and negative mass. The accompanying LXVIII vertex decomposition and
+four-mode cross/same-channel tomography already follow from
+`archetype_A4_sandwich_complementarity_and_trinity`; these are algebraic
+operator identities, not normalized scalar weak values or a thermal-state
+construction. The Tetraktys owner passed its locked Lake build (613 jobs).
+
+The companion Archetype LXIX vertex identity is now also proved there as
+`archetype_LXIX_higgs_vertex_sign_inversion`:
+`Φ (S X) Φ = -S (Φ X Φ)` for every observable `X` and Peirce grading `S`.
+This connects the cross-sheet sign inversion to the existing A₃ chiral
+Tetraktys dictionary and A₄ sandwich identities; it does not by itself assert
+a numerical spectral lower bound or a physical Higgs mechanism. The owner was
+rebuilt successfully after the addition (613 jobs).
+
+Archetype LXX's finite algebraic content is now proved as
+`archetype_LXX_aharonov_weak_value_erlangen_invariance` in
+[`TwoSheetedYangMillsInductiveColimit.lean`](../lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean).
+Under the integer light-cone rescaling of the two Peirce amplitudes, the
+existing symmetric and skew cross-sheet sandwiches scale by `α² - β²` for
+every observable, and hence are invariant on the unit determinant shell. The
+owner's locked build passed (1,017 jobs). The transcript's additional
+colimit-lift interpretation is not claimed by this finite-ring theorem; it
+requires a separately stated and checked compatibility result.
+
+The commit gate also exposed an older overstated interface:
+`crossDissipator_apply_mass_of_reflexive` depended only on square-zero, while
+its reflexivity binders were unused. The theorem now states the weaker true
+hypotheses, and its three call sites were updated. The staged proof-proxy gate
+rejected the old vacuous binders; the four affected owner targets passed their
+combined locked build after the interface correction.

@@ -2077,6 +2077,25 @@ theorem comm_peirceGradeMinus2_zero_closed (N_plus X Y : B)
   simp only [kkt_comm_add_right, hPP, hQQ, hRR]
   noncomm_ring [hP2, hQ2]
 
+/-- Subgroup-valued form of the `(+2)+0=+2` bracket closure. -/
+theorem comm_peirceGradePlus2_zero_mem (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (peirceGradePlus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+      peirceGradePlus2Subgroup N_plus := by
+  rw [comm_peirceGradePlus2_zero_closed N_plus X Y h_nil h_reg]
+  exact ⟨X * Q N_plus * Y * Q N_plus -
+    Y * P N_plus * X * Q N_plus, rfl⟩
+
+/-- Subgroup-valued form of the `(-2)+0=-2` bracket closure. -/
+theorem comm_peirceGradeMinus2_zero_mem (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (peirceGradeMinus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+      peirceGradeMinus2Subgroup N_plus := by
+  rw [comm_peirceGradeMinus2_zero_closed N_plus X Y h_nil h_reg]
+  exact ⟨X * P N_plus * Y - Y * Q N_plus * X, rfl⟩
+
 /-- The mixed bracket of grades `+1` and `-1` lands in grade zero. Its three
 diagonal components are the `P`, `Q`, and neutral Peirce blocks. -/
 theorem comm_peirceGradePlus1_minus1_closed (N_plus X Y : B)
@@ -3259,6 +3278,16 @@ def KKTAdjointGrade (N_plus : B) (k : ℤ) : AddSubgroup B :=
 def KKTAdjointGradeSubmodule (N_plus : B) (k : ℤ) : Submodule ℤ B :=
   (KKTAdjointGrade N_plus k).toIntSubmodule
 
+/-- Integer degree attached to the five Peirce components indexed in order
+`+2,+1,0,-1,-2`. -/
+def peirceFiveGradeDegree (i : Fin 5) : ℤ :=
+  match i.val with
+  | 0 => 2
+  | 1 => 1
+  | 2 => 0
+  | 3 => -1
+  | _ => -2
+
 /-- The KKT grade subgroups are closed under the Lie bracket with additive
 degree: a bracket of grade `m` and grade `n` belongs to grade `m + n`.
 This is the native graded-Lie closure interface for downstream constructions. -/
@@ -3284,6 +3313,18 @@ theorem kkt_adjoint_grades_intersection_eq_zero [IsAddTorsionFree B]
       _ = 0 := sub_self _
   exact (IsAddTorsionFree.zsmul_eq_zero_iff_right
     (sub_ne_zero.mpr hmn)).mp hmul
+
+/-- Distinct integer eigenspaces of the adjoint anomaly have trivial
+intersection when the additive group has no torsion. This is the directness
+condition for interpreting the integer adjoint-grade family as a grading. -/
+theorem kkt_adjoint_grades_disjoint [IsAddTorsionFree B]
+    (N_plus : B) {m n : ℤ} (hmn : m ≠ n) :
+    Disjoint (KKTAdjointGrade N_plus m) (KKTAdjointGrade N_plus n) := by
+  rw [AddSubgroup.disjoint_def]
+  intro X hXm hXn
+  change comm (Sigma N_plus) X = m • X at hXm
+  change comm (Sigma N_plus) X = n • X at hXn
+  exact kkt_adjoint_grades_intersection_eq_zero hXm hXn hmn
 
 local instance : LieRing B := LieRing.ofAssociativeRing
 
@@ -3328,6 +3369,325 @@ theorem peirce_five_grades_mem (N_plus X : B)
   · change comm (Sigma N_plus) (peirceGradeMinus2 N_plus X) =
       (-2 : ℤ) • peirceGradeMinus2 N_plus X
     simpa [two_nsmul] using hm2
+
+/-- Each concrete Peirce summand embeds into the corresponding native
+`ℤ`-submodule of the `ad(Σ)` grading. This connects the direct-sum decomposition
+to Mathlib's `GradedBracket` interface on adjoint eigenspaces. -/
+theorem peirceFiveGradeSubmodule_le_KKTAdjointGradeSubmodule (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) (i : Fin 5) :
+    peirceFiveGradeSubmodule N_plus i ≤
+      KKTAdjointGradeSubmodule N_plus (peirceFiveGradeDegree i) := by
+  intro x hx
+  change x ∈ peirceFiveGradeSubgroup N_plus i at hx
+  change x ∈ KKTAdjointGrade N_plus (peirceFiveGradeDegree i)
+  fin_cases i
+  · change x ∈ peirceGradePlus2Subgroup N_plus at hx
+    change x ∈ KKTAdjointGrade N_plus 2
+    change x ∈ Set.range (peirceGradePlus2 N_plus) at hx
+    rcases hx with ⟨y, hy⟩
+    rw [← hy]
+    exact (peirce_five_grades_mem N_plus y h_nil h_reg).1
+  · change x ∈ peirceGradePlus1Subgroup N_plus at hx
+    change x ∈ KKTAdjointGrade N_plus 1
+    change x ∈ Set.range (peirceGradePlus1 N_plus) at hx
+    rcases hx with ⟨y, hy⟩
+    rw [← hy]
+    exact (peirce_five_grades_mem N_plus y h_nil h_reg).2.1
+  · change x ∈ peirceGradeZeroSubgroup N_plus at hx
+    change x ∈ KKTAdjointGrade N_plus 0
+    change x ∈ Set.range (peirceGradeZero N_plus) at hx
+    rcases hx with ⟨y, hy⟩
+    rw [← hy]
+    exact (peirce_five_grades_mem N_plus y h_nil h_reg).2.2.1
+  · change x ∈ peirceGradeMinus1Subgroup N_plus at hx
+    change x ∈ KKTAdjointGrade N_plus (-1)
+    change x ∈ Set.range (peirceGradeMinus1 N_plus) at hx
+    rcases hx with ⟨y, hy⟩
+    rw [← hy]
+    exact (peirce_five_grades_mem N_plus y h_nil h_reg).2.2.2.1
+  · change x ∈ peirceGradeMinus2Subgroup N_plus at hx
+    change x ∈ KKTAdjointGrade N_plus (-2)
+    change x ∈ Set.range (peirceGradeMinus2 N_plus) at hx
+    rcases hx with ⟨y, hy⟩
+    rw [← hy]
+    exact (peirce_five_grades_mem N_plus y h_nil h_reg).2.2.2.2
+
+/-- The bracket of two concrete Peirce components belongs to the native
+adjoint-grade submodule of the sum of their degrees. This composes the
+component-to-eigenspace map with Mathlib's `GradedBracket` closure. -/
+theorem peirceFiveGrade_bracket_mem_adjoint (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i j : Fin 5) (x y : B)
+    (hx : x ∈ peirceFiveGradeSubmodule N_plus i)
+    (hy : y ∈ peirceFiveGradeSubmodule N_plus j) :
+    comm x y ∈ KKTAdjointGradeSubmodule N_plus
+      (peirceFiveGradeDegree i + peirceFiveGradeDegree j) := by
+  have hx' : x ∈ KKTAdjointGrade N_plus (peirceFiveGradeDegree i) :=
+    peirceFiveGradeSubmodule_le_KKTAdjointGradeSubmodule
+      N_plus h_nil h_reg i hx
+  have hy' : y ∈ KKTAdjointGrade N_plus (peirceFiveGradeDegree j) :=
+    peirceFiveGradeSubmodule_le_KKTAdjointGradeSubmodule
+      N_plus h_nil h_reg j hy
+  exact kkt_grade_bracket_mem hx' hy'
+
+/-- An adjoint eigenvector has no Peirce component whose integer grade differs
+from its eigenvalue, provided the additive group is torsion-free. -/
+theorem peirce_components_of_adjoint_eigenvalue [IsAddTorsionFree B]
+    (N_plus X : B) (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) (k : ℤ)
+    (hX : comm (Sigma N_plus) X = k • X) :
+    (k ≠ 2 → peirceGradePlus2 N_plus X = 0) ∧
+    (k ≠ 1 → peirceGradePlus1 N_plus X = 0) ∧
+    (k ≠ 0 → peirceGradeZero N_plus X = 0) ∧
+    (k ≠ -1 → peirceGradeMinus1 N_plus X = 0) ∧
+    (k ≠ -2 → peirceGradeMinus2 N_plus X = 0) := by
+  let x₂ := peirceGradePlus2 N_plus X
+  let x₁ := peirceGradePlus1 N_plus X
+  let x₀ := peirceGradeZero N_plus X
+  let xm₁ := peirceGradeMinus1 N_plus X
+  let xm₂ := peirceGradeMinus2 N_plus X
+  have hdecomp : X = x₂ + x₁ + x₀ + xm₁ + xm₂ :=
+    peirce_five_grade_decomposition N_plus X h_nil h_reg
+  have hgrades := peirce_five_grades_mem N_plus X h_nil h_reg
+  have he₂ : comm (Sigma N_plus) x₂ = (2 : ℤ) • x₂ := by
+    change x₂ ∈ KKTAdjointGrade N_plus 2
+    exact hgrades.1
+  have he₁ : comm (Sigma N_plus) x₁ = (1 : ℤ) • x₁ := by
+    change x₁ ∈ KKTAdjointGrade N_plus 1
+    exact hgrades.2.1
+  have he₀ : comm (Sigma N_plus) x₀ = (0 : ℤ) • x₀ := by
+    change x₀ ∈ KKTAdjointGrade N_plus 0
+    exact hgrades.2.2.1
+  have hem₁ : comm (Sigma N_plus) xm₁ = (-1 : ℤ) • xm₁ := by
+    change xm₁ ∈ KKTAdjointGrade N_plus (-1)
+    exact hgrades.2.2.2.1
+  have hem₂ : comm (Sigma N_plus) xm₂ = (-2 : ℤ) • xm₂ := by
+    change xm₂ ∈ KKTAdjointGrade N_plus (-2)
+    exact hgrades.2.2.2.2
+  have h_ad : comm (Sigma N_plus) X =
+      (2 : ℤ) • x₂ + (1 : ℤ) • x₁ + (0 : ℤ) • x₀ +
+        (-1 : ℤ) • xm₁ + (-2 : ℤ) • xm₂ := by
+    rw [hdecomp, kkt_comm_add_right, kkt_comm_add_right,
+      kkt_comm_add_right, kkt_comm_add_right, he₂, he₁, he₀, hem₁, hem₂]
+  have hdiff :
+      ((2 : ℤ) • x₂ - k • x₂) + ((1 : ℤ) • x₁ - k • x₁) +
+      ((0 : ℤ) • x₀ - k • x₀) + ((-1 : ℤ) • xm₁ - k • xm₁) +
+      ((-2 : ℤ) • xm₂ - k • xm₂) = 0 := by
+    calc
+      _ = comm (Sigma N_plus) X - k • X := by
+        rw [h_ad, hdecomp]
+        simp only [zsmul_add]
+        abel
+      _ = 0 := by rw [hX, sub_self]
+  have hsub₂ : (2 : ℤ) • x₂ - k • x₂ = (2 - k) • x₂ := by
+    simpa only [sub_eq_add_neg] using (sub_zsmul x₂ (2 : ℤ) k).symm
+  have hsub₁ : (1 : ℤ) • x₁ - k • x₁ = (1 - k) • x₁ := by
+    simpa only [sub_eq_add_neg] using (sub_zsmul x₁ (1 : ℤ) k).symm
+  have hsub₀ : (0 : ℤ) • x₀ - k • x₀ = (0 - k) • x₀ := by
+    simpa only [sub_eq_add_neg] using (sub_zsmul x₀ (0 : ℤ) k).symm
+  have hsubm₁ : (-1 : ℤ) • xm₁ - k • xm₁ = (-1 - k) • xm₁ := by
+    simpa only [sub_eq_add_neg] using (sub_zsmul xm₁ (-1 : ℤ) k).symm
+  have hsubm₂ : (-2 : ℤ) • xm₂ - k • xm₂ = (-2 - k) • xm₂ := by
+    simpa only [sub_eq_add_neg] using (sub_zsmul xm₂ (-2 : ℤ) k).symm
+  rw [hsub₂, hsub₁, hsub₀, hsubm₁, hsubm₂] at hdiff
+  have hx₂ : x₂ ∈ peirceGradePlus2Subgroup N_plus := ⟨X, rfl⟩
+  have hx₁ : x₁ ∈ peirceGradePlus1Subgroup N_plus := ⟨X, rfl⟩
+  have hx₀ : x₀ ∈ peirceGradeZeroSubgroup N_plus := ⟨X, rfl⟩
+  have hxm₁ : xm₁ ∈ peirceGradeMinus1Subgroup N_plus := ⟨X, rfl⟩
+  have hxm₂ : xm₂ ∈ peirceGradeMinus2Subgroup N_plus := ⟨X, rfl⟩
+  rcases peirce_five_grade_subgroup_sum_zero N_plus
+      ((2 - k) • x₂) ((1 - k) • x₁) ((0 - k) • x₀)
+      ((-1 - k) • xm₁) ((-2 - k) • xm₂)
+      h_nil h_reg
+      ((peirceGradePlus2Subgroup N_plus).zsmul_mem hx₂ (2 - k))
+      ((peirceGradePlus1Subgroup N_plus).zsmul_mem hx₁ (1 - k))
+      ((peirceGradeZeroSubgroup N_plus).zsmul_mem hx₀ (0 - k))
+      ((peirceGradeMinus1Subgroup N_plus).zsmul_mem hxm₁ (-1 - k))
+      ((peirceGradeMinus2Subgroup N_plus).zsmul_mem hxm₂ (-2 - k)) hdiff with
+    ⟨h₂, h₁, h₀, hm₁, hm₂⟩
+  have hkill₂ (hk : k ≠ 2) : x₂ = 0 := by
+    have hmul : (2 - k) • x₂ = 0 := h₂
+    have hcoef : (2 - k : ℤ) ≠ 0 := sub_ne_zero.mpr (Ne.symm hk)
+    exact (IsAddTorsionFree.zsmul_eq_zero_iff_right hcoef).mp hmul
+  have hkill₁ (hk : k ≠ 1) : x₁ = 0 := by
+    have hmul : (1 - k) • x₁ = 0 := h₁
+    have hcoef : (1 - k : ℤ) ≠ 0 := sub_ne_zero.mpr (Ne.symm hk)
+    exact (IsAddTorsionFree.zsmul_eq_zero_iff_right hcoef).mp hmul
+  have hkill₀ (hk : k ≠ 0) : x₀ = 0 := by
+    have hmul : (0 - k) • x₀ = 0 := h₀
+    have hcoef : (0 - k : ℤ) ≠ 0 := sub_ne_zero.mpr (Ne.symm hk)
+    exact (IsAddTorsionFree.zsmul_eq_zero_iff_right hcoef).mp hmul
+  have hkillm₁ (hk : k ≠ -1) : xm₁ = 0 := by
+    have hmul : (-1 - k) • xm₁ = 0 := hm₁
+    have hcoef : (-1 - k : ℤ) ≠ 0 := sub_ne_zero.mpr (Ne.symm hk)
+    exact (IsAddTorsionFree.zsmul_eq_zero_iff_right hcoef).mp hmul
+  have hkillm₂ (hk : k ≠ -2) : xm₂ = 0 := by
+    have hmul : (-2 - k) • xm₂ = 0 := hm₂
+    have hcoef : (-2 - k : ℤ) ≠ 0 := sub_ne_zero.mpr (Ne.symm hk)
+    exact (IsAddTorsionFree.zsmul_eq_zero_iff_right hcoef).mp hmul
+  exact ⟨hkill₂, hkill₁, hkill₀, hkillm₁, hkillm₂⟩
+
+/-- Under additive torsion-freeness, each Peirce submodule is exactly the
+corresponding native integer eigenspace of `ad(Σ)`. -/
+theorem peirceFiveGradeSubmodule_eq_KKTAdjointGradeSubmodule
+    [IsAddTorsionFree B] (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) (i : Fin 5) :
+    peirceFiveGradeSubmodule N_plus i =
+      KKTAdjointGradeSubmodule N_plus (peirceFiveGradeDegree i) := by
+  ext X
+  constructor
+  · intro hx
+    exact peirceFiveGradeSubmodule_le_KKTAdjointGradeSubmodule
+      N_plus h_nil h_reg i hx
+  · intro hX
+    change X ∈ KKTAdjointGrade N_plus (peirceFiveGradeDegree i) at hX
+    change comm (Sigma N_plus) X = peirceFiveGradeDegree i • X at hX
+    have hfilter := peirce_components_of_adjoint_eigenvalue
+      N_plus X h_nil h_reg (peirceFiveGradeDegree i) hX
+    have hdecomp := peirce_five_grade_decomposition N_plus X h_nil h_reg
+    fin_cases i
+    · change X ∈ peirceGradePlus2Subgroup N_plus
+      simp [peirceFiveGradeDegree] at hfilter
+      have hXeq : X = peirceGradePlus2 N_plus X := by
+        have h1 := hfilter.1
+        have h0 := hfilter.2.1
+        have hm1 := hfilter.2.2.1
+        have hm2 := hfilter.2.2.2
+        calc
+          X = peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+              peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+              peirceGradeMinus2 N_plus X := hdecomp
+          _ = peirceGradePlus2 N_plus X := by simp [h1, h0, hm1, hm2]
+      rw [hXeq]
+      exact ⟨X, rfl⟩
+    · change X ∈ peirceGradePlus1Subgroup N_plus
+      simp [peirceFiveGradeDegree] at hfilter
+      have hXeq : X = peirceGradePlus1 N_plus X := by
+        have h2 := hfilter.1
+        have h0 := hfilter.2.1
+        have hm1 := hfilter.2.2.1
+        have hm2 := hfilter.2.2.2
+        calc
+          X = peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+              peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+              peirceGradeMinus2 N_plus X := hdecomp
+          _ = peirceGradePlus1 N_plus X := by simp [h2, h0, hm1, hm2]
+      rw [hXeq]
+      exact ⟨X, rfl⟩
+    · change X ∈ peirceGradeZeroSubgroup N_plus
+      simp [peirceFiveGradeDegree] at hfilter
+      have hXeq : X = peirceGradeZero N_plus X := by
+        have h2 := hfilter.1
+        have h1 := hfilter.2.1
+        have hm1 := hfilter.2.2.1
+        have hm2 := hfilter.2.2.2
+        calc
+          X = peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+              peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+              peirceGradeMinus2 N_plus X := hdecomp
+          _ = peirceGradeZero N_plus X := by simp [h2, h1, hm1, hm2]
+      rw [hXeq]
+      exact ⟨X, rfl⟩
+    · change X ∈ peirceGradeMinus1Subgroup N_plus
+      simp [peirceFiveGradeDegree] at hfilter
+      have hXeq : X = peirceGradeMinus1 N_plus X := by
+        have h2 := hfilter.1
+        have h1 := hfilter.2.1
+        have h0 := hfilter.2.2.1
+        have hm2 := hfilter.2.2.2
+        calc
+          X = peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+              peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+              peirceGradeMinus2 N_plus X := hdecomp
+          _ = peirceGradeMinus1 N_plus X := by simp [h2, h1, h0, hm2]
+      rw [hXeq]
+      exact ⟨X, rfl⟩
+    · change X ∈ peirceGradeMinus2Subgroup N_plus
+      simp [peirceFiveGradeDegree] at hfilter
+      have hXeq : X = peirceGradeMinus2 N_plus X := by
+        have h2 := hfilter.1
+        have h1 := hfilter.2.1
+        have h0 := hfilter.2.2.1
+        have hm1 := hfilter.2.2.2
+        calc
+          X = peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+              peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+              peirceGradeMinus2 N_plus X := hdecomp
+          _ = peirceGradeMinus2 N_plus X := by simp [h2, h1, h0, hm1]
+      rw [hXeq]
+      exact ⟨X, rfl⟩
+
+/-- If the sum of two Peirce degrees is again one of the five degrees, their
+Lie bracket lies in that concrete Peirce sector. This is the Peirce-side form
+of the native adjoint-eigenspace graded-bracket law. -/
+theorem peirceFiveGrade_bracket_mem_peirce [IsAddTorsionFree B]
+    (N_plus : B) (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i j k : Fin 5) (x y : B)
+    (hx : x ∈ peirceFiveGradeSubmodule N_plus i)
+    (hy : y ∈ peirceFiveGradeSubmodule N_plus j)
+    (hdegree : peirceFiveGradeDegree i + peirceFiveGradeDegree j =
+      peirceFiveGradeDegree k) :
+    comm x y ∈ peirceFiveGradeSubmodule N_plus k := by
+  have hbracket := peirceFiveGrade_bracket_mem_adjoint
+    N_plus h_nil h_reg i j x y hx hy
+  rw [hdegree] at hbracket
+  rw [peirceFiveGradeSubmodule_eq_KKTAdjointGradeSubmodule
+    N_plus h_nil h_reg k]
+  exact hbracket
+
+/-- Brackets whose integer degree sum lies outside the five KKT degrees vanish.
+Together with `peirceFiveGrade_bracket_mem_peirce`, this gives closure at every
+degree sum, including the truncation at grades `±3` and `±4`. -/
+theorem peirceFiveGrade_bracket_eq_zero_of_degree_sum_outside
+    [IsAddTorsionFree B] (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i j : Fin 5) (x y : B) (k : ℤ)
+    (hx : x ∈ peirceFiveGradeSubmodule N_plus i)
+    (hy : y ∈ peirceFiveGradeSubmodule N_plus j)
+    (hdegree : peirceFiveGradeDegree i + peirceFiveGradeDegree j = k)
+    (hk₂ : k ≠ 2) (hk₁ : k ≠ 1) (hk₀ : k ≠ 0)
+    (hkm₁ : k ≠ -1) (hkm₂ : k ≠ -2) :
+    comm x y = 0 := by
+  have hbracket := peirceFiveGrade_bracket_mem_adjoint
+    N_plus h_nil h_reg i j x y hx hy
+  rw [hdegree] at hbracket
+  have hgrade0 := KKTAdjointGrade_eq_bot_of_outside_five
+    N_plus h_nil h_reg k hk₂ hk₁ hk₀ hkm₁ hkm₂
+  have hsubmodule0 : KKTAdjointGradeSubmodule N_plus k = ⊥ := by
+    change (KKTAdjointGrade N_plus k).toIntSubmodule = ⊥
+    rw [hgrade0]
+    rfl
+  rw [hsubmodule0] at hbracket
+  exact Submodule.mem_bot.mp hbracket
+
+/-- No other integer adjoint grades occur: under additive torsion-freeness,
+the eigenspace vanishes at every degree outside `{-2,-1,0,1,2}`. -/
+theorem KKTAdjointGrade_eq_bot_of_outside_five
+    [IsAddTorsionFree B] (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) (k : ℤ)
+    (hk₂ : k ≠ 2) (hk₁ : k ≠ 1) (hk₀ : k ≠ 0)
+    (hkm₁ : k ≠ -1) (hkm₂ : k ≠ -2) :
+    KKTAdjointGrade N_plus k = ⊥ := by
+  ext X
+  constructor
+  · intro hX
+    change comm (Sigma N_plus) X = k • X at hX
+    rcases peirce_components_of_adjoint_eigenvalue
+        N_plus X h_nil h_reg k hX with ⟨h₂, h₁, h₀, hm₁, hm₂⟩
+    have hdecomp := peirce_five_grade_decomposition N_plus X h_nil h_reg
+    have hXzero : X = 0 := by
+      rw [hdecomp, h₂ hk₂, h₁ hk₁, h₀ hk₀, hm₁ hkm₁, hm₂ hkm₂]
+      simp
+    simpa [hXzero]
+  · intro hX
+    rw [hX]
+    exact (KKTAdjointGrade N_plus k).zero_mem
 
 /-- The zero adjoint-grade sector is a native mathlib Lie subalgebra of the
 associative ring equipped with its commutator Lie bracket. -/
@@ -3439,7 +3799,8 @@ adjoint-grade closure results (`KKT₁`–`KKT₁₀`):
    seed fixed points (`K_{+2}(N_+, N_-) = 2 • N_+`, `K_{-2}(N_+, N_+) = 2 • N_-`),
 3. Odd carriers `G_{±1}^{L,R}` carry adjoint eigenvalues `±1` and bracket into `G_{±2}`,
 4. Opposite extremal commutators `[G_{+2}, G_{-2}]` decompose into `G_0^P - G_0^Q` and commute
-   with `Σ` (`[Σ, [G_{+2}, G_{-2}]] = 0`). -/
+   with `Σ` (`[Σ, [G_{+2}, G_{-2}]] = 0`), while additional concrete Peirce bracket closures
+   land in their corresponding range subgroups. -/
 theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
     (N_plus X Y : B)
     (h_nil : N_plus * N_plus = 0)
@@ -3490,6 +3851,12 @@ theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
       G_0_P N_plus (X * peirceR N_plus * Y) -
       G_0_Q N_plus (Y * peirceR N_plus * X) +
       peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus) ∧
+    (comm (peirceGradePlus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+       peirceGradePlus2Subgroup N_plus ∧
+     comm (peirceGradeMinus2 N_plus X) (peirceGradeZero N_plus Y) ∈
+       peirceGradeMinus2Subgroup N_plus ∧
+     comm (peirceGradePlus1 N_plus X) (peirceGradeMinus2 N_plus Y) ∈
+       peirceGradeMinus1Subgroup N_plus) ∧
     comm (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
       (4 : ℕ) • Sigma N_plus :=
   ⟨⟨KantorKoecherTitsStage.causalEdge_KKT1_KKT2,
@@ -3521,6 +3888,9 @@ theorem kantor_koecher_tits_five_graded_closure_poset_master_synthesis
     comm_Sigma_G_0_neutral N_plus X h_nil h_reg,
     comm_Sigma_comm_G_plus2_G_minus2 N_plus X Y h_nil h_reg⟩,
     ⟨(kkt_peirce_five_grade_completion N_plus X h_nil h_reg).2.2.2.1,
-      comm_K_plus2_seed_K_minus2_seed N_plus h_nil h_reg⟩⟩
+      ⟨⟨comm_peirceGradePlus2_zero_mem N_plus X Y h_nil h_reg,
+        comm_peirceGradeMinus2_zero_mem N_plus X Y h_nil h_reg,
+        comm_peirceGradePlus1_minus2_mem N_plus X Y h_nil h_reg⟩,
+       comm_K_plus2_seed_K_minus2_seed N_plus h_nil h_reg⟩⟩⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset

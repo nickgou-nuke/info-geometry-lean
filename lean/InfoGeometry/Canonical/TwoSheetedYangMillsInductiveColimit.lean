@@ -11,6 +11,7 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.Pi
 import Mathlib.Algebra.Star.Prod
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring
 import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
@@ -88,6 +89,33 @@ theorem two_sheet_tetraktys (A C : B) :
     ⟨_, _, hPhi, hJ, _, hJPhi, _, _, _, _, _, _, _, _, _⟩
   exact ⟨hPhi, hJ, hJPhi⟩
 
+/-- Finite shifted factorization for the two-sheet block. The parameter `μ`
+need only commute with the electron block. This is a ring
+identity derived from `Φ² = V`; it asserts no analytic resolvent
+or spectral-pole existence. -/
+theorem two_sheet_shifted_resolvent_factorization
+    (A C μ : B)
+    (hμ : μ * opElectron P A C = opElectron P A C * μ) :
+    (μ - opElectron P A C) * (μ + opElectron P A C) =
+      (μ * μ) * (1 - opQuadraticCoupling P A C) +
+        (μ * μ - 1) * opQuadraticCoupling P A C := by
+  have hPhiSq : opElectron P A C * opElectron P A C =
+      opQuadraticCoupling P A C := (two_sheet_tetraktys hP A C).1
+  calc
+    (μ - opElectron P A C) * (μ + opElectron P A C) =
+        μ * μ - opElectron P A C * opElectron P A C := by
+      noncomm_ring [hμ]
+    _ = μ * μ - opQuadraticCoupling P A C := by rw [hPhiSq]
+    _ = (μ * μ) * (1 - opQuadraticCoupling P A C) +
+        (μ * μ - 1) * opQuadraticCoupling P A C := by
+      calc
+        μ * μ - opQuadraticCoupling P A C =
+            (μ * μ - (μ * μ) * opQuadraticCoupling P A C) +
+              ((μ * μ) * opQuadraticCoupling P A C - opQuadraticCoupling P A C) := by abel
+        _ = (μ * μ) * (1 - opQuadraticCoupling P A C) +
+              (μ * μ - 1) * opQuadraticCoupling P A C := by
+          rw [mul_sub, sub_mul, mul_one, one_mul]
+
 /-- The grading involution negates the odd components and fixes the quadratic
 Peirce coupling. -/
 theorem grading_action (A C : B) :
@@ -155,6 +183,25 @@ theorem starRingHom_intertwines_two_sheeted_tower
     simp only [map_neg, InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
       map_sub, map_mul, hElec']
   exact ⟨hBit, hZig, hZag, hElec, hAx, hMass, hSpin, hOS, hDiss⟩
+
+/-- Star-preserving ring homomorphisms transport the shifted factorization to
+their images. The parameter need only commute with the source block; no
+centrality assumption on the entire target ring is needed. -/
+theorem starRingHom_transports_two_sheet_shifted_resolvent
+    {B₁ B₂ : Type*} [Ring B₁] [StarRing B₁] [Ring B₂] [StarRing B₂]
+    (φ : B₁ →+* B₂) (hφStar : ∀ x : B₁, φ (star x) = star (φ x))
+    {P A C μ : B₁}
+    (hP : P * P = P)
+    (hμ : μ * opElectron P A C = opElectron P A C * μ) :
+    (φ μ - opElectron (φ P) (φ A) (φ C)) *
+        (φ μ + opElectron (φ P) (φ A) (φ C)) =
+      (φ μ * φ μ) * (1 - opQuadraticCoupling (φ P) (φ A) (φ C)) +
+        (φ μ * φ μ - 1) * opQuadraticCoupling (φ P) (φ A) (φ C) := by
+  have hFactor := two_sheet_shifted_resolvent_factorization hP A C μ hμ
+  have hTransport := congrArg φ hFactor
+  rcases starRingHom_intertwines_two_sheeted_tower φ hφStar P A C μ with
+    ⟨_, _, _, hElectron, _, hGap, _, _, _⟩
+  simpa only [map_mul, map_sub, map_add, map_one, hElectron, hGap] using hTransport
 
 /-- An injective star-preserving ring map cannot collapse a nonzero two-sheet
 quadratic coupling. This is the algebraic nonvanishing statement needed when
@@ -403,8 +450,9 @@ theorem stepHomIter_preserves_nonzero_two_sheet_coupling
     (stepHomIter Cone k m).map_star' P Aop C hMass
 
 /-- **Theorem `LIII.1` (`colimit_renormalization_scale_invariance`):**
-Multi-step colimit cocycle invariance (`k → k + m → ∞`) of `opQuadraticCoupling`, `opSpinDipole`,
-`opGradingStarSandwich`, and `opNegativeAdjointSquare`. -/
+Multi-step colimit cocycle invariance (`k → k + m → ∞`) of the complete two-sheet
+operator package: grading, chiral waves, Dirac/axial fields, mass/spin pair,
+grading-star reflection, and the negative adjoint square. -/
 theorem colimit_renormalization_scale_invariance
     {A : ℕ → Type*} [∀ k, Ring (A k)] [∀ k, StarRing (A k)]
     {A_inf : Type*} [Ring A_inf] [StarRing A_inf]
@@ -420,7 +468,14 @@ theorem colimit_renormalization_scale_invariance
     ι_km (opGradingStarSandwich (ψ_m P_k) (ψ_m X_k)) =
       opGradingStarSandwich (ι_k P_k) (ι_k X_k) ∧
     ι_km (opNegativeAdjointSquare (ψ_m P_k) (ψ_m A_k) (ψ_m C_k) (ψ_m X_k)) =
-      opNegativeAdjointSquare (ι_k P_k) (ι_k A_k) (ι_k C_k) (ι_k X_k) := by
+      opNegativeAdjointSquare (ι_k P_k) (ι_k A_k) (ι_k C_k) (ι_k X_k) ∧
+    ι_km (opBitGrading (ψ_m P_k)) = opBitGrading (ι_k P_k) ∧
+    ι_km (opZig (ψ_m P_k) (ψ_m A_k)) = opZig (ι_k P_k) (ι_k A_k) ∧
+    ι_km (opZag (ψ_m P_k) (ψ_m C_k)) = opZag (ι_k P_k) (ι_k C_k) ∧
+    ι_km (opElectron (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) =
+      opElectron (ι_k P_k) (ι_k A_k) (ι_k C_k) ∧
+    ι_km (opAxial (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) =
+      opAxial (ι_k P_k) (ι_k A_k) (ι_k C_k) := by
   intro ψ_m ι_km ι_k
   have hCocycle : ∀ m' : ℕ, ∀ x : A k,
       (Cone.toColimit (k + m')).toRingHom ((stepHomIter Cone k m').toRingHom x) =
@@ -437,11 +492,13 @@ theorem colimit_renormalization_scale_invariance
       exact ih x
   rcases starRingHom_intertwines_two_sheeted_tower
       (stepHomIter Cone k m).toRingHom (stepHomIter Cone k m).map_star' P_k A_k C_k X_k with
-    ⟨_, _, _, _, _, hMass_m, hSpin_m, hOS_m, hDiss_m⟩
+    ⟨hBit_m, hZig_m, hZag_m, hElec_m, hAxial_m,
+      hMass_m, hSpin_m, hOS_m, hDiss_m⟩
   rcases starRingHom_intertwines_two_sheeted_tower
       (Cone.toColimit k).toRingHom (Cone.toColimit k).map_star' P_k A_k C_k X_k with
-    ⟨_, _, _, _, _, hMass_k, hSpin_k, hOS_k, hDiss_k⟩
-  refine ⟨hCocycle m, ?_, ?_, ?_, ?_⟩
+    ⟨hBit_k, hZig_k, hZag_k, hElec_k, hAxial_k,
+      hMass_k, hSpin_k, hOS_k, hDiss_k⟩
+  refine ⟨hCocycle m, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · calc ι_km (opQuadraticCoupling (ψ_m P_k) (ψ_m A_k) (ψ_m C_k))
       _ = ι_km (ψ_m (opQuadraticCoupling P_k A_k C_k)) := congr_arg ι_km hMass_m.symm
       _ = ι_k (opQuadraticCoupling P_k A_k C_k) := hCocycle m _
@@ -458,6 +515,26 @@ theorem colimit_renormalization_scale_invariance
       _ = ι_km (ψ_m (opNegativeAdjointSquare P_k A_k C_k X_k)) := congr_arg ι_km hDiss_m.symm
       _ = ι_k (opNegativeAdjointSquare P_k A_k C_k X_k) := hCocycle m _
       _ = opNegativeAdjointSquare (ι_k P_k) (ι_k A_k) (ι_k C_k) (ι_k X_k) := hDiss_k
+  · calc ι_km (opBitGrading (ψ_m P_k))
+      _ = ι_km (ψ_m (opBitGrading P_k)) := congr_arg ι_km hBit_m.symm
+      _ = ι_k (opBitGrading P_k) := hCocycle m _
+      _ = opBitGrading (ι_k P_k) := hBit_k
+  · calc ι_km (opZig (ψ_m P_k) (ψ_m A_k))
+      _ = ι_km (ψ_m (opZig P_k A_k)) := congr_arg ι_km hZig_m.symm
+      _ = ι_k (opZig P_k A_k) := hCocycle m _
+      _ = opZig (ι_k P_k) (ι_k A_k) := hZig_k
+  · calc ι_km (opZag (ψ_m P_k) (ψ_m C_k))
+      _ = ι_km (ψ_m (opZag P_k C_k)) := congr_arg ι_km hZag_m.symm
+      _ = ι_k (opZag P_k C_k) := hCocycle m _
+      _ = opZag (ι_k P_k) (ι_k C_k) := hZag_k
+  · calc ι_km (opElectron (ψ_m P_k) (ψ_m A_k) (ψ_m C_k))
+      _ = ι_km (ψ_m (opElectron P_k A_k C_k)) := congr_arg ι_km hElec_m.symm
+      _ = ι_k (opElectron P_k A_k C_k) := hCocycle m _
+      _ = opElectron (ι_k P_k) (ι_k A_k) (ι_k C_k) := hElec_k
+  · calc ι_km (opAxial (ψ_m P_k) (ψ_m A_k) (ψ_m C_k))
+      _ = ι_km (ψ_m (opAxial P_k A_k C_k)) := congr_arg ι_km hAxial_m.symm
+      _ = ι_k (opAxial P_k A_k C_k) := hCocycle m _
+      _ = opAxial (ι_k P_k) (ι_k A_k) (ι_k C_k) := hAxial_k
 
 /-- **Theorem `LIII.2` (`multi_channel_orthogonal_mass_gap_additivity`):**
 Multi-channel orthogonal additivity of `opElectron`, `opAxial`, `opQuadraticCoupling`, and `opSpinDipole`. -/
@@ -938,6 +1015,8 @@ theorem colimit_connes_higgs_triad_lift
     ι_km (opHiggsVEVSq (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = V_inf ∧
     ι_km (opHiggsMassOperator (ψ_m P_k) (ψ_m A_k) (ψ_m C_k) (ψ_m X_k)) =
       opHiggsMassOperator P_inf A_inf C_inf (ι_k X_k) ∧
+    ι_km (opAxial (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = J₅_inf ∧
+    ι_km (opSpinDipole (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = Sig_inf ∧
     Φ_inf * Φ_inf = V_inf ∧
     J₅_inf * J₅_inf = -V_inf ∧
     Φ_inf * Φ_inf + J₅_inf * J₅_inf = 0 ∧
@@ -953,24 +1032,25 @@ theorem colimit_connes_higgs_triad_lift
   have hP_inf : P_inf * P_inf = P_inf := by
     dsimp [P_inf, ι_k]; rw [← map_mul, hP_k]
   have hRG := colimit_renormalization_scale_invariance Cone k m P_k A_k C_k X_k
-  rcases hRG with ⟨hCocycle, hRG_Mass, _, _, hRG_Diss⟩
-  rcases starRingHom_intertwines_two_sheeted_tower
-      (stepHomIter Cone k m).toRingHom (stepHomIter Cone k m).map_star' P_k A_k C_k X_k with
-    ⟨_, _, _, hElec_m, _, _, _, _, _⟩
-  rcases starRingHom_intertwines_two_sheeted_tower
-      (Cone.toColimit k).toRingHom (Cone.toColimit k).map_star' P_k A_k C_k X_k with
-    ⟨_, _, _, hElec_k, _, _, _, _, _⟩
+  rcases hRG with ⟨_, hRG_Mass, hRG_Spin, _, hRG_Diss, _, _, _, hRG_Electron, hRG_Axial⟩
   have hRG_Phi : ι_km (opHiggsField (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = Φ_inf := by
-    change ι_km (opElectron (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = opElectron P_inf A_inf C_inf
-    calc ι_km (opElectron (ψ_m P_k) (ψ_m A_k) (ψ_m C_k))
-      _ = ι_km (ψ_m (opElectron P_k A_k C_k)) := congr_arg ι_km hElec_m.symm
-      _ = ι_k (opElectron P_k A_k C_k) := hCocycle _
-      _ = opElectron P_inf A_inf C_inf := hElec_k
+    change ι_km (opElectron (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) =
+      opElectron (ι_k P_k) (ι_k A_k) (ι_k C_k)
+    exact hRG_Electron
+  have hRG_J₅ : ι_km (opAxial (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = J₅_inf := by
+    change ι_km (opAxial (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) =
+      opAxial (ι_k P_k) (ι_k A_k) (ι_k C_k)
+    exact hRG_Axial
+  have hRG_Sig : ι_km (opSpinDipole (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) = Sig_inf := by
+    change ι_km (opSpinDipole (ψ_m P_k) (ψ_m A_k) (ψ_m C_k)) =
+      opSpinDipole (ι_k P_k) (ι_k A_k) (ι_k C_k)
+    exact hRG_Spin
   have hPhiSq := (connes_higgs_yukawa_mass_mechanism hP_inf A_inf C_inf 0).1
   rcases universal_higgs_goldstone_spin_triad hP_inf A_inf C_inf with
     ⟨hJSq, hNorm0, hPhiJ, hJPhi, _, _, _, _, _, hMPhi, hMV, hMJ, hMSpin⟩
   have hErl := erlangen_unitary_gauge_higgs_projection hP_inf A_inf C_inf α β
-  exact ⟨hRG_Phi, hRG_Mass, hRG_Diss, hPhiSq, hJSq, hNorm0, hPhiJ, hJPhi,
+  exact ⟨hRG_Phi, hRG_Mass, hRG_Diss, hRG_J₅, hRG_Sig,
+         hPhiSq, hJSq, hNorm0, hPhiJ, hJPhi,
          hMPhi, hMV, hMJ, hMSpin, hErl⟩
 
 /-- **Theorem `LXII.2` (`colimit_higgs_mexican_hat_and_goldstone_lift`):**
@@ -1047,6 +1127,55 @@ lemma opSpinDipole_zsmul (P A C : B) (N : ℤ) :
   change opZig P (N • A) * opZag P (N • C) - opZag P (N • C) * opZig P (N • A) =
     (N * N) • (opZig P A * opZag P C - opZag P C * opZig P A)
   rw [opZig_zsmul, opZag_zsmul, zsmul_mul_zsmul, zsmul_mul_zsmul, ← smul_sub]
+
+/-- Archetype LXX off-shell determinant scaling and on-shell invariance of
+the symmetric and skew cross-sheet readouts. The readouts are represented by
+the existing Peirce sandwich maps; no colimit or spacetime structure is used. -/
+theorem archetype_LXX_aharonov_weak_value_erlangen_invariance
+    (P A C O : B) (α β : ℤ) :
+    sandwichCross P ((α + β) • A) ((α - β) • C) O =
+      (α * α - β * β) • sandwichCross P A C O ∧
+    sandwichSkew P ((α + β) • A) ((α - β) • C) O =
+      (α * α - β * β) • sandwichSkew P A C O ∧
+    (α * α - β * β = 1 →
+      sandwichCross P ((α + β) • A) ((α - β) • C) O = sandwichCross P A C O ∧
+      sandwichSkew P ((α + β) • A) ((α - β) • C) O = sandwichSkew P A C O) := by
+  have hForward (X Y : B) :
+      ((α + β) • X) * O * ((α - β) • Y) =
+        (α * α - β * β) • (X * O * Y) := by
+    calc
+      _ = ((α + β) • (X * O)) * ((α - β) • Y) := by rw [smul_mul_assoc]
+      _ = (α + β) • ((X * O) * ((α - β) • Y)) := by rw [smul_mul_assoc]
+      _ = (α + β) • ((α - β) • ((X * O) * Y)) := by rw [mul_smul_comm]
+      _ = (α * α - β * β) • (X * O * Y) := by rw [smul_smul]; congr 1 <;> ring
+  have hBackward (X Y : B) :
+      ((α - β) • X) * O * ((α + β) • Y) =
+        (α * α - β * β) • (X * O * Y) := by
+    calc
+      _ = ((α - β) • (X * O)) * ((α + β) • Y) := by rw [smul_mul_assoc]
+      _ = (α - β) • ((X * O) * ((α + β) • Y)) := by rw [smul_mul_assoc]
+      _ = (α - β) • ((α + β) • ((X * O) * Y)) := by rw [mul_smul_comm]
+      _ = (α * α - β * β) • (X * O * Y) := by rw [smul_smul]; congr 1 <;> ring
+  have hPlus : conePlus P ((α + β) • A) = (α + β) • conePlus P A := by
+    change opZig P ((α + β) • A) = (α + β) • opZig P A
+    exact opZig_zsmul P A (α + β)
+  have hMinus : coneMinus P ((α - β) • C) = (α - β) • coneMinus P C := by
+    change opZag P ((α - β) • C) = (α - β) • opZag P C
+    exact opZag_zsmul P C (α - β)
+  have hCross :
+      sandwichCross P ((α + β) • A) ((α - β) • C) O =
+        (α * α - β * β) • sandwichCross P A C O := by
+    unfold sandwichCross
+    rw [hPlus, hMinus, hForward, hBackward, ← smul_add]
+  have hSkew :
+      sandwichSkew P ((α + β) • A) ((α - β) • C) O =
+        (α * α - β * β) • sandwichSkew P A C O := by
+    unfold sandwichSkew
+    rw [hPlus, hMinus, hForward, hBackward, ← smul_sub]
+  refine ⟨hCross, hSkew, ?_⟩
+  intro hOnShell
+  rw [hCross, hSkew, hOnShell, one_smul, one_smul]
+  exact ⟨rfl, rfl⟩
 
 lemma comm_zsmul_left (U V : B) (N : ℤ) :
     comm (N • U) V = N • comm U V := by

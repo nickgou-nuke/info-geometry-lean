@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Tactic.Abel
+import Mathlib.Analysis.CStarAlgebra.PositiveLinearMap
 import Mathlib.Algebra.Order.Star.Basic
 import Mathlib.Algebra.Star.Basic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
+
+open scoped ComplexOrder
 
 /-!
 # Algebraic Peirce reflection identities
@@ -82,5 +85,24 @@ theorem osPeirce_comm_eq_spin {P : B} (hP : P * P = P)
   rw [osPeirceReflection_conePlus hP hPs A]
   simp only [osPeirceSpinPairing, genSig, comm, neg_mul, mul_neg]
   abel
+
+end InfoGeometry.OperatorAlgebra.PeirceSpine
+
+namespace InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [CStarAlgebra B] [PartialOrder B] [StarOrderedRing B]
+
+open scoped ComplexOrder
+
+/-- Every positive complex-linear functional has nonnegative real part on
+the reflected Peirce pairing. This is a scalar positivity consequence, not a
+claim of the full Osterwalder--Schrader axiom system. -/
+theorem osPeirce_reflection_state_nonneg (φ : B →ₚ[ℂ] ℂ) {P : B}
+    (hP : P * P = P) (hPs : star P = P) (A : B) :
+    0 ≤ (φ (-(anticomm (osPeirceReflection P (conePlus P A))
+      (conePlus P A)))).re := by
+  rw [neg_osPeirce_anticomm_eq_mass hP hPs A]
+  exact (Complex.nonneg_iff.mp
+    (PositiveLinearMap.map_nonneg φ (osPeirceMassPairing_nonneg hPs A))).1
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -3329,3 +3329,21 @@ cross-only symmetric channels. The reflexive-pair mode actions are in
 they do not establish the transcript's universal quantum `T₁/T₂` relation or
 numerical decay rates without a positive state, time evolution, and scalar
 rate interpretation.
+
+### 2026-11-04: Transcript Archetype LXXXI second-level ladder recursion
+
+The latest `17Kj7o...` archive's Archetype LXXXI is now formalized by
+`archetype_LXXXI_second_level_superoperator_ladder_recursion` in
+[`ParaKahlerBregmanModularNoetherPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParaKahlerBregmanModularNoetherPoset.lean).
+From an idempotent Peirce cut it proves the two mixed double-commutator maps
+kill the chiral pair after one application, their difference is `-2 ad_Σ` on
+arbitrary operators, and their sum/difference square to the stated negative/
+positive `16 V²` actions on `Φ` and `J`. This is an algebraic operator identity;
+the Hall-rotation and Lorentz-boost phrases are not additional geometric or
+analytic claims.
+
+The archive's TCR-Former A85 algebraic cut/intervention equations were already
+covered by `blockLower_idempotent_intervention_synthesis` in
+[`BlockTriangularIntervention.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/BlockTriangularIntervention.lean),
+as recorded above; that owner does not formalize a learned attention model or
+the paper's empirical claims.

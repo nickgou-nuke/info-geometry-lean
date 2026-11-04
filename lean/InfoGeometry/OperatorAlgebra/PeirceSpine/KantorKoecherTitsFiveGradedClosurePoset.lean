@@ -7,6 +7,7 @@ import InfoGeometry.Core.JordanAssociatorRing
 import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.GolayLeechMOGSheetPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsNilpotentUnipotentVortexMassPoset
+import Mathlib.Algebra.Lie.Graded
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic.NoncommRing
 
@@ -2026,6 +2027,10 @@ the parity-anomaly adjoint action. -/
 def KKTAdjointGrade (N_plus : B) (k : ℤ) : AddSubgroup B :=
   kktAdjointGrade (Sigma N_plus) k
 
+/-- The integer adjoint eigenspaces, viewed as native `ℤ`-submodules. -/
+def KKTAdjointGradeSubmodule (N_plus : B) (k : ℤ) : Submodule ℤ B :=
+  (KKTAdjointGrade N_plus k).toIntSubmodule
+
 /-- The KKT grade subgroups are closed under the Lie bracket with additive
 degree: a bracket of grade `m` and grade `n` belongs to grade `m + n`.
 This is the native graded-Lie closure interface for downstream constructions. -/
@@ -2034,6 +2039,18 @@ theorem kkt_grade_bracket_mem {N_plus X Y : B} {m n : ℤ}
     (hY : Y ∈ KKTAdjointGrade N_plus n) :
     comm X Y ∈ KKTAdjointGrade N_plus (m + n) := by
   exact kktAdjointGrade_bracket hX hY
+
+local instance : LieRing B := LieRing.ofAssociativeRing
+
+/-- Mathlib's native homogeneous-bracket interface for the adjoint eigenspaces.
+This records degree addition without asserting a direct-sum decomposition. -/
+instance kkt_adjoint_grades_bracket :
+    SetLike.GradedBracket (fun k : ℤ => KKTAdjointGradeSubmodule (B := B) N_plus k)
+      (fun k : ℤ => KKTAdjointGradeSubmodule (B := B) N_plus k) where
+  bracket_mem := by
+    intro m n X Y hX hY
+    change comm X Y ∈ KKTAdjointGrade N_plus (m + n)
+    exact kkt_grade_bracket_mem hX hY
 
 /-- Each of the five concrete Peirce sectors belongs to its corresponding
 adjoint-eigenspace subgroup. -/

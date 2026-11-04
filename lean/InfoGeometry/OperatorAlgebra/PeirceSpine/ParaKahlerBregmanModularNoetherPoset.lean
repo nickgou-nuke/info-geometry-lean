@@ -289,6 +289,50 @@ theorem archetype_M3_dragged_frame_and_onsager_reciprocity
   · simp only [onsagerCrossOp]; peirce_nf hP
   · simp only [onsagerCrossOp]; peirce_nf hP
 
+/-! ### Archetype LXXXI: Second-Level Nilpotent Ladders and Elliptic/Hyperbolic Squares -/
+
+/-- The lowering and raising mixed double-commutator maps on the chiral block pair. -/
+def ladderMinusOp (P A C X : B) : B :=
+  comm (genPhi P A C) (comm (genJ P A C) X)
+
+def ladderPlusOp (P A C X : B) : B :=
+  comm (genJ P A C) (comm (genPhi P A C) X)
+
+/-- The sum and difference of the second-level chiral ladder maps. -/
+def ladderSumOp (P A C X : B) : B :=
+  ladderMinusOp P A C X + ladderPlusOp P A C X
+
+def ladderDiffOp (P A C X : B) : B :=
+  ladderMinusOp P A C X - ladderPlusOp P A C X
+
+/-- **Archetype LXXXI (second-level chiral ladder recursion).**
+The mixed double commutators act nilpotently on `Φ` and `J`; their sum has
+negative square and their difference has positive square, both with magnitude
+`16 V²`. The difference also equals the Jacobi commutator `-2 ad_Σ` on every
+operator. -/
+theorem archetype_LXXXI_second_level_superoperator_ladder_recursion
+    {P : B} (hP : P * P = P) (A C X : B) :
+    ladderMinusOp P A C (genPhi P A C) = -((4 : ℤ) • (genV P A C * genJ P A C)) ∧
+    ladderMinusOp P A C (genJ P A C) = 0 ∧
+    ladderPlusOp P A C (genJ P A C) = (4 : ℤ) • (genV P A C * genPhi P A C) ∧
+    ladderPlusOp P A C (genPhi P A C) = 0 ∧
+    ladderMinusOp P A C (ladderMinusOp P A C (genPhi P A C)) = 0 ∧
+    ladderMinusOp P A C (ladderMinusOp P A C (genJ P A C)) = 0 ∧
+    ladderPlusOp P A C (ladderPlusOp P A C (genPhi P A C)) = 0 ∧
+    ladderPlusOp P A C (ladderPlusOp P A C (genJ P A C)) = 0 ∧
+    ladderDiffOp P A C X = -((2 : ℤ) • comm (genSig P A C) X) ∧
+    ladderSumOp P A C (ladderSumOp P A C (genPhi P A C)) =
+      -((16 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C)) ∧
+    ladderSumOp P A C (ladderSumOp P A C (genJ P A C)) =
+      -((16 : ℤ) • ((genV P A C * genV P A C) * genJ P A C)) ∧
+    ladderDiffOp P A C (ladderDiffOp P A C (genPhi P A C)) =
+      (16 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C) ∧
+    ladderDiffOp P A C (ladderDiffOp P A C (genJ P A C)) =
+      (16 : ℤ) • ((genV P A C * genV P A C) * genJ P A C) := by
+  simp only [ladderMinusOp, ladderPlusOp, ladderSumOp, ladderDiffOp]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    peirce_nf hP
+
 /-! ### Archetype M₄: Circularly Polarized Light-Cone Eigenmodes & Non-Abelian Faraday Rotation -/
 
 /-- **Archetype `M₄` (Circularly Polarized Light-Cone Eigenmodes & Non-Abelian Faraday Rotation):**

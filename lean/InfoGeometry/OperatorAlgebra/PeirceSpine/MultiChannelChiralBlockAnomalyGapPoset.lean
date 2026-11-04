@@ -1325,6 +1325,33 @@ theorem Phi_w₃_sq_eq_Gap_w₃ (c₁ N₁ c₂ N₂ c₃ N₃ : B)
         h1_nil h1_reg h2_nil h2_reg h12_ab h12_ba h12_asb h12_sab hc1 hcs1 hc2 hcs2,
       weighted_single_Phi_sq c₃ N₃ h3_nil h3_reg hc3 hcs3]
 
+/-- Self-adjoint-weight form of the three-channel block-square theorem.
+Each coefficient commutes only with its own nilpotent; self-adjointness
+derives the corresponding commutation with the adjoint generator. -/
+theorem Phi_w₃_sq_eq_Gap_w₃_self_adjoint_weights (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h1_nil : N₁ * N₁ = 0) (h1_reg : N₁ * star N₁ * N₁ = N₁)
+    (h2_nil : N₂ * N₂ = 0) (h2_reg : N₂ * star N₂ * N₂ = N₂)
+    (h3_nil : N₃ * N₃ = 0) (h3_reg : N₃ * star N₃ * N₃ = N₃)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc1_star : star c₁ = c₁) (hc1 : c₁ * N₁ = N₁ * c₁)
+    (hc2_star : star c₂ = c₂) (hc2 : c₂ * N₂ = N₂ * c₂)
+    (hc3_star : star c₃ = c₃) (hc3 : c₃ * N₃ = N₃ * c₃) :
+    Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ =
+      Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃ := by
+  exact Phi_w₃_sq_eq_Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃
+    h1_nil h1_reg h2_nil h2_reg h3_nil h3_reg
+    h12_ab h12_ba h12_asb h12_sab
+    h13_ab h13_ba h13_asb h13_sab
+    h23_ab h23_ba h23_asb h23_sab
+    hc1 (comm_star_of_self_adjoint c₁ N₁ hc1_star hc1)
+    hc2 (comm_star_of_self_adjoint c₂ N₂ hc2_star hc2)
+    hc3 (comm_star_of_self_adjoint c₃ N₃ hc3_star hc3)
+
 /-- The three-channel weighted gap acts on channel one's weighted block by
 its squared weight. -/
 theorem Gap_w₃_mul_channel1 (c₁ N₁ c₂ N₂ c₃ N₃ : B)

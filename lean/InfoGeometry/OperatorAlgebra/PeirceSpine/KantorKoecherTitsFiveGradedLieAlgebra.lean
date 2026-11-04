@@ -75,6 +75,49 @@ theorem star_N_plus_mem_tkkGrade_m2 (N_plus : B)
         rw [hQstar]
     _ = star N_plus := hstarP
 
+/-- Every positive Jordan-associator KKT generator belongs to the concrete
+positive extremal Peirce grade, independently of additive torsion-freeness. -/
+theorem K_plus2_mem_tkkGrade_p2 (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    K_plus2 N_plus X ∈ tkkPeirceGrade N_plus .p2 := by
+  have hPN : P N_plus * N_plus = N_plus :=
+    YangMillsVortexPoset.P_mul_N_plus N_plus h_reg
+  have hNQ : N_plus * Q N_plus = N_plus :=
+    YangMillsVortexPoset.N_plus_mul_Q N_plus h_reg
+  have hG : G_plus2 N_plus X ∈ peirceGradePlus2Subgroup N_plus := by
+    change G_plus2 N_plus X ∈ Set.range (peirceGradePlus2 N_plus)
+    refine ⟨N_plus * X * N_plus, ?_⟩
+    change P N_plus * (N_plus * X * N_plus) * Q N_plus = N_plus * X * N_plus
+    calc P N_plus * (N_plus * X * N_plus) * Q N_plus
+        = (P N_plus * N_plus) * X * (N_plus * Q N_plus) := by noncomm_ring
+      _ = N_plus * X * N_plus := by rw [hPN, hNQ]
+  change K_plus2 N_plus X ∈ peirceGradePlus2Subgroup N_plus
+  rw [K_plus2_eq_two_sandwich N_plus X h_nil]
+  exact (peirceGradePlus2Subgroup N_plus).nsmul_mem hG 2
+
+/-- Every negative Jordan-associator KKT generator belongs to the concrete
+negative extremal Peirce grade, independently of additive torsion-freeness. -/
+theorem K_minus2_mem_tkkGrade_m2 (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    K_minus2 N_plus X ∈ tkkPeirceGrade N_plus .m2 := by
+  have hQstar : Q N_plus * star N_plus = star N_plus :=
+    YangMillsVortexPoset.Q_mul_star_N_plus N_plus h_reg
+  have hstarP : star N_plus * P N_plus = star N_plus :=
+    YangMillsVortexPoset.star_N_plus_mul_P N_plus h_reg
+  have hG : G_minus2 N_plus X ∈ peirceGradeMinus2Subgroup N_plus := by
+    change G_minus2 N_plus X ∈ Set.range (peirceGradeMinus2 N_plus)
+    refine ⟨star N_plus * X * star N_plus, ?_⟩
+    change Q N_plus * (star N_plus * X * star N_plus) * P N_plus =
+      star N_plus * X * star N_plus
+    calc Q N_plus * (star N_plus * X * star N_plus) * P N_plus
+        = (Q N_plus * star N_plus) * X * (star N_plus * P N_plus) := by noncomm_ring
+      _ = star N_plus * X * star N_plus := by rw [hQstar, hstarP]
+  change K_minus2 N_plus X ∈ peirceGradeMinus2Subgroup N_plus
+  rw [K_minus2_eq_two_sandwich N_plus X h_nil]
+  exact (peirceGradeMinus2Subgroup N_plus).nsmul_mem hG 2
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion
 freeness ensures the integer adjoint grades identify those components. -/

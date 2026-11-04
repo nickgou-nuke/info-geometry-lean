@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.QuantumGeometry.TensorBridge
+import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 
 /-!
 # Chiral nilpotent anomaly and Robertson uncertainty
@@ -32,6 +33,39 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
   [CompleteSpace H]
 
 local notation "EndH" => H →L[ℂ] H
+
+/-- The closed subspace on which the complementary operator `1 - Gap N`
+vanishes. -/
+noncomputable def gapSupport (N : EndH) : ClosedSubmodule ℂ H :=
+  ClosedSubmodule.comap (ContinuousLinearMap.id ℂ H - Gap N) ⊥
+
+/-- Membership in `gapSupport` means exactly that `Gap N` fixes the vector. -/
+theorem mem_gapSupport_iff_gap_fixed (N : EndH) (ψ : H) :
+    ψ ∈ gapSupport N ↔ Gap N ψ = ψ := by
+  change ((ContinuousLinearMap.id ℂ H - Gap N) ψ = 0) ↔ Gap N ψ = ψ
+  rw [sub_apply, id_apply]
+  constructor
+  · intro h
+    exact (sub_eq_zero.mp h).symm
+  · intro h
+    exact sub_eq_zero.mpr h.symm
+
+/-- For a regular nilpotent pair, the closed fixed-point subspace of the gap
+projection is exactly its range. -/
+theorem gapSupport_eq_range (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) :
+    {ψ : H | ψ ∈ gapSupport N} = Set.range (fun ψ : H => Gap N ψ) := by
+  ext ψ
+  constructor
+  · intro hψ
+    change ψ ∈ gapSupport N at hψ
+    rw [mem_gapSupport_iff_gap_fixed] at hψ
+    exact ⟨ψ, hψ⟩
+  · rintro ⟨φ, rfl⟩
+    change Gap N φ ∈ gapSupport N
+    rw [mem_gapSupport_iff_gap_fixed]
+    have h_idem := congrArg (fun T : EndH => T φ) (Gap_idem N h_nil h_reg)
+    simpa using h_idem
 
 /-- The parity anomaly `[N, N*]` is self-adjoint on the Hilbert operator space. -/
 theorem Sigma_selfAdjoint (N : EndH) : star (Sigma N) = Sigma N := by
@@ -96,6 +130,47 @@ theorem anomaly_expectation_sq_le_norm_sq_mul_gap_expectation (N : EndH) (ψ : H
 theorem Gap_selfAdjoint (N : EndH) : star (Gap N) = Gap N := by
   change star (Sigma N * Sigma N) = Sigma N * Sigma N
   rw [star_mul, Sigma_selfAdjoint]
+
+/-- For a regular nilpotent pair, the anomaly gap is the orthogonal projection
+onto its closed support subspace. -/
+theorem regular_gap_eq_orthogonal_projection (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    (gapSupport N).starProjection ψ = Gap N ψ := by
+  apply Submodule.eq_starProjection_of_mem_of_inner_eq_zero
+  · change Gap N ψ - Gap N (Gap N ψ) = 0
+    have h := congrArg (fun T : EndH => T ψ) (Gap_idem N h_nil h_reg)
+    have h_gap_apply : Gap N (Gap N ψ) = Gap N ψ := by simpa using h
+    rw [h_gap_apply, sub_self]
+  · intro w hw
+    have h_fixed : Gap N w = w := by
+      change w - Gap N w = 0 at hw
+      exact (sub_eq_zero.mp hw).symm
+    have h_adj : ContinuousLinearMap.adjoint (Gap N) = Gap N := by
+      rw [← ContinuousLinearMap.star_eq_adjoint]
+      exact Gap_selfAdjoint N
+    have h_inner := adjoint_inner_right (Gap N) ψ w
+    rw [h_adj] at h_inner
+    rw [inner_sub_left, ← h_inner, h_fixed, sub_self]
+
+/-- Under regularity, the closed support subspace is exactly the linear range
+of the gap projection. -/
+theorem regular_gap_support_eq_range (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) :
+    (gapSupport N).toSubmodule = (Gap N).toLinearMap.range := by
+  ext ψ
+  constructor
+  · intro h_support
+    change ψ - Gap N ψ = 0 at h_support
+    have h_fixed : Gap N ψ = ψ := (sub_eq_zero.mp h_support).symm
+    exact ⟨ψ, h_fixed⟩
+  · rintro ⟨φ, hφ⟩
+    change Gap N φ = ψ at hφ
+    have h_idem := congrArg (fun T : EndH => T φ) (Gap_idem N h_nil h_reg)
+    have h_fixed : Gap N ψ = ψ := by
+      rw [← hφ]
+      simpa using h_idem
+    change ψ - Gap N ψ = 0
+    rw [h_fixed, sub_self]
 
 /-- When the chiral anomaly is a regular nilpotent pair, `Gap` is idempotent
 and its state expectation is the squared norm of the projected state. -/

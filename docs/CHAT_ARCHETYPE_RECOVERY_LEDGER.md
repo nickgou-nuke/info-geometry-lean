@@ -2558,6 +2558,12 @@ state-dependent Cauchy--Schwarz estimate
 `‖⟨ψ, Sigma(N) ψ⟩‖² ≤ ‖ψ‖² · Re⟨ψ, Gap(N) ψ⟩`. It uses the proven norm identity
 for the gap expectation and does not assert a uniform positive spectral gap.
 
+The Hilbert owner now defines `gapSupport(N)` as the closed kernel of
+`1 - Gap(N)`. `mem_gapSupport_iff_gap_fixed` identifies its vectors as exactly
+the fixed vectors of `Gap(N)`, and `gapSupport_eq_range` proves that this
+closed subspace is precisely the range of the gap projection when the
+nilpotent pair is regular.
+
 The dedicated owner
 [`QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean`](../lean/InfoGeometry/QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean)
 now closes the scalar QGT-component map for every normalized state: the

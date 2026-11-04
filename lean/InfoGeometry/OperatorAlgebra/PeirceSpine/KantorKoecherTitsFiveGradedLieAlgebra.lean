@@ -41,6 +41,10 @@ theorem peirceFiveGradeDegree_tkkGradeIndex (i : TKKGrade) :
 def tkkPeirceGrade (N_plus : B) (i : TKKGrade) : Submodule ℤ B :=
   peirceFiveGradeSubmodule N_plus (tkkGradeIndex i)
 
+private theorem corner_sandwich_outer (e f x : B) :
+    e * (f * x * f) * e = (e * f) * x * (f * e) := by
+  noncomm_ring
+
 /-- The regular nilpotent generator belongs to the extremal positive Peirce
 grade, without any additive-torsion-freeness assumption. -/
 theorem N_plus_mem_tkkGrade_p2 (N_plus : B)
@@ -361,9 +365,14 @@ theorem peirce_p1_m1_bracket_mem_z0 (N_plus x y : B)
         peirceGradeZeroSubgroup N_plus
   rw [comm_peirceGradePlus1_minus1_closed N_plus X Y h_nil h_reg]
   change _ ∈ Set.range (peirceGradeZero N_plus)
-  refine ⟨X * peirceR N_plus * Y - Y * peirceR N_plus * X +
-      peirceR N_plus * (X * Q N_plus * Y - Y * P N_plus * X) * peirceR N_plus, ?_⟩
-  -- Each summand is already supported in a single diagonal Peirce corner.
+  let A := X * peirceR N_plus * Y
+  let C := Y * peirceR N_plus * X
+  let D := X * Q N_plus * Y - Y * P N_plus * X
+  let Z := P N_plus * A * P N_plus - Q N_plus * C * Q N_plus +
+    peirceR N_plus * D * peirceR N_plus
+  refine ⟨Z, ?_⟩
+  -- The witness is already a sum of the three mutually orthogonal diagonal corners.
+  -- Expanding the Peirce projection therefore returns it unchanged.
   have hP2 : P N_plus * P N_plus = P N_plus :=
     YangMillsVortexPoset.P_idem N_plus h_reg
   have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
@@ -377,14 +386,33 @@ theorem peirce_p1_m1_bracket_mem_z0 (N_plus x y : B)
   have hQR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.1
   have hRQ := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
   have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
-    have hGap2 := Gap_idem N_plus h_nil h_reg
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
     dsimp [peirceR]
     rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
-  dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR]
-  simp only [sub_mul, add_mul, mul_sub, mul_add, hP2, hQ2, hR2,
-    hPQ, hQP, hPR, hRP, hQR, hRQ, zero_mul, mul_zero,
-    zero_add, add_zero, sub_zero, zero_sub]
+  dsimp [Z, A, C, D, peirceGradeZero, peircePP, peirceQQ, peirceRR]
+  simp only [mul_add, add_mul, mul_sub, sub_mul]
+  simp only [corner_sandwich_outer, hP2, hQ2, hPQ, hQP, hPR, hRP, hQR, hRQ,
+    hR2, zero_mul, mul_zero, zero_add, add_zero, sub_zero, zero_sub]
+  dsimp [G_0_P, G_0_Q]
   noncomm_ring
+
+/-- Reversed-order grade-zero closure for the `(-1,+1)` bracket, obtained
+from Lie antisymmetry and closure of the grade-zero additive subgroup. -/
+theorem peirce_m1_p1_bracket_mem_z0 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m1)
+    (hy : y ∈ tkkPeirceGrade N_plus .p1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .z0 := by
+  change x ∈ peirceGradeMinus1Subgroup N_plus at hx
+  change y ∈ peirceGradePlus1Subgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradeZeroSubgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradeZeroSubgroup N_plus).neg_mem
+    (peirce_p1_m1_bracket_mem_z0 N_plus y x h_nil h_reg hy hx)
 
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion

@@ -601,6 +601,35 @@ theorem universal_rosetta_stone_hurwitz_nambu_kantor (α : R) (p : Vec3 R) (X : 
   refine ⟨by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring,
           by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring⟩
 
+/-- The diagonal components of the cubic self-associator of a pure upper
+Zorn mode depend only on its vector `x`, not on the diagonal entries `α, β`.
+The two components are the Nambu 3-bracket and its negative. -/
+theorem diagonal_self_associator_is_nambu (α β : R) (x : Vec3 R) :
+    (associator (⟨α, x, 0, β⟩ : ZornNC R)
+      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).α =
+        Vec3.nambu3 x ∧
+    (associator (⟨α, x, 0, β⟩ : ZornNC R)
+      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).β =
+        -Vec3.nambu3 x := by
+  constructor <;> zorn_nc_ring
+
+/-- Changing either diagonal entry leaves both diagonal channels of the cubic
+self-associator unchanged when the off-diagonal vector mode is fixed. -/
+theorem diagonal_self_associator_invariant_under_dressing
+    (α β γ δ : R) (x : Vec3 R) :
+    (associator (⟨α, x, 0, β⟩ : ZornNC R)
+      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).α =
+      (associator (⟨γ, x, 0, δ⟩ : ZornNC R)
+        (⟨γ, x, 0, δ⟩ : ZornNC R) (⟨γ, x, 0, δ⟩ : ZornNC R)).α ∧
+    (associator (⟨α, x, 0, β⟩ : ZornNC R)
+      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).β =
+      (associator (⟨γ, x, 0, δ⟩ : ZornNC R)
+        (⟨γ, x, 0, δ⟩ : ZornNC R) (⟨γ, x, 0, δ⟩ : ZornNC R)).β := by
+  exact ⟨(diagonal_self_associator_is_nambu α β x).1.trans
+      (diagonal_self_associator_is_nambu γ δ x).1.symm,
+    (diagonal_self_associator_is_nambu α β x).2.trans
+      (diagonal_self_associator_is_nambu γ δ x).2.symm⟩
+
 /-- **Theorem ZS_R6 (`universal_total_tensor_involution_is_anti_automorphism`):**
 Over ANY `[Ring R] [StarRing R]`, the Total Tensor Involution `totalConj = star ⊗ bar`
 satisfies `totalConj (X * Y) = totalConj Y * totalConj X` identically for all `X, Y : ZornNC R`. -/

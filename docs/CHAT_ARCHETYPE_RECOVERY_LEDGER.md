@@ -3575,6 +3575,16 @@ pairing result but do not supply the full Osterwalder--Schrader axiom set, a
 transfer-matrix contraction, or a spectral-gap inequality. The module overview
 was updated to state this scope precisely.
 
+The archived XLIV snippet also identifies a different expression,
+`Tr(Θ(N₊)⋆ N₊)`, as the mass-gap pairing. That identification is false for its
+own Peirce-corner definitions: `Θ(N₊) = -N₊⋆`, while `N₊² = 0`, so
+`(Θ(N₊))⋆ N₊ = 0` before taking the trace. The owner theorem
+`star_osPeirceReflection_mul_conePlus_eq_zero` now records this correction for
+every self-adjoint idempotent in an arbitrary star-ring. The positive mass
+pairing remains the negative Jordan anticommutator proved above. This resolves
+the algebraic discrepancy only; transfer-matrix contraction and a spectral
+gap inequality remain open.
+
 ### 2026-11-04: Transcript Archetypes XLV--XLVIII root and tower claims
 
 The XLV root-weight and reflexive-pair `sl₂` identities already have generic

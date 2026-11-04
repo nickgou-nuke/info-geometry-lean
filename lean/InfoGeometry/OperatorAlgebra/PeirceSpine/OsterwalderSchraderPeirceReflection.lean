@@ -48,6 +48,19 @@ theorem osPeirceReflection_conePlus {P : B} (hP : P * P = P)
   rw [osPeirceReflection, star_conePlus hPs]
   peirce_nf hP
 
+/-- The direct star-pairing of a reflected forward corner with that corner
+vanishes: the reflected corner is `-C⋆`, so its star is `-C`, and `C² = 0`
+for every upper Peirce corner `C = conePlus P A`. Thus this expression is not
+the positive mass pairing below; that pairing is the negative Jordan
+anticommutator. -/
+theorem star_osPeirceReflection_mul_conePlus_eq_zero {P : B}
+    (hP : P * P = P) (hPs : star P = P) (A : B) :
+    star (osPeirceReflection P (conePlus P A)) * conePlus P A = 0 := by
+  rw [osPeirceReflection_conePlus hP hPs, star_neg,
+    star_coneMinus hPs, star_star, neg_mul,
+    conePlus_mul_conePlus hP]
+  simp
+
 /-- The negative anticommutator with the reflected upper corner is exactly
 the algebraic Jordan mass pairing. This identity alone is not an order or
 positivity statement. -/

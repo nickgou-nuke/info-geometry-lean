@@ -53,6 +53,25 @@ theorem gap_expectation_eq_anomaly_norm_sq (N : EndH) (ψ : H) :
   rw [← Complex.ofReal_pow]
   exact Complex.ofReal_re _
 
+/-- The square-gap and anomaly have the same zero modes on the Hilbert space:
+`Gap N ψ = 0` exactly when `Σ N ψ = 0`. -/
+theorem gap_kernel_iff_anomaly_kernel (N : EndH) (ψ : H) :
+    Gap N ψ = 0 ↔ Sigma N ψ = 0 := by
+  constructor
+  · intro h_gap
+    have h_expect : (inner ℂ ψ (Gap N ψ)).re = 0 := by
+      rw [h_gap]
+      simp
+    have h_norm_sq : ‖Sigma N ψ‖ ^ 2 = 0 := by
+      rw [← gap_expectation_eq_anomaly_norm_sq]
+      exact h_expect
+    have h_norm : ‖Sigma N ψ‖ = 0 := by
+      nlinarith [sq_nonneg (‖Sigma N ψ‖ : ℝ)]
+    exact norm_eq_zero.mp h_norm
+  · intro h_sigma
+    change Sigma N (Sigma N ψ) = 0
+    simpa using congrArg (fun v : H => Sigma N v) h_sigma
+
 /-- Positivity of the anomaly-square gap on every Hilbert-space vector. -/
 theorem gap_expectation_nonneg (N : EndH) (ψ : H) :
     0 ≤ (inner ℂ ψ (Gap N ψ)).re := by
@@ -61,7 +80,8 @@ theorem gap_expectation_nonneg (N : EndH) (ψ : H) :
 
 /-- The anomaly-square operator is self-adjoint. -/
 theorem Gap_selfAdjoint (N : EndH) : star (Gap N) = Gap N := by
-  simp [Gap, star_mul, Sigma_selfAdjoint]
+  change star (Sigma N * Sigma N) = Sigma N * Sigma N
+  rw [star_mul, Sigma_selfAdjoint]
 
 /-- When the chiral anomaly is a regular nilpotent pair, `Gap` is idempotent
 and its state expectation is the squared norm of the projected state. -/
@@ -72,12 +92,61 @@ theorem regular_gap_expectation_eq_norm_sq (N : EndH)
     rw [← ContinuousLinearMap.star_eq_adjoint]
     exact Gap_selfAdjoint N
   have h_inner := adjoint_inner_right (Gap N) ψ (Gap N ψ)
-  rw [h_adj, ← Gap_idem N h_nil h_reg] at h_inner
-  change (inner ℂ ψ (Gap N (Gap N ψ))).re = ‖Gap N ψ‖ ^ 2
-  rw [h_inner, inner_self_eq_norm_sq_to_K]
-  change (Complex.ofReal (‖Gap N ψ‖) ^ 2).re = ‖Gap N ψ‖ ^ 2
-  rw [← Complex.ofReal_pow]
-  exact Complex.ofReal_re _
+  rw [h_adj] at h_inner
+  have h_gap_apply : Gap N (Gap N ψ) = Gap N ψ := by
+    have h := congrArg (fun T : EndH => T ψ) (Gap_idem N h_nil h_reg)
+    simpa using h
+  calc (inner ℂ ψ (Gap N ψ)).re
+      = (inner ℂ ψ (Gap N (Gap N ψ))).re := by rw [h_gap_apply]
+    _ = (inner ℂ (Gap N ψ) (Gap N ψ)).re := congrArg Complex.re h_inner
+    _ = ‖Gap N ψ‖ ^ 2 := by
+      rw [inner_self_eq_norm_sq_to_K]
+      change (Complex.ofReal (‖Gap N ψ‖) ^ 2).re = ‖Gap N ψ‖ ^ 2
+      rw [← Complex.ofReal_pow]
+      exact Complex.ofReal_re _
+
+/-- On the regular support, the projected state and its anomaly image have
+the same Hilbert norm. -/
+theorem regular_gap_norm_eq_anomaly_norm (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    ‖Gap N ψ‖ = ‖Sigma N ψ‖ := by
+  have h_sq : ‖Gap N ψ‖ ^ 2 = ‖Sigma N ψ‖ ^ 2 := by
+    calc ‖Gap N ψ‖ ^ 2 = (inner ℂ ψ (Gap N ψ)).re :=
+          (regular_gap_expectation_eq_norm_sq N h_nil h_reg ψ).symm
+      _ = ‖Sigma N ψ‖ ^ 2 := gap_expectation_eq_anomaly_norm_sq N ψ
+  nlinarith [norm_nonneg (Gap N ψ), norm_nonneg (Sigma N ψ)]
+
+/-- The regular anomaly support and its complementary projection give an
+orthogonal Pythagorean decomposition of every Hilbert-space vector. -/
+theorem regular_gap_pythagorean_decomposition (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    ‖ψ‖ ^ 2 = ‖Gap N ψ‖ ^ 2 + ‖(1 - Gap N) ψ‖ ^ 2 := by
+  have h_adj : ContinuousLinearMap.adjoint (Gap N) = Gap N := by
+    rw [← ContinuousLinearMap.star_eq_adjoint]
+    exact Gap_selfAdjoint N
+  have h_idem : Gap N * Gap N = Gap N := Gap_idem N h_nil h_reg
+  have h_gap_comp : Gap N * (1 - Gap N) = 0 := by
+    rw [mul_sub, mul_one, h_idem, sub_self]
+  have h_orth : inner ℂ (Gap N ψ) ((1 - Gap N) ψ) = 0 := by
+    have h_inner := adjoint_inner_right (Gap N) ψ ((1 - Gap N) ψ)
+    rw [h_adj] at h_inner
+    have h_annihilate : Gap N ((1 - Gap N) ψ) = 0 := by
+      have h := congrArg (fun T : EndH => T ψ) h_gap_comp
+      simpa using h
+    rw [h_annihilate] at h_inner
+    simpa using h_inner.symm
+  have h_split : ψ = Gap N ψ + (1 - Gap N) ψ := by
+    change ψ = Gap N ψ + (ψ - Gap N ψ)
+    calc ψ = (ψ - Gap N ψ) + Gap N ψ := (sub_add_cancel ψ (Gap N ψ)).symm
+      _ = Gap N ψ + (ψ - Gap N ψ) := add_comm _ _
+  have h_pyth :=
+    norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
+      (Gap N ψ) ((1 - Gap N) ψ) h_orth
+  calc ‖ψ‖ ^ 2 = ‖Gap N ψ + (1 - Gap N) ψ‖ ^ 2 :=
+      congrArg (fun v : H => ‖v‖ ^ 2) h_split
+    _ = ‖Gap N ψ‖ ^ 2 + ‖(1 - Gap N) ψ‖ ^ 2 := by
+      rw [pow_two, pow_two, pow_two]
+      exact h_pyth
 
 /-- The imaginary multiple of the symmetric chiral block is skew-adjoint. -/
 theorem imaginaryPhi_skewAdjoint (N : EndH) :

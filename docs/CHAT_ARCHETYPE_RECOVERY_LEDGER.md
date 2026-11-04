@@ -2282,6 +2282,46 @@ or independent A-A/QA-A review for those owners. This resolves the A26–A28
 source correspondence only, not the remaining shared-link A29–A44 audit or
 the complete multi-archive objective.
 
+### 2026-11-04: Shared-link A29–A44 Hodge, parity, and chiral-factor audit
+
+The repeated shared-link A29–A44 fences route to existing generic Peirce-ring
+owners; they do not require a duplicate file. A29's chiral derivation and
+Hodge–Dirac formulas are in
+`PureNonCommutativeOperatorSpine.archetype_A29_chiral_hodge_dirac_laplacian_and_qgt_generation`
+and the corresponding `PeirceSpine` owner. The claimed Laplacian
+`{d_Φ, d̄_Φ}(X) = 2 V X` is overstrong in a noncommutative ring: the corrected
+`PeirceSpine.Orientation.hodgeLaplacianPhi_eq` gives
+`2 • (V X + X V)`. Its theorem
+`hodgeLaplacianPhi_left_only_iff` characterizes exactly when the submitted
+left-only expression happens to hold at a given `X`; it requires the omitted
+right term to vanish after doubling. A30's cochain and generator readouts are
+owned by `archetype_A30_de_rham_hodge_cochain_complex`; the word “de Rham”
+here labels a ring-defined operator complex and does not construct a manifold
+or differential forms.
+
+A31–A32's generator actions and homogenized Laplacian are represented by
+`archetype_A31_graded_derivations_on_peirce_generators` and
+`archetype_A32_laplacian_left_weight_generation_of_homogenized_channels` in
+`KantorBogoliubovSpinePoset.lean`. A33–A34's grading, half-twist, and
+Hodge-conjugation identities are owned by
+`Orientation.archetype_A33_hodge_star_and_half_twists` and
+`Orientation.archetype_A34_hodge_conjugate_codifferentials`. A35–A41's
+self-duality, parity-twisted actions, and idempotency-defect recurrences are
+represented by the correspondingly named A35–A41 theorems in
+`KantorBogoliubovSpinePoset.lean`; these are algebraic identities under the
+stated idempotent cut, not analytic zeta or topological interpretations.
+
+A42's ordered chord products and their sum/difference are
+`PrimalDual.archetype_A42_primal_dual_chord_potentials`. A43 synthesizes those
+products with the Euler-factor identities in
+`KantorBogoliubovSpinePoset.archetype_A43_primal_dual_potentials_and_euler_factor_identities`.
+A44's four-factor product and even-grade readouts are in
+`KantorBogoliubovSpinePoset.archetype_A44_chiral_euler_factors_and_four_factor_supercharge_product`.
+This batch establishes source correspondence to checked owner declarations;
+it does not certify every repeated transcript fence as a distinct theorem,
+nor does its ring algebra alone prove analytic Dirichlet-series or spectral
+claims. The overall multi-archive inventory remains open.
+
 ### 2026-11-04: `17Kj7o...` turn 0012 contextual density / cross-correlation fence
 
 This packet is already covered by reusable owners; no duplicate matrix-only
@@ -2496,6 +2536,19 @@ that `Σ(N)` is self-adjoint and that the expectation of `Gap(N) = Σ(N)^2` is
 `‖Σ(N) ψ‖²` for every Hilbert-space vector, hence nonnegative. This is positivity
 of the quadratic operator expectation on the positive Hilbert carrier, not a
 claim of a uniform spectral lower bound or a gap for the separate Krein form.
+
+The dedicated owner
+[`QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean`](../lean/InfoGeometry/QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean)
+now closes the scalar QGT-component map for every normalized state: the
+imaginary component of the projective QGT evaluated on `(i Φ(N), J(N))` is
+exactly `⟪ψ, Σ(N) ψ⟫`. It derives this from the proved Berry-curvature
+commutator identity and the QGT definition, assuming `N² = 0`; regularity is
+not required for this component identity. The locked target build passed
+(3,184 jobs, exit 0), the staged proof-proxy gate passed, and the semantic
+vacuity audit reported zero findings. This supplies the explicit scalar
+Hilbert-QGT readout of the operator anomaly. An intertwiner from the distinct
+abstract Clifford/Krein carriers into this Hilbert realization, and an
+indefinite-form Robertson inequality, remain unproved.
 
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 

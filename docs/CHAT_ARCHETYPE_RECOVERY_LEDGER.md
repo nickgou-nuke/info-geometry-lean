@@ -1390,12 +1390,14 @@ not create a parallel API.
   operator glide in
   `archetype_A102_carrier_glide_wallpaper_glide_intertwining_and_double_glide_translation`:
   its Krein reflection reverses the off-seam component and its square is a
-  translation under the seam hypothesis. The A116 readouts are not currently
-  connected to that glide: the repo search found no proved Krein-fixed law for
-  their even component or Krein-odd law for their odd component. The equal
-  bridge signs in the two contractions establish an algebraic sign pattern,
-  but do not by themselves establish the A102 reflection law or a topological
-  Möbius structure. A different, already-proved reflection is owned by
+  translation under the seam hypothesis. The later bridge
+  `PlabicPathParityKreinBridge.nested_zorn_three_corner_readouts_krein_fixed`
+  proves both A116 readouts fixed by the A102 middle-shell `kreinReflect`,
+  under self-adjoint shell idempotents and adjoint-compatible link
+  coefficients. This closes the Krein-fixed readout law, but does not prove
+  the additional `wallpaperGlide` intertwining/double-translation law for
+  these contractions or a topological Möbius structure. A different,
+  already-proved reflection is owned by
   `PlabicKleinActionBridge.parity_transports_plabic_boundary_and_nullspace`
   and is included in the A97 master theorem: `parityConj` is an involutive ring
   action that transports the plabic boundary operator under `A,C ↦ -A,-C`.

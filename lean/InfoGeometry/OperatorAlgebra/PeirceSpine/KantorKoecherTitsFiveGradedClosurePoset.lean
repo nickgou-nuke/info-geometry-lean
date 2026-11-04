@@ -1331,6 +1331,44 @@ theorem comm_G_0_P_G_plus1_R (N_plus X Y : B)
   dsimp [comm]
   rw [hForward, hBackward, sub_self]
 
+/-- The positive diagonal block acts on the right `-1` carrier and preserves
+that carrier; the sign comes from the reversed order of the nonzero product. -/
+theorem comm_G_0_P_G_minus1_R (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_P N_plus X) (G_minus1_R N_plus Y) =
+      -G_minus1_R N_plus (Y * star N_plus * X * N_plus) := by
+  have hPS := P_mul_Sigma_eq_P N_plus h_nil h_reg
+  have hGapP : P N_plus * Gap N_plus = P N_plus := by
+    calc P N_plus * Gap N_plus
+        = (P N_plus * Sigma N_plus) * Sigma N_plus := by
+            dsimp [Gap]
+            rw [← mul_assoc]
+      _ = P N_plus * Sigma N_plus := congrArg (fun z : B => z * Sigma N_plus) hPS
+      _ = P N_plus := hPS
+  have hPR : P N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hGapP, sub_self]
+  have hStarP : star N_plus * P N_plus = star N_plus :=
+    YangMillsVortexPoset.star_N_plus_mul_P N_plus h_reg
+  have hForward : G_0_P N_plus X * G_minus1_R N_plus Y = 0 := by
+    dsimp [G_0_P, G_minus1_R]
+    calc (P N_plus * X * P N_plus) * ((1 - Gap N_plus) * Y * star N_plus)
+        = (P N_plus * X) * (P N_plus * (1 - Gap N_plus)) *
+            (Y * star N_plus) := by noncomm_ring
+      _ = 0 := by rw [hPR, mul_zero, zero_mul]
+  have hBackward : G_minus1_R N_plus Y * G_0_P N_plus X =
+      G_minus1_R N_plus (Y * star N_plus * X * N_plus) := by
+    dsimp [G_0_P, G_minus1_R]
+    calc ((1 - Gap N_plus) * Y * star N_plus) * (P N_plus * X * P N_plus)
+        = ((1 - Gap N_plus) * Y) * (star N_plus * P N_plus) * (X * P N_plus) := by
+            noncomm_ring
+      _ = ((1 - Gap N_plus) * Y) * star N_plus * (X * P N_plus) := by rw [hStarP]
+      _ = (1 - Gap N_plus) * (Y * star N_plus * X * N_plus) * star N_plus := by
+            dsimp [P]
+            noncomm_ring
+  dsimp [comm]
+  rw [hForward, hBackward, zero_sub]
+
 /-- Helper: `Sigma N_plus * Q N_plus = -Q N_plus`. -/
 theorem Sigma_mul_Q_eq_neg_Q (N_plus : B)
     (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :
@@ -1344,6 +1382,79 @@ theorem Q_mul_Sigma_eq_neg_Q (N_plus : B)
     Q N_plus * Sigma N_plus = -Q N_plus := by
   dsimp [Q]
   rw [mul_assoc, N_plus_mul_Sigma N_plus h_nil h_reg, mul_neg]
+
+/-- The negative diagonal block acts on the left `-1` carrier within that
+carrier; the reverse product vanishes by orthogonality with the neutral support. -/
+theorem comm_G_0_Q_G_minus1_L (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_Q N_plus X) (G_minus1_L N_plus Y) =
+      G_minus1_L N_plus (N_plus * X * star N_plus * Y) := by
+  have hGapStar := Gap_mul_star_N_plus N_plus h_nil h_reg
+  have hRQ : (1 - Gap N_plus) * Q N_plus = 0 := by
+    dsimp [Q]
+    calc (1 - Gap N_plus) * (star N_plus * N_plus)
+        = ((1 - Gap N_plus) * star N_plus) * N_plus := by rw [mul_assoc]
+      _ = (star N_plus - Gap N_plus * star N_plus) * N_plus := by rw [sub_mul, one_mul]
+      _ = (star N_plus - star N_plus) * N_plus := by rw [hGapStar]
+      _ = 0 := by rw [sub_self, zero_mul]
+  have hQStar : Q N_plus * star N_plus = star N_plus :=
+    YangMillsVortexPoset.Q_mul_star_N_plus N_plus h_reg
+  have hForward : G_0_Q N_plus X * G_minus1_L N_plus Y =
+      G_minus1_L N_plus (N_plus * X * star N_plus * Y) := by
+    dsimp [G_0_Q, G_minus1_L]
+    calc (Q N_plus * X * Q N_plus) * (star N_plus * Y * (1 - Gap N_plus))
+        = (Q N_plus * X) * (Q N_plus * star N_plus) * Y * (1 - Gap N_plus) := by
+            noncomm_ring
+      _ = (Q N_plus * X) * star N_plus * Y * (1 - Gap N_plus) := by rw [hQStar]
+      _ = star N_plus * (N_plus * X * star N_plus * Y) * (1 - Gap N_plus) := by
+            dsimp [Q]
+            noncomm_ring
+  have hBackward : G_minus1_L N_plus Y * G_0_Q N_plus X = 0 := by
+    dsimp [G_0_Q, G_minus1_L]
+    calc (star N_plus * Y * (1 - Gap N_plus)) * (Q N_plus * X * Q N_plus)
+        = (star N_plus * Y) * ((1 - Gap N_plus) * Q N_plus) * (X * Q N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hRQ, mul_zero, zero_mul]
+  dsimp [comm]
+  rw [hForward, hBackward, sub_zero]
+
+/-- The negative diagonal block annihilates the right `-1` carrier because
+both endpoint products meet orthogonal Peirce supports. -/
+theorem comm_G_0_Q_G_minus1_R (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_Q N_plus X) (G_minus1_R N_plus Y) = 0 := by
+  have hGapStar := Gap_mul_star_N_plus N_plus h_nil h_reg
+  have hQGap : Q N_plus * Gap N_plus = Q N_plus := by
+    calc Q N_plus * Gap N_plus
+        = (Q N_plus * Sigma N_plus) * Sigma N_plus := by
+            dsimp [Gap]
+            rw [← mul_assoc]
+      _ = (-Q N_plus) * Sigma N_plus := by
+            rw [Q_mul_Sigma_eq_neg_Q N_plus h_nil h_reg]
+      _ = -(Q N_plus * Sigma N_plus) := by rw [neg_mul]
+      _ = -(-Q N_plus) := by rw [Q_mul_Sigma_eq_neg_Q N_plus h_nil h_reg]
+      _ = Q N_plus := by rw [neg_neg]
+  have hQR : Q N_plus * (1 - Gap N_plus) = 0 := by
+    rw [mul_sub, mul_one, hQGap, sub_self]
+  have hMQ : star N_plus * Q N_plus = 0 := by
+    dsimp [Q]
+    rw [← mul_assoc, YangMillsVortexPoset.star_N_plus_sq N_plus h_nil, zero_mul]
+  have hForward : G_0_Q N_plus X * G_minus1_R N_plus Y = 0 := by
+    dsimp [G_0_Q, G_minus1_R]
+    calc (Q N_plus * X * Q N_plus) * ((1 - Gap N_plus) * Y * star N_plus)
+        = (Q N_plus * X) * (Q N_plus * (1 - Gap N_plus)) *
+            (Y * star N_plus) := by noncomm_ring
+      _ = 0 := by rw [hQR, mul_zero, zero_mul]
+  have hBackward : G_minus1_R N_plus Y * G_0_Q N_plus X = 0 := by
+    dsimp [G_0_Q, G_minus1_R]
+    calc ((1 - Gap N_plus) * Y * star N_plus) * (Q N_plus * X * Q N_plus)
+        = ((1 - Gap N_plus) * Y) * (star N_plus * Q N_plus) *
+            (X * Q N_plus) := by noncomm_ring
+      _ = 0 := by rw [hMQ, mul_zero, zero_mul]
+  dsimp [comm]
+  rw [hForward, hBackward, sub_self]
 
 /-- The negative diagonal grade-zero block acts on the right `+1` carrier
 within that carrier, with the action given by Peirce block composition. -/

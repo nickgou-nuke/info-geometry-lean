@@ -2788,3 +2788,136 @@ Section 148 therefore has formalized finite algebraic fragments, but its
 headline knot-to-cosmological-constant and Chern–Simons TQFT interpretations
 are not established. This is a source-to-owner scope audit; no Lean theorem was
 changed or newly built in this entry.
+
+### 2026-11-04: Section 147 Maldacena / holographic-condensate audit
+
+I compared Section 147 (Turn 0308 and the following Lean fence, around lines
+43340–43590) in
+`cached/aistudio_extracts/aistudio_prompt_1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or/transcript.md`
+with
+[`MaldacenaHolographicCondensate.lean`](../lean/InfoGeometry/QuantumGravity/MaldacenaHolographicCondensate.lean),
+its integer audit, and the `InfoGeometry.All` imports. Both owner files are
+included by `InfoGeometry.All`; the transcript's telemetry and claims of
+physical derivation do not count as checkout verification.
+
+- **Ryu–Takayanagi relation is an input:** the transcript's displayed version
+  puts the relation in `HolographicDictionary.rt_law`. The checked-in owner
+  instead stores only the three scalars in `HolographicDictionary` and takes
+  `h_rt : A_bulk = 4 * G_const * S_bndry` as an explicit hypothesis to each
+  theorem. `holographic_entanglement_geometry_equivalence` rewrites by that
+  hypothesis; it does not derive the dictionary or the area law.
+- **Dissolution and condensate substitution are conditional scalar algebra:**
+  `spacetime_dissolution_from_disentanglement` derives zero bulk area from
+  `h_rt` and `S_bndry = 0`. `seiberg_witten_condensate_weaves_bulk` also
+  assumes `S_bndry = m_gap^2`. The module defines no entropy functional, bulk
+  metric, minimal-surface carrier, holographic map, or derivation of either
+  premise from a monopole condensate.
+- **There are genuine finite coordinate identities in the owner:** the
+  split-octonion section proves explicit quark/antiquark anticommutator,
+  dyon interval, bulk-area scaling, and bulk-to-boundary chiral intertwining
+  identities. They are coordinate algebra over a commutative ring; the
+  intertwiner does not establish AdS/CFT reconstruction or identify those
+  coordinates with the scalar `HolographicDictionary` data.
+- **Transcript certificate mismatch:** the quoted transcript fence declares
+  `rt_law` as a structure field and packages three theorems in
+  `MaldacenaHolographicCertificate`. Those declarations are absent from the
+  current owner file. The checked-in source's theorem signatures make the RT
+  law an explicit premise instead. Do not attribute the transcript's exact
+  declarations or claimed build/test counts to this checkout.
+- **Repository-wide scope:** the repository also has separate RT and AdS/CFT
+  bridge modules, but their presence does not change the Section 147 owner's
+  assumptions. This entry audits the specific archive occurrence and does not
+  claim that no broader holographic formalization exists elsewhere.
+
+Section 147 therefore contributes conditional scalar consequences and
+kernel-shaped finite split-octonion identities. It does not prove that boundary
+entanglement generates bulk spacetime or derive the Ryu–Takayanagi premise.
+This is a source-to-owner audit; no Lean theorem was changed or newly built.
+
+### 2026-11-04: Section 146 Seiberg–Witten / monopole audit
+
+I compared Section 146 (Turn 0305, around lines 43014–43305) in
+`cached/aistudio_extracts/aistudio_prompt_1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or/transcript.md`
+with
+[`SeibergWittenMonopoleDuality.lean`](../lean/InfoGeometry/Superalgebra/SeibergWittenMonopoleDuality.lean),
+its integer audit, and the import in `InfoGeometry.All`. The checked-in owner is
+included in `InfoGeometry.All`; the transcript's claimed global test counts and
+acceptance telemetry are not local evidence for this checkout.
+
+- **Finite algebraic content present:** the owner defines an explicit
+  four-coordinate split-octonion record and proves the stated componentwise
+  `J` exchange on quark/antiquark coordinates, the scalar identity
+  `intervalNorm (seibergWittenBpsCharge q g) = q^2 - g^2`, and the implication
+  from a zero value of that polynomial to `q^2 = g^2`. These statements are
+  proved over a commutative ring; the integer audit supplies concrete examples.
+- **The duality map is a coordinate definition, not Tomita conjugation:**
+  `SplitOctonion.J` is defined directly on the four fields. The owner does not
+  construct a Hilbert or operator-algebra modular conjugation, an
+  electromagnetic duality action, an `SL(2, ℤ)` representation, or the
+  Seiberg–Witten curve/moduli space. Its coordinate exchange theorem alone
+  does not establish those structures.
+- **The transcript's displayed candidate has a component-order mismatch:**
+  its `J` definition negates `u` and `v` without exchanging them, while the
+  asserted quark-to-antiquark and antiquark-to-quark equations require the
+  exchange used by the checked-in owner (`⟨b, -v, -u, a⟩`). The current owner
+  proves the equations for its own definition; the transcript's exact code
+  fence should not be treated as the checked source.
+- **BPS-null balance does not prove condensation or confinement:** the
+  “mass formula” is an explicitly defined quadratic coordinate expression.
+  With only `[CommRing R]`, there is no positivity/order structure or physical
+  mass observable. The null-cone conclusion is the algebraic equality
+  `q^2 = g^2`; no monopole field, vacuum expectation value, condensate,
+  Meissner effect, or confinement mechanism is defined or derived.
+- **Adjacent formalizations remain distinct:** the repo also contains
+  `DonaldsonWittenSeibergMonopole.lean` and the Dirac–Schwinger–Zwanziger and
+  monopole/Hopf modules. Their presence is not evidence that this Section 146
+  owner proves the omitted physical claims; assess each source occurrence
+  against its own owner and hypotheses.
+
+Section 146 therefore formalizes a small split-octonion coordinate model and
+conditional polynomial consequences, not Seiberg–Witten electromagnetic
+duality or monopole condensation as physical theories. This is a
+source-to-owner audit; no Lean theorem was changed or newly built.
+
+### 2026-11-04: Section 145 Tomita-conjugation / CPT audit
+
+I compared Section 145 (Turn 0304 and the follow-up calibration in Turn 0305,
+around lines 42847–43010) in
+`cached/aistudio_extracts/aistudio_prompt_1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or/transcript.md`
+with
+[`TomitaConjugationCPTInvariant.lean`](../lean/InfoGeometry/Superalgebra/TomitaConjugationCPTInvariant.lean),
+its audit module, and the imports in `InfoGeometry.All`. Both owner and audit
+are imported there. The transcript's claimed global build/test telemetry is
+not evidence for this checkout.
+
+- **Coordinate algebra is formalized:** the owner defines a four-field
+  split-octonion record and a map
+  `J (a,u,v,b) = (b,-u,-v,a)`. It proves the map is involutive, reverses the
+  order of the explicitly defined multiplication, and satisfies the two
+  coordinate norm-product identities. It also proves the stated identities
+  on `paraSymplecticK0`, `diracVecH`, and the unit. These are universal
+  polynomial identities over a commutative ring.
+- **This does not instantiate Tomita–Takesaki theory:** there is no Hilbert
+  space, von Neumann algebra, cyclic separating vector, Tomita operator,
+  modular operator `Δ`, polar decomposition `S = J Δ^(1/2)`, or commutant
+  theorem in this owner. The Section 145 discussion names those structures,
+  but its displayed Lean candidate only defines a coordinate map. The exact
+  CPT interpretation is likewise not derived from a field theory or CPT
+  hypotheses.
+- **Code-fence calibration:** the initial transcript candidate uses a
+  `J` map that negates `u` and `v` while swapping `a,b`, and its proof fence
+  claims `J(XY)=J(Y)J(X)`. The checked-in owner proves that identity for this
+  exact coordinate map. The later Section 146 transcript fence changes the
+  component order, so it should not be conflated with Section 145's checked
+  owner or used as evidence for it.
+- **Norm-product language is limited:** `intervalNorm` and `scale` are
+  coordinate definitions, and the two products are verified by expansion.
+  No positivity, probability interpretation, Hilbert norm, or general
+  composition-algebra interface is constructed here. The concrete integer
+  audit provides examples; it does not strengthen the universal theorem's
+  interpretation.
+
+Section 145 therefore formalizes a nontrivial split-octonion coordinate
+anti-automorphism and norm identities, not modular conjugation or the CPT
+theorem. No Lean theorem was changed or newly built in this source-to-owner
+audit.

@@ -1250,7 +1250,7 @@ Coagulates the three downstream background-free `[Ring R] [StarRing R]` chapters
    - Cyclotomic eigenvalue selection `C_cyc(u) H_crank⁺ = u H_crank⁺`, `C_cyc(u) H_crank⁻ = (1 - u) H_crank⁻`,
    - Galois–spin locking `C_cyc(u) - C_cyc(1 - u) = (u - (1 - u)) Σ`,
    - Higgs vs. Goldstone splitting `{P, Φ} = Φ`, `[P, Φ] = J`, `[J, Φ] = 2Σ`,
-   - Supercolor chiral parity `{Γ_chiral, N_+} = 0` and emergent Poincaré translation `[P_poincare, N_+] = 0`.
+   - Supercolor chiral parity `{Γ_chiral, N_+} = 0` and emergent Poincaré translation commutation with both chiral supercharges, `[P_poincare, N_+] = [P_poincare, N_-] = 0`.
 2. **Emergent Two-Sheet BdG / Krein / Cartan Bridge Without Ambient `1` (`E₁`–`E₆`)**:
    - Intrinsic Krein grading `Σ P = P`, `Σ Q = -Q`, `Σ² = V`,
    - Emergent two-sheet filtration `restrictV N_plus X = spinConnV N_plus X + framePhiV N_plus X`,
@@ -1297,7 +1297,9 @@ theorem partXVd_higgs_frame_dragging_emergent_cartan_and_nilpotent_anomaly_gap_s
      HiggsFrameDraggingSupercolorPoset.anticomm
        (HiggsFrameDraggingSupercolorPoset.Gamma_chiral N_plus) N_plus = 0 ∧
      HiggsFrameDraggingSupercolorPoset.comm
-       (HiggsFrameDraggingSupercolorPoset.P_poincare N_plus) N_plus = 0) ∧
+       (HiggsFrameDraggingSupercolorPoset.P_poincare N_plus) N_plus = 0 ∧
+     HiggsFrameDraggingSupercolorPoset.comm
+       (HiggsFrameDraggingSupercolorPoset.P_poincare N_plus) (star N_plus) = 0) ∧
     (EmergentTwoSheetBridge.Sigma N_plus * EmergentTwoSheetBridge.P N_plus =
        EmergentTwoSheetBridge.P N_plus ∧
      EmergentTwoSheetBridge.Sigma N_plus * EmergentTwoSheetBridge.Q N_plus =
@@ -1349,7 +1351,8 @@ theorem partXVd_higgs_frame_dragging_emergent_cartan_and_nilpotent_anomaly_gap_s
     HiggsFrameDraggingSupercolorPoset.comm_P_Phi_eq_J N_plus h_nil h_reg,
     HiggsFrameDraggingSupercolorPoset.comm_J_Phi_eq_two_Sigma N_plus h_nil,
     HiggsFrameDraggingSupercolorPoset.anticomm_Gamma_chiral_N_plus N_plus h_nil h_reg,
-    HiggsFrameDraggingSupercolorPoset.comm_P_poincare_N_plus N_plus h_nil h_reg⟩,
+    HiggsFrameDraggingSupercolorPoset.comm_P_poincare_N_plus N_plus h_nil h_reg,
+    HiggsFrameDraggingSupercolorPoset.comm_P_poincare_star_N_plus N_plus h_nil h_reg⟩,
    ⟨EmergentTwoSheetBridge.Sigma_mul_P N_plus h_nil h_reg,
     EmergentTwoSheetBridge.Sigma_mul_Q N_plus h_nil h_reg,
     EmergentTwoSheetBridge.restrictV_decomp N_plus X₁,

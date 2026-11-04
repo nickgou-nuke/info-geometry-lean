@@ -492,6 +492,32 @@ theorem comm_P_poincare_N_plus (N_plus : B)
         ← mul_assoc N_plus (star N_plus) N_plus, h_reg, zero_add]
   rw [hL, hR, sub_self]
 
+/-- **`HFD₉` Dual SUSY Translation Invariance (`[P_poincare, Q_-] = 0`):**
+    The emergent translation generator also commutes with the adjoint chiral
+    supercharge `N_- = star N_plus`. -/
+theorem comm_P_poincare_star_N_plus (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (P_poincare N_plus) (star N_plus) = 0 := by
+  dsimp [comm, P_poincare, anticomm]
+  have hL :
+      (N_plus * star N_plus + star N_plus * N_plus) * star N_plus =
+        star N_plus := by
+    rw [add_mul,
+      mul_assoc N_plus (star N_plus) (star N_plus),
+      star_N_plus_sq N_plus h_nil, mul_zero,
+      star_N_plus_reg N_plus h_reg,
+      zero_add]
+  have hR :
+      star N_plus * (N_plus * star N_plus + star N_plus * N_plus) =
+        star N_plus := by
+    rw [mul_add,
+      ← mul_assoc (star N_plus) N_plus (star N_plus),
+      star_N_plus_reg N_plus h_reg,
+      ← mul_assoc (star N_plus) (star N_plus) N_plus,
+      star_N_plus_sq N_plus h_nil, zero_mul, add_zero]
+  rw [hL, hR, sub_self]
+
 /-- **`HFD₁₀` Multi-Channel Supercolor Translation Closure (`[P_poincare(N_a), P_poincare(N_b)] = 0`):**
     For any two supercolor nilpotent channels `N_a, N_b` with commuting bandgap supports,
     their emergent Poincaré translation generators commute identically. -/

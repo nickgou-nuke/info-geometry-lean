@@ -3981,3 +3981,12 @@ proves the corresponding right action and needs no weight-commutation premise:
 the coefficient remains on the left of its block, and cross-channel
 orthogonality annihilates the off-diagonal terms. Both declarations are in the
 axiom audit; the focused owner build passed (1,553 jobs).
+
+The HFD aggregate now includes the dual translation-charge commutator
+`[P_poincare, N_-] = 0`, proved as `comm_P_poincare_star_N_plus` from
+square-zero and von Neumann regularity. Together with the existing
+`comm_P_poincare_N_plus`, this closes the stated two-charge commutation clause
+in Part XV.d's synthesis. The focused owner and synthesis audit builds are
+recorded with this update. The audit build also exposed and corrected a stale
+`#print axioms` reference to a nonexistent aggregate name; it now targets the
+current finite weighted chiral supercolor synthesis declaration.

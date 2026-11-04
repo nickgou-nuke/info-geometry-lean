@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import DAG.FunctionalGaussJordan
 import Mathlib.Data.Matrix.Basic
@@ -82,10 +87,38 @@ lemma swap_selected_pivot_ne_zero
     A₁ pr j ≠ 0 := by
   let pr : Fin m := ⟨pivotRow, hrow⟩
   let A₁ := FunctionalGaussJordan.swapRowsMat pr pi * A
-  have hpi := (findPivot_spec A pivotRow j hpivot).1
-  dsimp [A₁, FunctionalGaussJordan.swapRowsMat]
+  have hpi : A pi j ≠ 0 := (findPivot_spec A pivotRow j hpivot).1
+  have h₂ : ∀ (k : Fin m), FunctionalGaussJordan.swapRowsMat pr pi pr k = (if k = pi then (1 : ℚ) else 0) := by
+    intro k
+    dsimp [FunctionalGaussJordan.swapRowsMat]
+    simp [PEquiv.toMatrix_apply, Equiv.toPEquiv_apply, Equiv.swap_apply_left]
+    <;> norm_num <;>
+    (try aesop)
+  have h₃ : (∑ k : Fin m, FunctionalGaussJordan.swapRowsMat pr pi pr k * A k j) = A pi j := by
+    have h₄ : (∑ k : Fin m, FunctionalGaussJordan.swapRowsMat pr pi pr k * A k j)
+      = ∑ k : Fin m, (if k = pi then (1 : ℚ) else 0) * A k j := by
+      apply Finset.sum_congr rfl
+      intro k _
+      rw [h₂ k]
+      <;> ring_nf
+    have h₅ : (∑ k : Fin m, (if k = pi then (1 : ℚ) else 0) * A k j) = A pi j := by
+      have h₅₁ : (∑ k : Fin m, (if k = pi then (1 : ℚ) else 0) * A k j)
+        = ∑ k : Fin m, if k = pi then A k j else (0 : ℚ) := by
+        apply Finset.sum_congr rfl
+        intro k _
+        split_ifs <;> simp [mul_zero, zero_mul]
+      have h₅₂ : (∑ k : Fin m, if k = pi then A k j else (0 : ℚ)) = A pi j := by
+        have h₅₂₁ : (∑ k : Fin m, if k = pi then A k j else (0 : ℚ))
+          = if pi ∈ (Finset.univ : Finset (Fin m)) then A pi j else (0 : ℚ) := by
+          rw [Finset.sum_ite_eq']
+        rw [h₅₂₁]
+        simp [Finset.mem_univ, ite_true]
+      exact h₅₁.trans h₅₂
+    exact h₄.trans h₅
+  dsimp [A₁]
   erw [Matrix.mul_apply]
-  simp [PEquiv.toMatrix_apply, hpi]
+  rw [h₃]
+  exact hpi
 
 lemma selected_pivotVal_ne_zero
     {A : Matrix (Fin m) (Fin n) ℚ}

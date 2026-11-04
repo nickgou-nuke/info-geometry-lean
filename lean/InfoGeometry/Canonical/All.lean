@@ -2383,6 +2383,7 @@ import InfoGeometry.Canonical.Cl55CARRepresentationCalibration
 import InfoGeometry.Canonical.SplitCliffordTailParity
 import InfoGeometry.Canonical.SplitCliffordHeadTailParity
 import InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
+import InfoGeometry.Canonical.MetriplecticCausalPlabicKreinYangianBridge
 
 namespace InfoGeometry
 

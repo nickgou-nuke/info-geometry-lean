@@ -23,6 +23,8 @@ import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
 import InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalPlabicKreinYangianPoset
+import InfoGeometry.Canonical.MetriplecticCausalPlabicKreinYangianBridge
 import Mathlib.Tactic
 
 /-!
@@ -1775,5 +1777,51 @@ theorem partXVh_chiral_anomaly_qgt_robertson_synthesis
     imaginaryPhi_commutator_eq_anomaly N h_nil,
     berryCurvature_eq_neg_two_anomaly_expectation N h_nil ψ,
     chiral_anomaly_robertson_bound N ψ⟩
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalPlabicKreinYangianPoset
+open InfoGeometry.Canonical.MetriplecticCausalPlabicKreinYangianBridge
+open scoped Matrix
+
+/-- **Part XV.i (`partXVi_metriplectic_causal_plabic_krein_yangian_synthesis`)**:
+Coagulates the 17-turn shared Gemini dialogue (`9666a5a14e0d`, *"Metriplectic and Tensor
+Decompositions of Causal Matrices"*) into the Epistemology synthesis spine:
+1. Recursive operator tensor tower `OpMatTower B n` on Doubled Real Krein Space (`towerKreinJ`,
+   `towerParaK`, `towerSympEps`, `towerKreinLift`) and `StarRing` metriplectic parity,
+2. Bidirectional 17-turn causal poset completeness (`Turn01` root to `Turn17` terminal synthesis)
+   and Peirce-spine operator evaluations across `[Ring B]`. -/
+theorem partXVi_metriplectic_causal_plabic_krein_yangian_synthesis
+    [StarRing B] (n : ℕ)
+    (X_tow S_tow K_tow : OpMatTower B n) (S₀ K₀ X : B)
+    (hS₀ : star S₀ = S₀) (hK₀ : star K₀ = -K₀) :
+    ((towerKreinJ B n * towerKreinJ B n = (1 : OpMatTower B (n + 1)) ∧
+      towerParaK B n * towerParaK B n = (1 : OpMatTower B (n + 1)) ∧
+      towerSympEps B n * towerSympEps B n = -(1 : OpMatTower B (n + 1)) ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+        (towerParaK B n) (towerKreinLift n X_tow) = (0 : OpMatTower B (n + 1)) ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+        (towerSympEps B n) (towerKreinLift n X_tow) = (0 : OpMatTower B (n + 1)) ∧
+      chiralDiracBlock S_tow K_tow * chiralDiracBlock S_tow K_tow =
+        (!![gramianOut S_tow K_tow, 0; 0, gramianIn S_tow K_tow] : OpMatTower B (n + 1))) ∧
+     (star (causalForward S₀ K₀) = causalBackward S₀ K₀ ∧
+      star (InfoGeometry.OperatorAlgebra.PeirceSpine.comm S₀ K₀) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm S₀ K₀ ∧
+      star (InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm S₀ K₀) =
+        -InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm S₀ K₀) ∧
+     gramianOut S₀ K₀ - gramianIn S₀ K₀ =
+       -(InfoGeometry.OperatorAlgebra.PeirceSpine.comm S₀ K₀ +
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm S₀ K₀)) ∧
+    ((matE01 (B := ℤ) * matE10 (B := ℤ) ≠ matE10 (B := ℤ) * matE01 (B := ℤ)) ∧
+     (∀ a : CausalMatrixChatTurnArchetype,
+        CausalMatrixChatTurnArchetype.Turn01_MetriplecticSplitGramiansAndAporiaDefect ≤ a ∧
+        a ≤ CausalMatrixChatTurnArchetype.Turn17_FoldyWouthuysenRapidityDictionaryAndThomasWignerPrecession ∧
+        ¬ (a < a)) ∧
+     (causalMatrixTurnOperator P A C X .Turn01_MetriplecticSplitGramiansAndAporiaDefect =
+        (2 : ℤ) • genV P A C + (2 : ℤ) • genSig P A C ∧
+      causalMatrixTurnOperator P A C X .Turn12_BCFWThreePointAmalgamationAndBridgeCommutator =
+        genSig P A C ∧
+      causalMatrixTurnOperator P A C X .Turn16_DiracKreinZitterbewegungCarrierDecouplingAndSecularCrash =
+        invS P + (2 : ℤ) • conePlus P A)) :=
+  ⟨canonical_tensor_tower_and_metriplectic_krein_synthesis n X_tow S_tow K_tow S₀ K₀ hS₀ hK₀,
+   canonical_seventeen_turn_poset_and_noncommutative_witness hP A C X⟩
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

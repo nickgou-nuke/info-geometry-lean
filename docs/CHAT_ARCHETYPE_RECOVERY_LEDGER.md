@@ -4041,3 +4041,145 @@ specified alternative dual and does not conflate it with the standard
 Clifford-algebra star. The updated owner build passed (3,129 jobs), and the
 staged proof-proxy gate passed. The semantic scan reports the same alias and
 projector warnings plus a trivial-surface warning for the seed reduction.
+
+### 2026-11-04: Shared Gemini dialogue `hNydhwDbFYmo` / `9666a5a14e0d` (Turns 01–17, Metriplectic Tensor Tower on Doubled Real Krein Space to Plabic–Yangian–Foldy–Wouthuysen Spine)
+
+Source: the 17-turn shared Gemini conversation `https://share.gemini.google/hNydhwDbFYmo`
+(canonical URL `https://gemini.google.com/share/9666a5a14e0d`, title *"Metriplectic and Tensor
+Decompositions of Causal Matrices"*, 4,691 lines), archived locally in
+[`cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.json`](../cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.json)
+and [`cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.md`](../cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.md).
+
+The conversation is structured in two halves:
+1. **Turns 01–09 (Recursive Tensor Tower of `2 × 2` Matrices over Non-Commutative Operators on
+   Doubled Real Krein Space for Metriplectic Attention / Density-Matrix Evolution):**
+   - Formalized in [`MetriplecticCausalPlabicKreinYangianPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean)
+     (Stages `MCP₁`–`MCP₄`, `MCP₁₀`) and bridged in
+     [`MetriplecticCausalPlabicKreinYangianBridge.lean`](../lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean).
+   - `OpMatTower B n` defines the recursive operator tensor tower `M₂(M₂(... M₂(B)))` over `[Ring B]`.
+     `tower_paraKahler_and_jordanWigner_lift` proves the `Cl(1,1)` para-Kähler triad (`J² = 1`,
+     `K_para² = 1`, `ε² = -1`, `K_para J = ε`), the anticommutation of the Jordan–Wigner Krein-string
+     lift `towerKreinLift n X = !![X, 0; 0, -X]` with `K_para` and `ε` (contrasted with the commutation
+     of the ungraded Kronecker lift `towerUngradedLift n X = !![X, 0; 0, X]`), and the chiral Dirac
+     block square `D(S, K)² = diag(G_out(S, K), G_in(S, K))` at every tower level `n`.
+   - `normalcyDefect_eq_neg_two_comm`, `gramian_sum_eq_two_diff_sq`, `aporiaIdempotencyDefect_expand`,
+     `metriplectic_star_parity`, `hadamard_decouples_metriplecticBlock`, `metriplecticBlock_schur_ldu`,
+     and `symplecticDilationBlock_schur_ldu` establish the non-commutative metriplectic and block-LDU
+     identities over `[Ring B]`.
+   - `cotlarTricomi_sum_sq`, `cotlarTricomi_anticomm`, `cotlarTricomi_hilbert_identity`, and
+     `peirce_gohbergKrein_cotlarTricomi` prove the discrete Gohberg–Krein Hilbert transform and
+     non-commutative Cotlar–Tricomi identities (`H(S_off² + K_A²) = {S_off, K_A}`).
+   - `jordanWigner_cl22_relations`, `jordanWigner_isotropic_norm_vs_ungraded_aporia`,
+     `butterfly_braiding_and_krein_boost_norm`, and `sramXorSwizzle_involution_and_bijective`
+     prove the `4 × 4` Jordan–Wigner vs. ungraded Kronecker dichotomy, the butterfly bit-flip
+     braiding and Krein-boost norm identities, and the `BitVec w` XOR-swizzle involution/bijection.
+2. **Turns 10–17 (Plabic / BCFW / Krein–Hamiltonian–Hopf / Yangian / Zitterbewegung / Foldy–Wouthuysen Terminus):**
+   - Formalized in Stages `MCP₅`–`MCP₉` of [`MetriplecticCausalPlabicKreinYangianPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean).
+   - **Socratic Elenchus & Countermodels (Turn 10)**: `walshHadamard_conjugation_elenchus`
+     and `hypercube_bipartite_nonplanar_bound` prove
+     that Walsh–Hadamard conjugation maps diagonal matrices to symmetric commuting matrices with zero
+     causal bivector weight (`H₂ b(d_i, d_p, d_s, d_c) H₂ = 2 b(d_i, d_s, d_p, -d_c)`), and that
+     bipartite `Q_n` violates the planar bound `E ≤ 2V - 4` for all `n ≥ 4`.
+   - **Plabic / BCFW / Krein–Hamiltonian–Hopf (`MCP₅`–`MCP₆`, Turns 10–13)**:
+     `talaska_urbanRenewal_schur_identity`, `cl11_lorentzian_det_resolvent_and_cayley`,
+     `cl11_dual_critical_horizons`, `bcfw_amalgamation_and_bridge_commutator`,
+     `kreinHamiltonianHopf_bifurcation`, and `kreinCrash_jordan_chain_and_null_norm` prove the
+     cleared-denominator Schur loop identity, the `Cl(1,1)` Cayley boost determinants and singular
+     horizons `v = ±1`, the BCFW bridge group/commutator/residue identities, and the `Cl(2,2)`
+     Krein–Hamiltonian–Hopf crash at `g = Δω` (`f_k = -1`) with rank-2 Jordan chain
+     `N_nil(1) Φ_gen = Ψ_EP` and null Krein norm.
+   - **Yangian / Clifford EP Braid / Zitterbewegung / Foldy–Wouthuysen (`MCP₇`–`MCP₉`, Turns 14–17)**:
+     `yangR4_unitarity_and_resonant_collapse`, `yangian_braided_qybe`,
+     `clifford_ep_artin_braid_and_period_eight` (proving the exact period-8 obstruction
+     `((1 + γ₁ γ₂)²)² = -4 · 1`, correcting the Turn 14 prose claim of period 4),
+     `lax_rtt_and_quantum_determinant` (proving the RTT commutator and Quantum Determinant on the
+     exact `2 × 2` blocks of `L(u) = (u - θ)I₄ + η P₁₂`),
+     `diracKrein_carrier_decoupling_and_zitter_split`, `diracKrein_secular_crash_evolution`,
+     `spinMonodromyEP_z4_periodicity`, `foldyWouthuysen_rational_dictionary_and_urbanRenewal`,
+     `foldyWouthuysen_real_rapidity_bridge`, and `thomasWigner_precession_commutator`.
+
+Both [`MetriplecticCausalPlabicKreinYangianPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean)
+(141 declarations) and [`MetriplecticCausalPlabicKreinYangianBridge.lean`](../lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean)
+(3 declarations) passed `opengauss_cli.py certify --verify-kernel` with zero errors, zero warnings,
+and zero forbidden axioms. Physical interpretations (e.g., thermodynamic entropy production,
+GPU hardware bank-conflict latency, continuum quantum field theory, or empirical transformer
+training dynamics) are not claimed beyond the declared algebraic, matrix, `BitVec w`, and real
+hyperbolic types.
+
+### Shared-link source: `hNyd...` / `9666a5a14e0d`, Metriplectic–Plabic–Krein–Yangian conversation (2026-11-04)
+
+The public Gemini share supplied on 2026-11-04
+(`https://share.gemini.google/hNydhwDbFYmo`, canonical ID `9666a5a14e0d`) was
+recovered the same day. Plain HTTP fetch of either host returns only an
+authenticated application shell (empty `AF_initDataCallback` payloads, no
+conversation data); the conversation renders only in a JS-capable browser.
+Recovery used headless Chromium via Playwright with the system Chrome binary:
+polling for `attached` (not visibility-checked) `user-query` and
+`response-container` blocks, CDP wheel scrolling to force lazy mounts, and a
+custom MathML linearizer (the DOM carries no `alttext` attributes). Model
+turns live under `response-container`, not `model-response`; Google
+Trusted-Types policy blocks string-JS evaluation paths.
+
+Preserved artifacts:
+
+- `cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.json`: structured per-turn
+  extraction (17 user + 17 model turns with turn IDs and timestamps; turn 01
+  is `2026-11-04T12:06:48+00:00`).
+- `cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.md`: flattened transcript
+  (~490 KB).
+- `cached/gemini_extracts/share_9666a5a14e0d_turns.txt` and
+  `cached/gemini_extracts/share_9666a5a14e0d_dom.html`: secondary innerText
+  extraction (~486 KB) and the raw ~12 MB rendered DOM used for MathML.
+
+Content inventory: 17 turns with a custom Gem ("ALCHEMY"); inputs in
+Cyrillic-transliterated Russian, Bulgarian, and English. Turns 01–04:
+metriplectic doubling of a nonsymmetric coincidence matrix (symmetric/skew
+split, out/in Gramians, `2n × 2n` block operators, causal masking and LDU,
+Krein signature). Turns 05–07: `Cl(1,1)` 8-fold periodicity and recursive
+`2 × 2` tensor factorization. Turns 08, 10, 15: Python/PyTorch
+implementations. Turns 11–14, 16–17: "epistemic compiler" derivations (BCFW
+residues, Krein Hamiltonian–Hopf crash, Yangian `R`-matrix, Dirac–Krein
+Zitterbewegung, Foldy–Wouthuysen rapidity).
+
+**No Lean code exists anywhere in the share** (zero code fences, zero `import`
+lines): the content is prose derivations plus Python/PyTorch listings.
+Nothing was transcribable as-is; the repository owners below are
+formalizations, not transcriptions.
+
+Source-math defects repaired during formalization (provenance caveats):
+
+1. The turn-01 claim that `E = [[S, K], [-K, -S]]` squares to
+   `diag(G_out, G_in)` is false for generic `S, K`; it requires an explicit
+   commutation (simultaneous diagonalization) hypothesis that the source does
+   not state.
+2. The source's Gramian commutator signs are flipped. The correct identities
+   are `G_out = (S + K)(S - K) = S² - K² - [S, K]`,
+   `G_in = (S - K)(S + K) = S² - K² + [S, K]`, and
+   `G_out - G_in = -2[S, K]`.
+3. Correct source pieces include the Hadamard diagonalization
+   `Wᵀ[[S, K], [K, S]]W = diag(C, Cᵀ)`, `½(G_out + G_in) = S² - K²`, and the
+   block-LDU factorization (requires `S` invertible).
+
+The owner resolves defect (1) by attachment, not assumption: the
+`diag(G_out, G_in)` square is proven for the off-diagonal chiral Dirac block
+`D(S, K) = [[0, S + K], [S - K, 0]]`, where it holds identically, while the
+source's `E = [[S, K], [-K, -S]]` receives its corrected square
+`[[S² - K², [S, K]], [[S, K], S² - K²]]` with the commutator on the
+off-diagonals.
+
+Owner routing: the turns are formalized as `MCP₁`–`MCP₁₀` in
+`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean`
+(turns 01–17, stating the corrected Gramian signs above) with the recursive
+operator tensor tower and Foldy–Wouthuysen terminus bridged in
+`lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`.
+Locked verification was rerun on 2026-11-04 after the owners and umbrella
+imports were staged. `python3 tools/infra/opengauss_cli.py certify --file
+lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean
+--verify-kernel` passed with 141 declarations; the corresponding command for
+`lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`
+passed with 3 declarations. The scoped staged proof-proxy gate passed for both
+owners and the three umbrella consumers. The locked build of
+`InfoGeometry.OperatorAlgebra.PeirceSpine`, `InfoGeometry.Canonical.All`, and
+`InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis` passed (13,742 jobs);
+that wider build emitted warnings in other replayed modules, so it was not
+warning-free repository-wide.

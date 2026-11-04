@@ -10,8 +10,11 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTitsFiveGradedClosu
 # The nilpotent Peirce tower as a five-graded Lie algebra
 
 This bridge packages the concrete Peirce sectors into the reusable TKK
-five-grade interface. Additive torsion-freeness is assumed because the
-component-to-adjoint-eigenspace identification uses distinct integer weights.
+five-grade interface using direct Peirce-corner bracket closure, so the package
+does not require additive torsion-freeness. Each Peirce sector embeds into its
+matching eigenspace for `ad(Σ)`; identifying those eigenspaces with the Peirce
+sectors requires an additional separation hypothesis when the carrier has
+additive torsion.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTits
@@ -37,9 +40,88 @@ theorem peirceFiveGradeDegree_tkkGradeIndex (i : TKKGrade) :
     peirceFiveGradeDegree (tkkGradeIndex i) = TKKJordanPairData.weight i := by
   cases i <;> rfl
 
+/-- The five integer TKK weights descend to their residues in the additive
+group `ZMod 5`, with bracket degree addition preserved whenever the partial
+five-grade sum remains in range. -/
+def tkkCyclicDegree (i : TKKGrade) : ZMod 5 :=
+  (TKKJordanPairData.weight i : ZMod 5)
+
+theorem tkkCyclicDegree_add_of_gradeAdd (i j k : TKKGrade)
+    (hijk : TKKJordanPairData.gradeAdd i j = some k) :
+    tkkCyclicDegree i + tkkCyclicDegree j = tkkCyclicDegree k := by
+  have hsum : TKKJordanPairData.ofWeight
+      (TKKJordanPairData.weight i + TKKJordanPairData.weight j) = some k := by
+    simpa [TKKJordanPairData.gradeAdd] using hijk
+  have hdegree : TKKJordanPairData.weight i + TKKJordanPairData.weight j =
+      TKKJordanPairData.weight k := by
+    cases i <;> cases j <;> cases k <;>
+      simp_all [TKKJordanPairData.ofWeight, TKKJordanPairData.weight]
+  change (TKKJordanPairData.weight i : ZMod 5) +
+      (TKKJordanPairData.weight j : ZMod 5) =
+    (TKKJordanPairData.weight k : ZMod 5)
+  simpa only [Int.cast_add] using
+    congrArg (fun n : ℤ => (n : ZMod 5)) hdegree
+
 /-- The five Peirce submodules, indexed by the TKK grades. -/
 def tkkPeirceGrade (N_plus : B) (i : TKKGrade) : Submodule ℤ B :=
   peirceFiveGradeSubmodule N_plus (tkkGradeIndex i)
+
+/-- Every element of a concrete TKK Peirce grade is homogeneous for the
+adjoint action of the parity anomaly, with the degree prescribed by the TKK
+index. This direction needs no additive torsion-freeness. -/
+theorem tkkPeirceGrade_adjoint_eigenvalue (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i : TKKGrade) (x : B) (hx : x ∈ tkkPeirceGrade N_plus i) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus) x =
+      TKKJordanPairData.weight i • x := by
+  have hx' : x ∈ KKTAdjointGradeSubmodule N_plus
+      (peirceFiveGradeDegree (tkkGradeIndex i)) :=
+    peirceFiveGradeSubmodule_le_KKTAdjointGradeSubmodule N_plus h_nil h_reg
+      (tkkGradeIndex i) hx
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus) x =
+    (peirceFiveGradeDegree (tkkGradeIndex i)) • x at hx'
+  rw [← peirceFiveGradeDegree_tkkGradeIndex i]
+  exact hx'
+
+/-- A bracket between concrete TKK Peirce sectors lies in the native
+`ad(Σ)` eigenspace whose degree is the sum of the input TKK weights. This
+connects the torsion-free-independent Peirce package to Mathlib's
+`SetLike.GradedBracket` family. -/
+theorem tkkPeirceGrade_bracket_mem_adjoint (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i j k : TKKGrade)
+    (hijk : TKKJordanPairData.gradeAdd i j = some k)
+    (x y : B) (hx : x ∈ tkkPeirceGrade N_plus i)
+    (hy : y ∈ tkkPeirceGrade N_plus j) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      KKTAdjointGradeSubmodule N_plus (TKKJordanPairData.weight k) := by
+  have hsum : TKKJordanPairData.ofWeight
+      (TKKJordanPairData.weight i + TKKJordanPairData.weight j) = some k := by
+    simpa [TKKJordanPairData.gradeAdd] using hijk
+  have hxi : x ∈ KKTAdjointGrade N_plus (TKKJordanPairData.weight i) := by
+    change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus) x =
+      TKKJordanPairData.weight i • x
+    exact tkkPeirceGrade_adjoint_eigenvalue N_plus h_nil h_reg i x hx
+  have hyi : y ∈ KKTAdjointGrade N_plus (TKKJordanPairData.weight j) := by
+    change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus) y =
+      TKKJordanPairData.weight j • y
+    exact tkkPeirceGrade_adjoint_eigenvalue N_plus h_nil h_reg j y hy
+  have hdegree : TKKJordanPairData.weight i + TKKJordanPairData.weight j =
+      TKKJordanPairData.weight k := by
+    cases i <;> cases j <;> cases k <;>
+      simp_all [TKKJordanPairData.ofWeight,
+        TKKJordanPairData.weight]
+  have hbracket := kkt_grade_bracket_mem hxi hyi
+  rw [hdegree] at hbracket
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    KKTAdjointGrade N_plus (TKKJordanPairData.weight k) at hbracket
+  exact hbracket
 
 omit [StarRing B] in
 private theorem corner_sandwich_outer (e f x : B) :
@@ -1055,58 +1137,115 @@ theorem peirce_p1_p2_subgroup_bracket_eq_zero (N_plus x y : B)
   exact neg_eq_zero.mpr
     (peirce_p2_p1_bracket_eq_zero N_plus y x h_nil h_reg hy hx)
 
+/-- Reversing the grade-zero/grade-`+2` bracket preserves grade `+2`. -/
+theorem peirce_z0_p2_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .z0)
+    (hy : y ∈ tkkPeirceGrade N_plus .p2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p2 := by
+  change x ∈ peirceGradeZeroSubgroup N_plus at hx
+  change y ∈ peirceGradePlus2Subgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradePlus2Subgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradePlus2Subgroup N_plus).neg_mem
+    (peirce_p2_z0_bracket_mem_p2 N_plus y x h_nil h_reg hy hx)
+
+/-- Reversing the grade-zero/grade-`-2` bracket preserves grade `-2`. -/
+theorem peirce_z0_m2_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .z0)
+    (hy : y ∈ tkkPeirceGrade N_plus .m2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m2 := by
+  change x ∈ peirceGradeZeroSubgroup N_plus at hx
+  change y ∈ peirceGradeMinus2Subgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradeMinus2Subgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradeMinus2Subgroup N_plus).neg_mem
+    (peirce_m2_z0_bracket_mem_m2 N_plus y x h_nil h_reg hy hx)
+
+/-- Every in-window bracket of concrete Peirce grades closes directly, without
+using adjoint-eigenvalue separation or additive torsion-freeness. -/
+theorem peirce_tkk_bracket_mem_direct (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i j k : TKKGrade)
+    (hijk : TKKJordanPairData.gradeAdd i j = some k)
+    (x y : B) (hx : x ∈ tkkPeirceGrade N_plus i)
+    (hy : y ∈ tkkPeirceGrade N_plus j) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus k := by
+  have hsum : TKKJordanPairData.ofWeight
+      (TKKJordanPairData.weight i + TKKJordanPairData.weight j) = some k := by
+    simpa [TKKJordanPairData.gradeAdd] using hijk
+  cases i <;> cases j <;> cases k <;>
+    simp_all [TKKJordanPairData.ofWeight,
+      TKKJordanPairData.weight]
+  all_goals first
+    | exact peirce_m2_z0_bracket_mem_m2 N_plus x y h_nil h_reg hx hy
+    | exact peirce_m2_p1_bracket_mem_m1 N_plus x y h_nil h_reg hx hy
+    | exact peirce_m2_p2_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_m1_bracket_mem_m2 N_plus x y h_nil h_reg hx hy
+    | exact peirce_m1_z0_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_p1_m1_bracket_mem_z0 N_plus x y h_nil h_reg hx hy
+    | exact peirce_m1_p2_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_z0_m2_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_z0_m1_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_z0_bracket_mem_z0 N_plus x y h_nil h_reg hx hy
+    | exact peirce_z0_p1_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_z0_p2_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_p1_m2_bracket_mem_m1 N_plus x y h_nil h_reg hx hy
+    | exact peirce_m1_p1_bracket_mem_z0 N_plus x y h_nil h_reg hx hy
+    | exact peirce_p1_z0_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_p1_bracket_mem_p2 N_plus x y h_nil h_reg hx hy
+    | exact peirce_p2_m2_subgroup_bracket_mem N_plus x y h_nil h_reg hx hy
+    | exact peirce_p2_m1_bracket_mem_p1 N_plus x y h_nil h_reg hx hy
+    | exact peirce_p2_z0_bracket_mem_p2 N_plus x y h_nil h_reg hx hy
+
+/-- Every out-of-window ordered grade pair has zero bracket by direct
+Peirce-corner orthogonality, without integer-grade separation. -/
+theorem peirce_tkk_bracket_eq_zero_direct (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (i j : TKKGrade)
+    (hij : TKKJordanPairData.gradeAdd i j = none)
+    (x y : B) (hx : x ∈ tkkPeirceGrade N_plus i)
+    (hy : y ∈ tkkPeirceGrade N_plus j) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  cases i <;> cases j <;>
+    simp_all [TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
+      TKKJordanPairData.weight]
+  all_goals first
+    | exact peirce_p2_p1_bracket_eq_zero N_plus x y h_nil h_reg hx hy
+    | exact peirce_p1_p2_subgroup_bracket_eq_zero N_plus x y h_nil h_reg hx hy
+    | exact peirce_m2_m1_bracket_eq_zero N_plus x y h_nil h_reg hx hy
+    | exact peirce_m1_m2_subgroup_bracket_eq_zero N_plus x y h_nil h_reg hx hy
+    | exact peirce_p2_bracket_eq_zero N_plus x y h_nil hx hy
+    | exact peirce_m2_bracket_eq_zero N_plus x y h_nil hx hy
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
-The hypotheses on the nilpotent generate the Peirce decomposition; torsion
-freeness ensures the integer adjoint grades identify those components. -/
+The nilpotent generates the Peirce decomposition, and each bracket closure
+law follows directly from the Peirce corners. -/
 noncomputable def nilpotentPairFiveGradedLieAlgebra
     (N_plus : B) (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus)
-    [IsAddTorsionFree B] : FiveGradedLieAlgebra ℤ where
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    FiveGradedLieAlgebra ℤ where
   L := B
   grade := tkkPeirceGrade N_plus
   bracket_mem_some := by
     intro i j k hijk x y hx hy
-    have hdegree : peirceFiveGradeDegree (tkkGradeIndex i) +
-        peirceFiveGradeDegree (tkkGradeIndex j) =
-        peirceFiveGradeDegree (tkkGradeIndex k) := by
-      cases i <;> cases j <;> cases k <;>
-        simp_all [TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
-          TKKJordanPairData.weight, tkkGradeIndex, peirceFiveGradeDegree]
-    have hbracket := peirceFiveGrade_bracket_mem_peirce N_plus h_nil h_reg
-      (tkkGradeIndex i) (tkkGradeIndex j) (tkkGradeIndex k) x y hx hy hdegree
+    have hbracket := peirce_tkk_bracket_mem_direct N_plus h_nil h_reg
+      i j k hijk x y hx hy
     simpa [tkkPeirceGrade, comm, LieRing.of_associative_ring_bracket] using hbracket
   bracket_eq_zero_none := by
     intro i j hij x y hx hy
-    let d : ℤ := peirceFiveGradeDegree (tkkGradeIndex i) +
-      peirceFiveGradeDegree (tkkGradeIndex j)
-    have hd2 : d ≠ 2 := by
-      cases i <;> cases j <;>
-        simp [d, tkkGradeIndex, peirceFiveGradeDegree,
-          TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
-          TKKJordanPairData.weight] at hij ⊢
-    have hd1 : d ≠ 1 := by
-      cases i <;> cases j <;>
-        simp [d, tkkGradeIndex, peirceFiveGradeDegree,
-          TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
-          TKKJordanPairData.weight] at hij ⊢
-    have hd0 : d ≠ 0 := by
-      cases i <;> cases j <;>
-        simp [d, tkkGradeIndex, peirceFiveGradeDegree,
-          TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
-          TKKJordanPairData.weight] at hij ⊢
-    have hdm1 : d ≠ -1 := by
-      cases i <;> cases j <;>
-        simp [d, tkkGradeIndex, peirceFiveGradeDegree,
-          TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
-          TKKJordanPairData.weight] at hij ⊢
-    have hdm2 : d ≠ -2 := by
-      cases i <;> cases j <;>
-        simp [d, tkkGradeIndex, peirceFiveGradeDegree,
-          TKKJordanPairData.gradeAdd, TKKJordanPairData.ofWeight,
-          TKKJordanPairData.weight] at hij ⊢
-    have hbracket := peirceFiveGrade_bracket_eq_zero_of_degree_sum_outside
-      N_plus h_nil h_reg (tkkGradeIndex i) (tkkGradeIndex j) x y d hx hy rfl
-      hd2 hd1 hd0 hdm1 hdm2
+    have hbracket := peirce_tkk_bracket_eq_zero_direct N_plus h_nil h_reg
+      i j hij x y hx hy
     simpa [comm, LieRing.of_associative_ring_bracket] using hbracket
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTits

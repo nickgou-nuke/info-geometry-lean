@@ -1255,7 +1255,7 @@ Coagulates the three downstream background-free `[Ring R] [StarRing R]` chapters
    - Intrinsic Krein grading `Σ P = P`, `Σ Q = -Q`, `Σ² = V`,
    - Emergent two-sheet filtration `restrictV N_plus X = spinConnV N_plus X + framePhiV N_plus X`,
    - Universal mode hyperbolic null squeezing `(metricGV + curvSigmaV) * (metricGV - curvSigmaV) = 0`,
-   - Emergent Élie Cartan curvature–torsion split `[cartanConnV W₁ X₁, cartanConnV W₂ X₂] = riemannCurvV + cartanTorsionV`.
+   - Emergent Élie Cartan curvature–torsion split `[cartanConnV W₁ X₁, cartanConnV W₂ X₂] = riemannCurvV + cartanTorsionV`, with `[Σ, riemannCurvV] = 0` and `{Σ, cartanTorsionV} = 0`.
 3. **Nilpotent Pairing Anomaly `Σ = [N_+, N_-]` to Chiral Block Gap `Gap = Σ²` (`NPA₁`–`NPA₈`)**:
    - Generator parity anomaly `Σ N_+ = N_+`, `N_+ Σ = -N_+`, `{Σ, N_+} = 0`,
    - Chiral block rotation `Σ Φ = J`, `Σ J = Φ`, `J Φ = Σ`, `{Σ, Φ} = 0`,
@@ -1311,7 +1311,13 @@ theorem partXVd_higgs_frame_dragging_emergent_cartan_and_nilpotent_anomaly_gap_s
        (EmergentTwoSheetBridge.cartanConnV N_plus W₁ X₁)
        (EmergentTwoSheetBridge.cartanConnV N_plus W₂ X₂) =
          EmergentTwoSheetBridge.riemannCurvV N_plus W₁ X₁ W₂ X₂ +
-           EmergentTwoSheetBridge.cartanTorsionV N_plus W₁ X₁ W₂ X₂) ∧
+           EmergentTwoSheetBridge.cartanTorsionV N_plus W₁ X₁ W₂ X₂ ∧
+     EmergentTwoSheetBridge.comm
+       (EmergentTwoSheetBridge.Sigma N_plus)
+       (EmergentTwoSheetBridge.riemannCurvV N_plus W₁ X₁ W₂ X₂) = 0 ∧
+     EmergentTwoSheetBridge.anticomm
+       (EmergentTwoSheetBridge.Sigma N_plus)
+       (EmergentTwoSheetBridge.cartanTorsionV N_plus W₁ X₁ W₂ X₂) = 0) ∧
     (NilpotentPairingAnomalyGapPoset.anticomm
        (NilpotentPairingAnomalyGapPoset.Sigma N_plus) N_plus = 0 ∧
      NilpotentPairingAnomalyGapPoset.anticomm
@@ -1349,7 +1355,9 @@ theorem partXVd_higgs_frame_dragging_emergent_cartan_and_nilpotent_anomaly_gap_s
     EmergentTwoSheetBridge.restrictV_decomp N_plus X₁,
     EmergentTwoSheetBridge.wingPlus_Phi_eq_N_plus N_plus h_nil h_reg,
     EmergentTwoSheetBridge.universal_mode_hyperbolic_null_squeezing N_plus X₁ h_nil,
-    EmergentTwoSheetBridge.emergent_cartan_curvature_torsion_split N_plus W₁ X₁ W₂ X₂⟩,
+    EmergentTwoSheetBridge.emergent_cartan_curvature_torsion_split N_plus W₁ X₁ W₂ X₂,
+    EmergentTwoSheetBridge.comm_Sigma_riemannCurvV N_plus W₁ X₁ W₂ X₂ h_nil h_reg,
+    EmergentTwoSheetBridge.anticomm_Sigma_cartanTorsionV N_plus W₁ X₁ W₂ X₂ h_nil h_reg⟩,
    ⟨NilpotentPairingAnomalyGapPoset.anticomm_Sigma_N_plus N_plus h_nil h_reg,
     NilpotentPairingAnomalyGapPoset.anticomm_Sigma_Phi N_plus h_nil h_reg,
     NilpotentPairingAnomalyGapPoset.Gap_idem N_plus h_nil h_reg,

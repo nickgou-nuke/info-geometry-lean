@@ -23,6 +23,8 @@ namespace InfoGeometry.OperatorAlgebra.PeirceSpine.KantorKoecherTits
 open InfoGeometry.Core.JordanAssociator
 open OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {B : Type*} [Ring B] [StarRing B]
 
 /-- The unnormalized Jordan associator used by the KKT sandwich generators. -/
@@ -2019,6 +2021,95 @@ theorem comm_Sigma_peirce_five_grades (N_plus X : B)
     abel
   · simpa [peirceGradeMinus2, peirceQP] using hQP
 
+/-- Native additive subgroup of operators with a fixed integer eigenvalue under
+the parity-anomaly adjoint action. -/
+def KKTAdjointGrade (N_plus : B) (k : ℤ) : AddSubgroup B :=
+  kktAdjointGrade (Sigma N_plus) k
+
+/-- The KKT grade subgroups are closed under the Lie bracket with additive
+degree: a bracket of grade `m` and grade `n` belongs to grade `m + n`.
+This is the native graded-Lie closure interface for downstream constructions. -/
+theorem kkt_grade_bracket_mem {N_plus X Y : B} {m n : ℤ}
+    (hX : X ∈ KKTAdjointGrade N_plus m)
+    (hY : Y ∈ KKTAdjointGrade N_plus n) :
+    comm X Y ∈ KKTAdjointGrade N_plus (m + n) := by
+  exact kktAdjointGrade_bracket hX hY
+
+/-- Each of the five concrete Peirce sectors belongs to its corresponding
+adjoint-eigenspace subgroup. -/
+theorem peirce_five_grades_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradePlus2 N_plus X ∈ KKTAdjointGrade N_plus 2 ∧
+    peirceGradePlus1 N_plus X ∈ KKTAdjointGrade N_plus 1 ∧
+    peirceGradeZero N_plus X ∈ KKTAdjointGrade N_plus 0 ∧
+    peirceGradeMinus1 N_plus X ∈ KKTAdjointGrade N_plus (-1) ∧
+    peirceGradeMinus2 N_plus X ∈ KKTAdjointGrade N_plus (-2) := by
+  rcases comm_Sigma_peirce_five_grades N_plus X h_nil h_reg with
+    ⟨h2, h1, h0, hm1, hm2⟩
+  constructor
+  · change comm (Sigma N_plus) (peirceGradePlus2 N_plus X) =
+      (2 : ℤ) • peirceGradePlus2 N_plus X
+    simpa [two_nsmul] using h2
+  constructor
+  · change comm (Sigma N_plus) (peirceGradePlus1 N_plus X) =
+      (1 : ℤ) • peirceGradePlus1 N_plus X
+    simpa using h1
+  constructor
+  · change comm (Sigma N_plus) (peirceGradeZero N_plus X) =
+      (0 : ℤ) • peirceGradeZero N_plus X
+    simpa using h0
+  constructor
+  · change comm (Sigma N_plus) (peirceGradeMinus1 N_plus X) =
+      (-1 : ℤ) • peirceGradeMinus1 N_plus X
+    simpa using hm1
+  · change comm (Sigma N_plus) (peirceGradeMinus2 N_plus X) =
+      (-2 : ℤ) • peirceGradeMinus2 N_plus X
+    simpa [two_nsmul] using hm2
+
+/-- The zero adjoint-grade sector is a native mathlib Lie subalgebra of the
+associative ring equipped with its commutator Lie bracket. -/
+def KKTGradeZeroLieSubalgebra (N_plus : B) :
+    (letI : LieRing B := LieRing.ofAssociativeRing
+     LieSubalgebra ℤ B) := by
+  letI : LieRing B := LieRing.ofAssociativeRing
+  exact
+    { carrier := KKTAdjointGrade N_plus 0
+      zero_mem' := by
+        change comm (Sigma N_plus) 0 = (0 : ℤ) • 0
+        simp [comm]
+      add_mem' := by
+        intro X Y hX hY
+        change comm (Sigma N_plus) X = (0 : ℤ) • X at hX
+        change comm (Sigma N_plus) Y = (0 : ℤ) • Y at hY
+        simp only [zero_zsmul] at hX hY
+        change comm (Sigma N_plus) (X + Y) = (0 : ℤ) • (X + Y)
+        rw [kkt_comm_add_right, hX, hY, add_zero]
+        simp
+      smul_mem' := by
+        intro n X hX
+        change comm (Sigma N_plus) X = (0 : ℤ) • X at hX
+        simp only [zero_zsmul] at hX
+        change comm (Sigma N_plus) (n • X) = (0 : ℤ) • (n • X)
+        rw [kkt_comm_zsmul_right, hX]
+        simp
+      lie_mem' := by
+        intro X Y hX hY
+        change comm (Sigma N_plus) X = (0 : ℤ) • X at hX
+        change comm (Sigma N_plus) Y = (0 : ℤ) • Y at hY
+        simp only [zero_zsmul] at hX hY
+        change comm (Sigma N_plus) (comm X Y) = (0 : ℤ) • comm X Y
+        rw [kkt_commutator_derivation, hX, hY]
+        simp [comm] }
+
+/-- The concrete Peirce grade-zero sector lies in the native KKT Lie
+subalgebra. -/
+theorem peirceGradeZero_mem_KKTGradeZeroLieSubalgebra (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradeZero N_plus X ∈ KKTGradeZeroLieSubalgebra N_plus := by
+  exact (peirce_five_grades_mem N_plus X h_nil h_reg).2.2.1
+
 /-- Completion interface: the five Peirce sectors exhaust each operator, are graded
 by `ad(Σ)`, and their extremal pieces are reached by the Jordan-associator generators. -/
 theorem kkt_peirce_five_grade_completion (N_plus X : B)
@@ -2050,7 +2141,12 @@ theorem kkt_peirce_five_grade_completion (N_plus X : B)
     (comm (peirceGradeZero N_plus X) (peirceGradeZero N_plus Y) =
       comm (G_0_P N_plus X) (G_0_P N_plus Y) +
       comm (G_0_Q N_plus X) (G_0_Q N_plus Y) +
-      comm (G_0_neutral N_plus X) (G_0_neutral N_plus Y)) := by
+      comm (G_0_neutral N_plus X) (G_0_neutral N_plus Y)) ∧
+    (peirceGradePlus2 N_plus X ∈ KKTAdjointGrade N_plus 2 ∧
+     peirceGradePlus1 N_plus X ∈ KKTAdjointGrade N_plus 1 ∧
+     peirceGradeZero N_plus X ∈ KKTAdjointGrade N_plus 0 ∧
+     peirceGradeMinus1 N_plus X ∈ KKTAdjointGrade N_plus (-1) ∧
+     peirceGradeMinus2 N_plus X ∈ KKTAdjointGrade N_plus (-2)) := by
   exact ⟨peirce_five_grade_decomposition N_plus X h_nil h_reg,
     comm_Sigma_peirce_five_grades N_plus X h_nil h_reg,
     K_extremals_cover_peirce_grades N_plus X h_nil,
@@ -2058,7 +2154,8 @@ theorem kkt_peirce_five_grade_completion (N_plus X : B)
     comm_peirceGradePlus2_plus1 N_plus X Y h_nil h_reg,
     comm_peirceGradeMinus2_minus1 N_plus X Y h_nil h_reg,
     comm_G_plus2_G_minus2_in_G_0 N_plus X Y h_reg,
-    comm_peirceGradeZero_closed N_plus X Y h_nil h_reg⟩
+    comm_peirceGradeZero_closed N_plus X Y h_nil h_reg,
+    peirce_five_grades_mem N_plus X h_nil h_reg⟩
 
 /-- **Theorem `KKT₉` (Opposite Extremal Commutator Has Adjoint Grade `0`)**:
 `[Σ, [G_{+2}(N_+, X), G_{-2}(N_+, Y)]] = 0`. -/

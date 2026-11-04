@@ -203,6 +203,23 @@ theorem commutator_bianchi (x y z : A) :
 def orbitGramian [Fintype ι] [StarRing A] (p : A) (potential : ι → A) : A :=
   ∑ i, star (orbitCommutator p (potential i)) * orbitCommutator p (potential i)
 
+/-- A finite orbit Gramian has equal cyclic-functional mass in the two
+complementary Peirce corners. This is the channel-summed form of
+`cyclicFunctional_orbit_mass_corner_equipartition`; it applies in particular
+to the matrix trace, without asserting strict positivity of either value. -/
+theorem cyclicFunctional_orbitGramian_corner_equipartition [StarRing A]
+    [Fintype ι] {S : Type*} [AddCommGroup S] (τ : A →+ S)
+    (hτ : ∀ x y : A, τ (x * y) = τ (y * x))
+    {p : A} (hp : p * p = p) (hps : star p = p)
+    (potential : ι → A) (hpotential : ∀ i, star (potential i) = potential i) :
+    τ (p * orbitGramian p potential * p) =
+      τ ((1 - p) * orbitGramian p potential * (1 - p)) := by
+  unfold orbitGramian
+  simp only [Finset.mul_sum, Finset.sum_mul, map_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact cyclicFunctional_orbit_mass_corner_equipartition τ hτ hp hps (hpotential i)
+
 /-- A nonzero orbit commutator certifies that the potential does not commute
 with the projection. -/
 theorem orbitCommutator_ne_zero_implies_not_commute {p a : A}

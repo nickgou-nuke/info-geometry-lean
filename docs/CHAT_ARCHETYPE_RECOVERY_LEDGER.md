@@ -3059,3 +3059,273 @@ The direct locked build of
 `InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelChiralBlockAnomalyGapPoset`
 also succeeded (1,549 jobs), confirming the weighted declarations above at
 their owner target.
+
+### 2026-11-04: Archetype XXXI orbit mass-gap channel sum
+
+The XXXI Yang--Mills orbit proposal in
+`cached/aistudio_extracts/aistudio_prompt_17Kj7oLBHPfoWvQLKPwwve8pcsDezqpkG/transcript.md`
+maps to the existing
+[`YangMillsOrbitGramian.lean`](../lean/InfoGeometry/OperatorAlgebra/YangMillsOrbitGramian.lean)
+owner. Its single-mode Gramian, projection commutation, Peirce corner Gramian,
+cyclic equipartition, and commutator Bianchi statements already cover the
+proposal's central algebraic identities in a general associative star ring.
+I added `cyclicFunctional_orbitGramian_corner_equipartition`, extending the
+single-mode equipartition to a finite family for every cyclic additive
+functional. Matrix trace is a specialization. The statement records equality
+of corner traces only; it does not claim strict positivity or a physical mass
+gap. The targeted locked build of
+`InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian` succeeded (8,930 jobs).
+
+### 2026-11-04: Archetype XXXII Penrose--Dirac corner mixing
+
+The XXXII photon/electron proposal in the saved Studio transcript is already
+covered at the general idempotent level by
+[`PeirceNambuGorkov.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceNambuGorkov.lean):
+`independent_directed_corner_mass_sector` gives square-zero directed Peirce
+corners, their mixed Jordan square, and its evenness under the idempotent;
+`independent_directed_corner_sum_is_odd` gives the reflection anticommutation;
+and `cyclicFunctional_peirce_corner_source_sink` proves the cyclic-readout
+spin source/sink and mass identities. Related matrix Gramian positivity and
+the commutation criterion are owned by
+[`PeirceChiralGeometry.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceChiralGeometry.lean).
+No new alias theorem is needed. The source prose's claim that mixing always
+produces *nonzero* mass is stronger than the algebraic identity: the mixed
+square can vanish for commuting/zero corner amplitudes. This audit adds no
+new Lean declaration.
+
+### 2026-11-04: Archetype XXXIII spin--mass--gravity synthesis
+
+The XXXIII spin/mass claims in the saved Studio transcript map to existing
+generic Peirce owners. In
+[`PeirceNambuGorkov.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceNambuGorkov.lean),
+`directed_corner_lie_jordan_reflection` proves both reflection twists between
+the Lie spin and Jordan mass for independent directed corners;
+`directed_corner_mass_spin_compressions` proves their four sheet
+compressions; and `cyclicFunctional_peirce_corner_source_sink` proves the
+opposite spin readouts, equal mass readouts, and doubled total mass under any
+cyclic additive functional. For adjoint-paired matrix corners,
+[`PeircePairPositivity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeircePairPositivity.lean)
+proves positive-semidefinite Gram representations and corner Gram matrices.
+These owners establish algebraic identities and semidefinite positivity under
+their stated star/order hypotheses; they do not establish a physical mass gap
+or strict positivity without a kernel/injectivity condition. No new Lean
+declaration was required for XXXIII.
+
+### 2026-11-04: Archetype XXXIV spin--electron reflexive closure
+
+The XXXIV identities are covered by the existing associative-ring and matrix
+owners, with hypotheses kept explicit. `squareZeroPair_lie_jordan_relations`
+in [`PeirceNambuGorkov.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceNambuGorkov.lean)
+proves the equal Lie/Jordan squares and spin/electron anticommutation for any
+square-zero pair. `reflexiveSquareZeroPair_tripotency` proves the spin-square
+mass identity, idempotent mass, and tripotent spin when both reflexivity laws
+are assumed. `reflexive_pair_dirac_support_and_involution` in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean)
+proves the corresponding tripotent Dirac sum and support action. For a
+self-adjoint tripotent matrix, `self_drazin` and
+`self_moorePenrose_of_isSelfAdjoint` in
+[`TripotentMatrixGeometry.lean`](../lean/InfoGeometry/NCG/TripotentMatrixGeometry.lean)
+give the native generalized-inverse conclusions. The latter requires the
+self-adjointness condition; generic reflexivity alone does not imply a
+Moore--Penrose inverse with the element itself. These existing owners require
+no duplicate XXXIV theorem.
+
+### 2026-11-04: Archetype XXXV Tetraktys and split-signature algebra
+
+The XXXV four-operator table is already distributed across the reusable
+square-zero pair owners. `squareZeroPair_lie_jordan_relations` and
+`squareZeroPair_spin_mass_precession` in
+[`PeirceNambuGorkov.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceNambuGorkov.lean)
+prove the generic Lie/Jordan squares, mixed anticommutation, and spin action.
+[`Orientation.lean`](../lean/InfoGeometry/OperatorAlgebra/SquareZeroPairSpectral/Orientation.lean)
+proves the Peirce-specific reflection actions on the sum, difference, mass,
+and spin elements, including the corresponding sandwich and Hodge-star
+relations. The commutant and spin-square relations are also present in
+[`MassCommutant.lean`](../lean/InfoGeometry/OperatorAlgebra/SquareZeroPairSpectral/MassCommutant.lean),
+and the reflexive specialization in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean)
+gives idempotent mass support and tripotent spin. This supplies the polynomial
+split-signature closure algebraically; it does not identify that finite
+operator algebra with a spacetime Clifford representation. No additional
+XXXV declaration is needed.
+
+### 2026-11-04: Archetype XXXVI helicity, involution, and resolvent split
+
+The XXXVI prompt's algebraic resolvent identity is covered by
+`shifted_dirac_product_factorization` in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean),
+which factors `(c - E) * (c + E)` through a supplied square relation and
+commutation hypotheses. The helicity twists of mass and spin are covered by
+the reflection identities in
+[`Orientation.lean`](../lean/InfoGeometry/OperatorAlgebra/SquareZeroPairSpectral/Orientation.lean).
+The global completion squares are covered by
+[`TripotentMatrixGeometry.lean`](../lean/InfoGeometry/NCG/TripotentMatrixGeometry.lean):
+for a tripotent `T`, `1 - T² + T` squares to one and is a unit; the star/unitary
+conclusion additionally assumes `T` self-adjoint. This is a polynomial
+factorization and algebraic completion, not a theorem about analytic
+resolvents or spectral pole locations. No duplicate XXXVI declaration is
+needed.
+
+### 2026-11-04: Archetype XLI vacuum/chiral dissipator crossover
+
+The stationarity and spin-pumping portion is already captured more generally
+by `peirce_corner_reflection_dissipator_actions` in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean):
+for arbitrary associative-algebra directed corners of an idempotent, the
+signed spin dissipator fixes the Cartan reflection, sends `1` to four times
+the commutator spin, and the mass dissipator sends the reflection to minus
+four times that spin. The same owner has cyclic-functional trace-zero results
+for both dissipator divergences. The searched owners do not expose the
+transcript's trace-pairing self-adjointness theorem for the symmetric mass
+dissipator; that clause remains an explicit formalization gap. This audit
+does not promote the full XLI package as complete.
+
+### 2026-11-04: Archetype XXXVII single-bit Tetraktys master theorem
+
+The XXXVII Wheeler/bit prompt is already covered by the more general Peirce
+Tetraktys owner
+[`Tetraktys.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean).
+`archetype_A3_nilpotent_cones_and_tetraktys_table` proves nilpotency of both
+directed corners and the full matter/current/mass/spin multiplication table
+for independent forward and backward amplitudes. Specializing both amplitudes
+to the same matrix gives the transcript's single-bit setup. The companion
+`tetraktys_interaction_iff_chiral_obstruction` records the interaction versus
+commutation criterion. Cyclic trace cancellation and the mass-square readout
+are already covered by `cyclicFunctional_peirce_corner_source_sink` in
+[`PeirceNambuGorkov.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceNambuGorkov.lean)
+and `peirce_cyclic_trace_mass_square` in
+[`ArchitecturalBlueprintD59.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ArchitecturalBlueprintD59.lean).
+No new XXXVII theorem is needed.
+
+### 2026-11-04: Archetype XXXVIII Hodge--Kraus quartet and derivation cycle
+
+The first XXXVIII proposal's four Lie/Jordan actions and cross-sandwich
+correction match `mixed_boundary_superoperator_quartet` in
+[`NoncommutativeContextInteraction.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeContextInteraction.lean),
+which is proved for arbitrary associative rings. Its trace duality is the
+generic `cyclicFunctional_crossSandwichChannel` theorem in that same owner.
+The later pure-derivation oscillator formulation is covered by
+`commutator_two_cycle_product_identities` in that file, once the two-cycle
+relations are supplied; the Peirce owner
+[`Tetraktys.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean)
+derives the matter/current cycle from an idempotent and its directed corners.
+The ring-level Leibniz rule then gives conservation of the quadratic products.
+These results prove algebraic superoperator and commutator identities, not a
+time-dependent Maxwell or Dirac field equation. No duplicate XXXVIII module
+is required.
+
+### 2026-11-04: Archetype XL Lindblad--Wheeler dissipator identities
+
+The XL algebraic identities have native generic owners, though not the
+transcript's matrix-specific names. `symmetricDissipator_eq_mixed_commutators`
+in [`NoncommutativeChiralChannels.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeChiralChannels.lean)
+identifies the symmetric mass dissipator with the negative sum of the two
+mixed double commutators. The spin-channel expression follows from the second
+component of `mixed_boundary_superoperator_quartet` in
+[`NoncommutativeContextInteraction.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeContextInteraction.lean),
+which retains the required cross-sandwich term and gives the exact ordered
+identity for arbitrary associative rings. Its cyclic-functional trace
+cancellation is obtained from `functional_commutator_zero` there. The identity
+input is fixed by the mass dissipator because its inner commutators with `1`
+vanish. These owners do not assert complete positivity, a generated GKSL
+semigroup, or stationarity of the vacuum projection `1 - M²`; the transcript's
+shown theorem establishes identity stationarity. No duplicate matrix-only XL
+owner is justified by the checked source.
+
+### 2026-11-04: Archetype XLII mass/spin dissipator stability
+
+The XLII algebraic content is covered at square-zero-pair generality by
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean).
+`squareZero_pair_mass_spin_compatibility` proves that the Jordan mass commutes
+with each generator and the commutator spin anticommutes with each generator.
+`crossDissipator_apply_mass_of_squareZero` fixes the mass under the symmetric
+cross dissipator, and `squareZero_pair_spin_and_horizon_actions` fixes the
+spin under the signed spin dissipator while giving both Kraus gain identities.
+The reflexive-pair master action also records mass stationarity. These are
+operator-valued identities and make no complete-positivity or physical
+pair-production assertion. No separate matrix-only XLII owner is needed.
+
+### 2026-11-04: Archetype XLIII correction to the off-diagonal Kraus claim
+
+The transcript's first XLIII claim that the cross-only mass dissipator leaves
+the off-diagonal Dirac sum dark is algebraically false. For square-zero
+reflexive corners, the cross sandwich vanishes on the sum, and the existing
+`crossDissipator_apply_add_of_reflexive` theorem in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean)
+computes the resulting action as `-2 • (u + v)`, rather than zero. The later
+transcript audit identifies the missing same-side channel; the full sum-channel
+action is already recorded by `sumDissipator_reflexive_pair_actions`, with the
+sum fixed and the axial difference damped. This supports the corrected
+channel-level algebra, but does not promote the initial cross-only zero-mode
+claim or its physical decoherence interpretation. No duplicate XLIII theorem
+is needed for these corrected identities.
+
+### 2026-11-04: Transcript Archetype XLIV reflection-pairing scope
+
+The transcript's proposed matrix theorem `osterwalder_schrader_reflection_positivity_mass_gap`
+was not found by the owner-source search. Its displayed conclusions are
+algebraic reflection and Gram-factor identities; the equation
+`N Nᴴ + Nᴴ N = M²` alone does not establish positivity in an ordered
+operator algebra, nor does the snippet prove a transfer-matrix contraction or
+a spectral-gap inequality. The repo has separate carrier-level positivity
+and transfer-matrix results, but the searched source does not identify them
+with this proposed horizon reflection. Treat this as a formalization gap and
+keep the OS positivity/spectral interpretation unclaimed pending an explicit
+positive-cone or inner-product bridge.
+
+### 2026-11-04: Transcript Archetypes XLV--XLVIII root and tower claims
+
+The XLV root-weight and reflexive-pair `sl₂` identities already have generic
+owners in [`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean):
+`cartan_reflection_corner_root_weights`,
+`cartan_reflection_commutes_mass_spin`, and
+`reflexive_pair_sl2_relations` (with a separate Casimir identity). The exact
+algebraic root triad therefore needs no matrix-only duplicate.
+
+For XLVI--XLVIII, [`TwoSheetedYangMillsInductiveColimit.lean`](../lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean)
+defines an abstract `InductiveStarColimitCone` and proves star-ring-hom
+transport plus finite-step cocycle invariance of selected two-sheet operators.
+This is meaningful tower transport. It does not instantiate the transcript's
+specific tensor-product/block-doubling system, prove transition maps are
+injective, or show a nonzero gap remains nonzero in every stage. The searched
+transport result also does not by itself establish every XLVII quartet
+identity or the XLVIII shifted-resolvent and dissipator claims uniformly at
+all stages. Those stronger claims require matching constructions and
+hypotheses; the current formalization is not evidence for a universal
+physical mass-gap persistence theorem.
+
+### 2026-11-04: Transcript Archetype XLIX dissipator mode correction
+
+The XLIX transcript defines `gkslMasterGenerator` from the cross-only
+`lindbladMassDissipator`. Its claimed zero action on the Dirac sum conflicts
+with the generic owner theorem `mass_gksl_reflexive_pair_actions` in
+[`PeirceDissipatorTrinity.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceDissipatorTrinity.lean):
+for a reflexive square-zero pair that generator sends `u + v` to
+`-2 • (M * (u + v))`, and sends `u - v` to `-2 • (M * (u - v))`.
+The cross-only Kraus sandwich vanishes on these off-diagonal modes, so the
+transcript's intermediate assertion that it contributes `+M * E` is the
+source of the discrepancy. The repo's separate full Dirac dissipator,
+`diracDissipator_reflexive_pair_actions` in
+[`NoncommutativeChiralChannels.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeChiralChannels.lean),
+includes the same-side channel and does fix `1`, the Jordan mass, and `u + v`,
+while damping `u - v` and the spin commutator by `-4 • (M * X)`.
+`sumDissipator_reflexive_pair_actions` gives the same full-channel actions.
+These are operator-valued mode actions; neither proves linear independence
+of the displayed modes or a numerical spectral gap without additional
+structure. The claimed XLIX cross-only zero mode should not be formalized as
+stated.
+
+### 2026-11-04: Transcript Archetypes L--LI dissipator trinity
+
+The corrected channel algebra has a repo-owned generic treatment in
+[`NoncommutativeChiralChannels.lean`](../lean/InfoGeometry/OperatorAlgebra/NoncommutativeChiralChannels.lean):
+`channels_add_eq_dirac_sandwich`,
+`diracDissipator_eq_neg_double_commutator`,
+`axialDissipator_eq_double_commutator`, and
+`dissipator_midpoint_identity` distinguish the full Dirac, axial, and
+cross-only symmetric channels. The reflexive-pair mode actions are in
+`diracDissipator_reflexive_pair_actions` and the corresponding
+`PeirceDissipatorTrinity` results. These prove algebraic operator identities;
+they do not establish the transcript's universal quantum `T₁/T₂` relation or
+numerical decay rates without a positive state, time evolution, and scalar
+rate interpretation.

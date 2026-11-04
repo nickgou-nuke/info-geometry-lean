@@ -1,0 +1,67 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.SquareZeroPairDeformationLimits
+import InfoGeometry.Krein.ExceptionalPointBilinear
+import InfoGeometry.Core.DefectIteration
+import InfoGeometry.Core.PeirceQuadraticFrame
+
+/-! Axiom dependencies of the parameterized deformation, its limit obstruction,
+and its bilinear adapter, together with the reused ordered Peirce/defect spine. -/
+
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.left_ne_zero
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.not_commute
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.deformation_zero
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.deformation_square_eq_smul_round_trips
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.deformation_square
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.normalized_square_eq_round_trips
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.normalized_square
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.smul_normalized
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.normalized_difference_square
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_add_projectorMinus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_sub_projectorMinus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_square
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorMinus_square
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_mul_projectorMinus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorMinus_mul_projectorPlus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.normalized_mul_projectorPlus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.normalized_mul_projectorMinus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_mul_normalized
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorMinus_mul_normalized
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.deformation_mul_projectorPlus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.deformation_mul_projectorMinus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_mul_deformation
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorMinus_mul_deformation
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.deformation_eq_smul_projector_difference
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorPlus_residue
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.projectorMinus_residue
+
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.isIdempotentElem_of_tendsto
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.nilpotent_eq_zero_of_tendsto_idempotents
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.tendsto_deformation
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.tendsto_projectorPlus_residue
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.tendsto_projectorMinus_residue
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.not_tendsto_projectorPlus
+#print axioms InfoGeometry.Algebra.SquareZeroPairDeformation.not_tendsto_projectorMinus
+
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.square_zero_range_pairing
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.jordan_chain_isotropic
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.round_trips_adjoint
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.round_trip_range_pairing
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.deformation_adjoint
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.normalized_adjoint
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.projectorPlus_adjoint
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.projectorMinus_adjoint
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.spectral_ranges_orthogonal
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.eigenvalue_square
+#print axioms InfoGeometry.Krein.ExceptionalPointBilinear.no_real_eigenvector_of_negative
+
+#print axioms InfoGeometry.Core.PeirceCoupledCorners.coupled_square
+#print axioms InfoGeometry.Core.PeirceCoupledCorners.component11_jordan
+#print axioms InfoGeometry.Core.PeirceCoupledCorners.component00_jordan
+#print axioms InfoGeometry.Core.PeirceQuadraticFrame.bracket_square
+#print axioms InfoGeometry.Core.IdempotencyDefect.polarization
+#print axioms InfoGeometry.Core.DefectIteration.adjoin_iterate_antitone
+#print axioms InfoGeometry.Algebra.IsotropicCyclotomicGenesis.normalized_square_zero_pair_generates_orthogonal_idempotents

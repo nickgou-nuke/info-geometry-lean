@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceSpine.WeightedMultiChannelJordanAnomalyPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelChiralBlockAnomalyGapPoset
 import InfoGeometry.Core.JordanAssociatorRing
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -143,6 +144,65 @@ theorem finite_channel_sum_regular (s : Finset ι) (N : ι → B)
   apply Finset.sum_congr rfl
   intro i hi
   exact h_reg i hi
+
+/-- The parity anomaly of a finite orthogonal channel sum is the sum of its
+channel anomalies. -/
+theorem finite_channel_sum_sigma_add (s : Finset ι) (N : ι → B)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma
+      (∑ i ∈ s, N i) =
+      ∑ i ∈ s, InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma
+        (N i) := by
+  classical
+  have hstar_sum (t : Finset ι) :
+      star (∑ i ∈ t, N i) = ∑ i ∈ t, star (N i) := by
+    induction t using Finset.induction_on with
+    | empty => simp
+    | @insert a t ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, star_add, ih]
+  have hleft :
+      (∑ i ∈ s, N i) * (∑ i ∈ s, star (N i)) =
+        ∑ i ∈ s, N i * star (N i) := by
+    apply sum_mul_sum_of_pairwise_cross_zero
+    intro i hi j hj hij
+    exact (h_cross i hi j hj hij).2.2.1
+  have hright :
+      (∑ i ∈ s, star (N i)) * (∑ i ∈ s, N i) =
+        ∑ i ∈ s, star (N i) * N i := by
+    apply sum_mul_sum_of_pairwise_cross_zero
+    intro i hi j hj hij
+    exact (h_cross i hi j hj hij).2.2.2
+  change ((∑ i ∈ s, N i) * star (∑ i ∈ s, N i) -
+      star (∑ i ∈ s, N i) * (∑ i ∈ s, N i)) = _
+  rw [hstar_sum s, hleft, hright, ← Finset.sum_sub_distrib]
+  rfl
+
+/-- The spectral gap of a finite orthogonal channel sum is the sum of its
+channel gaps. -/
+theorem finite_channel_sum_gap_add (s : Finset ι) (N : ι → B)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+      (∑ i ∈ s, N i) =
+      ∑ i ∈ s, InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+        (N i) := by
+  classical
+  change (InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma
+      (∑ i ∈ s, N i) *
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma
+        (∑ i ∈ s, N i)) = _
+  rw [finite_channel_sum_sigma_add s N h_cross]
+  rw [sum_sq_of_pairwise_mul_zero]
+  · rfl
+  · intro i hi j hj hij
+    exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Sigma_mul_Sigma_orthog
+      (N i) (N j)
+      (h_cross i hi j hj hij).1
+      (h_cross i hi j hj hij).2.1
+      (h_cross i hi j hj hij).2.2.1
+      (h_cross i hi j hj hij).2.2.2
 
 /-- A self-adjoint weight commuting with its channel generator also commutes
 with that generator's adjoint. This removes the redundant second local

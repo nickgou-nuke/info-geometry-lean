@@ -32,6 +32,22 @@ theorem schurDenominator_pos (θ : ℝ) : 0 < 1 + loopWeight θ := by
   have h := Real.tanh_sq_lt_one θ
   nlinarith
 
+/-- Every negative loop weight strictly above the Schur pole has a real
+rapidity representative.  The inverse is selected canonically by requiring
+`θ ≥ 0`, via `artanh (sqrt (-f))`. -/
+theorem loopWeight_artanh_sqrt (f : ℝ) (hf₀ : -1 < f) (hf₁ : f < 0) :
+    loopWeight (Real.artanh (Real.sqrt (-f))) = f := by
+  have hnonneg : 0 ≤ -f := by linarith
+  have hlt : Real.sqrt (-f) < 1 := by
+    have hsqrt := Real.sq_sqrt hnonneg
+    nlinarith [Real.sqrt_nonneg (-f)]
+  have htanh : Real.tanh (Real.artanh (Real.sqrt (-f))) = Real.sqrt (-f) :=
+    Real.tanh_artanh (Set.mem_Ioo.mpr
+      ⟨by nlinarith [Real.sqrt_nonneg (-f)], hlt⟩)
+  dsimp [loopWeight]
+  rw [htanh, Real.sq_sqrt hnonneg]
+  ring
+
 /-- The Schur denominator is the squared hyperbolic secant. -/
 theorem schurDenominator_eq_inv_cosh_sq (θ : ℝ) :
     1 + loopWeight θ = (Real.cosh θ)⁻¹ ^ 2 := by
@@ -56,7 +72,6 @@ theorem loopPrefactor_eq_cosh_two (θ : ℝ) :
           ((Real.cosh θ) ^ 2 - (Real.sinh θ) ^ 2) := by
             rw [Real.tanh_eq_sinh_div_cosh]
             field_simp
-            <;> ring
     _ = (Real.cosh θ) ^ 2 + (Real.sinh θ) ^ 2 := by
           rw [Real.cosh_sq_sub_sinh_sq]
           ring

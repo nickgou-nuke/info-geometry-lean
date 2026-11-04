@@ -3676,6 +3676,17 @@ self-adjointness from suitable adjoint-compatible input data. The targeted
 bridge build and umbrella `PeirceSpine` build passed; staged proof-proxy and
 semantic-vacuity checks passed.
 
+The bridge now closes that concrete side condition: under self-adjoint shell
+idempotents and coefficient relations `star A₁ = C₁`, `star A₂ = C₂`,
+`nested_zorn_three_corner_readouts_selfAdjoint` proves both ordinary and
+alternating-sign middle-shell contraction readouts are self-adjoint.
+`nested_zorn_three_corner_readouts_krein_fixed` then combines those results
+with the already-proved path-parity invariance to establish their A102
+Krein-reflection invariance. The targeted locked build passed (9,052 jobs).
+This is conditional on adjoint-compatible coefficient pairs; it does not
+assert self-adjointness for arbitrary link coefficients or wallpaper-glide
+invariance.
+
 ### 2026-11-04: KKT five-grade directness and synthesis contract alignment
 
 `peirce_five_grade_sum_zero_all` in

@@ -159,6 +159,18 @@ theorem weighted_finite_block_sq_eq_gap_sum_of_self_adjoint_weights
       (h_selfadjoint i hi) (h_comm i hi)
   · exact h_cross
 
+omit [DecidableEq ι] in
+/-- A family of self-adjoint weights that commute with their own channel
+generators automatically commutes with the adjoint generators. -/
+theorem self_adjoint_weights_commute_with_channel_adjoints
+    (s : Finset ι) (c N : ι → B)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i) :
+    ∀ i ∈ s, c i * star (N i) = star (N i) * c i := by
+  intro i hi
+  exact self_adjoint_weight_comm_star (c i) (N i)
+    (h_selfadjoint i hi) (h_comm i hi)
+
 /-- A channel's own gap fixes its weighted chiral block. -/
 theorem gap_mul_weighted_phi_self (c N : B)
     (h_nil : N * N = 0) (h_reg : N * star N * N = N)
@@ -518,6 +530,55 @@ theorem weighted_finite_J_sq_eq_neg_gap
   rw [weight_mul_weight (c i) (J (N i)) (J (N i))
       (comm_weight_J (c i) (N i) (h_comm i hi) (h_comm_star i hi)),
     J_sq_eq_neg_Gap (N i) (h_nil i hi) (h_reg i hi), mul_neg]
+
+/-- Self-adjoint-weight interface for the finite weighted rotor/block
+product. Only each weight's commutation with its own nilpotent is assumed. -/
+theorem weighted_finite_J_mul_Phi_eq_sigma_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    weightedFiniteJ s c N * weightedFinitePhi s c N =
+      weightedFiniteSigma s c N := by
+  exact weighted_finite_J_mul_Phi_eq_sigma s c N h_nil h_comm
+    (self_adjoint_weights_commute_with_channel_adjoints s c N
+      h_selfadjoint h_comm) h_cross
+
+/-- Self-adjoint-weight interface for the reversed weighted block/rotor
+product, with only channel-local weight commutation. -/
+theorem weighted_finite_Phi_mul_J_eq_neg_sigma_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    weightedFinitePhi s c N * weightedFiniteJ s c N =
+      -weightedFiniteSigma s c N := by
+  exact weighted_finite_Phi_mul_J_eq_neg_sigma s c N h_nil h_comm
+    (self_adjoint_weights_commute_with_channel_adjoints s c N
+      h_selfadjoint h_comm) h_cross
+
+/-- Self-adjoint-weight interface for the negative weighted rotor square;
+weight commutation is required only within each channel. -/
+theorem weighted_finite_J_sq_eq_neg_gap_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    weightedFiniteJ s c N * weightedFiniteJ s c N =
+      -weightedFiniteGap s c N := by
+  exact weighted_finite_J_sq_eq_neg_gap s c N h_nil h_reg h_comm
+    (self_adjoint_weights_commute_with_channel_adjoints s c N
+      h_selfadjoint h_comm) h_cross
 
 /-- The finite weighted gap sends the finite weighted block to its cubic block. -/
 theorem weighted_finite_gap_mul_Phi_eq_Phi3

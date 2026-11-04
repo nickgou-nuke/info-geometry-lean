@@ -2537,6 +2537,12 @@ that `Σ(N)` is self-adjoint and that the expectation of `Gap(N) = Σ(N)^2` is
 of the quadratic operator expectation on the positive Hilbert carrier, not a
 claim of a uniform spectral lower bound or a gap for the separate Krein form.
 
+The same owner now proves `regular_gap_range_eq_anomaly_range`: for a regular
+nilpotent pair, the ranges of `Gap(N)` and `Sigma(N)` coincide. The theorem
+`regular_anomaly_involution_on_gap_support` states the corresponding support
+law, `Sigma²(Gap ψ) = Gap ψ`. These are operator-range statements and do not
+claim a strictly positive lower spectral bound.
+
 The dedicated owner
 [`QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean`](../lean/InfoGeometry/QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean)
 now closes the scalar QGT-component map for every normalized state: the
@@ -3121,6 +3127,16 @@ The weighted-channel construction in the prompt is already formalized in
   weighted-channel owner or duplicate API. This is source inspection evidence;
   the exact weighted owner target was built after this audit and passed; see
   the verification entry below.
+
+The finite reusable owner
+[`FiniteWeightedMultiChannelGap.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/FiniteWeightedMultiChannelGap.lean)
+now also provides the self-adjoint-weight interface for the finite weighted
+rotor/block product, its reverse-order product, and the rotor square. Its
+`self_adjoint_weights_commute_with_channel_adjoints` helper derives commutation
+with each channel adjoint from self-adjointness and commutation with that
+channel's nilpotent. The assumptions remain channel-local; no weight needs to
+commute with another channel. Its locked owner build passed (845 jobs), as did
+the staged proof-proxy gate and semantic-vacuity check.
 
 In the same work session, the KKT owner gained a mixed `+1`/`-1` bracket
 decomposition into its three diagonal Peirce blocks, plus top/bottom grade

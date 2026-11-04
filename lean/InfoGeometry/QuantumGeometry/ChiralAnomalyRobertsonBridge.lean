@@ -116,6 +116,29 @@ theorem regular_gap_norm_eq_anomaly_norm (N : EndH)
       _ = ‖Sigma N ψ‖ ^ 2 := gap_expectation_eq_anomaly_norm_sq N ψ
   nlinarith [norm_nonneg (Gap N ψ), norm_nonneg (Sigma N ψ)]
 
+/-- For a regular nilpotent pair, the range of the support projection is
+exactly the range of the parity anomaly. -/
+theorem regular_gap_range_eq_anomaly_range (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) :
+    Set.range (fun ψ : H => Gap N ψ) = Set.range (fun ψ : H => Sigma N ψ) := by
+  ext y
+  constructor
+  · rintro ⟨ψ, rfl⟩
+    refine ⟨Sigma N ψ, ?_⟩
+    simp [Gap]
+  · rintro ⟨ψ, rfl⟩
+    refine ⟨Sigma N ψ, ?_⟩
+    have h := congrArg (fun T : EndH => T ψ) (Gap_mul_Sigma N h_nil h_reg)
+    simpa using h
+
+/-- Restricted to the regular anomaly support, the parity anomaly is an
+involution: applying it twice fixes every supported vector. -/
+theorem regular_anomaly_involution_on_gap_support (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    Sigma N (Sigma N (Gap N ψ)) = Gap N ψ := by
+  have h := congrArg (fun T : EndH => T ψ) (Gap_idem N h_nil h_reg)
+  simpa [Gap] using h
+
 /-- The regular anomaly support and its complementary projection give an
 orthogonal Pythagorean decomposition of every Hilbert-space vector. -/
 theorem regular_gap_pythagorean_decomposition (N : EndH)
@@ -147,6 +170,23 @@ theorem regular_gap_pythagorean_decomposition (N : EndH)
     _ = ‖Gap N ψ‖ ^ 2 + ‖(1 - Gap N) ψ‖ ^ 2 := by
       rw [pow_two, pow_two, pow_two]
       exact h_pyth
+
+/-- The regular anomaly support projection is contractive on vectors. -/
+theorem regular_gap_nonexpansive (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    ‖Gap N ψ‖ ≤ ‖ψ‖ := by
+  have h := regular_gap_pythagorean_decomposition N h_nil h_reg ψ
+  nlinarith [sq_nonneg (‖(1 - Gap N) ψ‖ : ℝ),
+    norm_nonneg (Gap N ψ), norm_nonneg ψ]
+
+/-- The operator norm of the regular anomaly support projection is at most
+one. -/
+theorem regular_gap_opNorm_le_one (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) :
+    ‖Gap N‖ ≤ 1 := by
+  apply ContinuousLinearMap.opNorm_le_bound (Gap N) zero_le_one
+  intro ψ
+  simpa using regular_gap_nonexpansive N h_nil h_reg ψ
 
 /-- The imaginary multiple of the symmetric chiral block is skew-adjoint. -/
 theorem imaginaryPhi_skewAdjoint (N : EndH) :

@@ -3953,3 +3953,9 @@ pairwise orthogonality; `finite_channel_sum_phi_sq_eq_gap_add` proves
 explicitly. The targeted locked build passed (1,553 jobs); axiom inspection,
 the staged proof-proxy gate, and the semantic-vacuity audit are recorded with
 the corresponding audit module.
+
+`finite_channel_gap_left_filters_phi_sum` completes the arbitrary finite
+channel resolution statement: for `k ∈ s`, left multiplication by `Gap(Nₖ)`
+projects `∑ᵢ Φ(Nᵢ)` to `Φ(Nₖ)`. It uses only the primitive pairwise
+orthogonality conditions plus channelwise nilpotency and regularity. Its
+declaration is included in the axiom-audit module.

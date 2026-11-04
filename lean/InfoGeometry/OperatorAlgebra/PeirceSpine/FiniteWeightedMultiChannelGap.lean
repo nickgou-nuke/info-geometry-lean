@@ -284,6 +284,48 @@ theorem finite_channel_sum_chiral_spectral_gap (s : Finset ι) (N : ι → B)
         InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi Ntot - 1) = 0
   rw [mul_sub, mul_one, hcube, sub_self]
 
+/-- The anomaly-generated gap of any selected channel filters the finite
+chiral block sum to that channel. -/
+theorem finite_channel_gap_left_filters_phi_sum
+    (s : Finset ι) (N : ι → B) (k : ι) (hk : k ∈ s)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap
+      (N k) *
+      (∑ i ∈ s,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi (N i)) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi (N k) := by
+  classical
+  have hterm (i : ι) (hi : i ∈ s) :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap (N k) *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi (N i) =
+        if i = k then
+          InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Phi (N k)
+        else 0 := by
+    by_cases hik : i = k
+    · subst i
+      simp
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap_mul_Phi
+        (N k) (h_nil k hk) (h_reg k hk)
+    · simp [hik]
+      exact InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelAnomalyGapPoset.Gap_mul_Phi_orthog
+        (N k) (N i)
+        (h_cross k hk i hi (Ne.symm hik)).1
+        (h_cross k hk i hi (Ne.symm hik)).2.1
+        (h_cross k hk i hi (Ne.symm hik)).2.2.1
+        (h_cross k hk i hi (Ne.symm hik)).2.2.2
+  rw [Finset.mul_sum, Finset.sum_eq_single k]
+  · rw [hterm k hk]
+    simp
+  · intro i hi hik
+    rw [hterm i hi]
+    simp [hik]
+  · intro hnot
+    exact (hnot hk).elim
+
 /-- A self-adjoint weight commuting with its channel generator also commutes
 with that generator's adjoint. This removes the redundant second local
 commutation hypothesis from weighted channel interfaces. -/

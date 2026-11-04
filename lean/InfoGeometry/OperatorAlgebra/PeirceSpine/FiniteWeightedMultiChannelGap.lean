@@ -93,6 +93,57 @@ theorem sum_mul_sum_of_pairwise_cross_zero (s : Finset ι) (f g : ι → B)
 
 variable [StarRing B]
 
+/-- A finite pairwise orthogonal family of square-zero channels has a
+square-zero sum. -/
+theorem finite_channel_sum_sq_zero (s : Finset ι) (N : ι → B)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    (∑ i ∈ s, N i) * (∑ i ∈ s, N i) = 0 := by
+  rw [sum_sq_of_pairwise_mul_zero s N]
+  · apply Finset.sum_eq_zero
+    intro i hi
+    exact h_nil i hi
+  · intro i hi j hj hij
+    exact (h_cross i hi j hj hij).1
+
+/-- Finite orthogonal sums of regular square-zero channels remain von Neumann
+regular. The adjoint-cross conditions kill all mixed terms in both products. -/
+theorem finite_channel_sum_regular (s : Finset ι) (N : ι → B)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    (∑ i ∈ s, N i) * star (∑ i ∈ s, N i) * (∑ i ∈ s, N i) =
+      ∑ i ∈ s, N i := by
+  classical
+  have hstar_sum (t : Finset ι) :
+      star (∑ i ∈ t, N i) = ∑ i ∈ t, star (N i) := by
+    induction t using Finset.induction_on with
+    | empty => simp
+    | @insert a t ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, star_add, ih]
+  have hstar := hstar_sum s
+  have hleft :
+      (∑ i ∈ s, N i) * (∑ i ∈ s, star (N i)) =
+        ∑ i ∈ s, N i * star (N i) := by
+    apply sum_mul_sum_of_pairwise_cross_zero
+    intro i hi j hj hij
+    exact (h_cross i hi j hj hij).2.2.1
+  have hright :
+      (∑ i ∈ s, N i * star (N i)) * (∑ i ∈ s, N i) =
+        ∑ i ∈ s, (N i * star (N i)) * N i := by
+    apply sum_mul_sum_of_pairwise_cross_zero
+    intro i hi j hj hij
+    calc (N i * star (N i)) * N j
+        = N i * (star (N i) * N j) := by rw [mul_assoc]
+      _ = N i * 0 := by rw [(h_cross i hi j hj hij).2.2.2]
+      _ = 0 := by rw [mul_zero]
+  rw [hstar, hleft, hright]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact h_reg i hi
+
 /-- A self-adjoint weight commuting with its channel generator also commutes
 with that generator's adjoint. This removes the redundant second local
 commutation hypothesis from weighted channel interfaces. -/

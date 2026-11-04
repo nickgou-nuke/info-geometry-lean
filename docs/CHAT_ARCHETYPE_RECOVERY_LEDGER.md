@@ -3917,3 +3917,14 @@ nilpotency and regularity hypotheses. Its proof uses the explicit Peirce
 corner annihilations and support complement idempotency. The KKT owner target
 built successfully (9,000 jobs); this is a range-containment lemma, not a
 claim that the full grade-zero subspace equals the positive corner.
+
+### 2026-11-04: Finite-family closure of nilpotency and regularity
+
+`finite_channel_sum_sq_zero` and `finite_channel_sum_regular` in
+[`FiniteWeightedMultiChannelGap.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/FiniteWeightedMultiChannelGap.lean)
+extend the multi-channel closure from two and three channels to any finite
+family. Under square-zero and von Neumann regularity of each channel, plus the
+four pairwise primitive orthogonality relations, the sum is square-zero and
+von Neumann regular. The proofs use finite-sum cross-term annihilation and
+state no ambient spacetime or analytic spectral-gap conclusion. The targeted
+locked build passed (845 jobs).

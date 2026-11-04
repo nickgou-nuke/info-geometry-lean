@@ -135,6 +135,75 @@ theorem peirceGradeZero_R_corner_mem (N_plus X : B)
   rw [corner_sandwich_outer, corner_sandwich_outer, corner_sandwich_outer]
   simp [hR2, hPR, hRP, hQR, hRQ]
 
+/-- The left component of grade `+1` is a canonical Peirce-range element. -/
+theorem peirceGradePlus1_L_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_plus1_L N_plus X ∈ peirceGradePlus1Subgroup N_plus := by
+  change G_plus1_L N_plus X ∈ Set.range (peirceGradePlus1 N_plus)
+  refine ⟨G_plus1_L N_plus X, ?_⟩
+  have hPN : P N_plus * N_plus = N_plus :=
+    YangMillsVortexPoset.P_mul_N_plus N_plus h_reg
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRP := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
+  have hRQ := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
+  have hRN : peirceR N_plus * N_plus = 0 := by
+    have hGapN : Gap N_plus * N_plus = N_plus := by
+      dsimp [Gap]
+      rw [mul_assoc, Sigma_mul_N_plus N_plus h_nil h_reg,
+        Sigma_mul_N_plus N_plus h_nil h_reg]
+    dsimp [peirceR]
+    rw [sub_mul, one_mul, hGapN, sub_self]
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [G_plus1_L, peirceGradePlus1, peircePR, peirceRQ]
+  change P N_plus * (N_plus * X * peirceR N_plus) * peirceR N_plus +
+      peirceR N_plus * (N_plus * X * peirceR N_plus) * Q N_plus =
+    N_plus * X * peirceR N_plus
+  have h1 : P N_plus * (N_plus * X * peirceR N_plus) * peirceR N_plus =
+      N_plus * X * peirceR N_plus := by
+    calc P N_plus * (N_plus * X * peirceR N_plus) * peirceR N_plus
+        = (P N_plus * N_plus) * X * (peirceR N_plus * peirceR N_plus) := by noncomm_ring
+      _ = N_plus * X * peirceR N_plus := by rw [hPN, hR2]
+  have h2 : peirceR N_plus * (N_plus * X * peirceR N_plus) * Q N_plus = 0 := by
+    calc peirceR N_plus * (N_plus * X * peirceR N_plus) * Q N_plus
+        = (peirceR N_plus * N_plus) * X * (peirceR N_plus * Q N_plus) := by noncomm_ring
+      _ = 0 := by rw [hRN, hRQ, zero_mul, mul_zero]
+  rw [h1, h2, add_zero]
+
+/-- The right component of grade `+1` is a canonical Peirce-range element. -/
+theorem peirceGradePlus1_R_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_plus1_R N_plus X ∈ peirceGradePlus1Subgroup N_plus := by
+  change G_plus1_R N_plus X ∈ Set.range (peirceGradePlus1 N_plus)
+  refine ⟨G_plus1_R N_plus X, ?_⟩
+  have hNQ : N_plus * Q N_plus = N_plus :=
+    YangMillsVortexPoset.N_plus_mul_Q N_plus h_reg
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [G_plus1_R, peirceGradePlus1, peircePR, peirceRQ]
+  change P N_plus * (peirceR N_plus * X * N_plus) * peirceR N_plus +
+      peirceR N_plus * (peirceR N_plus * X * N_plus) * Q N_plus =
+    peirceR N_plus * X * N_plus
+  have h1 : P N_plus * (peirceR N_plus * X * N_plus) * peirceR N_plus = 0 := by
+    calc P N_plus * (peirceR N_plus * X * N_plus) * peirceR N_plus
+        = (P N_plus * peirceR N_plus) * X * (N_plus * peirceR N_plus) := by noncomm_ring
+      _ = 0 := by rw [hPR]; simp
+  have h2 : peirceR N_plus * (peirceR N_plus * X * N_plus) * Q N_plus =
+      peirceR N_plus * X * N_plus := by
+    calc peirceR N_plus * (peirceR N_plus * X * N_plus) * Q N_plus
+        = (peirceR N_plus * peirceR N_plus) * X * (N_plus * Q N_plus) := by noncomm_ring
+      _ = peirceR N_plus * X * N_plus := by rw [hR2, hNQ]
+  rw [h1, h2, zero_add]
+
 /-- Direct grade-zero self-bracket closure from its three diagonal corners. -/
 theorem peirce_z0_bracket_mem_z0 (N_plus x y : B)
     (h_nil : N_plus * N_plus = 0)

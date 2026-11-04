@@ -3660,6 +3660,24 @@ covered by `blockLower_idempotent_intervention_synthesis` in
 as recorded above; that owner does not formalize a learned attention model or
 the paper's empirical claims.
 
+### 2026-11-04: Exact XLVIII transcript theorem scope
+
+The source theorem `inductive_colimit_mass_gap_persistence` is at lines
+9488--9571 of
+[`cached/aistudio_extracts/aistudio_prompt_17Kj7oLBHPfoWvQLKPwwve8pcsDezqpkG/transcript.md`](../cached/aistudio_extracts/aistudio_prompt_17Kj7oLBHPfoWvQLKPwwve8pcsDezqpkG/transcript.md).
+Its `InductiveOperatorTower` contains only a family of rings and arbitrary
+unital `RingHom` transitions; it does not encode injectivity, tensor products,
+block doubling, or a colimit universal property. The displayed theorem proves
+transported mass idempotency, the definitionally transported commutator,
+`E_k^2 = M2_k`, `E_k M2_k = E_k`, and the square-one identity for
+`(1 - M2_k) + E_k`. It does not state the claimed `sl₂` commutator weights,
+shifted-resolvent factorization, or dissipator stationarity. Those are
+separate transcript claims and must be matched to their own owner theorems and
+hypotheses; the existing finite-stage factorization/stationarity lemmas and
+injective concrete-tower persistence results do not enlarge the theorem's
+scope. The concrete `Cl(1,1)` block-doubling implementation remains the
+separate owner documented above.
+
 ### 2026-11-04: XLVIII stagewise gap factorization and dissipator stationarity
 
 The injective tower owner

@@ -152,6 +152,104 @@ theorem closure_K_minus2_mem_adjoint_grade (N_plus X : B)
     (OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.comm_Sigma_K_minus2
       N_plus X h_nil h_reg)
 
+/-- Direct Peirce-corner closure of the `(+1,+1)` bracket, without passing
+through adjoint eigenvalues or assuming additive torsion-freeness. -/
+theorem peirce_p1_bracket_mem_p2 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p1)
+    (hy : y ∈ tkkPeirceGrade N_plus .p1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p2 := by
+  change x ∈ peirceGradePlus1Subgroup N_plus at hx
+  change y ∈ peirceGradePlus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus1 N_plus X) (peirceGradePlus1 N_plus Y) ∈
+        peirceGradePlus2Subgroup N_plus
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus1 N_plus X) (peirceGradePlus1 N_plus Y) ∈
+        Set.range (peirceGradePlus2 N_plus)
+  refine ⟨X * peirceR N_plus * Y - Y * peirceR N_plus * X, ?_⟩
+  exact (comm_peirceGradePlus1_self_closed N_plus X Y h_nil h_reg).symm
+
+/-- Direct Peirce-corner closure of the `(-1,-1)` bracket into grade `-2`,
+without additive torsion-freeness. -/
+theorem peirce_m1_bracket_mem_m2 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m1)
+    (hy : y ∈ tkkPeirceGrade N_plus .m1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m2 := by
+  change x ∈ peirceGradeMinus1Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeMinus1 N_plus X) (peirceGradeMinus1 N_plus Y) ∈
+        peirceGradeMinus2Subgroup N_plus
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeMinus1 N_plus X) (peirceGradeMinus1 N_plus Y) ∈
+        Set.range (peirceGradeMinus2 N_plus)
+  refine ⟨X * peirceR N_plus * Y - Y * peirceR N_plus * X, ?_⟩
+  exact (comm_peirceGradeMinus1_self_closed N_plus X Y h_nil h_reg).symm
+
+/-- The out-of-range `(+2,+1)` bracket vanishes by orthogonality of its
+Peirce corners, with no additive torsion assumption. -/
+theorem peirce_p2_p1_bracket_eq_zero (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p2)
+    (hy : y ∈ tkkPeirceGrade N_plus .p1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  change x ∈ peirceGradePlus2Subgroup N_plus at hx
+  change y ∈ peirceGradePlus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  exact comm_peirceGradePlus2_plus1 N_plus X Y h_nil h_reg
+
+/-- The out-of-range `(-2,-1)` bracket vanishes by orthogonality of its
+Peirce corners, with no additive torsion assumption. -/
+theorem peirce_m2_m1_bracket_eq_zero (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m2)
+    (hy : y ∈ tkkPeirceGrade N_plus .m1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  change x ∈ peirceGradeMinus2Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  exact comm_peirceGradeMinus2_minus1 N_plus X Y h_nil h_reg
+
+/-- The extremal positive Peirce grade is abelian, so its bracket lies
+outside the five-grade window and vanishes without torsion assumptions. -/
+theorem peirce_p2_bracket_eq_zero (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (hx : x ∈ tkkPeirceGrade N_plus .p2)
+    (hy : y ∈ tkkPeirceGrade N_plus .p2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  change x ∈ peirceGradePlus2Subgroup N_plus at hx
+  change y ∈ peirceGradePlus2Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  exact comm_peirceGradePlus2_self N_plus X Y h_nil
+
+/-- The extremal negative Peirce grade is abelian, so its bracket lies
+outside the five-grade window and vanishes without torsion assumptions. -/
+theorem peirce_m2_bracket_eq_zero (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (hx : x ∈ tkkPeirceGrade N_plus .m2)
+    (hy : y ∈ tkkPeirceGrade N_plus .m2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  change x ∈ peirceGradeMinus2Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus2Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  exact comm_peirceGradeMinus2_self N_plus X Y h_nil
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion
 freeness ensures the integer adjoint grades identify those components. -/

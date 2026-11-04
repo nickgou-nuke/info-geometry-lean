@@ -1449,6 +1449,50 @@ theorem partXVe_multi_channel_and_weighted_chiral_block_anomaly_gap_synthesis
     WeightedMultiChannelGapPoset.comm_weight_Sigma c_a N_a hc_a hcs_a,
     WeightedMultiChannelGapPoset.comm_weight_Gap c_b N_b hc_b hcs_b⟩⟩
 
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+omit [Ring B] hP in
+/-- **Part XV.e finite weighted supercolor synthesis.** For a finite family of
+pairwise orthogonal regular nilpotent channels, self-adjoint weights need only
+commute with their own nilpotents. The resulting block and rotor sums square
+to opposite weighted gaps, anticommute, and multiply to the weighted anomaly.
+No weight is required to commute with a different channel. -/
+theorem partXVe_finite_weighted_chiral_supercolor_synthesis
+    {R : Type u} [Ring R] [StarRing R] {ι : Type*}
+    (s : Finset ι) (c N : ι → R)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_orth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+        N i * star (N j) = 0 ∧ star (N i) * N j = 0)
+    (h_weight_star : ∀ i ∈ s, star (c i) = c i)
+    (h_weight : ∀ i ∈ s, c i * N i = N i * c i) :
+    (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i)) *
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i)) =
+      ∑ i ∈ s, (c i * c i) * WeightedMultiChannelGapPoset.Gap (N i) ∧
+    (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) *
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) =
+      -(∑ i ∈ s, (c i * c i) * WeightedMultiChannelGapPoset.Gap (N i)) ∧
+    MultiChannelAnomalyGapPoset.anticomm
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i))
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) = 0 ∧
+    (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) *
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i)) =
+      ∑ i ∈ s, (c i * c i) * WeightedMultiChannelGapPoset.Sigma (N i) := by
+  have h_weight_adj : ∀ i ∈ s,
+      c i * star (N i) = star (N i) * c i := by
+    intro i hi
+    exact WeightedMultiChannelGapPoset.comm_star_of_self_adjoint
+      (c i) (N i) (h_weight_star i hi) (h_weight i hi)
+  exact ⟨
+    WeightedMultiChannelGapPoset.weighted_Phi_sum_sq_eq_weighted_Gap_self_adjoint
+      s c N h_nil h_reg h_orth h_weight_star h_weight,
+    WeightedMultiChannelGapPoset.weighted_J_sum_sq_eq_neg_weighted_Gap_self_adjoint
+      s c N h_nil h_reg h_orth h_weight_star h_weight,
+    WeightedMultiChannelGapPoset.weighted_chiral_sum_anticomm
+      s c N h_nil h_orth h_weight h_weight_adj,
+    WeightedMultiChannelGapPoset.weighted_J_sum_mul_Phi_sum
+      s c N h_nil h_orth h_weight h_weight_adj⟩
+
 /-!
 ## Part XVI: Archetype XX — 5-Graded Superconformal Élie Cartan Gravity & 3rd-Order Zorn Bimodule Insertion Anomaly (`Kantor5Graded`)
 -/

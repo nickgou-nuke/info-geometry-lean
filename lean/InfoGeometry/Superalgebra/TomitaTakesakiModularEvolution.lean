@@ -215,6 +215,15 @@ theorem real_rapidity_hyperbolic_identity (t : ℝ) :
     (Real.cosh t)^2 - (Real.sinh t)^2 = 1 :=
   Real.cosh_sq_sub_sinh_sq t
 
+/-- At surprisal rapidity, the modular rotor has the expected exponential
+diagonal coordinates. This is a coordinate identity for the defined rotor;
+it does not identify the rotor with an exponential of `modularHamiltonian`. -/
+theorem modularDelta_surprisal_coordinates (I_surp : ℝ) :
+    modularDelta (Real.cosh I_surp) (Real.sinh I_surp) =
+      ⟨Real.exp I_surp, ColorVec3.zero, ColorVec3.zero, Real.exp (-I_surp)⟩ := by
+  ext <;> simp [modularDelta, ColorVec3.zero, Real.cosh_add_sinh,
+    Real.cosh_sub_sinh]
+
 /-- The algebraic blue-shift formula specializes to the forward exponential
 weight on the quark sheet. -/
 theorem tomita_takesaki_quark_rapidity_shift (t : ℝ) (u : ColorVec3 ℝ) :

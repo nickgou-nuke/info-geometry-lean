@@ -3139,6 +3139,23 @@ This audit records the existing source coverage and the newly added inverse
 bridge separately. The build result certifies this owner target; it does not
 verify the transcript's broader analytic or physical interpretations.
 
+### 2026-11-04: Surprisal parameterization of the modular rotor
+
+`modularDelta_surprisal_coordinates` in
+[`TomitaTakesakiModularEvolution.lean`](../lean/InfoGeometry/Superalgebra/TomitaTakesakiModularEvolution.lean)
+now specializes the real rapidity coordinate to `I_surp` and proves the rotor
+has diagonal coordinates `exp I_surp` and `exp (-I_surp)`. Together with the
+existing rapidity-shift theorems, this yields the sheet weights
+`exp (2 * I_surp)` and `exp (-2 * I_surp)`. The owner target built successfully
+with the locked Lake wrapper (1,958 jobs).
+
+This resolves the parameterization mismatch in the transcript snippet. It does
+not prove that `modularDelta` is an exponential of the algebra element
+`modularHamiltonian I_surp`, define such an exponential in the split-octonion
+algebra, or establish a Tomita--Takesaki modular group or analytic KMS state.
+The transcript's broader operator-exponential and physical interpretations
+remain open.
+
 ### 2026-11-04: Weighted multi-channel chiral gap prompt
 
 The weighted-channel construction in the prompt is already formalized in

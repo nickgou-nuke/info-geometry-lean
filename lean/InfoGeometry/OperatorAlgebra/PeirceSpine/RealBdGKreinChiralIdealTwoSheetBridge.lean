@@ -1315,6 +1315,77 @@ theorem sub_Four_swap (a b c d : B) :
 def anticomm (X Y : B) : B := X * Y + Y * X
 def comm (X Y : B) : B := X * Y - Y * X
 
+/-- Commuting with each input makes the commutator commute with the same element. -/
+theorem comm_comm_of_commute (S A C : B)
+    (hSA : S * A = A * S) (hSC : S * C = C * S) :
+    comm S (comm A C) = 0 := by
+  have hAC : S * (A * C) = (A * C) * S := by
+    calc S * (A * C) = (S * A) * C := by rw [mul_assoc]
+      _ = (A * S) * C := by rw [hSA]
+      _ = A * (S * C) := by rw [mul_assoc]
+      _ = A * (C * S) := by rw [hSC]
+      _ = (A * C) * S := by rw [mul_assoc]
+  have hCA : S * (C * A) = (C * A) * S := by
+    calc S * (C * A) = (S * C) * A := by rw [mul_assoc]
+      _ = (C * S) * A := by rw [hSC]
+      _ = C * (S * A) := by rw [mul_assoc]
+      _ = C * (A * S) := by rw [hSA]
+      _ = (C * A) * S := by rw [mul_assoc]
+  dsimp [comm]
+  rw [mul_sub, sub_mul, hAC, hCA, sub_self]
+
+/-- Commuting with an even input and anticommuting with an odd input
+makes their commutator anticommute with the grading element. -/
+theorem anticomm_comm_of_even_odd (S A C : B)
+    (hSA : S * A = A * S) (hSC : S * C = -(C * S)) :
+    anticomm S (comm A C) = 0 := by
+  have hAC : S * (A * C) = -((A * C) * S) := by
+    calc S * (A * C) = (S * A) * C := by rw [mul_assoc]
+      _ = (A * S) * C := by rw [hSA]
+      _ = A * (S * C) := by rw [mul_assoc]
+      _ = A * (-(C * S)) := by rw [hSC]
+      _ = -((A * C) * S) := by rw [mul_neg, mul_assoc]
+  have hCA : S * (C * A) = -((C * A) * S) := by
+    calc S * (C * A) = (S * C) * A := by rw [mul_assoc]
+      _ = (-(C * S)) * A := by rw [hSC]
+      _ = -(C * (S * A)) := by rw [neg_mul, mul_assoc]
+      _ = -(C * (A * S)) := by rw [hSA]
+      _ = -((C * A) * S) := by rw [mul_assoc]
+  dsimp [anticomm, comm]
+  rw [mul_sub, sub_mul, hAC, hCA]
+  abel_nf
+
+/-- The commutator of two odd elements is even. -/
+theorem comm_comm_of_odd (S A C : B)
+    (hSA : S * A = -(A * S)) (hSC : S * C = -(C * S)) :
+    comm S (comm A C) = 0 := by
+  have hAC : S * (A * C) = (A * C) * S := by
+    calc S * (A * C) = (S * A) * C := by rw [mul_assoc]
+      _ = (-(A * S)) * C := by rw [hSA]
+      _ = -(A * (S * C)) := by rw [neg_mul, mul_assoc]
+      _ = -(A * (-(C * S))) := by rw [hSC]
+      _ = (A * C) * S := by rw [mul_neg, neg_neg, mul_assoc]
+  have hCA : S * (C * A) = (C * A) * S := by
+    calc S * (C * A) = (S * C) * A := by rw [mul_assoc]
+      _ = (-(C * S)) * A := by rw [hSC]
+      _ = -(C * (S * A)) := by rw [neg_mul, mul_assoc]
+      _ = -(C * (-(A * S))) := by rw [hSA]
+      _ = (C * A) * S := by rw [mul_neg, neg_neg, mul_assoc]
+  dsimp [comm]
+  rw [mul_sub, sub_mul, hAC, hCA, sub_self]
+
+theorem comm_add_right (S A C : B) :
+    comm S (A + C) = comm S A + comm S C := by
+  dsimp [comm]
+  rw [mul_add, add_mul]
+  abel
+
+theorem anticomm_sub_right (S A C : B) :
+    anticomm S (A - C) = anticomm S A - anticomm S C := by
+  dsimp [anticomm]
+  rw [mul_sub, sub_mul]
+  abel
+
 end RingHelpers
 
 variable {B : Type*} [Ring B] [StarRing B]
@@ -1706,6 +1777,72 @@ theorem emergent_cartan_curvature_torsion_split (N_plus W₁ X₁ W₂ X₂ : B)
   dsimp [cartanConnV, riemannCurvV, cartanTorsionV, comm]
   rw [mul_add, add_mul, add_mul, mul_add, add_mul, add_mul]
   abel
+
+/-- The emergent Cartan curvature is even under the intrinsic sheet grading:
+`[Σ, ℛ_V] = 0`. -/
+theorem comm_Sigma_riemannCurvV (N_plus W₁ X₁ W₂ X₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (Sigma N_plus) (riemannCurvV N_plus W₁ X₁ W₂ X₂) = 0 := by
+  have hSpin₁ := comm_Sigma_spinConnV N_plus W₁ h_nil h_reg
+  have hSpin₂ := comm_Sigma_spinConnV N_plus W₂ h_nil h_reg
+  have hFrame₁ : anticomm (Sigma N_plus) (framePhiV N_plus X₁) = 0 :=
+    anticomm_Sigma_framePhiV N_plus X₁ h_nil h_reg
+  have hFrame₂ : anticomm (Sigma N_plus) (framePhiV N_plus X₂) = 0 :=
+    anticomm_Sigma_framePhiV N_plus X₂ h_nil h_reg
+  have h₁ := comm_comm_of_commute (Sigma N_plus)
+    (spinConnV N_plus W₁) (spinConnV N_plus W₂)
+    (by
+      dsimp [comm] at hSpin₁
+      exact sub_eq_zero.mp hSpin₁)
+    (by
+      dsimp [comm] at hSpin₂
+      exact sub_eq_zero.mp hSpin₂)
+  have hSigmaFrame₁ : Sigma N_plus * framePhiV N_plus X₁ =
+      -(framePhiV N_plus X₁ * Sigma N_plus) := by
+    rw [Sigma_mul_framePhiV N_plus X₁ h_nil h_reg,
+      framePhiV_mul_Sigma N_plus X₁ h_nil h_reg]
+    rw [neg_neg]
+  have hSigmaFrame₂ : Sigma N_plus * framePhiV N_plus X₂ =
+      -(framePhiV N_plus X₂ * Sigma N_plus) := by
+    rw [Sigma_mul_framePhiV N_plus X₂ h_nil h_reg,
+      framePhiV_mul_Sigma N_plus X₂ h_nil h_reg, neg_neg]
+  have h₂ := comm_comm_of_odd (Sigma N_plus)
+    (framePhiV N_plus X₁) (framePhiV N_plus X₂)
+    hSigmaFrame₁ hSigmaFrame₂
+  rw [riemannCurvV, comm_add_right, h₁, h₂, add_zero]
+
+/-- The emergent Cartan torsion is odd under the intrinsic sheet grading:
+`{Σ, 𝒯_V} = 0`. -/
+theorem anticomm_Sigma_cartanTorsionV (N_plus W₁ X₁ W₂ X₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    anticomm (Sigma N_plus) (cartanTorsionV N_plus W₁ X₁ W₂ X₂) = 0 := by
+  have hSpin₁ := comm_Sigma_spinConnV N_plus W₁ h_nil h_reg
+  have hSpin₂ := comm_Sigma_spinConnV N_plus W₂ h_nil h_reg
+  have hFrame₁ : Sigma N_plus * framePhiV N_plus X₁ =
+      -(framePhiV N_plus X₁ * Sigma N_plus) := by
+    rw [Sigma_mul_framePhiV N_plus X₁ h_nil h_reg,
+      framePhiV_mul_Sigma N_plus X₁ h_nil h_reg]
+    simp
+  have hFrame₂ : Sigma N_plus * framePhiV N_plus X₂ =
+      -(framePhiV N_plus X₂ * Sigma N_plus) := by
+    rw [Sigma_mul_framePhiV N_plus X₂ h_nil h_reg,
+      framePhiV_mul_Sigma N_plus X₂ h_nil h_reg, neg_neg]
+  have h₁ := anticomm_comm_of_even_odd (Sigma N_plus)
+    (spinConnV N_plus W₁) (framePhiV N_plus X₂)
+    (by
+      dsimp [comm] at hSpin₁
+      exact sub_eq_zero.mp hSpin₁)
+    hFrame₂
+  have h₂ := anticomm_comm_of_even_odd (Sigma N_plus)
+    (spinConnV N_plus W₂) (framePhiV N_plus X₁)
+    (by
+      dsimp [comm] at hSpin₂
+      exact sub_eq_zero.mp hSpin₂)
+    hFrame₁
+  rw [cartanTorsionV, anticomm_sub_right, h₁, h₂]
+  simp
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.EmergentTwoSheetBridge
 

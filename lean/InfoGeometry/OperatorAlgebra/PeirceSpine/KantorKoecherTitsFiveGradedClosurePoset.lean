@@ -1171,6 +1171,38 @@ theorem P_mul_Sigma_eq_P (N_plus : B)
   dsimp [P]
   rw [mul_assoc, star_N_plus_mul_Sigma N_plus h_nil h_reg]
 
+/-- The positive diagonal grade-zero block acts on the left `+1` carrier,
+and the result remains in that same Peirce block. -/
+theorem comm_G_0_P_G_plus1_L (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_P N_plus X) (G_plus1_L N_plus Y) =
+      G_plus1_L N_plus (star N_plus * X * N_plus * Y) := by
+  have hGapN : Gap N_plus * N_plus = N_plus :=
+    Gap_mul_N_plus N_plus h_nil h_reg
+  have hGapP : Gap N_plus * P N_plus = P N_plus := by
+    dsimp [P]
+    rw [← mul_assoc, hGapN]
+  have hRP : (1 - Gap N_plus) * P N_plus = 0 := by
+    rw [sub_mul, one_mul, hGapP, sub_self]
+  have hPN : P N_plus * N_plus = N_plus := h_reg
+  have hL : G_0_P N_plus X * G_plus1_L N_plus Y =
+      G_plus1_L N_plus (star N_plus * X * N_plus * Y) := by
+    dsimp [G_0_P, G_plus1_L]
+    calc (P N_plus * X * P N_plus) * (N_plus * Y * (1 - Gap N_plus))
+        = P N_plus * X * (P N_plus * N_plus) * Y * (1 - Gap N_plus) := by noncomm_ring
+      _ = P N_plus * X * N_plus * Y * (1 - Gap N_plus) := by rw [hPN]
+      _ = N_plus * (star N_plus * X * N_plus * Y) * (1 - Gap N_plus) := by
+            dsimp [P]
+            noncomm_ring
+  have hR : G_plus1_L N_plus Y * G_0_P N_plus X = 0 := by
+    dsimp [G_0_P, G_plus1_L]
+    calc (N_plus * Y * (1 - Gap N_plus)) * (P N_plus * X * P N_plus)
+        = (N_plus * Y) * ((1 - Gap N_plus) * P N_plus) * (X * P N_plus) := by noncomm_ring
+      _ = 0 := by rw [hRP, mul_zero, zero_mul]
+  dsimp [comm]
+  rw [hL, hR, sub_zero]
+
 /-- Helper: `Sigma N_plus * Q N_plus = -Q N_plus`. -/
 theorem Sigma_mul_Q_eq_neg_Q (N_plus : B)
     (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :

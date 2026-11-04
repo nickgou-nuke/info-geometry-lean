@@ -2520,3 +2520,55 @@ identifications in this packet.
 - Added [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KantorKoecherTitsFiveGradedClosurePoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KantorKoecherTitsFiveGradedClosurePoset.lean) (`KKT₁ ≺ KKT₂ ≺ ⋯ ≺ KKT₁₀` over `[Ring B] [StarRing B]`) and wired it into **Part XV.g** (`partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis`) of [`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean):
   - **`KKT₁`–`KKT₄` (`K_plus2_eq_two_sandwich`, `K_minus2_eq_two_sandwich`, `comm_Sigma_K_plus2`, `comm_Sigma_K_minus2`, `K_plus2_mul_K_plus2`, `K_minus2_mul_K_minus2`, `K_plus2_seed`, `K_minus2_seed`)**: extremal Jordan associator quadratic triple sandwiches `K_{±2}(N_+, X) = 2 • G_{±2}(N_+, X)`, `ad(Σ)` eigenvalues `±2`, abelian nilpotency `K_{±2}(X) * K_{±2}(Y) = 0`, and seed fixed points `K_{+2}(N_+, N_-) = 2 • N_+`, `K_{-2}(N_+, N_+) = 2 • N_-`.
   - **`KKT₅`–`KKT₉` (`comm_Sigma_G_plus1_L`, `comm_Sigma_G_plus1_R`, `comm_Sigma_G_minus1_L`, `comm_Sigma_G_minus1_R`, `comm_G_plus1_into_G_plus2`, `comm_G_minus1_into_G_minus2`, `comm_G_plus2_G_minus2_in_G_0`, `comm_Sigma_G_0_P`, `comm_Sigma_G_0_Q`, `comm_Sigma_G_0_neutral`, `comm_Sigma_comm_G_plus2_G_minus2`)**: odd Grade `±1` eigenvalues, odd-to-extremal bracket closure `[g_{±1}, g_{±1}] ⊆ g_{±2}`, opposite extremal bracket `[g_{+2}, g_{-2}] ⊆ g_0`, and Grade `0` centralizer closure `[Σ, [G_{+2}, G_{-2}]] = 0`.
+
+### 2026-11-04: Shared-link duplicate A29–A44 occurrence audit
+
+The shared-link transcript reuses A29–A44 after an earlier A29–A44 block;
+these are distinct source occurrences, not safely covered by label matching.
+I inspected the second occurrence at transcript lines 10317–10707 and compared
+its displayed propositions to the current owners. The ring-level content is
+already represented, but several claims are corrected and some names in the
+source are not repo definitions:
+
+- **A29–A32** route to
+  `KantorBogoliubovSpinePoset.archetype_A29_graded_differentials_and_connection_factorization`,
+  `archetype_A30_mixed_graded_differentials_and_jordan_laplacian`,
+  `archetype_A31_graded_derivations_on_peirce_generators`, and
+  `archetype_A32_laplacian_left_weight_generation_of_homogenized_channels`.
+  The source A29 mixed barred differential is stated as `connSig X`; the owner
+  proves the corrected `{V, X}` expression. A30's left-only Laplacian `2 V X`
+  is replaced by `2 (V X + X V)`. A31 is an operator-identity packet, not a
+  graded module with differential maps, so “de Rham cochain complex” is not
+  established. A32 uses the corrected left-weight operator and coefficient-four
+  channel formulas; the submitted coefficients do not follow from the
+  left-only Laplacian.
+- **A33–A36** route to `Orientation.archetype_A33_hodge_star_and_half_twists`,
+  `Orientation.archetype_A34_hodge_conjugate_codifferentials`,
+  `KantorBogoliubovSpinePoset.archetype_A35_chiral_self_duality_and_complement_symmetry`,
+  and `archetype_A36_left_right_parity_twisted_clifford_actions`. These are
+  finite Peirce-ring identities. The A34 owner supplies the two extra
+  Laplacian consequences separately as `hodgeLaplacianPhi_from_star` and
+  `hodgeStar_hodgeLaplacianPhi`; both use the corrected two-sided Laplacian,
+  and the latter retains the additional `invS * X * V` term omitted in the
+  transcript. The orientation owner contains an additional `J V (-J)`
+  sandwich identity; the source's Möbius, instanton, and Dirac–Kähler names do
+  not construct manifolds, gauge fields, or a geometric Dirac–Kähler complex.
+- **A37–A39** map to the current A37 defect/unipotent packet, A38 conditional
+  defect-level recurrence, and A39 multiplicative defect/parity-orbit product
+  in `KantorBogoliubovSpinePoset`. The source's `galoisNormZorn` corresponds to
+  the explicit ordered product `X * parityConj P X`; the owner does not define
+  a Galois field extension or prove a Galois group.
+- **A40–A42** map respectively to the parity-conjugation/homogenized-readout
+  packet, defect-iteration/orthogonal-cycle packet, and cyclotomic polynomial
+  identities. The advertised `Gal ≅ ℤ₂ × ℤ₂` and Lagrange-resolvent language
+  is not a group theorem: the owner proves an involutive ring automorphism and
+  the stated finite extraction identities. Cyclotomic evaluations are
+  polynomial identities, not analytic resolvent or root-of-unity results.
+- **A43–A44** route to the corrected primal/dual Euler-factor and four-factor
+  supercharge products in `KantorBogoliubovSpinePoset` and
+  `ChiralEulerFactors`. Their finite factorization identities do not prove
+  analytic zeta, Möbius, Mangoldt, prime-distribution, or Dirichlet-L claims.
+
+This closes the occurrence-specific owner mapping for this second A29–A44
+block at the source-to-owner level. It does not constitute a fresh Lean build;
+the source claims above are not promoted beyond the exact owner statements.

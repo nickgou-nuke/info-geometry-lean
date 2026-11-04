@@ -3639,6 +3639,30 @@ theorem peirceFiveGrade_bracket_mem_peirce [IsAddTorsionFree B]
     N_plus h_nil h_reg k]
   exact hbracket
 
+/-- No other integer adjoint grades occur: under additive torsion-freeness,
+the eigenspace vanishes at every degree outside `{-2,-1,0,1,2}`. -/
+theorem KKTAdjointGrade_eq_bot_of_outside_five
+    [IsAddTorsionFree B] (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) (k : ℤ)
+    (hk₂ : k ≠ 2) (hk₁ : k ≠ 1) (hk₀ : k ≠ 0)
+    (hkm₁ : k ≠ -1) (hkm₂ : k ≠ -2) :
+    KKTAdjointGrade N_plus k = ⊥ := by
+  ext X
+  constructor
+  · intro hX
+    change comm (Sigma N_plus) X = k • X at hX
+    rcases peirce_components_of_adjoint_eigenvalue
+        N_plus X h_nil h_reg k hX with ⟨h₂, h₁, h₀, hm₁, hm₂⟩
+    have hdecomp := peirce_five_grade_decomposition N_plus X h_nil h_reg
+    have hXzero : X = 0 := by
+      rw [hdecomp, h₂ hk₂, h₁ hk₁, h₀ hk₀, hm₁ hkm₁, hm₂ hkm₂]
+      simp
+    simpa [hXzero]
+  · intro hX
+    rw [hX]
+    exact (KKTAdjointGrade N_plus k).zero_mem
+
 /-- Brackets whose integer degree sum lies outside the five KKT degrees vanish.
 Together with `peirceFiveGrade_bracket_mem_peirce`, this gives closure at every
 degree sum, including the truncation at grades `±3` and `±4`. -/
@@ -3663,31 +3687,7 @@ theorem peirceFiveGrade_bracket_eq_zero_of_degree_sum_outside
     rw [hgrade0]
     rfl
   rw [hsubmodule0] at hbracket
-  exact Submodule.mem_bot.mp hbracket
-
-/-- No other integer adjoint grades occur: under additive torsion-freeness,
-the eigenspace vanishes at every degree outside `{-2,-1,0,1,2}`. -/
-theorem KKTAdjointGrade_eq_bot_of_outside_five
-    [IsAddTorsionFree B] (N_plus : B)
-    (h_nil : N_plus * N_plus = 0)
-    (h_reg : N_plus * star N_plus * N_plus = N_plus) (k : ℤ)
-    (hk₂ : k ≠ 2) (hk₁ : k ≠ 1) (hk₀ : k ≠ 0)
-    (hkm₁ : k ≠ -1) (hkm₂ : k ≠ -2) :
-    KKTAdjointGrade N_plus k = ⊥ := by
-  ext X
-  constructor
-  · intro hX
-    change comm (Sigma N_plus) X = k • X at hX
-    rcases peirce_components_of_adjoint_eigenvalue
-        N_plus X h_nil h_reg k hX with ⟨h₂, h₁, h₀, hm₁, hm₂⟩
-    have hdecomp := peirce_five_grade_decomposition N_plus X h_nil h_reg
-    have hXzero : X = 0 := by
-      rw [hdecomp, h₂ hk₂, h₁ hk₁, h₀ hk₀, hm₁ hkm₁, hm₂ hkm₂]
-      simp
-    simpa [hXzero]
-  · intro hX
-    rw [hX]
-    exact (KKTAdjointGrade N_plus k).zero_mem
+  simpa using hbracket
 
 /-- The zero adjoint-grade sector is a native mathlib Lie subalgebra of the
 associative ring equipped with its commutator Lie bracket. -/

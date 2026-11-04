@@ -1480,7 +1480,13 @@ theorem partXVe_finite_weighted_chiral_supercolor_synthesis
         (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) = 0 ∧
     (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) *
         (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i)) =
-      ∑ i ∈ s, (c i * c i) * WeightedMultiChannelGapPoset.Sigma (N i) := by
+      ∑ i ∈ s, (c i * c i) * WeightedMultiChannelGapPoset.Sigma (N i) ∧
+    (∑ i ∈ s, MultiChannelAnomalyGapPoset.Sigma (N i)) *
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i)) =
+      ∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i) ∧
+    (∑ i ∈ s, MultiChannelAnomalyGapPoset.Sigma (N i)) *
+        (∑ i ∈ s, c i * WeightedMultiChannelGapPoset.J (N i)) =
+      ∑ i ∈ s, c i * WeightedMultiChannelGapPoset.Phi (N i) := by
   have h_weight_adj : ∀ i ∈ s,
       c i * star (N i) = star (N i) * c i := by
     intro i hi
@@ -1494,7 +1500,11 @@ theorem partXVe_finite_weighted_chiral_supercolor_synthesis
     WeightedMultiChannelGapPoset.weighted_chiral_sum_anticomm
       s c N h_nil h_orth h_weight h_weight_adj,
     WeightedMultiChannelGapPoset.weighted_J_sum_mul_Phi_sum
-      s c N h_nil h_orth h_weight h_weight_adj⟩
+      s c N h_nil h_orth h_weight h_weight_adj,
+    WeightedMultiChannelGapPoset.Sigma_sum_mul_weighted_Phi_sum_self_adjoint
+      s c N h_nil h_reg h_orth h_weight_star h_weight,
+    WeightedMultiChannelGapPoset.Sigma_sum_mul_weighted_J_sum_self_adjoint
+      s c N h_nil h_reg h_orth h_weight_star h_weight⟩
 
 /-!
 ## Part XVI: Archetype XX — 5-Graded Superconformal Élie Cartan Gravity & 3rd-Order Zorn Bimodule Insertion Anomaly (`Kantor5Graded`)

@@ -3290,6 +3290,9 @@ with that channel's nilpotent. Cross-channel terms use only primitive channel
 orthogonality; no weight is required to commute with a different channel.
 The locked owner build passed (1,550 jobs). These statements concern the
 algebraic left action of the summed anomaly, not analytic spectral data.
+Part XV.e of `CoagulatedArchetypeSynthesis.lean` now exports both finite
+anomaly actions in its self-adjoint-weight supercolor synthesis contract. The
+locked synthesis build passed (9,267 jobs).
 
 ### 2026-11-04: Finite-family anomaly-first support and gap additivity
 

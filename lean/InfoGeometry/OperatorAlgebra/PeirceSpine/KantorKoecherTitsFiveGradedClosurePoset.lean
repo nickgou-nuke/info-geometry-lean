@@ -1603,6 +1603,61 @@ theorem peirce_five_grade_sum_zero_minus1 (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B
   simp only [peirceGradeMinus1_zero, add_zero, zero_add] at hproject
   exact hproject
 
+/-- Directness of the five canonical Peirce grades: if a sum of five grade
+components is zero, every component is zero. -/
+theorem peirce_five_grade_sum_zero_all (N_plus X₂ X₁ X₀ Xm₁ Xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hsum : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0) :
+    peirceGradePlus2 N_plus X₂ = 0 ∧
+    peirceGradePlus1 N_plus X₁ = 0 ∧
+    peirceGradeZero N_plus X₀ = 0 ∧
+    peirceGradeMinus1 N_plus Xm₁ = 0 ∧
+    peirceGradeMinus2 N_plus Xm₂ = 0 := by
+  exact ⟨peirce_five_grade_sum_zero_plus2 N_plus X₂ X₁ X₀ Xm₁ Xm₂
+      h_nil h_reg hsum,
+    peirce_five_grade_sum_zero_plus1 N_plus X₂ X₁ X₀ Xm₁ Xm₂
+      h_nil h_reg hsum,
+    peirce_five_grade_sum_zero_zero N_plus X₂ X₁ X₀ Xm₁ Xm₂
+      h_nil h_reg hsum,
+    peirce_five_grade_sum_zero_minus1 N_plus X₂ X₁ X₀ Xm₁ Xm₂
+      h_nil h_reg hsum,
+    peirce_five_grade_sum_zero_minus2 N_plus X₂ X₁ X₀ Xm₁ Xm₂
+      h_nil h_reg hsum⟩
+
+/-- The five native additive subgroups are internally independent: a zero sum
+of arbitrary elements from their respective ranges has only zero summands. -/
+theorem peirce_five_grade_subgroup_sum_zero (N_plus x₂ x₁ x₀ xm₁ xm₂ : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (h₂ : x₂ ∈ peirceGradePlus2Subgroup N_plus)
+    (h₁ : x₁ ∈ peirceGradePlus1Subgroup N_plus)
+    (h₀ : x₀ ∈ peirceGradeZeroSubgroup N_plus)
+    (hm₁ : xm₁ ∈ peirceGradeMinus1Subgroup N_plus)
+    (hm₂ : xm₂ ∈ peirceGradeMinus2Subgroup N_plus)
+    (hsum : x₂ + x₁ + x₀ + xm₁ + xm₂ = 0) :
+    x₂ = 0 ∧ x₁ = 0 ∧ x₀ = 0 ∧ xm₁ = 0 ∧ xm₂ = 0 := by
+  change x₂ ∈ Set.range (peirceGradePlus2 N_plus) at h₂
+  change x₁ ∈ Set.range (peirceGradePlus1 N_plus) at h₁
+  change x₀ ∈ Set.range (peirceGradeZero N_plus) at h₀
+  change xm₁ ∈ Set.range (peirceGradeMinus1 N_plus) at hm₁
+  change xm₂ ∈ Set.range (peirceGradeMinus2 N_plus) at hm₂
+  obtain ⟨X₂, hX₂⟩ := h₂
+  obtain ⟨X₁, hX₁⟩ := h₁
+  obtain ⟨X₀, hX₀⟩ := h₀
+  obtain ⟨Xm₁, hXm₁⟩ := hm₁
+  obtain ⟨Xm₂, hXm₂⟩ := hm₂
+  have hsum' : peirceGradePlus2 N_plus X₂ + peirceGradePlus1 N_plus X₁ +
+      peirceGradeZero N_plus X₀ + peirceGradeMinus1 N_plus Xm₁ +
+      peirceGradeMinus2 N_plus Xm₂ = 0 := by
+    rw [hX₂, hX₁, hX₀, hXm₁, hXm₂]
+    exact hsum
+  rcases peirce_five_grade_sum_zero_all N_plus X₂ X₁ X₀ Xm₁ Xm₂
+      h_nil h_reg hsum' with ⟨hz₂, hz₁, hz₀, hzm₁, hzm₂⟩
+  exact ⟨hX₂ ▸ hz₂, hX₁ ▸ hz₁, hX₀ ▸ hz₀, hXm₁ ▸ hzm₁, hXm₂ ▸ hzm₂⟩
+
 /-- The grade-zero sector is closed under the commutator: its bracket is the
 sum of the three diagonal Peirce-block brackets. -/
 theorem comm_peirceGradeZero_closed (N_plus X Y : B)

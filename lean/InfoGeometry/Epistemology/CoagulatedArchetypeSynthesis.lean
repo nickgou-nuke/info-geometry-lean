@@ -1655,7 +1655,9 @@ theorem partXVg_kantor_koecher_tits_five_graded_closure_poset_synthesis
        peirceR N_plus *
          (X * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.Q N_plus * Y -
           Y * InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.P N_plus * X) *
-         peirceR N_plus) :=
+         peirceR N_plus) ∧
+    comm (K_plus2 N_plus (star N_plus)) (K_minus2 N_plus N_plus) =
+      (4 : ℕ) • _root_.OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma N_plus :=
   kantor_koecher_tits_five_graded_closure_poset_master_synthesis N_plus X Y h_nil h_reg
 
 open InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge

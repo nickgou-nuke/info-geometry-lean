@@ -601,6 +601,32 @@ theorem kkt_commutator_derivation (S A C : B) :
   dsimp [comm]
   noncomm_ring
 
+/-- Commutators are additive in the first argument, including natural scalar
+multiples. This lets eigenvalue equations be propagated through brackets. -/
+theorem kkt_comm_nsmul_left (k : ℕ) (A C : B) :
+    comm (k • A) C = k • comm A C := by
+  induction k with
+  | zero => simp [comm]
+  | succ k ih =>
+      rw [succ_nsmul, kkt_comm_add_left, ih, succ_nsmul]
+
+/-- Commutators are additive in the second argument, including natural scalar
+multiples. -/
+theorem kkt_comm_nsmul_right (k : ℕ) (A C : B) :
+    comm A (k • C) = k • comm A C := by
+  induction k with
+  | zero => simp [comm]
+  | succ k ih =>
+      rw [succ_nsmul, kkt_comm_add_right, ih, succ_nsmul]
+
+/-- The `ad(S)` grade of a commutator is the sum of the grades. The natural
+grades here cover the nonnegative half of the five-grade decomposition. -/
+theorem kkt_ad_grade_bracket_add (S A C : B) (m n : ℕ)
+    (hA : comm S A = m • A) (hC : comm S C = n • C) :
+    comm S (comm A C) = (m + n) • comm A C := by
+  rw [kkt_commutator_derivation, hA, hC,
+    kkt_comm_nsmul_left, kkt_comm_nsmul_right, ← add_nsmul]
+
 /-- Peirce-block composition: matching middle support idempotents compose,
 and orthogonal outer supports kill the reverse product. -/
 theorem kkt_peirce_bracket_composable (A E D X Y : B)
@@ -1328,6 +1354,36 @@ theorem comm_G_0_P_G_plus1_R (N_plus X Y : B)
         = ((1 - Gap N_plus) * Y) * (N_plus * P N_plus) * (X * P N_plus) := by
             noncomm_ring
       _ = 0 := by rw [hNP, mul_zero, zero_mul]
+  dsimp [comm]
+  rw [hForward, hBackward, sub_self]
+
+/-- The positive diagonal block annihilates the left `-1` carrier by
+positive/negative sheet orthogonality and neutral-support orthogonality. -/
+theorem comm_G_0_P_G_minus1_L (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_P N_plus X) (G_minus1_L N_plus Y) = 0 := by
+  have hGapN : Gap N_plus * N_plus = N_plus :=
+    Gap_mul_N_plus N_plus h_nil h_reg
+  have hGapP : Gap N_plus * P N_plus = P N_plus := by
+    dsimp [P]
+    rw [← mul_assoc, hGapN]
+  have hRP : (1 - Gap N_plus) * P N_plus = 0 := by
+    rw [sub_mul, one_mul, hGapP, sub_self]
+  have hPM : P N_plus * star N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_star_N_plus N_plus h_nil
+  have hForward : G_0_P N_plus X * G_minus1_L N_plus Y = 0 := by
+    dsimp [G_0_P, G_minus1_L]
+    calc (P N_plus * X * P N_plus) * (star N_plus * Y * (1 - Gap N_plus))
+        = (P N_plus * X) * (P N_plus * star N_plus) *
+            (Y * (1 - Gap N_plus)) := by noncomm_ring
+      _ = 0 := by rw [hPM, mul_zero, zero_mul]
+  have hBackward : G_minus1_L N_plus Y * G_0_P N_plus X = 0 := by
+    dsimp [G_0_P, G_minus1_L]
+    calc (star N_plus * Y * (1 - Gap N_plus)) * (P N_plus * X * P N_plus)
+        = (star N_plus * Y) * ((1 - Gap N_plus) * P N_plus) *
+            (X * P N_plus) := by noncomm_ring
+      _ = 0 := by rw [hRP, mul_zero, zero_mul]
   dsimp [comm]
   rw [hForward, hBackward, sub_self]
 

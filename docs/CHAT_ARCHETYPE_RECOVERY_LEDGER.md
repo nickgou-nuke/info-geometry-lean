@@ -2921,3 +2921,43 @@ Section 145 therefore formalizes a nontrivial split-octonion coordinate
 anti-automorphism and norm identities, not modular conjugation or the CPT
 theorem. No Lean theorem was changed or newly built in this source-to-owner
 audit.
+
+### 2026-11-04: Sections 143–144 modular-flow source/owner audit
+
+I compared the Sections 143–144 proposal (Turn 0303, around lines
+42169–42410) in
+`cached/aistudio_extracts/aistudio_prompt_1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or/transcript.md`
+with
+[`TomitaTakesakiModularEvolution.lean`](../lean/InfoGeometry/Superalgebra/TomitaTakesakiModularEvolution.lean),
+its integer audit, and the `InfoGeometry.All` imports. The owner and audit are
+imported by `InfoGeometry.All`.
+
+- **The finite split-octonion identities are present:** the owner lifts a
+  scalar `I_surp` by `scale I_surp paraSymplecticK0`, defines a diagonal rotor
+  `modularDelta c s`, proves the quark and antiquark scale factors
+  `(c+s)^2` and `(c-s)^2`, and proves pairing invariance under the explicit
+  hypothesis `c^2-s^2=1`. These are polynomial identities in the declared
+  coordinate multiplication.
+- **The reverse rotor is an inverse only on the normalized locus:** the flow
+  is defined for arbitrary `c,s` using `modularDelta c (-s)`. Its product with
+  `modularDelta c s` has diagonal entries `c^2-s^2`, so it equals the unit
+  only when that expression is `1`. I added `modularDelta_mul_reverse` and
+  `modularDelta_has_inverse` to record the exact product and the two-sided
+  inverse law under the same hyperbolic hypothesis. The targeted locked build
+  of `InfoGeometry.Superalgebra.TomitaTakesakiModularEvolution` then succeeded
+  (770 jobs).
+- **The transcript's analytic/time interpretation is not derived:** the
+  owner quantifies over ring elements `c,s`; it does not define real time,
+  `cosh`/`sinh`, an exponential of `modularHamiltonian`, or a theorem tying
+  `I_surp` to `c,s`. Thus `(c+s)^2` is not proved to equal `e^(2t)` here.
+  Nor does the pairing identity establish the analytic-strip KMS condition
+  for a state; it is an algebraic invariance under a supplied quadratic
+  relation.
+- **Scope:** the module proves a useful finite coordinate model, not the
+  Tomita–Takesaki theorem, a modular automorphism group on a von Neumann
+  algebra, or an Unruh/Hawking effect. The transcript's build telemetry and
+  physical conclusions are not local Lean evidence.
+
+This audit records the existing source coverage and the newly added inverse
+bridge separately. The build result certifies this owner target; it does not
+verify the transcript's broader analytic or physical interpretations.

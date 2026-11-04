@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Contributors
+Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
@@ -112,6 +112,32 @@ def modularHamiltonian (I_surp : R) : SplitOctonion R :=
 /-- Modular rotor `Δ_t = c • 𝟙 + s • K₀`. -/
 def modularDelta (c s : R) : SplitOctonion R :=
   ⟨c + s, ColorVec3.zero, ColorVec3.zero, c - s⟩
+
+/-- The two diagonal products of the modular rotor have scalar coordinate
+    `c² - s²`; this does not assume the mass-shell normalization. -/
+theorem modularDelta_mul_reverse (c s : R) :
+    mul (modularDelta c s) (modularDelta c (-s)) =
+      ⟨c^2 - s^2, ColorVec3.zero, ColorVec3.zero, c^2 - s^2⟩ := by
+  dsimp [mul, modularDelta, ColorVec3.zero, ColorVec3.dot, ColorVec3.sub,
+    ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+  ext <;> ring
+
+/-- On the hyperbolic mass shell, `Δ(c,-s)` is a genuine two-sided inverse
+    of `Δ(c,s)` in the defined split-octonion multiplication. -/
+theorem modularDelta_has_inverse (c s : R) (h_hyperbolic : c^2 - s^2 = 1) :
+    mul (modularDelta c s) (modularDelta c (-s)) = one ∧
+    mul (modularDelta c (-s)) (modularDelta c s) = one := by
+  constructor
+  · rw [modularDelta_mul_reverse, h_hyperbolic]
+    rfl
+  · have h_reverse := modularDelta_mul_reverse c (-s)
+    have h_reverse' :
+        mul (modularDelta c (-s)) (modularDelta c s) =
+          ⟨c^2 - (-s)^2, ColorVec3.zero, ColorVec3.zero, c^2 - (-s)^2⟩ := by
+      simpa only [neg_neg] using h_reverse
+    have hs : (-s)^2 = s^2 := by ring
+    rw [h_reverse', hs, h_hyperbolic]
+    rfl
 
 /-- Two-sided modular automorphism `σ_t(X) = Δ_t · X · (Δ_t)⁻¹`. -/
 def tomitaTakesakiFlow (c s : R) (X : SplitOctonion R) : SplitOctonion R :=

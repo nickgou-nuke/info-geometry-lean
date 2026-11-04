@@ -239,6 +239,34 @@ theorem chiralKreinCore_phase_inner_eq_QGT_im
       simp only [ContinuousLinearMap.id_apply]
     _ = (QGT ψ X Y).im := horizontalOperatorBerry_eq_QGT_im ψ X Y hψ hX
 
+/-- Complex master readout: on the positive phase-polarized sector, the full
+projective QGT is the complexification of the real Krein-core metric and its
+phase-rotated pairing. -/
+theorem chiralKreinCore_complex_QGT_decomposition
+    (ψ : NormalizedState NambuH) (X Y : EndC)
+    (hψ : IsPositiveClockPolarized ψ.vec)
+    (hX : CommutesClock X) :
+    QGT ψ X Y =
+      (↑((chiralHestenesKreinSpace (E := H)).inducedInnerProductCore.inner
+          (projOrth ψ X) (projOrth ψ Y)) : ℂ) +
+        Complex.I *
+          ↑((chiralHestenesKreinSpace (E := H)).inducedInnerProductCore.inner
+            (InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := H)
+              (projOrth ψ X)) (projOrth ψ Y)) := by
+  have hRe : (chiralHestenesKreinSpace (E := H)).inducedInnerProductCore.inner
+      (projOrth ψ X) (projOrth ψ Y) = (QGT ψ X Y).re := by
+    simpa [fubiniStudyMetric] using
+      chiralKreinCore_inner_eq_fubiniStudyMetric ψ X Y
+  have hIm : (chiralHestenesKreinSpace (E := H)).inducedInnerProductCore.inner
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := H)
+        (projOrth ψ X)) (projOrth ψ Y) = (QGT ψ X Y).im :=
+    chiralKreinCore_phase_inner_eq_QGT_im ψ X Y hψ hX
+  apply Complex.ext
+  · rw [hRe, hIm]
+    simp
+  · rw [hRe, hIm]
+    simp
+
 /--
 Exact symplectic soldering on the positive Hestenes polarization sector:
 projective Berry curvature is `-2` times the operatorial Hestenes Berry seed.

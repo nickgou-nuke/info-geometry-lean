@@ -2620,6 +2620,12 @@ the same owner now states the phase leg at the Krein-core level as
 horizontal tangent with the second yields `Im(QGT)` under the existing
 positive-polarization and phase-commutation hypotheses. The targeted build
 passed (4,135 jobs). No abstract Clifford-representation theorem is claimed.
+The same owner now combines the real metric and imaginary phase identities in
+`chiralKreinCore_complex_QGT_decomposition`, expressing the full complex QGT as
+the core inner product plus `Complex.I` times the clock-axis pairing. Its
+targeted locked build passed (4,135 jobs). This completes both scalar
+components for this concrete carrier under the stated hypotheses; it does not
+establish an abstract carrier-to-Hilbert intertwiner.
 
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 

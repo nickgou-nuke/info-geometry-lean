@@ -2615,9 +2615,11 @@ concrete carrier and proves `chiralKreinCore_inner_eq_fubiniStudyMetric`:
 the core pairing of horizontal doubled chiral vectors is exactly the real
 part of the projective QGT. Its targeted locked build passed (4,135 jobs).
 This closes the positive real metric readout for that concrete Nambu model;
-the phase-polarized Berry/QGT imaginary readout remains governed by the
-existing explicit polarization and phase-commutation hypotheses, and no
-abstract Clifford-representation theorem is claimed.
+the same owner now states the phase leg at the Krein-core level as
+`chiralKreinCore_phase_inner_eq_QGT_im`: pairing the phase-rotated first
+horizontal tangent with the second yields `Im(QGT)` under the existing
+positive-polarization and phase-commutation hypotheses. The targeted build
+passed (4,135 jobs). No abstract Clifford-representation theorem is claimed.
 
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 

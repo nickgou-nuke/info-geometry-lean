@@ -221,6 +221,24 @@ theorem horizontalOperatorBerry_eq_QGT_im
   rw [hQ]
   simp [Complex.mul_re]
 
+/-- The real core pairing with the doubled phase axis in its first slot reads
+the imaginary projective QGT component on the positive polarization sector.
+This is the antisymmetric partner of the Fubini--Study metric identity above. -/
+theorem chiralKreinCore_phase_inner_eq_QGT_im
+    (ψ : NormalizedState NambuH) (X Y : EndC)
+    (hψ : IsPositiveClockPolarized ψ.vec)
+    (hX : CommutesClock X) :
+    (chiralHestenesKreinSpace (E := H)).inducedInnerProductCore.inner
+        (InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := H)
+          (projOrth ψ X)) (projOrth ψ Y) = (QGT ψ X Y).im := by
+  calc
+    _ = horizontalOperatorBerry ψ X Y := by
+      rw [chiralHestenesKreinSpace_core_inner]
+      unfold horizontalOperatorBerry
+      rw [berryOfOperator_apply, metricOfOperator_apply]
+      simp only [ContinuousLinearMap.id_apply]
+    _ = (QGT ψ X Y).im := horizontalOperatorBerry_eq_QGT_im ψ X Y hψ hX
+
 /--
 Exact symplectic soldering on the positive Hestenes polarization sector:
 projective Berry curvature is `-2` times the operatorial Hestenes Berry seed.

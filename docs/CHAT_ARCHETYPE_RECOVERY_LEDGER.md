@@ -2587,6 +2587,16 @@ Hilbert-QGT readout of the operator anomaly. An intertwiner from the distinct
 abstract Clifford/Krein carriers into this Hilbert realization, and an
 indefinite-form Robertson inequality, remain unproved.
 
+`Carrier.HestenesKreinHilbertization` now derives a symmetric bilinear form
+from the positive diagonal `krein_form x (J x)` and packages it as a native
+`InnerProductSpace.Core ℝ V`. The theorem `positiveBilinForm_apply_self`
+records that the symmetrization preserves the original positive diagonal, and
+`inducedInnerProductCore` proves symmetry, nonnegativity, and definiteness.
+`Carrier.Bridge` imports this reusable construction. It gives the abstract
+Krein carrier a positive real inner-product core; it does not add a normed or
+complete structure automatically, identify an operator representation, or
+transport the complex projective QGT. Those cross-carrier claims remain open.
+
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 
 - Owner module [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean) (`InfoGeometry.OperatorAlgebra.PeirceSpine`, `0` `sorry`, `0` `admit`, `0` OpenGauss traps) formalizes over any non-commutative ring `[Ring B]` (and `[StarRing B]` / `H →L[ℂ] H` where stated):

@@ -135,6 +135,73 @@ theorem peirceGradeZero_R_corner_mem (N_plus X : B)
   rw [corner_sandwich_outer, corner_sandwich_outer, corner_sandwich_outer]
   simp [hR2, hPR, hRP, hQR, hRQ]
 
+/-- The left generator of grade `+1` lies in its Peirce range. -/
+theorem peirceGradePlus1_L_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_plus1_L N_plus X ∈ peirceGradePlus1Subgroup N_plus := by
+  change G_plus1_L N_plus X ∈ Set.range (peirceGradePlus1 N_plus)
+  refine ⟨G_plus1_L N_plus X, ?_⟩
+  have hPN : P N_plus * N_plus = N_plus :=
+    YangMillsVortexPoset.P_mul_N_plus N_plus h_reg
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRQ := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
+  have hRN : peirceR N_plus * N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul,
+      OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_mul_N_plus
+        N_plus h_nil h_reg,
+      sub_self]
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [G_plus1_L, peirceGradePlus1, peircePR, peirceRQ]
+  change P N_plus * (N_plus * X * peirceR N_plus) * peirceR N_plus +
+      peirceR N_plus * (N_plus * X * peirceR N_plus) * Q N_plus =
+    N_plus * X * peirceR N_plus
+  have h1 : P N_plus * (N_plus * X * peirceR N_plus) * peirceR N_plus =
+      N_plus * X * peirceR N_plus := by
+    calc P N_plus * (N_plus * X * peirceR N_plus) * peirceR N_plus
+        = (P N_plus * N_plus) * X * (peirceR N_plus * peirceR N_plus) := by noncomm_ring
+      _ = N_plus * X * peirceR N_plus := by rw [hPN, hR2]
+  have h2 : peirceR N_plus * (N_plus * X * peirceR N_plus) * Q N_plus = 0 := by
+    calc peirceR N_plus * (N_plus * X * peirceR N_plus) * Q N_plus
+        = (peirceR N_plus * N_plus) * X * (peirceR N_plus * Q N_plus) := by noncomm_ring
+      _ = 0 := by rw [hRN, hRQ, zero_mul, mul_zero]
+  rw [h1, h2, add_zero]
+
+/-- The right generator of grade `+1` lies in its Peirce range. -/
+theorem peirceGradePlus1_R_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_plus1_R N_plus X ∈ peirceGradePlus1Subgroup N_plus := by
+  change G_plus1_R N_plus X ∈ Set.range (peirceGradePlus1 N_plus)
+  refine ⟨G_plus1_R N_plus X, ?_⟩
+  have hNQ : N_plus * Q N_plus = N_plus :=
+    YangMillsVortexPoset.N_plus_mul_Q N_plus h_reg
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [G_plus1_R, peirceGradePlus1, peircePR, peirceRQ]
+  change P N_plus * (peirceR N_plus * X * N_plus) * peirceR N_plus +
+      peirceR N_plus * (peirceR N_plus * X * N_plus) * Q N_plus =
+    peirceR N_plus * X * N_plus
+  have h1 : P N_plus * (peirceR N_plus * X * N_plus) * peirceR N_plus = 0 := by
+    calc P N_plus * (peirceR N_plus * X * N_plus) * peirceR N_plus
+        = (P N_plus * peirceR N_plus) * X * (N_plus * peirceR N_plus) := by noncomm_ring
+      _ = 0 := by rw [hPR]; simp
+  have h2 : peirceR N_plus * (peirceR N_plus * X * N_plus) * Q N_plus =
+      peirceR N_plus * X * N_plus := by
+    calc peirceR N_plus * (peirceR N_plus * X * N_plus) * Q N_plus
+        = (peirceR N_plus * peirceR N_plus) * X * (N_plus * Q N_plus) := by noncomm_ring
+      _ = peirceR N_plus * X * N_plus := by rw [hR2, hNQ]
+  rw [h1, h2, zero_add]
+
 /-- Direct grade-zero self-bracket closure from its three diagonal corners. -/
 theorem peirce_z0_bracket_mem_z0 (N_plus x y : B)
     (h_nil : N_plus * N_plus = 0)
@@ -548,6 +615,304 @@ theorem peirce_m1_p1_bracket_mem_z0 (N_plus x y : B)
   rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
   exact (peirceGradeZeroSubgroup N_plus).neg_mem
     (peirce_p1_m1_bracket_mem_z0 N_plus y x h_nil h_reg hy hx)
+
+/-- Opposite extremal Peirce corners bracket directly into the diagonal
+grade-zero range, without using adjoint eigenvalue separation. -/
+theorem peirce_p2_m2_bracket_mem_z0 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus2 N_plus X) (peirceGradeMinus2 N_plus Y) ∈
+        peirceGradeZeroSubgroup N_plus := by
+  change _ ∈ Set.range (peirceGradeZero N_plus)
+  refine ⟨X * Q N_plus * Y * P N_plus - Y * P N_plus * X * Q N_plus, ?_⟩
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).1
+  have hRP := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.1
+  have hQR := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.1
+  have hRQ := (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.2
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+    peirceGradePlus2, peircePQ, peirceGradeMinus2, peirceQP,
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm]
+  have h₁ : (P N_plus * X * Q N_plus) * (Q N_plus * Y * P N_plus) =
+      P N_plus * X * Q N_plus * Y * P N_plus := by
+    calc (P N_plus * X * Q N_plus) * (Q N_plus * Y * P N_plus)
+        = P N_plus * X * (Q N_plus * Q N_plus) * Y * P N_plus := by noncomm_ring
+      _ = P N_plus * X * Q N_plus * Y * P N_plus := by rw [hQ2]
+  have h₂ : (Q N_plus * Y * P N_plus) * (P N_plus * X * Q N_plus) =
+      Q N_plus * Y * P N_plus * X * Q N_plus := by
+    calc (Q N_plus * Y * P N_plus) * (P N_plus * X * Q N_plus)
+        = Q N_plus * Y * (P N_plus * P N_plus) * X * Q N_plus := by noncomm_ring
+      _ = Q N_plus * Y * P N_plus * X * Q N_plus := by rw [hP2]
+  rw [h₁, h₂]
+  noncomm_ring [hP2, hQ2, hPQ, hQP, hPR, hRP, hQR, hRQ, hR2]
+
+/-- Reversing the opposite-extremal bracket preserves grade-zero membership. -/
+theorem peirce_m2_p2_bracket_mem_z0 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeMinus2 N_plus X) (peirceGradePlus2 N_plus Y) ∈
+        peirceGradeZeroSubgroup N_plus := by
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradeZeroSubgroup N_plus).neg_mem
+    (peirce_p2_m2_bracket_mem_z0 N_plus Y X h_nil h_reg)
+
+/-- The grade-zero sector acts on grade `+1` by a bracket that remains in
+grade `+1`. The result is assembled from the existing six Peirce corner
+bracket identities. -/
+theorem peirce_z0_p1_bracket_mem_p1 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeZero N_plus X) (peirceGradePlus1 N_plus Y) ∈
+        peirceGradePlus1Subgroup N_plus := by
+  let T := star N_plus * Y + Y * star N_plus
+  have hRstar : peirceR N_plus * star N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul,
+      OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_mul_star_N_plus
+        N_plus h_nil h_reg,
+      sub_self]
+  have hstarGap : star N_plus *
+      OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap N_plus =
+        star N_plus := by
+    rw [OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_eq_anticomm
+      N_plus h_nil h_reg]
+    dsimp [OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.anticomm]
+    calc star N_plus * (N_plus * star N_plus + star N_plus * N_plus)
+        = (star N_plus * N_plus) * star N_plus +
+          (star N_plus * star N_plus) * N_plus := by noncomm_ring
+      _ = star N_plus := by
+          rw [OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.star_N_plus_reg
+                N_plus h_reg,
+              OperatorAlgebra.PeirceSpine.YangMillsVortexPoset.star_N_plus_sq
+                N_plus h_nil,
+              zero_mul, add_zero]
+  have hstarR : star N_plus * peirceR N_plus = 0 := by
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, hstarGap, sub_self]
+  have hparam : G_plus1 N_plus T = peirceGradePlus1 N_plus Y := by
+    have hleft : N_plus * T * peirceR N_plus =
+        P N_plus * Y * peirceR N_plus := by
+      change N_plus * (star N_plus * Y + Y * star N_plus) * peirceR N_plus =
+        (N_plus * star N_plus) * Y * peirceR N_plus
+      calc N_plus * (star N_plus * Y + Y * star N_plus) * peirceR N_plus
+          = N_plus * star N_plus * Y * peirceR N_plus +
+            N_plus * Y * star N_plus * peirceR N_plus := by noncomm_ring
+        _ = N_plus * star N_plus * Y * peirceR N_plus := by
+            calc N_plus * star N_plus * Y * peirceR N_plus +
+                  N_plus * Y * star N_plus * peirceR N_plus
+                = N_plus * star N_plus * Y * peirceR N_plus +
+                    (N_plus * Y) * (star N_plus * peirceR N_plus) := by
+                      rw [mul_assoc (N_plus * Y) (star N_plus) (peirceR N_plus)]
+              _ = N_plus * star N_plus * Y * peirceR N_plus := by
+                    rw [hstarR, mul_zero, add_zero]
+        _ = (N_plus * star N_plus) * Y * peirceR N_plus := by rfl
+    have hright : peirceR N_plus * T * N_plus =
+        peirceR N_plus * Y * Q N_plus := by
+      change peirceR N_plus * (star N_plus * Y + Y * star N_plus) * N_plus =
+        peirceR N_plus * Y * (star N_plus * N_plus)
+      calc peirceR N_plus * (star N_plus * Y + Y * star N_plus) * N_plus
+          = peirceR N_plus * (star N_plus * (Y * N_plus)) +
+            peirceR N_plus * (Y * (star N_plus * N_plus)) := by noncomm_ring
+        _ = peirceR N_plus * (Y * (star N_plus * N_plus)) := by
+            calc peirceR N_plus * (star N_plus * (Y * N_plus)) +
+                  peirceR N_plus * (Y * (star N_plus * N_plus))
+                = (peirceR N_plus * star N_plus) * (Y * N_plus) +
+                    peirceR N_plus * (Y * (star N_plus * N_plus)) := by
+                      rw [← mul_assoc (peirceR N_plus) (star N_plus) (Y * N_plus)]
+              _ = peirceR N_plus * (Y * (star N_plus * N_plus)) := by
+                    rw [hRstar, zero_mul, zero_add]
+        _ = peirceR N_plus * Y * (star N_plus * N_plus) := by
+            rw [← mul_assoc]
+    change N_plus * T * peirceR N_plus + peirceR N_plus * T * N_plus = _
+    rw [hleft, hright]
+    rfl
+  have hclosure := comm_G_plus1_G_0_closed N_plus T X h_nil h_reg
+  have hnormal :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+          (peirceGradePlus1 N_plus Y) (peirceGradeZero N_plus X) =
+        G_plus1_L N_plus
+            (T * peirceR N_plus * X - star N_plus * X * N_plus * T) +
+          G_plus1_R N_plus
+            (T * N_plus * X * star N_plus - X * peirceR N_plus * T) := by
+    rw [← hparam]
+    simpa [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+      peirceR, G_0_P, G_0_Q, G_0_neutral] using hclosure
+  have hsum :
+      G_plus1_L N_plus
+          (T * peirceR N_plus * X - star N_plus * X * N_plus * T) +
+        G_plus1_R N_plus
+          (T * N_plus * X * star N_plus - X * peirceR N_plus * T) ∈
+        peirceGradePlus1Subgroup N_plus := by
+    apply (peirceGradePlus1Subgroup N_plus).add_mem
+    · exact peirceGradePlus1_L_corner_mem N_plus _ h_nil h_reg
+    · exact peirceGradePlus1_R_corner_mem N_plus _ h_nil h_reg
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm,
+    hnormal]
+  exact (peirceGradePlus1Subgroup N_plus).neg_mem hsum
+
+/-- The Peirce grade `-1` generator indexed by `Y` is the closure owner's
+`G_minus1` generator indexed by `N_plus * Y + Y * N_plus`. -/
+theorem peirce_m1_eq_G_minus1 (N_plus Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradeMinus1 N_plus Y =
+      G_minus1 N_plus (N_plus * Y + Y * N_plus) := by
+  let T := N_plus * Y + Y * N_plus
+  have hR_N : peirceR N_plus * N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul,
+      OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_mul_N_plus
+        N_plus h_nil h_reg,
+      sub_self]
+  have hN_R : N_plus * peirceR N_plus = 0 := by
+    dsimp [peirceR]
+    have hNG : N_plus *
+        OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap N_plus =
+          N_plus := by
+      rw [OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_eq_anticomm
+        N_plus h_nil h_reg]
+      dsimp [OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.anticomm]
+      rw [mul_add, ← mul_assoc N_plus N_plus (star N_plus), h_nil, zero_mul,
+        ← mul_assoc N_plus (star N_plus) N_plus, h_reg, zero_add]
+    rw [mul_sub, mul_one, hNG, sub_self]
+  have hleft : star N_plus * T * peirceR N_plus =
+      Q N_plus * Y * peirceR N_plus := by
+    dsimp [T, Q]
+    calc star N_plus * (N_plus * Y + Y * N_plus) * peirceR N_plus
+        = star N_plus * N_plus * Y * peirceR N_plus +
+          star N_plus * Y * N_plus * peirceR N_plus := by noncomm_ring
+      _ = star N_plus * N_plus * Y * peirceR N_plus := by
+          rw [mul_assoc (star N_plus * Y) N_plus (peirceR N_plus),
+            hN_R, mul_zero, add_zero]
+  have hright : peirceR N_plus * T * star N_plus =
+      peirceR N_plus * Y * P N_plus := by
+    dsimp [T, P]
+    calc peirceR N_plus * (N_plus * Y + Y * N_plus) * star N_plus
+        = peirceR N_plus * N_plus * Y * star N_plus +
+          peirceR N_plus * Y * N_plus * star N_plus := by noncomm_ring
+      _ = peirceR N_plus * Y * N_plus * star N_plus := by
+          rw [mul_assoc (peirceR N_plus * N_plus) Y (star N_plus),
+            hR_N, zero_mul, zero_add]
+      _ = peirceR N_plus * Y * (N_plus * star N_plus) := by
+          rw [mul_assoc (peirceR N_plus * Y) N_plus (star N_plus)]
+  dsimp [peirceGradeMinus1, peirceRP, peirceQR,
+    G_minus1, G_minus1_L, G_minus1_R]
+  dsimp [T] at hleft hright
+  change peirceR N_plus * Y * P N_plus + Q N_plus * Y * peirceR N_plus =
+    star N_plus * (N_plus * Y + Y * N_plus) * peirceR N_plus +
+      peirceR N_plus * (N_plus * Y + Y * N_plus) * star N_plus
+  rw [hleft, hright, add_comm]
+
+/-- The closure owner's left grade `-1` corner lies in the concrete Peirce
+grade `-1` subgroup. -/
+theorem peirceGradeMinus1_L_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_minus1_L N_plus X ∈ peirceGradeMinus1Subgroup N_plus := by
+  change G_minus1_L N_plus X ∈ Set.range (peirceGradeMinus1 N_plus)
+  refine ⟨G_minus1_L N_plus X, ?_⟩
+  have hRstar : peirceR N_plus * star N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul,
+      OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_mul_star_N_plus
+        N_plus h_nil h_reg,
+      sub_self]
+  have hQstar : Q N_plus * star N_plus = star N_plus :=
+    YangMillsVortexPoset.Q_mul_star_N_plus N_plus h_reg
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [G_minus1_L, peirceGradeMinus1, peirceRP, peirceQR]
+  change peirceR N_plus * (star N_plus * X * peirceR N_plus) * P N_plus +
+      Q N_plus * (star N_plus * X * peirceR N_plus) * peirceR N_plus =
+    star N_plus * X * peirceR N_plus
+  have hleft : peirceR N_plus * (star N_plus * X * peirceR N_plus) * P N_plus = 0 := by
+    calc peirceR N_plus * (star N_plus * X * peirceR N_plus) * P N_plus
+        = (peirceR N_plus * star N_plus) * (X * peirceR N_plus * P N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hRstar, zero_mul]
+  have hright : Q N_plus * (star N_plus * X * peirceR N_plus) * peirceR N_plus =
+      star N_plus * X * peirceR N_plus := by
+    calc Q N_plus * (star N_plus * X * peirceR N_plus) * peirceR N_plus
+        = (Q N_plus * star N_plus) * X *
+          (peirceR N_plus * peirceR N_plus) := by noncomm_ring
+      _ = star N_plus * X * peirceR N_plus := by rw [hQstar, hR2]
+  rw [hleft, hright, zero_add]
+
+/-- The closure owner's right grade `-1` corner lies in the concrete Peirce
+grade `-1` subgroup. -/
+theorem peirceGradeMinus1_R_corner_mem (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    G_minus1_R N_plus X ∈ peirceGradeMinus1Subgroup N_plus := by
+  change G_minus1_R N_plus X ∈ Set.range (peirceGradeMinus1 N_plus)
+  refine ⟨G_minus1_R N_plus X, ?_⟩
+  have hQR : Q N_plus * peirceR N_plus = 0 :=
+    (peirce_chiral_neutral_orthogonal N_plus h_nil h_reg).2.2.1
+  have hstarP : star N_plus * P N_plus = star N_plus :=
+    YangMillsVortexPoset.star_N_plus_mul_P N_plus h_reg
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  dsimp [G_minus1_R, peirceGradeMinus1, peirceRP, peirceQR]
+  change peirceR N_plus * (peirceR N_plus * X * star N_plus) * P N_plus +
+      Q N_plus * (peirceR N_plus * X * star N_plus) * peirceR N_plus =
+    peirceR N_plus * X * star N_plus
+  have hleft : peirceR N_plus * (peirceR N_plus * X * star N_plus) * P N_plus =
+      peirceR N_plus * X * star N_plus := by
+    calc peirceR N_plus * (peirceR N_plus * X * star N_plus) * P N_plus
+        = (peirceR N_plus * peirceR N_plus) * X * (star N_plus * P N_plus) := by
+            noncomm_ring
+      _ = peirceR N_plus * X * star N_plus := by rw [hR2, hstarP]
+  have hright : Q N_plus * (peirceR N_plus * X * star N_plus) * peirceR N_plus = 0 := by
+    calc Q N_plus * (peirceR N_plus * X * star N_plus) * peirceR N_plus
+        = (Q N_plus * peirceR N_plus) * (X * star N_plus * peirceR N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hQR, zero_mul]
+  rw [hleft, hright, add_zero]
+
+/-- The grade-zero sector acts on grade `-1` by a bracket that remains in
+grade `-1`, proved from direct Peirce-corner closure. -/
+theorem peirce_z0_m1_bracket_mem_m1 (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeZero N_plus X) (peirceGradeMinus1 N_plus Y) ∈
+        peirceGradeMinus1Subgroup N_plus := by
+  let T := N_plus * Y + Y * N_plus
+  let A := N_plus * X * star N_plus * T - T * peirceR N_plus * X
+  let C := X * peirceR N_plus * T - T * star N_plus * X * N_plus
+  have hclosure := comm_G_0_G_minus1_closed N_plus X T h_nil h_reg
+  have hnormal :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+          (peirceGradeZero N_plus X) (peirceGradeMinus1 N_plus Y) =
+        G_minus1_L N_plus A + G_minus1_R N_plus C := by
+    rw [peirce_m1_eq_G_minus1 N_plus Y h_nil h_reg]
+    simpa [peirceGradeZero, peircePP, peirceQQ, peirceRR,
+      peirceR, G_0_P, G_0_Q, G_0_neutral, A, C] using hclosure
+  rw [hnormal]
+  apply (peirceGradeMinus1Subgroup N_plus).add_mem
+  · exact peirceGradeMinus1_L_corner_mem N_plus A h_nil h_reg
+  · exact peirceGradeMinus1_R_corner_mem N_plus C h_nil h_reg
 
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion

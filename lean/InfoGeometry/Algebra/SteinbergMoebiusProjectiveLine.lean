@@ -206,3 +206,71 @@ theorem hua_distance_sq {P : B} (hP : P * P = P) (X Y : B) :
       = 1 - genV P X Y := by
   simp only [projChartPlus, projChartMinus, genV, anticomm, conePlus, coneMinus]
   noncomm_ring [hP, P_assoc hP]
+
+/-! ### A26: dual Bruhat factors and their order defect -/
+
+/-- Lower-upper Bruhat factor, built from the two square-zero Peirce cones. -/
+def moebiusBruhatDual (P A C : B) : B :=
+  (1 - coneMinus P C) * (1 + conePlus P A)
+
+/-- The inverse-order candidate for `moebiusBruhatDual`. -/
+def moebiusBruhatDualInv (P A C : B) : B :=
+  (1 - conePlus P A) * (1 + coneMinus P C)
+
+/-- Upper-lower Bruhat factor, used to compare the two factor orders. -/
+def moebiusBruhat (P A C : B) : B :=
+  (1 + conePlus P A) * (1 - coneMinus P C)
+
+/-- Inverse candidate for the upper-lower Bruhat factor. -/
+def moebiusBruhatInv (P A C : B) : B :=
+  (1 + coneMinus P C) * (1 - conePlus P A)
+
+/-- Conjugation by the upper-lower Bruhat factor. -/
+def moebiusConj (P A C X : B) : B :=
+  moebiusBruhat P A C * X * moebiusBruhatInv P A C
+
+/-- Conjugation by the lower-upper Bruhat factor. -/
+def moebiusConjDual (P A C X : B) : B :=
+  moebiusBruhatDual P A C * X * moebiusBruhatDualInv P A C
+
+/-- **A26 core:** the dual factor has a two-sided inverse, and exchanging the
+Bruhat factor order changes it by minus the commutator anomaly `genSig`. -/
+theorem moebiusBruhatDual_inverse_and_order_defect
+    {P : B} (hP : P * P = P) (A C : B) :
+    moebiusBruhatDual P A C * moebiusBruhatDualInv P A C = 1 ∧
+    moebiusBruhatDualInv P A C * moebiusBruhatDual P A C = 1 ∧
+    moebiusBruhat P A C - moebiusBruhatDual P A C = -genSig P A C := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+    simp only [moebiusBruhatDual, moebiusBruhatDualInv, moebiusBruhat,
+      genSig, comm, conePlus, coneMinus] <;>
+    noncomm_ring [hP, P_assoc hP]
+
+/-- The two-sided inverse of the upper-lower Bruhat factor. -/
+theorem moebiusBruhat_inverse (P : B) (hP : P * P = P) (A C : B) :
+    moebiusBruhat P A C * moebiusBruhatInv P A C = 1 ∧
+    moebiusBruhatInv P A C * moebiusBruhat P A C = 1 := by
+  constructor <;>
+    simp only [moebiusBruhat, moebiusBruhatInv, conePlus, coneMinus] <;>
+    noncomm_ring [hP, P_assoc hP]
+
+/-- Dual Bruhat conjugation fixes the channel metric. -/
+theorem moebiusConjDual_genV (P : B) (hP : P * P = P) (A C : B) :
+    moebiusConjDual P A C (genV P A C) = genV P A C := by
+  simp only [moebiusConjDual, moebiusBruhatDual, moebiusBruhatDualInv,
+    genV, anticomm, conePlus, coneMinus]
+  noncomm_ring [hP, P_assoc hP]
+
+/-- The four Peirce corners of the upper-lower Bruhat image of `P`.
+
+For the stated factor order, the lower-left corner is `-coneMinus P C`.
+This sign follows from the action and is opposite to the A26 transcript claim. -/
+theorem moebiusConj_basepoint_corners (P : B) (hP : P * P = P) (A C : B) :
+    peirce11 P (moebiusConj P A C P) = P * (1 - genV P A C) ∧
+    peirce00 P (moebiusConj P A C P) = (1 - P) * genV P A C ∧
+    coneMinus P (moebiusConj P A C P) = -coneMinus P C ∧
+    conePlus P (moebiusConj P A C P) =
+      -conePlus P A + conePlus P A * coneMinus P C * conePlus P A := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    simp only [peirce11, peirce00, moebiusConj, moebiusBruhat,
+      moebiusBruhatInv, genV, anticomm, conePlus, coneMinus] <;>
+    noncomm_ring [hP, P_assoc hP]

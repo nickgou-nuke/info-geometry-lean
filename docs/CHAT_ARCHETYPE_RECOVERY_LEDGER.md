@@ -977,6 +977,31 @@ successfully (674 jobs, zero errors). This verifies the Lean statements in
 their declared arbitrary-ring and arbitrary-star-ring scopes; it does not
 promote the source packet's broader physical interpretations.
 
+### Archive batch: `17Kj7o...`, A26 dual Bruhat core (2026-11-04)
+
+The later A26 occurrence in this archive proposes dual lower-upper Bruhat
+factors, a four-corner action, and cross-ratio equivariance. The exact dual
+factor and inverse definitions were not present in the searched owner surface.
+Added `moebiusBruhatDual`, `moebiusBruhatDualInv`, `moebiusBruhat`,
+`moebiusBruhatInv`, `moebiusConj`, and `moebiusConjDual`, plus theorems
+`moebiusBruhatDual_inverse_and_order_defect`, `moebiusBruhat_inverse`,
+`moebiusConjDual_genV`, and `moebiusConj_basepoint_corners` to
+`Algebra/SteinbergMoebiusProjectiveLine.lean`. These prove the inverse products,
+the order defect
+`moebiusBruhat - moebiusBruhatDual = -genSig` for an arbitrary associative
+unital ring with an idempotent cut, dual-action fixedness of `genV`, and the
+four basepoint corners for the explicitly defined upper-lower action. For that
+factor order, the lower-left corner is `-coneMinus P C`, correcting the source's
+positive sign. The locked build of
+`InfoGeometry.Algebra.SteinbergMoebiusProjectiveLine` passed on 2026-11-04
+(3,099 jobs, exit 0); it reported existing linter warnings in imported
+`SteinbergBraidDefectSpine.lean` and earlier declarations in the owner.
+
+Generic cross-ratio equivariance still requires an exact carrier and definition
+audit; unrelated coordinate/projective cross-ratios are not treated as this
+noncommutative ring construction. The finite ring identities do not establish
+the source's physical “Riccati flow” or group interpretations.
+
 The same archive's later LXXVI–LXXX operator packet maps to
 `PeirceSpine/ParaKahlerBregmanModularNoetherPoset.lean`, which owns the
 source-facing corrected stages M₁–M₅. In particular M₁ covers the curvature
@@ -1148,6 +1173,41 @@ with supporting results in `CurvatureDoubleCommutator.lean`,
 contracts A70–A86 over ring or star-ring carriers; its header states that the
 formalization uses no `sorry` or custom axioms. This inventory records source
 coverage, not a fresh kernel build of that large owner.
+
+The A81/A82 listing in turns 0229–0230 (source lines 35425–35639) is a
+separate occurrence from the A81/A82 declarations in
+`TelegrapherTwoStateMasterPoset.lean`; the numbering alone does not identify
+the same contract. Its base chart claims map to
+`TwoStateSandwich.chart_two_state_generator_sandwich`,
+`chart_spinor_selection_products`, and
+`chart_bruhat_conjugation_transition`. The latter is the two-sided chart
+transition already proved for the concrete factors
+`(1 + N₊)(1 - N₋)` and `(1 + N₋)(1 - N₊)`. The `diracKreinAdj` in this
+source is `invS P * star X * invS P`; its complementary-ideal norm clause is
+exactly `TwoStateSandwich.complementary_twisted_ideal_pairing` after unfolding
+`ketIdealComp` and `qgtMinus`. The star-dual chart equations are likewise
+owned by `StarGrading.grading_star_upper_chart` and
+`grading_star_lower_chart` (and included in the master A81 theorem).
+
+The source's asserted `Σ` chart sandwich is incorrect for the repository's
+definitions: `chart_two_state_generator_sandwich` gives
+`(P - N₊) * genSig * (P + N₋) = Q₊ + Q₊²`, while the source claims
+`-idemDefect Q₊ = Q₊² - Q₊`. The owner also proves the exact discrepancy in
+`chart_sigma_euler_compression_residual` as `2 • Q₊²`. The other three
+displayed base sandwiches (`Φ`, `J`, and `V`) agree with the owner.
+
+For A82, the all-scale daughter-tower contract is owned by
+`GolayLeechMOGSheetPoset.all_scale_fractal_two_state_chart_transition`. It
+proves the chart transition and inverse, both odd-mode sandwiches, the
+`(1 - V) * X_n` symmetric-mode sandwich, and the chiral-branch readout. The
+source's final `Σ` formula is incorrect: the owner proves
+`P_{k+1} * Sig_{k,n} * P_{C,k} = (1 + V_k) * X_n`, consistent with the
+depth-zero residual above. The source's `moebiusConj` names correspond to the
+owner's concrete `chartBruhatConj` / `chartBruhatConjInv` maps. The separate
+`TelegrapherTwoStateMasterPoset` A82 theorem supplies its own decoder package;
+it is additional coverage, not the only all-scale chart owner. This is an
+occurrence-level source audit; no Lean source was edited and no new build was
+run.
 
 - A70–A76 cover defect-iterate cone relations, parity/unipotent conjugations,
   double-derivation intertwining, telegrapher polynomial identities, and
@@ -1887,7 +1947,7 @@ audited on 2026-11-03:
 
 ### Final-turn A85 candidate: lower block closure and idempotent intervention
 
-The 2026-10-30 `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` snapshot ends with a TCR-Former-inspired A85 candidate (user turn 231; model turn 232; source SHA-256 `e4140cbac7483310d341877bfb1e47b927d56c9b9ef36a5a9c29eb4666ead64d`). Its exact ring-algebraic content is now combined by `blockLower_idempotent_intervention_synthesis` in `OperatorAlgebra/PeirceSpine/BlockTriangularIntervention.lean`: the upper-right Peirce corner vanishes, two lower-block operators multiply by the stated block formula, and bilateral compression by an orthogonal idempotent is idempotent, annihilated on both sides by the target idempotent, and preserves the factual `11` corner. The hypotheses explicitly include idempotence of both cuts and both ordered orthogonality equations. This formalizes the algebraic block pattern only; it does not construct a neural attention model, causal graph, or empirical result from the source paper.
+The 2026-10-30 `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` snapshot ends with a TCR-Former-inspired A85 candidate (user turn 231; model turn 232; source SHA-256 `e4140cbac7483310d341877bfb1e47b927d56c9b9ef36a5a9c29eb4666ead64d`). Its exact ring-algebraic content is combined by `blockLower_idempotent_intervention_synthesis` in `OperatorAlgebra/PeirceSpine/BlockTriangularIntervention.lean`: the upper-right Peirce corner vanishes, two lower-block operators multiply by the stated block formula, and bilateral compression by an orthogonal idempotent is idempotent, annihilated on both sides by the target idempotent, and preserves the factual `11` corner. I extended the synthesis packet to include the exact removed-term expansion `T - (1-Q)T(1-Q) = QT + TQ - QTQ` and its zero factual `11` corner, reusing the general compression lemmas. The hypotheses explicitly include idempotence of both cuts and both ordered orthogonality equations. This formalizes the algebraic block pattern only; it does not construct a neural attention model, causal graph, or empirical result from the source paper.
 
 ### Batch 2 (10 sources: Stages D₆₄–D₇₈ — Zorn Split-Octonion Moufang & Kantor Chiral Cocycle Meta-Abelian Posets), 2026-11-03
 
@@ -2505,6 +2565,7 @@ identifications in this packet.
 - Added [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MultiChannelChiralBlockAnomalyGapPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MultiChannelChiralBlockAnomalyGapPoset.lean) (`MC₁ ≺ MC₂ ≺ ⋯ ≺ MC₁₀` and `WMC₁`–`WMC₁₀` over `[Ring B] [StarRing B]`) and wired it into **Part XV.e** (`partXVe_multi_channel_and_weighted_chiral_block_anomaly_gap_synthesis`) of [`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean):
   - **`MC₁`–`MC₁₀` (`MultiChannelAnomalyGapPoset`)**: closure of multi-channel nilpotency `(N_a + N_b)² = 0` and Von Neumann regularity `(N_a + N_b)(N_a + N_b)*(N_a + N_b) = N_a + N_b`, anomaly additivity `Σ(N_a + N_b) = Σ(N_a) + Σ(N_b)` and mutual annihilation `Σ(N_a) Σ(N_b) = 0`, gap additivity `Gap(N_a + N_b) = Gap(N_a) + Gap(N_b)` and orthogonality `Gap(N_a) Gap(N_b) = 0`, channel-resolved projection `Gap(N_a) Φ(N_a + N_b) = Φ(N_a)`, spectral gap equation `Φ_tot (Φ_tot² - 1) = 0`, 3-channel supercolor closure `Σ(N₁ + N₂ + N₃) = Σ₁ + Σ₂ + Σ₃`, `Gap(N₁ + N₂ + N₃) = Gap₁ + Gap₂ + Gap₃`, and a concrete `4 × 4` integer matrix witness.
   - **`WMC₁`–`WMC₁₀` (`WeightedMultiChannelGapPoset`)**: intra-channel weight commutation (`c_b N_b = N_b c_b`, `c_b N_b* = N_b* c_b`) cross-channel annihilation `(c_a Φ(N_a))(c_b Φ(N_b)) = 0`, weighted rotor-block product `J_w₂ * Φ_w₂ = Σ_w₂`, weighted block square `Φ_w₂ * Φ_w₂ = c_a² Gap(N_a) + c_b² Gap(N_b) = Gap_w₂`, channel-selective filtering `Gap(N_a) Φ_w₂ = c_a Φ(N_a)`, eigenmode secular equation `(Φ_w₂² - c_a²)(c_a Φ(N_a)) = 0`, 3-channel weighted block square `Φ_w₃ * Φ_w₃ = Gap_w₃`, and cyclotomic `Φ₆(u) = u² - u + 1 = 0` reduction `(u Φ(N))² = (u - 1) Gap(N)`.
+  - Added `comm_star_of_self_adjoint`, the specialized one-channel and right-weight cross-annihilation results, and `Phi_w₂_sq_eq_Gap_w₂_self_adjoint`. For self-adjoint weights, the user-facing hypotheses now require only `c_a N_a = N_a c_a` and `c_b N_b = N_b c_b`; commutation with each channel's adjoint is derived by `star`. No weight commutation across distinct channels is assumed. The locked build `InfoGeometry.OperatorAlgebra.PeirceSpine.MultiChannelChiralBlockAnomalyGapPoset` passed on 2026-11-04 (1,549 jobs, exit 0).
 
 ### 2026-11-04: Kernel-verified Stage ZND₅ (`Archetype XX: SuperconformalCartan5GradedGravity`) & Part XVI of `CoagulatedArchetypeSynthesis`
 

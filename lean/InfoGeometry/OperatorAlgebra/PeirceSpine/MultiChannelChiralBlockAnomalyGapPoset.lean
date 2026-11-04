@@ -1037,6 +1037,24 @@ theorem Phi_w₂_sq_eq_Gap_w₂ (c_a N_a c_b N_b : B)
       weighted_single_Phi_sq c_a N_a h_nil_a h_reg_a hc_a hcs_a,
       weighted_single_Phi_sq c_b N_b h_nil_b h_reg_b hc_b hcs_b]
 
+/-- `WMC₅` Self-adjoint channel-weight form of the weighted two-channel square.
+    Each weight only needs to commute with its own nilpotent; self-adjointness
+    derives commutation with that channel's adjoint. No cross-channel weight
+    commutation is assumed. -/
+theorem Phi_w₂_sq_eq_Gap_w₂_self_adjoint (c_a N_a c_b N_b : B)
+    (h_nil_a : N_a * N_a = 0) (h_reg_a : N_a * star N_a * N_a = N_a)
+    (h_nil_b : N_b * N_b = 0) (h_reg_b : N_b * star N_b * N_b = N_b)
+    (h_ab : N_a * N_b = 0) (h_ba : N_b * N_a = 0)
+    (h_asb : N_a * star N_b = 0) (h_sab : star N_a * N_b = 0)
+    (hc_a_star : star c_a = c_a) (hc_a : c_a * N_a = N_a * c_a)
+    (hc_b_star : star c_b = c_b) (hc_b : c_b * N_b = N_b * c_b) :
+    Phi_w₂ c_a N_a c_b N_b * Phi_w₂ c_a N_a c_b N_b =
+      Gap_w₂ c_a N_a c_b N_b := by
+  exact Phi_w₂_sq_eq_Gap_w₂ c_a N_a c_b N_b
+    h_nil_a h_reg_a h_nil_b h_reg_b h_ab h_ba h_asb h_sab
+    hc_a (comm_star_of_self_adjoint c_a N_a hc_a_star hc_a)
+    hc_b (comm_star_of_self_adjoint c_b N_b hc_b_star hc_b)
+
 /-!
 ### 4. Channel-Selective Projective Filtering & Eigenmode Annihilation (`WMC₆–WMC₈`)
 -/

@@ -7,6 +7,7 @@ import InfoGeometry.Core.JordanAssociatorRing
 import InfoGeometry.NilpotentPairingAnomalyToChiralBlockGapPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.GolayLeechMOGSheetPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.YangMillsNilpotentUnipotentVortexMassPoset
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic.NoncommRing
 
 /-!
@@ -601,6 +602,27 @@ theorem kkt_commutator_derivation (S A C : B) :
   dsimp [comm]
   noncomm_ring
 
+/-- The associative commutator satisfies the cyclic Jacobi identity, so the
+bracket used for the KKT sectors is a Lie bracket over the underlying additive
+group. -/
+theorem kkt_comm_jacobi (A C D : B) :
+    comm A (comm C D) + comm C (comm D A) + comm D (comm A C) = 0 := by
+  dsimp [comm]
+  noncomm_ring
+
+/-- Alternating law for the commutator bracket. -/
+theorem kkt_comm_self (A : B) : comm A A = 0 := by
+  dsimp [comm]
+  exact sub_self _
+
+/-- The owner bracket agrees with mathlib's canonical Lie bracket on an
+associative ring. The instance stays local because mathlib intentionally does
+not install it globally, avoiding a bracket-instance diamond for modules. -/
+theorem kkt_comm_eq_native_lie_bracket (A C : B) :
+    (letI : LieRing B := LieRing.ofAssociativeRing
+     comm A C = ⁅A, C⁆) := by
+  rfl
+
 /-- Commutators are additive in the first argument, including natural scalar
 multiples. This lets eigenvalue equations be propagated through brackets. -/
 theorem kkt_comm_nsmul_left (k : ℕ) (A C : B) :
@@ -619,6 +641,24 @@ theorem kkt_comm_nsmul_right (k : ℕ) (A C : B) :
   | succ k ih =>
       rw [succ_nsmul, kkt_comm_add_right, ih, succ_nsmul]
 
+/-- Integer scalar multiples in the first commutator argument. -/
+theorem kkt_comm_zsmul_left (k : ℤ) (A C : B) :
+    comm (k • A) C = k • comm A C := by
+  let f : B →+ B :=
+    { toFun := fun x => comm x C
+      map_zero' := by simp [comm]
+      map_add' := fun x y => kkt_comm_add_left x y C }
+  exact f.map_zsmul k A
+
+/-- Integer scalar multiples in the second commutator argument. -/
+theorem kkt_comm_zsmul_right (k : ℤ) (A C : B) :
+    comm A (k • C) = k • comm A C := by
+  let f : B →+ B :=
+    { toFun := fun x => comm A x
+      map_zero' := by simp [comm]
+      map_add' := fun x y => kkt_comm_add_right A x y }
+  exact f.map_zsmul k C
+
 /-- The `ad(S)` grade of a commutator is the sum of the grades. The natural
 grades here cover the nonnegative half of the five-grade decomposition. -/
 theorem kkt_ad_grade_bracket_add (S A C : B) (m n : ℕ)
@@ -626,6 +666,29 @@ theorem kkt_ad_grade_bracket_add (S A C : B) (m n : ℕ)
     comm S (comm A C) = (m + n) • comm A C := by
   rw [kkt_commutator_derivation, hA, hC,
     kkt_comm_nsmul_left, kkt_comm_nsmul_right, ← add_nsmul]
+
+/-- A grade `+1` bracket with a grade `-1` element has grade zero. -/
+theorem kkt_ad_grade_bracket_one_minus_one (S A C : B)
+    (hA : comm S A = A) (hC : comm S C = -C) :
+    comm S (comm A C) = 0 := by
+  rw [kkt_commutator_derivation, hA, hC]
+  dsimp [comm]
+  noncomm_ring
+
+/-- The bracket of two grade `+1` elements has grade `+2`. -/
+theorem kkt_ad_grade_bracket_one_one (S A C : B)
+    (hA : comm S A = A) (hC : comm S C = C) :
+    comm S (comm A C) = (2 : ℕ) • comm A C := by
+  exact kkt_ad_grade_bracket_add S A C 1 1
+    (by simpa using hA) (by simpa using hC)
+
+/-- Full signed-grade addition law: the adjoint grade of a bracket is the sum
+of the integer adjoint grades of its inputs. -/
+theorem kkt_ad_zgrade_bracket_add (S A C : B) (m n : ℤ)
+    (hA : comm S A = m • A) (hC : comm S C = n • C) :
+    comm S (comm A C) = (m + n) • comm A C := by
+  rw [kkt_commutator_derivation, hA, hC,
+    kkt_comm_zsmul_left, kkt_comm_zsmul_right, add_zsmul]
 
 /-- Peirce-block composition: matching middle support idempotents compose,
 and orthogonal outer supports kill the reverse product. -/
@@ -649,6 +712,27 @@ theorem kkt_peirce_bracket_orthogonal (A E F D X Y : B)
           noncomm_ring
     _ = 0 - 0 := by rw [hEF, hDA, mul_zero, zero_mul, mul_zero, zero_mul]
     _ = 0 := by rw [sub_self]
+
+/-- The diagonal blocks of a three-piece Peirce decomposition are closed under
+the commutator. Cross terms vanish whenever the idempotent supports are
+pairwise orthogonal. -/
+theorem kkt_diagonal_peirce_bracket (P Q R X Y : B)
+    (hPQ : P * Q = 0) (hQP : Q * P = 0)
+    (hPR : P * R = 0) (hRP : R * P = 0)
+    (hQR : Q * R = 0) (hRQ : R * Q = 0) :
+    comm (P * X * P + Q * X * Q + R * X * R)
+        (P * Y * P + Q * Y * Q + R * Y * R) =
+      comm (P * X * P) (P * Y * P) +
+      comm (Q * X * Q) (Q * Y * Q) +
+      comm (R * X * R) (R * Y * R) := by
+  have hPQ₁ := kkt_peirce_bracket_orthogonal P P Q Q X Y hPQ hQP
+  have hQP₁ := kkt_peirce_bracket_orthogonal Q Q P P X Y hQP hPQ
+  have hPR₁ := kkt_peirce_bracket_orthogonal P P R R X Y hPR hRP
+  have hRP₁ := kkt_peirce_bracket_orthogonal R R P P X Y hRP hPR
+  have hQR₁ := kkt_peirce_bracket_orthogonal Q Q R R X Y hQR hRQ
+  have hRQ₁ := kkt_peirce_bracket_orthogonal R R Q Q X Y hRQ hQR
+  simp only [kkt_comm_add_left, kkt_comm_add_right,
+    hPQ₁, hQP₁, hPR₁, hRP₁, hQR₁, hRQ₁, add_zero, zero_add]
 
 end RingHelpers
 
@@ -802,6 +886,64 @@ theorem peirce_five_grade_decomposition (N_plus X : B)
             peirceGradeMinus1, peirceGradeMinus2]
           abel
 
+/-- The grade-zero sector is closed under the commutator: its bracket is the
+sum of the three diagonal Peirce-block brackets. -/
+theorem comm_peirceGradeZero_closed (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (peirceGradeZero N_plus X) (peirceGradeZero N_plus Y) =
+      comm (G_0_P N_plus X) (G_0_P N_plus Y) +
+      comm (G_0_Q N_plus X) (G_0_Q N_plus Y) +
+      comm (G_0_neutral N_plus X) (G_0_neutral N_plus Y) := by
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hPQ : P N_plus * Q N_plus = 0 :=
+    YangMillsVortexPoset.P_mul_Q N_plus h_nil
+  have hQP : Q N_plus * P N_plus = 0 :=
+    YangMillsVortexPoset.Q_mul_P N_plus h_nil
+  have hPG : P N_plus * Gap N_plus = P N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, mul_add, hP2, hPQ]
+    exact add_zero (P N_plus)
+  have hGP : Gap N_plus * P N_plus = P N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, add_mul, hP2, hQP]
+    exact add_zero (P N_plus)
+  have hQG : Q N_plus * Gap N_plus = Q N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, mul_add, hQP, hQ2]
+    exact zero_add (Q N_plus)
+  have hGQ : Gap N_plus * Q N_plus = Q N_plus := by
+    rw [Gap_eq_P_add_Q N_plus h_nil h_reg, add_mul, hPQ, hQ2]
+    exact zero_add (Q N_plus)
+  have hPR : P N_plus * peirceR N_plus = 0 := by
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, hPG, sub_self]
+  have hRP : peirceR N_plus * P N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul, hGP, sub_self]
+  have hQR : Q N_plus * peirceR N_plus = 0 := by
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, hQG, sub_self]
+  have hRQ : peirceR N_plus * Q N_plus = 0 := by
+    dsimp [peirceR]
+    rw [sub_mul, one_mul, hGQ, sub_self]
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := Gap_idem N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  have hDiag := kkt_diagonal_peirce_bracket
+    (P N_plus) (Q N_plus) (peirceR N_plus) X Y
+    hPQ hQP hPR hRP hQR hRQ
+  change comm (P N_plus * X * P N_plus + Q N_plus * X * Q N_plus +
+      peirceR N_plus * X * peirceR N_plus)
+      (P N_plus * Y * P N_plus + Q N_plus * Y * Q N_plus +
+      peirceR N_plus * Y * peirceR N_plus) =
+    comm (P N_plus * X * P N_plus) (P N_plus * Y * P N_plus) +
+      comm (Q N_plus * X * Q N_plus) (Q N_plus * Y * Q N_plus) +
+      comm (peirceR N_plus * X * peirceR N_plus)
+        (peirceR N_plus * Y * peirceR N_plus)
+  exact hDiag
+
 omit [StarRing B] in
 /-- **Theorem `KKT₁` (Positive Jordan Quadratic Triple Sandwich)**:
 `K_{+2}(N_+, X) = 2 • G_{+2}(N_+, X)`. -/
@@ -814,6 +956,24 @@ theorem K_plus2_eq_two_sandwich (N_plus X : B) (h_nil : N_plus * N_plus = 0) :
 theorem K_minus2_eq_two_sandwich (N_plus X : B) (h_nil : N_plus * N_plus = 0) :
     K_minus2 N_plus X = (2 : ℕ) • G_minus2 N_plus X :=
   kkt_jordan_assoc_eq_two_sandwich (star N_plus) X (star_N_plus_sq N_plus h_nil)
+
+/-- The involution exchanges the two extremal Jordan-associator generators. -/
+theorem star_K_plus2 (N_plus X : B) (h_nil : N_plus * N_plus = 0) :
+    star (K_plus2 N_plus X) = K_minus2 N_plus (star X) := by
+  rw [K_plus2_eq_two_sandwich N_plus X h_nil,
+    K_minus2_eq_two_sandwich N_plus (star X) h_nil]
+  simp only [two_nsmul, star_add]
+  dsimp [G_plus2, G_minus2]
+  simp only [star_mul]
+  noncomm_ring
+
+/-- The involution also exchanges the negative extremal generator back to the
+positive one. This follows from the preceding identity and involutivity. -/
+theorem star_K_minus2 (N_plus X : B) (h_nil : N_plus * N_plus = 0) :
+    star (K_minus2 N_plus X) = K_plus2 N_plus (star X) := by
+  have h := star_K_plus2 N_plus (star X) h_nil
+  have h' := congrArg star h
+  simpa only [star_star] using h'.symm
 
 /-- **Theorem `KKT₂` (Extremal Grade `+2` Adjoint Eigenvalue)**:
 `[Σ, K_{+2}(N_+, X)] = 2 • K_{+2}(N_+, X)`. -/

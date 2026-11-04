@@ -365,15 +365,19 @@ theorem blockLower_idempotent_intervention_synthesis
         (D₁ * (1 - P) * D₂) ∧
     idempotentCompression Q (idempotentCompression Q T) =
       idempotentCompression Q T ∧
+    T - idempotentCompression Q T = Q * T + T * Q - Q * T * Q ∧
     Q * idempotentCompression Q T = 0 ∧
     idempotentCompression Q T * Q = 0 ∧
+    peirce11 P (T - idempotentCompression Q T) = 0 ∧
     peirce11 P (idempotentCompression Q (blockLower P F L D)) =
       peirce11 P F := by
   exact ⟨blockLower_upper_right hP F L D,
     blockLower_mul hP F₁ L₁ D₁ F₂ L₂ D₂,
     idempotentCompression_idempotent hQ T,
+    idempotentCompression_removed_terms Q T,
     idempotentCompression_left_zero hQ T,
     idempotentCompression_right_zero hQ T,
+    idempotentCompression_removed_peirce11 hPQ hQP T,
     by rw [idempotentCompression_peirce11 hPQ hQP, blockLower_peirce11 hP]⟩
 
 end CornerPreservation

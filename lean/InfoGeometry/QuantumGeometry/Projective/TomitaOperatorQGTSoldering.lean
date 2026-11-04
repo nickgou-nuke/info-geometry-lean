@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.QuantumGeometry.Projective.QGT
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinCarrier
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Tactic
 
@@ -38,6 +45,7 @@ open ContinuousLinearMap
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.GeometricQuantumTensor
 open InfoGeometry.QuantumGeometry.Projective
+open InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinCarrier
 
 variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -175,6 +183,18 @@ theorem horizontalOperatorMetric_eq_fubiniStudyMetric
   rw [nambu_real_inner_eq_re_complex_inner]
   unfold fubiniStudyMetric
   rw [← QGT_eq_inner_projOrth]
+
+/-- The Krein-derived inner-product core on the doubled chiral carrier reads
+the real part of the projective QGT on horizontal tangent vectors. This
+identifies the abstract Krein hilbertization with the concrete Fubini--Study
+metric in the complex Nambu realization. -/
+theorem chiralKreinCore_inner_eq_fubiniStudyMetric
+    (ψ : NormalizedState NambuH) (X Y : EndC) :
+    (chiralHestenesKreinSpace (E := H)).inducedInnerProductCore.inner
+        (projOrth ψ X) (projOrth ψ Y) = fubiniStudyMetric ψ X Y := by
+  rw [chiralHestenesKreinSpace_core_inner,
+    nambu_real_inner_eq_re_complex_inner, ← QGT_eq_inner_projOrth]
+  rfl
 
 /-- On the positive polarization sector the operatorial Berry seed is `Im Q`. -/
 theorem horizontalOperatorBerry_eq_QGT_im

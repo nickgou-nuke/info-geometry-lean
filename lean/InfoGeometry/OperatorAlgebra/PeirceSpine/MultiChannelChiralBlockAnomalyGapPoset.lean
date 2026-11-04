@@ -1383,6 +1383,119 @@ theorem Phi_w₃_sq_eigenmode_channel1 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
       h13_ab h13_ba h13_asb h13_sab hc1 hcs1,
     sub_self]
 
+/-- The three-channel weighted gap acts on channel two's weighted block by
+its squared weight. Only the selected channel's weight commutation is needed. -/
+theorem Gap_w₃_mul_channel2 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h2_nil : N₂ * N₂ = 0) (h2_reg : N₂ * star N₂ * N₂ = N₂)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂) :
+    Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * (c₂ * Phi N₂) =
+      (c₂ * c₂) * (c₂ * Phi N₂) := by
+  dsimp [Gap_w₃, Gap_w₂]
+  have h1 : ((c₁ * c₁) * Gap N₁) * (c₂ * Phi N₂) = 0 := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_orthog N₁ c₂ N₂ h12_ab h12_ba
+        h12_asb h12_sab hc2 hcs2,
+      mul_zero]
+  have h2 : ((c₂ * c₂) * Gap N₂) * (c₂ * Phi N₂) =
+      (c₂ * c₂) * (c₂ * Phi N₂) := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_same c₂ N₂ h2_nil h2_reg hc2 hcs2]
+  have h3 : ((c₃ * c₃) * Gap N₃) * (c₂ * Phi N₂) = 0 := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_orthog N₃ c₂ N₂ h23_ba h23_ab
+        (N_b_mul_star_N_a N₂ N₃ h23_asb)
+        (star_N_b_mul_N_a N₂ N₃ h23_sab) hc2 hcs2,
+      mul_zero]
+  rw [add_mul, add_mul, h1, h2, h3, zero_add, add_zero]
+
+/-- The channel-two weighted block satisfies the three-channel secular
+equation at squared weight `c₂²`. -/
+theorem Phi_w₃_sq_eigenmode_channel2 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h1_nil : N₁ * N₁ = 0) (h1_reg : N₁ * star N₁ * N₁ = N₁)
+    (h2_nil : N₂ * N₂ = 0) (h2_reg : N₂ * star N₂ * N₂ = N₂)
+    (h3_nil : N₃ * N₃ = 0) (h3_reg : N₃ * star N₃ * N₃ = N₃)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    (Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ - c₂ * c₂) *
+      (c₂ * Phi N₂) = 0 := by
+  rw [sub_mul,
+    Phi_w₃_sq_eq_Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃
+      h1_nil h1_reg h2_nil h2_reg h3_nil h3_reg
+      h12_ab h12_ba h12_asb h12_sab
+      h13_ab h13_ba h13_asb h13_sab
+      h23_ab h23_ba h23_asb h23_sab hc1 hcs1 hc2 hcs2 hc3 hcs3,
+    Gap_w₃_mul_channel2 c₁ N₁ c₂ N₂ c₃ N₃
+      h2_nil h2_reg h12_ab h12_ba h12_asb h12_sab
+      h23_ab h23_ba h23_asb h23_sab hc2 hcs2,
+    sub_self]
+
+/-- The three-channel weighted gap acts on channel three's weighted block by
+its squared weight. Only the selected channel's weight commutation is needed. -/
+theorem Gap_w₃_mul_channel3 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h3_nil : N₃ * N₃ = 0) (h3_reg : N₃ * star N₃ * N₃ = N₃)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * (c₃ * Phi N₃) =
+      (c₃ * c₃) * (c₃ * Phi N₃) := by
+  dsimp [Gap_w₃, Gap_w₂]
+  have h1 : ((c₁ * c₁) * Gap N₁) * (c₃ * Phi N₃) = 0 := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_orthog N₁ c₃ N₃ h13_ab h13_ba
+        h13_asb h13_sab hc3 hcs3,
+      mul_zero]
+  have h2 : ((c₂ * c₂) * Gap N₂) * (c₃ * Phi N₃) = 0 := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_orthog N₂ c₃ N₃ h23_ab h23_ba
+        h23_asb h23_sab hc3 hcs3,
+      mul_zero]
+  have h3 : ((c₃ * c₃) * Gap N₃) * (c₃ * Phi N₃) =
+      (c₃ * c₃) * (c₃ * Phi N₃) := by
+    rw [mul_assoc,
+      Gap_mul_weighted_Phi_same c₃ N₃ h3_nil h3_reg hc3 hcs3]
+  rw [add_mul, add_mul, h1, h2, h3, zero_add, zero_add]
+
+/-- The channel-three weighted block satisfies the three-channel secular
+equation at squared weight `c₃²`. -/
+theorem Phi_w₃_sq_eigenmode_channel3 (c₁ N₁ c₂ N₂ c₃ N₃ : B)
+    (h1_nil : N₁ * N₁ = 0) (h1_reg : N₁ * star N₁ * N₁ = N₁)
+    (h2_nil : N₂ * N₂ = 0) (h2_reg : N₂ * star N₂ * N₂ = N₂)
+    (h3_nil : N₃ * N₃ = 0) (h3_reg : N₃ * star N₃ * N₃ = N₃)
+    (h12_ab : N₁ * N₂ = 0) (h12_ba : N₂ * N₁ = 0)
+    (h12_asb : N₁ * star N₂ = 0) (h12_sab : star N₁ * N₂ = 0)
+    (h13_ab : N₁ * N₃ = 0) (h13_ba : N₃ * N₁ = 0)
+    (h13_asb : N₁ * star N₃ = 0) (h13_sab : star N₁ * N₃ = 0)
+    (h23_ab : N₂ * N₃ = 0) (h23_ba : N₃ * N₂ = 0)
+    (h23_asb : N₂ * star N₃ = 0) (h23_sab : star N₂ * N₃ = 0)
+    (hc1 : c₁ * N₁ = N₁ * c₁) (hcs1 : c₁ * star N₁ = star N₁ * c₁)
+    (hc2 : c₂ * N₂ = N₂ * c₂) (hcs2 : c₂ * star N₂ = star N₂ * c₂)
+    (hc3 : c₃ * N₃ = N₃ * c₃) (hcs3 : c₃ * star N₃ = star N₃ * c₃) :
+    (Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ * Phi_w₃ c₁ N₁ c₂ N₂ c₃ N₃ - c₃ * c₃) *
+      (c₃ * Phi N₃) = 0 := by
+  rw [sub_mul,
+    Phi_w₃_sq_eq_Gap_w₃ c₁ N₁ c₂ N₂ c₃ N₃
+      h1_nil h1_reg h2_nil h2_reg h3_nil h3_reg
+      h12_ab h12_ba h12_asb h12_sab
+      h13_ab h13_ba h13_asb h13_sab
+      h23_ab h23_ba h23_asb h23_sab hc1 hcs1 hc2 hcs2 hc3 hcs3,
+    Gap_w₃_mul_channel3 c₁ N₁ c₂ N₂ c₃ N₃
+      h3_nil h3_reg h13_ab h13_ba h13_asb h13_sab
+      h23_ab h23_ba h23_asb h23_sab hc3 hcs3,
+    sub_self]
+
 /-- **`WMC₁₀` Cyclotomic Root Weight Specialization (`Φ₆(u) = u² - u + 1 = 0`):**
     When a channel weight `u` is a root of `u² - u + 1 = 0`, its squared chiral block
     `(u * Φ(N))²` reduces linearly to `(u - 1) * Gap(N)`. -/

@@ -914,6 +914,147 @@ theorem peirce_z0_m1_bracket_mem_m1 (N_plus X Y : B)
   · exact peirceGradeMinus1_L_corner_mem N_plus A h_nil h_reg
   · exact peirceGradeMinus1_R_corner_mem N_plus C h_nil h_reg
 
+/-- Direct subgroup-level closure of grade zero on grade `-1`. -/
+theorem peirce_z0_m1_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .z0)
+    (hy : y ∈ tkkPeirceGrade N_plus .m1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m1 := by
+  change x ∈ peirceGradeZeroSubgroup N_plus at hx
+  change y ∈ peirceGradeMinus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeZero N_plus X) (peirceGradeMinus1 N_plus Y) ∈
+        peirceGradeMinus1Subgroup N_plus
+  exact peirce_z0_m1_bracket_mem_m1 N_plus X Y h_nil h_reg
+
+/-- Reversing the grade-zero/grade-`-1` bracket preserves grade `-1`. -/
+theorem peirce_m1_z0_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m1)
+    (hy : y ∈ tkkPeirceGrade N_plus .z0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .m1 := by
+  change x ∈ peirceGradeMinus1Subgroup N_plus at hx
+  change y ∈ peirceGradeZeroSubgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradeMinus1Subgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradeMinus1Subgroup N_plus).neg_mem
+    (peirce_z0_m1_subgroup_bracket_mem N_plus y x h_nil h_reg hy hx)
+
+/-- Direct subgroup-level closure of grade zero on grade `+1`. -/
+theorem peirce_z0_p1_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .z0)
+    (hy : y ∈ tkkPeirceGrade N_plus .p1) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p1 := by
+  change x ∈ peirceGradeZeroSubgroup N_plus at hx
+  change y ∈ peirceGradePlus1Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeZero N_plus X) (peirceGradePlus1 N_plus Y) ∈
+        peirceGradePlus1Subgroup N_plus
+  exact peirce_z0_p1_bracket_mem_p1 N_plus X Y h_nil h_reg
+
+/-- Reversing the grade-zero/grade-`+1` bracket preserves grade `+1`. -/
+theorem peirce_p1_z0_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p1)
+    (hy : y ∈ tkkPeirceGrade N_plus .z0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p1 := by
+  change x ∈ peirceGradePlus1Subgroup N_plus at hx
+  change y ∈ peirceGradeZeroSubgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradePlus1Subgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradePlus1Subgroup N_plus).neg_mem
+    (peirce_z0_p1_subgroup_bracket_mem N_plus y x h_nil h_reg hy hx)
+
+/-- Subgroup-level closure of the opposite extremal Peirce corners into grade zero. -/
+theorem peirce_p2_m2_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p2)
+    (hy : y ∈ tkkPeirceGrade N_plus .m2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .z0 := by
+  change x ∈ peirceGradePlus2Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus2Subgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradePlus2 N_plus X) (peirceGradeMinus2 N_plus Y) ∈
+        peirceGradeZeroSubgroup N_plus
+  exact peirce_p2_m2_bracket_mem_z0 N_plus X Y h_nil h_reg
+
+/-- Reversing the opposite extremal bracket also lands in grade zero. -/
+theorem peirce_m2_p2_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m2)
+    (hy : y ∈ tkkPeirceGrade N_plus .p2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .z0 := by
+  change x ∈ peirceGradeMinus2Subgroup N_plus at hx
+  change y ∈ peirceGradePlus2Subgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradeZeroSubgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradeZeroSubgroup N_plus).neg_mem
+    (peirce_p2_m2_subgroup_bracket_mem N_plus y x h_nil h_reg hy hx)
+
+/-- Reversed `(+2,-1)` closure, with output in grade `+1`. -/
+theorem peirce_m1_p2_subgroup_bracket_mem (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m1)
+    (hy : y ∈ tkkPeirceGrade N_plus .p2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .p1 := by
+  change x ∈ peirceGradeMinus1Subgroup N_plus at hx
+  change y ∈ peirceGradePlus2Subgroup N_plus at hy
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+    peirceGradePlus1Subgroup N_plus
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact (peirceGradePlus1Subgroup N_plus).neg_mem
+    (peirce_p2_m1_bracket_mem_p1 N_plus y x h_nil h_reg hy hx)
+
+/-- Reversed `(-2,-1)` vanishing outside the five-grade window. -/
+theorem peirce_m1_m2_subgroup_bracket_eq_zero (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .m1)
+    (hy : y ∈ tkkPeirceGrade N_plus .m2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  change x ∈ peirceGradeMinus1Subgroup N_plus at hx
+  change y ∈ peirceGradeMinus2Subgroup N_plus at hy
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact neg_eq_zero.mpr
+    (peirce_m2_m1_bracket_eq_zero N_plus y x h_nil h_reg hy hx)
+
+/-- Reversed `(+2,+1)` vanishing outside the five-grade window. -/
+theorem peirce_p1_p2_subgroup_bracket_eq_zero (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .p1)
+    (hy : y ∈ tkkPeirceGrade N_plus .p2) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y = 0 := by
+  change x ∈ peirceGradePlus1Subgroup N_plus at hx
+  change y ∈ peirceGradePlus2Subgroup N_plus at hy
+  rw [OperatorAlgebra.PeirceSpine.KantorKoecherTitsClosurePoset.kkt_comm_antisymm]
+  exact neg_eq_zero.mpr
+    (peirce_p2_p1_bracket_eq_zero N_plus y x h_nil h_reg hy hx)
+
 /-- Package the nilpotent Peirce sectors as a concrete five-graded Lie algebra.
 The hypotheses on the nilpotent generate the Peirce decomposition; torsion
 freeness ensures the integer adjoint grades identify those components. -/

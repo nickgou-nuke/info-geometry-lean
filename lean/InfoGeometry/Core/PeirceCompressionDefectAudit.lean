@@ -10,3 +10,9 @@ import InfoGeometry.Core.PeirceCompressionDefect
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_defect_sum
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect_star
 #print axioms InfoGeometry.Core.PeirceCompressionDefect.compression_square_defect_selfAdjoint
+
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.defect_compression
+
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.defect_nested_compression
+
+#print axioms InfoGeometry.Core.PeirceCompressionDefect.defect_compression_flag

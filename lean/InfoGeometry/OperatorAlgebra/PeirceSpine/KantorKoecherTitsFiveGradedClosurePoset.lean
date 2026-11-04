@@ -1203,6 +1203,38 @@ theorem comm_G_0_P_G_plus1_L (N_plus X Y : B)
   dsimp [comm]
   rw [hL, hR, sub_zero]
 
+/-- The negative diagonal grade-zero block annihilates the left `+1` carrier:
+its two products vanish by the orthogonality of the `Q` and `P` supports. -/
+theorem comm_G_0_Q_G_plus1_L (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    comm (G_0_Q N_plus X) (G_plus1_L N_plus Y) = 0 := by
+  have hQN : Q N_plus * N_plus = 0 := by
+    dsimp [Q]
+    rw [mul_assoc, h_nil, mul_zero]
+  have hRQ : (1 - Gap N_plus) * Q N_plus = 0 := by
+    have hGapStar := Gap_mul_star_N_plus N_plus h_nil h_reg
+    dsimp [Q]
+    calc (1 - Gap N_plus) * (star N_plus * N_plus)
+        = ((1 - Gap N_plus) * star N_plus) * N_plus := by rw [mul_assoc]
+      _ = (star N_plus - Gap N_plus * star N_plus) * N_plus := by rw [sub_mul, one_mul]
+      _ = (star N_plus - star N_plus) * N_plus := by rw [hGapStar]
+      _ = 0 := by rw [sub_self, zero_mul]
+  have hForward : G_0_Q N_plus X * G_plus1_L N_plus Y = 0 := by
+    dsimp [G_0_Q, G_plus1_L]
+    calc (Q N_plus * X * Q N_plus) * (N_plus * Y * (1 - Gap N_plus))
+        = (Q N_plus * X) * (Q N_plus * N_plus) * (Y * (1 - Gap N_plus)) := by
+            noncomm_ring
+      _ = 0 := by rw [hQN, mul_zero, zero_mul]
+  have hBackward : G_plus1_L N_plus Y * G_0_Q N_plus X = 0 := by
+    dsimp [G_0_Q, G_plus1_L]
+    calc (N_plus * Y * (1 - Gap N_plus)) * (Q N_plus * X * Q N_plus)
+        = (N_plus * Y) * ((1 - Gap N_plus) * Q N_plus) * (X * Q N_plus) := by
+            noncomm_ring
+      _ = 0 := by rw [hRQ, mul_zero, zero_mul]
+  dsimp [comm]
+  rw [hForward, hBackward, sub_self]
+
 /-- Helper: `Sigma N_plus * Q N_plus = -Q N_plus`. -/
 theorem Sigma_mul_Q_eq_neg_Q (N_plus : B)
     (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus) :

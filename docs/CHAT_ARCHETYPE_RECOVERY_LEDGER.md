@@ -2572,3 +2572,53 @@ source are not repo definitions:
 This closes the occurrence-specific owner mapping for this second A29–A44
 block at the source-to-owner level. It does not constitute a fresh Lean build;
 the source claims above are not promoted beyond the exact owner statements.
+
+### 2026-11-04: Section 121 Connes/Higgs/Bousso source-to-owner scope audit
+
+I compared Section 121 in
+`cached/aistudio_extracts/aistudio_prompt_1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or/transcript.md`
+(proposal at lines 30188–30364 and its acceptance/telemetry claims beginning
+near line 30374) with the imported owner
+[`ConnesSpectralHiggsBoussoBound.lean`](../lean/InfoGeometry/QuantumGravity/ConnesSpectralHiggsBoussoBound.lean)
+and its integer examples in
+[`ConnesSpectralHiggsBoussoBoundAudit.lean`](../lean/InfoGeometry/QuantumGravity/ConnesSpectralHiggsBoussoBoundAudit.lean).
+Both owner files are imported by `InfoGeometry.All`; the main owner docstring
+explicitly limits the formalization to finite matrix-coordinate and scalar
+polynomial identities.
+
+- **Finite matrix identity present:** `SheetMatrixCoord2` defines a four-entry
+  matrix-coordinate record and multiplication over `[CommRing R]`;
+  `finite_sheet_matrix_square` and `finite_sheet_matrix_trace_square` prove
+  the stated coordinate square and trace formula. The coefficients commute,
+  and the module does not construct a Hilbert space, unbounded operator,
+  spectral triple, or spectral action. The transcript's assertion that this
+  establishes Connes noncommutative geometry and a geometric mass mechanism is
+  therefore stronger than the owner theorem.
+- **Potential claim narrowed:** `higgs_vacuum_minima_zero` proves the polynomial
+  vanishes at `ϕ = ±v`; `spectralHiggsPotential_nonneg` proves nonnegativity
+  when `λ ≥ 0`. The owner does not prove that these are the only zeros or
+  characterize global minimizers, and does not derive the polynomial from a
+  spectral action. The exact-minima and spontaneous-symmetry-breaking wording
+  in the transcript is not established by those two lemmas.
+- **Raychaudhuri claim reduced to arithmetic:**
+  `raychaudhuriFocusingRate2` is a scalar expression and
+  `raychaudhuri_scalar_rhs_nonpos` proves its sign under scalar inequalities.
+  There is no congruence, affine parameter, derivative, differential equation,
+  or evolving light-sheet in the owner.
+- **Bousso claim is conditional telescoping:**
+  `two_segment_scalar_bound_transitive` derives a bound from two already
+  supplied segment bounds and a nonnegative final-area scalar. It neither
+  derives the local segment bounds nor models entropy, area geometry, or
+  covariant light-sheets. The transcript's “Majorana shell” interpretation
+  has no corresponding carrier or map here.
+- The transcript's embedded Gate 4 telemetry, test count, 121-section
+  certification table, and repository-wide cleanliness assertions are
+  transcript text, not local build evidence. The integer audit file checks
+  examples and prints axiom dependencies but does not discharge the missing
+  geometric constructions.
+
+This is a source-to-owner audit, not a fresh kernel/build verification. The
+remaining Section 121 formalization work is to supply honest carriers and
+maps for any desired operator/spectral or geometric claims, and to prove exact
+potential minimizers only under assumptions that make the characterization
+true. No new theorem is inferred from the source's certificate labels.

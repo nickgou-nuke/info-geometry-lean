@@ -236,6 +236,23 @@ theorem weighted_finite_gap_mul_channel
   · intro hnot
     exact (hnot hk).elim
 
+/-- Self-adjoint-weight interface for the channel filter: the only weight
+commutation assumptions are `c i * N i = N i * c i` within each channel. -/
+theorem weighted_finite_gap_mul_channel_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B) (k : ι) (hk : k ∈ s)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    (∑ i ∈ s, (c i * c i) * Gap (N i)) * (c k * Phi (N k)) =
+      (c k * c k) * (c k * Phi (N k)) := by
+  exact weighted_finite_gap_mul_channel s c N k hk h_nil h_reg h_comm
+    (self_adjoint_weights_commute_with_channel_adjoints s c N
+      h_selfadjoint h_comm) h_cross
+
 /-- The weighted finite block obeys the channelwise secular equation: its
 square minus the selected channel's squared weight annihilates that channel's
 weighted chiral block. -/
@@ -254,6 +271,23 @@ theorem weighted_finite_block_secular_channel
     sub_mul,
     weighted_finite_gap_mul_channel s c N k hk h_nil h_reg h_comm h_comm_star h_cross,
     sub_self]
+
+/-- Self-adjoint-weight form of the channelwise secular equation, requiring
+only channel-local commutation between each weight and its nilpotent. -/
+theorem weighted_finite_block_secular_channel_of_self_adjoint_weights
+    (s : Finset ι) (c N : ι → B) (k : ι) (hk : k ∈ s)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_selfadjoint : ∀ i ∈ s, star (c i) = c i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    ((∑ i ∈ s, c i * Phi (N i)) * (∑ i ∈ s, c i * Phi (N i)) - c k * c k) *
+      (c k * Phi (N k)) = 0 := by
+  exact weighted_finite_block_secular_channel s c N k hk h_nil h_reg h_comm
+    (self_adjoint_weights_commute_with_channel_adjoints s c N
+      h_selfadjoint h_comm) h_cross
 
 omit [StarRing B] in
 /-- Negating the left input of an anticommutator negates the result. -/

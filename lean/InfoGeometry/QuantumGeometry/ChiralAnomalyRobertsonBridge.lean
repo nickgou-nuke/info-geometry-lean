@@ -171,6 +171,30 @@ theorem regular_gap_pythagorean_decomposition (N : EndH)
       rw [pow_two, pow_two, pow_two]
       exact h_pyth
 
+/-- The anomaly preserves the norm of a vector exactly when that vector is
+already in the support of the regular gap projection. -/
+theorem regular_anomaly_norm_saturation_iff_gap_fixed (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
+    ‖Sigma N ψ‖ = ‖ψ‖ ↔ Gap N ψ = ψ := by
+  rw [← regular_gap_norm_eq_anomaly_norm N h_nil h_reg ψ]
+  constructor
+  · intro h_norm
+    have h_pyth := regular_gap_pythagorean_decomposition N h_nil h_reg ψ
+    have h_comp_sq : ‖(1 - Gap N) ψ‖ ^ 2 = 0 := by
+      rw [h_norm] at h_pyth
+      nlinarith [h_pyth]
+    have h_comp_norm : ‖(1 - Gap N) ψ‖ = 0 := by
+      nlinarith [h_comp_sq, sq_nonneg (‖(1 - Gap N) ψ‖ : ℝ)]
+    have h_comp : (1 - Gap N) ψ = 0 := norm_eq_zero.mp h_comp_norm
+    have h_split : ψ = Gap N ψ + (1 - Gap N) ψ := by
+      change ψ = Gap N ψ + (ψ - Gap N ψ)
+      calc ψ = (ψ - Gap N ψ) + Gap N ψ := (sub_add_cancel ψ (Gap N ψ)).symm
+        _ = Gap N ψ + (ψ - Gap N ψ) := add_comm _ _
+    rw [h_comp, add_zero] at h_split
+    exact h_split.symm
+  · intro h_fixed
+    exact congrArg (fun v : H => ‖v‖) h_fixed
+
 /-- The regular anomaly support projection is contractive on vectors. -/
 theorem regular_gap_nonexpansive (N : EndH)
     (h_nil : N * N = 0) (h_reg : N * star N * N = N) (ψ : H) :
@@ -187,6 +211,21 @@ theorem regular_gap_opNorm_le_one (N : EndH)
   apply ContinuousLinearMap.opNorm_le_bound (Gap N) zero_le_one
   intro ψ
   simpa using regular_gap_nonexpansive N h_nil h_reg ψ
+
+/-- A nonzero regular nilpotent channel has a nonzero support projection;
+its projection norm is therefore exactly one. -/
+theorem regular_gap_opNorm_eq_one_of_ne_zero (N : EndH)
+    (h_nil : N * N = 0) (h_reg : N * star N * N = N) (hN : N ≠ 0) :
+    ‖Gap N‖ = 1 := by
+  have h_fix : Gap N * N = N := Gap_mul_N_plus N h_nil h_reg
+  have hN_norm : 0 < ‖N‖ := norm_pos_iff.mpr hN
+  have h_lower_mul : (1 : ℝ) * ‖N‖ ≤ ‖Gap N‖ * ‖N‖ := by
+    calc (1 : ℝ) * ‖N‖ = ‖N‖ := one_mul _
+      _ = ‖Gap N * N‖ := by rw [h_fix]
+      _ ≤ ‖Gap N‖ * ‖N‖ := norm_mul_le _ _
+  have h_lower : 1 ≤ ‖Gap N‖ :=
+    le_of_mul_le_mul_right h_lower_mul hN_norm
+  exact le_antisymm (regular_gap_opNorm_le_one N h_nil h_reg) h_lower
 
 /-- The imaginary multiple of the symmetric chiral block is skew-adjoint. -/
 theorem imaginaryPhi_skewAdjoint (N : EndH) :

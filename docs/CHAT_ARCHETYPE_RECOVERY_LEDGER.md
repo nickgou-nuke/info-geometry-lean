@@ -2543,6 +2543,16 @@ nilpotent pair, the ranges of `Gap(N)` and `Sigma(N)` coincide. The theorem
 law, `Sigma²(Gap ψ) = Gap ψ`. These are operator-range statements and do not
 claim a strictly positive lower spectral bound.
 
+It also characterizes norm saturation exactly:
+`regular_anomaly_norm_saturation_iff_gap_fixed` proves
+`‖Sigma(N) ψ‖ = ‖ψ‖ ↔ Gap(N) ψ = ψ`, using the Pythagorean decomposition of
+the support and complementary components.
+
+For a nonzero regular nilpotent, `regular_gap_opNorm_eq_one_of_ne_zero` also
+proves that the support projection has operator norm exactly one, using the
+fixed-vector identity `Gap(N) N = N` and the existing contraction bound. This
+is a norm statement for the projection, not a uniform spectral lower bound.
+
 The dedicated owner
 [`QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean`](../lean/InfoGeometry/QuantumGeometry/ChiralAnomalyQGTComponentBridge.lean)
 now closes the scalar QGT-component map for every normalized state: the
@@ -3137,6 +3147,13 @@ with each channel adjoint from self-adjointness and commutation with that
 channel's nilpotent. The assumptions remain channel-local; no weight needs to
 commute with another channel. Its locked owner build passed (845 jobs), as did
 the staged proof-proxy gate and semantic-vacuity check.
+
+The same reduced-hypothesis interface now covers finite channel-selective gap
+filtering and the corresponding secular annihilation equation, through
+`weighted_finite_gap_mul_channel_of_self_adjoint_weights` and
+`weighted_finite_block_secular_channel_of_self_adjoint_weights`. These reuse
+the general theorems after deriving adjoint commutation from each weight's
+self-adjointness; they add no cross-channel weight commutation premise.
 
 In the same work session, the KKT owner gained a mixed `+1`/`-1` bracket
 decomposition into its three diagonal Peirce blocks, plus top/bottom grade

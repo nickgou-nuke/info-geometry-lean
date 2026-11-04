@@ -46,6 +46,16 @@ private theorem corner_sandwich_outer (e f x : B) :
     e * (f * x * f) * e = (e * f) * x * (f * e) := by
   noncomm_ring
 
+omit [StarRing B] in
+private theorem comm_sandwich_corner (e x y : B)
+    (hee : e * e = e) :
+    (e * x * e) * (e * y * e) - (e * y * e) * (e * x * e) =
+      e * (x * e * y - y * e * x) * e := by
+  calc (e * x * e) * (e * y * e) - (e * y * e) * (e * x * e)
+      = (e * x * (e * e) * y * e) - (e * y * (e * e) * x * e) := by
+          noncomm_ring
+    _ = e * (x * e * y - y * e * x) * e := by rw [hee]; noncomm_ring
+
 /-- The positive-sheet diagonal corner belongs to the grade-zero range. -/
 theorem peirceGradeZero_P_corner_mem (N_plus X : B)
     (h_nil : N_plus * N_plus = 0)
@@ -124,6 +134,51 @@ theorem peirceGradeZero_R_corner_mem (N_plus X : B)
     peirceR N_plus * X * peirceR N_plus
   rw [corner_sandwich_outer, corner_sandwich_outer, corner_sandwich_outer]
   simp [hR2, hPR, hRP, hQR, hRQ]
+
+/-- Direct grade-zero self-bracket closure from its three diagonal corners. -/
+theorem peirce_z0_bracket_mem_z0 (N_plus x y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (hx : x ∈ tkkPeirceGrade N_plus .z0)
+    (hy : y ∈ tkkPeirceGrade N_plus .z0) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm x y ∈
+      tkkPeirceGrade N_plus .z0 := by
+  change x ∈ peirceGradeZeroSubgroup N_plus at hx
+  change y ∈ peirceGradeZeroSubgroup N_plus at hy
+  rcases hx with ⟨X, rfl⟩
+  rcases hy with ⟨Y, rfl⟩
+  change InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+      (peirceGradeZero N_plus X) (peirceGradeZero N_plus Y) ∈
+        peirceGradeZeroSubgroup N_plus
+  rw [comm_peirceGradeZero_closed N_plus X Y h_nil h_reg]
+  have hP2 : P N_plus * P N_plus = P N_plus :=
+    YangMillsVortexPoset.P_idem N_plus h_reg
+  have hQ2 : Q N_plus * Q N_plus = Q N_plus :=
+    YangMillsVortexPoset.Q_idem N_plus h_reg
+  have hR2 : peirceR N_plus * peirceR N_plus = peirceR N_plus := by
+    have hGap2 := OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Gap_idem
+      N_plus h_nil h_reg
+    dsimp [peirceR]
+    rw [mul_sub, mul_one, sub_mul, one_mul, hGap2, sub_self, sub_zero]
+  have hP : comm (G_0_P N_plus X) (G_0_P N_plus Y) =
+      G_0_P N_plus (X * P N_plus * Y - Y * P N_plus * X) := by
+    dsimp [comm, G_0_P]
+    exact comm_sandwich_corner (P N_plus) X Y hP2
+  have hQ : comm (G_0_Q N_plus X) (G_0_Q N_plus Y) =
+      G_0_Q N_plus (X * Q N_plus * Y - Y * Q N_plus * X) := by
+    dsimp [comm, G_0_Q]
+    exact comm_sandwich_corner (Q N_plus) X Y hQ2
+  have hR : comm (G_0_neutral N_plus X) (G_0_neutral N_plus Y) =
+      G_0_neutral N_plus (X * peirceR N_plus * Y -
+        Y * peirceR N_plus * X) := by
+    dsimp [comm, G_0_neutral]
+    exact comm_sandwich_corner (peirceR N_plus) X Y hR2
+  rw [hP, hQ, hR]
+  exact (peirceGradeZeroSubgroup N_plus).add_mem
+    ((peirceGradeZeroSubgroup N_plus).add_mem
+      (peirceGradeZero_P_corner_mem N_plus _ h_nil h_reg)
+      (peirceGradeZero_Q_corner_mem N_plus _ h_nil h_reg))
+    (peirceGradeZero_R_corner_mem N_plus _ h_nil h_reg)
 
 /-- The regular nilpotent generator belongs to the extremal positive Peirce
 grade, without any additive-torsion-freeness assumption. -/

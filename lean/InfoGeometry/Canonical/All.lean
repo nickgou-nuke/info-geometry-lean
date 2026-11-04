@@ -1682,6 +1682,7 @@ import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import InfoGeometry.Canonical.NilpotentQGTCartanBridge
+import InfoGeometry.Canonical.InnerConjugationSL2Casimir
 import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OnsagerSpineBridge
 import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage

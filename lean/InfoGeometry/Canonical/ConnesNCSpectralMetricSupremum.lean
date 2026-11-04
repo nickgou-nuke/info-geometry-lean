@@ -44,6 +44,49 @@ theorem pointwise_le_supremum_spectral_dist
   apply le_csSup h_bdd
   exact ⟨a, ha, rfl⟩
 
+/-- The Lip-1 constraint is equivariant under an isometric ring equivalence
+when both the Dirac element and observable are transported. -/
+theorem lipschitzBall_isometric_ringEquiv_iff
+    (e : A ≃+* A) (D a : A)
+    (hisom : ∀ x : A, ‖e x‖ = ‖x‖) :
+    LipschitzBall D a ↔ LipschitzBall (e D) (e a) := by
+  have hT : commutatorNorm (e D) (e a) = commutatorNorm D a :=
+    commutatorNorm_transport e.toRingHom D (e D) rfl hisom a
+  change commutatorNorm D a ≤ 1 ↔ commutatorNorm (e D) (e a) ≤ 1
+  rw [hT]
+
+/-- The Connes distance value set is unchanged by an isometric algebra
+equivalence when the two readouts are transported contravariantly. -/
+theorem spectralDistanceSet_isometric_ringEquiv
+    (e : A ≃+* A) (D : A) (ω₁ ω₂ : A → ℝ)
+    (hisom : ∀ x : A, ‖e x‖ = ‖x‖) :
+    spectralDistanceSet (e D) (ω₁ ∘ e.symm) (ω₂ ∘ e.symm) =
+      spectralDistanceSet D ω₁ ω₂ := by
+  ext r
+  constructor
+  · rintro ⟨b, hb, rfl⟩
+    refine ⟨e.symm b, ?_, rfl⟩
+    change LipschitzBall D (e.symm b)
+    apply (lipschitzBall_isometric_ringEquiv_iff e D (e.symm b) hisom).mpr
+    change LipschitzBall (e D) b at hb
+    simpa using hb
+  · rintro ⟨a, ha, rfl⟩
+    refine ⟨e a, ?_, ?_⟩
+    · change LipschitzBall (e D) (e a)
+      exact (lipschitzBall_isometric_ringEquiv_iff e D a hisom).mp ha
+    · simp
+
+/-- The supremum Connes distance is invariant under an isometric algebra
+equivalence with contravariantly transported readouts. The equality is exact
+even when the value set is unbounded, since the underlying sets agree. -/
+theorem supremumSpectralDist_isometric_ringEquiv
+    (e : A ≃+* A) (D : A) (ω₁ ω₂ : A → ℝ)
+    (hisom : ∀ x : A, ‖e x‖ = ‖x‖) :
+    supremumSpectralDist (e D) (ω₁ ∘ e.symm) (ω₂ ∘ e.symm) =
+      supremumSpectralDist D ω₁ ω₂ := by
+  unfold supremumSpectralDist
+  rw [spectralDistanceSet_isometric_ringEquiv e D ω₁ ω₂ hisom]
+
 /-- If two additive readouts distinguish an element commuting with the Dirac
 operator, the spectral-distance value set is unbounded above. Integer
 multiples of that element remain in the commutator Lip-1 ball while their

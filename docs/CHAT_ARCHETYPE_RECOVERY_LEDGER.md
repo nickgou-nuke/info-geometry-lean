@@ -2481,6 +2481,18 @@ presence and descriptive theorem names are not treated as proof of the
 Clifford/Krein claims. No compiler check was launched while the shared drafts
 were changing.
 
+The follow-up owner
+[`QuantumGeometry/ChiralAnomalyRobertsonBridge.lean`](../lean/InfoGeometry/QuantumGeometry/ChiralAnomalyRobertsonBridge.lean)
+now proves the anomaly-to-QGT link for an actual complex Hilbert-space
+endomorphism `N`: assuming only `N * N = 0`, the operators `i Φ(N)` and `J(N)`
+are skew-adjoint and their operator commutator is `-2i Σ(N)`. The existing
+Berry-curvature commutator identity then identifies curvature with the state
+expectation of `Σ(N)`, and the existing QGT Robertson theorem bounds the
+curvature. The locked owner build succeeded. This supplies a concrete
+Hilbert-space realization of the anomaly-first block algebra; it does not yet
+construct an intertwining representation from the distinct Clifford/Krein
+owners or establish a Krein-valued QGT inequality.
+
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 
 - Owner module [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean) (`InfoGeometry.OperatorAlgebra.PeirceSpine`, `0` `sorry`, `0` `admit`, `0` OpenGauss traps) formalizes over any non-commutative ring `[Ring B]` (and `[StarRing B]` / `H →L[ℂ] H` where stated):
@@ -3013,13 +3025,17 @@ imported by `InfoGeometry.All`.
   inverse law under the same hyperbolic hypothesis. The targeted locked build
   of `InfoGeometry.Superalgebra.TomitaTakesakiModularEvolution` then succeeded
   (770 jobs).
-- **The transcript's analytic/time interpretation is not derived:** the
-  owner quantifies over ring elements `c,s`; it does not define real time,
-  `cosh`/`sinh`, an exponential of `modularHamiltonian`, or a theorem tying
-  `I_surp` to `c,s`. Thus `(c+s)^2` is not proved to equal `e^(2t)` here.
-  Nor does the pairing identity establish the analytic-strip KMS condition
-  for a state; it is an algebraic invariance under a supplied quadratic
-  relation.
+- **Real rapidity dependence is now explicit:**
+  `real_rapidity_hyperbolic_identity` instantiates the inverse condition at
+  `c = cosh t`, `s = sinh t`; the forward and backward weights reduce to
+  `exp (2t)` and `exp (-2t)`, and the two sheet-shift formulas are exposed by
+  `tomita_takesaki_quark_rapidity_shift` and
+  `tomita_takesaki_antiquark_rapidity_shift`. This is a real-parameter algebraic
+  specialization. The owner still does not define an exponential of
+  `modularHamiltonian` or a theorem tying `I_surp` to the rapidity `t`, so the
+  operator exponential/time-evolution claim remains open. Nor does the
+  pairing identity establish the analytic-strip KMS condition for a state;
+  it is an algebraic invariance under a supplied quadratic relation.
 - **Scope:** the module proves a useful finite coordinate model, not the
   Tomita–Takesaki theorem, a modular automorphism group on a von Neumann
   algebra, or an Unruh/Hawking effect. The transcript's build telemetry and

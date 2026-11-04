@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
@@ -187,6 +188,46 @@ theorem tomita_takesaki_kms_invariant (c s : R) (u v : ColorVec3 R)
       _ = 1 := by ring
   rw [tomita_takesaki_quark_blue_shift, tomita_takesaki_antiquark_red_shift]
   rw [anticommutator_quark_antiquark, ColorVec3.dot_smul_smul, h_prod, one_mul]
+
+/-! ### 3a. Real Rapidity Parameterization -/
+
+/-- The hyperbolic rotor's forward chiral weight is exactly `exp (2t)` when
+the parameters are `cosh t` and `sinh t`. -/
+theorem real_rapidity_forward_weight (t : ℝ) :
+    (Real.cosh t + Real.sinh t)^2 = Real.exp (2 * t) := by
+  rw [Real.cosh_add_sinh]
+  calc (Real.exp t)^2 = Real.exp (t + t) := by rw [pow_two, ← Real.exp_add]
+    _ = Real.exp (2 * t) := by congr 1; ring
+
+/-- The opposite chiral weight is `exp (-2t)` under the same real
+rapidity parameterization. -/
+theorem real_rapidity_backward_weight (t : ℝ) :
+    (Real.cosh t - Real.sinh t)^2 = Real.exp (-2 * t) := by
+  have hlinear : Real.cosh t - Real.sinh t = Real.exp (-t) := by
+    exact Real.cosh_sub_sinh t
+  rw [hlinear]
+  calc (Real.exp (-t))^2 = Real.exp (-t + -t) := by rw [pow_two, ← Real.exp_add]
+    _ = Real.exp (-2 * t) := by congr 1; ring
+
+/-- The real rapidity parameters automatically satisfy the inverse law used
+by `modularDelta_has_inverse`. -/
+theorem real_rapidity_hyperbolic_identity (t : ℝ) :
+    (Real.cosh t)^2 - (Real.sinh t)^2 = 1 :=
+  Real.cosh_sq_sub_sinh_sq t
+
+/-- The algebraic blue-shift formula specializes to the forward exponential
+weight on the quark sheet. -/
+theorem tomita_takesaki_quark_rapidity_shift (t : ℝ) (u : ColorVec3 ℝ) :
+    tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (quark u) =
+      quark (ColorVec3.smul (Real.exp (2 * t)) u) := by
+  rw [tomita_takesaki_quark_blue_shift, real_rapidity_forward_weight]
+
+/-- The algebraic red-shift formula specializes to the backward exponential
+weight on the antiquark sheet. -/
+theorem tomita_takesaki_antiquark_rapidity_shift (t : ℝ) (v : ColorVec3 ℝ) :
+    tomitaTakesakiFlow (Real.cosh t) (Real.sinh t) (antiquark v) =
+      antiquark (ColorVec3.smul (Real.exp (-2 * t)) v) := by
+  rw [tomita_takesaki_antiquark_red_shift, real_rapidity_backward_weight]
 
 end SplitOctonion
 

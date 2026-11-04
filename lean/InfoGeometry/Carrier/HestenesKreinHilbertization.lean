@@ -70,6 +70,18 @@ def inducedInnerProductCore (K : HestenesKreinSpace V) :
     rw [hx] at hpos
     exact (lt_self_iff_false 0).mp hpos
 
+/-- A Krein isometry that also commutes with the fundamental symmetry preserves
+the induced positive bilinear form. The commutation premise is explicit because
+it is not part of the `BogoliubovTilt` structure. -/
+theorem BogoliubovTilt.preserves_positiveBilinForm
+    (K : HestenesKreinSpace V) (T : BogoliubovTilt V)
+    (hJ : ∀ x, T.tilt (K.J x) = K.J (T.tilt x)) (x y : V) :
+    K.positiveBilinForm (T.tilt x) (T.tilt y) = K.positiveBilinForm x y := by
+  simp only [positiveBilinForm, LinearMap.smul_apply, LinearMap.add_apply,
+    LinearMap.BilinForm.flip_apply, LinearMap.BilinForm.compRight_apply]
+  rw [← hJ y, ← hJ x, T.preserves_krein x (K.J y),
+    T.preserves_krein y (K.J x)]
+
 end InfoGeometry.Carrier.HestenesKreinSpace
 
 end

@@ -2596,6 +2596,12 @@ records that the symmetrization preserves the original positive diagonal, and
 Krein carrier a positive real inner-product core; it does not add a normed or
 complete structure automatically, identify an operator representation, or
 transport the complex projective QGT. Those cross-carrier claims remain open.
+The same owner now proves `BogoliubovTilt.preserves_positiveBilinForm`:
+a tilt preserving the indefinite Krein form preserves the induced positive
+pairing when it also commutes with the fundamental involution. This extra
+compatibility is an explicit hypothesis because `BogoliubovTilt` itself only
+encodes preservation of the Krein form. The Hilbertization and carrier-bridge
+targets both built successfully after this addition.
 
 ### 2026-11-04: Kernel-verified owner `ChiralLorentzTwistorCartanUncertaintyPoset` & Part XIII of `CoagulatedArchetypeSynthesis`
 

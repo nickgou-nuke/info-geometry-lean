@@ -1954,3 +1954,17 @@ build (9,180 jobs, exit 0); strict OpenGauss screening reported zero traps,
 semantic-vacuity reported zero findings, and the staged proof-proxy gate
 passed on 2026-11-04. The pointwise commutator normalization uses the
 continuous linear maps' subtraction law followed by additive normalization.
+
+The split-octonion transcript's diagonal self-associator claim is now exposed
+generally on the existing noncommutative `ZornNC R` carrier by
+`ZornNC.diagonal_self_associator_is_nambu` and
+`ZornNC.diagonal_self_associator_invariant_under_dressing`. For every ring
+`R` and vector `x : Vec3 R`, the diagonal entries of the cubic associator of
+`⟨α, x, 0, β⟩` are `nambu3 x` and `-nambu3 x`, independent of the arbitrary
+diagonal entries `α, β`; hence changing them preserves both channels. This is
+an algebraic associator identity, not a topological-invariance theorem. The
+owner passed the locked Lean check and targeted Lake build (759 jobs, exit 0),
+strict OpenGauss (zero traps), and staged proof-proxy gate. The file-wide
+semantic-vacuity audit reports 87 pre-existing warnings (record-field and
+trivial projection lemmas); neither new theorem appears among the reported
+findings. Verified on 2026-11-04.

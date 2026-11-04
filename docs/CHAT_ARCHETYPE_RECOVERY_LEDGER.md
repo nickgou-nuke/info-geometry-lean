@@ -3972,3 +3972,12 @@ formalized annihilation of the channel anomalies and associativity; the new
 lemma is listed in the axiom audit. The focused owner build passed (1,553
 jobs); the proof-proxy and semantic-vacuity gates are recorded with this
 extension.
+
+The finite weighted extension now includes left and right selected-gap
+filters of the whole weighted block sum. `finite_channel_gap_left_filters_weighted_phi_sum`
+proves `Gap(Nₖ) * ∑ᵢ cᵢ Φ(Nᵢ) = cₖ Φ(Nₖ)` using local commutation of each
+weight with its own channel. `finite_channel_gap_right_filters_weighted_phi_sum`
+proves the corresponding right action and needs no weight-commutation premise:
+the coefficient remains on the left of its block, and cross-channel
+orthogonality annihilates the off-diagonal terms. Both declarations are in the
+axiom audit; the focused owner build passed (1,553 jobs).

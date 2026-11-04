@@ -561,6 +561,87 @@ theorem weighted_finite_gap_mul_channel
   · intro hnot
     exact (hnot hk).elim
 
+/-- A selected unweighted channel gap filters the finite weighted chiral
+block sum to its weighted channel, using only channel-local weight
+commutation. -/
+theorem finite_channel_gap_left_filters_weighted_phi_sum
+    (s : Finset ι) (c N : ι → B) (k : ι) (hk : k ∈ s)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_comm : ∀ i ∈ s, c i * N i = N i * c i)
+    (h_comm_star : ∀ i ∈ s, c i * star (N i) = star (N i) * c i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    Gap (N k) * (∑ i ∈ s, c i * Phi (N i)) = c k * Phi (N k) := by
+  classical
+  have hterm (i : ι) (hi : i ∈ s) :
+      Gap (N k) * (c i * Phi (N i)) =
+        if i = k then c k * Phi (N k) else 0 := by
+    by_cases hik : i = k
+    · subst i
+      simp
+      exact gap_mul_weighted_phi_self (c k) (N k)
+        (h_nil k hk) (h_reg k hk) (h_comm k hk) (h_comm_star k hk)
+    · simp [hik]
+      calc Gap (N k) * (c i * Phi (N i))
+          = Gap (N k) * (Phi (N i) * c i) := by
+              rw [comm_weight_Phi (c i) (N i) (h_comm i hi) (h_comm_star i hi)]
+        _ = (Gap (N k) * Phi (N i)) * c i := by rw [← mul_assoc]
+        _ = 0 := by
+              rw [Gap_mul_Phi_orthog (N k) (N i) (h_nil k hk)
+                (h_cross k hk i hi (Ne.symm hik)).1
+                (h_cross k hk i hi (Ne.symm hik)).2.1
+                (h_cross k hk i hi (Ne.symm hik)).2.2.1
+                (h_cross k hk i hi (Ne.symm hik)).2.2.2, zero_mul]
+  rw [Finset.mul_sum, Finset.sum_eq_single k]
+  · rw [hterm k hk]
+    simp
+  · intro i hi hik
+    rw [hterm i hi]
+    simp [hik]
+  · intro hnot
+    exact (hnot hk).elim
+
+/-- The selected-channel filter also holds on the right, giving a two-sided
+finite weighted block resolution. -/
+theorem finite_channel_gap_right_filters_weighted_phi_sum
+    (s : Finset ι) (c N : ι → B) (k : ι) (hk : k ∈ s)
+    (h_nil : ∀ i ∈ s, N i * N i = 0)
+    (h_reg : ∀ i ∈ s, N i * star (N i) * N i = N i)
+    (h_cross : ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+      N i * N j = 0 ∧ N j * N i = 0 ∧
+      N i * star (N j) = 0 ∧ star (N i) * N j = 0) :
+    (∑ i ∈ s, c i * Phi (N i)) * Gap (N k) = c k * Phi (N k) := by
+  classical
+  have hterm (i : ι) (hi : i ∈ s) :
+      (c i * Phi (N i)) * Gap (N k) =
+        if i = k then c k * Phi (N k) else 0 := by
+    by_cases hik : i = k
+    · subst i
+      simp
+      calc (c k * Phi (N k)) * Gap (N k)
+          = c k * (Phi (N k) * Gap (N k)) := by rw [mul_assoc]
+        _ = c k * Phi (N k) := by rw [Phi_mul_Gap (N k) (h_nil k hk) (h_reg k hk)]
+    · simp [hik]
+      calc (c i * Phi (N i)) * Gap (N k)
+          = c i * (Phi (N i) * Gap (N k)) := by rw [mul_assoc]
+        _ = c i * 0 := by
+              rw [Phi_mul_Gap_orthog (N i) (N k) (h_nil k hk)
+                (h_cross i hi k hk hik).1
+                (h_cross i hi k hk hik).2.1
+                (h_cross i hi k hk hik).2.2.1
+                (h_cross i hi k hk hik).2.2.2]
+        _ = 0 := mul_zero _
+  rw [Finset.sum_mul, Finset.sum_eq_single k]
+  · rw [hterm k hk]
+    simp
+  · intro i hi hik
+    rw [hterm i hi]
+    simp [hik]
+  · intro hnot
+    exact (hnot hk).elim
+
 /-- Self-adjoint-weight interface for the channel filter: the only weight
 commutation assumptions are `c i * N i = N i * c i` within each channel. -/
 theorem weighted_finite_gap_mul_channel_of_self_adjoint_weights

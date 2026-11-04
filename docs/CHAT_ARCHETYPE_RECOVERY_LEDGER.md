@@ -2833,7 +2833,9 @@ verification evidence for this checkout.
   connected to `A`; no spacetime or cosmological observable is constructed.
   The source's implication “`A ≠ 1` therefore `Λ ≠ 0`” is false under the
   owner's hypotheses: `A = A_inv = -1` satisfies invertibility and `A ≠ 1`,
-  while the defined `Λ` is zero. (The source's forward implication `A = 1`
+  while the defined `Λ` is zero. This counterexample is now kernel-checked as
+  `inverse_phase_ne_one_can_have_zero_cosmological_constant` in the owner.
+  (The source's forward implication `A = 1`
   implies `Λ = 0` does follow algebraically.)
 - **Additional checked-in owner content:** the Section 148 module also proves
   finite split-octonion coordinate identities and `Mat3` Temperley–Lieb /

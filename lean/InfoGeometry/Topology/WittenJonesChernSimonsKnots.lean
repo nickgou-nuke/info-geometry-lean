@@ -1,9 +1,10 @@
 /-
-Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Contributors
+Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
@@ -159,6 +160,15 @@ theorem witten_cosmological_constant_is_knot_anomaly (CS : ChernSimonsPhase R)
     _ = CS.A^2 + CS.A_inv^2 - 2 * (CS.A * CS.A_inv) := by ring
     _ = CS.A^2 + CS.A_inv^2 - 2 * 1 := by rw [h_inv]
     _ = CS.A^2 + CS.A_inv^2 - 2 := by ring
+
+/-- The converse implication from `A ≠ 1` to a nonzero effective scalar is
+false under the phase's sole inverse relation: at `A = A_inv = -1` the phase
+is invertible and differs from `1`, while `topologicalCosmoConstant` vanishes.
+This is an integer counterexample to that converse, not a knot invariant. -/
+theorem inverse_phase_ne_one_can_have_zero_cosmological_constant :
+    let CS : ChernSimonsPhase ℤ := ⟨-1, -1⟩
+    CS.A * CS.A_inv = 1 ∧ CS.A ≠ 1 ∧ topologicalCosmoConstant CS = 0 := by
+  norm_num [topologicalCosmoConstant]
 
 /--
 Unknot vacuum loop and cosmological constant:

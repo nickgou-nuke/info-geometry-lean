@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Order.Basic
+import InfoGeometry.Core.JordanAssociatorRing
 
 /-!
 # Grade-3 Weighted Multi-Channel Jordan Associator Anomaly Poset (`WJA₁`–`WJA₁₀`)
@@ -238,6 +239,16 @@ def anticomm (X Y : B) : B := X * Y + Y * X
 /-- The Grade-3 Jordan Associator Anomaly `JordanAssoc X Y Z = {{X, Y}, Z} - {X, {Y, Z}}`. -/
 def JordanAssoc (X Y Z : B) : B :=
   anticomm (anticomm X Y) Z - anticomm X (anticomm Y Z)
+
+/-- The local unnormalized Jordan associator agrees with the shared core
+double-commutator formula. This provides the commutator interpretation for
+all weighted and unweighted operators in this module. -/
+theorem JordanAssoc_eq_double_commutator (X Y Z : B) :
+    JordanAssoc X Y Z =
+      Y * (X * Z - Z * X) - (X * Z - Z * X) * Y := by
+  dsimp [JordanAssoc, anticomm]
+  exact InfoGeometry.Core.JordanAssociator.symm_associator_eq_double_commutator
+    X Y Z
 
 theorem anticomm_zero_right (X : B) : anticomm X 0 = 0 := by
   dsimp [anticomm]; rw [mul_zero, zero_mul, add_zero]

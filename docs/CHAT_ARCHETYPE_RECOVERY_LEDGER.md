@@ -3886,6 +3886,13 @@ cross-channel weight commutation condition. The targeted locked Lake build
 passed (845 jobs), the staged proof-proxy gate passed, and the semantic-vacuity
 audit reported zero findings.
 
+The KKT grade-zero range interface is now symmetric across the two sheets:
+`peirceGradeZero_P_corner_mem` and `peirceGradeZero_Q_corner_mem` place each
+diagonal Peirce corner in the canonical grade-zero range. The negative-sheet
+lemma was verified by the locked KKT owner build (9,000 jobs). These are
+containment results for the two diagonal corners; they do not assert that
+either corner alone is the full grade-zero subspace.
+
 The KKT owner also now exposes `peirceGradeZero_P_corner_mem`, showing that
 every positive diagonal Peirce corner lies in the grade-zero range under the
 nilpotency and regularity hypotheses. Its proof uses the explicit Peirce

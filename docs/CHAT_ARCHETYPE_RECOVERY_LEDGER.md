@@ -3529,3 +3529,21 @@ separate `InductiveStarColimitCone` permits noninjective maps, so the XLVIII
 claim that a nonzero base mass persists through every such cone is not promoted
 without an image-nonzero assumption. Nor does this tower formalize a specific
 tensor-product/block-doubling functor or prove an analytic continuum mass gap.
+
+### 2026-11-04: Injective transport of nonzero two-sheet support
+
+`starRingHom_preserves_nonzero_two_sheet_coupling` in
+[`TwoSheetedYangMillsInductiveColimit.lean`](../lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean)
+now supplies the conditional nonvanishing step: a nonzero quadratic coupling
+remains nonzero under an injective star-preserving ring homomorphism. This
+supports stagewise nonvanishing when the tower maps are injective, while
+leaving noninjective cones conditional and making no uniform numerical or
+analytic spectral-gap claim. The targeted locked owner build passed (956 jobs).
+
+The concurrently staged five-grade KKT reconstruction lemma
+`peirce_five_grade_components_injective` proves uniqueness from equality of
+all five canonical Peirce components; it does not identify abstract adjoint
+eigenspaces over arbitrary base rings. Its targeted locked owner build passed
+(8,998 jobs). The staged proof-proxy gate and `git diff --cached --check`
+passed. The semantic audits reported only the owner files' existing
+proof-like-field and trivial-surface heuristic warnings.

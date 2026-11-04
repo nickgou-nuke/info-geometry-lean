@@ -898,6 +898,147 @@ def peirceGradeZero (N_plus X : B) : B :=
 def peirceGradeMinus1 (N_plus X : B) : B := peirceRP N_plus X + peirceQR N_plus X
 def peirceGradeMinus2 (N_plus X : B) : B := peirceQP N_plus X
 
+/-- The range of an additive projection, packaged as a native mathlib
+additive subgroup. -/
+def peirceRangeAddSubgroup (f : B → B)
+    (hzero : f 0 = 0)
+    (hadd : ∀ X Y, f (X + Y) = f X + f Y)
+    (hneg : ∀ X, f (-X) = -f X) : AddSubgroup B where
+  carrier := Set.range f
+  zero_mem' := ⟨0, hzero⟩
+  add_mem' := by
+    rintro a b ⟨X, rfl⟩ ⟨Y, rfl⟩
+    exact ⟨X + Y, hadd X Y⟩
+  neg_mem' := by
+    rintro a ⟨X, rfl⟩
+    exact ⟨-X, hneg X⟩
+
+private theorem peirceGradePlus2_zero (N_plus : B) :
+    peirceGradePlus2 N_plus 0 = 0 := by
+  simp [peirceGradePlus2, peircePQ]
+
+private theorem peirceGradePlus2_add (N_plus X Y : B) :
+    peirceGradePlus2 N_plus (X + Y) =
+      peirceGradePlus2 N_plus X + peirceGradePlus2 N_plus Y := by
+  simp only [peirceGradePlus2, peircePQ]
+  noncomm_ring
+
+private theorem peirceGradePlus2_neg (N_plus X : B) :
+    peirceGradePlus2 N_plus (-X) = -peirceGradePlus2 N_plus X := by
+  simp only [peirceGradePlus2, peircePQ]
+  noncomm_ring
+
+private theorem peirceGradePlus1_zero (N_plus : B) :
+    peirceGradePlus1 N_plus 0 = 0 := by
+  simp [peirceGradePlus1, peircePR, peirceRQ]
+
+private theorem peirceGradePlus1_add (N_plus X Y : B) :
+    peirceGradePlus1 N_plus (X + Y) =
+      peirceGradePlus1 N_plus X + peirceGradePlus1 N_plus Y := by
+  simp only [peirceGradePlus1, peircePR, peirceRQ]
+  noncomm_ring
+
+private theorem peirceGradePlus1_neg (N_plus X : B) :
+    peirceGradePlus1 N_plus (-X) = -peirceGradePlus1 N_plus X := by
+  simp only [peirceGradePlus1, peircePR, peirceRQ]
+  noncomm_ring
+
+private theorem peirceGradeZero_zero (N_plus : B) :
+    peirceGradeZero N_plus 0 = 0 := by
+  simp [peirceGradeZero, peircePP, peirceQQ, peirceRR]
+
+private theorem peirceGradeZero_add (N_plus X Y : B) :
+    peirceGradeZero N_plus (X + Y) =
+      peirceGradeZero N_plus X + peirceGradeZero N_plus Y := by
+  simp only [peirceGradeZero, peircePP, peirceQQ, peirceRR]
+  noncomm_ring
+
+private theorem peirceGradeZero_neg (N_plus X : B) :
+    peirceGradeZero N_plus (-X) = -peirceGradeZero N_plus X := by
+  simp only [peirceGradeZero, peircePP, peirceQQ, peirceRR]
+  noncomm_ring
+
+private theorem peirceGradeMinus1_zero (N_plus : B) :
+    peirceGradeMinus1 N_plus 0 = 0 := by
+  simp [peirceGradeMinus1, peirceRP, peirceQR]
+
+private theorem peirceGradeMinus1_add (N_plus X Y : B) :
+    peirceGradeMinus1 N_plus (X + Y) =
+      peirceGradeMinus1 N_plus X + peirceGradeMinus1 N_plus Y := by
+  simp only [peirceGradeMinus1, peirceRP, peirceQR]
+  noncomm_ring
+
+private theorem peirceGradeMinus1_neg (N_plus X : B) :
+    peirceGradeMinus1 N_plus (-X) = -peirceGradeMinus1 N_plus X := by
+  simp only [peirceGradeMinus1, peirceRP, peirceQR]
+  noncomm_ring
+
+private theorem peirceGradeMinus2_zero (N_plus : B) :
+    peirceGradeMinus2 N_plus 0 = 0 := by
+  simp [peirceGradeMinus2, peirceQP]
+
+private theorem peirceGradeMinus2_add (N_plus X Y : B) :
+    peirceGradeMinus2 N_plus (X + Y) =
+      peirceGradeMinus2 N_plus X + peirceGradeMinus2 N_plus Y := by
+  simp only [peirceGradeMinus2, peirceQP]
+  noncomm_ring
+
+private theorem peirceGradeMinus2_neg (N_plus X : B) :
+    peirceGradeMinus2 N_plus (-X) = -peirceGradeMinus2 N_plus X := by
+  simp only [peirceGradeMinus2, peirceQP]
+  noncomm_ring
+
+/-- Native additive subgroup consisting of the canonical grade `+2` Peirce
+components. -/
+def peirceGradePlus2Subgroup (N_plus : B) : AddSubgroup B :=
+  peirceRangeAddSubgroup (peirceGradePlus2 N_plus)
+    (peirceGradePlus2_zero N_plus) (peirceGradePlus2_add N_plus)
+    (peirceGradePlus2_neg N_plus)
+
+/-- Native additive subgroup consisting of the canonical grade `+1` Peirce
+components. -/
+def peirceGradePlus1Subgroup (N_plus : B) : AddSubgroup B :=
+  peirceRangeAddSubgroup (peirceGradePlus1 N_plus)
+    (peirceGradePlus1_zero N_plus) (peirceGradePlus1_add N_plus)
+    (peirceGradePlus1_neg N_plus)
+
+/-- Native additive subgroup consisting of the canonical grade-zero Peirce
+components. -/
+def peirceGradeZeroSubgroup (N_plus : B) : AddSubgroup B :=
+  peirceRangeAddSubgroup (peirceGradeZero N_plus)
+    (peirceGradeZero_zero N_plus) (peirceGradeZero_add N_plus)
+    (peirceGradeZero_neg N_plus)
+
+/-- Native additive subgroup consisting of the canonical grade `-1` Peirce
+components. -/
+def peirceGradeMinus1Subgroup (N_plus : B) : AddSubgroup B :=
+  peirceRangeAddSubgroup (peirceGradeMinus1 N_plus)
+    (peirceGradeMinus1_zero N_plus) (peirceGradeMinus1_add N_plus)
+    (peirceGradeMinus1_neg N_plus)
+
+/-- Native additive subgroup consisting of the canonical grade `-2` Peirce
+components. -/
+def peirceGradeMinus2Subgroup (N_plus : B) : AddSubgroup B :=
+  peirceRangeAddSubgroup (peirceGradeMinus2 N_plus)
+    (peirceGradeMinus2_zero N_plus) (peirceGradeMinus2_add N_plus)
+    (peirceGradeMinus2_neg N_plus)
+
+/-- Every canonical Peirce component belongs to its native additive subgroup,
+and the five subgroup-valued components reconstruct the operator. -/
+theorem peirce_five_grade_subgroup_decomposition (N_plus X : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    peirceGradePlus2 N_plus X ∈ peirceGradePlus2Subgroup N_plus ∧
+    peirceGradePlus1 N_plus X ∈ peirceGradePlus1Subgroup N_plus ∧
+    peirceGradeZero N_plus X ∈ peirceGradeZeroSubgroup N_plus ∧
+    peirceGradeMinus1 N_plus X ∈ peirceGradeMinus1Subgroup N_plus ∧
+    peirceGradeMinus2 N_plus X ∈ peirceGradeMinus2Subgroup N_plus ∧
+    X = peirceGradePlus2 N_plus X + peirceGradePlus1 N_plus X +
+      peirceGradeZero N_plus X + peirceGradeMinus1 N_plus X +
+      peirceGradeMinus2 N_plus X := by
+  refine ⟨⟨X, rfl⟩, ⟨X, rfl⟩, ⟨X, rfl⟩, ⟨X, rfl⟩, ⟨X, rfl⟩,
+    peirce_five_grade_decomposition N_plus X h_nil h_reg⟩
+
 /-- The nilpotent sandwich parametrization reaches every Peirce grade `+2` block. -/
 theorem G_plus2_preimage_peirce (N_plus X : B) :
     G_plus2 N_plus (star N_plus * X * star N_plus) = peirceGradePlus2 N_plus X := by
@@ -1027,6 +1168,23 @@ theorem peirce_five_grade_decomposition (N_plus X : B)
           simp only [peirceGradePlus2, peirceGradePlus1, peirceGradeZero,
             peirceGradeMinus1, peirceGradeMinus2]
           abel
+
+/-- The five grouped Peirce components jointly determine the operator. Thus the
+canonical five-sector reconstruction is unique as a decomposition induced by
+the Peirce projections (without asserting that abstract adjoint eigenspaces
+have distinct eigenvalues over every base ring). -/
+theorem peirce_five_grade_components_injective (N_plus X Y : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (h2 : peirceGradePlus2 N_plus X = peirceGradePlus2 N_plus Y)
+    (h1 : peirceGradePlus1 N_plus X = peirceGradePlus1 N_plus Y)
+    (h0 : peirceGradeZero N_plus X = peirceGradeZero N_plus Y)
+    (hm1 : peirceGradeMinus1 N_plus X = peirceGradeMinus1 N_plus Y)
+    (hm2 : peirceGradeMinus2 N_plus X = peirceGradeMinus2 N_plus Y) :
+    X = Y := by
+  rw [peirce_five_grade_decomposition N_plus X h_nil h_reg,
+      peirce_five_grade_decomposition N_plus Y h_nil h_reg,
+      h2, h1, h0, hm1, hm2]
 
 /-- The grade-zero sector is closed under the commutator: its bracket is the
 sum of the three diagonal Peirce-block brackets. -/

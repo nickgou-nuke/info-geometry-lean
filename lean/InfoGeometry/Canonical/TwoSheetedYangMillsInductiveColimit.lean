@@ -156,6 +156,27 @@ theorem starRingHom_intertwines_two_sheeted_tower
       map_sub, map_mul, hElec']
   exact ⟨hBit, hZig, hZag, hElec, hAx, hMass, hSpin, hOS, hDiss⟩
 
+/-- An injective star-preserving ring map cannot collapse a nonzero two-sheet
+quadratic coupling. This is the algebraic nonvanishing statement needed when
+transporting a nonzero finite-stage support to a later injective stage; it
+does not assert a uniform numerical spectral lower bound. -/
+theorem starRingHom_preserves_nonzero_two_sheet_coupling
+    {B₁ B₂ : Type*} [Ring B₁] [StarRing B₁] [Ring B₂] [StarRing B₂]
+    (φ : B₁ →+* B₂) (hφ_inj : Function.Injective φ)
+    (hφStar : ∀ x : B₁, φ (star x) = star (φ x)) (P A C : B₁)
+    (hMass : opQuadraticCoupling P A C ≠ 0) :
+    opQuadraticCoupling (φ P) (φ A) (φ C) ≠ 0 := by
+  intro hImage
+  rcases starRingHom_intertwines_two_sheeted_tower φ hφStar P A C A with
+    ⟨_, _, _, _, _, hTransport, _, _, _⟩
+  apply hMass
+  apply hφ_inj
+  calc
+    φ (opQuadraticCoupling P A C) =
+        opQuadraticCoupling (φ P) (φ A) (φ C) := hTransport
+    _ = 0 := hImage
+    _ = φ 0 := by rw [map_zero]
+
 /-- Compatibility theorem for the original transport interface. It records the
 seven two-sheet formulas and the star-transport law for the base operator. -/
 theorem starRingHom_intertwines_two_sheeted_operators

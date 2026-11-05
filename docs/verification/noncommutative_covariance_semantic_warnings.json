@@ -1,0 +1,164 @@
+{
+  "authority": "lexical heuristics; not a semantic or kernel proof",
+  "blocking_severity_counts": {
+    "warning": 14
+  },
+  "counts": {
+    "trivial_surface": 14
+  },
+  "coverage_complete": true,
+  "fail_on": "warning",
+  "fail_prefixes": [],
+  "files_scanned": 8,
+  "files_selected": 8,
+  "findings": [
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+      "line": 111,
+      "severity": "warning",
+      "subject": "finiteStein_star"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+      "line": 59,
+      "severity": "warning",
+      "subject": "covarianceStep_zero_eq_krausChannel"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 36,
+      "severity": "warning",
+      "subject": "mean_add"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 40,
+      "severity": "warning",
+      "subject": "mean_sub"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 48,
+      "severity": "warning",
+      "subject": "mean_left_mul"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 52,
+      "severity": "warning",
+      "subject": "mean_right_mul"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 67,
+      "severity": "warning",
+      "subject": "centered_left_mul"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 89,
+      "severity": "warning",
+      "subject": "crossCovariance_add_left"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 94,
+      "severity": "warning",
+      "subject": "crossCovariance_add_right"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 99,
+      "severity": "warning",
+      "subject": "crossCovariance_left_mul"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 103,
+      "severity": "warning",
+      "subject": "crossCovariance_right_mul"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 117,
+      "severity": "warning",
+      "subject": "mean_star"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 138,
+      "severity": "warning",
+      "subject": "crossCovariance_star"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+      "line": 152,
+      "severity": "warning",
+      "subject": "innovation_lag"
+    }
+  ],
+  "pattern_version": 1,
+  "read_failures": [],
+  "scope_roots": [
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean"
+  ],
+  "severity_counts": {
+    "warning": 14
+  },
+  "source_paths": [
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+    "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean"
+  ],
+  "successfully_read_paths": [
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+    "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+    "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+    "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean"
+  ],
+  "tracked": false
+}

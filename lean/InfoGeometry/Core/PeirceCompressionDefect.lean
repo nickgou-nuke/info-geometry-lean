@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Core.IdempotencyDefect
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic.NoncommRing
@@ -12,9 +13,14 @@ import Mathlib.Tactic.NoncommRing
 
 These are associative-ring identities. Star-square factorization supplies
 self-adjointness, but no ordered positivity or diffraction interpretation is
-asserted. The input operators need not be idempotent.
+asserted. The input operators need not be idempotent. Nested compressions and
+finite descending flags retain exact ordered relative-shell contributions to
+the idempotency defect.
 -/
 namespace InfoGeometry.Core.PeirceCompressionDefect
+
+open IdempotencyDefect
+open scoped BigOperators
 
 variable {A : Type*} [Ring A]
 
@@ -53,6 +59,94 @@ theorem compression_defect_sum {I : Type*} [Fintype I]
   calc
     _ = p * x * (s i * s i) * y * p := by rw [hi i]
     _ = _ := by simp only [mul_assoc]
+
+/-- Compression of the idempotency defect differs from the defect of the
+compression by the exact ordered transfer through the complementary corner. -/
+theorem defect_compression (p x : A) (hp : p * p = p) :
+    defect (p * x * p) =
+      p * defect x * p - p * x * (1 - p) * x * p := by
+  rw [← compression_mul_defect p x x hp]
+  unfold defect
+  noncomm_ring
+
+/-- For nested idempotents, refining the compression changes its defect by
+the transfer through the relative shell. Both absorption equations are
+explicit; neither idempotent is assumed to commute with the input. -/
+theorem defect_nested_compression (p q x : A)
+    (hp : p * p = p) (hq : q * q = q)
+    (hqp : q * p = q) (hpq : p * q = q) :
+    defect (q * x * q) =
+      q * defect (p * x * p) * q - q * x * (p - q) * x * q := by
+  have hcompress : q * (p * x * p) * q = q * x * q := by
+    calc
+      _ = (q * p) * x * (p * q) := by simp only [mul_assoc]
+      _ = _ := by rw [hqp, hpq]
+  have hrelative : p * (1 - q) * p = p - q := by
+    calc
+      _ = p * p - (p * q) * p := by noncomm_ring
+      _ = _ := by rw [hp, hpq, hqp]
+  have htransfer :
+      q * (p * x * p) * (1 - q) * (p * x * p) * q =
+        q * x * (p - q) * x * q := by
+    calc
+      _ = (q * p) * x * (p * (1 - q) * p) * x * (p * q) := by
+        simp only [mul_assoc]
+      _ = _ := by rw [hqp, hpq, hrelative]
+  have h := defect_compression q (p * x * p) hq
+  rw [hcompress, htransfer] at h
+  exact h
+
+/-- Every finite descending compression flag has an exact cumulative defect
+formula. The relative-shell contributions keep `x` on both sides in its
+original noncommutative order. All hypotheses are bounded by the chosen
+finite endpoint `n`; no convergence or infinite-dimensional limit is used. -/
+theorem defect_compression_flag (p : ℕ → A) (x : A) (n : ℕ)
+    (hp : ∀ i ≤ n, p i * p i = p i)
+    (hleft : ∀ i < n, p (i + 1) * p i = p (i + 1))
+    (hright : ∀ i < n, p i * p (i + 1) = p (i + 1)) :
+    defect (p n * x * p n) =
+      p n * defect (p 0 * x * p 0) * p n -
+        ∑ i ∈ Finset.range n, p n * x * (p i - p (i + 1)) * x * p n := by
+  have hbase : ∀ k ≤ n, p k * p 0 = p k ∧ p 0 * p k = p k := by
+    intro k
+    induction k with
+    | zero =>
+        intro hk
+        exact ⟨hp 0 hk, hp 0 hk⟩
+    | succ k ih =>
+        intro hk
+        have hkn : k ≤ n := (Nat.le_succ k).trans hk
+        have hklt : k < n := (Nat.lt_succ_self k).trans_le hk
+        rcases ih hkn with ⟨hkl, hkr⟩
+        constructor
+        · calc
+            p (k + 1) * p 0 = (p (k + 1) * p k) * p 0 := by
+              rw [hleft k hklt]
+            _ = p (k + 1) * (p k * p 0) := mul_assoc _ _ _
+            _ = p (k + 1) := by rw [hkl, hleft k hklt]
+        · calc
+            p 0 * p (k + 1) = p 0 * (p k * p (k + 1)) := by
+              rw [hright k hklt]
+            _ = (p 0 * p k) * p (k + 1) := (mul_assoc _ _ _).symm
+            _ = p (k + 1) := by rw [hkr, hright k hklt]
+  have hshells : ∀ k : ℕ,
+      (∑ i ∈ Finset.range k, (p i - p (i + 1))) = p 0 - p k := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+        rw [Finset.sum_range_succ, ih]
+        noncomm_ring
+  have hsum :
+      (∑ i ∈ Finset.range n, p n * x * (p i - p (i + 1)) * x * p n) =
+        p n * x * (p 0 - p n) * x * p n := by
+    calc
+      _ = (p n * x) * (∑ i ∈ Finset.range n, (p i - p (i + 1))) *
+          x * p n := by simp only [Finset.mul_sum, Finset.sum_mul]
+      _ = _ := by rw [hshells]
+  rw [hsum]
+  exact defect_nested_compression (p 0) (p n) x
+    (hp 0 (Nat.zero_le n)) (hp n le_rfl) (hbase n le_rfl).1 (hbase n le_rfl).2
 
 section Star
 variable [StarRing A]

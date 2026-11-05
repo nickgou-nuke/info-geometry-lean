@@ -1,0 +1,26 @@
+{
+  "received": "2026-11-04",
+  "source": "User attachments in active GitHub formalization task",
+  "base_commit": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+  "note": "Unedited intake. Mathematical and execution claims in these files are not acceptance evidence. See docs/STRUCTURED_ATTENTION_CONTRACT.md.",
+  "files": [
+    {
+      "source_name": "Pasted text(20261104-134359).txt",
+      "snapshot": "01-structured-operators.txt",
+      "bytes": 21882,
+      "sha256": "cf6fdf2b209190d29ea3f3cc787525e95da27565564b4e827176f6708f47cecb"
+    },
+    {
+      "source_name": "Pasted text (2)(20261104-134520).txt",
+      "snapshot": "02-reference-code.txt",
+      "bytes": 29199,
+      "sha256": "cd357a912194951f38a382fc36bc9276ab712578d94b8db3cfedb560a950eba7"
+    },
+    {
+      "source_name": "Pasted text (3)(20261104-135540).txt",
+      "snapshot": "03-hardware-krein-attention.txt",
+      "bytes": 29414,
+      "sha256": "751b58c857d1a33c1e4c6b0130d0c150e1b74febe68882ca58b68e036554db83"
+    }
+  ]
+}

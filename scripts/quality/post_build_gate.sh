@@ -114,13 +114,13 @@ if [ "$MODE" = "incremental" ]; then
     done || true)
     ALL_CHANGED_LEAN_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" "$HEAD_REF" 2>/dev/null | grep -E '(^|/)[^/]+\.lean$' || true)
     TEST_LEAN_FILES=$(grep '^tests/.*\.lean$' <<<"$CHANGED_FILES" || true)
-    AUDIT_TOOL_LEAN_FILES=$(grep -E '^tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit)\.lean$' <<<"$CHANGED_FILES" || true)
+    AUDIT_TOOL_LEAN_FILES=$(grep -E '^tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit|SemilinearGeometryDeclarationAudit)\.lean$' <<<"$CHANGED_FILES" || true)
     # Lean umbrella modules are still ordinary Lake targets. Including one in
     # an incremental diff must build that changed module target, not promote
     # the whole root package to `InfoGeometry.All`.
     BUILD_CONFIG_FILES=$(grep -E '^(lakefile\.lean|lake-manifest\.json|lean-toolchain|lib/InfoGeometryCore/lakefile\.lean|lib/InfoGeometryCore/lake-manifest\.json)$|^lib/InfoGeometryCore/.*\.lean$' <<<"$CHANGED_FILES" || true)
     UNSUPPORTED_PACKAGE_CONFIGS=$(grep -E '^(lean/lakefile\.lean|lean/lake-manifest\.json|lean/lean-toolchain|lean_sandbox/lakefile\.lean|lean_sandbox/lake-manifest\.json|lean_sandbox/lean-toolchain|proofs/lakefile\.(toml|lean)|proofs/lake-manifest\.json|proofs/lean-toolchain|verification/spinorial-core/lakefile\.lean|verification/spinorial-core/lake-manifest\.json|verification/spinorial-core/lean-toolchain)$' <<<"$CHANGED_FILES" || true)
-    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit)\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
+    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit|SemilinearGeometryDeclarationAudit)\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
 
     if [ -n "$UNSUPPORTED_PACKAGE_CONFIGS" ]; then
         echo "  ❌ Nested Lake project configuration changed, but this root gate has no package-specific locked build route:" >&2

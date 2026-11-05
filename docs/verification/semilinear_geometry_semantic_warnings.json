@@ -1,0 +1,115 @@
+{
+  "authority": "lexical heuristics; not a semantic or kernel proof",
+  "blocking_severity_counts": {
+    "warning": 9
+  },
+  "counts": {
+    "trivial_surface": 9
+  },
+  "coverage_complete": true,
+  "fail_on": "warning",
+  "fail_prefixes": [],
+  "files_scanned": 5,
+  "files_selected": 5,
+  "findings": [
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+      "line": 100,
+      "severity": "warning",
+      "subject": "matrixAmplitudeQuotient_eq"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+      "line": 56,
+      "severity": "warning",
+      "subject": "matrixEvolution_zero"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+      "line": 86,
+      "severity": "warning",
+      "subject": "sheetConj_covarianceStep"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+      "line": 71,
+      "severity": "warning",
+      "subject": "gramDensity_even"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+      "line": 45,
+      "severity": "warning",
+      "subject": "sheetConj_apply"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+      "line": 48,
+      "severity": "warning",
+      "subject": "sheetConj_eq_submatrix"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+      "line": 73,
+      "severity": "warning",
+      "subject": "sheetConj_lie"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "by",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+      "line": 151,
+      "severity": "warning",
+      "subject": "coupledBlock_isHermitian_iff"
+    },
+    {
+      "category": "trivial_surface",
+      "detail": "rfl",
+      "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+      "line": 222,
+      "severity": "warning",
+      "subject": "liouvillian_eq_ordered"
+    }
+  ],
+  "pattern_version": 1,
+  "read_failures": [],
+  "scope_roots": [
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean"
+  ],
+  "severity_counts": {
+    "warning": 9
+  },
+  "source_paths": [
+    "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean"
+  ],
+  "successfully_read_paths": [
+    "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean"
+  ],
+  "tracked": false
+}

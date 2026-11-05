@@ -1,0 +1,1027 @@
+{
+  "schema": "info_geometry.semilinear_operator_geometry_verification.v1",
+  "recorded_at_utc": "2026-11-05T14:22:19.474271+00:00",
+  "status": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "scope": "Complete selected 29-module repository source closure, four new mathematics modules and one import-only entry point; not a root-package build or push-gate certificate.",
+  "source_basis": [
+    {
+      "role": "Original covariance motivation",
+      "url": "https://mcbal.github.io/post/a-large-d-closure-for-asymmetric-kinetic-vector-spin-systems/"
+    },
+    {
+      "role": "Sakharov 1967 publisher reprint; historical motivation only",
+      "url": "https://ufn.ru/ufn91/ufn91_5/ufn915h.pdf"
+    },
+    {
+      "role": "Sakharov 1980 primary paper; historical and model boundaries",
+      "url": "https://jetp.ras.ru/cgi-bin/dn/e_052_03_0349.pdf"
+    },
+    {
+      "role": "CPT-symmetric-universe short model paper; model-specific hypotheses",
+      "url": "https://arxiv.org/abs/1803.08928"
+    },
+    {
+      "role": "Detailed companion construction and vacuum hypotheses",
+      "url": "https://arxiv.org/abs/1803.08930"
+    },
+    {
+      "role": "Bohmian singularity analysis; distinguishes singular and bouncing states",
+      "url": "https://arxiv.org/abs/1501.04181"
+    }
+  ],
+  "baselines": {
+    "local_verified_source_commit": "169b613066750153826bb41473d873dcc2aa1ab3",
+    "existing_public_pr_head": "b4d246c80027e27c74360e7f45da1dcc39fe6731",
+    "local_baseline_tree": "23ed0663e8bca14989a72f8512d815aa3c0e517e",
+    "upstream_main_at_start": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+    "qa_public_object_caveat": "The public commit object is unavailable in the local checkout. QA verifies the local baseline and exact sources. Publication must separately compare the complete GitHub tree with the committed verified local tree."
+  },
+  "lean_toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "counts": {
+    "public_source_theorems": 78,
+    "private_helper_theorems": 2,
+    "audited_owned_declarations": 131,
+    "theorem_constants_including_generated": 109,
+    "definition_constants": 22,
+    "compiled_repository_modules": 29,
+    "selected_owners": 5
+  },
+  "parent_native_verification": {
+    "status": "PASS",
+    "process_exit_code": 0,
+    "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+    "environment_overrides": {
+      "PATH_prefix": "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin",
+      "LD_PRELOAD": "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so"
+    },
+    "command": [
+      "python3",
+      "tools/quality/check_operator_geometry.py",
+      "--mathlib",
+      "/workspace/scratch/ec4ca3191aef/pinned-mathlib",
+      "--work-dir",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-final",
+      "--target",
+      "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry",
+      "--audit",
+      "--audit-source",
+      "tools/quality/SemilinearGeometryDeclarationAudit.lean",
+      "--owner-warnings-as-errors",
+      "--base-ref",
+      "169b613066750153826bb41473d873dcc2aa1ab3"
+    ],
+    "incremental": false,
+    "evidence": {
+      "result.json": {
+        "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-final/result.json",
+        "sha256": "068208231b9e86576b09ace25235917e45bcdb6026d868b3275426fdaddacad8"
+      },
+      "source-manifest.json": {
+        "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-final/source-manifest.json",
+        "sha256": "e54b22e899c70ce95f2c573f1af7165a3f2ff4c4754ba39aef505fc3ee67682a"
+      },
+      "checked-hashes.json": {
+        "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-final/checked-hashes.json",
+        "sha256": "972827514e95fba0d78bf3ce885e791f1daf11a79f3d35fe3f2437904c6b7a47"
+      },
+      "declaration-audit.jsonl": {
+        "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-final/declaration-audit.jsonl",
+        "sha256": "89e17aa901468eb83fbb60bfab2ef01145b779910f5ced522718426562eec117"
+      }
+    },
+    "exact_result_and_declaration_records_match_independent_qa": true
+  },
+  "independent_source_review": {
+    "record_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-source-review.json",
+    "record_sha256": "eb136950fcf00adc61b9362f7bb8fddc93b5427593df4e1cec9917053cd96f33",
+    "record": {
+      "role": "A-A",
+      "agent": "/root/repository_scout",
+      "recorded_by": "/root",
+      "authored_reviewed_mathematics": false,
+      "disposition": "PASS",
+      "required_changes": [],
+      "source_sha256": {
+        "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean": "58a6efac61763b2cbd64fad673be95fae347ff376690c546d23a8408d2228d9f",
+        "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+        "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean": "7af6f55069280a58d9aad1e00bb5bb12eac0877a3ee1df02fb657fed5500a378",
+        "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean": "4b3df3c1d3127424b98ae3af546bce780a6c8c82e98733e69d067327aa5d9b52",
+        "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean": "94bc0c058784ea18e88ae61b6934d610016ff41f11f3373ef031b0b17b12e7c0",
+        "docs/SEMILINEAR_OPERATOR_GEOMETRY.md": "53ca243bd83c913649af5687a39d255195569dfec8857f86907b5022aaeee5f8",
+        "tools/quality/SemilinearGeometryDeclarationAudit.lean": "d9cc47f6428cc324dd0b84db976d6b35eacc81f695887a88c423feedb5f8acdb",
+        "scripts/quality/post_build_gate.sh": "967830aa4922634fe9585ced2ca641087e2d7a3c98e8632ec6f2ed3f78541ef5"
+      },
+      "public_source_theorems": 78,
+      "private_helper_theorems": 2,
+      "scope": "Independent source, hypothesis, noncommutation, documentation, native-audit and gate-routing review; native acceptance remains separate.",
+      "semantic_warning_review": {
+        "count": 9,
+        "errors": 0,
+        "strict_policy_exit_code": 1,
+        "error_policy_exit_code": 0,
+        "report_sha256": "08417bc652340c466ab88aef49dbab98d3a93bb982008b784bcd5edb7afd373f",
+        "consumed_by_later_proofs": [
+          "matrixAmplitudeQuotient_eq",
+          "sheetConj_covarianceStep",
+          "gramDensity_even",
+          "sheetConj_apply",
+          "sheetConj_eq_submatrix",
+          "sheetConj_lie",
+          "coupledBlock_isHermitian_iff"
+        ],
+        "exported_boundary_or_expansion_identities": [
+          "matrixEvolution_zero",
+          "liouvillian_eq_ordered"
+        ],
+        "disposition": "All nine are legitimate short proofs. No conclusion assumed, no scalar or commuting carrier substitution; warnings retained without proof padding."
+      },
+      "scope_distinctions": [
+        "Real algebra equivalence with proved complex conjugate-linearity; no physical spacetime CPT representation.",
+        "Hermitian hypotheses are necessary to upgrade anti-real trace to zero.",
+        "Unitary exponential evolution and strictly contractive covariance transition are distinct branches.",
+        "The invariant positive stationary point is constructed using the existing fixed-point theorem.",
+        "Both the odd and even example observable fail to commute with the invariant density.",
+        "The amplitude norm estimate retains the inverse-amplitude factor; no singularity-removal conclusion."
+      ],
+      "historical_covariance_receipt_sha256": "4cfb6c00a37b84768a7b3b0649fa1909bdf06387d7b5ecca2ac100c7974fea4d",
+      "builds_or_tests_by_source_auditor": false
+    }
+  },
+  "independent_native_qa": {
+    "record_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-acceptance.json",
+    "record_sha256": "e6425b6e5381152333b0eb69426d58c45d5b6b31e30911dc99cd59459ef182fa",
+    "record": {
+      "schema": "info_geometry.independent_qa_acceptance.v1",
+      "recorded_at_utc": "2026-11-05T14:21:20.214841+00:00",
+      "role": "QA-A",
+      "agent": "/root/operator_extraction",
+      "authored_reviewed_mathematics": false,
+      "disposition": "PASS",
+      "repository": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+      "baseline_revision": "169b613066750153826bb41473d873dcc2aa1ab3",
+      "scope": "Fresh exact 29-repository-module source closure; four new mathematics owners plus one import-only umbrella, all owned declarations audited. Not a whole-root-package or pre-push certificate.",
+      "native_result": {
+        "status": "PASS",
+        "toolchain": "leanprover/lean4:v4.34.1",
+        "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+        "sources": {
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry": "94bc0c058784ea18e88ae61b6934d610016ff41f11f3373ef031b0b17b12e7c0",
+          "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry": "7af6f55069280a58d9aad1e00bb5bb12eac0877a3ee1df02fb657fed5500a378",
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+          "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry": "3b091f89e70740ebb00cffb6e0956a4e7f0082ecdefbb7bb39abd0a849897e72",
+          "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": "17ac7f059668f9c07e656da35970503dcce868002fbad94cdf79f134e09fd410",
+          "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry": "58a6efac61763b2cbd64fad673be95fae347ff376690c546d23a8408d2228d9f",
+          "InfoGeometry.OperatorAlgebra.DerivationRightLogarithmicForm": "8d49933bc76e24d17cf761f235ba723b9e44b9f6e942b9d8f35f3d064f9bb926",
+          "InfoGeometry.OperatorAlgebra.DerivationGaugeTransport": "636bc44edbdc0213bba5774958a101534b8ce2a8ba6b1e6fd7de82b86e5e678d",
+          "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms": "064f933a187f6ab522fdd054d6e0efc0dced1839423c61c6ef173d47a172fd7f",
+          "InfoGeometry.Algebra.DerivationLieLaneRepresentation": "10cc2d569ad3b07b823930bafea8a5eb0b9e4b4d19cb61965be622f12be75a92",
+          "InfoGeometry.Algebra.DerivationLieLane": "5f359091e7fc0e1da4e4d5ce98fc7accee63c01f97e06576791fc3e9e052e1c3",
+          "InfoGeometry.Algebra.NonAssocDerivation": "31d0955fd5a16a98b7e9d01e4e1006ac528e6e14fae27477ff075f95caef51a3",
+          "InfoGeometry.Geometry.AssociativeGaugeConnection": "3eda86b87abad47910bae91735c818999f2a065e3d6bbfc658722fc7cf62a436",
+          "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry": "c0e66444610e9bf32ef2365c5673caf6f19d5dcd8972f2619f5399b5564a34cd",
+          "InfoGeometry.OperatorAlgebra.CovarianceStationary": "385f4c69094092b7363503613cc9d28a4cbc330e5168a837220c7f2f0ba4ca96",
+          "InfoGeometry.OperatorAlgebra.CovarianceContraction": "bcdb84a32be89bd26e1e8a067cc7d61ff7c4e85e7de3cd157c56f734c8a89339",
+          "InfoGeometry.OperatorAlgebra.CovarianceDynamics": "9e8a914a61bfcf7cf64ec7e573ab02eb3a7bb96d92b74b7c1234ed53b374fea8",
+          "InfoGeometry.OperatorAlgebra.CovarianceTransport": "a5a0da3d5a74c2e2c6e89ec9f2bb6920cf1d30a5cde9bb2d64b422c4786711c8",
+          "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": "e5dedd55d49bbbf9213b13118cfa9ca6c6e3f6045b57ee75d59917eea80b9ec4",
+          "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "b1846b1a75c97a8159e73aabe6dd556389b6f35a0c590a692b4f6c4d0278f444",
+          "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining": "9b7be68720be13d4fdc0d7b4e948a3072d8bf271252f8f85b851de9b1ec82ba7",
+          "InfoGeometry.Canonical.FiniteSteinInverse": "d40605747ed403d8006386d8075689048321815ddbcd90caa135881b3f449515",
+          "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples": "4b3df3c1d3127424b98ae3af546bce780a6c8c82e98733e69d067327aa5d9b52",
+          "InfoGeometry.OperatorAlgebra.CovarianceExamples": "d2c4eb50525b650f68506bc92e067d60cc96904fc15ae9ec57f4edfd9ad3782e",
+          "InfoGeometry.OperatorAlgebra.CovarianceKraus": "f6b71278c4431bd9334f3dc5ca4d3f6c9c69c0777abc213eb7241b5e9d3a3ef5",
+          "InfoGeometry.Quantum.KrausAmplificationCP": "02075c267b4595a5c20320457a92c9c1ea8731bf03931e75871467633dfd4877",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+          "InfoGeometry.Modular.Choi": "1bfb539ed3eecf50a99164a80319fa8bd6a7fd31af7a32d1d7b15dc81351eb52",
+          "InfoGeometry.Quantum.ChoiCompletePositivity": "355393f1229736d065380dce0e9fb114da02388042c9e880a392b6534683066e"
+        },
+        "repository_head": "169b613066750153826bb41473d873dcc2aa1ab3",
+        "compile_order": [
+          "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities",
+          "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "InfoGeometry.Algebra.NonAssocDerivation",
+          "InfoGeometry.Algebra.DerivationLieLane",
+          "InfoGeometry.Algebra.DerivationLieLaneRepresentation",
+          "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms",
+          "InfoGeometry.Geometry.AssociativeGaugeConnection",
+          "InfoGeometry.OperatorAlgebra.DerivationGaugeTransport",
+          "InfoGeometry.OperatorAlgebra.DerivationRightLogarithmicForm",
+          "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry",
+          "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry",
+          "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+          "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel",
+          "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining",
+          "InfoGeometry.OperatorAlgebra.CovarianceTransport",
+          "InfoGeometry.Canonical.FiniteSteinInverse",
+          "InfoGeometry.OperatorAlgebra.CovarianceDynamics",
+          "InfoGeometry.OperatorAlgebra.CovarianceContraction",
+          "InfoGeometry.OperatorAlgebra.CovarianceStationary",
+          "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra",
+          "InfoGeometry.Quantum.ChoiCompletePositivity",
+          "InfoGeometry.Modular.Choi",
+          "InfoGeometry.Quantum.KrausAmplificationCP",
+          "InfoGeometry.OperatorAlgebra.CovarianceKraus",
+          "InfoGeometry.OperatorAlgebra.CovarianceExamples",
+          "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples",
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry"
+        ],
+        "owners": [
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples",
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry"
+        ],
+        "checked_owners": [
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples",
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry"
+        ],
+        "audited_owners": [
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry",
+          "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples",
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry"
+        ],
+        "owner_warnings_as_errors": true,
+        "mathlib_package_pins": {
+          "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+          "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+          "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+          "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+          "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+          "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+          "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+          "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+        },
+        "baseline_ref": "169b613066750153826bb41473d873dcc2aa1ab3",
+        "baseline_git_blobs": {
+          "InfoGeometry.OperatorAlgebra.MatrixTraceGeometry": "9c0b73a69684fa6125f319f775bac830975b1c88",
+          "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": "a5812bd0138c0b941f28f5680a579b2c9d54e72e",
+          "InfoGeometry.OperatorAlgebra.DerivationRightLogarithmicForm": "997e5e37ae2da53a1f1a6f6e32e5e45bbcda68a6",
+          "InfoGeometry.OperatorAlgebra.DerivationGaugeTransport": "b5aa3b0ecb4753c13d4f9ce9e779d587b7f39bde",
+          "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms": "e89be195954c554bffc2c9a683f8670c44bc04dd",
+          "InfoGeometry.Algebra.DerivationLieLaneRepresentation": "89c1f8c77bcdbb715ff2c2d0cca1bd875265bdd5",
+          "InfoGeometry.Algebra.DerivationLieLane": "acc36e4434c298a4d7f8d55c47ba50fee15c5c49",
+          "InfoGeometry.Algebra.NonAssocDerivation": "39f652f573400ec294d79a6fb5cd6b59f9448217",
+          "InfoGeometry.Geometry.AssociativeGaugeConnection": "22cdd04343e6a8228ffea99fb4294c02a81b7a6e",
+          "InfoGeometry.OperatorAlgebra.DerivationMatrixGeometry": "3d850dcc90bd52e8745594af23bb8205fe13af8d",
+          "InfoGeometry.OperatorAlgebra.CovarianceStationary": "7e0f6ace956d794ae3c18d6bb115ae36d0d9a671",
+          "InfoGeometry.OperatorAlgebra.CovarianceContraction": "8e87542dde6c011d03461acc7a44cf3f15bf2cda",
+          "InfoGeometry.OperatorAlgebra.CovarianceDynamics": "45ad44d2cc2879197c3758dc1d81e0cb38c40e72",
+          "InfoGeometry.OperatorAlgebra.CovarianceTransport": "fee87566a1ed1ecadfd82bb4afefe76ba2ab6f79",
+          "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": "2059bc9c438507882dc300ae77297d5912c80880",
+          "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "11ef973d3e64a1490aea863ac2826f4e85e7710d",
+          "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining": "c261b0871f222326a2cc7c1ff034b42724660eab",
+          "InfoGeometry.Canonical.FiniteSteinInverse": "e02789a2be96692be88b13425bad26b596213ac5",
+          "InfoGeometry.OperatorAlgebra.CovarianceExamples": "000c2e82178cd9df33f043ebe67d75dadb94814f",
+          "InfoGeometry.OperatorAlgebra.CovarianceKraus": "c01341c6c04ac0d89ca455fa28666ebd248d0ba1",
+          "InfoGeometry.Quantum.KrausAmplificationCP": "bd8af30d7f24623fbcdcf43728a600d1f27486f4",
+          "InfoGeometry.Algebra.FiniteSpinAlgebra": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+          "InfoGeometry.Modular.Choi": "e9a0675153e65ef42628cc8b9d9dd0d42c32afd0",
+          "InfoGeometry.Quantum.ChoiCompletePositivity": "03fe4548486a8c7987d5f843aeb0cd5c77128bc1"
+        },
+        "verification_tool_sha256": {
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/check_operator_geometry.py": "1009b859986348880a293d669db0d367d0216942a5325bbfa84832587210b490",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/SemilinearGeometryDeclarationAudit.lean": "d9cc47f6428cc324dd0b84db976d6b35eacc81f695887a88c423feedb5f8acdb",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/operator_geometry_dependency_order.py": "90305a21f77790cadd3d6b16123d60839c9dd293d41468d39c60e7d7399ad2ec"
+        },
+        "scope": "complete selected source closure, not a whole-repository build"
+      },
+      "native_process_exit_code": 0,
+      "native_invocation": {
+        "command": [
+          "python3",
+          "tools/quality/check_operator_geometry.py",
+          "--mathlib",
+          "/workspace/scratch/ec4ca3191aef/pinned-mathlib",
+          "--work-dir",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa",
+          "--target",
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.DerivationAmplitudeGeometry",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.SemilinearCovarianceGeometry",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.SemilinearGeometryExamples",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.SemilinearOperatorGeometry",
+          "--audit",
+          "--audit-source",
+          "tools/quality/SemilinearGeometryDeclarationAudit.lean",
+          "--owner-warnings-as-errors",
+          "--base-ref",
+          "169b613066750153826bb41473d873dcc2aa1ab3"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "environment_overrides": {
+          "PATH_prefix": "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin",
+          "LD_PRELOAD": "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so"
+        },
+        "fresh_workdir": true,
+        "preexisting_compilers": [],
+        "source_review_sha256": "eb136950fcf00adc61b9362f7bb8fddc93b5427593df4e1cec9917053cd96f33",
+        "reviewed_source_hashes_match": true,
+        "source_sha256": {
+          "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean": "58a6efac61763b2cbd64fad673be95fae347ff376690c546d23a8408d2228d9f",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean": "7af6f55069280a58d9aad1e00bb5bb12eac0877a3ee1df02fb657fed5500a378",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean": "4b3df3c1d3127424b98ae3af546bce780a6c8c82e98733e69d067327aa5d9b52",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean": "94bc0c058784ea18e88ae61b6934d610016ff41f11f3373ef031b0b17b12e7c0",
+          "docs/SEMILINEAR_OPERATOR_GEOMETRY.md": "53ca243bd83c913649af5687a39d255195569dfec8857f86907b5022aaeee5f8",
+          "tools/quality/SemilinearGeometryDeclarationAudit.lean": "d9cc47f6428cc324dd0b84db976d6b35eacc81f695887a88c423feedb5f8acdb",
+          "scripts/quality/post_build_gate.sh": "967830aa4922634fe9585ced2ca641087e2d7a3c98e8632ec6f2ed3f78541ef5"
+        }
+      },
+      "source_and_evidence_comparison": {
+        "status": "PASS",
+        "parent_result_manifest_exact_match": true,
+        "source_closure_count": 29,
+        "current_and_staged_source_hashes_match": true,
+        "all_native_checked_hashes_match": true,
+        "verification_tool_hashes_match": true,
+        "source_review_hashes_match": true,
+        "source_review_record_sha256": "eb136950fcf00adc61b9362f7bb8fddc93b5427593df4e1cec9917053cd96f33",
+        "staged_task_file_sha256": {
+          "docs/SEMILINEAR_OPERATOR_GEOMETRY.md": "53ca243bd83c913649af5687a39d255195569dfec8857f86907b5022aaeee5f8",
+          "docs/verification/semilinear_geometry_dependencies.json": "07a4a850d72d5e72f19bbf8332f880f42377b443794bc692b752e9a421391e9b",
+          "docs/verification/semilinear_geometry_semantic_warnings.json": "08417bc652340c466ab88aef49dbab98d3a93bb982008b784bcd5edb7afd373f",
+          "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean": "58a6efac61763b2cbd64fad673be95fae347ff376690c546d23a8408d2228d9f",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean": "7af6f55069280a58d9aad1e00bb5bb12eac0877a3ee1df02fb657fed5500a378",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean": "4b3df3c1d3127424b98ae3af546bce780a6c8c82e98733e69d067327aa5d9b52",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean": "94bc0c058784ea18e88ae61b6934d610016ff41f11f3373ef031b0b17b12e7c0",
+          "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+          "scripts/quality/post_build_gate.sh": "967830aa4922634fe9585ced2ca641087e2d7a3c98e8632ec6f2ed3f78541ef5",
+          "tools/quality/SemilinearGeometryDeclarationAudit.lean": "d9cc47f6428cc324dd0b84db976d6b35eacc81f695887a88c423feedb5f8acdb"
+        },
+        "native_audit_exact_bytes_match_parent": true,
+        "native_audit_sha256": "89e17aa901468eb83fbb60bfab2ef01145b779910f5ced522718426562eec117",
+        "declarations": 131,
+        "declaration_kinds": {
+          "theorem": 109,
+          "definition": 22
+        },
+        "public_named_theorems": 78,
+        "private_helper_theorems": 2,
+        "public_theorems_all_in_audit": true,
+        "permitted_axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "observed_axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "dag_exact_bytes_match_curated": true,
+        "dag_sha256": "07a4a850d72d5e72f19bbf8332f880f42377b443794bc692b752e9a421391e9b",
+        "dag_direct_edges": 377,
+        "dag_hasse_edges": 183,
+        "dag_layers": 9,
+        "independent_topology_and_transitive_reduction_check": true,
+        "semantic_report_exact_match": true,
+        "semantic_warning_count": 9,
+        "semantic_error_count": 0,
+        "historical_covariance_receipt_unchanged": true,
+        "historical_covariance_receipt_sha256": "4cfb6c00a37b84768a7b3b0649fa1909bdf06387d7b5ecca2ac100c7974fea4d",
+        "baseline_tree": "23ed0663e8bca14989a72f8512d815aa3c0e517e",
+        "public_baseline_object_available_locally": false,
+        "public_baseline_tree_if_available": null,
+        "compiler_warning_counts_in_unchanged_dependencies": {
+          "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 3,
+          "InfoGeometry.Algebra.DerivationLieLane": 1,
+          "InfoGeometry.Algebra.DerivationLieLaneRepresentation": 3,
+          "InfoGeometry.OperatorAlgebra.DerivationDifferentialForms": 9,
+          "InfoGeometry.Canonical.FiniteSteinInverse": 2,
+          "InfoGeometry.Quantum.ChoiCompletePositivity": 9,
+          "InfoGeometry.Quantum.KrausAmplificationCP": 5
+        },
+        "selected_owner_compiler_warnings": 0
+      },
+      "source_review": {
+        "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-source-review.json",
+        "sha256": "eb136950fcf00adc61b9362f7bb8fddc93b5427593df4e1cec9917053cd96f33",
+        "disposition": "PASS",
+        "independent_agent": "/root/repository_scout"
+      },
+      "static_checks": [
+        {
+          "name": "dag",
+          "command": [
+            "python3",
+            "tools/quality/operator_geometry_dependency_order.py",
+            "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/declaration-audit.jsonl",
+            "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/dependency-order.json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-dag.log",
+          "log_sha256": "8ba782e5d26bc964fef3e633bd10358e1d22533daf6025ff4d966e89b7f2b618"
+        },
+        {
+          "name": "screener",
+          "command": [
+            "python3",
+            "tools/infra/opengauss_screener.py",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-screener.log",
+          "log_sha256": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+        },
+        {
+          "name": "refute",
+          "command": [
+            "python3",
+            "tools/infra/opengauss_cli.py",
+            "refute",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+            "--strict",
+            "--json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-refute.log",
+          "log_sha256": "1b3aea04aae939ec94dd26daec7f75d85ed63c26c6b986aad888f6758e3c85ee"
+        },
+        {
+          "name": "gate4-static",
+          "command": [
+            "python3",
+            "tools/infra/opengauss_cli.py",
+            "review",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+            "--gate",
+            "GATE_4",
+            "--json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-gate4-static.log",
+          "log_sha256": "13dd9890f5a065c039431fe377582c86b31936e0d854a9068c13a546cfe22567"
+        },
+        {
+          "name": "semantic-strict",
+          "command": [
+            "python3",
+            "tools/quality/semantic_vacuity_gate.py",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+            "--fail-on",
+            "warning",
+            "--json-out",
+            "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/semantic-strict.json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 1,
+          "expected_exit_code": 1,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-semantic-strict.log",
+          "log_sha256": "e5f41f90db4650471f8d2aa714a27a936302b663e666460b64fb020696f29543"
+        },
+        {
+          "name": "semantic-errors",
+          "command": [
+            "python3",
+            "tools/quality/semantic_vacuity_gate.py",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+            "lean/InfoGeometry/OperatorAlgebra/SemilinearOperatorGeometry.lean",
+            "--fail-on",
+            "error",
+            "--json-out",
+            "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/semantic-errors.json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-semantic-errors.log",
+          "log_sha256": "e5f41f90db4650471f8d2aa714a27a936302b663e666460b64fb020696f29543"
+        },
+        {
+          "name": "gate-shell-syntax",
+          "command": [
+            "bash",
+            "-n",
+            "scripts/quality/post_build_gate.sh"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-gate-shell-syntax.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "staged-whitespace",
+          "command": [
+            "git",
+            "diff",
+            "--cached",
+            "--check"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-staged-whitespace.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "staged-proof-gate",
+          "command": [
+            "python3",
+            "tools/quality/proof_proxy_staged_gate.py"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-staged-proof-gate.log",
+          "log_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+        },
+        {
+          "name": "root-path-preflight",
+          "command": [
+            "python3",
+            "tools/infra/ci_bootstrap.py",
+            "paths",
+            "--root",
+            "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+            "--report",
+            "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/root-path-preflight.json"
+          ],
+          "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "exit_code": 1,
+          "expected_exit_code": 1,
+          "log": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-root-path-preflight.log",
+          "log_sha256": "a3d5375807b0b36c56c1e3ad5e20e696878ab1ed0f892833ead044b814fec9bf"
+        }
+      ],
+      "audit_route_checks": {
+        "status": "PASS",
+        "gate_source_sha256": "967830aa4922634fe9585ced2ca641087e2d7a3c98e8632ec6f2ed3f78541ef5",
+        "audit_selector_pattern": "^tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit|SemilinearGeometryDeclarationAudit)\\.lean$",
+        "unrouted_scope_pattern": "^(lakefile\\.lean|lean-toolchain|lean/InfoGeometry\\.lean|lean/DAG\\.lean|tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit|SemilinearGeometryDeclarationAudit)\\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\\.lean$|^proofs/.*\\.lean$|^lib/InfoGeometryCore/.*\\.lean$|^scratch/.*\\.lean$|^tests/.*\\.lean$",
+        "cases": [
+          {
+            "path": "tools/quality/OperatorGeometryDeclarationAudit.lean",
+            "selector_exit_code": 0,
+            "unrouted_filter_exit_code": 1
+          },
+          {
+            "path": "tools/quality/CovarianceDeclarationAudit.lean",
+            "selector_exit_code": 0,
+            "unrouted_filter_exit_code": 1
+          },
+          {
+            "path": "tools/quality/SemilinearGeometryDeclarationAudit.lean",
+            "selector_exit_code": 0,
+            "unrouted_filter_exit_code": 1
+          },
+          {
+            "path": "tools/quality/UnreviewedDeclarationAudit.lean",
+            "selector_exit_code": 1,
+            "unrouted_filter_exit_code": 0
+          }
+        ],
+        "locked_file_check_route_present": true,
+        "full_post_build_gate_executed": false
+      },
+      "semantic_warning_disposition": {
+        "strict_warning_policy_exit_code": 1,
+        "error_policy_exit_code": 0,
+        "warnings": 9,
+        "errors": 0,
+        "report_sha256": "08417bc652340c466ab88aef49dbab98d3a93bb982008b784bcd5edb7afd373f",
+        "disposition": "Accepted as legitimate short interface and computation proofs; no conclusion assumed, no scalar/commuting carrier substitution, and no proof padding or warning suppression.",
+        "findings": [
+          {
+            "category": "trivial_surface",
+            "detail": "rfl",
+            "file": "lean/InfoGeometry/OperatorAlgebra/DerivationAmplitudeGeometry.lean",
+            "line": 100,
+            "severity": "warning",
+            "subject": "matrixAmplitudeQuotient_eq",
+            "qa_assessment": "Definitional expansion of the actual inner-derivation specialization; consumed by the adjoint, norm, transport, and witness proofs."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "by",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "line": 56,
+            "severity": "warning",
+            "subject": "matrixEvolution_zero",
+            "qa_assessment": "The zero-time identity for the constructed native exponential; an exported boundary law."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "by",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearCovarianceGeometry.lean",
+            "line": 86,
+            "severity": "warning",
+            "subject": "sheetConj_covarianceStep",
+            "qa_assessment": "Equivariance derived from the concrete multiplicative star-preserving map; consumed by iterate transport and fixed-point invariance."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "by",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearGeometryExamples.lean",
+            "line": 71,
+            "severity": "warning",
+            "subject": "gramDensity_even",
+            "qa_assessment": "Concrete Gram-density symmetry derived from the proved Hamiltonian symmetry and map laws; used for the noncommuting witness."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "rfl",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "line": 45,
+            "severity": "warning",
+            "subject": "sheetConj_apply",
+            "qa_assessment": "Pointwise computation rule for the explicitly constructed real algebra equivalence; used in subsequent proofs."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "rfl",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "line": 48,
+            "severity": "warning",
+            "subject": "sheetConj_eq_submatrix",
+            "qa_assessment": "Equivalent pointwise representation of that concrete map, used for its positivity and block-action proofs."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "by",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "line": 73,
+            "severity": "warning",
+            "subject": "sheetConj_lie",
+            "qa_assessment": "Bracket preservation derived from multiplicativity and additivity, used by Liouvillian and amplitude transport."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "by",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "line": 151,
+            "severity": "warning",
+            "subject": "coupledBlock_isHermitian_iff",
+            "qa_assessment": "Native block-adjoint classification specialized to a coupled full matrix; used by the noncommuting example."
+          },
+          {
+            "category": "trivial_surface",
+            "detail": "rfl",
+            "file": "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean",
+            "line": 222,
+            "severity": "warning",
+            "subject": "liouvillian_eq_ordered",
+            "qa_assessment": "Definition expansion fixing the commutator sign and product order; an exported algebraic interface."
+          }
+        ]
+      },
+      "root_path_preflight": {
+        "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/root-path-preflight.json",
+        "sha256": "43c0bb30c93a8bf7d2fd7359d12cdc0b80ff0b8333cd30ba6fce9839a465cf29",
+        "exit_code": 1,
+        "report": {
+          "schema": "info_geometry.ci_path_preflight.v1",
+          "revision": "169b613066750153826bb41473d873dcc2aa1ab3",
+          "ok": false,
+          "packages": [
+            {
+              "name": "HomotopyHypothesis",
+              "dir": "external_refs/homotopy-hypothesis-lean4",
+              "config": "lakefile.lean",
+              "directory_exists": false,
+              "config_exists": false,
+              "source_kind": "untracked",
+              "errors": [
+                "missing_config",
+                "untracked_path_dependency"
+              ],
+              "ok": false
+            },
+            {
+              "name": "Atlas",
+              "dir": "external_refs/atlas-lean",
+              "config": "lakefile.toml",
+              "directory_exists": false,
+              "config_exists": false,
+              "source_kind": "untracked",
+              "errors": [
+                "missing_config",
+                "untracked_path_dependency"
+              ],
+              "ok": false
+            },
+            {
+              "name": "GIFT",
+              "dir": "external_refs/gift-framework-core",
+              "config": "lakefile.lean",
+              "directory_exists": true,
+              "config_exists": false,
+              "source_kind": "gitlink",
+              "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+              "errors": [
+                "missing_config",
+                "uninitialized_gitlink"
+              ],
+              "ok": false
+            },
+            {
+              "name": "InfoGeometryCore",
+              "dir": "lib/InfoGeometryCore",
+              "config": "lakefile.lean",
+              "directory_exists": true,
+              "config_exists": true,
+              "source_kind": "tracked",
+              "errors": [],
+              "ok": true
+            }
+          ],
+          "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+        }
+      },
+      "tool_and_runtime_hashes": {
+        "compiler_banner": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+        "toolchain": "leanprover/lean4:v4.34.1",
+        "runtime_files": {
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lean": {
+            "sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "bytes": 9024
+          },
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.c": {
+            "sha256": "9e5ec1993d93f7a0936f939d9bac75b7dfa1f69711065fb1ea063c7ff3b84518",
+            "bytes": 724
+          },
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so": {
+            "sha256": "8b6b5036e8daf7368ba903f40e5f451a98839ec27c13f28d5e0d104bd12d0d16",
+            "bytes": 15840
+          },
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/lib/lean/libleanshared.so": {
+            "sha256": "6b30cc963d065fc9d2f87f7e9cbe0682b23000ae5425bccd769c5d477fa74f13",
+            "bytes": 233708536
+          }
+        },
+        "verification_tool_sha256": {
+          "tools/quality/check_operator_geometry.py": "1009b859986348880a293d669db0d367d0216942a5325bbfa84832587210b490",
+          "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+          "tools/quality/SemilinearGeometryDeclarationAudit.lean": "d9cc47f6428cc324dd0b84db976d6b35eacc81f695887a88c423feedb5f8acdb",
+          "tools/quality/operator_geometry_dependency_order.py": "90305a21f77790cadd3d6b16123d60839c9dd293d41468d39c60e7d7399ad2ec",
+          "tools/infra/opengauss_screener.py": "8905eaa68b63c82709aca70e05b86249b74df297a96e6d7bae8b037331b9448b",
+          "tools/infra/opengauss_cli.py": "fa210dde57fc129ada5645926285c8a6e1b6ab7cdd3354747279aa5702f1f18c",
+          "tools/quality/semantic_vacuity_gate.py": "cfd9a8e4108610a8221a74a28330849b02c064536f245fb411bc989eba2ac27f",
+          "tools/quality/semantic_vacuity_patterns.json": "01cd14be0fdb966fbe93e93d2729d6822dc375c85f6338a7d67b70758fd87082",
+          "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9",
+          "scripts/quality/post_build_gate.sh": "967830aa4922634fe9585ced2ca641087e2d7a3c98e8632ec6f2ed3f78541ef5",
+          "tools/infra/ci_bootstrap.py": "91aef1473e016397248bfd422e81dc61b8ec676cd559a456362dcc6ca8174514"
+        },
+        "configuration_sha256": {
+          "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+          "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+        },
+        "environment_overrides": {
+          "PATH_prefix": "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin",
+          "LD_PRELOAD": "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so"
+        },
+        "helper_source_review": "Only redirects readlink of the current process /proc/PID/exe to /proc/self/exe. No proof source, compiler arguments, file contents, or return-status change."
+      },
+      "evidence": {
+        "qa-invocation.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-invocation.json",
+          "sha256": "6aef18371f6c9883730846757145c789be7435be480d8539d33965e99f5838cc"
+        },
+        "qa-process-result.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-process-result.json",
+          "sha256": "81868a6e94ffc0178bf833deb1c9013d9fab4ee95ddb876a5e8ec4f1d26376d2"
+        },
+        "build.log": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/build.log",
+          "sha256": "e550a476c34058d7e54afe93111ee15e77c8f00cb51cf85b7f810ffd82c7f410"
+        },
+        "compiler-version.txt": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/compiler-version.txt",
+          "sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680"
+        },
+        "source-manifest.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/source-manifest.json",
+          "sha256": "e54b22e899c70ce95f2c573f1af7165a3f2ff4c4754ba39aef505fc3ee67682a"
+        },
+        "checked-hashes.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/checked-hashes.json",
+          "sha256": "972827514e95fba0d78bf3ce885e791f1daf11a79f3d35fe3f2437904c6b7a47"
+        },
+        "result.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/result.json",
+          "sha256": "068208231b9e86576b09ace25235917e45bcdb6026d868b3275426fdaddacad8"
+        },
+        "declaration-audit.jsonl": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/declaration-audit.jsonl",
+          "sha256": "89e17aa901468eb83fbb60bfab2ef01145b779910f5ced522718426562eec117"
+        },
+        "dependency-order.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/dependency-order.json",
+          "sha256": "07a4a850d72d5e72f19bbf8332f880f42377b443794bc692b752e9a421391e9b"
+        },
+        "qa-static-results.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-static-results.json",
+          "sha256": "4727e3e9562e69e202dfc8db2a99252b78e0e9c49190336317743c586339df71"
+        },
+        "qa-evidence-comparison.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-evidence-comparison.json",
+          "sha256": "5708826a4a519a73713fb941e74735efde48448dd01fcceca035709d65fa4717"
+        },
+        "qa-audit-routing.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-audit-routing.json",
+          "sha256": "877711b616c8628bdc26511992b74e5222650c3c7e41dced657b96441caf7233"
+        },
+        "qa-tool-runtime-hashes.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-tool-runtime-hashes.json",
+          "sha256": "789c6d19a7f95ac6d26a73496bd91ce7d24fa4eb65389bdc319d630f616e0ba4"
+        },
+        "qa-semantic-disposition.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/qa-semantic-disposition.json",
+          "sha256": "94bf3e41bc0250b3955f5010978f5146c9031c74b9b2f126a4550fdc6412c2a7"
+        },
+        "semantic-strict.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/semantic-strict.json",
+          "sha256": "08417bc652340c466ab88aef49dbab98d3a93bb982008b784bcd5edb7afd373f"
+        },
+        "semantic-errors.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/semantic-errors.json",
+          "sha256": "59c7d908409fbc33f4eccd1a4f95c62c1bdfb70d4de224c44848da494d1c9e5c"
+        },
+        "root-path-preflight.json": {
+          "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/root-path-preflight.json",
+          "sha256": "43c0bb30c93a8bf7d2fd7359d12cdc0b80ff0b8333cd30ba6fce9839a465cf29"
+        }
+      },
+      "limitations": [
+        "Thirty-two inherited compiler warnings remain in unchanged dependencies; the five selected owners and audit passed warnings-as-errors.",
+        "Nine lexical trivial_surface warnings remain and make the strict warning policy exit 1; the error policy exits 0.",
+        "The root path-package preflight fails for missing HomotopyHypothesis and Atlas configurations/provenance and an uninitialized GIFT gitlink.",
+        "No root-package build, full post-build gate, or pre-push gate was executed by this QA run.",
+        "The public b4d246c80027e27c74360e7f45da1dcc39fe6731 commit object is unavailable locally; QA verified the local baseline tree 23ed0663e8bca14989a72f8512d815aa3c0e517e and exact current source, not the remote object.",
+        "One ancillary evidence-command process-creation attempt failed with exec-server transport disconnected; its retry completed. No native verification result relies on that failed call.",
+        "The operator theorems do not establish a physical spacetime CPT representation, dark-matter identification, negative gravitational mass, or singularity removal."
+      ],
+      "mathematical_review": "The concrete semilinear automorphism, Hermitian trace cancellation, even-Hamiltonian exponential reversal, fixed-point invariance from uniqueness, ordered Riccati/product formulas, inverse-dependent norm estimate, and noncommuting witnesses agree with the stated contract.",
+      "active_compilers_at_completion": [],
+      "compiler_test_lane": "RELEASED to /root after this receipt is written",
+      "source_edits_by_qa": false
+    }
+  },
+  "declaration_dependency_poset": {
+    "path": "docs/verification/semilinear_geometry_dependencies.json",
+    "sha256": "07a4a850d72d5e72f19bbf8332f880f42377b443794bc692b752e9a421391e9b",
+    "vertices": 131,
+    "direct_edges": 377,
+    "hasse_edges": 183,
+    "layers": 9,
+    "relation": "Reflexive transitive closure of actual checked declaration dependencies restricted to the selected owners.",
+    "acyclic": true,
+    "independent_topology_and_transitive_reduction_check": true,
+    "scope": "Dependencies of these proofs; not a reconstructed physical causal order."
+  },
+  "retained_semantic_report": {
+    "path": "docs/verification/semilinear_geometry_semantic_warnings.json",
+    "sha256": "08417bc652340c466ab88aef49dbab98d3a93bb982008b784bcd5edb7afd373f",
+    "warnings": 9,
+    "errors": 0,
+    "strict_warning_policy_exit_code": 1,
+    "error_policy_exit_code": 0,
+    "review": "All nine short interface or computation proofs were reviewed individually by A-A and QA-A. No proof padding, warning suppression, or semantic-gate exemption."
+  },
+  "root_package_preflight": {
+    "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/semilinear-qa/root-path-preflight.json",
+    "sha256": "43c0bb30c93a8bf7d2fd7359d12cdc0b80ff0b8333cd30ba6fce9839a465cf29",
+    "exit_code": 1,
+    "report": {
+      "schema": "info_geometry.ci_path_preflight.v1",
+      "revision": "169b613066750153826bb41473d873dcc2aa1ab3",
+      "ok": false,
+      "packages": [
+        {
+          "name": "HomotopyHypothesis",
+          "dir": "external_refs/homotopy-hypothesis-lean4",
+          "config": "lakefile.lean",
+          "directory_exists": false,
+          "config_exists": false,
+          "source_kind": "untracked",
+          "errors": [
+            "missing_config",
+            "untracked_path_dependency"
+          ],
+          "ok": false
+        },
+        {
+          "name": "Atlas",
+          "dir": "external_refs/atlas-lean",
+          "config": "lakefile.toml",
+          "directory_exists": false,
+          "config_exists": false,
+          "source_kind": "untracked",
+          "errors": [
+            "missing_config",
+            "untracked_path_dependency"
+          ],
+          "ok": false
+        },
+        {
+          "name": "GIFT",
+          "dir": "external_refs/gift-framework-core",
+          "config": "lakefile.lean",
+          "directory_exists": true,
+          "config_exists": false,
+          "source_kind": "gitlink",
+          "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+          "errors": [
+            "missing_config",
+            "uninitialized_gitlink"
+          ],
+          "ok": false
+        },
+        {
+          "name": "InfoGeometryCore",
+          "dir": "lib/InfoGeometryCore",
+          "config": "lakefile.lean",
+          "directory_exists": true,
+          "config_exists": true,
+          "source_kind": "tracked",
+          "errors": [],
+          "ok": true
+        }
+      ],
+      "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+    }
+  },
+  "runtime_compatibility": {
+    "description": "The host process-ID layout requires redirecting readlink of the current process executable from /proc/<own-pid>/exe to /proc/self/exe. All other readlink calls are forwarded unchanged. Lean executable and kernel are unchanged.",
+    "details_and_hashes_location": "independent_native_qa.record.tool_and_runtime_hashes"
+  },
+  "historical_covariance_receipt": {
+    "path": "docs/verification/noncommutative_covariance_verification.json",
+    "sha256": "4cfb6c00a37b84768a7b3b0649fa1909bdf06387d7b5ecca2ac100c7974fea4d",
+    "unchanged": true
+  },
+  "mathematical_scope_limits": [
+    "The concrete symmetry is a real algebra equivalence with proved complex conjugate-linearity; no spacetime CPT representation or antiunitary state-space operator is constructed.",
+    "Odd Hermitian observables have zero trace pairing with invariant Hermitian states; even Hamiltonians need not have zero expectation. Both witness pairs are proved noncommuting.",
+    "The native unitary exponential branch is distinct from the strictly contractive covariance branch.",
+    "The ordered amplitude quotient is not generally self-adjoint. The exact commutator obstruction and inverse-amplitude norm factor remain explicit.",
+    "No interacting second universe, baryogenesis, dark-matter identification, emergent spacetime, negative gravitational mass, curvature bound, or singularity removal is inferred.",
+    "The motivating large-dimension approximation, conditional-expectation identification, nonlinear gain derivation, quantitative stochastic closure errors, and varying-transition stability remain outside the proved scope."
+  ],
+  "publication_snapshot": {
+    "pull_request": "https://github.com/nickgou-nuke/info-geometry-lean/pull/285",
+    "base_branch": "main",
+    "head_branch": "feat/noncommutative-covariance-closure",
+    "existing_pull_request_is_draft": true,
+    "extension_committed": false,
+    "extension_published": false,
+    "state_note": "Pre-publication evidence snapshot. The existing draft PR already contains the earlier covariance development. The extension will be committed and published only after this record is cross-checked. Those later actions do not retroactively change this snapshot.",
+    "merge_requested": false
+  },
+  "record_note": "The full independent QA record is embedded without modification. All source hashes identify the exact verified contents. This file intentionally contains no self-hash or future commit identifier."
+}

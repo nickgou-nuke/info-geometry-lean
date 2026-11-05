@@ -1,0 +1,602 @@
+{
+  "schema": "info_geometry.noncommutative_covariance_verification.v1",
+  "status": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "source_article": "https://mcbal.github.io/post/a-large-d-closure-for-asymmetric-kinetic-vector-spin-systems/",
+  "base_revision": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+  "lean_toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "scope": "complete selected source closure, not a whole-repository build",
+  "native_build_command": {
+    "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+    "env_overrides": {
+      "PATH": "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin:/root/.codex/tmp/arg0-linux/codex-arg0iFLO8B:/opt/codex/codex-path:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "LD_PRELOAD": "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so"
+    },
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "tools/quality/check_operator_geometry.py",
+      "--mathlib",
+      "/workspace/scratch/ec4ca3191aef/pinned-mathlib",
+      "--work-dir",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa",
+      "--base-ref",
+      "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.CovarianceTransport",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.CovarianceDynamics",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.CovarianceKraus",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.CovarianceContraction",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.CovarianceStationary",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.CovarianceExamples",
+      "--owner",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeCovarianceClosure",
+      "--audit",
+      "--audit-source",
+      "tools/quality/CovarianceDeclarationAudit.lean",
+      "--owner-warnings-as-errors"
+    ]
+  },
+  "source_manifest": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "sources": {
+      "InfoGeometry.OperatorAlgebra.CovarianceTransport": "a5a0da3d5a74c2e2c6e89ec9f2bb6920cf1d30a5cde9bb2d64b422c4786711c8",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": "e5dedd55d49bbbf9213b13118cfa9ca6c6e3f6045b57ee75d59917eea80b9ec4",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "b1846b1a75c97a8159e73aabe6dd556389b6f35a0c590a692b4f6c4d0278f444",
+      "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining": "9b7be68720be13d4fdc0d7b4e948a3072d8bf271252f8f85b851de9b1ec82ba7",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance": "291b3dc5ebef62ac84c7cb69c67eb7cc8baea5178d01194e27218df7dea29361",
+      "InfoGeometry.OperatorAlgebra.CovarianceDynamics": "9e8a914a61bfcf7cf64ec7e573ab02eb3a7bb96d92b74b7c1234ed53b374fea8",
+      "InfoGeometry.Canonical.FiniteSteinInverse": "d40605747ed403d8006386d8075689048321815ddbcd90caa135881b3f449515",
+      "InfoGeometry.OperatorAlgebra.CovarianceKraus": "f6b71278c4431bd9334f3dc5ca4d3f6c9c69c0777abc213eb7241b5e9d3a3ef5",
+      "InfoGeometry.Quantum.KrausAmplificationCP": "02075c267b4595a5c20320457a92c9c1ea8731bf03931e75871467633dfd4877",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+      "InfoGeometry.Modular.Choi": "1bfb539ed3eecf50a99164a80319fa8bd6a7fd31af7a32d1d7b15dc81351eb52",
+      "InfoGeometry.Quantum.ChoiCompletePositivity": "355393f1229736d065380dce0e9fb114da02388042c9e880a392b6534683066e",
+      "InfoGeometry.OperatorAlgebra.CovarianceContraction": "bcdb84a32be89bd26e1e8a067cc7d61ff7c4e85e7de3cd157c56f734c8a89339",
+      "InfoGeometry.OperatorAlgebra.CovarianceStationary": "385f4c69094092b7363503613cc9d28a4cbc330e5168a837220c7f2f0ba4ca96",
+      "InfoGeometry.OperatorAlgebra.CovarianceExamples": "d2c4eb50525b650f68506bc92e067d60cc96904fc15ae9ec57f4edfd9ad3782e",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeCovarianceClosure": "d2727041fc1c94470fd2cfd6f600d86b5dbcecf3e57da434552310acf3305542"
+    },
+    "repository_head": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+    "compile_order": [
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel",
+      "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining",
+      "InfoGeometry.OperatorAlgebra.CovarianceTransport",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance",
+      "InfoGeometry.Canonical.FiniteSteinInverse",
+      "InfoGeometry.OperatorAlgebra.CovarianceDynamics",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Quantum.ChoiCompletePositivity",
+      "InfoGeometry.Modular.Choi",
+      "InfoGeometry.Quantum.KrausAmplificationCP",
+      "InfoGeometry.OperatorAlgebra.CovarianceKraus",
+      "InfoGeometry.OperatorAlgebra.CovarianceContraction",
+      "InfoGeometry.OperatorAlgebra.CovarianceStationary",
+      "InfoGeometry.OperatorAlgebra.CovarianceExamples",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeCovarianceClosure"
+    ],
+    "owners": [
+      "InfoGeometry.OperatorAlgebra.CovarianceTransport",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance",
+      "InfoGeometry.OperatorAlgebra.CovarianceDynamics",
+      "InfoGeometry.OperatorAlgebra.CovarianceKraus",
+      "InfoGeometry.OperatorAlgebra.CovarianceContraction",
+      "InfoGeometry.OperatorAlgebra.CovarianceStationary",
+      "InfoGeometry.OperatorAlgebra.CovarianceExamples",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeCovarianceClosure"
+    ],
+    "checked_owners": [
+      "InfoGeometry.OperatorAlgebra.CovarianceTransport",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance",
+      "InfoGeometry.OperatorAlgebra.CovarianceDynamics",
+      "InfoGeometry.OperatorAlgebra.CovarianceKraus",
+      "InfoGeometry.OperatorAlgebra.CovarianceContraction",
+      "InfoGeometry.OperatorAlgebra.CovarianceStationary",
+      "InfoGeometry.OperatorAlgebra.CovarianceExamples",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeCovarianceClosure"
+    ],
+    "audited_owners": [
+      "InfoGeometry.OperatorAlgebra.CovarianceTransport",
+      "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance",
+      "InfoGeometry.OperatorAlgebra.CovarianceDynamics",
+      "InfoGeometry.OperatorAlgebra.CovarianceKraus",
+      "InfoGeometry.OperatorAlgebra.CovarianceContraction",
+      "InfoGeometry.OperatorAlgebra.CovarianceStationary",
+      "InfoGeometry.OperatorAlgebra.CovarianceExamples",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeCovarianceClosure"
+    ],
+    "owner_warnings_as_errors": true,
+    "mathlib_package_pins": {
+      "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+      "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+    },
+    "baseline_ref": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+    "baseline_git_blobs": {
+      "InfoGeometry.OperatorAlgebra.NoncommutativeKrausChannel": "2059bc9c438507882dc300ae77297d5912c80880",
+      "InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace": "11ef973d3e64a1490aea863ac2826f4e85e7710d",
+      "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining": "c261b0871f222326a2cc7c1ff034b42724660eab",
+      "InfoGeometry.Canonical.FiniteSteinInverse": "e02789a2be96692be88b13425bad26b596213ac5",
+      "InfoGeometry.Quantum.KrausAmplificationCP": "bd8af30d7f24623fbcdcf43728a600d1f27486f4",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra": "e2ef7d33156ed3eeb35dd7bb219521270091cda0",
+      "InfoGeometry.Modular.Choi": "e9a0675153e65ef42628cc8b9d9dd0d42c32afd0",
+      "InfoGeometry.Quantum.ChoiCompletePositivity": "03fe4548486a8c7987d5f843aeb0cd5c77128bc1"
+    },
+    "verification_tool_sha256": {
+      "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/check_operator_geometry.py": "1009b859986348880a293d669db0d367d0216942a5325bbfa84832587210b490",
+      "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+      "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/CovarianceDeclarationAudit.lean": "f04fd9d6def2aa6d1855d1040bbea3deba6416d66a7a40f9d87e09020afcb391",
+      "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/operator_geometry_dependency_order.py": "90305a21f77790cadd3d6b16123d60839c9dd293d41468d39c60e7d7399ad2ec"
+    },
+    "scope": "complete selected source closure, not a whole-repository build"
+  },
+  "qa_acceptance_record_sha256": "155cb87a677eb81cd88b758647d4066d888ad50a19a6bf4967fba083cb3c71f3",
+  "qa_acceptance": {
+    "role": "QA-A",
+    "agent": "/root/operator_extraction",
+    "authored_mathematical_or_tooling_sources": false,
+    "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+    "accepted_scope": "Exact noncommutative operator covariance extension; full selected 16-module repository closure compiled afresh, all eight selected owners and native audit with warnings as errors; no whole-repository or article large-dimension approximation certification.",
+    "git_head": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+    "working_tree_scope": "dirty-with-task-owned-staged-changes",
+    "lean_toolchain": "leanprover/lean4:v4.34.1",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "lake_version": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)",
+    "artifact_sha256": {
+      "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean": "a5a0da3d5a74c2e2c6e89ec9f2bb6920cf1d30a5cde9bb2d64b422c4786711c8",
+      "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean": "291b3dc5ebef62ac84c7cb69c67eb7cc8baea5178d01194e27218df7dea29361",
+      "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean": "9e8a914a61bfcf7cf64ec7e573ab02eb3a7bb96d92b74b7c1234ed53b374fea8",
+      "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean": "f6b71278c4431bd9334f3dc5ca4d3f6c9c69c0777abc213eb7241b5e9d3a3ef5",
+      "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean": "bcdb84a32be89bd26e1e8a067cc7d61ff7c4e85e7de3cd157c56f734c8a89339",
+      "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean": "385f4c69094092b7363503613cc9d28a4cbc330e5168a837220c7f2f0ba4ca96",
+      "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean": "d2c4eb50525b650f68506bc92e067d60cc96904fc15ae9ec57f4edfd9ad3782e",
+      "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean": "d2727041fc1c94470fd2cfd6f600d86b5dbcecf3e57da434552310acf3305542",
+      "tools/quality/CovarianceDeclarationAudit.lean": "f04fd9d6def2aa6d1855d1040bbea3deba6416d66a7a40f9d87e09020afcb391",
+      "tools/quality/check_operator_geometry.py": "1009b859986348880a293d669db0d367d0216942a5325bbfa84832587210b490",
+      "scripts/quality/post_build_gate.sh": "ba67919a87601a292ac031d060ceaf8d9882c787b212a0e337a15d768a8d21f1",
+      "docs/NONCOMMUTATIVE_COVARIANCE_CLOSURE.md": "341964b0f5789f3effa1791d95ee3ee3796c5be0e99ac848379ba870459eb660"
+    },
+    "runtime_sha256": {
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.c": "9e5ec1993d93f7a0936f939d9bac75b7dfa1f69711065fb1ea063c7ff3b84518",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so": "8b6b5036e8daf7368ba903f40e5f451a98839ec27c13f28d5e0d104bd12d0d16",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550"
+    },
+    "evidence_comparison": {
+      "status": "PASS",
+      "source_modules": 16,
+      "selected_owners": 8,
+      "declarations": 114,
+      "theorem_constants": 102,
+      "named_source_theorems": 79,
+      "per_owner": {
+        "InfoGeometry.OperatorAlgebra.CovarianceContraction": 8,
+        "InfoGeometry.OperatorAlgebra.CovarianceDynamics": 18,
+        "InfoGeometry.OperatorAlgebra.CovarianceExamples": 18,
+        "InfoGeometry.OperatorAlgebra.CovarianceKraus": 5,
+        "InfoGeometry.OperatorAlgebra.CovarianceStationary": 6,
+        "InfoGeometry.OperatorAlgebra.CovarianceTransport": 24,
+        "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance": 35
+      },
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "direct_edges": 212,
+      "hasse_edges": 140,
+      "layers": 7,
+      "audit_sha256": "1d4615618c55a496b8dc0910fe736b8704be1e58b4421c068abb1e1d3176b45c",
+      "source_hashes_match_root": true,
+      "declaration_records_match_root": true,
+      "dag_matches_root_and_documented_artifact": true,
+      "frozen_11_lean_and_tool_hashes_unchanged": true,
+      "final_documentation_sha256": "341964b0f5789f3effa1791d95ee3ee3796c5be0e99ac848379ba870459eb660",
+      "documented_dag_sha256": "7e98ab94dd6294cefc11009d8c4756f661a8c62d5318321988b84754e5f0a852"
+    },
+    "checks": [
+      {
+        "check": "screener",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_screener.py",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+          "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean",
+          "--strict",
+          "--json"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "check": "refute",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_cli.py",
+          "refute",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+          "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean",
+          "--strict",
+          "--json"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "check": "gate4_static",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_cli.py",
+          "review",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+          "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean",
+          "--gate",
+          "GATE_4",
+          "--json"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "check": "vacuity_strict",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/semantic_vacuity_gate.py",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+          "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean",
+          "--fail-on",
+          "warning",
+          "--json-out",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-vacuity-strict.json"
+        ],
+        "exit_code": 1,
+        "expected_exit_code": 1
+      },
+      {
+        "check": "vacuity_policy",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/semantic_vacuity_gate.py",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceTransport.lean",
+          "lean/InfoGeometry/OperatorAlgebra/FiniteOperatorCovariance.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceDynamics.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceKraus.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceContraction.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceStationary.lean",
+          "lean/InfoGeometry/OperatorAlgebra/CovarianceExamples.lean",
+          "lean/InfoGeometry/OperatorAlgebra/NoncommutativeCovarianceClosure.lean",
+          "--fail-on",
+          "error",
+          "--json-out",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-vacuity-policy.json"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "check": "gate_shell_syntax",
+        "command": [
+          "bash",
+          "-n",
+          "scripts/quality/post_build_gate.sh"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "check": "staged_whitespace",
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--check"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      },
+      {
+        "check": "staged_proof_gate",
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/proof_proxy_staged_gate.py"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0
+      }
+    ],
+    "native_build_exit_code": 0,
+    "semantic_warnings": {
+      "strict_exit_code": 1,
+      "error_policy_exit_code": 0,
+      "errors": 0,
+      "warnings": 14,
+      "reviewed_findings": [
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.CovarianceDynamics.finiteStein_star",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.CovarianceDynamics.finiteStein_selfAdjoint"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.CovarianceTransport.covarianceStep_zero_eq_krausChannel",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": []
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_add",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.centered_add",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_add_left",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_add_right",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_affine"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_sub",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_eq_secondMoment_sub",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_centered"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_left_mul",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.centered_left_mul",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_eq_secondMoment_sub",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_left_mul",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_affine"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_right_mul",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_eq_secondMoment_sub",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_right_mul"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.centered_left_mul",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_left_mul",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_right_mul"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_add_left",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_covariance",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_lag"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_add_right",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_covariance"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_left_mul",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_covariance",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_lag"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_right_mul",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_covariance"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.mean_star",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_eq_secondMoment_sub"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.crossCovariance_star",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_covariance",
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_lag"
+          ]
+        },
+        {
+          "declaration": "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_lag",
+          "category": "trivial_surface",
+          "severity": "warning",
+          "disposition": "ACCEPTED_NONBLOCKING",
+          "reason": "Explicit algebraic interface or transport identity over the declared noncommutative carrier; short simplification proves its actual statement without a hidden conclusion premise or proof hole.",
+          "owned_consumers": [
+            "InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance.innovation_lag_of_cross_zero"
+          ]
+        }
+      ]
+    },
+    "curated_artifacts_verified": {
+      "docs/verification/noncommutative_covariance_dependencies.json": "7e98ab94dd6294cefc11009d8c4756f661a8c62d5318321988b84754e5f0a852",
+      "docs/verification/noncommutative_covariance_semantic_warnings.json": "a3eb6dd3a20a574a7a8c8900f278e9f396db51bbda89be98592faad35c528338"
+    },
+    "validation_caveats": [
+      "Unchanged dependency sources emit inherited Lean warnings; selected new owners and audit emitted no warnings under warningAsError.",
+      "The semantic heuristic is not warning-free: 14 short-proof warnings are retained and accepted by source review.",
+      "Mathlib and its dependencies were pin-checked and reused from existing compiled artifacts; this run rebuilt the 16 selected repository sources, not all Mathlib or the repository.",
+      "The inspected executable-path compatibility shim redirects only readlink of the process own executable path; its source and binary hashes are recorded.",
+      "The final documentation-only revision was re-reviewed and matches 341964b0f5789f3effa1791d95ee3ee3796c5be0e99ac848379ba870459eb660; mathematics and verification tooling remained unchanged.",
+      "No root-package build or push gate is certified. The parent will generate the curated verification JSON from this QA record before delivery."
+    ],
+    "remaining_mathematical_debt": [
+      "Conditional-expectation identification of innovations in a specified stochastic process.",
+      "Derivation and control of state-dependent nonlinear gains.",
+      "Large-dimension concentration and quantitative stochastic closure error rates.",
+      "Stability for time-varying or state-dependent transitions; the analytic theorem here uses a fixed transition and a sufficient norm bound."
+    ],
+    "evidence_sha256": {
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/result.json": "219d8f2fa0bb495f6a0be1cfb0231c7e4f1f92160897cb2d19b95fedc23f0b38",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/source-manifest.json": "53690c5924bd6da914cf1794955c452f95e7510e82afacc6aee6cb8b4d5c1fe8",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/declaration-audit.jsonl": "1d4615618c55a496b8dc0910fe736b8704be1e58b4421c068abb1e1d3176b45c",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/dependency-order.json": "7e98ab94dd6294cefc11009d8c4756f661a8c62d5318321988b84754e5f0a852",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-fingerprint-before.json": "d73338a44207c7cc391ed045daf688f0f870fb2c8283e0e437ac2c60ea9973b6",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-build-command.json": "cfaf84c27a41d041fe120bfce74b3e70ccac69b83f6f9ae9decbaf19e0bfb1b4",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-build-exit.json": "e89df0eae5ec7db81135aed16463968955c578bcc4f2ec43172eff351f080c17",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-build.log": "29131899cecf2a720fe6f26ce2afb208ad4063367fc7c5e073b9d46232863da4",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-evidence-comparison.json": "4c7f8a80a84989c26392c38ff4c4dbf3e336e31b0251b558e5d9700a4734ccb6",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-static-results.json": "4e4a44b7ab1e33e0f5edeaf85bb23b645a9f83aa189fbc2c5640b27f0d05a065",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-vacuity-strict.json": "a3eb6dd3a20a574a7a8c8900f278e9f396db51bbda89be98592faad35c528338",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-vacuity-policy.json": "da6cecd254b260e1653801a619938968f37bc30bcdf567f6fde41d7178b435f2",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-audit-validator-regression.json": "0deb51fc5c4e766c31033edf6a46fa161526d30ed02b5cde6f0dbc8dc2ed3d7c",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/covariance-qa/qa-audit-route-regression.json": "1aec29ecf82701e9fceec832005bc56b585056beedbea679e61e9502e4e0d66f"
+    },
+    "compiler_test_lane": "RELEASED"
+  },
+  "root_package_preflight": {
+    "schema": "info_geometry.ci_path_preflight.v1",
+    "revision": "3d7eb6d9b0af5636ab12b3d0b91b82740507e49e",
+    "ok": false,
+    "packages": [
+      {
+        "name": "HomotopyHypothesis",
+        "dir": "external_refs/homotopy-hypothesis-lean4",
+        "config": "lakefile.lean",
+        "directory_exists": false,
+        "config_exists": false,
+        "source_kind": "untracked",
+        "errors": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "ok": false
+      },
+      {
+        "name": "Atlas",
+        "dir": "external_refs/atlas-lean",
+        "config": "lakefile.toml",
+        "directory_exists": false,
+        "config_exists": false,
+        "source_kind": "untracked",
+        "errors": [
+          "missing_config",
+          "untracked_path_dependency"
+        ],
+        "ok": false
+      },
+      {
+        "name": "GIFT",
+        "dir": "external_refs/gift-framework-core",
+        "config": "lakefile.lean",
+        "directory_exists": true,
+        "config_exists": false,
+        "source_kind": "gitlink",
+        "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+        "errors": [
+          "missing_config",
+          "uninitialized_gitlink"
+        ],
+        "ok": false
+      },
+      {
+        "name": "InfoGeometryCore",
+        "dir": "lib/InfoGeometryCore",
+        "config": "lakefile.lean",
+        "directory_exists": true,
+        "config_exists": true,
+        "source_kind": "tracked",
+        "errors": [],
+        "ok": true
+      }
+    ],
+    "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+  },
+  "publication": {
+    "pushed_to_github": false,
+    "pull_request_created": false,
+    "reason": "The selected closure is verified. The required root-package/push gate has not been certified; direct path-package preflight reports missing HomotopyHypothesis and Atlas dependencies and an uninitialized GIFT gitlink."
+  },
+  "record_note": "QA git_head records the base revision before the final task commit. Content hashes identify the exact verified sources. The nested QA record is preserved from the completed independent review."
+}

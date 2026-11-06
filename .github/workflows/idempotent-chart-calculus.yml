@@ -6,6 +6,7 @@ on:
       - 'lean/InfoGeometry/**'
       - 'lib/InfoGeometryCore/**'
       - 'tools/quality/check_operator_geometry.py'
+      - 'tools/quality/check_chart_audit_rejection.py'
       - 'tools/build_lock.py'
       - 'lean-toolchain'
       - 'lake-manifest.json'
@@ -103,6 +104,14 @@ jobs:
           pathlib.Path('verification/object-manifest.json').write_text(json.dumps(hashes, indent=2) + '\n')
           print(f'Fresh project object files: {len(hashes)}')
           PY
+      - name: Reject a corrupted certificate in the second audit namespace
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHART_LEAN_BINARY="$(python3 -c 'import json; print(json.load(open("verification/ci-fingerprint.json"))["binaries"]["lean"]["path"])')"
+          python3 project/tools/quality/check_chart_audit_rejection.py \
+            --repo project --mathlib pinned-mathlib --work-dir verification \
+            --lean "$CHART_LEAN_BINARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -112,3 +121,4 @@ jobs:
             verification/*.json
             verification/*.txt
             verification/lean
+            verification/namespace-rejection

@@ -99,12 +99,18 @@ def main() -> None:
         if module in paths:
             return
         relative = Path("lean", *module.split(".")).with_suffix(".lean")
-        source = overlay / relative
+        # InfoGeometryCore is a tracked local Lake package, not an external
+        # stub. Snapshot its actual source under the same Lean module name.
+        source_relative = (
+            Path("lib", "InfoGeometryCore", *module.split(".")).with_suffix(".lean")
+            if module.startswith("InfoGeometryCore.") else relative
+        )
+        source = overlay / source_relative
         if not source.is_file():
-            source = root / relative
+            source = root / source_relative
         data = source.read_bytes()
         if args.base_ref and module not in OWNERS:
-            expected = subprocess.check_output(["git", "rev-parse", f"{args.base_ref}:{relative}"],
+            expected = subprocess.check_output(["git", "rev-parse", f"{args.base_ref}:{source_relative}"],
                                                cwd=root, text=True).strip()
             actual_blob = subprocess.check_output(["git", "hash-object", "--stdin"],
                                                   cwd=root, input=data).decode().strip()
@@ -119,7 +125,7 @@ def main() -> None:
         active.add(module)
         for line in IMPORT.findall(data.decode()):
             for dep in line.split("--", 1)[0].split():
-                if dep.startswith(("InfoGeometry.", "DAG.")):
+                if dep.startswith(("InfoGeometry.", "InfoGeometryCore.", "DAG.")):
                     stage(dep)
                 elif dep.split(".")[0] not in {"Mathlib", "Lean", "Std", "Init", "Batteries", "Aesop", "Qq"}:
                     raise RuntimeError(f"Unsupported import {dep}; no stub will be generated")

@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Algebra.IsotropicCyclotomicGalois
+import Mathlib.Algebra.GroupWithZero.Units.Basic
 import Mathlib.Tactic.NoncommRing
 
 /-! # Operator cyclotomic identities from nilpotent operators
@@ -794,6 +795,22 @@ theorem operator_geometric_sum_inverse (n : ℕ) (x : B)
     exact hxn
   rw [hpow] at hleft hright
   exact ⟨by simpa using hleft, by simpa using hright⟩
+
+/-- The existing two-sided geometric inverse is the native total ring inverse.
+Nilpotence supplies an actual unit, so no nonunit branch of `Ring.inverse` is
+used. The statement includes the zero-ring edge case at exponent zero. -/
+theorem ringInverse_one_sub_eq_operatorGeometricSum (n : ℕ) (x : B)
+    (hxn : x ^ n = 0) :
+    Ring.inverse (1 - x) = operatorGeometricSum n x := by
+  obtain ⟨hleft, hright⟩ := operator_geometric_sum_inverse n x hxn
+  let u : Bˣ := ⟨1 - x, operatorGeometricSum n x, hleft, hright⟩
+  exact Ring.inverse_unit u
+
+/-- Native powers and finite sums give the same nilpotent inverse formula. -/
+theorem ringInverse_one_sub_eq_sum (n : ℕ) (x : B) (hxn : x ^ n = 0) :
+    Ring.inverse (1 - x) = ∑ i ∈ Finset.range n, x ^ i := by
+  rw [ringInverse_one_sub_eq_operatorGeometricSum n x hxn,
+    operatorGeometricSum_eq_range_sum]
 
 /-- The raw Reynolds sum has a telescoping commutator in every unital
 associative ring. -/

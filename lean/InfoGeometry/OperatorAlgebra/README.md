@@ -35,6 +35,27 @@ This table is a practical entry map, not an exhaustive theorem inventory.
 
 ## Reading algebraic and spectral claims
 
+### Ordered resolvent transforms
+
+[ResolventTransform.lean](ResolventTransform.lean) proves the unit-domain
+equivalence for `1-A*C` and `1-C*A`, inverse intertwining, and the exact finite
+difference and quadratic remainder of `eta C A = Ring.inverse (1-A*C) * A` in
+an arbitrary associative ring.
+[PeirceSpine/Resolvent.lean](PeirceSpine/Resolvent.lean) supplies the corrected
+two-corner conjugation, chart commutator, and full/corner inverse-sandwich
+identities for arbitrary Peirce variations.
+
+The native analytic derivatives live in
+[ResolventTransformDifferential.lean](../Analysis/ResolventTransformDifferential.lean)
+and [PeirceResolventDifferential.lean](../Analysis/PeirceResolventDifferential.lean).
+They use `HasFDerivAt` on a complete real normed algebra, keep the lower
+coordinate fixed, and preserve noncommutative multiplication order. The
+[theorem contract](../../../docs/PEIRCE_RESOLVENT_DIFFERENTIAL_CONTRACT.md)
+records the exact inverse hypotheses and the additional obligations behind
+the proposed metric, Berezinian, and supermanifold interpretations.
+
+### Polynomial and spectral interpretations
+
 For the Peirce pair, `genV = N₊*N₋ + N₋*N₊` belongs to the same operator
 ring as the generators. In particular, a formula `D(J) = -4 • (genV * J)`
 keeps an ordered operator product. It supplies a scalar eigenvalue only after

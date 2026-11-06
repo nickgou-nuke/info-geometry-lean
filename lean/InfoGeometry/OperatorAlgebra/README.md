@@ -33,6 +33,27 @@ This table is a practical entry map, not an exhaustive theorem inventory.
 | Jones optics and material response | [OperatorialJonesCalculus.lean](OperatorialJonesCalculus.lean), [SusceptibilityHessian.lean](SusceptibilityHessian.lean), [StatisticalChannels.lean](OperatorialJonesCalculus/StatisticalChannels.lean), [HessianResponse.lean](SusceptibilityHessian/HessianResponse.lean) | These include data interfaces as well as theorems. For example, `PolarizationChannel` supplies a channel field, while Hessian regularity is defined by bijectivity of a supplied response operator; a physical evolution law is not inferred from those fields. |
 | Affine and Virasoro bridges | [AffineVirasoroBridge.lean](AffineVirasoroBridge.lean), [VirasoroProjectBridge.lean](VirasoroProjectBridge.lean) | The abstract datum supplies modes and a central element. Concrete realization and bracket theorems, including the conditional Heisenberg construction, are described below. |
 
+## Bounded intertwiners and cyclic vectors
+
+[BoundedIntertwinerLinking.lean](BoundedIntertwinerLinking.lean) embeds an
+arbitrary bounded map `T : E →L[𝕜] F` into the actual endomorphisms of `E × F`
+as `(x, y) ↦ (0, T x)`. It preserves the operator norm, characterizes the full
+lower-left corner, and identifies the diagonal commutator with the ordered
+intertwining defect `B ∘ T - T ∘ A`. The product has its native maximum norm;
+this file does not install a Hilbert inner product or adjoint on it.
+
+[CyclicIntertwiner.lean](CyclicIntertwiner.lean) proves that a bounded
+intertwiner is determined by its value on a cyclic vector.
+[GNSCyclicIntertwiner.lean](GNSCyclicIntertwiner.lean) applies this to the actual
+completed native GNS representation, using the already proved vacuum-orbit
+density in [PositiveLinearMapGNSVacuum.lean](PositiveLinearMapGNSVacuum.lean).
+[IntertwinerAdjointGram.lean](IntertwinerAdjointGram.lean) uses genuine Hilbert
+adjoints to prove that `S† ∘ T` centralizes the source star representation.
+
+The [bounded-intertwiner contract](../../../docs/BOUNDED_INTERTWINER_COMPILATION_CONTRACT.md)
+records exact hypotheses, source corrections, and verification scope. These
+operators do not construct Connes fusion, a conformal net, or its balance.
+
 ## Reading algebraic and spectral claims
 
 For the Peirce pair, `genV = N₊*N₋ + N₋*N₊` belongs to the same operator

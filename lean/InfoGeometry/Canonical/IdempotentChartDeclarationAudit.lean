@@ -27,11 +27,12 @@ namespace InfoGeometry.Canonical.IdempotentChartDeclarationAudit
 
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
-run_cmd InfoGeometry.Canonical.StreamVIDeclarationAudit.auditOwners
-  #[`InfoGeometry.OperatorAlgebra.ResolventChartDifferential,
-    `InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentChartResolvent,
-    `InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentChartDifferential,
-    `InfoGeometry.OperatorAlgebra.PeirceSpine.ChartSignCounterexample]
-  #[] #[]
+run_cmd do
+  InfoGeometry.Canonical.StreamVIDeclarationAudit.auditOwners
+    #[`InfoGeometry.OperatorAlgebra.ResolventChartDifferential,
+      `InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentChartResolvent,
+      `InfoGeometry.OperatorAlgebra.PeirceSpine.IdempotentChartDifferential,
+      `InfoGeometry.OperatorAlgebra.PeirceSpine.ChartSignCounterexample]
+    #[] #[]
 
 end InfoGeometry.Canonical.IdempotentChartDeclarationAudit

@@ -199,11 +199,11 @@ def make_probe(source: str) -> str:
         '      "theorem dependencyEdges_forward : ∀ e ∈ dependencyEdges, e.1 < e.2 := by decide")'
     )
     imports = "".join("import " + owner + "\n" for owner in OWNERS)
-    owner_literals = ",\n    ".join("`" + owner for owner in OWNERS)
+    owner_literals = ",\n      ".join("`" + owner for owner in OWNERS)
     invoke = (
         f"\nnamespace {NEGATIVE}\n"
         "set_option maxRecDepth 100000 in\nset_option maxHeartbeats 2000000 in\n"
-        f"run_cmd {VI}.auditOwners\n  #[{owner_literals}]\n  #[] #[]\n"
+        f"run_cmd do\n  {VI}.auditOwners\n    #[{owner_literals}]\n    #[] #[]\n"
         f"end {NEGATIVE}\n"
     )
     return imports + source.replace(FORWARD_COMMAND, replacement, 1) + invoke

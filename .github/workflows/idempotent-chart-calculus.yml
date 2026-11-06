@@ -1,0 +1,124 @@
+name: Idempotent chart calculus (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/**'
+      - 'lib/InfoGeometryCore/**'
+      - 'tools/quality/check_operator_geometry.py'
+      - 'tools/quality/check_chart_audit_rejection.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/idempotent-chart-calculus.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: idempotent-chart-calculus-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SOURCE_REV: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch the exact source and pinned Mathlib
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          spec = json.loads(pathlib.Path('project/lake-manifest.json').read_text())
+          pin = next(p for p in spec['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install the exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Obtain pinned dependency artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd pinned-mathlib
+          lake exe cache get
+      - name: Record the execution fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p verification
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess
+          root = pathlib.Path('project').resolve()
+          def run(*args):
+              return subprocess.check_output(args, cwd=root, text=True).strip()
+          binaries = {}
+          for name in ('lean', 'lake'):
+              path = pathlib.Path(run('elan', 'which', name))
+              binaries[name] = {
+                  'path': str(path),
+                  'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                  'version': run(name, '--version'),
+              }
+          record = {
+              'source_commit': run('git', 'rev-parse', 'HEAD'),
+              'source_tree': run('git', 'rev-parse', 'HEAD^{tree}'),
+              'toolchain': (root / 'lean-toolchain').read_text().strip(),
+              'binaries': binaries,
+          }
+          pathlib.Path('verification/ci-fingerprint.json').write_text(json.dumps(record, indent=2) + '\n')
+          print(json.dumps(record))
+          PY
+      - name: Compile the selected closure and both declaration audits
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_operator_geometry.py \
+            --mathlib pinned-mathlib --work-dir verification \
+            --target InfoGeometry.Canonical.IdempotentChartDeclarationAudit \
+            2>&1 | tee verification/selected-build.log
+          cat verification/source-manifest.json
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path('verification/oleans')
+          hashes = {
+              str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in sorted(root.rglob('*.olean'))
+          }
+          pathlib.Path('verification/object-manifest.json').write_text(json.dumps(hashes, indent=2) + '\n')
+          print(f'Fresh project object files: {len(hashes)}')
+          PY
+      - name: Reject a corrupted certificate in the second audit namespace
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHART_LEAN_BINARY="$(python3 -c 'import json; print(json.load(open("verification/ci-fingerprint.json"))["binaries"]["lean"]["path"])')"
+          python3 project/tools/quality/check_chart_audit_rejection.py \
+            --repo project --mathlib pinned-mathlib --work-dir verification \
+            --lean "$CHART_LEAN_BINARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: idempotent-chart-calculus-verification
+          path: |
+            verification/*.log
+            verification/*.json
+            verification/*.txt
+            verification/lean
+            verification/namespace-rejection

@@ -48,7 +48,7 @@ theorem add_coneMinus_idempotent {P : B} (hP : P * P = P) (C : B) :
 theorem conjPlusInv_idempotent_point_form {P : B} (hP : P * P = P) (A : B) :
     conjPlusInv P A P = P + conePlus P A := by
   simpa only [conjPlus, conjPlusInv, projChartPlus, conePlus_neg,
-    sub_eq_add_neg, sub_neg_eq_add] using
+    sub_eq_add_neg, neg_neg] using
     conjPlus_idempotent_point_form hP (-A)
 
 /-- Adding both tangent corners has exactly the quadratic Peirce defect.
@@ -120,7 +120,7 @@ theorem conjPlusInv_lower_chart_eq {P : B} (hP : P * P = P) (A C : B) :
         ((1 + conePlus P (-A)) * (1 - coneMinus P (-C))) * P *
           ((1 + coneMinus P (-C)) * (1 - conePlus P (-A))) := by
       simp only [conjPlusInv, conePlus_neg, coneMinus_neg,
-        sub_eq_add_neg, sub_neg_eq_add]
+        sub_eq_add_neg, neg_neg]
       peirce_nf hP
     _ = P - genJ P (-A) (-C) - genSig P (-A) (-C) +
         genV P (-A) (-C) * conePlus P (-A) - (2 : ℤ) • coneMinus P (-C) := hexpand

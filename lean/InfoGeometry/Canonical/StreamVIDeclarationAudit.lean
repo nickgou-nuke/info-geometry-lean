@@ -162,9 +162,12 @@ private def elabLiteralCommand (source : String) : CommandElabM Unit := do
       if (← MonadLog.hasErrors) then
         throwError "Generated graph declaration logged an elaboration error"
 
-set_option maxRecDepth 100000 in
-set_option maxHeartbeats 2000000 in
-run_cmd do
+/-- Audit the actual type/value closure of selected owners and named seeds.
+The literal graph declarations are elaborated in the caller's current
+namespace, allowing subsequent mathematical extensions to reuse the same
+inspection and kernel-certificate checks. -/
+def auditOwners (owners addedDeclarations anchors : Array Name) : CommandElabM Unit := do
+  let certificateNamespace ← getCurrNamespace
   let env := (← getEnv).setExporting false
   let mut names : Array Name := #[]
   let mut seen : NameSet := {}
@@ -175,7 +178,7 @@ run_cmd do
   for owner in owners do
     if !(names.any fun name => ownerOf env name == owner) then
       throwError "No declarations found in requested owner module {owner}"
-  for name in addedInverseDeclarations ++ anchors do
+  for name in addedDeclarations ++ anchors do
     if (env.checked.get.find? name).isNone then
       throwError "Requested named anchor is missing: {name}"
     if !seen.contains name then
@@ -282,7 +285,7 @@ run_cmd do
       " ∧ e.2 < " ++ count ++ " := by decide")
   elabLiteralCommand
     ("@[instance_reducible] def declarationPartialOrder : PartialOrder (Fin " ++ count ++ ") := " ++
-      "partialOrderOfRankedEdges (n := " ++ count ++ ") " ++
+      "InfoGeometry.Canonical.StreamVIDeclarationAudit.partialOrderOfRankedEdges (n := " ++ count ++ ") " ++
       "dependencyEdges dependencyEdges_forward")
   elabLiteralCommand
     ("theorem declarationPartialOrder_le_iff (i j : Fin " ++ count ++ ") : " ++
@@ -293,13 +296,13 @@ run_cmd do
   -- Every generated declaration must exist and pass the same axiom audit.
   let certificateDeclarations : Array Name := #[
     `InfoGeometry.Canonical.StreamVIDeclarationAudit.partialOrderOfRankedEdges,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.declarationNames,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.dependencyEdges,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.dependencyEdges_forward,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.declarationNames_size,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.dependencyEdges_bounded,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.declarationPartialOrder,
-    `InfoGeometry.Canonical.StreamVIDeclarationAudit.declarationPartialOrder_le_iff
+    certificateNamespace ++ `declarationNames,
+    certificateNamespace ++ `dependencyEdges,
+    certificateNamespace ++ `dependencyEdges_forward,
+    certificateNamespace ++ `declarationNames_size,
+    certificateNamespace ++ `dependencyEdges_bounded,
+    certificateNamespace ++ `declarationPartialOrder,
+    certificateNamespace ++ `declarationPartialOrder_le_iff
   ]
   let certificateEnv := (← getEnv).setExporting false
   for name in certificateDeclarations do
@@ -320,7 +323,7 @@ run_cmd do
     ("theorems", toJson theoremCount),
     ("project_dependency_edges", toJson edges.size),
     ("modules", toJson (owners.map Name.toString)),
-    ("added_inverse_declarations", toJson (addedInverseDeclarations.map Name.toString)),
+    ("added_seed_declarations", toJson (addedDeclarations.map Name.toString)),
     ("named_existing_anchors", toJson (anchors.map Name.toString)),
     ("axiom_whitelist", toJson (allowedAxioms.map Name.toString)),
     ("dependency_order", toJson (ordered.map Name.toString)),
@@ -331,5 +334,9 @@ run_cmd do
     ("acyclic", toJson true),
     ("status", toJson "PASS")
   ]).compress
+
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 2000000 in
+run_cmd auditOwners owners addedInverseDeclarations anchors
 
 end InfoGeometry.Canonical.StreamVIDeclarationAudit

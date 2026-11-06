@@ -270,9 +270,21 @@ def main() -> int:
         report["probe_source_sha256"] = digest(scratch)
         report["shared_source_sha256"] = digest(shared_source)
         libraries = [work / "oleans", mathlib / ".lake/build/lib/lean"]
-        libraries += [mathlib / ".lake/packages" / name / ".lake/build/lib/lean"
-                      for name in sorted(manifest["mathlib_package_pins"])]
-        require(all(path.is_dir() for path in libraries), "Missing compiled native dependency directory")
+        require(all(path.is_dir() for path in libraries), "Missing project or Mathlib compiled library directory")
+        # Match the maintained positive checker's discovery of existing package libraries.
+        package_root = mathlib / ".lake/packages"
+        package_libraries = sorted(package_root.glob("*/.lake/build/lib/lean"))
+        present_packages = [path.relative_to(package_root).parts[0] for path in package_libraries]
+        require(all(name in manifest["mathlib_package_pins"] for name in present_packages),
+                "Unpinned compiled native dependency directory")
+        require(all(path.is_dir() for path in package_libraries), "Invalid compiled native dependency directory")
+        libraries += package_libraries
+        report["native_library_directories"] = {
+            "included": [str(path) for path in libraries],
+            "pinned_packages_without_compiled_directory":
+                sorted(set(manifest["mathlib_package_pins"]) - set(present_packages)),
+            "selection": "Existing package library directories, as in the maintained positive checker",
+        }
         env = dict(os.environ, LEAN_PATH=os.pathsep.join(map(str, libraries)))
         command = [str(lean), "--root=" + str(scratch_root), str(scratch)]
         report["command"] = command

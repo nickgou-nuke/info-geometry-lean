@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -22,8 +27,7 @@ No wrappers. No classification structure.
 
 namespace InfoGeometry.Algebra.HypercomplexTriad
 
-abbrev Mat2 : Type :=
-  Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2 : Type := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
 /-- Elliptic unit: `I^2 = -1`. -/
 noncomputable def I : Mat2 :=

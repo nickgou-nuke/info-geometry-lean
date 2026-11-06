@@ -7,8 +7,8 @@ Authors: InfoGeometry Engine Contributors
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Geometry.DikinOrbitCore
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
@@ -17,8 +17,6 @@ namespace InfoGeometry.Quantum.DikinBlahutOrbits
 open Real Matrix
 
 noncomputable section
-
-set_option linter.unusedVariables false
 
 /-!
 # Dikin Ellipsoids & Blahut-Arimoto Contractions on Prime Periodic Orbits
@@ -49,12 +47,12 @@ iterative trajectories onto the Selberg/Gutzwiller prime periodic orbits γ_p:
 
 /-- The Dikin metric tensor g_p(x) = 1 / x² along the periodic orbit ray. -/
 def dikinMetric (x : ℝ) : ℝ :=
-  1 / x ^ 2
+  InfoGeometry.Geometry.DikinOrbitCore.coefficient x
 
 /-- Predicate for a point y being inside the Dikin Ellipsoid ℰ(x, r):
     g_p(x) * (y - x)² ≤ r². -/
 def InDikinEllipsoid (x y r : ℝ) : Prop :=
-  dikinMetric x * (y - x) ^ 2 ≤ r ^ 2
+  InfoGeometry.Geometry.DikinOrbitCore.ellipsoid x y r
 
 /-- The canonical period of the Selberg prime orbit γ_p. -/
 def primeOrbitPeriod (p : ℕ) : ℝ :=
@@ -69,14 +67,7 @@ def primeOrbitPeriod (p : ℕ) : ℝ :=
     which strictly confines y to the positive interior [x(1 - r), x(1 + r)] ⊂ (0, ∞). -/
 theorem dikin_ellipsoid_iff_abs_le (x y r : ℝ) (hx : 0 < x) (hr : 0 ≤ r) :
     InDikinEllipsoid x y r ↔ |y - x| ≤ r * x := by
-  unfold InDikinEllipsoid dikinMetric
-  have h_div : (1 / x ^ 2) * (y - x) ^ 2 = ((y - x) / x) ^ 2 := by
-    rw [div_pow, one_div_mul_eq_div]
-  rw [h_div]
-  have h_sqrt_le : ((y - x) / x) ^ 2 ≤ r ^ 2 ↔ |(y - x) / x| ≤ r := by
-    rw [sq_le_sq, abs_of_nonneg hr]
-  rw [h_sqrt_le, abs_div, abs_of_pos hx]
-  rw [div_le_iff₀ hx]
+  exact InfoGeometry.Geometry.DikinOrbitCore.ellipsoid_iff_abs_le hx hr
 
 /-- Quantitative lower bound for points in a one-dimensional Dikin ellipsoid:
     if `x > 0`, `0 ≤ r`, and `y ∈ ℰ(x, r)`, then `x * (1 - r) ≤ y`. -/
@@ -95,7 +86,7 @@ theorem dikin_ellipsoid_strictly_positive (x y r : ℝ) (hx : 0 < x) (hr_nonneg 
     (h_in : InDikinEllipsoid x y r) :
     0 < y := by
   have h_lower := dikin_ellipsoid_lower_bound x y r hx hr_nonneg h_in
-  exact lt_of_lt_of_le (mul_pos hx (by linarith)) h_lower
+  exact lt_of_lt_of_le (mul_pos hx (sub_pos.mpr hr_lt)) h_lower
 
 /-!
 ### 2. Blahut-Arimoto Contraction Nested Inclusions on Periodic Orbits
@@ -109,13 +100,12 @@ theorem dikin_ellipsoid_nested_shrink (x y r Kc : ℝ) (hx : 0 < x) (hr : 0 ≤ 
     (hKc_nonneg : 0 ≤ Kc) (hKc_le : Kc ≤ 1)
     (h_in : InDikinEllipsoid x y (Kc * r)) :
     InDikinEllipsoid x y r := by
+  have _hx_ne : x ≠ 0 := ne_of_gt hx
+  have h_Kc_r_le : Kc * r ≤ r := by
+    nlinarith [hKc_nonneg, hKc_le, hr]
   unfold InDikinEllipsoid at *
   have h_scale : (Kc * r) ^ 2 ≤ r ^ 2 := by
-    have h1 : (Kc * r) ^ 2 = Kc ^ 2 * r ^ 2 := mul_pow Kc r 2
-    rw [h1]
-    have h_Kc_sq_le : Kc ^ 2 ≤ 1 := by
-      nlinarith
-    nlinarith [sq_nonneg r]
+    nlinarith [h_Kc_r_le, mul_nonneg hKc_nonneg hr, hr]
   exact le_trans h_in h_scale
 
 /-- Under positive dilation by `p`, the coefficient of the one-dimensional
@@ -124,7 +114,9 @@ one-dimensional Riemannian volume density scales by `p⁻¹`. -/
 theorem dikin_metric_prime_scale (p : ℕ) (hp : 0 < p) (x : ℝ) (hx : 0 < x) :
     dikinMetric ((p : ℝ) * x) = (1 / (p : ℝ) ^ 2) * dikinMetric x := by
   unfold dikinMetric
-  have hp_pos : 0 < (p : ℝ) := Nat.cast_pos.mpr hp
+  unfold InfoGeometry.Geometry.DikinOrbitCore.coefficient
+  have _hp_pos : 0 < (p : ℝ) := Nat.cast_pos.mpr hp
+  have _hx_ne : x ≠ 0 := ne_of_gt hx
   have h_mul_sq : ((p : ℝ) * x) ^ 2 = (p : ℝ) ^ 2 * x ^ 2 := mul_pow (p : ℝ) x 2
   rw [h_mul_sq, one_div_mul_one_div]
 

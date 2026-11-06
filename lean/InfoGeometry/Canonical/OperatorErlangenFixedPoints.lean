@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupergradedBracket
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 /-!
 # Operator Erlangen fixed points
@@ -52,6 +59,68 @@ theorem fixedPointSubsemiring_antitone {H K : Subgroup G} (h : H ≤ K) :
   intro a ha
   exact fixedPointSet_antitone (A := A) h ha
 
+section PolynomialLoci
+
+variable {B : Type*} [Ring B] [MulSemiringAction G B]
+
+/-- Integer-polynomial zero loci in an operator ring are invariant under every
+symmetry in a multiplicative semiring action. This gives one operator-level
+Erlangen law covering nilpotence, idempotence, finite-order relations, and
+integer cyclotomic equations without choosing coordinates for the operators. -/
+theorem integerPolynomial_root_smul_iff (g : G) (p : Polynomial ℤ) (x : B) :
+    Polynomial.aeval (g • x) p = 0 ↔ Polynomial.aeval x p = 0 := by
+  have hforward (g : G) (x : B) (hx : Polynomial.aeval x p = 0) :
+      Polynomial.aeval (g • x) p = 0 := by
+    let f := MulSemiringAction.toRingHom G B g
+    have hcoeff : (algebraMap ℤ B).comp (RingHom.id ℤ) =
+        f.comp (algebraMap ℤ B) := by
+      ext z
+      simp [f]
+    have heval := Polynomial.map_aeval_eq_aeval_map hcoeff p x
+    have hmap := congrArg f hx
+    rw [heval] at hmap
+    simpa [f] using hmap
+  constructor
+  · intro hx
+    have hinv := hforward g⁻¹ (g • x) hx
+    have hact : g⁻¹ • (g • x) = x := by
+      calc
+        g⁻¹ • (g • x) = (g⁻¹ * g) • x := by rw [mul_smul]
+        _ = x := by simp
+    simpa [hact] using hinv
+  · exact hforward g x
+
+end PolynomialLoci
+
+section ModularFlowPolynomialLoci
+
+variable {B : Type*} [Ring B]
+
+/-- Every time slice of the repository's algebraic modular flow preserves
+integer-coefficient polynomial equations.  The coefficient ring is ℤ, whose
+image is fixed by each ring equivalence; no statement is made for arbitrary
+coefficients that the flow might move.  Nilpotence, idempotency, and integer
+cyclotomic relations are instances of this equation-preservation law. -/
+theorem modularFlow_integerPolynomial_root_iff
+    (σ : InfoGeometry.OperatorAlgebra.Thermodynamics.ModularFlow B)
+    (t : ℝ) (p : Polynomial ℤ) (x : B) :
+    Polynomial.aeval (σ.flow t x) p = 0 ↔ Polynomial.aeval x p = 0 := by
+  let f := σ.flow t
+  have hcoeff : (algebraMap ℤ B).comp (RingHom.id ℤ) =
+      f.toRingHom.comp (algebraMap ℤ B) := by
+    ext z
+    simp [f]
+  have heval : f (Polynomial.aeval x p) = Polynomial.aeval (f x) p := by
+    simpa [f] using Polynomial.map_aeval_eq_aeval_map hcoeff p x
+  constructor
+  · intro hx
+    apply f.injective
+    rw [heval, hx, map_zero]
+  · intro hx
+    rw [← heval, hx, map_zero]
+
+end ModularFlowPolynomialLoci
+
 section SupergradedCompatibility
 
 variable {R B : Type*} [Field R] [Ring B] [Algebra R B]
@@ -73,8 +142,6 @@ theorem smul_superBracket
       simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
         InfoGeometry.Algebra.SupergradedBracket.commutator,
         InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-        InfoGeometry.Algebra.InvariantTransport.commutator,
-        InfoGeometry.Algebra.InvariantTransport.anticommutator,
         smul_sub, smul_add, hxy, hyx]
 
 theorem fixedPointSet_superBracket_mem

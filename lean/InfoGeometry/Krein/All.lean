@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.MaurerCartanKreinCompatibility
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.FundamentalSymmetryProjectors
 import InfoGeometry.Krein.DoubledSpace

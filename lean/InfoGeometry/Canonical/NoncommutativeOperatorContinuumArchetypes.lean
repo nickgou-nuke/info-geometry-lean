@@ -48,6 +48,20 @@ structure CuntzPair (R : Type*) [Ring R] where
   s₂_s₁_ortho : s₂_star * s₁ = 0
   cuntz_closure : s₁ * s₁_star + s₂ * s₂_star = 1
 
+/-- Constructive zero-ring inhabitant for `CuntzPair PUnit`. -/
+def CuntzPair.punitModel : CuntzPair PUnit where
+  s₁ := 0
+  s₂ := 0
+  s₁_star := 0
+  s₂_star := 0
+  s₁_isometry := Subsingleton.elim _ _
+  s₂_isometry := Subsingleton.elim _ _
+  s₁_s₂_ortho := Subsingleton.elim _ _
+  s₂_s₁_ortho := Subsingleton.elim _ _
+  cuntz_closure := Subsingleton.elim _ _
+
+instance : Inhabited (CuntzPair PUnit) := ⟨CuntzPair.punitModel⟩
+
 /-- First Cuntz projector $e_1 = s_1 s_1^*$. -/
 def CuntzPair.e₁ (c : CuntzPair R) : R := c.s₁ * c.s₁_star
 

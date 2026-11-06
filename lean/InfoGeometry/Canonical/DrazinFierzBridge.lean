@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
@@ -238,22 +243,6 @@ def mk
 end DrazinFierzReadout
 
 /--
-Readback: any supplied readout produces a coordinate value on Drazin-stable
-two-projection data.
--/
-@[rep_depth operator]
-theorem drazin_stable_fierz_readout
-    {NormalizedFierzCoordinates : Type*}
-    (R : DrazinFierzReadout NormalizedFierzCoordinates)
-    (Φ : BSExpectationPhi)
-    (νH : Measure ℝ)
-    (σH : Set ℝ)
-    (_hD : BSExpectationPhi.NoTraceDrazinData Φ νH σH) :
-    ∃ x : NormalizedFierzCoordinates,
-      x = R.readout Φ νH σH :=
-  ⟨R.readout Φ νH σH, rfl⟩
-
-/--
 Trace-free expectation Fierz readout.
 
 The physical coordinate is an expectation value of the Drazin-filtered
@@ -267,7 +256,7 @@ inductive FierzChannel where
   | area
   deriving DecidableEq
 
-instance : Fintype FierzChannel where
+instance instFintypeFierzChannel : Fintype FierzChannel where
   elems := {.scalar, .phase, .metric, .area}
   complete channel := by cases channel <;> decide
 
@@ -559,5 +548,103 @@ structure BirkhoffDecomposition4
       Finset.univ.sum
         (fun π : Equiv.Perm (Fin 4) =>
           weights π • permutationMatrix4 π)
+
+/-! ## 7. Concrete consistency models -/
+
+section ConsistencyModel
+
+open BSExpectationPhi
+
+/-- Concrete identity expectation state on `ℂ`. -/
+@[rep_depth operator]
+def modelExpectationState : ExpectationState ℂ where
+  expect := id
+  map_add _ _ := rfl
+  map_smul _ _ := rfl
+  unital := rfl
+  positive_re a := by
+    change 0 ≤ (star a * a).re
+    simpa [Complex.mul_re] using add_nonneg (mul_self_nonneg a.re) (mul_self_nonneg a.im)
+  positive_im a := by
+    change (star a * a).im = 0
+    simp [Complex.mul_im]
+    ring
+
+/-- Concrete constant-zero Böttcher--Spitkovsky fiber representation. -/
+@[rep_depth operator]
+def modelBSExpectationPhi : BSExpectationPhi where
+  fiber := fun _ => 0
+
+/-- Concrete trace-free Drazin data for `modelBSExpectationPhi` on the empty spectrum. -/
+@[rep_depth operator]
+def modelNoTraceDrazinData :
+    NoTraceDrazinData modelBSExpectationPhi (0 : Measure ℝ) ∅ where
+  drazinFiber := fun _ => 0
+  lambdaRankOne := fun _ => 1
+  rankOneLaw := by simp [BSExpectationPhi.Delta11]
+  lambdaSeparated := ⟨1, one_pos, by simp [BSExpectationPhi.Delta11]⟩
+  zeroLaw := by simp [BSExpectationPhi.Delta0]
+  nilpotentLaw := by simp [BSExpectationPhi.Delta10]
+  stableRankOneLaw := by simp [BSExpectationPhi.Delta11]
+  invertibleLaw := by simp [BSExpectationPhi.Delta2]
+
+/-- Concrete normalized Fierz coordinate packet with zero coordinates. -/
+@[rep_depth operator]
+def modelNormalizedFierzCoordinates : NormalizedFierzCoordinates where
+  coord := fun _ => 0
+
+/-- Concrete constant-zero Fierz residual. -/
+@[rep_depth operator]
+def modelFierzResidual : FierzResidual where
+  residual := fun _ => 0
+
+/-- Concrete compatibility witness for `NormalizedFierzCoordinates`. -/
+@[rep_depth operator]
+def modelDrazinFierzCompatibility :
+    DrazinFierzCompatibilityAssumption NormalizedFierzCoordinates where
+  residual := modelFierzResidual.residual
+  readout := fun _ _ _ => modelNormalizedFierzCoordinates
+  sound := fun _ _ _ _ => rfl
+
+/-- Concrete stationary strong-limit witness on `ℂ`. -/
+@[rep_depth operator]
+def modelAlternatingProjectionStrongLimit :
+    AlternatingProjectionStrongLimitAssumption ℂ where
+  step := fun _ => 0
+  limit := 0
+  strong_limit := fun _ => tendsto_const_nhds
+
+/-- Concrete zero correlation energy packet. -/
+@[rep_depth projective]
+def modelCorrelationEnergy4 : CorrelationEnergy4 where
+  E := 0
+  nonneg := fun _ _ => le_rfl
+
+/-- Concrete identity `4 × 4` bistochastic matrix witness via the identity permutation. -/
+@[rep_depth projective]
+def modelBistochastic4 : Bistochastic4 where
+  M := permutationMatrix4 1
+  nonneg i j := by
+    unfold permutationMatrix4
+    split_ifs <;> norm_num
+  row_sum i := by
+    fin_cases i <;> simp [permutationMatrix4, Fin.sum_univ_four]
+  col_sum j := by
+    fin_cases j <;> simp [permutationMatrix4, Fin.sum_univ_four]
+
+/-- Concrete Birkhoff decomposition witness concentrating weight `1` at the identity permutation. -/
+@[rep_depth projective]
+def modelBirkhoffDecomposition4 :
+    BirkhoffDecomposition4 modelBistochastic4 where
+  weights := fun π => if π = 1 then 1 else 0
+  nonneg π := by
+    split_ifs <;> norm_num
+  total_weight := by
+    simp
+  reconstruct := by
+    ext i j
+    simp [modelBistochastic4, ite_smul]
+
+end ConsistencyModel
 
 end InfoGeometry.Canonical.DrazinFierzBridge

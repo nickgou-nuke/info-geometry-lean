@@ -7,6 +7,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ParaKahlerBregmanModularNoetherP
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornPeirceTetradPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.KantorCornerAnomaly
 import InfoGeometry.OperatorAlgebra.PeirceSpine.PeirceMaurerCartanCurvatureWitness
+import InfoGeometry.OperatorAlgebra.PeirceSpine.WilsonPlaquette
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 
 /-!
@@ -315,33 +316,33 @@ theorem archetype_CL3_poincare_semidirect_and_susy_superalgebra
   refine ⟨?_, ?_, ?_, ?_, rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [zornTetradSym]); peirce_nf hP)
 
-/-! ## 5. Stage `CL₄`: Super-Grassmannian Charts, Socratic Aporia (`Ψ² - Ψ = V`), & Para-Kähler Curvature -/
+/-! ## 5. Stage `CL₄`: Peirce Chart Idempotency, Aporia, & Double-Commutator Identity -/
 
-/-- Forward unipotent super-Grassmannian chart `(1 + N_+(A)) * P * (1 - N_+(A)) = P - N_+(A)`. -/
+/-- Forward Peirce chart expression `(1 + N₊(A)) * P * (1 - N₊(A))`. -/
 def superGrassmannChartPlus (P A : B) : B :=
   (1 + conePlus P A) * P * (1 - conePlus P A)
 
-/-- Backward unipotent super-Grassmannian chart `(1 - N_-(C)) * P * (1 + N_-(C)) = P - N_-(C)`. -/
+/-- Backward Peirce chart expression `(1 - N₋(C)) * P * (1 + N₋(C))`. -/
 def superGrassmannChartMinus (P C : B) : B :=
   (1 - coneMinus P C) * P * (1 + coneMinus P C)
 
 /-- **Stage `CL₄` (`archetype_CL4_super_grassmannian_parakahler_structure`)**:
-1. **First-Order Socratic Aporia (`Ψ² - Ψ = V`) vs. Unipotent Super-Grassmannian Idempotency:**
-   - The naive additive first-order state `Ψ = P + genPhi P A C` fails idempotency by the exact
-     Fubini–Study metric tensor: `(P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = genV P A C`,
-   - Both chiral unipotent super-Grassmannian charts are exact idempotents:
+1. **Idempotency Defect of the Additive Peirce Perturbation:**
+   - The additive perturbation `Ψ = P + genPhi P A C` has the exact algebraic idempotency
+     defect `(P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) = genV P A C`,
+   - Both chiral unipotent Peirce chart expressions are exact idempotents:
      `superGrassmannChartPlus P A = P - conePlus P A`,
      `superGrassmannChartMinus P C = P - coneMinus P C`,
      `superGrassmannChartPlus P A * superGrassmannChartPlus P A = superGrassmannChartPlus P A`, and
      `superGrassmannChartMinus P C * superGrassmannChartMinus P C = superGrassmannChartMinus P C`.
-2. **Non-Commutative Super-Grassmannian Chart Commutator & Anticommutator:**
-   - The commutator of the forward and backward super-Grassmannian charts splits into the even
+2. **Non-Commutative Peirce Chart Commutator & Anticommutator:**
+   - The commutator of the forward and backward Peirce chart expressions splits into the even
      **uncertainty commutator `Σ = [N_+, N_-]`** and the odd boost `Φ = N_+ + N_-`:
      `comm (superGrassmannChartPlus P A) (superGrassmannChartMinus P C) = genSig P A C + genPhi P A C`
      and `evenGrade P (comm (superGrassmannChartPlus P A) (superGrassmannChartMinus P C)) = genSig P A C`,
-   - Their anticommutator recovers the emergent metric `V = {N_+, N_-}`:
+   - Their anticommutator is the algebraic term `genV`:
      `anticomm (superGrassmannChartPlus P A) (superGrassmannChartMinus P C) - (2 : ℤ) • P = genV P A C - genPhi P A C`.
-3. **Para-Kähler Curvature 2-Form & Hessian Split on the Super-Grassmannian:**
+3. **Double-Commutator Identity and Second-Order Split:**
    - `comm (conePlus P A) (comm (coneMinus P C) X) - comm (coneMinus P C) (comm (conePlus P A) X) = comm (genSig P A C) X`,
    - `-(2 : ℤ) • (comm (conePlus P A) (comm (coneMinus P C) X) + comm (coneMinus P C) (comm (conePlus P A) X)) = derivSqPhi P A C X + derivSqJ P A C X`. -/
 theorem archetype_CL4_super_grassmannian_parakahler_structure
@@ -360,7 +361,16 @@ theorem archetype_CL4_super_grassmannian_parakahler_structure
     -(2 : ℤ) • (comm (conePlus P A) (comm (coneMinus P C) X) +
       comm (coneMinus P C) (comm (conePlus P A) X)) =
       derivSqPhi P A C X + derivSqJ P A C X := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  have hCross : P * genPhi P A C + genPhi P A C * P = genPhi P A C := by
+    peirce_nf hP
+  have hAporia :
+      (P + genPhi P A C) * (P + genPhi P A C) - (P + genPhi P A C) =
+        genV P A C := by
+    have hDefect := idempotencyDefect_idempotent_add_of_cross_sum hP hCross
+    have hPhiSq : genPhi P A C * genPhi P A C = genV P A C := by
+      peirce_nf hP
+    simpa [idempotencyDefect, hPhiSq] using hDefect
+  refine ⟨hAporia, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     ((try simp only [superGrassmannChartPlus, superGrassmannChartMinus, derivSqPhi, derivSqJ]);
       peirce_nf hP)
 
@@ -584,7 +594,10 @@ anomaly:
      `kantorGp2 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp2 P A X) = qgtPlus P A C * X * qgtMinus P A C - qgtMinus P A C * X * qgtPlus P A C`,
    - And the difference between the square of the grade-`0` operator `kantorG0` and the anticommutator
      of the grade-`±2` operators `kantorGp2`, `kantorGm2` is the **double-sided uncertainty sandwich `Σ X Σ`**:
-     `kantorG0 P A C (kantorG0 P A C X) - (kantorGp2 P A (kantorGm2 P C X) + kantorGm2 P C (kantorGp2 P A X)) = genSig P A C * X * genSig P A C`. -/
+     `kantorG0 P A C (kantorG0 P A C X) - (kantorGp2 P A (kantorGm2 P C X) + kantorGm2 P C (kantorGp2 P A X)) = genSig P A C * X * genSig P A C`.
+4. **Reference-Corner Curvature Pairing:** With `K = upperHomotopeBracket P C A Z` and `D = coneMinus P C`,
+   `comm K D = comm (genSig P A C) (genV P Z C)`, while
+   `anticomm K D = comm (genSig P A C) (genSig P Z C)`. -/
 theorem archetype_CL8_higher_grade_uncertainty_anomaly_in_symmetry_closure
     {P : B} (hP : P * P = P) (A C Z W X : B) :
     genSig P A C * conePlus P Z = conePlus P A * coneMinus P C * conePlus P Z ∧
@@ -603,9 +616,15 @@ theorem archetype_CL8_higher_grade_uncertainty_anomaly_in_symmetry_closure
       qgtPlus P A C * X * qgtMinus P A C - qgtMinus P A C * X * qgtPlus P A C ∧
     kantorG0 P A C (kantorG0 P A C X) -
       (kantorGp2 P A (kantorGm2 P C X) + kantorGm2 P C (kantorGp2 P A X)) =
-      genSig P A C * X * genSig P A C := by
+      genSig P A C * X * genSig P A C ∧
+    comm (upperHomotopeBracket P C A Z) (coneMinus P C) =
+      comm (genSig P A C) (genV P Z C) ∧
+    anticomm (upperHomotopeBracket P C A Z) (coneMinus P C) =
+      comm (genSig P A C) (genSig P Z C) := by
   refine ⟨?_, ?_, ?_, ?_, upper_homotope_jacobi hP C A Z W,
-          (upper_kantor_anomaly_corner hP A C Z).2, ?_, ?_, ?_, ?_⟩
+          (upper_kantor_anomaly_corner hP A C Z).2, ?_, ?_, ?_, ?_,
+          upper_anomaly_reference_commutator hP A C Z,
+          upper_anomaly_reference_anticommutator hP A C Z⟩
   · simp only [genSig]; peirce_nf hP
   · simp only [genSig]; peirce_nf hP
   · simp only [upperHomotopeBracket, opKantorAnomaly, genSig]; peirce_nf hP
@@ -614,6 +633,58 @@ theorem archetype_CL8_higher_grade_uncertainty_anomaly_in_symmetry_closure
   · simp only [kantorGm2, genSig]; peirce_nf hP
   · simp only [kantorGp2, kantorGm2, qgtPlus, qgtMinus]; peirce_nf hP
   · simp only [kantorG0, kantorTriple, kantorGp2, kantorGm2, genSig]; peirce_nf hP
+
+/-- The higher-grade uncertainty anomaly is the translation commutator for two
+upper-cone modes.  For an idempotent cut, the products of the two upper cones
+vanish, so `[V(A,C), N₊(Z)]` is exactly the skew associative corner product
+already owned by `upperHomotopeBracket`. -/
+theorem translation_commutator_eq_upper_uncertainty_anomaly
+    {P : B} (hP : P * P = P) (A C Z : B) :
+    comm (genV P A C) (conePlus P Z) = upperHomotopeBracket P C A Z := by
+  simp only [genV, anticomm, comm, upperHomotopeBracket, opKantorAnomaly,
+    conePlus, coneMinus]
+  peirce_nf hP
+
+/-! ### EC₆ countermodel: the two reference-corner pairings are ordered oppositely
+to the later prose claim.  This is a genuine `4 × 4` integer operator matrix
+model with a rank-two Peirce cut and noncommuting matrix-unit channel data. -/
+
+private abbrev EC6CounterMatrix := Matrix (Fin 4) (Fin 4) ℤ
+
+private def ec6CounterCut : EC6CounterMatrix :=
+  Matrix.single 0 0 1 + Matrix.single 1 1 1
+
+private def ec6CounterA₁ : EC6CounterMatrix := Matrix.single 0 3 1
+
+private def ec6CounterA₂ : EC6CounterMatrix := Matrix.single 1 2 1
+
+private def ec6CounterC₀ : EC6CounterMatrix :=
+  Matrix.single 2 0 1 + Matrix.single 3 1 1
+
+/-- Concrete evaluation of the EC₆ reference-corner pairings.  The commutator
+of the Kantor anomaly with the lower corner is the mixed `Σ`–`V` bracket;
+the anticommutator is the `Σ`–`Σ` bracket.  In particular, this model refutes
+the swapped universal assignment in the raw proposal. -/
+theorem ec6_reference_pairing_order_countermodel :
+    comm
+        (upperHomotopeBracket ec6CounterCut ec6CounterC₀
+          ec6CounterA₁ ec6CounterA₂)
+        (coneMinus ec6CounterCut ec6CounterC₀) =
+      comm (genSig ec6CounterCut ec6CounterA₁ ec6CounterC₀)
+        (genV ec6CounterCut ec6CounterA₂ ec6CounterC₀) ∧
+    anticomm
+        (upperHomotopeBracket ec6CounterCut ec6CounterC₀
+          ec6CounterA₁ ec6CounterA₂)
+        (coneMinus ec6CounterCut ec6CounterC₀) =
+      comm (genSig ec6CounterCut ec6CounterA₁ ec6CounterC₀)
+        (genSig ec6CounterCut ec6CounterA₂ ec6CounterC₀) ∧
+    comm
+        (upperHomotopeBracket ec6CounterCut ec6CounterC₀
+          ec6CounterA₁ ec6CounterA₂)
+        (coneMinus ec6CounterCut ec6CounterC₀) ≠
+      comm (genSig ec6CounterCut ec6CounterA₁ ec6CounterC₀)
+        (genSig ec6CounterCut ec6CounterA₂ ec6CounterC₀) := by
+  decide
 
 /-! ## 10. Stage `CL₉`: Recursive Meta-Cognitive Defect Tower & Hilbert-Space Cramér–Rao Curvature Bound -/
 
@@ -681,6 +752,14 @@ theorem stage_CL10_master_chiral_lorentz_twistor_cartan_uncertainty_synthesis
     let Ω := InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty.onsagerReversibleBracket ψ
     (∀ u : ChiralLorentzTwistorCartanStage,
       ¬ Relation.TransGen ChiralLorentzTwistorCartanStage.causalEdge u u) ∧
+    (P * X * P + conePlus P X + coneMinus P X + (1 - P) * X * (1 - P) = X ∧
+      invS P * invS P = 1 ∧
+      invS P * evenGrade P X * invS P = evenGrade P X ∧
+      invS P * oddGrade P X * invS P = -oddGrade P X ∧
+      conePlus P A₁ * conePlus P X = 0 ∧
+      coneMinus P C₁ * coneMinus P X = 0 ∧
+      comm (invS P) (conePlus P A₁) = (2 : ℤ) • conePlus P A₁ ∧
+      comm (invS P) (coneMinus P C₁) = -((2 : ℤ) • coneMinus P C₁)) ∧
     (comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSkew P A₁ C₁ A₂ C₂ ∧
       comm (genJ P A₁ C₁) (genJ P A₂ C₂) = -zornTetradSkew P A₁ C₁ A₂ C₂) ∧
     (anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSym P A₁ C₁ A₂ C₂ ∧
@@ -702,7 +781,12 @@ theorem stage_CL10_master_chiral_lorentz_twistor_cartan_uncertainty_synthesis
       kantorG0 P A₁ C₁ (kantorG0 P A₁ C₁ X) -
         (kantorGp2 P A₁ (kantorGm2 P C₁ X) + kantorGm2 P C₁ (kantorGp2 P A₁ X)) =
         genSig P A₁ C₁ * X * genSig P A₁ C₁) ∧
+    comm (upperHomotopeBracket P C₁ A₁ Z) (coneMinus P C₁) =
+      comm (genSig P A₁ C₁) (genV P Z C₁) ∧
+    anticomm (upperHomotopeBracket P C₁ A₁ Z) (coneMinus P C₁) =
+      comm (genSig P A₁ C₁) (genSig P Z C₁) ∧
     (g X_op X_op * g Y_op Y_op ≥ (g X_op Y_op) ^ 2 + (1 / 4 : ℝ) * (Ω X_op Y_op) ^ 2) := by
+  have hCL1 := archetype_CL1_primordial_chiral_cut_and_fourfold_peirce_anatomy hP A₁ C₁ X
   have hCL2 := archetype_CL2_chiral_dual_real_lorentz_representation hP A₁ C₁ A₂ C₂
   have hCL3 := archetype_CL3_poincare_semidirect_and_susy_superalgebra hP X A₁ C₁ A₂ C₂
   have hCL4 := archetype_CL4_super_grassmannian_parakahler_structure hP A₁ C₁ X
@@ -711,14 +795,16 @@ theorem stage_CL10_master_chiral_lorentz_twistor_cartan_uncertainty_synthesis
   have hCL7 := archetype_CL7_elie_cartan_torsion_and_spin_connection_gravity hP A₁ C₁
   have hCL8 := archetype_CL8_higher_grade_uncertainty_anomaly_in_symmetry_closure hP A₁ C₁ Z Z X
   have hCL9 := archetype_CL9_recursive_meta_tower_and_hilbert_cramer_rao_curvature_bound hP A₁ C₁ X ψ X_op Y_op
-  exact ⟨ChiralLorentzTwistorCartanStage.causalEdge_acyclic,
+  exact ⟨ChiralLorentzTwistorCartanStage.causalEdge_acyclic, hCL1,
     ⟨hCL2.2.2.2.2.1, hCL2.2.2.2.2.2.1⟩,
     ⟨hCL3.2.2.2.2.2.1, hCL3.2.2.2.2.2.2.2.1⟩,
     ⟨hCL4.2.2.2.2.2.1, hCL4.2.2.2.2.2.2.2.1⟩,
     hCL5.2.2.2.2.2.2.2.2,
     ⟨hCL6.2.2.1, hCL6.2.2.2.2.2.2.1⟩,
     ⟨hCL7.1, hCL7.2.2.2.2.2.1⟩,
-    ⟨hCL8.2.2.1, hCL8.2.2.2.2.2.2.2.2.2⟩,
+    ⟨hCL8.2.2.1, hCL8.2.2.2.2.2.2.2.2.2.1⟩,
+    hCL8.2.2.2.2.2.2.2.2.2.2.1,
+    hCL8.2.2.2.2.2.2.2.2.2.2.2,
     hCL9.2.2.2.2.1⟩
 
 /-! ## 12. Clifford–Krein Geometric Product, Grade-3 Jordan Associator Curvature Anomaly, & Nilpotent-First Élie Cartan Gravity -/
@@ -903,6 +989,215 @@ theorem nilpotent_first_chiral_lorentz_twistor_cartan_gravity
         simp only [JordanAssoc, anticomm, comm]; noncomm_ring
       _ = comm (Sigma_op N_plus) N_plus := rfl
 
+/-- **Nilpotent-First Orthogonal Projector & Emergent Dirac Metric Reconstruction
+(`nilpotent_first_orthogonal_projector_and_dirac_metric_reconstruction`, Turns 34–40)**:
+In any `[Ring B] [StarRing B]`, a single nilpotent Von Neumann regular operator `N_plus`
+(`N_plus * N_plus = 0` and `N_plus * star N_plus * N_plus = N_plus`) reconstructs:
+1. **Orthogonal Self-Adjoint Projectors (`P_twistor`, `Q_twistor`) Without a Prior Idempotent:**
+   - `P_twistor N_plus * P_twistor N_plus = P_twistor N_plus` and `star (P_twistor N_plus) = P_twistor N_plus`,
+   - `Q_twistor N_plus * Q_twistor N_plus = Q_twistor N_plus` and `star (Q_twistor N_plus) = Q_twistor N_plus`,
+   - `P_twistor N_plus * Q_twistor N_plus = 0` and `Q_twistor N_plus * P_twistor N_plus = 0`.
+2. **Dynamic Ladder Commutators (`[P, N_+] = N_+`, `[P, N_+⋆] = -N_+⋆`):**
+   - `comm (P_twistor N_plus) N_plus = N_plus` and `comm (P_twistor N_plus) (star N_plus) = -star N_plus`.
+3. **Emergent Dirac–Clifford Metric Algebra (`Φ_nil = N_+ + N_+⋆`, `J_nil = N_+ - N_+⋆`):**
+   - `(N_plus + star N_plus) * (N_plus + star N_plus) = P_mom N_plus`,
+   - `(N_plus - star N_plus) * (N_plus - star N_plus) = -P_mom N_plus`,
+   - `anticomm (N_plus + star N_plus) (N_plus - star N_plus) = 0`,
+   - `comm (N_plus + star N_plus) (N_plus - star N_plus) = -(Sigma_op N_plus + Sigma_op N_plus)`. -/
+theorem nilpotent_first_orthogonal_projector_and_dirac_metric_reconstruction
+    [StarRing B] (N_plus : B)
+    (h_nil : N_plus * N_plus = 0)
+    (h_reg : N_plus * star N_plus * N_plus = N_plus) :
+    P_twistor N_plus * P_twistor N_plus = P_twistor N_plus ∧
+    star (P_twistor N_plus) = P_twistor N_plus ∧
+    Q_twistor N_plus * Q_twistor N_plus = Q_twistor N_plus ∧
+    star (Q_twistor N_plus) = Q_twistor N_plus ∧
+    P_twistor N_plus * Q_twistor N_plus = 0 ∧
+    Q_twistor N_plus * P_twistor N_plus = 0 ∧
+    comm (P_twistor N_plus) N_plus = N_plus ∧
+    comm (P_twistor N_plus) (star N_plus) = -star N_plus ∧
+    (N_plus + star N_plus) * (N_plus + star N_plus) = P_mom N_plus ∧
+    (N_plus - star N_plus) * (N_plus - star N_plus) = -P_mom N_plus ∧
+    anticomm (N_plus + star N_plus) (N_plus - star N_plus) = 0 ∧
+    comm (N_plus + star N_plus) (N_plus - star N_plus) = -(Sigma_op N_plus + Sigma_op N_plus) := by
+  have h_star_nil := star_N_plus_sq N_plus h_nil
+  have h_star_reg := star_N_plus_reg N_plus h_reg
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · dsimp [P_twistor]
+    calc (N_plus * star N_plus) * (N_plus * star N_plus)
+      _ = (N_plus * star N_plus * N_plus) * star N_plus := by simp only [mul_assoc]
+      _ = N_plus * star N_plus := by rw [h_reg]
+  · dsimp [P_twistor]; rw [star_mul, star_star]
+  · dsimp [Q_twistor]
+    calc (star N_plus * N_plus) * (star N_plus * N_plus)
+      _ = (star N_plus * N_plus * star N_plus) * N_plus := by simp only [mul_assoc]
+      _ = star N_plus * N_plus := by rw [h_star_reg]
+  · dsimp [Q_twistor]; rw [star_mul, star_star]
+  · dsimp [P_twistor, Q_twistor]
+    calc (N_plus * star N_plus) * (star N_plus * N_plus)
+      _ = N_plus * (star N_plus * star N_plus) * N_plus := by simp only [mul_assoc]
+      _ = 0 := by rw [h_star_nil, mul_zero, zero_mul]
+  · dsimp [P_twistor, Q_twistor]
+    calc (star N_plus * N_plus) * (N_plus * star N_plus)
+      _ = star N_plus * (N_plus * N_plus) * star N_plus := by simp only [mul_assoc]
+      _ = 0 := by rw [h_nil, mul_zero, zero_mul]
+  · dsimp [P_twistor, comm]
+    rw [h_reg, ← mul_assoc N_plus N_plus (star N_plus), h_nil, zero_mul, sub_zero]
+  · dsimp [P_twistor, comm]
+    rw [mul_assoc N_plus (star N_plus) (star N_plus), h_star_nil, mul_zero,
+        ← mul_assoc (star N_plus) N_plus (star N_plus), h_star_reg, zero_sub]
+  · dsimp [P_mom]
+    rw [add_mul, mul_add, mul_add, h_nil, h_star_nil]; abel
+  · dsimp [P_mom]
+    rw [sub_mul, mul_sub, mul_sub, h_nil, h_star_nil]; noncomm_ring
+  · dsimp [anticomm]
+    have h1 : (N_plus + star N_plus) * (N_plus - star N_plus) =
+        -(N_plus * star N_plus) + star N_plus * N_plus := by
+      rw [add_mul, mul_sub, mul_sub, h_nil, h_star_nil]; noncomm_ring
+    have h2 : (N_plus - star N_plus) * (N_plus + star N_plus) =
+        N_plus * star N_plus - star N_plus * N_plus := by
+      rw [sub_mul, mul_add, mul_add, h_nil, h_star_nil]; noncomm_ring
+    rw [h1, h2]; noncomm_ring
+  · dsimp [comm, Sigma_op]
+    have h1 : (N_plus + star N_plus) * (N_plus - star N_plus) =
+        -(N_plus * star N_plus) + star N_plus * N_plus := by
+      rw [add_mul, mul_sub, mul_sub, h_nil, h_star_nil]; noncomm_ring
+    have h2 : (N_plus - star N_plus) * (N_plus + star N_plus) =
+        N_plus * star N_plus - star N_plus * N_plus := by
+      rw [sub_mul, mul_add, mul_add, h_nil, h_star_nil]; noncomm_ring
+    rw [h1, h2]; noncomm_ring
+
+/-! ## 13. Archetype XVII: Élie Cartan Supergravity, MacDowell–Mansouri Curvature–Torsion Split, & Order-3 Nilpotent Flag Reconstruction -/
+
+/-- Even-grade Lorentz Spin Connection `Ω = P W P + (1 - P) W (1 - P) ∈ 𝔤₀`. -/
+def spinConn (P W : B) : B :=
+  P * W * P + (1 - P) * W * (1 - P)
+
+/-- Unified Élie Cartan Super-Connection `𝓐 = Ω + Φ = spinConn P W + genPhi P A C ∈ 𝔤₀ ⊕ 𝔤₁`. -/
+def cartanConn (P W A C : B) : B :=
+  spinConn P W + genPhi P A C
+
+/-- Full Cartan Curvature 2-Form `𝓕₁₂ = [𝓐₁, 𝓐₂]`. -/
+def cartanFullCurv (P W₁ A₁ C₁ W₂ A₂ C₂ : B) : B :=
+  comm (cartanConn P W₁ A₁ C₁) (cartanConn P W₂ A₂ C₂)
+
+/-- Even Bosonic Riemann–Cartan / MacDowell–Mansouri Curvature `𝓡₁₂ = [Ω₁, Ω₂] + [Φ₁, Φ₂] ∈ 𝔤₀`. -/
+def riemannCartanCurv (P W₁ A₁ C₁ W₂ A₂ C₂ : B) : B :=
+  comm (spinConn P W₁) (spinConn P W₂) + comm (genPhi P A₁ C₁) (genPhi P A₂ C₂)
+
+/-- Odd Fermionic Élie Cartan Covariant Torsion `𝓣₁₂ = [Ω₁, Φ₂] - [Ω₂, Φ₁] ∈ 𝔤₁`. -/
+def elieCartanTorsion (P W₁ A₁ C₁ W₂ A₂ C₂ : B) : B :=
+  comm (spinConn P W₁) (genPhi P A₂ C₂) - comm (spinConn P W₂) (genPhi P A₁ C₁)
+
+/-- **Archetype XVII (`elie_cartan_supergravity_macdowell_mansouri_and_bianchi_closure`, Turns 54–62)**:
+1. **Cartan Curvature–Torsion Decomposition (`[𝓐₁, 𝓐₂] = 𝓡₁₂ + 𝓣₁₂`):**
+   `cartanFullCurv P W₁ A₁ C₁ W₂ A₂ C₂ = riemannCartanCurv P W₁ A₁ C₁ W₂ A₂ C₂ + elieCartanTorsion P W₁ A₁ C₁ W₂ A₂ C₂`.
+2. **Exact `ℤ₂` Chiral Grading of Curvature (`[S_P, 𝓡₁₂] = 0`) and Torsion (`{S_P, 𝓣₁₂} = 0`):**
+   `comm (invS P) (riemannCartanCurv P W₁ A₁ C₁ W₂ A₂ C₂) = 0` and
+   `anticomm (invS P) (elieCartanTorsion P W₁ A₁ C₁ W₂ A₂ C₂) = 0`.
+3. **Single-Operator MacDowell–Mansouri Cartan Square (`(Ω + Φ)² = (Ω² + V) + {Ω, Φ}`):**
+   `cartanConn P W₁ A₁ C₁ * cartanConn P W₁ A₁ C₁ = (spinConn P W₁ * spinConn P W₁ + genV P A₁ C₁) + anticomm (spinConn P W₁) (genPhi P A₁ C₁)`.
+4. **Spontaneous Gravitational Curvature from Pure Frame Uncertainty (`W₁ = W₂ = 0`):**
+   `cartanFullCurv P 0 A₁ C₁ 0 A₂ C₂ = comm (genPhi P A₁ C₁) (genPhi P A₂ C₂)`.
+5. **Unified Bianchi–Cartan Jacobi Identity (`[𝓐₁, 𝓕₂₃] + [𝓐₂, 𝓕₃₁] + [𝓐₃, 𝓕₁₂] = 0`):**
+   `comm (cartanConn P W₁ A₁ C₁) (cartanFullCurv P W₂ A₂ C₂ W₃ A₃ C₃) + comm (cartanConn P W₂ A₂ C₂) (cartanFullCurv P W₃ A₃ C₃ W₁ A₁ C₁) + comm (cartanConn P W₃ A₃ C₃) (cartanFullCurv P W₁ A₁ C₁ W₂ A₂ C₂) = 0`. -/
+theorem elie_cartan_supergravity_macdowell_mansouri_and_bianchi_closure
+    {P : B} (hP : P * P = P) (W₁ A₁ C₁ W₂ A₂ C₂ W₃ A₃ C₃ : B) :
+    cartanFullCurv P W₁ A₁ C₁ W₂ A₂ C₂ =
+      riemannCartanCurv P W₁ A₁ C₁ W₂ A₂ C₂ + elieCartanTorsion P W₁ A₁ C₁ W₂ A₂ C₂ ∧
+    comm (invS P) (riemannCartanCurv P W₁ A₁ C₁ W₂ A₂ C₂) = 0 ∧
+    anticomm (invS P) (elieCartanTorsion P W₁ A₁ C₁ W₂ A₂ C₂) = 0 ∧
+    cartanConn P W₁ A₁ C₁ * cartanConn P W₁ A₁ C₁ =
+      (spinConn P W₁ * spinConn P W₁ + genV P A₁ C₁) +
+        anticomm (spinConn P W₁) (genPhi P A₁ C₁) ∧
+    cartanFullCurv P 0 A₁ C₁ 0 A₂ C₂ = comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) ∧
+    comm (cartanConn P W₁ A₁ C₁) (cartanFullCurv P W₂ A₂ C₂ W₃ A₃ C₃) +
+      comm (cartanConn P W₂ A₂ C₂) (cartanFullCurv P W₃ A₃ C₃ W₁ A₁ C₁) +
+      comm (cartanConn P W₃ A₃ C₃) (cartanFullCurv P W₁ A₁ C₁ W₂ A₂ C₂) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp only [cartanFullCurv, cartanConn, riemannCartanCurv, elieCartanTorsion, comm]
+    noncomm_ring
+  · simp only [riemannCartanCurv, spinConn]; peirce_nf hP
+  · simp only [elieCartanTorsion, spinConn]; peirce_nf hP
+  · simp only [cartanConn, spinConn]; peirce_nf hP
+  · simp only [cartanFullCurv, cartanConn, spinConn, mul_zero, zero_mul, add_zero, zero_add]
+  · simp only [cartanFullCurv, comm]; noncomm_ring
+
+/-- Principal Order-3 Nilpotent Raising Operator `N₃ ∈ Matrix (Fin 3) (Fin 3) ℤ` (`N₃² ≠ 0`, `N₃³ = 0`). -/
+def nilRaise3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  !![0, 1, 0;
+     0, 0, 1;
+     0, 0, 0]
+
+/-- Principal Order-3 Nilpotent Lowering Operator `M₃ ∈ Matrix (Fin 3) (Fin 3) ℤ` (`M₃² ≠ 0`, `M₃³ = 0`). -/
+def nilLower3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  !![0, 0, 0;
+     2, 0, 0;
+     0, 2, 0]
+
+/-- Emergent `sl₂` Cartan Grading Diagonal `H₃ = [N₃, M₃] = diag(2, 0, -2)`. -/
+def cartanDiag3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  nilRaise3 * nilLower3 - nilLower3 * nilRaise3
+
+/-- Highest-weight spectral projector `P₁ = diag(1, 0, 0)` reconstructed from `N₃² M₃²`. -/
+def nilFlagProj1 : Matrix (Fin 3) (Fin 3) ℤ :=
+  !![1, 0, 0;
+     0, 0, 0;
+     0, 0, 0]
+
+/-- Middle-weight spectral projector `P₂ = diag(0, 1, 0)` reconstructed from `2 N₃ M₃ - N₃² M₃²`. -/
+def nilFlagProj2 : Matrix (Fin 3) (Fin 3) ℤ :=
+  !![0, 0, 0;
+     0, 1, 0;
+     0, 0, 0]
+
+/-- Lowest-weight spectral projector `P₃ = diag(0, 0, 1)` reconstructed from `M₃² N₃²`. -/
+def nilFlagProj3 : Matrix (Fin 3) (Fin 3) ℤ :=
+  !![0, 0, 0;
+     0, 0, 0;
+     0, 0, 1]
+
+/-- Non-commutativity witness for the `3 × 3` order-3 nilpotent carrier (`N₃ M₃ ≠ M₃ N₃`). -/
+theorem nilRaise3_nilLower3_noncomm :
+    nilRaise3 * nilLower3 ≠ nilLower3 * nilRaise3 := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℤ => M 0 0) h
+  revert h00; decide
+
+/-- **Order-3 Jacobson–Morozov Nilpotent Flag & Spectral Projector Reconstruction
+(`order3_nilpotent_flag_projector_reconstruction`, Turns 30, 33, 34)**:
+1. **Strict Order-3 Nilpotency (`N₃² ≠ 0`, `N₃³ = 0`):**
+   `nilRaise3 * nilRaise3 ≠ 0` and `nilRaise3 * nilRaise3 * nilRaise3 = 0`.
+2. **Jacobson–Morozov `sl₂` Commutation (`[H₃, N₃] = 2 N₃`, `[H₃, M₃] = -2 M₃`):**
+   `cartanDiag3 * nilRaise3 - nilRaise3 * cartanDiag3 = (2 : ℤ) • nilRaise3` and
+   `cartanDiag3 * nilLower3 - nilLower3 * cartanDiag3 = -((2 : ℤ) • nilLower3)`.
+3. **Nilpotent Reconstruction of the 3-State Orthogonal Projector Flag (`P₁, P₂, P₃`):**
+   - `(nilRaise3 * nilRaise3) * (nilLower3 * nilLower3) = (4 : ℤ) • nilFlagProj1`,
+   - `(2 : ℤ) • (nilRaise3 * nilLower3) - (nilRaise3 * nilRaise3) * (nilLower3 * nilLower3) = (4 : ℤ) • nilFlagProj2`,
+   - `(nilLower3 * nilLower3) * (nilRaise3 * nilRaise3) = (4 : ℤ) • nilFlagProj3`,
+   - `nilFlagProj1 + nilFlagProj2 + nilFlagProj3 = 1`,
+   - `nilFlagProj1 * nilFlagProj1 = nilFlagProj1`, `nilFlagProj2 * nilFlagProj2 = nilFlagProj2`,
+     `nilFlagProj3 * nilFlagProj3 = nilFlagProj3`, and `nilFlagProj1 * nilFlagProj2 = 0`. -/
+theorem order3_nilpotent_flag_projector_reconstruction :
+    nilRaise3 * nilRaise3 ≠ 0 ∧
+    nilRaise3 * nilRaise3 * nilRaise3 = 0 ∧
+    cartanDiag3 * nilRaise3 - nilRaise3 * cartanDiag3 = (2 : ℤ) • nilRaise3 ∧
+    cartanDiag3 * nilLower3 - nilLower3 * cartanDiag3 = -((2 : ℤ) • nilLower3) ∧
+    (nilRaise3 * nilRaise3) * (nilLower3 * nilLower3) = (4 : ℤ) • nilFlagProj1 ∧
+    (2 : ℤ) • (nilRaise3 * nilLower3) - (nilRaise3 * nilRaise3) * (nilLower3 * nilLower3) =
+      (4 : ℤ) • nilFlagProj2 ∧
+    (nilLower3 * nilLower3) * (nilRaise3 * nilRaise3) = (4 : ℤ) • nilFlagProj3 ∧
+    nilFlagProj1 + nilFlagProj2 + nilFlagProj3 = 1 ∧
+    nilFlagProj1 * nilFlagProj1 = nilFlagProj1 ∧
+    nilFlagProj2 * nilFlagProj2 = nilFlagProj2 ∧
+    nilFlagProj3 * nilFlagProj3 = nilFlagProj3 ∧
+    nilFlagProj1 * nilFlagProj2 = 0 := by
+  refine ⟨?_, by decide, by decide, by decide, by decide, by decide,
+          by decide, by decide, by decide, by decide, by decide, by decide⟩
+  intro h
+  have h02 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℤ => M 0 2) h
+  revert h02; decide
+
 /-- Concrete non-commutativity (`T16`) and non-vacuity (`T17`) witness in `Matrix (Fin 2) (Fin 2) ℤ`:
 certifies that for `curvatureWitnessP = !![1, 0; 0, 0]`, `curvatureWitnessA = !![0, 1; 0, 0]`,
 and `curvatureWitnessE10 = !![0, 0; 1, 0]`:
@@ -933,5 +1228,526 @@ theorem cltcWitness_noncomm_and_nonvanishing_uncertainty_curvature :
   · intro h
     have h01 := congrArg (fun M : Mat2 => M 0 1) h
     revert h01; decide
+
+/-- In the concrete noncommutative `2 × 2` operator carrier, the additive
+chiral perturbation of the Peirce cut has defect exactly equal to the local
+identity. This realizes the general aporia formula with nonzero support. -/
+theorem cltcWitness_additive_chiral_aporia_eq_one :
+    let Ψ := curvatureWitnessP +
+      genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10
+    Ψ * Ψ - Ψ = (1 : Mat2) := by
+  have hP : curvatureWitnessP * curvatureWitnessP = curvatureWitnessP := by decide
+  calc
+    _ = genV curvatureWitnessP curvatureWitnessA curvatureWitnessE10 :=
+      (archetype_CL4_super_grassmannian_parakahler_structure hP
+        curvatureWitnessA curvatureWitnessE10 0).1
+    _ = 1 := by decide
+
+/-- This finite matrix perturbation is not idempotent: its defect is the
+nonzero identity operator. -/
+theorem cltcWitness_additive_chiral_perturbation_not_idempotent :
+    (curvatureWitnessP +
+      genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10) *
+      (curvatureWitnessP +
+        genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10) ≠
+      curvatureWitnessP +
+        genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10 := by
+  intro hIdem
+  have hDefect := cltcWitness_additive_chiral_aporia_eq_one
+  change (curvatureWitnessP +
+      genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10) *
+      (curvatureWitnessP +
+        genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10) -
+      (curvatureWitnessP +
+        genPhi curvatureWitnessP curvatureWitnessA curvatureWitnessE10) =
+      (1 : Mat2) at hDefect
+  rw [hIdem, sub_self] at hDefect
+  exact one_ne_zero hDefect.symm
+
+/-! ## 14. Chunks 200–217: ordered products, projector identities, star-Gramian identities, power-vanishing consequences, and selected `4 × 4` matrix commutator identities -/
+
+/-- 4-Link Élie Cartan Holonomy Plaquette Loop `U_□ = (1 + N_+)(1 + N_-)(1 - N_+)(1 - N_-)`. -/
+def cartanPlaquette (P A C : B) : B :=
+  (1 + conePlus P A) * (1 + coneMinus P C) * (1 - conePlus P A) * (1 - coneMinus P C)
+
+/-- Reversed 4-Link Élie Cartan Holonomy Plaquette Loop `U_□^rev = (1 + N_-)(1 + N_+)(1 - N_-)(1 - N_+)`. -/
+def cartanPlaquetteRev (P A C : B) : B :=
+  (1 + coneMinus P C) * (1 + conePlus P A) * (1 - coneMinus P C) * (1 - conePlus P A)
+
+/-- **Stage P₁ (`stage_P1_nilpotent_first_genesis_of_projectors`, Chunk 217 of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`)**:
+From two square-zero nilpotents `N_p * N_p = 0`, `N_m * N_m = 0` satisfying the von Neumann / Jordan
+regularity pairing `N_p * N_m * N_p = N_p` and `N_m * N_p * N_m = N_m` (without postulating an
+idempotent `P` in advance), the products `P := N_p * N_m` and `Q := N_m * N_p` precipitate out as
+mutually orthogonal idempotents, `V := P + Q` is an idempotent metric, and `Φ := N_p + N_m`,
+`J := N_p - N_m` are tripotent Dirac generators (`Φ³ = Φ`, `J³ = -J`). -/
+theorem stage_P1_nilpotent_first_genesis_of_projectors
+    {N_p N_m : B} (hp2 : N_p * N_p = 0) (hm2 : N_m * N_m = 0)
+    (hRegP : N_p * N_m * N_p = N_p) (hRegM : N_m * N_p * N_m = N_m) :
+    let P := N_p * N_m
+    let Q := N_m * N_p
+    let V := P + Q
+    let Φ := N_p + N_m
+    let J := N_p - N_m
+    P * P = P ∧
+    Q * Q = Q ∧
+    P * Q = 0 ∧
+    Q * P = 0 ∧
+    V * V = V ∧
+    Φ * Φ = V ∧
+    J * J = -V ∧
+    Φ * Φ * Φ = Φ ∧
+    J * J * J = -J := by
+  intro P Q V Φ J
+  have hP_idem : P * P = P := by
+    change (N_p * N_m) * (N_p * N_m) = N_p * N_m
+    rw [← mul_assoc (N_p * N_m) N_p N_m, hRegP]
+  have hQ_idem : Q * Q = Q := by
+    change (N_m * N_p) * (N_m * N_p) = N_m * N_p
+    rw [← mul_assoc (N_m * N_p) N_m N_p, hRegM]
+  have hPQ : P * Q = 0 := by
+    change (N_p * N_m) * (N_m * N_p) = 0
+    calc (N_p * N_m) * (N_m * N_p)
+      _ = N_p * (N_m * N_m) * N_p := by simp only [mul_assoc]
+      _ = 0 := by rw [hm2, mul_zero, zero_mul]
+  have hQP : Q * P = 0 := by
+    change (N_m * N_p) * (N_p * N_m) = 0
+    calc (N_m * N_p) * (N_p * N_m)
+      _ = N_m * (N_p * N_p) * N_m := by simp only [mul_assoc]
+      _ = 0 := by rw [hp2, mul_zero, zero_mul]
+  have hV_idem : V * V = V := by
+    change (P + Q) * (P + Q) = P + Q
+    simp only [add_mul, mul_add, hP_idem, hQ_idem, hPQ, hQP, add_zero, zero_add]
+  have hPhi2 : Φ * Φ = V := by
+    change (N_p + N_m) * (N_p + N_m) = N_p * N_m + N_m * N_p
+    simp only [add_mul, mul_add, hp2, hm2, add_zero, zero_add]
+    abel
+  have hJ2 : J * J = -V := by
+    change (N_p - N_m) * (N_p - N_m) = -(N_p * N_m + N_m * N_p)
+    simp only [sub_mul, mul_sub, hp2, hm2]; abel
+  have hVNp : V * N_p = N_p := by
+    change (N_p * N_m + N_m * N_p) * N_p = N_p
+    rw [add_mul, hRegP, mul_assoc N_m N_p N_p, hp2, mul_zero, add_zero]
+  have hVNm : V * N_m = N_m := by
+    change (N_p * N_m + N_m * N_p) * N_m = N_m
+    rw [add_mul, mul_assoc N_p N_m N_m, hm2, mul_zero, zero_add, hRegM]
+  refine ⟨hP_idem, hQ_idem, hPQ, hQP, hV_idem, hPhi2, hJ2, ?_, ?_⟩
+  · rw [hPhi2]
+    change V * (N_p + N_m) = N_p + N_m
+    rw [mul_add, hVNp, hVNm]
+  · rw [hJ2]
+    change (-V) * (N_p - N_m) = -(N_p - N_m)
+    rw [neg_mul, mul_sub, hVNp, hVNm]
+
+/-- **Stage P₃ (`stage_P3_uncertainty_creates_elie_cartan_curvature_and_torsion`, Chunk 217 of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`)**:
+The ordered plaquettes retain their quadratic Peirce-corner terms. Their sum has symmetric even
+defect `-V²`, and their difference has odd part `-2 VJ`; these formulas do not assume the corner
+products are idempotent. -/
+theorem stage_P3_uncertainty_creates_elie_cartan_curvature_and_torsion
+    {P : B} (hP : P * P = P) (A C : B) :
+    cartanPlaquette P A C - 1 =
+      genSig P A C - genV P A C * genJ P A C +
+        qgtPlus P A C * qgtPlus P A C ∧
+    evenGrade P (cartanPlaquette P A C - cartanPlaquetteRev P A C) =
+      (2 : ℤ) • genSig P A C +
+        (qgtPlus P A C * qgtPlus P A C - qgtMinus P A C * qgtMinus P A C) ∧
+    evenGrade P ((1 - cartanPlaquette P A C) + (1 - cartanPlaquetteRev P A C)) =
+      -(genV P A C * genV P A C) ∧
+    oddGrade P (cartanPlaquette P A C - 1) =
+      -(genV P A C * genJ P A C) ∧
+    oddGrade P (cartanPlaquette P A C - cartanPlaquetteRev P A C) =
+      -((2 : ℤ) • (genV P A C * genJ P A C)) := by
+  dsimp only [cartanPlaquette, cartanPlaquetteRev, evenGrade, oddGrade,
+    qgtPlus, qgtMinus]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
+
+/-- **Chunk 209 (`peirce_star_gramian_and_fubini_study_chordal_metric` of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`)**:
+In any `[Ring B] [StarRing B]`, when `P` is a self-adjoint projection (`P * P = P`, `star P = P`)
+and `X` is self-adjoint (`star X = X`):
+1. `star (conePlus P X) = coneMinus P X` and `star (coneMinus P X) = conePlus P X`,
+2. `star (genPhi P X X) = genPhi P X X`, `star (genJ P X X) = -genJ P X X`,
+   `star (genV P X X) = genV P X X`, and `star (genSig P X X) = genSig P X X`,
+3. `genV P X X = conePlus P X * star (conePlus P X) + star (conePlus P X) * conePlus P X`
+   (Gramian decomposition of the Fubini–Study / BKM metric seed),
+4. `qgtPlus P X X * qgtMinus P X X = 0` and `qgtMinus P X X * qgtPlus P X X = 0`,
+5. `genPhi P X X * star (genPhi P X X) = genV P X X` and `star (genPhi P X X) * genPhi P X X = genV P X X`. -/
+theorem peirce_star_gramian_and_fubini_study_chordal_metric
+    [StarRing B] {P X : B} (hP : P * P = P) (hP_star : star P = P) (hX_star : star X = X) :
+    star (conePlus P X) = coneMinus P X ∧
+    star (coneMinus P X) = conePlus P X ∧
+    star (genPhi P X X) = genPhi P X X ∧
+    star (genJ P X X) = -genJ P X X ∧
+    star (genV P X X) = genV P X X ∧
+    star (genSig P X X) = genSig P X X ∧
+    genV P X X = conePlus P X * star (conePlus P X) + star (conePlus P X) * conePlus P X ∧
+    qgtPlus P X X * qgtMinus P X X = 0 ∧
+    qgtMinus P X X * qgtPlus P X X = 0 ∧
+    genPhi P X X * star (genPhi P X X) = genV P X X ∧
+    star (genPhi P X X) * genPhi P X X = genV P X X := by
+  have h1mP : star (1 - P) = 1 - P := by rw [star_sub, star_one, hP_star]
+  have hNp : star (conePlus P X) = coneMinus P X := by
+    simp only [conePlus, coneMinus, star_mul, h1mP, hX_star, hP_star, mul_assoc]
+  have hNm : star (coneMinus P X) = conePlus P X := by
+    simp only [conePlus, coneMinus, star_mul, h1mP, hX_star, hP_star, mul_assoc]
+  have hPhi : star (genPhi P X X) = genPhi P X X := by
+    simp only [genPhi, star_add, hNp, hNm, add_comm]
+  have hJ : star (genJ P X X) = -genJ P X X := by
+    simp only [genJ, star_sub, hNp, hNm]; abel
+  have hV : star (genV P X X) = genV P X X := by
+    simp only [genV, anticomm, star_add, star_mul, hNp, hNm, add_comm]
+  have hSig : star (genSig P X X) = genSig P X X := by
+    simp only [genSig, comm, star_sub, star_mul, hNp, hNm]
+  have hVgram : genV P X X = conePlus P X * star (conePlus P X) + star (conePlus P X) * conePlus P X := by
+    simp only [genV, anticomm, hNp]
+  have hPhiSq : genPhi P X X * genPhi P X X = genV P X X := by peirce_nf hP
+  refine ⟨hNp, hNm, hPhi, hJ, hV, hSig, hVgram,
+          by simp only [qgtPlus, qgtMinus]; peirce_nf hP,
+          by simp only [qgtPlus, qgtMinus]; peirce_nf hP,
+          by rw [hPhi, hPhiSq],
+          by rw [hPhi, hPhiSq]⟩
+
+/-- **Chunk 211 (`higher_rank_nilpotent_hierarchy_and_jordan_cancellation` of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`, Archetype A₈₉)**:
+1. **Power-vanishing consequences (`T⁴ = 0 → (T²)² = 0 ∧ (T³)² = 0`):**
+   The hypothesis is fourth-power vanishing; it does not assert an operator rank.
+2. **Cubic nilpotency consequences (`N_+³ = 0`):**
+   `(N_+²)² = 0`, `comm N_+ (N_+²) = 0`, `N_+ * N_+² = 0`, and `N_+² * N_+ = 0`.
+3. **Jordan Chain Commutator Sandwich Cancellation (`T² = 0`):**
+   `T * T = 0` and `T * comm T X * T = 0` for all `X : B`. -/
+theorem higher_rank_nilpotent_hierarchy_and_jordan_cancellation
+    (T N_plus T_nil X : B)
+    (hT4 : T ^ 4 = 0) (hN3 : N_plus ^ 3 = 0) (hT2 : T_nil ^ 2 = 0) :
+    ((T ^ 2) ^ 2 = 0 ∧ (T ^ 3) ^ 2 = 0) ∧
+    ((N_plus ^ 2) ^ 2 = 0 ∧
+     comm N_plus (N_plus ^ 2) = 0 ∧
+     N_plus * (N_plus ^ 2) = 0 ∧
+     (N_plus ^ 2) * N_plus = 0) ∧
+    (T_nil * T_nil = 0 ∧ T_nil * comm T_nil X * T_nil = 0) := by
+  have hT2_sq : (T ^ 2) ^ 2 = 0 := by
+    calc (T ^ 2) ^ 2 = T ^ (2 * 2) := by rw [← pow_mul]
+      _ = T ^ 4 := rfl
+      _ = 0 := hT4
+  have hT3_sq : (T ^ 3) ^ 2 = 0 := by
+    calc (T ^ 3) ^ 2 = T ^ (3 * 2) := by rw [← pow_mul]
+      _ = T ^ (4 + 2) := rfl
+      _ = T ^ 4 * T ^ 2 := by rw [pow_add]
+      _ = 0 := by rw [hT4, zero_mul]
+  have hN_sq_sq : (N_plus ^ 2) ^ 2 = 0 := by
+    calc (N_plus ^ 2) ^ 2 = N_plus ^ (2 * 2) := by rw [← pow_mul]
+      _ = N_plus ^ (3 + 1) := rfl
+      _ = N_plus ^ 3 * N_plus ^ 1 := by rw [pow_add]
+      _ = 0 := by rw [hN3, zero_mul]
+  have hN_right : N_plus * (N_plus ^ 2) = 0 := by
+    calc N_plus * (N_plus ^ 2) = N_plus ^ 1 * N_plus ^ 2 := by rw [pow_one]
+      _ = N_plus ^ (1 + 2) := by rw [← pow_add]
+      _ = N_plus ^ 3 := rfl
+      _ = 0 := hN3
+  have hN_left : (N_plus ^ 2) * N_plus = 0 := by
+    calc (N_plus ^ 2) * N_plus = N_plus ^ 2 * N_plus ^ 1 := by rw [pow_one]
+      _ = N_plus ^ (2 + 1) := by rw [← pow_add]
+      _ = N_plus ^ 3 := rfl
+      _ = 0 := hN3
+  have hN_comm : comm N_plus (N_plus ^ 2) = 0 := by
+    dsimp [comm]; rw [hN_right, hN_left, sub_self]
+  have hTnil_mul : T_nil * T_nil = 0 := by
+    simpa [sq] using hT2
+  have hTnil_sand : T_nil * comm T_nil X * T_nil = 0 := by
+    dsimp [comm]
+    calc T_nil * (T_nil * X - X * T_nil) * T_nil
+      _ = (T_nil * T_nil) * X * T_nil - T_nil * X * (T_nil * T_nil) := by noncomm_ring
+      _ = 0 := by rw [hTnil_mul]; noncomm_ring
+  exact ⟨⟨hT2_sq, hT3_sq⟩, ⟨hN_sq_sq, hN_comm, hN_right, hN_left⟩, ⟨hTnil_mul, hTnil_sand⟩⟩
+
+/-- Grade `+1` generator in the `4 × 4` contact Kantor–Koecher–Tits 5-graded algebra
+(`Chunk 204` of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`). -/
+def kktGradePlus1 {K : Type*} [CommRing K] (A B : K) : Matrix (Fin 4) (Fin 4) K :=
+  !![0, A, B, 0;
+     0, 0, 0, B;
+     0, 0, 0, -A;
+     0, 0, 0, 0]
+
+/-- Grade `+2` generator in the `4 × 4` contact Kantor–Koecher–Tits 5-graded algebra
+(`Chunk 204` of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`). -/
+def kktGradePlus2 {K : Type*} [CommRing K] (Z : K) : Matrix (Fin 4) (Fin 4) K :=
+  !![0, 0, 0, Z;
+     0, 0, 0, 0;
+     0, 0, 0, 0;
+     0, 0, 0, 0]
+
+/-- First elementary `4 × 4` matrix witness `E_{01}` over `K`. -/
+def kktWitnessA {K : Type*} [CommRing K] : Matrix (Fin 4) (Fin 4) K :=
+  !![0, 1, 0, 0;
+     0, 0, 0, 0;
+     0, 0, 0, 0;
+     0, 0, 0, 0]
+
+/-- Second elementary `4 × 4` matrix witness `E_{12}` over `K`. -/
+def kktWitnessB {K : Type*} [CommRing K] : Matrix (Fin 4) (Fin 4) K :=
+  !![0, 0, 0, 0;
+     0, 0, 1, 0;
+     0, 0, 0, 0;
+     0, 0, 0, 0]
+
+/-- Non-commutativity witness for `Matrix (Fin 4) (Fin 4) K` over any nontrivial commutative ring `K`:
+`kktWitnessA * kktWitnessB ≠ kktWitnessB * kktWitnessA`. -/
+theorem kktWitnessA_kktWitnessB_noncomm {K : Type*} [CommRing K] [Nontrivial K] :
+    (kktWitnessA : Matrix (Fin 4) (Fin 4) K) * (kktWitnessB : Matrix (Fin 4) (Fin 4) K) ≠
+      (kktWitnessB : Matrix (Fin 4) (Fin 4) K) * (kktWitnessA : Matrix (Fin 4) (Fin 4) K) := by
+  intro h
+  have h02 := congrArg (fun M => M 0 2) h
+  simp [kktWitnessA, kktWitnessB, Matrix.mul_apply, Fin.sum_univ_four] at h02
+
+/-- Non-commutativity witness for `kktGradePlus1` in `Matrix (Fin 4) (Fin 4) ℤ`:
+`kktGradePlus1 1 0 * kktGradePlus1 0 1 ≠ kktGradePlus1 0 1 * kktGradePlus1 1 0`. -/
+theorem kktGradePlus1_noncomm :
+    kktGradePlus1 (1 : ℤ) 0 * kktGradePlus1 (0 : ℤ) 1 ≠
+      kktGradePlus1 (0 : ℤ) 1 * kktGradePlus1 (1 : ℤ) 0 := by
+  intro h
+  have h03 := congrArg (fun M => M 0 3) h
+  revert h03; decide
+
+/-- For the explicitly defined `4 × 4` matrices over a commutative ring, these two
+commutator identities hold: the selected `kktGradePlus1` products have the stated
+`kktGradePlus2` difference, and `kktGradePlus1` commutes with `kktGradePlus2`.
+This theorem proves these matrix identities only; it does not establish a graded
+Lie algebra structure or a general contact/KKT construction. The historical
+source archetype is Chunk 204 of `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`. -/
+theorem kkt_bracket_p1_p1_eq_p2_and_p1_p2_zero {K : Type*} [CommRing K] (A B A' B' Z : K) :
+    (kktGradePlus1 A B * kktGradePlus1 A' B' - kktGradePlus1 A' B' * kktGradePlus1 A B =
+       kktGradePlus2 (2 * (A * B' - B * A'))) ∧
+    (kktGradePlus1 A B * kktGradePlus2 Z - kktGradePlus2 Z * kktGradePlus1 A B = 0) := by
+  refine ⟨?_, ?_⟩
+  · ext i j
+    fin_cases i <;> fin_cases j <;> (simp [kktGradePlus1, kktGradePlus2]; try ring)
+  · ext i j
+    fin_cases i <;> fin_cases j <;> simp [kktGradePlus1, kktGradePlus2]
+
+/-! ## 15. Chunks 121–125 & 156: explicit matrix identities over a ring, an ordered bilinear expansion, and nilpotent commutator identities -/
+
+/-- The diagonal matrix `diag(1, -1)` over a ring; its square is the identity. -/
+def kreinSigmaZ {K : Type*} [Ring K] : Matrix (Fin 2) (Fin 2) K :=
+  !![1, 0;
+     0, -1]
+
+/-- The matrix `[[0, -1], [1, 0]]` over a ring; its square is minus the identity. -/
+def kreinJ2 {K : Type*} [Ring K] : Matrix (Fin 2) (Fin 2) K :=
+  !![0, -1;
+     1, 0]
+
+/-- The explicitly defined matrix `[[s, a], [-a, s]]` over a ring. -/
+def realDoubleKrein {K : Type*} [Ring K] (s a : K) : Matrix (Fin 2) (Fin 2) K :=
+  !![s, a;
+     -a, s]
+
+/-- A `4 × 4` block matrix with two copies of the displayed `2 × 2` matrix. -/
+def kreinJ4 {K : Type*} [Ring K] : Matrix (Fin 4) (Fin 4) K :=
+  !![0, -1, 0, 0;
+     1, 0, 0, 0;
+     0, 0, 0, -1;
+     0, 0, 1, 0]
+
+/-- The `4 × 4` diagonal matrix `diag(1, 1, -1, -1)`. -/
+def kreinGamma5 {K : Type*} [Ring K] : Matrix (Fin 4) (Fin 4) K :=
+  !![1, 0, 0, 0;
+     0, 1, 0, 0;
+     0, 0, -1, 0;
+     0, 0, 0, -1]
+
+/-- Non-commutativity witness for `kreinSigmaZ` and `kreinJ2` over `ℤ`:
+`kreinSigmaZ * kreinJ2 ≠ kreinJ2 * kreinSigmaZ`. -/
+theorem kreinSigmaZ_kreinJ2_noncomm :
+    (kreinSigmaZ : Matrix (Fin 2) (Fin 2) ℤ) * kreinJ2 ≠
+      kreinJ2 * (kreinSigmaZ : Matrix (Fin 2) (Fin 2) ℤ) := by
+  intro h
+  have h01 := congrArg (fun M => M 0 1) h
+  revert h01; decide
+
+/-- **Chunks 121–125 (`real_doubled_krein_clifford_and_rope_symplectic_attention_split` of `1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1`)**:
+The matrix identities below hold over every ring, with no real structure or bilinear form assumed.
+1. **Two matrix square identities and an anticommutation identity:**
+   `kreinSigmaZ * kreinSigmaZ = 1`, `kreinJ2 * kreinJ2 = -1`, and
+   `kreinSigmaZ * kreinJ2 + kreinJ2 * kreinSigmaZ = 0`.
+2. **Product and conjugation identities for the defined block matrices:**
+   - `realDoubleKrein s₁ a₁ * realDoubleKrein s₂ a₂ = realDoubleKrein (s₁ * s₂ - a₁ * a₂) (s₁ * a₂ + a₁ * s₂)`,
+   - `kreinSigmaZ * realDoubleKrein s a * kreinSigmaZ = realDoubleKrein s (-a)`.
+3. **Two `4 × 4` matrix identities:**
+   `kreinJ4 * kreinJ4 = -1`, `kreinGamma5 * kreinGamma5 = 1`, and
+   `kreinGamma5 * kreinJ4 - kreinJ4 * kreinGamma5 = 0`.
+4. **Ordered bilinear expansion (historically labeled Chunk 123):**
+   The final clause is a distributive identity in an arbitrary ring. The symbols
+   `c_m`, `s_m`, `c_n`, and `s_n` are unconstrained coefficients; this proposition
+   does not assert trigonometric, rotation, or attention semantics. -/
+theorem real_doubled_krein_clifford_and_rope_symplectic_attention_split
+    {K : Type*} [Ring K] (s₁ a₁ s₂ a₂ q₁ q₂ k₁ k₂ c_m s_m c_n s_n : K) :
+    (kreinSigmaZ : Matrix (Fin 2) (Fin 2) K) * kreinSigmaZ = 1 ∧
+    (kreinJ2 : Matrix (Fin 2) (Fin 2) K) * kreinJ2 = -1 ∧
+    (kreinSigmaZ : Matrix (Fin 2) (Fin 2) K) * kreinJ2 +
+      kreinJ2 * (kreinSigmaZ : Matrix (Fin 2) (Fin 2) K) = 0 ∧
+    realDoubleKrein s₁ a₁ * realDoubleKrein s₂ a₂ =
+      realDoubleKrein (s₁ * s₂ - a₁ * a₂) (s₁ * a₂ + a₁ * s₂) ∧
+    kreinSigmaZ * realDoubleKrein s₁ a₁ * kreinSigmaZ = realDoubleKrein s₁ (-a₁) ∧
+    (kreinJ4 : Matrix (Fin 4) (Fin 4) K) * kreinJ4 = -1 ∧
+    (kreinGamma5 : Matrix (Fin 4) (Fin 4) K) * kreinGamma5 = 1 ∧
+    (kreinGamma5 : Matrix (Fin 4) (Fin 4) K) * kreinJ4 -
+      kreinJ4 * (kreinGamma5 : Matrix (Fin 4) (Fin 4) K) = 0 ∧
+    ((q₁ * c_m - q₂ * s_m) * (k₁ * c_n - k₂ * s_n) +
+     (q₁ * s_m + q₂ * c_m) * (k₁ * s_n + k₂ * c_n) =
+       (q₁ * c_m * k₁ * c_n - q₁ * c_m * k₂ * s_n -
+        q₂ * s_m * k₁ * c_n + q₂ * s_m * k₂ * s_n +
+        q₁ * s_m * k₁ * s_n + q₁ * s_m * k₂ * c_n +
+        q₂ * c_m * k₁ * s_n + q₂ * c_m * k₂ * c_n)) := by
+  have h_rope :
+      (q₁ * c_m - q₂ * s_m) * (k₁ * c_n - k₂ * s_n) +
+        (q₁ * s_m + q₂ * c_m) * (k₁ * s_n + k₂ * c_n) =
+        (q₁ * c_m * k₁ * c_n - q₁ * c_m * k₂ * s_n -
+         q₂ * s_m * k₁ * c_n + q₂ * s_m * k₂ * s_n +
+         q₁ * s_m * k₁ * s_n + q₁ * s_m * k₂ * c_n +
+         q₂ * c_m * k₁ * s_n + q₂ * c_m * k₂ * c_n) := by noncomm_ring
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, h_rope⟩
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinSigmaZ]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinJ2]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinSigmaZ, kreinJ2]
+  · ext i j; fin_cases i <;> fin_cases j <;> (simp [realDoubleKrein]; try noncomm_ring)
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinSigmaZ, realDoubleKrein]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinJ4]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinGamma5]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [kreinGamma5, kreinJ4]
+
+/-- Sandwich product `N_+ W N_+` for a square-zero element `N_+` (source Chunk 156). -/
+def nilKantorGp2 (Np W : B) : B :=
+  Np * W * Np
+
+/-- Sandwich product `N_- W N_-` for a square-zero element `N_-` (source Chunk 156). -/
+def nilKantorGm2 (Nm W : B) : B :=
+  Nm * W * Nm
+
+/-- **Chunk 156 (`nilpotent_first_cartan_dirac_and_kantor_5graded_closure` of `1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1`)**:
+For ANY pair of square-zero nilpotent operators `Np, Nm : B` (`hp : Np * Np = 0`, `hm : Nm * Nm = 0`)
+in any non-commutative ring `B` (without requiring a prior idempotent `P` or von Neumann regularity):
+1. **Dirac–Kähler Split-Quaternionic Genesis from Pure Nilpotents (`Φ = N_+ + N_-`, `J = N_+ - N_-`):**
+   - `(Np + Nm) * (Np + Nm) = anticomm Np Nm` (`Φ² = V`),
+   - `(Np - Nm) * (Np - Nm) = -anticomm Np Nm` (`J² = -V`),
+   - `anticomm (Np + Nm) (Np - Nm) = 0` (`{Φ, J} = 0`),
+   - `comm (Np + Nm) (Np - Nm) = -((2 : ℤ) • comm Np Nm)` (`[Φ, J] = -2 Σ`).
+2. **Jordan Associator Anomaly on Pure Nilpotents:**
+   - `JordanAssoc Nm Np Np = comm (comm Np Nm) Np`,
+   - `JordanAssoc Np Nm Nm = -comm (comm Np Nm) Nm`.
+3. **Commutator identities for the sandwich products:**
+   - `comm (comm Np W) Np = (2 : ℤ) • nilKantorGp2 Np W`,
+   - `comm (comm Nm W) Nm = (2 : ℤ) • nilKantorGm2 Nm W`,
+   - `comm (nilKantorGp2 Np W) Np = 0`,
+   - `comm (nilKantorGm2 Nm W) Nm = 0`.
+These identities alone do not define a 5-grading or a Kantor–Koecher–Tits algebra. -/
+theorem nilpotent_first_cartan_dirac_and_kantor_5graded_closure
+    {Np Nm : B} (hp : Np * Np = 0) (hm : Nm * Nm = 0) (W : B) :
+    (Np + Nm) * (Np + Nm) = anticomm Np Nm ∧
+    (Np - Nm) * (Np - Nm) = -anticomm Np Nm ∧
+    anticomm (Np + Nm) (Np - Nm) = 0 ∧
+    comm (Np + Nm) (Np - Nm) = -((2 : ℤ) • comm Np Nm) ∧
+    JordanAssoc Nm Np Np = comm (comm Np Nm) Np ∧
+    JordanAssoc Np Nm Nm = -comm (comm Np Nm) Nm ∧
+    comm (comm Np W) Np = (2 : ℤ) • nilKantorGp2 Np W ∧
+    comm (comm Nm W) Nm = (2 : ℤ) • nilKantorGm2 Nm W ∧
+    comm (nilKantorGp2 Np W) Np = 0 ∧
+    comm (nilKantorGm2 Nm W) Nm = 0 := by
+  have hp_left : ∀ X : B, Np * (Np * X) = 0 := fun X => by rw [← mul_assoc, hp, zero_mul]
+  have hm_left : ∀ X : B, Nm * (Nm * X) = 0 := fun X => by rw [← mul_assoc, hm, zero_mul]
+  refine ⟨?_, ?_, ?_, ?_,
+          by simp only [JordanAssoc, anticomm, comm]; noncomm_ring,
+          by simp only [JordanAssoc, anticomm, comm]; noncomm_ring,
+          ?_, ?_, ?_, ?_⟩
+  · dsimp [anticomm]
+    simp only [add_mul, mul_add, hp, hm]; abel
+  · dsimp [anticomm]
+    simp only [sub_mul, mul_sub, hp, hm]; noncomm_ring
+  · dsimp [anticomm]
+    simp only [add_mul, sub_mul, mul_add, mul_sub, hp, hm]; noncomm_ring
+  · dsimp [comm]
+    simp only [add_mul, sub_mul, mul_add, mul_sub, hp, hm]; noncomm_ring
+  · dsimp [comm, nilKantorGp2]
+    have hkill := hp_left W
+    simp only [sub_mul, mul_sub, mul_assoc, hp, mul_zero, sub_zero]
+    rw [hkill]
+    abel
+  · dsimp [comm, nilKantorGm2]
+    have hkill := hm_left W
+    simp only [sub_mul, mul_sub, mul_assoc, hm, mul_zero, sub_zero]
+    rw [hkill]
+    abel
+  · dsimp [comm, nilKantorGp2]
+    have hright : (Np * W * Np) * Np = 0 := by
+      rw [mul_assoc (Np * W) Np Np, hp, mul_zero]
+    have hleft : Np * (Np * W * Np) = 0 := by
+      simpa only [mul_assoc] using hp_left (W * Np)
+    rw [hright, hleft, sub_self]
+  · dsimp [comm, nilKantorGm2]
+    have hright : (Nm * W * Nm) * Nm = 0 := by
+      rw [mul_assoc (Nm * W) Nm Nm, hm, mul_zero]
+    have hleft : Nm * (Nm * W * Nm) = 0 := by
+      simpa only [mul_assoc] using hm_left (W * Nm)
+    rw [hright, hleft, sub_self]
+
+/-- Algebraic commutant closure, Peirce commutation, and nilpotent-conjugation identities
+(historically sourced from an archetype labeled “Erlangen 2.0”). The hypotheses and
+conclusion below are ring equations. They do not provide a von Neumann algebra, a state,
+a modular operator or flow, a Cartan/Casimir subalgebra, or an exponential map.
+1. **Peirce commutation consequences (`hP : P * P = P`):**
+   The displayed elements `genV P A C` and `invS P`, `conePlus P A`, `coneMinus P C`,
+   `genPhi P A C`, `genJ P A C`, and `genSig P A C` satisfy the listed commutator
+   identities under the idempotence hypothesis on `P`.
+2. **Commutant closure and derivation identity (`[K, Q₁] = 0`, `[K, Q₂] = 0`):**
+   - **Subring Closure**: `[K, Q₁ * Q₂] = 0`,
+   - Commutator closure: `[K, [Q₁, Q₂]] = 0`,
+   - Anticommutator closure: `[K, {Q₁, Q₂}] = 0`,
+   - The displayed nested-commutator identity follows from the assumed commutation relations.
+3. **Conjugation identities:**
+   - `invS P` conjugates the displayed Peirce expressions `genV` and `genSig` to themselves.
+   - For `N² = 0`, the following unipotent conjugation identities hold; no exponential is defined here:
+     `(1 + N)(1 - N) = 1`, `(1 + N) X (1 - N) = X + [N, X] - N X N`, and every Noether charge `Q`
+     commuting with `N` (`[N, Q] = 0`) is preserved by this conjugation:
+     `(1 + N) Q (1 - N) = Q`. -/
+theorem erlangen2_von_neumann_tomita_takesaki_modular_centralizer_and_noether_killing_invariants
+    {P K Q₁ Q₂ N Q : B} (hP : P * P = P)
+    (hQ1 : comm K Q₁ = 0) (hQ2 : comm K Q₂ = 0)
+    (hN : N * N = 0) (hQN : comm N Q = 0) (A C X : B) :
+    -- 1. Central Action of Cartan & Casimir Observables on Peirce Operator Modules:
+    comm (invS P) (genV P A C) = 0 ∧
+    comm (genV P A C) (conePlus P A) = 0 ∧
+    comm (genV P A C) (coneMinus P C) = 0 ∧
+    comm (genV P A C) (genPhi P A C) = 0 ∧
+    comm (genV P A C) (genJ P A C) = 0 ∧
+    comm (genV P A C) (genSig P A C) = 0 ∧
+    -- 2. Closure identities for elements commuting with K:
+    comm K (Q₁ * Q₂) = 0 ∧
+    comm K (comm Q₁ Q₂) = 0 ∧
+    comm K (anticomm Q₁ Q₂) = 0 ∧
+    comm K (comm Q₁ X) - comm Q₁ (comm K X) = 0 ∧
+    -- 3. Peirce and nilpotent-conjugation identities:
+    invS P * genV P A C * invS P = genV P A C ∧
+    invS P * genSig P A C * invS P = genSig P A C ∧
+    (1 + N) * (1 - N) = 1 ∧
+    (1 + N) * X * (1 - N) = X + comm N X - N * X * N ∧
+    (1 + N) * Q * (1 - N) = Q := by
+  refine ⟨by peirce_nf hP, by peirce_nf hP, by peirce_nf hP,
+          by peirce_nf hP, by peirce_nf hP, by peirce_nf hP,
+          ?_, ?_, ?_, ?_,
+          by peirce_nf hP, by peirce_nf hP,
+          ?_, by simp only [comm]; noncomm_ring, ?_⟩
+  · calc comm K (Q₁ * Q₂)
+      _ = comm K Q₁ * Q₂ + Q₁ * comm K Q₂ := by simp only [comm]; noncomm_ring
+      _ = 0 := by rw [hQ1, hQ2]; noncomm_ring
+  · calc comm K (comm Q₁ Q₂)
+      _ = comm (comm K Q₁) Q₂ + comm Q₁ (comm K Q₂) := by simp only [comm]; noncomm_ring
+      _ = 0 := by rw [hQ1, hQ2]; simp only [comm]; noncomm_ring
+  · calc comm K (anticomm Q₁ Q₂)
+      _ = anticomm (comm K Q₁) Q₂ + anticomm Q₁ (comm K Q₂) := by simp only [comm, anticomm]; noncomm_ring
+      _ = 0 := by rw [hQ1, hQ2]; simp only [anticomm]; noncomm_ring
+  · calc comm K (comm Q₁ X) - comm Q₁ (comm K X)
+      _ = comm (comm K Q₁) X := by simp only [comm]; noncomm_ring
+      _ = 0 := by rw [hQ1]; simp only [comm]; noncomm_ring
+  · calc (1 + N) * (1 - N)
+      _ = 1 - N * N := by noncomm_ring
+      _ = 1 := by rw [hN, sub_zero]
+  · calc (1 + N) * Q * (1 - N)
+      _ = Q * (1 - N * N) + comm N Q * (1 - N) := by simp only [comm]; noncomm_ring
+      _ = Q := by rw [hN, hQN]; noncomm_ring
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

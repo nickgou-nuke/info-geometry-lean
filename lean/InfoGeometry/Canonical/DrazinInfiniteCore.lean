@@ -809,4 +809,81 @@ theorem exists_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
 
 end FiniteDimensionalBridge
 
+noncomputable section ConsistencyModel
+
+/-- Concrete finite ascent/descent witness at `0` for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelFiniteAscentDescentZero :
+    HasFiniteAscentDescentAtZero (0 : ℝ →L[ℝ] ℝ).toLinearMap where
+  k := 1
+  ascent := ascentAtZero_of_isDrazinInverse_le (TD := 0) (k := 1) ⟨by simp, by simp, by simp⟩ (le_refl 1)
+  descent := descentAtZero_of_isDrazinInverse_le (TD := 0) (k := 1) ⟨by simp, by simp, by simp⟩ (le_refl 1)
+  D := 0
+  hIsDrazin := ⟨by simp, by simp, by simp⟩
+
+/-- Concrete classical Riesz decomposition witness at `0` for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelClassicalRieszZero :
+    HasClassicalRieszDecompositionAtZero (0 : ℝ →L[ℝ] ℝ) where
+  P := 0
+  P_idempotent := by simp
+  PT_comm := by simp
+  k := 1
+  D := 0
+  hIsDrazin := ⟨by simp, by simp, by simp⟩
+  hP := by simp [InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+
+/-- Concrete generalized Riesz decomposition witness at `0` for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelGeneralizedRieszZero :
+    HasGeneralizedRieszDecompositionAtZero (0 : ℝ →L[ℝ] ℝ) where
+  P := 0
+  P_idempotent := by simp
+  PT_comm := by simp
+  S := 0
+  left_inverse_on_regular := by simp
+  right_inverse_on_regular := by simp
+  quasinilpotent_on_defect := ⟨1, by simp⟩
+
+/-- Concrete constructive Riesz decomposition witness at `0` for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelConstructiveRieszZero :
+    ConstructiveRieszDecompositionAtZero (0 : ℝ →L[ℝ] ℝ) :=
+  constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+    modelClassicalRieszZero
+
+/-- Concrete foundational Drazin data witness for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelConstructiveDrazinDataZero :
+    ConstructiveDrazinData (0 : ℝ →L[ℝ] ℝ) :=
+  constructiveDrazinData_of_constructiveRieszDecompositionAtZero
+    modelConstructiveRieszZero
+
+/-- Concrete bundled infinite-dimensional Drazin assumptions witness for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelDrazinInfiniteAssumptionsZero :
+    DrazinInfiniteAssumptions (0 : ℝ →L[ℝ] ℝ) where
+  finite_ascent_descent := modelFiniteAscentDescentZero
+  zero_isolated_spectrum := by
+    refine ⟨Set.univ, isOpen_univ, trivial, fun z _ hz => ?_⟩
+    by_contra hne
+    have hUnit : IsUnit (algebraMap ℝ (ℝ →L[ℝ] ℝ) z - 0) := by
+      rw [sub_zero]
+      exact (algebraMap ℝ (ℝ →L[ℝ] ℝ)).isUnit_map (Ne.isUnit hne)
+    exact hz hUnit
+  classical_riesz := modelClassicalRieszZero
+  generalized_riesz := modelGeneralizedRieszZero
+
+/-- Concrete Riesz-style Drazin data witness for the zero operator on `ℝ`. -/
+@[rep_depth operator]
+def modelRieszDrazinDataZero :
+    RieszDrazinData (0 : ℝ →L[ℝ] ℝ) where
+  k := 1
+  D := 0
+  P := 0
+  hIsDrazin := ⟨by simp, by simp, by simp⟩
+  hP := by simp [InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+
+end ConsistencyModel
+
 end InfoGeometry.Canonical.DrazinInfiniteCore

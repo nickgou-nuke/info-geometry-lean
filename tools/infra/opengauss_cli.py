@@ -4,7 +4,7 @@
 Implements all 15 OpenGauss commands natively in Python:
 1.  /prove        - Top-Down Assume-and-Recurse Prover
 2.  /check        - Ground-Truthed Counterexample Hunter & Consistency Auditor
-3.  /refute       - Adversarial False-as-Stated Screener (15-Trap Catalog)
+3.  /refute       - Adversarial False-as-Stated Screener (selected 17-Trap checks)
 4.  /draft        - Skeleton Drafter
 5.  /review       - Automated QMS Source Preflight (Gate 2 / Gate 4)
 6.  /checkpoint   - State Saver & Continuous Tracker (git index protection)
@@ -195,7 +195,7 @@ def check_consistency(
 # ---------------------------------------------------------------------------
 
 def refute_content(content: str, filename: str = "<unknown>") -> Dict[str, Any]:
-    """Adversarially screen Lean 4 code against the 15-Trap Catalog."""
+    """Run selected automated checks from the 17-Trap Catalog on Lean code."""
     violations = screen_lean_content(content, filename=filename)
     errors = [asdict(v) for v in violations if v.severity == "ERROR"]
     warnings = [asdict(v) for v in violations if v.severity == "WARNING"]
@@ -322,12 +322,85 @@ class ReviewReport:
     independent_semantic_audit_performed: bool = False
 
 
+_STAGED_HOOK_CHURN_MARKER = "active Git index changed"
+
+
+def _active_index_digest(hook_root: Path) -> Optional[str]:
+    """SHA-256 of the checkout's Git index file, or None when unavailable.
+
+    Only a plain `.git` directory is supported; linked worktrees (where `.git`
+    is a file) return None, which disables caching rather than guessing.
+    """
+    index_path = Path(hook_root) / ".git" / "index"
+    try:
+        return hashlib.sha256(index_path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _run_staged_hook(hook_root: Path) -> Tuple[int, str, bool]:
+    """Run the staged proof gate, retrying transient index churn.
+
+    The staged hook REFUSES to certify when the Git index mutates mid-scan and
+    exits non-zero. That refusal is not a finding about the file under review:
+    it means concurrent staging made the snapshot untrustworthy. Treating it
+    as a QMS_STAGED_HOOK ERROR made every Gate 4 run reject whenever another
+    agent staged concurrently, which is common in this repository and which
+    hid genuine, independently-passing results. Retry the transient case, and
+    only surface a trap once the hook has actually reported a finding (or
+    churn has outlived the retries).
+
+    Returns ``(returncode, detail, churned)``.
+    """
+    hook_detail = ""
+    hook_churned = True
+    returncode = 1
+    for _attempt in range(3):
+        hook_check = subprocess.run(
+            [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
+            cwd=hook_root, capture_output=True, text=True, check=False,
+        )
+        returncode = hook_check.returncode
+        hook_detail = (hook_check.stderr or hook_check.stdout).strip()
+        if not returncode:
+            hook_churned = False
+            break
+        if _STAGED_HOOK_CHURN_MARKER not in hook_detail:
+            hook_churned = False
+            break
+        time.sleep(3.0)
+    return returncode, hook_detail, hook_churned
+
+
+def _run_staged_hook_cached(
+    hook_root: Path,
+    cache: Optional[Dict[str, Tuple[int, str, bool]]],
+) -> Tuple[int, str, bool]:
+    """Reuse a staged-hook result for an unchanged index snapshot.
+
+    The key is the index digest taken *after* the run, so a result is only
+    reused when the index observed afterwards is byte-identical. Churned
+    results are never cached.
+    """
+    if cache is None:
+        return _run_staged_hook(hook_root)
+    before = _active_index_digest(hook_root)
+    if before is not None and before in cache:
+        return cache[before]
+    result = _run_staged_hook(hook_root)
+    after = _active_index_digest(hook_root)
+    if after is not None and after == before and not result[2]:
+        cache[after] = result
+    return result
+
+
 def review_file(
     path: Path,
     gate: str = "GATE_2",
     *,
     verify_kernel: bool = False,
     repo_root: Optional[Path] = None,
+    staged_hook_cache: Optional[Dict[str, Tuple[int, str, bool]]] = None,
 ) -> ReviewReport:
     """Run static preflight, optionally followed by locked Gate 4 verification."""
     if gate == "GATE_4" and verify_kernel:
@@ -380,7 +453,7 @@ def review_file(
         if re.search(r"\badmit\b", stripped):
             admit_count += 1
 
-    # Screen against 15-Trap catalog
+    # Run the available automated checks drawn from the 17-Trap catalog.
     traps = screen_lean_content(content, filename=str(path))
     trap_dicts = [asdict(t) for t in traps]
     for type_name, constructor in aggregate_prop_constructors(content):
@@ -391,31 +464,14 @@ def review_file(
         ))
         trap_dicts.append(asdict(traps[-1]))
     hook_root = Path(repo_root) if repo_root is not None else canonical_repo_root()
-    # The staged hook REFUSES to certify when the Git index mutates mid-scan and
-    # exits non-zero. That refusal is not a finding about the file under review:
-    # it means concurrent staging made the snapshot untrustworthy. Treating it
-    # as a QMS_STAGED_HOOK ERROR made every Gate 4 run reject whenever another
-    # agent staged concurrently, which is common in this repository and which
-    # hid genuine, independently-passing results. Retry the transient case, and
-    # only surface a trap once the hook has actually reported a finding (or
-    # churn has outlived the retries).
-    _CHURN_MARKER = "active Git index changed"
-    hook_detail = ""
-    hook_churned = True
-    for _attempt in range(3):
-        hook_check = subprocess.run(
-            [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
-            cwd=hook_root, capture_output=True, text=True, check=False,
-        )
-        hook_detail = (hook_check.stderr or hook_check.stdout).strip()
-        if not hook_check.returncode:
-            hook_churned = False
-            break
-        if _CHURN_MARKER not in hook_detail:
-            hook_churned = False
-            break
-        time.sleep(3.0)
-    if hook_check.returncode:
+    # The staged hook scans the entire active index, not `path`, so its result
+    # depends only on the index snapshot. A multi-file `review` passes a shared
+    # cache so the scan runs once per distinct index snapshot instead of once
+    # per reviewed file (each scan takes minutes on a large staged set).
+    hook_returncode, hook_detail, hook_churned = _run_staged_hook_cached(
+        hook_root, staged_hook_cache,
+    )
+    if hook_returncode:
         if hook_churned:
             # Still churning after every retry. This is an infrastructure state,
             # not a verdict on the file: report it as a warning and let the
@@ -805,7 +861,7 @@ def run_formalize(
     if "clifford" in spec_lower or "spinor" in spec_lower:
         anchors.append("InfoGeometry.Clifford.SolderingIsomorphism")
 
-    # Screen raw spec keywords against T1-T15 traps
+    # Apply the available source checks to the raw spec text; coverage is partial.
     screen_res = refute_content(spec, filename="<spec>")
     clean = screen_res["clean"]
 
@@ -1830,16 +1886,21 @@ def generate_certification_audit(
                 for component in namespace_match.group(1).split(".")
             )
             continue
-        # Lean permits `noncomputable section` as a scoped command. Treat it
-        # like `section`; otherwise the fail-closed command scan mistakes the
-        # modifier for an unparsed declaration and refuses a valid owner file.
+        # Lean permits visibility and `noncomputable` modifiers on a scoped
+        # section command. Treat these as scope commands; otherwise the
+        # fail-closed scanner mistakes the modifier for an unparsed declaration.
         section_match = re.match(
-            rf"^\s*(?:noncomputable\s+)?section(?:\s+({_LEAN_IDENT}))?\s*$",
+            rf"^\s*(?:public\s+)?(?:noncomputable\s+)?section(?:\s+({_LEAN_IDENT}))?\s*$",
             line,
         )
         if section_match:
             pending_private = False
             scope_stack.append(("section", section_match.group(1)))
+            continue
+        if re.match(r"^\s*end\s+noncomputable\s+section\s*(?:--.*)?$", line):
+            pending_private = False
+            if scope_stack:
+                scope_stack.pop()
             continue
         end_match = end_pattern.match(line)
         if end_match:
@@ -1983,7 +2044,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_check.add_argument("--json", action="store_true", help="Output JSON")
 
     # 3. refute
-    p_refute = subparsers.add_parser("refute", help="Adversarial False-as-Stated Screener (15 Traps)")
+    p_refute = subparsers.add_parser(
+        "refute",
+        help="Adversarial false-as-stated screener (selected checks from the 17-Trap catalog)",
+    )
     p_refute.add_argument("paths", nargs="+", help="Files or directories to screen")
     p_refute.add_argument("--strict", action="store_true", help="Treat warnings as errors")
     p_refute.add_argument("--json", action="store_true", help="Output JSON")
@@ -2221,9 +2285,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     elif cmd == "review":
         reports = []
         has_reject = False
+        staged_hook_cache: Dict[str, Tuple[int, str, bool]] = {}
         for p_str in args.paths:
             p = Path(p_str)
-            rep = review_file(p, gate=args.gate, verify_kernel=args.verify_kernel)
+            rep = review_file(
+                p, gate=args.gate, verify_kernel=args.verify_kernel,
+                staged_hook_cache=staged_hook_cache,
+            )
             reports.append(rep)
             if rep.verdict in ("REJECT", "REJECTED"):
                 has_reject = True

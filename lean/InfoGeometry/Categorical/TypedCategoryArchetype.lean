@@ -70,6 +70,35 @@ structure ColimitCoconePairDatum (C : Type u) [Category.{v} C] where
   hs : IsColimit s
   ht : IsColimit t
 
+/-- Trivial one-object category instance on `PUnit.{v + 1}` for witnessing `ColimitCoconePairDatum`. -/
+instance punitCategory : Category.{v} PUnit.{v + 1} where
+  Hom _ _ := PUnit.{v + 1}
+  id _ := PUnit.unit
+  comp _ _ := PUnit.unit
+
+/-- Constant cocone colimit witness on `PUnit.{1}` for `ColimitCoconePairDatum PUnit.{1}`. -/
+def colimitCoconePairDatumPUnit : ColimitCoconePairDatum PUnit.{1} :=
+  let F : PUnit.{1} ⥤ PUnit.{1} :=
+    { obj := fun _ => PUnit.unit
+      map := fun _ => PUnit.unit }
+  let c : Cocone F :=
+    { pt := PUnit.unit
+      ι := { app := fun _ => PUnit.unit } }
+  let hc : IsColimit c :=
+    { desc := fun _ => PUnit.unit
+      fac := fun _ _ => rfl
+      uniq := fun _ _ _ => rfl }
+  { J := PUnit.{1}
+    instJ := punitCategory
+    F := F
+    s := c
+    t := c
+    hs := hc
+    ht := hc }
+
+instance : Inhabited (ColimitCoconePairDatum PUnit.{1}) :=
+  ⟨colimitCoconePairDatumPUnit⟩
+
 /-- Two colimiting cocones over the same diagram have mutually inverse apex isomorphisms. -/
 theorem colimitCoconePairDatum_apex_inversePair {C : Type u} [Category.{v} C]
     (D : ColimitCoconePairDatum C) :
@@ -87,6 +116,7 @@ theorem colimitCoconePairDatum_apex_inversePair {C : Type u} [Category.{v} C]
 structure BraidedCrossingDatum (C : Type u) [Category.{v} C] [MonoidalCategory C] [BraidedCategory C] where
   X : C
   Y : C
+  deriving Inhabited
 
 /-- The braiding morphism is a left inverse of the braiding in the opposite order. -/
 theorem braidedCrossingDatum_hom_inv_id {C : Type u} [Category.{v} C] [MonoidalCategory C]
@@ -102,6 +132,13 @@ theorem braidedCrossingDatum_hom_inv_id {C : Type u} [Category.{v} C] [MonoidalC
 structure GrothendieckCompletionDatum where
   M : Type u
   instM : AddCommMonoid M
+
+/-- Concrete `ℕ` model for `GrothendieckCompletionDatum`. -/
+def grothendieckCompletionDatumNat : GrothendieckCompletionDatum :=
+  ⟨ℕ, inferInstance⟩
+
+instance instInhabitedGrothendieckCompletionDatum : Inhabited GrothendieckCompletionDatum :=
+  ⟨grothendieckCompletionDatumNat⟩
 
 /-- Every additive commutative monoid has an abelian group completion through which
 every homomorphism into an abelian group factors uniquely. -/
@@ -132,6 +169,9 @@ structure ConvexDualityDatum where
   psi : ℝ → ℝ
   theta : ℝ
   eta : ℝ
+
+instance : Inhabited ConvexDualityDatum :=
+  ⟨⟨fun _ => 0, 0, 0⟩⟩
 
 /-- The Legendre–Fenchel pairing of a convex potential with its dual recovers the
 moment coupling `psi theta + psi* theta eta = theta * eta`. -/

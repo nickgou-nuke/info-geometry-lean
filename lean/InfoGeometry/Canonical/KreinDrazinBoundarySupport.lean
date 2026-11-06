@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
@@ -250,8 +255,7 @@ theorem projective_scaling_preserves_null
     [SMul ℝ K]
     {D : KreinDrazinBoundarySupport K Op}
     (H : KreinFormHomogeneous D)
-    {c : ℝ}
-    (_hc : c ≠ 0)
+    (c : ℝ)
     {x : K}
     (hx : IsKreinNull D x) :
     IsKreinNull D (c • x) := by
@@ -271,7 +275,7 @@ theorem boundary_null_vector_scaled
     (hx : BoundaryNullRayRepresentative D x) :
     BoundaryNullRayRepresentative D (c • x) := by
   refine ⟨H.smul_nonzero c hc x hx.1, H.defect_support_smul c hc x hx.2.1,
-    projective_scaling_preserves_null H hc hx.2.2⟩
+    projective_scaling_preserves_null H c hx.2.2⟩
 
 /-- Real projective equivalence by nonzero Weyl scaling. -/
 def ProjectivelyEquivalent
@@ -765,5 +769,278 @@ structure BoundaryNormalCone
   /-- Normal/conormal carrier over each projective ray. -/
   Normal : B.Ray → Type*
 
+/-! ## Concrete consistency model
+
+One small model inhabits the structures of this file and shows that their
+hypotheses are jointly satisfiable with a *non-invertible* operator and a
+*nonzero* Krein-null defect vector.
+
+* Operators: the commutative ring `ℝ × ℝ`, acting on `ℝ³` by
+  `(a₁, a₂) · (x, y, z) = (a₁ x, a₂ y, a₂ z)`.
+* Krein form of signature `(2, 1)`: `[v, w] = v₁ w₁ + v₂ w₂ - v₃ w₃`.
+* Operator `A = (1, 0)`: a singular idempotent, its own index-one Drazin inverse,
+  with regular support `p = (1, 0)` and defect support `q = (0, 1)`.
+* Defect support `{x = 0}` is a Lorentzian plane containing the null vector
+  `(0, 1, 1)`.
+
+The Krein adjoint is the identity: in this commutative model every operator acts
+diagonally and is Krein-self-adjoint.  The model witnesses consistency only; it
+is not a model of the doubled/Tomita physics.
+-/
+
+section ConsistencyModel
+
+/-- Model operator action of `ℝ × ℝ` on `ℝ × ℝ × ℝ`. -/
+def modelAct (a : ℝ × ℝ) (v : ℝ × ℝ × ℝ) : ℝ × ℝ × ℝ :=
+  (a.1 * v.1, a.2 * v.2.1, a.2 * v.2.2)
+
+/-- Model Krein form of signature `(2, 1)`. -/
+def modelForm (v w : ℝ × ℝ × ℝ) : ℝ :=
+  v.1 * w.1 + v.2.1 * w.2.1 - v.2.2 * w.2.2
+
+/-- The model Krein form is indefinite. -/
+theorem modelForm_indefinite :
+    0 < modelForm (1, 0, 0) (1, 0, 0) ∧ modelForm (0, 0, 1) (0, 0, 1) < 0 := by
+  constructor <;> norm_num [modelForm]
+
+/-- Model doubled/Krein carrier. -/
+def modelCarrier : DoubledKreinCarrier (ℝ × ℝ × ℝ) (ℝ × ℝ) where
+  act := modelAct
+  kreinForm := modelForm
+  zero := 0
+
+/-- Model Krein adjoint: the identity, valid because the operator ring is commutative. -/
+def modelAdjoint : KreinAdjointData (ℝ × ℝ) where
+  sharp := id
+  sharp_involutive := fun _ => rfl
+  sharp_mul := fun S T => mul_comm S T
+  sharp_add := fun _ _ => rfl
+
+/-- The singular idempotent `(1, 0)` is its own index-one Drazin inverse. -/
+theorem model_isDrazinInverse : IsDrazinInverse ((1, 0) : ℝ × ℝ) (1, 0) 1 :=
+  IsDrazinInverse.of_idempotent (by ext <;> simp)
+
+/-- The model operator `(1, 0)` is not invertible. -/
+theorem model_operator_not_isUnit : ¬ IsUnit ((1, 0) : ℝ × ℝ) := by
+  intro h
+  have h2 := (Prod.isUnit_iff.mp h).2
+  simp at h2
+
+/-- Model algebraic Drazin split of `(1, 0)`. -/
+def modelSplit : AlgebraicDrazinSplit (ℝ × ℝ) where
+  A := (1, 0)
+  AD := (1, 0)
+  index := 1
+  hDrazin := model_isDrazinInverse
+  p := (1, 0)
+  q := (0, 1)
+  p_def := by ext <;> simp
+  q_def := by ext <;> simp
+  p_idempotent := by ext <;> simp
+  q_idempotent := by ext <;> simp
+  pq_zero := by ext <;> simp
+  qp_zero := by ext <;> simp
+
+/-- Model Krein--Drazin boundary support. -/
+def modelSupport : KreinDrazinBoundarySupport (ℝ × ℝ × ℝ) (ℝ × ℝ) where
+  carrier := modelCarrier
+  adjoint := modelAdjoint
+  drazin := modelSplit
+  p_sharp := rfl
+  q_sharp := rfl
+  generalized_zero_sector_zero := by
+    simp [modelCarrier, modelAct, modelSplit]
+  inverse_on_regular_sector := by
+    simp [modelSplit]
+
+/-- The model null vector `(0, 1, 1)`. -/
+def modelNullVector : ℝ × ℝ × ℝ := (0, 1, 1)
+
+theorem modelNullVector_inDefectSupport : InDefectSupport modelSupport modelNullVector := by
+  simp [InDefectSupport, modelSupport, modelCarrier, modelAct, modelSplit, modelNullVector]
+
+theorem modelNullVector_isKreinNull : IsKreinNull modelSupport modelNullVector := by
+  simp [IsKreinNull, modelSupport, modelCarrier, modelForm, modelNullVector]
+
+theorem modelNullVector_ne_zero : modelNullVector ≠ modelSupport.carrier.zero := by
+  simp [modelNullVector, modelSupport, modelCarrier, Prod.ext_iff]
+
+/-- The model has a genuine boundary null ray representative. -/
+theorem modelNullVector_boundary :
+    BoundaryNullRayRepresentative modelSupport modelNullVector :=
+  ⟨modelNullVector_ne_zero, modelNullVector_inDefectSupport, modelNullVector_isKreinNull⟩
+
+/-- Model membership in the Drazin complement. -/
+theorem modelInDrazinComplement : InDrazinComplement modelSupport modelNullVector where
+  projectedByComplement := modelNullVector_inDefectSupport
+
+/-- Model Drazin--Krein null vector. -/
+def modelDrazinKreinNullVector : DrazinKreinNullVector modelSupport where
+  vector := modelNullVector
+  inDrazinComplement := modelInDrazinComplement
+  kreinNull := modelNullVector_isKreinNull
+
+/-- Model Krein form homogeneity under real scaling. -/
+theorem modelKreinFormHomogeneous : KreinFormHomogeneous modelSupport where
+  smul_zero_eq_zero := fun c => by simp [modelSupport, modelCarrier]
+  smul_nonzero := fun c hc x hx => by
+    simpa [modelSupport, modelCarrier] using smul_ne_zero hc hx
+  defect_support_smul := fun c _ x hx => by
+    simp only [InDefectSupport, modelSupport, modelCarrier, modelAct, modelSplit,
+      Prod.ext_iff, Prod.smul_fst, Prod.smul_snd, smul_eq_mul] at hx ⊢
+    obtain ⟨h1, -, -⟩ := hx
+    have hx1 : x.1 = 0 := by linarith
+    refine ⟨?_, by ring, by ring⟩
+    rw [hx1]; ring
+  kreinForm_smul_self := fun c x => by
+    simp only [modelSupport, modelCarrier, modelForm, Prod.smul_fst, Prod.smul_snd,
+      smul_eq_mul]
+    ring
+
+/-- Model projective null boundary with a single ray. -/
+def modelProjectiveNullBoundary :
+    ProjectiveDrazinNullBoundary (ℝ × ℝ × ℝ) (ℝ × ℝ) modelSupport where
+  Ray := Unit
+  representative := fun _ => modelNullVector
+  representative_nonzero := fun _ => modelNullVector_ne_zero
+  representative_in_defect := fun _ => modelNullVector_inDefectSupport
+  representative_krein_null := fun _ => modelNullVector_isKreinNull
+
+/-- Model projective null ray. -/
+def modelProjectiveNullRay : ProjectiveDrazinNullRay modelSupport where
+  representative := modelDrazinKreinNullVector
+  nonzero := modelNullVector_ne_zero
+
+/-- Model conformal symmetry: scaling by `2`.  The extra carrier fields are
+unconstrained type data and are set to `Unit`. -/
+def modelConformalSymmetry :
+    DrazinNullConformalSymmetry (ℝ × ℝ × ℝ) (ℝ × ℝ) modelSupport where
+  map := fun v => (2 : ℝ) • v
+  scale := 2
+  scale_nonzero := by norm_num
+  preserves_nonzero := fun x hx => by
+    simpa [modelSupport, modelCarrier] using smul_ne_zero (by norm_num : (2 : ℝ) ≠ 0) hx
+  preserves_defect_support := fun x hx =>
+    modelKreinFormHomogeneous.defect_support_smul 2 (by norm_num) x hx
+  preserves_krein_null := fun x hx =>
+    projective_scaling_preserves_null modelKreinFormHomogeneous 2 hx
+  PGL := Unit
+  conformalSubgroup := Unit
+  affineChart := Unit
+  weylGauge := Unit
+
+/-- Model nonnegative weight on a one-ray boundary. -/
+def modelKMSWeight : KMSWeightOnDrazinNullBoundary Unit where
+  rayWeight := fun _ => 1
+  rayWeight_nonnegative := fun _ => by norm_num
+
+/-- Model nonnegative weight on structured projective null rays. -/
+def modelKMSWeightOnRays : KMSWeightOnProjectiveDrazinNullRays modelSupport where
+  stateOrWeight := Unit
+  modularData := Unit
+  rayWeight := fun _ => 1
+  rayWeight_nonnegative := fun _ => by norm_num
+
+/-- Model Tomita polarization packet.  `TomitaKreinRealificationWitness` consists of
+type fields only, so this witness carries content only through the defect-sector
+characterization. -/
+def modelTomitaPolarization :
+    TomitaRealifiedDrazinBoundaryPolarization (ℝ × ℝ × ℝ) (ℝ × ℝ) modelSupport where
+  tomitaRealification :=
+    { ComplexCarrier := Unit, RealCarrier := Unit, complexStructure := Unit,
+      tomitaJ := Unit, realifiedJ := Unit, kreinSymmetry := Unit }
+  generalizedZeroSector := fun x => modelSupport.carrier.act modelSupport.drazin.q x = x
+  generalizedZeroSector_eq_defectSupport := fun _ => Iff.rfl
+
+/-- Model algebraic Drazin data for the minimal split API. -/
+def modelDrazinData : AlgebraicDrazinData (ℝ × ℝ) where
+  L := (1, 0)
+  LD := (1, 0)
+  H := (0, 1)
+  index := 1
+  isDrazinInverse := model_isDrazinInverse
+  H_def := by
+    simp only [IsDrazinInverse.complementaryProjection, IsDrazinInverse.projection]
+    ext <;> simp
+
+theorem modelNullVector_isDrazinKreinNull :
+    IsDrazinKreinNullVector modelCarrier modelDrazinData modelNullVector := by
+  constructor
+  · simp [InDrazinZeroSector, modelCarrier, modelAct, modelDrazinData, modelNullVector]
+  · simp [DoubledKreinCarrier.IsKreinNull, modelCarrier, modelForm, modelNullVector]
+
+/-- Model projective Drazin--Krein null boundary for the minimal split API. -/
+def modelDrazinKreinNullBoundary :
+    DrazinKreinNullBoundary (ℝ × ℝ × ℝ) (ℝ × ℝ) modelCarrier modelDrazinData where
+  Ray := Unit
+  representative := fun _ => modelNullVector
+  representative_nonzero := fun _ => by
+    simp [modelNullVector, modelCarrier, Prod.ext_iff]
+  representative_is_null := fun _ => modelNullVector_isDrazinKreinNull
+
+/-- Model carrier Krein adjoint: every model operator is Krein-self-adjoint. -/
+def modelCarrierAdjoint : CarrierKreinAdjointData (ℝ × ℝ × ℝ) (ℝ × ℝ) modelCarrier where
+  sharp := id
+  isCarrierKreinAdjoint := fun A v w => by
+    simp only [modelCarrier, modelForm, modelAct, id]
+    ring
+
+/-- Model Krein compatibility of the Drazin complement. -/
+theorem modelKreinCompatibleComplement :
+    KreinCompatibleDrazinComplement (ℝ × ℝ × ℝ) (ℝ × ℝ) modelCarrier modelDrazinData
+      modelCarrierAdjoint where
+  H_krein_self_adjoint := rfl
+
+/-- Model conformal Krein symmetry: the operator `(2, 2)` scales the form by `4`. -/
+def modelKreinConformalSymmetry : KreinConformalSymmetry (ℝ × ℝ × ℝ) (ℝ × ℝ) modelCarrier where
+  U := (2, 2)
+  scale := 4
+  scale_positive := by norm_num
+  preservesKreinForm := fun v w => by
+    simp only [modelCarrier, modelForm, modelAct]
+    ring
+
+/-- The model conformal symmetry preserves the Drazin--Krein boundary. -/
+theorem modelPreservesBoundary :
+    PreservesDrazinKreinBoundary modelCarrier modelDrazinData modelKreinConformalSymmetry where
+  preserves_zero_sector := fun v hv => by
+    simp only [InDrazinZeroSector, modelCarrier, modelAct, modelDrazinData,
+      modelKreinConformalSymmetry, Prod.ext_iff] at hv ⊢
+    obtain ⟨h1, h2, h3⟩ := hv
+    refine ⟨?_, ?_, ?_⟩ <;> nlinarith [h1, h2, h3]
+  preserves_null := fun v hv => by
+    simp only [DoubledKreinCarrier.IsKreinNull, modelCarrier, modelForm, modelAct,
+      modelKreinConformalSymmetry] at hv ⊢
+    nlinarith [hv]
+
+/-- The model Krein form is symmetric. -/
+theorem modelKreinFormSymmetric : KreinFormSymmetric modelCarrier where
+  symmetric := fun x y => by
+    simp only [modelCarrier, modelForm]
+    ring
+
+/-- Model Hilbert-normal representative: fundamental symmetry `η (x, y, z) = (x, y, -z)`
+with the Euclidean pairing. -/
+def modelHilbertNormal : HilbertNormalRepresentative modelCarrier where
+  eta := fun x => (x.1, x.2.1, -x.2.2)
+  hilbertPairing := fun v w => v.1 * w.1 + v.2.1 * w.2.1 + v.2.2 * w.2.2
+  eta_represents_conormal := fun x v => by
+    simp only [ConormalToNullCone, modelCarrier, modelForm]
+    ring
+
+/-- Model normal obstruction at the null vector. -/
+def modelBoundaryNormalObstruction :
+    BoundaryNormalObstruction modelCarrier modelDrazinData modelNullVector where
+  boundary_point := modelNullVector_isDrazinKreinNull
+  obstruction := Unit
+  obstruction_nonempty := ⟨()⟩
+
+/-- Model normal cone over the one-ray boundary. -/
+def modelBoundaryNormalCone :
+    BoundaryNormalCone (ℝ × ℝ × ℝ) (ℝ × ℝ) modelCarrier modelDrazinData
+      modelDrazinKreinNullBoundary where
+  Normal := fun _ => Unit
+
+end ConsistencyModel
 
 end InfoGeometry.Canonical.KreinDrazinBoundarySupport

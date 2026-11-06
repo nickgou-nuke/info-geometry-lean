@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.TwoSheetedYangMillsInductiveColimit
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis
+import InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian
 
 /-!
 # Two-Sheeted Yang–Mills: Nilpotent-to-Unipotent Condensate, Ordered Möbius–Bruhat / Steinberg Braid Vortices, Vortex Mass `m² = 4V`, and Operator Cyclotomic Locking (`YM₁ ≺ YM₂ ≺ YM₃ ≺ YM₄ ≺ YM₅ ≺ YM₆ ≺ YM₇`)
@@ -192,6 +193,22 @@ def opCondensateDisplacementDual (P A C : B) : B :=
 /-- Operator vortex mass squared `m² = 4V = (4 : ℤ) • opQuadraticCoupling P A C`. -/
 def opVortexMassSq (P A C : B) : B :=
   (4 : ℤ) • opQuadraticCoupling P A C
+
+/-- In the diagonal self-adjoint specialization `C = A`, the two-sheet
+    vortex mass is four times the ordered orbit Gramian. This is an identity
+    on the shared ring carrier; it does not assert positivity or an analytic
+    spectral gap. -/
+theorem diagonal_vortex_mass_eq_four_orbit_gramian
+    [StarRing B] (P A : B)
+    (hP : P * P = P)
+    (hPstar : star P = P)
+    (hAstar : star A = A) :
+    opVortexMassSq P A A =
+      (4 : ℤ) • InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian.orbitMassMode P A := by
+  change (4 : ℤ) • genV P A A =
+    (4 : ℤ) • InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian.orbitMassMode P A
+  rw [← InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian.orbitMassMode_eq_peirce_genV
+    hP hPstar hAstar]
 
 /-- The 12th cyclotomic polynomial `Φ₁₂(X) = X⁴ - X² + 1` on `B`. -/
 def opCyclotomicPhi12 (X : B) : B :=

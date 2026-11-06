@@ -179,30 +179,31 @@ theorem permutationOperator_unitary (σ : Equiv.Perm n) :
 
 /-- A weighted mixture of unitary conjugations on the full matrix algebra.
 The weights are scalar probabilities, while each summand acts by genuine
-noncommuting operator multiplication. -/
-def unitaryMixtureChannel {κ : Type*} [Fintype κ] [DecidableEq κ]
+noncommuting operator multiplication. This is the real-weighted variant,
+distinct from `ChoiCompletePositivity.unitaryMixtureChannel` (complex weights). -/
+def unitaryMixtureChannel_real {κ : Type*} [Fintype κ] [DecidableEq κ]
     (w : κ → ℝ) (U : κ → Matrix n n ℂ) (X : Matrix n n ℂ) : Matrix n n ℂ :=
   ∑ i, (w i : ℂ) • (U i * X * star (U i))
 
-/-- A normalized finite mixture of two-sided unitary conjugations is both
+/-! A normalized finite mixture of two-sided unitary conjugations is both
 unital and trace-preserving on the full, noncommutative matrix algebra. -/
-theorem unitaryMixtureChannel_doubly_stochastic
+theorem unitaryMixtureChannel_real_doubly_stochastic
     {κ : Type*} [Fintype κ] [DecidableEq κ]
     (w : κ → ℝ) (hw : ∑ i, w i = 1)
     (U : κ → Matrix n n ℂ)
     (hU : ∀ i, U i * star (U i) = 1 ∧ star (U i) * U i = 1)
     (X : Matrix n n ℂ) :
-    unitaryMixtureChannel w U 1 = 1 ∧
-      trace (unitaryMixtureChannel w U X) = trace X := by
+    unitaryMixtureChannel_real w U 1 = 1 ∧
+      trace (unitaryMixtureChannel_real w U X) = trace X := by
   constructor
-  · unfold unitaryMixtureChannel
+  · unfold unitaryMixtureChannel_real
     have hwC : ∑ i, (w i : ℂ) = 1 := by exact_mod_cast hw
     have hterm : ∀ i, U i * (1 : Matrix n n ℂ) * star (U i) = 1 := by
       intro i
       rw [Matrix.mul_one, (hU i).1]
     simp_rw [hterm]
     rw [← Finset.sum_smul, hwC, one_smul]
-  · unfold unitaryMixtureChannel
+  · unfold unitaryMixtureChannel_real
     rw [trace_sum]
     have hwC : ∑ i, (w i : ℂ) = 1 := by exact_mod_cast hw
     have hterm : ∀ i,

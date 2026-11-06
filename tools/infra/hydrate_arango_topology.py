@@ -10,12 +10,14 @@ from __future__ import annotations
 
 import argparse
 import collections
+from copy import deepcopy
 import json
 from pathlib import Path
 from typing import Any
 
 
 # [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.graph.decl_schema import decl_key
 from igf.common.json_io import read_jsonl
 
 
@@ -24,21 +26,75 @@ from igf.common.json_io import write_jsonl
 
 
 def node_key(row: dict[str, Any]) -> str:
-    return str(row.get("name") or row.get("_key") or row.get("id") or "")
+    """Return the persisted vertex key used by the layered Arango importer."""
+    for field in ("_key", "key"):
+        if field in row:
+            value = row[field]
+            if not isinstance(value, str) or not value or "/" in value:
+                raise ValueError(f"invalid vertex {field}")
+            return value
+    name = row.get("name")
+    if isinstance(name, str) and name:
+        return decl_key(name)
+    value = row.get("id")
+    if isinstance(value, str) and value and value.rsplit("/", 1)[-1]:
+        return value.rsplit("/", 1)[-1]
+    raise ValueError("vertex has no usable identity")
 
 
-def edge_endpoint_key(value: Any) -> str:
-    text = str(value or "")
-    if "/" in text:
-        return text.split("/", 1)[1]
-    return text
+def identity_aliases(
+    nodes: list[dict[str, Any]], collection: str
+) -> tuple[list[str], dict[str, str]]:
+    keys: list[str] = []
+    aliases: dict[str, str] = {}
+    seen: set[str] = set()
+    for row in nodes:
+        key = node_key(row)
+        if key in seen:
+            raise ValueError(f"duplicate vertex identity: {key}")
+        if "_id" in row and row["_id"] != f"{collection}/{key}":
+            raise ValueError("vertex _id is outside selected collection or disagrees with key")
+        keys.append(key)
+        seen.add(key)
+        for alias in (key, row.get("name"), row.get("id")):
+            if alias is None:
+                continue
+            if not isinstance(alias, str) or not alias:
+                raise ValueError("invalid vertex alias")
+            if alias in aliases and aliases[alias] != key:
+                raise ValueError(f"ambiguous vertex alias: {alias}")
+            aliases[alias] = key
+    return keys, aliases
 
 
-def collection_name(from_to: Any, fallback: str) -> str:
-    text = str(from_to or "")
-    if "/" in text:
-        return text.split("/", 1)[0]
-    return fallback
+def resolve_endpoint(
+    edge: dict[str, Any],
+    address: str,
+    name: str,
+    collection: str,
+    aliases: dict[str, str],
+) -> str | None:
+    resolved: list[str | None] = []
+    if address in edge:
+        value = edge[address]
+        if not isinstance(value, str):
+            raise ValueError("invalid edge address")
+        owner, separator, key = value.partition("/")
+        if owner != collection or not separator or not key or "/" in key:
+            raise ValueError("edge endpoint outside selected vertex collection")
+        # An addressed endpoint is a persisted key, never a declaration-name alias.
+        canonical = aliases.get(key)
+        if canonical is not None and canonical != key:
+            raise ValueError("edge address uses an alias instead of a vertex key")
+        resolved.append(canonical)
+    if name in edge:
+        value = edge[name]
+        if not isinstance(value, str) or not value:
+            raise ValueError("invalid named edge endpoint")
+        resolved.append(aliases.get(value))
+    if len(resolved) == 2 and resolved[0] != resolved[1]:
+        raise ValueError("named and addressed edge endpoints disagree")
+    return resolved[0] if resolved else None
 
 
 def tarjan(nodes: list[str], forward: dict[str, list[str]]) -> tuple[dict[str, int], dict[int, list[str]]]:
@@ -91,15 +147,17 @@ def hydrate(
     raw_node_collection: str,
     topology_overlay_collection: str,
 ) -> dict[str, Any]:
-    keys = [node_key(row) for row in nodes if node_key(row)]
+    keys, aliases = identity_aliases(nodes, raw_node_collection)
     key_set = set(keys)
     forward: dict[str, list[str]] = collections.defaultdict(list)
     reverse: dict[str, list[str]] = collections.defaultdict(list)
     edge_loss: list[dict[str, Any]] = []
 
+    resolved_edges: list[tuple[str | None, str | None]] = []
     for edge in edges:
-        src = edge_endpoint_key(edge.get("_from") or edge.get("src"))
-        dst = edge_endpoint_key(edge.get("_to") or edge.get("dst"))
+        src = resolve_endpoint(edge, "_from", "src", raw_node_collection, aliases)
+        dst = resolve_endpoint(edge, "_to", "dst", raw_node_collection, aliases)
+        resolved_edges.append((src, dst))
         if src in key_set and dst in key_set:
             forward[src].append(dst)
             reverse[dst].append(src)
@@ -141,8 +199,12 @@ def hydrate(
             labels.add("topology:sink")
         scc_id = scc_of.get(key, -1)
         scc_size = len(sccs.get(scc_id, []))
-        labels.add("topology:cyclic" if scc_size > 1 else "topology:acyclic_singleton")
-        next_row = dict(row)
+        labels.add(
+            "topology:cyclic"
+            if scc_size > 1 or key in forward.get(key, [])
+            else "topology:acyclic_singleton"
+        )
+        next_row = deepcopy(row)
         
         # ⚖️ PAULI REFACTOR: Handle list-based attrs from dagIndexer
         raw_attrs = next_row.get("attrs")
@@ -160,6 +222,7 @@ def hydrate(
             ])
         else:
             next_row["attrs"] = {
+                **(raw_attrs or {}),
                 "hydration_policy": raw_layer_policy,
                 "layer": "raw",
                 "grain": "fine",
@@ -170,12 +233,17 @@ def hydrate(
                 "outdegree": outdegree.get(key, 0),
             }
         
+        next_row.setdefault("_key", key)
         next_row["labels"] = sorted(labels)
         hydrated_nodes.append(next_row)
 
     hydrated_edges: list[dict[str, Any]] = []
-    for edge in edges:
-        next_edge = dict(edge)
+    for edge, (src, dst) in zip(edges, resolved_edges):
+        next_edge = deepcopy(edge)
+        if src is not None and dst is not None:
+            next_edge["_from"] = f"{raw_node_collection}/{src}"
+            next_edge["_to"] = f"{raw_node_collection}/{dst}"
+            next_edge["endpoint_keys_resolved"] = True
         labels = set(str(label) for label in next_edge.get("labels", []) if label)
         kind = str(next_edge.get("kind") or "")
         role = str(next_edge.get("role") or "")
@@ -189,16 +257,17 @@ def hydrate(
         labels.add("grain:fine")
         labels.add("policy:lossless_preserved")
         next_edge["labels"] = sorted(labels)
-        attrs = dict(next_edge.get("attrs") or {})
-        attrs.update(
-            {
-                "layer": "raw",
-                "grain": "fine",
-                "overlay_model": "layered_tensor_network",
-                "preserved_one_for_one": True,
-            }
-        )
-        next_edge["attrs"] = attrs
+        attrs = next_edge.get("attrs")
+        additions = {
+            "layer": "raw",
+            "grain": "fine",
+            "overlay_model": "layered_tensor_network",
+            "preserved_one_for_one": True,
+        }
+        if isinstance(attrs, list):
+            attrs.extend(f"{key}:{value}" for key, value in additions.items())
+        else:
+            next_edge["attrs"] = {**(attrs or {}), **additions}
         hydrated_edges.append(next_edge)
 
     overlay_nodes: list[dict[str, Any]] = []
@@ -241,7 +310,8 @@ def hydrate(
                 {
                     "_key": f"overlay_e_{overlay_edge_index}",
                     "_from": f"{raw_node_collection}/{member}",
-                    "_to": f"topology_overlay/{scc_key}",
+                    "_to": f"{topology_overlay_collection}/{scc_key}",
+                    "endpoint_keys_resolved": True,
                     "kind": "projection",
                     "role": "member_of_scc",
                     "layer": "projection",
@@ -269,24 +339,25 @@ def hydrate(
 
 
     scc_edge_witnesses: dict[tuple[int, int, str], list[str]] = collections.defaultdict(list)
-    for edge in edges:
-        src = edge_endpoint_key(edge.get("_from") or edge.get("src"))
-        dst = edge_endpoint_key(edge.get("_to") or edge.get("dst"))
+    witness_indices: dict[tuple[int, int, str], list[int]] = collections.defaultdict(list)
+    for index, (edge, (src, dst)) in enumerate(zip(edges, resolved_edges)):
         src_scc = scc_of.get(src)
         dst_scc = scc_of.get(dst)
         if src_scc is None or dst_scc is None:
             continue
         kind = str(edge.get("kind") or "")
         scc_edge_witnesses[(src_scc, dst_scc, kind)].append(str(edge.get("_key") or ""))
+        witness_indices[(src_scc, dst_scc, kind)].append(index)
 
     for (src_scc, dst_scc, kind), witnesses in sorted(scc_edge_witnesses.items()):
+        role = "scc_internal" if src_scc == dst_scc else "scc_quotient"
         overlay_edges.append(
             {
                 "_key": f"overlay_e_{overlay_edge_index}",
                 "_from": f"{topology_overlay_collection}/scc_{src_scc}",
                 "_to": f"{topology_overlay_collection}/scc_{dst_scc}",
                 "kind": kind,
-                "role": "scc_quotient",
+                "role": role,
                 "layer": "topology_overlay",
                 "grain": "scc",
                 "src_scc": src_scc,
@@ -295,10 +366,11 @@ def hydrate(
                 "dst_scc_id": dst_scc,
                 "multiplicity": len(witnesses),
                 "witness_raw_edge_keys": witnesses,
+                "witness_raw_edge_indices": witness_indices[(src_scc, dst_scc, kind)],
                 "labels": [
                     "layer:topology_overlay",
-                    "overlay:scc_quotient",
-                    "role:scc_quotient",
+                    f"overlay:{role}",
+                    f"role:{role}",
                     f"edge:{kind}",
                     "grain:scc",
                     "topology:coarse_grain",
@@ -329,7 +401,9 @@ def hydrate(
             "scc_labels_are_additive": True,
             "overlay_policy": "TOPOLOGY_PRESERVING_COARSE_GRAINING",
             "overlay_model": "layered_tensor_network",
-            "projection_edge_roles": ["member_of_scc", "scc_quotient"],
+            "projection_edge_roles": ["member_of_scc", "scc_quotient", "scc_internal"],
+            "scc_quotient_policy": "INTER_COMPONENT_ARCS_ONLY",
+            "internal_witness_policy": "PRESERVED_AS_SCC_INTERNAL",
             "raw_nodes_preserved": len(hydrated_nodes) == len(nodes),
             "raw_edges_preserved": len(hydrated_edges) == len(edges),
             "node_count": len(nodes),

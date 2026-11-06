@@ -295,16 +295,29 @@ def hartwigExpectedGroupInverse : Mat3 ℚ :=
 /-- The finite Souriau--Frame coefficient formula produces the expected group inverse. -/
 theorem hartwig_formula_candidate_eq_expected :
     hartwigFormulaCandidate = hartwigExpectedGroupInverse := by
-  native_decide
+  unfold hartwigFormulaCandidate
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    (simp [Matrix.mul_apply, Fin.sum_univ_three, hartwigAdjCoeff0, hartwigAdjCoeff1,
+      hartwigExpectedGroupInverse]; try norm_num)
 
 /-- Hartwig's formula satisfies the group inverse equations for the packet. -/
 theorem hartwig_formula_candidate_isGroupInverse :
     IsGroupInverse hartwigA hartwigFormulaCandidate := by
-  constructor
-  · native_decide
-  constructor
-  · native_decide
-  · native_decide
+  rw [hartwig_formula_candidate_eq_expected]
+  refine ⟨?_, ?_, ?_⟩
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      (simp [Matrix.mul_apply, Fin.sum_univ_three, hartwigA, hartwigExpectedGroupInverse];
+       try norm_num)
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      (simp [Matrix.mul_apply, Fin.sum_univ_three, hartwigA, hartwigExpectedGroupInverse];
+       try norm_num)
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      (simp [Matrix.mul_apply, Fin.sum_univ_three, hartwigA, hartwigExpectedGroupInverse];
+       try norm_num)
 
 /-- Therefore the same formula is the index-one Drazin inverse. -/
 theorem hartwig_formula_candidate_isDrazinInverse :
@@ -317,7 +330,12 @@ theorem hartwig_regular_idempotent_readout :
       !![0, 0, 0;
          0, 1, 0;
          0, 0, 1] := by
-  native_decide
+  unfold regularIdempotent
+  rw [hartwig_formula_candidate_eq_expected]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    (simp [Matrix.mul_apply, Fin.sum_univ_three, hartwigA, hartwigExpectedGroupInverse];
+     try norm_num)
 
 /-- The principal idempotent `Z = I - A A#` selects the zero-root lane. -/
 theorem hartwig_principal_idempotent_readout :
@@ -325,17 +343,20 @@ theorem hartwig_principal_idempotent_readout :
       !![1, 0, 0;
          0, 0, 0;
          0, 0, 0] := by
-  native_decide
+  unfold principalIdempotent
+  rw [hartwig_regular_idempotent_readout]
+  ext i j
+  fin_cases i <;> fin_cases j <;> (simp; try norm_num)
 
 /-- The zero-root principal idempotent is killed by `A` on the left. -/
 theorem hartwig_mul_principal_idempotent_eq_zero :
-    hartwigA * principalIdempotent hartwigA hartwigFormulaCandidate = 0 := by
-  native_decide
+    hartwigA * principalIdempotent hartwigA hartwigFormulaCandidate = 0 :=
+  mul_principalIdempotent_eq_zero hartwig_formula_candidate_isGroupInverse
 
 /-- The zero-root principal idempotent is killed by `A` on the right. -/
 theorem hartwig_principal_idempotent_mul_eq_zero :
-    principalIdempotent hartwigA hartwigFormulaCandidate * hartwigA = 0 := by
-  native_decide
+    principalIdempotent hartwigA hartwigFormulaCandidate * hartwigA = 0 :=
+  principalIdempotent_mul_eq_zero hartwig_formula_candidate_isGroupInverse
 
 end RationalSouriauFramePacket
 

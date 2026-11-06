@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Epistemic Compiler Project. All rights reserved.
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Epistemic Compiler Team & Independent QMS Auditor
+Authors: InfoGeometry Engine Contributors
 -/
 import Lean
 import Lean.Util.CollectAxioms
@@ -46,6 +46,13 @@ structure TypedArchetype (Input : Type u) (s : Status) where
   evidence : match s with
     | .proved => ∀ x : Input, claim x
     | _       => True
+
+/-- Constructive candidate witness for `TypedArchetype`. -/
+def TypedArchetype.trivialCandidate : TypedArchetype PUnit .candidate where
+  name := .anonymous
+  phase := 0
+  claim := fun _ => True
+  evidence := trivial
 
 namespace TypedArchetype
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DrazinPairingAdjunction
 import InfoGeometry.HodgeCohomology.KreinGreenEnergyTests
 
@@ -23,7 +28,7 @@ def green : Module.End ℝ Triple :=
 theorem operator_adjoint : LinearMap.IsAdjointPair pairing pairing operator operator := by
   intro left right
   simp [pairing, operator]
-  ring
+  noncomm_ring
 
 theorem green_inverse : IsDrazinInverse operator green 2 := by
   refine IsDrazinInverse.mk ?_ ?_ ?_

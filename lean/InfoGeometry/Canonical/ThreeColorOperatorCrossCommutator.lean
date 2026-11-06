@@ -156,7 +156,7 @@ theorem operatorCross_swap_defect (U V : OperatorVector A) :
 
 abbrev OperatorZornMatrix (A : Type*) [Ring A] := NCZornElement A
 
-instance : Zero (OperatorZornMatrix A) :=
+instance operatorZornMatrixZero : Zero (OperatorZornMatrix A) :=
   ⟨⟨0, 0, fun _ => 0, fun _ => 0⟩⟩
 
 abbrev operatorZornMul (X Y : OperatorZornMatrix A) : OperatorZornMatrix A :=
@@ -389,15 +389,13 @@ The generic theorem above says precisely that the self-cross vanishes iff the
 three coefficient pairs commute.  The following example realizes a nonzero
 self-cross with off-diagonal matrix units as coefficients. -/
 
-abbrev OperatorMatrix3Z := Matrix (Fin 3) (Fin 3) ℤ
-
-def operatorMatrixUnit12 : OperatorMatrix3Z :=
+def operatorMatrixUnit12 : InfoGeometry.Algebra.FiniteSpin.Mat3Z :=
   !![0, 1, 0; 0, 0, 0; 0, 0, 0]
 
-def operatorMatrixUnit23 : OperatorMatrix3Z :=
+def operatorMatrixUnit23 : InfoGeometry.Algebra.FiniteSpin.Mat3Z :=
   !![0, 0, 0; 0, 0, 1; 0, 0, 0]
 
-def operatorMatrixUnit13 : OperatorMatrix3Z :=
+def operatorMatrixUnit13 : InfoGeometry.Algebra.FiniteSpin.Mat3Z :=
   !![0, 0, 1; 0, 0, 0; 0, 0, 0]
 
 /-- Adjacent off-diagonal matrix units fail to commute in `M₃(ℤ)`. -/
@@ -410,11 +408,11 @@ theorem operatorMatrixUnits_noncommute :
     decide
   rw [hmul, hzero]
   intro h
-  have hentry := congrArg (fun M : OperatorMatrix3Z => M 0 2) h
+  have hentry := congrArg (fun M : InfoGeometry.Algebra.FiniteSpin.Mat3Z => M 0 2) h
   norm_num [operatorMatrixUnit13] at hentry
 
 /-- Two noncommuting off-diagonal matrix operators occupy adjacent color slots. -/
-def operatorCrossMatrixWitness : OperatorVector OperatorMatrix3Z := fun i =>
+def operatorCrossMatrixWitness : OperatorVector InfoGeometry.Algebra.FiniteSpin.Mat3Z := fun i =>
   if i = 0 then operatorMatrixUnit12
   else if i = 1 then operatorMatrixUnit23
   else 0
@@ -437,7 +435,7 @@ theorem operatorCrossMatrixWitness_self_ne_zero :
   intro h
   have h13 := congrFun h 2
   rw [operatorCrossMatrixWitness_blue] at h13
-  have hentry := congrArg (fun M : OperatorMatrix3Z => M 0 2) h13
+  have hentry := congrArg (fun M : InfoGeometry.Algebra.FiniteSpin.Mat3Z => M 0 2) h13
   norm_num [operatorMatrixUnit13] at hentry
 
 /-- The corresponding upper Zorn channel has nonzero square, so the commuting

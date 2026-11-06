@@ -31,13 +31,15 @@ Lean DAG export
 
 ## 1. Refresh the Lean Declaration DAG (Streaming Mode)
 
-**Primary method (constant memory, recommended):**
+**Default online method (constant memory, immutable generation):**
 
 ```bash
 # Build the indexer once
 lake build dagIndexer
 
 # Stream declaration graph directly to ArangoDB (constant memory)
+# With no generation options, this computes and validates an immutable
+# content-derived generation. It does not truncate existing decls/edges.
 python3 tools/infra/refresh_decl_graph.py \
   --stream \
   --import-root InfoGeometry.All \
@@ -348,7 +350,7 @@ That last step is where theorem work happens.
 
 | Layer | Collections | Source |
 |-------|-------------|--------|
-| **Streaming Declaration** | `decls`, `edges` | `dagIndexer --stream` → `refresh_decl_graph.py --stream` |
+| **Streaming Declaration** | `decls_g_ID`, `edges_g_ID` (immutable default); legacy `decls`, `edges` only with `--replace-live` | `dagIndexer --stream` → `refresh_decl_graph.py --stream` |
 | **Syntax AST** | `syntax_decls`, `syntax_nodes`, `ast_child`, `decl_root` | `DumpLeanGraph.lean` → `batch_dump_syntax.py` → `ingest_syntax_to_arango.py` |
 | **Raw DAG (file-based)** | `raw_info_nodes`, `raw_info_edges` | `dagIndexer` file export → `materialize_lossless_infotree.py` |
 | **Topology Overlay** | `topology_overlay`, `topology_overlay_edges` | `hydrate_arango_topology.py` |

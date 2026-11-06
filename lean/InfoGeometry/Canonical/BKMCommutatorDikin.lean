@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.CenteredBKMCommutatorGeometry
 import InfoGeometry.Canonical.DikinFiniteOrbitColimit
+import InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
 
 /-!
 # BKM commutator energy in the self-adjoint Dikin carrier
@@ -29,6 +30,8 @@ open SouriauOnsagerBKM
 open InfoGeometry.Canonical.CenteredBKMCommutatorGeometry
 open InfoGeometry.Canonical.DikinFiniteOrbitColimit
 open InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance
+open InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
+open InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
 
 variable {n : ℕ}
 
@@ -108,6 +111,31 @@ theorem bkmDikinQuadratic_selfAdjointCommutator_eq_centeredBKM
   rw [bkmDikinQuadratic_selfAdjointCommutator]
   exact (centeredBKM_commutator_eq_bkm_of_isSelfAdjoint
     D hpow X.1 Y.1 X.property Y.property).symm
+
+/-- The additive Gibbs log-partition Hessian along the rotated commutator is
+the BKM Dikin energy minus its scalar-gauge component.  The direction
+`i * [X,Y]` is self-adjoint, so it is a valid real Hessian direction.  This
+identity connects the Gibbs-Hessian and Dikin owners while retaining the
+centering defect rather than identifying covariance with the uncentered
+quadratic. -/
+theorem secondFDeriv_logPartition_selfAdjointCommutator_eq_bkmDikin_sub_expectation_sq
+    (H : FiniteOperatorAlgebra n) (hH : IsSelfAdjoint H)
+    (hZ : 0 < gibbsPartitionReal H)
+    (X Y : SelfAdjointOperator n) :
+    (secondFDerivLogPartitionReadout H
+      (selfAdjointCommutator X Y).1 (selfAdjointCommutator X Y).1).re =
+      bkmDikinQuadratic
+          (faithfulGibbsDensity H hH hZ)
+          (continuous_faithfulGibbsDensity_rpow H hH hZ)
+          (selfAdjointCommutator X Y) -
+        expectationReal (faithfulGibbsDensity H hH hZ)
+          (selfAdjointCommutator X Y).1 ^ 2 := by
+  rw [secondFDeriv_logPartition_apply_eq_centeredBKM H hH hZ
+    (selfAdjointCommutator X Y).1 (selfAdjointCommutator X Y).1
+    (selfAdjointCommutator X Y).property,
+    centeredBKMRealCovariance_eq]
+  unfold bkmDikinQuadratic
+  rw [pow_two]
 
 /-- Zero Dikin commutator energy is equivalent to commutativity. -/
 theorem bkmDikinQuadratic_selfAdjointCommutator_eq_zero_iff

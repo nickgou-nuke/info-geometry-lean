@@ -29,6 +29,7 @@ structure ArchetypeTemplate where
   ownerSurfaces : Array Lean.Name
   canonicalClaim : String
   status : String
+  deriving Repr, Inhabited
 
 namespace ArchetypeTemplate
 
@@ -42,6 +43,7 @@ end ArchetypeTemplate
 structure DetectedArchetype where
   template : ArchetypeTemplate
   observedTerms : Array String
+  deriving Repr, Inhabited
 
 namespace DetectedArchetype
 

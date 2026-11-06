@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Abel
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 
 /-!
 # Epistemic Operator Poset: Pure Non-Commutative Algebraic Synthesis
@@ -80,7 +81,7 @@ instance : Preorder EpistemicPosetStage where
   le_trans a b c := Nat.le_trans
   lt_iff_le_not_ge a b := by
     change stageRank a < stageRank b ↔ stageRank a ≤ stageRank b ∧ ¬ stageRank b ≤ stageRank a
-    exact Nat.lt_iff_le_not_le
+    exact Nat.lt_iff_le_and_not_ge
 
 instance : PartialOrder EpistemicPosetStage where
   le_antisymm a b hab hba := by
@@ -114,6 +115,14 @@ def comm (X Y : B) : B := X * Y - Y * X
 
 /-- Jordan anticommutator bracket over an arbitrary non-commutative ring. -/
 def anticomm (X Y : B) : B := X * Y + Y * X
+
+/-- Definitional bridge to `InfoGeometry.OperatorAlgebra.PeirceSpine.comm`. -/
+theorem comm_eq_peirceSpine_comm (X Y : B) :
+    comm X Y = InfoGeometry.OperatorAlgebra.PeirceSpine.comm X Y := rfl
+
+/-- Definitional bridge to `InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm`. -/
+theorem anticomm_eq_peirceSpine_anticomm (X Y : B) :
+    anticomm X Y = InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm X Y := rfl
 
 theorem comm_skew (X Y : B) : comm X Y = -comm Y X := by
   unfold comm; noncomm_ring
@@ -659,7 +668,7 @@ theorem peirceCorner_product_resolution {P : B} (hP : P * P = P)
   simpa [peirceCorner, mul_assoc] using hGeneral (if i then P else 1 - P) (if j then P else 1 - P)
 
 /-- Reconstruction makes the 2×2 Peirce block coordinate representation faithful (injective). -/
-theorem peirceCorner_injective {P : B} (hP : P * P = P) (X Y : B)
+theorem peirceCorner_injective (P X Y : B)
     (h : ∀ i j : Bool, peirceCorner P i j X = peirceCorner P i j Y) : X = Y := by
   have h11 := h true true
   have h10 := h true false

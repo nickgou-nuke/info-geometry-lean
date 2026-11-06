@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorContractionCARBridge
@@ -13,11 +19,11 @@ namespace InfoGeometry.Canonical.BRSTExactClassZeroBridge
 
 open ExteriorAlgebra
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 
 /-- **Definition**: Canonical Map Embedding Range into Kernel for Nilpotent Operator Q² = 0. -/
 def brstExactToClosed
-    (q : Module.End R (ExteriorAlgebra R V))
+    (q : Module.End R M)
     (hq2 : q.comp q = 0) :
     LinearMap.range q →ₗ[R] LinearMap.ker q where
   toFun x := ⟨x.1, by
@@ -31,15 +37,15 @@ def brstExactToClosed
 
 /-- **Definition**: Pure BRST Cohomology Module H_Q = ker Q / range(exactToClosed). -/
 def brstCohomologyModule
-    (q : Module.End R (ExteriorAlgebra R V))
+    (q : Module.End R M)
     (hq2 : q.comp q = 0) : Type _ :=
   LinearMap.ker q ⧸ LinearMap.range (brstExactToClosed q hq2)
 
 /-- **Theorem**: Literal BRST Exact State Class Zero [Q χ] = 0 in BRST Cohomology Module H_Q. -/
 theorem exact_state_class_eq_zero
-    (q : Module.End R (ExteriorAlgebra R V))
+    (q : Module.End R M)
     (hq2 : q.comp q = 0)
-    (chi : ExteriorAlgebra R V) :
+    (chi : M) :
     Submodule.Quotient.mk (p := LinearMap.range (brstExactToClosed q hq2))
       ⟨q chi, by
         have h := LinearMap.congr_fun hq2 chi
@@ -56,9 +62,9 @@ theorem exact_state_class_eq_zero
     3. Literal machine-checked quotient theorem [Q χ] = 0 in H_Q.
     4. Exact formal closure of BRST exact state decoupling on quotient cohomology. -/
 theorem master_brst_exact_class_zero_synthesis
-    (q : Module.End R (ExteriorAlgebra R V))
+    (q : Module.End R M)
     (hq2 : q.comp q = 0)
-    (chi : ExteriorAlgebra R V) :
+    (chi : M) :
     Submodule.Quotient.mk (p := LinearMap.range (brstExactToClosed q hq2))
       ⟨q chi, by
         have h := LinearMap.congr_fun hq2 chi

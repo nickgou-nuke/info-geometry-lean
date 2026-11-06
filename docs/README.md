@@ -65,6 +65,8 @@ reported as verification of the whole repository or a proposed physical theory.
 - [LeanTrail topic documentation](LeanTrail.md)
 - [AST/AQL/hash navigation](ASTAQLHASH-HOWTO.md)
 - [Arango refresh methodology](ARANGO_DAG_REFRESH_METHODOLOGY.md)
+- [Auto-Ontology agent operations](AUTO_ONTOLOGY_AGENT_OPERATIONS.md)
+- [Repository ontology unification playbook](ONTOLOGY_UNIFICATION_PLAYBOOK.md)
 - [aiClaw review runbook](AICLAW_CHATGPT_REVIEW_RUNBOOK.md)
 - [Pi agent-team operations](PI_AGENT_TEAMS_OPERATIONS.md)
 - [AI Studio transcript export](AI_STUDIO_TRANSCRIPT_EXPORT.md)

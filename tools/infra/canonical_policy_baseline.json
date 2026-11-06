@@ -6467,7 +6467,7 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DrazinFredholmBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinFredholmBridge.defectProjector_ne_zero_of_package"
+      "name": "InfoGeometry.Canonical.DrazinFredholmBridge.defectProjector_ne_zero_and_idempotent_of_package"
     },
     {
       "file": "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
@@ -6832,22 +6832,6 @@
     {
       "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
       "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_zero_isolated"
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq"
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.exists_drazinInverse_of_zeroIsolatedInSpectrum_package"
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package"
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package"
     },
     {
       "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
@@ -26358,7 +26342,7 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DrazinFredholmBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinFredholmBridge.defectProjector_ne_zero_of_package",
+      "name": "InfoGeometry.Canonical.DrazinFredholmBridge.defectProjector_ne_zero_and_idempotent_of_package",
       "line": 175,
       "reasons": [
         "theorem-surface category package_reprojection with no downstream theorem dependents and weak graph support (isolated_theorem)",
@@ -26891,42 +26875,6 @@
       "reasons": [
         "theorem-surface category package_reprojection with no downstream theorem dependents and weak graph support (isolated_theorem)",
         "proof is definitional/trivial with no downstream theorem dependents and weak graph support (isolated_theorem)",
-        "no downstream theorem dependents"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq",
-      "line": 41,
-      "reasons": [
-        "theorem-surface category surrogate_or_vacuous with no downstream theorem dependents and weak graph support (isolated_theorem)",
-        "no downstream theorem dependents"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.exists_drazinInverse_of_zeroIsolatedInSpectrum_package",
-      "line": 134,
-      "reasons": [
-        "theorem-surface category package_reprojection with no downstream theorem dependents and weak graph support (isolated_theorem)",
-        "no downstream theorem dependents"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package",
-      "line": 59,
-      "reasons": [
-        "theorem-surface category package_reprojection with no downstream theorem dependents and weak graph support (isolated_theorem)",
-        "no downstream theorem dependents"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
-      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package",
-      "line": 87,
-      "reasons": [
-        "theorem-surface category package_reprojection with no downstream theorem dependents and weak graph support (isolated_theorem)",
         "no downstream theorem dependents"
       ]
     },

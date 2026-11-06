@@ -202,27 +202,27 @@ theorem canonicalMaurerCartanJet_ne_default :
   norm_num at h1
 
 /-- Grade $-2$ Maurer–Cartan curvature $F_{-2} = d\Omega_{-2} + [\Omega_0 \wedge \Omega_{-2}] + \frac{1}{2}[\Omega_{-1} \wedge \Omega_{-1}]$. -/
-def mcCurvatureGradeM2 {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeM2 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_m2 + J.br_0_m2 + J.br_m1_m1_half
 
 /-- Grade $-1$ Maurer–Cartan curvature $F_{-1} = d\Omega_{-1} + [\Omega_0 \wedge \Omega_{-1}] + [\Omega_{+1} \wedge \Omega_{-2}]$. -/
-def mcCurvatureGradeM1 {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeM1 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_m1 + J.br_0_m1 + J.br_p1_m2
 
 /-- Grade $0$ Maurer–Cartan curvature $F_0 = d\Omega_0 + \frac{1}{2}[\Omega_0 \wedge \Omega_0] + ([\Omega_{-1} \wedge \Omega_{+1}] + [\Omega_{-2} \wedge \Omega_{+2}])$. -/
-def mcCurvatureGrade0 {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGrade0 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_0 + J.br_0_0_half + (J.br_m1_p1 + J.br_m2_p2)
 
 /-- Grade $+1$ Maurer–Cartan curvature $F_{+1} = d\Omega_{+1} + [\Omega_0 \wedge \Omega_{+1}] + [\Omega_{-1} \wedge \Omega_{+2}]$. -/
-def mcCurvatureGradeP1 {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeP1 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_p1 + J.br_0_p1 + J.br_m1_p2
 
 /-- Grade $+2$ Maurer–Cartan curvature $F_{+2} = d\Omega_{+2} + [\Omega_0 \wedge \Omega_{+2}] + \frac{1}{2}[\Omega_{+1} \wedge \Omega_{+1}]$. -/
-def mcCurvatureGradeP2 {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R) : R :=
+def mcCurvatureGradeP2 {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) : R :=
   J.dOmega_p2 + J.br_0_p2 + J.br_p1_p1_half
 
 /-- Full 5-graded Maurer–Cartan curvature tuple $(F_{-2}, F_{-1}, F_0, F_{+1}, F_{+2})$. -/
-def mcCurvatureTower {R : Type*} [CommRing R] (J : FiveGradedMaurerCartanJet R) :
+def mcCurvatureTower {R : Type*} [AddCommGroup R] (J : FiveGradedMaurerCartanJet R) :
     R × R × R × R × R :=
   (mcCurvatureGradeM2 J, mcCurvatureGradeM1 J, mcCurvatureGrade0 J,
    mcCurvatureGradeP1 J, mcCurvatureGradeP2 J)
@@ -235,7 +235,7 @@ only if the five graded covariant differentials balance their respective graded 
 3. Grade $0$: $d\Omega_0 + \frac{1}{2}[\Omega_0 \wedge \Omega_0] = -([\Omega_{-1} \wedge \Omega_{+1}] + [\Omega_{-2} \wedge \Omega_{+2}])$,
 4. Grade $+1$: $d\Omega_{+1} + [\Omega_0 \wedge \Omega_{+1}] = -[\Omega_{-1} \wedge \Omega_{+2}]$,
 5. Grade $+2$: $d\Omega_{+2} + [\Omega_0 \wedge \Omega_{+2}] = -\frac{1}{2}[\Omega_{+1} \wedge \Omega_{+1}]$. -/
-theorem mcCurvatureTower_flat_iff_source_laws {R : Type*} [CommRing R]
+theorem mcCurvatureTower_flat_iff_source_laws {R : Type*} [AddCommGroup R]
     (J : FiveGradedMaurerCartanJet R) :
     mcCurvatureTower J = (0, 0, 0, 0, 0) ↔
       (J.dOmega_m2 + J.br_0_m2 = -J.br_m1_m1_half ∧

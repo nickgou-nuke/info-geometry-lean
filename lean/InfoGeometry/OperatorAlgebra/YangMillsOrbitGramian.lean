@@ -7,6 +7,7 @@ import Mathlib
 import InfoGeometry.Core.IdempotentCartan
 import InfoGeometry.Core.PeirceStarCharges
 import InfoGeometry.OperatorAlgebra.PeirceQuantumGeometricTensor
+import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 
 /-!
 # Finite orbit commutator Gramian in a noncommutative star algebra
@@ -64,6 +65,28 @@ theorem orbitMassMode_eq_odd_square [StarRing A] {p a : A}
     _ = -(⁅p, a⁆ ^ 2) := by rw [hbridge, pow_two]
     _ = (InfoGeometry.Core.PeirceGrading.odd p a) ^ 2 := by
       rw [hcomm, neg_neg]
+
+/-- The orbit Gramian and the Peirce two-sided transition metric are the same
+operator. This joins the positive commutator-Gramian formulation to the
+ordered upper/lower Peirce-cycle formulation without changing carriers.
+Self-adjointness is needed for the Gramian-to-square step; idempotence is
+needed for the Peirce cycle identity. -/
+theorem orbitMassMode_eq_peirce_genV [StarRing A] {p a : A}
+    (hp : p * p = p) (hps : star p = p) (has : star a = a) :
+    orbitMassMode p a = InfoGeometry.OperatorAlgebra.PeirceSpine.genV p a a := by
+  have hp' : IsIdempotentElem p := hp
+  have hodd : InfoGeometry.Core.PeirceGrading.odd p a =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade p a := by
+    rw [InfoGeometry.Core.PeirceGrading.odd_apply]
+    rfl
+  calc
+    orbitMassMode p a = (InfoGeometry.Core.PeirceGrading.odd p a) ^ 2 :=
+      orbitMassMode_eq_odd_square hp' hps has
+    _ = InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade p a *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade p a := by
+      rw [hodd, pow_two]
+    _ = InfoGeometry.OperatorAlgebra.PeirceSpine.genV p a a :=
+      InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade_square_eq_genV hp a
 
 /-- The single-direction orbit mass operator commutes with its projection.
 This is a noncommutative Peirce support identity, with no commutativity

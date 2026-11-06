@@ -8,6 +8,7 @@ import Mathlib.Data.Matrix.Basis
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.NormNum
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Graph idempotents and ordered reflection products
@@ -285,11 +286,9 @@ theorem pointReflection_commutator_compact {p : B} (hp : p * p = p) (a c : B) :
 /-! A concrete matrix witness separates the two orders. The inputs are
 off-diagonal matrix units, so the example is genuinely noncommutative. -/
 
-abbrev WitnessMatrix := Matrix (Fin 2) (Fin 2) ℤ
-
-def witnessP : WitnessMatrix := Matrix.single 0 0 1
-def witnessA : WitnessMatrix := Matrix.single 0 1 1
-def witnessC : WitnessMatrix := Matrix.single 1 0 1
+def witnessP : InfoGeometry.Algebra.FiniteSpin.Mat2Z := Matrix.single 0 0 1
+def witnessA : InfoGeometry.Algebra.FiniteSpin.Mat2Z := Matrix.single 0 1 1
+def witnessC : InfoGeometry.Algebra.FiniteSpin.Mat2Z := Matrix.single 1 0 1
 
 theorem matrix_reflection_products_are_order_distinct :
     pointReflection (upperGraph witnessP witnessA) *

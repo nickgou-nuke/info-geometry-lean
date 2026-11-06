@@ -63,7 +63,7 @@ theorem complementaryProjection_mul_fittingNilpotentPart_pow
     complementaryProjection a d * fittingNilpotentPart a d ^ m =
       fittingNilpotentPart a d ^ m := by
   cases m with
-  | zero => omega
+  | zero => exact absurd hm (Nat.not_succ_le_zero 0)
   | succ n =>
       rw [pow_succ', ← mul_assoc,
         complementaryProjection_mul_fittingNilpotentPart h]
@@ -139,8 +139,7 @@ theorem complementaryProjection_mul_shellProj_of_one_le
 /-! ### The dressed range projector is `P_m * E_N` on positive indices -/
 
 theorem drazinRangeProj_eq_rangeProj_mul_of_one_le (h : IsDrazinInverse a d k)
-    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M) {r : ℕ}
-    (hr : 1 ≤ r) :
+    {M : ℕ → R} {r : ℕ} (hr : 1 ≤ r) :
     drazinRangeProj a d M r =
       rangeProj (fittingNilpotentPart a d) M r * complementaryProjection a d := by
   unfold drazinRangeProj
@@ -161,13 +160,13 @@ theorem drazinRangeProj_mul_of_le (h : IsDrazinInverse a d k) {M : ℕ → R}
       complementaryProjection_is_idempotent h]
   · have hq1 : 1 ≤ q := Nat.succ_le_of_lt hq
     rcases Nat.eq_zero_or_pos p with hp | hp
-    · rw [hp, drazinRangeProj_eq_rangeProj_mul_of_one_le h hM hq1]
+    · rw [hp, drazinRangeProj_eq_rangeProj_mul_of_one_le (M := M) h hq1]
       unfold drazinRangeProj
       rw [rangeProj_zero hM, mul_one, complementaryProjection_is_idempotent h,
         ← mul_assoc, complementaryProjection_mul_rangeProj_of_one_le h M hq1]
     · have hp1 : 1 ≤ p := Nat.succ_le_of_lt hp
-      rw [drazinRangeProj_eq_rangeProj_mul_of_one_le h hM hp1,
-        drazinRangeProj_eq_rangeProj_mul_of_one_le h hM hq1]
+      rw [drazinRangeProj_eq_rangeProj_mul_of_one_le (M := M) h hp1,
+        drazinRangeProj_eq_rangeProj_mul_of_one_le (M := M) h hq1]
       calc
         (rangeProj (fittingNilpotentPart a d) M p * complementaryProjection a d) *
             (rangeProj (fittingNilpotentPart a d) M q * complementaryProjection a d)
@@ -203,12 +202,12 @@ theorem drazinRangeProj_mul_of_ge (h : IsDrazinInverse a d k) {M : ℕ → R}
                 rw [rangeProj_zero hM, mul_one,
                   complementaryProjection_is_idempotent h]
         _ = drazinRangeProj a d M q := by
-                rw [drazinRangeProj_eq_rangeProj_mul_of_one_le h hM hq1,
+                rw [drazinRangeProj_eq_rangeProj_mul_of_one_le (M := M) h hq1,
                   mul_assoc, complementaryProjection_is_idempotent h]
   · have hp1 : 1 ≤ p := Nat.succ_le_of_lt hp
     have hq1 : 1 ≤ q := le_trans hp1 hpq
-    rw [drazinRangeProj_eq_rangeProj_mul_of_one_le h hM hq1,
-      drazinRangeProj_eq_rangeProj_mul_of_one_le h hM hp1]
+    rw [drazinRangeProj_eq_rangeProj_mul_of_one_le (M := M) h hq1,
+      drazinRangeProj_eq_rangeProj_mul_of_one_le (M := M) h hp1]
     calc
       (rangeProj (fittingNilpotentPart a d) M q * complementaryProjection a d) *
           (rangeProj (fittingNilpotentPart a d) M p * complementaryProjection a d)

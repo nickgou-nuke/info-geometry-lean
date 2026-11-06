@@ -6,15 +6,24 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.LinearAlgebra.Matrix.Stochastic
 import Mathlib.Tactic
 import InfoGeometry.Canonical.AttentionPolarizedSinkhornBridge
+import InfoGeometry.Canonical.Drazin
 
 /-!
-# Semisimplicity obstruction for finite stochastic attention
+# Semisimplicity and Kemeny–Snell Group Drazin Construction for Stochastic Attention
 
-For a finite row-stochastic real matrix, `1 - P` has no nonzero length-two
-generalized zero-vector chain. The proof is finite: stochastic powers preserve
-coordinate bounds, while such a chain would force linear growth. This is a
-prerequisite for a group-inverse bridge, equivalently the Drazin equations at
-`k = 1` (Drazin index at most one); no Drazin inverse is constructed here.
+1. **Bounded-Orbit Semisimplicity (`no_length_two_generalized_fixed_vector`)**:
+   For a finite row-stochastic real matrix, `1 - P` has no nonzero length-two
+   generalized zero-vector chain. The proof is finite: stochastic powers preserve
+   coordinate bounds, while such a chain would force linear growth.
+
+2. **Kemeny–Snell Stationary-Projector Group Drazin Construction (`Section 2`)**:
+   Over any associative unital ring `[Ring R]`, if an operator `L ∈ R` (such as a
+   Markov Laplacian `L = 1 - P`) and an idempotent stationary projector `Π ∈ R`
+   (`Π * Π = Π`) satisfy `L * Π = 0` and `Π * L = 0`, and the Kemeny–Snell shifted
+   operator `L + Π` has two-sided fundamental inverse `Z`, then the Kemeny–Snell
+   deviation operator `kemenySnellDeviation Z Π := Z - Π` is the canonical index-`1`
+   Drazin inverse of `L` (`IsDrazinInverse L (Z - Π) 1`), with Drazin complementary
+   null projector `1 - L * (Z - Π) = Π`.
 
 The action convention is explicit: `P *ᵥ x` applies the row-stochastic matrix
 to a column vector of observables. This file does not establish an evolution
@@ -131,9 +140,6 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [AddCommMonoid V] [Module ℝ V]
 variable {n : ℕ} [Fact (0 < n)]
 
-local instance markovAttentionFinNonempty : Nonempty (Fin n) :=
-  ⟨⟨0, Fact.out⟩⟩
-
 /-- The polarized attention transition matrix has no length-two generalized
 fixed-vector chain at eigenvalue one. -/
 theorem polarizedAttention_no_length_two_chain
@@ -142,6 +148,7 @@ theorem polarizedAttention_no_length_two_chain
     (hxy : (1 - polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β) *ᵥ x = y)
     (hyy : (1 - polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β) *ᵥ y = 0) :
     y = 0 := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   exact InfoGeometry.QuantumContext.MarkovDrazin.no_length_two_generalized_fixed_vector
     (polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β)
     (polarizedPlusAttentionMatrix_mem_rowStochastic
@@ -149,5 +156,145 @@ theorem polarizedAttention_no_length_two_chain
     x y hxy hyy
 
 end Attention
+
+/-! ## Section 2: Kemeny–Snell Stationary-Projector Group Drazin Construction -/
+
+section KemenySnellStationaryGroupDrazin
+
+open InfoGeometry.Canonical.Drazin
+
+variable {R : Type*} [Ring R]
+
+/-- The Kemeny–Snell fundamental deviation operator `L^# := Z - E₀`, obtained by
+subtracting the stationary projector `E₀` from the fundamental inverse `Z = (L + E₀)⁻¹`. -/
+def kemenySnellDeviation (Z E₀ : R) : R :=
+  Z - E₀
+
+/-- If `L * E₀ = 0`, `E₀ * E₀ = E₀`, and `Z * (L + E₀) = 1`, then `Z * E₀ = E₀`. -/
+theorem kemenySnell_mul_stationary_eq
+    {L E₀ Z : R}
+    (hE₀_idem : E₀ * E₀ = E₀)
+    (hLE₀ : L * E₀ = 0)
+    (hZL : Z * (L + E₀) = 1) :
+    Z * E₀ = E₀ := by
+  have hLE₀_sum : (L + E₀) * E₀ = E₀ := by
+    rw [add_mul, hLE₀, hE₀_idem, zero_add]
+  calc
+    Z * E₀ = Z * ((L + E₀) * E₀) := by rw [hLE₀_sum]
+    _ = (Z * (L + E₀)) * E₀ := by noncomm_ring
+    _ = 1 * E₀ := by rw [hZL]
+    _ = E₀ := one_mul E₀
+
+/-- If `E₀ * L = 0`, `E₀ * E₀ = E₀`, and `(L + E₀) * Z = 1`, then `E₀ * Z = E₀`. -/
+theorem stationary_mul_kemenySnell_eq
+    {L E₀ Z : R}
+    (hE₀_idem : E₀ * E₀ = E₀)
+    (hE₀L : E₀ * L = 0)
+    (hLZ : (L + E₀) * Z = 1) :
+    E₀ * Z = E₀ := by
+  have hE₀L_sum : E₀ * (L + E₀) = E₀ := by
+    rw [mul_add, hE₀L, hE₀_idem, zero_add]
+  calc
+    E₀ * Z = (E₀ * (L + E₀)) * Z := by rw [hE₀L_sum]
+    _ = E₀ * ((L + E₀) * Z) := by noncomm_ring
+    _ = E₀ * 1 := by rw [hLZ]
+    _ = E₀ := mul_one E₀
+
+/-- Left product of `L` with `kemenySnellDeviation Z E₀` equals the transient projector `1 - E₀`. -/
+theorem mul_kemenySnellDeviation_eq
+    {L E₀ Z : R}
+    (hE₀_idem : E₀ * E₀ = E₀)
+    (hLE₀ : L * E₀ = 0)
+    (hE₀L : E₀ * L = 0)
+    (hLZ : (L + E₀) * Z = 1) :
+    L * kemenySnellDeviation Z E₀ = 1 - E₀ := by
+  unfold kemenySnellDeviation
+  have hE₀Z : E₀ * Z = E₀ := stationary_mul_kemenySnell_eq hE₀_idem hE₀L hLZ
+  have hLZ_split : L * Z + E₀ = 1 := by
+    calc
+      L * Z + E₀ = L * Z + E₀ * Z := by rw [hE₀Z]
+      _ = (L + E₀) * Z := by noncomm_ring
+      _ = 1 := hLZ
+  calc
+    L * (Z - E₀) = L * Z - L * E₀ := by rw [mul_sub]
+    _ = L * Z := by rw [hLE₀, sub_zero]
+    _ = (L * Z + E₀) - E₀ := by noncomm_ring
+    _ = 1 - E₀ := by rw [hLZ_split]
+
+/-- Right product of `kemenySnellDeviation Z E₀` with `L` equals the transient projector `1 - E₀`. -/
+theorem kemenySnellDeviation_mul_eq
+    {L E₀ Z : R}
+    (hE₀_idem : E₀ * E₀ = E₀)
+    (hLE₀ : L * E₀ = 0)
+    (hE₀L : E₀ * L = 0)
+    (hZL : Z * (L + E₀) = 1) :
+    kemenySnellDeviation Z E₀ * L = 1 - E₀ := by
+  unfold kemenySnellDeviation
+  have hZE₀ : Z * E₀ = E₀ := kemenySnell_mul_stationary_eq hE₀_idem hLE₀ hZL
+  have hZL_split : Z * L + E₀ = 1 := by
+    calc
+      Z * L + E₀ = Z * L + Z * E₀ := by rw [hZE₀]
+      _ = Z * (L + E₀) := by noncomm_ring
+      _ = 1 := hZL
+  calc
+    (Z - E₀) * L = Z * L - E₀ * L := by rw [sub_mul]
+    _ = Z * L := by rw [hE₀L, sub_zero]
+    _ = (Z * L + E₀) - E₀ := by noncomm_ring
+    _ = 1 - E₀ := by rw [hZL_split]
+
+/-- **Kemeny–Snell Stationary-Projector Group Drazin Theorem**:
+For any operator `L ∈ R` (e.g., a Markov Laplacian `L = 1 - P`), idempotent stationary
+projector `E₀` (`E₀ * E₀ = E₀`) annihilating `L` on both sides (`L * E₀ = 0` and `E₀ * L = 0`),
+and Kemeny–Snell fundamental inverse `Z = (L + E₀)⁻¹`, the deviation operator
+`kemenySnellDeviation Z E₀ := Z - E₀` is the canonical index-`1` Drazin inverse of `L`. -/
+theorem isDrazinInverse_kemenySnellDeviation
+    {L E₀ Z : R}
+    (hE₀_idem : E₀ * E₀ = E₀)
+    (hLE₀ : L * E₀ = 0)
+    (hE₀L : E₀ * L = 0)
+    (hLZ : (L + E₀) * Z = 1)
+    (hZL : Z * (L + E₀) = 1) :
+    IsDrazinInverse L (kemenySnellDeviation Z E₀) 1 := by
+  have h_left : L * kemenySnellDeviation Z E₀ = 1 - E₀ :=
+    mul_kemenySnellDeviation_eq hE₀_idem hLE₀ hE₀L hLZ
+  have h_right : kemenySnellDeviation Z E₀ * L = 1 - E₀ :=
+    kemenySnellDeviation_mul_eq hE₀_idem hLE₀ hE₀L hZL
+  have hE₀Z : E₀ * Z = E₀ := stationary_mul_kemenySnell_eq hE₀_idem hE₀L hLZ
+  have h_comm : L * kemenySnellDeviation Z E₀ = kemenySnellDeviation Z E₀ * L := by
+    rw [h_left, h_right]
+  have h_idem :
+      kemenySnellDeviation Z E₀ * L * kemenySnellDeviation Z E₀ =
+        kemenySnellDeviation Z E₀ := by
+    rw [h_right]
+    unfold kemenySnellDeviation
+    calc
+      (1 - E₀) * (Z - E₀) = Z - E₀ - E₀ * Z + E₀ * E₀ := by noncomm_ring
+      _ = Z - E₀ - E₀ + E₀ := by rw [hE₀Z, hE₀_idem]
+      _ = Z - E₀ := by noncomm_ring
+  have h_pow : L ^ (1 + 1) * kemenySnellDeviation Z E₀ = L ^ 1 := by
+    calc
+      L ^ (1 + 1) * kemenySnellDeviation Z E₀
+          = L * (L * kemenySnellDeviation Z E₀) := by
+              rw [pow_succ', pow_one]
+              noncomm_ring
+      _ = L * (1 - E₀) := by rw [h_left]
+      _ = L - L * E₀ := by noncomm_ring
+      _ = L ^ 1 := by rw [hLE₀, sub_zero, pow_one]
+  exact ⟨h_comm, h_idem, h_pow⟩
+
+/-- The Drazin complementary (null/ergodic) projector `Q_D = 1 - L * L^#` of the
+Kemeny–Snell deviation operator `Z - E₀` is identically equal to the stationary projector `E₀`. -/
+theorem kemenySnellDeviation_complementaryProjection_eq
+    {L E₀ Z : R}
+    (hE₀_idem : E₀ * E₀ = E₀)
+    (hLE₀ : L * E₀ = 0)
+    (hE₀L : E₀ * L = 0)
+    (hLZ : (L + E₀) * Z = 1) :
+    IsDrazinInverse.complementaryProjection L (kemenySnellDeviation Z E₀) = E₀ := by
+  unfold IsDrazinInverse.complementaryProjection IsDrazinInverse.projection
+  rw [mul_kemenySnellDeviation_eq hE₀_idem hLE₀ hE₀L hLZ]
+  noncomm_ring
+
+end KemenySnellStationaryGroupDrazin
 
 end InfoGeometry.QuantumContext.MarkovDrazin

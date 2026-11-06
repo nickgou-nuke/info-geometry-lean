@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration
 import InfoGeometry.Canonical.BKMScalarGaugeQuotient
 import InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
+import InfoGeometry.Thermo.OnsagerTwoOperatorForm
 
 /-!
 # Finite Gibbs Onsager system on an `NOperatorForm` family
@@ -34,6 +35,7 @@ open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 open InfoGeometry.OperatorAlgebra.ExteriorAlgebra
 open InfoGeometry.Optics.OperatorDerivationForms
 open InfoGeometry.Thermo.OnsagerClosure
+open InfoGeometry.Thermo.SusceptibilityOnsagerStress
 
 abbrev FamilyCarrier (m n : ℕ) :=
   Fin m → Carrier n
@@ -192,6 +194,23 @@ theorem finiteCEFamilyNOperatorDissipativeForm_nonneg
   exact D.kuboMoriPairing_self_re_nonneg
     (centeredStatistic D (finiteGibbsCEFamilyNOperatorReadoutLinear a c x)) hpow
 
+/-- The finite Gibbs `NOperatorForm` dissipation as a native reciprocal,
+nonnegative Onsager form on the product of component CE directions. -/
+def finiteGibbsCEFamilyNOperatorOnsagerForm {m n : ℕ}
+    (H : GibbsOperator n) (hH : IsSelfAdjoint H)
+    (hZ : 0 < gibbsPartitionReal H)
+    (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) :
+    OnsagerTwoOperatorForm (FamilyCarrier m n) where
+  form := finiteCEFamilyNOperatorDissipativeForm
+    (faithfulGibbsDensity H hH hZ)
+    (continuous_faithfulGibbsDensity_rpow H hH hZ) a c
+  symmetric := finiteCEFamilyNOperatorDissipativeForm_symm
+    (faithfulGibbsDensity H hH hZ)
+    (continuous_faithfulGibbsDensity_rpow H hH hZ) a c
+  diagonal_nonnegative := finiteCEFamilyNOperatorDissipativeForm_nonneg
+    (faithfulGibbsDensity H hH hZ)
+    (continuous_faithfulGibbsDensity_rpow H hH hZ) a c
+
 theorem finiteCEFamilyNOperatorCurvatureProbeForm_skew
     {m n : ℕ} (D : SouriauOnsagerBKM.FaithfulDensityOperator n)
     (hpow : Continuous D.rpow) (a : Fin m → GibbsOperator n)
@@ -245,6 +264,18 @@ theorem finiteGibbsCEFamilyNOperatorSystem_entropy
     exact finiteCEFamilyNOperatorDissipativeForm_apply _ _ a c x x
   · exact
       (finiteGibbsCEFamilyNOperatorSystem H hH hZ a c Q).entropy_production_nonneg x
+
+/-- The diagonal entropy production of the CE Onsager--Casimir system is the
+quadratic response of its native finite-Gibbs Onsager form; the reversible
+curvature probe contributes no diagonal term. -/
+theorem finiteGibbsCEFamilyNOperatorSystem_entropy_eq_onsagerForm
+    {m n : ℕ} (H : GibbsOperator n) (hH : IsSelfAdjoint H)
+    (hZ : 0 < gibbsPartitionReal H) (a : Fin m → GibbsOperator n)
+    (c : Fin m → ℝ) (Q : GibbsOperator n) (x : FamilyCarrier m n) :
+    (finiteGibbsCEFamilyNOperatorSystem H hH hZ a c Q).totalGenerator x x =
+      (finiteGibbsCEFamilyNOperatorOnsagerForm H hH hZ a c).form x x := by
+  rw [(finiteGibbsCEFamilyNOperatorSystem H hH hZ a c Q).entropy_production_eq]
+  rfl
 
 /-- The weighted pairwise response for independent Fréchet directions on
 the components of an `NOperatorForm` family. -/

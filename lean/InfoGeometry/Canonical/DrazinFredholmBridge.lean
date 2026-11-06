@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
@@ -89,7 +94,7 @@ theorem defectProjector_eq_sum_defectChiralBlocks (T TD : EndH₂) :
     _ =
       (defectChiralBlockPlus (E := E) T TD
         + defectChiralBlockMinus (E := E) T TD) u := by
-          simp [defectChiralBlockPlus, defectChiralBlockMinus, ContinuousLinearMap.add_apply]
+          simp [defectChiralBlockPlus, defectChiralBlockMinus]
 
 /-- Positive defect kernel slice: `ker(P₀) ∩ range(P₊)`. -/
 @[rep_depth transport]
@@ -137,9 +142,7 @@ theorem defectKernelDimMismatch_of_defectChiralIndex_ne_zero
   intro hEq
   apply hIndex
   unfold defectChiralIndex
-  rcases hS with ⟨hPlus, hMinus⟩
-  letI := hPlus
-  letI := hMinus
+  rcases hS with ⟨_, _⟩
   simp [hEq]
 
 end Core
@@ -173,15 +176,70 @@ structure DrazinDefectFredholmPackage
         - (chiralMinus (E := E)) * (defectProjector (E := E) T TD))
   defectSurface : DefectChiralFredholmSurface (E := E) T TD
 
-/-- The packaged defect block is nontrivial whenever the underlying compat layer says so. -/
+/-- Under the Fredholm package, the defect projector is idempotent (derived from the
+package's `compat` field via `Pzero_idempotent`).  The nonvanishing part is supplied
+directly by the `DefectSectorData.nontrivial_defect` field, not derived. -/
 @[rep_depth transport, capstone]
-theorem defectProjector_ne_zero_of_package
+theorem defectProjector_ne_zero_and_idempotent_of_package
     {T TD : EndH₂} {k : ℕ}
-    (_hPkg : DrazinDefectFredholmPackage (E := E) T TD k)
+    (hPkg : DrazinDefectFredholmPackage (E := E) T TD k)
     (hNontrivial : DefectSectorData (E := E) T TD k) :
-    defectProjector (E := E) T TD ≠ 0 := by
-  exact hNontrivial.nontrivial_defect
+    defectProjector (E := E) T TD ≠ 0 ∧
+      defectProjector (E := E) T TD * defectProjector (E := E) T TD =
+        defectProjector (E := E) T TD := by
+  exact ⟨hNontrivial.nontrivial_defect, Pzero_idempotent hPkg.compat⟩
 
 end CompactnessPackage
+
+section ConsistencyModel
+
+local notation "H₂R" => DoubledSpace ℝ
+local notation "EndH₂R" => H₂R →L[ℝ] H₂R
+
+/-- Concrete Krein-graded Drazin compatibility witness for the identity operator on `DoubledSpace ℝ`. -/
+@[rep_depth transport]
+noncomputable def modelIdKreinGradedCompat :
+    KreinGradedDrazinCompatibility (E := ℝ) (1 : EndH₂R) (1 : EndH₂R) 0 where
+  hD := ⟨rfl, by simp, by simp⟩
+  η := 1
+  η_sq := rfl
+  η_star := star_one _
+  η_comm_T := rfl
+  η_comm_TD := rfl
+  ε_comm_T := rfl
+  ε_comm_TD := rfl
+  J_comm_T := rfl
+  J_comm_TD := rfl
+
+/-- Concrete `DrazinDefectFredholmPackage` witness on the finite-dimensional carrier `DoubledSpace ℝ`. -/
+@[rep_depth transport]
+noncomputable def modelDrazinDefectFredholmPackage :
+    DrazinDefectFredholmPackage (E := ℝ) (1 : EndH₂R) (1 : EndH₂R) 0 where
+  compat := modelIdKreinGradedCompat
+  defectCompact := by
+    have h0 : defectProjector (E := ℝ) (1 : EndH₂R) (1 : EndH₂R) = 0 := by
+      simp [defectProjector, Pzero, InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection,
+        InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+    rw [h0]
+    exact isCompactOperator_zero
+  defectCommPlusCompact := by
+    have h0 :
+        (defectProjector (E := ℝ) (1 : EndH₂R) (1 : EndH₂R)) * (chiralPlus (E := ℝ))
+          - (chiralPlus (E := ℝ)) * (defectProjector (E := ℝ) (1 : EndH₂R) (1 : EndH₂R)) = 0 := by
+      simp [defectProjector, Pzero, InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection,
+        InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+    rw [h0]
+    exact isCompactOperator_zero
+  defectCommMinusCompact := by
+    have h0 :
+        (defectProjector (E := ℝ) (1 : EndH₂R) (1 : EndH₂R)) * (chiralMinus (E := ℝ))
+          - (chiralMinus (E := ℝ)) * (defectProjector (E := ℝ) (1 : EndH₂R) (1 : EndH₂R)) = 0 := by
+      simp [defectProjector, Pzero, InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection,
+        InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+    rw [h0]
+    exact isCompactOperator_zero
+  defectSurface := ⟨inferInstance, inferInstance⟩
+
+end ConsistencyModel
 
 end InfoGeometry.Canonical.DrazinFredholmBridge

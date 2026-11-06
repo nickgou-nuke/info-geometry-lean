@@ -361,7 +361,8 @@ theorem edge_causalLE {a b : Archetype} (h : edge a b) : causalLE a b :=
   EdgeReachable.edge h
 
 theorem edge_rank_strict {a b : Archetype} (h : edge a b) : rank a < rank b := by
-  cases a <;> cases b <;> simp_all [edge, rank]
+  revert h
+  cases a <;> cases b <;> simp [edge, rank]
 
 theorem edgeReachable_rank_strict_of_ne {a b : Archetype}
     (h : EdgeReachable a b) (hne : a ≠ b) : rank a < rank b := by

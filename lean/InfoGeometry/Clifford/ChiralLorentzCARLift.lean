@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
@@ -67,6 +73,45 @@ def unitConjugationRingEquiv (u : Opˣ) : Op ≃+* Op where
 omit [Algebra ℝ Op] in
 @[simp] theorem unitConjugationRingEquiv_apply (u : Opˣ) (x : Op) :
     unitConjugationRingEquiv u x = unitConjugation u x := rfl
+
+omit [Algebra ℝ Op] in
+/-- Integer-polynomial relations are invariant under genuine inner
+conjugation of operators. This transports nilpotence, idempotence, and
+cyclotomic equations without changing the operator carrier or commuting any
+operator coefficients. -/
+theorem unitConjugation_aeval_eq_aeval (u : Opˣ) (p : Polynomial ℤ) (x : Op) :
+    unitConjugation u (Polynomial.aeval x p) =
+      Polynomial.aeval (unitConjugation u x) p := by
+  let f : Op →+* Op := (unitConjugationRingEquiv u).toRingHom
+  have hcoeff : (algebraMap ℤ Op).comp (RingHom.id ℤ) =
+      f.comp (algebraMap ℤ Op) := by
+    ext z
+    simp [f, unitConjugationRingEquiv]
+  have heval := Polynomial.map_aeval_eq_aeval_map hcoeff p x
+  simpa [f, unitConjugationRingEquiv_apply] using heval
+
+omit [Algebra ℝ Op] in
+/-- The zero locus of an integer polynomial is preserved in both directions
+by operator inner conjugation. -/
+theorem unitConjugation_polynomial_root_iff
+    (u : Opˣ) (p : Polynomial ℤ) (x : Op) :
+    Polynomial.aeval (unitConjugation u x) p = 0 ↔
+      Polynomial.aeval x p = 0 := by
+  have hinv' : unitConjugation u⁻¹ (unitConjugation u x) = x := by
+    simp [unitConjugation, mul_assoc]
+  have hzero : unitConjugation u⁻¹ 0 = 0 := by simp [unitConjugation]
+  constructor
+  · intro hx
+    have h := congrArg (unitConjugation u⁻¹) hx
+    rw [unitConjugation_aeval_eq_aeval] at h
+    rw [hzero] at h
+    change Polynomial.aeval (unitConjugation u⁻¹ (unitConjugation u x)) p = 0 at h
+    rw [hinv'] at h
+    exact h
+  · intro hx
+    have h := congrArg (unitConjugation u) hx
+    rw [unitConjugation_aeval_eq_aeval] at h
+    simpa [unitConjugation] using h
 
 omit [Algebra ℝ Op] in
 theorem unitConjugation_comp (u v : Opˣ) (x : Op) :

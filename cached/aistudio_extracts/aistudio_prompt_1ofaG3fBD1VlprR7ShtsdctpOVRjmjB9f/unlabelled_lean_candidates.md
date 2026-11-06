@@ -1,1 +1,1 @@
-# Unlabelled Lean-like code blocks (unverified candidates): `aistudio_prompt_1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f.json`
+# Unlabelled Lean-like code blocks (unverified candidates): `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f`

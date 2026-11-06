@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import Mathlib.Algebra.Algebra.Basic
@@ -115,6 +120,24 @@ theorem peirceMinus_mul_peircePlus (epsilon : A) (hε : epsilon * epsilon = 1) :
 structure SplitInvolution (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] where
   epsilon : A
   sq_eq_one : epsilon * epsilon = 1
+
+instance instInvertibleTwoPUnit : Invertible (2 : PUnit) :=
+  ⟨0, Subsingleton.elim _ _, Subsingleton.elim _ _⟩
+
+/-- Constructive zero-ring model for `SplitInvolution PUnit PUnit`. -/
+def splitInvolutionPUnitModel : SplitInvolution PUnit PUnit where
+  epsilon := 1
+  sq_eq_one := mul_one 1
+
+/-- Constructive identity involution model `ε = 1` for `SplitInvolution R A`. -/
+def SplitInvolution.unitModel (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] :
+    SplitInvolution R A where
+  epsilon := 1
+  sq_eq_one := mul_one 1
+
+instance (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] :
+    Inhabited (SplitInvolution R A) :=
+  ⟨SplitInvolution.unitModel R A⟩
 
 namespace SplitInvolution
 

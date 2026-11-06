@@ -1,11 +1,16 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Geometry.DikinOrbitCore
 
 noncomputable section
 
@@ -13,8 +18,6 @@ namespace InfoGeometry.Canonical.CartanDicksonColimitRH
 
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-
-set_option linter.unusedVariables false
 
 /-!
 # Dickson-Cayley Confinement of Zeros & Riemann Hypothesis Bridge
@@ -43,11 +46,12 @@ via **Dikin Ellipsoids on Para-Kähler Symmetric Spaces** and the **Split Cayley
 /-! ### 1. Dikin Log-Barrier & Interior Confinement -/
 
 /-- 1D Dikin metric g(x) = 1/x² induced by the self-concordant barrier Φ(x) = -ln x. -/
-def dikinMetric (x : ℝ) : ℝ := 1 / (x ^ 2)
+def dikinMetric (x : ℝ) : ℝ :=
+  InfoGeometry.Geometry.DikinOrbitCore.coefficient x
 
 /-- The 1D Dikin ellipsoid E(x, r) around x > 0 of radius r. -/
 def InDikinEllipsoid (x y r : ℝ) : Prop :=
-  (y - x) ^ 2 * dikinMetric x ≤ r ^ 2
+  InfoGeometry.Geometry.DikinOrbitCore.ellipsoid x y r
 
 /-- 
 🏆 THEOREM 1 (Dikin Interior Confinement):
@@ -57,13 +61,20 @@ Boundary collisions (y ≤ 0) are geometrically impossible.
 theorem dikin_interior_confinement {x y r : ℝ} (hx : 0 < x) (hr_nonneg : 0 ≤ r) (hr : r < 1)
     (h_in : InDikinEllipsoid x y r) :
     x * (1 - r) ≤ y ∧ y ≤ x * (1 + r) ∧ 0 < y := by
-  dsimp [InDikinEllipsoid, dikinMetric] at h_in
   have hx2_pos : 0 < x ^ 2 := sq_pos_of_pos hx
+  have h_in' : (1 / x ^ 2) * (y - x) ^ 2 ≤ r ^ 2 := by
+    simpa [InDikinEllipsoid, InfoGeometry.Geometry.DikinOrbitCore.ellipsoid,
+      InfoGeometry.Geometry.DikinOrbitCore.quadratic,
+      InfoGeometry.Geometry.DikinOrbitCore.coefficient, dikinMetric, mul_comm] using h_in
   have h_sq : (y - x) ^ 2 ≤ (r * x) ^ 2 := by
     calc
       (y - x) ^ 2 = (y - x) ^ 2 * (1 / x ^ 2) * x ^ 2 := by
         rw [mul_assoc, one_div_mul_cancel (ne_of_gt hx2_pos), mul_one]
-      _ ≤ r ^ 2 * x ^ 2 := by gcongr
+      _ ≤ r ^ 2 * x ^ 2 := by
+        calc
+          (y - x) ^ 2 * (1 / x ^ 2) * x ^ 2 =
+              ((1 / x ^ 2) * (y - x) ^ 2) * x ^ 2 := by ring
+          _ ≤ r ^ 2 * x ^ 2 := mul_le_mul_of_nonneg_right h_in' (le_of_lt hx2_pos)
       _ = (r * x) ^ 2 := by ring
   have h_rx_nonneg : 0 ≤ r * x := mul_nonneg hr_nonneg (le_of_lt hx)
   rw [sq_le_sq, abs_of_nonneg h_rx_nonneg] at h_sq
@@ -94,26 +105,30 @@ theorem cayley_unit_circle_on_critical_line (z : ℂ) (h_circ : OnLeeYangCircle 
   have h := cayleyToTemperature_mem_criticalLine_of_unitCircle z h_circ h_reg
   exact h
 
-/-! ### 3. Dikin Spectral Confinement Packet -/
+/-! ### 3. Dikin Spectral Confinement Predicate -/
 
-/-- Dikin confinement packet for a polynomial root system on the Para-Kähler space. -/
-structure DikinSpectralConfinement (P : Polynomial ℂ) where
-  /-- Every root of the partition polynomial is strictly confined to the unit Dikin circle. -/
-  unit_circle_confinement : ∀ z : ℂ, P.IsRoot z → OnLeeYangCircle z
-  /-- No root coincides with the Cayley pole z = -1. -/
-  regular_roots : ∀ z : ℂ, P.IsRoot z → z.re ≠ -1
+/-- Dikin spectral confinement predicate for a polynomial root system on the Para-Kähler space:
+every root lies on the unit Lee–Yang circle and away from the Cayley pole `z = -1`. -/
+def IsDikinSpectrallyConfined (P : Polynomial ℂ) : Prop :=
+  (∀ z : ℂ, P.IsRoot z → OnLeeYangCircle z) ∧
+  (∀ z : ℂ, P.IsRoot z → z.re ≠ -1)
+
+/-- Constructive witness: the constant polynomial `1` satisfies `IsDikinSpectrallyConfined`. -/
+theorem isDikinSpectrallyConfined_const_one :
+    IsDikinSpectrallyConfined (Polynomial.C (1 : ℂ)) := by
+  refine ⟨fun z hz => ?_, fun z hz => ?_⟩ <;>
+  · rw [Polynomial.IsRoot.def, Polynomial.eval_C] at hz
+    exact False.elim (one_ne_zero hz)
 
 /-- 
 🏆 THEOREM 3 (Master RH Bridge Theorem):
 For any polynomial root system governed by Dikin spectral confinement,
 all mapped roots under the Cayley-Klein transform lie unconditionally on Re(s) = 1/2.
 -/
-theorem dikin_roots_on_critical_line {P : Polynomial ℂ} (pack : DikinSpectralConfinement P)
+theorem dikin_roots_on_critical_line {P : Polynomial ℂ} (h_conf : IsDikinSpectrallyConfined P)
     (z : ℂ) (hz : P.IsRoot z) :
-    (cayleyTransform z).re = 1 / 2 := by
-  have h_circ : OnLeeYangCircle z := pack.unit_circle_confinement z hz
-  have h_reg : z.re ≠ -1 := pack.regular_roots z hz
-  exact cayley_unit_circle_on_critical_line z h_circ h_reg
+    (cayleyTransform z).re = 1 / 2 :=
+  cayley_unit_circle_on_critical_line z (h_conf.1 z hz) (h_conf.2 z hz)
 
 /-! ### 4. Split Cayley-Dickson Doubling & Invariant Embedding -/
 

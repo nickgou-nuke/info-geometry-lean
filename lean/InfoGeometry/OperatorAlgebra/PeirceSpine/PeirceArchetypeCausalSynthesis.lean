@@ -94,6 +94,14 @@ structure FinitePinchingArchetypeInput (n : ℕ) where
   cutSelfAdjoint : star cut = cut
   amplifiedPositive : amplifiedOperator.PosSemidef
 
+instance (n : ℕ) : Inhabited (FinitePinchingArchetypeInput n) :=
+  ⟨{ cut := 0
+     operator := 0
+     amplifiedOperator := 0
+     cutIdempotent := mul_zero 0
+     cutSelfAdjoint := star_zero _
+     amplifiedPositive := Matrix.PosSemidef.zero }⟩
+
 def finitePinchingChannelArchetype (n : ℕ) :
     TypedArchetype (FinitePinchingArchetypeInput n) .proved where
   name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.finitePinchingChannelArchetype
@@ -127,6 +135,29 @@ structure PinchedHistoryArchetypeInput (n : ℕ) where
   residualPositive : (1 - InfoGeometry.OperatorAlgebra.PeirceSpine.genV
     cut amplitude (star amplitude)).PosSemidef
 
+noncomputable instance : Inhabited (PinchedHistoryArchetypeInput 2) :=
+  ⟨{ cut := d63TiltedProjection
+     amplitude := 0
+     cutIdempotent := d63_tilted_projection_is_star_projection.isIdempotentElem.eq
+     cutSelfAdjoint := d63_tilted_projection_is_star_projection.isSelfAdjoint
+     cutNonzero := by
+       intro h
+       have h00 := congrArg (fun M : D63CausalMatrix => M 0 0) h
+       norm_num [d63TiltedProjection] at h00
+     cutNotOne := by
+       intro h
+       have h01 := congrArg (fun M : D63CausalMatrix => M 0 1) h
+       norm_num [d63TiltedProjection] at h01
+     residualPositive := by
+       have hV : InfoGeometry.OperatorAlgebra.PeirceSpine.genV
+           d63TiltedProjection (0 : D63CausalMatrix) (star (0 : D63CausalMatrix)) = 0 := by
+         simp [InfoGeometry.OperatorAlgebra.PeirceSpine.genV,
+           InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm,
+           InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+           InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus]
+       rw [hV, sub_zero]
+       exact Matrix.PosSemidef.one }⟩
+
 def pinchedHistoryCollisionArchetype (n : ℕ) :
     TypedArchetype (PinchedHistoryArchetypeInput n) .proved where
   name := `InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis.pinchedHistoryCollisionArchetype
@@ -157,6 +188,18 @@ structure ReplacementMinimaxInput (m : ℕ) where
   sigmaTrace : Matrix.trace sigma = 1
   observationOneTrace : Matrix.trace observationOne = 1
   observationTwoTrace : Matrix.trace observationTwo = 1
+
+instance : Inhabited (ReplacementMinimaxInput 1) :=
+  ⟨{ rho := 1
+     sigma := 1
+     observationOne := 1
+     observationTwo := 1
+     rhoPositive := Matrix.PosSemidef.one
+     sigmaPositive := Matrix.PosSemidef.one
+     rhoTrace := by simp
+     sigmaTrace := by simp
+     observationOneTrace := by simp
+     observationTwoTrace := by simp }⟩
 
 /-- A replacement channel attains the exact two-state minimax midpoint bound.
 This is an owner-backed finite-dimensional matrix archetype. -/
@@ -1208,6 +1251,16 @@ structure FrechetCommutatorInput
   right : FrechetOperatorDerivation 𝕜 A
   first : A
   second : A
+
+/-- Concrete zero-derivation model for `FrechetCommutatorInput`. -/
+noncomputable def frechetCommutatorInputModel :
+    FrechetCommutatorInput ℝ (SouriauOnsagerBKM.FiniteOperatorAlgebra 1) :=
+  ⟨⟨0, by simp⟩, ⟨0, by simp⟩, 0, 0⟩
+
+instance (𝕜 A : Type*) [NontriviallyNormedField 𝕜]
+    [NormedRing A] [NormedAlgebra 𝕜 A] :
+    Inhabited (FrechetCommutatorInput 𝕜 A) :=
+  ⟨⟨⟨0, by simp⟩, ⟨0, by simp⟩, 0, 0⟩⟩
 
 /-- The commutator of continuous operator derivations again satisfies the
 noncommutative Leibniz rule. The proof reuses the analytic operator owner. -/

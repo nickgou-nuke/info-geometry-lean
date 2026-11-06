@@ -115,3 +115,6 @@
 [submodule "external_refs/CFSG"]
 	path = external_refs/CFSG
 	url = https://github.com/AxiomMath/CFSG.git
+[submodule "external_refs/auto-ontology"]
+	path = external_refs/auto-ontology
+	url = https://github.com/NVIDIA/auto-ontology.git

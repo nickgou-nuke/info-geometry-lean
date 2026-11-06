@@ -3,7 +3,7 @@
 Verifies all 15 OpenGauss commands natively:
 1.  /prove        - Top-Down Assume-and-Recurse Prover
 2.  /check        - Ground-Truthed Counterexample Hunter & Consistency Auditor
-3.  /refute       - Adversarial False-as-Stated Screener (15-Trap Catalog)
+3.  /refute       - Adversarial False-as-Stated Screener (selected 17-Trap checks)
 4.  /draft        - Skeleton Drafter
 5.  /review       - Automated QMS Source Preflight (Gate 2 / Gate 4)
 6.  /checkpoint   - State Saver & Continuous Tracker
@@ -33,6 +33,7 @@ from tools.infra.opengauss_cli import (
     analyze_refactor_candidates,
     autoformalize_cas_identity,
     check_consistency,
+    DiscoveryReport,
     discover_declarations,
     draft_skeleton,
     execute_checkpoint,
@@ -165,13 +166,24 @@ def test_command_5_review(tmp_path: Optional[Path] = None):
         "theorem add_comm_test (x y : ℝ) : x + y = y + x := by ring\n",
         encoding="utf-8",
     )
-    rep2 = review_file(clean_file, gate="GATE_2")
+    # Static-preflight assertions should not launch the repository-wide staged
+    # gate once per fixture. The gate has separate integration coverage and
+    # scans the caller's entire current index.
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stderr="", stdout=""),
+    ):
+        rep2 = review_file(clean_file, gate="GATE_2")
     assert rep2.verdict == "PASS"
     assert rep2.sorry_count == 0
     assert rep2.review_authority == "automated_source_preflight"
     assert rep2.independent_semantic_audit_performed is False
 
-    rep4 = review_file(clean_file, gate="GATE_4")
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stderr="", stdout=""),
+    ):
+        rep4 = review_file(clean_file, gate="GATE_4")
     assert rep4.verdict == "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED"
     assert rep4.kernel_checked is False
     assert rep4.custom_axioms is None
@@ -184,7 +196,11 @@ def test_command_5_review(tmp_path: Optional[Path] = None):
         "axiom made_up : False\ntheorem false_claim : False := made_up\n",
         encoding="utf-8",
     )
-    rep_unverified = review_file(unverified_file, gate="GATE_4")
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stderr="", stdout=""),
+    ):
+        rep_unverified = review_file(unverified_file, gate="GATE_4")
     assert rep_unverified.verdict == "REJECTED"
     assert any(t["trap_id"] == "QMS_AXIOM" for t in rep_unverified.trap_violations)
     assert rep_unverified.kernel_checked is False
@@ -197,7 +213,11 @@ def test_command_5_review(tmp_path: Optional[Path] = None):
         "theorem dirty_unification : True := by sorry\n",
         encoding="utf-8",
     )
-    rep_dirty = review_file(dirty_file, gate="GATE_4")
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stderr="", stdout=""),
+    ):
+        rep_dirty = review_file(dirty_file, gate="GATE_4")
     assert rep_dirty.verdict == "REJECTED"
     assert rep_dirty.sorry_count == 1
     assert len(rep_dirty.scope_inflation_warnings) >= 1
@@ -224,10 +244,16 @@ def test_review_json_distinguishes_automated_preflight_from_independent_audit(tm
 
 def test_command_6_checkpoint():
     """Verify checkpoint captures state without staging unrelated work."""
-    receipt = execute_checkpoint(message="Unit test checkpoint verification", dry_run=False)
+    def fake_run(command, **kwargs):
+        stdout = "deadbeef\n" if command[:3] == ["git", "rev-parse", "--short"] else ""
+        return SimpleNamespace(returncode=0, stdout=stdout, stderr="")
+
+    with patch("tools.infra.opengauss_cli.subprocess.run", side_effect=fake_run) as run:
+        receipt = execute_checkpoint(message="Unit test checkpoint verification", dry_run=False)
     assert receipt.status == "CHECKPOINT_SAVED"
     assert receipt.git_head != ""
     assert isinstance(receipt.staged_files, list)
+    assert not any(call.args[0][:2] == ["git", "add"] for call in run.call_args_list)
 
 
 def test_command_7_refactor():
@@ -340,9 +366,21 @@ def test_command_12_handoff():
     assert len(ctx.dead_routes) >= 2
 
 
-def test_command_13_discover():
+def test_command_13_discover(tmp_path: Path):
     """Verify /discover scans for matching declarations, carriers, and recommended imports."""
-    report = discover_declarations("split quaternion", repo_root=Path("."))
+    source = tmp_path / "lean/InfoGeometry/Clifford/CockleCoquaternionPlanarTriad.lean"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "namespace InfoGeometry.Clifford\n"
+        "/-- Coquaternion is a split quaternion carrier. --/\n"
+        "structure Coquaternion where\n"
+        "  value : Nat\n"
+        "/-- Split quaternion planar triad relation. --/\n"
+        "theorem planar_triad_coexistence : True := by trivial\n"
+        "end InfoGeometry.Clifford\n",
+        encoding="utf-8",
+    )
+    report = discover_declarations("split quaternion", repo_root=tmp_path)
     assert report.query == "split quaternion"
     assert len(report.carriers_found) > 0
     assert any(c["name"] == "Coquaternion" for c in report.carriers_found)
@@ -606,7 +644,7 @@ def test_gate4_rejects_unicode_custom_axiom_name(tmp_path):
     assert "λWitness" in verified.rejected_axioms
 
 
-def test_cli_dispatch_main(capsys=None):
+def test_cli_dispatch_main(tmp_path: Path):
     """Verify all 15 commands dispatch cleanly through main()."""
     # 1. prove
     rc = main(["prove", "--headline", "test_thm", "--type", "True", "--json"])
@@ -617,18 +655,40 @@ def test_cli_dispatch_main(capsys=None):
     assert rc == 0
 
     # 3. refute
-    rc = main(["refute", "lean/InfoGeometry/Clifford/CockleCoquaternionPlanarTriad.lean", "--json"])
+    refute_smoke_file = tmp_path / "CleanRefute.lean"
+    refute_smoke_file.write_text(
+        "theorem refute_dispatch_smoke : True := by trivial\n",
+        encoding="utf-8",
+    )
+    rc = main(["refute", str(refute_smoke_file), "--json"])
     assert rc == 0
 
     # 4. draft
     rc = main(["draft", "--headline", "t_draft", "--signature", ": True", "--scratch", "--json"])
     assert rc == 0
     # 5. review
-    rc = main(["review", "proofs/WavefrontKMSKleinDuality.lean", "--gate", "GATE_2", "--json"])
+    review_smoke_file = tmp_path / "CleanReview.lean"
+    review_smoke_file.write_text(
+        "theorem review_dispatch_smoke : True := by trivial\n",
+        encoding="utf-8",
+    )
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stderr="", stdout=""),
+    ):
+        rc = main(["review", str(review_smoke_file), "--gate", "GATE_2", "--json"])
     assert rc == 0
 
     # 6. checkpoint
-    rc = main(["checkpoint", "--dry-run", "--json"])
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        side_effect=lambda command, **kwargs: SimpleNamespace(
+            returncode=0,
+            stdout="deadbeef\n" if command[:3] == ["git", "rev-parse", "--short"] else "",
+            stderr="",
+        ),
+    ):
+        rc = main(["checkpoint", "--dry-run", "--json"])
     assert rc == 0
 
     # 7. refactor
@@ -656,12 +716,15 @@ def test_cli_dispatch_main(capsys=None):
     assert rc == 0
 
     # 13. discover
-    rc = main(["discover", "--query", "split quaternion", "--json"])
+    with patch(
+        "tools.infra.opengauss_cli.discover_declarations",
+        return_value=DiscoveryReport(query="split quaternion"),
+    ):
+        rc = main(["discover", "--query", "split quaternion", "--json"])
     assert rc == 0
 
     # 14. quarantine
-    import tempfile
-    quarantine_root = Path(tempfile.mkdtemp())
+    quarantine_root = tmp_path / "quarantine"
     rc = main([
         "quarantine",
         "--file", "lean/InfoGeometry/Bad.lean",

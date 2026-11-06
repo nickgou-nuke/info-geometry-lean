@@ -49,12 +49,11 @@ def DrazinResidueProjector (A D : R) : R :=
 def DrazinGreenOperator (_A D : R) : R :=
   D
 
-/-- The Green reconstruction always returns the regular projection of the source. -/
+/-- The Green reconstruction always returns the regular projection of the source.
+This is associativity of `A * D * f`; no Drazin equation is needed. -/
 @[rep_depth operator]
 theorem drazinGreen_reconstructs_regular_part
-    {A D : R} {k : ℕ}
-    (_h : IsDrazinInverse A D k)
-    (f : R) :
+    {A D : R} (f : R) :
     A * (DrazinGreenOperator A D * f)
       = DrazinRegularProjector A D * f := by
   unfold DrazinGreenOperator DrazinRegularProjector
@@ -80,12 +79,12 @@ theorem DrazinResidueProjector_mul_A_pow_eq_zero
 
 /--
 If the source has no Drazin residue, then the Drazin Green operator gives an
-exact solution for the canonical representative `u_D = D * f`.
+exact solution for the canonical representative `u_D = D * f`.  This direction
+uses only `P + Q = 1`, so no Drazin equation is required.
 -/
 @[rep_depth operator]
 theorem drazinGreen_solves_of_residue_zero
-    {A D : R} {k : ℕ}
-    (h : IsDrazinInverse A D k)
+    {A D : R}
     {f : R}
     (hf : DrazinResidueProjector A D * f = 0) :
     A * (DrazinGreenOperator A D * f) = f := by
@@ -96,7 +95,7 @@ theorem drazinGreen_solves_of_residue_zero
   calc
     A * (DrazinGreenOperator A D * f)
         = DrazinRegularProjector A D * f := by
-            exact drazinGreen_reconstructs_regular_part h f
+            exact drazinGreen_reconstructs_regular_part (A := A) (D := D) f
     _ = (DrazinRegularProjector A D + DrazinResidueProjector A D) * f := by
             rw [add_mul, hf, add_zero]
     _ = (1 : R) * f := by
@@ -118,7 +117,7 @@ theorem residue_zero_of_drazinGreen_solves
   have hrec :
       A * (DrazinGreenOperator A D * f)
         = DrazinRegularProjector A D * f :=
-    drazinGreen_reconstructs_regular_part h f
+    drazinGreen_reconstructs_regular_part (A := A) (D := D) f
   have hfP : f = DrazinRegularProjector A D * f :=
     hsol.symm.trans hrec
   have hQP :
@@ -148,7 +147,7 @@ theorem drazinGreen_solves_iff_residue_zero
       ↔ DrazinResidueProjector A D * f = 0 := by
   constructor
   · exact residue_zero_of_drazinGreen_solves h
-  · exact drazinGreen_solves_of_residue_zero h
+  · exact drazinGreen_solves_of_residue_zero
 
 end Ring
 
@@ -179,5 +178,24 @@ def greenOperator : R :=
   DrazinGreenOperator K.A K.D
 
 end DrazinGreenKernelData
+
+/-- Concrete consistency witness for `DrazinGreenKernelData`: the singular idempotent
+`(1, 0)` in the product ring `ℚ × ℚ` is its own index-one Drazin inverse.  The kernel
+field is free data (here the zero kernel); this witness shows only that the structure's
+hypotheses are satisfiable by a non-invertible element. -/
+def drazinGreenKernelData_productIdempotent :
+    DrazinGreenKernelData Unit (ℚ × ℚ) where
+  A := (1, 0)
+  D := (1, 0)
+  index := 1
+  hDrazin := IsDrazinInverse.of_idempotent (by ext <;> simp)
+  GreenKernel := fun _ _ => 0
+
+/-- The witness element is genuinely singular: `(1, 0)` is not a unit of `ℚ × ℚ`. -/
+theorem drazinGreenKernelData_productIdempotent_not_isUnit :
+    ¬ IsUnit (drazinGreenKernelData_productIdempotent.A) := by
+  intro h
+  have h2 := (Prod.isUnit_iff.mp h).2
+  simp [drazinGreenKernelData_productIdempotent] at h2
 
 end InfoGeometry.Canonical.DrazinGreen

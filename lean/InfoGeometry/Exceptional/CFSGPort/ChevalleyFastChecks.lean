@@ -115,21 +115,7 @@ theorem conj_of_conjCheck {a : ℕ} {i : Fin τ.rank} {k : ℕ}
   (List.range' lo (hi - lo)).all fun a =>
     (List.finRange τ.rank).all fun i => [1, 2, 3].all fun k => conjCheck τ a i k
 
-theorem conjRange_spec {lo hi : ℕ} (h : conjRange τ lo hi = true)
-    {a : ℕ} (ha : lo ≤ a) (ha' : a < hi) (i : Fin τ.rank) {k : ℕ}
-    (hk : k ∈ [1, 2, 3]) : conjCheck τ a i k = true := by
-  simp only [conjRange, List.all_eq_true, List.mem_range', List.mem_finRange,
-    true_implies] at h
-  exact h a ⟨a - lo, by omega, by omega⟩ i k hk
-
-theorem conjRange_G2 : conjRange .G2 0 12 = true := by decide +kernel
-theorem conjRange_F4 : conjRange .F4 0 48 = true := by decide +kernel
-theorem conjRange_D4 : conjRange .D4 0 24 = true := by decide +kernel
-theorem conjRange_E6 : conjRange .E6 0 72 = true := by decide +kernel
-theorem conjRange_E7 : conjRange .E7 0 126 = true := by decide +kernel
-
-/-- Transfer two adjacent checked root-table ranges to their union. This is
-the local port of `RootOps.CertTools.conjRange_trans`. -/
+/-- Transfer two adjacent checked root-table ranges to their union. -/
 theorem conjRange_trans {a b c : ℕ} (hab : a ≤ b) (hbc : b ≤ c)
     (h₁ : conjRange τ a b = true) (h₂ : conjRange τ b c = true) :
     conjRange τ a c = true := by
@@ -138,5 +124,75 @@ theorem conjRange_trans {a b c : ℕ} (hab : a ≤ b) (hbc : b ≤ c)
   by_cases hx : a + m < b
   · exact h₁ _ ⟨m, by omega, rfl⟩
   · exact h₂ _ ⟨a + m - b, by omega, by omega⟩
+
+private theorem conjRange_join3 {a b c d : ℕ} (hab : a ≤ b) (hbc : b ≤ c)
+    (hcd : c ≤ d) (h₁ : conjRange τ a b = true)
+    (h₂ : conjRange τ b c = true) (h₃ : conjRange τ c d = true) :
+    conjRange τ a d = true := by
+  exact conjRange_trans (a := a) (b := c) (c := d) (Nat.le_trans hab hbc) hcd
+    (conjRange_trans (a := a) (b := b) (c := c) hab hbc h₁ h₂) h₃
+
+private theorem conjRange_join4 {a b c d e : ℕ} (hab : a ≤ b) (hbc : b ≤ c)
+    (hcd : c ≤ d) (hde : d ≤ e) (h₁ : conjRange τ a b = true)
+    (h₂ : conjRange τ b c = true) (h₃ : conjRange τ c d = true)
+    (h₄ : conjRange τ d e = true) : conjRange τ a e = true := by
+  exact conjRange_trans (a := a) (b := d) (c := e)
+    (Nat.le_trans hab (Nat.le_trans hbc hcd)) hde
+    (conjRange_join3 (a := a) (b := b) (c := c) (d := d)
+      hab hbc hcd h₁ h₂ h₃) h₄
+
+private theorem conjRange_join7 {a b c d e f g h : ℕ}
+    (hab : a ≤ b) (hbc : b ≤ c) (hcd : c ≤ d) (hde : d ≤ e)
+    (hef : e ≤ f) (hfg : f ≤ g) (hgh : g ≤ h)
+    (h₁ : conjRange τ a b = true) (h₂ : conjRange τ b c = true)
+    (h₃ : conjRange τ c d = true) (h₄ : conjRange τ d e = true)
+    (h₅ : conjRange τ e f = true) (h₆ : conjRange τ f g = true)
+    (h₇ : conjRange τ g h = true) : conjRange τ a h = true := by
+  have hAE := conjRange_join4 (a := a) (b := b) (c := c) (d := d) (e := e)
+    hab hbc hcd hde h₁ h₂ h₃ h₄
+  have hEH := conjRange_join3 (a := e) (b := f) (c := g) (d := h)
+    hef hfg hgh h₅ h₆ h₇
+  exact conjRange_trans (a := a) (b := e) (c := h) (by omega) (by omega) hAE hEH
+
+theorem conjRange_spec {lo hi : ℕ} (h : conjRange τ lo hi = true)
+    {a : ℕ} (ha : lo ≤ a) (ha' : a < hi) (i : Fin τ.rank) {k : ℕ}
+    (hk : k ∈ [1, 2, 3]) : conjCheck τ a i k = true := by
+  simp only [conjRange, List.all_eq_true, List.mem_range', List.mem_finRange,
+    true_implies] at h
+  exact h a ⟨a - lo, by omega, by omega⟩ i k hk
+
+theorem conjRange_G2 : conjRange .G2 0 12 = true := by decide +kernel
+theorem conjRange_D4 : conjRange .D4 0 24 = true := by decide +kernel
+
+private theorem conjRange_F4_0_24 : conjRange .F4 0 24 = true := by decide +kernel
+private theorem conjRange_F4_24_48 : conjRange .F4 24 48 = true := by decide +kernel
+
+theorem conjRange_F4 : conjRange .F4 0 48 = true := by
+  exact conjRange_trans (by omega) (by omega)
+    conjRange_F4_0_24 conjRange_F4_24_48
+
+private theorem conjRange_E6_0_18 : conjRange .E6 0 18 = true := by decide +kernel
+private theorem conjRange_E6_18_36 : conjRange .E6 18 36 = true := by decide +kernel
+private theorem conjRange_E6_36_54 : conjRange .E6 36 54 = true := by decide +kernel
+private theorem conjRange_E6_54_72 : conjRange .E6 54 72 = true := by decide +kernel
+
+theorem conjRange_E6 : conjRange .E6 0 72 = true := by
+  exact conjRange_join4 (by omega) (by omega) (by omega) (by omega)
+    conjRange_E6_0_18 conjRange_E6_18_36 conjRange_E6_36_54 conjRange_E6_54_72
+
+private theorem conjRange_E7_0_18 : conjRange .E7 0 18 = true := by decide +kernel
+private theorem conjRange_E7_18_36 : conjRange .E7 18 36 = true := by decide +kernel
+private theorem conjRange_E7_36_54 : conjRange .E7 36 54 = true := by decide +kernel
+private theorem conjRange_E7_54_72 : conjRange .E7 54 72 = true := by decide +kernel
+private theorem conjRange_E7_72_90 : conjRange .E7 72 90 = true := by decide +kernel
+private theorem conjRange_E7_90_108 : conjRange .E7 90 108 = true := by decide +kernel
+private theorem conjRange_E7_108_126 : conjRange .E7 108 126 = true := by decide +kernel
+
+theorem conjRange_E7 : conjRange .E7 0 126 = true := by
+  exact conjRange_join7 (by omega) (by omega) (by omega) (by omega)
+    (by omega) (by omega) (by omega)
+    conjRange_E7_0_18 conjRange_E7_18_36 conjRange_E7_36_54
+    conjRange_E7_54_72 conjRange_E7_72_90 conjRange_E7_90_108
+    conjRange_E7_108_126
 
 end InfoGeometry.Exceptional.CFSGPort.Chevalley.RootOps

@@ -1394,16 +1394,20 @@ not create a parallel API.
   `PlabicPathParityKreinBridge.nested_zorn_three_corner_readouts_krein_fixed`
   proves both A116 readouts fixed by the A102 middle-shell `kreinReflect`,
   under self-adjoint shell idempotents and adjoint-compatible link
-  coefficients. This closes the Krein-fixed readout law, but does not prove
-  the additional `wallpaperGlide` intertwining/double-translation law for
-  these contractions or a topological Möbius structure. A different,
+  coefficients. The direct theorem
+  `nested_zorn_three_corner_readouts_wallpaper_glide` then proves that each
+  readout is carried to itself plus the same step `T`, so their difference is
+  invariant. This one-step law needs no separate seam-fixing hypothesis:
+  `wallpaperGlide` is defined as `kreinReflect X + T`. It does not prove the
+  full carrier-chart intertwining/double-translation law for these contractions
+  or a topological Möbius structure. A different,
   already-proved reflection is owned by
   `PlabicKleinActionBridge.parity_transports_plabic_boundary_and_nullspace`
   and is included in the A97 master theorem: `parityConj` is an involutive ring
   action that transports the plabic boundary operator under `A,C ↦ -A,-C`.
   That exact parameter-reflection law is genuine, but its carrier/definitions
-  differ from A116's three-corner contraction and A102's star-based glide;
-  no theorem currently identifies these actions. The A116
+  differ from A116's three-corner contraction. The one-step A116 wallpaper
+  glide theorem is separately owned as above. The A116
   packet's specific two-sided inverse equations
   for the incoming/outgoing sums are now exposed by
   `nested_zorn_three_corner_contraction_strippers_are_inverses`, using the
@@ -4099,9 +4103,47 @@ The conversation is structured in two halves:
      `foldyWouthuysen_real_rapidity_bridge`, and `thomasWigner_precession_commutator`.
 
 Both [`MetriplecticCausalPlabicKreinYangianPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean)
-(141 declarations) and [`MetriplecticCausalPlabicKreinYangianBridge.lean`](../lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean)
-(3 declarations) passed `opengauss_cli.py certify --verify-kernel` with zero errors, zero warnings,
-and zero forbidden axioms. Physical interpretations (e.g., thermodynamic entropy production,
+(215 declarations after Pass-2 bidirectional extraction and codebase-reuse bridges) and
+[`MetriplecticCausalPlabicKreinYangianBridge.lean`](../lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean)
+(6 declarations) passed `opengauss_screener.py --strict` (0 traps) and `opengauss_cli.py certify --verify-kernel`
+with zero errors, zero warnings, and zero forbidden axioms:
+
+- **Pass-2 Bidirectional Extraction & `solve et coagula` Five-Stage Coagulation**:
+  - **Stage I (Binary Cut)**: `evenGrade`/`oddGrade` Peirce grading cut (`invS P`), `isSelfAdjoint_add_star`,
+    `star_sub_star_eq_neg`, `doubled_star_cut`, `metriplectic_star_parity`, and `digrac_metriplectic_realization`
+    (reusing `InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading`).
+  - **Stage II (Fourfold Relational Anatomy)**: Four Peirce sectors (`peirce11`, `peirce00`, `conePlus`,
+    `coneMinus`), `fourfold_pauli_block_decomposition`, `cl11_universal_matrix_basis_expansion`,
+    `clifford_attention_multivector_bilinear_readout`, and `matDiscreteHilbert_trichotomy_and_involution`.
+  - **Stage III (Transcendent Function)**: `metriplectic_peirce_casimir_and_chiral_horizon_selection`
+    (`L(N_+) = 4 V N_+`, `L(N_-) = 0`, `[Σ, V] = 0`), `peirce_plabic_resolvent_and_steinberg_braid_bridge`
+    (reusing `TransferDefect.qgt_primal_dual_euler_zeta_factorization`, `GradingPerturbation.grading_add_phi_sq`,
+    `GradingPerturbation.grading_add_j_sq`, and `Unipotent.steinbergBraid_dual_expansion_and_difference`),
+    `talaska_boundary_eq_block_ldu_schur`, and `wittLightCone_compensation` (reusing `LightConePair`).
+  - **Stage IV (Socratic Aporia & Recursive Meta-Cognition Tower)**: `metriplectic_idempotencyDefect_and_digrac_bridge`
+    (reusing `IdempotentGraphGrassmannian.idempotencyDefect`), `induction_head_key_query_bridge_defect`,
+    `walshHadamard_bivector_commutator_and_idempotency_defect`, `cl02_quaternionic_idempotency_obstruction`,
+    `elenchus_position_independent_kronecker_commute`, `elenchus_hadamard_mask_destroys_causal_zero`,
+    `towerUngradedRingHom` & `towerUngradedRingHom_preserves_peirce_spine` (reusing `RingHomTransport`),
+    and the inductive `n`-site `Cl(n,n)` Jordan–Wigner tower `tower_nSite_jordanWigner_clifford_relations`.
+  - **Stage V (Acyclic Causal Poset & Plabic–Krein–Yangian–Zitterbewegung–Foldy–Wouthuysen Synthesis)**:
+    `cl11_cayley_krein_and_symplectic_unitarity`, `cl11_canonical_jacobian_and_gr24_plucker`,
+    `bcfw_three_channel_spurious_pole_cancellation`, `kreinGelfandLidskii_and_second_jordan_chain`,
+    `kreinHopf_biquadratic_and_secular_group_law`, `yangian_parametric_braided_qybe`,
+    `matrix3_braid_and_parametric_qybe`, `yangian_unbraided_qybe_and_resonant_projectors`,
+    `bethe_pseudovacuum_and_twoSite_monodromy`, `bethe_creation_bracket_and_twoSite_transfer_comm`,
+    `diracKrein_offCrash_propagator_and_zitter_oscillation`,
+    `diracKrein_acceleration_unitarity_and_krein_breathing`,
+    `diracKrein_cubic_secular_position_increment`,
+    `foldyWouthuysen_cl22_diagonalization_and_crash_obstruction`,
+    `thomasWigner_finite_boost_holonomy`, `foldyWouthuysen_krein_unitarity_and_thomas_polar`,
+    `foldyWouthuysen_rapidity_inversion_and_jacobian_reuse` (reusing `FoldyWouthuysenPlabicRapidityBridge`),
+    and canonical bridges `canonical_pass2_inductive_tower_bethe_zitter_fw_synthesis`,
+    `canonical_codebase_reuse_colimit_positroid_cl11_rapidity_bridge` (reusing `MatrixColimitTransport`,
+    `Cl11TensorTowerLimit`, `PositroidClusterTwistPoset`, `MetriplecticCausalArchetypesNative`, and
+    `HestenesKreinRapidityCrossRatio`), and `canonical_solve_et_coagula_five_stage_master_synthesis`.
+
+Physical interpretations (e.g., thermodynamic entropy production,
 GPU hardware bank-conflict latency, continuum quantum field theory, or empirical transformer
 training dynamics) are not claimed beyond the declared algebraic, matrix, `BitVec w`, and real
 hyperbolic types.
@@ -4172,14 +4214,387 @@ Owner routing: the turns are formalized as `MCP₁`–`MCP₁₀` in
 (turns 01–17, stating the corrected Gramian signs above) with the recursive
 operator tensor tower and Foldy–Wouthuysen terminus bridged in
 `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`.
-Locked verification was rerun on 2026-11-04 after the owners and umbrella
+Locked verification was rerun on 2026-11-04 after the Pass-2 owners and umbrella
 imports were staged. `python3 tools/infra/opengauss_cli.py certify --file
 lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean
---verify-kernel` passed with 141 declarations; the corresponding command for
-`lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`
-passed with 3 declarations. The scoped staged proof-proxy gate passed for both
-owners and the three umbrella consumers. The locked build of
-`InfoGeometry.OperatorAlgebra.PeirceSpine`, `InfoGeometry.Canonical.All`, and
-`InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis` passed (13,742 jobs);
+--verify-kernel` passed with 215 declarations; the corresponding commands for
+`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalArchetypesNative.lean`
+and `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`
+passed with 5 declarations and 6 declarations respectively. The scoped staged
+proof-proxy gate passed for all three owners and the three umbrella consumers.
+The locked build of `InfoGeometry.OperatorAlgebra.PeirceSpine`,
+`InfoGeometry.Canonical.All`, and
+`InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis` passed (13,746 jobs);
 that wider build emitted warnings in other replayed modules, so it was not
 warning-free repository-wide.
+
+#### Third-Pass (`Pass 3`) Bidirectional Archetype Extraction & Full Clifford $\to$ Matrix $\to$ Tensor-Tower $\to$ Colimit Synthesis (`hNyd...` / `9666a5a14e0d`)
+
+A third pass (`Pass 3`) of bidirectional archetype extraction and formalization across all 17 turns (`Turn 01`–`Turn 17`), together with explicit integration of the repository's Clifford $\to$ Matrix $\to$ Tensor-Tower (`MatStage n`) $\to$ Iterated Kronecker Tower $\to$ Direct-Limit Colimit (`Limit`) infrastructure, was completed in `lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean` (now **262 declarations**), `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`, and `lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`:
+
+1. **`StageMCP1` (Turns 01–02 — Pass-3 BCH/Zassenhaus Splitting, Metriplectic Lie–Jordan Derivation, Dyson Perturbation, Polar Gramian Commutator & Level-1 Meta-Aporia)**:
+   - `bch_zassenhaus_quadratic_splitting_defect`: First-order Lie–Trotter (`(1 + S)(1 + K) - (1 + K)(1 + S) = [S, K]`), second-order truncated exponential (`exp₂(S + K) - exp₂(S) exp₂(K)`), and symmetric Strang splitting defects over any `[Ring B]`.
+   - `metriplectic_lie_jordan_derivation_and_associator_defect`: Non-commutative Lie–Jordan Poisson–Leibniz derivation identity `[A, B ∘_J C] = [A, B] ∘_J C + B ∘_J [A, C]` and Jordan associator commutator identity `(A ∘_J B) ∘_J C - A ∘_J (B ∘_J C) = [B, [A, C]]`.
+   - `causal_neumann_resolvent_and_dyson_perturbation`: Truncated Neumann series `(1 - L) * ∑_{j=0}^3 L^j = 1` for 4-step nilpotent `L` and second-order non-commutative Dyson perturbation identity `(1 - L - V)⁻¹ - (1 - L)⁻¹ = R₀ V R₀ + R₀ V R₀ V R`.
+   - `gramian_polar_commutator_and_meta_aporia_level1`: Polar Gramian commutator `[gramianOut S K, gramianIn S K] = 2 • [S² - K², [S, K]]`, normal-commutant invariance `[S + K, S² - K²] = [S + K, [S, K]]`, and the recursive Level-1 meta-aporia identity for `aporia₁ = C² - C`.
+2. **`StageMCP2` (Turn 03 — Pass-3 Rota–Baxter Weight `-1`, Gohberg–Krein Leakage & Causal Toeplitz Algebra)**:
+   - `rota_baxter_weight_neg_one_and_gohberg_krein_leakage`: Strict lower-triangular projection `matStrictLower` and causal lower-triangular projection `matStrictLower + matDiagPart` satisfy the exact Rota–Baxter weight-`(-1)` and weight-`(+1)` identities on `Matrix (Fin 3) (Fin 3) R`, and decomposes the Gauss–Gohberg–Krein factorization `(1 + matStrictLower X)(1 + matStrictUpper Y) - 1 = matStrictLower X + matStrictUpper Y + matStrictLower X * matStrictUpper Y` into its lower, diagonal, and upper blocks.
+   - `causalToeplitz3_commute_and_shift_boundary_defect`: 3-step shift nilpotency `S₃³ = 0`, commutativity of the causal Toeplitz subalgebra `causalToeplitz3 a₀ a₁ a₂`, and shift normal boundary defect `S₃ S₃ᵀ - S₃ᵀ S₃ = diag(-1, 0, 1)`.
+   - `blockLower_and_ranked_dag_resolvent_reuse`: Reuses `BlockTriangularIntervention`.
+3. **`StageMCP3` (Turns 04–06 — Pass-3 `sl(2, R)` Lie–Krein Casimir, Krein Hamiltonian Lie–Jordan Closure & Full Clifford $\to$ Matrix $\to$ Tensor-Tower $\to$ Colimit Spine)**:
+   - `sl2_pauli_krein_lie_casimir_and_hodge_duality`: `sl(2, R)` commutator brackets (`[σ_z, σ_x] = -2 ε`, `[σ_z, ε] = -2 σ_x`, `[σ_x, ε] = 2 σ_z`), quadratic Casimir `σ_z² + σ_x² - ε² = 3 I₂`, general traceless vector square `(x₀ σ_z + x₁ σ_x + x₂ ε)² = (x₀² + x₁² - x₂²) I₂`, and para-Kähler Hodge star duality `σ_z² = I₂`, `σ_z σ_x = -ε`, `σ_z ε = -σ_x`.
+   - `krein_hamiltonian_lie_closure_and_jordan_self_adjoint`: Proves that Krein-skew-adjoint (`J H + Hᵀ J = 0`) and Krein-self-adjoint (`J S = Sᵀ J`) operators form a Lie–Jordan pair (`[H₁, H₂]` is Krein-skew-adjoint, `H₁ ∘_J H₂` and `S₁ ∘_J S₂` are Krein-self-adjoint, and `[H, S]` is Krein-self-adjoint).
+   - `bergman_symplectic_and_chiral_euler_reuse`: Reuses `Bergman` and `ChiralEulerFactors`.
+   - `clifford_to_matrix_to_tensorTower_and_colimit_spine`: Directly wires `InfoGeometry.Clifford.Cl11Matrix` (`cl11EquivMat : CliffordAlgebra q11 ≃ₐ[ℝ] Mat2`), `InfoGeometry.Clifford.TowerMatrix` (`Jn_sq`, `cartan_involutive`), `InfoGeometry.Clifford.Cl11TensorTower` (`matStageEmbed_jwCreation`, `matStageEmbed_jwAnnihilation`), `InfoGeometry.Clifford.Cl11TensorTowerIteration` (`iteratedStageEmbed_normalizedTrace`, `iteratedStageEmbed_det`), `InfoGeometry.Clifford.Cl11TensorTowerSupergraded` (`ofStage_superBracket`), and `InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixColimitTransport` (`matrix_limit_grading_phi_sq`, `matrix_limit_hProjV_bond`, `matrix_limit_hProjPhi_bond`).
+4. **`StageMCP4` (Turns 07–10 — Pass-3 Recursive `2^n × 2^n` Fast Walsh–Hadamard Butterfly, XOR Convolution & Non-Commutative Woodbury Identity)**:
+   - `walshHadamard4_butterfly_and_xorConv4_diagonalization`: Exact Cooley–Tukey radix-2 butterfly factorization of `walshHadamard4`, involutive scaling `W₄² = 4 I₄`, and simultaneous diagonalization of the 4D dyadic XOR-convolution algebra `xorConv4 c₀ c₁ c₂ c₃`.
+   - `twoByTwo_walshHadamard_sq` and `towerWalshHadamard_mul_self`: Inductive `n`-level Fast Walsh–Hadamard Transform `towerWalshHadamard B n : OpMatTower B n` over any non-commutative base ring `B` satisfying `H_n² = (2^n : ℕ) • 1`.
+   - `noncomm_pushthrough_and_woodbury_identity`: Non-commutative push-through law `U (1 + V U) = (1 + U V) U` and exact Sherman–Morrison–Woodbury low-rank inverse identity `(A + U C V) * (A⁻¹ - A⁻¹ U W V A⁻¹) = 1`.
+5. **`StageMCP5` (Turns 11–12 — Pass-3 Lusztig–Steinberg Unipotent Braids, All 6 `Gr_+(2,4)` Plücker Minors & Cauchy–Binet Amalgamation)**:
+   - `lusztig_steinberg_unipotent_braid_and_bcfw3_pachner`: Elementary unipotent additive group laws, `SL₂` Weyl braid relation `x(1) y(-1) x(1) = y(-1) x(1) y(-1) = !![0, 1; -1, 0]`, and `3 × 3` BCFW non-adjacent bridge braiding `B₀₁(u) B₁₂(v) B₀₁(w) = B₁₂(v) B₀₁(u + w) E₀₂(u v)`.
+   - `plabic_positroid_gr24_all_six_plucker_and_total_positivity`: Universal 3-term Grassmann–Plücker syzygy `Δ₀₁ Δ₂₃ - Δ₀₂ Δ₁₃ + Δ₀₃ Δ₁₂ = 0`, all 6 Plücker coordinates of Postnikov's top-cell positroid matrix `plabicPositroidTop24`, and strict total positivity over `ℝ` when `w₁, w₂, w₃, w₄ > 0`.
+   - `plabic_amalgamation_cauchy_binet_plucker_multiplicativity` and `phaseConjugate_steinberg_and_middle_vertex_contraction_reuse`.
+6. **`StageMCP6` (Turn 13 — Pass-3 Puiseux Perturbation, Gelfand–Lidskii Krein Residue & Neutral Lagrangian Kernel)**:
+   - `krein_puiseux_perturbation_and_gelfand_lidskii_residue`: Perturbed square `kreinHopfNilPart dw (dw - eps)² = -(2 dw eps - eps²) I₄`, anticommutator `anticomm (kreinCrashNilpotent dw) (-jwE1) = -(2 dw) I₄`, and unit Gelfand–Lidskii Krein perturbation residues `⟨Ψ_EP^{(a)}, J₄ (-jwE1) Φ_gen^{(a)}⟩ = 1` (`a = 1, 2`).
+   - `krein_definite_subspaces_vs_neutral_lagrangian_kernel`: Definite Krein signatures on `V_+ ⊕ V_-` away from the crash vs. mutual Krein-orthogonality of the 2D neutral Lagrangian kernel `ker(N_nil(1))` at the crash.
+7. **`StageMCP7` (Turns 14–15 — Pass-3 Yangian `qdet` Centrality, Antisymmetrizer Fusion & Two-Magnon Bethe Commutativity)**:
+   - `yangian_qdet_centrality_and_antisymmetrizer_fusion`: Centrality of `qdet T(u)` with `A(v), B, C, D(v)` and 2-site fusion `R_check(u, η) * R_check(-η, η) = (u + η) R_check(-η, η)` on the singlet antisymmetrizer.
+   - `yangian_coproduct_coassociativity_and_twoMagnon_bethe_commutativity`: Matrix coproduct coassociativity, 2-magnon excitation commutativity `[B₂(v₁), B₂(v₂)] = 0`, `[C₂(v₁), C₂(v₂)] = 0`, and full 2-site transfer-matrix commutativity `[A₂(u) + D₂(u), A₂(v) + D₂(v)] = 0`.
+8. **`StageMCP8` (Turn 16 — Pass-3 Newton–Wigner Mean Position, Chiral Axial Non-Conservation & Zitterbewegung Reuse)**:
+   - `newtonWigner_mean_position_zero_zitterbewegung`: Exact decomposition `diracKreinNewtonWignerPos + diracKreinTrembleScaled = (Δω² - g²) X₀`, linear ballistic drift `X_NW(t₁ + t₂) - X_NW(t₁) = t₂ A_drift`, and exact commutation `[N_part(Δω, g), X_NW(t)] = 0` for any `X₀` commuting with `N_part`.
+   - `diracKrein_chiral_axial_nonconservation_and_carrier_conservation` and `peirce_zitterbewegung_velocity_reuse`.
+9. **`StageMCP9` (Turn 17 — Pass-3 Eriksen Closed-Form Foldy–Wouthuysen Sign Operator, Exact Projectors & Crash Breakdown)**:
+   - `eriksen_closed_form_foldy_wouthuysen_and_crash_breakdown`: Under `dw² - g² = Omega²`, proves `eriksenSignScaled dw g * eriksenSignScaled dw g = Omega² • 1`, exact orthogonal projector relations for `P_±`, closed-form equivalence `eriksenUnitaryScaled Omega dw g = fwTransform4 (Omega + dw) g`, exact block-diagonalization without series truncation, and breakdown at `Omega = 0, dw = g`.
+10. **`StageMCP10` & Canonical/Epistemology Synthesis (`causalMatrix_pass3_master_synthesis`, `Canonical Synthesis VII` & `VIII`, `Part XV.k`)**:
+    - `causalMatrix_pass3_master_synthesis` in `MetriplecticCausalPlabicKreinYangianPoset.lean`.
+    - `canonical_pass3_bch_rotabaxter_fwht_plucker_puiseux_qdet_nw_eriksen_synthesis` and `canonical_clifford_to_matrix_to_tensorTower_colimit_and_peirce_spine_synthesis` in `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`.
+    - `partXVk_pass3_and_clifford_tensorTower_colimit_synthesis` in `lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`.
+
+#### Fourth-Pass (`Pass 4`) Bidirectional Archetype Extraction & `Cl(1,1)` Star-Colimit Filtration / Tensor-Peirce Colimit Reuse (`hNyd...` / `9666a5a14e0d`)
+
+A fourth pass (`Pass 4`) of bidirectional archetype extraction and codebase reuse across all 17 turns (`Turn 01`–`Turn 17` of `cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.md`) was completed in `lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean` (**308 declarations**), `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean` (**10 declarations**), and `lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean` (**91 declarations**):
+
+1. **`StageMCP1` (Turns 01–02 — Pass-4 Morrison Casimir Degeneracy, Recursive Meta-Aporia Quartic Golden-Ratio Tower, `2 × 2` Block Krein Star-Self-Adjointness & `n`-Site JW Chirality)**:
+   - `metriplectic_casimir_degeneracy_and_thermodynamic_laws`: Under Casimir degeneracy conditions `S * dH = 0, K * dS = 0, dH_star * S = 0, dS_star * K = 0`, proves First Law Hamiltonian isolation `dH_star * ((S + K)(dH + dS)) = dH_star * K * dH`, Second Law metric entropy production `dS_star * ((S + K)(dH + dS)) = dS_star * S * dS`, and Out-Gramian Casimir action `gramianOut S K * dH = -(S + K)(K * dH)`, `gramianOut S K * dS = (S + K)(S * dS)`.
+   - `metaAporiaIter` & `metaAporiaIter_quartic_goldenRatio_and_idempotent`: Defines the recursive Socratic meta-aporia polynomial tower `A_0(X) = X² - X, A_{k+1}(X) = A_k(X)² - A_k(X)` and proves the quartic Golden-Ratio factorization `A_1(X) = X⁴ - 2 X³ + X = (X² - X)(X² - X - 1)`, complement invariance `A_k(1 - X) = A_k(X)`, and idempotent annihilation `X² = X → A_k(X) = 0`.
+   - `blockStar` & `blockStar_krein_selfAdjoint_and_block_resolvents`: Proves `J₂ * blockStar (metriplecticBlock S K) * J₂ = metriplecticBlock S K`, Hermitian self-adjointness of `symplecticDilationBlock S K` and `equilibriumFlowRoot S K`, and non-commutative block resolvents `(1 - equilibriumFlowRoot S K)(1 + equilibriumFlowRoot S K)` and `symplecticDilationBlock (1 - S) (-K) * symplecticDilationBlock (1 + S) K`.
+   - `towerJWChirality` & `towerJWChirality_involution_and_occupation_projectors`: Sitewise Jordan–Wigner chirality `χ_k^{(n)} = E_k^{(n)} Γ_k^{(n)}` in `OpMatTower B n` satisfying `(χ_k^{(n)})² = 1`, `E_k^{(n)} χ_k^{(n)} = Γ_k^{(n)}`, `χ_k^{(n)} E_k^{(n)} = -Γ_k^{(n)}`, and orthogonal occupation projectors `(1 ± χ_k^{(n)})`.
+2. **`StageMCP2` (Turn 03 — Pass-4 `3 × 3` Wiener–Hopf Triangular Resolvent, Position-Encoding Toeplitz Clock Derivation & Second Cotlar–Tricomi Form)**:
+   - `matStrictLower3_neumann_inverse_and_wienerHopf`: Universal 3-step nilpotency of `matStrictLower X` and `matStrictUpper Y` on `Matrix (Fin 3) (Fin 3) R`, Neumann inverses `1 + L + L²` and `1 + U + U²`, and two-sided Wiener–Hopf cross-resolvent `((1 - L)(1 - U))((1 + U + U²)(1 + L + L²)) = 1`.
+   - `diag_causalToeplitz3_commutator_and_clock_derivation`: Commutator `[diag(d₀, d₁, d₂), causalToeplitz3 a₀ a₁ a₂]` and uniform clock-step lag derivation `δ • causalToeplitz3 0 a₁ (2 a₂)`.
+   - `matDiscreteHilbert3_riesz_and_cotlarTricomi_second_form`: Riesz causal/acausal projectors `S_off ± H(S_off)` and entrywise `3 × 3` second Cotlar–Tricomi identity `H(S_off)² = -S_off² + H({S_off, H(S_off)})`.
+3. **`StageMCP3` (Turns 04–06 — Pass-4 `sp(2, R)` Trace Law, Hyperbolic vs. Elliptic Cayley Rotors & `Cl(1,1)` Star-Colimit Filtration Reuse)**:
+   - `sp2_trace_law_and_hyperbolic_vs_elliptic_cayley`: Symplectic Lie trace law `Xᵀ ε + ε X = tr(X) ε`, hyperbolic boost Cayley rotor `((1 + t σ_x)²)ᵀ σ_z (1 + t σ_x)² = (1 - t²)² σ_z`, and elliptic RoPE Cayley rotor `((1 + t ε)²)ᵀ (1 + t ε)² = (1 + t²)² I₂`.
+   - `cl11_starColimit_filtration_car_and_sl2_reuse`: Reuses `Cl11StarAlgebraColimit` (`ofStageStarAlgHom_injective`), `Cl11StarAlgebraFiltration` (`stageImage_lt_succ`, `stageImage_finrank`, `not_moduleFinite`), `Cl11JordanWignerCARBridge` (`jwAnnihilation_creation_anticommutator`), `Cl11GradingSl2` (`cl11ParabolicSL2Triple`), and `GradingTransfer` (`transfer_discriminant_square`, `transfer_j_discriminant_square`).
+4. **`StageMCP4` (Turns 07–10 — Pass-4 Recursive FWHT Block-Diagonal/Block-XOR Duality, Monarch Stride Permutation Kronecker Swap & Talaska Factored Determinant)**:
+   - `towerWalshHadamard_conjugation_diag_and_xor`: Recursive `OpMatTower B (n + 1)` butterfly conjugation mapping block-diagonal `!![D₀, 0; 0, D₁]` to block-XOR and diagonalizing block-XOR `!![C₀, C₁; C₁, C₀]`.
+   - `monarchStridePerm4` & `monarchStridePerm4_kronecker_swap_and_full_mixing`: `4 × 4` Monarch stride permutation `P_stride` swapping `I₂ ⊗ B ↔ B ⊗ I₂` and populating all four `2 × 2` blocks in 2-stage Monarch products.
+   - `talaska_plabic_factored_det_and_untwisted_pole`: Factored Talaska determinant `det(B_out * plabicCycleAdjugate a1 a2 a3 a4) = (1 - a1 a3)(1 + a1 a2 a3 a4)` and twisted (`det = 2`) vs. untwisted (`det = 0`) unit-weight cycle denominator dichotomy.
+5. **`StageMCP5` (Turns 11–12 — Pass-4 Lusztig–Postnikov 2-2 Urban Renewal Cluster Mutation, `Gr_+(2,4)` Twisted Cyclic Shift & `TwoStateSandwich` / `PlabicKleinActionBridge` / `ConeSheetBraiding` Reuse)**:
+   - `postnikov_urbanRenewal_mutation_and_bcfw_st_channels`: Polynomial-cleared Lusztig–Postnikov 2-2 move `diag(D, 1) x_-(y z) x_+(1) x_-(x y) diag(1, D) = D • (x_+(x) x_-(y) x_+(z))` (`D = x + z + x y z`) and 4-point BCFW `s`/`t`-channel decomposition `Δ₁₃ = w₁ w₃ + w₂ w₄`.
+   - `gr24TwistedCyclicShift` & `gr24_twisted_cyclic_shift_plucker_rotation`: Positive cyclic rotation of all 6 Plücker minors under `C mapsto C S_cyc` and spinor periodicity `S_cyc⁴ = -I₄`.
+   - `twoStateSandwich_plabicKlein_and_coneSheetBraiding_reuse`: Reuses `TwoStateSandwich`, `PlabicKleinActionBridge`, and `ConeSheetBraiding`.
+6. **`StageMCP6` (Turn 13 — Pass-4 Full `4 × 4` Cayley–Hamilton Theorem, Index-2 Nilpotency Witness & Canonical `GL_4(ℤ)` Jordan Normal Form)**:
+   - `kreinJordanBasis`, `kreinJordanBasisInv`, `kreinCrash_cayley_hamilton_and_canonical_jordan_form`, and `kreinCrash_strict_index_two_nilpotency_witness`: Proves degree-4 Cayley–Hamilton `M⁴ + 2(ω̄² + Δω² - g²) M² + (ω̄² - (Δω² - g²))² I₄ = 0`, non-vanishing index-2 nilpotency at the crash over `[Nontrivial R]`, and exact similarity `kreinJordanBasisInv * kreinCrashNilpotent dw * kreinJordanBasis = !![0, dw, 0, 0; 0, 0, 0, 0; 0, 0, 0, dw; 0, 0, 0, 0]`.
+7. **`StageMCP7` (Turns 14–15 — Pass-4 Dual `D(u)` Creation Exchange, 1-Magnon Eigenvalues & Two-Site `qdet` Multiplicativity)**:
+   - `yangian_dual_bethe_exchange_oneMagnon_and_twoSite_qdet`: Dual RTT exchange `(u - v) D(u) B = (u - v + η) B D(u) - η B D(v)`, 1-magnon Pauli exclusion `B |Ψ₁⟩ = 0` and exact eigenvalues under `A₁₂(u)` and `D₁₂(u)`, and 2-site quantum determinant multiplicativity `qdet L(u, θ₂) * qdet L(u, θ₁) = (((u - θ₂)² - η²)((u - θ₁)² - η²)) I₂`.
+8. **`StageMCP8` (Turn 16 — Pass-4 Heisenberg Velocity/Acceleration Equations of Motion & Krein Energy Conservation)**:
+   - `diracKrein_velocity_heisenberg_eom_and_energy_conservation`: Velocity anticommutation `{N_part, V_vel} = 0`, first Heisenberg derivative `[N_part, V_vel] = -2(Δω B + g A)`, second Heisenberg derivative `[N_part, [N_part, V_vel]] = -4(Δω² - g²) V_vel`, and Krein energy conservation `Uᵀ (J₄ N_part) U = (c² + (Δω² - g²) s²) (J₄ N_part)`.
+9. **`StageMCP9` (Turn 17 — Pass-4 Non-Commutative Foldy–Wouthuysen Odd-Operator Series & Collinear/Non-Collinear Boost Composition)**:
+   - `foldyWouthuysen_noncommutative_odd_commutator_series`: Universal `[Ring B]` reduction `[S, O²] = 0`, `[[S, O], O] = 4 S O²`, `[[[S, O], O], O] = 8 S O³` for `S² = 1, {S, O} = 0`, and Peirce-spine specialization `[[invS P, genPhi P A C], genPhi P A C] = 4 invS P * genV P A C`.
+   - `foldyWouthuysen_boost_composition_and_wigner_decomposition`: Collinear hyperbolic group law `fwTransform4 u1 v1 * fwTransform4 u2 v2 = fwTransform4 (u1 u2 + v1 v2) (u1 v2 + v1 u2)`, non-collinear boost anticommutator/commutator split, and composite boost `J₄`-isometry.
+10. **`StageMCP10` & Canonical/Epistemology Synthesis (`causalMatrix_pass4_master_synthesis`, `Canonical Synthesis IX` & `X`, `Part XV.l`)**:
+    - `causalMatrix_pass4_master_synthesis` in `MetriplecticCausalPlabicKreinYangianPoset.lean`.
+    - `canonical_pass4_casimir_aporia_wienerhopf_urbanrenewal_jordan_bethe_eom_fw_synthesis` and `canonical_cl11_starColimit_filtration_pinching_and_peirce_reuse_synthesis` (also wiring `TensorPeirceTraceLoss`, `TensorLimitExactConnection`, `SymmetricDissipatorColimit`, and `TwoSheetKreinAdjoint`) in `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`.
+    - `partXVl_pass4_and_starColimit_filtration_synthesis` in `lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`.
+11. **Auto Ontology (`http://localhost:3001`) & ArangoDB AST/AQL Hash (`http://127.0.0.1:8530`) Navigation Record**:
+    - Executed read-only Auto Ontology REST queries against `http://localhost:3001/api/terms` and `http://localhost:3001/api/terms/relationships` (`total: 306,503` indexed `InfoGeometry` declarations; `11,728` Krein-related terms):
+      - `curl -s "http://localhost:3001/api/terms?query=Krein&limit=5"` and `curl -s "http://localhost:3001/api/terms/relationships?dst=InfoGeometry.Algebra.Clifford.IsKreinInvolution&limit=5"` verified the `type`/`value` dependency fan-out from `InfoGeometry.Algebra.Clifford.IsKreinInvolution` (`lean/InfoGeometry/Algebra/Clifford.lean:695`, `related_counts: 23`) to `CliffordAlgebra.kreinInvolution_isKrein`, `CliffordAlgebra.kreinFundamentalSymmetry_isKrein`, `IsKreinInvolution.comp_of_commute`, and `IsKreinInvolution.toLinearEquiv`.
+      - `curl -s "http://localhost:3001/api/terms/relationships?src=InfoGeometry.Clifford.Cl11JordanWignerCARBridge.jwAnnihilation_creation_anticommutator&limit=5"` traced the direct `type`/`value` edges from `jwAnnihilation_creation_anticommutator` to `annihilation_creation_cross_site_anticommute`, `jw_same_site_car`, `jwAnnihilation`, and `jwCreation`.
+      - `curl -s "http://localhost:3001/api/terms?query=normalizedTraceLimit&limit=5"` and `curl -s "http://localhost:3001/api/terms/relationships?dst=InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit&limit=5"` resolved the two distinct `normalizedTraceLimit` owners in the repository (`InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit` at `lean/InfoGeometry/Canonical/Cl11CARPeirceMassCoercivityBridge.lean:574` vs. `InfoGeometry.Canonical.Cl11CuntzCoherentIndexTopologicalBridge.normalizedTraceLimit` at `lean/InfoGeometry/Canonical/Cl11CuntzCoherentIndexTopologicalBridge.lean:437`), enabling exact namespace qualification in `Canonical Synthesis X` and `Part XV.l`.
+    - Executed read-only ArangoDB AQL and `astaql_concept_bridge.py` queries against `http://127.0.0.1:8530` (database `infogeometry`, `decls = 306,503`, `edges = 2,085,736`, `algorithmVersion = "lean-expr-structural-v3"`), verifying structural/value/shape hashes (`canonicalTypeHash`, `canonicalValueHash`, `dagShapeHash`) for the Pass-3/Pass-4 declarations (`ofStageStarAlgHom_injective`, `stageImage_lt_succ`, `not_moduleFinite`, `normalizedTraceLimit_pinching_defect`, `limit_exactConnection_bianchi`, `ofStage_symmDissipator`, `kreinAdjoint_involutive`) and generating the cross-concept bridge packet (`/tmp/astaql_pass4_cl11_tensor_metriplectic_krein.json`, 495 quantum declarations, 114 classical declarations, 16 ranked bridge candidates).
+
+#### Fifth-Pass (`Pass 5`) Bidirectional Archetype Extraction & `Cl(1,1)` Markov–Jones / GNS / Colimit Curvature Reuse (`hNyd...` / `9666a5a14e0d`)
+
+A fifth pass (`Pass 5`) of bidirectional archetype extraction and codebase reuse across all 17 turns (`Turn 01`–`Turn 17` of `cached/gemini_share_hNydhwDbFYmo_9666a5a14e0d.md`) was completed in `lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean` (**336 declarations**), `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`, and `lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`:
+
+1. **`StageMCP1` (Turns 01–02 — Pass-5 Polar Gramian Intertwining, Chiral Dirac–Equilibrium Anticommutation & `TransferMoments` / `PrimalDual` / `SandwichBrackets` Reuse)**:
+   - `causalForward_backward_gramian_intertwining` (`(S + K) G_in = G_out (S + K)`, `(S - K) G_out = G_in (S - K)`), `chiralDiracBlock_equilibriumFlowRoot_anticomm_and_comm`, and `digrac_transferMoments_primalDual_and_sandwich_reuse`.
+2. **`StageMCP2` (Turn 03 — Pass-5 `n × n` Riesz Projection Orthogonality, Causal-Square Hilbert Transform & Schwinger–Keldysh / Dyson–Larkin–Ovchinnikov Rotate)**:
+   - `matRieszPosDoubled`, `matRieszNegDoubled`, `matRieszDoubled_projector_orthogonality_and_idempotency`, `multiHop_kramersKronig_hierarchy_lock_fin4`, and `schwingerKeldysh_retarded_advanced_contour_decoupling`.
+3. **`StageMCP3` (Turns 04–06 — Pass-5 `SO_0(n,n)` Indefinite Orthogonal Split-Signature, Hadamard `σ_z ↔ σ_x`, 3-Site JW `so(3)` Closure & `Cl11MarkovJonesEngine` / `Cl11FiniteTraceGNSReadout` Reuse)**:
+   - `walshHadamard2_krein_lightCone_metric_rotation`, `towerJW_quadratic_bivector_sonn_lie_closure`, and `cl11_markovJones_and_normalizedTrace_reuse`.
+4. **`StageMCP4` (Turns 07–10 — Pass-5 Binary Adder Carry CNOT Factorization of `cyclicShiftMat4`, Plabic Square Loop Cancellation & `Cl11TensorStageFactorization` Reuse)**:
+   - `butterflyLSBFlip4`, `butterflyCarryCNOT4`, `cyclicShiftMat4_butterfly_carry_factorization`, `plabicSquareTransferNum_loop_cancellation_and_factorization`, and `cl11_stageTensorFactorization_and_kantorCorner_reuse`.
+5. **`StageMCP5` (Turns 11–12 — Pass-5 Peirce Cayley Rotor / Bergman–Hua Bridge & `Gr(2,4)` Gale Orthogonal / Plücker Duality)**:
+   - `peirce_cayley_rotor_and_bergman_hua_bridge` and `gr24_gale_dual_orthogonality_and_plucker_duality`.
+6. **`StageMCP6` (Turn 13 — Pass-5 Full `4 × 4` Real Canonical Jordan Normal Form, Double-Pole Resolvent of `kreinHopfGenerator wBar dw dw` & `KreinXiStarDefect` Reuse)**:
+   - `kreinCrash_full_generator_jordan_normal_form`, `kreinCrash_resolvent_double_pole`, and `kreinCrash_resolvent_double_pole_and_xi_star_defect`.
+7. **`StageMCP7` (Turns 14–15 — Pass-5 Complete `2 × 2` Two-Site Yangian RTT Commutator Table)**:
+   - `yangian_twoSite_full_rtt_commutator_table`.
+8. **`StageMCP8` (Turn 16 — Pass-5 Dirac–Krein `so(2,1)` Lorentz Lie Algebra, Casimir `3 I₄` & `CurvatureDoubleCommutator` Reuse)**:
+   - `diracKrein_so21_lie_algebra_and_casimir_and_curvature_reuse`.
+9. **`StageMCP9` (Turn 17 — Pass-5 Transverse Velocity Boost Scaling & Eriksen Sign-Projector Spectral Decomposition)**:
+   - `foldyWouthuysen_velocity_dual_and_eriksen_spectral_decomposition`.
+10. **`StageMCP10` & Canonical/Epistemology Synthesis (`causalMatrix_pass5_master_synthesis`, `Canonical Synthesis XI` & `XII`, `Part XV.m`)**:
+    - `causalMatrix_pass5_master_synthesis` in `MetriplecticCausalPlabicKreinYangianPoset.lean`.
+    - `canonical_pass5_polar_riesz_keldysh_sonn_carry_gale_jordan_rtt_so21_eriksen_synthesis` and `canonical_cl11_markovJones_gns_colimit_curvature_and_stageFactorization_synthesis` (wiring `Cl11MarkovJonesEngine`, `Cl11FiniteTraceGNSReadout`, `Cl11CARPeirceMassCoercivityBridge`, `TensorColimitCurvatureEnergy`, `Cl11TensorStageFactorization`, `CurvatureDoubleCommutator`, and `KreinXiStarDefect`) in `lean/InfoGeometry/Canonical/MetriplecticCausalPlabicKreinYangianBridge.lean`.
+    - `coagulated_metriplectic_causal_plabic_krein_yangian_pass5_synthesis` in `lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`.
+
+### Archive batch: `1CaBH05LizVILxiiJgBBULCbS-tkN0HdX`, `1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`, & Lean 4 Repository Ontology (`solve et coagula`, 2026-11-04)
+
+1. **`1CaBH05LizVILxiiJgBBULCbS-tkN0HdX` (`Archetype XVIII: TwistorAmplituhedronZornBaryon`)**:
+   - Downloaded to `cached/aistudio_prompt_1CaBH05LizVILxiiJgBBULCbS-tkN0HdX.json` (`27,300` bytes; SHA-256 `df99abfe39557143d2e9d03904d3c86066aa7a96858c14b1f97b6eab93f9049b`).
+   - Formalized in [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean) (`Mat4 R`, `noncommutative_mat4_plucker_hodge_and_nambu_klein_anomaly`, `klein_quadric_and_zorn_nilpotency_of_twistor_lines`, `amplituhedron_4bracket_eq_zorn_plucker_anticommutator_and_baryon`).
+2. **`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA` (`63 chunks`, `2,087 math expressions`, Turns 01–63)**:
+   - Downloaded to `cached/aistudio_prompt_1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA.json` (`955,518` bytes; SHA-256 `aea30550c18e44851256e2e1fa2b1408102f7226b7c90d933655933d5bea5263`) and extracted to `cached/aistudio_extracts/aistudio_prompt_1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA/`.
+   - Formalized in [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean):
+     - `nilpotent_first_orthogonal_projector_and_dirac_metric_reconstruction` (Turns 34–40: reconstructing orthogonal self-adjoint projectors `P_twistor N_plus`, `Q_twistor N_plus`, ladder commutators `[P, N_+] = N_+`, `[P, N_+⋆] = -N_+⋆`, and emergent Dirac metric `(N_+ ± N_+⋆)² = ± P_mom N_+` from `N_+² = 0` and `N_+ N_+⋆ N_+ = N_+` without a prior idempotent),
+     - `elie_cartan_supergravity_macdowell_mansouri_and_bianchi_closure` (Turns 54–62, Archetype XVII: unified Élie Cartan connection `𝓐 = Ω + Φ`, curvature–torsion decomposition `[𝓐₁, 𝓐₂] = 𝓡₁₂ + 𝓣₁₂`, `ℤ₂` chiral parity `[S_P, 𝓡₁₂] = 0`, `{S_P, 𝓣₁₂} = 0`, single-operator MacDowell–Mansouri square `(Ω + Φ)² = (Ω² + V) + {Ω, Φ}`, and Bianchi–Cartan Jacobi identity),
+     - `order3_nilpotent_flag_projector_reconstruction` (Turns 30, 33, 34: principal order-3 nilpotent pair `(nilRaise3, nilLower3)` with `cartanDiag3 = [N₃, M₃]` reconstructing the mutually orthogonal projector flag `nilFlagProj1, nilFlagProj2, nilFlagProj3`).
+3. **Lean 4 Repository Ontology & Semantic Knowledge Graph (`solve et coagula`)**:
+   - Formalized in [`lean/InfoGeometry/Epistemology/JungianEpistemicCompiler.lean`](../lean/InfoGeometry/Epistemology/JungianEpistemicCompiler.lean) (`LeanOntologyEntityKind`, `LeanDeclarationKind`, `LeanOntologyEdgeKind`, `LeanOntologyCompilerStage`, `TacticTransition`, `composeTacticTransition`, `blastRadiusEdge`, and `lean_ontology_knowledge_graph_solve_et_coagula_synthesis`) and coagulated in [`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean) (`coagulated_all_aistudio_chats_and_lean_ontology_master_synthesis`).
+4. **Correction to the former Part XV.o claim**:
+   - The former `coagulated_auto_ontology_cross_lane_unification_synthesis` declaration was only a conjunction of six lane-local results with independent inputs. It established no map, compatibility condition, or implication between those lanes; calling it a unification was incorrect. The declaration has been removed from the source owner.
+   - The six lanes remain separately searchable candidates. Auto-Ontology discovery is navigation evidence and does not establish mathematical equivalence or a bridge.
+   - A concrete connection now has a proper theorem contract: `modularOpZornTransport_matrix3ToOpZorn` and the Euler-grading commuting-square theorem in [`lean/InfoGeometry/Canonical/ModularFlowOperatorForms.lean`](../lean/InfoGeometry/Canonical/ModularFlowOperatorForms.lean) establish equivariance of the existing `M₃(B) → OpZornMatrix B` coordinate projection under the implemented modular action. They do not assert multiplicativity of that projection.
+5. **Six-Artifact Google Drive / AI Studio / Google Docs Batch (`Part XV.p`: `coagulated_all_six_aistudio_drive_artifacts_master_synthesis`)**:
+   - Verified byte-for-byte SHA-256 matches between live remote downloads and cached exports for:
+     - `1E6iRChkkEszjN_UBwp9DhW6sOTe-0YEU` (`35,504` bytes, SHA-256 `4f00cbb13898a000...`, Archetypes $\mathcal{A}_1$–$\mathcal{A}_{20}$),
+     - `1PO_i6oQvcMXHygqCDANTy2w8y4JO_IGH` (`54,810` bytes, SHA-256 `cee6f05ce7eaf9a3...`, Archetypes LII–LXIII: Inductive Colimit Connes–Higgs Triad & Coherent BEC $N^2$ Scaling),
+     - `1ewrpkhcDRw_Xs7ryH6tWgKOjy7Yu-jBN` (`38,351` bytes, SHA-256 `a091e590c99083ea...`, Tetraktys Chiral $\gamma_5$ vs. Dirac Algebra & Alternating Associator Chain),
+     - `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` (`5,268,999` bytes, SHA-256 `405239ee6df8971e...`, 218 chunks: added Chunks 204, 209, 211, 217 declarations `cartanPlaquette`, `cartanPlaquetteRev`, `stage_P1_nilpotent_first_genesis_of_projectors`, `stage_P3_uncertainty_creates_elie_cartan_curvature_and_torsion`, `peirce_star_gramian_and_fubini_study_chordal_metric`, `higher_rank_nilpotent_hierarchy_and_jordan_cancellation`, `kktGradePlus1`, `kktGradePlus2`, and `kkt_bracket_p1_p1_eq_p2_and_p1_p2_zero` in [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean)),
+     - `1sWXuMYQXfyNiZtuhfkqDkB3Ia2INL311` (`28,075` bytes, SHA-256 `99dc312100150d9a...`, Archetypes $\mathcal{A}_{29}$ & $\mathcal{A}_{30}$: Chiral Hodge–Dirac Laplacians & De Rham–Hodge Generator Differentials in [`Orientation.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Orientation.lean) and [`GeneratorDifferentials.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/GeneratorDifferentials.lean)),
+     - `1uG9PjXKgmJvgIZ6jyIfPv4beB-fDHJdQy7q7OmGNX5E` (`106,666` bytes, SHA-256 `2393de3e95f8f691...`, Yang–Mills Existence & Mass Gap algebraic archetypes in [`YangMillsNilpotentUnipotentVortexMassPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/YangMillsNilpotentUnipotentVortexMassPoset.lean) and [`TwoSheetedYangMillsInductiveColimit.lean`](../lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean)).
+   - Unified all six artifacts in [`coagulated_all_six_aistudio_drive_artifacts_master_synthesis`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean) (`Part XV.p`).
+6. **Batch-3 Google Drive / AI Studio inventory and Eleven-Pillar Ontology Synthesis (`Part XV.q`: `coagulated_batch3_twelve_artifacts_and_eleven_pillar_ontology_synthesis`, 2026-11-05)**:
+   - The current `cached/aistudio_download_20261102/download_manifest.json` enumerates 12 artifacts: 10 distinct artifacts are downloaded, one duplicate export is downloaded, and `1R4cSvtth2-5VDZ3YwrK0vq8p9_hze1Lj` is recorded as HTTP 404 with no local file. The `1R4c` artifact itself is therefore not verified as recovered or inspected in this checkout.
+     - `10VJyRVd3fKau8zB_JvrNpftbq-XP0gSp` (`51,751` bytes: 3D operator-valued De Rham & Dirac–Kähler calculus over `[Ring R]`),
+     - `1LtuF7FL-_BoHwf4w-NXmlItDSMJ8nSEF` (`34,717` bytes: Four-Pillar Rosetta Stone — Hurwitz–Zorn norm, Nambu 3-bracket, Kantor–Allison triple, and Moufang–Weyl reflection isomorphism),
+     - `1R4cSvtth2-5VDZ3YwrK0vq8p9_hze1Lj` (manifest status: HTTP 404; its Yang–Mills–Bianchi–Poynting–Lichnerowicz–Weitzenböck–Dirac `g_S = 2` description is not verified from this artifact),
+     - `1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi` (`41,766` bytes: Operator Pell equation, dual chiral `γ₅`, Peirce–Bogoliubov–Frobenius–Schur, and Haar wavelet dilation),
+     - `1X7tkGR-aemsGa4Pu5-r2B-vVTr6qblJi` (`54,319` bytes: Universal non-commutative 3D De Rham–Dirac–Kähler & 4th-order Yang–Mills–Noether–Bogomolny instanton trace identities),
+     - `1byXiUlykdbNMsfArjR5k4MRBj0AAWWUX` (`39,691` bytes: Universal Tetraktys `γ₅`, single-channel Pauli exclusion, 3-channel chiral condensate, Higgs–Yukawa potential, and Newton–Peirce quadratic convergence),
+     - `1en-oJDgiG8txvxi_IOxKtWOwgI0B-Tva` (`46,627` bytes: Non-Abelian Maxwell–Faraday–Ampère–Bianchi, polarized insertion extraction of chromoelectric `E`, and same-sector Hodge Poynting theorem),
+     - `1fFi1wFgRFE8gfMwLKHVD6VY0LKhd4zQE` (`33,760` bytes: Non-Abelian Helmholtz–Hodge–Weitzenböck decomposition, curl-of-grad Faraday obstruction, div-of-curl Bianchi obstruction, and Meno–Theaetetus Pell anthyphairesis),
+     - `1iUvTlsUdZfBMgTHBGd__big54dTLpiFY` (`41,766` bytes: Duplicate export of `1SyAZ0b3H1KQij1R0_vzH959f1jekn6Oi`),
+     - `1lxzolfFvjI6VylIT2c79B0BeOaROB_LP` (`42,228` bytes: Right/left insertion anomalies factoring through chromoelectric `E = [α, y]`, polarized insertion along `eX, eY, eZ`, and 4-face Pontryagin identity),
+     - `1xSSy_Z8fOSORG_mJGQISEOkQzV5lsP_1` (`6,042,820` bytes, 157 chunks: complete cumulative AI Studio transcript including Malik–Thome ket-bra & superoperator Drazin resolution in Chunks 86–89, 3-site Tensor-Train / MPS Peirce & Jordan–Wigner string parity in Chunk 119, Real-Doubled Krein Space & RoPE relative-position symplectic-metric attention split in Chunks 121–125, and Nilpotent-First 5-Graded Kantor–Cartan closure in Chunk 156),
+     - `1zXzGnI4RiEWiVOk4NU3SuZe1LumRJbBu` (`25,438` bytes: Variational nilpotent defect expansion around vacuum `Δ(e_L + δΨ) = massLin(δΨ) + (δΨ)²` and Tetraktys Walsh–Hadamard Peirce projectors).
+   - Explicit Yang–Mills/Weitzenböck owner declarations in [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean) are also attributed there to the available `1X7...` and cumulative `1xSSy...` sources. This establishes owner coverage from those sources, not recovery of the missing `1R4c` artifact. The same owner and [`ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean) contain the Batch-3 declarations; the Part XV.q theorem is a synthesis readout, not independent proof evidence.
+
+### 2026-11-05: Operator-Erlangen polynomial-locus invariance
+
+`integerPolynomial_root_smul_iff` in
+[`OperatorErlangenFixedPoints.lean`](../lean/InfoGeometry/Canonical/OperatorErlangenFixedPoints.lean)
+proves that the zero locus of any integer-coefficient polynomial on a ring
+carrier is invariant in both directions under a supplied
+`MulSemiringAction` of a group. The proof uses the ring hom induced by each
+action element and its inverse. It therefore covers operator nilpotence,
+idempotence, finite-order, and cyclotomic equations at the level of polynomial
+relations, without introducing coordinate representatives. The theorem does
+not construct a symmetry group or claim that the automorphism group of every
+operator ring is a Galois group or field extension. The owner passed its locked
+Lean check; semantic and kernel-certification gates are recorded separately
+from this source-level ledger entry.
+
+### 2026-11-05: Three-sheet neutral action on an extremal operator block
+
+In [`MatrixThreeSheetKKTRealization.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MatrixThreeSheetKKTRealization.lean),
+`zero_plus2_bracket_matrix_coordinates` gives the ordered left-minus-right
+action of a neutral diagonal matrix on the positive extremal block.
+`zero_plus2_block_action_lie_law` proves that this action is a Lie
+representation for arbitrary, possibly noncommutative coefficient rings:
+the commutator of the two induced actions equals the action of the diagonal
+commutator. The `rfl`-only matrix natural-smul helper previously identified by
+the semantic audit was replaced with a proof via `map_nsmul` for matrix-entry
+evaluation. The owner passes the locked Lean check, strict screener, semantic
+vacuity audit, and kernel/axiom certification. This records one concrete
+three-sheet operator geometry result; it does not close the all-chat
+formalization objective.
+
+### 2026-11-05: Operator-Erlangen equivariance of the three-sheet KKT grading
+
+The owner [`MatrixThreeSheetKKTRealization.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MatrixThreeSheetKKTRealization.lean)
+defines diagonal units in the actual matrix ring over an arbitrary possibly
+noncommutative coefficient ring and proves
+`eulerFiveGrading3_diagonalConjugation`. Its grading is the intrinsic
+commutator action `ad(Σ)` by `eulerFiveGrading3_eq_ad_sigma`; the theorem proves
+that this five-grade operator is equivariant under inner conjugation by the
+diagonal matrix unit. Entry order remains `uᵢ * Xᵢⱼ * uⱼ⁻¹`; no scalarization
+or coefficient commutation is assumed. This is a finite three-sheet
+Erlangen-invariance result for a specified group of frame changes. It does
+not assert invariance under every automorphism, classify the full
+automorphism group, or construct a Galois extension.
+
+Validation: `run_locked_lean.py` on the owner passed; strict OpenGauss
+screening reported zero traps; semantic-vacuity audit reported zero; Gate 4
+kernel and axiom certification passed for all 52 owner declarations. A
+follow-up attempt to prove direct invariance of a Peirce projection by
+applying the generic five-grade coordinate theorem to a conjugated matrix
+exceeded the elaborator heartbeat and was removed; that stronger
+sector-projection statement is not claimed here.
+
+### 2026-11-05: Souriau–Kaluza–Janus–Bimetric `solve et coagula` poset and direct five-sector Peirce–KKT projection equivariance
+
+In [`SouriauKaluzaJanusBimetricSolveEtCoagula.lean`](../lean/InfoGeometry/Canonical/SouriauKaluzaJanusBimetricSolveEtCoagula.lean),
+the raw confabulation streams from Google Drive artifact
+`1CaBH05LizVILxiiJgBBULCbS-tkN0HdX` (`Janus 45.pdf`, 74 pages) and AI Studio prompt
+`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA` (`378,763` bytes) are distilled into a 6-stage
+acyclic causal poset `JanusBimetricEpistemicStage` ($\mathcal{J}_0 \prec \dots \prec \mathcal{J}_5$)
+strictly over non-commutative `[Ring B]` and `[StarRing B]` on `Matrix (Fin 2) (Fin 2) B`
+and `Matrix (Fin 3) (Fin 3) B`, with zero `[CommRing]` or commutation assumptions:
+
+- **$\mathcal{J}_0$ (`affGroup2`, `momentTorsor2_coadjoint_congruence`, `momentTorsor2_discrete_inversion`)**:
+  $2 \times 2$ block-triangular affine semidirect group and star-congruence of the Souriau moment torsor.
+- **$\mathcal{J}_1$ (`janusGroup3`, `janusInv3`, `janusLie3_adjoint_action`, `janusLie3_commutator`, `janusLie3_radical_sq_zero`)**:
+  $3 \times 3$ Kaluza–Janus double semidirect group, Lie adjoint action, and 2-step nilpotent translation/gauge radical.
+- **$\mathcal{J}_2$ (`janusDualMoment3`, `janus_noether_trace_pairing`, `janus_coadjoint_moment_sectors`, `janus_noether_contragredient_translation_defect`)**:
+  Souriau–Noether trace pairing $\mathrm{Tr}(\mu \cdot Z) = M \Omega + P \gamma + q \delta\phi$, coadjoint sectors, and exact non-commutative contragredient defect $P \cdot [\Omega, C]$.
+- **$\mathcal{J}_3$ (`bimetricCoupling2`, `bimetricCoupling2_sq_defect`, `bimetric_matrix_bianchi_conservation_zero`, `cartanEz2_mul_stressSelf2`)**:
+  Krein-graded bimetric coupling nilpotency defect (`= 0` under $b_1 b_2 = b_2 b_1 = 1$), 2-component matrix Bianchi identity, and Cartan involution $E_z = \mathrm{diag}(1, -1)$ pressure sign flip.
+- **$\mathcal{J}_4$ (Bridges 1–11 & Trap T16 non-commutativity witnesses)**:
+  Connects the Janus/bimetric operators to `PeirceSpine` (`invS`, `conePlus`, `coneMinus`), non-commutative elliptic/hyperbolic Krein moduli, universal Nambu 3-brackets, Kantor–Allison $G_+$-$G_-$ sandwich identities, Socratic aporia $[X, X^2 - X] = 0$, chiral $\gamma_5$ anomaly 2-cocycles, 3-sheet KKT five-grade decompositions (`MatrixThreeSheetKKTRealization`), and operator Zorn projections (`ModularFlowOperatorForms`).
+  In addition, **Bridge 11 (`nplus3_sheets_comm_diagonal`, `sandwich_comm_of_comm`, `peirceGrade_five_sector_diagonalConjugation_equivariance`)** resolves the direct sector-projection equivariance problem noted above without elaborator blowup: by proving that each rank-1 sheet support `P Nplus3`, `Q Nplus3`, `peirceR Nplus3` commutes with any diagonal matrix over `[Ring B]`, it establishes that all five three-sheet Peirce–KKT sector projections (`peirceGradePlus2`, `peirceGradePlus1`, `peirceGradeZero`, `peirceGradeMinus1`, `peirceGradeMinus2`) commute directly with inner conjugation `X ↦ U * X * U⁻¹` by `U = diagonalFrameUnit u`.
+- **$\mathcal{J}_5$ (`souriau_kaluza_janus_bimetric_solve_et_coagula_master_synthesis`)**:
+  Coagulates all six stages into a single kernel-certified master theorem, wired into `Part XXVII` of [`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean).
+- **Cross-Clade Quantum Yang–Mills Bridges**:
+  [`AnomalyHigherGradeTDualityExtension.lean`](../lean/InfoGeometry/Canonical/AnomalyHigherGradeTDualityExtension.lean) and [`QuantumYangMillsCrossCladeBridges.lean`](../lean/InfoGeometry/Canonical/QuantumYangMillsCrossCladeBridges.lean) formalize Bridges A, B, C, and D across the Yang–Mills clades and pass `opengauss_screener.py --strict` and `opengauss_cli.py certify --verify-kernel`.
+
+### 2026-11-05: 8-Stage Chiral Condensate, Operator GMOR, Peirce–Dirac Resolvent, Characteristic-Free Banks–Casher Trace, and NJL Gap Bifurcation Poset (`χ₁ ≺ ⋯ ≺ χ₈`)
+
+In [`ChiralCondensateGMORBanksCasherNJLPoset.lean`](../lean/InfoGeometry/Canonical/ChiralCondensateGMORBanksCasherNJLPoset.lean),
+the 8-stage Acyclic Causal Poset `ChiralCondensateEpistemicStage` ($\chi_1 \prec \chi_2 \prec \chi_3 \prec \chi_4 \prec \chi_5 \prec \chi_6 \prec \chi_7 \prec \chi_8$)
+is formalized in native Mathlib over `[Ring B]` and `[StarRing B]`:
+
+- **$\chi_1$ (`chiralGamma5`, `chiralGamma5_mul_conversions`, `socratic_chiral_involution_defect`)**:
+  Chiral grading involution $\gamma_5 = 2P - 1$, anticommutation $\{\gamma_5, \Phi\} = \{\gamma_5, J\} = 0$, and the Socratic involution defect $(\gamma_5 + \Phi)^2 - 1 = V$.
+- **$\chi_2$ (`archetype_chi2_gauge_orbit_gramian_and_maurer_cartan_bianchi`)**:
+  Identifies the chiral condensate square $\Phi^2 = V$ with the gauge-orbit commutator Gramian `orbitMassMode P a = -[P, a]²` and proves its covariant Bianchi conservation $D_{P,a}(V) = 0$.
+- **$\chi_3$ (`opHiggsMassOperator_chiralGamma5`, `archetype_chi3_double_commutator_goldstone_vortex_split`)**:
+  Proves Goldstone zero-mode transparency $\mathcal{M}_\Phi(\Phi) = \mathcal{M}_\Phi(V) = 0$ and gapped axial/vortex eigenvalues $\mathcal{M}_\Phi(J) = -(4V)J$, $\mathcal{M}_\Phi(\Sigma) = -(4V)\Sigma$, and $\mathcal{M}_\Phi(\gamma_5) = -(4V)\gamma_5 = -4\Sigma$.
+- **$\chi_4$ (`peirce_cartan_symmetric_pair_brackets`, `archetype_chi4_symmetric_pair_and_native_pion_car`)**:
+  Characteristic-free Peirce–Cartan symmetric-pair bracket closure $[\mathfrak{k}, \mathfrak{k}] \subseteq \mathfrak{k}$, $[\mathfrak{k}, \mathfrak{p}] \subseteq \mathfrak{p}$, $[\mathfrak{p}, \mathfrak{p}] \subseteq \mathfrak{k}$ paired with the native $(\pi^+, \pi^-, \pi^0)$ CAR/$\mathfrak{sl}_2$ closure.
+- **$\chi_5$ (`bdgStarHamiltonian_sq`, `bdgStarHamiltonian_andreev_cancellation`, `archetype_chi5_cl55_majorana_chiral_defect_and_bdg_andreev`)**:
+  Universal $2 \times 2$ star-BdG square decomposition, Andreev reflection cancellation of the off-diagonal commutator $[Q, M]$, and the native 5-mode $\mathcal{C}\ell(5,5)$ CAR Majorana chiral defect.
+- **$\chi_6$ (`operator_gmor_ward_takahashi_identity`, `expectation_gmor_trace_identity`, `archetype_chi6_higgs_gmor_dual_double_commutator`)**:
+  Exact Higgs–GMOR dual double-commutator identity: probing $H_m = -(m_q \Phi)$ with $\mathcal{M}_{\gamma_5}(X) = -[\gamma_5, [\gamma_5, X]]$ yields $(4 : \mathbb{Z}) \bullet (m_q \Phi)$ and $\tau(\mathcal{M}_{\gamma_5}(H_m)) = 4\,\tau(m_q \Phi)$ whenever $P m_q = m_q P$.
+- **$\chi_7$ (`peirceDiracOp_mul_conj`, `peirceDiracResolvent_two_sided_inverse`, `proj_comm_resolvent_of_comm_eta`, `peirceDiracResolvent_chiral_parity_decomposition`, `cyclic_trace_oddGrade_zero_and_eq_evenGrade`, `algebraic_banks_casher_resolvent_trace_identity`)**:
+  Constructs the exact two-sided Peirce–Dirac resolvent $(J + \eta)^{-1} = (-J + \eta)(V + \eta^2)^{-1}$, proves that $P \eta = \eta P$ automatically forces $P R_\eta = R_\eta P$, and proves the characteristic-free algebraic Banks–Casher trace reduction $\tau((J + \eta)^{-1}) = \tau(\eta (V + \eta^2)^{-1})$.
+- **$\chi_8$ (`njl_chiral_limit_factorization`, `njl_chiral_limit_bifurcation_iff`, `njl_operator_self_consistency_from_banks_casher`, `chiral_gmor_and_resolvent_matrix_witness`, `chiral_condensate_gmor_banks_casher_njl_master_synthesis`)**:
+  Proves the NJL chiral-limit factorization $\eta(1 - g_{\mathrm{NJL}} I_{\mathrm{BC}}) = 0$ and domain bifurcation $\eta = 0 \lor g_{\mathrm{NJL}} I_{\mathrm{BC}} = 1$, together with concrete $2 \times 2$ matrix witnesses (`Trap T16` & `T17`), wired into `Part XXIX` of [`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean).
+
+### 2026-11-05: EC₆ reference-corner pairing correction
+
+The later `ChiralLorentzSUSYCartanGravitySpine` proposal reverses the two
+reference-corner identities in its EC₆ prose. With the proposal's upper
+associative anomaly
+`K = N₊(A₁) N₋(C₀) N₊(A₂) - N₊(A₂) N₋(C₀) N₊(A₁)` and reference corner
+`N₋(C₀)`, the source-backed contracts are:
+
+- `[K, N₋(C₀)] = [Σ₁, V₂]`, the mixed spin/metric commutator;
+- `{K, N₋(C₀)} = [Σ₁, Σ₂]`, the commutator of the two anomaly operators.
+
+These are `upper_anomaly_reference_commutator` and
+`upper_anomaly_reference_anticommutator` in
+[`KantorCornerAnomaly.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/KantorCornerAnomaly.lean),
+reused by `archetype_CL8_higher_grade_uncertainty_anomaly_in_symmetry_closure`.
+The swapped identities are not promoted. The CL causal-edge relation proves
+acyclicity of its explicitly declared stage chain; it does not by itself prove
+that the stage contracts form logical implications. This turn's bounded
+validation of the CL owner passed the locked Lean check, strict OpenGauss
+screener (zero traps), Gate 4 axiom audit, and kernel verification (80
+declarations). The separate Souriau–Kaluza–Janus owner also passed its locked
+Lean check. Neither result certifies the whole repository or the supplied
+proposal as a file.
+
+### 2026-11-05: Full 32-Turn Shared Gemini Chat (`kKehiDWWV8DI` / `418904a66184`, Turns 18–32 Extension Poset) & 3-Post `mcbal` Kinetic Spin-to-LogCFT Poset (`𝔐₁ ≺ ⋯ ≺ 𝔐₈`)
+
+1. **Shared Gemini Conversation `https://share.gemini.google/kKehiDWWV8DI` (`https://gemini.google.com/share/418904a66184`, 32 Turns)**:
+   - Downloaded to `cached/gemini_share_kKehiDWWV8DI_418904a66184.json` (`3,537,695` bytes) and `cached/gemini_share_kKehiDWWV8DI_418904a66184.md` (`12,762` lines, 32 turns).
+   - Turns 01–17 are identical to `hNydhwDbFYmo` / `9666a5a14e0d` and are owned by [`MetriplecticCausalPlabicKreinYangianPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianPoset.lean).
+   - Turns 18–32 (the 15 continuation turns) are formalized in [`MetriplecticCausalPlabicKreinYangianExtensionPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/MetriplecticCausalPlabicKreinYangianExtensionPoset.lean):
+     - `ExtensionSolveEtCoagulaStage` ($\mathcal{E}_0 \prec \dots \prec \mathcal{E}_5$) and `Full32TurnChatArchetype` (`Turn01`–`Turn32`) with order-embedding `Full32TurnChatArchetype.of17_le_iff` from `CausalMatrixChatTurnArchetype`.
+     - **Turn 18**: `turn18_peirce_magnon_charge_selection_commutators`, `turn18_matrix2_magnon_selection_rules`, `turn18_baxter_tq_difference_and_antiperiodic_bae_at_root`, `turn18_cl11_twist_swap_invariance_and_parabolic_jordan_nilpotency`.
+     - **Turns 19–20**: `turn19_supermatrix_parity_and_witten_laplacian`, `turn19_fedosov_connes_berry_curvature_and_compression_defect`, `turn19_turn20_gelfand_retakh_block_ldu_factorization`, `turn20_quantum_det_vs_unshifted_defect_and_berezinian_crash`.
+     - **Turns 21–22**: `turn21_even_dirac_bug_elenchus_and_chiral_supercharge` (resolving the Turn 21 chiral vs. combined parity grading elenchus on `4 × 4` Yangian Lax operators), `turn22_schubert_gr24_qBinom_and_witten_index_vanishing`, `turn22_iwahori_hecke_quadratic_aporia_and_braid_relation` (`3 × 3` Iwahori–Hecke generators `heckeT1 L`, `heckeT2 L`).
+     - **Turns 23–29**: `turn23_idempotent_nilpotent_mutual_annihilation`, `turn23_witt_lightCone_split_and_orthogonal_projectors`, `turn23_24_25_26_kahler_bergman_madelung_and_higgs_twist`, `turn25_turn27_givental_korff_quantum_pieri_gr24_identities` (`6 × 6` quantum Schubert multiplication matrices on $QH^*(\operatorname{Gr}(2,4))$), `turn27_tridiagonal_hamming_count_and_multihead_twist_commutator`, `turn28_nonabelian_gauge_lax_exchange_duality`, `turn29_rademacher_sign_involution_of_idempotent`.
+     - **Turns 30–32**: `turn30_sl2_ads3_killing_maurer_cartan_and_cartan_metric`, `turn31_fermionic_cpt_sakharov_commutator_and_bogoliubov_excess`, `turn31_semilinear_sheet_evolution_and_riccati_bridge`, `turn32_lorentz_det_bondi_vs_janus_tov_aporia_and_bimetric_bridge`, `full32TurnOperator_extension_identities`, and `full32Turn_master_coagulated_synthesis`.
+2. **Three-Post `mcbal.github.io` Kinetic Vector-Spin Corridor & 8-Stage `solve et coagula` Poset (`𝔐₁ ≺ ⋯ ≺ 𝔐₈`)**:
+   - Cached in `external_refs/mcbal_blog/` and formalized in [`McbalLargeDAsymmetricClosureCorridor.lean`](../lean/InfoGeometry/LLM/McbalLargeDAsymmetricClosureCorridor.lean), wired into [`McbalFullNativeCorridor.lean`](../lean/InfoGeometry/LLM/McbalFullNativeCorridor.lean) and `Part XXX` of [`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean).
+
+### 2026-11-05: 7-Stage Maurer–Cartan Spectral Annihilator `𝒦_γ₅ = I - ad_P²`, Linear Death of Odd Maurer–Cartan Forms & Multiplicative Defect Curvature Poset (`𝔎₁ ≺ ⋯ ≺ 𝔎₇`)
+
+In [`MaurerCartanSpectralAnnihilatorDefectPoset.lean`](../lean/InfoGeometry/Canonical/MaurerCartanSpectralAnnihilatorDefectPoset.lean),
+the 7-stage Acyclic Causal Poset `MaurerCartanAnnihilatorStage` ($\mathfrak{K}_1 \prec \mathfrak{K}_2 \prec \mathfrak{K}_3 \prec \mathfrak{K}_4 \prec \mathfrak{K}_5 \prec \mathfrak{K}_6 \prec \mathfrak{K}_7$)
+is formalized in native Mathlib over `[Ring B]`:
+
+- **$\mathfrak{K}_1$ (`archetype_K1_tripotent_chiral_derivation`)**:
+  Tripotent derivation law $\mathrm{ad}_P^3 = \mathrm{ad}_P$ (`peirceGradingDeriv³ = peirceGradingDeriv`) and $\mathrm{ad}_{\gamma_5}^3 = 4\,\mathrm{ad}_{\gamma_5}$.
+- **$\mathfrak{K}_2$ (`chiralAnnihilator`, `oddProjector`, `archetype_K2_idempotent_annihilator_filter`)**:
+  Division-free chiral spectral annihilator $\mathcal{K}_{\gamma_5}(X) = X - [P, [P, X]] = \mathrm{evenGrade}_P(X)$, odd projector $\mathcal{P}_{\mathrm{odd}}(X) = [P, [P, X]] = \mathrm{oddGrade}_P(X)$, integer-scaled identities $2\mathcal{K}_{\gamma_5}(X) = X + \gamma_5 X \gamma_5$ and $4\mathcal{K}_{\gamma_5}(X) = 4X - [\gamma_5, [\gamma_5, X]]$, and complementary idempotency.
+- **$\mathfrak{K}_3$ (`archetype_K3_linear_annihilation_of_odd_maurer_cartan_forms`)**:
+  Linear annihilation of odd Maurer–Cartan 1-forms $\mathcal{K}_{\gamma_5}(N_\pm) = \mathcal{K}_{\gamma_5}(J) = \mathcal{K}_{\gamma_5}(\Phi) = 0$ and composite products $\mathcal{K}_{\gamma_5}(\mathfrak{k}\cdot\mathfrak{p}) = \mathcal{K}_{\gamma_5}(\mathfrak{p}\cdot\mathfrak{k}) = 0$, alongside exact preservation $\mathcal{K}_{\gamma_5}(V) = V$ and $\mathcal{K}_{\gamma_5}(\Sigma) = \Sigma$.
+- **$\mathfrak{K}_4$ (`chiralAnnihilatorMulDefect`, `chiralAnnihilator_mul_defect_eq_oddProjector_mul`, `qgt_as_chiralAnnihilator_multiplicative_defect`, `archetype_K4_multiplicative_defect_curvature_theorem`)**:
+  Universal Multiplicative Defect Theorem $\mathcal{K}_{\gamma_5}(XY) - \mathcal{K}_{\gamma_5}(X)\mathcal{K}_{\gamma_5}(Y) = \mathcal{P}_{\mathrm{odd}}(X)\mathcal{P}_{\mathrm{odd}}(Y)$ and exact Quantum Geometric Tensor reconstruction (`qgtPlus`, `qgtMinus`, `genV`, `genSig`, `2 • genSig`) as the multiplicative failure of $\mathcal{K}_{\gamma_5}$ on the odd Maurer–Cartan forms.
+- **$\mathfrak{K}_5$ (`archetype_K5_maurer_cartan_orbit_gramian_and_bianchi_centrality`)**:
+  Filtering the Maurer–Cartan curvature $\mathcal{K}_{\gamma_5}(F_{\mathrm{MC}}) = V$, $\mathcal{P}_{\mathrm{odd}}(F_{\mathrm{MC}}) = J$, centralizer conservation $[J, V] = [\Phi, V] = 0$, and covariant Bianchi identity $D_{P,A,C}(V) = 0$.
+- **$\mathfrak{K}_6$ (`cartanSplitConnection`, `riemannCartanCurvature`, `elieCartanTorsion`, `archetype_K6_elie_cartan_torsion_annihilation_and_macdowell_mansouri`)**:
+  Exact Élie Cartan torsion annihilation $\mathcal{K}_{\gamma_5}(\mathcal{T}_{12}) = 0$, Riemann–Cartan curvature isolation $\mathcal{K}_{\gamma_5}([\mathcal{A}_1, \mathcal{A}_2]) = \mathcal{R}_{12}$, and MacDowell–Mansouri Lie-bracket defect $\mathcal{K}_{\gamma_5}([\mathcal{A}_1, \mathcal{A}_2]) - [\mathcal{K}_{\gamma_5}(\mathcal{A}_1), \mathcal{K}_{\gamma_5}(\mathcal{A}_2)] = [\Phi_1, \Phi_2]$.
+- **$\mathfrak{K}_7$ (`archetype_K7_banks_casher_resolvent_drift_annihilation`, `maurer_cartan_spectral_annihilator_defect_master_synthesis`, `maurer_cartan_annihilator_defect_matrix_witness`)**:
+  Kills the odd Peirce–Dirac resolvent drift $\mathcal{K}_{\gamma_5}(-J R_\eta) = 0$, isolates the Banks–Casher kernel $\mathcal{K}_{\gamma_5}((J + \eta)^{-1}) = \eta R_\eta$, proves $\tau((J + \eta)^{-1}) = \tau(\mathcal{K}_{\gamma_5}((J + \eta)^{-1})) = \tau(\eta R_\eta)$, and supplies concrete $2 \times 2$ matrix witnesses (`Trap T16` & `T17`), wired into `Part XXXI` of [`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean).
+
+### 2026-11-06: 8-Stage Chiral Condensate, Operator GMOR, Peirce–Dirac Resolvent, Algebraic Banks–Casher Trace & NJL Gap Bifurcation Poset (`χ₁ ≺ ⋯ ≺ χ₈`)
+
+In [`ChiralCondensateGMORBanksCasherNJLPoset.lean`](../lean/InfoGeometry/Canonical/ChiralCondensateGMORBanksCasherNJLPoset.lean),
+the 8-stage Acyclic Causal Poset `ChiralCondensateEpistemicStage` ($\chi_1 \prec \chi_2 \prec \chi_3 \prec \chi_4 \prec \chi_5 \prec \chi_6 \prec \chi_7 \prec \chi_8$)
+is formalized in native Mathlib over `[Ring B]` and `[StarRing B]`:
+
+- **$\chi_1$ (`archetype_chi1_chiral_parity_cut_and_socratic_involution_defect`)**:
+  Chiral involution $\gamma_5(P)^2 = 1$, anticommutation $\{\gamma_5, \Phi\} = \{\gamma_5, J\} = 0$, and Socratic involution defect $(\gamma_5 + \Phi)^2 - 1 = V$.
+- **$\chi_2$ (`archetype_chi2_gauge_orbit_gramian_and_maurer_cartan_bianchi`)**:
+  Gauge-orbit commutator Gramian `orbitMassMode P a = -[P, a]^2 = genV P a a` and Maurer–Cartan Bianchi conservation $D_{P,a,a}(V) = 0$.
+- **$\chi_3$ (`archetype_chi3_double_commutator_goldstone_vortex_split`)**:
+  Double-commutator Goldstone zero mode $[\Phi, [\Phi, \Phi]] = 0$ and vortex/axial mass $m^2 = 4V$ (`[\Phi, [\Phi, J]] = -4VJ`, `[\Phi, [\Phi, \gamma_5]] = -4V\gamma_5`).
+- **$\chi_4$ (`archetype_chi4_symmetric_pair_and_native_pion_car`)**:
+  Symmetric-pair coset $[\mathfrak{k}, \mathfrak{p}] \subseteq \mathfrak{p}$, $[\mathfrak{p}, \mathfrak{p}] \subseteq \mathfrak{k}$, and native $(\pi^+, \pi^-, \pi^0)$ CAR algebra over $M_2(\mathbb{C})$.
+- **$\chi_5$ (`archetype_chi5_cl55_majorana_chiral_defect_and_bdg_andreev`)**:
+  Universal $2 \times 2$ star-BdG Hamiltonian square over `Matrix (Fin 2) (Fin 2) B` and $\mathrm{Cl}(5,5)$ CAR 5-mode Majorana chiral commutator defect.
+- **$\chi_6$ (`archetype_chi6_higgs_gmor_dual_double_commutator`, `expectation_gmor_trace_identity`)**:
+  Operator Gell-Mann–Oakes–Renner (GMOR) Ward–Takahashi identity $[\gamma_5, [\gamma_5, m_q \Phi]] = 4 m_q \Phi$ and linear expectation trace identity.
+- **$\chi_7$ (`peirceDiracResolvent_two_sided_inverse`, `algebraic_banks_casher_resolvent_trace_identity`)**:
+  Two-sided Peirce–Dirac resolvent $(J + \eta)^{-1} = (-J + \eta)(V + \eta^2)^{-1}$ and characteristic-free algebraic Banks–Casher trace reduction $\tau((J + \eta)^{-1}) = \tau(\eta(V + \eta^2)^{-1})$.
+- **$\chi_8$ (`njl_chiral_limit_bifurcation_iff`, `chiral_condensate_gmor_banks_casher_njl_master_synthesis`)**:
+  Self-consistent NJL chiral-limit gap bifurcation $\eta_s(1 - g_{\mathrm{NJL}} I_{\mathrm{BC}}) = 0 \iff \eta_s = 0 \lor g_{\mathrm{NJL}} I_{\mathrm{BC}} = 1$.
+
+### 2026-11-06: 8-Stage Operator Einstein–Cartan Gravity, Chiral Einstein Anomaly, Spin Frame Dragging, Soldered Cartan–Ehresmann Split & Fisher Cramér–Rao Poset (`𝔈₁ ≺ ⋯ ≺ 𝔈₈`)
+
+In [`EinsteinCartanChiralAnomalyFrameDraggingPoset.lean`](../lean/InfoGeometry/Canonical/EinsteinCartanChiralAnomalyFrameDraggingPoset.lean),
+the 8-stage Acyclic Causal Poset `EinsteinCartanAnomalyStage` ($\mathfrak{E}_1 \prec \mathfrak{E}_2 \prec \mathfrak{E}_3 \prec \mathfrak{E}_4 \prec \mathfrak{E}_5 \prec \mathfrak{E}_6 \prec \mathfrak{E}_7 \prec \mathfrak{E}_8$)
+is formalized in native Mathlib over `[Ring B]`:
+
+- **$\mathfrak{E}_1$ & $\mathfrak{E}_2$ (`archetype_E1_chiral_cut_and_maurer_cartan_solder_forms`, `archetype_E2_operator_fisher_metric_and_spin_dipole_curvature`)**:
+  Chiral cut $S_P = 2P - 1$, solder forms $(J, \Phi)$, Fisher metric $V = \Phi^2 = -J^2 = \{N_+, N_-\}$, and spin-dipole curvature $\Sigma = J\Phi = -\Phi J = [N_+, N_-]$.
+- **$\mathfrak{E}_3$ & $\mathfrak{E}_4$ (`archetype_E3_para_kahler_lock_and_levi_civita_aporia`, `chiralEinsteinAnomaly`, `archetype_E4_chiral_einstein_anomaly_cocycle`)**:
+  Para-Kähler lock $V = S_P \Sigma$, Levi-Civita aporia ($[\Phi, J] = 0 \implies 2\Sigma = 0 \land 2V = 0$), and Chiral Einstein Anomaly $S_P[\Phi, J] = [\Phi, J]S_P = -2V$.
+- **$\mathfrak{E}_5$ & $\mathfrak{E}_6$ (`dressedSpinTorsion`, `archetype_E5_spin_frame_dragging_and_dressed_torsion`, `solderedConnPhi`, `solderedConnJ`, `jordanAssociator`, `archetype_E6_soldered_cartan_ehresmann_and_jordan_associator`)**:
+  Spin frame dragging $[\Sigma, \Phi] = 2VJ$, $[\Sigma, J] = 2V\Phi$, dressed torsion $\mathcal{T}_\Sigma(\Phi) = (1 + 2V)J$, soldered Cartan–Ehresmann split $[\Sigma + \Phi, \Sigma + J] = -2\Sigma + 2V(\Phi - J)$, and Grade-3 Jordan associator $\mathcal{A}(N_-, N_+, N_+) = 2V N_+$.
+- **$\mathfrak{E}_7$ & $\mathfrak{E}_8$ (`archetype_E7_general_einstein_cartan_split_and_bianchi`, `archetype_E8_centrifugal_dragging_and_fisher_cramer_rao`, `einstein_cartan_chiral_anomaly_frame_dragging_master_synthesis`, `einstein_cartan_frame_dragging_matrix_witness`)**:
+  General Einstein–Cartan gauge split, non-Abelian Bianchi–Cartan identity, 4th-order centrifugal frame dragging $[\Sigma, [\Sigma, \Phi]] = 4V^2\Phi$, and Hilbert-space operator Cramér–Rao bound, wired into `Part XXXIII` of [`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean).
+
+### 2026-11-06: 8-Stage Operator Surprisal Idempotent Normal Form, Relative Volume Resolvent Gradient, Master Clocking Identity, 5-Graded Kantor Sandwich & BKM Metriplectic Closure Poset (`𝔖₁ ≺ ⋯ ≺ 𝔖₈`)
+
+In [`ModularSurprisalVolumeClockingBKMClosurePoset.lean`](../lean/InfoGeometry/Canonical/ModularSurprisalVolumeClockingBKMClosurePoset.lean),
+the 8-stage Acyclic Causal Poset `ModularSurprisalClockingStage` ($\mathfrak{S}_1 \prec \mathfrak{S}_2 \prec \mathfrak{S}_3 \prec \mathfrak{S}_4 \prec \mathfrak{S}_5 \prec \mathfrak{S}_6 \prec \mathfrak{S}_7 \prec \mathfrak{S}_8$)
+is formalized in native Mathlib over `[Ring B]` and `[Algebra ℝ B]`:
+
+- **$\mathfrak{S}_1$ & $\mathfrak{S}_2$ (`sheetThermalState`, `sheetSurprisalOp`, `realSheetSurprisalOp`, `archetype_S1_supercolor_vacuum_deformation_and_frozen_clock`, `archetype_S2_sheet_surprisal_idempotent_normal_form`)**:
+  Isotropic sheet collapse $pP + p(1-P) = p$, frozen clock $[s_0, X] = 0$, Grassmannian strain $(P + \Phi)^2 - (P + \Phi) = V$, Zorn split-octonion supercolor deficit, orthogonal idempotent power law $(pP + q(1-P))^{n+1} = p^{n+1}P + q^{n+1}(1-P)$, division-free chiral normal form $2\mathcal{K}_{\mathrm{sheet}} = (s_p + s_q)I - \Delta s\,S_P$, and exact real-logarithm normal form $\mathcal{K}_{\mathrm{sheet}}(p, q) = \bar{s}I - \frac{1}{2}\Delta s\,S_P$.
+- **$\mathfrak{S}_3$ (`volumeMetricDenom`, `volumeSurprisalGrad`, `two_sided_inv_comm_of_comm`, `archetype_S3_relative_volume_and_resolvent_surprisal_gradient`)**:
+  Automatic commutation of the two-sided resolvent $W_\beta = (1 + \beta V)^{-1}$ with $P$, $V$, and $\Phi$, odd chiral parity of $\nabla_\Phi \mathcal{K}_{\mathrm{vol}}(\beta) = 2\beta W_\beta \Phi \in \mathfrak{p}$, and linearized recovery $(1 + \beta V)\nabla_\Phi \mathcal{K}_{\mathrm{vol}}(\beta) = 2\beta\Phi$.
+- **$\mathfrak{S}_4$ & $\mathfrak{S}_5$ (`archetype_S4_modular_automorphism_precession_flow`, `archetype_S5_master_clocking_identity_and_thermal_harmonic_oscillator`)**:
+  Modular precession $[\mathcal{K}_{\mathrm{sheet}}, \Phi] = -\Delta s\,J$ and $[\mathcal{K}_{\mathrm{sheet}}, J] = -\Delta s\,\Phi$, the Master Clocking Identity $-[\Phi, [\Phi, J]] = -2[\Sigma, \Phi] = -4VJ$, and the thermal harmonic oscillator $[\mathcal{K}_{\mathrm{sheet}}, [\mathcal{K}_{\mathrm{sheet}}, \Phi]] = (\Delta s)^2 \Phi$.
+- **$\mathfrak{S}_6$ (`archetype_S6_five_graded_kantor_sandwich_and_fourth_order_harmonics`)**:
+  5-graded Kantor uncertainty sandwich $\mathrm{kantorG0}^2(X) - \{\mathrm{kantorGp2}, \mathrm{kantorGm2}\}(X) = \Sigma X \Sigma$ and $\mathrm{kantorG0}^2(X) + \{\mathrm{kantorGp2}, \mathrm{kantorGm2}\}(X) = V X V$, plus $[\Sigma, [\Sigma, \Phi]] = 4V^2\Phi$.
+- **$\mathfrak{S}_7$ & $\mathfrak{S}_8$ (`sheetResolventOp`, `bkmKernel`, `bkmSheetMetricOp`, `archetype_S7_bkm_relative_volume_metric_integration`, `archetype_S8_metriplectic_cramer_rao_closure`, `modular_surprisal_volume_clocking_bkm_master_synthesis`, `modular_surprisal_clocking_matrix_witness`)**:
+  Two-sheet resolvent sandwich collapse $\Phi(\rho + sI)^{-1}\Phi(\rho + sI)^{-1} = \frac{1}{(p+s)(q+s)}V$, exact partial-fraction decomposition, BKM logarithmic divided-difference metric evaluation, and metriplectic Cramér–Rao closure, wired into `Part XXXIV` of [`CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean).

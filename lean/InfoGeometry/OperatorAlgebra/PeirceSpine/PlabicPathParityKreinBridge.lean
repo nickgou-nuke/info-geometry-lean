@@ -168,8 +168,7 @@ theorem nested_zorn_three_corner_readouts_wallpaper_glide
     (hP₁ : P₁ * P₁ = P₁) (hP₂ : P₂ * P₂ = P₂)
     (hP₁star : star P₁ = P₁) (hP₂star : star P₂ = P₂)
     (hChain : idemLe P₁ P₂)
-    (hA₁ : star A₁ = C₁) (hA₂ : star A₂ = C₂)
-    (hSeamT : kreinReflect (shell2 P₁ P₂) T = T) :
+    (hA₁ : star A₁ = C₁) (hA₂ : star A₂ = C₂) :
     let E₁ := shell1 P₁
     let E₂ := shell2 P₁ P₂
     let E₃ := shell3 P₂

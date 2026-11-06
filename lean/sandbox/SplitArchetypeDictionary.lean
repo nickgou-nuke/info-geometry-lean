@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
@@ -11,6 +17,14 @@ representing the chiral volume element in split signature (e.g., $C\ell(1,1)$). 
 structure SplitInvolution (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] where
   epsilon : A
   sq_eq_one : epsilon * epsilon = 1
+
+instance instInvertibleTwoPUnit : Invertible (2 : PUnit) :=
+  ⟨0, Subsingleton.elim _ _, Subsingleton.elim _ _⟩
+
+/-- Constructive zero-ring model for `SplitInvolution PUnit PUnit`. -/
+def splitInvolutionPUnitModel : SplitInvolution PUnit PUnit where
+  epsilon := 1
+  sq_eq_one := mul_one 1
 
 namespace SplitInvolution
 

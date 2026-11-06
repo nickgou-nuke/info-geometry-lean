@@ -100,7 +100,7 @@ structure DeclNode where
   typeDigest : DAG.TermDigest.TermDigest
   /-- L1 nameless digest of the value, when the constant has one. -/
   valueDigest : Option DAG.TermDigest.TermDigest
-deriving ToJson
+deriving ToJson, Inhabited
 
 /-- Stream and file mode emit the same declaration record. -/
 abbrev StreamDecl := DeclNode
@@ -109,13 +109,13 @@ structure StreamEdge where
   src  : String
   dst  : String
   kind : String -- "type" | "value"
-deriving ToJson
+deriving ToJson, Inhabited
 
 structure DepEdge where
   src  : String
   dst  : String
   kind : String -- "type" | "value"
-deriving ToJson
+deriving ToJson, Inhabited
 
 structure Morphism where
   declName    : String
@@ -124,23 +124,23 @@ structure Morphism where
   codomainKey : String
   typeStr     : String
   doc         : String
-deriving ToJson
+deriving ToJson, Inhabited
 
 structure EdgeKey where
   src  : String
   dst  : String
   kind : String
-deriving BEq, Hashable
+deriving BEq, Hashable, Inhabited
 
 structure TypeNode where
   key     : String
   display : String
-deriving ToJson
+deriving ToJson, Inhabited
 
 structure FullGraph where
   nodes   : Array String
   forward : Array (Array (Nat × String))
-deriving ToJson
+deriving ToJson, Inhabited
 
 structure LeakageCountRow where
   label : String
@@ -163,7 +163,7 @@ structure EdgeLeakageReport where
   topExternalTargets : Array LeakageCountRow
   topInternalTargets : Array LeakageCountRow
   topUnknownTargets : Array LeakageCountRow
-deriving ToJson
+deriving ToJson, Inhabited
 
 /-- Schema version for the core indexer artifacts (meta.json, full_graph.json, decls/edges JSONL). -/
 def indexerSchemaVersion : Nat := 3
@@ -177,7 +177,7 @@ structure ArtifactMeta where
   typeCount     : Nat
   nsFilter      : String
   importRoot    : String
-deriving ToJson, FromJson
+deriving ToJson, FromJson, Inhabited
 
 structure IndexerState where
   decls     : Array DeclNode := #[]
@@ -186,11 +186,13 @@ structure IndexerState where
   morphisms : Array Morphism := #[]
   types     : Std.HashSet String := {}
   moduleFiles : Std.HashMap Name String := {}
+deriving Inhabited
 
 private structure PendingConstant where
   name : Name
   nameStr : String
   ci : ConstantInfo
+deriving Inhabited
 
 abbrev IndexerM := StateRefT IndexerState MetaM
 
@@ -435,6 +437,7 @@ private inductive DroppedDstClass where
 private structure EdgeFilterResult where
   keptEdges : Array DepEdge
   leakage : EdgeLeakageReport
+deriving Inhabited
 
 private def classifyDroppedDst
   (env : Environment)
@@ -758,13 +761,33 @@ def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environ
   IO.println "" -- flush
   IO.eprintln s!"[Indexer stream] emitted {consts.size} decls; dropped {dropped} edge(s) whose target is outside the indexed declaration set ({importRoot})"
 
+/-- Reuse Lake's resolved transitive artifacts when namespace roots occur in
+multiple packages. Plain `LEAN_PATH` lookup selects the first root directory,
+which need not own the requested module (for example the two `OAI` libraries).
+Conflicting setup maps are rejected instead of silently choosing an owner. -/
+def indexerImportArtifacts (imports : Array Import) : IO (NameMap ImportArtifacts) := do
+  let root ← IO.currentDir
+  let mut arts : NameMap ImportArtifacts := {}
+  for imp in imports do
+    let setupPath := modToFilePath (root / ".lake/build/ir") imp.module "setup.json"
+    if ← setupPath.pathExists then
+      let setup ← ModuleSetup.load setupPath
+      if setup.name != imp.module then
+        throw <| IO.userError s!"module mismatch in {setupPath}"
+      for (name, artifact) in setup.importArts do
+        if let some previous := arts.find? name then
+          if previous.toArrays != artifact.toArrays then
+            throw <| IO.userError s!"conflicting Lake artifact maps for {name}"
+        arts := arts.insert name artifact
+  return arts
+
 def indexerMain (args : List String) : IO UInt32 := do
   let importStart ← IO.monoMsNow
   let (importModsStr, nsPrefix, outDir, graphOut, structureOut, streaming) ←
     match args with
     | [m, ns, "--stream"] =>
         pure (m, ns, "", "", "", true)
-    | [m, ns, o, "--stream"] =>
+    | [m, ns, _o, "--stream"] =>
         pure (m, ns, "", "", "", true)
     | [m, ns, o] =>
         let graphOut := "artifacts/dag/full_graph.json"
@@ -780,7 +803,9 @@ def indexerMain (args : List String) : IO UInt32 := do
   if streaming then
     -- Streaming mode: output JSONL to stdout
     initSearchPath (← getBuildDir)
-    let env ← importModules (parseImports importModsStr) {} 0
+    let imports := parseImports importModsStr
+    let arts ← indexerImportArtifacts imports
+    let env ← importModules imports {} 0 (arts := arts)
     let coreContext : Core.Context := {
       fileName := "<Indexer-stream>",
       fileMap := default,
@@ -793,7 +818,9 @@ def indexerMain (args : List String) : IO UInt32 := do
     IO.FS.createDirAll timingLog.parent.get!
     try IO.FS.removeFile timingLog catch _ => pure ()
     initSearchPath (← getBuildDir)
-    let env ← importModules (parseImports importModsStr) {} 0
+    let imports := parseImports importModsStr
+    let arts ← indexerImportArtifacts imports
+    let env ← importModules imports {} 0 (arts := arts)
     let importStop ← IO.monoMsNow
     logTiming timingLog s!"importModules ({importModsStr})" (importStop - importStart)
     let coreContext : Core.Context := {

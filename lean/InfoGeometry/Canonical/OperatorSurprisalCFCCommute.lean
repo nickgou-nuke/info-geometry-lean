@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -22,6 +28,76 @@ theorem stateSurprisal_commutes_cfc (ρ : A) (f : ℝ → ℝ) :
   unfold stateSurprisal
   exact (cfc_commute_cfc Real.log f ρ).neg_left
 
+omit [PartialOrder A] [StarOrderedRing A] in
+/-- The real CFC logarithm of a positive two-sheet element has the expected
+idempotent normal form.  The carrier remains an arbitrary C⋆-algebra; the
+only spectral reduction is the `{0, 1}` spectrum of the self-adjoint
+idempotent `P`. -/
+theorem cfc_log_two_sheet (P : A) (hPstar : IsSelfAdjoint P)
+    (hPid : P * P = P) (p q : ℝ) (hp : 0 < p) (hq : 0 < q) :
+    cfc Real.log (p • P + q • (1 - P)) =
+      Real.log p • P + Real.log q • (1 - P) := by
+  let f : ℝ → ℝ := fun x => q + (p - q) * x
+  have hPid' : IsIdempotentElem P := hPid
+  have hspec : spectrum ℝ P ⊆ ({0, 1} : Set ℝ) :=
+    (isIdempotentElem_iff_spectrum_subset ℝ P hPstar).mp hPid'
+  have hf : ContinuousOn f (spectrum ℝ P) := by fun_prop
+  have hlogf : ContinuousOn Real.log (f '' spectrum ℝ P) := by
+    apply Real.continuousOn_log.mono
+    rintro y ⟨x, hx, rfl⟩
+    have hx01 := hspec hx
+    rcases Set.mem_insert_iff.mp hx01 with h0 | hx01
+    · simp [f, h0, ne_of_gt hq]
+    · rcases Set.mem_singleton_iff.mp hx01 with h1
+      simp [f, h1, ne_of_gt hp]
+  have hρ : p • P + q • (1 - P) = cfc f P := by
+    calc
+      p • P + q • (1 - P) = q • (1 : A) + (p - q) • P := by module
+      _ = cfc f P := by
+        dsimp [f]
+        rw [cfc_add P (fun _ => q) (fun x => (p - q) * x)
+          (by fun_prop) (by fun_prop), cfc_const q P hPstar,
+          cfc_const_mul_id (p - q) P hPstar]
+        rw [Algebra.algebraMap_eq_smul_one]
+  rw [hρ, ← cfc_comp' Real.log f P hlogf hf hPstar]
+  have hcongr : (spectrum ℝ P).EqOn (Real.log ∘ f)
+      (fun x => Real.log q + (Real.log p - Real.log q) * x) := by
+    intro x hx
+    have hx01 := hspec hx
+    rcases Set.mem_insert_iff.mp hx01 with h0 | hx01
+    · simp [Function.comp_apply, f, h0]
+    · rcases Set.mem_singleton_iff.mp hx01 with h1
+      have hf1 : f 1 = p := by dsimp [f]; ring
+      rw [Function.comp_apply, h1, hf1]
+      change Real.log p = Real.log q + (Real.log p - Real.log q) * 1
+      rw [mul_one]
+      ring
+  change cfc (Real.log ∘ f) P = _
+  rw [cfc_congr hcongr,
+    cfc_add P (fun _ => Real.log q)
+      (fun x => (Real.log p - Real.log q) * x)
+      (by fun_prop) (by fun_prop),
+    cfc_const (Real.log q) P hPstar,
+    cfc_const_mul_id (Real.log p - Real.log q) P hPstar]
+  have hnormal :
+      algebraMap ℝ A (Real.log q) + (Real.log p - Real.log q) • P =
+        Real.log p • P + Real.log q • (1 - P) := by
+    rw [Algebra.algebraMap_eq_smul_one]
+    module
+  exact hnormal
+
+omit [PartialOrder A] [StarOrderedRing A] in
+/-- The CFC state surprisal `-cfc Real.log ρ` agrees with the algebraic
+two-sheet surprisal coefficients when `ρ` is supported by a self-adjoint
+idempotent cut. -/
+theorem stateSurprisal_two_sheet (P : A) (hPstar : IsSelfAdjoint P)
+    (hPid : P * P = P) (p q : ℝ) (hp : 0 < p) (hq : 0 < q) :
+    stateSurprisal (p • P + q • (1 - P)) =
+      (-Real.log p) • P + (-Real.log q) • (1 - P) := by
+  unfold stateSurprisal
+  rw [cfc_log_two_sheet P hPstar hPid p q hp hq]
+  simp only [neg_add, neg_smul]
+
 theorem cfc_log_commutes_rpow (ρ : A) (hρ : 0 ≤ ρ) (β : ℝ) :
     Commute (cfc Real.log ρ) (ρ ^ β) := by
   rw [CFC.rpow_eq_cfc_real hρ]
@@ -42,6 +118,27 @@ theorem stateSurprisal_isSelfAdjoint (ρ : A) :
     IsSelfAdjoint (stateSurprisal ρ) := by
   unfold stateSurprisal
   exact IsSelfAdjoint.cfc.neg
+
+/-- Operator surprisal is natural under every complex star-algebra equivalence.
+This gives the precise covariance statement for a change of operator-algebra
+perspective; it does not assert that the observable is fixed by that action. -/
+theorem stateSurprisal_starAlgEquiv (e : A ≃⋆ₐ[ℂ] A) (ρ : A)
+    (hρ : IsSelfAdjoint ρ)
+    (hlog : ContinuousOn Real.log (spectrum ℝ ρ)) :
+    stateSurprisal (e ρ) = e (stateSurprisal ρ) := by
+  change -cfc Real.log (e.toStarAlgHom ρ) =
+    e.toStarAlgHom (-cfc Real.log ρ)
+  have heρ : IsSelfAdjoint (e.toStarAlgHom ρ) := by
+    calc
+      star (e.toStarAlgHom ρ) = e.toStarAlgHom (star ρ) := by
+        rw [map_star]
+      _ = e.toStarAlgHom ρ := by rw [hρ]
+  have hmap := e.toStarAlgHom.map_cfc Real.log ρ hlog
+    (by fun_prop) hρ heρ
+  calc
+    -cfc Real.log (e ρ) = -e.toStarAlgHom (cfc Real.log ρ) := by
+      simpa using congrArg (fun x : A => -x) hmap.symm
+    _ = e.toStarAlgHom (-cfc Real.log ρ) := by rw [map_neg]
 
 theorem exp_neg_stateSurprisal (ρ : A) (hρ : IsStrictlyPositive ρ) :
     NormedSpace.exp (- stateSurprisal ρ) = ρ := by
@@ -159,6 +256,7 @@ theorem stateSurprisal_commutes_petzKernel_of_commuting_states
 theorem rho_commutes_relativeLogDensity_of_commuting_states
     (ρ σ : A) (hρ : 0 ≤ ρ) (hρσ : Commute ρ σ) :
     Commute ρ (relativeLogDensity ρ σ) := by
+  have hρsa : IsSelfAdjoint ρ := IsSelfAdjoint.of_nonneg hρ
   unfold relativeLogDensity
   have hρlogρ : Commute ρ (cfc Real.log ρ) := by
     have h := cfc_commute_cfc (fun x : ℝ => x) Real.log ρ

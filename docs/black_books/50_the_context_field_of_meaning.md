@@ -66,10 +66,10 @@ The chapter now binds directly to theorem-level obligations:
 (`lean/InfoGeometry/Canonical/YangMillsContinuum.lean`)
 
 6. Spectral-isolation to Drazin birth (current forge obligations):
-`InfoGeometry.Canonical.DrazinInfiniteCore.HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum`
-and
-`InfoGeometry.Canonical.DrazinInfiniteCore.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum`
-(`lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean`)
+`InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum`
+and `InfoGeometry.Canonical.DrazinSpectralBridge.exists_drazinInverse_of_finiteAscentDescentAtZero`
+(`lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean`); finite ascent/descent alone
+yields the Drazin inverse, and the converse spectral statement is open.
 
 ### VI. THE FOG HORIZON (THE LIMIT OF EXTRAPOLATION)
 When the vessel is exponential, linear prophecy becomes fragile glass.

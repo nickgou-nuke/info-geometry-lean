@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.LLM.BogoliubovSinkhornRouting
 import InfoGeometry.Inference.PoissonSinkhornPrimalDual
@@ -17,6 +22,7 @@ import InfoGeometry.InformationGeometry.BKMMetricModularBridge
 import InfoGeometry.Canonical.BayesianThermoMetricHodgeBridge
 import InfoGeometry.Dynamics.WassersteinProximalBridge
 import InfoGeometry.Canonical.DikinFiniteOrbitColimit
+import InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor
 
 noncomputable section
 
@@ -141,5 +147,35 @@ alias contractive_orbit_stays_in_nested_dikin_ellipsoids :=
 /-- The operator BKM-Dikin quadratic form is strictly positive off zero. -/
 alias bkm_dikin_quadratic_is_positive_off_zero :=
   InfoGeometry.Canonical.DikinFiniteOrbitColimit.bkmDikinQuadratic_pos_of_ne_zero
+
+/-! ## Large-$D$ asymmetric kinetic vector-spin closure (`mcbal` Posts 1–3) & 8-stage LogCFT poset -/
+
+/-- Large-$D$ vMF saddle-point response norm, radial slack, and conjugate-field inverse recovery (Post 1). -/
+alias largeD_vmf_response_norm_and_inverse_recovery :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.mcbal_post1_largeD_vmf_response_norm_and_inverse_recovery
+
+/-- Pre-norm conjugate-field residual bus identity and Quench-and-Relax entropy budget (Post 2). -/
+alias prenorm_residual_bus_and_quench_relax_entropy_budget :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.mcbal_post2_prenorm_residual_bus_and_quench_relax_entropy_budget
+
+/-- Stochastic Drazin-index-1 semisimplicity and absence of length-2 Jordan chains. -/
+alias stochastic_drazin_index_one_semisimplicity_aporia :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.stageM2_stochastic_drazin_index_one_semisimplicity_aporia
+
+/-- Exact large-$D$ sphere norm conservation $a_i^2 r_i^2 + b_i = R^2$ for asymmetric kinetic vector spins (Post 3). -/
+alias exact_largeD_sphere_norm_conservation :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.mcbal_post3_exact_sphere_norm_conservation
+
+/-- Three-level closure hierarchy ($K = 1$ agreement vs. $K = 2$ shared-input covariance defect) (Post 3). -/
+alias three_level_closure_hierarchy_k1_vs_k2_defect :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.mcbal_post3_three_level_closure_hierarchy_k1_vs_k2_defect
+
+/-- Non-commutative operator covariance closure and $[G, J]$ gain-mixing order defect (Post 3). -/
+alias noncommutative_covariance_closure_and_gain_defect :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.stageM3_noncommutative_covariance_closure_and_gain_defect
+
+/-- Master 8-stage `solve et coagula` synthesis from `mcbal` kinetic spin-routing to Krein–Yangian LogCFT. -/
+alias mcbal_to_krein_yangian_logcft_master_synthesis :=
+  InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor.mcbal_to_krein_yangian_logcft_master_synthesis
 
 end InfoGeometry.LLM.McbalFullNativeCorridor

@@ -139,6 +139,27 @@ theorem upper_anomaly_left_reference_pairing (P A C Z : B) :
   simp only [upperHomotopeBracket, opKantorAnomaly, comm, qgtMinus]
   noncomm_ring
 
+/-- The Lie pairing of the upper Kantor anomaly with its reference lower
+corner is the mixed spin/metric commutator. The order is fixed by the two
+corner pairings above. -/
+theorem upper_anomaly_reference_commutator {P : B} (hP : P * P = P)
+    (A C Z : B) :
+    comm (upperHomotopeBracket P C A Z) (coneMinus P C) =
+      comm (genSig P A C) (genV P Z C) := by
+  simp only [upperHomotopeBracket, opKantorAnomaly, comm, genSig, genV,
+    anticomm, conePlus, coneMinus]
+  peirce_nf hP
+
+/-- The Jordan pairing of the upper Kantor anomaly with its reference lower
+corner is the commutator of the two uncertainty generators. -/
+theorem upper_anomaly_reference_anticommutator {P : B} (hP : P * P = P)
+    (A C Z : B) :
+    anticomm (upperHomotopeBracket P C A Z) (coneMinus P C) =
+      comm (genSig P A C) (genSig P Z C) := by
+  simp only [upperHomotopeBracket, opKantorAnomaly, comm, anticomm,
+    genSig, conePlus, coneMinus]
+  peirce_nf hP
+
 /-- The lower reference corner intertwines the upper and lower commutators.
 No inverse or equivalence of the two corners is assumed. -/
 theorem reference_corner_commutator_intertwines (P A C Z : B) :

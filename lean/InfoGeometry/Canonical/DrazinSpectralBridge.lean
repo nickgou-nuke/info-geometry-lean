@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.Spectrum
@@ -27,29 +32,6 @@ variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace
 variable {T : E →L[𝕂] E}
 
 /--
-Bridge constructor for the finite ascent/descent lane at spectral point `0`.
-
-This is an explicit witness re-projection surface:
-- it records that the spectral isolation witness `h` is in scope;
-- it does not hide any additional algebraic requirements.
--/
-@[rep_depth operator]
-noncomputable def HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum
-    (_h : ZeroIsolatedInSpectrum T)
-    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
-    HasFiniteAscentDescentAtZero T.toLinearMap :=
-  hFinite
-
-/--
-The finite ascent/descent bridge constructor is definitional on the finite witness.
--/
-@[rep_depth operator]
-theorem HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq
-    (h : ZeroIsolatedInSpectrum T)
-    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
-    HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum (T := T) h hFinite = hFinite := rfl
-
-/--
 Bridge constructor for the full infinite-dimensional Drazin assumption package.
 
 This definition is intentionally explicit: every nontrivial algebraic field is
@@ -62,8 +44,7 @@ noncomputable def DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum
     (hClassical : HasClassicalRieszDecompositionAtZero T)
     (hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
     DrazinInfiniteAssumptions T where
-  finite_ascent_descent :=
-    HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum h hFinite
+  finite_ascent_descent := hFinite
   zero_isolated_spectrum := h
   classical_riesz := hClassical
   generalized_riesz := hGeneralized
@@ -121,29 +102,25 @@ theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized
   rfl
 
 /--
-Constructive spectral bridge:
-from isolation at `0` plus finite ascent/descent, recover a Drazin witness.
+Constructive spectral bridge: finite ascent/descent at `0` alone recovers a
+Drazin witness.  Spectral isolation at `0` is not needed for this implication,
+so it is not taken as a hypothesis.
 -/
 @[rep_depth operator]
-theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
-    (_h : ZeroIsolatedInSpectrum T)
+theorem exists_drazinInverse_of_finiteAscentDescentAtZero
     (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
-    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T.toLinearMap TD k := by
-  exact
-    DrazinInfiniteCore.exists_drazinInverse_of_finiteAscentDescent_constructive
-      (T := T.toLinearMap) hFinite
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T.toLinearMap TD k :=
+  DrazinInfiniteCore.exists_drazinInverse_of_finiteAscentDescent_constructive
+    (T := T.toLinearMap) hFinite
 
 /--
-The bundled spectral bridge package carries a canonical Drazin witness.
+The bundled spectral package carries a Drazin witness, extracted from its
+finite ascent/descent field.
 -/
 @[rep_depth operator]
-theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_package
-    (h : ZeroIsolatedInSpectrum T)
-    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap)
-    (_hClassical : HasClassicalRieszDecompositionAtZero T)
-    (_hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
-    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T.toLinearMap TD k := by
-  exact exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
-    (T := T) h hFinite
+theorem exists_drazinInverse_of_drazinInfiniteAssumptions
+    (A : DrazinInfiniteAssumptions T) :
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T.toLinearMap TD k :=
+  exists_drazinInverse_of_finiteAscentDescentAtZero A.finite_ascent_descent
 
 end InfoGeometry.Canonical.DrazinSpectralBridge

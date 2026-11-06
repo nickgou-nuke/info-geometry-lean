@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RealHestenesKreinHomology
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
@@ -25,10 +30,11 @@ variable {C : Type*} [AddCommGroup C] [Module ℝ C]
 def isDiracKahlerPropagator (D G : Module.End ℝ C) (k : ℕ) : Prop :=
   IsDrazinInverse D G k
 
-/- The Drazin core and complementary readouts decompose the identity. -/
+/- The Drazin core and complementary readouts decompose the identity.  This is the
+definitional identity `D * G + (1 - D * G) = 1`; it holds for any `D, G` and uses no
+Drazin or propagator hypothesis. -/
 theorem dirac_drazin_projection_decomposition
-    (D G : Module.End ℝ C) (k : ℕ)
-    (hProp : isDiracKahlerPropagator D G k) :
+    (D G : Module.End ℝ C) :
     D * G + complementaryProjection D G = 1 := by
   simpa [InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection] using
     (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection

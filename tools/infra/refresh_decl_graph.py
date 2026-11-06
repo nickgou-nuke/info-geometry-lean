@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -28,6 +29,11 @@ from tools.infra.build import (
     compute_lean_source_hash,
     run_locked_prebuild,
 )
+from tools.infra.decl_graph_generation import (
+    validate_generation_counts,
+    validate_generation_metadata,
+    validate_generation_id,
+)
 from tools.infra.timings import write_indexer_timing_sidecar
 from tools.pathing import (
     default_decl_graph_file,
@@ -44,24 +50,102 @@ from tools.infra.arango_env import (
 from igf.graph.decl_schema import decl_key, edge_key
 
 
+def validate_stream_record(doc: object, decl_collection: str) -> None:
+    """Validate identity-bearing fields before normalization or database writes.
+
+    Accept declaration records, src/dst edges, and legacy _from/_to edges.
+    Extra compiler metadata is preserved; this is not full fingerprint-schema
+    validation. Blank stream lines remain legal (the indexer emits a flush line).
+    """
+    if not isinstance(doc, dict):
+        raise ValueError("stream record must be a JSON object")
+    edge = any(field in doc for field in ("src", "dst", "_from", "_to"))
+    def nonempty(field: str) -> str:
+        value = doc.get(field)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"stream record has invalid {field}")
+        return value
+    if edge:
+        if "name" in doc:
+            raise ValueError("ambiguous declaration/edge record")
+        if nonempty("kind") not in ("type", "value"):
+            raise ValueError("invalid dependency edge kind")
+        named = "src" in doc or "dst" in doc
+        addressed = "_from" in doc or "_to" in doc
+        if named:
+            src, dst = nonempty("src"), nonempty("dst")
+            if "_key" in doc and doc["_key"] != edge_key(src, doc["kind"], dst):
+                raise ValueError("edge key disagrees with dependency identity")
+        if addressed:
+            for field in ("_from", "_to"):
+                value = nonempty(field)
+                collection, separator, key = value.partition("/")
+                if collection != decl_collection or not separator or not key or "/" in key:
+                    raise ValueError("edge endpoint is outside selected declaration collection")
+            if named and (doc["_from"] != f"{decl_collection}/{decl_key(src)}"
+                          or doc["_to"] != f"{decl_collection}/{decl_key(dst)}"):
+                raise ValueError("edge endpoint disagrees with named identity")
+        if "_key" in doc:
+            nonempty("_key")
+    else:
+        name = nonempty("name")
+        for field in ("key", "_key"):
+            if field in doc and doc[field] != decl_key(name):
+                raise ValueError("declaration key disagrees with name")
+
+
 def stream_to_arango(
     root: Path, import_root: str, namespace: str, database: str, run_mode: str,
     generation_id: str | None = None, build_fingerprint: str | None = None,
+    expected_source_hash: str | None = None, expected_olean_hash: str | None = None,
 ) -> int:
     """Stream JSONL from dagIndexer directly to ArangoDB."""
+    if generation_id is not None:
+        try:
+            validate_generation_id(generation_id)
+            validate_generation_metadata(build_fingerprint, import_root, namespace)
+        except ValueError as exc:
+            print(f"[refresh-decl-graph] {exc}", file=sys.stderr)
+            return 1
     load_repo_arango_env(root)
+
+    # `HomotopyHypothesis` and this checkout both expose an `OAI` library.
+    # Lake puts dependency paths before the root path, so an indexer process
+    # using the default order can resolve the partial dependency OAI library
+    # and fail to load root-owned OAI declarations. Put the already-built root
+    # library first for the indexer process while preserving Lake's remaining
+    # search path.
+    path_result = subprocess.run(
+        ["lake", "env", "printenv", "LEAN_PATH"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    root_lean_path = str(root / ".lake" / "build" / "lib" / "lean")
+    lake_paths = [
+        path for path in path_result.stdout.strip().split(os.pathsep)
+        if path and path != root_lean_path
+    ]
+    lean_path = os.pathsep.join([root_lean_path, *lake_paths])
 
     # Build the streaming command
     if run_mode == "exe":
-        cmd = [
+        base_cmd = [
             "lake", "env",
             str(root / ".lake" / "build" / "bin" / "dagIndexer"),
             import_root, namespace, "--stream"
         ]
     else:
-        cmd = ["lake", "env", "lean", "--run", "lean/DAG/Indexer.lean", import_root, namespace, "--stream"]
+        base_cmd = ["lake", "env", "lean", "--run", "lean/DAG/Indexer.lean", import_root, namespace, "--stream"]
+    cmd = base_cmd[:2] + ["env", f"LEAN_PATH={lean_path}"] + base_cmd[2:]
 
     print(f"[refresh-decl-graph] streaming: {' '.join(cmd)}", flush=True)
+
+    # Check the executable before creating or truncating any target collection.
+    if run_mode == "exe" and not Path(base_cmd[2]).is_file():
+        print(f"Error: DAG indexer executable not found: {base_cmd[2]}", file=sys.stderr)
+        return 1
 
     # Connect to ArangoDB
     try:
@@ -116,13 +200,20 @@ def stream_to_arango(
             line = line.strip()
             if not line:
                 continue
-            try:
-                doc = json.loads(line)
-            except json.JSONDecodeError:
-                continue
+            doc = json.loads(line)
+            validate_stream_record(doc, decl_collection)
+            if not isinstance(doc, dict):
+                raise ValueError("indexer record must be a JSON object")
 
             # Determine if it's a decl or edge by checking for src/dst fields (streaming format) or _from/_to (file format)
             if ("_from" in doc and "_to" in doc) or ("src" in doc and "dst" in doc):
+                if generation_id and not all(
+                    isinstance(doc.get(field), str) and doc[field]
+                    for field in ("src", "dst")
+                ):
+                    raise ValueError("immutable edges require nonempty src/dst declaration names")
+                if generation_id and doc.get("kind") not in ("type", "value"):
+                    raise ValueError("immutable dependency edge has an unknown kind")
                 # Convert streaming format (src/dst/kind) to ArangoDB format (_from/_to)
                 if "src" in doc and "dst" in doc:
                     # Shared schema keys (igf.graph.decl_schema == DAG.Schema in Lean);
@@ -130,7 +221,7 @@ def stream_to_arango(
                     doc["kind"] = doc.get("kind", "type")
                     doc["_from"] = f"{decl_collection}/{decl_key(doc['src'])}"
                     doc["_to"] = f"{decl_collection}/{decl_key(doc['dst'])}"
-                    doc.setdefault("_key", edge_key(doc["src"], doc["kind"], doc["dst"]))
+                    doc["_key"] = edge_key(doc["src"], doc["kind"], doc["dst"])
                 edge_batch.append(doc)
                 if len(edge_batch) >= batch_size:
                     # Endpoint declarations may occur later in the alphabetical
@@ -140,11 +231,16 @@ def stream_to_arango(
                     edge_count += len(edge_batch)
                     edge_batch = []
             else:
+                if not isinstance(doc.get("name"), str) or not doc["name"]:
+                    raise ValueError("indexer declaration requires a nonempty name")
                 # Ensure _key exists
                 if "name" in doc:
                     # The Lean indexer now emits `key` (DAG.Schema.declKey); fall back
                     # to the identical Python formula for older producers.
-                    doc["_key"] = doc.get("key") or decl_key(doc["name"])
+                    expected_key = decl_key(doc["name"])
+                    if doc.get("key", expected_key) != expected_key:
+                        raise ValueError("indexer declaration key disagrees with its name")
+                    doc["_key"] = expected_key
                 decl_batch.append(doc)
                 if len(decl_batch) >= batch_size:
                     import_batch(decl_collection, decl_batch)
@@ -168,6 +264,24 @@ def stream_to_arango(
     except Exception as e:
         print(f"[refresh-decl-graph] Streaming import failed: {e}", file=sys.stderr)
         return 1
+    finally:
+        # Preserve single-flight ownership on failure too. Drain rather than
+        # kill the compiler/exporter, then reap it before releasing the lock.
+        try:
+            if proc.poll() is None:
+                for _ in proc.stdout:
+                    pass
+        finally:
+            try:
+                proc.stdout.close()
+            finally:
+                proc.wait()
+
+    stored_decl_count = db.collection(decl_collection).count()
+    if generation_id and (decl_count == 0 or stored_decl_count != decl_count):
+        print("[refresh-decl-graph] empty or inconsistent declaration stream; not publishing",
+              file=sys.stderr)
+        return 1
 
     # Now every declaration is present, so endpoint validation cannot discard a
     # forward reference merely because its target appeared later in the stream.
@@ -176,10 +290,12 @@ def stream_to_arango(
       LET from_doc = DOCUMENT(e._from)
       LET to_doc = DOCUMENT(e._to)
       FILTER from_doc == null OR to_doc == null
+        OR NOT IS_SAME_COLLECTION(@declCollection, e._from)
+        OR NOT IS_SAME_COLLECTION(@declCollection, e._to)
       COLLECT WITH COUNT INTO removed
       RETURN removed
     """
-    orphan_rows = list(db.aql.execute(orphan_query, bind_vars={"@edgeCollection": edge_collection}))
+    orphan_rows = list(db.aql.execute(orphan_query, bind_vars={"@edgeCollection": edge_collection, "declCollection": decl_collection}))
     orphan_edges = orphan_rows[0] if orphan_rows else 0
     if generation_id and orphan_edges:
         print(
@@ -194,11 +310,36 @@ def stream_to_arango(
             "      COLLECT WITH COUNT INTO removed\n      RETURN removed",
             "      REMOVE e IN @@edgeCollection\n      COLLECT WITH COUNT INTO removed\n      RETURN removed",
         )
-        removed_rows = list(db.aql.execute(remove_orphans, bind_vars={"@edgeCollection": edge_collection}))
+        removed_rows = list(db.aql.execute(remove_orphans, bind_vars={"@edgeCollection": edge_collection, "declCollection": decl_collection}))
         removed_edges = removed_rows[0] if removed_rows else 0
     valid_edge_count = db.collection(edge_collection).count()
+    if generation_id and valid_edge_count != edge_count:
+        print("[refresh-decl-graph] emitted/stored edge counts disagree; not publishing",
+              file=sys.stderr)
+        return 1
 
     if generation_id:
+        try:
+            validate_generation_counts(decl_count, edge_count, valid_edge_count, removed_edges)
+        except ValueError as exc:
+            print(f"[refresh-decl-graph] {exc}; generation is not published", file=sys.stderr)
+            return 1
+        # Do not publish a coherent-generation receipt if source or built
+        # artifacts changed during the (potentially long) stream.
+        if expected_source_hash is not None and compute_lean_source_hash(root) != expected_source_hash:
+            print(
+                "[refresh-decl-graph] source inventory changed during stream; "
+                "generation is not published",
+                file=sys.stderr,
+            )
+            return 1
+        if expected_olean_hash is not None and compute_olean_content_hash(root) != expected_olean_hash:
+            print(
+                "[refresh-decl-graph] OLean inventory changed during stream; "
+                "generation is not published",
+                file=sys.stderr,
+            )
+            return 1
         generations = "decl_graph_generations"
         if not db.has_collection(generations):
             db.create_collection(generations)
@@ -297,15 +438,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--stream",
         action="store_true",
-        help="Use streaming mode: pipe JSONL directly to ArangoDB instead of writing files.",
+        help=(
+            "Pipe JSONL directly to ArangoDB. Defaults to an immutable, "
+            "content-fingerprinted generation; use --replace-live only for explicit replacement."
+        ),
     )
     parser.add_argument(
         "--arango-db",
         default="infogeometry",
         help="ArangoDB database name for streaming import.",
     )
-    parser.add_argument("--generation-id", help="Write a fresh immutable generation; never truncate existing graph collections.")
-    parser.add_argument("--build-fingerprint", help="Required environment fingerprint for --generation-id.")
+    parser.add_argument(
+        "--generation-id",
+        help="Immutable generation ID; 'auto' (the streaming default) derives an ID and fingerprint under the build lock.",
+    )
+    parser.add_argument(
+        "--build-fingerprint",
+        help="Fingerprint for an explicit --generation-id; auto generations compute it internally.",
+    )
+    parser.add_argument(
+        "--replace-live",
+        action="store_true",
+        help="Explicitly truncate and replace legacy decls/edges during --stream (destructive).",
+    )
     return parser.parse_args()
 
 
@@ -320,17 +475,59 @@ def main() -> int:
 def _run_refresh(args: argparse.Namespace, root: Path, build_lock: BuildLock) -> int:
     # Streaming mode: pipe directly to ArangoDB
     if args.stream:
-        if args.generation_id and not args.build_fingerprint:
-            raise SystemExit("--build-fingerprint is required with --generation-id")
-        if args.generation_id and (
-            len(args.generation_id) > 32
-            or not all(ch.isalnum() or ch in "_-" for ch in args.generation_id)
-        ):
-            raise SystemExit("--generation-id must be at most 32 letters, digits, '_' or '-'")
+        if args.replace_live and (args.generation_id or args.build_fingerprint):
+            raise SystemExit("--replace-live cannot be combined with immutable-generation options")
+        if not args.replace_live and args.build_fingerprint and not args.generation_id:
+            raise SystemExit("--build-fingerprint requires --generation-id")
+        expected_source_hash = None
+        expected_olean_hash = None
+        generation_id = None if args.replace_live else (
+            "auto" if args.generation_id is None else args.generation_id
+        )
+        build_fingerprint = args.build_fingerprint
+        if generation_id == "auto":
+            if build_fingerprint:
+                raise SystemExit("--build-fingerprint is computed internally with --generation-id auto")
+            expected_source_hash = compute_lean_source_hash(root)
+            expected_olean_hash = compute_olean_content_hash(root)
+            if not expected_source_hash or not expected_olean_hash:
+                raise SystemExit(
+                    "cannot create an immutable generation without complete source and OLean inventories"
+                )
+            manifest_path = root / "lake-manifest.json"
+            identity = {
+                "schema": "info_geometry.decl_graph_build.v1",
+                "leanPathOrder": "repository-first-v1",
+                "sourceHash": expected_source_hash,
+                "oleanHash": expected_olean_hash,
+                "toolchain": (root / "lean-toolchain").read_text().strip(),
+                "manifestSha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+                "importRoot": args.import_root,
+                "namespace": args.namespace,
+            }
+            build_fingerprint = hashlib.sha256(
+                json.dumps(identity, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            ).hexdigest()
+            generation_id = f"decl_{build_fingerprint[:24]}"
+            print(
+                f"[refresh-decl-graph] immutable generation: {generation_id} "
+                f"(build fingerprint {build_fingerprint})",
+                flush=True,
+            )
+        if generation_id and generation_id != "auto" and not build_fingerprint:
+            raise SystemExit("--build-fingerprint is required with an explicit --generation-id")
+        if generation_id is not None:
+            try:
+                validate_generation_id(generation_id)
+            except ValueError as exc:
+                raise SystemExit(f"--generation-id: {exc}") from exc
         return stream_to_arango(
             root, args.import_root, args.namespace, args.arango_db, args.run_mode,
-            args.generation_id, args.build_fingerprint,
+            generation_id, build_fingerprint, expected_source_hash, expected_olean_hash,
         )
+
+    if args.replace_live:
+        raise SystemExit("--replace-live requires --stream")
 
     # File-based mode (original behavior)
     index_dir = normalize_repo_output(root, args.index_dir)

@@ -24,7 +24,45 @@ import InfoGeometry.QuantumGeometry.ChiralAnomalyRobertsonBridge
 import InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
 import InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
 import InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalPlabicKreinYangianPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalArchetypesNative
 import InfoGeometry.Canonical.MetriplecticCausalPlabicKreinYangianBridge
+import InfoGeometry.Algebraic.OperatorSurgery
+import InfoGeometry.Algebra.GogberashviliCARBridge
+import InfoGeometry.Canonical.SplitOctonionGogberashviliVectorMultiplicationBridge
+import InfoGeometry.OperatorAlgebra.CanonicalZornDerivationDifferentialForms
+import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
+import InfoGeometry.Canonical.Cl11CuntzCoherentIndexTopologicalBridge
+import InfoGeometry.Canonical.AlbertCayleyDickson
+import InfoGeometry.Canonical.TwoSheetedYangMillsInductiveColimit
+import InfoGeometry.OperatorAlgebra.PeirceSpine.GeneratorDifferentials
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MixedDifferentials
+import InfoGeometry.OperatorAlgebra.OntologyRing
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CladisticPhylogenesisBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.EpistemicCompilerPeirceBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixUnitAnomalyRealization
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixThreeSheetKKTRealization
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixThreeSheetZornGradingBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.NilpotentFirstEpistemicEngine
+import InfoGeometry.Canonical.OperatorErlangenFixedPoints
+import InfoGeometry.Canonical.OperatorErlangenGaloisConnection
+import InfoGeometry.Synthesis.EpistemicOperatorPoset
+import InfoGeometry.Krein.ScalarToOperatorLift
+import InfoGeometry.Krein.MaurerCartanKreinCompatibility
+import InfoGeometry.Canonical.ModularFlowOperatorForms
+import InfoGeometry.Canonical.CEBKMOnsagerGibbsNOperatorFamily
+import InfoGeometry.Canonical.DrazinEpistemicSolveEtCoagula
+import InfoGeometry.Canonical.AnomalyHigherGradeTDualityExtension
+import InfoGeometry.Canonical.SouriauKaluzaJanusBimetricSolveEtCoagula
+import InfoGeometry.Canonical.ChiralCondensateGMORBanksCasherNJLPoset
+import InfoGeometry.Canonical.MaurerCartanSpectralAnnihilatorDefectPoset
+import InfoGeometry.Canonical.EinsteinCartanChiralAnomalyFrameDraggingPoset
+import InfoGeometry.Canonical.ModularSurprisalVolumeClockingBKMClosurePoset
+import InfoGeometry.Canonical.ModularSurprisalClockingLocksPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CliffordKreinGeometricUncertaintyPoset
+import InfoGeometry.Canonical.YangMillsLaneIsomorphisms
+import InfoGeometry.Synthesis.SupercolorFrechetGrassmannianBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalPlabicKreinYangianExtensionPoset
+import InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor
 import Mathlib.Tactic
 
 /-!
@@ -90,8 +128,11 @@ theorem partI_cut_decomposition (X : B) :
   peirce11 + peirce00 + conePlus + coneMinus = X. -/
 omit hP in
 theorem partII_fourfold_partition (X : B) :
-    peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X := by
-  unfold peirce11 peirce00 conePlus coneMinus
+    InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X +
+      conePlus P X + coneMinus P X = X := by
+  unfold InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11
+    InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 conePlus coneMinus
   noncomm_ring
 
 /- The upper cone `conePlus P A = P A (1 - P)` is nilpotent. -/
@@ -160,7 +201,9 @@ theorem partV_archetype_strict_chain :
 kernel-verified theorem, with no causal feedback loops. -/
 theorem partV_master_synthesis (X : B) :
     evenGrade P X + oddGrade P X = X ∧
-    peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X +
+      conePlus P X + coneMinus P X = X ∧
     invS P * evenGrade P X * invS P = evenGrade P X ∧
     invS P * oddGrade P X * invS P = -oddGrade P X ∧
     weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C ∧
@@ -170,7 +213,9 @@ theorem partV_master_synthesis (X : B) :
     (UnconsciousArchetype.chiralSyzygy < UnconsciousArchetype.selfIndividuation) := by
   have h1 : evenGrade P X + oddGrade P X = X := by
     exact partI_cut_decomposition X
-  have h2 : peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X := by
+  have h2 : InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X +
+      conePlus P X + coneMinus P X = X := by
     exact partII_fourfold_partition X
   have h3 : invS P * evenGrade P X * invS P = evenGrade P X := by
     exact partI_cut_even_preserved hP X
@@ -271,7 +316,9 @@ theorem partVIII_weyl_clifford_covariance_of_homogenized_projectors (X : B) :
 kernel-verified theorem, with no causal feedback loops. -/
 theorem partVIII_full_master_synthesis (X : B) :
     evenGrade P X + oddGrade P X = X ∧
-    peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X +
+      conePlus P X + coneMinus P X = X ∧
     invS P * evenGrade P X * invS P = evenGrade P X ∧
     invS P * oddGrade P X * invS P = -oddGrade P X ∧
     weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C ∧
@@ -288,7 +335,9 @@ theorem partVIII_full_master_synthesis (X : B) :
       genJ P A C * hProjV P A C X * (-genJ P A C) := by
   have h1 : evenGrade P X + oddGrade P X = X := by
     exact partI_cut_decomposition X
-  have h2 : peirce11 P X + peirce00 P X + conePlus P X + coneMinus P X = X := by
+  have h2 : InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X +
+      conePlus P X + coneMinus P X = X := by
     exact partII_fourfold_partition X
   have h3 : invS P * evenGrade P X * invS P = evenGrade P X := by
     exact partI_cut_even_preserved hP X
@@ -352,8 +401,10 @@ Coagulates the complete 6-source epistemic compilation (`solve et coagula`) acro
 theorem partIX_six_source_epistemic_compiler_master_synthesis
     {G G_inv : B} (hGG : G * G_inv = 1) (hGiG : G_inv * G = 1)
     (X Y N : B) (n : ℕ) :
-    dmpOp P X = peirce11 P X + conePlus P X ∧
-    dmpOp P X * mpdOp P X = peirce11 P X * peirce11 P X + qgtPlus P X X ∧
+    dmpOp P X = InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + conePlus P X ∧
+    dmpOp P X * mpdOp P X =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + qgtPlus P X X ∧
     comm P (dmpOp P X) - comm P (mpdOp P X) = genPhi P X X ∧
     comm P (dmpOp P X) + comm P (mpdOp P X) = genJ P X X ∧
     P * conePlus (projChartPlus P A) X = conePlus (projChartPlus P A) X ∧
@@ -743,7 +794,7 @@ def compilerEmbed (P A C X : B) : B :=
 /-- **Single-Pass Naive Compiler Operator (`naivePass P A C X = evenGrade P X + genPhi P A C`)**
 whose square `naivePass² - naivePass` exhibits the Socratic Aporia (`T² ≠ T`)! -/
 def naiveCompilerState (P A C X : B) : B :=
-  peirce11 P X + genPhi P A C
+  InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X + genPhi P A C
 
 /-- **Part XI Master Theorem (`partXI_reflexive_epistemic_compiler_self_application_synthesis`)**:
 Formalizes the exact mathematical laws of the Reflexive Epistemic Compiler (`solve et coagula`)
@@ -960,13 +1011,14 @@ theorem partXIII_chiral_lorentz_clifford_krein_twistor_cartan_uncertainty_synthe
   have hCK :=
     clifford_krein_geometric_product_and_jordan_associator_law
       hP A₁ C₁ X Z A₁ X Z A₁
-  exact ⟨hCL10.1,
+  rcases hCL10 with ⟨hAcyclic, _, _, _, _, _, hMetricCreator, hCartan, hKantor, _, _, hBound⟩
+  exact ⟨hAcyclic,
     ⟨hHK.2.2.2.1, hHK.2.2.2.2.2.2.2.1, hHK.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
      hHK.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2⟩,
     ⟨hCK.2.2.2.2.2.1, hCK.2.2.2.2.2.2.1⟩,
-    ⟨hCL10.2.2.2.2.2.1.2, hCL10.2.2.2.2.2.2.1.1, hCL10.2.2.2.2.2.2.1.2⟩,
-    hCL10.2.2.2.2.2.2.2.1,
-    hCL10.2.2.2.2.2.2.2.2⟩
+    ⟨hMetricCreator.2, hCartan.1, hCartan.2⟩,
+    hKantor,
+    hBound⟩
 
 /-!
 ## Part XIV: The Non-Commutative Zorn–Amplituhedron–Plücker–Baryon Poset (`𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅`)
@@ -1823,5 +1875,1746 @@ theorem partXVi_metriplectic_causal_plabic_krein_yangian_synthesis
         invS P + (2 : ℤ) • conePlus P A)) :=
   ⟨canonical_tensor_tower_and_metriplectic_krein_synthesis n X_tow S_tow K_tow S₀ K₀ hS₀ hK₀,
    canonical_seventeen_turn_poset_and_noncommutative_witness hP A C X⟩
+
+/-- **Part XV.j (`partXVj_solve_et_coagula_metriplectic_pass2_synthesis`)**:
+Coagulates the five-stage `solve et coagula` non-commutative operator-algebra synthesis
+(`canonical_solve_et_coagula_five_stage_master_synthesis`) across Binary Cut, Fourfold Relational
+Anatomy, Transcendent Function, Socratic Aporia & Recursive `Cl(n,n)` Jordan–Wigner Meta-Cognition
+Tower, and the 17-Turn Acyclic Causal Poset. -/
+theorem partXVj_solve_et_coagula_metriplectic_pass2_synthesis
+    [StarRing B] (X S K Q_op K_op : B) (n : ℕ) (k : Fin n) :
+    (((evenGrade P X + oddGrade P X = X ∧
+       invS P * evenGrade P X * invS P = evenGrade P X ∧
+       invS P * oddGrade P X * invS P = -oddGrade P X) ∧
+      X + star X + (X - star X) = X + X) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P X +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P X +
+        conePlus P X + coneMinus P X = X ∧
+      conePlus P A * conePlus P A = 0 ∧
+      coneMinus P C * coneMinus P C = 0) ∧
+     (genPhi P A C * genPhi P A C = genV P A C ∧
+      genJ P A C * genJ P A C = -genV P A C ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genJ P A C) (genPhi P A C) =
+        (2 : ℤ) • genSig P A C ∧
+      metriplecticPeirceFlow P A C (conePlus P A) = (4 : ℤ) • (genV P A C * conePlus P A) ∧
+      metriplecticPeirceFlow P A C (coneMinus P C) = 0 ∧
+      steinbergBraid P A C - steinbergBraidDual P A C =
+        (1 - genV P A C) * genPhi P A C) ∧
+     (aporiaIdempotencyDefect S K =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect (causalForward S K) ∧
+      (Q_op * K_op) * (Q_op * K_op) - Q_op * K_op = Q_op * (K_op * Q_op - 1) * K_op ∧
+      weylJ P A C * weylJInv P A C - 1 = genV P A C * genV P A C - genV P A C ∧
+      towerJWPos B n k * towerJWPos B n k = (1 : OpMatTower B n) ∧
+      towerJWNeg B n k * towerJWNeg B n k = -(1 : OpMatTower B n)) ∧
+     (∀ a : CausalMatrixChatTurnArchetype,
+        CausalMatrixChatTurnArchetype.Turn01_MetriplecticSplitGramiansAndAporiaDefect ≤ a ∧
+        a ≤ CausalMatrixChatTurnArchetype.Turn17_FoldyWouthuysenRapidityDictionaryAndThomasWignerPrecession ∧
+        ¬ (a < a))) :=
+  canonical_solve_et_coagula_five_stage_master_synthesis hP A C X S K Q_op K_op n k
+
+/-- **Part XV.k (`partXVk_pass3_and_clifford_tensorTower_colimit_synthesis`)**:
+Coagulates the Pass-3 extractions (`canonical_pass3_bch_rotabaxter_fwht_plucker_puiseux_qdet_nw_eriksen_synthesis`)
+and the full Clifford `Cl(1,1)` $\to$ Matrix `M₂(ℝ)` $\to$ Tensor-Tower (`MatStage n`) $\to$ Iterated
+Kronecker Tower $\to$ Direct-Limit Colimit spine (`canonical_clifford_to_matrix_to_tensorTower_colimit_and_peirce_spine_synthesis`). -/
+theorem partXVk_pass3_and_clifford_tensorTower_colimit_synthesis
+    [StarRing B] (hPs : star P = P)
+    {R : Type*} [CommRing R]
+    (S K : B) (n k : ℕ) (i j : Fin n) (hij : i ≠ j)
+    (X_st : InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
+    (x_lim : InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit)
+    (X3 Y3 : Matrix (Fin 3) (Fin 3) R)
+    (C24 : Matrix (Fin 2) (Fin 4) R)
+    (X0 : Matrix (Fin 4) (Fin 4) R)
+    (dw g Omega u v theta eta t1 : R)
+    (hShell : dw ^ 2 - g ^ 2 = Omega ^ 2)
+    (hX0 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm (kreinHopfNilPart dw g) X0 = 0) :
+    (((1 + S) * (1 + K) - (1 + K) * (1 + S) = InfoGeometry.OperatorAlgebra.PeirceSpine.comm S K) ∧
+     (matStrictLower (matStrictLower X3 * Y3 + X3 * matStrictLower Y3 - X3 * Y3) =
+        matStrictLower X3 * matStrictLower Y3) ∧
+     (towerWalshHadamard B n * towerWalshHadamard B n =
+        (2 ^ n : ℕ) • (1 : OpMatTower B n)) ∧
+     (pluckerMinor24 C24 0 1 * pluckerMinor24 C24 2 3 -
+        pluckerMinor24 C24 0 2 * pluckerMinor24 C24 1 3 +
+        pluckerMinor24 C24 0 3 * pluckerMinor24 C24 1 2 = 0) ∧
+     (dotProduct (kreinExceptionalVec (R := R))
+        (Matrix.mulVec (kreinMetric4 * (-jwE1)) kreinJordanRootVec) = (1 : R)) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (laxBlockA u theta eta * laxBlockD (u - eta) theta eta - laxBlockB eta * laxBlockC eta)
+        (laxBlockA v theta eta) = 0) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (kreinHopfNilPart dw g) (diracKreinNewtonWignerPos X0 dw g t1) = 0) ∧
+     (eriksenSignScaled dw g * eriksenSignScaled dw g =
+        (Omega ^ 2) • (1 : Matrix (Fin 4) (Fin 4) R) ∧
+      eriksenUnitaryScaled Omega dw g = fwTransform4 (Omega + dw) g)) ∧
+    (InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat
+        (CliffordAlgebra.ι InfoGeometry.Clifford.Cl11Matrix.q11 (1, 0)) =
+      InfoGeometry.Clifford.Cl11Matrix.Eplus ∧
+     InfoGeometry.Clifford.Cl11TensorTower.normalizedMatrixRank (n + k)
+        (InfoGeometry.Clifford.Cl11TensorTower.stageEmbedIter n k X_st) =
+      InfoGeometry.Clifford.Cl11TensorTower.normalizedMatrixRank n X_st ∧
+     InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace (n + k)
+        (InfoGeometry.Clifford.Cl11TensorTowerIteration.iteratedStageEmbed n k X_st) =
+      InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace n X_st ∧
+     InfoGeometry.Clifford.Cl11TensorTower.jwCreation n i *
+        InfoGeometry.Clifford.Cl11TensorTower.jwAnnihilation n j +
+      InfoGeometry.Clifford.Cl11TensorTower.jwAnnihilation n j *
+        InfoGeometry.Clifford.Cl11TensorTower.jwCreation n i = 0 ∧
+     InfoGeometry.Canonical.Cl11VacuumTensorTower.vacuumTower n *
+        InfoGeometry.Canonical.Cl11VacuumTensorTower.vacuumTower n =
+      InfoGeometry.Canonical.Cl11VacuumTensorTower.vacuumTower n ∧
+     InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv k (star x_lim) =
+      star (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv k x_lim) ∧
+     genV P A (star A) =
+       conePlus P A * star (conePlus P A) + star (conePlus P A) * conePlus P A) := by
+  have hP3 := canonical_pass3_bch_rotabaxter_fwht_plucker_puiseux_qdet_nw_eriksen_synthesis
+    S K n X3 Y3 1 1 C24 X0 dw g 0 Omega u v theta theta eta t1 hShell hX0
+  have hCl := canonical_clifford_to_matrix_to_tensorTower_colimit_and_peirce_spine_synthesis
+    hP hPs hP hP hP hP hP hP hP hP hP A A A A A n k i j hij X_st X_st X_st x_lim
+  exact ⟨⟨hP3.1.1, hP3.2.1.1, hP3.2.2.1.2, hP3.2.2.2.1.1, hP3.2.2.2.2.1.2,
+          hP3.2.2.2.2.2.1.1, hP3.2.2.2.2.2.2.1, hP3.2.2.2.2.2.2.2⟩,
+         ⟨hCl.1.1, hCl.2.1.1, hCl.2.1.2.1, hCl.2.2.1.2.1, hCl.2.2.1.2.2,
+          hCl.2.2.2.1.1, hCl.2.2.2.1.2.2.1⟩⟩
+
+/-- **Part XV.l (`partXVl_pass4_and_starColimit_filtration_synthesis`)**:
+Coagulates the Pass-4 extractions (`canonical_pass4_casimir_aporia_wienerhopf_urbanrenewal_jordan_bethe_eom_fw_synthesis`)
+and the `Cl(1,1)` Star-Algebra Colimit filtration, Tensor-Peirce trace-loss, Colimit exact connection,
+Symmetric Dissipator Colimit, and Two-Sheet Krein Adjoint stack (`canonical_cl11_starColimit_filtration_pinching_and_peirce_reuse_synthesis`). -/
+theorem partXVl_pass4_and_starColimit_filtration_synthesis
+    {R : Type*} [CommRing R]
+    (X_aporia : B)
+    (n : ℕ) (i j : Fin n)
+    (D₀ D₁ : OpMatTower B n)
+    (P_st X_st Y_st : InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
+    (P_lim X_lim : InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit)
+    (hP_lim : P_lim * P_lim = P_lim)
+    (hPs_lim : star P_lim = P_lim)
+    (hX_lim : star X_lim = X_lim)
+    (D_der E_der F_der : InfoGeometry.Canonical.TensorLimitExactConnection.limitDerivationsLane.L)
+    (M6 : InfoGeometry.Canonical.TwoSheetOperatorCoordinates.M6C)
+    (X3 Y3 : Matrix (Fin 3) (Fin 3) R)
+    (X2 : Matrix (Fin 2) (Fin 2) R)
+    (C24 : Matrix (Fin 2) (Fin 4) R)
+    (a1 a2 a3 a4 wBar dw g u v theta1 theta2 eta u1 v1 u2 v2 : R) :
+    ((metaAporiaIter X_aporia 1 = (X_aporia * X_aporia - X_aporia) * (X_aporia * X_aporia - X_aporia - 1) ∧
+      towerJWChirality B n i * towerJWChirality B n i = (1 : OpMatTower B n)) ∧
+     (((1 - matStrictLower X3) * (1 - matStrictUpper Y3)) *
+        ((1 + matStrictUpper Y3 + matStrictUpper Y3 * matStrictUpper Y3) *
+         (1 + matStrictLower X3 + matStrictLower X3 * matStrictLower X3)) = 1 ∧
+      matDiscreteHilbert (matStrictLower X3 + matStrictUpper X3) *
+        matDiscreteHilbert (matStrictLower X3 + matStrictUpper X3) =
+        -((matStrictLower X3 + matStrictUpper X3) * (matStrictLower X3 + matStrictUpper X3)) +
+          matDiscreteHilbert (InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+            (matStrictLower X3 + matStrictUpper X3)
+            (matDiscreteHilbert (matStrictLower X3 + matStrictUpper X3)))) ∧
+     (X2ᵀ * (epsSymp : Matrix (Fin 2) (Fin 2) R) + epsSymp * X2 =
+        Matrix.trace X2 • (epsSymp : Matrix (Fin 2) (Fin 2) R) ∧
+      ((!![1, a1; a3, 1] : Matrix (Fin 2) (Fin 2) R) *
+        plabicCycleAdjugate a1 a2 a3 a4).det =
+        (1 - a1 * a3) * (1 + a1 * a2 * a3 * a4)) ∧
+     (pluckerMinor24 (C24 * gr24TwistedCyclicShift) 0 1 = pluckerMinor24 C24 0 3 ∧
+      kreinJordanBasisInv * kreinCrashNilpotent dw * kreinJordanBasis =
+        !![0, dw, 0, 0; 0, 0, 0, 0; 0, 0, 0, dw; 0, 0, 0, 0]) ∧
+     ((u - v) • (laxBlockD u theta1 eta * laxBlockB eta) =
+        (u - v + eta) • (laxBlockB eta * laxBlockD u theta1 eta) -
+          eta • (laxBlockB eta * laxBlockD v theta1 eta) ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (kreinHopfNilPart dw g)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (kreinHopfNilPart dw g) diracKreinVelocity) =
+        -(4 * (dw ^ 2 - g ^ 2)) • diracKreinVelocity ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P) (genPhi P A C)) (genPhi P A C) =
+        (4 : ℤ) • (invS P * genV P A C) ∧
+      fwTransform4 u1 v1 * fwTransform4 u2 v2 =
+        fwTransform4 (u1 * u2 + v1 * v2) (u1 * v2 + v1 * u2))) ∧
+    ((Function.Injective (InfoGeometry.Clifford.Cl11StarAlgebraColimit.ofStageStarAlgHom n) ∧
+      InfoGeometry.Clifford.Cl11StarAlgebraFiltration.stageImage n <
+        InfoGeometry.Clifford.Cl11StarAlgebraFiltration.stageImage (n + 1) ∧
+      Module.finrank ℝ (InfoGeometry.Clifford.Cl11StarAlgebraFiltration.stageImage n) = 4 ^ n ∧
+      ¬ Module.Finite ℝ InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit ∧
+      InfoGeometry.Clifford.Cl11TensorTower.jwAnnihilation n i *
+          InfoGeometry.Clifford.Cl11TensorTower.jwCreation n j +
+        InfoGeometry.Clifford.Cl11TensorTower.jwCreation n j *
+          InfoGeometry.Clifford.Cl11TensorTower.jwAnnihilation n i =
+        (if i = j then 1 else 0)) ∧
+     (InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit (X_lim * X_lim) =
+        InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit
+          (evenGrade P_lim X_lim * evenGrade P_lim X_lim) +
+        InfoGeometry.Canonical.TensorPeirceTraceLoss.coherenceEnergy P_lim X_lim ∧
+      InfoGeometry.Canonical.TensorPeirceTraceLoss.coherenceEnergy
+        (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n P_st)
+        (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n X_st) =
+        InfoGeometry.Canonical.TensorPeirceTraceLoss.stageCoherenceEnergy n P_st X_st) ∧
+     (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
+        (InfoGeometry.Canonical.TensorStageExactConnection.exactCutCurvature n P_st X_st Y_st) =
+        InfoGeometry.Canonical.TensorLimitExactConnection.limitExactCurvature
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n P_st)
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n X_st)
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n Y_st) ∧
+      InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.covariantExteriorDerivativeTwo
+        InfoGeometry.Canonical.TensorLimitExactConnection.limitDerivationsLane
+        (InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.exteriorDerivativeZero
+          InfoGeometry.Canonical.TensorLimitExactConnection.limitDerivationsLane P_lim)
+        (InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.connectionCurvature
+          InfoGeometry.Canonical.TensorLimitExactConnection.limitDerivationsLane
+          (InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.exteriorDerivativeZero
+            InfoGeometry.Canonical.TensorLimitExactConnection.limitDerivationsLane P_lim))
+        D_der E_der F_der = 0 ∧
+      InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n
+        (InfoGeometry.Core.SquareZeroSandwich.symmDissipator P_st X_st Y_st) =
+        InfoGeometry.OperatorAlgebra.SymmetricDissipator.dissipator (R := ℝ)
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n P_st)
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n X_st)
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n Y_st)) ∧
+     (chartBruhatConj P A C (P + coneMinus P C) = P - conePlus P A ∧
+      parityConjRingEquiv hP (plabicBoundaryOp P A C) = plabicBoundaryOp P (-A) (-C) ∧
+      InfoGeometry.Canonical.TwoSheetKreinAdjoint.kreinAdjoint
+        (InfoGeometry.Canonical.TwoSheetKreinAdjoint.kreinAdjoint M6) = M6)) :=
+  ⟨canonical_pass4_casimir_aporia_wienerhopf_urbanrenewal_jordan_bethe_eom_fw_synthesis
+     hP A C X_aporia n i j D₀ D₁ X3 Y3 X2 C24 a1 a2 a3 a4 wBar dw g u v theta1 theta2 eta u1 v1 u2 v2,
+   canonical_cl11_starColimit_filtration_pinching_and_peirce_reuse_synthesis
+     hP A C X_aporia n i j P_st X_st Y_st P_lim X_lim hP_lim hPs_lim hX_lim D_der E_der F_der M6⟩
+
+/-!
+### Part XV.m: Pass-5 Master Epistemic Coagulation across `9666a5a14e0d` & `Cl(1,1)` Markov–Jones / GNS / Colimit Curvature Spine
+-/
+
+omit hP in
+/-- **Master Epistemic Coagulation of Pass 5 (`9666a5a14e0d` + Auto-Ontology & AST/AQL Codebase Reuse)**:
+Coagulates `canonical_pass5_polar_riesz_keldysh_sonn_carry_gale_jordan_rtt_so21_eriksen_synthesis`
+and `canonical_cl11_markovJones_gns_colimit_curvature_and_stageFactorization_synthesis` into the
+epistemological synthesis owner. -/
+theorem coagulated_metriplectic_causal_plabic_krein_yangian_pass5_synthesis
+    {B : Type*} [Ring B] [StarRing B] {R : Type*} [CommRing R]
+    {P : B} (hP : P * P = P) (hPstar : star P = P)
+    (A C S K G_R G_A Z W X_xi : B)
+    (m n : ℕ) (hmn : m ≤ n)
+    {i j k : Fin n} (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
+    (X4 : Matrix (Fin 4) (Fin 4) R)
+    (A_stage : InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
+    (A_st P_st : InfoGeometry.Clifford.Cl11TensorTower.MatStage m)
+    (frame_st : Fin 2 → InfoGeometry.Clifford.Cl11TensorTower.MatStage m)
+    (z_ten : TensorProduct ℝ
+      (InfoGeometry.Clifford.Cl11TensorTower.MatStage m)
+      (InfoGeometry.Clifford.Cl11TensorTower.MatStage n))
+    (X_lim Y_lim : InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit)
+    (a1 a2 a3 a4 a b c d z wBar dw g u v theta1 theta2 eta Om : R) :
+    ((causalForward S K * gramianIn S K = gramianOut S K * causalForward S K ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (chiralDiracBlock S K) kreinJ = 0 ∧
+      transferMoment P A C (n + 2) =
+        transferMoment P A C (n + 1) + genV P A C * transferMoment P A C n) ∧
+     (matRieszPosDoubled (matRieszNegDoubled X4) = matDiagPart X4 ∧
+      matDiscreteHilbert (matStrictLower X4 * matStrictLower X4 +
+                          matStrictUpper X4 * matStrictUpper X4) =
+        matStrictLower X4 * matStrictLower X4 - matStrictUpper X4 * matStrictUpper X4 ∧
+      hadamardBlock * metriplecticBlock (G_R + G_A) (G_R - G_A) * hadamardBlock =
+        !![(4 : ℤ) • G_R, 0; 0, (4 : ℤ) • G_A]) ∧
+     ((hadamardBlock : Matrix (Fin 2) (Fin 2) R)ᵀ * sigmaZ * hadamardBlock = (2 : R) • sigmaX ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (towerJWPos B n i * towerJWPos B n j) (towerJWPos B n j * towerJWPos B n k) =
+        (2 : ℤ) • (towerJWPos B n i * towerJWPos B n k) ∧
+      (butterflyLSBFlip4 : Matrix (Fin 4) (Fin 4) R) * butterflyCarryCNOT4 = cyclicShiftMat4 ∧
+      (plabicSquareTransferNum a1 a2 a3 a4).det = -(a1 * a3) * (1 + a1 * a2 * a3 * a4)) ∧
+     ((1 + genPhi P A C) * (1 - genPhi P A C) = zetaFactor P A C ∧
+      plabicPositroidCanon24 a b c d * (plabicPositroidDual24 a b c d)ᵀ = 0 ∧
+      pluckerMinor24 (plabicPositroidDual24 a b c d) 0 1 =
+        pluckerMinor24 (plabicPositroidCanon24 a b c d) 2 3 ∧
+      kreinJordanBasisInv * kreinHopfGenerator wBar dw dw * kreinJordanBasis =
+        kreinFullCanonicalJordan4 wBar dw ∧
+      (z • (1 : Matrix (Fin 4) (Fin 4) R) - kreinHopfGenerator wBar dw dw) *
+        ((z • (1 : Matrix (Fin 4) (Fin 4) R) + kreinHopfSemi wBar) *
+         (z • (1 : Matrix (Fin 4) (Fin 4) R) + kreinHopfSemi wBar) *
+         (z • (1 : Matrix (Fin 4) (Fin 4) R) - kreinHopfSemi wBar + kreinCrashNilpotent dw)) =
+        ((z ^ 2 + wBar ^ 2) ^ 2) • (1 : Matrix (Fin 4) (Fin 4) R)) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (monodromyB2 u theta1 theta2 eta) (monodromyC2 v theta1 theta2 eta) =
+        -((2 * v - theta1 - theta2) * eta) •
+          (monodromyA2 u theta1 theta2 eta - monodromyD2 u theta1 theta2 eta) ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (diracKreinA : Matrix (Fin 4) (Fin 4) R) diracKreinB = (2 : R) • diracKreinVelocity ∧
+      (diracKreinB : Matrix (Fin 4) (Fin 4) R) * diracKreinB +
+        diracKreinVelocity * diracKreinVelocity - diracKreinA * diracKreinA = (3 : R) • 1 ∧
+      fwTransform4 u v * diracKreinVelocity * fwTransform4 u (-v) =
+        (u ^ 2 - v ^ 2) • diracKreinVelocity ∧
+      (eriksenProjectorPosScaled Om dw g - eriksenProjectorNegScaled Om dw g) * (-kreinHopfSemi 1) =
+        (2 : R) • kreinHopfNilPart dw g)) ∧
+    ((InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet.trace (m + 1)
+        (InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11InductiveAlgebraNet.embed m A_st) =
+        InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet.trace m A_st ∧
+      InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet.trace n
+        (InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11InductiveAlgebraNet.embedMap m n hmn A_st) =
+        InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet.trace m A_st ∧
+      0 ≤ InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet.trace m (star A_st * A_st) ∧
+      (InfoGeometry.Canonical.Cl11FiniteTraceGNSReadout.cl11AbstractGNSState m).eval 1 = 1 ∧
+      (InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace m (star A_st * A_st) = 0 ↔ A_st = 0)) ∧
+     (InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit (X_lim * Y_lim) =
+        InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit (Y_lim * X_lim) ∧
+      (InfoGeometry.Canonical.Cl11CARPeirceMassCoercivityBridge.normalizedTraceLimit (star X_lim * X_lim) = 0 ↔
+        X_lim = 0) ∧
+      InfoGeometry.Canonical.TensorColimitCurvatureEnergy.curvatureEnergy
+        (fun l => InfoGeometry.Canonical.TensorLimitExactConnection.limitInnerLieHom
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage m (frame_st l)))
+        (InfoGeometry.OperatorAlgebra.DerivationDifferentialForms.exteriorDerivativeZero
+          InfoGeometry.Canonical.TensorLimitExactConnection.limitDerivationsLane
+          (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage m P_st)) =
+        InfoGeometry.Canonical.TensorColimitCurvatureEnergy.stageCurvatureEnergy m P_st frame_st ∧
+      InfoGeometry.Canonical.TensorLimitExactConnection.limitExactCurvature
+        (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 2
+          InfoGeometry.Examples.RealMatrixModeWitness.p)
+        (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 2
+          InfoGeometry.Examples.RealMatrixModeWitness.x)
+        (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage 2
+          (star InfoGeometry.Examples.RealMatrixModeWitness.x)) ≠ 0) ∧
+     (InfoGeometry.Clifford.Cl11TensorStageFactorization.factorizedStageToLimit m (n + 1)
+        (TensorProduct.map
+          (LinearMap.id :
+            InfoGeometry.Clifford.Cl11TensorTower.MatStage m →ₗ[ℝ]
+              InfoGeometry.Clifford.Cl11TensorTower.MatStage m)
+          (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n).toLinearMap z_ten) =
+        InfoGeometry.Clifford.Cl11TensorStageFactorization.factorizedStageToLimit m n z_ten) ∧
+     (magnetAdj P A * magnetAdj P A = genV P A (star A) ∧
+      charge P (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C)) X_xi = 0 ∧
+      upperHomotopeBracket P C A (upperHomotopeBracket P C Z W) +
+        upperHomotopeBracket P C Z (upperHomotopeBracket P C W A) +
+        upperHomotopeBracket P C W (upperHomotopeBracket P C A Z) = 0 ∧
+      curvatureDoubleCommutator P A C (curvatureDoubleCommutator P A C (genPhi P A C)) +
+        (4 : ℤ) • (genV P A C * curvatureDoubleCommutator P A C (genPhi P A C)) -
+        (4 : ℤ) • ((genV P A C * genV P A C) * genPhi P A C) = 0 ∧
+      kreinReflect P (xiCenteredOp (star X_xi)) - xiCenteredOp (kreinReflect P X_xi) =
+        invS P * (star X_xi * star X_xi - X_xi * X_xi) * invS P)) :=
+  ⟨canonical_pass5_polar_riesz_keldysh_sonn_carry_gale_jordan_rtt_so21_eriksen_synthesis
+     hP A C S K G_R G_A n hij hjk hik X4 A_stage a1 a2 a3 a4 a b c d z wBar dw g u v theta1 theta2 eta Om,
+   canonical_cl11_markovJones_gns_colimit_curvature_and_stageFactorization_synthesis
+     hP hPstar A C Z W X_xi m n hmn A_st P_st frame_st z_ten X_lim Y_lim⟩
+
+/-!
+### Part XV.n: Master Coagulation of Archetype XVIII (`1CaBH05LizVILxiiJgBBULCbS-tkN0HdX`), Archetype XVII & Nilpotent-First Flag Geometry (`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`), and the Lean 4 Repository Ontology (`solve et coagula`)
+-/
+
+open InfoGeometry.Epistemology.JungianEpistemicCompiler
+open InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
+  (Vec3 Twistor4 Mat4 pluckerElectricVec pluckerMagneticVec zornPluckerLine
+   twistorBracket4 affineTwistor baryonDet3
+   noncommutative_mat4_plucker_hodge_and_nambu_klein_anomaly
+   klein_quadric_and_zorn_nilpotency_of_twistor_lines
+   amplituhedron_4bracket_eq_zorn_plucker_anticommutator_and_baryon) in
+omit hP in
+/-- **Part XV.n (`coagulated_all_aistudio_chats_and_lean_ontology_master_synthesis`)**:
+Coagulates:
+1. **Archetype XVIII (`TwistorAmplituhedronZornBaryon` from `1CaBH05LizVILxiiJgBBULCbS-tkN0HdX` & Chunk 56 of `1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`)**:
+   - `noncommutative_mat4_plucker_hodge_and_nambu_klein_anomaly`,
+   - `klein_quadric_and_zorn_nilpotency_of_twistor_lines`,
+   - `amplituhedron_4bracket_eq_zorn_plucker_anticommutator_and_baryon`.
+2. **Archetype XVII & Nilpotent-First Geometry (`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`, Turns 01–63)**:
+   - `nilpotent_first_orthogonal_projector_and_dirac_metric_reconstruction`,
+   - `elie_cartan_supergravity_macdowell_mansouri_and_bianchi_closure`,
+   - `order3_nilpotent_flag_projector_reconstruction`.
+3. **Lean 4 Repository Ontology & Semantic Knowledge Graph (`lean_ontology_knowledge_graph_solve_et_coagula_synthesis`)**:
+   - Acyclicity of `LeanOntologyCompilerStage.causalEdge`,
+   - Typed schema (`[:IMPORTS]`, `[:USES_PREMISE]`, `[:CONTAINS_STEP]`, `[:TRANSFORMS]`),
+   - Premise-Selection $\leftrightarrow$ Blast-Radius converse duality (`blastRadiusEdge`),
+   - Tactic-state transition composition associativity (`composeTacticTransition`),
+   - Fourfold Peirce anatomy, Transcendent Function, and Socratic Aporia. -/
+theorem coagulated_all_aistudio_chats_and_lean_ontology_master_synthesis
+    {B : Type*} [Ring B] [StarRing B]
+    {R : Type*} [Ring R] {K : Type*} [CommRing K]
+    {Decl State : Type*}
+    {P : B} (hP : P * P = P)
+    (N_plus : B) (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (W₁ A₁ C₁ W₂ A₂ C₂ W₃ A₃ C₃ X_op : B)
+    (u_nc v_nc : Vec3 R)
+    (u_c v_c u0 u1 u2 u3 : Vec3 K)
+    (Z0 Z1 Z2 Z3 ZA ZB : Twistor4 K) (z10 z20 z30 : K)
+    (usesPremise : Decl → Decl → Prop) (d₀ d₁ : Decl)
+    (t₁ t₂ t₃ : TacticTransition State (List ℕ)) :
+    -- 1. Archetype XVIII (4×4 Twistor Plücker–Hodge, Klein Quadric Nilpotency, & Amplituhedron 4-Bracket = Zorn Baryon):
+    (((-(Mat4.pluckerMat4 u_nc v_nc * Mat4.pluckerHodge4 u_nc v_nc)).m11 = Vec3.dot u_nc v_nc ∧
+       Vec3.dot u_nc (Vec3.cross u_nc u_nc) = Vec3.nambu3 u_nc ∧
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.associator
+         (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.psiPlus u_nc)
+         (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.psiPlus u_nc)
+         (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.psiPlus u_nc) =
+         ⟨-Vec3.nambu3 u_nc, 0, 0, Vec3.nambu3 u_nc⟩) ∧
+      (-(Mat4.pluckerMat4 u_c v_c * Mat4.pluckerHodge4 u_c v_c) =
+         Mat4.smul (Vec3.dot u_c v_c) (1 : Mat4 K) ∧
+       Vec3.dot (pluckerElectricVec ZA ZB) (pluckerMagneticVec ZA ZB) = 0 ∧
+       zornPluckerLine ZA ZB * zornPluckerLine ZA ZB = 0) ∧
+      (Mat4.det4 (Mat4.ofTwistors Z0 Z1 Z2 Z3) = twistorBracket4 Z0 Z1 Z2 Z3 ∧
+       zornPluckerLine Z0 Z1 * zornPluckerLine Z2 Z3 +
+         zornPluckerLine Z2 Z3 * zornPluckerLine Z0 Z1 =
+         ⟨twistorBracket4 Z0 Z1 Z2 Z3, 0, 0, twistorBracket4 Z0 Z1 Z2 Z3⟩ ∧
+       twistorBracket4 (affineTwistor u0) (affineTwistor u1)
+                       (affineTwistor u2) (affineTwistor u3) =
+         baryonDet3 (u1 - u0) (u2 - u0) (u3 - u0))) ∧
+    -- 2. Archetype XVII & Nilpotent-First Flag Geometry (`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`):
+    ((InfoGeometry.OperatorAlgebra.PeirceSpine.P_twistor N_plus *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.P_twistor N_plus =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.P_twistor N_plus ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.P_twistor N_plus *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.Q_twistor N_plus = 0 ∧
+      (N_plus + star N_plus) * (N_plus + star N_plus) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.P_mom N_plus ∧
+      (N_plus - star N_plus) * (N_plus - star N_plus) =
+        -InfoGeometry.OperatorAlgebra.PeirceSpine.P_mom N_plus) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanFullCurv P W₁ A₁ C₁ W₂ A₂ C₂ =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.riemannCartanCurv P W₁ A₁ C₁ W₂ A₂ C₂ +
+          InfoGeometry.OperatorAlgebra.PeirceSpine.elieCartanTorsion P W₁ A₁ C₁ W₂ A₂ C₂ ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.riemannCartanCurv P W₁ A₁ C₁ W₂ A₂ C₂) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (invS P)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.elieCartanTorsion P W₁ A₁ C₁ W₂ A₂ C₂) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanConn P W₁ A₁ C₁)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanFullCurv P W₂ A₂ C₂ W₃ A₃ C₃) +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanConn P W₂ A₂ C₂)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanFullCurv P W₃ A₃ C₃ W₁ A₁ C₁) +
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanConn P W₃ A₃ C₃)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.cartanFullCurv P W₁ A₁ C₁ W₂ A₂ C₂) = 0) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3 *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3 ≠ 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3 *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3 *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3 = 0 ∧
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3 *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilRaise3) *
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.nilLower3 *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilLower3) =
+        (4 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.nilFlagProj1 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.nilFlagProj1 +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilFlagProj2 +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.nilFlagProj3 = 1)) ∧
+    -- 3. Lean 4 Repository Ontology & Semantic Knowledge Graph (`solve et coagula`):
+    ((∀ u : LeanOntologyCompilerStage,
+        ¬ Relation.TransGen LeanOntologyCompilerStage.causalEdge u u) ∧
+     (blastRadiusEdge (blastRadiusEdge usesPremise) = usesPremise ∧
+      (Relation.TransGen usesPremise d₁ d₀ ↔
+        Relation.TransGen (blastRadiusEdge usesPremise) d₀ d₁)) ∧
+     (composeTacticTransition (composeTacticTransition t₁ t₂) t₃ =
+        composeTacticTransition t₁ (composeTacticTransition t₂ t₃)) ∧
+     (P * X_op * P + conePlus P X_op + coneMinus P X_op + (1 - P) * X_op * (1 - P) = X_op ∧
+      (P + genPhi P A₁ C₁) * (P + genPhi P A₁ C₁) - (P + genPhi P A₁ C₁) = genV P A₁ C₁)) := by
+  have hXVIII1 := noncommutative_mat4_plucker_hodge_and_nambu_klein_anomaly u_nc v_nc
+  have hXVIII2 := klein_quadric_and_zorn_nilpotency_of_twistor_lines u_c v_c ZA ZB
+  have hXVIII3 := amplituhedron_4bracket_eq_zorn_plucker_anticommutator_and_baryon
+    Z0 Z1 Z2 Z3 z10 z20 z30 u0 u1 u2 u3
+  have hNil := InfoGeometry.OperatorAlgebra.PeirceSpine.nilpotent_first_orthogonal_projector_and_dirac_metric_reconstruction
+    N_plus h_nil h_reg
+  have hXVII := InfoGeometry.OperatorAlgebra.PeirceSpine.elie_cartan_supergravity_macdowell_mansouri_and_bianchi_closure
+    hP W₁ A₁ C₁ W₂ A₂ C₂ W₃ A₃ C₃
+  have hFlag := InfoGeometry.OperatorAlgebra.PeirceSpine.order3_nilpotent_flag_projector_reconstruction
+  have hOnt := lean_ontology_knowledge_graph_solve_et_coagula_synthesis
+    usesPremise d₀ d₁ t₁ t₂ t₃ hP A₁ C₁ X_op
+  exact ⟨⟨⟨hXVIII1.1, hXVIII1.2.2.2.1, hXVIII1.2.2.2.2⟩,
+          ⟨hXVIII2.1, hXVIII2.2.2.1, hXVIII2.2.2.2⟩,
+          ⟨hXVIII3.1, hXVIII3.2.1, hXVIII3.2.2.2.2.2⟩⟩,
+         ⟨⟨hNil.1, hNil.2.2.2.2.1, hNil.2.2.2.2.2.2.2.2.1, hNil.2.2.2.2.2.2.2.2.2.1⟩,
+          ⟨hXVII.1, hXVII.2.1, hXVII.2.2.1, hXVII.2.2.2.2.2⟩,
+          ⟨hFlag.1, hFlag.2.1, hFlag.2.2.2.2.1, hFlag.2.2.2.2.2.2.2.1⟩⟩,
+         ⟨hOnt.1, hOnt.2.2.1, hOnt.2.2.2.1, ⟨hOnt.2.2.2.2.1, hOnt.2.2.2.2.2.2.2.2.2⟩⟩⟩
+
+/-!
+### Part XV.o retired: the former six-lane conjunction was not a unification theorem
+
+The former declaration only packaged lane-local results and supplied independent
+inputs; it established no map, compatibility law, or cross-lane implication. It
+was removed. The checked matrix-to-Zorn grading bridge and its modular
+equivariance are owned by `MatrixThreeSheetZornGradingBridge` and
+`ModularFlowOperatorForms`, respectively.
+-/
+
+/-!
+### Part XV.p: Master Coagulation of the Six Google Drive / AI Studio / Google Docs Artifacts (`1E6i`, `1PO_`, `1ewrp`, `1ofaG`, `1sWXu`, `1uG9P`)
+-/
+
+omit [Ring B] hP in
+/-- **Part XV.p (`coagulated_all_six_aistudio_drive_artifacts_master_synthesis`)**:
+Coagulates the mathematical archetypes across all six Google Drive / AI Studio / Google Docs
+artifacts:
+1. **`1E6iRChkkEszjN_UBwp9DhW6sOTe-0YEU` (`Archetypes A₁–A₂₀`)**:
+   - `archetype_A1_dual_leibniz_and_jacobi`,
+   - `archetype_A17_dual_steinberg_braid_and_yang_baxter`,
+   - `archetype_A18_inverse_steinberg_braid_and_unipotent_group`,
+   - `archetype_A20_homogenized_weyl_invariance`.
+2. **`1PO_i6oQvcMXHygqCDANTy2w8y4JO_IGH` (`Archetypes LII–LXIII: Inductive Colimit Lift of the Connes–Higgs Triad`)**:
+   - `CanonicalTwoSheetedInductiveColimit.universal_higgs_goldstone_spin_triad`,
+   - `CanonicalTwoSheetedInductiveColimit.erlangen_unitary_gauge_higgs_projection`,
+   - `CanonicalTwoSheetedInductiveColimit.colimit_connes_higgs_triad_lift`.
+3. **`1ewrpkhcDRw_Xs7ryH6tWgKOjy7Yu-jBN` (`Tetraktys Chiral γ₅ vs. Dirac Algebra & Alternating Associator Chain`)**:
+   - `tetraktys_gamma5_threefold_origin`,
+   - `tetraktys_mass_protection_and_chiral_charge_duality`,
+   - `alternating_gamma5_associator_chain`.
+4. **`1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` (`218 Chunks: Archetypes A₁–A₈₉, selected KKT-labeled matrix identities, Star-Gramian identities, & SolveEtCoagulaMasterPoset P₁–P₅`)**:
+   - `archetype_A83_metriplectic_weak_measurement_duality`,
+   - `stage_P1_nilpotent_first_genesis_of_projectors`,
+   - `stage_P3_uncertainty_creates_elie_cartan_curvature_and_torsion`,
+   - `peirce_star_gramian_and_fubini_study_chordal_metric`,
+   - `higher_rank_nilpotent_hierarchy_and_jordan_cancellation` (power-vanishing consequences under explicit nilpotency hypotheses),
+   - `kkt_bracket_p1_p1_eq_p2_and_p1_p2_zero` (two identities for explicitly defined 4 × 4 matrices over a commutative ring).
+5. **`1sWXuMYQXfyNiZtuhfkqDkB3Ia2INL311` (`Archetypes A₂₉ & A₃₀: Chiral Hodge–Dirac Laplacians & De Rham–Hodge Generator Differentials`)**:
+   - `hodgeLaplacianPhi_eq` (`{d_Φ, d̄_Φ}(X) = 2(V X + X V)`),
+   - `hodgeLaplacianPhi_add_connection` (`{d_Φ, d̄_Φ}(X) + 2[V, X] = 4 V X`),
+   - `superDerivPhi_invS`, `superDerivPhi_genPhi`, `superDerivJBar_genPhi`, `superDerivPhi_genV`, and `superDerivPlusBar_genSig`.
+6. **`1uG9PjXKgmJvgIZ6jyIfPv4beB-fDHJdQy7q7OmGNX5E` (`Yang–Mills Existence & Mass Gap Algebraic Archetypes`)**:
+   - `YangMillsVortexPoset.YangMillsVortexStage.poset_chain_and_acyclicity`,
+   - `YangMillsVortexPoset.W_vortex_eq`,
+   - `YangMillsVortexPoset.W_vortex_sq_eq_Z_center`,
+   - `YangMillsVortexPoset.Z_center_sq_eq_one`,
+   - `YangMillsVortexPoset.vortex_mass_eigenvalue_Phi`. -/
+theorem coagulated_all_six_aistudio_drive_artifacts_master_synthesis
+    {B : Type*} [Ring B] [StarRing B]
+    {K : Type*} [CommRing K]
+    {A_seq : ℕ → Type*} [∀ k, Ring (A_seq k)] [∀ k, StarRing (A_seq k)]
+    {A_inf : Type*} [Ring A_inf] [StarRing A_inf]
+    (Cone : CanonicalTwoSheetedInductiveColimit.InductiveStarColimitCone A_seq A_inf)
+    (k m : ℕ) (P_k A_k C_k X_k : A_seq k) (hP_k : P_k * P_k = P_k) (α_h β_h : ℤ)
+    {P : B} (hP : P * P = P) (hP_star : star P = P)
+    (A C X : B) (hX_star : star X = X)
+    (N_plus : B) (h_nil : N_plus * N_plus = 0) (h_reg : N_plus * star N_plus * N_plus = N_plus)
+    (T_pow4 N_pow3 T_pow2 : B)
+    (hT4 : T_pow4 ^ 4 = 0) (hN3 : N_pow3 ^ 3 = 0) (hT2 : T_pow2 ^ 2 = 0)
+    (A_kkt B_kkt A'_kkt B'_kkt Z_kkt : K)
+    (Z_oct : InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix K) :
+    -- 1. `1E6iRChkkEszjN_UBwp9DhW6sOTe-0YEU` (Archetypes A₁–A₂₀):
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (A * C) =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A * C +
+         A * InfoGeometry.OperatorAlgebra.PeirceSpine.comm P C ∧
+     steinbergBraid P A C - steinbergBraidDual P A C =
+       (1 - genV P A C) * genPhi P A C ∧
+     steinbergBraid P A C * steinbergBraidInv P A C = 1 ∧
+     hProjV P A C (genJ P A C * X * (-genJ P A C)) =
+       genJ P A C * hProjV P A C X * (-genJ P A C)) ∧
+    -- 2. `1PO_i6oQvcMXHygqCDANTy2w8y4JO_IGH` (Archetypes LII–LXIII: Inductive Colimit Connes–Higgs Triad):
+    (let ι_k := (Cone.toColimit k).toRingHom
+     let P_inf := ι_k P_k
+     let A_inf' := ι_k A_k
+     let C_inf' := ι_k C_k
+     let Φ_inf := CanonicalTwoSheetedInductiveColimit.opHiggsField P_inf A_inf' C_inf'
+     let J₅_inf := CanonicalTwoSheetedInductiveColimit.opAxial P_inf A_inf' C_inf'
+     let V_inf := CanonicalTwoSheetedInductiveColimit.opHiggsVEVSq P_inf A_inf' C_inf'
+     Φ_inf * Φ_inf + J₅_inf * J₅_inf = 0 ∧
+     CanonicalTwoSheetedInductiveColimit.opHiggsMassOperator P_inf A_inf' C_inf'
+       (α_h • Φ_inf + β_h • J₅_inf) =
+       β_h • (-((4 : ℤ) • (V_inf * J₅_inf)))) ∧
+    -- 3. `1ewrpkhcDRw_Xs7ryH6tWgKOjy7Yu-jBN` (Tetraktys Chiral γ₅ & Alternating Associator Chain):
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5 *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5 =
+         (1 : InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix K) ∧
+     ((InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.Wx :
+         InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix K) *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.Wy) *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.Wz =
+       -InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5 ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.Wx :
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix K) *
+         (InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.Wy *
+           InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.Wz) =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.associator
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5 Z_oct = 0) ∧
+    -- 4. `1ofaG3fBD1VlprR7ShtsdctpOVRjmjB9f` (Chunks 196–217: A₈₃, P₁, P₃, Star-Gramian, Rank Hierarchy, & 5-Graded KKT):
+    (((N_plus * star N_plus) * (N_plus * star N_plus) = N_plus * star N_plus ∧
+      (N_plus + star N_plus) * (N_plus + star N_plus) * (N_plus + star N_plus) =
+        N_plus + star N_plus) ∧
+     (evenGrade P (cartanPlaquette P A C - cartanPlaquetteRev P A C) =
+        (2 : ℤ) • genSig P A C +
+          (qgtPlus P A C * qgtPlus P A C - qgtMinus P A C * qgtMinus P A C) ∧
+      oddGrade P (cartanPlaquette P A C - 1) = -(genV P A C * genJ P A C)) ∧
+     (genV P X X = conePlus P X * star (conePlus P X) + star (conePlus P X) * conePlus P X ∧
+      genPhi P X X * star (genPhi P X X) = genV P X X) ∧
+     ((T_pow4 ^ 2) ^ 2 = 0 ∧ (N_pow3 ^ 2) ^ 2 = 0 ∧
+      T_pow2 * InfoGeometry.OperatorAlgebra.PeirceSpine.comm T_pow2 X * T_pow2 = 0) ∧
+     (kktGradePlus1 A_kkt B_kkt * kktGradePlus1 A'_kkt B'_kkt -
+        kktGradePlus1 A'_kkt B'_kkt * kktGradePlus1 A_kkt B_kkt =
+        kktGradePlus2 (2 * (A_kkt * B'_kkt - B_kkt * A'_kkt)) ∧
+      kktGradePlus1 A_kkt B_kkt * kktGradePlus2 Z_kkt -
+        kktGradePlus2 Z_kkt * kktGradePlus1 A_kkt B_kkt = 0)) ∧
+    -- 5. `1sWXuMYQXfyNiZtuhfkqDkB3Ia2INL311` (Archetypes A₂₉ & A₃₀: Chiral Hodge–Dirac Laplacian & Generator Complex):
+    (hodgeLaplacianPhi P A C X = (2 : ℤ) • (genV P A C * X + X * genV P A C) ∧
+     hodgeLaplacianPhi P A C X + (2 : ℤ) • connV P A C X = (4 : ℤ) • (genV P A C * X) ∧
+     superDerivPhi P A C (invS P) = -((2 : ℤ) • genJ P A C) ∧
+     superDerivPhi P A C (genPhi P A C) = (2 : ℤ) • genV P A C ∧
+     superDerivJBar P A C (genPhi P A C) = (2 : ℤ) • genSig P A C ∧
+     superDerivPhi P A C (genV P A C) = 0 ∧
+     superDerivPlusBar P A (genSig P A C) = 0) ∧
+    -- 6. `1uG9PjXKgmJvgIZ6jyIfPv4beB-fDHJdQy7q7OmGNX5E` (Yang–Mills Vortex Holonomy, Monodromy & Mass Gap):
+    ((∀ s : YangMillsVortexPoset.YangMillsVortexStage,
+        ¬ YangMillsVortexPoset.YangMillsVortexStage.causalEdge s s) ∧
+     YangMillsVortexPoset.W_vortex N_plus =
+       (1 - YangMillsVortexPoset.V N_plus) + YangMillsVortexPoset.J N_plus ∧
+     YangMillsVortexPoset.W_vortex N_plus * YangMillsVortexPoset.W_vortex N_plus =
+       YangMillsVortexPoset.Z_center N_plus ∧
+     YangMillsVortexPoset.Z_center N_plus * YangMillsVortexPoset.Z_center N_plus = 1 ∧
+     YangMillsVortexPoset.V N_plus * YangMillsVortexPoset.Phi N_plus =
+       YangMillsVortexPoset.Phi N_plus) := by
+  have hA1 := archetype_A1_dual_leibniz_and_jacobi P A C
+  have hA17 := steinbergBraid_dual_expansion_and_difference hP A C
+  have hA18 := steinbergBraid_mul_inv hP A C
+  have hA20 := archetype_A20_weyl_clifford_covariance_of_homogenized_projectors hP A C X
+  have hLXII := CanonicalTwoSheetedInductiveColimit.colimit_connes_higgs_triad_lift
+    Cone k m P_k A_k C_k X_k hP_k α_h β_h
+  have hGamma5 :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.tetraktys_gamma5_threefold_origin
+      (R := K)
+  have hAssoc :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.associator
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5 Z_oct = 0 := by
+    ext <;>
+      simp [InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.associator,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.gamma5,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.mul_def,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornMatrix.mul,
+        InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3.cross]
+  have h_star_reg : star N_plus * N_plus * star N_plus = star N_plus :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.star_N_plus_reg N_plus h_reg
+  have h_star_nil : star N_plus * star N_plus = 0 :=
+    InfoGeometry.OperatorAlgebra.PeirceSpine.star_N_plus_sq N_plus h_nil
+  have hP1 := InfoGeometry.OperatorAlgebra.PeirceSpine.stage_P1_nilpotent_first_genesis_of_projectors
+    h_nil h_star_nil h_reg h_star_reg
+  have hP3 := InfoGeometry.OperatorAlgebra.PeirceSpine.stage_P3_uncertainty_creates_elie_cartan_curvature_and_torsion
+    hP A C
+  have hGram := InfoGeometry.OperatorAlgebra.PeirceSpine.peirce_star_gramian_and_fubini_study_chordal_metric
+    hP hP_star hX_star
+  have hRank := InfoGeometry.OperatorAlgebra.PeirceSpine.higher_rank_nilpotent_hierarchy_and_jordan_cancellation
+    T_pow4 N_pow3 T_pow2 X hT4 hN3 hT2
+  have hKKT := InfoGeometry.OperatorAlgebra.PeirceSpine.kkt_bracket_p1_p1_eq_p2_and_p1_p2_zero
+    A_kkt B_kkt A'_kkt B'_kkt Z_kkt
+  have hYM_poset := YangMillsVortexPoset.YangMillsVortexStage.poset_chain_and_acyclicity
+  exact ⟨⟨hA1.1, hA17.2.1, hA18.1, hA20.1⟩,
+         ⟨hLXII.2.2.2.2.2.2.2.1, hLXII.2.2.2.2.2.2.2.2.2.2.2.2.2.2⟩,
+         ⟨hGamma5.2.1, hGamma5.2.2.2.1, hGamma5.2.2.2.2, hAssoc⟩,
+         ⟨⟨hP1.1, hP1.2.2.2.2.2.2.2.1⟩,
+          ⟨hP3.2.1, hP3.2.2.2.1⟩,
+          ⟨hGram.2.2.2.2.2.2.1, hGram.2.2.2.2.2.2.2.2.2.1⟩,
+          ⟨hRank.1.1, hRank.2.1.1, hRank.2.2.2⟩,
+          hKKT⟩,
+         ⟨hodgeLaplacianPhi_eq hP A C X,
+          hodgeLaplacianPhi_add_connection hP A C X,
+          superDerivPhi_invS hP A C,
+          superDerivPhi_genPhi hP A C,
+          superDerivJBar_genPhi hP A C,
+          superDerivPhi_genV hP A C,
+          superDerivPlusBar_genSig hP A C⟩,
+         ⟨hYM_poset.2.1,
+          YangMillsVortexPoset.W_vortex_eq N_plus h_nil h_reg,
+          YangMillsVortexPoset.W_vortex_sq_eq_Z_center N_plus h_nil h_reg,
+          YangMillsVortexPoset.Z_center_sq_eq_one N_plus h_nil h_reg,
+          YangMillsVortexPoset.vortex_mass_eigenvalue_Phi N_plus h_nil h_reg⟩⟩
+
+/-!
+### Part XV.q: Master Coagulation of the Twelve Batch-3 Artifacts (`10VJy`, `1Ltu`, `1R4c`, `1SyA`, `1X7tk`, `1byXi`, `1en-o`, `1fFi`, `1iUv`, `1lxzo`, `1xSSy`, `1zXzG`) & the Eleven-Pillar Super-Color / Maurer–Cartan / Krein / Clifford / Operator-Form / Onsager Ontology
+-/
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset in
+omit [Ring B] P hP in
+/-- **Part XV.q (`coagulated_batch3_twelve_artifacts_and_eleven_pillar_ontology_synthesis`)**:
+Coagulates all twelve Batch-3 Google Drive / Google AI Studio artifacts (`10VJy`, `1Ltu`, `1R4c`,
+`1SyA`, `1X7tk`, `1byXi`, `1en-o`, `1fFi`, `1iUv`, `1lxzo`, `1xSSy`, `1zXzG`) and the eleven-pillar
+Ontology (`Ring of Operators`, `Super-Color Grassmannian`, `Super-Color Algebra`,
+`Grassmannian Maurer–Cartan`, `Real Form`, `Real-Doubled Krein Space`, `Clifford Modules`,
+`Graded n-Operator-Form Complex`, `Fréchet–Leibniz Commutator Calculus`, and
+`Onsager–Casimir Commutator Uncertainty`) into a single kernel-verified theorem:
+1. **Super-Color Grassmannian & Super-Color Algebra (`1R4c`, `1iUv`, `1SyA`, `1xSSy`, `1byXi`, `1zXzG`):**
+   - Single-channel Pauli exclusion (`psiPlus (channelX u) * psiPlus (channelX u) = 0`),
+   - 3-channel chiral condensate decomposition (`chiralCondensateL u v = C_L(u_x, v_x) + C_L(u_y, v_y) + C_L(u_z, v_z)`),
+   - Higgs–Yukawa Newton–Peirce step deficit factorization (`idempotentDeficit (chiralCondensateL u v)`),
+   - Variational nilpotent defect expansion around the vacuum (`idempotentDeficit (eL + δΨ) = massLin δΨ + δΨ * δΨ`).
+2. **Non-Abelian Convective Curl/Div, Polarized Insertion, & Helmholtz–Hodge–Weitzenböck (`1byXi`, `1en-o`, `1fFi`, `1lxzo`):**
+   - Right/left insertion anomalies factoring through the chromoelectric field `E = [α, y]`,
+   - Irrotational Faraday obstruction (`adjointCurl p (adjointGrad p φ) = -commVec φ (cross p p)`),
+   - Solenoidal Bianchi obstruction (`adjointDiv p (adjointCurl p V) = adjointDiv (cross p p) V`),
+   - Non-Abelian Helmholtz–Hodge–Weitzenböck identity (`longitudinalOp p V - transverseOp p V = bochnerVec p V - adjointCurl (cross p p) V`).
+3. **Graded `n`-Operator-Form Complex, Fréchet–Leibniz Commutator Calculus, & Lichnerowicz–Bogomolny `g_S = 2` (`10VJy`, `1X7tk`, `1zXzG`, `1xSSy` Chunks 12–44):**
+   - Fréchet commutator Leibniz bridge (`commOp p (X * Y) = frechetBilinear X Y (commOp p X) (commOp p Y)`),
+   - Native Zorn product realization of `extCurl` and `-extDiv` on `Ω¹(R)` and `Ω²(R)`,
+   - Non-Abelian Faraday–Bianchi (`superTrace (commZorn Phi_0 F_curv - anticommZorn Phi_p F_curv) = 0`),
+   - Lichnerowicz–Bogomolny Dirac square (`diracPlus α p * diracPlus α p = scalarDiag (α * α + dot p p) + ⟨0, B + E, B + E, 0⟩`).
+4. **Explicit matrix identities and nilpotent commutators (`1xSSy` Chunks 121–125 & 156):**
+   - Matrix square, anticommutation, product, and conjugation identities over a ring (no real form or bilinear structure is assumed),
+   - An ordered bilinear expansion in unconstrained ring coefficients (the source labels this RoPE; the Lean proposition assumes no rotation or trigonometric laws),
+   - Square-zero sandwich commutator identities (`[[N_+, W], N_+] = 2 N_+ W N_+` and `[N_+ W N_+, N_+] = 0`; these equations alone do not assert a graded algebra structure).
+5. **Malik–Thome Ket-Bra Drazin Resolution, Tensor-Train MPS Peirce Calculus, & Meno–Theaetetus Anthyphairesis (`1Ltu`, `1xSSy` Chunks 86–134):**
+   - Malik–Thome ket-bra outer product (`dmpOp B_d M Mdag * mpdOp B_d M Mdag - B_d * B_d = qgtPlus P Mdag Mdag`),
+   - Tensor-Train MPS long-range Grade-`±2` truncation defect (`X - mpsApprox3 P₁ P₂ P₃ X = P₁ * X * P₃ + P₃ * X * P₁`),
+   - Meno–Theaetetus Pell defect alternation (`(x + 2y)² - 2(x + y)² = -(x² - 2y²)`). -/
+theorem coagulated_batch3_twelve_artifacts_and_eleven_pillar_ontology_synthesis
+    {R : Type*} [Ring R] {K : Type*} [CommRing K]
+    (u_r v_r p_r A_r C_r V_r : Vec3 R) (X_z δΨ : ZornMatrix R)
+    (α_r φ_r X_op Y_op W_op : R)
+    {Np Nm : R} (hp : Np * Np = 0) (hm : Nm * Nm = 0)
+    {M_d P_d C_d N_d B_d Mdag : R}
+    (hD : DrazinResolution M_d P_d C_d N_d B_d) (hMonad : P_d * Mdag * P_d = B_d)
+    {P₁ P₂ P₃ : R}
+    (h11 : P₁ * P₁ = P₁) (h22 : P₂ * P₂ = P₂)
+    (h12 : P₁ * P₂ = 0) (h21 : P₂ * P₁ = 0)
+    (hSum : P₁ + P₂ + P₃ = 1) (X_tt : R)
+    {K_mod Q₁ Q₂ Q_noether : R}
+    (hQ1 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm K_mod Q₁ = 0)
+    (hQ2 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm K_mod Q₂ = 0)
+    (hQN : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Np Q_noether = 0)
+    (σ_aut : R ≃+* R) (n_pow : ℕ)
+    (x_pell y_pell : ℤ)
+    (s₁ a₁ s₂ a₂ q₁ q₂ k₁ k₂ c_m s_m c_n s_n : K) :
+    -- 1. Super-Color Grassmannian & Super-Color Algebra (`1R4c`, `1iUv`, `1SyA`, `1xSSy`, `1byXi`, `1zXzG`):
+    (ZornMatrix.psiPlus (Vec3.channelX u_r) * ZornMatrix.psiPlus (Vec3.channelX u_r) = 0 ∧
+     ZornMatrix.chiralCondensateL u_r v_r =
+       ZornMatrix.chiralCondensateL (Vec3.channelX u_r) (Vec3.channelX v_r) +
+       ZornMatrix.chiralCondensateL (Vec3.channelY u_r) (Vec3.channelY v_r) +
+       ZornMatrix.chiralCondensateL (Vec3.channelZ u_r) (Vec3.channelZ v_r) ∧
+     ZornMatrix.idempotentDeficit (ZornMatrix.chiralCondensateL u_r v_r) =
+       ⟨Vec3.dot u_r v_r * Vec3.dot u_r v_r - Vec3.dot u_r v_r, 0, 0, 0⟩ ∧
+     ZornMatrix.idempotentDeficit (ZornMatrix.eL + δΨ) =
+       ZornMatrix.massLin δΨ + δΨ * δΨ) ∧
+    -- 2. Non-Abelian Convective Curl/Div, Polarized Insertion, & Helmholtz–Hodge–Weitzenböck (`1byXi`, `1en-o`, `1fFi`, `1lxzo`):
+    (Vec3.rightInsertionAnomaly α_r p_r = Vec3.cross p_r (Vec3.commVec α_r p_r) ∧
+     Vec3.adjointCurl p_r (Vec3.adjointGrad p_r φ_r) = -Vec3.commVec φ_r (Vec3.cross p_r p_r) ∧
+     Vec3.adjointDiv p_r (Vec3.adjointCurl p_r V_r) = Vec3.adjointDiv (Vec3.cross p_r p_r) V_r ∧
+     Vec3.longitudinalOp p_r V_r - Vec3.transverseOp p_r V_r =
+       Vec3.bochnerVec p_r V_r - Vec3.adjointCurl (Vec3.cross p_r p_r) V_r) ∧
+    -- 3. Graded `n`-Operator-Form Complex, Fréchet–Leibniz Calculus, & Lichnerowicz–Bogomolny `g_S = 2` (`10VJy`, `1X7tk`, `1zXzG`, `1xSSy`):
+    (Vec3.commOp α_r (X_op * Y_op) =
+       ZornForms.frechetBilinear X_op Y_op (Vec3.commOp α_r X_op) (Vec3.commOp α_r Y_op) ∧
+     ZornForms.zornMul (ZornForms.form1 p_r) (ZornForms.form1 A_r) +
+       ZornForms.zornMul (ZornForms.form1 A_r) (ZornForms.form1 p_r) =
+       ZornForms.extCurl p_r (ZornForms.form1 A_r) ∧
+     ZornForms.zornMul (ZornForms.form2 p_r) (ZornForms.form2 C_r) +
+       ZornForms.zornMul (ZornForms.form2 C_r) (ZornForms.form2 p_r) =
+       -ZornForms.extDiv p_r (ZornForms.form2 C_r) ∧
+     ZornNC.diracPlus α_r p_r * ZornNC.diracPlus α_r p_r =
+       ZornNC.scalarDiag (α_r * α_r + Vec3.dot p_r p_r) +
+         ⟨0, Vec3.cross p_r p_r + Vec3.commVec α_r p_r, Vec3.cross p_r p_r + Vec3.commVec α_r p_r, 0⟩) ∧
+    -- 4. Grassmannian Maurer–Cartan, Real-Doubled Krein Space, & Nilpotent-First 5-Graded Kantor Closure (`1xSSy` Chunks 121–125 & 156):
+    (((kreinSigmaZ : Matrix (Fin 2) (Fin 2) K) * kreinSigmaZ = 1 ∧
+      (kreinJ2 : Matrix (Fin 2) (Fin 2) K) * kreinJ2 = -1 ∧
+      (kreinSigmaZ : Matrix (Fin 2) (Fin 2) K) * kreinJ2 +
+        kreinJ2 * (kreinSigmaZ : Matrix (Fin 2) (Fin 2) K) = 0 ∧
+      kreinSigmaZ * realDoubleKrein s₁ a₁ * kreinSigmaZ = realDoubleKrein s₁ (-a₁) ∧
+      ((q₁ * c_m - q₂ * s_m) * (k₁ * c_n - k₂ * s_n) +
+       (q₁ * s_m + q₂ * c_m) * (k₁ * s_n + k₂ * c_n) =
+         (q₁ * c_m * k₁ * c_n - q₁ * c_m * k₂ * s_n -
+          q₂ * s_m * k₁ * c_n + q₂ * s_m * k₂ * s_n +
+          q₁ * s_m * k₁ * s_n + q₁ * s_m * k₂ * c_n +
+          q₂ * c_m * k₁ * s_n + q₂ * c_m * k₂ * c_n))) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm Np W_op) Np =
+        (2 : ℤ) • nilKantorGp2 Np W_op ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm (nilKantorGp2 Np W_op) Np = 0)) ∧
+    -- 5. Malik–Thome Ket-Bra Drazin Resolution, Tensor-Train MPS Peirce Calculus, & Meno–Theaetetus Anthyphairesis (`1Ltu`, `1xSSy` Chunks 86–134):
+    (dmpOp B_d M_d Mdag * mpdOp B_d M_d Mdag - B_d * B_d =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.qgtPlus P_d Mdag Mdag ∧
+     X_tt - ZornNambuDeRhamDiracKahlerPoset.mpsApprox3 P₁ P₂ P₃ X_tt = P₁ * X_tt * P₃ + P₃ * X_tt * P₁ ∧
+     (x_pell + 2 * y_pell) * (x_pell + 2 * y_pell) - 2 * ((x_pell + y_pell) * (x_pell + y_pell)) =
+       -(x_pell * x_pell - 2 * (y_pell * y_pell))) ∧
+    -- 6. Erlangen-labeled algebraic commutant, Peirce, and nilpotent-conjugation identities; no modular-flow structure is assumed:
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.invS P₁)
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P₁ X_op Y_op) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P₁ X_op Y_op)
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P₁ X_op) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P₁ X_op Y_op)
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P₁ Y_op) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P₁ X_op Y_op)
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P₁ X_op Y_op) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm K_mod (Q₁ * Q₂) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm K_mod
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.comm Q₁ Q₂) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm K_mod
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm Q₁ Q₂) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.invS P₁ *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.genV P₁ X_op Y_op *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.invS P₁ =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.genV P₁ X_op Y_op ∧
+     (1 + Np) * Q_noether * (1 - Np) = Q_noether ∧
+     (X_op ^ n_pow = 0 ↔ (σ_aut X_op) ^ n_pow = 0) ∧
+     (X_op ^ n_pow = 1 ↔ (σ_aut X_op) ^ n_pow = 1) ∧
+     σ_aut (X_op * X_op + X_op + 1) = σ_aut X_op * σ_aut X_op + σ_aut X_op + 1 ∧
+     ((1 + Np) * X_op * (1 - Np)) * ((1 + Np) * X_op * (1 - Np)) + (1 + Np) * X_op * (1 - Np) + 1 =
+       (1 + Np) * (X_op * X_op + X_op + 1) * (1 - Np) ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm (Np + X_op) (Nm + Y_op) -
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm Np Nm =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm Np Y_op +
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm X_op Nm +
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm X_op Y_op ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (Np + X_op) (Nm + Y_op))
+       (Np + X_op) =
+       ((Np + X_op) * (Nm + Y_op) * (Np + X_op) +
+        (Np + X_op) * (Nm + Y_op) * (Np + X_op)) -
+       InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+         ((Np + X_op) * (Np + X_op)) (Nm + Y_op)) := by
+  have hCh := ZornMatrix.psiPlus_channel_sq_zero_and_chiralCondensate_decomp u_r v_r
+  have hHiggs := ZornMatrix.idempotentDeficit_and_higgsYukawa_newton_peirce_condensation u_r v_r X_z
+  have hVar := ZornMatrix.variational_nilpotent_defect_expansion_around_vacuum δΨ
+  have hIns := Vec3.insertion_anomalies_factor_through_chromoelectric_field α_r p_r
+  have hIrr := Vec3.irrotational_obstruction_curl_of_grad_is_faraday p_r φ_r
+  have hSol := Vec3.solenoidal_obstruction_div_of_curl p_r V_r
+  have hHHW := Vec3.non_abelian_helmholtz_hodge_weitzenboeck_identity p_r V_r
+  have hFr := ZornForms.frechet_commutator_leibniz_bridge α_r X_op Y_op
+  have hSN := ZornForms.adjoint_schouten_nijenhuis_and_native_zorn_de_rham_realization p_r A_r C_r α_r
+  have hLB := ZornNC.zorn_lichnerowicz_bogomolny_dirac_wave_and_g2_synthesis α_r p_r
+  have hKrein := real_doubled_krein_clifford_and_rope_symplectic_attention_split
+    s₁ a₁ s₂ a₂ q₁ q₂ k₁ k₂ c_m s_m c_n s_n
+  have hNilK := nilpotent_first_cartan_dirac_and_kantor_5graded_closure hp hm W_op
+  have hMT := malik_thome_ket_bra_and_superoperator_drazin_resolution hD hMonad
+  have hTT := ZornNambuDeRhamDiracKahlerPoset.tensor_train_peirce_and_mps_jordan_wigner_parity
+    h11 h22 h12 h21 hSum X_tt
+  have hPell := meno_theaetetus_anthyphairesis_and_pell_transfer x_pell y_pell
+  have hErl2 := erlangen2_von_neumann_tomita_takesaki_modular_centralizer_and_noether_killing_invariants
+    h11 hQ1 hQ2 hp hQN X_op Y_op W_op
+  have hAut := JungianEpistemicCompiler.erlangen2_automorphism_equation_preservation_and_cyclotomic_transport
+    σ_aut hp X_op P₁ X_op Y_op n_pow
+  have hA56 := JungianEpistemicCompiler.stage_A5_A6_cartan_curvature_bianchi_and_5graded_kantor_closure
+    Np Nm X_op Y_op W_op hp
+  exact ⟨⟨hCh.1, hCh.2.2.2.2.2.2.2.2, hHiggs.1, hVar.2.2.1⟩,
+         ⟨hIns.1, hIrr, hSol, hHHW⟩,
+         ⟨hFr.1, hSN.2.2.2.2.2.1, hSN.2.2.2.2.2.2, hLB.1⟩,
+         ⟨⟨hKrein.1, hKrein.2.1, hKrein.2.2.1, hKrein.2.2.2.2.1, hKrein.2.2.2.2.2.2.2.2⟩,
+          ⟨hNilK.2.2.2.2.2.2.1, hNilK.2.2.2.2.2.2.2.2.1⟩⟩,
+         ⟨hMT.1, hTT.2.1, hPell.1⟩,
+         ⟨hErl2.1, hErl2.2.1, hErl2.2.2.1, hErl2.2.2.2.1,
+          hErl2.2.2.2.2.2.2.1, hErl2.2.2.2.2.2.2.2.1, hErl2.2.2.2.2.2.2.2.2.1,
+          hErl2.2.2.2.2.2.2.2.2.2.2.1, hErl2.2.2.2.2.2.2.2.2.2.2.2.2.2.2,
+          hAut.1.2.1, hAut.1.2.2.1, hAut.2.1.1, hAut.2.2.2.1,
+          hA56.1, hA56.2.2.2⟩⟩
+
+/-!
+### Part XV.r: Master Unification of Multi-Level Ontology (`OntologyRing`), Cladistic Phylogenesis (`D₅₀`), Epistemic Compiler Peirce Bridge (`D₄₆`), Concrete Noncommutative Matrix Realizations (`M₂(B)`, `M₃(B)`, `OpZornMatrix B`), and Erlangen 2.0 Galois Loci
+-/
+
+open InfoGeometry.OperatorAlgebra.OntologyRing in
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixUnitAnomalyRealization in
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixThreeSheetKKTRealization in
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixThreeSheetZornGradingBridge in
+open InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion in
+open InfoGeometry.Canonical.OperatorErlangenFixedPoints in
+open InfoGeometry.Synthesis.EpistemicOperatorPoset in
+omit [Ring B] P hP in
+/-- **Part XV.r (`coagulated_unified_multilevel_ontology_taxonomy_phylogenesis_and_all_lanes_dag_synthesis`)**:
+Unifies and fuses all ontology, taxonomy, phylogenesis, epistemic-compiler, matrix-realization,
+and Erlangen-Galois branches into the single connected apex of the repository DAG:
+1. **Multi-Level Operator Ontology (`OntologyRing`)**:
+   - 4-stratum MLT hierarchy (`M0_StateIndividual → M1_ProjectorClabject → M2_GrassmannianPowertypeOrbit → M3_ErlangenCasimirMetaLaw`) with `instantiatesEdge_acyclic`,
+   - Taxonomic subsumption (`cladeSubsumes Psub Panc → projectorSubspace Psub ⊆ projectorSubspace Panc`),
+   - Phylogenetic MRCA & synapomorphic character polarity (`cladeFork Pl Pr` acts as `+1` on `projectorSubspace Pl` and `-1` on `projectorSubspace Pr`, with both inside `projectorSubspace (cladeJoin Pl Pr)`),
+   - Grassmannian tangent space = odd Peirce grade (`P * T + T * P = T ↔ oddGrade P T = T`),
+   - Casimir centralizer conjugation invariance (`u * v = 1 → z ∈ centerB → u * z * v = z`),
+   - Erlangen 2.0 automorphism invariance of taxonomy, phylogenesis, and `centerB`.
+2. **Cladistic Phylogenesis (`stageD50_cladistic_phylogenesis`) & Epistemic Compiler Peirce Bridge (`stageD46_magnum_opus_completion`)**:
+   - Transitive nested clades, three-leaf outgroup defect `idempotencyDefect (threeLeafRoot P1 P2 P3) = 2 • P3`, idempotent `phyloLineage n P A`, and `forkDamping` / `cladisticFlow` selection eigenmodes,
+   - Faithful `2×2` Peirce block matrix homomorphism, `peirceAdCube P X = peirceAd P X`, `logisticBitPlus`, and dressed two-step resolvent inversion (`epistemicUnipotentDress`).
+3. **Concrete Noncommutative Matrix Realizations (`M₂(B)`, `M₃(B)`, and `OpZornMatrix B`)**:
+   - `MatrixUnitAnomalyRealization.matrix_unit_anomaly_gap_spine` on `Matrix (Fin 2) (Fin 2) R`,
+   - `MatrixThreeSheetKKTRealization.five_grade_matrix_reconstruction`, `eulerFiveGrading3_eq_ad_sigma`, and `eulerFiveGrading3_kkt_polynomial` on `Matrix (Fin 3) (Fin 3) R`,
+   - `MatrixThreeSheetZornGradingBridge.matrix3ToOpZorn_euler_intertwining` and `eulerFiveGrading3_factors_through_Zorn` connecting `M₃(R)` to `OpZornMatrix R`.
+4. **Erlangen 2.0 Galois Connection, Integer-Polynomial Loci (`OperatorErlangenFixedPoints`), & Epistemic Poset DAG**:
+   - `subgroup_le_fixingSubgroup_iff` (`H ≤ fixingSubgroup S ↔ S ⊆ fixedPointSet H`), `integerPolynomial_root_smul_iff`, and `epistemic_causal_poset_dag_acyclic`. -/
+theorem coagulated_unified_multilevel_ontology_taxonomy_phylogenesis_and_all_lanes_dag_synthesis
+    {R : Type*} [Ring R] [StarRing R]
+    {G : Type*} [Group G] [MulSemiringAction G R]
+    (σ_aut : R ≃+* R) (g_sym : G) (H_sub : Subgroup G) (S_obs : Set R)
+    {P Psub Pmid Panc Pl Pr P1 P2 P3 : R}
+    (hP : P * P = P) (hSub : Psub * Psub = Psub) (hMid : Pmid * Pmid = Pmid)
+    (hIncl1 : cladeSubsumes Psub Pmid) (hIncl2 : cladeSubsumes Pmid Panc)
+    (hL : Pl * Pl = Pl) (hR : Pr * Pr = Pr) (hLR : Pl * Pr = 0) (hRL : Pr * Pl = 0)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2) (h3 : P3 * P3 = P3)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (h13 : P1 * P3 = 0) (h31 : P3 * P1 = 0)
+    (h23 : P2 * P3 = 0) (h32 : P3 * P2 = 0)
+    (A C X T : R) (n_lin : ℕ)
+    {z u v : R} (hz : z ∈ centerB) (huv : u * v = 1)
+    (X_m2 : Matrix (Fin 2) (Fin 2) R)
+    (X_m3 : Matrix (Fin 3) (Fin 3) R)
+    (p_int : Polynomial ℤ) :
+    -- 1. Multi-Level Operator Ontology (`OntologyRing`):
+    (((∀ L : OntologyMetaLevel, ¬ Relation.TransGen OntologyMetaLevel.instantiatesEdge L L) ∧
+      OntologyMetaLevel.instantiatesEdge .M0_StateIndividual .M1_ProjectorClabject ∧
+      OntologyMetaLevel.instantiatesEdge .M1_ProjectorClabject .M2_GrassmannianPowertypeOrbit ∧
+      OntologyMetaLevel.instantiatesEdge .M2_GrassmannianPowertypeOrbit .M3_ErlangenCasimirMetaLaw) ∧
+     (projectorSubspace Psub ⊆ projectorSubspace Panc) ∧
+     (projectorSubspace Pl ⊆ projectorSubspace (cladeJoin Pl Pr) ∧
+      projectorSubspace Pr ⊆ projectorSubspace (cladeJoin Pl Pr) ∧
+      (∀ x ∈ projectorSubspace Pl, cladeFork Pl Pr * x = x) ∧
+      (∀ y ∈ projectorSubspace Pr, cladeFork Pl Pr * y = -y)) ∧
+     (((P * T + T * P = T) ↔ oddGrade P T = T) ∧
+      u * z * v = z) ∧
+     ((cladeSubsumes Psub Panc ↔ cladeSubsumes (σ_aut Psub) (σ_aut Panc)) ∧
+      σ_aut (cladeFork Pl Pr) = cladeFork (σ_aut Pl) (σ_aut Pr) ∧
+      σ_aut (cladeJoin Pl Pr) = cladeJoin (σ_aut Pl) (σ_aut Pr) ∧
+      (z ∈ centerB ↔ σ_aut z ∈ centerB))) ∧
+    -- 2. Cladistic Phylogenesis (`D₅₀`) & Epistemic Compiler Magnum Opus (`D₄₆`):
+    ((cladeSubsumes Psub Panc ∧
+      cladeFork P1 P2 * cladeFork P1 P2 = cladeJoin P1 P2 ∧
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect (threeLeafRoot P1 P2 P3) = (2 : ℤ) • P3 ∧
+      phyloLineage n_lin P A * phyloLineage n_lin P A = phyloLineage n_lin P A ∧
+      forkDamping P A C (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C) =
+        -((4 : ℤ) • (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C)) ∧
+      cladisticFlow P A C (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C) = 0) ∧
+     (peirceAdCube P X = peirceAd P X ∧
+      logisticBitPlus P A C =
+        P - InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P A C *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C ∧
+      epistemicUnipotentDress P A (1 - twoStepUpper P1 P2 A C) *
+        epistemicUnipotentDress P A (twoStepResolvent P1 P2 A C) = 1)) ∧
+    -- 3. Concrete Noncommutative Matrix Realizations (`M₂(R)`, `M₃(R)`, & `OpZornMatrix R`):
+    ((Phi (Nplus (B := R)) * Phi (Nplus (B := R)) = Gap (Nplus (B := R)) ∧
+      MatrixUnitAnomalyRealization.P (Nplus (B := R)) * X_m2 *
+        MatrixUnitAnomalyRealization.P (Nplus (B := R)) +
+        MatrixUnitAnomalyRealization.P (Nplus (B := R)) * X_m2 *
+        MatrixUnitAnomalyRealization.Q (Nplus (B := R)) +
+        MatrixUnitAnomalyRealization.Q (Nplus (B := R)) * X_m2 *
+        MatrixUnitAnomalyRealization.P (Nplus (B := R)) +
+        MatrixUnitAnomalyRealization.Q (Nplus (B := R)) * X_m2 *
+        MatrixUnitAnomalyRealization.Q (Nplus (B := R)) = X_m2) ∧
+     (eulerFiveGrading3 X_m3 =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+          (OperatorAlgebra.PeirceSpine.NilpotentPairingAnomalyGapPoset.Sigma (Nplus3 (B := R))) X_m3 ∧
+      matrix3ToOpZorn (eulerFiveGrading3 X_m3) =
+        opEulerFiveGrading (matrix3ToOpZorn X_m3) ∧
+      eulerFiveGrading3 X_m3 =
+        opZornToMatrix3 (opEulerFiveGrading (matrix3ToOpZorn X_m3)))) ∧
+    -- 4. Erlangen 2.0 Galois Connection, Integer-Polynomial Loci & Epistemic Poset DAG Acyclicity:
+    ((H_sub ≤ fixingSubgroup (G := G) (A := R) S_obs ↔
+        S_obs ⊆ fixedPointSet (G := G) (A := R) H_sub) ∧
+     (Polynomial.aeval (g_sym • X) p_int = 0 ↔ Polynomial.aeval X p_int = 0) ∧
+     (EpistemicPosetStage.primordialBrackets < EpistemicPosetStage.binaryCut ∧
+      EpistemicPosetStage.unipotentShears < EpistemicPosetStage.matrixRepresentation)) := by
+  have hClade : cladeSubsumes Psub Panc := cladeSubsumes_trans hIncl1 hIncl2
+  have hOnt := ontology_taxonomy_phylogenesis_multilevel_master_synthesis
+    σ_aut hP hClade hL hR hLR hRL T hz huv
+  have hD50 := stageD50_cladistic_phylogenesis
+    hP hSub hMid hIncl1 hIncl2 h1 h2 h3 h12 h21 h13 h31 h23 h32 A C n_lin
+  have hD46 := stageD46_magnum_opus_completion hP h1 h2 h12 h21 X A C
+  have hM2 := matrix_unit_anomaly_gap_spine X_m2
+  exact ⟨hOnt,
+         ⟨⟨hD50.1, hD50.2.2.1, hD50.2.2.2.2.1, hD50.2.2.2.2.2.1,
+           hD50.2.2.2.2.2.2.2.1, hD50.2.2.2.2.2.2.2.2⟩,
+          ⟨hD46.2.1, hD46.2.2.2.2.2.2.1, hD46.2.2.2.2.2.2.2.2.1⟩⟩,
+         ⟨⟨hM2.2.2.2.1, hM2.2.2.2.2.2⟩,
+          ⟨eulerFiveGrading3_eq_ad_sigma X_m3,
+           matrix3ToOpZorn_euler_intertwining X_m3,
+           eulerFiveGrading3_factors_through_Zorn X_m3⟩⟩,
+         ⟨subgroup_le_fixingSubgroup_iff,
+          integerPolynomial_root_smul_iff g_sym p_int X,
+          ⟨epistemic_causal_poset_dag_acyclic.1,
+           epistemic_causal_poset_dag_acyclic.2.2.2.2.2.2⟩⟩⟩
+
+open scoped BigOperators in
+open InfoGeometry.Core.IdempotentGraphGrassmannian in
+open InfoGeometry.OperatorAlgebra.PeirceSpine in
+open InfoGeometry.OperatorAlgebra.OntologyRing in
+open InfoGeometry.Canonical.Drazin in
+open InfoGeometry.Canonical.Drazin.IsDrazinInverse in
+open InfoGeometry.Canonical.DrazinMoorePenrosePartition in
+open InfoGeometry.Canonical.GradedDMPDependencyOrder in
+open InfoGeometry.Canonical.CampbellMeyerWeakDrazin in
+open InfoGeometry.Canonical.MoorePenrose in
+open InfoGeometry.Canonical.DrazinNilpotentShell in
+open InfoGeometry.Canonical.DrazinEpistemicSolveEtCoagula in
+omit [Ring B] P hP in
+/-- **Part XV.s (`coagulated_drazin_species_solve_et_coagula_all_lanes_synthesis`)**:
+Coagulates the complete Drazin `solve et coagula` species across all repository lanes:
+1. **Acyclic Causal Posets (`DrazinEpistemicStage`, `GradedDMPDependencyOrder.Stage`, & `OntologyMetaLevel`)**:
+   strict acyclicity of `DrazinEpistemicStage` and `OntologyMetaLevel`, and branch
+   incomparability of `GradedDMPDependencyOrder.Stage`.
+2. **Movement I (Triple-Root Equivalence, Uniqueness, Clabject Individuation, Binary Cut, & Cladistic Fork)**:
+   `Singular.Drazin.IsDrazinInverse ↔ Canonical.Drazin.IsDrazinInverse`,
+   `QuantumContext.Drazin.IsDrazinInverse ↔ Canonical.Drazin.IsDrazinInverse`, `b = c`,
+   unique clabject fixed-point decomposition (`∃! parts`), `cladeJoin P_D Q_D = 1`,
+   `cladeFork P_D Q_D = invS P_D`, `evenGrade P_D a = a`, `fittingRegularPart a b * b = P_D`,
+   and `(fittingNilpotentPart a b) ^ (k + 1) = 0`.
+3. **Movement II (Fourfold Peirce Anatomy & Faithful `2 × 2` Coordinate Representation)**:
+   4-sector decomposition across `P_D`, nilpotent cones `conePlus ^ 2 = 0`, `coneMinus ^ 2 = 0`,
+   `peirce11 P_D a = fittingRegularPart a b`, `peirce00 P_D a = fittingNilpotentPart a b`,
+   and injectivity of `peirceCoordinateRingHom`.
+4. **Movement III (Universal Drazin–Inner-Inverse Sandwich & Malik–Thome Transcendent Function)**:
+   From `a * m_dag * a = a`, `dmpInverse a b m_dag = dmpOp P_D m_dag`,
+   `dualDmpInverse a b m_dag = mpdOp P_D m_dag`, `projection a b * m_dag * projection a b = b`,
+   `dmpOp - mpdOp = peirceAd P_D m_dag`, `dmpOp * mpdOp - b * b = qgtPlus`,
+   `Q_D * (mpdOp * dmpOp) * Q_D = qgtMinus`, `qgtPlus ± qgtMinus = genV / genSig`,
+   `Φ * Φ = V`, and `J * J = -V`.
+5. **Movement IV (Socratic Aporia, MP Obstruction & Criterion, Shell Cascade, & Meta-Cognitive Tower)**:
+   orthogonal Fitting defect split, `idempotencyDefect (P_D + Φ) = V`,
+   `idempotencyDefect (P_D + J) = -V`, recursive defect tower split,
+   `nilpotent_moore_penrose_not_drazin`, `exists_index_iff_commute`, shell clade subsumption,
+   strict cascade triangularity, core + shell reconstruction of `a`,
+   `peirceAdCube P_D X = peirceAd P_D X`, and Grassmannian tangent equivalence
+   `(P_D * X + X * P_D = X) ↔ oddGrade P_D X = X`.
+6. **Movement V (Taxonomic Generalized-Inverse Chain, Rectangular Retract Lift, & Erlangen 2.0 Transport)**:
+   `IsDrazinInverse p_idem p_idem 1`, `IsCommutingWeakDrazin a b k`, `IsWeakDrazin a b k`,
+   `isDrazinInverse_of_retract`, and `IsDrazinInverse (e a) (e b) k`. -/
+theorem coagulated_drazin_species_solve_et_coagula_all_lanes_synthesis
+    {R S : Type u} [Ring R] [StarRing R] [Ring S] (e : R ≃+* S)
+    {m_dim n_dim : Type u} [Fintype m_dim] [DecidableEq m_dim] [Fintype n_dim] [DecidableEq n_dim]
+    {K_rect : Matrix n_dim m_dim R} {Q_rect : Matrix m_dim n_dim R}
+    (hRetract : Q_rect * K_rect = 1) (T_rect : Matrix n_dim n_dim R)
+    (hCommRect : Commute (K_rect * Q_rect) T_rect)
+    {D_rect : Matrix m_dim m_dim R} {k_rect r_rect : ℕ}
+    (hD_rect : InfoGeometry.QuantumContext.Drazin.IsDrazinInverse (Q_rect * T_rect * K_rect) D_rect k_rect)
+    (hN_rect : ((1 - K_rect * Q_rect) * T_rect * (1 - K_rect * Q_rect)) ^ r_rect = 0)
+    {a b c m_dag p_idem n_op m_op : R} {k ℓ r m s p q : ℕ}
+    (h : IsDrazinInverse a b k)
+    (hc : IsDrazinInverse a c ℓ)
+    (hInner : a * m_dag * a = a)
+    (hp_idem : p_idem * p_idem = p_idem)
+    (hMP : IsMoorePenroseInverse n_op m_op)
+    (hn_nil : n_op ^ r = 0) (hn_ne : n_op ≠ 0)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a b) M)
+    (hms : m ≤ s) (hpq : p ≤ q) (X Y : R) :
+    ((∀ st : DrazinEpistemicStage, ¬ Relation.TransGen DrazinEpistemicStage.causalEdge st st) ∧
+     DrazinEpistemicStage.causalEdge .E0_PrimordialDualRootsAndBinaryCut .E1_FourfoldPeirceAnatomy ∧
+     DrazinEpistemicStage.causalEdge .E4_SuperoperatorAndRectangularRetractTower .E5_ErlangenMultilevelMasterCoagulation ∧
+     (¬ (Stage.drazin ≤ Stage.penrose) ∧ ¬ (Stage.penrose ≤ Stage.drazin)) ∧
+     (∀ L : OntologyMetaLevel, ¬ Relation.TransGen OntologyMetaLevel.instantiatesEdge L L)) ∧
+    ((InfoGeometry.Singular.Drazin.IsDrazinInverse a b k ↔
+        InfoGeometry.Canonical.Drazin.IsDrazinInverse a b k) ∧
+     (InfoGeometry.QuantumContext.Drazin.IsDrazinInverse a b k ↔
+        InfoGeometry.Canonical.Drazin.IsDrazinInverse a b k) ∧
+     b = c ∧
+     (∀ z : R, ∃! parts : R × R,
+        parts.1 ∈ projectorSubspace (projection a b) ∧
+        parts.2 ∈ projectorSubspace (complementaryProjection a b) ∧
+        parts.1 + parts.2 = z) ∧
+     cladeJoin (projection a b) (complementaryProjection a b) = 1 ∧
+     cladeFork (projection a b) (complementaryProjection a b) = invS (projection a b) ∧
+     evenGrade (projection a b) a = a ∧
+     oddGrade (projection a b) a = 0 ∧
+     fittingRegularPart a b * b = projection a b ∧
+     (fittingNilpotentPart a b) ^ (k + 1) = 0) ∧
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 (projection a b) X +
+       conePlus (projection a b) X +
+       coneMinus (projection a b) X +
+       InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 (projection a b) X = X ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 (projection a b) a = fittingRegularPart a b ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 (projection a b) a = fittingNilpotentPart a b ∧
+     conePlus (projection a b) X * conePlus (projection a b) Y = 0 ∧
+     coneMinus (projection a b) X * coneMinus (projection a b) Y = 0 ∧
+     Function.Injective (peirceCoordinateRingHom (projection_is_idempotent h))) ∧
+    (dmpInverse a b m_dag =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.dmpOp (projection a b) m_dag ∧
+     dualDmpInverse a b m_dag =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.mpdOp (projection a b) m_dag ∧
+     projection a b * m_dag * projection a b = b ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.dmpOp (projection a b) m_dag -
+       InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.mpdOp (projection a b) m_dag =
+       peirceAd (projection a b) m_dag ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.dmpOp (projection a b) m_dag *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.mpdOp (projection a b) m_dag - b * b =
+       qgtPlus (projection a b) m_dag m_dag ∧
+     complementaryProjection a b *
+       (InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.mpdOp (projection a b) m_dag *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis.dmpOp (projection a b) m_dag) *
+       complementaryProjection a b =
+       qgtMinus (projection a b) m_dag m_dag ∧
+     qgtPlus (projection a b) m_dag m_dag + qgtMinus (projection a b) m_dag m_dag =
+       genV (projection a b) m_dag m_dag ∧
+     qgtPlus (projection a b) m_dag m_dag - qgtMinus (projection a b) m_dag m_dag =
+       genSig (projection a b) m_dag m_dag ∧
+     genPhi (projection a b) m_dag m_dag * genPhi (projection a b) m_dag m_dag =
+       genV (projection a b) m_dag m_dag ∧
+     genJ (projection a b) m_dag m_dag * genJ (projection a b) m_dag m_dag =
+       -genV (projection a b) m_dag m_dag) ∧
+    (idempotencyDefect a =
+       idempotencyDefect (fittingRegularPart a b) +
+         idempotencyDefect (fittingNilpotentPart a b) ∧
+     idempotencyDefect (projection a b + genPhi (projection a b) m_dag m_dag) =
+       genV (projection a b) m_dag m_dag ∧
+     idempotencyDefect (projection a b + genJ (projection a b) m_dag m_dag) =
+       -genV (projection a b) m_dag m_dag ∧
+     (∀ n : ℕ,
+       idempotencyDefect^[n] (genV (projection a b) m_dag m_dag) =
+         idempotencyDefect^[n] (qgtPlus (projection a b) m_dag m_dag) +
+           idempotencyDefect^[n] (qgtMinus (projection a b) m_dag m_dag)) ∧
+     ¬ IsDrazinInverse n_op m_op k ∧
+     ((∃ idx, IsDrazinInverse n_op m_op idx) ↔ n_op * m_op = m_op * n_op) ∧
+     cladeSubsumes (drazinShellProj a b M m) (complementaryProjection a b) ∧
+     cladeSubsumes (drazinRangeProj a b M q) (drazinRangeProj a b M p) ∧
+     drazinShellProj a b M m * a * drazinShellProj a b M s = 0 ∧
+     a = projection a b * a * projection a b +
+           ∑ idx ∈ Finset.range k,
+             drazinShellProj a b M idx * a *
+               (∑ r_idx ∈ Finset.range idx, drazinShellProj a b M r_idx) ∧
+     peirceAdCube (projection a b) X = peirceAd (projection a b) X ∧
+     ((projection a b * X + X * projection a b = X) ↔ oddGrade (projection a b) X = X)) ∧
+    (IsDrazinInverse p_idem p_idem 1 ∧
+     IsCommutingWeakDrazin a b k ∧
+     IsWeakDrazin a b k ∧
+     InfoGeometry.QuantumContext.Drazin.IsDrazinInverse
+       T_rect (InfoGeometry.Algebra.RectangularRetract.cornerHom K_rect Q_rect hRetract D_rect)
+       (k_rect + r_rect + 1) ∧
+     IsDrazinInverse (e a) (e b) k) :=
+  drazin_epistemic_solve_et_coagula_master_synthesis
+    e hRetract T_rect hCommRect hD_rect hN_rect
+    h hc hInner hp_idem hMP hn_nil hn_ne hM hms hpq X Y
+
+/-! =======================================================================
+    Part XXVII: Non-Commutative Souriau Moment Maps, 3×3 Kaluza–Janus Extensions
+    & Krein-Graded Bimetric Operator Systems (`solve et coagula`)
+    ======================================================================= -/
+
+section SouriauKaluzaJanusBimetricCoagulation
+
+open InfoGeometry.Canonical.SouriauKaluzaJanusBimetricSolveEtCoagula
+open InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MatrixThreeSheetZornGradingBridge
+
+variable {B_J : Type*} [Ring B_J] [StarRing B_J]
+
+omit [Ring B] hP in
+/-- **Part XXVII Master Coagulation**:
+Coagulates the 6-stage `JanusBimetricEpistemicStage` acyclic causal poset
+($\mathcal{J}_0 \prec \mathcal{J}_1 \prec \mathcal{J}_2 \prec \mathcal{J}_3 \prec \mathcal{J}_4 \prec \mathcal{J}_5$),
+the $2 \times 2$ Souriau moment torsor star-congruence, the $3 \times 3$ Kaluza–Janus double
+semidirect extension and Lie adjoint action, the Souriau–Noether trace pairing and coadjoint
+equivariance, the Krein-graded bimetric coupling nilpotency and Bianchi conservation law, and the
+Peirce–Krein / 3-sheet KKT / operator-Zorn bridges into `CoagulatedArchetypeSynthesis`. -/
+theorem partXXVII_souriau_kaluza_janus_bimetric_solve_et_coagula_synthesis
+    {χ χ_inv L L_inv b₁ b₂ : B_J}
+    (φ C M P q Ω γ δφ T_plus T_minus ρ p : B_J)
+    (hχ_left : χ_inv * χ = 1) (hL_left : L_inv * L = 1)
+    (hχ_right : χ * χ_inv = 1) (hL_right : L * L_inv = 1)
+    (hb₁₂ : b₁ * b₂ = 1) (hb₂₁ : b₂ * b₁ = 1) :
+    ((∀ st : JanusBimetricEpistemicStage,
+        ¬ Relation.TransGen JanusBimetricEpistemicStage.causalEdge st st) ∧
+     JanusBimetricEpistemicStage.causalEdge
+       .J0_PrimordialBinaryCutAndSouriauMomentCongruence
+       .J1_FourfoldAnatomyAndKaluzaJanusDoubleSemidirectAdjoint ∧
+     JanusBimetricEpistemicStage.causalEdge
+       .J4_PeirceKreinKKTZornTwistorBridge
+       .J5_MasterSouriauKaluzaJanusBimetricCoagulation) ∧
+    (affInv2 L_inv C * affGroup2 L C = 1 ∧
+     affGroup2 L C * affInv2 L_inv C = 1 ∧
+     affGroup2 L C * momentTorsor2 M P * (affGroup2 L C)ᴴ =
+       momentTorsor2 (L * M * star L - L * P * star C + C * star (L * P)) (L * P) ∧
+     affGroup2 (-1 : B_J) 0 * momentTorsor2 M P * (affGroup2 (-1 : B_J) 0)ᴴ =
+       momentTorsor2 M (-P)) ∧
+    (janusInv3 χ_inv φ L_inv C * janusGroup3 χ φ L C = 1 ∧
+     janusGroup3 χ φ L C * janusInv3 χ_inv φ L_inv C = 1 ∧
+     janusInv3 χ_inv φ L_inv C * janusLie3 Ω γ δφ * janusGroup3 χ φ L C =
+       janusLie3 (L_inv * Ω * L) (L_inv * Ω * C + L_inv * γ) (χ_inv * δφ) ∧
+     janusLie3 0 γ δφ * janusLie3 0 γ δφ = 0) ∧
+    (Matrix.trace (janusDualMoment3 M P q * janusLie3 Ω γ δφ) =
+       M * Ω + P * γ + q * δφ ∧
+     (janusInv3 χ_inv φ L_inv C * janusDualMoment3 M P q * janusGroup3 χ φ L C) 2 0 = q * χ ∧
+     (janusInv3 χ_inv φ L_inv C * janusDualMoment3 M P q * janusGroup3 χ φ L C) 2 1 = P * L ∧
+     (janusInv3 χ_inv φ L_inv C * janusDualMoment3 M P q * janusGroup3 χ φ L C) 1 1 =
+       L_inv * M * L - L_inv * C * P * L ∧
+     Matrix.trace
+         (janusDualMoment3 (M - P * C) P (q * χ) *
+           (janusInv3 χ_inv φ 1 C * janusLie3 Ω γ δφ * janusGroup3 χ φ 1 C)) =
+       (M * Ω + P * γ + q * δφ) + P * OperatorAlgebra.PeirceSpine.comm Ω C) ∧
+    (bimetricCoupling2 b₁ b₂ * bimetricCoupling2 b₁ b₂ = 0 ∧
+     Matrix.trace (bimetricCoupling2 b₁ b₂) = 0 ∧
+     b₂ * (T_plus + b₁ * T_minus) + (-(b₂ * T_plus) - T_minus) = 0 ∧
+     cartanEz2 * stressSelf2 ρ p = stressInduced2 ρ p) ∧
+    (bimetricCoupling2 b₁ b₂ =
+       invS (peirceProj2 (B := B_J)) +
+         conePlus (peirceProj2 (B := B_J)) !![0, b₁; 0, 0] -
+         coneMinus (peirceProj2 (B := B_J)) !![0, 0; b₂, 0] ∧
+     matrix3ToOpZorn (janusLie3 Ω γ δφ) =
+       opGradeZero 0 Ω + opGradePlus1 δφ 0 + opGradeMinus1 γ 0 ∧
+     matrix3ToOpZorn (janusDualMoment3 M P q) =
+       opGradeZero 0 M + opGradePlus1 0 P + opGradeMinus1 0 q) :=
+  souriau_kaluza_janus_bimetric_solve_et_coagula_master_synthesis
+    φ C M P q Ω γ δφ T_plus T_minus ρ p
+    hχ_left hL_left hχ_right hL_right hb₁₂ hb₂₁
+
+end SouriauKaluzaJanusBimetricCoagulation
+
+/-! =======================================================================
+    Part XXVIII: Clifford–Krein Geometric Uncertainty Poset (`1CaBH05`) &
+    All-Lanes Yang–Mills Native Mathlib Synthesis (`1iLTmbxfi`) (`solve et coagula`)
+    ======================================================================= -/
+
+section CliffordKreinAndYangMillsNativeCoagulation
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine.CliffordKreinGeometricUncertaintyPoset
+open InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian
+open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+open InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
+open InfoGeometry.Canonical.YangMillsLaneIsomorphisms
+
+omit [Ring B] hP in
+/-- **Part XXVIII Master Coagulation (`coagulated_yang_mills_clifford_krein_native_mathlib_solve_et_coagula_synthesis`)**:
+Coagulates the 6-stage `CliffordKreinUncertaintyStage` acyclic causal poset
+($p_0 \prec p_1 \prec p_2 \prec p_3 \prec p_4 \prec p_5$), non-commutative vs. signature-dependent
+Clifford–Krein rotor modulus dichotomy, and native Mathlib `CliffordAlgebra Q` reversion bridge from
+`CliffordKreinGeometricUncertaintyPoset` (`1CaBH05LizVILxiiJgBBULCbS-tkN0HdX`) together with
+the cross-lane Yang–Mills and native Mathlib `Matrix (Fin 4) (Fin 4)` / `Matrix (Fin 3) (Fin 3)` /
+`Matrix (Fin 2) (Fin 2)` synthesis from `YangMillsLaneIsomorphisms`
+(`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`) into `CoagulatedArchetypeSynthesis`. -/
+theorem coagulated_yang_mills_clifford_krein_native_mathlib_solve_et_coagula_synthesis
+    {B₀ : Type*} [Ring B₀] [StarRing B₀]
+    {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀) (hP₀star : star P₀ = P₀) (A₀ C₀ X₀ g₀ K_op : B₀)
+    {K₀ M₀ : Type*} [CommRing K₀] [AddCommGroup M₀] [Module K₀ M₀]
+    (Q_quad : QuadraticForm K₀ M₀) (g_scalar : K₀) (u_vec v_vec : M₀)
+    (h_anticomm : CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec +
+      CliffordAlgebra.ι Q_quad v_vec * CliffordAlgebra.ι Q_quad u_vec = 0)
+    (Z0 Z1 Z2 Z3 : InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Twistor4 K₀)
+    (u1 u2 u3 : InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.Vec3 K₀)
+    (g2 : Matrix (Fin 2) (Fin 2) K₀) (z₁ z₂ z₃ z₄ : Fin 2 → K₀) :
+    ((∀ s : CliffordKreinUncertaintyStage,
+        ¬ Relation.TransGen CliffordKreinUncertaintyStage.causalEdge s s) ∧
+     geometricTensor g₀ K_op * geometricTensorReverse g₀ K_op =
+       g₀ * g₀ - K_op * K_op - (g₀ * K_op - K_op * g₀) ∧
+     geometricTensor (genV P₀ A₀ C₀) (genSig P₀ A₀ C₀) *
+       geometricTensorReverse (genV P₀ A₀ C₀) (genSig P₀ A₀ C₀) = 0 ∧
+     CliffordAlgebra.reverse (CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec) =
+       -(CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec) ∧
+     geometricTensor (algebraMap K₀ (CliffordAlgebra Q_quad) g_scalar)
+         (CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec) *
+       CliffordAlgebra.reverse
+         (geometricTensor (algebraMap K₀ (CliffordAlgebra Q_quad) g_scalar)
+           (CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec)) =
+       algebraMap K₀ (CliffordAlgebra Q_quad) (g_scalar * g_scalar) -
+         (CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec) *
+           (CliffordAlgebra.ι Q_quad u_vec * CliffordAlgebra.ι Q_quad v_vec)) ∧
+    (InfoGeometry.Geometry.AssociativeGaugeConnection.gaugePotential
+       (InfoGeometry.Geometry.AssociativeGaugeConnection.innerDerivative (R := ℤ) P₀)
+       (0 : B₀) (moebiusBruhatVortexUnit hP₀ A₀ C₀) =
+       -(genPhi P₀ A₀ C₀ + genSig P₀ A₀ C₀) + conePlus P₀ A₀ * coneMinus P₀ C₀ * conePlus P₀ A₀ ∧
+     orbitCommutator P₀ (genPhi P₀ A₀ (star A₀)) = genJ P₀ A₀ (star A₀) ∧
+     orbitMassMode P₀ (genPhi P₀ A₀ (star A₀)) = osPeirceMassPairing P₀ A₀ ∧
+     osPeirceMassPairing P₀ A₀ = genV P₀ A₀ (star A₀) ∧
+     opVortexMassSq P₀ A₀ (star A₀) = (4 : ℤ) • orbitMassMode P₀ (genPhi P₀ A₀ (star A₀)) ∧
+     (conjMinus P₀ C₀ P₀ - conjPlus P₀ A₀ P₀) * (conjMinus P₀ C₀ P₀ - conjPlus P₀ A₀ P₀) =
+       genV P₀ A₀ C₀ ∧
+     peirceGradingDeriv P₀ (peirceGradingDeriv P₀ (peirceGradingDeriv P₀ X₀)) =
+       peirceGradingDeriv P₀ X₀ ∧
+     cartanCurvature2Form P₀ (genPhi P₀ A₀ C₀) = genJ P₀ A₀ C₀ + genV P₀ A₀ C₀ ∧
+     Matrix.det (nativeTwistorMatrix4 Z0 Z1 Z2 Z3) =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.twistorBracket4 Z0 Z1 Z2 Z3 ∧
+     Matrix.det (nativeBaryonMatrix3 u1 u2 u3) =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.baryonDet3 u1 u2 u3 ∧
+     (flagProj3_0 + flagProj3_1 + flagProj3_2 : Matrix (Fin 3) (Fin 3) K₀) = 1 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.casimir2
+       nilRaise3 nilLower3 cartanDiag3 =
+       (8 : ℤ) • (1 : Matrix (Fin 3) (Fin 3) ℤ)) ∧
+    (det2Bracket (g2.mulVec z₁) (g2.mulVec z₃) * det2Bracket (g2.mulVec z₂) (g2.mulVec z₄) =
+       (Matrix.det g2 * Matrix.det g2) * (det2Bracket z₁ z₃ * det2Bracket z₂ z₄) ∧
+     det2Bracket (g2.mulVec z₂) (g2.mulVec z₃) * det2Bracket (g2.mulVec z₁) (g2.mulVec z₄) =
+       (Matrix.det g2 * Matrix.det g2) * (det2Bracket z₂ z₃ * det2Bracket z₁ z₄)) := by
+  have hDich := cliffordKrein_bivector_rotor_signature_dichotomy hP₀ A₀ C₀ 0 0 0
+    (by simp) (by simp) (by simp)
+  have hCliff := native_cliffordAlgebra_bivector_reverse_and_modulus Q_quad g_scalar u_vec v_vec h_anticomm
+  have hYM := yang_mills_all_lanes_master_isomorphism_synthesis hP₀ hP₀star A₀ C₀ X₀ Z0 Z1 Z2 Z3 u1 u2 u3
+  have hCR := pgl2_moebius_cross_ratio_det_invariance g2 z₁ z₂ z₃ z₄
+  exact ⟨⟨CliffordKreinUncertaintyStage.cliffordKrein_poset_strict_acyclicity,
+    cliffordKreinModulus_noncommutative g₀ K_op,
+    hDich.2.2.2,
+    hCliff.1,
+    hCliff.2.2⟩, hYM, hCR⟩
+
+end CliffordKreinAndYangMillsNativeCoagulation
+
+/-! =======================================================================
+    Part XXIX: Chiral Condensate, Operator GMOR, Peirce–Dirac Resolvent,
+    Characteristic-Free Banks–Casher Trace & NJL Gap Bifurcation (`χ₁ ≺ ⋯ ≺ χ₈`)
+    ======================================================================= -/
+
+section ChiralCondensateGMORBanksCasherNJLCoagulation
+
+open InfoGeometry.Canonical.ChiralCondensateGMORBanksCasherNJLPoset
+open InfoGeometry.OperatorAlgebra.YangMillsOrbitGramian
+open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+open InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass
+open InfoGeometry.Canonical.PionChiralGoldstoneNative
+open InfoGeometry.Canonical.Cl55MassChiralSymmetryBridge
+open InfoGeometry.Canonical.Cl55AllModeMassCoercivity
+open InfoGeometry.Canonical.Cl55InfinityChiralCharge
+open InfoGeometry.Clifford.Clifford55
+open CanonicalTwoSheetedInductiveColimit
+
+omit [Ring B] hP in
+/-- **Part XXIX Master Coagulation (`partXXIX_chiral_condensate_gmor_banks_casher_njl_synthesis`)**:
+Coagulates the 8-stage Acyclic Causal Poset `ChiralCondensateEpistemicStage`
+(`χ₁ ≺ χ₂ ≺ χ₃ ≺ χ₄ ≺ χ₅ ≺ χ₆ ≺ χ₇ ≺ χ₈`) from
+`ChiralCondensateGMORBanksCasherNJLPoset` into `CoagulatedArchetypeSynthesis`. -/
+theorem partXXIX_chiral_condensate_gmor_banks_casher_njl_synthesis
+    {B₀ R₀ : Type*} [Ring B₀] [StarRing B₀] [Ring R₀] [NoZeroDivisors R₀]
+    {P₀ a₀ m_q η R_η Q₀ M₀ : B₀}
+    (hP₀ : P₀ * P₀ = P₀) (hPs₀ : star P₀ = P₀) (has₀ : star a₀ = a₀)
+    (hm : P₀ * m_q = m_q * P₀)
+    (hPη : P₀ * η = η * P₀)
+    (hηJ : η * genJ P₀ a₀ a₀ = genJ P₀ a₀ a₀ * η)
+    (hR_right : peirceDiracDenom P₀ a₀ a₀ η * R_η = 1)
+    (hR_left : R_η * peirceDiracDenom P₀ a₀ a₀ η = 1)
+    (τ : B₀ →+ R₀) (hτ_cyc : ∀ x y : B₀, τ (x * y) = τ (y * x))
+    {g_njl I_bc η_s : R₀} (h_comm : g_njl * η_s = η_s * g_njl) :
+    ((∀ st : ChiralCondensateEpistemicStage,
+        ¬ Relation.TransGen ChiralCondensateEpistemicStage.causalEdge st st) ∧
+     ChiralCondensateEpistemicStage.causalEdge
+       .chi1_ChiralParityCutAndCondensateSquare
+       .chi2_GaugeOrbitGramianAndMaurerCartanBianchi ∧
+     ChiralCondensateEpistemicStage.causalEdge
+       .chi7_PeirceDiracResolventAndBanksCasherTrace
+       .chi8_NJLSelfConsistentGapBifurcationAndMasterSynthesis) ∧
+    (chiralGamma5 P₀ * chiralGamma5 P₀ = 1 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+       (chiralGamma5 P₀) (genPhi P₀ a₀ a₀) = 0 ∧
+     (chiralGamma5 P₀ + genPhi P₀ a₀ a₀) * (chiralGamma5 P₀ + genPhi P₀ a₀ a₀) - 1 =
+       genV P₀ a₀ a₀) ∧
+    (orbitMassMode P₀ a₀ = genV P₀ a₀ a₀ ∧
+     peirceMaurerCartanCurvature P₀ a₀ a₀ = genJ P₀ a₀ a₀ + orbitMassMode P₀ a₀ ∧
+     peirceCovariantDeriv P₀ a₀ a₀ (orbitMassMode P₀ a₀) = 0) ∧
+    (opHiggsMassOperator P₀ a₀ a₀ (genPhi P₀ a₀ a₀) = 0 ∧
+     opHiggsMassOperator P₀ a₀ a₀ (genV P₀ a₀ a₀) = 0 ∧
+     opHiggsMassOperator P₀ a₀ a₀ (genJ P₀ a₀ a₀) = -(opVortexMassSq P₀ a₀ a₀ * genJ P₀ a₀ a₀) ∧
+     opHiggsMassOperator P₀ a₀ a₀ (genSig P₀ a₀ a₀) = -(opVortexMassSq P₀ a₀ a₀ * genSig P₀ a₀ a₀) ∧
+     opHiggsMassOperator P₀ a₀ a₀ (chiralGamma5 P₀) = -(opVortexMassSq P₀ a₀ a₀ * chiralGamma5 P₀)) ∧
+    (evenGrade P₀ (OperatorAlgebra.PeirceSpine.comm (evenGrade P₀ a₀) (oddGrade P₀ a₀)) = 0 ∧
+     oddGrade P₀ (OperatorAlgebra.PeirceSpine.comm (oddGrade P₀ a₀) (oddGrade P₀ a₀)) = 0 ∧
+     piPlus * piMinus + piMinus * piPlus = (1 : M2C) ∧
+     ⁅piPlus, piMinus⁆ = (2 : ℂ) • piZero) ∧
+    (bdgStarHamiltonian Q₀ M₀ * bdgStarHamiltonian Q₀ M₀ =
+       !![Q₀ * Q₀ + M₀ * star M₀, OperatorAlgebra.PeirceSpine.comm Q₀ M₀;
+          -OperatorAlgebra.PeirceSpine.comm Q₀ (star M₀), star M₀ * M₀ + Q₀ * Q₀] ∧
+     chiralCharge55 * nativeFiveModeMajorana -
+       nativeFiveModeMajorana * chiralCharge55 = nativeFiveModeChiralDefect ∧
+     chiralCharge55 * nativeFiveModeMajorana -
+       nativeFiveModeMajorana * chiralCharge55 ≠ 0) ∧
+    (axialDoubleCommutator P₀ (quarkMassHamiltonian P₀ m_q a₀ a₀) =
+       (4 : ℤ) • (m_q * genPhi P₀ a₀ a₀) ∧
+     τ (axialDoubleCommutator P₀ (quarkMassHamiltonian P₀ m_q a₀ a₀)) =
+       (4 : ℤ) • τ (m_q * genPhi P₀ a₀ a₀)) ∧
+    (peirceDiracOp P₀ a₀ a₀ η * peirceDiracResolvent P₀ a₀ a₀ η R_η = 1 ∧
+     peirceDiracResolvent P₀ a₀ a₀ η R_η * peirceDiracOp P₀ a₀ a₀ η = 1 ∧
+     τ (peirceDiracResolventOdd P₀ a₀ a₀ R_η) = 0 ∧
+     τ (peirceDiracResolvent P₀ a₀ a₀ η R_η) = τ (η * R_η)) ∧
+    (njlGapResidual 0 g_njl I_bc η_s = η_s * (1 - g_njl * I_bc) ∧
+     (njlGapResidual 0 g_njl I_bc η_s = 0 ↔ η_s = 0 ∨ g_njl * I_bc = 1)) :=
+  chiral_condensate_gmor_banks_casher_njl_master_synthesis
+    hP₀ hPs₀ has₀ hm hPη hηJ hR_right hR_left τ hτ_cyc h_comm
+
+end ChiralCondensateGMORBanksCasherNJLCoagulation
+
+/-! =======================================================================
+    Part XXX: Full 32-Turn Shared Gemini Chat (`kKehiDWWV8DI` / `418904a66184`)
+    & 3-Post `mcbal` Kinetic Spin-Routing to Krein–Yangian LogCFT Poset (`𝔐₁–𝔐₈`)
+    ======================================================================= -/
+
+section Full32TurnChatAndMcbalLogCFTCoagulation
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalPlabicKreinYangianPoset
+open InfoGeometry.OperatorAlgebra.PeirceSpine.MetriplecticCausalPlabicKreinYangianExtensionPoset
+open InfoGeometry.Canonical.SouriauKaluzaJanusBimetricSolveEtCoagula
+open InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor
+open InfoGeometry.OperatorAlgebra.FiniteOperatorCovariance
+open InfoGeometry.OperatorAlgebra.CovarianceTransport
+open InfoGeometry.OperatorAlgebra.CovarianceDynamics
+open InfoGeometry.Algebra.MonarchFactorization
+open scoped Matrix
+
+omit [Ring B] hP in
+/-- **Part XXX Master Coagulation (`coagulated_full32Turn_chat_and_mcbal_logcft_solve_et_coagula_synthesis`)**:
+Coagulates:
+1. **Full 32-Turn Shared Gemini Conversation (`https://share.gemini.google/kKehiDWWV8DI` / `418904a66184`, Turns 01–32)**:
+   - Order-embedding of the 17-turn poset into the 32-turn poset `Full32TurnChatArchetype` (`Turn01`–`Turn32`) and 6-stage `ExtensionSolveEtCoagulaStage` ($\mathcal{E}_0 \prec \dots \prec \mathcal{E}_5$),
+   - Peirce magnon charge selection, `2 × 2` supermatrix Witten Laplacian, Chiral vs. Combined parity on the `4 × 4` Yangian Lax operator, Fedosov–Connes Berry compression defect, and Iwahori–Hecke $H_3(q)$ quadratic aporia & braid relation (`Turns 18–22`),
+   - $\mathcal{C}\ell(1,1) \otimes \mathcal{C}\ell(1,1)$ swap invariance, Givental–Korff Quantum Pieri & Quantum Giambelli on $QH^*(\operatorname{Gr}(2,4))$ (`6 × 6` matrices), and non-Abelian $\operatorname{SL}_2$ Gauge–Lax exchange duality (`Turns 18, 25, 27, 28`),
+   - $\mathfrak{sl}_2(\mathbb{R}) \simeq \text{AdS}_3$ half-adjoint cubic Casimir, Minkowski $T$ vs. $PT$ determinant reversal, and Krein-graded Janus bimetric coupling nilpotency & Bianchi conservation (`Turns 30–32`).
+2. **Three-Post `mcbal.github.io` Kinetic Vector-Spin Corridor & 8-Stage `solve et coagula` Poset (`McbalToKreinYangianLogCFTStage`, $\mathfrak{M}_1 \prec \dots \prec \mathfrak{M}_8$)**:
+   - Large-$D$ vMF response inverse recovery & exact sphere norm conservation $a_i^2 \|\bar{h}_i\|^2 + (a_i^2 v_i + b_i) = R^2$ (`Posts 1 & 3`),
+   - Stochastic Drazin-index-1 semisimplicity (`no_length_two_generalized_fixed_vector`),
+   - Non-commutative operator covariance innovation closure and $[G, J]$ gain-mixing order defect (`Post 3`),
+   - Multi-hop operator word non-closure (`¬ IsMonarch (witness * witness)`),
+   - Krein isotropy of the coalesced Jordan eigenmode $\langle \Psi_{\text{EP}}, \Psi_{\text{EP}} \rangle_B = 0$ and exact $O(t^2)$ secular LogCFT evolution. -/
+theorem coagulated_full32Turn_chat_and_mcbal_logcft_solve_et_coagula_synthesis
+    {B₀ : Type*} [Ring B₀] {R : Type*} [CommRing R]
+    {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀) (A₀ C₀ X₀ B_ur C_ll : B₀)
+    {b1 b2 : B₀} (hb12 : b1 * b2 = 1) (hb21 : b2 * b1 = 1)
+    (T_stress : Matrix (Fin 2) (Fin 2) B₀)
+    (a32 : Full32TurnChatArchetype)
+    (u theta eta L q w0 wJ wB wC ax az aeps dw t : R)
+    (G_mat G_inv : Matrix (Fin 2) (Fin 2) R)
+    (hGR : G_mat * G_inv = 1) (hGL : G_inv * G_mat = 1)
+    (aStage : McbalToKreinYangianLogCFTStage)
+    {F : Type*} [Field F] [CharZero F]
+    (beta R_sq h_bar_sq v_i gamma_i h_vec : F)
+    (hSaddle : beta ^ 2 * (h_bar_sq + v_i) = R_sq * (gamma_i ^ 2 - 1))
+    (hGamma : 1 + gamma_i ≠ 0) (hBeta : beta ≠ 0) (hR : R_sq ≠ 0)
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P_stoch : Matrix ι ι ℝ) (hP_stoch : P_stoch ∈ Matrix.rowStochastic ℝ ι)
+    (x_vec y_vec : ι → ℝ)
+    (hxy : (1 - P_stoch) *ᵥ x_vec = y_vec) (hyy : (1 - P_stoch) *ᵥ y_vec = 0)
+    {Ω A_op : Type*} [Fintype Ω] [Ring A_op] [StarRing A_op] [Algebra ℝ A_op] [StarModule ℝ A_op]
+    (w : Ω → ℝ) (G_op J_op Q_op C_op : A_op) (X_rv E_rv : Ω → A_op)
+    (hXE : crossCovariance w X_rv E_rv = 0)
+    {E : Type*} [AddCommGroup E] [Module ℝ E]
+    (B_form : LinearMap.BilinForm ℝ E) (T_end : Module.End ℝ E)
+    (hT_adj : LinearMap.IsAdjointPair B_form B_form T_end T_end)
+    (r_eig : ℝ) (x_ep y_gen : E)
+    (hChain : (T_end - r_eig • (1 : Module.End ℝ E)) y_gen = x_ep)
+    (hEigen : (T_end - r_eig • (1 : Module.End ℝ E)) x_ep = 0) :
+    ((ExtensionSolveEtCoagulaStage.causalEdge
+        .E0_PrimordialBinaryCut_GradedSupermatrixAndWittSplit
+        .E1_FourfoldRelationalAnatomy_LaxMonodromyAndSchurBerezinian ∧
+      Full32TurnChatArchetype.Turn01_MetriplecticSplitGramiansAndAporiaDefect ≤ a32 ∧
+      a32 ≤ Full32TurnChatArchetype.Turn32_SakharovJanusBimetricTorsorBondiVsJanusAndTOVBianchiAporia) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (1 - P₀) (conePlus P₀ A₀) = -conePlus P₀ A₀ ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm (1 - P₀) (coneMinus P₀ C₀) = coneMinus P₀ C₀ ∧
+      (superchargePlus2 B_ur + superchargeMinus2 C_ll) *
+        (superchargePlus2 B_ur + superchargeMinus2 C_ll) =
+        !![B_ur * C_ll, 0; 0, C_ll * B_ur] ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm (combinedParityGrading4 (R := R)) (singleSiteLax4 u theta eta) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm (decoupledChiralGrading4 (R := R)) (oddSuperchargeLax4 eta) = 0) ∧
+     (P₀ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm P₀ X₀ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm P₀ X₀ * P₀ = -(P₀ * X₀ * (1 - P₀) * X₀ * P₀) ∧
+      heckeT1 L * heckeT2 L * heckeT1 L = heckeT2 L * heckeT1 L * heckeT2 L ∧
+      (heckeT1 L + 1) * (heckeT1 L - L • (1 : Matrix (Fin 3) (Fin 3) R)) = 0) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (swap4 : Matrix (Fin 4) (Fin 4) R) (cl11TwistKron4 w0 wJ wB wC) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm (quantumPieriC1 q) (quantumPieriC2 q) = 0 ∧
+      (quantumPieriC1 q * quantumPieriC1 q) * (quantumPieriC1 q * quantumPieriC1 q) =
+        (2 : R) • quantumSchubert22 q + (2 * q) • (1 : Matrix (Fin 6) (Fin 6) R) ∧
+      kronIdLeft4 G_mat * singleSiteLax4 u theta eta * kronIdLeft4 G_inv =
+        kronIdRight4 G_inv * singleSiteLax4 u theta eta * kronIdRight4 G_mat) ∧
+     (sl2HalfAdjoint3 ax az aeps *
+        (sl2HalfAdjoint3 ax az aeps * sl2HalfAdjoint3 ax az aeps) =
+        (ax ^ 2 + az ^ 2 - aeps ^ 2) • sl2HalfAdjoint3 ax az aeps ∧
+      ((minkowskiTimeReversal4 (R := R)) 0 0 * (minkowskiTimeReversal4 (R := R)) 1 1 *
+        (minkowskiTimeReversal4 (R := R)) 2 2 * (minkowskiTimeReversal4 (R := R)) 3 3 = -1) ∧
+      ((minkowskiTotalInversion4 (R := R)) 0 0 * (minkowskiTotalInversion4 (R := R)) 1 1 *
+        (minkowskiTotalInversion4 (R := R)) 2 2 * (minkowskiTotalInversion4 (R := R)) 3 3 = 1) ∧
+      bimetricCoupling2 b1 b2 * bimetricCoupling2 b1 b2 = 0 ∧
+      bimetricAnnihilator2 b2 * (bimetricCoupling2 b1 b2 * T_stress) = 0)) ∧
+    ((McbalToKreinYangianLogCFTStage.M1_ClassicalGibbsVmfResponseAndQuenchRelaxPathEntropy ≤ aStage ∧
+      aStage ≤ McbalToKreinYangianLogCFTStage.M8_DrazinNilpotentShellAndLogCFTSecularSynthesis) ∧
+     ((2 * R_sq / (beta * (R_sq - (beta / (1 + gamma_i)) ^ 2 * (h_bar_sq + v_i)))) *
+        ((beta / (1 + gamma_i)) * h_vec) = h_vec ∧
+      (beta / (1 + gamma_i)) ^ 2 * h_bar_sq +
+        ((beta / (1 + gamma_i)) ^ 2 * v_i + 2 * R_sq / (1 + gamma_i)) = R_sq) ∧
+     (y_vec = 0) ∧
+     (crossCovariance w (fun ω => (G_op * J_op) * X_rv ω + E_rv ω)
+        (fun ω => (G_op * J_op) * X_rv ω + E_rv ω) =
+        covarianceStep (G_op * J_op) (crossCovariance w E_rv E_rv) (crossCovariance w X_rv X_rv) ∧
+      covarianceStep (G_op * J_op) Q_op C_op - covarianceStep (J_op * G_op) Q_op C_op =
+        InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.operatorCommutator G_op J_op *
+          C_op * star (G_op * J_op) +
+          (J_op * G_op) * C_op *
+            star (InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.operatorCommutator G_op J_op)) ∧
+     (IsMonarch FourStateWitness.witness ∧
+      ¬ IsMonarch (FourStateWitness.witness * FourStateWitness.witness)) ∧
+     (B_form x_ep x_ep = 0 ∧
+      (1 - t • kreinCrashNilpotent dw) * diracKreinA * (1 + t • kreinCrashNilpotent dw) =
+        diracKreinA + (2 * dw * t) • diracKreinVelocity +
+          (2 * dw * t ^ 2) • kreinCrashNilpotent dw)) :=
+  ⟨full32Turn_master_coagulated_synthesis
+     hP₀ A₀ C₀ X₀ B_ur C_ll hb12 hb21 T_stress a32
+     u theta eta L q w0 wJ wB wC ax az aeps G_mat G_inv hGR hGL,
+   mcbal_to_krein_yangian_logcft_master_synthesis
+     aStage beta R_sq h_bar_sq v_i gamma_i h_vec hSaddle hGamma hBeta hR
+     P_stoch hP_stoch x_vec y_vec hxy hyy w G_op J_op Q_op C_op X_rv E_rv hXE
+     B_form T_end hT_adj r_eig x_ep y_gen hChain hEigen dw t⟩
+
+end Full32TurnChatAndMcbalLogCFTCoagulation
+
+/-! =======================================================================
+    Part XXXI: Maurer–Cartan Spectral Annihilator 𝒦_γ₅ = I - ad_P²,
+    Linear Death of Odd Maurer–Cartan Forms & Multiplicative Defect Curvature
+    Poset (`𝔎₁ ≺ 𝔎₂ ≺ 𝔎₃ ≺ 𝔎₄ ≺ 𝔎₅ ≺ 𝔎₆ ≺ 𝔎₇`)
+    ======================================================================= -/
+
+section MaurerCartanSpectralAnnihilatorDefectCoagulation
+
+open InfoGeometry.Canonical.MaurerCartanSpectralAnnihilatorDefectPoset
+open InfoGeometry.Canonical.ChiralCondensateGMORBanksCasherNJLPoset
+open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+
+omit [Ring B] hP in
+/-- **Part XXXI Master Coagulation (`partXXXI_maurer_cartan_spectral_annihilator_defect_synthesis`)**:
+Coagulates the 7-stage Acyclic Causal Poset `MaurerCartanAnnihilatorStage`
+(`𝔎₁ ≺ 𝔎₂ ≺ 𝔎₃ ≺ 𝔎₄ ≺ 𝔎₅ ≺ 𝔎₆ ≺ 𝔎₇`) from
+`MaurerCartanSpectralAnnihilatorDefectPoset` into `CoagulatedArchetypeSynthesis`. -/
+theorem partXXXI_maurer_cartan_spectral_annihilator_defect_synthesis
+    {B₀ G₀ : Type*} [Ring B₀] [AddCommGroup G₀]
+    {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀)
+    (τ : B₀ →+ G₀) (hτ_cyc : ∀ x y : B₀, τ (x * y) = τ (y * x))
+    (A₀ C₀ X₁ Y₁ X₂ Y₂ : B₀) {η R_η : B₀}
+    (hPη : P₀ * η = η * P₀)
+    (hR_right : peirceDiracDenom P₀ A₀ C₀ η * R_η = 1)
+    (hR_left : R_η * peirceDiracDenom P₀ A₀ C₀ η = 1) :
+    ((∀ st : MaurerCartanAnnihilatorStage,
+        ¬ Relation.TransGen MaurerCartanAnnihilatorStage.causalEdge st st) ∧
+     MaurerCartanAnnihilatorStage.causalEdge
+       .K1_TripotentChiralDerivation .K2_IdempotentAnnihilatorFilter ∧
+     MaurerCartanAnnihilatorStage.causalEdge
+       .K6_ElieCartanTorsionAnnihilationAndMacDowellMansouri
+       .K7_BanksCasherResolventDriftAnnihilationAndMasterSynthesis) ∧
+    (peirceGradingDeriv P₀ (peirceGradingDeriv P₀ (peirceGradingDeriv P₀ X₁)) =
+       peirceGradingDeriv P₀ X₁ ∧
+     chiralAnnihilator P₀ X₁ = evenGrade P₀ X₁ ∧
+     oddProjector P₀ X₁ = oddGrade P₀ X₁ ∧
+     chiralAnnihilator P₀ (chiralAnnihilator P₀ X₁) = chiralAnnihilator P₀ X₁ ∧
+     chiralAnnihilator P₀ (oddProjector P₀ X₁) = 0) ∧
+    (chiralAnnihilator P₀ (genJ P₀ A₀ C₀) = 0 ∧
+     chiralAnnihilator P₀ (genPhi P₀ A₀ C₀) = 0 ∧
+     chiralAnnihilator P₀ (evenGrade P₀ X₁ * oddGrade P₀ Y₁) = 0 ∧
+     chiralAnnihilator P₀ (oddGrade P₀ Y₁ * evenGrade P₀ X₁) = 0) ∧
+    (chiralAnnihilatorMulDefect P₀ X₁ Y₁ = oddProjector P₀ X₁ * oddProjector P₀ Y₁ ∧
+     chiralAnnihilatorMulDefect P₀ (genPhi P₀ A₀ C₀) (genPhi P₀ A₀ C₀) = genV P₀ A₀ C₀ ∧
+     chiralAnnihilatorMulDefect P₀ (genJ P₀ A₀ C₀) (genPhi P₀ A₀ C₀) = genSig P₀ A₀ C₀) ∧
+    (chiralAnnihilator P₀ (peirceMaurerCartanCurvature P₀ A₀ C₀) = genV P₀ A₀ C₀ ∧
+     OperatorAlgebra.PeirceSpine.comm (genJ P₀ A₀ C₀) (genV P₀ A₀ C₀) = 0 ∧
+     peirceCovariantDeriv P₀ A₀ C₀ (genV P₀ A₀ C₀) = 0) ∧
+    (chiralAnnihilator P₀ (elieCartanTorsion P₀ X₁ Y₁ X₂ Y₂) = 0 ∧
+     chiralAnnihilator P₀
+         (OperatorAlgebra.PeirceSpine.comm
+           (cartanSplitConnection P₀ X₁ Y₁)
+           (cartanSplitConnection P₀ X₂ Y₂)) =
+       riemannCartanCurvature P₀ X₁ Y₁ X₂ Y₂ ∧
+     chiralAnnihilator P₀
+         (OperatorAlgebra.PeirceSpine.comm
+           (cartanSplitConnection P₀ X₁ Y₁)
+           (cartanSplitConnection P₀ X₂ Y₂)) -
+       OperatorAlgebra.PeirceSpine.comm
+         (chiralAnnihilator P₀ (cartanSplitConnection P₀ X₁ Y₁))
+         (chiralAnnihilator P₀ (cartanSplitConnection P₀ X₂ Y₂)) =
+       OperatorAlgebra.PeirceSpine.comm (oddGrade P₀ Y₁) (oddGrade P₀ Y₂)) ∧
+    (chiralAnnihilator P₀ (peirceDiracResolventOdd P₀ A₀ C₀ R_η) = 0 ∧
+     chiralAnnihilator P₀ (peirceDiracResolvent P₀ A₀ C₀ η R_η) = η * R_η ∧
+     τ (peirceDiracResolvent P₀ A₀ C₀ η R_η) = τ (η * R_η)) :=
+  maurer_cartan_spectral_annihilator_defect_master_synthesis
+    hP₀ τ hτ_cyc A₀ C₀ X₁ Y₁ X₂ Y₂ hPη hR_right hR_left
+
+end MaurerCartanSpectralAnnihilatorDefectCoagulation
+
+/-! =======================================================================
+    Part XXXII: The Modular Surprisal Binary Cut, Normal-Form Operator Surprisal,
+    The Master `1 : (-2)` Clocking Identity, 5-Graded Supercolor Kantor Sandwich,
+    BKM Resolvent Factorization and Divided-Difference Trace Formula, and the Metriplectic Cramér–Rao
+    Closure Poset (`S₁ ≺ S₂ ≺ ⋯ ≺ S₈`)
+    ======================================================================= -/
+
+section ModularSurprisalClockingBkmCoagulation
+
+open InfoGeometry.Canonical.ModularSurprisalClockingLocksPoset
+
+omit [Ring B] hP in
+/-- **Part XXXII Master Coagulation (`partXXXII_modular_surprisal_clocking_bkm_synthesis`)**:
+Coagulates the 8-stage Acyclic Causal Poset `ModularSurprisalClockingStage`
+(`S₁ ≺ S₂ ≺ ⋯ ≺ S₈`) from `ModularSurprisalClockingLocksPoset` into
+`CoagulatedArchetypeSynthesis`. -/
+theorem partXXXII_modular_surprisal_clocking_bkm_synthesis
+    {B₀ : Type*} [Ring B₀] [Algebra ℝ B₀]
+    {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀) (A₀ C₀ W₀ X₀ Y₀ : B₀)
+    (tr : B₀ → ℝ) (g Ω : B₀ → B₀ → ℝ)
+    (p q s β : ℝ) (hp : 0 < p) (hq : 0 < q) (hpq : p ≠ q)
+    (hps : p + s ≠ 0) (hqs : q + s ≠ 0) (htrV : 0 < tr (genV P₀ A₀ C₀))
+    (hW_right : relativeVolumeKernel β P₀ A₀ C₀ * W₀ = 1)
+    (hW_left : W₀ * relativeVolumeKernel β P₀ A₀ C₀ = 1)
+    (hRS : (1 / 4 : ℝ) * (Ω X₀ Y₀) ^ 2 ≤ g X₀ X₀ * g Y₀ Y₀ - (g X₀ Y₀) ^ 2) :
+    (∀ st : ModularSurprisalClockingStage,
+      ¬ Relation.TransGen ModularSurprisalClockingStage.causalEdge st st) ∧
+    OperatorAlgebra.PeirceSpine.comm (sheetOperatorSurprisal p p P₀) X₀ = 0 ∧
+    deformedVacuumCandidate P₀ A₀ C₀ * deformedVacuumCandidate P₀ A₀ C₀ -
+      deformedVacuumCandidate P₀ A₀ C₀ = genV P₀ A₀ C₀ ∧
+    sheetOperatorSurprisal p q P₀ =
+      sheetSurprisalMean p q • (1 : B₀) - (sheetSurprisalGap p q / 2) • invS P₀ ∧
+    relativeVolumeKernel β P₀ A₀ C₀ * volumeResolventForce β W₀ P₀ A₀ C₀ =
+      (2 * β) • genPhi P₀ A₀ C₀ ∧
+    OperatorAlgebra.PeirceSpine.comm (sheetOperatorSurprisal p q P₀) (genPhi P₀ A₀ C₀) =
+      (-sheetSurprisalGap p q) • genJ P₀ A₀ C₀ ∧
+    -OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀)
+        (OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀) (genJ P₀ A₀ C₀)) =
+      -((2 : ℤ) • OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀)) ∧
+    -OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀)
+        (OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀) (genJ P₀ A₀ C₀)) =
+      -((4 : ℤ) • (genV P₀ A₀ C₀ * genJ P₀ A₀ C₀)) ∧
+    OperatorAlgebra.PeirceSpine.comm (sheetOperatorSurprisal p q P₀)
+        (OperatorAlgebra.PeirceSpine.comm (sheetOperatorSurprisal p q P₀) (genPhi P₀ A₀ C₀)) =
+      (sheetSurprisalGap p q ^ 2) • genPhi P₀ A₀ C₀ ∧
+    kantorG0 P₀ A₀ C₀ (kantorG0 P₀ A₀ C₀ X₀) -
+      (kantorGp2 P₀ A₀ (kantorGm2 P₀ C₀ X₀) + kantorGm2 P₀ C₀ (kantorGp2 P₀ A₀ X₀)) =
+      genSig P₀ A₀ C₀ * X₀ * genSig P₀ A₀ C₀ ∧
+    OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀)
+        (OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀)) =
+      (4 : ℤ) • ((genV P₀ A₀ C₀ * genV P₀ A₀ C₀) * genPhi P₀ A₀ C₀) ∧
+    genPhi P₀ A₀ C₀ * sheetResolvent p q s P₀ * genPhi P₀ A₀ C₀ * sheetResolvent p q s P₀ =
+      ((p + s) * (q + s))⁻¹ • genV P₀ A₀ C₀ ∧
+    bkmMetricEval tr p q P₀ A₀ C₀ = ((-Real.log (q / p)) / (p - q)) * tr (genV P₀ A₀ C₀) ∧
+    0 < bkmMetricEval tr p q P₀ A₀ C₀ ∧
+    (1 / 4 : ℝ) * (Ω X₀ Y₀) ^ 2 ≤ g X₀ X₀ * g Y₀ Y₀ :=
+  master_modular_surprisal_clocking_bkm_synthesis
+    hP₀ A₀ C₀ W₀ X₀ Y₀ tr g Ω p q s β hp hq hpq hps hqs htrV hW_right hW_left hRS
+
+end ModularSurprisalClockingBkmCoagulation
+
+/-! =======================================================================
+    Part XXXIII: Operator Einstein–Cartan Gravity, Chiral Einstein Anomaly,
+    Spin Frame Dragging, Soldered Cartan–Ehresmann Split & Fisher–Riemann
+    Cramér–Rao Poset (`𝔈₁ ≺ 𝔈₂ ≺ 𝔈₃ ≺ 𝔈₄ ≺ 𝔈₅ ≺ 𝔈₆ ≺ 𝔈₇ ≺ 𝔈₈`)
+    ======================================================================= -/
+
+section EinsteinCartanChiralAnomalyFrameDraggingCoagulation
+
+open InfoGeometry.Canonical.EinsteinCartanChiralAnomalyFrameDraggingPoset
+open InfoGeometry.Canonical.MaurerCartanSpectralAnnihilatorDefectPoset
+open InfoGeometry.Canonical.ChiralCondensateGMORBanksCasherNJLPoset
+open InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
+open InfoGeometry.QuantumGeometry.Projective
+open InfoGeometry.OperatorAlgebra.PeirceDefectBridge
+
+omit [Ring B] hP in
+/-- **Part XXXIII Master Coagulation (`partXXXIII_einstein_cartan_chiral_anomaly_frame_dragging_synthesis`)**:
+Coagulates the 8-stage Acyclic Causal Poset `EinsteinCartanAnomalyStage`
+(`𝔈₁ ≺ 𝔈₂ ≺ 𝔈₃ ≺ 𝔈₄ ≺ 𝔈₅ ≺ 𝔈₆ ≺ 𝔈₇ ≺ 𝔈₈`) from
+`EinsteinCartanChiralAnomalyFrameDraggingPoset` into `CoagulatedArchetypeSynthesis`. -/
+theorem partXXXIII_einstein_cartan_chiral_anomaly_frame_dragging_synthesis
+    {B₀ : Type*} [Ring B₀]
+    {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀)
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    (ψ : NormalizedState H) (X_op Y_op : H →L[ℂ] H)
+    (A₀ C₀ X₁ Y₁ X₂ Y₂ X₃ Y₃ : B₀) :
+    ((∀ st : EinsteinCartanAnomalyStage,
+        ¬ Relation.TransGen EinsteinCartanAnomalyStage.causalEdge st st) ∧
+     EinsteinCartanAnomalyStage.causalEdge
+       .E1_ChiralCutAndMaurerCartanSolderForms
+       .E2_OperatorFisherMetricAndSpinDipoleCurvature ∧
+     EinsteinCartanAnomalyStage.causalEdge
+       .E7_GeneralEinsteinCartanSplitAndBianchi
+       .E8_CentrifugalDraggingAndFisherCramerRaoBound) ∧
+    (invS P₀ * genPhi P₀ A₀ C₀ = genJ P₀ A₀ C₀ ∧
+     invS P₀ * genJ P₀ A₀ C₀ = genPhi P₀ A₀ C₀ ∧
+     genPhi P₀ A₀ C₀ * genPhi P₀ A₀ C₀ = genV P₀ A₀ C₀ ∧
+     genJ P₀ A₀ C₀ * genJ P₀ A₀ C₀ = -genV P₀ A₀ C₀ ∧
+     genJ P₀ A₀ C₀ * genPhi P₀ A₀ C₀ = genSig P₀ A₀ C₀ ∧
+     peirceMaurerCartanCurvature P₀ A₀ C₀ = genJ P₀ A₀ C₀ + genV P₀ A₀ C₀) ∧
+    (invS P₀ * genSig P₀ A₀ C₀ = genV P₀ A₀ C₀ ∧
+     (genSig P₀ A₀ C₀ = 0 ↔ genV P₀ A₀ C₀ = 0) ∧
+     (OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀) (genJ P₀ A₀ C₀) = 0 →
+       (2 : ℤ) • genSig P₀ A₀ C₀ = 0 ∧ (2 : ℤ) • genV P₀ A₀ C₀ = 0) ∧
+     OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀) (genJ P₀ A₀ C₀) =
+       -((2 : ℤ) • genSig P₀ A₀ C₀) ∧
+     chiralEinsteinAnomaly P₀ A₀ C₀ = -((2 : ℤ) • genV P₀ A₀ C₀)) ∧
+    (OperatorAlgebra.PeirceSpine.anticomm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀) = 0 ∧
+     OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀) =
+       (2 : ℤ) • (genV P₀ A₀ C₀ * genJ P₀ A₀ C₀) ∧
+     OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genJ P₀ A₀ C₀) =
+       (2 : ℤ) • (genV P₀ A₀ C₀ * genPhi P₀ A₀ C₀) ∧
+     dressedSpinTorsion P₀ A₀ C₀ = (1 + (2 : ℤ) • genV P₀ A₀ C₀) * genJ P₀ A₀ C₀) ∧
+    (OperatorAlgebra.PeirceSpine.comm (solderedConnPhi P₀ A₀ C₀) (solderedConnJ P₀ A₀ C₀) =
+       -((2 : ℤ) • genSig P₀ A₀ C₀) +
+         (2 : ℤ) • (genV P₀ A₀ C₀ * (genPhi P₀ A₀ C₀ - genJ P₀ A₀ C₀)) ∧
+     jordanAssociator (coneMinus P₀ C₀) (conePlus P₀ A₀) (conePlus P₀ A₀) =
+       (2 : ℤ) • (genV P₀ A₀ C₀ * conePlus P₀ A₀)) ∧
+    (OperatorAlgebra.PeirceSpine.comm
+         (cartanSplitConnection P₀ X₁ Y₁) (cartanSplitConnection P₀ X₂ Y₂) =
+       riemannCartanCurvature P₀ X₁ Y₁ X₂ Y₂ +
+         Canonical.MaurerCartanSpectralAnnihilatorDefectPoset.elieCartanTorsion P₀ X₁ Y₁ X₂ Y₂ ∧
+     OperatorAlgebra.PeirceSpine.comm (invS P₀)
+         (riemannCartanCurvature P₀ X₁ Y₁ X₂ Y₂) = 0 ∧
+     OperatorAlgebra.PeirceSpine.anticomm (invS P₀)
+         (Canonical.MaurerCartanSpectralAnnihilatorDefectPoset.elieCartanTorsion P₀ X₁ Y₁ X₂ Y₂) = 0 ∧
+     OperatorAlgebra.PeirceSpine.comm (cartanSplitConnection P₀ X₁ Y₁)
+         (riemannCartanCurvature P₀ X₂ Y₂ X₃ Y₃ +
+           Canonical.MaurerCartanSpectralAnnihilatorDefectPoset.elieCartanTorsion P₀ X₂ Y₂ X₃ Y₃) +
+       OperatorAlgebra.PeirceSpine.comm (cartanSplitConnection P₀ X₂ Y₂)
+         (riemannCartanCurvature P₀ X₃ Y₃ X₁ Y₁ +
+           Canonical.MaurerCartanSpectralAnnihilatorDefectPoset.elieCartanTorsion P₀ X₃ Y₃ X₁ Y₁) +
+       OperatorAlgebra.PeirceSpine.comm (cartanSplitConnection P₀ X₃ Y₃)
+         (riemannCartanCurvature P₀ X₁ Y₁ X₂ Y₂ +
+           Canonical.MaurerCartanSpectralAnnihilatorDefectPoset.elieCartanTorsion P₀ X₁ Y₁ X₂ Y₂) = 0) ∧
+    (OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀)
+         (OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀)) =
+       (4 : ℤ) • ((genV P₀ A₀ C₀ * genV P₀ A₀ C₀) * genPhi P₀ A₀ C₀) ∧
+     -OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀)
+         (OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀) (genJ P₀ A₀ C₀)) =
+       -((2 : ℤ) • OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀)) ∧
+     onsagerDissipativeMetric ψ X_op X_op * onsagerDissipativeMetric ψ Y_op Y_op ≥
+       (onsagerDissipativeMetric ψ X_op Y_op) ^ 2 +
+         (1 / 4 : ℝ) * (onsagerReversibleBracket ψ X_op Y_op) ^ 2) :=
+  einstein_cartan_chiral_anomaly_frame_dragging_master_synthesis
+    hP₀ ψ X_op Y_op A₀ C₀ X₁ Y₁ X₂ Y₂ X₃ Y₃
+
+end EinsteinCartanChiralAnomalyFrameDraggingCoagulation
+
+/-! =======================================================================
+    Part XXXIV: Operator Surprisal Idempotent Normal Form, Relative Volume
+    Resolvent Gradient, Master Clocking Identity, 5-Graded Kantor Sandwich &
+    BKM Metriplectic Closure Poset (`𝔖₁ ≺ 𝔖₂ ≺ ⋯ ≺ 𝔖₈`)
+    ======================================================================= -/
+
+section ModularSurprisalVolumeClockingBKMClosureCoagulation
+
+open InfoGeometry.Canonical.ModularSurprisalVolumeClockingBKMClosurePoset
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+open InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset (Vec3 ZornMatrix)
+open InfoGeometry.Canonical.CramerRaoOnsagerCommutatorUncertainty
+open InfoGeometry.QuantumGeometry.Projective
+
+omit [Ring B] hP in
+/-- **Part XXXIV Master Coagulation (`partXXXIV_modular_surprisal_volume_clocking_bkm_closure_synthesis`)**:
+Coagulates the 8-stage Acyclic Causal Poset `ModularSurprisalClockingStage`
+(`𝔖₁ ≺ 𝔖₂ ≺ ⋯ ≺ 𝔖₈`) from `ModularSurprisalVolumeClockingBKMClosurePoset` into
+`CoagulatedArchetypeSynthesis`. -/
+theorem partXXXIV_modular_surprisal_volume_clocking_bkm_closure_synthesis
+    {B₀ : Type*} [Ring B₀] [Algebra ℝ B₀]
+    {P₀ : B₀} (hP₀ : P₀ * P₀ = P₀)
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    (ψ : NormalizedState H) (X_op Y_op : H →L[ℂ] H)
+    (A₀ C₀ X₀ s_p s_q β W_β : B₀)
+    (hsp : ∀ Y : B₀, s_p * Y = Y * s_p) (hsq : ∀ Y : B₀, s_q * Y = Y * s_q)
+    (hβ : ∀ Y : B₀, β * Y = Y * β)
+    (hW_right : volumeMetricDenom P₀ A₀ C₀ β * W_β = 1)
+    (hW_left : W_β * volumeMetricDenom P₀ A₀ C₀ β = 1)
+    (u v : Vec3 B₀)
+    {p q s : ℝ} (hps : p + s ≠ 0) (hqs : q + s ≠ 0) (hpq : p - q ≠ 0)
+    (hp : 0 < p) (hq : 0 < q) (τ : B₀ →ₗ[ℝ] ℝ) :
+    ((∀ st : ModularSurprisalClockingStage,
+        ¬ Relation.TransGen ModularSurprisalClockingStage.causalEdge st st) ∧
+     ModularSurprisalClockingStage.causalEdge
+       .S1_SupercolorVacuumDeformationAndFrozenClock
+       .S2_SheetSurprisalIdempotentNormalForm ∧
+     ModularSurprisalClockingStage.causalEdge
+       .S7_BKMResolventFactorizationAndDividedDifference
+       .S8_MetriplecticCramerRaoClosureAndMasterSynthesis) ∧
+    (sheetThermalState P₀ s_p s_p = s_p ∧
+     (P₀ + genPhi P₀ A₀ C₀) * (P₀ + genPhi P₀ A₀ C₀) - (P₀ + genPhi P₀ A₀ C₀) = genV P₀ A₀ C₀ ∧
+     ZornMatrix.zornV u v = ZornMatrix.bilinearCondensate u v ∧
+     (2 : ℤ) • sheetSurprisalOp P₀ s_p s_q = (s_p + s_q) - (s_q - s_p) * invS P₀ ∧
+     realSheetSurprisalOp P₀ p q =
+       ((-(Real.log p + Real.log q) / 2) : ℝ) • (1 : B₀) -
+         (((-Real.log q - -Real.log p) / 2) : ℝ) • invS P₀) ∧
+    (W_β * genPhi P₀ A₀ C₀ = genPhi P₀ A₀ C₀ * W_β ∧
+     OperatorAlgebra.PeirceSpine.anticomm (invS P₀)
+       (volumeResolventForce P₀ A₀ C₀ β W_β) = 0 ∧
+     volumeMetricDenom P₀ A₀ C₀ β * volumeResolventForce P₀ A₀ C₀ β W_β =
+       (2 : ℤ) • (β * genPhi P₀ A₀ C₀)) ∧
+    (OperatorAlgebra.PeirceSpine.comm (sheetSurprisalOp P₀ s_p s_q) (genPhi P₀ A₀ C₀) =
+       -((s_q - s_p) * genJ P₀ A₀ C₀) ∧
+     OperatorAlgebra.PeirceSpine.comm (sheetSurprisalOp P₀ s_p s_q) (genJ P₀ A₀ C₀) =
+       -((s_q - s_p) * genPhi P₀ A₀ C₀) ∧
+     -OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀)
+         (OperatorAlgebra.PeirceSpine.comm (genPhi P₀ A₀ C₀) (genJ P₀ A₀ C₀)) =
+       -((2 : ℤ) • OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀)) ∧
+     OperatorAlgebra.PeirceSpine.comm (sheetSurprisalOp P₀ s_p s_q)
+         (OperatorAlgebra.PeirceSpine.comm (sheetSurprisalOp P₀ s_p s_q) (genPhi P₀ A₀ C₀)) =
+       (s_q - s_p) * (s_q - s_p) * genPhi P₀ A₀ C₀) ∧
+    (kantorG0 P₀ A₀ C₀ (kantorG0 P₀ A₀ C₀ X₀) -
+       (kantorGp2 P₀ A₀ (kantorGm2 P₀ C₀ X₀) + kantorGm2 P₀ C₀ (kantorGp2 P₀ A₀ X₀)) =
+         genSig P₀ A₀ C₀ * X₀ * genSig P₀ A₀ C₀ ∧
+     kantorG0 P₀ A₀ C₀ (kantorG0 P₀ A₀ C₀ X₀) +
+       (kantorGp2 P₀ A₀ (kantorGm2 P₀ C₀ X₀) + kantorGm2 P₀ C₀ (kantorGp2 P₀ A₀ X₀)) =
+         genV P₀ A₀ C₀ * X₀ * genV P₀ A₀ C₀ ∧
+     OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀)
+         (OperatorAlgebra.PeirceSpine.comm (genSig P₀ A₀ C₀) (genPhi P₀ A₀ C₀)) =
+       (4 : ℤ) • ((genV P₀ A₀ C₀ * genV P₀ A₀ C₀) * genPhi P₀ A₀ C₀)) ∧
+    (genPhi P₀ A₀ C₀ * sheetResolventOp P₀ p q s * genPhi P₀ A₀ C₀ * sheetResolventOp P₀ p q s =
+       ((p + s)⁻¹ * (q + s)⁻¹) • genV P₀ A₀ C₀ ∧
+     (p + s)⁻¹ * (q + s)⁻¹ = (p - q)⁻¹ * ((q + s)⁻¹ - (p + s)⁻¹) ∧
+     bkmKernel p q = (Real.log p - Real.log q) / (p - q) ∧
+     τ (bkmDividedDifferenceOperator P₀ A₀ C₀ p q) = bkmKernel p q * τ (genV P₀ A₀ C₀) ∧
+     onsagerDissipativeMetric ψ X_op X_op * onsagerDissipativeMetric ψ Y_op Y_op ≥
+       (onsagerDissipativeMetric ψ X_op Y_op) ^ 2 +
+         (1 / 4 : ℝ) * (onsagerReversibleBracket ψ X_op Y_op) ^ 2) :=
+  modular_surprisal_volume_clocking_bkm_master_synthesis
+    hP₀ ψ X_op Y_op A₀ C₀ X₀ s_p s_q β W_β hsp hsq hβ hW_right hW_left u v hps hqs hpq hp hq τ
+
+end ModularSurprisalVolumeClockingBKMClosureCoagulation
 
 end InfoGeometry.Epistemology.CoagulatedArchetypeSynthesis

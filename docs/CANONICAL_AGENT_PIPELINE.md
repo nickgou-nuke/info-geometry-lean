@@ -156,6 +156,10 @@ its state with aiClaw Gemini or ChatGPT.
 
 ## Optional Arango and graph services
 
+For the observed Auto-Ontology runtime topology, service startup, host-vs-
+Compose distinction, and REST/MCP health checks, see the
+[Auto-Ontology agent operations guide](AUTO_ONTOLOGY_AGENT_OPERATIONS.md).
+
 Resolve configuration from [igf.config](../src/igf/config/env_aliases.py),
 the [Hive queue](../tools/infra/hive_arango_queue.py), and
 the [aiClaw memory adapter](../tools/infra/aiclaw_auto_arango.py).
@@ -163,6 +167,7 @@ the [aiClaw memory adapter](../tools/infra/aiclaw_auto_arango.py).
 | Lane | Source default | Configuration |
 |---|---|---|
 | Declaration/InfoTree DAG | `infogeometry`, port 8530 | `ARANGO_*` |
+| Auto Ontology (Terms & Relationships) | FastAPI REST port 3001 / MCP port 3003 (`/mcp`) / Postgres port 5433 (`auto_ontology`) | `.mcp.json` (`nvidia-auto-ontology`), `tools/infra/arango_to_ontology.py`, `tools/infra/arango_to_ontology_relationships.py`, [ASTAQLHASH-HOWTO.md](ASTAQLHASH-HOWTO.md#auto-ontology-layer-localhost3001-rest-api--localhost3003mcp) |
 | Hive task queue | `hive_live`, port 8540 | `HIVE_ARANGO_*` and the documented aliases |
 | aiClaw proof/text memory | `aiclaw_auto_rag`, port 8540 | `AICLAW_ARANGO_*` |
 | Alexandria literature | `alexandria`, port 8532 in shared configuration | `ALEXANDRIA_ARANGO_*` |
@@ -172,6 +177,10 @@ can override them. Do not print credentials, assume graph freshness, or claim
 complete transcript ingestion without an ingestion record. The
 [search protocol](REPO_DEEP_SEARCH_PROTOCOL.md#arangodb-schema-families)
 describes collection families; graph evidence remains navigation evidence.
+For cross-lane mapping, typed bridge relations, freshness sentinels, and
+duplicate-candidate review, follow the
+[repository ontology unification playbook](ONTOLOGY_UNIFICATION_PLAYBOOK.md)
+and its [agent skill](../.agents/skills/repo-ontology-unification/SKILL.md).
 
 ## Pi integration status
 

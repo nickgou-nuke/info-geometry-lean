@@ -13612,3 +13612,7 @@ import InfoGeometry._ProbeW2v4
 import Omega.Conclusion.C6JacobianTypeModelCanonical
 import Omega.Conclusion.CollisionGenfuncRadiusCounterexample
 import Omega.POM.FiniteMomentHankelRank
+import InfoGeometry.Algebra.NilpotentPolynomial
+import InfoGeometry.OperatorAlgebra.PeirceSpine.PolynomialCalculus
+import InfoGeometry.Canonical.PeircePolynomialColimit
+import InfoGeometry.Examples.PeircePolynomialWitness

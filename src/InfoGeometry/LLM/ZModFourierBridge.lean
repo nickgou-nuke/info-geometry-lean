@@ -1,0 +1,256 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib.Algebra.Star.BigOperators
+import Mathlib.Analysis.Fourier.ZMod
+import Mathlib.LinearAlgebra.Eigenspace.Basic
+import Mathlib.LinearAlgebra.Matrix.Circulant
+import Mathlib.LinearAlgebra.Matrix.ToLin
+import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+/-!
+# Native cyclic Fourier kernels and circulant spectra
+
+## i. Overview
+
+Translation invariance reconstructs a native circulant matrix from its zero
+column. Additive characters give nonzero eigenvectors, and the native DFT
+diagonalizes the full cyclic matrix action with its counting-measure
+normalization. These finite statements do not assume a learning objective,
+an optimizer, or a supplied spectral certificate.
+
+## ii. Key results
+
+- Translation invariance of a difference kernel is exactly its circulant form.
+- Every native additive character is a nonzero eigenvector of every circulant
+  matrix.
+- The standard cyclic Fourier character has eigenvalue `ZMod.dft κ k`.
+- The native DFT diagonalizes the full circulant matrix-vector action.
+- Reversing and conjugating a cyclic kernel conjugates its native DFT.
+
+## iii. Table of contents
+
+- `zmodFourierKernel` — translation-invariant difference kernel
+- `circulant_translation_invariant` — circulant entries are translation-invariant
+- `matrix_eq_circulant_of_translation_invariant` — translation invariance ⟹ circulant
+- `matrix_translation_invariant_iff_eq_circulant` — equivalence theorem
+- `circulant_mulVec_addChar` — additive character eigenvector equation
+- `circulant_hasEigenvector_addChar` — native eigenspace membership
+- `circulant_mulVec_stdAddChar` — standard Fourier character eigenvector
+- `circulant_hasEigenvector_stdAddChar` — native nonzero eigenvector
+- `dft_circulant_mulVec` — DFT diagonalization of circulant action
+- `dft_star_comp_neg` — reversal/conjugation conjugates the DFT
+
+## iv. References
+
+- arXiv:2602.15029 — "Symmetry in language statistics shapes the geometry of
+  model representations" (Karkada, Korchinski, Nava, Wyart, Bahri, ICML 2026)
+- QMS-SOP-ALC-001 — Quality Management System
+
+### Three-Bucket Audit Classification
+
+- **BUCKET 1 — Proved Kernel Content:**
+  - `zmodFourierKernel_translation_invariant`, `zmodFourierKernel_zero`,
+  - `circulant_translation_invariant`, `matrix_eq_circulant_of_translation_invariant`, `matrix_translation_invariant_iff_eq_circulant`,
+  - `circulant_mulVec_addChar`, `circulant_hasEigenvector_addChar`, `circulant_mulVec_stdAddChar`, `circulant_hasEigenvector_stdAddChar`,
+  - `dft_circulant_mulVec`, `dft_star_comp_neg`.
+- **BUCKET 2 — Conditional / Interface Boundaries:**
+  - `NeZero n` and `NeZero N` supply nonemptiness of `ZMod n` and `ZMod N` for character nonvanishing and DFT inversion.
+- **BUCKET 3 — Out-of-Scope Empirical Claims:**
+  - Empirical corpus statistics and neural training dynamics of arXiv:2602.15029 remain outside this algebraic/Fourier owner.
+-/
+
+namespace InfoGeometry.LLM
+
+/-- Translation-invariant cyclic difference kernel `χ (t - s)` on `ZMod n`. -/
+noncomputable def zmodFourierKernel {n : ℕ} [NeZero n]
+    (χ : AddChar (ZMod n) ℂ) (t s : ZMod n) : ℂ :=
+  χ (t - s)
+
+/-- Translation invariance of the difference kernel under simultaneous
+row and column translation. -/
+theorem zmodFourierKernel_translation_invariant {n : ℕ} [NeZero n]
+    (χ : AddChar (ZMod n) ℂ) (t s a : ZMod n) :
+    zmodFourierKernel χ (t + a) (s + a) = zmodFourierKernel χ t s := by
+  simp [zmodFourierKernel, sub_eq_add_neg, add_assoc, add_comm]
+
+/-- The diagonal entry of the difference kernel is 1. -/
+theorem zmodFourierKernel_zero {n : ℕ} [NeZero n]
+    (χ : AddChar (ZMod n) ℂ) (t : ZMod n) :
+    zmodFourierKernel χ t t = 1 := by
+  simp [zmodFourierKernel]
+
+/-- The native DFT of `Φ` at `k` equals the character-weighted sum over `G`. -/
+theorem zmodDft_apply_as_character_sum {n : ℕ} [NeZero n]
+    (Φ : ZMod n → ℂ) (k : ZMod n) :
+    ZMod.dft Φ k = ∑ j : ZMod n, ZMod.stdAddChar (-(j * k)) • Φ j := by
+  simpa using ZMod.dft_apply Φ k
+
+/-- Left inverse: `ZMod.dft.symm ∘ ZMod.dft = id`. -/
+theorem zmodDft_inverse_left {n : ℕ} [NeZero n]
+    {E : Type*} [AddCommGroup E] [Module ℂ E]
+    (Φ : ZMod n → E) :
+    ZMod.dft.symm (ZMod.dft Φ) = Φ := by
+  simp
+
+/-- Right inverse: `ZMod.dft ∘ ZMod.dft.symm = id`. -/
+theorem zmodDft_inverse_right {n : ℕ} [NeZero n]
+    {E : Type*} [AddCommGroup E] [Module ℂ E]
+    (Ψ : ZMod n → E) :
+    ZMod.dft (ZMod.dft.symm Ψ) = Ψ := by
+  simp
+
+open Matrix
+
+section Translation
+
+variable {G α : Type*} [AddCommGroup G]
+
+/-- A difference kernel is invariant under simultaneous translation of its
+row and column indices. -/
+theorem circulant_translation_invariant (κ : G → α) (i j a : G) :
+    Matrix.circulant κ (i + a) (j + a) = Matrix.circulant κ i j := by
+  simp only [Matrix.circulant_apply, add_sub_add_right_eq_sub]
+
+/-- Translation invariance reconstructs the full matrix from its column at
+zero, without choosing a Fourier basis. -/
+theorem matrix_eq_circulant_of_translation_invariant
+    (M : Matrix G G α)
+    (hM : ∀ i j a, M (i + a) (j + a) = M i j) :
+    M = Matrix.circulant (fun i => M i 0) := by
+  ext i j
+  simpa only [Matrix.circulant_apply, add_neg_cancel, sub_eq_add_neg] using
+    (hM i j (-j)).symm
+
+/-- Simultaneous translation invariance is exactly the circulant form
+generated by the matrix's own column at zero. -/
+theorem matrix_translation_invariant_iff_eq_circulant
+    (M : Matrix G G α) :
+    (∀ i j a, M (i + a) (j + a) = M i j) ↔
+      M = Matrix.circulant (fun i => M i 0) := by
+  constructor
+  · exact matrix_eq_circulant_of_translation_invariant M
+  · intro hM i j a
+    conv_lhs => rw [hM]
+    conv_rhs => rw [hM]
+    exact circulant_translation_invariant _ i j a
+
+end Translation
+
+section AdditiveCharacter
+
+variable {G : Type*} [AddCommGroup G] [Fintype G]
+
+/-- A native additive character is an eigenvector of every circulant
+matrix; the eigenvalue is the pairing against the inverse character. -/
+theorem circulant_mulVec_addChar (κ : G → ℂ) (χ : AddChar G ℂ) :
+    Matrix.circulant κ *ᵥ (χ : G → ℂ) =
+      (∑ a : G, κ a * χ (-a)) • (χ : G → ℂ) := by
+  classical
+  funext i
+  change (∑ j : G, κ (i - j) * χ j) =
+    (∑ a : G, κ a * χ (-a)) * χ i
+  calc
+    (∑ j : G, κ (i - j) * χ j) =
+        ∑ a : G, κ a * χ (i - a) := by
+      refine Fintype.sum_equiv (Equiv.subLeft i) _ _ ?_
+      intro j
+      simp only [Equiv.subLeft_apply, sub_sub_cancel]
+    _ = ∑ a : G, (κ a * χ (-a)) * χ i := by
+      apply Finset.sum_congr rfl
+      intro a ha
+      rw [sub_eq_add_neg, χ.map_add_eq_mul]
+      ring
+    _ = (∑ a : G, κ a * χ (-a)) * χ i := by
+      rw [Finset.sum_mul]
+
+/-- The character eigenvector is nonzero, as required by the native
+eigenspace API. -/
+theorem circulant_hasEigenvector_addChar (κ : G → ℂ) (χ : AddChar G ℂ) :
+    Module.End.HasEigenvector (Matrix.circulant κ).mulVecLin
+      (∑ a : G, κ a * χ (-a)) (χ : G → ℂ) := by
+  rw [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
+  exact ⟨circulant_mulVec_addChar κ χ, AddChar.coe_ne_zero χ⟩
+
+end AdditiveCharacter
+
+section CyclicFourier
+
+variable {N : ℕ} [NeZero N]
+
+/-- The cyclic character of frequency `k` has eigenvalue `ZMod.dft κ k`.
+The positive sign in the eigenvector and negative sign in the DFT agree
+with Mathlib's counting-measure convention. -/
+theorem circulant_mulVec_stdAddChar (κ : ZMod N → ℂ) (k : ZMod N) :
+    Matrix.circulant κ *ᵥ (fun i => ZMod.stdAddChar (k * i)) =
+      ZMod.dft κ k • (fun i => ZMod.stdAddChar (k * i)) := by
+  classical
+  have hχ : ((ZMod.stdAddChar (N := N)).mulShift k : ZMod N → ℂ) =
+      fun i => ZMod.stdAddChar (k * i) := by
+    funext i
+    exact AddChar.mulShift_apply
+  have h := circulant_mulVec_addChar κ ((ZMod.stdAddChar (N := N)).mulShift k)
+  rw [hχ] at h
+  simpa [ZMod.dft_apply, AddChar.mulShift_apply, smul_eq_mul, mul_comm]
+    using h
+
+/-- The standard cyclic Fourier character is a native nonzero eigenvector
+with eigenvalue given by the DFT of the circulant kernel. -/
+theorem circulant_hasEigenvector_stdAddChar (κ : ZMod N → ℂ) (k : ZMod N) :
+    Module.End.HasEigenvector (Matrix.circulant κ).mulVecLin
+      (ZMod.dft κ k) (fun i => ZMod.stdAddChar (k * i)) := by
+  rw [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
+  refine ⟨circulant_mulVec_stdAddChar κ k, ?_⟩
+  intro hzero
+  have h := congrFun hzero 0
+  simp only [mul_zero, AddChar.map_zero_eq_one, Pi.zero_apply, one_ne_zero] at h
+
+/-- Applying the native DFT to a circulant matrix-vector product gives
+pointwise multiplication by the DFT of the matrix's kernel. -/
+theorem dft_circulant_mulVec (κ f : ZMod N → ℂ) :
+    ZMod.dft (Matrix.circulant κ *ᵥ f) = ZMod.dft κ * ZMod.dft f := by
+  classical
+  funext k
+  simp only [Pi.mul_apply, ZMod.dft_apply, Matrix.mulVec, dotProduct,
+    Matrix.circulant_apply, smul_eq_mul, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [Finset.sum_mul]
+  refine Fintype.sum_equiv (Equiv.subRight j) _ _ ?_
+  intro i
+  simp only [Equiv.subRight_apply]
+  have hchar : ZMod.stdAddChar (-(i * k)) =
+      ZMod.stdAddChar (-((i - j) * k)) * ZMod.stdAddChar (-(j * k)) := by
+    rw [← AddChar.map_add_eq_mul]
+    congr 1
+    ring
+  rw [hchar]
+  ring
+
+end CyclicFourier
+
+/-- Reversing and conjugating a cyclic kernel conjugates its native DFT. -/
+theorem dft_star_comp_neg {N : ℕ} [NeZero N] (f : ZMod N → ℂ) :
+    ZMod.dft (fun a => star (f (-a))) = star (ZMod.dft f) := by
+  classical
+  have hchar (a : ZMod N) : star (ZMod.stdAddChar a) = ZMod.stdAddChar (-a) := by
+    have hN : 0 < ringChar (ZMod N) := by
+      rw [ZMod.ringChar_zmod_n]
+      exact Nat.pos_of_ne_zero (NeZero.ne N)
+    simpa only [AddChar.inv_apply, starRingEnd_apply] using
+      (AddChar.starComp_apply (φ := ZMod.stdAddChar) hN a)
+  funext k
+  change (∑ a : ZMod N, ZMod.stdAddChar (-(a * k)) * star (f (-a))) =
+    star (∑ a : ZMod N, ZMod.stdAddChar (-(a * k)) * f a)
+  rw [star_sum]
+  refine Fintype.sum_equiv (Equiv.neg _) _ _ ?_
+  intro a
+  simp only [Equiv.neg_apply, star_mul, hchar, neg_mul, neg_neg]
+  ring
+
+end InfoGeometry.LLM

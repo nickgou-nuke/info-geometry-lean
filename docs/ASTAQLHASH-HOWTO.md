@@ -114,18 +114,30 @@ Do not silently fall back to legacy `decls`/`edges` when the requested
 generation is absent.
 The completed Arango generation is online DAG evidence; it does not by itself
 refresh the separate Auto-Ontology PostgreSQL term/relationship projection.
-The bridge importers write shared, additive legacy PostgreSQL tables. They do
-not publish a generation-scoped snapshot and `/api/terms` does not pin reads to
-an Arango generation. Generation input therefore requires explicit
-`--legacy-additive` acknowledgment; successful imports must not be described as
-a coherent PostgreSQL refresh:
+The bridge importers support two explicit PostgreSQL modes plus an offline/Arango `--dry-run` mode:
 
-```bash
-python3 tools/infra/arango_to_ontology.py \
-  --arango-db infogeometry --generation-id "$GENERATION_ID" --legacy-additive
-python3 tools/infra/arango_to_ontology_relationships.py \
-  --arango-db infogeometry --generation-id "$GENERATION_ID" --legacy-additive
-```
+1. **Generation-pinned snapshot & atomic reconciliation (`--pin-generation` / `--deployment-uuid`)**:
+   Requires `tools/infra/sql/001_decl_projection.sql` applied once to `auto_ontology`. Stages the validated Arango generation into schema `ig_decl_projection` via `tools/infra/decl_projection.py`, verifies `source_digest`, and atomically reconciles `public.table__term` and `public.term__term` (while preserving `public.term.source = 'semantic'`):
+   ```bash
+   python3 tools/infra/arango_to_ontology.py \
+     --arango-db infogeometry --generation-id "$GENERATION_ID" \
+     --pin-generation --report-json artifacts/ontology_reconciliation.json
+   ```
+2. **Offline / preflight dry-run validation (`--dry-run`)**:
+   Validates declarations and edges and computes `source_digest` without opening a PostgreSQL write connection:
+   ```bash
+   python3 tools/infra/arango_to_ontology.py \
+     --dry-run --decls-jsonl decls.jsonl --edges-jsonl edges.jsonl \
+     --report-json artifacts/bridge_dry_run.json
+   ```
+3. **Legacy shared additive mode (`--legacy-additive`)**:
+   Writes directly to shared additive `public` tables without publishing an `ig_decl_projection` snapshot:
+   ```bash
+   python3 tools/infra/arango_to_ontology.py \
+     --arango-db infogeometry --generation-id "$GENERATION_ID" --legacy-additive
+   python3 tools/infra/arango_to_ontology_relationships.py \
+     --arango-db infogeometry --generation-id "$GENERATION_ID" --legacy-additive
+   ```
 
 The relationship importer rejects ambiguous imported term identities and
 duplicate declaration names. For a generation import, it requires every
@@ -261,8 +273,9 @@ confused with it. Inspect the active deployment before connecting; see the
   relationship rows (`src_term_id`, `dst_term_id`, `kind`) by stable declaration
   key, avoiding name-based Cartesian fan-out. Immutable refreshes require the
   same `--generation-id ID` used by the term importer; it resolves both matching
-  collections from that receipt and requires `--legacy-additive`. Neither
-  importer publishes a generation-pinned projection.
+  collections from that receipt. Both importers support `--dry-run` for offline
+  validation and `--pin-generation` / `--deployment-uuid` for generation-pinned
+  atomic projection into schema `ig_decl_projection`.
 - See `docs/ONTOLOGY_LAYER_IMPROVEMENT_PLAN.md` (Section 10) for the full
   architecture and ingestion commands.
 
@@ -468,7 +481,7 @@ inputs, and imported environment. The script creates `decls_g_ID` and
 validation finish. Older generations remain untouched. An explicit fingerprint
 is caller-supplied metadata; only the `auto` path computes and revalidates the
 source/OLean identity inside the locked refresh process. The generation ID is
-limited to 32 letters, digits, `_`, or `-`.
+limited to 32 letters, digits, or `_`.
 
 ```bash
 python3 tools/infra/refresh_decl_graph.py \

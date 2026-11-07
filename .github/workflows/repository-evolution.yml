@@ -4,17 +4,44 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'lean/InfoGeometry/Graph/DarwinCommitTaxonomy.lean'
       - 'tools/repository_evolution/**'
+      - 'tools/infra/evolution_taxonomy.py'
+      - 'tools/infra/darwin_phylogeny_dashboard.py'
+      - 'tools/infra/arango_to_ontology.py'
+      - 'tools/infra/arango_to_ontology_relationships.py'
+      - 'tools/infra/decl_graph_generation.py'
+      - 'tools/infra/decl_projection.py'
+      - 'tools/infra/sql/001_decl_projection.sql'
+      - 'tests/test_evolution_taxonomy.py'
+      - 'tests/test_darwin_phylogeny_dashboard.py'
+      - 'tests/test_decl_graph_generation.py'
+      - 'tests/test_ontology_*.py'
+      - 'tests/test_arango_ontology_bridge.py'
       - 'tests/test_repository_phylogeny_export.py'
       - 'tests/test_repository_dna_character_tree.py'
       - 'tests/test_repository_ancestry_hodge.py'
       - 'tests/test_repository_evolution_render.py'
       - 'docs/REPOSITORY_EVOLUTION*.md'
+      - 'docs/PIPELINE_IMPROVEMENT_AND_REFACTORING_PLAN.md'
       - '.github/workflows/repository-evolution.yml'
   push:
     branches: [main]
     paths:
+      - 'lean/InfoGeometry/Graph/DarwinCommitTaxonomy.lean'
       - 'tools/repository_evolution/**'
+      - 'tools/infra/evolution_taxonomy.py'
+      - 'tools/infra/darwin_phylogeny_dashboard.py'
+      - 'tools/infra/arango_to_ontology.py'
+      - 'tools/infra/arango_to_ontology_relationships.py'
+      - 'tools/infra/decl_graph_generation.py'
+      - 'tools/infra/decl_projection.py'
+      - 'tools/infra/sql/001_decl_projection.sql'
+      - 'tests/test_evolution_taxonomy.py'
+      - 'tests/test_darwin_phylogeny_dashboard.py'
+      - 'tests/test_decl_graph_generation.py'
+      - 'tests/test_ontology_*.py'
+      - 'tests/test_arango_ontology_bridge.py'
       - 'tests/test_repository_*.py'
       - '.github/workflows/repository-evolution.yml'
   workflow_dispatch:
@@ -34,14 +61,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install optional sparse Hodge dependencies
-        run: python -m pip install -r tools/repository_evolution/requirements-hodge.txt
+      - name: Install optional sparse Hodge and psycopg dependencies
+        run: python -m pip install -r tools/repository_evolution/requirements-hodge.txt psycopg python-arango
       - name: Run focused suites sequentially
         shell: bash
+        env:
+          PYTHONPATH: src:.
         run: |
           set -euo pipefail
           ps -eo pid,comm,args
+          python -m unittest discover -s tests -p test_evolution_taxonomy.py -v
           python -m unittest discover -s tests -p test_repository_phylogeny_export.py -v
           python -m unittest discover -s tests -p test_repository_dna_character_tree.py -v
           python -m unittest discover -s tests -p test_repository_ancestry_hodge.py -v
           python -m unittest discover -s tests -p test_repository_evolution_render.py -v
+          python -m unittest discover -s tests -p test_decl_graph_generation.py -v
+          python -m unittest discover -s tests -p test_ontology_term_integrity.py -v
+          python -m unittest discover -s tests -p test_ontology_relationship_identity.py -v
+          if [ -f tests/test_arango_ontology_bridge.py ]; then
+            python -m unittest discover -s tests -p test_arango_ontology_bridge.py -v
+          fi
+          if [ -f tests/test_darwin_phylogeny_dashboard.py ]; then
+            python -m unittest discover -s tests -p test_darwin_phylogeny_dashboard.py -v
+          fi

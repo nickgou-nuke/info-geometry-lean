@@ -41,11 +41,7 @@ navigation packet:
 python3 tools/infra/context_preflight.py "question or target theorem" --include-external
 ```
 
-Its current root list still names old root TypeScript files and omits
-`extensions/`. Supplement it with direct searches of the actual relevant
-directories. A missing preflight hit is not evidence of repository-wide
-absence. Keep repo-owned, external-reference, generated-artifact, and runtime
-evidence separate, and inspect owner declarations before answering.
+Its root list includes `tools`, `scripts`, `src`, `cli`, `extensions`, `lakefile.toml`, `package.json`, and `pyproject.toml`. Keep repo-owned, external-reference, generated-artifact, and runtime evidence separate, and inspect owner declarations before answering.
 
 Before editing a mathematical owner, record the exact claim, carrier,
 operations, reused declarations, hypotheses, imports, consumers, smallest
@@ -71,7 +67,7 @@ Inspect active compiler processes and serialize builds and tests. Use the
 [Lake wrapper](../tools/infra/run_locked_lake_build.py) for a module:
 
 ```bash
-python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/To/File.lean
+python3 tools/infra/run_locked_lean.py src/InfoGeometry/Path/To/File.lean
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
 
@@ -115,7 +111,7 @@ prints send metadata and does not contact ChatGPT or validate a proof:
 
 ```bash
 python3 tools/infra/socratic_clawbot.py \
-  --file lean/InfoGeometry/Path/To/File.lean \
+  --file src/InfoGeometry/Path/To/File.lean \
   --theorem theorem_name --dry-run --json
 ```
 
@@ -124,7 +120,7 @@ artifact outputs are available:
 
 ```bash
 python3 tools/infra/socratic_clawbot.py \
-  --file lean/InfoGeometry/Path/To/File.lean \
+  --file src/InfoGeometry/Path/To/File.lean \
   --theorem theorem_name \
   --candidate-out tmp/oracle_candidates/theorem_name.lean \
   --response-out artifacts/oracle/theorem_name.md \
@@ -167,10 +163,20 @@ the [aiClaw memory adapter](../tools/infra/aiclaw_auto_arango.py).
 | Lane | Source default | Configuration |
 |---|---|---|
 | Declaration/InfoTree DAG | `infogeometry`, port 8530 | `ARANGO_*` |
-| Auto Ontology (Terms & Relationships) | FastAPI REST port 3001 / MCP port 3003 (`/mcp`) / Postgres port 5433 (`auto_ontology`) | `.mcp.json` (`nvidia-auto-ontology`), `tools/infra/arango_to_ontology.py`, `tools/infra/arango_to_ontology_relationships.py`, [ASTAQLHASH-HOWTO.md](ASTAQLHASH-HOWTO.md#auto-ontology-layer-localhost3001-rest-api--localhost3003mcp) |
+| Auto Ontology (Terms & Relationships) | FastAPI REST port 3001 / MCP port 3003 (`/mcp`) / Postgres port 5433 (`auto_ontology`) | `.mcp.json` (`nvidia-auto-ontology`), `tools/infra/arango_to_ontology.py` (`--pin-generation`, `--dry-run`), `tools/infra/arango_to_ontology_relationships.py`, `tools/infra/decl_projection.py`, `tools/infra/sql/001_decl_projection.sql`, [ASTAQLHASH-HOWTO.md](ASTAQLHASH-HOWTO.md#auto-ontology-layer-localhost3001-rest-api--localhost3003mcp) |
 | Hive task queue | `hive_live`, port 8540 | `HIVE_ARANGO_*` and the documented aliases |
 | aiClaw proof/text memory | `aiclaw_auto_rag`, port 8540 | `AICLAW_ARANGO_*` |
 | Alexandria literature | `alexandria`, port 8532 in shared configuration | `ALEXANDRIA_ARANGO_*` |
+
+### Unified pipeline runner (`scripts/run_pipeline.sh`)
+
+To run the four-stage ontology/taxonomy/phylogenesis pipeline (narrow-owner locked Lean build, evolution taxonomy contract tests, `repo-phylogeny/v2` export + dashboard generation, and offline/Arango Auto-Ontology bridge dry-run) with a SHA-256 run receipt:
+
+```bash
+./scripts/run_pipeline.sh [--skip-lean-build] [--generation-id <ID>] [--report-dir <DIR>]
+```
+
+See [docs/PIPELINE_IMPROVEMENT_AND_REFACTORING_PLAN.md](PIPELINE_IMPROVEMENT_AND_REFACTORING_PLAN.md) and [tools/repository_evolution/README.md](../tools/repository_evolution/README.md) for the full 5-level evidence boundary (`Level 1` Lean kernel truth vs. `Level 5` heuristic Python telemetry).
 
 These are defaults, not observed running services. Explicit environment values
 can override them. Do not print credentials, assume graph freshness, or claim
@@ -258,6 +264,32 @@ use the [wire-refactor workflow](../skills/lean-dag-wire-refactor/SKILL.md).
 For Souriau/Bost–Connes claims, read the
 [transition status](SOURIAU_BOST_CONNES_TRANSITION_STATUS.md). Other domain
 routing is in [AGENTS.md](../AGENTS.md#optional-services-and-domain-routing).
+
+## Quality Management System (QMS)
+
+Theorem-bearing work follows [docs/ALCHEMICAL_QMS_SOP.md](ALCHEMICAL_QMS_SOP.md)
+(QMS-SOP-ALC-001, v4.1). The SOP enforces role separation between generation
+(G-A), audit (A-A), acceptance (QA-A), and orchestration. QMS tooling is
+repo-owned under `tools/qms/` — no new network dependencies are introduced.
+
+| Gate | Purpose | Command | Role |
+|---|---|---|---|
+| 0 | Intake — formal intent envelope | `python3 tools/qms/run_qms.py intent --task-id T --source-text "..." --risk-level R2 ...` | G-A |
+| 1 | Owner-first search | `python3 tools/qms/run_qms.py owner-search --task-id T --artifact <file> --query <symbol-or-concept>` | G-A |
+| 2 | Artifact static scan; semantic controls remain for independent audit | `python3 tools/qms/run_qms.py generation --task-id T --artifact <file>` | G-A |
+| 3 | Sterile compile + audit | `python3 tools/qms/run_qms.py compile --task-id T --artifact <file>` | QA-A |
+| 4 | CAPA loop | `python3 tools/qms/run_qms.py capa create --task-id T --finding "..." ...` | Orchestrator |
+| 5 | Acceptance | `python3 tools/qms/run_qms.py accept --task-id T --artifact <file> --verdict ACCEPTED ...` | QA-A |
+| — | Quick gate (SOP §18) | `python3 tools/qms/run_qms.py quick-gate --task-id T` | QA-A |
+| — | CAPA index | `python3 tools/qms/run_qms.py capa-index` | Any |
+
+QMS artifacts are written to `artifacts/qms/<task-id>-{intent_envelope,audit_report,qa}.json`
+and `artifacts/qms/capa/`. Gate results record exact commands, outputs, and
+remaining debt.
+
+Permitted foundational axioms are `propext`, `Classical.choice`, and
+`Quot.sound`. Do not introduce `sorry`, `admit`, custom axioms, `native_decide`,
+or vacuous wrappers to obtain acceptance.
 
 ## Completion record
 

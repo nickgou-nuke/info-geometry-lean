@@ -23,6 +23,7 @@ An index entry, graph relation, or filename does not establish a theorem.
 | [Cache policy](../WARNING_DO_NOT_RUN_CACHE.md) | Cache preservation and the build helper's hydration behavior |
 | [Markdown governance](MarkdownCorpusGovernance.md) | Documentation status, provenance, and evidence requirements |
 | [Source audit, 2026-11-03](DOCUMENTATION_SOURCE_AUDIT_2026-11-03.md) | Bounded source findings, baseline CI evidence, and remaining integration limitations |
+| [QMS-SOP-ALC-001 v4.1](ALCHEMICAL_QMS_SOP.md) | Quality Management System: role separation (G-A/A-A/QA-A/Orchestrator), Gate 0-5 pipeline, intent envelopes, audit telemetry, QA acceptance records, CAPA tracking |
 
 ## Mathematical source maps
 
@@ -50,6 +51,7 @@ from an additional analytic or physical interpretation.
 - [Independent agent audit SOP](INDEPENDENT_AGENT_AUDIT_SOP.md)
 - [Generated-artifact policy](GeneratedArtifactsPolicy.md)
 - [Open debt problems](OPEN_DEBT_PROBLEMS.md)
+- [QMS-SOP-ALC-001 v4.1](ALCHEMICAL_QMS_SOP.md) — Quality Management System with role separation and Gate 0-5 acceptance pipeline
 
 Native proofs establish their stated conditional conclusions. Unproved witness
 existence, certificate discharge, or carrier-identification obligations must

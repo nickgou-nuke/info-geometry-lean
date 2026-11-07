@@ -169,6 +169,7 @@ import InfoGeometry.Algebra.DerivationLieLaneRepresentation
 import InfoGeometry.Algebra.Det2
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinOrder
+import InfoGeometry.Algebra.DihedralFourierBlocks
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.DiscretePowerGradeReadout
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
@@ -344,6 +345,7 @@ import InfoGeometry.Algebra.OSp12LogarithmicTransport
 import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.OnCuntzNAryIFSBridge
 import InfoGeometry.Algebra.OperatorSymbolCore
+import InfoGeometry.Algebra.OneCornerCounterexample
 import InfoGeometry.Algebra.OrbitClassification
 import InfoGeometry.Algebra.OrbitClassificationBridge
 import InfoGeometry.Algebra.OrbitStratification
@@ -459,6 +461,7 @@ import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.Algebra.SupergradedHomogeneousClosure
 import InfoGeometry.Algebra.SupergradedJordanLieSplit
 import InfoGeometry.Algebra.SupermatrixKoszul
+import InfoGeometry.Algebra.SubgroupCompressionVariance
 import InfoGeometry.Algebra.SusyCore
 import InfoGeometry.Algebra.SymplecticRankTwoJacobiator
 import InfoGeometry.Algebra.TemperleyLiebZeroLoop
@@ -1195,6 +1198,7 @@ import InfoGeometry.Arithmetic.CuntzPrimeCriticalEulerFactorBridge
 import InfoGeometry.Arithmetic.CuntzPrimeFiniteGibbsBridge
 import InfoGeometry.Arithmetic.CyclotomicFiveNPotentGaloisBridge
 import InfoGeometry.Arithmetic.CyclotomicGaloisRootsOfUnityGaussSumCapstone
+import InfoGeometry.Arithmetic.CyclotomicHarmonicOrbits
 import InfoGeometry.Arithmetic.DirichletCharacters
 import InfoGeometry.Arithmetic.DirichletModeFactorization
 import InfoGeometry.Arithmetic.Erdos1196ProofPin
@@ -8154,6 +8158,7 @@ import InfoGeometry.LLM.SpinTransformerFixedPoint
 import InfoGeometry.LLM.SpinTransformerMeanField
 import InfoGeometry.LLM.SpinTransformerPathEntropy
 import InfoGeometry.LLM.SpinTransformerQuenchRelax
+import InfoGeometry.LLM.SubgroupLogCompression
 import InfoGeometry.LLM.ThermodynamicSwitching
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.LLM.TransformerBlock

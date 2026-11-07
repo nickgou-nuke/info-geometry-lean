@@ -1,0 +1,55 @@
+# Pre-commit configuration for info-geometry-lean
+# Standardizes PhysLean/Mathlib style, module-doc layout, theorem docstrings,
+# LLM-proof anti-pattern checks, and repository structure hygiene.
+
+repos:
+  - repo: local
+    hooks:
+      - id: unified-quality-gate
+        name: Unified Quality Gate (placeholder, vacuity, mathfulness, hollow)
+        entry: python3 tools/quality/unified_gate.py
+        language: system
+        types: [file]
+        files: ^(src|lean)/.*\.lean$
+
+      - id: no-wrapper-audit
+        name: No-Wrapper & Docstring Audit (Canonical Posets)
+        entry: python3 tools/quality/audit_no_wrappers.py
+        language: system
+        types: [file]
+        files: ^(src|lean)/InfoGeometry/Canonical/.*Poset\.lean$
+
+      - id: lean-style-lint
+        name: Lean Style Linter (headers, tabs)
+        entry: python3 scripts/lint/required/style_lint.py
+        language: system
+        types: [file]
+        files: ^(src|lean)/.*\.lean$
+
+      - id: lean-module-doc-lint
+        name: Lean Module Docstring Linter (# Title, ## i-iv sections)
+        entry: python3 scripts/lint/required/module_doc_lint.py
+        language: system
+        types: [file]
+        files: ^(src|lean)/InfoGeometry/Canonical/.*\.lean$
+
+      - id: lean-theorem-lint
+        name: Lean Theorem Discipline & Docstring Linter
+        entry: python3 scripts/lint/required/theorem_lint.py
+        language: system
+        types: [file]
+        files: ^(src|lean)/.*\.lean$
+
+      - id: lean-llm-proof-lint
+        name: LLM-Generated Proof Anti-Pattern Linter
+        entry: python3 scripts/lint/required/llm_proof_lint.py
+        language: system
+        types: [file]
+        files: ^(src|lean)/.*\.lean$
+
+      - id: repo-structure-lint
+        name: Repository Structural Linter (alint layer)
+        entry: python3 scripts/lint/required/repo_structure_lint.py
+        language: system
+        pass_filenames: false
+        always_run: true

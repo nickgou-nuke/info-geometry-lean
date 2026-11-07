@@ -43,6 +43,7 @@ import InfoGeometry.Canonical.SplitOctonionCircularIsotropicAmariNambuPoset
 import InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset
 import InfoGeometry.Canonical.GaloisQuotientDihedralL8ClosureBridge
 import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
+import InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset
 import Lean.Util.CollectAxioms
 import Lean.Util.FoldConsts
 import Lean.Data.Json
@@ -152,7 +153,8 @@ private def owners : Array Name := #[
   `InfoGeometry.Canonical.LanguageSymmetryCirculantToeplitzBirkhoffPeircePoset,
   `InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset,
   `InfoGeometry.Canonical.GaloisQuotientDihedralL8ClosureBridge,
-  `InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
+  `InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset
 ]
 
 private def choiceFreeTheorems : Array Name := #[
@@ -237,7 +239,10 @@ private def choiceFreeTheorems : Array Name := #[
   `GaloisQuotientNonAbelianFourierPoset.quotient_surprisal_normal_form_and_second_order_survival,
   `GaloisQuotientNonAbelianFourierPoset.peirce_off_diagonal_involution_is_micro_attribute,
   `CliffordBottKTheoryWignerS4Poset.CliffordBottWignerS4Stage.rank_injective,
-  `CliffordBottKTheoryWignerS4Poset.CliffordBottWignerS4Stage.coverEdge_acyclic
+  `CliffordBottKTheoryWignerS4Poset.CliffordBottWignerS4Stage.coverEdge_acyclic,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.KitaevKOSpectrumStage.rank_injective,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.KitaevKOSpectrumStage.coverEdge_acyclic,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.ims_single_double_commutator_identity
 ]
 
 private def kindOf : ConstantInfo → String

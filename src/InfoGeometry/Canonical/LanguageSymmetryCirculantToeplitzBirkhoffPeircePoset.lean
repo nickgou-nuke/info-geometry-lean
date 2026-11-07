@@ -27,6 +27,7 @@ import InfoGeometry.Canonical.GrothendieckElementaryExpansionOperatorCalculus
 import InfoGeometry.Canonical.ModularSurprisalClockingLocksPoset
 import InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset
 import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
+import InfoGeometry.WignerHurwitzAdamsKTheory.WignerHurwitzAdamsKTheoryPoset
 import Mathlib.LinearAlgebra.Matrix.Vec
 import Mathlib.Data.Nat.Totient
 import Omega.Core.Word
@@ -140,6 +141,7 @@ homogenization:
 - `ls7_galois_quotient_dihedral_peter_weyl_and_surprisal_survival`
 - `ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_synthesis`
 - `ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`
+- `ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis`
 
 ## iii. Table of contents
 
@@ -182,7 +184,8 @@ homogenization:
   `ls7_peirce_helper_excursion_bkm_attribute_surprisal_and_kms_toeplitz_laplacian`,
   `ls7_galois_quotient_dihedral_peter_weyl_and_surprisal_survival`,
   `ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_synthesis`,
-  `ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`.
+  `ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`,
+  `ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis`.
 
 #### BUCKET 2 — Conditional / Interface Boundaries
 - Commutant closure and Peirce identities hold over any `[Ring B]` under explicit commutation
@@ -2172,7 +2175,9 @@ theorem ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesi
         3 * CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec 1 ∧
       CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort
         (Matrix.vecMulVec u_vec v_vec) 0 1 =
-        3 * CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec 2)) ∧
+        3 * CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec 2 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec =
+        InfoGeometry.Algebra.ZornVec3.cross u_vec v_vec)) ∧
     (CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op =
         dressedPeirceProjector P M_op M_op ∧
      CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op *
@@ -2191,12 +2196,138 @@ theorem ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesi
     CliffordBottKTheoryWignerS4Poset.Mat3.wigner_clebsch_gordan_s4_four_channel_decomposition M_cg
   have hZorn :=
     CliffordBottKTheoryWignerS4Poset.Mat3.kb5_antisym_channel_zorn_cross_product_bridge u_vec v_vec
+  have hZornVec :=
+    CliffordBottKTheoryWignerS4Poset.Mat3.kb5_zorn_vector_matrix_cross_and_dot_bridge u_vec v_vec
   have hKO :=
     CliffordBottKTheoryWignerS4Poset.ko_theory_pmi_bruhat_projector_colimit_stability P M_op hP ι n
   exact ⟨⟨hS4.1, hS4.2.2.2.1, hS4.2.2.2.2.1, hS4.2.2.2.2.2.1,
           hS4.2.2.2.2.2.2.1, hS4.2.2.2.2.2.2.2.1, hUnits.2⟩,
-         ⟨hCG, hZorn⟩,
+         ⟨hCG, ⟨hZorn.1, hZorn.2.1, hZorn.2.2.1, hZorn.2.2.2, hZornVec.2.1⟩⟩,
          hKO⟩
+
+/--
+**Theorem 7F (`ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis`):**
+Combines the scaled idempotency, mutual annihilation, and Frobenius Pythagorean decomposition of
+the four Wigner–Clebsch–Gordan channels on `Matrix (Fin 3) (Fin 3) K`
+(`WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_s4_idempotency_and_mutual_orthogonality`,
+`WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_frobenius_pythagorean_theorem`), the Hurwitz
+quaternion norm multiplicativity, spinor-corner `ℤ₃` triality conjugation identities, and
+`InfoGeometry.Quantum.Hurwitz` / `D23HurwitzCliffordFilterBank` paraunitary readouts
+(`WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_corner_triality_attention_filter`,
+`WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_d24_shell_and_d23_paraunitary_filter_bank_bridge`),
+and the cyclotomic polynomial factorization identities
+(`WignerHurwitzAdamsKTheoryPoset.adams_j_homomorphism_and_bott_hurwitz_cyclotomic_bridge`).
+This statement is a conjunction of those finite-stage algebraic results and does not establish a
+continuous homotopy-group construction of `π₃(SO) ↠ π₃^s`.
+-/
+theorem ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis
+    {K : Type*} [CommRing K]
+    (M_cg N_cg : WignerHurwitzAdamsKTheoryPoset.Mat3 K)
+    (Q_quat X_quat : WignerHurwitzAdamsKTheoryPoset.Quat K)
+    (x_cyc : K) :
+    (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1 M_cg +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 M_cg +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos M_cg +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg M_cg =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.smul 6 M_cg ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1 M_cg) =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.smul 6
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1 M_cg) ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 M_cg) =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.smul 6
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 M_cg) ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos M_cg) =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.smul 6
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos M_cg) ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg M_cg) =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.smul 6
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg M_cg) ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 M_cg) = 0 ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg M_cg) = 0 ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1 M_cg)
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 N_cg) = 0 ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos M_cg)
+        (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg N_cg) = 0 ∧
+     36 * WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner M_cg N_cg =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1 M_cg)
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi1 N_cg) +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 M_cg)
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 N_cg) +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos M_cg)
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos N_cg) +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.frobInner
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg M_cg)
+          (WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_neg N_cg)) ∧
+    (8 + 2 ^ 4 = 24 ∧
+     24 + Nat.choose 4 2 * 2 ^ 2 = 48 ∧
+     WignerHurwitzAdamsKTheoryPoset.Quat.qNorm (Q_quat * X_quat) =
+        WignerHurwitzAdamsKTheoryPoset.Quat.qNorm Q_quat *
+          WignerHurwitzAdamsKTheoryPoset.Quat.qNorm X_quat ∧
+     (WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW :
+        WignerHurwitzAdamsKTheoryPoset.Quat K) *
+        WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW -
+        WignerHurwitzAdamsKTheoryPoset.Quat.smul 2
+          WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW +
+        WignerHurwitzAdamsKTheoryPoset.Quat.smul 4
+          WignerHurwitzAdamsKTheoryPoset.Quat.qOne = 0 ∧
+     (WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW :
+        WignerHurwitzAdamsKTheoryPoset.Quat K) *
+        WignerHurwitzAdamsKTheoryPoset.Quat.qi *
+        WignerHurwitzAdamsKTheoryPoset.Quat.conj
+          WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW =
+        WignerHurwitzAdamsKTheoryPoset.Quat.smul 4
+          WignerHurwitzAdamsKTheoryPoset.Quat.qj ∧
+     (WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW :
+        WignerHurwitzAdamsKTheoryPoset.Quat K) *
+        WignerHurwitzAdamsKTheoryPoset.Quat.qj *
+        WignerHurwitzAdamsKTheoryPoset.Quat.conj
+          WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW =
+        WignerHurwitzAdamsKTheoryPoset.Quat.smul 4
+          WignerHurwitzAdamsKTheoryPoset.Quat.qk ∧
+     (WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW :
+        WignerHurwitzAdamsKTheoryPoset.Quat K) *
+        WignerHurwitzAdamsKTheoryPoset.Quat.qk *
+        WignerHurwitzAdamsKTheoryPoset.Quat.conj
+          WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW =
+        WignerHurwitzAdamsKTheoryPoset.Quat.smul 4
+          WignerHurwitzAdamsKTheoryPoset.Quat.qi ∧
+     InfoGeometry.Quantum.Hurwitz.hurwitzDirections.card = 24 ∧
+     InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet.paraunitary
+        InfoGeometry.Analysis.D23HurwitzCliffordFilterBank.d23HurwitzCliffordFilterBank ∧
+     InfoGeometry.Analysis.D23HurwitzCliffordFilterBank.d23HurwitzCliffordFilterBank.sum_normSq_eq_one) ∧
+    (WignerHurwitzAdamsKTheoryPoset.Phi6 (x_cyc ^ 4) =
+        WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc ∧
+     (x_cyc ^ 4 + 1) * WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc = x_cyc ^ 12 + 1 ∧
+     (x_cyc ^ 12 - 1) * (x_cyc ^ 4 + 1) *
+        WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc = x_cyc ^ 24 - 1) := by
+  have hIdem :=
+    WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_s4_idempotency_and_mutual_orthogonality M_cg
+  have hFrob :=
+    WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_frobenius_pythagorean_theorem M_cg N_cg
+  have hHurw :=
+    WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_corner_triality_attention_filter Q_quat X_quat
+  have hD23 :=
+    WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_d24_shell_and_d23_paraunitary_filter_bank_bridge
+  have hCyc :=
+    WignerHurwitzAdamsKTheoryPoset.adams_j_homomorphism_and_bott_hurwitz_cyclotomic_bridge x_cyc
+  exact ⟨⟨hIdem.1, hIdem.2.1, hIdem.2.2.1, hIdem.2.2.2.1, hIdem.2.2.2.2.1,
+          hIdem.2.2.2.2.2.1, hIdem.2.2.2.2.2.2.2.2.2.1,
+          hFrob.1, hFrob.2.2.2.1, hFrob.2.2.2.2⟩,
+         ⟨hHurw.1, by decide, hHurw.2.2.1, hHurw.2.2.2.2.1,
+          hHurw.2.2.2.2.2.2.1, hHurw.2.2.2.2.2.2.2.1, hHurw.2.2.2.2.2.2.2.2,
+          hD23.1, hD23.2.2.2.2.2.1, hD23.2.2.2.2.2.2⟩,
+         hCyc⟩
 
 end MasterLanguageSymmetryYangianPeirceSynthesis
 

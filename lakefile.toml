@@ -1,0 +1,62 @@
+name = "infogeometry"
+version = "0.1.0"
+defaultTargets = ["InfoGeometry"]
+
+[[lean_lib]]
+name = "InfoGeometry"
+srcDir = "src"
+
+[[require]]
+name = "InfoGeometryCore"
+path = "lib/InfoGeometryCore"
+
+[[require]]
+name = "Paperproof"
+git = "https://github.com/Paper-Proof/paperproof.git"
+rev = "c85fb0b45ce9ebaaa4715c7d043aadda80306c46"
+subDir = "lean"
+
+[[require]]
+name = "paranoia"
+git = "https://github.com/oOo0oOo/LeanParanoia.git"
+rev = "11c2385ade3cc417d69ce837bfda9d2c5b1d61ab"
+
+[[require]]
+name = "LeanArchitect"
+git = "https://github.com/hanwenzhu/LeanArchitect.git"
+rev = "54d3fb249685db8e5a564e0b3f331cff77991607"
+
+[[require]]
+name = "doc-gen4"
+git = "https://github.com/leanprover/doc-gen4.git"
+rev = "v4.34.1"
+
+[[require]]
+name = "GIFT"
+path = "external_refs/gift-framework-core"
+
+[[require]]
+name = "Atlas"
+path = "external_refs/atlas-lean"
+
+[[require]]
+name = "HomotopyHypothesis"
+path = "external_refs/homotopy-hypothesis-lean4"
+
+[[require]]
+name = "LeanCopilot"
+git = "https://github.com/lean-dojo/LeanCopilot.git"
+rev = "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
+
+[[require]]
+name = "OAI"
+path = "external_refs/openai-math/lean"
+
+[[require]]
+name = "Coxeter"
+path = "external_refs/lean-coxeter"

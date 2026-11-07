@@ -295,7 +295,7 @@ lemma clebsch_gordan_s4_idempotency_and_mutual_orthogonality (M : Mat3 K) :
     Pi3_pos (Pi3_neg M) = (0 : Mat3 K) ∧ Pi3_neg (Pi3_pos M) = (0 : Mat3 K) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
   · ext <;>
-    · dsimp [Pi1, Pi2, Pi3_pos, Pi3_neg, smul, tr, instAdd, instZero]
+    · simp [Pi1, Pi2, Pi3_pos, Pi3_neg, smul, tr]
       ring
 
 /--
@@ -412,13 +412,13 @@ lemma hurwitz_corner_triality_attention_filter (Q X : Quat K) :
     (hurwitzW : Quat K) * qj * conj hurwitzW = smul 4 qk ∧
     (hurwitzW : Quat K) * qk * conj hurwitzW = smul 4 qi := by
   refine ⟨by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · dsimp [qNorm, mul, instMul]; ring
-  · dsimp [qNorm, hurwitzW]; ring
-  · ext <;> (dsimp [hurwitzW, qOne, smul, mul, instMul, instAdd, instSub, instZero]; ring)
-  · ext <;> (dsimp [hurwitzW, qOne, smul, mul, instMul]; ring)
-  · ext <;> (dsimp [hurwitzW, qi, qj, conj, smul, mul, instMul]; ring)
-  · ext <;> (dsimp [hurwitzW, qj, qk, conj, smul, mul, instMul]; ring)
-  · ext <;> (dsimp [hurwitzW, qk, qi, conj, smul, mul, instMul]; ring)
+  · simp [qNorm, mul]; ring
+  · simp [qNorm, hurwitzW]; ring
+  · ext <;> (simp [hurwitzW, qOne, smul, mul]; ring)
+  · ext <;> (simp [hurwitzW, qOne, smul, mul]; ring)
+  · ext <;> (simp [hurwitzW, qi, qj, conj, smul, mul]; ring)
+  · ext <;> (simp [hurwitzW, qj, qk, conj, smul, mul]; ring)
+  · ext <;> (simp [hurwitzW, qk, qi, conj, smul, mul]; ring)
 
 /-- Conversion from `Quat ℝ` to `InfoGeometry.Quantum.Hurwitz.HurwitzNode = ℍ[ℝ]`. -/
 def toHurwitzNode (q : Quat ℝ) : InfoGeometry.Quantum.Hurwitz.HurwitzNode :=

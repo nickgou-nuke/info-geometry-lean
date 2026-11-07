@@ -18,44 +18,44 @@ import InfoGeometry.Algebra.ZornVectorMatrix
 import Omega.POM.CatalanMoments
 
 /-!
-# Clifford–Bott Colimit, Wigner–Clebsch–Gordan S₄ Decomposition & Adams π₃^s = ℤ₂₄ Poset (𝔎𝔅₁ ≺ ⋯ ≺ 𝔎𝔅₇)
+# Finite S₄ Dimension Arithmetic, Matrix Channels & Peirce Projector Poset (𝔎𝔅₁ ≺ ⋯ ≺ 𝔎𝔅₇)
 
 ## i. Overview
 
-Complete, `0 sorry`, `[propext]`-only formalization answering all three terminal directives on
-the Wigner–Eckart / Clebsch–Gordan $S_4$ decomposition, 4-scale split Bott periodicity,
-Adams' $J$-homomorphism lock $\pi_3^s = \mathbb{Z}_{24}$, and $KO_0$ projector colimit stability:
+This owner proves finite arithmetic identities, a scaled coordinate decomposition of `3 × 3`
+matrices, a Zorn cross-product coordinate identity, and conditional Peirce projector laws. It
+does not construct an `S₄` representation or group-algebra decomposition, Bott periodicity,
+Adams' `J`-homomorphism, a `KO₀` class, or a categorical colimit. The stage graph below is an
+explicit ordering of declarations, not a dependency theorem deriving one mathematical lane from
+another.
 
 1. **Directive 1 — Wigner–Eckart / Clebsch–Gordan $S_4 = V_4 \rtimes S_3$ Decomposition (`𝔎𝔅₁, 𝔎𝔅₄, 𝔎𝔅₅`):**
-   - `s4_wedderburn_artin_trees_and_adams_j_mod24_lock`:
-     Verifies the Wedderburn–Artin / Peter–Weyl decomposition of $\mathbb{R}[S_4]$ ($|S_4| = 4! = 24$)
-     into the quotient $S_4 / V_4 \cong S_3$ sector ($1^2 + 1^2 + 2^2 = 6$) and the two faithful
-     $V_4$-active 3D blocks ($3^2 + 3^2 = 18$), with $6 + 18 = 24$, and the Clebsch–Gordan dimension
-     split $1 + 2 + 3 + 3 = 3 \times 3$ of $\mathbf{3} \otimes \mathbf{3}$.
-   - `wigner_clebsch_gordan_s4_four_channel_decomposition`:
-     Proves over any commutative ring `K` that every $3 \times 3$ matrix `M : Matrix (Fin 3) (Fin 3) K`
-     decomposes division-freely (scaled by `6`) into four channels:
+   - `s4_wedderburn_artin_trees_and_adams_j_mod24_lock` proves the displayed dimension sums,
+     tree-count arithmetic, Catalan values, a gcd calculation, and a power identity. It does not
+     construct `S₄`, its normal subgroup `V₄`, irreducible representations, or a Wedderburn map.
+   - `wigner_clebsch_gordan_s4_four_channel_decomposition` proves a coordinate identity over any
+     commutative ring `K` for `M : Matrix (Fin 3) (Fin 3) K`:
      `smul 6 M = cgChan1_Triv M + cgChan2_Quadrupole M + cgChan3_SymOff M + cgChan3_AntisymVort M`,
-     with exact tracelessness of channels `2`, `3_+`, `3_-` and exact transpose symmetry/antisymmetry.
+     with the stated trace and transpose identities. No `S₄` action or equivariance is defined;
+     over an arbitrary ring the factor `6` is not assumed invertible, so this is a scaled identity,
+     not an unscaled direct-sum decomposition.
    - `kb5_antisym_channel_zorn_cross_product_bridge`:
      Proves that for any rank-1 tensor product `Matrix.vecMulVec u v` of two 3-vectors `u, v : Fin 3 → K`,
      the scalar trace is the Euclidean dot product `u · v` while the antisymmetric channel
      `cgChan3_AntisymVort (Matrix.vecMulVec u v)` is `3` times the 3D Zorn cross product `zornCross3D u v`.
-2. **Directive 2 — $KO_0$ Class of the PMI Matrix & 4-Scale Bott Periodicity (`𝔎𝔅₆, 𝔎𝔅₇`):**
+2. **Directive 2 — Conditional Peirce Projector Laws & Finite Index Cardinality (`𝔎𝔅₆, 𝔎𝔅₇`):**
    - `ko_theory_pmi_bruhat_projector_colimit_stability`:
      Using canonical `InfoGeometry.OperatorAlgebra.PeirceSpine.Basic` (`dressedPeirceProjector`,
      `genPhi`, `genV`, `genSig`, `evenGrade`, `comm`) and `InfoGeometry.Core.TensorPeirceDecomposition`
-     (`PeirceIndex`, `peirceIndex_card`), proves that `P_hat_KO P M = dressedPeirceProjector P M M`
-     is strictly idempotent (`P_hat_KO P M * P_hat_KO P M = P_hat_KO P M`), has diagonal difference
-     `evenGrade P (P_hat_KO P M - P) = - comm (conePlus P M) (coneMinus P M)`, commutes with any
-     unital ring homomorphism `ι : B →+* B'`, and satisfies the 4-scale Bott periodicity dimension law
-     `Fintype.card (PeirceIndex (n + 4)) = 16 * Fintype.card (PeirceIndex n)`.
-3. **Directive 3 — Adams' $J$-Homomorphism $\pi_3^s = \mathbb{Z}_{24}$ & 4-Token Syntactic Trees (`𝔎𝔅₂, 𝔎𝔅₃`):**
+     (`PeirceIndex`, `peirceIndex_card`), proves the dressed element is idempotent, its even-grade
+     difference has the displayed commutator form, its image under a unital ring homomorphism is
+     idempotent, and the finite index cardinality scales by 16 after four binary levels. These are
+     not a `KO₀` class, trace/index theorem, completed colimit, or classical Bott-periodicity result.
+3. **Directive 3 — Modulo-24 Arithmetic & 4-Token Tree Counts (`𝔎𝔅₂, 𝔎𝔅₃`):**
    - `adams_j_homomorphism_all_z24_units_divisibility`:
-     Proves that $\gcd(5^2 - 1, 7^2 - 1) = 24$, that `(k^2 - 1) % 24 = 0` for all $\varphi(24) = 8$
-     coprime units $k \in (\mathbb{Z}/24\mathbb{Z})^\times$, and verifies the 4-token syntactic tree counts
-     (`4^(4-2) = 16` Cayley trees, `24 - 16 = 8 = φ(24)`, and Catalan numbers `C₃ = 5`, `C₄ = 14`
-     from `Omega.POM.CatalanMoments.catalanNumber`).
+     proves that `k² ≡ 1 (mod 24)` for residues coprime to 24, alongside the totient value. This is
+     modular arithmetic only; it does not define or prove a statement about Adams' `J`-homomorphism
+     or `π₃ˢ`.
 
 ## ii. Key results
 
@@ -69,21 +69,23 @@ Adams' $J$-homomorphism lock $\pi_3^s = \mathbb{Z}_{24}$, and $KO_0$ projector c
 
 ## iii. Table of contents
 
-- Section 0: The 7-Stage Clifford–Bott–Wigner–$S_4$ Poset (`𝔎𝔅₁ ≺ ⋯ ≺ 𝔎𝔅₇`)
-- Section 1 (`𝔎𝔅₁–𝔎𝔅₃`): $S_4$ Wedderburn–Artin Split, Syntactic Trees, & Adams $\pi_3^s = \mathbb{Z}_{24}$ Lock
-- Section 2 (`𝔎𝔅₄–𝔎𝔅₅`): Division-Free Wigner–Clebsch–Gordan Decomposition of $\mathbf{3} \otimes \mathbf{3}$ & Zorn Cross Product
-- Section 3 (`𝔎𝔅₆–𝔎𝔅₇`): $KO_0$ Class of the PMI Matrix, 4-Scale Bott Periodicity, & Colimit Stabilization
+- Section 0: A seven-node declaration-order graph (`𝔎𝔅₁ ≺ ⋯ ≺ 𝔎𝔅₇`)
+- Section 1 (`𝔎𝔅₁–𝔎𝔅₃`): Dimension, tree, gcd, and modulo-24 arithmetic
+- Section 2 (`𝔎𝔅₄–𝔎𝔅₅`): Scaled coordinate channels and a Zorn cross-product identity
+- Section 3 (`𝔎𝔅₆–𝔎𝔅₇`): Conditional Peirce projector laws and finite index cardinality
 
 ### Three-Bucket Audit Map
-* **BUCKET 1 — Proved Kernel Content:**
+* **BUCKET 1 — Proved Kernel Content (finite algebra/arithmetic only):**
   - `CliffordBottWignerS4Stage` ($\mathfrak{KB}_1 \prec \dots \prec \mathfrak{KB}_7$), `coverEdge`, `coverEdge_strictMono`, `coverEdge_acyclic`,
   - `s4_wedderburn_artin_trees_and_adams_j_mod24_lock`, `adams_j_homomorphism_all_z24_units_divisibility`,
   - `Mat3.wigner_clebsch_gordan_s4_four_channel_decomposition`, `Mat3.kb5_antisym_channel_zorn_cross_product_bridge`,
   - `ko_theory_pmi_bruhat_projector_colimit_stability`, `kb7_master_clifford_bott_wigner_s4_synthesis`.
 * **BUCKET 2 — Conditional / Interface Boundaries:**
   - Idempotence (`hP : P * P = P`) and unital ring homomorphisms (`ι : B →+* B'`) are explicit theorem parameters.
-* **BUCKET 3 — Out-of-Scope Empirical Claims:**
-  - Continuous homotopy-group constructions of $\pi_3^s$ and empirical LLM training dynamics remain outside this finite-stage algebraic owner.
+* **BUCKET 3 — Open mathematical bridges:**
+  - An actual `S₄` action and equivariance proof for the four channels; the `S₄` group-algebra decomposition;
+    a topological model of Adams' `J` and `π₃ˢ`; a `KO₀` construction and index theorem; and a compatible
+    tensor-tower colimit map remain open. Numerical coincidences in this owner do not discharge them.
 
 ## iv. References
 
@@ -101,10 +103,8 @@ universe u v
 -- SECTION 0: The 7-Stage Clifford–Bott–Wigner–S₄ Poset (𝔎𝔅₁ ≺ ⋯ ≺ 𝔎𝔅₇)
 -- ============================================================================
 
-/-- The 7-stage causal poset ($\mathfrak{KB}_1 \prec \dots \prec \mathfrak{KB}_7$) governing
-the $S_4 = V_4 \rtimes S_3$ Wedderburn–Artin split, 4-token syntactic tree combinatorics,
-Adams' $J$-homomorphism $\pi_3^s = \mathbb{Z}_{24}$ lock, Wigner–Clebsch–Gordan $\mathbf{3} \otimes \mathbf{3}$
-four-channel decomposition, Zorn cross-product bridge, and $KO_0$ colimit stabilization. -/
+/-- The seven named stages used to order declarations in this file. The associated cover graph is
+acyclic by rank; this does not prove mathematical dependency edges between the listed topics. -/
 inductive CliffordBottWignerS4Stage : Type
   | kb1S4WedderburnArtinAndV4Quotient
   | kb2SyntacticTreePermutohedronCayleyCatalan
@@ -169,7 +169,7 @@ theorem coverEdge_acyclic (a : CliffordBottWignerS4Stage) : ¬ coverEdge a a := 
 end CliffordBottWignerS4Stage
 
 -- ============================================================================
--- SECTION 1 (𝔎𝔅₁–𝔎𝔅₃): S₄ Wedderburn–Artin, Syntactic Trees, & Adams π₃^s = ℤ₂₄ Lock
+-- SECTION 1 (𝔎𝔅₁–𝔎𝔅₃): Finite Dimension, Tree, Catalan, and Modulo-24 Arithmetic
 -- ============================================================================
 
 /-- `n`-th Catalan number `C_n = (2n choose n) / (n + 1)` re-exported from canonical
@@ -178,16 +178,11 @@ abbrev catalanNum (n : ℕ) : ℕ :=
   Omega.POM.CatalanMoments.catalanNumber n
 
 /--
-**Theorem 1 (𝔎𝔅₁–𝔎𝔅₃ — `S₄` Wedderburn–Artin Split, Syntactic Trees, & Adams `π₃^s = ℤ₂₄` Lock):**
-1. **Wedderburn–Artin decomposition of `ℝ[S₄]`:**
-   `S₄ / V₄ ≅ S₃` (`1² + 1² + 2² = 6`) plus dual 3D blocks (`3² + 3² = 18`) equals `24`.
-2. **Clebsch–Gordan dimension split of `3 ⊗ 3 = 1 ⊕ 2 ⊕ 3_+ ⊕ 3_-`:**
-   `1 + 2 + 3 + 3 = 3 * 3`.
-3. **4-Token Syntactic Trees:**
-   `24` permutohedron leaves = `16` Cayley trees (`4^(4-2)`) + `8` (`φ(24) = dim 𝕆_s`),
-   with Catalan numbers `catalanNum 3 = 5` and `catalanNum 4 = 14`.
-4. **Adams `J`-homomorphism denominator & 4-scale Bott matrix dimension:**
-   `Nat.gcd (5 ^ 2 - 1) (7 ^ 2 - 1) = 24` and `4 ^ 4 = 16 * 16`.
+**Theorem 1 (𝔎𝔅₁–𝔎𝔅₃ — Finite Dimension and Tree-Count Arithmetic):**
+This theorem verifies numerical identities: the displayed sums of squares total 24 and 6,
+`1 + 2 + 3 + 3 = 3 * 3`, the values `4^(4-2) = 16` and `24 - 16 = φ(24)`, two Catalan
+values, a gcd calculation, and `4^4 = 16 * 16`. These equalities alone do not construct group
+representations, a group-algebra decomposition, a Bott-periodicity map, or an Adams `J` map.
 -/
 theorem s4_wedderburn_artin_trees_and_adams_j_mod24_lock :
     (1 ^ 2 + 1 ^ 2 + 2 ^ 2) + (3 ^ 2 + 3 ^ 2) = 24 ∧
@@ -202,11 +197,10 @@ theorem s4_wedderburn_artin_trees_and_adams_j_mod24_lock :
   decide
 
 /--
-**Theorem 1b (𝔎𝔅₃ — Universal Exponent-2 Mod-24 Divisibility on `(ℤ/24ℤ)^×`):**
-1. The unit group `(ℤ/24ℤ)^× = {1, 5, 7, 11, 13, 17, 19, 23}` has cardinality `φ(24) = 8`.
-2. Every residue `k : Fin 24` coprime to `24` satisfies `(k.val * k.val - 1) % 24 = 0`
-   (i.e. `24 ∣ (k² - 1)`), locking the Von Staudt–Clausen / Adams `J`-homomorphism denominator
-   `denom(B₂ / 4) = gcd_{gcd(k, 6) = 1}(k² - 1) = 24`.
+**Theorem 1b (𝔎𝔅₃ — Modulo-24 Unit Arithmetic):**
+The proposition gives `φ(24) = 8` and proves that every `k : Fin 24` coprime to 24 has
+`k.val * k.val ≡ 1 (mod 24)`. It does not identify this fact with a Bernoulli denominator
+or prove an Adams `J`-homomorphism statement.
 -/
 theorem adams_j_homomorphism_all_z24_units_divisibility :
     Nat.totient 24 = 8 ∧
@@ -214,7 +208,7 @@ theorem adams_j_homomorphism_all_z24_units_divisibility :
   decide
 
 -- ============================================================================
--- SECTION 2 (𝔎𝔅₄–𝔎𝔅₅): Division-Free Wigner–Clebsch–Gordan Decomposition of 3 ⊗ 3
+-- SECTION 2 (𝔎𝔅₄–𝔎𝔅₅): Scaled Matrix Coordinate Channels and the Zorn Cross-Product Identity
 -- ============================================================================
 
 /-- Canonical `3 × 3` matrix carrier `Matrix (Fin 3) (Fin 3) K` over `K`. -/
@@ -261,15 +255,11 @@ def zornCross3D (u v : Fin 3 → K) : Fin 3 → K :=
     u 0 * v 1 - u 1 * v 0]
 
 /--
-**Theorem 2 (𝔎𝔅₄ & 𝔎𝔅₅ — Exact Division-Free Wigner–Clebsch–Gordan `3 ⊗ 3` Decomposition):**
-For any `3 × 3` matrix `M : Mat3 K` over any commutative ring `K`:
-1. **Exact Reconstruction (`1 ⊕ 2 ⊕ 3_+ ⊕ 3_-`):**
-   `6 • M = cgChan1_Triv M + cgChan2_Quadrupole M + cgChan3_SymOff M + cgChan3_AntisymVort M`!
-2. **Exact Tracelessness of Channels `2`, `3_+`, and `3_-`:**
-   `tr (cgChan2_Quadrupole M) = 0`, `tr (cgChan3_SymOff M) = 0`, and `tr (cgChan3_AntisymVort M) = 0`.
-3. **Exact Transpose Parity of `3_+` (Symmetric) and `3_-` (Antisymmetric Zorn Cross-Product):**
-   `transpose (cgChan3_SymOff M) = cgChan3_SymOff M` and
-   `transpose (cgChan3_AntisymVort M) = smul (-1) (cgChan3_AntisymVort M)`!
+**Theorem 2 (𝔎𝔅₄ & 𝔎𝔅₅ — Scaled Coordinate Decomposition and Zorn Identity):**
+For `M : Matrix (Fin 3) (Fin 3) K` over a commutative ring `K`, this theorem proves the exact
+scaled reconstruction `6 • M` from four explicitly defined coordinate maps, together with
+trace and transpose identities. Since 6 is not assumed invertible, it does not assert an
+unscaled direct-sum decomposition. No `S₄` action or Clebsch–Gordan equivariance is defined.
 -/
 theorem wigner_clebsch_gordan_s4_four_channel_decomposition (M : Mat3 K) :
     smul 6 M =
@@ -406,7 +396,7 @@ theorem kb5_zorn_vector_matrix_cross_and_dot_bridge (u v : Fin 3 → K) :
 end Mat3
 
 -- ============================================================================
--- SECTION 3 (𝔎𝔅₆–𝔎𝔅₇): KO₀ Class of the PMI Matrix & Colimit Stabilization in `[Ring B]`
+-- SECTION 3 (𝔎𝔅₆–𝔎𝔅₇): Conditional Peirce Projector Laws and Finite Index Cardinality
 -- ============================================================================
 
 section KOTheoryColimitStabilization
@@ -415,8 +405,8 @@ variable {B : Type u} {B' : Type v} [Ring B] [Ring B']
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 open InfoGeometry.Core.TensorPeirceDecomposition
 
-/-- Renormalized `KO₀` projector `P̂_+ = P + Φ - Σ - V N_+` of the PMI operator `M`,
-defined directly from the canonical Peirce spine generators `genPhi`, `genSig`, `genV`, `conePlus`. -/
+/-- Legacy name for the Peirce-dressed element `P + genPhi - genSig - genV * conePlus`.
+This definition alone does not construct a `KO₀` class or index. -/
 def P_hat_KO (P M : B) : B :=
   P + genPhi P M M - genSig P M M - genV P M M * conePlus P M
 
@@ -426,17 +416,11 @@ abbrev K_diag (P X : B) : B :=
   evenGrade P X
 
 /--
-**Theorem 3 (𝔎𝔅₆ & 𝔎𝔅₇ — `KO₀` Projector Stability, Bruhat Identity, & Colimit Index Conservation):**
-For any finite-stage vocabulary projector `P² = P` and PMI operator `M ∈ B`:
-1. **Canonical Bruhat Conjugation Identity:**
-   `P_hat_KO P M = dressedPeirceProjector P M M = (1 - N_+) * (P + N_-) * (1 + N_+)`.
-2. **Exact `KO₀` Idempotency:** `P_hat_KO P M * P_hat_KO P M = P_hat_KO P M`.
-3. **Index Conservation (Diagonal Difference Is an Exact Commutator `-[N_+, N_-]`):**
-   `K_diag P (P_hat_KO P M - P) = - comm (conePlus P M) (coneMinus P M)`, so `Tr(P̂_+ - P) = 0`!
-4. **Colimit Functoriality:** Any unital ring homomorphism `ι : B →+* B'` maps `P_hat_KO P M`
-   to an exact idempotent `ι(P_hat_KO P M)² = ι(P_hat_KO P M)`.
-5. **4-Scale Split Bott Periodicity on `PeirceIndex`:**
-   For every dyadic scale `n : ℕ`, `Fintype.card (PeirceIndex (n + 4)) = 16 * Fintype.card (PeirceIndex n)`.
+**Theorem 3 (𝔎𝔅₆ & 𝔎𝔅₇ — Conditional Peirce Identities and Finite Cardinality):**
+Under the explicit idempotence hypothesis `hP` and for a unital ring homomorphism `ι`, this
+proves equality with the canonical dressed Peirce element, idempotence, the even-grade
+commutator identity, preservation of idempotence under `ι`, and a cardinality formula for
+`PeirceIndex`. It does not define a trace, `KO₀` class, index, completed colimit, or Bott map.
 -/
 theorem ko_theory_pmi_bruhat_projector_colimit_stability
     (P M : B) (hP : P * P = P) (ι : B →+* B') (n : ℕ) :
@@ -461,15 +445,12 @@ theorem ko_theory_pmi_bruhat_projector_colimit_stability
   exact ⟨h_eq, h_idem, h_diag, h_colim, h_bott⟩
 
 /--
-**Theorem 4 (𝔎𝔅₇ — Master 7-Stage Clifford–Bott–Wigner–`S₄` Synthesis):**
-Assembles the complete 7-stage chain $\mathfrak{KB}_1 \prec \dots \prec \mathfrak{KB}_7$:
-1. Acyclicity of the 7-stage Hasse cover graph `CliffordBottWignerS4Stage.coverEdge`,
-2. $S_4 = V_4 \rtimes S_3$ Wedderburn–Artin split (`6 + 18 = 24`), Catalan tree counts (`C₃ = 5`, `C₄ = 14`),
-   and Adams' $J$-homomorphism lock `gcd(5² - 1, 7² - 1) = 24` (`𝔎𝔅₁–𝔎𝔅₃`),
-3. Division-free 4-channel Wigner–Clebsch–Gordan decomposition of any $3 \times 3$ matrix `M : Mat3 K`
-   and 3D Zorn cross-product bridge (`𝔎𝔅₄–𝔎𝔅₅`),
-4. $KO_0$ Bruhat projector idempotence, commutator diagonal defect `-[N_+, N_-]`, colimit
-   functoriality, and 4-scale Bott periodicity `card(PeirceIndex (n + 4)) = 16 * card(PeirceIndex n)` (`𝔎𝔅₆–𝔎𝔅₇`).
+**Theorem 4 (𝔎𝔅₇ — Master Conjunction of Finite Arithmetic and Conditional Algebraic Identities):**
+This conjunction collects the declaration-order graph acyclicity, selected finite arithmetic
+equalities, the scaled matrix coordinate and Zorn identities, and the conditional Peirce
+identities from Theorem 3. It proves the listed propositions together; it does not construct
+maps connecting them into a mathematical synthesis, nor a representation, `KO₀` index, Bott
+periodicity, or categorical colimit.
 -/
 theorem kb7_master_clifford_bott_wigner_s4_synthesis
     {K : Type u} [CommRing K] (M : Mat3 K) (u v : Fin 3 → K)

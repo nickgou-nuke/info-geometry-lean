@@ -41,9 +41,19 @@ import InfoGeometry.Canonical.ChiralCondensateGMORBanksCasherNJLPoset
 import InfoGeometry.Canonical.SouriauChernFourierCharpolyCyclotomicPoset
 import InfoGeometry.Canonical.SplitOctonionCircularIsotropicAmariNambuPoset
 import InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset
+import InfoGeometry.Canonical.FiniteCharacterMatrixOrder
 import InfoGeometry.Canonical.GaloisQuotientDihedralL8ClosureBridge
 import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
+import InfoGeometry.WignerHurwitzAdamsKTheory.WignerHurwitzAdamsKTheoryPoset
+import InfoGeometry.PinMinus88Triality.PinMinus88TrialityPoset
 import InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset
+import InfoGeometry.CondensedMatter.KitaevFreeFermionKOSpectrumLocalGapPoset
+import InfoGeometry.KitaevLocalGapOmegaSpectrum.KitaevLocalGapOmegaSpectrumPoset
+import InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset
+import InfoGeometry.Canonical.KitaevCliffordBottHurwitzKTheoryBridge
+import InfoGeometry.Canonical.TypedCategoryInductiveColimitInverseLimitPoset
+import InfoGeometry.Canonical.ColimitInverseLimitOntologyTaxonomyPhylogenesisPoset
+import InfoGeometry.Canonical.InductiveCategoricalColimitInverseLimitUnificationPoset
 import Lean.Util.CollectAxioms
 import Lean.Util.FoldConsts
 import Lean.Data.Json
@@ -152,9 +162,19 @@ private def owners : Array Name := #[
   `InfoGeometry.Canonical.LanguageStatisticsCirculantBirkhoffYangianPeircePoset,
   `InfoGeometry.Canonical.LanguageSymmetryCirculantToeplitzBirkhoffPeircePoset,
   `InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset,
+  `InfoGeometry.Canonical.FiniteCharacterMatrixOrder,
   `InfoGeometry.Canonical.GaloisQuotientDihedralL8ClosureBridge,
   `InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset,
-  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset
+  `InfoGeometry.WignerHurwitzAdamsKTheory.WignerHurwitzAdamsKTheoryPoset,
+  `InfoGeometry.PinMinus88Triality.PinMinus88TrialityPoset,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset,
+  `InfoGeometry.CondensedMatter.KitaevFreeFermionKOSpectrumLocalGapPoset,
+  `InfoGeometry.KitaevLocalGapOmegaSpectrum.KitaevLocalGapOmegaSpectrumPoset,
+  `InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset,
+  `InfoGeometry.Canonical.KitaevCliffordBottHurwitzKTheoryBridge,
+  `InfoGeometry.Canonical.TypedCategoryInductiveColimitInverseLimitPoset,
+  `InfoGeometry.Canonical.ColimitInverseLimitOntologyTaxonomyPhylogenesisPoset,
+  `InfoGeometry.Canonical.InductiveCategoricalColimitInverseLimitUnificationPoset
 ]
 
 private def choiceFreeTheorems : Array Name := #[
@@ -200,6 +220,7 @@ private def choiceFreeTheorems : Array Name := #[
   `InfoGeometry.Canonical.GrothendieckElementaryExpansionPoset.ara_two_out_of_three_dimensionwise_bijective,
   `InfoGeometry.Canonical.KitaevCliffordShiftHigherBerryE8Mod24Poset.finite_rindler_boost_scramblon_scaling_and_schwarzian_moebius_jet,
   `InfoGeometry.Canonical.KitaevCliffordShiftHigherBerryE8Mod24Poset.syk7_kitaev_holography_scramblon_and_grothendieck_shockwave_expansion_synthesis,
+  `InfoGeometry.Canonical.KitaevCliffordShiftHigherBerryE8Mod24Poset.kitaev_local_gap_centered_band_square_identity,
   `ParafermionCondensationGaloisCharacterPoset.zfSpinNum_charge_conjugation,
   `ParafermionCondensationGaloisCharacterPoset.zfSpinNum_half_period_even,
   `ParafermionCondensationGaloisCharacterPoset.parafermion_and_vortex_spin_numerator_examples,
@@ -240,9 +261,33 @@ private def choiceFreeTheorems : Array Name := #[
   `GaloisQuotientNonAbelianFourierPoset.peirce_off_diagonal_involution_is_micro_attribute,
   `CliffordBottKTheoryWignerS4Poset.CliffordBottWignerS4Stage.rank_injective,
   `CliffordBottKTheoryWignerS4Poset.CliffordBottWignerS4Stage.coverEdge_acyclic,
+  `WignerHurwitzAdamsKTheoryPoset.WignerHurwitzAdamsStage.rank_injective,
+  `WignerHurwitzAdamsKTheoryPoset.WignerHurwitzAdamsStage.coverEdge_acyclic,
+  `PinMinus88TrialityPoset.PinMinus88TrialityStage.rank_injective,
+  `PinMinus88TrialityPoset.PinMinus88TrialityStage.coverEdge_acyclic,
   `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.KitaevKOSpectrumStage.rank_injective,
   `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.KitaevKOSpectrumStage.coverEdge_acyclic,
-  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.ims_single_double_commutator_identity
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.kitaev_local_gap_centered_band_square_identity,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.ims_single_double_commutator_identity,
+  `InfoGeometry.Canonical.KitaevLocalGapOmegaSpectrumKOPoset.kitaev_soft_diagonal_restriction_and_dimer_loop_shift,
+  `InfoGeometry.CondensedMatter.KitaevFreeFermionKOSpectrumLocalGapPoset.KitaevFreeFermionKOSpectrumStage.rank_injective,
+  `InfoGeometry.CondensedMatter.KitaevFreeFermionKOSpectrumLocalGapPoset.KitaevFreeFermionKOSpectrumStage.coverEdge_acyclic,
+  `KitaevLocalGapOmegaSpectrumPoset.KitaevLocalGapStage.rank_injective,
+  `KitaevLocalGapOmegaSpectrumPoset.KitaevLocalGapStage.coverEdge_acyclic,
+  `KitaevLocalGapOmegaSpectrumPoset.convex_hamiltonian_fiber_ground_state_invariance,
+  `KitaevLocalGapOmegaSpectrumPoset.square_first_local_bulk_gap_collar_healing,
+  `InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset.KitaevLocalGapOmegaSpectrumStage.rank_injective,
+  `InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset.KitaevLocalGapOmegaSpectrumStage.coverEdge_acyclic,
+  `InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset.convex_hamiltonian_fiber_ground_state_invariance,
+  `InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset.spectral_gap_annulus_midpoint_centering,
+  `InfoGeometry.Kitaev.KitaevLocalGapOmegaSpectrumPoset.square_first_local_bulk_gap_collar_healing,
+  `InfoGeometry.Canonical.TypedCategoryInductiveColimitInverseLimitPoset.TypedCategoryLimitColimitStage.rank_injective,
+  `InfoGeometry.Canonical.TypedCategoryInductiveColimitInverseLimitPoset.TypedCategoryLimitColimitStage.causalEdge_acyclic,
+  `InfoGeometry.Canonical.TypedCategoryInductiveColimitInverseLimitPoset.tc1_typed_inductive_and_inverse_diagram_functoriality_and_retraction_section,
+  `InfoGeometry.Canonical.InductiveCategoricalColimitInverseLimitUnificationPoset.ColimitDevelopmentStratum.rank_injective,
+  `InfoGeometry.Canonical.InductiveCategoricalColimitInverseLimitUnificationPoset.ColimitDevelopmentStratum.rankEdge_acyclic,
+  `InfoGeometry.Canonical.InductiveCategoricalColimitInverseLimitUnificationPoset.ColimitInverseLimitUnificationStage.rank_injective,
+  `InfoGeometry.Canonical.InductiveCategoricalColimitInverseLimitUnificationPoset.ColimitInverseLimitUnificationStage.causalEdge_acyclic
 ]
 
 private def kindOf : ConstantInfo → String

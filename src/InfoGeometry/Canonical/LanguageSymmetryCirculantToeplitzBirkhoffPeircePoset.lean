@@ -28,6 +28,8 @@ import InfoGeometry.Canonical.ModularSurprisalClockingLocksPoset
 import InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset
 import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
 import InfoGeometry.WignerHurwitzAdamsKTheory.WignerHurwitzAdamsKTheoryPoset
+import InfoGeometry.PinMinus88Triality.PinMinus88TrialityPoset
+import InfoGeometry.KitaevLocalGapOmegaSpectrum.KitaevLocalGapOmegaSpectrumPoset
 import Mathlib.LinearAlgebra.Matrix.Vec
 import Mathlib.Data.Nat.Totient
 import Omega.Core.Word
@@ -185,7 +187,9 @@ homogenization:
   `ls7_galois_quotient_dihedral_peter_weyl_and_surprisal_survival`,
   `ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_synthesis`,
   `ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`,
-  `ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis`.
+  `ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis`,
+  `ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality_synthesis`,
+  `ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rotor_synthesis`.
 
 #### BUCKET 2 — Conditional / Interface Boundaries
 - Commutant closure and Peirce identities hold over any `[Ring B]` under explicit commutation
@@ -620,6 +624,14 @@ theorem symToeplitz3_comm_cyclicShift3 {R : Type*} [CommRing R] (t0 t1 t2 : R) :
     Fin.sum_univ_three, Fin.sum_univ_three]
   fin_cases i <;> fin_cases j <;>
     simp [symToeplitz3, cyclicShift3, toeplitzBoundaryDefect3]
+
+/-- Explicit non-commutativity witness: open-boundary `symToeplitz3 (0 : ℤ) 0 1` and `cyclicShift3` do not commute. -/
+theorem symToeplitz3_mul_cyclicShift3_ne :
+    symToeplitz3 (0 : ℤ) 0 1 * cyclicShift3 ≠ cyclicShift3 * symToeplitz3 (0 : ℤ) 0 1 := by
+  intro hEq
+  have h00 := congrFun (congrFun hEq 0) 0
+  revert h00
+  decide
 
 /--
 **Theorem 4 (`𝔏𝔖₄` — `ls4_toeplitz_open_boundary_commutator_defect_and_peirce_corner_leakage`):**
@@ -2212,9 +2224,9 @@ the four Wigner–Clebsch–Gordan channels on `Matrix (Fin 3) (Fin 3) K`
 (`WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_s4_idempotency_and_mutual_orthogonality`,
 `WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_frobenius_pythagorean_theorem`), the Hurwitz
 quaternion norm multiplicativity, spinor-corner `ℤ₃` triality conjugation identities, and
-`InfoGeometry.Quantum.Hurwitz` / `D23HurwitzCliffordFilterBank` paraunitary readouts
+`Quaternion K` / `DiscreteHurwitzCliffordWavelet` paraunitary readouts
 (`WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_corner_triality_attention_filter`,
-`WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_d24_shell_and_d23_paraunitary_filter_bank_bridge`),
+`WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_quaternion_and_paraunitary_filter_bank_bridge`),
 and the cyclotomic polynomial factorization identities
 (`WignerHurwitzAdamsKTheoryPoset.adams_j_homomorphism_and_bott_hurwitz_cyclotomic_bridge`).
 This statement is a conjunction of those finite-stage algebraic results and does not establish a
@@ -2302,14 +2314,36 @@ theorem ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis
           WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW =
         WignerHurwitzAdamsKTheoryPoset.Quat.smul 4
           WignerHurwitzAdamsKTheoryPoset.Quat.qi ∧
-     InfoGeometry.Quantum.Hurwitz.hurwitzDirections.card = 24 ∧
-     InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet.paraunitary
-        InfoGeometry.Analysis.D23HurwitzCliffordFilterBank.d23HurwitzCliffordFilterBank ∧
-     InfoGeometry.Analysis.D23HurwitzCliffordFilterBank.d23HurwitzCliffordFilterBank.sum_normSq_eq_one) ∧
+     WignerHurwitzAdamsKTheoryPoset.Quat.toQuaternion (Q_quat * X_quat) =
+        WignerHurwitzAdamsKTheoryPoset.Quat.toQuaternion Q_quat *
+          WignerHurwitzAdamsKTheoryPoset.Quat.toQuaternion X_quat ∧
+     WignerHurwitzAdamsKTheoryPoset.Quat.qNorm Q_quat =
+        Quaternion.normSq (WignerHurwitzAdamsKTheoryPoset.Quat.toQuaternion Q_quat) ∧
+     (∀ F : InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet.ParaunitaryCliffordFilterBank,
+        InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet.paraunitary F →
+          F.sum_normSq_eq_one)) ∧
     (WignerHurwitzAdamsKTheoryPoset.Phi6 (x_cyc ^ 4) =
         WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc ∧
      (x_cyc ^ 4 + 1) * WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc = x_cyc ^ 12 + 1 ∧
      (x_cyc ^ 12 - 1) * (x_cyc ^ 4 + 1) *
+        WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc = x_cyc ^ 24 - 1 ∧
+     WignerHurwitzAdamsKTheoryPoset.Mat3.Pi2 M_cg +
+        WignerHurwitzAdamsKTheoryPoset.Mat3.Pi3_pos M_cg =
+        WignerHurwitzAdamsKTheoryPoset.Mat3.Pi5_so3 M_cg ∧
+     (WignerHurwitzAdamsKTheoryPoset.Quat.oddCosetU :
+        WignerHurwitzAdamsKTheoryPoset.Quat K) *
+        WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW *
+        WignerHurwitzAdamsKTheoryPoset.Quat.conj
+          WignerHurwitzAdamsKTheoryPoset.Quat.oddCosetU =
+        WignerHurwitzAdamsKTheoryPoset.Quat.smul 2
+          WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW' ∧
+     WignerHurwitzAdamsKTheoryPoset.Phi1 x_cyc *
+        WignerHurwitzAdamsKTheoryPoset.Phi2 x_cyc *
+        WignerHurwitzAdamsKTheoryPoset.Phi3 x_cyc *
+        WignerHurwitzAdamsKTheoryPoset.Phi4 x_cyc *
+        WignerHurwitzAdamsKTheoryPoset.Phi6 x_cyc *
+        WignerHurwitzAdamsKTheoryPoset.Phi8 x_cyc *
+        WignerHurwitzAdamsKTheoryPoset.Phi12 x_cyc *
         WignerHurwitzAdamsKTheoryPoset.Phi24 x_cyc = x_cyc ^ 24 - 1) := by
   have hIdem :=
     WignerHurwitzAdamsKTheoryPoset.Mat3.clebsch_gordan_s4_idempotency_and_mutual_orthogonality M_cg
@@ -2318,16 +2352,199 @@ theorem ls7_wigner_hurwitz_adams_frobenius_pythagorean_and_d23_filter_synthesis
   have hHurw :=
     WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_corner_triality_attention_filter Q_quat X_quat
   have hD23 :=
-    WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_d24_shell_and_d23_paraunitary_filter_bank_bridge
+    WignerHurwitzAdamsKTheoryPoset.Quat.hurwitz_quaternion_and_paraunitary_filter_bank_bridge
+      Q_quat X_quat
   have hCyc :=
     WignerHurwitzAdamsKTheoryPoset.adams_j_homomorphism_and_bott_hurwitz_cyclotomic_bridge x_cyc
-  exact ⟨⟨hIdem.1, hIdem.2.1, hIdem.2.2.1, hIdem.2.2.2.1, hIdem.2.2.2.2.1,
-          hIdem.2.2.2.2.2.1, hIdem.2.2.2.2.2.2.2.2.2.1,
+  have hExt :=
+    WignerHurwitzAdamsKTheoryPoset.wh11_extended_wigner_hurwitz_adams_master_synthesis
+      M_cg N_cg x_cyc
+  rcases hIdem with ⟨hResolution, hPi1, hPi2, hPi3Pos, hPi3Neg,
+    hPi1Pi2, _, _, _, _, _, _, _, _, _, hPi3PosPi3Neg, _⟩
+  exact ⟨⟨hResolution, hPi1, hPi2, hPi3Pos, hPi3Neg,
+          hPi1Pi2, hPi3PosPi3Neg,
           hFrob.1, hFrob.2.2.2.1, hFrob.2.2.2.2⟩,
          ⟨hHurw.1, by decide, hHurw.2.2.1, hHurw.2.2.2.2.1,
           hHurw.2.2.2.2.2.2.1, hHurw.2.2.2.2.2.2.2.1, hHurw.2.2.2.2.2.2.2.2,
-          hD23.1, hD23.2.2.2.2.2.1, hD23.2.2.2.2.2.2⟩,
-         hCyc⟩
+          hD23.2.2.1, hD23.2.2.2.2.1, hD23.2.2.2.2.2.1⟩,
+         ⟨hCyc.1, hCyc.2.1, hCyc.2.2,
+          hExt.1.1, hExt.2.1.2.2.1,
+          (WignerHurwitzAdamsKTheoryPoset.complete_cyclotomic_24_factorization_and_spectral_dimensions x_cyc).2.2.2.2.2.2⟩⟩
+
+/--
+**Theorem 7G (`ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality_synthesis`):**
+Combines the finite `Pin_-` short-root reflection identities, Hurwitz triality generation
+`reflIJ * reflJK = hurwitzW`, `S₃` braid identity, and real orthogonal reflection on `Quat K` / `ℝ³`
+(`PinMinus88TrialityPoset.Quat.pin_minus_reflection_lift_in_binary_octahedral_coset`,
+`PinMinus88TrialityPoset.Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation`,
+`PinMinus88TrialityPoset.pinMinusJKUnitRoot_norm_and_square`,
+`PinMinus88TrialityPoset.pinMinusJKReflection3_is_orthogonal_improper`), the $2 \times 2$ and $4 \times 4$
+split Clifford parity-time generator relations and `TowerMatrix.Idx 8` cardinality
+(`PinMinus88TrialityPoset.Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations`,
+`PinMinus88TrialityPoset.Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding`,
+`PinMinus88TrialityPoset.Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge`), and the cyclotomic
+factorization `Phi8 (x_cyc ^ 3) = Phi8 x_cyc * Phi24 x_cyc = Phi8 x_cyc * Phi6 (x_cyc ^ 4)` and
+Chinese Remainder idempotent split `(9 : ZMod 24)` / `(16 : ZMod 24)`
+(`PinMinus88TrialityPoset.pin_minus_abk_triality_cyclotomic_bridge`,
+`PinMinus88TrialityPoset.zmod24_chinese_remainder_abk_triality_split`).
+This statement is a conjunction of those finite-stage algebraic results and does not establish a
+Lie-group construction of `Pin_-(8,8)` or a cobordism calculation of `Ω₂^{Pin_-}`.
+-/
+theorem ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality_synthesis
+    {K : Type*} [CommRing K]
+    (x_vec y_vec z_vec x_cyc : K) :
+    (PinMinus88TrialityPoset.Quat.qNorm
+        (PinMinus88TrialityPoset.Quat.reflJK : PinMinus88TrialityPoset.Quat K) = 2 ∧
+     (PinMinus88TrialityPoset.Quat.reflJK : PinMinus88TrialityPoset.Quat K) *
+        PinMinus88TrialityPoset.Quat.reflJK =
+        PinMinus88TrialityPoset.Quat.smul (-2) PinMinus88TrialityPoset.Quat.qOne ∧
+     PinMinus88TrialityPoset.Quat.pinRefl
+        PinMinus88TrialityPoset.Quat.reflJK
+        (PinMinus88TrialityPoset.Quat.vec3 x_vec y_vec z_vec) =
+        PinMinus88TrialityPoset.Quat.smul 2
+          (PinMinus88TrialityPoset.Quat.vec3 x_vec z_vec y_vec) ∧
+     PinMinus88TrialityPoset.Quat.pinRefl
+        PinMinus88TrialityPoset.Quat.reflJK
+        (PinMinus88TrialityPoset.Quat.pinRefl
+          PinMinus88TrialityPoset.Quat.reflJK
+          (PinMinus88TrialityPoset.Quat.vec3 x_vec y_vec z_vec)) =
+        PinMinus88TrialityPoset.Quat.smul 4
+          (PinMinus88TrialityPoset.Quat.vec3 x_vec y_vec z_vec) ∧
+     (PinMinus88TrialityPoset.Quat.reflJK : PinMinus88TrialityPoset.Quat K) *
+        PinMinus88TrialityPoset.Quat.hurwitzW *
+        PinMinus88TrialityPoset.Quat.conj PinMinus88TrialityPoset.Quat.reflJK =
+        PinMinus88TrialityPoset.Quat.smul 2
+          PinMinus88TrialityPoset.Quat.hurwitzW_refl ∧
+     (PinMinus88TrialityPoset.Quat.reflIJ : PinMinus88TrialityPoset.Quat K) *
+        PinMinus88TrialityPoset.Quat.reflJK =
+        PinMinus88TrialityPoset.Quat.hurwitzW ∧
+     (PinMinus88TrialityPoset.Quat.reflIJ : PinMinus88TrialityPoset.Quat K) *
+        PinMinus88TrialityPoset.Quat.reflJK *
+        PinMinus88TrialityPoset.Quat.reflIJ =
+        PinMinus88TrialityPoset.Quat.smul (-2) PinMinus88TrialityPoset.Quat.reflKI ∧
+     Quaternion.normSq PinMinus88TrialityPoset.pinMinusJKUnitRoot = 1 ∧
+     PinMinus88TrialityPoset.pinMinusJKUnitRoot *
+        PinMinus88TrialityPoset.pinMinusJKUnitRoot = (-1 : Quaternion ℝ) ∧
+     Matrix.det PinMinus88TrialityPoset.pinMinusJKReflection3 = -1) ∧
+    ((PinMinus88TrialityPoset.Mat2.parityP : PinMinus88TrialityPoset.Mat2 K) *
+        PinMinus88TrialityPoset.Mat2.parityP = -PinMinus88TrialityPoset.Mat2.I2 ∧
+     (PinMinus88TrialityPoset.Mat2.timeT : PinMinus88TrialityPoset.Mat2 K) *
+        PinMinus88TrialityPoset.Mat2.timeT = PinMinus88TrialityPoset.Mat2.I2 ∧
+     (PinMinus88TrialityPoset.Mat2.parityP : PinMinus88TrialityPoset.Mat2 K) *
+        PinMinus88TrialityPoset.Mat2.timeT +
+        PinMinus88TrialityPoset.Mat2.timeT *
+          PinMinus88TrialityPoset.Mat2.parityP = 0 ∧
+     (PinMinus88TrialityPoset.Mat2.chiralPT : PinMinus88TrialityPoset.Mat2 K) *
+        PinMinus88TrialityPoset.Mat2.chiralPT = PinMinus88TrialityPoset.Mat2.I2 ∧
+     (PinMinus88TrialityPoset.Mat2.clMinus3Refl23 : PinMinus88TrialityPoset.Mat2.Mat4Split K) *
+        PinMinus88TrialityPoset.Mat2.clMinus3Refl23 =
+        (-2 : K) • (1 : PinMinus88TrialityPoset.Mat2.Mat4Split K) ∧
+     PinMinus88TrialityPoset.Mat2.toMatrix
+        (PinMinus88TrialityPoset.Mat2.parityP : PinMinus88TrialityPoset.Mat2 ℝ) =
+        InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseBase ∧
+     Fintype.card (InfoGeometry.Clifford.TowerMatrix.Idx 8) = 256) ∧
+    (8 * 3 = 24 ∧ 3 * 3 - 1 * 8 = 1 ∧
+     PinMinus88TrialityPoset.Phi8 (x_cyc ^ 3) =
+        PinMinus88TrialityPoset.Phi8 x_cyc * PinMinus88TrialityPoset.Phi24 x_cyc ∧
+     PinMinus88TrialityPoset.Phi8 (x_cyc ^ 3) =
+        PinMinus88TrialityPoset.Phi8 x_cyc * PinMinus88TrialityPoset.Phi6 (x_cyc ^ 4) ∧
+     (x_cyc ^ 12 - 1) * PinMinus88TrialityPoset.Phi8 (x_cyc ^ 3) = x_cyc ^ 24 - 1 ∧
+     (9 : ZMod 24) * 16 = 0 ∧ (9 : ZMod 24) + 16 = 1) := by
+  have hRefl :=
+    PinMinus88TrialityPoset.Quat.pin_minus_reflection_lift_in_binary_octahedral_coset
+      x_vec y_vec z_vec
+  have hBraid :=
+    PinMinus88TrialityPoset.Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation
+      x_vec y_vec z_vec
+  have hUnit := PinMinus88TrialityPoset.pinMinusJKUnitRoot_norm_and_square
+  have hOrth := PinMinus88TrialityPoset.pinMinusJKReflection3_is_orthogonal_improper
+  have hPT :=
+    PinMinus88TrialityPoset.Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations
+      (K := K)
+  have hCl3 :=
+    PinMinus88TrialityPoset.Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := K)
+  have hIdx8 :=
+    PinMinus88TrialityPoset.Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge
+  have hCyc :=
+    PinMinus88TrialityPoset.pin_minus_abk_triality_cyclotomic_bridge x_cyc
+  have hCRT :=
+    PinMinus88TrialityPoset.zmod24_chinese_remainder_abk_triality_split
+  exact ⟨⟨hRefl.1, hRefl.2.1, hRefl.2.2.2.2.2.1, hRefl.2.2.2.2.2.2.1, hRefl.2.2.2.2.2.2.2,
+          hBraid.2.2.2.2.1, hBraid.2.2.2.2.2.1, hUnit.1, hUnit.2.1, hOrth.2⟩,
+         ⟨hPT.2.2.2.2.1, hPT.2.2.2.2.2.1, hPT.2.2.2.2.2.2.1, hPT.2.2.2.2.2.2.2.2,
+          hCl3.2.2.1, hIdx8.1, hIdx8.2.2.2⟩,
+         ⟨hCyc.1, hCyc.2.1, hCyc.2.2.1, hCyc.2.2.2.1, hCyc.2.2.2.2,
+          hCRT.2.2.2.2.2.2.1, hCRT.2.2.2.2.2.2.2⟩⟩
+
+/--
+**Theorem 7H (`ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rotor_synthesis`):**
+Combines the conditional affine ground-state fiber invariance and spectral-annulus midpoint
+centering (`KitaevLocalGapOmegaSpectrumPoset.convex_hamiltonian_fiber_ground_state_invariance`,
+`KitaevLocalGapOmegaSpectrumPoset.spectral_gap_annulus_midpoint_centering`), the square-first vs.
+truncate-first Peirce collar excursion identity and its bridge to `PeirceSpine.conePlus`
+and `coneMinus` (`KitaevLocalGapOmegaSpectrumPoset.square_first_local_bulk_gap_collar_healing`,
+`KitaevLocalGapOmegaSpectrumPoset.n_plus_minus_eq_centralizer_cones`), and the universal $2 \times 2$
+block anticommutator, rotor square, unit-gap homotopy preservation, pole domain-wall cancellation,
+and dimer re-association cancellation
+(`KitaevLocalGapOmegaSpectrumPoset.Block2.universal_invertibility_anticommuting_homotopy`,
+`KitaevLocalGapOmegaSpectrumPoset.Block2.unit_gap_rotor_preservation_and_pole_endpoints`).
+This statement is a conjunction of those finite-stage ring identities under explicit hypotheses and
+does not establish a continuous homotopy equivalence $A_d \simeq \Omega A_{d+1} \simeq KO_{d-2}$.
+-/
+theorem ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rotor_synthesis
+    {B : Type*} [Ring B] {K : Type*} [CommRing K]
+    (H0 H1 P0 t P A A0 μ0 c s : B)
+    (h0 : H0 * P0 = 0) (h1 : H1 * P0 = 0) (hP : P * P = P)
+    (hc : c * A = A * c) (hs : s * A = A * s) (hcs : c * s = s * c)
+    (Q a_sq b_sq : K) :
+    (((1 - t) * H0 + t * H1) * P0 = 0 ∧
+     (b_sq - a_sq) ^ 2 - (2 * Q - (a_sq + b_sq)) ^ 2 = 4 * (Q - a_sq) * (b_sq - Q)) ∧
+    (KitaevLocalGapOmegaSpectrumPoset.SquareFirstBulkOp P A μ0 -
+       KitaevLocalGapOmegaSpectrumPoset.TruncateFirstBulkOp P A μ0 =
+       - (KitaevLocalGapOmegaSpectrumPoset.N_plus P A *
+            KitaevLocalGapOmegaSpectrumPoset.N_minus P A) ∧
+     (P * (A * A) * P = -P →
+       KitaevLocalGapOmegaSpectrumPoset.SquareFirstBulkOp P A 1 = 0 ∧
+       KitaevLocalGapOmegaSpectrumPoset.TruncateFirstBulkOp P A 1 =
+         KitaevLocalGapOmegaSpectrumPoset.N_plus P A *
+           KitaevLocalGapOmegaSpectrumPoset.N_minus P A) ∧
+     KitaevLocalGapOmegaSpectrumPoset.N_plus P A =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A ∧
+     KitaevLocalGapOmegaSpectrumPoset.N_minus P A =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A) ∧
+    (KitaevLocalGapOmegaSpectrumPoset.Block2.doubledSys A *
+       KitaevLocalGapOmegaSpectrumPoset.Block2.baseDecoupler +
+       KitaevLocalGapOmegaSpectrumPoset.Block2.baseDecoupler *
+         KitaevLocalGapOmegaSpectrumPoset.Block2.doubledSys A = 0 ∧
+     KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A c s *
+       KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A c s =
+       KitaevLocalGapOmegaSpectrumPoset.Block2.mk2
+         (c * c * (A * A) - s * s) 0 0 (c * c * (A * A) - s * s) ∧
+     (A * A = -1 → c * c + s * s = 1 →
+       KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A c s *
+         KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A c s =
+         KitaevLocalGapOmegaSpectrumPoset.Block2.mk2 (-1) 0 0 (-1)) ∧
+     KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A 0 1 +
+       KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A 0 (-1) = 0 ∧
+     (A - A0) + (A0 - A0) + (A0 - A0) = A - A0) := by
+  have hFib :=
+    KitaevLocalGapOmegaSpectrumPoset.convex_hamiltonian_fiber_ground_state_invariance
+      H0 H1 P0 t h0 h1
+  have hAnn :=
+    KitaevLocalGapOmegaSpectrumPoset.spectral_gap_annulus_midpoint_centering Q a_sq b_sq
+  have hGap :=
+    KitaevLocalGapOmegaSpectrumPoset.square_first_local_bulk_gap_collar_healing P A μ0 hP
+  have hCones :=
+    KitaevLocalGapOmegaSpectrumPoset.n_plus_minus_eq_centralizer_cones P A
+  have hInv :=
+    KitaevLocalGapOmegaSpectrumPoset.Block2.universal_invertibility_anticommuting_homotopy
+      A A0 c s hc hs hcs
+  have hUnit :=
+    KitaevLocalGapOmegaSpectrumPoset.Block2.unit_gap_rotor_preservation_and_pole_endpoints
+      A c s hc hs hcs
+  exact ⟨⟨hFib, hAnn⟩,
+         ⟨hGap.1, hGap.2, hCones.1, hCones.2.1⟩,
+         ⟨hInv.1, hInv.2.1, hUnit.1, hUnit.2.2.2.2.2.1, hInv.2.2⟩⟩
 
 end MasterLanguageSymmetryYangianPeirceSynthesis
 

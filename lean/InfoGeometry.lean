@@ -736,6 +736,7 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibniz
 import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
+import InfoGeometry.Algebra.FiniteGroupFourier
 import InfoGeometry.Algebra.OSp12BulkBoundaryBridge
 import InfoGeometry.Algebra.OSp12ColimitReadback
 import InfoGeometry.Algebra.OSp12InductiveColimit
@@ -6986,6 +6987,7 @@ import InfoGeometry.LLM.DiscreteRouterHestenesPathBridge
 import InfoGeometry.LLM.FiniteVectorSpinKernel
 import InfoGeometry.LLM.HypothesisScaffold70
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
+import InfoGeometry.LLM.KMSBoundaryCounterexample
 import InfoGeometry.LLM.KreinEuclideanComparison
 import InfoGeometry.LLM.Llama4PythonBlockSpec
 import InfoGeometry.LLM.Llama4SpinSpec
@@ -7015,6 +7017,7 @@ import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.WallpaperMirrorAttentionBridge
 import InfoGeometry.LLM.ZModFourierBridge
+import InfoGeometry.LLM.WalshCharacterGeometry
 import InfoGeometry.LanglandsGWBridge
 import InfoGeometry.LatticeGauge.FiniteGibbsModel
 import InfoGeometry.LatticeGauge.FinitePlaquette

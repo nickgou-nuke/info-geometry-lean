@@ -335,6 +335,7 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
+import InfoGeometry.Algebra.FiniteGroupFourier
 import InfoGeometry.Algebra.OSp12
 import InfoGeometry.Algebra.OSp12BulkBoundaryBridge
 import InfoGeometry.Algebra.OSp12ColimitReadback
@@ -8124,6 +8125,7 @@ import InfoGeometry.LLM.FourierCharacterEncoding
 import InfoGeometry.LLM.FourierSuperposition
 import InfoGeometry.LLM.HypothesisScaffold70
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
+import InfoGeometry.LLM.KMSBoundaryCounterexample
 import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.LLM.KreinEuclideanComparison
@@ -8159,6 +8161,7 @@ import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.WallpaperMirrorAttentionBridge
 import InfoGeometry.LLM.ZModFourierBridge
+import InfoGeometry.LLM.WalshCharacterGeometry
 import InfoGeometry.LanglandsGWBridge
 import InfoGeometry.Library
 import InfoGeometry.Lie.BRSTCohomology

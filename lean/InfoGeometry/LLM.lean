@@ -49,6 +49,7 @@ import InfoGeometry.LLM.SphericalVMFExponentialFamily
 import InfoGeometry.LLM.SphericalVMFFieldDerivatives
 import InfoGeometry.LLM.ContinuousMeanFieldClosure
 import InfoGeometry.LLM.LanguageSymmetryRepresentationGeometryPoset
+import InfoGeometry.LLM.GaloisQuotientNonAbelianFourierPoset
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
@@ -73,6 +74,7 @@ Unified entrypoint for LLM-oriented formalization layers:
 - non-reciprocal housekeeping entropy production proxies
 - finite quench trajectories vs infinite-horizon fixed points
 - equivariant helper Gramians and exact finite Fourier–Walsh language kernels
+- cyclotomic frequency orbits, subgroup compression variance, and dihedral Fourier blocks
 -/
 
 end InfoGeometry

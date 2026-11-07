@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -44,8 +49,6 @@ theorem matrix_units_noncommute_of_nontrivial {R : Type*} [Ring R] [Nontrivial R
       matrixUnit10Over (R := R) * matrixUnit01Over (R := R) := by
   intro h
   have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
-  have h10 : (1 : R) = 0 := by
-    simpa [matrixUnit01Over, matrixUnit10Over, Matrix.mul_apply, Fin.sum_univ_two] using h00
-  exact one_ne_zero h10
+  simp [matrixUnit01Over, matrixUnit10Over, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 end InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness

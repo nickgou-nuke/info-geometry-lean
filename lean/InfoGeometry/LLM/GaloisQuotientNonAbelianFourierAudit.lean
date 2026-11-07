@@ -1,0 +1,151 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.LLM.GaloisQuotientNonAbelianFourierPoset
+
+/-!
+# Public declaration axiom audit for Galois, quotient, and dihedral geometry
+
+Every public theorem and definition in the four mathematical owner modules and
+the reused matrix-witness owner is listed below. The permitted foundational axioms are `propext`,
+`Classical.choice`, and `Quot.sound`.
+-/
+
+/-! ## LanguageSymmetryGalois -/
+
+#print axioms InfoGeometry.LLM.LanguageSymmetry.unit_frequency_preserves_order
+#print axioms InfoGeometry.LLM.LanguageSymmetry.unit_frequency_orbit_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.frequencyShell
+#print axioms InfoGeometry.LLM.LanguageSymmetry.frequencyShell_disjoint
+#print axioms InfoGeometry.LLM.LanguageSymmetry.frequencyShell_partition
+#print axioms InfoGeometry.LLM.LanguageSymmetry.frequencyShell_card
+#print axioms InfoGeometry.LLM.LanguageSymmetry.frequencyShell_card_sum
+#print axioms InfoGeometry.LLM.LanguageSymmetry.frequencyShell_unit_invariant
+#print axioms InfoGeometry.LLM.LanguageSymmetry.galois_zmodChar_action
+#print axioms InfoGeometry.LLM.LanguageSymmetry.galois_harmonic_action
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitive_zmodChar_injective
+#print axioms InfoGeometry.LLM.LanguageSymmetry.galois_character_orbit_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.galois_character_orbit_card
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicOrbitSum
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicOrbitSum_eq_trace
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicOrbitSum_is_integer
+#print axioms InfoGeometry.LLM.LanguageSymmetry.galois_cyclotomicOrbitSum
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicOrbitSum_zero
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitiveHarmonicEquiv
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitiveHarmonicBasis
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitiveHarmonicBasis_apply
+#print axioms InfoGeometry.LLM.LanguageSymmetry.circulant_mulVec_primitiveHarmonicBasis
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitiveFourierSum
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicOrbitSum_eq_primitiveFourierSum
+#print axioms InfoGeometry.LLM.LanguageSymmetry.sum_nthRootsFinset_pow
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitiveFourierSum_divisor_sum
+#print axioms InfoGeometry.LLM.LanguageSymmetry.primitiveFourierSum_moebius
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicOrbitSum_moebius
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicSigma5
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicSigma5_harmonics
+#print axioms InfoGeometry.LLM.LanguageSymmetry.cyclotomicSigma5_moves_primitive_root
+#print axioms InfoGeometry.LLM.LanguageSymmetry.twelve_frequencyShell_cards
+
+/-! ## LanguageSymmetryDihedral -/
+
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedRotation
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedRotation_zero
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedRotation_add
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedReflection_conjugates
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterMatrix
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterMatrix_r
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterMatrix_sr
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedral_opposite_character_conjugates
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterMatrix_rotation_pow
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterMatrix_reflection_sq
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterMatrix_two_reflections
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedReflection_mul_ne_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation_rotation_apply
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation_reflection_apply
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation_reflected_apply
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation_irreducible
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation_not_irreducible
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralCharacterRepresentation_irreducible_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedral_frequency_irreducible_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedral_three_fundamental_irreducible
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedral_three_fundamental_noncommuting
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralVertexPermutation
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralVertexPermutation_three_injective
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralThreeEquivPerm
+#print axioms InfoGeometry.LLM.LanguageSymmetry.realCharacterRotation
+#print axioms InfoGeometry.LLM.LanguageSymmetry.realCharacterRotation_entries
+#print axioms InfoGeometry.LLM.LanguageSymmetry.realReflection_mul_ne_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedral_three_real_noncommuting
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralRealCharacterMatrix
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedToReal
+#print axioms InfoGeometry.LLM.LanguageSymmetry.realToPaired
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedToReal_mul_realToPaired
+#print axioms InfoGeometry.LLM.LanguageSymmetry.realToPaired_mul_pairedToReal
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedToReal_intertwines
+#print axioms InfoGeometry.LLM.LanguageSymmetry.pairedToReal_conjugates
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralRealFourierBlock
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralRealFourierBlock_channels
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralFourierBlock
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralFourierBlock_entries
+#print axioms InfoGeometry.LLM.LanguageSymmetry.matrix_dihedral_peirce_frame
+#print axioms InfoGeometry.LLM.LanguageSymmetry.peirce_rotor_reflection
+#print axioms InfoGeometry.LLM.LanguageSymmetry.peirce_rotor_commutator
+#print axioms InfoGeometry.LLM.LanguageSymmetry.peirce_reflected_rotor_square
+
+/-! ## LanguageSymmetryQuotient -/
+
+#print axioms InfoGeometry.LLM.LanguageSymmetry.compression_affine
+#print axioms InfoGeometry.LLM.LanguageSymmetry.affine_involution_square
+#print axioms InfoGeometry.LLM.LanguageSymmetry.compression_affine_micro
+#print axioms InfoGeometry.LLM.LanguageSymmetry.compression_affine_macro
+#print axioms InfoGeometry.LLM.LanguageSymmetry.compression_affine_involution_defect
+#print axioms InfoGeometry.LLM.LanguageSymmetry.affine_involution_helper_product
+#print axioms InfoGeometry.LLM.LanguageSymmetry.compressed_involution_not_commute
+#print axioms InfoGeometry.LLM.LanguageSymmetry.binarySurprisalOperator
+#print axioms InfoGeometry.LLM.LanguageSymmetry.binaryLogContrast_eq_artanh
+#print axioms InfoGeometry.LLM.LanguageSymmetry.binaryLogContrast_ne_zero_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.binary_surprisal_compression_defect
+#print axioms InfoGeometry.LLM.LanguageSymmetry.subgroup_average_idempotent
+#print axioms InfoGeometry.LLM.LanguageSymmetry.action_mul_average
+#print axioms InfoGeometry.LLM.LanguageSymmetry.average_mul_action
+#print axioms InfoGeometry.LLM.LanguageSymmetry.average_weighted_compression_zero
+#print axioms InfoGeometry.LLM.LanguageSymmetry.average_commutes_of_commutes
+#print axioms InfoGeometry.LLM.LanguageSymmetry.average_compression_of_commutes
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotientFunctionsEquivInvariants
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_action_on_invariants
+#print axioms InfoGeometry.LLM.LanguageSymmetry.characterMultiplier
+#print axioms InfoGeometry.LLM.LanguageSymmetry.rightRegular_character_covariance
+#print axioms InfoGeometry.LLM.LanguageSymmetry.characterMultiplier_involution
+#print axioms InfoGeometry.LLM.LanguageSymmetry.binary_surprisal_character_apply
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_character_multiplier_compatible
+#print axioms InfoGeometry.LLM.LanguageSymmetry.micro_character_compression_zero
+#print axioms InfoGeometry.LLM.LanguageSymmetry.macro_character_compression
+#print axioms InfoGeometry.LLM.LanguageSymmetry.macro_character_commutes_average
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_macro_binary_surprisal_compression
+#print axioms InfoGeometry.LLM.LanguageSymmetry.regular_subgroup_average_ne_zero
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_binary_surprisal_defect
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_binary_surprisal_defect_ne_zero_iff
+#print axioms InfoGeometry.LLM.LanguageSymmetry.partialSwap3
+#print axioms InfoGeometry.LLM.LanguageSymmetry.partialSwap3_compression_counterexample
+
+/-! ## GaloisQuotientNonAbelianFourierPoset -/
+
+#print axioms InfoGeometry.LLM.LanguageSymmetry.galois_dihedralCharacterMatrix
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralBinaryQuotientEquiv
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedralBinaryQuotientEquiv_mk
+#print axioms InfoGeometry.LLM.LanguageSymmetry.dihedral_binary_quotient_matrix_action
+#print axioms InfoGeometry.LLM.LanguageSymmetry.coordinateSign_subgroup_nontrivial
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_walsh_coordinate_surprisal_defect
+#print axioms InfoGeometry.LLM.LanguageSymmetry.quotient_walsh_coordinate_surprisal_defect_ne_zero_iff
+
+/-! ## Reused finite matrix noncommutativity witness -/
+
+#print axioms InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit01
+#print axioms InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit10
+#print axioms InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrix_units_noncommute
+#print axioms InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit01Over
+#print axioms InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit10Over
+#print axioms InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrix_units_noncommute_of_nontrivial

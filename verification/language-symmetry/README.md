@@ -10,6 +10,7 @@ From the repository root, with the pinned Lean toolchain available:
 ```sh
 python3 verification/language-symmetry/check.py exe cache get
 python3 verification/language-symmetry/check.py build InfoGeometry.LLM.LanguageSymmetryRepresentationGeometryAudit --wfail
+python3 verification/language-symmetry/check.py build InfoGeometry.LLM.GaloisQuotientNonAbelianFourierAudit --wfail
 ```
 
 The first command is only needed when the pinned Mathlib cache is absent.
@@ -17,8 +18,10 @@ The first command is only needed when the pinned Mathlib cache is absent.
 checks, and retains the lock until its Lake child has exited. It does not alter
 the root manifest, root Lake configuration, or toolchain.
 
-The audit module prints axiom dependencies for every public declaration in the
-six new mathematical modules. Inspect the output: only `propext`,
+The audit modules print axiom dependencies for every public declaration in the
+six language-symmetry modules and the four Galois/quotient/dihedral modules.
+The latter audit also covers the reused finite matrix noncommutativity witness.
+Inspect the output: only `propext`,
 `Classical.choice`, and `Quot.sound` are allowed. A successful command is a
 focused source-and-dependency check, not a certificate for the full LLM umbrella
 or the root default targets.
@@ -27,7 +30,9 @@ For an explicit file recheck, pass an absolute source path:
 
 ```sh
 python3 verification/language-symmetry/check.py env lean /absolute/repository/lean/InfoGeometry/LLM/LanguageSymmetryRepresentationGeometryAudit.lean
+python3 verification/language-symmetry/check.py env lean /absolute/repository/lean/InfoGeometry/LLM/GaloisQuotientNonAbelianFourierAudit.lean
 ```
 
 The mathematical contract, corrections to the intake, and observed validation
-results are in [`docs/LANGUAGE_SYMMETRY_FORMALIZATION.md`](../../docs/LANGUAGE_SYMMETRY_FORMALIZATION.md).
+results are in [`docs/LANGUAGE_SYMMETRY_FORMALIZATION.md`](../../docs/LANGUAGE_SYMMETRY_FORMALIZATION.md)
+and [`docs/GALOIS_QUOTIENT_FOURIER_FORMALIZATION.md`](../../docs/GALOIS_QUOTIENT_FOURIER_FORMALIZATION.md).

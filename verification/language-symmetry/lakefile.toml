@@ -1,6 +1,6 @@
 name = "language_symmetry_validation"
 srcDir = "../../lean"
-defaultTargets = ["InfoGeometry.LLM.LanguageSymmetryRepresentationGeometryPoset"]
+defaultTargets = ["InfoGeometry.LLM.LanguageSymmetryRepresentationGeometryPoset", "InfoGeometry.LLM.GaloisQuotientNonAbelianFourierPoset"]
 
 [[require]]
 name = "mathlib"

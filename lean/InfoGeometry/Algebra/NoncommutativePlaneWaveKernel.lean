@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.MonoidAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -40,6 +45,7 @@ theorem planeWaveRepresentation_apply (g : G) :
     planeWaveRepresentation (R := R) g = planeWave (R := R) g :=
   rfl
 
+omit [Group G] in
 theorem planeWave_injective [Nontrivial R] :
     Function.Injective (planeWave (R := R) : G → MonoidAlgebra R G) := by
   intro g h e
@@ -75,6 +81,7 @@ def finitePlaneWaveTransform : (G → R) →ₗ[R] MonoidAlgebra R G where
     simp only [Pi.smul_apply, smul_smul, Finset.smul_sum, smul_eq_mul]
     congr 1
 
+omit [Group G] [DecidableEq G] in
 theorem finitePlaneWaveTransform_apply (f : G → R) :
     finitePlaneWaveTransform (R := R) f =
       ∑ g : G, f g • planeWave (R := R) g :=
@@ -87,13 +94,13 @@ theorem finitePlaneWaveTransform_pointMass (g : G) (c : R) :
   rw [Fintype.sum_eq_single g]
   · simp [planeWave]
   · intro b hb
-    simp [Pi.single_apply, hb]
+    simp [hb]
 
+omit [Group G] in
 theorem finitePlaneWaveTransform_coeff (f : G → R) (k : G) :
     (finitePlaneWaveTransform (R := R) f).coeff k = f k := by
   rw [finitePlaneWaveTransform_apply]
-  simp [planeWave, MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_smul,
-    MonoidAlgebra.coeff_single, Finsupp.single_apply, eq_comm]
+  simp [planeWave, MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_single, Finsupp.single_apply, eq_comm]
 
 def finiteConvolution (f h : G → R) (k : G) : R :=
   ∑ g : G, f g * h (g⁻¹ * k)
@@ -116,11 +123,13 @@ theorem finitePlaneWaveTransform_mul_convolution (f h : G → R) :
 def finiteHaarSum (f : G → R) : R :=
   ∑ g : G, f g
 
+omit [DecidableEq G] in
 theorem finiteHaarSum_left_translate (a : G) (f : G → R) :
     finiteHaarSum (fun g => f (a * g)) = finiteHaarSum f := by
   unfold finiteHaarSum
   simpa using (Equiv.sum_comp (Equiv.mulLeft a) f)
 
+omit [DecidableEq G] in
 theorem finiteHaarSum_right_translate (a : G) (f : G → R) :
     finiteHaarSum (fun g => f (g * a)) = finiteHaarSum f := by
   unfold finiteHaarSum

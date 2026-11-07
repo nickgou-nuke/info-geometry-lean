@@ -1,5 +1,0 @@
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-
-namespace InfoGeometry.External.Auto.FureyZornFermionBridge
-end InfoGeometry.External.Auto.FureyZornFermionBridge

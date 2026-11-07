@@ -1,3 +1,0 @@
-import InfoGeometry.Canonical.ModularSpinorFilteredColimitBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.CantorProjectiveReadoutBridge

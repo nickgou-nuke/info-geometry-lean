@@ -1,3 +1,0 @@
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.BerryKeating
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.RealProblem

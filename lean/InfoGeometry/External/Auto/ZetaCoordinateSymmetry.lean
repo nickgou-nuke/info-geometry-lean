@@ -1,2 +1,0 @@
-import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
-import InfoGeometry.Algebra.FiniteSpinAlgebra

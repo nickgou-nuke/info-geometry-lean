@@ -1,2 +1,0 @@
-import InfoGeometry.Projective.BostConnesZetaIdentity
-import InfoGeometry.Algebra.FiniteSpinAlgebra

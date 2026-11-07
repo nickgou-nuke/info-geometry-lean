@@ -1,3 +1,0 @@
-import InfoGeometry.Algebra.RealAlbertAdjointProductIdentity
-
-#print axioms InfoGeometry.Algebra.RealAlbertMatrix.mul_adjointQuad_eq_norm_smul_unit

@@ -16,7 +16,7 @@ else:
 
 
 ROOT = repo_root()
-DEFAULT_ROOT = ROOT / "lean" / "InfoGeometry"
+DEFAULT_ROOT = ROOT / "src" / "InfoGeometry" if (ROOT / "src" / "InfoGeometry").exists() else ROOT / "lean" / "InfoGeometry"
 
 DECL_RE = re.compile(r"^\s*(theorem|lemma|def|structure)\s+([A-Za-z0-9_'.]+)")
 # Concrete `witness` and `certificate` names can describe honest, proved

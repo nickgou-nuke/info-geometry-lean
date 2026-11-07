@@ -1,5 +1,0 @@
-import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-
-namespace InfoGeometry.Canonical.SouriauTranslatorAudit
-end InfoGeometry.Canonical.SouriauTranslatorAudit

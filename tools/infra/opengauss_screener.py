@@ -1877,7 +1877,7 @@ def _has_resolved_import_witness(
     ]
     for module in imported_modules:
         relative = Path(*module.split("."))
-        roots = (repo_root / "lean", repo_root / "proofs")
+        roots = (repo_root / "src", repo_root / "lean", repo_root / "proofs")
         if module.startswith("proofs."):
             relative = Path(*module.removeprefix("proofs.").split("."))
             roots = (repo_root / "proofs",)
@@ -1920,7 +1920,7 @@ def _repo_import_source_closure(source: str, repo_root: Path) -> str:
     while pending:
         module = pending.pop()
         relative = Path(*module.split("."))
-        roots = (repo_root / "lean", repo_root / "proofs")
+        roots = (repo_root / "src", repo_root / "lean", repo_root / "proofs")
         if module.startswith("proofs."):
             relative = Path(*module.removeprefix("proofs.").split("."))
             roots = (repo_root / "proofs",)

@@ -6,38 +6,43 @@ Reads Lean declaration->declaration edges from ArangoDB ``edges`` collection
 (src/dst names + kind) and writes them as Auto-Ontology ``term__term``
 association rows, linking two ``term`` rows by their ``imported_id`` (Arango
 ``_key`` of the source decl) and matched ``dst`` name.
-
-Run from the repository root with the configured Arango and populated
-Auto-Ontology PostgreSQL environment loaded without printing credentials.
-See docs/AUTO_ONTOLOGY_AGENT_OPERATIONS.md for deployment selection and
-docs/ASTAQLHASH-HOWTO.md for complete-generation verification.
-
-Usage (generation mode selects Arango input and writes legacy additive tables):
-    python3 tools/infra/arango_to_ontology_relationships.py \
-        --arango-db infogeometry --generation-id "$GENERATION_ID" --legacy-additive
 """
 from __future__ import annotations
 
 import argparse
 import csv
 import io
+import json
 import os
+from pathlib import Path
 import sys
 from datetime import datetime, timezone
 
-import psycopg
-from arango import ArangoClient
+_HERE = Path(__file__).resolve().parent
+_REPO_ROOT = _HERE.parents[1]
+for _p in (_HERE, _REPO_ROOT / "src", _REPO_ROOT):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
+try:
+    import psycopg
+except ImportError:  # pragma: no cover - offline/dry-run environments without psycopg
+    psycopg = None  # type: ignore[assignment]
+try:
+    from arango import ArangoClient
+except ImportError:  # pragma: no cover - offline/dry-run environments without python-arango
+    ArangoClient = None  # type: ignore[assignment,misc]
 from decl_graph_generation import resolve_decl_graph_generation, validate_generation_id
 
 
-ARANGO_ENDPOINT = os.environ["ARANGO_ENDPOINT"]
-ARANGO_DATABASE = os.environ["ARANGO_DATABASE"]
-ARANGO_USER = os.environ["ARANGO_USER"]
-ARANGO_PASS = os.environ["ARANGO_PASS"]
+ARANGO_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "")
+ARANGO_DATABASE = os.environ.get("ARANGO_DATABASE", "")
+ARANGO_USER = os.environ.get("ARANGO_USER", "")
+ARANGO_PASS = os.environ.get("ARANGO_PASS", "")
 
 PG_CONNECT = {
-    "user": os.environ["POSTGRES_USER"],
-    "password": os.environ["POSTGRES_PASSWORD"],
+    "user": os.environ.get("POSTGRES_USER", ""),
+    "password": os.environ.get("POSTGRES_PASSWORD", ""),
     "host": os.environ.get("POSTGRES_HOST", "localhost"),
     "port": os.environ.get("POSTGRES_PORT", "5433"),
     "dbname": os.environ.get("POSTGRES_DATABASE", "auto_ontology"),
@@ -48,10 +53,44 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _resolve_arango_env(database_override: str | None = None) -> tuple[str, str, str, str]:
+    endpoint = os.environ.get("ARANGO_ENDPOINT") or ARANGO_ENDPOINT
+    database = database_override or os.environ.get("ARANGO_DATABASE") or ARANGO_DATABASE
+    user = os.environ.get("ARANGO_USER") or ARANGO_USER
+    password = os.environ.get("ARANGO_PASS") or ARANGO_PASS
+    if not (endpoint and database and user and password):
+        try:
+            from arango_env import (
+                arango_database,
+                arango_endpoint,
+                arango_password,
+                arango_username,
+                load_repo_arango_env,
+            )
+            load_repo_arango_env()
+            endpoint = endpoint or arango_endpoint()
+            database = database or arango_database()
+            user = user or arango_username()
+            password = password or arango_password()
+        except Exception:
+            pass
+    return endpoint, database or "infogeometry", user, password
+
+
+def get_pg_connect() -> dict[str, str]:
+    PG_CONNECT["user"] = os.environ.get("POSTGRES_USER", PG_CONNECT.get("user", ""))
+    PG_CONNECT["password"] = os.environ.get("POSTGRES_PASSWORD", PG_CONNECT.get("password", ""))
+    PG_CONNECT["host"] = os.environ.get("POSTGRES_HOST", PG_CONNECT.get("host", "localhost"))
+    PG_CONNECT["port"] = os.environ.get("POSTGRES_PORT", PG_CONNECT.get("port", "5433"))
+    PG_CONNECT["dbname"] = os.environ.get("POSTGRES_DATABASE", PG_CONNECT.get("dbname", "auto_ontology"))
+    return PG_CONNECT
+
+
 def connect_arango(database: str):
-    client = ArangoClient(hosts=ARANGO_ENDPOINT)
+    endpoint, db_name, user, password = _resolve_arango_env(database)
+    client = ArangoClient(hosts=endpoint)
     return client.db(
-        database, username=ARANGO_USER, password=ARANGO_PASS, verify=True
+        db_name, username=user, password=password, verify=True
     )
 
 
@@ -166,27 +205,53 @@ def validate_dependency_edges(db, edge_collection: str, decl_collection: str) ->
         raise ValueError(f"invalid dependency edges in {edge_collection!r}: {invalid}")
 
 
+def _write_report(report_path: str | None, payload: dict) -> None:
+    if report_path:
+        out = Path(report_path)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Bridge ArangoDB edges -> Auto-Ontology term__term relationships"
     )
-    ap.add_argument("--arango-db", default=ARANGO_DATABASE,
+    ap.add_argument("--arango-db", default=ARANGO_DATABASE or "infogeometry",
                     help="Arango database to read (default: ARANGO_DATABASE)")
     ap.add_argument("--edge-collection",
                     help="Explicit edge collection for a legacy additive import")
     ap.add_argument("--decl-collection",
                     help="Matching declaration collection for a legacy additive import")
     ap.add_argument("--generation-id",
-                    help="Select source collections from a complete Arango receipt; this does not create a PostgreSQL snapshot")
+                    help="Select source collections from a complete Arango receipt")
     ap.add_argument("--legacy-additive", action="store_true",
                     help="Acknowledge writes to shared additive tables; reads are not generation-pinned")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="Validate edge integrity without opening a PostgreSQL write connection")
+    ap.add_argument("--decls-jsonl",
+                    help="Offline declarations JSONL input path for --dry-run validation")
+    ap.add_argument("--edges-jsonl",
+                    help="Offline edges JSONL input path for --dry-run validation")
+    ap.add_argument("--report-json", "--reconciliation-out", dest="report_json",
+                    help="Optional file path to write JSON reconciliation/dry-run report")
     ap.add_argument("--batch-size", type=int, default=5000)
     ap.add_argument("--limit", type=int, default=0,
                     help="Max edges (0 = all)")
     args = ap.parse_args()
 
-    if args.generation_id is not None and not args.legacy_additive:
-        ap.error("--generation-id only selects Arango input; PostgreSQL writes are legacy/additive. Pass --legacy-additive to acknowledge this. Generation-pinned projection is not implemented.")
+    if args.decls_jsonl or args.edges_jsonl:
+        if not (args.dry_run and args.decls_jsonl and args.edges_jsonl):
+            ap.error("offline relationship validation requires --dry-run, --decls-jsonl, and --edges-jsonl")
+        from arango_to_ontology import _run_offline_jsonl_dry_run
+        args.deployment_uuid = None
+        return _run_offline_jsonl_dry_run(args)
+
+    if args.generation_id is not None and not args.legacy_additive and not args.dry_run:
+        ap.error(
+            "--generation-id only selects Arango input; PostgreSQL writes are legacy/additive. "
+            "Pass --legacy-additive to acknowledge this (or use arango_to_ontology.py --pin-generation). "
+            "Generation-pinned projection is not implemented in standalone relationship mode."
+        )
     if args.generation_id is not None and args.limit != 0:
         ap.error("--generation-id requires --limit 0 to validate all source edges")
     if args.generation_id is not None:
@@ -222,7 +287,23 @@ def main() -> int:
 
     validate_dependency_edges(db, edge_collection, decl_collection)
 
-    conn = psycopg.connect(**PG_CONNECT)
+    if args.dry_run:
+        name_to_decl_key = load_decl_keys(db, decl_collection)
+        report = {
+            "status": "dry_run_ok",
+            "mode": "arango_relationships_preflight",
+            "generation_id": args.generation_id,
+            "decl_collection": decl_collection,
+            "edge_collection": edge_collection,
+            "expected_decl_count": len(name_to_decl_key),
+            "expected_edge_count": total,
+            "loaded_edge_count": 0,
+        }
+        _write_report(args.report_json, report)
+        print(json.dumps(report, sort_keys=True))
+        return 0
+
+    conn = psycopg.connect(**get_pg_connect())
     conn.autocommit = False
     cur = conn.cursor()
 
@@ -239,8 +320,6 @@ def main() -> int:
     skipped_no_src = 0
     skipped_no_dst = 0
 
-    # Collection name cannot be a bind var in AQL FOR; validate it's a safe
-    # identifier then interpolate directly.
     aql = f"FOR e IN {edge_collection} "
     if args.limit > 0:
         aql += "LIMIT @limit "
@@ -265,8 +344,6 @@ def main() -> int:
                 skipped_no_dst += 1
             continue
 
-        # Resolve names within this declaration snapshot, then use the stable
-        # imported_id to find exactly one ontology term for each endpoint.
         src_key = name_to_decl_key.get(src_name)
         dst_key = name_to_decl_key.get(dst_name)
         src_id = imported_id_to_term.get(src_key) if src_key else None
@@ -305,11 +382,19 @@ def main() -> int:
         cur.close()
         conn.close()
         raise SystemExit("incomplete relationship import: unresolved endpoints were skipped")
-    # The edge projection and its completeness checks share one transaction;
-    # a truncated source iterator cannot leave committed batches behind.
     conn.commit()
     cur.close()
     conn.close()
+    report = {
+        "status": "legacy_additive_committed",
+        "mode": "legacy_additive",
+        "generation_id": args.generation_id,
+        "decl_collection": decl_collection,
+        "edge_collection": edge_collection,
+        "expected_edge_count": total,
+        "loaded_edge_count": imported,
+    }
+    _write_report(args.report_json, report)
     print(f"\nDone. Imported {imported} relationships "
           f"(skipped {skipped_no_src} with no src term, "
           f"{skipped_no_dst} with no dst term; output_mode=legacy_additive, "

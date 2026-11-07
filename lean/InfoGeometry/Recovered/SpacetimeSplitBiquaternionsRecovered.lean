@@ -1,2 +1,0 @@
-import InfoGeometry.Recovered.SpacetimeLorentzTransformations
-import InfoGeometry.Algebra.FiniteSpinAlgebra

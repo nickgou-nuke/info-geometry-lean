@@ -1,4 +1,0 @@
-import InfoGeometry.OperatorAlgebra.PeirceSpine.BlockCharges
-open InfoGeometry.OperatorAlgebra.PeirceSpine
-#print axioms endomorphismBlock_mem_sector
-#print axioms fiveSupportedComponent_mem_sector

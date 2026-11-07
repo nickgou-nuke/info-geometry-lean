@@ -1,2 +1,0 @@
-import InfoGeometry.Clifford.Cl11ProjectiveMobiusBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra

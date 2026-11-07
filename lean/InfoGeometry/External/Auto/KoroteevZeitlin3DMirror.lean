@@ -1,2 +1,0 @@
-import InfoGeometry.Quiver.KoroteevZeitlinMirror
-import InfoGeometry.Algebra.FiniteSpinAlgebra

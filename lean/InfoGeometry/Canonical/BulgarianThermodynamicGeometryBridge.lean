@@ -1,5 +1,0 @@
-import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-
-namespace InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
-end InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge

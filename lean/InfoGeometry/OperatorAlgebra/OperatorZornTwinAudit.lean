@@ -1,8 +1,0 @@
-import InfoGeometry.OperatorAlgebra.OperatorZornTwinAll
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-
-#print axioms InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce.grading_sq
-#print axioms InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce.cartanInvolution_involutive
-#print axioms InfoGeometry.OperatorAlgebra.AssociativeOperatorZornCartanPeirce.four_corner_decomposition
-#print axioms InfoGeometry.OperatorAlgebra.ModularTwinZornRepresentation.ModularTwinRepresentation.exchange_involutive
-#print axioms InfoGeometry.OperatorAlgebra.KleinDiracKahlerOperatorZorn.twinBoundaryDiracBlock_sq

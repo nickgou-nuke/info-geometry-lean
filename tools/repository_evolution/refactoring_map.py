@@ -77,7 +77,7 @@ def tracked_paths(root: Path) -> list[str]:
         if not raw:
             continue
         rel = raw.decode("utf-8", errors="surrogateescape")
-        if any(part in SKIP_PARTS for part in Path(rel).parts):
+        if any(part in SKIP_PARTS or part.startswith(".venv-") for part in Path(rel).parts):
             continue
         target = root / rel
         # A gitlink is a directory. Keep its boundary record without reading it.

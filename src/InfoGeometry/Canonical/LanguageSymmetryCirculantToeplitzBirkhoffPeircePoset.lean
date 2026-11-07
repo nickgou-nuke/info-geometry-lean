@@ -26,6 +26,7 @@ import InfoGeometry.Quantum.DoubledSylvesterCommutantBridge
 import InfoGeometry.Canonical.GrothendieckElementaryExpansionOperatorCalculus
 import InfoGeometry.Canonical.ModularSurprisalClockingLocksPoset
 import InfoGeometry.GaloisQuotient.GaloisQuotientNonAbelianFourierPoset
+import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
 import Mathlib.LinearAlgebra.Matrix.Vec
 import Mathlib.Data.Nat.Totient
 import Omega.Core.Word
@@ -138,6 +139,7 @@ homogenization:
 - `ls7_peirce_helper_excursion_bkm_attribute_surprisal_and_kms_toeplitz_laplacian`
 - `ls7_galois_quotient_dihedral_peter_weyl_and_surprisal_survival`
 - `ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_synthesis`
+- `ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`
 
 ## iii. Table of contents
 
@@ -179,7 +181,8 @@ homogenization:
   `open_boundary_exponential_kernel_tridiagonal_inverse`,
   `ls7_peirce_helper_excursion_bkm_attribute_surprisal_and_kms_toeplitz_laplacian`,
   `ls7_galois_quotient_dihedral_peter_weyl_and_surprisal_survival`,
-  `ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_synthesis`.
+  `ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_synthesis`,
+  `ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`.
 
 #### BUCKET 2 — Conditional / Interface Boundaries
 - Commutant closure and Peirce identities hold over any `[Ring B]` under explicit commutation
@@ -2114,6 +2117,86 @@ theorem ls7_cl11_tensor_stage_factorization_ramanujan24_and_peirce_compression_s
     InfoGeometry.Canonical.LanguageStatisticsCirculantBirkhoffYangianPeircePoset.peirce_reflected_rotor_norm_and_off_diagonal_compression_defect
       P X Y c s hP hc_S hs_S hcs hc_J hs_J P_H u_bar delta_u hPH hPhi2 hu_P hd_P hu_Phi hd_Phi
   exact ⟨⟨hStage, hLimit⟩, ⟨hRam.2.2.1, hRam.2.2.2⟩, ⟨⟨htwo, hPeirce.1.2.1, hPeirce.1.2.2⟩, hPeirce.2⟩⟩
+
+/--
+**Theorem 7E (`ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis`):**
+Combines the finite arithmetic and Catalan identities
+(`CliffordBottKTheoryWignerS4Poset.s4_wedderburn_artin_trees_and_adams_j_mod24_lock`,
+`CliffordBottKTheoryWignerS4Poset.adams_j_homomorphism_all_z24_units_divisibility`), the
+division-free four-channel decomposition of `3 × 3` matrices and 3D Zorn cross-product identity
+(`CliffordBottKTheoryWignerS4Poset.Mat3.wigner_clebsch_gordan_s4_four_channel_decomposition`,
+`CliffordBottKTheoryWignerS4Poset.Mat3.kb5_antisym_channel_zorn_cross_product_bridge`), and the
+conditional dressed Peirce projector idempotence, diagonal commutator identity, ring homomorphism
+preservation, and 4-scale `PeirceIndex` cardinality scaling
+(`CliffordBottKTheoryWignerS4Poset.ko_theory_pmi_bruhat_projector_colimit_stability`). This theorem
+is a conjunction of those finite-stage and conditional results and does not establish a continuous
+homotopy-group construction of `π₃^s` or a carrier map between the matrix and ring parameters.
+-/
+theorem ls7_wigner_clebsch_gordan_s4_zorn_cross_and_dressed_peirce_bott_synthesis
+    {K : Type*} [CommRing K]
+    (M_cg : CliffordBottKTheoryWignerS4Poset.Mat3 K) (u_vec v_vec : Fin 3 → K)
+    {B B' : Type*} [Ring B] [Ring B']
+    (P M_op : B) (hP : P * P = P) (ι : B →+* B') (n : ℕ) :
+    ((1 ^ 2 + 1 ^ 2 + 2 ^ 2) + (3 ^ 2 + 3 ^ 2) = 24 ∧
+     4 ^ (4 - 2) = 16 ∧
+     24 - 4 ^ (4 - 2) = Nat.totient 24 ∧
+     CliffordBottKTheoryWignerS4Poset.catalanNum 3 = 5 ∧
+     CliffordBottKTheoryWignerS4Poset.catalanNum 4 = 14 ∧
+     Nat.gcd (5 ^ 2 - 1) (7 ^ 2 - 1) = 24 ∧
+     (∀ k : Fin 24, Nat.Coprime k.val 24 → (k.val * k.val - 1) % 24 = 0)) ∧
+    ((CliffordBottKTheoryWignerS4Poset.Mat3.smul 6 M_cg =
+        CliffordBottKTheoryWignerS4Poset.Mat3.cgChan1_Triv M_cg +
+        CliffordBottKTheoryWignerS4Poset.Mat3.cgChan2_Quadrupole M_cg +
+        CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_SymOff M_cg +
+        CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort M_cg ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.tr
+        (CliffordBottKTheoryWignerS4Poset.Mat3.cgChan2_Quadrupole M_cg) = 0 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.tr
+        (CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_SymOff M_cg) = 0 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.tr
+        (CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort M_cg) = 0 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.transpose
+        (CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_SymOff M_cg) =
+        CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_SymOff M_cg ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.transpose
+        (CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort M_cg) =
+        CliffordBottKTheoryWignerS4Poset.Mat3.smul (-1)
+          (CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort M_cg)) ∧
+     (CliffordBottKTheoryWignerS4Poset.Mat3.tr (Matrix.vecMulVec u_vec v_vec) =
+        u_vec 0 * v_vec 0 + u_vec 1 * v_vec 1 + u_vec 2 * v_vec 2 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort
+        (Matrix.vecMulVec u_vec v_vec) 1 2 =
+        3 * CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec 0 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort
+        (Matrix.vecMulVec u_vec v_vec) 2 0 =
+        3 * CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec 1 ∧
+      CliffordBottKTheoryWignerS4Poset.Mat3.cgChan3_AntisymVort
+        (Matrix.vecMulVec u_vec v_vec) 0 1 =
+        3 * CliffordBottKTheoryWignerS4Poset.Mat3.zornCross3D u_vec v_vec 2)) ∧
+    (CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op =
+        dressedPeirceProjector P M_op M_op ∧
+     CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op *
+        CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op =
+        CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op ∧
+     CliffordBottKTheoryWignerS4Poset.K_diag P
+        (CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op - P) =
+        - comm (conePlus P M_op) (coneMinus P M_op) ∧
+     ι (CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op) *
+        ι (CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op) =
+        ι (CliffordBottKTheoryWignerS4Poset.P_hat_KO P M_op) ∧
+     Fintype.card (PeirceIndex (n + 4)) = 16 * Fintype.card (PeirceIndex n)) := by
+  have hS4 := CliffordBottKTheoryWignerS4Poset.s4_wedderburn_artin_trees_and_adams_j_mod24_lock
+  have hUnits := CliffordBottKTheoryWignerS4Poset.adams_j_homomorphism_all_z24_units_divisibility
+  have hCG :=
+    CliffordBottKTheoryWignerS4Poset.Mat3.wigner_clebsch_gordan_s4_four_channel_decomposition M_cg
+  have hZorn :=
+    CliffordBottKTheoryWignerS4Poset.Mat3.kb5_antisym_channel_zorn_cross_product_bridge u_vec v_vec
+  have hKO :=
+    CliffordBottKTheoryWignerS4Poset.ko_theory_pmi_bruhat_projector_colimit_stability P M_op hP ι n
+  exact ⟨⟨hS4.1, hS4.2.2.2.1, hS4.2.2.2.2.1, hS4.2.2.2.2.2.1,
+          hS4.2.2.2.2.2.2.1, hS4.2.2.2.2.2.2.2.1, hUnits.2⟩,
+         ⟨hCG, hZorn⟩,
+         hKO⟩
 
 end MasterLanguageSymmetryYangianPeirceSynthesis
 

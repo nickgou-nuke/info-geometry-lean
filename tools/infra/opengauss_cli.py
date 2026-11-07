@@ -1403,29 +1403,26 @@ def _file_to_module_path(path: Path, repo_root: Path) -> str:
     """Convert a Lean file path into its canonical Lean module import path."""
     try:
         resolved = path.resolve()
-        lean_dir = (repo_root / "lean").resolve()
-        mathlib_dir = (repo_root / ".lake" / "packages" / "mathlib").resolve()
-        if lean_dir in resolved.parents or resolved == lean_dir:
-            rel = resolved.relative_to(lean_dir)
-            parts = list(rel.parts)
-            if parts[-1].endswith(".lean"):
-                parts[-1] = parts[-1][:-5]
-            return ".".join(parts)
-        elif mathlib_dir in resolved.parents or resolved == mathlib_dir:
-            rel = resolved.relative_to(mathlib_dir)
-            parts = list(rel.parts)
-            if parts[-1].endswith(".lean"):
-                parts[-1] = parts[-1][:-5]
-            return ".".join(parts)
-        else:
-            try:
-                rel = resolved.relative_to(repo_root.resolve())
+        module_roots = (
+            (repo_root / "src").resolve(),
+            (repo_root / "lean").resolve(),
+            (repo_root / ".lake" / "packages" / "mathlib").resolve(),
+        )
+        for module_root in module_roots:
+            if module_root in resolved.parents or resolved == module_root:
+                rel = resolved.relative_to(module_root)
                 parts = list(rel.parts)
-                if parts[-1].endswith(".lean"):
+                if parts and parts[-1].endswith(".lean"):
                     parts[-1] = parts[-1][:-5]
                 return ".".join(parts)
-            except ValueError:
-                return path.stem
+        try:
+            rel = resolved.relative_to(repo_root.resolve())
+            parts = list(rel.parts)
+            if parts and parts[-1].endswith(".lean"):
+                parts[-1] = parts[-1][:-5]
+            return ".".join(parts)
+        except ValueError:
+            return path.stem
     except Exception:
         return path.stem
 
@@ -1448,14 +1445,13 @@ def discover_declarations(
     dedup_warnings: List[str] = []
 
     # Identify search directories
-    search_dirs: List[Path] = []
-    info_dir = repo_root / "lean" / "InfoGeometry"
-    if info_dir.is_dir():
-        search_dirs.append(info_dir)
-    elif (repo_root / "lean").is_dir():
-        search_dirs.append(repo_root / "lean")
-    else:
-        search_dirs.append(repo_root)
+    source_roots = [repo_root / "src", repo_root / "lean"]
+    search_dirs = [root / "InfoGeometry" for root in source_roots
+                   if (root / "InfoGeometry").is_dir()]
+    if not search_dirs:
+        search_dirs = [root for root in source_roots if root.is_dir()][:1]
+    # Do not turn a missing configured source root into an unbounded scan of
+    # generated artifacts, vendored code, and repository metadata.
 
     # Pre-filter candidate files with tiered prioritization
     candidate_files: List[Path] = []

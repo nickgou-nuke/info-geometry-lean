@@ -1,4 +1,0 @@
-import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
-open InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
-
-#check SignalCoordinates.mk.injEq

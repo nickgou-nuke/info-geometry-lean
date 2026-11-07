@@ -1,3 +1,0 @@
-import InfoGeometry.External.Auto.tomita_kms_v4
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-#check kleinFourCanonical

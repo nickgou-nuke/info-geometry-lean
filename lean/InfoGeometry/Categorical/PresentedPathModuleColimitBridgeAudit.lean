@@ -1,4 +1,0 @@
-import InfoGeometry.Categorical.PresentedPathModuleColimitBridge
-
-#print axioms InfoGeometry.Categorical.PresentedPathModuleColimitBridge.presented_path_colimit_readback
-#print axioms InfoGeometry.Categorical.PresentedPathModuleColimitBridge.presented_path_tensor_power_readback

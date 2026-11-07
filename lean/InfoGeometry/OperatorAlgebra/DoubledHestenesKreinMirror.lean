@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.RealDoubledKreinMirror
-import InfoGeometry.Algebra.FiniteSpinAlgebra

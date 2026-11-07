@@ -8,7 +8,21 @@
 #   - localhost:3000      -> auto-ontology Next.js frontend & OAuth server
 set -euo pipefail
 
-AO_ROOT="/home/goutev/repos/auto-ontology-src"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+if [ -z "${AO_ROOT:-}" ]; then
+  if [ -d "/home/goutev/repos/auto-ontology-src" ]; then
+    AO_ROOT="/home/goutev/repos/auto-ontology-src"
+  else
+    AO_ROOT="$REPO_ROOT/external_refs/auto-ontology"
+  fi
+fi
+if [ -z "${AO_VENV:-}" ]; then
+  if [ -x "$AO_ROOT/.venv-ao/bin/python" ]; then
+    AO_VENV="$AO_ROOT/.venv-ao"
+  else
+    AO_VENV="$AO_ROOT/.venv"
+  fi
+fi
 NODE_BIN="/home/goutev/.nvm/versions/node/v22.22.2/bin"
 PNPM_BIN="/home/goutev/.local/bin"
 
@@ -29,20 +43,20 @@ echo "[4/6] Ensuring Auto-Ontology Backend (:3001) and Ingestion (:3002) are act
 if ! ss -tln | grep -q ':3001 '; then
   systemctl --user stop auto-ontology-backend.service >/dev/null 2>&1 || true
   systemd-run --user --unit=auto-ontology-backend --working-directory="$AO_ROOT" --collect \
-    /bin/bash -c "set -a && source .env && set +a && exec $AO_ROOT/.venv-ao/bin/python -m auto_ontology.server"
+    /bin/bash -c "set -a && source .env && set +a && exec $AO_VENV/bin/python -m auto_ontology.server"
 fi
 
 if ! ss -tln | grep -q ':3002 '; then
   systemctl --user stop auto-ontology-ingestion.service >/dev/null 2>&1 || true
   systemd-run --user --unit=auto-ontology-ingestion --working-directory="$AO_ROOT" --collect \
-    /bin/bash -c "set -a && source .env && set +a && exec $AO_ROOT/.venv-ao/bin/python -m auto_ontology.ingestion_service"
+    /bin/bash -c "set -a && source .env && set +a && exec $AO_VENV/bin/python -m auto_ontology.ingestion_service"
 fi
 
 echo "[5/6] Ensuring Auto-Ontology MCP (:3003) and Next.js Frontend (:3000) are active..."
 if ! ss -tln | grep -q ':3003 '; then
   systemctl --user stop auto-ontology-mcp.service >/dev/null 2>&1 || true
   systemd-run --user --unit=auto-ontology-mcp --working-directory="$AO_ROOT" --collect \
-    /bin/bash -c "set -a && source .env && set +a && exec $AO_ROOT/.venv-ao/bin/auto-ontology-mcp"
+    /bin/bash -c "set -a && source .env && set +a && exec $AO_VENV/bin/auto-ontology-mcp"
 fi
 
 if ! ss -tln | grep -q ':3000 '; then

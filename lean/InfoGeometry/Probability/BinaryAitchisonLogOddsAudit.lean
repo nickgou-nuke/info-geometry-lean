@@ -1,9 +1,0 @@
-import InfoGeometry.Probability.BinaryAitchisonLogOdds
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-
-#print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.clr_binary
-#print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.binary_inner
-#print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.binary_clr_distance_sq
-#print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.binary_clr_metric
-#print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.trajectory_clr
-#print axioms InfoGeometry.Probability.BinaryAitchisonLogOdds.time_dependent_hamilton_jacobi

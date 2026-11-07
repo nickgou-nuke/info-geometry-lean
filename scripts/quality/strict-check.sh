@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+LEAN_SOURCE_ROOT="${LEAN_SOURCE_ROOT:-$(if [[ -d src/InfoGeometry ]]; then printf src; else printf lean; fi)}"
 STRICT_CHECK_ARTIFACT_DIR="${STRICT_CHECK_ARTIFACT_DIR:-artifacts/leantrail}"
 mkdir -p "$STRICT_CHECK_ARTIFACT_DIR"
 
@@ -52,13 +53,13 @@ python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryCanonic
 python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryLLM
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
-python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/InfoGeometry/Library.lean
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock "$LEAN_SOURCE_ROOT/InfoGeometry/Library.lean"
 
 echo "[strict-check] elaborating canonical root InfoGeometry.lean"
-python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/InfoGeometry.lean
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock "$LEAN_SOURCE_ROOT/InfoGeometry.lean"
 
-INFOGEOMETRY_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry)
-CANONICAL_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical)
+INFOGEOMETRY_PATHS=("$LEAN_SOURCE_ROOT/InfoGeometry.lean" "$LEAN_SOURCE_ROOT/InfoGeometry/Library.lean" "$LEAN_SOURCE_ROOT/InfoGeometry")
+CANONICAL_PATHS=("$LEAN_SOURCE_ROOT/InfoGeometry.lean" "$LEAN_SOURCE_ROOT/InfoGeometry/Library.lean" "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical")
 
 echo "[strict-check] ensuring archive file is not imported by canonical modules"
 if rg -n "all_lean_files_combined" "${INFOGEOMETRY_PATHS[@]}" -g '*.lean'; then
@@ -114,14 +115,14 @@ python3 tools/quality/check_frontier_integrity_gate.py \
   --json-out reports/dag/frontier-gate-report.json
 
 CLOSURE_SPINE_PATHS=(
-  lean/InfoGeometry/Canonical/CertifiedModularReduction.lean
-  lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean
-  lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean
-  lean/InfoGeometry/Canonical/Cl11LorentzAction.lean
-  lean/InfoGeometry/Canonical/BogoliubovOptimalTransport.lean
-  lean/InfoGeometry/Canonical/PositiveMeasureSpectrum.lean
-  lean/InfoGeometry/Canonical/UhlmannBuresHolonomy.lean
-  lean/InfoGeometry/Canonical/WindingOrbitClosure.lean
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/CertifiedModularReduction.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/Cl11LorentzAction.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/BogoliubovOptimalTransport.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/PositiveMeasureSpectrum.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/UhlmannBuresHolonomy.lean"
+  "$LEAN_SOURCE_ROOT/InfoGeometry/Canonical/WindingOrbitClosure.lean"
 )
 
 echo "[strict-check] enforcing closure-spine non-shadow policy (no finite-dimensional/matrix toys)"
@@ -197,7 +198,7 @@ python3 tools/quality/check_closure_debt_gate.py \
 
 echo "[strict-check] enforcing no-hypothesis mandate gate"
 python3 tools/quality/check_no_hypothesis_mandate.py \
-  --root lean/InfoGeometry
+  --root "$LEAN_SOURCE_ROOT/InfoGeometry"
 
 echo "[strict-check] enforcing proof-only mandate gate"
 python3 tools/quality/proof_only_mandate_gate.py \
@@ -220,7 +221,7 @@ for target in "${CLOSURE_DEBT_BUILD_TARGETS[@]}"; do
 done
 
 echo "[strict-check] enforcing Pauli seal directives (I-XI) on all InfoGeometry modules"
-python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry --json-out reports/pauli-seal-audit.json
+python3 tools/quality/pauli_seal_audit.py --root "$LEAN_SOURCE_ROOT/InfoGeometry" --json-out reports/pauli-seal-audit.json
 
 echo "[strict-check] generating canonical policy lint report"
 python3 tools/infra/canonical_policy_lint.py \
@@ -230,7 +231,7 @@ python3 tools/infra/canonical_policy_lint.py \
 echo "[strict-check] generating mathfulness audit"
 mathfulness_cmd=(
   python3 tools/quality/mathfulness_audit.py
-  --file-prefix lean/InfoGeometry
+  --file-prefix "$LEAN_SOURCE_ROOT/InfoGeometry"
   --json-out reports/dag/mathfulness-audit.json
   --md-out reports/dag/mathfulness-audit.md
 )
@@ -242,7 +243,7 @@ fi
 echo "[strict-check] generating semantic vacuity audit"
 semantic_vacuity_cmd=(
   python3 tools/quality/semantic_vacuity_gate.py
-  lean
+  "$LEAN_SOURCE_ROOT"
   --json-out reports/dag/semantic-vacuity-audit.json
   --top 20
   --fail-on none
@@ -250,7 +251,7 @@ semantic_vacuity_cmd=(
 if [[ "${STRICT_CHECK_SEMANTIC_VACUITY_GATE:-0}" != "0" ]]; then
   semantic_vacuity_cmd=(
     python3 tools/quality/semantic_vacuity_gate.py
-    lean
+    "$LEAN_SOURCE_ROOT"
     --json-out reports/dag/semantic-vacuity-audit.json
     --top 20
     --fail-on "${STRICT_CHECK_SEMANTIC_VACUITY_GATE}"
@@ -281,13 +282,13 @@ run_advisory_audit() {
 
 echo "[strict-check] running naming convention audit (advisory)"
 set +e
-run_advisory_audit naming python3 tools/quality/audit_naming.py lean/InfoGeometry
+run_advisory_audit naming python3 tools/quality/audit_naming.py "$LEAN_SOURCE_ROOT/InfoGeometry"
 naming_status=$?
 echo "[strict-check] running docstring audit (advisory)"
-run_advisory_audit docstrings python3 tools/quality/audit_docstrings.py lean/InfoGeometry
+run_advisory_audit docstrings python3 tools/quality/audit_docstrings.py "$LEAN_SOURCE_ROOT/InfoGeometry"
 docstring_status=$?
 echo "[strict-check] running style audit (advisory)"
-run_advisory_audit style python3 tools/quality/audit_style.py lean/InfoGeometry
+run_advisory_audit style python3 tools/quality/audit_style.py "$LEAN_SOURCE_ROOT/InfoGeometry"
 style_status=$?
 set -e
 
@@ -305,5 +306,8 @@ fi
 
 echo "[strict-check] running compiler bridge RPC regression tests"
 python3 -m unittest tests.test_compiler_bridge_rpc
+
+echo "[strict-check] printing QMS operator checklist reminder (advisory; not evidence validation)"
+python3 tools/qms/run_qms.py --task-id "strict-check-$(date +%s)" quick-gate || true
 
 echo "[strict-check] all enforced checks passed"

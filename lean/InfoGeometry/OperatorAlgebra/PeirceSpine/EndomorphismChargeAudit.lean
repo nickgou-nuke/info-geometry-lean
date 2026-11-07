@@ -1,7 +1,0 @@
-import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismCharge
-open InfoGeometry.OperatorAlgebra.PeirceSpine
-#print axioms tripotent_comm_fifth
-#print axioms endomorphismCharge_apply
-#print axioms endomorphismCharge_fifth
-#print axioms endomorphismCharge_pow_apply
-#print axioms chargeIter_fifth_of_linear

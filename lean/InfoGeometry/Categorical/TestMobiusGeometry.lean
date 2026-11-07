@@ -1,2 +1,0 @@
-import InfoGeometry.Topology.MobiusGeometry
-import InfoGeometry.Algebra.FiniteSpinAlgebra

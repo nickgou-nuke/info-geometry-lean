@@ -1,9 +1,0 @@
-import InfoGeometry.Algebra.DerivationLieLaneRepresentation
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Lie.SplitOctonionRegularActionIntertwiner
-import InfoGeometry.Lie.CanonicalZornOperatorDerivationLane
-import InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
-import InfoGeometry.OperatorAlgebra.DerivationVectorCalculus
-import InfoGeometry.OperatorAlgebra.CanonicalZornDerivationDifferentialForms
-
-/-! Canonical import surface for the noncommutative derivation geometry lane. -/

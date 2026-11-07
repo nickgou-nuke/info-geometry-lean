@@ -1,5 +1,0 @@
-import InfoGeometry.Physics.ApolloniusCayleyScatteringBridge
-
-open InfoGeometry.Physics.ApolloniusCayleyScattering
-
-#print axioms certified_apollonius_cayley_scattering_synthesis

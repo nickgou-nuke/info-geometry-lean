@@ -16,6 +16,22 @@ dependencies = [
   "requests>=2.31",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+]
+cas = [
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "sympy>=1.12",
+  "clifford>=1.4",
+  "ray>=2.9",
+]
+ontology = [
+  "psycopg[binary]>=3.1",
+  "sqlalchemy>=2.0",
+]
+
 
 [project.scripts]
 infogeometry = "scripts.cli:main"

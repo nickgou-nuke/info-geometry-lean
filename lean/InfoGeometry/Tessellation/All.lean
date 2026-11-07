@@ -1,9 +1,0 @@
-import InfoGeometry.Tessellation.Incidence
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Tessellation.Corner
-import InfoGeometry.Tessellation.NilpotentFlow
-import InfoGeometry.Tessellation.CantorDiracSeaWalk
-import InfoGeometry.Tessellation.CantorDiracSeaCharge
-import InfoGeometry.Tessellation.VolumeTransport
-import InfoGeometry.Tessellation.WilsonLoop
-import InfoGeometry.Tessellation.CurrentCurvature

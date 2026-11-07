@@ -1,8 +1,0 @@
-import InfoGeometry.OperatorAlgebra.PeirceSpine.EndomorphismBlocks
-open InfoGeometry.OperatorAlgebra.PeirceSpine
-#print axioms threePeirceProjection_sum
-#print axioms threePeirceProjection_mul
-#print axioms endomorphismBlock_sum
-#print axioms endomorphismBlock_extract
-#print axioms endomorphismBlock_ext
-#print axioms fiveSupportedComponent_sum

@@ -1,8 +1,0 @@
-import InfoGeometry.Algebra.GrothendieckMathlibNatIso
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-#check InfoGeometry.Categorical.grothendieckCompletionFunctor
-#check InfoGeometry.Algebra.GrothendieckMathlibNatIso.mathlibGrothendieckFunctor
-#check InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso
-#check InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso_hom_app
-#print axioms InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso
-#print axioms InfoGeometry.Algebra.GrothendieckMathlibNatIso.grothendieckFunctorNatIso_naturality

@@ -1,5 +1,0 @@
-import InfoGeometry.Physics.AitchisonJaynesRapidityBridge
-
-open InfoGeometry.Physics.AitchisonJaynesRapidity
-
-#print axioms BinaryProbability.certified_aitchison_jaynes_rapidity_synthesis

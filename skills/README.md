@@ -64,6 +64,11 @@ All castes are strictly bound by the top-priority mandate:
   auditor and repair suggester; send the complete owner file plus relevant
   build errors in one prompt, then let Codex apply only Lean-checked edits.
 
+- [`qms`](qms/SKILL.md): Quality Management System per QMS-SOP-ALC-001 v4.1.
+  Gate 0-5 pipeline (intake, owner search, generation controls, sterile
+  compile+audit, CAPA loop, acceptance) with G-A/A-A/QA-A/Orchestrator role
+  separation. CLI: `python3 tools/qms/run_qms.py`.
+
 ## Induction Skills
 
 - [`induction-systematics`](induction-systematics/SKILL.md): the repo’s induction, recursive-trajectory, finite-stage transport, tensor-algebra, and direct-limit playbook.

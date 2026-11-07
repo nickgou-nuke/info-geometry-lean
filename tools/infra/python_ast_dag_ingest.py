@@ -360,11 +360,11 @@ class PythonCPGExtractor:
         excluded = {".lake", ".git", "__pycache__", ".venv", "node_modules", ".tempmediaStorage"}
         for d in target_dirs:
             if d.is_file() and d.suffix == ".py":
-                if not any(ex in d.parts for ex in excluded):
+                if not any(part in excluded or part.startswith(".venv-") for part in d.parts):
                     all_py.append(d)
             elif d.is_dir():
                 for p in sorted(d.glob("**/*.py")):
-                    if not any(ex in p.parts for ex in excluded):
+                    if not any(part in excluded or part.startswith(".venv-") for part in p.parts):
                         all_py.append(p)
 
         print(f"[python-cpg] Scanning {len(all_py)} Python source files...")

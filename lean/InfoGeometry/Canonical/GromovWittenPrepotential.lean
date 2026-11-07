@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.KANFrobeniusGromovWittenBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra

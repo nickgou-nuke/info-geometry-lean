@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.NavierStokesLegendre
-import InfoGeometry.Algebra.FiniteSpinAlgebra

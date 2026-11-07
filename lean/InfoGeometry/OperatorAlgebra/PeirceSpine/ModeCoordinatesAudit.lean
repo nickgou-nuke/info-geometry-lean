@@ -1,8 +1,0 @@
-import InfoGeometry.OperatorAlgebra.PeirceSpine.ModeCoordinates
-
-open InfoGeometry.OperatorAlgebra.PeirceSpine
-
-#print axioms modeCoordinateEquiv
-#print axioms mode_reconstruction_scaled
-#print axioms peirce_mode_reconstruction_scaled
-#print axioms modeCoordinateEquiv_peirce

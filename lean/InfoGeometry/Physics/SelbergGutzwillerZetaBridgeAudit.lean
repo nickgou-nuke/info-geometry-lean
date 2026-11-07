@@ -1,6 +1,0 @@
-import InfoGeometry.Physics.SelbergGutzwillerZetaBridge
-
-open InfoGeometry.Physics.SelbergGutzwillerZeta
-
-#print axioms GutzwillerOrbit.certified_selberg_gutzwiller_zeta_synthesis
-#print axioms GutzwillerOrbit.gutzwiller_trace_triangle_bound

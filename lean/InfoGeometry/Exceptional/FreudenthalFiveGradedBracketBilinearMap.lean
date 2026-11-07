@@ -1,2 +1,0 @@
-import InfoGeometry.Exceptional.FreudenthalGlobalJacobiFrontier
-import InfoGeometry.Algebra.FiniteSpinAlgebra

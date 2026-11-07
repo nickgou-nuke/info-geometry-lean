@@ -1,3 +1,0 @@
-import InfoGeometry.External.Auto.KleinBottle
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-#check InfoGeometry.External.Auto.KleinBottle.klein_bottle_relation

@@ -1,3 +1,0 @@
-import InfoGeometry.Sandbox.CliffordFunctorSandbox.Tower
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Sandbox.CliffordFunctorSandbox.Functor

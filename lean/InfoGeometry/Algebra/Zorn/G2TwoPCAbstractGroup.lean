@@ -1,3 +1,0 @@
-import InfoGeometry.Algebra.Zorn.G2TwoPCNormalFormAssoc
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Algebra.Zorn.G2TwoPCNormalFormInverse

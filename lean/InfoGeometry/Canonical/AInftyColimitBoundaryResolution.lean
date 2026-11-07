@@ -1,2 +1,0 @@
-import InfoGeometry.Canonical.CliffordDirectColimit
-import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge

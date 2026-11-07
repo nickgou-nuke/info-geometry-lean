@@ -1,2 +1,0 @@
-import InfoGeometry.Modular.Noncommutative
-import InfoGeometry.Algebra.FiniteSpinAlgebra

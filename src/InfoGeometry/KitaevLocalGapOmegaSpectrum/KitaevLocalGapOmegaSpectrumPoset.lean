@@ -783,7 +783,7 @@ theorem peirce_corner_embed_and_diagonal_lorentz_action (M X Y : B) :
         cornerEmbed (M * X - X * M) := by
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [lorentzDiag, cornerEmbed, mk2, Matrix.mul_apply, Fin.sum_univ_two]
+      simp [lorentzDiag, cornerEmbed, mk2]
   exact ⟨hIdem, hCorner, hAdd, hMul, hAct⟩
 
 /-- Rank-1 real Majorana-twistor momentum matrix `P(λ) = λ λᵀ = [[λ₁², λ₁ λ₂], [λ₂ λ₁, λ₂²]]`
@@ -1979,267 +1979,6 @@ theorem moment_curve_amplituhedron_vandermonde_and_gr24_positivity
       (Int.mul_pos (Int.mul_pos (Int.mul_pos (Int.mul_pos d10 d20) d30) d21) d31) d32
   exact ⟨hSyz, ⟨hGr01, hGr02, hGr03, hGr12, hGr13, hGr23⟩, ⟨hVanK, hPos⟩⟩
 
-/-- Real 4D Minkowski Feynman slash operator `p_μ γ^μ = p₀ γ⁰ + p₁ γ¹ + p₂ γ² + p₃ γ³` in `Mat4 K`,
-built from the two-bit DeWitt Tetractys generators `γ⁰ = diracMass2 = J₁ ⊗ I₂`,
-`γ¹ = diracGamma1 = S₁ ⊗ I₂`, `γ² = diracGamma2 = Φ₁ ⊗ S₂`, and `γ³ = diracGamma3 = Φ₁ ⊗ Φ₂`
-with zero complex numbers. -/
-def minkowskiSlash (p0 p1 p2 p3 : K) : Mat4 K :=
-  p0 • diracMass2 + p1 • diracGamma1 + p2 • diracGamma2 + p3 • diracGamma3
-
-/--
-**Theorem 5f'''' (`minkowski_tetractys_4d_slash_and_mass_shell`):**
-Concrete `Mat4 K` realization of the two-bit DeWitt Tetractys synthesis of the 4D real Majorana–Dirac
-matrices `(γ⁰, γ¹, γ², γ³)` and the exact $(-, +, +, +)$ Minkowski mass-shell identity (`𝔖𝔓₁–𝔖𝔓₂`):
-1. **Two-Bit DeWitt Tensor Synthesis:**
-   `diracGamma1 = pauliZ2` ($S_1 \otimes I_2$), `diracGamma2 = pauliX2 * pauliZ1` ($\Phi_1 \otimes S_2$),
-   and `diracGamma3 = pauliX2 * pauliX1` ($\Phi_1 \otimes \Phi_2$).
-2. **Exact 4D Minkowski Mass-Shell Square Law:**
-   For any `(p0, p1, p2, p3 : K)`,
-   `minkowskiSlash p0 p1 p2 p3 * minkowskiSlash p0 p1 p2 p3 =
-     (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • I4`.
--/
-theorem minkowski_tetractys_4d_slash_and_mass_shell (p0 p1 p2 p3 : K) :
-    ((diracGamma1 : Mat4 K) = pauliZ2 ∧
-     (diracGamma2 : Mat4 K) = pauliX2 * pauliZ1 ∧
-     (diracGamma3 : Mat4 K) = pauliX2 * pauliX1) ∧
-    minkowskiSlash p0 p1 p2 p3 * minkowskiSlash p0 p1 p2 p3 =
-      (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • I4 := by
-  have hG1 : (diracGamma1 : Mat4 K) = pauliZ2 := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [diracGamma1, pauliZ2]
-  have hG2 : (diracGamma2 : Mat4 K) = pauliX2 * pauliZ1 := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [diracGamma2, pauliX2, pauliZ1]
-  have hG3 : (diracGamma3 : Mat4 K) = pauliX2 * pauliX1 := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [diracGamma3, pauliX2, pauliX1]
-  have hShell :
-      minkowskiSlash p0 p1 p2 p3 * minkowskiSlash p0 p1 p2 p3 =
-        (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • I4 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3, I4,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  exact ⟨⟨hG1, hG2, hG3⟩, hShell⟩
-
-/-- Real Lorentz boost bivector `K₀₁ = γ⁰ γ¹ = diracMass2 * diracGamma1` in `Mat4 K`. -/
-def lorentzBoost01 : Mat4 K := diracMass2 * diracGamma1
-
-/-- Real Lorentz boost bivector `K₀₂ = γ⁰ γ² = diracMass2 * diracGamma2` in `Mat4 K`. -/
-def lorentzBoost02 : Mat4 K := diracMass2 * diracGamma2
-
-/-- Real Lorentz boost bivector `K₀₃ = γ⁰ γ³ = diracMass2 * diracGamma3` in `Mat4 K`. -/
-def lorentzBoost03 : Mat4 K := diracMass2 * diracGamma3
-
-/-- Real spatial rotation bivector `J₁₂ = γ¹ γ² = diracGamma1 * diracGamma2` in `Mat4 K`. -/
-def lorentzRot12 : Mat4 K := diracGamma1 * diracGamma2
-
-/-- Real spatial rotation bivector `J₂₃ = γ² γ³ = diracGamma2 * diracGamma3` in `Mat4 K`. -/
-def lorentzRot23 : Mat4 K := diracGamma2 * diracGamma3
-
-/-- Real spatial rotation bivector `J₃₁ = γ³ γ¹ = diracGamma3 * diracGamma1` in `Mat4 K`. -/
-def lorentzRot31 : Mat4 K := diracGamma3 * diracGamma1
-
-/-- Explicit 4-dimensional upper-right Peirce corner translation matrix
-`T₂(x₀, x₁, x₂, x₃) ∈ peirceP2 · Mat4 K · (I₄ - peirceP2)` in `Mat4 K`. -/
-def peirceCornerTranslation4 (x0 x1 x2 x3 : K) : Mat4 K :=
-  !![0, 0, x0, x1;
-     0, 0, x2, x3;
-     0, 0, 0, 0;
-     0, 0, 0, 0]
-
-/-- Explicit 4-dimensional Minkowski translation module embedded in the upper-right Peirce corner
-`Block2.cornerIdem · Block2 (Mat4 K) · (1 - Block2.cornerIdem)` via `minkowskiSlash`. -/
-def poincareTranslation4 (p0 p1 p2 p3 : K) : Block2 (Mat4 K) :=
-  Block2.cornerEmbed (minkowskiSlash p0 p1 p2 p3)
-
-/--
-**Theorem 5f''''' (`poincare_corner_4d_translation_module_and_lorentz_action`):**
-Explicit 4-dimensional translation module in the nilpotent Peirce corner and the 6-generator
-Lorentz action preserving that corner (`𝔖𝔓₃–𝔖𝔓₄`):
-1. **Faithful 4-Dimensional Rank-2 Peirce Corner Module inside `Mat4 K`:**
-   `peirceCornerTranslation4 p0 p1 p2 p3` lies strictly in the upper-right Peirce corner of `peirceP2`,
-   is Abelian nilpotent, and has 4 independent coordinates `(0,2) ↦ p0`, `(0,3) ↦ p1`, `(1,2) ↦ p2`, `(1,3) ↦ p3`.
-2. **4-Dimensional Minkowski Translation Corner Module `poincareTranslation4` in `Block2 (Mat4 K)`:**
-   - `N_plus Block2.cornerIdem (poincareTranslation4 p0 p1 p2 p3) = poincareTranslation4 p0 p1 p2 p3`,
-   - `poincareTranslation4 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) = poincareTranslation4 p0 p1 p2 p3 + poincareTranslation4 q0 q1 q2 q3`,
-   - `poincareTranslation4 p0 p1 p2 p3 * poincareTranslation4 q0 q1 q2 q3 = 0`,
-   - 4-coordinate extraction from `minkowskiSlash p0 p1 p2 p3`:
-     `(0,0) = p1`, `(0,3) = p3`, `(2,0) = p0 + p2`, `(0,2) = -p0 + p2`.
-3. **All 6 Real Lorentz Generators Preserve the 4D Translation Corner (`[L(γ^μ γ^ν), T(p)] = T(L_{μν} p)`):**
-   - **3 Lorentz Boosts (`K₀₁, K₀₂, K₀₃`):**
-     `[lorentzDiag K₀₁, T(p₀, p₁, p₂, p₃)] = T(2 p₁, 2 p₀, 0, 0)`,
-     `[lorentzDiag K₀₂, T(p₀, p₁, p₂, p₃)] = T(2 p₂, 0, 2 p₀, 0)`,
-     `[lorentzDiag K₀₃, T(p₀, p₁, p₂, p₃)] = T(2 p₃, 0, 0, 2 p₀)`.
-   - **3 Spatial Rotations (`J₁₂, J₂₃, J₃₁`):**
-     `[lorentzDiag J₁₂, T(p₀, p₁, p₂, p₃)] = T(0, 2 p₂, -2 p₁, 0)`,
-     `[lorentzDiag J₂₃, T(p₀, p₁, p₂, p₃)] = T(0, 0, 2 p₃, -2 p₂)`,
-     `[lorentzDiag J₃₁, T(p₀, p₁, p₂, p₃)] = T(0, -2 p₃, 0, 2 p₁)`.
--/
-theorem poincare_corner_4d_translation_module_and_lorentz_action
-    (p0 p1 p2 p3 q0 q1 q2 q3 : K) :
-    (N_plus (peirceP2 : Mat4 K) (peirceCornerTranslation4 p0 p1 p2 p3) =
-       peirceCornerTranslation4 p0 p1 p2 p3 ∧
-     peirceCornerTranslation4 p0 p1 p2 p3 * peirceCornerTranslation4 q0 q1 q2 q3 = 0 ∧
-     peirceCornerTranslation4 p0 p1 p2 p3 0 2 = p0 ∧
-     peirceCornerTranslation4 p0 p1 p2 p3 0 3 = p1 ∧
-     peirceCornerTranslation4 p0 p1 p2 p3 1 2 = p2 ∧
-     peirceCornerTranslation4 p0 p1 p2 p3 1 3 = p3) ∧
-    (N_plus (Block2.cornerIdem : Block2 (Mat4 K)) (poincareTranslation4 p0 p1 p2 p3) =
-       poincareTranslation4 p0 p1 p2 p3 ∧
-     poincareTranslation4 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
-       poincareTranslation4 p0 p1 p2 p3 + poincareTranslation4 q0 q1 q2 q3 ∧
-     poincareTranslation4 p0 p1 p2 p3 * poincareTranslation4 q0 q1 q2 q3 = 0 ∧
-     minkowskiSlash p0 p1 p2 p3 0 0 = p1 ∧
-     minkowskiSlash p0 p1 p2 p3 0 3 = p3 ∧
-     minkowskiSlash p0 p1 p2 p3 2 0 = p0 + p2 ∧
-     minkowskiSlash p0 p1 p2 p3 0 2 = -p0 + p2) ∧
-    (Block2.lorentzDiag lorentzBoost01 * poincareTranslation4 p0 p1 p2 p3 -
-       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost01 =
-       poincareTranslation4 (2 * p1) (2 * p0) 0 0 ∧
-     Block2.lorentzDiag lorentzBoost02 * poincareTranslation4 p0 p1 p2 p3 -
-       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost02 =
-       poincareTranslation4 (2 * p2) 0 (2 * p0) 0 ∧
-     Block2.lorentzDiag lorentzBoost03 * poincareTranslation4 p0 p1 p2 p3 -
-       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost03 =
-       poincareTranslation4 (2 * p3) 0 0 (2 * p0) ∧
-     Block2.lorentzDiag lorentzRot12 * poincareTranslation4 p0 p1 p2 p3 -
-       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot12 =
-       poincareTranslation4 0 (2 * p2) (-2 * p1) 0 ∧
-     Block2.lorentzDiag lorentzRot23 * poincareTranslation4 p0 p1 p2 p3 -
-       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot23 =
-       poincareTranslation4 0 0 (2 * p3) (-2 * p2) ∧
-     Block2.lorentzDiag lorentzRot31 * poincareTranslation4 p0 p1 p2 p3 -
-       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot31 =
-       poincareTranslation4 0 (-2 * p3) 0 (2 * p1)) := by
-  have hP2Corner :
-      N_plus (peirceP2 : Mat4 K) (peirceCornerTranslation4 p0 p1 p2 p3) =
-        peirceCornerTranslation4 p0 p1 p2 p3 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [N_plus, peirceP2, peirceCornerTranslation4, Matrix.mul_apply, Fin.sum_univ_four]
-  have hP2Nilp :
-      peirceCornerTranslation4 p0 p1 p2 p3 * peirceCornerTranslation4 q0 q1 q2 q3 = 0 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [peirceCornerTranslation4, Matrix.mul_apply, Fin.sum_univ_four]
-  have hSlashAdd :
-      minkowskiSlash (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
-        minkowskiSlash p0 p1 p2 p3 + minkowskiSlash q0 q1 q2 q3 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3] <;>
-      ring
-  have hCorner :=
-    Block2.peirce_corner_embed_and_diagonal_lorentz_action
-      (lorentzBoost01 : Mat4 K) (minkowskiSlash p0 p1 p2 p3) (minkowskiSlash q0 q1 q2 q3)
-  have hT4Add :
-      poincareTranslation4 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
-        poincareTranslation4 p0 p1 p2 p3 + poincareTranslation4 q0 q1 q2 q3 := by
-    unfold poincareTranslation4
-    rw [hSlashAdd, hCorner.2.2.1]
-  have hB01 :
-      lorentzBoost01 * minkowskiSlash p0 p1 p2 p3 -
-        minkowskiSlash p0 p1 p2 p3 * lorentzBoost01 =
-        minkowskiSlash (2 * p1) (2 * p0) 0 0 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [lorentzBoost01, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  have hB02 :
-      lorentzBoost02 * minkowskiSlash p0 p1 p2 p3 -
-        minkowskiSlash p0 p1 p2 p3 * lorentzBoost02 =
-        minkowskiSlash (2 * p2) 0 (2 * p0) 0 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [lorentzBoost02, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  have hB03 :
-      lorentzBoost03 * minkowskiSlash p0 p1 p2 p3 -
-        minkowskiSlash p0 p1 p2 p3 * lorentzBoost03 =
-        minkowskiSlash (2 * p3) 0 0 (2 * p0) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [lorentzBoost03, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  have hR12 :
-      lorentzRot12 * minkowskiSlash p0 p1 p2 p3 -
-        minkowskiSlash p0 p1 p2 p3 * lorentzRot12 =
-        minkowskiSlash 0 (2 * p2) (-2 * p1) 0 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [lorentzRot12, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  have hR23 :
-      lorentzRot23 * minkowskiSlash p0 p1 p2 p3 -
-        minkowskiSlash p0 p1 p2 p3 * lorentzRot23 =
-        minkowskiSlash 0 0 (2 * p3) (-2 * p2) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [lorentzRot23, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  have hR31 :
-      lorentzRot31 * minkowskiSlash p0 p1 p2 p3 -
-        minkowskiSlash p0 p1 p2 p3 * lorentzRot31 =
-        minkowskiSlash 0 (-2 * p3) 0 (2 * p1) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [lorentzRot31, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
-        Matrix.mul_apply, Fin.sum_univ_four] <;>
-      ring
-  have hAct01 :
-      Block2.lorentzDiag lorentzBoost01 * poincareTranslation4 p0 p1 p2 p3 -
-        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost01 =
-        poincareTranslation4 (2 * p1) (2 * p0) 0 0 := by
-    unfold poincareTranslation4
-    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzBoost01
-          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hB01]
-  have hAct02 :
-      Block2.lorentzDiag lorentzBoost02 * poincareTranslation4 p0 p1 p2 p3 -
-        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost02 =
-        poincareTranslation4 (2 * p2) 0 (2 * p0) 0 := by
-    unfold poincareTranslation4
-    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzBoost02
-          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hB02]
-  have hAct03 :
-      Block2.lorentzDiag lorentzBoost03 * poincareTranslation4 p0 p1 p2 p3 -
-        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost03 =
-        poincareTranslation4 (2 * p3) 0 0 (2 * p0) := by
-    unfold poincareTranslation4
-    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzBoost03
-          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hB03]
-  have hAct12 :
-      Block2.lorentzDiag lorentzRot12 * poincareTranslation4 p0 p1 p2 p3 -
-        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot12 =
-        poincareTranslation4 0 (2 * p2) (-2 * p1) 0 := by
-    unfold poincareTranslation4
-    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzRot12
-          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hR12]
-  have hAct23 :
-      Block2.lorentzDiag lorentzRot23 * poincareTranslation4 p0 p1 p2 p3 -
-        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot23 =
-        poincareTranslation4 0 0 (2 * p3) (-2 * p2) := by
-    unfold poincareTranslation4
-    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzRot23
-          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hR23]
-  have hAct31 :
-      Block2.lorentzDiag lorentzRot31 * poincareTranslation4 p0 p1 p2 p3 -
-        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot31 =
-        poincareTranslation4 0 (-2 * p3) 0 (2 * p1) := by
-    unfold poincareTranslation4
-    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzRot31
-          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hR31]
-  exact ⟨⟨hP2Corner, hP2Nilp, rfl, rfl, rfl, rfl⟩,
-    ⟨hCorner.2.1, hT4Add, hCorner.2.2.2.1,
-     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3],
-     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3],
-     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3],
-     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3]⟩,
-    ⟨hAct01, hAct02, hAct03, hAct12, hAct23, hAct31⟩⟩
-
 end Mat4
 
 -- ============================================================================
@@ -2844,56 +2583,131 @@ theorem tetractys_two_bit_10_plus_6_symplectic_and_chevalley_peirce_ladder
     ⟨hBoost, hSymp⟩,
     ⟨hSPSq, hUnipPlus, hUnipMinus, hChevPlus, hChevMinus⟩⟩
 
+/-- Endogenous timelike Tetractys generator `γ⁰ = J₁ = S₁ Φ₁` (`(γ⁰)² = -1`). -/
+def tetractysGamma0 (S1 Φ1 : B) : B :=
+  tetractysJ S1 Φ1
+
+/-- Endogenous first spacelike Tetractys generator `γ¹ = S₁` (`(γ¹)² = +1`). -/
+def tetractysGamma1 (S1 : B) : B :=
+  S1
+
+/-- Endogenous second spacelike Tetractys generator `γ² = Φ₁ S₂` (`(γ²))² = +1`). -/
+def tetractysGamma2 (Φ1 S2 : B) : B :=
+  Φ1 * S2
+
+/-- Endogenous third spacelike Tetractys generator `γ³ = Φ₁ Φ₂` (`(γ³)² = +1`). -/
+def tetractysGamma3 (Φ1 Φ2 : B) : B :=
+  Φ1 * Φ2
+
+/-- Endogenous 4D Tetractys Feynman slash operator
+`tetractysSlash S₁ Φ₁ S₂ Φ₂ p₀ p₁ p₂ p₃ = p₀ • γ⁰ + p₁ • γ¹ + p₂ • γ² + p₃ • γ³`
+constructed purely from the two-bit DeWitt Split Tetractys in any ring `B`. -/
+def tetractysSlash (S1 Φ1 S2 Φ2 : B) (p0 p1 p2 p3 : ℤ) : B :=
+  p0 • tetractysGamma0 S1 Φ1 + p1 • tetractysGamma1 S1 +
+    p2 • tetractysGamma2 Φ1 S2 + p3 • tetractysGamma3 Φ1 Φ2
+
+/-- Endogenous Tetractys Lorentz boost `K₀₁ = γ⁰ γ¹` (`= -Φ₁`). -/
+def tetractysBoost01 (S1 Φ1 : B) : B :=
+  tetractysGamma0 S1 Φ1 * tetractysGamma1 S1
+
+/-- Endogenous Tetractys Lorentz boost `K₀₂ = γ⁰ γ²` (`= S₁ S₂`). -/
+def tetractysBoost02 (S1 Φ1 S2 : B) : B :=
+  tetractysGamma0 S1 Φ1 * tetractysGamma2 Φ1 S2
+
+/-- Endogenous Tetractys Lorentz boost `K₀₃ = γ⁰ γ³` (`= S₁ Φ₂`). -/
+def tetractysBoost03 (S1 Φ1 Φ2 : B) : B :=
+  tetractysGamma0 S1 Φ1 * tetractysGamma3 Φ1 Φ2
+
+/-- Endogenous Tetractys spatial rotation `J₁₂ = γ¹ γ²` (`= J₁ S₂`). -/
+def tetractysRot12 (S1 Φ1 S2 : B) : B :=
+  tetractysGamma1 S1 * tetractysGamma2 Φ1 S2
+
+/-- Endogenous Tetractys spatial rotation `J₂₃ = γ² γ³` (`= J₂`). -/
+def tetractysRot23 (Φ1 S2 Φ2 : B) : B :=
+  tetractysGamma2 Φ1 S2 * tetractysGamma3 Φ1 Φ2
+
+/-- Endogenous Tetractys spatial rotation `J₃₁ = γ³ γ¹` (`= -J₁ Φ₂`). -/
+def tetractysRot31 (S1 Φ1 Φ2 : B) : B :=
+  tetractysGamma3 Φ1 Φ2 * tetractysGamma1 S1
+
+/-- Four-dimensional spacetime translation module in the nilpotent Peirce corner `N_+(P, -)`
+constructed directly from the two-bit DeWitt Split Tetractys `(S₁, Φ₁, S₂, Φ₂)` in any ring `B`. -/
+def tetractysCornerTranslation4 (P S1 Φ1 S2 Φ2 : B) (p0 p1 p2 p3 : ℤ) : B :=
+  N_plus P (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3)
+
 /--
-**Theorem 4aa ($\mathfrak{SP}_1$ — 4D Minkowski Clifford Algebra $(-, +, +, +)$ from the Two-Bit Real DeWitt Tetractys):**
+**Theorem 4aa ($\mathfrak{SP}_1\text{–}\mathfrak{SP}_2$ — 4D Minkowski Clifford Algebra $(-, +, +, +)$, Mass-Shell Square Law, & Lorentz Bivector Factorization from the Two-Bit Real DeWitt Tetractys):**
 Given two commuting real DeWitt Split Tetractys copies $(S_1, \Phi_1, J_1 = S_1 \Phi_1)$ and
-$(S_2, \Phi_2)$ in any ring $B$, the four endogenous real Majorana-Dirac operators
-$$\gamma^0 = J_1 = \mathtt{tetractysJ}\; S_1\; \Phi_1, \quad \gamma^1 = S_1, \quad \gamma^2 = \Phi_1 S_2, \quad \gamma^3 = \Phi_1 \Phi_2$$
+$(S_2, \Phi_2, J_2 = S_2 \Phi_2)$ in any ring $B$, the four endogenous Tetractys operators
+$$\gamma^0 = \mathtt{tetractysGamma0}\; S_1\; \Phi_1, \quad \gamma^1 = \mathtt{tetractysGamma1}\; S_1, \quad \gamma^2 = \mathtt{tetractysGamma2}\; \Phi_1\; S_2, \quad \gamma^3 = \mathtt{tetractysGamma3}\; \Phi_1\; \Phi_2$$
 generate the 4D Minkowski Clifford algebra $\mathcal{C}\ell(3, 1)$ with metric signature $(-, +, +, +)$:
 1. **Metric squares:** $(\gamma^0)^2 = -1$ and $(\gamma^1)^2 = (\gamma^2)^2 = (\gamma^3)^2 = +1$,
-2. **All 6 distinct pairs strictly anticommute:** $\{\gamma^\mu, \gamma^\nu\} = 0$ for $0 \le \mu < \nu \le 3$.
+2. **All 6 distinct pairs strictly anticommute:** $\{\gamma^\mu, \gamma^\nu\} = 0$ for $0 \le \mu < \nu \le 3$,
+3. **Endogenous 4D Minkowski Mass-Shell Square Law:**
+   $$\mathtt{tetractysSlash}\; S_1\; \Phi_1\; S_2\; \Phi_2\; p_0\; p_1\; p_2\; p_3 * \mathtt{tetractysSlash}\; S_1\; \Phi_1\; S_2\; \Phi_2\; p_0\; p_1\; p_2\; p_3 = (-p_0^2 + p_1^2 + p_2^2 + p_3^2) \bullet (1 : B),$$
+4. **Explicit Tetractys Factorization of the 6 Lorentz Bivectors:**
+   $$K_{01} = -\Phi_1, \quad K_{02} = S_1 S_2, \quad K_{03} = S_1 \Phi_2, \quad J_{12} = J_1 S_2, \quad J_{23} = J_2, \quad J_{31} = -J_1 \Phi_2.$$
 -/
 theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
-    (S1 Φ1 S2 Φ2 : B)
+    (S1 Φ1 S2 Φ2 : B) (p0 p1 p2 p3 : ℤ)
     (hS1 : S1 * S1 = 1) (hΦ1 : Φ1 * Φ1 = 1) (hAnti1 : S1 * Φ1 + Φ1 * S1 = 0)
     (hS2 : S2 * S2 = 1) (hΦ2 : Φ2 * Φ2 = 1) (hAnti2 : S2 * Φ2 + Φ2 * S2 = 0)
     (hCommS1S2 : S1 * S2 = S2 * S1) (hCommS1Φ2 : S1 * Φ2 = Φ2 * S1)
     (hCommΦ1S2 : Φ1 * S2 = S2 * Φ1) (hCommΦ1Φ2 : Φ1 * Φ2 = Φ2 * Φ1) :
-    (tetractysJ S1 Φ1 * tetractysJ S1 Φ1 = -1 ∧
-     S1 * S1 = 1 ∧
-     (Φ1 * S2) * (Φ1 * S2) = 1 ∧
-     (Φ1 * Φ2) * (Φ1 * Φ2) = 1) ∧
-    (tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 = 0 ∧
-     tetractysJ S1 Φ1 * (Φ1 * S2) + (Φ1 * S2) * tetractysJ S1 Φ1 = 0 ∧
-     tetractysJ S1 Φ1 * (Φ1 * Φ2) + (Φ1 * Φ2) * tetractysJ S1 Φ1 = 0 ∧
-     S1 * (Φ1 * S2) + (Φ1 * S2) * S1 = 0 ∧
-     S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 = 0 ∧
-     (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) = 0) := by
+    ((tetractysGamma0 S1 Φ1 * tetractysGamma0 S1 Φ1 = -1 ∧
+      tetractysGamma1 S1 * tetractysGamma1 S1 = 1 ∧
+      tetractysGamma2 Φ1 S2 * tetractysGamma2 Φ1 S2 = 1 ∧
+      tetractysGamma3 Φ1 Φ2 * tetractysGamma3 Φ1 Φ2 = 1) ∧
+     (tetractysGamma0 S1 Φ1 * tetractysGamma1 S1 +
+        tetractysGamma1 S1 * tetractysGamma0 S1 Φ1 = 0 ∧
+      tetractysGamma0 S1 Φ1 * tetractysGamma2 Φ1 S2 +
+        tetractysGamma2 Φ1 S2 * tetractysGamma0 S1 Φ1 = 0 ∧
+      tetractysGamma0 S1 Φ1 * tetractysGamma3 Φ1 Φ2 +
+        tetractysGamma3 Φ1 Φ2 * tetractysGamma0 S1 Φ1 = 0 ∧
+      tetractysGamma1 S1 * tetractysGamma2 Φ1 S2 +
+        tetractysGamma2 Φ1 S2 * tetractysGamma1 S1 = 0 ∧
+      tetractysGamma1 S1 * tetractysGamma3 Φ1 Φ2 +
+        tetractysGamma3 Φ1 Φ2 * tetractysGamma1 S1 = 0 ∧
+      tetractysGamma2 Φ1 S2 * tetractysGamma3 Φ1 Φ2 +
+        tetractysGamma3 Φ1 Φ2 * tetractysGamma2 Φ1 S2 = 0)) ∧
+    tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+      (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : B) ∧
+    (tetractysBoost01 S1 Φ1 = -Φ1 ∧
+     tetractysBoost02 S1 Φ1 S2 = S1 * S2 ∧
+     tetractysBoost03 S1 Φ1 Φ2 = S1 * Φ2 ∧
+     tetractysRot12 S1 Φ1 S2 = tetractysJ S1 Φ1 * S2 ∧
+     tetractysRot23 Φ1 S2 Φ2 = tetractysJ S2 Φ2 ∧
+     tetractysRot31 S1 Φ1 Φ2 = -(tetractysJ S1 Φ1 * Φ2)) := by
   have hΦ1S1 : Φ1 * S1 = -(S1 * Φ1) := eq_neg_of_add_eq_zero_right hAnti1
-  have hG0 : tetractysJ S1 Φ1 * tetractysJ S1 Φ1 = -1 := by
-    unfold tetractysJ
+  have hG0 : tetractysGamma0 S1 Φ1 * tetractysGamma0 S1 Φ1 = -1 := by
+    unfold tetractysGamma0 tetractysJ
     calc
       (S1 * Φ1) * (S1 * Φ1) = S1 * (Φ1 * S1) * Φ1 := by noncomm_ring
       _ = S1 * (-(S1 * Φ1)) * Φ1 := by rw [hΦ1S1]
       _ = -((S1 * S1) * (Φ1 * Φ1)) := by noncomm_ring
       _ = -(1 * 1) := by rw [hS1, hΦ1]
       _ = -1 := by noncomm_ring
-  have hG2 : (Φ1 * S2) * (Φ1 * S2) = 1 := by
+  have hG1 : tetractysGamma1 S1 * tetractysGamma1 S1 = 1 := hS1
+  have hG2 : tetractysGamma2 Φ1 S2 * tetractysGamma2 Φ1 S2 = 1 := by
+    unfold tetractysGamma2
     calc
       (Φ1 * S2) * (Φ1 * S2) = Φ1 * (S2 * Φ1) * S2 := by noncomm_ring
       _ = Φ1 * (Φ1 * S2) * S2 := by rw [← hCommΦ1S2]
       _ = (Φ1 * Φ1) * (S2 * S2) := by noncomm_ring
       _ = 1 * 1 := by rw [hΦ1, hS2]
       _ = 1 := by noncomm_ring
-  have hG3 : (Φ1 * Φ2) * (Φ1 * Φ2) = 1 := by
+  have hG3 : tetractysGamma3 Φ1 Φ2 * tetractysGamma3 Φ1 Φ2 = 1 := by
+    unfold tetractysGamma3
     calc
       (Φ1 * Φ2) * (Φ1 * Φ2) = Φ1 * (Φ2 * Φ1) * Φ2 := by noncomm_ring
       _ = Φ1 * (Φ1 * Φ2) * Φ2 := by rw [← hCommΦ1Φ2]
       _ = (Φ1 * Φ1) * (Φ2 * Φ2) := by noncomm_ring
       _ = 1 * 1 := by rw [hΦ1, hΦ2]
       _ = 1 := by noncomm_ring
-  have h01 : tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 = 0 := by
-    unfold tetractysJ
+  have h01 :
+      tetractysGamma0 S1 Φ1 * tetractysGamma1 S1 +
+        tetractysGamma1 S1 * tetractysGamma0 S1 Φ1 = 0 := by
+    unfold tetractysGamma0 tetractysGamma1 tetractysJ
     calc
       (S1 * Φ1) * S1 + S1 * (S1 * Φ1) = S1 * (Φ1 * S1 + S1 * Φ1) := by noncomm_ring
       _ = S1 * (-(S1 * Φ1) + S1 * Φ1) := by rw [hΦ1S1]
@@ -2912,7 +2726,10 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = S1 * (S2 * Φ1) := by noncomm_ring
       _ = S1 * (Φ1 * S2) := by rw [← hCommΦ1S2]
       _ = (S1 * Φ1) * S2 := by noncomm_ring
-  have h02 : tetractysJ S1 Φ1 * (Φ1 * S2) + (Φ1 * S2) * tetractysJ S1 Φ1 = 0 := by
+  have h02 :
+      tetractysGamma0 S1 Φ1 * tetractysGamma2 Φ1 S2 +
+        tetractysGamma2 Φ1 S2 * tetractysGamma0 S1 Φ1 = 0 := by
+    unfold tetractysGamma0 tetractysGamma2
     calc
       tetractysJ S1 Φ1 * (Φ1 * S2) + (Φ1 * S2) * tetractysJ S1 Φ1 =
         tetractysJ S1 Φ1 * Φ1 * S2 + Φ1 * (S2 * tetractysJ S1 Φ1) := by noncomm_ring
@@ -2928,7 +2745,10 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = S1 * (Φ2 * Φ1) := by noncomm_ring
       _ = S1 * (Φ1 * Φ2) := by rw [← hCommΦ1Φ2]
       _ = (S1 * Φ1) * Φ2 := by noncomm_ring
-  have h03 : tetractysJ S1 Φ1 * (Φ1 * Φ2) + (Φ1 * Φ2) * tetractysJ S1 Φ1 = 0 := by
+  have h03 :
+      tetractysGamma0 S1 Φ1 * tetractysGamma3 Φ1 Φ2 +
+        tetractysGamma3 Φ1 Φ2 * tetractysGamma0 S1 Φ1 = 0 := by
+    unfold tetractysGamma0 tetractysGamma3
     calc
       tetractysJ S1 Φ1 * (Φ1 * Φ2) + (Φ1 * Φ2) * tetractysJ S1 Φ1 =
         tetractysJ S1 Φ1 * Φ1 * Φ2 + Φ1 * (Φ2 * tetractysJ S1 Φ1) := by noncomm_ring
@@ -2936,7 +2756,10 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = (Φ1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * Φ1) * Φ2 := by noncomm_ring
       _ = 0 * Φ2 := by rw [hΦJ]
       _ = 0 := by noncomm_ring
-  have h12 : S1 * (Φ1 * S2) + (Φ1 * S2) * S1 = 0 := by
+  have h12 :
+      tetractysGamma1 S1 * tetractysGamma2 Φ1 S2 +
+        tetractysGamma2 Φ1 S2 * tetractysGamma1 S1 = 0 := by
+    unfold tetractysGamma1 tetractysGamma2
     calc
       S1 * (Φ1 * S2) + (Φ1 * S2) * S1 =
         S1 * Φ1 * S2 + Φ1 * (S2 * S1) := by noncomm_ring
@@ -2944,7 +2767,10 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = (S1 * Φ1 + Φ1 * S1) * S2 := by noncomm_ring
       _ = 0 * S2 := by rw [hAnti1]
       _ = 0 := by noncomm_ring
-  have h13 : S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 = 0 := by
+  have h13 :
+      tetractysGamma1 S1 * tetractysGamma3 Φ1 Φ2 +
+        tetractysGamma3 Φ1 Φ2 * tetractysGamma1 S1 = 0 := by
+    unfold tetractysGamma1 tetractysGamma3
     calc
       S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 =
         S1 * Φ1 * Φ2 + Φ1 * (Φ2 * S1) := by noncomm_ring
@@ -2952,7 +2778,10 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = (S1 * Φ1 + Φ1 * S1) * Φ2 := by noncomm_ring
       _ = 0 * Φ2 := by rw [hAnti1]
       _ = 0 := by noncomm_ring
-  have h23 : (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) = 0 := by
+  have h23 :
+      tetractysGamma2 Φ1 S2 * tetractysGamma3 Φ1 Φ2 +
+        tetractysGamma3 Φ1 Φ2 * tetractysGamma2 Φ1 S2 = 0 := by
+    unfold tetractysGamma2 tetractysGamma3
     calc
       (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) =
         Φ1 * (S2 * Φ1) * Φ2 + Φ1 * (Φ2 * Φ1) * S2 := by noncomm_ring
@@ -2960,7 +2789,121 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = (Φ1 * Φ1) * (S2 * Φ2 + Φ2 * S2) := by noncomm_ring
       _ = 1 * 0 := by rw [hΦ1, hAnti2]
       _ = 0 := by noncomm_ring
-  exact ⟨⟨hG0, hS1, hG2, hG3⟩, ⟨h01, h02, h03, h12, h13, h23⟩⟩
+  have hShell :
+      tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+        (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : B) := by
+    calc
+      tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+        (p0 * p0) • (tetractysGamma0 S1 Φ1 * tetractysGamma0 S1 Φ1) +
+        (p1 * p1) • (tetractysGamma1 S1 * tetractysGamma1 S1) +
+        (p2 * p2) • (tetractysGamma2 Φ1 S2 * tetractysGamma2 Φ1 S2) +
+        (p3 * p3) • (tetractysGamma3 Φ1 Φ2 * tetractysGamma3 Φ1 Φ2) +
+        (p0 * p1) • (tetractysGamma0 S1 Φ1 * tetractysGamma1 S1 +
+          tetractysGamma1 S1 * tetractysGamma0 S1 Φ1) +
+        (p0 * p2) • (tetractysGamma0 S1 Φ1 * tetractysGamma2 Φ1 S2 +
+          tetractysGamma2 Φ1 S2 * tetractysGamma0 S1 Φ1) +
+        (p0 * p3) • (tetractysGamma0 S1 Φ1 * tetractysGamma3 Φ1 Φ2 +
+          tetractysGamma3 Φ1 Φ2 * tetractysGamma0 S1 Φ1) +
+        (p1 * p2) • (tetractysGamma1 S1 * tetractysGamma2 Φ1 S2 +
+          tetractysGamma2 Φ1 S2 * tetractysGamma1 S1) +
+        (p1 * p3) • (tetractysGamma1 S1 * tetractysGamma3 Φ1 Φ2 +
+          tetractysGamma3 Φ1 Φ2 * tetractysGamma1 S1) +
+        (p2 * p3) • (tetractysGamma2 Φ1 S2 * tetractysGamma3 Φ1 Φ2 +
+          tetractysGamma3 Φ1 Φ2 * tetractysGamma2 Φ1 S2) := by
+          unfold tetractysSlash
+          noncomm_ring
+          simp only [smul_add, smul_smul, mul_comm p1 p0, mul_comm p2 p0, mul_comm p3 p0,
+            mul_comm p2 p1, mul_comm p3 p1, mul_comm p3 p2]
+          abel
+      _ = (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : B) := by
+          rw [hG0, hG1, hG2, hG3, h01, h02, h03, h12, h13, h23]
+          simp only [sq, add_smul, neg_smul, smul_neg, smul_zero, add_zero]
+  have hB01Fact : tetractysBoost01 S1 Φ1 = -Φ1 := by
+    unfold tetractysBoost01 tetractysGamma0 tetractysGamma1 tetractysJ
+    calc
+      (S1 * Φ1) * S1 = S1 * (Φ1 * S1) := by noncomm_ring
+      _ = S1 * (-(S1 * Φ1)) := by rw [hΦ1S1]
+      _ = -((S1 * S1) * Φ1) := by noncomm_ring
+      _ = -(1 * Φ1) := by rw [hS1]
+      _ = -Φ1 := by noncomm_ring
+  have hB02Fact : tetractysBoost02 S1 Φ1 S2 = S1 * S2 := by
+    unfold tetractysBoost02 tetractysGamma0 tetractysGamma2 tetractysJ
+    calc
+      (S1 * Φ1) * (Φ1 * S2) = S1 * (Φ1 * Φ1) * S2 := by noncomm_ring
+      _ = S1 * 1 * S2 := by rw [hΦ1]
+      _ = S1 * S2 := by noncomm_ring
+  have hB03Fact : tetractysBoost03 S1 Φ1 Φ2 = S1 * Φ2 := by
+    unfold tetractysBoost03 tetractysGamma0 tetractysGamma3 tetractysJ
+    calc
+      (S1 * Φ1) * (Φ1 * Φ2) = S1 * (Φ1 * Φ1) * Φ2 := by noncomm_ring
+      _ = S1 * 1 * Φ2 := by rw [hΦ1]
+      _ = S1 * Φ2 := by noncomm_ring
+  have hR12Fact : tetractysRot12 S1 Φ1 S2 = tetractysJ S1 Φ1 * S2 := by
+    unfold tetractysRot12 tetractysGamma1 tetractysGamma2 tetractysJ
+    noncomm_ring
+  have hR23Fact : tetractysRot23 Φ1 S2 Φ2 = tetractysJ S2 Φ2 := by
+    unfold tetractysRot23 tetractysGamma2 tetractysGamma3 tetractysJ
+    calc
+      (Φ1 * S2) * (Φ1 * Φ2) = Φ1 * (S2 * Φ1) * Φ2 := by noncomm_ring
+      _ = Φ1 * (Φ1 * S2) * Φ2 := by rw [← hCommΦ1S2]
+      _ = (Φ1 * Φ1) * (S2 * Φ2) := by noncomm_ring
+      _ = 1 * (S2 * Φ2) := by rw [hΦ1]
+      _ = S2 * Φ2 := by noncomm_ring
+  have hR31Fact : tetractysRot31 S1 Φ1 Φ2 = -(tetractysJ S1 Φ1 * Φ2) := by
+    unfold tetractysRot31 tetractysGamma3 tetractysGamma1 tetractysJ
+    calc
+      (Φ1 * Φ2) * S1 = Φ1 * (Φ2 * S1) := by noncomm_ring
+      _ = Φ1 * (S1 * Φ2) := by rw [← hCommS1Φ2]
+      _ = (Φ1 * S1) * Φ2 := by noncomm_ring
+      _ = (-(S1 * Φ1)) * Φ2 := by rw [hΦ1S1]
+      _ = -((S1 * Φ1) * Φ2) := by noncomm_ring
+  exact ⟨⟨⟨hG0, hG1, hG2, hG3⟩, ⟨h01, h02, h03, h12, h13, h23⟩⟩,
+    hShell,
+    ⟨hB01Fact, hB02Fact, hB03Fact, hR12Fact, hR23Fact, hR31Fact⟩⟩
+
+/-- Universal Clifford bivector commutator lemma `[X * Y, a • X + b • Y + c • Z + d • W] =
+(2 * b) • (X * Y²) - (2 * a) • (X² * Y)` for pairwise anticommuting generators `(X, Y, Z, W)`
+in any ring `B`. -/
+lemma clifford_bivector_linear_comm (X Y Z W : B) (a b c d : ℤ)
+    (hYX : Y * X = -(X * Y))
+    (hZX : Z * X = -(X * Z)) (hYZ : Y * Z = -(Z * Y))
+    (hWX : W * X = -(X * W)) (hYW : Y * W = -(W * Y)) :
+    (X * Y) * (a • X + b • Y + c • Z + d • W) -
+      (a • X + b • Y + c • Z + d • W) * (X * Y) =
+      (2 * b) • (X * (Y * Y)) - (2 * a) • ((X * X) * Y) := by
+  have hX : (X * Y) * X - X * (X * Y) = -((2 : ℤ) • ((X * X) * Y)) := by
+    calc
+      (X * Y) * X - X * (X * Y) = X * (Y * X) - (X * X) * Y := by noncomm_ring
+      _ = X * (-(X * Y)) - (X * X) * Y := by rw [hYX]
+      _ = -((2 : ℤ) • ((X * X) * Y)) := by noncomm_ring
+  have hY : (X * Y) * Y - Y * (X * Y) = (2 : ℤ) • (X * (Y * Y)) := by
+    calc
+      (X * Y) * Y - Y * (X * Y) = X * (Y * Y) - (Y * X) * Y := by noncomm_ring
+      _ = X * (Y * Y) - (-(X * Y)) * Y := by rw [hYX]
+      _ = (2 : ℤ) • (X * (Y * Y)) := by noncomm_ring
+  have hZ : (X * Y) * Z - Z * (X * Y) = 0 := by
+    calc
+      (X * Y) * Z - Z * (X * Y) = X * (Y * Z) - (Z * X) * Y := by noncomm_ring
+      _ = X * (-(Z * Y)) - (-(X * Z)) * Y := by rw [hYZ, hZX]
+      _ = 0 := by noncomm_ring
+  have hW : (X * Y) * W - W * (X * Y) = 0 := by
+    calc
+      (X * Y) * W - W * (X * Y) = X * (Y * W) - (W * X) * Y := by noncomm_ring
+      _ = X * (-(W * Y)) - (-(X * W)) * Y := by rw [hYW, hWX]
+      _ = 0 := by noncomm_ring
+  calc
+    (X * Y) * (a • X + b • Y + c • Z + d • W) -
+      (a • X + b • Y + c • Z + d • W) * (X * Y) =
+      a • ((X * Y) * X - X * (X * Y)) + b • ((X * Y) * Y - Y * (X * Y)) +
+      c • ((X * Y) * Z - Z * (X * Y)) + d • ((X * Y) * W - W * (X * Y)) := by
+        noncomm_ring
+        simp only [smul_add, smul_smul, neg_smul, smul_neg, neg_mul, one_mul, mul_one]
+        abel
+    _ = a • (-((2 : ℤ) • ((X * X) * Y))) + b • ((2 : ℤ) • (X * (Y * Y))) +
+        c • (0 : B) + d • (0 : B) := by rw [hX, hY, hZ, hW]
+    _ = (2 * b) • (X * (Y * Y)) - (2 * a) • ((X * X) * Y) := by
+        simp only [smul_neg, smul_smul, smul_zero, add_zero, mul_comm a 2, mul_comm b 2]
+        abel
 
 /--
 Diagonal Peirce stabilizer generator $L_P(M) = P M P + (1 - P) M (1 - P)$ representing the
@@ -3070,6 +3013,299 @@ theorem poincare_translations_commute_and_lorentz_covariance
       _ = P * (M * p - p * M) * (1 - P) := by noncomm_ring
   exact ⟨by decide, ⟨hPQ, hComm, hGroup⟩, ⟨hLor, hLorCorner, hLorStab⟩, by noncomm_ring⟩
 
+/--
+**Theorem 4cc ($\mathfrak{SP}_3\text{–}\mathfrak{SP}_4$ — Endogenous 4-Dimensional Tetractys Translation Module in the Peirce Corner & Corner-Preserving 6-Generator Lorentz Action):**
+Constructed purely from two commuting DeWitt Split Tetractys copies $(S_1, \Phi_1, J_1)$ and
+$(S_2, \Phi_2, J_2)$ in any ring $B$ (with zero coordinate Dirac matrices):
+1. **Four-Dimensional Translation Module in the Peirce Corner (`tetractysCornerTranslation4`):**
+   For any idempotent $P^2 = P$:
+   - Corner invariance: $N_+(P, T(p)) = T(p)$,
+   - 4-basis decomposition: $T(p_0, p_1, p_2, p_3) = p_0 \bullet N_+(P, \gamma^0) + p_1 \bullet N_+(P, \gamma^1) + p_2 \bullet N_+(P, \gamma^2) + p_3 \bullet N_+(P, \gamma^3)$,
+   - Module additivity: $T(p + q) = T(p) + T(q)$,
+   - Abelian nilpotent multiplication: $T(p) \, T(q) = 0$.
+2. **Corner-Preserving 6-Generator Lorentz Action (`Block2.lorentzDiag` on `Block2.cornerEmbed`):**
+   All 6 endogenous Tetractys Lorentz bivectors $(K_{01}, K_{02}, K_{03}, J_{12}, J_{23}, J_{31})$
+   preserve the 4-dimensional Peirce translation corner and transform $(p_0, p_1, p_2, p_3)$ by
+   the exact 3 hyperbolic Lorentz boosts and 3 spatial rotations.
+-/
+theorem tetractys_corner_4d_translation_module_and_lorentz_action
+    (P S1 Φ1 S2 Φ2 : B) (p0 p1 p2 p3 q0 q1 q2 q3 : ℤ)
+    (hP : P * P = P)
+    (hS1 : S1 * S1 = 1) (hΦ1 : Φ1 * Φ1 = 1) (hAnti1 : S1 * Φ1 + Φ1 * S1 = 0)
+    (hS2 : S2 * S2 = 1) (hΦ2 : Φ2 * Φ2 = 1) (hAnti2 : S2 * Φ2 + Φ2 * S2 = 0)
+    (hCommS1S2 : S1 * S2 = S2 * S1) (hCommS1Φ2 : S1 * Φ2 = Φ2 * S1)
+    (hCommΦ1S2 : Φ1 * S2 = S2 * Φ1) (hCommΦ1Φ2 : Φ1 * Φ2 = Φ2 * Φ1) :
+    (N_plus P (tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3) =
+       tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 ∧
+     tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+       p0 • N_plus P (tetractysGamma0 S1 Φ1) +
+       p1 • N_plus P (tetractysGamma1 S1) +
+       p2 • N_plus P (tetractysGamma2 Φ1 S2) +
+       p3 • N_plus P (tetractysGamma3 Φ1 Φ2) ∧
+     tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
+       tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 +
+       tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 q0 q1 q2 q3 ∧
+     tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 *
+       tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 q0 q1 q2 q3 = 0) ∧
+    (Block2.lorentzDiag (tetractysBoost01 S1 Φ1) *
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+         Block2.lorentzDiag (tetractysBoost01 S1 Φ1) =
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 (2 * p1) (2 * p0) 0 0) ∧
+     Block2.lorentzDiag (tetractysBoost02 S1 Φ1 S2) *
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+         Block2.lorentzDiag (tetractysBoost02 S1 Φ1 S2) =
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 (2 * p2) 0 (2 * p0) 0) ∧
+     Block2.lorentzDiag (tetractysBoost03 S1 Φ1 Φ2) *
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+         Block2.lorentzDiag (tetractysBoost03 S1 Φ1 Φ2) =
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 (2 * p3) 0 0 (2 * p0)) ∧
+     Block2.lorentzDiag (tetractysRot12 S1 Φ1 S2) *
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+         Block2.lorentzDiag (tetractysRot12 S1 Φ1 S2) =
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 0 (2 * p2) (-2 * p1) 0) ∧
+     Block2.lorentzDiag (tetractysRot23 Φ1 S2 Φ2) *
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+         Block2.lorentzDiag (tetractysRot23 Φ1 S2 Φ2) =
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 0 0 (2 * p3) (-2 * p2)) ∧
+     Block2.lorentzDiag (tetractysRot31 S1 Φ1 Φ2) *
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+         Block2.lorentzDiag (tetractysRot31 S1 Φ1 Φ2) =
+       Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 0 (-2 * p3) 0 (2 * p1))) := by
+  have hCl :=
+    dewitt_tetractys_generates_4d_minkowski_clifford_algebra
+      S1 Φ1 S2 Φ2 p0 p1 p2 p3 hS1 hΦ1 hAnti1 hS2 hΦ2 hAnti2
+      hCommS1S2 hCommS1Φ2 hCommΦ1S2 hCommΦ1Φ2
+  have hG0 := hCl.1.1.1
+  have hG1 := hCl.1.1.2.1
+  have hG2 := hCl.1.1.2.2.1
+  have hG3 := hCl.1.1.2.2.2
+  have h10 : tetractysGamma1 S1 * tetractysGamma0 S1 Φ1 =
+      -(tetractysGamma0 S1 Φ1 * tetractysGamma1 S1) :=
+    eq_neg_of_add_eq_zero_right hCl.1.2.1
+  have h01' : tetractysGamma0 S1 Φ1 * tetractysGamma1 S1 =
+      -(tetractysGamma1 S1 * tetractysGamma0 S1 Φ1) :=
+    eq_neg_of_add_eq_zero_left hCl.1.2.1
+  have h20 : tetractysGamma2 Φ1 S2 * tetractysGamma0 S1 Φ1 =
+      -(tetractysGamma0 S1 Φ1 * tetractysGamma2 Φ1 S2) :=
+    eq_neg_of_add_eq_zero_right hCl.1.2.2.1
+  have h02' : tetractysGamma0 S1 Φ1 * tetractysGamma2 Φ1 S2 =
+      -(tetractysGamma2 Φ1 S2 * tetractysGamma0 S1 Φ1) :=
+    eq_neg_of_add_eq_zero_left hCl.1.2.2.1
+  have h30 : tetractysGamma3 Φ1 Φ2 * tetractysGamma0 S1 Φ1 =
+      -(tetractysGamma0 S1 Φ1 * tetractysGamma3 Φ1 Φ2) :=
+    eq_neg_of_add_eq_zero_right hCl.1.2.2.2.1
+  have h03' : tetractysGamma0 S1 Φ1 * tetractysGamma3 Φ1 Φ2 =
+      -(tetractysGamma3 Φ1 Φ2 * tetractysGamma0 S1 Φ1) :=
+    eq_neg_of_add_eq_zero_left hCl.1.2.2.2.1
+  have h21 : tetractysGamma2 Φ1 S2 * tetractysGamma1 S1 =
+      -(tetractysGamma1 S1 * tetractysGamma2 Φ1 S2) :=
+    eq_neg_of_add_eq_zero_right hCl.1.2.2.2.2.1
+  have h12' : tetractysGamma1 S1 * tetractysGamma2 Φ1 S2 =
+      -(tetractysGamma2 Φ1 S2 * tetractysGamma1 S1) :=
+    eq_neg_of_add_eq_zero_left hCl.1.2.2.2.2.1
+  have h31 : tetractysGamma3 Φ1 Φ2 * tetractysGamma1 S1 =
+      -(tetractysGamma1 S1 * tetractysGamma3 Φ1 Φ2) :=
+    eq_neg_of_add_eq_zero_right hCl.1.2.2.2.2.2.1
+  have h13' : tetractysGamma1 S1 * tetractysGamma3 Φ1 Φ2 =
+      -(tetractysGamma3 Φ1 Φ2 * tetractysGamma1 S1) :=
+    eq_neg_of_add_eq_zero_left hCl.1.2.2.2.2.2.1
+  have h32 : tetractysGamma3 Φ1 Φ2 * tetractysGamma2 Φ1 S2 =
+      -(tetractysGamma2 Φ1 S2 * tetractysGamma3 Φ1 Φ2) :=
+    eq_neg_of_add_eq_zero_right hCl.1.2.2.2.2.2.2
+  have h23' : tetractysGamma2 Φ1 S2 * tetractysGamma3 Φ1 Φ2 =
+      -(tetractysGamma3 Φ1 Φ2 * tetractysGamma2 Φ1 S2) :=
+    eq_neg_of_add_eq_zero_left hCl.1.2.2.2.2.2.2
+  have hCornerIdem :
+      N_plus P (tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3) =
+        tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 := by
+    unfold tetractysCornerTranslation4 N_plus
+    calc
+      P * (P * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * (1 - P)) * (1 - P) =
+        (P * P) * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * (1 - P - P + P * P) := by noncomm_ring
+      _ = P * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * (1 - P - P + P) := by rw [hP]
+      _ = P * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * (1 - P) := by noncomm_ring
+  have hCornerBasis :
+      tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+        p0 • N_plus P (tetractysGamma0 S1 Φ1) +
+        p1 • N_plus P (tetractysGamma1 S1) +
+        p2 • N_plus P (tetractysGamma2 Φ1 S2) +
+        p3 • N_plus P (tetractysGamma3 Φ1 Φ2) := by
+    unfold tetractysCornerTranslation4 tetractysSlash N_plus
+    noncomm_ring
+    simp only [smul_add, smul_smul, neg_mul, one_mul, mul_neg, mul_one]
+    abel
+  have hCornerAdd :
+      tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
+        tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 +
+        tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 q0 q1 q2 q3 := by
+    unfold tetractysCornerTranslation4 tetractysSlash N_plus
+    noncomm_ring
+    simp only [add_smul, smul_add, smul_smul, neg_mul, one_mul]
+    abel
+  have hCornerNilp :
+      tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 p0 p1 p2 p3 *
+        tetractysCornerTranslation4 P S1 Φ1 S2 Φ2 q0 q1 q2 q3 = 0 :=
+    (poincare_translations_commute_and_lorentz_covariance P P
+      (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3)
+      (tetractysSlash S1 Φ1 S2 Φ2 q0 q1 q2 q3) P hP).2.1.1
+  have hB01 :
+      tetractysBoost01 S1 Φ1 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 -
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysBoost01 S1 Φ1 =
+        tetractysSlash S1 Φ1 S2 Φ2 (2 * p1) (2 * p0) 0 0 := by
+    unfold tetractysBoost01 tetractysSlash
+    rw [clifford_bivector_linear_comm (tetractysGamma0 S1 Φ1) (tetractysGamma1 S1)
+      (tetractysGamma2 Φ1 S2) (tetractysGamma3 Φ1 Φ2) p0 p1 p2 p3
+      h10 h20 h12' h30 h13', hG0, hG1]
+    noncomm_ring
+    simp only [smul_smul, neg_smul, smul_neg, zero_smul, one_smul, neg_mul, one_mul]
+    abel
+  have hB02 :
+      tetractysBoost02 S1 Φ1 S2 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 -
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysBoost02 S1 Φ1 S2 =
+        tetractysSlash S1 Φ1 S2 Φ2 (2 * p2) 0 (2 * p0) 0 := by
+    have hPerm :
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+          p0 • tetractysGamma0 S1 Φ1 + p2 • tetractysGamma2 Φ1 S2 +
+            p1 • tetractysGamma1 S1 + p3 • tetractysGamma3 Φ1 Φ2 := by
+      unfold tetractysSlash; abel
+    rw [hPerm]
+    unfold tetractysBoost02
+    rw [clifford_bivector_linear_comm (tetractysGamma0 S1 Φ1) (tetractysGamma2 Φ1 S2)
+      (tetractysGamma1 S1) (tetractysGamma3 Φ1 Φ2) p0 p2 p1 p3
+      h20 h10 h21 h30 h23', hG0, hG2]
+    unfold tetractysSlash
+    noncomm_ring
+    simp only [smul_smul, neg_smul, smul_neg, zero_smul, one_smul, neg_mul, one_mul]
+    abel
+  have hB03 :
+      tetractysBoost03 S1 Φ1 Φ2 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 -
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysBoost03 S1 Φ1 Φ2 =
+        tetractysSlash S1 Φ1 S2 Φ2 (2 * p3) 0 0 (2 * p0) := by
+    have hPerm :
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+          p0 • tetractysGamma0 S1 Φ1 + p3 • tetractysGamma3 Φ1 Φ2 +
+            p1 • tetractysGamma1 S1 + p2 • tetractysGamma2 Φ1 S2 := by
+      unfold tetractysSlash; abel
+    rw [hPerm]
+    unfold tetractysBoost03
+    rw [clifford_bivector_linear_comm (tetractysGamma0 S1 Φ1) (tetractysGamma3 Φ1 Φ2)
+      (tetractysGamma1 S1) (tetractysGamma2 Φ1 S2) p0 p3 p1 p2
+      h30 h10 h31 h20 h32, hG0, hG3]
+    unfold tetractysSlash
+    noncomm_ring
+    simp only [smul_smul, neg_smul, smul_neg, zero_smul, one_smul, neg_mul, one_mul]
+    abel
+  have hR12 :
+      tetractysRot12 S1 Φ1 S2 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 -
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysRot12 S1 Φ1 S2 =
+        tetractysSlash S1 Φ1 S2 Φ2 0 (2 * p2) (-2 * p1) 0 := by
+    have hPerm :
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+          p1 • tetractysGamma1 S1 + p2 • tetractysGamma2 Φ1 S2 +
+            p0 • tetractysGamma0 S1 Φ1 + p3 • tetractysGamma3 Φ1 Φ2 := by
+      unfold tetractysSlash; abel
+    rw [hPerm]
+    unfold tetractysRot12
+    rw [clifford_bivector_linear_comm (tetractysGamma1 S1) (tetractysGamma2 Φ1 S2)
+      (tetractysGamma0 S1 Φ1) (tetractysGamma3 Φ1 Φ2) p1 p2 p0 p3
+      h21 h01' h20 h31 h23', hG1, hG2]
+    unfold tetractysSlash
+    noncomm_ring
+    simp only [smul_smul, neg_smul, zero_smul, neg_mul, one_mul]
+    abel
+  have hR23 :
+      tetractysRot23 Φ1 S2 Φ2 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 -
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysRot23 Φ1 S2 Φ2 =
+        tetractysSlash S1 Φ1 S2 Φ2 0 0 (2 * p3) (-2 * p2) := by
+    have hPerm :
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+          p2 • tetractysGamma2 Φ1 S2 + p3 • tetractysGamma3 Φ1 Φ2 +
+            p0 • tetractysGamma0 S1 Φ1 + p1 • tetractysGamma1 S1 := by
+      unfold tetractysSlash; abel
+    rw [hPerm]
+    unfold tetractysRot23
+    rw [clifford_bivector_linear_comm (tetractysGamma2 Φ1 S2) (tetractysGamma3 Φ1 Φ2)
+      (tetractysGamma0 S1 Φ1) (tetractysGamma1 S1) p2 p3 p0 p1
+      h32 h02' h30 h12' h31, hG2, hG3]
+    unfold tetractysSlash
+    noncomm_ring
+    simp only [smul_smul, neg_smul, zero_smul, neg_mul, one_mul]
+    abel
+  have hR31 :
+      tetractysRot31 S1 Φ1 Φ2 * tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 -
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 * tetractysRot31 S1 Φ1 Φ2 =
+        tetractysSlash S1 Φ1 S2 Φ2 0 (-2 * p3) 0 (2 * p1) := by
+    have hPerm :
+        tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3 =
+          p3 • tetractysGamma3 Φ1 Φ2 + p1 • tetractysGamma1 S1 +
+            p0 • tetractysGamma0 S1 Φ1 + p2 • tetractysGamma2 Φ1 S2 := by
+      unfold tetractysSlash; abel
+    rw [hPerm]
+    unfold tetractysRot31
+    rw [clifford_bivector_linear_comm (tetractysGamma3 Φ1 Φ2) (tetractysGamma1 S1)
+      (tetractysGamma0 S1 Φ1) (tetractysGamma2 Φ1 S2) p3 p1 p0 p2
+      h13' h03' h10 h23' h12', hG3, hG1]
+    unfold tetractysSlash
+    noncomm_ring
+    simp only [smul_smul, neg_smul, zero_smul, neg_mul, one_mul]
+    abel
+  have hAct01 :
+      Block2.lorentzDiag (tetractysBoost01 S1 Φ1) *
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+          Block2.lorentzDiag (tetractysBoost01 S1 Φ1) =
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 (2 * p1) (2 * p0) 0 0) := by
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action
+          (tetractysBoost01 S1 Φ1) (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) 0).2.2.2.2, hB01]
+  have hAct02 :
+      Block2.lorentzDiag (tetractysBoost02 S1 Φ1 S2) *
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+          Block2.lorentzDiag (tetractysBoost02 S1 Φ1 S2) =
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 (2 * p2) 0 (2 * p0) 0) := by
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action
+          (tetractysBoost02 S1 Φ1 S2) (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) 0).2.2.2.2, hB02]
+  have hAct03 :
+      Block2.lorentzDiag (tetractysBoost03 S1 Φ1 Φ2) *
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+          Block2.lorentzDiag (tetractysBoost03 S1 Φ1 Φ2) =
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 (2 * p3) 0 0 (2 * p0)) := by
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action
+          (tetractysBoost03 S1 Φ1 Φ2) (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) 0).2.2.2.2, hB03]
+  have hAct12 :
+      Block2.lorentzDiag (tetractysRot12 S1 Φ1 S2) *
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+          Block2.lorentzDiag (tetractysRot12 S1 Φ1 S2) =
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 0 (2 * p2) (-2 * p1) 0) := by
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action
+          (tetractysRot12 S1 Φ1 S2) (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) 0).2.2.2.2, hR12]
+  have hAct23 :
+      Block2.lorentzDiag (tetractysRot23 Φ1 S2 Φ2) *
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+          Block2.lorentzDiag (tetractysRot23 Φ1 S2 Φ2) =
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 0 0 (2 * p3) (-2 * p2)) := by
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action
+          (tetractysRot23 Φ1 S2 Φ2) (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) 0).2.2.2.2, hR23]
+  have hAct31 :
+      Block2.lorentzDiag (tetractysRot31 S1 Φ1 Φ2) *
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) -
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) *
+          Block2.lorentzDiag (tetractysRot31 S1 Φ1 Φ2) =
+        Block2.cornerEmbed (tetractysSlash S1 Φ1 S2 Φ2 0 (-2 * p3) 0 (2 * p1)) := by
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action
+          (tetractysRot31 S1 Φ1 Φ2) (tetractysSlash S1 Φ1 S2 Φ2 p0 p1 p2 p3) 0).2.2.2.2, hR31]
+  exact ⟨⟨hCornerIdem, hCornerBasis, hCornerAdd, hCornerNilp⟩,
+    ⟨hAct01, hAct02, hAct03, hAct12, hAct23, hAct31⟩⟩
+
 end Z4ParafermionBraidAndUnipotentGate
 
 /--
@@ -3146,14 +3382,14 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
      (Mat4.zetaRealMat4 : Mat4 K) * Mat4.zetaRealMat4 = Mat4.diracMass2 ∧
      Block2.shearPlus Q * Block2.shearMinus a_sq = Block2.gaussianTP2 Q a_sq ∧
      Block2.det2 (Block2.gaussianTP2 Q a_sq) = 1 ∧
-     Mat4.minkowskiSlash Q a_sq b_sq 0 * Mat4.minkowskiSlash Q a_sq b_sq 0 =
-       (-Q ^ 2 + a_sq ^ 2 + b_sq ^ 2 + 0 ^ 2) • Mat4.I4 ∧
      Block2.det2 (Block2.twistorMomentum2 Q a_sq) = 0 ∧
      poincareLorentz P A * N_plus P A0 - N_plus P A0 * poincareLorentz P A =
        P * A * N_plus P A0 - N_plus P A0 * A * (1 - P) ∧
-     Block2.lorentzDiag Mat4.lorentzBoost01 * Mat4.poincareTranslation4 Q a_sq b_sq 0 -
-       Mat4.poincareTranslation4 Q a_sq b_sq 0 * Block2.lorentzDiag Mat4.lorentzBoost01 =
-       Mat4.poincareTranslation4 (2 * a_sq) (2 * Q) 0 0) := by
+     N_plus P (poincareLorentz P A * N_plus P A0 - N_plus P A0 * poincareLorentz P A) =
+       poincareLorentz P A * N_plus P A0 - N_plus P A0 * poincareLorentz P A ∧
+     Block2.lorentzDiag A * Block2.cornerEmbed A0 -
+       Block2.cornerEmbed A0 * Block2.lorentzDiag A =
+       Block2.cornerEmbed (A * A0 - A0 * A)) := by
   have hFib := convex_hamiltonian_fiber_ground_state_invariance H0 H1 P0 t h0 h1
   have hAnn := energy_gap_annulus_midpoint_centering Q a_sq b_sq
   have hGap := square_first_local_bulk_gap_collar_healing P A μ0 hP
@@ -3177,12 +3413,10 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
   have hTP2 :=
     Block2.positive_grassmannian_gaussian_tp2_and_homogeneous_projector
       Q a_sq 1 1 (by decide) (by decide)
-  have hMink := Mat4.minkowski_tetractys_4d_slash_and_mass_shell Q a_sq b_sq 0
   have hTwistor :=
     Block2.real_twistor_susy_null_and_massive_momentum_factorization Q a_sq a_sq b_sq 0 0 0 0
   have hPoinc := poincare_translations_commute_and_lorentz_covariance P A A0 A0 A hP
-  have hPoincCorner :=
-    Mat4.poincare_corner_4d_translation_module_and_lorentz_action Q a_sq b_sq 0 0 0 0 0
+  have hCorner := Block2.peirce_corner_embed_and_diagonal_lorentz_action A A0 A0
   exact ⟨KitaevLocalGapStage.coverEdge_acyclic,
     ⟨hFib, hAnn⟩,
     ⟨hGap.1, hCones.1, hCones.2.1⟩,
@@ -3194,6 +3428,6 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
      Mat4.bdiLeftZeroModeIndex_kitaevChainSublatticeSwapA,
      hBdi.2.2.1.2.2.2.1, hD3.2.2.1.2.1, hZ4Tau.2.2.1,
      hZ4Braid.1.1, hZ4Braid.2.2.2.2.1, hZeta8.1.2.2, hZeta8.2.1.1,
-     hTP2.1, hTP2.2.1, hMink.2, hTwistor.1.1, hPoinc.2.2.1.1, hPoincCorner.2.2.1⟩⟩
+     hTP2.1, hTP2.2.1, hTwistor.1.1, hPoinc.2.2.1.1, hPoinc.2.2.1.2.1, hCorner.2.2.2.2⟩⟩
 
 end KitaevLocalGapOmegaSpectrumPoset

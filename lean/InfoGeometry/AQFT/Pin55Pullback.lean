@@ -1,3 +1,11 @@
+/-!
+# Pin(5,5) Pullback Poset
+
+This module establishes the explicit, pointwise pullback structure of the Pin(5,5)
+group action on exterior algebra basis elements, providing the matrix representation
+fusion between Chevalley bases and spinor representations.
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.ToLin

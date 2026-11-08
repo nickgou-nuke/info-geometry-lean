@@ -57,6 +57,22 @@ theorem chiral_dirac_square_eq_momentum_operator {A : Type*} [Ring A]
   simp [anti, left_distrib, right_distrib, hplus, hminus]
   abel
 
+/-- The translation observable generated endogenously by a pair of chiral
+supercharges is their mixed anticommutator. This is a definition by
+supercharge data; it does not assume a separately supplied momentum operator. -/
+def chiralTranslation {A : Type*} [Ring A] (Qplus Qminus : A) : A :=
+  anti Qplus Qminus
+
+/-- The commutator acts as a derivation on the endogenous translation
+`{Qplus,Qminus}`. Consequently, once a Lorentz action on the chiral charges is
+specified, its action on the generated translation is forced by this identity. -/
+theorem comm_chiralTranslation_eq_anticomm_commutators {A : Type*} [Ring A]
+    (M Qplus Qminus : A) :
+    comm M (chiralTranslation Qplus Qminus) =
+      anti (comm M Qplus) Qminus + anti Qplus (comm M Qminus) := by
+  simp only [comm, chiralTranslation, anti, sub_eq_add_neg]
+  noncomm_ring
+
 /-- If the mixed anticommutator is the momentum operator, then `Dχ²=P`. -/
 theorem chiral_dirac_square_eq_given_momentum {A : Type*} [Ring A]
     {Qplus Qminus P : A}

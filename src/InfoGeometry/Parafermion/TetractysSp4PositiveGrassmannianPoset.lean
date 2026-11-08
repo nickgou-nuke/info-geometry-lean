@@ -529,8 +529,7 @@ theorem gr24_positive_chart_plucker_coordinates
       gr24Minor (gr24PositiveChart t1 t2 t3 t4) 1 2 = t1 ∧
       gr24Minor (gr24PositiveChart t1 t2 t3 t4) 1 3 = t1 * t3 + t4 ∧
       gr24Minor (gr24PositiveChart t1 t2 t3 t4) 2 3 = t2 * t4 := by
-    norm_num [gr24Minor, gr24PositiveChart]
-    ring
+    norm_num [gr24Minor, gr24PositiveChart]; ring
   rcases hcoords with ⟨h01, h02, h03, h12, h13, h23⟩
   refine ⟨h01, h02, h03, h12, h13, h23, ?_, ?_⟩
   · rw [h02, h13, h01, h23, h03, h12]

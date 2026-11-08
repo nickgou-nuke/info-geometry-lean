@@ -733,53 +733,113 @@ theorem positive_grassmannian_gaussian_tp2_and_homogeneous_projector
   have hP11 : 0 < posGrassProj t s 1 1 := by simpa [posGrassProj, mk2] using hts
   exact ⟨hFact, hDet, hProj, hG00, hG01, hG10, hG11, hGDet, hP11⟩
 
+/-- Conformal Peirce corner idempotent `P_conf = [[1, 0], [0, 0]]` in `Block2 B`. -/
+def cornerIdem : Block2 B :=
+  mk2 1 0 0 0
+
+/-- Upper-right Peirce corner embedding `[[0, X], [0, 0]]` in `Block2 B`. -/
+def cornerEmbed (X : B) : Block2 B :=
+  mk2 0 X 0 0
+
+/-- Diagonal stabilizer embedding `[[M, 0], [0, M]]` in `Block2 B` preserving the Peirce corner. -/
+def lorentzDiag (M : B) : Block2 B :=
+  mk2 M 0 0 M
+
+/--
+**Theorem 3f' (`peirce_corner_embed_and_diagonal_lorentz_action`):**
+In `Block2 B` over any `[Ring B]`, the upper-right Peirce corner `cornerEmbed X = [[0, X], [0, 0]]`
+determined by `cornerIdem = [[1, 0], [0, 0]]` is an Abelian nilpotent module preserved by the
+diagonal stabilizer action `lorentzDiag M = [[M, 0], [0, M]]`:
+1. `cornerIdem * cornerIdem = cornerIdem`,
+2. `N_plus cornerIdem (cornerEmbed X) = cornerEmbed X`,
+3. `cornerEmbed (X + Y) = cornerEmbed X + cornerEmbed Y` and `cornerEmbed X * cornerEmbed Y = 0`,
+4. `lorentzDiag M * cornerEmbed X - cornerEmbed X * lorentzDiag M = cornerEmbed (M * X - X * M)`.
+-/
+theorem peirce_corner_embed_and_diagonal_lorentz_action (M X Y : B) :
+    (cornerIdem : Block2 B) * cornerIdem = cornerIdem ∧
+    N_plus (cornerIdem : Block2 B) (cornerEmbed X) = cornerEmbed X ∧
+    cornerEmbed (X + Y) = cornerEmbed X + cornerEmbed Y ∧
+    cornerEmbed X * cornerEmbed Y = 0 ∧
+    lorentzDiag M * cornerEmbed X - cornerEmbed X * lorentzDiag M =
+      cornerEmbed (M * X - X * M) := by
+  have hIdem : (cornerIdem : Block2 B) * cornerIdem = cornerIdem := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [cornerIdem, mk2, Matrix.mul_apply, Fin.sum_univ_two]
+  have hCorner : N_plus (cornerIdem : Block2 B) (cornerEmbed X) = cornerEmbed X := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [N_plus, cornerIdem, cornerEmbed, mk2, Matrix.mul_apply, Fin.sum_univ_two]
+  have hAdd : cornerEmbed (X + Y) = cornerEmbed X + cornerEmbed Y := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [cornerEmbed, mk2]
+  have hMul : cornerEmbed X * cornerEmbed Y = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [cornerEmbed, mk2, Matrix.mul_apply, Fin.sum_univ_two]
+  have hAct :
+      lorentzDiag M * cornerEmbed X - cornerEmbed X * lorentzDiag M =
+        cornerEmbed (M * X - X * M) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzDiag, cornerEmbed, mk2, Matrix.mul_apply, Fin.sum_univ_two]
+  exact ⟨hIdem, hCorner, hAdd, hMul, hAct⟩
+
 /-- Rank-1 real Majorana-twistor momentum matrix `P(λ) = λ λᵀ = [[λ₁², λ₁ λ₂], [λ₂ λ₁, λ₂²]]`
 in `Block2 B`. -/
-def twistorMomentum2 (λ1 λ2 : B) : Block2 B :=
-  mk2 (λ1 * λ1) (λ1 * λ2) (λ2 * λ1) (λ2 * λ2)
+def twistorMomentum2 (lam1 lam2 : B) : Block2 B :=
+  mk2 (lam1 * lam1) (lam1 * lam2) (lam2 * lam1) (lam2 * lam2)
 
 /--
 **Theorem 3g (`real_twistor_susy_null_and_massive_momentum_factorization`):**
 Real Penrose–Witten twistor factorization of massless null and massive 4-momenta (`𝔖𝔓₅–𝔖𝔓₇`):
 1. **1-Twistor Massless Light-Cone Identity (`P = λ λᵀ`):**
-   For any `λ₁, λ₂ : K`, `det2 (twistorMomentum2 λ₁ λ₂) = 0` and the DeWitt components
-   `2 p₀ = λ₁² + λ₂²`, `2 p₁ = λ₁² - λ₂²`, `2 p₂ = 2 λ₁ λ₂` satisfy the exact light-cone law
-   `(λ₁ ^ 2 + λ₂ ^ 2) ^ 2 - (λ₁ ^ 2 - λ₂ ^ 2) ^ 2 - (2 * λ₁ * λ₂) ^ 2 = 0`.
+   For any `lam1, lam2 : K`, `det2 (twistorMomentum2 lam1 lam2) = 0` and the DeWitt components
+   `2 p₀ = lam1² + lam2²`, `2 p₁ = lam1² - lam2²`, `2 p₂ = 2 lam1 lam2` satisfy the exact light-cone law
+   `(lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 - (2 * lam1 * lam2) ^ 2 = 0`.
 2. **2-Twistor Massive Casimir Identity (`P = λ λᵀ + μ μᵀ`):**
-   Summing two real twistors `λ = (λ₁, λ₂)` and `μ = (μ₁, μ₂)` yields the invariant mass squared
-   as the square of the symplectic 2-bracket `⟨λ μ⟩ = λ₁ μ₂ - λ₂ μ₁`:
-   `det2 (twistorMomentum2 λ₁ λ₂ + twistorMomentum2 μ₁ μ₂) = (λ₁ * μ₂ - λ₂ * μ₁) ^ 2` and
-   `(λ₁ ^ 2 + μ₁ ^ 2) * (λ₂ ^ 2 + μ₂ ^ 2) - (λ₁ * λ₂ + μ₁ * μ₂) ^ 2 = (λ₁ * μ₂ - λ₂ * μ₁) ^ 2`.
+   Summing two real twistors `λ = (lam1, lam2)` and `μ = (mu1, mu2)` yields the invariant mass squared
+   as the square of the symplectic 2-bracket `⟨λ μ⟩ = lam1 * mu2 - lam2 * mu1`:
+   `det2 (twistorMomentum2 lam1 lam2 + twistorMomentum2 mu1 mu2) = (lam1 * mu2 - lam2 * mu1) ^ 2` and
+   `(lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 = (lam1 * mu2 - lam2 * mu1) ^ 2`.
 3. **Witten Positive Energy (`2 p₀ ≥ 0`) & Nonnegative Mass Squared (`m² ≥ 0`) Over `ℤ`:**
    For any `l₁, l₂, m₁, m₂ : ℤ`, `0 ≤ l₁ ^ 2 + l₂ ^ 2` and
    `0 ≤ det2 (twistorMomentum2 l₁ l₂ + twistorMomentum2 m₁ m₂)`.
 -/
 theorem real_twistor_susy_null_and_massive_momentum_factorization
-    {K : Type u} [CommRing K] (λ1 λ2 μ1 μ2 : K) (l1 l2 m1 m2 : ℤ) :
-    (det2 (twistorMomentum2 λ1 λ2) = 0 ∧
-     (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0) ∧
-    (det2 (twistorMomentum2 λ1 λ2 + twistorMomentum2 μ1 μ2) = (λ1 * μ2 - λ2 * μ1) ^ 2 ∧
-     (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
-       (λ1 * μ2 - λ2 * μ1) ^ 2) ∧
+    {K : Type u} [CommRing K] (lam1 lam2 mu1 mu2 : K) (l1 l2 m1 m2 : ℤ) :
+    (det2 (twistorMomentum2 lam1 lam2) = 0 ∧
+     (lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 - (2 * lam1 * lam2) ^ 2 = 0) ∧
+    (det2 (twistorMomentum2 lam1 lam2 + twistorMomentum2 mu1 mu2) =
+       (lam1 * mu2 - lam2 * mu1) ^ 2 ∧
+     (lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 =
+       (lam1 * mu2 - lam2 * mu1) ^ 2) ∧
     (0 ≤ l1 ^ 2 + l2 ^ 2 ∧
      0 ≤ det2 (twistorMomentum2 l1 l2 + twistorMomentum2 m1 m2)) := by
-  have hNullDet : det2 (twistorMomentum2 λ1 λ2) = 0 := by
-    simp [det2, twistorMomentum2, mk2]
+  have hNullDet : det2 (twistorMomentum2 lam1 lam2) = 0 := by
+    change (lam1 * lam1) * (lam2 * lam2) - (lam1 * lam2) * (lam2 * lam1) = 0
     ring
-  have hNullCone : (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0 := by
+  have hNullCone :
+      (lam1 ^ 2 + lam2 ^ 2) ^ 2 - (lam1 ^ 2 - lam2 ^ 2) ^ 2 - (2 * lam1 * lam2) ^ 2 = 0 := by
     ring
   have hMassDet :
-      det2 (twistorMomentum2 λ1 λ2 + twistorMomentum2 μ1 μ2) = (λ1 * μ2 - λ2 * μ1) ^ 2 := by
-    simp [det2, twistorMomentum2, mk2]
+      det2 (twistorMomentum2 lam1 lam2 + twistorMomentum2 mu1 mu2) =
+        (lam1 * mu2 - lam2 * mu1) ^ 2 := by
+    change ((lam1 * lam1 + mu1 * mu1) * (lam2 * lam2 + mu2 * mu2) -
+      (lam1 * lam2 + mu1 * mu2) * (lam2 * lam1 + mu2 * mu1)) =
+      (lam1 * mu2 - lam2 * mu1) ^ 2
     ring
   have hMassPoly :
-      (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
-        (λ1 * μ2 - λ2 * μ1) ^ 2 := by
+      (lam1 ^ 2 + mu1 ^ 2) * (lam2 ^ 2 + mu2 ^ 2) - (lam1 * lam2 + mu1 * mu2) ^ 2 =
+        (lam1 * mu2 - lam2 * mu1) ^ 2 := by
     ring
   have hPosE : 0 ≤ l1 ^ 2 + l2 ^ 2 := add_nonneg (sq_nonneg l1) (sq_nonneg l2)
   have hMassDetZ :
       det2 (twistorMomentum2 l1 l2 + twistorMomentum2 m1 m2) = (l1 * m2 - l2 * m1) ^ 2 := by
-    simp [det2, twistorMomentum2, mk2]
+    change ((l1 * l1 + m1 * m1) * (l2 * l2 + m2 * m2) -
+      (l1 * l2 + m1 * m2) * (l2 * l1 + m2 * m1)) =
+      (l1 * m2 - l2 * m1) ^ 2
     ring
   have hPosMass : 0 ≤ det2 (twistorMomentum2 l1 l2 + twistorMomentum2 m1 m2) := by
     rw [hMassDetZ]
@@ -1960,6 +2020,226 @@ theorem minkowski_tetractys_4d_slash_and_mass_shell (p0 p1 p2 p3 : K) :
       ring
   exact ⟨⟨hG1, hG2, hG3⟩, hShell⟩
 
+/-- Real Lorentz boost bivector `K₀₁ = γ⁰ γ¹ = diracMass2 * diracGamma1` in `Mat4 K`. -/
+def lorentzBoost01 : Mat4 K := diracMass2 * diracGamma1
+
+/-- Real Lorentz boost bivector `K₀₂ = γ⁰ γ² = diracMass2 * diracGamma2` in `Mat4 K`. -/
+def lorentzBoost02 : Mat4 K := diracMass2 * diracGamma2
+
+/-- Real Lorentz boost bivector `K₀₃ = γ⁰ γ³ = diracMass2 * diracGamma3` in `Mat4 K`. -/
+def lorentzBoost03 : Mat4 K := diracMass2 * diracGamma3
+
+/-- Real spatial rotation bivector `J₁₂ = γ¹ γ² = diracGamma1 * diracGamma2` in `Mat4 K`. -/
+def lorentzRot12 : Mat4 K := diracGamma1 * diracGamma2
+
+/-- Real spatial rotation bivector `J₂₃ = γ² γ³ = diracGamma2 * diracGamma3` in `Mat4 K`. -/
+def lorentzRot23 : Mat4 K := diracGamma2 * diracGamma3
+
+/-- Real spatial rotation bivector `J₃₁ = γ³ γ¹ = diracGamma3 * diracGamma1` in `Mat4 K`. -/
+def lorentzRot31 : Mat4 K := diracGamma3 * diracGamma1
+
+/-- Explicit 4-dimensional upper-right Peirce corner translation matrix
+`T₂(x₀, x₁, x₂, x₃) ∈ peirceP2 · Mat4 K · (I₄ - peirceP2)` in `Mat4 K`. -/
+def peirceCornerTranslation4 (x0 x1 x2 x3 : K) : Mat4 K :=
+  !![0, 0, x0, x1;
+     0, 0, x2, x3;
+     0, 0, 0, 0;
+     0, 0, 0, 0]
+
+/-- Explicit 4-dimensional Minkowski translation module embedded in the upper-right Peirce corner
+`Block2.cornerIdem · Block2 (Mat4 K) · (1 - Block2.cornerIdem)` via `minkowskiSlash`. -/
+def poincareTranslation4 (p0 p1 p2 p3 : K) : Block2 (Mat4 K) :=
+  Block2.cornerEmbed (minkowskiSlash p0 p1 p2 p3)
+
+/--
+**Theorem 5f''''' (`poincare_corner_4d_translation_module_and_lorentz_action`):**
+Explicit 4-dimensional translation module in the nilpotent Peirce corner and the 6-generator
+Lorentz action preserving that corner (`𝔖𝔓₃–𝔖𝔓₄`):
+1. **Faithful 4-Dimensional Rank-2 Peirce Corner Module inside `Mat4 K`:**
+   `peirceCornerTranslation4 p0 p1 p2 p3` lies strictly in the upper-right Peirce corner of `peirceP2`,
+   is Abelian nilpotent, and has 4 independent coordinates `(0,2) ↦ p0`, `(0,3) ↦ p1`, `(1,2) ↦ p2`, `(1,3) ↦ p3`.
+2. **4-Dimensional Minkowski Translation Corner Module `poincareTranslation4` in `Block2 (Mat4 K)`:**
+   - `N_plus Block2.cornerIdem (poincareTranslation4 p0 p1 p2 p3) = poincareTranslation4 p0 p1 p2 p3`,
+   - `poincareTranslation4 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) = poincareTranslation4 p0 p1 p2 p3 + poincareTranslation4 q0 q1 q2 q3`,
+   - `poincareTranslation4 p0 p1 p2 p3 * poincareTranslation4 q0 q1 q2 q3 = 0`,
+   - 4-coordinate extraction from `minkowskiSlash p0 p1 p2 p3`:
+     `(0,0) = p1`, `(0,3) = p3`, `(2,0) = p0 + p2`, `(0,2) = -p0 + p2`.
+3. **All 6 Real Lorentz Generators Preserve the 4D Translation Corner (`[L(γ^μ γ^ν), T(p)] = T(L_{μν} p)`):**
+   - **3 Lorentz Boosts (`K₀₁, K₀₂, K₀₃`):**
+     `[lorentzDiag K₀₁, T(p₀, p₁, p₂, p₃)] = T(2 p₁, 2 p₀, 0, 0)`,
+     `[lorentzDiag K₀₂, T(p₀, p₁, p₂, p₃)] = T(2 p₂, 0, 2 p₀, 0)`,
+     `[lorentzDiag K₀₃, T(p₀, p₁, p₂, p₃)] = T(2 p₃, 0, 0, 2 p₀)`.
+   - **3 Spatial Rotations (`J₁₂, J₂₃, J₃₁`):**
+     `[lorentzDiag J₁₂, T(p₀, p₁, p₂, p₃)] = T(0, 2 p₂, -2 p₁, 0)`,
+     `[lorentzDiag J₂₃, T(p₀, p₁, p₂, p₃)] = T(0, 0, 2 p₃, -2 p₂)`,
+     `[lorentzDiag J₃₁, T(p₀, p₁, p₂, p₃)] = T(0, -2 p₃, 0, 2 p₁)`.
+-/
+theorem poincare_corner_4d_translation_module_and_lorentz_action
+    (p0 p1 p2 p3 q0 q1 q2 q3 : K) :
+    (N_plus (peirceP2 : Mat4 K) (peirceCornerTranslation4 p0 p1 p2 p3) =
+       peirceCornerTranslation4 p0 p1 p2 p3 ∧
+     peirceCornerTranslation4 p0 p1 p2 p3 * peirceCornerTranslation4 q0 q1 q2 q3 = 0 ∧
+     peirceCornerTranslation4 p0 p1 p2 p3 0 2 = p0 ∧
+     peirceCornerTranslation4 p0 p1 p2 p3 0 3 = p1 ∧
+     peirceCornerTranslation4 p0 p1 p2 p3 1 2 = p2 ∧
+     peirceCornerTranslation4 p0 p1 p2 p3 1 3 = p3) ∧
+    (N_plus (Block2.cornerIdem : Block2 (Mat4 K)) (poincareTranslation4 p0 p1 p2 p3) =
+       poincareTranslation4 p0 p1 p2 p3 ∧
+     poincareTranslation4 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
+       poincareTranslation4 p0 p1 p2 p3 + poincareTranslation4 q0 q1 q2 q3 ∧
+     poincareTranslation4 p0 p1 p2 p3 * poincareTranslation4 q0 q1 q2 q3 = 0 ∧
+     minkowskiSlash p0 p1 p2 p3 0 0 = p1 ∧
+     minkowskiSlash p0 p1 p2 p3 0 3 = p3 ∧
+     minkowskiSlash p0 p1 p2 p3 2 0 = p0 + p2 ∧
+     minkowskiSlash p0 p1 p2 p3 0 2 = -p0 + p2) ∧
+    (Block2.lorentzDiag lorentzBoost01 * poincareTranslation4 p0 p1 p2 p3 -
+       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost01 =
+       poincareTranslation4 (2 * p1) (2 * p0) 0 0 ∧
+     Block2.lorentzDiag lorentzBoost02 * poincareTranslation4 p0 p1 p2 p3 -
+       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost02 =
+       poincareTranslation4 (2 * p2) 0 (2 * p0) 0 ∧
+     Block2.lorentzDiag lorentzBoost03 * poincareTranslation4 p0 p1 p2 p3 -
+       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost03 =
+       poincareTranslation4 (2 * p3) 0 0 (2 * p0) ∧
+     Block2.lorentzDiag lorentzRot12 * poincareTranslation4 p0 p1 p2 p3 -
+       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot12 =
+       poincareTranslation4 0 (2 * p2) (-2 * p1) 0 ∧
+     Block2.lorentzDiag lorentzRot23 * poincareTranslation4 p0 p1 p2 p3 -
+       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot23 =
+       poincareTranslation4 0 0 (2 * p3) (-2 * p2) ∧
+     Block2.lorentzDiag lorentzRot31 * poincareTranslation4 p0 p1 p2 p3 -
+       poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot31 =
+       poincareTranslation4 0 (-2 * p3) 0 (2 * p1)) := by
+  have hP2Corner :
+      N_plus (peirceP2 : Mat4 K) (peirceCornerTranslation4 p0 p1 p2 p3) =
+        peirceCornerTranslation4 p0 p1 p2 p3 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [N_plus, peirceP2, peirceCornerTranslation4, Matrix.mul_apply, Fin.sum_univ_four]
+  have hP2Nilp :
+      peirceCornerTranslation4 p0 p1 p2 p3 * peirceCornerTranslation4 q0 q1 q2 q3 = 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peirceCornerTranslation4, Matrix.mul_apply, Fin.sum_univ_four]
+  have hSlashAdd :
+      minkowskiSlash (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
+        minkowskiSlash p0 p1 p2 p3 + minkowskiSlash q0 q1 q2 q3 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3] <;>
+      ring
+  have hCorner :=
+    Block2.peirce_corner_embed_and_diagonal_lorentz_action
+      (lorentzBoost01 : Mat4 K) (minkowskiSlash p0 p1 p2 p3) (minkowskiSlash q0 q1 q2 q3)
+  have hT4Add :
+      poincareTranslation4 (p0 + q0) (p1 + q1) (p2 + q2) (p3 + q3) =
+        poincareTranslation4 p0 p1 p2 p3 + poincareTranslation4 q0 q1 q2 q3 := by
+    unfold poincareTranslation4
+    rw [hSlashAdd, hCorner.2.2.1]
+  have hB01 :
+      lorentzBoost01 * minkowskiSlash p0 p1 p2 p3 -
+        minkowskiSlash p0 p1 p2 p3 * lorentzBoost01 =
+        minkowskiSlash (2 * p1) (2 * p0) 0 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzBoost01, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  have hB02 :
+      lorentzBoost02 * minkowskiSlash p0 p1 p2 p3 -
+        minkowskiSlash p0 p1 p2 p3 * lorentzBoost02 =
+        minkowskiSlash (2 * p2) 0 (2 * p0) 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzBoost02, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  have hB03 :
+      lorentzBoost03 * minkowskiSlash p0 p1 p2 p3 -
+        minkowskiSlash p0 p1 p2 p3 * lorentzBoost03 =
+        minkowskiSlash (2 * p3) 0 0 (2 * p0) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzBoost03, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  have hR12 :
+      lorentzRot12 * minkowskiSlash p0 p1 p2 p3 -
+        minkowskiSlash p0 p1 p2 p3 * lorentzRot12 =
+        minkowskiSlash 0 (2 * p2) (-2 * p1) 0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzRot12, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  have hR23 :
+      lorentzRot23 * minkowskiSlash p0 p1 p2 p3 -
+        minkowskiSlash p0 p1 p2 p3 * lorentzRot23 =
+        minkowskiSlash 0 0 (2 * p3) (-2 * p2) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzRot23, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  have hR31 :
+      lorentzRot31 * minkowskiSlash p0 p1 p2 p3 -
+        minkowskiSlash p0 p1 p2 p3 * lorentzRot31 =
+        minkowskiSlash 0 (-2 * p3) 0 (2 * p1) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [lorentzRot31, minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  have hAct01 :
+      Block2.lorentzDiag lorentzBoost01 * poincareTranslation4 p0 p1 p2 p3 -
+        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost01 =
+        poincareTranslation4 (2 * p1) (2 * p0) 0 0 := by
+    unfold poincareTranslation4
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzBoost01
+          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hB01]
+  have hAct02 :
+      Block2.lorentzDiag lorentzBoost02 * poincareTranslation4 p0 p1 p2 p3 -
+        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost02 =
+        poincareTranslation4 (2 * p2) 0 (2 * p0) 0 := by
+    unfold poincareTranslation4
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzBoost02
+          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hB02]
+  have hAct03 :
+      Block2.lorentzDiag lorentzBoost03 * poincareTranslation4 p0 p1 p2 p3 -
+        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzBoost03 =
+        poincareTranslation4 (2 * p3) 0 0 (2 * p0) := by
+    unfold poincareTranslation4
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzBoost03
+          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hB03]
+  have hAct12 :
+      Block2.lorentzDiag lorentzRot12 * poincareTranslation4 p0 p1 p2 p3 -
+        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot12 =
+        poincareTranslation4 0 (2 * p2) (-2 * p1) 0 := by
+    unfold poincareTranslation4
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzRot12
+          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hR12]
+  have hAct23 :
+      Block2.lorentzDiag lorentzRot23 * poincareTranslation4 p0 p1 p2 p3 -
+        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot23 =
+        poincareTranslation4 0 0 (2 * p3) (-2 * p2) := by
+    unfold poincareTranslation4
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzRot23
+          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hR23]
+  have hAct31 :
+      Block2.lorentzDiag lorentzRot31 * poincareTranslation4 p0 p1 p2 p3 -
+        poincareTranslation4 p0 p1 p2 p3 * Block2.lorentzDiag lorentzRot31 =
+        poincareTranslation4 0 (-2 * p3) 0 (2 * p1) := by
+    unfold poincareTranslation4
+    rw [(Block2.peirce_corner_embed_and_diagonal_lorentz_action lorentzRot31
+          (minkowskiSlash p0 p1 p2 p3) 0).2.2.2.2, hR31]
+  exact ⟨⟨hP2Corner, hP2Nilp, rfl, rfl, rfl, rfl⟩,
+    ⟨hCorner.2.1, hT4Add, hCorner.2.2.2.1,
+     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3],
+     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3],
+     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3],
+     by simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3]⟩,
+    ⟨hAct01, hAct02, hAct03, hAct12, hAct23, hAct31⟩⟩
+
 end Mat4
 
 -- ============================================================================
@@ -2589,7 +2869,15 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
      S1 * (Φ1 * S2) + (Φ1 * S2) * S1 = 0 ∧
      S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 = 0 ∧
      (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) = 0) := by
-  have hTriad := dewitt_tetractys_division_free_zeta8_and_sl2_triad S1 Φ1 hS1 hΦ1 hAnti1
+  have hΦ1S1 : Φ1 * S1 = -(S1 * Φ1) := eq_neg_of_add_eq_zero_right hAnti1
+  have hG0 : tetractysJ S1 Φ1 * tetractysJ S1 Φ1 = -1 := by
+    unfold tetractysJ
+    calc
+      (S1 * Φ1) * (S1 * Φ1) = S1 * (Φ1 * S1) * Φ1 := by noncomm_ring
+      _ = S1 * (-(S1 * Φ1)) * Φ1 := by rw [hΦ1S1]
+      _ = -((S1 * S1) * (Φ1 * Φ1)) := by noncomm_ring
+      _ = -(1 * 1) := by rw [hS1, hΦ1]
+      _ = -1 := by noncomm_ring
   have hG2 : (Φ1 * S2) * (Φ1 * S2) = 1 := by
     calc
       (Φ1 * S2) * (Φ1 * S2) = Φ1 * (S2 * Φ1) * S2 := by noncomm_ring
@@ -2605,10 +2893,17 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = 1 * 1 := by rw [hΦ1, hΦ2]
       _ = 1 := by noncomm_ring
   have h01 : tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 = 0 := by
+    unfold tetractysJ
     calc
-      tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 =
-        S1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * S1 := by noncomm_ring
-      _ = 0 := hTriad.2.1.2.1
+      (S1 * Φ1) * S1 + S1 * (S1 * Φ1) = S1 * (Φ1 * S1 + S1 * Φ1) := by noncomm_ring
+      _ = S1 * (-(S1 * Φ1) + S1 * Φ1) := by rw [hΦ1S1]
+      _ = 0 := by noncomm_ring
+  have hΦJ : Φ1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * Φ1 = 0 := by
+    unfold tetractysJ
+    calc
+      Φ1 * (S1 * Φ1) + (S1 * Φ1) * Φ1 = (Φ1 * S1 + S1 * Φ1) * Φ1 := by noncomm_ring
+      _ = (-(S1 * Φ1) + S1 * Φ1) * Φ1 := by rw [hΦ1S1]
+      _ = 0 := by noncomm_ring
   have hJS2 : S2 * tetractysJ S1 Φ1 = tetractysJ S1 Φ1 * S2 := by
     unfold tetractysJ
     calc
@@ -2623,7 +2918,7 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
         tetractysJ S1 Φ1 * Φ1 * S2 + Φ1 * (S2 * tetractysJ S1 Φ1) := by noncomm_ring
       _ = tetractysJ S1 Φ1 * Φ1 * S2 + Φ1 * (tetractysJ S1 Φ1 * S2) := by rw [hJS2]
       _ = (Φ1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * Φ1) * S2 := by noncomm_ring
-      _ = 0 * S2 := by rw [hTriad.2.1.2.2]
+      _ = 0 * S2 := by rw [hΦJ]
       _ = 0 := by noncomm_ring
   have hJΦ2 : Φ2 * tetractysJ S1 Φ1 = tetractysJ S1 Φ1 * Φ2 := by
     unfold tetractysJ
@@ -2639,7 +2934,7 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
         tetractysJ S1 Φ1 * Φ1 * Φ2 + Φ1 * (Φ2 * tetractysJ S1 Φ1) := by noncomm_ring
       _ = tetractysJ S1 Φ1 * Φ1 * Φ2 + Φ1 * (tetractysJ S1 Φ1 * Φ2) := by rw [hJΦ2]
       _ = (Φ1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * Φ1) * Φ2 := by noncomm_ring
-      _ = 0 * Φ2 := by rw [hTriad.2.1.2.2]
+      _ = 0 * Φ2 := by rw [hΦJ]
       _ = 0 := by noncomm_ring
   have h12 : S1 * (Φ1 * S2) + (Φ1 * S2) * S1 = 0 := by
     calc
@@ -2665,7 +2960,7 @@ theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
       _ = (Φ1 * Φ1) * (S2 * Φ2 + Φ2 * S2) := by noncomm_ring
       _ = 1 * 0 := by rw [hΦ1, hAnti2]
       _ = 0 := by noncomm_ring
-  exact ⟨⟨hTriad.2.1.1, hS1, hG2, hG3⟩, ⟨h01, h02, h03, h12, h13, h23⟩⟩
+  exact ⟨⟨hG0, hS1, hG2, hG3⟩, ⟨h01, h02, h03, h12, h13, h23⟩⟩
 
 /--
 Diagonal Peirce stabilizer generator $L_P(M) = P M P + (1 - P) M (1 - P)$ representing the
@@ -2680,8 +2975,9 @@ For any idempotent $P^2 = P$ in a ring $B$:
 1. **10D Poincaré dimension budget:** $6 + 4 = 10$ ($6$ Lorentz bivectors $\gamma^{\mu\nu}$ + $4$ nilpotent Peirce translations),
 2. **Abelian spacetime translations in the primal Peirce nilpotent cone $N_+(P, p) = P p (1 - P)$:**
    $$N_+(P, p)\,N_+(P, q) = 0, \qquad [N_+(P, p), N_+(P, q)] = 0, \qquad (1 + N_+(P, p))(1 + N_+(P, q)) = 1 + N_+(P, p + q),$$
-3. **Lorentz-translation semidirect commutator:**
+3. **Lorentz-translation semidirect commutator & universal Peirce corner preservation:**
    $$[L_P(M), N_+(P, p)] = P M N_+(P, p) - N_+(P, p) M (1 - P),$$
+   $$N_+(P, [L_P(M), N_+(P, p)]) = [L_P(M), N_+(P, p)],$$
    and whenever $M$ commutes with the conformal infinity projector ($P M = M P$),
    $$[L_P(M), N_+(P, p)] = N_+(P, [M, p]),$$
 4. **Super-Poincaré graded Jacobi identity:** $[Q, \{Q, Q\}] = Q(Q^2 + Q^2) - (Q^2 + Q^2)Q = 0$.
@@ -2694,6 +2990,8 @@ theorem poincare_translations_commute_and_lorentz_covariance
      (1 + N_plus P p) * (1 + N_plus P q) = 1 + N_plus P (p + q)) ∧
     (poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
        P * M * N_plus P p - N_plus P p * M * (1 - P) ∧
+     N_plus P (poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M) =
+       poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M ∧
      (P * M = M * P →
        poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
          N_plus P (M * p - p * M))) ∧
@@ -2744,6 +3042,18 @@ theorem poincare_translations_commute_and_lorentz_covariance
       poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
         P * M * N_plus P p - N_plus P p * M * (1 - P) := by
     rw [hLeft, hRight]
+  have hLorCorner :
+      N_plus P (poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M) =
+        poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M := by
+    rw [hLor]
+    unfold N_plus
+    calc
+      P * (P * M * (P * p * (1 - P)) - (P * p * (1 - P)) * M * (1 - P)) * (1 - P) =
+        (P * P) * M * (P * p * (1 - P - P + P * P)) -
+        (P * P) * p * (1 - P) * M * (1 - P - P + P * P) := by noncomm_ring
+      _ = P * M * (P * p * (1 - P - P + P)) -
+        P * p * (1 - P) * M * (1 - P - P + P) := by rw [hP]
+      _ = P * M * (P * p * (1 - P)) - (P * p * (1 - P)) * M * (1 - P) := by noncomm_ring
   have hLorStab :
       P * M = M * P →
         poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
@@ -2758,7 +3068,7 @@ theorem poincare_translations_commute_and_lorentz_covariance
       _ = (P * P) * M * p * (1 - P) - P * p * M * (1 - P - P + P * P) := by noncomm_ring
       _ = P * M * p * (1 - P) - P * p * M * (1 - P - P + P) := by rw [hP]
       _ = P * (M * p - p * M) * (1 - P) := by noncomm_ring
-  exact ⟨by decide, ⟨hPQ, hComm, hGroup⟩, ⟨hLor, hLorStab⟩, by noncomm_ring⟩
+  exact ⟨by decide, ⟨hPQ, hComm, hGroup⟩, ⟨hLor, hLorCorner, hLorStab⟩, by noncomm_ring⟩
 
 end Z4ParafermionBraidAndUnipotentGate
 
@@ -2840,7 +3150,10 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
        (-Q ^ 2 + a_sq ^ 2 + b_sq ^ 2 + 0 ^ 2) • Mat4.I4 ∧
      Block2.det2 (Block2.twistorMomentum2 Q a_sq) = 0 ∧
      poincareLorentz P A * N_plus P A0 - N_plus P A0 * poincareLorentz P A =
-       P * A * N_plus P A0 - N_plus P A0 * A * (1 - P)) := by
+       P * A * N_plus P A0 - N_plus P A0 * A * (1 - P) ∧
+     Block2.lorentzDiag Mat4.lorentzBoost01 * Mat4.poincareTranslation4 Q a_sq b_sq 0 -
+       Mat4.poincareTranslation4 Q a_sq b_sq 0 * Block2.lorentzDiag Mat4.lorentzBoost01 =
+       Mat4.poincareTranslation4 (2 * a_sq) (2 * Q) 0 0) := by
   have hFib := convex_hamiltonian_fiber_ground_state_invariance H0 H1 P0 t h0 h1
   have hAnn := energy_gap_annulus_midpoint_centering Q a_sq b_sq
   have hGap := square_first_local_bulk_gap_collar_healing P A μ0 hP
@@ -2868,6 +3181,8 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
   have hTwistor :=
     Block2.real_twistor_susy_null_and_massive_momentum_factorization Q a_sq a_sq b_sq 0 0 0 0
   have hPoinc := poincare_translations_commute_and_lorentz_covariance P A A0 A0 A hP
+  have hPoincCorner :=
+    Mat4.poincare_corner_4d_translation_module_and_lorentz_action Q a_sq b_sq 0 0 0 0 0
   exact ⟨KitaevLocalGapStage.coverEdge_acyclic,
     ⟨hFib, hAnn⟩,
     ⟨hGap.1, hCones.1, hCones.2.1⟩,
@@ -2879,6 +3194,6 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
      Mat4.bdiLeftZeroModeIndex_kitaevChainSublatticeSwapA,
      hBdi.2.2.1.2.2.2.1, hD3.2.2.1.2.1, hZ4Tau.2.2.1,
      hZ4Braid.1.1, hZ4Braid.2.2.2.2.1, hZeta8.1.2.2, hZeta8.2.1.1,
-     hTP2.1, hTP2.2.1, hMink.2.2, hTwistor.1.1, hPoinc.2.2.1.1⟩⟩
+     hTP2.1, hTP2.2.1, hMink.2, hTwistor.1.1, hPoinc.2.2.1.1, hPoincCorner.2.2.1⟩⟩
 
 end KitaevLocalGapOmegaSpectrumPoset

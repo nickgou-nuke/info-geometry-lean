@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Notation
+import Mathlib.Data.Matrix.Reflection
 import Mathlib.Tactic
 
 /-!
@@ -259,6 +259,7 @@ def LorentzL (P M : B) : B := P * M * P + (1 - P) * M * (1 - P)
 /-- Odd Super-Peirce supercharge $Q(Z, \bar{Z}) = P Z (1 - P) + (1 - P) \bar{Z} P$. -/
 def superQ (P Z Zbar : B) : B := P * Z * (1 - P) + (1 - P) * Zbar * P
 
+/-- Right-associated idempotent collapse `P * (P * Z) = P * Z` for `P * P = P`. -/
 lemma proj_idem {P : B} (hP : P * P = P) (Z : B) : P * (P * Z) = P * Z := by
   rw [← mul_assoc, hP]
 
@@ -276,7 +277,9 @@ lemma proj_idem {P : B} (hP : P * P = P) (Z : B) : P * (P * Z) = P * Z := by
    `comm QA (anticomm QB QC) + comm QB (anticomm QC QA) + comm QC (anticomm QA QB) = 0`.
 -/
 theorem poincare_translations_commute_and_lorentz_covariance
-    (P M p q Q QA QB QC : B) (hP : P * P = P) :
+    (P M p q Q QA QB QC : B) (hP : P * P = P)
+    (hMP : M * P = P * M)
+    (hpCorner : P * p * (1 - P) = p) :
     6 + 4 = 10 ∧
     TransN P p * TransN P q = 0 ∧
     comm (TransN P p) (TransN P q) = 0 ∧
@@ -285,11 +288,49 @@ theorem poincare_translations_commute_and_lorentz_covariance
     comm (LorentzL P M) (TransN P p) = TransN P (comm M p) ∧
     comm Q (Q * Q + Q * Q) = 0 ∧
     comm QA (anticomm QB QC) + comm QB (anticomm QC QA) + comm QC (anticomm QA QB) = 0 := by
-  refine ⟨by decide, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-  · dsimp only [TransN, LorentzL, comm, anticomm]
+  refine ⟨by decide, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · dsimp only [TransN]
+    simp only [mul_assoc, hP, proj_idem hP, mul_sub, mul_one, sub_self, mul_zero]
+  · dsimp only [TransN, comm]
+    simp only [mul_assoc, hP, proj_idem hP, mul_sub, mul_one, sub_self,
+      mul_zero, sub_zero, zero_sub, neg_zero]
+  · dsimp only [TransN]
     simp only [add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one,
-               mul_assoc, hP, proj_idem hP]
+      mul_assoc, hP, proj_idem hP, sub_self, mul_zero, zero_mul]
     abel
+  · dsimp only [TransN]
+    simp only [sub_mul, mul_sub, one_mul, mul_one, mul_assoc, hP,
+      proj_idem hP, sub_self, mul_zero, zero_mul]
+    abel
+  · dsimp only [TransN, LorentzL, comm]
+    have hQ : (1 - P) * (1 - P) = 1 - P := by
+      calc
+        (1 - P) * (1 - P) = 1 - P - P + P * P := by noncomm_ring
+        _ = 1 - P := by rw [hP]; abel
+    have hL : LorentzL P M = M := by
+      dsimp [LorentzL]
+      calc
+        P * M * P + (1 - P) * M * (1 - P)
+            = M * P + M * (1 - P) := by
+                rw [← hMP]
+                noncomm_ring
+        _ = M := by noncomm_ring
+    rw [hL]
+    dsimp [TransN, comm]
+    rw [hpCorner]
+    have hcommCorner : P * (M * p - p * M) * (1 - P) = M * p - p * M := by
+      rw [mul_sub, sub_mul, ← mul_assoc, hMP]
+      have hMPQ : P * M * p * (1 - P) = M * p := by
+        rw [← hMP, ← mul_assoc, hpCorner]
+      have hpMQ : P * p * M * (1 - P) = p * M := by
+        rw [hpCorner]
+        noncomm_ring
+      rw [hMPQ, hpMQ]
+    simpa [comm] using hcommCorner
+  · dsimp only [comm]
+    noncomm_ring
+  · dsimp only [comm, anticomm]
+    noncomm_ring
 
 /--
 **Super-Peirce Odd Supercharge Anticommutator (`super_peirce_odd_supercharge_anticommutator`):**

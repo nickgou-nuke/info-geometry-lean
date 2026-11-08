@@ -5,7 +5,6 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
-import InfoGeometry.Parafermion.TetraktysRealCarryMatrix
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -435,8 +434,6 @@ section RealEighthRootCarry
 
 variable {B : Type u} [Ring B]
 
-open InfoGeometry.Parafermion.TetraktysRealCarryMatrix
-
 /-- The modified two-bit carry in which the carry channel is the first bit's
 endogenous complex structure `J`, rather than an involution `Φ₁`. -/
 def realEighthRootCarry (P Φ J : B) : B :=
@@ -445,24 +442,6 @@ def realEighthRootCarry (P Φ J : B) : B :=
 /-- The algebraic candidate for the inverse of `realEighthRootCarry`. -/
 def realEighthRootCarryInv (P Φ J : B) : B :=
   (1 - P) * Φ - P * J * Φ
-
-/-- The generic two-bit real carry specializes to the explicit four-state
-integer Tetraktys carry. This identifies the abstract operator definition with
-the independently declared matrix representation, and transports its first
-power law across that bridge. -/
-theorem real_eighth_root_carry_tetraktys_matrix_specialization :
-    realEighthRootCarry secondProjector secondFlip firstJ = zetaCarry ∧
-    zetaCarry * zetaCarry = firstJ := by
-  have h_one : one4 = (1 : Mat) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> decide
-  have h_repr :
-      realEighthRootCarry secondProjector secondFlip firstJ = zetaCarry := by
-    dsimp [realEighthRootCarry, zetaCarry]
-    rw [← h_one]
-  rcases tetraktys_real_carry_power_laws with
-    ⟨_, _, _, _, h_square, _, _⟩
-  exact ⟨h_repr, h_square⟩
 
 /-- A DeWitt second bit, with a commuting square-minus-one carry `J`, gives
 `ζ² = J`, `ζ⁴ = -1`, and the displayed two-sided inverse. This records power

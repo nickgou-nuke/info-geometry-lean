@@ -1051,7 +1051,7 @@ lemma parity16_anticomm_flip01_16 :
   rw [Fintype.sum_eq_single i (fun k hk => by simp [parity16, Ne.symm hk])]
   rw [Fintype.sum_eq_single j (fun k hk => by simp [parity16, hk])]
   dsimp [parity16, flip01_16]
-  rw [if_pos rfl, if_pos rfl]
+  simp only [↓reduceIte]
   by_cases h : i = 0 ∧ j = 1
   · rcases h with ⟨rfl, rfl⟩
     have h10 : (1 : Fin 16) ≠ 0 := by decide
@@ -1151,7 +1151,7 @@ Kramers TRS elenchus, and the $\mathcal{C}\ell(1,1) \otimes \mathcal{C}\ell(4,4)
 noncommutative Klein-bottle twist:
 1. Strict monotonicity & acyclicity of `KitaevABSCliffordExtensionStage` ($\mathfrak{KL}_{12} \prec \dots \prec \mathfrak{KL}_{18}$)
    alongside the AZ periodic table entries `azFullTable .D 1 = .Z2`, `azFullTable .D 2 = .Z`,
-   `azFullTable .D 3 = .Zero`, `azFullTable .DIII 3 = .Z`, and `azFullTable .AII 3 = .Z2`,
+   `azFullTable .D 3 = .Zero`, `azFullTable .DIII 3 = .Z`, and `azFullTable .AIII 3 = .Z`,
 2. $d = 1$ single-flavor isolated mass solutions $X^2 = -I_2 \iff X = \pm J$ ($\mathfrak{KL}_{12}$) vs.
    two-flavor continuous rotor $M(c, s)^2 = -(c^2 + s^2) I_4$ ($\mathfrak{KL}_{13}$),
 3. $d = 2$ locked chiral mass uniqueness $X = X_{01} J$ in $\mathrm{Mat}_2(\mathbb{R})$ and
@@ -1171,7 +1171,7 @@ theorem kl18_master_abs_clifford_extension_and_klein_bottle_synthesis
       azFullTable AZClass.D 2 = TopologicalGroup.Z ∧
       azFullTable AZClass.D 3 = TopologicalGroup.Zero ∧
       azFullTable AZClass.DIII 3 = TopologicalGroup.Z ∧
-      azFullTable AZClass.AII 3 = TopologicalGroup.Z2) ∧
+      azFullTable AZClass.AIII 3 = TopologicalGroup.Z) ∧
     (Mat4.massRotor c s * Mat4.massRotor c s = (- (c ^ 2 + s ^ 2)) • (Mat4.I4 : Mat4 K) ∧
       Matrix.det (Mat4.dim2SignatureMass s1 s2) = (s1 * s2) ^ 2) ∧
     ((Mat2.sigmaZ : Mat2 ℝ) * X2 + X2 * Mat2.sigmaZ = 0 →

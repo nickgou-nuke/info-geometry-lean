@@ -76,6 +76,7 @@ lean_lib SrcLane where
     .one `KaplanskyCliffordBridge,
     .one `NonIsoConf3OrlikSolomon,
     .one `Omega,
+    .one `PrimitiveSetsAboveX,
     .one `SelfReference,
     .one `Socratic,
     .one `Test,

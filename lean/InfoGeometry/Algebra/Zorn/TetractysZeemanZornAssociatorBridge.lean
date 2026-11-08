@@ -2846,7 +2846,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
         boundaryJordanMinus P C (boundaryLiePlus P A X) =
         InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genV P A C) X ∧
       boundaryLiePlus P A (boundaryJordanMinus P C X) -
-        boundaryLieMinus P C (boundaryJordanPlus P A X) =
+        boundaryJordanMinus P C (boundaryLiePlus P A X) =
         anticomm (genSig P A C) X ∧
       boundaryLiePlus P A (boundaryLieMinus P C X) -
         boundaryLieMinus P C (boundaryLiePlus P A X) =
@@ -2863,27 +2863,22 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
         (4 : ℤ) • sandwichCross P A C X)) := by
   have hSigEqSV : genSig P A C = invS P * genV P A C := by peirce_nf hP
   have hVEqSSig : genV P A C = invS P * genSig P A C := by peirce_nf hP
-  have hSpin1 : P * genSig P A C * P = conePlus P A * coneMinus P C := by
-    unfold conePlus coneMinus; peirce_nf hP
+  have hSpin1 : P * genSig P A C * P = conePlus P A * coneMinus P C := by peirce_nf hP
   have hSpin2 : (1 - P) * genSig P A C * (1 - P) = -(coneMinus P C * conePlus P A) := by
-    unfold conePlus coneMinus; peirce_nf hP
-  have hMass1 : P * genV P A C * P = conePlus P A * coneMinus P C := by
-    unfold conePlus coneMinus; peirce_nf hP
-  have hMass2 : (1 - P) * genV P A C * (1 - P) = coneMinus P C * conePlus P A := by
-    unfold conePlus coneMinus; peirce_nf hP
+    peirce_nf hP
+  have hMass1 : P * genV P A C * P = conePlus P A * coneMinus P C := by peirce_nf hP
+  have hMass2 : (1 - P) * genV P A C * (1 - P) = coneMinus P C * conePlus P A := by peirce_nf hP
   have hTrEq :
       τ (conePlus P A * coneMinus P C) = τ (coneMinus P C * conePlus P A) :=
     hτ (conePlus P A) (coneMinus P C)
   have hCubic :
       genPhi P A C * (genPhi P A C * genPhi P A C) =
         conePlus P A * coneMinus P C * conePlus P A +
-        coneMinus P C * conePlus P A * coneMinus P C := by
-    unfold conePlus coneMinus; peirce_nf hP
+        coneMinus P C * conePlus P A * coneMinus P C := by peirce_nf hP
   have hQuartic :
       (genPhi P A C * genPhi P A C) * (genPhi P A C * genPhi P A C) =
         (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) +
-        (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by
-    unfold conePlus coneMinus; peirce_nf hP
+        (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by peirce_nf hP
   have hSigPhi0 : genSig P A C * genPhi P A C = genJ P A C * genV P A C := by peirce_nf hP
   have hSigJ0 : genSig P A C * genJ P A C = genPhi P A C * genV P A C := by peirce_nf hP
   have hReflAll :
@@ -2904,9 +2899,9 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
           (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C := by
     intro hReflPlus hReflMinus
     have hCross1 : (conePlus P A * coneMinus P C) * (coneMinus P C * conePlus P A) = 0 := by
-      unfold conePlus coneMinus; peirce_nf hP
+      peirce_nf hP
     have hCross2 : (coneMinus P C * conePlus P A) * (conePlus P A * coneMinus P C) = 0 := by
-      unfold conePlus coneMinus; peirce_nf hP
+      peirce_nf hP
     have hIdemL :
         (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) =
           conePlus P A * coneMinus P C := by
@@ -2920,7 +2915,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
         _ = (coneMinus P C * conePlus P A * coneMinus P C) * conePlus P A := by noncomm_ring
         _ = coneMinus P C * conePlus P A := by rw [hReflMinus]
     have hV_idem : genV P A C * genV P A C = genV P A C := by
-      unfold genV
+      unfold genV anticomm
       calc (conePlus P A * coneMinus P C + coneMinus P C * conePlus P A) *
            (conePlus P A * coneMinus P C + coneMinus P C * conePlus P A)
         _ = (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) +
@@ -2928,7 +2923,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
             (coneMinus P C * conePlus P A) * (conePlus P A * coneMinus P C) +
             (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by noncomm_ring
         _ = conePlus P A * coneMinus P C + coneMinus P C * conePlus P A := by
-            rw [hIdemL, hIdemR, hCross1, hCross2]; noncomm_ring
+            rw [hIdemL, hIdemR, hCross1, hCross2]; abel
     have hSig2V2 : genSig P A C * genSig P A C = genV P A C * genV P A C := by peirce_nf hP
     have hSigSq : genSig P A C * genSig P A C = genV P A C := by rw [hSig2V2, hV_idem]
     have hPhiTrip : genPhi P A C * (genPhi P A C * genPhi P A C) = genPhi P A C := by
@@ -2936,8 +2931,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
     have hSigCubic :
         genSig P A C * (genSig P A C * genSig P A C) =
           (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) -
-          (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by
-      unfold conePlus coneMinus; peirce_nf hP
+          (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by peirce_nf hP
     have hSigTrip : genSig P A C * (genSig P A C * genSig P A C) = genSig P A C := by
       rw [hSigCubic, hIdemL, hIdemR]; rfl
     have hPhi2V : genPhi P A C * genPhi P A C = genV P A C := by peirce_nf hP
@@ -2951,8 +2945,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
     have hJExpand :
         genJ P A C * genV P A C =
           conePlus P A * coneMinus P C * conePlus P A -
-          coneMinus P C * conePlus P A * coneMinus P C := by
-      unfold conePlus coneMinus; peirce_nf hP
+          coneMinus P C * conePlus P A * coneMinus P C := by peirce_nf hP
     have hJV : genJ P A C * genV P A C = genJ P A C := by
       rw [hJExpand, hReflPlus, hReflMinus]; rfl
     have hSigPhi : genSig P A C * genPhi P A C = genJ P A C := by rw [hSigPhi0, hJV]
@@ -2961,7 +2954,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
       unfold vacuumProjector
       calc (1 - genV P A C) * (1 - genV P A C)
         _ = 1 - genV P A C - genV P A C + genV P A C * genV P A C := by noncomm_ring
-        _ = 1 - genV P A C := by rw [hV_idem]; noncomm_ring
+        _ = 1 - genV P A C := by rw [hV_idem]; abel
     have hVacPhi : vacuumProjector P A C * genPhi P A C = 0 := by
       unfold vacuumProjector; rw [sub_mul, one_mul, hVPhi, sub_self]
     have hPhiVac : genPhi P A C * vacuumProjector P A C = 0 := by
@@ -2974,7 +2967,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
             genPhi P A C * vacuumProjector P A C +
             genPhi P A C * genPhi P A C := by noncomm_ring
         _ = vacuumProjector P A C + genV P A C := by
-            rw [hVacIdem, hVacPhi, hPhiVac, hPhi2V]; noncomm_ring
+            rw [hVacIdem, hVacPhi, hPhiVac, hPhi2V]; abel
         _ = 1 := by unfold vacuumProjector; noncomm_ring
     have hVSig : genV P A C * genSig P A C = genSig P A C := by
       calc genV P A C * genSig P A C
@@ -2995,16 +2988,20 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
             genSig P A C * vacuumProjector P A C +
             genSig P A C * genSig P A C := by noncomm_ring
         _ = vacuumProjector P A C + genV P A C := by
-            rw [hVacIdem, hVacSig, hSigVac, hSigSq]; noncomm_ring
+            rw [hVacIdem, hVacSig, hSigVac, hSigSq]; abel
         _ = 1 := by unfold vacuumProjector; noncomm_ring
     have hPropSplit :
         (k • (1 : B) - genPhi P A C) * (k • (1 : B) + genPhi P A C) =
           (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C := by
       calc (k • (1 : B) - genPhi P A C) * (k • (1 : B) + genPhi P A C)
-        _ = (k * k) • (1 : B) - genPhi P A C * genPhi P A C := by noncomm_ring
+        _ = k • (k • (1 : B) - genPhi P A C) +
+            (k • genPhi P A C - genPhi P A C * genPhi P A C) := by noncomm_ring
+        _ = (k * k) • (1 : B) - genPhi P A C * genPhi P A C := by
+            rw [smul_sub, smul_smul]; abel
         _ = (k * k) • (1 : B) - genV P A C := by rw [hPhi2V]
         _ = (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C := by
-            unfold vacuumProjector; noncomm_ring
+            unfold vacuumProjector
+            rw [smul_sub, sub_smul, one_smul]; abel
     exact ⟨hPhiTrip, hSigSq, hSigTrip, hV_idem, hSigPhi, hSigJ,
       hVacIdem, hVacPhi, hPhiVac, hDiracInv, hSpinInv, hPropSplit⟩
   have hSterile :
@@ -3020,10 +3017,10 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
         unfold coneMinus; peirce_nf hP
       rw [hId, h0, zero_mul, neg_zero]
     have hV0 : genV P A A = 0 := by
-      unfold genV
+      unfold genV anticomm
       rw [hPlus0, hMinus0, zero_mul, add_zero]
     have hSig0 : genSig P A A = 0 := by
-      unfold genSig
+      unfold genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm
       rw [hPlus0, hMinus0, zero_mul, sub_self]
     exact ⟨hPlus0, hMinus0, hV0, hSig0⟩
   refine ⟨⟨⟨by peirce_nf hP, by peirce_nf hP, by peirce_nf hP,
@@ -3041,7 +3038,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
       by unfold boundaryLieMinus boundaryJordanMinus; peirce_nf hP,
       by unfold boundaryLieMinus boundaryJordanMinus; peirce_nf hP⟩,
      ⟨by unfold boundaryJordanPlus boundaryLieMinus boundaryJordanMinus boundaryLiePlus genV InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
-      by unfold boundaryLiePlus boundaryJordanMinus boundaryLieMinus boundaryJordanPlus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
+      by unfold boundaryLiePlus boundaryJordanMinus boundaryLiePlus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
       by unfold boundaryLiePlus boundaryLieMinus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring,
       by unfold boundaryJordanPlus boundaryJordanMinus boundaryLiePlus boundaryLieMinus genV InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
       by unfold boundaryJordanPlus boundaryJordanMinus boundaryLiePlus boundaryLieMinus sandwichCross InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring⟩⟩⟩

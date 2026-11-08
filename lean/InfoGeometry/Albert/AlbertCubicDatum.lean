@@ -5,6 +5,13 @@ import InfoGeometry.Algebra.CubicJordanFreudenthal
 import InfoGeometry.Exceptional.Freudenthal
 import Mathlib
 
+/-!
+# Albert Cubic Datum
+
+Provides trace, norm, and adjoint operations on Albert matrices, establishing
+the cubic Jordan algebra structure used in exceptional information geometry.
+-/
+
 open InfoGeometry.Algebra.CubicJordanOs
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.Exceptional.Freudenthal

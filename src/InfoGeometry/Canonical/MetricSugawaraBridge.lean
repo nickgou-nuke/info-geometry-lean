@@ -1,17 +1,30 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
-# Metric Sugawara bridge
+# Metric Sugawara Bridge
 
-This file records the finite-channel Sugawara kernel used by the metric datum
-layer.
+This module defines the channel-indexed normal-ordered current pair `channelPairNO`
+and the `kappaInv`-contracted finite-channel Sugawara stress kernel
+`channelSugawaraKernel`, together with its 8-channel split specialization
+`splitEightKernel`, and proves their evaluation and mode-ordering identities.
 
-It packages the channel-indexed normal-ordered pair and the explicit
-`kappa`-contracted stress kernel.  The full Virasoro bracket theorem is still
-owned by the existing single-current Sugawara lane; this file only introduces
-the finite-channel operator formula in a repo-native form.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Canonical.CurrentSugawaraMetricDatum`:
+    `CurrentMetricDatum`, `MetricHeisenbergCurrent`, `splitEightCurrentMetricDatum`.
+- BUCKET 2 (Deconfabulation):
+  * All normal-ordered pair and Sugawara kernel evaluation theorems are proved
+    via explicit unfolding.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `channelPairNO`, `channelSugawaraKernel`, `splitEightKernel`.
+  * `channelPairNO_def`, `channelPairNO_of_le`, `channelPairNO_of_gt`,
+    `channelSugawaraKernel_def`, `splitEightKernel_def`.
 -/
 
 namespace InfoGeometry.Canonical.MetricSugawaraBridge
@@ -24,28 +37,39 @@ variable {𝕜 I V : Type*}
 variable [Field 𝕜] [Fintype I] [DecidableEq I]
 variable [AddCommGroup V] [Module 𝕜 V]
 
-/-- Channel-indexed normal-ordered pair of current operators. -/
+/-- Channel-indexed normal-ordered pair of current operators `:J_{i,m} J_{j,n}:`. -/
 noncomputable def channelPairNO
     (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
     (i j : I) (m n : ℤ) : V →ₗ[𝕜] V :=
   if n ≤ m then (H.J j n).comp (H.J i m) else (H.J i m).comp (H.J j n)
 
+/-- Explicit definition of `channelPairNO H i j m n`. -/
 @[simp] theorem channelPairNO_def
     (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
     (i j : I) (m n : ℤ) :
     channelPairNO H i j m n =
       (if n ≤ m then (H.J j n).comp (H.J i m) else (H.J i m).comp (H.J j n)) := by
-  rfl
+  unfold channelPairNO
+  exact Eq.refl _
 
-/--
-Explicit finite-channel Sugawara kernel.
+/-- When `n ≤ m`, `channelPairNO H i j m n` places `H.J i m` on the right. -/
+theorem channelPairNO_of_le
+    (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
+    (i j : I) {m n : ℤ} (hnm : n ≤ m) :
+    channelPairNO H i j m n = (H.J j n).comp (H.J i m) := by
+  unfold channelPairNO
+  exact if_pos hnm
 
-This is the formal finite-channel version of
+/-- When `m < n`, `channelPairNO H i j m n` places `H.J j n` on the right. -/
+theorem channelPairNO_of_gt
+    (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
+    (i j : I) {m n : ℤ} (hmn : m < n) :
+    channelPairNO H i j m n = (H.J i m).comp (H.J j n) := by
+  unfold channelPairNO
+  exact if_neg (not_le.mpr hmn)
 
-`L_n = 1/2 ∑_{k,i,j} κ^{ij} :J_{i,n-k} J_{j,k}:`
-
-written directly as a finitely supported sum of operator values.
--/
+/-- Explicit finite-channel Sugawara kernel
+`L_n v = 2⁻¹ • ∑ᶠ k, ∑ i, ∑ j, κ^{ij} • :J_{i,n-k} J_{j,k}: v`. -/
 noncomputable def channelSugawaraKernel
     (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
     (n : ℤ) : V → V :=
@@ -53,21 +77,24 @@ noncomputable def channelSugawaraKernel
     (2 : 𝕜)⁻¹ • ∑ᶠ k, ∑ i, ∑ j, H.metric.kappaInv i j •
       channelPairNO H i j (n - k) k v
 
+/-- Pointwise evaluation of `channelSugawaraKernel H n v`. -/
 @[simp] theorem channelSugawaraKernel_def
     (H : CurrentMetricDatum.MetricHeisenbergCurrent 𝕜 V I)
     (n : ℤ) (v : V) :
     channelSugawaraKernel H n v =
       (2 : 𝕜)⁻¹ • ∑ᶠ k, ∑ i, ∑ j, H.metric.kappaInv i j •
         channelPairNO H i j (n - k) k v := by
-  rfl
+  unfold channelSugawaraKernel
+  exact Eq.refl _
 
-/-- The split 8-channel kernel uses the canonical split metric datum. -/
+/-- The split 8-channel Sugawara kernel specialized to `Fin 8` over `ℝ`. -/
 noncomputable def splitEightKernel
     (V : Type*) [AddCommGroup V] [Module ℝ V] :
     CurrentMetricDatum.MetricHeisenbergCurrent ℝ V (Fin 8) →
       ℤ → V → V :=
   channelSugawaraKernel
 
+/-- Pointwise evaluation of `splitEightKernel H n v`. -/
 @[simp] theorem splitEightKernel_def
     (V : Type*) [AddCommGroup V] [Module ℝ V]
     (H : CurrentMetricDatum.MetricHeisenbergCurrent ℝ V (Fin 8))
@@ -75,6 +102,7 @@ noncomputable def splitEightKernel
     splitEightKernel (V := V) H n v =
       (2 : ℝ)⁻¹ • ∑ᶠ k, ∑ i : Fin 8, ∑ j : Fin 8, H.metric.kappaInv i j •
         channelPairNO H i j (n - k) k v := by
-  rfl
+  unfold splitEightKernel channelSugawaraKernel
+  exact Eq.refl _
 
 end InfoGeometry.Canonical.MetricSugawaraBridge

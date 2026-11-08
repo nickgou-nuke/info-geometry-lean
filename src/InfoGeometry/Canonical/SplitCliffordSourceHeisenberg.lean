@@ -4,12 +4,28 @@ import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 
 /-!
-# InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
+# Split-Clifford Source Heisenberg Packaging and Charged-Fock Readouts
 
-Strict packaging from proved endomorphism-valued current laws to the existing
-split Heisenberg witness.
+This module packages endomorphism-valued current families satisfying eventual
+truncation and `SplitSourceEndWickLaw` into `SplitCliffordHeisenbergWitness`,
+extracts the concrete charged-Fock truncation and Wick commutator laws, and
+exposes the external infinite-current Lie brackets.
 
-This file introduces no pseudo-closure surfaces.
+## 1. Real Math in This File
+- `packagedHeisenbergWitness`
+- `truncLift_of_represented_current`, `wickLift_of_represented_current`,
+  `strictWitness_of_represented_current`
+- `truncLift_of_splitCurrentLiftDatum`
+- `canonicalInfiniteCurrent_commutator_readout`,
+  `canonicalInfiniteCurrent_one_negOne`, `canonicalInfiniteCurrent_central`
+
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.SplitCliffordHeisenbergBridge`
+- `InfoGeometry.Canonical.SplitCliffordSourceCurrentWick`
+- `InfoGeometry.Canonical.SplitCliffordInfiniteCurrent`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
@@ -20,25 +36,18 @@ open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 open InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 open InfoGeometry.Canonical.SplitCliffordSourceCurrent
 
-/--
-Bundle a proved endomorphism-valued current family into the split Heisenberg
-bridge witness.
--/
+/-- Construct a `SplitCliffordHeisenbergWitness 𝕜 V` from a current family `Jlift`
+with eventual positive-mode truncation and `SplitSourceEndWickLaw`. -/
 def packagedHeisenbergWitness
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (Jlift : Int → V →ₗ[𝕜] V)
     (hTruncLift : ∀ v : V, ∀ᶠ l : Int in atTop, Jlift l v = 0)
     (hCommLift : SplitSourceEndWickLaw Jlift) :
-    SplitCliffordHeisenbergWitness 𝕜 V where
-  J := Jlift
-  trunc := hTruncLift
-  comm := hCommLift
+    SplitCliffordHeisenbergWitness 𝕜 V :=
+  ⟨Jlift, hTruncLift, hCommLift⟩
 
-/--
-`truncLift`: extract eventual truncation from the concrete charged-Fock source
-current witness.
--/
+/-- Existence of a locally truncated current family on `ChargedFockSpace 𝕜 α`. -/
 theorem truncLift_of_represented_current
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     ∃ J :
@@ -49,10 +58,8 @@ theorem truncLift_of_represented_current
   rcases represented_current_commutator_chargedFock (𝕜 := 𝕜) α with ⟨J, htrunc, _⟩
   exact ⟨J, htrunc⟩
 
-/--
-`wickLift`: extract the endomorphism-valued Wick/Heisenberg commutator law
-from the concrete charged-Fock source current witness.
--/
+/-- Existence of a current family on `ChargedFockSpace 𝕜 α` satisfying
+`SplitSourceEndWickLaw`. -/
 theorem wickLift_of_represented_current
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     ∃ J :
@@ -63,10 +70,8 @@ theorem wickLift_of_represented_current
   rcases represented_current_commutator_chargedFock (𝕜 := 𝕜) α with ⟨J, _, hwick⟩
   exact ⟨J, hwick⟩
 
-/--
-Strict witness packaging theorem: the concrete charged-Fock current family
-provides a `SplitCliffordHeisenbergWitness` without any extra closure surface.
--/
+/-- Existence of a current family on `ChargedFockSpace 𝕜 α` satisfying both
+eventual positive-mode truncation and `SplitSourceEndWickLaw`. -/
 theorem strictWitness_of_represented_current
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     ∃ J :
@@ -79,50 +84,37 @@ theorem strictWitness_of_represented_current
     ⟨J, hTruncLift, hCommLift⟩
   exact ⟨J, hTruncLift, hCommLift⟩
 
-/-! ## Packaging from split source lift data -/
-
 universe u
 
-/--
-Any split-source current lift datum gives eventual truncation for its lifted
-mode family.
--/
+/-- Eventual positive-mode truncation of the lifted mode family `L.Jlift` for any
+`SplitCurrentLiftDatum`. -/
 theorem truncLift_of_splitCurrentLiftDatum
     {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V)) :
-    ∀ v : V, ∀ᶠ l : Int in atTop, L.Jlift l v = 0 :=
-  L.trunc
+    ∀ v : V, ∀ᶠ l : Int in atTop, L.Jlift l v = 0 := by
+  intro v
+  exact L.trunc v
 
-/-! ## Explicit infinite-current consumer readouts -/
-
-/--
-Consumer readout: the canonical infinite current from the external Heisenberg
-algebra satisfies the full mode commutator law.
--/
+/-- Mode commutator identity for the canonical infinite current `Jinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_commutator_readout
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
     (m n : Int) :
     ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
-      if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 :=
-  canonicalInfiniteCurrent_lie (𝕜 := 𝕜) m n
+      if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 := by
+  exact canonicalInfiniteCurrent_lie (𝕜 := 𝕜) m n
 
-/--
-Consumer readout: the first central mode pair of the canonical infinite
-current is exactly `[J₁,J₋₁] = 1 • K`.
--/
+/-- Fundamental mode pair commutator `⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_one_negOne
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
-    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 :=
-  canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
+    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 := by
+  exact canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
 
-/--
-Consumer readout: the canonical central generator commutes with every element.
--/
+/-- Centrality of `Kinf 𝕜` in `InfiniteCurrentAlg 𝕜`. -/
 theorem canonicalInfiniteCurrent_central
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
     (Z : InfiniteCurrentAlg 𝕜) :
-    ⁅Kinf 𝕜, Z⁆ = 0 :=
-  canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z
+    ⁅Kinf 𝕜, Z⁆ = 0 := by
+  exact canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z
 
 end InfoGeometry.Canonical.SplitCliffordSourceHeisenberg

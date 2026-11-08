@@ -7,21 +7,24 @@ selection, not a claim that all those modules currently compile. The separate
 `lakefile.src.lean` workspace selects every Lean module under each source-bearing
 top-level directory in `src/` and every top-level `.lean` file. It uses
 `.lake/src-build` so shared module names have independent artifacts.
-The root-level `src/PrimitiveSetsAboveX.lean` symlink remains explicitly
-outside the default lane because its external proof is pinned to another Lean
-toolchain. The dual-source audit checks this exception and rejects any other
-unselected `src/` module.
+The root-level `src/PrimitiveSetsAboveX.lean` compatibility module is selected
+in the source lane, matching the canonical Lake default target. Its metadata
+records the upstream toolchain, while the local compatibility module is
+retargeted to this repository's pinned toolchain.
 
-`InfoGeometry.All` imports `InfoGeometry.AllExhaustive`. Default-selected
-modules are included there unless they depend on that umbrella themselves.
-In particular, `InfoGeometry.auto_blueprints` and `InfoGeometry.BlueprintTags`
-must remain downstream to avoid an import cycle; both are default-built.
+`InfoGeometry.All` imports `InfoGeometry.AllExhaustive`. The intended contract
+is that every default-selected `InfoGeometry.*` module is reachable from that
+umbrella unless it depends on the umbrella itself. The current canonical audit
+still reports unreachable default modules, so that contract is not yet closed.
+`InfoGeometry.auto_blueprints` and `InfoGeometry.BlueprintTags` remain
+downstream to avoid an import cycle; both are default-built.
 
 Run `python3 tools/infra/audit_default_lean_sources.py` for a read-only check
 of canonical default selection, source existence, Git tracking, and umbrella
 coverage. The strict-check pipeline also runs the separate source-lane audit,
-which validates `src/` selection and the explicit external-toolchain exception.
-The locked combined default build compiles both lanes. A newly selected canonical module
+which validates `src/` selection against its explicit Lake globs. The locked
+combined default-build mode is configured to compile both lanes; it still needs
+a completed run before it can serve as build evidence. A newly selected canonical module
 missing from the umbrella, or a source missing from the Git index, causes the
 canonical audit to fail. This does not stage files automatically.
 
@@ -36,8 +39,9 @@ selection flag. Do not run another compiler while the shared build is active.
 
 ## Remaining integration boundaries
 
-- `PrimitiveSetsAboveX` is an explicitly opt-in external proof requiring a
-  different Lean toolchain. Its pins are unchanged.
+- `PrimitiveSetsAboveX` is a locally retargeted compatibility module for a
+  pinned external proof. The upstream and local toolchains are recorded in
+  `InfoGeometry.Arithmetic.Erdos1196ProofPin`.
 - Root probes, nested Lake configuration files, generated annotation copies,
   caches, recovery trees, and archives are not promoted as active libraries.
 - Twenty misplaced mathematical modules were moved from root `InfoGeometry/`

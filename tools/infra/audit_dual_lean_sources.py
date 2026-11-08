@@ -16,11 +16,6 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-# This root-level src symlink is an external proof pinned to a different Lean
-# toolchain; it remains an explicit opt-in target under repository policy.
-NON_DEFAULT_SRC_MODULES = {"PrimitiveSetsAboveX"}
-
-
 if __package__ in (None, ""):
     sys.path.insert(0, str(ROOT))
 
@@ -85,8 +80,7 @@ def audit(root: Path) -> tuple[dict[str, int], list[str], dict[str, list[str]]]:
     selected_src = src_lane_sources(root)
     src_names, lean_names = set(src), set(lean)
     selected_src_names = set(selected_src)
-    unselected_src = sorted(src_names - selected_src_names - NON_DEFAULT_SRC_MODULES)
-    nondefault_src = sorted(src_names & NON_DEFAULT_SRC_MODULES)
+    unselected_src = sorted(src_names - selected_src_names)
     selected_missing = sorted(
         name for name, path in selected_src.items() if not path.is_file()
     )
@@ -101,7 +95,6 @@ def audit(root: Path) -> tuple[dict[str, int], list[str], dict[str, list[str]]]:
         "lean_modules": len(lean_names),
         "src_lane_selected_modules": len(selected_src_names),
         "src_modules_unselected": len(unselected_src),
-        "src_modules_explicitly_non_default": len(nondefault_src),
         "src_selected_paths_missing": len(selected_missing),
         "shared_module_names": len(shared),
         "shared_divergent_modules": len(divergent),
@@ -117,7 +110,6 @@ def audit(root: Path) -> tuple[dict[str, int], list[str], dict[str, list[str]]]:
     ]
     details = {
         "src_modules_unselected": unselected_src,
-        "src_modules_explicitly_non_default": nondefault_src,
         "src_selected_paths_missing": selected_missing,
         "shared_divergent_modules": divergent,
         "src_only_modules": sorted(src_names - lean_names),

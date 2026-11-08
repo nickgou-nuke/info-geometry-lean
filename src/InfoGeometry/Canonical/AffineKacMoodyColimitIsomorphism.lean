@@ -261,3 +261,12 @@ noncomputable def colimitLieEquivAmbient :
       (⊤ : LieSubalgebra 𝕜 (KM Φ hΦ hΦs))
       (by rw [affineFiniteModeColimitLieSubalgebra_eq_top Φ hΦ hΦs])).trans
       LieSubalgebra.topEquiv)
+
+/-- The Lie equivalence on the categorical colimit is the canonical
+ModuleCat comparison map after forgetting its Lie structure. -/
+theorem colimitLieEquivAmbient_apply (x : affineFiniteModeColimit Φ hΦ hΦs) :
+    colimitLieEquivAmbient Φ hΦ hΦs x =
+      (affineFiniteModeColimitMap Φ hΦ hΦs).hom x := by
+  change ((colimitEquivUnion Φ hΦ hΦs x :
+    affineFiniteModeUnion Φ hΦ hΦs) : KM Φ hΦ hΦs) = _
+  rfl

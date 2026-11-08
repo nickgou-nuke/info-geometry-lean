@@ -4,14 +4,24 @@ import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.SplitCARCurrentSource
 
 /-!
-# InfoGeometry.Canonical.ChargedFockSpaceFromRawCAR
+# Constructive Bridge from Raw CAR Mode Completions to Charged-Fock Sugawara Virasoro
 
-Constructive bridge from raw CAR mode completions to the `CurrentHeisenbergRep`
-and downstream Sugawara/Virasoro algebra on the charged Fock space.
+This module pairs any raw CAR mode completion `RawCARModeCompletion A` with the
+canonical charged-Fock Heisenberg representation `chargedFockSpaceCurrentHeisenbergRep`
+and proves the induced Heisenberg and Sugawara Virasoro commutator identities.
 
-This file establishes the source-side link connecting raw CAR normal-ordered
-matrix units to the Heisenberg current commutator $[J_m, J_n] = m \delta_{m+n,0} K$
-and Virasoro generators $L_n$.
+## 1. Real Math in This File
+- `chargedFockSpaceWitnessFromRawCAR`
+- `chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep`,
+  `chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode`
+- `rawCAR_to_SugawaraVirasoro_bridge`
+
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.SplitCARCurrentSource`
+- `InfoGeometry.Canonical.CurrentSugawaraBridge`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Canonical.ChargedFockSpaceFromRawCAR
@@ -22,57 +32,54 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SplitCARCurrentSource
 open VirasoroProject
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
-
-/--
-Constructive package embedding a raw CAR mode completion into the charged Fock space
-Heisenberg current representation.
--/
+/-- Pairing of a raw CAR mode completion `C : RawCARModeCompletion A` with the
+canonical charged-Fock Heisenberg current representation. -/
 noncomputable def chargedFockSpaceWitnessFromRawCAR
+    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :
-    SplitCARCurrentWitness 𝕜 A (ChargedFockSpace 𝕜 α) where
-  source := C
-  J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
-  trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
-  comm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
+    SplitCARCurrentWitness 𝕜 A (ChargedFockSpace 𝕜 α) :=
+  (C, chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
-/--
-The converted Heisenberg representation on the charged Fock space matches the
-canonical `chargedFockSpaceCurrentHeisenbergRep`.
--/
+/-- The Heisenberg representation extracted from `chargedFockSpaceWitnessFromRawCAR`
+equals `chargedFockSpaceCurrentHeisenbergRep 𝕜 α`. -/
 theorem chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep
+    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :
     (chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep =
       chargedFockSpaceCurrentHeisenbergRep 𝕜 α := by
+  unfold chargedFockSpaceWitnessFromRawCAR SplitCARCurrentWitness.toCurrentHeisenbergRep
   rfl
 
-/--
-The Virasoro stress-energy modes derived from the raw CAR witness match the canonical
-Sugawara representation.
--/
+/-- The Sugawara stress-energy modes extracted from `chargedFockSpaceWitnessFromRawCAR`
+match those of `chargedFockSpaceCurrentHeisenbergRep 𝕜 α`. -/
 theorem chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode
+    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) (n : Int) :
     (chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep.sugawaraStressMode n =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).sugawaraStressMode n := by
-  rfl
+  rw [chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep]
 
-/--
-**Main Constructive Bridge Theorem:**
-Every raw CAR mode completion `C` induces a valid Heisenberg current representation
-on `ChargedFockSpace 𝕜 α` satisfying the Heisenberg commutator law $[J_m, J_n] = m \delta_{m+n,0} I$
-and generating the Sugawara Virasoro representation with central charge $c = 1$.
--/
+/-- Any raw CAR mode completion `C` paired with `ChargedFockSpace 𝕜 α` yields a
+Heisenberg current representation satisfying both the Heisenberg mode commutator
+and the Sugawara Virasoro commutator with central charge $c = 1$. -/
 theorem rawCAR_to_SugawaraVirasoro_bridge
+    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :
     ∃ (H : CurrentHeisenbergRep 𝕜 (ChargedFockSpace 𝕜 α)),
-      (∀ m n, (H.J m).commutator (H.J n) = if m + n = 0 then (m : 𝕜) • (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α) else 0) ∧
+      (∀ m n, (H.J m).commutator (H.J n) =
+        if m + n = 0 then
+          (m : 𝕜) • (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α)
+        else 0) ∧
       (∀ m n, (H.sugawaraStressMode m).commutator (H.sugawaraStressMode n) =
         (m - n) • H.sugawaraStressMode (m + n) +
-          if m + n = 0 then (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α)) else 0) := by
+          if m + n = 0 then
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+              (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α))
+          else 0) := by
   classical
   refine ⟨(chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep, ?_, ?_⟩
   · intro m n

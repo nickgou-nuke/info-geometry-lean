@@ -1,11 +1,37 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-!
-# InfoGeometry.Canonical.CurrentConjugationLemmas
+# Conjugation Transport Lemmas for Heisenberg Current and Sugawara Operators
 
-Concrete conjugation transport lemmas for current operators.
+This module proves that conjugating endomorphisms by a linear equivalence
+`U : V ≃ₗ[𝕜] V` preserves the zero map, subtraction, associative commutators,
+Heisenberg current commutators, high-mode truncation, and the Sugawara Virasoro
+stress-mode and central generator relations, inducing `conjugatedCurrentHeisenbergRep`.
+
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Canonical.CurrentSugawaraBridge`: `conjugateEnd`,
+    `CurrentHeisenbergRep`, `CurrentHeisenbergRep.sugawaraStressMode`,
+    `CurrentHeisenbergRep.currentSugawaraRepresentation`.
+- BUCKET 2 (Deconfabulation):
+  * All operator conjugation identities and `conjugatedCurrentHeisenbergRep` are
+    proved constructively using `CurrentHeisenbergRep.mk`.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `conjugateEnd_zero`, `conjugateEnd_sub`, `conjugateEnd_commutator`.
+  * `current_commutator_conjugated`, `current_trunc_conjugated`.
+  * `currentSugawara_lgen_conjugated`, `currentSugawara_cgen_conjugated`,
+    `currentSugawaraRepresentation_bracket_conjugated`,
+    `sugawara_commutator_conjugated`, `currentSugawara_lgen_commutator_conjugated`,
+    `currentSugawara_cgen_lgen_commutator_conjugated`,
+    `currentSugawara_lgen_cgen_commutator_conjugated`,
+    `currentSugawara_lgen_commutator_conjugated_skew`.
+  * `conjugatedCurrentHeisenbergRep`.
 -/
 
 namespace InfoGeometry.Canonical.CurrentConjugationLemmas
@@ -16,6 +42,7 @@ attribute [local instance] LieAlgebra.ofAssociativeAlgebra
 open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 
+/-- Conjugating the zero endomorphism by `U` yields zero. -/
 @[simp]
 theorem conjugateEnd_zero
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
@@ -24,6 +51,7 @@ theorem conjugateEnd_zero
   ext v
   simp [conjugateEnd]
 
+/-- Conjugating a difference of endomorphisms distributes over subtraction. -/
 @[simp]
 theorem conjugateEnd_sub
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
@@ -32,14 +60,17 @@ theorem conjugateEnd_sub
   ext v
   simp [sub_eq_add_neg, conjugateEnd]
 
+/-- Conjugation by `U` intertwines the associative commutator `LinearMap.commutator`. -/
 theorem conjugateEnd_commutator
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V)
     (A B : V →ₗ[𝕜] V) :
     (conjugateEnd U A).commutator (conjugateEnd U B) =
       conjugateEnd U (A.commutator B) := by
-  simp [LinearMap.commutator, conjugateEnd_mul]
+  unfold LinearMap.commutator
+  rw [conjugateEnd_sub, conjugateEnd_mul, conjugateEnd_mul]
 
+/-- Conjugated current modes satisfy the same Heisenberg commutator relation. -/
 theorem current_commutator_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -57,6 +88,7 @@ theorem current_commutator_conjugated
   · simp [conjugateEnd_smul, conjugateEnd_one]
   · simp
 
+/-- Conjugated current modes preserve high-mode truncation on every vector `v : V`. -/
 theorem current_trunc_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -70,9 +102,7 @@ theorem current_trunc_conjugated
   intro l hl
   simp [conjugateEnd, hl]
 
-/--
-Conjugation transports the Sugawara `lgen` action modewise.
--/
+/-- Conjugation transports the Sugawara `lgen` action modewise. -/
 theorem currentSugawara_lgen_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -83,11 +113,9 @@ theorem currentSugawara_lgen_conjugated
       (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
     =
     conjugateEnd U (H.sugawaraStressMode n) := by
-  simp [H.currentSugawaraRepresentation_lgen_apply n]
+  rw [H.currentSugawaraRepresentation_lgen_apply n]
 
-/--
-Conjugation preserves the Virasoro central generator action (`cgen ↦ 1`).
--/
+/-- Conjugation preserves the Virasoro central generator action (`cgen ↦ 1`). -/
 theorem currentSugawara_cgen_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -97,12 +125,9 @@ theorem currentSugawara_cgen_conjugated
       (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
     =
     (1 : V →ₗ[𝕜] V) := by
-  simp [H.currentSugawaraRepresentation_central, conjugateEnd_one]
+  rw [H.currentSugawaraRepresentation_central, conjugateEnd_one]
 
-/--
-Conjugation transports the full Virasoro bracket law for the Sugawara
-representation.
--/
+/-- Conjugation transports the full Virasoro bracket law for the Sugawara representation. -/
 theorem currentSugawaraRepresentation_bracket_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -117,12 +142,8 @@ theorem currentSugawaraRepresentation_bracket_conjugated
   exact congrArg (conjugateEnd U)
     (H.currentSugawaraRepresentation.map_lie x y).symm
 
-/--
-Conjugation transports the Sugawara/Virasoro stress-mode commutator law.
-
-This is the direct operator identity
-`[U L_m U⁻¹, U L_n U⁻¹] = U [L_m, L_n] U⁻¹`.
--/
+/-- Conjugation transports the Sugawara/Virasoro stress-mode commutator law
+`[U L_m U⁻¹, U L_n U⁻¹] = U [L_m, L_n] U⁻¹`. -/
 theorem sugawara_commutator_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -146,9 +167,7 @@ theorem sugawara_commutator_conjugated
     rw [← Int.cast_smul_eq_zsmul (R := 𝕜) m (U ((H.sugawaraStressMode (m + n)) (U.symm v)))]
     rw [← Int.cast_smul_eq_zsmul (R := 𝕜) n (U ((H.sugawaraStressMode (m + n)) (U.symm v)))]
 
-/--
-Conjugated Virasoro `lgen` commutator in Sugawara form.
--/
+/-- Conjugated Virasoro `lgen` commutator in Sugawara form. -/
 theorem currentSugawara_lgen_commutator_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -165,12 +184,10 @@ theorem currentSugawara_lgen_commutator_conjugated
       (if m + n = 0 then
         (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
       else 0) := by
-  simpa [currentSugawara_lgen_conjugated] using
-    sugawara_commutator_conjugated (H := H) (U := U) m n
+  rw [currentSugawara_lgen_conjugated, currentSugawara_lgen_conjugated]
+  exact sugawara_commutator_conjugated (H := H) (U := U) m n
 
-/--
-Conjugated central/`lgen` commutator vanishes.
--/
+/-- Conjugated central/`lgen` commutator vanishes. -/
 theorem currentSugawara_cgen_lgen_commutator_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -185,9 +202,7 @@ theorem currentSugawara_cgen_lgen_commutator_conjugated
   rw [currentSugawara_cgen_conjugated, currentSugawara_lgen_conjugated]
   simp [LinearMap.commutator]
 
-/--
-Swapped conjugated `lgen`/central commutator also vanishes.
--/
+/-- Swapped conjugated `lgen`/central commutator also vanishes. -/
 theorem currentSugawara_lgen_cgen_commutator_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -202,9 +217,7 @@ theorem currentSugawara_lgen_cgen_commutator_conjugated
   rw [currentSugawara_lgen_conjugated, currentSugawara_cgen_conjugated]
   simp [LinearMap.commutator]
 
-/--
-Skew-symmetry of conjugated `lgen` commutators.
--/
+/-- Skew-symmetry of conjugated `lgen` commutators. -/
 theorem currentSugawara_lgen_commutator_conjugated_skew
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -220,24 +233,20 @@ theorem currentSugawara_lgen_commutator_conjugated_skew
       (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))).commutator
       (conjugateEnd U
         (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)))) := by
-  simp [LinearMap.commutator, sub_eq_add_neg]
+  unfold LinearMap.commutator
+  rw [neg_sub]
 
-/--
-Conjugating every current mode by a linear equivalence yields a new
-`CurrentHeisenbergRep`.
--/
+/-- Conjugating every current mode by a linear equivalence yields a new
+`CurrentHeisenbergRep`. -/
 noncomputable def conjugatedCurrentHeisenbergRep
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (H : CurrentHeisenbergRep 𝕜 V)
     (U : V ≃ₗ[𝕜] V) :
-    CurrentHeisenbergRep 𝕜 V where
-  J := fun n => conjugateEnd U (H.J n)
-  trunc := by
-    intro v
-    simpa using current_trunc_conjugated H U v
-  comm := by
-    intro m n
-    simpa using current_commutator_conjugated H U m n
+    CurrentHeisenbergRep 𝕜 V :=
+  CurrentHeisenbergRep.mk
+    (fun n => conjugateEnd U (H.J n))
+    (fun v => current_trunc_conjugated H U v)
+    (fun m n => current_commutator_conjugated H U m n)
 
 end InfoGeometry.Canonical.CurrentConjugationLemmas

@@ -3,6 +3,13 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CubicJordanFreudenthal
 import Mathlib
 
+/-!
+# F4 Action
+
+Defines the F4 coordinate carrier (52-dimensional real space) and generation
+permutation actions on Albert matrices, including CKM/PMNS mixing matrices.
+-/
+
 open InfoGeometry.Algebra.CubicJordanOs
 open InfoGeometry.Algebra.CubicJordanFreudenthal
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication

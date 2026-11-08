@@ -16,6 +16,13 @@ import InfoGeometry.Algebra.PeirceDeWittChiralSplit
 import InfoGeometry.Algebra.DeWittPeirceChiralBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
+/-!
+# Algebra
+
+Core algebra module defining the canonical zeta map for the Kawamura CAR embedding
+and foundational operator algebra structures used throughout InfoGeometry.
+-/
+
 open InfoGeometry.Topology
 
 variable {Op : Type*} [Ring Op] [StarRing Op]

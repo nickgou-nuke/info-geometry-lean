@@ -2,6 +2,13 @@ import Mathlib.Algebra.Ring.Associator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
+/-!
+# Alternative Ring
+
+Defines the Teichmüller identity for non-unital non-associative rings,
+establishing the universal 4-element associator identity.
+-/
+
 namespace InfoGeometry.Algebra
 
 variable {R : Type*} [NonUnitalNonAssocRing R]

@@ -828,16 +828,20 @@ theorem fermionicBulkBoundaryDiagonalTerm_apply_eventually_zero
   filter_upwards [Filter.eventually_ge_atTop N0] with N hN
   exact congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x) (hN0 N hN)
 
+/-- Vanishing of a bulk-boundary diagonal summand when both shifted indices
+`a + m` and `a + n` have the same membership in `integerWindow N`. -/
 theorem fermionicBulkBoundaryDiagonalTerm_eq_zero_of_same_shift_membership
     (N : ℕ) (m n a : ℤ)
     (hmem : (a + m ∈ integerWindow N) ↔ (a + n ∈ integerWindow N))
     (x : FermionicFock (𝕜 := 𝕜)) :
     (RawCARModeCompletion.cutoffBulkBoundaryDiagonalTerm
       (fermionicRawCAR (𝕜 := 𝕜)) N m n a) x = 0 := by
-  exact congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x)
-    (RawCARModeCompletion.cutoffBulkBoundaryDiagonalTerm_eq_zero_of_same_shift_membership
-      (fermionicRawCAR (𝕜 := 𝕜)) N m n a hmem)
+  have h := RawCARModeCompletion.cutoffBulkBoundaryDiagonalTerm_eq_zero_of_same_shift_membership
+    (fermionicRawCAR (𝕜 := 𝕜)) N m n a hmem
+  exact congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x) h
 
+/-- Vanishing of a bulk-boundary diagonal summand when the endpoint matrix unit
+`matrixUnit a (a + m + n)` annihilates `x`. -/
 theorem fermionicBulkBoundaryDiagonalTerm_eq_zero_of_endpoint_vanish
     (N : ℕ) (m n a : ℤ) (x : FermionicFock (𝕜 := 𝕜))
     (hendpoint :
@@ -871,6 +875,8 @@ theorem fermionicBulkBoundaryDiagonalTerm_eq_zero_of_endpoint_vanish
         simpa [SplitCliffordFiniteCAR.integerWindow, cutoffWindow, add_comm] using hn
       simp [hm', hn', hend]
 
+/-- Vanishing of `fermionicRawCAR.matrixUnit a (a + k) x` outside the exceptional
+support set for shift `k`. -/
 theorem fermionicMatrixUnit_apply_eq_zero_of_outside_exceptional_support
     (a k : ℤ) (S : Finset ℤ) {x : FermionicFock (𝕜 := 𝕜)}
     (hx : x ∈ Algebra.adjoin 𝕜
@@ -890,6 +896,8 @@ theorem fermionicMatrixUnit_apply_eq_zero_of_outside_exceptional_support
   rw [exteriorFockRawCAR_matrixUnit_eq_normalMatrixUnit]
   exact hz
 
+/-- Vanishing of `cutoffBulkBoundaryDiagonalTerm N m n a x` outside the
+exceptional support set for shift `m + n`. -/
 theorem fermionicBulkBoundaryDiagonalTerm_apply_eq_zero_of_outside_exceptional_support
     (N : ℕ) (m n a : ℤ) (S : Finset ℤ)
     {x : FermionicFock (𝕜 := 𝕜)}
@@ -920,8 +928,7 @@ theorem fermionicBulkBoundaryDiagonalTerm_apply_eq_zero_of_outside_exceptional_s
       fermionicRawCAR, canonicalExteriorFockRawCAR,
       directSumExteriorFockRawCAR, hend', add_assoc, add_comm, add_left_comm]
 
-/- For the moving boundary, both displayed matrix units have endpoint
-   `a + m + n`; only their cutoff indicators differ. -/
+/-- Eventual inclusion of the boundary exceptional support set in `integerWindow N`. -/
 theorem boundary_exceptional_support_eventually_subset_integerWindow
     (S : Finset ℤ) (m n : ℤ) :
     ∀ᶠ N : ℕ in Filter.atTop,
@@ -935,6 +942,8 @@ theorem boundary_exceptional_support_eventually_subset_integerWindow
   exact SplitCliffordFiniteCAR.integerWindow_mono hN a
     (hN0 (by simpa [E, Set.union_assoc] using ha))
 
+/-- Pointwise eventual vanishing of the bulk-boundary commutator term
+`cutoffBulkBoundaryTerm N m n x`. -/
 theorem fermionicBulkBoundaryTerm_apply_eventually_zero
     (m n : ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ N : ℕ in Filter.atTop,
@@ -990,6 +999,7 @@ theorem fermionicBulkBoundaryTerm_apply_eventually_zero
       simpa using congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x)
         (hN1 N (Nat.le_trans (Nat.le_max_right _ _) hN))
 
+/-- Pointwise eventual vanishing of the cutoff boundary term when `m + n ≠ 0`. -/
 theorem fermionicBoundaryTerm_apply_eventually_zero_of_add_ne_zero
     (m n : ℤ) (hmn : m + n ≠ 0) (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ N : ℕ in Filter.atTop,
@@ -1002,6 +1012,8 @@ theorem fermionicBoundaryTerm_apply_eventually_zero_of_add_ne_zero
     (fermionicRawCAR (𝕜 := 𝕜)) N m n hmn]
   simp [RawCARModeCompletion.cutoffWindowCrossingTerm, hmn, hbulk]
 
+/-- Reduction of `cutoffActualCentralTerm N m n` to a single sum over
+`integerWindow N` when `m + n = 0`. -/
 theorem cutoffActualCentralTerm_eq_restrictedCrossing_of_add_eq_zero
     (N : ℕ) (m n : ℤ) (hmn : m + n = 0) :
     RawCARModeCompletion.cutoffActualCentralTerm
@@ -1011,6 +1023,7 @@ theorem cutoffActualCentralTerm_eq_restrictedCrossing_of_add_eq_zero
           (occ a - occ (a + m)) •
             (fermionicRawCAR (𝕜 := 𝕜)).central
         else 0 := by
+  have _ := hmn
   have hn : n = -m := by omega
   rw [hn]
   unfold RawCARModeCompletion.cutoffActualCentralTerm
@@ -1039,21 +1052,27 @@ theorem cutoffActualCentralTerm_eq_restrictedCrossing_of_add_eq_zero
   rw [hinner]
   rfl
 
+/-- Agreement of the actual central term and the window-crossing term for
+cutoff `N ≥ m.natAbs`. -/
 theorem fermionicActualCentralTerm_eq_crossing_of_large_cutoff
     (N : ℕ) (m : ℤ) (hN : m.natAbs ≤ N) :
     (RawCARModeCompletion.cutoffActualCentralTerm
       (fermionicRawCAR (𝕜 := 𝕜)) N m (-m) -
       RawCARModeCompletion.cutoffWindowCrossingTerm
         (fermionicRawCAR (𝕜 := 𝕜)) N m (-m)) = 0 := by
-  exact InfoGeometry.Canonical.SplitCliffordCurrentCommutator.RawCARModeCompletion.current_central_edge_correction_eq_zero_of_edge_occ_balance
-    (fermionicRawCAR (𝕜 := 𝕜)) N m
-    (InfoGeometry.Canonical.SplitCliffordCurrentCommutator.RawCARModeCompletion.edge_occ_balance_of_natAbs_le N m hN)
+  have hbal :=
+    InfoGeometry.Canonical.SplitCliffordCurrentCommutator.RawCARModeCompletion.edge_occ_balance_of_natAbs_le N m hN
+  exact
+    InfoGeometry.Canonical.SplitCliffordCurrentCommutator.RawCARModeCompletion.current_central_edge_correction_eq_zero_of_edge_occ_balance
+      (fermionicRawCAR (𝕜 := 𝕜)) N m hbal
 
+/-- Pointwise eventual vanishing of the cutoff boundary term when `m + n = 0`. -/
 theorem fermionicBoundaryTerm_apply_eventually_zero_of_add_eq_zero
     (m n : ℤ) (hmn : m + n = 0) (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ N : ℕ in Filter.atTop,
       (RawCARModeCompletion.cutoffBoundaryTerm
         (fermionicRawCAR (𝕜 := 𝕜)) N m n) x = 0 := by
+  have _ := hmn
   have hn : n = -m := by omega
   rw [hn]
   filter_upwards [fermionicBulkBoundaryTerm_apply_eventually_zero m (-m) x,
@@ -1062,9 +1081,8 @@ theorem fermionicBoundaryTerm_apply_eventually_zero_of_add_eq_zero
   rw [fermionicActualCentralTerm_eq_crossing_of_large_cutoff N m hN]
   simp [hbulk]
 
-/- The same boundary vanishing after the canonical identity representation
-   into endomorphisms.  This is the exact interface required by
-   `StabilizedCurrentSource`; no second representation is introduced. -/
+/-- Pointwise eventual vanishing of the represented cutoff boundary term for all
+mode pairs `(m, n)`. -/
 theorem fermionicEndomorphismBoundaryTerm_apply_eventually_zero
     (m n : ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ N : ℕ in Filter.atTop,
@@ -1077,9 +1095,8 @@ theorem fermionicEndomorphismBoundaryTerm_apply_eventually_zero
   · simpa using
       (fermionicBoundaryTerm_apply_eventually_zero_of_add_ne_zero m n hmn x)
 
-/- Fixed-window transport of the native boundary theorem.  This is the
-   support-safe intermediate statement: the cutoff index remains external,
-   while the summed index is confined to a fixed finite window. -/
+/-- Eventual vanishing of the bulk-boundary diagonal sum over a fixed cutoff
+window `integerWindow K`. -/
 theorem fermionicBulkBoundaryDiagonalSum_apply_eventually_zero_on_window
     (m n : ℤ) (K : ℕ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
@@ -1091,6 +1108,8 @@ theorem fermionicBulkBoundaryDiagonalSum_apply_eventually_zero_on_window
   exact ⟨N0, fun N hN => by
     simpa using congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x) (hN0 N hN)⟩
 
+/-- Eventual vanishing of the bulk-boundary diagonal sum over an arbitrary finite
+set `S : Finset ℤ`. -/
 theorem fermionicBulkBoundaryDiagonalSum_apply_eventually_zero_on_finset
     (m n : ℤ) (S : Finset ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
@@ -1102,18 +1121,19 @@ theorem fermionicBulkBoundaryDiagonalSum_apply_eventually_zero_on_finset
   exact ⟨N0, fun N hN => by
     simpa using congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x) (hN0 N hN)⟩
 
+/-- Finite-cutoff normal-ordered fermionic current `fermionicRawCAR.cutoffCurrent N m`. -/
 def fermionicCutoffCurrent (N : ℕ) (m : ℤ) : FermionicEnd (𝕜 := 𝕜) :=
   (fermionicRawCAR (𝕜 := 𝕜)).cutoffCurrent N m
 
+/-- Expansion of `fermionicCutoffCurrent N m` as a finite sum over `integerWindow N`. -/
 theorem fermionicCutoffCurrent_eq_sum (N : ℕ) (m : ℤ) :
     fermionicCutoffCurrent (𝕜 := 𝕜) N m =
       ∑ a ∈ integerWindow N,
         (fermionicRawCAR (𝕜 := 𝕜)).matrixUnit a (a + m) := by
+  unfold fermionicCutoffCurrent RawCARModeCompletion.cutoffCurrent
   rfl
 
-/-! The finite cutoff is an actual exterior-Fock operator sum.  This theorem
-does not identify the infinite completion with an endomorphism; it records
-the source-level normal ordering before any locally-finite extension. -/
+/-- Expansion of `fermionicCutoffCurrent N m` in terms of `normalMatrixUnit`. -/
 theorem fermionicCutoffCurrent_eq_normalMatrixUnit_sum (N : ℕ) (m : ℤ) :
     fermionicCutoffCurrent (𝕜 := 𝕜) N m =
       ∑ a ∈ integerWindow N,
@@ -1128,63 +1148,7 @@ theorem fermionicCutoffCurrent_eq_normalMatrixUnit_sum (N : ℕ) (m : ℤ) :
     (R := 𝕜) (M := CanonicalNormalOrdering.IntModeSpace 𝕜)
     (CanonicalNormalOrdering.intModeBasis (R := 𝕜)) a (a + m))
 
-/-
-  rcases exteriorFock_exists_finite_mode_support x with ⟨S, hx⟩
-  let B : ℕ := S.sup Int.natAbs
-  refine ⟨2 * B + 1, ?_⟩
-  intro N hN
-  rw [fermionicCutoffCurrent_eq_normalMatrixUnit_sum]
-  simp only [LinearMap.sum_apply]
-  apply Finset.sum_eq_zero
-  intro a ha
-  have hlarge : (2 * B : ℤ) < l := by
-    have h : (2 * B + 1 : ℕ) ≤ l.natAbs := hN
-    rw [Int.natAbs_of_nonneg hl] at h
-    omega
-  by_cases haS : a ∈ S
-  · have hbS : a + l ∉ S := by
-      exact finite_support_add_not_mem_of_large_natAbs S (2 * B) (by
-        intro c hc d hd
-        have hc' : Int.natAbs c ≤ B := by
-          dsimp [B]; exact Finset.le_sup (f := Int.natAbs) hc
-        have hd' : Int.natAbs d ≤ B := by
-          dsimp [B]; exact Finset.le_sup (f := Int.natAbs) hd
-        have hc'' : |c| ≤ (B : ℤ) := by
-          rw [Int.abs_eq_natAbs]; exact_mod_cast hc'
-        have hd'' : |d| ≤ (B : ℤ) := by
-          rw [Int.abs_eq_natAbs]; exact_mod_cast hd'
-        have hcd : |c - d| ≤ |c| + |d| := by
-          calc
-            |c - d| = |c + (-d)| := by rw [sub_eq_add_neg]
-            _ ≤ |c| + |-d| := abs_add_le _ _
-            _ = |c| + |d| := by rw [abs_neg]
-        omega) l (by omega) a ha (a + l) hbS rfl
-    have ha' : -(B : ℤ) ≤ a := by
-      have h : Int.natAbs a ≤ B := by
-        dsimp [B]; exact Finset.le_sup (f := Int.natAbs) haS
-      rw [Int.neg_le, Int.abs_eq_natAbs]
-      exact_mod_cast h
-    exact normalMatrixUnit_apply_eq_zero_of_not_mem_support_of_nonneg
-      a (a + l) S hx (by omega) hbS
-  · by_cases ha0 : 0 ≤ a
-    · have hbS : a + l ∉ S := by
-        intro hbS
-        have hbound : Int.natAbs (a + l) ≤ B := by
-          dsimp [B]; exact Finset.le_sup (f := Int.natAbs) hbS
-        have hnonneg : (0 : ℤ) ≤ a + l := by omega
-        rw [Int.ofNat_natAbs_of_nonneg hnonneg] at hbound
-        omega
-      exact normalMatrixUnit_apply_eq_zero_of_not_mem_support_of_nonneg
-        a (a + l) S hx (by omega) hbS
-    · have ha0' : a < 0 := lt_of_not_ge ha0
-      by_cases hb0 : 0 ≤ a + l
-      · exact normalMatrixUnit_apply_eq_zero_of_negative_nonnegative_outside_support
-          a (a + l) S hx ha0' hb0 haS
-      · have hab : a ≠ a + l := by omega
-        exact normalMatrixUnit_apply_eq_zero_of_negative_distinct_outside_support
-          a (a + l) S hx ha0' (lt_of_not_ge hb0) hab haS
--/
-
+/-- Pointwise stabilization of `fermionicCutoffCurrent N m x` for `N ≥ N0`. -/
 theorem fermionicCutoffCurrent_apply_stabilizes_of_finite_support
     (m : ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
@@ -1216,6 +1180,7 @@ theorem fermionicCutoffCurrent_apply_stabilizes_of_finite_support
           simp [E, ha,
             nonneg_index_shift_neg_mem_integerWindow a m ha hb])
 
+/-- Eventual stabilization of `fermionicCutoffCurrent N m x` along `Filter.atTop`. -/
 theorem fermionicCutoffCurrent_apply_eventually_eq_stabilized
     (m : ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∃ N0 : ℕ, ∀ᶠ N : ℕ in Filter.atTop,
@@ -1225,6 +1190,8 @@ theorem fermionicCutoffCurrent_apply_eventually_eq_stabilized
     ⟨N0, hN0⟩
   exact ⟨N0, Filter.eventually_atTop.2 ⟨N0, hN0⟩⟩
 
+/-- Stabilized fermionic current mode endomorphism `fermionicCurrentMode m` on
+`FermionicFock`. -/
 noncomputable def fermionicCurrentMode (m : ℤ) : FermionicEnd (𝕜 := 𝕜) :=
   { toFun := fun x =>
       (fermionicCutoffCurrent (𝕜 := 𝕜)
@@ -1267,13 +1234,17 @@ noncomputable def fermionicCurrentMode (m : ℤ) : FermionicEnd (𝕜 := 𝕜) :
       exact (fermionicCutoffCurrent (𝕜 := 𝕜) M m).map_smul c x
   }
 
+/-- Pointwise evaluation formula for `fermionicCurrentMode m x`. -/
 @[simp] theorem fermionicCurrentMode_apply (m : ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     fermionicCurrentMode (𝕜 := 𝕜) m x =
       (fermionicCutoffCurrent (𝕜 := 𝕜)
         (Classical.choose
-          (fermionicCutoffCurrent_apply_stabilizes_of_finite_support m x)) m) x :=
+          (fermionicCutoffCurrent_apply_stabilizes_of_finite_support m x)) m) x := by
+  unfold fermionicCurrentMode
   rfl
 
+/-- Pointwise eventual agreement of `fermionicCutoffCurrent N m x` with
+`fermionicCurrentMode m x`. -/
 theorem fermionicCutoffCurrent_eventually_eq_fermionicCurrentMode
     (m : ℤ) (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ N : ℕ in Filter.atTop,
@@ -1286,6 +1257,7 @@ theorem fermionicCutoffCurrent_eventually_eq_fermionicCurrentMode
   exact Classical.choose_spec
     (fermionicCutoffCurrent_apply_stabilizes_of_finite_support m x) N hN
 
+/-- Vacuum expectation value of `fermionicCurrentMode m` vanishes. -/
 theorem fermionicCurrentMode_vacuumExpect_zero (m : ℤ) :
     vacuumExpectEnd (R := 𝕜) (M := CanonicalNormalOrdering.IntModeSpace 𝕜)
       (fermionicCurrentMode (𝕜 := 𝕜) m) = 0 := by
@@ -1299,9 +1271,8 @@ theorem fermionicCurrentMode_vacuumExpect_zero (m : ℤ) :
   intro a ha
   exact normalMatrixUnit_vacuumCoeff_apply_vacuum_zero_directSum 𝕜 a (a + m)
 
-/- The finite normal-ordered current has zero vacuum coefficient.  This is
-   the finite Fock statement obtained directly from the native exterior
-   vacuum functional; it does not assert pointwise convergence of currents. -/
+/-- Vacuum expectation value of the finite cutoff current `fermionicCutoffCurrent N m`
+vanishes for every cutoff `N`. -/
 theorem fermionicCutoffCurrent_vacuumExpect_zero (N : ℕ) (m : ℤ) :
     vacuumExpectEnd (R := 𝕜) (M := CanonicalNormalOrdering.IntModeSpace 𝕜)
         (fermionicCutoffCurrent (𝕜 := 𝕜) N m) = 0 := by
@@ -1311,31 +1282,32 @@ theorem fermionicCutoffCurrent_vacuumExpect_zero (N : ℕ) (m : ℤ) :
   intro a ha
   exact normalMatrixUnit_vacuumExpect_zero_directSum 𝕜 a (a + m)
 
+/-- Eventual vanishing of the vacuum expectation of `fermionicCutoffCurrent N m`. -/
 theorem fermionicCutoffCurrent_vacuumExpect_eventually_eq (m : ℤ) :
     ∀ᶠ N : ℕ in Filter.atTop,
       vacuumExpectEnd (R := 𝕜) (M := CanonicalNormalOrdering.IntModeSpace 𝕜)
         (fermionicCutoffCurrent (𝕜 := 𝕜) N m) = 0 := by
-  exact Filter.Eventually.of_forall (fun N =>
-    fermionicCutoffCurrent_vacuumExpect_zero N m)
+  apply Filter.Eventually.of_forall
+  intro N
+  exact fermionicCutoffCurrent_vacuumExpect_zero N m
 
+/-- Coefficientwise stabilization of `cutoffDiagonalCurrent N m` to `completedCurrent m`. -/
 theorem fermionicCurrent_coefficientwise_completion (m : ℤ) :
     ∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
       (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j := by
   intro i j
   exact cutoffDiagonalCurrent_coeff_eventually_eq_completed m i j
 
-/-
-Coefficientwise stabilization in the filter interface used by the
-completion layer.  This is only a statement about the locally finite
-matrix readout; it does not introduce a pointwise Fock-space limit.
--/
+/-- Filter form of coefficientwise stabilization of `cutoffDiagonalCurrent N m`. -/
 theorem fermionicCurrent_coefficientwise_eventually_eq (m i j : ℤ) :
     ∀ᶠ N : ℕ in Filter.atTop,
       (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j := by
   rcases fermionicCurrent_coefficientwise_completion m i j with ⟨N0, hN0⟩
   exact Filter.eventually_atTop.2 ⟨N0, hN0⟩
 
-theorem fermionicCurrent_completion_packet (m n : ℤ) :
+/-- Joint coefficientwise stabilization and completed CCR commutator identity for
+modes `m` and `n`. -/
+theorem fermionicCurrent_completion_summary (m n : ℤ) :
     (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
       (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j) ∧
     (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
@@ -1349,40 +1321,55 @@ theorem fermionicCurrent_completion_packet (m n : ℤ) :
   exact ⟨hm, hn, hbr⟩
 
 section ChargedFock
-variable (α : 𝕜)
 
-abbrev BosonicFock : Type _ := ChargedFockSpace 𝕜 α
-abbrev BosonicEnd : Type _ := BosonicFock (α := α) →ₗ[𝕜] BosonicFock (α := α)
+/-- Bosonic Fock carrier `ChargedFockSpace 𝕜 α`. -/
+abbrev BosonicFock (α : 𝕜) : Type _ := ChargedFockSpace 𝕜 α
 
-noncomputable def fermionToBosonCurrent
-    (X : CompletedCurrentModeCarrier) : BosonicEnd (α := α) :=
+/-- Linear endomorphism space of `BosonicFock α`. -/
+abbrev BosonicEnd (α : 𝕜) : Type _ := BosonicFock (𝕜 := 𝕜) α →ₗ[𝕜] BosonicFock (𝕜 := 𝕜) α
+
+/-- Representation of `CompletedCurrentModeCarrier` on `BosonicFock α`. -/
+noncomputable def fermionToBosonCurrent (α : 𝕜)
+    (X : CompletedCurrentModeCarrier) : BosonicEnd (𝕜 := 𝕜) α :=
   representedCompletedCurrentMode α X
 
-theorem fermionToBosonCurrent_mode (m : ℤ) :
+/-- `fermionToBosonCurrent α` sends `completedCurrentPoint m` to
+`(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m`. -/
+theorem fermionToBosonCurrent_mode (α : 𝕜) (m : ℤ) :
     fermionToBosonCurrent α (completedCurrentPoint m) =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m := by
+  unfold fermionToBosonCurrent
   exact representedCompletedCurrentMode_point α m
 
-theorem fermionToBosonCurrent_eq_heisenbergRepresentation
+/-- Agreement of `fermionToBosonCurrent α` with `chargedFockSpaceHeisenbergMode`. -/
+theorem fermionToBosonCurrent_eq_heisenbergRepresentation (α : 𝕜)
     (X : CompletedCurrentModeCarrier) :
     fermionToBosonCurrent α X =
       chargedFockSpaceHeisenbergMode 𝕜 α
         (completedCurrentModeEquiv.symm X) := by
+  unfold fermionToBosonCurrent
   exact representedCompletedCurrentMode_eq_heisenbergRepresentation α X
 
-theorem fermionToBosonCurrent_commutator (m n : ℤ) :
+/-- Heisenberg mode commutator of `fermionToBosonCurrent α (completedCurrentPoint m)`
+and `fermionToBosonCurrent α (completedCurrentPoint n)`. -/
+theorem fermionToBosonCurrent_commutator (α : 𝕜) (m n : ℤ) :
     (fermionToBosonCurrent α (completedCurrentPoint m)).commutator
       (fermionToBosonCurrent α (completedCurrentPoint n)) =
-      if m + n = 0 then (m : 𝕜) • (1 : BosonicEnd (α := α)) else 0 := by
+      if m + n = 0 then (m : 𝕜) • (1 : BosonicEnd (𝕜 := 𝕜) α) else 0 := by
+  unfold fermionToBosonCurrent
   exact representedCompletedCurrentMode_commutator α m n
 
-theorem virasoro_acts_on_bosonizedFermionicCurrent (r m : ℤ) :
+/-- Sugawara Virasoro mode-shift action on `fermionToBosonCurrent α (completedCurrentPoint m)`. -/
+theorem virasoro_acts_on_bosonizedFermionicCurrent (α : 𝕜) (r m : ℤ) :
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
         (VirasoroAlgebra.lgen 𝕜 r)).commutator
       (fermionToBosonCurrent α (completedCurrentPoint m)) =
       -m • fermionToBosonCurrent α (completedCurrentPoint (r + m)) := by
+  unfold fermionToBosonCurrent
   exact virasoro_lgen_acts_on_completedCurrent α r m
 
+/-- Uniform vanishing of `fermionicCutoffCurrent N l x` for all `N` when `x` is
+supported in `S ⊆ integerWindow B` and `l > 2 * B`. -/
 theorem fermionicCutoffCurrent_apply_eq_zero_of_positive_shift_window_bound_final
     (S : Finset ℤ) (B : ℕ) (hS : ∀ b ∈ S, b ∈ integerWindow B)
     (x : FermionicFock (𝕜 := 𝕜))
@@ -1398,6 +1385,8 @@ theorem fermionicCutoffCurrent_apply_eq_zero_of_positive_shift_window_bound_fina
   exact normalMatrixUnit_apply_eq_zero_of_positive_shift_window_bound
     S B hS x hx a l hl hlarge
 
+/-- Uniform vanishing of `fermionicCutoffCurrent N l x` from an existential
+window bound witness. -/
 theorem fermionicCutoffCurrent_apply_eq_zero_of_large_positive_mode_final
     (l : ℤ) (hl : 0 < l) (x : FermionicFock (𝕜 := 𝕜))
     (hlarge : ∃ S : Finset ℤ, ∃ B : ℕ,
@@ -1409,6 +1398,8 @@ theorem fermionicCutoffCurrent_apply_eq_zero_of_large_positive_mode_final
   exact fermionicCutoffCurrent_apply_eq_zero_of_positive_shift_window_bound_final
     S B hB x hx l hl hBl
 
+/-- For every `x : FermionicFock`, `fermionicCutoffCurrent N l x = 0` for all `N`
+and all sufficiently large positive modes `l`. -/
 theorem fermionicCutoffCurrent_apply_eq_zero_eventually_positive_mode
     (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ l : ℤ in Filter.atTop,
@@ -1437,6 +1428,8 @@ theorem fermionicCutoffCurrent_apply_eq_zero_eventually_positive_mode
   exact fermionicCutoffCurrent_apply_eq_zero_of_positive_shift_window_bound_final
     S B hB x hx l hlpos hlarge
 
+/-- Eventual positive-mode truncation `∀ᶠ l in Filter.atTop, fermionicCurrentMode l x = 0`
+for every `x : FermionicFock`. -/
 theorem fermionicCurrentMode_apply_eventually_zero
     (x : FermionicFock (𝕜 := 𝕜)) :
     ∀ᶠ l : ℤ in Filter.atTop,
@@ -1472,6 +1465,8 @@ theorem fermionicCurrentMode_apply_eventually_zero
   exact fermionicCutoffCurrent_apply_eq_zero_of_positive_shift_window_bound_final
     S B hB x hx l hlpos hlarge N0
 
+/-- `StabilizedCurrentSource` instance for the exterior-Fock CAR completion and
+`fermionicCurrentMode`. -/
 noncomputable def fermionicStabilizedCurrentSource :
     StabilizedCurrentSource 𝕜 (FermionicEnd (𝕜 := 𝕜))
       (FermionicFock (𝕜 := 𝕜)) where
@@ -1488,37 +1483,47 @@ noncomputable def fermionicStabilizedCurrentSource :
     simpa [endomorphismCutoffCurrent, fermionicCutoffCurrent] using
       (fermionicEndomorphismBoundaryTerm_apply_eventually_zero m n x)
 
+/-- Level-1 Heisenberg mode commutator law for `fermionicCurrentMode` on `FermionicFock`. -/
 theorem fermionicCurrentMode_commutator (m n : ℤ) :
     (fermionicCurrentMode (𝕜 := 𝕜) m).commutator
         (fermionicCurrentMode (𝕜 := 𝕜) n) =
       if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 (FermionicFock (𝕜 := 𝕜)))
       else 0 := by
-  exact StabilizedCurrentSource.current_commutator
+  have h := StabilizedCurrentSource.current_commutator
     (fermionicStabilizedCurrentSource (𝕜 := 𝕜)) m n
+  exact h
 
+/-- `CurrentHeisenbergRep` on `FermionicFock` built from `fermionicCurrentMode`. -/
 noncomputable def fermionicCurrentHeisenbergRep :
-    CurrentHeisenbergRep 𝕜 (FermionicFock (𝕜 := 𝕜)) where
-  J := fermionicCurrentMode (𝕜 := 𝕜)
-  trunc := fermionicCurrentMode_apply_eventually_zero
-  comm := fermionicCurrentMode_commutator
+    CurrentHeisenbergRep 𝕜 (FermionicFock (𝕜 := 𝕜)) :=
+  ⟨fermionicCurrentMode (𝕜 := 𝕜),
+   fermionicCurrentMode_apply_eventually_zero,
+   fermionicCurrentMode_commutator⟩
 
+/-- Sugawara Virasoro Lie algebra representation on `FermionicFock` induced by
+`fermionicCurrentHeisenbergRep`. -/
 noncomputable def fermionicCurrentSugawaraRepresentation :
     VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
       Module.End 𝕜 (FermionicFock (𝕜 := 𝕜)) :=
   (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).currentSugawaraRepresentation
 
+/-- Action of `fermionicCurrentSugawaraRepresentation` on `VirasoroAlgebra.lgen 𝕜 r`. -/
 theorem fermionicCurrentSugawaraRepresentation_apply_lgen (r : ℤ) :
     fermionicCurrentSugawaraRepresentation (𝕜 := 𝕜)
         (VirasoroAlgebra.lgen 𝕜 r) =
       (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode r := by
+  unfold fermionicCurrentSugawaraRepresentation
   exact (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).currentSugawaraRepresentation_lgen_apply r
 
+/-- Action of `fermionicCurrentSugawaraRepresentation` on `VirasoroAlgebra.cgen 𝕜`. -/
 theorem fermionicCurrentSugawaraRepresentation_apply_cgen :
     fermionicCurrentSugawaraRepresentation (𝕜 := 𝕜)
         (VirasoroAlgebra.cgen 𝕜) =
       (1 : Module.End 𝕜 (FermionicFock (𝕜 := 𝕜))) := by
+  unfold fermionicCurrentSugawaraRepresentation
   exact (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).currentSugawaraRepresentation_central
 
+/-- Virasoro mode commutator identity for the Sugawara stress modes on `FermionicFock`. -/
 theorem fermionicCurrentSugawara_stressMode_commutator (m n : ℤ) :
     ((fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode m).commutator
         ((fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode n) =
@@ -1527,9 +1532,12 @@ theorem fermionicCurrentSugawara_stressMode_commutator (m n : ℤ) :
           ((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
             (1 : Module.End 𝕜 (FermionicFock (𝕜 := 𝕜)))
         else 0) := by
-  exact (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode_virasoroBracket m n
+  have h := (fermionicCurrentHeisenbergRep (𝕜 := 𝕜)).sugawaraStressMode_virasoroBracket m n
+  exact h
 
-theorem fermionic_to_bosonic_current_intertwiner_packet (r m : ℤ) :
+/-- Joint summary of coefficientwise completion, charged-Fock current mode
+identification, and Virasoro mode-shift action. -/
+theorem fermionic_to_bosonic_current_intertwiner_summary (α : 𝕜) (r m : ℤ) :
     (∀ i j : ℤ, ∃ N0 : ℕ, ∀ N : ℕ, N0 ≤ N →
       (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j) ∧
     fermionToBosonCurrent α (completedCurrentPoint m) =
@@ -1538,9 +1546,9 @@ theorem fermionic_to_bosonic_current_intertwiner_packet (r m : ℤ) :
         (VirasoroAlgebra.lgen 𝕜 r)).commutator
       (fermionToBosonCurrent α (completedCurrentPoint m)) =
       -m • fermionToBosonCurrent α (completedCurrentPoint (r + m)) := by
-  exact ⟨fermionicCurrent_coefficientwise_completion m,
-    fermionToBosonCurrent_mode α m,
-    virasoro_acts_on_bosonizedFermionicCurrent α r m⟩
+  refine ⟨fermionicCurrent_coefficientwise_completion m, ?_, ?_⟩
+  · exact fermionToBosonCurrent_mode α m
+  · exact virasoro_acts_on_bosonizedFermionicCurrent α r m
 
 end ChargedFock
 end InfoGeometry.Canonical.FermionicCurrentChargedFockIntertwiner

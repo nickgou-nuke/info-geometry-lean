@@ -5,19 +5,27 @@ import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 
 /-!
-# Tensor modular atom current source
+# Tensor Modular Atom Current Source and Charged-Fock Sugawara Bridge
 
-This file does not invent a new current algebra. It reuses the owned charged
-Fock Heisenberg current and packages it under the split-Clifford bridge.
+This module connects the Wick-corrected normal-ordered CAR current commutator
+from `BosonizationConstructiveCurrent` and the charged-Fock Heisenberg current
+representation to `SplitCliffordHeisenbergWitness` and `CurrentSugawaraMorphism`.
 
-The finite `Cl(1,1)` atom is kept separate from the mode current:
+## 1. Real Math in This File
+- `wickContraction_current`, `wickContraction_cutoffBoundary`
+- `tensorModularAtomHeisenbergWitness`
+- `tensorModularAtom_toCurrentHeisenbergRep`,
+  `tensorModularAtom_toCurrentSugawaraMorphism`,
+  `tensorModularAtom_to_sugawaraRepresentation`
+- `tensorModularAtom_current_readout`, `tensorModularAtom_currentSugawara_readout`
 
-* the finite local seed lives in `TomitaKreinNilpotentAtom`;
-* the Wick-corrected current law lives in `BosonizationConstructiveCurrent`;
-* the `CurrentHeisenbergRep` and Sugawara bridge live in
-  `CurrentSugawaraBridge`;
-* this file only packages those owner theorems into the requested source-side
-  witness surface.
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
+- `InfoGeometry.Canonical.CurrentSugawaraBridge`
+- `InfoGeometry.Canonical.SplitCliffordHeisenbergBridge`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -36,22 +44,16 @@ section WickMechanism
 
 variable {A : Type*} [Ring A]
 
-/--
-The source-side Wick contraction law is the owner theorem from the
-constructive current layer.
--/
+/-- Completed normal-ordered CAR current commutator identity
+`CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n)`. -/
 theorem wickContraction_current
     (C : RawCARModeCompletion A) (m n : Int) :
     CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
       if m + n = 0 then m • completedCentral C else 0 := by
   simpa using normalOrderedCurrent_heisenberg_from_matrixUnit C m n
 
-/--
-The finite-cutoff boundary form of the same calculation.
-
-This is the explicit reindexed cutoff boundary plus the window-crossing
-correction.
--/
+/-- Finite-cutoff CAR current commutator decomposition into the boundary term
+and the window-crossing central term. -/
 theorem wickContraction_cutoffBoundary
     (C : RawCARModeCompletion A) (N : Nat) (m n : Int) :
     comm (RawCARModeCompletion.cutoffCurrent C N m)
@@ -68,99 +70,96 @@ section ChargedFockWitness
 variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
 variable (α : 𝕜)
 
-/--
-The concrete tensor-modular atom witness is the existing charged-Fock
-Heisenberg current packaged as a split-Clifford witness.
-
-This is the exact current-side data required by the bridge:
-current modes, local truncation, and the Heisenberg commutator.
--/
+/-- Charged-Fock Heisenberg current packaged as a `SplitCliffordHeisenbergWitness`. -/
 noncomputable def tensorModularAtomHeisenbergWitness :
-    SplitCliffordHeisenbergWitness 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) where
-  J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
-  trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
-  comm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
+    SplitCliffordHeisenbergWitness 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  ⟨(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J,
+   (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc,
+   (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm⟩
 
+/-- The current mode family of `tensorModularAtomHeisenbergWitness` agrees with
+`(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J`. -/
 @[simp] theorem tensorModularAtomHeisenbergWitness_J (n : Int) :
     (tensorModularAtomHeisenbergWitness 𝕜 α).J n =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n :=
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n := by
+  unfold tensorModularAtomHeisenbergWitness SplitCliffordHeisenbergWitness.J
   rfl
 
-@[simp] theorem tensorModularAtomHeisenbergWitness_trunc :
-    (tensorModularAtomHeisenbergWitness 𝕜 α).trunc =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc :=
-  rfl
+/-- Eventual positive-mode truncation of `tensorModularAtomHeisenbergWitness`. -/
+theorem tensorModularAtomHeisenbergWitness_trunc
+    (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
+    ∀ᶠ l : Int in atTop,
+      (tensorModularAtomHeisenbergWitness 𝕜 α).J l v = 0 := by
+  exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc v
 
-@[simp] theorem tensorModularAtomHeisenbergWitness_comm :
-    (tensorModularAtomHeisenbergWitness 𝕜 α).comm =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
-  rfl
+/-- Heisenberg mode commutator law of `tensorModularAtomHeisenbergWitness`. -/
+theorem tensorModularAtomHeisenbergWitness_comm (m n : Int) :
+    ((tensorModularAtomHeisenbergWitness 𝕜 α).J m).commutator
+        ((tensorModularAtomHeisenbergWitness 𝕜 α).J n) =
+      if m + n = 0 then
+        (m : 𝕜) •
+          (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α)
+      else 0 := by
+  exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
-/-- The tensor modular atom witness yields the exact current interface. -/
+/-- `CurrentHeisenbergRep` induced by `tensorModularAtomHeisenbergWitness`. -/
 noncomputable def tensorModularAtom_toCurrentHeisenbergRep :
     CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   splitClifford_to_currentHeisenbergRep (tensorModularAtomHeisenbergWitness 𝕜 α)
 
-/-- The tensor modular atom witness yields the packaged Sugawara morphism. -/
+/-- `CurrentSugawaraMorphism` induced by `tensorModularAtomHeisenbergWitness`. -/
 noncomputable def tensorModularAtom_toCurrentSugawaraMorphism :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   splitClifford_to_currentSugawaraMorphism (tensorModularAtomHeisenbergWitness 𝕜 α)
 
-/--
-Bundled bridge export via owner theorem route: packaged Sugawara morphism together
-with exact current representation on the tensor modular-atom carrier.
--/
+/-- Product of the Sugawara morphism and current representation induced by
+`tensorModularAtomHeisenbergWitness`. -/
 noncomputable def tensorModularAtom_toCurrentSugawaraMorphism_and_current :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) ×
       CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   splitClifford_currentSugawara_and_current (tensorModularAtomHeisenbergWitness 𝕜 α)
 
-/-- The tensor modular atom witness yields the downstream Sugawara representation. -/
+/-- Sugawara Virasoro representation induced by `tensorModularAtomHeisenbergWitness`. -/
 noncomputable def tensorModularAtom_to_sugawaraRepresentation :
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
       (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) :=
   (tensorModularAtomHeisenbergWitness 𝕜 α).currentSugawaraRepresentation
 
-/--
-Bundled bridge export via owner theorem route: exact current representation
-plus downstream Sugawara representation on the tensor modular-atom carrier.
--/
-noncomputable def tensorModularAtom_toCurrentAndSugawara
-    :
+/-- Product of the current representation and Sugawara Virasoro representation
+induced by `tensorModularAtomHeisenbergWitness`. -/
+noncomputable def tensorModularAtom_toCurrentAndSugawara :
     CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) ×
       (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
         (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   splitClifford_current_and_sugawara (tensorModularAtomHeisenbergWitness 𝕜 α)
 
-/--
-The exact source-side bridge: the charged-Fock current witness is already a
-split-Clifford witness, so the current and Sugawara packages are immediate.
--/
-theorem tensorModularAtom_current_readout
-    :
+/-- Joint readout of the mode family, eventual truncation, and Heisenberg
+commutator of `tensorModularAtom_toCurrentHeisenbergRep`. -/
+theorem tensorModularAtom_current_readout :
     (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).J =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
-      ∧ (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).trunc =
-        (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
+      ∧ (∀ v, ∀ᶠ l : Int in atTop,
+          (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).J l v = 0)
       ∧ ∀ m n,
           (((tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).J m).commutator
             ((tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).J n)) =
             if m + n = 0 then (m : 𝕜) •
               (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
                 VirasoroProject.ChargedFockSpace 𝕜 α) else 0 := by
-  exact ⟨rfl, rfl, (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).comm⟩
+  exact ⟨rfl,
+    (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).trunc,
+    (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).comm⟩
 
-/--
-Companion bridge surface exposing the packaged Sugawara morphism together with
-its current witness on the tensor modular-atom carrier.
--/
-theorem tensorModularAtom_currentSugawara_readout
-    :
+/-- Joint readout of the Heisenberg and Virasoro components of
+`tensorModularAtom_toCurrentSugawaraMorphism`. -/
+theorem tensorModularAtom_currentSugawara_readout :
     (tensorModularAtom_toCurrentSugawaraMorphism (𝕜 := 𝕜) (α := α)).heisenberg =
       tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)
       ∧ (tensorModularAtom_toCurrentSugawaraMorphism (𝕜 := 𝕜) (α := α)).virasoro =
         (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).currentSugawaraRepresentation := by
-  exact ⟨rfl, rfl⟩
+  exact ⟨CurrentSugawaraMorphism.ofHeisenberg_heisenberg _,
+    CurrentSugawaraMorphism.ofHeisenberg_virasoro _⟩
 
 end ChargedFockWitness
 

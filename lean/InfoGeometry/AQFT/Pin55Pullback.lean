@@ -1,3 +1,7 @@
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.LinearAlgebra.Matrix.ToLin
+
 /-!
 # Pin(5,5) Pullback Poset
 
@@ -6,9 +10,7 @@ group action on exterior algebra basis elements, providing the matrix representa
 fusion between Chevalley bases and spinor representations.
 -/
 
-import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.LinearAlgebra.Matrix.ToLin
+namespace InfoGeometry.AQFT.Pin55Pullback
 
 namespace InfoGeometry.AQFT.Pin55Pullback
 

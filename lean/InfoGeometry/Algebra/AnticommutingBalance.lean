@@ -6,6 +6,13 @@ Authors: InfoGeometry Engine Contributors
 
 import Mathlib
 
+/-!
+# Anticommuting Balance
+
+Establishes weighted square identities for anticommuting elements in an algebra,
+including complementary weight identities and balanced square non-vanishing.
+-/
+
 namespace InfoGeometry.Algebra.AnticommutingBalance
 
 variable {Carrier : Type*} [Ring Carrier] [Algebra ℝ Carrier]

@@ -6,31 +6,29 @@ import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 
 /-!
-# InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+# Split-Clifford Heisenberg Current Bridge and Sugawara Readouts
 
-Source-side bridge from split-Clifford current data into the existing
-`CurrentHeisenbergRep` interface.
+This module defines the subtype `SplitCliffordHeisenbergWitness 𝕜 V` of
+locally truncated Heisenberg current families on `V`, connects it to
+`CurrentHeisenbergRep` and `CurrentSugawaraMorphism`, and exposes the external
+infinite-current Lie brackets on `InfiniteCurrentAlg 𝕜`.
 
-This file does not prove a new Sugawara theorem.  It packages exactly the
-data required by `CurrentHeisenbergRep`:
+## 1. Real Math in This File
+- `SplitCliffordHeisenbergWitness`, `SplitCliffordHeisenbergWitness.J`,
+  `SplitCliffordHeisenbergWitness.trunc`, `SplitCliffordHeisenbergWitness.comm`
+- `SplitCliffordHeisenbergWitness.toCurrentHeisenbergRep`,
+  `SplitCliffordHeisenbergWitness.toCurrentSugawaraMorphism`,
+  `SplitCliffordHeisenbergWitness.currentSugawaraRepresentation`,
+  `SplitCliffordHeisenbergWitness.sugawaraStressMode_virasoroBracket`
+- `canonicalInfiniteCurrent_lie`, `canonicalInfiniteCurrent_lie_one_neg_one`,
+  `canonicalInfiniteCurrent_lie_neg_one_one`, `canonicalInfiniteCurrent_lie_central`
 
-* current modes `J : Int → V →ₗ[𝕜] V`;
-* local truncation;
-* the Heisenberg commutator law.
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.CurrentSugawaraBridge`
+- `InfoGeometry.Canonical.SplitCliffordInfiniteCurrent`
 
-Once that witness is supplied, the downstream Sugawara/Virasoro construction
-is delegated to `CurrentSugawaraBridge`.
-
-No new Virasoro construction.
-No vague `IsHeisenbergPair`.
-No theorem pretending that the split direct limit automatically supplies the
-current algebra.
-
-Repository policy boundary:
-this file is conditional. The missing theorem remains source-side construction
-of `J`, `trunc`, and `comm` from split-current data.
-No theorem here claims that split completion automatically yields an affine
-current algebra witness.
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -48,139 +46,126 @@ local instance linearEndLieRing (𝕜 V : Type*) [Semiring 𝕜]
     [AddCommGroup V] [Module 𝕜 V] : LieRing (V →ₗ[𝕜] V) :=
   LieRing.ofAssociativeRing
 
-/--
-Source-side split-Clifford current witness.
-
-This is intentionally the same shape as `CurrentHeisenbergRep`, but it is
-named from the source side.  It is the bridge target for split-Clifford
-completion data, transported CAR currents, or any concrete split current
-construction.
--/
-structure SplitCliffordHeisenbergWitness
+/-- Subtype of endomorphism-valued current families `J : Int → V →ₗ[𝕜] V`
+satisfying eventual positive-mode truncation and the level-1 Heisenberg
+commutator law. -/
+def SplitCliffordHeisenbergWitness
     (𝕜 V : Type*) [Field 𝕜] [CharZero 𝕜]
-    [AddCommGroup V] [Module 𝕜 V] where
-  /-- Current modes. -/
-  J : Int → V →ₗ[𝕜] V
-
-  /-- Local truncation of current modes. -/
-  trunc : ∀ v, atTop.Eventually (fun l => J l v = 0)
-
-  /-- Heisenberg current commutator. -/
-  comm :
-    ∀ m n,
+    [AddCommGroup V] [Module 𝕜 V] : Type _ :=
+  { J : Int → V →ₗ[𝕜] V //
+    (∀ v, atTop.Eventually (fun l => J l v = 0)) ∧
+    (∀ m n,
       (J m).commutator (J n) =
-        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0
+        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) }
 
 namespace SplitCliffordHeisenbergWitness
 
 variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
-/--
-Convert the source-side split-Clifford current witness into the exact
-current interface consumed by the Sugawara bridge.
--/
+/-- Underlying current mode family `Int → V →ₗ[𝕜] V`. -/
+def J (W : SplitCliffordHeisenbergWitness 𝕜 V) : Int → V →ₗ[𝕜] V :=
+  W.val
+
+/-- Eventual positive-mode truncation of `W.J`. -/
+theorem trunc (W : SplitCliffordHeisenbergWitness 𝕜 V) :
+    ∀ v, atTop.Eventually (fun l => W.J l v = 0) :=
+  W.property.1
+
+/-- Heisenberg mode commutator law of `W.J`. -/
+theorem comm (W : SplitCliffordHeisenbergWitness 𝕜 V) :
+    ∀ m n,
+      (W.J m).commutator (W.J n) =
+        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 :=
+  W.property.2
+
+/-- Convert `W` into a `CurrentHeisenbergRep 𝕜 V`. -/
 def toCurrentHeisenbergRep
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    CurrentHeisenbergRep 𝕜 V where
-  J := W.J
-  trunc := W.trunc
-  comm := W.comm
+    CurrentHeisenbergRep 𝕜 V :=
+  ⟨W.J, W.trunc, W.comm⟩
 
+/-- The current mode family of `W.toCurrentHeisenbergRep` equals `W.J`. -/
 @[simp]
 theorem toCurrentHeisenbergRep_J
     (W : SplitCliffordHeisenbergWitness 𝕜 V)
     (n : Int) :
-    (W.toCurrentHeisenbergRep).J n = W.J n :=
+    (W.toCurrentHeisenbergRep).J n = W.J n := by
+  unfold toCurrentHeisenbergRep CurrentHeisenbergRep.J
   rfl
 
-@[simp]
+/-- Eventual positive-mode truncation of `W.toCurrentHeisenbergRep` on any vector `v`. -/
 theorem toCurrentHeisenbergRep_trunc
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    (W.toCurrentHeisenbergRep).trunc = W.trunc :=
-  rfl
+    (W : SplitCliffordHeisenbergWitness 𝕜 V) (v : V) :
+    ∀ᶠ l : Int in atTop, (W.toCurrentHeisenbergRep).J l v = 0 := by
+  exact W.trunc v
 
-/--
-Readout form of the bridge into the existing current interface.
--/
+/-- Joint readout of the mode family, eventual truncation, and commutator law
+of `W.toCurrentHeisenbergRep`. -/
 theorem toCurrentHeisenbergRep_readout
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     W.toCurrentHeisenbergRep.J = W.J
-      ∧ W.toCurrentHeisenbergRep.trunc = W.trunc
+      ∧ (∀ v, atTop.Eventually (fun l => W.toCurrentHeisenbergRep.J l v = 0))
       ∧ ∀ m n,
           (W.toCurrentHeisenbergRep.J m).commutator (W.toCurrentHeisenbergRep.J n) =
             if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
-  exact ⟨rfl, rfl, W.toCurrentHeisenbergRep.comm⟩
+  exact ⟨rfl, W.toCurrentHeisenbergRep.trunc, W.toCurrentHeisenbergRep.comm⟩
 
-/--
-Pack the witness into the downstream Sugawara morphism interface.
-
-This stays on the safe side of the bridge: it does not construct the source
-Heisenberg witness, it only packages a witness that is already present.
--/
+/-- Sugawara morphism `CurrentSugawaraMorphism 𝕜 V` induced by `W`. -/
 noncomputable def toCurrentSugawaraMorphism
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentSugawaraMorphism 𝕜 V :=
   CurrentSugawaraMorphism.ofHeisenberg W.toCurrentHeisenbergRep
 
+/-- The Heisenberg component of `W.toCurrentSugawaraMorphism` is `W.toCurrentHeisenbergRep`. -/
 @[simp]
 theorem toCurrentSugawaraMorphism_heisenberg
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep :=
-  rfl
+    W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep := by
+  unfold toCurrentSugawaraMorphism
+  exact CurrentSugawaraMorphism.ofHeisenberg_heisenberg _
 
+/-- The Virasoro component of `W.toCurrentSugawaraMorphism` is the Sugawara representation. -/
 @[simp]
 theorem toCurrentSugawaraMorphism_virasoro
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     W.toCurrentSugawaraMorphism.virasoro =
-      (W.toCurrentHeisenbergRep).currentSugawaraRepresentation :=
-  rfl
+      (W.toCurrentHeisenbergRep).currentSugawaraRepresentation := by
+  unfold toCurrentSugawaraMorphism
+  exact CurrentSugawaraMorphism.ofHeisenberg_virasoro _
 
-/-- Every split-Clifford current witness yields a Sugawara morphism package with the expected readout. -/
+/-- Joint readout of both components of `W.toCurrentSugawaraMorphism`. -/
 theorem toCurrentSugawaraMorphism_readout
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep
       ∧ W.toCurrentSugawaraMorphism.virasoro =
         W.toCurrentHeisenbergRep.currentSugawaraRepresentation := by
-  exact ⟨rfl, rfl⟩
+  exact ⟨W.toCurrentSugawaraMorphism_heisenberg, W.toCurrentSugawaraMorphism_virasoro⟩
 
-/--
-Sugawara representation obtained from the existing owner surface.
-
-This is a definition, not a new theorem: the construction is delegated to
-`CurrentSugawaraBridge.CurrentHeisenbergRep.currentSugawaraRepresentation`.
--/
+/-- Sugawara Virasoro Lie algebra representation obtained from `W`. -/
 noncomputable def currentSugawaraRepresentation
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
   (W.toCurrentHeisenbergRep).currentSugawaraRepresentation
 
-/--
-The central Virasoro generator acts as the identity in the representation
-obtained from the split-Clifford current witness.
--/
+/-- The Virasoro central generator acts as the identity in `W.currentSugawaraRepresentation`. -/
 theorem currentSugawaraRepresentation_central
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     W.currentSugawaraRepresentation (VirasoroAlgebra.cgen 𝕜) =
-      (1 : V →ₗ[𝕜] V) :=
-  CurrentHeisenbergRep.currentSugawaraRepresentation_central
-    W.toCurrentHeisenbergRep
+      (1 : V →ₗ[𝕜] V) := by
+  unfold currentSugawaraRepresentation
+  exact CurrentHeisenbergRep.currentSugawaraRepresentation_central W.toCurrentHeisenbergRep
 
-/--
-The Virasoro `lgen` action is the Sugawara stress mode attached to the
-underlying current witness.
--/
+/-- The Virasoro generator `lgen 𝕜 n` acts as `sugawaraStressMode n` in
+`W.currentSugawaraRepresentation`. -/
 theorem currentSugawaraRepresentation_lgen_apply
     (W : SplitCliffordHeisenbergWitness 𝕜 V) (n : Int) :
     W.currentSugawaraRepresentation (VirasoroAlgebra.lgen 𝕜 n) =
-      (W.toCurrentHeisenbergRep).sugawaraStressMode n :=
-  CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply
-    W.toCurrentHeisenbergRep n
+      (W.toCurrentHeisenbergRep).sugawaraStressMode n := by
+  unfold currentSugawaraRepresentation
+  exact CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply W.toCurrentHeisenbergRep n
 
-/--
-The Sugawara stress modes satisfy the Virasoro bracket with central charge one,
-as inherited from the existing owner theorem.
--/
+/-- The Sugawara stress modes of `W` satisfy the Virasoro commutator with central charge $c = 1$. -/
 theorem sugawaraStressMode_virasoroBracket
     (W : SplitCliffordHeisenbergWitness 𝕜 V) (m n : Int) :
     ((W.toCurrentHeisenbergRep).sugawaraStressMode m).commutator
@@ -188,22 +173,17 @@ theorem sugawaraStressMode_virasoroBracket
       (m - n) • (W.toCurrentHeisenbergRep).sugawaraStressMode (m + n)
         + if m + n = 0 then
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
-          else 0 :=
-  CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket
-    W.toCurrentHeisenbergRep m n
+          else 0 := by
+  exact CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket W.toCurrentHeisenbergRep m n
 
-/--
-Bundled source-side theorem surface: a split-Clifford current witness gives
-both the exact Heisenberg current representation and the downstream Sugawara
-representation.
--/
+/-- Product pair of `W.toCurrentHeisenbergRep` and `W.currentSugawaraRepresentation`. -/
 noncomputable def current_and_sugawara
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentHeisenbergRep 𝕜 V ×
       (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
   ⟨W.toCurrentHeisenbergRep, W.currentSugawaraRepresentation⟩
 
-/-- Bundled source-side theorem surface through the Sugawara morphism. -/
+/-- Product pair of `W.toCurrentSugawaraMorphism` and `W.toCurrentHeisenbergRep`. -/
 noncomputable def currentSugawaraMorphism_and_current
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentSugawaraMorphism 𝕜 V × CurrentHeisenbergRep 𝕜 V :=
@@ -211,14 +191,7 @@ noncomputable def currentSugawaraMorphism_and_current
 
 end SplitCliffordHeisenbergWitness
 
-
-/-! ## Top-level theorem names -/
-
-/--
-Source-side bridge into the existing `CurrentHeisenbergRep`.
-
-This is the theorem requested by the implementation plan.
--/
+/-- Top-level conversion from `SplitCliffordHeisenbergWitness 𝕜 V` to `CurrentHeisenbergRep 𝕜 V`. -/
 def splitClifford_to_currentHeisenbergRep
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -226,12 +199,8 @@ def splitClifford_to_currentHeisenbergRep
     CurrentHeisenbergRep 𝕜 V :=
   W.toCurrentHeisenbergRep
 
-/--
-Source-side bridge into the existing Sugawara/Virasoro owner surface.
-
-No new Sugawara theorem is proved here; the result is obtained by applying the
-existing construction to the current witness.
--/
+/-- Top-level conversion from `SplitCliffordHeisenbergWitness 𝕜 V` to its Sugawara
+Virasoro representation. -/
 noncomputable def splitClifford_to_sugawaraRepresentation
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -239,7 +208,7 @@ noncomputable def splitClifford_to_sugawaraRepresentation
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
   W.currentSugawaraRepresentation
 
-/-- Source-side bridge into the packaged Sugawara morphism surface. -/
+/-- Top-level conversion from `SplitCliffordHeisenbergWitness 𝕜 V` to `CurrentSugawaraMorphism 𝕜 V`. -/
 noncomputable def splitClifford_to_currentSugawaraMorphism
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -247,11 +216,7 @@ noncomputable def splitClifford_to_currentSugawaraMorphism
     CurrentSugawaraMorphism 𝕜 V :=
   W.toCurrentSugawaraMorphism
 
-/--
-The strongest theorem surface for this bridge: once a split-Clifford source
-witness supplies the Heisenberg current laws, both the current representation
-and Sugawara representation are available.
--/
+/-- Top-level product of the current representation and Sugawara representation induced by `W`. -/
 noncomputable def splitClifford_current_and_sugawara
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -260,7 +225,7 @@ noncomputable def splitClifford_current_and_sugawara
       (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
   W.current_and_sugawara
 
-/-- The bridge also exposes the packaged Sugawara morphism and current datum. -/
+/-- Top-level product of the Sugawara morphism and current representation induced by `W`. -/
 noncomputable def splitClifford_currentSugawara_and_current
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
@@ -268,37 +233,32 @@ noncomputable def splitClifford_currentSugawara_and_current
     CurrentSugawaraMorphism 𝕜 V × CurrentHeisenbergRep 𝕜 V :=
   W.currentSugawaraMorphism_and_current
 
-/-! ## Explicit infinite-current consumer surface (external Heisenberg engine) -/
-
 section ExternalInfiniteCurrent
 
 variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
 
-/--
-Canonical infinite-current commutator readout, directly from
-`SplitCliffordInfiniteCurrent`.
--/
+/-- Lie bracket of the canonical infinite-current generators `Jinf 𝕜 m` and `Jinf 𝕜 n`. -/
 theorem canonicalInfiniteCurrent_lie
     (m n : Int) :
     ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
-      if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 :=
-  lie_Jinf (𝕜 := 𝕜) m n
+      if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 := by
+  exact lie_Jinf (𝕜 := 𝕜) m n
 
-/-- Concrete central-mode check: `[J₁,J₋₁] = 1 • K`. -/
+/-- Fundamental mode pair bracket `⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_lie_one_neg_one :
-    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 :=
-  lie_Jinf_one_neg_one (𝕜 := 𝕜)
+    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 := by
+  exact lie_Jinf_one_neg_one (𝕜 := 𝕜)
 
-/-- Concrete reverse check: `[J₋₁,J₁] = -1 • K`. -/
+/-- Reverse fundamental mode pair bracket `⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_lie_neg_one_one :
-    ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 :=
-  lie_Jinf_neg_one_one (𝕜 := 𝕜)
+    ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 := by
+  exact lie_Jinf_neg_one_one (𝕜 := 𝕜)
 
-/-- The canonical central generator commutes with every element. -/
+/-- Centrality of `Kinf 𝕜` in `InfiniteCurrentAlg 𝕜`: `⁅Kinf 𝕜, Z⁆ = 0`. -/
 theorem canonicalInfiniteCurrent_lie_central
     (Z : InfiniteCurrentAlg 𝕜) :
-    ⁅Kinf 𝕜, Z⁆ = 0 :=
-  lie_Kinf (𝕜 := 𝕜) Z
+    ⁅Kinf 𝕜, Z⁆ = 0 := by
+  exact lie_Kinf (𝕜 := 𝕜) Z
 
 end ExternalInfiniteCurrent
 

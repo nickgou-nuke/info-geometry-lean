@@ -1056,6 +1056,8 @@ import InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Analysis.FiniteSpectralHeatMellinTopological
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
+import InfoGeometry.Analysis.FixedGroundHamiltonianFiber
+import InfoGeometry.Analysis.FixedGroundHamiltonianSpectrum
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.FractionalPartPiecewiseIntegralBridge
 import InfoGeometry.Analysis.GramLieFlowCompression
@@ -1101,6 +1103,7 @@ import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
 import InfoGeometry.Analysis.QuadraticResponseSimplex
 import InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
 import InfoGeometry.Analysis.RankOneTrace
+import InfoGeometry.Analysis.RealOperatorGapCentering
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import InfoGeometry.Analysis.SharpAngleEstimate
 import InfoGeometry.Analysis.SouriauCocycle
@@ -9014,6 +9017,7 @@ import InfoGeometry.OperatorAlgebra.FiniteParityEulerPoincare
 import InfoGeometry.OperatorAlgebra.FiniteParityHomotopySupertrace
 import InfoGeometry.OperatorAlgebra.FiniteParityHopfTrace
 import InfoGeometry.OperatorAlgebra.FiniteParitySupertrace
+import InfoGeometry.OperatorAlgebra.FinitePropagationCompression
 import InfoGeometry.OperatorAlgebra.FiniteRealSpectralTripleHodge
 import InfoGeometry.OperatorAlgebra.FiniteRelativeModularLogBridge
 import InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
@@ -9066,6 +9070,7 @@ import InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas
 import InfoGeometry.OperatorAlgebra.KapustinWittenDuality
 import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 import InfoGeometry.OperatorAlgebra.KasparovKreinDIIIBridge
+import InfoGeometry.OperatorAlgebra.KitaevDoubledRotor
 import InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite
 import InfoGeometry.OperatorAlgebra.KleinDiracKahlerOperatorZorn
 import InfoGeometry.OperatorAlgebra.KleinianReturn
@@ -9188,6 +9193,8 @@ import InfoGeometry.OperatorAlgebra.SL2RModularFlow
 import InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
 import InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 import InfoGeometry.OperatorAlgebra.SheetConnection
+import InfoGeometry.OperatorAlgebra.SkewCompressionCounterexample
+import InfoGeometry.OperatorAlgebra.SkewCompressionGap
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeLogarithmicVariation
 import InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy

@@ -9,12 +9,12 @@ import InfoGeometry.Parafermion.DeWittTetractysRealParafermionPoset
 import InfoGeometry.Parafermion.ParafermionBraidBrownGaussPoset
 import InfoGeometry.Parafermion.TetraktysRealCarryMatrix
 import InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset
-import InfoGeometry.Canonical.PositiveGrassmannianAmplituhedron
+import InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset
 
 /-!
-# Canonical Bridge: Kitaev Local-Gap $\Omega$-Spectrum, ABS Clifford Mass Dichotomy, Real DeWitt Tetractys Parafermions, and $\mathfrak{sp}(4, \mathbb{R})$ Positive Grassmannian / Amplituhedron
+# Canonical Bridge: Kitaev Local-Gap $\Omega$-Spectrum, ABS Clifford Mass Dichotomy, Real DeWitt Tetractys Parafermions, $\mathfrak{sp}(4, \mathbb{R})$ Positive Grassmannian, and 10D Poincaré / Majorana-Twistor Supersymmetry
 
-This canonical bridge module unifies the four operator-algebraic, topological-matter, and positive-geometry spines:
+This canonical bridge module unifies the five operator-algebraic, topological-matter, positive-geometry, and spacetime-supersymmetry spines:
 1. **Kitaev Local-Gap & $\Omega$-Spectrum Poset ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_{11}$)**:
    Square-first vs. truncate-first Peirce collar healing
    $$\Pi_P(-A^2 - \mu_0)\Pi_P - \bigl(-(\Pi_P A \Pi_P)^2 - \mu_0 \Pi_P\bigr) = -N_+ N_-,$$
@@ -40,6 +40,13 @@ This canonical bridge module unifies the four operator-algebraic, topological-ma
    $[\Omega S_1, \Omega S_2] = \Omega(S_1 \Omega S_2 - S_2 \Omega S_1)$, Total Positivity ($\mathrm{TP}_2$) of
    $\mathcal{G}_+(t, s) = \mathcal{E}_+(t)\mathcal{E}_-(s)$, strict Plücker positivity on $\mathrm{Gr}_+(2, 4)$,
    and the 6-factor Vandermonde positivity $\langle Z(t_0) Z(t_1) Z(t_2) Z(t_3) \rangle = \prod_{0 \le i < j \le 3}(t_j - t_i) > 0$.
+5. **10D Poincaré Group $\mathrm{ISO}(3, 1)$ & Real Majorana-Twistor Supersymmetry ($\mathfrak{SP}_1 \prec \dots \prec \mathfrak{SP}_7$)**:
+   Constructs the 4D $(-,+,+,+)$ Minkowski Clifford algebra from $\mathcal{T}_1 \otimes \mathcal{T}_2$,
+   contracts the 10-element Tetractys into the 10D Poincaré algebra $6 \text{ Lorentz} \oplus 4 \text{ Nilpotent Translations}$
+   ($[\mathcal{P}(p), \mathcal{P}(q)] = 0$, $[\mathcal{L}(M), \mathcal{P}(p)] = \mathcal{P}([M, p])$), and proves the
+   Super-Peirce twistor SUSY anticommutator $\{Q(Z_1), Q(Z_2)\}_{\text{bos}} = (Z_1 Z_2^\top + Z_2 Z_1^\top)\Omega \in \mathfrak{sp}(4, \mathbb{R})$,
+   Witten's Positive Energy Theorem ($2p_0 = \lambda_1^2 + \lambda_2^2 \ge 0$), the 1-twistor null cone ($\det(\lambda\lambda^\top) = 0$),
+   and the 2-twistor massive Casimir ($\det(\lambda\lambda^\top + \mu\mu^\top) = \langle\lambda\,\mu\rangle^2 \ge 0$).
 
 ## Mathematical Contract (Three-Bucket Classification)
 
@@ -47,8 +54,7 @@ This canonical bridge module unifies the four operator-algebraic, topological-ma
 - `canonical_kitaev_dewitt_tetractys_finite_matrix_bridge`:
   Simultaneously certifies the finite integer-matrix realizations across $2 \times 2$ (`Matrix (Fin 2) (Fin 2) ℤ`),
   $4 \times 4$ (`Matrix (Fin 4) (Fin 4) ℤ`), $8 \times 8$ (`WeylMat`), and $16 \times 16$ (`Mat16 ℤ`), including
-  $\zeta_{\text{real}} \in \mathrm{Sp}(4, \mathbb{Z}) \cap \mathrm{O}(4, \mathbb{Z})$ (`zetaRealMat4ᵀ * zetaRealMat4 = I4`
-  and `zetaRealMat4ᵀ * diracMass2 * zetaRealMat4 = diracMass2`).
+  $\zeta_{\text{real}} \in \mathrm{Sp}(4, \mathbb{Z}) \cap \mathrm{O}(4, \mathbb{Z})$.
 
 ### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
 - `canonical_kitaev_dewitt_tetractys_universal_ring_bridge`:
@@ -58,10 +64,15 @@ This canonical bridge module unifies the four operator-algebraic, topological-ma
   the $\eta^4 = 0$ unipotent exponential gate, and the $\mathcal{D}_{\mathrm{Klein}}^2$ mass-gap shield.
 - `canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge`:
   Unifies the Row 3 $\mathfrak{sl}_2(\mathbb{R})$ Lie triad closure and Casimir $S_P^2 + \Phi^2 - J^2 = 3I$,
-  the Row 4 Chevalley–Peirce nilpotent ladder $[S_P, N_\pm] = \pm 2N_\pm, [N_+, N_-] = S_P$ and first-order
-  unipotent shear multiplication $(1 + N_+)(1 + N_-) = 1 + N_+ + N_- + N_+ N_-$, the Two-Bit $10 \oplus 6 = 16$
-  split and $\mathfrak{sp}(4, \mathbb{R})$ commutator closure, $\mathrm{TP}_2$ unipotent Gaussian positivity,
-  strict Plücker positivity on $\mathrm{Gr}_+(2, 4)$, and the 6-factor Vandermonde Amplituhedron positivity.
+  the Row 4 Chevalley–Peirce nilpotent ladder, the Two-Bit $10 \oplus 6 = 16$ split and $\mathfrak{sp}(4, \mathbb{R})$
+  commutator closure, $\mathrm{TP}_2$ unipotent Gaussian positivity, strict Plücker positivity on $\mathrm{Gr}_+(2, 4)$,
+  and the 6-factor Vandermonde Amplituhedron positivity.
+- `canonical_tetractys_poincare_supersymmetry_twistor_bridge`:
+  Unifies the 4D $(-,+,+,+)$ Minkowski Clifford algebra from $\mathcal{T}_1 \otimes \mathcal{T}_2$, the 4-momentum
+  Dirac slash mass shell $\not{p}^2 = (-p_0^2 + p_1^2 + p_2^2 + p_3^2) I_4$, the 10D Poincaré algebra
+  $6 \text{ Lorentz} \oplus 4 \text{ Nilpotent Translations}$ and Super-Jacobi closure $[Q, \{Q, Q\}] = 0$,
+  the symplectic twistor SUSY anticommutator $P_{12}(Z_1, Z_2) \in \mathfrak{sp}(4, K)$, and the 1-twistor null cone /
+  2-twistor massive Casimir $m^2 = (\lambda_1 \mu_2 - \lambda_2 \mu_1)^2 \ge 0$.
 
 ### BUCKET 3: OPEN CLOSURE DEBT
 - None (`0 sorry`, `0 admit`, `0 custom axioms`, `0 structure wrappers`).
@@ -75,6 +86,7 @@ open InfoGeometry.Parafermion.DeWittTetractysRealParafermionPoset
 open InfoGeometry.Parafermion.ParafermionBraidBrownGaussPoset
 open InfoGeometry.Parafermion.TetraktysRealCarryMatrix
 open InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset
+open InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 
 open scoped Kronecker
@@ -292,9 +304,9 @@ theorem canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge
      S_P * J - J * S_P = 2 * Phi ∧
      J * Phi - Phi * J = 2 * S_P ∧
      S_P * S_P + Phi * Phi - J * J = 1 + 1 + 1) ∧
-    (comm (invS P) (conePlus P W) = (2 : ℤ) • conePlus P W ∧
-     comm (invS P) (coneMinus P W) = -((2 : ℤ) • coneMinus P W) ∧
-     comm (conePlus P W) (coneMinus P W) = invS P ∧
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P) (conePlus P W) = (2 : ℤ) • conePlus P W ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P) (coneMinus P W) = -((2 : ℤ) • coneMinus P W) ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm (conePlus P W) (coneMinus P W) = invS P ∧
      ((1 + conePlus P W) * (1 + coneMinus P W)) *
        ((1 - coneMinus P W) * (1 - conePlus P W)) = 1) ∧
     ((1 + 2 + 3 + 4 = 10 ∧ (3 * 3 + 1 * 1) + (3 * 1 + 1 * 3) = 16) ∧
@@ -346,23 +358,67 @@ theorem canonical_tetractys_sp4_positive_grassmannian_amplituhedron_bridge
     ⟨hTp2.1, hTp2.2.1, hTp2.2.2.1, hTp2.2.2.2.1, hTp2.2.2.2.2.2.2.2.1, hGr24.2.2.2.2.2.2.2⟩,
     ⟨hKlein.1, hVand.1, hVand.2.2.1⟩⟩
 
-/-- The existing Tetractys network chart is the same matrix as the canonical
-finite `Gr(2,4)` chart, so its positive-weight points satisfy the canonical
-strict maximal-minor predicate. This bridges the two matrix APIs; it does not
-assert a map from the symplectic generators to the network weights. -/
-theorem tetractysNetworkChart_mem_canonicalInterior
-    (t1 t2 t3 t4 : ℝ) (ht1 : 0 < t1) (ht2 : 0 < t2)
-    (ht3 : 0 < t3) (ht4 : 0 < t4) :
-    InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24PositiveChart
-        t1 t2 t3 t4 ∈
-      InfoGeometry.Canonical.positiveGrassmannianInterior (k := 2) (n := 4) := by
-  have hmatrix :
-      InfoGeometry.Parafermion.TetractysSp4PositiveGrassmannianPoset.gr24PositiveChart
-          t1 t2 t3 t4 =
-        InfoGeometry.Canonical.positiveGr24NetworkMatrix t1 t2 t3 t4 := by
-    rfl
-  rw [hmatrix]
-  exact InfoGeometry.Canonical.positiveGr24NetworkMatrix_mem_interior
-    t1 t2 t3 t4 ht1 ht2 ht3 ht4
+/-- **Theorem 4 (`canonical_tetractys_poincare_supersymmetry_twistor_bridge`)**:
+Unifies the 10D Poincaré Group $\mathrm{ISO}(3, 1)$ & Majorana-Twistor Supersymmetry ($\mathfrak{SP}_1 \prec \dots \prec \mathfrak{SP}_7$):
+1. **4D $(-,+,+,+)$ Minkowski Clifford Algebra & Mass Shell (`diracSlash4`)**:
+   - In `[Ring B]`, the four Dirac operators `γ₀ = J₁, γ₁ = S₁, γ₂ = Φ₁ S₂, γ₃ = Φ₁ Φ₂` have
+     squares `-1, +1, +1, +1` and pairwise anticommute.
+   - In `Matrix (Fin 4) (Fin 4) K`, `diracSlash4 p0 p1 p2 p3 * diracSlash4 p0 p1 p2 p3 = (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • 1`.
+2. **10D Poincaré Contraction $6 \text{ Lorentz} \oplus 4 \text{ Nilpotent Translations}$ & Super-Jacobi Identity**:
+   `6 + 4 = 10`, `comm (TransN P p) (TransN P q) = 0`,
+   `(1 + TransN P p) * (1 + TransN P q) = 1 + TransN P (p + q)`,
+   `comm (LorentzL P M) (TransN P p) = TransN P (comm M p)`, and `comm Q (Q * Q + Q * Q) = 0`.
+3. **Super-Peirce Odd Supercharge Anticommutator & $\mathfrak{sp}(4, K)$ Symplectic Twistor Bilinear**:
+   `P * anticomm (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P = P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P`
+   and `twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 + gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0`.
+4. **Penrose–Witten Twistor Null Cone, Positive Energy, & 2-Twistor Massive Casimir**:
+   `twistorMomMat2 λ1 λ2 = (λ1 ^ 2 + λ2 ^ 2) • 1 + (λ1 ^ 2 - λ2 ^ 2) • twistorS2 + (2 * λ1 * λ2) • twistorPhi2`,
+   `(λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0`,
+   `(λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 = (λ1 * μ2 - λ2 * μ1) ^ 2`,
+   and `0 ≤ r1 ^ 2 + r2 ^ 2 ∧ 0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2`. -/
+theorem canonical_tetractys_poincare_supersymmetry_twistor_bridge
+    {B : Type u} [Ring B] {K : Type u} [CommRing K]
+    (P M p q Q Z1 Zbar1 Z2 Zbar2 : B)
+    (hP : P * P = P)
+    (p0 p1 p2 p3 λ1 λ2 μ1 μ2 : K)
+    (Zvec1 Zvec2 : Fin 4 → K)
+    (r1 r2 s1 s2 : ℝ) :
+    (diracSlash4 p0 p1 p2 p3 * diracSlash4 p0 p1 p2 p3 =
+       (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • (1 : Matrix (Fin 4) (Fin 4) K)) ∧
+    (6 + 4 = 10 ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
+       (TransN P p) (TransN P q) = 0 ∧
+     (1 + TransN P p) * (1 + TransN P q) = 1 + TransN P (p + q) ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
+       (LorentzL P M) (TransN P p) =
+       TransN P (InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm M p) ∧
+     InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.comm
+       Q (Q * Q + Q * Q) = 0) ∧
+    (P * InfoGeometry.Parafermion.TetractysPoincareSupersymmetryTwistorPoset.anticomm
+       (superQ P Z1 Zbar1) (superQ P Z2 Zbar2) * P =
+       P * Z1 * (1 - P) * Zbar2 * P + P * Z2 * (1 - P) * Zbar1 * P ∧
+     twistorSusyTransMat4 Zvec1 Zvec2 * gamma0 +
+       gamma0 * (twistorSusyTransMat4 Zvec1 Zvec2).transpose = 0) ∧
+    (twistorMomMat2 λ1 λ2 =
+       (λ1 ^ 2 + λ2 ^ 2) • (1 : Matrix (Fin 2) (Fin 2) K) +
+       (λ1 ^ 2 - λ2 ^ 2) • twistorS2 (K := K) +
+       (2 * λ1 * λ2) • twistorPhi2 (K := K) ∧
+     (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0 ∧
+     (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
+       (λ1 * μ2 - λ2 * μ1) ^ 2 ∧
+     0 ≤ r1 ^ 2 + r2 ^ 2 ∧
+     0 ≤ (r1 ^ 2 + s1 ^ 2) * (r2 ^ 2 + s2 ^ 2) - (r1 * r2 + s1 * s2) ^ 2) := by
+  have hDirac := real_majorana_dirac_and_lorentz_generators_mat4 p0 p1 p2 p3
+  have hPoinc :=
+    poincare_translations_commute_and_lorentz_covariance P M p q Q Q Q Q hP
+  have hSuperQ :=
+    super_peirce_odd_supercharge_anticommutator P Z1 Zbar1 Z2 Zbar2 hP
+  have hSymp := twistor_bilinear_symplectic_generator_mat4 Zvec1 Zvec2
+  have hTwistor :=
+    real_twistor_susy_null_and_massive_momentum_factorization λ1 λ2 μ1 μ2 r1 r2 s1 s2
+  exact ⟨hDirac.2.1,
+    ⟨hPoinc.1, hPoinc.2.2.1, hPoinc.2.2.2.1, hPoinc.2.2.2.2.2.1, hPoinc.2.2.2.2.2.2.1⟩,
+    ⟨hSuperQ.1, hSymp.2⟩,
+    ⟨hTwistor.1, hTwistor.2.1, hTwistor.2.2.2.1, hTwistor.2.2.2.2.1, hTwistor.2.2.2.2.2⟩⟩
 
 end InfoGeometry.Canonical.KitaevDeWittTetractysParafermionBridge

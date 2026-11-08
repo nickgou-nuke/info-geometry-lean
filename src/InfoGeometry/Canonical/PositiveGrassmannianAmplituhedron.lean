@@ -47,50 +47,19 @@ def positiveGrassmannianChart : Set (Matrix (Fin k) (Fin n) ℝ) :=
 def positiveGrassmannianInterior : Set (Matrix (Fin k) (Fin n) ℝ) :=
   {C | HasPositiveMaximalMinors C}
 
-/-- A finite-network chart representative for a strictly positive point of
-`Gr(2,4)`. Its parameters are positive edge weights. -/
-def positiveGr24NetworkMatrix (t1 t2 t3 t4 : ℝ) : Matrix (Fin 2) (Fin 4) ℝ :=
-  !![1, 0, -t1, -(t1 * t3 + t4);
-     0, 1, t2, t2 * t3]
-
-/-- The six ordered maximal minors of the explicit `Gr(2,4)` network matrix.
-This computes Plücker coordinates from the actual matrix carrier. -/
-theorem positiveGr24NetworkMatrix_minors (t1 t2 t3 t4 : ℝ) :
-    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![0, 1] = 1 ∧
-    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![0, 2] = t2 ∧
-    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![0, 3] = t2 * t3 ∧
-    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![1, 2] = t1 ∧
-    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![1, 3] = t1 * t3 + t4 ∧
-    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![2, 3] = t2 * t4 := by
-  simp only [maximalMinor_pair, positiveGr24NetworkMatrix]
-  norm_num
-  all_goals ring
-
-/-- Positive network weights produce a point in the repository's strict
-finite matrix chart for `Gr(2,4)`. -/
-theorem positiveGr24NetworkMatrix_mem_interior
-    (t1 t2 t3 t4 : ℝ) (ht1 : 0 < t1) (ht2 : 0 < t2)
-    (ht3 : 0 < t3) (ht4 : 0 < t4) :
-    positiveGr24NetworkMatrix t1 t2 t3 t4 ∈
-      positiveGrassmannianInterior (k := 2) (n := 4) := by
+/-- Pairwise positivity of ordered column determinants implies strict
+positivity of every ordered maximal minor for a two-row matrix. -/
+theorem hasPositiveMaximalMinors_of_pairwisePositive
+    (C : Matrix (Fin 2) (Fin n) ℝ)
+    (hC : ∀ i j : Fin n, i < j →
+      0 < C 0 i * C 1 j - C 0 j * C 1 i) :
+    HasPositiveMaximalMinors C := by
   intro s hs
-  have h01 : s 0 < s 1 := hs (by decide)
-  generalize h0 : s 0 = i
-  generalize h1 : s 1 = j
-  have hij : i < j := by simpa [h0, h1] using h01
-  have heq : s = ![i, j] := by
+  have hs_eq : s = ![s 0, s 1] := by
     funext r
-    fin_cases r <;> simp [h0, h1]
-  rw [heq, maximalMinor_pair]
-  rcases i with ⟨i, hi⟩
-  rcases j with ⟨j, hj⟩
-  have hij' : i < j := by simpa using hij
-  interval_cases i <;> interval_cases j
-  all_goals
-    first
-    | omega
-    | (simp [positiveGr24NetworkMatrix] <;> ring_nf <;>
-        first | positivity | linarith [mul_pos ht2 ht4])
+    fin_cases r <;> simp
+  rw [hs_eq, maximalMinor_pair]
+  exact hC (s 0) (s 1) (hs (by decide))
 
 /-! ### Boundary extension by a zero column
 

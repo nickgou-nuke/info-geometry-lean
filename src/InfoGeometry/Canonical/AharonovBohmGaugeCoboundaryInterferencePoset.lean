@@ -7,6 +7,7 @@ import InfoGeometry.Physics.SelbergTraceAharonovBohm
 import InfoGeometry.Canonical.ModularHamiltonianHorizonDefectPoset
 import InfoGeometry.Canonical.E10Grading
 import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 
 /-!
 # The Aharonov–Bohm (1959) Gauge-Coboundary, Two-Branch Interference, & Möbius Horizon Poset
@@ -200,6 +201,25 @@ on the punctured complex plane. The normalization makes its integral around a
 positively oriented circle equal to the phase flux. -/
 def abCircleConnectionCoefficient (flux : ℝ) (z : ℂ) : ℂ :=
   (-(flux : ℂ) * Complex.I / (2 * Real.pi)) * (z - 0)⁻¹
+
+/-- A logarithmic potential for the normalized connection on Mathlib's standard
+branch domain `Complex.slitPlane`. -/
+def abCircleConnectionPotential (flux : ℝ) (z : ℂ) : ℂ :=
+  (-(flux : ℂ) * Complex.I / (2 * Real.pi)) * Complex.log z
+
+/-- On the slit plane, the normalized connection coefficient is the derivative
+of its logarithmic potential. This is a branch-domain primitive, consistent
+with the nonzero-period obstruction to a primitive on the punctured plane. -/
+theorem abCircleConnection_local_primitive (flux : ℝ) {z : ℂ}
+    (hz : z ∈ Complex.slitPlane) :
+    HasDerivAt (abCircleConnectionPotential flux)
+      (abCircleConnectionCoefficient flux z) z := by
+  change HasDerivAt
+    (fun y : ℂ => (-(flux : ℂ) * Complex.I / (2 * Real.pi)) * Complex.log y)
+    ((-(flux : ℂ) * Complex.I / (2 * Real.pi)) * (z - 0)⁻¹) z
+  simpa [sub_zero] using
+    (Complex.hasDerivAt_log hz).const_mul
+      (-(flux : ℂ) * Complex.I / (2 * Real.pi))
 
 /-- **Continuum circle circulation (`abCircleConnection_circleIntegral`):**
 For every positive radius, the contour integral of this coefficient is exactly

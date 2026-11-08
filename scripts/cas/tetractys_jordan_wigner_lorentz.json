@@ -1,0 +1,281 @@
+{
+  "anti_hom": false,
+  "artifact_hash": "5e2b0a338911df52cb6b308068bbe329771f57edbda81d0c070ddfefb8beaab2",
+  "basis_order": [
+    "00",
+    "01",
+    "10",
+    "11"
+  ],
+  "carrier": "MatStage 2 = Matrix (Fin 4) (Fin 4) \u211d",
+  "checked": {
+    "all_24_lorentz_vector_commutators": true,
+    "gamma_frame_matches_jw_generators_and_volume": true,
+    "single_atom_tetractys_table": true,
+    "six_lorentz_bivector_squares": true,
+    "two_site_gamma_squares_and_anticommutators": true
+  },
+  "gamma_matrices_row_major": [
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      -1,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "lean_multiplication": "jwCliffordRepresentation 2, where MatStage 2 is the two-site Wigner-Jordan tensor representation",
+  "lean_owner": "InfoGeometry.Clifford.Cl11JordanWignerCARBridge",
+  "lorentz_action_coefficients_in_gamma_basis": {
+    "01:0": [
+      0,
+      2,
+      0,
+      0
+    ],
+    "01:1": [
+      2,
+      0,
+      0,
+      0
+    ],
+    "01:2": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "01:3": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "02:0": [
+      0,
+      0,
+      2,
+      0
+    ],
+    "02:1": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "02:2": [
+      2,
+      0,
+      0,
+      0
+    ],
+    "02:3": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "03:0": [
+      0,
+      0,
+      0,
+      2
+    ],
+    "03:1": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "03:2": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "03:3": [
+      2,
+      0,
+      0,
+      0
+    ],
+    "12:0": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "12:1": [
+      0,
+      0,
+      -2,
+      0
+    ],
+    "12:2": [
+      0,
+      2,
+      0,
+      0
+    ],
+    "12:3": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "13:0": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "13:1": [
+      0,
+      0,
+      0,
+      -2
+    ],
+    "13:2": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "13:3": [
+      0,
+      2,
+      0,
+      0
+    ],
+    "23:0": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "23:1": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "23:2": [
+      0,
+      0,
+      0,
+      -2
+    ],
+    "23:3": [
+      0,
+      0,
+      2,
+      0
+    ]
+  },
+  "lorentz_action_convention": "[gamma_a gamma_b, gamma_c] = 2(eta_bc gamma_a - eta_ac gamma_b), a<b",
+  "lorentz_bivector_squares": {
+    "01": 1,
+    "02": 1,
+    "03": 1,
+    "12": -1,
+    "13": -1,
+    "23": -1
+  },
+  "metric_diagonal": [
+    -1,
+    1,
+    1,
+    1
+  ],
+  "multiplication_convention": "matrix multiplication; site 1 is left Kronecker factor",
+  "object": "two_site_tetractys_from_jordan_wigner_cl11",
+  "round_trip_element": {
+    "expected_output": "gamma_0=JW_minus(site 1), gamma_1=JW_plus(site 1), gamma_2=JW_plus(site 2), gamma_3=product of all four in the declared order",
+    "input": "ordered four Wigner-Jordan generators at stage 2",
+    "status": "Exact CAS formulas pass; an owner-level Lean equality identifying this frame with the Tetractys construction is not yet present."
+  },
+  "round_trip_verified": false,
+  "sympy_source": "scripts/cas/tetractys_jordan_wigner_lorentz.py",
+  "tetractys_conversion": {
+    "J": "S*Phi = jwMajoranaMinus 1 0",
+    "Phi": "jwMajoranaPlus 1 0 * jwMajoranaMinus 1 0 = S*J",
+    "S": "jwMajoranaPlus 1 0 = a\u2020 + a"
+  },
+  "two_site_gamma": [
+    "J\u2297I",
+    "S\u2297I",
+    "Phi\u2297S",
+    "Phi\u2297Phi"
+  ],
+  "wigner_jordan_generators": [
+    "S\u2297I",
+    "J\u2297I",
+    "Phi\u2297S",
+    "Phi\u2297J"
+  ]
+}

@@ -286,16 +286,21 @@ naming_status=$?
 echo "[strict-check] running docstring audit (advisory)"
 run_advisory_audit docstrings python3 tools/quality/audit_docstrings.py lean/InfoGeometry
 docstring_status=$?
-echo "[strict-check] running style audit (advisory)"
+echo "[strict-check] running style audit (enforced)"
 run_advisory_audit style python3 tools/quality/audit_style.py lean/InfoGeometry
 style_status=$?
 set -e
 
-if [[ $naming_status -ne 0 || $docstring_status -ne 0 || $style_status -ne 0 ]]; then
+if [[ $style_status -ne 0 ]]; then
+  echo "[strict-check] style audit failed with exit code $style_status"
+  echo "  logs: $QUALITY_REPORT_DIR"
+  exit 1
+fi
+
+if [[ $naming_status -ne 0 || $docstring_status -ne 0 ]]; then
   echo "[strict-check] advisory quality audits reported findings:"
   echo "  naming audit exit code: $naming_status"
   echo "  docstring audit exit code: $docstring_status"
-  echo "  style audit exit code: $style_status"
   echo "  logs: $QUALITY_REPORT_DIR"
   if [[ "${STRICT_CHECK_ENFORCE_HEURISTICS:-0}" == "1" ]]; then
     echo "[strict-check] failing because STRICT_CHECK_ENFORCE_HEURISTICS=1"

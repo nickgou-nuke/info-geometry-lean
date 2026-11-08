@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
 
@@ -14,6 +19,17 @@ Ref: `QMS-DIR-SEC150-MAJORANA-PLABIC-ZERO-MODES-2026-OCT-16`
    генерира масовата междина (Mass Gap) на истински Дираков фермион.
 5. Теорема 3 (Майоранова Нулева Мода): Висящият (прекъснат) ръб анулира Хамилтониана (H·E = 0), 
    раждайки Топологично Защитена Нулева Мода (MZM) — гръбнакът на квантовите компютри!
+
+### Three-Bucket Epistemic Audit Classification
+
+* **BUCKET 1 — Constructively Proved Theorems (`[kernel_verified]`):**
+  - `ridge_is_nilpotent`, `dirac_fermion_fusion_mass_gap`, and
+    `majorana_zero_mode_topological_protection`.
+* **BUCKET 2 — Eliminated Certificate Wrappers (Zero Remaining):**
+  - The legacy `MajoranaPlabicZeroModeCertificate : Prop` wrapper has been eliminated.
+* **BUCKET 3 — Many-Body Plabic Network & Non-Abelian Braiding (`[bucket_3_open_debt]`):**
+  - Full multi-plaquette plabic network cluster mutations and non-abelian Ising anyon
+    braiding statistics remain outside this finite $2 \times 2$ (`PlabicMajoranaOp R`) dimer model.
 -/
 
 namespace InfoGeometry.Holography.MajoranaPlabic
@@ -22,6 +38,8 @@ variable {R : Type*} [CommRing R]
 
 /-! ### 1. Cℓ(1,1) Операторна База на Топологичния Изолатор -/
 
+/-- Four-component $2 \times 2$ matrix carrier (`black_node`, `ridge_fwd`, `ridge_bwd`, `white_node`)
+representing a two-sublattice Plabic dimer operator over `R`. -/
 @[ext]
 structure PlabicMajoranaOp (R : Type*) where
   black_node : R  -- e₁ (Майоранова подрешетка A)
@@ -33,19 +51,25 @@ namespace PlabicMajoranaOp
 
 variable {R : Type*} [CommRing R]
 
+/-- Zero operator in `PlabicMajoranaOp R`. -/
 def zero : PlabicMajoranaOp R := ⟨0, 0, 0, 0⟩
+
+/-- Multiplicative identity operator in `PlabicMajoranaOp R`. -/
 def one  : PlabicMajoranaOp R := ⟨1, 0, 0, 1⟩
 
+/-- Componentwise addition on `PlabicMajoranaOp R`. -/
 def add (A B : PlabicMajoranaOp R) : PlabicMajoranaOp R :=
   ⟨A.black_node + B.black_node, A.ridge_fwd + B.ridge_fwd,
    A.ridge_bwd + B.ridge_bwd, A.white_node + B.white_node⟩
 
+/-- Associative $2 \times 2$ matrix multiplication on `PlabicMajoranaOp R`. -/
 def mul (A B : PlabicMajoranaOp R) : PlabicMajoranaOp R :=
   ⟨A.black_node * B.black_node + A.ridge_fwd * B.ridge_bwd,
    A.black_node * B.ridge_fwd + A.ridge_fwd * B.white_node,
    A.ridge_bwd * B.black_node + A.white_node * B.ridge_bwd,
    A.ridge_bwd * B.ridge_fwd + A.white_node * B.white_node⟩
 
+/-- Scalar multiplication on `PlabicMajoranaOp R`. -/
 def scale (c : R) (A : PlabicMajoranaOp R) : PlabicMajoranaOp R :=
   ⟨c * A.black_node, c * A.ridge_fwd, c * A.ridge_bwd, c * A.white_node⟩
 
@@ -110,23 +134,6 @@ theorem majorana_zero_mode_topological_protection (w : R) :
     mul (openHamiltonian w) danglingEdge = zero := by
   dsimp [openHamiltonian, danglingEdge, ridgeFwd, mul, zero]
   ext <;> ring
-
-/-! ### 5. Главен Сертификат на Раздел 150 -/
-
-structure MajoranaPlabicZeroModeCertificate (R : Type*) [CommRing R] : Prop where
-  nilpotency : ∀ (w : R),
-    PlabicMajoranaOp.mul (PlabicMajoranaOp.ridgeFwd w) (PlabicMajoranaOp.ridgeFwd w) = PlabicMajoranaOp.zero
-  mass_gap : ∀ (w : R),
-    PlabicMajoranaOp.mul (PlabicMajoranaOp.kitaevHamiltonian w) (PlabicMajoranaOp.kitaevHamiltonian w) =
-      PlabicMajoranaOp.scale (w^2) PlabicMajoranaOp.one
-  topological_protection : ∀ (w : R),
-    PlabicMajoranaOp.mul (PlabicMajoranaOp.openHamiltonian w) PlabicMajoranaOp.danglingEdge = PlabicMajoranaOp.zero
-
-theorem compile_majorana_plabic_zero_mode_certificate :
-    MajoranaPlabicZeroModeCertificate R where
-  nilpotency := fun w => (PlabicMajoranaOp.ridge_is_nilpotent w).1
-  mass_gap := PlabicMajoranaOp.dirac_fermion_fusion_mass_gap
-  topological_protection := PlabicMajoranaOp.majorana_zero_mode_topological_protection
 
 end PlabicMajoranaOp
 

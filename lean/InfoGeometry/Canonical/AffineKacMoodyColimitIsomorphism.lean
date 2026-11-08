@@ -182,7 +182,7 @@ theorem affineFiniteModeUnion_eq_top :
   have hdecomp : (⟨Z.fst, 0⟩ : KM Φ hΦ hΦs) + ⟨0, Z.snd⟩ = Z := by
     rw [LieTwoCocycle.CentralExtension.add_def]
     cases Z
-    rfl
+    simp
   rw [← hdecomp]
   exact (affineFiniteModeUnion Φ hΦ hΦs).add_mem hloop hcentral
 

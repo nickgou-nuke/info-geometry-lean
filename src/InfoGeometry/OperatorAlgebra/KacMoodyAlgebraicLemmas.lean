@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -11,16 +16,16 @@ This module proves the associative $\mathbb{R}$-algebra identity
 $[J_a J_b, J_n] = c(b, n)\,J_a + c(a, n)\,J_b$ for currents whose pairwise
 commutators lie in the central scalar subalgebra `algebraMap ℝ Op`.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `kacMoodyCentralCoeff`, `kacMoodyCentralElement`
 - `mul_algebraMap_eq_smul`, `algebraMap_mul_eq_smul`
 - `sugawara_bilinear_current_bracket`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Canonical.SugawaraAlgebraicLemmas` (`comm`, `comm_mul_left`)
 - `Algebra.smul_def`, `Algebra.commutes`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 

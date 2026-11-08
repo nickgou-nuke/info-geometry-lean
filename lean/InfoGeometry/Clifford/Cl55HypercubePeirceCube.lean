@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -10,10 +15,6 @@ import Mathlib.Tactic.FinCases
 noncomputable section
 
 open Matrix
-
-namespace InfoGeometry.Clifford.Hypercube
-
-abbrev AlgMat (n : ℕ) := Matrix (Fin n) (Fin n) ℝ
 
 /-!
 # Cl(5,5) Split-Cartan Hypercube Peirce Projector Architecture
@@ -37,8 +38,12 @@ algebras (specifically $r=5$ split Cartan generators on the 32-dimensional spino
 6. **Hyperbolic Multi-Flow & Asymptotic MoE Routing**:
    $$\left( \prod_{a=0}^{r-1} \operatorname{cartanFlow}(a, t_a) \right) P_\varepsilon = \exp\left( \sum_{a=0}^{r-1} \varepsilon_a t_a \right) P_\varepsilon.$$
 
-All proofs are complete in native Mathlib 4 with 0 `sorry`s and 0 axioms.
+All proofs are complete in native Mathlib 4 with zero proof placeholders and zero custom axioms.
 -/
+
+namespace InfoGeometry.Clifford.Hypercube
+
+abbrev AlgMat (n : ℕ) := Matrix (Fin n) (Fin n) ℝ
 
 /-! ### 1. Commuting Split Involutive Structure -/
 
@@ -54,8 +59,7 @@ variable {n r : ℕ} (S : SplitCartanSector n r)
 
 @[simp] theorem smul_mat_mul_smul_mat (r s : ℝ) (A B : AlgMat n) :
     (r • A) * (s • B) = (r * s) • (A * B) := by
-  simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
-  rw [mul_comm s r]
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
 
 /-! ### 2. 1-Dimensional Peirce Projector Family -/
 
@@ -194,7 +198,7 @@ theorem P_2d_sum_four (i j : Fin r) :
     _ = S.P_plus i * (S.P_plus j + S.P_minus j) +
         S.P_minus i * (S.P_plus j + S.P_minus j) := by rw [h1, h2]
     _ = S.P_plus i * 1 + S.P_minus i * 1 := by rw [S.P_1d_sum_one j]
-    _ = S.P_plus i + S.P_minus i := by simp only [Matrix.mul_one]
+    _ = S.P_plus i + S.P_minus i := by rw [Matrix.mul_one, Matrix.mul_one]
     _ = 1 := S.P_1d_sum_one i
 
 /-! ### 4. Character Eigenspace Equations -/

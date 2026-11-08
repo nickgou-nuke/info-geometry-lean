@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -26,7 +31,8 @@ def scalar (x : ℝ) : ℝ :=
 
 @[simp] theorem scalar_zero :
     scalar 0 = 0 := by
-  simp [scalar]
+  unfold scalar
+  rw [neg_zero, Real.exp_zero, sub_self, add_zero]
 
 theorem hasDerivAt_scalar (x : ℝ) :
     HasDerivAt scalar (1 - Real.exp (-x)) x := by
@@ -78,7 +84,7 @@ theorem scalar_pos_iff (x : ℝ) :
 the origin. -/
 theorem scalar_eq_exp_sub_tangent (x : ℝ) :
     scalar x = Real.exp (-x) - (1 - x) := by
-  simp [scalar]
+  unfold scalar
   ring
 
 @[simp]

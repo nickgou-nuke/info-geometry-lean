@@ -45,6 +45,139 @@ theorem compression_square_defect (p x : A) (hp : p * p = p) :
     _ = p * x * ((1 - p) * (1 - p)) * x * p := by rw [hc]
     _ = _ := by simp only [mul_assoc]
 
+/-! ## Two-boundary compression and its intermediate-corner decomposition -/
+
+/-- Compression between distinct initial and final idempotent boundaries.
+The multiplication order is final boundary, observable, initial boundary. -/
+def twoBoundaryCompression (final observable initial : A) : A :=
+  final * observable * initial
+
+/-- The final boundary absorbs a two-boundary compression on the left. -/
+theorem twoBoundaryCompression_left_absorption
+    (final observable initial : A)
+    (hfinal : final * final = final) :
+    final * twoBoundaryCompression final observable initial =
+      twoBoundaryCompression final observable initial := by
+  unfold twoBoundaryCompression
+  calc
+    final * (final * observable * initial) =
+        (final * final) * observable * initial := by simp only [mul_assoc]
+    _ = final * observable * initial := by rw [hfinal]
+
+/-- The initial boundary absorbs a two-boundary compression on the right. -/
+theorem twoBoundaryCompression_right_absorption
+    (final observable initial : A)
+    (hinitial : initial * initial = initial) :
+    twoBoundaryCompression final observable initial * initial =
+      twoBoundaryCompression final observable initial := by
+  unfold twoBoundaryCompression
+  calc
+    (final * observable * initial) * initial =
+        final * observable * (initial * initial) := by simp only [mul_assoc]
+    _ = final * observable * initial := by rw [hinitial]
+
+/-- Equal boundary idempotents recover the ordinary Peirce compression. -/
+theorem twoBoundaryCompression_diagonal (p x : A) :
+    twoBoundaryCompression p x p = p * x * p := rfl
+
+/-- The sum of two idempotent boundary observables doubles the transition
+corner, without requiring the two idempotents to commute. -/
+theorem twoBoundaryCompression_sum_amplification
+    (initial final : A)
+    (hinitial : initial * initial = initial)
+    (hfinal : final * final = final) :
+    twoBoundaryCompression final (initial + final) initial =
+      final * initial + final * initial := by
+  unfold twoBoundaryCompression
+  have hinitial_absorb : (final * initial) * initial = final * initial := by
+    calc
+      (final * initial) * initial = final * (initial * initial) := by
+        rw [mul_assoc]
+      _ = final * initial := by rw [hinitial]
+  have hfinal_absorb : (final * final) * initial = final * initial := by
+    rw [hfinal]
+  calc
+    final * (initial + final) * initial =
+        final * initial * initial + final * final * initial := by
+          simp only [mul_add, add_mul, mul_assoc]
+    _ = final * initial + final * initial := by
+      rw [hinitial_absorb, hfinal_absorb]
+
+/-- Resolving an intermediate idempotent into itself and its complement splits
+the two-boundary product into its through-corner and complementary channels. -/
+theorem twoBoundaryCompression_intermediate_decomposition
+    (final x y initial middle : A)
+    (hmiddle : middle * middle = middle) :
+    twoBoundaryCompression final (x * y) initial =
+      twoBoundaryCompression final x middle *
+          twoBoundaryCompression middle y initial +
+        (final * x * (1 - middle)) * ((1 - middle) * y * initial) := by
+  unfold twoBoundaryCompression
+  let complement := 1 - middle
+  have hcomplement : complement * complement = complement := by
+    dsimp [complement]
+    noncomm_ring [hmiddle]
+  have hsplit : middle + complement = 1 := by
+    dsimp [complement]
+    abel
+  have hthrough :
+      (final * x * middle) * (middle * y * initial) =
+        (final * x * middle) * (y * initial) := by
+    calc
+      (final * x * middle) * (middle * y * initial) =
+          ((final * x * middle) * middle) * (y * initial) := by
+            simp only [mul_assoc]
+      _ = ((final * x) * (middle * middle)) * (y * initial) := by
+            simp only [mul_assoc]
+      _ = (final * x * middle) * (y * initial) := by rw [hmiddle]
+  have hout :
+      (final * x * complement) * (complement * y * initial) =
+        (final * x * complement) * (y * initial) := by
+    calc
+      (final * x * complement) * (complement * y * initial) =
+          ((final * x * complement) * complement) * (y * initial) := by
+            simp only [mul_assoc]
+      _ = ((final * x) * (complement * complement)) * (y * initial) := by
+            simp only [mul_assoc]
+      _ = (final * x * complement) * (y * initial) := by rw [hcomplement]
+  calc
+    final * (x * y) * initial = (final * x) * (y * initial) := by
+      simp only [mul_assoc]
+    _ = (final * x) * (middle + complement) * (y * initial) := by
+      rw [hsplit, mul_one]
+    _ = (final * x * middle) * (y * initial) +
+        (final * x * complement) * (y * initial) := by
+      noncomm_ring
+    _ = (final * x * middle) * (middle * y * initial) +
+        (final * x * complement) * (complement * y * initial) := by
+      rw [← hthrough, ← hout]
+
+/-- Correct square expansion for the two-idempotent sandwich. The cross terms
+give three copies of the transition corner and one square of that corner. -/
+theorem twoBoundaryCompression_sum_square
+    (initial final : A)
+    (hinitial : initial * initial = initial)
+    (hfinal : final * final = final) :
+    twoBoundaryCompression final ((initial + final) * (initial + final)) initial =
+      3 • (final * initial) + (final * initial) * (final * initial) := by
+  unfold twoBoundaryCompression
+  have hfinal_left : final * (final * initial) = final * initial := by
+    calc
+      final * (final * initial) = (final * final) * initial := by
+        rw [mul_assoc]
+      _ = final * initial := by rw [hfinal]
+  calc
+    final * ((initial + final) * (initial + final)) * initial =
+        2 • (final * initial) +
+          (final * (final * initial) +
+            final * (initial * (final * initial))) := by
+              noncomm_ring [hinitial, hfinal]
+    _ = 3 • (final * initial) +
+          (final * initial) * (final * initial) := by
+      rw [hfinal_left]
+      simp only [two_nsmul, three_nsmul, mul_assoc]
+      abel
+
 /-- Resolving the complement into idempotents resolves the defect into products.
 Pairwise orthogonality is not needed for this identity once the sum is given. -/
 theorem compression_defect_sum {I : Type*} [Fintype I]

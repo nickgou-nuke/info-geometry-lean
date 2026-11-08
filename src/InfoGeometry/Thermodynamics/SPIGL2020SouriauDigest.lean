@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.CartanExponentialFamily
@@ -102,9 +107,8 @@ theorem gibbsDensity_eq_exp_neg_pairing_sub_Phi
     (D : SouriauLieThermoData State LieAlgebra LieDual)
     (x : State) :
     D.gibbsDensity x =
-      Real.exp (-D.pairing (D.momentMap x) D.beta - D.partitionPotential) := by
-  simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
-    SouriauLieThermoData.gibbsDensity_eq_exp_neg_pairing_sub_Phi D x
+      Real.exp (-D.pairing (D.momentMap x) D.beta - D.partitionPotential) :=
+  SouriauLieThermoData.gibbsDensity_eq_exp_neg_pairing_sub_Phi D x
 
 /-! ## 2. Finite Cartan / Fisher / Connes shadows -/
 
@@ -374,25 +378,25 @@ theorem entropy_production_eq_zero_iff_detailed_balance
 theorem pathEntropy_eq_zero_of_detailed_balance
     (D : FiniteSouriauDynamicsStageData ι Op)
     (hdb : InfoGeometry.Topology.ThermodynamicGauge.entropy_production D.flow = 0) :
-    D.pathPacket.pathEntropy = 0 :=
-  by
-    have hdb' : InfoGeometry.Topology.ThermodynamicGauge.entropy_production D.pathPacket.flow = 0 := by
-      simpa [D.pathPacket_flow_eq] using hdb
-    exact
-      InfoGeometry.Topology.MaximumCaliberPath.MaximumCaliberPacket.pathEntropy_eq_zero_of_detailed_balance
-        D.pathPacket hdb'
+    D.pathPacket.pathEntropy = 0 := by
+  have hdb' : InfoGeometry.Topology.ThermodynamicGauge.entropy_production D.pathPacket.flow = 0 := by
+    rw [D.pathPacket_flow_eq]
+    exact hdb
+  exact
+    InfoGeometry.Topology.MaximumCaliberPath.MaximumCaliberPacket.pathEntropy_eq_zero_of_detailed_balance
+      D.pathPacket hdb'
 
 @[rep_depth thermo]
 theorem caliber_eq_zero_of_detailed_balance
     (D : FiniteSouriauDynamicsStageData ι Op)
     (hdb : InfoGeometry.Topology.ThermodynamicGauge.entropy_production D.flow = 0) :
-    D.pathPacket.caliber = 0 :=
-  by
-    have hdb' : InfoGeometry.Topology.ThermodynamicGauge.entropy_production D.pathPacket.flow = 0 := by
-      simpa [D.pathPacket_flow_eq] using hdb
-    exact
-      InfoGeometry.Topology.MaximumCaliberPath.MaximumCaliberPacket.caliber_eq_zero_of_detailed_balance
-        D.pathPacket hdb'
+    D.pathPacket.caliber = 0 := by
+  have hdb' : InfoGeometry.Topology.ThermodynamicGauge.entropy_production D.pathPacket.flow = 0 := by
+    rw [D.pathPacket_flow_eq]
+    exact hdb
+  exact
+    InfoGeometry.Topology.MaximumCaliberPath.MaximumCaliberPacket.caliber_eq_zero_of_detailed_balance
+      D.pathPacket hdb'
 
 @[rep_depth thermo]
 theorem finiteConnesFlux_cocycle

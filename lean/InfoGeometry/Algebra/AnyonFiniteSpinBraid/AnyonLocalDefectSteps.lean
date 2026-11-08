@@ -1,6 +1,13 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
+/-!
+# Anyon Local Defect Steps
+
+Defines local finite spin ladder operators (creation/annihilation) and their
+nilpotency properties for anyon finite spin braid constructions.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Algebra.AnyonFiniteSpinBraid

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
@@ -11,7 +16,7 @@ truncation and `SplitSourceEndWickLaw` into `SplitCliffordHeisenbergWitness`,
 extracts the concrete charged-Fock truncation and Wick commutator laws, and
 exposes the external infinite-current Lie brackets.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `packagedHeisenbergWitness`
 - `truncLift_of_represented_current`, `wickLift_of_represented_current`,
   `strictWitness_of_represented_current`
@@ -19,12 +24,12 @@ exposes the external infinite-current Lie brackets.
 - `canonicalInfiniteCurrent_commutator_readout`,
   `canonicalInfiniteCurrent_one_negOne`, `canonicalInfiniteCurrent_central`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Canonical.SplitCliffordHeisenbergBridge`
 - `InfoGeometry.Canonical.SplitCliffordSourceCurrentWick`
 - `InfoGeometry.Canonical.SplitCliffordInfiniteCurrent`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
@@ -102,19 +107,22 @@ theorem canonicalInfiniteCurrent_commutator_readout
     (m n : Int) :
     ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
       if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 := by
-  exact canonicalInfiniteCurrent_lie (𝕜 := 𝕜) m n
+  have h := canonicalInfiniteCurrent_lie (𝕜 := 𝕜) m n
+  exact h
 
 /-- Fundamental mode pair commutator `⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_one_negOne
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
     ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 := by
-  exact canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
+  have h := canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
+  exact h
 
 /-- Centrality of `Kinf 𝕜` in `InfiniteCurrentAlg 𝕜`. -/
 theorem canonicalInfiniteCurrent_central
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
     (Z : InfiniteCurrentAlg 𝕜) :
     ⁅Kinf 𝕜, Z⁆ = 0 := by
-  exact canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z
+  have h := canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z
+  exact h
 
 end InfoGeometry.Canonical.SplitCliffordSourceHeisenberg

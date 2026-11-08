@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.RegularDyadCompression
+import InfoGeometry.Core.PeirceCompressionDefect
 
 /-!
 # Dyadic compression for the existing regular two-boundary functional
@@ -53,6 +54,57 @@ theorem boundaryDyad_compression (p : RegularBoundaryPair ι) (A : Operator ι) 
 theorem boundaryDyad_idempotent (p : RegularBoundaryPair ι) :
     boundaryDyad p * boundaryDyad p = boundaryDyad p :=
   normalizedDyad_idempotent p.pre (postCovector p) p.overlap_ne
+
+/-- The finite weak-value functional is the coordinate-free normalized
+module coefficient on the pre-selected vector and post-selected covector. -/
+theorem weakValue_eq_normalizedReadout (p : RegularBoundaryPair ι)
+    (A : Operator ι) :
+    weakValue p A = normalizedReadout p.pre (postCovector p) A := rfl
+
+/-- Weak-value evaluation of a two-boundary operator sandwich, with the
+successive module actions made explicit. -/
+theorem weakValue_twoBoundaryCompression_apply
+    (p : RegularBoundaryPair ι) (post observable pre : Operator ι) :
+    weakValue p
+        (InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression
+          post observable pre) =
+      pairing p.post (post (observable (pre p.pre))) / overlap p := by
+  simp [weakValue, numerator,
+    InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression,
+    Module.End.mul_apply]
+
+/-- The intermediate-idempotent channel decomposition for two-boundary
+operator products remains valid after the regular weak-value readout. -/
+theorem weakValue_twoBoundaryCompression_intermediate
+    (p : RegularBoundaryPair ι) (post x y pre middle : Operator ι)
+    (hmiddle : middle * middle = middle) :
+    weakValue p
+        (InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression
+          post (x * y) pre) =
+      weakValue p
+          (InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression
+            post x middle *
+            InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression
+              middle y pre) +
+        weakValue p
+          ((post * x * (1 - middle)) * ((1 - middle) * y * pre)) := by
+  rw [InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression_intermediate_decomposition
+    post x y pre middle hmiddle]
+  exact weakValue_add p _ _
+
+/-- The two-idempotent additive amplification identity also descends to the
+two-boundary weak-value functional; no commutation assumption is needed. -/
+theorem weakValue_twoBoundaryCompression_sum_amplification
+    (p : RegularBoundaryPair ι) (initial final : Operator ι)
+    (hinitial : initial * initial = initial)
+    (hfinal : final * final = final) :
+    weakValue p
+        (InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression
+          final (initial + final) initial) =
+      weakValue p (final * initial) + weakValue p (final * initial) := by
+  rw [InfoGeometry.Core.PeirceCompressionDefect.twoBoundaryCompression_sum_amplification
+    initial final hinitial hfinal]
+  exact weakValue_add p _ _
 
 theorem boundaryDyad_ker (p : RegularBoundaryPair ι) :
     (boundaryDyad p).ker = (postCovector p).ker :=

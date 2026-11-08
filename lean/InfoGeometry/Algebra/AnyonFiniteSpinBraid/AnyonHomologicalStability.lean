@@ -2,6 +2,13 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 
+/-!
+# Anyon Homological Stability
+
+Defines the finite Witten-index trace and homological braid stability gate
+for anyon finite spin braid constructions.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Algebra.AnyonFiniteSpinBraid

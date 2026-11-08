@@ -168,6 +168,87 @@ theorem semigroup_equilibrium_decoupling
   dsimp [adK]
   rw [hK_stat, zero_mul, mul_zero, sub_zero]
 
+/-!
+=============================================================================
+PART 3: Ring-Endomorphism Shifts and Gauge-Dressed Commutators
+=============================================================================
+-/
+
+/-- A ring element implementing a specified ring endomorphism by left
+intertwining. This is a stronger, all-elements relation than a single Weyl
+commutation hypothesis on one observable and one shift. -/
+structure RingModularShiftPair (A : Type*) [Ring A] where
+  shift : A
+  endomorphism : A →+* A
+  intertwines : ∀ V : A, shift * V = endomorphism V * shift
+
+/-- Ring commutator with the convention `[X,Y] = X*Y - Y*X`. -/
+def ringCommutator (X Y : A) : A := X * Y - Y * X
+
+namespace RingModularShiftPair
+
+variable (M : RingModularShiftPair A)
+
+/-- The commutator of the shift with any ring element is the endomorphism
+finite difference transported by the shift. -/
+theorem commutator_eq_finite_difference (V : A) :
+    ringCommutator M.shift V = (M.endomorphism V - V) * M.shift := by
+  unfold ringCommutator
+  rw [M.intertwines V, sub_mul]
+
+/-- Composition of two intertwining shifts composes their endomorphisms. -/
+def comp (M₁ M₂ : RingModularShiftPair A) : RingModularShiftPair A where
+  shift := M₁.shift * M₂.shift
+  endomorphism := M₁.endomorphism.comp M₂.endomorphism
+  intertwines V := by
+    calc
+      (M₁.shift * M₂.shift) * V =
+          M₁.shift * (M₂.shift * V) := by rw [mul_assoc]
+      _ = M₁.shift * (M₂.endomorphism V * M₂.shift) := by
+          rw [M₂.intertwines V]
+      _ = (M₁.shift * M₂.endomorphism V) * M₂.shift :=
+          (mul_assoc _ _ _).symm
+      _ = (M₁.endomorphism (M₂.endomorphism V) * M₁.shift) * M₂.shift := by
+          rw [M₁.intertwines (M₂.endomorphism V)]
+      _ = (M₁.endomorphism.comp M₂.endomorphism V) *
+          (M₁.shift * M₂.shift) := mul_assoc _ _ _
+
+/-- The composite shift difference splits into the two successive finite
+differences, with the original multiplication order preserved. -/
+theorem comp_commutator_cocycle (M₁ M₂ : RingModularShiftPair A) (V : A) :
+    ringCommutator ((comp M₁ M₂).shift) V =
+      ((M₁.endomorphism (M₂.endomorphism V) - M₁.endomorphism V) +
+        (M₁.endomorphism V - V)) * (M₁.shift * M₂.shift) := by
+  calc
+    ringCommutator ((comp M₁ M₂).shift) V =
+        (M₁.endomorphism (M₂.endomorphism V) - V) *
+          (M₁.shift * M₂.shift) := by
+            rw [(comp M₁ M₂).commutator_eq_finite_difference]
+            rfl
+    _ = ((M₁.endomorphism (M₂.endomorphism V) - M₁.endomorphism V) +
+          (M₁.endomorphism V - V)) * (M₁.shift * M₂.shift) := by
+            congr 1
+            abel_nf
+
+/-- A left gauge link contributes its own commutator in addition to the
+endomorphism finite difference of the shift. -/
+theorem gauge_dressed_commutator (M : RingModularShiftPair A) (W V : A) :
+    ringCommutator (W * M.shift) V =
+      W * (M.endomorphism V - V) * M.shift +
+        ringCommutator W V * M.shift := by
+  unfold ringCommutator
+  calc
+    (W * M.shift) * V - V * (W * M.shift) =
+        W * (M.shift * V) - (V * W) * M.shift := by
+          rw [mul_assoc W M.shift V, mul_assoc V W M.shift]
+    _ = W * (M.endomorphism V * M.shift) - (V * W) * M.shift := by
+          rw [M.intertwines V]
+    _ = W * (M.endomorphism V - V) * M.shift +
+          (W * V - V * W) * M.shift := by
+          noncomm_ring
+
+end RingModularShiftPair
+
 end InfoGeometry.Modular.TimeSemigroup
 
 end noncomputable section

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -7,12 +12,6 @@ import Mathlib.Tactic.Ring
 noncomputable section
 
 open Matrix
-
-namespace InfoGeometry.Clifford.Involutions
-
-abbrev Dim32 := Fin 32
-abbrev Mat32 := Matrix Dim32 Dim32 ℝ
-abbrev Spinor32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 /-!
 # Universal Hexad of Involutions & Krein-Dirac-Tomita Duality Bridge
@@ -27,8 +26,14 @@ This module formalizes the universal reflection geometry / $\mathbb{Z}_2$-involu
 4. **Tomita-Takesaki Modular Conjugation $J$ & CPT Symmetry**:
    $J = \eta$ satisfying $J^\sharp = J$, $J^2 = 1$.
 
-All proofs are complete in native Lean 4 with 0 `sorry`s.
+All proofs are complete in native Lean 4 with zero proof placeholders.
 -/
+
+namespace InfoGeometry.Clifford.Involutions
+
+abbrev Dim32 := Fin 32
+abbrev Mat32 := Matrix Dim32 Dim32 ℝ
+abbrev Spinor32 := InfoGeometry.Algebra.FiniteSpin.Vec32R
 
 /-! ### 1. General Matrix-Vector Transpose Duality Lemma -/
 
@@ -84,12 +89,12 @@ theorem kreinAdjoint_involution (A : Mat32) :
   have h_eta := kreinEta_sq
   have h_symm := kreinEta_symm
   have h_trans : transpose (kreinEta * transpose A * kreinEta) = kreinEta * A * kreinEta := by
-    simp only [transpose_mul, h_symm, transpose_transpose, Matrix.mul_assoc]
+    rw [transpose_mul, transpose_mul, h_symm, transpose_transpose, Matrix.mul_assoc]
   calc
     kreinEta * transpose (kreinEta * transpose A * kreinEta) * kreinEta
       = kreinEta * (kreinEta * A * kreinEta) * kreinEta := by rw [h_trans]
     _ = (kreinEta * kreinEta) * A * (kreinEta * kreinEta) := by
-          simp only [Matrix.mul_assoc]
+          rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_assoc (kreinEta * kreinEta * A)]
     _ = 1 * A * 1 := by rw [h_eta]
     _ = A := by rw [Matrix.one_mul, Matrix.mul_one]
 
@@ -101,11 +106,11 @@ theorem kreinAdjoint_pairing (A : Mat32) (psi phi : Spinor32) :
   have h_eta := kreinEta_sq
   have h_symm := kreinEta_symm
   have h_trans : transpose (kreinEta * transpose A * kreinEta) = kreinEta * A * kreinEta := by
-    simp only [transpose_mul, h_symm, transpose_transpose, Matrix.mul_assoc]
+    rw [transpose_mul, transpose_mul, h_symm, transpose_transpose, Matrix.mul_assoc]
   have h_mat : (kreinEta * A * kreinEta) * kreinEta = kreinEta * A := by
     calc
       (kreinEta * A * kreinEta) * kreinEta = kreinEta * A * (kreinEta * kreinEta) := by
-        simp only [Matrix.mul_assoc]
+        rw [Matrix.mul_assoc]
       _ = kreinEta * A * 1 := by rw [h_eta]
       _ = kreinEta * A := by rw [Matrix.mul_one]
   rw [mulVec_dotProduct]

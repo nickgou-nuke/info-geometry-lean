@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -9,16 +14,16 @@ import InfoGeometry.Meta.Architecture
 This module proves the associative-ring commutator identities (Leibniz derivation
 rules and finite-sum distributivity) used in the Sugawara bilinear current calculus.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `comm`, `comm_mul_left`, `comm_mul_right`
 - `comm_zero_right`, `zero_comm`, `comm_self`
 - `comm_sum_left`, `comm_sum_right`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `Mathlib.Tactic.NoncommRing`
 - `Finset.sum_mul`, `Finset.mul_sum`, `Finset.sum_sub_distrib`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 

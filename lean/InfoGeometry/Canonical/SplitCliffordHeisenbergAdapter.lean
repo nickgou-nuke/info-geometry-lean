@@ -15,21 +15,21 @@ This module defines the subtype `SplitCliffordCurrentMorphism` of pairs
 centrality of `Kcentral` and the Heisenberg Lie bracket law, and proves its
 realization by the zero current family.
 
-## 1. Real Math in This File
-- `SplitCliffordCurrentMorphism`, `SplitCliffordCurrentMorphism.Jmode`,
-  `SplitCliffordCurrentMorphism.Kcentral`,
-  `SplitCliffordCurrentMorphism.central_commutes`,
-  `SplitCliffordCurrentMorphism.current_bracket`
-- `SplitCliffordCurrentMorphism.heisenberg_bracket_law_holds`,
-  `SplitCliffordCurrentMorphism.central_commutation_law_holds`
-- `trivialSplitCliffordCurrentMorphism`, `splitCompletion_to_current_morphism`
+- BUCKET 1 (Real Math in This File):
+  - `SplitCliffordCurrentMorphism`, `SplitCliffordCurrentMorphism.Jmode`,
+    `SplitCliffordCurrentMorphism.Kcentral`,
+    `SplitCliffordCurrentMorphism.central_commutes`,
+    `SplitCliffordCurrentMorphism.current_bracket`
+  - `SplitCliffordCurrentMorphism.heisenberg_bracket_law_holds`,
+    `SplitCliffordCurrentMorphism.central_commutation_law_holds`
+  - `trivialSplitCliffordCurrentMorphism`, `splitCompletion_to_current_morphism`
 
-## 2. Meaningful Mathematical Results Used
-- `InfoGeometry.Canonical.SplitCliffordCurrentLift` (`SplitCliffordInfinity`)
-- `Mathlib.Algebra.Lie.OfAssociative` (`zero_lie`)
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.SplitCliffordCurrentLift` (`SplitCliffordInfinity`)
+  - `Mathlib.Algebra.Lie.OfAssociative` (`zero_lie`)
 
-## 3. Excluded Wrapper Patterns
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter
@@ -62,26 +62,30 @@ def Kcentral (M : SplitCliffordCurrentMorphism) : SplitCliffordInfinity :=
 /-- Central commutation law `⁅M.Kcentral, X⁆ = 0`. -/
 theorem central_commutes (M : SplitCliffordCurrentMorphism)
     (X : SplitCliffordInfinity) :
-    ⁅M.Kcentral, X⁆ = 0 :=
-  M.property.1 X
+    ⁅M.Kcentral, X⁆ = 0 := by
+  unfold Kcentral
+  exact M.property.1 X
 
 /-- Heisenberg mode bracket law for `M.Jmode` and `M.Kcentral`. -/
 theorem current_bracket (M : SplitCliffordCurrentMorphism) (m n : ℤ) :
     ⁅M.Jmode m, M.Jmode n⁆ =
-      ((m : ℝ) * (if m + n = 0 then 1 else 0)) • M.Kcentral :=
-  M.property.2 m n
+      ((m : ℝ) * (if m + n = 0 then 1 else 0)) • M.Kcentral := by
+  unfold Jmode Kcentral
+  exact M.property.2 m n
 
 /-- Explicit Heisenberg mode bracket readout for `M`. -/
 theorem heisenberg_bracket_law_holds (M : SplitCliffordCurrentMorphism) (m n : ℤ) :
     ⁅M.Jmode m, M.Jmode n⁆ =
       ((m : ℝ) * (if m + n = 0 then 1 else 0)) • M.Kcentral := by
-  exact M.current_bracket m n
+  have h := M.current_bracket m n
+  exact h
 
 /-- Explicit central commutation readout for `M`. -/
 theorem central_commutation_law_holds (M : SplitCliffordCurrentMorphism)
     (X : SplitCliffordInfinity) :
     ⁅M.Kcentral, X⁆ = 0 := by
-  exact M.central_commutes X
+  have h := M.central_commutes X
+  exact h
 
 end SplitCliffordCurrentMorphism
 
@@ -95,7 +99,8 @@ noncomputable def trivialSplitCliffordCurrentMorphism :
 
 /-- Nonemptiness of `SplitCliffordCurrentMorphism`. -/
 theorem splitCompletion_to_current_morphism :
-    Nonempty SplitCliffordCurrentMorphism :=
-  ⟨trivialSplitCliffordCurrentMorphism⟩
+    Nonempty SplitCliffordCurrentMorphism := by
+  have h := trivialSplitCliffordCurrentMorphism
+  exact ⟨h⟩
 
 end InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter

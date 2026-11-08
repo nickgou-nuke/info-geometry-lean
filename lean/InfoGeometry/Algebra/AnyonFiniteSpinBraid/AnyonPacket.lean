@@ -5,6 +5,13 @@ import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonLocalDefectSteps
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonHomologicalStability
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonCoxeterQuotient
 
+/-!
+# Anyon Packet
+
+Consolidated finite spin/SUSY anyon braid packet combining defect steps,
+homological stability, and Coxeter quotient certificates.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Algebra.AnyonFiniteSpinBraid

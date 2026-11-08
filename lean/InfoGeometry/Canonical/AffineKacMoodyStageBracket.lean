@@ -14,6 +14,18 @@ The causal dependencies are: affine central extension → finite mode stages →
 generator bracket and mode addition → closure under linear span.  The final
 colimit Lie bracket is not constructed here; this file proves its essential
 finite-stage closure input.
+
+- BUCKET 1 (Real Math in This File):
+  - `BracketClosureArchetype`, `BracketClosureArchetype.rank`,
+    `bracketClosure_causal_chain`
+  - `affineFiniteModeGenerator_bracket_mem`,
+    `affineFiniteModeStage_bracket_mem`
+
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit`
+
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section

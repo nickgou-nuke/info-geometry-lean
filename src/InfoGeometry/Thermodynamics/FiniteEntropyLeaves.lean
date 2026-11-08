@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 
@@ -14,8 +18,8 @@ def entropyLeaf {X R : Type*} (S : X → R) (c : R) : Set X :=
 
 theorem mem_entropyLeaf_iff
     {X R : Type*} {S : X → R} {c : R} {x : X} :
-    x ∈ entropyLeaf S c ↔ S x = c :=
-  Iff.rfl
+    x ∈ entropyLeaf S c ↔ S x = c := by
+  constructor <;> exact id
 
 theorem entropy_preserving_maps_leaf
     {X R : Type*}
@@ -62,9 +66,10 @@ theorem trace_conjugate
     Matrix.trace (conjugate U V A) = Matrix.trace A := by
   calc
     Matrix.trace (conjugate U V A) = Matrix.trace (V * (U * A)) := by
-      simpa [conjugate] using Matrix.trace_mul_comm (U * A) V
+      unfold conjugate
+      exact Matrix.trace_mul_comm (U * A) V
     _ = Matrix.trace ((V * U) * A) := by rw [Matrix.mul_assoc]
-    _ = Matrix.trace A := by simp [hVU]
+    _ = Matrix.trace A := by rw [hVU, Matrix.one_mul]
 
 theorem conjugate_maps_trace_leaf
     {n R : Type*} [Fintype n] [DecidableEq n]
@@ -105,7 +110,8 @@ theorem boltzmannSurprisalOperator_mulVec
     (kB W : ℝ) (v : n → ℝ) :
     boltzmannSurprisalOperator kB W *ᵥ v =
       boltzmannEntropy kB W • v := by
-  simp [boltzmannSurprisalOperator, Matrix.smul_mulVec]
+  unfold boltzmannSurprisalOperator
+  rw [Matrix.smul_mulVec, Matrix.one_mulVec]
 
 theorem boltzmannSurprisalOperator_eigenvector
     {n : Type*} [Fintype n] [DecidableEq n]

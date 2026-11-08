@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
@@ -44,7 +49,7 @@ Records the Lie-algebraic temperature and the moment-map evaluation for the
 Cantor-Cuntz symmetry group.
 -/
 @[rep_depth transport]
-structure SouriauWeylPartitionBridge
+structure SouriauWeylPartitionDatum
     (E Op H Finite Alg : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
     [Ring Op] [StarRing Op]
@@ -84,7 +89,7 @@ structure SouriauWeylPartitionBridge
     finitePrimeBosonicInverseDenominator positiveRoots (fun p => souriauEvaluation p temperature.s) =
       (finitePrimeWeylDenominator positiveRoots (fun p => souriauEvaluation p temperature.s))⁻¹
 
-namespace SouriauWeylPartitionBridge
+namespace SouriauWeylPartitionDatum
 
 variable
     {E Op H Finite Alg : Type}
@@ -94,7 +99,7 @@ variable
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
-variable (B : SouriauWeylPartitionBridge E Op H Finite Alg)
+variable (B : SouriauWeylPartitionDatum E Op H Finite Alg)
 
 /-- 
 The carried finite arithmetic partition readout is exactly the finite Euler
@@ -119,9 +124,13 @@ algebra.
 theorem weyl_cancellation_holds
     (h : ∀ p ∈ B.positiveRoots, 1 - souriauEvaluation p B.temperature.s ≠ 0) :
     finitePrimeBosonicInverseDenominator B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) *
-      finitePrimeWeylDenominator B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) = 1 :=
-  bosonicInverse_mul_weylDenominator_cancel B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) h
+      finitePrimeWeylDenominator B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) = 1 := by
+  have hcancel :=
+    bosonicInverse_mul_weylDenominator_cancel B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) h
+  exact hcancel
 
-end SouriauWeylPartitionBridge
+end SouriauWeylPartitionDatum
+
+notation "SouriauWeylPartitionBridge" => SouriauWeylPartitionDatum
 
 end InfoGeometry.Thermodynamics

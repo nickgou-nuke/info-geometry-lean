@@ -129,6 +129,35 @@ of a Hestenes rotor. -/
 def hestenesRotorBar (c s : R) : Matrix (Fin 2) (Fin 2) R :=
   !![c - s, 0; 0, c + s]
 
+/-- Two-matrix product of split vectors is diagonal:
+$V(a_+, a_-)\,V(b_+, b_-) = \mathrm{diag}(a_+ b_-, a_- b_+)$. -/
+theorem splitVec_mul_splitVec (a_plus a_minus b_plus b_minus : R) :
+    splitVec a_plus a_minus * splitVec b_plus b_minus =
+      !![a_plus * b_minus, 0; 0, a_minus * b_plus] := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [splitVec, Matrix.mul_apply]
+
+/-- Two-matrix left action of a diagonal matrix on a split vector. -/
+theorem diag2_mul_splitVec (d₀ d₁ x_plus x_minus : R) :
+    (!![d₀, 0; 0, d₁] : Matrix (Fin 2) (Fin 2) R) * splitVec x_plus x_minus =
+      splitVec (d₀ * x_plus) (d₁ * x_minus) := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [splitVec, Matrix.mul_apply]
+
+/-- Two-matrix left action of a Hestenes rotor on a split vector. -/
+theorem hestenesRotor_mul_splitVec (c s x_plus x_minus : R) :
+    hestenesRotor c s * splitVec x_plus x_minus =
+      splitVec ((c + s) * x_plus) ((c - s) * x_minus) := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [hestenesRotor, splitVec, Matrix.mul_apply]
+
+/-- Two-matrix right action of a reversed Hestenes rotor on a split vector. -/
+theorem splitVec_mul_hestenesRotorBar (x_plus x_minus c s : R) :
+    splitVec x_plus x_minus * hestenesRotorBar c s =
+      splitVec (x_plus * (c + s)) (x_minus * (c - s)) := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [hestenesRotorBar, splitVec, Matrix.mul_apply]
+
 /-- **Split Clifford Generators & Witt Isotropic Null Plane Decomposition
 (`splitClifford11_generators_and_witt_null_basis`):**
 1. $e_1^2 = I_2$, $f_1^2 = -I_2$, and $e_1 f_1 + f_1 e_1 = 0$;
@@ -144,9 +173,14 @@ theorem splitClifford11_generators_and_witt_null_basis (x_plus x_minus : R) :
     wittNullU (R := R) * wittNullV + wittNullV * wittNullU = 1 ∧
     splitVec x_plus x_minus * splitVec x_plus x_minus =
       !![x_plus * x_minus, 0; 0, x_plus * x_minus] := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    (ext i j; fin_cases i <;> fin_cases j <;>
-      simp [splitGenE, splitGenF, wittNullU, wittNullV, splitVec, Matrix.mul_apply] <;> ring)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [splitGenE, Matrix.mul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [splitGenF, Matrix.mul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [splitGenE, splitGenF, Matrix.mul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [wittNullU, Matrix.mul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [wittNullV, Matrix.mul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [wittNullU, wittNullV, Matrix.mul_apply]
+  · rw [splitVec_mul_splitVec, mul_comm x_minus x_plus]
 
 /-- **Cartan Spinors as Polyforms in the Minimal Left Ideal
 (`cartanSpinorKet_polyform_ideal_and_left_closure`):**
@@ -167,7 +201,7 @@ theorem cartanSpinorKet_polyform_ideal_and_left_closure
       cartanSpinorKet (a * ψ₀ + b * ψ₁) (c * ψ₀ + d * ψ₁) := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
     (ext i j; fin_cases i <;> fin_cases j <;>
-      simp [cartanSpinorKet, wittNullV, cartanVacIdempotent, Matrix.mul_apply] <;> ring)
+      simp [cartanSpinorKet, wittNullV, cartanVacIdempotent, Matrix.mul_apply])
 
 /-- **Hestenes Rotor Sandwich Law & Cartan–Hestenes Intertwining Bridge
 (`hestenesRotor_sandwich_and_cartan_bridge`):**
@@ -189,17 +223,26 @@ theorem hestenesRotor_sandwich_and_cartan_bridge
     hestenesRotor c s * (splitVec x_plus x_minus * cartanSpinorKet ψ₀ ψ₁) =
       (hestenesRotor c s * splitVec x_plus x_minus * hestenesRotorBar c s) *
         (hestenesRotor c s * cartanSpinorKet ψ₀ ψ₁) := by
-  refine ⟨?_, ?_, ?_⟩
-  · ext i j; fin_cases i <;> fin_cases j <;>
+  have h_right : hestenesRotor c s * hestenesRotorBar c s = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
       simp [hestenesRotor, hestenesRotorBar, Matrix.mul_apply]
     · linear_combination h_spin
     · linear_combination h_spin
-  · ext i j; fin_cases i <;> fin_cases j <;>
-      simp [hestenesRotor, hestenesRotorBar, splitVec, Matrix.mul_apply] <;> ring
-  · ext i j; fin_cases i <;> fin_cases j <;>
-      simp [hestenesRotor, hestenesRotorBar, splitVec, cartanSpinorKet, Matrix.mul_apply]
-    · linear_combination x_plus * ψ₁ * (c + s) * h_spin
-    · linear_combination x_minus * ψ₀ * (c - s) * h_spin
+  have h_left : hestenesRotorBar c s * hestenesRotor c s = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [hestenesRotor, hestenesRotorBar, Matrix.mul_apply]
+    · linear_combination h_spin
+    · linear_combination h_spin
+  refine ⟨h_right, ?_, ?_⟩
+  · rw [hestenesRotor_mul_splitVec, splitVec_mul_hestenesRotorBar]
+    congr 1 <;> ring
+  · calc hestenesRotor c s * (splitVec x_plus x_minus * cartanSpinorKet ψ₀ ψ₁)
+      _ = hestenesRotor c s * splitVec x_plus x_minus *
+            (hestenesRotorBar c s * hestenesRotor c s) * cartanSpinorKet ψ₀ ψ₁ := by
+          rw [h_left, Matrix.mul_one, Matrix.mul_assoc]
+      _ = (hestenesRotor c s * splitVec x_plus x_minus * hestenesRotorBar c s) *
+            (hestenesRotor c s * cartanSpinorKet ψ₀ ψ₁) := by
+          simp only [Matrix.mul_assoc]
 
 -- ============================================================================
 -- SECTION 2: Pin(1,1) Twisted Adjoint Action & Double Cover 1 → Z₂ → Pin → O → 1
@@ -232,9 +275,26 @@ theorem pin_reflection_and_double_cover_exact_kernel
       splitVec (-ε * a ^ 2 * x_minus) (-ε * b ^ 2 * x_plus) ∧
     twistedAdjoint (-g) (-g_inv) X = twistedAdjoint g g_inv X ∧
     twistedAdjoint (-1 : Matrix (Fin 2) (Fin 2) R) (-1) X = X := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    (ext i j; fin_cases i <;> fin_cases j <;>
-      simp [gradeInvolution, twistedAdjoint, splitVec, Matrix.mul_apply, finSumFinEquiv] <;> ring)
+  have h_neg : gradeInvolution (-g) = -gradeInvolution g := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [gradeInvolution]
+  have h_neg_one : gradeInvolution (-1 : Matrix (Fin 2) (Fin 2) R) = -1 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [gradeInvolution]
+  have h_grade_ab : gradeInvolution (splitVec a b) = splitVec (-a) (-b) := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [gradeInvolution, splitVec]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [gradeInvolution, splitVec]
+  · calc twistedAdjoint (splitVec a b) (splitVec (ε * a) (ε * b)) (splitVec x_plus x_minus)
+      _ = splitVec (-a) (-b) * splitVec x_plus x_minus * splitVec (ε * a) (ε * b) := by
+          simp only [twistedAdjoint, h_grade_ab]
+      _ = (!![(-a) * x_minus, 0; 0, (-b) * x_plus] : Matrix (Fin 2) (Fin 2) R) *
+            splitVec (ε * a) (ε * b) := by
+          rw [splitVec_mul_splitVec]
+      _ = splitVec (((-a) * x_minus) * (ε * a)) (((-b) * x_plus) * (ε * b)) := by
+          rw [diag2_mul_splitVec]
+      _ = splitVec (-ε * a ^ 2 * x_minus) (-ε * b ^ 2 * x_plus) := by
+          congr 1 <;> ring
+  · simp [twistedAdjoint, h_neg]
+  · simp [twistedAdjoint, h_neg_one]
 
 /-- **Symmetric Space $G/H$ Pin-Lift & Brauer–Wall $\mathbb{Z}_2$ 2-Cocycle Obstruction
 (`symmetric_space_pin_lift_cocycle_obstruction`):**
@@ -253,20 +313,19 @@ theorem symmetric_space_pin_lift_cocycle_obstruction
       twistedAdjoint g₁₂ g₁₂_inv X := by
   have h_grade_mul : gradeInvolution g₁ * gradeInvolution g₂ = gradeInvolution (g₁ * g₂) := by
     ext i j; fin_cases i <;> fin_cases j <;>
-      simp [gradeInvolution, Matrix.mul_apply, finSumFinEquiv] <;> ring
+      simp [gradeInvolution, Matrix.mul_apply] <;> ring
   have h_grade_smul : gradeInvolution (ε • g₁₂) = ε • gradeInvolution g₁₂ := by
     ext i j; fin_cases i <;> fin_cases j <;>
-      simp [gradeInvolution] <;> ring
+      simp [gradeInvolution]
+  have hε2 : ε * ε = 1 := by linear_combination hε
   calc twistedAdjoint g₁ g₁_inv (twistedAdjoint g₂ g₂_inv X)
     _ = (gradeInvolution g₁ * gradeInvolution g₂) * X * (g₂_inv * g₁_inv) := by
         simp only [twistedAdjoint, Matrix.mul_assoc]
     _ = gradeInvolution (g₁ * g₂) * X * (g₂_inv * g₁_inv) := by rw [h_grade_mul]
     _ = (ε • gradeInvolution g₁₂) * X * (ε • g₁₂_inv) := by rw [h_mul, h_inv, h_grade_smul]
     _ = (ε * ε) • (gradeInvolution g₁₂ * X * g₁₂_inv) := by
-        ext i j; fin_cases i <;> fin_cases j <;>
-          simp [Matrix.mul_apply, finSumFinEquiv] <;> ring
+        rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.smul_mul, smul_smul]
     _ = (1 : R) • twistedAdjoint g₁₂ g₁₂_inv X := by
-        have hε2 : ε * ε = 1 := by linear_combination hε
         rw [hε2]; rfl
     _ = twistedAdjoint g₁₂ g₁₂_inv X := one_smul R _
 
@@ -285,6 +344,27 @@ def galoisShearPlus : Matrix (Fin 2) (Fin 2) R :=
 /-- Inverse unipotent shear $T_+^{-1} = I_2 - u_+ = \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix}$. -/
 def galoisShearPlusInv : Matrix (Fin 2) (Fin 2) R :=
   !![1, -1; 0, 1]
+
+/-- Two-matrix left multiplication by $e_1$. -/
+theorem splitGenE_mul_mat (a b c d : R) :
+    splitGenE (R := R) * !![a, b; c, d] = !![c, d; a, b] := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [splitGenE, Matrix.mul_apply]
+
+/-- Two-matrix right multiplication by $e_1$. -/
+theorem mat_mul_splitGenE (a b c d : R) :
+    (!![a, b; c, d] : Matrix (Fin 2) (Fin 2) R) * splitGenE = !![b, a; d, c] := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [splitGenE, Matrix.mul_apply]
+
+/-- Two-matrix left multiplication by the unipotent shear $T_+$. -/
+theorem galoisShearPlus_mul_mat (a b c d : R) :
+    galoisShearPlus (R := R) * !![a, b; c, d] = !![a + c, b + d; c, d] := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [galoisShearPlus, Matrix.mul_apply]
+
+/-- Two-matrix right multiplication by the inverse shear $T_+^{-1}$. -/
+theorem mat_mul_galoisShearPlusInv (a b c d : R) :
+    (!![a, b; c, d] : Matrix (Fin 2) (Fin 2) R) * galoisShearPlusInv =
+      !![a, -a + b; c, -c + d] := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [galoisShearPlusInv, Matrix.mul_apply]
 
 /-- **Inner Galois Ring Automorphism Laws (`innerGalois_ring_automorphism_laws`):**
 For any invertible pair $(g, g_{\mathrm{inv}})$ with $g_{\mathrm{inv}} g = I_2$ and $g g_{\mathrm{inv}} = I_2$,
@@ -308,7 +388,7 @@ theorem innerGalois_ring_automorphism_laws
           simp only [Matrix.mul_assoc]
       _ = (g * X * g_inv) * (g * Y * g_inv) := by
           simp only [Matrix.mul_assoc]
-  · simp [innerGaloisConj, Matrix.mul_smul, Matrix.smul_mul, h_right]
+  · simp [innerGaloisConj, h_right]
 
 /-- **Galois Fixed Subring Equals the Scalar Center $Z(\mathrm{Cl}_{1,1}) = R \cdot I_2$
 (`galois_fixed_subring_eq_scalar_center`):**
@@ -319,34 +399,19 @@ theorem galois_fixed_subring_eq_scalar_center (a b c d : R) :
     (innerGaloisConj (splitGenE (R := R)) splitGenE !![a, b; c, d] = !![a, b; c, d] ∧
      innerGaloisConj (galoisShearPlus (R := R)) galoisShearPlusInv !![a, b; c, d] = !![a, b; c, d]) ↔
     (b = 0 ∧ c = 0 ∧ a = d) := by
+  rw [innerGaloisConj, splitGenE_mul_mat, mat_mul_splitGenE,
+      innerGaloisConj, galoisShearPlus_mul_mat, mat_mul_galoisShearPlusInv]
   constructor
   · rintro ⟨hE, hT⟩
-    have hE00 : (innerGaloisConj (splitGenE (R := R)) splitGenE !![a, b; c, d]) 0 0 = d := by
-      simp [innerGaloisConj, splitGenE, Matrix.mul_apply, finSumFinEquiv]
-    have hE00_rhs : (!![a, b; c, d] : Matrix (Fin 2) (Fin 2) R) 0 0 = a := rfl
-    have had : a = d := by
-      have h := congr_fun (congr_fun hE 0) 0
-      rw [hE00, hE00_rhs] at h
-      exact h.symm
-    have hT00 : (innerGaloisConj (galoisShearPlus (R := R)) galoisShearPlusInv !![a, b; c, d]) 0 0 = a + c := by
-      simp [innerGaloisConj, galoisShearPlus, galoisShearPlusInv, Matrix.mul_apply, finSumFinEquiv]
-    have hc : c = 0 := by
-      have h := congr_fun (congr_fun hT 0) 0
-      rw [hT00, hE00_rhs] at h
-      linarith [h]
-    have hE01 : (innerGaloisConj (splitGenE (R := R)) splitGenE !![a, b; c, d]) 0 1 = c := by
-      simp [innerGaloisConj, splitGenE, Matrix.mul_apply, finSumFinEquiv]
-    have hE01_rhs : (!![a, b; c, d] : Matrix (Fin 2) (Fin 2) R) 0 1 = b := rfl
-    have hb : b = 0 := by
-      have h := congr_fun (congr_fun hE 0) 1
-      rw [hE01, hE01_rhs, hc] at h
-      exact h.symm
+    have had : a = d := (congr_fun (congr_fun hE 0) 0).symm
+    have hT00 : a + c = a := congr_fun (congr_fun hT 0) 0
+    have hc : c = 0 := by linear_combination hT00
+    have hcb : c = b := congr_fun (congr_fun hE 0) 1
+    have hb : b = 0 := by linear_combination -hcb + hc
     exact ⟨hb, hc, had⟩
-  · rintro ⟨ rfl, rfl, rfl ⟩
+  · rintro ⟨rfl, rfl, rfl⟩
     constructor <;>
-      (ext i j; fin_cases i <;> fin_cases j <;>
-        simp [innerGaloisConj, splitGenE, galoisShearPlus, galoisShearPlusInv,
-              Matrix.mul_apply, finSumFinEquiv] <;> ring)
+      (ext i j; fin_cases i <;> fin_cases j <;> simp)
 
 -- ============================================================================
 -- SECTION 4: Skolem–Noether & Z₂-Graded Skolem–Noether Parity Bifurcation
@@ -368,41 +433,24 @@ theorem skolem_noether_inner_intertwiner_and_uniqueness
     ((splitGenE (R := R) * !![a, b; c, d] = !![a, b; c, d] * splitGenE ∧
       wittNullU (R := R) * !![a, b; c, d] = !![a, b; c, d] * wittNullU) ↔
      (b = 0 ∧ c = 0 ∧ a = d)) := by
+  have hU_left : wittNullU (R := R) * !![a, b; c, d] = !![c, d; 0, 0] := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [wittNullU, Matrix.mul_apply]
+  have hU_right : (!![a, b; c, d] : Matrix (Fin 2) (Fin 2) R) * wittNullU = !![0, a; 0, c] := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [wittNullU, Matrix.mul_apply]
   refine ⟨?_, ?_⟩
   · calc (g * A * g_inv) * (g * Ψ)
       _ = g * A * (g_inv * g) * Ψ := by simp only [Matrix.mul_assoc]
       _ = g * (A * Ψ) := by rw [h_left, Matrix.mul_one, Matrix.mul_assoc]
-  · constructor
+  · rw [splitGenE_mul_mat, mat_mul_splitGenE, hU_left, hU_right]
+    constructor
     · rintro ⟨hE, hU⟩
-      have hU10 : (wittNullU (R := R) * !![a, b; c, d]) 0 0 = c := by
-        simp [wittNullU, Matrix.mul_apply, finSumFinEquiv]
-      have hU00_rhs : (!![a, b; c, d] * wittNullU (R := R)) 0 0 = 0 := by
-        simp [wittNullU, Matrix.mul_apply, finSumFinEquiv]
-      have hc : c = 0 := by
-        have h := congr_fun (congr_fun hU 0) 0
-        rw [hU10, hU00_rhs] at h
-        exact h
-      have hU01 : (wittNullU (R := R) * !![a, b; c, d]) 0 1 = d := by
-        simp [wittNullU, Matrix.mul_apply, finSumFinEquiv]
-      have hU01_rhs : (!![a, b; c, d] * wittNullU (R := R)) 0 1 = a := by
-        simp [wittNullU, Matrix.mul_apply, finSumFinEquiv]
-      have had : a = d := by
-        have h := congr_fun (congr_fun hU 0) 1
-        rw [hU01, hU01_rhs] at h
-        exact h.symm
-      have hE00 : (splitGenE (R := R) * !![a, b; c, d]) 0 0 = c := by
-        simp [splitGenE, Matrix.mul_apply, finSumFinEquiv]
-      have hE00_rhs : (!![a, b; c, d] * splitGenE (R := R)) 0 0 = b := by
-        simp [splitGenE, Matrix.mul_apply, finSumFinEquiv]
-      have hb : b = 0 := by
-        have h := congr_fun (congr_fun hE 0) 0
-        rw [hE00, hE00_rhs, hc] at h
-        exact h.symm
+      have hc : c = 0 := congr_fun (congr_fun hU 0) 0
+      have had : a = d := (congr_fun (congr_fun hU 0) 1).symm
+      have hcb : c = b := congr_fun (congr_fun hE 0) 0
+      have hb : b = 0 := by linear_combination -hcb + hc
       exact ⟨hb, hc, had⟩
     · rintro ⟨rfl, rfl, rfl⟩
-      constructor <;>
-        (ext i j; fin_cases i <;> fin_cases j <;>
-          simp [splitGenE, wittNullU, Matrix.mul_apply, finSumFinEquiv] <;> ring)
+      exact ⟨rfl, rfl⟩
 
 /-- **$\mathbb{Z}_2$-Graded Skolem–Noether Parity Bifurcation (`graded_skolem_noether_spin_vs_pin_bifurcation`):**
 1. **Even Parity ($\alpha(g) = +g$, $\mathrm{Spin}(1,1)$):**
@@ -417,15 +465,15 @@ theorem graded_skolem_noether_spin_vs_pin_bifurcation
     twistedAdjoint g_odd g_inv X = -innerGaloisConj g_odd g_inv X := by
   refine ⟨?_, ?_⟩
   · simp [twistedAdjoint, innerGaloisConj, h_even]
-  · simp [twistedAdjoint, innerGaloisConj, h_odd, Matrix.neg_mul]
+  · simp [twistedAdjoint, innerGaloisConj, h_odd]
 
 /-- Explicit non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℤ` for the split Clifford generators. -/
 theorem cl11Galois_noncommutative :
     splitGenE (R := ℤ) * splitGenF (R := ℤ) ≠
       splitGenF (R := ℤ) * splitGenE (R := ℤ) := by
   intro h
-  have h00 := congr_fun (congr_fun h 0) 0
-  revert h00
-  decide
+  have h00 : (splitGenE (R := ℤ) * splitGenF (R := ℤ)) 0 0 =
+      (splitGenF (R := ℤ) * splitGenE (R := ℤ)) 0 0 := by rw [h]
+  simp [splitGenE, splitGenF, Matrix.mul_apply] at h00
 
 end InfoGeometry.Canonical.CartanHestenesPinSkolemNoetherGaloisPoset

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.Sugawara
@@ -10,16 +15,16 @@ This module proves from the Sugawara–Heisenberg commutator identity
 $[L_n, J_m] = -m\,J_{n+m}$ that the mixed commutator $[L_1, J_1] = -J_2$ exits
 a five-mode window unless $J_2 = 0$.
 
-## 1. Real Math in This File
-- `sugawara_current_mode_shift`, `positive_one_one_commutator`
-- `boundary_zero_forces_current_two_zero`, `current_two_ne_zero_obstructs_boundary_zero`
-- `no_naive_positive_boundary_truncation`, `mode_escape_formula`
+- BUCKET 1 (Real Math in This File):
+  - `sugawara_current_mode_shift`, `positive_one_one_commutator`
+  - `boundary_zero_forces_current_two_zero`, `current_two_ne_zero_obstructs_boundary_zero`
+  - `no_naive_positive_boundary_truncation`, `mode_escape_formula`
 
-## 2. Meaningful Mathematical Results Used
-- `VirasoroProject.commutator_sugawaraGen_heiOper`
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `VirasoroProject.commutator_sugawaraGen_heiOper`
 
-## 3. Excluded Wrapper Patterns
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -45,8 +50,9 @@ include hcomm
 theorem sugawara_current_mode_shift (n m : ℤ) :
     (sugawaraGen trunc n).commutator (J m) =
       -m • J (n + m) := by
-  exact commutator_sugawaraGen_heiOper
+  have h := commutator_sugawaraGen_heiOper
     (heiOper := J) (heiTrunc := trunc) (heiComm := hcomm) n m
+  exact h
 
 /-- At modes $n = 1, m = 1$, the mixed commutator satisfies $[L_1, J_1] = -J_2$. -/
 theorem positive_one_one_commutator :
@@ -80,7 +86,8 @@ theorem mode_escape_formula
     {n m : ℤ} :
     (sugawaraGen trunc n).commutator (J m) =
       -m • J (n + m) := by
-  exact commutator_sugawaraGen_heiOper
+  have h := commutator_sugawaraGen_heiOper
     (heiOper := J) (heiTrunc := trunc) (heiComm := hcomm) n m
+  exact h
 
 end InfoGeometry.Canonical.SugawaraFiveGradingObstruction

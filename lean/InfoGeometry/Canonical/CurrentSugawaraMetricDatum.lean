@@ -91,7 +91,7 @@ def MetricHeisenbergCurrent
   { p : CurrentMetricDatum 𝕜 I × ((I → ℤ → V →ₗ[𝕜] V) × (V →ₗ[𝕜] V)) //
     (∀ v i, ∀ᶠ l in Filter.atTop, p.2.1 i l v = 0) ∧
     (∀ i j m n,
-      (p.2.1 i m).commutator (p.2.1 j n) =
+      ⁅p.2.1 i m, p.2.1 j n⁆ =
         if m + n = 0 then (m : 𝕜) • (p.1.kappa i j • p.2.2) else 0) }
 
 /-- Constructor for `MetricHeisenbergCurrent 𝕜 V I`. -/
@@ -102,7 +102,7 @@ def MetricHeisenbergCurrent.mk
     (K : V →ₗ[𝕜] V)
     (trunc : ∀ v i, ∀ᶠ l in Filter.atTop, J i l v = 0)
     (comm : ∀ i j m n,
-      (J i m).commutator (J j n) =
+      ⁅J i m, J j n⁆ =
         if m + n = 0 then (m : 𝕜) • (metric.kappa i j • K) else 0) :
     MetricHeisenbergCurrent 𝕜 V I :=
   ⟨(metric, (J, K)), ⟨trunc, comm⟩⟩
@@ -137,7 +137,7 @@ theorem MetricHeisenbergCurrent.trunc
 theorem MetricHeisenbergCurrent.comm
     {V : Type*} [AddCommGroup V] [Module 𝕜 V]
     (H : MetricHeisenbergCurrent 𝕜 V I) (i j : I) (m n : ℤ) :
-    (H.J i m).commutator (H.J j n) =
+    ⁅H.J i m, H.J j n⁆ =
       if m + n = 0 then (m : 𝕜) • (H.metric.kappa i j • H.K) else 0 := by
   unfold MetricHeisenbergCurrent.J MetricHeisenbergCurrent.metric MetricHeisenbergCurrent.K
   exact H.2.2 i j m n
@@ -164,7 +164,7 @@ theorem splitEightKappa_inverse_left (i k : Fin 8) :
         intro j _hj hji
         simp [f, splitEightKappa, hji])
     have hfi : f i = 1 := by
-      simp [f, splitEightKappa]
+      dsimp only [f, splitEightKappa]
       by_cases hi : i.val < 4 <;> simp [hi]
     rw [if_pos rfl]
     exact hsum.trans hfi
@@ -176,8 +176,8 @@ theorem splitEightKappa_inverse_left (i k : Fin 8) :
         simp [f, splitEightKappa, hik]
       · by_cases hjk : j = k
         · subst hjk
-          simp [f, splitEightKappa, hik, hji]
-        · simp [f, splitEightKappa, hji, hjk]
+          simp [f, splitEightKappa, hik]
+        · simp [f, splitEightKappa, hjk]
     have hsum : ∑ j : Fin 8, f j = 0 := Finset.sum_eq_zero hzero
     rw [if_neg hik]
     exact hsum
@@ -185,7 +185,8 @@ theorem splitEightKappa_inverse_left (i k : Fin 8) :
 /-- The split 8-channel metric is its own right inverse. -/
 theorem splitEightKappa_inverse_right (i k : Fin 8) :
     ∑ j : Fin 8, splitEightKappa i j * splitEightKappa j k = if i = k then 1 else 0 := by
-  exact splitEightKappa_inverse_left i k
+  have h := splitEightKappa_inverse_left i k
+  exact h
 
 /-- The canonical 8-channel split `(4,4)` metric datum. -/
 noncomputable def splitEightCurrentMetricDatum : CurrentMetricDatum ℝ (Fin 8) :=

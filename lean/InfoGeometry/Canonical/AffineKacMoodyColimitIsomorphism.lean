@@ -1,6 +1,37 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit
 import InfoGeometry.Canonical.AffineKacMoodyColimitBracket
+
+/-!
+# Lie Isomorphism Between the Filtered Affine Kac–Moody Colimit and the Full Carrier
+
+This module proves that the comparison map `affineFiniteModeColimitMap` from the
+filtered `ModuleCat` colimit `affineFiniteModeColimit` to `AffineKacMoody` is
+injective and has range equal to the directed union `affineFiniteModeUnion`,
+shows that `affineFiniteModeUnion = ⊤`, and transports the Lie algebra structure
+to establish the Lie equivalence `colimitLieEquivAmbient`.
+
+- BUCKET 1 (Real Math in This File):
+  - `isoColimit`, `colimit_exists_rep_hack`, `colimitMap_injective`
+  - `unionCocone`, `colimitMap_range_eq_union`, `affineFiniteModeUnion_eq_top`,
+    `affineFiniteModeColimitLieSubalgebra_eq_top`
+  - `colimitEquivUnion`, `colimitEquivLieSubalgebra`, `colimitLieRing`,
+    `colimitLieAlgebra`, `colimitLieEquiv`, `colimitLieEquivAmbient`,
+    `colimitLieEquivAmbient_apply`
+
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit`
+  - `InfoGeometry.Canonical.AffineKacMoodyColimitBracket`
+  - `Mathlib.Algebra.Category.ModuleCat.FilteredColimits`
+
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+-/
 
 open CategoryTheory CategoryTheory.Limits
 open VirasoroProject InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit
@@ -11,11 +42,15 @@ variable {𝓰 : Type u} [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
 variable (Φ : LinearMap.BilinForm 𝕜 𝓰)
 variable (hΦ : Φ.lieInvariant 𝓰) (hΦs : Φ.IsSymm)
 
+/-- Isomorphism between the categorical colimit of `affineFiniteModeDiagram` and
+the explicit filtered-colimit cocone point in `ModuleCat`. -/
 noncomputable def isoColimit : (colimit (affineFiniteModeDiagram Φ hΦ hΦs)) ≅ 
   (ModuleCat.FilteredColimits.colimitCocone (affineFiniteModeDiagram Φ hΦ hΦs)).pt :=
   (colimit.isColimit (affineFiniteModeDiagram Φ hΦ hΦs)).coconePointUniqueUpToIso 
   (ModuleCat.FilteredColimits.colimitCoconeIsColimit (affineFiniteModeDiagram Φ hΦ hΦs))
 
+/-- Every element of `colimit (affineFiniteModeDiagram Φ hΦ hΦs)` is represented
+by some element `z` at a finite cutoff stage `N`. -/
 lemma colimit_exists_rep_hack (x : ↑(colimit (affineFiniteModeDiagram Φ hΦ hΦs))) : 
     ∃ (N : ℕ) (z : (affineFiniteModeDiagram Φ hΦ hΦs).obj N), 
       x = (colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) N).hom z := by
@@ -31,7 +66,7 @@ lemma colimit_exists_rep_hack (x : ↑(colimit (affineFiniteModeDiagram Φ hΦ h
     exact h_eval.symm
   rw [hx, ← hz]
   have h_mk : ModuleCat.FilteredColimits.M.mk (affineFiniteModeDiagram Φ hΦ hΦs) ⟨N, z⟩ = 
-    ((ModuleCat.FilteredColimits.colimitCocone (affineFiniteModeDiagram Φ hΦ hΦs)).ι.app N).hom z := rfl
+    ((ModuleCat.FilteredColimits.colimitCocone (affineFiniteModeDiagram Φ hΦ hΦs)).ι.app N).hom z := by dsimp; rfl
   rw [h_mk]
   have h_fac := (ModuleCat.FilteredColimits.colimitCoconeIsColimit (affineFiniteModeDiagram Φ hΦ hΦs)).fac (colimit.cocone (affineFiniteModeDiagram Φ hΦ hΦs)) N
   have h_fac2 : ((ModuleCat.FilteredColimits.colimitCocone (affineFiniteModeDiagram Φ hΦ hΦs)).ι.app N) ≫ (isoColimit Φ hΦ hΦs).inv = (colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) N) := h_fac
@@ -40,6 +75,7 @@ lemma colimit_exists_rep_hack (x : ↑(colimit (affineFiniteModeDiagram Φ hΦ h
     exact congrArg (fun F => ModuleCat.Hom.hom F z) h_fac2
   exact h_eval
 
+/-- Injectivity of the comparison map `(affineFiniteModeColimitMap Φ hΦ hΦs).hom`. -/
 theorem colimitMap_injective : 
     Function.Injective (affineFiniteModeColimitMap Φ hΦ hΦs).hom := by
   intro x y hxy
@@ -56,6 +92,7 @@ theorem colimitMap_injective :
     rw [hz, hz_zero, map_zero]
   exact sub_eq_zero.mp hx_sub_y
 
+/-- Cocone on `affineFiniteModeDiagram` with vertex `affineFiniteModeUnion`. -/
 noncomputable def unionCocone : Cocone (affineFiniteModeDiagram Φ hΦ hΦs) where
   pt := ModuleCat.of 𝕜 (affineFiniteModeUnion Φ hΦ hΦs)
   ι := {
@@ -69,6 +106,8 @@ noncomputable def unionCocone : Cocone (affineFiniteModeDiagram Φ hΦ hΦs) whe
       rfl
   }
 
+/-- The range of `affineFiniteModeColimitMap` equals the directed union
+`affineFiniteModeUnion`. -/
 theorem colimitMap_range_eq_union :
     LinearMap.range (affineFiniteModeColimitMap Φ hΦ hΦs).hom = 
       affineFiniteModeUnion Φ hΦ hΦs := by
@@ -195,6 +234,7 @@ theorem affineFiniteModeColimitLieSubalgebra_eq_top :
   simp [affineFiniteModeColimitLieSubalgebra,
     affineFiniteModeUnion_eq_top Φ hΦ hΦs]
 
+/-- Linear equivalence between `affineFiniteModeColimit` and `affineFiniteModeUnion`. -/
 noncomputable def colimitEquivUnion :
     (affineFiniteModeColimit Φ hΦ hΦs) ≃ₗ[𝕜] (affineFiniteModeUnion Φ hΦ hΦs) :=
   LinearEquiv.ofBijective 
@@ -211,10 +251,13 @@ noncomputable def colimitEquivUnion :
        use x
        rfl⟩
 
+/-- Linear equivalence between `affineFiniteModeColimit` and
+`affineFiniteModeColimitLieSubalgebra`. -/
 noncomputable def colimitEquivLieSubalgebra :
     (affineFiniteModeColimit Φ hΦ hΦs) ≃ₗ[𝕜] (affineFiniteModeColimitLieSubalgebra Φ hΦ hΦs) :=
   colimitEquivUnion Φ hΦ hΦs
 
+/-- `LieRing` instance on `affineFiniteModeColimit` transported along `colimitEquivLieSubalgebra`. -/
 noncomputable instance colimitLieRing : LieRing (affineFiniteModeColimit Φ hΦ hΦs) where
   bracket x y := (colimitEquivLieSubalgebra Φ hΦ hΦs).symm ⁅colimitEquivLieSubalgebra Φ hΦ hΦs x, colimitEquivLieSubalgebra Φ hΦ hΦs y⁆
   add_lie x y z := by
@@ -235,12 +278,14 @@ noncomputable instance colimitLieRing : LieRing (affineFiniteModeColimit Φ hΦ 
     simp only [LinearEquiv.apply_symm_apply]
     rw [leibniz_lie, map_add]
 
+/-- `LieAlgebra` instance on `affineFiniteModeColimit` transported along `colimitEquivLieSubalgebra`. -/
 noncomputable instance colimitLieAlgebra : LieAlgebra 𝕜 (affineFiniteModeColimit Φ hΦ hΦs) where
   lie_smul r x y := by
     let eqv := colimitEquivLieSubalgebra Φ hΦ hΦs
     change eqv.symm ⁅eqv x, eqv (r • y)⁆ = r • eqv.symm ⁅eqv x, eqv y⁆
     rw [map_smul, lie_smul, map_smul]
 
+/-- Lie equivalence between `affineFiniteModeColimit` and `affineFiniteModeColimitLieSubalgebra`. -/
 noncomputable def colimitLieEquiv :
     (affineFiniteModeColimit Φ hΦ hΦs) ≃ₗ⁅𝕜⁆ (affineFiniteModeColimitLieSubalgebra Φ hΦ hΦs) :=
   { colimitEquivLieSubalgebra Φ hΦ hΦs with
@@ -270,3 +315,59 @@ theorem colimitLieEquivAmbient_apply (x : affineFiniteModeColimit Φ hΦ hΦs) :
   change ((colimitEquivUnion Φ hΦ hΦs x :
     affineFiniteModeUnion Φ hΦ hΦs) : KM Φ hΦ hΦs) = _
   rfl
+
+/-- Internal-colimit bracket formula for two current representatives, including
+the affine central cocycle when the modes sum to zero. -/
+theorem affineCurrentColimitMode_bracket
+    (m n : ℤ) (x y : 𝓰) :
+    ⁅affineCurrentColimitMode Φ hΦ hΦs m x,
+      affineCurrentColimitMode Φ hΦ hΦs n y⁆ =
+      affineCurrentColimitMode Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰) +
+        (if m + n = 0 then ((m : 𝕜) * Φ x y) •
+          affineCentralColimitMode Φ hΦ hΦs else 0) := by
+  apply colimitMap_injective Φ hΦ hΦs
+  let F := (affineFiniteModeColimitMap Φ hΦ hΦs).hom
+  calc
+    F ⁅affineCurrentColimitMode Φ hΦ hΦs m x,
+        affineCurrentColimitMode Φ hΦ hΦs n y⁆ =
+        ⁅F (affineCurrentColimitMode Φ hΦ hΦs m x),
+          F (affineCurrentColimitMode Φ hΦ hΦs n y)⁆ := by
+            calc
+              _ = colimitLieEquivAmbient Φ hΦ hΦs
+                    ⁅affineCurrentColimitMode Φ hΦ hΦs m x,
+                      affineCurrentColimitMode Φ hΦ hΦs n y⁆ := by
+                    rw [colimitLieEquivAmbient_apply]
+              _ = ⁅colimitLieEquivAmbient Φ hΦ hΦs
+                    (affineCurrentColimitMode Φ hΦ hΦs m x),
+                    colimitLieEquivAmbient Φ hΦ hΦs
+                      (affineCurrentColimitMode Φ hΦ hΦs n y)⁆ :=
+                    (colimitLieEquivAmbient Φ hΦ hΦs).map_lie _ _
+              _ = _ := by rw [colimitLieEquivAmbient_apply,
+                colimitLieEquivAmbient_apply]
+    _ = affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+          (m + n) (⁅x, y⁆ : 𝓰) +
+        (if m + n = 0 then ((m : 𝕜) * Φ x y) •
+          affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs else 0) :=
+          affineCurrentColimit_bracket_readout Φ hΦ hΦs m n x y
+    _ = F (affineCurrentColimitMode Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰) +
+        (if m + n = 0 then ((m : 𝕜) * Φ x y) •
+          affineCentralColimitMode Φ hΦ hΦs else 0)) := by
+          rw [map_add]
+          by_cases hmn : m + n = 0
+          · simp only [if_pos hmn]
+            change affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+                (m + n) (⁅x, y⁆ : 𝓰) +
+                ((m : 𝕜) * Φ x y) •
+                  affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs =
+              F (affineCurrentColimitMode Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)) +
+                F (((m : 𝕜) * Φ x y) •
+                  affineCentralColimitMode Φ hΦ hΦs)
+            rw [map_smul,
+              ← affineFiniteModeColimitMap_current Φ hΦ hΦs (m + n) ⁅x, y⁆,
+              ← affineFiniteModeColimitMap_central Φ hΦ hΦs]
+          · simp only [if_neg hmn]
+            change affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+                (m + n) (⁅x, y⁆ : 𝓰) + 0 =
+              F (affineCurrentColimitMode Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)) + F 0
+            simp only [map_zero, add_zero]
+            exact (affineFiniteModeColimitMap_current Φ hΦ hΦs (m + n) ⁅x, y⁆).symm

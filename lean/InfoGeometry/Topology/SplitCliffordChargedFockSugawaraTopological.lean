@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.SplitCliffordChargedFockTopological
@@ -10,7 +15,7 @@ This module constructs `representedChargedFockSugawaraMorphism α` from
 in the sigma bundle `ChargedFockSugawaraBundle 𝕜`, and proves its generator
 readouts, continuity, and local constancy.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `representedChargedFockSugawaraMorphism`,
   `representedChargedFockSugawaraMorphism_heisenberg`,
   `representedChargedFockSugawaraMorphism_central`,
@@ -21,11 +26,11 @@ readouts, continuity, and local constancy.
   `continuous_representedChargedFockSugawaraBundle`,
   `isLocallyConstant_representedChargedFockSugawaraBundle`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Topology.SplitCliffordChargedFockTopological`
 - `InfoGeometry.Canonical.CurrentSugawaraBridge`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
@@ -61,7 +66,8 @@ theorem representedChargedFockSugawaraMorphism_central (α : 𝕜) :
       (1 :
         VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
           VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  exact (representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).central_apply
+  have h := (representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).central_apply
+  exact h
 
 /-- The Virasoro mode generator `lgen 𝕜 n` acts as `sugawaraStressMode n` in
 `representedChargedFockSugawaraMorphism α`. -/
@@ -69,7 +75,8 @@ theorem representedChargedFockSugawaraMorphism_lgen (α : 𝕜) (n : Int) :
       (representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).virasoro
         (VirasoroAlgebra.lgen 𝕜 n) =
       ((representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).heisenberg).sugawaraStressMode n := by
-  exact (representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).lgen_apply n
+  have h := (representedChargedFockSugawaraMorphism (𝕜 := 𝕜) α).lgen_apply n
+  exact h
 
 /-- Dependent sigma bundle of concrete charged-Fock Sugawara morphisms over `α : 𝕜`. -/
 abbrev ChargedFockSugawaraBundle (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :=
@@ -106,13 +113,16 @@ def representedChargedFockSugawaraBundle (α : 𝕜) :
 /-- Continuity of `representedChargedFockSugawaraBundle`. -/
 theorem continuous_representedChargedFockSugawaraBundle :
     Continuous (representedChargedFockSugawaraBundle (𝕜 := 𝕜)) := by
-  exact continuous_of_discreteTopology
+  have h : Continuous (representedChargedFockSugawaraBundle (𝕜 := 𝕜)) :=
+    continuous_of_discreteTopology
+  exact h
 
 /-- Local constancy of `representedChargedFockSugawaraBundle`. -/
 theorem isLocallyConstant_representedChargedFockSugawaraBundle :
     IsLocallyConstant (representedChargedFockSugawaraBundle (𝕜 := 𝕜)) := by
-  exact IsLocallyConstant.of_discrete
+  have h := IsLocallyConstant.of_discrete
     (f := representedChargedFockSugawaraBundle (𝕜 := 𝕜))
+  exact h
 
 end
 end InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological

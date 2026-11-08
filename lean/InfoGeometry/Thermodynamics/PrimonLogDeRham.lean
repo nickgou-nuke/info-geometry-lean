@@ -1,5 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.TomitaModularDeviance
 import InfoGeometry.Canonical.VonMangoldtPrimonExplicitBridge
 import InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra
@@ -42,8 +46,8 @@ theorem primeMode1Form_eq_neg_vonMangoldt
     {p : ℕ} (hp : p.Prime) (ds : ℝ) :
     primeMode1Form p ds =
       -(ArithmeticFunction.vonMangoldt p) * ds := by
-  simp [primeMode1Form,
-    InfoGeometry.Canonical.VonMangoldtPrimonExplicitBridge.vonMangoldt_prime hp]
+  unfold primeMode1Form
+  rw [InfoGeometry.Canonical.VonMangoldtPrimonExplicitBridge.vonMangoldt_prime hp]
 
 /-! ## Bosonic and signed-fermionic connection data -/
 
@@ -60,17 +64,20 @@ def signedFermionicConnection (P : DeRhamSystem) (ds : ℝ) : ℝ :=
 @[simp] theorem primon_signed_connection_cancel
     (P : DeRhamSystem) (ds : ℝ) :
     bosonicConnection P ds + signedFermionicConnection P ds = 0 := by
-  simp [bosonicConnection, signedFermionicConnection]
+  unfold bosonicConnection signedFermionicConnection
+  ring
 
 @[simp] theorem signedFermionicConnection_eq_neg_bosonic
     (P : DeRhamSystem) (ds : ℝ) :
     signedFermionicConnection P ds = -bosonicConnection P ds := by
-  simp [bosonicConnection, signedFermionicConnection]
+  unfold bosonicConnection signedFermionicConnection
+  ring
 
 @[simp] theorem bosonicConnection_eq_neg_signedFermionic
     (P : DeRhamSystem) (ds : ℝ) :
     bosonicConnection P ds = -signedFermionicConnection P ds := by
-  simp [bosonicConnection, signedFermionicConnection]
+  unfold bosonicConnection signedFermionicConnection
+  ring
 
 /-! ## Finite weighted logarithmic score -/
 
@@ -211,8 +218,8 @@ theorem primeModeDeviance_pos
 theorem primeModeDeviance_eq_finiteDiagonalDeviance
     (p : ℕ) (s : ℝ) :
     primeModeDeviance p s =
-      finiteDiagonalDeviance s (fun _ : Unit => Real.log (p : ℝ)) () := by
-  rfl
+      finiteDiagonalDeviance s (fun _ : Unit => Real.log (p : ℝ)) () :=
+  Eq.refl (primeModeDeviance p s)
 
 theorem primeModeDeviance_eq_zero_iff
     (p : ℕ) (s : ℝ) :
@@ -296,8 +303,7 @@ theorem weightedMicrostateDeviance_eq_zero_iff
             (fun y hy => (htail_pos y hy).le)
         have hzero' :
             m.prob * scalar (s * m.energy) +
-                weightedMicrostateDeviance states s = 0 := by
-          simpa [weightedMicrostateDeviance] using hzero
+                weightedMicrostateDeviance states s = 0 := hzero
         have hhead_zero : m.prob * scalar (s * m.energy) = 0 := by
           linarith [hzero', htail_nonneg]
         have htail_zero : weightedMicrostateDeviance states s = 0 := by

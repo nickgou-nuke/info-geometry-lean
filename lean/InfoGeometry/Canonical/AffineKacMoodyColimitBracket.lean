@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.AffineKacMoodyStageBracket
 
 /-!
@@ -9,9 +14,15 @@ use the rigorous mathematical fact that the union of all finite stages (which
 is exactly the colimit image) is a genuine Lie subalgebra of the parent 
 Kac--Moody algebra.
 
-The finite-stage closure prerequisite (`affineFiniteModeStage_bracket_mem`) 
-guarantees that this infinite colimit supremum is closed under the Kac--Moody 
-Lie bracket.
+- BUCKET 1 (Real Math in This File):
+  - `affineFiniteModeUnion`, `affineFiniteModeStage_directed`
+  - `union_bracket_closed`, `affineFiniteModeColimitLieSubalgebra`
+
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.AffineKacMoodyStageBracket`
+
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -64,9 +75,8 @@ theorem union_bracket_closed {X Y : KM Φ hΦ hΦs}
     exact ⟨N + M, h_bracket⟩
   exact h_res
 
-/-- The Categorical Colimit Lie Subalgebra.
-    We natively endow the infinite colimit limit with its intrinsic Lie algebra
-    structure inherited from the Kac-Moody envelope. -/
+/-- The Categorical Colimit Lie Subalgebra: we endow the infinite colimit union
+with its intrinsic Lie algebra bracket inherited from the Kac--Moody envelope. -/
 def affineFiniteModeColimitLieSubalgebra : LieSubalgebra 𝕜 (KM Φ hΦ hΦs) :=
   { affineFiniteModeUnion Φ hΦ hΦs with
     lie_mem' := by

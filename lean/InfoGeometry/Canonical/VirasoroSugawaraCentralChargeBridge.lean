@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
@@ -12,15 +17,15 @@ $c(k, d, h^\vee) = (k \cdot d) / (k + h^\vee)$ and proves its direct-sum
 decomposition, vanishing at $d = 0$, level-independence in the abelian case
 $h^\vee = 0$, and strict positivity for $k > 0, d > 0, h^\vee \ge 0$.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `sugawaraCentralCharge`
 - `sugawara_central_charge_add`, `sugawara_central_charge_zero_dim`
 - `sugawara_central_charge_abelian`, `sugawara_central_charge_pos`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `Mathlib.Data.Real.Basic` (`mul_div_cancel_left₀`, `div_pos`)
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 

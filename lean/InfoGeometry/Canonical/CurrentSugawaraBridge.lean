@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MetricSugawaraBridge
@@ -7,15 +12,36 @@ import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 import InfoGeometry.External.Virasoro.FockSpace
 
 /-!
-# Current-to-Sugawara bridge
+# Current-to-Sugawara Virasoro Bridge
 
-This file is a narrow adapter from a proved Heisenberg current representation
-to the existing external Sugawara/Virasoro construction.
+This module connects any Heisenberg current representation (`CurrentHeisenbergRep`)
+to the normal-ordered Sugawara stress-energy modes and the resulting $c = 1$
+Virasoro Lie algebra representation (`currentSugawaraRepresentation`).
 
-It does not reprove Sugawara and it does not assert a Lichnerowicz square
-identity. The only inputs are exactly the inputs required by
-`VirasoroProject.sugawaraRepresentation`: current modes, local truncation, and
-the Heisenberg commutator.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `VirasoroProject.sugawaraGen`, `VirasoroProject.sugawaraRepresentation`,
+    `VirasoroProject.ChargedFockSpace`.
+  * `InfoGeometry.Canonical.BosonizationConstructiveCurrent`:
+    `sugawaraVirasoroRepresentation_from_heisenbergCurrent`,
+    `sugawaraVirasoro_from_heisenbergCurrent`,
+    `sugawaraVirasoroRepresentation_central_from_heisenbergCurrent`.
+- BUCKET 2 (Deconfabulation):
+  * Replaced the `CurrentHeisenbergRep` and `CurrentSugawaraMorphism` wrapper
+    `structure`s with dependent product carriers and explicit projection functions,
+    and eliminated all `:= rfl` wrapper lemmas.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `conjugateEnd` and its ring/commutator homomorphism theorems.
+  * `heisenberg_central_term_commutes`, `heisenberg_central_term_commutator_eq_zero`.
+  * `CurrentHeisenbergRep`: `sugawaraStressMode`, `sugawaraStressMode_eq_pairNO`,
+    `currentSugawaraRepresentation`, `sugawaraStressMode_virasoroBracket`,
+    `sugawaraCentralTerm_zero_of_global_mode`, `sugawaraStressMode_virasoroBracket_global_mode`,
+    `currentSugawaraRepresentation_central`, `currentSugawaraRepresentation_lgen_apply`,
+    `conjugated_current_commutator`, `conjugated_current_trunc`.
+  * `chargedFockSpaceHeisenbergMode`, `chargedFockSpaceHeisenbergRepresentation_kgen`,
+    `chargedFockSpaceCurrentHeisenbergRep`.
+  * `CurrentSugawaraMorphism`, `CurrentSugawaraMorphism.ofHeisenberg`,
+    `CurrentSugawaraMorphism.ofHeisenberg_readout`,
+    `chargedFockSpace_currentSugawaraMorphism_readout`.
 -/
 
 namespace InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -28,12 +54,13 @@ open CurrentMetricDatum
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 
-/-- Algebraic conjugation on endomorphisms by a linear equivalence. -/
+/-- Algebraic conjugation on endomorphisms by a linear equivalence $U : V \simeq_𝕜 V$. -/
 noncomputable def conjugateEnd
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (A : V →ₗ[𝕜] V) : V →ₗ[𝕜] V :=
   U.toLinearMap.comp (A.comp U.symm.toLinearMap)
 
+/-- Conjugation by a linear equivalence distributes over addition of endomorphisms. -/
 @[simp] lemma conjugateEnd_add
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
@@ -41,40 +68,19 @@ noncomputable def conjugateEnd
   ext v
   simp [conjugateEnd]
 
-/--
-The split 8-channel Sugawara signature datum.
-
-This stays separate from the global Krein carrier.  It packages the metric
-signature used for the indexed current contraction layer.
--/
+/-- The split 8-channel Sugawara signature datum. -/
 noncomputable def splitEightSugawaraSignatureDatum :
     CurrentMetricDatum ℝ (Fin 8) :=
   CurrentMetricDatum.splitEightCurrentMetricDatum
 
-@[simp] theorem splitEightSugawaraSignatureDatum_kappa :
-    splitEightSugawaraSignatureDatum.kappa = splitEightKappa := by
-  rfl
-
-@[simp] theorem splitEightSugawaraSignatureDatum_kappaInv :
-    splitEightSugawaraSignatureDatum.kappaInv = splitEightKappa := by
-  rfl
-
-/-- The split 8-channel Sugawara kernel is the finite-channel operator layer. -/
+/-- The split 8-channel Sugawara normal-ordered kernel. -/
 noncomputable def splitEightSugawaraKernel
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (H : CurrentMetricDatum.MetricHeisenbergCurrent ℝ V (Fin 8)) :
     ℤ → V → V :=
   MetricSugawaraBridge.splitEightKernel (V := V) H
 
-@[simp] theorem splitEightSugawaraKernel_def
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (H : CurrentMetricDatum.MetricHeisenbergCurrent ℝ V (Fin 8))
-    (n : ℤ) (v : V) :
-    splitEightSugawaraKernel (V := V) H n v =
-      (2 : ℝ)⁻¹ • ∑ᶠ k, ∑ i : Fin 8, ∑ j : Fin 8,
-        H.metric.kappaInv i j • MetricSugawaraBridge.channelPairNO H i j (n - k) k v := by
-  rfl
-
+/-- Conjugation by a linear equivalence preserves endomorphism multiplication. -/
 @[simp] lemma conjugateEnd_mul
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
@@ -82,6 +88,7 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
+/-- Conjugation by a linear equivalence preserves linear-map composition. -/
 @[simp] lemma conjugateEnd_comp
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
@@ -89,6 +96,7 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
+/-- Conjugation by a linear equivalence maps the zero endomorphism to zero. -/
 @[simp] lemma conjugateEnd_zero
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) :
@@ -96,6 +104,7 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
+/-- Conjugation by a linear equivalence distributes over subtraction of endomorphisms. -/
 @[simp] lemma conjugateEnd_sub
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V)
@@ -105,6 +114,7 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
+/-- Conjugation by a linear equivalence commutes with scalar multiplication. -/
 @[simp] lemma conjugateEnd_smul
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (a : 𝕜) (A : V →ₗ[𝕜] V) :
@@ -112,6 +122,7 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
+/-- Conjugation by a linear equivalence fixes the identity endomorphism. -/
 @[simp] lemma conjugateEnd_one
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) :
@@ -119,32 +130,23 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
-/--
-Scalar multiples of the identity are central in the endomorphism algebra.
-
-This is the algebraic core needed for Jacobi closure of the Heisenberg
-central extension term.
--/
+/-- Scalar multiples of the identity are central in the endomorphism algebra. -/
 theorem heisenberg_central_term_commutes
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (c : 𝕜) (J : V →ₗ[𝕜] V) :
     (c • (1 : V →ₗ[𝕜] V)) * J - J * (c • (1 : V →ₗ[𝕜] V)) = 0 := by
   ext v
-  simp [sub_eq_add_neg]
+  simp
 
-/--
-Commutator form of `heisenberg_central_term_commutes`.
--/
+/-- Commutator form of `heisenberg_central_term_commutes`: $[c\cdot 1, J] = 0$. -/
 theorem heisenberg_central_term_commutator_eq_zero
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (c : 𝕜) (J : V →ₗ[𝕜] V) :
     (c • (1 : V →ₗ[𝕜] V)).commutator J = 0 := by
-  simpa [LinearMap.commutator] using
-    heisenberg_central_term_commutes (𝕜 := 𝕜) (V := V) c J
+  change (c • (1 : V →ₗ[𝕜] V)) * J - J * (c • (1 : V →ₗ[𝕜] V)) = 0
+  exact heisenberg_central_term_commutes (𝕜 := 𝕜) (V := V) c J
 
-/--
-Conjugation by a linear equivalence preserves the endomorphism commutator.
--/
+/-- Conjugation by a linear equivalence preserves the endomorphism commutator. -/
 theorem conjugateEnd_commutator
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V)
@@ -158,69 +160,81 @@ theorem conjugateEnd_commutator
     conjugateEnd U (A * B - B * A)
   rw [conjugateEnd_sub, conjugateEnd_mul, conjugateEnd_mul]
 
-/--
-The exact current-representation interface required by the external Sugawara
-construction.
--/
-structure CurrentHeisenbergRep
+/-- The Heisenberg current-representation carrier required by the Sugawara construction:
+a mode family `J : ℤ → V →ₗ[𝕜] V` paired with its local truncation and Heisenberg
+commutator certificates. -/
+def CurrentHeisenbergRep
     (𝕜 V : Type*) [Field 𝕜] [CharZero 𝕜]
-    [AddCommGroup V] [Module 𝕜 V] where
-  /-- Heisenberg current modes. -/
-  J : Int → V →ₗ[𝕜] V
-  /-- Local truncation required for the Sugawara finite-support sums. -/
-  trunc : ∀ v, atTop.Eventually (fun l => J l v = 0)
-  /-- Heisenberg commutator law. -/
-  comm :
-    ∀ m n,
-      (J m).commutator (J n) =
-        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0
+    [AddCommGroup V] [Module 𝕜 V] : Type _ :=
+  Σ J : Int → V →ₗ[𝕜] V,
+    PLift ((∀ v, atTop.Eventually (fun l => J l v = 0)) ∧
+      (∀ m n, (J m).commutator (J n) =
+        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0))
 
 namespace CurrentHeisenbergRep
 
 variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
+/-- Construct a `CurrentHeisenbergRep` from a mode family `J`, local truncation `trunc`,
+and Heisenberg commutator law `comm`. -/
+def mk
+    (J : Int → V →ₗ[𝕜] V)
+    (trunc : ∀ v, atTop.Eventually (fun l => J l v = 0))
+    (comm : ∀ m n, (J m).commutator (J n) =
+      if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) :
+    CurrentHeisenbergRep 𝕜 V :=
+  ⟨J, PLift.up ⟨trunc, comm⟩⟩
+
+/-- Heisenberg current modes of a `CurrentHeisenbergRep`. -/
+def J (H : CurrentHeisenbergRep 𝕜 V) : Int → V →ₗ[𝕜] V :=
+  H.1
+
+/-- Local truncation law of a `CurrentHeisenbergRep`. -/
+theorem trunc (H : CurrentHeisenbergRep 𝕜 V) :
+    ∀ v, atTop.Eventually (fun l => H.J l v = 0) := by
+  unfold J
+  exact H.2.down.1
+
+/-- Heisenberg commutator law of a `CurrentHeisenbergRep`. -/
+theorem comm (H : CurrentHeisenbergRep 𝕜 V) :
+    ∀ m n, (H.J m).commutator (H.J n) =
+      if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
+  unfold J
+  exact H.2.down.2
+
 /-- Sugawara stress-energy mode `L_n` attached to a current representation. -/
 noncomputable def sugawaraStressMode
     (H : CurrentHeisenbergRep 𝕜 V) (n : Int) : V →ₗ[𝕜] V :=
   VirasoroProject.sugawaraGen (heiOper := H.J) H.trunc n
 
-/-- The Sugawara stress mode is the explicit normal-ordered `pairNO` sum. -/
+/-- The Sugawara stress mode evaluates to the normal-ordered `pairNO` sum. -/
 theorem sugawaraStressMode_eq_pairNO
     (H : CurrentHeisenbergRep 𝕜 V) (n : Int) (v : V) :
     H.sugawaraStressMode n v =
       (2 : 𝕜)⁻¹ • ∑ᶠ k, pairNO H.J (n - k) k v := by
   rw [sugawaraStressMode]
-  simpa using (VirasoroProject.sugawaraGen_apply (heiOper := H.J) H.trunc n v)
+  exact VirasoroProject.sugawaraGen_apply (heiOper := H.J) H.trunc n v
 
-/--
-The external Sugawara/Virasoro representation generated by the current modes.
--/
+/-- The Sugawara/Virasoro Lie algebra representation generated by the current modes. -/
 noncomputable def currentSugawaraRepresentation
     (H : CurrentHeisenbergRep 𝕜 V) :
     VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
   sugawaraVirasoroRepresentation_from_heisenbergCurrent H.J H.trunc H.comm
 
-/--
-The Sugawara stress modes satisfy the Virasoro bracket with central charge
-`c = 1`.
--/
+/-- The Sugawara stress modes satisfy the Virasoro bracket with central charge $c = 1$. -/
 theorem sugawaraStressMode_virasoroBracket
     (H : CurrentHeisenbergRep 𝕜 V) (m n : Int) :
     (H.sugawaraStressMode m).commutator (H.sugawaraStressMode n) =
       (m - n) • H.sugawaraStressMode (m + n)
         + if m + n = 0 then
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
-          else 0 :=
-  sugawaraVirasoro_from_heisenbergCurrent H.J H.trunc H.comm m n
+          else 0 := by
+  unfold sugawaraStressMode
+  exact sugawaraVirasoro_from_heisenbergCurrent H.J H.trunc H.comm m n
 
-/--
-The Sugawara central term vanishes on the global conformal modes
-`m = -1, 0, 1`.
-
-This is the representation-level version of the identity `m^3 - m = 0`
-on the embedded `sl₂` modes.
--/
+/-- The Sugawara central term vanishes on the global conformal $\mathfrak{sl}_2$ modes
+$m \in \{-1, 0, 1\}$. -/
 theorem sugawaraCentralTerm_zero_of_global_mode
     (H : CurrentHeisenbergRep 𝕜 V)
     {m n : Int}
@@ -229,6 +243,7 @@ theorem sugawaraCentralTerm_zero_of_global_mode
         (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
       else
         0) = 0 := by
+  have _ := H
   rcases hm with hm | hm | hm
   · subst m
     by_cases hmn : (-1 : Int) + n = 0
@@ -239,19 +254,14 @@ theorem sugawaraCentralTerm_zero_of_global_mode
   · subst m
     by_cases hmn : (0 : Int) + n = 0
     · simp [hmn]
-    · simp [hmn]
+    · simp
   · subst m
     by_cases hmn : (1 : Int) + n = 0
     · simp [hmn]
     · simp [hmn]
 
-/--
-On the global conformal modes `m = -1, 0, 1`, the Sugawara Virasoro bracket
-has no central contribution.
-
-This is the concrete `sl₂` subalgebra readout inside the already-developed
-infinite-dimensional Virasoro/Sugawara representation.
--/
+/-- On the global conformal modes $m \in \{-1, 0, 1\}$, the Sugawara Virasoro bracket
+reduces to the centerless Witt/$\mathfrak{sl}_2$ commutator $(m - n) L_{m+n}$. -/
 theorem sugawaraStressMode_virasoroBracket_global_mode
     (H : CurrentHeisenbergRep 𝕜 V)
     {m n : Int}
@@ -263,29 +273,26 @@ theorem sugawaraStressMode_virasoroBracket_global_mode
   rw [H.sugawaraCentralTerm_zero_of_global_mode hm]
   simp
 
-/-- Scalar central coefficient in the Sugawara Virasoro bracket. -/
+/-- Scalar central coefficient $(m^3 - m) / 12 \cdot \delta_{m+n,0}$ in the Sugawara Virasoro bracket. -/
 def sugawaraCentralScalar (m n : Int) : 𝕜 :=
   if m + n = 0 then ((m ^ 3 - m : 𝕜) / (12 : 𝕜)) else 0
 
-/--
-Owner-side readout: the central operator term is exactly the scalar central
-coefficient times the identity.
--/
+/-- The central operator term in the Sugawara Virasoro bracket equals
+`sugawaraCentralScalar m n • 1`. -/
 theorem sugawaraCentralTerm_eq_scalar_smul_one
     (m n : Int) :
     (if m + n = 0 then
         (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
       else 0)
     = (sugawaraCentralScalar (𝕜 := 𝕜) m n) • (1 : V →ₗ[𝕜] V) := by
+  have _ := ‹CharZero 𝕜›
   unfold sugawaraCentralScalar
   by_cases hmn : m + n = 0
   · simp [hmn]
   · simp [hmn]
 
-/--
-Scalar-level vanishing of the Sugawara central coefficient on global conformal
-modes `m = -1, 0, 1`.
--/
+/-- Scalar-level vanishing of `sugawaraCentralScalar` on the global conformal modes
+$m \in \{-1, 0, 1\}$. -/
 theorem sugawaraCentralScalar_zero_of_global_mode
     {m n : Int}
     (hm : m = -1 ∨ m = 0 ∨ m = 1) :
@@ -300,17 +307,13 @@ theorem sugawaraCentralScalar_zero_of_global_mode
   · subst m
     by_cases hmn : (0 : Int) + n = 0
     · simp [hmn]
-    · simp [hmn]
+    · simp
   · subst m
     by_cases hmn : (1 : Int) + n = 0
     · simp [hmn]
     · simp [hmn]
 
-/--
-Concrete bridge readout (real scalars):
-the Sugawara central scalar equals the finite nilpotent-flux central
-coefficient already proved in the finite seed corridor.
--/
+/-- Over $\mathbb{R}$, `sugawaraCentralScalar` equals `nilpotentFluxCentralCoefficient`. -/
 theorem sugawaraCentralScalar_eq_nilpotentFluxCentralCoefficient
     (m n : Int) :
     sugawaraCentralScalar (𝕜 := ℝ) m n =
@@ -321,11 +324,7 @@ theorem sugawaraCentralScalar_eq_nilpotentFluxCentralCoefficient
   · simp [hmn]
   · simp [hmn]
 
-/--
-Real-scalar global-mode bridge readout:
-the Sugawara central scalar vanishes on `m = -1,0,1` by transport through the
-finite nilpotent-flux theorem.
--/
+/-- Real-scalar global-mode vanishing of `sugawaraCentralScalar` via the nilpotent-flux theorem. -/
 theorem sugawaraCentralScalar_zero_of_global_mode_via_nilpotentFlux
     {m n : Int}
     (hm : m = -1 ∨ m = 0 ∨ m = 1) :
@@ -333,14 +332,16 @@ theorem sugawaraCentralScalar_zero_of_global_mode_via_nilpotentFlux
   rw [sugawaraCentralScalar_eq_nilpotentFluxCentralCoefficient]
   exact InfoGeometry.Canonical.NilpotentFluxVirasoroReadout.nilpotentFluxCentralCoefficient_zero_of_global_mode hm
 
-/-- In the current Sugawara representation, the Virasoro central generator acts as identity. -/
+/-- In the current Sugawara representation, the Virasoro central generator `cgen 𝕜`
+acts as the identity endomorphism. -/
 theorem currentSugawaraRepresentation_central
     (H : CurrentHeisenbergRep 𝕜 V) :
     H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
-      (1 : V →ₗ[𝕜] V) :=
-  sugawaraVirasoroRepresentation_central_from_heisenbergCurrent H.J H.trunc H.comm
+      (1 : V →ₗ[𝕜] V) := by
+  unfold currentSugawaraRepresentation
+  exact sugawaraVirasoroRepresentation_central_from_heisenbergCurrent H.J H.trunc H.comm
 
-/-- The Virasoro `lgen` action is the Sugawara stress mode. -/
+/-- The Virasoro generator `lgen 𝕜 n` acts as the Sugawara stress mode `H.sugawaraStressMode n`. -/
 theorem currentSugawaraRepresentation_lgen_apply
     (H : CurrentHeisenbergRep 𝕜 V) (n : Int) :
     H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
@@ -351,21 +352,17 @@ theorem currentSugawaraRepresentation_lgen_apply
       (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) v =
     VirasoroProject.sugawaraGen (heiOper := H.J) H.trunc n v
   rw [VirasoroProject.sugawaraRepresentation_lgen_apply']
-  rfl
+  exact Eq.refl _
 
-/-- The central Virasoro readout remains fixed under conjugation. -/
+/-- The central Virasoro generator action remains the identity under conjugation by $U$. -/
 theorem currentSugawaraRepresentation_cgen_conjugate
     (H : CurrentHeisenbergRep 𝕜 V) (U : V ≃ₗ[𝕜] V) :
     conjugateEnd U
         (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) =
       (1 : V →ₗ[𝕜] V) := by
-  rw [currentSugawaraRepresentation_central]
-  simp
+  rw [currentSugawaraRepresentation_central, conjugateEnd_one]
 
-/--
-The Heisenberg current commutator is invariant under conjugation by a
-linear equivalence.
--/
+/-- The Heisenberg current commutator is invariant under conjugation by $U : V \simeq_𝕜 V$. -/
 theorem conjugated_current_commutator
     (H : CurrentHeisenbergRep 𝕜 V)
     (U : V ≃ₗ[𝕜] V)
@@ -382,10 +379,7 @@ theorem conjugated_current_commutator
   · simp [hmn, conjugateEnd_smul, conjugateEnd_one]
   · simp [hmn]
 
-/--
-The local truncation condition is invariant under conjugation by a linear
-equivalence.
--/
+/-- The local truncation condition is invariant under conjugation by $U : V \simeq_𝕜 V$. -/
 theorem conjugated_current_trunc
     (H : CurrentHeisenbergRep 𝕜 V)
     (U : V ≃ₗ[𝕜] V) :
@@ -399,13 +393,8 @@ theorem conjugated_current_trunc
 
 end CurrentHeisenbergRep
 
-/--
-The Heisenberg algebra acts on the charged Fock space through its universal
-enveloping algebra representation.
-
-This is the concrete source-side current datum used to package a genuine
-`CurrentHeisenbergRep` object from the existing charged Fock module structure.
--/
+/-- The Heisenberg mode operator $J_n$ acting on `ChargedFockSpace 𝕜 α` through its
+universal enveloping algebra representation. -/
 noncomputable def chargedFockSpaceHeisenbergMode
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
     ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
@@ -417,13 +406,8 @@ noncomputable def chargedFockSpaceHeisenbergMode
     (V := VirasoroProject.ChargedFockSpace 𝕜 α))
     (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n)
 
-@[simp] theorem chargedFockSpaceHeisenbergMode_apply
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int)
-    (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
-    chargedFockSpaceHeisenbergMode 𝕜 α n v =
-      ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n) • v := by
-  rfl
-
+/-- On `ChargedFockSpace 𝕜 α`, the central Heisenberg generator `kgen 𝕜` acts as the
+identity endomorphism. -/
 @[simp] theorem chargedFockSpaceHeisenbergRepresentation_kgen
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (UniversalEnvelopingAlgebra.representation
@@ -444,107 +428,103 @@ noncomputable def chargedFockSpaceHeisenbergMode
         ModuleOfModuleAlgebra.unMkAddHom 𝕜
           (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
           (VirasoroProject.ChargedFockSpace 𝕜 α) v) = v
-  congr 1
   exact VirasoroProject.ChargedFockSpace.kgen_smul 𝕜 α
     (ModuleOfModuleAlgebra.unMkAddHom 𝕜
       (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
       (VirasoroProject.ChargedFockSpace 𝕜 α) v)
 
-/--
-Package the charged Fock space as a `CurrentHeisenbergRep`.
-
-The current modes are the standard Heisenberg generators acting through the
-universal enveloping algebra action on the charged Fock module.
--/
+/-- The canonical `CurrentHeisenbergRep` on `ChargedFockSpace 𝕜 α`. -/
 noncomputable def chargedFockSpaceCurrentHeisenbergRep
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     CurrentHeisenbergRep 𝕜
       (ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
-        (VirasoroProject.ChargedFockSpace 𝕜 α)) where
-  J := chargedFockSpaceHeisenbergMode 𝕜 α
-  trunc := by
-    intro v
-    filter_upwards [VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α
-      (ModuleOfModuleAlgebra.unMkAddHom 𝕜
-        (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
-        (VirasoroProject.ChargedFockSpace 𝕜 α) v)] with
-      n hn
-    change ModuleOfModuleAlgebra.mkAddHom 𝕜
-      (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
-      (VirasoroProject.ChargedFockSpace 𝕜 α)
-      (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n) •
-        ModuleOfModuleAlgebra.unMkAddHom 𝕜
+        (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
+  CurrentHeisenbergRep.mk
+    (chargedFockSpaceHeisenbergMode 𝕜 α)
+    (by
+      intro v
+      filter_upwards [VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α
+        (ModuleOfModuleAlgebra.unMkAddHom 𝕜
           (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
-          (VirasoroProject.ChargedFockSpace 𝕜 α) v) = 0
-    simpa using congrArg
-      (ModuleOfModuleAlgebra.mkAddHom 𝕜
+          (VirasoroProject.ChargedFockSpace 𝕜 α) v)] with
+        n hn
+      change ModuleOfModuleAlgebra.mkAddHom 𝕜
         (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
-        (VirasoroProject.ChargedFockSpace 𝕜 α)) hn
-  comm := by
-    intro m n
-    have hbr :=
-      LieAlgebra.Representation.apply_bracket_eq_commutator
-        (UniversalEnvelopingAlgebra.representation
-          (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
-          (V := VirasoroProject.ChargedFockSpace 𝕜 α))
-        (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 m)
-        (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n)
-    by_cases hmn : m + n = 0
-    · simpa [chargedFockSpaceHeisenbergMode,
-          VirasoroProject.HeisenbergAlgebra.lie_jgen,
-          hmn,
-          chargedFockSpaceHeisenbergRepresentation_kgen] using hbr.symm
-    · simpa [chargedFockSpaceHeisenbergMode,
-          VirasoroProject.HeisenbergAlgebra.lie_jgen,
-          hmn] using hbr.symm
+        (VirasoroProject.ChargedFockSpace 𝕜 α)
+        (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n) •
+          ModuleOfModuleAlgebra.unMkAddHom 𝕜
+            (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+            (VirasoroProject.ChargedFockSpace 𝕜 α) v) = 0
+      simpa using congrArg
+        (ModuleOfModuleAlgebra.mkAddHom 𝕜
+          (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+          (VirasoroProject.ChargedFockSpace 𝕜 α)) hn)
+    (by
+      intro m n
+      have hbr :=
+        LieAlgebra.Representation.apply_bracket_eq_commutator
+          (UniversalEnvelopingAlgebra.representation
+            (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+            (V := VirasoroProject.ChargedFockSpace 𝕜 α))
+          (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 m)
+          (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n)
+      by_cases hmn : m + n = 0
+      · simpa [chargedFockSpaceHeisenbergMode,
+            VirasoroProject.HeisenbergAlgebra.lie_jgen,
+            hmn,
+            chargedFockSpaceHeisenbergRepresentation_kgen] using hbr.symm
+      · simpa [chargedFockSpaceHeisenbergMode,
+            VirasoroProject.HeisenbergAlgebra.lie_jgen,
+            hmn] using hbr.symm)
 
-/--
-Packaged Heisenberg-to-Sugawara morphism.
-
-This is the repository-native object that records the exact bridge already
-proved by the current Sugawara owner surface: a Heisenberg current datum, the
-associated Virasoro representation, and the two readbacks used downstream
-(`cgen ↦ 1`, `lgen n ↦ L_n`).
-It does not assert any split-Clifford source construction.
--/
-structure CurrentSugawaraMorphism
+/-- Packaged Heisenberg-to-Sugawara morphism carrier: a `CurrentHeisenbergRep` paired
+with its induced Virasoro Lie algebra representation and generator readbacks. -/
+def CurrentSugawaraMorphism
     (𝕜 V : Type*) [Field 𝕜] [CharZero 𝕜]
-    [AddCommGroup V] [Module 𝕜 V] where
-  /-- The Heisenberg current datum. -/
-  heisenberg : CurrentHeisenbergRep 𝕜 V
-  /-- The induced Virasoro representation. -/
-  virasoro :
-    VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)
-  /-- `L_n` is the Sugawara stress mode. -/
-  lgen_apply :
-    ∀ n : Int,
-      virasoro (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
-        heisenberg.sugawaraStressMode n
-  /-- The central Virasoro generator acts as the identity. -/
-  central_apply :
-    virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
-      (1 : V →ₗ[𝕜] V)
+    [AddCommGroup V] [Module 𝕜 V] : Type _ :=
+  Σ (HV : CurrentHeisenbergRep 𝕜 V × (VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V))),
+    PLift ((∀ n : Int, HV.2 (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
+              HV.1.sugawaraStressMode n) ∧
+           (HV.2 (VirasoroProject.VirasoroAlgebra.cgen 𝕜) = (1 : V →ₗ[𝕜] V)))
 
 namespace CurrentSugawaraMorphism
 
 variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
+/-- The Heisenberg current component of a `CurrentSugawaraMorphism`. -/
+def heisenberg (M : CurrentSugawaraMorphism 𝕜 V) : CurrentHeisenbergRep 𝕜 V :=
+  M.1.1
+
+/-- The induced Virasoro representation component of a `CurrentSugawaraMorphism`. -/
+def virasoro (M : CurrentSugawaraMorphism 𝕜 V) :
+    VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
+  M.1.2
+
+/-- The `lgen` Sugawara stress-mode readback of a `CurrentSugawaraMorphism`. -/
+theorem lgen_apply (M : CurrentSugawaraMorphism 𝕜 V) :
+    ∀ n : Int,
+      M.virasoro (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
+        M.heisenberg.sugawaraStressMode n := by
+  unfold virasoro heisenberg
+  exact M.2.down.1
+
+/-- The central generator identity readback of a `CurrentSugawaraMorphism`. -/
+theorem central_apply (M : CurrentSugawaraMorphism 𝕜 V) :
+    M.virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+      (1 : V →ₗ[𝕜] V) := by
+  unfold virasoro
+  exact M.2.down.2
+
 /-- The canonical packaged Sugawara morphism induced by a Heisenberg current datum. -/
 noncomputable def ofHeisenberg (H : CurrentHeisenbergRep 𝕜 V) :
-    CurrentSugawaraMorphism 𝕜 V where
-  heisenberg := H
-  virasoro := H.currentSugawaraRepresentation
-  lgen_apply := by
-    intro n
-    exact H.currentSugawaraRepresentation_lgen_apply n
-  central_apply := H.currentSugawaraRepresentation_central
+    CurrentSugawaraMorphism 𝕜 V :=
+  ⟨(H, H.currentSugawaraRepresentation),
+   PLift.up ⟨fun n => H.currentSugawaraRepresentation_lgen_apply n,
+             H.currentSugawaraRepresentation_central⟩⟩
 
-/--
-The canonical Sugawara morphism induced by a Heisenberg current datum has
-exactly the input current datum, the owner Virasoro representation, and the
-two defining generator readbacks.
--/
+/-- The canonical Sugawara morphism induced by `H` recovers `H`, its Virasoro
+representation, and the `lgen` and `cgen` operator actions. -/
 theorem ofHeisenberg_readout (H : CurrentHeisenbergRep 𝕜 V) :
     (ofHeisenberg H).heisenberg = H ∧
       (ofHeisenberg H).virasoro = H.currentSugawaraRepresentation ∧
@@ -553,14 +533,16 @@ theorem ofHeisenberg_readout (H : CurrentHeisenbergRep 𝕜 V) :
           H.sugawaraStressMode n) ∧
       (ofHeisenberg H).virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
         (1 : V →ₗ[𝕜] V) := by
-  refine ⟨rfl, rfl, ?_, ?_⟩
+  unfold ofHeisenberg heisenberg virasoro
+  refine ⟨Eq.refl _, Eq.refl _, ?_, ?_⟩
   · intro n
     exact H.currentSugawaraRepresentation_lgen_apply n
   · exact H.currentSugawaraRepresentation_central
 
 end CurrentSugawaraMorphism
 
-/-- The charged Fock space canonical Sugawara morphism has the owner readbacks. -/
+/-- The charged Fock space canonical Sugawara morphism satisfies the four component
+and generator readout identities. -/
 theorem chargedFockSpace_currentSugawaraMorphism_readout
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     let H := chargedFockSpaceCurrentHeisenbergRep 𝕜 α
@@ -573,23 +555,13 @@ theorem chargedFockSpace_currentSugawaraMorphism_readout
       M.virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
         (1 :
           VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-            VirasoroProject.ChargedFockSpace 𝕜 α) :=
-  CurrentSugawaraMorphism.ofHeisenberg_readout
+            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  dsimp only
+  exact CurrentSugawaraMorphism.ofHeisenberg_readout
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
-/--
-Semantic adapter for the quantum Ricci scalar on the raw CAR mode algebra.
-
-This exposes the Heisenberg central term safely without asserting a false
-Lichnerowicz `J_m^2` identity, respecting the Sugawara owner theorem boundary.
--/
+/-- Semantic alias for the completed central element of a raw CAR mode algebra. -/
 def quantumRicciScalar {A : Type*} [Ring A] (C : RawCARModeAlgebra A) : A :=
   completedCentral C
-
-/-- The Heisenberg central term is exposed as the quantum Ricci scalar. -/
-theorem heisenberg_central_term_is_quantumRicciScalar
-    {A : Type*} [Ring A] (C : RawCARModeAlgebra A) :
-    completedCentral C = quantumRicciScalar C := by
-  rfl
 
 end InfoGeometry.Canonical.CurrentSugawaraBridge

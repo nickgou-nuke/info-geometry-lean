@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Analysis.InnerProductSpace.Adjoint
@@ -15,29 +20,29 @@ the filtered Heisenberg colimit Lie bracket, proves the linear representation
 intertwining on `ChargedFockSpace 𝕜 α` and the Sugawara mode-shift identity, and
 establishes the orthogonality of the forward and backward Krein Bogoliubov blocks.
 
-## 1. Real Math in This File
-- `completedCurrentCentralReadout`,
-  `completedCurrentCentralReadout_centralCurrentClass`,
-  `completedCurrentBracket_readout_eq_heisenbergBracket`,
-  `completedCurrentBracket_readout_eq_colimitBracket`
-- `canonicalExteriorFockRawCAR`,
-  `canonicalExteriorFock_completedCurrent_heisenberg`,
-  `exteriorFock_to_heisenbergColimit_summary`
-- `completedModeRepresentation`, `completedModeRepresentation_bracket`,
-  `completedModeRepresentation_sugawara_shift`,
-  `colimitHeisenbergToChargedFock`, `colimitHeisenbergToChargedFock_mode`
-- `externalInfiniteJ_sugawara_shift`, `externalInfiniteJ_hasModeShift`
-- `currentForward`, `currentBackward`,
-  `forward_backward_orthogonal`, `backward_forward_orthogonal`,
-  `heisenberg_current_commutator`
+- BUCKET 1 (Real Math in This File):
+  - `completedCurrentCentralReadout`,
+    `completedCurrentCentralReadout_centralCurrentClass`,
+    `completedCurrentBracket_readout_eq_heisenbergBracket`,
+    `completedCurrentBracket_readout_eq_colimitBracket`
+  - `canonicalExteriorFockRawCAR`,
+    `canonicalExteriorFock_completedCurrent_heisenberg`,
+    `exteriorFock_to_heisenbergColimit_summary`
+  - `completedModeRepresentation`, `completedModeRepresentation_bracket`,
+    `completedModeRepresentation_sugawara_shift`,
+    `colimitHeisenbergToChargedFock`, `colimitHeisenbergToChargedFock_mode`
+  - `externalInfiniteJ_sugawara_shift`, `externalInfiniteJ_hasModeShift`
+  - `currentForward`, `currentBackward`,
+    `forward_backward_orthogonal`, `backward_forward_orthogonal`,
+    `heisenberg_current_commutator`
 
-## 2. Meaningful Mathematical Results Used
-- `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
-- `InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge`
-- `InfoGeometry.Krein.DoubledKreinMobiusTwist`
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
+  - `InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge`
+  - `InfoGeometry.Krein.DoubledKreinMobiusTwist`
 
-## 3. Excluded Wrapper Patterns
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -169,8 +174,9 @@ theorem completedModeRepresentation_summary (α : 𝕜) (m n : ℤ) :
     (completedModeRepresentation (𝕜 := 𝕜) α m).commutator
         (completedModeRepresentation (𝕜 := 𝕜) α n) =
       if m + n = 0 then (m : 𝕜) • (1 : _) else 0 := by
-  exact ⟨completedModeRepresentation_eq_current α m,
-    completedModeRepresentation_bracket α m n⟩
+  constructor
+  · exact completedModeRepresentation_eq_current α m
+  · exact completedModeRepresentation_bracket α m n
 
 /-- Linear map from the filtered Heisenberg colimit `heisenbergFiniteModeColimit`
 into `FockEnd α`. -/
@@ -261,7 +267,7 @@ theorem forward_backward_orthogonal
           rw [ContinuousLinearMap.comp_assoc]
     _ = (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
         ((kp.P_plus.comp kp.P_minus).comp (T.comp kp.P_plus)) := by
-          simp only [ContinuousLinearMap.comp_assoc]
+          dsimp; simp only [ContinuousLinearMap.comp_assoc]
     _ = 0 := by rw [kp.orthog_symm]; simp
 
 /-- The backward-forward cross term `adjoint (currentBackward kp T) ∘L currentForward kp T`
@@ -282,7 +288,7 @@ theorem backward_forward_orthogonal
           rw [ContinuousLinearMap.comp_assoc]
     _ = (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
         ((kp.P_minus.comp kp.P_plus).comp (T.comp kp.P_plus)) := by
-          simp only [ContinuousLinearMap.comp_assoc]
+          dsimp; simp only [ContinuousLinearMap.comp_assoc]
     _ = 0 := by rw [kp.orthog]; simp
 
 /-- Bogoliubov subspace split: when `T` is a Krein isometry on the positive cone,
@@ -294,7 +300,8 @@ theorem heisenberg_current_commutator
     (hT : kp.P_plus.comp ((kp.kreinAdjoint T).comp (T.comp kp.P_plus)) = kp.P_plus) :
     ContinuousLinearMap.adjoint (kp.Phi T) ∘L kp.Phi T -
        ContinuousLinearMap.adjoint (kp.Psi T) ∘L kp.Psi T = kp.P_plus := by
-  exact kp.bogoliubov_subspace_split T hT
+  apply kp.bogoliubov_subspace_split T
+  exact hT
 
 end BogoliubovCrossTerms
 

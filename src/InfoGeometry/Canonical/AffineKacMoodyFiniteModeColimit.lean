@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
@@ -15,11 +20,24 @@ current generators `J_n(x)` with `Int.natAbs n <= N`.  The stages are nested,
 so they form a functor `ℕ ⥤ ModuleCat 𝕜`.  Its categorical colimit has a
 canonical comparison map to the full affine Kac--Moody carrier.
 
-The comparison map lands in the full affine carrier. Its image is the union of
-the finite-mode stages; identifying that union with the full carrier is a
-separate spanning theorem. This module therefore records the stage diagram and
-comparison map without transporting a Lie structure across an unproved
-equivalence.
+- BUCKET 1 (Real Math in This File):
+  - `KM`, `affineFiniteModeGenerators`, `affineFiniteModeStage`,
+    `affineCentralGen_mem_stage`, `affineCurrentGen_mem_stage`,
+    `affineFiniteModeStage_mono`
+  - `affineFiniteModeDiagram`, `affineFiniteModeCocone`,
+    `affineFiniteModeColimit`, `affineFiniteModeColimitMap`,
+    `affineFiniteModeColimitMap_stage`
+  - `affineCurrentColimitMode`, `affineFiniteModeColimitMap_current`,
+    `affineCentralColimitMode`, `affineFiniteModeColimitMap_central`,
+    `affineCurrentColimit_bracket_readout`,
+    `affine_current_generator_colimit_summary`
+
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.External.Virasoro.AffineKacMoody`
+  - `Mathlib.Algebra.Category.ModuleCat.FilteredColimits`
+
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -35,6 +53,7 @@ variable {𝓰 : Type u} [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
 variable (Φ : LinearMap.BilinForm 𝕜 𝓰)
 variable (hΦ : Φ.lieInvariant 𝓰) (hΦs : Φ.IsSymm)
 
+/-- Abbreviation for the full affine Kac--Moody Lie algebra `AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs`. -/
 abbrev KM : Type u :=
   AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs
 
@@ -189,7 +208,7 @@ theorem affineCurrentColimit_bracket_readout
 
 /-- Every individual current and the central line are visibly generated at a
 finite cutoff in the categorical diagram. -/
-theorem affine_current_generator_colimit_packet (n : ℤ) (x : 𝓰) :
+theorem affine_current_generator_colimit_summary (n : ℤ) (x : 𝓰) :
     (affineFiniteModeColimitMap Φ hΦ hΦs).hom
         (affineCurrentColimitMode Φ hΦ hΦs n x) =
       affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x
@@ -197,7 +216,8 @@ theorem affine_current_generator_colimit_packet (n : ℤ) (x : 𝓰) :
     (affineFiniteModeColimitMap Φ hΦ hΦs).hom
         (affineCentralColimitMode Φ hΦ hΦs) =
       affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs := by
-  exact ⟨affineFiniteModeColimitMap_current Φ hΦ hΦs n x,
-    affineFiniteModeColimitMap_central Φ hΦ hΦs⟩
+  constructor
+  · exact affineFiniteModeColimitMap_current Φ hΦ hΦs n x
+  · exact affineFiniteModeColimitMap_central Φ hΦ hΦs
 
 end InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit

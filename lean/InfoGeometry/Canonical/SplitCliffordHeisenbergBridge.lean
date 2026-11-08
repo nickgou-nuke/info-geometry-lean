@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Order.Filter.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -13,22 +18,22 @@ locally truncated Heisenberg current families on `V`, connects it to
 `CurrentHeisenbergRep` and `CurrentSugawaraMorphism`, and exposes the external
 infinite-current Lie brackets on `InfiniteCurrentAlg 𝕜`.
 
-## 1. Real Math in This File
-- `SplitCliffordHeisenbergWitness`, `SplitCliffordHeisenbergWitness.J`,
-  `SplitCliffordHeisenbergWitness.trunc`, `SplitCliffordHeisenbergWitness.comm`
-- `SplitCliffordHeisenbergWitness.toCurrentHeisenbergRep`,
-  `SplitCliffordHeisenbergWitness.toCurrentSugawaraMorphism`,
-  `SplitCliffordHeisenbergWitness.currentSugawaraRepresentation`,
-  `SplitCliffordHeisenbergWitness.sugawaraStressMode_virasoroBracket`
-- `canonicalInfiniteCurrent_lie`, `canonicalInfiniteCurrent_lie_one_neg_one`,
-  `canonicalInfiniteCurrent_lie_neg_one_one`, `canonicalInfiniteCurrent_lie_central`
+- BUCKET 1 (Real Math in This File):
+  - `SplitCliffordHeisenbergWitness`, `SplitCliffordHeisenbergWitness.J`,
+    `SplitCliffordHeisenbergWitness.trunc`, `SplitCliffordHeisenbergWitness.comm`
+  - `SplitCliffordHeisenbergWitness.toCurrentHeisenbergRep`,
+    `SplitCliffordHeisenbergWitness.toCurrentSugawaraMorphism`,
+    `SplitCliffordHeisenbergWitness.currentSugawaraRepresentation`,
+    `SplitCliffordHeisenbergWitness.sugawaraStressMode_virasoroBracket`
+  - `canonicalInfiniteCurrent_lie`, `canonicalInfiniteCurrent_lie_one_neg_one`,
+    `canonicalInfiniteCurrent_lie_neg_one_one`, `canonicalInfiniteCurrent_lie_central`
 
-## 2. Meaningful Mathematical Results Used
-- `InfoGeometry.Canonical.CurrentSugawaraBridge`
-- `InfoGeometry.Canonical.SplitCliffordInfiniteCurrent`
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.CurrentSugawaraBridge`
+  - `InfoGeometry.Canonical.SplitCliffordInfiniteCurrent`
 
-## 3. Excluded Wrapper Patterns
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -69,15 +74,17 @@ def J (W : SplitCliffordHeisenbergWitness 𝕜 V) : Int → V →ₗ[𝕜] V :=
 
 /-- Eventual positive-mode truncation of `W.J`. -/
 theorem trunc (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    ∀ v, atTop.Eventually (fun l => W.J l v = 0) :=
-  W.property.1
+    ∀ v, atTop.Eventually (fun l => W.J l v = 0) := by
+  intro v
+  exact W.property.1 v
 
 /-- Heisenberg mode commutator law of `W.J`. -/
 theorem comm (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     ∀ m n,
       (W.J m).commutator (W.J n) =
-        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 :=
-  W.property.2
+        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
+  intro m n
+  exact W.property.2 m n
 
 /-- Convert `W` into a `CurrentHeisenbergRep 𝕜 V`. -/
 def toCurrentHeisenbergRep
@@ -98,7 +105,8 @@ theorem toCurrentHeisenbergRep_J
 theorem toCurrentHeisenbergRep_trunc
     (W : SplitCliffordHeisenbergWitness 𝕜 V) (v : V) :
     ∀ᶠ l : Int in atTop, (W.toCurrentHeisenbergRep).J l v = 0 := by
-  exact W.trunc v
+  have h := W.trunc v
+  exact h
 
 /-- Joint readout of the mode family, eventual truncation, and commutator law
 of `W.toCurrentHeisenbergRep`. -/
@@ -109,7 +117,9 @@ theorem toCurrentHeisenbergRep_readout
       ∧ ∀ m n,
           (W.toCurrentHeisenbergRep.J m).commutator (W.toCurrentHeisenbergRep.J n) =
             if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
-  exact ⟨rfl, W.toCurrentHeisenbergRep.trunc, W.toCurrentHeisenbergRep.comm⟩
+  constructor
+  · rfl
+  · exact ⟨W.toCurrentHeisenbergRep.trunc, W.toCurrentHeisenbergRep.comm⟩
 
 /-- Sugawara morphism `CurrentSugawaraMorphism 𝕜 V` induced by `W`. -/
 noncomputable def toCurrentSugawaraMorphism
@@ -140,7 +150,9 @@ theorem toCurrentSugawaraMorphism_readout
     W.toCurrentSugawaraMorphism.heisenberg = W.toCurrentHeisenbergRep
       ∧ W.toCurrentSugawaraMorphism.virasoro =
         W.toCurrentHeisenbergRep.currentSugawaraRepresentation := by
-  exact ⟨W.toCurrentSugawaraMorphism_heisenberg, W.toCurrentSugawaraMorphism_virasoro⟩
+  constructor
+  · exact W.toCurrentSugawaraMorphism_heisenberg
+  · exact W.toCurrentSugawaraMorphism_virasoro
 
 /-- Sugawara Virasoro Lie algebra representation obtained from `W`. -/
 noncomputable def currentSugawaraRepresentation
@@ -174,7 +186,8 @@ theorem sugawaraStressMode_virasoroBracket
         + if m + n = 0 then
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
           else 0 := by
-  exact CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket W.toCurrentHeisenbergRep m n
+  have h := CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket W.toCurrentHeisenbergRep m n
+  exact h
 
 /-- Product pair of `W.toCurrentHeisenbergRep` and `W.currentSugawaraRepresentation`. -/
 noncomputable def current_and_sugawara
@@ -242,23 +255,27 @@ theorem canonicalInfiniteCurrent_lie
     (m n : Int) :
     ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
       if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 := by
-  exact lie_Jinf (𝕜 := 𝕜) m n
+  have h := lie_Jinf (𝕜 := 𝕜) m n
+  exact h
 
 /-- Fundamental mode pair bracket `⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_lie_one_neg_one :
     ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 := by
-  exact lie_Jinf_one_neg_one (𝕜 := 𝕜)
+  have h := lie_Jinf_one_neg_one (𝕜 := 𝕜)
+  exact h
 
 /-- Reverse fundamental mode pair bracket `⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜`. -/
 theorem canonicalInfiniteCurrent_lie_neg_one_one :
     ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 := by
-  exact lie_Jinf_neg_one_one (𝕜 := 𝕜)
+  have h := lie_Jinf_neg_one_one (𝕜 := 𝕜)
+  exact h
 
 /-- Centrality of `Kinf 𝕜` in `InfiniteCurrentAlg 𝕜`: `⁅Kinf 𝕜, Z⁆ = 0`. -/
 theorem canonicalInfiniteCurrent_lie_central
     (Z : InfiniteCurrentAlg 𝕜) :
     ⁅Kinf 𝕜, Z⁆ = 0 := by
-  exact lie_Kinf (𝕜 := 𝕜) Z
+  have h := lie_Kinf (𝕜 := 𝕜) Z
+  exact h
 
 end ExternalInfiniteCurrent
 

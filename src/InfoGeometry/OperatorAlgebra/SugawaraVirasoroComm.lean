@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -10,14 +15,14 @@ by the Sugawara factor `1 / (2 * (k + h^∨))` converts the unnormalized quadrat
 mode commutator into the Virasoro commutator with central charge
 $c = k \dim(\mathfrak{g}) / (k + h^\vee)$.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `modeSum`, `sugawaraFactor`, `L_sugawara`
 - `sum_mul_left`, `sum_mul_right`, `virasoro_commutation`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.OperatorAlgebra.AffineVirasoroBridge`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
@@ -77,11 +82,11 @@ theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
          (if (m + n : ℤ) = 0 then S.bridge.virasoro.central else 0)) := by
   have h₁ : ⁅L_sugawara A S e s m, L_sugawara A S e s n⁆ =
       ⁅sugawaraFactor S • modeSum A e s m, sugawaraFactor S • modeSum A e s n⁆ := by
-    simp [L_sugawara]
+    dsimp; simp [L_sugawara]
   rw [h₁]
   have h₂ : ⁅sugawaraFactor S • modeSum A e s m, sugawaraFactor S • modeSum A e s n⁆ =
       (sugawaraFactor S * sugawaraFactor S : ℝ) • ⁅modeSum A e s m, modeSum A e s n⁆ := by
-    simp only [h_comm]
+    dsimp; simp only [h_comm]
     simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub]
     rw [mul_comm]
     simp only [smul_smul]
@@ -95,13 +100,13 @@ theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
              (S.bridge.level + S.bridge.dualCoxeterNumber) / 12 *
              ((m : ℝ) ^ 3 - (m : ℝ))) := by
     unfold sugawaraFactor
-    field_simp
+    field_simp [h_level_nz]
     ring
   have h₅ : (sugawaraFactor S * sugawaraFactor S : ℝ) *
             (2 * (S.bridge.level + S.bridge.dualCoxeterNumber) * (m - n : ℝ)) =
             (m - n : ℝ) * sugawaraFactor S := by
     unfold sugawaraFactor
-    field_simp
+    field_simp [h_level_nz]
   calc
     (sugawaraFactor S * sugawaraFactor S : ℝ) • ⁅modeSum A e s m, modeSum A e s n⁆ =
       (sugawaraFactor S * sugawaraFactor S : ℝ) •
@@ -119,7 +124,7 @@ theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
              (S.bridge.level + S.bridge.dualCoxeterNumber)) *
             ((m : ℝ) ^ 3 - (m : ℝ)) / 12))) •
          (if (m + n : ℤ) = 0 then S.bridge.virasoro.central else 0)) := by
-      simp only [smul_add, smul_smul, mul_assoc]
+      dsimp; simp only [smul_add, smul_smul, mul_assoc]
     _ = ((m - n : ℝ) • L_sugawara A S e s (m + n)) +
         (((S.bridge.level * S.bridge.finiteDimension) /
           (S.bridge.level + S.bridge.dualCoxeterNumber) / 12 *

@@ -16,13 +16,13 @@ variable {M N : Type*}
 theorem sinkhorn_total_mass_conservation [Fintype M] [Fintype N]
     (P : M → N → ℝ) :
     ∑ m : M, rowMarginal P m = ∑ n : N, colMarginal P n := by
-  simp only [rowMarginal, colMarginal]
+  unfold rowMarginal colMarginal
   exact Finset.sum_comm
 
-/-- The coupled scaling equations are equivalent to the doubly-stochastic property. -/
+/-- The coupled scaling equations are equivalent to membership in the doubly-stochastic set. -/
 theorem sinkhorn_doublyStochastic_iff_coupled_scaling [Fintype N]
     (E : RegularizationParam) (C : N → N → ℝ) (S : ScalingPotentials N N) :
-    IsDoublyStochastic (sinkhornCoupling E C S) ↔
+    sinkhornCoupling E C S ∈ doublyStochasticCouplingSet ↔
       (∀ i : N, S.u i * (∑ j : N, gibbsKernel E C i j * S.v j) = 1) ∧
       (∀ j : N, S.v j * (∑ i : N, S.u i * gibbsKernel E C i j) = 1) := by
   constructor

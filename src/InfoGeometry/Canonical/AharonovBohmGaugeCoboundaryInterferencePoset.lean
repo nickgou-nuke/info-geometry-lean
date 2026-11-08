@@ -5,7 +5,9 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Physics.SelbergTraceAharonovBohm
 import InfoGeometry.Canonical.ModularHamiltonianHorizonDefectPoset
-import InfoGeometry.Canonical.E10Grading
+import InfoGeometry.GrandUnification.CantorTypeDBitwordLimit
+import InfoGeometry.GrandUnification.TypeDBitwordAtomikBridge
+import InfoGeometry.Geometry.RealRotorCore
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 
@@ -15,7 +17,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 This canonical module formalizes the mathematical core of **Y. Aharonov and D. Bohm**,
 *"Significance of Electromagnetic Potentials in the Quantum Theory"*, *Phys. Rev.* **115**,
 485–491 (1959) (`10.1103/PhysRev.115.485`), and proves its exact bridges to the repository's
-Type-D bitword Cantor continuum (`InfoGeometry.Canonical.E10Grading`) and $(5,5)$ Möbius
+Type-D bitword Cantor continuum (`InfoGeometry.GrandUnification.CantorTypeDBitwordLimit`) and $(5,5)$ Möbius
 horizon capacitor (`InfoGeometry.Canonical.ModularHamiltonianHorizonDefectPoset`):
 
 1. **Discrete Gauge Coboundaries & Closed-Loop Stokes Invariance:**
@@ -38,6 +40,9 @@ horizon capacitor (`InfoGeometry.Canonical.ModularHamiltonianHorizonDefectPoset`
    - **Exact destructive cancellation ($= 0$)** at the half-flux quantum
      $\Delta\varphi = (2k+1)\pi$, together with the real trigonometric envelope identity
      $2 I_0 (1 + \cos \Delta\varphi) = 4 I_0 \cos^2(\Delta\varphi / 2)$.
+   - The real chiral rotor records the same phase by its sine/cosine coordinates; it does not
+     construct a connection or prove that a line integral of an electromagnetic potential
+     equals magnetic flux.
 4. **Möbius Horizon Capacitor as Constructive/Destructive Aharonov–Bohm Projectors:**
    The Weyl/Peirce projectors $P_+(\mathcal{T}) = \frac{1}{2}(1 + \mathcal{T})$ and
    $P_-(\mathcal{T}) = \frac{1}{2}(1 - \mathcal{T})$ are the $\Delta\varphi = 0$ (constructive)
@@ -83,7 +88,7 @@ open scoped BigOperators
 open Complex Real Matrix
 open InfoGeometry.Physics.SelbergTraceAharonovBohm
 open InfoGeometry.Canonical.ModularHamiltonianHorizonDefectPoset
-open InfoGeometry.Canonical.E10Grading
+open InfoGeometry.GrandUnification.CantorTypeDBitwordLimit
 
 -- ============================================================================
 -- SECTION 1: Discrete Gauge Coboundaries & Closed-Loop Stokes Invariance
@@ -147,12 +152,13 @@ theorem bitword_gaugeCoboundary_mem_typeDEvenParity {n : ℕ}
     (σ : Equiv.Perm (Fin n)) (state χ : Bitword n) :
     parity (gaugeCoboundary σ χ) = 0 ∧
     gaugeCoboundary σ χ ∈ TypeDEvenParity n ∧
-    parity (applyDelta state (gaugeCoboundary σ χ)) = parity state := by
+    parity (InfoGeometry.GrandUnification.AtomikTypeDBridge.applyDelta
+      state (gaugeCoboundary σ χ)) = parity state := by
   have hPar : parity (gaugeCoboundary σ χ) = 0 :=
     loopCirculation_gaugeCoboundary_eq_zero σ χ
   have hMem : gaugeCoboundary σ χ ∈ TypeDEvenParity n := hPar
   refine ⟨hPar, hMem, ?_⟩
-  unfold applyDelta parity
+  unfold InfoGeometry.GrandUnification.AtomikTypeDBridge.applyDelta parity
   simp only [Pi.add_apply, Finset.sum_add_distrib]
   change parity state + parity (gaugeCoboundary σ χ) = parity state
   rw [hPar, add_zero]
@@ -164,6 +170,57 @@ end DiscreteGaugeCoboundary
 -- ============================================================================
 
 noncomputable section ContinuousAharonovBohmInterference
+
+/-- The Aharonov--Bohm loop phase represented in the real scalar/bivector
+plane.  The bivector coordinate is the real chiral phase axis; complex
+notation is introduced only by the readout theorem below. -/
+def abRealChiralHolonomy (flux : ℝ) : InfoGeometry.Geometry.RealChiralPhase where
+  scalar := Real.cos flux
+  bivector := Real.sin flux
+
+/-- Every real chiral Aharonov--Bohm holonomy is a unit rotor. -/
+theorem abRealChiralHolonomy_unit (flux : ℝ) :
+    (abRealChiralHolonomy flux).normSq = 1 := by
+  change Real.cos flux ^ 2 + Real.sin flux ^ 2 = 1
+  calc
+    Real.cos flux ^ 2 + Real.sin flux ^ 2 =
+        Real.sin flux ^ 2 + Real.cos flux ^ 2 := by ring
+    _ = 1 := Real.sin_sq_add_cos_sq flux
+
+/-- Additive flux concatenation is multiplication in the endogenous real
+chiral phase algebra. -/
+theorem abRealChiralHolonomy_add (flux₁ flux₂ : ℝ) :
+    abRealChiralHolonomy (flux₁ + flux₂) =
+      abRealChiralHolonomy flux₁ * abRealChiralHolonomy flux₂ := by
+  apply InfoGeometry.Geometry.RealChiralPhase.ext
+  · change Real.cos (flux₁ + flux₂) =
+      Real.cos flux₁ * Real.cos flux₂ - Real.sin flux₁ * Real.sin flux₂
+    rw [Real.cos_add]
+  · change Real.sin (flux₁ + flux₂) =
+      Real.cos flux₁ * Real.sin flux₂ + Real.sin flux₁ * Real.cos flux₂
+    rw [Real.sin_add]
+    ring
+
+/-- Reversing the loop orientation conjugates the real chiral holonomy. -/
+theorem abRealChiralHolonomy_neg (flux : ℝ) :
+    abRealChiralHolonomy (-flux) =
+      InfoGeometry.Geometry.RealChiralPhase.conj (abRealChiralHolonomy flux) := by
+  apply InfoGeometry.Geometry.RealChiralPhase.ext
+  · change Real.cos (-flux) = Real.cos flux
+    exact Real.cos_neg flux
+  · change Real.sin (-flux) = -Real.sin flux
+    exact Real.sin_neg flux
+
+/-- The conventional complex Aharonov--Bohm phase is the coordinate readout
+of the real chiral holonomy, not an additional phase datum. -/
+theorem abRealChiralHolonomy_complex_readout (flux : ℝ) :
+    ((abRealChiralHolonomy flux).scalar : ℂ) +
+        ((abRealChiralHolonomy flux).bivector : ℂ) * Complex.I =
+      aharonovBohmPhase flux := by
+  change (Real.cos flux : ℂ) + (Real.sin flux : ℂ) * Complex.I =
+    Complex.exp (Complex.I * (flux : ℂ))
+  have harg : Complex.I * (flux : ℂ) = (flux : ℂ) * Complex.I := by ring
+  rw [harg, Complex.exp_mul_I, Complex.ofReal_cos, Complex.ofReal_sin]
 
 /-- The additive flux around a finite loop exponentiates to the product of its
 edge phases.  This bridges the discrete circulation convention above to the

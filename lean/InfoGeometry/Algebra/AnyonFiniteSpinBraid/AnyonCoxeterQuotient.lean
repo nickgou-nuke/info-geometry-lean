@@ -1,6 +1,13 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
+/-!
+# Anyon Coxeter Quotient
+
+Defines GAP finite quotient orders for D-type Coxeter witnesses (D4: 192, D5: 1920)
+used in anyon finite spin braid constructions.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Algebra.AnyonFiniteSpinBraid

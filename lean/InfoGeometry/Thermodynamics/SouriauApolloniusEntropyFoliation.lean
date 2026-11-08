@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
@@ -82,10 +87,12 @@ theorem apolloniusRatio_eq_normSq_mobiusMap (s : ℂ) :
 def souriauEntropyPotential (s : ℂ) : ℝ :=
   - (1 / 2) * Real.log (apolloniusRatio s)
 
-/-- Souriau entropy leaf at level λ > 0:
+/-- Souriau entropy leaf set at level λ > 0:
     ℒ_λ = {s ∈ ℂ | R(s) = λ}. -/
-def IsOnEntropyLeaf (s : ℂ) (lambda : ℝ) : Prop :=
-  apolloniusRatio s = lambda
+def apolloniusEntropyLeafSet (lambda : ℝ) : Set ℂ :=
+  {s : ℂ | apolloniusRatio s = lambda}
+
+notation "IsOnEntropyLeaf" => fun (s : ℂ) (lambda : ℝ) => s ∈ apolloniusEntropyLeafSet lambda
 
 /-- The Souriau affine temperature parameter derived from the Apollonius difference:
     β_Souriau(σ) = -4σ + 2. -/
@@ -105,7 +112,7 @@ def apolloniusLeafCarrier (lambda_ratio : ℝ) : Set (ℝ × ℝ) :=
 /-- Numerator squared distance: |s - 3/2|² = (σ - 3/2)² + t². -/
 theorem apollonius_num_normSq (s : ℂ) :
     Complex.normSq (s - dipoleZero) = (s.re - 3 / 2) ^ 2 + s.im ^ 2 := by
-  have h_re : (s - dipoleZero).re = s.re - 3 / 2 := rfl
+  have h_re : (s - dipoleZero).re = s.re - 3 / 2 := Eq.refl _
   have h_im : (s - dipoleZero).im = s.im := by dsimp [dipoleZero]; ring
   rw [Complex.normSq_apply, h_re, h_im]
   ring
@@ -131,7 +138,8 @@ theorem apollonius_den_pos (s : ℂ) (hs : s ≠ dipolePole) :
     The level set R(s) = 1 is identically the critical line Re(s) = 1/2. -/
 theorem souriau_leaf_one_iff_re_half (s : ℂ) (hs : s ≠ dipolePole) :
     IsOnEntropyLeaf s 1 ↔ s.re = 1 / 2 := by
-  unfold IsOnEntropyLeaf apolloniusRatio
+  unfold apolloniusEntropyLeafSet apolloniusRatio
+  dsimp only [Set.mem_setOf_eq]
   have h_den_pos := apollonius_den_pos s hs
   rw [div_eq_one_iff_eq (ne_of_gt h_den_pos)]
   rw [apollonius_num_normSq, apollonius_den_normSq]
@@ -304,7 +312,7 @@ theorem souriau_hamiltonian_conformal_conjugation (s : ℂ) (hs1 : s ≠ dipoleZ
   have h_re : (Real.log ‖w‖ : ℂ) = - (souriauEntropyPotential s : ℂ) := by
     exact_mod_cast congrArg Complex.ofReal h_log_norm
   have h_im : (Complex.arg w : ℂ) * Complex.I =
-      (hamiltonianPhase s : ℂ) * Complex.I := rfl
+      (hamiltonianPhase s : ℂ) * Complex.I := Eq.refl _
   rw [h_re, h_im]
 
 /-!

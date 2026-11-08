@@ -1,5 +1,11 @@
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Tactic
 
 noncomputable section
 
@@ -114,9 +120,9 @@ theorem sinkhorn_col_marginal [Fintype M] (E : RegularizationParam) (C : M → N
 
 /-! ### 4. The Birkhoff Polytope & Doubly-Stochastic Property -/
 
-/-- Doubly-stochastic property on $N \times N$: non-negative entries, row sums 1, column sums 1. -/
-def IsDoublyStochastic [Fintype N] (P : N → N → ℝ) : Prop :=
-  (∀ i j : N, 0 ≤ P i j) ∧ (∀ i : N, rowMarginal P i = 1) ∧ (∀ j : N, colMarginal P j = 1)
+/-- Doubly-stochastic subset on $N \times N$: non-negative entries, row sums 1, column sums 1. -/
+def doublyStochasticCouplingSet [Fintype N] : Set (N → N → ℝ) :=
+  {P : N → N → ℝ | (∀ i j : N, 0 ≤ P i j) ∧ (∀ i : N, rowMarginal P i = 1) ∧ (∀ j : N, colMarginal P j = 1)}
 
 /--
   **THEOREM (Sinkhorn Birkhoff Normalization Condition)**:
@@ -128,7 +134,7 @@ theorem sinkhorn_doublyStochastic_of_coupled_scaling [Fintype N]
     (E : RegularizationParam) (C : N → N → ℝ) (S : ScalingPotentials N N)
     (hu : ∀ i : N, S.u i * (∑ j : N, gibbsKernel E C i j * S.v j) = 1)
     (hv : ∀ j : N, S.v j * (∑ i : N, S.u i * gibbsKernel E C i j) = 1) :
-    IsDoublyStochastic (sinkhornCoupling E C S) := by
+    sinkhornCoupling E C S ∈ doublyStochasticCouplingSet := by
   refine ⟨fun i j => sinkhornCoupling_nonneg E C S i j, ?_, ?_⟩
   · intro i
     rw [sinkhorn_row_marginal]

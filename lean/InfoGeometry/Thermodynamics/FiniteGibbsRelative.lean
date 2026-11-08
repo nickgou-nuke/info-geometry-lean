@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import InfoGeometry.Algebraic.CartanExponentialFamily
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.FiniteGibbsVariational
@@ -52,9 +57,11 @@ noncomputable def massieuBregman (θ η : FiniteTemperature ι) : ℝ :=
   bregmanPhi θ η
 
 /-- Finite Fisher/Souriau metric: the Cartan covariance form. -/
-noncomputable def fisherMetric
+noncomputable def cartanFisherMetric
     (θ : FiniteTemperature ι) (X Y : ι → ℝ) : ℝ :=
   fisherCov θ X Y
+
+notation "fisherMetric" => cartanFisherMetric
 
 /-- Pointwise log-density difference for two finite Cartan Gibbs states. -/
 theorem logDensity_sub_logDensity
@@ -254,7 +261,8 @@ noncomputable def finiteScalarRelativeCocycle
 theorem finiteScalarRelativeCocycle_zero
     {κ : Type*} (φ ψ : FiniteTemperature κ) (i : κ) :
     finiteScalarRelativeCocycle φ ψ 0 i = 1 := by
-  simp [finiteScalarRelativeCocycle]
+  unfold finiteScalarRelativeCocycle
+  rw [zero_mul, Real.exp_zero]
 
 /-- The finite scalar relative cocycle has the additive one-parameter law. -/
 theorem finiteScalarRelativeCocycle_add

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Basic
@@ -12,15 +17,15 @@ $U(1)$ Kac–Moody current algebra and the Virasoro central anomaly function
 `virasoroCentralAnomaly`, proving antisymmetry, zero-mode centrality, and the
 vanishing of the anomaly on the $\mathfrak{sl}(2, \mathbb{R})$ modes $m \in \{-1, 0, 1\}$.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `currentCommutator`, `current_commutator_antisymm`, `current_zero_mode_commute`
 - `sugawaraCentralCharge`, `central_charge_pos`
 - `virasoroCentralAnomaly`, `virasoro_anomaly_sl2_invariance`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `Mathlib.Analysis.Complex.Basic`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 

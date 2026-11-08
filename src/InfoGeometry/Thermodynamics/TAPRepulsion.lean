@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -21,8 +26,10 @@ The coupling matrix has a finite uniform entry bound.
 Since `n` is finite this is the proof-facing condition needed by later
 thermodynamic estimates, and it replaces the former vacuous `True` predicate.
 -/
-def CouplingMatrix (J : n → n → ℝ) : Prop :=
-  ∃ C : ℝ, ∀ i j : n, |J i j| ≤ C
+def couplingMatrixSet : Set (n → n → ℝ) :=
+  {J : n → n → ℝ | ∃ C : ℝ, ∀ i j : n, |J i j| ≤ C}
+
+notation "CouplingMatrix" => fun J => J ∈ couplingMatrixSet
 
 /-- A Hopfield-style finite network is represented here by symmetric weights. -/
 class HopfieldNetwork (J : n → n → ℝ) where

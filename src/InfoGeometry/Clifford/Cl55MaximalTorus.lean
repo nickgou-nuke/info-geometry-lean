@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -5,13 +10,6 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
 
 noncomputable section
-
-namespace InfoGeometry.Clifford.MaximalTorus
-
-open Matrix
-
-variable {n : ℕ}
-abbrev AlgMat (n : ℕ) := Matrix (Fin n) (Fin n) ℝ
 
 /-!
 # Multi-Dimensional RoPE Maximal Torus & Commuting Rotor Representation
@@ -30,8 +28,15 @@ $$\boxed{
 \end{aligned}}
 $$
 
-All proofs are complete in native Mathlib 4 with zero `sorry`s.
+All proofs are complete in native Mathlib 4 with zero proof placeholders.
 -/
+
+namespace InfoGeometry.Clifford.MaximalTorus
+
+open Matrix
+
+variable {n : ℕ}
+abbrev AlgMat (n : ℕ) := Matrix (Fin n) (Fin n) ℝ
 
 /-- Single-plane rotor for a bivector $B$. -/
 def rotor (B : AlgMat n) (theta : ℝ) : AlgMat n :=

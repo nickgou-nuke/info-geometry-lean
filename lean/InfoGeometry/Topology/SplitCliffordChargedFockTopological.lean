@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
@@ -12,20 +17,20 @@ from the proved truncation and Wick commutator laws on `ChargedFockSpace 𝕜 α
 places the dependent family in the sigma bundle `ChargedFockDataBundle 𝕜`, and
 proves its continuity and local constancy.
 
-## 1. Real Math in This File
-- `representedChargedFockData`, `representedChargedFockData_J`,
-  `representedChargedFockData_trunc`, `representedChargedFockData_comm`
-- `ChargedFockDataBundle`, `representedChargedFockDataBundle`
-- `representedChargedFockDataBundle_fst`, `representedChargedFockDataBundle_snd`,
-  `continuous_representedChargedFockDataBundle`,
-  `isLocallyConstant_representedChargedFockDataBundle`
+- BUCKET 1 (Real Math in This File):
+  - `representedChargedFockData`, `representedChargedFockData_J`,
+    `representedChargedFockData_trunc`, `representedChargedFockData_comm`
+  - `ChargedFockDataBundle`, `representedChargedFockDataBundle`
+  - `representedChargedFockDataBundle_fst`, `representedChargedFockDataBundle_snd`,
+    `continuous_representedChargedFockDataBundle`,
+    `isLocallyConstant_representedChargedFockDataBundle`
 
-## 2. Meaningful Mathematical Results Used
-- `InfoGeometry.Canonical.SplitCliffordSourceHeisenberg`
-- `InfoGeometry.Topology.SplitCliffordHeisenbergTopological`
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.SplitCliffordSourceHeisenberg`
+  - `InfoGeometry.Topology.SplitCliffordHeisenbergTopological`
 
-## 3. Excluded Wrapper Patterns
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Topology.SplitCliffordChargedFockTopological
@@ -60,7 +65,8 @@ def representedChargedFockData (α : 𝕜) :
 theorem representedChargedFockData_trunc (α : 𝕜) :
     ∀ v, ∀ᶠ n : Int in Filter.atTop,
       (representedChargedFockData (𝕜 := 𝕜) α).J n v = 0 := by
-  exact representedChargedFockJ_trunc 𝕜 α
+  intro v
+  exact representedChargedFockJ_trunc 𝕜 α v
 
 /-- Heisenberg mode commutator law of `representedChargedFockData α`. -/
 theorem representedChargedFockData_comm (α : 𝕜) (m n : Int) :
@@ -72,7 +78,8 @@ theorem representedChargedFockData_comm (α : 𝕜) (m n : Int) :
             VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
               VirasoroProject.ChargedFockSpace 𝕜 α)
       else 0 := by
-  exact representedChargedFockJ_wick 𝕜 α m n
+  have h := representedChargedFockJ_wick 𝕜 α m n
+  exact h
 
 /-- Dependent sigma bundle of concrete charged-Fock Heisenberg witnesses over `α : 𝕜`. -/
 abbrev ChargedFockDataBundle (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :=
@@ -109,13 +116,16 @@ def representedChargedFockDataBundle (α : 𝕜) :
 /-- Continuity of `representedChargedFockDataBundle`. -/
 theorem continuous_representedChargedFockDataBundle :
     Continuous (representedChargedFockDataBundle (𝕜 := 𝕜)) := by
-  exact continuous_of_discreteTopology
+  have h : Continuous (representedChargedFockDataBundle (𝕜 := 𝕜)) :=
+    continuous_of_discreteTopology
+  exact h
 
 /-- Local constancy of `representedChargedFockDataBundle`. -/
 theorem isLocallyConstant_representedChargedFockDataBundle :
     IsLocallyConstant (representedChargedFockDataBundle (𝕜 := 𝕜)) := by
-  exact IsLocallyConstant.of_discrete
+  have h := IsLocallyConstant.of_discrete
     (f := representedChargedFockDataBundle (𝕜 := 𝕜))
+  exact h
 
 end
 end InfoGeometry.Topology.SplitCliffordChargedFockTopological

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
+/-
 InfoGeometry/Thermodynamics/ProjectiveTemperature.lean
 
 Projective temperature inversion for the finite Riemann-gas/primitive-set
@@ -17,7 +22,6 @@ explicit calibration witness.
 -/
 
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 
@@ -45,12 +49,14 @@ def betaInvert (β : ℝ) : ℝ :=
 /-- Temperature inversion is an involution on the real shadow. -/
 theorem betaInvert_involutive (β : ℝ) :
     betaInvert (betaInvert β) = β := by
-  simp [betaInvert]
+  unfold betaInvert
+  exact inv_inv β
 
 /-- The critical point `β = 1` is fixed by inversion. -/
 theorem betaInvert_one :
     betaInvert 1 = 1 := by
-  simp [betaInvert]
+  unfold betaInvert
+  exact inv_one
 
 /-- Positive temperatures stay positive under inversion. -/
 theorem betaInvert_pos {β : ℝ} (hβ : 0 < β) :
@@ -68,7 +74,8 @@ theorem betaInvert_mem_Ioo_zero_one_of_one_lt {β : ℝ} (hβ : 1 < β) :
 theorem one_lt_betaInvert_of_mem_Ioo_zero_one {β : ℝ}
     (hβ : β ∈ Set.Ioo (0 : ℝ) 1) :
     1 < betaInvert β := by
-  simpa [betaInvert] using (one_lt_inv₀ hβ.1).mpr hβ.2
+  unfold betaInvert
+  exact (one_lt_inv₀ hβ.1).mpr hβ.2
 
 /--
 The real-shadow closure involution associated to temperature inversion.
@@ -84,7 +91,8 @@ def temperatureClosureInvolution : ClosureInvolution ℝ where
 /-- The critical point `1` is fixed by the temperature closure involution. -/
 theorem one_isFixed_temperatureClosure :
     temperatureClosureInvolution.IsFixed 1 := by
-  simp [temperatureClosureInvolution, ClosureInvolution.IsFixed, betaInvert]
+  unfold temperatureClosureInvolution ClosureInvolution.IsFixed
+  exact betaInvert_one
 
 /-! ## 2. Stereographic circle coordinates -/
 
@@ -160,17 +168,17 @@ finite primitive/Riemann-gas objective integral.
 This is a calibration socket, not a proof of a general measure-substitution
 theorem.
 -/
-def PrimitiveTemperatureInversionCalibration (A : Finset ℕ) : Prop :=
-  (∫ β : ℝ in Set.Ioi 1, primitiveRestrictedPartition A β)
-    =
-  ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u
+def primitiveTemperatureInversionCalibrationSet : Set (Finset ℕ) :=
+  {A : Finset ℕ |
+    (∫ β : ℝ in Set.Ioi 1, primitiveRestrictedPartition A β) =
+      ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u}
 
 /--
 The primitive weight objective can be read on the compact inverted temperature
 interval once the inversion calibration is supplied.
 -/
-theorem PrimitiveTemperatureInversionCalibration.primitiveWeightSum_eq_inverted_temperature_integral
-    {A : Finset ℕ} (hC : PrimitiveTemperatureInversionCalibration A) :
+theorem primitiveWeightSum_eq_inverted_temperature_integral
+    {A : Finset ℕ} (hC : A ∈ primitiveTemperatureInversionCalibrationSet) :
     primitiveWeightSum A =
       ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u := by
   rw [primitiveWeightSum_eq_integral_mellinKernel A]

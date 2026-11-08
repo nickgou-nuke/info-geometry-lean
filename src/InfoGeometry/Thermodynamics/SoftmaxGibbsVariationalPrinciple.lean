@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
@@ -138,7 +143,7 @@ theorem freeEnergy_sub_equilibrium_eq_kl
   calc
     freeEnergy T H p - (-(1 / T.beta) * Real.log (partitionSum T H))
       = (∑ i : I, p i * H i + (1 / T.beta) * ∑ i : I, p i * Real.log (p i)) -
-        (-(1 / T.beta) * Real.log (partitionSum T H)) := rfl
+        (-(1 / T.beta) * Real.log (partitionSum T H)) := Eq.refl _
     _ = (1 / T.beta) * (T.beta * (∑ i : I, p i * H i) + ∑ i : I, p i * Real.log (p i) +
         Real.log (partitionSum T H)) := by
           have : T.beta ≠ 0 := T.beta_ne_zero
@@ -183,7 +188,7 @@ theorem freeEnergy_ge_equilibrium
     rw [← h_fe_gibbs] at h_kl
     exact h_kl
   have h_kl_eq : klDivergence p (gibbsState T H) =
-      FiniteKLNonnegativity.finiteKL p (gibbsState T H) := rfl
+      FiniteKLNonnegativity.finiteKL p (gibbsState T H) := Eq.refl _
   have h_kl_nonneg : 0 ≤ klDivergence p (gibbsState T H) := by
     rw [h_kl_eq]
     exact FiniteKLNonnegativity.finiteKL_nonneg p (gibbsState T H) hp_sum

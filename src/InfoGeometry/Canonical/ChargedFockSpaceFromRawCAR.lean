@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -10,17 +15,17 @@ This module pairs any raw CAR mode completion `RawCARModeCompletion A` with the
 canonical charged-Fock Heisenberg representation `chargedFockSpaceCurrentHeisenbergRep`
 and proves the induced Heisenberg and Sugawara Virasoro commutator identities.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `chargedFockSpaceWitnessFromRawCAR`
 - `chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep`,
   `chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode`
-- `rawCAR_to_SugawaraVirasoro_bridge`
+- `rawCAR_to_SugawaraVirasoro_intertwiner`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Canonical.SplitCARCurrentSource`
 - `InfoGeometry.Canonical.CurrentSugawaraBridge`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
@@ -65,7 +70,7 @@ theorem chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode
 /-- Any raw CAR mode completion `C` paired with `ChargedFockSpace 𝕜 α` yields a
 Heisenberg current representation satisfying both the Heisenberg mode commutator
 and the Sugawara Virasoro commutator with central charge $c = 1$. -/
-theorem rawCAR_to_SugawaraVirasoro_bridge
+theorem rawCAR_to_SugawaraVirasoro_intertwiner
     {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :

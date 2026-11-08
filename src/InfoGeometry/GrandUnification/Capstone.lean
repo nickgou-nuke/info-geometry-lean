@@ -630,6 +630,204 @@ theorem operator_lichnerowicz_amari_information_geometry_and_peirce_dewitt_spire
     ⟨h12_3.1.1, h12_3.1.2.1, h12_3.1.2.2.1, h12_3.1.2.2.2.1,
      h12_3.2.2.1, h12_3.2.2.2.1, h12_3.2.2.2.2.1, h12_3.2.2.2.2.2⟩⟩
 
+/-- **Top-Level Spire Capstone (`dewitt_supermetric_yang_mills_mass_gap_reflexive_electron_and_wheeler_hodge_spire_capstone`):**
+Unifies the three stages of Section 13 of `TetractysZeemanZornAssociatorBridge`
+(`Archetypes XXX Parts 2–3` through `XXXVIII`) into a single master theorem over any
+unital $\star$-ring `B` (`[Ring B] [StarRing B]`) and any cyclic additive functional
+$\tau : B \to_+ R_0$:
+1. **Stage 13.1 (`peirce_dewitt_joint_eigenspaces_and_supermetric_four_block_split_bridge`):**
+   - Joint eigenspaces of $\mathrm{ad}_P = [P, \cdot]$ and $\mathcal{J}_P = \{P, \cdot\}$ on the
+     Peirce quartet $(\mathrm{peirce11}, \mathrm{peirce00}, \mathrm{conePlus}, \mathrm{coneMinus})$,
+   - Riemannian 4-block trace split vs. DeWitt supermetric signature split
+     $\mathrm{dewittSupermetric}\,\tau\,P\,A\,C = \tau(P_{11}(A)P_{11}(C)) - \tau(P_{00}(A)P_{00}(C)) + \tau(N_+(A)N_-(C)) - \tau(N_-(A)N_+(C))$.
+2. **Stage 13.2 (`yang_mills_bianchi_divergence_duality_and_orbit_mass_gap_equipartition_bridge`):**
+   - Exact non-Abelian Bianchi identity $[D_1, F_{23}] + [D_2, F_{31}] + [D_3, F_{12}] = 0$ and
+     covariant divergence action duality $\tau(F_{12}[D_1, \delta A_2]) = -\tau([D_1, F_{12}]\delta A_2)$,
+   - Gribov–Singer–Feynman orbit mass-gap Gramian
+     $\mathrm{ymMassGapMode}\,P\,A = [P, A]^\star[P, A] = \mathrm{oddGrade}(P, A)^2$,
+     strict gauge-subspace conservation $[P, \mathrm{ymMassGapMode}\,P\,A] = 0$, and
+     Core–Ghost mass equipartition $\tau(P\,\mathrm{ymMassGapMode}(P, A)\,P) = \tau((1 - P)\,\mathrm{ymMassGapMode}(P, A)\,(1 - P))$.
+3. **Stage 13.3 (`two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge_kraus_bridge`):**
+   - Two-sheeted Spin–Mass mutual locking ($\mathrm{genV}\,P\,A\,C = 0 \leftrightarrow \mathrm{genSig}\,P\,A\,C = 0$),
+     Source–Sink Spin Dipole ($\tau(P\Sigma P) + \tau((1 - P)\Sigma(1 - P)) = 0$), and
+     Universal Mass Monopole ($\tau(PVP) = \tau((1 - P)V(1 - P))$),
+   - Reflexive self-Drazin tripotent electron ($\Phi^3 = \Phi$), Split-Quaternion $\mathcal{C}\ell_{1,1}(V)$
+     closure ($\Sigma\Phi = J$, $\Sigma J = \Phi$), Global Connes–Drazin involutions
+     ($\mathcal{U}_{\mathrm{Dirac}}^2 = 1$, $\mathcal{U}_{\mathrm{Spin}}^2 = 1$), and non-perturbative
+     propagator pole split $(k \bullet 1 - \Phi)(k \bullet 1 + \Phi) = k^2 \bullet P_{\mathrm{vac}} + (k^2 - 1) \bullet V$,
+   - Wheeler's "Boundary of a Boundary is Zero" ($\partial_\pm^2 = 0$) and the 4-way Hodge–Kraus
+     superoperator quartet generating $[\mathrm{genV}, X]$, $\{\mathrm{genSig}, X\}$,
+     $[\mathrm{genSig}, X]$, $(2 : \mathbb{Z}) \bullet \{\mathrm{genV}, X\}$, and
+     $(4 : \mathbb{Z}) \bullet \mathrm{sandwichCross}\,P\,A\,C\,X$. -/
+theorem dewitt_supermetric_yang_mills_mass_gap_reflexive_electron_and_wheeler_hodge_spire_capstone
+    {B : Type*} [Ring B] [StarRing B]
+    {R₀ : Type*} [AddCommGroup R₀]
+    (τ : B →+ R₀)
+    (hτ : InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.IsCyclic τ)
+    {P A : B} (hP : P * P = P) (hPsym : star P = P) (hAsym : star A = A)
+    (C D₁ D₂ D₃ F₁₂ δA₂ X : B) (k : ℤ) :
+    ((InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P A) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P A) =
+        (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P A ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P A) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P A) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A) =
+        -InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm P
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.dewittSupermetric τ P A C =
+        τ (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P A *
+             InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P C) -
+          τ (InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P A *
+               InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P C) +
+          τ (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A *
+               InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C) -
+          τ (InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A *
+               InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P C))) ∧
+    ((InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁
+        (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymFieldStrength D₂ D₃) +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₂
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymFieldStrength D₃ D₁) +
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₃
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymFieldStrength D₁ D₂) = 0 ∧
+      τ (F₁₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ δA₂) =
+        -τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ F₁₂ * δA₂) ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymMassGapMode P A =
+        star (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymMassGapMode P A =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P A *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P A ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+        (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymMassGapMode P A) = 0 ∧
+      τ (P * InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymMassGapMode P A * P) =
+        τ ((1 - P) *
+             InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.ymMassGapMode P A *
+             (1 - P)))) ∧
+    (((InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C = 0 ↔
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C = 0) ∧
+      τ (P * InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C * P) +
+        τ ((1 - P) * InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C * (1 - P)) = 0 ∧
+      τ (P * InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C * P) =
+        τ ((1 - P) * InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C * (1 - P)) ∧
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A =
+         InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A →
+       InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C =
+         InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C →
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C *
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C *
+             InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C) =
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C ∧
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C *
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C =
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C ∧
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C *
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C *
+             InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C) =
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C ∧
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C *
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C =
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C ∧
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C *
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C =
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P A C ∧
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C *
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P A C =
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C ∧
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.vacuumProjector P A C *
+           InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.vacuumProjector P A C =
+           InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.vacuumProjector P A C ∧
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.vacuumProjector P A C *
+           InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C = 0 ∧
+         InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C *
+           InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.vacuumProjector P A C = 0 ∧
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.globalDiracInvolution P A C *
+           InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.globalDiracInvolution P A C = 1 ∧
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.globalSpinInvolution P A C *
+           InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.globalSpinInvolution P A C = 1 ∧
+         (k • (1 : B) - InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C) *
+           (k • (1 : B) + InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A C) =
+           (k * k) •
+             InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.vacuumProjector P A C +
+             (k * k - 1) • InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C) ∧
+      (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A X) = 0 ∧
+       InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A X) = 0 ∧
+       InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C X) = 0 ∧
+       InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C X) = 0) ∧
+      (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C X) +
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C
+           (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A X) =
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C) X ∧
+       InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C X) -
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C
+           (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A X) =
+         InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C) X ∧
+       InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A
+         (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C X) -
+         InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C
+           (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A X) =
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A C) X ∧
+       (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C X) +
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A X)) +
+       (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C X) +
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A X)) =
+         (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A C) X ∧
+       (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C X) +
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanMinus P C
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryJordanPlus P A X)) -
+       (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C X) +
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLieMinus P C
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.boundaryLiePlus P A X)) =
+         (4 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.sandwichCross P A C X))) := by
+  have h13_1 :=
+    InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.peirce_dewitt_joint_eigenspaces_and_supermetric_four_block_split_bridge
+      τ hτ hP A C
+  have h13_2 :=
+    InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.yang_mills_bianchi_divergence_duality_and_orbit_mass_gap_equipartition_bridge
+      τ hτ hP hPsym hAsym D₁ D₂ D₃ F₁₂ δA₂
+  have h13_3 :=
+    InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge_kraus_bridge
+      τ hτ hP (A := A) (C := C) X k
+  exact ⟨⟨h13_1.1.1.1, h13_1.1.1.2, h13_1.1.2.1.1, h13_1.1.2.1.2,
+          h13_1.1.2.2.1.1, h13_1.1.2.2.1.2, h13_1.1.2.2.2.1, h13_1.1.2.2.2.2,
+          h13_1.2.2⟩,
+    ⟨h13_2.1.1, h13_2.1.2.2, h13_2.2.2.1, h13_2.2.2.2.1, h13_2.2.2.2.2.1,
+     h13_2.2.2.2.2.2.2.2.2.2⟩,
+    ⟨h13_3.1.1.2.2.2, h13_3.1.2.2.2.1, h13_3.1.2.2.2.2.2.2,
+     h13_3.2.1.2, h13_3.2.2.2.1, h13_3.2.2.2.2⟩⟩
+
 end InfoGeometry.GrandUnification.Capstone
 
 end

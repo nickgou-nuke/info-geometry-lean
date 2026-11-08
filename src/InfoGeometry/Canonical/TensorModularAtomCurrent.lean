@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -11,21 +16,21 @@ This module connects the Wick-corrected normal-ordered CAR current commutator
 from `BosonizationConstructiveCurrent` and the charged-Fock Heisenberg current
 representation to `SplitCliffordHeisenbergWitness` and `CurrentSugawaraMorphism`.
 
-## 1. Real Math in This File
-- `wickContraction_current`, `wickContraction_cutoffBoundary`
-- `tensorModularAtomHeisenbergWitness`
-- `tensorModularAtom_toCurrentHeisenbergRep`,
-  `tensorModularAtom_toCurrentSugawaraMorphism`,
-  `tensorModularAtom_to_sugawaraRepresentation`
-- `tensorModularAtom_current_readout`, `tensorModularAtom_currentSugawara_readout`
+- BUCKET 1 (Real Math in This File):
+  - `wickContraction_current`, `wickContraction_cutoffBoundary`
+  - `tensorModularAtomHeisenbergWitness`
+  - `tensorModularAtom_toCurrentHeisenbergRep`,
+    `tensorModularAtom_toCurrentSugawaraMorphism`,
+    `tensorModularAtom_to_sugawaraRepresentation`
+  - `tensorModularAtom_current_readout`, `tensorModularAtom_currentSugawara_readout`
 
-## 2. Meaningful Mathematical Results Used
-- `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
-- `InfoGeometry.Canonical.CurrentSugawaraBridge`
-- `InfoGeometry.Canonical.SplitCliffordHeisenbergBridge`
+- BUCKET 2 (Meaningful Mathematical Results Used):
+  - `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
+  - `InfoGeometry.Canonical.CurrentSugawaraBridge`
+  - `InfoGeometry.Canonical.SplitCliffordHeisenbergBridge`
 
-## 3. Excluded Wrapper Patterns
-- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+- BUCKET 3 (Excluded Wrapper Patterns):
+  - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -50,7 +55,7 @@ theorem wickContraction_current
     (C : RawCARModeCompletion A) (m n : Int) :
     CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
       if m + n = 0 then m • completedCentral C else 0 := by
-  simpa using normalOrderedCurrent_heisenberg_from_matrixUnit C m n
+  dsimp; simpa using normalOrderedCurrent_heisenberg_from_matrixUnit C m n
 
 /-- Finite-cutoff CAR current commutator decomposition into the boundary term
 and the window-crossing central term. -/
@@ -60,7 +65,7 @@ theorem wickContraction_cutoffBoundary
         (RawCARModeCompletion.cutoffCurrent C N n) =
       RawCARModeCompletion.cutoffBoundaryTerm C N m n +
         RawCARModeCompletion.cutoffWindowCrossingTerm C N m n := by
-  simpa using
+  dsimp; simpa using
     RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_windowCrossing C N m n
 
 end WickMechanism
@@ -90,7 +95,8 @@ theorem tensorModularAtomHeisenbergWitness_trunc
     (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
     ∀ᶠ l : Int in atTop,
       (tensorModularAtomHeisenbergWitness 𝕜 α).J l v = 0 := by
-  exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc v
+  have h := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc v
+  exact h
 
 /-- Heisenberg mode commutator law of `tensorModularAtomHeisenbergWitness`. -/
 theorem tensorModularAtomHeisenbergWitness_comm (m n : Int) :
@@ -101,7 +107,8 @@ theorem tensorModularAtomHeisenbergWitness_comm (m n : Int) :
           (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
             VirasoroProject.ChargedFockSpace 𝕜 α)
       else 0 := by
-  exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+  have h := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+  exact h
 
 /-- `CurrentHeisenbergRep` induced by `tensorModularAtomHeisenbergWitness`. -/
 noncomputable def tensorModularAtom_toCurrentHeisenbergRep :
@@ -147,9 +154,10 @@ theorem tensorModularAtom_current_readout :
             if m + n = 0 then (m : 𝕜) •
               (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
                 VirasoroProject.ChargedFockSpace 𝕜 α) else 0 := by
-  exact ⟨rfl,
-    (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).trunc,
-    (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).comm⟩
+  constructor
+  · rfl
+  · exact ⟨(tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).trunc,
+      (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).comm⟩
 
 /-- Joint readout of the Heisenberg and Virasoro components of
 `tensorModularAtom_toCurrentSugawaraMorphism`. -/
@@ -158,8 +166,9 @@ theorem tensorModularAtom_currentSugawara_readout :
       tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)
       ∧ (tensorModularAtom_toCurrentSugawaraMorphism (𝕜 := 𝕜) (α := α)).virasoro =
         (tensorModularAtom_toCurrentHeisenbergRep (𝕜 := 𝕜) (α := α)).currentSugawaraRepresentation := by
-  exact ⟨CurrentSugawaraMorphism.ofHeisenberg_heisenberg _,
-    CurrentSugawaraMorphism.ofHeisenberg_virasoro _⟩
+  constructor
+  · exact CurrentSugawaraMorphism.ofHeisenberg_heisenberg _
+  · exact CurrentSugawaraMorphism.ofHeisenberg_virasoro _
 
 end ChargedFockWitness
 

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
+/-
 InfoGeometry/Thermodynamics/SouriauTemperatureProjective.lean
 
 Narrow projective-temperature sidecar.
@@ -64,19 +69,19 @@ def ofRealUpperHalfPlane
 theorem toRealUpperHalfPlane_x
     (T : PositiveSouriauTemperature) :
     (T.toRealUpperHalfPlane).x = T.temp.s.re :=
-  rfl
+  Eq.refl T.temp.s.re
 
 @[simp]
 theorem toRealUpperHalfPlane_y
     (T : PositiveSouriauTemperature) :
     (T.toRealUpperHalfPlane).y = T.temp.s.im :=
-  rfl
+  Eq.refl T.temp.s.im
 
 @[simp]
 theorem ofRealUpperHalfPlane_temp_s
     (τ : RealUpperHalfPlane) :
     (ofRealUpperHalfPlane τ).temp.s = Complex.mk τ.x τ.y :=
-  rfl
+  Eq.refl (Complex.mk τ.x τ.y)
 
 @[simp]
 theorem toRealUpperHalfPlane_ofRealUpperHalfPlane
@@ -128,7 +133,7 @@ theorem smul_def
     (T : PositiveSouriauTemperature) :
     g • T =
       ofRealUpperHalfPlane (g • T.toRealUpperHalfPlane) :=
-  rfl
+  Eq.refl (ofRealUpperHalfPlane (g • T.toRealUpperHalfPlane))
 
 @[simp]
 theorem toRealUpperHalfPlane_smul
@@ -136,7 +141,7 @@ theorem toRealUpperHalfPlane_smul
     (T : PositiveSouriauTemperature) :
     toRealUpperHalfPlane (g • T) =
       g • T.toRealUpperHalfPlane := by
-  simp [smul_def]
+  rw [smul_def, toRealUpperHalfPlane_ofRealUpperHalfPlane]
 
 /-- The central lift `-I` acts trivially on positive Souriau temperatures. -/
 @[simp]
@@ -197,7 +202,7 @@ theorem closure_theta
     (I : ProjectiveTemperatureInversion)
     (T : PositiveSouriauTemperature) :
     (I.closure).theta T = I.element • T :=
-  rfl
+  Eq.refl (I.element • T)
 
 /--
 Invariant temperature readouts are expressed through the existing
@@ -238,7 +243,8 @@ theorem smul_eq_self_of_stationary
     {T : PositiveSouriauTemperature}
     (hT : StationaryTemperature I T) :
     I.element • T = T := by
-  simpa [StationaryTemperature, closure, ClosureInvolution.IsFixed] using hT
+  change (I.closure).theta T = T
+  exact hT
 
 /-- Invariant readouts are unchanged by the supplied lift action. -/
 theorem read_lift
@@ -247,7 +253,8 @@ theorem read_lift
     (R : I.InvariantTemperatureReadout Charge)
     (T : PositiveSouriauTemperature) :
     R.read (I.element • T) = R.read T := by
-  simpa [closure] using R.read_theta T
+  rw [← I.closure_theta T]
+  exact R.read_theta T
 
 /-- Any readout is unchanged at a stationary temperature after applying the closure. -/
 theorem read_eq_of_stationary
@@ -309,7 +316,7 @@ theorem closure_theta
     (I : ProjectiveLiftTemperatureInversion)
     (T : PositiveSouriauTemperature) :
     (I.closure).theta T = I.element • T :=
-  rfl
+  Eq.refl (I.element • T)
 
 /-- Invariant readouts for a lift-level projective temperature inversion. -/
 abbrev InvariantTemperatureReadout
@@ -339,7 +346,8 @@ theorem smul_eq_self_of_stationary
     {T : PositiveSouriauTemperature}
     (hT : StationaryTemperature I T) :
     I.element • T = T := by
-  simpa [StationaryTemperature, closure, ClosureInvolution.IsFixed] using hT
+  change (I.closure).theta T = T
+  exact hT
 
 /-- Invariant readouts are unchanged by the supplied lift action. -/
 theorem read_lift
@@ -348,7 +356,8 @@ theorem read_lift
     (R : I.InvariantTemperatureReadout Charge)
     (T : PositiveSouriauTemperature) :
     R.read (I.element • T) = R.read T := by
-  simpa [closure] using R.read_theta T
+  rw [← I.closure_theta T]
+  exact R.read_theta T
 
 /-- Any readout is unchanged at a stationary temperature after applying the closure. -/
 theorem read_eq_of_stationary
@@ -412,7 +421,7 @@ theorem closure_theta
     (I : ProjectivePSLTemperatureInversion)
     (T : PositiveSouriauTemperature) :
     (I.closure).theta T = I.projectiveTheta T :=
-  rfl
+  Eq.refl (I.projectiveTheta T)
 
 /-- The projective closure agrees with the chosen `SL2R` lift action. -/
 theorem closure_theta_eq_lift

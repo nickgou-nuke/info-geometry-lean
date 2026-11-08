@@ -2791,7 +2791,7 @@ $\tau : B \to_+ R_0$:
    - $[P, A] = 0 \to \mathrm{conePlus}\,P\,A = 0 \land \mathrm{coneMinus}\,P\,A = 0 \land \mathrm{genV}\,P\,A\,A = 0 \land \mathrm{genSig}\,P\,A\,A = 0$,
    - $[N_+, \{N_+, X\}] = 0$, $\{N_+, [N_+, X]\} = 0$, $[N_-, \{N_-, X\}] = 0$, and $\{N_-, [N_-, X]\} = 0$,
    - $\{N_+, [N_-, X]\} + \{N_-, [N_+, X]\} = [\mathrm{genV}\,P\,A\,C, X]$,
-   - $[N_+, \{N_-, X\}] - [N_-, \{N_+, X\}] = \{\mathrm{genSig}\,P\,A\,C, X\}$,
+   - $[N_+, \{N_-, X\}] - \{N_-, [N_+, X]\} = \{\mathrm{genSig}\,P\,A\,C, X\}$,
    - $[N_+, [N_-, X]] - [N_-, [N_+, X]] = [\mathrm{genSig}\,P\,A\,C, X]$,
    - $(\{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}) + ([N_+, [N_-, X]] + [N_-, [N_+, X]]) = (2 : \mathbb{Z}) \bullet \{\mathrm{genV}\,P\,A\,C, X\}$,
    - $(\{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}) - ([N_+, [N_-, X]] + [N_-, [N_+, X]]) = (4 : \mathbb{Z}) \bullet \mathrm{sandwichCross}\,P\,A\,C\,X$. -/

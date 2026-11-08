@@ -12,15 +12,15 @@ This module proves the diagonal and off-diagonal mode commutator specializations
 of the CAR-stabilized fermionic current modes `fermionicCurrentMode` on the
 exterior-Fock carrier `FermionicFock`.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `fermionicCurrentMode_commutator_diag`
 - `fermionicCurrentMode_commutator_offDiag`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Canonical.FermionicCurrentChargedFockIntertwiner`
   (`fermionicCurrentMode`, `fermionicCurrentMode_commutator`)
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 

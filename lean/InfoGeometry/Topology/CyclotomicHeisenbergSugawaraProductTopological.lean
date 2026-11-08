@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CyclotomicLatentQuotientTopological
@@ -13,7 +18,7 @@ and the product readout `cyclotomicHeisenbergSugawaraReadout` into
 `LatentQuotient × ChargedFockSugawaraBundle 𝕜`, proving its coordinate formulas,
 continuity, local constancy, and invariance under `reflectionAct`.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `CyclotomicHeisenbergSugawaraInput`, `CyclotomicHeisenbergSugawaraOutput`
 - `cyclotomicHeisenbergSugawaraReadout`,
   `cyclotomicHeisenbergSugawaraReadout_fst`,
@@ -23,11 +28,11 @@ continuity, local constancy, and invariance under `reflectionAct`.
   `cyclotomicHeisenbergSugawaraReadout_reflection_invariant`,
   `cyclotomicHeisenbergSugawaraReadout_latent_and_sugawara`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Topology.CyclotomicLatentQuotientTopological`
 - `InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
@@ -77,6 +82,7 @@ def cyclotomicHeisenbergSugawaraReadout
 /-- Continuity of `cyclotomicHeisenbergSugawaraReadout`. -/
 theorem continuous_cyclotomicHeisenbergSugawaraReadout :
     Continuous (cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜)) := by
+  unfold cyclotomicHeisenbergSugawaraReadout
   exact Continuous.prodMk
     (continuous_latentQuotientProj.comp continuous_fst)
     ((continuous_representedChargedFockSugawaraBundle (𝕜 := 𝕜)).comp
@@ -85,8 +91,9 @@ theorem continuous_cyclotomicHeisenbergSugawaraReadout :
 /-- Local constancy of `cyclotomicHeisenbergSugawaraReadout`. -/
 theorem isLocallyConstant_cyclotomicHeisenbergSugawaraReadout :
     IsLocallyConstant (cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜)) := by
-  exact IsLocallyConstant.of_discrete
+  have h := IsLocallyConstant.of_discrete
     (f := cyclotomicHeisenbergSugawaraReadout (𝕜 := 𝕜))
+  exact h
 
 /-- Reflection invariance of `cyclotomicHeisenbergSugawaraReadout` in the first factor. -/
 theorem cyclotomicHeisenbergSugawaraReadout_reflection_invariant

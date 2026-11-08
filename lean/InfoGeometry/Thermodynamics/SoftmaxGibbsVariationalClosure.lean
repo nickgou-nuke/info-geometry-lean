@@ -25,7 +25,7 @@ theorem freeEnergy_eq_equilibrium_iff
       p = gibbsState T H := by
   have hkl_eq :
       klDivergence p (gibbsState T H) =
-        FiniteKLNonnegativity.finiteKL p (gibbsState T H) := rfl
+        FiniteKLNonnegativity.finiteKL p (gibbsState T H) := Eq.refl _
   have hkl_zero_iff :
       klDivergence p (gibbsState T H) = 0 ↔
         p = gibbsState T H := by

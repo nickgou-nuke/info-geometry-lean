@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
+/-
 InfoGeometry/Thermodynamics/SouriauModularS.lean
 
 Concrete modular `S` lift for positive Souriau temperatures.
@@ -58,7 +63,7 @@ def modularSLiftInversion : ProjectiveLiftTemperatureInversion where
 @[simp]
 theorem modularSLiftInversion_element :
     modularSLiftInversion.element = modularS :=
-  rfl
+  Eq.refl modularS
 
 /-! ## 2. The fixed temperature `i` -/
 
@@ -111,8 +116,8 @@ theorem unitImaginary_stationary_modularS :
 /-- The modular `S` closure fixes the unit imaginary temperature. -/
 theorem modularS_closure_unitImaginary :
     (modularSLiftInversion.closure).theta unitImaginary = unitImaginary := by
-  simpa [ProjectiveLiftTemperatureInversion.closure, modularSLiftInversion] using
-    modularS_smul_unitImaginary
+  change modularS • unitImaginary = unitImaginary
+  exact modularS_smul_unitImaginary
 
 end PositiveSouriauTemperature
 

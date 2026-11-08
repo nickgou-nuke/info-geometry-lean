@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Formalization Team
+-/
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -69,8 +74,8 @@ theorem finiteConnesFlux_zero
 @[simp]
 theorem finiteConnesFlux_eq_one_of_same
     (Uφ : ℝ → G) (t : ℝ) :
-    Uφ t * (Uφ t)⁻¹ = 1 := by
-  simp
+    Uφ t * (Uφ t)⁻¹ = 1 :=
+  mul_inv_cancel (Uφ t)
 
 variable {ι : Type*}
 
@@ -91,12 +96,13 @@ noncomputable def finitePositiveDensityRatioOfStates
 @[simp] theorem finitePositiveDensityRatioAtTime_zero
     (ΔK : ι → ℝ) (i : ι) :
     finitePositiveDensityRatioAtTime ΔK 0 i = 1 := by
-  simp [finitePositiveDensityRatioAtTime]
+  unfold finitePositiveDensityRatioAtTime
+  rw [zero_mul, neg_zero, Real.exp_zero]
 
 @[simp] theorem finitePositiveDensityRatioAtTime_one
     (ΔK : ι → ℝ) (i : ι) :
-    finitePositiveDensityRatioAtTime ΔK 1 i = finitePositiveDensityRatio ΔK i := by
-  rfl
+    finitePositiveDensityRatioAtTime ΔK 1 i = finitePositiveDensityRatio ΔK i :=
+  Eq.refl (finitePositiveDensityRatio ΔK i)
 
 /-- The time-parametrized positive density ratio is multiplicative in time. -/
 theorem finitePositiveDensityRatioAtTime_add
@@ -114,9 +120,18 @@ theorem finitePositiveDensityRatioAtTime_hasDerivAt
       (fun τ : ℝ => finitePositiveDensityRatioAtTime ΔK τ i)
       ((-ΔK i) * finitePositiveDensityRatioAtTime ΔK t i)
       t := by
-  simpa [finitePositiveDensityRatioAtTime, Real.exp_eq_exp_ℝ, smul_eq_mul, mul_comm,
-    mul_left_comm, mul_assoc, neg_mul] using
-    (hasDerivAt_exp_smul_const (-(ΔK i)) t)
+  unfold finitePositiveDensityRatioAtTime
+  have h := hasDerivAt_exp_smul_const (-(ΔK i)) t
+  have hfun : (fun x : ℝ => NormedSpace.exp (x • -(ΔK i))) =
+      (fun τ : ℝ => Real.exp (-(τ * ΔK i))) := by
+    funext τ
+    rw [← Real.exp_eq_exp_ℝ, smul_eq_mul, mul_neg]
+  have hval : NormedSpace.exp (t • -(ΔK i)) * -(ΔK i) =
+      (-ΔK i) * Real.exp (-(t * ΔK i)) := by
+    rw [← Real.exp_eq_exp_ℝ, smul_eq_mul]
+    ring
+  rw [hfun, hval] at h
+  exact h
 
 /-- At modular time zero, the infinitesimal scalar generator is `-ΔK`. -/
 theorem finitePositiveDensityRatioAtTime_hasDerivAt_zero
@@ -125,7 +140,9 @@ theorem finitePositiveDensityRatioAtTime_hasDerivAt_zero
       (fun τ : ℝ => finitePositiveDensityRatioAtTime ΔK τ i)
       (-ΔK i)
       0 := by
-  simpa using finitePositiveDensityRatioAtTime_hasDerivAt ΔK 0 i
+  have h := finitePositiveDensityRatioAtTime_hasDerivAt ΔK 0 i
+  rw [finitePositiveDensityRatioAtTime_zero, mul_one] at h
+  exact h
 
 /-- The finite positive density ratio is strictly positive. -/
 theorem finitePositiveDensityRatio_pos
@@ -157,7 +174,8 @@ theorem finitePositiveDensityRatio_add
 theorem finiteCommutingConnesPhase_zero
     (ΔK : ι → ℝ) (i : ι) :
     finiteCommutingConnesPhase ΔK 0 i = 1 := by
-  simp [finiteCommutingConnesPhase]
+  unfold finiteCommutingConnesPhase
+  rw [zero_mul, Complex.ofReal_zero, mul_zero, neg_zero, Complex.exp_zero]
 
 /--
 The finite commuting Connes phase has the additive one-parameter law.

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
@@ -10,7 +15,7 @@ This module equips `SplitCliffordHeisenbergWitness`, `CurrentHeisenbergRep`, and
 local constancy of the canonical conversions `topologicalSplitCliffordToCurrentHeisenbergRep`
 and `topologicalSplitCliffordToCurrentSugawaraMorphism`.
 
-## 1. Real Math in This File
+- BUCKET 1 (Real Math in This File):
 - `topologicalSplitCliffordToCurrentHeisenbergRep`,
   `topologicalSplitCliffordToCurrentHeisenbergRep_eq`,
   `continuous_topologicalSplitCliffordToCurrentHeisenbergRep`,
@@ -20,11 +25,11 @@ and `topologicalSplitCliffordToCurrentSugawaraMorphism`.
   `continuous_topologicalSplitCliffordToCurrentSugawaraMorphism`,
   `isLocallyConstant_topologicalSplitCliffordToCurrentSugawaraMorphism`
 
-## 2. Meaningful Mathematical Results Used
+- BUCKET 2 (Meaningful Mathematical Results Used):
 - `InfoGeometry.Canonical.SplitCliffordHeisenbergBridge`
 - `InfoGeometry.Canonical.CurrentSugawaraBridge`
 
-## 3. Excluded Wrapper Patterns
+- BUCKET 3 (Excluded Wrapper Patterns):
 - Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
@@ -82,7 +87,7 @@ def topologicalSplitCliffordToCurrentHeisenbergRep
 theorem continuous_topologicalSplitCliffordToCurrentHeisenbergRep :
     Continuous (topologicalSplitCliffordToCurrentHeisenbergRep
       (𝕜 := 𝕜) (V := V)) := by
-  simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
+  dsimp; simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
     (continuous_of_discreteTopology :
       Continuous (topologicalSplitCliffordToCurrentHeisenbergRep
         (𝕜 := 𝕜) (V := V)))
@@ -91,7 +96,7 @@ theorem continuous_topologicalSplitCliffordToCurrentHeisenbergRep :
 theorem isLocallyConstant_topologicalSplitCliffordToCurrentHeisenbergRep :
     IsLocallyConstant (topologicalSplitCliffordToCurrentHeisenbergRep
       (𝕜 := 𝕜) (V := V)) := by
-  simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
+  dsimp; simpa [topologicalSplitCliffordToCurrentHeisenbergRep] using
     (IsLocallyConstant.of_discrete
       (f := topologicalSplitCliffordToCurrentHeisenbergRep (𝕜 := 𝕜) (V := V)))
 
@@ -115,7 +120,7 @@ def topologicalSplitCliffordToCurrentSugawaraMorphism
 theorem continuous_topologicalSplitCliffordToCurrentSugawaraMorphism :
     Continuous (topologicalSplitCliffordToCurrentSugawaraMorphism
       (𝕜 := 𝕜) (V := V)) := by
-  simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
+  dsimp; simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
     (continuous_of_discreteTopology :
       Continuous (topologicalSplitCliffordToCurrentSugawaraMorphism
         (𝕜 := 𝕜) (V := V)))
@@ -124,7 +129,7 @@ theorem continuous_topologicalSplitCliffordToCurrentSugawaraMorphism :
 theorem isLocallyConstant_topologicalSplitCliffordToCurrentSugawaraMorphism :
     IsLocallyConstant (topologicalSplitCliffordToCurrentSugawaraMorphism
       (𝕜 := 𝕜) (V := V)) := by
-  simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
+  dsimp; simpa [topologicalSplitCliffordToCurrentSugawaraMorphism] using
     (IsLocallyConstant.of_discrete
       (f := topologicalSplitCliffordToCurrentSugawaraMorphism
         (𝕜 := 𝕜) (V := V)))

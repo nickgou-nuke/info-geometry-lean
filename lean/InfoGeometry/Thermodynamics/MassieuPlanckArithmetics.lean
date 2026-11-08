@@ -40,7 +40,8 @@ noncomputable def primeMassieu (x : ℝ) : ℝ := Real.log (1 / (1 - x))
 
 theorem primeMassieu_eq_polylog1 (x : ℝ) :
     primeMassieu x = polylog1 x := by
-  simp [primeMassieu, polylog1, one_div, Real.log_inv]
+  unfold primeMassieu polylog1
+  rw [one_div, Real.log_inv]
 
 theorem logit_negentropy (p : ℝ) (hp : 0 < p) (hp1 : p < 1) :
     p * Real.log (p / (1 - p)) - Real.log (1 / (1 - p)) =

@@ -2791,7 +2791,7 @@ $\tau : B \to_+ R_0$:
    - $[P, A] = 0 \to \mathrm{conePlus}\,P\,A = 0 \land \mathrm{coneMinus}\,P\,A = 0 \land \mathrm{genV}\,P\,A\,A = 0 \land \mathrm{genSig}\,P\,A\,A = 0$,
    - $[N_+, \{N_+, X\}] = 0$, $\{N_+, [N_+, X]\} = 0$, $[N_-, \{N_-, X\}] = 0$, and $\{N_-, [N_-, X]\} = 0$,
    - $\{N_+, [N_-, X]\} + \{N_-, [N_+, X]\} = [\mathrm{genV}\,P\,A\,C, X]$,
-   - $[N_+, \{N_-, X\}] - [N_-, \{N_+, X\}] = \{\mathrm{genSig}\,P\,A\,C, X\}$,
+   - $[N_+, \{N_-, X\}] - \{N_-, [N_+, X]\} = \{\mathrm{genSig}\,P\,A\,C, X\}$,
    - $[N_+, [N_-, X]] - [N_-, [N_+, X]] = [\mathrm{genSig}\,P\,A\,C, X]$,
    - $(\{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}) + ([N_+, [N_-, X]] + [N_-, [N_+, X]]) = (2 : \mathbb{Z}) \bullet \{\mathrm{genV}\,P\,A\,C, X\}$,
    - $(\{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}) - ([N_+, [N_-, X]] + [N_-, [N_+, X]]) = (4 : \mathbb{Z}) \bullet \mathrm{sandwichCross}\,P\,A\,C\,X$. -/
@@ -2928,12 +2928,14 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
     have hSigSq : genSig P A C * genSig P A C = genV P A C := by rw [hSig2V2, hV_idem]
     have hPhiTrip : genPhi P A C * (genPhi P A C * genPhi P A C) = genPhi P A C := by
       rw [hCubic, hReflPlus, hReflMinus]; rfl
-    have hSigCubic :
-        genSig P A C * (genSig P A C * genSig P A C) =
+    have hSigVExpand :
+        genSig P A C * genV P A C =
           (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) -
           (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by peirce_nf hP
+    have hSigV : genSig P A C * genV P A C = genSig P A C := by
+      rw [hSigVExpand, hIdemL, hIdemR]; rfl
     have hSigTrip : genSig P A C * (genSig P A C * genSig P A C) = genSig P A C := by
-      rw [hSigCubic, hIdemL, hIdemR]; rfl
+      rw [hSigSq, hSigV]
     have hPhi2V : genPhi P A C * genPhi P A C = genV P A C := by peirce_nf hP
     have hVPhi : genV P A C * genPhi P A C = genPhi P A C := by
       calc genV P A C * genPhi P A C
@@ -2974,8 +2976,6 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
         _ = (genSig P A C * genSig P A C) * genSig P A C := by rw [hSigSq]
         _ = genSig P A C * (genSig P A C * genSig P A C) := by noncomm_ring
         _ = genSig P A C := hSigTrip
-    have hSigV : genSig P A C * genV P A C = genSig P A C := by
-      rw [← hSigSq, hSigTrip]
     have hVacSig : vacuumProjector P A C * genSig P A C = 0 := by
       unfold vacuumProjector; rw [sub_mul, one_mul, hVSig, sub_self]
     have hSigVac : genSig P A C * vacuumProjector P A C = 0 := by
@@ -3038,7 +3038,7 @@ theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge
       by unfold boundaryLieMinus boundaryJordanMinus; peirce_nf hP,
       by unfold boundaryLieMinus boundaryJordanMinus; peirce_nf hP⟩,
      ⟨by unfold boundaryJordanPlus boundaryLieMinus boundaryJordanMinus boundaryLiePlus genV InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
-      by unfold boundaryLiePlus boundaryJordanMinus boundaryLiePlus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
+      by unfold boundaryLiePlus boundaryJordanMinus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
       by unfold boundaryLiePlus boundaryLieMinus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring,
       by unfold boundaryJordanPlus boundaryJordanMinus boundaryLiePlus boundaryLieMinus genV InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
       by unfold boundaryJordanPlus boundaryJordanMinus boundaryLiePlus boundaryLieMinus sandwichCross InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring⟩⟩⟩

@@ -3843,6 +3843,7 @@ import InfoGeometry.Canonical.GromovWittenPrepotentialGaugeQuotient
 import InfoGeometry.Canonical.GromovWittenPrepotentialGaugeQuotientTopological
 import InfoGeometry.Canonical.GromovWittenPrepotentialTopologicalReadout
 import InfoGeometry.Canonical.GromovWittenQuantumCohomologyWDVVCapstone
+import InfoGeometry.Canonical.GrothendieckElementaryExpansionOperatorCalculus
 import InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
 import InfoGeometry.Canonical.GrothendieckFrobeniusGromovWittenUnifiedBridge
 import InfoGeometry.Canonical.GrothendieckGroup
@@ -6565,6 +6566,7 @@ import InfoGeometry.Canonical.ZornExteriorAlgebraBridge
 import InfoGeometry.Canonical.ZornFieldSpectralReadout
 import InfoGeometry.Canonical.ZornFiniteSelfAdjoint
 import InfoGeometry.Canonical.ZornFiniteVectorCalculus
+import InfoGeometry.Canonical.NoncommutativeHelmholtzWeitzenboeck
 import InfoGeometry.Canonical.ZornGaugeBosonGellMannTwistorBridge
 import InfoGeometry.Canonical.ZornHodgeHelmholtzBridge
 import InfoGeometry.Canonical.ZornIntegralMoebius
@@ -8665,6 +8667,7 @@ import InfoGeometry.Modular.ModularColimitDerivation
 import InfoGeometry.Modular.ModularColimitFlow
 import InfoGeometry.Modular.ModularSurprisalDerivationBridge
 import InfoGeometry.Modular.ModularTimeSemigroupBridge
+import InfoGeometry.Modular.ModularTimeSemigroupBridgeAudit
 import InfoGeometry.Modular.NambuGradedSuperalgebraBridge
 import InfoGeometry.Modular.NonAssociativeRiemannian
 import InfoGeometry.Modular.Noncommutative
@@ -9064,6 +9067,8 @@ import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 import InfoGeometry.OperatorAlgebra.IndividuatedCayley
 import InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
 import InfoGeometry.OperatorAlgebra.InformationAffineKacMoodyBridge
+import InfoGeometry.OperatorAlgebra.AharonovTwoStateModularHeisenberg
+import InfoGeometry.Canonical.XamboWesselRieszSkewDerivationOlindeRodriguesPoset
 import InfoGeometry.OperatorAlgebra.InnerConjugation
 import InfoGeometry.OperatorAlgebra.IntrinsicPeirceOperators
 import InfoGeometry.OperatorAlgebra.IsROrK
@@ -10814,6 +10819,7 @@ import InfoGeometry.Streaming.PositiveBoundaryConditioning
 import InfoGeometry.Streaming.StreamingBoundaryAudit
 import InfoGeometry.Streaming.StreamingBoundaryPristineChain
 import InfoGeometry.Streaming.TwoBoundaryDyadCompression
+import InfoGeometry.Streaming.TwoBoundaryDyadCompressionAudit
 import InfoGeometry.Streaming.TwoBoundaryWeakAudit
 import InfoGeometry.Streaming.TwoBoundaryWeakPristineChain
 import InfoGeometry.Streaming.TwoStateVectorEvolution

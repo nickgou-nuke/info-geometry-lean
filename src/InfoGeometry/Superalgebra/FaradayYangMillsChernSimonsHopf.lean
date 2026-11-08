@@ -131,19 +131,19 @@ def chernSimons3Form (u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ c₁ c₂ c�
 /-- **Maurer–Cartan Commutator & Faraday–Yang–Mills Monopole Reduction
 (`maurer_cartan_commutator_and_faraday_monopole_reduction`):**
 1. $[\omega_L(\mathbf{u}, \mathbf{a}), \omega_L(\mathbf{u}, \mathbf{b})]
-   = 2\,V(\mathbf{a}\times\mathbf{b}) - 2\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})\,(K_0 + U(\mathbf{u}))$;
+   = 2\,V(\mathbf{a}\times\mathbf{b}) + 2\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})\,(K_0 - U(\mathbf{u}))$;
 2. $\mathcal{F}_{\mathrm{YM}}(\mathbf{u}, \mathbf{a}, \mathbf{b})
-   = -2\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})\,(K_0 + U(\mathbf{u}))$. -/
+   = 2\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})\,(K_0 - U(\mathbf{u}))$. -/
 theorem maurer_cartan_commutator_and_faraday_monopole_reduction
     (u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ : R) :
     commutatorZ (maurerCartanForm u₁ u₂ u₃ a₁ a₂ a₃)
                 (maurerCartanForm u₁ u₂ u₃ b₁ b₂ b₃) =
       addZ (smulZ 2 (sheetV (a₂ * b₃ - a₃ * b₂) (a₃ * b₁ - a₁ * b₃) (a₁ * b₂ - a₂ * b₁)))
-           (smulZ (-2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
-                  (addZ paraSymplecticK0 (sheetU u₁ u₂ u₃))) ∧
+           (smulZ (2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
+                  (subZ paraSymplecticK0 (sheetU u₁ u₂ u₃))) ∧
     faradayYangMillsCurvature u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ =
-      smulZ (-2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
-            (addZ paraSymplecticK0 (sheetU u₁ u₂ u₃)) := by
+      smulZ (2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
+            (subZ paraSymplecticK0 (sheetU u₁ u₂ u₃)) := by
   refine ⟨?_, ?_⟩
   · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
       (dsimp [commutatorZ, subZ, mulZ, maurerCartanForm, addZ, smulZ, sheetU, sheetV,
@@ -154,23 +154,23 @@ theorem maurer_cartan_commutator_and_faraday_monopole_reduction
 
 /-- **Berry–Faraday Supertrace Charge & Quadratic Law (`faraday_yang_mills_traces_and_sq`):**
 1. $\mathrm{Tr}(\mathcal{F}_{\mathrm{YM}}) = 0$;
-2. $\mathrm{STr}(\mathcal{F}_{\mathrm{YM}}) = -4\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})$;
-3. $\mathcal{F}_{\mathrm{YM}}^2 = 4\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})^2\,(\mathbf{1} + U(\mathbf{u}))$. -/
+2. $\mathrm{STr}(\mathcal{F}_{\mathrm{YM}}) = 4\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})$;
+3. $\mathcal{F}_{\mathrm{YM}}^2 = 4\det_3(\mathbf{u}, \mathbf{a}, \mathbf{b})^2\,\mathbf{1}$. -/
 theorem faraday_yang_mills_traces_and_sq
     (u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ : R) :
     traceZ (faradayYangMillsCurvature u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃) = 0 ∧
     superTraceZ (faradayYangMillsCurvature u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃) =
-      -4 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ ∧
+      4 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ ∧
     mulZ (faradayYangMillsCurvature u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
          (faradayYangMillsCurvature u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃) =
       smulZ (4 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
-            (addZ oneZ (sheetU u₁ u₂ u₃)) := by
+            oneZ := by
   rw [(maurer_cartan_commutator_and_faraday_monopole_reduction u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃).2]
   refine ⟨?_, ?_, ?_⟩
-  · dsimp [traceZ, smulZ, addZ, paraSymplecticK0, sheetU]; ring
-  · dsimp [superTraceZ, smulZ, addZ, paraSymplecticK0, sheetU]; ring
+  · dsimp [traceZ, smulZ, subZ, paraSymplecticK0, sheetU]; ring
+  · dsimp [superTraceZ, smulZ, subZ, paraSymplecticK0, sheetU]; ring
   · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
-      (dsimp [mulZ, smulZ, addZ, paraSymplecticK0, sheetU, oneZ]; ring)
+      (dsimp [mulZ, smulZ, subZ, paraSymplecticK0, sheetU, oneZ]; ring)
 
 /-- **Chern–Simons 3-Form Formula & Hopf Sphere Conservation
 (`chern_simons_explicit_formula_and_sphere_conservation`):**
@@ -189,7 +189,7 @@ theorem chern_simons_explicit_formula_and_sphere_conservation
         -2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ * (u₁ * c₁ + u₂ * c₂ + u₃ * c₃) := by
     dsimp [chernSimons3Form]
     rw [(maurer_cartan_commutator_and_faraday_monopole_reduction u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃).2]
-    dsimp [traceZ, mulZ, smulZ, addZ, paraSymplecticK0, sheetU, daggerZ, maurerCartanForm]
+    dsimp [traceZ, mulZ, smulZ, subZ, paraSymplecticK0, sheetU, daggerZ, maurerCartanForm]
     ring
   refine ⟨h_cs, ?_⟩
   intro h_tan

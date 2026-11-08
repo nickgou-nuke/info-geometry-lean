@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Lie.E10LorentzianDecomposition
 import InfoGeometry.Lie.D5E10SerreInclusion
-import InfoGeometry.Canonical.E10Grading
+import InfoGeometry.Lie.E10SerrePresentation
 
 /-!
 # The $E_8 \subset E_9 \subset E_{10}$ Affine Null Root $\delta$, Hyperbolic Light-Cone Plane, & $D_5$ Embedding Poset
@@ -14,7 +14,7 @@ This canonical module formalizes the exact root-lattice light-cone geometry gove
 transition from the affine Kac–Moody algebra $E_9 = E_8^{(1)}$ to the hyperbolic Kac–Moody
 algebra $E_{10} = E_8^{(1)\wedge}$, uniting `InfoGeometry.Lie.E10HyperbolicSignature`,
 `InfoGeometry.Lie.E10LorentzianDecomposition`, `InfoGeometry.Lie.D5E10SerreInclusion`, and
-`InfoGeometry.Canonical.E10Grading`:
+the E₁₀ Serre presentation:
 
 1. **The Canonical $E_9$ Affine Imaginary Null Root $\delta$ (`e9AffineNullRoot`):**
    $\delta = (6, 3, 4, 2, 5, 4, 3, 2, 1, 0) \in \mathbb{Z}^{10}$ has total root height
@@ -77,7 +77,6 @@ open InfoGeometry.Lie.E10
 open InfoGeometry.Lie.E10Hyperbolic
 open InfoGeometry.Lie.E10LorentzianDecomposition
 open InfoGeometry.Lie.D5E10Inclusion
-open InfoGeometry.Canonical.E10Grading
 
 -- ============================================================================
 -- SECTION 1: The E₉ Affine Null Root δ & Over-Extending Root α₉ in E₁₀
@@ -227,8 +226,7 @@ theorem d5_in_e10_cartan_trace_splitting :
     Matrix.trace cartanMatrix = 20 ∧
     2 * Matrix.trace d5CartanMatrix = Matrix.trace cartanMatrix := by
   have hD5 : Matrix.trace d5CartanMatrix = 10 := by decide
-  have hE10 : Matrix.trace cartanMatrix = 20 :=
-    e10_serre_generator_degrees_and_cartan_trace.1
+  have hE10 : Matrix.trace cartanMatrix = 20 := cartanMatrix_trace
   refine ⟨hD5, hE10, by norm_num [hD5, hE10]⟩
 
 /-- Explicit non-commutativity witness for the $10 \times 10$ $E_{10}$ Cartan matrix carrier

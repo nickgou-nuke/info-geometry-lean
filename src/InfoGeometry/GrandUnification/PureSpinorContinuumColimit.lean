@@ -1,78 +1,83 @@
-import Mathlib
-import InfoGeometry.GrandUnification.ChevalleyKahlerBridge
-import InfoGeometry.GrandUnification.KleinCartanOrbifoldPacket
-import InfoGeometry.Canonical.WallpaperKleinBottleCartan
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Colimit.Module
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.Tactic.Abel
 
 /-!
-# The Pure Spinor Continuum Colimit
-## The Infinite-Dimensional Thermodynamic Limit
+# The Pure Spinor Continuum Colimit and Direct-Limit Klein Twist Transport
 
-By passing the finite representations of the Pure Spinor Vacuum and the 
-Klein-Cartan Orbifold through a sequence of natural inclusions, we construct 
-the continuous spectrum of Topological Quantum Field Theory. 
-We strictly enforce the Colimit Continuum Mandate here: infinite dimensions 
-are achieved algebraically via categorical limits rather than analytic continuation.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * Constructs the categorical direct limit `ContinuumSpace M bonding = Module.DirectLimit M bonding`
+    of a directed system of $R$-modules `(M i, bonding i j hij)` together with its exterior-algebra
+    unit `continuumVacuum` and stage injections `continuumOf`.
+- BUCKET 2 (Colimit Operations & Stage Compatibility):
+  * Defines the continuum translation `continuumTranslation` and reflection `continuumReflection`
+    directly as functions on `ContinuumSpace M bonding` and relates them to finite stages via
+    the canonical linear map `Module.DirectLimit.of`.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `continuumReflection_involutive`: reflection on `ContinuumSpace M bonding` is an involution.
+  * `continuum_klein_twist_defect`: non-orientable Klein reflection-translation commutator defect
+    `continuumReflection (continuumTranslation lambda x) - continuumTranslation lambda (continuumReflection x) = -(2 • lambda)`.
+  * `continuum_klein_twist_defect_of_stage`: compatibility of the continuum Klein twist defect
+    with the canonical colimit injection `continuumOf i : M i →ₗ[R] ContinuumSpace M bonding`.
 -/
 
 namespace InfoGeometry.GrandUnification.Continuum
 
-open InfoGeometry.Canonical.WallpaperKleinBottleCartan
-
-variable {R ι : Type*} [CommRing R] [Invertible (2 : R)] 
-variable [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] [DecidableEq ι]
+variable {R ι : Type*} [CommRing R]
+variable [Preorder ι] [DecidableEq ι]
 variable (M : ι → Type*) [∀ i, AddCommGroup (M i)] [∀ i, Module R (M i)]
-
--- The sequence of natural inclusions for the kinematic sheets
 variable (bonding : ∀ i j, i ≤ j → M i →ₗ[R] M j)
-variable [DirectedSystem M (fun i j h => bonding i j h)]
 
-/-- 
-Archetype 1: The Infinite Continuum Space.
-The categorical inductive direct limit of the finite kinematic layers.
--/
-abbrev ContinuumSpace := Module.DirectLimit M (fun i j h => bonding i j h)
+/-- The categorical inductive direct limit of the finite kinematic module layers. -/
+abbrev ContinuumSpace : Type _ :=
+  Module.DirectLimit M (fun i j h => bonding i j h)
 
-/-- 
-Archetype 2: The Continuum Vacuum Projection.
-Lifts the unexcited scalar vacuum identically across the entire limit space.
-Because the vacuum lives in grade-0 (the constants R), it is canonically 
-invariant under the tensor tower inclusions.
--/
-noncomputable def continuumVacuum (_i : ι) : ExteriorAlgebra R (ContinuumSpace M bonding) :=
-  1 -- The pure spinor vacuum natively persists through the colimit
+/-- Canonical linear injection from finite stage `i` into the direct-limit continuum module. -/
+noncomputable def continuumOf (i : ι) : M i →ₗ[R] ContinuumSpace M bonding :=
+  Module.DirectLimit.of R ι M (fun i j h => bonding i j h) i
 
-/--
-Archetype 3: The Colimit Transport of the Klein-Cartan Orbifold.
-If the finite layers host the non-orientable topology, the entire
-infinite continuum inherits the exact same anomaly structure.
--/
-structure ContinuumKleinOrbifold where
-  finite_orbifold_data : ∀ _i : ι, KleinCartanOrbifoldPacket
-  -- We package the continuum translation and reflection
-  translation : ContinuumSpace M bonding → ContinuumSpace M bonding → ContinuumSpace M bonding
-  reflection : ContinuumSpace M bonding → ContinuumSpace M bonding
-  -- The exact same non-orientable anomaly witness maps to the infinite limit
-  anomaly_witness : ∀ (x lambda : ContinuumSpace M bonding),
-    reflection (translation lambda x) - translation lambda (reflection x) = -(2 • lambda)
+/-- The grade-0 unit in the exterior algebra over the direct-limit continuum module. -/
+noncomputable def continuumVacuum : ExteriorAlgebra R (ContinuumSpace M bonding) :=
+  1
 
--- The construction theorem proving the lift
-noncomputable def liftContinuumOrbifold 
-    (finite_orbifolds : ∀ _i : ι, KleinCartanOrbifoldPacket) : ContinuumKleinOrbifold M bonding where
-  finite_orbifold_data := finite_orbifolds
-  translation := fun lambda x => x + lambda
-  reflection := fun x => -x
-  anomaly_witness := by
-    -- The anomaly is structurally invariant because the ContinuumSpace 
-    -- inherits the AddCommGroup structure perfectly via Module.DirectLimit.
-    intro x lambda
-    -- J(x + λ) - (J(x) + λ) = - (x + λ) - (-x + λ) = -2λ
-    have h1 : -(x + lambda) - (-x + lambda) = -lambda - lambda := by abel
-    have h2 : -(2 • lambda) = -lambda - lambda := by
-      calc
-        -(2 • lambda) = -((1 + 1) • lambda) := by rfl
-        _ = -(1 • lambda + 1 • lambda) := by rw [add_smul]
-        _ = -(lambda + lambda) := by simp
-        _ = -lambda - lambda := by abel
-    rw [h1, h2]
+/-- Continuum translation by `lambda` on `ContinuumSpace M bonding`. -/
+noncomputable def continuumTranslation (lambda x : ContinuumSpace M bonding) : ContinuumSpace M bonding :=
+  x + lambda
+
+/-- Continuum reflection (orientation reversal) on `ContinuumSpace M bonding`. -/
+noncomputable def continuumReflection (x : ContinuumSpace M bonding) : ContinuumSpace M bonding :=
+  -x
+
+/-- Continuum reflection is an involution on `ContinuumSpace M bonding`. -/
+theorem continuumReflection_involutive (x : ContinuumSpace M bonding) :
+    continuumReflection M bonding (continuumReflection M bonding x) = x := by
+  unfold continuumReflection
+  rw [neg_neg]
+
+/-- Non-orientable Klein twist defect on the direct-limit module `ContinuumSpace M bonding`:
+reversing orientation before and after translation by `lambda` yields `-(2 • lambda)`. -/
+theorem continuum_klein_twist_defect (x lambda : ContinuumSpace M bonding) :
+    continuumReflection M bonding (continuumTranslation M bonding lambda x) -
+      continuumTranslation M bonding lambda (continuumReflection M bonding x) =
+      -(2 • lambda) := by
+  unfold continuumReflection continuumTranslation
+  have h1 : -(x + lambda) - (-x + lambda) = -(lambda + lambda) := by abel
+  rw [h1, two_smul]
+
+/-- Stage-to-colimit compatibility: the continuum Klein twist defect on images of stage `i`
+equals the canonical colimit injection of the stage-`i` defect `-(2 • lambda)`. -/
+theorem continuum_klein_twist_defect_of_stage (i : ι) (x lambda : M i) :
+    continuumReflection M bonding
+        (continuumTranslation M bonding (continuumOf M bonding i lambda) (continuumOf M bonding i x)) -
+      continuumTranslation M bonding (continuumOf M bonding i lambda)
+        (continuumReflection M bonding (continuumOf M bonding i x)) =
+      continuumOf M bonding i (-(2 • lambda)) := by
+  rw [continuum_klein_twist_defect M bonding (continuumOf M bonding i x) (continuumOf M bonding i lambda)]
+  rw [map_neg, map_nsmul]
 
 end InfoGeometry.GrandUnification.Continuum

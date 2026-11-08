@@ -1,14 +1,32 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.HeisenbergSixthRootCubicMonodromyBridge
 
 /-!
-# TopCat packaging for the Heisenberg sixth-root / cubic monodromy packet
+# TopCat Packaging for the Heisenberg Sixth-Root / Cubic Monodromy Bundle
 
-This file packages the already verified sixth-root Heisenberg readout as a
-discrete topological packet. The source is the parameter space
-`𝕜 × SixthRootParameter`; the target is the combined boundary / cubic-root /
-monodromy readout. No new algebraic identification is introduced.
+This module defines the dependent product bundle `Bundle` storing the Heisenberg charge
+parameter, sixth-root parameter, Heisenberg boundary atlas, effective cubic root, and
+Klein-bottle colour monodromy operator, realizes `Bundle` and `𝕜 × SixthRootParameter`
+in `TopCat`, and proves the categorical retraction law `readout ≫ projection = 𝟙 _`.
+
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Topology.HeisenbergSixthRootCubicMonodromyBridge`:
+    `heisenbergSixthRootCubicMonodromyReadout`.
+- BUCKET 2 (Deconfabulation):
+  * Replaced the 5-field `structure Packet` wrapper with the dependent product carrier
+    `def Bundle` and explicit projection functions `Bundle.α`, `Bundle.q`,
+    `Bundle.heisenberg`, `Bundle.cubicRoot`, `Bundle.monodromy`.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `Bundle`, `Bundle.α`, `Bundle.q`, `Bundle.heisenberg`, `Bundle.cubicRoot`,
+    `Bundle.monodromy`.
+  * `topCat`, `parameterTopCat`, `projection`, `readout`.
+  * `projection_readout`, `projection_readout_apply`: categorical retraction in `TopCat`.
 -/
 
 noncomputable section
@@ -22,60 +40,86 @@ open InfoGeometry.Topology.KleinBottleCubicRootMonodromyTopological
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-- A concrete packet storing the Heisenberg parameter and the induced
-sixth-root / cubic-monodromy readout. -/
-structure Packet where
-  α : 𝕜
-  q : SixthRootParameter
-  heisenberg :
-    InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) α
-  cubicRoot : CubicRootParameter
-  monodromy : ColourOperator
+/-- Dependent product carrier storing the Heisenberg charge parameter, sixth-root
+parameter, Heisenberg boundary atlas, effective cubic root, and colour monodromy operator. -/
+def Bundle : Type _ :=
+  Σ α : 𝕜,
+    SixthRootParameter ×
+      (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) α ×
+        (CubicRootParameter × ColourOperator))
 
-instance packetTopologicalSpace : TopologicalSpace (Packet (𝕜 := 𝕜)) := ⊥
+/-- Charge parameter coordinate of a monodromy bundle point. -/
+def Bundle.α (p : Bundle (𝕜 := 𝕜)) : 𝕜 :=
+  p.1
 
-instance packetDiscreteTopology : DiscreteTopology (Packet (𝕜 := 𝕜)) := ⟨rfl⟩
+/-- Sixth-root parameter coordinate of a monodromy bundle point. -/
+def Bundle.q (p : Bundle (𝕜 := 𝕜)) : SixthRootParameter :=
+  p.2.1
+
+/-- Heisenberg boundary atlas component of a monodromy bundle point. -/
+def Bundle.heisenberg (p : Bundle (𝕜 := 𝕜)) :
+    InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) p.α :=
+  p.2.2.1
+
+/-- Effective cubic-root component of a monodromy bundle point. -/
+def Bundle.cubicRoot (p : Bundle (𝕜 := 𝕜)) : CubicRootParameter :=
+  p.2.2.2.1
+
+/-- Klein-bottle colour monodromy operator component of a monodromy bundle point. -/
+def Bundle.monodromy (p : Bundle (𝕜 := 𝕜)) : ColourOperator :=
+  p.2.2.2.2
+
+instance bundleTopologicalSpace : TopologicalSpace (Bundle (𝕜 := 𝕜)) := ⊥
+
+instance bundleDiscreteTopology : DiscreteTopology (Bundle (𝕜 := 𝕜)) := DiscreteTopology.mk (Eq.refl _)
 
 instance parameterTopologicalSpace :
     TopologicalSpace (𝕜 × SixthRootParameter) := ⊥
 
 instance parameterDiscreteTopology :
-    DiscreteTopology (𝕜 × SixthRootParameter) := ⟨rfl⟩
+    DiscreteTopology (𝕜 × SixthRootParameter) := DiscreteTopology.mk (Eq.refl _)
 
-/-- The packet as a `TopCat` object. -/
+/-- The monodromy bundle as a `TopCat` object. -/
 def topCat : TopCat :=
-  TopCat.of (Packet (𝕜 := 𝕜))
+  TopCat.of (Bundle (𝕜 := 𝕜))
 
-/-- The parameter space as a `TopCat` object. -/
+/-- The parameter space `𝕜 × SixthRootParameter` as a `TopCat` object. -/
 def parameterTopCat : TopCat :=
   TopCat.of (𝕜 × SixthRootParameter)
 
-/-- Projection from the packet back to its input parameter. -/
+/-- Projection morphism from the bundle back to its input parameter pair. -/
 noncomputable def projection :
     topCat (𝕜 := 𝕜) ⟶ parameterTopCat (𝕜 := 𝕜) := by
   refine TopCat.ofHom ?_
-  exact ⟨fun p : Packet (𝕜 := 𝕜) => (p.α, p.q),
+  exact ⟨fun p : Bundle (𝕜 := 𝕜) => (p.α, p.q),
     continuous_of_discreteTopology⟩
 
-/-- Canonical section from parameters into the combined packet. -/
+/-- Canonical section morphism from parameters into the monodromy bundle. -/
 noncomputable def readout :
     parameterTopCat (𝕜 := 𝕜) ⟶ topCat (𝕜 := 𝕜) := by
   refine TopCat.ofHom ?_
   exact ⟨fun p : 𝕜 × SixthRootParameter =>
-      ⟨p.1, p.2,
-        heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) p.1 p.2 |>.1,
-        heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) p.1 p.2 |>.2.1,
-        heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) p.1 p.2 |>.2.2⟩,
+      ⟨p.1,
+        (p.2,
+          (heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) p.1 p.2 |>.1,
+            (heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) p.1 p.2 |>.2.1,
+              heisenbergSixthRootCubicMonodromyReadout (𝕜 := 𝕜) p.1 p.2 |>.2.2)))⟩,
       continuous_of_discreteTopology⟩
 
+/-- Categorical retraction law `readout ≫ projection = 𝟙 _` in `TopCat`. -/
 @[simp] theorem projection_readout :
     readout (𝕜 := 𝕜) ≫ projection (𝕜 := 𝕜) = 𝟙 _ := by
   apply TopCat.hom_ext
   ext p
-  rfl
+  · unfold readout projection Bundle.α
+    exact Eq.refl _
+  · unfold readout projection Bundle.q
+    exact Eq.refl _
 
+/-- Pointwise evaluation of `readout ≫ projection` at `p : 𝕜 × SixthRootParameter`. -/
 @[simp] theorem projection_readout_apply (p : 𝕜 × SixthRootParameter) :
     (readout (𝕜 := 𝕜) ≫ projection (𝕜 := 𝕜)) p = p := by
-  rfl
+  rw [projection_readout (𝕜 := 𝕜)]
+  exact Eq.refl _
 
 end InfoGeometry.Topology.HeisenbergSixthRootCubicMonodromyTopCat

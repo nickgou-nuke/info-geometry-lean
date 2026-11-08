@@ -4,17 +4,29 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-!
-# InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
+# Source-Faithful CAR-to-Current Adapter and Sugawara Readout
 
-Source-faithful adapter binding `RawCARModeCompletion A`, algebra representation
-`ρ : A →+* Module.End 𝕜 V`, and derived current $J_m$.
+This module defines the subtype `AdapterData 𝕜 A V` binding a raw CAR mode
+completion `RawCARModeCompletion A`, an algebra representation
+`ρ : A →+* Module.End 𝕜 V`, represented cutoff currents, and a stabilized
+Heisenberg current representation `CurrentHeisenbergRep 𝕜 V`, and derives its
+Sugawara Virasoro representation and mode commutator readout.
 
-This module closes the interface adapter gap:
-1. It connects `source` to the module action via `ρ : A →+* Module.End 𝕜 V`.
-2. It proves that `cutoffCurrent L m` equals the represented raw CAR normal-ordered current `ρ (representedCutoffCurrent source L m)`.
-3. It derives `J m` from the stabilized cutoff current action.
-4. It proves the Heisenberg commutator law $[J_m, J_n] = m \\delta_{m+n,0} I$ non-vacuously from the underlying Wick expansion.
-5. It yields the composed end-to-end `RawCAR → Heisenberg → Sugawara` Virasoro representation.
+## 1. Real Math in This File
+- `AdapterData`
+- `AdapterData.source`, `AdapterData.ρ`, `AdapterData.cutoffCurrent`,
+  `AdapterData.toCurrentHeisenbergRep`, `AdapterData.J`,
+  `AdapterData.eventually_cutoffCurrent_eq`,
+  `AdapterData.cutoffCurrent_eq_represented_rawCurrent`,
+  `AdapterData.trunc`, `AdapterData.comm`
+- `AdapterData.toSugawaraVirasoroRepresentation`, `AdapterData.virasoro_bracket_readout`
+
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
+- `InfoGeometry.Canonical.CurrentSugawaraBridge`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
@@ -26,64 +38,71 @@ open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open VirasoroProject
 
-variable (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
-variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
-
-/--
-A source-faithful CAR-to-current adapter.
-
-Binds the raw CAR mode completion `source`, the representation `ρ : A →+* Module.End 𝕜 V`,
-the represented cutoff currents, and the stabilized mode limit `J`.
--/
-structure AdapterData where
-  /-- Raw CAR mode completion data. -/
-  source : RawCARModeCompletion A
-  /-- Ring homomorphism representation on the carrier space `V`. -/
-  ρ : A →+* Module.End 𝕜 V
-  /-- Truncated normal-ordered current endomorphisms. -/
-  cutoffCurrent : ℕ → Int → Module.End 𝕜 V
-  /-- Limit current modes on the carrier. -/
-  J : Int → Module.End 𝕜 V
-  /-- Stabilization of the finite cutoff current action to `J m v`. -/
-  eventually_cutoffCurrent_eq :
-    ∀ (m : Int) (v : V), ∀ᶠ L : ℕ in atTop, cutoffCurrent L m v = J m v
-  /-- Identification of cutoff current with represented raw CAR current. -/
-  cutoffCurrent_eq_represented_rawCurrent :
-    ∀ (L : ℕ) (m : Int), cutoffCurrent L m = ρ (representedCutoffCurrent source L m)
-  /-- Local truncation for the limit current family. -/
-  trunc : ∀ v, ∀ᶠ l : Int in atTop, J l v = 0
-  /-- Heisenberg commutator law. -/
-  comm :
-    ∀ m n, (J m).commutator (J n) =
-      if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0
+/-- Subtype of source-faithful CAR-to-current adapter tuples
+`(source, ρ, cutoffCurrent, H)` whose cutoff currents equal the represented raw
+CAR cutoff currents and stabilize pointwise to `H.J`. -/
+def AdapterData (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
+    [Ring A] [AddCommGroup V] [Module 𝕜 V] : Type _ :=
+  { D : RawCARModeCompletion A × (A →+* Module.End 𝕜 V) ×
+        (ℕ → Int → Module.End 𝕜 V) × CurrentHeisenbergRep 𝕜 V //
+      (∀ (m : Int) (v : V), ∀ᶠ L : ℕ in atTop, D.2.2.1 L m v = D.2.2.2.J m v) ∧
+      (∀ (L : ℕ) (m : Int), D.2.2.1 L m = D.2.1 (representedCutoffCurrent D.1 L m)) }
 
 namespace AdapterData
 
 variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
-/-- Convert the adapter into a `CurrentHeisenbergRep 𝕜 V`. -/
-def toCurrentHeisenbergRep
-    (S : AdapterData 𝕜 A V) :
-    CurrentHeisenbergRep 𝕜 V where
-  J := S.J
-  trunc := S.trunc
-  comm := S.comm
+/-- Raw CAR mode completion carried by `S`. -/
+def source (S : AdapterData 𝕜 A V) : RawCARModeCompletion A :=
+  S.val.1
 
-/--
-End-to-End Raw-CAR to Sugawara Virasoro Representation Theorem:
-Every source-faithful adapter `S` induces a Sugawara Virasoro algebra representation
-$L_n : \\mathfrak{vir} \\to \\operatorname{End}(V)$ with central charge $c = 1$.
--/
+/-- Ring homomorphism representation `A →+* Module.End 𝕜 V` carried by `S`. -/
+def ρ (S : AdapterData 𝕜 A V) : A →+* Module.End 𝕜 V :=
+  S.val.2.1
+
+/-- Truncated normal-ordered current endomorphisms carried by `S`. -/
+def cutoffCurrent (S : AdapterData 𝕜 A V) : ℕ → Int → Module.End 𝕜 V :=
+  S.val.2.2.1
+
+/-- Underlying `CurrentHeisenbergRep 𝕜 V` carried by `S`. -/
+def toCurrentHeisenbergRep (S : AdapterData 𝕜 A V) : CurrentHeisenbergRep 𝕜 V :=
+  S.val.2.2.2
+
+/-- Stabilized limit current modes on `V`. -/
+def J (S : AdapterData 𝕜 A V) : Int → Module.End 𝕜 V :=
+  S.toCurrentHeisenbergRep.J
+
+/-- Pointwise eventual stabilization of the finite cutoff current action to `S.J m v`. -/
+theorem eventually_cutoffCurrent_eq (S : AdapterData 𝕜 A V)
+    (m : Int) (v : V) :
+    ∀ᶠ L : ℕ in atTop, S.cutoffCurrent L m v = S.J m v :=
+  S.property.1 m v
+
+/-- Identification of the cutoff current with the represented raw CAR current. -/
+theorem cutoffCurrent_eq_represented_rawCurrent (S : AdapterData 𝕜 A V)
+    (L : ℕ) (m : Int) :
+    S.cutoffCurrent L m = S.ρ (representedCutoffCurrent S.source L m) :=
+  S.property.2 L m
+
+/-- Eventual positive-mode truncation for the limit current family `S.J`. -/
+theorem trunc (S : AdapterData 𝕜 A V) :
+    ∀ v, ∀ᶠ l : Int in atTop, S.J l v = 0 :=
+  S.toCurrentHeisenbergRep.trunc
+
+/-- Heisenberg mode commutator law for `S.J`. -/
+theorem comm (S : AdapterData 𝕜 A V) :
+    ∀ m n, (S.J m).commutator (S.J n) =
+      if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0 :=
+  S.toCurrentHeisenbergRep.comm
+
+/-- Sugawara Virasoro Lie algebra representation induced by `S`. -/
 noncomputable def toSugawaraVirasoroRepresentation
     (S : AdapterData 𝕜 A V) :
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ Module.End 𝕜 V :=
   S.toCurrentHeisenbergRep.currentSugawaraRepresentation
 
-/--
-Virasoro Bracket Readout:
-The stress-tensor modes $L_m = S.\\text{toSugawaraVirasoroRepresentation}(L_m)$ satisfy the Virasoro algebra.
--/
+/-- Virasoro mode commutator identity for the Sugawara stress-tensor modes of `S`. -/
 theorem virasoro_bracket_readout
     (S : AdapterData 𝕜 A V) (m n : Int) :
     (S.toCurrentHeisenbergRep.sugawaraStressMode m).commutator

@@ -1,38 +1,29 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
 
 /-!
-# Grand Unification: Souriau-Bost-Connes Dirac-Hodge Boundary Operator
+# Grand Unification: Souriau–Bost–Connes Dirac–Hodge Boundary Operator
 
-This module formalizes an algebraic Dirac-Hodge boundary model.  It records
-linear-map identities on an explicitly supplied carrier; it is not a
-construction of a spectral triple, a Cuntz $C^*$-algebra, or a physical
-Bost-Connes system:
-
-1. **Cuntz-Dirac Boundary**:
-   - The left shift $S_L$ represents the exterior derivative $d$ (creation).
-   - The modular conjugation $J$ satisfies $J^2 = \text{id}$ (Hodge involution / Legendre dual).
-   - The right shift $S_R = J \circ S_L \circ J$ is the codifferential $\delta$ (Hodge dual).
-   - The Dirac operator $D_{\text{graph}} = S_L + S_R = d + \delta$.
-   - The chiral grading / phase axis $K = S_L S_L^* - S_R S_R^*$.
-
-2. **🏆 THEOREM 1 (`J_flips_tilt`)**:
-   - Applying modular conjugation $J$ to the phase axis strictly reverses the chirality:
-     $$J \circ K \circ J = -K$$
-   - This proves only the stated conjugation identity for the supplied linear map $J$.
-
-3. **THEOREM 2 (`anomaly_cancellation`)**:
-   - For any $J$-invariant linear functional $\operatorname{Tr}$, the expectation of the phase axis vanishes:
-     $$\operatorname{Tr}(K) = 0$$
-   - This is an algebraic trace-cancellation result under the explicitly stated
-     conjugation-invariance hypothesis. It does not assert a Lee--Yang theorem,
-     a KMS construction, or a consequence for the Riemann hypothesis.
-
-All proofs are complete in native Mathlib 4 with 0 `sorry`s, 0 custom axioms, and 0 wrappers.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * Formalizes an algebraic Dirac–Hodge boundary model on an explicitly supplied $\mathbb{C}$-module
+    `H` equipped with `CuntzDiracBoundary H` (`S_L`, `S_L_adj`, and modular involution `J` with
+    `J ∘ₗ J = id`).
+- BUCKET 2 (Explicit Linear-Map Carrier):
+  * Defines `S_R = J ∘ₗ S_L ∘ₗ J`, `S_R_adj = J ∘ₗ S_L_adj ∘ₗ J`, `graph_Dirac = S_L + S_R`,
+    and the chiral grading axis `tilt_axis = S_L ∘ₗ S_L_adj - S_R ∘ₗ S_R_adj`.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `S_R_mul_S_R_adj`, `J_S_R_proj_J`: conjugation identities relating the left and right shift
+    projectors under `J`.
+  * `J_flips_tilt`: `J ∘ₗ tilt_axis H ∘ₗ J = -tilt_axis H`.
+  * `anomaly_cancellation`: for any $J$-invariant linear functional `trace`,
+    `trace (tilt_axis H) = 0`.
 -/
 
 namespace InfoGeometry.GrandUnification.SouriauBostConnes.Foundation
@@ -41,15 +32,10 @@ open Complex
 
 /-- The Souriau-Bost-Connes Cuntz Boundary -/
 class CuntzDiracBoundary (H : Type*) [AddCommGroup H] [Module ℂ H] where
-  -- The Cuntz Left Shift (Exterior Derivative / Creation)
   S_L : H →ₗ[ℂ] H
   S_L_adj : H →ₗ[ℂ] H
-  
-  -- The Modular Conjugation (Fenchel Dual / Hodge Star Involution)
   J : H →ₗ[ℂ] H
   J_sq : J ∘ₗ J = LinearMap.id
-  
-  -- The Cuntz Partition of Unity (Completeness of the Haar Dirac Sea)
   partition : (S_L ∘ₗ S_L_adj) + (J ∘ₗ S_L ∘ₗ J) ∘ₗ (J ∘ₗ S_L_adj ∘ₗ J) = LinearMap.id
 
 variable (H : Type*) [AddCommGroup H] [Module ℂ H] [CuntzDiracBoundary H]
@@ -68,7 +54,7 @@ def graph_Dirac : H →ₗ[ℂ] H :=
   (CuntzDiracBoundary.S_L : H →ₗ[ℂ] H) + S_R H
 
 /-- The Chiral Grading (Phase Axis / Haar Psi): $K = S_L S_L^* - S_R S_R^*$. -/
-def tilt_axis : H →ₗ[ℂ] H := 
+def tilt_axis : H →ₗ[ℂ] H :=
   ((CuntzDiracBoundary.S_L : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L_adj) - (S_R H ∘ₗ S_R_adj H)
 
 /-- Product of Right Shift and its adjoint in terms of $J$ and Left Shift. -/
@@ -96,36 +82,16 @@ theorem J_S_R_proj_J :
     LinearMap.congr_fun (CuntzDiracBoundary.J_sq (H := H)) y
   rw [hj1, hj2]
 
-/-- 🏆 THEOREM 1: The Fenchel/Legendre Transform flips the Phase Axis.
-    Applying the modular conjugation $J$ to the phase axis exactly reverses the chirality:
-    $$J \circ K \circ J = -K$$ -/
+/-- Applying the modular conjugation $J$ to the phase axis reverses the chirality:
+    $J \circ K \circ J = -K$. -/
 theorem J_flips_tilt :
     (CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ tilt_axis H ∘ₗ CuntzDiracBoundary.J = -tilt_axis H := by
   unfold tilt_axis
-  ext x
-  have h_comp_sub : ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ
-      (((CuntzDiracBoundary.S_L : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L_adj) - (S_R H ∘ₗ S_R_adj H)) ∘ₗ
-      CuntzDiracBoundary.J) x =
-    ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ ((CuntzDiracBoundary.S_L : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L_adj) ∘ₗ CuntzDiracBoundary.J) x -
-    ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ (S_R H ∘ₗ S_R_adj H) ∘ₗ CuntzDiracBoundary.J) x := by
-    simp only [LinearMap.comp_apply, LinearMap.sub_apply, map_sub]
-  rw [h_comp_sub]
-  have h1 : ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ ((CuntzDiracBoundary.S_L : H →ₗ[ℂ] H) ∘ₗ CuntzDiracBoundary.S_L_adj) ∘ₗ CuntzDiracBoundary.J) x =
-      (S_R H ∘ₗ S_R_adj H) x := by
-    simpa only [LinearMap.comp_apply] using
-      congrArg (fun T : H →ₗ[ℂ] H => T x) (S_R_mul_S_R_adj H).symm
-  have h2 : ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ (S_R H ∘ₗ S_R_adj H) ∘ₗ CuntzDiracBoundary.J) x =
-      (CuntzDiracBoundary.S_L ∘ₗ CuntzDiracBoundary.S_L_adj) x := by
-    simpa only [LinearMap.comp_apply] using
-      congrArg (fun T : H →ₗ[ℂ] H => T x) (J_S_R_proj_J H)
-  rw [h1, h2]
-  simp only [LinearMap.sub_apply, LinearMap.neg_apply]
+  rw [LinearMap.sub_comp, LinearMap.comp_sub, ← S_R_mul_S_R_adj H, J_S_R_proj_J H]
   abel
 
-/-- 🏆 THEOREM 2: The Half-Filled Dirac Sea and Chiral Anomaly Cancellation.
-    For any linear trace functional invariant under modular conjugation $J$,
-    the expectation of the phase axis (the net chiral anomaly) vanishes identically:
-    $$\operatorname{Tr}(K) = 0$$ -/
+/-- For any linear trace functional invariant under modular conjugation $J$,
+    the expectation of the phase axis vanishes: $\operatorname{Tr}(K) = 0$. -/
 theorem anomaly_cancellation
     (trace : (H →ₗ[ℂ] H) →ₗ[ℂ] ℂ)
     (h_trace_J_inv : ∀ A : H →ₗ[ℂ] H, trace ((CuntzDiracBoundary.J : H →ₗ[ℂ] H) ∘ₗ A ∘ₗ CuntzDiracBoundary.J) = trace A) :

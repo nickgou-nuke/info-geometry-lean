@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.ErlangenLanglandsLane
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.ErlangenLanglandsGeometryLane
@@ -135,6 +140,6 @@ noncomputable section
 #check InfoGeometry.GromovHomologicalProbabilityRoadmap.constructGromovHomologicalProbabilityRoadmapPacket
 -/
 
-#check InfoGeometry.GrandUnification.modularTransportBridgeTarget
-#check InfoGeometry.GrandUnification.tomitaGromovBridgeTarget
+#check InfoGeometry.GrandUnification.finite_modular_connes_phase_cocycle_law
+#check InfoGeometry.GrandUnification.tomita_gromov_finite_connes_souriau_synthesis
 #check InfoGeometry.GrandUnification.spectralThermalNormalization_partition_pos

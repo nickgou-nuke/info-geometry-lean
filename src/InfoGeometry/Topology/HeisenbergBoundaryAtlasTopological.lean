@@ -1,14 +1,33 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HeisenbergBoundaryAtlas
 
 /-!
-# Topological readout for the Heisenberg boundary atlas
+# Topological Readout for the Heisenberg Boundary Atlas
 
-This file packages the already-verified Heisenberg boundary atlas as a
-topological readout. The parameter space and atlas carrier are given discrete
-topologies, so continuity and local constancy are bookkeeping consequences of
-the algebraic atlas fields.
+This module equips the Heisenberg charge parameter space `𝕜` and the dependent
+Heisenberg boundary atlas total space `HeisenbergBoundaryAtlasBundle` with discrete
+topologies, and proves continuity, local constancy, and fiber projection laws for
+`topologicalHeisenbergBoundaryAtlas`.
+
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Canonical.HeisenbergBoundaryAtlas`: `Atlas`, `canonicalAtlas`.
+  * `Mathlib.Topology.Constructions`: discrete topology and locally constant maps.
+- BUCKET 2 (Deconfabulation):
+  * All projection and topological theorems are proved through explicit definitional
+    unfolding and discrete topology continuity lemmas.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `HeisenbergBoundaryAtlasBundle`: dependent total space `Σ α : 𝕜, Atlas α`.
+  * `topologicalHeisenbergBoundaryAtlas`: section `α ↦ ⟨α, canonicalAtlas α⟩`.
+  * `topologicalHeisenbergBoundaryAtlas_eq`, `topologicalHeisenbergBoundaryAtlas_fst`,
+    `topologicalHeisenbergBoundaryAtlas_snd`: explicit section and projection identities.
+  * `continuous_topologicalHeisenbergBoundaryAtlas`,
+    `isLocallyConstant_topologicalHeisenbergBoundaryAtlas`: continuity and local constancy.
 -/
 
 namespace InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
@@ -20,52 +39,62 @@ noncomputable section
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-! The parameter space and the total atlas packet are both given discrete
-topologies. This keeps the packaging honest while avoiding dependent-codomain
-continuity claims. -/
 instance heisenbergBoundaryAtlasParameterTopologicalSpace :
     TopologicalSpace 𝕜 := ⊥
 
 instance heisenbergBoundaryAtlasParameterDiscreteTopology :
-    DiscreteTopology 𝕜 := ⟨rfl⟩
+    DiscreteTopology 𝕜 := DiscreteTopology.mk (Eq.refl _)
 
-/-- Total-space packet for the parameterized Heisenberg boundary atlas. -/
-abbrev HeisenbergBoundaryAtlasPacket :=
+/-- Total-space bundle for the parameterized Heisenberg boundary atlas. -/
+abbrev HeisenbergBoundaryAtlasBundle :=
   Σ α : 𝕜, InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) α
 
-instance heisenbergBoundaryAtlasPacketTopologicalSpace :
-    TopologicalSpace (HeisenbergBoundaryAtlasPacket (𝕜 := 𝕜)) := ⊥
+instance heisenbergBoundaryAtlasBundleTopologicalSpace :
+    TopologicalSpace (HeisenbergBoundaryAtlasBundle (𝕜 := 𝕜)) := ⊥
 
-instance heisenbergBoundaryAtlasPacketDiscreteTopology :
-    DiscreteTopology (HeisenbergBoundaryAtlasPacket (𝕜 := 𝕜)) := ⟨rfl⟩
+instance heisenbergBoundaryAtlasBundleDiscreteTopology :
+    DiscreteTopology (HeisenbergBoundaryAtlasBundle (𝕜 := 𝕜)) := DiscreteTopology.mk (Eq.refl _)
 
-/-- The Heisenberg boundary atlas, viewed as a topological packet. -/
+/-- The Heisenberg boundary atlas viewed as a section into the total-space bundle. -/
 def topologicalHeisenbergBoundaryAtlas :
-    𝕜 → HeisenbergBoundaryAtlasPacket (𝕜 := 𝕜) :=
+    𝕜 → HeisenbergBoundaryAtlasBundle (𝕜 := 𝕜) :=
   fun α => ⟨α, InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas
     (𝕜 := 𝕜) α⟩
 
+/-- Explicit evaluation of `topologicalHeisenbergBoundaryAtlas` at charge parameter `α`. -/
 @[simp] theorem topologicalHeisenbergBoundaryAtlas_eq
     (α : 𝕜) :
     topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜) α =
       ⟨α, InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α⟩ := by
-  rfl
+  unfold topologicalHeisenbergBoundaryAtlas
+  exact Eq.refl _
 
-/-- The Heisenberg boundary atlas readout is continuous on the discrete
-parameter space. -/
+/-- Base charge coordinate of `topologicalHeisenbergBoundaryAtlas α`. -/
+@[simp] theorem topologicalHeisenbergBoundaryAtlas_fst
+    (α : 𝕜) :
+    (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜) α).1 = α := by
+  unfold topologicalHeisenbergBoundaryAtlas
+  exact Eq.refl _
+
+/-- Fiber atlas coordinate of `topologicalHeisenbergBoundaryAtlas α`. -/
+@[simp] theorem topologicalHeisenbergBoundaryAtlas_snd
+    (α : 𝕜) :
+    (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜) α).2 =
+      InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α := by
+  unfold topologicalHeisenbergBoundaryAtlas
+  exact Eq.refl _
+
+/-- The Heisenberg boundary atlas readout is continuous on the discrete parameter space. -/
 theorem continuous_topologicalHeisenbergBoundaryAtlas :
     Continuous (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜)) := by
-  simpa [topologicalHeisenbergBoundaryAtlas] using
-    (continuous_of_discreteTopology :
-      Continuous (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜)))
+  unfold topologicalHeisenbergBoundaryAtlas
+  exact continuous_of_discreteTopology
 
-/-- The Heisenberg boundary atlas readout is locally constant on the discrete
-parameter space. -/
+/-- The Heisenberg boundary atlas readout is locally constant on the discrete parameter space. -/
 theorem isLocallyConstant_topologicalHeisenbergBoundaryAtlas :
     IsLocallyConstant (topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜)) := by
-  simpa [topologicalHeisenbergBoundaryAtlas] using
-    (IsLocallyConstant.of_discrete
-      (f := topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜)))
+  unfold topologicalHeisenbergBoundaryAtlas
+  exact IsLocallyConstant.of_discrete
 
 end
 end InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological

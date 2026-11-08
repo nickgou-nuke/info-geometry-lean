@@ -493,6 +493,143 @@ theorem operator_maurer_cartan_and_differential_forms_spire_capstone
      hgalois.2.2.2.2.2.2, hpeirce.2.2.2.1, hpeirce.2.2.2.2.2.2.1⟩,
     ⟨heven, hanom⟩⟩
 
+/-- **Operator Lichnerowicz Elliptic/Hyperbolic Duality, Operatorial Information Geometry,
+and Transparent Peirce–DeWitt Spire Capstone
+(`operator_lichnerowicz_amari_information_geometry_and_peirce_dewitt_spire_capstone`):**
+Unifies Stage 12 of `TetractysZeemanZornAssociatorBridge` at the top of the Grand Unification
+Spire:
+1. **Operator Lichnerowicz–Weitzenböck Elliptic vs. Hyperbolic Duality & Peirce–Nambu–Gorkov SUSY:**
+   - $D_+^2 = \Delta_{\mathrm{Bochner}} + \Omega_{12}[D_1, D_2]$ and
+     $D_{\mathrm{flip}}^2 = \Delta_{\mathrm{Bochner}} - \Omega_{12}[D_1, D_2]$,
+   - $D_+ D_{\mathrm{flip}} = \square - \Omega_{12}\{D_1, D_2\}$ and
+     $D_{\mathrm{flip}} D_+ = \square + \Omega_{12}\{D_1, D_2\}$,
+   - $Q_A^2 = D_A^2 + M_A^2 = 0$ for $Q_A = \mathrm{bdgSupercharge}\,P\,A = (2 : \mathbb{Z}) \bullet \mathrm{conePlus}\,P\,A$.
+2. **Operatorial Information Geometry Dual Connections, Cyclic Trace Compatibility, & Dirac Waves:**
+   - $\tau(\nabla^{(+)}_{H,S}(X) * Y) + \tau(X * \nabla^{(-)}_{H,S}(Y)) = 0$ and
+     $\tau(\nabla^{(+)}_{H,S}(X)) + \tau(\nabla^{(-)}_{H,S}(X)) = 0$,
+   - $[H, \{S, X\}] - \{S, [H, X]\} = \{[H, S], X\}$ and, when $[H, S] = 0$,
+     $\Delta_{H,S}(X) = [H, [H, X]] - \{S, \{S, X\}\}$,
+   - $\{D^{(+)}, D^{(-)}\} = (2 : \mathbb{Z}) \bullet ((D^{(0)})^2 - (D^{(\mathrm{skew})})^2)$ and
+     $[D^{(+)}, D^{(-)}] = -((2 : \mathbb{Z}) \bullet [D^{(0)}, D^{(\mathrm{skew})}])$.
+3. **The Four Transparent Non-Commutative Peirce–DeWitt Identities & Cayley–Möbius Apollonian Poles:**
+   - $(2 : \mathbb{Z}) \bullet \mathrm{peirce11}\,P\,A = \{P, A\} - [P, [P, A]]$,
+   - $(2 : \mathbb{Z}) \bullet \mathrm{peirce00}\,P\,A = (2 : \mathbb{Z}) \bullet A - \{P, A\} - [P, [P, A]]$,
+   - $(2 : \mathbb{Z}) \bullet \mathrm{conePlus}\,P\,A = [P, [P, A]] + [P, A] = \nabla^{(+)}_{P,P}([P, A])$,
+   - $(2 : \mathbb{Z}) \bullet \mathrm{coneMinus}\,P\,A = [P, [P, A]] - [P, A] = \nabla^{(-)}_{P,P}([P, A])$,
+   - $U(X) * U(-X) = 1$, $U(-X) * U(X) = 1$, $1 + U(X) = (2 : \mathbb{Z}) \bullet R_+$, and
+     $1 - U(X) = (2 : \mathbb{Z}) \bullet (X * R_+)$. -/
+theorem operator_lichnerowicz_amari_information_geometry_and_peirce_dewitt_spire_capstone
+    {B : Type*} [Ring B]
+    {R₀ : Type*} [AddCommGroup R₀]
+    (τ : B →+ R₀)
+    (hτ : InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.IsCyclic τ)
+    {Γ₁ Γ₂ D₁ D₂ P X R_plus R_minus : B}
+    (hΓ1 : Γ₁ * Γ₁ = 1) (hΓ2 : Γ₂ * Γ₂ = 1)
+    (hΓ12 : InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm Γ₁ Γ₂ = 0)
+    (h11 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₁ D₁ = 0)
+    (h12 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₁ D₂ = 0)
+    (h21 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₂ D₁ = 0)
+    (h22 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₂ D₂ = 0)
+    (hP : P * P = P)
+    (hPlus_r : (1 + X) * R_plus = 1) (hPlus_l : R_plus * (1 + X) = 1)
+    (hMinus_r : (1 - X) * R_minus = 1) (hMinus_l : R_minus * (1 - X) = 1)
+    (A H S Y H₁ H₂ S₁ S₂ : B) :
+    ((InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ D₁ D₂ *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ D₁ D₂ =
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.bochnerLaplacianOp D₁ D₂ +
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.spinBivector Γ₁ Γ₂ *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂ ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracFlipped Γ₁ Γ₂ D₁ D₂ *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracFlipped Γ₁ Γ₂ D₁ D₂ =
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.bochnerLaplacianOp D₁ D₂ -
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.spinBivector Γ₁ Γ₂ *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂ ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ D₁ D₂ *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracFlipped Γ₁ Γ₂ D₁ D₂ =
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.dalembertianOp D₁ D₂ -
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.spinBivector Γ₁ Γ₂ *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm D₁ D₂ ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracFlipped Γ₁ Γ₂ D₁ D₂ *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ D₁ D₂ =
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.dalembertianOp D₁ D₂ +
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.spinBivector Γ₁ Γ₂ *
+            InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm D₁ D₂ ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.bdgSupercharge
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P A) =
+        (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.bdgSupercharge
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P A) *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.bdgSupercharge
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.oddGrade P A) = 0)) ∧
+    ((τ (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnPlus H S X * Y) +
+        τ (X * InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnMinus H S Y) = 0 ∧
+      τ (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnPlus H S X) +
+        τ (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnMinus H S X) = 0 ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm S X) -
+        InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm S
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H S) X ∧
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H S = 0 →
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnMinus H S
+          (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnPlus H S X) =
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnPlus H S
+            (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.amariConnMinus H S X) ∧
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.dualLaplaceBeltrami H S X =
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+            InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm S
+              (InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm S X)) ∧
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm
+        (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracPrimalWave Γ₁ Γ₂ H₁ H₂ S₁ S₂)
+        (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracDualWave Γ₁ Γ₂ H₁ H₂ S₁ S₂) =
+        (2 : ℤ) • (InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ H₁ H₂ *
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ H₁ H₂ -
+          InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ S₁ S₂ *
+            InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.diracForward Γ₁ Γ₂ S₁ S₂))) ∧
+    (((2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.peirce11 P A =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm P A -
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) ∧
+      (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.peirce00 P A =
+        (2 : ℤ) • A - InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm P A -
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) ∧
+      (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) +
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A ∧
+      (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P A =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) -
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.cayleyMoebiusTransform X R_plus *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.cayleyMoebiusInverse X R_minus = 1 ∧
+      InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.cayleyMoebiusInverse X R_minus *
+        InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.cayleyMoebiusTransform X R_plus = 1 ∧
+      1 + InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.cayleyMoebiusTransform X R_plus =
+        (2 : ℤ) • R_plus ∧
+      1 - InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.cayleyMoebiusTransform X R_plus =
+        (2 : ℤ) • (X * R_plus))) := by
+  have h12_1 :=
+    InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.operator_lichnerowicz_elliptic_hyperbolic_and_peirce_nambu_gorkov_susy_bridge
+      hΓ1 hΓ2 hΓ12 h11 h12 h21 h22 hP A
+  have h12_2 :=
+    InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.operatorial_information_geometry_dual_connections_trace_compatibility_and_dirac_waves_bridge
+      τ hτ H S X Y Γ₁ Γ₂ H₁ H₂ S₁ S₂
+  have h12_3 :=
+    InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge.four_transparent_peirce_dewitt_identities_and_cayley_moebius_apollonian_poles_bridge
+      hP hPlus_r hPlus_l hMinus_r hMinus_l A
+  exact ⟨⟨h12_1.2.1.1, h12_1.2.1.2.1, h12_1.2.1.2.2.2.2.1, h12_1.2.1.2.2.2.2.2.1,
+          h12_1.2.2.2.2.2.1, h12_1.2.2.2.2.2.2.1⟩,
+    ⟨h12_2.2.1.1, h12_2.2.1.2.2.2.2, h12_2.2.2.1.1, h12_2.2.2.1.2, h12_2.2.2.2.2.2.1⟩,
+    ⟨h12_3.1.1, h12_3.1.2.1, h12_3.1.2.2.1, h12_3.1.2.2.2.1,
+     h12_3.2.2.1, h12_3.2.2.2.1, h12_3.2.2.2.2.1, h12_3.2.2.2.2.2⟩⟩
+
 end InfoGeometry.GrandUnification.Capstone
 
 end

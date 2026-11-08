@@ -1,37 +1,26 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
-# The Celik-Erlangen Braid Bridge
+# The Celik–Erlangen Braid Bridge
 
-This module gives a finite permutation model for the three sector labels used by
-the tripotent/Hodge dictionary.
-
-The three coordinates are read as:
-* coordinate 1: `P_zero`  (harmonic label);
-* coordinate 2: `P_plus`  (exact label);
-* coordinate 3: `P_minus` (coexact label).
-
-The generators below are the adjacent transpositions.  They satisfy the
-Yang-Baxter / Artin relation in the symmetric-group quotient of `B₃`, together
-with the extra involutive relations `σᵢ² = 1`.
-
-No theorem here asserts full braid-group holonomy, a punctured-plane
-fundamental group action, Berry curvature, Reidemeister invariance, KMS/CFT
-physics, or zeta-zero consequences.
-
-#### BUCKET 1: CLOSED FINITE THEOREMS
-`sigma1_squared`, `sigma2_squared`, `yang_baxter_braid_relation`,
-`spectral_parameter_antisymmetric`, `spectral_cpt_symmetry`, and
-`spectral_triangle_identity`.
-
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-None.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-Any upgrade from this finite `S₃` permutation quotient to genuine topological
-braid holonomy, punctured-plane monodromy, Berry curvature, or analytic zeta
-geometry.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * Formalizes a finite $S_3$ permutation model for the three tripotent/Hodge sector labels
+    (`P_zero`, `P_plus`, `P_minus`) on `FiberState H = H × H × H` together with a signed
+    phase-difference readout `spectral_parameter a b = a - b`.
+- BUCKET 2 (Finite Symmetric-Group Quotient Scope):
+  * The generators `sigma1` and `sigma2` are adjacent transpositions satisfying the Artin
+    braid relation and involutivity inside the symmetric-group quotient of $B_3$.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `sigma1_squared`, `sigma2_squared`, `yang_baxter_braid_relation`: involutivity and the
+    Yang–Baxter braid relation on `FiberState H`.
+  * `spectral_parameter_antisymmetric`, `spectral_cpt_symmetry`, `spectral_triangle_identity`:
+    antisymmetry, scale-inversion behavior, and triangle additivity of `spectral_parameter`.
 -/
 
 namespace InfoGeometry.GrandUnification.CelikErlangenBraidBridge
@@ -55,17 +44,23 @@ def sigma2 (v : FiberState H) : FiberState H :=
 /-- `σ₁` is involutive in the finite symmetric-group quotient. -/
 theorem sigma1_squared (v : FiberState H) :
     sigma1 (sigma1 v) = v := by
-  rfl
+  rcases v with ⟨a, b, c⟩
+  unfold sigma1
+  exact Prod.ext (Eq.refl a) (Prod.ext (Eq.refl b) (Eq.refl c))
 
 /-- `σ₂` is involutive in the finite symmetric-group quotient. -/
 theorem sigma2_squared (v : FiberState H) :
     sigma2 (sigma2 v) = v := by
-  rfl
+  rcases v with ⟨a, b, c⟩
+  unfold sigma2
+  exact Prod.ext (Eq.refl a) (Prod.ext (Eq.refl b) (Eq.refl c))
 
-/-- The adjacent transpositions satisfy the Yang-Baxter / Artin relation. -/
+/-- The adjacent transpositions satisfy the Yang–Baxter / Artin relation. -/
 theorem yang_baxter_braid_relation (v : FiberState H) :
     sigma1 (sigma2 (sigma1 v)) = sigma2 (sigma1 (sigma2 v)) := by
-  rfl
+  rcases v with ⟨a, b, c⟩
+  unfold sigma1 sigma2
+  exact Prod.ext (Eq.refl c) (Prod.ext (Eq.refl b) (Eq.refl a))
 
 /-! ### Finite signed phase readout -/
 

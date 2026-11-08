@@ -86,7 +86,14 @@ change's integration and acceptance.
 | Specific owner and dependencies | Explicit module target |
 | Changed `InfoGeometry` owners | `--changed`, also the no-target default |
 | Registered `proofs` library | Explicit `proofs` target |
-| Every Lake default target | Explicit `--all-default-targets` |
+| Every canonical and `src/` Lake default target | Explicit `--all-default-targets` |
+
+`--all-default-targets` runs the root `lakefile.lean` workspace and then the
+isolated `lakefile.src.lean` workspace under one shared build lock. Use
+`--source-lane <module>` to build a specific module from `src/`; its artifacts
+live under `.lake/src-build` so duplicate module identities do not shadow the
+canonical `lean/` artifacts. The no-target changed-owner mode checks both
+source roots for `InfoGeometry` changes and builds each changed lane separately.
 
 `--wfail` requests warnings-as-errors. Extra Lake arguments belong after `--`
 and require explicit target/default-target mode; changed-owner mode rejects

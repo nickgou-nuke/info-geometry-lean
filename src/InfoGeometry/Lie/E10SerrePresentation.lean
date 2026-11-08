@@ -36,6 +36,10 @@ theorem adjacent_comm (i j : Fin 10) : Adjacent i j ↔ Adjacent j i := by
 def cartanMatrix : Matrix (Fin 10) (Fin 10) ℤ := fun i j =>
   if i = j then 2 else if Adjacent i j then -1 else 0
 
+/-- The finite E₁₀ Cartan matrix has ten diagonal entries equal to `2`, so its trace is `20`. -/
+theorem cartanMatrix_trace : Matrix.trace cartanMatrix = 20 := by
+  decide
+
 @[simp] theorem cartanMatrix_diag (i : Fin 10) : cartanMatrix i i = 2 := by
   simp [cartanMatrix]
 

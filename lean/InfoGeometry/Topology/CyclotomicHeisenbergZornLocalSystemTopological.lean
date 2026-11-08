@@ -1,15 +1,39 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CyclotomicCliffordPauliQutritTopological
 import InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 /-!
-# Cyclotomic Heisenberg--Zorn local-system readout
+# Cyclotomic Heisenberg–Zorn Local-System Readout
 
-This is the first genuine product-topology node joining the three finite
-lanes: a sixth-root parameter, a qutrit Weyl word, and the effective Zorn
-cube root.  The output is only a paired observable readout; no algebraic
-identification of the carriers is asserted.
+This module defines the joint observable readout `cyclotomicLocalSystemReadout`
+sending `(q, (a, b)) : SixthRootParameter × (ℕ × ℕ)` to
+`(effectiveCubeRoot q, topologicalQutritWeyl a b)`, and proves coordinate
+projections, product continuity, local constancy, cube-root order three, and
+mod-3 periodicity in the clock and shift exponents.
+
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Topology.ZornSixthRootCubicChargeTopological`:
+    `effectiveCubeRoot`, `effectiveCubeRoot_cube`, `continuous_effectiveCubeRoot`.
+  * `InfoGeometry.Topology.CyclotomicCliffordPauliQutritTopological`:
+    `topologicalQutritWeyl`, `continuous_topologicalQutritWeyl`,
+    `topologicalQutritWeyl_clock_period`, `topologicalQutritWeyl_shift_period`.
+- BUCKET 2 (Deconfabulation):
+  * All coordinate projections, continuity, cube-root, and mod-3 periodicity
+    identities are proved constructively.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `WeylWord`, `cyclotomicLocalSystemReadout`.
+  * `cyclotomicLocalSystemReadout_fst`, `cyclotomicLocalSystemReadout_snd`.
+  * `continuous_cyclotomicLocalSystemReadout`,
+    `isLocallyConstant_cyclotomicLocalSystemReadout`.
+  * `cyclotomicLocalSystemReadout_effective_root_cube`,
+    `cyclotomicLocalSystemReadout_clock_period`,
+    `cyclotomicLocalSystemReadout_shift_period`.
 -/
 
 namespace InfoGeometry.Topology.CyclotomicHeisenbergZornLocalSystemTopological
@@ -20,23 +44,28 @@ open InfoGeometry.Topology.ZornSixthRootCubicChargeTopological
 
 noncomputable section
 
-abbrev WeylWord := InfoGeometry.Algebra.FiniteSpin.Mat3C
+/-- Complex 3×3 matrix carrier for qutrit Weyl words. -/
+abbrev WeylWord := Matrix (Fin 3) (Fin 3) ℂ
 
-/-- Joint cyclotomic parameter/Weyl-word observable. -/
+/-- Joint cyclotomic parameter and qutrit Weyl-word observable readout. -/
 def cyclotomicLocalSystemReadout
     (p : SixthRootParameter × (ℕ × ℕ)) : ℂ × WeylWord :=
   (effectiveCubeRoot p.1, topologicalQutritWeyl p.2.1 p.2.2)
 
+/-- First coordinate of `cyclotomicLocalSystemReadout p` is `effectiveCubeRoot p.1`. -/
 @[simp] theorem cyclotomicLocalSystemReadout_fst
     (p : SixthRootParameter × (ℕ × ℕ)) :
     (cyclotomicLocalSystemReadout p).1 = effectiveCubeRoot p.1 := by
-  rfl
+  unfold cyclotomicLocalSystemReadout
+  exact Eq.refl _
 
+/-- Second coordinate of `cyclotomicLocalSystemReadout p` is `topologicalQutritWeyl p.2.1 p.2.2`. -/
 @[simp] theorem cyclotomicLocalSystemReadout_snd
     (p : SixthRootParameter × (ℕ × ℕ)) :
     (cyclotomicLocalSystemReadout p).2 =
       topologicalQutritWeyl p.2.1 p.2.2 := by
-  rfl
+  unfold cyclotomicLocalSystemReadout
+  exact Eq.refl _
 
 /-- The joint readout is continuous in the product topology. -/
 theorem continuous_cyclotomicLocalSystemReadout :
@@ -52,34 +81,38 @@ theorem continuous_cyclotomicLocalSystemReadout :
 /-- Discrete cyclotomic parameters give a locally constant joint readout. -/
 theorem isLocallyConstant_cyclotomicLocalSystemReadout :
     IsLocallyConstant cyclotomicLocalSystemReadout := by
-  exact IsLocallyConstant.of_discrete (f := cyclotomicLocalSystemReadout)
+  unfold cyclotomicLocalSystemReadout
+  exact IsLocallyConstant.of_discrete
 
 /-- The first readout coordinate is always a cube root of unity. -/
 theorem cyclotomicLocalSystemReadout_effective_root_cube
     (p : SixthRootParameter × (ℕ × ℕ)) :
     (cyclotomicLocalSystemReadout p).1 ^ 3 = 1 := by
+  rw [cyclotomicLocalSystemReadout_fst]
   exact effectiveCubeRoot_cube p.1
 
-/-- The Weyl coordinate is periodic in the clock direction. -/
+/-- The Weyl coordinate is periodic of period 3 in the clock exponent. -/
 theorem cyclotomicLocalSystemReadout_clock_period
     (p : SixthRootParameter × (ℕ × ℕ)) :
     cyclotomicLocalSystemReadout
         (p.1, (p.2.1 + 3, p.2.2)) =
       cyclotomicLocalSystemReadout p := by
   apply Prod.ext
-  · rfl
+  · unfold cyclotomicLocalSystemReadout
+    exact Eq.refl _
   · change topologicalQutritWeyl (p.2.1 + 3) p.2.2 =
       topologicalQutritWeyl p.2.1 p.2.2
     exact topologicalQutritWeyl_clock_period p.2.1 p.2.2
 
-/-- The Weyl coordinate is periodic in the shift direction. -/
+/-- The Weyl coordinate is periodic of period 3 in the shift exponent. -/
 theorem cyclotomicLocalSystemReadout_shift_period
     (p : SixthRootParameter × (ℕ × ℕ)) :
     cyclotomicLocalSystemReadout
         (p.1, (p.2.1, p.2.2 + 3)) =
       cyclotomicLocalSystemReadout p := by
   apply Prod.ext
-  · rfl
+  · unfold cyclotomicLocalSystemReadout
+    exact Eq.refl _
   · change topologicalQutritWeyl p.2.1 (p.2.2 + 3) =
       topologicalQutritWeyl p.2.1 p.2.2
     exact topologicalQutritWeyl_shift_period p.2.1 p.2.2

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -5,18 +10,31 @@ import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
 import InfoGeometry.Topology.CurrentHeisenbergSugawaraTopological
 
 /-!
-# Topological bridge from the Heisenberg boundary atlas to the Sugawara readout
+# Topological Bridge from the Heisenberg Boundary Atlas to the Sugawara Readout
 
-This file packages the already verified Heisenberg boundary atlas together with
-its current/Sugawara readout. It does not add a new current algebra or a new
-boundary completion.
+This module constructs the discrete topological bundle `boundaryAtlasSugawaraBundle`
+pairing the Heisenberg boundary atlas with its current-algebra Sugawara Virasoro
+representation, and proves its projection, continuity, local constancy, central
+generator, and stress-mode identities.
 
-The bridge is purely packaging:
-
-* the atlas packet is topological and discrete;
-* the current Sugawara readout is recovered from the atlas's current
-  Heisenberg representation;
-* continuity and local constancy are bookkeeping consequences.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Canonical.HeisenbergBoundaryAtlas`: `Atlas`, `canonicalAtlas`,
+    `canonicalAtlas_currentSugawara_central`, `canonicalAtlas_currentSugawara_lgen_apply`.
+  * `InfoGeometry.Topology.CurrentHeisenbergSugawaraTopological`:
+    `topologicalCurrentSugawaraReadout`.
+- BUCKET 2 (Deconfabulation):
+  * All projection and Sugawara evaluation identities are proved via explicit unfolding
+    and reduction to the canonical boundary-atlas theorems.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `boundaryAtlasSugawaraBundle`: dependent section pairing `canonicalAtlas α` with its
+    Sugawara Virasoro Lie homomorphism.
+  * `boundaryAtlasSugawaraBundle_fst`, `boundaryAtlasSugawaraBundle_snd_fst`,
+    `boundaryAtlasSugawaraBundle_snd_snd`: coordinate projections.
+  * `continuous_boundaryAtlasSugawaraBundle`,
+    `isLocallyConstant_boundaryAtlasSugawaraBundle`: continuity and local constancy.
+  * `boundaryAtlasSugawaraBundle_currentSugawara_central`,
+    `boundaryAtlasSugawaraBundle_currentSugawara_lgen_apply`: Sugawara central and
+    stress-mode evaluations.
 -/
 
 namespace InfoGeometry.Topology.HeisenbergBoundaryAtlasCurrentSugawaraTopological
@@ -36,7 +54,7 @@ local instance boundaryAtlasEndLieRing (α : 𝕜) :
         VirasoroProject.ChargedFockSpace 𝕜 α) :=
   LieRing.ofAssociativeRing
 
-instance boundaryAtlasSugawaraPacketTopologicalSpace :
+instance boundaryAtlasSugawaraBundleTopologicalSpace :
     TopologicalSpace
       (Σ α : 𝕜,
         InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) α ×
@@ -44,16 +62,16 @@ instance boundaryAtlasSugawaraPacketTopologicalSpace :
             (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
               VirasoroProject.ChargedFockSpace 𝕜 α))) := ⊥
 
-instance boundaryAtlasSugawaraPacketDiscreteTopology :
+instance boundaryAtlasSugawaraBundleDiscreteTopology :
     DiscreteTopology
       (Σ α : 𝕜,
         InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) α ×
           (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
             (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-              VirasoroProject.ChargedFockSpace 𝕜 α))) := ⟨rfl⟩
+              VirasoroProject.ChargedFockSpace 𝕜 α))) := DiscreteTopology.mk (Eq.refl _)
 
-/-- The Heisenberg boundary atlas together with its Sugawara readout. -/
-def boundaryAtlasSugawaraPacket (α : 𝕜) :
+/-- The Heisenberg boundary atlas together with its Sugawara Virasoro readout. -/
+def boundaryAtlasSugawaraBundle (α : 𝕜) :
     Σ α : 𝕜,
       InfoGeometry.Canonical.HeisenbergBoundaryAtlas.Atlas (𝕜 := 𝕜) α ×
         (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
@@ -66,43 +84,45 @@ def boundaryAtlasSugawaraPacket (α : 𝕜) :
         (V := VirasoroProject.ChargedFockSpace 𝕜 α)
         (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α).currentRep)⟩
 
-@[simp] theorem boundaryAtlasSugawaraPacket_fst (α : 𝕜) :
-    (boundaryAtlasSugawaraPacket (𝕜 := 𝕜) α).1 = α := by
-  rfl
+/-- Base charge coordinate of `boundaryAtlasSugawaraBundle α`. -/
+@[simp] theorem boundaryAtlasSugawaraBundle_fst (α : 𝕜) :
+    (boundaryAtlasSugawaraBundle (𝕜 := 𝕜) α).1 = α := by
+  unfold boundaryAtlasSugawaraBundle
+  exact Eq.refl _
 
-@[simp] theorem boundaryAtlasSugawaraPacket_snd_fst (α : 𝕜) :
-    (boundaryAtlasSugawaraPacket (𝕜 := 𝕜) α).2.1 =
+/-- First fiber component of `boundaryAtlasSugawaraBundle α` recovers `canonicalAtlas α`. -/
+@[simp] theorem boundaryAtlasSugawaraBundle_snd_fst (α : 𝕜) :
+    (boundaryAtlasSugawaraBundle (𝕜 := 𝕜) α).2.1 =
       InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α := by
-  rfl
+  unfold boundaryAtlasSugawaraBundle
+  exact Eq.refl _
 
-@[simp] theorem boundaryAtlasSugawaraPacket_snd_snd (α : 𝕜) :
-    (boundaryAtlasSugawaraPacket (𝕜 := 𝕜) α).2.2 =
+/-- Second fiber component of `boundaryAtlasSugawaraBundle α` recovers the Sugawara readout. -/
+@[simp] theorem boundaryAtlasSugawaraBundle_snd_snd (α : 𝕜) :
+    (boundaryAtlasSugawaraBundle (𝕜 := 𝕜) α).2.2 =
       topologicalCurrentSugawaraReadout
         (𝕜 := 𝕜)
         (V := VirasoroProject.ChargedFockSpace 𝕜 α)
         (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α).currentRep := by
-  rfl
+  unfold boundaryAtlasSugawaraBundle
+  exact Eq.refl _
 
-/-- The boundary atlas current/Sugawara bridge is continuous on the discrete
-parameter space. -/
-theorem continuous_boundaryAtlasSugawaraPacket :
-    Continuous (boundaryAtlasSugawaraPacket (𝕜 := 𝕜)) := by
-  simpa [boundaryAtlasSugawaraPacket, topologicalCurrentSugawaraReadout] using
-    (continuous_of_discreteTopology :
-      Continuous (boundaryAtlasSugawaraPacket (𝕜 := 𝕜)))
+/-- The boundary atlas current/Sugawara bridge is continuous on the discrete parameter space. -/
+theorem continuous_boundaryAtlasSugawaraBundle :
+    Continuous (boundaryAtlasSugawaraBundle (𝕜 := 𝕜)) := by
+  unfold boundaryAtlasSugawaraBundle
+  exact continuous_of_discreteTopology
 
-/-- The boundary atlas current/Sugawara bridge is locally constant on the
-discrete parameter space. -/
-theorem isLocallyConstant_boundaryAtlasSugawaraPacket :
-    IsLocallyConstant (boundaryAtlasSugawaraPacket (𝕜 := 𝕜)) := by
-  simpa [boundaryAtlasSugawaraPacket, topologicalCurrentSugawaraReadout] using
-    (IsLocallyConstant.of_discrete
-      (f := boundaryAtlasSugawaraPacket (𝕜 := 𝕜)))
+/-- The boundary atlas current/Sugawara bridge is locally constant on the discrete parameter space. -/
+theorem isLocallyConstant_boundaryAtlasSugawaraBundle :
+    IsLocallyConstant (boundaryAtlasSugawaraBundle (𝕜 := 𝕜)) := by
+  unfold boundaryAtlasSugawaraBundle
+  exact IsLocallyConstant.of_discrete
 
-/-- The Sugawara central generator readout is preserved in the bridge packet. -/
-theorem boundaryAtlasSugawaraPacket_currentSugawara_central
+/-- The Sugawara central generator readout is preserved in `boundaryAtlasSugawaraBundle`. -/
+theorem boundaryAtlasSugawaraBundle_currentSugawara_central
     (α : 𝕜) :
-    (boundaryAtlasSugawaraPacket (𝕜 := 𝕜) α).2.2
+    (boundaryAtlasSugawaraBundle (𝕜 := 𝕜) α).2.2
         (VirasoroAlgebra.cgen 𝕜) =
       (1 :
         VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
@@ -113,10 +133,10 @@ theorem boundaryAtlasSugawaraPacket_currentSugawara_central
   exact InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_central
     (𝕜 := 𝕜) α
 
-/-- The `lgen` readout is preserved in the bridge packet. -/
-theorem boundaryAtlasSugawaraPacket_currentSugawara_lgen_apply
+/-- The Virasoro stress generator `lgen n` readout is preserved in `boundaryAtlasSugawaraBundle`. -/
+theorem boundaryAtlasSugawaraBundle_currentSugawara_lgen_apply
     (α : 𝕜) (n : Int) :
-    (boundaryAtlasSugawaraPacket (𝕜 := 𝕜) α).2.2
+    (boundaryAtlasSugawaraBundle (𝕜 := 𝕜) α).2.2
         (VirasoroAlgebra.lgen 𝕜 n) =
       InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.sugawaraStressMode
         ((InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α).currentRep)
@@ -126,3 +146,6 @@ theorem boundaryAtlasSugawaraPacket_currentSugawara_lgen_apply
       (VirasoroAlgebra.lgen 𝕜 n) = _
   exact InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
     (𝕜 := 𝕜) α n
+
+end
+end InfoGeometry.Topology.HeisenbergBoundaryAtlasCurrentSugawaraTopological

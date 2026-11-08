@@ -5,15 +5,23 @@ import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Meta.Architecture
 
 /-!
-# InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas
+# Associative-Algebra Identities for Un-Summed Sugawara Current Blocks
 
-Native algebraic lemmas for finite Kac--Moody/Sugawara calculations.
+This module proves the associative $\mathbb{R}$-algebra identity
+$[J_a J_b, J_n] = c(b, n)\,J_a + c(a, n)\,J_b$ for currents whose pairwise
+commutators lie in the central scalar subalgebra `algebraMap ℝ Op`.
 
-This file does not construct an affine Lie algebra, a VOA, or an analytic OPE.
-It records the associative-algebra identities used after a current algebra
-bracket has already been supplied.  The goal is to keep the Kac--Moody lane
-canonical in Lean: imported algebra first, proof-bearing finite rewrites second,
-and no bridge layer where a direct theorem is enough.
+## 1. Real Math in This File
+- `kacMoodyCentralCoeff`, `kacMoodyCentralElement`
+- `mul_algebraMap_eq_smul`, `algebraMap_mul_eq_smul`
+- `sugawara_bilinear_current_bracket`
+
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.SugawaraAlgebraicLemmas` (`comm`, `comm_mul_left`)
+- `Algebra.smul_def`, `Algebra.commutes`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 noncomputable section
@@ -24,51 +32,43 @@ open InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 
 variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
 
-/-- Scalar coefficient of the central term in the one-current Kac--Moody bracket. -/
+/-- Scalar coefficient $m k\,\delta_{m+n,0}$ of the central term in the one-current
+Kac–Moody bracket. -/
 @[rep_depth operator]
 def kacMoodyCentralCoeff (k : ℝ) (m n : ℤ) : ℝ :=
-  if m + n = 0 then (m : ℝ) * k else 0
+  if m + n = 0 then (m :  ℝ) * k else 0
 
-/--
-One-dimensional Kac--Moody current bracket inside an associative `ℝ`-algebra:
-`[J_m,J_n] = m k δ_{m+n,0} · 1`.
--/
+/-- Central algebra element `algebraMap ℝ Op (kacMoodyCentralCoeff k m n)` inside `Op`. -/
 @[rep_depth operator]
-def kacMoodyCurrentBracket (J : ℤ → Op) (k : ℝ) (m n : ℤ) : Prop :=
-  comm (J m) (J n) = algebraMap ℝ Op (kacMoodyCentralCoeff k m n)
+def kacMoodyCentralElement (k : ℝ) (m n : ℤ) : Op :=
+  algebraMap ℝ Op (kacMoodyCentralCoeff k m n)
 
-/-- Right multiplication by a scalar from the base field equals scalar multiplication. -/
+/-- Right multiplication by an embedded real scalar equals scalar multiplication. -/
 @[rep_depth operator]
 theorem mul_algebraMap_eq_smul (A : Op) (r : ℝ) :
     A * algebraMap ℝ Op r = r • A := by
   rw [Algebra.smul_def]
   exact (Algebra.commutes r A).symm
 
-/-- Left multiplication by a scalar from the base field equals scalar multiplication. -/
+/-- Left multiplication by an embedded real scalar equals scalar multiplication. -/
 @[rep_depth operator]
 theorem algebraMap_mul_eq_smul (A : Op) (r : ℝ) :
     algebraMap ℝ Op r * A = r • A := by
   rw [Algebra.smul_def]
 
-/--
-Un-summed Sugawara current block:
-
-`[J_a J_b, J_n] = c(b,n) J_a + c(a,n) J_b`,
-where `c(m,n) = m k δ_{m+n,0}`.
-
-This is the finite algebraic engine used before any normal-ordering or mode-sum
-regularization enters the story.
--/
+/-- Un-summed Sugawara bilinear current commutator identity:
+if $[J_b, J_n]$ and $[J_a, J_n]$ equal the central scalar elements
+`kacMoodyCentralElement k b n` and `kacMoodyCentralElement k a n`, then
+`comm (J a * J b) (J n) = kacMoodyCentralCoeff k b n • J a + kacMoodyCentralCoeff k a n • J b`. -/
 @[rep_depth operator]
 theorem sugawara_bilinear_current_bracket
     (J : ℤ → Op) (k : ℝ) (a b n : ℤ)
-    (hbn : kacMoodyCurrentBracket J k b n)
-    (han : kacMoodyCurrentBracket J k a n) :
+    (hbn : comm (J b) (J n) = kacMoodyCentralElement (Op := Op) k b n)
+    (han : comm (J a) (J n) = kacMoodyCentralElement (Op := Op) k a n) :
     comm (J a * J b) (J n) =
       kacMoodyCentralCoeff k b n • J a + kacMoodyCentralCoeff k a n • J b := by
-  rw [comm_mul_left]
-  unfold kacMoodyCurrentBracket at hbn han
-  rw [hbn, han]
+  rw [comm_mul_left, hbn, han]
+  unfold kacMoodyCentralElement
   rw [mul_algebraMap_eq_smul, algebraMap_mul_eq_smul]
 
 end InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas

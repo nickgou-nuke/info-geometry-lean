@@ -1,9 +1,16 @@
 # Default Lean source coverage
 
-The default Lake libraries include the active `InfoGeometry`, `Omega`, `DAG`,
+The canonical default Lake libraries include the active `InfoGeometry`, `Omega`, `DAG`,
 `Agent`, `Docs`, `Socratic`, `SelfReference`, `Experimental`, `VirasoroProject`,
 `scripts`, audit, standalone-mathematics, and test sources. This is build
-selection, not a claim that all those modules currently compile.
+selection, not a claim that all those modules currently compile. The separate
+`lakefile.src.lean` workspace selects every Lean module under each source-bearing
+top-level directory in `src/` and every top-level `.lean` file. It uses
+`.lake/src-build` so shared module names have independent artifacts.
+The root-level `src/PrimitiveSetsAboveX.lean` symlink remains explicitly
+outside the default lane because its external proof is pinned to another Lean
+toolchain. The dual-source audit checks this exception and rejects any other
+unselected `src/` module.
 
 `InfoGeometry.All` imports `InfoGeometry.AllExhaustive`. Default-selected
 modules are included there unless they depend on that umbrella themselves.
@@ -11,15 +18,17 @@ In particular, `InfoGeometry.auto_blueprints` and `InfoGeometry.BlueprintTags`
 must remain downstream to avoid an import cycle; both are default-built.
 
 Run `python3 tools/infra/audit_default_lean_sources.py` for a read-only check
-of default selection, source existence, Git tracking, and umbrella coverage.
-The strict-check pipeline runs this audit before its builds. A newly selected
-module missing from the umbrella, or a source missing from the Git index,
-causes the check to fail. This does not stage files automatically.
+of canonical default selection, source existence, Git tracking, and umbrella
+coverage. The strict-check pipeline also runs the separate source-lane audit,
+which validates `src/` selection and the explicit external-toolchain exception.
+The locked combined default build compiles both lanes. A newly selected canonical module
+missing from the umbrella, or a source missing from the Git index, causes the
+canonical audit to fail. This does not stage files automatically.
 
 Use the shared-lock wrapper for verification:
 
 ```sh
-python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --all-default-targets
 ```
 
 `lake build -R` re-elaborates Lake configuration; `-R` is not an all-files
@@ -42,6 +51,6 @@ selection flag. Do not run another compiler while the shared build is active.
   declare the same namespace and theorem names with different imports.
   These require source reconciliation and kernel checks, not blanket imports.
 
-The source audit covers configured default libraries, not this unresolved
-proof archive. A passing source audit must not be reported as proof that
-every `.lean` file anywhere in the repository has been integrated or compiled.
+The source audits cover configured source lanes, not archived or generated
+trees. A passing audit must not be reported as proof that every `.lean` file
+anywhere in the repository has been integrated or compiled.

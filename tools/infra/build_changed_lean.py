@@ -65,7 +65,9 @@ def changed_paths(
     return out
 
 
-def path_to_module(root: Path, path: Path) -> str | None:
+def path_to_module(
+    root: Path, path: Path, *, source_root: str = "lean"
+) -> str | None:
     try:
         rel = path.resolve().relative_to(root.resolve())
     except ValueError:
@@ -73,9 +75,9 @@ def path_to_module(root: Path, path: Path) -> str | None:
     parts = rel.parts
     if len(parts) < 2:
         return None
-    if parts[0] == "lean" and rel.suffix == ".lean":
+    if parts[0] == source_root and rel.suffix == ".lean":
         stem_parts = list(parts[1:])
-    elif parts[0] == "InfoGeometry" and rel.suffix == ".lean":
+    elif source_root == "lean" and parts[0] == "InfoGeometry" and rel.suffix == ".lean":
         stem_parts = list(parts)
     else:
         return None
@@ -90,12 +92,13 @@ def collect_modules(
     allow_umbrella: bool,
     prefix: str | None,
     base_ref: str | None = None,
+    source_root: str = "lean",
 ) -> list[str]:
     modules: set[str] = set()
     for path in changed_paths(root, include_untracked=include_untracked, base_ref=base_ref):
         if not path.exists():
             continue
-        mod = path_to_module(root, path)
+        mod = path_to_module(root, path, source_root=source_root)
         if mod is None:
             continue
         if (not allow_umbrella) and mod.endswith(".All"):
@@ -122,6 +125,12 @@ def parse_args() -> argparse.Namespace:
         "--prefix",
         default="InfoGeometry.",
         help="Optional module-prefix filter (default: InfoGeometry.). Use empty string to disable.",
+    )
+    parser.add_argument(
+        "--source-root",
+        choices=("lean", "src", "both"),
+        default="both",
+        help="Source tree(s) whose changed module identities should be selected.",
     )
     parser.add_argument(
         "--include-untracked",
@@ -172,30 +181,43 @@ def main() -> int:
     args = parse_args()
     root = repo_root()
     prefix = args.prefix if args.prefix else None
-    modules = collect_modules(
-        root,
-        include_untracked=args.include_untracked,
-        allow_umbrella=args.allow_umbrella,
-        prefix=prefix,
-        base_ref=args.base_ref,
-    )
-    if not modules:
+    lanes = ("lean", "src") if args.source_root == "both" else (args.source_root,)
+    modules_by_lane = {
+        lane: collect_modules(
+            root,
+            include_untracked=args.include_untracked,
+            allow_umbrella=args.allow_umbrella,
+            prefix=prefix,
+            base_ref=args.base_ref,
+            source_root=lane,
+        )
+        for lane in lanes
+    }
+    if not any(modules_by_lane.values()):
         print("[build-changed-lean] no changed Lean owner modules detected", flush=True)
         return 0
 
-    print(f"[build-changed-lean] modules ({len(modules)}):", flush=True)
-    for mod in modules:
-        print(f"  - {mod}", flush=True)
+    for lane, modules in modules_by_lane.items():
+        print(f"[build-changed-lean] {lane} modules ({len(modules)}):", flush=True)
+        for mod in modules:
+            print(f"  - {mod}", flush=True)
 
     if args.dry_run:
         print("[build-changed-lean] dry-run only; no build executed", flush=True)
         return 0
 
-    return run_locked_lake_build(
-        modules,
-        wait_for_lock=args.wait_for_build_lock,
-        wfail=args.wfail,
-    )
+    for lane, modules in modules_by_lane.items():
+        if not modules:
+            continue
+        status = run_locked_lake_build(
+            modules,
+            wait_for_lock=args.wait_for_build_lock,
+            wfail=args.wfail,
+            lakefile="lakefile.src.lean" if lane == "src" else None,
+        )
+        if status != 0:
+            return status
+    return 0
 
 
 if __name__ == "__main__":

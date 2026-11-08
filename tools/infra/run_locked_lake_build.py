@@ -45,7 +45,15 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--all-default-targets",
         action="store_true",
-        help="Run Lake with no positional target, compiling every @[default_target].",
+        help=(
+            "Run both the canonical lean/ and isolated src/ Lake workspaces with no target, "
+            "compiling every @[default_target] in each."
+        ),
+    )
+    parser.add_argument(
+        "--source-lane",
+        action="store_true",
+        help="Build explicit targets from src/ using lakefile.src.lean and isolated outputs.",
     )
     parser.add_argument(
         "--changed",
@@ -70,8 +78,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    if args.all_default_targets and (args.targets or args.changed):
-        print("--all-default-targets cannot be combined with targets or --changed", file=sys.stderr)
+    if args.all_default_targets and (args.targets or args.changed or args.source_lane):
+        print(
+            "--all-default-targets cannot be combined with targets, --changed, or --source-lane",
+            file=sys.stderr,
+        )
         return 2
     if args.changed and args.targets:
         print("--changed cannot be combined with positional targets", file=sys.stderr)
@@ -79,6 +90,9 @@ def main() -> int:
     targets = [] if args.all_default_targets else args.targets
     # No-target invocations are development builds: resolve changed owners
     # instead of silently expanding to the repository umbrella target.
+    if args.source_lane and not args.targets:
+        print("--source-lane requires one or more explicit module targets", file=sys.stderr)
+        return 2
     if args.changed or (not args.targets and not args.all_default_targets):
         import subprocess
         changed = Path(__file__).with_name("build_changed_lean.py")
@@ -95,6 +109,8 @@ def main() -> int:
         [*targets, *args.lake_args],
         wait_for_lock=args.wait_for_build_lock,
         wfail=args.wfail,
+        include_src_default=args.all_default_targets,
+        lakefile="lakefile.src.lean" if args.source_lane else None,
     )
 
 

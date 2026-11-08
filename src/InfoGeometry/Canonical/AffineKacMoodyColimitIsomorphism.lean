@@ -130,6 +130,71 @@ theorem colimitMap_range_eq_union :
     use (colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) N).hom y
     exact congrArg (fun F => ModuleCat.Hom.hom F y) hstage
 
+/-- Every element of the affine Kac--Moody carrier is a finite linear
+combination of the central generator and current modes.  The loop-algebra
+component is finitely supported in its mode index, so it lies in one cutoff;
+the central component already lies in every cutoff. -/
+theorem affineFiniteModeUnion_eq_top :
+    affineFiniteModeUnion Φ hΦ hΦs = ⊤ := by
+  classical
+  apply Submodule.eq_top_iff'.mpr
+  intro Z
+  let loopLift :
+      LieAlgebra.loopAlgebra 𝕜 ℤ 𝓰 →ₗ[𝕜] KM Φ hΦ hΦs :=
+    { toFun := fun X => ⟨X, 0⟩
+      map_add' := by
+        intro X Y
+        ext <;> simp [LieTwoCocycle.CentralExtension.add_def]
+      map_smul' := by
+        intro c X
+        ext <;> simp [LieTwoCocycle.CentralExtension.smul_def] }
+  let coordinateLift : (ℤ →₀ 𝓰) →ₗ[𝕜] KM Φ hΦ hΦs :=
+    loopLift.comp (LieAlgebra.LoopAlgebra.toFinsupp 𝕜 ℤ 𝓰).symm.toLinearMap
+  have hcoordinate (f : ℤ →₀ 𝓰) : coordinateLift f ∈
+      affineFiniteModeUnion Φ hΦ hΦs := by
+    induction f using Finsupp.induction_linear with
+    | zero =>
+        simp [coordinateLift]
+    | add f g hf hg =>
+        rw [map_add]
+        exact (affineFiniteModeUnion Φ hΦ hΦs).add_mem hf hg
+    | single n x =>
+        have hmode :
+            affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs (-n) x ∈
+              affineFiniteModeStage Φ hΦ hΦs (Int.natAbs (-n)) :=
+          affineCurrentGen_mem_stage Φ hΦ hΦs (Int.natAbs (-n)) (-n) x le_rfl
+        have hmodeUnion := Submodule.mem_iSup_of_mem
+          (Int.natAbs (-n)) hmode
+        simpa [coordinateLift, loopLift, affineCurrentGen, affineLoopMode,
+          affineFiniteModeUnion] using hmodeUnion
+  have hloop : (⟨Z.fst, 0⟩ : KM Φ hΦ hΦs) ∈
+      affineFiniteModeUnion Φ hΦ hΦs := by
+    have h := hcoordinate
+      (LieAlgebra.LoopAlgebra.toFinsupp 𝕜 ℤ 𝓰 Z.fst)
+    simpa [coordinateLift, loopLift] using h
+  have hcentral : (⟨0, Z.snd⟩ : KM Φ hΦ hΦs) ∈
+      affineFiniteModeUnion Φ hΦ hΦs := by
+    have hgen : affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs ∈
+        affineFiniteModeUnion Φ hΦ hΦs :=
+      Submodule.mem_iSup_of_mem 0 (affineCentralGen_mem_stage Φ hΦ hΦs 0)
+    have hscaled := (affineFiniteModeUnion Φ hΦ hΦs).smul_mem Z.snd hgen
+    simpa [affineCentralGen, LieTwoCocycle.CentralExtension.smul_def] using hscaled
+  have hdecomp : (⟨Z.fst, 0⟩ : KM Φ hΦ hΦs) + ⟨0, Z.snd⟩ = Z := by
+    rw [LieTwoCocycle.CentralExtension.add_def]
+    cases Z
+    rfl
+  rw [← hdecomp]
+  exact (affineFiniteModeUnion Φ hΦ hΦs).add_mem hloop hcentral
+
+/-- The Lie subalgebra carried by the finite-mode union is the full affine
+Kac--Moody algebra. -/
+theorem affineFiniteModeColimitLieSubalgebra_eq_top :
+    affineFiniteModeColimitLieSubalgebra Φ hΦ hΦs = ⊤ := by
+  apply LieSubalgebra.ext
+  intro X
+  simp [affineFiniteModeColimitLieSubalgebra,
+    affineFiniteModeUnion_eq_top Φ hΦ hΦs]
+
 noncomputable def colimitEquivUnion :
     (affineFiniteModeColimit Φ hΦ hΦs) ≃ₗ[𝕜] (affineFiniteModeUnion Φ hΦ hΦs) :=
   LinearEquiv.ofBijective 
@@ -185,3 +250,14 @@ noncomputable def colimitLieEquiv :
       change eqv (eqv.symm ⁅eqv x, eqv y⁆) = ⁅eqv x, eqv y⁆
       exact eqv.apply_symm_apply _
   }
+
+/-- The finite-mode module colimit is Lie-equivalent to the full affine
+Kac--Moody carrier.  This uses the finite-support spanning theorem above. -/
+noncomputable def colimitLieEquivAmbient :
+    (affineFiniteModeColimit Φ hΦ hΦs) ≃ₗ⁅𝕜⁆ KM Φ hΦ hΦs :=
+  (colimitLieEquiv Φ hΦ hΦs).trans
+    ((LieEquiv.ofEq
+      (affineFiniteModeColimitLieSubalgebra Φ hΦ hΦs)
+      (⊤ : LieSubalgebra 𝕜 (KM Φ hΦ hΦs))
+      (by rw [affineFiniteModeColimitLieSubalgebra_eq_top Φ hΦ hΦs])).trans
+      LieSubalgebra.topEquiv)

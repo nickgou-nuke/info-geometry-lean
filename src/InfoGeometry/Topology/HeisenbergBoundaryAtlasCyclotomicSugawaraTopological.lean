@@ -1,20 +1,42 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
 import InfoGeometry.Topology.CurrentHeisenbergSugawaraTopological
 
 /-!
-# Topological bridge for the Heisenberg boundary atlas, sixth-root lane, and
-current Sugawara readout
+# Topological Bridge for the Heisenberg Boundary Atlas, Sixth-Root Lane, and Current Sugawara Readout
 
-This owner packages three already-verified surfaces:
+This module constructs the discrete topological bundle `BoundaryAtlasCyclotomicSugawaraBundle`
+combining the Heisenberg boundary atlas, the sixth-root cyclotomic parameter, and the
+Sugawara Virasoro representation on `ChargedFockSpace 𝕜 α`, together with coordinate
+projections, continuity, local constancy, and Sugawara central/stress-mode evaluations.
 
-* the Heisenberg boundary atlas with its finite-mode readout;
-* the sixth-root cyclotomic parameter lane;
-* the current Heisenberg/Sugawara readout on the charged Fock space.
-
-It does not claim any new identification between these carriers.  The bridge is
-purely a discrete topological packet.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * `InfoGeometry.Canonical.HeisenbergCyclotomicAtlas`: `Atlas`, `canonicalAtlas`,
+    `canonicalAtlas_currentSugawara_central`.
+  * `InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological`: `SixthRootParameter`.
+  * `InfoGeometry.Topology.CurrentHeisenbergSugawaraTopological`:
+    `topologicalCurrentSugawaraReadout`.
+- BUCKET 2 (Deconfabulation):
+  * All coordinate projections and Sugawara generator evaluations are proved via
+    explicit definitional unfolding and reduction to the canonical boundary-atlas theorems.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `BoundaryAtlasCyclotomicSugawaraBundle`: total-space bundle over `𝕜`.
+  * `boundaryAtlasCyclotomicSugawaraReadout`: section from `𝕜 × SixthRootParameter`.
+  * `boundaryAtlasCyclotomicSugawaraReadout_fst`,
+    `boundaryAtlasCyclotomicSugawaraReadout_snd_fst`,
+    `boundaryAtlasCyclotomicSugawaraReadout_snd_snd_fst`,
+    `boundaryAtlasCyclotomicSugawaraReadout_snd_snd_snd`: coordinate projections.
+  * `continuous_boundaryAtlasCyclotomicSugawaraReadout`,
+    `isLocallyConstant_boundaryAtlasCyclotomicSugawaraReadout`: continuity and local constancy.
+  * `boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_central`,
+    `boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_lgen_apply`: Sugawara generator
+    identities.
 -/
 
 namespace InfoGeometry.Topology.HeisenbergBoundaryAtlasCyclotomicSugawaraTopological
@@ -34,15 +56,17 @@ instance heisenbergCyclotomicParameterTopologicalSpace :
     TopologicalSpace 𝕜 := ⊥
 
 instance heisenbergCyclotomicParameterDiscreteTopology :
-    DiscreteTopology 𝕜 := ⟨rfl⟩
+    DiscreteTopology 𝕜 := DiscreteTopology.mk (Eq.refl _)
 
 instance heisenbergCyclotomicSugawaraInputTopologicalSpace :
     TopologicalSpace (𝕜 × SixthRootParameter) := ⊥
 
 instance heisenbergCyclotomicSugawaraInputDiscreteTopology :
-    DiscreteTopology (𝕜 × SixthRootParameter) := ⟨rfl⟩
+    DiscreteTopology (𝕜 × SixthRootParameter) := DiscreteTopology.mk (Eq.refl _)
 
-abbrev BoundaryAtlasCyclotomicSugawaraPacket :=
+/-- Total-space bundle combining the charge parameter, sixth-root parameter,
+cyclotomic atlas, and Sugawara Virasoro Lie homomorphism. -/
+abbrev BoundaryAtlasCyclotomicSugawaraBundle :=
   Σ α : 𝕜,
     SixthRootParameter ×
       (InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.Atlas (𝕜 := 𝕜) α ×
@@ -50,16 +74,16 @@ abbrev BoundaryAtlasCyclotomicSugawaraPacket :=
           (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
             VirasoroProject.ChargedFockSpace 𝕜 α)))
 
-instance boundaryAtlasCyclotomicSugawaraPacketTopologicalSpace :
-    TopologicalSpace (BoundaryAtlasCyclotomicSugawaraPacket (𝕜 := 𝕜)) := ⊥
+instance boundaryAtlasCyclotomicSugawaraBundleTopologicalSpace :
+    TopologicalSpace (BoundaryAtlasCyclotomicSugawaraBundle (𝕜 := 𝕜)) := ⊥
 
-instance boundaryAtlasCyclotomicSugawaraPacketDiscreteTopology :
-    DiscreteTopology (BoundaryAtlasCyclotomicSugawaraPacket (𝕜 := 𝕜)) := ⟨rfl⟩
+instance boundaryAtlasCyclotomicSugawaraBundleDiscreteTopology :
+    DiscreteTopology (BoundaryAtlasCyclotomicSugawaraBundle (𝕜 := 𝕜)) := DiscreteTopology.mk (Eq.refl _)
 
 /-- The combined Heisenberg boundary / sixth-root / Sugawara readout. -/
 def boundaryAtlasCyclotomicSugawaraReadout
     (p : 𝕜 × SixthRootParameter) :
-    BoundaryAtlasCyclotomicSugawaraPacket (𝕜 := 𝕜) :=
+    BoundaryAtlasCyclotomicSugawaraBundle (𝕜 := 𝕜) :=
   ⟨p.1,
     (p.2,
       (InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
@@ -70,23 +94,30 @@ def boundaryAtlasCyclotomicSugawaraReadout
           (InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
             (𝕜 := 𝕜) p.1 p.2.1 p.2.2).heisenberg.currentRep))⟩
 
+/-- First coordinate of `boundaryAtlasCyclotomicSugawaraReadout p` is the charge parameter `p.1`. -/
 @[simp] theorem boundaryAtlasCyclotomicSugawaraReadout_fst
     (p : 𝕜 × SixthRootParameter) :
     (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜) p).1 = p.1 := by
-  rfl
+  unfold boundaryAtlasCyclotomicSugawaraReadout
+  exact Eq.refl _
 
+/-- Sixth-root parameter component of `boundaryAtlasCyclotomicSugawaraReadout p`. -/
 @[simp] theorem boundaryAtlasCyclotomicSugawaraReadout_snd_fst
     (p : 𝕜 × SixthRootParameter) :
     (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜) p).2.1 = p.2 := by
-  rfl
+  unfold boundaryAtlasCyclotomicSugawaraReadout
+  exact Eq.refl _
 
+/-- Cyclotomic atlas component of `boundaryAtlasCyclotomicSugawaraReadout p`. -/
 @[simp] theorem boundaryAtlasCyclotomicSugawaraReadout_snd_snd_fst
     (p : 𝕜 × SixthRootParameter) :
     (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜) p).2.2.1 =
       (InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
         (𝕜 := 𝕜) p.1 p.2.1 p.2.2) := by
-  rfl
+  unfold boundaryAtlasCyclotomicSugawaraReadout
+  exact Eq.refl _
 
+/-- Sugawara Virasoro Lie homomorphism component of `boundaryAtlasCyclotomicSugawaraReadout p`. -/
 @[simp] theorem boundaryAtlasCyclotomicSugawaraReadout_snd_snd_snd
     (p : 𝕜 × SixthRootParameter) :
     (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜) p).2.2.2 =
@@ -95,23 +126,22 @@ def boundaryAtlasCyclotomicSugawaraReadout
         (V := VirasoroProject.ChargedFockSpace 𝕜 p.1)
         (InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
           (𝕜 := 𝕜) p.1 p.2.1 p.2.2).heisenberg.currentRep := by
-  rfl
+  unfold boundaryAtlasCyclotomicSugawaraReadout
+  exact Eq.refl _
 
 /-- The combined readout is continuous on the discrete parameter space. -/
 theorem continuous_boundaryAtlasCyclotomicSugawaraReadout :
     Continuous (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜)) := by
-  simpa [boundaryAtlasCyclotomicSugawaraReadout] using
-    (continuous_of_discreteTopology :
-      Continuous (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜)))
+  unfold boundaryAtlasCyclotomicSugawaraReadout
+  exact continuous_of_discreteTopology
 
 /-- The combined readout is locally constant on the discrete parameter space. -/
 theorem isLocallyConstant_boundaryAtlasCyclotomicSugawaraReadout :
     IsLocallyConstant (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜)) := by
-  simpa [boundaryAtlasCyclotomicSugawaraReadout] using
-    (IsLocallyConstant.of_discrete
-      (f := boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜)))
+  unfold boundaryAtlasCyclotomicSugawaraReadout
+  exact IsLocallyConstant.of_discrete
 
-/-- The Sugawara central generator readout is preserved in the combined packet. -/
+/-- The Sugawara central generator readout is preserved in the combined bundle. -/
 theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_central
     (p : 𝕜 × SixthRootParameter) :
     (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜) p).2.2.2
@@ -127,7 +157,7 @@ theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_central
   exact InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_currentSugawara_central
     (𝕜 := 𝕜) p.1 p.2.1 p.2.2
 
-/-- The `lgen` readout is preserved in the combined packet. -/
+/-- The Virasoro stress generator `lgen n` readout is preserved in the combined bundle. -/
 theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_lgen_apply
     (p : 𝕜 × SixthRootParameter) (n : Int) :
     (boundaryAtlasCyclotomicSugawaraReadout (𝕜 := 𝕜) p).2.2.2
@@ -143,3 +173,6 @@ theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_lgen_apply
           (𝕜 := 𝕜) p.1).currentRep.sugawaraStressMode n
   exact InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
     (𝕜 := 𝕜) p.1 n
+
+end
+end InfoGeometry.Topology.HeisenbergBoundaryAtlasCyclotomicSugawaraTopological

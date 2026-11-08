@@ -42,16 +42,19 @@ def compute_olean_content_hash(root: Path) -> str:
     manifest_path = root / "lake-manifest.json"
     manifest_bytes = manifest_path.read_bytes() if manifest_path.is_file() else b""
     packages = _declared_lake_packages(root, manifest_bytes)
-    oleans = _olean_inventory(build_lib, packages)
+    src_build_lib = root / ".lake" / "src-build" / "lib"
+    oleans = _olean_inventory(build_lib, packages, extra_build_libs=(src_build_lib,))
     if not oleans:
         return ""
     compiler_identity = _lean_compiler_identity(root)
     build_identity_files = _build_identity_inventory(root)
     build_identity_state = _inventory_state(build_identity_files)
     h = hashlib.sha256()
-    h.update(b"info-geometry-olean-content-v5\0")
+    h.update(b"info-geometry-olean-content-v6\0")
     h.update(b"lean-compiler-identity\0" + compiler_identity.encode("utf-8") + b"\0")
-    for name in ("lean-toolchain", "lakefile.lean", "lakefile.toml"):
+    for name in (
+        "lean-toolchain", "lakefile.lean", "lakefile.src.lean", "lakefile.toml"
+    ):
         path = root / name
         h.update(name.encode() + b"\0")
         if path.is_file():
@@ -74,7 +77,9 @@ def compute_olean_content_hash(root: Path) -> str:
     final_packages = _declared_lake_packages(root, manifest_bytes)
     if final_packages != packages:
         raise RuntimeError("Lake package inventory changed while hashing artifacts")
-    final_oleans = _olean_inventory(build_lib, final_packages)
+    final_oleans = _olean_inventory(
+        build_lib, final_packages, extra_build_libs=(src_build_lib,)
+    )
     if tuple(str(path) for path in final_oleans) != inventory:
         raise RuntimeError("olean inventory changed while hashing artifacts")
     if _inventory_state(final_oleans) != inventory_state:
@@ -106,7 +111,7 @@ def compute_lean_source_hash(root: Path) -> str:
     if not any(path.suffix == ".lean" for path in files):
         return ""
     h = hashlib.sha256()
-    h.update(b"info-geometry-source-content-v3\0")
+    h.update(b"info-geometry-source-content-v4\0")
     inventory = tuple(str(path) for path in files)
     inventory_state = _inventory_state(files)
     for path in files:
@@ -255,13 +260,19 @@ def _declared_lake_packages(
     )
 
 
-def _olean_inventory(build_lib: Path, dependencies: Sequence[Path]) -> list[Path]:
+def _olean_inventory(
+    build_lib: Path,
+    dependencies: Sequence[Path],
+    *,
+    extra_build_libs: Sequence[Path] = (),
+) -> list[Path]:
     """Inventory main and optional OLean parts that Lean imports together."""
     paths: set[Path] = set()
     patterns = ("*.olean", "*.olean.server", "*.olean.private")
-    if build_lib.is_dir():
-        for pattern in patterns:
-            paths.update(build_lib.rglob(pattern))
+    for root in (build_lib, *extra_build_libs):
+        if root.is_dir():
+            for pattern in patterns:
+                paths.update(root.rglob(pattern))
     for package in dependencies:
         package_lib = package / ".lake" / "build" / "lib"
         if package_lib.is_dir():
@@ -272,7 +283,10 @@ def _olean_inventory(build_lib: Path, dependencies: Sequence[Path]) -> list[Path
 
 def _source_inventory(root: Path, dependencies: Sequence[Path]) -> list[Path]:
     """List project/package Lean sources while excluding VCS and build internals."""
-    paths = set((root / "lean").rglob("*.lean")) if (root / "lean").is_dir() else set()
+    paths = set()
+    for source_root in (root / "lean", root / "src", root / "proofs"):
+        if source_root.is_dir():
+            paths.update(source_root.rglob("*.lean"))
     for package in dependencies:
         paths.update(
             path for path in package.rglob("*.lean")
@@ -282,7 +296,10 @@ def _source_inventory(root: Path, dependencies: Sequence[Path]) -> list[Path]:
             config = package / name
             if config.is_file():
                 paths.add(config)
-    for name in ("lakefile.lean", "lakefile.toml", "lean-toolchain", "lake-manifest.json"):
+    for name in (
+        "lakefile.lean", "lakefile.src.lean", "lakefile.toml",
+        "lean-toolchain", "lake-manifest.json",
+    ):
         path = root / name
         if path.is_file():
             paths.add(path)
@@ -290,7 +307,10 @@ def _source_inventory(root: Path, dependencies: Sequence[Path]) -> list[Path]:
 
 
 def _build_identity_inventory(root: Path) -> list[Path]:
-    names = ("lean-toolchain", "lakefile.lean", "lakefile.toml", "lake-manifest.json")
+    names = (
+        "lean-toolchain", "lakefile.lean", "lakefile.src.lean",
+        "lakefile.toml", "lake-manifest.json",
+    )
     return [root / name for name in names if (root / name).is_file()]
 
 
@@ -299,9 +319,14 @@ def _path_identity(path: Path, root: Path) -> str:
     return Path(os.path.relpath(path.resolve(), root.resolve())).as_posix()
 
 
-def lake_build_command(targets: Sequence[str], *, wfail: bool = False) -> list[str]:
+def lake_build_command(
+    targets: Sequence[str], *, wfail: bool = False, lakefile: str | None = None
+) -> list[str]:
     """Compile the exact Lake argv after wrapper-owned options are resolved."""
-    command = ["lake", "build"]
+    command = ["lake"]
+    if lakefile is not None:
+        command.extend(("--file", lakefile))
+    command.append("build")
     if wfail:
         command.append("--wfail")
     command.extend(targets)
@@ -375,7 +400,8 @@ def _ensure_mathlib_cache_hydrated(root: Path) -> None:
 
 def run_locked_lake_build(
     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False,
-    existing_lock: BuildLock | None = None,
+    existing_lock: BuildLock | None = None, lakefile: str | None = None,
+    include_src_default: bool = False,
 ) -> int:
     """Run the causal build transaction: validate -> lock -> execute -> release.
 
@@ -387,6 +413,17 @@ def run_locked_lake_build(
         print(f"[locked-lake-build] {integrity_error}", file=sys.stderr, flush=True)
         return 2
     targets = tuple(str(target) for target in targets)
+    if lakefile not in (None, "lakefile.src.lean"):
+        print("[locked-lake-build] unsupported Lake configuration file", file=sys.stderr)
+        return 2
+    if include_src_default and (
+        lakefile is not None or any(not target.startswith("-") for target in targets)
+    ):
+        print(
+            "[locked-lake-build] combined default mode cannot be combined with targets or a lane",
+            file=sys.stderr,
+        )
+        return 2
     if any(not target or "\x00" in target for target in targets):
         print("[locked-lake-build] invalid empty/NUL target argument", file=sys.stderr, flush=True)
         return 2
@@ -425,15 +462,22 @@ def run_locked_lake_build(
     interrupted = False
     try:
         _ensure_mathlib_cache_hydrated(root)
-        cmd = lake_build_command(targets, wfail=wfail)
-        print(f"[locked-lake-build] executing: {shlex.join(cmd)}", flush=True)
-        proc = subprocess.Popen(cmd, cwd=root, start_new_session=(os.name == "posix"))
-        try:
-            status = proc.wait()
-        except KeyboardInterrupt:
-            interrupted = True
-            raise
-        print(f"[locked-lake-build] lake build exited with code {status}", flush=True)
+        commands = [lake_build_command(targets, wfail=wfail, lakefile=lakefile)]
+        if include_src_default:
+            commands.append(
+                lake_build_command(targets, wfail=wfail, lakefile="lakefile.src.lean")
+            )
+        for cmd in commands:
+            print(f"[locked-lake-build] executing: {shlex.join(cmd)}", flush=True)
+            proc = subprocess.Popen(cmd, cwd=root, start_new_session=(os.name == "posix"))
+            try:
+                status = proc.wait()
+            except KeyboardInterrupt:
+                interrupted = True
+                raise
+            print(f"[locked-lake-build] lake build exited with code {status}", flush=True)
+            if status != 0:
+                break
     except FileNotFoundError as exc:
         print(f"[locked-lake-build] could not start build command: {exc}",
               file=sys.stderr, flush=True)

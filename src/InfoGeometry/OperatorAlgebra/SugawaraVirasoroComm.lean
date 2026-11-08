@@ -2,54 +2,63 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
+/-!
+# Sugawara Rescaling of Quadratic Current Mode Sums to Virasoro Generators
+
+This module proves that rescaling a finite quadratic current mode sum `modeSum`
+by the Sugawara factor `1 / (2 * (k + h^∨))` converts the unnormalized quadratic
+mode commutator into the Virasoro commutator with central charge
+$c = k \dim(\mathfrak{g}) / (k + h^\vee)$.
+
+## 1. Real Math in This File
+- `modeSum`, `sugawaraFactor`, `L_sugawara`
+- `sum_mul_left`, `sum_mul_right`, `virasoro_commutation`
+
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.OperatorAlgebra.AffineVirasoroBridge`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
+-/
+
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 namespace InfoGeometry.OperatorAlgebra.SugawaraVirasoroComm
 
-/-
-Theorem: Assuming an affine current algebra with a non‑degenerate Killing form,
-an orthonormal basis of the finite‑dimensional Lie algebra, and the Sugawara
-definition of the Virasoro modes via the normal‑ordered bilinear sum,
-the Virasoro generators satisfy the Virasoro commutation relations
-with central charge \(c = \\frac{k \\dim \\mathfrak{g}}{k + h^{\\vee}}\).
--/
-
--- Assumptions on the finite Lie algebra
 variable {Finite : Type*} [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite]
   [LieAlgebra ℝ Finite] [Fintype Finite] [DecidableEq Finite]
 
--- Assumptions on the algebra where the currents live
 variable {Alg : Type*} [Ring Alg] [Algebra ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
--- Affine current datum (the owner data)
 variable (A : AffineCurrentDatum Finite Alg)
-
--- Sugawara mode‑sum datum (owner data)
 variable (S : SugawaraModeConstructionDatum Finite Alg)
 variable (e : Finite → Finite)
 
--- We define modeSum explicitly in terms of A and the orthonormal basis e
+/-- Finite quadratic current mode sum $\sum_{m \in s} \sum_i J_m(e_i)\,J_{n-m}(e_i)$. -/
 noncomputable def modeSum (s : Finset ℤ) (n : ℤ) : Alg :=
   ∑ m ∈ s, ∑ i : Finite, (A.Current m (e i)) * (A.Current (n - m) (e i))
 
--- The Sugawara factor (real number)
+/-- Sugawara normalization factor $\frac{1}{2(k + h^\vee)}$. -/
 noncomputable def sugawaraFactor : ℝ :=
   1 / (2 * (S.bridge.level + S.bridge.dualCoxeterNumber))
 
--- The Virasoro mode as defined by the Sugawara construction
+/-- Sugawara-normalized finite Virasoro mode `sugawaraFactor S • modeSum A e s n`. -/
 noncomputable def L_sugawara (s : Finset ℤ) (n : ℤ) : Alg :=
   sugawaraFactor S • modeSum A e s n
 
--- Helper lemmas about sums
+/-- Scalar multiplication pulls out of a finite sum of binary products. -/
 lemma sum_mul_left (s : Finset ℤ) (r : ℝ) (f g : ℤ → Alg) :
     (∑ m ∈ s, r • (f m * g m)) = r • (∑ m ∈ s, f m * g m) := by
   rw [← Finset.smul_sum]
 
+/-- Right multiplication distributes over a finite sum of binary products. -/
 lemma sum_mul_right (s : Finset ℤ) (r : Alg) (f g : ℤ → Alg) :
     (∑ m ∈ s, (f m * g m) * r) = (∑ m ∈ s, f m * g m) * r := by
   rw [Finset.sum_mul]
 
--- Main theorem: Virasoro commutation
+/-- Rescaling the unnormalized quadratic current mode sum by `sugawaraFactor S`
+yields the Virasoro commutation relation with central charge
+$c = k \dim(\mathfrak{g}) / (k + h^\vee)$. -/
 theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
     (h_comm : ∀ (X Y : Alg), ⁅X, Y⁆ = X * Y - Y * X)
     (h_level_nz : S.bridge.level + S.bridge.dualCoxeterNumber ≠ 0) :

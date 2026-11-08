@@ -5,13 +5,27 @@ import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
 import InfoGeometry.Topology.SplitCliffordHeisenbergTopological
 
 /-!
-# Concrete charged-Fock split-Clifford Heisenberg property
+# Topological Bundle of Concrete Charged-Fock Split-Clifford Heisenberg Currents
 
-The source-current owner already proves truncation and the endomorphism-valued
-Heisenberg commutator for the represented charged-Fock current family.  This
-owner packages those proofs into the canonical property structure and then
-places the dependent family of witnesses in a discrete topological packet.
-No existential choice or additional current law is introduced.
+This module constructs `representedChargedFockData α : SplitCliffordHeisenbergWitness 𝕜 (ChargedFockSpace 𝕜 α)`
+from the proved truncation and Wick commutator laws on `ChargedFockSpace 𝕜 α`,
+places the dependent family in the sigma bundle `ChargedFockDataBundle 𝕜`, and
+proves its continuity and local constancy.
+
+## 1. Real Math in This File
+- `representedChargedFockData`, `representedChargedFockData_J`,
+  `representedChargedFockData_trunc`, `representedChargedFockData_comm`
+- `ChargedFockDataBundle`, `representedChargedFockDataBundle`
+- `representedChargedFockDataBundle_fst`, `representedChargedFockDataBundle_snd`,
+  `continuous_representedChargedFockDataBundle`,
+  `isLocallyConstant_representedChargedFockDataBundle`
+
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.SplitCliffordSourceHeisenberg`
+- `InfoGeometry.Topology.SplitCliffordHeisenbergTopological`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Topology.SplitCliffordChargedFockTopological
@@ -26,24 +40,29 @@ noncomputable section
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-- The concrete property carried by the represented charged-Fock current. -/
+/-- Concrete `SplitCliffordHeisenbergWitness` carried by the represented
+charged-Fock current at charge `α`. -/
 def representedChargedFockData (α : 𝕜) :
     SplitCliffordHeisenbergWitness 𝕜
-      (VirasoroProject.ChargedFockSpace 𝕜 α) where
-  J := representedChargedFockJ 𝕜 α
-  trunc := representedChargedFockJ_trunc 𝕜 α
-  comm := representedChargedFockJ_wick 𝕜 α
+      (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  ⟨representedChargedFockJ 𝕜 α,
+   representedChargedFockJ_trunc 𝕜 α,
+   representedChargedFockJ_wick 𝕜 α⟩
 
+/-- The mode family of `representedChargedFockData α` equals `representedChargedFockJ 𝕜 α`. -/
 @[simp] theorem representedChargedFockData_J (α : 𝕜) :
     (representedChargedFockData (𝕜 := 𝕜) α).J =
       representedChargedFockJ 𝕜 α := by
+  unfold representedChargedFockData SplitCliffordHeisenbergWitness.J
   rfl
 
+/-- Eventual positive-mode truncation of `representedChargedFockData α`. -/
 theorem representedChargedFockData_trunc (α : 𝕜) :
     ∀ v, ∀ᶠ n : Int in Filter.atTop,
       (representedChargedFockData (𝕜 := 𝕜) α).J n v = 0 := by
   exact representedChargedFockJ_trunc 𝕜 α
 
+/-- Heisenberg mode commutator law of `representedChargedFockData α`. -/
 theorem representedChargedFockData_comm (α : 𝕜) (m n : Int) :
     ((representedChargedFockData (𝕜 := 𝕜) α).J m).commutator
         ((representedChargedFockData (𝕜 := 𝕜) α).J n) =
@@ -55,40 +74,48 @@ theorem representedChargedFockData_comm (α : 𝕜) (m n : Int) :
       else 0 := by
   exact representedChargedFockJ_wick 𝕜 α m n
 
-/-- Dependent packet of all concrete charged-Fock witnesses. -/
-abbrev ChargedFockDataPacket (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :=
+/-- Dependent sigma bundle of concrete charged-Fock Heisenberg witnesses over `α : 𝕜`. -/
+abbrev ChargedFockDataBundle (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :=
   Σ α : 𝕜,
     SplitCliffordHeisenbergWitness 𝕜
       (VirasoroProject.ChargedFockSpace 𝕜 α)
 
-instance chargedFockDataPacketTopologicalSpace :
-    TopologicalSpace (ChargedFockDataPacket 𝕜) := ⊥
+/-- Discrete topology on `ChargedFockDataBundle 𝕜`. -/
+instance chargedFockDataBundleTopologicalSpace :
+    TopologicalSpace (ChargedFockDataBundle 𝕜) := ⊥
 
-instance chargedFockDataPacketDiscreteTopology :
-    DiscreteTopology (ChargedFockDataPacket 𝕜) := ⟨rfl⟩
+/-- `DiscreteTopology` instance on `ChargedFockDataBundle 𝕜`. -/
+instance chargedFockDataBundleDiscreteTopology :
+    DiscreteTopology (ChargedFockDataBundle 𝕜) := ⟨rfl⟩
 
-/-- The concrete property family as a topological packet-valued readout. -/
-def representedChargedFockDataPacket (α : 𝕜) :
-    ChargedFockDataPacket 𝕜 :=
+/-- Section `α ↦ ⟨α, representedChargedFockData α⟩` into `ChargedFockDataBundle 𝕜`. -/
+def representedChargedFockDataBundle (α : 𝕜) :
+    ChargedFockDataBundle 𝕜 :=
   ⟨α, representedChargedFockData (𝕜 := 𝕜) α⟩
 
-@[simp] theorem representedChargedFockDataPacket_fst (α : 𝕜) :
-    (representedChargedFockDataPacket (𝕜 := 𝕜) α).1 = α := by
+/-- First sigma coordinate of `representedChargedFockDataBundle α`. -/
+@[simp] theorem representedChargedFockDataBundle_fst (α : 𝕜) :
+    (representedChargedFockDataBundle (𝕜 := 𝕜) α).1 = α := by
+  unfold representedChargedFockDataBundle
   rfl
 
-@[simp] theorem representedChargedFockDataPacket_snd (α : 𝕜) :
-    (representedChargedFockDataPacket (𝕜 := 𝕜) α).2 =
+/-- Second sigma coordinate of `representedChargedFockDataBundle α`. -/
+@[simp] theorem representedChargedFockDataBundle_snd (α : 𝕜) :
+    (representedChargedFockDataBundle (𝕜 := 𝕜) α).2 =
       representedChargedFockData (𝕜 := 𝕜) α := by
+  unfold representedChargedFockDataBundle
   rfl
 
-theorem continuous_representedChargedFockDataPacket :
-    Continuous (representedChargedFockDataPacket (𝕜 := 𝕜)) := by
+/-- Continuity of `representedChargedFockDataBundle`. -/
+theorem continuous_representedChargedFockDataBundle :
+    Continuous (representedChargedFockDataBundle (𝕜 := 𝕜)) := by
   exact continuous_of_discreteTopology
 
-theorem isLocallyConstant_representedChargedFockDataPacket :
-    IsLocallyConstant (representedChargedFockDataPacket (𝕜 := 𝕜)) := by
+/-- Local constancy of `representedChargedFockDataBundle`. -/
+theorem isLocallyConstant_representedChargedFockDataBundle :
+    IsLocallyConstant (representedChargedFockDataBundle (𝕜 := 𝕜)) := by
   exact IsLocallyConstant.of_discrete
-    (f := representedChargedFockDataPacket (𝕜 := 𝕜))
+    (f := representedChargedFockDataBundle (𝕜 := 𝕜))
 
 end
 end InfoGeometry.Topology.SplitCliffordChargedFockTopological

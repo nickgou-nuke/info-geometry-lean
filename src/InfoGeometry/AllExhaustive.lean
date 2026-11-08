@@ -169,6 +169,7 @@ import InfoGeometry.Algebra.DerivationLieLaneRepresentation
 import InfoGeometry.Algebra.Det2
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinLift
 import InfoGeometry.Algebra.DihedralArtinI2SixSpinOrder
+import InfoGeometry.Algebra.DihedralFourierBlocks
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.DiscretePowerGradeReadout
 import InfoGeometry.Algebra.DualAlgebraAutomorphismDerivationBridge
@@ -335,6 +336,7 @@ import InfoGeometry.Algebra.NonAssocIteratedLeibnizTransport
 import InfoGeometry.Algebra.NonAssocPeirceFrame
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
+import InfoGeometry.Algebra.FiniteGroupFourier
 import InfoGeometry.Algebra.OSp12
 import InfoGeometry.Algebra.OSp12BulkBoundaryBridge
 import InfoGeometry.Algebra.OSp12ColimitReadback
@@ -343,6 +345,7 @@ import InfoGeometry.Algebra.OSp12LogarithmicTransport
 import InfoGeometry.Algebra.OctonionMatrixObstruction
 import InfoGeometry.Algebra.OnCuntzNAryIFSBridge
 import InfoGeometry.Algebra.OperatorSymbolCore
+import InfoGeometry.Algebra.OneCornerCounterexample
 import InfoGeometry.Algebra.OrbitClassification
 import InfoGeometry.Algebra.OrbitClassificationBridge
 import InfoGeometry.Algebra.OrbitStratification
@@ -458,6 +461,7 @@ import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.Algebra.SupergradedHomogeneousClosure
 import InfoGeometry.Algebra.SupergradedJordanLieSplit
 import InfoGeometry.Algebra.SupermatrixKoszul
+import InfoGeometry.Algebra.SubgroupCompressionVariance
 import InfoGeometry.Algebra.SusyCore
 import InfoGeometry.Algebra.SymplecticRankTwoJacobiator
 import InfoGeometry.Algebra.TemperleyLiebZeroLoop
@@ -1056,6 +1060,8 @@ import InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Analysis.FiniteSpectralHeatMellinTopological
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
+import InfoGeometry.Analysis.FixedGroundHamiltonianFiber
+import InfoGeometry.Analysis.FixedGroundHamiltonianSpectrum
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.FractionalPartPiecewiseIntegralBridge
 import InfoGeometry.Analysis.GramLieFlowCompression
@@ -1101,6 +1107,7 @@ import InfoGeometry.Analysis.PositiveOrthantSurprisalCalculus
 import InfoGeometry.Analysis.QuadraticResponseSimplex
 import InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
 import InfoGeometry.Analysis.RankOneTrace
+import InfoGeometry.Analysis.RealOperatorGapCentering
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import InfoGeometry.Analysis.SharpAngleEstimate
 import InfoGeometry.Analysis.SouriauCocycle
@@ -1194,6 +1201,7 @@ import InfoGeometry.Arithmetic.CuntzPrimeCriticalEulerFactorBridge
 import InfoGeometry.Arithmetic.CuntzPrimeFiniteGibbsBridge
 import InfoGeometry.Arithmetic.CyclotomicFiveNPotentGaloisBridge
 import InfoGeometry.Arithmetic.CyclotomicGaloisRootsOfUnityGaussSumCapstone
+import InfoGeometry.Arithmetic.CyclotomicHarmonicOrbits
 import InfoGeometry.Arithmetic.DirichletCharacters
 import InfoGeometry.Arithmetic.DirichletModeFactorization
 import InfoGeometry.Arithmetic.Erdos1196ProofPin
@@ -8124,6 +8132,7 @@ import InfoGeometry.LLM.FourierCharacterEncoding
 import InfoGeometry.LLM.FourierSuperposition
 import InfoGeometry.LLM.HypothesisScaffold70
 import InfoGeometry.LLM.KMSAttentionThermodynamicRouterCapstone
+import InfoGeometry.LLM.KMSBoundaryCounterexample
 import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.LLM.KreinEuclideanComparison
@@ -8152,6 +8161,7 @@ import InfoGeometry.LLM.SpinTransformerFixedPoint
 import InfoGeometry.LLM.SpinTransformerMeanField
 import InfoGeometry.LLM.SpinTransformerPathEntropy
 import InfoGeometry.LLM.SpinTransformerQuenchRelax
+import InfoGeometry.LLM.SubgroupLogCompression
 import InfoGeometry.LLM.ThermodynamicSwitching
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.LLM.TransformerBlock
@@ -8159,6 +8169,7 @@ import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.LLM.WallpaperMirrorAttentionBridge
 import InfoGeometry.LLM.ZModFourierBridge
+import InfoGeometry.LLM.WalshCharacterGeometry
 import InfoGeometry.LanglandsGWBridge
 import InfoGeometry.Library
 import InfoGeometry.Lie.BRSTCohomology
@@ -9014,6 +9025,7 @@ import InfoGeometry.OperatorAlgebra.FiniteParityEulerPoincare
 import InfoGeometry.OperatorAlgebra.FiniteParityHomotopySupertrace
 import InfoGeometry.OperatorAlgebra.FiniteParityHopfTrace
 import InfoGeometry.OperatorAlgebra.FiniteParitySupertrace
+import InfoGeometry.OperatorAlgebra.FinitePropagationCompression
 import InfoGeometry.OperatorAlgebra.FiniteRealSpectralTripleHodge
 import InfoGeometry.OperatorAlgebra.FiniteRelativeModularLogBridge
 import InfoGeometry.OperatorAlgebra.FiniteRelativeModularOperator
@@ -9066,6 +9078,7 @@ import InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas
 import InfoGeometry.OperatorAlgebra.KapustinWittenDuality
 import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 import InfoGeometry.OperatorAlgebra.KasparovKreinDIIIBridge
+import InfoGeometry.OperatorAlgebra.KitaevDoubledRotor
 import InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite
 import InfoGeometry.OperatorAlgebra.KleinDiracKahlerOperatorZorn
 import InfoGeometry.OperatorAlgebra.KleinianReturn
@@ -9188,6 +9201,8 @@ import InfoGeometry.OperatorAlgebra.SL2RModularFlow
 import InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
 import InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 import InfoGeometry.OperatorAlgebra.SheetConnection
+import InfoGeometry.OperatorAlgebra.SkewCompressionCounterexample
+import InfoGeometry.OperatorAlgebra.SkewCompressionGap
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeLogarithmicVariation
 import InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy
@@ -13612,3 +13627,17 @@ import InfoGeometry._ProbeW2v4
 import Omega.Conclusion.C6JacobianTypeModelCanonical
 import Omega.Conclusion.CollisionGenfuncRadiusCounterexample
 import Omega.POM.FiniteMomentHankelRank
+import InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge
+import InfoGeometry.Canonical.E10AffineNullRootLightConePoset
+import InfoGeometry.GrandUnification.AnomalyInflow
+import InfoGeometry.GrandUnification.ArchetypeDictionary
+import InfoGeometry.GrandUnification.BulkBoundaryCorrespondence
+import InfoGeometry.GrandUnification.CantorTypeDBitwordLimit
+import InfoGeometry.GrandUnification.Commutant
+import InfoGeometry.GrandUnification.PfaffianSquareRootCharacter
+import InfoGeometry.GrandUnification.TypeDWeylSemidirectAction
+import InfoGeometry.GrandUnification.TypeDZeroOrbitRigidity
+import InfoGeometry.Superalgebra.EinsteinDiracUnruhSpinFusion
+import InfoGeometry.Superalgebra.FaradayYangMillsChernSimonsHopf
+import InfoGeometry.Superalgebra.SplitOctonionGrandUnifiedTowerArchive
+import InfoGeometry.Superalgebra.TomitaTakesakiModularSpinHawkingUnitarity

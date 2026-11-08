@@ -2037,4 +2037,1013 @@ theorem operator_maurer_cartan_galois_bruhat_pullback_amari_qgt_and_nonabelian_c
      charge_iter_cubic_difference hP A C X,
      charge_iter_fifth_annihilator hP A C X⟩⟩
 
+/-!
+## 12. Operator Lichnerowicz–Weitzenböck Duality, Operatorial Information Geometry, & The Four Transparent Peirce–DeWitt Identities
+-/
+
+/-- Quaternionic Clifford spin bivector $\Sigma_{12} := \Gamma_1 * \Gamma_2$. -/
+def spinBivector {B : Type*} [Ring B] (Γ₁ Γ₂ : B) : B := Γ₁ * Γ₂
+
+/-- Forward covariant operator Dirac wave $D_+ := \Gamma_1 * \nabla_1 + \Gamma_2 * \nabla_2$. -/
+def diracForward {B : Type*} [Ring B] (Γ₁ Γ₂ D₁ D₂ : B) : B :=
+  Γ₁ * D₁ + Γ₂ * D₂
+
+/-- Factor-reversed backward covariant operator Dirac wave $D_- := \nabla_1 * \Gamma_1 + \nabla_2 * \Gamma_2$. -/
+def diracBackward {B : Type*} [Ring B] (Γ₁ Γ₂ D₁ D₂ : B) : B :=
+  D₁ * Γ₁ + D₂ * Γ₂
+
+/-- Quaternion-flipped covariant operator Dirac wave $D_{\mathrm{flip}} := \Gamma_1 * \nabla_1 - \Gamma_2 * \nabla_2$. -/
+def diracFlipped {B : Type*} [Ring B] (Γ₁ Γ₂ D₁ D₂ : B) : B :=
+  Γ₁ * D₁ - Γ₂ * D₂
+
+/-- Operator Bochner–Laplace–Beltrami sum of squares $\Delta_{\mathrm{LB}} := \nabla_1^2 + \nabla_2^2$. -/
+def bochnerLaplacianOp {B : Type*} [Ring B] (D₁ D₂ : B) : B :=
+  D₁ * D₁ + D₂ * D₂
+
+/-- Operator hyperbolic D'Alembertian difference of squares $\Box := \nabla_1^2 - \nabla_2^2$. -/
+def dalembertianOp {B : Type*} [Ring B] (D₁ D₂ : B) : B :=
+  D₁ * D₁ - D₂ * D₂
+
+/-- Nambu–Gorkov Bogoliubov–de Gennes (BdG) Dirac–Majorana supercharge $Q := D + M$. -/
+def bdgSupercharge {B : Type*} [Ring B] (D M : B) : B := D + M
+
+/-- Primal ($+1$ / exponential) operator affine connection $\nabla^{(+)}_{H,S}(X) := [H, X] + \{S, X\}$. -/
+def amariConnPlus {B : Type*} [Ring B] (H S X : B) : B :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X + anticomm S X
+
+/-- Dual ($-1$ / mixture) operator affine connection $\nabla^{(-)}_{H,S}(X) := [H, X] - \{S, X\}$. -/
+def amariConnMinus {B : Type*} [Ring B] (H S X : B) : B :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X - anticomm S X
+
+/-- Dual Laplace–Beltrami divergence–gradient superoperator $\Delta_{\mathrm{dual}}(X) := \nabla^{(-)}_{H,S}(\nabla^{(+)}_{H,S}(X))$. -/
+def dualLaplaceBeltrami {B : Type*} [Ring B] (H S X : B) : B :=
+  amariConnMinus H S (amariConnPlus H S X)
+
+/-- Primal ($+1$) linearized Dirac wave $D^{(+)} := \Gamma_1 (H_1 + S_1) + \Gamma_2 (H_2 + S_2)$. -/
+def diracPrimalWave {B : Type*} [Ring B] (Γ₁ Γ₂ H₁ H₂ S₁ S₂ : B) : B :=
+  Γ₁ * (H₁ + S₁) + Γ₂ * (H₂ + S₂)
+
+/-- Dual ($-1$) linearized Dirac wave $D^{(-)} := \Gamma_1 (H_1 - S_1) + \Gamma_2 (H_2 - S_2)$. -/
+def diracDualWave {B : Type*} [Ring B] (Γ₁ Γ₂ H₁ H₂ S₁ S₂ : B) : B :=
+  Γ₁ * (H₁ - S₁) + Γ₂ * (H₂ - S₂)
+
+/-- Forward Cayley–Möbius operator transform $U(X) := (1 - X) * R_+$. -/
+def cayleyMoebiusTransform {B : Type*} [Ring B] (X R_plus : B) : B :=
+  (1 - X) * R_plus
+
+/-- Parity-flipped inverse Cayley–Möbius operator transform $U(-X) := (1 + X) * R_-$. -/
+def cayleyMoebiusInverse {B : Type*} [Ring B] (X R_minus : B) : B :=
+  (1 + X) * R_minus
+
+/-- **Stage 12.1 (`operator_lichnerowicz_elliptic_hyperbolic_and_peirce_nambu_gorkov_susy_bridge`):**
+Over any unital associative ring `B`:
+1. **Quaternionic Clifford–Pauli Bivector Flip (`Γ₁² = 1`, `Γ₂² = 1`, `{Γ₁, Γ₂} = 0`):**
+   `spinBivector Γ₂ Γ₁ = -spinBivector Γ₁ Γ₂`, `spinBivector Γ₁ Γ₂ * spinBivector Γ₁ Γ₂ = -1`,
+   and `diracForward Γ₁ Γ₂ D₁ D₂ - diracBackward Γ₁ Γ₂ D₁ D₂ = comm Γ₁ D₁ + comm Γ₂ D₂`.
+2. **Elliptic & Hyperbolic Operator Lichnerowicz–Weitzenböck Duality (`[Γ_a, D_b] = 0`):**
+   - **Elliptic Squares (Bochner Laplacian + Lie Curvature):**
+     $$D_+^2 = (\nabla_1^2 + \nabla_2^2) + \Gamma_1 \Gamma_2 [\nabla_1, \nabla_2], \qquad
+       D_{\mathrm{flip}}^2 = (\nabla_1^2 + \nabla_2^2) - \Gamma_1 \Gamma_2 [\nabla_1, \nabla_2],$$
+     so $D_+^2 + D_{\mathrm{flip}}^2 = (2 : \mathbb{Z}) \bullet (\nabla_1^2 + \nabla_2^2)$ and
+     $D_+^2 - D_{\mathrm{flip}}^2 = (2 : \mathbb{Z}) \bullet (\Gamma_1 \Gamma_2 [\nabla_1, \nabla_2])$;
+   - **Hyperbolic Cross-Products (D'Alembertian Wave Operator + Jordan Strain):**
+     $$D_+ D_{\mathrm{flip}} = (\nabla_1^2 - \nabla_2^2) - \Gamma_1 \Gamma_2 \{\nabla_1, \nabla_2\}, \qquad
+       D_{\mathrm{flip}} D_+ = (\nabla_1^2 - \nabla_2^2) + \Gamma_1 \Gamma_2 \{\nabla_1, \nabla_2\},$$
+     so $\{D_+, D_{\mathrm{flip}}\} = (2 : \mathbb{Z}) \bullet (\nabla_1^2 - \nabla_2^2)$ and
+     $[D_+, D_{\mathrm{flip}}] = -((2 : \mathbb{Z}) \bullet (\Gamma_1 \Gamma_2 \{\nabla_1, \nabla_2\}))$.
+3. **Universal Peirce–Nambu–Gorkov SUSY Realization (`P * P = P`):**
+   For any idempotent $P^2 = P$ and any $A \in B$, the tangent commutator $D_A = [P, A]$ and odd
+   Cartan grade $M_A = \mathrm{oddGrade}\,P\,A = [P, [P, A]]$ satisfy
+   $\{S_P, D_A\} = 0$, $\{S_P, M_A\} = 0$, $\{D_A, M_A\} = 0$, and their BdG supercharge
+   $Q = D_A + M_A = (2 : \mathbb{Z}) \bullet \mathrm{conePlus}\,P\,A$ satisfies
+   $Q^2 = D_A^2 + M_A^2 = 0$ and $\{Q, S_P Q\} = 0$. -/
+theorem operator_lichnerowicz_elliptic_hyperbolic_and_peirce_nambu_gorkov_susy_bridge
+    {B : Type*} [Ring B]
+    {Γ₁ Γ₂ D₁ D₂ P : B}
+    (hΓ1 : Γ₁ * Γ₁ = 1) (hΓ2 : Γ₂ * Γ₂ = 1) (hΓ12 : anticomm Γ₁ Γ₂ = 0)
+    (h11 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₁ D₁ = 0)
+    (h12 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₁ D₂ = 0)
+    (h21 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₂ D₁ = 0)
+    (h22 : InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₂ D₂ = 0)
+    (hP : P * P = P) (A : B) :
+    (spinBivector Γ₂ Γ₁ = -spinBivector Γ₁ Γ₂ ∧
+     spinBivector Γ₁ Γ₂ * spinBivector Γ₁ Γ₂ = -1 ∧
+     diracForward Γ₁ Γ₂ D₁ D₂ - diracBackward Γ₁ Γ₂ D₁ D₂ =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₁ D₁ +
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₂ D₂) ∧
+    (diracForward Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ =
+       bochnerLaplacianOp D₁ D₂ +
+         spinBivector Γ₁ Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂ ∧
+     diracFlipped Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+       bochnerLaplacianOp D₁ D₂ -
+         spinBivector Γ₁ Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂ ∧
+     diracForward Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ +
+       diracFlipped Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+       (2 : ℤ) • bochnerLaplacianOp D₁ D₂ ∧
+     diracForward Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ -
+       diracFlipped Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+       (2 : ℤ) • (spinBivector Γ₁ Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂) ∧
+     diracForward Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+       dalembertianOp D₁ D₂ - spinBivector Γ₁ Γ₂ * anticomm D₁ D₂ ∧
+     diracFlipped Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ =
+       dalembertianOp D₁ D₂ + spinBivector Γ₁ Γ₂ * anticomm D₁ D₂ ∧
+     anticomm (diracForward Γ₁ Γ₂ D₁ D₂) (diracFlipped Γ₁ Γ₂ D₁ D₂) =
+       (2 : ℤ) • dalembertianOp D₁ D₂ ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (diracForward Γ₁ Γ₂ D₁ D₂) (diracFlipped Γ₁ Γ₂ D₁ D₂) =
+       -((2 : ℤ) • (spinBivector Γ₁ Γ₂ * anticomm D₁ D₂))) ∧
+    (anticomm (invS P) (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) = 0 ∧
+     anticomm (invS P) (oddGrade P A) = 0 ∧
+     anticomm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) (oddGrade P A) = 0 ∧
+     bdgSupercharge (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) (oddGrade P A) =
+       (2 : ℤ) • conePlus P A ∧
+     bdgSupercharge (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) (oddGrade P A) *
+       bdgSupercharge (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) (oddGrade P A) = 0 ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A *
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A +
+       oddGrade P A * oddGrade P A = 0 ∧
+     anticomm
+       (bdgSupercharge (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) (oddGrade P A))
+       (invS P * bdgSupercharge (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) (oddGrade P A)) = 0) := by
+  have h_anti : Γ₂ * Γ₁ = -(Γ₁ * Γ₂) :=
+    eq_neg_of_add_eq_zero_right hΓ12
+  have c11 : D₁ * Γ₁ = Γ₁ * D₁ := (sub_eq_zero.mp h11).symm
+  have c12 : D₂ * Γ₁ = Γ₁ * D₂ := (sub_eq_zero.mp h12).symm
+  have c21 : D₁ * Γ₂ = Γ₂ * D₁ := (sub_eq_zero.mp h21).symm
+  have c22 : D₂ * Γ₂ = Γ₂ * D₂ := (sub_eq_zero.mp h22).symm
+  have h_biv_flip : spinBivector Γ₂ Γ₁ = -spinBivector Γ₁ Γ₂ := h_anti
+  have h_biv_sq : spinBivector Γ₁ Γ₂ * spinBivector Γ₁ Γ₂ = -1 := by
+    unfold spinBivector
+    calc
+      (Γ₁ * Γ₂) * (Γ₁ * Γ₂) = Γ₁ * (Γ₂ * Γ₁) * Γ₂ := by noncomm_ring
+      _ = Γ₁ * (-(Γ₁ * Γ₂)) * Γ₂ := by rw [h_anti]
+      _ = -((Γ₁ * Γ₁) * (Γ₂ * Γ₂)) := by noncomm_ring
+      _ = -(1 * 1) := by rw [hΓ1, hΓ2]
+      _ = -1 := by noncomm_ring
+  have h_fb_diff :
+      diracForward Γ₁ Γ₂ D₁ D₂ - diracBackward Γ₁ Γ₂ D₁ D₂ =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₁ D₁ +
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm Γ₂ D₂ := by
+    unfold diracForward diracBackward InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    abel
+  have h1 : (Γ₁ * D₁) * (Γ₁ * D₁) = D₁ * D₁ := by
+    calc
+      (Γ₁ * D₁) * (Γ₁ * D₁) = Γ₁ * (D₁ * Γ₁) * D₁ := by noncomm_ring
+      _ = Γ₁ * (Γ₁ * D₁) * D₁ := by rw [c11]
+      _ = (Γ₁ * Γ₁) * (D₁ * D₁) := by noncomm_ring
+      _ = 1 * (D₁ * D₁) := by rw [hΓ1]
+      _ = D₁ * D₁ := one_mul _
+  have h2 : (Γ₂ * D₂) * (Γ₂ * D₂) = D₂ * D₂ := by
+    calc
+      (Γ₂ * D₂) * (Γ₂ * D₂) = Γ₂ * (D₂ * Γ₂) * D₂ := by noncomm_ring
+      _ = Γ₂ * (Γ₂ * D₂) * D₂ := by rw [c22]
+      _ = (Γ₂ * Γ₂) * (D₂ * D₂) := by noncomm_ring
+      _ = 1 * (D₂ * D₂) := by rw [hΓ2]
+      _ = D₂ * D₂ := one_mul _
+  have h12_cross : (Γ₁ * D₁) * (Γ₂ * D₂) = (Γ₁ * Γ₂) * (D₁ * D₂) := by
+    calc
+      (Γ₁ * D₁) * (Γ₂ * D₂) = Γ₁ * (D₁ * Γ₂) * D₂ := by noncomm_ring
+      _ = Γ₁ * (Γ₂ * D₁) * D₂ := by rw [c21]
+      _ = (Γ₁ * Γ₂) * (D₁ * D₂) := by noncomm_ring
+  have h21_cross : (Γ₂ * D₂) * (Γ₁ * D₁) = -((Γ₁ * Γ₂) * (D₂ * D₁)) := by
+    calc
+      (Γ₂ * D₂) * (Γ₁ * D₁) = Γ₂ * (D₂ * Γ₁) * D₁ := by noncomm_ring
+      _ = Γ₂ * (Γ₁ * D₂) * D₁ := by rw [c12]
+      _ = (Γ₂ * Γ₁) * (D₂ * D₁) := by noncomm_ring
+      _ = (-(Γ₁ * Γ₂)) * (D₂ * D₁) := by rw [h_anti]
+      _ = -((Γ₁ * Γ₂) * (D₂ * D₁)) := by noncomm_ring
+  have h_lich_pos :
+      diracForward Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ =
+        bochnerLaplacianOp D₁ D₂ +
+          spinBivector Γ₁ Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂ := by
+    unfold diracForward bochnerLaplacianOp spinBivector InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    calc
+      (Γ₁ * D₁ + Γ₂ * D₂) * (Γ₁ * D₁ + Γ₂ * D₂)
+        = (Γ₁ * D₁) * (Γ₁ * D₁) + (Γ₂ * D₂) * (Γ₂ * D₂) +
+            ((Γ₁ * D₁) * (Γ₂ * D₂) + (Γ₂ * D₂) * (Γ₁ * D₁)) := by noncomm_ring
+      _ = D₁ * D₁ + D₂ * D₂ +
+            ((Γ₁ * Γ₂) * (D₁ * D₂) + -((Γ₁ * Γ₂) * (D₂ * D₁))) := by
+            rw [h1, h2, h12_cross, h21_cross]
+      _ = (D₁ * D₁ + D₂ * D₂) + (Γ₁ * Γ₂) * (D₁ * D₂ - D₂ * D₁) := by noncomm_ring
+  have h_lich_neg :
+      diracFlipped Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+        bochnerLaplacianOp D₁ D₂ -
+          spinBivector Γ₁ Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂ := by
+    unfold diracFlipped bochnerLaplacianOp spinBivector InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    calc
+      (Γ₁ * D₁ - Γ₂ * D₂) * (Γ₁ * D₁ - Γ₂ * D₂)
+        = (Γ₁ * D₁) * (Γ₁ * D₁) + (Γ₂ * D₂) * (Γ₂ * D₂) -
+            ((Γ₁ * D₁) * (Γ₂ * D₂) + (Γ₂ * D₂) * (Γ₁ * D₁)) := by noncomm_ring
+      _ = D₁ * D₁ + D₂ * D₂ -
+            ((Γ₁ * Γ₂) * (D₁ * D₂) + -((Γ₁ * Γ₂) * (D₂ * D₁))) := by
+            rw [h1, h2, h12_cross, h21_cross]
+      _ = (D₁ * D₁ + D₂ * D₂) - (Γ₁ * Γ₂) * (D₁ * D₂ - D₂ * D₁) := by noncomm_ring
+  have h_lich_sum :
+      diracForward Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ +
+        diracFlipped Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+        (2 : ℤ) • bochnerLaplacianOp D₁ D₂ := by
+    rw [h_lich_pos, h_lich_neg]
+    noncomm_ring
+  have h_lich_diff :
+      diracForward Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ -
+        diracFlipped Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+        (2 : ℤ) • (spinBivector Γ₁ Γ₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂) := by
+    rw [h_lich_pos, h_lich_neg]
+    noncomm_ring
+  have h_hyp_1 :
+      diracForward Γ₁ Γ₂ D₁ D₂ * diracFlipped Γ₁ Γ₂ D₁ D₂ =
+        dalembertianOp D₁ D₂ - spinBivector Γ₁ Γ₂ * anticomm D₁ D₂ := by
+    unfold diracForward diracFlipped dalembertianOp spinBivector anticomm
+    calc
+      (Γ₁ * D₁ + Γ₂ * D₂) * (Γ₁ * D₁ - Γ₂ * D₂)
+        = (Γ₁ * D₁) * (Γ₁ * D₁) - (Γ₂ * D₂) * (Γ₂ * D₂) -
+            ((Γ₁ * D₁) * (Γ₂ * D₂) - (Γ₂ * D₂) * (Γ₁ * D₁)) := by noncomm_ring
+      _ = D₁ * D₁ - D₂ * D₂ -
+            ((Γ₁ * Γ₂) * (D₁ * D₂) - -((Γ₁ * Γ₂) * (D₂ * D₁))) := by
+            rw [h1, h2, h12_cross, h21_cross]
+      _ = (D₁ * D₁ - D₂ * D₂) - (Γ₁ * Γ₂) * (D₁ * D₂ + D₂ * D₁) := by noncomm_ring
+  have h_hyp_2 :
+      diracFlipped Γ₁ Γ₂ D₁ D₂ * diracForward Γ₁ Γ₂ D₁ D₂ =
+        dalembertianOp D₁ D₂ + spinBivector Γ₁ Γ₂ * anticomm D₁ D₂ := by
+    unfold diracForward diracFlipped dalembertianOp spinBivector anticomm
+    calc
+      (Γ₁ * D₁ - Γ₂ * D₂) * (Γ₁ * D₁ + Γ₂ * D₂)
+        = (Γ₁ * D₁) * (Γ₁ * D₁) - (Γ₂ * D₂) * (Γ₂ * D₂) +
+            ((Γ₁ * D₁) * (Γ₂ * D₂) - (Γ₂ * D₂) * (Γ₁ * D₁)) := by noncomm_ring
+      _ = D₁ * D₁ - D₂ * D₂ +
+            ((Γ₁ * Γ₂) * (D₁ * D₂) - -((Γ₁ * Γ₂) * (D₂ * D₁))) := by
+            rw [h1, h2, h12_cross, h21_cross]
+      _ = (D₁ * D₁ - D₂ * D₂) + (Γ₁ * Γ₂) * (D₁ * D₂ + D₂ * D₁) := by noncomm_ring
+  have h_hyp_anticomm :
+      anticomm (diracForward Γ₁ Γ₂ D₁ D₂) (diracFlipped Γ₁ Γ₂ D₁ D₂) =
+        (2 : ℤ) • dalembertianOp D₁ D₂ := by
+    unfold anticomm
+    rw [h_hyp_1, h_hyp_2]
+    noncomm_ring
+  have h_hyp_comm :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (diracForward Γ₁ Γ₂ D₁ D₂) (diracFlipped Γ₁ Γ₂ D₁ D₂) =
+        -((2 : ℤ) • (spinBivector Γ₁ Γ₂ * anticomm D₁ D₂)) := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    rw [h_hyp_1, h_hyp_2]
+    noncomm_ring
+  refine ⟨⟨h_biv_flip, h_biv_sq, h_fb_diff⟩,
+    ⟨h_lich_pos, h_lich_neg, h_lich_sum, h_lich_diff,
+     h_hyp_1, h_hyp_2, h_hyp_anticomm, h_hyp_comm⟩,
+    ⟨by peirce_nf hP, by peirce_nf hP, by peirce_nf hP,
+     by unfold bdgSupercharge conePlus; peirce_nf hP,
+     by unfold bdgSupercharge; peirce_nf hP,
+     by peirce_nf hP,
+     by unfold bdgSupercharge; peirce_nf hP⟩⟩
+
+/-- **Stage 12.2 (`operatorial_information_geometry_dual_connections_trace_compatibility_and_dirac_waves_bridge`):**
+Over any unital associative ring `B` and any cyclic additive functional $\tau : B \to_+ R_0$:
+1. **Primal/Dual Affine Connections (`amariConnPlus`, `amariConnMinus`):**
+   - $\nabla^{(+)}_{H,S}(X) + \nabla^{(-)}_{H,S}(X) = (2 : \mathbb{Z}) \bullet [H, X]$ (twice the Levi-Civita derivation),
+   - $\nabla^{(+)}_{H,S}(X) - \nabla^{(-)}_{H,S}(X) = (2 : \mathbb{Z}) \bullet \{S, X\}$ (twice the Amari–Chentsov skewness),
+   - $\nabla^{(+)}_{H,H}(X) = (2 : \mathbb{Z}) \bullet (H * X)$ and $\nabla^{(-)}_{H,H}(X) = -((2 : \mathbb{Z}) \bullet (X * H))$.
+2. **Dual Affine Cyclic Trace-Metric Compatibility & Total Trace Balance:**
+   - $\tau(\nabla^{(+)}_{H,S}(X) * Y) + \tau(X * \nabla^{(-)}_{H,S}(Y)) = 0$,
+   - $\tau(\nabla^{(+)}_{H,S}(X) * Y) + \tau(X * \nabla^{(+)}_{H,S}(Y)) = (2 : \mathbb{Z}) \bullet \tau(\{S, X\} * Y)$,
+   - $\tau(\nabla^{(+)}_{H,S}(X)) = (2 : \mathbb{Z}) \bullet \tau(S * X)$,
+     $\tau(\nabla^{(-)}_{H,S}(X)) = -((2 : \mathbb{Z}) \bullet \tau(S * X))$, and
+     $\tau(\nabla^{(+)}_{H,S}(X)) + \tau(\nabla^{(-)}_{H,S}(X)) = 0$.
+3. **Universal Mixed Lie–Jordan Jacobi Identity & Dual Laplace–Beltrami Split:**
+   - $[H, \{S, X\}] - \{S, [H, X]\} = \{[H, S], X\}$,
+   - Whenever $[H, S] = 0$, $\nabla^{(-)}_{H,S}(\nabla^{(+)}_{H,S}(X)) = \nabla^{(+)}_{H,S}(\nabla^{(-)}_{H,S}(X))$ and
+     $\mathrm{dualLaplaceBeltrami}\,H\,S\,X = [H, [H, X]] - \{S, \{S, X\}\}$.
+4. **Linearized Forward & Backward Dirac Waves (`diracPrimalWave` vs. `diracDualWave`):**
+   - $D^{(+)} + D^{(-)} = (2 : \mathbb{Z}) \bullet D^{(0)}$ and $D^{(+)} - D^{(-)} = (2 : \mathbb{Z}) \bullet D^{(\mathrm{skew})}$,
+   - $\{D^{(+)}, D^{(-)}\} = (2 : \mathbb{Z}) \bullet \big((D^{(0)})^2 - (D^{(\mathrm{skew})})^2\big)$ and
+     $[D^{(+)}, D^{(-)}] = -((2 : \mathbb{Z}) \bullet [D^{(0)}, D^{(\mathrm{skew})}])$. -/
+theorem operatorial_information_geometry_dual_connections_trace_compatibility_and_dirac_waves_bridge
+    {B : Type*} [Ring B]
+    {R₀ : Type*} [AddCommGroup R₀]
+    (τ : B →+ R₀)
+    (hτ : InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.IsCyclic τ)
+    (H S X Y Γ₁ Γ₂ H₁ H₂ S₁ S₂ : B) :
+    (amariConnPlus H S X + amariConnMinus H S X =
+       (2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X ∧
+     amariConnPlus H S X - amariConnMinus H S X =
+       (2 : ℤ) • anticomm S X ∧
+     amariConnPlus H H X = (2 : ℤ) • (H * X) ∧
+     amariConnMinus H H X = -((2 : ℤ) • (X * H))) ∧
+    (τ (amariConnPlus H S X * Y) + τ (X * amariConnMinus H S Y) = 0 ∧
+     τ (amariConnPlus H S X * Y) + τ (X * amariConnPlus H S Y) =
+       (2 : ℤ) • τ (anticomm S X * Y) ∧
+     τ (amariConnPlus H S X) = (2 : ℤ) • τ (S * X) ∧
+     τ (amariConnMinus H S X) = -((2 : ℤ) • τ (S * X)) ∧
+     τ (amariConnPlus H S X) + τ (amariConnMinus H S X) = 0) ∧
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H (anticomm S X) -
+       anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) =
+       anticomm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H S) X ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H S = 0 →
+       amariConnMinus H S (amariConnPlus H S X) =
+         amariConnPlus H S (amariConnMinus H S X) ∧
+       dualLaplaceBeltrami H S X =
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+           anticomm S (anticomm S X))) ∧
+    (diracPrimalWave Γ₁ Γ₂ H₁ H₂ S₁ S₂ + diracDualWave Γ₁ Γ₂ H₁ H₂ S₁ S₂ =
+       (2 : ℤ) • diracForward Γ₁ Γ₂ H₁ H₂ ∧
+     diracPrimalWave Γ₁ Γ₂ H₁ H₂ S₁ S₂ - diracDualWave Γ₁ Γ₂ H₁ H₂ S₁ S₂ =
+       (2 : ℤ) • diracForward Γ₁ Γ₂ S₁ S₂ ∧
+     anticomm (diracPrimalWave Γ₁ Γ₂ H₁ H₂ S₁ S₂) (diracDualWave Γ₁ Γ₂ H₁ H₂ S₁ S₂) =
+       (2 : ℤ) • (diracForward Γ₁ Γ₂ H₁ H₂ * diracForward Γ₁ Γ₂ H₁ H₂ -
+         diracForward Γ₁ Γ₂ S₁ S₂ * diracForward Γ₁ Γ₂ S₁ S₂) ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+       (diracPrimalWave Γ₁ Γ₂ H₁ H₂ S₁ S₂) (diracDualWave Γ₁ Γ₂ H₁ H₂ S₁ S₂) =
+       -((2 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+         (diracForward Γ₁ Γ₂ H₁ H₂) (diracForward Γ₁ Γ₂ S₁ S₂))) := by
+  have hSkew :
+      τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X * Y) +
+        τ (X * InfoGeometry.OperatorAlgebra.PeirceSpine.comm H Y) = 0 := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    have hL : (H * X - X * H) * Y = H * (X * Y) - X * (H * Y) := by noncomm_ring
+    have hR : X * (H * Y - Y * H) = X * (H * Y) - (X * Y) * H := by noncomm_ring
+    rw [hL, hR, map_sub, map_sub, hτ H (X * Y)]
+    abel
+  have hSymm :
+      τ (anticomm S X * Y) = τ (X * anticomm S Y) := by
+    unfold anticomm
+    have hL : (S * X + X * S) * Y = S * (X * Y) + X * (S * Y) := by noncomm_ring
+    have hR : X * (S * Y + Y * S) = X * (S * Y) + (X * Y) * S := by noncomm_ring
+    rw [hL, hR, map_add, map_add, hτ S (X * Y)]
+    abel
+  have hCompat1 : τ (amariConnPlus H S X * Y) + τ (X * amariConnMinus H S Y) = 0 := by
+    unfold amariConnPlus amariConnMinus
+    rw [add_mul, mul_sub, map_add, map_sub, ← hSymm]
+    calc
+      (τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X * Y) + τ (anticomm S X * Y)) +
+          (τ (X * InfoGeometry.OperatorAlgebra.PeirceSpine.comm H Y) - τ (anticomm S X * Y))
+        = (τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X * Y) +
+            τ (X * InfoGeometry.OperatorAlgebra.PeirceSpine.comm H Y)) +
+          (τ (anticomm S X * Y) - τ (anticomm S X * Y)) := by abel
+      _ = 0 := by rw [hSkew, sub_self, add_zero]
+  have hCompat2 :
+      τ (amariConnPlus H S X * Y) + τ (X * amariConnPlus H S Y) =
+        (2 : ℤ) • τ (anticomm S X * Y) := by
+    unfold amariConnPlus
+    rw [add_mul, mul_add, map_add, map_add, ← hSymm]
+    calc
+      (τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X * Y) + τ (anticomm S X * Y)) +
+          (τ (X * InfoGeometry.OperatorAlgebra.PeirceSpine.comm H Y) + τ (anticomm S X * Y))
+        = (τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X * Y) +
+            τ (X * InfoGeometry.OperatorAlgebra.PeirceSpine.comm H Y)) +
+          (τ (anticomm S X * Y) + τ (anticomm S X * Y)) := by abel
+      _ = (2 : ℤ) • τ (anticomm S X * Y) := by rw [hSkew, zero_add, two_zsmul]
+  have hComm0 : τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) = 0 := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    rw [map_sub, hτ H X, sub_self]
+  have hAntiTr : τ (anticomm S X) = (2 : ℤ) • τ (S * X) := by
+    unfold anticomm
+    rw [map_add, hτ X S, two_zsmul]
+  have hTrPlus : τ (amariConnPlus H S X) = (2 : ℤ) • τ (S * X) := by
+    unfold amariConnPlus
+    rw [map_add, hComm0, hAntiTr, zero_add]
+  have hTrMinus : τ (amariConnMinus H S X) = -((2 : ℤ) • τ (S * X)) := by
+    unfold amariConnMinus
+    rw [map_sub, hComm0, hAntiTr, zero_sub]
+  have hJac :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm H (anticomm S X) -
+        anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) =
+        anticomm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H S) X := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm
+    noncomm_ring
+  have hLapSplit :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm H S = 0 →
+        amariConnMinus H S (amariConnPlus H S X) =
+          amariConnPlus H S (amariConnMinus H S X) ∧
+        dualLaplaceBeltrami H S X =
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+            anticomm S (anticomm S X) := by
+    intro hHS
+    have hJac0 := hJac
+    rw [hHS] at hJac0
+    have hZeroAnti : anticomm (0 : B) X = 0 := by
+      unfold anticomm; noncomm_ring
+    rw [hZeroAnti] at hJac0
+    have hCommSuper :
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm H (anticomm S X) =
+          anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) :=
+      sub_eq_zero.mp hJac0
+    have hMP :
+        amariConnMinus H S (amariConnPlus H S X) =
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+            anticomm S (anticomm S X) := by
+      unfold amariConnMinus amariConnPlus
+      have hL :
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X + anticomm S X) =
+            InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+              (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) +
+              InfoGeometry.OperatorAlgebra.PeirceSpine.comm H (anticomm S X) := by
+        unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring
+      have hR :
+          anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X + anticomm S X) =
+            anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) +
+              anticomm S (anticomm S X) := by
+        unfold anticomm; noncomm_ring
+      rw [hL, hR, hCommSuper]
+      abel
+    have hPM :
+        amariConnPlus H S (amariConnMinus H S X) =
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+            anticomm S (anticomm S X) := by
+      unfold amariConnPlus amariConnMinus
+      have hL :
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+            (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X - anticomm S X) =
+            InfoGeometry.OperatorAlgebra.PeirceSpine.comm H
+              (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+              InfoGeometry.OperatorAlgebra.PeirceSpine.comm H (anticomm S X) := by
+        unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring
+      have hR :
+          anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X - anticomm S X) =
+            anticomm S (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H X) -
+              anticomm S (anticomm S X) := by
+        unfold anticomm; noncomm_ring
+      rw [hL, hR, hCommSuper]
+      abel
+    refine ⟨by rw [hMP, hPM], hMP⟩
+  refine ⟨⟨by unfold amariConnPlus amariConnMinus; noncomm_ring,
+           by unfold amariConnPlus amariConnMinus; noncomm_ring,
+           by unfold amariConnPlus InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
+           by unfold amariConnMinus InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring⟩,
+    ⟨hCompat1, hCompat2, hTrPlus, hTrMinus, by rw [hTrPlus, hTrMinus, add_neg_cancel]⟩,
+    ⟨hJac, hLapSplit⟩,
+    ⟨by unfold diracPrimalWave diracDualWave diracForward; noncomm_ring,
+     by unfold diracPrimalWave diracDualWave diracForward; noncomm_ring,
+     by unfold diracPrimalWave diracDualWave diracForward anticomm; noncomm_ring,
+     by unfold diracPrimalWave diracDualWave diracForward InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring⟩⟩
+
+/-- **Stage 12.3 (`four_transparent_peirce_dewitt_identities_and_cayley_moebius_apollonian_poles_bridge`):**
+Over any unital associative ring `B` with idempotent $P * P = P$:
+1. **The Four Transparent Non-Commutative Peirce–DeWitt Identities (`A : B`):**
+   - $(2 : \mathbb{Z}) \bullet \mathrm{peirce11}\,P\,A = \{P, A\} - [P, [P, A]]$,
+   - $(2 : \mathbb{Z}) \bullet \mathrm{peirce00}\,P\,A = (2 : \mathbb{Z}) \bullet A - \{P, A\} - [P, [P, A]]$,
+   - $(2 : \mathbb{Z}) \bullet \mathrm{conePlus}\,P\,A = [P, [P, A]] + [P, A] = \nabla^{(+)}_{P,P}([P, A])$,
+   - $(2 : \mathbb{Z}) \bullet \mathrm{coneMinus}\,P\,A = [P, [P, A]] - [P, A] = \nabla^{(-)}_{P,P}([P, A])$,
+   - $\mathrm{peirce11}\,P\,A + \mathrm{peirce00}\,P\,A + \mathrm{conePlus}\,P\,A + \mathrm{coneMinus}\,P\,A = A$.
+2. **Cayley–Möbius Projective Transform & Apollonian Twin Pole Identities (`(1 + X) * R_plus = 1`, `R_plus * (1 + X) = 1`, `(1 - X) * R_minus = 1`, `R_minus * (1 - X) = 1`):**
+   - $(1 - X) * (1 + X) = (1 + X) * (1 - X)$,
+   - $U(X) * U(-X) = 1$ and $U(-X) * U(X) = 1$,
+   - $1 + U(X) = (2 : \mathbb{Z}) \bullet R_+$ and $1 - U(X) = (2 : \mathbb{Z}) \bullet (X * R_+)$. -/
+theorem four_transparent_peirce_dewitt_identities_and_cayley_moebius_apollonian_poles_bridge
+    {B : Type*} [Ring B] {P X R_plus R_minus : B}
+    (hP : P * P = P)
+    (hPlus_r : (1 + X) * R_plus = 1) (hPlus_l : R_plus * (1 + X) = 1)
+    (hMinus_r : (1 - X) * R_minus = 1) (hMinus_l : R_minus * (1 - X) = 1)
+    (A : B) :
+    ((2 : ℤ) • peirce11 P A =
+       anticomm P A -
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) ∧
+     (2 : ℤ) • peirce00 P A =
+       (2 : ℤ) • A - anticomm P A -
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+           (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) ∧
+     (2 : ℤ) • conePlus P A =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+         (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) +
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A ∧
+     (2 : ℤ) • coneMinus P A =
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
+         (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) -
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A ∧
+     amariConnPlus P P (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) =
+       (2 : ℤ) • conePlus P A ∧
+     amariConnMinus P P (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) =
+       (2 : ℤ) • coneMinus P A ∧
+     peirce11 P A + peirce00 P A + conePlus P A + coneMinus P A = A) ∧
+    ((1 - X) * (1 + X) = (1 + X) * (1 - X) ∧
+     cayleyMoebiusTransform X R_plus * cayleyMoebiusInverse X R_minus = 1 ∧
+     cayleyMoebiusInverse X R_minus * cayleyMoebiusTransform X R_plus = 1 ∧
+     1 + cayleyMoebiusTransform X R_plus = (2 : ℤ) • R_plus ∧
+     1 - cayleyMoebiusTransform X R_plus = (2 : ℤ) • (X * R_plus)) := by
+  have hInv1 : cayleyMoebiusTransform X R_plus * cayleyMoebiusInverse X R_minus = 1 := by
+    unfold cayleyMoebiusTransform cayleyMoebiusInverse
+    calc
+      (1 - X) * R_plus * ((1 + X) * R_minus)
+        = (1 - X) * (R_plus * (1 + X)) * R_minus := by noncomm_ring
+      _ = (1 - X) * 1 * R_minus := by rw [hPlus_l]
+      _ = (1 - X) * R_minus := by noncomm_ring
+      _ = 1 := hMinus_r
+  have hInv2 : cayleyMoebiusInverse X R_minus * cayleyMoebiusTransform X R_plus = 1 := by
+    unfold cayleyMoebiusTransform cayleyMoebiusInverse
+    calc
+      (1 + X) * R_minus * ((1 - X) * R_plus)
+        = (1 + X) * (R_minus * (1 - X)) * R_plus := by noncomm_ring
+      _ = (1 + X) * 1 * R_plus := by rw [hMinus_l]
+      _ = (1 + X) * R_plus := by noncomm_ring
+      _ = 1 := hPlus_r
+  have hPoleSum : 1 + cayleyMoebiusTransform X R_plus = (2 : ℤ) • R_plus := by
+    unfold cayleyMoebiusTransform
+    calc
+      1 + (1 - X) * R_plus = (1 + X) * R_plus + (1 - X) * R_plus := by rw [hPlus_r]
+      _ = (2 : ℤ) • R_plus := by noncomm_ring
+  have hPoleDiff : 1 - cayleyMoebiusTransform X R_plus = (2 : ℤ) • (X * R_plus) := by
+    unfold cayleyMoebiusTransform
+    calc
+      1 - (1 - X) * R_plus = (1 + X) * R_plus - (1 - X) * R_plus := by rw [hPlus_r]
+      _ = (2 : ℤ) • (X * R_plus) := by noncomm_ring
+  refine ⟨⟨by peirce_nf hP, by peirce_nf hP,
+           by unfold conePlus; peirce_nf hP,
+           by unfold coneMinus; peirce_nf hP,
+           by unfold amariConnPlus conePlus; peirce_nf hP,
+           by unfold amariConnMinus coneMinus; peirce_nf hP,
+           by simp only [peirce11, peirce00, conePlus, coneMinus]; noncomm_ring⟩,
+    ⟨by noncomm_ring, hInv1, hInv2, hPoleSum, hPoleDiff⟩⟩
+
+/-!
+## 13. DeWitt Supermetric 4-Block Split, Yang–Mills Orbit Mass-Gap Equipartition, Reflexive Self-Drazin Electron, Connes–Drazin Involutions, & Wheeler–Hodge–Kraus Superoperator Quartet
+-/
+
+/-- **DeWitt Indefinite Supermetric Pairing (`⟨A, C⟩_DeWitt = τ (invS P * A * C)`):**
+Weights the cyclic trace inner product by the Cartan/DeWitt reflection `invS P = P - (1 - P)`,
+assigning `+1` signature to the `P` core sector and `-1` signature to the `1 - P` bulk sector. -/
+def dewittSupermetric {B R₀ : Type*} [Ring B] [AddCommGroup R₀]
+    (τ : B →+ R₀) (P A C : B) : R₀ :=
+  τ (invS P * A * C)
+
+/-- **Non-Abelian Yang–Mills Field Strength Operator (`F(D₁, D₂) = [D₁, D₂]`):**
+Commutator curvature of two covariant derivative operators `D₁, D₂`. -/
+def ymFieldStrength {B : Type*} [Ring B] (D₁ D₂ : B) : B :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ D₂
+
+/-- **Single-Mode Yang–Mills Orbit Mass-Gap Operator (`ymMassGapMode P A = -[P, A]²`):**
+Measures the non-Abelian orbit curvature self-energy generated by `[P, A] ≠ 0`. -/
+def ymMassGapMode {B : Type*} [Ring B] (P A : B) : B :=
+  -(InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A *
+    InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A)
+
+/-- **Vacuum Zero-Mode Projector (`vacuumProjector P A C = 1 - genV P A C`):**
+Complementary projector to the massive sector `genV P A C = {N₊, N₋}`. -/
+def vacuumProjector {B : Type*} [Ring B] (P A C : B) : B :=
+  1 - genV P A C
+
+/-- **Global Connes–Dirac Involution (`globalDiracInvolution P A C = (1 - V) + Φ`):**
+Completes the tripotent Dirac–Penrose electron `Φ = N₊ + N₋` into a globally invertible
+involution (`V_dirac² = 1`) when `(N₊, N₋)` is a reflexive pair. -/
+def globalDiracInvolution {B : Type*} [Ring B] (P A C : B) : B :=
+  vacuumProjector P A C + genPhi P A C
+
+/-- **Global Connes–Spin Involution (`globalSpinInvolution P A C = (1 - V) + Σ`):**
+Completes the tripotent Spin Dipole `Σ = [N₊, N₋]` into a globally invertible
+involution (`U_spin² = 1`) when `(N₊, N₋)` is a reflexive pair. -/
+def globalSpinInvolution {B : Type*} [Ring B] (P A C : B) : B :=
+  vacuumProjector P A C + genSig P A C
+
+/-- **Forward Lie Boundary Super-Differential (`boundaryLiePlus P A X = [N₊, X]`):** -/
+def boundaryLiePlus {B : Type*} [Ring B] (P A X : B) : B :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.comm (conePlus P A) X
+
+/-- **Forward Jordan Boundary Super-Differential (`boundaryJordanPlus P A X = {N₊, X}`):** -/
+def boundaryJordanPlus {B : Type*} [Ring B] (P A X : B) : B :=
+  anticomm (conePlus P A) X
+
+/-- **Backward Lie Boundary Super-Differential (`boundaryLieMinus P C X = [N₋, X]`):** -/
+def boundaryLieMinus {B : Type*} [Ring B] (P C X : B) : B :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.comm (coneMinus P C) X
+
+/-- **Backward Jordan Boundary Super-Differential (`boundaryJordanMinus P C X = {N₋, X}`):** -/
+def boundaryJordanMinus {B : Type*} [Ring B] (P C X : B) : B :=
+  anticomm (coneMinus P C) X
+
+/-- **Stage 13.1 (`peirce_dewitt_joint_eigenspaces_and_supermetric_four_block_split_bridge`):**
+Over any unital associative ring `B` with idempotent $P * P = P$ and any cyclic additive functional
+$\tau : B \to_+ R_0$:
+1. **Four Simultaneous Joint Eigenspaces of $\mathrm{ad}_P = [P, \cdot]$ and $\mathcal{J}_P = \{P, \cdot\}$:**
+   - $[P, \mathrm{peirce11}\,P\,A] = 0$ and $\{P, \mathrm{peirce11}\,P\,A\} = (2 : \mathbb{Z}) \bullet \mathrm{peirce11}\,P\,A$,
+   - $[P, \mathrm{peirce00}\,P\,A] = 0$ and $\{P, \mathrm{peirce00}\,P\,A\} = 0$,
+   - $[P, \mathrm{conePlus}\,P\,A] = \mathrm{conePlus}\,P\,A$ and $\{P, \mathrm{conePlus}\,P\,A\} = \mathrm{conePlus}\,P\,A$,
+   - $[P, \mathrm{coneMinus}\,P\,A] = -\mathrm{coneMinus}\,P\,A$ and $\{P, \mathrm{coneMinus}\,P\,A\} = \mathrm{coneMinus}\,P\,A$.
+2. **Riemannian 4-Block Trace Split vs. DeWitt Supermetric 4-Block Signature Split:**
+   - $\tau(A * C) = \tau(\mathrm{peirce11}\,P\,A * \mathrm{peirce11}\,P\,C) + \tau(\mathrm{peirce00}\,P\,A * \mathrm{peirce00}\,P\,C) + \tau(\mathrm{conePlus}\,P\,A * \mathrm{coneMinus}\,P\,C) + \tau(\mathrm{coneMinus}\,P\,A * \mathrm{conePlus}\,P\,C)$,
+   - $\mathrm{dewittSupermetric}\,\tau\,P\,A\,C = \tau(\mathrm{peirce11}\,P\,A * \mathrm{peirce11}\,P\,C) - \tau(\mathrm{peirce00}\,P\,A * \mathrm{peirce00}\,P\,C) + \tau(\mathrm{conePlus}\,P\,A * \mathrm{coneMinus}\,P\,C) - \tau(\mathrm{coneMinus}\,P\,A * \mathrm{conePlus}\,P\,C)$. -/
+theorem peirce_dewitt_joint_eigenspaces_and_supermetric_four_block_split_bridge
+    {B : Type*} [Ring B]
+    {R₀ : Type*} [AddCommGroup R₀]
+    (τ : B →+ R₀)
+    (hτ : InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.IsCyclic τ)
+    {P : B} (hP : P * P = P) (A C : B) :
+    ((InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (peirce11 P A) = 0 ∧
+      anticomm P (peirce11 P A) = (2 : ℤ) • peirce11 P A) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (peirce00 P A) = 0 ∧
+      anticomm P (peirce00 P A) = 0) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (conePlus P A) = conePlus P A ∧
+      anticomm P (conePlus P A) = conePlus P A) ∧
+     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (coneMinus P A) = -coneMinus P A ∧
+      anticomm P (coneMinus P A) = coneMinus P A)) ∧
+    (τ (A * C) =
+       τ (peirce11 P A * peirce11 P C) +
+       τ (peirce00 P A * peirce00 P C) +
+       τ (conePlus P A * coneMinus P C) +
+       τ (coneMinus P A * conePlus P C) ∧
+     dewittSupermetric τ P A C =
+       τ (peirce11 P A * peirce11 P C) -
+       τ (peirce00 P A * peirce00 P C) +
+       τ (conePlus P A * coneMinus P C) -
+       τ (coneMinus P A * conePlus P C)) := by
+  have h11L : peirce11 P A * peirce11 P C = (P * A * P * C) * P := by peirce_nf hP
+  have h11R : P * (P * A * P * C) = P * A * P * C := by peirce_nf hP
+  have h11 : τ (peirce11 P A * peirce11 P C) = τ (P * A * P * C) := by
+    rw [h11L, hτ (P * A * P * C) P, h11R]
+  have h00L : peirce00 P A * peirce00 P C = ((1 - P) * A * (1 - P) * C) * (1 - P) := by
+    peirce_nf hP
+  have h00R : (1 - P) * ((1 - P) * A * (1 - P) * C) = (1 - P) * A * (1 - P) * C := by
+    peirce_nf hP
+  have h00 : τ (peirce00 P A * peirce00 P C) = τ ((1 - P) * A * (1 - P) * C) := by
+    rw [h00L, hτ ((1 - P) * A * (1 - P) * C) (1 - P), h00R]
+  have h10L : conePlus P A * coneMinus P C = (P * A * (1 - P) * C) * P := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have h10R : P * (P * A * (1 - P) * C) = P * A * (1 - P) * C := by peirce_nf hP
+  have h10 : τ (conePlus P A * coneMinus P C) = τ (P * A * (1 - P) * C) := by
+    rw [h10L, hτ (P * A * (1 - P) * C) P, h10R]
+  have h01L : coneMinus P A * conePlus P C = ((1 - P) * A * P * C) * (1 - P) := by
+    unfold coneMinus conePlus; peirce_nf hP
+  have h01R : (1 - P) * ((1 - P) * A * P * C) = (1 - P) * A * P * C := by peirce_nf hP
+  have h01 : τ (coneMinus P A * conePlus P C) = τ ((1 - P) * A * P * C) := by
+    rw [h01L, hτ ((1 - P) * A * P * C) (1 - P), h01R]
+  have hSumId :
+      P * A * P * C + (1 - P) * A * (1 - P) * C +
+        P * A * (1 - P) * C + (1 - P) * A * P * C = A * C := by
+    noncomm_ring
+  have hDeWittId :
+      invS P * A * C =
+        P * A * P * C - (1 - P) * A * (1 - P) * C +
+        P * A * (1 - P) * C - (1 - P) * A * P * C := by
+    unfold invS; noncomm_ring
+  refine ⟨⟨⟨by peirce_nf hP, by peirce_nf hP⟩,
+           ⟨by peirce_nf hP, by peirce_nf hP⟩,
+           ⟨by unfold conePlus; peirce_nf hP, by unfold conePlus; peirce_nf hP⟩,
+           ⟨by unfold coneMinus; peirce_nf hP, by unfold coneMinus; peirce_nf hP⟩⟩,
+    ⟨by rw [h11, h00, h10, h01, ← map_add, ← map_add, ← map_add, hSumId],
+     by unfold dewittSupermetric; rw [h11, h00, h10, h01, ← map_sub, ← map_add, ← map_sub, hDeWittId]⟩⟩
+
+/-- **Stage 13.2 (`yang_mills_bianchi_divergence_duality_and_orbit_mass_gap_equipartition_bridge`):**
+Over any unital $\star$-ring `B` (`[Ring B] [StarRing B]`) and any cyclic additive functional
+$\tau : B \to_+ R_0$:
+1. **Exact Non-Abelian Bianchi Identity & Covariant Divergence Action Duality:**
+   - $[D_1, F_{23}] + [D_2, F_{31}] + [D_3, F_{12}] = 0$ for $F_{ij} = \mathrm{ymFieldStrength}\,D_i\,D_j$,
+   - $\tau(F_{12} * [D_1, \delta A_2]) + \tau([D_1, F_{12}] * \delta A_2) = 0$ and
+     $\tau(F_{12} * [D_1, \delta A_2]) = -\tau([D_1, F_{12}] * \delta A_2)$.
+2. **Gribov–Singer–Feynman Orbit Mass-Gap Operator & Core–Ghost Mass Equipartition:**
+   For any self-adjoint projection $P * P = P$, $P^\star = P$ and self-adjoint gauge potential $A^\star = A$:
+   - $[P, A] = 0 \to \mathrm{ymMassGapMode}\,P\,A = 0$ (Abelian masslessness),
+   - $\mathrm{ymMassGapMode}\,P\,A = (\mathrm{comm}\,P\,A)^\star * \mathrm{comm}\,P\,A = \mathrm{oddGrade}\,P\,A * \mathrm{oddGrade}\,P\,A$,
+   - $[P, \mathrm{ymMassGapMode}\,P\,A] = 0$ (strict gauge-subspace conservation),
+   - $P * \mathrm{ymMassGapMode}\,P\,A * P = \mathrm{conePlus}\,P\,A * (\mathrm{conePlus}\,P\,A)^\star$,
+   - $\tau(P * \mathrm{ymMassGapMode}\,P\,A * P) = \tau((1 - P) * \mathrm{ymMassGapMode}\,P\,A * (1 - P))$. -/
+theorem yang_mills_bianchi_divergence_duality_and_orbit_mass_gap_equipartition_bridge
+    {B : Type*} [Ring B] [StarRing B]
+    {R₀ : Type*} [AddCommGroup R₀]
+    (τ : B →+ R₀)
+    (hτ : InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.IsCyclic τ)
+    {P A : B} (hP : P * P = P) (hPsym : star P = P) (hAsym : star A = A)
+    (D₁ D₂ D₃ F₁₂ δA₂ : B) :
+    (InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ (ymFieldStrength D₂ D₃) +
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₂ (ymFieldStrength D₃ D₁) +
+       InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₃ (ymFieldStrength D₁ D₂) = 0 ∧
+     τ (F₁₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ δA₂) +
+       τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ F₁₂ * δA₂) = 0 ∧
+     τ (F₁₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ δA₂) =
+       -τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ F₁₂ * δA₂)) ∧
+    ((InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A = 0 → ymMassGapMode P A = 0) ∧
+     ymMassGapMode P A =
+       star (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) *
+         InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A ∧
+     ymMassGapMode P A = oddGrade P A * oddGrade P A ∧
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (ymMassGapMode P A) = 0 ∧
+     star (conePlus P A) = coneMinus P A ∧
+     P * ymMassGapMode P A * P = conePlus P A * coneMinus P A ∧
+     (1 - P) * ymMassGapMode P A * (1 - P) = coneMinus P A * conePlus P A ∧
+     P * ymMassGapMode P A * P = conePlus P A * star (conePlus P A) ∧
+     τ (P * ymMassGapMode P A * P) =
+       τ ((1 - P) * ymMassGapMode P A * (1 - P))) := by
+  have hDivSum :
+      τ (F₁₂ * InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ δA₂) +
+        τ (InfoGeometry.OperatorAlgebra.PeirceSpine.comm D₁ F₁₂ * δA₂) = 0 := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    have hL : F₁₂ * (D₁ * δA₂ - δA₂ * D₁) = (F₁₂ * D₁) * δA₂ - (F₁₂ * δA₂) * D₁ := by
+      noncomm_ring
+    have hR : (D₁ * F₁₂ - F₁₂ * D₁) * δA₂ = D₁ * (F₁₂ * δA₂) - (F₁₂ * D₁) * δA₂ := by
+      noncomm_ring
+    rw [hL, hR, map_sub, map_sub, hτ (F₁₂ * δA₂) D₁]
+    abel
+  have hSkew :
+      star (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) =
+        -InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A := by
+    unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+    rw [star_sub, star_mul, star_mul, hPsym, hAsym]
+    noncomm_ring
+  have hGram :
+      ymMassGapMode P A =
+        star (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A) *
+          InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A := by
+    unfold ymMassGapMode
+    rw [hSkew, neg_mul]
+  have hConeStar : star (conePlus P A) = coneMinus P A := by
+    unfold conePlus coneMinus
+    rw [star_mul, star_mul, star_sub, star_one, hPsym, hAsym]
+    noncomm_ring
+  have hCore : P * ymMassGapMode P A * P = conePlus P A * coneMinus P A := by
+    unfold ymMassGapMode conePlus coneMinus
+    peirce_nf hP
+  have hBulk : (1 - P) * ymMassGapMode P A * (1 - P) = coneMinus P A * conePlus P A := by
+    unfold ymMassGapMode conePlus coneMinus
+    peirce_nf hP
+  refine ⟨⟨by unfold ymFieldStrength InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring,
+           hDivSum, eq_neg_of_add_eq_zero_left hDivSum⟩,
+    ⟨fun h0 => by unfold ymMassGapMode; rw [h0, mul_zero, neg_zero],
+     hGram,
+     by unfold ymMassGapMode; peirce_nf hP,
+     by unfold ymMassGapMode; peirce_nf hP,
+     hConeStar, hCore, hBulk,
+     by rw [hConeStar, hCore],
+     by rw [hCore, hBulk, hτ (conePlus P A) (coneMinus P A)]⟩⟩
+
+/-- **Stage 13.3 (`two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge_kraus_bridge`):**
+Over any unital associative ring `B` with idempotent $P * P = P$ and any cyclic additive functional
+$\tau : B \to_+ R_0$:
+1. **Two-Sheeted Spin–Mass Mutual Locking & Source–Sink Dipole vs. Universal Mass Monopole (`Archetypes XXXII–XXXIV`):**
+   - $\mathrm{invS}\,P * \mathrm{genPhi}\,P\,A\,C * \mathrm{invS}\,P = -\mathrm{genPhi}\,P\,A\,C$ (linear chiral symmetry breaking),
+   - $\mathrm{invS}\,P * \mathrm{genV}\,P\,A\,C * \mathrm{invS}\,P = \mathrm{genV}\,P\,A\,C$ and
+     $\mathrm{invS}\,P * \mathrm{genSig}\,P\,A\,C * \mathrm{invS}\,P = \mathrm{genSig}\,P\,A\,C$ (quadratic chiral symmetry restoration),
+   - $\mathrm{genV}\,P\,A\,C = 0 \leftrightarrow \mathrm{genSig}\,P\,A\,C = 0$ (Spin goes hand-in-hand with the Mass Gap),
+   - $P * \mathrm{genSig}\,P\,A\,C * P = N_+ N_-$, $(1 - P) * \mathrm{genSig}\,P\,A\,C * (1 - P) = -N_- N_+$, and
+     $\tau(P * \mathrm{genSig}\,P\,A\,C * P) + \tau((1 - P) * \mathrm{genSig}\,P\,A\,C * (1 - P)) = 0$ (Source + Sink = 0),
+   - $P * \mathrm{genV}\,P\,A\,C * P = N_+ N_-$, $(1 - P) * \mathrm{genV}\,P\,A\,C * (1 - P) = +N_- N_+$, and
+     $\tau(P * \mathrm{genV}\,P\,A\,C * P) = \tau((1 - P) * \mathrm{genV}\,P\,A\,C * (1 - P))$ (Universal Source = Source).
+2. **Feynman Checkerboard Powers, Reflexive Self-Drazin Electron ($E^3 = E$), Split-Quaternion $\mathcal{C}\ell_{1,1}(V)$ Closure, & Global Connes–Drazin Involutions (`Archetypes XXXIII–XXXVI`):**
+   - $\Phi * (\Phi * \Phi) = N_+ N_- N_+ + N_- N_+ N_-$ and $(\Phi * \Phi) * (\Phi * \Phi) = (N_+ N_-)^2 + (N_- N_+)^2$,
+   - $\Sigma * \Phi = J * V$, $\Sigma * J = \Phi * V$, $\{\Sigma, \Phi\} = 0$, and $\{\Sigma, J\} = 0$,
+   - Whenever $(N_+, N_-)$ is a reflexive pair ($N_+ N_- N_+ = N_+$ and $N_- N_+ N_- = N_-$):
+     $\Phi * (\Phi * \Phi) = \Phi$, $\Sigma * \Sigma = V$, $\Sigma * (\Sigma * \Sigma) = \Sigma$, $V * V = V$,
+     $\Sigma * \Phi = J$, $\Sigma * J = \Phi$,
+     $\mathrm{globalDiracInvolution}\,P\,A\,C * \mathrm{globalDiracInvolution}\,P\,A\,C = 1$,
+     $\mathrm{globalSpinInvolution}\,P\,A\,C * \mathrm{globalSpinInvolution}\,P\,A\,C = 1$, and
+     $(k \bullet 1 - \Phi) * (k \bullet 1 + \Phi) = (k * k) \bullet \mathrm{vacuumProjector}\,P\,A\,C + (k * k - 1) \bullet \mathrm{genV}\,P\,A\,C$.
+3. **Wheeler's "It from Bit", "Boundary of a Boundary is Zero" ($\partial_\pm^2 = 0$), & The 4-Way Hodge–Kraus Superoperator Quartet (`Archetypes XXXVI–XXXVIII`):**
+   - $[P, A] = 0 \to \mathrm{conePlus}\,P\,A = 0 \land \mathrm{coneMinus}\,P\,A = 0 \land \mathrm{genV}\,P\,A\,A = 0 \land \mathrm{genSig}\,P\,A\,A = 0$,
+   - $[N_+, \{N_+, X\}] = 0$, $\{N_+, [N_+, X]\} = 0$, $[N_-, \{N_-, X\}] = 0$, and $\{N_-, [N_-, X]\} = 0$,
+   - $\{N_+, [N_-, X]\} + \{N_-, [N_+, X]\} = [\mathrm{genV}\,P\,A\,C, X]$,
+   - $[N_+, \{N_-, X\}] - [N_-, \{N_+, X\}] = \{\mathrm{genSig}\,P\,A\,C, X\}$,
+   - $[N_+, [N_-, X]] - [N_-, [N_+, X]] = [\mathrm{genSig}\,P\,A\,C, X]$,
+   - $(\{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}) + ([N_+, [N_-, X]] + [N_-, [N_+, X]]) = (2 : \mathbb{Z}) \bullet \{\mathrm{genV}\,P\,A\,C, X\}$,
+   - $(\{N_+, \{N_-, X\}\} + \{N_-, \{N_+, X\}\}) - ([N_+, [N_-, X]] + [N_-, [N_+, X]]) = (4 : \mathbb{Z}) \bullet \mathrm{sandwichCross}\,P\,A\,C\,X$. -/
+theorem two_sheeted_spin_mass_reflexive_electron_connes_drazin_and_wheeler_hodge_kraus_bridge
+    {B : Type*} [Ring B]
+    {R₀ : Type*} [AddCommGroup R₀]
+    (τ : B →+ R₀)
+    (hτ : InfoGeometry.OperatorAlgebra.NoncommutativeGradedTrace.IsCyclic τ)
+    {P A C : B} (hP : P * P = P) (X : B) (k : ℤ) :
+    ((invS P * genPhi P A C * invS P = -genPhi P A C ∧
+      invS P * genV P A C * invS P = genV P A C ∧
+      invS P * genSig P A C * invS P = genSig P A C ∧
+      (genV P A C = 0 ↔ genSig P A C = 0)) ∧
+     (P * genSig P A C * P = conePlus P A * coneMinus P C ∧
+      (1 - P) * genSig P A C * (1 - P) = -(coneMinus P C * conePlus P A) ∧
+      τ (P * genSig P A C * P) + τ ((1 - P) * genSig P A C * (1 - P)) = 0 ∧
+      P * genV P A C * P = conePlus P A * coneMinus P C ∧
+      (1 - P) * genV P A C * (1 - P) = coneMinus P C * conePlus P A ∧
+      τ (P * genV P A C * P) = τ ((1 - P) * genV P A C * (1 - P)))) ∧
+    ((genPhi P A C * (genPhi P A C * genPhi P A C) =
+        conePlus P A * coneMinus P C * conePlus P A +
+        coneMinus P C * conePlus P A * coneMinus P C ∧
+      (genPhi P A C * genPhi P A C) * (genPhi P A C * genPhi P A C) =
+        (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) +
+        (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) ∧
+      genSig P A C * genPhi P A C = genJ P A C * genV P A C ∧
+      genSig P A C * genJ P A C = genPhi P A C * genV P A C ∧
+      anticomm (genSig P A C) (genPhi P A C) = 0 ∧
+      anticomm (genSig P A C) (genJ P A C) = 0) ∧
+     (conePlus P A * coneMinus P C * conePlus P A = conePlus P A →
+      coneMinus P C * conePlus P A * coneMinus P C = coneMinus P C →
+        genPhi P A C * (genPhi P A C * genPhi P A C) = genPhi P A C ∧
+        genSig P A C * genSig P A C = genV P A C ∧
+        genSig P A C * (genSig P A C * genSig P A C) = genSig P A C ∧
+        genV P A C * genV P A C = genV P A C ∧
+        genSig P A C * genPhi P A C = genJ P A C ∧
+        genSig P A C * genJ P A C = genPhi P A C ∧
+        vacuumProjector P A C * vacuumProjector P A C = vacuumProjector P A C ∧
+        vacuumProjector P A C * genPhi P A C = 0 ∧
+        genPhi P A C * vacuumProjector P A C = 0 ∧
+        globalDiracInvolution P A C * globalDiracInvolution P A C = 1 ∧
+        globalSpinInvolution P A C * globalSpinInvolution P A C = 1 ∧
+        (k • (1 : B) - genPhi P A C) * (k • (1 : B) + genPhi P A C) =
+          (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C)) ∧
+    ((InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A = 0 →
+        conePlus P A = 0 ∧ coneMinus P A = 0 ∧ genV P A A = 0 ∧ genSig P A A = 0) ∧
+     (boundaryLiePlus P A (boundaryJordanPlus P A X) = 0 ∧
+      boundaryJordanPlus P A (boundaryLiePlus P A X) = 0 ∧
+      boundaryLieMinus P C (boundaryJordanMinus P C X) = 0 ∧
+      boundaryJordanMinus P C (boundaryLieMinus P C X) = 0) ∧
+     (boundaryJordanPlus P A (boundaryLieMinus P C X) +
+        boundaryJordanMinus P C (boundaryLiePlus P A X) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genV P A C) X ∧
+      boundaryLiePlus P A (boundaryJordanMinus P C X) -
+        boundaryLieMinus P C (boundaryJordanPlus P A X) =
+        anticomm (genSig P A C) X ∧
+      boundaryLiePlus P A (boundaryLieMinus P C X) -
+        boundaryLieMinus P C (boundaryLiePlus P A X) =
+        InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C) X ∧
+      (boundaryJordanPlus P A (boundaryJordanMinus P C X) +
+       boundaryJordanMinus P C (boundaryJordanPlus P A X)) +
+      (boundaryLiePlus P A (boundaryLieMinus P C X) +
+       boundaryLieMinus P C (boundaryLiePlus P A X)) =
+        (2 : ℤ) • anticomm (genV P A C) X ∧
+      (boundaryJordanPlus P A (boundaryJordanMinus P C X) +
+       boundaryJordanMinus P C (boundaryJordanPlus P A X)) -
+      (boundaryLiePlus P A (boundaryLieMinus P C X) +
+       boundaryLieMinus P C (boundaryLiePlus P A X)) =
+        (4 : ℤ) • sandwichCross P A C X)) := by
+  have hSigEqSV : genSig P A C = invS P * genV P A C := by peirce_nf hP
+  have hVEqSSig : genV P A C = invS P * genSig P A C := by peirce_nf hP
+  have hSpin1 : P * genSig P A C * P = conePlus P A * coneMinus P C := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have hSpin2 : (1 - P) * genSig P A C * (1 - P) = -(coneMinus P C * conePlus P A) := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have hMass1 : P * genV P A C * P = conePlus P A * coneMinus P C := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have hMass2 : (1 - P) * genV P A C * (1 - P) = coneMinus P C * conePlus P A := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have hTrEq :
+      τ (conePlus P A * coneMinus P C) = τ (coneMinus P C * conePlus P A) :=
+    hτ (conePlus P A) (coneMinus P C)
+  have hCubic :
+      genPhi P A C * (genPhi P A C * genPhi P A C) =
+        conePlus P A * coneMinus P C * conePlus P A +
+        coneMinus P C * conePlus P A * coneMinus P C := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have hQuartic :
+      (genPhi P A C * genPhi P A C) * (genPhi P A C * genPhi P A C) =
+        (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) +
+        (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by
+    unfold conePlus coneMinus; peirce_nf hP
+  have hSigPhi0 : genSig P A C * genPhi P A C = genJ P A C * genV P A C := by peirce_nf hP
+  have hSigJ0 : genSig P A C * genJ P A C = genPhi P A C * genV P A C := by peirce_nf hP
+  have hReflAll :
+      conePlus P A * coneMinus P C * conePlus P A = conePlus P A →
+      coneMinus P C * conePlus P A * coneMinus P C = coneMinus P C →
+        genPhi P A C * (genPhi P A C * genPhi P A C) = genPhi P A C ∧
+        genSig P A C * genSig P A C = genV P A C ∧
+        genSig P A C * (genSig P A C * genSig P A C) = genSig P A C ∧
+        genV P A C * genV P A C = genV P A C ∧
+        genSig P A C * genPhi P A C = genJ P A C ∧
+        genSig P A C * genJ P A C = genPhi P A C ∧
+        vacuumProjector P A C * vacuumProjector P A C = vacuumProjector P A C ∧
+        vacuumProjector P A C * genPhi P A C = 0 ∧
+        genPhi P A C * vacuumProjector P A C = 0 ∧
+        globalDiracInvolution P A C * globalDiracInvolution P A C = 1 ∧
+        globalSpinInvolution P A C * globalSpinInvolution P A C = 1 ∧
+        (k • (1 : B) - genPhi P A C) * (k • (1 : B) + genPhi P A C) =
+          (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C := by
+    intro hReflPlus hReflMinus
+    have hCross1 : (conePlus P A * coneMinus P C) * (coneMinus P C * conePlus P A) = 0 := by
+      unfold conePlus coneMinus; peirce_nf hP
+    have hCross2 : (coneMinus P C * conePlus P A) * (conePlus P A * coneMinus P C) = 0 := by
+      unfold conePlus coneMinus; peirce_nf hP
+    have hIdemL :
+        (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) =
+          conePlus P A * coneMinus P C := by
+      calc (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C)
+        _ = (conePlus P A * coneMinus P C * conePlus P A) * coneMinus P C := by noncomm_ring
+        _ = conePlus P A * coneMinus P C := by rw [hReflPlus]
+    have hIdemR :
+        (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) =
+          coneMinus P C * conePlus P A := by
+      calc (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A)
+        _ = (coneMinus P C * conePlus P A * coneMinus P C) * conePlus P A := by noncomm_ring
+        _ = coneMinus P C * conePlus P A := by rw [hReflMinus]
+    have hV_idem : genV P A C * genV P A C = genV P A C := by
+      unfold genV
+      calc (conePlus P A * coneMinus P C + coneMinus P C * conePlus P A) *
+           (conePlus P A * coneMinus P C + coneMinus P C * conePlus P A)
+        _ = (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) +
+            (conePlus P A * coneMinus P C) * (coneMinus P C * conePlus P A) +
+            (coneMinus P C * conePlus P A) * (conePlus P A * coneMinus P C) +
+            (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by noncomm_ring
+        _ = conePlus P A * coneMinus P C + coneMinus P C * conePlus P A := by
+            rw [hIdemL, hIdemR, hCross1, hCross2]; noncomm_ring
+    have hSig2V2 : genSig P A C * genSig P A C = genV P A C * genV P A C := by peirce_nf hP
+    have hSigSq : genSig P A C * genSig P A C = genV P A C := by rw [hSig2V2, hV_idem]
+    have hPhiTrip : genPhi P A C * (genPhi P A C * genPhi P A C) = genPhi P A C := by
+      rw [hCubic, hReflPlus, hReflMinus]; rfl
+    have hSigCubic :
+        genSig P A C * (genSig P A C * genSig P A C) =
+          (conePlus P A * coneMinus P C) * (conePlus P A * coneMinus P C) -
+          (coneMinus P C * conePlus P A) * (coneMinus P C * conePlus P A) := by
+      unfold conePlus coneMinus; peirce_nf hP
+    have hSigTrip : genSig P A C * (genSig P A C * genSig P A C) = genSig P A C := by
+      rw [hSigCubic, hIdemL, hIdemR]; rfl
+    have hPhi2V : genPhi P A C * genPhi P A C = genV P A C := by peirce_nf hP
+    have hVPhi : genV P A C * genPhi P A C = genPhi P A C := by
+      calc genV P A C * genPhi P A C
+        _ = (genPhi P A C * genPhi P A C) * genPhi P A C := by rw [hPhi2V]
+        _ = genPhi P A C * (genPhi P A C * genPhi P A C) := by noncomm_ring
+        _ = genPhi P A C := hPhiTrip
+    have hPhiV : genPhi P A C * genV P A C = genPhi P A C := by
+      rw [← hPhi2V, hPhiTrip]
+    have hJExpand :
+        genJ P A C * genV P A C =
+          conePlus P A * coneMinus P C * conePlus P A -
+          coneMinus P C * conePlus P A * coneMinus P C := by
+      unfold conePlus coneMinus; peirce_nf hP
+    have hJV : genJ P A C * genV P A C = genJ P A C := by
+      rw [hJExpand, hReflPlus, hReflMinus]; rfl
+    have hSigPhi : genSig P A C * genPhi P A C = genJ P A C := by rw [hSigPhi0, hJV]
+    have hSigJ : genSig P A C * genJ P A C = genPhi P A C := by rw [hSigJ0, hPhiV]
+    have hVacIdem : vacuumProjector P A C * vacuumProjector P A C = vacuumProjector P A C := by
+      unfold vacuumProjector
+      calc (1 - genV P A C) * (1 - genV P A C)
+        _ = 1 - genV P A C - genV P A C + genV P A C * genV P A C := by noncomm_ring
+        _ = 1 - genV P A C := by rw [hV_idem]; noncomm_ring
+    have hVacPhi : vacuumProjector P A C * genPhi P A C = 0 := by
+      unfold vacuumProjector; rw [sub_mul, one_mul, hVPhi, sub_self]
+    have hPhiVac : genPhi P A C * vacuumProjector P A C = 0 := by
+      unfold vacuumProjector; rw [mul_sub, mul_one, hPhiV, sub_self]
+    have hDiracInv : globalDiracInvolution P A C * globalDiracInvolution P A C = 1 := by
+      unfold globalDiracInvolution
+      calc (vacuumProjector P A C + genPhi P A C) * (vacuumProjector P A C + genPhi P A C)
+        _ = vacuumProjector P A C * vacuumProjector P A C +
+            vacuumProjector P A C * genPhi P A C +
+            genPhi P A C * vacuumProjector P A C +
+            genPhi P A C * genPhi P A C := by noncomm_ring
+        _ = vacuumProjector P A C + genV P A C := by
+            rw [hVacIdem, hVacPhi, hPhiVac, hPhi2V]; noncomm_ring
+        _ = 1 := by unfold vacuumProjector; noncomm_ring
+    have hVSig : genV P A C * genSig P A C = genSig P A C := by
+      calc genV P A C * genSig P A C
+        _ = (genSig P A C * genSig P A C) * genSig P A C := by rw [hSigSq]
+        _ = genSig P A C * (genSig P A C * genSig P A C) := by noncomm_ring
+        _ = genSig P A C := hSigTrip
+    have hSigV : genSig P A C * genV P A C = genSig P A C := by
+      rw [← hSigSq, hSigTrip]
+    have hVacSig : vacuumProjector P A C * genSig P A C = 0 := by
+      unfold vacuumProjector; rw [sub_mul, one_mul, hVSig, sub_self]
+    have hSigVac : genSig P A C * vacuumProjector P A C = 0 := by
+      unfold vacuumProjector; rw [mul_sub, mul_one, hSigV, sub_self]
+    have hSpinInv : globalSpinInvolution P A C * globalSpinInvolution P A C = 1 := by
+      unfold globalSpinInvolution
+      calc (vacuumProjector P A C + genSig P A C) * (vacuumProjector P A C + genSig P A C)
+        _ = vacuumProjector P A C * vacuumProjector P A C +
+            vacuumProjector P A C * genSig P A C +
+            genSig P A C * vacuumProjector P A C +
+            genSig P A C * genSig P A C := by noncomm_ring
+        _ = vacuumProjector P A C + genV P A C := by
+            rw [hVacIdem, hVacSig, hSigVac, hSigSq]; noncomm_ring
+        _ = 1 := by unfold vacuumProjector; noncomm_ring
+    have hPropSplit :
+        (k • (1 : B) - genPhi P A C) * (k • (1 : B) + genPhi P A C) =
+          (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C := by
+      calc (k • (1 : B) - genPhi P A C) * (k • (1 : B) + genPhi P A C)
+        _ = (k * k) • (1 : B) - genPhi P A C * genPhi P A C := by noncomm_ring
+        _ = (k * k) • (1 : B) - genV P A C := by rw [hPhi2V]
+        _ = (k * k) • vacuumProjector P A C + (k * k - 1) • genV P A C := by
+            unfold vacuumProjector; noncomm_ring
+    exact ⟨hPhiTrip, hSigSq, hSigTrip, hV_idem, hSigPhi, hSigJ,
+      hVacIdem, hVacPhi, hPhiVac, hDiracInv, hSpinInv, hPropSplit⟩
+  have hSterile :
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A = 0 →
+        conePlus P A = 0 ∧ coneMinus P A = 0 ∧ genV P A A = 0 ∧ genSig P A A = 0 := by
+    intro h0
+    have hPlus0 : conePlus P A = 0 := by
+      have hId : conePlus P A = P * InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A := by
+        unfold conePlus; peirce_nf hP
+      rw [hId, h0, mul_zero]
+    have hMinus0 : coneMinus P A = 0 := by
+      have hId : coneMinus P A = -(InfoGeometry.OperatorAlgebra.PeirceSpine.comm P A * P) := by
+        unfold coneMinus; peirce_nf hP
+      rw [hId, h0, zero_mul, neg_zero]
+    have hV0 : genV P A A = 0 := by
+      unfold genV
+      rw [hPlus0, hMinus0, zero_mul, add_zero]
+    have hSig0 : genSig P A A = 0 := by
+      unfold genSig
+      rw [hPlus0, hMinus0, zero_mul, sub_self]
+    exact ⟨hPlus0, hMinus0, hV0, hSig0⟩
+  refine ⟨⟨⟨by peirce_nf hP, by peirce_nf hP, by peirce_nf hP,
+           ⟨fun hV0 => by rw [hSigEqSV, hV0, mul_zero],
+            fun hS0 => by rw [hVEqSSig, hS0, mul_zero]⟩⟩,
+          ⟨hSpin1, hSpin2,
+           by rw [hSpin1, hSpin2, map_neg, hTrEq, add_neg_cancel],
+           hMass1, hMass2,
+           by rw [hMass1, hMass2, hTrEq]⟩⟩,
+    ⟨⟨hCubic, hQuartic, hSigPhi0, hSigJ0, by peirce_nf hP, by peirce_nf hP⟩,
+     hReflAll⟩,
+    ⟨hSterile,
+     ⟨by unfold boundaryLiePlus boundaryJordanPlus; peirce_nf hP,
+      by unfold boundaryLiePlus boundaryJordanPlus; peirce_nf hP,
+      by unfold boundaryLieMinus boundaryJordanMinus; peirce_nf hP,
+      by unfold boundaryLieMinus boundaryJordanMinus; peirce_nf hP⟩,
+     ⟨by unfold boundaryJordanPlus boundaryLieMinus boundaryJordanMinus boundaryLiePlus genV InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
+      by unfold boundaryLiePlus boundaryJordanMinus boundaryLieMinus boundaryJordanPlus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
+      by unfold boundaryLiePlus boundaryLieMinus genSig InfoGeometry.OperatorAlgebra.PeirceSpine.comm; noncomm_ring,
+      by unfold boundaryJordanPlus boundaryJordanMinus boundaryLiePlus boundaryLieMinus genV InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring,
+      by unfold boundaryJordanPlus boundaryJordanMinus boundaryLiePlus boundaryLieMinus sandwichCross InfoGeometry.OperatorAlgebra.PeirceSpine.comm anticomm; noncomm_ring⟩⟩⟩
+
 end InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge

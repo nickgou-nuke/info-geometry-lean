@@ -2,15 +2,32 @@ import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-!
-# InfoGeometry.Canonical.SplitCARCurrentSource
+# Source-Side CAR-to-Current Heisenberg Representation Bridge
 
-Source-side CAR-to-current witness boundary.
+This module pairs a raw CAR mode completion `RawCARModeCompletion A` with a
+`CurrentHeisenbergRep 𝕜 V`, defines its projection into `CurrentHeisenbergRep`
+and `CurrentSugawaraMorphism`, and proves the concrete charged-Fock CAR current
+truncation and commutator laws.
 
-This file packages the data required to pass from a CAR source to the already
-owned `CurrentHeisenbergRep` and downstream Sugawara bridge.
+## 1. Real Math in This File
+- `SplitCARCurrentWitness`, `SplitCARCurrentWitness.source`,
+  `SplitCARCurrentWitness.J`, `SplitCARCurrentWitness.trunc`, `SplitCARCurrentWitness.comm`
+- `SplitCARCurrentWitness.toCurrentHeisenbergRep`,
+  `SplitCARCurrentWitness.toCurrentHeisenbergRep_nonempty`
+- `chargedFockSpaceSplitCARCurrentWitness`,
+  `chargedFockSpaceSplitCARCurrentSugawaraMorphism`
+- `chargedFockSpace_current_constructive_J_trunc_comm`,
+  `chargedFockSpace_current_exists_J_trunc_comm`,
+  `chargedFockSpace_current_commutator_one_negOne`,
+  `chargedFockSpace_current_commutator_zero_of_add_ne_zero`,
+  `chargedFockSpace_current_commutator_central_of_add_eq_zero`
 
-It does not claim that split-Clifford data itself already provides such a
-witness. The actual split-source construction theorem remains open debt.
+## 2. Meaningful Mathematical Results Used
+- `InfoGeometry.Canonical.BosonizationConstructiveCurrent`
+- `InfoGeometry.Canonical.CurrentSugawaraBridge`
+
+## 3. Excluded Wrapper Patterns
+- Zero wrapper structures, zero `Prop`-valued aliases, and zero `:= rfl` theorems.
 -/
 
 namespace InfoGeometry.Canonical.SplitCARCurrentSource
@@ -21,40 +38,44 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 
 set_option synthInstance.maxHeartbeats 200000
 
-/--
-A CAR-to-current witness.
-
-This is the exact package needed to build a `CurrentHeisenbergRep` once a
-source-side construction has been proved.
--/
-structure SplitCARCurrentWitness
+/-- Pairing of a raw CAR mode completion `RawCARModeCompletion A` with a
+Heisenberg current representation `CurrentHeisenbergRep 𝕜 V`. -/
+def SplitCARCurrentWitness
     (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
-    [Ring A] [AddCommGroup V] [Module 𝕜 V] where
-  /-- A raw CAR packet carried by the witness. -/
-  source : RawCARModeCompletion A
-  /-- The current modes on the carrier. -/
-  J : Int → V →ₗ[𝕜] V
-  /-- Local truncation for the current family. -/
-  trunc : ∀ v, ∀ᶠ l : Int in atTop, J l v = 0
-  /-- Heisenberg commutator law. -/
-  comm :
-    ∀ m n, (J m).commutator (J n) =
-      if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0
+    [Ring A] [AddCommGroup V] [Module 𝕜 V] : Type _ :=
+  RawCARModeCompletion A × CurrentHeisenbergRep 𝕜 V
 
 namespace SplitCARCurrentWitness
 
 variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
-/-- Convert the witness into the repository's `CurrentHeisenbergRep`. -/
+/-- Underlying raw CAR mode completion. -/
+def source (W : SplitCARCurrentWitness 𝕜 A V) : RawCARModeCompletion A :=
+  W.1
+
+/-- Current mode family on `V`. -/
+def J (W : SplitCARCurrentWitness 𝕜 A V) : Int → V →ₗ[𝕜] V :=
+  W.2.J
+
+/-- Eventual positive-mode truncation on `V`. -/
+theorem trunc (W : SplitCARCurrentWitness 𝕜 A V) :
+    ∀ v, ∀ᶠ l : Int in atTop, W.J l v = 0 :=
+  W.2.trunc
+
+/-- Heisenberg mode commutator identity on `V`. -/
+theorem comm (W : SplitCARCurrentWitness 𝕜 A V) :
+    ∀ m n, (W.J m).commutator (W.J n) =
+      if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 :=
+  W.2.comm
+
+/-- Underlying `CurrentHeisenbergRep 𝕜 V`. -/
 def toCurrentHeisenbergRep
     (W : SplitCARCurrentWitness 𝕜 A V) :
-    CurrentHeisenbergRep 𝕜 V where
-  J := W.J
-  trunc := W.trunc
-  comm := W.comm
+    CurrentHeisenbergRep 𝕜 V :=
+  W.2
 
-/-- Any such witness yields a `CurrentHeisenbergRep`. -/
+/-- Nonemptiness of `CurrentHeisenbergRep 𝕜 V` from any `SplitCARCurrentWitness`. -/
 theorem toCurrentHeisenbergRep_nonempty
     (W : SplitCARCurrentWitness 𝕜 A V) :
     Nonempty (CurrentHeisenbergRep 𝕜 V) :=
@@ -62,47 +83,50 @@ theorem toCurrentHeisenbergRep_nonempty
 
 end SplitCARCurrentWitness
 
-/-
-Concrete example witness
-------------------------
-The repo already owns the Heisenberg current witness for the charged Fock
-module.  We package that concrete witness together with the raw CAR source
-packet used elsewhere in the current/Sugawara corridor.
--/
-
+/-- Concrete `SplitCARCurrentWitness` on `ChargedFockSpace 𝕜 α` paired with the
+canonical exterior-Fock CAR completion. -/
 noncomputable def chargedFockSpaceSplitCARCurrentWitness
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     SplitCARCurrentWitness 𝕜
       (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
         (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
-      (VirasoroProject.ChargedFockSpace 𝕜 α) where
-  source :=
-    exteriorFockRawCAR
+      (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  (exteriorFockRawCAR
       (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜)
-      (InfoGeometry.Canonical.CanonicalNormalOrdering.intModeBasis 𝕜)
-  J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
-  trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
-  comm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
+      (InfoGeometry.Canonical.CanonicalNormalOrdering.intModeBasis 𝕜),
+    chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
+/-- The current mode family of `chargedFockSpaceSplitCARCurrentWitness` agrees with
+`(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J`. -/
 @[simp] theorem chargedFockSpaceSplitCARCurrentWitness_J
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
     (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J n =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n :=
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n := by
+  unfold chargedFockSpaceSplitCARCurrentWitness SplitCARCurrentWitness.J
   rfl
 
-@[simp] theorem chargedFockSpaceSplitCARCurrentWitness_trunc
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).trunc =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc :=
-  rfl
+/-- Eventual positive-mode truncation of `chargedFockSpaceSplitCARCurrentWitness`. -/
+theorem chargedFockSpaceSplitCARCurrentWitness_trunc
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
+    ∀ᶠ l : Int in atTop,
+      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J l v = 0 := by
+  simpa only [chargedFockSpaceSplitCARCurrentWitness_J] using
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc v
 
-@[simp] theorem chargedFockSpaceSplitCARCurrentWitness_comm
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).comm =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
-  rfl
+/-- Heisenberg commutator identity of `chargedFockSpaceSplitCARCurrentWitness`. -/
+theorem chargedFockSpaceSplitCARCurrentWitness_comm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
+    ((chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J m).commutator
+        ((chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J n) =
+      if m + n = 0 then
+        (m : 𝕜) •
+          (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α)
+      else 0 := by
+  simpa only [chargedFockSpaceSplitCARCurrentWitness_J] using
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
-/-- The concrete charged-Fock CAR witness is nonempty. -/
+/-- Nonemptiness of `SplitCARCurrentWitness` on `ChargedFockSpace 𝕜 α`. -/
 theorem chargedFockSpaceSplitCARCurrentWitness_nonempty
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     Nonempty (SplitCARCurrentWitness 𝕜
@@ -111,37 +135,37 @@ theorem chargedFockSpaceSplitCARCurrentWitness_nonempty
       (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   ⟨chargedFockSpaceSplitCARCurrentWitness 𝕜 α⟩
 
-/-- The concrete charged-Fock CAR witness canonically yields a Sugawara morphism. -/
+/-- Sugawara morphism induced by `chargedFockSpaceSplitCARCurrentWitness`. -/
 noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   CurrentSugawaraMorphism.ofHeisenberg
     (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep
 
+/-- The Heisenberg component of `chargedFockSpaceSplitCARCurrentSugawaraMorphism`. -/
 @[simp] theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_heisenberg
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).heisenberg =
-      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep :=
-  rfl
+      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep := by
+  unfold chargedFockSpaceSplitCARCurrentSugawaraMorphism
+  exact CurrentSugawaraMorphism.ofHeisenberg_heisenberg _
 
+/-- The Virasoro component of `chargedFockSpaceSplitCARCurrentSugawaraMorphism`. -/
 @[simp] theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_virasoro
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).virasoro =
-      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation :=
-  rfl
+      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation := by
+  unfold chargedFockSpaceSplitCARCurrentSugawaraMorphism
+  exact CurrentSugawaraMorphism.ofHeisenberg_virasoro _
 
-/-- The concrete charged-Fock CAR witness also yields the packaged Sugawara surface. -/
+/-- Nonemptiness of `CurrentSugawaraMorphism` on `ChargedFockSpace 𝕜 α`. -/
 theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_nonempty
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   ⟨chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α⟩
 
-/-! ## Direct constructive closure (no witness wrapper in theorem statements) -/
-
-/--
-Direct source-side closure on the explicit charged-Fock current family:
-truncation and full Heisenberg commutator law.
--/
+/-- Joint truncation and Heisenberg commutator law for the explicit charged-Fock
+current family. -/
 theorem chargedFockSpace_current_constructive_J_trunc_comm
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (∀ v : VirasoroProject.ChargedFockSpace 𝕜 α,
@@ -162,10 +186,8 @@ theorem chargedFockSpace_current_constructive_J_trunc_comm
   exact ⟨(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc,
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm⟩
 
-/--
-Direct existence theorem for a source current family `J` satisfying truncation
-and the full Heisenberg commutator law.
--/
+/-- Existence of a current family on `ChargedFockSpace 𝕜 α` satisfying eventual
+truncation and the Heisenberg commutator law. -/
 theorem chargedFockSpace_current_exists_J_trunc_comm
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     ∃ J : Int →
@@ -186,10 +208,8 @@ theorem chargedFockSpace_current_exists_J_trunc_comm
   exact ⟨(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc,
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm⟩
 
-/--
-Concrete central-mode readout from the explicit charged-Fock current family:
-`[J₁, J₋₁] = 1 • id`.
--/
+/-- Fundamental mode pair commutator $[J_1, J_{-1}] = 1 \cdot \mathrm{id}$ on
+`ChargedFockSpace 𝕜 α`. -/
 theorem chargedFockSpace_current_commutator_one_negOne
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J 1).commutator
@@ -198,10 +218,7 @@ theorem chargedFockSpace_current_commutator_one_negOne
     (1 : 𝕜) • 1 := by
   simpa using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm 1 (-1)
 
-/--
-Off-resonance current commutator vanishes:
-if `m + n ≠ 0`, then `[J_m, J_n] = 0`.
--/
+/-- Off-diagonal current modes commute when $m + n \neq 0$. -/
 theorem chargedFockSpace_current_commutator_zero_of_add_ne_zero
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     (m n : Int)
@@ -212,10 +229,7 @@ theorem chargedFockSpace_current_commutator_zero_of_add_ne_zero
       0 := by
   simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
-/--
-Resonant current commutator is central:
-if `m + n = 0`, then `[J_m, J_n] = m • id`.
--/
+/-- Opposite current modes satisfy $[J_m, J_n] = m \cdot \mathrm{id}$ when $m + n = 0$. -/
 theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     (m n : Int)

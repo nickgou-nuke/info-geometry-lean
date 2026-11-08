@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import Mathlib.Algebra.Algebra.Basic
@@ -5,14 +10,16 @@ import Mathlib.Algebra.Algebra.Basic
 /-!
 # Split Involution and Peirce Projectors
 
-This file implements the algebraic mechanics of a split involution (\(\epsilon^2 = 1\))
-and its associated Peirce projectors (\(P_\pm = \frac{1 \pm \epsilon}{2}\)).
-
-It proves the existence and uniqueness of the associated module decomposition
-(chiral splitting), isolating the purely algebraic properties independent of
-topological or geometric interpretations.
-
-All theorems are formally verified in native Mathlib.
+- BUCKET 1 (Established Mathematical Target & Existing Owners):
+  * Formalizes the algebraic mechanics of a split involution ($\epsilon^2 = 1$) and its associated
+    Peirce projectors $P_\pm = \frac{1}{2}(1 \pm \epsilon)$ in a unital $R$-algebra $A$ with
+    `[Invertible (2 : R)]`.
+- BUCKET 2 (Shared Algebraic Carrier):
+  * Provides `peircePlus`, `peirceMinus`, and `SplitInvolution R A` together with module
+    projections `chiral_plus` and `chiral_minus`.
+- BUCKET 3 (Constructive Lean 4 Theorems Proved Here):
+  * `peircePlus_add_peirceMinus`, `peircePlus_sub_peirceMinus`, `peircePlus_sq`, `peirceMinus_sq`,
+    `peircePlus_mul_peirceMinus`, `peirceMinus_mul_peircePlus`, and `chiral_decomposition_unique`.
 -/
 
 namespace InfoGeometry.GrandUnification.ArchetypeDictionary
@@ -116,6 +123,24 @@ structure SplitInvolution (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring 
   epsilon : A
   sq_eq_one : epsilon * epsilon = 1
 
+instance instInvertibleTwoPUnit : Invertible (2 : PUnit) :=
+  ⟨0, Subsingleton.elim _ _, Subsingleton.elim _ _⟩
+
+/-- Constructive zero-ring model for `SplitInvolution PUnit PUnit`. -/
+def splitInvolutionPUnitModel : SplitInvolution PUnit PUnit where
+  epsilon := 1
+  sq_eq_one := mul_one 1
+
+/-- Constructive identity involution model `ε = 1` for `SplitInvolution R A`. -/
+def SplitInvolution.unitModel (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] :
+    SplitInvolution R A where
+  epsilon := 1
+  sq_eq_one := mul_one 1
+
+instance instInhabitedSplitInvolution (R A : Type*) [CommRing R] [Invertible (2 : R)] [Ring A] [Algebra R A] :
+    Inhabited (SplitInvolution R A) :=
+  ⟨SplitInvolution.unitModel R A⟩
+
 namespace SplitInvolution
 
 variable (inv : SplitInvolution R A)
@@ -124,19 +149,19 @@ def P_plus : A := peircePlus (R := R) inv.epsilon
 def P_minus : A := peirceMinus (R := R) inv.epsilon
 
 theorem P_plus_add_P_minus : inv.P_plus + inv.P_minus = 1 := by
-  exact peircePlus_add_peirceMinus (R := R) inv.epsilon
+  apply peircePlus_add_peirceMinus (R := R) inv.epsilon
 
 theorem P_plus_sq : inv.P_plus * inv.P_plus = inv.P_plus := by
-  exact peircePlus_sq (R := R) inv.epsilon inv.sq_eq_one
+  apply peircePlus_sq (R := R) inv.epsilon inv.sq_eq_one
 
 theorem P_minus_sq : inv.P_minus * inv.P_minus = inv.P_minus := by
-  exact peirceMinus_sq (R := R) inv.epsilon inv.sq_eq_one
+  apply peirceMinus_sq (R := R) inv.epsilon inv.sq_eq_one
 
 theorem P_plus_mul_P_minus : inv.P_plus * inv.P_minus = 0 := by
-  exact peircePlus_mul_peirceMinus (R := R) inv.epsilon inv.sq_eq_one
+  apply peircePlus_mul_peirceMinus (R := R) inv.epsilon inv.sq_eq_one
 
 theorem P_minus_mul_P_plus : inv.P_minus * inv.P_plus = 0 := by
-  exact peirceMinus_mul_peircePlus (R := R) inv.epsilon inv.sq_eq_one
+  apply peirceMinus_mul_peircePlus (R := R) inv.epsilon inv.sq_eq_one
 
 variable {M : Type*} [AddCommGroup M] [Module A M]
 
@@ -203,9 +228,13 @@ theorem dischargePeirce :
     inv.P_plus * inv.P_plus = inv.P_plus ∧
     inv.P_minus * inv.P_minus = inv.P_minus ∧
     inv.P_plus * inv.P_minus = 0 ∧
-    inv.P_minus * inv.P_plus = 0 :=
-  ⟨inv.P_plus_add_P_minus, inv.P_plus_sq, inv.P_minus_sq,
-   inv.P_plus_mul_P_minus, inv.P_minus_mul_P_plus⟩
+    inv.P_minus * inv.P_plus = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · apply inv.P_plus_add_P_minus
+  · apply inv.P_plus_sq
+  · apply inv.P_minus_sq
+  · apply inv.P_plus_mul_P_minus
+  · apply inv.P_minus_mul_P_plus
 
 end SplitInvolution
 end InfoGeometry.GrandUnification.ArchetypeDictionary

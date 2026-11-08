@@ -168,7 +168,7 @@ The root integration gate is separately blocked, as described below.
   frequencies, Gram construction, and the limited interpretation of the real
   Fourier pair. Generation, semantic audit, and acceptance were separate roles.
 - Untouched `FiniteSpinAlgebra` and the root `lean-toolchain`, manifest, and
-  `lakefile.toml` matched the base commit's Git blobs. Mathlib and all eight
+  `lakefile.lean` matched the base commit's Git blobs. Mathlib and all eight
   of its dependencies retained their exact manifest revisions and unchanged
   tracked sources.
 

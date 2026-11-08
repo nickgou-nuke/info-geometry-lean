@@ -2,7 +2,12 @@
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Tactic.Abel
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
+/-!
 # The Epistemic Compiler (`Solve et Coagula`) Self-Bootstrap Poset (𝔈ℭ₁ ≺ ⋯ ≺ 𝔈ℭ₇)
 
 Complete, `0 sorry` formalization of the Epistemic Compiler applied to its own specification
@@ -37,11 +42,21 @@ and unifying the five foundational pillars of the dialogue:
   Coagulates the entire poset into the self-verifying Master Synthesis uniting Friedman
   (Outer-Identity Extension), Wheeler–Gödel (Quantum ⟺ Existence), Planck–Popper (Foam Survival),
   Postnikov–Arkani-Hamed (Twisted KLT Amplituhedron), and Grothendieck (Weak Coherator Defect).
--/
 
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Tactic.Abel
-import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+## Mathematical Contract (Three-Bucket Classification)
+
+### BUCKET 1: CLOSED FINITE THEOREMS
+- `fourfold_relational_anatomy_decomposition`: unconditional Peirce 4-block partition of unity in any `[Ring B]`.
+
+### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
+- `primordial_binary_cut_and_noncommutative_asymmetry`, `reversible_symmetry_iff_projections_vanish`,
+  `transcendent_function_ignition_laws`, `socratic_aporia_thesis_square_defect`,
+  `quine_self_compilation_shadow_necessity`, `meta_cognitive_horizon_expansion_idempotence`,
+  `epistemic_compiler_grand_unified_coagulation`.
+
+### BUCKET 3: OPEN CLOSURE DEBT
+- None (`0 sorry`, `0 admit`, `0 custom axioms`).
+-/
 
 namespace EpistemicCompilerSelfBootstrapPoset
 
@@ -87,6 +102,7 @@ def SocraticAporia (P X : B) : B :=
 def TwistedCoagulaDefect (P X Theta : B) : B :=
   P * (X * Theta * X) * P - (P * X * P) * Theta * (P * X * P)
 
+/-- Right-associated idempotent rewrite `P * (P * Z) = P * Z`. -/
 lemma proj_idem {P : B} (hP : P * P = P) (Z : B) : P * (P * Z) = P * Z := by
   rw [← mul_assoc, hP]
 

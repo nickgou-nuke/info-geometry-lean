@@ -45,6 +45,31 @@ theorem momentumTwistorData_has_positive_maximal_minor
     exact Fin.mk_lt_mk.mpr hij
   exact ⟨s, hs, Z.2.2 s hs⟩
 
+/-- Row-oriented points on the real cubic moment curve. -/
+def cubicMomentCurveData (t : Fin 4 → ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
+  fun i j => t i ^ j.val
+
+/-- Strictly ordered four parameters give a point of the existing finite
+external-data carrier for `k = 0`, `n = 4`. The checked transpose is the
+Vandermonde matrix on those parameters. This does not identify this data with
+a DeWitt operator or assert a Plücker-ray anticommutator. -/
+def cubicMomentCurveMomentumTwistorData (t : Fin 4 → ℝ)
+    (ht : StrictMono t) : MomentumTwistorData 0 4 := by
+  refine ⟨cubicMomentCurveData t, by decide, ?_⟩
+  intro s hs
+  have hmatrix :
+      (cubicMomentCurveData t).transpose.submatrix id s =
+        (Matrix.vandermonde (t ∘ s)).transpose := by
+    ext i j
+    simp [cubicMomentCurveData, Matrix.vandermonde]
+  rw [hmatrix, Matrix.det_transpose, Matrix.det_vandermonde]
+  apply Finset.prod_pos
+  intro i hi
+  apply Finset.prod_pos
+  intro j hj
+  have hij : i < j := Finset.mem_Ioi.mp hj
+  exact sub_pos.mpr (ht (hs hij))
+
 /-! ### Finite exterior-algebra bilocal consequence -/
 
 /-- Every ordered pair of twistor rows is proportional. -/

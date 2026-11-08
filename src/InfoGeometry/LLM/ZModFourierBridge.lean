@@ -15,94 +15,45 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 /-!
 # Native cyclic Fourier kernels and circulant spectra
 
-## i. Overview
-
 Translation invariance reconstructs a native circulant matrix from its zero
 column. Additive characters give nonzero eigenvectors, and the native DFT
 diagonalizes the full cyclic matrix action with its counting-measure
 normalization. These finite statements do not assume a learning objective,
 an optimizer, or a supplied spectral certificate.
-
-## ii. Key results
-
-- Translation invariance of a difference kernel is exactly its circulant form.
-- Every native additive character is a nonzero eigenvector of every circulant
-  matrix.
-- The standard cyclic Fourier character has eigenvalue `ZMod.dft κ k`.
-- The native DFT diagonalizes the full circulant matrix-vector action.
-- Reversing and conjugating a cyclic kernel conjugates its native DFT.
-
-## iii. Table of contents
-
-- `zmodFourierKernel` — translation-invariant difference kernel
-- `circulant_translation_invariant` — circulant entries are translation-invariant
-- `matrix_eq_circulant_of_translation_invariant` — translation invariance ⟹ circulant
-- `matrix_translation_invariant_iff_eq_circulant` — equivalence theorem
-- `circulant_mulVec_addChar` — additive character eigenvector equation
-- `circulant_hasEigenvector_addChar` — native eigenspace membership
-- `circulant_mulVec_stdAddChar` — standard Fourier character eigenvector
-- `circulant_hasEigenvector_stdAddChar` — native nonzero eigenvector
-- `dft_circulant_mulVec` — DFT diagonalization of circulant action
-- `dft_star_comp_neg` — reversal/conjugation conjugates the DFT
-
-## iv. References
-
-- arXiv:2602.15029 — "Symmetry in language statistics shapes the geometry of
-  model representations" (Karkada, Korchinski, Nava, Wyart, Bahri, ICML 2026)
-- QMS-SOP-ALC-001 — Quality Management System
-
-### Three-Bucket Audit Classification
-
-- **BUCKET 1 — Proved Kernel Content:**
-  - `zmodFourierKernel_translation_invariant`, `zmodFourierKernel_zero`,
-  - `circulant_translation_invariant`, `matrix_eq_circulant_of_translation_invariant`, `matrix_translation_invariant_iff_eq_circulant`,
-  - `circulant_mulVec_addChar`, `circulant_hasEigenvector_addChar`, `circulant_mulVec_stdAddChar`, `circulant_hasEigenvector_stdAddChar`,
-  - `dft_circulant_mulVec`, `dft_star_comp_neg`.
-- **BUCKET 2 — Conditional / Interface Boundaries:**
-  - `NeZero n` and `NeZero N` supply nonemptiness of `ZMod n` and `ZMod N` for character nonvanishing and DFT inversion.
-- **BUCKET 3 — Out-of-Scope Empirical Claims:**
-  - Empirical corpus statistics and neural training dynamics of arXiv:2602.15029 remain outside this algebraic/Fourier owner.
 -/
 
 namespace InfoGeometry.LLM
 
-/-- Translation-invariant cyclic difference kernel `χ (t - s)` on `ZMod n`. -/
 noncomputable def zmodFourierKernel {n : ℕ} [NeZero n]
     (χ : AddChar (ZMod n) ℂ) (t s : ZMod n) : ℂ :=
   χ (t - s)
 
-/-- Translation invariance of the difference kernel under simultaneous
-row and column translation. -/
 theorem zmodFourierKernel_translation_invariant {n : ℕ} [NeZero n]
     (χ : AddChar (ZMod n) ℂ) (t s a : ZMod n) :
     zmodFourierKernel χ (t + a) (s + a) = zmodFourierKernel χ t s := by
   simp [zmodFourierKernel, sub_eq_add_neg, add_assoc, add_comm]
 
-/-- The diagonal entry of the difference kernel is 1. -/
 theorem zmodFourierKernel_zero {n : ℕ} [NeZero n]
     (χ : AddChar (ZMod n) ℂ) (t : ZMod n) :
     zmodFourierKernel χ t t = 1 := by
   simp [zmodFourierKernel]
 
-/-- The native DFT of `Φ` at `k` equals the character-weighted sum over `G`. -/
 theorem zmodDft_apply_as_character_sum {n : ℕ} [NeZero n]
     (Φ : ZMod n → ℂ) (k : ZMod n) :
     ZMod.dft Φ k = ∑ j : ZMod n, ZMod.stdAddChar (-(j * k)) • Φ j := by
-  simpa using ZMod.dft_apply Φ k
+  exact ZMod.dft_apply Φ k
 
-/-- Left inverse: `ZMod.dft.symm ∘ ZMod.dft = id`. -/
 theorem zmodDft_inverse_left {n : ℕ} [NeZero n]
     {E : Type*} [AddCommGroup E] [Module ℂ E]
     (Φ : ZMod n → E) :
     ZMod.dft.symm (ZMod.dft Φ) = Φ := by
-  simp
+  exact ZMod.dft.left_inv Φ
 
-/-- Right inverse: `ZMod.dft ∘ ZMod.dft.symm = id`. -/
 theorem zmodDft_inverse_right {n : ℕ} [NeZero n]
     {E : Type*} [AddCommGroup E] [Module ℂ E]
     (Ψ : ZMod n → E) :
     ZMod.dft (ZMod.dft.symm Ψ) = Ψ := by
-  simp
+  exact ZMod.dft.right_inv Ψ
 
 open Matrix
 

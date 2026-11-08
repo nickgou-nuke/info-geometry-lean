@@ -21,6 +21,16 @@ variable {k n m : ℕ}
 def maximalMinor (C : Matrix (Fin k) (Fin n) ℝ) (s : Fin k → Fin n) : ℝ :=
   Matrix.det (fun i j => C i (s j))
 
+/-- In the 2-row chart, an ordered maximal minor is the usual column-pair
+determinant. -/
+lemma maximalMinor_pair (C : Matrix (Fin 2) (Fin n) ℝ) (i j : Fin n) :
+    maximalMinor C ![i, j] = C 0 i * C 1 j - C 0 j * C 1 i := by
+  unfold maximalMinor
+  let D : Matrix (Fin 2) (Fin 2) ℝ := fun r c => C r (![i, j] c)
+  change Matrix.det D = _
+  rw [Matrix.det_fin_two D]
+  simp [D]
+
 /-- All selected maximal minors are nonnegative. -/
 def HasNonnegativeMaximalMinors (C : Matrix (Fin k) (Fin n) ℝ) : Prop :=
   ∀ s : Fin k → Fin n, StrictMono s → 0 ≤ maximalMinor C s
@@ -36,6 +46,51 @@ def positiveGrassmannianChart : Set (Matrix (Fin k) (Fin n) ℝ) :=
 /-- A finite matrix-chart version of the strictly positive Grassmannian. -/
 def positiveGrassmannianInterior : Set (Matrix (Fin k) (Fin n) ℝ) :=
   {C | HasPositiveMaximalMinors C}
+
+/-- A finite-network chart representative for a strictly positive point of
+`Gr(2,4)`. Its parameters are positive edge weights. -/
+def positiveGr24NetworkMatrix (t1 t2 t3 t4 : ℝ) : Matrix (Fin 2) (Fin 4) ℝ :=
+  !![1, 0, -t1, -(t1 * t3 + t4);
+     0, 1, t2, t2 * t3]
+
+/-- The six ordered maximal minors of the explicit `Gr(2,4)` network matrix.
+This computes Plücker coordinates from the actual matrix carrier. -/
+theorem positiveGr24NetworkMatrix_minors (t1 t2 t3 t4 : ℝ) :
+    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![0, 1] = 1 ∧
+    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![0, 2] = t2 ∧
+    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![0, 3] = t2 * t3 ∧
+    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![1, 2] = t1 ∧
+    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![1, 3] = t1 * t3 + t4 ∧
+    maximalMinor (positiveGr24NetworkMatrix t1 t2 t3 t4) ![2, 3] = t2 * t4 := by
+  simp only [maximalMinor_pair, positiveGr24NetworkMatrix]
+  norm_num
+  all_goals ring
+
+/-- Positive network weights produce a point in the repository's strict
+finite matrix chart for `Gr(2,4)`. -/
+theorem positiveGr24NetworkMatrix_mem_interior
+    (t1 t2 t3 t4 : ℝ) (ht1 : 0 < t1) (ht2 : 0 < t2)
+    (ht3 : 0 < t3) (ht4 : 0 < t4) :
+    positiveGr24NetworkMatrix t1 t2 t3 t4 ∈
+      positiveGrassmannianInterior (k := 2) (n := 4) := by
+  intro s hs
+  have h01 : s 0 < s 1 := hs (by decide)
+  generalize h0 : s 0 = i
+  generalize h1 : s 1 = j
+  have hij : i < j := by simpa [h0, h1] using h01
+  have heq : s = ![i, j] := by
+    funext r
+    fin_cases r <;> simp [h0, h1]
+  rw [heq, maximalMinor_pair]
+  rcases i with ⟨i, hi⟩
+  rcases j with ⟨j, hj⟩
+  have hij' : i < j := by simpa using hij
+  interval_cases i <;> interval_cases j
+  all_goals
+    first
+    | omega
+    | (simp [positiveGr24NetworkMatrix] <;> ring_nf <;>
+        first | positivity | linarith [mul_pos ht2 ht4])
 
 /-! ### Boundary extension by a zero column
 

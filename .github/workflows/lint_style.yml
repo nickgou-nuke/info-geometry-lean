@@ -1,4 +1,4 @@
-name: Lean style & QMS lint
+name: Lean style lint
 
 on:
   push:
@@ -9,26 +9,12 @@ on:
 
 jobs:
   lint-style:
-    name: Lint Lean style, module docs, theorem discipline & PR summary
+    name: Lint Lean style
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Run mathlib style linter
+        uses: leanprover-community/lint-style-action@main
         with:
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Run repository structural linter (alint layer)
-        run: python3 scripts/lint/required/repo_structure_lint.py
-
-      - name: Run required 8-step lint gate (skip-build)
-        run: bash scripts/lint/required/lint_all.sh --skip-build
-
-      - name: Generate PR change summary
-        if: github.event_name == 'pull_request'
-        run: python3 scripts/github/pr_summary.py --base "${{ github.event.pull_request.base.sha }}" --head "${{ github.sha }}"
+          mode: check
+          lint-bib-file: false

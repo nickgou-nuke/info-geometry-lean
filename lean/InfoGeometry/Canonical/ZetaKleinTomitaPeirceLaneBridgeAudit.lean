@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge
+
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.FourLaneArchetype
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.fourLaneRank
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.fourLaneRank_injective
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.instPartialOrderFourLaneArchetype
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.lane1_centered_seam_and_xi_zero_reflection
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.lane2_and_3_klein_quotient_and_operator_double_cover
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.fourLaneArchetypeOperator
+#print axioms InfoGeometry.Canonical.ZetaKleinTomitaPeirceLaneBridge.lane4_peirce_steinberg_sector_swap_and_master_synthesis

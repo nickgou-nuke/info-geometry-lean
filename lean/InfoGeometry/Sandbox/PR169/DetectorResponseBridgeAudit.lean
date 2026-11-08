@@ -1,0 +1,6 @@
+import InfoGeometry.Sandbox.PR169.DetectorResponseIntegral
+
+-- Request transitive kernel dependency reports for every public theorem.
+#print axioms InfoGeometry.Sandbox.PR169.DetectorResponseIntegral.firstCollisionKernel_eq_existing_flux
+#print axioms InfoGeometry.Sandbox.PR169.DetectorResponseIntegral.response_eq_existing_flux_integral
+#print axioms InfoGeometry.Sandbox.PR169.DetectorResponseIntegral.on_axis_kernel_uses_existing_separation

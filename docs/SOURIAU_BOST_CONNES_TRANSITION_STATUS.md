@@ -16,28 +16,23 @@ The owner module currently verifies a finite/local transition matrix. It is a
 capstone readout over existing owner theorems, not a proof of the full analytic
 physics narrative.
 
-The exported theorem-safe capstones are:
+The exported theorem-safe capstone is:
 
 ```lean
 InfoGeometry.Canonical.SouriauBostConnesTransition
   .souriau_bost_connes_transition_verified
-InfoGeometry.Canonical.SouriauBostConnesKMSBoundarySynthesis
-  .souriau_bost_connes_tenfold_kms_fisher_euler_and_cantor_synthesis
-InfoGeometry.Canonical.SouriauBostConnesKMSBoundarySynthesis
-  .souriau_bost_connes_twelvefold_analytic_kms_cuntz_fibonacci_braid_synthesis
 ```
 
-They package these kernel-checked components:
+It packages these kernel-checked components:
 
 - finite Boolean prime Weyl denominator identity;
-- infinite prime Euler product `infinitePrimeEulerProduct β = riemannZeta (β : ℂ)` (`1 < β`) and inverse Dirichlet Möbius identity;
-- single-mode Souriau–Fisher variance positivity (`0 < primonFisherMetric p β`) and zero-temperature collapse (`Tendsto (primonFisherMetric p) atTop (nhds 0)`);
-- Bost–Connes `C*`-dynamical KMS phase disjunction across `β_c = 1` and mode range-projection idempotency;
-- `TopCat` projective limit Cantor boundary isomorphism (`prefixBoundaryLimitIso`) and UHF colimit/projective-dual state descent;
-- Cuntz–Krieger Golden-Mean transition matrix `goldenMeanMatrixR ^ 2 = goldenMeanMatrixR + 1`, Fibonacci path powers `goldenMeanMatrixR ^ (n + 1)` via `Nat.fib`, forbidden-word annihilation `T1 * T1 = 0`, and Parry–KMS Perron–Frobenius eigenvector;
-- universal 3-strand Artin braid representation `fibonacciArtinBraidRep3 : PresentedBraidGroup 3 →* GL₂(ℂ)` and categorical Fibonacci pentagon and hexagon coherence;
-- Cayley critical-line/unit-circle readout, Riemann reflection as Cayley fugacity inversion, and conditional RH readout from supplied prime Lee-Yang witnesses;
-- combinatorial Dirac-sea vacuum and interface-step nilpotence.
+- Cayley critical-line/unit-circle readout;
+- Riemann reflection as Cayley fugacity inversion;
+- conditional RH readout from supplied prime Lee-Yang witnesses;
+- finite Yang-Baxter matrix parameters;
+- finite Fibonacci golden-ratio and phase readouts;
+- combinatorial Dirac-sea vacuum and interface-step nilpotence;
+- verified categorical Fibonacci pentagon and hexagon coherence.
 
 The module also defines:
 

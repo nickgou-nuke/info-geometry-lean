@@ -1,4 +1,4 @@
-"""Focused real-Git tests for ancestry preservation, DNA provenance, and CommitDeclEdge carrier separation."""
+"""Focused real-Git tests for ancestry preservation and DNA provenance gates."""
 import json
 import os
 from pathlib import Path
@@ -160,100 +160,6 @@ class ExportTests(unittest.TestCase):
     def test_acyclicity_is_checked_independently_of_time(self):
         with self.assertRaises(ValueError):
             exporter.topological({"a": {"parents": ["b"]}, "b": {"parents": ["a"]}})
-
-    def test_compressed_links_satisfy_darwin_commit_taxonomy_rank_and_length_invariants(self):
-        """Verify expandCompressedParentLink_length, last_parentIndex, and rank_increasing invariants."""
-        data = self.export(since="2025-01-01", until="2027-01-01")
-        rank_by_sha = {row["sha"]: row["index"] for row in data["commits"]}
-        for node in data["nodes"]:
-            rank_by_sha.setdefault(node["sha"], node["index"])
-
-        for link in data["links"]:
-            path = [link["source"], *link["chain"], link["target"]]
-            hops = [
-                (parent, child, link["parent_index"] if idx == len(path) - 2 else 0)
-                for idx, (parent, child) in enumerate(zip(path, path[1:]))
-            ]
-            # expandCompressedParentLink_length: length == chain.length + 1
-            self.assertEqual(len(hops), len(link["chain"]) + 1)
-            # expandCompressedParentLink_last_parentIndex: last hop carries link.parent_index
-            self.assertEqual(hops[-1][2], link["parent_index"])
-            # expandParentPath_rank_increasing: parent rank < child rank on every hop
-            for parent_sha, child_sha, _ in hops:
-                self.assertLess(rank_by_sha[parent_sha], rank_by_sha[child_sha])
-
-    def test_optional_declaration_links_keep_separate_carrier_and_distinguish_cohabitation(self):
-        """Verify CommitDeclEdge carrier separation (DarwinCommitTaxonomy.lean:131-133, 435-468)."""
-        baseline = self.export()
-        self.assertNotIn("declaration_links", baseline)
-        self.assertEqual(baseline["stats"]["decl_edge_count"], 0)
-
-        edges_path = self.repo / "commit_decl_edges.jsonl"
-        rows = [
-            {
-                "commitHash": self.ids["tip"],
-                "declKey": "d_alpha",
-                "declName": "InfoGeometry.Graph.alpha",
-                "moduleName": "InfoGeometry.Graph.DarwinCommitTaxonomy",
-                "resolution": "habitat_cohabitation",
-                "exact_match": False,
-                "canonicalTypeHash": "12345",
-            },
-            {
-                "_from": f"commit_nodes/{self.ids['merge']}",
-                "_to": "decls/d_beta",
-                "edgeKind": "touches",
-                "declName": "InfoGeometry.Graph.beta",
-                "modulePath": "lean/InfoGeometry/Graph/DarwinCommitTaxonomy.lean",
-                "exact_match": True,
-                "resolution": "exact_declaration",
-            },
-            {
-                "commitHash": self.ids["root"],  # Outside [2026-02-01, 2026-02-08) window
-                "declKey": "d_root",
-                "declName": "InfoGeometry.Graph.rootDecl",
-                "moduleName": "InfoGeometry.Graph.DarwinCommitTaxonomy",
-                "resolution": "habitat_cohabitation",
-                "exact_match": False,
-            },
-        ]
-        edges_path.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
-
-        with_edges = self.export(decl_edges_path=edges_path)
-        # Topological nodes and links must remain completely unchanged
-        self.assertEqual(with_edges["nodes"], baseline["nodes"])
-        self.assertEqual(with_edges["links"], baseline["links"])
-
-        decl_links = with_edges["declaration_links"]
-        self.assertEqual(decl_links["carrier"], "CommitDeclEdge")
-        self.assertEqual(decl_links["edge_kind"], "touches")
-        self.assertEqual(
-            decl_links["non_transitive_cohabitation_note"],
-            "InfoGeometry.Graph.shared_path_not_equivalence",
-        )
-        self.assertEqual(decl_links["edge_count"], 2)
-        self.assertEqual(decl_links["exact_count"], 1)
-        self.assertEqual(decl_links["cohabitation_count"], 1)
-        self.assertEqual(decl_links["unattached_outside_window"], 1)
-        self.assertEqual(with_edges["stats"]["decl_edge_count"], 2)
-        self.assertEqual(with_edges["stats"]["exact_decl_edge_count"], 1)
-        self.assertEqual(with_edges["stats"]["cohabitation_decl_edge_count"], 1)
-
-        tip_entry = decl_links["by_commit"][self.ids["tip"]]["edges"][0]
-        self.assertEqual(tip_entry["edgeKind"], "touches")
-        self.assertEqual(tip_entry["resolution"], "habitat_cohabitation")
-        self.assertFalse(tip_entry["exact_match"])
-        self.assertEqual(tip_entry["identifierRole"], "candidate_only")
-
-        # Reject unknown commit SHA or invalid edgeKind
-        bad_path = self.repo / "bad_edges.jsonl"
-        bad_path.write_text(json.dumps({
-            "commitHash": "0" * 40,
-            "declName": "X",
-            "moduleName": "M",
-        }) + "\n", encoding="utf-8")
-        with self.assertRaises(ValueError):
-            self.export(decl_edges_path=bad_path)
 
 
 if __name__ == "__main__":

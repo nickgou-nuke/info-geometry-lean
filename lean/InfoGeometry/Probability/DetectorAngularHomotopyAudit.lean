@@ -1,0 +1,22 @@
+import InfoGeometry.Probability.DetectorAngularHomotopy
+
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.directionalW_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.primitiveP2_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.primitiveP4_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.primitiveP2_diff
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.primitiveP4_diff
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.integratedP2_eq_solid_mul_Q2
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.integratedP4_eq_solid_mul_Q4
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.integratedFlux_factorization
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.flux_ratio_recovers_effectiveW
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.Q2_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.Q4_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.effectiveW_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.co60_effectiveW_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.eu152_gd_effectiveW_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.eu152_sm_effectiveW_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.tl208_effectiveW_one
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.Q2_deflection
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.Q4_deflection
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.effectiveW_deflection
+#print axioms InfoGeometry.Probability.DetectorAngularHomotopy.effectiveW_deflection_factorization

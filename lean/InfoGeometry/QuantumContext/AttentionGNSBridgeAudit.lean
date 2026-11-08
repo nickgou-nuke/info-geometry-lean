@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.AttentionGNSBridge
+
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.weightedMatrixState_quadratic_eq_gnsInner
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.attentionState_eq_weightedMatrixFunctional
+#print axioms InfoGeometry.Prequantum.GNSAction.RepresentationState.act_vacuum_eq_zero_iff_null
+#print axioms InfoGeometry.Prequantum.GNSAction.RepresentationState.pullback_act_vacuum_eq_zero_iff
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.pruned_action_vacuum_not_separating
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.representationState_vacuum_cyclic
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.attentionRepresentationState_eval
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.attention_vacuum_cyclic
+#print axioms InfoGeometry.QuantumContext.AttentionGNSBridge.attention_action_vacuum_separating

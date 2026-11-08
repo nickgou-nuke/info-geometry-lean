@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.Cl55TKKGradeReversalDirectSum
+
+namespace InfoGeometry.Clifford.Cl55TKKGradeReversalDirectSumAudit
+
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeReverseIndex_involutive
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeValue_reverse
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeComponentReverse
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_lof
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_intertwines_reconstruction
+#check @InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_involutive
+#check @InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_involutive
+
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeReverseIndex_involutive
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeValue_reverse
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_lof
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_intertwines_reconstruction
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_involutive
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_involutive
+
+end InfoGeometry.Clifford.Cl55TKKGradeReversalDirectSumAudit

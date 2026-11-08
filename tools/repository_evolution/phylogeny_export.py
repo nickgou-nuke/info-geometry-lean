@@ -222,93 +222,6 @@ def load_dna(path, repository, records, included):
     return result
 
 
-def load_decl_edges(path, records, included):
-    """Load optional CommitDeclEdge JSONL as a separate carrier (DarwinCommitTaxonomy.lean:131-133, 435-468)."""
-    if path is None:
-        return None
-    by_commit = defaultdict(lambda: {
-        "exact_count": 0,
-        "cohabitation_count": 0,
-        "edges": [],
-    })
-    exact_count = 0
-    cohabitation_count = 0
-    unattached_outside_window = 0
-    with Path(path).open(encoding="utf-8") as stream:
-        for line_number, line in enumerate(stream, 1):
-            if not line.strip():
-                continue
-            try:
-                raw = json.loads(line, object_pairs_hook=unique_object)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"invalid declaration edge JSONL at line {line_number}: {exc}") from exc
-            if not isinstance(raw, dict):
-                raise ValueError(f"declaration edge at line {line_number} must be a JSON object")
-            sha = raw.get("commitHash") or raw.get("sha")
-            if sha is None and isinstance(raw.get("_from"), str) and raw["_from"].startswith("commit_nodes/"):
-                sha = raw["_from"].split("/", 1)[1]
-            if not isinstance(sha, str) or not SHA.fullmatch(sha) or sha not in records:
-                raise ValueError(f"declaration edge at line {line_number} has missing or unknown full commit SHA")
-            edge_kind = raw.get("edgeKind", "touches")
-            if edge_kind != "touches":
-                raise ValueError(f"CommitDeclEdge edgeKind must be 'touches', got {edge_kind!r}")
-            decl_key = raw.get("declKey")
-            if decl_key is None and isinstance(raw.get("_to"), str) and "/" in raw["_to"]:
-                decl_key = raw["_to"].split("/", 1)[1]
-            decl_name = raw.get("declName")
-            module_or_path = (
-                raw.get("modulePath")
-                or raw.get("declFile")
-                or raw.get("moduleName")
-                or raw.get("path")
-                or raw.get("subsystem")
-            )
-            if not (decl_name or decl_key) or not isinstance(module_or_path, str) or not module_or_path.strip():
-                raise ValueError(f"declaration edge at line {line_number} requires declName/declKey and path/module")
-            if sha not in included:
-                unattached_outside_window += 1
-                continue
-            is_exact = raw.get("exact_match") is True or raw.get("resolution") == "exact_declaration"
-            resolution = "exact_declaration" if is_exact else "habitat_cohabitation"
-            candidate_fingerprints = {
-                field: raw[field]
-                for field in ("typeFingerprint", "valueFingerprint", "declFingerprint",
-                              "canonicalTypeHash", "canonicalValueHash")
-                if raw.get(field) is not None
-            }
-            entry = {
-                "declKey": decl_key,
-                "declName": decl_name,
-                "path": module_or_path,
-                "edgeKind": "touches",
-                "resolution": resolution,
-                "exact_match": is_exact,
-            }
-            if candidate_fingerprints:
-                entry["candidateFingerprints"] = candidate_fingerprints
-                entry["identifierRole"] = "candidate_only"
-            bucket = by_commit[sha]
-            bucket["edges"].append(entry)
-            if is_exact:
-                bucket["exact_count"] += 1
-                exact_count += 1
-            else:
-                bucket["cohabitation_count"] += 1
-                cohabitation_count += 1
-    return {
-        "carrier": "CommitDeclEdge",
-        "edge_kind": "touches",
-        "non_transitive_cohabitation_note": "InfoGeometry.Graph.shared_path_not_equivalence",
-        "identifier_role": "candidate_only",
-        "edge_count": exact_count + cohabitation_count,
-        "linked_commit_count": len(by_commit),
-        "exact_count": exact_count,
-        "cohabitation_count": cohabitation_count,
-        "unattached_outside_window": unattached_outside_window,
-        "by_commit": {sha: by_commit[sha] for sha in sorted(by_commit)},
-    }
-
-
 def check_uint64(value):
     if not isinstance(value, str) or not value.isascii() or not value.isdecimal() or int(value) >= 2**64:
         raise ValueError("UInt64 fingerprints must remain decimal strings")
@@ -324,7 +237,7 @@ def expanded_edges(links):
     return edges
 
 
-def export(repo, since, until, repository, dna_path=None, decl_edges_path=None):
+def export(repo, since, until, repository, dna_path=None):
     start, stop = utc(since), utc(until)
     if stop <= start:
         raise ValueError("until must follow since")
@@ -336,7 +249,6 @@ def export(repo, since, until, repository, dna_path=None, decl_edges_path=None):
     if not included:
         raise ValueError("no reachable commits in selected UTC window")
     dna = load_dna(dna_path, repository, records, included)
-    decl_links = load_decl_edges(decl_edges_path, records, included)
     view = {row["sha"]: row for row in commits}
     children, original = defaultdict(list), Counter()
     for row in commits:
@@ -390,22 +302,16 @@ def export(repo, since, until, repository, dna_path=None, decl_edges_path=None):
         "clock_skew_edges": sum(records[parent]["time"] > records[child]["time"] for parent, child, _ in original if parent in records),
         "dna_snapshot_count": len(dna["snapshots"]),
         "visible_nodes": len(nodes), "boundary_nodes": sum(row["boundary"] for row in nodes),
-        "decl_edge_count": decl_links["edge_count"] if decl_links else 0,
-        "exact_decl_edge_count": decl_links["exact_count"] if decl_links else 0,
-        "cohabitation_decl_edge_count": decl_links["cohabitation_count"] if decl_links else 0,
     }
-    payload = {"schema": "repo-phylogeny/v2", "repository": repository,
-               "source": {"head": git(repo, "rev-parse", "HEAD").stdout.strip(), "generated_at": iso(datetime.now(timezone.utc)),
-                          "git_object_format": object_format,
-                          "refs": refs, "ignored_refs": ignored, "is_shallow": shallow,
-                          "ref_scope": "current local branches, remote-tracking branches, and commit-valued tags (reachable history only)",
-                          "reachable_commit_count": len(records),
-                          "provenance_validation": "manifest contract only; no Lean compilation"},
-               "window": {"since": iso(start), "until": iso(stop), "end_exclusive": True},
-               "stats": stats, "commits": commits, "nodes": nodes, "links": links, "dna": dna}
-    if decl_links is not None:
-        payload["declaration_links"] = decl_links
-    return payload
+    return {"schema": "repo-phylogeny/v2", "repository": repository,
+            "source": {"head": git(repo, "rev-parse", "HEAD").stdout.strip(), "generated_at": iso(datetime.now(timezone.utc)),
+                       "git_object_format": object_format,
+                       "refs": refs, "ignored_refs": ignored, "is_shallow": shallow,
+                       "ref_scope": "current local branches, remote-tracking branches, and commit-valued tags (reachable history only)",
+                       "reachable_commit_count": len(records),
+                       "provenance_validation": "manifest contract only; no Lean compilation"},
+            "window": {"since": iso(start), "until": iso(stop), "end_exclusive": True},
+            "stats": stats, "commits": commits, "nodes": nodes, "links": links, "dna": dna}
 
 
 def main():
@@ -413,10 +319,9 @@ def main():
     for flag in ("repo", "since", "until", "repository-url", "out"):
         parser.add_argument("--" + flag, required=True)
     parser.add_argument("--dna")
-    parser.add_argument("--decl-edges", help="optional CommitDeclEdge JSONL bridge (kept as a separate carrier)")
     args = parser.parse_args()
     try:
-        result = export(Path(args.repo), args.since, args.until, args.repository_url, args.dna, args.decl_edges)
+        result = export(Path(args.repo), args.since, args.until, args.repository_url, args.dna)
         target = Path(args.out)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")

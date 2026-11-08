@@ -1,0 +1,118 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Topology.KANWallpaperIsomorphism
+
+/-!
+# Exceptional-point grokking shadow
+
+This file records a theorem-safe finite/operator shadow of the slogan
+"grokking as an exceptional point".
+
+It does **not** prove that trained LLMs grok, that hallucinations are impossible,
+or that black-hole horizons, SUSY charges, and neural attention operators are
+physically identical.  It proves only the common algebraic socket used by those
+finite bridges: a Jordan exceptional-point witness carries a square-zero
+nilpotent part, and the concrete KAN wallpaper translation generator has the
+same square-zero certificate.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+`KAN_nilpotent_generator_square_zero`.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+
+`exceptionalPoint_nilpotent_part_square_zero`, `grokking_is_event_horizon`,
+and `exceptionalPoint_and_KAN_share_square_zero_socket`.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+Actual LLM grokking dynamics, hallucination behavior, non-Hermitian spectral
+flow, and physical black-hole horizons remain outside this finite/operator
+socket unless supplied by additional explicit premises.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.CognitiveTopology.Grokking
+
+open ContinuousLinearMap
+open InfoGeometry.Topology.KANWallpaper
+
+/- A continuous-linear attention-like operator at a supplied exceptional-point witness. -/
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+
+/--
+The theorem-safe exceptional-point predicate used here.
+
+`A` is represented as a Jordan block `id + N`, and the nilpotent part is
+square-zero. This is an explicit premise, not a theorem that any trained
+network reaches such a point.
+-/
+def IsExceptionalPoint (A : H →L[ℂ] H) (N : H →L[ℂ] H) : Prop :=
+  A = ContinuousLinearMap.id ℂ H + N ∧ N ∘L N = 0
+
+/-- Projection of the square-zero part from an explicit exceptional-point witness. -/
+theorem exceptionalPoint_nilpotent_part_square_zero (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    N ∘L N = 0 :=
+  h_ep.2
+
+/-- The nilpotent part is unique for the fixed affine decomposition `A = id + N`.
+
+This is additive cancellation; the square-zero hypotheses in the two
+`IsExceptionalPoint` premises are not needed for the uniqueness itself. -/
+theorem exceptionalPoint_nilpotent_part_unique
+    (A N M : H →L[ℂ] H)
+    (hN : IsExceptionalPoint A N)
+    (hM : IsExceptionalPoint A M) :
+    N = M := by
+  apply add_left_cancel (b := N) (c := M)
+  exact hN.1.symm.trans hM.1
+
+/-- The observable deviation from the identity inherits square-zero nilpotence. -/
+theorem exceptionalPoint_deviation_square_zero
+    (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    (A - ContinuousLinearMap.id ℂ H) ∘L
+        (A - ContinuousLinearMap.id ℂ H) = 0 := by
+  have hdev : A - ContinuousLinearMap.id ℂ H = N := by
+    rw [h_ep.1]
+    ext x
+    simp [sub_eq_add_neg]
+  rw [hdev]
+  exact h_ep.2
+
+/--
+Compatibility name for the finite/operator grokking socket.
+
+Read this as: an explicitly supplied exceptional-point witness has the same
+square-zero nilpotent shape used by the finite KAN horizon bridge.
+-/
+theorem grokking_is_event_horizon (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    N ∘L N = 0 :=
+  exceptionalPoint_nilpotent_part_square_zero A N h_ep
+
+/-- The KAN wallpaper nilpotent generator carries the same square-zero certificate. -/
+theorem KAN_nilpotent_generator_square_zero :
+    n * n = 0 :=
+  translation_is_nilpotent_horizon
+
+/--
+Finite socket combining the two square-zero certificates without identifying
+their carriers or claiming a physical/cognitive theorem.
+-/
+theorem exceptionalPoint_and_KAN_share_square_zero_socket (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    (N ∘L N = 0) ∧ (n * n = 0) := by
+  exact ⟨h_ep.2, translation_is_nilpotent_horizon⟩
+
+end InfoGeometry.CognitiveTopology.Grokking
+
+end noncomputable section

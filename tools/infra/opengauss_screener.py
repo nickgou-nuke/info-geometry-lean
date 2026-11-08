@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """OpenGauss / TeamAntigravity Automated Screener & Protocol Validator.
 
-Implements selected automated checks from the 17-Trap Catalog (TRAP_CATALOG.md)
+Implements automated screening against the 15-Trap Catalog (TRAP_CATALOG.md)
 and validates top-down assume-and-recurse proof invariants for Lean 4 modules.
 """
 
@@ -29,7 +29,7 @@ class TrapViolation:
     severity: str = "ERROR"  # ERROR or WARNING
 
 
-# Line-local regex patterns supplement the selected structural checks below.
+# Regular expression patterns for static screening of T1-T15 traps
 _TRAP_PATTERNS = [
     (
         "T1",
@@ -1356,12 +1356,7 @@ def _source_def_carrier_map(source: str) -> dict[str, tuple[str, str, str]]:
             if ":=" in " ".join(header):
                 break
             header.append(following)
-        # A nested coefficient such as `Matrix (Fin 2) (Fin 2) ℤ` contains
-        # another `Matrix` token.  For a declaration's result type, the
-        # operator carrier is the outer matrix, so parse that first balanced
-        # application instead of requiring the whole type to mention only one
-        # matrix carrier.
-        signature = _matrix_carrier_at(
+        signature = _matrix_carrier_signature(
             _expand_local_type_alias(source, " ".join(header).split(":=", 1)[0])
         )
         parsed = _top_level_result_type(" ".join(header))
@@ -1877,7 +1872,7 @@ def _has_resolved_import_witness(
     ]
     for module in imported_modules:
         relative = Path(*module.split("."))
-        roots = (repo_root / "src", repo_root / "lean", repo_root / "proofs")
+        roots = (repo_root / "lean", repo_root / "proofs")
         if module.startswith("proofs."):
             relative = Path(*module.removeprefix("proofs.").split("."))
             roots = (repo_root / "proofs",)
@@ -1920,7 +1915,7 @@ def _repo_import_source_closure(source: str, repo_root: Path) -> str:
     while pending:
         module = pending.pop()
         relative = Path(*module.split("."))
-        roots = (repo_root / "src", repo_root / "lean", repo_root / "proofs")
+        roots = (repo_root / "lean", repo_root / "proofs")
         if module.startswith("proofs."):
             relative = Path(*module.removeprefix("proofs.").split("."))
             roots = (repo_root / "proofs",)
@@ -2504,7 +2499,7 @@ def check_model_witnessing(
 def screen_lean_content(
     content: str, filename: str = "<unknown>", *, import_root: Path | None = None
 ) -> list[TrapViolation]:
-    """Run the available text and structural checks drawn from the 17-trap catalog."""
+    """Run the 17-trap screener on a Lean source string."""
     raw_content = content
     content = _strip_lean_comments_and_strings(content)
     violations: list[TrapViolation] = []

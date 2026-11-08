@@ -1,0 +1,37 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.FisherSouriauGroupInverse
+
+/-!
+# Axiom audit for the finite Fisher--Souriau Hessian group inverse
+-/
+
+namespace InfoGeometry.Synthesis.FisherSouriauGroupInverseAudit
+
+open InfoGeometry.Synthesis.FisherSouriauGroupInverse
+
+#check @fisherHessianGroupInverseCandidate
+#check @fisherHessian_candidate_left
+#check @fisherHessian_candidate_right
+#check @fisherHessian_groupInverse_energy_eq_centered_reciprocal_norm
+#check @fisherHessian_groupInverse_energy_nonneg
+#check @fisherHessian_groupInverse_energy_eq_zero_iff_constant
+#check @fisherSouriauHessian_groupInverse_formula
+#check @fisherSouriauHessian_candidate_eq_drazinInverse
+#check @fisherHessian_drazin_left_projector_eq_centerScores
+#check @fisherHessian_drazin_right_projector_eq_centerScores
+#check @fisherHessianEnd_eq_zero_iff_constant
+
+#print axioms fisherHessian_groupInverse_energy_eq_centered_reciprocal_norm
+#print axioms fisherHessian_groupInverse_energy_nonneg
+#print axioms fisherHessian_groupInverse_energy_eq_zero_iff_constant
+#print axioms fisherSouriauHessian_groupInverse_formula
+#print axioms fisherSouriauHessian_candidate_eq_drazinInverse
+#print axioms fisherHessian_drazin_left_projector_eq_centerScores
+#print axioms fisherHessian_drazin_right_projector_eq_centerScores
+#print axioms fisherHessianEnd_eq_zero_iff_constant
+
+end InfoGeometry.Synthesis.FisherSouriauGroupInverseAudit

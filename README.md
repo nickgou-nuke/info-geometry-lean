@@ -19,8 +19,8 @@ statements in the Lean owners, with their actual hypotheses.
 | Set up and run a scoped check | [Getting started](docs/GETTING_STARTED.md) |
 | Work as a coding or mathematical agent | [AGENTS.md](AGENTS.md), then the [canonical pipeline](docs/CANONICAL_AGENT_PIPELINE.md) |
 | Find maintained guides and historical notes | [Documentation map](docs/README.md) |
-| Explore the main Lean source | [src/InfoGeometry/](src/InfoGeometry/) and [InfoGeometry.All](src/InfoGeometry/All.lean) |
-| Trace operator-algebra owners | [OperatorAlgebra guide](src/InfoGeometry/OperatorAlgebra/README.md) and [Peirce archetype ledger](docs/PEIRCE_OPERATOR_ARCHETYPES.md) |
+| Explore the main Lean source | [lean/InfoGeometry/](lean/InfoGeometry/) and [InfoGeometry.All](lean/InfoGeometry/All.lean) |
+| Trace operator-algebra owners | [OperatorAlgebra guide](lean/InfoGeometry/OperatorAlgebra/README.md) and [Peirce archetype ledger](docs/PEIRCE_OPERATOR_ARCHETYPES.md) |
 | Search before proposing a construction | [Repository deep-search protocol](docs/REPO_DEEP_SEARCH_PROTOCOL.md) |
 
 Search definitions, imports, instances, theorem statements, and consumers before
@@ -35,16 +35,16 @@ Each linked owner supplies the precise typeclasses and hypotheses.
 
 | Area | Source-backed result | Owner |
 |---|---|---|
-| Peirce operator identities | Polynomial identities for an idempotent and arbitrary coefficients in an associative ring; A60 gives `τ₁ − τ₂ = −J − 2Σ` and `hProjSig(τ₁ − τ₂) = −16 V²Σ` | [CyclotomicBridge](src/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicBridge.lean) |
-| Five-grade parity | The grade ±1 projectors sum to the odd Peirce component; the −2, 0, +2 projectors sum to the even component | [TripotentParity](src/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentParity.lean) |
-| Chiral zero-mode restriction | Projector intertwiners from anticommutation, and an involutive linear equivalence on the kernel under the stated tripotence and involution hypotheses | [TripotentChiralRestriction](src/InfoGeometry/Core/TripotentChiralRestriction.lean) |
-| Noncommutative RPA blocks | Exact block squaring and Hadamard intertwining retaining `a*b - b*a` and both ordered products | [OperatorRPABlock](src/InfoGeometry/Physics/OperatorRPABlock.lean) |
-| Operator-weighted phonons | Mode-sum commutators with the correction terms `[Ωᵢ, X] * numberOpᵢ` retained | [NuclearPhononOperatorWeights](src/InfoGeometry/Physics/NuclearPhononOperatorWeights.lean) |
-| Matrix towers | Full-matrix algebraic direct limits, stage maps, and an induced star structure | [Cl11TensorTowerLimit](src/InfoGeometry/Clifford/Cl11TensorTowerLimit.lean) |
-| Categorical Zorn stages | A `ModuleCat ℂ` diagram and multiplication descended through its colimits | [ZornUHFColimit](src/InfoGeometry/Categorical/ZornUHFColimit.lean) |
-| Algebraic Cuntz shift | Injectivity of the existing canonical shift from a generator-level left inverse | [CuntzHoppingCantorLattice](src/InfoGeometry/NCG/CuntzHoppingCantorLattice.lean) |
-| Finite matrix Lax data | Trace cancellations and the determinant/nonzero-kernel equivalence | [LaxPairIsospectralMassGap](src/InfoGeometry/NCG/LaxPairIsospectralMassGap.lean) |
-| Split-octonion derivations | A stabilizer predicate and consequences for a parameterized derivation family | [GunaydinGurseySU3Stabilizer](src/InfoGeometry/NCG/GunaydinGurseySU3Stabilizer.lean) |
+| Peirce operator identities | Polynomial identities for an idempotent and arbitrary coefficients in an associative ring; A60 gives `τ₁ − τ₂ = −J − 2Σ` and `hProjSig(τ₁ − τ₂) = −16 V²Σ` | [CyclotomicBridge](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/CyclotomicBridge.lean) |
+| Five-grade parity | The grade ±1 projectors sum to the odd Peirce component; the −2, 0, +2 projectors sum to the even component | [TripotentParity](lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TripotentParity.lean) |
+| Chiral zero-mode restriction | Projector intertwiners from anticommutation, and an involutive linear equivalence on the kernel under the stated tripotence and involution hypotheses | [TripotentChiralRestriction](lean/InfoGeometry/Core/TripotentChiralRestriction.lean) |
+| Noncommutative RPA blocks | Exact block squaring and Hadamard intertwining retaining `a*b - b*a` and both ordered products | [OperatorRPABlock](lean/InfoGeometry/Physics/OperatorRPABlock.lean) |
+| Operator-weighted phonons | Mode-sum commutators with the correction terms `[Ωᵢ, X] * numberOpᵢ` retained | [NuclearPhononOperatorWeights](lean/InfoGeometry/Physics/NuclearPhononOperatorWeights.lean) |
+| Matrix towers | Full-matrix algebraic direct limits, stage maps, and an induced star structure | [Cl11TensorTowerLimit](lean/InfoGeometry/Clifford/Cl11TensorTowerLimit.lean) |
+| Categorical Zorn stages | A `ModuleCat ℂ` diagram and multiplication descended through its colimits | [ZornUHFColimit](lean/InfoGeometry/Categorical/ZornUHFColimit.lean) |
+| Algebraic Cuntz shift | Injectivity of the existing canonical shift from a generator-level left inverse | [CuntzHoppingCantorLattice](lean/InfoGeometry/NCG/CuntzHoppingCantorLattice.lean) |
+| Finite matrix Lax data | Trace cancellations and the determinant/nonzero-kernel equivalence | [LaxPairIsospectralMassGap](lean/InfoGeometry/NCG/LaxPairIsospectralMassGap.lean) |
+| Split-octonion derivations | A stabilizer predicate and consequences for a parameterized derivation family | [GunaydinGurseySU3Stabilizer](lean/InfoGeometry/NCG/GunaydinGurseySU3Stabilizer.lean) |
 
 For a concrete example, `OperatorRPABlock.rpa_square` retains the full operator
 commutator when squaring `[[a,b],[-b,-a]]`. Its off-diagonal square vanishes
@@ -83,7 +83,7 @@ scope of the observed source scan and baseline CI results.
 
 Use the toolchain in [lean-toolchain](lean-toolchain), the dependency revisions
 in [lake-manifest.json](lake-manifest.json), and the targets in
-[lakefile.toml](lakefile.toml). The reviewed baseline pins Lean 4.34.1.
+[lakefile.lean](lakefile.lean). The reviewed baseline pins Lean 4.34.1.
 The [getting-started guide](docs/GETTING_STARTED.md) explains local path
 dependencies and preflight checks.
 
@@ -102,30 +102,6 @@ and its build is a different coverage claim from all Lake default targets.
 Preserve build caches and pinned dependencies. Never run `lake clean` or
 delete `.lake` caches. See the [cache policy](WARNING_DO_NOT_RUN_CACHE.md) for
 the existing wrapper's empty-cache hydration behavior and recovery boundaries.
-
-## Quality Management System (QMS)
-
-Theorem-bearing work follows [docs/ALCHEMICAL_QMS_SOP.md](docs/ALCHEMICAL_QMS_SOP.md)
-(QMS-SOP-ALC-001, v4.1). The SOP enforces role separation between generation
-(G-A), audit (A-A), acceptance (QA-A), and orchestration:
-
-| Gate | Purpose | Command | Role |
-|---|---|---|---|
-| 0 | Intake — formal intent envelope | `python3 tools/qms/run_qms.py intent --task-id T --source-text "..." --risk-level R2` | G-A |
-| 1 | Owner-first search | `python3 tools/qms/run_qms.py owner-search --task-id T --artifact <file>` | G-A |
-| 2 | Generation controls | `python3 tools/qms/run_qms.py generation --task-id T --artifact <file>` | G-A |
-| 3 | Sterile compile + audit | `python3 tools/qms/run_qms.py compile --task-id T --artifact <file>` | QA-A |
-| 4 | CAPA loop | `python3 tools/qms/run_qms.py capa create --task-id T --finding "..."` | Orchestrator |
-| 5 | Acceptance | `python3 tools/qms/run_qms.py accept --task-id T --artifact <file> --verdict ACCEPTED` | QA-A |
-| — | Quick gate | `python3 tools/qms/run_qms.py quick-gate --task-id T` | QA-A |
-
-QMS artifacts are written to `artifacts/qms/<task-id>-{intent_envelope,audit_report,qa}.json`
-and `artifacts/qms/capa/`. No new network dependencies are introduced; all QMS
-tooling is repo-owned under `tools/qms/`.
-
-Permitted foundational axioms are `propext`, `Classical.choice`, and
-`Quot.sound`. Do not introduce `sorry`, `admit`, custom axioms, `native_decide`,
-or vacuous wrappers to obtain acceptance.
 
 ## Graphs and optional research tooling
 

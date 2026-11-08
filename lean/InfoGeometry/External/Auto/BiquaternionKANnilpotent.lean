@@ -1,0 +1,2 @@
+import InfoGeometry.Canonical.BiquaternionKANnilpotent
+import InfoGeometry.Algebra.FiniteSpinAlgebra

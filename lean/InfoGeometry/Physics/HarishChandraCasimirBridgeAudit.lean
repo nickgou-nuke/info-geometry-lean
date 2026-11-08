@@ -1,0 +1,5 @@
+import InfoGeometry.Physics.HarishChandraCasimirBridge
+
+open InfoGeometry.Physics.HarishChandraCasimir
+
+#print axioms certified_harish_chandra_casimir_synthesis

@@ -1,0 +1,18 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovPartitionLumping
+
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.partitionIncidence_mulVec
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.partitionIncidence_row_sum
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.partitionIncidence_nonneg
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.mul_partitionIncidence_apply
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.partitionIncidence_mul_apply
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.partitionIntertwining_iff_blockSum
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.partitionLumping_surjective
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.pushforwardStationaryRow_sum
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.pushforwardStationaryRow_stationary
+#print axioms InfoGeometry.QuantumContext.MarkovPartitionLumping.groupInverse_intertwines_of_partitionLumping

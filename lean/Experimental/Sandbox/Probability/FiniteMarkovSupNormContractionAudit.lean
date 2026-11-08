@@ -1,0 +1,8 @@
+import Experimental.Sandbox.Probability.FiniteMarkovSupNormContraction
+
+namespace InfoGeometry.Experimental.Probability.FiniteMarkovSupNorm.Audit
+
+#check InfoGeometry.Experimental.Probability.FiniteMarkovSupNorm.mulVec_abs_le_of_coordinate_bound
+#print axioms InfoGeometry.Experimental.Probability.FiniteMarkovSupNorm.mulVec_abs_le_of_coordinate_bound
+
+end InfoGeometry.Experimental.Probability.FiniteMarkovSupNorm.Audit

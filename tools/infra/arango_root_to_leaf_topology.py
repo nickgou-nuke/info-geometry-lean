@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -45,99 +44,42 @@ def arango_target(repo_root: Path) -> ArangoTarget:
     )
 
 
-def check_and_refresh_stale_arango(target: ArangoTarget, repo_root: Path) -> tuple[str, str]:
-    """Select the current content-addressed generation, creating it if absent."""
-    print("🔄 Resolving the current immutable Arango declaration generation...")
-    cmd = [
-        sys.executable,
-        str(repo_root / "tools/infra/refresh_decl_graph.py"),
-        "--stream",
-        "--run-mode", "exe",
-        "--import-root", "InfoGeometry.All",
-        "--namespace", "InfoGeometry",
-        "--arango-db", arango_database(),
-    ]
-    proc = subprocess.run(cmd, cwd=repo_root, text=True, capture_output=True)
-    if proc.stdout:
-        print(proc.stdout, end="")
-    if proc.stderr:
-        print(proc.stderr, file=sys.stderr, end="")
-    match = re.search(r"immutable generation: ([A-Za-z0-9_-]+)", proc.stdout)
-    if proc.returncode not in (0, 2) or match is None:
-        raise RuntimeError("immutable declaration graph stream failed or did not report its generation ID")
-    generation_id = match.group(1)
-    receipts = run_aql(
-        target,
-        "FOR g IN decl_graph_generations FILTER g._key == @id && g.status == 'complete' RETURN g",
-        {"id": generation_id},
-    )
-    if not receipts:
-        raise RuntimeError(f"declaration graph generation {generation_id} has no complete receipt")
-    receipt = receipts[0]
-    if receipt.get("importRoot") != "InfoGeometry.All" or receipt.get("namespace") != "InfoGeometry":
-        raise RuntimeError(f"declaration graph generation {generation_id} has an unexpected import scope")
-    if receipt.get("declarationCount", 0) <= 0 or receipt.get("validEdgeCount") != receipt.get("emittedEdgeCount"):
-        raise RuntimeError(f"declaration graph generation {generation_id} failed count validation")
-    decl_collection = receipt.get("declCollection")
-    edge_collection = receipt.get("edgeCollection")
-    if not decl_collection or not edge_collection:
-        raise RuntimeError(f"declaration graph generation {generation_id} has incomplete collection metadata")
-    print(f"✅ Using completed declaration graph generation {generation_id}.")
-    return decl_collection, edge_collection
+def check_and_refresh_stale_arango(target: ArangoTarget, repo_root: Path) -> None:
+    """Checks if ArangoDB decls/edges are empty or stale and refreshes them if needed."""
+    try:
+        decl_count = run_aql(target, "RETURN LENGTH(decls)")[0]
+    except Exception:
+        decl_count = 0
+
+    if decl_count < 1000:
+        print("⚠️ ArangoDB graph is empty or stale. Running canonical streaming graph refresh...")
+        cmd = [
+            sys.executable,
+            str(repo_root / "tools/infra/refresh_decl_graph.py"),
+            "--stream",
+            "--run-mode", "exe",
+            "--skip-prebuild",
+            "--import-root", "InfoGeometry.All",
+            "--namespace", "InfoGeometry",
+            "--arango-db", arango_database(),
+        ]
+        subprocess.run(cmd, cwd=repo_root, check=True)
+        print("✅ Graph streaming refresh complete.")
 
 
-def duplicate_candidate_query() -> str:
-    """Group only matching type/value pairs within one fingerprint version.
-
-    These remain source-review candidates, not equivalence classes. In
-    particular, open-term digests cannot establish a closed declaration match.
-    """
-    return f"""
-    FOR d IN @@decls
-      LET hasDigests = d.typeDigest.algorithmVersion == "{TERM_DIGEST_VERSION}"
-          AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}"
-      LET closedDigests = hasDigests AND d.typeDigest.openTerm == false
-          AND d.valueDigest.openTerm == false
-      LET legacyPair = !hasDigests
-          AND d.typeFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}"
-          AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}"
-      FILTER closedDigests OR legacyPair
-      LET version = closedDigests ? "{TERM_DIGEST_VERSION}" : "{STRUCTURAL_FINGERPRINT_VERSION}"
-      LET typeHash = closedDigests ? d.typeDigest.digest : d.canonicalTypeHash
-      LET valueHash = closedDigests ? d.valueDigest.digest : d.canonicalValueHash
-      FILTER typeHash != null AND valueHash != null
-      COLLECT algorithmVersion = version, typeFingerprint = typeHash,
-              valueFingerprint = valueHash INTO members
-      FILTER LENGTH(members) > 1
-      SORT LENGTH(members) DESC, algorithmVersion, typeFingerprint, valueFingerprint
-      LIMIT 20
-      RETURN {{
-        algorithmVersion, typeFingerprint, valueFingerprint,
-        count: LENGTH(members),
-        declarations: SORTED(members[*].d.name)
-      }}
-    """
-
-
-def compute_root_leaf_topology(
-    target: ArangoTarget,
-    sample_limit: int = 100,
-    decl_collection: str = "decls",
-    edge_collection: str = "edges",
-) -> dict[str, Any]:
+def compute_root_leaf_topology(target: ArangoTarget, sample_limit: int = 100) -> dict[str, Any]:
     print("🔍 Analyzing ArangoDB declaration graph roots and leaves...")
-
-    collection_bindings = {"@decls": decl_collection, "@edges": edge_collection}
-    total_decls = run_aql(target, "RETURN LENGTH(@@decls)", {"@decls": decl_collection})[0]
-    total_edges = run_aql(target, "RETURN LENGTH(@@edges)", {"@edges": edge_collection})[0]
-
+    
+    total_decls = run_aql(target, "RETURN LENGTH(decls)")[0]
+    total_edges = run_aql(target, "RETURN LENGTH(edges)")[0]
+    
     print(f"📊 Total Graph Size: {total_decls} vertices, {total_edges} edges")
 
     # Find Root Declarations (out-degree 0 in dependency graph: base definitions & primitives)
     roots_query = """
-    FOR d IN @@decls
+    FOR d IN decls
       LET out_edges = (
-        FOR e IN @@edges
+        FOR e IN edges
           FILTER e._from == d._id
           LIMIT 1
           RETURN 1
@@ -146,13 +88,13 @@ def compute_root_leaf_topology(
       LIMIT @limit
       RETURN {name: d.name, kind: d.kind, module: d.module, id: d._id}
     """
-    roots = run_aql(target, roots_query, {**collection_bindings, "limit": sample_limit})
+    roots = run_aql(target, roots_query, {"limit": sample_limit})
     
     # Find Leaf Declarations (in-degree 0 in dependency graph: top-level capstone theorems)
     leaves_query = """
-    FOR d IN @@decls
+    FOR d IN decls
       LET in_edges = (
-        FOR e IN @@edges
+        FOR e IN edges
           FILTER e._to == d._id
           LIMIT 1
           RETURN 1
@@ -161,7 +103,7 @@ def compute_root_leaf_topology(
       LIMIT @limit
       RETURN {name: d.name, kind: d.kind, module: d.module, id: d._id}
     """
-    leaves = run_aql(target, leaves_query, {**collection_bindings, "limit": sample_limit})
+    leaves = run_aql(target, leaves_query, {"limit": sample_limit})
 
     # Interconnect: Trace conductive paths from sample leaves down to foundational roots
     print("⚡ Tracing conductive paths down to roots and up to leaves...")
@@ -169,7 +111,7 @@ def compute_root_leaf_topology(
     if leaves:
         sample_leaf = leaves[0]
         path_query = """
-        FOR v, e, p IN 1..4 OUTBOUND @start_id @@edges
+        FOR v, e, p IN 1..4 OUTBOUND @start_id edges
           LIMIT 20
           RETURN {
             path_length: LENGTH(p.edges),
@@ -180,17 +122,29 @@ def compute_root_leaf_topology(
         leaf_root_paths = run_aql(target, path_query, {
             "start_id": sample_leaf["id"],
             "leaf_name": sample_leaf["name"],
-            "@edges": edge_collection,
         })
 
-    conductive_wires = run_aql(target, duplicate_candidate_query(), {"@decls": decl_collection})
+    # Find frequent value-hash candidate groups (not equivalence classes).
+    wires_query = f"""
+    FOR d IN decls
+      FILTER (d.valueDigest != null AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}")
+          OR (d.valueFingerprint != null AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}")
+      COLLECT hash = (d.valueDigest.digest || d.canonicalValueHash) INTO members
+      FILTER hash != null AND LENGTH(members) > 1
+      SORT LENGTH(members) DESC
+      LIMIT 20
+      RETURN {{
+        canonicalValueHash: hash,
+        count: LENGTH(members),
+        declarations: members[*].d.name
+      }}
+    """
+    conductive_wires = run_aql(target, wires_query)
 
     report = {
         "summary": {
             "total_declarations": total_decls,
             "total_edges": total_edges,
-            "declaration_collection": decl_collection,
-            "edge_collection": edge_collection,
             "sampled_roots_count": len(roots),
             "sampled_leaves_count": len(leaves),
             "conductive_wire_clusters": len(conductive_wires),
@@ -213,14 +167,9 @@ def main() -> None:
     repo_root = Path(__file__).resolve().parents[2]
     target = arango_target(repo_root)
 
-    decl_collection, edge_collection = check_and_refresh_stale_arango(target, repo_root)
+    check_and_refresh_stale_arango(target, repo_root)
 
-    report = compute_root_leaf_topology(
-        target,
-        sample_limit=args.sample_limit,
-        decl_collection=decl_collection,
-        edge_collection=edge_collection,
-    )
+    report = compute_root_leaf_topology(target, sample_limit=args.sample_limit)
 
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2))

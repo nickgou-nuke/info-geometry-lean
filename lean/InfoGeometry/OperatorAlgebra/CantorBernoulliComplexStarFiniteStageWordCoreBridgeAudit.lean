@@ -1,0 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.OperatorAlgebra.CantorBernoulliComplexStarFiniteStageWordCoreBridge
+
+#print axioms InfoGeometry.OperatorAlgebra.CantorBernoulliComplexStarFiniteStageWordCoreBridge.WordCore
+#print axioms InfoGeometry.OperatorAlgebra.CantorBernoulliComplexStarFiniteStageWordCoreBridge.wordCoreFiniteStageElement
+#print axioms InfoGeometry.OperatorAlgebra.CantorBernoulliComplexStarFiniteStageWordCoreBridge.phi0_wordCoreFiniteStageElement_eq_complexStarFiniteStageTrace

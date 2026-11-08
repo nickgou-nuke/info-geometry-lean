@@ -73,7 +73,7 @@ Inspect running compiler processes before validation. Serialize build, test,
 and compilation commands. Use the maintained wrappers:
 
 ```bash
-python3 tools/infra/run_locked_lean.py src/InfoGeometry/Path/To/File.lean
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/To/File.lean
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
 
@@ -151,36 +151,6 @@ needed, such as `Finsupp.single (i, j) (1 : R)`, and use `noncomputable` when
 required by the chosen construction. Keep Arnold relations, BCFW recursion,
 Klein-quadric decomposability, operator nilpotency, and Bost–Connes partition
 functions distinct unless an explicit map and theorem relate them.
-
-## Quality Management System (QMS)
-
-Theorem-bearing work follows [docs/ALCHEMICAL_QMS_SOP.md](docs/ALCHEMICAL_QMS_SOP.md)
-(QMS-SOP-ALC-001, v4.1). The SOP enforces role separation:
-
-- **G-A (Generation Agent)** — ingests latent bundles, writes candidate code/task packets. Forbidden from declaring acceptance or reviewing its own work as final authority.
-- **A-A (Audit Agent)** — independently reads generated artifacts, classifies gaps (G1–G5), recommends CAPA. Forbidden from authoring the artifact under audit or accepting delivery.
-- **QA-A (Acceptance Quality Agent)** — runs final compile/build/audit gates, accepts or rejects delivery. Forbidden from writing new theorem content for the artifact under acceptance.
-- **Orchestrator** — routes work and records status. Cannot use its own coordination notes as proof authority.
-
-The process map (Stage 0–7) maps to Gates 0–5:
-
-| Stage | Gate | Command | Role |
-|---|---|---|---|
-| 0 Intake | Gate 0 | `python3 tools/qms/run_qms.py intent --task-id T --source-text "..." --risk-level R2 ...` | G-A |
-| 1 Owner search | Gate 1 | `python3 tools/qms/run_qms.py owner-search --task-id T --artifact src/InfoGeometry/...` | G-A |
-| 2 Generation controls | Gate 2 | `python3 tools/qms/run_qms.py generation --task-id T --artifact src/InfoGeometry/...` | G-A |
-| 3 Sterile compile + audit | Gate 3 | `python3 tools/qms/run_qms.py compile --task-id T --artifact src/InfoGeometry/...` | QA-A |
-| 5 Acceptance | Gate 5 | `python3 tools/qms/run_qms.py accept --task-id T --artifact src/InfoGeometry/... --verdict ACCEPTED ...` | QA-A |
-| — | Quick gate (SOP §18) | `python3 tools/qms/run_qms.py quick-gate --task-id T` | QA-A |
-
-Artifacts are written to `artifacts/qms/<task-id>-{intent_envelope,audit_report,qa}.json` and `artifacts/qms/capa/`.
-
-Do not introduce `sorry`, `admit`, custom axioms, `native_decide`, unsafe proof
-bypasses, or vacuous wrappers to obtain acceptance. Audit declaration axiom
-dependencies; permitted foundational axioms are `propext`, `Classical.choice`,
-and `Quot.sound`. A clean text scan, a successful compilation, and a semantic
-review are different checks. Report each at its actual scope. These are
-acceptance requirements, not a claim that every tracked historical file passes.
 
 End a task with the changed files, exact validation commands and results,
 proved or observed scope, and unresolved issues. Do not turn an old report or

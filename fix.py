@@ -1,0 +1,8 @@
+content = open('test_quantum_plane.lean').read()
+content = content.replace('assoc ((delta_d', 'TensorProduct.assoc ((delta_d')
+content = content.replace('assoc ((delta_K', 'TensorProduct.assoc ((delta_K')
+content = content.replace('lid (TensorProduct.map', 'TensorProduct.lid (TensorProduct.map')
+content = content.replace('rid (TensorProduct.map', 'TensorProduct.rid (TensorProduct.map')
+content = content.replace("lmul' R", "LinearMap.mul' R A")
+content = content.replace("lmul'_apply_tmul", "LinearMap.mul'_apply")
+open('test_quantum_plane.lean', 'w').write(content)

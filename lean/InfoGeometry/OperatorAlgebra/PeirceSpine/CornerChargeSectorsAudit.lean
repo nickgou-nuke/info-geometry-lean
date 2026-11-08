@@ -1,0 +1,9 @@
+import InfoGeometry.OperatorAlgebra.PeirceSpine.CornerChargeSectors
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+#print axioms plus_sandwich_mem_sector
+#print axioms minus_sandwich_mem_sector
+#print axioms plus_lie_mem_sector
+#print axioms minus_lie_mem_sector
+#print axioms cross_transport_mem_sector
+#print axioms opposite_lie_comm
+#print axioms sigma_lie_mem_sector

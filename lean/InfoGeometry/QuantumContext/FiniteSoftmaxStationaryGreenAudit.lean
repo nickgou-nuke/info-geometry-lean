@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.FiniteSoftmaxStationaryGreen
+
+/-!
+# Kernel axiom audit for finite softmax stationary weights and Green reciprocity
+-/
+
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.existsUnique_softmax_stationary_row
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionMass_pos
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_pos
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_sum
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_mul_kernel
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_stationary
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_detailedBalance
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_is_stationary
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_unique
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttention_poisson_solvable_iff_weightedMean_zero
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttention_poisson_solution_of_weightedMean_zero
+#print axioms InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.exists_softmax_groupInverse_green_reciprocity

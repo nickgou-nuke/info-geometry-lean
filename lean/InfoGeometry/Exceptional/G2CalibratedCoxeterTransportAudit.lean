@@ -1,0 +1,13 @@
+import InfoGeometry.Exceptional.G2CalibratedCoxeterTransport
+import InfoGeometry.Algebra.Zorn.G2CyclotomicActionObstruction
+
+open InfoGeometry.Exceptional.G2CalibratedCoxeterTransport
+open InfoGeometry.Algebra.Zorn.G2CyclotomicSignedRootBridge
+
+#print axioms InfoGeometry.Algebra.Zorn.G2CyclotomicActionObstruction.no_dihedral_equivariance_for_s1
+#print axioms signedRootCyclotomicEquiv_s1
+#print axioms signedRootCyclotomicEquiv_s2
+#print axioms InfoGeometry.Exceptional.G2CyclotomicCoxeterLift.cyclotomicReflectionGenerators_isLiftable
+#print axioms calibratedCoordinateAction_equivariant
+#print axioms calibratedCoordinateAction_simple_zero
+#print axioms calibratedCoordinateAction_simple_one

@@ -282,7 +282,7 @@ def imported_source_index_mismatches(
     while pending:
         module = pending.pop()
         relative = Path(*module.split("."))
-        roots = (repo_root / "src", repo_root / "lean", repo_root / "proofs")
+        roots = (repo_root / "lean", repo_root / "proofs")
         if module.startswith("proofs."):
             relative = Path(*module.removeprefix("proofs.").split("."))
             roots = (repo_root / "proofs",)
@@ -353,7 +353,7 @@ def materialize_indexed_imports(
     while pending:
         module = pending.pop()
         relative = Path(*module.split("."))
-        roots = (Path("src"), Path("lean"), Path("proofs"))
+        roots = (Path("lean"), Path("proofs"))
         if module.startswith("proofs."):
             relative = Path(*module.removeprefix("proofs.").split("."))
             roots = (Path("proofs"),)

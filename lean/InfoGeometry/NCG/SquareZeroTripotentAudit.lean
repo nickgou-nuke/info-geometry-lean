@@ -1,0 +1,48 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.NCG.SquareZeroMatrixPair
+import InfoGeometry.NCG.TripotentMatrixResolvent
+
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.sum_sq
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.difference_sq
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.difference_mul_sum
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.sum_mul_difference
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.sum_difference_anticommute
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_mul_sum
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_anticommutes_sum
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_anticommutes_difference
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_commutator_sum
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_mul_difference
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.anticommutator_commutes_sum
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.anticommutator_commutes_difference
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_sq
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.sum_cube
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.sum_cube_of_reflexive
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.difference_cube_of_reflexive
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_cube_of_reflexive
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_mul_sum_of_reflexive
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.commutator_mul_difference_of_reflexive
+#print axioms InfoGeometry.NCG.SquareZeroMatrixPair.corner_sum_cube
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.self_drazin
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.square_idempotent
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.complement_idempotent
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.complement_mul
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.mul_complement
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.completion_sq
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.completion_isUnit
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.self_moorePenrose_iff
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.self_moorePenrose_of_isSelfAdjoint
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.completion_mem_unitary
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.complement_mulVec_eq_self_iff
+#print axioms InfoGeometry.NCG.TripotentMatrixGeometry.range_complement_eq_ker
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.shift_product_split
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.numerator_left
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.numerator_right
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.resolventPolynomial
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.shift_mul_resolvent
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.resolvent_mul_shift
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.shift_inv
+#print axioms InfoGeometry.NCG.TripotentMatrixResolvent.shift_isUnit

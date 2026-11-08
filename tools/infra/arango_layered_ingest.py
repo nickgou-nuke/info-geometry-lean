@@ -46,8 +46,6 @@ class CollectionSpec:
     edge: bool
     vertex_collection: str | None = None
     overlay_collection: str | None = None
-    source_vertex_collection: str | None = None
-    source_overlay_collection: str | None = "topology_overlay"
 
 
 @dataclass(frozen=True)
@@ -134,37 +132,24 @@ def dag_decl_key(name: Any) -> str:
     return _shared_decl_key(str(name))
 
 
-def rewrite_endpoint(
-    endpoint: Any,
-    *,
-    raw_collection: str | None,
-    overlay_collection: str | None,
-    row: dict[str, Any],
-    endpoint_type: str | None = None,
-    source_vertex_collection: str | None = None,
-    source_overlay_collection: str | None = "topology_overlay",
-) -> Any:
+def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_collection: str | None, row: dict[str, Any], endpoint_type: str | None = None) -> Any:
     if not isinstance(endpoint, str):
         return endpoint
-    source_owner, separator, raw_key = endpoint.partition("/")
-    known_source_vertices = {"ig_nodes", "raw_info_nodes"}
-    if source_vertex_collection:
-        known_source_vertices.add(source_vertex_collection)
-    if raw_collection and separator and source_owner in known_source_vertices:
-        if row.get("endpoint_keys_resolved") is True:
-            return f"{raw_collection}/{raw_key}"
+    if raw_collection and (endpoint.startswith("ig_nodes/") or endpoint.startswith("raw_info_nodes/")):
+        raw_key = endpoint.split("/", 1)[1]
         if raw_key.startswith(("raw_", "d_")):
             return f"{raw_collection}/{raw_key}"
-        # Named metadata must not override an explicit persisted endpoint key.
-        # Only legacy addresses that encode a declaration name are hashed.
-        if raw_key.startswith("InfoGeometry."):
-            return f"{raw_collection}/{dag_decl_key(raw_key)}"
+        decl_name = None
+        if endpoint_type == "from":
+            decl_name = row.get("src")
+        elif endpoint_type == "to":
+            decl_name = row.get("dst")
+        if not decl_name:
+            decl_name = row.get("member_key") or row.get("src") or row.get("dst") or raw_key
+        if raw_key.startswith("InfoGeometry.") or str(decl_name).startswith("InfoGeometry."):
+            return f"{raw_collection}/{dag_decl_key(decl_name)}"
         return f"{raw_collection}/{raw_key}"
-    if (
-        overlay_collection
-        and source_overlay_collection
-        and endpoint.startswith(f"{source_overlay_collection}/")
-    ):
+    if overlay_collection and endpoint.startswith("topology_overlay/"):
         return f"{overlay_collection}/{endpoint.split('/', 1)[1]}"
     return endpoint
 
@@ -200,8 +185,6 @@ def iter_jsonl(path: Path, spec: CollectionSpec | None = None) -> Iterable[dict[
                 overlay_collection=spec.overlay_collection,
                 row=row,
                 endpoint_type="from",
-                source_vertex_collection=spec.source_vertex_collection,
-                source_overlay_collection=spec.source_overlay_collection,
             )
             row["_to"] = rewrite_endpoint(
                 row.get("_to"),
@@ -209,8 +192,6 @@ def iter_jsonl(path: Path, spec: CollectionSpec | None = None) -> Iterable[dict[
                 overlay_collection=spec.overlay_collection,
                 row=row,
                 endpoint_type="to",
-                source_vertex_collection=spec.source_vertex_collection,
-                source_overlay_collection=spec.source_overlay_collection,
             )
         yield row
 
@@ -297,11 +278,9 @@ def main() -> int:
     parser.add_argument("--password", default=arango_password("alexandria_root"))
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--raw-nodes-collection", default="ig_nodes")
-    parser.add_argument("--source-raw-nodes-collection", default="ig_nodes")
     parser.add_argument("--raw-edges-collection", default="ig_edges")
     parser.add_argument("--overlay-nodes-collection", default="topology_overlay")
     parser.add_argument("--overlay-edges-collection", default="topology_overlay_edges")
-    parser.add_argument("--source-overlay-nodes-collection", default="topology_overlay")
     parser.add_argument("--drop-existing", action="store_true")
     parser.add_argument("--batch-size", type=int, default=5000)
     parser.add_argument("--json-out", type=Path)
@@ -331,7 +310,6 @@ def main() -> int:
             raw_edges_file,
             True,
             vertex_collection=str(args.raw_nodes_collection),
-            source_vertex_collection=str(args.source_raw_nodes_collection),
         ),
         CollectionSpec(str(args.overlay_nodes_collection), input_dir / "topology_overlay_nodes.jsonl", False),
         CollectionSpec(
@@ -340,17 +318,9 @@ def main() -> int:
             True,
             vertex_collection=str(args.raw_nodes_collection),
             overlay_collection=str(args.overlay_nodes_collection),
-            source_vertex_collection=str(args.source_raw_nodes_collection),
-            source_overlay_collection=str(args.source_overlay_nodes_collection),
         ),
         CollectionSpec("ig_chiral_patches", input_dir / "ig_chiral_patches.jsonl", False),
-        CollectionSpec(
-            "ig_patch_members",
-            input_dir / "ig_patch_members.jsonl",
-            True,
-            vertex_collection=str(args.raw_nodes_collection),
-            source_vertex_collection=str(args.source_raw_nodes_collection),
-        ),
+        CollectionSpec("ig_patch_members", input_dir / "ig_patch_members.jsonl", True, vertex_collection=str(args.raw_nodes_collection)),
     ]
 
     # Filter out missing optional specs

@@ -1,0 +1,22 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovReversibleStationaryProjector
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedSkew_mulVec_one_eq_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMeanMap_mulVec_eq_zero_of_weightedSkew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedSkew_leftAction_annihilates_stationaryProjector
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.leftAction_commutes_markovGroupInverse
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.uniformPositiveTransition_rowStochastic
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.uniformPositiveTransition_entrywise_positive
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.uniformStationaryWeight_normalized
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.uniformStationaryWeight_stationary
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.cyclicSkewAction_weighted_skew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.cyclicSkewAction_commutes_uniformPositiveTransition
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.cyclicSkewAction_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.cyclicSkewAction_leftAction_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.fullMatrixCarrier_noncommutative_witness
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.exists_uniformMarkov_stationary_annihilation

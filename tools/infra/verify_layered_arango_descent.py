@@ -35,11 +35,6 @@ def aql(args: argparse.Namespace, query: str, bind_vars: dict[str, Any] | None =
     return execute_aql(target, query, bind_vars, timeout=30)
 
 
-def scc_witness_role(src_scc: int, dst_scc: int) -> str:
-    """Select internal evidence for same-component edges, quotient arcs otherwise."""
-    return "scc_internal" if src_scc == dst_scc else "scc_quotient"
-
-
 def main() -> int:
     load_repo_arango_env()
     parser = argparse.ArgumentParser(description=__doc__)
@@ -96,21 +91,16 @@ def main() -> int:
         args,
         """
         FOR q IN topology_overlay_edges
-          FILTER q.role == @role
+          FILTER q.role == "scc_quotient"
           FILTER q.src_scc == @src_scc && q.dst_scc == @dst_scc && q.kind == @kind
           LIMIT 1
           RETURN q
         """,
-        {
-            "role": scc_witness_role(src_scc, dst_scc),
-            "src_scc": src_scc,
-            "dst_scc": dst_scc,
-            "kind": edge["kind"],
-        },
+        {"src_scc": src_scc, "dst_scc": dst_scc, "kind": edge["kind"]},
     )
     if not quotients:
         raise SystemExit(
-            f"missing {scc_witness_role(src_scc, dst_scc)} edge for "
+            "missing scc_quotient edge for "
             f"src_scc={src_scc} dst_scc={dst_scc} kind={edge['kind']}"
         )
     quotient = quotients[0]
@@ -152,9 +142,8 @@ def main() -> int:
         "member_of_scc_to": membership["_to"],
         "target_member_of_scc_edge": target_membership["_key"],
         "target_member_of_scc_to": target_membership["_to"],
-        "scc_witness_edge": quotient["_key"],
-        "scc_witness_role": quotient["role"],
-        "scc_witness_multiplicity": quotient["multiplicity"],
+        "quotient_edge": quotient["_key"],
+        "quotient_multiplicity": quotient["multiplicity"],
         "raw_witness_query_count": witness_count,
         "witness_count_matches_multiplicity": ok,
     }
@@ -167,8 +156,7 @@ def main() -> int:
             else "LAYERED_ARANGO_DESCENT_FAILED",
             report["raw_edge_key"],
             report["member_of_scc_edge"],
-            report["scc_witness_edge"],
-            report["scc_witness_role"],
+            report["quotient_edge"],
             f"witnesses={witness_count}",
         )
     return 0 if ok else 2

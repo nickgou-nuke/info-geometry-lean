@@ -153,27 +153,10 @@ Important distinction:
 ```text
 LeanSearch local = deterministic records from local DAG artifacts.
 Loogle = theorem search service/index, including external indexed libraries.
-Auto Ontology (port 3001 REST / port 3003 MCP) = queryable Term + Relationship ontology over the 306,503 InfoGeometry declarations and Lean→Lean dependency edges.
 ```
 
 Use filters when Loogle/external refs are included; do not mix Loogle hits with
 repo-owned owner theorem claims.
-
-For the live Auto Ontology service (configured in `.mcp.json` as
-`nvidia-auto-ontology` at `http://localhost:3003/mcp`, with OAuth-protected MCP
-tools `search_terms`/`get_term`/`check_answerable` and unauthenticated local
-read-only REST endpoints at `http://localhost:3001`), query terms and
-Lean→Lean dependency edges via:
-
-```bash
-curl -s "http://localhost:3001/api/terms?query=Krein&limit=5"
-curl -s "http://localhost:3001/api/terms?query=InfoGeometry&limit=1"
-curl -s "http://localhost:3001/api/terms/relationships?dst=InfoGeometry.Algebra.Clifford.IsKreinInvolution&limit=5"
-```
-
-See `docs/ASTAQLHASH-HOWTO.md` ("Auto Ontology Layer") for combining port-3001
-ontology term/relationship lookups with port-8530 ArangoDB `canonicalTypeHash` /
-`canonicalValueHash` / `dagShapeHash` queries.
 
 ### 3. Text/Literature GraphRAG Brain
 

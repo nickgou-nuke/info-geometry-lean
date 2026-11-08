@@ -1,0 +1,13 @@
+import InfoGeometry.Physics.KreinBRSTGhostConfinement
+
+namespace InfoGeometry.Physics.KreinBRSTGhostConfinement.Audit
+
+#print axioms brst_squared_annihilation
+#print axioms brst_exact_is_closed
+#print axioms brst_ghost_charge_collapse_skew
+#print axioms brst_ghost_charge_collapse_self_adjoint
+#print axioms brst_physical_ghost_decoupling_skew
+#print axioms brst_physical_ghost_decoupling_self_adjoint
+#print axioms certified_krein_brst_ghost_confinement_synthesis
+
+end InfoGeometry.Physics.KreinBRSTGhostConfinement.Audit

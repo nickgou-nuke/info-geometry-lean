@@ -124,49 +124,11 @@ records `math_expression_count`. Counts for the five current source snapshots
 | `1SSh9Kruyv8BNCpXiC5g0he9V4e7j_4Dr` | 365 | 6446 |
 | `1xHyRdU-TU8mjwZzKRRrzTAdvk8nPm7Or` | 311 | 5310 |
 | `1YHHorO` (browser scroll extraction) | 93 | 170 |
-| `1CaBH05LizVILxiiJgBBULCbS-tkN0HdX` (2026-11-04) | 1 | 62 |
-| `1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA` (2026-11-04) | 63 | 2087 |
 
 These are occurrence counts, not counts of distinct theorems. Mathematical
 prose and code remain in the full transcript and fence indexes; the equation
 index alone is not a complete mathematical claim inventory. The scroll
 extraction has a different provenance from the Drive JSON downloads.
-
-## Additional exports: `1CaBH05LizVILxiiJgBBULCbS-tkN0HdX` and `1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA` (2026-11-04)
-
-On 2026-11-04, the two public Google Drive / AI Studio artifacts supplied in
-the `/goal` prompt were fetched directly via
-`https://drive.google.com/uc?export=download&id=<ID>` and indexed:
-
-1. **`1CaBH05LizVILxiiJgBBULCbS-tkN0HdX`**:
-   - Preserved at `cached/aistudio_prompt_1CaBH05LizVILxiiJgBBULCbS-tkN0HdX.json`
-     and `cached/download_1CaBH05LizVILxiiJgBBULCbS-tkN0HdX.md` (`27,300` bytes;
-     SHA-256 `df99abfe39557143d2e9d03904d3c86066aa7a96858c14b1f97b6eab93f9049b`).
-   - Contains **Archetype XVIII (`TwistorAmplituhedronZornBaryon`)**, bridging
-     $4 \times 4$ real twistor / amplituhedron Plücker coordinates in `Mat4 R`
-     with the 3-quark Zorn baryon determinant in `ZornMatrix R`, now formalized
-     and kernel-checked in
-     [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean)
-     (`noncommutative_mat4_plucker_hodge_and_nambu_klein_anomaly`,
-     `klein_quadric_and_zorn_nilpotency_of_twistor_lines`,
-     `amplituhedron_4bracket_eq_zorn_plucker_anticommutator_and_baryon`).
-2. **`1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA`** (`userId`: `108823602022255146798`):
-   - Preserved at `cached/aistudio_prompt_1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA.json`
-     (`955,518` bytes; SHA-256
-     `aea30550c18e44851256e2e1fa2b1408102f7226b7c90d933655933d5bea5263`;
-     63 ordered chunks: 23 `user`, 40 `model`; first timestamp
-     `2026-11-03T13:49:39.664Z`, last timestamp `2026-11-04T18:38:44.827Z`;
-     `2,087` extracted math expressions; 6 tagged Lean fences) and indexed under
-     `cached/aistudio_extracts/aistudio_prompt_1iLTmbxfiVRM8rOhwchpAcmLD3r1zL4JA/`.
-   - Formalized in
-     [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ChiralLorentzTwistorCartanUncertaintyPoset.lean)
-     (`nilpotent_first_orthogonal_projector_and_dirac_metric_reconstruction`,
-     `elie_cartan_supergravity_macdowell_mansouri_and_bianchi_closure`,
-     `order3_nilpotent_flag_projector_reconstruction`),
-     [`lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean`](../lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ZornNambuDeRhamDiracKahlerPoset.lean),
-     and coagulated in
-     [`lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean`](../lean/InfoGeometry/Epistemology/CoagulatedArchetypeSynthesis.lean)
-     (`coagulated_all_aistudio_chats_and_lean_ontology_master_synthesis`).
 
 When controlling the already signed-in Ubuntu Chromium session through
 browser-harness, use the active CDP endpoint and stdin interface:

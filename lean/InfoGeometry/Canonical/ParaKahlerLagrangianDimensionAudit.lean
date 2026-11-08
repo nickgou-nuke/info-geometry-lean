@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
+
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.tplus_isotropic
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.tminus_isotropic
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.inTPlus_of_mem_range
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.inTMinus_of_mem_range
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.range_plus_isotropic
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.range_minus_isotropic
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.crossPairing_injective
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.finrank_le_of_isotropic_sup_eq_top
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.range_plus_sup_range_minus
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.finrank_range_plus_le
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.finrank_range_minus_le
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.finrank_range_plus_eq_minus
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.two_mul_finrank_range_plus
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.even_finrank
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.swapK_apply_zero
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.swapK_apply_one
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.swapParaKahler
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.swapG_nondegenerate
+#print axioms InfoGeometry.Canonical.ParaKahlerLagrangianDimension.swap_two_mul_finrank_range_plus

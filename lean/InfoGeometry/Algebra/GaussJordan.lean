@@ -1,0 +1,2 @@
+import InfoGeometry.Algebra.GaussJordan.Elementary
+import InfoGeometry.Algebra.FiniteSpinAlgebra

@@ -1,0 +1,747 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman
+import InfoGeometry.OperatorAlgebra.PeirceSpine.RelationalDressingPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.UHFHeisenbergSugawaraVirasoroPoset
+
+/-!
+# Stage `D₂₉` (Archetypes `Z₁ → Z₅`): Peirce Block Encoding, Quadratic Products, and Complex Tetrad Decomposition
+
+This module formalizes the 5-stage causal poset of Peirce block encodings inspired by Zorn
+coordinates and complex tetrad archetypes (`Z₁ → Z₅`) over an arbitrary non-commutative
+associative ring `[Ring B]` (and `[StarRing B]` for star-reality of symmetric/skew tetrad sectors),
+reusing the canonical `PeirceSpine` vocabulary (`peirce11`, `peirce00`, `conePlus`, `coneMinus`,
+`qgtPlus`, `qgtMinus`, `genPhi`, `genJ`, `genV`, `genSig`, `invS`, `zornConj`, `idemDefect`):
+
+1. **Archetype `Z₁` (`zornMatrix`):**
+   Zorn-coordinate-inspired Peirce four-corner encoding `Z_P(a, b, x, y)` over `[Ring B]` with respect
+   to the diagonal idempotents `u₀^* = P` and `u₀ = 1 - P`:
+   `zornMatrix P a b x y = peirce11 P a - conePlus P x + coneMinus P y + peirce00 P b`.
+2. **Archetype `Z₂` (`zorn_matrix_product_and_quaternion_embedding`):**
+   Exact non-commutative Peirce block multiplication law, where the
+   off-diagonal contractions `conePlus P x * coneMinus P w = qgtPlus P x w` and
+   `coneMinus P y * conePlus P z = qgtMinus P z y` are the upper and lower Quantum Geometric Tensor
+   sheets.
+3. **Archetype `Z₃` (`zornNorm`, `zorn_conjugation_and_quadratic_norms`):**
+   Peirce parity conjugation `zornConj P (zornMatrix P a b x y) = zornMatrix P a b (-x) (-y)` and
+   ordered Peirce quadratic products:
+   - `zornNorm P (zornMatrix P 1 1 x (-y)) = 1 - genV P x y`,
+   - `zornNorm P (genV P x y + genPhi P x y) = idemDefect (genV P x y)`.
+4. **Archetype `Z₄` (`zornTetradSym`, `zornTetradSkew`):**
+   Two-tetrad Jordan anticommutator `anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSym P A₁ C₁ A₂ C₂`
+   and Lie commutator `comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSkew P A₁ C₁ A₂ C₂`,
+   both strictly even-graded (`comm P (zornTetradSym ...) = 0`, `comm P (zornTetradSkew ...) = 0`).
+5. **Archetype `Z₅` (`complex_tetrad_metric_electromagnetic_split_and_square`,
+   `stage_D29_zorn_matrix_algebra_and_complex_tetrad_master_synthesis`):**
+   Mixed Peirce tetrad operator square
+   `(genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =`
+   the exact Jordan-cross-term formula, together with self-adjointness of
+   `zornTetradSym` and skew-adjointness of `zornTetradSkew` when `C_i = star A_i` and `star P = P`.
+-/
+
+/- The `zornMatrix` carrier here is built inside an associative ring. It is a
+Peirce four-corner encoding, not the repository's actual nonassociative
+split-Cayley Zorn algebra. The latter is owned by
+`OperatorZornFourPotentialGauge`; its mismatch with an associative matrix slice
+is quantified by `OperatorZornPeirceTetraktysBridge.zornChiralPlane_zero_mul_defect`. -/
+
+namespace InfoGeometry.OperatorAlgebra.PeirceSpine
+
+/-! ### 1. Causal Poset of Peirce Block Encoding & Complex Tetrad Archetypes (`Z₁ → Z₅`) -/
+
+/-- The 5-stage causal poset of non-commutative Peirce block algebra and complex tetrad
+archetypes (`Z₁ → Z₅`). -/
+inductive ZornPeirceTetradStage : Type
+  | Z1_zorn_peirce_matrix
+  | Z2_zorn_block_product
+  | Z3_zorn_conjugation_and_norm
+  | Z4_complex_tetrad_sym_skew_split
+  | Z5_unified_gravito_electromagnetic_square
+  deriving DecidableEq, Repr
+
+namespace ZornPeirceTetradStage
+
+/-- Numerical topological rank of each stage `Z₁..Z₅`. -/
+def rank : ZornPeirceTetradStage → ℕ
+  | Z1_zorn_peirce_matrix => 1
+  | Z2_zorn_block_product => 2
+  | Z3_zorn_conjugation_and_norm => 3
+  | Z4_complex_tetrad_sym_skew_split => 4
+  | Z5_unified_gravito_electromagnetic_square => 5
+
+/-- Directed causal dependency edges of the `Z₁ → Z₅` poset. -/
+inductive causalEdge : ZornPeirceTetradStage → ZornPeirceTetradStage → Prop
+  | z1_z2 : causalEdge Z1_zorn_peirce_matrix Z2_zorn_block_product
+  | z1_z3 : causalEdge Z1_zorn_peirce_matrix Z3_zorn_conjugation_and_norm
+  | z2_z4 : causalEdge Z2_zorn_block_product Z4_complex_tetrad_sym_skew_split
+  | z3_z4 : causalEdge Z3_zorn_conjugation_and_norm Z4_complex_tetrad_sym_skew_split
+  | z3_z5 : causalEdge Z3_zorn_conjugation_and_norm Z5_unified_gravito_electromagnetic_square
+  | z4_z5 : causalEdge Z4_complex_tetrad_sym_skew_split Z5_unified_gravito_electromagnetic_square
+
+theorem causalEdge_strict_rank_mono {a b : ZornPeirceTetradStage}
+    (h : causalEdge a b) : rank a < rank b := by
+  cases h <;> simp [rank]
+
+theorem causalEdge_irrefl (a : ZornPeirceTetradStage) : ¬ causalEdge a a := by
+  intro h
+  exact Nat.lt_irrefl (rank a) (causalEdge_strict_rank_mono h)
+
+/-- Reflexive-transitive dependency order generated by the six declared
+causal edges. `Z₂` and `Z₃` are independent inputs to the tetrad split. -/
+def causalLE : ZornPeirceTetradStage → ZornPeirceTetradStage → Prop
+  | Z1_zorn_peirce_matrix, _ => True
+  | Z2_zorn_block_product, Z2_zorn_block_product => True
+  | Z2_zorn_block_product, Z4_complex_tetrad_sym_skew_split => True
+  | Z2_zorn_block_product, Z5_unified_gravito_electromagnetic_square => True
+  | Z3_zorn_conjugation_and_norm, Z3_zorn_conjugation_and_norm => True
+  | Z3_zorn_conjugation_and_norm, Z4_complex_tetrad_sym_skew_split => True
+  | Z3_zorn_conjugation_and_norm, Z5_unified_gravito_electromagnetic_square => True
+  | Z4_complex_tetrad_sym_skew_split, Z4_complex_tetrad_sym_skew_split => True
+  | Z4_complex_tetrad_sym_skew_split, Z5_unified_gravito_electromagnetic_square => True
+  | Z5_unified_gravito_electromagnetic_square,
+      Z5_unified_gravito_electromagnetic_square => True
+  | _, _ => False
+
+/-- The archetype stages carry a genuine dependency partial order; a numeric
+rank is retained separately and does not impose a spurious total order. -/
+instance : PartialOrder ZornPeirceTetradStage where
+  le := causalLE
+  le_refl a := by cases a <;> simp [causalLE]
+  le_trans a b c hab hbc := by
+    cases a <;> cases b <;> cases c <;> simp_all [causalLE]
+  le_antisymm a b hab hba := by
+    cases a <;> cases b <;> simp_all [causalLE]
+
+theorem causalEdge_le {a b : ZornPeirceTetradStage}
+    (h : causalEdge a b) : a ≤ b := by
+  cases h <;> simp [LE.le, causalLE]
+
+end ZornPeirceTetradStage
+
+/-! ### 2. Stage 0: Core Zorn–Peirce Matrix, Quadratic Norm & Complex Tetrad Primitives -/
+
+section Primitives
+
+variable {B : Type*} [Ring B]
+
+/-- **Archetype `Z₁` (`zornMatrix`):**
+Implements Oliveira–Maia Eq. (2.5) `Z(A) = [[a, -x], [y, b]]` in `[Ring B]` with respect to
+the split Cayley idempotents `u₀^* = P` and `u₀ = 1 - P`:
+`zornMatrix P a b x y = peirce11 P a - conePlus P x + coneMinus P y + peirce00 P b`. -/
+def zornMatrix (P a b x y : B) : B :=
+  peirce11 P a - conePlus P x + coneMinus P y + peirce00 P b
+
+/-- **Archetype `Z₃` (`zornNorm`):**
+Ordered Peirce quadratic product `zornNorm P X = X * zornConj P X`. -/
+def zornNorm (P X : B) : B :=
+  X * zornConj P X
+
+/-- **Archetype `Z₄` (`zornTetradSym`, `zornTetradSkew`):**
+Two-tetrad symmetric metric operator `zornTetradSym` (`= {K₁, K₂}`) and antisymmetric field-strength
+operator `zornTetradSkew` (`= [K₁, K₂]`) for `K₁ = genPhi P A₁ C₁` and `K₂ = genPhi P A₂ C₂`. -/
+def zornTetradSym (P A₁ C₁ A₂ C₂ : B) : B :=
+  anticomm (conePlus P A₁) (coneMinus P C₂) + anticomm (conePlus P A₂) (coneMinus P C₁)
+
+def zornTetradSkew (P A₁ C₁ A₂ C₂ : B) : B :=
+  comm (conePlus P A₁) (coneMinus P C₂) - comm (conePlus P A₂) (coneMinus P C₁)
+
+end Primitives
+
+/-! ### 3. Individual Theorems for Archetypes `Z₁ → Z₅` -/
+
+section Theorems
+
+variable {B : Type*} [Ring B]
+
+/-- **Theorem `Z₁.1` & `Z₂.1` (`zorn_matrix_product_and_quaternion_embedding`):**
+For any idempotent `P` (`P * P = P`) and any `a, b, c, d, x, y, z, w : B`:
+1. **Zorn Unit Element (`Eq. 2.9`):**
+   `zornMatrix P 1 1 0 0 = 1`.
+2. **Split Quaternion Subalgebra (`Eq. 2.10`):**
+   `zornMatrix P 0 0 (-x) y = genPhi P x y` and `zornMatrix P 0 0 x y = -genJ P x y`.
+3. **Exact Non-Commutative Peirce Block Multiplication Table:**
+   `zornMatrix P a b x y * zornMatrix P c d z w =`
+   `(peirce11 P a * peirce11 P c - qgtPlus P x w) -`
+   `(peirce11 P a * conePlus P z + conePlus P x * peirce00 P d) +`
+   `(coneMinus P y * peirce11 P c + peirce00 P b * coneMinus P w) +`
+   `(peirce00 P b * peirce00 P d - qgtMinus P z y)`. -/
+theorem zorn_matrix_product_and_quaternion_embedding
+    {P : B} (hP : P * P = P) (a b c d x y z w : B) :
+    zornMatrix P 1 1 0 0 = 1 ∧
+    zornMatrix P 0 0 (-x) y = genPhi P x y ∧
+    zornMatrix P 0 0 x y = -genJ P x y ∧
+    zornMatrix P a b x y * zornMatrix P c d z w =
+      (peirce11 P a * peirce11 P c - qgtPlus P x w) -
+      (peirce11 P a * conePlus P z + conePlus P x * peirce00 P d) +
+      (coneMinus P y * peirce11 P c + peirce00 P b * coneMinus P w) +
+      (peirce00 P b * peirce00 P d - qgtMinus P z y) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+    (simp only [zornMatrix, peirce11, peirce00, qgtPlus, qgtMinus]; peirce_nf hP)
+
+/-- **Theorem `Z₃.1` (`zorn_conjugation_and_quadratic_norms`):**
+For any idempotent `P` (`P * P = P`) and any `a, b, x, y : B`:
+1. **Zorn Parity Conjugation (`S_P Z(a, b, x, y) S_P = Z(a, b, -x, -y)`):**
+   `zornConj P (zornMatrix P a b x y) = zornMatrix P a b (-x) (-y)`.
+2. **Zorn Norm of the Unipotent Split Quaternion `Z(1, 1, x, -y) = 1 - Φ(x, y)`:**
+   `zornNorm P (zornMatrix P 1 1 x (-y)) = 1 - genV P x y`.
+3. **Zorn Norm of the Metric-Shifted Split Quaternion `V + Φ(x, y)`:**
+   `zornNorm P (genV P x y + genPhi P x y) = idemDefect (genV P x y)`. -/
+theorem zorn_conjugation_and_quadratic_norms
+    {P : B} (hP : P * P = P) (a b x y : B) :
+    zornConj P (zornMatrix P a b x y) = zornMatrix P a b (-x) (-y) ∧
+    zornNorm P (zornMatrix P 1 1 x (-y)) = 1 - genV P x y ∧
+    zornNorm P (genV P x y + genPhi P x y) = idemDefect (genV P x y) := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+    (simp only [zornNorm, zornConj, zornMatrix, peirce11, peirce00, idemDefect];
+      peirce_nf hP)
+
+/-- **Theorem `Z₄.1` & `Z₅.1` (`complex_tetrad_metric_electromagnetic_split_and_square`):**
+For any idempotent `P` (`P * P = P`, `star P = P`) and any two complex tetrad pairs `(A₁, C₁)` and
+`(A₂, C₂)`:
+1. **Jordan Anticommutator Generates the Symmetric Metric `G_{(12)}` (`Eq. 7.5`):**
+   `anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSym P A₁ C₁ A₂ C₂`.
+2. **Lie Commutator Generates the Antisymmetric Electromagnetic 2-Form `G_{[12]}` (`Eq. 7.6`):**
+   `comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSkew P A₁ C₁ A₂ C₂`.
+3. **Even-Subring Closure (`[P, G_{(12)}] = 0` and `[P, G_{[12]}] = 0`):**
+   `comm P (zornTetradSym P A₁ C₁ A₂ C₂) = 0` and
+   `comm P (zornTetradSkew P A₁ C₁ A₂ C₂) = 0`.
+4. **Corrected mixed Zorn–Weyl square (`(Φ₁ + J₂)²`):**
+   `(genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =`
+   `genV P A₁ C₁ - genV P A₂ C₂ -`
+   `(anticomm (conePlus P A₁) (coneMinus P C₂) -`
+   `  anticomm (conePlus P A₂) (coneMinus P C₁))`.
+   The proposed replacement of this Jordan cross term by `zornTetradSkew`
+   differs by twice the ordered cross-sheet obstruction proved in
+   `TetraktysZornYangMillsBridge.symmetric_signed_square_commutator_anomaly`.
+5. **Self-Adjoint Reality of `G_{(12)}` and Skew-Adjointness of `G_{[12]}` when `C_i = star A_i`:**
+   For `star P = P`,
+   `star (zornTetradSym P A₁ (star A₁) A₂ (star A₂)) = zornTetradSym P A₁ (star A₁) A₂ (star A₂)`
+   and
+   `star (zornTetradSkew P A₁ (star A₁) A₂ (star A₂)) = -zornTetradSkew P A₁ (star A₁) A₂ (star A₂)`. -/
+theorem complex_tetrad_metric_electromagnetic_split_and_square [StarRing B]
+    {P : B} (hP : P * P = P) (hPsym : star P = P) (A₁ C₁ A₂ C₂ : B) :
+    anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSym P A₁ C₁ A₂ C₂ ∧
+    comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSkew P A₁ C₁ A₂ C₂ ∧
+    comm P (zornTetradSym P A₁ C₁ A₂ C₂) = 0 ∧
+    comm P (zornTetradSkew P A₁ C₁ A₂ C₂) = 0 ∧
+    (genPhi P A₁ C₁ + genPhi P A₂ C₂) * (genPhi P A₁ C₁ - genPhi P A₂ C₂) =
+      (genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂ ∧
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      genV P A₁ C₁ - genV P A₂ C₂ -
+        (anticomm (conePlus P A₁) (coneMinus P C₂) -
+          anticomm (conePlus P A₂) (coneMinus P C₁)) ∧
+    star (zornTetradSym P A₁ (star A₁) A₂ (star A₂)) =
+      zornTetradSym P A₁ (star A₁) A₂ (star A₂) ∧
+    star (zornTetradSkew P A₁ (star A₁) A₂ (star A₂)) =
+      -zornTetradSkew P A₁ (star A₁) A₂ (star A₂) := by
+  have hStarPhi : ∀ A : B, star (genPhi P A (star A)) = genPhi P A (star A) := by
+    intro A
+    have hStarConePlus : star (conePlus P A) = coneMinus P (star A) := by
+      unfold conePlus coneMinus
+      rw [star_mul, star_mul, star_sub, star_one, hPsym, mul_assoc]
+    have hStarConeMinus : star (coneMinus P (star A)) = conePlus P A := by
+      rw [← hStarConePlus, star_star]
+    unfold genPhi
+    rw [star_add, hStarConePlus, hStarConeMinus, add_comm]
+  have hSymEq : ∀ A₁ A₂ : B,
+      zornTetradSym P A₁ (star A₁) A₂ (star A₂) =
+        anticomm (genPhi P A₁ (star A₁)) (genPhi P A₂ (star A₂)) := by
+    intro A₁ A₂
+    unfold zornTetradSym
+    peirce_nf hP
+  have hSkewEq : ∀ A₁ A₂ : B,
+      zornTetradSkew P A₁ (star A₁) A₂ (star A₂) =
+        comm (genPhi P A₁ (star A₁)) (genPhi P A₂ (star A₂)) := by
+    intro A₁ A₂
+    unfold zornTetradSkew
+    peirce_nf hP
+  refine ⟨by unfold zornTetradSym; peirce_nf hP,
+          by unfold zornTetradSkew; peirce_nf hP,
+          by unfold zornTetradSym; peirce_nf hP,
+          by unfold zornTetradSkew; peirce_nf hP,
+          by unfold zornTetradSkew; peirce_nf hP,
+          by
+            simp only [genPhi, genJ, genV, anticomm, conePlus, coneMinus]
+            peirce_nf hP,
+          ?_, ?_⟩
+  · rw [hSymEq]
+    unfold anticomm
+    rw [star_add, star_mul, star_mul, hStarPhi A₁, hStarPhi A₂, add_comm]
+  · rw [hSkewEq]
+    unfold comm
+    rw [star_sub, star_mul, star_mul, hStarPhi A₁, hStarPhi A₂, neg_sub]
+
+/-- **Master Theorem `D₂₉` (`stage_D29_zorn_matrix_algebra_and_complex_tetrad_master_synthesis`):**
+Complete synthesis of the 5-stage non-commutative Peirce block algebra, quadratic products, and
+complex tetrad gravito-electromagnetic decomposition poset (`Z₁ → Z₅`):
+1. **Non-Commutative Peirce Block Multiplication Law (`Z₁` & `Z₂`):**
+   `zornMatrix P a b x y * zornMatrix P c d z w =`
+   `(peirce11 P a * peirce11 P c - qgtPlus P x w) -`
+   `(peirce11 P a * conePlus P z + conePlus P x * peirce00 P d) +`
+   `(coneMinus P y * peirce11 P c + peirce00 P b * coneMinus P w) +`
+   `(peirce00 P b * peirce00 P d - qgtMinus P z y)`.
+2. **Zorn Conjugation & Quadratic Norms (`N_Zorn(1 - Φ) = 1 - V`, `N_Zorn(V + Φ) = δ(V)`, `Z₃`):**
+   `zornNorm P (zornMatrix P 1 1 x (-y)) = 1 - genV P x y` and
+   `zornNorm P (genV P x y + genPhi P x y) = idemDefect (genV P x y)`.
+3. **Complex Tetrad Symmetric Metric `G_{(12)}` vs. Antisymmetric 2-Form `G_{[12]}` (`Z₄`):**
+   `anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSym P A₁ C₁ A₂ C₂`,
+   `comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSkew P A₁ C₁ A₂ C₂`,
+   `comm P (zornTetradSym P A₁ C₁ A₂ C₂) = 0`, and
+   `comm P (zornTetradSkew P A₁ C₁ A₂ C₂) = 0`.
+4. **Corrected Mixed Peirce Tetrad Squares & Star Symmetry (`Z₅`):**
+   `(genPhi P A₁ C₁ + genPhi P A₂ C₂) * (genPhi P A₁ C₁ - genPhi P A₂ C₂) =`
+   `(genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂`,
+   `(genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =`
+   `genV P A₁ C₁ - genV P A₂ C₂ -`
+   `(anticomm (conePlus P A₁) (coneMinus P C₂) -`
+   `  anticomm (conePlus P A₂) (coneMinus P C₁))`,
+   `star (zornTetradSym P A₁ (star A₁) A₂ (star A₂)) = zornTetradSym P A₁ (star A₁) A₂ (star A₂)`,
+   and
+   `star (zornTetradSkew P A₁ (star A₁) A₂ (star A₂)) = -zornTetradSkew P A₁ (star A₁) A₂ (star A₂)`. -/
+theorem stage_D29_zorn_matrix_algebra_and_complex_tetrad_master_synthesis [StarRing B]
+    {P a b c d x y z w A₁ C₁ A₂ C₂ : B}
+    (hP : P * P = P) (hPsym : star P = P) :
+    zornMatrix P a b x y * zornMatrix P c d z w =
+      (peirce11 P a * peirce11 P c - qgtPlus P x w) -
+      (peirce11 P a * conePlus P z + conePlus P x * peirce00 P d) +
+      (coneMinus P y * peirce11 P c + peirce00 P b * coneMinus P w) +
+      (peirce00 P b * peirce00 P d - qgtMinus P z y) ∧
+    zornNorm P (zornMatrix P 1 1 x (-y)) = 1 - genV P x y ∧
+    zornNorm P (genV P x y + genPhi P x y) = idemDefect (genV P x y) ∧
+    anticomm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSym P A₁ C₁ A₂ C₂ ∧
+    comm (genPhi P A₁ C₁) (genPhi P A₂ C₂) = zornTetradSkew P A₁ C₁ A₂ C₂ ∧
+    comm P (zornTetradSym P A₁ C₁ A₂ C₂) = 0 ∧
+    comm P (zornTetradSkew P A₁ C₁ A₂ C₂) = 0 ∧
+    (genPhi P A₁ C₁ + genPhi P A₂ C₂) * (genPhi P A₁ C₁ - genPhi P A₂ C₂) =
+      (genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂ ∧
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      genV P A₁ C₁ - genV P A₂ C₂ -
+        (anticomm (conePlus P A₁) (coneMinus P C₂) -
+          anticomm (conePlus P A₂) (coneMinus P C₁)) ∧
+    star (zornTetradSym P A₁ (star A₁) A₂ (star A₂)) =
+      zornTetradSym P A₁ (star A₁) A₂ (star A₂) ∧
+    star (zornTetradSkew P A₁ (star A₁) A₂ (star A₂)) =
+      -zornTetradSkew P A₁ (star A₁) A₂ (star A₂) := by
+  rcases zorn_matrix_product_and_quaternion_embedding hP a b c d x y z w with
+    ⟨_, _, _, hM4⟩
+  rcases zorn_conjugation_and_quadratic_norms hP a b x y with ⟨_, hN2, hN3⟩
+  rcases complex_tetrad_metric_electromagnetic_split_and_square hP hPsym A₁ C₁ A₂ C₂ with
+    ⟨hT1, hT2, hT3, hT4, hT5, hT6, hT7, hT8⟩
+  exact ⟨hM4, hN2, hN3, hT1, hT2, hT3, hT4, hT5, hT6, hT7, hT8⟩
+
+/-! ### 4. Stage `D₃₂`: Upper-Sheet Gravito-Electromagnetic Square, Mode-Graded Zorn–Drinfeld–Virasoro Matrices, and Horizon-Dressed Zorn Norm Invariance -/
+
+/-- **Theorem `D₃₂.1` (`zorn_tetrad_upper_sheet_and_lower_qgt_residual`):**
+For any idempotent `P` (`P * P = P`) and any two complex tetrad pairs `(A₁, C₁)` and `(A₂, C₂)`:
+1. `zornTetradSym P A₁ C₁ A₂ C₂ = genV P A₁ C₂ + genV P A₂ C₁`,
+2. `zornTetradSkew P A₁ C₁ A₂ C₂ = genSig P A₁ C₂ - genSig P A₂ C₁`,
+3. On the full ring `B`, the mixed Zorn–Weyl square `(Φ₁ + J₂)²` differs from
+   `(V₁ - V₂) - zornTetradSkew P A₁ C₁ A₂ C₂` by `-2 • (qgtMinus P A₁ C₂ - qgtMinus P A₂ C₁)`:
+   `(genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =`
+   `((genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂) -`
+   `(2 : ℤ) • (qgtMinus P A₁ C₂ - qgtMinus P A₂ C₁)`,
+4. On the upper Peirce sheet (`· P`), the lower-sheet residual `qgtMinus` vanishes identically, so
+   `((genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂)) * P =`
+   `((genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂) * P`. -/
+theorem zorn_tetrad_upper_sheet_and_lower_qgt_residual
+    {P : B} (hP : P * P = P) (A₁ C₁ A₂ C₂ : B) :
+    zornTetradSym P A₁ C₁ A₂ C₂ = genV P A₁ C₂ + genV P A₂ C₁ ∧
+    zornTetradSkew P A₁ C₁ A₂ C₂ = genSig P A₁ C₂ - genSig P A₂ C₁ ∧
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      ((genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂) -
+        (2 : ℤ) • (qgtMinus P A₁ C₂ - qgtMinus P A₂ C₁) ∧
+    ((genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂)) * P =
+      ((genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂) * P := by
+  refine ⟨rfl, rfl, ?_, ?_⟩ <;>
+    (simp only [zornTetradSkew, qgtMinus, two_zsmul, zsmul_sub]; peirce_nf hP)
+
+/-- **Mode-Graded Zorn–Drinfeld–Virasoro Matrix (`zornDrinfeldMatrix`):**
+Encodes the `n`-th even Sugawara power `opPow n (genV P A C)` on the `(1, 1)` and `(0, 0)` sheets
+and the affine Heisenberg–Drinfeld current modes `(-heisenbergSourceMode n P A C)` and
+`heisenbergSinkMode m P A C` in the off-diagonal Zorn cones. -/
+def zornDrinfeldMatrix (n m : ℕ) (P A C : B) : B :=
+  zornMatrix P (opPow n (genV P A C)) (opPow m (genV P A C))
+    (-heisenbergSourceMode n P A C) (heisenbergSinkMode m P A C)
+
+/-- **Lemma `D₃₂.2` (`opPow_genV_comm_idem`):**
+For any idempotent `P` (`P * P = P`), any `A, C : B`, and any mode index `n : ℕ`, `opPow n (genV P A C)`
+commutes with `P` and `1 - P`, and satisfies
+`peirce11 P (opPow n (genV P A C)) + peirce00 P (opPow n (genV P A C)) = opPow n (genV P A C)`. -/
+theorem opPow_genV_comm_idem {P : B} (hP : P * P = P) (A C : B) (n : ℕ) :
+    P * opPow n (genV P A C) = opPow n (genV P A C) * P ∧
+    (1 - P) * opPow n (genV P A C) = opPow n (genV P A C) * (1 - P) ∧
+    peirce11 P (opPow n (genV P A C)) + peirce00 P (opPow n (genV P A C)) =
+      opPow n (genV P A C) := by
+  have hPV : P * genV P A C = genV P A C * P := by peirce_nf hP
+  have hCommP : P * opPow n (genV P A C) = opPow n (genV P A C) * P := by
+    induction n with
+    | zero => simp [opPow]
+    | succ k ih =>
+      simp only [opPow]
+      rw [← mul_assoc, ih, mul_assoc, hPV, ← mul_assoc]
+  have hCommQ : (1 - P) * opPow n (genV P A C) = opPow n (genV P A C) * (1 - P) := by
+    rw [sub_mul, mul_sub, one_mul, mul_one, hCommP]
+  refine ⟨hCommP, hCommQ, ?_⟩
+  unfold peirce11 peirce00
+  have h11 : P * opPow n (genV P A C) * P = P * opPow n (genV P A C) := by
+    rw [hCommP, mul_assoc, hP, ← hCommP]
+  have hQ : (1 - P) * (1 - P) = 1 - P := by peirce_nf hP
+  have h00 : (1 - P) * opPow n (genV P A C) * (1 - P) = (1 - P) * opPow n (genV P A C) := by
+    rw [hCommQ, mul_assoc, hQ, ← hCommQ]
+  rw [h11, h00, ← add_mul, add_sub_cancel, one_mul]
+
+/-- **Theorem `D₃₂.3` (`zornDrinfeldMatrix_eq_and_zornNorm`):**
+For any idempotent `P` (`P * P = P`), any `A, C : B`, and any mode index `n : ℕ`:
+1. `zornDrinfeldMatrix n n P A C = opPow n (genV P A C) + heisenbergSourceMode n P A C + heisenbergSinkMode n P A C`,
+2. `zornConj P (zornDrinfeldMatrix n n P A C) = opPow n (genV P A C) - heisenbergSourceMode n P A C - heisenbergSinkMode n P A C`,
+3. `zornNorm P (zornDrinfeldMatrix n n P A C) = opPow (n + n) (genV P A C) - virasoroModeEven (n + n) P A C`. -/
+theorem zornDrinfeldMatrix_eq_and_zornNorm
+    {P : B} (hP : P * P = P) (A C : B) (n : ℕ) :
+    zornDrinfeldMatrix n n P A C =
+      opPow n (genV P A C) + heisenbergSourceMode n P A C + heisenbergSinkMode n P A C ∧
+    zornConj P (zornDrinfeldMatrix n n P A C) =
+      opPow n (genV P A C) - heisenbergSourceMode n P A C - heisenbergSinkMode n P A C ∧
+    zornNorm P (zornDrinfeldMatrix n n P A C) =
+      opPow (n + n) (genV P A C) - virasoroModeEven (n + n) P A C := by
+  rcases opPow_genV_comm_idem hP A C n with ⟨hCommP, hCommQ, hSumP⟩
+  have hVp : conePlus P A * opPow n (genV P A C) = opPow n (genV P A C) * conePlus P A :=
+    (opPow_genV_comm_invS_and_cones hP A C n).2.1
+  have hVm : coneMinus P C * opPow n (genV P A C) = opPow n (genV P A C) * coneMinus P C :=
+    (opPow_genV_comm_invS_and_cones hP A C n).2.2
+  have hSrcPos : conePlus P (heisenbergSourceMode n P A C) = heisenbergSourceMode n P A C := by
+    have h1 : P * conePlus P A * (1 - P) = conePlus P A := by peirce_nf hP
+    calc conePlus P (heisenbergSourceMode n P A C)
+      _ = P * (opPow n (genV P A C) * conePlus P A) * (1 - P) := rfl
+      _ = opPow n (genV P A C) * (P * conePlus P A * (1 - P)) := by
+          rw [← mul_assoc P, hCommP]; simp only [mul_assoc]
+      _ = heisenbergSourceMode n P A C := by
+          rw [h1]; rfl
+  have hSrcAbs : conePlus P (-heisenbergSourceMode n P A C) = -heisenbergSourceMode n P A C := by
+    have hNeg : conePlus P (-heisenbergSourceMode n P A C) =
+        -conePlus P (heisenbergSourceMode n P A C) := by
+      unfold conePlus; noncomm_ring
+    rw [hNeg, hSrcPos]
+  have hSnkAbs : coneMinus P (heisenbergSinkMode n P A C) = heisenbergSinkMode n P A C := by
+    have h2 : (1 - P) * coneMinus P C * P = coneMinus P C := by peirce_nf hP
+    calc coneMinus P (heisenbergSinkMode n P A C)
+      _ = (1 - P) * (coneMinus P C * opPow n (genV P A C)) * P := rfl
+      _ = (1 - P) * (opPow n (genV P A C) * coneMinus P C) * P := by
+          rw [hVm]
+      _ = opPow n (genV P A C) * ((1 - P) * coneMinus P C * P) := by
+          rw [← mul_assoc (1 - P), hCommQ]; simp only [mul_assoc]
+      _ = heisenbergSinkMode n P A C := by
+          rw [h2, ← hVm]; rfl
+  have hSnkNeg : coneMinus P (-heisenbergSinkMode n P A C) = -heisenbergSinkMode n P A C := by
+    have hNeg : coneMinus P (-heisenbergSinkMode n P A C) =
+        -coneMinus P (heisenbergSinkMode n P A C) := by
+      unfold coneMinus; noncomm_ring
+    rw [hNeg, hSnkAbs]
+  have hMatEq :
+      zornDrinfeldMatrix n n P A C =
+        opPow n (genV P A C) + heisenbergSourceMode n P A C + heisenbergSinkMode n P A C := by
+    unfold zornDrinfeldMatrix zornMatrix
+    rw [hSrcAbs, hSnkAbs, sub_neg_eq_add]
+    calc peirce11 P (opPow n (genV P A C)) + heisenbergSourceMode n P A C +
+          heisenbergSinkMode n P A C + peirce00 P (opPow n (genV P A C))
+      _ = (peirce11 P (opPow n (genV P A C)) + peirce00 P (opPow n (genV P A C))) +
+          heisenbergSourceMode n P A C + heisenbergSinkMode n P A C := by abel
+      _ = opPow n (genV P A C) + heisenbergSourceMode n P A C + heisenbergSinkMode n P A C := by
+          rw [hSumP]
+  have hConjEq :
+      zornConj P (zornDrinfeldMatrix n n P A C) =
+        opPow n (genV P A C) - heisenbergSourceMode n P A C - heisenbergSinkMode n P A C := by
+    unfold zornDrinfeldMatrix
+    rw [(zorn_conjugation_and_quadratic_norms hP
+      (opPow n (genV P A C)) (opPow n (genV P A C))
+      (-heisenbergSourceMode n P A C) (heisenbergSinkMode n P A C)).1]
+    unfold zornMatrix
+    rw [neg_neg, hSrcPos, hSnkNeg]
+    calc peirce11 P (opPow n (genV P A C)) - heisenbergSourceMode n P A C +
+          -heisenbergSinkMode n P A C + peirce00 P (opPow n (genV P A C))
+      _ = (peirce11 P (opPow n (genV P A C)) + peirce00 P (opPow n (genV P A C))) -
+          heisenbergSourceMode n P A C - heisenbergSinkMode n P A C := by abel
+      _ = opPow n (genV P A C) - heisenbergSourceMode n P A C - heisenbergSinkMode n P A C := by
+          rw [hSumP]
+  refine ⟨hMatEq, hConjEq, ?_⟩
+  unfold zornNorm
+  rw [hConjEq, hMatEq]
+  rcases all_mode_heisenberg_current_algebra hP A C n n with ⟨hJpSq, hJmSq, _, hAnti⟩
+  have hVnCommSrc :
+      opPow n (genV P A C) * heisenbergSourceMode n P A C =
+        heisenbergSourceMode n P A C * opPow n (genV P A C) := by
+    unfold heisenbergSourceMode chiralSource sugawaraTensor
+    change opPow n (genV P A C) * (opPow n (genV P A C) * conePlus P A) =
+      (opPow n (genV P A C) * conePlus P A) * opPow n (genV P A C)
+    rw [mul_assoc, hVp]
+  have hVnCommSnk :
+      opPow n (genV P A C) * heisenbergSinkMode n P A C =
+        heisenbergSinkMode n P A C * opPow n (genV P A C) := by
+    unfold heisenbergSinkMode chiralSink sugawaraTensor
+    change opPow n (genV P A C) * (coneMinus P C * opPow n (genV P A C)) =
+      (coneMinus P C * opPow n (genV P A C)) * opPow n (genV P A C)
+    rw [← mul_assoc, hVm]
+  have hOddSq :
+      (heisenbergSourceMode n P A C + heisenbergSinkMode n P A C) *
+        (heisenbergSourceMode n P A C + heisenbergSinkMode n P A C) =
+      virasoroModeEven (n + n) P A C := by
+    calc (heisenbergSourceMode n P A C + heisenbergSinkMode n P A C) *
+          (heisenbergSourceMode n P A C + heisenbergSinkMode n P A C)
+      _ = heisenbergSourceMode n P A C * heisenbergSourceMode n P A C +
+          anticomm (heisenbergSourceMode n P A C) (heisenbergSinkMode n P A C) +
+          heisenbergSinkMode n P A C * heisenbergSinkMode n P A C := by
+          unfold anticomm; noncomm_ring
+      _ = virasoroModeEven (n + n) P A C := by
+          rw [hJpSq, hJmSq, hAnti, zero_add, add_zero]
+  calc (opPow n (genV P A C) + heisenbergSourceMode n P A C + heisenbergSinkMode n P A C) *
+        (opPow n (genV P A C) - heisenbergSourceMode n P A C - heisenbergSinkMode n P A C)
+    _ = opPow n (genV P A C) * opPow n (genV P A C) -
+        opPow n (genV P A C) * heisenbergSourceMode n P A C -
+        opPow n (genV P A C) * heisenbergSinkMode n P A C +
+        heisenbergSourceMode n P A C * opPow n (genV P A C) +
+        heisenbergSinkMode n P A C * opPow n (genV P A C) -
+        (heisenbergSourceMode n P A C + heisenbergSinkMode n P A C) *
+          (heisenbergSourceMode n P A C + heisenbergSinkMode n P A C) := by
+        noncomm_ring
+    _ = opPow (n + n) (genV P A C) - virasoroModeEven (n + n) P A C := by
+        rw [hVnCommSrc, hVnCommSnk, hOddSq, ← opPow_add]
+        abel
+
+/-- **Theorem `D₃₂.4` (`dressedCurv_zornMatrix_and_zornNorm_invariance`):**
+For any horizon-preserving dressing `(U, U_inv)` (`U * U_inv = 1`, `U * P = P * U`,
+`U_inv * P = P * U_inv`), conjugation `dressedCurv U U_inv` distributes entrywise across
+`zornMatrix P a b x y` and intertwines `zornConj P` and `zornNorm P`. -/
+theorem dressedCurv_zornMatrix_and_zornNorm_invariance
+    {P U U_inv : B} (hR : U * U_inv = 1)
+    (hUP : U * P = P * U) (hUinvP : U_inv * P = P * U_inv)
+    (a b x y X : B) :
+    dressedCurv U U_inv (zornMatrix P a b x y) =
+      zornMatrix P (dressedCurv U U_inv a) (dressedCurv U U_inv b)
+        (dressedCurv U U_inv x) (dressedCurv U U_inv y) ∧
+    dressedCurv U U_inv (zornConj P X) = zornConj P (dressedCurv U U_inv X) ∧
+    dressedCurv U U_inv (zornNorm P X) = zornNorm P (dressedCurv U U_inv X) := by
+  have hUQ : U * (1 - P) = (1 - P) * U := by
+    rw [mul_sub, sub_mul, mul_one, one_mul, hUP]
+  have hUinvQ : U_inv * (1 - P) = (1 - P) * U_inv := by
+    rw [mul_sub, sub_mul, mul_one, one_mul, hUinvP]
+  have hUS : U * invS P = invS P * U := by
+    unfold invS
+    rw [mul_sub, sub_mul, hUP, hUQ]
+  have hUinvS : U_inv * invS P = invS P * U_inv := by
+    unfold invS
+    rw [mul_sub, sub_mul, hUinvP, hUinvQ]
+  have h11 : ∀ z : B, dressedCurv U U_inv (peirce11 P z) = peirce11 P (dressedCurv U U_inv z) := by
+    intro z; unfold dressedCurv peirce11
+    calc U_inv * (P * z * P) * U
+      _ = (U_inv * P) * z * (P * U) := by simp only [mul_assoc]
+      _ = P * (U_inv * z * U) * P := by rw [hUinvP, ← hUP]; simp only [mul_assoc]
+  have h00 : ∀ z : B, dressedCurv U U_inv (peirce00 P z) = peirce00 P (dressedCurv U U_inv z) := by
+    intro z; unfold dressedCurv peirce00
+    calc U_inv * ((1 - P) * z * (1 - P)) * U
+      _ = (U_inv * (1 - P)) * z * ((1 - P) * U) := by simp only [mul_assoc]
+      _ = (1 - P) * (U_inv * z * U) * (1 - P) := by rw [hUinvQ, ← hUQ]; simp only [mul_assoc]
+  have hCp : ∀ z : B, dressedCurv U U_inv (conePlus P z) = conePlus P (dressedCurv U U_inv z) := by
+    intro z; unfold dressedCurv conePlus
+    calc U_inv * (P * z * (1 - P)) * U
+      _ = (U_inv * P) * z * ((1 - P) * U) := by simp only [mul_assoc]
+      _ = P * (U_inv * z * U) * (1 - P) := by rw [hUinvP, ← hUQ]; simp only [mul_assoc]
+  have hCm : ∀ z : B, dressedCurv U U_inv (coneMinus P z) = coneMinus P (dressedCurv U U_inv z) := by
+    intro z; unfold dressedCurv coneMinus
+    calc U_inv * ((1 - P) * z * P) * U
+      _ = (U_inv * (1 - P)) * z * (P * U) := by simp only [mul_assoc]
+      _ = (1 - P) * (U_inv * z * U) * P := by rw [hUinvQ, ← hUP]; simp only [mul_assoc]
+  have hConj : ∀ z : B, dressedCurv U U_inv (zornConj P z) = zornConj P (dressedCurv U U_inv z) := by
+    intro z; unfold dressedCurv zornConj
+    calc U_inv * (invS P * z * invS P) * U
+      _ = (U_inv * invS P) * z * (invS P * U) := by simp only [mul_assoc]
+      _ = invS P * (U_inv * z * U) * invS P := by rw [hUinvS, ← hUS]; simp only [mul_assoc]
+  refine ⟨?_, hConj X, ?_⟩
+  · unfold zornMatrix
+    have hSubAdd : ∀ p q r s : B,
+        dressedCurv U U_inv (p - q + r + s) =
+          dressedCurv U U_inv p - dressedCurv U U_inv q +
+            dressedCurv U U_inv r + dressedCurv U U_inv s := by
+      intro p q r s; unfold dressedCurv; noncomm_ring
+    rw [hSubAdd, h11, hCp, hCm, h00]
+  · unfold zornNorm
+    rw [← hConj X]
+    unfold dressedCurv
+    calc U_inv * (X * zornConj P X) * U
+      _ = (U_inv * X) * (U * U_inv) * (zornConj P X * U) := by
+          rw [hR, mul_one]; simp only [mul_assoc]
+      _ = (U_inv * X * U) * (U_inv * zornConj P X * U) := by simp only [mul_assoc]
+
+/-- **Master Theorem `D₃₂` (`stage_D32_zorn_drinfeld_virasoro_and_dressing_bridge`):**
+Synthesizes the upper-sheet gravito-electromagnetic square `(Φ₁ + J₂)² · P = ((V₁ - V₂) - G_{[12]}) · P`,
+the exact lower-sheet QGT residual `-2 • (qgtMinus P A₁ C₂ - qgtMinus P A₂ C₁)`, the mode-graded
+Zorn–Drinfeld–Virasoro matrix `zornDrinfeldMatrix n n P A C` and its Zorn norm
+`opPow (n + n) (genV P A C) - virasoroModeEven (n + n) P A C`, and horizon-preserving dressing
+invariance of `zornMatrix` and `zornNorm`. -/
+theorem stage_D32_zorn_drinfeld_virasoro_and_dressing_bridge
+    {P U U_inv : B} (hP : P * P = P) (hR : U * U_inv = 1)
+    (hUP : U * P = P * U) (hUinvP : U_inv * P = P * U_inv)
+    (a b x y A C A₁ C₁ A₂ C₂ : B) (n : ℕ) :
+    ((genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂)) * P =
+      ((genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂) * P ∧
+    (genPhi P A₁ C₁ + genJ P A₂ C₂) * (genPhi P A₁ C₁ + genJ P A₂ C₂) =
+      ((genV P A₁ C₁ - genV P A₂ C₂) - zornTetradSkew P A₁ C₁ A₂ C₂) -
+        (2 : ℤ) • (qgtMinus P A₁ C₂ - qgtMinus P A₂ C₁) ∧
+    zornDrinfeldMatrix n n P A C =
+      opPow n (genV P A C) + heisenbergSourceMode n P A C + heisenbergSinkMode n P A C ∧
+    zornNorm P (zornDrinfeldMatrix n n P A C) =
+      opPow (n + n) (genV P A C) - virasoroModeEven (n + n) P A C ∧
+    dressedCurv U U_inv (zornMatrix P a b x y) =
+      zornMatrix P (dressedCurv U U_inv a) (dressedCurv U U_inv b)
+        (dressedCurv U U_inv x) (dressedCurv U U_inv y) ∧
+    dressedCurv U U_inv (zornNorm P (zornDrinfeldMatrix n n P A C)) =
+      zornNorm P (dressedCurv U U_inv (zornDrinfeldMatrix n n P A C)) := by
+  rcases zorn_tetrad_upper_sheet_and_lower_qgt_residual hP A₁ C₁ A₂ C₂ with ⟨_, _, hRes, hUpper⟩
+  rcases zornDrinfeldMatrix_eq_and_zornNorm hP A C n with ⟨hDrinEq, _, hDrinNorm⟩
+  rcases dressedCurv_zornMatrix_and_zornNorm_invariance hR hUP hUinvP a b x y
+      (zornDrinfeldMatrix n n P A C) with
+    ⟨hDressMat, _, hDressNorm⟩
+  exact ⟨hUpper, hRes, hDrinEq, hDrinNorm, hDressMat, hDressNorm⟩
+
+/-- **Theorem `D₃₇.1` (`zornDrinfeldMatrix_norm_and_virasoroModeEven_comm_idem_and_genPhi`):**
+For any idempotent `P` (`P * P = P`), any `A, C : B`, and any mode indices `m, r : ℕ`,
+the horizon-metric powers `opPow m (genV P A C)`, the even Virasoro modes
+`virasoroModeEven m P A C`, and the Zorn norm `zornNorm P (zornDrinfeldMatrix r r P A C)`
+commute with both `P` and the vector current `genPhi P A C`. -/
+theorem zornDrinfeldMatrix_norm_and_virasoroModeEven_comm_idem_and_genPhi
+    {P : B} (hP : P * P = P) (A C : B) (m r : ℕ) :
+    comm P (opPow m (genV P A C)) = 0 ∧
+    comm (genPhi P A C) (opPow m (genV P A C)) = 0 ∧
+    comm P (virasoroModeEven m P A C) = 0 ∧
+    comm (genPhi P A C) (virasoroModeEven m P A C) = 0 ∧
+    comm P (zornNorm P (zornDrinfeldMatrix r r P A C)) = 0 ∧
+    comm (genPhi P A C) (zornNorm P (zornDrinfeldMatrix r r P A C)) = 0 := by
+  have hCommP : ∀ k : ℕ, comm P (opPow k (genV P A C)) = 0 := by
+    intro k
+    have hP_k := (opPow_genV_comm_idem hP A C k).1
+    unfold comm
+    rw [hP_k, sub_self]
+  have hCommPhi : ∀ k : ℕ, comm (genPhi P A C) (opPow k (genV P A C)) = 0 := by
+    intro k
+    rcases opPow_genV_comm_invS_and_cones hP A C k with ⟨_, hCp, hCm⟩
+    unfold comm genPhi
+    rw [add_mul, mul_add, hCp, hCm, sub_self]
+  have hVirEq : ∀ k : ℕ, virasoroModeEven k P A C = opPow (k + 1) (genV P A C) :=
+    fun _ => rfl
+  have hVirP : ∀ k : ℕ, comm P (virasoroModeEven k P A C) = 0 := by
+    intro k; rw [hVirEq k]; exact hCommP (k + 1)
+  have hVirPhi : ∀ k : ℕ, comm (genPhi P A C) (virasoroModeEven k P A C) = 0 := by
+    intro k; rw [hVirEq k]; exact hCommPhi (k + 1)
+  have hNormEq := (zornDrinfeldMatrix_eq_and_zornNorm hP A C r).2.2
+  have hNormP : comm P (zornNorm P (zornDrinfeldMatrix r r P A C)) = 0 := by
+    rw [hNormEq]
+    have hSub :
+        comm P (opPow (r + r) (genV P A C) - virasoroModeEven (r + r) P A C) =
+          comm P (opPow (r + r) (genV P A C)) -
+            comm P (virasoroModeEven (r + r) P A C) := by
+      unfold comm; noncomm_ring
+    rw [hSub, hCommP (r + r), hVirP (r + r), sub_zero]
+  have hNormPhi : comm (genPhi P A C) (zornNorm P (zornDrinfeldMatrix r r P A C)) = 0 := by
+    rw [hNormEq]
+    have hSub :
+        comm (genPhi P A C)
+            (opPow (r + r) (genV P A C) - virasoroModeEven (r + r) P A C) =
+          comm (genPhi P A C) (opPow (r + r) (genV P A C)) -
+            comm (genPhi P A C) (virasoroModeEven (r + r) P A C) := by
+      unfold comm; noncomm_ring
+    rw [hSub, hCommPhi (r + r), hVirPhi (r + r), sub_zero]
+  exact ⟨hCommP m, hCommPhi m, hVirP m, hVirPhi m, hNormP, hNormPhi⟩
+
+/-! ### 6. Stage `D₃₉` (Priority 1): Non-Associative Zorn Wedge Product (`Eq. 2.8`), Square Alternativity, and Zorn Norm Invariance -/
+
+/-- **Upper-Right Zorn Wedge Product (`zornWedgePlus P M y w = P (y M w - w M y) (1 - P)`):**
+Realizes the off-diagonal cross-product `-y ∧ w` in `P B (1 - P)` bridged across the Peirce cut by `M`. -/
+def zornWedgePlus (P M y w : B) : B :=
+  conePlus P (y * M * w - w * M * y)
+
+/-- **Lower-Left Zorn Wedge Product (`zornWedgeMinus P M x z = (1 - P) (x M z - z M x) P`):**
+Realizes the off-diagonal cross-product `x ∧ z` in `(1 - P) B P` bridged across the Peirce cut by `M`. -/
+def zornWedgeMinus (P M x z : B) : B :=
+  coneMinus P (x * M * z - z * M * x)
+
+/-- **Deformed Non-Associative Zorn–Peirce Matrix Product (`Z₁ ⊙_M Z₂`):**
+Incorporates the off-diagonal Zorn cross-product terms `-zornWedgePlus P M y w` and
+`+zornWedgeMinus P M x z` into the Peirce block product `zornMatrix P a b x y * zornMatrix P c d z w`. -/
+def zornNonAssocMul (P M a b x y c d z w : B) : B :=
+  zornMatrix P a b x y * zornMatrix P c d z w -
+    zornWedgePlus P M y w + zornWedgeMinus P M x z
+
+/-- **Theorem `D₃₉` (`stage_D39_zorn_nonassociative_wedge_product_and_norm_invariance`):**
+Establishes the non-associative Zorn–Peirce wedge product (`zornNonAssocMul`), its exact four-block
+Peirce decomposition, skew-symmetry and collinear vanishing of the wedge terms, self-square
+alternativity (`Z ⊙_M Z = Z * Z`), conjugate-product Zorn norm invariance, and exact preservation
+of the even diagonal Peirce grade:
+1. **Four-Block Expansion (`Eq. 2.8` with Explicit Wedge Terms):**
+   `zornNonAssocMul P M a b x y c d z w =`
+   `(peirce11 P a * peirce11 P c - conePlus P x * coneMinus P w) -`
+   `(peirce11 P a * conePlus P z + conePlus P x * peirce00 P d + zornWedgePlus P M y w) +`
+   `(coneMinus P y * peirce11 P c + peirce00 P b * coneMinus P w + zornWedgeMinus P M x z) +`
+   `(peirce00 P b * peirce00 P d - coneMinus P y * conePlus P z)`;
+2. **Skew-Symmetry & Diagonal Vanishing of the Wedge Products:**
+   `zornWedgePlus P M y w + zornWedgePlus P M w y = 0`,
+   `zornWedgeMinus P M x z + zornWedgeMinus P M z x = 0`,
+   `zornWedgePlus P M y y = 0`, and `zornWedgeMinus P M x x = 0`;
+3. **Self-Square Alternativity (`Z ⊙_M Z = Z * Z`):**
+   `zornNonAssocMul P M a b x y a b x y = zornMatrix P a b x y * zornMatrix P a b x y`;
+4. **Conjugate-Product Wedge Cancellation & Zorn Norm Invariance:**
+   `zornNonAssocMul P M a b x y b a (-x) (-y) = zornNorm P (zornMatrix P a b x y)` and
+   `zornNonAssocMul P M b a (-x) (-y) a b x y = zornConj P (zornMatrix P a b x y) * zornMatrix P a b x y`;
+5. **Even-Grade Diagonal Invariance:**
+   `evenGrade P (zornNonAssocMul P M a b x y c d z w) = evenGrade P (zornMatrix P a b x y * zornMatrix P c d z w)`. -/
+theorem stage_D39_zorn_nonassociative_wedge_product_and_norm_invariance
+    {P : B} (hP : P * P = P) (M a b x y c d z w : B) :
+    zornNonAssocMul P M a b x y c d z w =
+      (peirce11 P a * peirce11 P c - conePlus P x * coneMinus P w) -
+      (peirce11 P a * conePlus P z + conePlus P x * peirce00 P d + zornWedgePlus P M y w) +
+      (coneMinus P y * peirce11 P c + peirce00 P b * coneMinus P w + zornWedgeMinus P M x z) +
+      (peirce00 P b * peirce00 P d - coneMinus P y * conePlus P z) ∧
+    zornWedgePlus P M y w + zornWedgePlus P M w y = 0 ∧
+    zornWedgeMinus P M x z + zornWedgeMinus P M z x = 0 ∧
+    zornWedgePlus P M y y = 0 ∧
+    zornWedgeMinus P M x x = 0 ∧
+    zornNonAssocMul P M a b x y a b x y =
+      zornMatrix P a b x y * zornMatrix P a b x y ∧
+    zornNonAssocMul P M a b x y a b (-x) (-y) =
+      zornNorm P (zornMatrix P a b x y) ∧
+    zornNonAssocMul P M a b (-x) (-y) a b x y =
+      zornConj P (zornMatrix P a b x y) * zornMatrix P a b x y ∧
+    evenGrade P (zornNonAssocMul P M a b x y c d z w) =
+      evenGrade P (zornMatrix P a b x y * zornMatrix P c d z w) := by
+  have hMul := (zorn_matrix_product_and_quaternion_embedding hP a b c d x y z w).2.2.2
+  have hConj := (zorn_conjugation_and_quadratic_norms hP a b x y).1
+  have hWpNeg : zornWedgePlus P M y (-y) = 0 := by
+    unfold zornWedgePlus conePlus; noncomm_ring
+  have hWmNeg : zornWedgeMinus P M x (-x) = 0 := by
+    unfold zornWedgeMinus coneMinus; noncomm_ring
+  have hWpNeg' : zornWedgePlus P M (-y) y = 0 := by
+    unfold zornWedgePlus conePlus; noncomm_ring
+  have hWmNeg' : zornWedgeMinus P M (-x) x = 0 := by
+    unfold zornWedgeMinus coneMinus; noncomm_ring
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · unfold zornNonAssocMul
+    rw [hMul]
+    unfold qgtPlus qgtMinus
+    abel
+  · unfold zornWedgePlus conePlus; noncomm_ring
+  · unfold zornWedgeMinus coneMinus; noncomm_ring
+  · unfold zornWedgePlus conePlus; noncomm_ring
+  · unfold zornWedgeMinus coneMinus; noncomm_ring
+  · unfold zornNonAssocMul zornWedgePlus zornWedgeMinus conePlus coneMinus
+    noncomm_ring
+  · unfold zornNonAssocMul zornNorm
+    rw [hWpNeg, hWmNeg, sub_zero, add_zero, hConj]
+  · unfold zornNonAssocMul
+    rw [hWpNeg', hWmNeg', sub_zero, add_zero, hConj]
+  · unfold zornNonAssocMul zornWedgePlus zornWedgeMinus evenGrade
+    peirce_nf hP
+
+end Theorems
+
+end InfoGeometry.OperatorAlgebra.PeirceSpine

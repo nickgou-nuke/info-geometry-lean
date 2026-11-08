@@ -59,30 +59,15 @@ work outside the active task.
 Run from the repository root, substituting an actual owner:
 
 ```bash
-python3 tools/infra/run_locked_lean.py src/InfoGeometry/Path/To/File.lean
+python3 tools/infra/run_locked_lean.py lean/InfoGeometry/Path/To/File.lean
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
 
 The [Lake wrapper](../tools/infra/run_locked_lake_build.py) selects changed
 `InfoGeometry` owners when no target is supplied. Use an explicit module or
 library for the task; request `--all-default-targets` only when that broader
-coverage is needed. The current [lakefile.toml](lakefile.toml), rather than a
+coverage is needed. The current [lakefile](../lakefile.lean), rather than a
 historical job count, defines the default targets.
-
-## Quality Management System (QMS)
-
-Theorem-bearing work follows [docs/ALCHEMICAL_QMS_SOP.md](ALCHEMICAL_QMS_SOP.md)
-(QMS-SOP-ALC-001, v4.1) with role separation:
-
-- **G-A (Generation Agent)** — writes candidate packets, never declares acceptance or reviews its own work.
-- **A-A (Audit Agent)** — independently reads artifacts, classifies gaps G1–G5, recommends CAPA; never authors the artifact under audit.
-- **QA-A (Acceptance Quality Agent)** — runs compile/build/audit gates, accepts or rejects; never writes theorem content for the artifact.
-- **Orchestrator** — routes work and records status; never uses its own coordination notes as proof authority.
-
-QMS CLI entry point: `python3 tools/qms/run_qms.py` with subcommands
-`intent`, `owner-search`, `generation`, `compile`, `capa`, `accept`,
-`quick-gate`, and `capa-index`. Artifacts go to `artifacts/qms/<task-id>-*.json`
-and `artifacts/qms/capa/`.
 
 ## Staged proof header and hooks
 

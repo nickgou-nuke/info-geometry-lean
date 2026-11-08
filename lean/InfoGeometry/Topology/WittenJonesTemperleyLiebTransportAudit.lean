@@ -1,0 +1,26 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Topology.WittenJonesTemperleyLiebTransport
+
+/-!
+# Kernel audit for the Witten–Jones TL transport bridge.
+-/
+
+namespace InfoGeometry.Topology.WittenJonesTemperleyLiebTransportAudit
+
+#check InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.carrierEquiv
+#check InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.toNative_mul
+#check InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.concreteTLSystem
+#check InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.concreteTLSystem_generator_difference_01
+#check InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.kauffmanBraid_yang_baxter_from_generic
+#check InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.kauffmanBraid_yang_baxter_iff_reciprocal
+
+#print axioms InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.toNative_mul
+#print axioms InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.concreteTLSystem_generator_difference_01
+#print axioms InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.kauffmanBraid_yang_baxter_from_generic
+#print axioms InfoGeometry.Topology.WittenJonesTemperleyLiebTransport.kauffmanBraid_yang_baxter_iff_reciprocal
+
+end InfoGeometry.Topology.WittenJonesTemperleyLiebTransportAudit

@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge
+
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.Target
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.Source
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.targetWordPair
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.targetPair
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.sourcePair
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.sourceWordPairSpan
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.sourceWordPairSpan_map_eq_top
+#print axioms InfoGeometry.Canonical.CuntzComplexStarBinaryWordPairSpanBridge.sourceWordPair_span_eq_top

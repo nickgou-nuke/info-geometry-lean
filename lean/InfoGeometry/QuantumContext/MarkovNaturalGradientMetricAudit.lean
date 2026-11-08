@@ -1,0 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovNaturalGradientMetric
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_eq_gnsInner_transpose
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_self_eq_zero_iff
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_self_pos_of_weights
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_nondegenerate
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_eq_zero_forall_iff
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixBilin_self_pos_of_weights
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovNaturalGradientSubmersionSystem_g_pos
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.symmetricSoftmaxNaturalGradientSubmersionSystem_g_pos

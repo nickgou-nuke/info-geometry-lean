@@ -1,0 +1,9 @@
+import InfoGeometry.Continuous.DeRhamBridge
+
+#print axioms InfoGeometry.Continuous.DeRhamBridge.zeroForm_hasFDerivAt
+#print axioms InfoGeometry.Continuous.DeRhamBridge.zeroForm_contDiffOn_positiveOrthant
+#print axioms InfoGeometry.Continuous.DeRhamBridge.exactOneForm_is_derivative
+#print axioms InfoGeometry.Continuous.DeRhamBridge.exactOneForm_eq_mathlib_extDeriv
+#print axioms InfoGeometry.Continuous.DeRhamBridge.exactOneForm_path_integral
+#print axioms InfoGeometry.Continuous.DeRhamBridge.exactOneForm_closed_loop
+#print axioms InfoGeometry.Continuous.DeRhamBridge.exactOneForm_path_integral_antisymm

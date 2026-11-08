@@ -1,0 +1,13 @@
+import InfoGeometry.Probability.DetectorAnscombeMadelungRegistration
+
+open InfoGeometry.Probability.DetectorAnscombeMadelungRegistration
+
+#print axioms anscombe_delta_method_stabilization
+#print axioms anscombe_coincidence_recovery
+#print axioms madelung_born_rule
+#print axioms singles_response_decomposition
+#print axioms rank_one_minor_vanishing
+#print axioms spacer_stack_cancellation
+#print axioms spacer_shift_gauge_invariance
+#print axioms linearized_coordinate_spacer_identity
+#print axioms certified_anscombe_madelung_registration_synthesis

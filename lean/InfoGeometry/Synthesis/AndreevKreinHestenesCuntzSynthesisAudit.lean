@@ -1,0 +1,54 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis
+
+/-!
+# Axiom-Footprint Audit for `InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis`
+
+Verifies that every public definition and theorem in
+`InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis` depends only on the
+standard Lean 4 axioms (`propext`, `Classical.choice`, `Quot.sound`).
+-/
+
+namespace InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesisAudit
+
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.KreinSpace
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.gPi
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.sheetSwap
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.sheetSwap_involutive
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.sheetExchangeFromPrimal
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.sheetExchangeFromPrimal_eq_sheetSwap
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.sheetExchange_preserves_sheet_nullity
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.sheetExchange_pairing_eq_weighted_quadratic
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.gPi_sheetSwap_invariant
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesE0
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesE1
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.majoranaPsi1
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.majoranaPsi2
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesOmega
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesComplexJ
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.peircianP1
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.peircianP2
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesE0Real
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesE1Real
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesE0_anticomm_hestenesE1
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesE0_mul_hestenesE1_ne_comm
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenes_cl11_generator_relations
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.majorana_witt_basis_relations
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesComplexJ_relations
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenes_matrix_expansion_and_trace
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesRev
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesKreinAdjoint
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesRev_properties
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.hestenesKreinAdjoint_eq_transpose
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.peircian_chiral_idempotent_algebra
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.cornerEmbed1
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.cornerEmbed2
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.corner_embedding_retractions
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.corner_embeddings_sum_eq_enfold
+#print axioms InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesis.corner_retractions_eq_pinching
+
+end InfoGeometry.Synthesis.AndreevKreinHestenesCuntzSynthesisAudit

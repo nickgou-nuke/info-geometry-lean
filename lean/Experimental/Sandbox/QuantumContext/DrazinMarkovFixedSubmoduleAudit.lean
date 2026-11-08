@@ -1,0 +1,8 @@
+import Experimental.Sandbox.QuantumContext.DrazinMarkovFixedSubmodule
+
+namespace InfoGeometry.Experimental.DrazinMarkovFixedSubmodule.Audit
+
+#check fixedVector_iff_mem_complementaryProjection_range
+#print axioms fixedVector_iff_mem_complementaryProjection_range
+
+end InfoGeometry.Experimental.DrazinMarkovFixedSubmodule.Audit

@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
+
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vacuumIdempotent_sq
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.topStateIdempotent_sq
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vacuum_mul_topState_zero
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.topState_mul_vacuum_zero
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.chiralTopCreate_mul_chiralTopAnnihilate_ne_comm
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vacuumIdempotent_eq_single
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.topStateIdempotent_eq_single
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vacuumIdempotent_zero_zero
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.topStateIdempotent_seven_seven
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.hodge_fock_gPlus2_vac_eq_gMinus1_top
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.hodge_fock_gMinus2_top_eq_gPlus1_vac
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zorn_innerProduct_vac_projection
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zorn_innerProduct_top_projection
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.fin8ToZorn_left_inv
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.fin8ToZorn_right_inv
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.fin8ToZorn_gPlus1_vac
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.fin8ToZorn_gPlus2Hodge_vac
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornNorm_mul
+#print axioms InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul_noncomm

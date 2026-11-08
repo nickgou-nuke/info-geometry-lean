@@ -1,0 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.AttentionTowerCompatibility
+
+#print axioms InfoGeometry.QuantumContext.AttentionTowerCompatibility.softmaxWeight_lift_eq_half
+#print axioms InfoGeometry.QuantumContext.AttentionTowerCompatibility.modularUnitary_lift_compatible
+#print axioms InfoGeometry.QuantumContext.AttentionTowerCompatibility.attentionStageDensity_lift_compatible
+#print axioms InfoGeometry.QuantumContext.AttentionTowerCompatibility.modularFlow_lift_intertwines_concreteStep
+#print axioms InfoGeometry.QuantumContext.AttentionTowerCompatibility.jwNewCreate_occupiedEnergy_eigen_entry
+#print axioms InfoGeometry.QuantumContext.AttentionTowerCompatibility.jwNewCreate_occupiedEnergy_eigen

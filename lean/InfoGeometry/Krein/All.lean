@@ -1,0 +1,77 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Krein.FundamentalSymmetryProjectors
+import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.DoubledRootLemmas
+import InfoGeometry.Krein.DoubledAdjoint
+import InfoGeometry.Krein.HestenesWeylGenerator
+import InfoGeometry.Krein.HilbertBridge
+import InfoGeometry.Krein.RealDoubledHilbertBridge
+import InfoGeometry.Krein.RealDoubledOperatorAdjointTransport
+import InfoGeometry.Krein.RealDoubledCl11AdjointConsequences
+import InfoGeometry.Krein.RealDoubledCompactTransport
+import InfoGeometry.Krein.RealDoubledGradingTransport
+import InfoGeometry.Krein.Metric
+import InfoGeometry.Krein.SplitQuadratic
+import InfoGeometry.Krein.SplitComplex
+import InfoGeometry.Krein.SplitBoost
+import InfoGeometry.Krein.SplitQuadraticSheets
+import InfoGeometry.Krein.PolarizedSector
+import InfoGeometry.Krein.Thermal
+import InfoGeometry.Krein.CartanDecomposition
+import InfoGeometry.Krein.HessianFrameConjugation
+import InfoGeometry.Krein.HestenesAnalyticKMSBridge
+import InfoGeometry.Krein.HestenesModularKMSBridge
+import InfoGeometry.Krein.HestenesKreinRotorBoundaryBridge
+import InfoGeometry.Krein.BoundedKMSHestenesBridge
+import InfoGeometry.Krein.HestenesKreinVacuumBridge
+import InfoGeometry.Krein.HestenesKreinNaturalConeBridge
+import InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
+import InfoGeometry.Krein.HestenesConnesWilsonBridge
+import InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
+import InfoGeometry.Krein.HestenesMoebiusClosureBridge
+import InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosureBridge
+import InfoGeometry.Krein.HestenesPhaseVolumeBridge
+import InfoGeometry.Krein.HestenesJonesFiltrationBridge
+import InfoGeometry.Krein.HestenesJonesGWVolumeBridge
+import InfoGeometry.Krein.BoundedKMSHestenesPhaseVolumeBridge
+import InfoGeometry.Krein.HestenesD4HurwitzBridge
+import InfoGeometry.Krein.HestenesCPTONNDualityBridge
+import InfoGeometry.Krein.HestenesAffineO55ClosureBridge
+import InfoGeometry.Krein.OrthogonalGroup
+import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Krein.Category
+import InfoGeometry.Krein.Clifford
+import InfoGeometry.Krein.Grading
+import InfoGeometry.Krein.Superalgebra
+import InfoGeometry.Krein.Superphysics
+import InfoGeometry.Krein.Modular
+import InfoGeometry.Krein.Representation
+import InfoGeometry.Krein.State
+import InfoGeometry.Krein.Dilation
+import InfoGeometry.Krein.ExponentialIsometry
+import InfoGeometry.Krein.Prelude
+import InfoGeometry.Krein.DoubledSpaceMatrix
+import InfoGeometry.Krein.DoubledMatrixClockBridge
+import InfoGeometry.Krein.SplitCliffordNN
+import InfoGeometry.Krein.InvolutiveSelfDualCarrier
+import InfoGeometry.Krein.CarrierTransport
+import InfoGeometry.Krein.CarrierWithGenerator
+import InfoGeometry.Krein.TomitaMatrixAtom
+import InfoGeometry.Krein.README
+
+namespace InfoGeometry
+
+/-!
+# InfoGeometry.Krein.All
+
+Umbrella module for the Krein/Modular layer.
+-/
+
+end InfoGeometry

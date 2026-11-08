@@ -1,0 +1,17 @@
+import InfoGeometry.Physics.SelbergTraceAharonovBohm
+
+namespace InfoGeometry.Physics.SelbergTraceAharonovBohm.Audit
+
+open InfoGeometry.Physics.SelbergTraceAharonovBohm.PrimeGeodesic
+
+#print axioms weight_is_pos
+#print axioms aharonov_bohm_phase_norm
+#print axioms aharonov_bohm_amplitude_invariant
+#print axioms aharonov_bohm_phase_add
+#print axioms aharonov_bohm_phase_zero
+#print axioms twisted_contribution_zero_flux
+#print axioms aharonov_bohm_phase_two_pi_int
+#print axioms selberg_euler_factor_pos
+#print axioms certified_selberg_aharonov_bohm_synthesis
+
+end InfoGeometry.Physics.SelbergTraceAharonovBohm.Audit

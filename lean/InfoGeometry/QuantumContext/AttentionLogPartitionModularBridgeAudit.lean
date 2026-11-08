@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge
+
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.partitionZ_pos
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.exp_logPartitionPotential
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.thermalWeight_eq_exp_neg_modularHamiltonian
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.hamiltonianFlow_apply
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.hamiltonianFlow_add_const
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.thermalHamiltonianFlow_eq_centeredEnergyFlow
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.relativeHamiltonianFlow_apply
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.relativeHamiltonianFlow_add_constants
+#print axioms InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.relativeThermalFlow_partitionPhase

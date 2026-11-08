@@ -1,0 +1,3 @@
+import InfoGeometry.Canonical.ModularSpinorCl11SequentialColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.CantorCl11Limit

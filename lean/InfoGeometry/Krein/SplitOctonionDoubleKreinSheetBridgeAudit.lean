@@ -1,0 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Krein.SplitOctonionDoubleKreinSheetBridge
+
+#print axioms InfoGeometry.Krein.SplitOctonionDoubleKreinSheetBridge.modularSwap_intertwines_chiralCoordinateExchange
+#print axioms InfoGeometry.Krein.SplitOctonionDoubleKreinSheetBridge.creation_encodes_as_positiveSheet
+#print axioms InfoGeometry.Krein.SplitOctonionDoubleKreinSheetBridge.annihilation_encodes_as_negativeSheet
+#print axioms InfoGeometry.Krein.SplitOctonionDoubleKreinSheetBridge.creation_maps_splitOctonion_minusSheet_to_plusSheet
+#print axioms InfoGeometry.Krein.SplitOctonionDoubleKreinSheetBridge.annihilation_maps_splitOctonion_plusSheet_to_minusSheet

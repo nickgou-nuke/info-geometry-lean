@@ -1,0 +1,12 @@
+import InfoGeometry.Probability.DetectorAnscombeMadelung
+
+open InfoGeometry.Probability.DetectorAnscombeMadelung
+
+#print axioms sqrt_variance_stabilization
+#print axioms anscombe_unit_variance
+#print axioms fisher_rao_madelung_isometry
+#print axioms quantum_transport_dilation_homogeneity
+#print axioms fourthRootLinearizer_eq
+#print axioms spacer_cancellation_pure_depth
+#print axioms depth_difference_spacer_invariant
+#print axioms certified_anscombe_madelung_registration_synthesis

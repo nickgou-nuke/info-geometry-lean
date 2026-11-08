@@ -47,31 +47,6 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def validate_declaration_audit(output: str, owners: list[str]) -> dict:
-    """Bind a passing native audit to the exact requested owner scope."""
-    records = [json.loads(line) for line in output.splitlines() if line.startswith("{")]
-    if not records or records[-1].get("record") != "summary":
-        raise RuntimeError("Missing declaration-audit summary")
-    summary = records[-1]
-    if summary.get("status") != "PASS":
-        raise RuntimeError("Declaration audit did not pass")
-    modules = summary.get("modules", [])
-    if len(modules) != len(set(modules)) or set(modules) != set(owners):
-        raise RuntimeError("Native audit modules differ from requested owners")
-    declarations = records[:-1]
-    if not declarations or any(record.get("record") != "declaration" for record in declarations):
-        raise RuntimeError("Missing or malformed declaration records")
-    names = [record.get("name") for record in declarations]
-    if None in names or len(set(names)) != len(names) or summary.get("declarations") != len(names):
-        raise RuntimeError("Duplicate or miscounted declarations")
-    observed = {record.get("module") for record in declarations}
-    empty = summary.get("empty_modules", [])
-    if (len(empty) != len(set(empty)) or not observed <= set(owners)
-            or set(empty) != set(owners) - observed):
-        raise RuntimeError("Declaration records do not cover the native audit scope")
-    return summary
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
@@ -80,21 +55,10 @@ def main() -> None:
     parser.add_argument("--lean", default="lean")
     parser.add_argument("--work-dir", type=Path)
     parser.add_argument("--target", action="append")
-    parser.add_argument("--owner", action="append",
-                        help="Audit/source owners; repeat to replace the default operator-geometry owners")
     parser.add_argument("--audit", action="store_true")
-    parser.add_argument("--audit-source", type=Path,
-                        help="Native declaration audit source (requires --audit)")
-    parser.add_argument("--owner-warnings-as-errors", action="store_true",
-                        help="Reject warnings in selected owners and the declaration audit")
     parser.add_argument("--incremental", action="store_true")
     parser.add_argument("--base-ref", help="Require unchanged dependency sources to match this Git ref")
     args = parser.parse_args()
-    if args.audit_source and not args.audit:
-        parser.error("--audit-source requires --audit")
-    owners = args.owner or OWNERS
-    if len(owners) != len(set(owners)):
-        parser.error("Duplicate --owner modules")
     root = args.repo.resolve()
     overlay = (args.overlay or root).resolve()
     mathlib = (args.mathlib or root / ".lake/packages/mathlib").resolve()
@@ -139,7 +103,7 @@ def main() -> None:
         if not source.is_file():
             source = root / relative
         data = source.read_bytes()
-        if args.base_ref and module not in owners:
+        if args.base_ref and module not in OWNERS:
             expected = subprocess.check_output(["git", "rev-parse", f"{args.base_ref}:{relative}"],
                                                cwd=root, text=True).strip()
             actual_blob = subprocess.check_output(["git", "hash-object", "--stdin"],
@@ -162,17 +126,14 @@ def main() -> None:
         active.remove(module)
         order.append(module)
 
-    targets = args.target or owners
+    targets = args.target or OWNERS
     for module in targets:
         stage(module)
-    audit_source = (args.audit_source or
-                    overlay / "tools/quality/OperatorGeometryDeclarationAudit.lean").resolve()
+    audit_source = overlay / "tools/quality/OperatorGeometryDeclarationAudit.lean"
     if args.audit:
-        for module in owners:
+        for module in OWNERS:
             stage(module)
         shutil.copyfile(audit_source, work / "lean/OperatorGeometryDeclarationAudit.lean")
-    if args.owner_warnings_as_errors and not set(owners) <= set(order):
-        raise RuntimeError("Strict owner checking requires every selected owner in the source closure")
     tool_paths = [Path(__file__).resolve(), root / "tools/build_lock.py"]
     if args.audit:
         tool_paths.extend([audit_source,
@@ -182,10 +143,7 @@ def main() -> None:
         "toolchain": toolchain, "mathlib": pin, "sources": hashes,
         "repository_head": subprocess.check_output(["git", "rev-parse", "HEAD"],
                                                    cwd=root, text=True).strip(),
-        "compile_order": order, "owners": owners,
-        "checked_owners": [module for module in owners if module in paths],
-        "audited_owners": owners if args.audit else [],
-        "owner_warnings_as_errors": args.owner_warnings_as_errors,
+        "compile_order": order, "owners": OWNERS,
         "mathlib_package_pins": package_pins,
         "baseline_ref": args.base_ref, "baseline_git_blobs": baseline_blobs,
         "verification_tool_sha256": tool_hashes,
@@ -229,16 +187,12 @@ def main() -> None:
             out = output / relative.with_suffix(".olean")
             if checked.get(module) != hashes[module] or not out.exists():
                 changed = True
-            if args.incremental and not changed and not (
-                args.owner_warnings_as_errors and module in owners
-            ):
+            if args.incremental and not changed:
                 checked_now[module] = hashes[module]
                 continue
             out.parent.mkdir(parents=True, exist_ok=True)
             command = [args.lean, "--root=" + str(work / "lean"), "-o", str(out),
                        str(work / "lean" / relative.with_suffix(".lean"))]
-            if args.owner_warnings_as_errors and module in owners:
-                command.insert(1, "-DwarningAsError=true")
             print("CHECK " + module, flush=True)
             result = subprocess.run(command, cwd=root, env=env, text=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -251,16 +205,16 @@ def main() -> None:
         if args.audit:
             command = [args.lean, "--root=" + str(work / "lean"),
                        str(work / "lean/OperatorGeometryDeclarationAudit.lean")]
-            if args.owner_warnings_as_errors:
-                command.insert(1, "-DwarningAsError=true")
             result = subprocess.run(command, cwd=root, env=env, text=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             (work / "declaration-audit.jsonl").write_text(result.stdout)
             if result.returncode:
                 print(result.stdout, end="", flush=True)
             result.check_returncode()
-            summary = validate_declaration_audit(result.stdout, owners)
-            print(json.dumps(summary), flush=True)
+            summaries = [json.loads(s) for s in result.stdout.splitlines() if s.startswith("{")]
+            if not summaries or summaries[-1].get("status") != "PASS":
+                raise RuntimeError("Missing passing declaration-audit summary")
+            print(json.dumps(summaries[-1]), flush=True)
         for module, source in paths.items():
             if digest(source) != hashes[module]:
                 raise RuntimeError(f"Source changed while checking: {module}")

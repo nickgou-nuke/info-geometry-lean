@@ -1,0 +1,37 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.MajoranaEightByEightJW
+
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.oddSuperBracketZ_eq_superBracket
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenZ_sq
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenZ_pairwise_anticomm
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenZ_mul_add_mul_eq_zero
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenZ_noncomm
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.gamma1PlusZ_mul_gamma1MinusZ_ne_comm
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenZ_clifford_superBracket
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.twoFockCreate8Z_sq
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.twoFockAnnihilate8Z_sq
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.twoFockCreate8Z_anticomm
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.twoFockAnnihilate8Z_anticomm
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.twoFockCreate8Z_twoFockAnnihilate8Z_superBracket
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.oddSuperBracketR_eq_superBracket
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.mapMatrix_zsmul
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.mapMatrix_oddSuperBracketZ
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenR_sq
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenR_pairwise_anticomm
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.gamma1PlusR_anticomm_gamma1MinusR
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.majoranaGenR_clifford_superBracket
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockCreate8_eq_half_mapMatrix
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockAnnihilate8_eq_half_mapMatrix
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.oddSuperBracketR_half_smul
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockCreate8_sq
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockAnnihilate8_sq
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockCreate8_oddSuperBracket_zero
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockAnnihilate8_oddSuperBracket_zero
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockCreate8_fockAnnihilate8_oddSuperBracket
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockCreate8_fockAnnihilate8_same_mode
+#print axioms InfoGeometry.Canonical.MajoranaEightByEightJW.fockCreate8_fockAnnihilate8_diff_mode

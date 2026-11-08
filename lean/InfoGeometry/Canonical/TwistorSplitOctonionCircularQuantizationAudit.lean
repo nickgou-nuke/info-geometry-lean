@@ -1,0 +1,10 @@
+import InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+/-! Transitive axiom audit for the finite twistor/circular bridge. -/
+
+#print axioms InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge.circularCreationElement_sq
+#print axioms InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge.circularAnnihilationElement_sq
+#print axioms InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge.circularCreationOperator_on_basis
+#print axioms InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge.vacuum_twistor_circular_readout
+#print axioms InfoGeometry.Canonical.TwistorSplitOctonionCircularQuantizationBridge.vacuum_annihilator_circular_channels

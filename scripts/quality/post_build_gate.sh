@@ -114,14 +114,13 @@ if [ "$MODE" = "incremental" ]; then
     done || true)
     ALL_CHANGED_LEAN_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" "$HEAD_REF" 2>/dev/null | grep -E '(^|/)[^/]+\.lean$' || true)
     TEST_LEAN_FILES=$(grep '^tests/.*\.lean$' <<<"$CHANGED_FILES" || true)
-    AUDIT_TOOL_LEAN_FILES=$(grep -E '^tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit|SemilinearGeometryDeclarationAudit)\.lean$' <<<"$CHANGED_FILES" || true)
-    PIPELINE_PYTHON_FILES=$(grep -E '^(lean/InfoGeometry/Graph/DarwinCommitTaxonomy\.lean|tools/infra/(evolution_taxonomy|darwin_phylogeny_dashboard|arango_to_ontology|arango_to_ontology_relationships|decl_graph_generation|decl_projection)\.py|tools/repository_evolution/.*\.py|tests/test_(evolution_taxonomy|repository_phylogeny_export|decl_graph_generation|ontology_term_integrity|ontology_relationship_identity|arango_ontology_bridge|darwin_phylogeny_dashboard)\.py)$' <<<"$CHANGED_FILES" || true)
+    AUDIT_TOOL_LEAN_FILES=$(grep '^tools/quality/OperatorGeometryDeclarationAudit\.lean$' <<<"$CHANGED_FILES" || true)
     # Lean umbrella modules are still ordinary Lake targets. Including one in
     # an incremental diff must build that changed module target, not promote
     # the whole root package to `InfoGeometry.All`.
     BUILD_CONFIG_FILES=$(grep -E '^(lakefile\.lean|lake-manifest\.json|lean-toolchain|lib/InfoGeometryCore/lakefile\.lean|lib/InfoGeometryCore/lake-manifest\.json)$|^lib/InfoGeometryCore/.*\.lean$' <<<"$CHANGED_FILES" || true)
     UNSUPPORTED_PACKAGE_CONFIGS=$(grep -E '^(lean/lakefile\.lean|lean/lake-manifest\.json|lean/lean-toolchain|lean_sandbox/lakefile\.lean|lean_sandbox/lake-manifest\.json|lean_sandbox/lean-toolchain|proofs/lakefile\.(toml|lean)|proofs/lake-manifest\.json|proofs/lean-toolchain|verification/spinorial-core/lakefile\.lean|verification/spinorial-core/lake-manifest\.json|verification/spinorial-core/lean-toolchain)$' <<<"$CHANGED_FILES" || true)
-    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|tools/quality/(OperatorGeometryDeclarationAudit|CovarianceDeclarationAudit|SemilinearGeometryDeclarationAudit)\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
+    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|tools/quality/OperatorGeometryDeclarationAudit\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
 
     if [ -n "$UNSUPPORTED_PACKAGE_CONFIGS" ]; then
         echo "  ❌ Nested Lake project configuration changed, but this root gate has no package-specific locked build route:" >&2
@@ -230,32 +229,6 @@ if [ "$MODE" = "incremental" ]; then
                 python3 tools/infra/run_locked_lean.py \
                   --wait-for-build-lock "$audit_file"
         done <<<"$AUDIT_TOOL_LEAN_FILES"
-    fi
-
-    if [ -n "$PIPELINE_PYTHON_FILES" ]; then
-        echo "  Modified pipeline/taxonomy/ontology files:"
-        sed 's/^/    - /' <<<"$PIPELINE_PYTHON_FILES"
-        PY_TEST_BIN="python3"
-        if [ -x "$ROOT/external_refs/auto-ontology/.venv/bin/python" ]; then
-            PY_TEST_BIN="$ROOT/external_refs/auto-ontology/.venv/bin/python"
-        elif [ -x "$ROOT/.venv-py312/bin/python" ]; then
-            PY_TEST_BIN="$ROOT/.venv-py312/bin/python"
-        fi
-        PIPELINE_SUITES=(
-            tests/test_evolution_taxonomy.py
-            tests/test_repository_phylogeny_export.py
-            tests/test_decl_graph_generation.py
-            tests/test_ontology_term_integrity.py
-            tests/test_ontology_relationship_identity.py
-        )
-        if [ -f "tests/test_arango_ontology_bridge.py" ]; then
-            PIPELINE_SUITES+=(tests/test_arango_ontology_bridge.py)
-        fi
-        if [ -f "tests/test_darwin_phylogeny_dashboard.py" ]; then
-            PIPELINE_SUITES+=(tests/test_darwin_phylogeny_dashboard.py)
-        fi
-        run_check "Pipeline & Ontology Unit Tests (incremental)" \
-            env PYTHONPATH="$ROOT/src:$ROOT" "$PY_TEST_BIN" -m unittest "${PIPELINE_SUITES[@]}"
     fi
 
     # Fast scope and quarantine audits

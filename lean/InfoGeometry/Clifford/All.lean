@@ -1,0 +1,178 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Clifford.OpSignatureBridge
+import InfoGeometry.Clifford.OctonionParavectorBridge
+import InfoGeometry.Clifford.FanoOctonionParavector
+import InfoGeometry.Clifford.BottSupergradedCartanBridge
+import InfoGeometry.Clifford.BudinichCliqueSpinor
+import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
+import InfoGeometry.Clifford.BudinichSpinorsNullVectors
+import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
+import InfoGeometry.Clifford.DiracPauliGamma
+import InfoGeometry.Clifford.RealMod8Classification
+import InfoGeometry.Clifford.CartanInstance
+import InfoGeometry.Clifford.KoszulFoundation
+import InfoGeometry.Clifford.OpSignatureBridge
+import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Clifford.ClNNSuperGrassmannianBridge
+import InfoGeometry.Clifford.ClNNBilinear
+import InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
+import InfoGeometry.Clifford.ClNNPermutationSymmetry
+import InfoGeometry.Clifford.ClNNFockRepresentation
+import InfoGeometry.Clifford.ClNNFockColimitPrimalSheetBridge
+import InfoGeometry.Clifford.CliffordInjectivity
+import InfoGeometry.Clifford.CliffordTower
+import InfoGeometry.Clifford.CliffordTowerFunctor
+import InfoGeometry.Clifford.QuadraticPolarBridge
+import InfoGeometry.Clifford.PolarizedMinkowski55
+import InfoGeometry.Clifford.PolarizedBoundaryInvolutions
+import InfoGeometry.Clifford.Cl55MetriplecticReduction
+import InfoGeometry.Clifford.Cl55ParaKahlerPinTransport
+import InfoGeometry.Clifford.Pin55KramersContactMultigrading
+import InfoGeometry.Clifford.Pin55KramersKleinAll
+import InfoGeometry.Clifford.Cl55CreationWordGradeObstruction
+import InfoGeometry.Clifford.FockCarDyadCalibration
+import InfoGeometry.Clifford.Cl55WittSpinorLaboratory
+import InfoGeometry.Clifford.SplitCartanHopWittBridge
+import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.Cl11CliffordMapIsometryBridge
+import InfoGeometry.Clifford.Cl11OscillationBridge
+import InfoGeometry.Clifford.Cl11CoordinateAlgebra
+import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Clifford.Cl11TensorStageFactorization
+import InfoGeometry.Clifford.Cl11GeometricCompass
+import InfoGeometry.Clifford.JordanWignerBridge
+import InfoGeometry.Clifford.JordanWignerCAR
+import InfoGeometry.Clifford.MatToCantorOperator
+import InfoGeometry.Clifford.Cl11InfiniteCarrier
+import InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion
+import InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
+import InfoGeometry.Clifford.Cl11SupergradedTensorBridge
+import InfoGeometry.Clifford.Cl11MarkovJonesEngine
+import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.Clifford.RealCantorOpLimit
+import InfoGeometry.Clifford.Cl11TensorTowerSupergraded
+import InfoGeometry.Clifford.Cl11TensorTowerIteration
+import InfoGeometry.Clifford.InductiveColimitCrystal
+import InfoGeometry.Clifford.FiniteTiltDiracShell
+import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
+import InfoGeometry.Clifford.GammaMatrices
+import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Clifford.SpinorRep_REAL
+import InfoGeometry.Clifford.SignedPermutation
+import InfoGeometry.Clifford.Cl11Quaternion
+import InfoGeometry.Clifford.SplitQuaternion
+import InfoGeometry.Clifford.SplitBiquaternion
+import InfoGeometry.Clifford.SplitBiquaternionExponential
+import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
+import InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
+import InfoGeometry.Clifford.MonodromyFlowAdapter
+import InfoGeometry.Clifford.ModularCftBridge
+import InfoGeometry.Clifford.ClNNSpecialization
+import InfoGeometry.Clifford.Decomposition
+import InfoGeometry.Clifford.GeneralizedMetricBField
+import InfoGeometry.Clifford.Grading
+import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Clifford.Hestenes1975
+import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
+import InfoGeometry.Clifford.HestenesCauchyRiemann
+import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
+import InfoGeometry.Clifford.CantorDiracSeaChargeHestenesBridge
+import InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
+import InfoGeometry.Clifford.AlbertBottConformalBridge
+import InfoGeometry.Clifford.Pin55ReflectionGlide
+import InfoGeometry.Clifford.ThreeDHurwitz
+import InfoGeometry.Clifford.Lift
+import InfoGeometry.Clifford.MatrixCompat
+import InfoGeometry.Clifford.NeutralPhaseSpaceCore
+import InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
+import InfoGeometry.Clifford.Relations
+import InfoGeometry.Clifford.Soldering
+import InfoGeometry.Clifford.SolderingGNSCARBridge
+import InfoGeometry.Clifford.SolderingCl11MatrixBridge
+import InfoGeometry.Cosmology.Cl11ParabolicVacuumQuotientBridge
+import InfoGeometry.Clifford.Spacetime
+import InfoGeometry.Clifford.STAOperators
+import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Clifford.SplitQ11Equivariance
+import InfoGeometry.Clifford.SplitQ11Sesquilinear
+import InfoGeometry.Clifford.SplitQ11PhaseFlip
+import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.Clifford.SplitQ11CausalCone
+import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
+import InfoGeometry.Clifford.SplitCl44CausalEnvelope
+import InfoGeometry.Clifford.SplitCl44Complexification
+import InfoGeometry.Clifford.FibonacciCl55Carrier
+import InfoGeometry.Clifford.SplitCliffordBoundaryPacket
+import InfoGeometry.Clifford.Cl44GenerationRotation
+import InfoGeometry.Clifford.Cl44C8Comparison
+import InfoGeometry.Clifford.Cl44QuaternionSplit
+import InfoGeometry.Clifford.Cl44SignatureResidue
+import InfoGeometry.Clifford.Cl44S3CopyModel
+import InfoGeometry.Clifford.Cl44S3CopyModelAudit
+import InfoGeometry.Clifford.QuadraticPolarAnticommutator
+import InfoGeometry.Krein.Superphysics
+import InfoGeometry.Clifford.Tower
+import InfoGeometry.Clifford.TowerMatrix
+import InfoGeometry.Clifford.ChiralBasis
+import InfoGeometry.Clifford.HestenesDirac
+import InfoGeometry.Clifford.GeometricRotor
+import InfoGeometry.Clifford.RealDoubledHestenesAnchor
+import InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
+import InfoGeometry.Clifford.Arxiv160309063SplitAlgebra
+import InfoGeometry.Clifford.TodorovInternalSpace
+import InfoGeometry.Clifford.ConformalSpinorBridge.SuperLieRingInstance
+import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Clifford.Cl55PinPlusMinusNative
+import InfoGeometry.Clifford.Cl55IntertwinerFrontier
+import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
+import InfoGeometry.Clifford.Cl55CayleyRoPEBridge
+import InfoGeometry.Clifford.Cl55SpinorZornReadout
+import InfoGeometry.Clifford.FanoProjectedAssociator
+import InfoGeometry.Clifford.Cl11ProjectiveMobiusBridge
+import InfoGeometry.Clifford.Cl55HypercubePeirceCube
+import InfoGeometry.Clifford.Cl55PeirceMoERouting
+import InfoGeometry.Clifford.Clifford55AnomalyOSP
+import InfoGeometry.Clifford.D4Cl11Tripotent
+import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Clifford.SplitAtomDoubling
+import InfoGeometry.Clifford.SplitAtomInvolutions
+import InfoGeometry.Clifford.Cl55MaximalTorus
+import InfoGeometry.Clifford.Cl55SplitRotorPeirce
+import InfoGeometry.Clifford.Cl55RoPEAttentionPairing
+import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
+import InfoGeometry.Clifford.EmergentSpacetimeBilinear
+import InfoGeometry.Clifford.FoundationalInvolutionsBridge
+import InfoGeometry.Clifford.Cl55FockSupergradedRepresentation
+import InfoGeometry.Clifford.Cl55PositiveGrassmannianFockBridge
+import InfoGeometry.Clifford.Cl55SuperTKK
+import InfoGeometry.Clifford.Cl55TKKAdjointGradeReversal
+import InfoGeometry.Clifford.Cl55TKKGradeDirectSumInternal
+import InfoGeometry.Clifford.Cl55TKKGradeReversalDirectSum
+import InfoGeometry.Clifford.Cl55ContactTKKVacuumIdeal
+import InfoGeometry.Clifford.Cl55ContactTKKKreinBridge
+import InfoGeometry.Clifford.Cl55RightIdealSupertrace
+
+namespace InfoGeometry
+
+/-!
+# InfoGeometry.Clifford.All
+
+Umbrella module for the Clifford algebra layer.
+
+Authority note:
+
+- `ClNN` and its downstream split-tower files own the recursive split
+  `Cl(n,n)` presentation,
+- `NeutralPhaseSpaceCore` and its downstream bridge files own the corrected
+  neutral phase-space lane on `E × E*`,
+- both lanes are imported here, but they should not be read as competing roots.
+-/
+
+end InfoGeometry

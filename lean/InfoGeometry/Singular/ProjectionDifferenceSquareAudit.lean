@@ -1,0 +1,18 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Singular.ProjectionDifferenceSquare
+import InfoGeometry.Canonical.InversePartitionExamples
+
+#print axioms InfoGeometry.Singular.ProjectionSectors.boundary_square_idempotent_iff_commute
+#print axioms InfoGeometry.Singular.ProjectionSectors.boundary_square_projection_iff_commute
+#print axioms InfoGeometry.Singular.ProjectionSectors.mp_support_boundary_idempotent_iff
+#print axioms InfoGeometry.Singular.ProjectionSectors.boundary_idempotence_defect
+#print axioms InfoGeometry.Canonical.InversePartitionExamples.skewChain_cube
+#print axioms InfoGeometry.Canonical.InversePartitionExamples.skewChain_mp
+#print axioms InfoGeometry.Canonical.InversePartitionExamples.skewChain_supports_not_commute
+#print axioms InfoGeometry.Canonical.InversePartitionExamples.skewChain_boundary_not_idempotent
+#print axioms InfoGeometry.Canonical.InversePartitionExamples.oblique_drazin
+#print axioms InfoGeometry.Canonical.InversePartitionExamples.oblique_not_selfAdjoint

@@ -26,10 +26,15 @@ REPO_ROOTS = [
     "scripts",
     "src",
     "cli",
-    "extensions",
     "lakefile.lean",
     "package.json",
-    "pyproject.toml",
+    "agent-orchestrator.ts",
+    "arango-rag-tool.ts",
+    "chatgpt-oracle.ts",
+    "commit-conscious-knowledge.ts",
+    "lean-prover-tool.ts",
+    "setup-db.ts",
+    "sympy-witness.ts",
 ]
 
 COMMON_EXCLUDES = [
@@ -227,9 +232,9 @@ def tool_candidates(hits: list[Hit], *, limit: int) -> list[dict[str, Any]]:
     tool_hits = [
         hit
         for hit in hits
-        if hit.path.startswith(("tools/", "scripts/", "src/", "cli/", "extensions/"))
+        if hit.path.startswith(("tools/", "scripts/", "src/", "cli/"))
         or hit.path.endswith(".ts")
-        or hit.path in {"lakefile.lean", "package.json", "pyproject.toml"}
+        or hit.path in {"lakefile.lean", "package.json"}
     ]
     return summarize_paths(tool_hits, limit=limit)
 

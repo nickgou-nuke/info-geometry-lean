@@ -1,0 +1,10 @@
+import InfoGeometry.SuperGrassmannian.TrialityCliffordAxisEquivariance
+
+namespace InfoGeometry.SuperGrassmannian.TrialityCliffordAxisEquivariance.Audit
+
+#check cliffordPlus_axisCycle
+#check cliffordMinus_axisCycle
+#print axioms cliffordPlus_axisCycle
+#print axioms cliffordMinus_axisCycle
+
+end InfoGeometry.SuperGrassmannian.TrialityCliffordAxisEquivariance.Audit

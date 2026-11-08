@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Core.JordanTripleFormulaCriterion
+import InfoGeometry.Core.NormalizedDiracSelfAdjointAudit
+import InfoGeometry.Canonical.PeirceWeylExamples
+
+#print axioms InfoGeometry.Core.JordanAssociator.proposed_triple_forall_middle_iff
+#print axioms InfoGeometry.Core.JordanAssociator.proposed_triple_unit_middle_iff
+#print axioms InfoGeometry.Core.JordanAssociator.proposed_triple_formula_defect
+#print axioms InfoGeometry.Core.JordanAssociator.symm_triple_eq_symm_sub_commutator
+#print axioms InfoGeometry.Core.JordanAssociator.symm_associator_square_zero_inner_inverse
+#print axioms InfoGeometry.Core.NormalizedDiracSelfAdjoint.normalizedDirac_isSelfAdjoint_iff
+#print axioms InfoGeometry.Canonical.PeirceSquareZeroExamples.proposed_triple_identity_false
+#print axioms InfoGeometry.Canonical.PeirceSquareZeroExamples.reciprocal_sum_not_selfAdjoint
+#print axioms InfoGeometry.Canonical.PeirceSquareZeroExamples.reciprocal_sum_square_isStarProjection
+#print axioms InfoGeometry.Core.JordanMultiplicationClosure.commutator_apply
+#print axioms InfoGeometry.Core.PeirceWeylUnits.thirdRoot_polynomial
+#print axioms InfoGeometry.Core.PeirceWeylUnits.thirdRoot_cube
+#print axioms InfoGeometry.Core.PeirceWeylUnits.weyl_fourth
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.chiralSupport_sq_support
+#print axioms InfoGeometry.Canonical.PeirceWeylExamples.grading_not_cyclotomic_two
+#print axioms InfoGeometry.Canonical.PeirceWeylExamples.source_jordan_sign_counterexample
+#print axioms InfoGeometry.Canonical.PeirceWeylExamples.square_zero_associator_nonzero
+#print axioms InfoGeometry.Canonical.PeirceWeylExamples.proper_corner_distinctions

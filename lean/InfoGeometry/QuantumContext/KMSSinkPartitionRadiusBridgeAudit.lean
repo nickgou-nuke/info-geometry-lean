@@ -1,0 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge
+
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.softmaxWeight_eq_exp_div_partitionZ
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.softmaxSink_logMonopole_eq_logPartition
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.attentionRowSink_logMonopole_eq_logPartition
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.hasDerivAt_softmaxSink_logMonopole_at_partitionRadius
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.softmaxSink_centrifugalBalance_at_partitionRadius
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.softmaxSink_epicyclicFreqSq_at_partitionRadius
+#print axioms InfoGeometry.QuantumContext.KMSSinkPartitionRadiusBridge.softmaxSink_epicyclicFreqSq_pos_at_partitionRadius

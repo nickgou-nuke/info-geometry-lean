@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.PeirceParityClosure
+
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.evenPart_add
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_add
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.evenPart_evenPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.evenPart_oddPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_evenPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_oddPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.parity_decomposition_unique
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.evenPart_mul
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_mul
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.gradingConjugationEquiv
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.gradingConjugationEquiv_apply
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.grading_conjugation_eq_even_sub_odd
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.two_nsmul_evenPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.two_nsmul_oddPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_eq_grading_mul_commutator
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_eq_double_commutator
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.grading_mul_oddPart
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_zero_iff_commute
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.evenPart_eq_self_iff_grading_conjugation
+#print axioms InfoGeometry.Algebra.PeirceDeWittChiralSplit.oddPart_eq_self_iff_grading_conjugation

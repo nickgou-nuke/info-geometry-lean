@@ -137,7 +137,7 @@ Lossless for the InfoTree layer means:
 - Block export reads info-tree dependencies per command snapshot, not as a complete global expression graph.
 - `tools/leantrail/adapters.py` exports `ig_nodes`/`ig_edges` from a snapshot, but does not make those collections equivalent to raw expression memory.
 - `tools/infra/arango_gravity_context.py` defaults to declaration/source-excerpt retrieval and therefore intentionally ignores many raw graph nodes.
-- **Streaming mode** (`dagIndexer --stream` → `refresh_decl_graph.py --stream`) bypasses file-based artifacts and pipes JSONL directly to ArangoDB. It defaults to immutable `decls_g_ID`/`edges_g_ID` collections with a content-derived generation receipt. It does not produce `artifacts/dag/index/` files. The legacy base collections `decls`/`edges` are truncated only with explicit `--replace-live`.
+- **Streaming mode** (`dagIndexer --stream` → `refresh_decl_graph.py --stream`) bypasses file-based artifacts and pipes JSONL directly to ArangoDB `decls`/`edges` collections. This is constant-memory but does not produce `artifacts/dag/index/` files.
 
 ## Immediate Audit
 
@@ -365,7 +365,7 @@ Use Arango in this order:
 
 | Layer | Collections | Source |
 |-------|-------------|--------|
-| **Streaming Declaration** | `decls_g_ID`, `edges_g_ID` by default; base `decls`, `edges` with `--replace-live` | `dagIndexer --stream` → `refresh_decl_graph.py --stream` |
+| **Streaming Declaration** | `decls`, `edges` | `dagIndexer --stream` → `refresh_decl_graph.py --stream` |
 | **Syntax AST** | `syntax_decls`, `syntax_nodes`, `ast_child`, `decl_root` | `DumpLeanGraph.lean` → `batch_dump_syntax.py` → `ingest_syntax_to_arango.py` |
 | **Raw DAG (file-based)** | `raw_info_nodes`, `raw_info_edges` | `dagIndexer` file export → `materialize_lossless_infotree.py` |
 | **Topology Overlay** | `topology_overlay`, `topology_overlay_edges` | `hydrate_arango_topology.py` |

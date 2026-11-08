@@ -1,0 +1,6 @@
+import InfoGeometry.Nuclear.CrossSectionDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+#print axioms InfoGeometry.Nuclear.CrossSectionDuality.Speak_independent_of_activity
+#print axioms InfoGeometry.Nuclear.CrossSectionDuality.peak_to_total_cross_ratio
+#print axioms InfoGeometry.Nuclear.CrossSectionDuality.cross_sections_positive

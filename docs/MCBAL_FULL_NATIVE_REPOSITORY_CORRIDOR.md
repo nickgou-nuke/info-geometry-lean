@@ -456,56 +456,7 @@ or duplicate them.
 
 ```lean
 import InfoGeometry.LLM.McbalFullNativeCorridor
-import InfoGeometry.LLM.McbalLargeDAsymmetricClosureCorridor
 ```
 
-The imported owner `McbalFullNativeCorridor` aliases the native theorems across
-Sinkhorn, Birkhoff, Poisson-Sinkhorn, weighted detailed balance, Maximum Caliber,
-mass-spectrometry cross-Gramians, frozen Information Bottleneck, BKM/Fisher
-geometry, Bayesian Hodge currents, finite JKO steps, Dikin confinement, and the
-three-post `mcbal` large-$D$ kinetic vector-spin closure corridor
-(`McbalLargeDAsymmetricClosureCorridor`):
-
-- **Post 1 (`spin-model-transformers`)**:
-  - `mcbal_post1_largeD_vmf_response_norm_and_inverse_recovery`: exact large-$D$
-    vMF saddle-point response norm $m^2 = R^2 \frac{\gamma - 1}{\gamma + 1}$,
-    radial slack $R^2 - m^2 = \frac{2 R^2}{1 + \gamma}$, and exact conjugate-field
-    inverse recovery $\varphi_\beta^{-1}(\varphi_\beta(h)) = h$ from the
-    saddle-point relation $\beta^2 r^2 = R^2 (\gamma^2 - 1)$.
-  - `mcbal_post1_singleSpinCovarianceOp_spectral_and_mul`: spectral action and
-    multiplicative closure of the single-spin transverse/longitudinal covariance
-    operator $\Sigma_{\text{spin}}(\tau, \rho, P_\parallel) = \tau(1 - P_\parallel) + \rho P_\parallel$.
-- **Post 2 (`nonequilibrium-dynamics-in-spin-model-transformers`)**:
-  - `mcbal_post2_prenorm_residual_bus_and_quench_relax_entropy_budget`: pre-norm
-    conjugate-field residual bus identity at zero increment vs. naive
-    magnetization-space attenuation, telescoping $K$-step Quench-and-Relax
-    entropy budget, and vanishing housekeeping entropy under symmetric couplings
-    (`housekeepingEntropyProxy_eq_zero_of_symmetric`).
-- **Post 3 (`a-large-d-closure-for-asymmetric-kinetic-vector-spin-systems`)**:
-  - `mcbal_post3_exact_sphere_norm_conservation`: exact algebraic sphere norm
-    conservation $a_i^2 r_i^2 + b_i = R^2$ and
-    $\|m_i'\|^2 + C_{ii}' = a_i^2 \|\bar{h}_i\|^2 + (a_i^2 v_i + b_i) = R^2$.
-  - `mcbal_post3_three_level_closure_hierarchy_k1_vs_k2_defect`: exact agreement
-    of Full Closure and Diagonal Closure at $K = 1$ for diagonal $C_0$, contrasted
-    with the non-zero shared-input cross-correlation defect
-    $2 J_{00} J_{01} (J_{00} J_{10} + J_{01} J_{11})$ at $K = 2$ (witnessed by
-    $J = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}$ where the defect equals $2$).
-  - `stageM3_noncommutative_covariance_closure_and_gain_defect`: non-commutative
-    operator innovation covariance closure, one-step lag covariance, $[G, J]$
-    gain-mixing commutator defect, finite-$K$ Stein trajectory, and unique
-    contractive PSD stationary covariance (`NoncommutativeCovarianceClosure`).
-- **8-Stage `solve et coagula` Poset (`McbalToKreinYangianLogCFTStage`, $\mathfrak{M}_1 \prec \dots \prec \mathfrak{M}_8$)**:
-  - `stageM2_stochastic_drazin_index_one_semisimplicity_aporia`: row-stochastic
-    absence of length-2 Jordan chains (`no_length_two_generalized_fixed_vector`)
-    and Drazin index-1 nilpotent shell extinction (`fittingNilpotentPart a d = 0`).
-  - `stageM4_multihop_word_nonclosure`: single-hop Monarch rank-1 slice minor
-    vanishing vs. two-hop word non-closure (`¬ IsMonarch (witness * witness)`).
-  - `stagesM5_M6_cl11_tower_sonn_and_yangian_monodromy`: $\mathcal{C}\ell(1,1)^{\otimes n}$
-    stage dimension $4^n$, $\mathfrak{so}(n,n)$ quadratic bivector Lie closure,
-    2-site Yangian RTT commutator, and non-Abelian $\operatorname{SL}_2$
-    Gauge–Lax exchange duality.
-  - `stagesM7_M8_krein_exceptional_isotropy_and_logcft_secular_evolution` &
-    `mcbal_to_krein_yangian_logcft_master_synthesis`: Krein isotropy of the
-    coalesced Jordan eigenmode $\langle \Psi_{\text{EP}}, \Psi_{\text{EP}} \rangle_B = 0$
-    (`jordan_chain_isotropic`) and exact $O(t^2)$ secular evolution at the
-    Krein–Hamiltonian–Hopf crash.
+The imported owner aliases the exact native theorems without changing their
+hypotheses or claiming that the final mcbal intertwiner already exists.

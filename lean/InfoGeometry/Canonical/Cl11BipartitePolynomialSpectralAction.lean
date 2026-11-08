@@ -1,0 +1,229 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib.Tactic
+
+import InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
+import InfoGeometry.Canonical.Cl11BipartiteDiracBridge
+import InfoGeometry.OperatorAlgebra.PeirceSpine.DiracPolynomialAction
+
+/-!
+# Finite polynomial spectral action on the bipartite Cl(1,1) stage
+
+This module formalizes a theorem-safe finite polynomial analogue of the
+spectral action on the repository-owned stage-two matrix carrier.
+
+For
+  P(X) = c₀ I + c₁ X + c₂ X²
+we define
+  S_P(X) = Tr(P(X)).
+
+Closed here:
+* invariance of S_P under arbitrary inner similarity by units;
+* exact trace formula for
+    X = Δ_L ⊗ I + I ⊗ Δ_R;
+* exact mixed trace term
+    2 Tr(Δ_L) Tr(Δ_R).
+
+This is a finite polynomial trace identity.  It is not the analytic
+Chamseddine--Connes functional Tr(f(D²/Λ²)), nor a Seeley--DeWitt expansion.
+No interpretation of the mixed term as mutual information or entanglement
+energy is asserted.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction
+
+open scoped Matrix Kronecker
+open InfoGeometry.Clifford.Cl11Matrix
+open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
+
+abbrev Atom := Mat2
+abbrev StageOne := MatStage 1
+-- Use the product index produced by `⊗ₖ` directly. `Idx 2` has this
+-- underlying type, but its recursively installed `Fintype` instance is
+-- opaque, whereas matrix Kronecker operations use the product instance.
+abbrev StageTwo :=
+  Matrix (InfoGeometry.Clifford.TowerMatrix.Idx 1 × Fin 2)
+    (InfoGeometry.Clifford.TowerMatrix.Idx 1 × Fin 2) ℝ
+
+/-- Quadratic polynomial cutoff model
+    P(X) = c₀ I + c₁ X + c₂ X². -/
+def spectralPolynomial (c0 c1 c2 : ℝ) (X : StageTwo) : StageTwo :=
+  c0 • (1 : StageTwo) + c1 • X + c2 • (X * X)
+
+/-- Finite polynomial spectral trace. -/
+def polynomialSpectralAction (c0 c1 c2 : ℝ) (X : StageTwo) : ℝ :=
+  Matrix.trace (spectralPolynomial c0 c1 c2 X)
+
+/-- Conjugation by a stage-two unit. -/
+def stageTwoConjugate (U : Units StageTwo) (X : StageTwo) : StageTwo :=
+  (U : StageTwo) * X * (↑U⁻¹ : StageTwo)
+
+@[simp] theorem stageTwoConjugate_one (U : Units StageTwo) :
+    stageTwoConjugate U 1 = 1 := by
+  simp [stageTwoConjugate]
+
+@[simp] theorem stageTwoConjugate_add
+    (U : Units StageTwo) (X Y : StageTwo) :
+    stageTwoConjugate U (X + Y) =
+      stageTwoConjugate U X + stageTwoConjugate U Y := by
+  simp [stageTwoConjugate, add_mul, mul_add]
+
+@[simp] theorem stageTwoConjugate_smul
+    (U : Units StageTwo) (r : ℝ) (X : StageTwo) :
+    stageTwoConjugate U (r • X) =
+      r • stageTwoConjugate U X := by
+  simp [stageTwoConjugate]
+
+@[simp] theorem stageTwoConjugate_mul
+    (U : Units StageTwo) (X Y : StageTwo) :
+    stageTwoConjugate U (X * Y) =
+      stageTwoConjugate U X * stageTwoConjugate U Y := by
+  simp [stageTwoConjugate, mul_assoc]
+
+/-- Polynomial functional calculus commutes with inner conjugation. -/
+theorem spectralPolynomial_conjugate
+    (U : Units StageTwo) (c0 c1 c2 : ℝ) (X : StageTwo) :
+    spectralPolynomial c0 c1 c2 (stageTwoConjugate U X) =
+      stageTwoConjugate U (spectralPolynomial c0 c1 c2 X) := by
+  simp [spectralPolynomial]
+
+/-- Matrix trace is invariant under stage-two unit conjugation. -/
+theorem trace_stageTwoConjugate
+    (U : Units StageTwo) (X : StageTwo) :
+    Matrix.trace (stageTwoConjugate U X) = Matrix.trace X := by
+  unfold stageTwoConjugate
+  calc
+    Matrix.trace ((U : StageTwo) * X * (↑U⁻¹ : StageTwo))
+        = Matrix.trace ((X * (↑U⁻¹ : StageTwo)) * (U : StageTwo)) := by
+            simpa only [mul_assoc] using
+              Matrix.trace_mul_comm (U : StageTwo) (X * (↑U⁻¹ : StageTwo))
+    _ = Matrix.trace (X * ((↑U⁻¹ : StageTwo) * (U : StageTwo))) := by
+            rw [Matrix.mul_assoc]
+    _ = Matrix.trace X := by simp
+
+/-- Exact gauge/similarity invariance of the finite polynomial spectral action. -/
+theorem polynomialSpectralAction_conjugation_invariant
+    (U : Units StageTwo) (c0 c1 c2 : ℝ) (X : StageTwo) :
+    polynomialSpectralAction c0 c1 c2 (stageTwoConjugate U X) =
+      polynomialSpectralAction c0 c1 c2 X := by
+  unfold polynomialSpectralAction
+  rw [spectralPolynomial_conjugate]
+  exact trace_stageTwoConjugate U (spectralPolynomial c0 c1 c2 X)
+
+/-! ## Decoupled left/right Laplacian readout -/
+
+/-- Tensor-sum operator X = Δ_L ⊗ I + I ⊗ Δ_R. -/
+def tensorSum (DeltaL : StageOne) (DeltaR : Atom) : StageTwo :=
+  DeltaL ⊗ₖ (1 : Atom) + (1 : StageOne) ⊗ₖ DeltaR
+
+/-- Exact square of the tensor sum. -/
+theorem tensorSum_sq (DeltaL : StageOne) (DeltaR : Atom) :
+    tensorSum DeltaL DeltaR * tensorSum DeltaL DeltaR =
+      (DeltaL * DeltaL) ⊗ₖ (1 : Atom) +
+      (2 : ℝ) • (DeltaL ⊗ₖ DeltaR) +
+      (1 : StageOne) ⊗ₖ (DeltaR * DeltaR) := by
+  unfold tensorSum
+  rw [Matrix.add_mul, Matrix.mul_add, Matrix.mul_add]
+  rw [← Matrix.mul_kronecker_mul DeltaL DeltaL (1 : Atom) (1 : Atom),
+    ← Matrix.mul_kronecker_mul DeltaL (1 : StageOne) (1 : Atom) DeltaR,
+    ← Matrix.mul_kronecker_mul (1 : StageOne) DeltaL DeltaR (1 : Atom),
+    ← Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) DeltaR DeltaR]
+  simp only [Matrix.one_mul, Matrix.mul_one]
+  module
+
+/-- Trace of the stage-one identity is 2. -/
+theorem trace_stageOne_one :
+    Matrix.trace (1 : StageOne) = 2 := by
+  rw [Matrix.trace_one]
+  norm_num [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
+
+/-- Trace of the Cl(1,1) atom identity is 2. -/
+theorem trace_atom_one :
+    Matrix.trace (1 : Atom) = 2 := by
+  rw [Matrix.trace_one]
+  norm_num
+
+/-- Trace of the stage-two identity is 4. -/
+theorem trace_stageTwo_one :
+    Matrix.trace (1 : StageTwo) = 4 := by
+  rw [Matrix.trace_one]
+  norm_num [Fintype.card_prod, InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
+
+/-- Exact trace of the tensor-sum operator. -/
+theorem trace_tensorSum (DeltaL : StageOne) (DeltaR : Atom) :
+    Matrix.trace (tensorSum DeltaL DeltaR) =
+      2 * (Matrix.trace DeltaL + Matrix.trace DeltaR) := by
+  unfold tensorSum
+  rw [Matrix.trace_add, Matrix.trace_kronecker, Matrix.trace_kronecker,
+    trace_atom_one, trace_stageOne_one]
+  ring
+
+/-- Exact trace of the squared tensor sum, including the mixed term. -/
+theorem trace_tensorSum_sq (DeltaL : StageOne) (DeltaR : Atom) :
+    Matrix.trace (tensorSum DeltaL DeltaR * tensorSum DeltaL DeltaR) =
+      2 * (Matrix.trace (DeltaL * DeltaL) +
+        Matrix.trace DeltaL * Matrix.trace DeltaR +
+        Matrix.trace (DeltaR * DeltaR)) := by
+  rw [tensorSum_sq]
+  rw [Matrix.trace_add, Matrix.trace_add, Matrix.trace_smul,
+    Matrix.trace_kronecker, Matrix.trace_kronecker, Matrix.trace_kronecker,
+    trace_atom_one, trace_stageOne_one]
+  simp only [smul_eq_mul]
+  ring
+
+/-- Exact finite polynomial spectral-action decomposition on the tensor sum. -/
+theorem polynomialSpectralAction_tensorSum
+    (c0 c1 c2 : ℝ) (DeltaL : StageOne) (DeltaR : Atom) :
+    polynomialSpectralAction c0 c1 c2 (tensorSum DeltaL DeltaR) =
+      4 * c0 +
+      2 * c1 * (Matrix.trace DeltaL + Matrix.trace DeltaR) +
+      2 * c2 *
+        (Matrix.trace (DeltaL * DeltaL) +
+          Matrix.trace DeltaL * Matrix.trace DeltaR +
+          Matrix.trace (DeltaR * DeltaR)) := by
+  unfold polynomialSpectralAction spectralPolynomial
+  rw [Matrix.trace_add, Matrix.trace_add, Matrix.trace_smul,
+    Matrix.trace_smul, Matrix.trace_smul, trace_stageTwo_one,
+    trace_tensorSum, trace_tensorSum_sq]
+  simp only [smul_eq_mul]
+  ring
+
+/-- The mixed quadratic contribution is exactly
+    2 c₂ Tr(Δ_L) Tr(Δ_R). -/
+theorem mixed_quadratic_trace_term
+    (c2 : ℝ) (DeltaL : StageOne) (DeltaR : Atom) :
+    2 * c2 * (Matrix.trace DeltaL * Matrix.trace DeltaR) =
+      c2 * Matrix.trace ((2 : ℝ) • (DeltaL ⊗ₖ DeltaR)) := by
+  rw [Matrix.trace_smul, Matrix.trace_kronecker]
+  simp only [smul_eq_mul]
+  ring
+
+/-! ## Peirce Dirac polynomial trace bridge -/
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+open InfoGeometry.Core.IdempotentGraphGrassmannian
+
+/-- Evaluating the finite quadratic trace polynomial at the square of the
+Peirce massive Dirac operator gives the trace of its algebraic quartic split.
+This connects the Peirce ring identity to the existing finite matrix trace
+action; it does not assert an analytic spectral-action formula. -/
+theorem peirceDirac_quadraticPolynomialTrace
+    (P A C : StageTwo) (hP : P * P = P) :
+    polynomialSpectralAction 0 (-1) 1
+      (peirceMassDirac P A C * peirceMassDirac P A C) =
+      Matrix.trace ((2 : ℤ) • genV P A C + idempotencyDefect (genV P A C)) := by
+  let D := peirceMassDirac P A C
+  have hPoly : spectralPolynomial 0 (-1) 1 (D * D) = diracQuarticPolynomial D := by
+    simp [spectralPolynomial, diracQuarticPolynomial]
+    noncomm_ring
+  unfold polynomialSpectralAction
+  rw [hPoly, dirac_quartic_polynomial_split hP A C]
+
+end InfoGeometry.Canonical.Cl11BipartitePolynomialSpectralAction

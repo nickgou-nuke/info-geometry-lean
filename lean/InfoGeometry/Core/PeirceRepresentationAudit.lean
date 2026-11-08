@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Core.PeirceMatrixRepresentation
+import InfoGeometry.Core.PeirceQuartetIndependence
+
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_single01
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_single10
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_one
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.support_mul_representation
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_mul_support
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.range_eq_adjoin
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.generators_mul_ne
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_eq_zero_iff
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_injective
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.representation_injective_iff
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.finrank_range
+#print axioms InfoGeometry.Core.PeirceMatrixRepresentation.finrank_adjoin
+#print axioms InfoGeometry.Core.PeirceQuartetIndependence.quartet_combination_eq_zero_iff
+#print axioms InfoGeometry.Core.PeirceQuartetIndependence.quartet_linearIndependent

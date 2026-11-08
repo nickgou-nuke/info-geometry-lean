@@ -1,0 +1,24 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Epistemology.FisherNaturalGradientSteepest
+
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.psd_cauchy_schwarz
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.pairing_le_of_quad_le
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.neg_quad_le_pairing
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.steepest_ascent
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.steepest_descent
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherBilin_apply
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherNaturalGradient_sum_zero
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherMetric_naturalGradient
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherNaturalGradient_unique
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherNaturalGradient_steepest_ascent
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherNaturalGradient_steepest_descent
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherNaturalGradient_rate_eq_norm_sq
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.fisherNaturalGradient_rate_eq_variance
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.uniformBool_naturalGradient_true
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.uniformBool_naturalGradient_ne_zero
+#print axioms InfoGeometry.Epistemology.FisherNaturalGradientSteepest.uniformBool_rate

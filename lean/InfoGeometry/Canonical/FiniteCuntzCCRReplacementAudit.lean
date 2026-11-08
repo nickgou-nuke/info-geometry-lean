@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.FiniteCantorAmplificationTrace
+import InfoGeometry.Canonical.FiniteDimensionalCCRObstruction
+import InfoGeometry.Canonical.FiniteMatrixCuntzObstruction
+import InfoGeometry.Canonical.FiniteStageCuntzObstruction
+import InfoGeometry.Canonical.CuntzFiniteStageObstruction
+import InfoGeometry.Canonical.CyclicTraceIsometryObstruction
+
+#print axioms InfoGeometry.Canonical.FiniteCantorCuntzBranches.amplifyRingHom
+#print axioms InfoGeometry.Canonical.FiniteCantorCuntzBranches.amplify_commute_iff
+#print axioms InfoGeometry.Canonical.FiniteCantorCuntzBranches.trace_branch_sandwich
+#print axioms InfoGeometry.Canonical.FiniteCantorCuntzBranches.trace_amplify
+#print axioms InfoGeometry.Canonical.FiniteCantorCuntzBranches.normalized_trace_amplify
+#print axioms InfoGeometry.Canonical.FiniteCantorCuntzBranches.existsUnique_branch_refinement
+#print axioms InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.scalar_commutator_forces_dimension_scalar_zero
+#print axioms InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.scalar_commutator_iff_zero_and_commute
+#print axioms InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.charTwo_commutator_eq_one
+#print axioms InfoGeometry.Canonical.FiniteMatrixCuntzObstruction.no_cuntz2_matrix
+#print axioms InfoGeometry.Canonical.square_matrix_right_inverse_annihilator_iff
+#print axioms InfoGeometry.Canonical.no_two_square_matrix_inverse_pairs
+#print axioms InfoGeometry.Canonical.CuntzFiniteStageObstruction.isometry_range_partition_implies_card_eq_one
+#print axioms InfoGeometry.Canonical.CyclicTraceIsometryObstruction.cyclic_trace_finite_partition_fixed_point
+#print axioms InfoGeometry.Canonical.CyclicTraceIsometryObstruction.no_car_isometry_in_nontrivial_ring

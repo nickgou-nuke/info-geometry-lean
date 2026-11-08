@@ -33,7 +33,6 @@ authorization.
 | Registered proof library | `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock proofs` | The `proofs` library selected in the root Lake configuration |
 | Registered test suite | `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometryTestSuite` | The test roots listed for that library in the lakefile |
 | All default targets | `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --all-default-targets` | Every current `@[default_target]`, subject to the resulting build success |
-| Ontology/phylogeny pipeline | `./scripts/run_pipeline.sh [--skip-lean-build]` | Narrow ontology/taxonomy Lean owners (unless skipped), Python taxonomy contract tests, `repo-phylogeny/v2` export + dashboard, and offline Auto-Ontology bridge dry-run |
 
 The [Lake wrapper](tools/infra/run_locked_lake_build.py) also chooses
 changed-owner mode when invoked without targets. A no-target success must not

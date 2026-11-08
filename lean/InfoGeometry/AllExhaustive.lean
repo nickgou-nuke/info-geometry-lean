@@ -199,6 +199,7 @@ import InfoGeometry.Algebra.FiveGradedLieJacobi
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Algebra.FiveGradedTKKSpec
 import InfoGeometry.Algebra.FormalSeriesCalculus
+import InfoGeometry.Algebra.FourthRootClockShift
 import InfoGeometry.Algebra.FourthRootPeirceProjectors
 import InfoGeometry.Algebra.FourthRootSpectralProjectors
 import InfoGeometry.Algebra.FractalScaleTransport
@@ -312,6 +313,8 @@ import InfoGeometry.Algebra.LinearInvolutionProjectors
 import InfoGeometry.Algebra.LogarithmicDeformationCoordinate
 import InfoGeometry.Algebra.LogarithmicJordanPair
 import InfoGeometry.Algebra.LorentzBiquaternionEquivalence
+import InfoGeometry.Algebra.MajoranaClockReencoding
+import InfoGeometry.Algebra.MajoranaQuartic
 import InfoGeometry.Algebra.ManivelG2SplitOctonions
 import InfoGeometry.Algebra.ManivelMagicSquare
 import InfoGeometry.Algebra.MaximalSplitOrder
@@ -10415,6 +10418,7 @@ import InfoGeometry.Quantum.LoxodromicGauge
 import InfoGeometry.Quantum.MajoranaKramersPairingCanonical
 import InfoGeometry.Quantum.MajoranaPfaffianBridge
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
+import InfoGeometry.Quantum.MajoranaQuarticFour
 import InfoGeometry.Quantum.MajoranaVacuumWickFour
 import InfoGeometry.Quantum.MathieuMoonshineMockTheta
 import InfoGeometry.Quantum.MatrixFourierSL2Representation

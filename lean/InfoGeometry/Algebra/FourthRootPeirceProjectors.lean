@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.FourthRootClockShift
 import InfoGeometry.Core.FinitePeirceMatrix
 import InfoGeometry.Canonical.CyclotomicProjectorReadout
 
@@ -20,15 +26,9 @@ open InfoGeometry.Canonical.CyclotomicProjector
 
 variable {A : Type*} [Ring A] [Algebra ℂ A]
 
-/-- The four scalar characters in the canonical order. -/
-def phase (k : Fin 4) : ℂ := Complex.I ^ k.val
-
 /-- The finite Fourier polynomial, using zeta^(-1)=zeta^3 for fourth roots. -/
 def projector (U : A) (k : Fin 4) : A :=
   (1 / 4 : ℂ) • (1 + (phase k)^3 • U + (phase k)^2 • U^2 + phase k • U^3)
-
-@[simp] theorem phase_fourth (k : Fin 4) : phase k ^ 4 = 1 := by
-  fin_cases k <;> norm_num [phase, pow_succ, Complex.I_mul_I]
 
 lemma I_mul_I_mul (c : ℂ) : Complex.I * (c * Complex.I) = -c := by
   calc Complex.I * (c * Complex.I) = (Complex.I * Complex.I) * c := by ring
@@ -184,32 +184,6 @@ theorem square_neg_one_projectors (U : A) (hU : U*U = -1) :
     try module
   )
 
-/-- Cyclic sector shifting does not by itself imply nilpotency. -/
-def cyclicShift : Matrix (Fin 4) (Fin 4) ℂ :=
-  !![0,0,0,1; 1,0,0,0; 0,1,0,0; 0,0,1,0]
-
-def degreeClock : Matrix (Fin 4) (Fin 4) ℂ := Matrix.diagonal phase
-
-theorem cyclicShift_fourth : cyclicShift^4 = 1 := by
-  funext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [cyclicShift, pow_succ, Matrix.mul_apply, Fin.sum_univ_succ]
-
-theorem degreeClock_fourth : degreeClock^4 = 1 := by
-  funext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [degreeClock, phase, Matrix.diagonal, pow_succ,
-      Matrix.mul_apply, Fin.sum_univ_succ, Complex.I_mul_I]
-
-/-- The clock-shift covariance holds although the shift has fourth power one. -/
-theorem degreeClock_shift : degreeClock * cyclicShift =
-    Complex.I • (cyclicShift * degreeClock) := by
-  ext i j
-  rw [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply, Matrix.mul_apply]
-  fin_cases i <;> fin_cases j <;>
-    norm_num [degreeClock, cyclicShift, phase, Matrix.diagonal,
-      Fin.sum_univ_succ, pow_succ, Complex.I_mul_I]
-
 /-- This shift satisfies the stated sector-ladder relation and is still invertible. -/
 theorem cyclicShift_projector (k : Fin 4) :
     cyclicShift * projector degreeClock k =
@@ -247,9 +221,5 @@ theorem cyclicShift_projector (k : Fin 4) :
       Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.add_apply]
     fin_cases i <;> fin_cases j <;>
       norm_num [cyclicShift, phase, pow_succ, Complex.I_mul_I]
-
-theorem cyclicShift_fourth_ne_zero : cyclicShift^4 ≠ 0 := by
-  rw [cyclicShift_fourth]
-  exact one_ne_zero
 
 end InfoGeometry.Algebra.FourthRootPeirceProjectors

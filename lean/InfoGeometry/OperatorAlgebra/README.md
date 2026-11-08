@@ -36,6 +36,42 @@ This table is a practical entry map, not an exhaustive theorem inventory.
 | Jones optics and material response | [OperatorialJonesCalculus.lean](OperatorialJonesCalculus.lean), [SusceptibilityHessian.lean](SusceptibilityHessian.lean), [StatisticalChannels.lean](OperatorialJonesCalculus/StatisticalChannels.lean), [HessianResponse.lean](SusceptibilityHessian/HessianResponse.lean) | These include data interfaces as well as theorems. For example, `PolarizationChannel` supplies a channel field, while Hessian regularity is defined by bijectivity of a supplied response operator; a physical evolution law is not inferred from those fields. |
 | Affine and Virasoro bridges | [AffineVirasoroBridge.lean](AffineVirasoroBridge.lean), [VirasoroProjectBridge.lean](VirasoroProjectBridge.lean) | The abstract datum supplies modes and a central element. Concrete realization and bracket theorems, including the conditional Heisenberg construction, are described below. |
 
+## Reversible gates and native differentiation
+
+[ReversibleGateVariation.lean](PeirceSpine/ReversibleGateVariation.lean) reuses
+the ordered shear `epistemicCornerShear P A C = (1+conePlus P A)*(1+coneMinus P C)`
+and its reverse-ordered inverse. It proves midpoint/input reconstruction,
+the exact right-trivialized parameter variation, and the output-coordinate
+tangent formula in an arbitrary associative ring. The finite-update formula
+retains the mixed quadratic remainder. A separate finite-list theorem shows
+that words using only one fixed upper corner depend on the sum of their
+parameters and cannot distinguish permutations.
+An explicit construction in native `Units` specializes nested-word reduction
+to the actual mixed-corner shear and its polynomial inverse.
+
+[PeirceReversibleDifferential.lean](../Analysis/PeirceReversibleDifferential.lean)
+constructs the full continuous linear differential in the independent
+parameters `(A,C,x)` and proves native `HasFDerivAt` / `fderiv` statements.
+[PeirceReversibleMatrixPullback.lean](../Analysis/PeirceReversibleMatrixPullback.lean)
+proves the cotangent pullback on full finite complex matrices, differentiated
+over the reals, using the existing positive definite real trace pairing.
+The projector is fixed and self-adjoint. The file includes a scalar-loss
+chain rule and a concrete half trace-square loss.
+
+[NestedGroupWords.lean](../Algebra/NestedGroupWords.lean) constructs labeled
+words from native binary trees, identifies their erasure with Mathlib Dyck
+words, and proves reduction to the empty word before evaluating in an
+arbitrary group. It also proves that balanced-word evaluation is not an
+injective encoding of trees when a label exists.
+[ZornTripleContraction.lean](../Canonical/ZornTripleContraction.lean) proves
+the precisely bracketed upper-sector triple anticommutator with a native
+`Matrix.det` coefficient using the existing full nonassociative split-octonion
+product. Its carrier is distinct from the associative gate algebra.
+
+The [theorem contract](../../../docs/PEIRCE_REVERSIBLE_DIFFERENTIAL_CONTRACT.md)
+records the source, assumptions and validation scope. These results do not
+construct a Yangian RTT algebra or supply an algorithmic memory bound.
+
 ## Reading algebraic and spectral claims
 
 ### Ordered resolvent transforms

@@ -98,7 +98,8 @@ Unifies in one kernel-checked theorem:
 6. **Aharonov Quantum Cheshire Cat & 3-Box Counter-Particle:**
    $\langle\Phi_{\mathrm{CC}}|\Pi_L|\Psi_{\mathrm{CC}}\rangle = 2$,
    $\langle\Phi_{\mathrm{CC}}|\Pi_R\Sigma_z|\Psi_{\mathrm{CC}}\rangle = 2$, and
-   3-box counter-particle weak occupation $\langle\Phi_{\mathrm{box}}|P_2|\Psi_{\mathrm{box}}\rangle = -1$. -/
+   3-box counter-particle weak occupation $\langle\Phi_{\mathrm{box}}|P_2|\Psi_{\mathrm{box}}\rangle
+  = -1$. -/
 theorem grand_unification_spire_master_capstone
     (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {R M : Type*} [Field R] [CharZero R] [Invertible (2 : R)]
@@ -129,8 +130,10 @@ theorem grand_unification_spire_master_capstone
     (Fintype.card (CantorTypeDBitwordLimit.Bitword 5) = 32 ∧
       CantorTypeDBitwordLimit.injectFiniteState 6 (CantorTypeDBitwordLimit.extendParityHom s5) =
         CantorTypeDBitwordLimit.injectFiniteState 5 s5) ∧
-    (twoStatePairing4 (cheshirePostState (R := R)) cheshirePathLeft (cheshirePreState (R := R)) = 2 ∧
-      twoStatePairing4 (cheshirePostState (R := R)) cheshirePathRight (cheshirePreState (R := R)) = 0 ∧
+    (twoStatePairing4 (cheshirePostState (R := R)) cheshirePathLeft (cheshirePreState (R
+  := R)) = 2 ∧
+      twoStatePairing4 (cheshirePostState (R := R)) cheshirePathRight (cheshirePreState (R
+  := R)) = 0 ∧
       twoStatePairing4 (cheshirePostState (R := R))
         (cheshirePathLeft * cheshireSpinZ) (cheshirePreState (R := R)) = 0 ∧
       twoStatePairing4 (cheshirePostState (R := R))
@@ -221,14 +224,16 @@ theorem zorn_tetractys_aharonov_and_grand_unification_spire_capstone
   have hdiff :
       InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D (u * v) -
           InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D u =
-        (u : A_alg) * InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D v * (u⁻¹ : A_algˣ).val := by
+        (u : A_alg) * InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D v * (u⁻¹ : A_algˣ).val
+  := by
     calc
       InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D (u * v) -
           InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D u
         = ((u : A_alg) * InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D v * (u⁻¹ : A_algˣ).val +
             InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D u) -
           InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D u := by rw [hcocycle]
-      _ = (u : A_alg) * InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D v * (u⁻¹ : A_algˣ).val := by abel
+      _ = (u : A_alg) * InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D v * (u⁻¹ : A_algˣ).val
+  := by abel
   have hvortex := InfoGeometry.Topology.Parafermion.diagonalVortexOperator_cube_eq_one h_phase
   exact ⟨hnambu, ⟨hcat_idem, hcat_diff⟩, hah.2.2.2, ⟨hdiff, hvortex⟩⟩
 
@@ -243,7 +248,8 @@ Unifies in one kernel-checked theorem:
    $\tau_{\mathrm{Klein}}(T_2(U_0)) \ne T_2(\tau_{\mathrm{Klein}}(U_0))$;
 3. **Souriau–Tomita Massieu Separation & Finite Connes Cocycle:**
    $\Phi_{\mathrm{Massieu}}(0) \ne \log\det(\exp(0))$ on $\mathrm{Fin}\,2$ and the
-   pointwise Connes 1-cocycle identity $u_{\psi|\varphi}(s+t) = u_{\psi|\varphi}(s)\,\sigma^\varphi_s(u_{\psi|\varphi}(t))$. -/
+   pointwise Connes 1-cocycle identity $u_{\psi|\varphi}(s+t)
+  = u_{\psi|\varphi}(s)\,\sigma^\varphi_s(u_{\psi|\varphi}(t))$. -/
 theorem co60_compton_klein_bottle_souriau_and_spire_capstone
     (I0 P_pol : ℝ) (hI0 : I0 ≠ 0)
     (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
@@ -332,19 +338,27 @@ Unifies in one kernel-checked theorem:
    Leibniz rule $d_F(X * Y) = d_F(X) * Y + X * d_F(Y)$, $F$-oddness of operator 1-forms
    ($\{F, d_F(X)\} = 0$), $F$-evenness of operator 2-form products ($[F, d_F(X) \, d_F(Y)] = 0$),
    and cyclic graded trace closure ($\tau(F \, d_F(X)) = 0$);
-2. **Operator Maurer–Cartan Conjugation Shift, Universal Graded Curvature Law, & Non-Abelian Operator Curl Identity:**
-   $D + \omega_D = U_{\mathrm{inv}} D U$, $\{D, \omega_D\} + \omega_D^2 = U_{\mathrm{inv}} D^2 U - D^2$,
+2. **Operator Maurer–Cartan Conjugation Shift, Universal Graded Curvature Law,
+  & Non-Abelian Operator Curl Identity:**
+   $D + \omega_D = U_{\mathrm{inv}} D U$, $\{D, \omega_D\} + \omega_D^2
+  = U_{\mathrm{inv}} D^2 U - D^2$,
    identical graded flatness $\{F, \omega_F\} + \omega_F^2 = 0$ when $F^2 = 1$, and the non-Abelian
    operator curl law $[H_1, U \, \omega_{H_2}(U)] - [H_2, U \, \omega_{H_1}(U)] = [[H_1, H_2], U]$;
-3. **Peirce Unipotent Maurer–Cartan Dichotomy, Two-Cone Möbius–Bruhat Pullbacks, Amari–Nagaoka QGT Connections, & 5-Graded Kantor Annihilator:**
-   ungraded projector curvature $[P, \omega_P] + \omega_P^2 = N_+$ (witnessed non-flat on $2 \times 2$
-   integer matrices) vs. Cartan-graded involution flatness $\{S_P, \omega_{S_P}\} + \omega_{S_P}^2 = 0$,
+3. **Peirce Unipotent Maurer–Cartan Dichotomy, Two-Cone Möbius–Bruhat Pullbacks,
+  Amari–Nagaoka QGT Connections, & 5-Graded Kantor Annihilator:**
+   ungraded projector curvature $[P, \omega_P] + \omega_P^2
+  = N_+$ (witnessed non-flat on $2 \times 2$
+   integer matrices) vs. Cartan-graded involution flatness $\{S_P, \omega_{S_P}\} + \omega_{S_P}^2
+  = 0$,
    two-cone Möbius–Bruhat left Maurer–Cartan pullback $\Omega_L = \Phi - \Sigma - V N_-$,
-   commuting dually flat QGT connections $\nabla^{(+)}(\nabla^{(-)}(X)) = \nabla^{(-)}(\nabla^{(+)}(X))$,
-   and the 5th-order Kantor charge annihilator $(\Delta_P^5 - 5 \Delta_P^3 + 4 \Delta_P)(\mathcal{K}_{\mathrm{tot}})(X) = 0$;
+   commuting dually flat QGT connections $\nabla^{(+)}(\nabla^{(-)}(X))
+  = \nabla^{(-)}(\nabla^{(+)}(X))$,
+
+  the 5th-order Kantor charge annihilator $(\Delta_P^5 - 5 \Delta_P^3 + 4 \Delta_P)(\mathcal{K}_{\mathrm{tot}})(X) = 0$;
 4. **Endomorphism $\Gamma$-Odd Operator 1-Form Product & Supertrace Anomaly (`AnomalyInflow`):**
    $\Gamma (A_{\mathrm{odd}} B_{\mathrm{odd}}) = (A_{\mathrm{odd}} B_{\mathrm{odd}}) \Gamma$ and
-   $\operatorname{sTr}_\Gamma([A_{\mathrm{odd}}, B_{\mathrm{odd}}]) = 2 \operatorname{sTr}_\Gamma(A_{\mathrm{odd}} B_{\mathrm{odd}})$. -/
+   $\operatorname{sTr}_\Gamma([A_{\mathrm{odd}}, B_{\mathrm{odd}}])
+  = 2 \operatorname{sTr}_\Gamma(A_{\mathrm{odd}} B_{\mathrm{odd}})$. -/
 theorem operator_maurer_cartan_and_differential_forms_spire_capstone
     {B : Type*} [Ring B] {R₀ : Type*} [AddCommGroup R₀]
     (τ : B →+ R₀)

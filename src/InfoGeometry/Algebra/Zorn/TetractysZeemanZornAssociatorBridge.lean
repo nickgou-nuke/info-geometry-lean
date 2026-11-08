@@ -36,8 +36,7 @@ This module establishes the exact algebraic bridge between the **Real DeWitt Spl
 Associator Poset** (`InfoGeometry.Algebra.Zorn.ZeemanChiralGatedAssociatorPoset`) over any
 unital associative ring `B` with a Peirce idempotent $P^2 = P$:
 
-1. **Stage $\mathfrak{TZ}_1$ (Universal Peirce–Tetractys Zorn Triad $\langle N_+, N_-,
-  P \rangle$ & Cubic Nambu Law):**
+1. **Stage $\mathfrak{TZ}_1$ (Universal Peirce–Tetractys Zorn Triad $\langle N_+, N_-, P \rangle$ & Cubic Nambu Law):**
    For any $P^2 = P$ and $A, C \in B$, the ordered three-vector
    $$\mathcal{T}_{\mathrm{Peirce}}(P, A, C) := \langle N_+, N_-, P \rangle
      = \langle P A (1 - P),\, (1 - P) C P,\, P \rangle$$
@@ -49,30 +48,23 @@ unital associative ring `B` with a Peirce idempotent $P^2 = P$:
      = (1 + P)\,V(P, A, C) = V(P, A, C) + N_+ N_-.$$
    When the DeWitt bridge $\Phi = N_+ + N_-$ is normalized ($\Phi^2 = V = 1$), this reduces over
    any ring `B` to $\mathrm{nambu}\big(\mathcal{T}_{\mathrm{Peirce}}(P, W, W)\big) = 1 + P$.
-2. **Stage $\mathfrak{TZ}_2$ (Cartan-Graded DeWitt Triad $\langle N_+, N_-,
-  S_P \rangle$ & $\mathfrak{sl}_2$ Casimir Identity):**
+2. **Stage $\mathfrak{TZ}_2$ (Cartan-Graded DeWitt Triad $\langle N_+, N_-, S_P \rangle$ & $\mathfrak{sl}_2$ Casimir Identity):**
    Replacing $P$ by the DeWitt Cartan grading involution $S_P = \mathrm{invS}(P) = P - (1 - P)$
-   yields the Cartan triad $\mathcal{T}_{\mathrm{Cartan}}(P, A, C)
-  := \langle N_+, N_-, S_P \rangle$,
+   yields the Cartan triad $\mathcal{T}_{\mathrm{Cartan}}(P, A, C) := \langle N_+, N_-, S_P \rangle$,
    whose self-cross product is $\langle 2N_-, 2N_+, \Sigma(P, A, C) \rangle$ and whose cubic Nambu
    volume is
    $$\mathrm{nambu}\big(\mathcal{T}_{\mathrm{Cartan}}(P, A, C)\big)
      = 3\,V(P, A, C)
      = S_P^2 V(P, A, C) + \Phi^2 - J^2,$$
-   matching the Row-3 DeWitt $\mathfrak{sl}_2$ quadratic Casimir $S_P^2 + \Phi^2 - J^2 = 3I$ when $V
-  = 1$.
-3. **Stage $\mathfrak{TZ}_3$ (Row-3 DeWitt $\mathfrak{sl}_2$ Triad $\langle S_P, \Phi,
-  J \rangle$ & Chiral-Gated vs. Racemic Zorn Associators):**
-   Proves the exact cross-product commutator table of $\mathcal{T}_{\mathfrak{sl}_2}(P, A, C)
-  := \langle S_P, \Phi, J \rangle$
-   ($\mathcal{T}_{\mathfrak{sl}_2} \times \mathcal{T}_{\mathfrak{sl}_2}
-  = \langle -2\Sigma, -2\Phi, 2J \rangle$)
+   matching the Row-3 DeWitt $\mathfrak{sl}_2$ quadratic Casimir $S_P^2 + \Phi^2 - J^2 = 3I$ when $V = 1$.
+3. **Stage $\mathfrak{TZ}_3$ (Row-3 DeWitt $\mathfrak{sl}_2$ Triad $\langle S_P, \Phi, J \rangle$ & Chiral-Gated vs. Racemic Zorn Associators):**
+   Proves the exact cross-product commutator table of $\mathcal{T}_{\mathfrak{sl}_2}(P, A, C) := \langle S_P, \Phi, J \rangle$
+   ($\mathcal{T}_{\mathfrak{sl}_2} \times \mathcal{T}_{\mathfrak{sl}_2} = \langle -2\Sigma, -2\Phi, 2J \rangle$)
    and shows that in `ZornNC B`, the ungated racemic state `psiCov r (tetractysPeirceTriad P A C)`
    has zero diagonal self-associator and zero supertrace, whereas its chiral beta-gated projection
    `chiralUpperProj (psiCov r (tetractysPeirceTriad P A C))` has diagonal self-associator
    $\langle (1 + P)V(P, A, C),\, 0,\, 0,\, -(1 + P)V(P, A, C) \rangle$.
-4. **Stage $\mathfrak{TZ}_4$ (Peirce Eigenvalue Decomposition $(2P,
-  1 - P)$ & Nilpotent Cone Commutant):**
+4. **Stage $\mathfrak{TZ}_4$ (Peirce Eigenvalue Decomposition $(2P, 1 - P)$ & Nilpotent Cone Commutant):**
    Proves that the Peirce Nambu volume $1 + P$ acts on the upper Peirce corner $P$ with integer
    weight $2$ ($P(1 + P) = P + P$) and on the lower Peirce corner $1 - P$ with weight $1$
    ($(1 - P)(1 + P) = 1 - P$), while $V(P, A, C)$ commutes with both nilpotent Peirce cones $N_\pm$.
@@ -85,20 +77,14 @@ unital associative ring `B` with a Peirce idempotent $P^2 = P$:
 ## ii. Three-Bucket Audit Classification
 
 - **BUCKET 1 (Genuine Constructive Owner Declarations Kept & Proved):**
-  - `TetractysZornBridgeStage` ($\mathfrak{TZ}_1 \prec \dots \prec \mathfrak{TZ}_5$), `rank`,
-  `coverEdge`, `instDecidableRelCoverEdge`, `rank_injective`, `coverEdge_rank_step`, `coverEdge_strictMono`, `coverEdge_acyclic`, `poset_covering_chain`
-  - `tetractysPeirceTriad`, `cross_tetractysPeirceTriad`, `nambu_tetractysPeirceTriad`,
-  `nambu_tetractysPeirceTriad_normalized`, `tz1_peirce_tetractys_triad_cross_and_nambu_volume`
-  - `tetractysCartanTriad`, `cross_tetractysCartanTriad`, `nambu_tetractysCartanTriad`,
-  `nambu_tetractysCartanTriad_eq_casimir`, `tz2_cartan_tetractys_triad_and_sl2_casimir_identity`
-  - `tetractysSl2Triad`, `cross_tetractysSl2Triad`, `nambu_tetractysSl2Triad`,
-  `chiralGated_tetractysPeirceTriad_self_associator`, `tz3_sl2_triad_and_chiral_gated_tetractys_associator`
+  - `TetractysZornBridgeStage` ($\mathfrak{TZ}_1 \prec \dots \prec \mathfrak{TZ}_5$), `rank`, `coverEdge`, `instDecidableRelCoverEdge`, `rank_injective`, `coverEdge_rank_step`, `coverEdge_strictMono`, `coverEdge_acyclic`, `poset_covering_chain`
+  - `tetractysPeirceTriad`, `cross_tetractysPeirceTriad`, `nambu_tetractysPeirceTriad`, `nambu_tetractysPeirceTriad_normalized`, `tz1_peirce_tetractys_triad_cross_and_nambu_volume`
+  - `tetractysCartanTriad`, `cross_tetractysCartanTriad`, `nambu_tetractysCartanTriad`, `nambu_tetractysCartanTriad_eq_casimir`, `tz2_cartan_tetractys_triad_and_sl2_casimir_identity`
+  - `tetractysSl2Triad`, `cross_tetractysSl2Triad`, `nambu_tetractysSl2Triad`, `chiralGated_tetractysPeirceTriad_self_associator`, `tz3_sl2_triad_and_chiral_gated_tetractys_associator`
   - `peirce_corner_eigenvalues_of_one_add_P`, `tz4_peirce_eigenvalue_split_and_cone_commutant`
-  - `dtMatP0_eq_e11_and_cones`, `tetractysPeirceTriad_dtMat_eq_pChiral`,
-  `nambu_pChiral_eq_one_add_dtMatP0`, `tz5_finite_dewitt_tetractys_matrix_witness_bridge`, `tz5_master_tetractys_zeeman_zorn_associator_bridge`
+  - `dtMatP0_eq_e11_and_cones`, `tetractysPeirceTriad_dtMat_eq_pChiral`, `nambu_pChiral_eq_one_add_dtMatP0`, `tz5_finite_dewitt_tetractys_matrix_witness_bridge`, `tz5_master_tetractys_zeeman_zorn_associator_bridge`
 - **BUCKET 2 (Conditional Ring-Theoretic Theorems from Explicit Idempotent Hypotheses):**
-  - All `[Ring B]` theorems take explicit `hP : P * P
-  = P` (and where normalized, `hPhi : genPhi P W W * genPhi P W W = 1`).
+  - All `[Ring B]` theorems take explicit `hP : P * P = P` (and where normalized, `hPhi : genPhi P W W * genPhi P W W = 1`).
 - **BUCKET 3 (Open Closure Debt):**
   - None (`0` `sorry`, `0` `admit`, `0` custom axioms, `0` vacuous wrappers).
 
@@ -115,14 +101,10 @@ unital associative ring `B` with a Peirce idempotent $P^2 = P$:
 ## iv. Table of contents
 
 - Section 0: The 5-Stage Tetractys–Zorn Bridge Poset ($\mathfrak{TZ}_1 \prec \dots \prec \mathfrak{TZ}_5$)
-- Section 1 ($\mathfrak{TZ}_1$): Universal Peirce–Tetractys Zorn Triad $\langle N_+, N_-,
-  P \rangle$ & Cubic Nambu Formula
-- Section 2 ($\mathfrak{TZ}_2$): Cartan-Graded DeWitt Triad $\langle N_+, N_-,
-  S_P \rangle$ & the $3V$ Casimir Law
-- Section 3 ($\mathfrak{TZ}_3$): Row-3 DeWitt $\mathfrak{sl}_2$ Triad $\langle S_P, \Phi,
-  J \rangle$ & Chiral-Gated Zorn Associator
-- Section 4 ($\mathfrak{TZ}_4$): Peirce Corner Eigenvalue Split $(2P,
-  1 - P)$ & Nilpotent Cone Commutant
+- Section 1 ($\mathfrak{TZ}_1$): Universal Peirce–Tetractys Zorn Triad $\langle N_+, N_-, P \rangle$ & Cubic Nambu Formula
+- Section 2 ($\mathfrak{TZ}_2$): Cartan-Graded DeWitt Triad $\langle N_+, N_-, S_P \rangle$ & the $3V$ Casimir Law
+- Section 3 ($\mathfrak{TZ}_3$): Row-3 DeWitt $\mathfrak{sl}_2$ Triad $\langle S_P, \Phi, J \rangle$ & Chiral-Gated Zorn Associator
+- Section 4 ($\mathfrak{TZ}_4$): Peirce Corner Eigenvalue Split $(2P, 1 - P)$ & Nilpotent Cone Commutant
 - Section 5 ($\mathfrak{TZ}_5$): Exact Identification with `ChiralNambuMatrixWitness` & Master Synthesis
 -/
 
@@ -202,23 +184,20 @@ theorem poset_covering_chain :
 end TetractysZornBridgeStage
 
 /-!
-## Section 1 ($\mathfrak{TZ}_1$): Universal Peirce–Tetractys Zorn Triad $\langle N_+, N_-,
-  P \rangle$ & Cubic Nambu Formula
+## Section 1 ($\mathfrak{TZ}_1$): Universal Peirce–Tetractys Zorn Triad $\langle N_+, N_-, P \rangle$ & Cubic Nambu Formula
 -/
 
 section UniversalRingBridge
 
 variable {B : Type*} [Ring B]
 
-/-- The Peirce–Tetractys three-vector $\mathcal{T}_{\mathrm{Peirce}}(P, A, C)
-  = \langle N_+, N_-, P \rangle$
+/-- The Peirce–Tetractys three-vector $\mathcal{T}_{\mathrm{Peirce}}(P, A, C) = \langle N_+, N_-, P \rangle$
 in `NoncommutativeZornNambu.Vec3 B`. -/
 def tetractysPeirceTriad (P A C : B) : NoncommutativeZornNambu.Vec3 B :=
   ⟨conePlus P A, coneMinus P C, P⟩
 
 /-- Self-cross product of the Peirce–Tetractys triad:
-$\langle N_+, N_-, P \rangle \times \langle N_+, N_-, P \rangle
-  = \langle N_-, N_+, \Sigma(P, A, C) \rangle$. -/
+$\langle N_+, N_-, P \rangle \times \langle N_+, N_-, P \rangle = \langle N_-, N_+, \Sigma(P, A, C) \rangle$. -/
 theorem cross_tetractysPeirceTriad {P : B} (hP : P * P = P) (A C : B) :
     cross (tetractysPeirceTriad P A C) (tetractysPeirceTriad P A C) =
       ⟨coneMinus P C, conePlus P A, genSig P A C⟩ := by
@@ -267,19 +246,16 @@ theorem tz1_peirce_tetractys_triad_cross_and_nambu_volume
   exact ⟨hcross, hnambu.1, hnambu.2, hnorm⟩
 
 /-!
-## Section 2 ($\mathfrak{TZ}_2$): Cartan-Graded DeWitt Triad $\langle N_+, N_-,
-  S_P \rangle$ & the $3V$ Casimir Law
+## Section 2 ($\mathfrak{TZ}_2$): Cartan-Graded DeWitt Triad $\langle N_+, N_-, S_P \rangle$ & the $3V$ Casimir Law
 -/
 
-/-- The Cartan-graded DeWitt triad $\mathcal{T}_{\mathrm{Cartan}}(P, A, C)
-  = \langle N_+, N_-, S_P \rangle$
+/-- The Cartan-graded DeWitt triad $\mathcal{T}_{\mathrm{Cartan}}(P, A, C) = \langle N_+, N_-, S_P \rangle$
 with $S_P = \mathrm{invS}(P) = P - (1 - P)$. -/
 def tetractysCartanTriad (P A C : B) : NoncommutativeZornNambu.Vec3 B :=
   ⟨conePlus P A, coneMinus P C, invS P⟩
 
 /-- Self-cross product of the Cartan-graded DeWitt triad:
-$\langle N_+, N_-, S_P \rangle \times \langle N_+, N_-, S_P \rangle
-  = \langle 2N_-, 2N_+, \Sigma(P, A, C) \rangle$. -/
+$\langle N_+, N_-, S_P \rangle \times \langle N_+, N_-, S_P \rangle = \langle 2N_-, 2N_+, \Sigma(P, A, C) \rangle$. -/
 theorem cross_tetractysCartanTriad {P : B} (hP : P * P = P) (A C : B) :
     cross (tetractysCartanTriad P A C) (tetractysCartanTriad P A C) =
       ⟨coneMinus P C + coneMinus P C,
@@ -338,12 +314,10 @@ theorem tz2_cartan_tetractys_triad_and_sl2_casimir_identity
   exact ⟨hcross, hnambu, hcas⟩
 
 /-!
-## Section 3 ($\mathfrak{TZ}_3$): Row-3 DeWitt $\mathfrak{sl}_2$ Triad $\langle S_P, \Phi,
-  J \rangle$ & Chiral-Gated Zorn Associator
+## Section 3 ($\mathfrak{TZ}_3$): Row-3 DeWitt $\mathfrak{sl}_2$ Triad $\langle S_P, \Phi, J \rangle$ & Chiral-Gated Zorn Associator
 -/
 
-/-- The Row-3 DeWitt $\mathfrak{sl}_2$ triad $\mathcal{T}_{\mathfrak{sl}_2}(P, A, C)
-  = \langle S_P, \Phi, J \rangle$. -/
+/-- The Row-3 DeWitt $\mathfrak{sl}_2$ triad $\mathcal{T}_{\mathfrak{sl}_2}(P, A, C) = \langle S_P, \Phi, J \rangle$. -/
 def tetractysSl2Triad (P A C : B) : NoncommutativeZornNambu.Vec3 B :=
   ⟨invS P, genPhi P A C, genJ P A C⟩
 
@@ -423,8 +397,7 @@ theorem tz3_sl2_triad_and_chiral_gated_tetractys_associator
   exact ⟨hcross, hnambu, hgated.1, hgated.2⟩
 
 /-!
-## Section 4 ($\mathfrak{TZ}_4$): Peirce Corner Eigenvalue Split $(2P,
-  1 - P)$ & Nilpotent Cone Commutant
+## Section 4 ($\mathfrak{TZ}_4$): Peirce Corner Eigenvalue Split $(2P, 1 - P)$ & Nilpotent Cone Commutant
 -/
 
 /-- The normalized Peirce Nambu operator $1 + P$ acts with weight $2$ on the upper Peirce
@@ -522,12 +495,9 @@ theorem tz5_finite_dewitt_tetractys_matrix_witness_bridge :
 
 /-- **Master DeWitt Tetractys $\otimes$ Zeeman-Gated Zorn Associator Bridge ($\mathfrak{TZ}_1 \prec \dots \prec \mathfrak{TZ}_5$):**
 Unifies the 5-stage covering poset with:
-1. ($\mathfrak{TZ}_1$) Universal Peirce–Tetractys Nambu law $\mathrm{nambu}\langle N_+, N_-,
-  P \rangle = (1 + P)V$;
-2. ($\mathfrak{TZ}_2$) Cartan-graded DeWitt triad Nambu law $\mathrm{nambu}\langle N_+, N_-,
-  S_P \rangle = 3V = S_P^2 V + \Phi^2 - J^2$;
-3. ($\mathfrak{TZ}_3$) Row-3 DeWitt $\mathfrak{sl}_2$ triad cross-product table
-  chiral-gated vs. racemic Zorn associators;
+1. ($\mathfrak{TZ}_1$) Universal Peirce–Tetractys Nambu law $\mathrm{nambu}\langle N_+, N_-, P \rangle = (1 + P)V$;
+2. ($\mathfrak{TZ}_2$) Cartan-graded DeWitt triad Nambu law $\mathrm{nambu}\langle N_+, N_-, S_P \rangle = 3V = S_P^2 V + \Phi^2 - J^2$;
+3. ($\mathfrak{TZ}_3$) Row-3 DeWitt $\mathfrak{sl}_2$ triad cross-product table and chiral-gated vs. racemic Zorn associators;
 4. ($\mathfrak{TZ}_4$) Peirce corner eigenvalue split $(2P, 1 - P)$ of $1 + P$;
 5. ($\mathfrak{TZ}_5$) Exact specialization to the $2 \times 2$ integer DeWitt Tetractys matrix witness `pChiral`. -/
 theorem tz5_master_tetractys_zeeman_zorn_associator_bridge
@@ -567,21 +537,17 @@ theorem tz5_master_tetractys_zeeman_zorn_associator_bridge
     htz2,
     htz3,
     ⟨htz4.1, htz4.2.1⟩,
-    ⟨tetractysPeirceTriad_dtMat_eq_pChiral, nambu_pChiral_eq_one_add_dtMatP0,
-  nambu_pChiral_ne_zero⟩⟩
+    ⟨tetractysPeirceTriad_dtMat_eq_pChiral, nambu_pChiral_eq_one_add_dtMatP0, nambu_pChiral_ne_zero⟩⟩
 
-/-- **Unified DeWitt Tetractys, Klein–Nishina Coincidence Cross-Ratio, Cayley Transform,
-  & $^{60}\text{Co} \to {}^{60}\text{Ni}^*$ Zorn Cascade Time-Reversal Anomaly Bridge:**
+/-- **Unified DeWitt Tetractys, Klein–Nishina Coincidence Cross-Ratio, Cayley Transform, & $^{60}\text{Co} \to {}^{60}\text{Ni}^*$ Zorn Cascade Time-Reversal Anomaly Bridge:**
 Combines:
-1. Universal Peirce–Tetractys Nambu volume $\mathrm{nambu}\langle N_+, N_-, P \rangle
-  = (1 + P)V(P, A, C)$
+1. Universal Peirce–Tetractys Nambu volume $\mathrm{nambu}\langle N_+, N_-, P \rangle = (1 + P)V(P, A, C)$
    and operator Cayley transform recovery $(1 - U)(1 + S) = S + S$;
 2. Multiplicative single-detector efficiency cancellation in the Klein–Nishina coincidence
    cross-ratio $CR = \frac{N_{12} N_{34}}{N_{14} N_{23}}$ and its native Zorn Cayley chiral
    asymmetry $\mathcal{A}_{\mathrm{chiral}} = \frac{CR - 1}{CR + 1}$;
 3. Constructive 3-vector Zorn associator identity (`volume_is_associator`) and Time-Reversal
-   symmetry breaking ($\Omega(-\vec{s}, \vec{e}_1, \vec{e}_2) \ne \Omega(\vec{s}, \vec{e}_1,
-  \vec{e}_2)$)
+   symmetry breaking ($\Omega(-\vec{s}, \vec{e}_1, \vec{e}_2) \ne \Omega(\vec{s}, \vec{e}_1, \vec{e}_2)$)
    whenever the chiral-gated Zorn associator readout is non-zero. -/
 theorem tz5_klein_nishina_cayley_zorn_cascade_time_reversal_bridge
     {B : Type*} [Ring B] {P : B} (hP : P * P = P) (A C S R : B) (hR : R * (1 + S) = 1)
@@ -629,17 +595,14 @@ theorem tz5_klein_nishina_cayley_zorn_cascade_time_reversal_bridge
     ⟨heff.1, heff.2, hcayCR⟩,
     ⟨hvol.2.2.1, hvol.2.2.2, hdisc.2.2.1, hdisc.2.2.2.2.2.2⟩⟩
 
-/-- **Unified Peirce Error-Correction, Scalar Identity Noise Rejection, Coplanar Crosstalk Rejection,
-  & $\mathrm{SL}(3)$ Unimodular Scaling Invariance Bridge:**
+/-- **Unified Peirce Error-Correction, Scalar Identity Noise Rejection, Coplanar Crosstalk Rejection, & $\mathrm{SL}(3)$ Unimodular Scaling Invariance Bridge:**
 Combines all five layers of Section 7 of `ZeemanChiralGatedAssociatorPoset`:
 1. Four-sector Peirce resolution of identity on `ZornNC R`;
 2. Exact invariance of the Zorn associator under scalar identity noise `scalarIdZorn c`;
 3. Annihilation of duplicated vector channels and invariance under coplanar crosstalk
-   $\vec{s} \mapsto \vec{s} + \alpha\vec{e}_1 + \beta\vec{e}_2$,
-  $\vec{e}_1 \mapsto \vec{e}_1 + \gamma\vec{e}_2$;
+   $\vec{s} \mapsto \vec{s} + \alpha\vec{e}_1 + \beta\vec{e}_2$, $\vec{e}_1 \mapsto \vec{e}_1 + \gamma\vec{e}_2$;
 4. Opposite-chirality cancellation of `chiralUpperProj` and `chiralLowerProj` associators;
-5. Exact $\mathrm{SL}(3,
-  R)$ determinant-$1$ scaling invariance of the upper Peirce-gated Zorn associator. -/
+5. Exact $\mathrm{SL}(3, R)$ determinant-$1$ scaling invariance of the upper Peirce-gated Zorn associator. -/
 theorem tz5_peirce_error_correction_and_sl3_scaling_invariance_bridge
     {R : Type*} [CommRing R]
     (A B C : ZornNC R) (c1 c2 c3 α β γ : R)
@@ -680,8 +643,7 @@ theorem tz5_peirce_error_correction_and_sl3_scaling_invariance_bridge
   exact ⟨hpeirce, hnoise, hcross.1, hcross.2.2.2, hrac, hsl3⟩
 
 /-!
-## Section 6: Prima Materia Noncommutative Peirce Order-One, Plabic Master Index,
-  Graded Maurer–Cartan Superbracket, & Non-Abelian Chern–Weil Synthesis
+## Section 6: Prima Materia Noncommutative Peirce Order-One, Plabic Master Index, Graded Maurer–Cartan Superbracket, & Non-Abelian Chern–Weil Synthesis
 -/
 
 open InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
@@ -689,19 +651,16 @@ open InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 open InfoGeometry.NCG.BlockSupermatrixGradedTrace
 
 /-- **Universal Noncommutative Order-One Commutator Symmetry:**
-Over any associative (not necessarily commutative) ring `B`,
-  the commutator `OperatorAlgebra.PeirceSpine.comm X Y = X * Y - Y * X`
+Over any associative (not necessarily commutative) ring `B`, the commutator `OperatorAlgebra.PeirceSpine.comm X Y = X * Y - Y * X`
 satisfies the universal Jacobi identity
 $$\mathrm{comm}(\mathrm{comm}(D, a), b) - \mathrm{comm}(\mathrm{comm}(D, b), a)
   = \mathrm{comm}(D, \mathrm{comm}(a, b)),$$
-and therefore whenever `OperatorAlgebra.PeirceSpine.comm a b
-  = 0`, `OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D a) b = OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D b) a` for every operator `D : B`. -/
+and therefore whenever `OperatorAlgebra.PeirceSpine.comm a b = 0`, `OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D a) b = OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D b) a` for every operator `D : B`. -/
 theorem order_one_comm_symmetry {B : Type*} [Ring B] (D a b : B) :
     OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D a) b - OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D b) a =
       OperatorAlgebra.PeirceSpine.comm D (OperatorAlgebra.PeirceSpine.comm a b) ∧
     (OperatorAlgebra.PeirceSpine.comm a b = 0 →
-      OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D a) b
-  = OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D b) a) := by
+      OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D a) b = OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D b) a) := by
   have hjac :
       OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D a) b - OperatorAlgebra.PeirceSpine.comm (OperatorAlgebra.PeirceSpine.comm D b) a =
         OperatorAlgebra.PeirceSpine.comm D (OperatorAlgebra.PeirceSpine.comm a b) := by
@@ -759,8 +718,7 @@ theorem peirce_bipartite_sheet_order_one_symmetry {B : Type*} [Ring B]
 
 /-- **Bipartite Plabic Graph Amplituhedron Master Index Tetrad:**
 For any trivalent bipartite plabic graph with $3 V_B + 3 V_W = 2 E + n$ and helicity grade
-$k
-  = 2 V_B + V_W - E$, the topological index $2 k - n$ equals the bipartite color excess $V_B - V_W$,
+$k = 2 V_B + V_W - E$, the topological index $2 k - n$ equals the bipartite color excess $V_B - V_W$,
 and $V_B \ne V_W \iff 2 k \ne n$. -/
 theorem amplituhedron_bipartite_master_index (V_B V_W E n k : ℤ)
     (h_trivalent : 3 * V_B + 3 * V_W = 2 * E + n)
@@ -771,8 +729,7 @@ theorem amplituhedron_bipartite_master_index (V_B V_W E n k : ℤ)
   refine ⟨hidx, ?_⟩
   omega
 
-/-- The Maurer–Cartan curvature $F(\omega)
-  := d\omega + \omega * \omega$ on `ExteriorAlgebra R V`. -/
+/-- The Maurer–Cartan curvature $F(\omega) := d\omega + \omega * \omega$ on `ExteriorAlgebra R V`. -/
 def maurerCartanCurvature {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
     (d : Module.End R (ExteriorAlgebra R V)) (ω : ExteriorAlgebra R V) :
     ExteriorAlgebra R V :=
@@ -781,13 +738,10 @@ def maurerCartanCurvature {R V : Type*} [CommRing R] [AddCommGroup V] [Module R 
 /-- **Odd Graded Superbracket & Maurer–Cartan Curvature Identity:**
 Using the repository's canonical `ringSuperbracket` (`InfoGeometry.NCG.BlockSupermatrixGradedTrace`):
 1. For any $\omega \in \mathrm{ExteriorAlgebra}\,R\,V$, the odd-odd superbracket is
-   $\mathrm{ringSuperbracket}\,.odd\,.odd\,\omega\,\omega = \omega * \omega + \omega * \omega
-  = (2 : R) \bullet (\omega * \omega)$;
-2. When $2$ is invertible in $R$,
-  $(\operatorname{invOf} 2) \bullet \mathrm{ringSuperbracket}\,.odd\,.odd\,\omega\,\omega = \omega * \omega$,
+   $\mathrm{ringSuperbracket}\,.odd\,.odd\,\omega\,\omega = \omega * \omega + \omega * \omega = (2 : R) \bullet (\omega * \omega)$;
+2. When $2$ is invertible in $R$, $(\operatorname{invOf} 2) \bullet \mathrm{ringSuperbracket}\,.odd\,.odd\,\omega\,\omega = \omega * \omega$,
    so the graded Maurer–Cartan curvature expression
-   $d\omega + \tfrac{1}{2}[\omega, \omega]_{\mathrm{super}}$ equals `maurerCartanCurvature d ω
-  = d ω + ω * ω`. -/
+   $d\omega + \tfrac{1}{2}[\omega, \omega]_{\mathrm{super}}$ equals `maurerCartanCurvature d ω = d ω + ω * ω`. -/
 theorem ringSuperbracket_odd_self_and_maurerCartan
     {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
     (d : Module.End R (ExteriorAlgebra R V)) (ω : ExteriorAlgebra R V) :
@@ -807,8 +761,7 @@ theorem ringSuperbracket_odd_self_and_maurerCartan
   refine ⟨hhalf, ?_⟩
   rw [hhalf, maurerCartanCurvature]
 
-/-- **Pauli Exterior 1-Form Nilpotency, Odd Superbracket Vanishing,
-  & Abelian Maurer–Cartan Reduction:**
+/-- **Pauli Exterior 1-Form Nilpotency, Odd Superbracket Vanishing, & Abelian Maurer–Cartan Reduction:**
 For any vectors $u, v \in V$ and `D : ExteriorDifferentialData R V`
 (`InfoGeometry.Canonical.ExteriorGradedDerivationBridge`):
 1. $\iota_R(v)$ is homogeneous of exterior degree $1$ (`IsHomogeneousExteriorDegree 1 (ι R v)`);
@@ -864,9 +817,7 @@ and any homogeneous 1-form $\omega \in \mathrm{ExteriorAlgebra}\,R\,V$ (`hω : I
      + \mathrm{ringSuperbracket}\,.odd\,.even\,\omega\,\big(\mathrm{maurerCartanCurvature}\,D.d\,\omega\big) = 0;$$
 4. Whenever $\omega$ satisfies the Maurer–Cartan flatness equation
    `maurerCartanCurvature D.d ω = 0` ($D.d \omega + \omega * \omega = 0$), we have
-   $D.d \omega = -\omega * \omega$, $D.d(\mathrm{maurerCartanCurvature}\,D.d\,\omega)
-  = 0$,
-  $D.d(\omega * \omega) = 0$. -/
+   $D.d \omega = -\omega * \omega$, $D.d(\mathrm{maurerCartanCurvature}\,D.d\,\omega) = 0$, and $D.d(\omega * \omega) = 0$. -/
 theorem maurerCartanCurvature_graded_bianchi
     {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
     (D : ExteriorDifferentialData R V) (ω : ExteriorAlgebra R V)
@@ -903,13 +854,9 @@ theorem maurerCartanCurvature_graded_bianchi
 /-- **Abelian Collapse of Scalar Homogeneous 1-Forms vs. Non-Abelian Matrix 1-Forms:**
 In the scalar exterior algebra `ExteriorAlgebra R V`, every homogeneous degree-1 form
 `ω` (`IsHomogeneousExteriorDegree 1 ω`) lies in the image of `ExteriorAlgebra.ι R`
-(`homogeneous_one_iff_exists_generator`). Consequently,
-  for every scalar homogeneous 1-form $\omega \in \bigwedge^1 V$:
-1. $\omega * \omega = 0$
-  $\mathrm{ringSuperbracket}\,.odd\,.odd\,\omega\,\omega
-  = 0$ identically;
-2. `maurerCartanCurvature D.d ω
-  = D.d ω` (the quadratic Maurer–Cartan term $\tfrac{1}{2}[\omega, \omega]_{\mathrm{super}}$
+(`homogeneous_one_iff_exists_generator`). Consequently, for every scalar homogeneous 1-form $\omega \in \bigwedge^1 V$:
+1. $\omega * \omega = 0$ and $\mathrm{ringSuperbracket}\,.odd\,.odd\,\omega\,\omega = 0$ identically;
+2. `maurerCartanCurvature D.d ω = D.d ω` (the quadratic Maurer–Cartan term $\tfrac{1}{2}[\omega, \omega]_{\mathrm{super}}$
    collapses to zero unless $\omega$ is tensored with a noncommutative matrix/Lie algebra or has mixed odd degrees). -/
 theorem scalar_homogeneous_one_form_maurerCartan_abelian_collapse
     {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
@@ -926,25 +873,19 @@ theorem scalar_homogeneous_one_form_maurerCartan_abelian_collapse
 /-- The $2 \times 2$ chiral off-diagonal matrix-valued 1-form connection
 $$A_{\mathrm{chiral}}(u, v) = \begin{pmatrix} 0 & \iota_R(u) \\ \iota_R(v) & 0 \end{pmatrix}
   \in M_2(\mathrm{ExteriorAlgebra}\,R\,V),$$
-whose matrix wedge-square is $\mathrm{diag}\big(\iota_R(u)\iota_R(v),\,
-  -\iota_R(u)\iota_R(v)\big)$. -/
+whose matrix wedge-square is $\mathrm{diag}\big(\iota_R(u)\iota_R(v),\, -\iota_R(u)\iota_R(v)\big)$. -/
 def chiralMatrixOneForm {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
     (u v : V) : Matrix (Fin 2) (Fin 2) (ExteriorAlgebra R V) :=
   !![0, ExteriorAlgebra.ι R u; ExteriorAlgebra.ι R v, 0]
 
-/-- **Non-Abelian Matrix-Valued 1-Form Graded Maurer–Cartan Curvature, Chiral 2-Form Wedge Witness,
-  & Covariant Bianchi Identity:**
-1. On $M_2(\mathrm{ExteriorAlgebra}\,R\,V)$,
-  `chiralMatrixOneForm u v` is entrywise homogeneous of degree $1$
-   (`MatrixIsHomogeneous 1 (chiralMatrixOneForm u v)`),
-  yet its matrix square is the diagonal 2-form matrix
+/-- **Non-Abelian Matrix-Valued 1-Form Graded Maurer–Cartan Curvature, Chiral 2-Form Wedge Witness, & Covariant Bianchi Identity:**
+1. On $M_2(\mathrm{ExteriorAlgebra}\,R\,V)$, `chiralMatrixOneForm u v` is entrywise homogeneous of degree $1$
+   (`MatrixIsHomogeneous 1 (chiralMatrixOneForm u v)`), yet its matrix square is the diagonal 2-form matrix
    `!![ι R u * ι R v, 0; 0, -(ι R u * ι R v)]` and its odd matrix superbracket is
    `(2 : R) • !![ι R u * ι R v, 0; 0, -(ι R u * ι R v)]`;
 2. On $M_n(\mathrm{ExteriorAlgebra}\,R\,V)$ over a field $R$ with `[Invertible (2 : R)]`, for any
-   homogeneous 1-form connection matrix $A$ (`MatrixIsHomogeneous 1 A`)
-  `D : ExteriorDifferentialData R V`:
-   - `matrixExteriorDerivative D.d A + (⅟(2 : R)) • ringSuperbracket .odd .odd A A
-  = curvatureFromConnection D.d A`,
+   homogeneous 1-form connection matrix $A$ (`MatrixIsHomogeneous 1 A`) and `D : ExteriorDifferentialData R V`:
+   - `matrixExteriorDerivative D.d A + (⅟(2 : R)) • ringSuperbracket .odd .odd A A = curvatureFromConnection D.d A`,
    - `matrixExteriorDerivative D.d (curvatureFromConnection D.d A) + ringSuperbracket .odd .even A (curvatureFromConnection D.d A) = covariantDerivative A D.d (curvatureFromConnection D.d A)`,
    - and this graded Bianchi expression vanishes identically (`= 0`). -/
 theorem matrix_homogeneous_one_form_nonabelian_maurerCartan_and_chiral_witness
@@ -956,8 +897,7 @@ theorem matrix_homogeneous_one_form_nonabelian_maurerCartan_and_chiral_witness
     chiralMatrixOneForm (R := R) u v * chiralMatrixOneForm (R := R) u v =
       !![ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v, 0;
          0, -(ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v)] ∧
-    ringSuperbracket .odd .odd (chiralMatrixOneForm (R := R) u v) (chiralMatrixOneForm (R
-  := R) u v) =
+    ringSuperbracket .odd .odd (chiralMatrixOneForm (R := R) u v) (chiralMatrixOneForm (R := R) u v) =
       (2 : R) • !![ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v, 0;
                    0, -(ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v)] ∧
     InfoGeometry.Canonical.MatrixTracedChernWeilBridge.matrixExteriorDerivative D.d A +
@@ -993,8 +933,7 @@ theorem matrix_homogeneous_one_form_nonabelian_maurerCartan_and_chiral_witness
     fin_cases i <;> fin_cases j <;>
       simp [chiralMatrixOneForm, Matrix.mul_apply, Fin.sum_univ_two, hanti]
   have hsb_chiral :
-      ringSuperbracket .odd .odd (chiralMatrixOneForm (R := R) u v) (chiralMatrixOneForm (R
-  := R) u v) =
+      ringSuperbracket .odd .odd (chiralMatrixOneForm (R := R) u v) (chiralMatrixOneForm (R := R) u v) =
         (2 : R) • !![ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v, 0;
                      0, -(ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v)] := by
     change chiralMatrixOneForm (R := R) u v * chiralMatrixOneForm (R := R) u v +
@@ -1003,8 +942,7 @@ theorem matrix_homogeneous_one_form_nonabelian_maurerCartan_and_chiral_witness
   have hmc_A :
       InfoGeometry.Canonical.MatrixTracedChernWeilBridge.matrixExteriorDerivative D.d A +
         (⅟(2 : R)) • ringSuperbracket .odd .odd A A =
-        InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge.curvatureFromConnection D.d A
-  := by
+        InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge.curvatureFromConnection D.d A := by
     have hsbA : ringSuperbracket .odd .odd A A = (2 : R) • (A * A) := by
       change A * A + A * A = (2 : R) • (A * A)
       exact (two_smul R (A * A)).symm
@@ -1023,13 +961,11 @@ theorem matrix_homogeneous_one_form_nonabelian_maurerCartan_and_chiral_witness
         ringSuperbracket .odd .even A
           (InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge.curvatureFromConnection D.d A) = 0 := by
     rw [hcov_eq]
-
-  exact InfoGeometry.Canonical.GradedConnectionBianchiBridge.graded_connection_curvature_bianchi D A hA
+    exact InfoGeometry.Canonical.GradedConnectionBianchiBridge.graded_connection_curvature_bianchi D A hA
   exact ⟨hhom, hsq, hsb_chiral, hmc_A, hcov_eq, hbianchi⟩
 
 /-- **Unified Prima Materia, Graded Maurer–Cartan Superbracket, & Non-Abelian Chern–Weil Bridge:**
-Connects the noncommutative Peirce Order-One sheet symmetry
-  bipartite plabic Master Index directly
+Connects the noncommutative Peirce Order-One sheet symmetry and bipartite plabic Master Index directly
 to the repository's canonical graded exterior derivation, superbracket, non-abelian Bianchi, and
 Chern–Weil owners (`ExteriorGradedDerivationBridge`, `BlockSupermatrixGradedTrace`,
 `GradedConnectionBianchiBridge`, `ExteriorEvenTraceChernWeil`):
@@ -1079,8 +1015,7 @@ theorem tz5_prima_materia_and_graded_maurer_cartan_chern_weil_bridge
   exact ⟨⟨hord, hidx⟩, ⟨hmc_sb, hmc_bianchi⟩, ⟨hmat_bianchi, htr4, hcw⟩⟩
 
 /-!
-## Section 7: Majorana Twist Involution (`𝒯 * 𝒯
-  = 1`), $\mathrm{Cl}(1,1)$ Boundary Algebra, Nilpotent Lightcone Modes, & Automatic Phase Separation
+## Section 7: Majorana Twist Involution (`𝒯 * 𝒯 = 1`), $\mathrm{Cl}(1,1)$ Boundary Algebra, Nilpotent Lightcone Modes, & Automatic Phase Separation
 -/
 
 /-- **Universal $\mathrm{Cl}(1,1)$ Majorana–Krein Generator Laws from `twist_involution` ($\mathcal{T}^2 = 1$) and `klein_twist_anticommute` ($J_\Delta \mathcal{T} = -\mathcal{T} J_\Delta$):**
@@ -1091,12 +1026,9 @@ In any associative ring `B`, let $J_\Delta, \mathcal{T} \in B$ satisfy:
 Then:
 1. **Symplectic $\mathrm{Cl}(1,1)$ Volume Square:** $(J_\Delta * \mathcal{T}) * (J_\Delta * \mathcal{T}) = -1$;
 2. **Mutual Particle–Antiparticle Conjugation:**
-   $J_\Delta * \mathcal{T} * J_\Delta = -\mathcal{T}$
-  $\mathcal{T} * J_\Delta * \mathcal{T}
-  = -J_\Delta$;
+   $J_\Delta * \mathcal{T} * J_\Delta = -\mathcal{T}$ and $\mathcal{T} * J_\Delta * \mathcal{T} = -J_\Delta$;
 3. **Exact Boundary Commutator & Krein Product:**
-   $(J_\Delta * \mathcal{T}) * \mathcal{T} - \mathcal{T} * (J_\Delta * \mathcal{T})
-  = J_\Delta + J_\Delta$ and
+   $(J_\Delta * \mathcal{T}) * \mathcal{T} - \mathcal{T} * (J_\Delta * \mathcal{T}) = J_\Delta + J_\Delta$ and
    $J_\Delta * \big((J_\Delta * \mathcal{T}) * \mathcal{T} - \mathcal{T} * (J_\Delta * \mathcal{T})\big) = 1 + 1$;
 4. **Nilpotent Majorana Lightcone Modes $N_\pm = J_\Delta \pm J_\Delta * \mathcal{T}$:**
    $(J_\Delta + J_\Delta * \mathcal{T})^2 = 0$, $(J_\Delta - J_\Delta * \mathcal{T})^2 = 0$, and
@@ -1174,18 +1106,14 @@ theorem majorana_klein_twist_cl11_generator_laws {B : Type*} [Ring B]
 /-- **Majorana Edge-Mode Pairing & Automatic Krein Supertrace Phase Separation on `Module.End R M`:**
 For any free finite-rank module `M` over a commutative ring `R` with `[Invertible (2 : R)]`, if
 $J_\Delta, \mathcal{T} \in \mathrm{Module.End}\,R\,M$ satisfy `hJ : J_Δ * J_Δ = 1`,
-`hT : 𝒯 * 𝒯 = 1` (`twist_involution`),
-  `h_anti : J_Δ * 𝒯
-  = -(𝒯 * J_Δ)` (`klein_twist_anticommute`):
+`hT : 𝒯 * 𝒯 = 1` (`twist_involution`), and `h_anti : J_Δ * 𝒯 = -(𝒯 * J_Δ)` (`klein_twist_anticommute`):
 1. **Exact Krein Supertrace of $[J_\Delta \mathcal{T}, \mathcal{T}]$:**
    $$\mathrm{trace}\,R\,M\,\Big(J_\Delta * \big((J_\Delta * \mathcal{T}) * \mathcal{T} - \mathcal{T} * (J_\Delta * \mathcal{T})\big)\Big)
      = (2 : R) * \mathrm{trace}\,R\,M\,(1 : \mathrm{Module.End}\,R\,M);$$
 2. **Automatic Phase Separation (`trace R M 1 ≠ 0`):**
-   Whenever $\mathrm{trace}\,R\,M\,(1 : \mathrm{Module.End}\,R\,M) \ne 0$,
-  the Majorana involution and
+   Whenever $\mathrm{trace}\,R\,M\,(1 : \mathrm{Module.End}\,R\,M) \ne 0$, the Majorana involution and
    anticommutation unconditionally force $J_\Delta \ne 1$, $J_\Delta \ne -1$, $\mathcal{T} \ne 1$,
-   $\mathcal{T} \ne -1$,
-  $(J_\Delta * \mathcal{T}) * \mathcal{T} \ne \mathcal{T} * (J_\Delta * \mathcal{T})$;
+   $\mathcal{T} \ne -1$, and $(J_\Delta * \mathcal{T}) * \mathcal{T} \ne \mathcal{T} * (J_\Delta * \mathcal{T})$;
 3. **Majorana Double-Cover Involution & Bijective Eigenspace Pairing:**
    For every state $v \in M$, $\mathcal{T}(\mathcal{T} v) = v$ and
    $$v \in \mathrm{ker}(J_\Delta - 1) \iff \mathcal{T} v \in \mathrm{ker}(J_\Delta + 1).$$ -/
@@ -1276,35 +1204,25 @@ theorem majorana_klein_twist_endomorphism_phase_separation_and_edge_pairing
         _ = 0 := sub_self _
 
 /-!
-## Section 8: Tomita–Takesaki Submodule Commutant Reflection ($J_\Delta \mathcal{M} J_\Delta
-  = \mathcal{M}'$), Determinant Spinning Instability (`spinning_instability_anomaly`), Bogoliubov/Berry Flatness, & $\mathrm{Pin}(5,5)$ Anomaly Inflow
+## Section 8: Tomita–Takesaki Submodule Commutant Reflection ($J_\Delta \mathcal{M} J_\Delta = \mathcal{M}'$), Determinant Spinning Instability (`spinning_instability_anomaly`), Bogoliubov/Berry Flatness, & $\mathrm{Pin}(5,5)$ Anomaly Inflow
 -/
 
-/-- **Tomita–Takesaki Submodule Commutant Reflection ($J_\Delta \mathcal{M} J_\Delta
-  = \mathcal{M}'$) & Phase Separation:**
-For any commutative ring `R`, `R`-module `M`, submodule $\mathcal{M} \le \mathrm{Module.End}\,R\,M$,
-  and
+/-- **Tomita–Takesaki Submodule Commutant Reflection ($J_\Delta \mathcal{M} J_\Delta = \mathcal{M}'$) & Phase Separation:**
+For any commutative ring `R`, `R`-module `M`, submodule $\mathcal{M} \le \mathrm{Module.End}\,R\,M$, and
 modular involution $J_\Delta \in \mathrm{Module.End}\,R\,M$ (`hJ : J_Δ * J_Δ = 1`):
 1. **Racemic Vacuum Collapse (`scalar_submodule_mem_commutant`):**
-   If every $X \in \mathcal{M}$ is a scalar multiple of the identity ($\exists c : R,\, X
-  = c \bullet 1$),
+   If every $X \in \mathcal{M}$ is a scalar multiple of the identity ($\exists c : R,\, X = c \bullet 1$),
    then every $Y \in \mathrm{Module.End}\,R\,M$ lies in `MoebiusTomitaPacket.Commutant ℳ`;
-2. **Contrapositive Phase Separation of Non-Scalar Ego $\mathcal{M}$
-  Anima $\mathrm{Commutant}(\mathcal{M})$:**
+2. **Contrapositive Phase Separation of Non-Scalar Ego $\mathcal{M}$ and Anima $\mathrm{Commutant}(\mathcal{M})$:**
    If $X \in \mathcal{M}$ and $Y \in \mathrm{Module.End}\,R\,M$ satisfy $X * Y \ne Y * X$, then
    $Y \notin \mathrm{MoebiusTomitaPacket.Commutant}\,\mathcal{M}$ and $X$ is strictly non-scalar
    ($\forall c : R,\, X \ne c \bullet 1$);
 3. **Involutive Modular Conjugation (`conjugation_by_involution_involutive`):**
-   For every $X \in \mathrm{Module.End}\,R\,M$, $J_\Delta * (J_\Delta * X * J_\Delta) * J_\Delta
-  = X$;
-4. **Bijective Ego–Anima Exchange & Mutual Causal Independence ($J_\Delta \mathcal{M} J_\Delta
-  = \mathcal{M}'$):**
-   Whenever conjugation by $J_\Delta$ maps $\mathcal{M}$ into `Commutant ℳ`
-  `Commutant ℳ` into $\mathcal{M}$,
+   For every $X \in \mathrm{Module.End}\,R\,M$, $J_\Delta * (J_\Delta * X * J_\Delta) * J_\Delta = X$;
+4. **Bijective Ego–Anima Exchange & Mutual Causal Independence ($J_\Delta \mathcal{M} J_\Delta = \mathcal{M}'$):**
+   Whenever conjugation by $J_\Delta$ maps $\mathcal{M}$ into `Commutant ℳ` and `Commutant ℳ` into $\mathcal{M}$,
    $X \in \mathcal{M} \iff J_\Delta * X * J_\Delta \in \mathrm{MoebiusTomitaPacket.Commutant}\,\mathcal{M}$,
-
-  every $X_1, X_2 \in \mathcal{M}$ satisfy $X_1 * (J_\Delta * X_2 * J_\Delta)
-  = (J_\Delta * X_2 * J_\Delta) * X_1$. -/
+   and every $X_1, X_2 \in \mathcal{M}$ satisfy $X_1 * (J_\Delta * X_2 * J_\Delta) = (J_\Delta * X_2 * J_\Delta) * X_1$. -/
 theorem tomita_submodule_commutant_reflection_and_phase_separation
     {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
     (ℳ : Submodule R (Module.End R M))
@@ -1341,21 +1259,18 @@ theorem tomita_submodule_commutant_reflection_and_phase_separation
     rwa [InfoGeometry.GrandUnification.MoebiusTomitaPacket.conjugation_by_involution_involutive
       J_Δ X hJ] at h_back
 
-/-- **Determinant Spinning Instability (`spinning_instability_anomaly`),
-  Callan–Harvey Anomaly Inflow, & Spontaneous Modular Phase Separation:**
+/-- **Determinant Spinning Instability (`spinning_instability_anomaly`), Callan–Harvey Anomaly Inflow, & Spontaneous Modular Phase Separation:**
 For any free finite-rank module `M` over a commutative ring `R` with `[Invertible (2 : R)]`, any
 chiral/Krein grading $\Gamma \in \mathrm{Module.End}\,R\,M$, and any two $\Gamma$-odd Cartan 1-forms
 $A, B \in \mathrm{Module.End}\,R\,M$ (`hA : Γ * A = -(A * Γ)` and `hB : Γ * B = -(B * Γ)`):
 1. **Ungraded Trace Collapse vs. Graded Supertrace Doubling (`spinning_instability_anomaly`):**
    $$\mathrm{trace}\,R\,M\,(A * B - B * A) = 0
      \quad\land\quad
-     \mathrm{supertrace}\,\Gamma\,(A * B - B * A)
-  = (2 : R) * \mathrm{supertrace}\,\Gamma\,(A * B);$$
+     \mathrm{supertrace}\,\Gamma\,(A * B - B * A) = (2 : R) * \mathrm{supertrace}\,\Gamma\,(A * B);$$
 2. **Callan–Harvey Anomaly Inflow Conservation:**
    Whenever a bulk topological index $I_{\mathrm{bulk}} : R$ matches the boundary commutator supertrace
    ($I_{\mathrm{bulk}} = \mathrm{supertrace}\,\Gamma\,(A * B - B * A)$), it equals
-   $(2 : R) * \mathrm{supertrace}\,\Gamma\,(A * B)$
-  the combined boundary-minus-bulk anomaly vanishes:
+   $(2 : R) * \mathrm{supertrace}\,\Gamma\,(A * B)$ and the combined boundary-minus-bulk anomaly vanishes:
    $$\mathrm{supertrace}\,\Gamma\,(A * B - B * A) - I_{\mathrm{bulk}} = 0;$$
 3. **Spontaneous Modular Phase Separation from Non-Vanishing Spinning Instability:**
    Whenever $\mathrm{supertrace}\,\Gamma\,(A * B) \ne 0$, the commutator supertrace is non-zero
@@ -1388,8 +1303,7 @@ theorem spinning_instability_anomaly_and_inflow_phase_separation
   have h_comm_ne : InfoGeometry.TopologicalFieldTheory.supertrace Γ (A * B - B * A) ≠ 0 := by
     rw [h_spin]
     intro hzero
-    have hinv : ⅟(2 : R) * ((2 : R) * InfoGeometry.TopologicalFieldTheory.supertrace Γ (A * B)) = 0
-  := by
+    have hinv : ⅟(2 : R) * ((2 : R) * InfoGeometry.TopologicalFieldTheory.supertrace Γ (A * B)) = 0 := by
       rw [hzero, mul_zero]
     rw [← mul_assoc, invOf_mul_self, one_mul] at hinv
     exact h_ab_ne hinv
@@ -1431,8 +1345,7 @@ theorem spinning_instability_anomaly_and_inflow_phase_separation
 Unifies the dressed-vacuum right Maurer–Cartan flatness identity
 `D(u) * D(u⁻¹) + ω_B * ω_B = 0` (`BogoliubovBerryMaurerCartanBridge.berryMaurerCartan_flat`) with
 the $\mathrm{Pin}(5,5)$ algebra-cone transport of the nilpotent projective compensation
-$(\psi_n(a))^2 = 0$, the TKK scale symmetry $[[\psi_n(a), \psi_n(c)], \psi_n(a)]
-  = \psi_n(a) + \psi_n(a)$,
+$(\psi_n(a))^2 = 0$, the TKK scale symmetry $[[\psi_n(a), \psi_n(c)], \psi_n(a)] = \psi_n(a) + \psi_n(a)$,
 and the $\mathrm{Pin}(5,5)$ reflection (`Pin55ColimitAnomalyBridge`). -/
 theorem berry_maurer_cartan_and_pin55_colimit_anomaly_bridge
     {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
@@ -1447,15 +1360,13 @@ theorem berry_maurer_cartan_and_pin55_colimit_anomaly_bridge
       InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm D u =
         -(D (u : A) * D (u⁻¹ : Aˣ).val) ∧
     (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f)) *
-      (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f))
-  = 0 ∧
+      (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f)) = 0 ∧
     NoncommutativeGeometry.lie_bracket
       (NoncommutativeGeometry.lie_bracket
         (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f))
         (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_c e f)))
       (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f)) *
-      psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f)
-  = 0 ∧
+      psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f) = 0 ∧
     NoncommutativeGeometry.e_reflect (fun j => psi n (e j)) (fun j => psi n (f j)) i (psi n v) =
       psi n (NoncommutativeGeometry.e_reflect e f i v) := by
   have hflat := InfoGeometry.NCG.AlgebraDerivation.maurer_cartan_flatness D u
@@ -1472,8 +1383,7 @@ theorem berry_maurer_cartan_and_pin55_colimit_anomaly_bridge
           D (u : A) * D (u⁻¹ : Aˣ).val := by abel
       _ = 0 - D (u : A) * D (u⁻¹ : Aˣ).val := by rw [hflat]
       _ = -(D (u : A) * D (u⁻¹ : Aˣ).val) := by abel
-  have hsq
-  := InfoGeometry.Canonical.Pin55ColimitAnomalyBridge.target_projective_compensation_sq psi n e f
+  have hsq := InfoGeometry.Canonical.Pin55ColimitAnomalyBridge.target_projective_compensation_sq psi n e f
   have htkk := InfoGeometry.Canonical.Pin55ColimitAnomalyBridge.target_tkk_scale_symmetry psi n e f
   have htkk_nil :
       NoncommutativeGeometry.lie_bracket
@@ -1481,36 +1391,27 @@ theorem berry_maurer_cartan_and_pin55_colimit_anomaly_bridge
           (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f))
           (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_c e f)))
         (psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f)) *
-        psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f)
-  = 0 := by
+        psi n (InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary.projective_compensation_a e f) = 0 := by
     rw [htkk, add_mul, hsq, add_zero]
-  have hrefl
-  := InfoGeometry.Canonical.Pin55ColimitAnomalyBridge.target_pin55_reflection psi n e f i v
+  have hrefl := InfoGeometry.Canonical.Pin55ColimitAnomalyBridge.target_pin55_reflection psi n e f i v
   exact ⟨hberry_sq, hsq, htkk_nil, hrefl⟩
 
 /-!
-## Section 9: Modular Hamiltonian ($K
-  = -\log \Delta$), $(5,5)$ Horizon Capacitance, Bulk–Boundary Defect Correspondence, & Type-D Cantor Bitword Colimit Synthesis
+## Section 9: Modular Hamiltonian ($K = -\log \Delta$), $(5,5)$ Horizon Capacitance, Bulk–Boundary Defect Correspondence, & Type-D Cantor Bitword Colimit Synthesis
 -/
 
-/-- **Modular Hamiltonian ($K
-  = -\log \Delta$), $(5,5)$ Horizon Capacitance, `time_requires_horizon`, & Bulk–Boundary Defect Bridge:**
+/-- **Modular Hamiltonian ($K = -\log \Delta$), $(5,5)$ Horizon Capacitance, `time_requires_horizon`, & Bulk–Boundary Defect Bridge:**
 Unifies `InfoGeometry.GrandUnification.Dynamics` (`ModularHamiltonian`) and
 `InfoGeometry.GrandUnification.bulk_index_forces_boundary_defect_mode` (`BulkBoundaryCorrespondence`):
-1. Logarithmic Modular Hamiltonian laws ($K(1) = 0$, $K(\delta^{-1})
-  = -K(\delta)$, $\exp(-K(\delta)) = \delta$);
-2. Tomita conjugation oddness ($J_\Delta K J_\Delta = -K \iff J_\Delta K
-  = -K J_\Delta$)
-  twin-sheet
+1. Logarithmic Modular Hamiltonian laws ($K(1) = 0$, $K(\delta^{-1}) = -K(\delta)$, $\exp(-K(\delta)) = \delta$);
+2. Tomita conjugation oddness ($J_\Delta K J_\Delta = -K \iff J_\Delta K = -K J_\Delta$) and twin-sheet
    time reversal $K(J_\Delta v) = -J_\Delta(K v)$;
 3. Exact $(5,5)$ holographic horizon capacitance quantization (`horizon_capacitance Γ = 5`,
    `witten_index Γ = 0`, and $\dim_R M = 10$);
-4. Constructive `time_requires_horizon` ($\mathcal{T} K_{\mathrm{triv}}
-  = K_{\mathrm{triv}} \land \mathrm{horizon\_capacitance}\,\mathcal{T} = 0 \implies K_{\mathrm{triv}} = 0$);
+4. Constructive `time_requires_horizon` ($\mathcal{T} K_{\mathrm{triv}} = K_{\mathrm{triv}} \land \mathrm{horizon\_capacitance}\,\mathcal{T} = 0 \implies K_{\mathrm{triv}} = 0$);
 5. Constructive bulk-boundary defect correspondence: if $\mathcal{T}_b * K_b = K_b$ and
    $\mathrm{trace}\,R\,M\,(\Gamma * (K_b * B_b - B_b * K_b)) \ne 0$, then $K_b \ne 0$,
-   $K_b * B_b \ne B_b * K_b$,
-  the boundary defect subspace is non-trivial ($\ker(\mathcal{T}_b - 1) \ne \bot$). -/
+   $K_b * B_b \ne B_b * K_b$, and the boundary defect subspace is non-trivial ($\ker(\mathcal{T}_b - 1) \ne \bot$). -/
 theorem modular_hamiltonian_horizon_capacitance_and_bulk_boundary_defect_bridge
     {R M : Type*} [Field R] [Invertible (2 : R)] [AddCommGroup M] [Module R M]
     [FiniteDimensional R M]
@@ -1546,18 +1447,13 @@ theorem modular_hamiltonian_horizon_capacitance_and_bulk_boundary_defect_bridge
 
 /-- **Type-D Cantor Bitword Filtered Colimit & Zorn–Tetractys–Majorana–Anomaly Grand Unification Capstone:**
 Unifies:
-1. Filtered colimit preservation of Type-D even-parity bitwords (`parity (extendBitword w)
-  = parity w`,
-   `iteratedExtendParityHom_comp`, `injectFiniteState_iteratedExtend`,
-  `injectFiniteState_extendParityHom`);
-2. Universal Peirce–Tetractys Zorn Nambu law $\mathrm{nambu}\langle N_+, N_-, P \rangle
-  = (1 + P)V(P, A, C)$;
+1. Filtered colimit preservation of Type-D even-parity bitwords (`parity (extendBitword w) = parity w`,
+   `iteratedExtendParityHom_comp`, `injectFiniteState_iteratedExtend`, `injectFiniteState_extendParityHom`);
+2. Universal Peirce–Tetractys Zorn Nambu law $\mathrm{nambu}\langle N_+, N_-, P \rangle = (1 + P)V(P, A, C)$;
 3. Boundary $\mathrm{Cl}(1,1)$ Majorana involution laws $(J_\Delta \mathcal{T})^2 = -1$ and
    $J_\Delta [(J_\Delta \mathcal{T}), \mathcal{T}] = 1 + 1$;
 4. $\Gamma$-evenness of the product of two $\Gamma$-odd Cartan 1-forms ($\Gamma (A_{\mathrm{odd}} B_{\mathrm{odd}}) = (A_{\mathrm{odd}} B_{\mathrm{odd}}) \Gamma$)
-
-  the Determinant Spinning Instability $\mathrm{supertrace}\,\Gamma\,[A_{\mathrm{odd}},
-  B_{\mathrm{odd}}] = 2\,\mathrm{supertrace}\,\Gamma\,(A_{\mathrm{odd}} B_{\mathrm{odd}})$. -/
+   and the Determinant Spinning Instability $\mathrm{supertrace}\,\Gamma\,[A_{\mathrm{odd}}, B_{\mathrm{odd}}] = 2\,\mathrm{supertrace}\,\Gamma\,(A_{\mathrm{odd}} B_{\mathrm{odd}})$. -/
 theorem cantor_typeD_bitword_colimit_and_zorn_tetractys_grand_unification_capstone
     {n m k : ℕ} (hnm : n ≤ m) (hmk : m ≤ k)
     (w : Bitword n)
@@ -1594,15 +1490,12 @@ theorem cantor_typeD_bitword_colimit_and_zorn_tetractys_grand_unification_capsto
   have hinj_succ := injectFiniteState_extendParityHom n state
   have hnambu := (nambu_tetractysPeirceTriad hP A C).1
   have hcl := majorana_klein_twist_cl11_generator_laws hJ hT h_anti
-  have heven
-  := InfoGeometry.TopologicalFieldTheory.odd_mul_odd_commutes_with_grading Γ A_odd B_odd hA_odd hB_odd
-  have hspin
-  := InfoGeometry.TopologicalFieldTheory.spinning_instability_anomaly Γ A_odd B_odd hA_odd hB_odd
+  have heven := InfoGeometry.TopologicalFieldTheory.odd_mul_odd_commutes_with_grading Γ A_odd B_odd hA_odd hB_odd
+  have hspin := InfoGeometry.TopologicalFieldTheory.spinning_instability_anomaly Γ A_odd B_odd hA_odd hB_odd
   exact ⟨⟨hpar, hcomp, hinj_m, hinj_succ⟩, hnambu, ⟨hcl.1, hcl.2.2.2.2.1⟩, ⟨heven, hspin⟩⟩
 
 /-!
-## 10. Aharonov Two-State Vector Formalism (TSVF), Quantum Cheshire Cat,
-  Modular Momentum & Faraday-Cage Holonomy
+## 10. Aharonov Two-State Vector Formalism (TSVF), Quantum Cheshire Cat, Modular Momentum & Faraday-Cage Holonomy
 -/
 
 /-- **Aharonov–Bergmann–Lebowitz Two-State Peirce Sandwich, Universal Quantum Cheshire Cat &
@@ -1612,9 +1505,7 @@ and any which-way slit involution $V^2 = 1$ anticommuting with the non-local mod
 operator $U$ ($V U = - U V$):
 1. **Two-State Graph-Chart Overlap & Bruhat Transition (`TwoStateSandwich`):**
    The pre-selected chart point $P - N_+$ and post-selected chart point $P + N_-$ satisfy
-   $(P - N_+)(P + N_-)
-  = P - N_+ N_-$
-  are intertwined by `chartBruhatConj` / `chartBruhatConjInv`.
+   $(P - N_+)(P + N_-) = P - N_+ N_-$ and are intertwined by `chartBruhatConj` / `chartBruhatConjInv`.
 2. **Two-State Peirce Generator Sandwiches:**
    Between $P - N_+$ and $P + N_-$, the symmetric bridge $\Phi = N_+ + N_-$ has vanishing sandwich
    $(P - N_+)\Phi(P + N_-) = 0$, whereas the chiral generator $J = N_+ - N_-$ has non-vanishing
@@ -1654,8 +1545,7 @@ theorem aharonov_two_state_peirce_cheshire_cat_and_modular_momentum_causality_pr
   have hprod := chart_point_product hP A C
   have hbruhat := chart_bruhat_conjugation_transition hP A C
   have hsand := chart_two_state_generator_sandwich hP A C
-  have hcat_idem : ((1 - P) + conePlus P A) * ((1 - P) + conePlus P A) = (1 - P) + conePlus P A
-  := by
+  have hcat_idem : ((1 - P) + conePlus P A) * ((1 - P) + conePlus P A) = (1 - P) + conePlus P A := by
     peirce_nf hP
   have hcat_supp : conePlus P A * ((1 - P) + conePlus P A) = conePlus P A := by
     peirce_nf hP
@@ -1702,22 +1592,16 @@ Faraday-Cage Aharonov–Bohm Gauge Cocycle Bridge:**
 Unifies:
 1. **Concentric $S^3$ Sphere-Time Dilatation & Twin-Shell Horizon Lock (`AharonovTwoStateSphereTime`):**
    Dilating $X \in \mathrm{Sphere4D}\,R$ by $s$ scales `radiusSq` by $s^2$, while forward-expanding
-   ($r_0 e^{+\tau}$)
-  backward-contracting ($r_0 e^{-\tau}$) shells with $e^{+\tau} e^{-\tau}
-  = 1$
+   ($r_0 e^{+\tau}$) and backward-contracting ($r_0 e^{-\tau}$) shells with $e^{+\tau} e^{-\tau} = 1$
    lock onto the static horizon squared radius $r_0^2$.
 2. **Standard Single-State Non-Negativity vs. Two-State Negative Counter-Particle Occupation:**
    While every single-state Slit-1 expectation $\langle \psi \mid \hat{P}_1 \mid \psi \rangle \ge 0$
    is non-negative, the two-state weak readouts satisfy the partition of unity
-   $\langle \phi \mid \hat{P}_1 \mid \psi \rangle + \langle \phi \mid \hat{P}_2 \mid \psi \rangle
-  = \langle \phi \mid \psi \rangle$
+   $\langle \phi \mid \hat{P}_1 \mid \psi \rangle + \langle \phi \mid \hat{P}_2 \mid \psi \rangle = \langle \phi \mid \psi \rangle$
    and exhibit a strictly negative normalized Slit-1 weak occupation $W(\hat{P}_1) = -1 < 0$
-   (Aharonov's counter-particle witness) balanced by $W(\hat{P}_2)
-  = +2$ so $W(\hat{P}_1) + W(\hat{P}_2) = 1$.
+   (Aharonov's counter-particle witness) balanced by $W(\hat{P}_2) = +2$ so $W(\hat{P}_1) + W(\hat{P}_2) = 1$.
 3. **Two-Faraday-Cage Pure-Gauge Maurer–Cartan Difference & Fractional Vortex Holonomy:**
-   For any derivation $D : A \to_R A$ (`IsDerivation D`)
-  gauge transformations $u,
-  v \in A^\times$,
+   For any derivation $D : A \to_R A$ (`IsDerivation D`) and gauge transformations $u, v \in A^\times$,
    each local branch has vanishing Maurer–Cartan curvature ($D(u) D(u^{-1}) + \omega_B(u)^2 = 0$),
    yet the potential difference $\omega_B(u v) - \omega_B(u) = u \, \omega_B(v) \, u^{-1}$ isolates
    the gauge-covariant relative holonomy, while a third-root Aharonov–Bohm vortex phase
@@ -1767,12 +1651,10 @@ theorem aharonov_sphere_time_counter_particle_and_faraday_cage_holonomy_bridge
         InfoGeometry.Topology.Parafermion.diagonalVortexOperator phase *
           InfoGeometry.Topology.Parafermion.diagonalVortexOperator phase = 1) := by
   have hdil := InfoGeometry.QuantumContext.AharonovTime.Sphere4D.radiusSq_dilate s X
-  have hlock
-  := InfoGeometry.QuantumContext.AharonovTime.Sphere4D.twin_shell_horizon_lock r₀ ep en hep_en
+  have hlock := InfoGeometry.QuantumContext.AharonovTime.Sphere4D.twin_shell_horizon_lock r₀ ep en hep_en
   have hpos := InfoGeometry.QuantumContext.AharonovTime.SlitState2D.standard_qm_slit1_nonneg ψ
   have hpart := InfoGeometry.QuantumContext.AharonovTime.SlitState2D.two_state_weak_partition ϕ ψ
-  have hneg
-  := InfoGeometry.QuantumContext.AharonovTime.SlitState2D.double_slit_registers_negative_weak_time
+  have hneg := InfoGeometry.QuantumContext.AharonovTime.SlitState2D.double_slit_registers_negative_weak_time
   have hflat := InfoGeometry.NCG.AlgebraDerivation.maurer_cartan_flatness D u
   have hcocycle := InfoGeometry.NCG.AlgebraDerivation.pureGaugeForm_mul D u v
   have hdiff :
@@ -1814,11 +1696,9 @@ In any unital associative operator ring `B`:
    $\omega_D := \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,D)\,U\,U_{\mathrm{inv}}
    = U_{\mathrm{inv}} * (D * U - U * D)$ satisfies:
    - **Dirac Shift = Gauge Conjugation:**
-     $$\omega_D = U_{\mathrm{inv}} * D * U - D \quad\text{and}\quad D + \omega_D
-  = U_{\mathrm{inv}} * D * U,$$
+     $$\omega_D = U_{\mathrm{inv}} * D * U - D \quad\text{and}\quad D + \omega_D = U_{\mathrm{inv}} * D * U,$$
    - **Universal Graded Operator Maurer–Cartan Curvature Identity:**
-     $$\mathrm{anticomm}\,D\,\omega_D + \omega_D * \omega_D
-  = U_{\mathrm{inv}} * (D * D) * U - D * D,$$
+     $$\mathrm{anticomm}\,D\,\omega_D + \omega_D * \omega_D = U_{\mathrm{inv}} * (D * D) * U - D * D,$$
    - **Identical Graded Flatness for Involutive Dirac/Cartan Operators ($F * F = 1$):**
      For $\omega_F := \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,F)\,U\,U_{\mathrm{inv}}$,
      $$\mathrm{anticomm}\,F\,\omega_F + \omega_F * \omega_F = 0.$$ -/
@@ -1926,34 +1806,26 @@ For any Peirce idempotent $P * P = P$ and $A, C \in B$:
 1. **Unipotent Inverse Pair ($U = 1 + N_+$, $U_{\mathrm{inv}} = 1 - N_+$):**
    $(1 + \mathrm{conePlus}\,P\,A) * (1 - \mathrm{conePlus}\,P\,A) = 1$ and
    $(1 - \mathrm{conePlus}\,P\,A) * (1 + \mathrm{conePlus}\,P\,A) = 1$.
-2. **Ungraded Projector Maurer–Cartan Operator ($\omega_P
-  = N_+$) & Non-Flat Curvature (`PeirceMaurerCartanCurvatureWitness`):**
+2. **Ungraded Projector Maurer–Cartan Operator ($\omega_P = N_+$) & Non-Flat Curvature (`PeirceMaurerCartanCurvatureWitness`):**
    Under $d_P = \mathrm{comm}\,P$, the left Maurer–Cartan operator 1-form is
    $\omega_P = \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,P)\,(1 + N_+)\,(1 - N_+) = N_+$,
    whose ungraded commutator curvature is $\mathrm{comm}\,P\,\omega_P + \omega_P * \omega_P = N_+$
    (witnessed non-zero on $2 \times 2$ integer matrices by `peirce_matrix_unipotent_maurer_cartan_nonflat`).
-3. **Cartan-Graded Involution Maurer–Cartan Operator ($\omega_{S_P}
-  = -2 N_+$) & Exact Graded Flatness:**
-   Under the DeWitt Cartan grading involution $S_P = \mathrm{invS}\,P = P - (1 - P)$ ($S_P * S_P
-  = 1$),
+3. **Cartan-Graded Involution Maurer–Cartan Operator ($\omega_{S_P} = -2 N_+$) & Exact Graded Flatness:**
+   Under the DeWitt Cartan grading involution $S_P = \mathrm{invS}\,P = P - (1 - P)$ ($S_P * S_P = 1$),
    the left Maurer–Cartan operator 1-form is
-   $\omega_{S_P}
-  := \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,(\mathrm{invS}\,P))\,(1 + N_+)\,(1 - N_+) = -((2 : \mathbb{Z}) \bullet N_+)$,
+   $\omega_{S_P} := \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,(\mathrm{invS}\,P))\,(1 + N_+)\,(1 - N_+) = -((2 : \mathbb{Z}) \bullet N_+)$,
    shifting $S_P$ by $\omega_{S_P}$ conjugates $S_P$ by $1 \pm N_+$
    ($\mathrm{invS}\,P + \omega_{S_P} = (1 - N_+) * \mathrm{invS}\,P * (1 + N_+)$),
    and its graded operator Maurer–Cartan curvature vanishes identically:
    $$\mathrm{anticomm}\,(\mathrm{invS}\,P)\,\omega_{S_P} + \omega_{S_P} * \omega_{S_P} = 0.$$
-4. **Soldered Tetrad ($\Phi, J$)
-  Uncertainty Spin Connection ($\Sigma
-  = [N_+, N_-]$) Operator Differential Curvature & Bianchi Laws:**
+4. **Soldered Tetrad ($\Phi, J$) and Uncertainty Spin Connection ($\Sigma = [N_+, N_-]$) Operator Differential Curvature & Bianchi Laws:**
    - $\mathrm{comm}\,P\,(\mathrm{genPhi}\,P\,A\,C) + \mathrm{genPhi}\,P\,A\,C * \mathrm{genPhi}\,P\,A\,C = \mathrm{genJ}\,P\,A\,C + \mathrm{genV}\,P\,A\,C$,
-   - $\mathrm{comm}\,P\,(\mathrm{genJ}\,P\,A\,C) + \mathrm{genJ}\,P\,A\,C * \mathrm{genJ}\,P\,A\,C
-  = \mathrm{genPhi}\,P\,A\,C - \mathrm{genV}\,P\,A\,C$,
+   - $\mathrm{comm}\,P\,(\mathrm{genJ}\,P\,A\,C) + \mathrm{genJ}\,P\,A\,C * \mathrm{genJ}\,P\,A\,C = \mathrm{genPhi}\,P\,A\,C - \mathrm{genV}\,P\,A\,C$,
    - $\mathrm{comm}\,P\,(\mathrm{genSig}\,P\,A\,C) = 0$,
      $\mathrm{comm}\,P\,(\mathrm{genSig}\,P\,A\,C) + \mathrm{genSig}\,P\,A\,C * \mathrm{genSig}\,P\,A\,C = \mathrm{genV}\,P\,A\,C * \mathrm{genV}\,P\,A\,C$,
    - $\mathrm{comm}\,P\,(\mathrm{genV}\,P\,A\,C * \mathrm{genV}\,P\,A\,C) = 0$ and
-     $\mathrm{comm}\,(\mathrm{genSig}\,P\,A\,C)\,(\mathrm{genV}\,P\,A\,C * \mathrm{genV}\,P\,A\,C)
-  = 0$. -/
+     $\mathrm{comm}\,(\mathrm{genSig}\,P\,A\,C)\,(\mathrm{genV}\,P\,A\,C * \mathrm{genV}\,P\,A\,C) = 0$. -/
 theorem peirce_operator_maurer_cartan_ungraded_vs_cartan_graded_and_tetrad_curvature_bridge
     {B : Type*} [Ring B] {P : B} (hP : P * P = P) (A C : B) :
     ((1 + conePlus P A) * (1 - conePlus P A) = 1 ∧
@@ -1999,8 +1871,7 @@ theorem peirce_operator_maurer_cartan_ungraded_vs_cartan_graded_and_tetrad_curva
      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (genSig P A C) +
        genSig P A C * genSig P A C = genV P A C * genV P A C ∧
      InfoGeometry.OperatorAlgebra.PeirceSpine.comm P (genV P A C * genV P A C) = 0 ∧
-     InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C) (genV P A C * genV P A C) = 0)
-  := by
+     InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genSig P A C) (genV P A C * genV P A C) = 0) := by
   refine ⟨⟨by peirce_nf hP, by peirce_nf hP⟩,
     ⟨by unfold peirceMaurerCartanForm; peirce_nf hP,
      peirce_unipotent_maurer_cartan_curvature_eq_conePlus hP A,
@@ -2014,19 +1885,14 @@ theorem peirce_operator_maurer_cartan_ungraded_vs_cartan_graded_and_tetrad_curva
 /-- **Non-Abelian Operator Maurer–Cartan Inverse/Curl Law, Peirce Operator Differential Forms,
 Dually Flat Amari–Nagaoka QGT Connections, & Möbius–Bruhat 5-Graded Kantor Pullback Bridge:**
 In any unital associative operator ring `B` with Peirce idempotent $P * P = P$:
-1. **Non-Abelian Operator Maurer–Cartan Inverse Derivation, Flow Reconstruction,
-  & Zero-Curl Identity (`Archetype XVI`):**
-   For any inverse operator pair $(U, U_{\mathrm{inv}})$ ($U * U_{\mathrm{inv}}
-  = 1$, $U_{\mathrm{inv}} * U = 1$)
+1. **Non-Abelian Operator Maurer–Cartan Inverse Derivation, Flow Reconstruction, & Zero-Curl Identity (`Archetype XVI`):**
+   For any inverse operator pair $(U, U_{\mathrm{inv}})$ ($U * U_{\mathrm{inv}} = 1$, $U_{\mathrm{inv}} * U = 1$)
    and derivation generators $H_1, H_2 \in B$:
    - **Inverse Derivation Law:**
-     $\mathrm{comm}\,H_1\,U_{\mathrm{inv}}
-  = -(U_{\mathrm{inv}} * \mathrm{comm}\,H_1\,U * U_{\mathrm{inv}})
-
-  = -(\mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,H_1)\,U\,U_{\mathrm{inv}} * U_{\mathrm{inv}})$,
+     $\mathrm{comm}\,H_1\,U_{\mathrm{inv}} = -(U_{\mathrm{inv}} * \mathrm{comm}\,H_1\,U * U_{\mathrm{inv}})
+     = -(\mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,H_1)\,U\,U_{\mathrm{inv}} * U_{\mathrm{inv}})$,
    - **Left Maurer–Cartan Flow Reconstruction:**
-     $U * \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,H_1)\,U\,U_{\mathrm{inv}}
-  = \mathrm{comm}\,H_1\,U$,
+     $U * \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,H_1)\,U\,U_{\mathrm{inv}} = \mathrm{comm}\,H_1\,U$,
    - **Operator Curl of Reconstructed Maurer–Cartan Flows (Jacobi Curvature Law):**
      $$\mathrm{comm}\,H_1\,\big(U * \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,H_2)\,U\,U_{\mathrm{inv}}\big)
        - \mathrm{comm}\,H_2\,\big(U * \mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,H_1)\,U\,U_{\mathrm{inv}}\big)
@@ -2040,19 +1906,14 @@ In any unital associative operator ring `B` with Peirce idempotent $P * P = P$:
    - $\mathrm{qgtPlus}\,P\,A\,C + \mathrm{qgtMinus}\,P\,A\,C = \mathrm{genV}\,P\,A\,C$,
      $\mathrm{qgtPlus}\,P\,A\,C - \mathrm{qgtMinus}\,P\,A\,C = \mathrm{genSig}\,P\,A\,C$,
      $\mathrm{connPlus}\,P\,A\,C\,X + \mathrm{connMinus}\,P\,A\,C\,X = \mathrm{connV}\,P\,A\,C\,X$,
-     $\mathrm{connPlus}\,P\,A\,C\,X - \mathrm{connMinus}\,P\,A\,C\,X
-  = \mathrm{connSig}\,P\,A\,C\,X$, and
-     $\mathrm{connPlus}\,P\,A\,C\,(\mathrm{connMinus}\,P\,A\,C\,X)
-  = \mathrm{connMinus}\,P\,A\,C\,(\mathrm{connPlus}\,P\,A\,C\,X)$.
+     $\mathrm{connPlus}\,P\,A\,C\,X - \mathrm{connMinus}\,P\,A\,C\,X = \mathrm{connSig}\,P\,A\,C\,X$, and
+     $\mathrm{connPlus}\,P\,A\,C\,(\mathrm{connMinus}\,P\,A\,C\,X) = \mathrm{connMinus}\,P\,A\,C\,(\mathrm{connPlus}\,P\,A\,C\,X)$.
 3. **Two-Cone Möbius–Bruhat Maurer–Cartan Pullbacks & 5-Graded Kantor–Koecher–Tits Charge Spectrum (`A₅₁–A₅₃`):**
-   - $\mathrm{comm}\,P\,\big((1 + \mathrm{conePlus}\,P\,A) * (1 - \mathrm{coneMinus}\,P\,C)\big)
-  = \mathrm{genPhi}\,P\,A\,C$,
+   - $\mathrm{comm}\,P\,\big((1 + \mathrm{conePlus}\,P\,A) * (1 - \mathrm{coneMinus}\,P\,C)\big) = \mathrm{genPhi}\,P\,A\,C$,
    - $\mathrm{peirceMaurerCartanForm}\,(\mathrm{comm}\,P)\,\big((1 + \mathrm{conePlus}\,P\,A) * (1 - \mathrm{coneMinus}\,P\,C)\big)\,\big((1 + \mathrm{coneMinus}\,P\,C) * (1 - \mathrm{conePlus}\,P\,A)\big)
-
-  = \mathrm{genPhi}\,P\,A\,C - \mathrm{genSig}\,P\,A\,C - \mathrm{genV}\,P\,A\,C * \mathrm{coneMinus}\,P\,C$,
+     = \mathrm{genPhi}\,P\,A\,C - \mathrm{genSig}\,P\,A\,C - \mathrm{genV}\,P\,A\,C * \mathrm{coneMinus}\,P\,C$,
    - $\mathrm{comm}\,P\,\big((1 + \mathrm{conePlus}\,P\,A) * (1 - \mathrm{coneMinus}\,P\,C)\big) * \big((1 + \mathrm{coneMinus}\,P\,C) * (1 - \mathrm{conePlus}\,P\,A)\big)
-
-  = \mathrm{genPhi}\,P\,A\,C + \mathrm{genSig}\,P\,A\,C - \mathrm{genV}\,P\,A\,C * \mathrm{conePlus}\,P\,A$,
+     = \mathrm{genPhi}\,P\,A\,C + \mathrm{genSig}\,P\,A\,C - \mathrm{genV}\,P\,A\,C * \mathrm{conePlus}\,P\,A$,
    - $\mathrm{chargeIter}\,P\,(\mathrm{cornerOperatorSum}\,P\,A\,C)\,3\,X - \mathrm{chargeIter}\,P\,(\mathrm{cornerOperatorSum}\,P\,A\,C)\,1\,X = (6 : \mathbb{Z}) \bullet (\mathrm{sandwich}\,(\mathrm{conePlus}\,P\,A)\,(\mathrm{conePlus}\,P\,A)\,X - \mathrm{sandwich}\,(\mathrm{coneMinus}\,P\,C)\,(\mathrm{coneMinus}\,P\,C)\,X)$ and
      $\mathrm{chargeIter}\,P\,(\mathrm{cornerOperatorSum}\,P\,A\,C)\,5\,X - (5 : \mathbb{Z}) \bullet \mathrm{chargeIter}\,P\,(\mathrm{cornerOperatorSum}\,P\,A\,C)\,3\,X + (4 : \mathbb{Z}) \bullet \mathrm{chargeIter}\,P\,(\mathrm{cornerOperatorSum}\,P\,A\,C)\,1\,X = 0$. -/
 theorem operator_maurer_cartan_galois_bruhat_pullback_amari_qgt_and_nonabelian_curl_bridge
@@ -2075,8 +1936,7 @@ theorem operator_maurer_cartan_galois_bruhat_pullback_amari_qgt_and_nonabelian_c
        InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁
          (U * peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₂) U Uinv) -
        InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₂
-         (U * peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁) U Uinv)
-  = 0)) ∧
+         (U * peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁) U Uinv) = 0)) ∧
     (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm P X) = oddGrade P X ∧
      X - InfoGeometry.OperatorAlgebra.PeirceSpine.comm P
@@ -2123,8 +1983,7 @@ theorem operator_maurer_cartan_galois_bruhat_pullback_amari_qgt_and_nonabelian_c
       _ = -(Uinv * (H₁ * U - U * H₁) * Uinv) := by noncomm_ring
   have hinv_mc :
       InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁ Uinv =
-        -(peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁) U Uinv * Uinv)
-  := by
+        -(peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁) U Uinv * Uinv) := by
     rw [hinv_comm]
     unfold peirceMaurerCartanForm
     noncomm_ring
@@ -2161,8 +2020,7 @@ theorem operator_maurer_cartan_galois_bruhat_pullback_amari_qgt_and_nonabelian_c
         InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁
           (U * peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₂) U Uinv) -
         InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₂
-          (U * peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁) U Uinv) = 0
-  := by
+          (U * peirceMaurerCartanForm (InfoGeometry.OperatorAlgebra.PeirceSpine.comm H₁) U Uinv) = 0 := by
     intro hcomm0
     rw [hcurl, hcomm0]
     unfold InfoGeometry.OperatorAlgebra.PeirceSpine.comm
@@ -2173,11 +2031,10 @@ theorem operator_maurer_cartan_galois_bruhat_pullback_amari_qgt_and_nonabelian_c
      by simp only [qgtPlus, qgtMinus]; peirce_nf hP,
      by simp only [qgtPlus, qgtMinus]; peirce_nf hP,
      hA26.1, hA26.2.1, hA26.2.2.2.2.1, hA26.2.2.2.2.2.2.1⟩,
-    ⟨InfoGeometry.OperatorAlgebra.PeirceSpine.comm_two_cone_product hP A C,
-     by unfold peirceMaurerCartanForm;
-  exact InfoGeometry.OperatorAlgebra.PeirceSpine.two_cone_left_pullback hP A C,
-     InfoGeometry.OperatorAlgebra.PeirceSpine.two_cone_right_pullback hP A C,
-     InfoGeometry.OperatorAlgebra.PeirceSpine.charge_iter_cubic_difference hP A C X,
-     InfoGeometry.OperatorAlgebra.PeirceSpine.charge_iter_fifth_annihilator hP A C X⟩⟩
+    ⟨comm_two_cone_product hP A C,
+     by unfold peirceMaurerCartanForm; exact two_cone_left_pullback hP A C,
+     two_cone_right_pullback hP A C,
+     charge_iter_cubic_difference hP A C X,
+     charge_iter_fifth_annihilator hP A C X⟩⟩
 
 end InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge

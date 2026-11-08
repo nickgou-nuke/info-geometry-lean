@@ -120,6 +120,13 @@ def audit(root: Path, workspace_roots: tuple[str, ...] | None = None) -> dict:
     non_default_sources = sorted(
         path for path in repository_sources if path not in default_source_paths
     )
+    # Only InfoGeometry sources are governed by the InfoGeometry umbrella.
+    # DAG, Omega, proofs, tests, and independent Lake libraries are default
+    # build targets in their own right and must not be required to import it.
+    info_geometry_sources = {
+        module for module in sources
+        if module == "InfoGeometry" or module.startswith("InfoGeometry.")
+    }
     return {
         "workspace_roots": list(workspace_roots),
         "default_modules": len(sources),
@@ -129,7 +136,7 @@ def audit(root: Path, workspace_roots: tuple[str, ...] | None = None) -> dict:
         "missing_sources": sorted(relative(path) for path in sources.values() if not path.is_file()),
         "untracked_sources": sorted(relative(path) for path in sources.values()
                                     if relative(path) not in tracked),
-        "missing_from_all": sorted(sources.keys() - reachable - downstream),
+        "missing_from_all": sorted(info_geometry_sources - reachable - downstream),
         "downstream_of_all": sorted(downstream - umbrella),
     }
 

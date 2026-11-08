@@ -275,8 +275,8 @@ theorem pillar_11_12_spin_fusion_and_faraday_monopole
       addZ (smulZ (u₁ * a₁ + u₂ * a₂ + u₃ * a₃) paraSymplecticK0)
            (smulZ 2 (sheetV (u₂ * a₃ - u₃ * a₂) (u₃ * a₁ - u₁ * a₃) (u₁ * a₂ - u₂ * a₁))) ∧
     faradayYangMills u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃ =
-      smulZ (-2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
-            (addZ paraSymplecticK0 (sheetU u₁ u₂ u₃)) := by
+      smulZ (2 * det3R u₁ u₂ u₃ a₁ a₂ a₃ b₁ b₂ b₃)
+            (subZ paraSymplecticK0 (sheetU u₁ u₂ u₃)) := by
   refine ⟨?_, ?_⟩
   · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;>
       (dsimp [commutatorZ, subZ, mulZ, sheetU, sheetV, boostGenH, addZ, smulZ, paraSymplecticK0]; ring)

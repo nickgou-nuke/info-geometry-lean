@@ -41,7 +41,7 @@ construction of $KO$-theory from gapped free-fermion Majorana Hamiltonians ($\ma
      block $C_{\mathrm{skew}}(A) = \begin{pmatrix} 0 & A \\ -A & 0 \end{pmatrix}$ anticommutes with
      both split Clifford generators $e_1, e_2$, satisfies $C_{\mathrm{skew}}(A)^\top = C_{\mathrm{skew}}(A) \iff A^\top = -A$,
      and squares to $\begin{pmatrix} -A^2 & 0 \\ 0 & -A^2 \end{pmatrix}$.
-3. **Stages `𝔎𝔖₃–𝔎𝔖₄` (`ks3_kitaev_centered_spectral_band_square_identity` &
+3. **Stages `𝔎𝔖₃–𝔎𝔖₄` (`ks3_kitaev_centered_energy_band_square_identity` &
    `ks4_interior_disk_projection_eliminates_boundary_modes`):**
    - Proves Kitaev's centered spectral-band polynomial factorization over any `[CommRing R]`:
      for $M_2(A, a, b) = -(2 \bullet (A * A)) - (a^2 + b^2) \bullet 1$,
@@ -78,7 +78,7 @@ construction of $KO$-theory from gapped free-fermion Majorana Hamiltonians ($\ma
 - `ks1_transverse_field_ising_and_three_corner_domain_wall_algebra`
 - `ks1_zero_dim_convex_projector_defect_and_fermionic_z2_parity`
 - `ks2_majorana_standard_complex_structure_and_skew_clifford_shift`
-- `ks3_kitaev_centered_spectral_band_square_identity`
+- `ks3_kitaev_centered_energy_band_square_identity`
 - `ks4_interior_disk_projection_eliminates_boundary_modes`
 - `ks5_kitaev_invertibility_block_anticommutator_and_rotor_gap`
 - `ks6_block_swap_conjugation_and_soft_diagonal_restriction`
@@ -98,7 +98,7 @@ construction of $KO$-theory from gapped free-fermion Majorana Hamiltonians ($\ma
   - `KitaevFreeFermionKOSpectrumStage` ($\mathfrak{KS}_1 \prec \dots \prec \mathfrak{KS}_7$), `coverEdge`, `coverEdge_strictMono`, `coverEdge_acyclic`,
   - `ks1_transverse_field_ising_and_three_corner_domain_wall_algebra`, `ks1_zero_dim_convex_projector_defect_and_fermionic_z2_parity`,
   - `ks2_majorana_standard_complex_structure_and_skew_clifford_shift`,
-  - `ks3_kitaev_centered_spectral_band_square_identity`, `ks4_interior_disk_projection_eliminates_boundary_modes`,
+  - `ks3_kitaev_centered_energy_band_square_identity`, `ks4_interior_disk_projection_eliminates_boundary_modes`,
   - `ks5_kitaev_invertibility_block_anticommutator_and_rotor_gap`,
   - `ks6_block_swap_conjugation_and_soft_diagonal_restriction`,
   - `ks7_alternating_dimer_loop_and_ko_d_minus_2_master_synthesis`.
@@ -246,7 +246,7 @@ theorem ks1_transverse_field_ising_and_three_corner_domain_wall_algebra
       σx * σz * σx = -(σz * σx) * σx := by rw [h1]
       _ = -(σz * (σx * σx)) := by noncomm_ring
       _ = -(σz * 1) := by rw [hσx]
-      _ = -σz := by simp
+      _ = -σz := by rw [mul_one]
   have hCorners := three_corner_laws h₁ h₂ h₁₂ h₂₁
   have h1' : ∀ Z : B, P₁ * (P₁ * Z) = P₁ * Z := fun Z => by rw [← mul_assoc, h₁]
   have h2' : ∀ Z : B, P₂ * (P₂ * Z) = P₂ * Z := fun Z => by rw [← mul_assoc, h₂]
@@ -446,7 +446,7 @@ In any $R$-algebra `[Algebra R B]` over `[CommRing R]`, for any operator `A : B`
 2. **Flat-Band Complex-Structure Annihilation (`A * A = -1`):**
    If `A * A = -1` (such as $A = A_0$) and $a^2 + b^2 = 2$, then `kitaevCenteredGapOp A a b = 0`.
 -/
-theorem ks3_kitaev_centered_spectral_band_square_identity
+theorem ks3_kitaev_centered_energy_band_square_identity
     {R B : Type*} [CommRing R] [Ring B] [Algebra R B]
     (A : B) (a b : R) :
     kitaevCenteredGapOp A a b * kitaevCenteredGapOp A a b - ((b ^ 2 - a ^ 2) ^ 2) • (1 : B) =
@@ -767,7 +767,7 @@ theorem ks7_alternating_dimer_loop_and_ko_d_minus_2_master_synthesis
      Fintype.card (InfoGeometry.Core.TensorPeirceDecomposition.PeirceIndex (m + 4)) =
        16 * Fintype.card (InfoGeometry.Core.TensorPeirceDecomposition.PeirceIndex m) ∧
      (((d + 8 - 2 : ℕ) : ZMod 8) = ((d + 6 : ℕ) : ZMod 8))) := by
-  have hBand := (ks3_kitaev_centered_spectral_band_square_identity A_op a b).1
+  have hBand := (ks3_kitaev_centered_energy_band_square_identity A_op a b).1
   have hInt :=
     (ks4_interior_disk_projection_eliminates_boundary_modes
       (A₁ := A₁) (C₁ := C₁) (A₂ := A₂) (C₂ := C₂) h₁ h₂ h₁₂ h₂₁).2.2.2

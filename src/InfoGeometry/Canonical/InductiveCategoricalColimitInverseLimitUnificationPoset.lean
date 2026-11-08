@@ -551,14 +551,15 @@ def pullbackInductiveSystem
     (res_id : ∀ (i : I) (x : X i), res (le_refl i) x = x)
     (res_comp : ∀ {i j k : I} (hij : i ≤ j) (hjk : j ≤ k) (x : X k),
       res hij (res hjk x) = res (le_trans hij hjk) x) :
-    DirectInductiveSystem R I (fun i => X i → R) where
-  f hij := pullbackLinearMap (res hij)
-  f_id i := by
-    ext f x
-    exact congrArg f (res_id i x)
-  f_comp hij hjk := by
-    ext f x
-    exact congrArg f (res_comp hij hjk x)
+    DirectInductiveSystem R I (fun i => X i → R) :=
+  DirectInductiveSystem.mk
+    (fun hij => pullbackLinearMap (res hij))
+    (fun i => by
+      ext f x
+      exact congrArg f (res_id i x))
+    (fun hij hjk => by
+      ext f x
+      exact congrArg f (res_comp hij hjk x))
 
 /-- Any compatible projective cone `(X_inf, proj i)` over `(X i, res hij)` induces an
 `InductiveCocone` from `pullbackInductiveSystem` into the boundary observable space `X_inf → R`. -/
@@ -572,11 +573,12 @@ def pullbackCylinderCocone
     (X_inf : Type u)
     (proj : ∀ i : I, X_inf → X i)
     (proj_compat : ∀ {i j : I} (hij : i ≤ j) (b : X_inf), res hij (proj j b) = proj i b) :
-    InductiveCocone R (pullbackInductiveSystem R X res res_id res_comp) (X_inf → R) where
-  psi i := pullbackLinearMap (proj i)
-  psi_comm hij := by
-    ext f b
-    exact congrArg f (proj_compat hij b)
+    InductiveCocone R (pullbackInductiveSystem R X res res_id res_comp) (X_inf → R) :=
+  InductiveCocone.mk
+    (fun i => pullbackLinearMap (proj i))
+    (fun hij => by
+      ext f b
+      exact congrArg f (proj_compat hij b))
 
 /-- **Stages `ℭ₄` & `ℭ₅` (`stage_C4_C5_projective_space_to_inductive_cylinder_and_cantor_uhf_bridge`)**:
 1. **General Projective-Space / Inductive-Observable Duality**: For any projective system
@@ -672,14 +674,15 @@ def algTowerToDirectSystem
     (f_id : ∀ i : I, f (le_refl i) = AlgHom.id R (Stage i))
     (f_comp : ∀ {i j k : I} (hij : i ≤ j) (hjk : j ≤ k),
       (f hjk).comp (f hij) = f (le_trans hij hjk)) :
-    DirectInductiveSystem R I Stage where
-  f hij := (f hij).toLinearMap
-  f_id i := by
-    ext x
-    exact AlgHom.congr_fun (f_id i) x
-  f_comp hij hjk := by
-    ext x
-    exact AlgHom.congr_fun (f_comp hij hjk) x
+    DirectInductiveSystem R I Stage :=
+  DirectInductiveSystem.mk
+    (fun hij => (f hij).toLinearMap)
+    (fun i => by
+      ext x
+      exact AlgHom.congr_fun (f_id i) x)
+    (fun hij hjk => by
+      ext x
+      exact AlgHom.congr_fun (f_comp hij hjk) x)
 
 /-- **Stage `ℭ₇` (`stage_C7_peirce_cartan_gauss_bonnet_tower_to_dual_inverse_trace_system`)**:
 Let `(Stage i, f hij)` be a directed system of `R`-algebras over `(I, ≤)` and let

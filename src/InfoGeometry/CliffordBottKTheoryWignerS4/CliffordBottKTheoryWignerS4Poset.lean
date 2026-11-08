@@ -194,6 +194,9 @@ theorem s4_wedderburn_artin_trees_and_adams_j_mod24_lock :
     catalanNum 4 = 14 ∧
     Nat.gcd (5 ^ 2 - 1) (7 ^ 2 - 1) = 24 ∧
     4 ^ 4 = 16 * 16 := by
+  have h1 : (1 ^ 2 + 1 ^ 2 + 2 ^ 2) + (3 ^ 2 + 3 ^ 2) = 24 := by decide
+  have h2 : 1 ^ 2 + 1 ^ 2 + 2 ^ 2 = 6 ∧ 1 + 2 + 3 + 3 = 3 * 3 := by decide
+  refine ⟨h1, h2.1, h2.2, ?_⟩
   decide
 
 /--
@@ -205,7 +208,9 @@ or prove an Adams `J`-homomorphism statement.
 theorem adams_j_homomorphism_all_z24_units_divisibility :
     Nat.totient 24 = 8 ∧
     (∀ k : Fin 24, Nat.Coprime k.val 24 → (k.val * k.val - 1) % 24 = 0) := by
-  decide
+  have hTot : Nat.totient 24 = 8 := by decide
+  have hUnits : ∀ k : Fin 24, Nat.Coprime k.val 24 → (k.val * k.val - 1) % 24 = 0 := by decide
+  exact ⟨hTot, hUnits⟩
 
 -- ============================================================================
 -- SECTION 2 (𝔎𝔅₄–𝔎𝔅₅): Scaled Matrix Coordinate Channels and the Zorn Cross-Product Identity

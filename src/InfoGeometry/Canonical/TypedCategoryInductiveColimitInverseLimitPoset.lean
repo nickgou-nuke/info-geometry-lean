@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Nikolay Goutev, Dimitar Tonev
+Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.CategoryTheory.Limits.Types.Limits
 import Mathlib.CategoryTheory.Limits.Types.ColimitType
@@ -13,6 +13,8 @@ import Mathlib.CategoryTheory.Limits.ColimitLimit
 import Mathlib.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
 import InfoGeometry.Canonical.CantorProjectiveLimit
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
+import InfoGeometry.Canonical.FilteredDirectInverseColimit
+import InfoGeometry.Canonical.FilteredDirectInverseColimitReadback
 
 /-!
 # Typed Category Inductive Colimits & Inverse Limits Poset (`𝔗ℭ₁ ≺ … ≺ 𝔗ℭ₇`)
@@ -549,8 +551,7 @@ def prefixProjectiveLimitEquivCompatibleThreads :
     ⟨fun n => boundaryPrefix n (PrefixProjectiveLimit.toCantor p),
      fun {_ _} hmn => boundaryPrefix_prefixCastLE hmn (PrefixProjectiveLimit.toCantor p)⟩
   invFun u :=
-    { word := u.val
-      coherent := fun n => u.property (Nat.le_succ n) }
+    PrefixProjectiveLimit.mk u.val (fun n => u.property (Nat.le_succ n))
   left_inv p := by
     apply PrefixProjectiveLimit.ext
     funext n
@@ -559,7 +560,7 @@ def prefixProjectiveLimitEquivCompatibleThreads :
     apply Subtype.ext
     funext n
     exact PrefixProjectiveLimit.boundaryPrefix_toCantor_eq_word
-      { word := u.val, coherent := fun k => u.property (Nat.le_succ k) } n
+      (PrefixProjectiveLimit.mk u.val (fun k => u.property (Nat.le_succ k))) n
 
 /-- Direct equivalence between the Cantor stream space `CantorBoundary` (`ℕ → Bool`) and
 categorical sections `cantorTypedInverseDiagram.sections` of `cantorTypedInverseDiagram : ℕᵒᵖ ⥤ Type`. -/
@@ -620,6 +621,103 @@ theorem tc6_cantor_typed_inverse_limit_sections_and_uhf_cylinder_colimit
          hlim,
          rfl,
          cylinder_compatible_succ n f_diag⟩
+
+/-- The typed inverse diagram (`Iᵒᵖ ⥤ Type u`) of dual stage modules `A i →ₗ[R] R` associated to
+a `FilteredColimit.DirectInductiveSystem R I A`. -/
+def dualModuleTypedInverseDiagram
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : FilteredColimit.DirectInductiveSystem R I A) :
+    Iᵒᵖ ⥤ Type u :=
+  typedInverseDiagram
+    (fun i => A i →ₗ[R] R)
+    (fun {_ _} hij phi => FilteredColimit.InductiveCocone.dualInverseTransition sys hij phi)
+    (fun i phi => by
+      ext x
+      exact congrArg phi (LinearMap.congr_fun (sys.f_id i) x))
+    (fun hij hjk phi =>
+      FilteredColimit.InductiveCocone.dual_inverse_comp sys hij hjk phi)
+
+/-- Equivalence between compatible dual inverse families `{ phi // IsDualInverseFamily phi }`
+and `CompatibleProjectiveThreads` of stage dual linear maps. -/
+def dualInverseFamilyEquivCompatibleThreads
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : FilteredColimit.DirectInductiveSystem R I A) :
+    { phi : ∀ i : I, A i →ₗ[R] R //
+      FilteredColimit.InductiveCocone.IsDualInverseFamily (sys := sys) phi } ≃
+      CompatibleProjectiveThreads (fun i => A i →ₗ[R] R)
+        (fun {_ _} hij phi => FilteredColimit.InductiveCocone.dualInverseTransition sys hij phi) :=
+  Equiv.refl _
+
+/-- Equivalence between compatible dual inverse families `{ phi // IsDualInverseFamily phi }`
+and sections `(dualModuleTypedInverseDiagram sys).sections` of the typed inverse diagram. -/
+def dualInverseFamilyEquivTypedInverseSections
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : FilteredColimit.DirectInductiveSystem R I A) :
+    { phi : ∀ i : I, A i →ₗ[R] R //
+      FilteredColimit.InductiveCocone.IsDualInverseFamily (sys := sys) phi } ≃
+      (dualModuleTypedInverseDiagram sys).sections :=
+  (dualInverseFamilyEquivCompatibleThreads sys).trans
+    (typedInverseSectionsEquivCompatibleThreads
+      (fun i => A i →ₗ[R] R)
+      (fun {_ _} hij phi => FilteredColimit.InductiveCocone.dualInverseTransition sys hij phi)
+      (fun i phi => by
+        ext x
+        exact congrArg phi (LinearMap.congr_fun (sys.f_id i) x))
+      (fun hij hjk phi =>
+        FilteredColimit.InductiveCocone.dual_inverse_comp sys hij hjk phi)).symm
+
+/-- Equivalence between the carrier of the `ModuleCat` projective limit
+`limit (dualModuleDiagram sys)` and the `Type u` inverse limit `limit (dualModuleTypedInverseDiagram sys)`. -/
+noncomputable def dualModuleProjectiveLimitEquivTypedInverseLimit
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : FilteredColimit.DirectInductiveSystem R I A) :
+    ((CategoryTheory.Limits.limit
+      (FilteredColimit.InductiveCocone.dualModuleDiagram sys) : ModuleCat R) : Type u) ≃
+      limit (dualModuleTypedInverseDiagram sys) :=
+  (FilteredColimit.InductiveCocone.projectiveLimitEquivDualInverseFamily (sys := sys)).trans
+    ((dualInverseFamilyEquivTypedInverseSections sys).trans
+      (limitEquivSections (dualModuleTypedInverseDiagram sys)).symm)
+
+/-- **Stage `𝔗ℭ₆` Module-Dual Seam (`tc6b_module_dual_projective_limit_to_typed_inverse_sections_bridge`)**:
+For any `DirectInductiveSystem R I A`:
+1. `dualInverseFamilyEquivTypedInverseSections sys` identifies compatible dual families with
+   sections `(dualModuleTypedInverseDiagram sys).sections` and preserves stage evaluation;
+2. `dualModuleProjectiveLimitEquivTypedInverseLimit sys` identifies the `ModuleCat` projective limit
+   `limit (dualModuleDiagram sys)` with `limit (dualModuleTypedInverseDiagram sys)` and intertwines
+   the `ModuleCat` projection `limit.π (dualModuleDiagram sys) (Opposite.op i)` with the `Type u`
+   projection `limit.π (dualModuleTypedInverseDiagram sys) (Opposite.op i)`. -/
+theorem tc6b_module_dual_projective_limit_to_typed_inverse_sections_bridge
+    {R : Type u} [CommRing R] {I : Type u} [Preorder I]
+    {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : FilteredColimit.DirectInductiveSystem R I A)
+    (s : { phi : ∀ i : I, A i →ₗ[R] R //
+      FilteredColimit.InductiveCocone.IsDualInverseFamily (sys := sys) phi })
+    (z : ((CategoryTheory.Limits.limit
+      (FilteredColimit.InductiveCocone.dualModuleDiagram sys) : ModuleCat R) : Type u))
+    (i : I) :
+    (dualInverseFamilyEquivTypedInverseSections sys s).val (Opposite.op i) = s.val i ∧
+    (dualInverseFamilyEquivTypedInverseSections sys).symm
+      (dualInverseFamilyEquivTypedInverseSections sys s) = s ∧
+    limit.π (dualModuleTypedInverseDiagram sys) (Opposite.op i)
+      (dualModuleProjectiveLimitEquivTypedInverseLimit sys z) =
+      (CategoryTheory.Limits.limit.π
+        (FilteredColimit.InductiveCocone.dualModuleDiagram sys) (Opposite.op i)).hom z := by
+  have hsec : (dualInverseFamilyEquivTypedInverseSections sys s).val (Opposite.op i) = s.val i := rfl
+  have hproj :
+      limit.π (dualModuleTypedInverseDiagram sys) (Opposite.op i)
+        (dualModuleProjectiveLimitEquivTypedInverseLimit sys z) =
+        (CategoryTheory.Limits.limit.π
+          (FilteredColimit.InductiveCocone.dualModuleDiagram sys) (Opposite.op i)).hom z := by
+    dsimp [dualModuleProjectiveLimitEquivTypedInverseLimit]
+    rw [limitEquivSections_symm_apply]
+    rfl
+  exact ⟨hsec,
+         (dualInverseFamilyEquivTypedInverseSections sys).symm_apply_apply s,
+         hproj⟩
 
 /-!
 ## Part VIII: Stage `𝔗ℭ₇` — Master Synthesis of Typed Category Inductive Colimits & Inverse Limits

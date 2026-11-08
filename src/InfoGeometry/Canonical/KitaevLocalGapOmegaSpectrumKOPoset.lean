@@ -6,32 +6,37 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Algebra.Group.Idempotent
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+import Mathlib.Analysis.Convex.Contractible
 import Mathlib.Analysis.Matrix.Normed
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Topology.Path
+import Mathlib.Topology.Homotopy.Basic
 import Mathlib.Data.Matrix.Block
 import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Basic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.ZornKitaevMajoranaChainFull
 import InfoGeometry.Algebra.BerezinianPfaffianBott
+import InfoGeometry.Canonical.PfaffianFour
 import InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian
 import InfoGeometry.Canonical.TKNNTopologicalHallChernCapstone
 import InfoGeometry.Quantum.KitaevDimerizationSwitch
 import InfoGeometry.CliffordBottKTheoryWignerS4.CliffordBottKTheoryWignerS4Poset
 
 /-!
-# Kitaev's Condensed-Matter $KO$-Spectrum Poset: Transverse-Field Ising Local Gap, Centered Operator-Square Window, IMS Double-Commutator Localization & The $(F_d, G_d)$ Dimerization Switch ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$)
+# Kitaev-Inspired Local-Gap and Finite Dimer Identities ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$)
 
 ## i. Overview
 
-This module formalizes the seven-stage causal poset ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$)
-distilled from Alexei Kitaev's lecture on topological insulators, free-fermion local spectral gaps,
-and the condensed-matter construction of the shifted real $K$-theory $\Omega$-spectrum
-($A_d \simeq \Omega A_{d+1} \simeq KO_{d-2}$):
+This module formalizes selected finite-dimensional and algebraic identities motivated by
+Alexei Kitaev's lecture on topological insulators and free-fermion local spectral gaps. Its
+stage labels organize these identities; they are not a construction of the classifying spaces
+$A_d$, the maps $F_d,G_d$, or a proof of the spectrum equivalence
+$A_d \simeq \Omega A_{d+1} \simeq KO_{d-2}$:
 
 1. **Stage $\mathfrak{KL}_1$ (`kl1_tfim_paramagnetic_vs_ferromagnetic_local_gap_and_iqhe_tknn`)**:
    - **1D Transverse-Field Ising Model (TFIM)**:
@@ -44,13 +49,17 @@ and the condensed-matter construction of the shifted real $K$-theory $\Omega$-sp
      Reuses `InfoGeometry.Canonical.TKNNTopologicalHall.firstChernNumber_quantized` and
      `hallConductance` additivity.
 2. **Stage $\mathfrak{KL}_2$ (`kl2_zero_dim_convex_ground_state_fiber_and_fermion_parity_split`)**:
-   - **0D Bosonic Ground-State Fiber Convexity ($B_0 \simeq \mathbb{C}P^\infty = K(\mathbb{Z}, 2)$)**:
-     For any two operators $H_0, H_1$ sharing ground-state projector $P$ ($H_0 P = E_0 P$, $H_1 P = E_1 P$),
-     every convex combination $H(t) = (1 - t) H_0 + t H_1$ preserves $P$ with eigenvalue
-     $(1 - t) E_0 + t E_1$ and preserves any positive spectral gap lower bound $\gamma > 0$.
-   - **0D Fermionic $\mathbb{Z}_2$-Graded Parity Split ($F_0 \simeq \mathbb{C}P^\infty \times \mathbb{Z}_2$)**:
-     Any parity-even Hamiltonian (`comm (invS P) H = 0`) decomposes strictly into even and odd Fock
-     sectors `H = peirce11 P H + peirce00 P H` (`genPhi P H H = 0`).
+   - The theorem proves preservation of a shared ground-state eigenvector and a stated scalar gap
+     lower bound under convex interpolation, plus algebraic parity relations for an idempotent.
+   - `convex_symmetric_matrix_common_ground_gap_fixed` separately proves that a common positive
+     Rayleigh lower bound on the orthogonal complement of a shared eigenvector is preserved for
+     finite real symmetric matrices under convex interpolation.
+   - `convex_symmetric_matrix_common_ground_gap_minimum` handles unequal positive endpoint bounds
+     and gives the uniform lower bound `min gap₀ gap₁` along the full interpolation.
+   - `kitaevFiniteGroundGapFiber_contractible` proves that the explicitly defined, nonempty finite
+     matrix fiber with fixed symmetric ground eigenpair and Rayleigh gap is contractible.
+   - It does not construct the topology on the Hamiltonian spaces or identify them with
+     $\mathbb{C}P^\infty$, $K(\mathbb{Z},2)$, or $\mathbb{C}P^\infty\times\mathbb{Z}_2$.
 3. **Stage $\mathfrak{KL}_3$ (`kl3_majorana_clifford_complex_structure_and_creation_annihilation`)**:
    - Standard $2 \times 2$ real skew-symmetric complex structure $J_2 = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$
      satisfies $J_2^\top = -J_2$, $J_2^2 = -I_2$, $\det J_2 = 1$, and $\mathrm{tr}(J_2) = 0$.
@@ -84,15 +93,18 @@ and the condensed-matter construction of the shifted real $K$-theory $\Omega$-sp
    - **Principle 3 (Lipschitz Diagonal Restriction)**: $L$-Lipschitz modulation over $r$-local bonds
      bounds variation by $L r$.
 7. **Stage $\mathfrak{KL}_7$ (`kl7_omega_spectrum_dimerization_switch_and_ko_d_minus_2_master_synthesis`)**:
-   - Connects the dimerization switch (`pauli_dimerization_switch_operator_laws`), the 2-site Kitaev
-     Pfaffian (`kitaev_pfaffian4_formula`), and the mod-8 shifted $KO_{d-2}$ Bott clock into a single
-     kernel-verified synthesis theorem.
+   - Bundles the finite dimerization-switch and 2-site Pfaffian identities with the arithmetic
+     residue equality $(d + 8 - 2 : \mathrm{ZMod}\;8) = (d - 2 : \mathrm{ZMod}\;8)$. This does not
+     construct or identify a $KO$-theory spectrum.
 
 ### Three-Bucket Audit Map
 * **BUCKET 1 — Proved Kernel Content:**
   - `KitaevKOSpectrumStage` ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$), `rank_injective`, `coverEdge`, `coverEdge_acyclic`,
   - `kl1_tfim_paramagnetic_vs_ferromagnetic_local_gap_and_iqhe_tknn`,
   - `kl2_zero_dim_convex_ground_state_fiber_and_fermion_parity_split`,
+  - `convex_symmetric_matrix_common_ground_gap_fixed`,
+  - `convex_symmetric_matrix_common_ground_gap_minimum`,
+  - `kitaevFiniteGroundGapFiber_convex`, `kitaevFiniteGroundGapFiber_contractible`,
   - `kl3_majorana_clifford_complex_structure_and_creation_annihilation`,
   - `kl4_spectral_gap_window_polynomial_and_bulk_disk_truncation`,
   - `kitaev_local_gap_centered_band_square_identity`,
@@ -212,7 +224,7 @@ theorem kl1_tfim_paramagnetic_vs_ferromagnetic_local_gap_and_iqhe_tknn
 /-! ## §3. Stage $\mathfrak{KL}_2$: 0D Convex Ground-State Fiber Contractibility ($B_0 \simeq \mathbb{C}P^\infty$) & Fermionic $\mathbb{Z}_2$ Parity Superselection ($F_0 \simeq \mathbb{C}P^\infty \times \mathbb{Z}_2$) -/
 
 /-- **Stage $\mathfrak{KL}_2$ (`kl2_zero_dim_convex_ground_state_fiber_and_fermion_parity_split`) —
-0D Convex Ground-State Fiber Contractibility & Fermionic $\mathbb{Z}_2$-Graded Parity Superselection (`00:17:19 – 00:26:37`)**:
+Convex Eigenvector/Gap Inequalities & Algebraic Fermion-Parity Relations (`00:17:19 – 00:26:37`)**:
 1. **Convex Fiber Eigenvector Preservation**:
    In any associative $\mathbb{R}$-algebra `B`, if $H_0 P = E_0 \bullet P$ and $H_1 P = E_1 \bullet P$,
    then for every $t \in \mathbb{R}$, the convex interpolation $H(t) = (1 - t) \bullet H_0 + t \bullet H_1$
@@ -346,6 +358,164 @@ theorem convex_symmetric_matrix_common_ground_gap
     rw [hShift]
     exact h
   exact ⟨hv, hSymmT, hEigT, hGapT⟩
+
+/-- The smaller of two positive endpoint Rayleigh gaps is a uniform gap
+throughout the convex interpolation. This gives an explicit fixed lower
+bound, rather than only the parameter-dependent convex combination appearing
+in `convex_symmetric_matrix_common_ground_gap`. The result is still a finite
+real-matrix Rayleigh estimate, not a topological classification. -/
+theorem convex_symmetric_matrix_common_ground_gap_minimum
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H₀ H₁ : Matrix n n ℝ) (v : n → ℝ)
+    (energy₀ energy₁ gap₀ gap₁ t : ℝ)
+    (hgap₀_pos : 0 < gap₀) (hgap₁_pos : 0 < gap₁)
+    (hSymm₀ : H₀.IsSymm) (hSymm₁ : H₁.IsSymm)
+    (hv : v ≠ 0)
+    (hEig₀ : H₀ *ᵥ v = energy₀ • v)
+    (hEig₁ : H₁ *ᵥ v = energy₁ • v)
+    (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1)
+    (hGap₀ : ∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap₀ * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (H₀ - energy₀ • (1 : Matrix n n ℝ)) x)
+    (hGap₁ : ∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap₁ * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (H₁ - energy₁ • (1 : Matrix n n ℝ)) x) :
+    let Ht := (1 - t) • H₀ + t • H₁
+    let energyT := (1 - t) * energy₀ + t * energy₁
+    let gapMin := min gap₀ gap₁
+    0 < gapMin ∧ v ≠ 0 ∧ Ht.IsSymm ∧ Ht *ᵥ v = energyT • v ∧
+      (∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+        gapMin * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (Ht - energyT • (1 : Matrix n n ℝ)) x) := by
+  have h := convex_symmetric_matrix_common_ground_gap H₀ H₁ v energy₀ energy₁ gap₀ gap₁ t
+    hSymm₀ hSymm₁ hv hEig₀ hEig₁ ht₀ ht₁ hGap₀ hGap₁
+  dsimp only at h ⊢
+  have ht₁' : 0 ≤ 1 - t := sub_nonneg.mpr ht₁
+  have hMinGap : min gap₀ gap₁ ≤ (1 - t) * gap₀ + t * gap₁ := by
+    calc
+      min gap₀ gap₁ = (1 - t) * min gap₀ gap₁ + t * min gap₀ gap₁ := by ring
+      _ ≤ (1 - t) * gap₀ + t * gap₁ :=
+        add_le_add
+          (mul_le_mul_of_nonneg_left (min_le_left gap₀ gap₁) ht₁')
+          (mul_le_mul_of_nonneg_left (min_le_right gap₀ gap₁) ht₀)
+  have hMinPos : 0 < min gap₀ gap₁ := lt_min hgap₀_pos hgap₁_pos
+  refine ⟨hMinPos, h.1, h.2.1, h.2.2.1, ?_⟩
+  intro x hx
+  have hxx : 0 ≤ x ⬝ᵥ x := by
+    unfold dotProduct
+    apply Finset.sum_nonneg
+    intro i hi
+    exact mul_self_nonneg (x i)
+  have hGapOrder := mul_le_mul_of_nonneg_right hMinGap hxx
+  exact hGapOrder.trans (h.2.2.2 x hx)
+
+/-- Finite-dimensional fiber of real symmetric Hamiltonians with a fixed
+eigenvector, eigenvalue, and Rayleigh lower bound on its orthogonal
+complement. This is an actual subset of the finite matrix space; it does not
+encode an infinite-volume or many-body Hamiltonian space. -/
+def kitaevFiniteGroundGapFiber
+    {n : Type*} [Fintype n] [DecidableEq n] (v : n → ℝ) (energy gap : ℝ) :
+    Set (Matrix n n ℝ) :=
+  {H | H.IsSymm ∧ H *ᵥ v = energy • v ∧
+    ∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (H - energy • (1 : Matrix n n ℝ)) x}
+
+/-- The finite ground-gap fiber is convex: symmetry, the fixed eigenvector
+equation, and each Rayleigh lower-bound inequality are preserved by affine
+combinations with nonnegative coefficients summing to one. -/
+theorem kitaevFiniteGroundGapFiber_convex
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (v : n → ℝ) (energy gap : ℝ) :
+    Convex ℝ (kitaevFiniteGroundGapFiber v energy gap) := by
+  intro H₀ h₀ H₁ h₁ a b ha hb hab
+  dsimp only [kitaevFiniteGroundGapFiber] at h₀ h₁ ⊢
+  change (a • H₀ + b • H₁).IsSymm ∧
+    (a • H₀ + b • H₁) *ᵥ v = energy • v ∧
+    (∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap * (x ⬝ᵥ x) ≤
+        kitaevQuadraticForm (a • H₀ + b • H₁ - energy • (1 : Matrix n n ℝ)) x)
+  rcases h₀ with ⟨hSymm₀, hEig₀, hGap₀⟩
+  rcases h₁ with ⟨hSymm₁, hEig₁, hGap₁⟩
+  have hSymm : (a • H₀ + b • H₁).IsSymm :=
+    (hSymm₀.smul a).add (hSymm₁.smul b)
+  have hEig : (a • H₀ + b • H₁) *ᵥ v = energy • v := by
+    calc
+      (a • H₀ + b • H₁) *ᵥ v = a • (H₀ *ᵥ v) + b • (H₁ *ᵥ v) := by
+        rw [Matrix.add_mulVec, Matrix.smul_mulVec, Matrix.smul_mulVec]
+      _ = a • (energy • v) + b • (energy • v) := by rw [hEig₀, hEig₁]
+      _ = energy • v := by
+        rw [smul_smul, smul_smul, ← add_smul, ← add_mul, hab, one_mul]
+  have hShift :
+      a • H₀ + b • H₁ - energy • (1 : Matrix n n ℝ) =
+        a • (H₀ - energy • (1 : Matrix n n ℝ)) +
+          b • (H₁ - energy • (1 : Matrix n n ℝ)) := by
+    ext i j
+    simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply]
+    by_cases hij : i = j
+    · simp [hij]
+      linear_combination energy * hab
+    · simp [hij]
+  have hForm (x : n → ℝ) :
+      kitaevQuadraticForm (a • (H₀ - energy • (1 : Matrix n n ℝ)) +
+        b • (H₁ - energy • (1 : Matrix n n ℝ))) x =
+        a * kitaevQuadraticForm (H₀ - energy • (1 : Matrix n n ℝ)) x +
+        b * kitaevQuadraticForm (H₁ - energy • (1 : Matrix n n ℝ)) x := by
+    change x ⬝ᵥ ((a • (H₀ - energy • (1 : Matrix n n ℝ)) +
+      b • (H₁ - energy • (1 : Matrix n n ℝ))) *ᵥ x) = _
+    rw [Matrix.add_mulVec, Matrix.smul_mulVec, Matrix.smul_mulVec]
+    simp [kitaevQuadraticForm, dotProduct_add, dotProduct_smul]
+  have hGap : ∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap * (x ⬝ᵥ x) ≤
+        kitaevQuadraticForm (a • H₀ + b • H₁ - energy • (1 : Matrix n n ℝ)) x := by
+    intro x hx
+    calc
+      gap * (x ⬝ᵥ x) = a * (gap * (x ⬝ᵥ x)) + b * (gap * (x ⬝ᵥ x)) := by
+        rw [← add_mul, hab, one_mul]
+      _ ≤ a * kitaevQuadraticForm (H₀ - energy • (1 : Matrix n n ℝ)) x +
+          b * kitaevQuadraticForm (H₁ - energy • (1 : Matrix n n ℝ)) x :=
+        add_le_add (mul_le_mul_of_nonneg_left (hGap₀ x hx) ha)
+          (mul_le_mul_of_nonneg_left (hGap₁ x hx) hb)
+      _ = kitaevQuadraticForm (a • H₀ + b • H₁ - energy • (1 : Matrix n n ℝ)) x := by
+        rw [hShift, hForm]
+  exact ⟨hSymm, hEig, hGap⟩
+
+/-- A nonempty finite ground-gap fiber is contractible by Mathlib's theorem
+that every nonempty convex subset of a real topological vector space is
+contractible. This finite result supports the fiber-convexity mechanism; it
+does not identify the full 0D classifying space with `ℂP^∞`. -/
+theorem kitaevFiniteGroundGapFiber_contractible
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (v : n → ℝ) (energy gap : ℝ)
+    (hne : (kitaevFiniteGroundGapFiber v energy gap).Nonempty) :
+    ContractibleSpace {H : Matrix n n ℝ // H ∈ kitaevFiniteGroundGapFiber v energy gap} := by
+  exact (kitaevFiniteGroundGapFiber_convex v energy gap).contractibleSpace hne
+
+/-- A common positive Rayleigh lower-gap bound is preserved exactly when the
+two endpoint Hamiltonians have the same bound. This is the fixed-gap
+specialization of `convex_symmetric_matrix_common_ground_gap`; it remains a
+finite real-matrix statement and does not assert a classifying-space or
+spectral-theorem result. -/
+theorem convex_symmetric_matrix_common_ground_gap_fixed
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (H₀ H₁ : Matrix n n ℝ) (v : n → ℝ)
+    (energy₀ energy₁ gap t : ℝ) (hgap_pos : 0 < gap)
+    (hSymm₀ : H₀.IsSymm) (hSymm₁ : H₁.IsSymm)
+    (hv : v ≠ 0)
+    (hEig₀ : H₀ *ᵥ v = energy₀ • v)
+    (hEig₁ : H₁ *ᵥ v = energy₁ • v)
+    (ht₀ : 0 ≤ t) (ht₁ : t ≤ 1)
+    (hGap₀ : ∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (H₀ - energy₀ • (1 : Matrix n n ℝ)) x)
+    (hGap₁ : ∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+      gap * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (H₁ - energy₁ • (1 : Matrix n n ℝ)) x) :
+    let Ht := (1 - t) • H₀ + t • H₁
+    let energyT := (1 - t) * energy₀ + t * energy₁
+    0 < gap ∧ v ≠ 0 ∧ Ht.IsSymm ∧ Ht *ᵥ v = energyT • v ∧
+      (∀ x : n → ℝ, v ⬝ᵥ x = 0 →
+        gap * (x ⬝ᵥ x) ≤ kitaevQuadraticForm (Ht - energyT • (1 : Matrix n n ℝ)) x) := by
+  have h := convex_symmetric_matrix_common_ground_gap H₀ H₁ v energy₀ energy₁ gap gap t
+    hSymm₀ hSymm₁ hv hEig₀ hEig₁ ht₀ ht₁ hGap₀ hGap₁
+  dsimp only at h ⊢
+  have hgap : (1 - t) * gap + t * gap = gap := by ring
+  rw [hgap] at h
+  exact ⟨hgap_pos, h⟩
 
 /-! ## §4. Stage $\mathfrak{KL}_3$: Majorana Clifford Algebra $\mathcal{C}\ell_{2n}$, Standard Complex Structure $A_0$, and Creation/Annihilation Operators -/
 
@@ -848,6 +1018,114 @@ theorem ims_localization_error_norm_le_sum_of_local_bounds
   apply mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun b _ => hLocal b)
   norm_num
 
+/-- Finite-overlap refinement of IMS aggregation. If the double commutator
+vanishes outside an active patch family and is bounded by `ε` on active
+patches, the localization error depends on the active-patch count bound `K`,
+not on the cardinality of the entire indexing type. Geometric cutoff families
+must still prove both the vanishing condition and a uniform `K`. -/
+theorem ims_localization_error_norm_le_active_patch_overlap
+    {B : Type*} [NormedRing B] [NormedAlgebra ℝ B]
+    {ι : Type*} [Fintype ι] (active : ι → Prop) [DecidablePred active]
+    (χ : ι → B) (M : B) (hPart : (∑ b : ι, χ b * χ b) = 1)
+    (ε K : ℝ) (hε : 0 ≤ ε)
+    (hOverlap : (∑ b : ι, if active b then (1 : ℝ) else 0) ≤ K)
+    (hLocal : ∀ b : ι,
+      ‖InfoGeometry.OperatorAlgebra.PeirceSpine.comm (χ b)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (χ b) M)‖ ≤
+          if active b then ε else 0) :
+    ‖M - ∑ b : ι, χ b * M * χ b‖ ≤ (1 / 2 : ℝ) * ε * K := by
+  have h := ims_localization_error_norm_le_sum_of_local_bounds
+    χ M hPart (fun b : ι => if active b then ε else 0) hLocal
+  have hsum : (∑ b : ι, if active b then ε else 0) =
+      ε * (∑ b : ι, if active b then (1 : ℝ) else 0) := by
+    calc
+      (∑ b : ι, if active b then ε else 0) =
+          ∑ b : ι, ε * (if active b then (1 : ℝ) else 0) := by
+            apply Finset.sum_congr rfl
+            intro b hb
+            split_ifs <;> simp
+      _ = ε * (∑ b : ι, if active b then (1 : ℝ) else 0) :=
+        by rw [Finset.mul_sum]
+  have hεOverlap := mul_le_mul_of_nonneg_left hOverlap hε
+  calc
+    ‖M - ∑ b : ι, χ b * M * χ b‖ ≤
+        (1 / 2 : ℝ) * (∑ b : ι, if active b then ε else 0) := h
+    _ = (1 / 2 : ℝ) *
+        (ε * (∑ b : ι, if active b then (1 : ℝ) else 0)) := by rw [hsum]
+    _ ≤ (1 / 2 : ℝ) * (ε * K) :=
+      mul_le_mul_of_nonneg_left hεOverlap (by norm_num)
+    _ = (1 / 2 : ℝ) * ε * K := by ring
+
+/-- The IMS approximation converts bounds on the localized compressions into
+a finite global operator-norm bound. The partition and its localization error
+are explicit hypotheses; this lemma does not construct geometric cutoffs. -/
+theorem ims_global_norm_le_localized_norm_sum
+    {B : Type*} [NormedRing B] [NormedAlgebra ℝ B]
+    {ι : Type*} [Fintype ι]
+    (χ : ι → B) (M : B) (hPart : (∑ b : ι, χ b * χ b) = 1)
+    (δ : ι → ℝ)
+    (hLocal : ∀ b : ι,
+      ‖InfoGeometry.OperatorAlgebra.PeirceSpine.comm (χ b)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (χ b) M)‖ ≤ δ b)
+    (hCompression : ∀ b : ι, ‖χ b * M * χ b‖ ≤ δ b) :
+    ‖M‖ ≤ (3 / 2 : ℝ) * ∑ b : ι, δ b := by
+  have hError := ims_localization_error_norm_le_sum_of_local_bounds
+    χ M hPart δ hLocal
+  have hSum : ‖∑ b : ι, χ b * M * χ b‖ ≤ ∑ b : ι, δ b := by
+    calc
+      ‖∑ b : ι, χ b * M * χ b‖ ≤ ∑ b : ι, ‖χ b * M * χ b‖ := norm_sum_le _ _
+      _ ≤ ∑ b : ι, δ b := Finset.sum_le_sum fun b _ => hCompression b
+  have hTriangle : ‖M‖ ≤ ‖M - ∑ b : ι, χ b * M * χ b‖ +
+      ‖∑ b : ι, χ b * M * χ b‖ := by
+    have h := norm_add_le (M - ∑ b : ι, χ b * M * χ b)
+      (∑ b : ι, χ b * M * χ b)
+    simpa using h
+  calc
+    ‖M‖ ≤ ‖M - ∑ b : ι, χ b * M * χ b‖ +
+        ‖∑ b : ι, χ b * M * χ b‖ := hTriangle
+    _ ≤ (1 / 2 : ℝ) * ∑ b : ι, δ b + ∑ b : ι, δ b :=
+      add_le_add hError hSum
+    _ = (3 / 2 : ℝ) * ∑ b : ι, δ b := by ring
+
+/-- Active-patch form of the finite IMS local-to-global norm estimate. Both
+the local compression and double-commutator terms are assumed zero off the
+active family and at most `ε` on it; the result then depends on its overlap
+bound `K`, rather than on the full finite cover size. -/
+theorem ims_global_norm_le_active_patch_overlap
+    {B : Type*} [NormedRing B] [NormedAlgebra ℝ B]
+    {ι : Type*} [Fintype ι] (active : ι → Prop) [DecidablePred active]
+    (χ : ι → B) (M : B) (hPart : (∑ b : ι, χ b * χ b) = 1)
+    (ε K : ℝ) (hε : 0 ≤ ε)
+    (hOverlap : (∑ b : ι, if active b then (1 : ℝ) else 0) ≤ K)
+    (hLocal : ∀ b : ι,
+      ‖InfoGeometry.OperatorAlgebra.PeirceSpine.comm (χ b)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (χ b) M)‖ ≤
+          if active b then ε else 0)
+    (hCompression : ∀ b : ι,
+      ‖χ b * M * χ b‖ ≤ if active b then ε else 0) :
+    ‖M‖ ≤ (3 / 2 : ℝ) * ε * K := by
+  have h := ims_global_norm_le_localized_norm_sum χ M hPart
+    (fun b : ι => if active b then ε else 0) hLocal hCompression
+  have hsum : (∑ b : ι, if active b then ε else 0) =
+      ε * (∑ b : ι, if active b then (1 : ℝ) else 0) := by
+    calc
+      (∑ b : ι, if active b then ε else 0) =
+          ∑ b : ι, ε * (if active b then (1 : ℝ) else 0) := by
+            apply Finset.sum_congr rfl
+            intro b hb
+            split_ifs <;> simp
+      _ = ε * (∑ b : ι, if active b then (1 : ℝ) else 0) := by
+        rw [Finset.mul_sum]
+  have hεOverlap := mul_le_mul_of_nonneg_left hOverlap hε
+  calc
+    ‖M‖ ≤ (3 / 2 : ℝ) *
+        (∑ b : ι, if active b then ε else 0) := by simpa using h
+    _ = (3 / 2 : ℝ) *
+        (ε * (∑ b : ι, if active b then (1 : ℝ) else 0)) := by rw [hsum]
+    _ ≤ (3 / 2 : ℝ) * (ε * K) :=
+      mul_le_mul_of_nonneg_left hεOverlap (by norm_num)
+    _ = (3 / 2 : ℝ) * ε * K := by ring
+
 /-! ### Finite-propagation matrix commutator estimate
 
 The next estimate supplies a concrete finite-matrix input to the abstract IMS
@@ -1000,7 +1278,7 @@ theorem ims_diagonal_localization_norm_le_lipschitz_bond_sum
     (hLip : ∀ b : ι, ∀ i j : n, |u b i - u b j| ≤ L * dist i j)
     (hRange : ∀ i j : n, M i j ≠ 0 → dist i j ≤ r) :
     ‖M - ∑ b : ι, Matrix.diagonal (u b) * M * Matrix.diagonal (u b)‖ ≤
-      (1 / 2 : ℝ) * ∑ b : ι, (L * r) ^ 2 * ‖M‖ := by
+      (1 / 2 : ℝ) * ∑ _b : ι, (L * r) ^ 2 * ‖M‖ := by
   apply ims_localization_error_norm_le_sum_of_local_bounds
     (χ := fun b : ι => Matrix.diagonal (u b)) M hPart
   intro b
@@ -1062,7 +1340,7 @@ theorem ims_frobenius_localization_norm_le_lipschitz_energy
     (hLip : ∀ b : ι, ∀ i j : n, |u b i - u b j| ≤ L * dist i j)
     (hRange : ∀ i j : n, M i j ≠ 0 → dist i j ≤ r) :
     ‖M - ∑ b : ι, Matrix.diagonal (u b) * M * Matrix.diagonal (u b)‖ ≤
-      (1 / 2 : ℝ) * ∑ b : ι,
+      (1 / 2 : ℝ) * ∑ _b : ι,
         Real.sqrt ((L * r) ^ 4 * matrixEntryEnergy M) := by
   apply ims_localization_error_norm_le_sum_of_local_bounds
     (χ := fun b : ι => Matrix.diagonal (u b)) M hPart
@@ -1241,7 +1519,7 @@ theorem diagonal_double_comm_l2_norm_le_card_mul_lipschitz_bound
       (L * r) ^ 4 * matrixEntryEnergy M ≤
           (L * r) ^ 4 * ((Fintype.card n : ℝ) * ‖M‖ ^ 2) :=
             mul_le_mul_of_nonneg_left hMatrixEnergy hCoeff
-      _ = (L * r) ^ 4 * (Fintype.card n : ℝ) * ‖M‖ ^ 2 := by ring
+      _ = (L * r) ^ 4 * (Fintype.card n : ℝ) * ‖M‖ ^ 2 := (mul_assoc _ _ _).symm
   have h := l2_opNorm_le_sqrt_matrix_entry_energy C
   have hEnergy := Real.sqrt_le_sqrt hLocalEnergy
   have hOperator := Real.sqrt_le_sqrt hCombined
@@ -1249,7 +1527,446 @@ theorem diagonal_double_comm_l2_norm_le_card_mul_lipschitz_bound
   have hBound' := hBound.trans hOperator
   simpa [C] using hBound'
 
+/-! ### An explicit three-site finite metric cutoff instance
+
+This finite path example supplies the partition, Lipschitz, and propagation
+hypotheses to the preceding operator-norm IMS estimate. It is an actual
+three-site matrix instance, not a statement about arbitrary geometric covers
+or a continuum limit. -/
+
+section ThreeSiteCutoffInstance
+
+/-- Path distance `|i - j|` on the three-site path `Fin 3`. -/
+private def threeSitePathDist (i j : Fin 3) : ℝ :=
+  |(i : ℝ) - (j : ℝ)|
+
+/-- Two nonconstant cutoff weights on the three-vertex path. At each vertex
+their squares sum to one; their values are the rational points
+`(1,0)`, `(4/5,3/5)`, and `(3/5,4/5)` on the unit circle. -/
+private noncomputable def threeSiteCutoff (b : Fin 2) (i : Fin 3) : ℝ :=
+  if b.val = 0 then
+    if i.val = 0 then 1 else if i.val = 1 then 4 / 5 else 3 / 5
+  else
+    if i.val = 0 then 0 else if i.val = 1 then 3 / 5 else 4 / 5
+
+/-- Quadratic partition-of-unity identity `∑_b diag(χ_b)² = I₃` for `threeSiteCutoff`. -/
+private theorem threeSiteCutoff_partition :
+    (∑ b : Fin 2,
+      Matrix.diagonal (threeSiteCutoff b) * Matrix.diagonal (threeSiteCutoff b)) =
+        (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.diagonal, Matrix.mul_apply, threeSiteCutoff,
+      Fin.sum_univ_succ] <;> norm_num
+
+/-- Lipschitz bound `|χ_b(i) - χ_b(j)| ≤ (3/5) · threeSitePathDist i j` on `Fin 3`. -/
+private theorem threeSiteCutoff_lipschitz :
+    ∀ b : Fin 2, ∀ i j : Fin 3,
+      |threeSiteCutoff b i - threeSiteCutoff b j| ≤
+        (3 / 5 : ℝ) * threeSitePathDist i j := by
+  intro b i j
+  fin_cases b <;> fin_cases i <;> fin_cases j <;>
+    norm_num [threeSiteCutoff, threeSitePathDist]
+
+/-- For any real `3 × 3` matrix supported on the diagonal and nearest-neighbor
+bonds of the three-site path, these explicit cutoffs give the Hilbert operator
+norm IMS error bound. The dimension factor `3` is retained inside the local
+entry-energy-to-operator-norm conversion. -/
+theorem threeSiteCutoff_ims_l2_bound (M : Matrix (Fin 3) (Fin 3) ℝ)
+    (hRange : ∀ i j : Fin 3, M i j ≠ 0 → threeSitePathDist i j ≤ 1) :
+    ‖M - ∑ b : Fin 2,
+        Matrix.diagonal (threeSiteCutoff b) * M * Matrix.diagonal (threeSiteCutoff b)‖ ≤
+      Real.sqrt ((3 / 5 : ℝ) ^ 4 * 3 * ‖M‖ ^ 2) := by
+  have hLocal : ∀ b : Fin 2,
+      ‖InfoGeometry.OperatorAlgebra.PeirceSpine.comm (Matrix.diagonal (threeSiteCutoff b))
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+          (Matrix.diagonal (threeSiteCutoff b)) M)‖ ≤
+        Real.sqrt ((3 / 5 : ℝ) ^ 4 * 3 * ‖M‖ ^ 2) := by
+    intro b
+    have h := diagonal_double_comm_l2_norm_le_card_mul_lipschitz_bound
+      (threeSiteCutoff b) threeSitePathDist M (3 / 5) 1 (by norm_num) (by norm_num)
+      (threeSiteCutoff_lipschitz b) hRange
+    simpa using h
+  have hIMS := ims_matrix_l2_localization_norm_le_card_mul_uniform_bound
+    (fun b : Fin 2 => Matrix.diagonal (threeSiteCutoff b)) M
+    threeSiteCutoff_partition _ hLocal
+  simpa using hIMS
+
+end ThreeSiteCutoffInstance
+
 end HilbertOperatorIMS
+
+/-! ### Concrete two-site open Majorana chain
+
+The following finite matrix instance distinguishes the physical outer zero
+modes from the artificial cut through a bulk dimer. With the owner convention
+`N₊ = P A (1-P)` and `N₋ = (1-P) A P`, the collar product is `N₊N₋ = -P`
+for a skew bond of unit strength; the restoring term in the square-first
+operator is `-N₊N₋ = +P`. -/
+
+section TwoSiteOpenMajoranaChain
+
+/-- Generic square-first decomposition for a matrix compression. Inserting
+`P + (1 - P) = 1` between the two factors of `A` separates the path that stays
+inside the projected subspace from the one-hop-out-and-return collar term. -/
+theorem matrix_square_first_collar_decomposition
+    {n : Type*} [Fintype n] [DecidableEq n] {K : Type*} [Ring K]
+    (P A : Matrix n n K) (hP : P * P = P) :
+    P * (-(A * A)) * P =
+      -((P * A * P) * (P * A * P)) -
+        (P * A * (1 - P)) * ((1 - P) * A * P) := by
+  have hPleft : ∀ Z : Matrix n n K, P * (P * Z) = P * Z := by
+    intro Z
+    rw [← mul_assoc, hP]
+  noncomm_ring [hP, hPleft]
+
+private def twoSiteOpenMajoranaA {K : Type*} [CommRing K] :
+    Matrix (Fin 4) (Fin 4) K :=
+  !![0, 0, 0, 0;
+    0, 0, 1, 0;
+    0, -1, 0, 0;
+    0, 0, 0, 0]
+
+private def twoSiteCutProjector {K : Type*} [CommRing K] :
+    Matrix (Fin 4) (Fin 4) K :=
+  !![0, 0, 0, 0;
+    0, 1, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 0, 0]
+
+private def twoSiteCollarProjector {K : Type*} [CommRing K] :
+    Matrix (Fin 4) (Fin 4) K :=
+  !![1, 0, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 1, 0;
+    0, 0, 0, 1]
+
+private def twoSiteIdentity {K : Type*} [CommRing K] :
+    Matrix (Fin 4) (Fin 4) K := 1
+
+private def twoSiteBoundaryResidual {K : Type*} [CommRing K] :
+    Matrix (Fin 4) (Fin 4) K :=
+  !![(-1 : K), 0, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 0, -1]
+
+/-- Exact finite `4 × 4` open-chain calculation. The inter-site dimer couples
+Majoranas `c₂,c₃`, while `c₁,c₄` are outer zero modes. Cutting to `c₂` alone
+annihilates the truncated bond, but square-first compression of `-A²-I`
+is zero because the collar return restores the missing unit term. These are
+matrix identities over a commutative ring, not a thermodynamic-limit claim. -/
+theorem twoSiteOpenMajorana_squareFirst_collar_healing
+    {K : Type*} [CommRing K] :
+    let A : Matrix (Fin 4) (Fin 4) K := twoSiteOpenMajoranaA
+    let P : Matrix (Fin 4) (Fin 4) K := twoSiteCutProjector
+    let Q : Matrix (Fin 4) (Fin 4) K := twoSiteCollarProjector
+    let IdM : Matrix (Fin 4) (Fin 4) K := twoSiteIdentity
+    let Residual : Matrix (Fin 4) (Fin 4) K := twoSiteBoundaryResidual
+    A.transpose = -A ∧
+    -(A * A) - IdM = Residual ∧
+    P * A * P = 0 ∧
+    (P * A * Q) * (Q * A * P) = -P ∧
+    (P * (-(A * A)) * P = P ∧
+      P * (-(A * A) - IdM) * P = 0) ∧
+    P * Residual * P = 0 ∧
+    -((P * A * P) * (P * A * P)) - P = -P := by
+  intro A P Q IdM Residual
+  have hCollarQ : (P * A * Q) * (Q * A * P) = -P := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [A, P, Q, twoSiteOpenMajoranaA, twoSiteCutProjector,
+        twoSiteCollarProjector, Matrix.mul_apply, Fin.sum_univ_succ]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [A, twoSiteOpenMajoranaA, Matrix.transpose_apply,
+        Matrix.neg_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [A, IdM, Residual, twoSiteOpenMajoranaA, twoSiteIdentity,
+        twoSiteBoundaryResidual, Matrix.sub_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [A, P, twoSiteOpenMajoranaA, twoSiteCutProjector,
+        Matrix.mul_apply, Fin.sum_univ_succ]
+  · exact hCollarQ
+  · have hPid : P * P = P := by
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [P, twoSiteCutProjector, Matrix.mul_apply, Fin.sum_univ_succ]
+    have hCut : P * A * P = 0 := by
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [A, P, twoSiteOpenMajoranaA, twoSiteCutProjector,
+          Matrix.mul_apply, Fin.sum_univ_succ]
+    have hQ : Q = 1 - P := by
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [P, Q, twoSiteCutProjector, twoSiteCollarProjector,
+          Matrix.sub_apply]
+    have hCollar : (P * A * (1 - P)) * ((1 - P) * A * P) = -P := by
+      simpa only [hQ] using hCollarQ
+    have hdecomp := matrix_square_first_collar_decomposition P A hPid
+    rw [hCut, hCollar] at hdecomp
+    have hSquare : P * (-(A * A)) * P = P := by simpa using hdecomp
+    have hIdP : P * IdM * P = P := by
+      simpa [IdM, twoSiteIdentity] using hPid
+    refine ⟨hSquare, ?_⟩
+    calc
+      P * (-(A * A) - IdM) * P =
+          P * (-(A * A)) * P - P * IdM * P := by noncomm_ring
+      _ = P - P := by rw [hSquare, hIdP]
+      _ = 0 := sub_self P
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [P, Residual, twoSiteCutProjector, twoSiteBoundaryResidual]
+  · have hCut : P * A * P = 0 := by
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [A, P, twoSiteOpenMajoranaA, twoSiteCutProjector,
+          Matrix.mul_apply, Fin.sum_univ_succ]
+    rw [hCut]
+    simp
+
+/-- The two boundary Majorana coordinate vectors lie in the kernel of the
+finite open-chain matrix. This is the explicit zero-mode statement behind
+the two negative diagonal entries of `-A² - I` above. -/
+theorem twoSiteOpenMajorana_boundary_zero_modes
+    {K : Type*} [CommRing K] :
+    (twoSiteOpenMajoranaA : Matrix (Fin 4) (Fin 4) K) *ᵥ
+        (fun i : Fin 4 => if i = 0 then (1 : K) else 0) = 0 ∧
+    (twoSiteOpenMajoranaA : Matrix (Fin 4) (Fin 4) K) *ᵥ
+        (fun i : Fin 4 => if i = 3 then (1 : K) else 0) = 0 := by
+  constructor <;> ext i <;> fin_cases i <;>
+    simp [twoSiteOpenMajoranaA, Matrix.mulVec, dotProduct]
+
+/-- The open-chain matrix is singular over every commutative ring: its first
+column vanishes because the first boundary Majorana is uncoupled. This uses
+Mathlib's determinant criterion for a zero column. -/
+theorem twoSiteOpenMajorana_det_zero
+    {K : Type*} [CommRing K] :
+    Matrix.det (twoSiteOpenMajoranaA : Matrix (Fin 4) (Fin 4) K) = 0 := by
+  apply Matrix.det_eq_zero_of_column_eq_zero 0
+  intro i
+  fin_cases i <;> simp [twoSiteOpenMajoranaA]
+
+/-- The canonical Pfaffian owner's sweet-spot matrix uses bond strength `2`;
+it is exactly twice the unit-bond matrix used in the collar calculation. -/
+theorem twoSiteOpenMajorana_matches_pfaffian_sweet_spot :
+    InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+        0 1 1 =
+      (2 : ℝ) •
+        (twoSiteOpenMajoranaA : Matrix (Fin 4) (Fin 4) ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4,
+      twoSiteOpenMajoranaA, Matrix.smul_apply]
+
+/-- The repository's Kitaev Majorana matrix is the standard skew `4 × 4`
+matrix with upper-triangular coordinates
+`(μ, 0, t - Δ, t + Δ, 0, μ)`. -/
+theorem kitaevMajoranaMatrix4_eq_standard_skew4 (mu t delta : ℝ) :
+    InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+        mu t delta =
+      InfoGeometry.Canonical.Pfaffian.skew4 mu 0 (t - delta) (t + delta) 0 mu := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4,
+      InfoGeometry.Canonical.Pfaffian.skew4]
+
+/-- Transport of the standard four-dimensional Pfaffian determinant identity
+to the repository's parameterized Kitaev Majorana matrix. -/
+theorem kitaevMajoranaMatrix4_pfaffian_sq_eq_det (mu t delta : ℝ) :
+    (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.pfaffian4
+      (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+        mu t delta)) ^ 2 =
+      (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+        mu t delta).det := by
+  rw [kitaevMajoranaMatrix4_eq_standard_skew4]
+  calc
+    _ = (InfoGeometry.Canonical.Pfaffian.pfaffian4
+        mu 0 (t - delta) (t + delta) 0 mu) ^ 2 := by
+          simp [InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.pfaffian4,
+            InfoGeometry.Canonical.Pfaffian.skew4,
+            InfoGeometry.Canonical.Pfaffian.pfaffian4]
+    _ = (InfoGeometry.Canonical.Pfaffian.skew4
+        mu 0 (t - delta) (t + delta) 0 mu).det :=
+          InfoGeometry.Canonical.Pfaffian.pfaffian4_sq_eq_det
+            mu 0 (t - delta) (t + delta) 0 mu
+
+/-- The canonical sweet-spot matrix inherits the two uncoupled boundary
+kernel vectors through the explicitly proved matrix scaling map. -/
+theorem twoSitePfaffianSweetSpot_boundary_zero_modes :
+    let A := InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+      (0 : ℝ) 1 1
+    A *ᵥ (fun i : Fin 4 => if i = 0 then (1 : ℝ) else 0) = 0 ∧
+    A *ᵥ (fun i : Fin 4 => if i = 3 then (1 : ℝ) else 0) = 0 := by
+  intro A
+  have h := twoSiteOpenMajorana_boundary_zero_modes (K := ℝ)
+  dsimp only [A]
+  rw [twoSiteOpenMajorana_matches_pfaffian_sweet_spot]
+  constructor
+  · rw [Matrix.smul_mulVec, h.1, smul_zero]
+  · rw [Matrix.smul_mulVec, h.2, smul_zero]
+
+/-- The same sweet-spot parameter has the zero Pfaffian certified by the
+canonical Kitaev-chain owner. -/
+theorem twoSiteOpenMajorana_sweet_spot_pfaffian_zero :
+    InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.pfaffian4
+        (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+          0 1 1) = 0 :=
+  InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.sweet_spot_pfaffian_zero 1
+
+/-- At every sweet-spot coupling `μ = 0`, `t = Δ`, the canonical Majorana
+matrix is singular. This follows from the transported Pfaffian-square identity
+and the owner theorem for the sweet-spot Pfaffian. -/
+theorem kitaevSweetSpot_determinant_zero (t : ℝ) :
+    (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+      0 t t).det = 0 := by
+  rw [← kitaevMajoranaMatrix4_pfaffian_sq_eq_det]
+  rw [InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.sweet_spot_pfaffian_zero]
+  norm_num
+
+/-- Closed determinant formula for the parameterized two-site Kitaev matrix,
+obtained by composing its Pfaffian formula with `Pf(A)^2 = det(A)`. -/
+theorem kitaevMajoranaMatrix4_det_formula (mu t delta : ℝ) :
+    (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+      mu t delta).det = (mu ^ 2 + (t ^ 2 - delta ^ 2)) ^ 2 := by
+  rw [← kitaevMajoranaMatrix4_pfaffian_sq_eq_det,
+    InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaev_pfaffian4_formula]
+
+/-- The finite Majorana matrix is nonsingular exactly away from the Pfaffian
+zero locus. This is an algebraic determinant criterion, not a spectral-gap
+classification. -/
+theorem kitaevMajoranaMatrix4_det_ne_zero_iff (mu t delta : ℝ) :
+    (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+      mu t delta).det ≠ 0 ↔ mu ^ 2 + (t ^ 2 - delta ^ 2) ≠ 0 := by
+  rw [kitaevMajoranaMatrix4_det_formula]
+  simp
+
+/-- The matrix-algebra formulation of the same criterion: the finite Kitaev
+matrix is invertible exactly away from the Pfaffian zero locus. -/
+theorem kitaevMajoranaMatrix4_isUnit_iff_pfaffian_ne_zero (mu t delta : ℝ) :
+    IsUnit (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+      mu t delta) ↔ mu ^ 2 + (t ^ 2 - delta ^ 2) ≠ 0 := by
+  rw [Matrix.isUnit_iff_isUnit_det, kitaevMajoranaMatrix4_det_formula]
+  simp [isUnit_iff_ne_zero]
+
+/-- Exact finite-dimensional zero-mode criterion: a nonzero Majorana vector is
+annihilated by the Kitaev matrix exactly on the Pfaffian-zero parameter locus.
+The equivalence uses Mathlib's determinant/kernel theorem for square matrices. -/
+theorem kitaevMajoranaMatrix4_has_nonzero_kernel_iff_pfaffian_zero (mu t delta : ℝ) :
+    (∃ v : Fin 4 → ℝ, v ≠ 0 ∧
+      InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+        mu t delta *ᵥ v = 0) ↔
+      mu ^ 2 + (t ^ 2 - delta ^ 2) = 0 := by
+  rw [Matrix.exists_mulVec_eq_zero_iff, kitaevMajoranaMatrix4_det_formula]
+  simp
+
+/-- For a real transpose-skew matrix, the quadratic form of `-A^2` is the
+squared Euclidean norm of `A v`. This is a finite-dimensional identity; no
+locality, spectral-gap bound, or infinite-volume conclusion is assumed. -/
+theorem neg_square_quadratic_form_eq_norm_sq
+    {ι : Type*} [Fintype ι] (A : Matrix ι ι ℝ)
+    (hA : A.transpose = -A) (v : ι → ℝ) :
+    dotProduct v ((-(A * A)) *ᵥ v) = dotProduct (A *ᵥ v) (A *ᵥ v) := by
+  have hA2 : (A * A) *ᵥ v = A *ᵥ (A *ᵥ v) :=
+    (Matrix.mulVec_mulVec v A A).symm
+  have h : dotProduct v (A *ᵥ (A *ᵥ v)) =
+      - dotProduct (A *ᵥ v) (A *ᵥ v) := by
+    calc
+      dotProduct v (A *ᵥ (A *ᵥ v)) = dotProduct (A.vecMul v) (A *ᵥ v) :=
+        Matrix.dotProduct_mulVec v A (A *ᵥ v)
+      _ = dotProduct (A.transpose *ᵥ v) (A *ᵥ v) := by
+        rw [← Matrix.mulVec_transpose]
+      _ = dotProduct ((-A) *ᵥ v) (A *ᵥ v) := by rw [hA]
+      _ = - dotProduct (A *ᵥ v) (A *ᵥ v) := by
+        rw [Matrix.neg_mulVec, neg_dotProduct]
+  calc
+    dotProduct v ((-(A * A)) *ᵥ v) = - dotProduct v ((A * A) *ᵥ v) := by
+      rw [Matrix.neg_mulVec, dotProduct_neg]
+    _ = - dotProduct v (A *ᵥ (A *ᵥ v)) := by rw [hA2]
+    _ = dotProduct (A *ᵥ v) (A *ᵥ v) := by rw [h, neg_neg]
+
+/-- A real transpose-skew matrix has positive-semidefinite negative square.
+This is the Mathlib Gram-matrix result `Aᵀ A ≥ 0`, transported through
+`Aᵀ = -A`. -/
+theorem neg_square_posSemidef
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (A : Matrix ι ι ℝ)
+    (hA : A.transpose = -A) : Matrix.PosSemidef (-(A * A)) := by
+  have hgram : Matrix.PosSemidef (Aᴴ * (1 : Matrix ι ι ℝ) * A) :=
+    Matrix.PosSemidef.conjTranspose_mul_mul_same Matrix.PosSemidef.one A
+  simpa [Matrix.conjTranspose_eq_transpose_of_trivial, hA] using hgram
+
+/-- Congruence by a real matrix preserves positive semidefiniteness. This is
+Mathlib's matrix Gram/congruence theorem specialized from `Bᴴ * M * B` to
+`Bᵀ * M * B`. -/
+theorem posSemidef_transpose_compression
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (M P : Matrix ι ι ℝ) (hM : Matrix.PosSemidef M)
+    (hP : P.transpose = P) : Matrix.PosSemidef (P * M * P) := by
+  have h := Matrix.PosSemidef.conjTranspose_mul_mul_same hM P
+  simpa [Matrix.conjTranspose_eq_transpose_of_trivial, hP] using h
+
+/-- The square-first compression of a real skew matrix remains positive
+semidefinite whenever the compression matrix is a symmetric idempotent or,
+more generally, any symmetric matrix. -/
+theorem neg_square_compression_posSemidef
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A P : Matrix ι ι ℝ) (hA : A.transpose = -A)
+    (hP : P.transpose = P) :
+    Matrix.PosSemidef (P * (-(A * A)) * P) := by
+  exact posSemidef_transpose_compression (-(A * A)) P
+    (neg_square_posSemidef A hA) hP
+
+/-- The quadratic energy of `-A^2` vanishes precisely on the kernel of a
+real transpose-skew matrix. -/
+theorem neg_square_quadratic_form_eq_zero_iff_kernel
+    {ι : Type*} [Fintype ι] (A : Matrix ι ι ℝ)
+    (hA : A.transpose = -A) (v : ι → ℝ) :
+    dotProduct v ((-(A * A)) *ᵥ v) = 0 ↔ A *ᵥ v = 0 := by
+  rw [neg_square_quadratic_form_eq_norm_sq A hA v,
+    dotProduct_self_eq_zero]
+
+/-- The parameterized two-site Kitaev Majorana matrix inherits the generic
+nonnegative `-A²` quadratic-form identity from its canonical skew-symmetry
+theorem. -/
+theorem kitaevMajoranaMatrix4_neg_square_energy_identity (mu t delta : ℝ)
+    (v : Fin 4 → ℝ) :
+    let A := InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+      mu t delta
+    dotProduct v ((-(A * A)) *ᵥ v) = dotProduct (A *ᵥ v) (A *ᵥ v) := by
+  dsimp
+  exact neg_square_quadratic_form_eq_norm_sq _
+    (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4_skew_symmetric
+      mu t delta) v
+
+/-- The negative square of the parameterized Kitaev Majorana matrix is
+positive semidefinite as a real `4 × 4` matrix. -/
+theorem kitaevMajoranaMatrix4_neg_square_posSemidef (mu t delta : ℝ) :
+    Matrix.PosSemidef
+      (-(InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+        mu t delta *
+        InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4
+          mu t delta)) := by
+  exact neg_square_posSemidef _
+    (InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian.kitaevMajoranaMatrix4_skew_symmetric
+      mu t delta)
+
+/-- The finite two-site square-first interior compression is positive
+semidefinite by Mathlib's congruence theorem. The separate exact identity
+above sharpens this to equality with the rank-one cut projector. -/
+theorem twoSiteOpenMajorana_squareFirst_compression_posSemidef :
+    Matrix.PosSemidef
+      (twoSiteCutProjector *
+        (-(twoSiteOpenMajoranaA * twoSiteOpenMajoranaA)) *
+        twoSiteCutProjector : Matrix (Fin 4) (Fin 4) ℝ) := by
+  apply neg_square_compression_posSemidef
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [twoSiteOpenMajoranaA, Matrix.transpose_apply, Matrix.neg_apply]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [twoSiteCutProjector, Matrix.transpose_apply]
+
+end TwoSiteOpenMajoranaChain
 
 /-! ## §7. Stage $\mathfrak{KL}_6$: Kitaev's Three Spectrum Principles (Invertibility, Block-Swap Commutativity, and Softness / Lipschitz Diagonal Restriction) -/
 
@@ -1614,6 +2331,85 @@ theorem kitaevFlatMajoranaNullPath_endpoints
   exact ⟨(kitaevFlatMajoranaNullPath A hAT hA2).source',
     (kitaevFlatMajoranaNullPath A hAT hA2).target'⟩
 
+/-- The map sending a flat Majorana matrix to its doubled pair `A ⊕ (-A)`. -/
+noncomputable def kitaevDoubledFlatMajoranaMap
+    {n : Type*} [Fintype n] [DecidableEq n] :
+    C(FlatMajoranaMatrix n, FlatMajoranaMatrix (n ⊕ n)) := by
+  refine ⟨fun M => kitaevDoubledFlatMajorana M.val M.property.1 ?_, ?_⟩
+  · have h := congrArg Neg.neg M.property.2
+    simpa using h
+  · apply Continuous.subtype_mk
+    have hA : Continuous (fun M : FlatMajoranaMatrix n => M.val) :=
+      continuous_subtype_val
+    simpa [kitaevDoubledFlatMajorana] using
+      Continuous.matrix_fromBlocks hA
+        (continuous_const : Continuous (fun _ : FlatMajoranaMatrix n => (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)))
+        (continuous_const : Continuous (fun _ : FlatMajoranaMatrix n => (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)))
+        hA.neg
+
+/-- The constant map with value the finite-dimensional block decoupler. -/
+noncomputable def kitaevDecouplerFlatMajoranaMap
+    {n : Type*} [Fintype n] [DecidableEq n] :
+    C(FlatMajoranaMatrix n, FlatMajoranaMatrix (n ⊕ n)) :=
+  ⟨fun _ => kitaevDecouplerFlatMajorana 0 (by simp), continuous_const⟩
+
+/-- Jointly continuous finite-dimensional null-homotopy of the doubled-system
+map over the full flat-locus domain. This is stronger than choosing a path
+separately for each input matrix; it still does not assert the spectrum-level
+equivalence `A_d ≃ Ω A_{d+1}`. -/
+noncomputable def kitaevFlatMajoranaLocusNullHomotopy
+    {n : Type*} [Fintype n] [DecidableEq n] :
+    ContinuousMap.Homotopy (kitaevDoubledFlatMajoranaMap (n := n))
+      (kitaevDecouplerFlatMajoranaMap (n := n)) := by
+  let θ : unitInterval × FlatMajoranaMatrix n → ℝ :=
+    fun z => Real.pi / 2 * z.1
+  let hθ : Continuous θ :=
+    continuous_const.mul (continuous_subtype_val.comp continuous_fst)
+  let hcos : Continuous (fun z => Real.cos (θ z)) := Real.continuous_cos.comp hθ
+  let hsin : Continuous (fun z => Real.sin (θ z)) := Real.continuous_sin.comp hθ
+  let hA : Continuous (fun z : unitInterval × FlatMajoranaMatrix n => z.2.val) :=
+    continuous_subtype_val.comp continuous_snd
+  let hTop : Continuous (fun z : unitInterval × FlatMajoranaMatrix n =>
+      Matrix.fromBlocks (z.2.val) (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)
+        (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ) (-z.2.val)) :=
+    Continuous.matrix_fromBlocks hA continuous_const continuous_const hA.neg
+  let hBase : Continuous (fun _ : unitInterval × FlatMajoranaMatrix n =>
+      Matrix.fromBlocks (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ) (1 : Matrix (n ⊕ n) (n ⊕ n) ℝ)
+        (-1 : Matrix (n ⊕ n) (n ⊕ n) ℝ) (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)) := continuous_const
+  let hRotor : Continuous (fun z : unitInterval × FlatMajoranaMatrix n =>
+      Real.cos (θ z) • Matrix.fromBlocks (z.2.val) (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)
+        (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ) (-z.2.val) +
+        Real.sin (θ z) • Matrix.fromBlocks (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)
+          (1 : Matrix (n ⊕ n) (n ⊕ n) ℝ) (-1 : Matrix (n ⊕ n) (n ⊕ n) ℝ)
+          (0 : Matrix (n ⊕ n) (n ⊕ n) ℝ)) :=
+    (hcos.smul hTop).add (hsin.smul hBase)
+  refine ⟨⟨fun z =>
+    let M := z.2
+    let hA2 : M.val * M.val = -1 := by
+      have h := congrArg Neg.neg M.property.2
+      simpa using h
+    ⟨kitaevBlockRotorPath M.val (θ z), by
+      rw [kitaevBlockRotorPath_eq_blockRotor]
+      have hRotor := (kitaev_invertibility_block_rotor_gap_preservation M.val
+        (Real.cos (θ z)) (Real.sin (θ z))).2.2
+      exact ⟨hRotor.1 M.property.1,
+        kitaev_flat_complex_structure_rotor_remains_unit_gapped M.val (θ z) hA2⟩⟩,
+    by
+      apply Continuous.subtype_mk
+      simpa only [kitaevBlockRotorPath] using hRotor⟩,
+    ?_, ?_⟩
+  · intro M
+    apply Subtype.ext
+    have hEnd := kitaevBlockRotorPath_endpoints M.val
+    simpa [θ, kitaevDoubledFlatMajoranaMap, kitaevDoubledFlatMajorana,
+      Real.cos_zero, Real.sin_zero, Matrix.fromBlocks_smul] using hEnd.1
+  · intro M
+    apply Subtype.ext
+    have hEnd := kitaevBlockRotorPath_endpoints M.val
+    simpa [θ, kitaevDecouplerFlatMajoranaMap, kitaevDecouplerFlatMajorana,
+      Real.cos_pi_div_two, Real.sin_pi_div_two,
+      Matrix.fromBlocks_smul] using hEnd.2
+
 /-- Kitaev's symmetrized diagonal restriction (`01:04:44 – 01:08:28`):
 Given a site-indexed family of matrices `u : n → Matrix n n R`,
 `(diagRestrict u) j k = u j j k + u k j k`. -/
@@ -1630,12 +2426,11 @@ Symmetrized Diagonal Restriction Skew-Symmetry, $r$-Locality Preservation & Alte
    $\mathrm{diagRestrict}\;u\;j\;k = 0$.
 3. **Constant Family Recovery**:
    If $u(p) = A$ for all $p$, then $\mathrm{diagRestrict}\;(fun\;\_ \Rightarrow A) = (2 : \mathbb{Z}) \bullet A$.
-4. **Alternating Dimer Re-Pairing / Eilenberg-Swindle Boundary Isolation ($F_d \leftrightarrow G_d$)**:
-   In any associative ring `[Ring B]`, on a 3-block system with orthogonal block idempotents
-   $e_1, e_2, e_3 \in B$, grouping the left dimer $(e_1 A e_1 - e_2 A e_2) + e_3 A e_3$ versus
-   the right dimer $e_1 A e_1 + (-e_2 A e_2 + e_3 A e_3)$ defines the identical total operator
-   $e_1 A e_1 - e_2 A e_2 + e_3 A e_3$, so annihilating the right dimer $(-e_2 A e_2 + e_3 A e_3 \mapsto 0)$
-   isolates the single boundary mode $e_1 A e_1$. -/
+4. **Three-Term Reassociation and Cancellation**:
+   In any associative ring `[Ring B]`, for arbitrary `e₁ e₂ e₃ A_op : B`, the two parenthesizations
+   of `e₁*A_op*e₁ - e₂*A_op*e₂ + e₃*A_op*e₃` are equal; subtracting the last two terms from
+   that sum leaves `e₁*A_op*e₁`. No idempotence, orthogonality, block decomposition, or topology
+   is assumed or constructed by this algebraic identity. -/
 theorem kitaev_soft_diagonal_restriction_and_dimer_loop_shift
     {n : Type*} {R : Type*} [CommRing R]
     (u : n → Matrix n n R) (hSkew : ∀ p : n, (u p).transpose = -u p)
@@ -1666,11 +2461,13 @@ theorem kitaev_soft_diagonal_restriction_and_dimer_loop_shift
     rw [two_zsmul]
   exact ⟨hSkewRestrict, hLoc, hConst, ⟨by abel, by abel⟩⟩
 
-/-! ## §8. Stage $\mathfrak{KL}_7$: The $(F_d, G_d)$ Dimerization Switch & Shifted Real $KO_{d-2}$ $\Omega$-Spectrum Synthesis -/
+/-! ## §8. Stage $\mathfrak{KL}_7$: Finite Dimerization Identities and Bott-Residue Arithmetic -/
 
 /-- **Stage $\mathfrak{KL}_7$ (`kl7_omega_spectrum_dimerization_switch_and_ko_d_minus_2_master_synthesis`) —
-Master Synthesis of Kitaev's Condensed-Matter $KO_{d-2}$ $\Omega$-Spectrum Poset ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$)**:
-Unifies all seven stages of Kitaev's lecture into a single kernel-verified theorem:
+Finite Algebraic Bundle of Selected Kitaev Identities ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$)**:
+Assembles selected previously proved finite/algebraic statements into one theorem. Despite the
+historic declaration name, this result does not construct the spaces $A_d$, the suspension and
+loop maps $F_d,G_d$, or prove an $\Omega$-spectrum or $KO_{d-2}$ classification:
 1. **Acyclic 7-Stage Causal Poset ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$)**:
    `KitaevKOSpectrumStage.rank_injective` and `coverEdge_acyclic`.
 2. **1D TFIM Bulk vs. Boundary Excitation Gap (`4 J` vs. `2 J`) & Paramagnetic Gap (`2 h`)**:
@@ -1681,7 +2478,7 @@ Unifies all seven stages of Kitaev's lecture into a single kernel-verified theor
    and `peirce11 P (-(A * A)) = -(peirce11 P A * peirce11 P A) - conePlus P A * coneMinus P A`.
 4. **Noncommutative IMS Double-Commutator Localization Identity**:
    `(2 : ℤ) • M - (2 : ℤ) • (∑ b : ι, χ b * M * χ b) = ∑ b : ι, comm (χ b) (comm (χ b) M)`.
-5. **Suspension–Loop Dimerization Switch (`pauli_dimerization_switch_operator_laws`) & Pfaffian Phase Transition (`kitaev_pfaffian4_formula`)**:
+5. **Finite Dimerization Operator Laws (`pauli_dimerization_switch_operator_laws`) & Pfaffian Identity (`kitaev_pfaffian4_formula`)**:
    - Inter-cell dimer leaves the boundary Majorana $\gamma_0$ conserved (`[H_inter, γ₀] = 0`),
      whereas intra-cell dimerization has nonzero boundary commutator (`[H_intra, γ₀] = -2 γ₁ ≠ 0`),
    - 2-site Majorana Pfaffian $\mathrm{Pf}(A_4(\mu, t, \Delta)) = \mu^2 + (t^2 - \Delta^2)$ vanishes

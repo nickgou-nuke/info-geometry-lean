@@ -2422,10 +2422,13 @@ theorem ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality
         PinMinus88TrialityPoset.Quat.reflJK *
         PinMinus88TrialityPoset.Quat.reflIJ =
         PinMinus88TrialityPoset.Quat.smul (-2) PinMinus88TrialityPoset.Quat.reflKI ∧
+     PinMinus88TrialityPoset.Quat.binaryOctahedral48Finset.card = 48 ∧
      Quaternion.normSq PinMinus88TrialityPoset.pinMinusJKUnitRoot = 1 ∧
      PinMinus88TrialityPoset.pinMinusJKUnitRoot *
         PinMinus88TrialityPoset.pinMinusJKUnitRoot = (-1 : Quaternion ℝ) ∧
-     Matrix.det PinMinus88TrialityPoset.pinMinusJKReflection3 = -1) ∧
+     Matrix.det PinMinus88TrialityPoset.pinMinusJKReflection3 = -1 ∧
+     -PinMinus88TrialityPoset.quatAdjointMatrix3 PinMinus88TrialityPoset.pinMinusJKUnitRoot =
+        PinMinus88TrialityPoset.pinMinusJKReflection3) ∧
     ((PinMinus88TrialityPoset.Mat2.parityP : PinMinus88TrialityPoset.Mat2 K) *
         PinMinus88TrialityPoset.Mat2.parityP = -PinMinus88TrialityPoset.Mat2.I2 ∧
      (PinMinus88TrialityPoset.Mat2.timeT : PinMinus88TrialityPoset.Mat2 K) *
@@ -2439,6 +2442,7 @@ theorem ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality
      (PinMinus88TrialityPoset.Mat2.clMinus3Refl23 : PinMinus88TrialityPoset.Mat2.Mat4Split K) *
         PinMinus88TrialityPoset.Mat2.clMinus3Refl23 =
         (-2 : K) • (1 : PinMinus88TrialityPoset.Mat2.Mat4Split K) ∧
+     Function.Injective PinMinus88TrialityPoset.Mat2.mat4SplitToMatStage8AlgHom ∧
      PinMinus88TrialityPoset.Mat2.toMatrix
         (PinMinus88TrialityPoset.Mat2.parityP : PinMinus88TrialityPoset.Mat2 ℝ) =
         InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseBase ∧
@@ -2456,13 +2460,22 @@ theorem ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality
   have hBraid :=
     PinMinus88TrialityPoset.Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation
       x_vec y_vec z_vec
+  have h48 :=
+    PinMinus88TrialityPoset.Quat.binary_octahedral_48_coset_decomposition_and_octahedral_pole_action
   have hUnit := PinMinus88TrialityPoset.pinMinusJKUnitRoot_norm_and_square
   have hOrth := PinMinus88TrialityPoset.pinMinusJKReflection3_is_orthogonal_improper
+  have hAdj :=
+    PinMinus88TrialityPoset.quatAdjointMatrix3_homomorphism_orthogonality_and_graded_2O_action
+      (PinMinus88TrialityPoset.Quat.qOne : PinMinus88TrialityPoset.Quat ℝ)
+      (PinMinus88TrialityPoset.Quat.qOne : PinMinus88TrialityPoset.Quat ℝ)
+      (fun _ => (0 : ℝ))
   have hPT :=
     PinMinus88TrialityPoset.Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations
       (K := K)
   have hCl3 :=
     PinMinus88TrialityPoset.Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := K)
+  have hSt8 :=
+    PinMinus88TrialityPoset.Mat2.clMinus30_into_matStage8_algHom_and_reflection_transport
   have hIdx8 :=
     PinMinus88TrialityPoset.Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge
   have hCyc :=
@@ -2470,9 +2483,10 @@ theorem ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality
   have hCRT :=
     PinMinus88TrialityPoset.zmod24_chinese_remainder_abk_triality_split
   exact ⟨⟨hRefl.1, hRefl.2.1, hRefl.2.2.2.2.2.1, hRefl.2.2.2.2.2.2.1, hRefl.2.2.2.2.2.2.2,
-          hBraid.2.2.2.2.1, hBraid.2.2.2.2.2.1, hUnit.1, hUnit.2.1, hOrth.2⟩,
+          hBraid.2.2.2.2.1, hBraid.2.2.2.2.2.1, h48.2.2.2.2.1,
+          hUnit.1, hUnit.2.1, hOrth.2, hAdj.2.2.2.2.2⟩,
          ⟨hPT.2.2.2.2.1, hPT.2.2.2.2.2.1, hPT.2.2.2.2.2.2.1, hPT.2.2.2.2.2.2.2.2,
-          hCl3.2.2.1, hIdx8.1, hIdx8.2.2.2⟩,
+          hCl3.2.2.1, hSt8.1, hIdx8.1, hIdx8.2.2.2⟩,
          ⟨hCyc.1, hCyc.2.1, hCyc.2.2.1, hCyc.2.2.2.1, hCyc.2.2.2.2,
           hCRT.2.2.2.2.2.2.1, hCRT.2.2.2.2.2.2.2⟩⟩
 
@@ -2480,14 +2494,18 @@ theorem ls7_pin_minus_88_octahedral_reflection_cl11_parity_time_and_abk_triality
 **Theorem 7H (`ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rotor_synthesis`):**
 Combines the conditional affine ground-state fiber invariance and spectral-annulus midpoint
 centering (`KitaevLocalGapOmegaSpectrumPoset.convex_hamiltonian_fiber_ground_state_invariance`,
-`KitaevLocalGapOmegaSpectrumPoset.spectral_gap_annulus_midpoint_centering`), the square-first vs.
+`KitaevLocalGapOmegaSpectrumPoset.energy_gap_annulus_midpoint_centering`), the square-first vs.
 truncate-first Peirce collar excursion identity and its bridge to `PeirceSpine.conePlus`
 and `coneMinus` (`KitaevLocalGapOmegaSpectrumPoset.square_first_local_bulk_gap_collar_healing`,
-`KitaevLocalGapOmegaSpectrumPoset.n_plus_minus_eq_centralizer_cones`), and the universal $2 \times 2$
-block anticommutator, rotor square, unit-gap homotopy preservation, pole domain-wall cancellation,
-and dimer re-association cancellation
-(`KitaevLocalGapOmegaSpectrumPoset.Block2.universal_invertibility_anticommuting_homotopy`,
-`KitaevLocalGapOmegaSpectrumPoset.Block2.unit_gap_rotor_preservation_and_pole_endpoints`).
+`KitaevLocalGapOmegaSpectrumPoset.n_plus_minus_eq_centralizer_cones`), the universal $2 \times 2$
+block anticommutators (both Hadamard-rotated and direct unrotated), division-free Hadamard
+similarity, rotor squares, unit-gap homotopy preservation, pole domain-wall cancellation, and dimer
+re-association cancellation (`KitaevLocalGapOmegaSpectrumPoset.Block2.universal_invertibility_anticommuting_homotopy`,
+`KitaevLocalGapOmegaSpectrumPoset.Block2.universal_unrotated_and_hadamard_invertibility_rotor`,
+`KitaevLocalGapOmegaSpectrumPoset.Block2.unit_gap_rotor_preservation_and_pole_endpoints`), and the
+concrete $4$-Majorana open Kitaev chain collar healing and $2 \times 2$ Brown–Gauss 8-fold matrix
+powers (`KitaevLocalGapOmegaSpectrumPoset.Mat4.open_kitaev_majorana_chain_square_first_healing`,
+`KitaevLocalGapOmegaSpectrumPoset.Block2.brown_gauss_matrix_power_identities`).
 This statement is a conjunction of those finite-stage ring identities under explicit hypotheses and
 does not establish a continuous homotopy equivalence $A_d \simeq \Omega A_{d+1} \simeq KO_{d-2}$.
 -/
@@ -2516,8 +2534,20 @@ theorem ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rot
        KitaevLocalGapOmegaSpectrumPoset.Block2.baseDecoupler +
        KitaevLocalGapOmegaSpectrumPoset.Block2.baseDecoupler *
          KitaevLocalGapOmegaSpectrumPoset.Block2.doubledSys A = 0 ∧
+     KitaevLocalGapOmegaSpectrumPoset.Block2.diagSys A *
+       KitaevLocalGapOmegaSpectrumPoset.Block2.baseDecoupler +
+       KitaevLocalGapOmegaSpectrumPoset.Block2.baseDecoupler *
+         KitaevLocalGapOmegaSpectrumPoset.Block2.diagSys A = 0 ∧
+     KitaevLocalGapOmegaSpectrumPoset.Block2.hadamard2 *
+       KitaevLocalGapOmegaSpectrumPoset.Block2.diagSys A *
+       KitaevLocalGapOmegaSpectrumPoset.Block2.hadamard2 =
+       KitaevLocalGapOmegaSpectrumPoset.Block2.doubledSys (A + A) ∧
      KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A c s *
        KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A c s =
+       KitaevLocalGapOmegaSpectrumPoset.Block2.mk2
+         (c * c * (A * A) - s * s) 0 0 (c * c * (A * A) - s * s) ∧
+     KitaevLocalGapOmegaSpectrumPoset.Block2.DirectRotor A c s *
+       KitaevLocalGapOmegaSpectrumPoset.Block2.DirectRotor A c s =
        KitaevLocalGapOmegaSpectrumPoset.Block2.mk2
          (c * c * (A * A) - s * s) 0 0 (c * c * (A * A) - s * s) ∧
      (A * A = -1 → c * c + s * s = 1 →
@@ -2526,12 +2556,45 @@ theorem ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rot
          KitaevLocalGapOmegaSpectrumPoset.Block2.mk2 (-1) 0 0 (-1)) ∧
      KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A 0 1 +
        KitaevLocalGapOmegaSpectrumPoset.Block2.RotorXY A 0 (-1) = 0 ∧
-     (A - A0) + (A0 - A0) + (A0 - A0) = A - A0) := by
+     (A - A0) + (A0 - A0) + (A0 - A0) = A - A0) ∧
+    (- ((KitaevLocalGapOmegaSpectrumPoset.Mat4.kitaevChainA :
+          KitaevLocalGapOmegaSpectrumPoset.Mat4 K) *
+         KitaevLocalGapOmegaSpectrumPoset.Mat4.kitaevChainA) -
+       KitaevLocalGapOmegaSpectrumPoset.Mat4.I4 =
+       KitaevLocalGapOmegaSpectrumPoset.Mat4.edgeZeroModeDefect ∧
+     KitaevLocalGapOmegaSpectrumPoset.TruncateFirstBulkOp
+       (KitaevLocalGapOmegaSpectrumPoset.Mat4.projCut2 :
+         KitaevLocalGapOmegaSpectrumPoset.Mat4 K)
+       KitaevLocalGapOmegaSpectrumPoset.Mat4.kitaevChainA 1 =
+       -KitaevLocalGapOmegaSpectrumPoset.Mat4.projCut2 ∧
+     KitaevLocalGapOmegaSpectrumPoset.N_plus
+       (KitaevLocalGapOmegaSpectrumPoset.Mat4.projCut2 :
+         KitaevLocalGapOmegaSpectrumPoset.Mat4 K)
+       KitaevLocalGapOmegaSpectrumPoset.Mat4.kitaevChainA *
+       KitaevLocalGapOmegaSpectrumPoset.N_minus
+         KitaevLocalGapOmegaSpectrumPoset.Mat4.projCut2
+         KitaevLocalGapOmegaSpectrumPoset.Mat4.kitaevChainA =
+       -KitaevLocalGapOmegaSpectrumPoset.Mat4.projCut2 ∧
+     KitaevLocalGapOmegaSpectrumPoset.SquareFirstBulkOp
+       (KitaevLocalGapOmegaSpectrumPoset.Mat4.projCut2 :
+         KitaevLocalGapOmegaSpectrumPoset.Mat4 K)
+       KitaevLocalGapOmegaSpectrumPoset.Mat4.kitaevChainA 1 = 0 ∧
+     (((KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU :
+          KitaevLocalGapOmegaSpectrumPoset.Block2 K) *
+         KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU) *
+        (KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU *
+         KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU)) *
+       (((KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU :
+            KitaevLocalGapOmegaSpectrumPoset.Block2 K) *
+           KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU) *
+          (KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU *
+           KitaevLocalGapOmegaSpectrumPoset.Block2.brownGaussU)) =
+       (16 : K) • (1 : KitaevLocalGapOmegaSpectrumPoset.Block2 K)) := by
   have hFib :=
     KitaevLocalGapOmegaSpectrumPoset.convex_hamiltonian_fiber_ground_state_invariance
       H0 H1 P0 t h0 h1
   have hAnn :=
-    KitaevLocalGapOmegaSpectrumPoset.spectral_gap_annulus_midpoint_centering Q a_sq b_sq
+    KitaevLocalGapOmegaSpectrumPoset.energy_gap_annulus_midpoint_centering Q a_sq b_sq
   have hGap :=
     KitaevLocalGapOmegaSpectrumPoset.square_first_local_bulk_gap_collar_healing P A μ0 hP
   have hCones :=
@@ -2539,12 +2602,22 @@ theorem ls7_kitaev_local_bulk_gap_collar_healing_and_universal_invertibility_rot
   have hInv :=
     KitaevLocalGapOmegaSpectrumPoset.Block2.universal_invertibility_anticommuting_homotopy
       A A0 c s hc hs hcs
+  have hUnrot :=
+    KitaevLocalGapOmegaSpectrumPoset.Block2.universal_unrotated_and_hadamard_invertibility_rotor
+      A c s hc hs hcs
   have hUnit :=
     KitaevLocalGapOmegaSpectrumPoset.Block2.unit_gap_rotor_preservation_and_pole_endpoints
       A c s hc hs hcs
+  have hMaj :=
+    KitaevLocalGapOmegaSpectrumPoset.Mat4.open_kitaev_majorana_chain_square_first_healing (K := K)
+  have hBrown :=
+    KitaevLocalGapOmegaSpectrumPoset.Block2.brown_gauss_matrix_power_identities
+      (B := K)
   exact ⟨⟨hFib, hAnn⟩,
          ⟨hGap.1, hGap.2, hCones.1, hCones.2.1⟩,
-         ⟨hInv.1, hInv.2.1, hUnit.1, hUnit.2.2.2.2.2.1, hInv.2.2⟩⟩
+         ⟨hInv.1, hUnrot.2.1, hUnrot.2.2.1.1, hInv.2.1, hUnrot.2.2.2.2,
+          hUnit.1, hUnit.2.2.2.2.2.1, hInv.2.2⟩,
+         ⟨hMaj.2.1, hMaj.2.2.2.1.2.2, hMaj.2.2.2.2.1, hMaj.2.2.2.2.2.2, hBrown.2.2.2⟩⟩
 
 end MasterLanguageSymmetryYangianPeirceSynthesis
 

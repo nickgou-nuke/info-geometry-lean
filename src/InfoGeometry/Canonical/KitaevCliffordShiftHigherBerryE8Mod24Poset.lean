@@ -6602,9 +6602,12 @@ theorem pin_minus_88_octahedral_reflection_cl_minus_3_0_and_abk_triality_poset_b
      (PinMinus88TrialityPoset.Quat.reflIJ : PinMinus88TrialityPoset.Quat R) *
        PinMinus88TrialityPoset.Quat.reflJK =
          PinMinus88TrialityPoset.Quat.hurwitzW ∧
+     PinMinus88TrialityPoset.Quat.binaryOctahedral48Finset.card = 48 ∧
      PinMinus88TrialityPoset.pinMinusJKReflection3.transpose *
        PinMinus88TrialityPoset.pinMinusJKReflection3 = 1 ∧
-     Matrix.det PinMinus88TrialityPoset.pinMinusJKReflection3 = -1) ∧
+     Matrix.det PinMinus88TrialityPoset.pinMinusJKReflection3 = -1 ∧
+     -PinMinus88TrialityPoset.quatAdjointMatrix3 PinMinus88TrialityPoset.pinMinusJKUnitRoot =
+       PinMinus88TrialityPoset.pinMinusJKReflection3) ∧
     ((PinMinus88TrialityPoset.Mat2.clMinus3Gen1 : PinMinus88TrialityPoset.Mat2.Mat4Split R) *
        PinMinus88TrialityPoset.Mat2.clMinus3Gen1 = -1 ∧
      (PinMinus88TrialityPoset.Mat2.clMinus3Gen2 : PinMinus88TrialityPoset.Mat2.Mat4Split R) *
@@ -6617,6 +6620,10 @@ theorem pin_minus_88_octahedral_reflection_cl_minus_3_0_and_abk_triality_poset_b
        PinMinus88TrialityPoset.Mat2.clMinus3Gen2 *
        PinMinus88TrialityPoset.Mat2.clMinus3Refl23 =
          (2 : R) • PinMinus88TrialityPoset.Mat2.clMinus3Gen3 ∧
+     Function.Injective PinMinus88TrialityPoset.Mat2.mat4SplitToMatStage8AlgHom ∧
+     PinMinus88TrialityPoset.Mat2.clStage8Refl23 *
+       PinMinus88TrialityPoset.Mat2.clStage8Refl23 =
+         (-2 : ℝ) • (1 : InfoGeometry.Clifford.TowerMatrix.Mat 8) ∧
      Fintype.card (InfoGeometry.Clifford.TowerMatrix.Idx 8) = 256) ∧
     (PinMinus88TrialityPoset.Phi8 (x ^ 3) =
        PinMinus88TrialityPoset.Phi8 x * PinMinus88TrialityPoset.Phi24 x ∧
@@ -6629,15 +6636,25 @@ theorem pin_minus_88_octahedral_reflection_cl_minus_3_0_and_abk_triality_poset_b
   have hBraid :=
     PinMinus88TrialityPoset.Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation
       x y z
+  have h48 :=
+    PinMinus88TrialityPoset.Quat.binary_octahedral_48_coset_decomposition_and_octahedral_pole_action
   have hOrth := PinMinus88TrialityPoset.pinMinusJKReflection3_is_orthogonal_improper
+  have hAdj :=
+    PinMinus88TrialityPoset.quatAdjointMatrix3_homomorphism_orthogonality_and_graded_2O_action
+      (PinMinus88TrialityPoset.Quat.qOne : PinMinus88TrialityPoset.Quat ℝ)
+      (PinMinus88TrialityPoset.Quat.qOne : PinMinus88TrialityPoset.Quat ℝ)
+      (fun _ => (0 : ℝ))
   have hCl3 := PinMinus88TrialityPoset.Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := R)
+  have hSt8 := PinMinus88TrialityPoset.Mat2.clMinus30_into_matStage8_algHom_and_reflection_transport
   have hIdx8 := PinMinus88TrialityPoset.Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge
   have hCyc := PinMinus88TrialityPoset.pin_minus_abk_triality_cyclotomic_bridge x
   have hEval := PinMinus88TrialityPoset.eval_cyclotomic8_cube_eq_mul_cyclotomic24 x
   have hCRT := PinMinus88TrialityPoset.zmod24_chinese_remainder_abk_triality_split
   exact ⟨⟨PinMinus88TrialityPoset.PinMinus88TrialityStage.rank_injective,
-          hRefl.1, hRefl.2.1, hRefl.2.2.2.2.2.1, hBraid.2.2.2.2.1, hOrth.1, hOrth.2⟩,
-    ⟨hCl3.1.1, hCl3.1.2.1, hCl3.1.2.2, hCl3.2.2.1, hCl3.2.2.2.2.1, hIdx8.2.2.2⟩,
+          hRefl.1, hRefl.2.1, hRefl.2.2.2.2.2.1, hBraid.2.2.2.2.1,
+          h48.2.2.2.2.1, hOrth.1, hOrth.2, hAdj.2.2.2.2.2⟩,
+    ⟨hCl3.1.1, hCl3.1.2.1, hCl3.1.2.2, hCl3.2.2.1, hCl3.2.2.2.2.1,
+     hSt8.1, hSt8.2.2.2.2.2.1, hIdx8.2.2.2⟩,
     ⟨hCyc.2.2.1, hEval, ⟨hCRT.2.2.2.2.1, hCRT.2.2.2.2.2.1, hCRT.2.2.2.2.2.2.1, hCRT.2.2.2.2.2.2.2⟩⟩⟩
 
 end TwelveMasterTheorems

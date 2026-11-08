@@ -1,3 +1,7 @@
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Abel
+
 /-!
 # Generalized Group Fourier Transform, Chebyshev Horseshoe & Peter–Weyl Peirce Blocks (𝔓𝔚₁ ≺ ⋯ ≺ 𝔓𝔚₇)
 
@@ -43,10 +47,6 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Abel
 
 namespace PeterWeylNoncommutativeFourierPoset
 
@@ -128,15 +128,22 @@ end NonCommutativeConvolution
 
 @[ext]
 structure Mat2 (K : Type u) where
-  m11 : K; m12 : K
-  m21 : K; m22 : K
+  m11 : K
+  m12 : K
+  m21 : K
+  m22 : K
   deriving DecidableEq
 
 namespace Mat2
 variable {K : Type u} [CommRing K]
 
-instance : Add (Mat2 K) := ⟨fun A B => ⟨A.m11 + B.m11, A.m12 + B.m12, A.m21 + B.m21, A.m22 + B.m22⟩⟩
-instance : Sub (Mat2 K) := ⟨fun A B => ⟨A.m11 - B.m11, A.m12 - B.m12, A.m21 - B.m21, A.m22 - B.m22⟩⟩
+def add (A B : Mat2 K) : Mat2 K :=
+  ⟨A.m11 + B.m11, A.m12 + B.m12, A.m21 + B.m21, A.m22 + B.m22⟩
+def sub (A B : Mat2 K) : Mat2 K :=
+  ⟨A.m11 - B.m11, A.m12 - B.m12, A.m21 - B.m21, A.m22 - B.m22⟩
+
+instance instAdd : Add (Mat2 K) := ⟨add⟩
+instance instSub : Sub (Mat2 K) := ⟨sub⟩
 instance : One (Mat2 K) := ⟨⟨1, 0, 0, 1⟩⟩
 
 def smul (c : K) (A : Mat2 K) : Mat2 K :=
@@ -157,8 +164,8 @@ def basisPhi: Mat2 K := ⟨0,  1,  1,  0⟩
 def basisJ  : Mat2 K := ⟨0,  1, -1,  0⟩
 
 -- Explicit 2D irreducible representation generators of S₃ in Mat₂(ℤ):
-def s3_tau12 : Mat2 ℤ := ⟨ 1,  0, 0, -1⟩  -- swaps (1 ↔ 2)
-def s3_tau23 : Mat2 ℤ := ⟨-1, -1, 0,  1⟩  -- swaps (2 ↔ 3) in root basis
+def s3_tau12 : Mat2 ℤ := ⟨(1 : ℤ), 0, 0, -1⟩  -- swaps (1 ↔ 2)
+def s3_tau23 : Mat2 ℤ := ⟨-1, -1, 0, (1 : ℤ)⟩  -- swaps (2 ↔ 3) in root basis
 
 /--
 **Theorem 4 (𝔓𝔚₄ & 𝔓𝔚₅ — Wedderburn–Artin `S₃` Decomposition & Non-Commutative Word Order):**
@@ -183,14 +190,25 @@ reconstructed from its four traces against the Peirce–DeWitt–Clifford basis 
 -/
 lemma peirce_peter_weyl_four_basis_reconstruction (M : Mat2 K) :
     smul 2 M =
-      smul (tr (M * basisI))   basisI  +
-      smul (tr (M * basisSP))  basisSP +
-      smul (tr (M * basisPhi)) basisPhi -
-      smul (tr (M * basisJ))   basisJ := by
-  ext <;>
-  · dsimp [smul, tr, basisI, basisSP, basisPhi, basisJ,
-           HMul.hMul, Mul.mul, mul, HAdd.hAdd, Add.add, HSub.hSub, Sub.sub]
+      sub
+        (add (add (smul (tr (M * basisI)) basisI)
+          (smul (tr (M * basisSP)) basisSP))
+          (smul (tr (M * basisPhi)) basisPhi))
+        (smul (tr (M * basisJ)) basisJ) := by
+  have hI : tr (M * basisI) = M.m11 + M.m22 := by
+    change (M.m11 * 1 + M.m12 * 0) + (M.m21 * 0 + M.m22 * 1) = _
     ring
+  have hSP : tr (M * basisSP) = M.m11 - M.m22 := by
+    change (M.m11 * 1 + M.m12 * 0) + (M.m21 * 0 + M.m22 * (-1)) = _
+    ring
+  have hPhi : tr (M * basisPhi) = M.m12 + M.m21 := by
+    change (M.m11 * 0 + M.m12 * 1) + (M.m21 * 1 + M.m22 * 0) = _
+    ring
+  have hJ : tr (M * basisJ) = M.m21 - M.m12 := by
+    change (M.m11 * 0 + M.m12 * (-1)) + (M.m21 * 1 + M.m22 * 0) = _
+    ring
+  rw [hI, hSP, hPhi, hJ]
+  ext <;> dsimp [smul, add, sub, basisI, basisSP, basisPhi, basisJ] <;> ring
 
 end Mat2
 

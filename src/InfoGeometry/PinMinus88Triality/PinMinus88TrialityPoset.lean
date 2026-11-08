@@ -9,6 +9,7 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic.Ring
 import InfoGeometry.Algebra.MatrixNoncommutativity
+import InfoGeometry.Core.AnticommutingSum
 import InfoGeometry.WignerHurwitzAdamsKTheory.WignerHurwitzAdamsKTheoryPoset
 import InfoGeometry.Clifford.Cl11TensorTower
 
@@ -53,14 +54,18 @@ $\Omega_2^{\mathrm{Pin}_-}(\mathrm{pt})$, or continuous homotopy groups $\pi_3^s
 
 - `PinMinus88TrialityStage`, `coverEdge`, `coverEdge_strictMono`, `coverEdge_acyclic`
 - `Quat.pin_minus_reflection_lift_in_binary_octahedral_coset`,
-  `Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation`
+  `Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation`,
+  `Quat.binary_octahedral_48_coset_decomposition_and_octahedral_pole_action`
 - `pinMinusJKUnitRoot_norm_and_square`, `pinMinusJKReflection3_is_orthogonal_improper`,
   `pinMinusJKUnitRoot_action_eq_matrix_reflection`, `pinMinusJKUnitRoot_twistedAdjoint_eq_matrix_reflection`,
-  `pinMinusJKUnitRoot_double_cover_sign_kernel`
+  `pinMinusJKUnitRoot_double_cover_sign_kernel`,
+  `quatAdjointMatrix3`, `quatAdjointMatrix3_homomorphism_orthogonality_and_graded_2O_action`
 - `Quat.toWHQuat_bridge`
 - `Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations`
 - `Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge`
-- `Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding`
+- `Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding`,
+  `Mat2.clMinus30ToMat4SplitAlgHom`, `Mat2.mat4SplitToMatStage8AlgHom`,
+  `Mat2.clMinus30ToMatStage8AlgHom`, `Mat2.clMinus30_into_matStage8_algHom_and_reflection_transport`
 - `pin_minus_abk_triality_cyclotomic_bridge`
 - `zmod24_chinese_remainder_abk_triality_split`
 - `pm4_master_pin_minus_88_triality_synthesis`
@@ -75,9 +80,9 @@ $\Omega_2^{\mathrm{Pin}_-}(\mathrm{pt})$, or continuous homotopy groups $\pi_3^s
 ### Three-Bucket Audit Map
 * **BUCKET 1 — Proved Kernel Content:**
   - `PinMinus88TrialityStage` ($\mathfrak{PM}_1 \prec \dots \prec \mathfrak{PM}_4$), `coverEdge`, `coverEdge_strictMono`, `coverEdge_acyclic`,
-  - `Quat.pin_minus_reflection_lift_in_binary_octahedral_coset`, `Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation`, `Quat.toWHQuat_bridge`,
-  - `pinMinusJKUnitRoot_norm_and_square`, `pinMinusJKReflection3_is_orthogonal_improper`, `pinMinusJKUnitRoot_action_eq_matrix_reflection`, `pinMinusJKUnitRoot_twistedAdjoint_eq_matrix_reflection`, `pinMinusJKUnitRoot_double_cover_sign_kernel`,
-  - `Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations`, `Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge`, `Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding`,
+  - `Quat.pin_minus_reflection_lift_in_binary_octahedral_coset`, `Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation`, `Quat.binary_octahedral_48_coset_decomposition_and_octahedral_pole_action`, `Quat.toWHQuat_bridge`,
+  - `pinMinusJKUnitRoot_norm_and_square`, `pinMinusJKReflection3_is_orthogonal_improper`, `pinMinusJKUnitRoot_action_eq_matrix_reflection`, `pinMinusJKUnitRoot_twistedAdjoint_eq_matrix_reflection`, `pinMinusJKUnitRoot_double_cover_sign_kernel`, `quatAdjointMatrix3_homomorphism_orthogonality_and_graded_2O_action`,
+  - `Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations`, `Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge`, `Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding`, `Mat2.clMinus30_into_matStage8_algHom_and_reflection_transport`,
   - `pin_minus_abk_triality_cyclotomic_bridge`, `zmod24_chinese_remainder_abk_triality_split`, `pm4_master_pin_minus_88_triality_synthesis`.
 * **BUCKET 2 — Conditional / Interface Boundaries:**
   - The abstract quaternion identities assume `[CommRing K]`; the normalized real orthogonal action is specifically over `ℝ`.
@@ -254,19 +259,16 @@ lemma pin_minus_reflection_lift_in_binary_octahedral_coset (x y z : K) :
   have hPin := WignerHurwitzAdamsKTheoryPoset.Quat.pin_minus_short_root_reflection_identities (K := K)
   refine ⟨hPin.1, hPin.2.1, hPin.2.2.1, hPin.2.2.2.1, hPin.2.2.2.2.1, ?_, ?_, ?_⟩
   · apply Quaternion.ext <;>
-      simp [pinRefl, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
-        vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      ring
+      (dsimp [pinRefl, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+        vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
   · apply Quaternion.ext <;>
-      simp [pinRefl, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
-        vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      ring
+      (dsimp [pinRefl, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+        vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
   · apply Quaternion.ext <;>
-      simp [reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+      (dsimp [reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
         hurwitzW, WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW,
         hurwitzW_refl, conj, WignerHurwitzAdamsKTheoryPoset.Quat.conj,
-        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      norm_num
+        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
 
 /-- Twisted `Pin_-` adjoint identity `pinRefl reflJK (vec3 x y z) = -(reflJK * vec3 x y z * conj reflJK)`
 and reflected Hurwitz corner norm `qNorm hurwitzW_refl = 4`. -/
@@ -275,9 +277,8 @@ lemma pinRefl_eq_neg_conj_and_hurwitzW_refl_norm (x y z : K) :
     qNorm (hurwitzW_refl : Quat K) = 4 := by
   refine ⟨?_, ?_⟩
   · apply Quaternion.ext <;>
-      simp [pinRefl, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
-        vec3, conj, WignerHurwitzAdamsKTheoryPoset.Quat.conj] <;>
-      ring
+      (dsimp [pinRefl, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+        vec3, conj, WignerHurwitzAdamsKTheoryPoset.Quat.conj]; ring)
   · dsimp [qNorm, WignerHurwitzAdamsKTheoryPoset.Quat.qNorm, hurwitzW_refl]
     rw [Quaternion.normSq_def']
     ring
@@ -316,31 +317,124 @@ lemma pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation (x y z
     rw [Quaternion.normSq_def']; ring
   · dsimp [qNorm, WignerHurwitzAdamsKTheoryPoset.Quat.qNorm, reflKI]
     rw [Quaternion.normSq_def']; ring
-  · (apply Quaternion.ext <;>
-      simp [reflIJ, qOne, WignerHurwitzAdamsKTheoryPoset.Quat.qOne,
-        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]);
-    norm_num
-  · (apply Quaternion.ext <;>
-      simp [reflKI, qOne, WignerHurwitzAdamsKTheoryPoset.Quat.qOne,
-        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]);
-    norm_num
   · apply Quaternion.ext <;>
-      simp [reflIJ, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
-        hurwitzW, WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW]
+      (dsimp [reflIJ, qOne, WignerHurwitzAdamsKTheoryPoset.Quat.qOne,
+        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
   · apply Quaternion.ext <;>
-      simp [reflIJ, reflJK, reflKI, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
-        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      norm_num
+      (dsimp [reflKI, qOne, WignerHurwitzAdamsKTheoryPoset.Quat.qOne,
+        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
   · apply Quaternion.ext <;>
-      simp [reflIJ, reflJK, reflKI, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
-        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      norm_num
+      (dsimp [reflIJ, reflJK, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+        hurwitzW, WignerHurwitzAdamsKTheoryPoset.Quat.hurwitzW]; ring)
   · apply Quaternion.ext <;>
-      simp [pinRefl, reflIJ, vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      ring
+      (dsimp [reflIJ, reflJK, reflKI, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
   · apply Quaternion.ext <;>
-      simp [pinRefl, reflKI, vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul] <;>
-      ring
+      (dsimp [reflIJ, reflJK, reflKI, WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK,
+        smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
+  · apply Quaternion.ext <;>
+      (dsimp [pinRefl, reflIJ, vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
+  · apply Quaternion.ext <;>
+      (dsimp [pinRefl, reflKI, vec3, smul, WignerHurwitzAdamsKTheoryPoset.Quat.smul]; ring)
+
+/-- Computable `DecidableEq` instance for `Quat R = Quaternion R`. -/
+instance instDecidableEqQuat {R : Type u} [CommRing R] [DecidableEq R] : DecidableEq (Quat R) :=
+  fun a b =>
+    decidable_of_iff (a.re = b.re ∧ a.imI = b.imI ∧ a.imJ = b.imJ ∧ a.imK = b.imK)
+      ⟨fun h => Quaternion.ext_iff.mpr ⟨h.1, h.2.1, h.2.2.1, h.2.2.2⟩,
+       fun h => ⟨congrArg QuaternionAlgebra.re h, congrArg QuaternionAlgebra.imI h,
+                 congrArg QuaternionAlgebra.imJ h, congrArg QuaternionAlgebra.imK h⟩⟩
+
+/-- Computable norm-square polynomial `re² + imI² + imJ² + imK²` on `Quat K`, matching `qNorm`. -/
+def qNormSq (q : Quat K) : K :=
+  q.re * q.re + q.imI * q.imI + q.imJ * q.imJ + q.imK * q.imK
+
+/-- `qNorm` agrees identically with the computable polynomial `qNormSq`. -/
+lemma qNorm_eq_qNormSq (q : Quat K) : qNorm q = qNormSq q := by
+  dsimp [qNorm, WignerHurwitzAdamsKTheoryPoset.Quat.qNorm, qNormSq]
+  rw [Quaternion.normSq_def']
+  ring
+
+/-- Explicit duplicate-free list of the 24 scaled Hurwitz units `2 · D₂₄ = 2T` in `Quat ℤ` (`qNormSq = 4`):
+8 axis units `±2, ±2i, ±2j, ±2k` and 16 corners `(±1, ±1, ±1, ±1)`. -/
+def hurwitz24List : List (Quat ℤ) :=
+  [ ⟨2, 0, 0, 0⟩, ⟨-2, 0, 0, 0⟩, ⟨0, 2, 0, 0⟩, ⟨0, -2, 0, 0⟩,
+    ⟨0, 0, 2, 0⟩, ⟨0, 0, -2, 0⟩, ⟨0, 0, 0, 2⟩, ⟨0, 0, 0, -2⟩,
+    ⟨1, 1, 1, 1⟩, ⟨1, 1, 1, -1⟩, ⟨1, 1, -1, 1⟩, ⟨1, 1, -1, -1⟩,
+    ⟨1, -1, 1, 1⟩, ⟨1, -1, 1, -1⟩, ⟨1, -1, -1, 1⟩, ⟨1, -1, -1, -1⟩,
+    ⟨-1, 1, 1, 1⟩, ⟨-1, 1, 1, -1⟩, ⟨-1, 1, -1, 1⟩, ⟨-1, 1, -1, -1⟩,
+    ⟨-1, -1, 1, 1⟩, ⟨-1, -1, 1, -1⟩, ⟨-1, -1, -1, 1⟩, ⟨-1, -1, -1, -1⟩ ]
+
+/-- The 24 scaled Hurwitz units `2 · D₂₄ = 2T` as a `Finset (Quat ℤ)`. -/
+def hurwitz24Finset : Finset (Quat ℤ) :=
+  ⟨Multiset.ofList hurwitz24List, by decide⟩
+
+/-- Explicit duplicate-free list of the 24 scaled odd-coset elements `√2 · (2O \ 2T)` in `Quat ℤ` (`qNormSq = 2`):
+all 24 `F₄` short roots with two coordinates in `{-1, 1}` and two coordinates equal to `0`. -/
+def oddCoset24List : List (Quat ℤ) :=
+  [ ⟨1, 1, 0, 0⟩, ⟨1, -1, 0, 0⟩, ⟨-1, 1, 0, 0⟩, ⟨-1, -1, 0, 0⟩,
+    ⟨1, 0, 1, 0⟩, ⟨1, 0, -1, 0⟩, ⟨-1, 0, 1, 0⟩, ⟨-1, 0, -1, 0⟩,
+    ⟨1, 0, 0, 1⟩, ⟨1, 0, 0, -1⟩, ⟨-1, 0, 0, 1⟩, ⟨-1, 0, 0, -1⟩,
+    ⟨0, 1, 1, 0⟩, ⟨0, 1, -1, 0⟩, ⟨0, -1, 1, 0⟩, ⟨0, -1, -1, 0⟩,
+    ⟨0, 0, 1, 1⟩, ⟨0, 0, 1, -1⟩, ⟨0, 0, -1, 1⟩, ⟨0, 0, -1, -1⟩,
+    ⟨0, 1, 0, 1⟩, ⟨0, 1, 0, -1⟩, ⟨0, -1, 0, 1⟩, ⟨0, -1, 0, -1⟩ ]
+
+/-- The 24 scaled odd-coset elements `√2 · (2O \ 2T)` as a `Finset (Quat ℤ)`. -/
+def oddCoset24Finset : Finset (Quat ℤ) :=
+  ⟨Multiset.ofList oddCoset24List, by decide⟩
+
+/-- The 48-element Binary Octahedral finite set `2O = 2T ⊔ (2O \ 2T)` in `Quat ℤ`. -/
+def binaryOctahedral48Finset : Finset (Quat ℤ) :=
+  ⟨Multiset.ofList (hurwitz24List ++ oddCoset24List), by decide⟩
+
+/-- The 6 octahedral coordinate poles `{±i, ±j, ±k}` in `Im(ℍ_ℤ)`. -/
+def octahedralPoles6 : Finset (Quat ℤ) :=
+  ⟨Multiset.ofList [qi, -qi, qj, -qj, qk, -qk], by decide⟩
+
+/--
+**Theorem 1c (𝔓𝔐₁ — The 48-Element Binary Octahedral Group `2O = 2T ⊔ (2O \ 2T)`, `ℤ₂`-Graded Multiplication & Octahedral Pole Double Cover):**
+1. **Exact Coset Cardinalities (`24 + 24 = 48`):**
+   `hurwitz24Finset.card = 24`, `oddCoset24Finset.card = 24`, `Disjoint hurwitz24Finset oddCoset24Finset`,
+   `binaryOctahedral48Finset = hurwitz24Finset ∪ oddCoset24Finset`,
+   `binaryOctahedral48Finset.card = 48`, and `octahedralPoles6.card = 6`.
+2. **Norm Separation & Conjugation Closure:**
+   Every `u ∈ hurwitz24Finset` has `qNormSq u = 4` and `conj u ∈ hurwitz24Finset`;
+   every `v ∈ oddCoset24Finset` has `qNormSq v = 2` and `conj v ∈ oddCoset24Finset`.
+3. **Exact `ℤ₂`-Graded Multiplication Law (`2O / 2T ≅ ℤ₂`):**
+   - `even * even = 2 • even`: `∀ u₁, u₂ ∈ hurwitz24Finset, ∃ u₃ ∈ hurwitz24Finset, u₁ * u₂ = smul 2 u₃`,
+   - `even * odd = 2 • odd` and `odd * even = 2 • odd`,
+   - `odd * odd = even`: `∀ v₁, v₂ ∈ oddCoset24Finset, v₁ * v₂ ∈ hurwitz24Finset`.
+4. **Octahedral Signed-Permutation Action on `{±i, ±j, ±k}` & `{±2}` Double-Cover Kernel:**
+   Every element of `hurwitz24Finset` (scaled by `4`) and `oddCoset24Finset` (scaled by `2`) permutes
+   `octahedralPoles6`, and the kernel of the conjugation action on `octahedralPoles6` inside
+   `hurwitz24Finset` is `{smul 2 qOne, smul (-2) qOne}` while no element of `oddCoset24Finset` acts trivially.
+-/
+lemma binary_octahedral_48_coset_decomposition_and_octahedral_pole_action :
+    hurwitz24Finset.card = 24 ∧
+    oddCoset24Finset.card = 24 ∧
+    Disjoint hurwitz24Finset oddCoset24Finset ∧
+    binaryOctahedral48Finset = hurwitz24Finset ∪ oddCoset24Finset ∧
+    binaryOctahedral48Finset.card = 48 ∧
+    octahedralPoles6.card = 6 ∧
+    (∀ u ∈ hurwitz24Finset, qNormSq u = 4 ∧ conj u ∈ hurwitz24Finset) ∧
+    (∀ v ∈ oddCoset24Finset, qNormSq v = 2 ∧ conj v ∈ oddCoset24Finset) ∧
+    (∀ u₁ ∈ hurwitz24Finset, ∀ u₂ ∈ hurwitz24Finset,
+      ∃ u₃ ∈ hurwitz24Finset, u₁ * u₂ = smul 2 u₃) ∧
+    (∀ u ∈ hurwitz24Finset, ∀ v ∈ oddCoset24Finset,
+      (∃ v₁ ∈ oddCoset24Finset, u * v = smul 2 v₁) ∧
+      (∃ v₂ ∈ oddCoset24Finset, v * u = smul 2 v₂)) ∧
+    (∀ v₁ ∈ oddCoset24Finset, ∀ v₂ ∈ oddCoset24Finset,
+      v₁ * v₂ ∈ hurwitz24Finset) ∧
+    (∀ u ∈ hurwitz24Finset, ∀ p ∈ octahedralPoles6,
+      ∃ p' ∈ octahedralPoles6, u * p * conj u = smul 4 p') ∧
+    (∀ v ∈ oddCoset24Finset, ∀ p ∈ octahedralPoles6,
+      ∃ p' ∈ octahedralPoles6, v * p * conj v = smul 2 p') ∧
+    (∀ u ∈ hurwitz24Finset,
+      (∀ p ∈ octahedralPoles6, u * p * conj u = smul 4 p) ↔
+        (u = smul 2 qOne ∨ u = smul (-2) qOne)) ∧
+    (∀ v ∈ oddCoset24Finset,
+      ¬ (∀ p ∈ octahedralPoles6, v * p * conj v = smul 2 p)) := by
+  decide
 
 end Quat
 
@@ -478,6 +572,87 @@ lemma pinMinusJKUnitRoot_double_cover_sign_kernel (v : Fin 3 → ℝ) (c : ℝ) 
       exact sq_eq_one_iff.mp hsq
     · rintro (rfl | rfl) <;>
         ext <;> simp [Quat.qi, WignerHurwitzAdamsKTheoryPoset.Quat.qi]
+
+/-- $3 \times 3$ grading matrix `diag(1, -1, 0)` on `Matrix (Fin 3) (Fin 3) K`. -/
+def mat3Diag12 {K : Type u} [CommRing K] : Matrix (Fin 3) (Fin 3) K :=
+  !![1, 0, 0; 0, -1, 0; 0, 0, 0]
+
+/-- $3 \times 3$ transposition matrix swapping axes `0 ↔ 1` on `Matrix (Fin 3) (Fin 3) K`. -/
+def mat3Swap12 {K : Type u} [CommRing K] : Matrix (Fin 3) (Fin 3) K :=
+  !![0, 1, 0; 1, 0, 0; 0, 0, 0]
+
+/-- Closed anticommutator witness `{mat3Diag12, mat3Swap12} = 0` on `Matrix (Fin 3) (Fin 3) K`. -/
+lemma mat3_diag12_swap12_anticomm {K : Type u} [CommRing K] :
+    (mat3Diag12 : Matrix (Fin 3) (Fin 3) K) * mat3Swap12 + mat3Swap12 * mat3Diag12 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [mat3Diag12, mat3Swap12]
+
+/-- The Cayley–Klein / Euler–Rodrigues $3 \times 3$ matrix representation
+`quatAdjointMatrix3 q : Matrix (Fin 3) (Fin 3) K` of the quaternion conjugation action
+`v ↦ q * v * conj q` on `Im(ℍ_K) ≅ K³`. -/
+def quatAdjointMatrix3 {K : Type u} [CommRing K] (q : Quat K) : Matrix (Fin 3) (Fin 3) K :=
+  let w := q.re; let a := q.imI; let b := q.imJ; let c := q.imK
+  !![w * w + a * a - b * b - c * c, 2 * (a * b - w * c), 2 * (a * c + w * b);
+     2 * (a * b + w * c), w * w - a * a + b * b - c * c, 2 * (b * c - w * a);
+     2 * (a * c - w * b), 2 * (b * c + w * a), w * w - a * a - b * b + c * c]
+
+/--
+**Theorem 1d (𝔓𝔐₁ — Universal Cayley–Klein / Euler–Rodrigues Homomorphism `ℍ_K → Mat₃(K)`, Scaled Orthogonality & Twisted `Pin_-(3)` Recovery):**
+For any `[CommRing K]`, `p, q : Quat K`, and `v : Fin 3 → K`:
+1. **Exact Conjugation Representation on `Im(ℍ_K) ≅ K³`:**
+   `q * Quat.vec3 (v 0) (v 1) (v 2) * Quat.conj q = Quat.vec3 ((quatAdjointMatrix3 q).mulVec v 0) ((quatAdjointMatrix3 q).mulVec v 1) ((quatAdjointMatrix3 q).mulVec v 2)`.
+2. **Multiplicative Homomorphism Law (`M(p * q) = M(p) * M(q)`):**
+   `quatAdjointMatrix3 (p * q) = quatAdjointMatrix3 p * quatAdjointMatrix3 q`.
+3. **Identity & `{±1}` Double-Cover Kernel:**
+   `quatAdjointMatrix3 (Quat.qOne : Quat K) = 1` and `quatAdjointMatrix3 (-Quat.qOne : Quat K) = 1`.
+4. **Scaled Orthogonality (`M(q)ᵀ M(q) = qNorm(q)² • I₃`):**
+   `(quatAdjointMatrix3 q).transpose * quatAdjointMatrix3 q = (Quat.qNorm q * Quat.qNorm q) • (1 : Matrix (Fin 3) (Fin 3) K)`.
+5. **Twisted `Pin_-(3)` Improper Reflection Recovery on `pinMinusJKUnitRoot`:**
+   Over `ℝ`, `-quatAdjointMatrix3 pinMinusJKUnitRoot = pinMinusJKReflection3`.
+-/
+lemma quatAdjointMatrix3_homomorphism_orthogonality_and_graded_2O_action
+    {K : Type u} [CommRing K] (p q : Quat K) (v : Fin 3 → K) :
+    q * Quat.vec3 (v 0) (v 1) (v 2) * Quat.conj q =
+      Quat.vec3 ((quatAdjointMatrix3 q).mulVec v 0)
+        ((quatAdjointMatrix3 q).mulVec v 1)
+        ((quatAdjointMatrix3 q).mulVec v 2) ∧
+    quatAdjointMatrix3 (p * q) = quatAdjointMatrix3 p * quatAdjointMatrix3 q ∧
+    quatAdjointMatrix3 (Quat.qOne : Quat K) = 1 ∧
+    quatAdjointMatrix3 (-Quat.qOne : Quat K) = 1 ∧
+    (quatAdjointMatrix3 q).transpose * quatAdjointMatrix3 q =
+      (Quat.qNorm q * Quat.qNorm q) • (1 : Matrix (Fin 3) (Fin 3) K) ∧
+    -quatAdjointMatrix3 pinMinusJKUnitRoot = pinMinusJKReflection3 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · apply Quaternion.ext <;>
+      (simp [quatAdjointMatrix3, Quat.vec3, Quat.conj,
+        WignerHurwitzAdamsKTheoryPoset.Quat.conj, Matrix.mulVec, dotProduct, Fin.sum_univ_three];
+       ring)
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [quatAdjointMatrix3, Matrix.mul_apply, Fin.sum_univ_three] <;>
+      ring
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [quatAdjointMatrix3, Quat.qOne, WignerHurwitzAdamsKTheoryPoset.Quat.qOne]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [quatAdjointMatrix3, Quat.qOne, WignerHurwitzAdamsKTheoryPoset.Quat.qOne]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [quatAdjointMatrix3, Quat.qNorm, WignerHurwitzAdamsKTheoryPoset.Quat.qNorm,
+        Quaternion.normSq_def', Matrix.mul_apply, Matrix.transpose_apply,
+        Fin.sum_univ_three] <;>
+      ring
+  · have hs2 : (Real.sqrt 2) ^ 2 = 2 :=
+      Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)
+    have hsne : Real.sqrt 2 ≠ 0 := ne_of_gt (Real.sqrt_pos.2 (by norm_num))
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [quatAdjointMatrix3, pinMinusJKUnitRoot, Quat.reflJK,
+        WignerHurwitzAdamsKTheoryPoset.Quat.pinMinusRootJK, pinMinusJKReflection3] <;>
+      field_simp <;>
+      nlinarith [hs2]
 
 -- ============================================================================
 -- SECTION 2 (𝔓𝔐₂ & 𝔓𝔐₃): Split Brick Cl_-(1,1) ≅ Mat₂(K) & The Pin_-(8,8) P-T Group
@@ -620,6 +795,220 @@ lemma cl_minus_3_0_into_split_cl_2_2_kronecker_embedding :
         Fintype.sum_prod_type, Fin.sum_univ_two] <;>
       ring
 
+/-- The negative-definite 3D quadratic form `Q_{3,0}^-(x) = -x₀² - x₁² - x₂²` on `Fin 3 → K`
+governing $\mathcal{C}\ell_-(3,0) = \mathcal{C}\ell(0,3)$. -/
+noncomputable abbrev qMinus30 (K : Type u) [CommRing K] : QuadraticForm K (Fin 3 → K) :=
+  QuadraticMap.weightedSumSquares K (fun _ : Fin 3 => (-1 : K))
+
+/-- Indexed generator family `γ : Fin 3 → Mat4Split K` for $\mathcal{C}\ell_-(3,0) \hookrightarrow \mathcal{C}\ell_-(2,2)$. -/
+def clMinus3GenFamily : Fin 3 → Mat4Split K
+  | ⟨0, _⟩ => clMinus3Gen1
+  | ⟨1, _⟩ => clMinus3Gen2
+  | ⟨2, _⟩ => clMinus3Gen3
+
+/-- Pairwise anticommutation of the indexed family `clMinus3GenFamily`. -/
+lemma clMinus3GenFamily_anti (i j : Fin 3) (hne : i ≠ j) :
+    (clMinus3GenFamily i : Mat4Split K) * clMinus3GenFamily j +
+      clMinus3GenFamily j * clMinus3GenFamily i = 0 := by
+  have h := (cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := K)).2.1
+  fin_cases i <;> fin_cases j
+  · exact False.elim (hne rfl)
+  · exact h.1
+  · exact h.2.1
+  · simpa [clMinus3GenFamily, add_comm] using h.1
+  · exact False.elim (hne rfl)
+  · exact h.2.2
+  · simpa [clMinus3GenFamily, add_comm] using h.2.1
+  · simpa [clMinus3GenFamily, add_comm] using h.2.2
+  · exact False.elim (hne rfl)
+
+/-- Negative-square law `γ_i² = -1` in `algebraMap` form for `CliffordAlgebra.lift`. -/
+lemma clMinus3GenFamily_sq (i : Fin 3) :
+    (clMinus3GenFamily i : Mat4Split K) * clMinus3GenFamily i =
+      algebraMap K (Mat4Split K) ((fun _ : Fin 3 => (-1 : K)) i) := by
+  have h := (cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := K)).1
+  rw [map_neg, map_one]
+  fin_cases i
+  · exact h.1
+  · exact h.2.1
+  · exact h.2.2
+
+/-- Universal `K`-algebra homomorphism `CliffordAlgebra (qMinus30 K) →ₐ[K] Mat4Split K`
+constructed via `CliffordAlgebra.lift` and `AnticommutingSum.basis_square`. -/
+noncomputable def clMinus30ToMat4SplitAlgHom :
+    CliffordAlgebra (qMinus30 K) →ₐ[K] Mat4Split K :=
+  CliffordAlgebra.lift (qMinus30 K)
+    ⟨(Pi.basisFun K (Fin 3)).constr K (clMinus3GenFamily (K := K)),
+      InfoGeometry.Core.AnticommutingSum.basis_square
+        (clMinus3GenFamily (K := K)) (fun _ : Fin 3 => (-1 : K))
+        clMinus3GenFamily_anti clMinus3GenFamily_sq⟩
+
+/-- Evaluation of `clMinus30ToMat4SplitAlgHom` on any vector `CliffordAlgebra.ι (qMinus30 K) x`. -/
+@[simp] lemma clMinus30ToMat4SplitAlgHom_ι (x : Fin 3 → K) :
+    clMinus30ToMat4SplitAlgHom (CliffordAlgebra.ι (qMinus30 K) x) =
+      ∑ i : Fin 3, x i • (clMinus3GenFamily i : Mat4Split K) := by
+  rw [clMinus30ToMat4SplitAlgHom, CliffordAlgebra.lift_ι_apply]
+  simp [Module.Basis.constr_apply_fintype]
+
+/-- Evaluation of `clMinus30ToMat4SplitAlgHom` on the three standard basis vectors `e₀, e₁, e₂`. -/
+@[simp] lemma clMinus30ToMat4SplitAlgHom_basis (i : Fin 3) :
+    clMinus30ToMat4SplitAlgHom (K := K) (CliffordAlgebra.ι (qMinus30 K) (Pi.single i 1)) =
+      clMinus3GenFamily i := by
+  simp [clMinus30ToMat4SplitAlgHom_ι, Pi.single_apply]
+
+/-- Uniqueness of `clMinus30ToMat4SplitAlgHom`: any `K`-algebra homomorphism from
+`CliffordAlgebra (qMinus30 K)` to `Mat4Split K` agreeing on the three standard basis generators
+is equal to `clMinus30ToMat4SplitAlgHom`. -/
+lemma clMinus30ToMat4SplitAlgHom_unique
+    (f : CliffordAlgebra (qMinus30 K) →ₐ[K] Mat4Split K)
+    (hf : ∀ i : Fin 3, f (CliffordAlgebra.ι (qMinus30 K) (Pi.single i 1)) = clMinus3GenFamily i) :
+    f = clMinus30ToMat4SplitAlgHom := by
+  apply CliffordAlgebra.hom_ext
+  apply (Pi.basisFun K (Fin 3)).ext
+  intro i
+  simpa using (hf i).trans (clMinus30ToMat4SplitAlgHom_basis (K := K) i).symm
+
+/-- Explicit index equivalence between `TowerMatrix.Idx 2 = (Idx 0 × Fin 2) × Fin 2` and `Fin 2 × Fin 2`. -/
+def idx2EquivFin2ProdFin2 : InfoGeometry.Clifford.TowerMatrix.Idx 2 ≃ Fin 2 × Fin 2 where
+  toFun x := (x.1.2, x.2)
+  invFun y := ((default, y.1), y.2)
+  left_inv x := by
+    rcases x with ⟨⟨u, i₁⟩, i₂⟩
+    have hu : u = default := Subsingleton.elim u default
+    subst hu
+    rfl
+  right_inv _ := rfl
+
+/-- `ℝ`-algebra isomorphism identifying `Mat4Split ℝ` with `TowerMatrix.Mat 2`. -/
+noncomputable def mat4SplitEquivMatStage2 :
+    Mat4Split ℝ ≃ₐ[ℝ] InfoGeometry.Clifford.TowerMatrix.Mat 2 :=
+  Matrix.reindexAlgEquiv ℝ ℝ idx2EquivFin2ProdFin2.symm
+
+open scoped Kronecker in
+/-- One-step Kronecker `ℝ`-algebra homomorphism `A ↦ A ⊗ₖ I₂` from `TowerMatrix.Mat n` to `TowerMatrix.Mat (n + 1)`. -/
+noncomputable def matStageStepAlgHom (n : ℕ) :
+    InfoGeometry.Clifford.TowerMatrix.Mat n →ₐ[ℝ]
+      InfoGeometry.Clifford.TowerMatrix.Mat (n + 1) where
+  toFun A := A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  map_one' := Matrix.one_kronecker_one
+  map_mul' A B := by
+    change (A * B) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ) =
+      (A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) * (B ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ))
+    rw [← Matrix.mul_kronecker_mul, mul_one]
+  map_zero' := Matrix.zero_kronecker _
+  map_add' A B := Matrix.add_kronecker A B _
+  commutes' r := by
+    change (algebraMap ℝ (InfoGeometry.Clifford.TowerMatrix.Mat n) r) ⊗ₖ
+        (1 : Matrix (Fin 2) (Fin 2) ℝ) =
+      algebraMap ℝ (InfoGeometry.Clifford.TowerMatrix.Mat (n + 1)) r
+    rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one,
+      Matrix.smul_kronecker, Matrix.one_kronecker_one]
+    rfl
+
+open scoped Kronecker in
+/-- Every one-step Kronecker tower embedding `A ↦ A ⊗ₖ I₂` is injective. -/
+lemma matStageStepAlgHom_injective (n : ℕ) :
+    Function.Injective (matStageStepAlgHom n) := by
+  intro A B hAB
+  ext i j
+  have hij : (matStageStepAlgHom n A) (i, (0 : Fin 2)) (j, (0 : Fin 2)) =
+      (matStageStepAlgHom n B) (i, (0 : Fin 2)) (j, (0 : Fin 2)) :=
+    congr_fun (congr_fun hAB (i, (0 : Fin 2))) (j, (0 : Fin 2))
+  change A i j * (1 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 =
+    B i j * (1 : Matrix (Fin 2) (Fin 2) ℝ) 0 0 at hij
+  simpa using hij
+
+/-- Faithful 6-step Kronecker `ℝ`-algebra homomorphism `A ↦ A ⊗ I₂^{\otimes 6}` from
+`Mat4Split ℝ ≅ MatStage 2` into `TowerMatrix.Mat 8` ($\mathcal{C}\ell_-(8,8) \cong \mathrm{Mat}_{256}(\mathbb{R})$). -/
+noncomputable def mat4SplitToMatStage8AlgHom :
+    Mat4Split ℝ →ₐ[ℝ] InfoGeometry.Clifford.TowerMatrix.Mat 8 :=
+  (matStageStepAlgHom 7).comp <|
+    (matStageStepAlgHom 6).comp <|
+      (matStageStepAlgHom 5).comp <|
+        (matStageStepAlgHom 4).comp <|
+          (matStageStepAlgHom 3).comp <|
+            (matStageStepAlgHom 2).comp mat4SplitEquivMatStage2.toAlgHom
+
+/-- The 6-step Kronecker embedding `Mat4Split ℝ →ₐ[ℝ] TowerMatrix.Mat 8` is injective. -/
+lemma mat4SplitToMatStage8AlgHom_injective :
+    Function.Injective mat4SplitToMatStage8AlgHom := by
+  intro A B hAB
+  dsimp [mat4SplitToMatStage8AlgHom] at hAB
+  have h7 := matStageStepAlgHom_injective 7 hAB
+  have h6 := matStageStepAlgHom_injective 6 h7
+  have h5 := matStageStepAlgHom_injective 5 h6
+  have h4 := matStageStepAlgHom_injective 4 h5
+  have h3 := matStageStepAlgHom_injective 3 h4
+  have h2 := matStageStepAlgHom_injective 2 h3
+  exact mat4SplitEquivMatStage2.injective h2
+
+/-- Composite universal `ℝ`-algebra homomorphism from `CliffordAlgebra (qMinus30 ℝ)` into
+the 8-stage split Clifford matrix algebra `TowerMatrix.Mat 8` ($\mathrm{Mat}_{256}(\mathbb{R})$). -/
+noncomputable def clMinus30ToMatStage8AlgHom :
+    CliffordAlgebra (qMinus30 ℝ) →ₐ[ℝ] InfoGeometry.Clifford.TowerMatrix.Mat 8 :=
+  mat4SplitToMatStage8AlgHom.comp (clMinus30ToMat4SplitAlgHom (K := ℝ))
+
+/-- The $i$-th $\mathcal{C}\ell_-(3,0)$ generator inside `TowerMatrix.Mat 8` ($\mathrm{Mat}_{256}(\mathbb{R})$). -/
+noncomputable def clStage8Gen (i : Fin 3) : InfoGeometry.Clifford.TowerMatrix.Mat 8 :=
+  clMinus30ToMatStage8AlgHom (CliffordAlgebra.ι (qMinus30 ℝ) (Pi.single i 1))
+
+/-- The embedded $\mathrm{Pin}_-(3)$ short-root reflection $R_{23} = \gamma_2 - \gamma_3$ inside `TowerMatrix.Mat 8`. -/
+noncomputable def clStage8Refl23 : InfoGeometry.Clifford.TowerMatrix.Mat 8 :=
+  clMinus30ToMatStage8AlgHom (CliffordAlgebra.ι (qMinus30 ℝ) (Pi.single 1 1 - Pi.single 2 1))
+
+/--
+**Theorem 2d (𝔓𝔐₂ & 𝔓𝔐₃ — Universal `CliffordAlgebra` Lift & Faithful Kronecker Embedding into `TowerMatrix.Mat 8`):**
+1. **Faithfulness:** `Function.Injective mat4SplitToMatStage8AlgHom`.
+2. **Stage-8 Generator Images:** `clStage8Gen i = mat4SplitToMatStage8AlgHom (clMinus3GenFamily i)` and
+   `clStage8Refl23 = mat4SplitToMatStage8AlgHom clMinus3Refl23`.
+3. **Stage-8 $\mathcal{C}\ell_-(3,0)$ Clifford & $\mathrm{Pin}_-(3)$ Reflection Relations in $\mathrm{Mat}_{256}(\mathbb{R})$:**
+   - `clStage8Gen i * clStage8Gen i = -1`,
+   - `clStage8Gen i * clStage8Gen j + clStage8Gen j * clStage8Gen i = 0` (`i ≠ j`),
+   - `clStage8Refl23 * clStage8Refl23 = (-2 : ℝ) • 1`,
+   - `clStage8Refl23 * clStage8Gen 0 * clStage8Refl23 = (2 : ℝ) • clStage8Gen 0`,
+   - `clStage8Refl23 * clStage8Gen 1 * clStage8Refl23 = (2 : ℝ) • clStage8Gen 2`,
+   - `clStage8Refl23 * clStage8Gen 2 * clStage8Refl23 = (2 : ℝ) • clStage8Gen 1`.
+-/
+lemma clMinus30_into_matStage8_algHom_and_reflection_transport :
+    Function.Injective mat4SplitToMatStage8AlgHom ∧
+    (∀ i : Fin 3, clStage8Gen i = mat4SplitToMatStage8AlgHom (clMinus3GenFamily i)) ∧
+    clStage8Refl23 = mat4SplitToMatStage8AlgHom clMinus3Refl23 ∧
+    (∀ i : Fin 3, clStage8Gen i * clStage8Gen i = -1) ∧
+    (∀ i j : Fin 3, i ≠ j → clStage8Gen i * clStage8Gen j + clStage8Gen j * clStage8Gen i = 0) ∧
+    clStage8Refl23 * clStage8Refl23 = (-2 : ℝ) • (1 : InfoGeometry.Clifford.TowerMatrix.Mat 8) ∧
+    clStage8Refl23 * clStage8Gen 0 * clStage8Refl23 = (2 : ℝ) • clStage8Gen 0 ∧
+    clStage8Refl23 * clStage8Gen 1 * clStage8Refl23 = (2 : ℝ) • clStage8Gen 2 ∧
+    clStage8Refl23 * clStage8Gen 2 * clStage8Refl23 = (2 : ℝ) • clStage8Gen 1 := by
+  have hGen : ∀ i : Fin 3, clStage8Gen i = mat4SplitToMatStage8AlgHom (clMinus3GenFamily i) := by
+    intro i
+    simp [clStage8Gen, clMinus30ToMatStage8AlgHom]
+  have hRefl : clStage8Refl23 = mat4SplitToMatStage8AlgHom clMinus3Refl23 := by
+    simp [clStage8Refl23, clMinus30ToMatStage8AlgHom, map_sub,
+      clMinus3Refl23, clMinus3GenFamily]
+  have hEmb := cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := ℝ)
+  refine ⟨mat4SplitToMatStage8AlgHom_injective, hGen, hRefl, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro i
+    rw [hGen i, ← map_mul]
+    have hsq := clMinus3GenFamily_sq (K := ℝ) i
+    rw [map_neg, map_one] at hsq
+    rw [hsq, map_neg, map_one]
+  · intro i j hij
+    rw [hGen i, hGen j, ← map_mul, ← map_mul, ← map_add,
+      clMinus3GenFamily_anti i j hij, map_zero]
+  · rw [hRefl, ← map_mul, hEmb.2.2.1, map_smul, map_one]
+  · rw [hRefl, hGen 0, ← map_mul, ← map_mul]
+    change mat4SplitToMatStage8AlgHom (clMinus3Refl23 * clMinus3Gen1 * clMinus3Refl23) =
+      (2 : ℝ) • mat4SplitToMatStage8AlgHom clMinus3Gen1
+    rw [hEmb.2.2.2.1, map_smul]
+  · rw [hRefl, hGen 1, hGen 2, ← map_mul, ← map_mul]
+    change mat4SplitToMatStage8AlgHom (clMinus3Refl23 * clMinus3Gen2 * clMinus3Refl23) =
+      (2 : ℝ) • mat4SplitToMatStage8AlgHom clMinus3Gen3
+    rw [hEmb.2.2.2.2.1, map_smul]
+  · rw [hRefl, hGen 2, hGen 1, ← map_mul, ← map_mul]
+    change mat4SplitToMatStage8AlgHom (clMinus3Refl23 * clMinus3Gen3 * clMinus3Refl23) =
+      (2 : ℝ) • mat4SplitToMatStage8AlgHom clMinus3Gen2
+    rw [hEmb.2.2.2.2.2, map_smul]
+
 end Mat2
 
 -- ============================================================================
@@ -699,10 +1088,14 @@ Unites the 4-stage poset $\mathfrak{PM}_1 \prec \dots \prec \mathfrak{PM}_4$ in 
 1. Acyclicity of `PinMinus88TrialityStage.coverEdge`,
 2. Short-root `Pin_-` reflection square law `reflJK * reflJK = -2 • 1`, hyperplane reflection
    `pinRefl reflJK (vec3 x y z) = 2 • vec3 x z y`, Hurwitz triality product `reflIJ * reflJK = hurwitzW`,
-   `S₃` braid identity `reflIJ * reflJK * reflIJ = -2 • reflKI`, and normalized real unit-root
-   reflection `pinMinusJKUnitRoot² = -1` with `det(pinMinusJKReflection3) = -1` (`𝔓𝔐₁`),
+   `S₃` braid identity `reflIJ * reflJK * reflIJ = -2 • reflKI`, 48-element binary octahedral coset
+   partition `binaryOctahedral48Finset.card = 48`, normalized real unit-root reflection
+   `pinMinusJKUnitRoot² = -1` with `det(pinMinusJKReflection3) = -1` and
+   `-quatAdjointMatrix3 pinMinusJKUnitRoot = pinMinusJKReflection3` (`𝔓𝔐₁`),
 3. Split `Cl_-(1,1)` parity-time relations `parityP² = -I₂`, `timeT² = +I₂`, `parityP * timeT + timeT * parityP = 0`,
-   two-stage Kronecker embedding `clMinus3Refl23² = -2 • 1`, and `Fintype.card (TowerMatrix.Idx 8) = 256` (`𝔓𝔐₂–𝔓𝔐₃`),
+   two-stage Kronecker embedding `clMinus3Refl23² = -2 • 1`, faithful 6-step `TowerMatrix.Mat 8`
+   homomorphism `Function.Injective Mat2.mat4SplitToMatStage8AlgHom` with
+   `Mat2.clStage8Refl23 * Mat2.clStage8Refl23 = (-2 : ℝ) • 1`, and `Fintype.card (TowerMatrix.Idx 8) = 256` (`𝔓𝔐₂–𝔓𝔐₃`),
 4. Cyclotomic factorization `Phi8 (x ^ 3) = Phi8 x * Phi24 x = Phi8 x * Phi6 (x ^ 4)`,
    `(x ^ 12 - 1) * Phi8 (x ^ 3) = x ^ 24 - 1`, and Chinese Remainder idempotents `(9 : ZMod 24)` and `(16 : ZMod 24)` (`𝔓𝔐₄`).
 -/
@@ -715,15 +1108,20 @@ lemma pm4_master_pin_minus_88_triality_synthesis (x y z : K) :
        Quat.smul 4 (Quat.vec3 x y z) ∧
      (Quat.reflIJ : Quat K) * Quat.reflJK = Quat.hurwitzW ∧
      (Quat.reflIJ : Quat K) * Quat.reflJK * Quat.reflIJ = Quat.smul (-2) Quat.reflKI ∧
+     Quat.binaryOctahedral48Finset.card = 48 ∧
      Quaternion.normSq pinMinusJKUnitRoot = 1 ∧
      pinMinusJKUnitRoot * pinMinusJKUnitRoot = (-1 : Quaternion ℝ) ∧
-     Matrix.det pinMinusJKReflection3 = -1) ∧
+     Matrix.det pinMinusJKReflection3 = -1 ∧
+     -quatAdjointMatrix3 pinMinusJKUnitRoot = pinMinusJKReflection3) ∧
     ((Mat2.parityP : Mat2 K) * Mat2.parityP = -Mat2.I2 ∧
      (Mat2.timeT : Mat2 K) * Mat2.timeT = Mat2.I2 ∧
      (Mat2.parityP : Mat2 K) * Mat2.timeT + Mat2.timeT * Mat2.parityP = 0 ∧
      (Mat2.chiralPT : Mat2 K) * Mat2.chiralPT = Mat2.I2 ∧
      (Mat2.clMinus3Refl23 : Mat2.Mat4Split K) * Mat2.clMinus3Refl23 =
        (-2 : K) • (1 : Mat2.Mat4Split K) ∧
+     Function.Injective Mat2.mat4SplitToMatStage8AlgHom ∧
+     Mat2.clStage8Refl23 * Mat2.clStage8Refl23 =
+       (-2 : ℝ) • (1 : InfoGeometry.Clifford.TowerMatrix.Mat 8) ∧
      Fintype.card (InfoGeometry.Clifford.TowerMatrix.Idx 8) = 256) ∧
     (8 * 3 = 24 ∧ 3 * 3 - 1 * 8 = 1 ∧
      Phi8 (x ^ 3) = Phi8 x * Phi24 x ∧
@@ -732,18 +1130,22 @@ lemma pm4_master_pin_minus_88_triality_synthesis (x y z : K) :
      (9 : ZMod 24) * 16 = 0 ∧ (9 : ZMod 24) + 16 = 1) := by
   have hRefl := Quat.pin_minus_reflection_lift_in_binary_octahedral_coset x y z
   have hBraid := Quat.pin_minus_short_root_product_eq_hurwitz_triality_and_braid_relation x y z
+  have h48 := Quat.binary_octahedral_48_coset_decomposition_and_octahedral_pole_action
   have hUnit := pinMinusJKUnitRoot_norm_and_square
   have hOrth := pinMinusJKReflection3_is_orthogonal_improper
+  have hAdj := quatAdjointMatrix3_homomorphism_orthogonality_and_graded_2O_action
+    (Quat.qOne : Quat ℝ) (Quat.qOne : Quat ℝ) (fun _ => (0 : ℝ))
   have hPT := Mat2.cl_minus_1_1_split_generators_and_parity_time_d4_relations (K := K)
   have hCl3 := Mat2.cl_minus_3_0_into_split_cl_2_2_kronecker_embedding (K := K)
+  have hSt8 := Mat2.clMinus30_into_matStage8_algHom_and_reflection_transport
   have hIdx8 := Mat2.cl11_tensor_tower_parity_time_and_idx8_bridge
   have hCyc := pin_minus_abk_triality_cyclotomic_bridge x
   have hCRT := zmod24_chinese_remainder_abk_triality_split
   exact ⟨PinMinus88TrialityStage.coverEdge_acyclic,
     ⟨hRefl.1, hRefl.2.1, hRefl.2.2.2.2.2.1, hRefl.2.2.2.2.2.2.1,
-     hBraid.2.2.2.2.1, hBraid.2.2.2.2.2.1, hUnit.1, hUnit.2.1, hOrth.2⟩,
+     hBraid.2.2.2.2.1, hBraid.2.2.2.2.2.1, h48.2.2.2.2.1, hUnit.1, hUnit.2.1, hOrth.2, hAdj.2.2.2.2.2⟩,
     ⟨hPT.2.2.2.2.1, hPT.2.2.2.2.2.1, hPT.2.2.2.2.2.2.1, hPT.2.2.2.2.2.2.2.2,
-     hCl3.2.2.1, hIdx8.2.2.2⟩,
+     hCl3.2.2.1, hSt8.1, hSt8.2.2.2.2.2.1, hIdx8.2.2.2⟩,
     ⟨hCyc.1, hCyc.2.1, hCyc.2.2.1, hCyc.2.2.2.1, hCyc.2.2.2.2,
      hCRT.2.2.2.2.2.2.1, hCRT.2.2.2.2.2.2.2⟩⟩
 

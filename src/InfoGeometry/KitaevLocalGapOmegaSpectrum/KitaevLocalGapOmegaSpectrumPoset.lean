@@ -733,6 +733,59 @@ theorem positive_grassmannian_gaussian_tp2_and_homogeneous_projector
   have hP11 : 0 < posGrassProj t s 1 1 := by simpa [posGrassProj, mk2] using hts
   exact ⟨hFact, hDet, hProj, hG00, hG01, hG10, hG11, hGDet, hP11⟩
 
+/-- Rank-1 real Majorana-twistor momentum matrix `P(λ) = λ λᵀ = [[λ₁², λ₁ λ₂], [λ₂ λ₁, λ₂²]]`
+in `Block2 B`. -/
+def twistorMomentum2 (λ1 λ2 : B) : Block2 B :=
+  mk2 (λ1 * λ1) (λ1 * λ2) (λ2 * λ1) (λ2 * λ2)
+
+/--
+**Theorem 3g (`real_twistor_susy_null_and_massive_momentum_factorization`):**
+Real Penrose–Witten twistor factorization of massless null and massive 4-momenta (`𝔖𝔓₅–𝔖𝔓₇`):
+1. **1-Twistor Massless Light-Cone Identity (`P = λ λᵀ`):**
+   For any `λ₁, λ₂ : K`, `det2 (twistorMomentum2 λ₁ λ₂) = 0` and the DeWitt components
+   `2 p₀ = λ₁² + λ₂²`, `2 p₁ = λ₁² - λ₂²`, `2 p₂ = 2 λ₁ λ₂` satisfy the exact light-cone law
+   `(λ₁ ^ 2 + λ₂ ^ 2) ^ 2 - (λ₁ ^ 2 - λ₂ ^ 2) ^ 2 - (2 * λ₁ * λ₂) ^ 2 = 0`.
+2. **2-Twistor Massive Casimir Identity (`P = λ λᵀ + μ μᵀ`):**
+   Summing two real twistors `λ = (λ₁, λ₂)` and `μ = (μ₁, μ₂)` yields the invariant mass squared
+   as the square of the symplectic 2-bracket `⟨λ μ⟩ = λ₁ μ₂ - λ₂ μ₁`:
+   `det2 (twistorMomentum2 λ₁ λ₂ + twistorMomentum2 μ₁ μ₂) = (λ₁ * μ₂ - λ₂ * μ₁) ^ 2` and
+   `(λ₁ ^ 2 + μ₁ ^ 2) * (λ₂ ^ 2 + μ₂ ^ 2) - (λ₁ * λ₂ + μ₁ * μ₂) ^ 2 = (λ₁ * μ₂ - λ₂ * μ₁) ^ 2`.
+3. **Witten Positive Energy (`2 p₀ ≥ 0`) & Nonnegative Mass Squared (`m² ≥ 0`) Over `ℤ`:**
+   For any `l₁, l₂, m₁, m₂ : ℤ`, `0 ≤ l₁ ^ 2 + l₂ ^ 2` and
+   `0 ≤ det2 (twistorMomentum2 l₁ l₂ + twistorMomentum2 m₁ m₂)`.
+-/
+theorem real_twistor_susy_null_and_massive_momentum_factorization
+    {K : Type u} [CommRing K] (λ1 λ2 μ1 μ2 : K) (l1 l2 m1 m2 : ℤ) :
+    (det2 (twistorMomentum2 λ1 λ2) = 0 ∧
+     (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0) ∧
+    (det2 (twistorMomentum2 λ1 λ2 + twistorMomentum2 μ1 μ2) = (λ1 * μ2 - λ2 * μ1) ^ 2 ∧
+     (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
+       (λ1 * μ2 - λ2 * μ1) ^ 2) ∧
+    (0 ≤ l1 ^ 2 + l2 ^ 2 ∧
+     0 ≤ det2 (twistorMomentum2 l1 l2 + twistorMomentum2 m1 m2)) := by
+  have hNullDet : det2 (twistorMomentum2 λ1 λ2) = 0 := by
+    simp [det2, twistorMomentum2, mk2]
+    ring
+  have hNullCone : (λ1 ^ 2 + λ2 ^ 2) ^ 2 - (λ1 ^ 2 - λ2 ^ 2) ^ 2 - (2 * λ1 * λ2) ^ 2 = 0 := by
+    ring
+  have hMassDet :
+      det2 (twistorMomentum2 λ1 λ2 + twistorMomentum2 μ1 μ2) = (λ1 * μ2 - λ2 * μ1) ^ 2 := by
+    simp [det2, twistorMomentum2, mk2]
+    ring
+  have hMassPoly :
+      (λ1 ^ 2 + μ1 ^ 2) * (λ2 ^ 2 + μ2 ^ 2) - (λ1 * λ2 + μ1 * μ2) ^ 2 =
+        (λ1 * μ2 - λ2 * μ1) ^ 2 := by
+    ring
+  have hPosE : 0 ≤ l1 ^ 2 + l2 ^ 2 := add_nonneg (sq_nonneg l1) (sq_nonneg l2)
+  have hMassDetZ :
+      det2 (twistorMomentum2 l1 l2 + twistorMomentum2 m1 m2) = (l1 * m2 - l2 * m1) ^ 2 := by
+    simp [det2, twistorMomentum2, mk2]
+    ring
+  have hPosMass : 0 ≤ det2 (twistorMomentum2 l1 l2 + twistorMomentum2 m1 m2) := by
+    rw [hMassDetZ]
+    exact sq_nonneg (l1 * m2 - l2 * m1)
+  exact ⟨⟨hNullDet, hNullCone⟩, ⟨hMassDet, hMassPoly⟩, ⟨hPosE, hPosMass⟩⟩
+
 end Block2
 
 -- ============================================================================
@@ -1866,6 +1919,47 @@ theorem moment_curve_amplituhedron_vandermonde_and_gr24_positivity
       (Int.mul_pos (Int.mul_pos (Int.mul_pos (Int.mul_pos d10 d20) d30) d21) d31) d32
   exact ⟨hSyz, ⟨hGr01, hGr02, hGr03, hGr12, hGr13, hGr23⟩, ⟨hVanK, hPos⟩⟩
 
+/-- Real 4D Minkowski Feynman slash operator `p_μ γ^μ = p₀ γ⁰ + p₁ γ¹ + p₂ γ² + p₃ γ³` in `Mat4 K`,
+built from the two-bit DeWitt Tetractys generators `γ⁰ = diracMass2 = J₁ ⊗ I₂`,
+`γ¹ = diracGamma1 = S₁ ⊗ I₂`, `γ² = diracGamma2 = Φ₁ ⊗ S₂`, and `γ³ = diracGamma3 = Φ₁ ⊗ Φ₂`
+with zero complex numbers. -/
+def minkowskiSlash (p0 p1 p2 p3 : K) : Mat4 K :=
+  p0 • diracMass2 + p1 • diracGamma1 + p2 • diracGamma2 + p3 • diracGamma3
+
+/--
+**Theorem 5f'''' (`minkowski_tetractys_4d_slash_and_mass_shell`):**
+Concrete `Mat4 K` realization of the two-bit DeWitt Tetractys synthesis of the 4D real Majorana–Dirac
+matrices `(γ⁰, γ¹, γ², γ³)` and the exact $(-, +, +, +)$ Minkowski mass-shell identity (`𝔖𝔓₁–𝔖𝔓₂`):
+1. **Two-Bit DeWitt Tensor Synthesis:**
+   `diracGamma1 = pauliZ2` ($S_1 \otimes I_2$), `diracGamma2 = pauliX2 * pauliZ1` ($\Phi_1 \otimes S_2$),
+   and `diracGamma3 = pauliX2 * pauliX1` ($\Phi_1 \otimes \Phi_2$).
+2. **Exact 4D Minkowski Mass-Shell Square Law:**
+   For any `(p0, p1, p2, p3 : K)`,
+   `minkowskiSlash p0 p1 p2 p3 * minkowskiSlash p0 p1 p2 p3 =
+     (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • I4`.
+-/
+theorem minkowski_tetractys_4d_slash_and_mass_shell (p0 p1 p2 p3 : K) :
+    ((diracGamma1 : Mat4 K) = pauliZ2 ∧
+     (diracGamma2 : Mat4 K) = pauliX2 * pauliZ1 ∧
+     (diracGamma3 : Mat4 K) = pauliX2 * pauliX1) ∧
+    minkowskiSlash p0 p1 p2 p3 * minkowskiSlash p0 p1 p2 p3 =
+      (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • I4 := by
+  have hG1 : (diracGamma1 : Mat4 K) = pauliZ2 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [diracGamma1, pauliZ2]
+  have hG2 : (diracGamma2 : Mat4 K) = pauliX2 * pauliZ1 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [diracGamma2, pauliX2, pauliZ1]
+  have hG3 : (diracGamma3 : Mat4 K) = pauliX2 * pauliX1 := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [diracGamma3, pauliX2, pauliX1]
+  have hShell :
+      minkowskiSlash p0 p1 p2 p3 * minkowskiSlash p0 p1 p2 p3 =
+        (-p0 ^ 2 + p1 ^ 2 + p2 ^ 2 + p3 ^ 2) • I4 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [minkowskiSlash, diracMass2, diracGamma1, diracGamma2, diracGamma3, I4,
+        Matrix.mul_apply, Fin.sum_univ_four] <;>
+      ring
+  exact ⟨⟨hG1, hG2, hG3⟩, hShell⟩
+
 end Mat4
 
 -- ============================================================================
@@ -2470,6 +2564,202 @@ theorem tetractys_two_bit_10_plus_6_symplectic_and_chevalley_peirce_ladder
     ⟨hBoost, hSymp⟩,
     ⟨hSPSq, hUnipPlus, hUnipMinus, hChevPlus, hChevMinus⟩⟩
 
+/--
+**Theorem 4aa ($\mathfrak{SP}_1$ — 4D Minkowski Clifford Algebra $(-, +, +, +)$ from the Two-Bit Real DeWitt Tetractys):**
+Given two commuting real DeWitt Split Tetractys copies $(S_1, \Phi_1, J_1 = S_1 \Phi_1)$ and
+$(S_2, \Phi_2)$ in any ring $B$, the four endogenous real Majorana-Dirac operators
+$$\gamma^0 = J_1 = \mathtt{tetractysJ}\; S_1\; \Phi_1, \quad \gamma^1 = S_1, \quad \gamma^2 = \Phi_1 S_2, \quad \gamma^3 = \Phi_1 \Phi_2$$
+generate the 4D Minkowski Clifford algebra $\mathcal{C}\ell(3, 1)$ with metric signature $(-, +, +, +)$:
+1. **Metric squares:** $(\gamma^0)^2 = -1$ and $(\gamma^1)^2 = (\gamma^2)^2 = (\gamma^3)^2 = +1$,
+2. **All 6 distinct pairs strictly anticommute:** $\{\gamma^\mu, \gamma^\nu\} = 0$ for $0 \le \mu < \nu \le 3$.
+-/
+theorem dewitt_tetractys_generates_4d_minkowski_clifford_algebra
+    (S1 Φ1 S2 Φ2 : B)
+    (hS1 : S1 * S1 = 1) (hΦ1 : Φ1 * Φ1 = 1) (hAnti1 : S1 * Φ1 + Φ1 * S1 = 0)
+    (hS2 : S2 * S2 = 1) (hΦ2 : Φ2 * Φ2 = 1) (hAnti2 : S2 * Φ2 + Φ2 * S2 = 0)
+    (hCommS1S2 : S1 * S2 = S2 * S1) (hCommS1Φ2 : S1 * Φ2 = Φ2 * S1)
+    (hCommΦ1S2 : Φ1 * S2 = S2 * Φ1) (hCommΦ1Φ2 : Φ1 * Φ2 = Φ2 * Φ1) :
+    (tetractysJ S1 Φ1 * tetractysJ S1 Φ1 = -1 ∧
+     S1 * S1 = 1 ∧
+     (Φ1 * S2) * (Φ1 * S2) = 1 ∧
+     (Φ1 * Φ2) * (Φ1 * Φ2) = 1) ∧
+    (tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 = 0 ∧
+     tetractysJ S1 Φ1 * (Φ1 * S2) + (Φ1 * S2) * tetractysJ S1 Φ1 = 0 ∧
+     tetractysJ S1 Φ1 * (Φ1 * Φ2) + (Φ1 * Φ2) * tetractysJ S1 Φ1 = 0 ∧
+     S1 * (Φ1 * S2) + (Φ1 * S2) * S1 = 0 ∧
+     S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 = 0 ∧
+     (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) = 0) := by
+  have hTriad := dewitt_tetractys_division_free_zeta8_and_sl2_triad S1 Φ1 hS1 hΦ1 hAnti1
+  have hG2 : (Φ1 * S2) * (Φ1 * S2) = 1 := by
+    calc
+      (Φ1 * S2) * (Φ1 * S2) = Φ1 * (S2 * Φ1) * S2 := by noncomm_ring
+      _ = Φ1 * (Φ1 * S2) * S2 := by rw [← hCommΦ1S2]
+      _ = (Φ1 * Φ1) * (S2 * S2) := by noncomm_ring
+      _ = 1 * 1 := by rw [hΦ1, hS2]
+      _ = 1 := by noncomm_ring
+  have hG3 : (Φ1 * Φ2) * (Φ1 * Φ2) = 1 := by
+    calc
+      (Φ1 * Φ2) * (Φ1 * Φ2) = Φ1 * (Φ2 * Φ1) * Φ2 := by noncomm_ring
+      _ = Φ1 * (Φ1 * Φ2) * Φ2 := by rw [← hCommΦ1Φ2]
+      _ = (Φ1 * Φ1) * (Φ2 * Φ2) := by noncomm_ring
+      _ = 1 * 1 := by rw [hΦ1, hΦ2]
+      _ = 1 := by noncomm_ring
+  have h01 : tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 = 0 := by
+    calc
+      tetractysJ S1 Φ1 * S1 + S1 * tetractysJ S1 Φ1 =
+        S1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * S1 := by noncomm_ring
+      _ = 0 := hTriad.2.1.2.1
+  have hJS2 : S2 * tetractysJ S1 Φ1 = tetractysJ S1 Φ1 * S2 := by
+    unfold tetractysJ
+    calc
+      S2 * (S1 * Φ1) = (S2 * S1) * Φ1 := by noncomm_ring
+      _ = (S1 * S2) * Φ1 := by rw [← hCommS1S2]
+      _ = S1 * (S2 * Φ1) := by noncomm_ring
+      _ = S1 * (Φ1 * S2) := by rw [← hCommΦ1S2]
+      _ = (S1 * Φ1) * S2 := by noncomm_ring
+  have h02 : tetractysJ S1 Φ1 * (Φ1 * S2) + (Φ1 * S2) * tetractysJ S1 Φ1 = 0 := by
+    calc
+      tetractysJ S1 Φ1 * (Φ1 * S2) + (Φ1 * S2) * tetractysJ S1 Φ1 =
+        tetractysJ S1 Φ1 * Φ1 * S2 + Φ1 * (S2 * tetractysJ S1 Φ1) := by noncomm_ring
+      _ = tetractysJ S1 Φ1 * Φ1 * S2 + Φ1 * (tetractysJ S1 Φ1 * S2) := by rw [hJS2]
+      _ = (Φ1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * Φ1) * S2 := by noncomm_ring
+      _ = 0 * S2 := by rw [hTriad.2.1.2.2]
+      _ = 0 := by noncomm_ring
+  have hJΦ2 : Φ2 * tetractysJ S1 Φ1 = tetractysJ S1 Φ1 * Φ2 := by
+    unfold tetractysJ
+    calc
+      Φ2 * (S1 * Φ1) = (Φ2 * S1) * Φ1 := by noncomm_ring
+      _ = (S1 * Φ2) * Φ1 := by rw [← hCommS1Φ2]
+      _ = S1 * (Φ2 * Φ1) := by noncomm_ring
+      _ = S1 * (Φ1 * Φ2) := by rw [← hCommΦ1Φ2]
+      _ = (S1 * Φ1) * Φ2 := by noncomm_ring
+  have h03 : tetractysJ S1 Φ1 * (Φ1 * Φ2) + (Φ1 * Φ2) * tetractysJ S1 Φ1 = 0 := by
+    calc
+      tetractysJ S1 Φ1 * (Φ1 * Φ2) + (Φ1 * Φ2) * tetractysJ S1 Φ1 =
+        tetractysJ S1 Φ1 * Φ1 * Φ2 + Φ1 * (Φ2 * tetractysJ S1 Φ1) := by noncomm_ring
+      _ = tetractysJ S1 Φ1 * Φ1 * Φ2 + Φ1 * (tetractysJ S1 Φ1 * Φ2) := by rw [hJΦ2]
+      _ = (Φ1 * tetractysJ S1 Φ1 + tetractysJ S1 Φ1 * Φ1) * Φ2 := by noncomm_ring
+      _ = 0 * Φ2 := by rw [hTriad.2.1.2.2]
+      _ = 0 := by noncomm_ring
+  have h12 : S1 * (Φ1 * S2) + (Φ1 * S2) * S1 = 0 := by
+    calc
+      S1 * (Φ1 * S2) + (Φ1 * S2) * S1 =
+        S1 * Φ1 * S2 + Φ1 * (S2 * S1) := by noncomm_ring
+      _ = S1 * Φ1 * S2 + Φ1 * (S1 * S2) := by rw [← hCommS1S2]
+      _ = (S1 * Φ1 + Φ1 * S1) * S2 := by noncomm_ring
+      _ = 0 * S2 := by rw [hAnti1]
+      _ = 0 := by noncomm_ring
+  have h13 : S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 = 0 := by
+    calc
+      S1 * (Φ1 * Φ2) + (Φ1 * Φ2) * S1 =
+        S1 * Φ1 * Φ2 + Φ1 * (Φ2 * S1) := by noncomm_ring
+      _ = S1 * Φ1 * Φ2 + Φ1 * (S1 * Φ2) := by rw [← hCommS1Φ2]
+      _ = (S1 * Φ1 + Φ1 * S1) * Φ2 := by noncomm_ring
+      _ = 0 * Φ2 := by rw [hAnti1]
+      _ = 0 := by noncomm_ring
+  have h23 : (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) = 0 := by
+    calc
+      (Φ1 * S2) * (Φ1 * Φ2) + (Φ1 * Φ2) * (Φ1 * S2) =
+        Φ1 * (S2 * Φ1) * Φ2 + Φ1 * (Φ2 * Φ1) * S2 := by noncomm_ring
+      _ = Φ1 * (Φ1 * S2) * Φ2 + Φ1 * (Φ1 * Φ2) * S2 := by rw [← hCommΦ1S2, ← hCommΦ1Φ2]
+      _ = (Φ1 * Φ1) * (S2 * Φ2 + Φ2 * S2) := by noncomm_ring
+      _ = 1 * 0 := by rw [hΦ1, hAnti2]
+      _ = 0 := by noncomm_ring
+  exact ⟨⟨hTriad.2.1.1, hS1, hG2, hG3⟩, ⟨h01, h02, h03, h12, h13, h23⟩⟩
+
+/--
+Diagonal Peirce stabilizer generator $L_P(M) = P M P + (1 - P) M (1 - P)$ representing the
+Lorentz subalgebra $\mathfrak{so}(3, 1)$ acting on the primal/dual Peirce split $(P, 1 - P)$.
+-/
+def poincareLorentz (P M : B) : B :=
+  P * M * P + (1 - P) * M * (1 - P)
+
+/--
+**Theorem 4bb ($\mathfrak{SP}_3\text{–}\mathfrak{SP}_4$ — 10D Poincaré Algebra $\mathfrak{iso}(3, 1) = \mathfrak{so}(3, 1) \ltimes \mathbb{R}^{3,1}$ via Peirce Contraction):**
+For any idempotent $P^2 = P$ in a ring $B$:
+1. **10D Poincaré dimension budget:** $6 + 4 = 10$ ($6$ Lorentz bivectors $\gamma^{\mu\nu}$ + $4$ nilpotent Peirce translations),
+2. **Abelian spacetime translations in the primal Peirce nilpotent cone $N_+(P, p) = P p (1 - P)$:**
+   $$N_+(P, p)\,N_+(P, q) = 0, \qquad [N_+(P, p), N_+(P, q)] = 0, \qquad (1 + N_+(P, p))(1 + N_+(P, q)) = 1 + N_+(P, p + q),$$
+3. **Lorentz-translation semidirect commutator:**
+   $$[L_P(M), N_+(P, p)] = P M N_+(P, p) - N_+(P, p) M (1 - P),$$
+   and whenever $M$ commutes with the conformal infinity projector ($P M = M P$),
+   $$[L_P(M), N_+(P, p)] = N_+(P, [M, p]),$$
+4. **Super-Poincaré graded Jacobi identity:** $[Q, \{Q, Q\}] = Q(Q^2 + Q^2) - (Q^2 + Q^2)Q = 0$.
+-/
+theorem poincare_translations_commute_and_lorentz_covariance
+    (P M p q Q : B) (hP : P * P = P) :
+    6 + 4 = 10 ∧
+    (N_plus P p * N_plus P q = 0 ∧
+     N_plus P p * N_plus P q - N_plus P q * N_plus P p = 0 ∧
+     (1 + N_plus P p) * (1 + N_plus P q) = 1 + N_plus P (p + q)) ∧
+    (poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
+       P * M * N_plus P p - N_plus P p * M * (1 - P) ∧
+     (P * M = M * P →
+       poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
+         N_plus P (M * p - p * M))) ∧
+    Q * (Q * Q + Q * Q) - (Q * Q + Q * Q) * Q = 0 := by
+  have hPQ : N_plus P p * N_plus P q = 0 := by
+    unfold N_plus
+    calc
+      (P * p * (1 - P)) * (P * q * (1 - P)) =
+        P * p * (P - P * P) * q * (1 - P) := by noncomm_ring
+      _ = P * p * (P - P) * q * (1 - P) := by rw [hP]
+      _ = 0 := by noncomm_ring
+  have hQP : N_plus P q * N_plus P p = 0 := by
+    unfold N_plus
+    calc
+      (P * q * (1 - P)) * (P * p * (1 - P)) =
+        P * q * (P - P * P) * p * (1 - P) := by noncomm_ring
+      _ = P * q * (P - P) * p * (1 - P) := by rw [hP]
+      _ = 0 := by noncomm_ring
+  have hComm : N_plus P p * N_plus P q - N_plus P q * N_plus P p = 0 := by
+    rw [hPQ, hQP, sub_zero]
+  have hGroup : (1 + N_plus P p) * (1 + N_plus P q) = 1 + N_plus P (p + q) := by
+    calc
+      (1 + N_plus P p) * (1 + N_plus P q) =
+        1 + N_plus P p + N_plus P q + N_plus P p * N_plus P q := by noncomm_ring
+      _ = 1 + N_plus P p + N_plus P q + 0 := by rw [hPQ]
+      _ = 1 + N_plus P (p + q) := by
+        unfold N_plus
+        noncomm_ring
+  have hLeft : poincareLorentz P M * N_plus P p = P * M * N_plus P p := by
+    unfold poincareLorentz N_plus
+    calc
+      (P * M * P + (1 - P) * M * (1 - P)) * (P * p * (1 - P)) =
+        P * M * (P * P) * p * (1 - P) +
+        (1 - P) * M * (P - P * P) * p * (1 - P) := by noncomm_ring
+      _ = P * M * P * p * (1 - P) +
+        (1 - P) * M * (P - P) * p * (1 - P) := by rw [hP]
+      _ = P * M * (P * p * (1 - P)) := by noncomm_ring
+  have hRight : N_plus P p * poincareLorentz P M = N_plus P p * M * (1 - P) := by
+    unfold poincareLorentz N_plus
+    calc
+      (P * p * (1 - P)) * (P * M * P + (1 - P) * M * (1 - P)) =
+        P * p * (P - P * P) * M * P +
+        P * p * (1 - P - P + P * P) * M * (1 - P) := by noncomm_ring
+      _ = P * p * (P - P) * M * P +
+        P * p * (1 - P - P + P) * M * (1 - P) := by rw [hP]
+      _ = (P * p * (1 - P)) * M * (1 - P) := by noncomm_ring
+  have hLor :
+      poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
+        P * M * N_plus P p - N_plus P p * M * (1 - P) := by
+    rw [hLeft, hRight]
+  have hLorStab :
+      P * M = M * P →
+        poincareLorentz P M * N_plus P p - N_plus P p * poincareLorentz P M =
+          N_plus P (M * p - p * M) := by
+    intro hMP
+    rw [hLor]
+    unfold N_plus
+    calc
+      P * M * (P * p * (1 - P)) - (P * p * (1 - P)) * M * (1 - P) =
+        P * (M * P) * p * (1 - P) - P * p * (M - P * M) * (1 - P) := by noncomm_ring
+      _ = P * (P * M) * p * (1 - P) - P * p * (M - M * P) * (1 - P) := by rw [hMP]
+      _ = (P * P) * M * p * (1 - P) - P * p * M * (1 - P - P + P * P) := by noncomm_ring
+      _ = P * M * p * (1 - P) - P * p * M * (1 - P - P + P) := by rw [hP]
+      _ = P * (M * p - p * M) * (1 - P) := by noncomm_ring
+  exact ⟨by decide, ⟨hPQ, hComm, hGroup⟩, ⟨hLor, hLorStab⟩, by noncomm_ring⟩
+
 end Z4ParafermionBraidAndUnipotentGate
 
 /--
@@ -2545,7 +2835,12 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
        (Mat4.I4 - Mat4.peirceP2) * Mat4.diracMass2 * Mat4.pauliX1 = Mat4.zetaRealMat4 ∧
      (Mat4.zetaRealMat4 : Mat4 K) * Mat4.zetaRealMat4 = Mat4.diracMass2 ∧
      Block2.shearPlus Q * Block2.shearMinus a_sq = Block2.gaussianTP2 Q a_sq ∧
-     Block2.det2 (Block2.gaussianTP2 Q a_sq) = 1) := by
+     Block2.det2 (Block2.gaussianTP2 Q a_sq) = 1 ∧
+     Mat4.minkowskiSlash Q a_sq b_sq 0 * Mat4.minkowskiSlash Q a_sq b_sq 0 =
+       (-Q ^ 2 + a_sq ^ 2 + b_sq ^ 2 + 0 ^ 2) • Mat4.I4 ∧
+     Block2.det2 (Block2.twistorMomentum2 Q a_sq) = 0 ∧
+     poincareLorentz P A * N_plus P A0 - N_plus P A0 * poincareLorentz P A =
+       P * A * N_plus P A0 - N_plus P A0 * A * (1 - P)) := by
   have hFib := convex_hamiltonian_fiber_ground_state_invariance H0 H1 P0 t h0 h1
   have hAnn := energy_gap_annulus_midpoint_centering Q a_sq b_sq
   have hGap := square_first_local_bulk_gap_collar_healing P A μ0 hP
@@ -2569,6 +2864,10 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
   have hTP2 :=
     Block2.positive_grassmannian_gaussian_tp2_and_homogeneous_projector
       Q a_sq 1 1 (by decide) (by decide)
+  have hMink := Mat4.minkowski_tetractys_4d_slash_and_mass_shell Q a_sq b_sq 0
+  have hTwistor :=
+    Block2.real_twistor_susy_null_and_massive_momentum_factorization Q a_sq a_sq b_sq 0 0 0 0
+  have hPoinc := poincare_translations_commute_and_lorentz_covariance P A A0 A0 A hP
   exact ⟨KitaevLocalGapStage.coverEdge_acyclic,
     ⟨hFib, hAnn⟩,
     ⟨hGap.1, hCones.1, hCones.2.1⟩,
@@ -2580,6 +2879,6 @@ theorem kl7_master_kitaev_local_gap_omega_spectrum_synthesis
      Mat4.bdiLeftZeroModeIndex_kitaevChainSublatticeSwapA,
      hBdi.2.2.1.2.2.2.1, hD3.2.2.1.2.1, hZ4Tau.2.2.1,
      hZ4Braid.1.1, hZ4Braid.2.2.2.2.1, hZeta8.1.2.2, hZeta8.2.1.1,
-     hTP2.1, hTP2.2.1⟩⟩
+     hTP2.1, hTP2.2.1, hMink.2.2, hTwistor.1.1, hPoinc.2.2.1.1⟩⟩
 
 end KitaevLocalGapOmegaSpectrumPoset

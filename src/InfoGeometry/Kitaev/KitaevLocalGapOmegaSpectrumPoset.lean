@@ -33,8 +33,8 @@ Ising Model, Local Bulk Energy Gaps, and the $\Omega$-Spectrum $A_d \simeq \Omeg
    $H_0 P_0 = E_0 P_0$ and $H_1 P_0 = E_1 P_0$), then every convex combination
    $H(t) = (1 - t) H_0 + t H_1$ preserves $P_0$ with interpolated ground-state energy
    $(1 - t) E_0 + t E_1$.
-2. **Node $\mathfrak{KL}_2$ (`spectral_gap_annulus_midpoint_centering` &
-   `noncomm_spectral_gap_annulus_commutator_defect`):**
+2. **Node $\mathfrak{KL}_2$ (`energy_gap_annulus_midpoint_centering` &
+   `noncomm_energy_gap_annulus_commutator_defect`):**
    Proves Kitaev's division-free spectral annulus midpoint identity (`00:41:40`):
    $$(b^2 - a^2)^2 - \big(2 Q - (a^2 + b^2)\big)^2 = 4 (Q - a^2)(b^2 - Q),$$
    together with its exact noncommutative commutator defect over any associative ring `[Ring B]`.
@@ -50,7 +50,7 @@ Ising Model, Local Bulk Energy Gaps, and the $\Omega$-Spectrum $A_d \simeq \Omeg
    collar-hopping cones across $\partial\widetilde{D}$. When the interior bulk is unit-gapped
    ($P (A * A) P = -P$), `SquareFirstBulkOp P A 1 = 0` whereas `TruncateFirstBulkOp P A 1` leaves
    the spurious boundary collar defect `N_plus P A * N_minus P A`.
-4. **Nodes $\mathfrak{KL}_4\text{–}\mathfrak{KL}_5$ (`Block2.hadamard_conjugation_diag_to_offdiag_bridge` &
+4. **Nodes $\mathfrak{KL}_4\text{–}\mathfrak{KL}_5$ (`Block2.hadamard_conjugation_diag_to_offdiag_intertwining` &
    `Block2.universal_invertibility_anticommuting_homotopy`):**
    Over the canonical $2 \times 2$ matrix carrier `Block2 B := Matrix (Fin 2) (Fin 2) B` for any
    associative ring `[Ring B]` (with **zero commutativity assumptions on $A \in B$**):
@@ -72,11 +72,11 @@ Ising Model, Local Bulk Energy Gaps, and the $\Omega$-Spectrum $A_d \simeq \Omeg
 
 - `KitaevLocalGapOmegaSpectrumStage`, `rank`, `rank_injective`, `coverEdge`, `coverEdge_strictMono`, `coverEdge_acyclic`
 - `convex_hamiltonian_fiber_ground_state_invariance`, `convex_hamiltonian_fiber_eigenvalue_interpolation`
-- `spectral_gap_annulus_midpoint_centering`, `noncomm_spectral_gap_annulus_commutator_defect`
+- `energy_gap_annulus_midpoint_centering`, `noncomm_energy_gap_annulus_commutator_defect`
 - `N_plus`, `N_minus`, `SquareFirstBulkOp`, `TruncateFirstBulkOp`, `n_plus_minus_eq_peirce_cones`
 - `square_first_local_bulk_gap_collar_healing`, `square_first_local_bulk_gap_shifted_collar_healing`
 - `Block2`, `Block2.mk2`, `Block2.doubledSys`, `Block2.diagDoubledSys`, `Block2.hadamard2`, `Block2.baseDecoupler`, `Block2.RotorXY`
-- `Block2.hadamard_conjugation_diag_to_offdiag_bridge`
+- `Block2.hadamard_conjugation_diag_to_offdiag_intertwining`
 - `Block2.universal_invertibility_anticommuting_homotopy`
 - `Block2.dimer_peierls_suspension_reassociativity_cancellation`
 - `kl7_master_kitaev_local_gap_omega_spectrum_synthesis`
@@ -93,9 +93,9 @@ Ising Model, Local Bulk Energy Gaps, and the $\Omega$-Spectrum $A_d \simeq \Omeg
 * **BUCKET 1 — Proved Kernel Content:**
   - `KitaevLocalGapOmegaSpectrumStage` ($\mathfrak{KL}_1 \prec \dots \prec \mathfrak{KL}_7$), `rank`, `rank_injective`, `coverEdge`, `coverEdge_strictMono`, `coverEdge_acyclic`,
   - `convex_hamiltonian_fiber_ground_state_invariance`, `convex_hamiltonian_fiber_eigenvalue_interpolation`,
-  - `spectral_gap_annulus_midpoint_centering`, `noncomm_spectral_gap_annulus_commutator_defect`,
+  - `energy_gap_annulus_midpoint_centering`, `noncomm_energy_gap_annulus_commutator_defect`,
   - `n_plus_minus_eq_peirce_cones`, `square_first_local_bulk_gap_collar_healing`, `square_first_local_bulk_gap_shifted_collar_healing`,
-  - `Block2.hadamard_conjugation_diag_to_offdiag_bridge`, `Block2.universal_invertibility_anticommuting_homotopy`, `Block2.dimer_peierls_suspension_reassociativity_cancellation`,
+  - `Block2.hadamard_conjugation_diag_to_offdiag_intertwining`, `Block2.universal_invertibility_anticommuting_homotopy`, `Block2.dimer_peierls_suspension_reassociativity_cancellation`,
   - `kl7_master_kitaev_local_gap_omega_spectrum_synthesis`.
 * **BUCKET 2 — Conditional / Interface Boundaries:**
   - Projector idempotence (`hP : P * P = P`), ground-state annihilation/eigenvalue hypotheses (`h0 : H0 * P0 = 0`, `h1 : H1 * P0 = 0`), central scalar commutation (`hc : c * A = A * c`, `hs : s * A = A * s`, `hcs : c * s = s * c`), and nested 3-shell idempotent hypotheses (`h₁`, `h₂`, `h₁₂`, `h₂₁`) are explicit theorem parameters.
@@ -221,7 +221,7 @@ lemma convex_hamiltonian_fiber_ground_state_invariance
     (H0 H1 P0 t : B) (h0 : H0 * P0 = 0) (h1 : H1 * P0 = 0) :
     ((1 - t) * H0 + t * H1) * P0 = 0 := by
   calc ((1 - t) * H0 + t * H1) * P0
-    _ = (1 - t) * (H0 * P0) + t * (H1 * P0) := by simp only [add_mul, mul_assoc]
+    _ = (1 - t) * (H0 * P0) + t * (H1 * P0) := by noncomm_ring
     _ = 0 := by rw [h0, h1, mul_zero, mul_zero, add_zero]
 
 /--
@@ -236,7 +236,7 @@ lemma convex_hamiltonian_fiber_eigenvalue_interpolation
     (E0 = E1 → ((1 - t) * H0 + t * H1) * P0 = E0 * P0) := by
   have hInterp : ((1 - t) * H0 + t * H1) * P0 = ((1 - t) * E0 + t * E1) * P0 := by
     calc ((1 - t) * H0 + t * H1) * P0
-      _ = (1 - t) * (H0 * P0) + t * (H1 * P0) := by simp only [add_mul, mul_assoc]
+      _ = (1 - t) * (H0 * P0) + t * (H1 * P0) := by noncomm_ring
       _ = (1 - t) * (E0 * P0) + t * (E1 * P0) := by rw [h0, h1]
       _ = ((1 - t) * E0 + t * E1) * P0 := by noncomm_ring
   refine ⟨hInterp, ?_⟩
@@ -250,7 +250,7 @@ In any commutative ring `K` (scaled by `4` to avoid division by `2`), the spectr
 that `Q = -A²` lies in `[a², b²]` (`(Q - a²)(b² - Q) ≥ 0`) is algebraically identical to
 the centered norm bound `(b² - a²)² - (2Q - (a² + b²))² = 4 * (Q - a²) * (b² - Q)`.
 -/
-lemma spectral_gap_annulus_midpoint_centering
+lemma energy_gap_annulus_midpoint_centering
     {K : Type u} [CommRing K] (Q a_sq b_sq : K) :
     (b_sq - a_sq) ^ 2 - (2 * Q - (a_sq + b_sq)) ^ 2 =
       4 * (Q - a_sq) * (b_sq - Q) := by
@@ -277,7 +277,7 @@ $$((b_{\mathrm{sq}} - a_{\mathrm{sq}}) * (b_{\mathrm{sq}} - a_{\mathrm{sq}}) -
   -(2 : \mathbb{Z}) \bullet \big(\mathrm{comm}\;a_{\mathrm{sq}}\;Q +
     \mathrm{comm}\;Q\;b_{\mathrm{sq}} + \mathrm{comm}\;b_{\mathrm{sq}}\;a_{\mathrm{sq}}\big).$$
 -/
-lemma noncomm_spectral_gap_annulus_commutator_defect
+lemma noncomm_energy_gap_annulus_commutator_defect
     (Q a_sq b_sq : B) :
     ((b_sq - a_sq) * (b_sq - a_sq) -
       ((2 : ℤ) • Q - (a_sq + b_sq)) * ((2 : ℤ) • Q - (a_sq + b_sq))) -
@@ -377,8 +377,7 @@ lemma square_first_local_bulk_gap_collar_healing
   have h_sq_zero : SquareFirstBulkOp P A 1 = 0 := by
     dsimp [SquareFirstBulkOp]
     calc P * (-(A * A) - 1) * P
-      _ = - (P * (A * A) * P) - P * P := by
-          simp only [sub_mul, mul_sub, neg_mul, mul_neg, mul_one, mul_assoc]
+      _ = - (P * (A * A) * P) - P * P := by noncomm_ring
       _ = - (-P) - P := by rw [h_unit_gap, hP]
       _ = 0 := by abel
   have h_trunc : TruncateFirstBulkOp P A 1 = N_plus P A * N_minus P A := by
@@ -507,6 +506,10 @@ def baseDecoupler : Block2 B :=
 def RotorXY (A c s : B) : Block2 B :=
   mk2 0 (c * A + s) (c * A - s) 0
 
+/-- Direct, unrotated rotor `c • diag(A,-A) + s • Y`, written as a block matrix. -/
+def DirectRotor (A c s : B) : Block2 B :=
+  mk2 (c * A) s (-s) (-(c * A))
+
 /-- Explicit non-commutativity witness on `Block2 ℤ = Matrix (Fin 2) (Fin 2) ℤ`:
 `hadamard2` and `baseDecoupler` do not commute (`hadamard2 * baseDecoupler ≠ baseDecoupler * hadamard2`). -/
 lemma hadamard2_baseDecoupler_noncomm :
@@ -528,7 +531,7 @@ For **any** operator `A ∈ B` in an associative ring `[Ring B]` (with zero comm
    Both `diagDoubledSys A` and `doubledSys A` strictly anticommute with `baseDecoupler`, and
    `baseDecoupler * baseDecoupler = mk2 (-1) 0 0 (-1)`.
 -/
-lemma hadamard_conjugation_diag_to_offdiag_bridge (A : B) :
+lemma hadamard_conjugation_diag_to_offdiag_intertwining (A : B) :
     (hadamard2 : Block2 B) * hadamard2 = mk2 (1 + 1) 0 0 (1 + 1) ∧
     hadamard2 * diagDoubledSys A * hadamard2 = doubledSys (A + A) ∧
     hadamard2 * doubledSys A * hadamard2 = diagDoubledSys (A + A) ∧
@@ -581,21 +584,19 @@ lemma universal_invertibility_anticommuting_homotopy
     (A - A0) + (A0 - A0) + (A0 - A0) = A - A0 := by
   have h_quad : (c * A + s) * (c * A - s) = c * c * (A * A) - s * s := by
     calc (c * A + s) * (c * A - s)
-      _ = c * (A * c) * A - c * A * s + s * c * A - s * s := by
-          simp only [add_mul, mul_sub, mul_assoc]; abel
+      _ = c * (A * c) * A - c * A * s + s * c * A - s * s := by noncomm_ring
       _ = c * c * (A * A) - c * (A * s) + c * s * A - s * s := by
           rw [← hc, ← hcs]; simp only [mul_assoc]
       _ = c * c * (A * A) - s * s := by
           rw [← hs]; simp only [mul_assoc]; abel
   have h_quad2 : (c * A - s) * (c * A + s) = c * c * (A * A) - s * s := by
     calc (c * A - s) * (c * A + s)
-      _ = c * (A * c) * A + c * A * s - s * c * A - s * s := by
-          simp only [sub_mul, mul_add, mul_assoc]; abel
+      _ = c * (A * c) * A + c * A * s - s * c * A - s * s := by noncomm_ring
       _ = c * c * (A * A) + c * (A * s) - c * s * A - s * s := by
           rw [← hc, ← hcs]; simp only [mul_assoc]
       _ = c * c * (A * A) - s * s := by
           rw [← hs]; simp only [mul_assoc]; abel
-  refine ⟨(hadamard_conjugation_diag_to_offdiag_bridge A).2.2.2.2.1, ?_, by abel⟩
+  refine ⟨(hadamard_conjugation_diag_to_offdiag_intertwining A).2.2.2.2.1, ?_, by abel⟩
   ext i j
   fin_cases i <;> fin_cases j
   · dsimp [RotorXY, mk2]
@@ -612,6 +613,58 @@ lemma universal_invertibility_anticommuting_homotopy
     simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply,
       Matrix.cons_val_zero, Matrix.cons_val_one, zero_mul, add_zero]
     exact h_quad2
+
+/-- The unrotated rotor has the same square as the Hadamard-rotated rotor.
+The coefficients are assumed to commute with `A` and with each other; no
+commutativity assumption is made on the ambient ring. -/
+lemma direct_unrotated_rotor_square
+    (A c s : B) (hc : c * A = A * c) (hs : s * A = A * s)
+    (hcs : c * s = s * c) :
+    DirectRotor A c s * DirectRotor A c s =
+      mk2 (c * c * (A * A) - s * s) 0 0
+        (c * c * (A * A) - s * s) := by
+  have hdiag : (c * A) * (c * A) + s * (-s) =
+      c * c * (A * A) - s * s := by
+    calc
+      (c * A) * (c * A) + s * (-s)
+          = c * (A * c) * A - s * s := by noncomm_ring
+      _ = c * c * (A * A) - s * s := by rw [← hc]; simp only [mul_assoc]
+  have hdiag' : (-s) * s + (-(c * A)) * (-(c * A)) =
+      c * c * (A * A) - s * s := by
+    calc
+      (-s) * s + (-(c * A)) * (-(c * A))
+          = c * (A * c) * A - s * s := by noncomm_ring
+      _ = c * c * (A * A) - s * s := by rw [← hc]; simp only [mul_assoc]
+  have hoff : (c * A) * s + s * (-(c * A)) = 0 := by
+    calc
+      (c * A) * s + s * (-(c * A)) = c * (A * s) - s * c * A := by
+        noncomm_ring
+      _ = c * s * A - s * c * A := by rw [← hs]; simp only [mul_assoc]
+      _ = 0 := by rw [hcs]; abel
+  have hoff' : (-s) * (c * A) + (-(c * A)) * (-s) = 0 := by
+    calc
+      (-s) * (c * A) + (-(c * A)) * (-s) = c * (A * s) - s * c * A := by
+        noncomm_ring
+      _ = c * s * A - s * c * A := by rw [← hs]; simp only [mul_assoc]
+      _ = 0 := by rw [hcs]; abel
+  ext i j
+  fin_cases i <;> fin_cases j
+  · dsimp [DirectRotor, mk2]
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    exact hdiag
+  · dsimp [DirectRotor, mk2]
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    exact hoff
+  · dsimp [DirectRotor, mk2]
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    exact hoff'
+  · dsimp [DirectRotor, mk2]
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    exact hdiag'
 
 /--
 **Unit-gap specialization of the rotor-square identity:** if the input operator has
@@ -711,12 +764,12 @@ lemma kl7_master_kitaev_local_gap_omega_spectrum_synthesis
        Block2.mk2 (c * c * (A * A) - s * s) 0 0 (c * c * (A * A) - s * s) ∧
      (A - A0) + (A0 - A0) + (A0 - A0) = A - A0) := by
   have hFib := convex_hamiltonian_fiber_ground_state_invariance H0 H1 P0 t h0 h1
-  have hMid := spectral_gap_annulus_midpoint_centering Q a_sq b_sq
+  have hMid := energy_gap_annulus_midpoint_centering Q a_sq b_sq
   have hCollar := (square_first_local_bulk_gap_collar_healing P A μ0 hP).1
   have hDisk :=
     (InfoGeometry.CondensedMatter.KitaevFreeFermionKOSpectrumLocalGapPoset.ks4_interior_disk_projection_eliminates_boundary_modes
       (A₁ := A₁) (C₁ := C₁) (A₂ := A₂) (C₂ := C₂) h₁ h₂ h₁₂ h₂₁).2.2.2
-  have hHad := (Block2.hadamard_conjugation_diag_to_offdiag_bridge A).2.1
+  have hHad := (Block2.hadamard_conjugation_diag_to_offdiag_intertwining A).2.1
   have hRot := Block2.universal_invertibility_anticommuting_homotopy A A0 c s hc hs hcs
   exact ⟨⟨KitaevLocalGapOmegaSpectrumStage.rank_injective,
           KitaevLocalGapOmegaSpectrumStage.coverEdge_acyclic⟩,

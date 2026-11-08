@@ -1,0 +1,3 @@
+import InfoGeometry.Canonical.ModularSpinorCl11MarkovJonesTopologicalColimitBridge
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalCyclicTransport

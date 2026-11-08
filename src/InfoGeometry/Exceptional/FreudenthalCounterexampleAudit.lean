@@ -1,0 +1,37 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Exceptional.FreudenthalLegacyFiveGradedJacobiCounterexample
+import InfoGeometry.Exceptional.FreudenthalFiveGradedLegacyJacobiCounterexample
+import InfoGeometry.Exceptional.FreudenthalSymplecticMixedTripleCounterexample
+import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiBridge
+import InfoGeometry.Exceptional.FreudenthalSymplecticTKKJacobiObstruction
+import InfoGeometry.Exceptional.FreudenthalGlobalJacobiFrontier
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactAll
+import InfoGeometry.Exceptional.FreudenthalContactNormalization
+
+/-! Kernel audit: distinguish the non-Jacobi legacy bracket, the explicit
+mixed-triple obstruction, the conditional Jacobi component, and the corrected
+symplectic contact Lie algebra. -/
+
+#print axioms InfoGeometry.Exceptional.Freudenthal.legacy_fiveGradedBracket_not_jacobi
+#print axioms InfoGeometry.Exceptional.Freudenthal.legacy_extreme_charge_jacobi_readout
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticRankTwo_mixedTriple_counterexample
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_mixed_jacobi_alpha_beta_alpha_ne_zero
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_mixed_jacobi_is_not_available_from_symplecticRankTwo
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_mixed_jacobi_minus1_component_eq_zero
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_mixed_jacobi_on_iff_pairing_zero
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_mixed_jacobi_minus1_obstruction_explicit
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_mixed_jacobi_on_iff_pairing_zero
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_minus_minus_plus_jacobiator_jacobiPattern
+#print axioms InfoGeometry.Exceptional.Freudenthal.tkk_minus_minus_plus_jacobiator_jacobiPattern
+#print axioms InfoGeometry.Exceptional.Freudenthal.global_fiveGraded_jacobi_of_homogeneous
+#print axioms InfoGeometry.Exceptional.Freudenthal.no_global_homogeneous_jacobi_completion
+#print axioms InfoGeometry.Exceptional.Freudenthal.corrected_minus1_minus1_bracket
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactLieAlgebra
+#print axioms InfoGeometry.Exceptional.Freudenthal.contactMixedJacobiMinus_eq
+#print axioms InfoGeometry.Exceptional.Freudenthal.contactMixedJacobiMinus_fixed_heisenberg_iff
+#print axioms InfoGeometry.Exceptional.Freudenthal.contactMixedJacobiMinus_fixed_scalar_iff
+#print axioms InfoGeometry.Exceptional.Freudenthal.contactMixedJacobiMinus_vanishes_iff_of_nontrivial

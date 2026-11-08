@@ -1,0 +1,5 @@
+import InfoGeometry.Physics.BiWaveRamanujanBridge
+
+open InfoGeometry.Physics.BiWaveRamanujan
+
+#print axioms certified_biwave_ramanujan_synthesis

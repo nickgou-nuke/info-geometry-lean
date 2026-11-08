@@ -1,0 +1,36 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.NCG.OppositePeirceTrace
+
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.sum_sq
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.sum_mem_odd
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.conjugate_sum
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.anticommutator_mem_even
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.commutator_mem_even
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.commutator_eq_reflection_mul
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.anticommutator_eq_reflection_mul
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.anticommutator_eq_zero_iff_commutator
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.component11_anticommutator
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.component00_anticommutator
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.component11_commutator
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.component00_commutator
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.anticommutator_eq_zero_iff_products
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.conjugate_anticommutator
+#print axioms InfoGeometry.NCG.OppositePeirceCoupling.conjugate_commutator
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_component10
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_component01
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_sum_sq
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_reflection_mul_commutator
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_anticommutator_corners
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_commutator_corners_add
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.component01_conjTranspose
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.adjoint_sum_isHermitian
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.adjoint_anticommutator_posSemidef
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.adjoint_sum_sq_posSemidef
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.trace_adjoint_anticommutator_nonneg
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.adjoint_anticommutator_eq_zero_iff
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.adjoint_commutator_ne_zero_iff
+#print axioms InfoGeometry.NCG.OppositePeirceTrace.adjoint_sum_sq_eq_zero_iff

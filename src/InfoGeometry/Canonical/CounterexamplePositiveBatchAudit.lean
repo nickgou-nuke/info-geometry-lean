@@ -1,0 +1,21 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.GramianInverseContracts
+import InfoGeometry.Probability.GromovPermutationNormalization
+import InfoGeometry.Routing.AttentionInteriorFiber
+
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.oblique_idempotent_counterexample
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.projector_cross_zero_iff
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.orthogonal_split_cross_zero
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_left_gramian_drazin_one
+#print axioms InfoGeometry.Probability.GromovPermutationNormalization.normalization_non_additive_counterexample
+#print axioms InfoGeometry.Probability.GromovPermutationNormalization.normalization_sum_eq_mass_mixture
+#print axioms InfoGeometry.Probability.GromovPermutationNormalization.normalization_pooled_nonnegative_weights
+#print axioms InfoGeometry.Probability.GromovPermutationNormalization.mass_mixture_weights_probability
+#print axioms InfoGeometry.Routing.AttentionInteriorFiber.collinear_counterexample
+#print axioms InfoGeometry.Routing.AttentionInteriorFiber.unique_probability_coords_at_positive_iff
+#print axioms InfoGeometry.Routing.AttentionInteriorFiber.vectorSpan_probabilityFiber_eq_ker
+#print axioms InfoGeometry.Routing.AttentionInteriorFiber.fiber_finrank_eq_card_sub_rank

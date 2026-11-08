@@ -1,0 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovJordanWignerActionNonvanishing
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.JordanWigner.weightedSkewActionMatrix_ne_zero_of_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.JordanWigner.mulLeftLinearMap_ne_zero_of_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.JordanWigner.weightedMajoranaAction_ne_zero_of_positive
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.JordanWigner.softmaxWeightedMajoranaAction_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.JordanWigner.exists_symmetricSoftmax_groupInverse_majorana_balance_with_nonzero_action

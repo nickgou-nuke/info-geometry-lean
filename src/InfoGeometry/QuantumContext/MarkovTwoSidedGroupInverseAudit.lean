@@ -1,0 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovTwoSidedGroupInverse
+
+#print axioms InfoGeometry.QuantumContext.MarkovTwoSidedGroupInverse.cornerMap_groupInverse
+#print axioms InfoGeometry.QuantumContext.MarkovTwoSidedGroupInverse.markovSandwich_groupInverse
+#print axioms InfoGeometry.QuantumContext.MarkovTwoSidedGroupInverse.markovSandwich_recovers_on_range
+#print axioms InfoGeometry.QuantumContext.MarkovTwoSidedGroupInverse.exists_stochastic_markovSandwich_groupInverse
+#print axioms InfoGeometry.QuantumContext.MarkovTwoSidedGroupInverse.exists_stochastic_markovSandwich_green_recovers_range

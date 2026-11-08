@@ -1,0 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.DrazinShellConsequenceExamples
+
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.oblique_shell_zero_not_selfadjoint
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.oblique_shell_zero_mul_operator
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.operator_mul_oblique_shell_zero_entry
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.operator_mul_oblique_shell_zero_ne_zero
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.skewChain_support_product_entry
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.skewChain_reverse_support_product_entry
+#print axioms InfoGeometry.Canonical.DrazinShellConsequenceExamples.skewChain_supports_not_commute

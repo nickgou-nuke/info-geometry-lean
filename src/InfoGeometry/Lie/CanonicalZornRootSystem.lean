@@ -1,0 +1,2 @@
+import InfoGeometry.Lie.CanonicalZornCartanRootSystem
+import InfoGeometry.Algebra.FiniteSpinAlgebra

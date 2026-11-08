@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore
+
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.Carrier
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.carrierFlow_word
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.carrierFlow_star_word
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.carrierFlow_matrixUnit
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.carrierFlow_finiteStageElement
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.finiteCoreFlow
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.finiteCoreFlow_realizes_carrierFlow
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.finiteCoreState
+#print axioms InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore.finiteCore_kms_boundary

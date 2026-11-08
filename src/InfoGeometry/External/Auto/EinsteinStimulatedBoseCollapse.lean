@@ -1,0 +1,2 @@
+import InfoGeometry.External.Auto.CapstoneCondensate
+import InfoGeometry.Algebra.FiniteSpinAlgebra

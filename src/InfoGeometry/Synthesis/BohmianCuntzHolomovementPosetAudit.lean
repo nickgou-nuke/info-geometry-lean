@@ -1,0 +1,62 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset
+
+/-!
+# Axiom-Footprint Audit for `InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset`
+
+Verifies that every public definition and theorem in
+`InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset` depends only on the
+standard Lean 4 axioms (`propext`, `Classical.choice`, `Quot.sound`).
+-/
+
+namespace InfoGeometry.Synthesis.BohmianCuntzHolomovementPosetAudit
+
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.cuntz_finite_matrix_trace_obstruction
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.no_cuntz_isometries_on_nonempty_finite_matrix
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.cuntzProj1
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.cuntzProj2
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_one
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_add
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_mul
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_transpose
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.cuntz_projector_algebra
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_commutes_with_cuntzProj
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.unfold1
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.unfold2
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.unfoldConditionalExp
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmian_holographic_retraction
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmian_conditional_exp_retraction
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_injective
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.holomovement
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.holomovement_eq_fromBlocks_unfold
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.holomovement_idempotent
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_holomovement_invariant
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.unfold_holomovement_eq_unfold
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.trace_fromBlocks_eq_add
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.enfold_trace_scaling
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.normalized_enfold_trace_invariant
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.holomovement_trace_eq
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.holomovement_enfold_trace_sum
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.holomovement_enfold_trace_invariant
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.uhf_tower_enfold_and_state_coherence_bridge
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.BohmCuntzStage
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzTerminalWitness
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzTerminalWitness_ne_default
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzHeight
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.BohmCuntzEdge
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.BohmCuntzReach
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzEdge_height_lt
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzReach_trans
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzReach_height_le
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzReach_height_lt_of_ne
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzReach_antisymm
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntzHeight_strictMono
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.not_total_bohmCuntzStage_le
+#print axioms InfoGeometry.Synthesis.BohmianCuntzHolomovementPoset.bohmCuntz_endToEnd_strict_chains
+
+end InfoGeometry.Synthesis.BohmianCuntzHolomovementPosetAudit

@@ -1,0 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication
+
+#print axioms InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication.cornerLeftSide_cornerOfSides
+#print axioms InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication.cornerRightSide_cornerOfSides
+#print axioms InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication.corner_product_mem_of_compatible_supports
+#print axioms InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication.corner_product_eq_zero_of_incompatible_supports
+#print axioms InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication.markov_corner_product_mem_of_compatible_supports
+#print axioms InfoGeometry.QuantumContext.MarkovMatrixPeirceMultiplication.markov_corner_product_eq_zero_of_incompatible_supports

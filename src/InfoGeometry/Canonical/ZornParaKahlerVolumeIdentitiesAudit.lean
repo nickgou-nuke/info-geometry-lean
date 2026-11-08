@@ -1,0 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities
+
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.paraMetric_K_eq_symplectic
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.offDiagonal_product_decomposition
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.paraGrading_commutator
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.paraGrading_anticommutator_zero
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.paraMetric_sq_symplectic_sq_lagrange
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.primal_triple_singlet
+#print axioms InfoGeometry.Canonical.ZornParaKahlerVolumeIdentities.primal_associator_eq_neg_volume_grading

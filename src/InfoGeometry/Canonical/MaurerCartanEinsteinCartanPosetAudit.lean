@@ -1,0 +1,45 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.MaurerCartanSpectralAnnihilatorDefectPoset
+import InfoGeometry.Canonical.EinsteinCartanChiralAnomalyFrameDraggingPoset
+
+/-!
+# Axiom Audit for `MaurerCartanSpectralAnnihilatorDefectPoset` (`𝔎₁–𝔎₇`) & `EinsteinCartanChiralAnomalyFrameDraggingPoset` (`𝔈₁–𝔈₈`)
+
+Exposes the kernel axiom dependencies of all theorems in the Maurer–Cartan Spectral Annihilator
+poset (`𝔎₁ ≺ ⋯ ≺ 𝔎₇`) and the Operator Einstein–Cartan Spin-Torsion & Chiral Frame Dragging
+poset (`𝔈₁ ≺ ⋯ ≺ 𝔈₈`).
+-/
+
+open InfoGeometry.Canonical.MaurerCartanSpectralAnnihilatorDefectPoset
+open InfoGeometry.Canonical.EinsteinCartanChiralAnomalyFrameDraggingPoset
+
+#print axioms MaurerCartanAnnihilatorStage.causalEdge_acyclic
+#print axioms MaurerCartanAnnihilatorStage.causalEdge_chain
+#print axioms archetype_K1_tripotent_chiral_derivation
+#print axioms archetype_K2_idempotent_annihilator_filter
+#print axioms archetype_K3_linear_annihilation_of_odd_maurer_cartan_forms
+#print axioms chiralAnnihilator_mul_defect_eq_oddProjector_mul
+#print axioms qgt_as_chiralAnnihilator_multiplicative_defect
+#print axioms archetype_K4_multiplicative_defect_curvature_theorem
+#print axioms archetype_K5_maurer_cartan_orbit_gramian_and_bianchi_centrality
+#print axioms archetype_K6_elie_cartan_torsion_annihilation_and_macdowell_mansouri
+#print axioms archetype_K7_banks_casher_resolvent_drift_annihilation
+#print axioms maurer_cartan_spectral_annihilator_defect_master_synthesis
+
+#print axioms EinsteinCartanAnomalyStage.causalEdge_acyclic
+#print axioms EinsteinCartanAnomalyStage.causalEdge_chain_and_diamond
+#print axioms archetype_E1_chiral_cut_and_maurer_cartan_solder_forms
+#print axioms archetype_E2_operator_fisher_metric_and_spin_dipole_curvature
+#print axioms archetype_E3_para_kahler_lock_and_levi_civita_aporia
+#print axioms levi_civita_commuting_frames_force_zero_metric
+#print axioms archetype_E4_chiral_einstein_anomaly_cocycle
+#print axioms archetype_E5_spin_frame_dragging_and_dressed_torsion
+#print axioms jordanAssociator_eq_double_comm
+#print axioms archetype_E6_soldered_cartan_ehresmann_and_jordan_associator
+#print axioms archetype_E7_general_einstein_cartan_split_and_bianchi
+#print axioms archetype_E8_centrifugal_dragging_and_fisher_cramer_rao
+#print axioms einstein_cartan_chiral_anomaly_frame_dragging_master_synthesis

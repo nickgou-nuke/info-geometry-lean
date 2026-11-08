@@ -1,0 +1,2 @@
+import Mathlib.Algebra.Category.ModuleCat.ExteriorPower
+import InfoGeometry.Algebra.FiniteSpinAlgebra

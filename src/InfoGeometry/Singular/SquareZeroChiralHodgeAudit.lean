@@ -1,0 +1,48 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Singular.SquareZeroChiralHodge
+
+open InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
+
+#print axioms exactSupport_idem
+#print axioms coexactSupport_idem
+#print axioms exactSupport_mul_coexactSupport
+#print axioms coexactSupport_mul_exactSupport
+#print axioms dual_square_zero_orthogonality
+#print axioms exactSupport_add_coexactSupport_add_harmonicSupport
+#print axioms harmonicSupport_idem
+#print axioms harmonicSupport_mul_exactSupport
+#print axioms harmonicSupport_mul_coexactSupport
+#print axioms exactSupport_mul_harmonicSupport
+#print axioms coexactSupport_mul_harmonicSupport
+#print axioms harmonicSupport_mul_eq_zero
+#print axioms mul_harmonicSupport_eq_zero
+#print axioms inverse_mul_harmonicSupport_eq_zero
+#print axioms harmonicSupport_mul_inverse_eq_zero
+#print axioms normalizedDirac_sq_support
+#print axioms chiralSupport_sq_support
+#print axioms chiralSupport_cube
+#print axioms chiralSupport_mul_exactSupport
+#print axioms chiralSupport_mul_coexactSupport
+#print axioms exactSupport_mul_chiralSupport
+#print axioms coexactSupport_mul_chiralSupport
+#print axioms chiralSupport_mul_eq_self
+#print axioms mul_chiralSupport_eq_neg
+#print axioms chiralSupport_mul_inverse_eq_neg
+#print axioms inverse_mul_chiralSupport_eq_self
+#print axioms chiralSupport_anticommute_normalizedDirac
+#print axioms normalizedDirac_mul_harmonicSupport
+#print axioms harmonicSupport_mul_normalizedDirac
+#print axioms squareZero_chiralHodge_decomposition
+#print axioms InfoGeometry.Singular.MoorePenrose.exactSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.coexactSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.harmonicSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.chiralSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.normalizedDirac_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.star_reverse
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.star_same_order
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_same_order_star_transport

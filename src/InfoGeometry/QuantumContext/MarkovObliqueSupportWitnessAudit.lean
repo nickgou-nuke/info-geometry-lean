@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovObliqueSupportWitness
+
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.transition_rowStochastic
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.transition_entrywise_pos
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.laplacianGroupInverse_isGroupInverse
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.rangeIdempotent_eq
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.rangeIdempotent_not_symmetric
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.stationaryProjector_not_symmetric
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.rangeIdempotent_mul_matrixUnit01_ne
+#print axioms InfoGeometry.QuantumContext.MarkovObliqueSupportWitness.rangeIdempotent_not_central

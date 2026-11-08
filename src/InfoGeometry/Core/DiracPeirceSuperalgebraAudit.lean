@@ -1,0 +1,33 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Core.DiracPeirceSuperalgebra
+
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_chiralSupport_commute
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_chiralSupport_anticommute
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_idem
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_idem
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_oddPeircePart
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_evenPeircePart
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_add_oddPeircePart_of_activeSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_add_oddPeircePart_eq_activeSupport_sandwich
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.fullPeircePart_decomposition
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_star
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_star
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.fullPeircePart_decomposition_star
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_evenPeircePart
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_oddPeircePart
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_superInvolution
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_normalizedDirac
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_star
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_normalizedDirac
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_sq_exactSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_coexactSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_harmonicSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_activeSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commutator_exactSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_normalizedDirac
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_activeSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.globalMajoranaReflection_conjugates_activeSupport

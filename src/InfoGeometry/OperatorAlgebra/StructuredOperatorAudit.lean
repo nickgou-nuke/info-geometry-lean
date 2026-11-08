@@ -1,0 +1,98 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Routing.InvolutiveDiagonalAlgebra
+import InfoGeometry.OperatorAlgebra.MonarchFactorization
+import InfoGeometry.Routing.SymmetricCausalBoundary
+import InfoGeometry.Krein.CayleyFormTransport
+import InfoGeometry.Krein.HyperbolicDepth
+
+/-!
+# Axiom audit for the structured-operator compilation
+
+Every public theorem and construction introduced by the five owners is
+listed explicitly. The final group checks the reused Peirce/defect backbone.
+Compiler output is the evidence; the presence of these commands is not a
+claim that the whole root package or any hardware implementation was built.
+-/
+
+-- InfoGeometry.Routing.InvolutiveDiagonalAlgebra
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.localOperator
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.permutation_mul_diagonal
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.diagonal_mul_permutation
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.permutation_square
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.permutation_conjugate_diagonal
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.localOperator_mul
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.localOperator_add
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.localOperator_sub
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.permutation_diagonal_commutator
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.defect_localOperator
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.localSubalgebra
+#print axioms InfoGeometry.Routing.InvolutiveDiagonalAlgebra.iterate_defect_local
+
+-- InfoGeometry.OperatorAlgebra.MonarchFactorization
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.monarch
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.monarch_apply
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.reversed_stages_apply
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.monarch_one_one
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.reshuffled_minor_eq_zero
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.ne_monarch_of_reshuffled_minor_ne_zero
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchBlocks
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchMonarch
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchMonarch_square_reshuffled_entries
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.identity_coarse_minor
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchMonarch_square_minor
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchMonarch_square_ne_monarch
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchMonarch_defect_minor
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.switchMonarch_defect_ne_monarch
+#print axioms InfoGeometry.OperatorAlgebra.MonarchFactorization.exists_monarch_square_not_monarch
+
+-- InfoGeometry.Routing.SymmetricCausalBoundary
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.isDiag_of_isSymm_isLowerTriangular
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.conjugated_diagonal_mul
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.conjugated_diagonal_commutator
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.conjugated_diagonals_commute
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.conjugated_diagonal_isSymm
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.conjugated_diagonal_isDiag_of_lower
+#print axioms InfoGeometry.Routing.SymmetricCausalBoundary.normality_defect_self_add_skew
+
+-- InfoGeometry.Krein.CayleyFormTransport
+#print axioms InfoGeometry.Krein.CayleyFormTransport.form_defect_mul
+#print axioms InfoGeometry.Krein.CayleyFormTransport.cayley_factor_form_difference
+#print axioms InfoGeometry.Krein.CayleyFormTransport.resolvent_denominator_form
+#print axioms InfoGeometry.Krein.CayleyFormTransport.cayley_form_defect
+#print axioms InfoGeometry.Krein.CayleyFormTransport.cayley_preserves_form
+#print axioms InfoGeometry.Krein.CayleyFormTransport.form_defect_pow
+#print axioms InfoGeometry.Krein.CayleyFormTransport.list_prod_preserves_form
+#print axioms InfoGeometry.Krein.CayleyFormTransport.cayley_pow_preserves_form
+
+-- InfoGeometry.Krein.HyperbolicDepth
+#print axioms InfoGeometry.Krein.HyperbolicDepth.splitForm
+#print axioms InfoGeometry.Krein.HyperbolicDepth.splitForm_apply
+#print axioms InfoGeometry.Krein.HyperbolicDepth.splitForm_diagonal
+#print axioms InfoGeometry.Krein.HyperbolicDepth.boost
+#print axioms InfoGeometry.Krein.HyperbolicDepth.boost_apply
+#print axioms InfoGeometry.Krein.HyperbolicDepth.splitForm_boost
+#print axioms InfoGeometry.Krein.HyperbolicDepth.boost_preserves_splitForm
+#print axioms InfoGeometry.Krein.HyperbolicDepth.boost_pow_preserves_splitForm
+#print axioms InfoGeometry.Krein.HyperbolicDepth.boost_diagonal
+#print axioms InfoGeometry.Krein.HyperbolicDepth.boost_pow_diagonal
+#print axioms InfoGeometry.Krein.HyperbolicDepth.doublingBoost
+#print axioms InfoGeometry.Krein.HyperbolicDepth.doublingBoost_pow_preserves_splitForm
+#print axioms InfoGeometry.Krein.HyperbolicDepth.doublingBoost_pow_diagonal
+#print axioms InfoGeometry.Krein.HyperbolicDepth.norm_doublingBoost_pow_diagonal
+#print axioms InfoGeometry.Krein.HyperbolicDepth.exists_norm_doublingBoost_pow_gt
+
+-- Reused operator backbone
+#print axioms InfoGeometry.Core.PeirceDecomposition.peirce_decomposition
+#print axioms InfoGeometry.Core.PeirceDecomposition.complementIdempotent_sq
+#print axioms InfoGeometry.Core.PeirceDecomposition.idempotent_mul_complement
+#print axioms InfoGeometry.Core.PeirceDecomposition.complement_mul_idempotent
+#print axioms InfoGeometry.Core.PeirceCoupledCorners.coupled_square
+#print axioms InfoGeometry.Core.PeirceQuadraticFrame.difference_square
+#print axioms InfoGeometry.Core.PeirceQuadraticFrame.bracket_eq_difference_mul_sum
+#print axioms InfoGeometry.Core.PeirceQuadraticFrame.bracket_square
+#print axioms InfoGeometry.Core.IdempotencyDefect.defect_eq_zero_iff
+#print axioms InfoGeometry.Core.DefectIteration.adjoin_iterate_antitone

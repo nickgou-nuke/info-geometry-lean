@@ -1,0 +1,18 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge
+
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.DoubleStarSheetCarrier
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.doubleStarSheetCarrier_card
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.doubleStarSheetCarrierEquivFin24
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.phi24Eval_eq_phi12Eval_sq
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.phi24Eval_eq_zero_of_phi12Eval_sq_eq_zero
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.sheetSwapLift
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.sheetSwapLift_sq_apply
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.split_cayleyDickson_plus_minus_square_zero
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.cdLift_preserves_square_zero_tangent
+#print axioms InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge.sedenion_plus_minus_diagonal_norm_zero

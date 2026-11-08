@@ -1,0 +1,51 @@
+import InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopCat
+
+/-!
+# The distinguished normalized-trace point of the readout inverse limit
+
+The compatible normalized-trace family is transported through the native
+`TopCat` limit isomorphism.  This owner records its coordinate formula only;
+it does not identify the point with a state, a KMS state, or a completed UHF
+algebra element.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitCanonicalPoint
+
+open CategoryTheory CategoryTheory.Limits
+open InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimit
+open InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimit
+open InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopCat
+
+noncomputable def normalizedTraceInverseLimitPoint :
+    TopCat.carrier (limit readoutDiagram) :=
+  compatibleReadoutInverseLimitIso.hom normalizedTraceReadoutFamily
+
+theorem normalizedTraceInverseLimitPoint_projection
+    (n : ℕ) :
+    (limit.π readoutDiagram n)
+        normalizedTraceInverseLimitPoint =
+      normalizedTraceReadoutFamily.1 n := by
+  have hmap :
+      compatibleReadoutInverseLimitIso.hom ≫
+          limit.π readoutDiagram n =
+        readoutInverseCone.π.app n := by
+    change
+      (IsLimit.conePointUniqueUpToIso readoutInverseConeIsLimit
+        (limit.isLimit readoutDiagram)).hom ≫
+          limit.π readoutDiagram n =
+        readoutInverseCone.π.app n
+    exact IsLimit.conePointUniqueUpToIso_hom_comp
+      readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n
+  have h := congrArg
+    (fun f => f normalizedTraceReadoutFamily) hmap
+  change (limit.π readoutDiagram n)
+      (compatibleReadoutInverseLimitIso.hom normalizedTraceReadoutFamily) =
+    (readoutInverseCone.π.app n) normalizedTraceReadoutFamily
+  exact h
+
+end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitCanonicalPoint
+end

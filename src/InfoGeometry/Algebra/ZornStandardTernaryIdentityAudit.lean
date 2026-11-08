@@ -1,0 +1,8 @@
+import InfoGeometry.Algebra.ZornStandardTernaryIdentity
+import InfoGeometry.Algebra.ZornAssociatorFilippovObstruction
+
+#print axioms InfoGeometry.Algebra.zorn_standard_ternary_fundamental_identity
+#print axioms InfoGeometry.Algebra.zornStanDerivation_apply_normal_form
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.associatorFilippovDefect_UUUVV
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.associatorFilippovDefect_UUUVV_eq_zero_iff_four_eq_zero
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.associator_not_filippov_real

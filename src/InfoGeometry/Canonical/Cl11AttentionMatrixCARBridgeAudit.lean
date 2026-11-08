@@ -1,0 +1,22 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge
+
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.clStageToComplexCarrier_compatible
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.clLimitToComplexCarrier_stage
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.fockOperatorLimitToComplexCarrier_stage
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrierCreation_stage
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrierAnnihilation_stage
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrierCreation_succ
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrierAnnihilation_succ
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrierCreation_sq_zero
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrierAnnihilation_sq_zero
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrier_mixed_car
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrier_creation_cross_site_car
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrier_annihilation_cross_site_car
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrier_creation_anticommute
+#print axioms InfoGeometry.Canonical.Cl11AttentionMatrixCARBridge.complexCarrier_annihilation_anticommute

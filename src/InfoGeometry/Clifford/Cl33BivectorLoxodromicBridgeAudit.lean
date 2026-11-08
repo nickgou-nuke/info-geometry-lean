@@ -1,0 +1,21 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge
+
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.wittU₁_sq_zero
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.wittV₁_sq_zero
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.boostBivector_wittU₁
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.boostBivector_wittV₁
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.boostBivector_sq
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.rotationBivector_sq
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.boost_rotation_commute
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.positive_generators_noncommute
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.boostMatrix_sq
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.rotationMatrix_sq
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.boostMatrix_rotationMatrix_commute
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.positive_spinor_generators_noncommute
+#print axioms InfoGeometry.Clifford.Cl33BivectorLoxodromicBridge.exp_loxodromicGenerator

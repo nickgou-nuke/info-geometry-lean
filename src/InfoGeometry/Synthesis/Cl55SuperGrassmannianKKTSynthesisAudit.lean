@@ -1,0 +1,41 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis
+
+/-!
+# Axiom-Footprint Audit for `InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis`
+
+Verifies that every public definition and theorem in
+`InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis` depends only on the
+standard Lean 4 axioms (`propext`, `Classical.choice`, `Quot.sound`).
+-/
+
+namespace InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesisAudit
+
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.cl11_cl44_cl55_carrier_factorization
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.spin55_bivector_kkt_decomposition
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.cl55_kkt_five_graded_ladder_synthesis
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.kkt_quintic_characteristic_synthesis
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.Twistor55
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.twistorNeutralPairing
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.twistorSymplecticForm
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.PenroseTwistorIncidence
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.twistor_semiSpinor_sheets_isotropic
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.penrose_incidence_null_of_skewSymmetric
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.GunaydinGurseyMultiplet
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.gunaydinGurseySplit
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.gunaydinGurseyCombine
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.gunaydinGurseyEquiv
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.SuperTwistor55
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.oddSupercolorIncidence
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.oddSupercolorIncidence_penrose_transport
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.superAndreevReflect
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.colorSymplecticForm
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.superAndreevReflect_order_four_and_symplectic_invariance
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.colorSingletInvariant
+#print axioms InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesis.grassmann_color_singlet_superAndreev_invariant
+
+end InfoGeometry.Synthesis.Cl55SuperGrassmannianKKTSynthesisAudit

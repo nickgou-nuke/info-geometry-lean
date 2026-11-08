@@ -1,0 +1,16 @@
+import InfoGeometry.Physics.AcousticTrappedSurfaceHorizonDecoupling
+
+open InfoGeometry.Physics.AcousticTrappedSurface
+
+#print axioms mach_ordering
+#print axioms bimetric_gap_background_invariance
+#print axioms bimetric_gap_strictly_negative
+#print axioms slow_supersonic_in_window
+#print axioms fast_subsonic_in_window
+#print axioms slow_trapped_in_window
+#print axioms fast_untrapped_in_window
+#print axioms slow_no_upstream_escape
+#print axioms fast_upstream_escape
+#print axioms slow_horizon_transparent_to_fast
+#print axioms acoustic_interval_bimetric_gap
+#print axioms certified_acoustic_trapped_surface_synthesis

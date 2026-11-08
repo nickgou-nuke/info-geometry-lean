@@ -1,0 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.PolarizedAttentionReturnTrajectoryColimit
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.PolarizedAttention.polarizedAttentionReturnTrajectoryColimitCocone
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.PolarizedAttention.polarizedAttentionReturnTrajectoryColimitCocone_pt_eq_potential
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.PolarizedAttention.polarizedAttentionReturnTrajectoryColimit_vertices_sum_eq_trace_add_one
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.PolarizedAttention.exists_polarizedAttention_returnTrajectoryColimitKemenyTrace

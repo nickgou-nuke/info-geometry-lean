@@ -1,0 +1,47 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.ZornMajoranaRotations
+
+#print axioms InfoGeometry.Algebra.L_map_square_of_left_alternative
+#print axioms InfoGeometry.Algebra.L_map_anticommutator_of_left_alternative
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.L_U_square_zero
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.L_negV_square_zero
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.L_U_U_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.L_negV_negV_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.L_U_negV_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.neg_L_U0_L_negV1_apply_U1
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.L_U0_negV1_anticommutator_ne_ordered
+#print axioms InfoGeometry.Algebra.ZornColorBilinears.E_action_U
+#print axioms InfoGeometry.Algebra.ZornColorBilinears.E_action_negV
+#print axioms InfoGeometry.Algebra.ZornColorBilinears.E_commutator
+#print axioms InfoGeometry.Algebra.ZornColorBilinears.left_E11_commutes_offDiagonal_product
+#print axioms InfoGeometry.Algebra.ZornColorBilinears.E_commutes_left_E11
+#print axioms InfoGeometry.Algebra.ZornColorBilinears.E_commutes_left_diagonal_difference
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.left_offDiagonal_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.left_offDiagonal_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaPlus_basis
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaMinus_basis
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaPlus_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaMinus_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_mixed_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaPlus_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaMinus_anticommutator
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_mode_product
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_six_factor_product
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaPlus_basis_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaMinus_basis_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_mode_flip_plus
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_mode_flip_minus
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_mode_products_commute
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaPlus_sum_basis
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaMinus_sum_basis
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaPlus_total_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaMinus_total_square
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_totals_anticommute
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaRotation_action_plus
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaRotation_action_minus
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajoranaRotation_commutes_projector
+#print axioms InfoGeometry.Algebra.ZornVectorMatrix.leftMajorana_mode_product_square

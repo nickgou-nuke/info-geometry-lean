@@ -1,0 +1,129 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+
+/-!
+# Concrete Integer Instantiation & Axiom Audit for Section 115: Peirce–DeWitt Zorn Quantization
+Target: `InfoGeometry/Superalgebra/PeirceDeWittZornQuantizationAudit.lean`
+
+Verifies over `ℤ` (`decide`) the Penrose chiral zig-zag mass norm, CAR anticommutation,
+diquark cross-product fusion `3 ⊗ 3 → 3̄`, baryon singlet closure `3 ⊗ 3 ⊗ 3 → 1`,
+and Hurwitz–Zorn quadratic norm composition.
+-/
+
+namespace InfoGeometry.Superalgebra.PeirceDeWittZornQuantizationAudit
+
+open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3
+open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra
+
+/-- Concrete verification over `ℤ` (`decide`) of Penrose zig-zag mass generation,
+CAR anticommutation `{U(u), V(v)} = (u · v) I`, diquark fusion `U(e_r) · U(e_g) = V(e_b)`,
+and RGB baryon singlet closure `{U(e_b), U(e_r) · U(e_g)} = I`. -/
+theorem sample_peirce_dewitt_zorn_quantization_int :
+    ZornAlgebra.norm (ZornAlgebra.add (ZornAlgebra.smul (3 : ℤ) ZornAlgebra.e₁)
+      (ZornAlgebra.smul (5 : ℤ) ZornAlgebra.e₂)) = 15 ∧
+    ZornAlgebra.anticommutator
+      (ZornAlgebra.quarkU (⟨2, 3, 4⟩ : ColorVec3 ℤ))
+      (ZornAlgebra.antiquarkV (⟨5, 6, 7⟩ : ColorVec3 ℤ)) =
+      ZornAlgebra.smul (56 : ℤ) ZornAlgebra.one ∧
+    ZornAlgebra.mul (ZornAlgebra.quarkU (ColorVec3.e_r : ColorVec3 ℤ))
+      (ZornAlgebra.quarkU (ColorVec3.e_g : ColorVec3 ℤ)) =
+      ZornAlgebra.antiquarkV (ColorVec3.e_b : ColorVec3 ℤ) ∧
+    ZornAlgebra.anticommutator
+      (ZornAlgebra.quarkU (ColorVec3.e_b : ColorVec3 ℤ))
+      (ZornAlgebra.mul (ZornAlgebra.quarkU (ColorVec3.e_r : ColorVec3 ℤ))
+        (ZornAlgebra.quarkU (ColorVec3.e_g : ColorVec3 ℤ))) =
+      (ZornAlgebra.one : ZornAlgebra ℤ) := by
+  decide
+
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.add_assoc_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.zero_add_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.add_zero_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.sub_eq_add_neg_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.neg_add_cancel_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.add_comm_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.one_smul_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.mul_smul_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.smul_zero_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.smul_add_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.add_smul_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.zero_smul_vec
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.e_r_ne_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.e_r_ne_e_g
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.dot_comm
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.cross_self
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.cross_anticomm
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.baryonDet_antisymm_12
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.baryonDet_antisymm_23
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.baryonDet_cyclic
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.dot_cross_cross
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.equivZornVec3_dot
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.equivZornVec3_cross
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.add_assoc_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zero_add_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.add_zero_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.sub_eq_add_neg_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.neg_add_cancel_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.add_comm_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one_smul_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul_smul_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.smul_zero_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.smul_add_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.add_smul_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zero_smul_zorn
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one_mul
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul_one
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.mul_conj
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.conj_mul
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.norm_mul
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.equivZornVectorMatrix_mul
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce_partition_of_unity
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.penrose_zigzag_mass_norm
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce11_eq
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce12_eq
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce21_eq
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce22_eq
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce_four_block_completeness
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittEven_eq
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittOdd_eq
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.peirce_dewitt_completeness
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittEven_idem
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittOdd_idem
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittEven_odd_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittOdd_even_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittOdd_mul_even_even
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittEven_mul_even_odd
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittEven_mul_odd_even
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittEven_mul_odd_odd
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittOdd_mul_odd_odd
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.dewittOdd_mul_odd_odd_of_cross_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_car_quantization_exact
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.quarkU_sq_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.antiquarkV_sq_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.supercolor_diquark_fusion
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.supercolor_antidiquark_fusion
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.supercolor_baryon_singlet_closure
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.rgb_baryon_singlet_unit
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_noncommutative
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_nonassociative
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_idempotent
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₂_idempotent
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_mul_e₂_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₂_mul_e₁_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.norm_smul_e₁_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.norm_smul_e₂_zero
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_mul_quarkU
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.quarkU_mul_e₂
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₂_mul_quarkU
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.quarkU_mul_e₁
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₂_mul_antiquarkV
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.antiquarkV_mul_e₁
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_mul_antiquarkV
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.antiquarkV_mul_e₂
+#print axioms sample_peirce_dewitt_zorn_quantization_int
+
+end InfoGeometry.Superalgebra.PeirceDeWittZornQuantizationAudit

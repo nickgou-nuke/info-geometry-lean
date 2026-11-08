@@ -1,0 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MatrixStagePartialTrace
+
+#print axioms InfoGeometry.QuantumContext.MatrixStagePartialTrace.trace_mul_partialTraceSecondOp
+#print axioms InfoGeometry.QuantumContext.MatrixStagePartialTrace.normalizedPartialTraceStep_concreteStep
+#print axioms InfoGeometry.QuantumContext.MatrixStagePartialTrace.normalizedPartialTraceStep_adjoint
+#print axioms InfoGeometry.QuantumContext.MatrixStagePartialTrace.weightedStageFunctional_step
+#print axioms InfoGeometry.QuantumContext.MatrixStagePartialTrace.weightedStageFunctional_compatible_of_partialTraceCompatible
+#print axioms InfoGeometry.QuantumContext.MatrixStagePartialTrace.partialTraceCompatibleColimitFunctional_stage

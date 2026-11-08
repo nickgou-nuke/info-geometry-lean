@@ -1,0 +1,4 @@
+import Architect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.All
+import InfoGeometry.Arithmetic.LPrimitive

@@ -1,0 +1,19 @@
+import InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge
+
+/-! Independent audit surface for the finite Möbius/BdG bridge. -/
+
+namespace InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.Audit
+
+#check InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.evenCorner_tau_conjugation
+#check InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.evenCorner_reflected_ospPairingElement
+#check InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.tau1_bdgBlock_flip
+#check InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.tau1_qpnmMatrix_reflection
+#check InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.compile_moebius_bdg_even_corner_bridge
+
+#print axioms InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.evenCorner_tau_conjugation
+#print axioms InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.evenCorner_reflected_ospPairingElement
+#print axioms InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.tau1_bdgBlock_flip
+#print axioms InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.tau1_qpnmMatrix_reflection
+#print axioms InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.compile_moebius_bdg_even_corner_bridge
+
+end InfoGeometry.Nuclear.MoebiusBdGEvenCornerBridge.Audit

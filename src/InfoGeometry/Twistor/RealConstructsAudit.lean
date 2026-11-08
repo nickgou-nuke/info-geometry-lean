@@ -1,0 +1,50 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Twistor.RealConstructs
+import InfoGeometry.Twistor.RealInfinityContractionAudit
+
+/-! Kernel axiom footprints for the real twistor constructions.
+These checks expose dependencies of the actual proved declarations. -/
+
+#print axioms InfoGeometry.Twistor.RealTwistorIncidence.incidenceSpace_eq_ker
+#print axioms InfoGeometry.Twistor.RealTwistorIncidence.spinorEquivIncidence
+#print axioms InfoGeometry.Twistor.RealTwistorIncidence.projectiveIncidence_injective
+#print axioms InfoGeometry.Twistor.RealTwistorIncidence.translation_incidenceSpace
+#print axioms InfoGeometry.Twistor.RealMultiTwistorReconstruction.reconstruct_exists_unique
+#print axioms InfoGeometry.Twistor.RealMultiTwistorReconstruction.reconstruct_frame_change
+#print axioms InfoGeometry.Twistor.RealTwistorSoldering.operatorSoldering
+#print axioms InfoGeometry.Twistor.RealTwistorSoldering.null_iff_shared_nonzero_twistor
+#print axioms InfoGeometry.Twistor.RealMomentumTwistor.cyclic_momentum_conservation
+#print axioms InfoGeometry.Twistor.RealMomentumTwistor.rectangle_edges_nonzero_null
+#print axioms InfoGeometry.Twistor.RealMomentumTwistor.rectangle_diagonal_nonnull
+#print axioms InfoGeometry.Twistor.RealDualTwistor.dyad_sq_zero_iff
+#print axioms InfoGeometry.Twistor.RealDualTwistor.examplePair_dyad_ne_zero
+#print axioms InfoGeometry.Twistor.RealProjectiveAmbitwistor.incident_frame_iff
+#print axioms InfoGeometry.Twistor.RealTwistorDualIncidence.mem_dualAnnihilator_iff_existsUnique
+#print axioms InfoGeometry.Twistor.RealTwistorDualIncidence.dualPair_translation
+#print axioms InfoGeometry.Twistor.RealDualTwistorKreinBridge.hessian_lightconeDoubled
+#print axioms InfoGeometry.Twistor.RealDualTwistorKreinBridge.dualFundamentalSymmetry_sq
+#print axioms InfoGeometry.Twistor.RealDualTwistorKreinBridge.realInnerDuality_physical_pos
+#print axioms InfoGeometry.Twistor.RealDualTwistorClifford.incident_iff_clifford_sq_zero
+#print axioms InfoGeometry.Twistor.RealDualTwistorClifford.neutralAnnihilator_isotropic
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.quantize_commutator
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.wavePolynomial_not_finiteDimensional
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.fockPairing_self_pos
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.fockPairing_vacuum
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.create_annihilate_adjoint
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.fockToDual_injective
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.quantizeDual_commutator
+#print axioms InfoGeometry.Twistor.RealSupertwistor.bosonic_CCR
+#print axioms InfoGeometry.Twistor.RealSupertwistor.fermionic_CAR
+#print axioms InfoGeometry.Twistor.RealSupertwistor.boson_fermion_commute
+#print axioms InfoGeometry.Twistor.RealMiniTwistor.orientedLineEquiv
+#print axioms InfoGeometry.Twistor.RealMiniTwistor.same_line_iff
+#print axioms InfoGeometry.Twistor.RealMiniTwistor.parameter_unique
+#print axioms InfoGeometry.Twistor.RealMiniTwistor.coordinateLine_incident
+#print axioms InfoGeometry.Twistor.RealFlatTwistorSpinor.clifford_anticommutator
+#print axioms InfoGeometry.Twistor.RealFlatTwistorSpinor.field_hasFDerivAt
+#print axioms InfoGeometry.Twistor.RealFlatTwistorSpinor.flat_twistor_equation
+#print axioms InfoGeometry.Twistor.RealFlatTwistorSpinor.sphere_action

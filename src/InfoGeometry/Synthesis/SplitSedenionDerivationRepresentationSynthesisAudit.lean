@@ -1,0 +1,49 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesis
+
+/-!
+# Audit of Split-Sedenion Derivation Lie Bracket Closure and Intertwined $G_2$ Representations
+
+Verifies the exported signatures and axiom footprints of
+`InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesis`.
+-/
+
+namespace InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesisAudit
+
+open InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesis
+
+#check @IsSedenionDerivation
+#check @IsSedenionStarDerivation
+#check @sedenionG2Derivation_smul
+#check @sedenionG2Derivation_isStarDerivation
+#check @sedenionDerivationCommutator
+#check @isSedenionDerivation_commutator
+#check @isSedenionStarDerivation_commutator
+#check @spinor16G2Derivation
+#check @cl44LeftIdealG2Derivation
+#check @spinor16SplitSedenionEquiv_intertwines_g2Derivation
+#check @cl44LeftIdealSplitSedenionEquiv_intertwines_g2Derivation
+#check @leftIdealEquiv_intertwines_g2Derivation
+#check @spinor16G2Derivation_leibniz
+#check @spinor16G2Derivation_preserves_semiSpinorPlus
+#check @spinor16G2Derivation_preserves_semiSpinorMinus
+#check @sedenionG2Derivation_commutes_with_sheetLinearMix
+#check @sedenionG2Derivation_lands_in_traceZero_bimodule
+
+#print axioms sedenionG2Derivation_isStarDerivation
+#print axioms isSedenionDerivation_commutator
+#print axioms isSedenionStarDerivation_commutator
+#print axioms spinor16SplitSedenionEquiv_intertwines_g2Derivation
+#print axioms cl44LeftIdealSplitSedenionEquiv_intertwines_g2Derivation
+#print axioms leftIdealEquiv_intertwines_g2Derivation
+#print axioms spinor16G2Derivation_leibniz
+#print axioms spinor16G2Derivation_preserves_semiSpinorPlus
+#print axioms spinor16G2Derivation_preserves_semiSpinorMinus
+#print axioms sedenionG2Derivation_commutes_with_sheetLinearMix
+#print axioms sedenionG2Derivation_lands_in_traceZero_bimodule
+
+end InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesisAudit

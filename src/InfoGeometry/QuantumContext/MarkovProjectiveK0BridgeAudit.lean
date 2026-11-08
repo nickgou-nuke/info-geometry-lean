@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge
+
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovRangeEnd_idempotent
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovKernelEnd_idempotent
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovRangeEnd_mul_kernelEnd
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovLaplacianEnd_ne_zero_of_matrix_ne_one
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovRangeEnd_range_eq_laplacian
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovKernelEnd_range_eq_laplacian_kernel
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovKernelEnd_mul_rangeEnd
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovProjectiveK0_split
+#print axioms InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.exists_nontrivial_rowStochastic_markovProjectiveK0_split

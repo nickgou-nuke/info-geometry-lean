@@ -1,0 +1,285 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Spectrometry.DecoupledThermodynamicsFluctuations
+import InfoGeometry.Spectrometry.FiniteWeightDispersion
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+
+namespace InfoGeometry.Spectrometry.DecoupledThermodynamics
+
+open scoped BigOperators
+
+namespace ThermodynamicGeometryDependency
+
+inductive Archetype
+  | varianceDecomposition
+  | dispersion
+  | stateEnvelope
+  | quadraticPeak
+  | universalBound
+  | freeEnergyCalculus
+  | shiftHessian
+  | susceptibilityBound
+  deriving DecidableEq
+
+open Archetype
+
+instance : Fintype Archetype where
+  elems := {varianceDecomposition, dispersion, stateEnvelope, quadraticPeak,
+    universalBound, freeEnergyCalculus, shiftHessian, susceptibilityBound}
+  complete := by
+    intro archetype
+    cases archetype <;> simp
+
+def prerequisites : Archetype → Finset Archetype
+  | varianceDecomposition => {varianceDecomposition}
+  | dispersion => {dispersion}
+  | stateEnvelope => {varianceDecomposition, dispersion, stateEnvelope}
+  | quadraticPeak => {quadraticPeak}
+  | universalBound =>
+      {varianceDecomposition, dispersion, stateEnvelope, quadraticPeak, universalBound}
+  | freeEnergyCalculus => {freeEnergyCalculus}
+  | shiftHessian => {varianceDecomposition, freeEnergyCalculus, shiftHessian}
+  | susceptibilityBound =>
+      {varianceDecomposition, dispersion, stateEnvelope, freeEnergyCalculus,
+        shiftHessian, susceptibilityBound}
+
+instance : PartialOrder Archetype where
+  le earlier later := prerequisites earlier ⊆ prerequisites later
+  le_refl _ := Finset.Subset.refl _
+  le_trans _ _ _ := Finset.Subset.trans
+  le_antisymm := by
+    intro earlier later
+    cases earlier <;> cases later <;> decide
+
+theorem dependency_edges :
+    varianceDecomposition ≤ stateEnvelope ∧ dispersion ≤ stateEnvelope ∧
+    stateEnvelope ≤ universalBound ∧ quadraticPeak ≤ universalBound ∧
+    varianceDecomposition ≤ shiftHessian ∧ freeEnergyCalculus ≤ shiftHessian ∧
+    stateEnvelope ≤ susceptibilityBound ∧ shiftHessian ≤ susceptibilityBound := by
+  change
+    prerequisites varianceDecomposition ⊆ prerequisites stateEnvelope ∧
+    prerequisites dispersion ⊆ prerequisites stateEnvelope ∧
+    prerequisites stateEnvelope ⊆ prerequisites universalBound ∧
+    prerequisites quadraticPeak ⊆ prerequisites universalBound ∧
+    prerequisites varianceDecomposition ⊆ prerequisites shiftHessian ∧
+    prerequisites freeEnergyCalculus ⊆ prerequisites shiftHessian ∧
+    prerequisites stateEnvelope ⊆ prerequisites susceptibilityBound ∧
+    prerequisites shiftHessian ⊆ prerequisites susceptibilityBound
+  decide
+
+theorem envelope_and_hessian_incomparable :
+    ¬ stateEnvelope ≤ shiftHessian ∧ ¬ shiftHessian ≤ stateEnvelope := by
+  change ¬ prerequisites stateEnvelope ⊆ prerequisites shiftHessian ∧
+    ¬ prerequisites shiftHessian ⊆ prerequisites stateEnvelope
+  decide
+
+end ThermodynamicGeometryDependency
+
+open InfoGeometry.Spectrometry.FiniteWeightDispersion
+
+noncomputable section
+
+variable {Line : Type*} [Fintype Line] [DecidableEq Line]
+
+theorem accepted_count_variance_decomposition
+    (energies : Line → ℝ) (cutoff temperature : ℝ) :
+    acceptedCountVariance energies cutoff temperature =
+      activeSupport energies cutoff temperature -
+        squaredWeightSum (fun line => lineWeight (energies line) cutoff temperature) := by
+  rw [accepted_count_variance_eq_sum]
+  unfold activeSupport squaredWeightSum
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro line _
+  ring
+
+theorem accepted_count_envelope_defect [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature : ℝ) :
+    varianceEnvelope (Fintype.card Line) (activeSupport energies cutoff temperature) -
+        acceptedCountVariance energies cutoff temperature =
+      dispersion (fun line => lineWeight (energies line) cutoff temperature) := by
+  rw [accepted_count_variance_decomposition, dispersion_eq]
+  unfold varianceEnvelope activeSupport
+  ring
+
+theorem accepted_count_variance_le_state_envelope [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature : ℝ) :
+    acceptedCountVariance energies cutoff temperature ≤
+      varianceEnvelope (Fintype.card Line) (activeSupport energies cutoff temperature) := by
+  have nonnegative := dispersion_nonneg (fun line => lineWeight (energies line) cutoff temperature)
+  rw [← accepted_count_envelope_defect] at nonnegative
+  linarith
+
+theorem accepted_count_variance_eq_envelope_iff [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature : ℝ) :
+    acceptedCountVariance energies cutoff temperature =
+        varianceEnvelope (Fintype.card Line) (activeSupport energies cutoff temperature) ↔
+      ∀ line, lineWeight (energies line) cutoff temperature =
+        activeSupport energies cutoff temperature / Fintype.card Line := by
+  rw [eq_comm, ← sub_eq_zero, accepted_count_envelope_defect]
+  exact dispersion_eq_zero_iff _
+
+theorem accepted_count_variance_lt_envelope_of_nonuniform [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature : ℝ)
+    (nonuniform : ∃ line, lineWeight (energies line) cutoff temperature ≠
+      activeSupport energies cutoff temperature / Fintype.card Line) :
+    acceptedCountVariance energies cutoff temperature <
+      varianceEnvelope (Fintype.card Line) (activeSupport energies cutoff temperature) := by
+  refine lt_of_le_of_ne (accepted_count_variance_le_state_envelope energies cutoff temperature) ?_
+  intro equality
+  obtain ⟨line, different⟩ := nonuniform
+  exact different ((accepted_count_variance_eq_envelope_iff energies cutoff temperature).mp equality line)
+
+theorem accepted_count_variance_le_quarter_via_envelope [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature : ℝ) :
+    acceptedCountVariance energies cutoff temperature ≤ (Fintype.card Line : ℝ) / 4 :=
+  (accepted_count_variance_le_state_envelope energies cutoff temperature).trans
+    (envelope_le_quarter _ _ Fintype.card_pos)
+
+theorem eleven_line_variance_bound_of_support_ten
+    (energies : Fin 11 → ℝ) (cutoff temperature : ℝ)
+    (support_ten : activeSupport energies cutoff temperature = 10) :
+    acceptedCountVariance energies cutoff temperature ≤ 10 / 11 := by
+  have bound := accepted_count_variance_le_state_envelope energies cutoff temperature
+  norm_num [support_ten, varianceEnvelope] at bound ⊢
+  exact bound
+
+def shiftedFreeEnergy (energies : Line → ℝ) (cutoff temperature shift : ℝ) : ℝ :=
+  totalFreeEnergy (fun line => energies line + shift) cutoff temperature
+
+omit [DecidableEq Line] in
+theorem hasDerivAt_shiftedFreeEnergy
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :
+    HasDerivAt (shiftedFreeEnergy energies cutoff temperature)
+      (activeSupport (fun line => energies line + shift) cutoff temperature) shift := by
+  have line_derivative (line : Line) :
+      HasDerivAt (fun offset => lineFreeEnergy (energies line + offset) cutoff temperature)
+        (lineWeight (energies line + shift) cutoff temperature) shift := by
+    exact HasDerivAt.comp_const_add (energies line) shift
+      (hasDerivAt_lineFreeEnergy (energies line + shift) cutoff temperature temperature_pos)
+  exact HasDerivAt.fun_sum (fun line _ => line_derivative line)
+
+omit [DecidableEq Line] in
+theorem deriv_shiftedFreeEnergy_eq
+    (energies : Line → ℝ) (cutoff temperature : ℝ) (temperature_pos : 0 < temperature) :
+    deriv (shiftedFreeEnergy energies cutoff temperature) =
+      fun shift => activeSupport (fun line => energies line + shift) cutoff temperature := by
+  funext shift
+  exact (hasDerivAt_shiftedFreeEnergy energies cutoff temperature shift temperature_pos).deriv
+
+theorem hasDerivAt_shiftedActiveSupport
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) :
+    HasDerivAt
+      (fun offset => activeSupport (fun line => energies line + offset) cutoff temperature)
+      (-acceptedCountVariance (fun line => energies line + shift) cutoff temperature / temperature)
+      shift := by
+  have line_derivative (line : Line) :
+      HasDerivAt (fun offset => lineWeight (energies line + offset) cutoff temperature)
+      (-lineWeight (energies line + shift) cutoff temperature *
+          (1 - lineWeight (energies line + shift) cutoff temperature) / temperature) shift := by
+    exact HasDerivAt.comp_const_add (energies line) shift
+      (hasDerivAt_lineWeight (energies line + shift) cutoff temperature)
+  change HasDerivAt (fun offset =>
+    ∑ line, lineWeight (energies line + offset) cutoff temperature) _ shift
+  convert HasDerivAt.fun_sum (fun line _ => line_derivative line) using 1
+  rw [accepted_count_variance_eq_sum, ← Finset.sum_neg_distrib, Finset.sum_div]
+  apply Finset.sum_congr rfl
+  intro line _
+  ring
+
+theorem hasDerivAt_deriv_shiftedFreeEnergy
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :
+    HasDerivAt (deriv (shiftedFreeEnergy energies cutoff temperature))
+      (-acceptedCountVariance (fun line => energies line + shift) cutoff temperature / temperature)
+      shift := by
+  rw [deriv_shiftedFreeEnergy_eq energies cutoff temperature temperature_pos]
+  exact hasDerivAt_shiftedActiveSupport energies cutoff temperature shift
+
+def shiftSusceptibility (energies : Line → ℝ) (cutoff temperature shift : ℝ) : ℝ :=
+  -deriv (deriv (shiftedFreeEnergy energies cutoff temperature)) shift
+
+theorem shift_susceptibility_eq_variance_div_temperature
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :
+    shiftSusceptibility energies cutoff temperature shift =
+      acceptedCountVariance (fun line => energies line + shift) cutoff temperature / temperature := by
+  unfold shiftSusceptibility
+  rw [(hasDerivAt_deriv_shiftedFreeEnergy energies cutoff temperature shift temperature_pos).deriv]
+  ring
+
+theorem shift_susceptibility_nonneg
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :
+    0 ≤ shiftSusceptibility energies cutoff temperature shift := by
+  rw [shift_susceptibility_eq_variance_div_temperature energies cutoff temperature shift temperature_pos]
+  exact div_nonneg (accepted_count_variance_nonneg _ _ _) temperature_pos.le
+
+theorem shift_susceptibility_pos [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :
+    0 < shiftSusceptibility energies cutoff temperature shift := by
+  rw [shift_susceptibility_eq_variance_div_temperature energies cutoff temperature shift temperature_pos]
+  exact div_pos (accepted_count_variance_pos _ _ _) temperature_pos
+
+theorem shift_susceptibility_le_state_envelope [Nonempty Line]
+    (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :
+    shiftSusceptibility energies cutoff temperature shift ≤
+      varianceEnvelope (Fintype.card Line)
+        (activeSupport (fun line => energies line + shift) cutoff temperature) / temperature := by
+  rw [shift_susceptibility_eq_variance_div_temperature energies cutoff temperature shift temperature_pos]
+  exact div_le_div_of_nonneg_right
+    (accepted_count_variance_le_state_envelope _ _ _) temperature_pos.le
+
+theorem shift_susceptibility_at_cutoff (cutoff temperature : ℝ) (temperature_pos : 0 < temperature) :
+    shiftSusceptibility (fun _line : Line => cutoff) cutoff temperature 0 =
+      (Fintype.card Line : ℝ) / (4 * temperature) := by
+  rw [shift_susceptibility_eq_variance_div_temperature _ _ _ _ temperature_pos]
+  simp only [add_zero, accepted_count_variance_at_cutoff]
+  ring
+
+end
+
+/-! ### Non-Commutative Operator Realization of `ThermodynamicGeometryDependency.Archetype` over `[Ring B]` -/
+
+section NonCommutativeOperatorRealization
+
+open InfoGeometry.OperatorAlgebra.PeirceSpine
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative operator realization mapping each `ThermodynamicGeometryDependency.Archetype`
+node to its canonical Peirce operator in `[Ring B]`. -/
+def thermodynamicGeometryArchetypeOperator (P A C X : B) :
+    ThermodynamicGeometryDependency.Archetype → B
+  | .varianceDecomposition => evenGrade P X + oddGrade P X
+  | .dispersion => genSig P A C
+  | .stateEnvelope => genV P A C
+  | .quadraticPeak => conePlus P X * conePlus P X
+  | .universalBound => genSig P A C * genSig P A C - genV P A C * genV P A C
+  | .freeEnergyCalculus => genPhi P A C
+  | .shiftHessian => derivSqPhi P A C (genJ P A C)
+  | .susceptibilityBound => InfoGeometry.OperatorAlgebra.PeirceSpine.comm (genPhi P A C) (genJ P A C)
+
+/-- **Theorem (Non-Commutative Operator Identities across `ThermodynamicGeometryDependency.Archetype`)**:
+For any idempotent `P * P = P` in a non-commutative ring `[Ring B]`, the thermodynamic
+geometry archetypes satisfy exact Peirce decomposition, nilpotent cone vanishing
+`N_+² = 0`, Casimir envelope identity `Σ² - V² = 0`, double-commutator Hessian
+shift `ad_Φ²(J) = -4 V J`, and susceptibility commutator `[Φ, J] = -2 Σ`. -/
+theorem thermodynamicGeometryArchetype_operator_identities {P : B} (hP : P * P = P) (A C X : B) :
+    thermodynamicGeometryArchetypeOperator P A C X .varianceDecomposition = X ∧
+    thermodynamicGeometryArchetypeOperator P A C X .quadraticPeak = 0 ∧
+    thermodynamicGeometryArchetypeOperator P A C X .universalBound = 0 ∧
+    thermodynamicGeometryArchetypeOperator P A C X .freeEnergyCalculus *
+      thermodynamicGeometryArchetypeOperator P A C X .freeEnergyCalculus =
+      thermodynamicGeometryArchetypeOperator P A C X .stateEnvelope ∧
+    thermodynamicGeometryArchetypeOperator P A C X .shiftHessian =
+      -((4 : ℤ) • (genV P A C * genJ P A C)) ∧
+    thermodynamicGeometryArchetypeOperator P A C X .susceptibilityBound =
+      -((2 : ℤ) • thermodynamicGeometryArchetypeOperator P A C X .dispersion) := by
+  dsimp only [thermodynamicGeometryArchetypeOperator]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> ((try simp only [derivSqPhi]); peirce_nf hP)
+
+end NonCommutativeOperatorRealization
+
+end InfoGeometry.Spectrometry.DecoupledThermodynamics

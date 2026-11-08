@@ -1,0 +1,10 @@
+import InfoGeometry.Canonical.ChiralCausalConeSoldering
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.carrierSolderAlg
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.carrierSolderAlg_commutator
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.sigmaPlus_alg_solder
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.sigmaMinus_alg_solder
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.sigmaThree_alg_solder
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.carrierSolderAlg_car_packet
+#print axioms InfoGeometry.Canonical.ChiralCausalConeSoldering.solder_preserves_causal_determinant

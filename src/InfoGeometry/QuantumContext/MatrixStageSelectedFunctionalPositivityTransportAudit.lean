@@ -1,0 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MatrixStageSelectedFunctionalPositivityTransport
+
+#print axioms InfoGeometry.QuantumContext.MatrixStageSelectedFunctionalPositivityTransport.selectedFamilyFunctional_eq_pullback
+#print axioms InfoGeometry.QuantumContext.MatrixStageSelectedFunctionalPositivityTransport.selectedFamilyLinearFunctional
+#print axioms InfoGeometry.QuantumContext.MatrixStageSelectedFunctionalPositivityTransport.selectedFamilyLinearFunctional_apply
+#print axioms InfoGeometry.QuantumContext.MatrixStageSelectedFunctionalPositivityTransport.selectedFamilyFunctional_positive
+#print axioms InfoGeometry.QuantumContext.MatrixStageSelectedFunctionalPositivityTransport.selectedFamilyFunctional_starSquare_im_zero

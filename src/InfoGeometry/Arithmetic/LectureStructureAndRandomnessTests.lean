@@ -1,0 +1,81 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Arithmetic.LectureStructureAndRandomness
+
+namespace InfoGeometry.Arithmetic.LectureStructureAndRandomnessTests
+
+open scoped BigOperators
+open LectureStructureAndRandomness BostConnesSystem
+
+example : Archetype.finiteFields ≤ Archetype.gaussIdentities :=
+  le_trans gauss_branch.1 gauss_branch.2
+
+example : ¬ Archetype.finiteCounting ≤ Archetype.spectralStatistics := by
+  decide
+
+example (samples : Finset ℕ+) :
+    (∑ index ∈ samples, liouville index * liouville (1 * index.val)) =
+      (samples.card : ℤ) := by
+  simpa using dilation_correlation samples 1
+
+example (samples : Finset ℕ+) :
+    (∑ index ∈ samples, liouville index * liouville (2 * index.val)) =
+      -(samples.card : ℤ) :=
+  prime_dilation_correlation samples 2 (by decide)
+
+example :
+    (∑ index ∈ ({1} : Finset ℕ+), liouville index * liouville (3 * index.val)) =
+      -1 := by
+  simpa using prime_dilation_correlation ({1} : Finset ℕ+) 3 (by decide)
+
+example (multiplier : ℕ+) :
+    (∑ index ∈ (∅ : Finset ℕ+),
+      liouville index * liouville (multiplier.val * index.val)) = 0 := by
+  simp
+
+example (samples : Finset ℕ+) (shift : ℕ) :
+    (∑ index ∈ samples, liouville index * shiftedLiouville index shift) = 0 ↔
+      2 * ((samples.filter (fun (index : ℕ+) =>
+        liouville index = shiftedLiouville index shift)).card : ℤ) =
+          (samples.card : ℤ) :=
+  liouville_correlation_zero_iff samples shift
+
+local instance factPrimeFive : Fact (Nat.Prime 5) := ⟨by decide⟩
+local instance factPrimeThirteen : Fact (Nat.Prime 13) := ⟨by decide⟩
+
+example : legendreSym 13 5 = legendreSym 5 13 :=
+  quadratic_reciprocity_one_mod_four 5 13 (by decide) (by decide)
+
+example {point : ℂ}
+    (zero_at :
+      InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge.entireRiemannXi point = 0) :
+    InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge.entireRiemannXi
+      (InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.antiunitaryCriticalReflection point) = 0 :=
+  SarnakLocalCertification.entireRiemannXi_zero_reflection zero_at
+
+example : ∃ predicate : ℕ → Prop,
+    (∀ index ≤ 1000000, predicate index) ∧ ¬ ∀ index, predicate index :=
+  finite_checks_do_not_imply_universal 1000000
+
+#print axioms prerequisites_injective
+#print axioms gauss_branch
+#print axioms correlation_branch
+#print axioms symmetry_branch
+#print axioms spectral_branch
+#print axioms symmetry_and_spectral_realization_incomparable
+#print axioms dependency_antisymmetric
+#print axioms gauss_duality
+#print axioms quadratic_gauss_square
+#print axioms quadratic_reciprocity_one_mod_four
+#print axioms liouville_completely_multiplicative
+#print axioms dilation_correlation
+#print axioms prime_dilation_correlation
+#print axioms functional_symmetry_pairs_zeros
+#print axioms functional_symmetry_does_not_force_critical_zeros
+#print axioms finite_checks_do_not_imply_universal
+
+end InfoGeometry.Arithmetic.LectureStructureAndRandomnessTests

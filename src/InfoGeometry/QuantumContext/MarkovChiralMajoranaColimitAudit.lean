@@ -1,0 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit
+
+#print axioms InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit.realCliffordStageToLimit
+#print axioms InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit.chiralMajoranaAtLimit
+#print axioms InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit.softmaxLaplacianAtLimit
+#print axioms InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit.chiralMajoranaAtLimit_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit.chiralMajoranaAtLimit_anticommutes_globalChirality
+#print axioms InfoGeometry.QuantumContext.MarkovChiralMajoranaColimit.exists_symmetricSoftmax_groupInverse_chiralMajorana_inMatrixStageLimit

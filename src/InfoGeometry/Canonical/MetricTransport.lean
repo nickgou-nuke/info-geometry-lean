@@ -1,0 +1,142 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.OperatorProjectorMismatch
+import InfoGeometry.Singular.MoorePenroseTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic.NoncommRing
+
+/-!
+# Metric transport
+
+Theorem-safe transport layer:
+- Drazin projector is similarity-natural under supplied transport equations.
+- Moore-Penrose projector is metric-natural under supplied transport equations.
+- Fixed-metric failures are recorded as an explicit tear term.
+
+No automatic anomaly deletion and no automatic conformal-gravity closure claim.
+-/
+
+namespace InfoGeometry.Canonical.MetricTransport
+
+open OperatorProjectorMismatch
+open OperatorProjectorMismatch.ProjectorPair
+
+variable {R : Type*} [Ring R]
+
+/-- Range and co-range covariance derived from the Penrose equations and
+star-compatible coordinates. The target inverse is identified by uniqueness;
+neither projector transport equation is an assumption. -/
+theorem penrose_projectors_covariant
+    {S : Type*} [Ring S] [StarRing R] [StarRing S]
+    {a b : R} {c : S} (e : R ≃+* S)
+    (he : ∀ x : R, e (star x) = star (e x))
+    (h : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse a b)
+    (hc : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse (e a) c) :
+    e a * c = e (a * b) ∧ c * e a = e (b * a) := by
+  rw [h.target_eq_map e he hc]
+  exact ⟨(e.map_mul a b).symm, (e.map_mul b a).symm⟩
+
+/-- Fixed-metric covariance of both actual Penrose projectors is equivalent
+to commutation of the source supports with the Gram element. No transport
+record or assumed projector covariance is used. -/
+theorem penrose_projectors_similarity_iff [StarRing R]
+    {a b c g gInv : R}
+    (hab : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse a b)
+    (hc : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse (g * a * gInv) c)
+    (hleft : gInv * g = 1) (hright : g * gInv = 1) :
+    ((g * a * gInv) * c = g * (a * b) * gInv ∧
+      c * (g * a * gInv) = g * (b * a) * gInv) ↔
+    ((a * b) * (star g * g) = (star g * g) * (a * b) ∧
+      (b * a) * (star g * g) = (star g * g) * (b * a)) := by
+  constructor
+  · rintro ⟨hL, hR⟩
+    constructor
+    · apply (InfoGeometry.Singular.MoorePenrose.similarity_selfAdjoint_iff_gram_commute
+        hab.ab_adj_eq hleft hright).mp
+      rw [← hL]
+      exact hc.ab_adj_eq
+    · apply (InfoGeometry.Singular.MoorePenrose.similarity_selfAdjoint_iff_gram_commute
+        hab.ba_adj_eq hleft hright).mp
+      rw [← hR]
+      exact hc.ba_adj_eq
+  · intro hcomm
+    rw [(hab.target_eq_similarity_iff hc hleft hright).mpr hcomm]
+    have hmul (x y : R) : (g * x * gInv) * (g * y * gInv) =
+        g * (x * y) * gInv := by
+      calc
+        _ = g * x * (gInv * g) * y * gInv := by simp only [mul_assoc]
+        _ = _ := by rw [hleft, mul_one]; simp only [mul_assoc]
+    exact ⟨hmul a b, hmul b a⟩
+
+/-- Similarity transport data between two projector pairs.
+
+The checked projector equations below are the Lean authority available in this
+transport object.
+-/
+@[rep_depth transport]
+structure SimilarityTransport (P P' : ProjectorPair R) where
+  g : R
+  gInv : R
+  leftInv : gInv * g = 1
+  rightInv : g * gInv = 1
+  drazin_transport : P'.PD = g * P.PD * gInv
+  moorePenrose_transport : P'.PMP = g * P.PMP * gInv
+
+/-- Fixed-metric Moore--Penrose tear term (the non-equivariance defect). -/
+def MPFixedTear (P P' : ProjectorPair R) (W : SimilarityTransport P P') : R :=
+  P'.PMP - W.g * P.PMP * W.gInv
+
+/-- Drazin/MP mismatch in a chosen metric layer. -/
+def mismatch_G (P : ProjectorPair R) : R :=
+  ProjectorPair.mismatch P
+
+/-- Transported metric restores Moore--Penrose covariance. -/
+theorem transported_metric_restores_mp_covariance
+    {P P' : ProjectorPair R}
+    (W : SimilarityTransport P P') :
+    P'.PMP = W.g * P.PMP * W.gInv :=
+  W.moorePenrose_transport
+
+/-- Mismatch decomposition under fixed-metric transport:
+`mismatch' = transported mismatch - MP fixed-metric tear`.
+-/
+theorem mismatch_transport_decomposition
+    {P P' : ProjectorPair R}
+    (W : SimilarityTransport P P') :
+    mismatch_G P' = W.g * mismatch_G P * W.gInv - MPFixedTear P P' W := by
+  unfold mismatch_G MPFixedTear ProjectorPair.mismatch
+    ProjectorPair.spectralProjector ProjectorPair.metricProjector
+  rw [W.drazin_transport, W.moorePenrose_transport]
+  noncomm_ring
+
+/-- With transported metric transport, mismatch transports covariantly. -/
+theorem transported_mismatch_covariant
+    {P P' : ProjectorPair R}
+    (W : SimilarityTransport P P')
+    (hTearZero : MPFixedTear P P' W = 0) :
+    mismatch_G P' = W.g * mismatch_G P * W.gInv := by
+  have h := mismatch_transport_decomposition (W := W)
+  rw [hTearZero, sub_zero] at h
+  exact h
+
+/-- Transporting the metric exactly kills the fixed-metric Moore--Penrose tear term. -/
+theorem mpFixedTear_eq_zero_of_similarityTransport
+    {P P' : ProjectorPair R}
+    (W : SimilarityTransport P P') :
+    MPFixedTear P P' W = 0 := by
+  unfold MPFixedTear
+  rw [W.moorePenrose_transport]
+  exact sub_self _
+
+/-- Direct covariance theorem from the similarity transport owner data. -/
+theorem mismatch_covariant_of_similarityTransport
+    {P P' : ProjectorPair R}
+    (W : SimilarityTransport P P') :
+    mismatch_G P' = W.g * mismatch_G P * W.gInv :=
+  transported_mismatch_covariant W (mpFixedTear_eq_zero_of_similarityTransport W)
+
+end InfoGeometry.Canonical.MetricTransport

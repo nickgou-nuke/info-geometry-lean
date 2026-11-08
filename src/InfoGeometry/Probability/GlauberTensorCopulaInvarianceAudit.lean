@@ -1,0 +1,13 @@
+import InfoGeometry.Probability.GlauberTensorCopulaInvariance
+
+/-!
+# Audit for finite separable-kernel identities
+-/
+
+open InfoGeometry.Probability.GlauberTensorCopula
+
+#print axioms SeparableKernelModel.integratedKernel_factorization
+#print axioms SeparableKernelModel.separableKernelRatio_eq_amplitude_div_factor
+#print axioms SeparableKernelModel.factor_mul_ratio_eq_amplitude
+#print axioms SeparableKernelModel.separableKernelRatio_scale_invariance
+#print axioms SeparableKernelModel.separableKernelRatio_asymmetric_scale_invariance

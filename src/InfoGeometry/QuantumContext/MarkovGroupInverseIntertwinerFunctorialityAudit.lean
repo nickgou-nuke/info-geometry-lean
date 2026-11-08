@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctoriality
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.stationaryMeanMatrix_intertwines
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.unitRowSums_alone_do_not_intertwine_stationaryMeanMatrix
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.isGroupInverse_toLin'
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.poissonGreen_transports_of_stationary_compatible
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.regularizedShift_intertwines_of_stationary_compatible
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.liftedSolution_mean_zero_of_stationary_compatible
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.mulVec_mem_range_of_groupInverse'
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.range_groupInverse_eq
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.isGroupInverse_toLin'_of

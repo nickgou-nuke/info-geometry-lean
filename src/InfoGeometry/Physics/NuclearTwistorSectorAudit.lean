@@ -1,0 +1,54 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Twistor.RealConstructsAudit
+import InfoGeometry.Physics.NuclearTwistorSectorExample
+
+/-! Axiom footprints for the concrete real sector, action and normalized readout. -/
+
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneParticleProjector_idempotent
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.mem_oneParticleSector_iff
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneParticleProjector_ne_zero
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneParticleProjector_ne_one
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneParticleProjector_symmetric
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.euler_oneParticleProjector
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneBody_linearForm
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneBody_transpose_adjoint
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneParticleProjector_oneBody_commute
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.oneBody_injective
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.euclideanEmbedding_pairing
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualRetraction_embedding
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualEmbedding_retraction
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualEmbedding_neutral
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualEmbedding_symplectic
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.mem_sectorDualEmbedding_range_iff
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualEmbedding_oneBody
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualRetraction_oneBody
+#print axioms InfoGeometry.Twistor.RealPolynomialCCR.sectorDualEmbedding_positiveEmbedding
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.dualLift_neutral_selfAdjoint
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.positiveEmbedding_pairing
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.lightconeDoubled_positiveEmbedding
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.positiveProjector_idempotent
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.positiveProjector_neutral_selfAdjoint
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.positiveProjector_fixed_iff_graph
+#print axioms InfoGeometry.Twistor.RealDualTwistorPositiveSector.dualLift_positiveProjector_commute
+#print axioms InfoGeometry.Twistor.RealSpectralAction.hasDerivAt_action_line
+#print axioms InfoGeometry.Twistor.RealSpectralAction.stationary_iff
+#print axioms InfoGeometry.Physics.NuclearTwistorConfigurationSector.polynomialHamiltonian_embedding
+#print axioms InfoGeometry.Physics.NuclearTwistorConfigurationSector.polynomialHamiltonian_off_diagonal
+#print axioms InfoGeometry.Physics.NuclearTwistorConfigurationSector.dualNumberProjector_hamiltonian_commute
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.polynomialAction_hasDerivAt
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.polynomialStationary_embedding_iff
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.positiveDualAction_stationary_iff
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.darkPolynomial_stationary
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.brightPolynomial_stationary
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.darkDual_unit
+#print axioms InfoGeometry.Physics.NuclearTwistorStationaryStates.brightDual_unit
+#print axioms InfoGeometry.Physics.NuclearTwistorTransition.polynomialMeasuredStrength_closed_form
+#print axioms InfoGeometry.Physics.NuclearTwistorTransition.dualMeasuredStrength_closed_form
+#print axioms InfoGeometry.Physics.NuclearTwistorTransition.polynomialProbe_strength_sum
+#print axioms InfoGeometry.Physics.NuclearTwistorSectorExample.three_stationary_states
+#print axioms InfoGeometry.Physics.NuclearTwistorSectorExample.two_bright_strengths_sum
+#print axioms InfoGeometry.Physics.NuclearTwistorSectorExample.dual_two_bright_strengths_sum

@@ -1,0 +1,11 @@
+import InfoGeometry.Physics.SDiffCoadjointHelicityCasimir
+
+open InfoGeometry.Physics.SDiffCoadjoint
+
+#print axioms dot_invariant
+#print axioms normSq_invariant
+#print axioms kinetic_energy_invariant
+#print axioms helicity_density_invariant
+#print axioms helicity_is_generalized_casimir
+#print axioms beltrami_helicity_coadjoint_invariant
+#print axioms certified_sdiff_coadjoint_helicity_synthesis

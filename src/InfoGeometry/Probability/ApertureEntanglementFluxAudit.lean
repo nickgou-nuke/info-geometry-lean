@@ -1,0 +1,22 @@
+import InfoGeometry.Probability.ApertureEntanglementFlux
+
+/-!
+# Audit for Aperture Entanglement Flux & Rose Attenuation
+-/
+
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.J2_eq_J0_mul_Q2
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.J4_eq_J0_mul_Q4
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.Q2_one
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.Q4_one
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.Q2_zero
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.Q4_zero
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.Weff_one
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.Weff_zero
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.co60_Weff_one
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.co60_Weff_contact
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.tl208_Weff_one
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.solidAngle_one
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.solidAngle_zero
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.etendue_conservation
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.boundaryFlux_zero
+#print axioms InfoGeometry.Probability.ApertureEntanglementFlux.aperture_entanglement_flux_synthesis

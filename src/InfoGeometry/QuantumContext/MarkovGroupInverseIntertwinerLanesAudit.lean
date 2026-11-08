@@ -1,0 +1,21 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerLanes
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_rangeIntertwining_iff_stationaryProjector
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_regularIdempotent_eq_one_sub_stationaryMeanMatrix
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.regularIdempotents_intertwine_of_stationary_compatible
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.covariantPoisson_coarse_solution
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.covariantLaplacian_intertwines_on_observables
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.covariantPoisson_fine_solution
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.covariantPoisson_fine_solution_in_range
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.solvable_range_solution_eq_groupInverse_image
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.regularizedShift_inverts_transported_regularizedLaplacian
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.regularizedShift_inverts_of_stationary_compatible
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.partitionIncidence_intertwines_regularIdempotents
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.partitionLumping_from_rangeIntertwining
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.partitionIncidence_groupInverse_iff_regularIdempotentIntertwining

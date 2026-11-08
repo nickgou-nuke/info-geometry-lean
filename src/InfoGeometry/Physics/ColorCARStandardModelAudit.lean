@@ -1,0 +1,41 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Physics.ColorCARStandardModel
+
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.e_mem_R_CAR
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.car_submodule_is_left_tau_ideal
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carAnn_mem_fureyConjugateGeneration
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.N_plus_add_N_minus
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.N_plus_sub_N_minus
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.N_plus_mul_N_minus
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.N_minus_mul_N_plus
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.N_plus_idempotent
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.N_minus_idempotent
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.numberOp0_idem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.numberOp1_idem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.numberOp2_idem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.excitationOp0_idem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.excitationOp1_idem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.excitationOp2_idem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.fureyVacuumIdempotent_sq
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carAnn0_mul_fureyVacuumIdempotent
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carAnn1_mul_fureyVacuumIdempotent
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carAnn2_mul_fureyVacuumIdempotent
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.furey_top_creation_state_eq
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.readoutMinus3_tmul
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.furey_top_creation_state_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carCre0_mul_fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carCre1_mul_fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carCre2_mul_fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carCre0_carCre1_mul_fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carCre1_carCre2_mul_fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.carCre0_carCre2_mul_fureyVacuumIdempotent_ne_zero
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.mul_fureyVacuumIdempotent_mem
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.fureyVacuumLeftIdeal_left_mul_closed
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.furey_creation_states_mem_fureyVacuumLeftIdeal
+#print axioms InfoGeometry.Physics.ColorCARStandardModel.color_car_standard_model_synthesis

@@ -1,0 +1,39 @@
+import InfoGeometry.Thermal.FiniteMatrix
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Thermo.BuresWassersteinKMSCost
+import InfoGeometry.Thermo.OnsagerDifferentialFormsBridge
+import InfoGeometry.Thermo.OnsagerOperatorClosure
+import InfoGeometry.Thermo.FiniteDiagonal
+import InfoGeometry.Thermo.FiniteMatrix
+import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+import InfoGeometry.Thermo.SplitChiralPolarizationBasis
+import InfoGeometry.Thermo.FromBregman
+import InfoGeometry.Thermo.FromLogDet
+import InfoGeometry.Thermo.JacobianBregmanBridge
+import InfoGeometry.Thermo.Gibbs
+import InfoGeometry.Thermo.KMSDetailedBalance
+import InfoGeometry.Thermo.MetalMirror
+import InfoGeometry.Thermo.ArakiItakuraSaitoCollapse
+import InfoGeometry.Thermo.AmariSouriauBridge
+import InfoGeometry.Thermo.ModularKLDivergence
+import InfoGeometry.Thermo.RelativeTemperatureFirstLaw
+import InfoGeometry.Thermo.SusceptibilityHessian
+import InfoGeometry.Thermo.SusceptibilityOnsagerStress
+import InfoGeometry.Thermo.ThermodynamicIdentities
+import InfoGeometry.Thermo.GenericMetriplecticFlow
+import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
+import InfoGeometry.Thermo.BipolarDissipativeGENERIC
+import InfoGeometry.Thermo.BipolarThreeCoordinateGENERIC
+import InfoGeometry.Thermo.BipolarGENERICRestriction
+import InfoGeometry.Potential.Thermo
+import InfoGeometry.Thermo.LambdaReductionAffinity
+
+namespace InfoGeometry
+
+/-!
+# InfoGeometry.Thermo.All
+
+Umbrella module for the thermodynamics and thermal matrix layer.
+-/
+
+end InfoGeometry

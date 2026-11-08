@@ -1,0 +1,10 @@
+import InfoGeometry.Thermo.ComplexThermodynamicLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+open InfoGeometry.Thermo.ComplexThermodynamicLift
+
+#check freeEnergyGap
+#check freeEnergyGap_eq_energy_sub_temperature_mul_entropy
+#check twoPhasePartition_eq_zero_iff
+#check yangLeeZero_freeEnergyGap
+#check yangLeeZero_realPhaseConditions

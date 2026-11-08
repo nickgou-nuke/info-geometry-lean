@@ -1,0 +1,29 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.CurrentModeNonvanishing
+import InfoGeometry.Canonical.SplitCliffordFiniteCAR
+
+open InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep
+open InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction
+open InfoGeometry.Canonical.SugawaraFiveGradingObstruction
+open InfoGeometry.Canonical.SplitCliffordFiniteCAR
+
+#print axioms mode_ne_zero
+#print axioms not_uniformly_truncated
+#print axioms sugawara_current_commutator_eq_zero_iff
+#print axioms sugawara_current_commutator_ne_zero
+#print axioms positive_sugawara_boundary_ne_zero
+#print axioms currentHeisenbergRep_no_opposite_zero_modes
+#print axioms no_two_mode_supported_currentHeisenbergRep
+#print axioms sugawara_current_mode_shift
+#print axioms positive_one_one_commutator
+#print axioms boundary_zero_forces_current_two_zero
+#print axioms current_two_ne_zero_obstructs_boundary_zero
+#print axioms no_naive_positive_boundary_truncation
+#print axioms mode_escape_formula
+#print axioms JfinIndexed_comm_table_piecewise
+#print axioms JfinIndexed_not_scalarHeisenbergShape
+#print axioms JfinIndexed_constructive_window_J_trunc_comm

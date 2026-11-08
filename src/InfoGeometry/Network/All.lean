@@ -1,0 +1,3 @@
+import InfoGeometry.Network.ThermoDiamond
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Network.DeformationPositivity

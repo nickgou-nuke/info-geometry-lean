@@ -1,0 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit
+
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.stageDiagram_obj
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.stageDiagram_map_succ
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.cartanStageEndomorphism_apply
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.stageBond_cartan_naturality
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.cartanColimitEndomorphism_stage
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.cartanColimitEndomorphism_apply_stage
+#print axioms InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit.cartanColimitEndomorphism_unique

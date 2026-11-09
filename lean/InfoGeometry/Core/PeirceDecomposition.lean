@@ -188,10 +188,8 @@ theorem idempotencyDefect_peirce_components
     complementIdempotent]
   have hcomp : complementIdempotent f * complementIdempotent f = complementIdempotent f := by
     rw [complementIdempotent_sq f hf]
-  constructor <;>
-  (try noncomm_ring [hf, hcomp]) <;>
-  (try simp_all [hf, hcomp, mul_assoc]) <;>
-  (try abel)
+  constructor <;> noncomm_ring [hf, hcomp] <;>
+    simp only [idempotent_mul_nested f hf] <;> abel_nf <;> simp
 
 /-! ## Nonzero routing laws -/
 

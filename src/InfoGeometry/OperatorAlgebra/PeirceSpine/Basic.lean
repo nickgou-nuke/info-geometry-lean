@@ -362,16 +362,23 @@ theorem complementary_corner_disproves_compression_aporia_equivalence
   · rw [hcomm]
     simp [comm]
 
-/-- Squaring the even-plus-odd decomposition preserves the grading: the
-even square is the sum of the even-even and odd-odd products, while the odd
-square is the mixed anticommutator. This is the general Peirce form of the
-square split used by the Zorn-potential archetype. -/
-theorem even_odd_square_decomposition (X : B) :
-    evenGrade P (X * X) =
-      evenGrade P X * evenGrade P X + oddGrade P X * oddGrade P X ∧
-    oddGrade P (X * X) =
-      evenGrade P X * oddGrade P X + oddGrade P X * evenGrade P X := by
-  exact ⟨evenGrade_mul hP X X, oddGrade_mul hP X X⟩
+/-- The idempotency defect `X² - X` splits by Peirce parity. Its even part is
+the sum of the even-even and odd-odd products, less the even part of `X`; its
+odd part is the mixed product sum, less the odd part of `X`. -/
+theorem idempotency_defect_peirce_grade_decomposition (X : B) :
+    evenGrade P (X * X - X) =
+      evenGrade P X * evenGrade P X + oddGrade P X * oddGrade P X - evenGrade P X ∧
+    oddGrade P (X * X - X) =
+      evenGrade P X * oddGrade P X + oddGrade P X * evenGrade P X - oddGrade P X := by
+  have hEvenSub : evenGrade P (X * X - X) = evenGrade P (X * X) - evenGrade P X := by
+    unfold evenGrade
+    noncomm_ring
+  have hOddSub : oddGrade P (X * X - X) = oddGrade P (X * X) - oddGrade P X := by
+    unfold oddGrade
+    noncomm_ring
+  constructor
+  · rw [hEvenSub, evenGrade_mul hP]
+  · rw [hOddSub, oddGrade_mul hP]
 
 /-- Squaring a sum of a Peirce-even element `D` and a Peirce-odd element `O`
 separates into an even diagonal term and an odd mixed term. The four support

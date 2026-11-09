@@ -59,14 +59,16 @@ theorem theta_theta
     Θ.theta (Θ.theta x) = x :=
   Θ.theta_sq x
 
-/--
-If an element is fixed, applying the closure map does nothing.
--/
-theorem theta_eq_self_of_fixed
+/-- The involution maps its fixed locus into itself. -/
+theorem theta_preserves_fixed_points
     {x : X}
     (h : Θ.IsFixed x) :
-    Θ.theta x = x :=
-  h
+    Θ.IsFixed (Θ.theta x) := by
+  change Θ.theta x = x at h
+  change Θ.theta (Θ.theta x) = Θ.theta x
+  calc
+    Θ.theta (Θ.theta x) = x := Θ.theta_sq x
+    _ = Θ.theta x := h.symm
 
 end ClosureInvolution
 
@@ -218,23 +220,21 @@ end TomitaSplitInversion
 /-! ## 4. Factor/center collapse law -/
 
 /--
-A scalar/central collapse law for the observable-commutant overlap.
-
-For a factor representation, this is the place where the model supplies:
-
-`M ∩ M′ = scalars`.
+A model-specific scalar-collapse certificate for the observable/commutant
+overlap. It supplies an actual injective scalar-value map and identifies the
+overlap exactly with its image. Since `Op` is only a type here, this does not
+assert compatibility with addition or multiplication, or centrality.
 -/
 structure OverlapScalarLaw
     {Op : Type*}
     (T : TomitaSplitInversion Op) where
-  /-- Scalar/central predicate. -/
-  IsScalar : Op → Prop
+  /-- The scalar values represented in the operator carrier. -/
+  scalarEmbedding : ℝ ↪ Op
 
-  /-- Overlap elements are scalar/central. -/
-  overlap_is_scalar :
+  /-- The observable/commutant overlap is exactly the embedded scalar range. -/
+  overlap_iff_scalar_value :
     ∀ x : Op,
-      T.InOverlap x →
-        IsScalar x
+      T.InOverlap x ↔ ∃ r : ℝ, scalarEmbedding r = x
 
 namespace OverlapScalarLaw
 
@@ -242,28 +242,24 @@ variable {Op : Type*}
 variable {T : TomitaSplitInversion Op}
 variable (S : OverlapScalarLaw T)
 
-/--
-A fixed observable element is scalar/central once the overlap collapse law is
-supplied.
--/
-theorem fixed_observable_is_scalar
+/-- A fixed observable element has a representative in the supplied scalar
+embedding, conditional on the model's exact overlap-collapse certificate. -/
+theorem fixed_observable_has_scalar_representative
     {x : Op}
     (hx : x ∈ T.InObservable)
     (hfix : T.mirror.IsFixed x) :
-    S.IsScalar x :=
-  S.overlap_is_scalar x
+    ∃ r : ℝ, S.scalarEmbedding r = x :=
+  (S.overlap_iff_scalar_value x).mp
     (T.fixed_observable_mem_overlap hx hfix)
 
-/--
-A fixed commutant element is scalar/central once the overlap collapse law is
-supplied.
--/
-theorem fixed_commutant_is_scalar
+/-- A fixed commutant element has a representative in the supplied scalar
+embedding, conditional on the model's exact overlap-collapse certificate. -/
+theorem fixed_commutant_has_scalar_representative
     {x : Op}
     (hx : x ∈ T.InCommutant)
     (hfix : T.mirror.IsFixed x) :
-    S.IsScalar x :=
-  S.overlap_is_scalar x
+    ∃ r : ℝ, S.scalarEmbedding r = x :=
+  (S.overlap_iff_scalar_value x).mp
     (T.fixed_commutant_mem_overlap hx hfix)
 
 end OverlapScalarLaw

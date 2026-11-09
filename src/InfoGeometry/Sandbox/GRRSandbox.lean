@@ -12,7 +12,7 @@ cell boundaries to Cohomology pushforwards twisted by the Todd class.
 -/
 
 variable {A B : Type*} [AddCommGroup A] [AddCommGroup B]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 namespace InfoGeometry.Sandbox.GRRSandbox
 
@@ -24,7 +24,7 @@ structure K0Group (X : Type*) where
 attribute [instance] K0Group.instAddCommGroup
 
 -- Even Cohomology Modules
-structure EvenCohomology (X : Type*) (R : Type*) [CommRing R] where
+structure EvenCohomology (X : Type*) (R : Type*) [Ring R] where
   H : Type*
   [instAddCommGroup : AddCommGroup H]
   [instModule : Module R H]
@@ -33,25 +33,25 @@ attribute [instance] EvenCohomology.instAddCommGroup
 attribute [instance] EvenCohomology.instModule
 
 -- The Chern Character Map
-structure ChernCharacter (X : Type*) (R : Type*) [CommRing R] (K : K0Group X) (H_ev : EvenCohomology X R) where
+structure ChernCharacter (X : Type*) (R : Type*) [Ring R] (K : K0Group X) (H_ev : EvenCohomology X R) where
   ch : K.G →+ H_ev.H
 
 -- Pushforwards for a proper morphism f : A → B
-structure Pushforward (A B : Type*) (R : Type*) [CommRing R] 
+structure Pushforward (A B : Type*) (R : Type*) [Ring R] 
     (KA : K0Group A) (KB : K0Group B) 
     (HA : EvenCohomology A R) (HB : EvenCohomology B R) where
   f_shriek_K : KA.G →+ KB.G
   f_shriek_H : HA.H →+ HB.H
 
 -- The Todd Class twist operator
-structure ToddClass (A : Type*) (R : Type*) [CommRing R] (HA : EvenCohomology A R) where
+structure ToddClass (A : Type*) (R : Type*) [Ring R] (HA : EvenCohomology A R) where
   td : HA.H →+ HA.H
 
 /-- 
   The abstract Grothendieck-Riemann-Roch commutative diagram.
   For a positroid cell map f: ch(f_!(x)) = f_!(ch(x) ⌣ td(A))
 -/
-structure GRRTheorem (A B : Type*) (R : Type*) [CommRing R] 
+structure GRRTheorem (A B : Type*) (R : Type*) [Ring R] 
     (KA : K0Group A) (KB : K0Group B) 
     (HA : EvenCohomology A R) (HB : EvenCohomology B R) 
     (chA : ChernCharacter A R KA HA) (chB : ChernCharacter B R KB HB)
@@ -63,7 +63,7 @@ structure GRRTheorem (A B : Type*) (R : Type*) [CommRing R]
   Theorem: The GRR commutative mapping intrinsically preserves the 
   trivial topological boundary state across the pushforward.
 -/
-theorem grr_preserves_zero (A B : Type*) (R : Type*) [CommRing R]
+theorem grr_preserves_zero (A B : Type*) (R : Type*) [Ring R]
     (KA : K0Group A) (KB : K0Group B) 
     (HA : EvenCohomology A R) (HB : EvenCohomology B R) 
     (chA : ChernCharacter A R KA HA) (chB : ChernCharacter B R KB HB)

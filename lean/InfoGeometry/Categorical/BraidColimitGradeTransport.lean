@@ -19,7 +19,7 @@ open InfoGeometry.OperatorAlgebra
 
 universe u
 
-variable {𝕜 V : Type u} [CommRing 𝕜]
+variable {𝕜 V : Type u} [Ring 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 variable {B : InfoGeometry.Categorical.HadjiivanovBraidGroupColimit.BraidGroupDiagram.{u}}
 variable {A : CompatibleStageAction 𝕜 V B}

@@ -61,13 +61,13 @@ theorem readback_involutive
 end SymplecticDualityReadbackPacket
 
 /-- Localized equivariant Grothendieck ring as a pointwise function ring. -/
-abbrev LocalizedGrothendieckRing (R : Type u) [CommRing R]
+abbrev LocalizedGrothendieckRing (R : Type u) [Ring R]
     (Point : Type v) (Character : Type w) :=
   Point → LocalizedIndex R Character
 
 namespace LocalizedGrothendieckRing
 
-variable {R : Type u} [CommRing R]
+variable {R : Type u} [Ring R]
 
 /-- Readback acts on the localized Grothendieck ring by point/character transport. -/
 def readback

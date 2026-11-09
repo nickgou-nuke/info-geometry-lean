@@ -46,7 +46,7 @@ Abstract finite Mellin-scaling datum.
 -/
 @[rep_depth projective]
 structure FiniteMellinScalingDatum
-    (Func R : Type*) [AddCommMonoid Func] [CommSemiring R] where
+    (Func R : Type*) [AddCommMonoid Func] [Semiring R] where
   sample : ℕ → Func → Func
   weight : ℕ → R
   Mellin : Func → R
@@ -62,8 +62,7 @@ structure FiniteMellinScalingDatum
 
 namespace FiniteMellinScalingDatum
 
-variable {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
-variable (D : FiniteMellinScalingDatum Func R)
+variable {Func R : Type*} [AddCommMonoid Func]
 
 /--
 Finite Mellin orbit-sum factorization.
@@ -71,7 +70,8 @@ Finite Mellin orbit-sum factorization.
 This is the finite, kernel-checkable part of the Cook identity.
 -/
 @[bridge_target_tag, rep_depth projective]
-theorem finite_sample_sum_factor
+theorem finite_sample_sum_factor [Semiring R]
+    (D : FiniteMellinScalingDatum Func R)
     (A : Finset ℕ)
     (f : Func) :
     D.Mellin (Finset.sum A (fun n => D.sample n f))
@@ -84,15 +84,9 @@ theorem finite_sample_sum_factor
             refine Finset.sum_congr rfl ?_
             intro n hn
             rw [D.Mellin_sample_eq_weight_mul n f]
-    _ = Finset.sum A (fun n => D.Mellin f * D.weight n) := by
-          refine Finset.sum_congr rfl ?_
-          intro n hn
-          rw [mul_comm]
-    _ = D.Mellin f * Finset.sum A D.weight := by
-          simpa using
-            (Finset.mul_sum (s := A) (a := D.Mellin f) (f := D.weight)).symm
     _ = (Finset.sum A D.weight) * D.Mellin f := by
-          rw [mul_comm]
+          simpa using
+            (Finset.sum_mul (s := A) (f := D.weight) (a := D.Mellin f)).symm
 
 /--
 Finite multiplicative Mellin orbit-character factorization.
@@ -102,7 +96,8 @@ orbit labels gives the multiplicative character carried by the same scaling
 weights.
 -/
 @[bridge_target_tag, rep_depth projective]
-theorem finite_sample_product_factor
+theorem finite_sample_product_factor [CommSemiring R]
+    (D : FiniteMellinScalingDatum Func R)
     (A : Finset ℕ)
     (f : Func) :
     (∏ n ∈ A, D.Mellin (D.sample n f))
@@ -146,7 +141,7 @@ The finite orbit-sum factor is exactly the finite Dirichlet weight sum.
 -/
 @[bridge_target_tag, rep_depth projective]
 theorem finite_sample_sum_factor_as_dirichlet_weight
-    {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
+    {Func R : Type*} [AddCommMonoid Func] [Semiring R]
     (D : FiniteMellinScalingDatum Func R)
     (A : Finset ℕ)
     (f : Func) :

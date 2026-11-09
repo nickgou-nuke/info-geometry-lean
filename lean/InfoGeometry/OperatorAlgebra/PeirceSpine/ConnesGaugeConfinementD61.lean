@@ -282,9 +282,7 @@ omit [StarRing B] in
 compose into this D₆₁ summary. The trace component is an algebraic cyclic-trace
 identity only. -/
 theorem d61_dirac_and_trace_summary
-    {R : Type*} [Ring R] (τ : B → R)
-    (hAdd : ∀ X Y : B, τ (X + Y) = τ X + τ Y)
-    (hSub : ∀ X Y : B, τ (X - Y) = τ X - τ Y)
+    {R : Type*} [Ring R] (τ : B →+ R)
     (hCyc : ∀ X Y : B, τ (X * Y) = τ (Y * X)) (A C : B) :
     peirceMassDirac P A C * peirceMassDirac P A C = 1 + genV P A C ∧
     diracQuarticPolynomial (peirceMassDirac P A C) =
@@ -293,14 +291,12 @@ theorem d61_dirac_and_trace_summary
       τ P - τ (1 - P) := by
   exact ⟨peirce_mass_dirac_square hP A C,
     dirac_quartic_polynomial_split hP A C,
-    peirce_cyclic_trace_mass_square hP τ hAdd hSub hCyc A C⟩
+    peirce_cyclic_trace_mass_square hP τ τ.map_add τ.map_sub hCyc A C⟩
 
 /-- Data for the Dirac polynomial and cyclic trace identity. -/
 structure D61DiracTraceInput (B R : Type*) [Ring B] [Ring R] where
   cut : D59IdempotentCut B
-  trace : B → R
-  traceAdd : ∀ X Y : B, trace (X + Y) = trace X + trace Y
-  traceSub : ∀ X Y : B, trace (X - Y) = trace X - trace Y
+  trace : B →+ R
   traceCyclic : ∀ X Y : B, trace (X * Y) = trace (Y * X)
   forwardAmplitude : B
   backwardAmplitude : B
@@ -325,21 +321,20 @@ def d61DiracTraceArchetype {B R : Type*} [Ring B] [Ring R] :
          peirceMassDirac (input.cut : B) input.forwardAmplitude input.backwardAmplitude)) =
       input.trace (input.cut : B) - input.trace (1 - (input.cut : B))
   evidence := fun input => d61_dirac_and_trace_summary input.cut.property
-    input.trace input.traceAdd input.traceSub input.traceCyclic
+    input.trace input.traceCyclic
     input.forwardAmplitude input.backwardAmplitude
 
 omit [Ring B] hP [StarRing B] in
 theorem d61_trace_kills_commutator {B R : Type*} [Ring B] [Ring R]
-    (τ : B → R) (hSub : ∀ X Y, τ (X - Y) = τ X - τ Y)
+    (τ : B →+ R)
     (hCyc : ∀ X Y, τ (X * Y) = τ (Y * X)) (X Y : B) :
     τ (comm X Y) = 0 := by
   unfold comm
-  rw [hSub, hCyc X Y, sub_self]
+  rw [map_sub, hCyc X Y, sub_self]
 
 /-- Input for the cyclic-trace cancellation archetype. -/
 structure D61TraceInput (B R : Type*) [Ring B] [Ring R] where
-  trace : B → R
-  traceSub : ∀ X Y : B, trace (X - Y) = trace X - trace Y
+  trace : B →+ R
   traceCyclic : ∀ X Y : B, trace (X * Y) = trace (Y * X)
   leftOperator : B
   rightOperator : B
@@ -351,16 +346,14 @@ def d61CyclicTraceArchetype {B R : Type*} [Ring B] [Ring R] :
   name := `InfoGeometry.OperatorAlgebra.PeirceSpine.d61CyclicTraceArchetype
   phase := 61
   claim := fun input => input.trace (comm input.leftOperator input.rightOperator) = 0
-  evidence := fun input => d61_trace_kills_commutator input.trace input.traceSub
-    input.traceCyclic input.leftOperator input.rightOperator
+  evidence := fun input => d61_trace_kills_commutator input.trace input.traceCyclic
+    input.leftOperator input.rightOperator
 
 /-- Master synthesis of the five D₆₁ strata. The odd-fluctuation clause is
 scoped to fixed points of `oddGrade`; the trace conclusion is the algebraic
 cyclic-trace identity inherited from D₅₉. -/
 theorem stage_D61_connes_forms_curvature_real_structure_and_trace
-    {R : Type*} [Ring R] (τ : B → R)
-    (hAdd : ∀ X Y : B, τ (X + Y) = τ X + τ Y)
-    (hSub : ∀ X Y : B, τ (X - Y) = τ X - τ Y)
+    {R : Type*} [Ring R] (τ : B →+ R)
     (hCyc : ∀ X Y : B, τ (X * Y) = τ (Y * X))
     (hPstar : star P = P) (A C a b X Y : B)
     (hEven : comm P a = 0) :
@@ -397,7 +390,7 @@ theorem stage_D61_connes_forms_curvature_real_structure_and_trace
   have hReflectionBack := d61_real_structure_reflects_backward hP hPstar A
   have hOddRepresentation := fun Ω hΩ =>
     peirce_odd_grade_representation (P := P) Ω hΩ
-  have hDirac := d61_dirac_and_trace_summary hP τ hAdd hSub hCyc A C
+  have hDirac := d61_dirac_and_trace_summary hP τ hCyc A C
   exact ⟨hOneFormOdd, hLeibniz, hProjection.1, hProjection.2,
     hCurvature.2.1, hCurvature.2.2, d61_gauge_curvature_is_even hP A C X,
     hReal.1, hReal.2.1, hReflection, hReflectionBack,

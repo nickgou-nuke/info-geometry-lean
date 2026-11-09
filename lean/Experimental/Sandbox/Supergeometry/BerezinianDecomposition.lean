@@ -9,10 +9,10 @@ set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
 /-!
-# Section 52 / Supergeometry: Noncommutative Super-LU Berezinian Factorization & Orthogonal Balance
+# Section 52 / Supergeometry: 2×2 Super-LU Berezinian Factorization & Orthogonal Balance
 Target: `Experimental/Sandbox/Supergeometry/BerezinianDecomposition.lean`
 
-Grounds the Berezinian superdeterminant and Super-LU decomposition in the noncommutative operator algebra `Matrix (Fin 2) (Fin 2) R`:
+Formalizes finite 2×2 matrix identities over a commutative ring `R`:
 1. Matrix Carrier & Regularity:
    - Carrier: M ∈ Matrix (Fin 2) (Fin 2) R
    - Regularity of denominator block: M₁₁ · invD = 1
@@ -32,7 +32,6 @@ Grounds the Berezinian superdeterminant and Super-LU decomposition in the noncom
    - For balanced (1|1) superspace: Ber(c • M) = Ber(M).
 7. Orthogonal Superstructures (OSp Balance):
    - When fermionic cross-coupling vanishes (M₀₁ = 0), Ber(M) = M₀₀ · invD.
-8. Master verification certificate `BerezinianMasterCertificate`.
 -/
 
 namespace Experimental.Sandbox.Supergeometry.Berezinian
@@ -41,11 +40,21 @@ open Matrix
 
 variable {R : Type*} [CommRing R]
 
-/-! ### 1. Matrix Carrier and Regularity -/
+/-- The first diagonal matrix unit. -/
+def matrixE00 : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, 0]
 
-/-- Regularity condition for the denominator block M₁₁. -/
-def isRegularD (M : Matrix (Fin 2) (Fin 2) R) (invD : R) : Prop :=
-  M 1 1 * invD = 1
+/-- The upper off-diagonal matrix unit. -/
+def matrixE01 : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]
+
+/-- The 2×2 matrix carrier is noncommutative when its coefficient ring is nontrivial. -/
+theorem matrix_algebra_noncommutative [Nontrivial R] :
+    matrixE00 (R := R) * matrixE01 (R := R) ≠
+      matrixE01 (R := R) * matrixE00 (R := R) := by
+  intro h
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 1) h
+  simp [matrixE00, matrixE01, Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+/-! ### 1. Matrix Carrier and Regularity -/
 
 /-! ### 2. The Berezinian Superdeterminant Operator -/
 
@@ -53,6 +62,20 @@ def isRegularD (M : Matrix (Fin 2) (Fin 2) R) (invD : R) : Prop :=
     Ber(M) = (M₀₀ - M₀₁ · invD · M₁₀) · invD. -/
 def berezinian (M : Matrix (Fin 2) (Fin 2) R) (invD : R) : R :=
   (M 0 0 - M 0 1 * invD * M 1 0) * invD
+
+/-- Scalar expansion used by the balanced Berezinian scaling law. -/
+private theorem balancedScaling_expand
+    (a b d invD c inv_c : R) :
+    (c * a - c * b * (inv_c * invD) * (c * d)) * (inv_c * invD) =
+      (c * inv_c) * (a * invD) - (c * inv_c)^2 * (b * invD * d * invD) := by
+  ring
+
+/-- Scalar contraction used after the inverse-scaling hypothesis is applied. -/
+private theorem balancedScaling_contract
+    (a b d invD : R) :
+    1 * (a * invD) - 1^2 * (b * invD * d * invD) =
+      (a - b * invD * d) * invD := by
+  ring
 
 /-! ### 3. The Super-LU Trifactor Matrix Decomposition -/
 
@@ -125,11 +148,11 @@ theorem berezinian_scaling_balanced
   calc
     (c * M 0 0 - c * M 0 1 * (inv_c * invD) * (c * M 1 0)) * (inv_c * invD)
       = (c * inv_c) * (M 0 0 * invD) - (c * inv_c)^2 * (M 0 1 * invD * M 1 0 * invD) := by
-        ring
+        exact balancedScaling_expand _ _ _ _ _ _
     _ = 1 * (M 0 0 * invD) - 1^2 * (M 0 1 * invD * M 1 0 * invD) := by
         rw [hc]
     _ = (M 0 0 - M 0 1 * invD * M 1 0) * invD := by
-        ring
+        exact balancedScaling_contract _ _ _ _
 
 /-! ### 7. Orthogonal Superstructures (OSp Balance) -/
 
@@ -142,31 +165,5 @@ theorem berezinian_of_orthogonal
   dsimp [berezinian]
   rw [h_orth]
   ring
-
-/-! ### 8. Master Verification Certificate -/
-
-/-- Certificate bundling all operator noncommutative geometry theorems of the Berezinian decomposition. -/
-structure BerezinianMasterCertificate : Prop where
-  super_lu : ∀ (M : Matrix (Fin 2) (Fin 2) ℝ) (invD : ℝ), M 1 1 * invD = 1 →
-    factorL M invD * factorH M invD * factorR M invD = M
-  unipotent_L : ∀ (x : ℝ), berezinian (!![1, x; 0, 1]) 1 = 1
-  unipotent_R : ∀ (y : ℝ), berezinian (!![1, 0; y, 1]) 1 = 1
-  unipotent_mul : ∀ (x y : ℝ), (!![1, x; 0, 1] : Matrix (Fin 2) (Fin 2) ℝ) * !![1, y; 0, 1] = !![1, x + y; 0, 1]
-  diagonal_ber : ∀ (a d invD : ℝ), berezinian (!![a, 0; 0, d]) invD = a * invD
-  scaling_balanced : ∀ (M : Matrix (Fin 2) (Fin 2) ℝ) (invD c inv_c : ℝ), c * inv_c = 1 →
-    berezinian (c • M) (inv_c * invD) = berezinian M invD
-  orthogonal_red : ∀ (M : Matrix (Fin 2) (Fin 2) ℝ) (invD : ℝ), M 0 1 = 0 →
-    berezinian M invD = M 0 0 * invD
-
-/-- Master Compilation Theorem for Berezinian Decomposition. -/
-theorem compile_berezinian_certificate : BerezinianMasterCertificate := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro M invD hD; exact super_lu_factorization M invD hD
-  · intro x; exact unipotent_L_berezinian x
-  · intro y; exact unipotent_R_berezinian y
-  · intro x y; exact unipotent_group_mul x y
-  · intro a d invD; exact diagonal_berezinian a d invD
-  · intro M invD c inv_c hc; exact berezinian_scaling_balanced M invD c inv_c hc
-  · intro M invD h_orth; exact berezinian_of_orthogonal M invD h_orth
 
 end Experimental.Sandbox.Supergeometry.Berezinian

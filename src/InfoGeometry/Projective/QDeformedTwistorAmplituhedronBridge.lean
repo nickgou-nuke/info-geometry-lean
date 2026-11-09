@@ -64,7 +64,7 @@ theorem q_window_finite_gram_positive
 
 /-- At `q = 0`, the algebraic q-CCR seed has Cuntz-Toeplitz orthogonality. -/
 theorem q_seed_toeplitz_endpoint_readback
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRSeed R)
     (hq : H.q = (0 : R))
     (i j : Fin 2) :
@@ -74,7 +74,7 @@ theorem q_seed_toeplitz_endpoint_readback
 
 /-- At `q = -1`, the algebraic q-CCR seed has the CAR anticommutation readout. -/
 theorem q_seed_car_endpoint_readback
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRSeed R)
     (hq : H.q = (-1 : R))
     (i j : Fin 2) :
@@ -84,7 +84,7 @@ theorem q_seed_car_endpoint_readback
 
 /-- At `q = 1`, the algebraic q-CCR seed has the CCR commutator readout. -/
 theorem q_seed_ccr_endpoint_readback
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRSeed R)
     (hq : H.q = (1 : R))
     (i j : Fin 2) :

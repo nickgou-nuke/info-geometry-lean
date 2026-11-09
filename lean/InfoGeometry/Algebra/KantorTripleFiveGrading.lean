@@ -8,7 +8,7 @@ import Mathlib.Tactic
 noncomputable section
 namespace InfoGeometry.Algebra.KantorTripleFiveGrading
 
-variable (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V]
+variable (R V : Type*) [Ring R] [AddCommGroup V] [Module R V]
 
 structure KantorTripleSystem where
   triple : V → V → V → V
@@ -28,7 +28,7 @@ structure KantorTripleSystem where
         (triple u (triple x y z) v - triple v (triple x y z) u)
 
 namespace KantorTripleSystem
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 variable (T : KantorTripleSystem R V)
 
 def D (x y : V) : Module.End R V where

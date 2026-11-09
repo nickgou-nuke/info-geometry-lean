@@ -1,7 +1,7 @@
 import Experimental.Sandbox.Supergeometry.BerezinianDecomposition
 
 /-!
-# Axiomatic Audit for Sandbox BerezinianDecomposition (Operator Noncommutative Geometry)
+# Axiomatic Audit for finite 2×2 Berezinian identities
 Target: `lean/Experimental/Sandbox/Supergeometry/BerezinianDecompositionAudit.lean`
 -/
 
@@ -14,4 +14,3 @@ open Experimental.Sandbox.Supergeometry.Berezinian
 #print axioms diagonal_berezinian
 #print axioms berezinian_scaling_balanced
 #print axioms berezinian_of_orthogonal
-#print axioms compile_berezinian_certificate

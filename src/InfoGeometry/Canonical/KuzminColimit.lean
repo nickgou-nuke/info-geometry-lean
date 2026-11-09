@@ -160,7 +160,7 @@ theorem qccr_n2_gram_positive_stage
 
 /-- The finite `q=0` Cuntz--Toeplitz readout from the existing q-CCR owner. -/
 theorem finite_cuntz_toeplitz_q_zero_readout
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (0 : R) * (a j * astar i))
     (i j : Fin 2) :

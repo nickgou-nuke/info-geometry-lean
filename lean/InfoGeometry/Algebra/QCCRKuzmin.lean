@@ -46,7 +46,7 @@ theorem finite_T_square_eq_q_sq_identity (q : ℝ) :
   T_square_eq_q_sq_I_n2 q
 
 /-- CAR at `q=-1` in the algebraic q-relation. -/
-theorem finite_car_anticommutation {R : Type*} [CommRing R] [StarRing R]
+theorem finite_car_anticommutation {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (-1 : R) * (a j * astar i))
     (i j : Fin 2) :
@@ -54,7 +54,7 @@ theorem finite_car_anticommutation {R : Type*} [CommRing R] [StarRing R]
   car_anticommutation a astar hstar hrel i j
 
 /-- CCR at `q=1` in the algebraic q-relation. -/
-theorem finite_ccr_commutation {R : Type*} [CommRing R] [StarRing R]
+theorem finite_ccr_commutation {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (1 : R) * (a j * astar i))
     (i j : Fin 2) :
@@ -62,7 +62,7 @@ theorem finite_ccr_commutation {R : Type*} [CommRing R] [StarRing R]
   ccr_commutation a astar hstar hrel i j
 
 /-- Toeplitz/Cuntz boundary at `q=0` in the algebraic q-relation. -/
-theorem finite_cuntz_toeplitz_limit {R : Type*} [CommRing R] [StarRing R]
+theorem finite_cuntz_toeplitz_limit {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (0 : R) * (a j * astar i))
     (i j : Fin 2) :

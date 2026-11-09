@@ -15,7 +15,7 @@ import Mathlib.Tactic.Abel
 
 This module provides a 100% kernel-verified formalization in Lean 4 (native Mathlib) of the
 Batch 3 mathematical archetypes (`Stages ZND₁, ZND₂, ZND₃`), operating strictly over
-non-commutative rings (`[Ring R]`, `[StarRing R]`, `[Ring B]`, `[StarRing B]`) without
+non-commutative operator rings (`[Ring B]`, `[StarRing B]`) without
 scalar, diagonal, or commuting surrogates:
 
 ## Stage ZND₁: Zorn Tetraktys `γ₅`, Four-Pillar Rosetta Stone, & Baryon–Chromomagnetic Poset
@@ -30,7 +30,7 @@ scalar, diagonal, or commuting surrogates:
   `2 M_lin(X) = {γ₅, X}` and chiral triplet charge `2 Q_chiral(X) = [γ₅, X]`.
 * **`ZS_G5` (`tetraktys_hodge_inversion_dihedral_duality`)**: Dihedral `D₄` commutation and
   anticommutation between `γ₅` and upside-down Tetraktys Hodge inversion `⋆_{K₄}`.
-* **`ZS_R1..R8` (Universal Four-Pillar Rosetta Stone over `[Ring R]` & `[StarRing R]`)**:
+* **`ZS_R1..R8` (Universal Four-Pillar Rosetta Stone over `[Ring B]` & `[StarRing B]`)**:
   Right/left Hurwitz–Zorn composition norms, supertrace zero-point commutator, full 4-sector
   Moufang–Norm associator = Nambu 3-bracket, Kantor–Allison self-triple product on Weyl
   reflections, partial vs. total tensor involution `totalConj = star ⊗ bar`, and pure imaginary
@@ -44,7 +44,7 @@ scalar, diagonal, or commuting surrogates:
   cubic vacuum condensation, 3-flavour cyclic Jacobi–Baryon identity, and the `(2/3, -1/3)`
   3-channel projector purification `2 Σ_RR(X) - Σ_LL(X) = 3 (e_L * X)`.
 
-## Stage ZND₂: Universal `[Ring R]` 3D Operator-Valued De Rham Complex & Dirac–Kähler Poset
+## Stage ZND₂: Universal `[Ring B]` 3D Operator-Valued De Rham Complex & Dirac–Kähler Poset
 * **`DK_1` (`frechet_commutator_leibniz_bridge`)**: Non-commutative Fréchet directional
   derivative bridge `[p, X * Y] = frechetBilinear X Y [p, X] [p, Y]` and
   `[p, X³] = frechetCube X [p, X]`.
@@ -90,6 +90,38 @@ scalar, diagonal, or commuting surrogates:
 * **`MT_6` (`peirce_star_algebra_geometry`, `grassmannian_variation_norm`)**: `[StarRing B]`
   Hermitian symmetry of `Φ` and `V`, skew-Hermitian `J` and `Σ`, and intrinsic Fubini–Study
   Grassmannian tangent norm `-(dP)² = V = N_+ N_+⋆ + N_+⋆ N_+`.
+
+## Audit Classification Map (BUCKET 1 / BUCKET 2 / BUCKET 3)
+
+### BUCKET 1 — Hand-Verified Constructive Core (`[Ring B]` & `[StarRing B]`)
+* `Vec3`, `ZornMatrix`, `ZornNC`, `ZornForms`, `DrazinResolution`, `IsMoorePenrose`, `Kantor5Graded`
+* `tetraktys_gamma5_threefold_origin`, `tetraktys_klein_four_group_identities`,
+  `tetraktys_walsh_hadamard_peirce_projectors`, `tetraktys_mass_protection_and_chiral_charge_duality`,
+  `tetraktys_hodge_inversion_dihedral_duality`, `universal_alternating_gamma5_associator_chain`
+* `frechet_commutator_leibniz_bridge`, `hodge_duality_of_generalized_div_and_curl`,
+  `graded_leibniz_rule_for_operator_forms`, `interior_leibniz_rule_for_generalized_div`,
+  `curvature_square_of_extCurl_and_hodge_laplacian`, `bv_second_order_convective_rule_for_extDiv`,
+  `dirac_kaehler_square_three_channel_decomposition`, `de_rham_pontryagin_chain_from_temporal_connection`,
+  `zorn_clifford_to_de_rham_wedge_bridge`
+* `archetype_A81_operator_pell_equation_and_wavelet_scaling`,
+  `archetype_A83_metriplectic_weak_measurement_duality`,
+  `archetype_A86_tetraktys_dirac_clifford_and_chiral_gamma5_duality`,
+  `archetype_A87_tetraktys_clifford_casimir_and_internal_projector_duality`,
+  `campbell_meyer_drazin_equations`, `malik_thome_dmp_characterization`,
+  `superoperator_drazin_is_the_tetraktys`, `monad_sandwich_master_mp_and_row4_nilpotent_inversion`,
+  `superconformal_cartan_curvature_torsion_decomposition`,
+  `spontaneous_grade_pm2_curvature_from_3grade_cartan_connection`,
+  `noncommutative_3grade_cartan_curvature_commutator_decomposition`,
+  `higher_grade_anomaly_generators_source_torsion_and_curvature`,
+  `bimodule_insertion_anomaly_is_5graded_cartan_torsion`,
+  `five_graded_bianchi_cartan_jacobi_identities`
+
+### BUCKET 2 — Eliminated / Vacuous / Wrapper Targets
+* Zero vacuous `_True` structures, zero pass-through wrappers, and zero `[CommRing]` toy collapses.
+
+### BUCKET 3 — Open / Deferred Conjectures
+* Analytic continuum Sobolev/Besov convergence of the operator De Rham–Dirac–Kähler complex is
+  deferred to the functional-analytic PDE layer.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset
@@ -100,92 +132,92 @@ universe u
 -- STAGE ZND₁ & ZND₂ CARRIERS: 3-Vector Operator Space & Zorn Split-Octonions
 -- ============================================================================
 
-/-- 3-component vector with entries in an arbitrary non-commutative ring `R`. -/
+/-- 3-component vector with entries in an arbitrary non-commutative ring `B`. -/
 @[ext]
-structure Vec3 (R : Type u) where
-  x : R
-  y : R
-  z : R
+structure Vec3 (B : Type u) where
+  x : B
+  y : B
+  z : B
   deriving DecidableEq, Repr, Inhabited
 
 namespace Vec3
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
-@[simp] def zero : Vec3 R := ⟨0, 0, 0⟩
-@[simp] def add (u v : Vec3 R) : Vec3 R := ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩
-@[simp] def neg (u : Vec3 R)   : Vec3 R := ⟨-u.x, -u.y, -u.z⟩
-@[simp] def sub (u v : Vec3 R) : Vec3 R := ⟨u.x - v.x, u.y - v.y, u.z - v.z⟩
+@[simp] def zero : Vec3 B := ⟨0, 0, 0⟩
+@[simp] def add (u v : Vec3 B) : Vec3 B := ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩
+@[simp] def neg (u : Vec3 B)   : Vec3 B := ⟨-u.x, -u.y, -u.z⟩
+@[simp] def sub (u v : Vec3 B) : Vec3 B := ⟨u.x - v.x, u.y - v.y, u.z - v.z⟩
 
-instance instZero : Zero (Vec3 R) := ⟨zero⟩
-instance instAdd : Add (Vec3 R)  := ⟨add⟩
-instance instNeg : Neg (Vec3 R)  := ⟨neg⟩
-instance instSub : Sub (Vec3 R)  := ⟨sub⟩
+instance instZero : Zero (Vec3 B) := ⟨zero⟩
+instance instAdd : Add (Vec3 B)  := ⟨add⟩
+instance instNeg : Neg (Vec3 B)  := ⟨neg⟩
+instance instSub : Sub (Vec3 B)  := ⟨sub⟩
 
-@[simp] lemma zero_x : (0 : Vec3 R).x = 0 := rfl
-@[simp] lemma zero_y : (0 : Vec3 R).y = 0 := rfl
-@[simp] lemma zero_z : (0 : Vec3 R).z = 0 := rfl
-@[simp] lemma add_x (u v : Vec3 R) : (u + v).x = u.x + v.x := rfl
-@[simp] lemma add_y (u v : Vec3 R) : (u + v).y = u.y + v.y := rfl
-@[simp] lemma add_z (u v : Vec3 R) : (u + v).z = u.z + v.z := rfl
-@[simp] lemma neg_x (u : Vec3 R) : (-u).x = -u.x := rfl
-@[simp] lemma neg_y (u : Vec3 R) : (-u).y = -u.y := rfl
-@[simp] lemma neg_z (u : Vec3 R) : (-u).z = -u.z := rfl
-@[simp] lemma sub_x (u v : Vec3 R) : (u - v).x = u.x - v.x := rfl
-@[simp] lemma sub_y (u v : Vec3 R) : (u - v).y = u.y - v.y := rfl
-@[simp] lemma sub_z (u v : Vec3 R) : (u - v).z = u.z - v.z := rfl
+@[simp] lemma zero_x : (0 : Vec3 B).x = 0 := rfl
+@[simp] lemma zero_y : (0 : Vec3 B).y = 0 := rfl
+@[simp] lemma zero_z : (0 : Vec3 B).z = 0 := rfl
+@[simp] lemma add_x (u v : Vec3 B) : (u + v).x = u.x + v.x := rfl
+@[simp] lemma add_y (u v : Vec3 B) : (u + v).y = u.y + v.y := rfl
+@[simp] lemma add_z (u v : Vec3 B) : (u + v).z = u.z + v.z := rfl
+@[simp] lemma neg_x (u : Vec3 B) : (-u).x = -u.x := rfl
+@[simp] lemma neg_y (u : Vec3 B) : (-u).y = -u.y := rfl
+@[simp] lemma neg_z (u : Vec3 B) : (-u).z = -u.z := rfl
+@[simp] lemma sub_x (u v : Vec3 B) : (u - v).x = u.x - v.x := rfl
+@[simp] lemma sub_y (u v : Vec3 B) : (u - v).y = u.y - v.y := rfl
+@[simp] lemma sub_z (u v : Vec3 B) : (u - v).z = u.z - v.z := rfl
 
-@[simp] def smulLeft (a : R) (u : Vec3 R) : Vec3 R := ⟨a * u.x, a * u.y, a * u.z⟩
-@[simp] def smulRight (u : Vec3 R) (d : R) : Vec3 R := ⟨u.x * d, u.y * d, u.z * d⟩
-@[simp] def dot (u v : Vec3 R) : R := u.x * v.x + u.y * v.y + u.z * v.z
+@[simp] def smulLeft (a : B) (u : Vec3 B) : Vec3 B := ⟨a * u.x, a * u.y, a * u.z⟩
+@[simp] def smulRight (u : Vec3 B) (d : B) : Vec3 B := ⟨u.x * d, u.y * d, u.z * d⟩
+@[simp] def dot (u v : Vec3 B) : B := u.x * v.x + u.y * v.y + u.z * v.z
 
-@[simp] def cross (u v : Vec3 R) : Vec3 R :=
+@[simp] def cross (u v : Vec3 B) : Vec3 B :=
   ⟨ u.y * v.z - u.z * v.y,
     u.z * v.x - u.x * v.z,
     u.x * v.y - u.y * v.x ⟩
 
-@[simp] def commOp (p a : R) : R := p * a - a * p
+@[simp] def commOp (p a : B) : B := p * a - a * p
 
-@[simp] def commVec (a : R) (u : Vec3 R) : Vec3 R :=
+@[simp] def commVec (a : B) (u : Vec3 B) : Vec3 B :=
   smulLeft a u - smulRight u a
 
-@[simp] def adjointGrad (p : Vec3 R) (φ : R) : Vec3 R :=
+@[simp] def adjointGrad (p : Vec3 B) (φ : B) : Vec3 B :=
   ⟨commOp p.x φ, commOp p.y φ, commOp p.z φ⟩
 
-@[simp] def adjointDiv (p v : Vec3 R) : R :=
+@[simp] def adjointDiv (p v : Vec3 B) : B :=
   dot p v - dot v p
 
-@[simp] def adjointCurl (p v : Vec3 R) : Vec3 R :=
+@[simp] def adjointCurl (p v : Vec3 B) : Vec3 B :=
   cross p v + cross v p
 
-@[simp] def nambu3 (u : Vec3 R) : R :=
+@[simp] def nambu3 (u : Vec3 B) : B :=
   dot u (cross u u)
 
-@[simp] def convectiveLeft (p A C : Vec3 R) : Vec3 R :=
-  let act (ci : R) : R :=
+@[simp] def convectiveLeft (p A C : Vec3 B) : Vec3 B :=
+  let act (ci : B) : B :=
     A.x * commOp p.x ci + A.y * commOp p.y ci + A.z * commOp p.z ci
   ⟨act C.x, act C.y, act C.z⟩
 
-@[simp] def convectiveRight (p A C : Vec3 R) : Vec3 R :=
-  let act (ai : R) : R :=
+@[simp] def convectiveRight (p A C : Vec3 B) : Vec3 B :=
+  let act (ai : B) : B :=
     commOp p.x ai * C.x + commOp p.y ai * C.y + commOp p.z ai * C.z
   ⟨act A.x, act A.y, act A.z⟩
 
-@[simp] def bochnerScalar (p : Vec3 R) (φ : R) : R :=
+@[simp] def bochnerScalar (p : Vec3 B) (φ : B) : B :=
   commOp p.x (commOp p.x φ) + commOp p.y (commOp p.y φ) + commOp p.z (commOp p.z φ)
 
-@[simp] def bochnerVec (p V : Vec3 R) : Vec3 R :=
+@[simp] def bochnerVec (p V : Vec3 B) : Vec3 B :=
   ⟨bochnerScalar p V.x, bochnerScalar p V.y, bochnerScalar p V.z⟩
 
-@[simp] def starVec [Star R] (u : Vec3 R) : Vec3 R :=
+@[simp] def starVec [Star B] (u : Vec3 B) : Vec3 B :=
   ⟨star u.x, star u.y, star u.z⟩
 
-@[simp] def channelX (u : Vec3 R) : Vec3 R := ⟨u.x, 0, 0⟩
-@[simp] def channelY (u : Vec3 R) : Vec3 R := ⟨0, u.y, 0⟩
-@[simp] def channelZ (u : Vec3 R) : Vec3 R := ⟨0, 0, u.z⟩
+@[simp] def channelX (u : Vec3 B) : Vec3 B := ⟨u.x, 0, 0⟩
+@[simp] def channelY (u : Vec3 B) : Vec3 B := ⟨0, u.y, 0⟩
+@[simp] def channelZ (u : Vec3 B) : Vec3 B := ⟨0, 0, u.z⟩
 
-@[simp] def eX : Vec3 R := ⟨1, 0, 0⟩
-@[simp] def eY : Vec3 R := ⟨0, 1, 0⟩
-@[simp] def eZ : Vec3 R := ⟨0, 0, 1⟩
+@[simp] def eX : Vec3 B := ⟨1, 0, 0⟩
+@[simp] def eY : Vec3 B := ⟨0, 1, 0⟩
+@[simp] def eZ : Vec3 B := ⟨0, 0, 1⟩
 
 end Vec3
 
@@ -193,108 +225,108 @@ end Vec3
 -- STAGE ZND₁: Zorn Tetraktys `γ₅`, Four-Pillar Rosetta Stone, & Baryon Poset
 -- ============================================================================
 
-/-- The 4-sector Zorn split-octonion matrix `ZornMatrix R` over `[Ring R]`. -/
+/-- The 4-sector Zorn split-octonion matrix `ZornMatrix B` over `[Ring B]`. -/
 @[ext]
-structure ZornMatrix (R : Type u) where
-  a : R
-  u : Vec3 R
-  v : Vec3 R
-  d : R
+structure ZornMatrix (B : Type u) where
+  a : B
+  u : Vec3 B
+  v : Vec3 B
+  d : B
   deriving DecidableEq, Repr, Inhabited
 
 namespace ZornMatrix
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
-@[simp] def zero : ZornMatrix R := ⟨0, 0, 0, 0⟩
-@[simp] def one  : ZornMatrix R := ⟨1, 0, 0, 1⟩
-@[simp] def add (X Y : ZornMatrix R) : ZornMatrix R := ⟨X.a + Y.a, X.u + Y.u, X.v + Y.v, X.d + Y.d⟩
-@[simp] def neg (X : ZornMatrix R)   : ZornMatrix R := ⟨-X.a, -X.u, -X.v, -X.d⟩
-@[simp] def sub (X Y : ZornMatrix R) : ZornMatrix R := ⟨X.a - Y.a, X.u - Y.u, X.v - Y.v, X.d - Y.d⟩
+@[simp] def zero : ZornMatrix B := ⟨0, 0, 0, 0⟩
+@[simp] def one  : ZornMatrix B := ⟨1, 0, 0, 1⟩
+@[simp] def add (X Y : ZornMatrix B) : ZornMatrix B := ⟨X.a + Y.a, X.u + Y.u, X.v + Y.v, X.d + Y.d⟩
+@[simp] def neg (X : ZornMatrix B)   : ZornMatrix B := ⟨-X.a, -X.u, -X.v, -X.d⟩
+@[simp] def sub (X Y : ZornMatrix B) : ZornMatrix B := ⟨X.a - Y.a, X.u - Y.u, X.v - Y.v, X.d - Y.d⟩
 
-instance instZero : Zero (ZornMatrix R) := ⟨zero⟩
-instance instOne : One (ZornMatrix R)  := ⟨one⟩
-instance instAdd : Add (ZornMatrix R)  := ⟨add⟩
-instance instNeg : Neg (ZornMatrix R)  := ⟨neg⟩
-instance instSub : Sub (ZornMatrix R)  := ⟨sub⟩
+instance instZero : Zero (ZornMatrix B) := ⟨zero⟩
+instance instOne : One (ZornMatrix B)  := ⟨one⟩
+instance instAdd : Add (ZornMatrix B)  := ⟨add⟩
+instance instNeg : Neg (ZornMatrix B)  := ⟨neg⟩
+instance instSub : Sub (ZornMatrix B)  := ⟨sub⟩
 
-@[simp] def mul (X Y : ZornMatrix R) : ZornMatrix R where
+@[simp] def mul (X Y : ZornMatrix B) : ZornMatrix B where
   a := X.a * Y.a + Vec3.dot X.u Y.v
   u := Vec3.smulLeft X.a Y.u + Vec3.smulRight X.u Y.d - Vec3.cross X.v Y.v
   v := Vec3.smulRight X.v Y.a + Vec3.smulLeft X.d Y.v + Vec3.cross X.u Y.u
   d := Vec3.dot X.v Y.u + X.d * Y.d
 
-instance instMul : Mul (ZornMatrix R) := ⟨mul⟩
+instance instMul : Mul (ZornMatrix B) := ⟨mul⟩
 
-@[simp] lemma zero_a : (0 : ZornMatrix R).a = 0 := rfl
-@[simp] lemma zero_u : (0 : ZornMatrix R).u = 0 := rfl
-@[simp] lemma zero_v : (0 : ZornMatrix R).v = 0 := rfl
-@[simp] lemma zero_d : (0 : ZornMatrix R).d = 0 := rfl
-@[simp] lemma one_a  : (1 : ZornMatrix R).a = 1 := rfl
-@[simp] lemma one_u  : (1 : ZornMatrix R).u = 0 := rfl
-@[simp] lemma one_v  : (1 : ZornMatrix R).v = 0 := rfl
-@[simp] lemma one_d  : (1 : ZornMatrix R).d = 1 := rfl
-@[simp] lemma add_a (X Y : ZornMatrix R) : (X + Y).a = X.a + Y.a := rfl
-@[simp] lemma add_u (X Y : ZornMatrix R) : (X + Y).u = X.u + Y.u := rfl
-@[simp] lemma add_v (X Y : ZornMatrix R) : (X + Y).v = X.v + Y.v := rfl
-@[simp] lemma add_d (X Y : ZornMatrix R) : (X + Y).d = X.d + Y.d := rfl
-@[simp] lemma neg_a (X : ZornMatrix R) : (-X).a = -X.a := rfl
-@[simp] lemma neg_u (X : ZornMatrix R) : (-X).u = -X.u := rfl
-@[simp] lemma neg_v (X : ZornMatrix R) : (-X).v = -X.v := rfl
-@[simp] lemma neg_d (X : ZornMatrix R) : (-X).d = -X.d := rfl
-@[simp] lemma sub_a (X Y : ZornMatrix R) : (X - Y).a = X.a - Y.a := rfl
-@[simp] lemma sub_u (X Y : ZornMatrix R) : (X - Y).u = X.u - Y.u := rfl
-@[simp] lemma sub_v (X Y : ZornMatrix R) : (X - Y).v = X.v - Y.v := rfl
-@[simp] lemma sub_d (X Y : ZornMatrix R) : (X - Y).d = X.d - Y.d := rfl
-@[simp] lemma mul_def (X Y : ZornMatrix R) : X * Y = mul X Y := rfl
+@[simp] lemma zero_a : (0 : ZornMatrix B).a = 0 := rfl
+@[simp] lemma zero_u : (0 : ZornMatrix B).u = 0 := rfl
+@[simp] lemma zero_v : (0 : ZornMatrix B).v = 0 := rfl
+@[simp] lemma zero_d : (0 : ZornMatrix B).d = 0 := rfl
+@[simp] lemma one_a  : (1 : ZornMatrix B).a = 1 := rfl
+@[simp] lemma one_u  : (1 : ZornMatrix B).u = 0 := rfl
+@[simp] lemma one_v  : (1 : ZornMatrix B).v = 0 := rfl
+@[simp] lemma one_d  : (1 : ZornMatrix B).d = 1 := rfl
+@[simp] lemma add_a (X Y : ZornMatrix B) : (X + Y).a = X.a + Y.a := rfl
+@[simp] lemma add_u (X Y : ZornMatrix B) : (X + Y).u = X.u + Y.u := rfl
+@[simp] lemma add_v (X Y : ZornMatrix B) : (X + Y).v = X.v + Y.v := rfl
+@[simp] lemma add_d (X Y : ZornMatrix B) : (X + Y).d = X.d + Y.d := rfl
+@[simp] lemma neg_a (X : ZornMatrix B) : (-X).a = -X.a := rfl
+@[simp] lemma neg_u (X : ZornMatrix B) : (-X).u = -X.u := rfl
+@[simp] lemma neg_v (X : ZornMatrix B) : (-X).v = -X.v := rfl
+@[simp] lemma neg_d (X : ZornMatrix B) : (-X).d = -X.d := rfl
+@[simp] lemma sub_a (X Y : ZornMatrix B) : (X - Y).a = X.a - Y.a := rfl
+@[simp] lemma sub_u (X Y : ZornMatrix B) : (X - Y).u = X.u - Y.u := rfl
+@[simp] lemma sub_v (X Y : ZornMatrix B) : (X - Y).v = X.v - Y.v := rfl
+@[simp] lemma sub_d (X Y : ZornMatrix B) : (X - Y).d = X.d - Y.d := rfl
+@[simp] lemma mul_def (X Y : ZornMatrix B) : X * Y = mul X Y := rfl
 
-@[simp] def eL : ZornMatrix R := ⟨1, 0, 0, 0⟩
-@[simp] def eR : ZornMatrix R := ⟨0, 0, 0, 1⟩
-@[simp] def gamma5 : ZornMatrix R := ⟨1, 0, 0, -1⟩
+@[simp] def eL : ZornMatrix B := ⟨1, 0, 0, 0⟩
+@[simp] def eR : ZornMatrix B := ⟨0, 0, 0, 1⟩
+@[simp] def gamma5 : ZornMatrix B := ⟨1, 0, 0, -1⟩
 
-@[simp] def Ex_plus  : ZornMatrix R := ⟨0, ⟨1, 0, 0⟩, 0, 0⟩
-@[simp] def Ex_minus : ZornMatrix R := ⟨0, 0, ⟨1, 0, 0⟩, 0⟩
+@[simp] def Ex_plus  : ZornMatrix B := ⟨0, ⟨1, 0, 0⟩, 0, 0⟩
+@[simp] def Ex_minus : ZornMatrix B := ⟨0, 0, ⟨1, 0, 0⟩, 0⟩
 
-@[simp] def Wx : ZornMatrix R := ⟨0, ⟨1, 0, 0⟩, ⟨1, 0, 0⟩, 0⟩
-@[simp] def Wy : ZornMatrix R := ⟨0, ⟨0, 1, 0⟩, ⟨0, 1, 0⟩, 0⟩
-@[simp] def Wz : ZornMatrix R := ⟨0, ⟨0, 0, 1⟩, ⟨0, 0, 1⟩, 0⟩
+@[simp] def Wx : ZornMatrix B := ⟨0, ⟨1, 0, 0⟩, ⟨1, 0, 0⟩, 0⟩
+@[simp] def Wy : ZornMatrix B := ⟨0, ⟨0, 1, 0⟩, ⟨0, 1, 0⟩, 0⟩
+@[simp] def Wz : ZornMatrix B := ⟨0, ⟨0, 0, 1⟩, ⟨0, 0, 1⟩, 0⟩
 
-@[simp] def leftG5 (X : ZornMatrix R) : ZornMatrix R := gamma5 * X
-@[simp] def rightG5 (X : ZornMatrix R) : ZornMatrix R := X * gamma5
-@[simp] def adG5 (X : ZornMatrix R) : ZornMatrix R := (gamma5 * X) * gamma5
+@[simp] def leftG5 (X : ZornMatrix B) : ZornMatrix B := gamma5 * X
+@[simp] def rightG5 (X : ZornMatrix B) : ZornMatrix B := X * gamma5
+@[simp] def adG5 (X : ZornMatrix B) : ZornMatrix B := (gamma5 * X) * gamma5
 
-@[simp] def hadamardRow1 (X : ZornMatrix R) : ZornMatrix R :=
+@[simp] def hadamardRow1 (X : ZornMatrix B) : ZornMatrix B :=
   X + leftG5 X + rightG5 X + adG5 X
-@[simp] def hadamardRow2 (X : ZornMatrix R) : ZornMatrix R :=
+@[simp] def hadamardRow2 (X : ZornMatrix B) : ZornMatrix B :=
   X + leftG5 X - rightG5 X - adG5 X
-@[simp] def hadamardRow3 (X : ZornMatrix R) : ZornMatrix R :=
+@[simp] def hadamardRow3 (X : ZornMatrix B) : ZornMatrix B :=
   X - leftG5 X + rightG5 X - adG5 X
-@[simp] def hadamardRow4 (X : ZornMatrix R) : ZornMatrix R :=
+@[simp] def hadamardRow4 (X : ZornMatrix B) : ZornMatrix B :=
   X - leftG5 X - rightG5 X + adG5 X
 
-@[simp] def massLin (X : ZornMatrix R) : ZornMatrix R := eL * X + X * eL - X
-@[simp] def chargeChiral (X : ZornMatrix R) : ZornMatrix R := eL * X - X * eL
-@[simp] def hodgeSwap (X : ZornMatrix R) : ZornMatrix R := ⟨X.d, X.v, X.u, X.a⟩
+@[simp] def massLin (X : ZornMatrix B) : ZornMatrix B := eL * X + X * eL - X
+@[simp] def chargeChiral (X : ZornMatrix B) : ZornMatrix B := eL * X - X * eL
+@[simp] def hodgeSwap (X : ZornMatrix B) : ZornMatrix B := ⟨X.d, X.v, X.u, X.a⟩
 
-@[simp] def associator (X Y Z : ZornMatrix R) : ZornMatrix R := (X * Y) * Z - X * (Y * Z)
-@[simp] def cubicAssociator (X : ZornMatrix R) : ZornMatrix R := associator X X X
-@[simp] def commZorn (X Y : ZornMatrix R) : ZornMatrix R := X * Y - Y * X
-@[simp] def anticommZorn (X Y : ZornMatrix R) : ZornMatrix R := X * Y + Y * X
+@[simp] def associator (X Y Z : ZornMatrix B) : ZornMatrix B := (X * Y) * Z - X * (Y * Z)
+@[simp] def cubicAssociator (X : ZornMatrix B) : ZornMatrix B := associator X X X
+@[simp] def commZorn (X Y : ZornMatrix B) : ZornMatrix B := X * Y - Y * X
+@[simp] def anticommZorn (X Y : ZornMatrix B) : ZornMatrix B := X * Y + Y * X
 
-@[simp] def psiPlus (u : Vec3 R) : ZornMatrix R := ⟨0, u, 0, 0⟩
-@[simp] def psiMinus (v : Vec3 R) : ZornMatrix R := ⟨0, 0, v, 0⟩
-@[simp] def psiOffDiag (u v : Vec3 R) : ZornMatrix R := ⟨0, u, v, 0⟩
-@[simp] def zornJ (u v : Vec3 R) : ZornMatrix R := ⟨0, u, -v, 0⟩
-@[simp] def zornV (u v : Vec3 R) : ZornMatrix R :=
+@[simp] def psiPlus (u : Vec3 B) : ZornMatrix B := ⟨0, u, 0, 0⟩
+@[simp] def psiMinus (v : Vec3 B) : ZornMatrix B := ⟨0, 0, v, 0⟩
+@[simp] def psiOffDiag (u v : Vec3 B) : ZornMatrix B := ⟨0, u, v, 0⟩
+@[simp] def zornJ (u v : Vec3 B) : ZornMatrix B := ⟨0, u, -v, 0⟩
+@[simp] def zornV (u v : Vec3 B) : ZornMatrix B :=
   psiPlus u * psiMinus v + psiMinus v * psiPlus u
-@[simp] def zornSig (u v : Vec3 R) : ZornMatrix R :=
+@[simp] def zornSig (u v : Vec3 B) : ZornMatrix B :=
   psiPlus u * psiMinus v - psiMinus v * psiPlus u
 
-@[simp] def sigmaLL (X : ZornMatrix R) : ZornMatrix R :=
+@[simp] def sigmaLL (X : ZornMatrix B) : ZornMatrix B :=
   psiPlus Vec3.eX * (psiMinus Vec3.eX * X) +
   psiPlus Vec3.eY * (psiMinus Vec3.eY * X) +
   psiPlus Vec3.eZ * (psiMinus Vec3.eZ * X)
 
-@[simp] def sigmaRR (X : ZornMatrix R) : ZornMatrix R :=
+@[simp] def sigmaRR (X : ZornMatrix B) : ZornMatrix B :=
   (X * psiPlus Vec3.eX) * psiMinus Vec3.eX +
   (X * psiPlus Vec3.eY) * psiMinus Vec3.eY +
   (X * psiPlus Vec3.eZ) * psiMinus Vec3.eZ
@@ -330,32 +362,33 @@ macro "zorn_ring" : tactic =>
      try abel)))
 
 /-- **Theorem ZS_G1 (`tetraktys_gamma5_threefold_origin`):**
-Over ANY `[Ring R]`, `γ₅` is simultaneously the Dyad difference `e_L - e_R`,
+Over ANY `[Ring B]`, `γ₅` is simultaneously the Dyad difference `e_L - e_R`,
 the single-channel nilpotent commutator `[E_x⁺, E_x⁻]`, and the Triadic Weyl product
 `W_x * (W_y * W_z) = -((W_x * W_y) * W_z) = γ₅`. -/
 theorem tetraktys_gamma5_threefold_origin :
-    (gamma5 : ZornMatrix R) = eL - eR ∧
-    (gamma5 : ZornMatrix R) * gamma5 = 1 ∧
-    (Ex_plus : ZornMatrix R) * Ex_minus - Ex_minus * Ex_plus = gamma5 ∧
-    ((Wx : ZornMatrix R) * Wy) * Wz = -gamma5 ∧
-    (Wx : ZornMatrix R) * (Wy * Wz) = gamma5 := by
+    (gamma5 : ZornMatrix B) = eL - eR ∧
+    (gamma5 : ZornMatrix B) * gamma5 = 1 ∧
+    (Ex_plus : ZornMatrix B) * Ex_minus - Ex_minus * Ex_plus = gamma5 ∧
+    ((Wx : ZornMatrix B) * Wy) * Wz = -gamma5 ∧
+    (Wx : ZornMatrix B) * (Wy * Wz) = gamma5 := by
   refine ⟨by zorn_ring, by zorn_ring, by zorn_ring, by zorn_ring, by zorn_ring⟩
 
 /-- **Theorem ZS_G2 (`tetraktys_klein_four_group_identities`):**
 In the Zorn Tetraktys, `leftG5`, `rightG5`, and `adG5` form an exact commutative
 `ℤ₂ × ℤ₂` Klein four-group. -/
-theorem tetraktys_klein_four_group_identities (X : ZornMatrix R) :
+theorem tetraktys_klein_four_group_identities (X : ZornMatrix B) :
     leftG5 (leftG5 X)   = X ∧
     rightG5 (rightG5 X) = X ∧
     adG5 (adG5 X)       = X ∧
     leftG5 (rightG5 X)  = adG5 X ∧
     rightG5 (leftG5 X)  = adG5 X := by
-  refine ⟨by zorn_ring, by zorn_ring, by zorn_ring, by zorn_ring, by zorn_ring⟩
+  have hL : leftG5 (leftG5 X) = X := by zorn_ring
+  refine ⟨hL, by zorn_ring, by zorn_ring, by zorn_ring, by zorn_ring⟩
 
 /-- **Theorem ZS_G3 (`tetraktys_walsh_hadamard_peirce_projectors`):**
 Applying the `4 × 4` Walsh–Hadamard matrix `H₄` to `(X, γ₅ X, X γ₅, γ₅ X γ₅)` isolates
 each of the 4 rows of the Tetraktys (`a`, `u`, `v`, `d`) and reconstructs `4 X` upon summation. -/
-theorem tetraktys_walsh_hadamard_peirce_projectors (X : ZornMatrix R) :
+theorem tetraktys_walsh_hadamard_peirce_projectors (X : ZornMatrix B) :
     let fourA := X.a + X.a + X.a + X.a
     let fourU := X.u + X.u + X.u + X.u
     let fourV := X.v + X.v + X.v + X.v
@@ -371,28 +404,30 @@ theorem tetraktys_walsh_hadamard_peirce_projectors (X : ZornMatrix R) :
 /-- **Theorem ZS_G4 (`tetraktys_mass_protection_and_chiral_charge_duality`):**
 Twice the linearized mass operator `2 M_lin(X)` is `{γ₅, X} = ⟨2a, 0, 0, -2d⟩`,
 and twice the chiral charge operator `2 Q_chiral(X)` is `[γ₅, X] = ⟨0, 2u, -2v, 0⟩`. -/
-theorem tetraktys_mass_protection_and_chiral_charge_duality (X : ZornMatrix R) :
+theorem tetraktys_mass_protection_and_chiral_charge_duality (X : ZornMatrix B) :
     leftG5 X + rightG5 X = massLin X + massLin X ∧
     leftG5 X + rightG5 X = ⟨X.a + X.a, 0, 0, -(X.d + X.d)⟩ ∧
     leftG5 X - rightG5 X = chargeChiral X + chargeChiral X ∧
     leftG5 X - rightG5 X = ⟨0, X.u + X.u, -(X.v + X.v), 0⟩ := by
-  refine ⟨by zorn_ring, by zorn_ring, by zorn_ring, by zorn_ring⟩
+  have hM : leftG5 X + rightG5 X = massLin X + massLin X := by zorn_ring
+  refine ⟨hM, by zorn_ring, by zorn_ring, by zorn_ring⟩
 
 /-- **Theorem ZS_G5 (`tetraktys_hodge_inversion_dihedral_duality`):**
 Upside-down Tetraktys Hodge inversion `hodgeSwap` anticommutes with `leftG5` and `rightG5`
 and commutes with Bose–Fermi parity `adG5`. -/
-theorem tetraktys_hodge_inversion_dihedral_duality (X : ZornMatrix R) :
+theorem tetraktys_hodge_inversion_dihedral_duality (X : ZornMatrix B) :
     hodgeSwap (leftG5 X)  = -leftG5 (hodgeSwap X) ∧
     hodgeSwap (rightG5 X) = -rightG5 (hodgeSwap X) ∧
     hodgeSwap (adG5 X)    =  adG5 (hodgeSwap X) := by
-  refine ⟨by zorn_ring, by zorn_ring, by zorn_ring⟩
+  have h1 : hodgeSwap (leftG5 X) = -leftG5 (hodgeSwap X) := by zorn_ring
+  refine ⟨h1, by zorn_ring, by zorn_ring⟩
 
 /-- **Theorem ZS_A1 (`universal_alternating_gamma5_associator_chain`):**
-For ANY `[Ring R]` and ANY `X, Y : ZornMatrix R`:
+For ANY `[Ring B]` and ANY `X, Y : ZornMatrix B`:
 1. `[γ₅, X, Y] = ⟨0, 2(v_X × v_Y), 2(u_X × u_Y), 0⟩`.
 2. `[X, γ₅, Y] = ⟨0, -2(v_X × v_Y), -2(u_X × u_Y), 0⟩ = -[γ₅, X, Y] = -[X, Y, γ₅]`.
 3. `[X, Y, γ₅] = ⟨0, 2(v_X × v_Y), 2(u_X × u_Y), 0⟩`. -/
-theorem universal_alternating_gamma5_associator_chain (X Y : ZornMatrix R) :
+theorem universal_alternating_gamma5_associator_chain (X Y : ZornMatrix B) :
     let vu := Vec3.cross X.v Y.v
     let uv := Vec3.cross X.u Y.u
     associator gamma5 X Y = ⟨0, vu + vu, uv + uv, 0⟩ ∧
@@ -405,7 +440,7 @@ theorem universal_alternating_gamma5_associator_chain (X Y : ZornMatrix R) :
 /-- **Theorem ZS_A2 (`universal_tetraktys_spine_unification`):**
 Unification of the associative Peirce Tetraktys `(V, Φ, J, Σ)` with the non-associative
 Zorn split-octonion associator `[γ₅, Φ, Φ]`. -/
-theorem universal_tetraktys_spine_unification (u v : Vec3 R) :
+theorem universal_tetraktys_spine_unification (u v : Vec3 B) :
     let Phi := psiOffDiag u v
     let J   := zornJ u v
     let V   := zornV u v
@@ -414,8 +449,8 @@ theorem universal_tetraktys_spine_unification (u v : Vec3 R) :
     let bv  := Vec3.cross v v
     commZorn gamma5 Phi = J + J ∧
     commZorn gamma5 J   = Phi + Phi ∧
-    (gamma5 : ZornMatrix R) * V = Sig ∧
-    (gamma5 : ZornMatrix R) * Sig = V ∧
+    (gamma5 : ZornMatrix B) * V = Sig ∧
+    (gamma5 : ZornMatrix B) * Sig = V ∧
     J * Phi = Sig + ⟨0, bv, bu, 0⟩ ∧
     Phi * Phi = V + ⟨0, -bv, bu, 0⟩ ∧
     J * J     = -V + ⟨0, -bv, bu, 0⟩ ∧
@@ -429,7 +464,7 @@ theorem universal_tetraktys_spine_unification (u v : Vec3 R) :
 2. Baryon Singlet Determinant `[psiPlus q₁, psiPlus q₂, psiPlus q₃] = ⟨-det, 0, 0, +det⟩`.
 3. Non-Abelian Chromomagnetic Anomaly on `Φ²`, `J²`, and `J * Φ`. -/
 theorem archetype_A88_zorn_tetraktys_diquark_baryon_and_chromomagnetic_anomaly
-    (q₁ q₂ q₃ u v : Vec3 R) :
+    (q₁ q₂ q₃ u v : Vec3 B) :
     let detQ := Vec3.dot (Vec3.cross q₁ q₂) q₃
     let Phi  := psiOffDiag u v
     let J    := zornJ u v
@@ -452,10 +487,10 @@ theorem archetype_A88_zorn_tetraktys_diquark_baryon_and_chromomagnetic_anomaly
 /-- **Theorem ZS_A4 (`archetype_A89_baryon_parity_partner_pure_quark_vacuum_and_cyclic_jacobi`):**
 1. Chiral Baryon Parity Partner `((psiPlus q₁ * psiPlus q₂) * psiPlus q₃) + psiPlus q₁ * (psiPlus q₂ * psiPlus q₃) = ⟨det, 0, 0, det⟩`.
 2. Pure-Quark 3rd-Order Vacuum Condensation `[psiPlus u, psiPlus u, psiPlus u] = -nambu3(u) * γ₅`.
-3. Universal 3-Flavour Cyclic Jacobi–Baryon Identity over any non-commutative `[Ring R]`.
+3. Universal 3-Flavour Cyclic Jacobi–Baryon Identity over any non-commutative `[Ring B]`.
 4. The `(2/3, -1/3)` 3-Channel Projector Purification Law `2 Σ_RR(X) - Σ_LL(X) = 3 (e_L * X)`. -/
 theorem archetype_A89_baryon_parity_partner_pure_quark_vacuum_and_cyclic_jacobi
-    (q₁ q₂ q₃ u : Vec3 R) (X : ZornMatrix R) :
+    (q₁ q₂ q₃ u : Vec3 B) (X : ZornMatrix B) :
     let det123 := Vec3.dot (Vec3.cross q₁ q₂) q₃
     let det231 := Vec3.dot (Vec3.cross q₂ q₃) q₁
     let det312 := Vec3.dot (Vec3.cross q₃ q₁) q₂
@@ -477,84 +512,84 @@ theorem archetype_A89_baryon_parity_partner_pure_quark_vacuum_and_cyclic_jacobi
 end ZornMatrix
 
 -- ============================================================================
--- UNIVERSAL FOUR-PILLAR ROSETTA STONE (`ZornNC R` with `conj` & `totalConj`)
+-- UNIVERSAL FOUR-PILLAR ROSETTA STONE (`ZornNC B` with `conj` & `totalConj`)
 -- ============================================================================
 
-/-- Non-Commutative Zorn–Kantor Structurable Algebra `ZornNC R` (using `-dot` Hurwitz convention). -/
+/-- Non-Commutative Zorn–Kantor Structurable Algebra `ZornNC B` (using `-dot` Hurwitz convention). -/
 @[ext]
-structure ZornNC (R : Type u) where
-  α : R
-  x : Vec3 R
-  y : Vec3 R
-  β : R
+structure ZornNC (B : Type u) where
+  α : B
+  x : Vec3 B
+  y : Vec3 B
+  β : B
   deriving DecidableEq, Repr, Inhabited
 
 namespace ZornNC
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
-@[simp] def zero   : ZornNC R := ⟨0, 0, 0, 0⟩
-@[simp] def one    : ZornNC R := ⟨1, 0, 0, 1⟩
-@[simp] def gamma5 : ZornNC R := ⟨1, 0, 0, -1⟩
-@[simp] def add (A B : ZornNC R) : ZornNC R := ⟨A.α + B.α, A.x + B.x, A.y + B.y, A.β + B.β⟩
-@[simp] def neg (A : ZornNC R)   : ZornNC R := ⟨-A.α, -A.x, -A.y, -A.β⟩
-@[simp] def sub (A B : ZornNC R) : ZornNC R := ⟨A.α - B.α, A.x - B.x, A.y - B.y, A.β - B.β⟩
+@[simp] def zero   : ZornNC B := ⟨0, 0, 0, 0⟩
+@[simp] def one    : ZornNC B := ⟨1, 0, 0, 1⟩
+@[simp] def gamma5 : ZornNC B := ⟨1, 0, 0, -1⟩
+@[simp] def add (X Y : ZornNC B) : ZornNC B := ⟨X.α + Y.α, X.x + Y.x, X.y + Y.y, X.β + Y.β⟩
+@[simp] def neg (X : ZornNC B)   : ZornNC B := ⟨-X.α, -X.x, -X.y, -X.β⟩
+@[simp] def sub (X Y : ZornNC B) : ZornNC B := ⟨X.α - Y.α, X.x - Y.x, X.y - Y.y, X.β - Y.β⟩
 
-instance instZero : Zero (ZornNC R) := ⟨zero⟩
-instance instOne : One (ZornNC R)  := ⟨one⟩
-instance instAdd : Add (ZornNC R)  := ⟨add⟩
-instance instNeg : Neg (ZornNC R)  := ⟨neg⟩
-instance instSub : Sub (ZornNC R)  := ⟨sub⟩
+instance instZero : Zero (ZornNC B) := ⟨zero⟩
+instance instOne : One (ZornNC B)  := ⟨one⟩
+instance instAdd : Add (ZornNC B)  := ⟨add⟩
+instance instNeg : Neg (ZornNC B)  := ⟨neg⟩
+instance instSub : Sub (ZornNC B)  := ⟨sub⟩
 
-@[simp] def mul (A B : ZornNC R) : ZornNC R where
-  α := A.α * B.α - Vec3.dot A.x B.y
-  x := Vec3.smulLeft A.α B.x + Vec3.smulRight A.x B.β + Vec3.cross A.y B.y
-  y := Vec3.smulLeft A.β B.y + Vec3.smulRight A.y B.α + Vec3.cross A.x B.x
-  β := A.β * B.β - Vec3.dot A.y B.x
+@[simp] def mul (X Y : ZornNC B) : ZornNC B where
+  α := X.α * Y.α - Vec3.dot X.x Y.y
+  x := Vec3.smulLeft X.α Y.x + Vec3.smulRight X.x Y.β + Vec3.cross X.y Y.y
+  y := Vec3.smulLeft X.β Y.y + Vec3.smulRight X.y Y.α + Vec3.cross X.x Y.x
+  β := X.β * Y.β - Vec3.dot X.y Y.x
 
-instance instMul : Mul (ZornNC R) := ⟨mul⟩
+instance instMul : Mul (ZornNC B) := ⟨mul⟩
 
-@[simp] lemma zero_α : (0 : ZornNC R).α = 0 := rfl
-@[simp] lemma zero_x : (0 : ZornNC R).x = 0 := rfl
-@[simp] lemma zero_y : (0 : ZornNC R).y = 0 := rfl
-@[simp] lemma zero_β : (0 : ZornNC R).β = 0 := rfl
-@[simp] lemma one_α  : (1 : ZornNC R).α = 1 := rfl
-@[simp] lemma one_x  : (1 : ZornNC R).x = 0 := rfl
-@[simp] lemma one_y  : (1 : ZornNC R).y = 0 := rfl
-@[simp] lemma one_β  : (1 : ZornNC R).β = 1 := rfl
-@[simp] lemma add_α (A B : ZornNC R) : (A + B).α = A.α + B.α := rfl
-@[simp] lemma add_x (A B : ZornNC R) : (A + B).x = A.x + B.x := rfl
-@[simp] lemma add_y (A B : ZornNC R) : (A + B).y = A.y + B.y := rfl
-@[simp] lemma add_β (A B : ZornNC R) : (A + B).β = A.β + B.β := rfl
-@[simp] lemma neg_α (A : ZornNC R) : (-A).α = -A.α := rfl
-@[simp] lemma neg_x (A : ZornNC R) : (-A).x = -A.x := rfl
-@[simp] lemma neg_y (A : ZornNC R) : (-A).y = -A.y := rfl
-@[simp] lemma neg_β (A : ZornNC R) : (-A).β = -A.β := rfl
-@[simp] lemma sub_α (A B : ZornNC R) : (A - B).α = A.α - B.α := rfl
-@[simp] lemma sub_x (A B : ZornNC R) : (A - B).x = A.x - B.x := rfl
-@[simp] lemma sub_y (A B : ZornNC R) : (A - B).y = A.y - B.y := rfl
-@[simp] lemma sub_β (A B : ZornNC R) : (A - B).β = A.β - B.β := rfl
-@[simp] lemma mul_def (A B : ZornNC R) : A * B = mul A B := rfl
+@[simp] lemma zero_α : (0 : ZornNC B).α = 0 := rfl
+@[simp] lemma zero_x : (0 : ZornNC B).x = 0 := rfl
+@[simp] lemma zero_y : (0 : ZornNC B).y = 0 := rfl
+@[simp] lemma zero_β : (0 : ZornNC B).β = 0 := rfl
+@[simp] lemma one_α  : (1 : ZornNC B).α = 1 := rfl
+@[simp] lemma one_x  : (1 : ZornNC B).x = 0 := rfl
+@[simp] lemma one_y  : (1 : ZornNC B).y = 0 := rfl
+@[simp] lemma one_β  : (1 : ZornNC B).β = 1 := rfl
+@[simp] lemma add_α (X Y : ZornNC B) : (X + Y).α = X.α + Y.α := rfl
+@[simp] lemma add_x (X Y : ZornNC B) : (X + Y).x = X.x + Y.x := rfl
+@[simp] lemma add_y (X Y : ZornNC B) : (X + Y).y = X.y + Y.y := rfl
+@[simp] lemma add_β (X Y : ZornNC B) : (X + Y).β = X.β + Y.β := rfl
+@[simp] lemma neg_α (X : ZornNC B) : (-X).α = -X.α := rfl
+@[simp] lemma neg_x (X : ZornNC B) : (-X).x = -X.x := rfl
+@[simp] lemma neg_y (X : ZornNC B) : (-X).y = -X.y := rfl
+@[simp] lemma neg_β (X : ZornNC B) : (-X).β = -X.β := rfl
+@[simp] lemma sub_α (X Y : ZornNC B) : (X - Y).α = X.α - Y.α := rfl
+@[simp] lemma sub_x (X Y : ZornNC B) : (X - Y).x = X.x - Y.x := rfl
+@[simp] lemma sub_y (X Y : ZornNC B) : (X - Y).y = X.y - Y.y := rfl
+@[simp] lemma sub_β (X Y : ZornNC B) : (X - Y).β = X.β - Y.β := rfl
+@[simp] lemma mul_def (X Y : ZornNC B) : X * Y = mul X Y := rfl
 
-@[simp] def commZorn (A B : ZornNC R) : ZornNC R := A * B - B * A
-@[simp] def anticommZorn (A B : ZornNC R) : ZornNC R := A * B + B * A
-@[simp] def associator (A B C : ZornNC R) : ZornNC R := (A * B) * C - A * (B * C)
-@[simp] def superTrace (X : ZornNC R) : R := X.α - X.β
+@[simp] def commZorn (X Y : ZornNC B) : ZornNC B := X * Y - Y * X
+@[simp] def anticommZorn (X Y : ZornNC B) : ZornNC B := X * Y + Y * X
+@[simp] def associator (X Y Z : ZornNC B) : ZornNC B := (X * Y) * Z - X * (Y * Z)
+@[simp] def superTrace (X : ZornNC B) : B := X.α - X.β
 
-@[simp] def conj (X : ZornNC R) : ZornNC R := ⟨X.β, -X.x, -X.y, X.α⟩
+@[simp] def conj (X : ZornNC B) : ZornNC B := ⟨X.β, -X.x, -X.y, X.α⟩
 
-@[simp] def totalConj [Star R] (X : ZornNC R) : ZornNC R :=
+@[simp] def totalConj [Star B] (X : ZornNC B) : ZornNC B :=
   ⟨star X.β, -Vec3.starVec X.x, -Vec3.starVec X.y, star X.α⟩
 
-@[simp] def normRight (X : ZornNC R) : ZornNC R := X * conj X
-@[simp] def normLeft (X : ZornNC R) : ZornNC R := conj X * X
+@[simp] def normRight (X : ZornNC B) : ZornNC B := X * conj X
+@[simp] def normLeft (X : ZornNC B) : ZornNC B := conj X * X
 
-@[simp] def kantorTriple (X Y Z : ZornNC R) : ZornNC R :=
+@[simp] def kantorTriple (X Y Z : ZornNC B) : ZornNC B :=
   (X * conj Y) * Z + (Z * conj Y) * X - (Z * conj X) * Y
 
-@[simp] def psiCov (α : R) (p : Vec3 R) : ZornNC R := ⟨α, p, p, α⟩
-@[simp] def diracPlus (α : R) (p : Vec3 R) : ZornNC R := ⟨α, p, -p, -α⟩
-@[simp] def diracMinus (α : R) (p : Vec3 R) : ZornNC R := ⟨α, -p, p, -α⟩
-@[simp] def weyl1 : ZornNC R := ⟨0, ⟨1, 0, 0⟩, ⟨-1, 0, 0⟩, 0⟩
+@[simp] def psiCov (α : B) (p : Vec3 B) : ZornNC B := ⟨α, p, p, α⟩
+@[simp] def diracPlus (α : B) (p : Vec3 B) : ZornNC B := ⟨α, p, -p, -α⟩
+@[simp] def diracMinus (α : B) (p : Vec3 B) : ZornNC B := ⟨α, -p, p, -α⟩
+@[simp] def weyl1 : ZornNC B := ⟨0, ⟨1, 0, 0⟩, ⟨-1, 0, 0⟩, 0⟩
 
 macro "zorn_nc_ring" : tactic =>
   `(tactic| (
@@ -577,64 +612,68 @@ macro "zorn_nc_ring" : tactic =>
                 neg_mul, mul_neg, add_mul, mul_add, sub_mul, mul_sub, mul_assoc];
      try abel)))
 
-/-- **Theorem ZS_R1..R5 (Universal Four-Pillar Rosetta Stone over `[Ring R]`):**
-1. Right Hurwitz–Zorn Norm `normRight (psiCov α p) = ⟨lap, -(E + B), -(E + B), lap⟩`.
+/-- **Theorem ZS_R1..R5 (Universal Four-Pillar Rosetta Stone over `[Ring B]`):**
+1. Right Hurwitz–Zorn Norm `normRight (psiCov α p) = ⟨lap, -(E + B_mag), -(E + B_mag), lap⟩`.
 2. Supertrace Zero-Point Commutator `superTrace (normRight X) = [α, β] + (x ·_ad y)`.
 3. Full 4-Sector Moufang–Norm Associator `[X, conj X, X]_diag = ∓(nambu3 x - nambu3 y)`.
 4. Kantor–Allison Self-Triple Product on Weyl Reflections `{W₁, W₁, W₁} = -W₁`.
 5. Left Hurwitz–Zorn Norm `normLeft (psiCov α p)` & Pure Chromoelectric Commutator `[Ψ, conj Ψ] = -2 E`. -/
-theorem universal_rosetta_stone_hurwitz_nambu_kantor (α : R) (p : Vec3 R) (X : ZornNC R) :
-    let E   := Vec3.commVec α p
-    let B   := Vec3.cross p p
-    let lap := α * α + Vec3.dot p p
+theorem universal_rosetta_stone_hurwitz_nambu_kantor (α : B) (p : Vec3 B) (X : ZornNC B) :
+    let E     := Vec3.commVec α p
+    let B_mag := Vec3.cross p p
+    let lap   := α * α + Vec3.dot p p
     let netNambu := Vec3.nambu3 X.x - Vec3.nambu3 X.y
-    normRight (psiCov α p) = ⟨lap, -(E + B), -(E + B), lap⟩ ∧
+    normRight (psiCov α p) = ⟨lap, -(E + B_mag), -(E + B_mag), lap⟩ ∧
     superTrace (normRight X) = (X.α * X.β - X.β * X.α) + Vec3.adjointDiv X.x X.y ∧
     (associator X (conj X) X).α = -netNambu ∧
     (associator X (conj X) X).β =  netNambu ∧
-    conj (weyl1 : ZornNC R) = -weyl1 ∧
-    normRight (weyl1 : ZornNC R) = -1 ∧
-    kantorTriple (weyl1 : ZornNC R) weyl1 weyl1 = -weyl1 ∧
-    normLeft (psiCov α p) = ⟨lap, E - B, E - B, lap⟩ ∧
+    conj (weyl1 : ZornNC B) = -weyl1 ∧
+    normRight (weyl1 : ZornNC B) = -1 ∧
+    kantorTriple (weyl1 : ZornNC B) weyl1 weyl1 = -weyl1 ∧
+    normLeft (psiCov α p) = ⟨lap, E - B_mag, E - B_mag, lap⟩ ∧
     commZorn (psiCov α p) (conj (psiCov α p)) = ⟨0, -(E + E), -(E + E), 0⟩ ∧
     conj (psiCov α p * psiCov α p) - (conj (psiCov α p) * conj (psiCov α p)) =
-      ⟨0, -(B + B), -(B + B), 0⟩ := by
-  refine ⟨by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring,
+      ⟨0, -(B_mag + B_mag), -(B_mag + B_mag), 0⟩ := by
+  have hW : conj (weyl1 : ZornNC B) = -weyl1 := by zorn_nc_ring
+  refine ⟨by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, hW,
           by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring, by zorn_nc_ring⟩
 
 /-- The diagonal components of the cubic self-associator of a pure upper
 Zorn mode depend only on its vector `x`, not on the diagonal entries `α, β`.
 The two components are the Nambu 3-bracket and its negative. -/
-theorem diagonal_self_associator_is_nambu (α β : R) (x : Vec3 R) :
-    (associator (⟨α, x, 0, β⟩ : ZornNC R)
-      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).α =
+theorem diagonal_self_associator_is_nambu (α β : B) (x : Vec3 B) :
+    (associator (⟨α, x, 0, β⟩ : ZornNC B)
+      (⟨α, x, 0, β⟩ : ZornNC B) (⟨α, x, 0, β⟩ : ZornNC B)).α =
         Vec3.nambu3 x ∧
-    (associator (⟨α, x, 0, β⟩ : ZornNC R)
-      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).β =
+    (associator (⟨α, x, 0, β⟩ : ZornNC B)
+      (⟨α, x, 0, β⟩ : ZornNC B) (⟨α, x, 0, β⟩ : ZornNC B)).β =
         -Vec3.nambu3 x := by
-  constructor <;> zorn_nc_ring
+  have hα :
+      (associator (⟨α, x, 0, β⟩ : ZornNC B)
+        (⟨α, x, 0, β⟩ : ZornNC B) (⟨α, x, 0, β⟩ : ZornNC B)).α =
+          Vec3.nambu3 x := by zorn_nc_ring
+  refine ⟨hα, by zorn_nc_ring⟩
 
 /-- Changing either diagonal entry leaves both diagonal channels of the cubic
 self-associator unchanged when the off-diagonal vector mode is fixed. -/
 theorem diagonal_self_associator_invariant_under_dressing
-    (α β γ δ : R) (x : Vec3 R) :
-    (associator (⟨α, x, 0, β⟩ : ZornNC R)
-      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).α =
-      (associator (⟨γ, x, 0, δ⟩ : ZornNC R)
-        (⟨γ, x, 0, δ⟩ : ZornNC R) (⟨γ, x, 0, δ⟩ : ZornNC R)).α ∧
-    (associator (⟨α, x, 0, β⟩ : ZornNC R)
-      (⟨α, x, 0, β⟩ : ZornNC R) (⟨α, x, 0, β⟩ : ZornNC R)).β =
-      (associator (⟨γ, x, 0, δ⟩ : ZornNC R)
-        (⟨γ, x, 0, δ⟩ : ZornNC R) (⟨γ, x, 0, δ⟩ : ZornNC R)).β := by
-  exact ⟨(diagonal_self_associator_is_nambu α β x).1.trans
-      (diagonal_self_associator_is_nambu γ δ x).1.symm,
-    (diagonal_self_associator_is_nambu α β x).2.trans
-      (diagonal_self_associator_is_nambu γ δ x).2.symm⟩
+    (α β γ δ : B) (x : Vec3 B) :
+    (associator (⟨α, x, 0, β⟩ : ZornNC B)
+      (⟨α, x, 0, β⟩ : ZornNC B) (⟨α, x, 0, β⟩ : ZornNC B)).α =
+      (associator (⟨γ, x, 0, δ⟩ : ZornNC B)
+        (⟨γ, x, 0, δ⟩ : ZornNC B) (⟨γ, x, 0, δ⟩ : ZornNC B)).α ∧
+    (associator (⟨α, x, 0, β⟩ : ZornNC B)
+      (⟨α, x, 0, β⟩ : ZornNC B) (⟨α, x, 0, β⟩ : ZornNC B)).β =
+      (associator (⟨γ, x, 0, δ⟩ : ZornNC B)
+        (⟨γ, x, 0, δ⟩ : ZornNC B) (⟨γ, x, 0, δ⟩ : ZornNC B)).β := by
+  have h1 := diagonal_self_associator_is_nambu α β x
+  have h2 := diagonal_self_associator_is_nambu γ δ x
+  exact ⟨h1.1.trans h2.1.symm, h1.2.trans h2.2.symm⟩
 
 /-- **Theorem ZS_R6 (`universal_total_tensor_involution_is_anti_automorphism`):**
-Over ANY `[Ring R] [StarRing R]`, the Total Tensor Involution `totalConj = star ⊗ bar`
-satisfies `totalConj (X * Y) = totalConj Y * totalConj X` identically for all `X, Y : ZornNC R`. -/
-theorem universal_total_tensor_involution_is_anti_automorphism [StarRing R] (X Y : ZornNC R) :
+Over ANY `[Ring B] [StarRing B]`, the Total Tensor Involution `totalConj = star ⊗ bar`
+satisfies `totalConj (X * Y) = totalConj Y * totalConj X` identically for all `X, Y : ZornNC B`. -/
+theorem universal_total_tensor_involution_is_anti_automorphism [StarRing B] (X Y : ZornNC B) :
     totalConj (X * Y) = totalConj Y * totalConj X := by
   ext <;>
   · simp only [totalConj, mul_def, mul, Vec3.starVec,
@@ -649,15 +688,15 @@ theorem universal_total_tensor_involution_is_anti_automorphism [StarRing R] (X Y
 Chiral `γ₅` factorization `D_+ = γ₅ * Ψ_cov`, `D_- = Ψ_cov * γ₅`, pure imaginary octonion
 property `conj D_+ = -D_+`, and unified conjugate-twisted Gauss–Ampère extraction
 `conj D_+ * F_+ - F_+ * D_+ = ⟨G_gauss, -J_amp, J_amp, -G_gauss⟩`. -/
-theorem universal_chiral_factorization_and_dirac_gauss_ampere (α : R) (p : Vec3 R) :
-    let Ψ   := psiCov α p
-    let D_p := diracPlus α p
-    let D_m := diracMinus α p
-    let E   := Vec3.commVec α p
-    let B   := Vec3.cross p p
-    let F_p : ZornNC R := ⟨0, B + E, B + E, 0⟩
+theorem universal_chiral_factorization_and_dirac_gauss_ampere (α : B) (p : Vec3 B) :
+    let Ψ     := psiCov α p
+    let D_p   := diracPlus α p
+    let D_m   := diracMinus α p
+    let E     := Vec3.commVec α p
+    let B_mag := Vec3.cross p p
+    let F_p : ZornNC B := ⟨0, B_mag + E, B_mag + E, 0⟩
     let G_gauss := Vec3.adjointDiv p E
-    let J_amp   := Vec3.commVec α E - Vec3.adjointCurl p B
+    let J_amp   := Vec3.commVec α E - Vec3.adjointCurl p B_mag
     D_p = gamma5 * Ψ ∧
     D_m = Ψ * gamma5 ∧
     conj D_p = -D_p ∧
@@ -668,102 +707,102 @@ theorem universal_chiral_factorization_and_dirac_gauss_ampere (α : R) (p : Vec3
 end ZornNC
 
 -- ============================================================================
--- STAGE ZND₂: Universal `[Ring R]` 3D Operator-Valued De Rham & Dirac–Kähler Poset
+-- STAGE ZND₂: Universal `[Ring B]` 3D Operator-Valued De Rham & Dirac–Kähler Poset
 -- ============================================================================
 
-/-- The Zorn De Rham Exterior Complex `ZornForms R` (`Ω•(R) = Ω⁰ ⊕ Ω¹ ⊕ Ω² ⊕ Ω³`) over `[Ring R]`. -/
+/-- The Zorn De Rham Exterior Complex `ZornForms B` (`Ω•(B) = Ω⁰ ⊕ Ω¹ ⊕ Ω² ⊕ Ω³`) over `[Ring B]`. -/
 @[ext]
-structure ZornForms (R : Type u) where
-  ω0 : R
-  ω1 : Vec3 R
-  ω2 : Vec3 R
-  ω3 : R
+structure ZornForms (B : Type u) where
+  ω0 : B
+  ω1 : Vec3 B
+  ω2 : Vec3 B
+  ω3 : B
   deriving DecidableEq, Repr, Inhabited
 
 namespace ZornForms
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
-@[simp] def zero : ZornForms R := ⟨0, 0, 0, 0⟩
-@[simp] def add (A B : ZornForms R) : ZornForms R :=
-  ⟨A.ω0 + B.ω0, A.ω1 + B.ω1, A.ω2 + B.ω2, A.ω3 + B.ω3⟩
-@[simp] def neg (A : ZornForms R) : ZornForms R :=
-  ⟨-A.ω0, -A.ω1, -A.ω2, -A.ω3⟩
-@[simp] def sub (A B : ZornForms R) : ZornForms R :=
-  ⟨A.ω0 - B.ω0, A.ω1 - B.ω1, A.ω2 - B.ω2, A.ω3 - B.ω3⟩
+@[simp] def zero : ZornForms B := ⟨0, 0, 0, 0⟩
+@[simp] def add (X Y : ZornForms B) : ZornForms B :=
+  ⟨X.ω0 + Y.ω0, X.ω1 + Y.ω1, X.ω2 + Y.ω2, X.ω3 + Y.ω3⟩
+@[simp] def neg (X : ZornForms B) : ZornForms B :=
+  ⟨-X.ω0, -X.ω1, -X.ω2, -X.ω3⟩
+@[simp] def sub (X Y : ZornForms B) : ZornForms B :=
+  ⟨X.ω0 - Y.ω0, X.ω1 - Y.ω1, X.ω2 - Y.ω2, X.ω3 - Y.ω3⟩
 
-instance instZero : Zero (ZornForms R) := ⟨zero⟩
-instance instAdd : Add (ZornForms R)  := ⟨add⟩
-instance instNeg : Neg (ZornForms R)  := ⟨neg⟩
-instance instSub : Sub (ZornForms R)  := ⟨sub⟩
+instance instZero : Zero (ZornForms B) := ⟨zero⟩
+instance instAdd : Add (ZornForms B)  := ⟨add⟩
+instance instNeg : Neg (ZornForms B)  := ⟨neg⟩
+instance instSub : Sub (ZornForms B)  := ⟨sub⟩
 
-@[simp] lemma zero_ω0 : (0 : ZornForms R).ω0 = 0 := rfl
-@[simp] lemma zero_ω1 : (0 : ZornForms R).ω1 = 0 := rfl
-@[simp] lemma zero_ω2 : (0 : ZornForms R).ω2 = 0 := rfl
-@[simp] lemma zero_ω3 : (0 : ZornForms R).ω3 = 0 := rfl
-@[simp] lemma add_ω0 (A B : ZornForms R) : (A + B).ω0 = A.ω0 + B.ω0 := rfl
-@[simp] lemma add_ω1 (A B : ZornForms R) : (A + B).ω1 = A.ω1 + B.ω1 := rfl
-@[simp] lemma add_ω2 (A B : ZornForms R) : (A + B).ω2 = A.ω2 + B.ω2 := rfl
-@[simp] lemma add_ω3 (A B : ZornForms R) : (A + B).ω3 = A.ω3 + B.ω3 := rfl
-@[simp] lemma neg_ω0 (A : ZornForms R) : (-A).ω0 = -A.ω0 := rfl
-@[simp] lemma neg_ω1 (A : ZornForms R) : (-A).ω1 = -A.ω1 := rfl
-@[simp] lemma neg_ω2 (A : ZornForms R) : (-A).ω2 = -A.ω2 := rfl
-@[simp] lemma neg_ω3 (A : ZornForms R) : (-A).ω3 = -A.ω3 := rfl
-@[simp] lemma sub_ω0 (A B : ZornForms R) : (A - B).ω0 = A.ω0 - B.ω0 := rfl
-@[simp] lemma sub_ω1 (A B : ZornForms R) : (A - B).ω1 = A.ω1 - B.ω1 := rfl
-@[simp] lemma sub_ω2 (A B : ZornForms R) : (A - B).ω2 = A.ω2 - B.ω2 := rfl
-@[simp] lemma sub_ω3 (A B : ZornForms R) : (A - B).ω3 = A.ω3 - B.ω3 := rfl
+@[simp] lemma zero_ω0 : (0 : ZornForms B).ω0 = 0 := rfl
+@[simp] lemma zero_ω1 : (0 : ZornForms B).ω1 = 0 := rfl
+@[simp] lemma zero_ω2 : (0 : ZornForms B).ω2 = 0 := rfl
+@[simp] lemma zero_ω3 : (0 : ZornForms B).ω3 = 0 := rfl
+@[simp] lemma add_ω0 (X Y : ZornForms B) : (X + Y).ω0 = X.ω0 + Y.ω0 := rfl
+@[simp] lemma add_ω1 (X Y : ZornForms B) : (X + Y).ω1 = X.ω1 + Y.ω1 := rfl
+@[simp] lemma add_ω2 (X Y : ZornForms B) : (X + Y).ω2 = X.ω2 + Y.ω2 := rfl
+@[simp] lemma add_ω3 (X Y : ZornForms B) : (X + Y).ω3 = X.ω3 + Y.ω3 := rfl
+@[simp] lemma neg_ω0 (X : ZornForms B) : (-X).ω0 = -X.ω0 := rfl
+@[simp] lemma neg_ω1 (X : ZornForms B) : (-X).ω1 = -X.ω1 := rfl
+@[simp] lemma neg_ω2 (X : ZornForms B) : (-X).ω2 = -X.ω2 := rfl
+@[simp] lemma neg_ω3 (X : ZornForms B) : (-X).ω3 = -X.ω3 := rfl
+@[simp] lemma sub_ω0 (X Y : ZornForms B) : (X - Y).ω0 = X.ω0 - Y.ω0 := rfl
+@[simp] lemma sub_ω1 (X Y : ZornForms B) : (X - Y).ω1 = X.ω1 - Y.ω1 := rfl
+@[simp] lemma sub_ω2 (X Y : ZornForms B) : (X - Y).ω2 = X.ω2 - Y.ω2 := rfl
+@[simp] lemma sub_ω3 (X Y : ZornForms B) : (X - Y).ω3 = X.ω3 - Y.ω3 := rfl
 
 /-- Non-commutative Fréchet directional derivative of bilinear product `F(X, Y) = X * Y`. -/
-@[simp] def frechetBilinear (X Y dX dY : R) : R := dX * Y + X * dY
+@[simp] def frechetBilinear (X Y dX dY : B) : B := dX * Y + X * dY
 
 /-- Non-commutative Fréchet directional derivative of cubic monomial `F(X) = X³`. -/
-@[simp] def frechetCube (X dX : R) : R := (dX * X) * X + (X * dX) * X + (X * X) * dX
+@[simp] def frechetCube (X dX : B) : B := (dX * X) * X + (X * dX) * X + (X * X) * dX
 
-/-- Graded Exterior Wedge Product `ω ∧ η` on `Ω•(R)`. -/
-@[simp] def wedge (A B : ZornForms R) : ZornForms R where
-  ω0 := A.ω0 * B.ω0
-  ω1 := Vec3.smulLeft A.ω0 B.ω1 + Vec3.smulRight A.ω1 B.ω0
-  ω2 := Vec3.smulLeft A.ω0 B.ω2 + Vec3.smulRight A.ω2 B.ω0 + Vec3.cross A.ω1 B.ω1
-  ω3 := A.ω0 * B.ω3 + A.ω3 * B.ω0 + Vec3.dot A.ω1 B.ω2 + Vec3.dot A.ω2 B.ω1
+/-- Graded Exterior Wedge Product `ω ∧ η` on `Ω•(B)`. -/
+@[simp] def wedge (X Y : ZornForms B) : ZornForms B where
+  ω0 := X.ω0 * Y.ω0
+  ω1 := Vec3.smulLeft X.ω0 Y.ω1 + Vec3.smulRight X.ω1 Y.ω0
+  ω2 := Vec3.smulLeft X.ω0 Y.ω2 + Vec3.smulRight X.ω2 Y.ω0 + Vec3.cross X.ω1 Y.ω1
+  ω3 := X.ω0 * Y.ω3 + X.ω3 * Y.ω0 + Vec3.dot X.ω1 Y.ω2 + Vec3.dot X.ω2 Y.ω1
 
-/-- Non-Associative Zorn Split-Octonion Product on `ZornForms R`. -/
-@[simp] def zornMul (A B : ZornForms R) : ZornForms R where
-  ω0 := A.ω0 * B.ω0 - Vec3.dot A.ω1 B.ω2
-  ω1 := Vec3.smulLeft A.ω0 B.ω1 + Vec3.smulRight A.ω1 B.ω3 + Vec3.cross A.ω2 B.ω2
-  ω2 := Vec3.smulLeft A.ω3 B.ω2 + Vec3.smulRight A.ω2 B.ω0 + Vec3.cross A.ω1 B.ω1
-  ω3 := A.ω3 * B.ω3 - Vec3.dot A.ω2 B.ω1
+/-- Non-Associative Zorn Split-Octonion Product on `ZornForms B`. -/
+@[simp] def zornMul (X Y : ZornForms B) : ZornForms B where
+  ω0 := X.ω0 * Y.ω0 - Vec3.dot X.ω1 Y.ω2
+  ω1 := Vec3.smulLeft X.ω0 Y.ω1 + Vec3.smulRight X.ω1 Y.ω3 + Vec3.cross X.ω2 Y.ω2
+  ω2 := Vec3.smulLeft X.ω3 Y.ω2 + Vec3.smulRight X.ω2 Y.ω0 + Vec3.cross X.ω1 Y.ω1
+  ω3 := X.ω3 * Y.ω3 - Vec3.dot X.ω2 Y.ω1
 
-/-- Euclidean Hodge Star Operator `⋆ : Ω^k(R) → Ω^{3-k}(R)`. -/
-@[simp] def hodgeStar (ω : ZornForms R) : ZornForms R := ⟨ω.ω3, ω.ω2, ω.ω1, ω.ω0⟩
+/-- Euclidean Hodge Star Operator `⋆ : Ω^k(B) → Ω^{3-k}(B)`. -/
+@[simp] def hodgeStar (ω : ZornForms B) : ZornForms B := ⟨ω.ω3, ω.ω2, ω.ω1, ω.ω0⟩
 
-/-- Generalized Curl / Covariant Exterior Derivative `d_∇ : Ω^k(R) → Ω^{k+1}(R)`. -/
-@[simp] def extCurl (p : Vec3 R) (ω : ZornForms R) : ZornForms R where
+/-- Generalized Curl / Covariant Exterior Derivative `d_∇ : Ω^k(B) → Ω^{k+1}(B)`. -/
+@[simp] def extCurl (p : Vec3 B) (ω : ZornForms B) : ZornForms B where
   ω0 := 0
   ω1 := Vec3.adjointGrad p ω.ω0
   ω2 := Vec3.adjointCurl p ω.ω1
   ω3 := Vec3.adjointDiv  p ω.ω2
 
-/-- Generalized Div / Negative Codifferential `Div_∇ = -δ_∇ : Ω^k(R) → Ω^{k-1}(R)`. -/
-@[simp] def extDiv (p : Vec3 R) (ω : ZornForms R) : ZornForms R where
+/-- Generalized Div / Negative Codifferential `Div_∇ = -δ_∇ : Ω^k(B) → Ω^{k-1}(B)`. -/
+@[simp] def extDiv (p : Vec3 B) (ω : ZornForms B) : ZornForms B where
   ω0 := Vec3.adjointDiv  p ω.ω1
   ω1 := -Vec3.adjointCurl p ω.ω2
   ω2 := Vec3.adjointGrad p ω.ω3
   ω3 := 0
 
-/-- Covariant Codifferential `δ_∇ = -Div_∇ : Ω^k(R) → Ω^{k-1}(R)`. -/
-@[simp] def codiff (p : Vec3 R) (ω : ZornForms R) : ZornForms R := -extDiv p ω
+/-- Covariant Codifferential `δ_∇ = -Div_∇ : Ω^k(B) → Ω^{k-1}(B)`. -/
+@[simp] def codiff (p : Vec3 B) (ω : ZornForms B) : ZornForms B := -extDiv p ω
 
 /-- Unified Dirac–Kähler Operator `D_DK = d_∇ - δ_∇ = extCurl + extDiv`. -/
-@[simp] def diracKaehler (p : Vec3 R) (ω : ZornForms R) : ZornForms R :=
+@[simp] def diracKaehler (p : Vec3 B) (ω : ZornForms B) : ZornForms B :=
   extCurl p ω + extDiv p ω
 
 /-- Covariant Hodge–de Rham Laplacian `Δ_Hodge = d_∇ δ_∇ + δ_∇ d_∇`. -/
-@[simp] def hodgeLaplacian (p : Vec3 R) (ω : ZornForms R) : ZornForms R :=
+@[simp] def hodgeLaplacian (p : Vec3 B) (ω : ZornForms B) : ZornForms B :=
   extCurl p (codiff p ω) + codiff p (extCurl p ω)
 
-@[simp] def form0 (φ : R) : ZornForms R := ⟨φ, 0, 0, 0⟩
-@[simp] def form1 (A : Vec3 R) : ZornForms R := ⟨0, A, 0, 0⟩
-@[simp] def form2 (B : Vec3 R) : ZornForms R := ⟨0, 0, B, 0⟩
+@[simp] def form0 (φ : B) : ZornForms B := ⟨φ, 0, 0, 0⟩
+@[simp] def form1 (A : Vec3 B) : ZornForms B := ⟨0, A, 0, 0⟩
+@[simp] def form2 (v2 : Vec3 B) : ZornForms B := ⟨0, 0, v2, 0⟩
 
 macro "zorn_forms_ring" : tactic =>
   `(tactic| (
@@ -791,9 +830,9 @@ macro "zorn_forms_ring" : tactic =>
      try abel)))
 
 /-- **Theorem DK_1 (`frechet_commutator_leibniz_bridge`):**
-Over ANY `[Ring R]`, the commutator derivation `[p, F(X)]` equals the non-commutative Fréchet
+Over ANY `[Ring B]`, the commutator derivation `[p, F(X)]` equals the non-commutative Fréchet
 directional derivative `DF(X)[[p, X]]` on bilinear (`X * Y`) and cubic (`X³`) polynomials. -/
-theorem frechet_commutator_leibniz_bridge (p X Y : R) :
+theorem frechet_commutator_leibniz_bridge (p X Y : B) :
     let dX := Vec3.commOp p X
     let dY := Vec3.commOp p Y
     Vec3.commOp p (X * Y) = frechetBilinear X Y dX dY ∧
@@ -801,9 +840,9 @@ theorem frechet_commutator_leibniz_bridge (p X Y : R) :
   refine ⟨by zorn_forms_ring, by zorn_forms_ring⟩
 
 /-- **Theorem DK_2 (`hodge_duality_of_generalized_div_and_curl`):**
-Over ANY `[Ring R]`, `⋆ d_∇ ⋆` reproduces the components of `extDiv` across all 4 grades
+Over ANY `[Ring B]`, `⋆ d_∇ ⋆` reproduces the components of `extDiv` across all 4 grades
 (with the graded sign `-1` on 2-forms). -/
-theorem hodge_duality_of_generalized_div_and_curl (p : Vec3 R) (ω : ZornForms R) :
+theorem hodge_duality_of_generalized_div_and_curl (p : Vec3 B) (ω : ZornForms B) :
     let dualD := hodgeStar (extCurl p (hodgeStar ω))
     let divW  := extDiv p ω
     dualD.ω0 = divW.ω0 ∧
@@ -813,87 +852,99 @@ theorem hodge_duality_of_generalized_div_and_curl (p : Vec3 R) (ω : ZornForms R
   refine ⟨by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring⟩
 
 /-- **Theorem DK_3 (`graded_leibniz_rule_for_operator_forms`):**
-Over ANY `[Ring R]`, `d_∇(ω^(k) ∧ η) = (d_∇ ω^(k)) ∧ η + (-1)^k ω^(k) ∧ (d_∇ η)`
+Over ANY `[Ring B]`, `d_∇(ω^(k) ∧ η) = (d_∇ ω^(k)) ∧ η + (-1)^k ω^(k) ∧ (d_∇ η)`
 for `k = 0` (`+1` sign) and `k = 1` (`-1` sign: `Div_ad(A × C) = (Curl_ad A)·C - A·(Curl_ad C)`). -/
-theorem graded_leibniz_rule_for_operator_forms (p A C : Vec3 R) (φ : R) :
+theorem graded_leibniz_rule_for_operator_forms (p A C : Vec3 B) (φ : B) :
     extCurl p (wedge (form0 φ) (form1 A)) =
       wedge (extCurl p (form0 φ)) (form1 A) + wedge (form0 φ) (extCurl p (form1 A)) ∧
     extCurl p (wedge (form1 A) (form1 C)) =
       wedge (extCurl p (form1 A)) (form1 C) - wedge (form1 A) (extCurl p (form1 C)) ∧
     Vec3.adjointDiv p (Vec3.cross A C) =
       Vec3.dot (Vec3.adjointCurl p A) C - Vec3.dot A (Vec3.adjointCurl p C) := by
-  refine ⟨by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring⟩
+  have h0 :
+      extCurl p (wedge (form0 φ) (form1 A)) =
+        wedge (extCurl p (form0 φ)) (form1 A) + wedge (form0 φ) (extCurl p (form1 A)) := by
+    zorn_forms_ring
+  refine ⟨h0, by zorn_forms_ring, by zorn_forms_ring⟩
 
 /-- **Theorem DK_4 (`interior_leibniz_rule_for_generalized_div`):**
-Over ANY `[Ring R]`, `Div_ad(φ A) = (Grad_ad φ) · A + φ * (Div_ad A)`. -/
-theorem interior_leibniz_rule_for_generalized_div (p A : Vec3 R) (φ : R) :
+Over ANY `[Ring B]`, `Div_ad(φ A) = (Grad_ad φ) · A + φ * (Div_ad A)`. -/
+theorem interior_leibniz_rule_for_generalized_div (p A : Vec3 B) (φ : B) :
     (extDiv p (wedge (form0 φ) (form1 A))).ω0 =
       Vec3.dot (Vec3.adjointGrad p φ) A + φ * Vec3.adjointDiv p A := by
-  zorn_forms_ring
+  have h :
+      (extDiv p (wedge (form0 φ) (form1 A))).ω0 =
+        Vec3.dot (Vec3.adjointGrad p φ) A + φ * Vec3.adjointDiv p A := by
+    zorn_forms_ring
+  exact h
 
 /-- **Theorem DK_5 (`curvature_square_of_extCurl_and_hodge_laplacian`):**
-Over ANY `[Ring R]`, `d_∇²` and `Div_∇²` act by the chromomagnetic curvature `B = p × p`,
+Over ANY `[Ring B]`, `d_∇²` and `Div_∇²` act by the chromomagnetic curvature `B_mag = p × p`,
 and `hodgeLaplacian = d_∇ δ_∇ + δ_∇ d_∇` equals `-Δ_Bochner` plus the Weitzenböck magnetic
-curvature twist `B ×_ad ·` on `Ω¹` and `Ω²`. -/
-theorem curvature_square_of_extCurl_and_hodge_laplacian (p : Vec3 R) (ω : ZornForms R) :
-    let B  := Vec3.cross p p
+curvature twist `B_mag ×_ad ·` on `Ω¹` and `Ω²`. -/
+theorem curvature_square_of_extCurl_and_hodge_laplacian (p : Vec3 B) (ω : ZornForms B) :
+    let B_mag := Vec3.cross p p
     let d2 := extCurl p (extCurl p ω)
     let v2 := extDiv  p (extDiv  p ω)
     let lapHodge := hodgeLaplacian p ω
     d2.ω0 = 0 ∧
     d2.ω1 = 0 ∧
-    d2.ω2 = Vec3.adjointGrad B ω.ω0 ∧
-    d2.ω3 = Vec3.adjointDiv B ω.ω1 ∧
-    v2.ω0 = -Vec3.adjointDiv B ω.ω2 ∧
-    v2.ω1 = -Vec3.adjointGrad B ω.ω3 ∧
+    d2.ω2 = Vec3.adjointGrad B_mag ω.ω0 ∧
+    d2.ω3 = Vec3.adjointDiv B_mag ω.ω1 ∧
+    v2.ω0 = -Vec3.adjointDiv B_mag ω.ω2 ∧
+    v2.ω1 = -Vec3.adjointGrad B_mag ω.ω3 ∧
     v2.ω2 = 0 ∧
     v2.ω3 = 0 ∧
     lapHodge.ω0 = -Vec3.bochnerScalar p ω.ω0 ∧
-    lapHodge.ω1 = -Vec3.bochnerVec p ω.ω1 + Vec3.adjointCurl B ω.ω1 ∧
-    lapHodge.ω2 = -Vec3.bochnerVec p ω.ω2 + Vec3.adjointCurl B ω.ω2 ∧
+    lapHodge.ω1 = -Vec3.bochnerVec p ω.ω1 + Vec3.adjointCurl B_mag ω.ω1 ∧
+    lapHodge.ω2 = -Vec3.bochnerVec p ω.ω2 + Vec3.adjointCurl B_mag ω.ω2 ∧
     lapHodge.ω3 = -Vec3.bochnerScalar p ω.ω3 := by
   refine ⟨by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring,
           by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring,
           by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring⟩
 
 /-- **Theorem DK_6 (`bv_second_order_convective_rule_for_extDiv`):**
-Over ANY `[Ring R]`, the second-order Batalin–Vilkovisky operator `extDiv` on `form1 A ∧ form1 C`
+Over ANY `[Ring B]`, the second-order Batalin–Vilkovisky operator `extDiv` on `form1 A ∧ form1 C`
 equals `(Div_ad A) C - A (Div_ad C)` plus the BV convective antibracket defect
 `(A · ∇_ad) C - (∇_ad A) · C`. -/
-theorem bv_second_order_convective_rule_for_extDiv (p A C : Vec3 R) :
+theorem bv_second_order_convective_rule_for_extDiv (p A C : Vec3 B) :
     let divTerm := Vec3.smulLeft (Vec3.adjointDiv p A) C - Vec3.smulRight A (Vec3.adjointDiv p C)
     let bvConvectiveDefect := Vec3.convectiveLeft p A C - Vec3.convectiveRight p A C
     (extDiv p (wedge (form1 A) (form1 C))).ω1 = divTerm + bvConvectiveDefect := by
   zorn_forms_ring
 
 /-- **Theorem DK_7 (`dirac_kaehler_square_three_channel_decomposition`):**
-Over ANY `[Ring R]`, squaring `diracKaehler = extCurl + extDiv` decomposes into the
+Over ANY `[Ring B]`, squaring `diracKaehler = extCurl + extDiv` decomposes into the
 3 orthogonal grade-shift channels `d_∇² + Div_∇² - Δ_Hodge`. -/
-theorem dirac_kaehler_square_three_channel_decomposition (p : Vec3 R) (ω : ZornForms R) :
+theorem dirac_kaehler_square_three_channel_decomposition (p : Vec3 B) (ω : ZornForms B) :
     diracKaehler p (diracKaehler p ω) =
       (extCurl p (extCurl p ω) + extDiv p (extDiv p ω)) - hodgeLaplacian p ω := by
-  zorn_forms_ring
+  have h :
+      diracKaehler p (diracKaehler p ω) =
+        (extCurl p (extCurl p ω) + extDiv p (extDiv p ω)) - hodgeLaplacian p ω := by
+    zorn_forms_ring
+  exact h
 
 /-- **Theorem DK_8 (`de_rham_pontryagin_chain_from_temporal_connection`):**
-Over ANY `[Ring R]`, iterating `extCurl p` on `form0 α` generates `-E` at step 1,
-`-[α, B]` at step 2, and the 4th-order Pontryagin 3-form `E ·_ad B` at step 3,
+Over ANY `[Ring B]`, iterating `extCurl p` on `form0 α` generates `-E` at step 1,
+`-[α, B_mag]` at step 2, and the 4th-order Pontryagin 3-form `E ·_ad B_mag` at step 3,
 and satisfies the differential Bianchi commutation `(d_∇ ∘ d_∇²)(φ) = (d_∇² ∘ d_∇)(φ)`. -/
-theorem de_rham_pontryagin_chain_from_temporal_connection (p : Vec3 R) (α φ : R) :
-    let E  := Vec3.commVec α p
-    let B  := Vec3.cross p p
+theorem de_rham_pontryagin_chain_from_temporal_connection (p : Vec3 B) (α φ : B) :
+    let E     := Vec3.commVec α p
+    let B_mag := Vec3.cross p p
     let d1 := extCurl p (form0 α)
     let d2 := extCurl p d1
     let d3 := extCurl p d2
     d1 = ⟨0, -E, 0, 0⟩ ∧
-    d2 = ⟨0, 0, -Vec3.commVec α B, 0⟩ ∧
-    d3 = ⟨0, 0, 0, Vec3.adjointDiv E B⟩ ∧
+    d2 = ⟨0, 0, -Vec3.commVec α B_mag, 0⟩ ∧
+    d3 = ⟨0, 0, 0, Vec3.adjointDiv E B_mag⟩ ∧
     (extCurl p (extCurl p (extCurl p (form0 φ)))).ω3 =
-      Vec3.adjointDiv B (Vec3.adjointGrad p φ) := by
+      Vec3.adjointDiv B_mag (Vec3.adjointGrad p φ) := by
   refine ⟨by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring, by zorn_forms_ring⟩
 
 /-- **Theorem DK_9 (`zorn_clifford_to_de_rham_wedge_bridge`):**
 Exact bridge between non-associative Zorn multiplication `zornMul` and the De Rham `wedge` product. -/
-theorem zorn_clifford_to_de_rham_wedge_bridge (A C : Vec3 R) :
+theorem zorn_clifford_to_de_rham_wedge_bridge (A C : Vec3 B) :
     (zornMul (form1 A) (form1 C)).ω2 = (wedge (form1 A) (form1 C)).ω2 ∧
     (zornMul (form1 A) (form2 C)).ω0 = -(wedge (form1 A) (form2 C)).ω3 ∧
     (zornMul (form2 C) (form1 A)).ω3 = -(wedge (form2 C) (form1 A)).ω3 := by
@@ -909,42 +960,70 @@ section PeirceOperatorSpine
 
 variable {B : Type*} [Ring B]
 
+/-- Ring commutator `[X, Y] = X * Y - Y * X`. -/
 def comm (X Y : B) : B := X * Y - Y * X
+/-- Ring anticommutator `{X, Y} = X * Y + Y * X`. -/
 def anticomm (X Y : B) : B := X * Y + Y * X
+/-- Left associator commutator defect `(X * Y - Y * X) * Z`. -/
 def assocDefect (X Y Z : B) : B := X * Y * Z - Y * X * Z
 
+/-- Peirce grading involution `S_P = P - (1 - P) = 2P - 1`. -/
 def invS (P : B) : B := P - (1 - P)
+/-- Idempotent defect `P * P - P`. -/
 def idempDefect (P : B) : B := P * P - P
 
+/-- Conscious diagonal Peirce corner `P * X * P`. -/
 def secPP (P X : B) : B := P * X * P
+/-- Upper off-diagonal Peirce corner `P * X * (1 - P)`. -/
 def secPM (P X : B) : B := P * X * (1 - P)
+/-- Lower off-diagonal Peirce corner `(1 - P) * X * P`. -/
 def secMP (P X : B) : B := (1 - P) * X * P
+/-- Shadow diagonal Peirce corner `(1 - P) * X * (1 - P)`. -/
 def secMM (P X : B) : B := (1 - P) * X * (1 - P)
 
+/-- Forward nilpotent Peirce cone `N_+ = P * A * (1 - P)`. -/
 def conePlus (P A : B) : B := P * A * (1 - P)
+/-- Backward nilpotent Peirce cone `N_- = (1 - P) * C * P`. -/
 def coneMinus (P C : B) : B := (1 - P) * C * P
 
+/-- Off-diagonal Peirce bridge `Φ = N_+ + N_-`. -/
 def genPhi (P A C : B) : B := conePlus P A + coneMinus P C
+/-- Off-diagonal Peirce symplectic twist `J = N_+ - N_-`. -/
 def genJ   (P A C : B) : B := conePlus P A - coneMinus P C
+/-- Total bimetric Casimir `V = {N_+, N_-}`. -/
 def genV   (P A C : B) : B := anticomm (conePlus P A) (coneMinus P C)
+/-- Bimetric chiral dipole `Σ = [N_+, N_-]`. -/
 def genSig (P A C : B) : B := comm (conePlus P A) (coneMinus P C)
 
+/-- Conscious sheet QGT metric `Q_+ = N_+ * N_-`. -/
 def qgtPlus  (P A C : B) : B := conePlus P A * coneMinus P C
+/-- Shadow sheet QGT metric `Q_- = N_- * N_+`. -/
 def qgtMinus (P A C : B) : B := coneMinus P C * conePlus P A
 
+/-- Diagonal Peirce block sum `P X P + (1 - P) X (1 - P)`. -/
 def coreOp (P X : B) : B := secPP P X + secMM P X
+/-- Off-diagonal Peirce block sum `P X (1 - P) + (1 - P) X P`. -/
 def offOp  (P X : B) : B := secPM P X + secMP P X
 
+/-- Additive doubling `2 X = X + X`. -/
 def twoOp   (X : B) : B := X + X
+/-- Additive tripling `3 X = X + X + X`. -/
 def threeOp (X : B) : B := X + X + X
+/-- Additive quadrupling `4 X = X + X + X + X`. -/
 def fourOp  (X : B) : B := X + X + X + X
+/-- Additive octupling `8 X = 4 X + 4 X`. -/
 def eightOp (X : B) : B := fourOp X + fourOp X
 
+/-- Cubic Newton–Raphson idempotent purification step `3 P² - 2 P³`. -/
 def newtonStep (P : B) : B := threeOp (P * P) - twoOp (P * P * P)
+/-- Operator Pell scale `1 + 4 (P² - P)`. -/
 def pellScale (P : B) : B := (1 : B) + fourOp (idempDefect P)
 
+/-- Weak-value numerator `(1 - P) * X * N_+`. -/
 def weakNum (P A X : B) : B := (1 - P) * X * conePlus P A
+/-- Weak-value denominator `Q_- = N_- * N_+`. -/
 def weakDen (P A C : B) : B := qgtMinus P A C
+/-- Non-commutative Aharonov–Albert–Vaidman weak-value commutator remainder. -/
 def weakRem (P A C X : B) : B := secMP P X * qgtPlus P A C - qgtMinus P A C * secMP P X
 
 /-- **Coordinate-Free Drazin Core-Nilpotent Resolution (`DrazinResolution M P C N B_d`)**:
@@ -967,20 +1046,32 @@ structure DrazinResolution (M P C N B_d : B) : Prop where
   core_inv_right : C * B_d = P
   core_inv_left : B_d * C = P
 
-/-- Constructive inhabitant witness for `DrazinResolution` (`0` in any ring `B`). -/
-theorem drazinResolution_zero_witness :
-    DrazinResolution (0 : B) 0 0 0 0 :=
-  { idem := mul_zero 0
-    decomp := (add_zero 0).symm
-    core_left := mul_zero 0
-    core_right := mul_zero 0
-    nil_left := mul_zero 0
-    nil_right := mul_zero 0
-    nil_sq := mul_zero 0
-    drazin_left := mul_zero 0
-    drazin_right := mul_zero 0
-    core_inv_right := mul_zero 0
-    core_inv_left := mul_zero 0 }
+/-! The resolution data imply that the core and nilpotent parts annihilate
+each other on both sides. This is the compatibility used by the Drazin
+identities below; it is stronger than exhibiting the degenerate zero example. -/
+
+/-- In a Drazin resolution, the core and nilpotent components have disjoint
+left and right products. -/
+theorem drazin_core_nilpotent_annihilation
+    {M P C N B_d : B} (hD : DrazinResolution M P C N B_d) :
+    C * N = 0 ∧ N * C = 0 ∧ B_d * N = 0 ∧ N * B_d = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · calc
+      C * N = (C * P) * N := by rw [hD.core_right]
+      _ = C * (P * N) := by rw [mul_assoc]
+      _ = 0 := by rw [hD.nil_left, mul_zero]
+  · calc
+      N * C = N * (P * C) := by rw [hD.core_left]
+      _ = (N * P) * C := by rw [← mul_assoc]
+      _ = 0 := by rw [hD.nil_right, zero_mul]
+  · calc
+      B_d * N = (B_d * P) * N := by rw [hD.drazin_right]
+      _ = B_d * (P * N) := by rw [mul_assoc]
+      _ = 0 := by rw [hD.nil_left, mul_zero]
+  · calc
+      N * B_d = N * (P * B_d) := by rw [hD.drazin_left]
+      _ = (N * P) * B_d := by rw [← mul_assoc]
+      _ = 0 := by rw [hD.nil_right, zero_mul]
 
 end PeirceOperatorSpine
 
@@ -991,29 +1082,29 @@ structure IsMoorePenrose {B : Type*} [Ring B] [Star B] (M Mdag : B) : Prop where
   penrose3 : star (M * Mdag) = M * Mdag
   penrose4 : star (Mdag * M) = Mdag * M
 
-/-- Constructive inhabitant witness for `IsMoorePenrose` (`0` in any `StarRing B`). -/
-theorem isMoorePenrose_zero_witness {B : Type*} [Ring B] [StarRing B] :
-    IsMoorePenrose (0 : B) 0 :=
-  { penrose1 := mul_zero (0 * 0)
-    penrose2 := mul_zero (0 * 0)
-    penrose3 := by
-      calc
-        star ((0 : B) * 0) = star (0 : B) := by rw [zero_mul]
-        _ = 0 := star_zero B
-        _ = (0 : B) * 0 := by rw [zero_mul]
-    penrose4 := by
-      calc
-        star ((0 : B) * 0) = star (0 : B) := by rw [zero_mul]
-        _ = 0 := star_zero B
-        _ = (0 : B) * 0 := by rw [zero_mul] }
+/-- The Penrose reflexive equations make both support operators idempotent.
+The star-symmetry equations are part of `hMP`, but are not needed for this
+algebraic consequence. -/
+theorem moore_penrose_supports_are_idempotent
+    {B : Type*} [Ring B] [Star B] {M Mdag : B}
+    (hMP : IsMoorePenrose M Mdag) :
+    (M * Mdag) * (M * Mdag) = M * Mdag ∧
+    (Mdag * M) * (Mdag * M) = Mdag * M := by
+  refine ⟨?_, ?_⟩
+  · calc
+      (M * Mdag) * (M * Mdag) = (M * Mdag * M) * Mdag := by simp only [mul_assoc]
+      _ = M * Mdag := by rw [hMP.penrose1]
+  · calc
+      (Mdag * M) * (Mdag * M) = (Mdag * M * Mdag) * M := by simp only [mul_assoc]
+      _ = Mdag * M := by rw [hMP.penrose2]
 
 section PeirceOperatorSpine
 
 variable {B : Type*} [Ring B]
 
-/-- The Malik–Thome DMP inverse `T_DMP = M^D M M† = B_d M M†` and dual MPD inverse
-`T_MPD = M† M M^D = M† M B_d`. -/
+/-- The Malik–Thome DMP inverse `T_DMP = M^D M M† = B_d M M†`. -/
 def dmpOp (B_d M Mdag : B) : B := B_d * M * Mdag
+/-- The dual Malik–Thome MPD inverse `T_MPD = M† M M^D = M† M B_d`. -/
 def mpdOp (B_d M Mdag : B) : B := Mdag * M * B_d
 
 /-- The Row-4 Shadow Reflexive Inverse `S_{--} = M† - T_DMP - T_MPD + B_d = (1 - P) M† (1 - P)`. -/
@@ -1023,17 +1114,27 @@ def row4ShadowOp (B_d M Mdag : B) : B := Mdag - dmpOp B_d M Mdag - mpdOp B_d M M
 def twoPointCorrelation (P X : B) : B :=
   secPM P X * secMP P X + secMP P X * secPM P X
 
+/-- Walsh–Hadamard `(+, +)` Peirce row combination `X + S X + X S + S X S`. -/
 def hadamardPP (S X : B) : B := X + S * X + X * S + S * X * S
+/-- Walsh–Hadamard `(+, -)` Peirce row combination `X + S X - X S - S X S`. -/
 def hadamardPM (S X : B) : B := X + S * X - X * S - S * X * S
+/-- Walsh–Hadamard `(-, +)` Peirce row combination `X - S X + X S - S X S`. -/
 def hadamardMP (S X : B) : B := X - S * X + X * S - S * X * S
+/-- Walsh–Hadamard `(-, -)` Peirce row combination `X - S X - X S + S X S`. -/
 def hadamardMM (S X : B) : B := X - S * X - X * S + S * X * S
 
+/-- 3-idempotent Grade `0` diagonal projection `E₁ X E₁ + E₂ X E₂ + E₃ X E₃`. -/
 def grade0 (E₁ E₂ E₃ X : B) : B := E₁ * X * E₁ + E₂ * X * E₂ + E₃ * X * E₃
+/-- 3-idempotent Grade `+1` superdiagonal projection `E₁ X E₂ + E₂ X E₃`. -/
 def gradePlus1 (E₁ E₂ E₃ X : B) : B := E₁ * X * E₂ + E₂ * X * E₃
+/-- 3-idempotent Grade `-1` subdiagonal projection `E₂ X E₁ + E₃ X E₂`. -/
 def gradeMinus1 (E₁ E₂ E₃ X : B) : B := E₂ * X * E₁ + E₃ * X * E₂
+/-- 3-idempotent Grade `+2` top corner projection `E₁ X E₃`. -/
 def gradePlus2 (E₁ E₃ X : B) : B := E₁ * X * E₃
+/-- 3-idempotent Grade `-2` bottom corner projection `E₃ X E₁`. -/
 def gradeMinus2 (E₁ E₃ X : B) : B := E₃ * X * E₁
 
+/-- Left associativity helper `P * (P * X) = P * X` for an idempotent `P * P = P`. -/
 lemma P_assoc {P : B} (hP : P * P = P) (X : B) : P * (P * X) = P * X := by
   rw [← mul_assoc, hP]
 
@@ -1105,7 +1206,8 @@ theorem archetype_A83_metriplectic_weak_measurement_duality
     weakNum P A (qgtMinus P A C) = 0 ∧
     weakNum P A X * coneMinus P C = weakDen P A C * secMP P X + weakRem P A C X ∧
     coneMinus P C * weakNum P A X = weakDen P A C * secPP P X := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  have h1 : weakNum P A X = secMP P X * conePlus P A := by peirce_abel_znd3 hP
+  refine ⟨h1, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     peirce_abel_znd3 hP
 
 /-- **Theorem MT_3a (`archetype_A86_tetraktys_dirac_clifford_and_chiral_gamma5_duality`):**
@@ -1135,7 +1237,8 @@ theorem archetype_A86_tetraktys_dirac_clifford_and_chiral_gamma5_duality
     (genV P A C + genSig P A C) * (genPhi P A C - genJ P A C) = 0 ∧
     (genV P A C + genSig P A C) * (genPhi P A C + genJ P A C) =
       (4 : ℤ) • (genV P A C * conePlus P A) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  have h1 : genJ P A C * genPhi P A C = genSig P A C := by peirce_abel_znd3 hP
+  refine ⟨h1, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     peirce_abel_znd3 hP
 
 /-- **Theorem MT_3b (`archetype_A87_tetraktys_clifford_casimir_and_internal_projector_duality`):**
@@ -1213,23 +1316,12 @@ theorem campbell_meyer_drazin_and_superoperator_tetraktys
     comm P (comm P (comm P X)) = comm P X ∧
     comm P (comm P (coreOp P X)) = 0 ∧
     comm P (comm P (offOp P X))  = offOp P X := by
+  have hAn := drazin_core_nilpotent_annihilation hD
   rcases hD with ⟨hP, hM, hCL, hCR, hNL, hNR, hN2, hDL, hDR, hCIR, hCIL⟩
-  have hNBd : N * B_d = 0 := by
-    calc N * B_d = N * (P * B_d) := by rw [hDL]
-      _ = (N * P) * B_d := by rw [← mul_assoc]
-      _ = 0 := by rw [hNR, zero_mul]
-  have hBdN : B_d * N = 0 := by
-    calc B_d * N = (B_d * P) * N := by rw [hDR]
-      _ = B_d * (P * N) := by rw [mul_assoc]
-      _ = 0 := by rw [hNL, mul_zero]
-  have hCN : C * N = 0 := by
-    calc C * N = (C * P) * N := by rw [hCR]
-      _ = C * (P * N) := by rw [mul_assoc]
-      _ = 0 := by rw [hNL, mul_zero]
-  have hNC : N * C = 0 := by
-    calc N * C = N * (P * C) := by rw [hCL]
-      _ = (N * P) * C := by rw [← mul_assoc]
-      _ = 0 := by rw [hNR, zero_mul]
+  have hCN := hAn.1
+  have hNC := hAn.2.1
+  have hBdN := hAn.2.2.1
+  have hNBd := hAn.2.2.2
   have hMBd : M * B_d = P := by
     rw [hM, add_mul, hCIR, hNBd, add_zero]
   have hBdM : B_d * M = P := by
@@ -1872,6 +1964,7 @@ def rank : ZornAmplituhedronBaryonStage → ℕ
   | .p4_baryonDeterminantSinglet  => 4
   | .p5_holographicSimplexBoundary => 5
 
+/-- Injectivity of the topological rank map `rank`. -/
 theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> first | rfl | cases h
@@ -1898,47 +1991,47 @@ end ZornAmplituhedronBaryonStage
 
 section ZornAmplituhedronPluckerBaryon
 
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
-/-- A 4-component twistor `Z = (z₀, u) ∈ R × Vec3 R` over a non-commutative ring `R`. -/
+/-- A 4-component twistor `Z = (z₀, u) ∈ B × Vec3 B` over a non-commutative ring `B`. -/
 @[ext]
-structure Twistor4 (R : Type u) where
-  z0 : R
-  u  : Vec3 R
+structure Twistor4 (B : Type u) where
+  z0 : B
+  u  : Vec3 B
   deriving DecidableEq, Repr, Inhabited
 
 /-- Affine origin twistor `Z₀ = (1, 0, 0, 0)`. -/
-@[simp] def affineOrigin : Twistor4 R := ⟨1, 0⟩
+@[simp] def affineOrigin : Twistor4 B := ⟨1, 0⟩
 
 /-- Purely spatial twistor `Z = (0, u)`. -/
-@[simp] def spatialTwistor (u : Vec3 R) : Twistor4 R := ⟨0, u⟩
+@[simp] def spatialTwistor (u : Vec3 B) : Twistor4 B := ⟨0, u⟩
 
 /-- Affine twistor `Z_a = (1, u_a)` in the `z₀ = 1` chart of projective twistor space. -/
-@[simp] def affineTwistor (u : Vec3 R) : Twistor4 R := ⟨1, u⟩
+@[simp] def affineTwistor (u : Vec3 B) : Twistor4 B := ⟨1, u⟩
 
 /-- The electric/quark Plücker 3-vector `u = z_{A,0} u_B - z_{B,0} u_A` (`p_{01}, p_{02}, p_{03}`)
 of a twistor line `Z_A ∧ Z_B`. -/
-@[simp] def pluckerElectricVec (ZA ZB : Twistor4 R) : Vec3 R :=
+@[simp] def pluckerElectricVec (ZA ZB : Twistor4 B) : Vec3 B :=
   Vec3.smulLeft ZA.z0 ZB.u - Vec3.smulLeft ZB.z0 ZA.u
 
 /-- The magnetic/diquark Hodge-dual Plücker 3-vector `v = u_A × u_B` (`p_{23}, p_{31}, p_{12}`)
-of a twistor line `Z_A ∧ Z_B`. Over a non-commutative ring `R`, `pluckerMagneticVec (spatialTwistor u) (spatialTwistor u) = u × u`
+of a twistor line `Z_A ∧ Z_B`. Over a non-commutative ring `B`, `pluckerMagneticVec (spatialTwistor u) (spatialTwistor u) = u × u`
 is the non-Abelian chromomagnetic self-wedge! -/
-@[simp] def pluckerMagneticVec (ZA ZB : Twistor4 R) : Vec3 R :=
+@[simp] def pluckerMagneticVec (ZA ZB : Twistor4 B) : Vec3 B :=
   Vec3.cross ZA.u ZB.u
 
-/-- Explicit `4 × 4` matrix over `[Ring R]` represented as `(R × Vec3 R) × (Vec3 R × (Vec3 R → Vec3 R))`
+/-- Explicit `4 × 4` matrix over `[Ring B]` represented as `(B × Vec3 B) × (Vec3 B × (Vec3 B → Vec3 B))`
 via its `(0,0)` scalar entry, `(0, j)` first-row 3-vector, and `(i, 0)` first-column 3-vector
 in the Hodge–Plücker product `-(P₄(u, v) · ⋆P₄(u, v))`:
 For the `4 × 4` skew-symmetric Plücker matrix
 `P₄(u, v) = [[0, u_x, u_y, u_z], [-u_x, 0, -v_z, v_y], [-u_y, v_z, 0, -v_x], [-u_z, -v_y, v_x, 0]]`
 and its Hodge dual `⋆P₄(u, v) = P₄(v, u)`, we compute the exact entries of `-(P₄(u, v) · ⋆P₄(u, v))`
-by explicit row-by-column dot products over `R`. -/
+by explicit row-by-column dot products over `B`. -/
 @[ext]
-structure Mat4Row0Col0 (R : Type u) where
-  entry00 : R
-  row0Vec : Vec3 R
-  col0Vec : Vec3 R
+structure Mat4Row0Col0 (B : Type u) where
+  entry00 : B
+  row0Vec : Vec3 B
+  col0Vec : Vec3 B
   deriving DecidableEq, Repr, Inhabited
 
 /-- Explicit row-by-column evaluation of the `(0,0)` entry, the `(0, 1..3)` first-row vector,
@@ -1947,7 +2040,7 @@ Row 0 of `P₄(u, v)` is `(0, u_x, u_y, u_z)`,
 Rows 1..3 of `P₄(u, v)` are `(-u_x, 0, -v_z, v_y)`, `(-u_y, v_z, 0, -v_x)`, `(-u_z, -v_y, v_x, 0)`,
 Col 0 of `⋆P₄(u, v) = P₄(v, u)` is `(0, -v_x, -v_y, -v_z)^T`, and
 Cols 1..3 of `⋆P₄(u, v)` are `(v_x, 0, u_z, -u_y)^T`, `(v_y, -u_z, 0, u_x)^T`, `(v_z, u_y, -u_x, 0)^T`. -/
-@[simp] def hodgePluckerBoundary (u v : Vec3 R) : Mat4Row0Col0 R where
+@[simp] def hodgePluckerBoundary (u v : Vec3 B) : Mat4Row0Col0 B where
   entry00 := -(0 * 0 + u.x * (-v.x) + u.y * (-v.y) + u.z * (-v.z))
   row0Vec :=
     ⟨ -(0 * v.x + u.x * 0 + u.y * u.z + u.z * (-u.y)),
@@ -1960,21 +2053,21 @@ Cols 1..3 of `⋆P₄(u, v)` are `(v_x, 0, u_z, -u_y)^T`, `(v_y, -u_z, 0, u_x)^T
 
 /-- Zorn split-octonion embedding of a Plücker line `(u, v)` as the off-diagonal derivation
 `Φ_Plücker(u, v) = ⟨0, u, v, 0⟩`. -/
-@[simp] def zornPluckerPhi (u v : Vec3 R) : ZornMatrix R :=
+@[simp] def zornPluckerPhi (u v : Vec3 B) : ZornMatrix B :=
   ZornMatrix.psiOffDiag u v
 
 /-- Zorn split-octonion embedding of a twistor line `Z_A ∧ Z_B`:
 `Φ_Plücker(Z_A, Z_B) = ⟨0, pluckerElectricVec Z_A Z_B, pluckerMagneticVec Z_A Z_B, 0⟩`. -/
-@[simp] def zornPluckerLine (ZA ZB : Twistor4 R) : ZornMatrix R :=
+@[simp] def zornPluckerLine (ZA ZB : Twistor4 B) : ZornMatrix B :=
   zornPluckerPhi (pluckerElectricVec ZA ZB) (pluckerMagneticVec ZA ZB)
 
 /-- The 3-quark Baryon Color-Singlet Determinant `B(u₁, u₂, u₃) = (u₁ × u₂) · u₃`. -/
-@[simp] def baryonDet3 (u₁ u₂ u₃ : Vec3 R) : R :=
+@[simp] def baryonDet3 (u₁ u₂ u₃ : Vec3 B) : B :=
   Vec3.dot (Vec3.cross u₁ u₂) u₃
 
-/-- The `4 × 4` Amplituhedron Twistor 4-Bracket `⟨Z₀ Z₁ Z₂ Z₃⟩` over any non-commutative ring `R`,
+/-- The `4 × 4` Amplituhedron Twistor 4-Bracket `⟨Z₀ Z₁ Z₂ Z₃⟩` over any non-commutative ring `B`,
 defined by first-column cofactor expansion across the four 3-quark baryon facets. -/
-@[simp] def twistorBracket4 (Z₀ Z₁ Z₂ Z₃ : Twistor4 R) : R :=
+@[simp] def twistorBracket4 (Z₀ Z₁ Z₂ Z₃ : Twistor4 B) : B :=
   Z₀.z0 * baryonDet3 Z₁.u Z₂.u Z₃.u -
   Z₁.z0 * baryonDet3 Z₀.u Z₂.u Z₃.u +
   Z₂.z0 * baryonDet3 Z₀.u Z₁.u Z₃.u -
@@ -1983,7 +2076,7 @@ defined by first-column cofactor expansion across the four 3-quark baryon facets
 /-- **Lemma 1 (`lemma1_non_abelian_chromomagnetic_hodge_plucker_and_nambu_anomaly`)**:
 From `𝔭₀ → 𝔭₁ → 𝔭₂`:
 1. **Non-Abelian Hodge–Plücker Square (`hodgePluckerBoundary u v`)**:
-   In any non-commutative ring `R`, the Hodge–Plücker product `-(P₄(u, v) · ⋆P₄(u, v))` does not
+   In any non-commutative ring `B`, the Hodge–Plücker product `-(P₄(u, v) · ⋆P₄(u, v))` does not
    collapse to a pure scalar:
    - its `(0, 0)` entry is the meson condensate `u · v` (`Vec3.dot u v`),
    - its first-row boundary `(0, 1..3)` is the negative quark chromomagnetic self-wedge `-(u × u)` (`-Vec3.cross u u`),
@@ -1998,7 +2091,7 @@ From `𝔭₀ → 𝔭₁ → 𝔭₂`:
    `u.y * u.z = u.z * u.y`, `u.z * u.x = u.x * u.z`), the chromomagnetic self-wedge `u × u`
    and the Nambu 3-bracket `⟦u⟧ = u · (u × u)` vanish identically (`= 0`)! -/
 theorem lemma1_non_abelian_chromomagnetic_hodge_plucker_and_nambu_anomaly
-    (u v : Vec3 R) :
+    (u v : Vec3 B) :
     hodgePluckerBoundary u v = ⟨Vec3.dot u v, -Vec3.cross u u, Vec3.cross v v⟩ ∧
     (hodgePluckerBoundary u (Vec3.cross u u)).entry00 = Vec3.nambu3 u ∧
     ((ZornMatrix.psiPlus u * ZornMatrix.psiPlus u) * ZornMatrix.psiPlus u).d = Vec3.nambu3 u ∧
@@ -2032,7 +2125,7 @@ theorem lemma1_non_abelian_chromomagnetic_hodge_plucker_and_nambu_anomaly
 /-- **Lemma 2 (`lemma2_baryon_amplituhedron_zorn_anticommutator_equivalence`)**:
 From `𝔭₂ → 𝔭₃ → 𝔭₄`:
 1. **Baryon SingletAssociativity Law**:
-   In any associative ring `R`, `(u₁ × u₂) · u₃ = u₁ · (u₂ × u₃)` (`baryonDet3 u₁ u₂ u₃ = Vec3.dot u₁ (Vec3.cross u₂ u₃)`).
+   In any associative ring `B`, `(u₁ × u₂) · u₃ = u₁ · (u₂ × u₃)` (`baryonDet3 u₁ u₂ u₃ = Vec3.dot u₁ (Vec3.cross u₂ u₃)`).
 2. **Zorn Anticommutator of Twistor Lines**:
    For `Φ₁ = zornPluckerLine (spatialTwistor u₁) (spatialTwistor u₂)` (`= psiMinus (u₁ × u₂) = psiPlus u₁ * psiPlus u₂`)
    and `Φ₂ = zornPluckerLine affineOrigin (spatialTwistor u₃)` (`= psiPlus u₃`),
@@ -2047,7 +2140,7 @@ From `𝔭₂ → 𝔭₃ → 𝔭₄`:
    `twistorBracket4 (affineTwistor 0) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) = baryonDet3 u₁ u₂ u₃`,
    so that `(psiPlus u₁ * psiPlus u₂) * psiPlus u₃ + psiPlus u₁ * (psiPlus u₂ * psiPlus u₃) = ⟨twistorBracket4 affineOrigin (spatialTwistor u₁) (spatialTwistor u₂) (spatialTwistor u₃), 0, 0, twistorBracket4 affineOrigin (spatialTwistor u₁) (spatialTwistor u₂) (spatialTwistor u₃)⟩`! -/
 theorem lemma2_baryon_amplituhedron_zorn_anticommutator_equivalence
-    (u₁ u₂ u₃ : Vec3 R) :
+    (u₁ u₂ u₃ : Vec3 B) :
     baryonDet3 u₁ u₂ u₃ = Vec3.dot u₁ (Vec3.cross u₂ u₃) ∧
     zornPluckerLine (spatialTwistor u₁) (spatialTwistor u₂) =
       ZornMatrix.psiPlus u₁ * ZornMatrix.psiPlus u₂ ∧
@@ -2102,21 +2195,21 @@ theorem lemma2_baryon_amplituhedron_zorn_anticommutator_equivalence
 From `𝔭₄ → 𝔭₅`:
 1. **Holographic 4-Facet Simplex Boundary Sum (`⟨Z₀ Z₁ Z₂ Z₃⟩ = B₁₂₃ - B₀₂₃ + B₀₁₃ - B₀₁₂`)**:
    For four affine quark twistors `Z_a = affineTwistor u_a = (1, u_a)` (`a = 0, 1, 2, 3`) over any
-   non-commutative ring `[Ring R]`, the Amplituhedron 4-bracket expands into the exact 4-facet
+   non-commutative ring `[Ring B]`, the Amplituhedron 4-bracket expands into the exact 4-facet
    cyclic homological boundary sum of 3-quark baryons:
    `twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) = baryonDet3 u₁ u₂ u₃ - baryonDet3 u₀ u₂ u₃ + baryonDet3 u₀ u₁ u₃ - baryonDet3 u₀ u₁ u₂`.
 2. **Exact 5-Simplex Homological Boundary Identity (`∂² = 0` on 5 Affine Twistors `Z₀..Z₄`)**:
    For any five affine twistors `Z_a = affineTwistor u_a` (`a = 0, 1, 2, 3, 4`) over any
-   non-commutative ring `[Ring R]`, the alternating 5-simplex boundary sum of Amplituhedron
+   non-commutative ring `[Ring B]`, the alternating 5-simplex boundary sum of Amplituhedron
    4-brackets vanishes identically:
    `twistorBracket4 Z₁ Z₂ Z₃ Z₄ - twistorBracket4 Z₀ Z₂ Z₃ Z₄ + twistorBracket4 Z₀ Z₁ Z₃ Z₄ - twistorBracket4 Z₀ Z₁ Z₂ Z₄ + twistorBracket4 Z₀ Z₁ Z₂ Z₃ = 0`.
-3. **Commutative Relative-Chord Equivalence (`B(u₁ - u₀, u₂ - u₀, u₃ - u₀) = ⟨Z₀ Z₁ Z₂ Z₃⟩`)**:
-   Whenever the coordinates lie in a commutative ring (`[CommRing R_comm]`), the relative-chord
-   baryon determinant `baryonDet3 (v₁ - v₀) (v₂ - v₀) (v₃ - v₀)` equals the 4-facet boundary sum
-   `twistorBracket4 (affineTwistor v₀) (affineTwistor v₁) (affineTwistor v₂) (affineTwistor v₃)`! -/
+3. **Non-Commutative Relative-Chord Expansion & Nambu 3-Bracket Origin Anomaly**:
+   Over any non-commutative ring `[Ring B]`, the relative-chord baryon determinant
+   `baryonDet3 (u₁ - u₀) (u₂ - u₀) (u₃ - u₀)` expands into the ordered 3-quark facets, the
+   2nd-order origin-repeat terms, and the 3rd-order Nambu 3-bracket origin anomaly `-Vec3.nambu3 u₀`:
+   `baryonDet3 (u₁ - u₀) (u₂ - u₀) (u₃ - u₀) = baryonDet3 u₁ u₂ u₃ - baryonDet3 u₀ u₂ u₃ - baryonDet3 u₁ u₀ u₃ - baryonDet3 u₁ u₂ u₀ + baryonDet3 u₀ u₀ u₃ + baryonDet3 u₀ u₂ u₀ + baryonDet3 u₁ u₀ u₀ - Vec3.nambu3 u₀`. -/
 theorem theorem3_holographic_simplex_boundary_sum_of_matter
-    (u₀ u₁ u₂ u₃ u₄ : Vec3 R)
-    {R_comm : Type*} [CommRing R_comm] (v₀ v₁ v₂ v₃ : Vec3 R_comm) :
+    (u₀ u₁ u₂ u₃ u₄ : Vec3 B) :
     twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) =
       baryonDet3 u₁ u₂ u₃ - baryonDet3 u₀ u₂ u₃ +
         baryonDet3 u₀ u₁ u₃ - baryonDet3 u₀ u₁ u₂ ∧
@@ -2125,21 +2218,24 @@ theorem theorem3_holographic_simplex_boundary_sum_of_matter
       twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₃) (affineTwistor u₄) -
       twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₄) +
       twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) = 0) ∧
-    baryonDet3 (v₁ - v₀) (v₂ - v₀) (v₃ - v₀) =
-      twistorBracket4 (affineTwistor v₀) (affineTwistor v₁) (affineTwistor v₂) (affineTwistor v₃) := by
+    baryonDet3 (u₁ - u₀) (u₂ - u₀) (u₃ - u₀) =
+      baryonDet3 u₁ u₂ u₃ - baryonDet3 u₀ u₂ u₃ -
+        baryonDet3 u₁ u₀ u₃ - baryonDet3 u₁ u₂ u₀ +
+        baryonDet3 u₀ u₀ u₃ + baryonDet3 u₀ u₂ u₀ +
+        baryonDet3 u₁ u₀ u₀ - Vec3.nambu3 u₀ := by
   refine ⟨?_, ?_, ?_⟩
   · simp only [twistorBracket4, affineTwistor, one_mul]
   · simp only [twistorBracket4, affineTwistor, one_mul]
     abel
-  · simp only [twistorBracket4, affineTwistor, baryonDet3, Vec3.dot, Vec3.cross,
+  · simp only [baryonDet3, Vec3.nambu3, Vec3.dot, Vec3.cross,
       Vec3.sub_x, Vec3.sub_y, Vec3.sub_z]
-    ring
+    noncomm_ring
 
 /-- **Master Structural Synthesis (`zorn_amplituhedron_plucker_baryon_master_synthesis`)**:
 Coagulates the entire 6-stage Zorn–Amplituhedron–Plücker–Baryon Poset (`𝔭₀ ≺ 𝔭₁ ≺ 𝔭₂ ≺ 𝔭₃ ≺ 𝔭₄ ≺ 𝔭₅`)
-into one self-verifying theorem over `[Ring R]`. -/
+into one self-verifying theorem over `[Ring B]`. -/
 theorem zorn_amplituhedron_plucker_baryon_master_synthesis
-    (u v u₀ u₁ u₂ u₃ u₄ : Vec3 R) :
+    (u v u₀ u₁ u₂ u₃ u₄ : Vec3 B) :
     (ZornAmplituhedronBaryonStage.causalEdge .p0_nonCommTwistorSpace .p1_pluckerBivectorSplit ∧
      ZornAmplituhedronBaryonStage.causalEdge .p1_pluckerBivectorSplit .p2_nambuKleinQuadricAnomaly ∧
      ZornAmplituhedronBaryonStage.causalEdge .p2_nambuKleinQuadricAnomaly .p3_zornPluckerAnticommutator ∧
@@ -2164,7 +2260,7 @@ theorem zorn_amplituhedron_plucker_baryon_master_synthesis
       twistorBracket4 (affineTwistor u₀) (affineTwistor u₁) (affineTwistor u₂) (affineTwistor u₃) = 0) := by
   have h1 := lemma1_non_abelian_chromomagnetic_hodge_plucker_and_nambu_anomaly u v
   have h2 := lemma2_baryon_amplituhedron_zorn_anticommutator_equivalence u₁ u₂ u₃
-  have h3 := theorem3_holographic_simplex_boundary_sum_of_matter u₀ u₁ u₂ u₃ u₄ (0 : Vec3 ℤ) 0 0 0
+  have h3 := theorem3_holographic_simplex_boundary_sum_of_matter u₀ u₁ u₂ u₃ u₄
   exact ⟨ZornAmplituhedronBaryonStage.strict_causal_chain,
     ⟨h1.1, h1.2.1⟩,
     ⟨h2.2.2.2.2.1, h2.2.2.2.2.2.2⟩,
@@ -2178,69 +2274,120 @@ end ZornAmplituhedronPluckerBaryon
 -- ============================================================================
 
 namespace Vec3
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
 /-- Symmetric non-commutative Plücker–Zorn frame uncertainty `u ×_sym v = u × v + v × u`. -/
-@[simp] def symCross (u v : Vec3 R) : Vec3 R :=
+@[simp] def symCross (u v : Vec3 B) : Vec3 B :=
   cross u v + cross v u
 
 /-- Antisymmetric Lie cross commutator `u ×_ad v = u × v - v × u`. -/
-@[simp] def adCross (u v : Vec3 R) : Vec3 R :=
+@[simp] def adCross (u v : Vec3 B) : Vec3 B :=
   cross u v - cross v u
 
-@[simp] theorem symCross_zero_left (v : Vec3 R) : symCross 0 v = 0 := by
+/-- Explicit non-commutative commutator cross-product remainder `[u, v]_×`:
+collects the component commutators `commOp a b = a * b - b * a` produced when permuting
+products `a * b = b * a + [a, b]` inside the 3D cross product over `[Ring B]`. -/
+@[simp] def commCross (u v : Vec3 B) : Vec3 B :=
+  ⟨commOp u.y v.z - commOp u.z v.y,
+   commOp u.z v.x - commOp u.x v.z,
+   commOp u.x v.y - commOp u.y v.x⟩
+
+/-- Fundamental non-commutative product permutation law `a * b = b * a + [a, b]` over `[Ring B]`. -/
+theorem mul_eq_swap_add_commOp (a b : B) :
+    a * b = b * a + commOp a b := by
+  (simp only [commOp])
+  abel
+
+/-- Explicit non-commutative cross-product permutation law (`u × v = -(v × u) + [u, v]_×`)
+over `[Ring B]`: replacing each `u_i * v_j` with `v_j * u_i + commOp u_i v_j` decomposes
+`u × v` into `- (v × u)` plus the explicit commutator remainder `commCross u v`. -/
+theorem cross_eq_neg_swap_add_commCross (u v : Vec3 B) :
+    cross u v = -cross v u + commCross u v := by
+  ext <;>
+  · (simp only [cross, commCross, commOp, add_x, add_y, add_z, neg_x, neg_y, neg_z])
+    abel
+
+/-- Over any non-commutative ring `[Ring B]`, the symmetric Plücker–Zorn cross product
+`symCross u v = u × v + v × u` equals the explicit commutator cross-product remainder `commCross u v`. -/
+theorem symCross_eq_commCross (u v : Vec3 B) :
+    symCross u v = commCross u v := by
+  ext <;>
+  · (simp only [symCross, commCross, cross, commOp, add_x, add_y, add_z])
+    abel
+
+@[simp] theorem symCross_zero_left (v : Vec3 B) : symCross 0 v = 0 := by
   ext <;> simp [symCross, cross]
 
-@[simp] theorem symCross_zero_right (u : Vec3 R) : symCross u 0 = 0 := by
+@[simp] theorem symCross_zero_right (u : Vec3 B) : symCross u 0 = 0 := by
   ext <;> simp [symCross, cross]
 
-@[simp] theorem adCross_zero_left (v : Vec3 R) : adCross 0 v = 0 := by
+@[simp] theorem adCross_zero_left (v : Vec3 B) : adCross 0 v = 0 := by
   ext <;> simp [adCross, cross]
 
-@[simp] theorem adCross_zero_right (u : Vec3 R) : adCross u 0 = 0 := by
+@[simp] theorem adCross_zero_right (u : Vec3 B) : adCross u 0 = 0 := by
   ext <;> simp [adCross, cross]
 
-@[simp] theorem dot_zero_left (v : Vec3 R) : dot 0 v = 0 := by
+@[simp] theorem dot_zero_left (v : Vec3 B) : dot 0 v = 0 := by
   simp [dot]
 
-@[simp] theorem dot_zero_right (u : Vec3 R) : dot u 0 = 0 := by
+@[simp] theorem dot_zero_right (u : Vec3 B) : dot u 0 = 0 := by
   simp [dot]
 
-@[simp] theorem smulLeft_zero (r : R) : smulLeft r 0 = 0 := by
+@[simp] theorem smulLeft_zero (r : B) : smulLeft r 0 = 0 := by
   ext <;> simp [smulLeft]
 
-@[simp] theorem zero_smulLeft (v : Vec3 R) : smulLeft 0 v = 0 := by
+@[simp] theorem zero_smulLeft (v : Vec3 B) : smulLeft 0 v = 0 := by
   ext <;> simp [smulLeft]
 
-@[simp] theorem smulRight_zero (r : R) : smulRight 0 r = 0 := by
+@[simp] theorem smulRight_zero (r : B) : smulRight 0 r = 0 := by
   ext <;> simp [smulRight]
 
-@[simp] theorem zero_smulRight (v : Vec3 R) : smulRight v 0 = 0 := by
+@[simp] theorem zero_smulRight (v : Vec3 B) : smulRight v 0 = 0 := by
   ext <;> simp [smulRight]
 
-@[simp] theorem add_zero_vec (u : Vec3 R) : u + 0 = u := by
+@[simp] theorem add_zero_vec (u : Vec3 B) : u + 0 = u := by
   ext <;> simp
 
-@[simp] theorem zero_add_vec (u : Vec3 R) : 0 + u = u := by
+@[simp] theorem zero_add_vec (u : Vec3 B) : 0 + u = u := by
   ext <;> simp
 
-@[simp] theorem sub_zero_vec (u : Vec3 R) : u - 0 = u := by
+@[simp] theorem sub_zero_vec (u : Vec3 B) : u - 0 = u := by
   ext <;> simp
 
-@[simp] theorem zero_sub_vec (u : Vec3 R) : 0 - u = -u := by
+@[simp] theorem zero_sub_vec (u : Vec3 B) : 0 - u = -u := by
   ext <;> simp
 
-@[simp] theorem neg_zero_vec : -(0 : Vec3 R) = 0 := by
+@[simp] theorem neg_zero_vec : -(0 : Vec3 B) = 0 := by
   ext <;> simp
+
+/-- Triple scalar-product associativity `A · (B × C) = (A × B) · C` over any non-commutative ring `[Ring B]`. -/
+theorem dot_cross_assoc (A B_v C : Vec3 B) :
+    dot A (cross B_v C) = dot (cross A B_v) C := by
+  simp only [dot, cross]
+  noncomm_ring
+
+/-- **Kantor Anomaly Defect (`kantorAnomalyDefect A B C`)**:
+The non-commutative adjoint-curl Stokes–Jacobi defect
+`A · (Curl_ad B C) - (Curl_ad A B) · C` over any non-commutative ring `[Ring B]`. -/
+@[simp] def kantorAnomalyDefect (A B_v C : Vec3 B) : B :=
+  dot A (adjointCurl B_v C) - dot (adjointCurl A B_v) C
+
+/-- In any non-commutative ring `[Ring B]`, `kantorAnomalyDefect A B C` equals
+`-adjointDiv B (A × C) = (A × C) · B - B · (A × C)`. -/
+theorem kantorAnomalyDefect_eq_neg_adjointDiv_cross (A B_v C : Vec3 B) :
+    kantorAnomalyDefect A B_v C = -adjointDiv B_v (cross A C) := by
+  simp only [kantorAnomalyDefect, adjointCurl, adjointDiv, dot, cross,
+    add_x, add_y, add_z]
+  noncomm_ring
 
 end Vec3
 
 namespace ZornMatrix
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
 /-- The upper-right off-diagonal 3rd-order Bimodule Insertion Anomaly of `[X, X, X]_assoc`:
 `dotDefect + insertionDefect + crossCommutator`. -/
-@[simp] def upperBimoduleAnomaly (X : ZornMatrix R) : Vec3 R :=
+@[simp] def upperBimoduleAnomaly (X : ZornMatrix B) : Vec3 B :=
   let dotDefect := Vec3.smulLeft (Vec3.dot X.u X.v) X.u - Vec3.smulRight X.u (Vec3.dot X.v X.u)
   let wv := Vec3.smulRight X.v X.a + Vec3.smulLeft X.d X.v
   let insertionDefect :=
@@ -2258,97 +2405,97 @@ end ZornMatrix
 - `gp1`: Grade `+1` forward chiral tetrad / twistor solder form `e_+`
 - `gp2`: Grade `+2` upper uncertainty / special-conformal connection `κ_+` -/
 @[ext]
-structure Kantor5Graded (R : Type u) where
-  gm2 : Vec3 R
-  gm1 : Vec3 R
-  g0L : R
-  g0R : R
-  gp1 : Vec3 R
-  gp2 : Vec3 R
+structure Kantor5Graded (B : Type u) where
+  gm2 : Vec3 B
+  gm1 : Vec3 B
+  g0L : B
+  g0R : B
+  gp1 : Vec3 B
+  gp2 : Vec3 B
   deriving DecidableEq, Repr, Inhabited
 
 namespace Kantor5Graded
 
 section NonCommutativeRing
-variable {R : Type u} [Ring R]
+variable {B : Type u} [Ring B]
 
-@[simp] def zero : Kantor5Graded R := ⟨0, 0, 0, 0, 0, 0⟩
+@[simp] def zero : Kantor5Graded B := ⟨0, 0, 0, 0, 0, 0⟩
 
-@[simp] def add (X Y : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def add (X Y : Kantor5Graded B) : Kantor5Graded B :=
   ⟨X.gm2 + Y.gm2, X.gm1 + Y.gm1, X.g0L + Y.g0L,
    X.g0R + Y.g0R, X.gp1 + Y.gp1, X.gp2 + Y.gp2⟩
 
-@[simp] def sub (X Y : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def sub (X Y : Kantor5Graded B) : Kantor5Graded B :=
   ⟨X.gm2 - Y.gm2, X.gm1 - Y.gm1, X.g0L - Y.g0L,
    X.g0R - Y.g0R, X.gp1 - Y.gp1, X.gp2 - Y.gp2⟩
 
-@[simp] def neg (X : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def neg (X : Kantor5Graded B) : Kantor5Graded B :=
   ⟨-X.gm2, -X.gm1, -X.g0L, -X.g0R, -X.gp1, -X.gp2⟩
 
-instance instZero : Zero (Kantor5Graded R) := ⟨zero⟩
-instance instAdd : Add (Kantor5Graded R) := ⟨add⟩
-instance instSub : Sub (Kantor5Graded R) := ⟨sub⟩
-instance instNeg : Neg (Kantor5Graded R) := ⟨neg⟩
+instance instZero : Zero (Kantor5Graded B) := ⟨zero⟩
+instance instAdd : Add (Kantor5Graded B) := ⟨add⟩
+instance instSub : Sub (Kantor5Graded B) := ⟨sub⟩
+instance instNeg : Neg (Kantor5Graded B) := ⟨neg⟩
 
-@[simp] lemma zero_gm2 : (0 : Kantor5Graded R).gm2 = 0 := rfl
-@[simp] lemma zero_gm1 : (0 : Kantor5Graded R).gm1 = 0 := rfl
-@[simp] lemma zero_g0L : (0 : Kantor5Graded R).g0L = 0 := rfl
-@[simp] lemma zero_g0R : (0 : Kantor5Graded R).g0R = 0 := rfl
-@[simp] lemma zero_gp1 : (0 : Kantor5Graded R).gp1 = 0 := rfl
-@[simp] lemma zero_gp2 : (0 : Kantor5Graded R).gp2 = 0 := rfl
+@[simp] lemma zero_gm2 : (0 : Kantor5Graded B).gm2 = 0 := rfl
+@[simp] lemma zero_gm1 : (0 : Kantor5Graded B).gm1 = 0 := rfl
+@[simp] lemma zero_g0L : (0 : Kantor5Graded B).g0L = 0 := rfl
+@[simp] lemma zero_g0R : (0 : Kantor5Graded B).g0R = 0 := rfl
+@[simp] lemma zero_gp1 : (0 : Kantor5Graded B).gp1 = 0 := rfl
+@[simp] lemma zero_gp2 : (0 : Kantor5Graded B).gp2 = 0 := rfl
 
-@[simp] lemma add_gm2 (X Y : Kantor5Graded R) : (X + Y).gm2 = X.gm2 + Y.gm2 := rfl
-@[simp] lemma add_gm1 (X Y : Kantor5Graded R) : (X + Y).gm1 = X.gm1 + Y.gm1 := rfl
-@[simp] lemma add_g0L (X Y : Kantor5Graded R) : (X + Y).g0L = X.g0L + Y.g0L := rfl
-@[simp] lemma add_g0R (X Y : Kantor5Graded R) : (X + Y).g0R = X.g0R + Y.g0R := rfl
-@[simp] lemma add_gp1 (X Y : Kantor5Graded R) : (X + Y).gp1 = X.gp1 + Y.gp1 := rfl
-@[simp] lemma add_gp2 (X Y : Kantor5Graded R) : (X + Y).gp2 = X.gp2 + Y.gp2 := rfl
+@[simp] lemma add_gm2 (X Y : Kantor5Graded B) : (X + Y).gm2 = X.gm2 + Y.gm2 := rfl
+@[simp] lemma add_gm1 (X Y : Kantor5Graded B) : (X + Y).gm1 = X.gm1 + Y.gm1 := rfl
+@[simp] lemma add_g0L (X Y : Kantor5Graded B) : (X + Y).g0L = X.g0L + Y.g0L := rfl
+@[simp] lemma add_g0R (X Y : Kantor5Graded B) : (X + Y).g0R = X.g0R + Y.g0R := rfl
+@[simp] lemma add_gp1 (X Y : Kantor5Graded B) : (X + Y).gp1 = X.gp1 + Y.gp1 := rfl
+@[simp] lemma add_gp2 (X Y : Kantor5Graded B) : (X + Y).gp2 = X.gp2 + Y.gp2 := rfl
 
-@[simp] lemma sub_gm2 (X Y : Kantor5Graded R) : (X - Y).gm2 = X.gm2 - Y.gm2 := rfl
-@[simp] lemma sub_gm1 (X Y : Kantor5Graded R) : (X - Y).gm1 = X.gm1 - Y.gm1 := rfl
-@[simp] lemma sub_g0L (X Y : Kantor5Graded R) : (X - Y).g0L = X.g0L - Y.g0L := rfl
-@[simp] lemma sub_g0R (X Y : Kantor5Graded R) : (X - Y).g0R = X.g0R - Y.g0R := rfl
-@[simp] lemma sub_gp1 (X Y : Kantor5Graded R) : (X - Y).gp1 = X.gp1 - Y.gp1 := rfl
-@[simp] lemma sub_gp2 (X Y : Kantor5Graded R) : (X - Y).gp2 = X.gp2 - Y.gp2 := rfl
+@[simp] lemma sub_gm2 (X Y : Kantor5Graded B) : (X - Y).gm2 = X.gm2 - Y.gm2 := rfl
+@[simp] lemma sub_gm1 (X Y : Kantor5Graded B) : (X - Y).gm1 = X.gm1 - Y.gm1 := rfl
+@[simp] lemma sub_g0L (X Y : Kantor5Graded B) : (X - Y).g0L = X.g0L - Y.g0L := rfl
+@[simp] lemma sub_g0R (X Y : Kantor5Graded B) : (X - Y).g0R = X.g0R - Y.g0R := rfl
+@[simp] lemma sub_gp1 (X Y : Kantor5Graded B) : (X - Y).gp1 = X.gp1 - Y.gp1 := rfl
+@[simp] lemma sub_gp2 (X Y : Kantor5Graded B) : (X - Y).gp2 = X.gp2 - Y.gp2 := rfl
 
-@[simp] lemma neg_gm2 (X : Kantor5Graded R) : (-X).gm2 = -X.gm2 := rfl
-@[simp] lemma neg_gm1 (X : Kantor5Graded R) : (-X).gm1 = -X.gm1 := rfl
-@[simp] lemma neg_g0L (X : Kantor5Graded R) : (-X).g0L = -X.g0L := rfl
-@[simp] lemma neg_g0R (X : Kantor5Graded R) : (-X).g0R = -X.g0R := rfl
-@[simp] lemma neg_gp1 (X : Kantor5Graded R) : (-X).gp1 = -X.gp1 := rfl
-@[simp] lemma neg_gp2 (X : Kantor5Graded R) : (-X).gp2 = -X.gp2 := rfl
+@[simp] lemma neg_gm2 (X : Kantor5Graded B) : (-X).gm2 = -X.gm2 := rfl
+@[simp] lemma neg_gm1 (X : Kantor5Graded B) : (-X).gm1 = -X.gm1 := rfl
+@[simp] lemma neg_g0L (X : Kantor5Graded B) : (-X).g0L = -X.g0L := rfl
+@[simp] lemma neg_g0R (X : Kantor5Graded B) : (-X).g0R = -X.g0R := rfl
+@[simp] lemma neg_gp1 (X : Kantor5Graded B) : (-X).gp1 = -X.gp1 := rfl
+@[simp] lemma neg_gp2 (X : Kantor5Graded B) : (-X).gp2 = -X.gp2 := rfl
 
 /-! ### Grade Injections, Even/Odd Connection Projectors & Super-Parity -/
 
-@[simp] def injM2 (κ_m : Vec3 R) : Kantor5Graded R := ⟨κ_m, 0, 0, 0, 0, 0⟩
-@[simp] def injM1 (e_m : Vec3 R) : Kantor5Graded R := ⟨0, e_m, 0, 0, 0, 0⟩
-@[simp] def inj0  (ω_L ω_R : R)  : Kantor5Graded R := ⟨0, 0, ω_L, ω_R, 0, 0⟩
-@[simp] def injP1 (e_p : Vec3 R) : Kantor5Graded R := ⟨0, 0, 0, 0, e_p, 0⟩
-@[simp] def injP2 (κ_p : Vec3 R) : Kantor5Graded R := ⟨0, 0, 0, 0, 0, κ_p⟩
+@[simp] def injM2 (κ_m : Vec3 B) : Kantor5Graded B := ⟨κ_m, 0, 0, 0, 0, 0⟩
+@[simp] def injM1 (e_m : Vec3 B) : Kantor5Graded B := ⟨0, e_m, 0, 0, 0, 0⟩
+@[simp] def inj0  (ω_L ω_R : B)  : Kantor5Graded B := ⟨0, 0, ω_L, ω_R, 0, 0⟩
+@[simp] def injP1 (e_p : Vec3 B) : Kantor5Graded B := ⟨0, 0, 0, 0, e_p, 0⟩
+@[simp] def injP2 (κ_p : Vec3 B) : Kantor5Graded B := ⟨0, 0, 0, 0, 0, κ_p⟩
 
 /-- Purely 3-graded Cartan connection `A_3grade ∈ g_{-1} ⊕ g_0 ⊕ g_{+1}` (`κ_{±} = 0`). -/
-@[simp] def cartan3Grade (ω_L ω_R : R) (e_p e_m : Vec3 R) : Kantor5Graded R :=
+@[simp] def cartan3Grade (ω_L ω_R : B) (e_p e_m : Vec3 B) : Kantor5Graded B :=
   ⟨0, e_m, ω_L, ω_R, e_p, 0⟩
 
 /-- Uncertainty-Dressed 5-Graded Cartan Connection associated to a Zorn matrix `X = ⟨a, u, v, d⟩`:
 populates Grade `±2` with the Plücker–Zorn uncertainty anomalies `κ_+ = u × u` and `κ_- = -v × v`. -/
-@[simp] def cartanDressed (X : ZornMatrix R) : Kantor5Graded R :=
+@[simp] def cartanDressed (X : ZornMatrix B) : Kantor5Graded B :=
   ⟨-Vec3.cross X.v X.v, X.v, X.a, X.d, X.u, Vec3.cross X.u X.u⟩
 
 /-- Even Bosonic Connection Projector `projEven : g → g_{-2} ⊕ g_0 ⊕ g_{+2}`. -/
-@[simp] def projEven (A : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def projEven (A : Kantor5Graded B) : Kantor5Graded B :=
   ⟨A.gm2, 0, A.g0L, A.g0R, 0, A.gp2⟩
 
 /-- Odd Fermionic / Frame Solder-Form Projector `projOdd : g → g_{-1} ⊕ g_{+1}`. -/
-@[simp] def projOdd (A : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def projOdd (A : Kantor5Graded B) : Kantor5Graded B :=
   ⟨0, A.gm1, 0, 0, A.gp1, 0⟩
 
 /-- `ℤ₂` Super-Parity Involution `superParity Γ` (`+1` on `g_even`, `-1` on `g_odd`). -/
-@[simp] def superParity (A : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def superParity (A : Kantor5Graded B) : Kantor5Graded B :=
   ⟨A.gm2, -A.gm1, A.g0L, A.g0R, -A.gp1, A.gp2⟩
 
 /-- The 5-Graded Kantor–Conformal Lie Super-Bracket `kantorBracket A₁ A₂`. -/
-@[simp] def kantorBracket (X Y : Kantor5Graded R) : Kantor5Graded R where
+@[simp] def kantorBracket (X Y : Kantor5Graded B) : Kantor5Graded B where
   gm2 :=
     (Vec3.smulLeft X.g0L Y.gm2 - Vec3.smulRight Y.gm2 X.g0R) -
     (Vec3.smulLeft Y.g0L X.gm2 - Vec3.smulRight X.gm2 Y.g0R) -
@@ -2375,24 +2522,24 @@ populates Grade `±2` with the Plücker–Zorn uncertainty anomalies `κ_+ = u �
     Vec3.symCross X.gp1 Y.gp1
 
 /-- Full 5-Graded Superconformal Cartan Curvature Multiplet `𝓕_5D(A₁, A₂) = kantorBracket A₁ A₂`. -/
-@[simp] def cartanCurvature5D (A₁ A₂ : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def cartanCurvature5D (A₁ A₂ : Kantor5Graded B) : Kantor5Graded B :=
   kantorBracket A₁ A₂
 
 /-- Even Bosonic Superconformal Curvature `𝓡_5D(A₁, A₂) ∈ g_{-2} ⊕ g_0 ⊕ g_{+2}`:
 combines Grade `0` Riemann–MacDowell–Mansouri–Gluon curvature and Grade `±2` Plücker–Zorn curvature. -/
-@[simp] def riemannConformalCurv5D (A₁ A₂ : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def riemannConformalCurv5D (A₁ A₂ : Kantor5Graded B) : Kantor5Graded B :=
   projEven (kantorBracket A₁ A₂)
 
 /-- Odd Élie Cartan Super-Torsion `𝓣_5D(A₁, A₂) ∈ g_{-1} ⊕ g_{+1}`:
 combines classical spin-frame torsion `D_ω e` with Grade `±2` uncertainty backreaction `[κ_{±}, e_{∓}]`. -/
-@[simp] def elieCartanTorsion5D (A₁ A₂ : Kantor5Graded R) : Kantor5Graded R :=
+@[simp] def elieCartanTorsion5D (A₁ A₂ : Kantor5Graded B) : Kantor5Graded B :=
   projOdd (kantorBracket A₁ A₂)
 
 set_option linter.unusedSimpArgs false in
 /-- **Theorem XX.1 (`superconformal_cartan_curvature_torsion_decomposition`)**:
-5-Graded Superconformal Curvature–Torsion Splitting & `ℤ₂` Super-Symmetry over `[Ring R]`. -/
+5-Graded Superconformal Curvature–Torsion Splitting & `ℤ₂` Super-Symmetry over `[Ring B]`. -/
 theorem superconformal_cartan_curvature_torsion_decomposition
-    (A₁ A₂ : Kantor5Graded R) :
+    (A₁ A₂ : Kantor5Graded B) :
     projEven A₁ + projOdd A₁ = A₁ ∧
     cartanCurvature5D A₁ A₂ = riemannConformalCurv5D A₁ A₂ + elieCartanTorsion5D A₁ A₂ ∧
     superParity (riemannConformalCurv5D A₁ A₂) = riemannConformalCurv5D A₁ A₂ ∧
@@ -2428,9 +2575,9 @@ theorem superconformal_cartan_curvature_torsion_decomposition
 set_option linter.unusedSimpArgs false in
 /-- **Theorem XX.2 (`spontaneous_grade_pm2_curvature_from_3grade_cartan_connection`)**:
 Spontaneous Grade `±2` Plücker–Zorn uncertainty curvature from two purely 3-graded Cartan
-connections (`κ_{±} = 0`) over any non-commutative ring `[Ring R]`. -/
+connections (`κ_{±} = 0`) over any non-commutative ring `[Ring B]`. -/
 theorem spontaneous_grade_pm2_curvature_from_3grade_cartan_connection
-    (ω₁L ω₁R ω₂L ω₂R : R) (u₁ v₁ u₂ v₂ : Vec3 R) :
+    (ω₁L ω₁R ω₂L ω₂R : B) (u₁ v₁ u₂ v₂ : Vec3 B) :
     let A₁ := cartan3Grade ω₁L ω₁R u₁ v₁
     let A₂ := cartan3Grade ω₂L ω₂R u₂ v₂
     let F  := cartanCurvature5D A₁ A₂
@@ -2463,7 +2610,7 @@ Unifies the 3rd-Order Zorn Bimodule Insertion Anomaly `ZornMatrix.upperBimoduleA
 3. `-(kantorBracket Ω_X κm).gm2 - (kantorBracket (injM2 wv) (injP1 X.v)).gm1 = a(v × v) - (v × v)d - (wv × v - v × wv)` (`insertionDefect`),
 4. `(ZornMatrix.cubicAssociator X).u = ZornMatrix.upperBimoduleAnomaly X` and equals the sum of those
    three 5-graded Élie Cartan Torsion and Curvature brackets! -/
-theorem bimodule_insertion_anomaly_is_5graded_cartan_torsion (X : ZornMatrix R) :
+theorem bimodule_insertion_anomaly_is_5graded_cartan_torsion (X : ZornMatrix B) :
     let Ω_X := inj0 X.a X.d
     let V_X := inj0 (Vec3.dot X.u X.v) (Vec3.dot X.v X.u)
     let Qp  := injP1 X.u
@@ -2500,11 +2647,11 @@ theorem bimodule_insertion_anomaly_is_5graded_cartan_torsion (X : ZornMatrix R) 
 
 set_option linter.unusedSimpArgs false in
 /-- **Theorem XX.4 (`five_graded_bianchi_cartan_jacobi_identities`)**:
-Over any non-commutative associative ring `[Ring R]`, the 5-graded Cartan curvature `kantorBracket`
+Over any non-commutative associative ring `[Ring B]`, the 5-graded Cartan curvature `kantorBracket`
 satisfies exact Bianchi–Cartan Jacobi closure across Grade `0` spin connections, Grade `±1` tetrads,
 and Grade `±2` uncertainty connections. -/
 theorem five_graded_bianchi_cartan_jacobi_identities
-    (a₁ d₁ a₂ d₂ a₃ d₃ : R) (u v κp κm : Vec3 R) :
+    (a₁ d₁ a₂ d₂ a₃ d₃ : B) (u v κp κm : Vec3 B) :
     let Ω₁ := inj0 a₁ d₁
     let Ω₂ := inj0 a₂ d₂
     let Ω₃ := inj0 a₃ d₃
@@ -2539,30 +2686,329 @@ theorem five_graded_bianchi_cartan_jacobi_identities
         Vec3.neg_x, Vec3.neg_y, Vec3.neg_z]
       try noncomm_ring
 
-end NonCommutativeRing
-
-section CommutativeCollapse
-variable {K : Type u} [CommRing K]
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.2b (`noncommutative_3grade_cartan_curvature_commutator_decomposition`)**:
+Over ANY non-commutative associative ring `[Ring B]` (with zero commutativity assumptions):
+1. Applying the non-commutative permutation law `a * b = b * a + [a, b]` (`Vec3.cross_eq_neg_swap_add_commCross`)
+   expresses `u₁ × u₂ = -(u₂ × u₁) + Vec3.commCross u₁ u₂` and identifies `Vec3.symCross u₁ u₂`
+   and `Vec3.adjointCurl u₁ u₂` with the explicit commutator remainder `Vec3.commCross u₁ u₂`.
+2. In the 5-graded curvature `F = cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)`
+   of two 3-graded Cartan connections, the classical permuted cross products cancel and leave
+   explicitly the non-commutative commutator remainders in Grade `+2` and Grade `-2`:
+   - `F.gp2 = Vec3.commCross u₁ u₂ = ⟨[u₁.y, u₂.z] - [u₁.z, u₂.y], [u₁.z, u₂.x] - [u₁.x, u₂.z], [u₁.x, u₂.y] - [u₁.y, u₂.x]⟩`,
+   - `F.gm2 = -Vec3.commCross v₁ v₂ = -⟨[v₁.y, v₂.z] - [v₁.z, v₂.y], [v₁.z, v₂.x] - [v₁.x, v₂.z], [v₁.x, v₂.y] - [v₁.y, v₂.x]⟩`.
+3. **Exact Non-Commutative Grade `±2` Closure Criterion**:
+   `F.gp2 = 0 ∧ F.gm2 = 0` holds if and only if both commutator cross-product remainders vanish
+   (`Vec3.commCross u₁ u₂ = 0 ∧ Vec3.commCross v₁ v₂ = 0`). -/
+theorem noncommutative_3grade_cartan_curvature_commutator_decomposition
+    (ω₁L ω₁R ω₂L ω₂R : B) (u₁ v₁ u₂ v₂ : Vec3 B) :
+    let F := cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)
+    Vec3.cross u₁ u₂ = -Vec3.cross u₂ u₁ + Vec3.commCross u₁ u₂ ∧
+    Vec3.symCross u₁ u₂ = Vec3.commCross u₁ u₂ ∧
+    Vec3.adjointCurl u₁ u₂ = Vec3.commCross u₁ u₂ ∧
+    F.gp2 = Vec3.commCross u₁ u₂ ∧
+    F.gm2 = -Vec3.commCross v₁ v₂ ∧
+    F.gp2 =
+      ⟨Vec3.commOp u₁.y u₂.z - Vec3.commOp u₁.z u₂.y,
+       Vec3.commOp u₁.z u₂.x - Vec3.commOp u₁.x u₂.z,
+       Vec3.commOp u₁.x u₂.y - Vec3.commOp u₁.y u₂.x⟩ ∧
+    F.gm2 =
+      -⟨Vec3.commOp v₁.y v₂.z - Vec3.commOp v₁.z v₂.y,
+        Vec3.commOp v₁.z v₂.x - Vec3.commOp v₁.x v₂.z,
+        Vec3.commOp v₁.x v₂.y - Vec3.commOp v₁.y v₂.x⟩ ∧
+    ((F.gp2 = 0 ∧ F.gm2 = 0) ↔
+      (Vec3.commCross u₁ u₂ = 0 ∧ Vec3.commCross v₁ v₂ = 0)) := by
+  have hSpont :=
+    spontaneous_grade_pm2_curvature_from_3grade_cartan_connection ω₁L ω₁R ω₂L ω₂R u₁ v₁ u₂ v₂
+  have hSymU : Vec3.symCross u₁ u₂ = Vec3.commCross u₁ u₂ :=
+    Vec3.symCross_eq_commCross u₁ u₂
+  have hSymV : Vec3.symCross v₁ v₂ = Vec3.commCross v₁ v₂ :=
+    Vec3.symCross_eq_commCross v₁ v₂
+  have hGp2 :
+      (cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)).gp2 =
+        Vec3.commCross u₁ u₂ :=
+    hSpont.1.trans hSymU
+  have hGm2 :
+      (cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)).gm2 =
+        -Vec3.commCross v₁ v₂ := by
+    rw [hSpont.2.1, hSymV]
+  refine ⟨Vec3.cross_eq_neg_swap_add_commCross u₁ u₂, hSymU, hSymU, hGp2, hGm2, hGp2, hGm2, ?_⟩
+  constructor
+  · rintro ⟨hP, hM⟩
+    refine ⟨hGp2.symm.trans hP, ?_⟩
+    have hNeg : -Vec3.commCross v₁ v₂ = 0 := hGm2.symm.trans hM
+    ext <;>
+    · have hx := congrArg Vec3.x hNeg
+      have hy := congrArg Vec3.y hNeg
+      have hz := congrArg Vec3.z hNeg
+      (simp only [Vec3.neg_x, Vec3.neg_y, Vec3.neg_z, Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+        neg_eq_zero] at hx hy hz ⊢)
+      first | exact hx | exact hy | exact hz
+  · rintro ⟨hU, hV⟩
+    refine ⟨hGp2.trans hU, ?_⟩
+    rw [hGm2, hV]
+    ext <;> exact neg_zero
 
 set_option linter.unusedSimpArgs false in
-/-- **Theorem XX.2b (`commutative_3grade_cartan_curvature_closure`)**:
-Over any commutative ring `[CommRing K]`, the curvature of two 3-graded Cartan connections
-has identically zero Grade `+2` and Grade `-2` components. -/
-theorem commutative_3grade_cartan_curvature_closure
-    (ω₁L ω₁R ω₂L ω₂R : K) (u₁ v₁ u₂ v₂ : Vec3 K) :
-    let F := cartanCurvature5D (cartan3Grade ω₁L ω₁R u₁ v₁) (cartan3Grade ω₂L ω₂R u₂ v₂)
-    F.gp2 = 0 ∧ F.gm2 = 0 := by
-  refine ⟨?_, ?_⟩ <;>
-  · ext <;>
-    · simp only [cartanCurvature5D, kantorBracket, cartan3Grade,
-        Vec3.symCross, Vec3.cross, Vec3.smulLeft, Vec3.smulRight,
-        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
-        Vec3.add_x, Vec3.add_y, Vec3.add_z,
-        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
-        Vec3.neg_x, Vec3.neg_y, Vec3.neg_z]
-      ring
+/-- **Theorem XX.2c (`higher_grade_anomaly_generators_source_torsion_and_curvature`)**:
+Over any non-commutative associative operator ring `[Ring B]`, the commutator and Plücker–Zorn
+anomalies are **not** disposable defects: they act as **sources for the higher grades `g_{±2}`**
+of the 5-graded symmetry tower and subsequently become **sources of spacetime torsion (`g_{±1}`)
+and spacetime curvature (`g_0`)**, whereas discarding them collapses both channels to a flat (`0`)
+structure:
+1. **Grade `±1 × Grade ±1 → Grade ±2` (Anomalies Act as Sources for Higher Grades `g_{±2}`)**:
+   - `kantorBracket (injP1 u₁) (injP1 u₂) = injP2 (Vec3.commCross u₁ u₂)`,
+   - `kantorBracket (injM1 v₁) (injM1 v₂) = injM2 (-Vec3.commCross v₁ v₂)`,
+   - `cartanDressed X = cartan3Grade X.a X.d X.u X.v + injP2 (Vec3.cross X.u X.u) + injM2 (-Vec3.cross X.v X.v)`,
+   - `cartanDressed X - cartan3Grade X.a X.d X.u X.v = injP2 (Vec3.cross X.u X.u) + injM2 (-Vec3.cross X.v X.v)`.
+2. **Grade `±2 × Grade ∓1 → Grade ±1` (Higher-Grade Anomalies Source Élie Cartan Spacetime Torsion)**:
+   - `elieCartanTorsion5D (injP2 κp) (injM1 v) = injP1 (-Vec3.adCross κp v)`,
+   - `elieCartanTorsion5D (injM2 κm) (injP1 u) = injM1 (Vec3.adCross κm u)`,
+   - 2-step cascade `(g_{+1} × g_{+1} → g_{+2}) × g_{-1} → g_{+1}`:
+     `elieCartanTorsion5D (kantorBracket (injP1 u₁) (injP1 u₂)) (injM1 v) = injP1 (-Vec3.adCross (Vec3.commCross u₁ u₂) v)`,
+   - 2-step cascade `(g_{-1} × g_{-1} → g_{-2}) × g_{+1} → g_{-1}`:
+     `elieCartanTorsion5D (kantorBracket (injM1 v₁) (injM1 v₂)) (injP1 u) = injM1 (Vec3.adCross (-Vec3.commCross v₁ v₂) u)`.
+3. **Grade `-2 × Grade +2 → Grade 0` (Higher-Grade Anomalies Source Grade-`0` Spacetime Curvature)**:
+   - `riemannConformalCurv5D (injM2 κm) (injP2 κp) = inj0 (Vec3.dot κm κp) (-Vec3.dot κp κm)` with total Grade-`0` trace `(riemannConformalCurv5D (injM2 κm) (injP2 κp)).g0L + (riemannConformalCurv5D (injM2 κm) (injP2 κp)).g0R = Vec3.adjointDiv κm κp`,
+   - 2-step cascade `(g_{-1} × g_{-1} → g_{-2}) × (g_{+1} × g_{+1} → g_{+2}) → g_0`:
+     `riemannConformalCurv5D (kantorBracket (injM1 v₁) (injM1 v₂)) (kantorBracket (injP1 u₁) (injP1 u₂)) = inj0 (Vec3.dot (-Vec3.commCross v₁ v₂) (Vec3.commCross u₁ u₂)) (-Vec3.dot (Vec3.commCross u₁ u₂) (-Vec3.commCross v₁ v₂))`.
+4. **Flat Collapse Upon Discarding Anomalies (`κp = 0, κm = 0`)**:
+   - `elieCartanTorsion5D (injP2 0 + injM2 0) (injP1 u + injM1 v) = 0`,
+   - `riemannConformalCurv5D (injM2 0) (injP2 0) = 0`. -/
+theorem higher_grade_anomaly_generators_source_torsion_and_curvature
+    (u₁ u₂ v₁ v₂ u v κp κm : Vec3 B) (X : ZornMatrix B) :
+    kantorBracket (injP1 u₁) (injP1 u₂) = injP2 (Vec3.commCross u₁ u₂) ∧
+    kantorBracket (injM1 v₁) (injM1 v₂) = injM2 (-Vec3.commCross v₁ v₂) ∧
+    cartanDressed X =
+      cartan3Grade X.a X.d X.u X.v +
+      injP2 (Vec3.cross X.u X.u) +
+      injM2 (-Vec3.cross X.v X.v) ∧
+    cartanDressed X - cartan3Grade X.a X.d X.u X.v =
+      injP2 (Vec3.cross X.u X.u) +
+      injM2 (-Vec3.cross X.v X.v) ∧
+    elieCartanTorsion5D (injP2 κp) (injM1 v) = injP1 (-Vec3.adCross κp v) ∧
+    elieCartanTorsion5D (injM2 κm) (injP1 u) = injM1 (Vec3.adCross κm u) ∧
+    elieCartanTorsion5D (kantorBracket (injP1 u₁) (injP1 u₂)) (injM1 v) =
+      injP1 (-Vec3.adCross (Vec3.commCross u₁ u₂) v) ∧
+    elieCartanTorsion5D (kantorBracket (injM1 v₁) (injM1 v₂)) (injP1 u) =
+      injM1 (Vec3.adCross (-Vec3.commCross v₁ v₂) u) ∧
+    riemannConformalCurv5D (injM2 κm) (injP2 κp) =
+      inj0 (Vec3.dot κm κp) (-Vec3.dot κp κm) ∧
+    (riemannConformalCurv5D (injM2 κm) (injP2 κp)).g0L +
+      (riemannConformalCurv5D (injM2 κm) (injP2 κp)).g0R =
+      Vec3.adjointDiv κm κp ∧
+    riemannConformalCurv5D
+        (kantorBracket (injM1 v₁) (injM1 v₂))
+        (kantorBracket (injP1 u₁) (injP1 u₂)) =
+      inj0 (Vec3.dot (-Vec3.commCross v₁ v₂) (Vec3.commCross u₁ u₂))
+           (-Vec3.dot (Vec3.commCross u₁ u₂) (-Vec3.commCross v₁ v₂)) ∧
+    elieCartanTorsion5D (injP2 0 + injM2 0) (injP1 u + injM1 v) = 0 ∧
+    riemannConformalCurv5D (injM2 (0 : Vec3 B)) (injP2 (0 : Vec3 B)) = 0 := by
+  have hP1 : kantorBracket (injP1 u₁) (injP1 u₂) = injP2 (Vec3.commCross u₁ u₂) := by
+    ext <;>
+    · simp only [kantorBracket, injP1, injP2, Vec3.symCross, Vec3.commCross, Vec3.commOp,
+        Vec3.adCross, Vec3.cross, Vec3.dot, Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z, Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z, Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+      try abel
+  have hM1 : kantorBracket (injM1 v₁) (injM1 v₂) = injM2 (-Vec3.commCross v₁ v₂) := by
+    ext <;>
+    · simp only [kantorBracket, injM1, injM2, Vec3.symCross, Vec3.commCross, Vec3.commOp,
+        Vec3.adCross, Vec3.cross, Vec3.dot, Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z, Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z, Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+      try abel
+  have hDressed1 :
+      cartanDressed X =
+        cartan3Grade X.a X.d X.u X.v +
+        injP2 (Vec3.cross X.u X.u) +
+        injM2 (-Vec3.cross X.v X.v) := by
+    ext <;> simp [cartanDressed, cartan3Grade, injP2, injM2]
+  have hDressed2 :
+      cartanDressed X - cartan3Grade X.a X.d X.u X.v =
+        injP2 (Vec3.cross X.u X.u) +
+        injM2 (-Vec3.cross X.v X.v) := by
+    ext <;> simp [cartanDressed, cartan3Grade, injP2, injM2]
+  have hTorsP (κ : Vec3 B) :
+      elieCartanTorsion5D (injP2 κ) (injM1 v) = injP1 (-Vec3.adCross κ v) := by
+    ext <;> simp [elieCartanTorsion5D, kantorBracket, projOdd, injP2, injM1, injP1]
+  have hTorsM (κ : Vec3 B) :
+      elieCartanTorsion5D (injM2 κ) (injP1 u) = injM1 (Vec3.adCross κ u) := by
+    ext <;> simp [elieCartanTorsion5D, kantorBracket, projOdd, injM2, injP1, injM1]
+  have hCurv (κ_m κ_p : Vec3 B) :
+      riemannConformalCurv5D (injM2 κ_m) (injP2 κ_p) =
+        inj0 (Vec3.dot κ_m κ_p) (-Vec3.dot κ_p κ_m) := by
+    ext <;> simp [riemannConformalCurv5D, kantorBracket, projEven, injM2, injP2, inj0]
+  have hCurvSum :
+      (riemannConformalCurv5D (injM2 κm) (injP2 κp)).g0L +
+        (riemannConformalCurv5D (injM2 κm) (injP2 κp)).g0R =
+        Vec3.adjointDiv κm κp := by
+    rw [hCurv]
+    simp [inj0, Vec3.adjointDiv, sub_eq_add_neg]
+  have hFlatTors :
+      elieCartanTorsion5D (injP2 0 + injM2 0) (injP1 u + injM1 v) = 0 := by
+    ext <;> simp [elieCartanTorsion5D, kantorBracket, projOdd, injP2, injM2, injP1, injM1]
+  have hFlatCurv :
+      riemannConformalCurv5D (injM2 (0 : Vec3 B)) (injP2 (0 : Vec3 B)) = 0 := by
+    rw [hCurv]
+    ext <;> simp [inj0]
+  refine ⟨hP1, hM1, hDressed1, hDressed2, hTorsP κp, hTorsM κm, ?_, ?_,
+    hCurv κm κp, hCurvSum, ?_, hFlatTors, hFlatCurv⟩
+  · rw [hP1, hTorsP]
+  · rw [hM1, hTorsM]
+  · rw [hM1, hP1, hCurv]
 
-end CommutativeCollapse
+/-- Vanishing of the two commutator-cross sources generated by grade-one
+brackets forces the corresponding second-stage torsion readouts and their
+grade-zero curvature readout to vanish.  This is a statement about these
+specified channels; it does not assert that every curvature component of an
+arbitrary pair of five-graded connections vanishes. -/
+theorem generated_anomaly_sources_vanishing_kills_selected_readouts
+    (u₁ u₂ v₁ v₂ u v : Vec3 B)
+    (hPlus : Vec3.commCross u₁ u₂ = 0)
+    (hMinus : Vec3.commCross v₁ v₂ = 0) :
+    elieCartanTorsion5D
+        (kantorBracket (injP1 u₁) (injP1 u₂)) (injM1 v) = 0 ∧
+    elieCartanTorsion5D
+        (kantorBracket (injM1 v₁) (injM1 v₂)) (injP1 u) = 0 ∧
+    riemannConformalCurv5D
+        (kantorBracket (injM1 v₁) (injM1 v₂))
+        (kantorBracket (injP1 u₁) (injP1 u₂)) = 0 := by
+  have hCascade :=
+    higher_grade_anomaly_generators_source_torsion_and_curvature
+      u₁ u₂ v₁ v₂ u v (0 : Vec3 B) (0 : Vec3 B) (0 : ZornMatrix B)
+  rcases hCascade with
+    ⟨_, _, _, _, _, _, hTplus, hTminus, _, _, hCurvature, _, _⟩
+  refine ⟨?_, ?_, ?_⟩
+  · rw [hTplus, hPlus]
+    ext <;> simp [injP1]
+  · rw [hTminus, hMinus]
+    ext <;> simp [injM1]
+  · rw [hCurvature, hMinus, hPlus]
+    ext <;> simp [inj0]
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.5 (`bianchi_torsion_exterior_derivative_determines_conformal_curvature`)**:
+Over any non-commutative associative ring `[Ring B]`, the exterior tetrad derivative
+`dT = [𝓣_5D(κ_-, e_B), e_C] + [𝓣_5D(κ_-, e_C), e_B]` of the 5D Élie Cartan super-torsion
+and the 5D Riemann–conformal curvature `R_curv = 𝓡_5D(κ_-, [e_B, e_C])` satisfy the exact
+non-commutative 5D Bianchi Torsion-to-Curvature & Kantor Anomaly Defect identities:
+1. `dT.g0R = Vec3.kantorAnomalyDefect A B_v C + Vec3.kantorAnomalyDefect A C B_v`,
+2. `R_curv.g0L = Vec3.dot A (Vec3.adjointCurl B_v C)` and `R_curv.g0R = -Vec3.dot (Vec3.adjointCurl B_v C) A`,
+3. `R_curv.g0L + R_curv.g0R = Vec3.adjointDiv A (Vec3.adjointCurl B_v C)`,
+4. `R_curv.g0L = Vec3.dot (Vec3.adjointCurl A B_v) C + Vec3.kantorAnomalyDefect A B_v C`,
+5. `R_curv.g0L - dT.g0R = Vec3.dot (Vec3.cross B_v A) C + Vec3.dot (Vec3.cross C A) B_v`,
+6. `R_curv = inj0 R_curv.g0L R_curv.g0R`. -/
+theorem bianchi_torsion_exterior_derivative_determines_conformal_curvature
+    (A B_v C : Vec3 B) :
+    let T_AB   := elieCartanTorsion5D (injM2 A) (injP1 B_v)
+    let T_AC   := elieCartanTorsion5D (injM2 A) (injP1 C)
+    let dT     := kantorBracket T_AB (injP1 C) + kantorBracket T_AC (injP1 B_v)
+    let R_curv := riemannConformalCurv5D (injM2 A) (kantorBracket (injP1 B_v) (injP1 C))
+    dT.g0R = Vec3.kantorAnomalyDefect A B_v C + Vec3.kantorAnomalyDefect A C B_v ∧
+    R_curv.g0L = Vec3.dot A (Vec3.adjointCurl B_v C) ∧
+    R_curv.g0R = -Vec3.dot (Vec3.adjointCurl B_v C) A ∧
+    R_curv.g0L + R_curv.g0R = Vec3.adjointDiv A (Vec3.adjointCurl B_v C) ∧
+    R_curv.g0L =
+      Vec3.dot (Vec3.adjointCurl A B_v) C + Vec3.kantorAnomalyDefect A B_v C ∧
+    R_curv.g0L - dT.g0R =
+      Vec3.dot (Vec3.cross B_v A) C + Vec3.dot (Vec3.cross C A) B_v ∧
+    R_curv = inj0 R_curv.g0L R_curv.g0R := by
+  dsimp only
+  have hKB : kantorBracket (injP1 B_v) (injP1 C) = injP2 (Vec3.adjointCurl B_v C) := by
+    ext <;>
+    · simp only [kantorBracket, injP1, injP2, Vec3.symCross, Vec3.adjointCurl,
+        Vec3.adCross, Vec3.cross, Vec3.dot, Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z, Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z, Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+  have hRC : riemannConformalCurv5D (injM2 A) (kantorBracket (injP1 B_v) (injP1 C)) =
+      inj0 (Vec3.dot A (Vec3.adjointCurl B_v C)) (-Vec3.dot (Vec3.adjointCurl B_v C) A) := by
+    rw [hKB]
+    ext <;>
+    · simp only [riemannConformalCurv5D, kantorBracket, projEven, injM2, injP2, inj0,
+        Vec3.symCross, Vec3.adCross, Vec3.cross, Vec3.dot, Vec3.smulLeft, Vec3.smulRight,
+        Vec3.zero_x, Vec3.zero_y, Vec3.zero_z, Vec3.add_x, Vec3.add_y, Vec3.add_z,
+        Vec3.sub_x, Vec3.sub_y, Vec3.sub_z, Vec3.neg_x, Vec3.neg_y, Vec3.neg_z,
+        mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub, neg_zero]
+      try abel
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp only [kantorBracket, elieCartanTorsion5D, projOdd, injM2, injP1,
+      add_g0R, Vec3.add, Vec3.sub, Vec3.kantorAnomalyDefect, Vec3.adjointCurl, Vec3.adCross,
+      Vec3.dot, Vec3.cross, Vec3.smulLeft, Vec3.smulRight,
+      Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+      Vec3.add_x, Vec3.add_y, Vec3.add_z,
+      Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+      mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+    noncomm_ring
+  · rw [hRC]; rfl
+  · rw [hRC]; rfl
+  · rw [hRC]; simp only [inj0, Vec3.adjointDiv]; abel
+  · rw [hRC]; simp only [inj0, Vec3.kantorAnomalyDefect]; abel
+  · simp only [kantorBracket, riemannConformalCurv5D, elieCartanTorsion5D,
+      projEven, projOdd, injM2, injP1, add_g0R, Vec3.add, Vec3.sub,
+      Vec3.symCross, Vec3.adCross, Vec3.dot, Vec3.cross,
+      Vec3.smulLeft, Vec3.smulRight,
+      Vec3.zero_x, Vec3.zero_y, Vec3.zero_z,
+      Vec3.add_x, Vec3.add_y, Vec3.add_z,
+      Vec3.sub_x, Vec3.sub_y, Vec3.sub_z,
+      mul_zero, zero_mul, add_zero, zero_add, sub_zero, zero_sub]
+    noncomm_ring
+  · rw [hRC]; rfl
+
+set_option linter.unusedSimpArgs false in
+/-- **Theorem XX.6 (`selected_channel_readouts_vanish_of_source_conditions`)**:
+Under the stated zero-source and zero-curl hypotheses, these specified torsion and curvature
+readouts vanish. This conditional algebraic result does not assert global flatness or that
+Kantor defects are dispensable: the preceding theorem identifies their nonzero graded
+components as sources for higher-grade torsion and grade-zero curvature. -/
+theorem selected_channel_readouts_vanish_of_source_conditions
+    (u₁ u₂ v₁ v₂ u v A B_v C : Vec3 B)
+    (hKPlus : kantorBracket (injP1 u₁) (injP1 u₂) = 0)
+    (hKMinus : kantorBracket (injM1 v₁) (injM1 v₂) = 0)
+    (hCurlBC : Vec3.adjointCurl B_v C = 0)
+    (hCurlAB : Vec3.adjointCurl A B_v = 0) :
+    elieCartanTorsion5D (kantorBracket (injP1 u₁) (injP1 u₂)) (injM1 v) =
+      (Zero.zero : Kantor5Graded B) ∧
+    elieCartanTorsion5D (kantorBracket (injM1 v₁) (injM1 v₂)) (injP1 u) =
+      (Zero.zero : Kantor5Graded B) ∧
+    riemannConformalCurv5D
+        (kantorBracket (injM1 v₁) (injM1 v₂))
+        (kantorBracket (injP1 u₁) (injP1 u₂)) =
+      (Zero.zero : Kantor5Graded B) ∧
+    Vec3.kantorAnomalyDefect A B_v C = 0 ∧
+    riemannConformalCurv5D (injM2 A) (kantorBracket (injP1 B_v) (injP1 C)) =
+      (Zero.zero : Kantor5Graded B) := by
+  have hzero : (Zero.zero : Kantor5Graded B) = 0 := rfl
+  rw [hzero]
+  have h1 :
+      elieCartanTorsion5D (kantorBracket (injP1 u₁) (injP1 u₂)) (injM1 v) = 0 := by
+    rw [hKPlus]
+    ext <;> simp [elieCartanTorsion5D, kantorBracket, projOdd, injM1]
+  have h2 :
+      elieCartanTorsion5D (kantorBracket (injM1 v₁) (injM1 v₂)) (injP1 u) = 0 := by
+    rw [hKMinus]
+    ext <;> simp [elieCartanTorsion5D, kantorBracket, projOdd, injP1]
+  have h3 :
+      riemannConformalCurv5D
+          (kantorBracket (injM1 v₁) (injM1 v₂))
+          (kantorBracket (injP1 u₁) (injP1 u₂)) = 0 := by
+    rw [hKMinus, hKPlus]
+    ext <;> simp [riemannConformalCurv5D, kantorBracket, projEven]
+  have h4 : Vec3.kantorAnomalyDefect A B_v C = 0 := by
+    simp only [Vec3.kantorAnomalyDefect, hCurlBC, hCurlAB,
+      Vec3.dot_zero_left, Vec3.dot_zero_right, sub_self]
+  have h5 :
+      riemannConformalCurv5D (injM2 A) (kantorBracket (injP1 B_v) (injP1 C)) = 0 := by
+    obtain ⟨_, hRL, hRR, _, _, _, hR_eq⟩ :=
+      bianchi_torsion_exterior_derivative_determines_conformal_curvature A B_v C
+    rw [hR_eq, hRL, hRR, hCurlBC, Vec3.dot_zero_left, Vec3.dot_zero_right, neg_zero]
+    ext <;> simp [inj0]
+  exact ⟨h1, h2, h3, h4, h5⟩
+
+end NonCommutativeRing
 
 end Kantor5Graded
 

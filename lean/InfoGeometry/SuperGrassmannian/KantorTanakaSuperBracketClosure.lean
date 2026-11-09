@@ -21,7 +21,7 @@ namespace InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
 
 open InfoGeometry.Algebra.SupergradedBracket
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 private def matI : Matrix (Fin 3) (Fin 3) ℝ :=
   fun i j => if i = 0 ∧ j = 1 then 1 else 0

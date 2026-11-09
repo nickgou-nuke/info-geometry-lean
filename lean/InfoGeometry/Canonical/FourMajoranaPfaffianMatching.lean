@@ -18,7 +18,7 @@ namespace InfoGeometry.Canonical.FourMajoranaPfaffianMatching
 open Matrix
 open InfoGeometry.Volume.OrientedPfaffian
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def skew4 (a12 a13 a14 a23 a24 a34 : R) : Matrix (Fin 4) (Fin 4) R :=
   !![0, a12, a13, a14;
@@ -38,7 +38,7 @@ def pfaffian4 (a12 a13 a14 a23 a24 a34 : R) : R :=
     pfaffian4 a12 a13 a14 a23 a24 a34 =
       a12 * a34 - a13 * a24 + a14 * a23 := by
   simp [pfaffian4, pairing12_34, pairing13_24, pairing14_23]
-  ring
+  abel
 
 theorem skew4_transpose
     (a12 a13 a14 a23 a24 a34 : R) :

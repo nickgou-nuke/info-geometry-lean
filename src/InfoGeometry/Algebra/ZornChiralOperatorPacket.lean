@@ -59,22 +59,22 @@ theorem coordinate_injective :
         · exact congrFun h 6
         · exact congrFun h 7
 
-def toZornMatrix [CommRing A] (Q : ChiralOperatorData (A := A)) : ZornMatrix A where
+def toZornMatrix [Ring A] (Q : ChiralOperatorData (A := A)) : ZornMatrix A where
   a := Q.uPlusOp
   v := Q.sigmaPlus
   w := Q.sigmaMinus
   b := Q.uMinusOp
 
-@[simp] theorem toZornMatrix_a [CommRing A] (Q : ChiralOperatorData (A := A)) :
+@[simp] theorem toZornMatrix_a [Ring A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).a = Q.uPlusOp := rfl
 
-@[simp] theorem toZornMatrix_b [CommRing A] (Q : ChiralOperatorData (A := A)) :
+@[simp] theorem toZornMatrix_b [Ring A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).b = Q.uMinusOp := rfl
 
-@[simp] theorem toZornMatrix_v [CommRing A] (Q : ChiralOperatorData (A := A)) :
+@[simp] theorem toZornMatrix_v [Ring A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).v = Q.sigmaPlus := rfl
 
-@[simp] theorem toZornMatrix_w [CommRing A] (Q : ChiralOperatorData (A := A)) :
+@[simp] theorem toZornMatrix_w [Ring A] (Q : ChiralOperatorData (A := A)) :
     (toZornMatrix Q).w = Q.sigmaMinus := rfl
 
 end InfoGeometry.Algebra.ZornChiralOperatorPacket

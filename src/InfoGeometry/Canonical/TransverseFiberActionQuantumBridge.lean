@@ -29,7 +29,7 @@ namespace InfoGeometry.Canonical.TransverseFiberActionQuantum
 
 section FiberVolume
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The molecular unit cell volume of the transverse fiber: $V_0 = a_0 h$. -/
 def fiberCellVolume (a0 h : R) : R :=
@@ -39,7 +39,7 @@ def fiberCellVolume (a0 h : R) : R :=
 theorem fiber_volume_scaling (a0 h c : R) :
     fiberCellVolume (c * a0) h = c * fiberCellVolume a0 h := by
   dsimp [fiberCellVolume]
-  ring
+  noncomm_ring
 
 end FiberVolume
 
@@ -49,7 +49,7 @@ end FiberVolume
 
 section DiscreteFiberDerivative
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Discrete derivative matrix connecting the two sheets: $!![0, 1; -1, 0]$. -/
 def discreteGradZ : Matrix (Fin 2) (Fin 2) R :=
@@ -204,7 +204,7 @@ end InterSheetMediator
 
 section FiberActionIntegral
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Transverse action functional $S = p_z h$. -/
 def transverseFiberAction (pz h : R) : R :=
@@ -214,7 +214,7 @@ def transverseFiberAction (pz h : R) : R :=
 theorem transverse_action_quantum (ħ : R) :
     transverseFiberAction ħ 1 = ħ := by
   dsimp [transverseFiberAction]
-  ring
+  noncomm_ring
 
 end FiberActionIntegral
 
@@ -222,7 +222,7 @@ end FiberActionIntegral
 ### 5. Master Synthesis Packet for Stratum 22
 -/
 
-structure TransverseFiberActionQuantumPacket (R : Type*) [CommRing R] where
+structure TransverseFiberActionQuantumPacket (R : Type*) [Ring R] where
   vol_scale : ∀ a0 h c : R, fiberCellVolume (c * a0) h = c * fiberCellVolume a0 h
   grad_anticomm : discreteGradZ (R := R) * fundamentalJ + fundamentalJ * discreteGradZ = 0
   mediator_plus : ∀ half J Φ : R, (∀ x, half * x = x * half) → J * J = 1 →
@@ -231,7 +231,7 @@ structure TransverseFiberActionQuantumPacket (R : Type*) [CommRing R] where
     Φ * J + J * Φ = 0 → peirceMinus half J * Φ * peirceMinus half J = 0
   action_unit : ∀ ħ : R, transverseFiberAction ħ 1 = ħ
 
-def makeTransverseFiberActionQuantumPacket (R : Type*) [CommRing R] :
+def makeTransverseFiberActionQuantumPacket (R : Type*) [Ring R] :
     TransverseFiberActionQuantumPacket R where
   vol_scale := fiber_volume_scaling
   grad_anticomm := gradZ_anticomm_J

@@ -3,6 +3,13 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+-- [HIVE-MINDPROVENANCE HEADER]
+-- LAYER: Operator Algebra / Peirce Spine (Non-Commutative Bimetric Sheet Poset S₀ ≺ ... ≺ S₄)
+-- ARCHITECTURAL ROLE: Non-Commutative Peirce Bimetric Algebra, Double-Commutator Bohm Curvature, and Involutive Block-Matrix Sheet Geometry
+-- EPISTEMIC STATUS: 100% Constructive Proof (Zero Sorrys, Zero Axioms, Zero Wrapper Forgery)
+-- DEPENDENCIES: Mathlib.Algebra.Ring.Defs, Mathlib.Algebra.Star.Basic, InfoGeometry.OperatorAlgebra.PeirceSpine.Basic, DefectTower, Tetraktys
+-- [END HEADER]
+
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic.Abel
@@ -36,6 +43,17 @@ Zero `sorry`s. Zero axioms. Zero commutativity assumptions on `B`.
   with the canonical `InfoGeometry.OperatorAlgebra.PeirceSpine` owners `qgtPlus`, `qgtMinus`,
   `PeirceSpine.genPhi`, `PeirceSpine.genJ`, `PeirceSpine.genV`, `PeirceSpine.genSig`, and
   `PeirceSpine.derivSqPhi`.
+
+## Three-Bucket Audit Map:
+- **BUCKET 1 (Keep)**: `BimetricSheetPosetStage`, `Mat2`, `invS`, `conePlus`, `coneMinus`,
+  `genPhi`, `genJ`, `metricPlus`, `metricMinus`, `genV`, `genSig`, `bohmCurv`,
+  `archetype_S0_S1_bimetric_sheets_and_reflective_intertwining`,
+  `archetype_S2_double_commutator_bohm_curvature_and_continuity`,
+  `archetype_S3_matrix_sheet_exchange_and_symplectic_adjugate`,
+  `archetype_S4_star_ring_gramian_duality_and_cpt_balance`,
+  `bimetric_peirceSpine_dictionary_alignment`.
+- **BUCKET 2 (Rewrite)**: None (constructed directly as owner-side non-commutative theorems).
+- **BUCKET 3 (Delete)**: None (zero wrapper structures or vacuous Prop aliases).
 -/
 
 namespace NonCommutativeBimetricSheetGeometry
@@ -67,13 +85,16 @@ def toNat : BimetricSheetPosetStage → ℕ
   | S3_matrix_sheet_exchange_and_symplectic_adjugate => 3
   | S4_star_ring_gramian_duality_and_cpt_balance => 4
 
+/-- `toNat` is injective on `BimetricSheetPosetStage`. -/
 theorem toNat_injective : Function.Injective toNat := by
   intro a b h
   cases a <;> cases b <;> first | rfl | cases h
 
-instance : LinearOrder BimetricSheetPosetStage :=
+/-- Canonical linear order on `BimetricSheetPosetStage`. -/
+instance instLinearOrderBimetricSheetPosetStage : LinearOrder BimetricSheetPosetStage :=
   LinearOrder.lift' toNat toNat_injective
 
+/-- Strict causal poset ordering $\mathcal{S}_0 \prec \mathcal{S}_1 \prec \mathcal{S}_2 \prec \mathcal{S}_3 \prec \mathcal{S}_4$. -/
 theorem poset_chain_S0_lt_S1_lt_S2_lt_S3_lt_S4 :
     S0_orthogonal_sheet_metrics_and_intertwining < S1_metric_commutation_and_dipole_anticommutation ∧
     S1_metric_commutation_and_dipole_anticommutation < S2_double_commutator_bohm_curvature ∧
@@ -87,7 +108,10 @@ end BimetricSheetPosetStage
 -- 1. ABSTRACT BIMETRIC PEIRCE ALGEBRA OVER A NON-COMMUTATIVE RING `[Ring B]`
 -- ============================================================================
 
+/-- Ring commutator `[x, y] = x * y - y * x`. -/
 @[simp] def rcomm {A : Type u} [Ring A] (x y : A) : A := x * y - y * x
+
+/-- Ring anticommutator `{x, y} = x * y + y * x`. -/
 @[simp] def racomm {A : Type u} [Ring A] (x y : A) : A := x * y + y * x
 
 /-- Sheet grading involution `S_P = P - (1 - P) = 2P - 1`. -/
@@ -113,6 +137,7 @@ end BimetricSheetPosetStage
 @[simp] def bohmCurv (P X Y Z : B) : B :=
   -rcomm (genPhi P X Y) (rcomm (genPhi P X Y) Z)
 
+/-- Left idempotent absorption $P (P Z) = P Z$ for an idempotent $P^2 = P$. -/
 lemma P_assoc {P : B} (hP : P * P = P) (Z : B) : P * (P * Z) = P * Z := by
   rw [← mul_assoc]
   rw [hP]
@@ -231,13 +256,13 @@ namespace Mat2
   ⟨M.a11 * N.a11 + M.a12 * N.a21, M.a11 * N.a12 + M.a12 * N.a22,
    M.a21 * N.a11 + M.a22 * N.a21, M.a21 * N.a12 + M.a22 * N.a22⟩
 
-instance : Zero (Mat2 B) := ⟨zero⟩
-instance : One (Mat2 B)  := ⟨one⟩
-instance : Inhabited (Mat2 B) := ⟨zero⟩
-instance : Add (Mat2 B)  := ⟨add⟩
-instance : Neg (Mat2 B)  := ⟨neg⟩
-instance : Sub (Mat2 B)  := ⟨sub⟩
-instance : Mul (Mat2 B)  := ⟨mul⟩
+instance instZero : Zero (Mat2 B) := ⟨zero⟩
+instance instOne : One (Mat2 B)  := ⟨one⟩
+instance instInhabited : Inhabited (Mat2 B) := ⟨zero⟩
+instance instAdd : Add (Mat2 B)  := ⟨add⟩
+instance instNeg : Neg (Mat2 B)  := ⟨neg⟩
+instance instSub : Sub (Mat2 B)  := ⟨sub⟩
+instance instMul : Mul (Mat2 B)  := ⟨mul⟩
 
 @[simp] lemma zero_a11 : (0 : Mat2 B).a11 = 0 := by
   have h : (0 : Mat2 B) = zero := Eq.refl _
@@ -360,6 +385,7 @@ instance : Mul (Mat2 B)  := ⟨mul⟩
 
 /-- Bimetric asymmetry dipole matrix `Σ(A, C) = [[A C, 0], [0, -C A]]`. -/
 @[simp] def matSig (A C : B) : Mat2 B := ⟨A * C, 0, 0, -(C * A)⟩
+
 
 /-- Conjugate-transpose star operation on `Mat2 B` when `[StarRing B]`. -/
 @[simp] def starMat [StarRing B] (M : Mat2 B) : Mat2 B :=

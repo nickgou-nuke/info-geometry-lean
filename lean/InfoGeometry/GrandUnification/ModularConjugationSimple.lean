@@ -29,7 +29,7 @@ import InfoGeometry.GrandUnification.Commutant
 
 namespace InfoGeometry.GrandUnification
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
 
 /-- Conjugation of an endomorphism `x` by the modular reflection operator `J_Δ`:
     `J_Δ * x * J_Δ`. -/

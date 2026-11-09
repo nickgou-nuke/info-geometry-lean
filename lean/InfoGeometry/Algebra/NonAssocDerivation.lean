@@ -18,36 +18,54 @@ namespace InfoGeometry.Algebra.NonAssocDerivation
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 
-variable (R A : Type*) [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
-  [IsScalarTower R A A] [SMulCommClass R A A]
+section NoncommScalars
+
+variable (R A : Type*) [Ring R] [NonUnitalNonAssocRing A] [Module R A]
 
 /-- The Leibniz property for a linear endomorphism of a possibly nonassociative algebra. -/
 def IsLeibniz (D : Module.End R A) : Prop :=
   ∀ x y : A, D (x * y) = D x * y + x * D y
 
+variable {R A}
+
+theorem isLeibniz_zero : IsLeibniz R A 0 := by
+  intro x y
+  simp
+
+theorem isLeibniz_add {D E : Module.End R A}
+    (hD : IsLeibniz R A D) (hE : IsLeibniz R A E) :
+    IsLeibniz R A (D + E) := by
+  intro x y
+  simp only [LinearMap.add_apply]
+  rw [hD x y, hE x y]
+  simp only [add_mul, mul_add]
+  abel
+
+theorem isLeibniz_lie {D E : Module.End R A}
+    (hD : IsLeibniz R A D) (hE : IsLeibniz R A E) :
+    IsLeibniz R A ⁅D, E⁆ := by
+  intro x y
+  simp only [Ring.lie_def, Module.End.mul_apply, LinearMap.sub_apply]
+  rw [hE x y, map_add, hD (E x) y, hD x (E y)]
+  rw [hD x y, map_add, hE (D x) y, hE x (D y)]
+  simp only [sub_mul, mul_sub]
+  abel
+
+end NoncommScalars
+
+variable (R A : Type*) [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
+
 /-- Leibniz endomorphisms form a Lie subalgebra of the endomorphism Lie algebra. -/
 def derivations : LieSubalgebra R (Module.End R A) where
   carrier := {D | IsLeibniz R A D}
-  zero_mem' := by
-    intro x y
-    simp
-  add_mem' := by
-    intro D E hD hE x y
-    simp only [LinearMap.add_apply]
-    rw [hD x y, hE x y]
-    simp only [add_mul, mul_add]
-    abel
+  zero_mem' := isLeibniz_zero
+  add_mem' {_ _} hD hE := isLeibniz_add hD hE
   smul_mem' := by
     intro r D hD x y
     simp only [LinearMap.smul_apply]
     rw [hD x y, smul_add, smul_mul_assoc, mul_smul_comm]
-  lie_mem' := by
-    intro D E hD hE x y
-    simp only [Ring.lie_def, Module.End.mul_apply, LinearMap.sub_apply]
-    rw [hE x y, map_add, hD (E x) y, hD x (E y)]
-    rw [hD x y, map_add, hE (D x) y, hE x (D y)]
-    simp only [sub_mul, mul_sub]
-    abel
+  lie_mem' {_ _} hD hE := isLeibniz_lie hD hE
 
 /-- A bundled element of `derivations` satisfies the Leibniz rule.
 
@@ -78,7 +96,7 @@ theorem commutator_mem (D E : derivations R A) :
 
 section Quadratic
 
-variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable {R A : Type*} [Ring R] [AddCommGroup A] [Module R A]
 
 /-- Polarization of a quadratic `U`-operator in its outer variables. -/
 def polarizedU (U : A → A → A) (X Y Z : A) : A :=

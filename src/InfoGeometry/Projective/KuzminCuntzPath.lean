@@ -27,7 +27,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 /--
 The local finite `q`-CCR datum (n=2) in a commutative star ring.
 -/
-structure QCCRSeed (R : Type*) [CommRing R] [StarRing R] where
+structure QCCRSeed (R : Type*) [Ring R] [StarRing R] where
   q : R
   annihilation : Fin 2 → R
   creation : Fin 2 → R
@@ -41,7 +41,7 @@ A conservative transmutation socket for Kuzmin's corridor.
 The `toCuntzToeplitz` field is intentionally explicit and assumption-only: it
 models the claimed algebraic bridge without asserting an analytic construction.
 -/
-structure QCCRToCuntzSocket (R : Type*) [CommRing R] [StarRing R] where
+structure QCCRToCuntzSocket (R : Type*) [Ring R] [StarRing R] where
   seed : QCCRSeed R
   toCuntzToeplitz : R ≃⋆+* CuntzToeplitzAlg 2
 
@@ -52,7 +52,7 @@ expected:
 `a_i^* a_j + a_j a_i^* = δ_{ij}`.
 -/
 theorem seed_car_from_minus_one
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRSeed R)
     (hq : H.q = (-1 : R))
     (i j : Fin 2) :
@@ -73,7 +73,7 @@ expected:
 `a_i^* a_j - a_j a_i^* = δ_{ij}`.
 -/
 theorem seed_ccr_from_plus_one
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRSeed R)
     (hq : H.q = (1 : R))
     (i j : Fin 2) :
@@ -92,7 +92,7 @@ At `q = 0`, the seed data satisfy the Cuntz–Toeplitz orthogonality relation
 `a_i^* a_j = δ_{ij}`.
 -/
 theorem seed_toeplitz_limit
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRSeed R)
     (hq : H.q = (0 : R))
     (i j : Fin 2) :
@@ -105,7 +105,7 @@ Transported Toeplitz orthogonality under an explicit isomorphism to
 `CuntzToeplitzAlg 2`.
 -/
 theorem transported_toeplitz_orthogonality
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRToCuntzSocket R)
     (hq : H.seed.q = (0 : R))
     (i j : Fin 2) :
@@ -118,7 +118,7 @@ theorem transported_toeplitz_orthogonality
 Conservative CAR readout under an assumed transmutation socket.
 -/
 theorem transmutation_car_packet
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (H : QCCRToCuntzSocket R)
     (hcar : H.seed.q = (-1 : R))
     (i j : Fin 2) :
@@ -129,7 +129,7 @@ theorem transmutation_car_packet
 /--
 A packet-style consequence statement mirroring the requested physical interface.
 -/
-structure KuzminCuntzPathPacket (R : Type*) [CommRing R] [StarRing R] where
+structure KuzminCuntzPathPacket (R : Type*) [Ring R] [StarRing R] where
   q : R
   seed : QCCRSeed R
   toCuntzToeplitz : R ≃⋆+* CuntzToeplitzAlg 2
@@ -140,7 +140,7 @@ Conservative specialization: a path packet is present exactly as an explicit
 hypothesis (no hidden completion).
 -/
 theorem path_packet_is_explicit
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (P : KuzminCuntzPathPacket R) :
     P.seed.q = P.q := by
   simp [P.q_norm]

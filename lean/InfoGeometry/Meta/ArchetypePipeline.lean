@@ -36,8 +36,8 @@ inductive Status where
 A mathematically sound epistemic archetype.
 The `evidence` field is type-indexed on `s : Status`:
 - If `s = .proved`, it carries a verified proof `∀ x : Input, claim x`.
-- If `s ≠ .proved`, the proof obligation collapses to `True`, preventing vacuous instantiation
-  from satisfying proof extractors.
+- Otherwise the field is `PUnit`, an explicit marker that no theorem evidence is
+  present. It cannot be extracted as evidence for `claim`.
 -/
 structure TypedArchetype (Input : Type u) (s : Status) where
   name     : Name
@@ -45,7 +45,7 @@ structure TypedArchetype (Input : Type u) (s : Status) where
   claim    : Input → Prop
   evidence : match s with
     | .proved => ∀ x : Input, claim x
-    | _       => True
+    | _       => PUnit
 
 namespace TypedArchetype
 

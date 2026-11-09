@@ -29,13 +29,13 @@ open InfoGeometry.Categorical.BraidVirasoroIntertwiner
 universe u
 
 /-- The group of linear automorphisms of a carrier. -/
-abbrev LinearAut (𝕜 V : Type u) [CommRing 𝕜]
+abbrev LinearAut (𝕜 V : Type u) [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V] :=
   V ≃ₗ[𝕜] V
 
 /-- A compatible family of finite-stage braid representations. -/
 structure CompatibleStageAction
-    (𝕜 V : Type u) [CommRing 𝕜]
+    (𝕜 V : Type u) [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (B : BraidGroupDiagram.{u}) where
   L : ℤ → Module.End 𝕜 V
@@ -49,7 +49,7 @@ structure CompatibleStageAction
 
 /-- The categorical action of the braid colimit on the carrier. -/
 abbrev descendedAction
-    {𝕜 V : Type u} [CommRing 𝕜]
+    {𝕜 V : Type u} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     {B : BraidGroupDiagram.{u}}
     (A : CompatibleStageAction 𝕜 V B) :
@@ -58,7 +58,7 @@ abbrev descendedAction
 
 /-- Pointwise form of the descended B-infinity action. -/
 def action
-    {𝕜 V : Type u} [CommRing 𝕜]
+    {𝕜 V : Type u} [Ring 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     {B : BraidGroupDiagram.{u}}
     (A : CompatibleStageAction 𝕜 V B)
@@ -67,7 +67,7 @@ def action
 
 namespace CompatibleStageAction
 
-variable {𝕜 V : Type u} [CommRing 𝕜]
+variable {𝕜 V : Type u} [Ring 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 variable {B : BraidGroupDiagram.{u}}
 variable (A : CompatibleStageAction 𝕜 V B)
@@ -149,7 +149,7 @@ end CompatibleStageAction
 a genuine compatible finite-stage action. -/
 structure CertifiedClosure
     (Bridge : Type*) (𝕜 V : Type u)
-    [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (B : BraidGroupDiagram.{u})
     (L : ℤ → Module.End 𝕜 V) where
   bridge : Bridge
@@ -159,7 +159,7 @@ structure CertifiedClosure
 /-- Attach a concrete compatible stage action to an existing bridge packet. -/
 def attach
     {Bridge : Type*} {𝕜 V : Type u}
-    [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     {B : BraidGroupDiagram.{u}}
     {L : ℤ → Module.End 𝕜 V}
     (bridge : Bridge)

@@ -12,7 +12,7 @@ open scoped Matrix
 open InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra
 open InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The Cartan adjoint action assigns grade +1 to the first odd contact generator. -/
 theorem adH_E01_grade_one :

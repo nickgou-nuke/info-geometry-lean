@@ -65,7 +65,7 @@ The `hamiltonianMellinDecomposition` field states that H₂ - H₁ equals the
 Mellin-weighted sum over root directions.
 -/
 structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
-    [CommRing LieAlg]
+    [Ring LieAlg]
     extends InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg where
   /-- First modular Hamiltonian (state ω₁). -/
   H₁ : LieAlg
@@ -81,7 +81,7 @@ structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
 
 namespace CocycleOverCoadjointOrbit
 
-variable {Orbit LieAlg LieCoalg : Type*} [CommRing LieAlg]
+variable {Orbit LieAlg LieCoalg : Type*} [Ring LieAlg]
   (ctx : CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
 
 /--
@@ -144,7 +144,7 @@ theorem from ZetaTraceSpecialization identifies the supertrace with the
 Weyl denominator.
 -/
 structure PrimeCocycleState (Orbit LieAlg LieCoalg : Type*)
-    [CommRing LieAlg]
+    [Ring LieAlg]
     extends CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg where
   /-- The prime register indexing the A₁ roots. -/
   register : PrimeRegister

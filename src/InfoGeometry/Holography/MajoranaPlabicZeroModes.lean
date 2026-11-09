@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic
 
 /-!
 # Раздел 150 (ГРАНД ФИНАЛ): Майоранови Нулеви Моди като Ръбове в Plabic Графите
@@ -34,7 +34,7 @@ Ref: `QMS-DIR-SEC150-MAJORANA-PLABIC-ZERO-MODES-2026-OCT-16`
 
 namespace InfoGeometry.Holography.MajoranaPlabic
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Cℓ(1,1) Операторна База на Топологичния Изолатор -/
 
@@ -49,7 +49,7 @@ structure PlabicMajoranaOp (R : Type*) where
 
 namespace PlabicMajoranaOp
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero operator in `PlabicMajoranaOp R`. -/
 def zero : PlabicMajoranaOp R := ⟨0, 0, 0, 0⟩
@@ -92,9 +92,9 @@ theorem ridge_is_nilpotent (w : R) :
     mul (ridgeBwd w) (ridgeBwd w) = zero := by
   constructor
   · dsimp [ridgeFwd, mul, zero]
-    ext <;> ring
+    ext <;> noncomm_ring
   · dsimp [ridgeBwd, mul, zero]
-    ext <;> ring
+    ext <;> noncomm_ring
 
 /-! ### 3. Сливане на Дираков Фермион и Масова Междина (Mass Gap) -/
 
@@ -111,7 +111,7 @@ H² = w² • 𝟙.
 theorem dirac_fermion_fusion_mass_gap (w : R) :
     mul (kitaevHamiltonian w) (kitaevHamiltonian w) = scale (w^2) one := by
   dsimp [kitaevHamiltonian, ridgeFwd, ridgeBwd, add, mul, scale, one]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 /-! ### 4. Майоранова Нулева Мода (Топологичен Дефект) -/
 
@@ -133,7 +133,7 @@ H_open · Edge_dangling = 0.
 theorem majorana_zero_mode_topological_protection (w : R) :
     mul (openHamiltonian w) danglingEdge = zero := by
   dsimp [openHamiltonian, danglingEdge, ridgeFwd, mul, zero]
-  ext <;> ring
+  ext <;> noncomm_ring
 
 end PlabicMajoranaOp
 

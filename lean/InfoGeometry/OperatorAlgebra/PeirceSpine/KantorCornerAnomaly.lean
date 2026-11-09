@@ -23,11 +23,16 @@ def upperCornerCrossProduct (P C A Z : B) : B :=
   conePlus P A * coneMinus P C * conePlus P Z -
     conePlus P Z * coneMinus P C * conePlus P A
 
-/-- The explicit ordered triple formula is exactly the existing upper
-homotope bracket. -/
-theorem upperHomotopeBracket_eq_upperCornerCrossProduct
-    (P C A Z : B) :
-    upperHomotopeBracket P C A Z = upperCornerCrossProduct P C A Z := rfl
+/-- The upper homotope bracket is supported in the upper off-diagonal Peirce
+corner and is square-zero for an idempotent cut. -/
+theorem upperHomotopeBracket_corner_and_square_zero {P : B}
+    (hP : P * P = P) (C A Z : B) :
+    P * upperHomotopeBracket P C A Z = upperHomotopeBracket P C A Z ∧
+    upperHomotopeBracket P C A Z * (1 - P) = upperHomotopeBracket P C A Z ∧
+    upperHomotopeBracket P C A Z * upperHomotopeBracket P C A Z = 0 := by
+  simp only [upperHomotopeBracket, opKantorAnomaly, conePlus, coneMinus]
+  peirce_nf hP
+  simp
 
 /-- The upper homotope bracket is alternating in its two cone inputs. This
 is a law of the associative Peirce homotope, not of the concrete Zorn
@@ -91,11 +96,16 @@ def lowerCornerCrossProduct (P A Y W : B) : B :=
   coneMinus P Y * conePlus P A * coneMinus P W -
     coneMinus P W * conePlus P A * coneMinus P Y
 
-/-- The lower ordered triple formula is the lower-corner instance of the same
-associative Kantor skew anomaly. -/
-theorem lowerCornerCrossProduct_eq_opKantorAnomaly (P A Y W : B) :
-    lowerCornerCrossProduct P A Y W =
-      opKantorAnomaly (coneMinus P Y) (coneMinus P W) (conePlus P A) := rfl
+/-- The lower corner cross-product is supported in the lower off-diagonal
+Peirce corner and is square-zero for an idempotent cut. -/
+theorem lowerCornerCrossProduct_corner_and_square_zero {P : B}
+    (hP : P * P = P) (A Y W : B) :
+    (1 - P) * lowerCornerCrossProduct P A Y W = lowerCornerCrossProduct P A Y W ∧
+    lowerCornerCrossProduct P A Y W * P = lowerCornerCrossProduct P A Y W ∧
+    lowerCornerCrossProduct P A Y W * lowerCornerCrossProduct P A Y W = 0 := by
+  simp only [lowerCornerCrossProduct, conePlus, coneMinus]
+  peirce_nf hP
+  simp
 
 /-- The lower associative Peirce homotope cross-product also satisfies Jacobi. -/
 theorem lower_corner_cross_product_jacobi {P : B} (hP : P * P = P)
@@ -147,15 +157,108 @@ theorem reference_corner_commutator_intertwines (P A C Z : B) :
   simp only [comm, qgtPlus, qgtMinus]
   noncomm_ring
 
-/-- Every finite idempotency-defect iterate of the two corner commutators
-is intertwined by the same lower reference corner. -/
-theorem reference_corner_commutator_defect_iterates (P A C Z : B) (n : ℕ) :
+/-- Defect iteration preserves the orthogonal Peirce separation of the two
+corner commutators, while the reference cone transports every lower iterate
+to its matching upper iterate. -/
+theorem reference_corner_commutator_defect_orbits {P : B} (hP : P * P = P)
+    (A C Z : B) (n m : ℕ) :
+    InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n]
+        (comm (qgtPlus P A C) (qgtPlus P Z C)) *
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m]
+        (comm (qgtMinus P A C) (qgtMinus P Z C)) = 0 ∧
+    InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m]
+        (comm (qgtMinus P A C) (qgtMinus P Z C)) *
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n]
+        (comm (qgtPlus P A C) (qgtPlus P Z C)) = 0 ∧
     InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n]
         (comm (qgtMinus P A C) (qgtMinus P Z C)) * coneMinus P C =
       coneMinus P C * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n]
         (comm (qgtPlus P A C) (qgtPlus P Z C)) := by
-  exact InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_intertwines
-    (reference_corner_commutator_intertwines P A C Z).symm n
+  let upper := comm (qgtPlus P A C) (qgtPlus P Z C)
+  let lower := comm (qgtMinus P A C) (qgtMinus P Z C)
+  have hUpperLeft : P * upper = upper := by
+    simp only [upper, comm, qgtPlus, conePlus, coneMinus]
+    peirce_nf hP
+  have hUpperRight : upper * P = upper := by
+    simp only [upper, comm, qgtPlus, conePlus, coneMinus]
+    peirce_nf hP
+  have hLowerLeft : (1 - P) * lower = lower := by
+    simp only [lower, comm, qgtMinus, conePlus, coneMinus]
+    peirce_nf hP
+  have hLowerRight : lower * (1 - P) = lower := by
+    simp only [lower, comm, qgtMinus, conePlus, coneMinus]
+    peirce_nf hP
+  have hUpperLowerCut : P * (1 - P) = 0 := by simp [mul_sub, hP]
+  have hLowerUpperCut : (1 - P) * P = 0 := by simp [sub_mul, hP]
+  have hUpperIterLeft (k : ℕ) :
+      P * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] upper =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] upper :=
+    InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_left_support
+      hUpperLeft k
+  have hUpperIterRight (k : ℕ) :
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] upper * P =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] upper :=
+    InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_right_support
+      hUpperRight k
+  have hLowerIterLeft (k : ℕ) :
+      (1 - P) * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] lower =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] lower :=
+    InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_left_support
+      hLowerLeft k
+  have hLowerIterRight (k : ℕ) :
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] lower * (1 - P) =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] lower :=
+    InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_iterates_right_support
+      hLowerRight k
+  have hUpperLowerZero :
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper *
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower = 0 := by
+    have hCut : P * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower = 0 := by
+      calc
+        _ = P * ((1 - P) * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower) := by
+          exact congrArg (P * ·) (hLowerIterLeft m).symm
+        _ = (P * (1 - P)) *
+            InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower := by
+          rw [← mul_assoc]
+        _ = 0 := by rw [hUpperLowerCut, zero_mul]
+    calc
+      _ = (InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper * P) *
+          InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower := by
+        rw [hUpperIterRight n]
+      _ = InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper *
+          (P * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower) := by
+        rw [mul_assoc]
+      _ = 0 := by rw [hCut, mul_zero]
+  have hLowerUpperZero :
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower *
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper = 0 := by
+    have hCut : (1 - P) * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper = 0 := by
+      calc
+        _ = (1 - P) * (P * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper) := by
+          exact congrArg ((1 - P) * ·) (hUpperIterLeft n).symm
+        _ = ((1 - P) * P) *
+            InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper := by
+          rw [← mul_assoc]
+        _ = 0 := by rw [hLowerUpperCut, zero_mul]
+    calc
+      _ = (InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower * (1 - P)) *
+          InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper := by
+        rw [hLowerIterRight m]
+      _ = InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[m] lower *
+          ((1 - P) * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[n] upper) := by
+        rw [mul_assoc]
+      _ = 0 := by rw [hCut, mul_zero]
+  have hBase : lower * coneMinus P C = coneMinus P C * upper :=
+    (reference_corner_commutator_intertwines P A C Z).symm
+  have hOrbit (k : ℕ) :
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] lower * coneMinus P C =
+        coneMinus P C * InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect^[k] upper := by
+    induction k with
+    | zero => exact hBase
+    | succ k ih =>
+        simpa only [Function.iterate_succ_apply'] using
+          InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_intertwines ih
+  exact ⟨hUpperLowerZero, hLowerUpperZero, hOrbit n⟩
 
 /-- A cyclic additive functional annihilates the left reference pairing. -/
 theorem upper_anomaly_left_reference_pairing_trace_zero

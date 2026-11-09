@@ -6,7 +6,7 @@ namespace InfoGeometry.AlbertSemidirectCollapse
 
 set_option linter.unusedSectionVars false
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### 1. Октонионен модел: Разцепване на 1D реална и 7D имагинерна част -/
 

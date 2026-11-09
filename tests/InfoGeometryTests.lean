@@ -235,7 +235,6 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Exceptional.AlbertAlgebra.compile_albert_algebra_certificate
 #check InfoGeometry.Exceptional.F4DerivationsAlbert.compile_f4_derivations_albert
 #check InfoGeometry.Exceptional.AlbertDerivations.compile_albert_derivation_certificate
-#check InfoGeometry.Supergeometry.Berezinian.compile_berezinian_certificate
 #check InfoGeometry.SuperGrassmannian.WeylBerezinian.compile_weyl_berezinian_deformation
 #check InfoGeometry.Exceptional.AlbertBPSNilpotentOrbits.compile_albert_bps_nilpotent_orbits
 #check InfoGeometry.SuperGrassmannian.GeneralSupercarrierDeformation.compile_general_supercarrier_deformation

@@ -15,9 +15,9 @@ namespace InfoGeometry.Canonical.DoubledChiralPairing
 
 variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V]
 
-abbrev Dual (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] :=
+abbrev Dual (R V : Type*) [Ring R] [AddCommGroup V] [Module R V] :=
   Module.Dual R V
-abbrev Doubled (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] :=
+abbrev Doubled (R V : Type*) [Ring R] [AddCommGroup V] [Module R V] :=
   V × Dual R V
 
 def evaluation (X Y : Doubled R V) : R := X.2 Y.1

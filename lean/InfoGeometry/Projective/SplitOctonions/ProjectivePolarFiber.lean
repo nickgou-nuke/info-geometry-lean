@@ -27,7 +27,7 @@ Left representative rescaling does not change the incidence fiber.
 -/
 theorem incidenceFiber_scale_left
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_left :
@@ -52,7 +52,7 @@ Right representative rescaling does not change the incidence fiber.
 -/
 theorem incidenceFiber_scale_right
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_right :
@@ -77,7 +77,7 @@ Erlangen covariance preserves incidence fibers in preimage form.
 -/
 theorem incidenceFiber_erlangen_preimage
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     (polar : Carrier → Carrier → R)
     (g : Carrier ≃ Carrier)
     (χ : R)
@@ -104,7 +104,7 @@ of `g Y`.
 -/
 theorem incidenceFiber_erlangen_image
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     (polar : Carrier → Carrier → R)
     (g : Carrier ≃ Carrier)
     (χ : R)
@@ -136,7 +136,7 @@ Combined projective scaling plus Erlangen covariance for incidence fibers.
 -/
 theorem incidenceFiber_projective_erlangen_image
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_right :

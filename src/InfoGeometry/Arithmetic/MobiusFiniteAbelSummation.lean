@@ -20,7 +20,7 @@ def prefixSum {R : Type*} [AddCommMonoid R]
     (a : ℕ → R) (n : ℕ) : R :=
   ∑ k ∈ Finset.range (n + 1), a k
 
-theorem finite_summation_by_parts {R : Type*} [CommRing R]
+theorem finite_summation_by_parts {R : Type*} [Ring R]
     (a f : ℕ → R) (N : ℕ) :
     (∑ n ∈ Finset.range (N + 1), a n * f n) =
       prefixSum a N * f N +
@@ -34,7 +34,7 @@ theorem finite_summation_by_parts {R : Type*} [CommRing R]
         unfold prefixSum
         rw [Finset.sum_range_succ]
       rw [hp, Finset.sum_range_succ]
-      ring
+      noncomm_ring
 
 theorem mobius_sum_eq_mertens_summation_by_parts
     (f : ℕ → ℤ) (N : ℕ) :

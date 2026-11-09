@@ -133,19 +133,19 @@ theorem gram_positive_definite (q : ℝ) (hq : |q| < 1) (x : Fin 4 → ℝ) (hx 
 
 /-! ### 4. q-CCR Relation Consistency over Commutative Rings -/
 
-theorem car_anticommutation {R : Type*} [CommRing R] [StarRing R]
+theorem car_anticommutation {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (-1 : R) * (a j * astar i))
     (i j : Fin 2) : astar i * a j + a j * astar i = (if i = j then 1 else 0) := by
-  rw [hrel i j]; ring
+  rw [hrel i j]; noncomm_ring
 
-theorem ccr_commutation {R : Type*} [CommRing R] [StarRing R]
+theorem ccr_commutation {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (1 : R) * (a j * astar i))
     (i j : Fin 2) : astar i * a j - a j * astar i = (if i = j then 1 else 0) := by
-  rw [hrel i j]; ring
+  rw [hrel i j]; noncomm_ring
 
-theorem cuntz_toeplitz_limit {R : Type*} [CommRing R] [StarRing R]
+theorem cuntz_toeplitz_limit {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (0 : R) * (a j * astar i))
     (i j : Fin 2) : astar i * a j = (if i = j then 1 else 0) := by

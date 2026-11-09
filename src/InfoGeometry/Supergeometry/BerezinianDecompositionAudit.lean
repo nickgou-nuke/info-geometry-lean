@@ -1,7 +1,7 @@
 import InfoGeometry.Supergeometry.BerezinianDecomposition
 
 /-!
-# Axiomatic Audit for BerezinianDecomposition (Operator Noncommutative Geometry)
+# Axiomatic Audit for finite 2×2 Berezinian identities
 Target: `lean/InfoGeometry/Supergeometry/BerezinianDecompositionAudit.lean`
 -/
 
@@ -14,4 +14,3 @@ open InfoGeometry.Supergeometry.Berezinian
 #print axioms diagonal_berezinian
 #print axioms berezinian_scaling_balanced
 #print axioms berezinian_of_orthogonal
-#print axioms compile_berezinian_certificate

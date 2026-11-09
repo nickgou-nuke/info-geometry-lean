@@ -36,39 +36,39 @@ open CategoryTheory.Limits
 /-! ### 1. Discrete Holographic Tower and Sequential Bonding -/
 
 /-- Direct inductive tower of modules with linear successor maps. -/
-structure HolographicTower {R : Type*} [CommRing R]
+structure HolographicTower {R : Type*} [Ring R]
     (T : ℕ → Type*) [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] where
   iota : ∀ n, T n →ₗ[R] T (n + 1)
 
 /-- Constructive model witness: constant module tower with zero bonding maps. -/
-def zeroHolographicTower {R : Type*} [CommRing R] :
+def zeroHolographicTower {R : Type*} [Ring R] :
     HolographicTower (R := R) (fun _ : ℕ => R) :=
   ⟨fun _ => 0⟩
 
-instance {R : Type*} [CommRing R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] :
+instance {R : Type*} [Ring R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] :
     Inhabited (HolographicTower (R := R) T) :=
   ⟨⟨fun _ => 0⟩⟩
 
 /-- Sequential composition of bonding maps across `m` steps. -/
-def iotaSeq {R : Type*} [CommRing R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+def iotaSeq {R : Type*} [Ring R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (n : ℕ) : ∀ m, T n →ₗ[R] T (n + m)
   | 0 => LinearMap.id
   | m + 1 => (tower.iota (n + m)).comp (iotaSeq tower n m)
 
 @[simp]
-theorem iotaSeq_zero {R : Type*} [CommRing R]
+theorem iotaSeq_zero {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (n : ℕ) :
     iotaSeq tower n 0 = LinearMap.id := rfl
 
 @[simp]
-theorem iotaSeq_succ {R : Type*} [CommRing R]
+theorem iotaSeq_succ {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (n m : ℕ) :
     iotaSeq tower n (m + 1) = (tower.iota (n + m)).comp (iotaSeq tower n m) := rfl
 
 /-- Connection theorem: Exact identity with canonical TensorTowerColimit `iota_seq`. -/
-theorem iotaSeq_eq_tensorTowerColimit_iota_seq {R : Type*} [CommRing R]
+theorem iotaSeq_eq_tensorTowerColimit_iota_seq {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (n m : ℕ) :
     iotaSeq tower n m = iota_seq T tower.iota n m := by
@@ -81,7 +81,7 @@ theorem iotaSeq_eq_tensorTowerColimit_iota_seq {R : Type*} [CommRing R]
 /-! ### 2. Native Mathlib Module Colimit -/
 
 /-- The transition map from stage `m` to stage `n`, for `m ≤ n`. -/
-def holographicStageMap {R : Type*} [CommRing R]
+def holographicStageMap {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (m n : ℕ) (h : m ≤ n) :
     T m →ₗ[R] T n :=
@@ -91,7 +91,7 @@ def holographicStageMap {R : Type*} [CommRing R]
     (LinearMap.id : T m →ₗ[R] T m)
 
 @[simp]
-theorem holographicStageMap_refl {R : Type*} [CommRing R]
+theorem holographicStageMap_refl {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (m : ℕ) :
     holographicStageMap tower m m le_rfl = LinearMap.id := by
@@ -101,7 +101,7 @@ theorem holographicStageMap_refl {R : Type*} [CommRing R]
       (next := fun {k} f => (tower.iota k).comp f)
       (x := (LinearMap.id : T m →ₗ[R] T m)))
 
-theorem holographicStageMap_succ {R : Type*} [CommRing R]
+theorem holographicStageMap_succ {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (m n : ℕ) (h : m ≤ n) :
     holographicStageMap tower m (n + 1) (Nat.le_trans h (Nat.le_succ n)) =
@@ -110,7 +110,7 @@ theorem holographicStageMap_succ {R : Type*} [CommRing R]
   rw [Nat.leRecOn_trans h (Nat.le_succ n)]
   rw [Nat.leRecOn_succ']
 
-theorem holographicStageMap_apply_trans {R : Type*} [CommRing R]
+theorem holographicStageMap_apply_trans {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (m n k : ℕ)
     (hmn : m ≤ n) (hnk : n ≤ k) (x : T m) :
@@ -125,7 +125,7 @@ theorem holographicStageMap_apply_trans {R : Type*} [CommRing R]
       exact congrArg (fun y => tower.iota k y) ih
 
 /-- The successor maps of a `HolographicTower` form a Mathlib directed system. -/
-instance holographicDirectedSystem {R : Type*} [CommRing R]
+instance holographicDirectedSystem {R : Type*} [Ring R]
     (T : ℕ → Type) [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) :
     DirectedSystem T (fun m n h => holographicStageMap tower m n h) where
@@ -139,7 +139,7 @@ instance holographicDirectedSystem {R : Type*} [CommRing R]
 
 /-- The canonical Mathlib cocone on the algebraic module direct limit of this
 successor tower. -/
-noncomputable abbrev holographicModuleCocone {R : Type*} [CommRing R]
+noncomputable abbrev holographicModuleCocone {R : Type*} [Ring R]
     (T : ℕ → Type) [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) :
     Cocone (ModuleCat.directLimitDiagram T
@@ -149,7 +149,7 @@ noncomputable abbrev holographicModuleCocone {R : Type*} [CommRing R]
 /-- The canonical module direct limit of a `HolographicTower` has the genuine
 universal property of a colimit in `ModuleCat R`. This is an algebraic
 filtered colimit; it asserts no topology, completion, or analytic limit. -/
-noncomputable def holographicModuleCoconeIsColimit {R : Type*} [CommRing R]
+noncomputable def holographicModuleCoconeIsColimit {R : Type*} [Ring R]
     (T : ℕ → Type) [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) :
     IsColimit (holographicModuleCocone T tower) :=
@@ -160,18 +160,18 @@ noncomputable def holographicModuleCoconeIsColimit {R : Type*} [CommRing R]
 
 /-- A compatible family of linear maps from the stages into a chosen target.
 This structure alone does not assert that the target is a colimit. -/
-structure HolographicColimitCocone {R : Type*} [CommRing R]
+structure HolographicColimitCocone {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (T_inf : Type*) [AddCommGroup T_inf] [Module R T_inf] where
   psi : ∀ n, T n →ₗ[R] T_inf
   psi_comm : ∀ n, (psi (n + 1)).comp (tower.iota n) = psi n
 
 /-- Constructive model witness: the zero cocone over `zeroHolographicTower`. -/
-def zeroHolographicColimitCocone {R : Type*} [CommRing R] :
+def zeroHolographicColimitCocone {R : Type*} [Ring R] :
     HolographicColimitCocone (zeroHolographicTower (R := R)) R :=
   ⟨fun _ => 0, fun _ => LinearMap.zero_comp 0⟩
 
-instance {R : Type*} [CommRing R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
+instance {R : Type*} [Ring R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     {T_inf : Type*} [AddCommGroup T_inf] [Module R T_inf]
     (tower : HolographicTower (R := R) T) :
     Inhabited (HolographicColimitCocone tower T_inf) :=
@@ -181,7 +181,7 @@ instance {R : Type*} [CommRing R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)
 Theorem: Sequential cocone compatibility.
 Evaluating the colimit morphism at depth `n + m` on `iotaSeq n m v` recovers `psi n v`.
 -/
-theorem psi_comp_iotaSeq {R : Type*} [CommRing R]
+theorem psi_comp_iotaSeq {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     {T_inf : Type*} [AddCommGroup T_inf] [Module R T_inf]
     (tower : HolographicTower (R := R) T)
@@ -198,7 +198,7 @@ theorem psi_comp_iotaSeq {R : Type*} [CommRing R]
     exact ih
 
 /-- Functional evaluation invariance: Any boundary linear functional evaluates identically along the tower. -/
-theorem compatible_family_evaluation_invariant {R : Type*} [CommRing R]
+theorem compatible_family_evaluation_invariant {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     {T_inf : Type*} [AddCommGroup T_inf] [Module R T_inf]
     (tower : HolographicTower (R := R) T)
@@ -210,7 +210,7 @@ theorem compatible_family_evaluation_invariant {R : Type*} [CommRing R]
   exact h_eval
 
 /-- Connection theorem: Colimit trace commutativity derived from canonical TensorTowerColimit. -/
-theorem compatible_family_trace_invariant {R : Type*} [CommRing R]
+theorem compatible_family_trace_invariant {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     {T_inf : Type*} [AddCommGroup T_inf] [Module R T_inf]
     (tower : HolographicTower (R := R) T)
@@ -234,13 +234,13 @@ instance {T : ℕ → Type*} : Inhabited (CausalConeFamily T) :=
   ⟨⟨fun _ _ => True⟩⟩
 
 /-- Preservation of causal cones under the bonding intertwiners. -/
-def PreservesCausalCone {R : Type*} [CommRing R]
+def PreservesCausalCone {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (cones : CausalConeFamily T) : Prop :=
   ∀ (n : ℕ) (v : T n), cones.cone n v → cones.cone (n + 1) (tower.iota n v)
 
 /-- Theorem: Causal cone membership is stably preserved across arbitrary depth $m$. -/
-theorem causal_cone_seq_stable {R : Type*} [CommRing R]
+theorem causal_cone_seq_stable {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (cones : CausalConeFamily T)
     (h_pres : PreservesCausalCone tower cones)
@@ -254,22 +254,22 @@ theorem causal_cone_seq_stable {R : Type*} [CommRing R]
 /-! ### 5. Coherent Idempotent Projectors & Stage Invariance -/
 
 /-- Family of idempotent projectors `P_n : T n →ₗ[R] T n` on each discrete stage. -/
-structure ProjectorFamily {R : Type*} [CommRing R]
+structure ProjectorFamily {R : Type*} [Ring R]
     (T : ℕ → Type*) [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] where
   P : ∀ n, T n →ₗ[R] T n
   idempotent : ∀ n (v : T n), P n (P n v) = P n v
 
 /-- Constructive model witness: the identity stage projector family. -/
-def idProjectorFamily {R : Type*} [CommRing R] :
+def idProjectorFamily {R : Type*} [Ring R] :
     ProjectorFamily (R := R) (fun _ : ℕ => R) :=
   ⟨fun _ => LinearMap.id, fun _ _ => rfl⟩
 
-instance {R : Type*} [CommRing R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] :
+instance {R : Type*} [Ring R] {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] :
     Inhabited (ProjectorFamily (R := R) T) :=
   ⟨⟨fun _ => LinearMap.id, fun _ _ => rfl⟩⟩
 
 /-- Intertwining condition: The projectors commute with the bonding maps. -/
-def IntertwinesProjector {R : Type*} [CommRing R]
+def IntertwinesProjector {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (projs : ProjectorFamily (R := R) T) : Prop :=
   ∀ n, (tower.iota n).comp (projs.P n) = (projs.P (n + 1)).comp (tower.iota n)
@@ -278,7 +278,7 @@ def IntertwinesProjector {R : Type*} [CommRing R]
 Theorem: Sequential intertwining.
 Projectors commute with `iotaSeq` across arbitrary depth $m$.
 -/
-theorem projector_comm_iotaSeq {R : Type*} [CommRing R]
+theorem projector_comm_iotaSeq {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (projs : ProjectorFamily (R := R) T)
     (h_inter : IntertwinesProjector tower projs)
@@ -293,13 +293,13 @@ theorem projector_comm_iotaSeq {R : Type*} [CommRing R]
     rfl
 
 /-- Complementary projector $Q_n = \text{id} - P_n$ is also idempotent. -/
-def complementProjector {R : Type*} [CommRing R]
+def complementProjector {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (projs : ProjectorFamily (R := R) T) (n : ℕ) : T n →ₗ[R] T n :=
   LinearMap.id - projs.P n
 
 @[simp]
-theorem complement_idempotent {R : Type*} [CommRing R]
+theorem complement_idempotent {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (projs : ProjectorFamily (R := R) T) (n : ℕ) (v : T n) :
     complementProjector projs n (complementProjector projs n v) = complementProjector projs n v := by
@@ -308,7 +308,7 @@ theorem complement_idempotent {R : Type*} [CommRing R]
 
 /-- Orthogonal annihilation: $P_n Q_n = 0$. -/
 @[simp]
-theorem projector_annihilation {R : Type*} [CommRing R]
+theorem projector_annihilation {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (projs : ProjectorFamily (R := R) T) (n : ℕ) (v : T n) :
     projs.P n (complementProjector projs n v) = 0 := by
@@ -319,7 +319,7 @@ theorem projector_annihilation {R : Type*} [CommRing R]
 Theorem: Sequential intertwining of the complementary projector $Q_n = \text{id} - P_n$.
 If `projs` intertwines the tower bonding maps, then `complementProjector projs` also commutes with `iotaSeq`.
 -/
-theorem complement_intertwines_iotaSeq {R : Type*} [CommRing R]
+theorem complement_intertwines_iotaSeq {R : Type*} [Ring R]
     {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)]
     (tower : HolographicTower (R := R) T) (projs : ProjectorFamily (R := R) T)
     (h_inter : IntertwinesProjector tower projs)

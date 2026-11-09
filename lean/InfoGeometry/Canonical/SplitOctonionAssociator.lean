@@ -23,7 +23,7 @@ open scoped BigOperators
 
 namespace ZornMatrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The split-octonion associator defect on the Zorn carrier. -/
 def associatorDefect (x y z : InfoGeometry.Canonical.ZornMatrix R) :

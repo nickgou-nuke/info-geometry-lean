@@ -42,7 +42,7 @@ then for nonzero `λ` and `μ`,
 -/
 theorem projective_incidence_well_defined
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_left :
@@ -61,7 +61,7 @@ theorem projective_incidence_well_defined
     rw [h_left l X (m • Y)]
     rw [h_right m X Y]
     rw [hXY]
-    ring
+    noncomm_ring
   · intro hScaled
     rw [h_left l X (m • Y)] at hScaled
     rw [h_right m X Y] at hScaled
@@ -81,7 +81,7 @@ does not require nonzero scalars and does not require `NoZeroDivisors`.
 -/
 theorem projective_incidence_scaled_of_zero
     {R Carrier : Type*}
-    [CommRing R]
+    [Ring R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_left :
@@ -97,7 +97,7 @@ theorem projective_incidence_scaled_of_zero
   rw [h_left l X (m • Y)]
   rw [h_right m X Y]
   rw [hXY]
-  ring
+  noncomm_ring
 
 /--
 Erlangen-style incidence invariance under a symmetry action.
@@ -112,7 +112,7 @@ then the zero-incidence relation is invariant:
 -/
 theorem incidence_invariant_of_polar_scaled
     {R G Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     (polar : Carrier → Carrier → R)
     (act : G → Carrier → Carrier)
     (scale : G → R)
@@ -145,7 +145,7 @@ unchanged:
 -/
 theorem projective_erlangen_incidence_invariant
     {R G Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_left :
@@ -200,7 +200,7 @@ incidence fiber.
 -/
 theorem incidenceFiber_scale_left
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_left :
@@ -230,7 +230,7 @@ membership in an incidence fiber.
 -/
 theorem incidenceFiber_scale_right
     {R Carrier : Type*}
-    [CommRing R] [NoZeroDivisors R]
+    [Ring R] [NoZeroDivisors R]
     [AddCommGroup Carrier] [Module R Carrier]
     (polar : Carrier → Carrier → R)
     (h_right :

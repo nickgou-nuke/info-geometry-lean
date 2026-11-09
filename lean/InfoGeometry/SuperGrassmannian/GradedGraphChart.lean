@@ -62,7 +62,7 @@ noncomputable def graphQuotientEquiv (f : U →ₗ[A] W) :
 
 section Grading
 
-variable {k ι : Type*} [CommRing k] [DecidableEq ι]
+variable {k ι : Type*} [Ring k] [DecidableEq ι]
   [Module k U] [Module k W]
   (GU : ι → Submodule k U) (GW : ι → Submodule k W)
   [Decomposition GU] [Decomposition GW]

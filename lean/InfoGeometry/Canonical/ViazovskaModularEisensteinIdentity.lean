@@ -15,7 +15,7 @@ This module formalizes:
 4. Minimal vector count identities: $a_1(E_8) = 240$ and $a_2(\Lambda_{24}) = 196560 = 240 \times 819$.
 -/
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Theta function of E₈ lattice in terms of Eisenstein series E₄. -/
 def thetaE8 (E4 : R) : R := E4
@@ -31,9 +31,9 @@ theorem thetaLeech24_eisenstein_expressibility
     thetaLeech24 E4 Delta = E6 ^ 2 + (1008 : R) * Delta := by
   dsimp [thetaLeech24]
   calc E4 ^ 3 - (720 : R) * Delta
-    _ = (E4 ^ 3 - E6 ^ 2) + E6 ^ 2 - (720 : R) * Delta := by ring
+    _ = (E4 ^ 3 - E6 ^ 2) + E6 ^ 2 - (720 : R) * Delta := by abel
     _ = (1728 : R) * Delta + E6 ^ 2 - (720 : R) * Delta := by rw [h_ramanujan]
-    _ = E6 ^ 2 + (1008 : R) * Delta := by ring
+    _ = E6 ^ 2 + (1008 : R) * Delta := by noncomm_ring
 
 /-- Minimal root vector count of E₈ lattice: a₁ = 240. -/
 def e8MinimalVectorCount : ℕ := 240

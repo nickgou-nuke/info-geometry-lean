@@ -115,7 +115,7 @@ structure ModularSuperTorus where
 /--
 Ternaform unifying boost, rotation, and scale.
 -/
-structure Ternaform (R : Type*) [CommRing R] where
+structure Ternaform (R : Type*) [Ring R] where
   boost : R
   rotation : R
   scale : R

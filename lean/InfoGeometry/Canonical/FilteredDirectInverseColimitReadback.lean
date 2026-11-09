@@ -10,7 +10,7 @@ noncomputable section
 
 namespace FilteredColimit.InductiveCocone
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable {I : Type*} [Preorder I]
 variable {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
 variable {sys : DirectInductiveSystem R I A}

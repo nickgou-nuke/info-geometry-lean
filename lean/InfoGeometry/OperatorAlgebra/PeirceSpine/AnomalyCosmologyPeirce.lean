@@ -42,22 +42,20 @@ operator identity. -/
 theorem cubic_chiral_term_is_half_commutator (A C : B) :
     (2 : ℤ) • (genV P A C * genJ P A C) =
       comm (genSig P A C) (genPhi P A C) := by
-  exact (archetype_A50_second_order_defect_and_derivation_mismatch hP A C).2.2.2.2.2.2.1.symm
+  simp only [genV, genJ, genSig, genPhi, anticomm, comm]
+  peirce_nf hP
 
 omit hP in
-/-- The charge difference is controlled by the two orthogonal sector
-idempotents. The hypotheses are precisely the sector relations of the owner
-theorem; no classification of gauge groups follows from this identity. -/
+/-- The charge difference depends on the weak-sector idempotents; the color and
+scalar terms cancel without orthogonality assumptions. No classification of
+gauge groups follows from this identity. -/
 theorem charge_difference_from_sector_data
-    {P_O2 P_H1 P_H2 P_C X : B}
-    (hH1 : P_H1 * P_H1 = P_H1) (hH2 : P_H2 * P_H2 = P_H2)
-    (hH12 : P_H1 * P_H2 = 0) (hH21 : P_H2 * P_H1 = 0)
-    (hO_H1 : P_O2 * P_H1 = 0) (hH2_O : P_H2 * P_O2 = 0)
-    (hC_H1 : P_C * P_H1 = 0) (hH2_C : P_H2 * P_C = 0) :
+    {P_O2 P_H1 P_H2 P_C : B} :
     chargeQ6 P_O2 P_H2 P_C - chargeY6 P_O2 P_H1 P_H2 P_C =
       (3 : ℤ) • quatChiralInv P_H1 P_H2 := by
-  exact (quaternionic_symmetry_breaking_and_charge_operators
-    hH1 hH2 hH12 hH21 hO_H1 hH2_O hC_H1 hH2_C X).1
+  unfold chargeQ6 chargeY6 quatChiralInv
+  simp only [zsmul_add, zsmul_sub]
+  abel
 
 omit hP in
 /-- If the two quaternionic corner readouts balance, the post-minus-pre
@@ -65,33 +63,20 @@ charge difference has zero additive trace. This is a trace statement about
 the sector operators; it does not assert cancellation of a field-theoretic
 gauge anomaly. -/
 theorem balanced_quaternionic_charge_trace_cancellation
-    {R : Type*} [Ring R] (τ : B → R)
-    (hAdd : ∀ X Y : B, τ (X + Y) = τ X + τ Y)
-    (hSub : ∀ X Y : B, τ (X - Y) = τ X - τ Y)
-    {P_O2 P_H1 P_H2 P_C X : B}
-    (hH1 : P_H1 * P_H1 = P_H1) (hH2 : P_H2 * P_H2 = P_H2)
-    (hH12 : P_H1 * P_H2 = 0) (hH21 : P_H2 * P_H1 = 0)
-    (hO_H1 : P_O2 * P_H1 = 0) (hH2_O : P_H2 * P_O2 = 0)
-    (hC_H1 : P_C * P_H1 = 0) (hH2_C : P_H2 * P_C = 0)
+    {R : Type*} [Ring R] (τ : B →+ R)
+    {P_O2 P_H1 P_H2 P_C : B}
     (hBalance : τ P_H2 = τ P_H1) :
     τ (chargeQ6 P_O2 P_H2 P_C - chargeY6 P_O2 P_H1 P_H2 P_C) = 0 := by
-  have hZero : τ (0 : B) = 0 := by
-    have h := hSub (0 : B) 0
-    simpa using h
-  let traceHom : B →+ R :=
-    { toFun := τ
-      map_zero' := hZero
-      map_add' := hAdd }
   have hCharge := charge_difference_from_sector_data
-    (X := X) hH1 hH2 hH12 hH21 hO_H1 hH2_O hC_H1 hH2_C
+    (P_O2 := P_O2) (P_H1 := P_H1) (P_H2 := P_H2) (P_C := P_C)
   have hInv : τ (quatChiralInv P_H1 P_H2) = τ P_H2 - τ P_H1 := by
     unfold quatChiralInv
-    exact hSub P_H2 P_H1
+    exact map_sub τ P_H2 P_H1
   calc
     τ (chargeQ6 P_O2 P_H2 P_C - chargeY6 P_O2 P_H1 P_H2 P_C)
         = τ ((3 : ℤ) • quatChiralInv P_H1 P_H2) := by rw [hCharge]
     _ = (3 : ℤ) • τ (quatChiralInv P_H1 P_H2) := by
-      simpa [traceHom] using traceHom.map_zsmul (3 : ℤ) (quatChiralInv P_H1 P_H2)
+      exact map_zsmul τ (3 : ℤ) (quatChiralInv P_H1 P_H2)
     _ = 0 := by
       rw [hInv, hBalance, sub_self, zsmul_zero]
 
@@ -99,12 +84,11 @@ omit hP in
 /-- A cyclic additive trace kills the commutator appearing in the cubic
 identity. This conclusion is strictly algebraic. -/
 lemma cubic_commutator_trace_zero
-    {R : Type*} [Ring R] (τ : B → R)
-    (hSub : ∀ X Y : B, τ (X - Y) = τ X - τ Y)
+    {R : Type*} [Ring R] (τ : B →+ R)
     (hCyc : ∀ X Y : B, τ (X * Y) = τ (Y * X)) (A C : B) :
     τ (comm (genSig P A C) (genPhi P A C)) = 0 := by
   unfold comm
-  rw [hSub, hCyc (genSig P A C) (genPhi P A C), sub_self]
+  rw [map_sub, hCyc (genSig P A C) (genPhi P A C), sub_self]
 
 /-- The fourth power of the grading-plus-Peirce operator has the exact
 operator-polynomial decomposition into a constant term, a linear interaction,
@@ -267,25 +251,15 @@ def acDoubleCommutatorArchetype {B : Type*} [Ring B] :
   evidence := fun input => current_double_commutator_identity
     input.cut.property input.forwardAmplitude input.backwardAmplitude
 
-/-- Complete data for the sector-balance trace statement.  All orthogonality,
-idempotency, and trace-balance premises are carried in the archetype input. -/
+/-- Data for the sector-balance trace statement. The charge operators retain
+their color, weak, and scalar sector entries; this trace conclusion requires
+only equality of the two weak-sector traces. -/
 structure ACChargeBalanceInput (B R : Type*) [Ring B] [Ring R] where
-  trace : B → R
-  traceAdd : ∀ X Y : B, trace (X + Y) = trace X + trace Y
-  traceSub : ∀ X Y : B, trace (X - Y) = trace X - trace Y
+  trace : B →+ R
   colorSector : B
   weakSectorOne : B
   weakSectorTwo : B
   scalarSector : B
-  witness : B
-  weakOneIdempotent : weakSectorOne * weakSectorOne = weakSectorOne
-  weakTwoIdempotent : weakSectorTwo * weakSectorTwo = weakSectorTwo
-  weakOrthogonal12 : weakSectorOne * weakSectorTwo = 0
-  weakOrthogonal21 : weakSectorTwo * weakSectorOne = 0
-  colorOrthogonal : colorSector * weakSectorOne = 0
-  weakColorOrthogonal : weakSectorTwo * colorSector = 0
-  scalarOrthogonal : scalarSector * weakSectorOne = 0
-  weakScalarOrthogonal : weakSectorTwo * scalarSector = 0
   traceBalance : trace weakSectorTwo = trace weakSectorOne
 
 /-- Under the exact sector and trace-balance premises, the charge-difference
@@ -301,12 +275,8 @@ def acBalancedChargeTraceArchetype {B R : Type*} [Ring B] [Ring R] :
           input.scalarSector)
     chargeTrace = 0
   evidence := fun input => balanced_quaternionic_charge_trace_cancellation
-    input.trace input.traceAdd input.traceSub
-    (X := input.witness)
-    input.weakOneIdempotent input.weakTwoIdempotent
-    input.weakOrthogonal12 input.weakOrthogonal21
-    input.colorOrthogonal input.weakColorOrthogonal
-    input.scalarOrthogonal input.weakScalarOrthogonal input.traceBalance
+    input.trace
+    input.traceBalance
 
 /-! ## Proof-carrying causal order
 

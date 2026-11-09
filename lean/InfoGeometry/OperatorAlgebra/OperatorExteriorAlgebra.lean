@@ -20,8 +20,9 @@ PART 1: Operator-Valued 1-Forms and Alternating 2-Forms
 =============================================================================
 -/
 
-/-- An operator-valued 1-form is an R-linear map from V to the operator algebra A. -/
-abbrev Op1Form (R V A : Type*) [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A] :=
+/-- An operator-valued 1-form is an R-linear map from V to the operator algebra A
+over any (possibly non-commutative) ring `R`. -/
+abbrev Op1Form (R V A : Type*) [Ring R] [AddCommGroup V] [Module R V] [Ring A] [Module R A] :=
   V →ₗ[R] A
 
 /-- An operator-valued alternating 2-form on V with values in A. -/
@@ -308,8 +309,10 @@ def map2 (f : A →ₐ[R] B) (ω : Op2Form R V A) : Op2Form R V B where
 
 end ValueTransport
 
-/-- Pullback of an operator 1-form along a linear map ϕ : W → V. -/
-def pullback1 (ϕ : W →ₗ[R] V) (α : Op1Form R V A) : Op1Form R W A :=
+/-- Pullback of an operator 1-form along a linear map ϕ : W → V over any `[Ring R]`. -/
+def pullback1 {R V W A : Type*} [Ring R] [AddCommGroup V] [Module R V]
+    [AddCommGroup W] [Module R W] [Ring A] [Module R A]
+    (ϕ : W →ₗ[R] V) (α : Op1Form R V A) : Op1Form R W A :=
   α.comp ϕ
 
 /-- Pullback of an operator 2-form along a linear map ϕ : W → V. -/
@@ -342,7 +345,8 @@ def pullback2 (ϕ : W →ₗ[R] V) (ω : Op2Form R V A) : Op2Form R W A where
     exact ω.alt (ϕ w)
 
 @[simp]
-theorem pullback1_apply
+theorem pullback1_apply {R V W A : Type*} [Ring R] [AddCommGroup V] [Module R V]
+    [AddCommGroup W] [Module R W] [Ring A] [Module R A]
     (ϕ : W →ₗ[R] V) (α : Op1Form R V A) (w : W) :
     (pullback1 ϕ α) w = α (ϕ w) :=
   rfl
@@ -368,11 +372,13 @@ PART 4: Operator Derivations and the Leibniz Rule for Wedge Products
 =============================================================================
 -/
 
-structure OpDerivation (R A : Type*) [CommRing R] [Ring A] [Algebra R A] where
+structure OpDerivation (R A : Type*) [Ring R] [Ring A] [Module R A] where
   toLinearMap : A →ₗ[R] A
   leibniz' : ∀ x y : A, toLinearMap (x * y) = toLinearMap x * y + x * toLinearMap y
 
 namespace OpDerivation
+
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
 
 instance : CoeFun (OpDerivation R A) (fun _ => A → A) where
   coe D := D.toLinearMap
@@ -386,8 +392,9 @@ variable (D : OpDerivation R A)
 
 end OpDerivation
 
-/-- Action of an operator derivation on a 1-form. -/
-def applyDeriv1 (D : OpDerivation R A) (α : Op1Form R V A) : Op1Form R V A :=
+/-- Action of an operator derivation on a 1-form over any `[Ring R]`. -/
+def applyDeriv1 {R V A : Type*} [Ring R] [AddCommGroup V] [Module R V] [Ring A] [Module R A]
+    (D : OpDerivation R A) (α : Op1Form R V A) : Op1Form R V A :=
   D.toLinearMap.comp α
 
 /-- Action of an operator derivation on a 2-form. -/
@@ -422,7 +429,7 @@ def applyDeriv2 (D : OpDerivation R A) (ω : Op2Form R V A) : Op2Form R V A wher
     rw [halt, D.toLinearMap.map_zero]
 
 @[simp]
-theorem applyDeriv1_apply
+theorem applyDeriv1_apply {R V A : Type*} [Ring R] [AddCommGroup V] [Module R V] [Ring A] [Module R A]
     (D : OpDerivation R A) (α : Op1Form R V A) (v : V) :
     (applyDeriv1 D α) v = D (α v) :=
   rfl

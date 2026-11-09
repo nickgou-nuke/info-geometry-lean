@@ -13,7 +13,7 @@ natively within the safe sandbox layer to protect the primary codebase.
 namespace InfoGeometry.Sandbox.ChernIsomorphismSandbox
 
 /-- Representation of the abstract Even De Rham / Cyclic Cohomology Module space -/
-structure EvenCohomology (A : Type*) (R : Type*) [CommRing R] where
+structure EvenCohomology (A : Type*) (R : Type*) [Ring R] where
   H : Type*
   [instAddCommGroup : AddCommGroup H]
   [instModule : Module R H]
@@ -32,7 +32,7 @@ attribute [instance] K0Group.instAddCommGroup
   The Chern Character Isomorphism Structure.
   Maps the discrete K-theory invariants into the continuous differential forms space.
 -/
-structure ChernCharacter (A : Type*) (R : Type*) [CommRing R] 
+structure ChernCharacter (A : Type*) (R : Type*) [Ring R] 
     (K : K0Group A) (H_ev : EvenCohomology A R) where
   ch_map : K.G →+ H_ev.H
   -- The core requirement: the map is a strict isomorphism of topological invariants
@@ -47,7 +47,7 @@ def m2_chern_isomorphism_rank : ℤ := 1
   Proves that the Chern character natively preserves the trivial vacuum state (0)
   under the m2_chern_isomorphism_rank = 1 condition.
 -/
-theorem chern_map_preserves_zero (A : Type*) (R : Type*) [CommRing R]
+theorem chern_map_preserves_zero (A : Type*) (R : Type*) [Ring R]
     (K : K0Group A) (H_ev : EvenCohomology A R) (ch : ChernCharacter A R K H_ev)
     (h_rank : m2_chern_isomorphism_rank = 1) :
     ch.ch_map 0 = 0 := by

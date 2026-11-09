@@ -42,7 +42,7 @@ namespace InfoGeometry.SuperGrassmannian.FiveGradedLieSuperalgebra
 
 open scoped Matrix
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ### Section 1: Polynomial Factorization and Characteristic Roots -/
 
@@ -50,25 +50,25 @@ variable {R : Type*} [CommRing R]
     $x(x^2 - 1)(x^2 - 4) = x^5 - 5x^3 + 4x$. -/
 theorem quintic_polynomial_factorization (x : R) :
     x * (x ^ 2 - 1) * (x ^ 2 - 4) = x ^ 5 - 5 * x ^ 3 + 4 * x := by
-  ring
+  noncomm_ring
 
 /-- **Theorem (Linear Factor Expansion)**:
     $x(x - 1)(x + 1)(x - 2)(x + 2) = x^5 - 5x^3 + 4x$. -/
 theorem five_grade_roots_expansion (x : R) :
     x * (x - 1) * (x + 1) * (x - 2) * (x + 2) = x ^ 5 - 5 * x ^ 3 + 4 * x := by
-  ring
+  noncomm_ring
 
 /-- **Theorem (Bosonic 3-Graded Roots)**:
     $x(x - 2)(x + 2) = x^3 - 4x$. -/
 theorem three_grade_bosonic_roots (x : R) :
     x * (x - 2) * (x + 2) = x ^ 3 - 4 * x := by
-  ring
+  noncomm_ring
 
 /-- **Theorem (Fermionic Odd Roots)**:
     $(x - 1)(x + 1) = x^2 - 1$. -/
 theorem odd_fermionic_roots (x : R) :
     (x - 1) * (x + 1) = x ^ 2 - 1 := by
-  ring
+  noncomm_ring
 
 /-! ### Section 2: Concrete $3 \times 3$ Kantor–Tanaka Matrix Model -/
 
@@ -91,7 +91,7 @@ theorem adH_01 (X : Matrix (Fin 3) (Fin 3) R) : adH X 0 1 = X 0 1 := by
 
 theorem adH_02 (X : Matrix (Fin 3) (Fin 3) R) : adH X 0 2 = 2 * X 0 2 := by
   dsimp [adH, H_grading]
-  simp [Matrix.mul_apply, Fin.sum_univ_three]; ring
+  simp [Matrix.mul_apply, Fin.sum_univ_three]; noncomm_ring
 
 theorem adH_10 (X : Matrix (Fin 3) (Fin 3) R) : adH X 1 0 = - X 1 0 := by
   dsimp [adH, H_grading]
@@ -107,7 +107,7 @@ theorem adH_12 (X : Matrix (Fin 3) (Fin 3) R) : adH X 1 2 = X 1 2 := by
 
 theorem adH_20 (X : Matrix (Fin 3) (Fin 3) R) : adH X 2 0 = -2 * X 2 0 := by
   dsimp [adH, H_grading]
-  simp [Matrix.mul_apply, Fin.sum_univ_three]; ring
+  simp [Matrix.mul_apply, Fin.sum_univ_three]; noncomm_ring
 
 theorem adH_21 (X : Matrix (Fin 3) (Fin 3) R) : adH X 2 1 = - X 2 1 := by
   dsimp [adH, H_grading]
@@ -128,19 +128,19 @@ theorem quintic_01 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 0 1 = 0 := by
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply]
   repeat rw [adH_01]
-  simp; ring
+  simp; noncomm_ring
 
 theorem quintic_02 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 0 2 = 0 := by
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply]
   repeat rw [adH_02]
-  simp; ring
+  simp; noncomm_ring
 
 theorem quintic_10 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 1 0 = 0 := by
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply]
   repeat rw [adH_10]
-  simp; ring
+  simp; noncomm_ring
 
 theorem quintic_11 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 1 1 = 0 := by
@@ -151,19 +151,19 @@ theorem quintic_12 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 1 2 = 0 := by
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply]
   repeat rw [adH_12]
-  simp; ring
+  simp; noncomm_ring
 
 theorem quintic_20 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 2 0 = 0 := by
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply]
   repeat rw [adH_20]
-  simp; ring
+  simp; noncomm_ring
 
 theorem quintic_21 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 2 1 = 0 := by
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply]
   repeat rw [adH_21]
-  simp; ring
+  simp; noncomm_ring
 
 theorem quintic_22 (X : Matrix (Fin 3) (Fin 3) R) :
     (adH (adH (adH (adH (adH X)))) - 5 • adH (adH (adH X)) + 4 • adH X) 2 2 = 0 := by
@@ -204,7 +204,7 @@ theorem bosonic_01 (X : Matrix (Fin 3) (Fin 3) R) (h : X 0 1 = 0) : (adH (adH (a
 theorem bosonic_02 (X : Matrix (Fin 3) (Fin 3) R) : (adH (adH (adH X))) 0 2 = (4 • adH X) 0 2 := by
   simp only [Matrix.smul_apply]
   repeat rw [adH_02]
-  simp; ring
+  simp; noncomm_ring
 
 theorem bosonic_10 (X : Matrix (Fin 3) (Fin 3) R) (h : X 1 0 = 0) : (adH (adH (adH X))) 1 0 = (4 • adH X) 1 0 := by
   simp only [Matrix.smul_apply, adH_10, h, smul_zero, neg_zero]
@@ -218,7 +218,7 @@ theorem bosonic_12 (X : Matrix (Fin 3) (Fin 3) R) (h : X 1 2 = 0) : (adH (adH (a
 theorem bosonic_20 (X : Matrix (Fin 3) (Fin 3) R) : (adH (adH (adH X))) 2 0 = (4 • adH X) 2 0 := by
   simp only [Matrix.smul_apply]
   repeat rw [adH_20]
-  simp; ring
+  simp; noncomm_ring
 
 theorem bosonic_21 (X : Matrix (Fin 3) (Fin 3) R) (h : X 2 1 = 0) : (adH (adH (adH X))) 2 1 = (4 • adH X) 2 1 := by
   simp only [Matrix.smul_apply, adH_21, h, smul_zero, neg_zero]
@@ -261,7 +261,7 @@ theorem fermionic_02 (X : Matrix (Fin 3) (Fin 3) R) (h : X 0 2 = 0) : (adH (adH 
 
 theorem fermionic_10 (X : Matrix (Fin 3) (Fin 3) R) : (adH (adH (adH X))) 1 0 = adH X 1 0 := by
   repeat rw [adH_10]
-  ring
+  abel
 
 theorem fermionic_11 (X : Matrix (Fin 3) (Fin 3) R) : (adH (adH (adH X))) 1 1 = adH X 1 1 := by
   rw [adH_11, adH_11]
@@ -275,7 +275,7 @@ theorem fermionic_20 (X : Matrix (Fin 3) (Fin 3) R) (h : X 2 0 = 0) : (adH (adH 
 
 theorem fermionic_21 (X : Matrix (Fin 3) (Fin 3) R) : (adH (adH (adH X))) 2 1 = adH X 2 1 := by
   repeat rw [adH_21]
-  ring
+  abel
 
 theorem fermionic_22 (X : Matrix (Fin 3) (Fin 3) R) : (adH (adH (adH X))) 2 2 = adH X 2 2 := by
   rw [adH_22, adH_22]

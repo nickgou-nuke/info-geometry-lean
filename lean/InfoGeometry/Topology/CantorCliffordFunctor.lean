@@ -11,7 +11,7 @@ noncomputable section
 
 namespace InfoGeometry.Topology
 
-variable (R : Type*) [CommRing R] [Algebra ℝ R]
+variable (R : Type*) [Ring R] [Algebra ℝ R]
 abbrev V (n : ℕ) : Type := Fin (2 * n) → ℝ
 variable (Q : ∀ n, QuadraticForm ℝ (V n))
 variable (h_Q_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : V m), 

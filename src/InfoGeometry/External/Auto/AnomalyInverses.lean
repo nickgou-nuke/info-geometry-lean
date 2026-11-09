@@ -21,7 +21,7 @@ A matrix `X` is the Drazin inverse of `A` with index `k` if it satisfies
 the three defining conditions of Drazin inverses. 
 -/
 def IsDrazinInverse {n : Type*} [Fintype n] [DecidableEq n]
-    {R : Type*} [CommRing R] (A X : Matrix n n R) (k : ℕ) : Prop :=
+    {R : Type*} [Ring R] (A X : Matrix n n R) (k : ℕ) : Prop :=
   A * X = X * A ∧
     X * A * X = X ∧
       A ^ (k + 1) * X = A ^ k

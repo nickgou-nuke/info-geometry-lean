@@ -397,57 +397,28 @@ theorem derivedStress_swap
       P.derivedStress.derivedStress U Y X :=
   P.derivedStress.derivedStress_swap U X Y
 
+/-- Transported stress is the Onsager response evaluated on the transported
+carrier probes. -/
+@[rep_depth thermo]
+theorem derivedStress_eq_operatorOnsager
+    (U : Op)
+    (X Y : Carrier) :
+    P.derivedStress.derivedStress U X Y =
+      P.operatorOnsager.form
+        (P.stressProbe (P.derivation U) X)
+        (P.stressProbe (P.derivation U) Y) := by
+  rw [P.derivedStress_apply, P.onsager_controls_stress]
+
+/-- The diagonal derived-stress response is nonnegative by positivity of the
+operator Onsager form. -/
+@[rep_depth thermo]
+theorem derivedStress_apply_self_nonnegative
+    (U : Op)
+    (X : Carrier) :
+    0 ≤ P.derivedStress.derivedStress U X X := by
+  rw [P.derivedStress_eq_operatorOnsager]
+  exact P.operatorOnsager_apply_self_nonnegative _
+
 end SusceptibilityOnsagerStressPacket
-
-/-! ## 7. Owner target -/
-
-/--
-Owner target for installing a susceptibility/Onsager/stress/derivation packet.
--/
-def SusceptibilityOnsagerStressOwnerTarget
-    (Op Field Response Carrier : Type*)
-    [NormedAddCommGroup Op] [NormedSpace ℝ Op] [Mul Op]
-    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
-    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
-    [AddCommMonoid Carrier] [Module ℝ Carrier] : Prop :=
-  ∀ (P : SusceptibilityOnsagerStressPacket Op Field Response Carrier),
-    (∀ (A B : Op),
-      P.operatorOnsager.form A B = P.operatorOnsager.form B A) ∧
-    (∀ (U : Op) (E₁ E₂ : Field),
-      P.onsagerPairing.pairing U E₁ E₂ = P.onsagerPairing.pairing U E₂ E₁) ∧
-    (∀ (U : Op) (X Y : Carrier),
-      P.stressTensor.stress U X Y = P.stressTensor.stress U Y X) ∧
-    (∀ (U : Op),
-      P.derivedStress.derivedStress U = P.stressTensor.stress (P.derivation U))
-
-/--
-Any installed susceptibility/Onsager/stress packet satisfies the owner-side
-reciprocity, symmetry, and readback laws already proved in this file.
--/
-theorem susceptibilityOnsagerStressOwnerTarget
-    (Op Field Response Carrier : Type*)
-    [NormedAddCommGroup Op] [NormedSpace ℝ Op] [Mul Op]
-    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
-    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
-    [AddCommMonoid Carrier] [Module ℝ Carrier] :
-    ∀ (P : SusceptibilityOnsagerStressPacket Op Field Response Carrier),
-      (∀ (A B : Op),
-        P.operatorOnsager.form A B = P.operatorOnsager.form B A) ∧
-      (∀ (U : Op) (E₁ E₂ : Field),
-        P.onsagerPairing.pairing U E₁ E₂ = P.onsagerPairing.pairing U E₂ E₁) ∧
-      (∀ (U : Op) (X Y : Carrier),
-        P.stressTensor.stress U X Y = P.stressTensor.stress U Y X) ∧
-      (∀ (U : Op),
-        P.derivedStress.derivedStress U = P.stressTensor.stress (P.derivation U)) := by
-  intro P
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · intro A B
-    exact P.operatorOnsager_swap A B
-  · intro U E₁ E₂
-    exact P.fieldOnsager_swap U E₁ E₂
-  · intro U X Y
-    exact P.stressTensor_swap U X Y
-  · intro U
-    exact P.derivedStress_eq_stress_derivation U
 
 end InfoGeometry.Thermo.SusceptibilityOnsagerStress

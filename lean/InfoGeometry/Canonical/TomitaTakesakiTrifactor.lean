@@ -161,7 +161,7 @@ section Trifactor
 
 open TrifactorDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 /-- Tomita `+` sector: modular-flow/orientation-preserving readout. -/
 abbrev modularFlowSector (T : R) : R :=

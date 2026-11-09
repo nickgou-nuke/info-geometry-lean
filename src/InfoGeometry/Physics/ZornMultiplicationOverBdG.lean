@@ -93,7 +93,7 @@ def singleColourEmbedding (c : Fin 3) (M : Matrix (Fin 2) (Fin 2) A) :
 
 section CommutativeCoefficients
 
-variable {C : Type*} [CommRing C]
+variable {C : Type*} [Ring C]
 
 theorem singleColourEmbedding_map_mul
     (c : Fin 3) (M N : Matrix (Fin 2) (Fin 2) C) :

@@ -29,20 +29,20 @@ structure Mat4 (R : Type*) where
   m32 : R
   m33 : R
 
-def det3 {R : Type*} [CommRing R]
+def det3 {R : Type*} [Ring R]
     (a00 a01 a02 a10 a11 a12 a20 a21 a22 : R) : R :=
   a00 * (a11 * a22 - a12 * a21) -
     a01 * (a10 * a22 - a12 * a20) +
     a02 * (a10 * a21 - a11 * a20)
 
-def det4 {R : Type*} [CommRing R] (M : Mat4 R) : R :=
+def det4 {R : Type*} [Ring R] (M : Mat4 R) : R :=
   let d0 := det3 M.m11 M.m12 M.m13 M.m21 M.m22 M.m23 M.m31 M.m32 M.m33
   let d1 := det3 M.m10 M.m12 M.m13 M.m20 M.m22 M.m23 M.m30 M.m32 M.m33
   let d2 := det3 M.m10 M.m11 M.m13 M.m20 M.m21 M.m23 M.m30 M.m31 M.m33
   let d3 := det3 M.m10 M.m11 M.m12 M.m20 M.m21 M.m22 M.m30 M.m31 M.m32
   M.m00 * d0 - M.m01 * d1 + M.m02 * d2 - M.m03 * d3
 
-def charMat4 {R : Type*} [CommRing R] (m ε phase x : R) : Mat4 R where
+def charMat4 {R : Type*} [Ring R] (m ε phase x : R) : Mat4 R where
   m00 := x - m; m01 := -ε; m02 := 0; m03 := 0
   m10 := 0; m11 := x - m; m12 := -ε; m13 := 0
   m20 := 0; m21 := 0; m22 := x - m; m23 := -ε

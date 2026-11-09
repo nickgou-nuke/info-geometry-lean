@@ -17,9 +17,11 @@ variable {B : Type*} [Ring B]
 /-- The additive coboundary of X, with the sign convention X minus g(X). -/
 def automorphismCoboundary (X : B) (g : B ≃+* B) : B := X - g X
 
-theorem automorphismCoboundary_one (X : B) :
-    automorphismCoboundary X (1 : B ≃+* B) = 0 := by
-  simp [automorphismCoboundary]
+theorem automorphismCoboundary_inv (X : B) (g : B ≃+* B) :
+    automorphismCoboundary X g⁻¹ = -g⁻¹ (automorphismCoboundary X g) := by
+  change X - g.symm X = -g.symm (X - g X)
+  rw [map_sub, g.symm_apply_apply]
+  abel
 
 /-- The group cocycle law for the additive action on the ambient ring. -/
 theorem automorphismCoboundary_mul (X : B) (g h : B ≃+* B) :

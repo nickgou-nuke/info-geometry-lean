@@ -125,7 +125,7 @@ theorem oddOdd_koszul_neg_square
 
 /-- Conjugation by the finite parity operator fixes even `1|1` matrices. -/
 theorem parityBlock_mul_evenBlock_mul_parityBlock
-    {R : Type*} [CommRing R] (a d : R) :
+    {R : Type*} [Ring R] (a d : R) :
     parityBlock * evenBlock a d * parityBlock = evenBlock a d := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -133,7 +133,7 @@ theorem parityBlock_mul_evenBlock_mul_parityBlock
 
 /-- Conjugation by the finite parity operator negates odd `1|1` matrices. -/
 theorem parityBlock_mul_oddBlock_mul_parityBlock
-    {R : Type*} [CommRing R] (b c : R) :
+    {R : Type*} [Ring R] (b c : R) :
     parityBlock * oddBlock b c * parityBlock = -oddBlock b c := by
   ext i j
   fin_cases i <;> fin_cases j <;>

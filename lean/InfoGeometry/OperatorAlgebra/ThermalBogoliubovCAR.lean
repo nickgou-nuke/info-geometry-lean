@@ -9,18 +9,18 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 /-!
 # Algebraic Bogoliubov transport of CAR relations
 
-The coefficients lie in a commutative ring acting centrally on an associative
-operator ring.  The result records preservation of the CAR identities; it
-does not assert a state, a Hilbert-space representation, or an analytic
-exponential.
+The operator-valued Bogoliubov transformations and anticommutator anomalies are
+formulated first over a general associative (non-commutative) operator ring `A`
+and left `R`-module structure over `[Ring R]`, followed by the central-scalar
+`[CommRing R] [Algebra R A]` specialization.
 -/
 
 namespace InfoGeometry.OperatorAlgebra
 
-section
+section NoncommOperatorRing
 
-variable {R : Type*} [CommRing R]
-variable {A : Type*} [Ring A] [Algebra R A]
+variable {R : Type*} [Ring R]
+variable {A : Type*} [Ring A] [Module R A]
 
 def thermalAnticommutator (x y : A) : A := x * y + y * x
 
@@ -28,13 +28,130 @@ def thermalAnnihilator (a d : A) (u v : R) : A := u • a + v • d
 
 def thermalCreator (c b : A) (u v : R) : A := u • c + v • b
 
-omit [Algebra R A] in
+omit [Module R A] in
 theorem thermalAnticommutator_map
     {B : Type*} [Ring B]
     (φ : A →+* B) (x y : A) :
     φ (thermalAnticommutator x y) =
       thermalAnticommutator (φ x) (φ y) := by
   simp [thermalAnticommutator]
+
+omit [Module R A] in
+lemma thermalAnticommutator_symm (x y : A) :
+    thermalAnticommutator x y = thermalAnticommutator y x := by
+  dsimp [thermalAnticommutator]
+  exact add_comm _ _
+
+/-! ## Operator-valued Bogoliubov coefficients over `[Ring A]` -/
+
+def operatorThermalAnnihilator (a d u v : A) : A := u * a + v * d
+
+def operatorThermalCreator (c b u v : A) : A := u * c + v * b
+
+omit [Module R A] in
+theorem RingHom.map_operatorThermalAnnihilator
+    {B : Type*} [Ring B] (φ : A →+* B) (a d u v : A) :
+    φ (operatorThermalAnnihilator a d u v) =
+      operatorThermalAnnihilator (φ a) (φ d) (φ u) (φ v) := by
+  simp [operatorThermalAnnihilator]
+
+omit [Module R A] in
+theorem RingHom.map_operatorThermalCreator
+    {B : Type*} [Ring B] (φ : A →+* B) (c b u v : A) :
+    φ (operatorThermalCreator c b u v) =
+      operatorThermalCreator (φ c) (φ b) (φ u) (φ v) := by
+  simp [operatorThermalCreator]
+
+omit [Module R A] in
+/-- Over a general non-commutative operator ring `A`, the Bogoliubov anticommutator
+differs from the naive ordered bilinear combination by an explicit sum of operator
+commutator anomalies `[x_i, u]`, `[x_i, v]`, `[y_j, u]`, `[y_j, v]` and the
+Bogoliubov coefficient commutator `[u, v] = u * v - v * u`. -/
+theorem operatorThermalAnticommutator_noncomm_anomaly
+    (x₁ x₂ y₁ y₂ u v : A) :
+    thermalAnticommutator
+        (operatorThermalAnnihilator x₁ x₂ u v)
+        (operatorThermalCreator y₁ y₂ u v) -
+      (u * u * thermalAnticommutator x₁ y₁ +
+        u * v * thermalAnticommutator x₁ y₂ +
+        v * u * thermalAnticommutator x₂ y₁ +
+        v * v * thermalAnticommutator x₂ y₂) =
+      u * (x₁ * u - u * x₁) * y₁ + u * (y₁ * u - u * y₁) * x₁ +
+      u * (x₁ * v - v * x₁) * y₂ + v * (y₂ * u - u * y₂) * x₁ +
+      v * (x₂ * u - u * x₂) * y₁ + u * (y₁ * v - v * y₁) * x₂ +
+      v * (x₂ * v - v * x₂) * y₂ + v * (y₂ * v - v * y₂) * x₂ +
+      (u * v - v * u) * (y₁ * x₂ - y₂ * x₁) := by
+  unfold thermalAnticommutator operatorThermalAnnihilator operatorThermalCreator
+  noncomm_ring
+
+omit [Module R A] in
+lemma operatorThermalAnticommutator_expand
+    (x₁ x₂ y₁ y₂ u v : A)
+    (hu : ∀ z : A, z * u = u * z)
+    (hv : ∀ z : A, z * v = v * z) :
+    thermalAnticommutator
+        (operatorThermalAnnihilator x₁ x₂ u v)
+        (operatorThermalCreator y₁ y₂ u v) =
+      u * u * thermalAnticommutator x₁ y₁ +
+        u * v * thermalAnticommutator x₁ y₂ +
+        v * u * thermalAnticommutator x₂ y₁ +
+        v * v * thermalAnticommutator x₂ y₂ := by
+  rw [hu v]
+  unfold thermalAnticommutator operatorThermalAnnihilator operatorThermalCreator
+  have huu (r s : A) : u * r * u * s = u * u * (r * s) := by
+    calc
+      u * r * u * s = u * (r * u) * s := by noncomm_ring
+      _ = u * (u * r) * s := by rw [hu r]
+      _ = u * u * (r * s) := by noncomm_ring
+  have huv (r s : A) : u * r * v * s = u * v * (r * s) := by
+    calc
+      u * r * v * s = u * (r * v) * s := by noncomm_ring
+      _ = u * (v * r) * s := by rw [hv r]
+      _ = u * v * (r * s) := by noncomm_ring
+  have hvu (r s : A) : v * r * u * s = u * v * (r * s) := by
+    calc
+      v * r * u * s = v * (r * u) * s := by noncomm_ring
+      _ = v * (u * r) * s := by rw [hu r]
+      _ = v * u * (r * s) := by noncomm_ring
+      _ = u * v * (r * s) := by rw [hu v]
+  have hvv (r s : A) : v * r * v * s = v * v * (r * s) := by
+    calc
+      v * r * v * s = v * (r * v) * s := by noncomm_ring
+      _ = v * (v * r) * s := by rw [hv r]
+      _ = v * v * (r * s) := by noncomm_ring
+  simp only [mul_add, add_mul, ← mul_assoc]
+  rw [huu x₁ y₁, hvu x₂ y₁, huv x₁ y₂, hvv x₂ y₂,
+    huu y₁ x₁, hvu y₂ x₁, huv y₁ x₂, hvv y₂ x₂]
+  noncomm_ring
+
+omit [Module R A] in
+theorem operator_thermal_bogoliubov_car_preserved
+    (a c b d u v : A)
+    (hu : ∀ z : A, z * u = u * z)
+    (hv : ∀ z : A, z * v = v * z)
+    (huv : u * u + v * v = 1)
+    (hac : thermalAnticommutator a c = 1)
+    (hbd : thermalAnticommutator b d = 1)
+    (hab : thermalAnticommutator a b = 0)
+    (hcd : thermalAnticommutator c d = 0) :
+    thermalAnticommutator
+        (operatorThermalAnnihilator a d u v)
+        (operatorThermalCreator c b u v) = 1 := by
+  rw [operatorThermalAnticommutator_expand a d c b u v hu hv]
+  have hdc : thermalAnticommutator d c = 0 := by
+    rw [thermalAnticommutator_symm, hcd]
+  have hdb : thermalAnticommutator d b = 1 := by
+    rw [thermalAnticommutator_symm, hbd]
+  rw [hac, hab, hdc, hdb]
+  simp only [mul_one, mul_zero, add_zero]
+  exact huv
+
+end NoncommOperatorRing
+
+section CentralScalarAlgebra
+
+variable {R : Type*} [CommRing R]
+variable {A : Type*} [Ring A] [Algebra R A]
 
 theorem thermalAnnihilator_map
     {B : Type*} [Ring B] [Algebra R B]
@@ -49,12 +166,6 @@ theorem thermalCreator_map
     φ (thermalCreator c b u v) =
       thermalCreator (φ c) (φ b) u v := by
   simp [thermalCreator]
-
-omit [Algebra R A] in
-lemma thermalAnticommutator_symm (x y : A) :
-    thermalAnticommutator x y = thermalAnticommutator y x := by
-  dsimp [thermalAnticommutator]
-  exact add_comm _ _
 
 lemma thermalAnticommutator_expand (x₁ x₂ y₁ y₂ : A) (c₁ c₂ d₁ d₂ : R) :
     thermalAnticommutator (c₁ • x₁ + c₂ • x₂) (d₁ • y₁ + d₂ • y₂) =
@@ -153,93 +264,6 @@ theorem AlgHom.map_thermal_bogoliubov_car_preserved
       _ = φ 0 := by rw [hcd]
       _ = 0 := map_zero φ
 
-/-! ## Operator-valued Bogoliubov coefficients
-
-The coefficients below are elements of the ambient operator ring. The
-expansion and preservation theorems assume they commute with every ambient
-element; the ambient ring itself remains noncommutative.
--/
-
-def operatorThermalAnnihilator (a d u v : A) : A := u * a + v * d
-
-def operatorThermalCreator (c b u v : A) : A := u * c + v * b
-
-omit [Algebra R A] in
-theorem RingHom.map_operatorThermalAnnihilator
-    {B : Type*} [Ring B] (φ : A →+* B) (a d u v : A) :
-    φ (operatorThermalAnnihilator a d u v) =
-      operatorThermalAnnihilator (φ a) (φ d) (φ u) (φ v) := by
-  simp [operatorThermalAnnihilator]
-
-omit [Algebra R A] in
-theorem RingHom.map_operatorThermalCreator
-    {B : Type*} [Ring B] (φ : A →+* B) (c b u v : A) :
-    φ (operatorThermalCreator c b u v) =
-      operatorThermalCreator (φ c) (φ b) (φ u) (φ v) := by
-  simp [operatorThermalCreator]
-
-omit [Algebra R A] in
-lemma operatorThermalAnticommutator_expand
-    (x₁ x₂ y₁ y₂ u v : A)
-    (hu : ∀ z : A, z * u = u * z)
-    (hv : ∀ z : A, z * v = v * z) :
-    thermalAnticommutator
-        (operatorThermalAnnihilator x₁ x₂ u v)
-        (operatorThermalCreator y₁ y₂ u v) =
-      u * u * thermalAnticommutator x₁ y₁ +
-        u * v * thermalAnticommutator x₁ y₂ +
-        v * u * thermalAnticommutator x₂ y₁ +
-        v * v * thermalAnticommutator x₂ y₂ := by
-  rw [hu v]
-  unfold thermalAnticommutator operatorThermalAnnihilator operatorThermalCreator
-  have huu (r s : A) : u * r * u * s = u * u * (r * s) := by
-    calc
-      u * r * u * s = u * (r * u) * s := by noncomm_ring
-      _ = u * (u * r) * s := by rw [hu r]
-      _ = u * u * (r * s) := by noncomm_ring
-  have huv (r s : A) : u * r * v * s = u * v * (r * s) := by
-    calc
-      u * r * v * s = u * (r * v) * s := by noncomm_ring
-      _ = u * (v * r) * s := by rw [hv r]
-      _ = u * v * (r * s) := by noncomm_ring
-  have hvu (r s : A) : v * r * u * s = u * v * (r * s) := by
-    calc
-      v * r * u * s = v * (r * u) * s := by noncomm_ring
-      _ = v * (u * r) * s := by rw [hu r]
-      _ = v * u * (r * s) := by noncomm_ring
-      _ = u * v * (r * s) := by rw [hu v]
-  have hvv (r s : A) : v * r * v * s = v * v * (r * s) := by
-    calc
-      v * r * v * s = v * (r * v) * s := by noncomm_ring
-      _ = v * (v * r) * s := by rw [hv r]
-      _ = v * v * (r * s) := by noncomm_ring
-  simp only [mul_add, add_mul, ← mul_assoc]
-  rw [huu x₁ y₁, hvu x₂ y₁, huv x₁ y₂, hvv x₂ y₂,
-    huu y₁ x₁, hvu y₂ x₁, huv y₁ x₂, hvv y₂ x₂]
-  noncomm_ring
-
-omit [Algebra R A] in
-theorem operator_thermal_bogoliubov_car_preserved
-    (a c b d u v : A)
-    (hu : ∀ z : A, z * u = u * z)
-    (hv : ∀ z : A, z * v = v * z)
-    (huv : u * u + v * v = 1)
-    (hac : thermalAnticommutator a c = 1)
-    (hbd : thermalAnticommutator b d = 1)
-    (hab : thermalAnticommutator a b = 0)
-    (hcd : thermalAnticommutator c d = 0) :
-    thermalAnticommutator
-        (operatorThermalAnnihilator a d u v)
-        (operatorThermalCreator c b u v) = 1 := by
-  rw [operatorThermalAnticommutator_expand a d c b u v hu hv]
-  have hdc : thermalAnticommutator d c = 0 := by
-    rw [thermalAnticommutator_symm, hcd]
-  have hdb : thermalAnticommutator d b = 1 := by
-    rw [thermalAnticommutator_symm, hbd]
-  rw [hac, hab, hdc, hdb]
-  simp only [mul_one, mul_zero, add_zero]
-  exact huv
-
-end
+end CentralScalarAlgebra
 
 end InfoGeometry.OperatorAlgebra

@@ -19,7 +19,7 @@ namespace InfoGeometry.SuperGrassmannian.GradedGraphTransition
 
 open DirectSum GradedGraphChart
 
-variable {A k ι U W : Type*} [Ring A] [CommRing k] [DecidableEq ι]
+variable {A k ι U W : Type*} [Ring A] [Ring k] [DecidableEq ι]
   [AddCommGroup U] [Module A U] [Module k U]
   [AddCommGroup W] [Module A W] [Module k W]
   (GU : ι → Submodule k U) (GW : ι → Submodule k W)

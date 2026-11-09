@@ -41,7 +41,7 @@ open InfoGeometry.Physics.Algebra
 
 universe u v
 
-variable {R : Type u} [CommRing R]
+variable {R : Type u} [Ring R]
 variable (A : ℕ → Type v)
 variable [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (iota : ∀ n, A n →ₗ[R] A (n + 1))

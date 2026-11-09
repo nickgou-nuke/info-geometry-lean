@@ -55,7 +55,7 @@ end TKKGrade
 
 /-- A Jordan pair datum supplies the two grade-one spaces and the triple
 products needed by the universal TKK construction. -/
-structure JordanPairData (R : Type*) [CommRing R] where
+structure JordanPairData (R : Type*) [Ring R] where
   Vplus : Type*
   Vminus : Type*
   triplePlus : Vplus -> Vminus -> Vplus -> Vplus
@@ -64,7 +64,7 @@ structure JordanPairData (R : Type*) [CommRing R] where
   outerSymmetryMinus : forall x y z, tripleMinus x y z = tripleMinus z y x
 
 /-- A five-graded TKK Lie datum with an abstract carrier. -/
-structure TKKLieData (R : Type*) [CommRing R] [Zero R] where
+structure TKKLieData (R : Type*) [Ring R] [Zero R] where
   carrier : Type*
   zero : carrier
   bracket : carrier -> carrier -> carrier
@@ -82,7 +82,7 @@ structure TKKLieData (R : Type*) [CommRing R] [Zero R] where
 
 /-- The graded bracket closure theorem is the data projection. -/
 theorem tkk_bracket_mem
-    {R : Type*} [CommRing R] [Zero R] (G : TKKLieData R)
+    {R : Type*} [Ring R] [Zero R] (G : TKKLieData R)
     {i j k : TKKGrade} {x y : G.carrier}
     (hx : x ∈ G.gradeSubspace i) (hy : y ∈ G.gradeSubspace j)
     (hgrade : TKKGrade.add? i j = some k) :
@@ -91,7 +91,7 @@ theorem tkk_bracket_mem
 
 /-- Brackets whose grade sum leaves `[-2,2]` vanish in the five-graded model. -/
 theorem tkk_bracket_zero_of_outside
-    {R : Type*} [CommRing R] [Zero R] (G : TKKLieData R)
+    {R : Type*} [Ring R] [Zero R] (G : TKKLieData R)
     {i j : TKKGrade} {x y : G.carrier}
     (hx : x ∈ G.gradeSubspace i) (hy : y ∈ G.gradeSubspace j)
     (hgrade : TKKGrade.add? i j = none) :
@@ -105,7 +105,7 @@ structure SpacetimeGeometryData where
 
 /-- The finite compilation target: a Jordan pair, a five-graded TKK datum, and
 the resulting spacetime geometry datum. -/
-structure ChiralToSpacetimeCompileData (R : Type*) [CommRing R] [Zero R] where
+structure ChiralToSpacetimeCompileData (R : Type*) [Ring R] [Zero R] where
   jordanPair : JordanPairData R
   tkk : TKKLieData R
   spacetime : SpacetimeGeometryData
@@ -113,7 +113,7 @@ structure ChiralToSpacetimeCompileData (R : Type*) [CommRing R] [Zero R] where
 /-- A constructor-level compile projection returning the recorded spacetime
 geometry datum. -/
 def compileChiralToSpacetimeData
-    {R : Type*} [CommRing R] [Zero R] (C : ChiralToSpacetimeCompileData R) :
+    {R : Type*} [Ring R] [Zero R] (C : ChiralToSpacetimeCompileData R) :
     SpacetimeGeometryData :=
   C.spacetime
 

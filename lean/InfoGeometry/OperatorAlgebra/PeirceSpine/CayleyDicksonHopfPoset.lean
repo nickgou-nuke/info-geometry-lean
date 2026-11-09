@@ -237,6 +237,25 @@ lemma fureyProduct_genPhi_genJ_tetraktys
     peirce_nf hP
 
 omit [StarRing B] in
+/-- The sector charge difference and the square of its chiral difference follow
+from the orthogonal idempotent relations alone; no transition operator is
+needed for these two operator identities. -/
+theorem quaternionic_charge_difference_and_sector_square
+    {P_O2 P_H1 P_H2 P_C : B}
+    (hH1 : P_H1 * P_H1 = P_H1) (hH2 : P_H2 * P_H2 = P_H2)
+    (hH12 : P_H1 * P_H2 = 0) (hH21 : P_H2 * P_H1 = 0) :
+    chargeQ6 P_O2 P_H2 P_C - chargeY6 P_O2 P_H1 P_H2 P_C =
+      (3 : ℤ) • quatChiralInv P_H1 P_H2 ∧
+    quatChiralInv P_H1 P_H2 * quatChiralInv P_H1 P_H2 = P_H1 + P_H2 := by
+  constructor
+  · unfold chargeQ6 chargeY6 quatChiralInv
+    simp only [zsmul_add, zsmul_sub]
+    abel
+  · unfold quatChiralInv
+    simp only [sub_mul, mul_sub, hH1, hH2, hH12, hH21]
+    abel
+
+omit [StarRing B] in
 /-- **Lemma `N₂.1 & N₃.1` (`quaternionic_symmetry_breaking_and_charge_operators`):**
 Let `P_O2, P_H1, P_H2, P_C : B` be mutually orthogonal idempotents in the quaternionic sector
 (`hH1 : P_H1 * P_H1 = P_H1`, `hH2 : P_H2 * P_H2 = P_H2`, `hH12 : P_H1 * P_H2 = 0`, `hH21 : P_H2 * P_H1 = 0`,
@@ -261,13 +280,9 @@ theorem quaternionic_symmetry_breaking_and_charge_operators
     comm (chargeY6 P_O2 P_H1 P_H2 P_C) (P_H1 * X * P_H2) = 0 ∧
     comm (chargeQ6 P_O2 P_H2 P_C) (P_H1 * X * P_H2) =
       -(6 : ℤ) • (P_H1 * X * P_H2) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · unfold chargeQ6 chargeY6 quatChiralInv
-    simp only [zsmul_add, zsmul_sub]
-    abel
-  · unfold quatChiralInv
-    simp only [sub_mul, mul_sub, hH1, hH2, hH12, hH21]
-    abel
+  have hBase := quaternionic_charge_difference_and_sector_square
+    (P_O2 := P_O2) (P_C := P_C) hH1 hH2 hH12 hH21
+  refine ⟨hBase.1, hBase.2, ?_, ?_⟩
   · unfold comm chargeY6
     simp only [add_mul, mul_add, smul_add, mul_assoc, smul_mul_assoc, mul_smul_comm,
                P_assoc hH1, hH2,

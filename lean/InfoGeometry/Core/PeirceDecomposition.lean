@@ -191,6 +191,41 @@ theorem idempotencyDefect_peirce_components
   constructor <;> noncomm_ring [hf, hcomp] <;>
     simp only [idempotent_mul_nested f hf] <;> abel_nf <;> simp
 
+/-- An element is idempotent exactly when each of its four Peirce defect
+components vanishes. The diagonal conditions include the two ordered
+off-diagonal round trips; in general these products are distinct. -/
+theorem isIdempotent_iff_peirceDefect_components
+    (f x : A) (hf : f * f = f) :
+    x * x = x ↔
+      ((component11 f x * component11 f x - component11 f x) +
+          component10 f x * component01 f x = 0 ∧
+        component11 f x * component10 f x +
+          component10 f x * component00 f x - component10 f x = 0 ∧
+        component01 f x * component11 f x +
+          component00 f x * component01 f x - component01 f x = 0 ∧
+        (component00 f x * component00 f x - component00 f x) +
+          component01 f x * component10 f x = 0) := by
+  constructor
+  · intro hx
+    have hparts := idempotencyDefect_peirce_components f x hf
+    rw [hx] at hparts
+    rcases hparts with ⟨h11, h10, h01, h00⟩
+    exact ⟨by simpa [component11, component10, component01, component00] using h11.symm,
+      by simpa [component11, component10, component01, component00] using h10.symm,
+      by simpa [component11, component10, component01, component00] using h01.symm,
+      by simpa [component11, component10, component01, component00] using h00.symm⟩
+  · rintro ⟨h11, h10, h01, h00⟩
+    have hparts := idempotencyDefect_peirce_components f x hf
+    rcases hparts with ⟨h11', h10', h01', h00'⟩
+    rw [h11] at h11'
+    rw [h10] at h10'
+    rw [h01] at h01'
+    rw [h00] at h00'
+    have hsum := peirce_decomposition f (x * x - x)
+    rw [h11', h10', h01', h00'] at hsum
+    simp at hsum
+    exact sub_eq_zero.mp hsum
+
 /-! ## Nonzero routing laws -/
 
 /-- `A₁₁ A₁₁ ⊆ A₁₁`. -/

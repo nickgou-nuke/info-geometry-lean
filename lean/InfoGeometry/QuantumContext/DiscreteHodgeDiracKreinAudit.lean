@@ -22,7 +22,7 @@ namespace InfoGeometry.QuantumContext.DiscreteHodgeDiracAudit
 open InfoGeometry.QuantumContext.DiscreteHodgeDirac
 
 /-- Verification 1: Master Certificate compilation. -/
-theorem test_certificate_compiles (R : Type*) [CommRing R] :
+theorem test_certificate_compiles (R : Type*) [Ring R] :
     DiscreteHodgeDiracKreinCertificate R :=
   compile_discrete_hodge_dirac_krein R
 

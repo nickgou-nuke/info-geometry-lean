@@ -22,7 +22,7 @@ def ZornVectorMatrix.map {R S : Type*} (f : R → S) (X : ZornVectorMatrix R) : 
 
 section MapProperties
 
-variable {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
+variable {R S : Type*} [Ring R] [Ring S] (f : R →+* S)
 
 theorem ZornVec3.map_dot (x y : ZornVec3 R) :
     ZornVec3.dot (ZornVec3.map f x) (ZornVec3.map f y) = f (ZornVec3.dot x y) := by

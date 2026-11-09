@@ -460,14 +460,23 @@ inductive RenormalizedIntegrationBackend
 
 namespace RenormalizedIntegrationBackend
 
-variable {A : Type*} [Mul A]
+variable {A : Type*} [Semigroup A]
 
-/-- A cyclic-cocycle readout is cyclic when its cyclicity witness is supplied. -/
-theorem cyclicCocycle_cyclicity
+/-- Pairwise cyclicity rotates a three-operator product without commuting any
+of its factors. -/
+theorem cyclicCocycle_triple_product_rotation
     (readout : A → ℝ)
-    (hcyc : ∀ a b : A, readout (a * b) = readout (b * a)) :
-    ∀ a b : A, readout (a * b) = readout (b * a) := by
-  exact hcyc
+    (hcyc : ∀ a b : A, readout (a * b) = readout (b * a))
+    (a b c : A) :
+    readout ((a * b) * c) = readout (b * (c * a)) ∧
+      readout ((a * b) * c) = readout (c * (a * b)) := by
+  constructor
+  · calc
+      readout ((a * b) * c) = readout (a * (b * c)) := by rw [mul_assoc]
+      _ = readout ((b * c) * a) := hcyc a (b * c)
+      _ = readout (b * (c * a)) := by rw [← mul_assoc]
+  · calc
+      readout ((a * b) * c) = readout (c * (a * b)) := hcyc (a * b) c
 
 end RenormalizedIntegrationBackend
 

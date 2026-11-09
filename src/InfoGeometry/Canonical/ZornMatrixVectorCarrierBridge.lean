@@ -14,7 +14,7 @@ associative matrix multiplication.
 
 namespace InfoGeometry.Canonical
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 def zornMatrixToVector
     (X : ZornMatrix R) : InfoGeometry.Algebra.ZornVectorMatrix R :=
@@ -70,7 +70,7 @@ theorem zornMatrixToVector_mul (X Y : ZornMatrix R) :
       InfoGeometry.Algebra.ZornVec3.dot,
       InfoGeometry.Algebra.ZornVec3.cross, Fin.sum_univ_three,
       Pi.smul_apply, Matrix.vecHead, Matrix.vecTail] <;>
-      ring
+      abel
   · fin_cases i <;>
       simp [zornMatrixToVector, ZornMatrix.mul,
         ZornMatrix.dot, ZornMatrix.cross,
@@ -78,14 +78,14 @@ theorem zornMatrixToVector_mul (X Y : ZornMatrix R) :
         InfoGeometry.Algebra.ZornVec3.dot,
         InfoGeometry.Algebra.ZornVec3.cross, Fin.sum_univ_three,
         Pi.smul_apply, Matrix.vecHead, Matrix.vecTail] <;>
-      ring
+      abel
   · simp [zornMatrixToVector, ZornMatrix.mul,
       ZornMatrix.dot, ZornMatrix.cross,
       InfoGeometry.Algebra.ZornVectorMatrix.mul,
       InfoGeometry.Algebra.ZornVec3.dot,
       InfoGeometry.Algebra.ZornVec3.cross, Fin.sum_univ_three,
       Pi.smul_apply, Matrix.vecHead, Matrix.vecTail]
-    ring
+    abel
 
 theorem zornMatrixToVector_add (X Y : ZornMatrix R) :
     zornMatrixToVector (X + Y) =

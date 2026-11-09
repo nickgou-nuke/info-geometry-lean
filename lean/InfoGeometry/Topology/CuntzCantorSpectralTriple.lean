@@ -933,6 +933,31 @@ theorem commuting_idempotent_mul {e f : R}
     _ = (e * e) * (f * f) := by noncomm_ring
     _ = e * f := by rw [he.eq, hf.eq]
 
+/-- Boolean join of commuting idempotents over any ring `[Ring R]`: `e ∨ f = e + f - e * f`. -/
+@[rep_depth operator]
+theorem commuting_idempotent_boolean_join {e f : R}
+    (he : IsIdempotentElem e) (hf : IsIdempotentElem f) (hcomm : e * f = f * e) :
+    IsIdempotentElem (e + f - e * f) := by
+  have he2 : e * e = e := he.eq
+  have hf2 : f * f = f := hf.eq
+  have he2' : ∀ x : R, e * (e * x) = e * x := fun x => by rw [← mul_assoc, he2]
+  have hf2' : ∀ x : R, f * (f * x) = f * x := fun x => by rw [← mul_assoc, hf2]
+  have hfe : f * e = e * f := hcomm.symm
+  have hfe' : ∀ x : R, f * (e * x) = e * (f * x) := fun x => by rw [← mul_assoc, hfe, mul_assoc]
+  rw [IsIdempotentElem]
+  simp only [add_mul, mul_add, sub_mul, mul_sub, mul_assoc, he2, hf2, he2', hf2', hfe, hfe']
+  abel
+
+/-- An idempotent lies below its Boolean join with any element on the left over `[Ring R]`. -/
+@[rep_depth operator]
+theorem central_idempotent_boolean_join_absorb_left {e f : R}
+    (he : IsIdempotentElem e) (_hf : IsIdempotentElem f) :
+    e * (e + f - e * f) = e := by
+  have he2 : e * e = e := he.eq
+  have he2' : ∀ x : R, e * (e * x) = e * x := fun x => by rw [← mul_assoc, he2]
+  simp only [add_mul, mul_add, sub_mul, mul_sub, mul_assoc, he2, he2']
+  abel
+
 end IdempotentProjectorAlgebra
 
 section CentralIdempotentBooleanAlgebra
@@ -951,22 +976,7 @@ theorem central_idempotent_boolean_meet {e f : R}
 theorem central_idempotent_boolean_join {e f : R}
     (he : IsIdempotentElem e) (hf : IsIdempotentElem f) :
     IsIdempotentElem (e + f - e * f) := by
-  have he2 : e ^ 2 = e := by simpa [pow_two] using he.eq
-  have hf2 : f ^ 2 = f := by simpa [pow_two] using hf.eq
-  rw [IsIdempotentElem]
-  ring_nf
-  rw [he2, hf2]
-  ring
-
-/-- A central idempotent lies below its Boolean join with another central idempotent. -/
-@[rep_depth operator]
-theorem central_idempotent_boolean_join_absorb_left {e f : R}
-    (he : IsIdempotentElem e) (_hf : IsIdempotentElem f) :
-    e * (e + f - e * f) = e := by
-  have he2 : e ^ 2 = e := by simpa [pow_two] using he.eq
-  ring_nf
-  rw [he2]
-  ring
+  exact commuting_idempotent_boolean_join he hf (mul_comm e f)
 
 /-- A central idempotent is absorbed by its Boolean join on the other side too. -/
 @[rep_depth operator]

@@ -23,7 +23,7 @@ open InfoGeometry.Canonical.YangBaxterProof
 
 set_option linter.unusedSectionVars false
 
-variable {𝕜 : Type*} [CommRing 𝕜]
+variable {𝕜 : Type*} [Ring 𝕜]
 variable (A : ℕ → Type*)
 variable [∀ n, NonUnitalNonAssocRing (A n)] [∀ n, Module 𝕜 (A n)]
 variable [∀ n, IsScalarTower 𝕜 (A n) (A n)] [∀ n, SMulCommClass 𝕜 (A n) (A n)]

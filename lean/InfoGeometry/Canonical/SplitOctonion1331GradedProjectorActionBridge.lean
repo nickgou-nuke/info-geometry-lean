@@ -155,14 +155,14 @@ theorem fourPlane_exteriorDegree_complement (k : Fin 4) :
   fin_cases k <;> rfl
 
 theorem fourPlaneLift_off_plane_zero
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (B : Matrix (Fin 2) (Fin 2) R)
     (k l : Fin 4) (c d : Fin 2) (hkl : k ≠ l) :
     fourPlaneLift B (k, c) (l, d) = 0 := by
   simp [fourPlaneLift, hkl]
 
 theorem cyclotomic_fourPlaneLift_off_plane_zero
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (zeta : R) (B : Matrix (Fin 2) (Fin 2) R)
     (k l : Fin 4) (c d : Fin 2) (hkl : k ≠ l) :
     (zeta • fourPlaneLift B) (k, c) (l, d) = 0 := by

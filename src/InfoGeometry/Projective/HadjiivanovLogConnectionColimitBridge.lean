@@ -23,7 +23,7 @@ namespace InfoGeometry.Projective.HadjiivanovLogConnectionColimitBridge
 
 noncomputable section
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 variable (A : ℕ → Type*) [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]
 

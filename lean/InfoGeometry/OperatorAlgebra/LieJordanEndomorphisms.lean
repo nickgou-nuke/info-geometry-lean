@@ -21,7 +21,8 @@ namespace InfoGeometry.OperatorAlgebra.LieJordan
 open InfoGeometry.Core.IdempotentCartan
 open InfoGeometry.Core.PeirceDecomposition
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- The inner derivation, bundled as a native linear endomorphism. -/
 def lieOp (H : A) : Module.End R A :=
@@ -177,7 +178,7 @@ theorem minus_mul_plus (H S : A) :
         lieOp R H * lieOp R H - jordanOp R S * jordanOp R S +
           (lieOp R H * jordanOp R S - jordanOp R S * lieOp R H) := by
       unfold minus plus
-      simp only [sub_mul, mul_add, add_mul, mul_sub]
+      simp only [sub_mul, mul_add]
       abel
     _ = _ := by rw [lie_jordan]
 
@@ -191,7 +192,7 @@ theorem plus_mul_minus (H S : A) :
         lieOp R H * lieOp R H - jordanOp R S * jordanOp R S -
           (lieOp R H * jordanOp R S - jordanOp R S * lieOp R H) := by
       unfold plus minus
-      simp only [sub_mul, mul_add, add_mul, mul_sub]
+      simp only [add_mul, mul_sub]
       abel
     _ = _ := by rw [lie_jordan]
 
@@ -223,23 +224,43 @@ theorem plus_curvature (H S K T : A) :
       X * ((H * T - T * H) + (S * K - K * S)))
   noncomm_ring
 
-/-- The pair is natural under actual algebra homomorphisms. -/
-theorem map_plus {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (H S X : A) :
+/-- The pair is natural under arbitrary ring homomorphisms. -/
+theorem RingHom.map_plus {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (H S X : A) :
     f (plus R H S X) = plus R (f H) (f S) (f X) := by
   simp only [plus_apply, map_add, map_sub, map_mul]
 
-theorem map_minus {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (H S X : A) :
+theorem RingHom.map_minus {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (H S X : A) :
     f (minus R H S X) = minus R (f H) (f S) (f X) := by
   simp only [minus_apply, map_add, map_sub, map_mul]
 
+section AlgebraHom
+
+variable (R₁ : Type*) [CommRing R₁] {A₁ B₁ : Type*} [Ring A₁] [Ring B₁]
+  [Algebra R₁ A₁] [Algebra R₁ B₁]
+
+/-- The pair is natural under actual algebra homomorphisms. -/
+theorem map_plus
+    (f : A₁ →ₐ[R₁] B₁) (H S X : A₁) :
+    f (plus R₁ H S X) = plus R₁ (f H) (f S) (f X) := by
+  simp only [plus_apply, map_add, map_sub, map_mul]
+
+theorem map_minus
+    (f : A₁ →ₐ[R₁] B₁) (H S X : A₁) :
+    f (minus R₁ H S X) = minus R₁ (f H) (f S) (f X) := by
+  simp only [minus_apply, map_add, map_sub, map_mul]
+
 /-- The actual linear-map intertwining square for the plus operator. -/
-theorem intertwine_plus {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (H S : A) :
-    f.toLinearMap.comp (plus R H S) =
-      (plus R (f H) (f S)).comp f.toLinearMap := by
+theorem intertwine_plus
+    (f : A₁ →ₐ[R₁] B₁) (H S : A₁) :
+    f.toLinearMap.comp (plus R₁ H S) =
+      (plus R₁ (f H) (f S)).comp f.toLinearMap := by
   ext X
-  exact map_plus R f H S X
+  exact map_plus R₁ f H S X
+
+end AlgebraHom
 
 end InfoGeometry.OperatorAlgebra.LieJordan

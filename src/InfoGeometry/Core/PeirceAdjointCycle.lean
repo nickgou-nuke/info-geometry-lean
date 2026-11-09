@@ -101,9 +101,67 @@ theorem ad_difference (hp : IsIdempotentElem p)
     LieAlgebra.ad ℤ A p (u - v) = u + v := by
   rw [map_sub, ad_eq_self_of_mem10 hp hu, ad_eq_neg_of_mem01 hp hv, sub_neg_eq_add]
 
-theorem ad_commutator_eq_odd (hp : IsIdempotentElem p) (x : A) :
-    LieAlgebra.ad ℤ A p ⁅p, x⁆ = odd p x :=
-  (odd_reconstruction hp x).2.symm
+/-- The squared adjoint action retains exactly the two directed mixed Peirce
+corners: it is the identity on those corners and vanishes on both diagonal
+corners. -/
+theorem ad_square_four_corner_readout (hp : IsIdempotentElem p) (x : A) :
+    component10 p (LieAlgebra.ad ℤ A p (LieAlgebra.ad ℤ A p x)) = component10 p x ∧
+    component01 p (LieAlgebra.ad ℤ A p (LieAlgebra.ad ℤ A p x)) = component01 p x ∧
+    component11 p (LieAlgebra.ad ℤ A p (LieAlgebra.ad ℤ A p x)) = 0 ∧
+    component00 p (LieAlgebra.ad ℤ A p (LieAlgebra.ad ℤ A p x)) = 0 := by
+  have hsq := congrArg (fun f : Module.End ℤ A => f x) (ad_sq_eq_odd hp)
+  change LieAlgebra.ad ℤ A p (LieAlgebra.ad ℤ A p x) = odd p x at hsq
+  let u := component10 p x
+  let v := component01 p x
+  have hu : u ∈ peirce10 p := component10_mem p x
+  have hv : v ∈ peirce01 p := component01_mem p x
+  have hodd : odd p x = u + v := by
+    dsimp [u, v]
+    rw [odd_apply]
+    rfl
+  have h11u : component11 p u = 0 := by
+    change p * u * p = 0
+    calc
+      _ = p * (u * p) := by rw [mul_assoc]
+      _ = 0 := by rw [right_support10 hp hu, mul_zero]
+  have h11v : component11 p v = 0 := by
+    change p * v * p = 0
+    calc
+      _ = (p * v) * p := by rw [mul_assoc]
+      _ = 0 := by rw [left_support01 hp hv, zero_mul]
+  have hleftu : (1 - p) * u = 0 := by
+    calc
+      _ = u - p * u := by noncomm_ring
+      _ = 0 := by rw [left_support10 hp hu]; simp
+  have hrightv : v * (1 - p) = 0 := by
+    calc
+      _ = v - v * p := by noncomm_ring
+      _ = 0 := by rw [right_support01 hp hv]; simp
+  have h00u : component00 p u = 0 := by
+    change (1 - p) * u * (1 - p) = 0
+    calc
+      _ = ((1 - p) * u) * (1 - p) := by rw [mul_assoc]
+      _ = 0 := by rw [hleftu, zero_mul]
+  have h00v : component00 p v = 0 := by
+    change (1 - p) * v * (1 - p) = 0
+    calc
+      _ = (1 - p) * (v * (1 - p)) := by rw [mul_assoc]
+      _ = 0 := by rw [hrightv, mul_zero]
+  have h11 : component11 p (u + v) = 0 := by
+    calc
+      _ = component11 p u + component11 p v := by
+        simp only [component11, mul_add, add_mul]
+      _ = 0 := by rw [h11u, h11v]; simp
+  have h00 : component00 p (u + v) = 0 := by
+    calc
+      _ = component00 p u + component00 p v := by
+        simp only [component00, mul_add, add_mul]
+      _ = 0 := by rw [h00u, h00v]; simp
+  rw [hsq]
+  rw [hodd]
+  refine ⟨?_, ?_, h11, h00⟩
+  · exact component10_coupled hp hu hv
+  · exact component01_coupled hp hu hv
 
 theorem ad_odd_eq_ad (hp : IsIdempotentElem p) (x : A) :
     LieAlgebra.ad ℤ A p (odd p x) = LieAlgebra.ad ℤ A p x := by

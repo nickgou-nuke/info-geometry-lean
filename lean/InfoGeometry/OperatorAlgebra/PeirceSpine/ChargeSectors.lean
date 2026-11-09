@@ -53,10 +53,19 @@ theorem one_mem_chargeSector (P : B) :
   change (LieAlgebra.ad ℤ B P) * 1 - 1 * (LieAlgebra.ad ℤ B P) = 0
   simp
 
-/-- The same closure statement for the native associative-ring Lie bracket. -/
-theorem lie_mem_chargeSector {P : B} {m n : ℤ} {K L : Module.End ℤ B}
-    (hK : K ∈ chargeSector P m) (hL : L ∈ chargeSector P n) :
-    ⁅K, L⁆ ∈ chargeSector P (m + n) :=
-  comm_mem_chargeSector hK hL
+/-- The zero-charge endomorphisms form a Lie subalgebra: they commute with
+the adjoint charge operator, and their commutators remain in its kernel. -/
+def chargeZeroLieSubalgebra (P : B) :
+    LieSubalgebra ℤ (Module.End ℤ B) where
+  carrier := chargeSector P 0
+  zero_mem' := (chargeSector P 0).zero_mem
+  add_mem' := (chargeSector P 0).add_mem
+  smul_mem' := by
+    intro c K hK
+    exact (chargeSector P 0).smul_mem c hK
+  lie_mem' := by
+    intro K L hK hL
+    change comm K L ∈ chargeSector P 0
+    exact comm_mem_chargeSector (m := 0) (n := 0) hK hL
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine

@@ -17,19 +17,19 @@ noncomputable section
 namespace FilteredColimit
 
 /-- Directed Filtered Inductive System of Modules over a Directed Set (I, ≤). -/
-structure DirectInductiveSystem (R : Type*) [CommRing R] (I : Type*) [Preorder I] (A : I → Type*) [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)] where
+structure DirectInductiveSystem (R : Type*) [Ring R] (I : Type*) [Preorder I] (A : I → Type*) [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)] where
   f : ∀ {i j : I}, i ≤ j → (A i →ₗ[R] A j)
   f_id : ∀ (i : I), f (le_refl i) = LinearMap.id
   f_comp : ∀ {i j k : I} (hij : i ≤ j) (hjk : j ≤ k), (f hjk).comp (f hij) = f (le_trans hij hjk)
 
 /-- Cocone over a Direct Inductive System targeting a Module A_inf. -/
-structure InductiveCocone (R : Type*) [CommRing R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)] (sys : DirectInductiveSystem R I A) (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf] where
+structure InductiveCocone (R : Type*) [Ring R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)] (sys : DirectInductiveSystem R I A) (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf] where
   psi : ∀ i : I, A i →ₗ[R] A_inf
   psi_comm : ∀ {i j : I} (hij : i ≤ j), (psi j).comp (sys.f hij) = psi i
 
 namespace InductiveCocone
 
-variable {R : Type*} [CommRing R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+variable {R : Type*} [Ring R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
 variable {sys : DirectInductiveSystem R I A} {A_inf : Type*} [AddCommGroup A_inf] [Module R A_inf]
 variable (cocone : InductiveCocone R sys A_inf)
 
@@ -50,10 +50,10 @@ theorem colimit_functional_trace_comm (phi_inf : A_inf →ₗ[R] R) {i j : I} (h
   rw [cocone.cocone_eval_comm hij x]
 
 /-- Inverse / Projective System of Dual Functional Spaces A_i* = A i →ₗ[R] R. -/
-def dualInverseTransition (sys : DirectInductiveSystem R I A) {i j : I} (hij : i ≤ j) : (A j →ₗ[R] R) →ₗ[R] (A i →ₗ[R] R) where
+def dualInverseTransition (sys : DirectInductiveSystem R I A) {i j : I} (hij : i ≤ j) : (A j →ₗ[R] R) →+ (A i →ₗ[R] R) where
   toFun phi_j := phi_j.comp (sys.f hij)
+  map_zero' := rfl
   map_add' phi1 phi2 := rfl
-  map_smul' c phi := rfl
 
 /-- **Theorem**: Dual Inverse System Composition Property:
     g_{i, h} ∘ g_{j, i} = g_{j, h} for dual functionals. -/
@@ -92,7 +92,7 @@ open CategoryTheory.Limits
 
 universe u
 
-variable {R : Type u} [CommRing R]
+variable {R : Type u} [Ring R]
 variable {I : Type u} [Preorder I]
 variable {A : I → Type u} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
 variable {A_inf : Type u} [AddCommGroup A_inf] [Module R A_inf]

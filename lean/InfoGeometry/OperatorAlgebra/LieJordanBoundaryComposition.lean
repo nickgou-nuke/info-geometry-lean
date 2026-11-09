@@ -15,7 +15,8 @@ derivation is asserted square-zero merely because its generator is.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordan
 
-variable (R : Type*) [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Ordered two-sided multiplication, as a native endomorphism. -/
 def sandwichOp (a b : A) : Module.End R A :=
@@ -143,14 +144,29 @@ theorem crossTransport_one (a b : A) :
     crossTransport R a b 1 = a * b + b * a := by
   simp
 
+/-- Any ring homomorphism intertwines the evaluated two-sided transport. -/
+theorem RingHom.map_crossTransport {B : Type*} [Ring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (a b x : A) :
+    f (crossTransport R a b x) =
+      crossTransport R (f a) (f b) (f x) := by
+  simp only [crossTransport_apply, map_add, map_mul]
+
+section AlgebraHom
+
+variable (R₁ : Type*) [CommRing R₁] {A₁ B₁ : Type*} [Ring A₁] [Ring B₁]
+  [Algebra R₁ A₁] [Algebra R₁ B₁]
+
 /-- A real algebra map intertwines the complete two-sided transport. -/
-theorem crossTransport_natural {B : Type*} [Ring B] [Algebra R B]
-    (f : A →ₐ[R] B) (a b : A) :
-    f.toLinearMap.comp (crossTransport R a b) =
-      (crossTransport R (f a) (f b)).comp f.toLinearMap := by
+theorem crossTransport_natural
+    (f : A₁ →ₐ[R₁] B₁) (a b : A₁) :
+    f.toLinearMap.comp (crossTransport R₁ a b) =
+      (crossTransport R₁ (f a) (f b)).comp f.toLinearMap := by
   ext x
   change f (a * x * b + b * x * a) =
     f a * f x * f b + f b * f x * f a
   simp only [map_add, map_mul]
+
+end AlgebraHom
 
 end InfoGeometry.OperatorAlgebra.LieJordan

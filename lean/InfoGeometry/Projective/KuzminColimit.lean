@@ -19,7 +19,7 @@ open InfoGeometry.Projective.KuzminInductiveLimitBridge
 
 /-- Projective alias for the conservative Kuzmin inductive-limit input data. -/
 abbrev KuzminLimitInput
-    (R AInf : Type*) [CommRing R] [StarRing R] [CommRing AInf] :=
+    (R AInf : Type*) [Ring R] [StarRing R] [Ring AInf] :=
   KuzminInductiveLimitData (R := R) (AInf := AInf)
 
 /-- The `q = 0` finite-stage readout, re-exported on the projective surface. -/
@@ -30,7 +30,7 @@ theorem qccr_n2_gram_positive_stage
 
 /-- The finite `q = 0` Cuntz--Toeplitz readout, re-exported on the projective surface. -/
 theorem finite_cuntz_toeplitz_q_zero_readout
-    {R : Type*} [CommRing R] [StarRing R]
+    {R : Type*} [Ring R] [StarRing R]
     (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
     (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (0 : R) * (a j * astar i))
     (i j : Fin 2) :

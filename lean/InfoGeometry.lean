@@ -6447,7 +6447,6 @@ import InfoGeometry.External.Auto.TransformsAndScale
 import InfoGeometry.External.Auto.TrifactorGeometry
 import InfoGeometry.External.Auto.TripotentCliffordColimit
 import InfoGeometry.External.Auto.TripotentPenroseHolography
-import InfoGeometry.External.Auto.TwistedOrbifoldVacuum
 import InfoGeometry.External.Auto.UnifiedAnomalyArchitecture
 import InfoGeometry.External.Auto.UnifiedKleinHolographicArchitecture
 import InfoGeometry.External.Auto.UthayakumaarMirrorKnockout

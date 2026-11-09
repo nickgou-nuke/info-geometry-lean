@@ -99,21 +99,21 @@ Tripotent null-sector readout: `P₀` is idempotent and the tripotent annihilate
 that sector.
 -/
 theorem nullProjector_owner_readout
-    {R : Type*} [CommRing R] [Invertible (2 : R)]
+    {R : Type*} [Ring R] [Invertible (2 : R)]
     (T : R) (hT : T ^ 3 = T) :
     P_zero T * P_zero T = P_zero T ∧ T * P_zero T = 0 :=
   ⟨P_zero_idempotent T hT, T_on_P_zero T hT⟩
 
 /-- The null projector is explicitly idempotent. -/
 theorem nullProjector_idempotent_readout
-    {R : Type*} [CommRing R] [Invertible (2 : R)]
+    {R : Type*} [Ring R] [Invertible (2 : R)]
     (T : R) (hT : T ^ 3 = T) :
     P_zero T * P_zero T = P_zero T :=
   (nullProjector_owner_readout T hT).1
 
 /-- The tripotent annihilates the null projector explicitly. -/
 theorem tripotent_null_readout
-    {R : Type*} [CommRing R] [Invertible (2 : R)]
+    {R : Type*} [Ring R] [Invertible (2 : R)]
     (T : R) (hT : T ^ 3 = T) :
     T * P_zero T = 0 :=
   (nullProjector_owner_readout T hT).2

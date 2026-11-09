@@ -54,7 +54,7 @@ theorem Cuntz_poincare_translation_relation (n : ℕ) (i : Fin n) :
 
 /-- Bost colimit trace commutativity. -/
 theorem bost_colimit_trace_commutativity
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     {A : ℕ → Type*} [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
     {iota : ∀ n, A n →ₗ[R] A (n + 1)}
     {A_inf : Type*} [AddCommGroup A_inf] [Module R A_inf]

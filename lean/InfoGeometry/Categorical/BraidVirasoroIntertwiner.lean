@@ -33,7 +33,7 @@ abbrev VirasoroGenerator
 /-- A braid representation together with modewise Virasoro invariance. -/
 structure BraidVirasoroIntertwiner
     (𝕜 : Type u) (V : Type v)
-    [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (B : Type v) [Group B]
     (L : VirasoroGenerator 𝕜 V) where
   braidRep : B →* (V ≃ₗ[𝕜] V)
@@ -43,12 +43,12 @@ structure BraidVirasoroIntertwiner
 /-- The commutator in the endomorphism ring. -/
 def commutator
     {𝕜 : Type u} {V : Type v}
-    [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (A B : Module.End 𝕜 V) : Module.End 𝕜 V :=
   A * B - B * A
 
 variable {𝕜 : Type u} {V : Type v}
-variable [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
+variable [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V]
 variable {B : Type v} [Group B]
 variable {L : VirasoroGenerator 𝕜 V}
 variable (I : BraidVirasoroIntertwiner 𝕜 V B L)
@@ -100,7 +100,7 @@ theorem representation_mul (b c : B) :
 carrier-level intertwiner input. -/
 structure CertifiedBraidVirasoroClosure
     (Bridge : Type*) (Carrier B : Type v)
-    (𝕜 : Type u) [CommRing 𝕜]
+    (𝕜 : Type u) [Ring 𝕜]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     [Group B]
     (L : VirasoroGenerator 𝕜 Carrier) where
@@ -111,7 +111,7 @@ structure CertifiedBraidVirasoroClosure
 is supplied.  No intertwiner is constructed here. -/
 def attach
     {Bridge : Type*} {Carrier B : Type v}
-    {𝕜 : Type u} [CommRing 𝕜]
+    {𝕜 : Type u} [Ring 𝕜]
     [AddCommGroup Carrier] [Module 𝕜 Carrier]
     [Group B]
     {L : VirasoroGenerator 𝕜 Carrier}

@@ -20,7 +20,7 @@ namespace InfoGeometry.Canonical.BRSTQuotientTopologicalBridge
 open CategoryTheory
 open InfoGeometry.Canonical.BRSTQuotientInnerProductLiftBridge
 
-variable {R H Y : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R H Y : Type*} [Ring R] [AddCommGroup H] [Module R H]
 
 abbrev BRSTSubmodule (q : Module.End R H) : Submodule R (LinearMap.ker q) :=
   (LinearMap.range q).comap (LinearMap.ker q).subtype

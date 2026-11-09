@@ -35,7 +35,7 @@ namespace InfoGeometry.Canonical.ChiralRibbonHelicalSeamMobius
 
 section LineTensionSurgery
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The line tension functional on an open ribbon of length L with two exposed edges. -/
 def openRibbonLineEnergy (γ L : R) : R :=
@@ -45,7 +45,7 @@ def openRibbonLineEnergy (γ L : R) : R :=
 theorem boundary_edge_elimination (γ L : R) :
     openRibbonLineEnergy γ L - γ * (L + L) = 0 := by
   dsimp [openRibbonLineEnergy]
-  ring
+  noncomm_ring
 
 /-- Energy of an open ribbon with positive line tension and positive length is positive. -/
 theorem open_ribbon_energy_pos (γ L : ℝ) (hγ : 0 < γ) (hL : 0 < L) :
@@ -62,7 +62,7 @@ end LineTensionSurgery
 
 section AffineSeamGeometry
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The linear part of the helical seam transformation matrix. -/
 def linearSeamMap : Matrix (Fin 2) (Fin 2) R :=
@@ -76,7 +76,7 @@ def det2x2 (M : Matrix (Fin 2) (Fin 2) R) : R :=
 theorem seam_orientation_reversal :
     det2x2 (linearSeamMap (R := R)) = -1 := by
   dsimp [det2x2, linearSeamMap]
-  ring
+  noncomm_ring
 
 /-- Double traversal along the helical seam restores orientation (det = +1). -/
 theorem seam_double_traversal_oriented :
@@ -181,7 +181,7 @@ end ChiralTiltPeirce
 
 section HelicalPitchResonance
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The 2D unit director corresponding to the molecular chiral tilt angle $\theta$. -/
 def chiralDirector (cosTheta sinTheta : R) : Fin 2 → R :=
@@ -217,7 +217,7 @@ end HelicalPitchResonance
 
 section PolarizationSelection
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Transverse polarization vector $\mathbf{P} = \mu \mathbf{n}$. -/
 def transversePolarization (μ : R) (normal : R) : R :=
@@ -227,13 +227,13 @@ def transversePolarization (μ : R) (normal : R) : R :=
 theorem polarization_flip (μ normal : R) :
     transversePolarization μ (-normal) = - transversePolarization μ normal := by
   dsimp [transversePolarization]
-  ring
+  noncomm_ring
 
 /-- Under a double flip ($360^\circ$ cylindrical closure), the polarization is restored. -/
 theorem polarization_double_flip_restored (μ normal : R) :
     transversePolarization μ (-(-normal)) = transversePolarization μ normal := by
   dsimp [transversePolarization]
-  ring
+  noncomm_ring
 
 end PolarizationSelection
 
@@ -241,7 +241,7 @@ end PolarizationSelection
 ### 6. Master Synthesis Packet for Stratum 18
 -/
 
-structure ChiralRibbonHelicalSeamPacket (R : Type*) [CommRing R] where
+structure ChiralRibbonHelicalSeamPacket (R : Type*) [Ring R] where
   det_seam_rev : det2x2 (linearSeamMap (R := R)) = -1
   det_seam_double : det2x2 (linearSeamMap (R := R) * linearSeamMap (R := R)) = 1
   seam_sq_one : linearSeamMap (R := R) * linearSeamMap (R := R) = 1
@@ -250,7 +250,7 @@ structure ChiralRibbonHelicalSeamPacket (R : Type*) [CommRing R] where
   polar_flip : ∀ μ n : R, transversePolarization μ (-n) = - transversePolarization μ n
   polar_restore : ∀ μ n : R, transversePolarization μ (-(-n)) = transversePolarization μ n
 
-def makeChiralRibbonHelicalSeamPacket (R : Type*) [CommRing R] :
+def makeChiralRibbonHelicalSeamPacket (R : Type*) [Ring R] :
     ChiralRibbonHelicalSeamPacket R where
   det_seam_rev := seam_orientation_reversal
   det_seam_double := seam_double_traversal_oriented

@@ -71,20 +71,20 @@ variable {G}
 /-- The signed, weighted sum over all edge identities joining `b` to `w`.
 Rows are white vertices and columns are black vertices, matching the existing
 `PlabicDiracKrein.diracDHK` convention. -/
-def edgeSumMatrix {R : Type*} [CommRing R] (S : KasteleynSigning G)
+def edgeSumMatrix {R : Type*} [Ring R] (S : KasteleynSigning G)
     (weight : G.Edge → R) : Matrix G.White G.Black R :=
   fun w b => ∑ e : G.Edge,
     if G.blackEndpoint e = b ∧ G.whiteEndpoint e = w
     then (S.sign e : R) * weight e else 0
 
-@[simp] theorem edgeSumMatrix_apply {R : Type*} [CommRing R]
+@[simp] theorem edgeSumMatrix_apply {R : Type*} [Ring R]
     (S : KasteleynSigning G) (weight : G.Edge → R) (w : G.White) (b : G.Black) :
     edgeSumMatrix S weight w b = ∑ e : G.Edge,
       if G.blackEndpoint e = b ∧ G.whiteEndpoint e = w
       then (S.sign e : R) * weight e else 0 := rfl
 
 /-- Signed edge sums are additive in the edge weights. -/
-theorem edgeSumMatrix_add {R : Type*} [CommRing R]
+theorem edgeSumMatrix_add {R : Type*} [Ring R]
     (S : KasteleynSigning G) (weight₁ weight₂ : G.Edge → R) :
     edgeSumMatrix S (fun e => weight₁ e + weight₂ e) =
       edgeSumMatrix S weight₁ + edgeSumMatrix S weight₂ := by
@@ -97,7 +97,7 @@ theorem edgeSumMatrix_add {R : Type*} [CommRing R]
   split_ifs <;> simp [mul_add]
 
 /-- The signed edge-sum matrix is homogeneous in the edge weights. -/
-theorem edgeSumMatrix_smul {R : Type*} [CommRing R]
+theorem edgeSumMatrix_smul {R : Type*} [Ring R]
     (S : KasteleynSigning G) (r : R) (weight : G.Edge → R) :
     edgeSumMatrix S (fun e => r * weight e) =
       r • edgeSumMatrix S weight := by
@@ -115,7 +115,9 @@ theorem edgeSumMatrix_smul {R : Type*} [CommRing R]
         (S.sign e : R) * weight e else 0)) := by
           apply Finset.sum_congr rfl
           intro e he
-          split_ifs <;> ring
+          split_ifs
+          · rw [← mul_assoc, Int.cast_comm, mul_assoc]
+          · rw [mul_zero]
     _ = r * Finset.univ.sum (fun e => if G.blackEndpoint e = b ∧ G.whiteEndpoint e = w then
         (S.sign e : R) * weight e else 0) := by
           exact (Finset.mul_sum Finset.univ
@@ -124,7 +126,7 @@ theorem edgeSumMatrix_smul {R : Type*} [CommRing R]
 
 /-- If no edge has the selected endpoints, the corresponding matrix entry is
 zero. -/
-theorem edgeSumMatrix_eq_zero_of_no_edge {R : Type*} [CommRing R]
+theorem edgeSumMatrix_eq_zero_of_no_edge {R : Type*} [Ring R]
     (S : KasteleynSigning G) (weight : G.Edge → R)
     (w : G.White) (b : G.Black)
     (h : ∀ e, G.blackEndpoint e ≠ b ∨ G.whiteEndpoint e ≠ w) :
@@ -142,7 +144,7 @@ theorem edgeSumMatrix_eq_zero_of_no_edge {R : Type*} [CommRing R]
 
 /-- The edge-sum matrix can be used directly as the coupling matrix of the
 repository's bipartite block Dirac operator. -/
-abbrev edgeSumDirac {R : Type*} [CommRing R] [StarRing R]
+abbrev edgeSumDirac {R : Type*} [Ring R] [StarRing R]
     (S : KasteleynSigning G) (weight : G.Edge → R) :
     Matrix (G.Black ⊕ G.White) (G.Black ⊕ G.White) R :=
   InfoGeometry.Canonical.PlabicDiracKrein.diracDHK (edgeSumMatrix S weight)
@@ -163,7 +165,7 @@ theorem edgeSumDirac_smul {R : Type*} [CommRing R] [StarRing R]
 
 /-- The block square of the Kasteleyn-coupled Dirac operator is the pair of
 Gram matrices of the weighted edge-sum matrix. -/
-theorem edgeSumDirac_sq {R : Type*} [CommRing R] [StarRing R]
+theorem edgeSumDirac_sq {R : Type*} [Ring R] [StarRing R]
     (S : KasteleynSigning G) (weight : G.Edge → R) :
     edgeSumDirac S weight * edgeSumDirac S weight =
       Matrix.fromBlocks

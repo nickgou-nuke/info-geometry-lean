@@ -9,7 +9,7 @@ namespace InfoGeometry.Algebra.NonAssocDerivationKernel
 open InfoGeometry.Algebra
 
 variable {R A : Type*}
-variable [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
+variable [Ring R] [NonUnitalNonAssocRing A] [Module R A]
 variable [IsScalarTower R A A] [SMulCommClass R A A]
 variable [One A]
 

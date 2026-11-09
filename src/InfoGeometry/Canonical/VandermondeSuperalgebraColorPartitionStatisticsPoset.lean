@@ -296,12 +296,6 @@ theorem streamVI_laughlin_numeric_route
       0 < L.anyonBraidPhase :=
   ⟨L.filling_factor_pos, L.quasi_hole_charge_mult e, L.anyon_braid_phase_pos⟩
 
-/-- The Berezinian route exposes the owner's exact real `2×2` Super-LU
-certificate. -/
-theorem streamVI_berezinian_route :
-    InfoGeometry.Supergeometry.Berezinian.BerezinianMasterCertificate :=
-  InfoGeometry.Supergeometry.Berezinian.compile_berezinian_certificate
-
 /-- The corrected `gl(6|21)` carrier has supertrace `-15` on its identity. -/
 theorem streamVI_color_supertrace_route {R : Type*} [CommRing R] :
     InfoGeometry.Canonical.GLSupermatrixGradedLie.supertrace

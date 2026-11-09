@@ -11,9 +11,9 @@ an ambient Clifford grading is assumed.
 
 namespace InfoGeometry.Canonical.ChiralEndomorphismSupergrading
 
-variable {R E : Type*} [CommRing R] [AddCommGroup E] [Module R E]
+variable {R E : Type*} [Ring R] [AddCommGroup E] [Module R E]
 
-abbrev End (R E : Type*) [CommRing R] [AddCommGroup E] [Module R E] :=
+abbrev End (R E : Type*) [Ring R] [AddCommGroup E] [Module R E] :=
   Module.End R E
 
 def IsInvolution (K : End R E) : Prop := K.comp K = LinearMap.id

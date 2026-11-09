@@ -29,7 +29,8 @@ namespace InfoGeometry.OperatorAlgebra.SquareZeroPairSpectral
 
 open InfoGeometry.Core.PeirceDecomposition
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [Ring R] [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-! ### Abstract corner relations -/
 

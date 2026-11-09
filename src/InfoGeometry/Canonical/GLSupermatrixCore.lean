@@ -27,7 +27,7 @@ def blockA (M : SuperMatrix m n R) : Matrix (Fin m) (Fin m) R :=
 def blockD (M : SuperMatrix m n R) : Matrix (Fin n) (Fin n) R :=
   fun i j => M (Sum.inr i) (Sum.inr j)
 
-variable [CommRing R]
+variable [Ring R]
 
 def evenMatrix (A : Matrix (Fin m) (Fin m) R)
     (D : Matrix (Fin n) (Fin n) R) : SuperMatrix m n R :=

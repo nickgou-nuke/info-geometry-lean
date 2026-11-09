@@ -38,7 +38,7 @@ end LieTKK
 
 section ThermofieldDouble
 
-variable {I : Type*} [Fintype I] [DecidableEq I] {R : Type*} [CommRing R]
+variable {I : Type*} [Fintype I] [DecidableEq I] {R : Type*} [Ring R]
 
 def tfd_vec (W : I → R) (i j : I) : R := if i = j then W i else 0
 def tfd_density (W : I → R) (ix kx : I × I) : R := tfd_vec W ix.1 ix.2 * tfd_vec W kx.1 kx.2
@@ -78,13 +78,13 @@ export InfoGeometry.Canonical.ChiralCausalConeFlow
   (ChiralState weyl_trace causal_interval ModularTimeFlow rindler_boost
     weyl_gauge_scale rindler_flow_isometry weyl_trace_scaling)
 
-structure SymmState2x2 (R : Type*) [CommRing R] where
+structure SymmState2x2 (R : Type*) [Ring R] where
   t : R
   x : R
   z : R
 
-def trace_2x2 {R : Type*} [CommRing R] (S : SymmState2x2 R) : R := S.t + S.t
-def symmState2x2_det {R : Type*} [CommRing R] (S : SymmState2x2 R) : R := S.t * S.t - S.x * S.x - S.z * S.z
+def trace_2x2 {R : Type*} [Ring R] (S : SymmState2x2 R) : R := S.t + S.t
+def symmState2x2_det {R : Type*} [Ring R] (S : SymmState2x2 R) : R := S.t * S.t - S.x * S.x - S.z * S.z
 
 theorem cartan_symmetric_interior (S : SymmState2x2 ℝ) (h_trace : trace_2x2 S = 1) (h_det : symmState2x2_det S > 0) :
     S.x * S.x + S.z * S.z < (1 / 2) * (1 / 2) := by

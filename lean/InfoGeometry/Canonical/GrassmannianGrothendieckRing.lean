@@ -23,12 +23,12 @@ relations reduce to polynomial equations in `e_1` and `e_2`.
 
 namespace InfoGeometry.Canonical.GrassmannianGrothendieckRing
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- The class `f_1` is uniquely determined by the generator `e_1`. -/
 theorem f1_eq (e_1 f_1 : R) (h1 : e_1 + f_1 = 4) : f_1 = 4 - e_1 := by
   calc
-    f_1 = (e_1 + f_1) - e_1 := by ring
+    f_1 = (e_1 + f_1) - e_1 := by abel
     _ = 4 - e_1 := by rw [h1]
 
 /-- The class `f_2` is uniquely determined by `e_1` and `e_2`. -/
@@ -38,9 +38,9 @@ theorem f2_eq (e_1 e_2 f_1 f_2 : R)
     f_2 = 6 - e_2 - 4 * e_1 + e_1 ^ 2 := by
   have hf1 : f_1 = 4 - e_1 := f1_eq e_1 f_1 h1
   calc
-    f_2 = (e_2 + e_1 * f_1 + f_2) - e_2 - e_1 * f_1 := by ring
+    f_2 = (e_2 + e_1 * f_1 + f_2) - e_2 - e_1 * f_1 := by abel
     _ = 6 - e_2 - e_1 * (4 - e_1) := by rw [h2, hf1]
-    _ = 6 - e_2 - 4 * e_1 + e_1 ^ 2 := by ring
+    _ = 6 - e_2 - 4 * e_1 + e_1 ^ 2 := by noncomm_ring
 
 /-- Elimination of the third relation into a polynomial equation in `e_1` and `e_2`. -/
 theorem rel3_elim (e_1 e_2 f_1 f_2 : R)

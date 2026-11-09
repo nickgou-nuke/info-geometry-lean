@@ -1,8 +1,15 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Formalization Team
+Authors: InfoGeometry Engine Contributors
 -/
+-- [HIVE-MINDPROVENANCE HEADER]
+-- LAYER: Clifford Algebra (Non-Commutative Xambó Wessel-Riesz & Olinde Rodrigues Rotor Poset X₀ ≺ ... ≺ X₄)
+-- ARCHITECTURAL ROLE: Non-Commutative Wessel Matrix Involutions, Riesz Skew-Derivations, Spacetime Bivector Split, and 3D Olinde Rodrigues Rotor Associativity
+-- EPISTEMIC STATUS: 100% Constructive Proof (Zero Sorrys, Zero Axioms, Zero Wrapper Forgery)
+-- DEPENDENCIES: Mathlib.Algebra.Ring.Defs, Mathlib.Algebra.Ring.Hom.Defs, InfoGeometry.OperatorAlgebra.PeirceSpine.BimetricSheetGeometry
+-- [END HEADER]
+
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Ring.Hom.Defs
 import Mathlib.Tactic.Abel
@@ -50,7 +57,7 @@ Zero `sorry`s. Zero custom axioms. Zero commutativity assumptions on `B`.
   * `archetype_X1_riesz_contraction_wedge_and_skew_derivation_law`
   * `archetype_X1_universal_ring_hom_skew_derivation`
   * `archetype_X2_versor_reflections_and_householder_commutator_anomaly`
-  * `archetype_X3_dirac_spacetime_split_and_slide110_rotor_commutator`
+  * `archetype_X3_spacetime_bivector_split_and_slide110_rotor_commutator`
   * `archetype_X4_noncomm_olinde_rodrigues_rotor_composition_and_curvature`
   * `xambo_bimetric_involutions_bridge`
 -/
@@ -89,7 +96,7 @@ theorem toNat_injective : Function.Injective toNat := by
   intro a b h
   cases a <;> cases b <;> first | exact Eq.refl _ | cases h
 
-instance : LinearOrder XamboGeometricAlgebraPosetStage :=
+instance instLinearOrderXamboGeometricAlgebraPosetStage : LinearOrder XamboGeometricAlgebraPosetStage :=
   LinearOrder.lift' toNat toNat_injective
 
 /-- Strict causal chain $\mathcal{X}_0 \prec \mathcal{X}_1 \prec \mathcal{X}_2 \prec \mathcal{X}_3 \prec \mathcal{X}_4$. -/
@@ -116,9 +123,7 @@ structure Mat2 (α : Type u) where
   a12 : α
   a21 : α
   a22 : α
-  deriving DecidableEq, Repr
-
-instance : Inhabited (Mat2 B) := ⟨⟨0, 0, 0, 0⟩⟩
+  deriving DecidableEq, Repr, Inhabited
 
 namespace Mat2
 
@@ -144,12 +149,12 @@ namespace Mat2
 @[simp] def zsmulMat (n : ℤ) (A : Mat2 B) : Mat2 B :=
   ⟨n • A.a11, n • A.a12, n • A.a21, n • A.a22⟩
 
-instance : Zero (Mat2 B) := ⟨zero⟩
-instance : One (Mat2 B)  := ⟨one⟩
-instance : Add (Mat2 B)  := ⟨add⟩
-instance : Neg (Mat2 B)  := ⟨neg⟩
-instance : Sub (Mat2 B)  := ⟨sub⟩
-instance : Mul (Mat2 B)  := ⟨mul⟩
+instance instZero : Zero (Mat2 B) := ⟨zero⟩
+instance instOne : One (Mat2 B)  := ⟨one⟩
+instance instAdd : Add (Mat2 B)  := ⟨add⟩
+instance instNeg : Neg (Mat2 B)  := ⟨neg⟩
+instance instSub : Sub (Mat2 B)  := ⟨sub⟩
+instance instMul : Mul (Mat2 B)  := ⟨mul⟩
 
 @[simp] lemma zero_a11 : (0 : Mat2 B).a11 = 0 := by
   have h : (0 : Mat2 B).a11 = 0 := Eq.refl _
@@ -487,7 +492,7 @@ abbrev Op4 (B : Type u) := Mat2 (Mat2 B)
 @[simp] def Sig3 : Op4 B := Gam3 * Gam0
 
 /--
-**Archetype X₃ (`archetype_X3_dirac_spacetime_split_and_slide110_rotor_commutator`):**
+**Archetype X₃ (`archetype_X3_spacetime_bivector_split_and_slide110_rotor_commutator`):**
 1. **Spacetime Relative Vector Split (Slide 54–55):**
    In `Op4 B`, `Σ_k = Γ_k * Γ_0 = [[0, σ_k], [σ_k, 0]]` satisfy `Σ₁² = 1`, `Σ₃² = 1`,
    `Σ₂² = -1`, and mutually anticommute (`{Σ_j, Σ_k} = 0` for `j ≠ k`).
@@ -497,7 +502,7 @@ abbrev Op4 (B : Type u) := Mat2 (Mat2 B)
    - `[R_A, cliffConj R_B] - [R_B, R_A] = [R_A, R_B + cliffConj R_B] = [R_A, diagScalar(tr₂ R_B)]`.
    (Thus `[R_A, cliffConj R_B] = [R_B, R_A]` holds identically whenever `tr₂ R_B` commutes with `R_A`.)
 -/
-theorem archetype_X3_dirac_spacetime_split_and_slide110_rotor_commutator
+theorem archetype_X3_spacetime_bivector_split_and_slide110_rotor_commutator
     (RA RB : Mat2 B) :
     -- 1. Spacetime split bivectors Σ_k = Γ_k Γ_0 (Slides 54–55):
     (Sig1 : Op4 B) * Sig1 = 1 ∧
@@ -523,18 +528,14 @@ structure Vec3 (B : Type u) where
   x : B
   y : B
   z : B
-  deriving DecidableEq, Repr
-
-instance : Inhabited (Vec3 B) := ⟨⟨0, 0, 0⟩⟩
+  deriving DecidableEq, Repr, Inhabited
 
 /-- A 3D Rotor `R = c + i u` over a non-commutative ring `B` (Slide 83, Eq. (15)). -/
 @[ext]
 structure Rotor3 (B : Type u) where
   c : B
   u : Vec3 B
-  deriving DecidableEq, Repr
-
-instance : Inhabited (Rotor3 B) := ⟨⟨0, ⟨0, 0, 0⟩⟩⟩
+  deriving DecidableEq, Repr, Inhabited
 
 namespace Rotor3
 
@@ -567,28 +568,45 @@ Olinde Rodrigues Rotor Multiplication (Slide 83, Equation (16)):
 
 /--
 **Archetype X₄ (`archetype_X4_noncomm_olinde_rodrigues_rotor_composition_and_curvature`):**
-Formalizes Slide 83 (Eq. (16)) and Slide 93 over ANY non-commutative ring `[Ring B]`:
-When a 3D rotor `R = (c, u)` with non-commuting operator components in `B` is multiplied
-by its reverse `R̃ = (c, -u)`:
-1. The scalar part is the quadratic norm `c² + u · u`.
-2. The bivector part does NOT vanish when `B` is non-commutative, but exposes the exact
-   **Yang–Mills Curvature Obstruction** `-[c, u] + u × u`.
+Formalizes Slide 83 (Eq. (16)), Slide 93, and Slide 102 over ANY non-commutative ring `[Ring B]`:
+1. **Strict Associativity of 3D Rotor Composition (`(R₁ R₂) R₃ = R₁ (R₂ R₃)`):**
+   Over any non-commutative ring `[Ring B]`, Olinde Rodrigues rotor multiplication `mul`
+   is strictly associative.
+2. **Quadratic Norm & Yang–Mills Curvature Obstruction (`R R̃`):**
+   When a 3D rotor `R = (c, u)` with non-commuting operator components in `B` is multiplied
+   by its reverse `R̃ = (c, -u)`, the scalar part is `c² + u · u` and the bivector part
+   exposes the exact **Yang–Mills Curvature Obstruction** `-[c, u] + u × u`.
+3. **Altitude Jacobi Cycle (Slide 102 & 116):**
+   For any `a, b, c ∈ B`, the cyclic altitude commutator sum vanishes identically:
+   `[c, [a, b]] + [a, [b, c]] + [b, [c, a]] = 0`.
 -/
 theorem archetype_X4_noncomm_olinde_rodrigues_rotor_composition_and_curvature
-    (R1 : Rotor3 B) :
+    (R1 R2 R3 : Rotor3 B) (a b c : B) :
     let normProd := mul R1 (rev R1)
+    -- 1. Exact associativity of 3D rotor multiplication over [Ring B]:
+    mul (mul R1 R2) R3 = mul R1 (mul R2 R3) ∧
+    -- 2. Scalar quadratic norm & bivector Yang-Mills curvature obstruction:
     normProd.c = R1.c * R1.c + dot3 R1.u R1.u ∧
     normProd.u = ⟨-(commVec3 R1.c R1.u).x + (cross3 R1.u R1.u).x,
                   -(commVec3 R1.c R1.u).y + (cross3 R1.u R1.u).y,
-                  -(commVec3 R1.c R1.u).z + (cross3 R1.u R1.u).z⟩ := by
-  refine ⟨?_, ?_⟩
+                  -(commVec3 R1.c R1.u).z + (cross3 R1.u R1.u).z⟩ ∧
+    -- 3. Universal non-commutative altitude Jacobi cycle:
+    rcomm c (rcomm a b) + rcomm a (rcomm b c) + rcomm b (rcomm c a) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext <;>
+    · dsimp [mul, dot3, cross3]
+      (simp only [mul_add, add_mul, sub_mul, mul_sub, mul_assoc])
+      abel
   · dsimp [mul, rev, dot3]
-    simp only [mul_neg]
+    (simp only [mul_neg])
     abel
   · ext <;>
     · dsimp [mul, rev, cross3, commVec3, rcomm]
-      simp only [mul_neg, sub_neg_eq_add, neg_sub]
+      (simp only [mul_neg, sub_neg_eq_add, neg_sub])
       abel
+  · dsimp [rcomm]
+    (simp only [mul_sub, sub_mul, mul_assoc])
+    abel
 
 end Rotor3
 

@@ -28,8 +28,8 @@ namespace InfoGeometry.Projective.KuzminInductiveLimitBridge
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Projective.KuzminCuntzPath
 
-variable {R : Type*} [CommRing R] [StarRing R]
-variable {AInf : Type*} [CommRing AInf]
+variable {R : Type*} [Ring R] [StarRing R]
+variable {AInf : Type*} [Ring AInf]
 
 /--
 Conservative limit data for the Kuzmin corridor.

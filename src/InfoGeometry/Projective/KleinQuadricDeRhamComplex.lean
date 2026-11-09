@@ -18,7 +18,7 @@ namespace InfoGeometry.Projective.KleinQuadric.DeRhamComplex
 noncomputable section
 
 variable {R Ω₀ Ω₁ Ω₂ : Type*}
-variable [CommRing R]
+variable [Ring R]
 variable [AddCommGroup Ω₀] [Module R Ω₀]
 variable [AddCommGroup Ω₁] [Module R Ω₁]
 variable [AddCommGroup Ω₂] [Module R Ω₂]

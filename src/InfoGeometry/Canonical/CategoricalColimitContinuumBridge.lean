@@ -56,7 +56,7 @@ Generic colimit cocone compatibility: The composite of the $m$-step sequence
 embedding with the target map at stage $n + m$ reproduces the target map at stage $n$.
 -/
 theorem colimit_cocone_comm
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (A : ℕ → Type*) [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
     (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]
@@ -71,7 +71,7 @@ Generic colimit trace commutativity: Evaluation of any linear functional on the
 colimit space is invariant under the $m$-step sequence embedding.
 -/
 theorem colimit_evaluation_invariance
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (A : ℕ → Type*) [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
     (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]
@@ -129,7 +129,7 @@ UHF inductive limits.
 structure CategoricalColimitContinuumPacket where
   -- Stratum 1: Generic Colimit Cocone & Trace Commutativity
   colimit_cocone :
-    ∀ {R : Type*} [CommRing R]
+    ∀ {R : Type*} [Ring R]
       (A : ℕ → Type*) [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
       (iota : ∀ n, A n →ₗ[R] A (n + 1))
       (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]
@@ -138,7 +138,7 @@ structure CategoricalColimitContinuumPacket where
       (n m : ℕ),
       (psi (n + m)).comp (iota_seq A iota n m) = psi n
   colimit_trace :
-    ∀ {R : Type*} [CommRing R]
+    ∀ {R : Type*} [Ring R]
       (A : ℕ → Type*) [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
       (iota : ∀ n, A n →ₗ[R] A (n + 1))
       (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf]

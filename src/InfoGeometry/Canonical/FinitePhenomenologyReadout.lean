@@ -48,7 +48,7 @@ open InfoGeometry.Canonical.CelikErlangenBraidBridge
 
 /-! ## Trifactor null-sector readout -/
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Ring R] [Invertible (2 : R)]
 
 /--
 Finite "superlocalization" readout: for a tripotent operator, the null

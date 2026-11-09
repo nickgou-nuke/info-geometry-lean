@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Core.IdempotencyDefect
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Set.Basic
 import Mathlib.Tactic
@@ -164,6 +165,31 @@ theorem peirce_decomposition (f x : A) :
   simp only [component11, component10, component01, component00,
     complementIdempotent]
   noncomm_ring
+
+/-- The idempotency defect `x * x - x` resolves into the four ordered
+Peirce corners.  The diagonal defects receive the two round-trip transfer
+terms, while the off-diagonal components are the corresponding two-step
+paths minus the original component. -/
+theorem idempotencyDefect_peirce_components
+    (f x : A) (hf : f * f = f) :
+    component11 f (x * x - x) =
+        (component11 f x * component11 f x - component11 f x) +
+          component10 f x * component01 f x ∧
+    component10 f (x * x - x) =
+        component11 f x * component10 f x +
+          component10 f x * component00 f x - component10 f x ∧
+    component01 f (x * x - x) =
+        component01 f x * component11 f x +
+          component00 f x * component01 f x - component01 f x ∧
+    component00 f (x * x - x) =
+        (component00 f x * component00 f x - component00 f x) +
+          component01 f x * component10 f x := by
+  simp only [component11, component10, component01, component00,
+    complementIdempotent]
+  have hcomp : complementIdempotent f * complementIdempotent f = complementIdempotent f := by
+    rw [complementIdempotent_sq f hf]
+  constructor <;> noncomm_ring [hf, hcomp] <;>
+    simp only [idempotent_mul_nested f hf] <;> abel_nf <;> simp
 
 /-! ## Nonzero routing laws -/
 

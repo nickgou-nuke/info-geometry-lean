@@ -26,7 +26,7 @@ open InfoGeometry.Canonical.BoundaryBraidRepresentation
 open InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 
 variable {R V W : Type*}
-  [CommRing R]
+  [Ring R]
   [AddCommGroup V] [AddCommGroup W]
   [Module R V] [Module R W]
 

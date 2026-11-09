@@ -18,7 +18,7 @@ namespace InfoGeometry.Canonical.EulerPfaffianCurvatureForm
 
 open InfoGeometry.Volume.PfaffianPathBridge
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- A finite oriented skew-curvature packet together with its signed
 Pfaffian readout.  The orientation is represented by the signed matching

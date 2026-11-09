@@ -60,7 +60,7 @@ namespace InfoGeometry.Canonical
 
 section ZornAssociatorShadow
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /--
 Split-octonion shadow associator defect on Zorn matrices.

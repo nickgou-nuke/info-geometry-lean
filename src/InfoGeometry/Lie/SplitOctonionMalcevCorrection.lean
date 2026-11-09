@@ -28,7 +28,7 @@ open InfoGeometry.Algebra
 open ZornVectorMatrix
 open ZornVec3
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-! ## 1. Commutator and associator -/
 

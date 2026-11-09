@@ -70,14 +70,27 @@ theorem krausMap_conserved_iff (V : ι → Matrix n n ℂ) (E : Matrix n n ℂ) 
   exact Matrix.ext_iff_trace_mul_left.symm
 
 /-- Apply a finite word in chronological list order. -/
-def forwardWord : List (ι → Matrix n n ℂ) → MatrixMap (n := n)
-  | [] => LinearMap.id
-  | V :: tail => (forwardWord tail).comp (krausMap V)
+def forwardWord (word : List (ι → Matrix n n ℂ)) : MatrixMap (n := n) :=
+  word.foldr (fun V next => next.comp (krausMap V)) LinearMap.id
 
 /-- Pull an operator backward through the same word, in reverse order. -/
-def backwardWord : List (ι → Matrix n n ℂ) → MatrixMap (n := n)
-  | [] => LinearMap.id
-  | V :: tail => (krausMap (fun i => star (V i))).comp (backwardWord tail)
+def backwardWord (word : List (ι → Matrix n n ℂ)) : MatrixMap (n := n) :=
+  word.foldr (fun V next => (krausMap (fun i => star (V i))).comp next) LinearMap.id
+
+@[simp] theorem forwardWord_nil :
+    forwardWord ([] : List (ι → Matrix n n ℂ)) = LinearMap.id := rfl
+
+@[simp] theorem forwardWord_cons (V : ι → Matrix n n ℂ)
+    (tail : List (ι → Matrix n n ℂ)) :
+    forwardWord (V :: tail) = (forwardWord tail).comp (krausMap V) := rfl
+
+@[simp] theorem backwardWord_nil :
+    backwardWord ([] : List (ι → Matrix n n ℂ)) = LinearMap.id := rfl
+
+@[simp] theorem backwardWord_cons (V : ι → Matrix n n ℂ)
+    (tail : List (ι → Matrix n n ℂ)) :
+    backwardWord (V :: tail) =
+      (krausMap (fun i => star (V i))).comp (backwardWord tail) := rfl
 
 /-- Finite ordered propagation and backward pullback are trace dual. -/
 theorem trace_forwardWord_pairing (word : List (ι → Matrix n n ℂ))
@@ -96,7 +109,7 @@ theorem forwardWord_append (left right : List (ι → Matrix n n ℂ)) :
   induction left with
   | nil => ext X; rfl
   | cons V tail ih =>
-      simp only [List.cons_append, forwardWord, ih, LinearMap.comp_assoc]
+      simp only [List.cons_append, forwardWord_cons, ih, LinearMap.comp_assoc]
 
 /-- Backward maps compose contravariantly. -/
 theorem backwardWord_append (left right : List (ι → Matrix n n ℂ)) :
@@ -104,7 +117,7 @@ theorem backwardWord_append (left right : List (ι → Matrix n n ℂ)) :
   induction left with
   | nil => ext X; rfl
   | cons V tail ih =>
-      simp only [List.cons_append, backwardWord, ih, LinearMap.comp_assoc]
+      simp only [List.cons_append, backwardWord_cons, ih, LinearMap.comp_assoc]
 
 /-- Every cut of a word has the same boundary pairing. -/
 theorem trace_pairing_at_cut (left right : List (ι → Matrix n n ℂ))
@@ -178,14 +191,14 @@ theorem permutationOperator_unitary (σ : Equiv.Perm n) :
     · simp
 
 /-- A weighted mixture of unitary conjugations on the full matrix algebra.
-The weights are scalar probabilities, while each summand acts by genuine
+The real weights are unrestricted, while each summand acts by genuine
 noncommuting operator multiplication. This is the real-weighted variant,
 distinct from `ChoiCompletePositivity.unitaryMixtureChannel` (complex weights). -/
 def unitaryMixtureChannel_real {κ : Type*} [Fintype κ] [DecidableEq κ]
     (w : κ → ℝ) (U : κ → Matrix n n ℂ) (X : Matrix n n ℂ) : Matrix n n ℂ :=
   ∑ i, (w i : ℂ) • (U i * X * star (U i))
 
-/-! A normalized finite mixture of two-sided unitary conjugations is both
+/-- A normalized finite mixture of two-sided unitary conjugations is both
 unital and trace-preserving on the full, noncommutative matrix algebra. -/
 theorem unitaryMixtureChannel_real_doubly_stochastic
     {κ : Type*} [Fintype κ] [DecidableEq κ]

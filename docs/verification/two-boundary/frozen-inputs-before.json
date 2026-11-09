@@ -1,0 +1,227 @@
+{
+  "schema": "two_boundary_qa_frozen_inputs.v1",
+  "created_utc": "2026-11-09T09:14:58.565603+00:00",
+  "repository": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+  "head": "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0",
+  "branch": "feat/two-boundary-operator-geometry",
+  "owners": [
+    "InfoGeometry.Quantum.KrausBoundaryDuality",
+    "InfoGeometry.Quantum.FinitePartialTrace",
+    "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges",
+    "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+    "InfoGeometry.Quantum.BoundaryInstrument",
+    "InfoGeometry.Quantum.MixedBoundaryReadout",
+    "InfoGeometry.Quantum.MatrixBoundaryPurification",
+    "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+    "InfoGeometry.Quantum.TwoBoundaryOperatorExamples"
+  ],
+  "additional_target": "InfoGeometry.Quantum.KrausInvariantGeometry",
+  "staged_count": 26,
+  "staged_files": {
+    ".githooks/pre-push": {
+      "sha256": "5ea58fd402899bf7e8c04f26158146dd429485fab636367fd6671df207dfbaaf",
+      "index_equals_worktree": true
+    },
+    "docs/TWO_BOUNDARY_OPERATOR_CONTRACT.md": {
+      "sha256": "e19d92030a6537c2ea45525a16b3c4cfac08688fd6d86b50b03d6e67ba32247e",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/AllExhaustive.lean": {
+      "sha256": "59769bb22e6f3d814588b7322ef64d408b681fafaf0473b7bc2ea1576b6d6af7",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean": {
+      "sha256": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/BoundaryInstrument.lean": {
+      "sha256": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/FiniteAttentionCanonicalBridges.lean": {
+      "sha256": "fe181c5428136dd0b86cb2676115f7a0dd149b561e6277c8ffdc4c4ca8cd0592",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/FinitePartialTrace.lean": {
+      "sha256": "bfb3db143b95aee547e5241d2f854bc2cfcd964c116afd89817726d54a52d7c1",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/KrausBoundaryDuality.lean": {
+      "sha256": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean": {
+      "sha256": "3414dabfa40cc746d6511c4a9d57b0986228044bcf6eff73d13fcd06f85af7e1",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/MixedBoundaryReadout.lean": {
+      "sha256": "3708e31d8f41bc14b957e357c768101d5e5dc0b96c383d892bba09c69b72a600",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean": {
+      "sha256": "972734ce15376f0458db8598615f9f57fa117ab0df152b575c06404d113b52a1",
+      "index_equals_worktree": true
+    },
+    "lean/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean": {
+      "sha256": "c3f603ad869f59dd7f35444df1c03f3373a298f0c159097a85e9d32064737252",
+      "index_equals_worktree": true
+    },
+    "scripts/quality/post_build_gate.sh": {
+      "sha256": "548ecf9d42268fbef3a4a89b5c90834568a7e9c5ad046d78bf78a6bfce7bcf8a",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/AllExhaustive.lean": {
+      "sha256": "59769bb22e6f3d814588b7322ef64d408b681fafaf0473b7bc2ea1576b6d6af7",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/BoundaryInstrument.lean": {
+      "sha256": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/FiniteAttentionCanonicalBridges.lean": {
+      "sha256": "fe181c5428136dd0b86cb2676115f7a0dd149b561e6277c8ffdc4c4ca8cd0592",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/FinitePartialTrace.lean": {
+      "sha256": "bfb3db143b95aee547e5241d2f854bc2cfcd964c116afd89817726d54a52d7c1",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/KrausBoundaryDuality.lean": {
+      "sha256": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/MatrixBoundaryPurification.lean": {
+      "sha256": "3414dabfa40cc746d6511c4a9d57b0986228044bcf6eff73d13fcd06f85af7e1",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/MixedBoundaryReadout.lean": {
+      "sha256": "3708e31d8f41bc14b957e357c768101d5e5dc0b96c383d892bba09c69b72a600",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean": {
+      "sha256": "972734ce15376f0458db8598615f9f57fa117ab0df152b575c06404d113b52a1",
+      "index_equals_worktree": true
+    },
+    "src/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean": {
+      "sha256": "c3f603ad869f59dd7f35444df1c03f3373a298f0c159097a85e9d32064737252",
+      "index_equals_worktree": true
+    },
+    "tests/quality/test_two_boundary_gate_routing.py": {
+      "sha256": "6ac0fd80f0add086ea020e91f5da46106a2efe0e68160fc0ea606b0a1299cc73",
+      "index_equals_worktree": true
+    },
+    "tests/test_operator_geometry_audit_scope.py": {
+      "sha256": "dcb77659d5b1e793de40ae287284f01f8848f7026c64aa8794f3efb9ec124744",
+      "index_equals_worktree": true
+    },
+    "tools/quality/TwoBoundaryDeclarationAudit.lean": {
+      "sha256": "8c274f1935e96955474444b359f575d5ab8b13f0dc0f1a6c14767753b5ccbb7c",
+      "index_equals_worktree": true
+    },
+    "tools/quality/check_operator_geometry.py": {
+      "sha256": "2e3a78cb576936ca16951108a90ceed22934cad35a38b243fe53eff415512495",
+      "index_equals_worktree": true
+    }
+  },
+  "repository_file_hashes": {
+    ".githooks/pre-push": "5ea58fd402899bf7e8c04f26158146dd429485fab636367fd6671df207dfbaaf",
+    "docs/TWO_BOUNDARY_OPERATOR_CONTRACT.md": "e19d92030a6537c2ea45525a16b3c4cfac08688fd6d86b50b03d6e67ba32247e",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "lakefile.lean": "a9bc1bbce7c0180926819efd65a847484004f49291acfb3a9d239c8c64c2fdd6",
+    "lakefile.src.lean": "03a9e76dbfa6e31e45e2e9d383c6a0a43a31a931f6edc097e995aec15baa51e1",
+    "lakefile.toml": "4b493ada108e662af1b2d213a2ff93746010e034e069a37b4c31041fd758213c",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "lean/InfoGeometry/AllExhaustive.lean": "59769bb22e6f3d814588b7322ef64d408b681fafaf0473b7bc2ea1576b6d6af7",
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean": "49abd537aa7af6fcaa2dfb9e71dbaca6296fb323c82f58a60d760cd94322b12d",
+    "lean/InfoGeometry/Canonical/TKKJordanPairData.lean": "8e79a8304b037277aed014c154c8ba5ecb62310471a65b7c11d88c1aa4727769",
+    "lean/InfoGeometry/External/Auto/SarsModularWeakValue.lean": "b9aa8466eaad5089612c064268fd8a8b658412f6610f2abf12bf25dde3323537",
+    "lean/InfoGeometry/External/Auto/WeakIsospinSU2.lean": "c1299a4aff1b139193320b9f53f8c531bccd6cc69bcb74d969a4529d8996aecb",
+    "lean/InfoGeometry/OperatorAlgebra/MatrixOperatorIdentities.lean": "17ac7f059668f9c07e656da35970503dcce868002fbad94cdf79f134e09fd410",
+    "lean/InfoGeometry/OperatorAlgebra/MatrixTraceGeometry.lean": "3b091f89e70740ebb00cffb6e0956a4e7f0082ecdefbb7bb39abd0a849897e72",
+    "lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+    "lean/InfoGeometry/Physics/CPTAtom.lean": "400aeee865aad49098f3a482cf2e6771cf8ce8a10b27d4ab6c2db737960d5e94",
+    "lean/InfoGeometry/Physics/ChiralCausalCone.lean": "acda1cd32e079a7283955ca25bb06c622aff254b05a270ba91a027c37c58e986",
+    "lean/InfoGeometry/Physics/ChiralTensorRecoupling.lean": "ddabcbfddd1467c0494b9f1a3fa884a55df34be7404fd4cb730e4bba97cfcf45",
+    "lean/InfoGeometry/Physics/IsospinMirrorDynamics.lean": "5a5f8b90f14506ebb65a5b01690d980693ffb46473187992fe9dbbf48ed29bd0",
+    "lean/InfoGeometry/Physics/NuclearChargeExchangeBridge.lean": "a057a2acb800047ebcb32cf8de66c8691d9d05137a5302550a4ed0589796c291",
+    "lean/InfoGeometry/Physics/NuclearSpinIsospinTensorRepresentation.lean": "0a3e64f9fa751c0103a8221c1cca4620c74b8b193595f7b25a59a59ba0a434e5",
+    "lean/InfoGeometry/Physics/NuclearWignerSupermultipletSymmetry.lean": "8d095fcbe4f24a01f4fcf3edbd8802ea88d3946e81c1617c51b537bf7ae9480c",
+    "lean/InfoGeometry/Physics/SolderingSpinConnectionBogoliubov.lean": "c8daae0bed8c27b35ac33b0b10ff31e397e1975432640eb29b740cb80f1edcd4",
+    "lean/InfoGeometry/Physics/SplitCliffordAlgebras.lean": "5538006af3b0be7c17b144558b67778cf3f6381e1ea1624fe77cb1a38d918c0a",
+    "lean/InfoGeometry/Probability/AitchisonFinite.lean": "8f7a58961acc588caf3b845bb42dd3868418733a91392d0189be397dd4726cee",
+    "lean/InfoGeometry/Quantum/BoundaryInstrument.lean": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15",
+    "lean/InfoGeometry/Quantum/ChoiCompletePositivity.lean": "355393f1229736d065380dce0e9fb114da02388042c9e880a392b6534683066e",
+    "lean/InfoGeometry/Quantum/FiniteAttentionCanonicalBridges.lean": "fe181c5428136dd0b86cb2676115f7a0dd149b561e6277c8ffdc4c4ca8cd0592",
+    "lean/InfoGeometry/Quantum/FinitePartialTrace.lean": "bfb3db143b95aee547e5241d2f854bc2cfcd964c116afd89817726d54a52d7c1",
+    "lean/InfoGeometry/Quantum/KrausBoundaryDuality.lean": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+    "lean/InfoGeometry/Quantum/KrausInvariantGeometry.lean": "f6eae329022e13bdb61f39627ebf9e199bd827802e49f72d0dc112c4a9da75fb",
+    "lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean": "3414dabfa40cc746d6511c4a9d57b0986228044bcf6eff73d13fcd06f85af7e1",
+    "lean/InfoGeometry/Quantum/MixedBoundaryReadout.lean": "3708e31d8f41bc14b957e357c768101d5e5dc0b96c383d892bba09c69b72a600",
+    "lean/InfoGeometry/Quantum/PositiveBoundaryConditioning.lean": "f0f66a956fafc68ea84f94d768d0e473af97e9ab06f0fa7eddb13a2eae4ec550",
+    "lean/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean": "972734ce15376f0458db8598615f9f57fa117ab0df152b575c06404d113b52a1",
+    "lean/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean": "c3f603ad869f59dd7f35444df1c03f3373a298f0c159097a85e9d32064737252",
+    "lean/InfoGeometry/Streaming/FiniteTwoBoundaryWeakFunctional.lean": "d3aed78464eba74aaf6d722fbedac57696baa6d9db4593d882673078a3daf403",
+    "lean/InfoGeometry/Streaming/WeakValueBoundary.lean": "c5f21ae1a254d2e34a2a51f0da9307848f28aea51b8a0f1a1457c9d684e54e78",
+    "scripts/quality/post_build_gate.sh": "548ecf9d42268fbef3a4a89b5c90834568a7e9c5ad046d78bf78a6bfce7bcf8a",
+    "src/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    "src/InfoGeometry/AllExhaustive.lean": "59769bb22e6f3d814588b7322ef64d408b681fafaf0473b7bc2ea1576b6d6af7",
+    "src/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean": "49abd537aa7af6fcaa2dfb9e71dbaca6296fb323c82f58a60d760cd94322b12d",
+    "src/InfoGeometry/Canonical/TKKJordanPairData.lean": "8e79a8304b037277aed014c154c8ba5ecb62310471a65b7c11d88c1aa4727769",
+    "src/InfoGeometry/External/Auto/SarsModularWeakValue.lean": "b9aa8466eaad5089612c064268fd8a8b658412f6610f2abf12bf25dde3323537",
+    "src/InfoGeometry/External/Auto/WeakIsospinSU2.lean": "c1299a4aff1b139193320b9f53f8c531bccd6cc69bcb74d969a4529d8996aecb",
+    "src/InfoGeometry/OperatorAlgebra/MatrixOperatorIdentities.lean": "17ac7f059668f9c07e656da35970503dcce868002fbad94cdf79f134e09fd410",
+    "src/InfoGeometry/OperatorAlgebra/MatrixTraceGeometry.lean": "3b091f89e70740ebb00cffb6e0956a4e7f0082ecdefbb7bb39abd0a849897e72",
+    "src/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+    "src/InfoGeometry/Physics/CPTAtom.lean": "400aeee865aad49098f3a482cf2e6771cf8ce8a10b27d4ab6c2db737960d5e94",
+    "src/InfoGeometry/Physics/ChiralCausalCone.lean": "acda1cd32e079a7283955ca25bb06c622aff254b05a270ba91a027c37c58e986",
+    "src/InfoGeometry/Physics/ChiralTensorRecoupling.lean": "ddabcbfddd1467c0494b9f1a3fa884a55df34be7404fd4cb730e4bba97cfcf45",
+    "src/InfoGeometry/Physics/IsospinMirrorDynamics.lean": "5a5f8b90f14506ebb65a5b01690d980693ffb46473187992fe9dbbf48ed29bd0",
+    "src/InfoGeometry/Physics/NuclearChargeExchangeBridge.lean": "a057a2acb800047ebcb32cf8de66c8691d9d05137a5302550a4ed0589796c291",
+    "src/InfoGeometry/Physics/NuclearSpinIsospinTensorRepresentation.lean": "0a3e64f9fa751c0103a8221c1cca4620c74b8b193595f7b25a59a59ba0a434e5",
+    "src/InfoGeometry/Physics/NuclearWignerSupermultipletSymmetry.lean": "8d095fcbe4f24a01f4fcf3edbd8802ea88d3946e81c1617c51b537bf7ae9480c",
+    "src/InfoGeometry/Physics/SolderingSpinConnectionBogoliubov.lean": "c8daae0bed8c27b35ac33b0b10ff31e397e1975432640eb29b740cb80f1edcd4",
+    "src/InfoGeometry/Physics/SplitCliffordAlgebras.lean": "5538006af3b0be7c17b144558b67778cf3f6381e1ea1624fe77cb1a38d918c0a",
+    "src/InfoGeometry/Probability/AitchisonFinite.lean": "8f7a58961acc588caf3b845bb42dd3868418733a91392d0189be397dd4726cee",
+    "src/InfoGeometry/Quantum/BoundaryInstrument.lean": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15",
+    "src/InfoGeometry/Quantum/ChoiCompletePositivity.lean": "355393f1229736d065380dce0e9fb114da02388042c9e880a392b6534683066e",
+    "src/InfoGeometry/Quantum/FiniteAttentionCanonicalBridges.lean": "fe181c5428136dd0b86cb2676115f7a0dd149b561e6277c8ffdc4c4ca8cd0592",
+    "src/InfoGeometry/Quantum/FinitePartialTrace.lean": "bfb3db143b95aee547e5241d2f854bc2cfcd964c116afd89817726d54a52d7c1",
+    "src/InfoGeometry/Quantum/KrausBoundaryDuality.lean": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+    "src/InfoGeometry/Quantum/KrausInvariantGeometry.lean": "f6eae329022e13bdb61f39627ebf9e199bd827802e49f72d0dc112c4a9da75fb",
+    "src/InfoGeometry/Quantum/MatrixBoundaryPurification.lean": "3414dabfa40cc746d6511c4a9d57b0986228044bcf6eff73d13fcd06f85af7e1",
+    "src/InfoGeometry/Quantum/MixedBoundaryReadout.lean": "3708e31d8f41bc14b957e357c768101d5e5dc0b96c383d892bba09c69b72a600",
+    "src/InfoGeometry/Quantum/PositiveBoundaryConditioning.lean": "f0f66a956fafc68ea84f94d768d0e473af97e9ab06f0fa7eddb13a2eae4ec550",
+    "src/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean": "972734ce15376f0458db8598615f9f57fa117ab0df152b575c06404d113b52a1",
+    "src/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean": "c3f603ad869f59dd7f35444df1c03f3373a298f0c159097a85e9d32064737252",
+    "src/InfoGeometry/Streaming/FiniteTwoBoundaryWeakFunctional.lean": "d3aed78464eba74aaf6d722fbedac57696baa6d9db4593d882673078a3daf403",
+    "src/InfoGeometry/Streaming/WeakValueBoundary.lean": "c5f21ae1a254d2e34a2a51f0da9307848f28aea51b8a0f1a1457c9d684e54e78",
+    "tests/quality/test_pre_push_ref_range.py": "a0ee49c2753fdf60651fb1514566563947816cb2d18bd87a644cef660c714754",
+    "tests/quality/test_two_boundary_gate_routing.py": "6ac0fd80f0add086ea020e91f5da46106a2efe0e68160fc0ea606b0a1299cc73",
+    "tests/test_operator_geometry_audit_scope.py": "dcb77659d5b1e793de40ae287284f01f8848f7026c64aa8794f3efb9ec124744",
+    "tools/build_lock.py": "02e3e6712a2f1b716965e49ab8f7e0f0bbaf5b528d7ad723496fd373af7401df",
+    "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+    "tools/infra/ci_bootstrap.py": "91aef1473e016397248bfd422e81dc61b8ec676cd559a456362dcc6ca8174514",
+    "tools/infra/run_locked_lake_build.py": "10c9d567f310dc76bfb406596dda5a8364367f8269158d09ab2646a4790162c2",
+    "tools/infra/run_locked_lean.py": "e7280cb69266158a8a062d43c5ed6a9d4dee4bb9275c6c796dfd1d8fdde7a9b0",
+    "tools/quality/TwoBoundaryDeclarationAudit.lean": "8c274f1935e96955474444b359f575d5ab8b13f0dc0f1a6c14767753b5ccbb7c",
+    "tools/quality/check_operator_geometry.py": "2e3a78cb576936ca16951108a90ceed22934cad35a38b243fe53eff415512495",
+    "tools/quality/operator_geometry_dependency_order.py": "90305a21f77790cadd3d6b16123d60839c9dd293d41468d39c60e7d7399ad2ec",
+    "tools/quality/proof_proxy_staged_gate.py": "eaa861d929ad9465586504f30f65ddc64eb96f8198bee65b3039c8d4fb813db9"
+  },
+  "external_file_hashes": {
+    "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-aa-review.md": "a76ae068c4dd9249054ea773585775a954a0b4bd4736a2ebb4e775c6b427e4f7",
+    "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.c": "d603519a061ece743c2d4cb09079ca3f7666c1dd92b3e6be19093184addc8f11",
+    "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so": "3ce87eb6dd4bb68e115e669a622a48c60757131fd1a03b4bbd70ee038c05b1ff",
+    "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lake": "6f53827dab18010d6c690d14c8401cacabc1db958edb3552a877ed4cf1dd995d",
+    "/workspace/scratch/ec4ca3191aef/pinned-mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "/workspace/scratch/ec4ca3191aef/pinned-mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67"
+  },
+  "aa_report": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-aa-review.md",
+  "aa_all_staged_hashes_match": true,
+  "status_porcelain": "M  .githooks/pre-push\nA  docs/TWO_BOUNDARY_OPERATOR_CONTRACT.md\nM  lean/InfoGeometry/AllExhaustive.lean\nA  lean/InfoGeometry/OperatorAlgebra/SemilinearSheetGeometry.lean\nA  lean/InfoGeometry/Quantum/BoundaryInstrument.lean\nM  lean/InfoGeometry/Quantum/FiniteAttentionCanonicalBridges.lean\nA  lean/InfoGeometry/Quantum/FinitePartialTrace.lean\nM  lean/InfoGeometry/Quantum/KrausBoundaryDuality.lean\nA  lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean\nA  lean/InfoGeometry/Quantum/MixedBoundaryReadout.lean\nA  lean/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean\nA  lean/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean\nM  scripts/quality/post_build_gate.sh\nM  src/InfoGeometry/AllExhaustive.lean\nA  src/InfoGeometry/Quantum/BoundaryInstrument.lean\nM  src/InfoGeometry/Quantum/FiniteAttentionCanonicalBridges.lean\nM  src/InfoGeometry/Quantum/FinitePartialTrace.lean\nM  src/InfoGeometry/Quantum/KrausBoundaryDuality.lean\nA  src/InfoGeometry/Quantum/MatrixBoundaryPurification.lean\nA  src/InfoGeometry/Quantum/MixedBoundaryReadout.lean\nA  src/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean\nA  src/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean\nA  tests/quality/test_two_boundary_gate_routing.py\nA  tests/test_operator_geometry_audit_scope.py\nA  tools/quality/TwoBoundaryDeclarationAudit.lean\nM  tools/quality/check_operator_geometry.py\n",
+  "index_tree": "dfb2c7ad27adca0801dc95ced35dc99c533572b0",
+  "active_compilers": [],
+  "native_scope": "Fresh selected project source closure; pinned cached mathlib; not root Lake publication certification"
+}

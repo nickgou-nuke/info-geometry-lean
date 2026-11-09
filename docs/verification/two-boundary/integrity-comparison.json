@@ -1,0 +1,262 @@
+{
+  "status": "PASS",
+  "lanes": {
+    "lean": {
+      "audit_sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc",
+      "dag_sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a",
+      "declarations": 284,
+      "kinds": {
+        "definition": 51,
+        "theorem": 230,
+        "inductive": 1,
+        "constructor": 1,
+        "recursor": 1
+      },
+      "direct_edges": 664,
+      "hasse_edges": 359,
+      "layers": 10,
+      "module_counts": {
+        "InfoGeometry.Quantum.KrausBoundaryDuality": {
+          "definition": 4,
+          "theorem": 24
+        },
+        "InfoGeometry.Quantum.FinitePartialTrace": {
+          "definition": 2,
+          "theorem": 3
+        },
+        "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": {
+          "definition": 23,
+          "inductive": 1,
+          "theorem": 40,
+          "constructor": 1,
+          "recursor": 1
+        },
+        "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": {
+          "definition": 4,
+          "theorem": 33
+        },
+        "InfoGeometry.Quantum.BoundaryInstrument": {
+          "theorem": 38,
+          "definition": 4
+        },
+        "InfoGeometry.Quantum.MixedBoundaryReadout": {
+          "definition": 4,
+          "theorem": 22
+        },
+        "InfoGeometry.Quantum.MatrixBoundaryPurification": {
+          "definition": 3,
+          "theorem": 24
+        },
+        "InfoGeometry.Quantum.SemilinearBoundaryReversal": {
+          "theorem": 19,
+          "definition": 1
+        },
+        "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": {
+          "theorem": 27,
+          "definition": 6
+        }
+      },
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "independent_graph_validation": "PASS",
+      "compiled_modules": 31,
+      "owner_warnings": 0,
+      "dependency_warning_count": 95,
+      "dependency_warning_modules": {
+        "InfoGeometry.Quantum.ChoiCompletePositivity": 9,
+        "InfoGeometry.Probability.AitchisonFinite": 4,
+        "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 3,
+        "InfoGeometry.Quantum.PositiveBoundaryConditioning": 2,
+        "InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional": 7,
+        "InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry": 1,
+        "InfoGeometry.Physics.ChiralTensorRecoupling": 3,
+        "InfoGeometry.Physics.ChiralCausalCone": 49,
+        "InfoGeometry.Physics.CPTAtom": 7,
+        "InfoGeometry.Physics.SplitCliffordAlgebras": 5,
+        "InfoGeometry.Physics.IsospinMirrorDynamics": 2,
+        "InfoGeometry.Canonical.FiniteMatrixGibbsFunctional": 3
+      }
+    },
+    "src": {
+      "audit_sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc",
+      "dag_sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a",
+      "declarations": 284,
+      "kinds": {
+        "definition": 51,
+        "theorem": 230,
+        "inductive": 1,
+        "constructor": 1,
+        "recursor": 1
+      },
+      "direct_edges": 664,
+      "hasse_edges": 359,
+      "layers": 10,
+      "module_counts": {
+        "InfoGeometry.Quantum.KrausBoundaryDuality": {
+          "definition": 4,
+          "theorem": 24
+        },
+        "InfoGeometry.Quantum.FinitePartialTrace": {
+          "definition": 2,
+          "theorem": 3
+        },
+        "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": {
+          "definition": 23,
+          "inductive": 1,
+          "theorem": 40,
+          "constructor": 1,
+          "recursor": 1
+        },
+        "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": {
+          "definition": 4,
+          "theorem": 33
+        },
+        "InfoGeometry.Quantum.BoundaryInstrument": {
+          "theorem": 38,
+          "definition": 4
+        },
+        "InfoGeometry.Quantum.MixedBoundaryReadout": {
+          "definition": 4,
+          "theorem": 22
+        },
+        "InfoGeometry.Quantum.MatrixBoundaryPurification": {
+          "definition": 3,
+          "theorem": 24
+        },
+        "InfoGeometry.Quantum.SemilinearBoundaryReversal": {
+          "theorem": 19,
+          "definition": 1
+        },
+        "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": {
+          "theorem": 27,
+          "definition": 6
+        }
+      },
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "independent_graph_validation": "PASS",
+      "compiled_modules": 31,
+      "owner_warnings": 0,
+      "dependency_warning_count": 95,
+      "dependency_warning_modules": {
+        "InfoGeometry.Quantum.ChoiCompletePositivity": 9,
+        "InfoGeometry.Probability.AitchisonFinite": 4,
+        "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 3,
+        "InfoGeometry.Quantum.PositiveBoundaryConditioning": 2,
+        "InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional": 7,
+        "InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry": 1,
+        "InfoGeometry.Physics.ChiralTensorRecoupling": 3,
+        "InfoGeometry.Physics.ChiralCausalCone": 49,
+        "InfoGeometry.Physics.CPTAtom": 7,
+        "InfoGeometry.Physics.SplitCliffordAlgebras": 5,
+        "InfoGeometry.Physics.IsospinMirrorDynamics": 2,
+        "InfoGeometry.Canonical.FiniteMatrixGibbsFunctional": 3
+      }
+    }
+  },
+  "source_comparisons": {
+    "parent_canonical_manifest_exact": true,
+    "audit_and_dag_byte_identical_across_parent_and_both_lanes": true,
+    "cross_lane_source_differences": []
+  },
+  "parent_comparison": {
+    "audit_sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc",
+    "dag_sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a",
+    "declarations": 284,
+    "kinds": {
+      "definition": 51,
+      "theorem": 230,
+      "inductive": 1,
+      "constructor": 1,
+      "recursor": 1
+    },
+    "direct_edges": 664,
+    "hasse_edges": 359,
+    "layers": 10,
+    "module_counts": {
+      "InfoGeometry.Quantum.KrausBoundaryDuality": {
+        "definition": 4,
+        "theorem": 24
+      },
+      "InfoGeometry.Quantum.FinitePartialTrace": {
+        "definition": 2,
+        "theorem": 3
+      },
+      "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": {
+        "definition": 23,
+        "inductive": 1,
+        "theorem": 40,
+        "constructor": 1,
+        "recursor": 1
+      },
+      "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": {
+        "definition": 4,
+        "theorem": 33
+      },
+      "InfoGeometry.Quantum.BoundaryInstrument": {
+        "theorem": 38,
+        "definition": 4
+      },
+      "InfoGeometry.Quantum.MixedBoundaryReadout": {
+        "definition": 4,
+        "theorem": 22
+      },
+      "InfoGeometry.Quantum.MatrixBoundaryPurification": {
+        "definition": 3,
+        "theorem": 24
+      },
+      "InfoGeometry.Quantum.SemilinearBoundaryReversal": {
+        "theorem": 19,
+        "definition": 1
+      },
+      "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": {
+        "theorem": 27,
+        "definition": 6
+      }
+    },
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "independent_graph_validation": "PASS"
+  },
+  "mirrors": {
+    "InfoGeometry.Quantum.KrausBoundaryDuality": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+    "InfoGeometry.Quantum.FinitePartialTrace": "bfb3db143b95aee547e5241d2f854bc2cfcd964c116afd89817726d54a52d7c1",
+    "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": "fe181c5428136dd0b86cb2676115f7a0dd149b561e6277c8ffdc4c4ca8cd0592",
+    "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+    "InfoGeometry.Quantum.BoundaryInstrument": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15",
+    "InfoGeometry.Quantum.MixedBoundaryReadout": "3708e31d8f41bc14b957e357c768101d5e5dc0b96c383d892bba09c69b72a600",
+    "InfoGeometry.Quantum.MatrixBoundaryPurification": "3414dabfa40cc746d6511c4a9d57b0986228044bcf6eff73d13fcd06f85af7e1",
+    "InfoGeometry.Quantum.SemilinearBoundaryReversal": "972734ce15376f0458db8598615f9f57fa117ab0df152b575c06404d113b52a1",
+    "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": "c3f603ad869f59dd7f35444df1c03f3373a298f0c159097a85e9d32064737252",
+    "InfoGeometry.AllExhaustive": "59769bb22e6f3d814588b7322ef64d408b681fafaf0473b7bc2ea1576b6d6af7"
+  },
+  "registrations": {
+    "lean": {
+      "InfoGeometry.Quantum.FinitePartialTrace": 1,
+      "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": 1,
+      "InfoGeometry.Quantum.BoundaryInstrument": 1,
+      "InfoGeometry.Quantum.MixedBoundaryReadout": 1,
+      "InfoGeometry.Quantum.MatrixBoundaryPurification": 1,
+      "InfoGeometry.Quantum.SemilinearBoundaryReversal": 1,
+      "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": 1
+    },
+    "src": {
+      "InfoGeometry.Quantum.FinitePartialTrace": 1,
+      "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": 1,
+      "InfoGeometry.Quantum.BoundaryInstrument": 1,
+      "InfoGeometry.Quantum.MixedBoundaryReadout": 1,
+      "InfoGeometry.Quantum.MatrixBoundaryPurification": 1,
+      "InfoGeometry.Quantum.SemilinearBoundaryReversal": 1,
+      "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": 1
+    }
+  }
+}

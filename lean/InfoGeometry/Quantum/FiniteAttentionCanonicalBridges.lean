@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.AitchisonFinite
+import InfoGeometry.Quantum.FinitePartialTrace
 
 /-!
 # Finite canonical bridges for attention-like data
@@ -21,30 +27,8 @@ open InfoGeometry.Probability.AitchisonFinite
 
 section Marginal
 
-abbrev BipartiteOperator (m n : ℕ) :=
-  Matrix (Fin m × Fin n) (Fin m × Fin n) ℂ
-
-noncomputable def partialTraceSecondOp {m n : ℕ}
-    (ρ : BipartiteOperator m n) : Matrix (Fin m) (Fin m) ℂ :=
-  fun i k => ∑ j, ρ (i, j) (k, j)
-
-theorem partialTraceSecondOp_trace {m n : ℕ} (ρ : BipartiteOperator m n) :
-    Matrix.trace (partialTraceSecondOp ρ) = Matrix.trace ρ := by
-  simp only [Matrix.trace, Matrix.diag, partialTraceSecondOp]
-  rw [Fintype.sum_prod_type]
-
-theorem partialTraceSecondOp_diagonal {m n : ℕ}
-    (p : Fin m → Fin n → ℂ) :
-    partialTraceSecondOp (Matrix.diagonal (fun ij => p ij.1 ij.2)) =
-      Matrix.diagonal (fun i => ∑ j, p i j) := by
-  ext i k
-  by_cases hik : i = k
-  · subst k
-    simp [partialTraceSecondOp]
-  · simp [partialTraceSecondOp, hik]
-
 /-! Complex positivity is stated through the real part of the Hermitian
-quadratic form, since `ℂ` has no order structure. -/
+quadratic form. -/
 def ComplexPositive {ι : Type*} [Fintype ι]
     (A : Matrix ι ι ℂ) : Prop :=
   ∀ v : ι → ℂ, 0 ≤ (∑ i, ∑ j, star (v i) * A i j * v j).re
@@ -64,7 +48,7 @@ theorem fiber_quadratic_form {m n : ℕ}
       ∑ i, ∑ k, star (v i) * A (i, j) (k, j) * v k := by
   classical
   simp only [Fintype.sum_prod_type]
-  simp only [mul_ite, ite_mul, zero_mul, mul_zero]
+  simp only [mul_ite, mul_zero]
   apply Finset.sum_congr rfl
   intro x hx
   rw [Finset.sum_eq_single j]
@@ -232,16 +216,12 @@ theorem diagonalFiniteDensity_operator {n : ℕ}
       Matrix.diagonal (fun i => (p i : ℂ)) := by
   rfl
 
+/-- The diagonal marginal identity requires no positivity or normalization. -/
 theorem diagonalFiniteDensity_partialTrace {m n : ℕ}
-    (p : Fin m → Fin n → ℝ) (_hp : ∀ i j, 0 ≤ p i j)
-    (_hsum : ∑ i, ∑ j, p i j = 1) :
+    (p : Fin m → Fin n → ℝ) :
     partialTraceSecondOp (Matrix.diagonal (fun ij => (p ij.1 ij.2 : ℂ))) =
       Matrix.diagonal (fun i => (∑ j, p i j : ℝ) : Fin m → ℂ) := by
-  ext i k
-  by_cases hik : i = k
-  · subst k
-    simp [partialTraceSecondOp]
-  · simp [partialTraceSecondOp, hik]
+  simpa using partialTraceSecondOp_diagonal (fun i j => (p i j : ℂ))
 
 theorem diagonalFiniteDensity_softmax {n : ℕ} (hn : 0 < n)
     (z : Fin n → ℝ) :

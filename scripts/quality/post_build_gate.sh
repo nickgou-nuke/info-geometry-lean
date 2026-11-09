@@ -105,6 +105,11 @@ if [ "$MODE" = "incremental" ]; then
     CHANGED_LEAN_FILES=$(grep '^lean/.*\.lean$' <<<"$CHANGED_FILES" | while IFS= read -r path; do
         if [ -f "$path" ]; then printf '%s\n' "$path"; fi
     done || true)
+    DELETED_SRC_LEAN_FILES=$(git diff --diff-filter=D --name-only "$BASE_REF" "$HEAD_REF" -- 'src/*.lean' 'src/**/*.lean' || true)
+    SRC_CHANGED_LEAN_FILES=$(grep '^src/.*\.lean$' <<<"$CHANGED_FILES" | while IFS= read -r path; do
+        if [ -f "$path" ]; then printf '%s\n' "$path"; fi
+    done || true)
+    SRC_BUILD_CONFIG_FILES=$(grep '^lakefile\.src\.lean$' <<<"$CHANGED_FILES" || true)
     # `proofs/` is a root-package Lean library (`lean_lib proofs`), not a
     # nested Lake project. Route its changed modules explicitly instead of
     # treating every legacy proof edit as an unrouted source.
@@ -114,13 +119,13 @@ if [ "$MODE" = "incremental" ]; then
     done || true)
     ALL_CHANGED_LEAN_FILES=$(git diff --diff-filter=d --name-only "$BASE_REF" "$HEAD_REF" 2>/dev/null | grep -E '(^|/)[^/]+\.lean$' || true)
     TEST_LEAN_FILES=$(grep '^tests/.*\.lean$' <<<"$CHANGED_FILES" || true)
-    AUDIT_TOOL_LEAN_FILES=$(grep '^tools/quality/OperatorGeometryDeclarationAudit\.lean$' <<<"$CHANGED_FILES" || true)
+    AUDIT_TOOL_LEAN_FILES=$(grep -E '^tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean$' <<<"$CHANGED_FILES" || true)
     # Lean umbrella modules are still ordinary Lake targets. Including one in
     # an incremental diff must build that changed module target, not promote
     # the whole root package to `InfoGeometry.All`.
     BUILD_CONFIG_FILES=$(grep -E '^(lakefile\.lean|lake-manifest\.json|lean-toolchain|lib/InfoGeometryCore/lakefile\.lean|lib/InfoGeometryCore/lake-manifest\.json)$|^lib/InfoGeometryCore/.*\.lean$' <<<"$CHANGED_FILES" || true)
     UNSUPPORTED_PACKAGE_CONFIGS=$(grep -E '^(lean/lakefile\.lean|lean/lake-manifest\.json|lean/lean-toolchain|lean_sandbox/lakefile\.lean|lean_sandbox/lake-manifest\.json|lean_sandbox/lean-toolchain|proofs/lakefile\.(toml|lean)|proofs/lake-manifest\.json|proofs/lean-toolchain|verification/spinorial-core/lakefile\.lean|verification/spinorial-core/lake-manifest\.json|verification/spinorial-core/lean-toolchain)$' <<<"$CHANGED_FILES" || true)
-    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|tools/quality/OperatorGeometryDeclarationAudit\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
+    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/InfoGeometry\.lean|lean/DAG\.lean|src/InfoGeometry\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^src/InfoGeometry/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
 
     if [ -n "$UNSUPPORTED_PACKAGE_CONFIGS" ]; then
         echo "  ❌ Nested Lake project configuration changed, but this root gate has no package-specific locked build route:" >&2
@@ -136,6 +141,8 @@ if [ "$MODE" = "incremental" ]; then
     fi
 
     if [ -z "$CHANGED_LEAN_FILES" ] && [ -z "$DELETED_LEAN_FILES" ] \
+        && [ -z "$SRC_CHANGED_LEAN_FILES" ] && [ -z "$DELETED_SRC_LEAN_FILES" ] \
+        && [ -z "$SRC_BUILD_CONFIG_FILES" ] \
         && [ -z "$PROOFS_CHANGED_LEAN_FILES" ] && [ -z "$DELETED_PROOFS_LEAN_FILES" ] \
         && [ -z "$BUILD_CONFIG_FILES" ]; then
         echo "  ℹ No Lean source or build-configuration files modified in range ($BASE_REF..$HEAD_REF)."
@@ -193,8 +200,21 @@ if [ "$MODE" = "incremental" ]; then
             fi
         fi
 
+        # The maintained source lane uses lakefile.src.lean and .lake/src-build;
+        # accepting a src path must never silently reuse canonical artifacts.
+        if [ -n "$SRC_BUILD_CONFIG_FILES" ] || [ -n "$DELETED_SRC_LEAN_FILES" ]; then
+            run_check "Locked Lake build (src umbrella)" \
+                python3 tools/infra/run_locked_lake_build.py \
+                  --wait-for-build-lock --source-lane InfoGeometry.All
+        elif [ -n "$SRC_CHANGED_LEAN_FILES" ]; then
+            SRC_TARGETS=$(sed -e 's|^src/||' -e 's|\.lean$||' -e 's|/|.|g' <<<"$SRC_CHANGED_LEAN_FILES")
+            run_check "Locked Lake build (src incremental targets)" \
+                python3 tools/infra/run_locked_lake_build.py \
+                  --wait-for-build-lock --source-lane $SRC_TARGETS
+        fi
+
         # 2. Incremental Axiom & Debt Audit
-        AUDIT_LEAN_FILES=$(printf '%s\n%s\n' "$CHANGED_LEAN_FILES" "$PROOFS_CHANGED_LEAN_FILES" | sed '/^[[:space:]]*$/d' || true)
+        AUDIT_LEAN_FILES=$(printf '%s\n%s\n%s\n' "$CHANGED_LEAN_FILES" "$SRC_CHANGED_LEAN_FILES" "$PROOFS_CHANGED_LEAN_FILES" | sed '/^[[:space:]]*$/d' || true)
         if [ -n "$AUDIT_LEAN_FILES" ]; then
             run_check "Axiom & Debt Audit (incremental)" \
                 python3 tools/infra/axiom_audit.py --fail-on-gaps $AUDIT_LEAN_FILES
@@ -208,6 +228,10 @@ if [ "$MODE" = "incremental" ]; then
         if [ -n "$PROOFS_CHANGED_LEAN_FILES" ]; then
             run_gate "Semantic Content Audit (proofs incremental)" \
                 python3 tools/quality/semantic_content_audit.py --file-prefix proofs --gate
+        fi
+        if [ -n "$SRC_CHANGED_LEAN_FILES" ]; then
+            run_gate "Semantic Content Audit (src incremental)" \
+                python3 tools/quality/semantic_content_audit.py --file-prefix src --gate
         fi
     fi
 

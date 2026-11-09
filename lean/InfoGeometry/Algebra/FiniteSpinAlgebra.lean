@@ -166,12 +166,11 @@ theorem j_plus_j_minus_ne : J_plus * J_minus ≠ J_minus * J_plus := by
       (2 : ℂ) • J_zero = J_plus * J_minus - J_minus * J_plus := by rw [h₁]
       _ = 0 := by rw [h₂]
   have h₄ : J_zero = 0 := by
-    rcases (smul_eq_zero.mp h₃) with h₂ | hzero
-    · norm_num at h₂
-    · exact hzero
+    calc
+      J_zero = (2 : ℂ)⁻¹ • ((2 : ℂ) • J_zero) := by simp [smul_smul]
+      _ = 0 := by rw [h₃]; simp
   have h₅ : J_zero 0 0 = (1 / 2 : ℂ) := by
     norm_num [J_zero, Fin.val_zero, Fin.val_one]
-    <;> rfl
   rw [h₄] at h₅
   norm_num at h₅
 

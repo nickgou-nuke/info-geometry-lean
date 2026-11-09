@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
@@ -75,6 +81,9 @@ abbrev Vec32R := Fin 32 → ℝ
 def comm (A B : Mat2C) : Mat2C :=
   A * B - B * A
 
+/-- Commutator on square matrices of any finite dimension. -/
+def matrixComm {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℂ) := A * B - B * A
+
 /-- Spin-half raising matrix. -/
 def J_plus : Mat2C :=
   !![0, 1;
@@ -103,22 +112,26 @@ namespace SpinHalfBasis
 
 variable {n : ℕ} (basis : SpinHalfBasis n)
 
-/-- The `J₀,J₊` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_plus_commutation :
-    basis.J_zero * basis.J_plus - basis.J_plus * basis.J_zero = basis.J_plus :=
-  basis.h_commutator_z_plus
-
-/-- The `J₀,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_minus_commutation :
-    basis.J_zero * basis.J_minus - basis.J_minus * basis.J_zero = -basis.J_minus :=
-  basis.h_commutator_z_minus
-
-/-- The `J₊,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_plus_minus_commutation :
-    basis.J_plus * basis.J_minus - basis.J_minus * basis.J_plus = (2 : ℂ) • basis.J_zero :=
-  basis.h_commutator_plus_minus
+/- These are consequences of the defining fields, not independent theorems.
+The useful derived statement here is the Jacobi identity for the three
+operators, which is not stored in the basis structure. -/
+theorem commutator_jacobi :
+    matrixComm basis.J_zero (matrixComm basis.J_plus basis.J_minus) +
+      matrixComm basis.J_plus (matrixComm basis.J_minus basis.J_zero) +
+      matrixComm basis.J_minus (matrixComm basis.J_zero basis.J_plus) = 0 := by
+  unfold matrixComm
+  noncomm_ring
 
 end SpinHalfBasis
+
+/-- The matrix commutator satisfies Jacobi for arbitrary operators, without
+assuming the spin-half relations. -/
+theorem matrix_commutator_jacobi (A B C : Mat2C) :
+    comm A (comm B C) + comm B (comm C A) + comm C (comm A B) = 0 := by
+  change matrixComm A (matrixComm B C) + matrixComm B (matrixComm C A) +
+    matrixComm C (matrixComm A B) = 0
+  unfold matrixComm
+  noncomm_ring
 
 /-- Concrete finite relation `[J₀,J₊]=J₊`. -/
 theorem comm_J_zero_J_plus :
@@ -140,6 +153,27 @@ theorem comm_J_plus_J_minus :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [comm, J_plus, J_minus, J_zero, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- `Mat2C` is non-commutative: `J₊` and `J₋` do not commute. -/
+theorem j_plus_j_minus_ne : J_plus * J_minus ≠ J_minus * J_plus := by
+  intro h
+  have h₁ : J_plus * J_minus - J_minus * J_plus = (2 : ℂ) • J_zero := comm_J_plus_J_minus
+  have h₂ : J_plus * J_minus - J_minus * J_plus = 0 := by
+    rw [h]
+    simp [sub_self]
+  have h₃ : (2 : ℂ) • J_zero = 0 := by
+    calc
+      (2 : ℂ) • J_zero = J_plus * J_minus - J_minus * J_plus := by rw [h₁]
+      _ = 0 := by rw [h₂]
+  have h₄ : J_zero = 0 := by
+    rcases (smul_eq_zero.mp h₃) with h₂ | hzero
+    · norm_num at h₂
+    · exact hzero
+  have h₅ : J_zero 0 0 = (1 / 2 : ℂ) := by
+    norm_num [J_zero, Fin.val_zero, Fin.val_one]
+    <;> rfl
+  rw [h₄] at h₅
+  norm_num at h₅
 
 /-- The canonical concrete spin-half basis. -/
 def canonicalSpinHalfBasis : SpinHalfBasis 2 where

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Core.PeirceDecomposition
 import Mathlib.RingTheory.Idempotents
 import Mathlib.Data.Matrix.Basic
@@ -17,7 +22,7 @@ namespace InfoGeometry.Core.FinitePeirceMatrix
 
 open scoped BigOperators
 
-variable {K A I : Type*} [CommRing K] [Ring A] [Algebra K A]
+variable {K A I : Type*} [Ring K] [Ring A] [Module K A] [IsScalarTower K A A] [SMulCommClass K A A]
 variable [Fintype I] [DecidableEq I]
 
 /-- The literal finite array of Peirce corners. -/

@@ -180,6 +180,25 @@ It exited with code 1 before elaboration because the declared path dependency
 configuration blocker. The selected import-closure result does not certify
 the root Lake package or a whole-repository build.
 
+The installed pre-commit hook passed for mathematical candidate commit
+`75de34d17e987d4644773aa1bef1e89e2fd1f8f8`. The installed pre-push hook was
+then executed locally with that exact commit and a new-branch ref update as
+input, without attempting a remote update. It exited 1 during its incremental
+gate. In addition to the missing `HomotopyHypothesis` dependency, the
+semantic scan of the `lean/` corpus found two pre-existing blocking findings in
+`lean/InfoGeometry/Physics/NuclearColimit.lean`: `colimit_pairing_compat`
+reduces to `True`, and `colimit_pairing_compat_trivial` proves it by `trivial`.
+That file is byte-identical to the intake base revision and is outside the
+36-module import closure checked here. The three changed Lean files had zero
+gaps in the gate's debt scan. The tracked-scope and quarantine audits passed.
+The gate log and exact invocation/result are recorded in
+`scratch/dual-seed-qa/pre-push.log` and `pre-push-result.json`.
+
+The subsequent change only completes this documentation of the observed gate
+result; it does not change the reviewed Lean sources or workflow. Publication
+remains blocked by the repository policy against bypassing the pre-push gate.
+No branch or pull request has been published.
+
 The added workflow reproduces the selected source-closure and native audit,
 requires zero warnings for the three new targets, runs the strict screener,
 and retains reports/logs/copied sources as CI artifacts. Its path filter

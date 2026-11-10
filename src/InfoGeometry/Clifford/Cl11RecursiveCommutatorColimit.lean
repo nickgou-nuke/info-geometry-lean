@@ -199,9 +199,9 @@ theorem cl11_stage_operator_residual_compatibility
   | nil => rfl
   | cons increment increments ih =>
       simp only [operatorResidual, reverseOperatorAggregate, List.map_cons,
-        map_add, map_sub]
+        map_add]
       rw [ih]
-      rfl
+      simp only [map_sub]
 
 /-- Reconstructing a finite stagewise operator residual remains exact after
 passing to the direct limit. -/

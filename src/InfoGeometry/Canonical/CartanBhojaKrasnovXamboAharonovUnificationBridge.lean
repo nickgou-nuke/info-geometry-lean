@@ -1545,22 +1545,45 @@ theorem archetype_U10_chiral_cheshire_cat_genesis_bohm_transduction_and_gauge_va
 --     WAVE EQUATION OVER [Ring B] (Z₀ ≺ Z₁ ≺ Z₂ ≺ Z₃ ≺ Z₄ ≺ U₁₁)
 -- ============================================================================
 
-/-- 3-vector carrier over a non-commutative ring `γ`. -/
-@[ext]
-structure Vec3NC (γ : Type u) where
-  v1 : γ
-  v2 : γ
-  v3 : γ
-  deriving DecidableEq, Repr, Inhabited
+/-- 3-vector carrier `γ × γ × γ` over a non-commutative ring `γ`. -/
+def Vec3NC (γ : Type u) : Type u := γ × γ × γ
 
-/-- Zorn octonion vector-matrix carrier over a non-commutative ring `γ`. -/
-@[ext]
-structure ZornMatNC (γ : Type u) where
-  α : γ
-  x : Vec3NC γ
-  y : Vec3NC γ
-  β : γ
-  deriving DecidableEq, Repr, Inhabited
+/-- First component `v1` of `a : Vec3NC γ`. -/
+@[simp] def Vec3NC.v1 {γ : Type u} (a : Vec3NC γ) : γ := a.1
+/-- Second component `v2` of `a : Vec3NC γ`. -/
+@[simp] def Vec3NC.v2 {γ : Type u} (a : Vec3NC γ) : γ := a.2.1
+/-- Third component `v3` of `a : Vec3NC γ`. -/
+@[simp] def Vec3NC.v3 {γ : Type u} (a : Vec3NC γ) : γ := a.2.2
+
+/-- Componentwise extensionality for `Vec3NC γ`. -/
+@[ext] lemma Vec3NC.ext {γ : Type u} {a b : Vec3NC γ}
+    (h1 : a.v1 = b.v1) (h2 : a.v2 = b.v2) (h3 : a.v3 = b.v3) : a = b := by
+  rcases a with ⟨a1, a2, a3⟩
+  rcases b with ⟨b1, b2, b3⟩
+  dsimp [Vec3NC.v1, Vec3NC.v2, Vec3NC.v3] at h1 h2 h3
+  subst h1 h2 h3
+  rfl
+
+/-- Zorn octonion vector-matrix carrier `γ × Vec3NC γ × Vec3NC γ × γ` over a non-commutative ring `γ`. -/
+def ZornMatNC (γ : Type u) : Type u := γ × Vec3NC γ × Vec3NC γ × γ
+
+/-- Upper-left scalar entry `α` of `M : ZornMatNC γ`. -/
+@[simp] def ZornMatNC.α {γ : Type u} (M : ZornMatNC γ) : γ := M.1
+/-- Upper-right 3-vector entry `x` of `M : ZornMatNC γ`. -/
+@[simp] def ZornMatNC.x {γ : Type u} (M : ZornMatNC γ) : Vec3NC γ := M.2.1
+/-- Lower-left 3-vector entry `y` of `M : ZornMatNC γ`. -/
+@[simp] def ZornMatNC.y {γ : Type u} (M : ZornMatNC γ) : Vec3NC γ := M.2.2.1
+/-- Lower-right scalar entry `β` of `M : ZornMatNC γ`. -/
+@[simp] def ZornMatNC.β {γ : Type u} (M : ZornMatNC γ) : γ := M.2.2.2
+
+/-- Componentwise extensionality for `ZornMatNC γ`. -/
+@[ext] lemma ZornMatNC.ext {γ : Type u} {M N : ZornMatNC γ}
+    (hα : M.α = N.α) (hx : M.x = N.x) (hy : M.y = N.y) (hβ : M.β = N.β) : M = N := by
+  rcases M with ⟨mα, mx, my, mβ⟩
+  rcases N with ⟨nα, nx, ny, nβ⟩
+  dsimp [ZornMatNC.α, ZornMatNC.x, ZornMatNC.y, ZornMatNC.β] at hα hx hy hβ
+  subst hα hx hy hβ
+  rfl
 
 /-- Zero 3-vector over `B`. -/
 @[simp] def vecZero : Vec3NC B := ⟨0, 0, 0⟩
@@ -1648,10 +1671,10 @@ structure ZornMatNC (γ : Type u) where
 
 /-- Non-associative Zorn vector-matrix multiplication over `B`. -/
 @[simp] def zornMul (M N : ZornMatNC B) : ZornMatNC B :=
-  { α := M.α * N.α - vecDot M.x N.y
-    x := vecAdd (vecAdd (vecLmul M.α N.x) (vecRmul M.x N.β)) (vecCross M.y N.y)
-    y := vecAdd (vecAdd (vecLmul M.β N.y) (vecRmul M.y N.α)) (vecCross M.x N.x)
-    β := M.β * N.β - vecDot M.y N.x }
+  ⟨M.α * N.α - vecDot M.x N.y,
+   vecAdd (vecAdd (vecLmul M.α N.x) (vecRmul M.x N.β)) (vecCross M.y N.y),
+   vecAdd (vecAdd (vecLmul M.β N.y) (vecRmul M.y N.α)) (vecCross M.x N.x),
+   M.β * N.β - vecDot M.y N.x⟩
 
 /-- Zorn commutator `[M, N]_Z = M * N - N * M`. -/
 @[simp] def zornComm (M N : ZornMatNC B) : ZornMatNC B := zornSub (zornMul M N) (zornMul N M)
@@ -1689,7 +1712,9 @@ structure ZornMatNC (γ : Type u) where
 macro "zorn_nc_calc" : tactic =>
   `(tactic| (
     (try ext) <;>
-    · (try simp only [vecZero, vecAdd, vecSub, vecNeg, vecLmul, vecRmul,
+    · (try simp only [Vec3NC.v1, Vec3NC.v2, Vec3NC.v3,
+                      ZornMatNC.α, ZornMatNC.x, ZornMatNC.y, ZornMatNC.β,
+                      vecZero, vecAdd, vecSub, vecNeg, vecLmul, vecRmul,
                       vecDot, vecCross, vecComm,
                       adjointGrad, adjointDiv, adjointCurl,
                       bochnerLapScalar, bochnerLaplacian, vecNambu3,
@@ -2486,5 +2511,45 @@ theorem fin2_integer_matrix_has_noncommuting_pair :
     congrFun (congrFun h 0) 0
   revert h00
   decide
+
+/-- **Inductive Colimit Cone Transport (`cartan_bhoja_krasnov_colimit_cone_transport`):**
+    Under any compatible inductive ring cone `toLimit : ∀ k : ℕ, Stage k →+* Limit`
+    (`toLimit (k + 1) (embed k Z) = toLimit k Z`), the Nambu ternary bracket `vecNambu3`,
+    magnetic/Faraday–Bianchi identities (`archetype_Z0`), and Zorn–Lichnerowicz–Weitzenböck
+    cubic self-associator Nambu doubling (`archetype_Z1`) transport functorially into `Limit`. -/
+theorem cartan_bhoja_krasnov_colimit_cone_transport
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    {Limit : Type u} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (d0 : Stage k) (p : Vec3NC (Stage k)) :
+    let d0_inf := toLimit k d0
+    let p_inf : Vec3NC Limit := ⟨toLimit k p.v1, toLimit k p.v2, toLimit k p.v3⟩
+    let p_emb : Vec3NC (Stage (k + 1)) := ⟨embed k p.v1, embed k p.v2, embed k p.v3⟩
+    toLimit k (vecNambu3 p) = vecNambu3 p_inf ∧
+    toLimit (k + 1) (vecNambu3 p_emb) = vecNambu3 p_inf ∧
+    adjointDiv p_inf (covB p_inf) = 0 ∧
+    vecSub (vecComm d0_inf (covB p_inf)) (adjointCurl p_inf (covE d0_inf p_inf)) = vecZero ∧
+    (zornSelfAssociator (weylZornPlus d0_inf p_inf)).α = vecNambu3 p_inf + vecNambu3 p_inf ∧
+    (zornSelfAssociator (weylZornPlus d0_inf p_inf)).β = -(vecNambu3 p_inf + vecNambu3 p_inf) := by
+  have hNam : toLimit k (vecNambu3 p) =
+      vecNambu3 (⟨toLimit k p.v1, toLimit k p.v2, toLimit k p.v3⟩ : Vec3NC Limit) := by
+    dsimp [vecNambu3, vecDot, vecCross, Vec3NC.v1, Vec3NC.v2, Vec3NC.v3]
+    simp only [map_add, map_sub, map_mul]
+  have hNamEmb : toLimit (k + 1) (vecNambu3 (⟨embed k p.v1, embed k p.v2, embed k p.v3⟩ : Vec3NC (Stage (k + 1)))) =
+      vecNambu3 (⟨toLimit k p.v1, toLimit k p.v2, toLimit k p.v3⟩ : Vec3NC Limit) := by
+    have hE : embed k (vecNambu3 p) =
+        vecNambu3 (⟨embed k p.v1, embed k p.v2, embed k p.v3⟩ : Vec3NC (Stage (k + 1))) := by
+      dsimp [vecNambu3, vecDot, vecCross, Vec3NC.v1, Vec3NC.v2, Vec3NC.v3]
+      simp only [map_add, map_sub, map_mul]
+    rw [← hE, hCone k, hNam]
+  set d0_inf := toLimit k d0
+  set p_inf : Vec3NC Limit := ⟨toLimit k p.v1, toLimit k p.v2, toLimit k p.v3⟩
+  have hZ0 := archetype_Z0_bianchi_vanishing_ricci_obstruction_and_symmetric_adjoint_curl
+    d0_inf p_inf p_inf p_inf
+  have hZ1 := archetype_Z1_zorn_lichnerowicz_weitzenboeck_and_cubic_nambu_associator
+    d0_inf p_inf
+  exact ⟨hNam, hNamEmb, hZ0.1, hZ0.2.1, hZ1.2.2.1, hZ1.2.2.2.1⟩
 
 end InfoGeometry.Canonical.CartanBhojaKrasnovXamboAharonovUnificationBridge

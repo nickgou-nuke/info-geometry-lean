@@ -16,12 +16,23 @@ where `ω_ij = d log Q(x_i - x_j)`.
 
 This file does not prove a BCFW recursion theorem.  Such a comparison must be
 supplied by an amplituhedron owner file.
+
+#### BUCKET 1: CLOSED ALGEBRAIC RESULTS
+The exterior-algebra carrier and the quotient by the declared Arnold
+relations are defined here.
+
+#### BUCKET 2: CONDITIONAL RESULTS
+Kernel evaluation applies to any ring homomorphism whose kernel contains the
+specified mixed relation.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+No identification with differential forms or BCFW recursion is established.
 -/
 
 namespace InfoGeometry.Projective.ArnoldRelations
 
 variable (R : Type*) [CommRing R]
-variable (M : Type*) [AddCommMonoid M] [Module R M]
+variable (M : Type*) [AddCommGroup M] [Module R M]
 
 /-- Exterior carrier used for finite Arnold relation readouts. -/
 abbrev ArnoldExterior :=
@@ -92,8 +103,8 @@ theorem arnold_mixed_relation_quotient_zero (i j k : ι) :
     (RingQuot.mkRingHom (ArnoldRel R ι))
       (w R ι i j * w R ι j k +
         w R ι j k * w R ι k i +
-        w R ι k i * w R ι i j) =
-      (RingQuot.mkRingHom (ArnoldRel R ι)) 0 :=
-  RingQuot.mkRingHom_rel (ArnoldRel.mixed (R := R) (ι := ι) i j k)
+        w R ι k i * w R ι i j) = 0 := by
+  simpa using
+    (RingQuot.mkRingHom_rel (ArnoldRel.mixed (R := R) (ι := ι) i j k))
 
 end InfoGeometry.Projective.Amplituhedron

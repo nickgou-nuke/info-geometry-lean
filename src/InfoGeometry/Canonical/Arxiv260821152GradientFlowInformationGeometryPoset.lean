@@ -13,6 +13,7 @@ import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset
 import Mathlib.Tactic.Ring
 
 /-!
@@ -1841,10 +1842,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    rw [if_pos h', if_pos h, hm]
+    rw [ite_eq_left_of_eq_true (eq_true h'), ite_eq_left_of_eq_true (eq_true h), hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    rw [if_neg h', if_neg h]
+    rw [ite_eq_right_of_eq_false (eq_false h'), ite_eq_right_of_eq_false (eq_false h)]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1859,12 +1860,14 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    rw [if_pos h1, if_pos h2, if_pos h3, hk]
+    rw [ite_eq_left_of_eq_true (eq_true h1), ite_eq_left_of_eq_true (eq_true h2),
+        ite_eq_left_of_eq_true (eq_true h3), hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    rw [if_neg h1, if_neg h2, if_neg h3]
+    rw [ite_eq_right_of_eq_false (eq_false h1), ite_eq_right_of_eq_false (eq_false h2),
+        ite_eq_right_of_eq_false (eq_false h3)]
     ring
 
 /-- **Theorem 3 (`virasoro_cocycle_sl2_vanishing_and_jacobi_identity`)**:
@@ -2357,5 +2360,49 @@ theorem virasoro_sugawara_direct_limit_and_clifford_tail_realization
       d k r s m Q U W hQ
   exact ⟨hDir.1, hDir.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.2,
          hTail.1, hTail.2.2.2.1, hTail.2.2.2.2.2.2⟩
+
+open scoped TensorProduct
+open InfoGeometry.Canonical.SplitCliffordHeadTailTower
+
+/-- **Theorem 9 (`split_clifford_head_tail_module_colimit_and_hyperbolic_residual_quantization`)**:
+    Finite-Head Module `CliffordAlgebra (Qsplit k)` × Infinite-Tail Operator Ring `SplitCliffordInfinity`
+    Colimit (`splitCliffordHeadTailModuleEquiv k`, `splitCliffordHeadTailInfinity_ringEquiv k`)
+    and `arXiv:2609.26342` Hyperbolic Residual Aggregation (`hraHeadAggregate_add_tail_eq_initial`)
+    plus Discounted Straight-Through Estimator (`dHsteWeightSum`) realization. -/
+theorem split_clifford_head_tail_module_colimit_and_hyperbolic_residual_quantization
+    (k n r s : ℕ) (m : ℤ)
+    (a : CliffordAlgebra (InfoGeometry.Clifford.ClNN.Qsplit k))
+    (x : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitClNNAlg n)
+    (P X Y : SplitCliffordHeadTailStage k n)
+    (hP : P * P = P)
+    (X_seq : ℕ → InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity)
+    (γ G : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity) :
+    let ofHT  := splitCliffordHeadTailOf k n
+    let φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom
+    let P_ht  := ofHT P
+    let X_ht  := ofHT X
+    let Y_ht  := ofHT Y
+    let P_inf := φ_inf P_ht
+    let X_inf := φ_inf X_ht
+    let Y_inf := φ_inf Y_ht
+    splitCliffordHeadTailModuleEquiv k
+      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      ofHT (a ᵍ⊗ₜ x) ∧
+    (ofHT (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 m P X Y) = 0 ↔
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 m P X Y = 0) ∧
+    φ_inf (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode r P_ht X_ht Y_ht) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode r P_inf X_inf Y_inf ∧
+    comm (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.sugawaraSourceMode r P_ht X_ht Y_ht)
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.sugawaraSinkMode s P_ht X_ht Y_ht) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode (r + s) P_ht X_ht Y_ht ∧
+    comm (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.sugawaraSourceMode r P_inf X_inf Y_inf)
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.sugawaraSinkMode s P_inf X_inf Y_inf) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.virasoroChiralMode (r + s) P_inf X_inf Y_inf ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.VirasoroAnomaly24 3 P_inf X_inf Y_inf =
+      (24 : ℤ) • TriacontadicModularMoonshinePoset.V_met P_inf X_inf Y_inf ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.hraHeadAggregate X_seq k + X_seq k = X_seq 0 ∧
+    ((1 - γ) * InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.dHsteWeightSum γ k) * G + (γ ^ k) * G = G :=
+  InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset.split_clifford_head_tail_module_colimit_and_hra_realization
+    k n r s m a x P X Y hP X_seq γ G
 
 end DuotriacontadicFiveGradedVirasoroBruhatPoset

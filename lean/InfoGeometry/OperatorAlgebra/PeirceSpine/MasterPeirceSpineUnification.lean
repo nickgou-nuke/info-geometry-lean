@@ -678,4 +678,47 @@ theorem master_direct_limit_super_closure_and_clifford_head_tail_unification
          ⟨hUHF.1, hUHF.2.2.2.1⟩,
          ⟨hAttn.2.2.1, hAttn.2.2.2.2.2⟩⟩
 
+open scoped TensorProduct
+open InfoGeometry.Canonical.SplitCliffordHeadTailTower
+
+/-- **Master Finite-Head Module × Infinite-Tail Operator Ring Colimit (`SplitCliffordHeadTailTower`)
+& Hyperbolic Residual Quantization (`arXiv:2609.26342`) Unification
+(`master_split_clifford_head_tail_module_and_hra_unification`)**:
+Unifies the module tensor product `CliffordAlgebra (Qsplit k) ⊗[ℝ] SplitCliffordInfinity ≃ₗ[ℝ] SplitCliffordHeadTailInfinity k`
+(`splitCliffordHeadTailModuleEquiv k`), the ring isomorphism `splitCliffordHeadTailInfinity_ringEquiv k : SplitCliffordHeadTailInfinity k ≃+* SplitCliffordInfinity`,
+and `arXiv:2609.26342` Hyperbolic Residual Aggregation (`hraHeadAggregate_add_tail_eq_initial`)
+plus Discounted Straight-Through Estimator (`dHsteWeightSum`). -/
+theorem master_split_clifford_head_tail_module_and_hra_unification
+    (k n r s : ℕ) (m : ℤ)
+    (a : CliffordAlgebra (InfoGeometry.Clifford.ClNN.Qsplit k))
+    (x : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitClNNAlg n)
+    (P X Y : SplitCliffordHeadTailStage k n)
+    (hP : P * P = P)
+    (X_seq : ℕ → InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity)
+    (γ G : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity) :
+    let ofHT  := splitCliffordHeadTailOf k n
+    let φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom
+    let P_ht  := ofHT P
+    let X_ht  := ofHT X
+    let Y_ht  := ofHT Y
+    let P_inf := φ_inf P_ht
+    let X_inf := φ_inf X_ht
+    let Y_inf := φ_inf Y_ht
+    splitCliffordHeadTailModuleEquiv k
+      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      ofHT (a ᵍ⊗ₜ x) ∧
+    (ofHT (VirasoroAnomaly24 m P X Y) = 0 ↔ VirasoroAnomaly24 m P X Y = 0) ∧
+    φ_inf (virasoroChiralMode r P_ht X_ht Y_ht) =
+      virasoroChiralMode r P_inf X_inf Y_inf ∧
+    comm (sugawaraSourceMode r P_ht X_ht Y_ht) (sugawaraSinkMode s P_ht X_ht Y_ht) =
+      virasoroChiralMode (r + s) P_ht X_ht Y_ht ∧
+    comm (sugawaraSourceMode r P_inf X_inf Y_inf) (sugawaraSinkMode s P_inf X_inf Y_inf) =
+      virasoroChiralMode (r + s) P_inf X_inf Y_inf ∧
+    VirasoroAnomaly24 3 P_inf X_inf Y_inf =
+      (24 : ℤ) • V_met P_inf X_inf Y_inf ∧
+    hraHeadAggregate X_seq k + X_seq k = X_seq 0 ∧
+    ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G = G :=
+  split_clifford_head_tail_module_colimit_and_hra_realization
+    k n r s m a x P X Y hP X_seq γ G
+
 end InfoGeometry.OperatorAlgebra.PeirceSpine.MasterPeirceSpineUnification

@@ -6,6 +6,9 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Canonical.Cl11MatrixTowerTailShift
+import InfoGeometry.Canonical.SplitCliffordHeadTailTower
+
+open scoped TensorProduct
 
 /-!
 # Operator Möbius Peirce Algebra, Parabolic/Hyperbolic/Elliptic Rotors, Finite Corner Brackets,
@@ -1319,10 +1322,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    rw [if_pos h', if_pos h, hm]
+    rw [ite_eq_left_of_eq_true (eq_true h'), ite_eq_left_of_eq_true (eq_true h), hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    rw [if_neg h', if_neg h]
+    rw [ite_eq_right_of_eq_false (eq_false h'), ite_eq_right_of_eq_false (eq_false h)]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1337,12 +1340,14 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    rw [if_pos h1, if_pos h2, if_pos h3, hk]
+    rw [ite_eq_left_of_eq_true (eq_true h1), ite_eq_left_of_eq_true (eq_true h2),
+        ite_eq_left_of_eq_true (eq_true h3), hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    rw [if_neg h1, if_neg h2, if_neg h3]
+    rw [ite_eq_right_of_eq_false (eq_false h1), ite_eq_right_of_eq_false (eq_false h2),
+        ite_eq_right_of_eq_false (eq_false h3)]
     ring
 
 /--
@@ -1659,7 +1664,7 @@ In any associative ring `[Ring B]` with orthogonal idempotents `P₁² = P₁, P
    - `unipotentExpGrade1Inv P1 P2 X * unipotentExpGrade1 P1 P2 X = 1`.
 2. **Eisenstein–Ramanujan Modular Discriminant `1728 Δ = E₄³ - E₆²` & `q`-Expansion Identity:**
    - `E4 ^ 3 - eisensteinRamanujanDiscriminant E4 E6 = E6 ^ 2`,
-   - `eisensteinRamanujanDiscriminant (1 + (240 : ℤ) • q) (1 - (504 : ℤ) • q) = (1728 : ℤ) • q + (-81216 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q)`.
+   - `eisensteinRamanujanDiscriminant (1 + (240 : ℤ) • q) (1 - (504 : ℤ) • q) = (1728 : ℤ) • q - (81216 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q)`.
 3. **Monster / `E₈³` Modular Constant & Griess Dimension Identities in `[Ring B]`:**
    - `((3 * 248 : ℤ) • (1 : B)) = (744 : ℤ) • (1 : B)`,
    - `((1 + 47 * 59 * 71 : ℤ) • (1 : B)) = (196884 : ℤ) • (1 : B)`.
@@ -1674,7 +1679,7 @@ theorem lie_exponential_nilpotent_group_law_and_eisenstein_discriminant
     unipotentExpGrade1Inv P1 P2 X * unipotentExpGrade1 P1 P2 X = 1 ∧
     E4 ^ 3 - eisensteinRamanujanDiscriminant E4 E6 = E6 ^ 2 ∧
     eisensteinRamanujanDiscriminant (1 + (240 : ℤ) • q) (1 - (504 : ℤ) • q) =
-      (1728 : ℤ) • q + (-81216 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q) ∧
+      (1728 : ℤ) • q - (81216 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q) ∧
     ((3 * 248 : ℤ) • (1 : B)) = (744 : ℤ) • (1 : B) ∧
     ((1 + 47 * 59 * 71 : ℤ) • (1 : B)) = (196884 : ℤ) • (1 : B) := by
   have h1'  : ∀ Z, P1 * (P1 * Z) = P1 * Z := fun Z => by rw [← mul_assoc, h1]
@@ -1960,9 +1965,9 @@ theorem virasoro_sugawara_direct_limit_super_closure_realization
   have hBondC : directLimitOf bond n (bondMap bond k n hkn (virasoroChiralMode r P X Y)) =
       virasoroChiralMode r (directLimitOf bond k P) (directLimitOf bond k X) (directLimitOf bond k Y) := by
     rw [directLimitOf_bondMap bond k n hkn, ← hCone k, hC1]
-  have hAnomMap : ∀ {L : Type u} [Ring L] (φ : Stage k →+* L),
+  have hAnomMap : ∀ (φ : Stage k →+* DirectLimitSuperClosure bond),
       φ (VirasoroAnomaly24 m P X Y) = VirasoroAnomaly24 m (φ P) (φ X) (φ Y) := by
-    intro L _ φ
+    intro φ
     dsimp [VirasoroAnomaly24, V_met, Q_pos, Q_neg, N_plus, N_minus]
     simp only [map_zsmul, map_add, map_mul, map_sub, map_one]
   have hBondAnom : directLimitOf bond n (bondMap bond k n hkn (VirasoroAnomaly24 m P X Y)) =
@@ -2035,5 +2040,210 @@ theorem clifford_head_tail_colimit_tetractys_and_virasoro_realization
       (φ_tail (ofStage n P)) (φ_tail (ofStage n X)) (φ_tail (ofStage n Y)) hP_tail r s with
     ⟨hAlg1, _, hAlg2, hAlg3, _, _⟩
   exact ⟨hShift, hMapC, hMapA, hAlg1, hAlg2, hAlg3, rfl⟩
+
+-- ============================================================================
+-- 14. HYPERBOLIC RESIDUAL AGGREGATION (`arXiv:2609.26342`), DISCOUNTED
+--     STRAIGHT-THROUGH ESTIMATOR (`d-HSTE`), & FINITE-HEAD MODULE × INFINITE-TAIL
+--     OPERATOR RING COLIMIT (`SplitCliffordHeadTailTower`)
+-- ============================================================================
+
+/-- Stage-`m` coarse-to-fine residual quantization increment `X m - X (m + 1)` in `[Ring B]`
+(`arXiv:2609.26342`, Colombo & Ayoughi, *Geometry-Aware Hyperbolic Residual Quantization*). -/
+def hraStageIncrement (X : ℕ → B) (m : ℕ) : B :=
+  X m - X (m + 1)
+
+/-- Depth-`k` finite-head residual aggregation `∑_{m < k} (X m - X (m + 1))` in `[Ring B]`. -/
+def hraHeadAggregate (X : ℕ → B) : ℕ → B
+  | 0 => 0
+  | k + 1 => hraHeadAggregate X k + hraStageIncrement X k
+
+/-- Exact coarse-to-fine Head + Tail telescoping theorem (`hraHeadAggregate_add_tail_eq_initial`):
+For any sequence of operators `X : ℕ → B` in an arbitrary, non-dimension-limited `[Ring B]`
+and any finite head cutoff `k : ℕ`, the `k`-stage quantized head sum `hraHeadAggregate X k`
+plus the stage-`k` infinite tail residual `X k` reconstructs `X 0` identically. -/
+theorem hraHeadAggregate_add_tail_eq_initial (X : ℕ → B) (k : ℕ) :
+    hraHeadAggregate X k + X k = X 0 := by
+  induction k with
+  | zero =>
+    dsimp [hraHeadAggregate]
+    exact zero_add (X 0)
+  | succ k ih =>
+    dsimp [hraHeadAggregate, hraStageIncrement]
+    calc
+      (hraHeadAggregate X k + (X k - X (k + 1))) + X (k + 1)
+          = hraHeadAggregate X k + X k := by abel
+      _ = X 0 := ih
+
+/-- Discounted straight-through geometric weight sum `∑_{m < k} γ^m` at head depth `k : ℕ`
+in `[Ring B]` (`arXiv:2609.26342` Section 3.2, Discounted Hyperbolic Straight-Through Estimator `d-HSTE`). -/
+def dHsteWeightSum (γ : B) : ℕ → B
+  | 0 => 0
+  | k + 1 => dHsteWeightSum γ k + γ ^ k
+
+/-- Inductive discounted straight-through telescoping identity (`dHste_discounted_telescoping`):
+For any discount operator `γ : B` and any finite head depth `k : ℕ` in `[Ring B]`,
+`(1 - γ) * dHsteWeightSum γ k + γ ^ k = 1` and `dHsteWeightSum γ k * (1 - γ) + γ ^ k = 1`. -/
+theorem dHste_discounted_telescoping (γ : B) (k : ℕ) :
+    (1 - γ) * dHsteWeightSum γ k + γ ^ k = 1 ∧
+    dHsteWeightSum γ k * (1 - γ) + γ ^ k = 1 := by
+  induction k with
+  | zero =>
+    dsimp [dHsteWeightSum]
+    refine ⟨?_, ?_⟩ <;> noncomm_ring
+  | succ k ih =>
+    rcases ih with ⟨ih1, ih2⟩
+    dsimp [dHsteWeightSum]
+    refine ⟨?_, ?_⟩
+    · rw [pow_succ']
+      calc
+        (1 - γ) * (dHsteWeightSum γ k + γ ^ k) + γ * γ ^ k
+            = (1 - γ) * dHsteWeightSum γ k + γ ^ k := by noncomm_ring
+        _ = 1 := ih1
+    · rw [pow_succ]
+      calc
+        (dHsteWeightSum γ k + γ ^ k) * (1 - γ) + γ ^ k * γ
+            = dHsteWeightSum γ k * (1 - γ) + γ ^ k := by noncomm_ring
+        _ = 1 := ih2
+
+/-- **Hyperbolic Residual Aggregation (HRA), Non-Associative Gyration Defect vs. Lie-Algebraic
+Unipotent BCH Group Law, & Discounted Straight-Through Routing (`arXiv:2609.26342`):**
+In any non-dimension-limited `[Ring B]` with orthogonal idempotents `P₁² = P₁, P₂² = P₂, P₁ P₂ = P₂ P₁ = 0`:
+1. **Exact Head-Plus-Tail Telescoping at Depth `k`:**
+   `hraHeadAggregate X_seq k + X_seq k = X_seq 0`,
+2. **Tangent-Space / Lie-Algebraic Residual Additivity (`L₋₁(Q₁ + Q₂) = L₋₁(Q₁) + L₋₁(Q₂)`):**
+   `L5_neg1 P1 P2 (Q1 + Q2) = L5_neg1 P1 P2 Q1 + L5_neg1 P1 P2 Q2`,
+3. **Unipotent Baker–Campbell–Hausdorff Group Law for 2-Stage Residual Quantization:**
+   `unipotentExpGrade1 P1 P2 Q1 * unipotentExpGrade1 P1 P2 Q2 = 1 + L5_neg1 P1 P2 (Q1 + Q2) + L5_neg1 P1 P2 Q1 * L5_neg1 P1 P2 Q2`,
+4. **Non-Commutative Hyperbolic Gyration Commutator Defect:**
+   `comm (unipotentExpGrade1 P1 P2 Q1) (unipotentExpGrade1 P1 P2 Q2) = comm (L5_neg1 P1 P2 Q1) (L5_neg1 P1 P2 Q2)`,
+5. **Exact Infinite-Tail Residual Extraction via `unipotentExpGrade1Inv`:**
+   `unipotentExpGrade1Inv P1 P2 Q1 * (unipotentExpGrade1 P1 P2 Q1 * R_tail) = R_tail`,
+6. **Discounted Hyperbolic Straight-Through (`d-HSTE`) Gradient Decomposition:**
+   `((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G = G`. -/
+theorem hra_unipotent_bch_gyration_and_dhste_routing
+    (X_seq : ℕ → B) (k : ℕ)
+    (P1 P2 Q1 Q2 R_tail γ G : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    hraHeadAggregate X_seq k + X_seq k = X_seq 0 ∧
+    L5_neg1 P1 P2 (Q1 + Q2) = L5_neg1 P1 P2 Q1 + L5_neg1 P1 P2 Q2 ∧
+    unipotentExpGrade1 P1 P2 Q1 * unipotentExpGrade1 P1 P2 Q2 =
+      1 + L5_neg1 P1 P2 (Q1 + Q2) + L5_neg1 P1 P2 Q1 * L5_neg1 P1 P2 Q2 ∧
+    comm (unipotentExpGrade1 P1 P2 Q1) (unipotentExpGrade1 P1 P2 Q2) =
+      comm (L5_neg1 P1 P2 Q1) (L5_neg1 P1 P2 Q2) ∧
+    unipotentExpGrade1Inv P1 P2 Q1 * (unipotentExpGrade1 P1 P2 Q1 * R_tail) = R_tail ∧
+    ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G = G := by
+  have hInv : unipotentExpGrade1Inv P1 P2 Q1 * unipotentExpGrade1 P1 P2 Q1 = 1 :=
+    (lie_exponential_nilpotent_group_law_and_eisenstein_discriminant
+      P1 P2 Q1 0 0 0 h1 h2 h12 h21).2.2.1
+  have hDhste : (1 - γ) * dHsteWeightSum γ k + γ ^ k = 1 :=
+    (dHste_discounted_telescoping γ k).1
+  refine ⟨hraHeadAggregate_add_tail_eq_initial X_seq k, ?_, ?_, ?_, ?_, ?_⟩
+  · dsimp only [L5_neg1]
+    noncomm_ring
+  · dsimp only [unipotentExpGrade1, L5_neg1]
+    noncomm_ring
+  · dsimp only [comm, unipotentExpGrade1]
+    noncomm_ring
+  · rw [← mul_assoc, hInv, one_mul]
+  · calc
+      ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G
+          = ((1 - γ) * dHsteWeightSum γ k + γ ^ k) * G := by rw [add_mul]
+      _ = 1 * G := by rw [hDhste]
+      _ = G := one_mul G
+
+open InfoGeometry.Canonical.SplitCliffordHeadTailTower
+
+/-- **Finite-Head Module × Infinite-Tail Operator Ring Colimit & Hyperbolic Residual Quantization
+Realization (`split_clifford_head_tail_module_colimit_and_hra_realization`):**
+Formalizes the principle that the finite cutoff `k` is a finite-moduli head (`CliffordAlgebra (Qsplit k)`)
+carrying the structure symmetry of the first `k` split Clifford coordinates, tensored with the
+infinite-dimensional tail operator ring (`SplitCliffordInfinity`), via `SplitCliffordHeadTailTower`:
+1. **Module Tensor Product Identification (`splitCliffordHeadTailModuleEquiv k`):**
+   For any finite-head element `a : CliffordAlgebra (Qsplit k)` and finite-stage tail element
+   `x : SplitClNNAlg n`, `splitCliffordHeadTailModuleEquiv k` maps the pure head-tail tensor
+   `a ⊗ₜ[ℝ] splitCliffordTailOf 0 n x` in `CliffordAlgebra (Qsplit k) ⊗[ℝ] SplitCliffordInfinity`
+   to the canonical graded-tensor stage inclusion `splitCliffordHeadTailOf k n (a ᵍ⊗ₜ x)` in
+   `SplitCliffordHeadTailInfinity k`.
+2. **Faithful Stage Injection (`splitCliffordHeadTailInfinity_stage_injective k n`):**
+   For any `P, X, Y : SplitCliffordHeadTailStage k n`, the operator Virasoro anomaly
+   `VirasoroAnomaly24 m P X Y` vanishes in the colimit `SplitCliffordHeadTailInfinity k` if and
+   only if it vanishes at stage `(k, n)`.
+3. **Ring Isomorphism to the Infinite Split-Clifford Colimit (`splitCliffordHeadTailInfinity_ringEquiv k`):**
+   `φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom` intertwines `virasoroChiralMode r`
+   and `VirasoroAnomaly24 m`, and both `SplitCliffordHeadTailInfinity k` and `SplitCliffordInfinity`
+   satisfy the all-mode Sugawara–Heisenberg–Virasoro commutator algebra, the Grade-3 Scale-24
+   Virasoro anomaly, and the `arXiv:2609.26342` Head-Plus-Tail and `d-HSTE` telescoping identities! -/
+theorem split_clifford_head_tail_module_colimit_and_hra_realization
+    (k n r s : ℕ) (m : ℤ)
+    (a : CliffordAlgebra (InfoGeometry.Clifford.ClNN.Qsplit k))
+    (x : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitClNNAlg n)
+    (P X Y : SplitCliffordHeadTailStage k n)
+    (hP : P * P = P)
+    (X_seq : ℕ → InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity)
+    (γ G : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity) :
+    let ofHT  := splitCliffordHeadTailOf k n
+    let φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom
+    let P_ht  := ofHT P
+    let X_ht  := ofHT X
+    let Y_ht  := ofHT Y
+    let P_inf := φ_inf P_ht
+    let X_inf := φ_inf X_ht
+    let Y_inf := φ_inf Y_ht
+    splitCliffordHeadTailModuleEquiv k
+      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      ofHT (a ᵍ⊗ₜ x) ∧
+    (ofHT (VirasoroAnomaly24 m P X Y) = 0 ↔ VirasoroAnomaly24 m P X Y = 0) ∧
+    φ_inf (virasoroChiralMode r P_ht X_ht Y_ht) =
+      virasoroChiralMode r P_inf X_inf Y_inf ∧
+    comm (sugawaraSourceMode r P_ht X_ht Y_ht) (sugawaraSinkMode s P_ht X_ht Y_ht) =
+      virasoroChiralMode (r + s) P_ht X_ht Y_ht ∧
+    comm (sugawaraSourceMode r P_inf X_inf Y_inf) (sugawaraSinkMode s P_inf X_inf Y_inf) =
+      virasoroChiralMode (r + s) P_inf X_inf Y_inf ∧
+    VirasoroAnomaly24 3 P_inf X_inf Y_inf =
+      (24 : ℤ) • V_met P_inf X_inf Y_inf ∧
+    hraHeadAggregate X_seq k + X_seq k = X_seq 0 ∧
+    ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G = G := by
+  have hMod : splitCliffordHeadTailModuleEquiv k
+      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      splitCliffordHeadTailOf k n (a ᵍ⊗ₜ x) :=
+    splitCliffordHeadTailModuleEquiv_tmul_ofStage k n a x
+  have hInj : splitCliffordHeadTailOf k n (VirasoroAnomaly24 m P X Y) = 0 ↔
+      VirasoroAnomaly24 m P X Y = 0 := by
+    constructor
+    · intro h
+      apply splitCliffordHeadTailInfinity_stage_injective k n
+      rw [h, map_zero]
+    · intro h
+      rw [h, map_zero]
+  have hP_ht : splitCliffordHeadTailOf k n P * splitCliffordHeadTailOf k n P =
+      splitCliffordHeadTailOf k n P := by
+    rw [← map_mul, hP]
+  let φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom
+  have hP_inf : φ_inf (splitCliffordHeadTailOf k n P) * φ_inf (splitCliffordHeadTailOf k n P) =
+      φ_inf (splitCliffordHeadTailOf k n P) := by
+    rw [← map_mul, hP_ht]
+  have hMapC : ∀ {R1 R2 : Type*} [Ring R1] [Ring R2] (ψ : R1 →+* R2) (P' X' Y' : R1),
+      ψ (virasoroChiralMode r P' X' Y') = virasoroChiralMode r (ψ P') (ψ X') (ψ Y') := by
+    intro R1 R2 _ _ ψ P' X' Y'
+    dsimp [virasoroChiralMode, V_met, Sigma_sp, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_mul, map_pow, map_add, map_sub, map_one]
+  rcases all_mode_sugawara_virasoro_mode_algebra
+      (splitCliffordHeadTailOf k n P) (splitCliffordHeadTailOf k n X) (splitCliffordHeadTailOf k n Y)
+      hP_ht r s with ⟨hAlgHT, _, _, _, _, _⟩
+  rcases all_mode_sugawara_virasoro_mode_algebra
+      (φ_inf (splitCliffordHeadTailOf k n P)) (φ_inf (splitCliffordHeadTailOf k n X)) (φ_inf (splitCliffordHeadTailOf k n Y))
+      hP_inf r s with ⟨hAlgInf, _, _, _, _, _⟩
+  have hDhste : ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G = G := by
+    calc
+      ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G
+          = ((1 - γ) * dHsteWeightSum γ k + γ ^ k) * G := by rw [add_mul]
+      _ = 1 * G := by rw [(dHste_discounted_telescoping γ k).1]
+      _ = G := one_mul G
+  exact ⟨hMod, hInj,
+         hMapC φ_inf (splitCliffordHeadTailOf k n P) (splitCliffordHeadTailOf k n X) (splitCliffordHeadTailOf k n Y),
+         hAlgHT, hAlgInf, rfl,
+         hraHeadAggregate_add_tail_eq_initial X_seq k,
+         hDhste⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset

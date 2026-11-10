@@ -288,16 +288,29 @@ theorem helper_word_ablation_and_dihedral_peter_weyl
 Lifted completely from `[CommRing K]` to arbitrary non-commutative `[Ring B]`!
 -/
 
-/-- Explicit `2 × 2` operator matrix over an arbitrary `[Ring B]`. -/
-@[ext]
-structure Mat2 (B : Type u) where
-  m11 : B
-  m12 : B
-  m21 : B
-  m22 : B
-  deriving DecidableEq
+/-- Explicit `2 × 2` operator matrix carrier `B × B × B × B` over an arbitrary `[Ring B]`. -/
+def Mat2 (B : Type u) : Type u := B × B × B × B
 
 namespace Mat2
+
+/-- Top-left entry `m11` of `A : Mat2 B`. -/
+def m11 (A : Mat2 B) : B := A.1
+/-- Top-right entry `m12` of `A : Mat2 B`. -/
+def m12 (A : Mat2 B) : B := A.2.1
+/-- Bottom-left entry `m21` of `A : Mat2 B`. -/
+def m21 (A : Mat2 B) : B := A.2.2.1
+/-- Bottom-right entry `m22` of `A : Mat2 B`. -/
+def m22 (A : Mat2 B) : B := A.2.2.2
+
+/-- Componentwise extensionality for `Mat2 B`. -/
+lemma ext {A C : Mat2 B}
+    (h11 : A.m11 = C.m11) (h12 : A.m12 = C.m12)
+    (h21 : A.m21 = C.m21) (h22 : A.m22 = C.m22) : A = C := by
+  rcases A with ⟨a11, a12, a21, a22⟩
+  rcases C with ⟨c11, c12, c21, c22⟩
+  dsimp [m11, m12, m21, m22] at h11 h12 h21 h22
+  subst h11 h12 h21 h22
+  rfl
 
 /-- Entrywise addition of `2 × 2` operator matrices. -/
 def add (A C : Mat2 B) : Mat2 B := ⟨A.m11 + C.m11, A.m12 + C.m12, A.m21 + C.m21, A.m22 + C.m22⟩
@@ -351,30 +364,50 @@ theorem peirce_peter_weyl_four_basis_reconstruction_in_ring (M : Mat2 B) :
       scaleRight (tr (rightBasisMul M basisSP))  basisSP +
       scaleRight (tr (rightBasisMul M basisPhi)) basisPhi -
       scaleRight (tr (rightBasisMul M basisJ))   basisJ := by
-  ext <;>
+  apply ext <;>
   · simp only [add_m11, add_m12, add_m21, add_m22, sub_m11, sub_m12, sub_m21, sub_m22,
                zsmulMat, scaleRight, tr, rightBasisMul,
                basisI, basisSP, basisPhi, basisJ,
+               m11, m12, m21, m22,
                mul_one, mul_zero, mul_neg, add_zero, zero_add, two_zsmul]
     (try abel)
 
 end Mat2
 
-/-- Explicit `3 × 3` operator matrix over an arbitrary `[Ring B]`. -/
-@[ext]
-structure Mat3 (B : Type u) where
-  m11 : B
-  m12 : B
-  m13 : B
-  m21 : B
-  m22 : B
-  m23 : B
-  m31 : B
-  m32 : B
-  m33 : B
-  deriving DecidableEq
+/-- Explicit `3 × 3` operator matrix carrier over an arbitrary `[Ring B]`. -/
+def Mat3 (B : Type u) : Type u := B × B × B × B × B × B × B × B × B
 
 namespace Mat3
+
+/-- Entry `(1,1)` of `A : Mat3 B`. -/
+def m11 (A : Mat3 B) : B := A.1
+/-- Entry `(1,2)` of `A : Mat3 B`. -/
+def m12 (A : Mat3 B) : B := A.2.1
+/-- Entry `(1,3)` of `A : Mat3 B`. -/
+def m13 (A : Mat3 B) : B := A.2.2.1
+/-- Entry `(2,1)` of `A : Mat3 B`. -/
+def m21 (A : Mat3 B) : B := A.2.2.2.1
+/-- Entry `(2,2)` of `A : Mat3 B`. -/
+def m22 (A : Mat3 B) : B := A.2.2.2.2.1
+/-- Entry `(2,3)` of `A : Mat3 B`. -/
+def m23 (A : Mat3 B) : B := A.2.2.2.2.2.1
+/-- Entry `(3,1)` of `A : Mat3 B`. -/
+def m31 (A : Mat3 B) : B := A.2.2.2.2.2.2.1
+/-- Entry `(3,2)` of `A : Mat3 B`. -/
+def m32 (A : Mat3 B) : B := A.2.2.2.2.2.2.2.1
+/-- Entry `(3,3)` of `A : Mat3 B`. -/
+def m33 (A : Mat3 B) : B := A.2.2.2.2.2.2.2.2
+
+/-- Componentwise extensionality for `Mat3 B`. -/
+lemma ext {A C : Mat3 B}
+    (h11 : A.m11 = C.m11) (h12 : A.m12 = C.m12) (h13 : A.m13 = C.m13)
+    (h21 : A.m21 = C.m21) (h22 : A.m22 = C.m22) (h23 : A.m23 = C.m23)
+    (h31 : A.m31 = C.m31) (h32 : A.m32 = C.m32) (h33 : A.m33 = C.m33) : A = C := by
+  rcases A with ⟨a11, a12, a13, a21, a22, a23, a31, a32, a33⟩
+  rcases C with ⟨c11, c12, c13, c21, c22, c23, c31, c32, c33⟩
+  dsimp [m11, m12, m13, m21, m22, m23, m31, m32, m33] at h11 h12 h13 h21 h22 h23 h31 h32 h33
+  subst h11 h12 h13 h21 h22 h23 h31 h32 h33
+  rfl
 
 instance : Zero (Mat3 B) := ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩⟩
 /-- Zero `3 × 3` operator matrix inhabitant for model witnessing. -/
@@ -451,10 +484,11 @@ theorem clebsch_gordan_s4_idempotency_and_orthogonality_in_ring (M : Mat3 B) :
     Pi1 (Pi3_pos M) = (0 : Mat3 B) ∧ Pi2 (Pi3_pos M) = (0 : Mat3 B) ∧
     Pi3_pos (Pi3_neg M) = (0 : Mat3 B) ∧ Pi3_neg (Pi3_pos M) = (0 : Mat3 B) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-  · ext <;>
+  · apply ext <;>
     · simp only [add_m11, add_m12, add_m13, add_m21, add_m22, add_m23, add_m31, add_m32, add_m33,
                  zero_m11, zero_m12, zero_m13, zero_m21, zero_m22, zero_m23, zero_m31, zero_m32, zero_m33,
-                 Pi1, Pi2, Pi3_pos, Pi3_neg, zsmulMat, tr]
+                 Pi1, Pi2, Pi3_pos, Pi3_neg, zsmulMat, tr,
+                 m11, m12, m13, m21, m22, m23, m31, m32, m33]
       (try abel)
 
 end Mat3
@@ -463,16 +497,29 @@ end Mat3
 ## Stage VI: Hurwitz `D₂₄ = 8 + 16` Quaternion Attention Triality & Bott–Hurwitz `Φ₂₄(x) = Φ₆(x⁴)` in `[Ring B]` (Turn 0052)
 -/
 
-/-- Quaternion algebra `Quat B` over an arbitrary non-commutative `[Ring B]`. -/
-@[ext]
-structure Quat (B : Type u) where
-  w : B
-  x : B
-  y : B
-  z : B
-  deriving DecidableEq
+/-- Quaternion algebra carrier `Quat B := B × B × B × B` over an arbitrary non-commutative `[Ring B]`. -/
+def Quat (B : Type u) : Type u := B × B × B × B
 
 namespace Quat
+
+/-- Scalar component `w` of `q : Quat B`. -/
+def w (q : Quat B) : B := q.1
+/-- First imaginary component `x` of `q : Quat B`. -/
+def x (q : Quat B) : B := q.2.1
+/-- Second imaginary component `y` of `q : Quat B`. -/
+def y (q : Quat B) : B := q.2.2.1
+/-- Third imaginary component `z` of `q : Quat B`. -/
+def z (q : Quat B) : B := q.2.2.2
+
+/-- Componentwise extensionality for `Quat B`. -/
+lemma ext {a b : Quat B}
+    (hw : a.w = b.w) (hx : a.x = b.x)
+    (hy : a.y = b.y) (hz : a.z = b.z) : a = b := by
+  rcases a with ⟨aw, ax, ay, az⟩
+  rcases b with ⟨bw, bx, by_, bz⟩
+  dsimp [w, x, y, z] at hw hx hy hz
+  subst hw hx hy hz
+  rfl
 
 instance : Add  (Quat B) := ⟨fun a b => ⟨a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z⟩⟩
 instance : Sub  (Quat B) := ⟨fun a b => ⟨a.w - b.w, a.x - b.x, a.y - b.y, a.z - b.z⟩⟩
@@ -499,11 +546,11 @@ def zsmulQuat (c : ℤ) (q : Quat B) : Quat B :=
 def conj (q : Quat B) : Quat B := ⟨q.w, -q.x, -q.y, -q.z⟩
 
 /-- Hamilton quaternion product over `[Ring B]`. -/
-def mul (a b : Quat B) : Quat B where
-  w := a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
-  x := a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y
-  y := a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x
-  z := a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w
+def mul (a b : Quat B) : Quat B :=
+  ⟨a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
+   a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+   a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+   a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w⟩
 
 instance : Mul (Quat B) := ⟨mul⟩
 
@@ -534,10 +581,11 @@ theorem hurwitz_corner_triality_attention_filter_in_ring :
     (hurwitzW : Quat B) * qj * conj hurwitzW = zsmulQuat 4 qk ∧
     (hurwitzW : Quat B) * qk * conj hurwitzW = zsmulQuat 4 qi := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
-  · ext <;>
+  · apply ext <;>
     · simp only [zero_w, zero_x, zero_y, zero_z, add_w, add_x, add_y, add_z,
                  sub_w, sub_x, sub_y, sub_z, mul_w, mul_x, mul_y, mul_z,
                  hurwitzW, qOne, qi, qj, qk, conj, zsmulQuat,
+                 w, x, y, z,
                  mul_one, mul_zero, one_mul, zero_mul, mul_neg, neg_mul, neg_neg]
       (try abel)
 
@@ -628,5 +676,39 @@ theorem coverEdge_irrefl (u : Node) : ¬ coverEdge u u := by
 theorem coverEdge_asymm {u v : Node} (huv : coverEdge u v) : ¬ coverEdge v u := by
   intro hvu
   exact Nat.lt_asymm (coverEdge_strict_rank huv) (coverEdge_strict_rank hvu)
+
+/-- **Inductive Colimit Cone Transport (`syk_rindler_hurwitz_colimit_cone_transport`):**
+    Under any compatible inductive ring cone `toLimit : ∀ k : ℕ, Stage k →+* Limit`
+    (`toLimit (k + 1) (embed k Z) = toLimit k Z`), the Bott–Hurwitz 6th and 24th cyclotomic
+    polynomials `Phi6` and `Phi24` and their 24-periodicity factorization transport
+    functorially from finite stage `Stage k` into `Limit`. -/
+theorem syk_rindler_hurwitz_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (x : Stage k) :
+    let x_inf := toLimit k x
+    toLimit k (Phi6 x) = Phi6 x_inf ∧
+    toLimit k (Phi24 x) = Phi24 x_inf ∧
+    toLimit (k + 1) (Phi24 (embed k x)) = Phi24 x_inf ∧
+    Phi6 (x_inf ^ 4) = Phi24 x_inf ∧
+    (x_inf ^ 4 + 1) * Phi24 x_inf = x_inf ^ 12 + 1 ∧
+    (x_inf ^ 12 - 1) * (x_inf ^ 4 + 1) * Phi24 x_inf = x_inf ^ 24 - 1 := by
+  have hP6 : toLimit k (Phi6 x) = Phi6 (toLimit k x) := by
+    dsimp [Phi6]
+    simp only [map_add, map_sub, map_pow, map_one]
+  have hP24 : toLimit k (Phi24 x) = Phi24 (toLimit k x) := by
+    dsimp [Phi24]
+    simp only [map_add, map_sub, map_pow, map_one]
+  have hP24Emb : toLimit (k + 1) (Phi24 (embed k x)) = Phi24 (toLimit k x) := by
+    have hE : embed k (Phi24 x) = Phi24 (embed k x) := by
+      dsimp [Phi24]
+      simp only [map_add, map_sub, map_pow, map_one]
+    rw [← hE, hCone k, hP24]
+  rcases adams_j_homomorphism_and_bott_hurwitz_cyclotomic_bridge_in_ring (toLimit k x) with
+    ⟨hB1, hB2, hB3⟩
+  exact ⟨hP6, hP24, hP24Emb, hB1, hB2, hB3⟩
 
 end InfoGeometry.Canonical.SYKParafermionGolayPeterWeylWignerHurwitzPoset

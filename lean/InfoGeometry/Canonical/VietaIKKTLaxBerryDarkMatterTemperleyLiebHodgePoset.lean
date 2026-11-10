@@ -213,7 +213,7 @@ theorem ikkt_ring_variation_commutator_identity (P X dX : A) :
   simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
   abel
 
-/-- Theorem 3.2 (`ikkt_connes_spectral_action_anomaly`, Turns 0105, 0106, 0118 — 0-sorry proof):
+/-- Theorem 3.2 (`ikkt_connes_spectral_action_anomaly`, Turns 0105, 0106, 0118):
     Under any cyclic trace `τ : A →+ R` (`hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X)`) into any
     `[AddCommGroup R]`, the first variation of the spectral action `S(X) = - τ(J_1(P, X)²)`
     with respect to `dX` equals `2 • τ(Phi_1(P, X) * dX)`:

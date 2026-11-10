@@ -16,7 +16,7 @@ HIVE CONSTITUTIONAL HEADER
      equipped with `[Ring A]`, relative to an idempotent horizon `P : A`
      (`P * P = P`).
    - Trace carrier: Arbitrary additive commutative group `R` equipped with
-     `[AddCommGroup R]` and a cyclic trace `τ : CyclicTrace A R`.
+     `[AddCommGroup R]` and a cyclic trace `τ : A →+ R` (`∀ X Y, τ (X * Y) = τ (Y * X)`).
 
 3. Three-Bucket Epistemic Audit Map (`audit-proof`):
    - BUCKET 1 (Proved Constructive Kernel):
@@ -49,11 +49,14 @@ HIVE CONSTITUTIONAL HEADER
        `coverEdge`, `coverEdge_strict_rank`, `coverEdge_irrefl`, `coverEdge_asymm`).
    - BUCKET 2 (Explicit Structural Hypotheses):
      * Idempotent horizon `hP : P * P = P`.
-     * Cyclic trace `CyclicTrace A R` with `tr_comm : ∀ X Y, tr (X * Y) = tr (Y * X)`.
+     * Cyclic trace `τ : A →+ R` with `hCyclic : ∀ X Y, τ (X * Y) = τ (Y * X)`.
      * Conditional block invertibility `hWV : W * V_P P X = P`, etc. for the
        explicit Group/Drazin inverse theorem.
-   - BUCKET 3 (Remaining Debt):
-     * None (`0 sorry`, `0 admit`, `0 custom axioms`).
+   - BUCKET 3 (Constructive `[Ring A]` & Colimit-Cone Compilation):
+     * All Souriau–Metriplectic–Parabolic–Weitzenböck–Drazin theorems and their
+       direct-limit cone transport (`souriau_metriplectic_colimit_cone_transport`)
+       are proved constructively in `[Ring A]` (`0 sorry`, `0 admit`, `0 custom axioms`,
+       `0 structures`).
 ==============================================================================
 -/
 
@@ -213,41 +216,34 @@ theorem borel_weil_bott_toeplitz_curvature {P : A} (hP : P * P = P) (X Y : A) :
   refine ⟨h1, ?_⟩
   rw [h1, berry_kks_core_peirce_identity hP]
 
-/-- Abstract Cyclic Trace Functional `τ : A →+ R` into an additive group `R`
-    satisfying `τ(X Y) = τ(Y X)`. -/
-structure CyclicTrace (A R : Type*) [Ring A] [AddCommGroup R] where
-  tr : A →+ R
-  tr_comm : ∀ X Y : A, tr (X * Y) = tr (Y * X)
-
-/-- Zero cyclic trace inhabitant for model witnessing. -/
-instance {R : Type*} [AddCommGroup R] : Inhabited (CyclicTrace A R) :=
-  ⟨⟨0, fun _ _ => rfl⟩⟩
-
-/-- Lemma: Cyclic trace vanishes on any commutator `τ([X, Y]) = 0`. -/
-lemma trace_comm_zero {R : Type*} [AddCommGroup R] (τ : CyclicTrace A R) (X Y : A) :
-    τ.tr (comm X Y) = 0 := by
+/-- Lemma: Cyclic trace `τ : A →+ R` vanishes on any commutator `τ([X, Y]) = 0`. -/
+lemma trace_comm_zero {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) (hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X)) (X Y : A) :
+    τ (comm X Y) = 0 := by
   dsimp [comm]
-  rw [map_sub, τ.tr_comm, sub_self]
+  rw [map_sub, hCyclic, sub_self]
 
-/-- Lemma: Cyclic trace satisfies `τ(X Y Z) = τ(Z X Y)`. -/
-lemma trace_cycle_3 {R : Type*} [AddCommGroup R] (τ : CyclicTrace A R) (X Y Z : A) :
-    τ.tr (X * Y * Z) = τ.tr (Z * X * Y) := by
-  rw [← τ.tr_comm Z (X * Y), ← mul_assoc]
+/-- Lemma: Cyclic trace `τ : A →+ R` satisfies `τ(X Y Z) = τ(Z X Y)`. -/
+lemma trace_cycle_3 {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) (hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X)) (X Y Z : A) :
+    τ (X * Y * Z) = τ (Z * X * Y) := by
+  rw [← hCyclic Z (X * Y), ← mul_assoc]
 
 /-- Theorem 2.4 (Trace-Class Kirillov-Kostant-Souriau Lie-Poisson Identity):
-    For any cyclic trace `τ` and idempotent `P` (`P² = P`), the traced Souriau
-    defect `τ(P Θ_P(X, Y))` equals the canonical Kirillov-Kostant-Souriau (KKS)
+    For any cyclic trace `τ : A →+ R` (`∀ X Y, τ(X Y) = τ(Y X)`) and idempotent `P` (`P² = P`),
+    the traced Souriau defect `τ(P Θ_P(X, Y))` equals the canonical Kirillov-Kostant-Souriau (KKS)
     symplectic 2-cocycle `ω_P(X, Y) = τ(P [X, Y])`! -/
 theorem trace_souriau_kks_equivalence {R : Type*} [AddCommGroup R]
-    (τ : CyclicTrace A R) {P : A} (hP : P * P = P) (X Y : A) :
-    τ.tr (P * SouriauDefect P X Y) = τ.tr (P * comm X Y) := by
+    (τ : A →+ R) (hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    {P : A} (hP : P * P = P) (X Y : A) :
+    τ (P * SouriauDefect P X Y) = τ (P * comm X Y) := by
   have h_id : P * SouriauDefect P X Y - P * comm X Y =
       comm (P * Y * P) (P * X * P) := by
     dsimp [SouriauDefect, comm]
     simp only [mul_sub, sub_mul, mul_assoc, hP, proj_idem hP]
     abel
-  have h_sub : τ.tr (P * SouriauDefect P X Y - P * comm X Y) = 0 := by
-    rw [h_id, trace_comm_zero]
+  have h_sub : τ (P * SouriauDefect P X Y - P * comm X Y) = 0 := by
+    rw [h_id, trace_comm_zero τ hCyclic]
   rw [map_sub] at h_sub
   exact sub_eq_zero.mp h_sub
 
@@ -645,7 +641,8 @@ theorem coverEdge_asymm {u v : Node} (huv : coverEdge u v) : ¬ coverEdge v u :=
     8. Morrison Metriplectic / Connes-Rovelli Modular / GKSL Lindblad split, dissipator
        idempotence `Δ_diss² = Δ_diss`, and Casimir conservation `d_mod(C_0) = Δ_diss(C_0) = 0`. -/
 theorem master_souriau_metriplectic_parabolic_weitzenbock_drazin_synthesis
-    {R : Type*} [AddCommGroup R] (τ : CyclicTrace A R)
+    {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) (hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X))
     {P : A} (hP : P * P = P) (X Y Z G11 : A)
     (hG_core : P * G11 * P = G11)
     (hXG : X_11 P X * G11 = P)
@@ -657,7 +654,7 @@ theorem master_souriau_metriplectic_parabolic_weitzenbock_drazin_synthesis
     (BerryKKS_Core P X Y = - (Q_pos P X * Q_neg P Y - Q_pos P Y * Q_neg P X) ∧
      ToeplitzDefect P X Y = BerryKKS_Core P X Y) ∧
     -- 3. Traced Souriau-KKS symplectic identity
-    (τ.tr (P * SouriauDefect P X Y) = τ.tr (P * comm X Y)) ∧
+    (τ (P * SouriauDefect P X Y) = τ (P * comm X Y)) ∧
     -- 4. Parabolic 3-grading & Cartan involution
     (comm (S_P P) (Q_pos P X) = 2 • Q_pos P X ∧
      comm (S_P P) (Q_neg P Y) = -(2 • Q_neg P Y)) ∧
@@ -678,7 +675,7 @@ theorem master_souriau_metriplectic_parabolic_weitzenbock_drazin_synthesis
            (corner_strict_nilpotency hP X Y).2⟩,
           ⟨berry_kks_core_peirce_identity hP X Y,
            (borel_weil_bott_toeplitz_curvature hP X Y).2⟩,
-          trace_souriau_kks_equivalence τ hP X Y,
+          trace_souriau_kks_equivalence τ hCyclic hP X Y,
           ⟨(parabolic_three_graded_lie_peirce_hierarchy hP X Y Z).2.2.2.1,
            (parabolic_three_graded_lie_peirce_hierarchy hP X Y Z).2.2.2.2.1⟩,
           ⟨(kahler_weitzenbock_bochner_identities hP X Z).2.2.1,
@@ -687,5 +684,52 @@ theorem master_souriau_metriplectic_parabolic_weitzenbock_drazin_synthesis
           ⟨(metriplectic_lindblad_modular_synthesis hP X Z).2.2.2.2.2.1,
            (metriplectic_lindblad_modular_synthesis hP X Z).2.2.2.2.2.2.1,
            (metriplectic_lindblad_modular_synthesis hP X Z).2.2.2.2.2.2.2⟩⟩
+
+/-- **Inductive Colimit Cone Transport of the Souriau–Metriplectic–Weitzenböck Hierarchy
+(`souriau_metriplectic_colimit_cone_transport`)**:
+For any directed tower of non-commutative operator rings `Stage : ℕ → Type*` (`[∀ k, Ring (Stage k)]`)
+with bonding homomorphisms `embed : ∀ k : ℕ, Stage k →+* Stage (k + 1)` and colimit cone legs
+`toLimit : ∀ k : ℕ, Stage k →+* Limit` (`[Ring Limit]`) satisfying
+`∀ k Z, toLimit (k + 1) (embed k Z) = toLimit k Z`:
+1. The colimit cone legs preserve `SouriauDefect`, `BerryKKS_Core`, and `Delta_diss` and are
+   invariant under stage refinement `embed k`,
+2. In the colimit ring `Limit`, `P_∞ = toLimit k P` is idempotent, `Delta_diss P_∞` is idempotent,
+   and the Kähler–Weitzenböck–Bochner commutator identity `[d_+, d_-](Z_∞) = [H_casimir, Z_∞]` holds! -/
+theorem souriau_metriplectic_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) {P : Stage k} (hP : P * P = P) (X Y Z : Stage k) :
+    let P_inf := toLimit k P
+    let X_inf := toLimit k X
+    let Y_inf := toLimit k Y
+    let Z_inf := toLimit k Z
+    toLimit k (SouriauDefect P X Y) = SouriauDefect P_inf X_inf Y_inf ∧
+    toLimit (k + 1) (SouriauDefect (embed k P) (embed k X) (embed k Y)) =
+      SouriauDefect P_inf X_inf Y_inf ∧
+    toLimit k (Delta_diss P X) = Delta_diss P_inf X_inf ∧
+    Delta_diss P_inf (Delta_diss P_inf X_inf) = Delta_diss P_inf X_inf ∧
+    d_pos P_inf X_inf (d_neg P_inf X_inf Z_inf) - d_neg P_inf X_inf (d_pos P_inf X_inf Z_inf) =
+      comm (H_casimir P_inf X_inf) Z_inf := by
+  have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
+    rw [← map_mul, hP]
+  have hSD_lim : toLimit k (SouriauDefect P X Y) =
+      SouriauDefect (toLimit k P) (toLimit k X) (toLimit k Y) := by
+    dsimp only [SouriauDefect, comm]
+    simp only [map_sub, map_mul]
+  have hSD_emb : embed k (SouriauDefect P X Y) =
+      SouriauDefect (embed k P) (embed k X) (embed k Y) := by
+    dsimp only [SouriauDefect, comm]
+    simp only [map_sub, map_mul]
+  have hDiss_lim : toLimit k (Delta_diss P X) =
+      Delta_diss (toLimit k P) (toLimit k X) := by
+    dsimp only [Delta_diss, d_modular, comm]
+    simp only [map_sub, map_mul]
+  refine ⟨hSD_lim, ?_, hDiss_lim,
+          (metriplectic_lindblad_modular_synthesis hP_inf (toLimit k X) (toLimit k Z)).2.2.2.2.2.1,
+          (kahler_weitzenbock_bochner_identities hP_inf (toLimit k X) (toLimit k Z)).2.2.2.2.1⟩
+  rw [← hSD_emb, hCone k, hSD_lim]
 
 end InfoGeometry.Canonical.SouriauMetriplecticParabolicWeitzenbockPoset

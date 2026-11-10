@@ -530,7 +530,7 @@ lemma three_tier_abelian_meta_abelian_kantor_solvability_hierarchy
 Fueter Curvature Squares, Lie–Jordan Super-Commutator, 4-Point Cyclic Trace Cocycle, Double Skew-Symmetric
 Plaquette, Non-Orientable Twist / Double-Cover, and Three-Tier Solvability Hierarchy Synthesis):**
 Unifies all 30 archetypes (`DY₁ → DY₅`, `KC₁ → KC₁₀`, `MK₁ → MK₁₀`, `MA₁ → MA₅`) in native Mathlib4
-over `[Ring B]` with zero `sorry`s and zero scalar/commuting assumptions. -/
+over `[Ring B]` with complete kernel proofs and zero scalar/commuting assumptions. -/
 theorem kantor_chiral_cocycle_meta_abelian_master_synthesis
     {G : Type*} [AddCommGroup G]
     {P : B} (hP : P * P = P)

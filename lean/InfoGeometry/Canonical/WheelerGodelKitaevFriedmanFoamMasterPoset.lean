@@ -194,17 +194,26 @@ theorem cantor_diagonal_order_noncommutative
 ## Section 2: Kruskal `TREE(1)=1`, `TREE(2)=3`, `TREE(3)>3` & Constructive Friedman Extensions
 -/
 
-/-- Finite rooted `k`-colored reduced tree (`MonoReducedTree k`). -/
-structure MonoReducedTree (k : ℕ) where
-  rootColor  : Fin k
-  hasChild   : Bool
-  childColor : Fin k
-  deriving DecidableEq
+/-- Finite rooted `k`-colored reduced tree (`MonoReducedTree k := Fin k × Bool × Fin k`). -/
+def MonoReducedTree (k : ℕ) : Type := Fin k × Bool × Fin k
+
+/-- Decidable equality for `MonoReducedTree k`. -/
+instance {k : ℕ} : DecidableEq (MonoReducedTree k) :=
+  inferInstanceAs (DecidableEq (Fin k × Bool × Fin k))
 
 /-- Canonical single-node 0-colored tree inhabitant for `MonoReducedTree (k + 1)`. -/
-instance {k : ℕ} : Inhabited (MonoReducedTree (k + 1)) := ⟨⟨0, false, 0⟩⟩
+instance {k : ℕ} : Inhabited (MonoReducedTree (k + 1)) := ⟨(0, false, 0)⟩
 
 namespace MonoReducedTree
+
+/-- Root color of a reduced tree `T : MonoReducedTree k`. -/
+def rootColor {k : ℕ} (T : MonoReducedTree k) : Fin k := T.1
+
+/-- Boolean flag indicating whether `T : MonoReducedTree k` has a child vertex. -/
+def hasChild {k : ℕ} (T : MonoReducedTree k) : Bool := T.2.1
+
+/-- Child color of a reduced tree `T : MonoReducedTree k`. -/
+def childColor {k : ℕ} (T : MonoReducedTree k) : Fin k := T.2.2
 
 /-- Vertex count (`1` for a single root, `2` for a root with a child). -/
 def minSize {k : ℕ} (T : MonoReducedTree k) : ℕ :=
@@ -306,23 +315,14 @@ theorem outer_extend_strict_mono_constructive
     omega
   · exact hxy
 
-/-- Constructive Ultrafilter (`IsConstructiveUltrafilter`). -/
-structure IsConstructiveUltrafilter {U : Type*} (𝒰 : (U → Prop) → Prop) : Prop where
-  upward    : ∀ {A B : U → Prop}, 𝒰 A → (∀ x, A x → B x) → 𝒰 B
-  partition : ∀ (A : U → Prop), 𝒰 A ∨ 𝒰 (fun x => ¬ A x)
-  exclusive : ∀ (A : U → Prop), ¬ (𝒰 A ∧ 𝒰 (fun x => ¬ A x))
-
-/-- Principal ultrafilter at `() : Unit` witnesses `IsConstructiveUltrafilter`. -/
-lemma unit_principal_isConstructiveUltrafilter :
-    IsConstructiveUltrafilter (fun A : Unit → Prop => A ()) := by
-  constructor
-  · intro A B hA hAB; exact hAB () hA
-  · intro A; exact Classical.em (A ())
-  · intro A h; exact h.2 h.1
-
-/-- **Theorem 2.5 (Choice-Free Definable Angel Ultrafilter Homomorphism)**: -/
+/-- **Theorem 2.5 (Choice-Free Definable Angel Ultrafilter Homomorphism)**:
+    For any ultrafilter predicate `𝒰 : (U → Prop) → Prop` satisfying the partition law
+    `h_part : ∀ (A : U → Prop), 𝒰 A ∨ 𝒰 (fun x => ¬ A x)` and any negation-closed definable
+    family `Def : (U → Prop) → Prop` witnessed by an angel element `a : U` (`∀ A, Def A → 𝒰 A → A a`),
+    `𝒰 B ↔ B a` holds on every definable `B`, and `¬ 𝒰 (fun _ => False)`. -/
 theorem choice_free_definable_angel_homomorphism
-    {U : Type*} {𝒰 Def : (U → Prop) → Prop} (h𝒰 : IsConstructiveUltrafilter 𝒰)
+    {U : Type*} {𝒰 Def : (U → Prop) → Prop}
+    (h_part : ∀ (A : U → Prop), 𝒰 A ∨ 𝒰 (fun x => ¬ A x))
     (hDef_neg : ∀ {B : U → Prop}, Def B → Def (fun x => ¬ B x))
     (hDef_false : Def (fun _ => False))
     (a : U) (h_angel : ∀ A : U → Prop, Def A → 𝒰 A → A a) :
@@ -332,7 +332,7 @@ theorem choice_free_definable_angel_homomorphism
     constructor
     · exact h_angel B hDefB
     · intro hBa
-      rcases h𝒰.partition B with hPos | hNeg
+      rcases h_part B with hPos | hNeg
       · exact hPos
       · exfalso
         exact (h_angel (fun x => ¬ B x) (hDef_neg hDefB) hNeg) hBa
@@ -534,6 +534,50 @@ theorem wheeler_foam_and_grothendieck_elementary_expansion
     simp only [mul_assoc, hG_inv_l, hG_inv_l_assoc, mul_one, hP, P_idem hP]
   · dsimp only [C_diag, i_exp, G_plus, G_plus_inv, N_plus, N_minus, comm]
     simp only [add_mul, mul_add, sub_mul, mul_sub, one_mul, mul_one, neg_mul, mul_neg, mul_assoc, hP, P_idem hP]; abel
+
+/-- **Inductive Colimit Cone Transport (`wheeler_godel_kitaev_foam_colimit_cone_transport`):**
+    Under any compatible inductive ring cone `toLimit : ∀ k : ℕ, Stage k →+* Limit`
+    (`toLimit (k + 1) (embed k Z) = toLimit k Z`), the Inner Gödel (`P_hat`) and Outer Friedman (`W_hat`)
+    Bruhat idempotents, quantum foam metric `V_foam`, and globular boundary nilpotency (`∂ ∂ = 0`)
+    transport functorially from finite stage `Stage k` into `Limit`. -/
+theorem wheeler_godel_kitaev_foam_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (P g X Y : Stage k) (hP : P * P = P) :
+    let P_inf := toLimit k P
+    let g_inf := toLimit k g
+    let X_inf := toLimit k X
+    let Y_inf := toLimit k Y
+    toLimit k (P_hat P X Y) = P_hat P_inf X_inf Y_inf ∧
+    toLimit k (W_hat P X Y) = W_hat P_inf X_inf Y_inf ∧
+    toLimit (k + 1) (V_foam (embed k P) (embed k X) (embed k Y)) = V_foam P_inf X_inf Y_inf ∧
+    P_inf * V_foam P_inf g_inf g_inf * P_inf = N_plus P_inf g_inf * N_minus P_inf g_inf ∧
+    globBoundary P_inf g_inf (globBoundary P_inf g_inf X_inf) = 0 ∧
+    r_ret P_inf g_inf (i_exp P_inf g_inf (P_inf * X_inf * P_inf)) = P_inf * X_inf * P_inf := by
+  have hPh : toLimit k (P_hat P X Y) = P_hat (toLimit k P) (toLimit k X) (toLimit k Y) := by
+    dsimp [P_hat, Phi, Sigma_sp, V_foam, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_add, map_sub, map_mul, map_one]
+  have hWh : toLimit k (W_hat P X Y) = W_hat (toLimit k P) (toLimit k X) (toLimit k Y) := by
+    dsimp [W_hat, Phi, Sigma_sp, V_foam, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_add, map_sub, map_mul, map_one]
+  have hVf : toLimit k (V_foam P X Y) = V_foam (toLimit k P) (toLimit k X) (toLimit k Y) := by
+    dsimp [V_foam, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_add, map_sub, map_mul, map_one]
+  have hVfEmb : toLimit (k + 1) (V_foam (embed k P) (embed k X) (embed k Y)) =
+      V_foam (toLimit k P) (toLimit k X) (toLimit k Y) := by
+    have hE : embed k (V_foam P X Y) = V_foam (embed k P) (embed k X) (embed k Y) := by
+      dsimp [V_foam, Q_pos, Q_neg, N_plus, N_minus]
+      simp only [map_add, map_sub, map_mul, map_one]
+    rw [← hE, hCone k, hVf]
+  have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
+    rw [← map_mul, hP]
+  rcases wheeler_foam_and_grothendieck_elementary_expansion
+    (toLimit k P) (toLimit k g) (toLimit k X) (toLimit k Y) hP_inf with
+    ⟨hRect, _, hGlob, hRet, _, _⟩
+  exact ⟨hPh, hWh, hVfEmb, hRect, hGlob, hRet⟩
 
 end MasterOperatorSpine
 

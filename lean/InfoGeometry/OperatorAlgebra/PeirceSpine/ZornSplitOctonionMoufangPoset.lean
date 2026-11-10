@@ -1007,7 +1007,7 @@ lemma bilateral_active_moufang_duality_and_lower_intertwining
 Equivalence, Jordan-Symmetrized Alternativity, Corner-Intertwining Moufang Law, and Bilateral
 Active Moufang Duality Synthesis):**
 Unifies all 40 archetypes (`ZO₁ → ZO₁₀`, `ZM₁ → ZM₂₅`, `ZS₁ → ZS₅`) in native Mathlib4 over
-`[Ring B] [StarRing B]` with zero `sorry`s and zero scalar/commuting assumptions. -/
+`[Ring B] [StarRing B]` with complete kernel proofs and zero scalar/commuting assumptions. -/
 theorem zorn_split_octonion_moufang_master_synthesis
     {P L : B} (hP : P * P = P) (hPsym : star P = P)
     (c₀ a₀ X Y A₁ A₂ A₃ C₁ C₂ C₃ Q₁ Q₂ : B) :

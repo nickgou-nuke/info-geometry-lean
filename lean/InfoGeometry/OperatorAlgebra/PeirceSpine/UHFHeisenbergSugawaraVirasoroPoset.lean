@@ -951,8 +951,8 @@ theorem uhf_heisenberg_sugawara_virasoro_direct_limit_and_clifford_tail_realizat
   have hConeTail : ∀ (j : ℕ) (Z : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage j),
       toTailStage (j + 1) (InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond j Z) = toTailStage j Z := by
     intro j Z
-    dsimp [toTailStage, InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond]
-    rw [InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage_apply_bond]
+    exact congrArg (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
+      (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage_apply_bond j Z)
   rcases uhf_heisenberg_sugawara_virasoro_colimit_cone_transport
       InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond toTailStage hConeTail
       s hQ U W n m k with ⟨_, hTail2, hTH1, _, hTV1, _⟩

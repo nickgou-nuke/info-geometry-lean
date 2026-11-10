@@ -193,21 +193,12 @@ theorem fermion_first_spectral_triple_weyl_splitting {P : A} (hP : P * P = P) (X
 ## Stage III: IKKT / Connes Spectral Action First Variation Anomaly (Turns 0105, 0106)
 -/
 
-/-- Abstract Cyclic Trace `τ : A →+ R` into an additive commutative group `R`
-    (no `CommRing` required!). -/
-structure CyclicTrace (A R : Type*) [Ring A] [AddCommGroup R] where
-  tr : A →+ R
-  tr_comm : ∀ X Y : A, tr (X * Y) = tr (Y * X)
-
-/-- Zero cyclic trace inhabitant for model witnessing. -/
-instance {R : Type*} [AddCommGroup R] : Inhabited (CyclicTrace A R) :=
-  ⟨⟨0, fun _ _ => rfl⟩⟩
-
-/-- Cyclic trace vanishes on every commutator `τ([U, V]) = 0`. -/
-lemma trace_comm_zero {R : Type*} [AddCommGroup R] (τ : CyclicTrace A R) (U V : A) :
-    τ.tr (comm U V) = 0 := by
+/-- Cyclic trace `τ : A →+ R` (`∀ X Y, τ (X * Y) = τ (Y * X)`) vanishes on every commutator `τ([U, V]) = 0`. -/
+lemma trace_comm_zero {R : Type*} [AddCommGroup R]
+    (τ : A →+ R) (hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X)) (U V : A) :
+    τ (comm U V) = 0 := by
   dsimp [comm]
-  rw [map_sub, τ.tr_comm, sub_self]
+  rw [map_sub, hCyclic, sub_self]
 
 /-- Theorem 3.1 (Exact Ring-Theoretic IKKT / Spectral Action Variation Identity):
     In ANY non-commutative ring `A` (even without `P² = P`!), for any `P, X, dX : A`,
@@ -222,18 +213,18 @@ theorem ikkt_ring_variation_commutator_identity (P X dX : A) :
   simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
   abel
 
-/-- Theorem 3.2 (`ikkt_connes_spectral_action_anomaly`, Turns 0105, 0106, 0118 — 0-sorry proof):
-    Under any cyclic trace `τ : CyclicTrace A R` into any `[AddCommGroup R]`, the first
-    variation of the spectral action `S(X) = - τ(J_1(P, X)²)` with respect to `dX` equals
-    `2 • τ(Phi_1(P, X) * dX)`:
-    `τ.tr (- (J_1 P X * J_1 P dX + J_1 P dX * J_1 P X)) = 2 • τ.tr (Phi_1 P X * dX)`. -/
+/-- Theorem 3.2 (`ikkt_connes_spectral_action_anomaly`, Turns 0105, 0106, 0118):
+    Under any cyclic trace `τ : A →+ R` (`hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X)`) into any
+    `[AddCommGroup R]`, the first variation of the spectral action `S(X) = - τ(J_1(P, X)²)`
+    with respect to `dX` equals `2 • τ(Phi_1(P, X) * dX)`:
+    `τ (- (J_1 P X * J_1 P dX + J_1 P dX * J_1 P X)) = 2 • τ (Phi_1 P X * dX)`. -/
 theorem ikkt_connes_spectral_action_anomaly {R : Type*} [AddCommGroup R]
-    (τ : CyclicTrace A R) (P X dX : A) :
-    τ.tr (- (J_1 P X * J_1 P dX + J_1 P dX * J_1 P X)) =
-    2 • τ.tr (Phi_1 P X * dX) := by
+    (τ : A →+ R) (hCyclic : ∀ X Y : A, τ (X * Y) = τ (Y * X)) (P X dX : A) :
+    τ (- (J_1 P X * J_1 P dX + J_1 P dX * J_1 P X)) =
+    2 • τ (Phi_1 P X * dX) := by
   have h_id := ikkt_ring_variation_commutator_identity P X dX
-  have h_tr := congrArg τ.tr h_id
-  rw [map_sub, map_nsmul, map_add, trace_comm_zero, trace_comm_zero, add_zero] at h_tr
+  have h_tr := congrArg τ h_id
+  rw [map_sub, map_nsmul, map_add, trace_comm_zero τ hCyclic, trace_comm_zero τ hCyclic, add_zero] at h_tr
   exact sub_eq_zero.mp h_tr
 
 /-!
@@ -585,5 +576,51 @@ theorem coverEdge_irrefl (u : Node) : ¬ coverEdge u u := by
 theorem coverEdge_asymm {u v : Node} (huv : coverEdge u v) : ¬ coverEdge v u := by
   intro hvu
   exact Nat.lt_asymm (coverEdge_strict_rank huv) (coverEdge_strict_rank hvu)
+
+/-- **Inductive Colimit Cone Transport (`vieta_ikkt_hodge_colimit_cone_transport`):**
+    Under any compatible inductive ring cone `toLimit : ∀ k : ℕ, Stage k →+* Limit`
+    (`toLimit (k + 1) (embed k Z) = toLimit k Z`), the IKKT/Connes spectral action variation
+    identity, Kato Berry connection `Gamma_Kato`, Casimir Hodge bridge `Z_casimir`, and
+    exact/coexact/harmonic Hodge decomposition transport functorially into `Limit`. -/
+theorem vieta_ikkt_hodge_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (P X dP U V Z_harm : Stage k) (hP : P * P = P)
+    (h_harm : Delta_casimir (toLimit k P) (toLimit k X) (toLimit k Z_harm) = 0) :
+    let P_inf := toLimit k P
+    let X_inf := toLimit k X
+    let dP_inf := toLimit k dP
+    let U_inf := toLimit k U
+    let V_inf := toLimit k V
+    let Zh_inf := toLimit k Z_harm
+    toLimit k (Gamma_Kato P dP) = Gamma_Kato P_inf dP_inf ∧
+    toLimit k (Z_casimir P X) = Z_casimir P_inf X_inf ∧
+    toLimit (k + 1) (Z_casimir (embed k P) (embed k X)) = Z_casimir P_inf X_inf ∧
+    d_exact P_inf X_inf (Z_casimir P_inf X_inf) = 0 ∧
+    d_coexact P_inf X_inf (Z_casimir P_inf X_inf) = 0 ∧
+    Delta_casimir P_inf X_inf (d_exact P_inf X_inf U_inf + d_coexact P_inf X_inf V_inf + Zh_inf) =
+      d_exact P_inf X_inf (Delta_casimir P_inf X_inf U_inf) +
+      d_coexact P_inf X_inf (Delta_casimir P_inf X_inf V_inf) := by
+  have hKato : toLimit k (Gamma_Kato P dP) = Gamma_Kato (toLimit k P) (toLimit k dP) := by
+    dsimp [Gamma_Kato, comm]
+    simp only [map_sub, map_mul]
+  have hZcas : toLimit k (Z_casimir P X) = Z_casimir (toLimit k P) (toLimit k X) := by
+    dsimp [Z_casimir, Q_pos, Q_neg, P_perp]
+    simp only [map_add, map_mul, map_sub, map_one]
+  have hZcasEmb : toLimit (k + 1) (Z_casimir (embed k P) (embed k X)) =
+      Z_casimir (toLimit k P) (toLimit k X) := by
+    have hE : embed k (Z_casimir P X) = Z_casimir (embed k P) (embed k X) := by
+      dsimp [Z_casimir, Q_pos, Q_neg, P_perp]
+      simp only [map_add, map_mul, map_sub, map_one]
+    rw [← hE, hCone k, hZcas]
+  have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
+    rw [← map_mul, hP]
+  rcases exact_coexact_harmonic_hodge_decomposition hP_inf
+    (toLimit k X) (toLimit k U) (toLimit k V) (toLimit k Z_harm) h_harm with
+    ⟨hd1, hd2, _, _, hSplit⟩
+  exact ⟨hKato, hZcas, hZcasEmb, hd1, hd2, hSplit⟩
 
 end InfoGeometry.Canonical.VietaIKKTLaxBerryDarkMatterTemperleyLiebHodgePoset

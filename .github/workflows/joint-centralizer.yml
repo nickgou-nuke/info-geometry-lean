@@ -10,9 +10,13 @@ on:
       - 'lean/InfoGeometry/Canonical/JointCentralizerDynamicsAudit.lean'
       - 'lean/InfoGeometry/Canonical/JointCentralizerTilt.lean'
       - 'lean/InfoGeometry/Canonical/JointCentralizerTiltAudit.lean'
+      - 'lean/InfoGeometry/Core/DualSeedHodgeOperators.lean'
+      - 'lean/InfoGeometry/Core/DualSeedHodge.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerHodgeAudit.lean'
       - 'docs/DUAL_SEED_JOINT_CENTRALIZER.md'
       - 'docs/DUAL_SEED_FLOW_AND_TOWER_BOUNDARIES.md'
       - 'docs/DUAL_SEED_TILT_AND_DERIVATION_BOUNDARIES.md'
+      - 'docs/DUAL_SEED_HODGE_AND_LEAN_ARCHITECTURE.md'
       - '.github/workflows/joint-centralizer.yml'
   workflow_dispatch:
 permissions:
@@ -69,7 +73,10 @@ jobs:
                      'InfoGeometry.Canonical.JointCentralizerDynamicsAudit',
                      'InfoGeometry.Core.DualSeedTilt',
                      'InfoGeometry.Canonical.JointCentralizerTilt',
-                     'InfoGeometry.Canonical.JointCentralizerTiltAudit']
+                     'InfoGeometry.Canonical.JointCentralizerTiltAudit',
+                     'InfoGeometry.Core.DualSeedHodgeOperators',
+                     'InfoGeometry.Core.DualSeedHodge',
+                     'InfoGeometry.Canonical.JointCentralizerHodgeAudit']
           _, _, native = closure(pathlib.Path('project'), targets)
           with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'joint-centralizer-cache', block=True):
               subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
@@ -88,7 +95,10 @@ jobs:
             --target InfoGeometry.Canonical.JointCentralizerDynamicsAudit \
             --target InfoGeometry.Core.DualSeedTilt \
             --target InfoGeometry.Canonical.JointCentralizerTilt \
-            --target InfoGeometry.Canonical.JointCentralizerTiltAudit
+            --target InfoGeometry.Canonical.JointCentralizerTiltAudit \
+            --target InfoGeometry.Core.DualSeedHodgeOperators \
+            --target InfoGeometry.Core.DualSeedHodge \
+            --target InfoGeometry.Canonical.JointCentralizerHodgeAudit
           python3 - <<'PY'
           import json, pathlib, sys
           report = json.loads(pathlib.Path('verification/report.json').read_text())
@@ -113,7 +123,10 @@ jobs:
             lean/InfoGeometry/Canonical/JointCentralizerDynamicsAudit.lean \
             lean/InfoGeometry/Core/DualSeedTilt.lean \
             lean/InfoGeometry/Canonical/JointCentralizerTilt.lean \
-            lean/InfoGeometry/Canonical/JointCentralizerTiltAudit.lean
+            lean/InfoGeometry/Canonical/JointCentralizerTiltAudit.lean \
+            lean/InfoGeometry/Core/DualSeedHodgeOperators.lean \
+            lean/InfoGeometry/Core/DualSeedHodge.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerHodgeAudit.lean
       - uses: actions/upload-artifact@v4
         if: always()
         with:

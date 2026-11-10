@@ -20,7 +20,7 @@ supplied by an amplituhedron owner file.
 
 namespace InfoGeometry.Projective.ArnoldRelations
 
-variable (R : Type*) [CommSemiring R]
+variable (R : Type*) [CommRing R]
 variable (M : Type*) [AddCommMonoid M] [Module R M]
 
 /-- Exterior carrier used for finite Arnold relation readouts. -/

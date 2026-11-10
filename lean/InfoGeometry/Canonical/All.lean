@@ -2355,6 +2355,7 @@ import InfoGeometry.Canonical.IntegralCyclotomicGroup
 import InfoGeometry.Canonical.RootsOfZeroUnityMoebiusModularG22
 import InfoGeometry.Canonical.UnifiedGeometryOperatorSignificance
 import InfoGeometry.Canonical.Cl11FiveStreamColimitTransport
+import InfoGeometry.Canonical.PeirceColimitAdjointIteration
 import InfoGeometry.Canonical.ExteriorEvenTraceChernWeil
 import InfoGeometry.Canonical.TensorLimitExactConnection
 import InfoGeometry.Canonical.TensorColimitCurvatureEnergy

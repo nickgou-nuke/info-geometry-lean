@@ -637,7 +637,7 @@ theorem kato_berry_spectral_flow_and_covariant_time
     calc (1 - P) * (dP * P - P * dP) * (1 - P)
       _ = (dP * P - P * dP * P - P * dP + (P * P) * dP) * (1 - P) := by noncomm_ring
       _ = (dP * P - 0 - P * dP + P * dP) * (1 - P) := by rw [h_P_dP_P, hP]
-      _ = (dP * P) * (1 - P) := by abel
+      _ = (dP * P) * (1 - P) := by abel_nf
       _ = dP * P - dP * (P * P) := by noncomm_ring
       _ = dP * P - dP * P := by rw [hP]
       _ = 0 := by abel

@@ -1319,10 +1319,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    simp only [h', h, ↓reduceIte, hm]
+    rw [if_pos h', if_pos h, hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    simp only [h', h, ↓reduceIte]
+    rw [if_neg h', if_neg h]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1337,12 +1337,12 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    simp only [h1, h2, h3, ↓reduceIte, hk]
+    rw [if_pos h1, if_pos h2, if_pos h3, hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    simp only [h1, h2, h3, ↓reduceIte]
+    rw [if_neg h1, if_neg h2, if_neg h3]
     ring
 
 /--
@@ -1659,7 +1659,7 @@ In any associative ring `[Ring B]` with orthogonal idempotents `P₁² = P₁, P
    - `unipotentExpGrade1Inv P1 P2 X * unipotentExpGrade1 P1 P2 X = 1`.
 2. **Eisenstein–Ramanujan Modular Discriminant `1728 Δ = E₄³ - E₆²` & `q`-Expansion Identity:**
    - `E4 ^ 3 - eisensteinRamanujanDiscriminant E4 E6 = E6 ^ 2`,
-   - `eisensteinRamanujanDiscriminant (1 + (240 : ℤ) • q) (1 - (504 : ℤ) • q) = (1728 : ℤ) • q + (172512 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q)`.
+   - `eisensteinRamanujanDiscriminant (1 + (240 : ℤ) • q) (1 - (504 : ℤ) • q) = (1728 : ℤ) • q + (-81216 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q)`.
 3. **Monster / `E₈³` Modular Constant & Griess Dimension Identities in `[Ring B]`:**
    - `((3 * 248 : ℤ) • (1 : B)) = (744 : ℤ) • (1 : B)`,
    - `((1 + 47 * 59 * 71 : ℤ) • (1 : B)) = (196884 : ℤ) • (1 : B)`.
@@ -1674,7 +1674,7 @@ theorem lie_exponential_nilpotent_group_law_and_eisenstein_discriminant
     unipotentExpGrade1Inv P1 P2 X * unipotentExpGrade1 P1 P2 X = 1 ∧
     E4 ^ 3 - eisensteinRamanujanDiscriminant E4 E6 = E6 ^ 2 ∧
     eisensteinRamanujanDiscriminant (1 + (240 : ℤ) • q) (1 - (504 : ℤ) • q) =
-      (1728 : ℤ) • q + (172512 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q) ∧
+      (1728 : ℤ) • q + (-81216 : ℤ) • (q * q) + (13824000 : ℤ) • (q * q * q) ∧
     ((3 * 248 : ℤ) • (1 : B)) = (744 : ℤ) • (1 : B) ∧
     ((1 + 47 * 59 * 71 : ℤ) • (1 : B)) = (196884 : ℤ) • (1 : B) := by
   have h1'  : ∀ Z, P1 * (P1 * Z) = P1 * Z := fun Z => by rw [← mul_assoc, h1]
@@ -1960,11 +1960,15 @@ theorem virasoro_sugawara_direct_limit_super_closure_realization
   have hBondC : directLimitOf bond n (bondMap bond k n hkn (virasoroChiralMode r P X Y)) =
       virasoroChiralMode r (directLimitOf bond k P) (directLimitOf bond k X) (directLimitOf bond k Y) := by
     rw [directLimitOf_bondMap bond k n hkn, ← hCone k, hC1]
+  have hAnomMap : ∀ {L : Type u} [Ring L] (φ : Stage k →+* L),
+      φ (VirasoroAnomaly24 m P X Y) = VirasoroAnomaly24 m (φ P) (φ X) (φ Y) := by
+    intro L _ φ
+    dsimp [VirasoroAnomaly24, V_met, Q_pos, Q_neg, N_plus, N_minus]
+    simp only [map_zsmul, map_add, map_mul, map_sub, map_one]
   have hBondAnom : directLimitOf bond n (bondMap bond k n hkn (VirasoroAnomaly24 m P X Y)) =
       VirasoroAnomaly24 m (directLimitOf bond k P) (directLimitOf bond k X) (directLimitOf bond k Y) := by
     rw [directLimitOf_bondMap bond k n hkn]
-    dsimp [VirasoroAnomaly24, V_met, Q_pos, Q_neg, N_plus, N_minus]
-    simp only [map_zsmul, map_add, map_mul, map_sub, map_one]
+    exact hAnomMap (directLimitOf bond k)
   have hBondL : directLimitOf bond n (bondMap bond k n hkn (L5_neg2 P1 P2 X)) =
       L5_neg2 (directLimitOf bond k P1) (directLimitOf bond k P2) (directLimitOf bond k X) := by
     rw [directLimitOf_bondMap bond k n hkn, ← hCone k, hL1]

@@ -2214,63 +2214,60 @@ theorem virasoro_sugawara_colimit_cone_transport
     (n - m) • virasoroCocycleOp (n + m) l C_inf +
       (m - l) • virasoroCocycleOp (m + l) n C_inf +
       (l - n) • virasoroCocycleOp (l + n) m C_inf = 0 := by
-  have hMapNp : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x : A),
-      f (TriacontadicModularMoonshinePoset.N_plus p x) =
-        TriacontadicModularMoonshinePoset.N_plus (f p) (f x) := by
-    intro A D _ _ f p x
-    dsimp [TriacontadicModularMoonshinePoset.N_plus]
-    simp [map_mul, map_sub, map_one]
-  have hMapNm : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p y : A),
-      f (TriacontadicModularMoonshinePoset.N_minus p y) =
-        TriacontadicModularMoonshinePoset.N_minus (f p) (f y) := by
-    intro A D _ _ f p y
-    dsimp [TriacontadicModularMoonshinePoset.N_minus]
-    simp [map_mul, map_sub, map_one]
-  have hMapV : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A),
-      f (TriacontadicModularMoonshinePoset.V_met p x y) =
-        TriacontadicModularMoonshinePoset.V_met (f p) (f x) (f y) := by
-    intro A D _ _ f p x y
-    dsimp [TriacontadicModularMoonshinePoset.V_met]
-    simp [map_add, map_mul, hMapNp, hMapNm]
-  have hMapSrc : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
-      f (sugawaraSourceMode p x y m') = sugawaraSourceMode (f p) (f x) (f y) m' := by
-    intro A D _ _ f p x y m'
-    dsimp [sugawaraSourceMode]
-    simp [map_mul, map_pow, hMapV, hMapNp]
-  have hMapSnk : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
-      f (sugawaraSinkMode p x y m') = sugawaraSinkMode (f p) (f x) (f y) m' := by
-    intro A D _ _ f p x y m'
-    dsimp [sugawaraSinkMode]
-    simp [map_mul, map_pow, hMapV, hMapNm]
-  have hMapEven : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
-      f (virasoroEvenMode p x y m') = virasoroEvenMode (f p) (f x) (f y) m' := by
-    intro A D _ _ f p x y m'
-    dsimp [virasoroEvenMode]
-    simp [map_pow, hMapV]
-  have hMapChiral : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
-      f (virasoroChiralMode p x y m') = virasoroChiralMode (f p) (f x) (f y) m' := by
-    intro A D _ _ f p x y m'
-    dsimp [virasoroChiralMode]
-    simp [map_mul, map_sub, map_nsmul, map_one, map_pow, hMapV]
+  have hSrc : toLimit k (sugawaraSourceMode P X Y r) =
+      sugawaraSourceMode (toLimit k P) (toLimit k X) (toLimit k Y) r := by
+    dsimp [sugawaraSourceMode, TriacontadicModularMoonshinePoset.V_met,
+      TriacontadicModularMoonshinePoset.N_plus, TriacontadicModularMoonshinePoset.N_minus]
+    simp only [map_mul, map_pow, map_add, map_sub, map_one]
+  have hSnk : toLimit k (sugawaraSinkMode P X Y s) =
+      sugawaraSinkMode (toLimit k P) (toLimit k X) (toLimit k Y) s := by
+    dsimp [sugawaraSinkMode, TriacontadicModularMoonshinePoset.V_met,
+      TriacontadicModularMoonshinePoset.N_plus, TriacontadicModularMoonshinePoset.N_minus]
+    simp only [map_mul, map_pow, map_add, map_sub, map_one]
+  have hEven : toLimit k (virasoroEvenMode P X Y (r + s)) =
+      virasoroEvenMode (toLimit k P) (toLimit k X) (toLimit k Y) (r + s) := by
+    dsimp [virasoroEvenMode, TriacontadicModularMoonshinePoset.V_met,
+      TriacontadicModularMoonshinePoset.N_plus, TriacontadicModularMoonshinePoset.N_minus]
+    simp only [map_mul, map_pow, map_add, map_sub, map_one]
+  have hChiral : toLimit k (virasoroChiralMode P X Y (r + s)) =
+      virasoroChiralMode (toLimit k P) (toLimit k X) (toLimit k Y) (r + s) := by
+    dsimp [virasoroChiralMode, TriacontadicModularMoonshinePoset.V_met,
+      TriacontadicModularMoonshinePoset.N_plus, TriacontadicModularMoonshinePoset.N_minus]
+    simp only [map_mul, map_pow, map_add, map_sub, map_one, map_nsmul]
+  have hSrcEmb : toLimit (k + 1) (sugawaraSourceMode (embed k P) (embed k X) (embed k Y) r) =
+      sugawaraSourceMode (toLimit k P) (toLimit k X) (toLimit k Y) r := by
+    have hE : embed k (sugawaraSourceMode P X Y r) =
+        sugawaraSourceMode (embed k P) (embed k X) (embed k Y) r := by
+      dsimp [sugawaraSourceMode, TriacontadicModularMoonshinePoset.V_met,
+        TriacontadicModularMoonshinePoset.N_plus, TriacontadicModularMoonshinePoset.N_minus]
+      simp only [map_mul, map_pow, map_add, map_sub, map_one]
+    rw [← hE, hCone k, hSrc]
+  have hChiralEmb : toLimit (k + 1) (virasoroChiralMode (embed k P) (embed k X) (embed k Y) (r + s)) =
+      virasoroChiralMode (toLimit k P) (toLimit k X) (toLimit k Y) (r + s) := by
+    have hE : embed k (virasoroChiralMode P X Y (r + s)) =
+        virasoroChiralMode (embed k P) (embed k X) (embed k Y) (r + s) := by
+      dsimp [virasoroChiralMode, TriacontadicModularMoonshinePoset.V_met,
+        TriacontadicModularMoonshinePoset.N_plus, TriacontadicModularMoonshinePoset.N_minus]
+      simp only [map_mul, map_pow, map_add, map_sub, map_one, map_nsmul]
+    rw [← hE, hCone k, hChiral]
   have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
     rw [← map_mul, hP]
   have hAlg_inf := all_mode_sugawara_virasoro_mode_algebra
     (toLimit k P) (toLimit k X) (toLimit k Y) hP_inf r s
   have hCocycle_inf := virasoro_cocycle_sl2_vanishing_and_jacobi_identity n m l (toLimit k C_op)
-  refine ⟨hMapSrc (toLimit k) P X Y r,
-          hMapSnk (toLimit k) P X Y s,
-          hMapEven (toLimit k) P X Y (r + s),
-          hMapChiral (toLimit k) P X Y (r + s),
-          ?_, ?_,
+  refine ⟨hSrc,
+          hSnk,
+          hEven,
+          hChiral,
+          hSrcEmb,
+          hChiralEmb,
           hAlg_inf.1,
           hAlg_inf.2.2.2.2.1,
           hAlg_inf.2.2.2.2.2,
           ?_,
           hCocycle_inf.2.2.2.2.2.2⟩
-  · rw [← hMapSrc (embed k) P X Y r, hCone k, hMapSrc (toLimit k) P X Y r]
-  · rw [← hMapChiral (embed k) P X Y (r + s), hCone k, hMapChiral (toLimit k) P X Y (r + s)]
-  · dsimp [virasoroCocycleOp]
-    exact map_zsmul (toLimit k) (virasoroCocycleCoeff12 n m) C_op
+  dsimp [virasoroCocycleOp]
+  exact map_zsmul (toLimit k) (virasoroCocycleCoeff12 n m) C_op
 
 /-- **Theorem 7 (`five_graded_virasoro_witt_tower_commutation`, `𝔇𝔗₁` & `𝔇𝔗₂`)**:
     In any associative ring `[Ring B]` with orthogonal idempotents

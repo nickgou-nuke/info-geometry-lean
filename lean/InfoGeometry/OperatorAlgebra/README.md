@@ -116,6 +116,27 @@ to unfold beyond that set. Successful use proves the individual goal; a
 claim that it decides every ring identity, or that a proposed Knuth–Bendix
 completion is complete, would require a separately stated metatheorem.
 
+## Ordered Peirce words and unitary balance
+
+[WilsonPlaquette.lean](PeirceSpine/WilsonPlaquette.lean) owns the exact
+four-factor expansion `W = 1 + Sigma - V*J + Qplus^2`.
+[WilsonPlaquetteCriteria.lean](PeirceSpine/WilsonPlaquetteCriteria.lean)
+characterizes `W=1` by vanishing of both mixed products and `W=1+Sigma`
+by vanishing of both directed cubic round trips. These are arbitrary-ring
+results with an idempotent cut; the higher terms cannot be discarded merely
+because each individual corner is square-zero.
+
+[SquareZeroUnitary.lean](SquareZeroUnitary.lean) proves that a square-zero
+perturbation `1+N` in a C*-ring is unitary exactly when `N=0`. Its analytic
+corollary uses the actual complex Banach-algebra exponential. A unitary
+left factor preserves this obstruction without a commutation hypothesis.
+
+The [conformal-balance theorem contract](../../../docs/CONFORMAL_BALANCE_OBSTRUCTION_CONTRACT.md)
+records the source claims, existing owners, exact hypotheses, and verification
+scope. These operator theorems do not construct Connes fusion or identify a
+Peirce word with categorical double braiding. Non-rationality of a unitary
+conformal net does not supply a nontrivial unitary Jordan perturbation.
+
 ## Virasoro bridge details and reusable notes
 
 [AffineVirasoroBridge.lean](AffineVirasoroBridge.lean) defines `VirasoroDatum`

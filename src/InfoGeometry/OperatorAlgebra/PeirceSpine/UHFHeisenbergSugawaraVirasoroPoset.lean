@@ -460,7 +460,7 @@ lemma uhf_inductive_tower_parity_and_sugawara_invariance
 /-! ### 5. Master Theorem `D₂₈`: Synthesis of Peirce Current Modes & Idempotent Recurrence -/
 
 /-- **Master Theorem `D₂₈` (`stage_D28_uhf_heisenberg_sugawara_virasoro_and_chiral_parity_master_synthesis`):**
-Unifies all 5 archetypes (`U₁ → U₅`) in native Mathlib4 with zero `sorry`s. -/
+Unifies all 5 archetypes (`U₁ → U₅`) in native Mathlib4 with complete constructive proofs. -/
 theorem stage_D28_uhf_heisenberg_sugawara_virasoro_and_chiral_parity_master_synthesis
     {P A C : B} (hP : P * P = P) (n k : ℕ) :
     -- 1. Chiral Parity Charge & Current of the Chiral Parity Charge (`[Q_chiral, J_V] = 2 J_A`) (U₁):

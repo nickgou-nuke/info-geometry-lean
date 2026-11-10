@@ -541,4 +541,46 @@ theorem coverEdge_asymm {u v : Node} (huv : coverEdge u v) : ¬ coverEdge v u :=
   intro hvu
   exact Nat.lt_asymm (coverEdge_strict_rank huv) (coverEdge_strict_rank hvu)
 
+/-- **Inductive Colimit Cone Transport (`wheeler_single_commutator_resolvent_colimit_cone_transport`):**
+    Under any compatible inductive ring cone `toLimit : ∀ k : ℕ, Stage k →+* Limit`
+    (`toLimit (k + 1) (embed k Z) = toLimit k Z`), the single-commutator power ladder
+    (`J_1, J_2`), Casimir bridge `Z_bridge`, and decadic resolvent crystal factorizations
+    transport functorially from finite stage `Stage k` into `Limit`. -/
+theorem wheeler_single_commutator_resolvent_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (P X : Stage k) (hP : P * P = P) :
+    let P_inf := toLimit k P
+    let X_inf := toLimit k X
+    toLimit k (J_1 P X) = J_1 P_inf X_inf ∧
+    toLimit k (J_2 P X) = J_2 P_inf X_inf ∧
+    toLimit k (Z_bridge P X) = Z_bridge P_inf X_inf ∧
+    toLimit (k + 1) (Z_bridge (embed k P) (embed k X)) = Z_bridge P_inf X_inf ∧
+    J_1 P_inf X_inf * J_1 P_inf X_inf + J_2 P_inf X_inf * J_2 P_inf X_inf = 0 ∧
+    (1 - J_1 P_inf X_inf) * (1 + J_1 P_inf X_inf) = 1 + Z_bridge P_inf X_inf ∧
+    (1 - J_2 P_inf X_inf) * (1 + J_2 P_inf X_inf) = 1 - Z_bridge P_inf X_inf := by
+  have hJ1 : toLimit k (J_1 P X) = J_1 (toLimit k P) (toLimit k X) := by
+    dsimp [J_1, comm]
+    simp only [map_sub, map_mul]
+  have hJ2 : toLimit k (J_2 P X) = J_2 (toLimit k P) (toLimit k X) := by
+    dsimp [J_2, J_1, comm]
+    simp only [map_sub, map_mul]
+  have hZb : toLimit k (Z_bridge P X) = Z_bridge (toLimit k P) (toLimit k X) := by
+    dsimp [Z_bridge, V_P, Sigma_P, Q_pos, Q_neg, P_perp]
+    simp only [map_add, map_mul, map_sub, map_one]
+  have hZbEmb : toLimit (k + 1) (Z_bridge (embed k P) (embed k X)) =
+      Z_bridge (toLimit k P) (toLimit k X) := by
+    have hE : embed k (Z_bridge P X) = Z_bridge (embed k P) (embed k X) := by
+      dsimp [Z_bridge, V_P, Sigma_P, Q_pos, Q_neg, P_perp]
+      simp only [map_add, map_mul, map_sub, map_one]
+    rw [← hE, hCone k, hZb]
+  have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
+    rw [← map_mul, hP]
+  have hLad := single_commutator_power_ladder hP_inf (toLimit k X)
+  have hRes := decadic_single_commutator_resolvent_crystal hP_inf (toLimit k X)
+  exact ⟨hJ1, hJ2, hZb, hZbEmb, hLad.2.2.2.1, hRes.1, hRes.2.1⟩
+
 end InfoGeometry.Canonical.WheelerItFromBitSingleCommutatorForgottenArchetypesPoset

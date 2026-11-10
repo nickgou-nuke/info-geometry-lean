@@ -1841,10 +1841,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    rw [if_pos h', if_pos h, hm]
+    simp only [h', h, ↓reduceIte, hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    rw [if_neg h', if_neg h]
+    simp only [h', h, ↓reduceIte]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1859,12 +1859,12 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    rw [if_pos h1, if_pos h2, if_pos h3, hk]
+    simp only [h1, h2, h3, ↓reduceIte, hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    rw [if_neg h1, if_neg h2, if_neg h3]
+    simp only [h1, h2, h3, ↓reduceIte]
     ring
 
 /-- **Theorem 3 (`virasoro_cocycle_sl2_vanishing_and_jacobi_identity`)**:

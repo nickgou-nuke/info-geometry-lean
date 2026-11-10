@@ -1089,7 +1089,14 @@ theorem s3_wedderburn_artin_and_2d_peirce_syntax_witness :
     mul s3_tau12 s3_tau12 = (oneMat : Mat2Op ℤ) ∧
     mul s3_tau23 s3_tau23 = (oneMat : Mat2Op ℤ) ∧
     mul s3_tau12 s3_tau23 ≠ mul s3_tau23 s3_tau12 := by
-  decide
+  refine ⟨by decide,
+          Prod.ext (Prod.ext (by decide) (by decide)) (Prod.ext (by decide) (by decide)),
+          Prod.ext (Prod.ext (by decide) (by decide)) (Prod.ext (by decide) (by decide)),
+          fun h => by
+            have h12 : (mul s3_tau12 s3_tau23).1.2 = (mul s3_tau23 s3_tau12).1.2 :=
+              congrArg (fun X => X.1.2) h
+            revert h12
+            decide⟩
 
 /--
 **Lean `#15` Theorem 5 (`peirce_peter_weyl_four_basis_reconstruction`, lifted to `[Ring K]`):**
@@ -1106,7 +1113,7 @@ theorem peirce_peter_weyl_four_basis_reconstruction (M : Mat2Op K) :
         (scaleRight (tr (mul M basisJ)) basisJ) := by
   rcases M with ⟨⟨a11, a12⟩, ⟨a21, a22⟩⟩
   dsimp only [nsmulMat, subMat, addMat, scaleRight, tr, mul, basisI, basisSP, basisPhi, basisJ]
-  ext <;> noncomm_ring
+  refine Prod.ext (Prod.ext ?_ ?_) (Prod.ext ?_ ?_) <;> noncomm_ring
 
 end Mat2Op
 
@@ -1181,7 +1188,8 @@ theorem clebsch_gordan_s4_idempotency_and_mutual_orthogonality (M : Mat3Op K) :
   rcases M with ⟨⟨a11, a12, a13⟩, ⟨a21, a22, a23⟩, ⟨a31, a32, a33⟩⟩
   dsimp only [Pi1, Pi2, Pi3_pos, Pi3_neg, addMat, nsmulMat, zeroMat, tr]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-  · ext <;> abel
+  · refine Prod.ext (Prod.ext ?_ (Prod.ext ?_ ?_))
+      (Prod.ext (Prod.ext ?_ (Prod.ext ?_ ?_)) (Prod.ext ?_ (Prod.ext ?_ ?_))) <;> abel
 
 /--
 **Lean `#18` Theorem 2 (`clebsch_gordan_frobenius_pythagorean_theorem`, lifted to `[Ring K]`):**
@@ -1272,15 +1280,15 @@ theorem hurwitz_corner_triality_attention_filter :
   refine ⟨by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · dsimp only [qNorm, hurwitzW]; noncomm_ring
   · dsimp only [hurwitzW, qOne, zeroQuat, addQuat, subQuat, zsmulQuat, mul]
-    ext <;> noncomm_ring
+    refine Prod.ext (Prod.ext ?_ ?_) (Prod.ext ?_ ?_) <;> noncomm_ring
   · dsimp only [hurwitzW, qOne, zsmulQuat, mul]
-    ext <;> noncomm_ring
+    refine Prod.ext (Prod.ext ?_ ?_) (Prod.ext ?_ ?_) <;> noncomm_ring
   · dsimp only [hurwitzW, qi, qj, conj, zsmulQuat, mul]
-    ext <;> noncomm_ring
+    refine Prod.ext (Prod.ext ?_ ?_) (Prod.ext ?_ ?_) <;> noncomm_ring
   · dsimp only [hurwitzW, qj, qk, conj, zsmulQuat, mul]
-    ext <;> noncomm_ring
+    refine Prod.ext (Prod.ext ?_ ?_) (Prod.ext ?_ ?_) <;> noncomm_ring
   · dsimp only [hurwitzW, qk, qi, conj, zsmulQuat, mul]
-    ext <;> noncomm_ring
+    refine Prod.ext (Prod.ext ?_ ?_) (Prod.ext ?_ ?_) <;> noncomm_ring
 
 end QuatOp
 
@@ -1601,7 +1609,6 @@ theorem master_octacosadic_three_strand_yang_baxter_coagulation
     JW_2 e1 e2 tau * JW_2 e1 e2 tau = (1 - tau) * JW_2 e1 e2 tau ∧
     (g_braid u e1 * g_braid u e2 * g_braid u e1 - g_braid u e2 * g_braid u e1 * g_braid u e2 =
       (u * (1 + u + tau * (u * u))) * H_tl e1 e2) := by
-  dsimp only []
   exact ⟨OctacosadicBraidNode.oc_poset_chain,
          (three_strand_halmos_commutator_aporia e1 e2 e3 h13).2,
          (three_strand_cubic_temperley_lieb_braid_transfer e1 e2 e3 tau he1 he3 h13 h121 h232 h323 h212 htau1 htau3).2.2.2.2.2.2.2,
@@ -1645,34 +1652,34 @@ theorem temperley_lieb_yang_baxter_colimit_cone_transport
     JW_2 E1 E2 Tau * JW_2 E1 E2 Tau = (1 - Tau) * JW_2 E1 E2 Tau ∧
     (g_braid U E1 * g_braid U E2 * g_braid U E1 - g_braid U E2 * g_braid U E1 * g_braid U E2 =
       (U * (1 + U + Tau * (U * U))) * H_tl E1 E2) := by
-  have hMapJW : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (a b t : R),
-      f (JW_2 a b t) = JW_2 (f a) (f b) (f t) := by
-    intro R S _ _ f a b t
-    dsimp only [JW_2]
-    simp only [map_sub, map_mul, map_one]
-  have hMapG : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (x a : R),
-      f (g_braid x a) = g_braid (f x) (f a) := by
-    intro R S _ _ f x a
-    dsimp only [g_braid]
-    simp only [map_add, map_mul, map_one]
-  have hMapH : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (a b : R),
-      f (H_tl a b) = H_tl (f a) (f b) := by
-    intro R S _ _ f a b
-    dsimp only [H_tl]
-    simp only [map_sub]
+  have hMapJW_lim : ∀ (a b t : Stage k),
+      toLimit k (JW_2 a b t) = JW_2 (toLimit k a) (toLimit k b) (toLimit k t) := by
+    intro a b t; dsimp only [JW_2]; simp only [map_sub, map_mul, map_one]
+  have hMapJW_emb : ∀ (a b t : Stage k),
+      embed k (JW_2 a b t) = JW_2 (embed k a) (embed k b) (embed k t) := by
+    intro a b t; dsimp only [JW_2]; simp only [map_sub, map_mul, map_one]
+  have hMapG_lim : ∀ (x a : Stage k),
+      toLimit k (g_braid x a) = g_braid (toLimit k x) (toLimit k a) := by
+    intro x a; dsimp only [g_braid]; simp only [map_add, map_mul, map_one]
+  have hMapG_emb : ∀ (x a : Stage k),
+      embed k (g_braid x a) = g_braid (embed k x) (embed k a) := by
+    intro x a; dsimp only [g_braid]; simp only [map_add, map_mul, map_one]
+  have hMapH_lim : ∀ (a b : Stage k),
+      toLimit k (H_tl a b) = H_tl (toLimit k a) (toLimit k b) := by
+    intro a b; dsimp only [H_tl]; simp only [map_sub]
   have hJW_stage : JW_2 e1 e2 tau * JW_2 e1 e2 tau = (1 - tau) * JW_2 e1 e2 tau :=
     (jones_wenzl_second_idempotent_from_halmos_square e1 e2 tau he1 he2 h121 h212 htau1 htau2).2.2.2.2.2.2.2
   have hYB_stage : g_braid u e1 * g_braid u e2 * g_braid u e1 -
       g_braid u e2 * g_braid u e1 * g_braid u e2 =
       (u * (1 + u + tau * (u * u))) * H_tl e1 e2 :=
     (kauffman_jones_yang_baxter_braid_defect_identity e1 e2 tau u he1 he2 h121 h212 hu1 hu2 hutau).1
-  refine ⟨hMapJW (toLimit k) e1 e2 tau, ?_, hMapG (toLimit k) u e1, ?_, ?_, ?_⟩
-  · rw [← hMapJW (embed k), hCone, hMapJW (toLimit k)]
-  · rw [← hMapG (embed k), hCone, hMapG (toLimit k)]
+  refine ⟨hMapJW_lim e1 e2 tau, ?_, hMapG_lim u e1, ?_, ?_, ?_⟩
+  · rw [← hMapJW_emb, hCone, hMapJW_lim]
+  · rw [← hMapG_emb, hCone, hMapG_lim]
   · have h := congrArg (toLimit k) hJW_stage
-    simpa only [map_mul, map_sub, map_one, hMapJW] using h
+    simpa only [map_mul, map_sub, map_one, hMapJW_lim] using h
   · have h := congrArg (toLimit k) hYB_stage
-    simpa only [map_sub, map_mul, map_add, map_one, hMapG, hMapH] using h
+    simpa only [map_sub, map_mul, map_add, map_one, hMapG_lim, hMapH_lim] using h
 
 end Track2_OctacosadicThreeStrandTemperleyLiebYangBaxter
 

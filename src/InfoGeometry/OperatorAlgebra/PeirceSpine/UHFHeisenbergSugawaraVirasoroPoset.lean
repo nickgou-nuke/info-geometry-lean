@@ -130,7 +130,7 @@ instance : PartialOrder UHFHeisenbergSugawaraStage where
   le_trans a b c hab hbc := by
     cases a <;> cases b <;> cases c <;> simp_all [causalLE]
   le_antisymm a b hab hba := by
-    cases a <;> cases b <;> cases c <;> simp_all [causalLE]
+    cases a <;> cases b <;> simp_all [causalLE]
 
 /-- Every directed causal edge `causalEdge a b` implies `a ≤ b` in `UHFHeisenbergSugawaraStage`. -/
 theorem causalEdge_le {a b : UHFHeisenbergSugawaraStage}
@@ -245,7 +245,6 @@ lemma chiral_parity_charge_and_source_sink_currents {P : B} (hP : P * P = P) (A 
     comm (chiralParityCharge P) (axialCurrent P A C) = (2 : ℤ) • vectorCurrent P A C ∧
     anticomm (chiralParityCharge P) (vectorCurrent P A C) = 0 ∧
     anticomm (chiralParityCharge P) (axialCurrent P A C) = 0 := by
-  dsimp only []
   refine ⟨by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP,
           by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP,
           by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP⟩
@@ -328,7 +327,6 @@ lemma sugawara_stress_energy_and_conformal_commutators {P : B} (hP : P * P = P) 
       (2 : ℤ) • (sugawaraTensor P A C * axialCurrent P A C) ∧
     comm (chiralSchwinger P A C) (axialCurrent P A C) =
       (2 : ℤ) • (sugawaraTensor P A C * vectorCurrent P A C) := by
-  dsimp only []
   refine ⟨by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP,
           by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP⟩
 
@@ -350,7 +348,6 @@ lemma virasoro_chiral_splitting_and_central_defect {P : B} (hP : P * P = P) (A C
       idemDefect (sugawaraPlus P A C) + idemDefect (sugawaraMinus P A C) ∧
     chiralSchwinger P A C * chiralSchwinger P A C =
       sugawaraTensor P A C * sugawaraTensor P A C := by
-  dsimp only []
   refine ⟨by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP, by sugawara_abel hP⟩
 
 /-- **Lemma `U₄.2` (`virasoro_sugawara_mode_closure`):**
@@ -858,9 +855,18 @@ theorem uhf_heisenberg_sugawara_virasoro_colimit_cone_transport
       (2 : ℤ) • heisenbergSourceMode (n + m + 1) P_inf A_inf C_inf ∧
     comm (virasoroModeChiral n P_inf A_inf C_inf) (heisenbergSinkMode m P_inf A_inf C_inf) =
       -(2 : ℤ) • heisenbergSinkMode (n + m + 1) P_inf A_inf C_inf := by
-  have hMapTower : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (r : ℕ) (p a : R),
-      f (uhfIdemTower r p a) = uhfIdemTower r (f p) (f a) := by
-    intro R S _ _ f r
+  have hMapTower_lim : ∀ (r : ℕ) (p a : Stage s),
+      toLimit s (uhfIdemTower r p a) = uhfIdemTower r (toLimit s p) (toLimit s a) := by
+    intro r
+    induction r with
+    | zero => intro p a; rfl
+    | succ r ih =>
+      intro p a
+      dsimp only [uhfIdemTower, idemTrans, chiralSource]
+      simp only [map_sub, map_mul, map_one, ih p a]
+  have hMapTower_emb : ∀ (r : ℕ) (p a : Stage s),
+      embed s (uhfIdemTower r p a) = uhfIdemTower r (embed s p) (embed s a) := by
+    intro r
     induction r with
     | zero => intro p a; rfl
     | succ r ih =>
@@ -871,8 +877,8 @@ theorem uhf_heisenberg_sugawara_virasoro_colimit_cone_transport
     rw [← map_mul, hP]
   rcases stage_D29_all_mode_heisenberg_virasoro_and_uhf_unipotent_bridge hP_inf
       (toLimit s A) (toLimit s C) n m k with ⟨hH1, hH2, hV1, hV2, _, _, _⟩
-  refine ⟨hMapTower (toLimit s) k P A, ?_, hH1, hH2, hV1, hV2⟩
-  rw [← hMapTower (embed s) k P A, hCone s, hMapTower (toLimit s) k P A]
+  refine ⟨hMapTower_lim k P A, ?_, hH1, hH2, hV1, hV2⟩
+  rw [← hMapTower_emb k P A, hCone s, hMapTower_lim k P A]
 
 end Primitives
 

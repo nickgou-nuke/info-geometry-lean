@@ -599,17 +599,31 @@ theorem three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint
     have h_pn :
         τ.tr (positiveStepCommutator P1 P2 X (negativeStepCommutator P1 P2 Y A) * Z) =
           τ.tr (A * negativeStepCommutator P1 P2 Y (positiveStepCommutator P1 P2 X Z)) := by
-      rw [h_comm_adj (N_pos1_3 P1 P2 X) (negativeStepCommutator P1 P2 Y A) Z,
-          h_comm_adj (N_neg1_3 P1 P2 Y) A (positiveStepCommutator P1 P2 X Z), neg_neg]
+      have h1_adj :
+          τ.tr (positiveStepCommutator P1 P2 X (negativeStepCommutator P1 P2 Y A) * Z) =
+            - τ.tr (negativeStepCommutator P1 P2 Y A * positiveStepCommutator P1 P2 X Z) :=
+        h_comm_adj (N_pos1_3 P1 P2 X) (negativeStepCommutator P1 P2 Y A) Z
+      have h2_adj :
+          τ.tr (negativeStepCommutator P1 P2 Y A * positiveStepCommutator P1 P2 X Z) =
+            - τ.tr (A * negativeStepCommutator P1 P2 Y (positiveStepCommutator P1 P2 X Z)) :=
+        h_comm_adj (N_neg1_3 P1 P2 Y) A (positiveStepCommutator P1 P2 X Z)
+      rw [h1_adj, h2_adj, neg_neg]
     have h_np :
         τ.tr (negativeStepCommutator P1 P2 Y (positiveStepCommutator P1 P2 X A) * Z) =
           τ.tr (A * positiveStepCommutator P1 P2 X (negativeStepCommutator P1 P2 Y Z)) := by
-      rw [h_comm_adj (N_neg1_3 P1 P2 Y) (positiveStepCommutator P1 P2 X A) Z,
-          h_comm_adj (N_pos1_3 P1 P2 X) A (negativeStepCommutator P1 P2 Y Z), neg_neg]
+      have h1_adj :
+          τ.tr (negativeStepCommutator P1 P2 Y (positiveStepCommutator P1 P2 X A) * Z) =
+            - τ.tr (positiveStepCommutator P1 P2 X A * negativeStepCommutator P1 P2 Y Z) :=
+        h_comm_adj (N_neg1_3 P1 P2 Y) (positiveStepCommutator P1 P2 X A) Z
+      have h2_adj :
+          τ.tr (positiveStepCommutator P1 P2 X A * negativeStepCommutator P1 P2 Y Z) =
+            - τ.tr (A * positiveStepCommutator P1 P2 X (negativeStepCommutator P1 P2 Y Z)) :=
+        h_comm_adj (N_pos1_3 P1 P2 X) A (negativeStepCommutator P1 P2 Y Z)
+      rw [h1_adj, h2_adj, neg_neg]
     rw [h_pn, h_np, add_comm]
   refine ⟨?_, h_d_step1, h_d_step2, h_pos_adj, h_neg_adj, h_lap_adj, ?_⟩
   · dsimp only [block10, P0_waist]
     parabolic_idem_nf h1 h2 h12 h21 h1' h2' h12' h21'
-  · exact (peirce_nine_block_decomposition P1 P2 Z).2
+  · exact (peirce_nine_block_decomposition P1 P2 Z h1 h2 h12 h21).2.2.2.2.2.symm
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.ThreeHorizonHodgeDecompositionPoset

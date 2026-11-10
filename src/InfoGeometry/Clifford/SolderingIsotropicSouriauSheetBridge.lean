@@ -3,8 +3,8 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
@@ -53,7 +53,7 @@ This module formalizes:
    - Casimir invariant $C_1 = 0$ is conserved everywhere on both sheets, proving that the
      coadjoint orbits of massless left- and right-chiral states are invariant and isoentropic.
 
-All proofs are native Mathlib with 0 sorry, 0 admit, and 0 custom axioms.
+All proofs are proved in native Mathlib.
 -/
 
 namespace InfoGeometry.Clifford.SolderingIsotropic
@@ -61,6 +61,13 @@ namespace InfoGeometry.Clifford.SolderingIsotropic
 open Matrix
 open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem solderingIsotropic_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section Ring
 
@@ -156,6 +163,15 @@ def spinorDyad (l0 l1 lt0 lt1 : R) : Mat2 R :=
     $\mathcal{O}(\Lambda, P) = \Lambda P \Lambda^\top$. -/
 def souriauOrbitPoint (Λ P : Mat2 R) : Mat2 R :=
   Λ * P * Λᵀ
+
+/-- Over any non-commutative ring `[Ring R]`, the sum of the left and right Souriau orbit points
+equals `Λ * Λᵀ`. -/
+theorem souriauOrbitPoint_P_L_add_P_R (Λ : Mat2 R) :
+    souriauOrbitPoint Λ P_L + souriauOrbitPoint Λ P_R = Λ * Λᵀ := by
+  unfold souriauOrbitPoint
+  have h_add : Λ * P_L * Λᵀ + Λ * P_R * Λᵀ = Λ * (P_L + P_R) * Λᵀ := by
+    simp only [Matrix.mul_add, Matrix.add_mul]
+  rw [h_add, P_L_add_P_R, Matrix.mul_one]
 
 end Ring
 

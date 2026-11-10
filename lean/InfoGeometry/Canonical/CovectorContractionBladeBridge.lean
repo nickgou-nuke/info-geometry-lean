@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.GrassmannianCartanTower
@@ -9,14 +14,48 @@ namespace InfoGeometry.Canonical.CovectorContractionBladeBridge
 
 open ExteriorAlgebra
 open InfoGeometry.GrassmannianTower
+open InfoGeometry.Algebra.FiniteSpin
 
-variable {R₀ V₀ : Type*} [CommSemiring R₀] [AddCommMonoid V₀] [Module R₀ V₀]
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingFiveBladeContraction
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative 4-blade `v1 * v2 * v3 * v4` in any associative ring `[Ring B]`. -/
+def ringBlade4 (v1 v2 v3 v4 : B) : B :=
+  v1 * v2 * v3 * v4
+
+/-- Non-commutative 5-blade contraction in any associative ring `[Ring B]` by an
+additive functional `lambda : B → B`. -/
+def ringContractFiveBlade (lambda : B → B) (u w1 w2 w3 w4 : B) : B :=
+  lambda u * ringBlade4 w1 w2 w3 w4 -
+  lambda w1 * ringBlade4 u w2 w3 w4 +
+  lambda w2 * ringBlade4 u w1 w3 w4 -
+  lambda w3 * ringBlade4 u w1 w2 w4 +
+  lambda w4 * ringBlade4 u w1 w2 w3
+
+/-- Over any non-commutative ring `[Ring B]`, an adapted frame (`lambda u = 1`,
+`lambda w_i = 0`) contracts the 5-blade to `ringBlade4 w1 w2 w3 w4`. -/
+theorem ring_contraction_of_adapted_five_frame
+    (lambda : B → B) (u w1 w2 w3 w4 : B)
+    (hu : lambda u = 1) (hw1 : lambda w1 = 0) (hw2 : lambda w2 = 0)
+    (hw3 : lambda w3 = 0) (hw4 : lambda w4 = 0) :
+    ringContractFiveBlade lambda u w1 w2 w3 w4 = ringBlade4 w1 w2 w3 w4 := by
+  dsimp [ringContractFiveBlade]
+  rw [hu, hw1, hw2, hw3, hw4]
+  noncomm_ring
+
+end NonCommRingFiveBladeContraction
+
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- **Definition**: 5-Blade Generator K5 = ι(v1) ∧ ι(v2) ∧ ι(v3) ∧ ι(v4) ∧ ι(v5). -/
-def blade5 (v1 v2 v3 v4 v5 : V₀) : ExteriorAlgebra R₀ V₀ :=
-  ι R₀ v1 * ι R₀ v2 * ι R₀ v3 * ι R₀ v4 * ι R₀ v5
-
-variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
+def blade5 (v1 v2 v3 v4 v5 : V) : ExteriorAlgebra R V :=
+  ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5
 
 /-- **Definition**: 4-Blade Generator K4 = ι(v1) ∧ ι(v2) ∧ ι(v3) ∧ ∧(v4). -/
 def blade4 (v1 v2 v3 v4 : V) : ExteriorAlgebra R V :=

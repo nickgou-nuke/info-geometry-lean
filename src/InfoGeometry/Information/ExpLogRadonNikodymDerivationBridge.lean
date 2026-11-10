@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.RingTheory.Derivation.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -7,6 +12,93 @@ import InfoGeometry.Probability.DerivationBridge
 import Mathlib.Tactic
 
 namespace InfoGeometry.Information.ExpLogRadonNikodymDerivationBridge
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+/-!
+=============================================================================
+PART 0: Non-Commutative Operator Logarithmic Derivations Over `[Ring A]`
+=============================================================================
+-/
+
+section NonCommLogarithmicDerivation
+
+variable {A : Type*} [Ring A]
+
+/-- An additive map on a non-commutative ring `[Ring A]` is a derivation if it
+satisfies the Leibniz product rule `D (x * y) = D x * y + x * D y`. -/
+def IsRingDerivation (D : A → A) : Prop :=
+  (∀ x y, D (x + y) = D x + D y) ∧ (∀ x y, D (x * y) = D x * y + x * D y)
+
+/-- Left logarithmic derivative `u⁻¹ * D u` on units of a non-commutative ring `[Ring A]`. -/
+def dlogL (D : A → A) (u : Aˣ) : A :=
+  (↑u⁻¹ : A) * D (u : A)
+
+/-- Right logarithmic derivative `D u * u⁻¹` on units of a non-commutative ring `[Ring A]`. -/
+def dlogR (D : A → A) (u : Aˣ) : A :=
+  D (u : A) * (↑u⁻¹ : A)
+
+/-- Every derivation on a ring `[Ring A]` annihilates the unit `1`. -/
+theorem derivation_unit_one_ring (D : A → A) (hD : IsRingDerivation D) :
+    D 1 = 0 := by
+  have h1 : D 1 + D 1 = D 1 + 0 := by
+    calc
+      D 1 + D 1 = D 1 * 1 + 1 * D 1 := by rw [mul_one, one_mul]
+      _ = D (1 * 1) := (hD.2 1 1).symm
+      _ = D 1 + 0 := by rw [mul_one, add_zero]
+  exact add_left_cancel h1
+
+/-- Non-commutative inverse derivation rule over `[Ring A]`:
+`D(u⁻¹) = - (u⁻¹ * D(u) * u⁻¹)`. -/
+theorem derivation_unit_inv_ring (D : A → A) (hD : IsRingDerivation D) (u : Aˣ) :
+    D (↑u⁻¹ : A) = - ((↑u⁻¹ : A) * D (u : A) * (↑u⁻¹ : A)) := by
+  have h_prod : D ((u : A) * (↑u⁻¹ : A)) = 0 := by
+    rw [Units.mul_inv u, derivation_unit_one_ring D hD]
+  have h_leib := hD.2 (u : A) (↑u⁻¹ : A)
+  rw [h_prod] at h_leib
+  have h_sum : D (u : A) * (↑u⁻¹ : A) + (u : A) * D (↑u⁻¹ : A) = 0 := h_leib.symm
+  have h_mul := congrArg (fun z : A => (↑u⁻¹ : A) * z) (eq_neg_of_add_eq_zero_right h_sum)
+  have h_lhs : (↑u⁻¹ : A) * ((u : A) * D (↑u⁻¹ : A)) = D (↑u⁻¹ : A) := by
+    rw [← mul_assoc, Units.inv_mul u, one_mul]
+  rw [h_lhs, mul_neg, ← mul_assoc] at h_mul
+  exact h_mul
+
+/-- Non-commutative 1-cocycle law for the left logarithmic derivative over `[Ring A]`:
+`dlogL D (u * v) = v⁻¹ * dlogL D u * v + dlogL D v`. -/
+theorem dlogL_mul_ring (D : A → A) (hD : IsRingDerivation D) (u v : Aˣ) :
+    dlogL D (u * v) = (↑v⁻¹ : A) * dlogL D u * (v : A) + dlogL D v := by
+  dsimp [dlogL]
+  rw [hD.2 (u : A) (v : A), mul_inv_rev, Units.val_mul, mul_add]
+  have h1 : (↑v⁻¹ : A) * (↑u⁻¹ : A) * (D (u : A) * (v : A)) =
+      (↑v⁻¹ : A) * ((↑u⁻¹ : A) * D (u : A)) * (v : A) := by
+    noncomm_ring
+  have h2 : (↑v⁻¹ : A) * (↑u⁻¹ : A) * ((u : A) * D (v : A)) =
+      (↑v⁻¹ : A) * ((↑u⁻¹ : A) * (u : A)) * D (v : A) := by
+    noncomm_ring
+  rw [h1, h2, Units.inv_mul u, mul_one]
+
+/-- When `dlogL D u` commutes with `v`, the left logarithmic derivative is additive
+over `[Ring A]`: `dlogL D (u * v) = dlogL D u + dlogL D v`. -/
+theorem dlogL_mul_of_commute (D : A → A) (hD : IsRingDerivation D) (u v : Aˣ)
+    (hcomm : Commute (dlogL D u) (v : A)) :
+    dlogL D (u * v) = dlogL D u + dlogL D v := by
+  rw [dlogL_mul_ring D hD u v, mul_assoc, hcomm.eq, ← mul_assoc, Units.inv_mul v, one_mul]
+
+/-- Non-commutative logarithmic inverse rule over `[Ring A]`:
+`dlogL D u⁻¹ = - dlogR D u`. -/
+theorem dlogL_inv_ring (D : A → A) (hD : IsRingDerivation D) (u : Aˣ) :
+    dlogL D u⁻¹ = - dlogR D u := by
+  dsimp [dlogL, dlogR]
+  have h_inv : (u⁻¹ : Aˣ)⁻¹ = u := inv_inv u
+  rw [h_inv, derivation_unit_inv_ring D hD u, mul_neg, ← mul_assoc, ← mul_assoc,
+    Units.mul_inv u, one_mul]
+
+end NonCommLogarithmicDerivation
 
 variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.GromovWittenErlangen.DrazinLocalization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Coalgebra.FrobeniusPairing
@@ -89,11 +94,28 @@ def localizationGraph : LocalizationGraphWitness G T Target where
     cases e
     rfl
 
-/-- Minimal virtual localization packet with unit contributions. -/
-def virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff where
+/-- Build the fixed/edge localization packet with supplied sector weights. -/
+def virtualLocalizationWithContributions
+    (vertexWeight : Fixed → Coeff) (edgeWeight : Edge → Coeff) :
+    VirtualLocalizationOrbitPacket G T Target Coeff where
   graph := localizationGraph
-  vertexContribution := fun _ => 1
-  edgeContribution := fun _ => 1
+  vertexContribution := vertexWeight
+  edgeContribution := edgeWeight
+
+/-- A concrete two-sector example with distinct fixed-sector contributions. -/
+def virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff :=
+  virtualLocalizationWithContributions
+    (fun sector => match sector with
+      | Fixed.zero => 1
+      | Fixed.infinity => -1)
+    (fun _ => 2)
+
+/-- The two fixed points in the fixture carry genuinely different contributions. -/
+theorem virtualLocalization_vertex_terms_distinct :
+    virtualLocalization.vertexContribution Fixed.zero ≠
+      virtualLocalization.vertexContribution Fixed.infinity := by
+  change (1 : Int) ≠ -1
+  norm_num
 
 /-- Complementary support/residue projections for the regular edge weight `1`. -/
 def regularProjections : SelfAdjointIdempotentPair Algebra where
@@ -109,26 +131,32 @@ def regularProjections : SelfAdjointIdempotentPair Algebra where
   residue_selfAdjoint := by
     norm_num
 
-/-- The regular edge denominator `1` has Drazin inverse `1` and zero residue. -/
-def regularEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
+/-! ### Regular Drazin decomposition for a general nonzero edge weight -/
+
+/-- A nonzero real edge weight is regular with inverse `w⁻¹` and zero residue. -/
+def regularEdgeDrazinOfWeight (w : Algebra) (hw : w ≠ 0) :
+    RelativeCoreNilpotentDecomposition Algebra where
   projections := regularProjections
-  element := 1
-  regularPart := 1
-  coreInv := 1
+  element := w
+  regularPart := w
+  coreInv := w⁻¹
   nilpotentPart := 0
-  element_eq_regular_add_nilpotent := by norm_num
-  regular_supported_left := by norm_num [regularProjections]
-  regular_supported_right := by norm_num [regularProjections]
-  nilpotent_residue_supported_left := by norm_num
-  nilpotent_residue_supported_right := by norm_num
-  coreInv_supported_left := by norm_num [regularProjections]
-  coreInv_supported_right := by norm_num [regularProjections]
-  regular_mul_coreInv := by norm_num [regularProjections]
-  coreInv_mul_regular := by norm_num [regularProjections]
-  nilpotent_mul_coreInv := by norm_num
-  coreInv_mul_nilpotent := by norm_num
-  nilpotent_isNilpotent := by
-    exact IsNilpotent.zero
+  element_eq_regular_add_nilpotent := by simp
+  regular_supported_left := by simp [regularProjections]
+  regular_supported_right := by simp [regularProjections]
+  nilpotent_residue_supported_left := by simp
+  nilpotent_residue_supported_right := by simp
+  coreInv_supported_left := by simp [regularProjections]
+  coreInv_supported_right := by simp [regularProjections]
+  regular_mul_coreInv := by simp [regularProjections, mul_inv_cancel₀ hw]
+  coreInv_mul_regular := by simp [regularProjections, inv_mul_cancel₀ hw]
+  nilpotent_mul_coreInv := by simp
+  coreInv_mul_nilpotent := by simp
+  nilpotent_isNilpotent := IsNilpotent.zero
+
+/-- The unit edge fixture is the weight-one specialization of the regular construction. -/
+def regularEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra :=
+  regularEdgeDrazinOfWeight 1 (by norm_num)
 
 /-- Frobenius self-duality over the real localized coefficient algebra. -/
 def frobenius : FrobeniusSelfDualPacket Algebra where

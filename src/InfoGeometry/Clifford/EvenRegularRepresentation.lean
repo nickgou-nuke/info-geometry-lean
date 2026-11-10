@@ -1,80 +1,101 @@
- import Mathlib.LinearAlgebra.CliffordAlgebra.Even
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.LinearAlgebra.CliffordAlgebra.Even
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
- /-! Algebraic regular representations of the native even Clifford algebra. -/
+/-! Algebraic regular representations of the native even Clifford algebra. -/
 
- noncomputable section
- namespace InfoGeometry.Clifford.EvenRegularRepresentation
+noncomputable section
+namespace InfoGeometry.Clifford.EvenRegularRepresentation
 
- open CliffordAlgebra
- variable {R M : Type*} [CommRing R]
- variable [AddCommGroup M] [Module R M]
- variable (Q : QuadraticForm R M)
- local notation "EvenQ" => CliffordAlgebra.even Q
+open CliffordAlgebra
 
- def leftRegularLinearMap (a : EvenQ) : EvenQ →ₗ[R] EvenQ :=
-   LinearMap.mulLeft R a
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
- def rightRegularLinearMap (a : EvenQ) : EvenQ →ₗ[R] EvenQ :=
-   LinearMap.mulRight R a
+/-- In any non-commutative ring `[Ring B]`, left multiplication by `a` commutes with right
+multiplication by `b`: `a * (x * b) = (a * x) * b`. -/
+theorem ring_left_right_regular_commute
+    {B : Type*} [Ring B] (a b x : B) :
+    a * (x * b) = (a * x) * b :=
+  (mul_assoc a x b).symm
 
- @[simp] theorem leftRegularLinearMap_apply (a x : EvenQ) :
-     leftRegularLinearMap Q a x = a * x := rfl
- @[simp] theorem rightRegularLinearMap_apply (a x : EvenQ) :
-     rightRegularLinearMap Q a x = x * a := rfl
+variable {R M : Type*} [CommRing R]
+variable [AddCommGroup M] [Module R M]
+variable (Q : QuadraticForm R M)
+local notation "EvenQ" => CliffordAlgebra.even Q
 
- theorem leftRegularLinearMap_mul (a b : EvenQ) :
-     (leftRegularLinearMap Q a).comp (leftRegularLinearMap Q b) =
-       leftRegularLinearMap Q (a * b) := by
-   ext x; simp [mul_assoc]
- theorem rightRegularLinearMap_mul (a b : EvenQ) :
-     (rightRegularLinearMap Q a).comp (rightRegularLinearMap Q b) =
-       rightRegularLinearMap Q (b * a) := by
-   ext x; simp [mul_assoc]
- theorem leftRegularLinearMap_comm_rightRegularLinearMap (a b : EvenQ) :
-     (leftRegularLinearMap Q a).comp (rightRegularLinearMap Q b) =
-       (rightRegularLinearMap Q b).comp (leftRegularLinearMap Q a) := by
-   ext x; simp [mul_assoc]
+def leftRegularLinearMap (a : EvenQ) : EvenQ →ₗ[R] EvenQ :=
+  LinearMap.mulLeft R a
 
- def leftRegularCommutant : Set (EvenQ →ₗ[R] EvenQ) :=
-   {T | ∀ a x, T (leftRegularLinearMap Q a x) =
-     leftRegularLinearMap Q a (T x)}
+def rightRegularLinearMap (a : EvenQ) : EvenQ →ₗ[R] EvenQ :=
+  LinearMap.mulRight R a
 
- theorem rightRegularLinearMap_mem_leftRegularCommutant (b : EvenQ) :
-     rightRegularLinearMap Q b ∈ leftRegularCommutant Q := by
-   intro a x
-   simp [leftRegularCommutant, mul_assoc]
+@[simp] theorem leftRegularLinearMap_apply (a x : EvenQ) :
+    leftRegularLinearMap Q a x = a * x := rfl
+@[simp] theorem rightRegularLinearMap_apply (a x : EvenQ) :
+    rightRegularLinearMap Q a x = x * a := rfl
 
- theorem leftRegularCommutant_eq_rightRegularLinearMap_range :
-     leftRegularCommutant Q =
-       {T | ∃ b : EvenQ, T = rightRegularLinearMap Q b} := by
-   ext T
-   constructor
-   · intro hT
-     refine ⟨T 1, ?_⟩
-     apply LinearMap.ext
-     intro x
-     have hx := hT x 1
-     simpa only [leftRegularLinearMap_apply, rightRegularLinearMap_apply, one_mul, mul_one] using hx
-   · rintro ⟨b, rfl⟩
-     exact rightRegularLinearMap_mem_leftRegularCommutant Q b
+theorem leftRegularLinearMap_mul (a b : EvenQ) :
+    (leftRegularLinearMap Q a).comp (leftRegularLinearMap Q b) =
+      leftRegularLinearMap Q (a * b) := by
+  ext x; simp [mul_assoc]
+theorem rightRegularLinearMap_mul (a b : EvenQ) :
+    (rightRegularLinearMap Q a).comp (rightRegularLinearMap Q b) =
+      rightRegularLinearMap Q (b * a) := by
+  ext x; simp [mul_assoc]
+theorem leftRegularLinearMap_comm_rightRegularLinearMap (a b : EvenQ) :
+    (leftRegularLinearMap Q a).comp (rightRegularLinearMap Q b) =
+      (rightRegularLinearMap Q b).comp (leftRegularLinearMap Q a) := by
+  ext x; simp [mul_assoc]
 
- theorem coe_mem_evenOdd_zero (a : EvenQ) :
-     (a : CliffordAlgebra Q) ∈ CliffordAlgebra.evenOdd Q 0 := by
-   change (a : CliffordAlgebra Q) ∈ (CliffordAlgebra.even Q).toSubmodule
-   rw [CliffordAlgebra.even_toSubmodule]
-   exact a.2
+def leftRegularCommutant : Set (EvenQ →ₗ[R] EvenQ) :=
+  {T | ∀ a x, T (leftRegularLinearMap Q a x) =
+    leftRegularLinearMap Q a (T x)}
 
- noncomputable def evenEquivEvenOddZero :
-     CliffordAlgebra.even Q ≃ₗ[R] CliffordAlgebra.evenOdd Q 0 where
-   toFun a := ⟨a.1, coe_mem_evenOdd_zero Q a⟩
-   invFun x := ⟨x.1, by
-     change x.1 ∈ (CliffordAlgebra.even Q).toSubmodule
-     rw [CliffordAlgebra.even_toSubmodule]
-     exact x.2⟩
-   left_inv a := by rfl
-   right_inv x := by rfl
-   map_add' a b := by rfl
-   map_smul' c a := by rfl
+theorem rightRegularLinearMap_mem_leftRegularCommutant (b : EvenQ) :
+    rightRegularLinearMap Q b ∈ leftRegularCommutant Q := by
+  intro a x
+  simp [leftRegularCommutant, mul_assoc]
 
- end InfoGeometry.Clifford.EvenRegularRepresentation
- end
+theorem leftRegularCommutant_eq_rightRegularLinearMap_range :
+    leftRegularCommutant Q =
+      {T | ∃ b : EvenQ, T = rightRegularLinearMap Q b} := by
+  ext T
+  constructor
+  · intro hT
+    refine ⟨T 1, ?_⟩
+    apply LinearMap.ext
+    intro x
+    have hx := hT x 1
+    simpa only [leftRegularLinearMap_apply, rightRegularLinearMap_apply, one_mul, mul_one] using hx
+  · rintro ⟨b, rfl⟩
+    exact rightRegularLinearMap_mem_leftRegularCommutant Q b
+
+theorem coe_mem_evenOdd_zero (a : EvenQ) :
+    (a : CliffordAlgebra Q) ∈ CliffordAlgebra.evenOdd Q 0 := by
+  change (a : CliffordAlgebra Q) ∈ (CliffordAlgebra.even Q).toSubmodule
+  rw [CliffordAlgebra.even_toSubmodule]
+  exact a.2
+
+noncomputable def evenEquivEvenOddZero :
+    CliffordAlgebra.even Q ≃ₗ[R] CliffordAlgebra.evenOdd Q 0 where
+  toFun a := ⟨a.1, coe_mem_evenOdd_zero Q a⟩
+  invFun x := ⟨x.1, by
+    change x.1 ∈ (CliffordAlgebra.even Q).toSubmodule
+    rw [CliffordAlgebra.even_toSubmodule]
+    exact x.2⟩
+  left_inv a := by rfl
+  right_inv x := by rfl
+  map_add' a b := by rfl
+  map_smul' c a := by rfl
+
+end InfoGeometry.Clifford.EvenRegularRepresentation
+end

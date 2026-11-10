@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.DualSeedPeirce
 import Mathlib.Tactic.Module
 
@@ -19,6 +20,13 @@ namespace InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceRotor_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section Noncomm
 
@@ -141,10 +149,12 @@ theorem phaseRotor_inverse (h : IsDualSeedPair d b) {c s : R} (hcs : c * c + s *
     phaseRotor c (-s) d b * phaseRotor c s d b = 1 := by
   have h₁ : c * c - s * (-s) = 1 := by simpa using hcs
   have h₂ : c * c - (-s) * s = 1 := by simpa using hcs
+  have h₃ : c * (-s) + s * c = 0 := by rw [mul_neg, mul_comm s c, neg_add_cancel]
+  have h₄ : c * s + (-s) * c = 0 := by rw [neg_mul, mul_comm s c, add_neg_cancel]
   constructor
-  · rw [phaseRotor_mul h, h₁, show c * (-s) + s * c = 0 by ring]
+  · rw [phaseRotor_mul h, h₁, h₃]
     exact phaseRotor_one_zero
-  · rw [phaseRotor_mul h, h₂, show c * s + (-s) * c = 0 by ring]
+  · rw [phaseRotor_mul h, h₂, h₄]
     exact phaseRotor_one_zero
 
 /-- A native ambient unit; no inverse is left as an unproved field. -/
@@ -184,7 +194,7 @@ theorem phaseRotor_conjugates_plus (h : IsDualSeedPair d b) (c s : R) :
   rw [add_mul, (harmonic_block h (1 : R) 0 0 0).1, zero_add, peirceBlock_mul h,
     mul_add, (harmonic_block h _ _ _ _).2, zero_add, peirceBlock_mul h]
   unfold movingPolePlus
-  congr 1 <;> ring
+  congr 1 <;> simp [mul_neg, mul_comm s c]
 
 /-- Swapping the source pole gives the other moving idempotent. -/
 theorem phaseRotor_conjugates_minus (h : IsDualSeedPair d b) (c s : R) :
@@ -196,7 +206,7 @@ theorem phaseRotor_conjugates_minus (h : IsDualSeedPair d b) (c s : R) :
   rw [add_mul, (harmonic_block h (0 : R) 0 0 1).1, zero_add, peirceBlock_mul h,
     mul_add, (harmonic_block h _ _ _ _).2, zero_add, peirceBlock_mul h]
   unfold movingPoleMinus
-  congr 1 <;> ring
+  congr 1 <;> simp [mul_neg, mul_comm s c]
 
 /-- Both idempotences and both annihilation orders follow from the same conjugation. -/
 theorem moving_projector_relations (h : IsDualSeedPair d b) {c s : R} (hcs : c * c + s * s = 1) :

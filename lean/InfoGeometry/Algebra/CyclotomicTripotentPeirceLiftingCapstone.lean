@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -40,7 +44,7 @@ namespace InfoGeometry.Algebra.CyclotomicTripotent
 
 section RealAlgebra
 
-variable {A : Type*} [CommRing A] [Algebra ℝ A]
+variable {A : Type*} [Ring A] [Algebra ℝ A]
 
 /-- Half scalar in algebra $A$. -/
 def halfA : A := algebraMap ℝ A (1 / 2 : ℝ)
@@ -57,6 +61,10 @@ def P_minus (T : A) : A :=
 def P_zero (T : A) : A :=
   1 - T ^ 2
 
+/-- Helper lemma: `halfA` commutes with every element of $A$. -/
+theorem halfA_comm (x : A) : halfA * x = x * halfA :=
+  Algebra.commutes (1 / 2 : ℝ) x
+
 /-- Helper lemma: `2 * halfA = 1`. -/
 theorem two_mul_halfA : (2 : A) * halfA = 1 := by
   dsimp [halfA]
@@ -67,65 +75,95 @@ theorem two_mul_halfA : (2 : A) * halfA = 1 := by
   have : (2 : ℝ) * (1 / 2 : ℝ) = 1 := by norm_num
   rw [this, map_one]
 
+/-- Helper lemma: `halfA * halfA * 2 = halfA`. -/
+theorem halfA_mul_halfA_mul_two : halfA * halfA * (2 : A) = halfA := by
+  calc
+    halfA * halfA * (2 : A) = halfA * (halfA * (2 : A)) := by noncomm_ring
+    _ = halfA * ((2 : A) * halfA) := by rw [halfA_comm (2 : A)]
+    _ = halfA * 1 := by rw [two_mul_halfA]
+    _ = halfA := mul_one _
+
 /-- 🏆 THEOREM: Completeness / Partition of Unity: $P_+ + P_0 + P_- = 1$. -/
 theorem peirce_partition_of_unity (T : A) :
     P_plus T + P_zero T + P_minus T = 1 := by
   dsimp [P_plus, P_minus, P_zero]
   calc
     halfA * (T ^ 2 + T) + (1 - T ^ 2) + halfA * (T ^ 2 - T) =
-      (2 * halfA) * T ^ 2 + (1 - T ^ 2) := by ring
+      ((2 : A) * halfA) * T ^ 2 + (1 - T ^ 2) := by
+      rw [show (2 : A) = 1 + 1 by norm_num]
+      noncomm_ring
     _ = 1 * T ^ 2 + (1 - T ^ 2) := by rw [two_mul_halfA]
-    _ = 1 := by ring
+    _ = 1 := by noncomm_ring
 
 /-- 🏆 THEOREM: Spectral resolution: $T = P_+ - P_-$. -/
 theorem peirce_spectral_T (T : A) :
     P_plus T - P_minus T = T := by
   dsimp [P_plus, P_minus]
   calc
-    halfA * (T ^ 2 + T) - halfA * (T ^ 2 - T) = (2 * halfA) * T := by ring
+    halfA * (T ^ 2 + T) - halfA * (T ^ 2 - T) = ((2 : A) * halfA) * T := by
+      rw [show (2 : A) = 1 + 1 by norm_num]
+      noncomm_ring
     _ = 1 * T := by rw [two_mul_halfA]
-    _ = T := by ring
+    _ = T := by noncomm_ring
 
 /-- 🏆 THEOREM: Squared resolution: $T^2 = P_+ + P_-$. -/
 theorem peirce_spectral_T_sq (T : A) :
     P_plus T + P_minus T = T ^ 2 := by
   dsimp [P_plus, P_minus]
   calc
-    halfA * (T ^ 2 + T) + halfA * (T ^ 2 - T) = (2 * halfA) * T ^ 2 := by ring
+    halfA * (T ^ 2 + T) + halfA * (T ^ 2 - T) = ((2 : A) * halfA) * T ^ 2 := by
+      rw [show (2 : A) = 1 + 1 by norm_num]
+      noncomm_ring
     _ = 1 * T ^ 2 := by rw [two_mul_halfA]
-    _ = T ^ 2 := by ring
+    _ = T ^ 2 := by noncomm_ring
 
 /-- 🏆 THEOREM: $T^4 = T^2$ holds for any tripotent element. -/
 theorem tripotent_pow4 (T : A) (hT : T ^ 3 = T) :
     T ^ 4 = T ^ 2 := by
   calc
-    T ^ 4 = T ^ 3 * T := by ring
+    T ^ 4 = T ^ 3 * T := by noncomm_ring
     _ = T * T := by rw [hT]
-    _ = T ^ 2 := by ring
+    _ = T ^ 2 := by noncomm_ring
 
 /-- 🏆 THEOREM: Idempotence of $P_+$ on tripotents: $P_+^2 = P_+$. -/
 theorem P_plus_idempotent (T : A) (hT : T ^ 3 = T) :
     (P_plus T) ^ 2 = P_plus T := by
   dsimp [P_plus]
   have h4 := tripotent_pow4 T hT
-  have h_sq : (halfA * (T ^ 2 + T)) ^ 2 = halfA * halfA * (T ^ 4 + 2 * T ^ 3 + T ^ 2) := by ring
+  have hc := halfA_comm (T ^ 2 + T)
+  have h_sq : (halfA * (T ^ 2 + T)) ^ 2 = halfA * halfA * (T ^ 4 + (2 : A) * T ^ 3 + T ^ 2) := by
+    calc
+      (halfA * (T ^ 2 + T)) ^ 2
+        = halfA * ((T ^ 2 + T) * halfA) * (T ^ 2 + T) := by noncomm_ring
+      _ = halfA * (halfA * (T ^ 2 + T)) * (T ^ 2 + T) := by rw [← hc]
+      _ = halfA * halfA * (T ^ 4 + (2 : A) * T ^ 3 + T ^ 2) := by
+        rw [show (2 : A) = 1 + 1 by norm_num]
+        noncomm_ring
   rw [h_sq, h4, hT]
-  have h_mid : T ^ 2 + 2 * T + T ^ 2 = 2 * (T ^ 2 + T) := by ring
-  rw [h_mid]
-  have h_assoc : halfA * halfA * (2 * (T ^ 2 + T)) = ((2 : A) * halfA) * (halfA * (T ^ 2 + T)) := by ring
-  rw [h_assoc, two_mul_halfA, one_mul]
+  have h_mid : T ^ 2 + (2 : A) * T + T ^ 2 = (2 : A) * (T ^ 2 + T) := by
+    rw [show (2 : A) = 1 + 1 by norm_num]
+    noncomm_ring
+  rw [h_mid, ← mul_assoc (halfA * halfA) (2 : A) (T ^ 2 + T), halfA_mul_halfA_mul_two]
 
 /-- 🏆 THEOREM: Idempotence of $P_-$ on tripotents: $P_-^2 = P_-$. -/
 theorem P_minus_idempotent (T : A) (hT : T ^ 3 = T) :
     (P_minus T) ^ 2 = P_minus T := by
   dsimp [P_minus]
   have h4 := tripotent_pow4 T hT
-  have h_sq : (halfA * (T ^ 2 - T)) ^ 2 = halfA * halfA * (T ^ 4 - 2 * T ^ 3 + T ^ 2) := by ring
+  have hc := halfA_comm (T ^ 2 - T)
+  have h_sq : (halfA * (T ^ 2 - T)) ^ 2 = halfA * halfA * (T ^ 4 - (2 : A) * T ^ 3 + T ^ 2) := by
+    calc
+      (halfA * (T ^ 2 - T)) ^ 2
+        = halfA * ((T ^ 2 - T) * halfA) * (T ^ 2 - T) := by noncomm_ring
+      _ = halfA * (halfA * (T ^ 2 - T)) * (T ^ 2 - T) := by rw [← hc]
+      _ = halfA * halfA * (T ^ 4 - (2 : A) * T ^ 3 + T ^ 2) := by
+        rw [show (2 : A) = 1 + 1 by norm_num]
+        noncomm_ring
   rw [h_sq, h4, hT]
-  have h_mid : T ^ 2 - 2 * T + T ^ 2 = 2 * (T ^ 2 - T) := by ring
-  rw [h_mid]
-  have h_assoc : halfA * halfA * (2 * (T ^ 2 - T)) = ((2 : A) * halfA) * (halfA * (T ^ 2 - T)) := by ring
-  rw [h_assoc, two_mul_halfA, one_mul]
+  have h_mid : T ^ 2 - (2 : A) * T + T ^ 2 = (2 : A) * (T ^ 2 - T) := by
+    rw [show (2 : A) = 1 + 1 by norm_num]
+    noncomm_ring
+  rw [h_mid, ← mul_assoc (halfA * halfA) (2 : A) (T ^ 2 - T), halfA_mul_halfA_mul_two]
 
 /-- 🏆 THEOREM: Idempotence of $P_0$ on tripotents: $P_0^2 = P_0$. -/
 theorem P_zero_idempotent (T : A) (hT : T ^ 3 = T) :
@@ -133,19 +171,27 @@ theorem P_zero_idempotent (T : A) (hT : T ^ 3 = T) :
   dsimp [P_zero]
   have h4 := tripotent_pow4 T hT
   calc
-    (1 - T ^ 2) ^ 2 = 1 - 2 * T ^ 2 + T ^ 4 := by ring
-    _ = 1 - 2 * T ^ 2 + T ^ 2 := by rw [h4]
-    _ = 1 - T ^ 2 := by ring
+    (1 - T ^ 2) ^ 2 = 1 - (2 : A) * T ^ 2 + T ^ 4 := by
+      rw [show (2 : A) = 1 + 1 by norm_num]
+      noncomm_ring
+    _ = 1 - (2 : A) * T ^ 2 + T ^ 2 := by rw [h4]
+    _ = 1 - T ^ 2 := by
+      rw [show (2 : A) = 1 + 1 by norm_num]
+      noncomm_ring
 
 /-- 🏆 THEOREM: Orthogonality: $P_+ P_- = 0$. -/
 theorem P_plus_mul_P_minus (T : A) (hT : T ^ 3 = T) :
     P_plus T * P_minus T = 0 := by
   dsimp [P_plus, P_minus]
   have h4 := tripotent_pow4 T hT
+  have hc := halfA_comm (T ^ 2 + T)
   calc
-    halfA * (T ^ 2 + T) * (halfA * (T ^ 2 - T)) = (halfA * halfA) * (T ^ 4 - T ^ 2) := by ring
+    halfA * (T ^ 2 + T) * (halfA * (T ^ 2 - T))
+      = halfA * ((T ^ 2 + T) * halfA) * (T ^ 2 - T) := by noncomm_ring
+    _ = halfA * (halfA * (T ^ 2 + T)) * (T ^ 2 - T) := by rw [← hc]
+    _ = (halfA * halfA) * (T ^ 4 - T ^ 2) := by noncomm_ring
     _ = (halfA * halfA) * (T ^ 2 - T ^ 2) := by rw [h4]
-    _ = 0 := by ring
+    _ = 0 := by noncomm_ring
 
 /-! ## 2. Cyclotomic Operator Lifting and Mexican Hat Eigenvalue on Active Subspace -/
 
@@ -159,7 +205,7 @@ theorem phi12_op_on_tripotent (T : A) (hT : T ^ 3 = T) :
   dsimp [phi12_op]
   have h4 := tripotent_pow4 T hT
   rw [h4]
-  ring
+  noncomm_ring
 
 /-- 🏆 MASTER THEOREM: On a scaled field $X = r T$, the cyclotomic operator on the active subspace
 $(P_+ + P_-)$ evaluates exactly to the Mexican Hat potential $\left(r^2 - \frac{1}{2}\right)^2 + \frac{3}{4}$! -/
@@ -169,24 +215,39 @@ theorem phi12_scaled_tripotent_mexican_hat (r : ℝ) (T : A) (hT : T ^ 3 = T) :
   have h4 := tripotent_pow4 T hT
   have h6 : T ^ 6 = T ^ 2 := by
     calc
-      T ^ 6 = T ^ 4 * T ^ 2 := by ring
+      T ^ 6 = T ^ 4 * T ^ 2 := by noncomm_ring
       _ = T ^ 2 * T ^ 2 := by rw [h4]
-      _ = T ^ 4 := by ring
+      _ = T ^ 4 := by noncomm_ring
       _ = T ^ 2 := h4
   rw [peirce_spectral_T_sq]
   dsimp [phi12_op]
-  have h_expand : (algebraMap ℝ A r * T) ^ 4 - (algebraMap ℝ A r * T) ^ 2 + 1 =
-      algebraMap ℝ A (r ^ 4) * T ^ 4 - algebraMap ℝ A (r ^ 2) * T ^ 2 + 1 := by
-    simp only [map_pow]
-    ring
-  rw [h_expand]
+  have hpow2 : (algebraMap ℝ A r * T) ^ 2 = algebraMap ℝ A (r ^ 2) * T ^ 2 := by
+    have hc := Algebra.commutes r T
+    calc
+      (algebraMap ℝ A r * T) ^ 2
+        = algebraMap ℝ A r * (T * algebraMap ℝ A r) * T := by noncomm_ring
+      _ = algebraMap ℝ A r * (algebraMap ℝ A r * T) * T := by rw [← hc]
+      _ = (algebraMap ℝ A r * algebraMap ℝ A r) * T ^ 2 := by noncomm_ring
+      _ = algebraMap ℝ A (r ^ 2) * T ^ 2 := by rw [← map_mul, ← sq]
+  have hpow4 : (algebraMap ℝ A r * T) ^ 4 = algebraMap ℝ A (r ^ 4) * T ^ 4 := by
+    have hc2 := Algebra.commutes (r ^ 2) (T ^ 2)
+    calc
+      (algebraMap ℝ A r * T) ^ 4
+        = ((algebraMap ℝ A r * T) ^ 2) * ((algebraMap ℝ A r * T) ^ 2) := by noncomm_ring
+      _ = (algebraMap ℝ A (r ^ 2) * T ^ 2) * (algebraMap ℝ A (r ^ 2) * T ^ 2) := by rw [hpow2]
+      _ = algebraMap ℝ A (r ^ 2) * (T ^ 2 * algebraMap ℝ A (r ^ 2)) * T ^ 2 := by noncomm_ring
+      _ = algebraMap ℝ A (r ^ 2) * (algebraMap ℝ A (r ^ 2) * T ^ 2) * T ^ 2 := by rw [← hc2]
+      _ = (algebraMap ℝ A (r ^ 2) * algebraMap ℝ A (r ^ 2)) * T ^ 4 := by noncomm_ring
+      _ = algebraMap ℝ A (r ^ 4) * T ^ 4 := by
+        rw [← map_mul, show r ^ 2 * r ^ 2 = r ^ 4 by ring]
+  rw [hpow4, hpow2]
   have h_mult : (algebraMap ℝ A (r ^ 4) * T ^ 4 - algebraMap ℝ A (r ^ 2) * T ^ 2 + 1) * T ^ 2 =
-      algebraMap ℝ A (r ^ 4) * T ^ 6 - algebraMap ℝ A (r ^ 2) * T ^ 4 + T ^ 2 := by ring
+      algebraMap ℝ A (r ^ 4) * T ^ 6 - algebraMap ℝ A (r ^ 2) * T ^ 4 + T ^ 2 := by noncomm_ring
   rw [h_mult, h6, h4]
   have h_fact : algebraMap ℝ A (r ^ 4) * T ^ 2 - algebraMap ℝ A (r ^ 2) * T ^ 2 + T ^ 2 =
       algebraMap ℝ A (r ^ 4 - r ^ 2 + 1) * T ^ 2 := by
     simp only [map_add, map_sub, map_pow, map_one]
-    ring
+    noncomm_ring
   rw [h_fact]
   have h_poly : r ^ 4 - r ^ 2 + 1 = (r ^ 2 - (1 / 2 : ℝ)) ^ 2 + (3 / 4 : ℝ) := by ring
   rw [h_poly]
@@ -227,7 +288,7 @@ Unifies:
 6. **Bregman Relative Entropy Stability**: $e^{-x} - 1 + x \ge 0$.
 -/
 theorem grand_cyclotomic_tripotent_peirce_synthesis
-    {A : Type*} [CommRing A] [Algebra ℝ A]
+    {A : Type*} [Ring A] [Algebra ℝ A]
     (T : A) (hT : T ^ 3 = T)
     (r : ℝ) (x : ℝ) :
     (P_plus T + P_zero T + P_minus T = 1) ∧

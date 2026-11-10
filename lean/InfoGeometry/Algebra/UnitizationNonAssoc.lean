@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Algebra.Unitization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -9,14 +14,21 @@ This file packages a generic unitization lift for nonassociative targets.
 
 namespace Unitization
 
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
 universe u v
 
 variable {R : Type u} {N : Type v} {A : Type*}
 
-variable [CommRing R]
-variable [NonUnitalNonAssocRing N] [Module R N]
+variable [CommSemiring R]
+variable [NonUnitalNonAssocSemiring N] [Module R N]
 
-variable [NonAssocRing A] [Module R A]
+variable [NonAssocSemiring A] [Module R A]
 variable [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Extend a nonunital nonassociative algebra homomorphism to the unitization.
@@ -32,7 +44,7 @@ noncomputable def liftNonAssoc (φ : N →ₙₐ[R] A) : Unitization R N →+* A
         rcases x with ⟨r, a⟩
         rcases y with ⟨s, b⟩
         simp only [Unitization.fst_add, Unitization.snd_add, add_smul, map_add]
-        abel
+        ac_rfl
       map_mul' := by
         intro x y
         rcases x with ⟨r, a⟩

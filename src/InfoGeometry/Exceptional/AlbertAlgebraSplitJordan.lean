@@ -8,6 +8,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.H3ZornCubicNormStructure
 import InfoGeometry.Algebra.H3ZornCarrierBasis
@@ -51,6 +52,13 @@ Formalizes the split Albert Jordan carrier via H₃(𝕆_s):
 -/
 
 namespace InfoGeometry.Exceptional.AlbertAlgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem albertAlgebraSplitJordan_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 variable {R : Type*} [Ring R]
 
@@ -130,16 +138,20 @@ noncomputable def diagonal (α₁ α₂ α₃ : R) : AlbertElement R :=
 /-- Cubic norm of diagonal elements matches scalar product. -/
 theorem diagonal_normCubic (α₁ α₂ α₃ : R) :
     freudenthalDet (diagonal α₁ α₂ α₃) = α₁ * α₂ * α₃ := by
-  simp [freudenthalDet, normCubic, diagonal, ZornVectorMatrix.norm_zero,
-    ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero]
+  simp [freudenthalDet, normCubic, diagonal, ZornVectorMatrix.norm,
+    ZornVectorMatrix.zero, ZornVectorMatrix.mul, ZornVectorMatrix.trace,
+    ZornVec3.dot, ZornVec3.cross]
 
 /-- The Freudenthal adjoint on diagonal elements strictly reproduces matrix minors. -/
 theorem diagonal_adjoint_exact (α₁ α₂ α₃ : R) :
     freudenthalAdjoint (diagonal α₁ α₂ α₃) = diagonal (α₂ * α₃) (α₁ * α₃) (α₁ * α₂) := by
   apply ext_h3
-  · simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.norm_zero]
-  · simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.norm_zero]
-  · simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.norm_zero]
+  · simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.norm,
+      ZornVectorMatrix.zero, ZornVec3.dot]
+  · simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.norm,
+      ZornVectorMatrix.zero, ZornVec3.dot]
+  · simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.norm,
+      ZornVectorMatrix.zero, ZornVec3.dot]
   · ext i <;> simp [freudenthalAdjoint, adjointQuad, diagonal, ZornVectorMatrix.sub,
       ZornVectorMatrix.zero, ZornVectorMatrix.conj, ZornVectorMatrix.mul,
       ZornVectorMatrix.smul, ZornVectorMatrix.neg, ZornVec3.dot, ZornVec3.cross]
@@ -155,7 +167,7 @@ theorem diagonal_traceBilin_adjoint {R : Type*} [CommRing R] (α₁ α₂ α₃ 
     traceBilin (diagonal α₁ α₂ α₃) (freudenthalAdjoint (diagonal α₁ α₂ α₃)) =
       3 * freudenthalDet (diagonal α₁ α₂ α₃) := by
   rw [diagonal_normCubic, diagonal_adjoint_exact]
-  simp [traceBilin, diagonal, ZornVectorMatrix.zero_mul, ZornVectorMatrix.trace_zero, ZornVectorMatrix.conj_zero]
+  simp [traceBilin, diagonal, ZornVectorMatrix.trace_zero, ZornVectorMatrix.conj_zero]
   ring
 
 /-! ### 5. Jordan Cross Product & Trace Complement -/

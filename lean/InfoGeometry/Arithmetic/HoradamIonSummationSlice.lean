@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.HoradamIonBinetSlice
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -24,6 +29,13 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.HoradamIonSummationSlice
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open Finset
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 open InfoGeometry.Arithmetic.HoradamIonBinetSlice
@@ -36,7 +48,7 @@ variable {R : Type*} [Ring R]
 def geomPartial (x : R) (n : ℕ) : R :=
   ∑ i ∈ Finset.range (n + 1), x ^ i
 
-/-- Cleared-denominator finite geometric sum identity. -/
+/-- Cleared-denominator finite geometric sum identity (left multiplication). -/
 theorem one_sub_mul_geomPartial (x : R) (n : ℕ) :
     (1 - x) * geomPartial x n = 1 - x ^ (n + 1) := by
   unfold geomPartial
@@ -47,9 +59,30 @@ theorem one_sub_mul_geomPartial (x : R) (n : ℕ) :
     _ = -(x ^ (n + 1) - 1) := by rw [h]
     _ = 1 - x ^ (n + 1) := by noncomm_ring
 
+/-- Cleared-denominator finite geometric sum identity (right multiplication) in any `[Ring R]`. -/
+theorem geomPartial_mul_one_sub (x : R) (n : ℕ) :
+    geomPartial x n * (1 - x) = 1 - x ^ (n + 1) := by
+  unfold geomPartial
+  have h := geom_sum_mul x (n + 1)
+  calc
+    (∑ i ∈ Finset.range (n + 1), x ^ i) * (1 - x)
+        = -((∑ i ∈ Finset.range (n + 1), x ^ i) * (x - 1)) := by noncomm_ring
+    _ = -(x ^ (n + 1) - 1) := by rw [h]
+    _ = 1 - x ^ (n + 1) := by noncomm_ring
+
 /-- Finite partial sum of the Binet core. -/
 def binetPartialSum (A B α β : R) (n : ℕ) : R :=
   ∑ i ∈ Finset.range (n + 1), binetCore A B α β i
+
+/-- Non-commutative cleared-denominator summation identity for a single Binet branch `∑ A * α^i`
+by right-multiplying by `1 - α` in any `[Ring R]`. -/
+theorem binetBranch_mul_one_sub_ring (A α : R) (n : ℕ) :
+    (∑ i ∈ Finset.range (n + 1), A * α ^ i) * (1 - α) =
+      A * (1 - α ^ (n + 1)) := by
+  rw [← Finset.mul_sum, mul_assoc]
+  have hα := geomPartial_mul_one_sub (R := R) α n
+  unfold geomPartial at hα
+  rw [hα]
 
 end Ring
 

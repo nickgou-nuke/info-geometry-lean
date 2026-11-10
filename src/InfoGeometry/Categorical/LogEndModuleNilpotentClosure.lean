@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.CommutingNilpotentSum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.LogEndModuleCategory
@@ -36,7 +41,40 @@ open InfoGeometry.Categorical.LogEndModuleCategory.LogEndModule
 
 universe u v
 
-variable {𝕜 : Type u} [Field 𝕜]
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem logEndModuleNilpotentClosure_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {R : Type u} [Ring R]
+
+/-- In any noncommutative ring `[Ring R]`, a morphism `f : X ⟶ Y` in `LogEndModule R`
+intertwines all powers of the distinguished endomorphism. -/
+theorem Hom.pow_comm {X Y : LogEndModule R} (f : X ⟶ Y) (m : ℕ) :
+    f.hom.comp (X.N ^ m) = (Y.N ^ m).comp f.hom := by
+  induction m with
+  | zero =>
+      ext x
+      simp
+  | succ m ih =>
+      rw [pow_succ, pow_succ]
+      change f.hom.comp (X.N ^ m * X.N) = (Y.N ^ m * Y.N).comp f.hom
+      rw [Module.End.mul_eq_comp, Module.End.mul_eq_comp, ← LinearMap.comp_assoc, ih,
+        LinearMap.comp_assoc, f.comm, ← LinearMap.comp_assoc]
+
+/-- If `X.N ^ m = 0` in `LogEndModule R` over any `[Ring R]`, then `(Y.N ^ m).comp f.hom = 0`. -/
+theorem Hom.pow_comp_eq_zero_of_nilpotent {X Y : LogEndModule R} (f : X ⟶ Y) (m : ℕ)
+    (hX : X.N ^ m = 0) :
+    (Y.N ^ m).comp f.hom = 0 := by
+  rw [← Hom.pow_comm f m, hX, LinearMap.comp_zero]
+
+end NoncommRing
+
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- Left tensor-leg extension of an endomorphism. -/
 def leftTensorEnd (X Y : LogEndModule 𝕜) :

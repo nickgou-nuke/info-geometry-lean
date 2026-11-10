@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.A2InsideD5RootSubsystem
@@ -9,6 +14,11 @@ import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 The six ordered `A₂` roots are realized here by the six off-diagonal
 matrix units of `M₃(ℂ)`.  This is a concrete matrix bridge: it does not
 package a witness structure or assert a representation by contract.
+
+BUCKET 1: The matrix-unit support, root injectivity, and finite matrix
+identities are proved for the concrete qutrit carrier.
+BUCKET 2: No conditional theorem is asserted.
+BUCKET 3: No arbitrary-ring or infinite root-system conclusion is asserted.
 -/
 
 noncomputable section
@@ -18,23 +28,27 @@ namespace InfoGeometry.Canonical.A2QutritTransitionRootBridge
 open Matrix
 open InfoGeometry.Canonical.A2InsideD5RootSubsystem
 
-abbrev QutritMatrix := InfoGeometry.Algebra.FiniteSpin.QutritMatrix
-
 /-- The qutrit transition matrix attached to an ordered pair of distinct levels. -/
-def transitionMatrix (r : A2Root) : QutritMatrix :=
+def transitionMatrix (r : A2Root) : InfoGeometry.Algebra.FiniteSpin.QutritMatrix :=
   Matrix.single r.1.1 r.1.2 1
 
 /-- The diagonal Cartan matrix with eigenvalue function `h`. -/
-def diagonalCartan (h : Fin 3 → ℂ) : QutritMatrix := Matrix.diagonal h
+def diagonalCartan (h : Fin 3 → ℂ) : InfoGeometry.Algebra.FiniteSpin.QutritMatrix :=
+  Matrix.diagonal h
 
-@[simp] theorem transitionMatrix_apply_source_target (r : A2Root) :
-    transitionMatrix r r.1.1 r.1.2 = 1 := by
-  simp [transitionMatrix]
+/-- Every entry of a transition matrix is determined by its ordered root:
+the matrix unit has exactly one supported coordinate. -/
+theorem transitionMatrix_apply (r : A2Root) (i j : Fin 3) :
+    transitionMatrix r i j =
+      if i = r.1.1 ∧ j = r.1.2 then 1 else 0 := by
+  by_cases hi : i = r.1.1 <;> by_cases hj : j = r.1.2 <;>
+    simp [transitionMatrix, Matrix.single, hi, hj, eq_comm]
 
 theorem transitionMatrix_ne_zero (r : A2Root) :
     transitionMatrix r ≠ 0 := by
   intro h
-  have hentry := congrArg (fun M : QutritMatrix => M r.1.1 r.1.2) h
+  have hentry := congrArg
+    (fun M : InfoGeometry.Algebra.FiniteSpin.QutritMatrix => M r.1.1 r.1.2) h
   simp [transitionMatrix] at hentry
 
 theorem transitionMatrix_injective :
@@ -43,7 +57,7 @@ theorem transitionMatrix_injective :
   apply Subtype.ext
   apply Prod.ext
   · by_contra hne
-    have hentry := congrArg (fun M : QutritMatrix =>
+    have hentry := congrArg (fun M : InfoGeometry.Algebra.FiniteSpin.QutritMatrix =>
       M r.1.1 r.1.2) h
     have hne' : s.1.1 ≠ r.1.1 := by
       intro hs
@@ -51,13 +65,13 @@ theorem transitionMatrix_injective :
     simp [transitionMatrix, Matrix.single, hne'] at hentry
   · have hi : r.1.1 = s.1.1 := by
       by_contra hne
-      have hentry := congrArg (fun M : QutritMatrix =>
+      have hentry := congrArg (fun M : InfoGeometry.Algebra.FiniteSpin.QutritMatrix =>
         M r.1.1 r.1.2) h
       have hne' : s.1.1 ≠ r.1.1 := by
         intro hs
         exact hne hs.symm
       simp [transitionMatrix, Matrix.single, hne'] at hentry
-    have hentry := congrArg (fun M : QutritMatrix =>
+    have hentry := congrArg (fun M : InfoGeometry.Algebra.FiniteSpin.QutritMatrix =>
       M r.1.1 r.1.2) h
     by_contra hne
     have hne' : s.1.2 ≠ r.1.2 := by

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceRotor
 import InfoGeometry.Algebra.AlternativeDerivations
 
@@ -18,6 +19,13 @@ namespace InfoGeometry.Core.PeirceBilateralAction
 
 open InfoGeometry.Core.DualSeedPeirce InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Core.DiracSuperalgebra InfoGeometry.Algebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceBilateralAction_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section Noncomm
 

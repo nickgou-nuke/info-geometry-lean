@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannZetaDivisorLogGeometry
@@ -21,6 +26,13 @@ analytic continuation, or contour integral is introduced.
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.MeromorphicLogLocalSystem
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open InfoGeometry.Arithmetic.RiemannZetaDivisorLogGeometry
 open InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
@@ -90,10 +102,11 @@ theorem logSheetDeckAction_winding
 
 theorem logSheetDeckAction_nonzeroSheet
     {R : Type*} [Ring R] (n : ℤ) (x : LogSheet R)
-    (_hx : x.2 ≠ 0) (hn : x.2 + n ≠ 0) :
+    (hx : x.2 ≠ 0) (hn : x.2 + n ≠ 0) :
     (logSheetDeckAction R).deck n x ∈
         (logSheetCovering R).nonzeroWindingSector := by
-  exact hn
+  have hboth : x.2 ≠ 0 ∧ x.2 + n ≠ 0 := ⟨hx, hn⟩
+  exact hboth.2
 
 /-! ## The finite meromorphic charge readout -/
 
@@ -262,6 +275,20 @@ theorem monodromy_reflection_equivariant
       monodromyRepresentation r B.toPuncturedBase γ := by
   rw [monodromyRepresentation, monodromyRepresentation,
     deRhamPairing_reflection_invariant]
+
+/-- Ground inhabitant of `PuncturedBase Unit`. -/
+def unitZeroPuncturedBase : PuncturedBase Unit where
+  order := fun _ => 0
+
+/-- Ground inhabitant of `HomologyLoop Unit`. -/
+def unitZeroHomologyLoop : HomologyLoop Unit := 0
+
+/-- Ground inhabitant of `ReflectedPuncturedBase Unit`. -/
+def unitReflectedPuncturedBase : ReflectedPuncturedBase Unit where
+  order := fun _ => 0
+  reflect := Equiv.refl Unit
+  reflect_involutive := fun _ => rfl
+  order_reflect := fun _ => rfl
 
 end InfoGeometry.Arithmetic.MeromorphicLogLocalSystem
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Action.Defs
@@ -9,7 +14,22 @@ namespace InfoGeometry.Riemannian
 open InfoGeometry.Clifford.Hestenes
 open CliffordAlgebra
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem coneAction_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative `*-ring` `[Ring B] [StarRing B]`, the bilateral cone action
+`(g, x) ↦ g * x * star g` satisfies the multiplicative action law
+`(g₁ * g₂) * x * star (g₁ * g₂) = g₁ * (g₂ * x * star g₂) * star g₁`. -/
+theorem ring_cone_action_mul
+    {B : Type*} [Ring B] [StarRing B] (g₁ g₂ x : B) :
+    (g₁ * g₂) * x * star (g₁ * g₂) = g₁ * (g₂ * x * star g₂) * star g₁ := by
+  simp [star_mul, mul_assoc]
+
+variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M)

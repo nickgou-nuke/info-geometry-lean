@@ -1,6 +1,11 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
@@ -34,6 +39,40 @@ open InfoGeometry.Arithmetic.FiniteMobiusOperatorInversionBridge
 open InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 
 namespace InfoGeometry.Arithmetic.BosonFermionMobiusTwistedHamiltonianBridge
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingEulerRoleSwap
+
+variable {ι B : Type*} [Ring B]
+
+/-- Ordered finite Euler product `(modes.map (fun p => 1 - q p)).prod` over any
+non-commutative ring `[Ring B]`. -/
+def ringEulerProductList (modes : List ι) (q : ι → B) : B :=
+  (modes.map (fun p => 1 - q p)).prod
+
+@[simp]
+theorem ringEulerProductList_nil (q : ι → B) :
+    ringEulerProductList [] q = 1 :=
+  rfl
+
+@[simp]
+theorem ringEulerProductList_cons (p : ι) (modes : List ι) (q : ι → B) :
+    ringEulerProductList (p :: modes) q = (1 - q p) * ringEulerProductList modes q := by
+  simp [ringEulerProductList]
+
+/-- Over any non-commutative ring `[Ring B]`, the ordered 2-mode fermionic Euler product
+expands into the four signed occupation terms `1 - q₁ - q₂ + q₁ * q₂`. -/
+theorem ringTwoModeEulerProduct (q₁ q₂ : B) :
+    (1 - q₁) * (1 - q₂) = 1 - q₁ - q₂ + q₁ * q₂ := by
+  noncomm_ring
+
+end NonCommRingEulerRoleSwap
 
 /-- 1. Bosonic spectral weight at energy mode n: $e^{-s \ln n} = n^{-s}$. -/
 noncomputable def bosonicWeight (s : ℂ) (n : ℕ) : ℂ :=

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.LinearAlgebra.Basis.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Pi
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Tactic.NoncommRing
@@ -15,6 +16,13 @@ separately from self-anticommutation in characteristic two.
 -/
 namespace InfoGeometry.Core.AnticommutingSum
 open scoped BigOperators
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem anticommutingSum_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 variable {A : Type*} [Ring A] {ι : Type*}
 

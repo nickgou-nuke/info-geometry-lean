@@ -203,10 +203,24 @@ theorem projSelfDual_add_projAntiSelfDual :
   rw [h_add, smul_smul]
   rw [invOf_mul_self (2 : R), one_smul]
 
-theorem projSelfDual_sq {R : Type*} [CommRing R] [Invertible (2 : R)] :
+lemma invOf_two_smul_mul_smul {n : Type*} [Fintype n] (M N : Matrix n n R) :
+    ((⅟(2 : R) : R) • M) * ((⅟(2 : R) : R) • N) =
+      ((⅟(2 : R) * ⅟(2 : R) : R)) • (M * N) := by
+  ext i j
+  simp only [Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  have hc : ⅟(2 : R) * M i k = M i k * ⅟(2 : R) :=
+    (Commute.ofNat_left 2 (M i k)).invOf_left.eq
+  calc
+    (⅟(2 : R) * M i k) * (⅟(2 : R) * N k j)
+      = ⅟(2 : R) * (M i k * ⅟(2 : R)) * N k j := by noncomm_ring
+    _ = ⅟(2 : R) * (⅟(2 : R) * M i k) * N k j := by rw [← hc]
+    _ = ⅟(2 : R) * ⅟(2 : R) * (M i k * N k j) := by noncomm_ring
+
+theorem projSelfDual_sq :
     (projSelfDual : Matrix (Fin 6) (Fin 6) R) * projSelfDual = projSelfDual := by
   dsimp [projSelfDual]
-  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  rw [invOf_two_smul_mul_smul]
   have h_mul : ((1 : Matrix (Fin 6) (Fin 6) R) + hodgeEuclidean) *
       ((1 : Matrix (Fin 6) (Fin 6) R) + hodgeEuclidean) =
       (2 : R) • ((1 : Matrix (Fin 6) (Fin 6) R) + hodgeEuclidean) := by
@@ -218,14 +232,14 @@ theorem projSelfDual_sq {R : Type*} [CommRing R] [Invertible (2 : R)] :
   rw [h_mul, smul_smul]
   have h_coeff : ⅟(2 : R) * (⅟(2 : R) * 2) = ⅟(2 : R) := by
     rw [invOf_mul_self (2 : R), mul_one]
-  have h_assoc : ⅟(2 : R) * ⅟(2 : R) * 2 = ⅟(2 : R) * (⅟(2 : R) * 2) := by ring
+  have h_assoc : ⅟(2 : R) * ⅟(2 : R) * 2 = ⅟(2 : R) * (⅟(2 : R) * 2) := mul_assoc _ _ _
   rw [h_assoc, h_coeff]
 
-theorem projAntiSelfDual_sq {R : Type*} [CommRing R] [Invertible (2 : R)] :
+theorem projAntiSelfDual_sq :
     (projAntiSelfDual : Matrix (Fin 6) (Fin 6) R) * projAntiSelfDual =
       projAntiSelfDual := by
   dsimp [projAntiSelfDual]
-  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  rw [invOf_two_smul_mul_smul]
   have h_mul : ((1 : Matrix (Fin 6) (Fin 6) R) - hodgeEuclidean) *
       ((1 : Matrix (Fin 6) (Fin 6) R) - hodgeEuclidean) =
       (2 : R) • ((1 : Matrix (Fin 6) (Fin 6) R) - hodgeEuclidean) := by
@@ -237,13 +251,13 @@ theorem projAntiSelfDual_sq {R : Type*} [CommRing R] [Invertible (2 : R)] :
   rw [h_mul, smul_smul]
   have h_coeff : ⅟(2 : R) * (⅟(2 : R) * 2) = ⅟(2 : R) := by
     rw [invOf_mul_self (2 : R), mul_one]
-  have h_assoc : ⅟(2 : R) * ⅟(2 : R) * 2 = ⅟(2 : R) * (⅟(2 : R) * 2) := by ring
+  have h_assoc : ⅟(2 : R) * ⅟(2 : R) * 2 = ⅟(2 : R) * (⅟(2 : R) * 2) := mul_assoc _ _ _
   rw [h_assoc, h_coeff]
 
-theorem proj_self_dual_mul_proj_anti_self_dual {R : Type*} [CommRing R] [Invertible (2 : R)] :
+theorem proj_self_dual_mul_proj_anti_self_dual :
     projSelfDual * projAntiSelfDual = (0 : Matrix (Fin 6) (Fin 6) R) := by
   dsimp [projSelfDual, projAntiSelfDual]
-  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  rw [invOf_two_smul_mul_smul]
   have h_mul : (1 + hodgeEuclidean) * (1 - hodgeEuclidean) =
       (0 : Matrix (Fin 6) (Fin 6) R) := by
     ext i j
@@ -252,10 +266,10 @@ theorem proj_self_dual_mul_proj_anti_self_dual {R : Type*} [CommRing R] [Inverti
       norm_num
   rw [h_mul, smul_zero]
 
-theorem proj_anti_self_dual_mul_proj_self_dual {R : Type*} [CommRing R] [Invertible (2 : R)] :
+theorem proj_anti_self_dual_mul_proj_self_dual :
     projAntiSelfDual * projSelfDual = (0 : Matrix (Fin 6) (Fin 6) R) := by
   dsimp [projSelfDual, projAntiSelfDual]
-  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  rw [invOf_two_smul_mul_smul]
   have h_mul : (1 - hodgeEuclidean) * (1 + hodgeEuclidean) =
       (0 : Matrix (Fin 6) (Fin 6) R) := by
     ext i j

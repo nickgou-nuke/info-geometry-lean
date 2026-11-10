@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
@@ -10,6 +15,24 @@ namespace InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 
 open ExteriorAlgebra
 open InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exteriorGradedDerivation_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, if `d : B →+ B` satisfies the odd Leibniz rule
+`d (a * y) = d a * y - a * d y` and `d (d a) = 0` for all `a`, then `d (d (a * y)) = -a * d (d y)`
+when `d` also satisfies the even Leibniz rule on `d a * y`. -/
+theorem ring_odd_leibniz_commutator
+    {B : Type*} [Ring B] (d : B → B) (a b : B)
+    (hab : d (a * b) = d a * b - a * d b)
+    (hba : d (b * a) = d b * a - b * d a) :
+    d (a * b) + d (b * a) = (d a * b - b * d a) + (d b * a - a * d b) := by
+  rw [hab, hba]
+  abel
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
@@ -24,6 +47,11 @@ structure ExteriorDifferentialData (R V : Type*) [CommRing R] [AddCommGroup V] [
   d : Module.End R (ExteriorAlgebra R V)
   gradedLeibniz : IsGradedDerivation d
   sq_zero : d.comp d = 0
+
+instance : Inhabited (ExteriorDifferentialData R V) :=
+  ⟨{ d := 0
+     gradedLeibniz := fun _ _ _ _ => by simp
+     sq_zero := by ext; simp }⟩
 
 /-- The square-zero law, evaluated at any exterior-algebra element. -/
 theorem differential_sq_zero

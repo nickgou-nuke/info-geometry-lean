@@ -22,8 +22,8 @@ namespace InfoGeometry.Algebra
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
 
-def ChiralChargeWindow (N : ℕ) (w : List ChiralGenerator) : Prop :=
-  -(N : ℤ) ≤ wordDegree w ∧ wordDegree w ≤ N
+def ChiralChargeWindow (N : ℕ) : Set (List ChiralGenerator) :=
+  {w | -(N : ℤ) ≤ wordDegree w ∧ wordDegree w ≤ N}
 
 /-- The words visible in the finite integer-charge window `[-N,N]`.
 
@@ -31,7 +31,7 @@ This is a carrier for the filtration only.  It is deliberately not declared
 to be an algebra: concatenation can leave a fixed window.
 -/
 def ChiralChargeWindowCarrier (N : ℕ) :=
-  {w : List ChiralGenerator // ChiralChargeWindow N w}
+  {w : List ChiralGenerator // w ∈ ChiralChargeWindow N}
 
 /-- Enlarging a charge window gives a canonical inclusion of carriers. -/
 def chiralChargeWindowInclusion {N M : ℕ} (hNM : N ≤ M) :
@@ -40,11 +40,19 @@ def chiralChargeWindowInclusion {N M : ℕ} (hNM : N ≤ M) :
     rcases w.2 with ⟨hlo, hhi⟩
     constructor <;> omega⟩
 
-@[simp] theorem chiralChargeWindowInclusion_val
+theorem chiralChargeWindowInclusion_val
     {N M : ℕ} (hNM : N ≤ M)
     (w : ChiralChargeWindowCarrier N) :
-    (chiralChargeWindowInclusion hNM w).1 = w.1 :=
-  rfl
+    (chiralChargeWindowInclusion hNM w).1 = w.1 ∧
+    wordDegree (chiralChargeWindowInclusion hNM w).1 = wordDegree w.1 ∧
+    (chiralChargeWindowInclusion hNM w).1 ∈ ChiralChargeWindow M := by
+  rcases w.2 with ⟨hlo, hhi⟩
+  constructor
+  · rfl
+  constructor
+  · rfl
+  · change -(M : ℤ) ≤ wordDegree w.1 ∧ wordDegree w.1 ≤ M
+    constructor <;> omega
 
 /-- The finite cyclotomic readout forgets the integer window and retains the
 mod-three charge. -/
@@ -57,8 +65,10 @@ theorem chiralWindowCyclotomicReadout_inclusion
     (w : ChiralChargeWindowCarrier N) :
     chiralWindowCyclotomicReadout M
         (chiralChargeWindowInclusion hNM w) =
-      chiralWindowCyclotomicReadout N w :=
-  rfl
+    chiralWindowCyclotomicReadout N w := by
+  change chiralWordCyclotomicCharge
+      (chiralChargeWindowInclusion hNM w).1 = chiralWordCyclotomicCharge w.1
+  rw [(chiralChargeWindowInclusion_val hNM w).1]
 
 /-- Concatenation is compatible with the charge filtration when the windows
 are added.  This is the finite-stage multiplicative law behind the colimit
@@ -76,12 +86,17 @@ def chiralChargeWindowAppend
     rw [wordDegree_append]
     constructor <;> omega⟩
 
-@[simp] theorem chiralChargeWindowAppend_val
+theorem chiralChargeWindowAppend_val
     {N M : ℕ}
     (u : ChiralChargeWindowCarrier N)
     (v : ChiralChargeWindowCarrier M) :
-    (chiralChargeWindowAppend u v).1 = u.1 ++ v.1 :=
-  rfl
+    (chiralChargeWindowAppend u v).1 = u.1 ++ v.1 ∧
+    wordDegree (chiralChargeWindowAppend u v).1 =
+      wordDegree u.1 + wordDegree v.1 := by
+  constructor
+  · rfl
+  · change wordDegree (u.1 ++ v.1) = _
+    rw [wordDegree_append]
 
 theorem chiralWindowCyclotomicReadout_append
     {N M : ℕ}
@@ -96,40 +111,96 @@ theorem chiralWindowCyclotomicReadout_append
 
 theorem chiralGenerator_mem_chargeWindow_one
     (g : ChiralGenerator) :
-    ChiralChargeWindow 1 [g] := by
+    [g] ∈ ChiralChargeWindow 1 := by
   cases g <;> simp [ChiralChargeWindow, wordDegree, generatorDegree]
 
 theorem chiralPair_mem_chargeWindow_two
     (g h : ChiralGenerator) :
-    ChiralChargeWindow 2 [g, h] := by
+    [g, h] ∈ ChiralChargeWindow 2 := by
   cases g <;> cases h <;>
     simp [ChiralChargeWindow, wordDegree, generatorDegree]
 
 theorem sPlus_pair_mem_chargeWindow_two (i j : Fin 3) :
-    ChiralChargeWindow 2
-      [.sPlus i, .sPlus j] := by
-  simp [ChiralChargeWindow, wordDegree, generatorDegree]
+    wordDegree [.sPlus i, .sPlus j] = 2 ∧
+    [.sPlus i, .sPlus j] ∈ ChiralChargeWindow 2 := by
+  have hdegree := sPlus_pair_has_charge_two i j
+  refine ⟨hdegree, ?_⟩
+  change -(2 : ℤ) ≤ wordDegree [.sPlus i, .sPlus j] ∧
+    wordDegree [.sPlus i, .sPlus j] ≤ 2
+  rw [hdegree]
+  norm_num
 
 theorem sMinus_pair_mem_chargeWindow_two (i j : Fin 3) :
-    ChiralChargeWindow 2
-      [.sMinus i, .sMinus j] := by
-  simp [ChiralChargeWindow, wordDegree, generatorDegree]
+    wordDegree [.sMinus i, .sMinus j] = -2 ∧
+    [.sMinus i, .sMinus j] ∈ ChiralChargeWindow 2 := by
+  have hdegree := sMinus_pair_has_charge_neg_two i j
+  refine ⟨hdegree, ?_⟩
+  change -(2 : ℤ) ≤ wordDegree [.sMinus i, .sMinus j] ∧
+    wordDegree [.sMinus i, .sMinus j] ≤ 2
+  rw [hdegree]
+  norm_num
 
 theorem sPlus_triple_not_mem_chargeWindow_two (i j k : Fin 3) :
-    ¬ ChiralChargeWindow 2
-      [.sPlus i, .sPlus j, .sPlus k] := by
-  simp [ChiralChargeWindow, wordDegree, generatorDegree]
+    wordDegree [.sPlus i, .sPlus j, .sPlus k] = 3 ∧
+    ¬ ([.sPlus i, .sPlus j, .sPlus k] ∈ ChiralChargeWindow 2) := by
+  have hdegree := sPlus_triple_has_charge_three i j k
+  refine ⟨hdegree, ?_⟩
+  change ¬ (-(2 : ℤ) ≤ wordDegree [.sPlus i, .sPlus j, .sPlus k] ∧
+    wordDegree [.sPlus i, .sPlus j, .sPlus k] ≤ 2)
+  rw [hdegree]
+  norm_num
 
 theorem sMinus_triple_not_mem_chargeWindow_two (i j k : Fin 3) :
-    ¬ ChiralChargeWindow 2
-      [.sMinus i, .sMinus j, .sMinus k] := by
-  simp [ChiralChargeWindow, wordDegree, generatorDegree]
+    wordDegree [.sMinus i, .sMinus j, .sMinus k] = -3 ∧
+    ¬ ([.sMinus i, .sMinus j, .sMinus k] ∈ ChiralChargeWindow 2) := by
+  have hdegree := sMinus_triple_has_charge_neg_three i j k
+  refine ⟨hdegree, ?_⟩
+  change ¬ (-(2 : ℤ) ≤ wordDegree [.sMinus i, .sMinus j, .sMinus k] ∧
+    wordDegree [.sMinus i, .sMinus j, .sMinus k] ≤ 2)
+  rw [hdegree]
+  norm_num
+
+/-- At cutoff two, signed pairs lie on the boundary and have distinct integer
+degrees, while the corresponding triples lie outside the window. The
+cyclotomic readout records the pair charges modulo three. -/
+theorem chiralWindow_two_boundary_and_cyclotomic_classification
+    (i j k : Fin 3) :
+    wordDegree [.sPlus i, .sPlus j] = 2 ∧
+    wordDegree [.sMinus i, .sMinus j] = -2 ∧
+    wordDegree [.sPlus i, .sPlus j, .sPlus k] = 3 ∧
+    wordDegree [.sMinus i, .sMinus j, .sMinus k] = -3 ∧
+    [.sPlus i, .sPlus j] ∈ ChiralChargeWindow 2 ∧
+    [.sMinus i, .sMinus j] ∈ ChiralChargeWindow 2 ∧
+    ¬ ([.sPlus i, .sPlus j, .sPlus k] ∈ ChiralChargeWindow 2) ∧
+    ¬ ([.sMinus i, .sMinus j, .sMinus k] ∈ ChiralChargeWindow 2) ∧
+    chiralWordCyclotomicCharge [.sPlus i, .sPlus j] = (-1 : ZMod 3) ∧
+    chiralWordCyclotomicCharge [.sMinus i, .sMinus j] = (1 : ZMod 3) := by
+  have hp := sPlus_pair_mem_chargeWindow_two i j
+  have hm := sMinus_pair_mem_chargeWindow_two i j
+  have hpt := sPlus_triple_not_mem_chargeWindow_two i j k
+  have hmt := sMinus_triple_not_mem_chargeWindow_two i j k
+  rcases hp with ⟨hpdeg, hpmem⟩
+  rcases hm with ⟨hmdeg, hmmem⟩
+  rcases hpt with ⟨hptdeg, hptout⟩
+  rcases hmt with ⟨hmtdeg, hmtout⟩
+  refine ⟨hpdeg, hmdeg, hptdeg, hmtdeg, hpmem, hmmem, hptout, hmtout, ?_, ?_⟩
+  · rw [chiralWordCyclotomicCharge, hpdeg]
+    decide
+  · rw [chiralWordCyclotomicCharge, hmdeg]
+    decide
 
 theorem chiralWindow_two_separates_integer_from_cyclotomic :
     chiralChargeModThree 2 = chiralChargeModThree (-1) ∧
     chiralChargeModThree (-2) = chiralChargeModThree 1 := by
-  exact ⟨chiralChargeModThree_pos_two_eq_neg_one,
-    chiralChargeModThree_neg_two_eq_pos_one⟩
+  constructor
+  · calc
+      chiralChargeModThree 2 =
+          chiralChargeModThree ((-1 : ℤ) + 3) := by
+            exact congrArg chiralChargeModThree (by norm_num : (2 : ℤ) = -1 + 3)
+      _ = chiralChargeModThree (-1) := chiralChargeModThree_period_three (-1)
+  · calc
+      chiralChargeModThree (-2) = chiralChargeModThree 1 :=
+        (chiralChargeModThree_period_three (-2)).symm
 
 end InfoGeometry.Algebra
 
@@ -152,8 +223,11 @@ theorem chiral_colimit_readout_comm
     readout (psi (n + m)
       (iota_seq A iota n m x)) =
       readout (psi n x) := by
-  exact colimit_trace_comm
-    A iota A_inf psi psi_comm readout n m x
+  have h_compat :
+      (psi (n + m)).comp (iota_seq A iota n m) = psi n :=
+    psi_comp_iota_seq A iota A_inf psi psi_comm n m
+  change readout ((psi (n + m)).comp (iota_seq A iota n m) x) = _
+  rw [h_compat]
 
 end ColimitReadout
 

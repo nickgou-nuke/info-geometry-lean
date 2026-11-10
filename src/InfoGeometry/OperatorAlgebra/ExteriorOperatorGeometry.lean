@@ -26,29 +26,19 @@ namespace InfoGeometry.OperatorAlgebra.ExteriorOperatorGeometry
 open InfoGeometry.Canonical.CanonicalNormalOrdering
 open InfoGeometry.Projective.ExteriorBladeIncidence
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+variable {K V : Type*}
 
 /-- Left exterior multiplication by the blade of an ordered finite frame. -/
-def bladeOperator {n : ℕ} (v : Fin n → V) : Module.End K (ExteriorAlgebra K V) :=
+def bladeOperator [CommRing K] [AddCommGroup V] [Module K V] {n : ℕ} (v : Fin n → V) :
+    Module.End K (ExteriorAlgebra K V) :=
   Algebra.lmul K (ExteriorAlgebra K V) (ExteriorAlgebra.ιMulti K n v)
 
-@[simp] theorem bladeOperator_apply {n : ℕ} (v : Fin n → V)
-    (ω : ExteriorAlgebra K V) :
+@[simp] theorem bladeOperator_apply [CommRing K] [AddCommGroup V] [Module K V]
+    {n : ℕ} (v : Fin n → V) (ω : ExteriorAlgebra K V) :
     bladeOperator v ω = ExteriorAlgebra.ιMulti K n v * ω := rfl
 
-/-- An operator made from a frame vanishes exactly when the frame is dependent. -/
-theorem bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V) :
-    bladeOperator (K := K) v = 0 ↔ ¬LinearIndependent K v := by
-  constructor
-  · intro h
-    apply (ιMulti_eq_zero_iff v).1
-    have h1 := LinearMap.congr_fun h (1 : ExteriorAlgebra K V)
-    simpa only [bladeOperator_apply, mul_one, LinearMap.zero_apply] using h1
-  · intro h
-    simp only [bladeOperator, (ιMulti_eq_zero_iff v).2 h, map_zero]
-
 /-- The ordered composition is the regular action of the ordered exterior blade. -/
-theorem bladeOperator_eq_prod {n : ℕ} (v : Fin n → V) :
+theorem bladeOperator_eq_prod [CommRing K] [AddCommGroup V] [Module K V] {n : ℕ} (v : Fin n → V) :
     bladeOperator v = (List.ofFn fun i => create (R := K) (v i)).prod := by
   induction n with
   | zero =>
@@ -60,6 +50,29 @@ theorem bladeOperator_eq_prod {n : ℕ} (v : Fin n → V) :
     rw [ih]
     simp only [List.ofFn_succ, List.prod_cons]
     rfl
+
+/-- Noncommutativity is witnessed on the vacuum, not inferred from a sign rule. -/
+theorem annih_mul_create_ne_create_mul_annih [CommRing K] [AddCommGroup V] [Module K V]
+    (d : Module.Dual K V) (v : V) (hd : d v ≠ 0) :
+    annih d * create v ≠ create v * annih d := by
+  intro h
+  have h1 := LinearMap.congr_fun h (1 : ExteriorAlgebra K V)
+  change annih d (create v 1) = create v (annih d 1) at h1
+  rw [annih_create_vacuum, annih_vacuum, map_zero] at h1
+  exact hd ((ExteriorAlgebra.algebraMap_eq_zero_iff V (d v)).1 h1)
+
+variable [Field K] [AddCommGroup V] [Module K V]
+
+/-- An operator made from a frame vanishes exactly when the frame is dependent. -/
+theorem bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V) :
+    bladeOperator (K := K) v = 0 ↔ ¬LinearIndependent K v := by
+  constructor
+  · intro h
+    apply (ιMulti_eq_zero_iff v).1
+    have h1 := LinearMap.congr_fun h (1 : ExteriorAlgebra K V)
+    simpa only [bladeOperator_apply, mul_one, LinearMap.zero_apply] using h1
+  · intro h
+    simp only [bladeOperator, (ιMulti_eq_zero_iff v).2 h, map_zero]
 
 /-- Exact incidence as composition-zero in the full endomorphism algebra. -/
 theorem create_mul_bladeOperator_eq_zero_iff {n : ℕ} (v : Fin n → V)
@@ -97,16 +110,6 @@ theorem bladeOperator_mul_eq_zero_iff {m n : ℕ}
     simp only [bladeOperator, ← map_mul, ExteriorAlgebra.ιMulti_mul_ιMulti]
   rw [hmul, bladeOperator_eq_zero_iff, linearIndependent_append_iff_disjoint v w hv hw]
 
-/-- Noncommutativity is witnessed on the vacuum, not inferred from a sign rule. -/
-theorem annih_mul_create_ne_create_mul_annih
-    (d : Module.Dual K V) (v : V) (hd : d v ≠ 0) :
-    annih d * create v ≠ create v * annih d := by
-  intro h
-  have h1 := LinearMap.congr_fun h (1 : ExteriorAlgebra K V)
-  change annih d (create v 1) = create v (annih d 1) at h1
-  rw [annih_create_vacuum, annih_vacuum, map_zero] at h1
-  exact hd ((ExteriorAlgebra.algebraMap_eq_zero_iff V (d v)).1 h1)
-
 /-- Every nonzero mode has a covector giving genuinely noncommuting operators. -/
 theorem exists_noncommuting_annihilator {v : V} (hv : v ≠ 0) :
     ∃ d : Module.Dual K V,
@@ -116,10 +119,11 @@ theorem exists_noncommuting_annihilator {v : V} (hv : v ≠ 0) :
 
 section Matrices
 
-variable {I : Type*} [Fintype I] [LinearOrder I] (b : Module.Basis I K V)
+variable {I : Type*} [Fintype I] [LinearOrder I]
 
 /-- Finite-basis matrices preserve the existing, constructed CAR relation. -/
-theorem matrix_annih_create_CAR (d : Module.Dual K V) (v : V) :
+theorem matrix_annih_create_CAR {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
+    (b : Module.Basis I K V) (d : Module.Dual K V) (v : V) :
     LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (annih d) *
         LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (create v) +
       LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (create v) *
@@ -130,8 +134,8 @@ theorem matrix_annih_create_CAR (d : Module.Dual K V) (v : V) :
   simpa only [map_add, map_mul, map_smul, map_one] using h
 
 /-- The full matrix model retains a certified noncommuting pair. -/
-theorem matrix_annih_mul_create_ne_create_mul_annih
-    (d : Module.Dual K V) (v : V) (hd : d v ≠ 0) :
+theorem matrix_annih_mul_create_ne_create_mul_annih {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
+    (b : Module.Basis I K V) (d : Module.Dual K V) (v : V) (hd : d v ≠ 0) :
     LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (annih d) *
         LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (create v) ≠
       LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (create v) *
@@ -140,6 +144,8 @@ theorem matrix_annih_mul_create_ne_create_mul_annih
   apply annih_mul_create_ne_create_mul_annih d v hd
   apply (LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra).injective
   simpa only [map_mul] using h
+
+variable (b : Module.Basis I K V)
 
 /-- Matrix multiplication-zero is equivalent to actual frame-span membership. -/
 theorem matrix_create_mul_blade_eq_zero_iff {n : ℕ} (v : Fin n → V)
@@ -162,18 +168,21 @@ theorem matrix_blade_mul_eq_zero_iff {m n : ℕ}
   exact (LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra).map_eq_zero_iff
 
 /-- Arbitrary exterior elements, including inhomogeneous ones, are retained faithfully. -/
-theorem regularMatrix_eq_iff (ω η : ExteriorAlgebra K V) :
+theorem regularMatrix_eq_iff {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
+    (b : Module.Basis I K V) (ω η : ExteriorAlgebra K V) :
     Algebra.leftMulMatrix b.ExteriorAlgebra ω =
       Algebra.leftMulMatrix b.ExteriorAlgebra η ↔ ω = η :=
   (Algebra.leftMulMatrix_injective b.ExteriorAlgebra).eq_iff
 
 /-- The frame operator's matrix is precisely native left exterior multiplication. -/
-theorem matrix_bladeOperator {n : ℕ} (v : Fin n → V) :
+theorem matrix_bladeOperator {K V : Type*} [CommRing K] [AddCommGroup V] [Module K V]
+    (b : Module.Basis I K V) {n : ℕ} (v : Fin n → V) :
     LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (bladeOperator v) =
       Algebra.leftMulMatrix b.ExteriorAlgebra (ExteriorAlgebra.ιMulti K n v) := rfl
 
 /-- The vacuum criterion also proves noncommutativity for each basis mode. -/
-theorem matrix_basis_mode_noncommuting (i : I) :
+theorem matrix_basis_mode_noncommuting {K V : Type*} [CommRing K] [Nontrivial K] [AddCommGroup V] [Module K V]
+    (b : Module.Basis I K V) (i : I) :
     LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (annih (b.coord i)) *
         LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (create (b i)) ≠
       LinearMap.toMatrixAlgEquiv b.ExteriorAlgebra (create (b i)) *

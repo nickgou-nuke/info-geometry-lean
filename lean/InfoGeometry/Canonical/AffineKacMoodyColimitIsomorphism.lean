@@ -37,7 +37,7 @@ open CategoryTheory CategoryTheory.Limits
 open VirasoroProject InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit
 
 universe u
-variable {𝕜 : Type u} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜] [IsAddTorsionFree 𝕜]
 variable {𝓰 : Type u} [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
 variable (Φ : LinearMap.BilinForm 𝕜 𝓰)
 variable (hΦ : Φ.lieInvariant 𝓰) (hΦs : Φ.IsSymm)
@@ -371,3 +371,37 @@ theorem affineCurrentColimitMode_bracket
               F (affineCurrentColimitMode Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)) + F 0
             simp only [map_zero, add_zero]
             exact (affineFiniteModeColimitMap_current Φ hΦ hΦs (m + n) ⁅x, y⁆).symm
+
+/-- Every current mode in the categorical colimit commutes with the central
+generator `affineCentralColimitMode Φ hΦ hΦs`. -/
+theorem affineCurrentColimitMode_lie_central
+    (m : ℤ) (x : 𝓰) :
+    ⁅affineCurrentColimitMode Φ hΦ hΦs m x,
+      affineCentralColimitMode Φ hΦ hΦs⁆ = 0 := by
+  apply colimitMap_injective Φ hΦ hΦs
+  let F := (affineFiniteModeColimitMap Φ hΦ hΦs).hom
+  calc
+    F ⁅affineCurrentColimitMode Φ hΦ hΦs m x,
+        affineCentralColimitMode Φ hΦ hΦs⁆ =
+        ⁅F (affineCurrentColimitMode Φ hΦ hΦs m x),
+          F (affineCentralColimitMode Φ hΦ hΦs)⁆ := by
+            calc
+              _ = colimitLieEquivAmbient Φ hΦ hΦs
+                    ⁅affineCurrentColimitMode Φ hΦ hΦs m x,
+                      affineCentralColimitMode Φ hΦ hΦs⁆ := by
+                    rw [colimitLieEquivAmbient_apply]
+              _ = ⁅colimitLieEquivAmbient Φ hΦ hΦs
+                    (affineCurrentColimitMode Φ hΦ hΦs m x),
+                    colimitLieEquivAmbient Φ hΦ hΦs
+                      (affineCentralColimitMode Φ hΦ hΦs)⁆ :=
+                    (colimitLieEquivAmbient Φ hΦ hΦs).map_lie _ _
+              _ = _ := by rw [colimitLieEquivAmbient_apply,
+                colimitLieEquivAmbient_apply]
+    _ = ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+          affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs⁆ := by
+          rw [affineFiniteModeColimitMap_current, affineFiniteModeColimitMap_central]
+    _ = 0 := by
+          rw [LieTwoCocycle.CentralExtension.lie_def]
+          simp only [affineCurrentGen, affineCentralGen, map_zero, lie_zero]
+          rfl
+    _ = F 0 := (map_zero F).symm

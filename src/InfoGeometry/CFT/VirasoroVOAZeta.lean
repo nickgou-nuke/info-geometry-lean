@@ -1,44 +1,55 @@
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
-import Mathlib.Topology.Instances.Complex
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import Mathlib.Tactic
+
+/-!
+# Virasoro mode anomalies and the free-boson weight polynomial
+
+This owner records two independent, precisely scoped facts.  First, the
+Virasoro central extension has its standard resonant bracket, and the first
+resonant mode beyond the `sl₂` wedge has a nonzero central defect.  Second,
+the quadratic free-boson weight `α²/2` is positive away from zero and vanishes
+at the vacuum parameter.  No relation between this weight and the Riemann zeta
+function is asserted here.
+-/
 
 namespace InfoGeometry.CFT.VirasoroVOAZeta
 
-open Complex Real
+/-- The quadratic conformal weight used by the rank-one free-boson model. -/
+noncomputable def primaryConformalWeight (alpha : ℝ) : ℝ := alpha ^ 2 / 2
 
-noncomputable section
-
-set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
-
-def virasoroCentralCharge : ℝ := 1
-
-def primaryConformalWeight (alpha : ℝ) : ℝ :=
-  (alpha ^ 2) / 2
-
-def zetaPoleParameter : ℝ := 1
-
-theorem c_equals_one : virasoroCentralCharge = 1 := rfl
-
-theorem primary_weight_pos (p : ℝ) (hp : 2 ≤ p) :
-    0 < primaryConformalWeight (Real.log p) := by
+/-- Every nonzero parameter has positive quadratic conformal weight. -/
+theorem primary_weight_pos_of_ne_zero (alpha : ℝ) (hα : alpha ≠ 0) :
+    0 < primaryConformalWeight alpha := by
   unfold primaryConformalWeight
-  have h_ln_pos : 0 < Real.log p := by
-    have : 1 < p := by linarith
-    exact Real.log_pos this
-  have h_sq : 0 < (Real.log p) ^ 2 := sq_pos_of_pos h_ln_pos
-  linarith
+  have hsq : 0 < alpha ^ 2 := sq_pos_of_ne_zero hα
+  positivity
 
-theorem vacuum_state_conformal_weight :
-    primaryConformalWeight (Real.log 1) = 0 := by
-  unfold primaryConformalWeight
-  rw [Real.log_one]
-  norm_num
+/-- The quadratic conformal weight vanishes exactly at the vacuum parameter. -/
+theorem primary_weight_eq_zero_iff (alpha : ℝ) :
+    primaryConformalWeight alpha = 0 ↔ alpha = 0 := by
+  constructor
+  · intro hweight
+    by_contra hα
+    have hpositive := primary_weight_pos_of_ne_zero alpha hα
+    linarith
+  · rintro rfl
+    simp [primaryConformalWeight]
 
-theorem virasoro_zeta_scaling_alignment (p : ℝ) (hp : 2 ≤ p) :
-    (primaryConformalWeight (Real.log p) = (Real.log p) ^ 2 / 2) ∧
-    (zetaPoleParameter = 1) ∧
-    (primaryConformalWeight (Real.log 1) = 0) :=
-  ⟨rfl, rfl, vacuum_state_conformal_weight⟩
+/-- The resonant Virasoro bracket records both its Witt term and central term. -/
+theorem resonant_mode_bracket (n : ℤ) :
+    ⁅VirasoroProject.VirasoroAlgebra.lgen ℝ n,
+      VirasoroProject.VirasoroAlgebra.lgen ℝ (-n)⁆ =
+        (2 * (n : ℝ)) • VirasoroProject.VirasoroAlgebra.lgen ℝ 0 +
+          (((n ^ 3 - n : ℝ) / 12) • VirasoroProject.VirasoroAlgebra.cgen ℝ) := by
+  rw [VirasoroProject.VirasoroAlgebra.lgen_bracket]
+  rw [show n + -n = 0 by omega]
+  congr 1
+  push_cast
+  ring_nf
+
+end InfoGeometry.CFT.VirasoroVOAZeta

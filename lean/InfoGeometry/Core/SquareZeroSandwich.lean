@@ -52,6 +52,16 @@ theorem ring_anticomm_mul_commutator (hx : X * X = 0) (hy : Y * Y = 0) :
   have hcy : Commute (X * Y + Y * X) Y := ring_anticomm_mul_right hy
   exact (hcx.mul_right hcy).sub_right (hcy.mul_right hcx)
 
+/-- In any noncommutative ring `[Ring A]`, the division-free symmetric dissipator identity
+`2 • (X * Z * Y + Y * Z * X) - ((X * Y + Y * X) * Z + Z * (X * Y + Y * X))` equals the
+negative double commutator sum. -/
+theorem ring_dissipator_eq_double_commutator (X Y Z : A) :
+    (X * Z * Y + Y * Z * X) + (X * Z * Y + Y * Z * X) -
+      ((X * Y + Y * X) * Z + Z * (X * Y + Y * X)) =
+    -((X * (Y * Z - Z * Y) - (Y * Z - Z * Y) * X) +
+      (Y * (X * Z - Z * X) - (X * Z - Z * X) * Y)) := by
+  noncomm_ring
+
 end PureRing
 
 variable {n R : Type*} [Fintype n] [DecidableEq n] [CommRing R]

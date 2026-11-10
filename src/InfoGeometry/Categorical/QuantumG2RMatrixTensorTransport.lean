@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.QuantumG2RMatrixBraidingDatum
@@ -13,10 +18,22 @@ Cuntz algebra or a Spin carrier has already been identified with the other.
 
 namespace InfoGeometry.Categorical.QuantumG2RMatrixTensorTransport
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem quantumG2RMatrixTensorTransport_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open TensorProduct
 
+section NoncommRing
+
+/-! Conjugation transport needs only a (possibly noncommutative) coefficient
+ring: linear equivalences over `[Ring 𝕜]` already compose and invert. -/
+
 variable {𝕜 A B : Type*}
-variable [CommRing 𝕜]
+variable [Ring 𝕜]
 variable [AddCommGroup A] [Module 𝕜 A]
 variable [AddCommGroup B] [Module 𝕜 B]
 
@@ -49,6 +66,14 @@ theorem conjugate_yangBaxter
   have hx := LinearMap.congr_fun h (J.symm x)
   simpa [conjugate, LinearEquiv.trans_apply, LinearMap.comp_apply] using
     congrArg (fun y => J y) hx
+
+end NoncommRing
+
+section CommRingTensor
+
+/-! Tensor powers of modules require commutative scalars. -/
+
+variable {𝕜 : Type*} [CommRing 𝕜]
 
 /-- Tensor-square transport of a carrier equivalence. -/
 def tensorSquareEquiv
@@ -97,5 +122,7 @@ theorem transportedR_yangBaxter
       (transportedR J S).toLinearMap ∘ₗ (transportedR J R).toLinearMap ∘ₗ
         (transportedR J S).toLinearMap := by
   exact conjugate_yangBaxter (tensorSquareEquiv J) R S h
+
+end CommRingTensor
 
 end InfoGeometry.Categorical.QuantumG2RMatrixTensorTransport

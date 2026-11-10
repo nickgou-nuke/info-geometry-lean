@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -70,7 +74,7 @@ theorem npotent_factorization {x : R} {n : ℕ} (hn : 2 ≤ n)
     (hx : IsNPotent x n) :
     x * (x ^ (n - 1) - 1) = 0 := by
   dsimp [IsNPotent] at hx
-  have hs : n - 1 + 1 = n := by omega
+  have hs : n - 1 + 1 = n := Nat.sub_add_cancel (by linarith [hn])
   calc
     x * (x ^ (n - 1) - 1) = x * x ^ (n - 1) - x := by rw [mul_sub, mul_one]
     _ = x ^ (n - 1 + 1) - x := by rw [← pow_succ' x (n - 1)]
@@ -82,7 +86,7 @@ theorem npotent_factorization_right {x : R} {n : ℕ} (hn : 2 ≤ n)
     (hx : IsNPotent x n) :
     (x ^ (n - 1) - 1) * x = 0 := by
   dsimp [IsNPotent] at hx
-  have hs : n - 1 + 1 = n := by omega
+  have hs : n - 1 + 1 = n := Nat.sub_add_cancel (by linarith [hn])
   calc
     (x ^ (n - 1) - 1) * x = x ^ (n - 1) * x - x := by rw [sub_mul, one_mul]
     _ = x ^ (n - 1 + 1) - x := by rw [pow_succ]
@@ -93,6 +97,7 @@ theorem npotent_factorization_right {x : R} {n : ℕ} (hn : 2 ≤ n)
 theorem npotent_nonzero_isIdempotent {x : R} {n : ℕ} (hn : 2 ≤ n) (hx : IsNPotent x n) :
     IsIdempotent (npotentNonzeroProjector x n) := by
   dsimp [IsIdempotent, npotentNonzeroProjector]
+  have hn1 : 1 ≤ n - 1 := Nat.le_sub_one_of_lt hn
   have hsucc : n - 1 + (n - 1) = n + (n - 2) := by omega
   have hsucc2 : n - 2 + 1 = n - 1 := by omega
   calc
@@ -149,7 +154,7 @@ theorem npotent_projectors_orthogonal_right {x : R} {n : ℕ} (hn : 2 ≤ n) (hx
 theorem npotent_zero_projector_annihilates {x : R} {n : ℕ} (hn : 2 ≤ n) (hx : IsNPotent x n) :
     x * npotentZeroProjector x n = 0 := by
   dsimp [npotentZeroProjector]
-  have hsucc : n - 1 + 1 = n := by omega
+  have hsucc : n - 1 + 1 = n := Nat.sub_add_cancel (by linarith [hn])
   calc
     x * (1 - x ^ (n - 1)) = x - x * x ^ (n - 1) := by rw [mul_sub, mul_one]
     _ = x - x ^ (n - 1 + 1) := by rw [← pow_succ' x (n - 1)]
@@ -161,7 +166,7 @@ theorem npotent_zero_projector_annihilates {x : R} {n : ℕ} (hn : 2 ≤ n) (hx 
 theorem npotent_nonzero_projector_acts_as_id {x : R} {n : ℕ} (hn : 2 ≤ n) (hx : IsNPotent x n) :
     x * npotentNonzeroProjector x n = x := by
   dsimp [npotentNonzeroProjector]
-  have hsucc : n - 1 + 1 = n := by omega
+  have hsucc : n - 1 + 1 = n := Nat.sub_add_cancel (by linarith [hn])
   calc
     x * x ^ (n - 1) = x ^ (n - 1 + 1) := (pow_succ' x (n - 1)).symm
     _ = x ^ n := by rw [hsucc]
@@ -172,7 +177,7 @@ theorem npotent_zero_projector_left_annihilates {x : R} {n : ℕ} (hn : 2 ≤ n)
     (hx : IsNPotent x n) :
     npotentZeroProjector x n * x = 0 := by
   dsimp [npotentZeroProjector]
-  have hsucc : n - 1 + 1 = n := by omega
+  have hsucc : n - 1 + 1 = n := Nat.sub_add_cancel (by linarith [hn])
   calc
     (1 - x ^ (n - 1)) * x = x - x ^ (n - 1) * x := by rw [sub_mul, one_mul]
     _ = x - x ^ n := by rw [← pow_succ x (n - 1), hsucc]
@@ -184,7 +189,7 @@ theorem npotent_nonzero_projector_left_acts_as_id {x : R} {n : ℕ} (hn : 2 ≤ 
     (hx : IsNPotent x n) :
     npotentNonzeroProjector x n * x = x := by
   dsimp [npotentNonzeroProjector]
-  have hsucc : n - 1 + 1 = n := by omega
+  have hsucc : n - 1 + 1 = n := Nat.sub_add_cancel (by linarith [hn])
   calc
     x ^ (n - 1) * x = x ^ n := by rw [← pow_succ x (n - 1), hsucc]
     _ = x := hx
@@ -330,6 +335,14 @@ end CyclotomicGeometricSum
 
 section CyclotomicFieldSpecialization
 
+/-- In any division ring (including non-commutative skew fields), every nontrivial
+finite-order element has zero geometric sum. -/
+theorem root_of_unity_geometric_sum_eq_zero_of_ne_one {K : Type*} [DivisionRing K] {u : K} {n : ℕ}
+    (hu : u ^ n = 1) (hune : u ≠ 1) :
+    (∑ i ∈ range n, u ^ i) = 0 := by
+  apply root_of_unity_geometric_sum_eq_zero hu
+  exact isUnit_iff_ne_zero.mpr (sub_ne_zero.mpr (Ne.symm hune))
+
 variable {K : Type*} [Field K]
 
 /-- A finite-order element has minimal polynomial dividing its root polynomial. -/
@@ -339,13 +352,6 @@ theorem minpoly_dvd_pow_sub_one_of_root {u : K} {n : ℕ}
   apply minpoly.dvd
   simpa [IsRootOfUnity, Polynomial.aeval_def] using
     (sub_eq_zero.mpr hu)
-
-/-- In a field, every nontrivial finite-order element has zero geometric sum. -/
-theorem root_of_unity_geometric_sum_eq_zero_of_ne_one {u : K} {n : ℕ}
-    (hu : u ^ n = 1) (hune : u ≠ 1) :
-    (∑ i ∈ range n, u ^ i) = 0 := by
-  apply root_of_unity_geometric_sum_eq_zero hu
-  exact isUnit_iff_ne_zero.mpr (sub_ne_zero.mpr (Ne.symm hune))
 
 end CyclotomicFieldSpecialization
 
@@ -363,49 +369,101 @@ def involutionPlusProjector (u : R) (half : R) : R :=
 def involutionMinusProjector (u : R) (half : R) : R :=
   half * (1 - u)
 
+/-- In any non-commutative ring `[Ring R]`, the $+1$ involution projector is idempotent
+whenever `2 * half = 1` and `Commute half u`. -/
+theorem involution_plus_isIdempotent_of_commute {u half : R}
+    (hhalf : 2 * half = 1) (hcomm : Commute half u) (hu : u ^ 2 = 1) :
+    IsIdempotent (involutionPlusProjector u half) := by
+  dsimp [IsIdempotent, involutionPlusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
+  have hhu : u * half = half * u := hcomm.symm.eq
+  have hhalf_sq : half * half * 2 = half := by
+    calc
+      half * half * 2 = half * (half * (1 + 1)) := by
+        rw [show (2 : R) = 1 + 1 by norm_num]; noncomm_ring
+      _ = half * ((1 + 1) * half) := by noncomm_ring
+      _ = half * (2 * half) := by rw [show (2 : R) = 1 + 1 by norm_num]
+      _ = half * 1 := by rw [hhalf]
+      _ = half := mul_one half
+  calc
+    (half * (1 + u)) * (half * (1 + u))
+      = half * half + half * (u * half) + half * half * u + half * (u * half) * u := by
+        noncomm_ring
+    _ = half * half + half * (half * u) + half * half * u + half * (half * u) * u := by
+        rw [hhu]
+    _ = (half * half * (1 + 1)) + (half * half * (1 + 1)) * u - half * half + half * half * (u * u) := by
+        noncomm_ring
+    _ = (half * half * 2) * (1 + u) - half * half + half * half * 1 := by
+        rw [hu2, show (1 : R) + 1 = 2 by norm_num]
+        noncomm_ring
+    _ = half * (1 + u) := by
+        rw [hhalf_sq]
+        noncomm_ring
+
+/-- In any non-commutative ring `[Ring R]`, the $-1$ involution projector is idempotent
+whenever `2 * half = 1` and `Commute half u`. -/
+theorem involution_minus_isIdempotent_of_commute {u half : R}
+    (hhalf : 2 * half = 1) (hcomm : Commute half u) (hu : u ^ 2 = 1) :
+    IsIdempotent (involutionMinusProjector u half) := by
+  dsimp [IsIdempotent, involutionMinusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
+  have hhu : u * half = half * u := hcomm.symm.eq
+  have hhalf_sq : half * half * 2 = half := by
+    calc
+      half * half * 2 = half * ((1 + 1) * half) := by
+        rw [show (2 : R) = 1 + 1 by norm_num]; noncomm_ring
+      _ = half * (2 * half) := by rw [show (2 : R) = 1 + 1 by norm_num]
+      _ = half * 1 := by rw [hhalf]
+      _ = half := mul_one half
+  calc
+    (half * (1 - u)) * (half * (1 - u))
+      = half * half - half * (u * half) - half * half * u + half * (u * half) * u := by
+        noncomm_ring
+    _ = half * half - half * (half * u) - half * half * u + half * (half * u) * u := by
+        rw [hhu]
+    _ = (half * half * 2) * (1 - u) - half * half + half * half * (u * u) := by
+        rw [show (2 : R) = 1 + 1 by norm_num]
+        noncomm_ring
+    _ = half * (1 - u) := by
+        rw [hhalf_sq, hu2]
+        noncomm_ring
+
+/-- In any non-commutative ring `[Ring R]`, the $+1$ and $-1$ involution projectors are
+mutually orthogonal whenever `Commute half u`. -/
+theorem involution_projectors_orthogonal_of_commute {u half : R}
+    (hcomm : Commute half u) (hu : u ^ 2 = 1) :
+    involutionPlusProjector u half * involutionMinusProjector u half = 0 := by
+  dsimp [involutionPlusProjector, involutionMinusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
+  have hhu : u * half = half * u := hcomm.symm.eq
+  calc
+    (half * (1 + u)) * (half * (1 - u))
+      = half * half - half * half * u + half * (u * half) - half * (u * half) * u := by
+        noncomm_ring
+    _ = half * half - half * half * u + half * (half * u) - half * (half * u) * u := by
+        rw [hhu]
+    _ = half * half * (1 - u * u) := by noncomm_ring
+    _ = 0 := by rw [hu2, sub_self, mul_zero]
+
 /-- The $+1$ involution projector is idempotent given $2 \cdot \mathrm{half} = 1$. -/
 theorem involution_plus_isIdempotent {R : Type*} [CommRing R] {u half : R}
     (hhalf : 2 * half = 1)
     (hu : u ^ 2 = 1) :
-    IsIdempotent (involutionPlusProjector u half) := by
-  dsimp [IsIdempotent, involutionPlusProjector]
-  have hu2 : u * u = 1 := by
-    rw [← pow_two]
-    exact hu
-  calc
-    (half * (1 + u)) * (half * (1 + u)) =
-        (half * (2 * half)) * (1 + u) + (half * half) * (u * u - 1) := by ring
-    _ = (half * 1) * (1 + u) + (half * half) * (1 - 1) := by rw [hhalf, hu2]
-    _ = half * (1 + u) := by ring
+    IsIdempotent (involutionPlusProjector u half) :=
+  involution_plus_isIdempotent_of_commute hhalf (Commute.all half u) hu
 
 /-- The $-1$ involution projector is idempotent given $2 \cdot \mathrm{half} = 1$. -/
 theorem involution_minus_isIdempotent {R : Type*} [CommRing R] {u half : R}
     (hhalf : 2 * half = 1)
     (hu : u ^ 2 = 1) :
-    IsIdempotent (involutionMinusProjector u half) := by
-  dsimp [IsIdempotent, involutionMinusProjector]
-  have hu2 : u * u = 1 := by
-    rw [← pow_two]
-    exact hu
-  calc
-    (half * (1 - u)) * (half * (1 - u)) =
-        (half * (2 * half)) * (1 - u) + (half * half) * (u * u - 1) := by ring
-    _ = (half * 1) * (1 - u) + (half * half) * (1 - 1) := by rw [hhalf, hu2]
-    _ = half * (1 - u) := by ring
+    IsIdempotent (involutionMinusProjector u half) :=
+  involution_minus_isIdempotent_of_commute hhalf (Commute.all half u) hu
 
 /-- The $+1$ and $-1$ involution projectors are mutually orthogonal. -/
 theorem involution_projectors_orthogonal {R : Type*} [CommRing R] {u half : R}
     (hu : u ^ 2 = 1) :
-    involutionPlusProjector u half * involutionMinusProjector u half = 0 := by
-  dsimp [involutionPlusProjector, involutionMinusProjector]
-  have hu2 : u * u = 1 := by
-    rw [← pow_two]
-    exact hu
-  calc
-    (half * (1 + u)) * (half * (1 - u)) =
-        (half * half) * (1 - u * u) := by ring
-    _ = (half * half) * (1 - 1) := by rw [hu2]
-    _ = 0 := by ring
+    involutionPlusProjector u half * involutionMinusProjector u half = 0 :=
+  involution_projectors_orthogonal_of_commute (Commute.all half u) hu
 
 /-- The $+1$ and $-1$ involution projectors sum to the identity: $P_+ + P_- = 1$. -/
 theorem involution_projectors_sum_eq_one {u half : R}
@@ -431,33 +489,66 @@ theorem involution_spectral_reconstruction {u half : R}
     _ = 1 * u := by rw [hhalf]
     _ = u := one_mul u
 
-/- The involution acts by its defining eigenvalue on each projector. -/
-theorem involution_plus_projector_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
+/-- In any non-commutative ring `[Ring R]`, `u` acts by `+1` on the left of `P_+`
+whenever `Commute half u`. -/
+theorem involution_plus_projector_eigen_of_commute {u half : R}
+    (hcomm : Commute half u) (hu : u ^ 2 = 1) :
     u * involutionPlusProjector u half = involutionPlusProjector u half := by
   dsimp [involutionPlusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
   calc
-    u * (half * (1 + u)) = half * (u + u * u) := by ring
-    _ = half * (u + 1) := by rw [← pow_two u, hu]
-    _ = half * (1 + u) := by ring
+    u * (half * (1 + u)) = (u * half) * (1 + u) := (mul_assoc u half (1 + u)).symm
+    _ = (half * u) * (1 + u) := by rw [hcomm.symm.eq]
+    _ = half * (u + u * u) := by noncomm_ring
+    _ = half * (u + 1) := by rw [hu2]
+    _ = half * (1 + u) := by noncomm_ring
 
-theorem involution_minus_projector_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
+/-- In any non-commutative ring `[Ring R]`, `u` acts by `-1` on the left of `P_-`
+whenever `Commute half u`. -/
+theorem involution_minus_projector_eigen_of_commute {u half : R}
+    (hcomm : Commute half u) (hu : u ^ 2 = 1) :
     u * involutionMinusProjector u half = -involutionMinusProjector u half := by
   dsimp [involutionMinusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
   calc
-    u * (half * (1 - u)) = half * (u - u * u) := by ring
-    _ = half * (u - 1) := by rw [← pow_two u, hu]
-    _ = -(half * (1 - u)) := by ring
+    u * (half * (1 - u)) = (u * half) * (1 - u) := (mul_assoc u half (1 - u)).symm
+    _ = (half * u) * (1 - u) := by rw [hcomm.symm.eq]
+    _ = half * (u - u * u) := by noncomm_ring
+    _ = half * (u - 1) := by rw [hu2]
+    _ = -(half * (1 - u)) := by noncomm_ring
 
-theorem involution_plus_projector_right_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
+/- The involution acts by its defining eigenvalue on each projector. -/
+theorem involution_plus_projector_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
+    u * involutionPlusProjector u half = involutionPlusProjector u half :=
+  involution_plus_projector_eigen_of_commute (Commute.all half u) hu
+
+theorem involution_minus_projector_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
+    u * involutionMinusProjector u half = -involutionMinusProjector u half :=
+  involution_minus_projector_eigen_of_commute (Commute.all half u) hu
+
+theorem involution_plus_projector_right_eigen {u half : R} (hu : u ^ 2 = 1) :
     involutionPlusProjector u half * u = involutionPlusProjector u half := by
-  rw [mul_comm]
-  exact involution_plus_projector_eigen hu
+  dsimp [involutionPlusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
+  calc
+    (half * (1 + u)) * u = half * (u + u * u) := by noncomm_ring
+    _ = half * (u + 1) := by rw [hu2]
+    _ = half * (1 + u) := by noncomm_ring
 
-theorem involution_minus_projector_right_eigen {R : Type*} [CommRing R] {u half : R} (hu : u ^ 2 = 1) :
+theorem involution_minus_projector_right_eigen {u half : R} (hu : u ^ 2 = 1) :
     involutionMinusProjector u half * u = -involutionMinusProjector u half := by
-  rw [mul_comm]
-  exact involution_minus_projector_eigen hu
+  dsimp [involutionMinusProjector]
+  have hu2 : u * u = 1 := by rw [← pow_two]; exact hu
+  calc
+    (half * (1 - u)) * u = half * (u - u * u) := by noncomm_ring
+    _ = half * (u - 1) := by rw [hu2]
+    _ = -(half * (1 - u)) := by noncomm_ring
 
 end CyclotomicInvolutions
+
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem cyclotomic_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end InfoGeometry.Algebra.CyclotomicOperatorProjectors

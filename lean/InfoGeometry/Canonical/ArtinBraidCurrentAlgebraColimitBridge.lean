@@ -274,7 +274,7 @@ theorem completedCurrent_to_same_heisenberg_current
 
 section Affine
 universe u
-variable {𝕜a : Type u} [Field 𝕜a] [CharZero 𝕜a]
+variable {𝕜a : Type u} [CommRing 𝕜a] [IsAddTorsionFree 𝕜a]
 variable {𝓰 : Type u} [LieRing 𝓰] [LieAlgebra 𝕜a 𝓰]
 
 /-- Comparison readout of the categorical affine Kac--Moody current mode
@@ -314,7 +314,7 @@ theorem affine_current_intrinsic_colimit_kacMoody_bracket
         if m + n = 0 then
           ((m : 𝕜a) * Φ x y) • affineCentralColimitMode Φ hΦ hΦs
         else 0 := by
-  rw [affineCurrentColimitMode_lie_eq Φ hΦ hΦs m n x y]
+  rw [affineCurrentColimitMode_bracket Φ hΦ hΦs m n x y]
 
 end Affine
 

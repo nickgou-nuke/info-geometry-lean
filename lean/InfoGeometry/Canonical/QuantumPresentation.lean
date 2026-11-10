@@ -1,6 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Real.Basic
 
 /-!
 # InfoGeometry.Canonical.QuantumPresentation
@@ -125,35 +129,47 @@ Concrete nontrivial presentation on paired states.
 
 This gives a load-bearing witness that the intertwiner lane is not only identity
 scaffolding: the state map can be a genuine symmetry (swap) while preserving the
-typed action/support/generator contracts.
+typed action/support/generator contracts. Its two ordered-pair readouts vary with
+the state and are exchanged by the generator.
 -/
 @[rep_depth operator]
 def pairedFunctionPresentation (α : Type) : Presentation where
-  Scalar := Nat
+  Scalar := α × α
   State := α × α
   Observable := α → α
   act := fun o s => (o s.1, o s.2)
   support := fun s => s.1 ≠ s.2
   generator := fun s => (s.2, s.1)
-  metricReadout := fun _ => 0
-  phaseReadout := fun _ => 0
+  metricReadout := fun s => s
+  phaseReadout := fun s => (s.2, s.1)
 
-@[simp, rep_depth operator]
+/-- The exchange generator is an involution on paired states. -/
+@[rep_depth operator]
+theorem pairedFunctionPresentation_generator
+    (α : Type) (s : (pairedFunctionPresentation α).State) :
+    (pairedFunctionPresentation α).generator
+        ((pairedFunctionPresentation α).generator s) = s := by
+  cases s
+  rfl
+
+/-- Applying the generator changes the metric readout into the phase channel. -/
+@[rep_depth operator]
 theorem pairedFunctionPresentation_metricReadout
     (α : Type) (s : (pairedFunctionPresentation α).State) :
-    (pairedFunctionPresentation α).metricReadout s = (0 : Nat) :=
+    (pairedFunctionPresentation α).metricReadout
+        ((pairedFunctionPresentation α).generator s) =
+          (pairedFunctionPresentation α).phaseReadout s := by
+  cases s
   rfl
 
-@[simp, rep_depth operator]
+/-- Applying the generator changes the phase readout back into the metric channel. -/
+@[rep_depth operator]
 theorem pairedFunctionPresentation_phaseReadout
     (α : Type) (s : (pairedFunctionPresentation α).State) :
-    (pairedFunctionPresentation α).phaseReadout s = (0 : Nat) :=
-  rfl
-
-@[simp, rep_depth operator]
-theorem pairedFunctionPresentation_generator
-    (α : Type) (s : α × α) :
-    (pairedFunctionPresentation α).generator s = (s.2, s.1) :=
+    (pairedFunctionPresentation α).phaseReadout
+        ((pairedFunctionPresentation α).generator s) =
+          (pairedFunctionPresentation α).metricReadout s := by
+  cases s
   rfl
 
 /-- Non-identity symmetry intertwiner on the paired-function presentation. -/
@@ -162,7 +178,7 @@ def pairedSwapIntertwiner (α : Type) :
     Intertwiner (pairedFunctionPresentation α) (pairedFunctionPresentation α) where
   mapState := fun s => (s.2, s.1)
   mapObservable := fun o => o
-  mapScalar := fun x => x
+  mapScalar := fun x => (x.2, x.1)
   map_act := by
     intro o s
     cases s
@@ -177,14 +193,23 @@ def pairedSwapIntertwiner (α : Type) :
 
 /-- Readout preservation for the paired swap intertwiner. -/
 @[rep_depth krein]
-def pairedSwapReadoutPreservation (α : Type) :
+theorem pairedSwapReadoutPreservation (α : Type) :
     ReadoutPreservation (pairedSwapIntertwiner α) := by
-  refine ⟨?_, ?_⟩
+  constructor
   · intro s
+    cases s
     rfl
   · intro s
+    cases s
     rfl
 
+/-- A constructive tagged example makes the presentation-lane metadata inhabited. -/
+@[rep_depth operator]
+def pairedTaggedPresentation (α : Type) : TaggedPresentation where
+  lane := .operator
+  data := pairedFunctionPresentation α
+
+/-- Distinct paired states are moved by the exchange intertwiner. -/
 @[rep_depth krein]
 theorem pairedSwapIntertwiner_moves_state
     {α : Type} (a b : α) (h : a ≠ b) :

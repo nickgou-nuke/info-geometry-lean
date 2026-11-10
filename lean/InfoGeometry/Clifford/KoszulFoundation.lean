@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -9,7 +14,7 @@ Kernel-checked Clifford-algebra pivot for the supergraded/Koszul lane.
 Mathlib already owns the native Clifford algebra, its polar anticommutator, and
 its grade involution `CliffordAlgebra.involute`.  This file exposes those facts
 under repository-facing names and adds one finite list-product volume-element
-calculation.
+calculation, together with non-commutative `[Ring B]` anticommutator identities.
 
 No Berezinian functor, ABS isomorphism, Dirac index theorem, Bott-periodicity
 classification theorem, or tenfold-way physics statement is asserted here.
@@ -18,6 +23,32 @@ classification theorem, or tenfold-way physics statement is asserted here.
 namespace InfoGeometry.Clifford.KoszulFoundation
 
 open CliffordAlgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NonCommRingAnticommutator
+
+variable {B : Type*} [Ring B]
+
+/-- Operator anticommutator `{x, y} = x * y + y * x` in any non-commutative ring `[Ring B]`. -/
+def ringAnticommutator (x y : B) : B :=
+  x * y + y * x
+
+theorem ringAnticommutator_symm (x y : B) :
+    ringAnticommutator x y = ringAnticommutator y x :=
+  add_comm (x * y) (y * x)
+
+theorem ring_anticommute_of_anticommutator_eq_zero {x y : B}
+    (h : ringAnticommutator x y = 0) :
+    x * y = -(y * x) :=
+  eq_neg_of_add_eq_zero_left h
+
+end NonCommRingAnticommutator
 
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Convex.Radon
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -12,6 +17,23 @@ namespace InfoGeometry.Convex
 
 open Fintype Finset Set
 open Module
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem radonHelly_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any ordered ring `[Ring R] [LinearOrder R] [IsStrictOrderedRing R]`, a convex set `s : Set E`
+is closed under two-point convex combinations `a • x + b • y`. -/
+theorem ring_convex_combo_mem
+    {R E : Type*} [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
+    [AddCommGroup E] [Module R E] {s : Set E}
+    (hs : Convex R s) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
+    {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
+    a • x + b • y ∈ s :=
+  hs hx hy ha hb hab
 
 variable {ι 𝕜 E : Type*}
 variable [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]

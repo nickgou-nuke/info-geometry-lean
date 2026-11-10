@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -9,6 +14,26 @@ namespace InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 
 open ExteriorAlgebra
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exteriorHomogeneousDegree_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Entrywise predicate on `n × n` matrices over any non-commutative ring `[Ring B]`
+whose entries lie in a submodule `S : Submodule R B`. -/
+def RingMatrixInSubmodule {R B : Type*} [Semiring R] [Ring B] [Module R B] {n : ℕ}
+    (S : Submodule R B) (M : Matrix (Fin n) (Fin n) B) : Prop :=
+  ∀ i j, M i j ∈ S
+
+theorem ringMatrixInSubmodule_add {R B : Type*} [Semiring R] [Ring B] [Module R B] {n : ℕ}
+    (S : Submodule R B) {M N : Matrix (Fin n) (Fin n) B}
+    (hM : RingMatrixInSubmodule S M) (hN : RingMatrixInSubmodule S N) :
+    RingMatrixInSubmodule S (M + N) := by
+  intro i j
+  exact S.add_mem (hM i j) (hN i j)
+
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Definition**: Homogeneous Exterior Algebra Degree Predicate IsHomogeneousExteriorDegree k x for x ∈ ⋀^k V. -/
@@ -18,7 +43,7 @@ def IsHomogeneousExteriorDegree (k : ℕ) (x : ExteriorAlgebra R V) : Prop :=
 /-- The length-one exterior products span exactly the range of the canonical
 generator map. -/
 theorem homogeneous_one_iff_exists_generator (x : ExteriorAlgebra R V) :
-    IsHomogeneousExteriorDegree (R := R) (V := V) 1 x ↔
+    IsHomogeneousExteriorDegree 1 x ↔
       ∃ v : V, ι R v = x := by
   have hgen : Set.range (fun v : Fin 1 → V =>
       List.prod (List.ofFn (fun i => ι R (v i)))) =

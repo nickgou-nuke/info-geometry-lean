@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -18,11 +23,63 @@ namespace InfoGeometry.Categorical.MobiusCircleAlgebra
 
 open scoped ComplexConjugate
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem mobiusCircleAlgebra_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+/-! ### Operator-valued coefficient transport
+
+Over a noncommutative ring the transformed `|z|²` coefficient is the ordered
+sandwich `ā·A·a + ā·B·c + c̄·B̄·a + c̄·C·c` (row `(ā, c̄)`, coefficient matrix
+`[[A, B], [B̄, C]]`, column `(a, c)`).  The order of the factors is retained;
+no commutativity is used.  The determinant factorization below is a genuinely
+commutative statement and is kept over `CommRing`. -/
+
+variable {B : Type*} [Ring B]
+
+/-- Ordered Hermitian sandwich `(ā, c̄) · [[A, B], [B̄, C]] · (a, c)ᵀ` in `[Ring B]`. -/
+def ringImageA (A C Bc Bbar a abar c cbar : B) : B :=
+  abar * A * a + abar * Bc * c + cbar * Bbar * a + cbar * C * c
+
+/-- The ordered sandwich is additive in the operator-valued coefficient matrix. -/
+theorem ringImageA_add_coeff (A C Bc Bbar A' C' Bc' Bbar' a abar c cbar : B) :
+    ringImageA (A + A') (C + C') (Bc + Bc') (Bbar + Bbar') a abar c cbar =
+      ringImageA A C Bc Bbar a abar c cbar + ringImageA A' C' Bc' Bbar' a abar c cbar := by
+  unfold ringImageA
+  noncomm_ring
+
+/-- The identity column `(1, 0)` reads back the `|z|²` coefficient exactly. -/
+theorem ringImageA_identity (A C Bc Bbar : B) :
+    ringImageA A C Bc Bbar 1 1 0 0 = A := by
+  simp [ringImageA]
+
+/-- The ordered sandwich factors through the row/column action: it is
+`(ā·A + c̄·B̄)·a + (ā·B + c̄·C)·c`, with no reordering of operators. -/
+theorem ringImageA_eq_row_column (A C Bc Bbar a abar c cbar : B) :
+    ringImageA A C Bc Bbar a abar c cbar =
+      (abar * A + cbar * Bbar) * a + (abar * Bc + cbar * C) * c := by
+  unfold ringImageA
+  noncomm_ring
+
+end NoncommRing
+
 variable {R : Type*} [CommRing R]
 
 /-- The transformed `|z|^2` coefficient. -/
 def imageA (A C B Bbar a abar c cbar : R) : R :=
   A * a * abar + B * abar * c + Bbar * a * cbar + C * c * cbar
+
+/-- Over a commutative ring the ordered operator sandwich `ringImageA`
+specializes to the scalar coefficient `imageA`. -/
+theorem ringImageA_eq_imageA (A C B Bbar a abar c cbar : R) :
+    ringImageA A C B Bbar a abar c cbar = imageA A C B Bbar a abar c cbar := by
+  unfold ringImageA imageA
+  ring
 
 /-- The transformed constant coefficient. -/
 def imageC (A C B Bbar b bbar d dbar : R) : R :=
@@ -90,6 +147,12 @@ structure GeneralizedCircle where
   h_disc : A * C < Complex.normSq B
 
 namespace GeneralizedCircle
+
+/-- The unit circle `z * conj z - 1 = 0` is a genuine generalized circle
+(`A = 1`, `B = 0`, `C = -1`, discriminant `-1 < 0`). -/
+def unitCircle : GeneralizedCircle := ⟨1, 0, -1, by norm_num⟩
+
+instance : Inhabited GeneralizedCircle := ⟨unitCircle⟩
 
 /-- The transformed `|z'|^2` coefficient, specialized to complex conjugates. -/
 def image_A (g : GeneralizedCircle) (a c : ℂ) : ℝ :=

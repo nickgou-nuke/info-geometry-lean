@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
@@ -38,7 +43,7 @@ theorem tripotent_factor {R : Type*} [Ring R] (a : R) :
     a ^ 3 - a = a * (a - 1) * (a + 1) := by
   noncomm_ring
 
-theorem tripotent_roots_in_field {K : Type*} [Field K] (a : K) (ha : a ^ 3 = a) :
+theorem tripotent_roots_in_field {K : Type*} [Ring K] [NoZeroDivisors K] (a : K) (ha : a ^ 3 = a) :
     a = 0 ∨ a = 1 ∨ a = -1 := by
   have h0 : a * (a - 1) * (a + 1) = 0 := by rw [← tripotent_factor, ha, sub_self]
   rcases mul_eq_zero.mp h0 with hmul | hadd

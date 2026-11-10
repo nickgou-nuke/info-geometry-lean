@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -26,6 +31,13 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.HoradamIonBinetSlice
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 
 variable {R : Type*} [CommRing R]
@@ -33,19 +45,39 @@ variable {R : Type*} [CommRing R]
 /-- Conditional Binet numerator/core `A α^n - B β^n`. -/
 def binetCore {R : Type*} [Ring R] (A B α β : R) (n : ℕ) : R := A * α ^ n - B * β ^ n
 
-/-- A root of `x^2 - p x - q = 0` propagates the Horadam recurrence. -/
+/-- A root of `x^2 - p x - q = 0` propagates the Horadam recurrence in any `[Ring R]`. -/
 theorem pow_succ_succ_of_characteristic
+    {R : Type*} [Ring R]
     (x p q : R)
     (h : x ^ 2 = p * x + q)
     (n : ℕ) :
     x ^ (n + 2) = p * x ^ (n + 1) + q * x ^ n := by
   calc
-    x ^ (n + 2) = x ^ n * x ^ 2 := by
-      rw [pow_add]
-    _ = x ^ n * (p * x + q) := by rw [h]
+    x ^ (n + 2) = x ^ 2 * x ^ n := by
+      rw [show n + 2 = 2 + n by omega, pow_add]
+    _ = (p * x + q) * x ^ n := by rw [h]
     _ = p * x ^ (n + 1) + q * x ^ n := by
-      rw [show x ^ (n + 1) = x ^ n * x by rw [pow_add]; ring]
-      ring
+      rw [show n + 1 = 1 + n by omega, pow_add, pow_one]
+      noncomm_ring
+
+/-- Right-coefficient Binet core `α^n * A - β^n * B` in any non-commutative `[Ring R]`. -/
+def rightBinetCore {R : Type*} [Ring R] (A B α β : R) (n : ℕ) : R :=
+  α ^ n * A - β ^ n * B
+
+/-- In any non-commutative `[Ring R]`, the right-coefficient Binet core `α^n * A - β^n * B`
+satisfies the left-multiplied Horadam recurrence whenever `α` and `β` satisfy `x^2 = p * x + q`. -/
+theorem rightBinetCore_recurrence
+    {R : Type*} [Ring R]
+    (A B α β p q : R)
+    (hα : α ^ 2 = p * α + q)
+    (hβ : β ^ 2 = p * β + q)
+    (n : ℕ) :
+    rightBinetCore A B α β (n + 2) =
+      p * rightBinetCore A B α β (n + 1) + q * rightBinetCore A B α β n := by
+  unfold rightBinetCore
+  rw [pow_succ_succ_of_characteristic α p q hα n]
+  rw [pow_succ_succ_of_characteristic β p q hβ n]
+  noncomm_ring
 
 /-- The Binet core satisfies the Horadam recurrence under the characteristic-root hypotheses. -/
 theorem binetCore_recurrence

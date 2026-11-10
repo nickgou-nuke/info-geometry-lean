@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
@@ -12,6 +17,13 @@ open InfoGeometry.Clifford.SplitOctonionsDualProduct
 open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem splitQuaternions_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
@@ -59,13 +71,26 @@ instance {R : Type*} [Ring R] : Mul (SplitQuaternion R) := ⟨SplitQuaternion.mu
 -/
 def SplitQuaternion.normSq {R : Type*} [Ring R] (q : SplitQuaternion R) : R :=
   q.re * q.re + q.i * q.i - q.j * q.j - q.k * q.k
+
 @[ext]
 lemma SplitQuaternion.ext {R : Type*} [Ring R] (x y : SplitQuaternion R) 
     (h_re : x.re = y.re) (h_i : x.i = y.i) (h_j : x.j = y.j) (h_k : x.k = y.k) : x = y := by
-  cases x; cases y; simp_all
+  cases x; cases y
+  simp only [SplitQuaternion.mk.injEq]
+  exact ⟨h_re, h_i, h_j, h_k⟩
 
 instance {R : Type*} [Ring R] : Zero (SplitQuaternion R) :=
   ⟨{ re := 0, i := 0, j := 0, k := 0 }⟩
+
+instance {R : Type*} [Ring R] : Inhabited (SplitQuaternion R) := ⟨0⟩
+
+/-- Over any non-commutative ring `[Ring R]`, the scalar part `(X * X.conj).re`
+equals the Minkowski interval `SplitQuaternion.normSq X`. -/
+theorem re_mul_conj {R : Type*} [Ring R] (X : SplitQuaternion R) :
+    (X * X.conj).re = SplitQuaternion.normSq X := by
+  change (SplitQuaternion.mul X (SplitQuaternion.conj X)).re = SplitQuaternion.normSq X
+  dsimp [SplitQuaternion.mul, SplitQuaternion.conj, SplitQuaternion.normSq]
+  noncomm_ring
 
 /-- Съхранение на интервала на Минковски при Twin Wave интерференция.
 Доказва, че Разделените Кватерниони образуват композиционна алгебра. -/

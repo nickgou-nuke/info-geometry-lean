@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.LieJordanComposition
 import Mathlib.Algebra.Module.Submodule.Range
 
@@ -20,6 +21,31 @@ namespace InfoGeometry.Core.LieJordanBoundaryOperators
 attribute [local instance 100] LieRing.ofAssociativeRing
 
 open JordanMultiplicationClosure
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem lieJordanBoundaryOperators_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {A : Type*} [Ring A]
+
+/-- In any noncommutative ring `[Ring A]`, the composition of commutator `ad a` and
+anticommutator `J_a` equals the commutator `ad (a * a)` on every element `x`. -/
+theorem ring_ad_mul_jordan_self_apply (a x : A) :
+    a * (a * x + x * a) - (a * x + x * a) * a = (a * a) * x - x * (a * a) := by
+  noncomm_ring
+
+/-- In any noncommutative ring `[Ring A]`, the composition of anticommutator `J_a` and
+commutator `ad a` equals the commutator `ad (a * a)` on every element `x`. -/
+theorem ring_jordan_mul_ad_self_apply (a x : A) :
+    a * (a * x - x * a) + (a * x - x * a) * a = (a * a) * x - x * (a * a) := by
+  noncomm_ring
+
+end NoncommRing
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 

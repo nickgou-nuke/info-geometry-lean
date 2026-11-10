@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 ==============================================================================
 HIVE CONSTITUTIONAL HEADER
 ==============================================================================
@@ -82,6 +87,9 @@ import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
 
 namespace InfoGeometry.Canonical.WheelerItFromBitSingleCommutatorForgottenArchetypesPoset
+
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
 
 variable {B : Type*} [Ring B]
 
@@ -416,23 +424,6 @@ lemma ZornOct.ext {X Y : ZornOct B}
   subst ha hb hu' hv'
   rfl
 
-@[simp] lemma zorn_mul_a (X Y : ZornOct B) : (X * Y).a = X.a * Y.a - dot3 X.u Y.v := rfl
-@[simp] lemma zorn_mul_b (X Y : ZornOct B) : (X * Y).b = X.b * Y.b - dot3 X.v Y.u := rfl
-@[simp] lemma zorn_mul_u (X Y : ZornOct B) (i : Fin 3) :
-    (X * Y).u i = X.a * Y.u i + X.u i * Y.b + cross3 X.v Y.v i := rfl
-@[simp] lemma zorn_mul_v (X Y : ZornOct B) (i : Fin 3) :
-    (X * Y).v i = X.v i * Y.a + X.b * Y.v i + cross3 X.u Y.u i := rfl
-@[simp] lemma zorn_sub_a (X Y : ZornOct B) : (X - Y).a = X.a - Y.a := rfl
-@[simp] lemma zorn_sub_b (X Y : ZornOct B) : (X - Y).b = X.b - Y.b := rfl
-@[simp] lemma zornUpper_a (u : Fin 3 → B) : (zornUpper u).a = 0 := rfl
-@[simp] lemma zornUpper_b (u : Fin 3 → B) : (zornUpper u).b = 0 := rfl
-@[simp] lemma zornUpper_u (u : Fin 3 → B) (i : Fin 3) : (zornUpper u).u i = u i := rfl
-@[simp] lemma zornUpper_v (u : Fin 3 → B) (i : Fin 3) : (zornUpper u).v i = 0 := rfl
-@[simp] lemma zornLower_a (v : Fin 3 → B) : (zornLower v).a = 0 := rfl
-@[simp] lemma zornLower_b (v : Fin 3 → B) : (zornLower v).b = 0 := rfl
-@[simp] lemma zornLower_u (v : Fin 3 → B) (i : Fin 3) : (zornLower v).u i = 0 := rfl
-@[simp] lemma zornLower_v (v : Fin 3 → B) (i : Fin 3) : (zornLower v).v i = v i := rfl
-
 @[simp] lemma cross3_zero (i : Fin 3) :
     cross3 (fun _ : Fin 3 => (0 : B)) (fun _ => 0) i = 0 := by
   rcases i with ⟨_ | _ | _ | n, hn⟩
@@ -442,7 +433,7 @@ lemma ZornOct.ext {X Y : ZornOct B}
   · omega
 
 @[simp] lemma dot3_zero_left (v : Fin 3 → B) :
-    dot3 (fun _ : Fin 3 → (0 : B)) v = 0 := by
+    dot3 (fun _ : Fin 3 => (0 : B)) v = 0 := by
   dsimp [dot3]; simp
 
 @[simp] lemma dot3_zero_right (u : Fin 3 → B) :
@@ -468,19 +459,37 @@ theorem zorn_triality_folding_and_associator_in_ring (u1 u2 u3 v1 v2 : Fin 3 →
       dot3 u1 (cross3 u2 u3) ∧
     (zornAssoc (zornUpper u1) (zornUpper u2) (zornUpper u3)).b =
       - dot3 (cross3 u1 u2) u3 := by
+  have mul_def (X Y : ZornOct B) : X * Y =
+      mkZornOct (X.a * Y.a - dot3 X.u Y.v) (X.b * Y.b - dot3 X.v Y.u)
+        (fun i => X.a * Y.u i + X.u i * Y.b + cross3 X.v Y.v i)
+        (fun i => X.v i * Y.a + X.b * Y.v i + cross3 X.u Y.u i) := rfl
+  have sub_def (X Y : ZornOct B) : X - Y =
+      mkZornOct (X.a - Y.a) (X.b - Y.b) (fun i => X.u i - Y.u i) (fun i => X.v i - Y.v i) := rfl
   have h_uu : ∀ x y : Fin 3 → B, zornUpper x * zornUpper y = zornLower (cross3 x y) := by
     intro x y
-    apply ZornOct.ext <;> simp [zornUpper_v, zornUpper_u, cross3_zero, dot3_zero_right]
+    apply ZornOct.ext <;>
+    · (try intro i)
+      simp only [mul_def]
+      dsimp [zornUpper, zornLower, mkZornOct, ZornOct.a, ZornOct.b, ZornOct.u, ZornOct.v]
+      simp [cross3_zero, dot3_zero_right]
   have h_vv : ∀ x y : Fin 3 → B, zornLower x * zornLower y = zornUpper (cross3 x y) := by
     intro x y
-    apply ZornOct.ext <;> simp [zornLower_u, zornLower_v, cross3_zero, dot3_zero_left]
+    apply ZornOct.ext <;>
+    · (try intro i)
+      simp only [mul_def]
+      dsimp [zornUpper, zornLower, mkZornOct, ZornOct.a, ZornOct.b, ZornOct.u, ZornOct.v]
+      simp [cross3_zero, dot3_zero_left]
   refine ⟨h_uu u1 u2, h_vv v1 v2, ?_, ?_⟩
   · dsimp [zornAssoc]
     rw [h_uu u1 u2, h_uu u2 u3]
-    simp [zornUpper_u, zornLower_v, dot3_zero_left]
+    simp only [mul_def, sub_def]
+    dsimp [zornUpper, zornLower, mkZornOct, ZornOct.a, ZornOct.b, ZornOct.u, ZornOct.v]
+    simp [dot3_zero_left]
   · dsimp [zornAssoc]
     rw [h_uu u1 u2, h_uu u2 u3]
-    simp [zornUpper_u, zornLower_v, dot3_zero_right]
+    simp only [mul_def, sub_def]
+    dsimp [zornUpper, zornLower, mkZornOct, ZornOct.a, ZornOct.b, ZornOct.u, ZornOct.v]
+    simp [dot3_zero_right]
 
 /-!
 ## Stage VI: Acyclic Causal Poset of the Wheeler–Single-Commutator–Zorn Synthesis

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -23,6 +28,36 @@ universe u v
 
 namespace InfoGeometry.Core
 namespace SymmetricLieSpaces
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem symmetricLieSpaces_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section AssociativeRingInvolution
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+
+variable {A : Type*} [Ring A] (θ : A →+* A)
+
+/-- Core alias for `[𝔨, 𝔨] ⊆ 𝔨` on any noncommutative associative `[Ring A]`. -/
+theorem ring_bracket_k_k {x y : A} (hx : θ x = x) (hy : θ y = y) :
+    θ ⁅x, y⁆ = ⁅x, y⁆ :=
+  InfoGeometry.Core.Generic.ring_bracket_k_k θ hx hy
+
+/-- Core alias for `[𝔨, 𝔭] ⊆ 𝔭` on any noncommutative associative `[Ring A]`. -/
+theorem ring_bracket_k_p {x y : A} (hx : θ x = x) (hy : θ y = -y) :
+    θ ⁅x, y⁆ = -⁅x, y⁆ :=
+  InfoGeometry.Core.Generic.ring_bracket_k_p θ hx hy
+
+/-- Core alias for `[𝔭, 𝔭] ⊆ 𝔨` on any noncommutative associative `[Ring A]`. -/
+theorem ring_bracket_p_p {x y : A} (hx : θ x = -x) (hy : θ y = -y) :
+    θ ⁅x, y⁆ = ⁅x, y⁆ :=
+  InfoGeometry.Core.Generic.ring_bracket_p_p θ hx hy
+
+end AssociativeRingInvolution
 
 variable {R : Type u} {L : Type v}
 
@@ -191,9 +226,9 @@ variable [CommRing R]
 variable [LieRing L] [LieAlgebra R L]
 variable [Module.Free R L] [Module.Finite R L]
 
-/-- Core alias for Cartan Lie algebras. -/
-abbrev CartanLieAlgebra :=
-  InfoGeometry.Core.Generic.SymmetricLieAlgebra.CartanLieAlgebra R L
+/-- Core alias for Cartan Lie algebra nondegeneracy. -/
+abbrev IsCartanLieAlgebra : Prop :=
+  InfoGeometry.Core.Generic.SymmetricLieAlgebra.IsCartanLieAlgebra R L
 
 namespace SymmetricLieAlgebra
 
@@ -247,8 +282,8 @@ variable [Module.Free R L] [Module.Finite R L]
 namespace SymmetricLieAlgebra
 
 /-- Core alias for Cartan signature assumptions. -/
-abbrev CartanSignature (S : SymmetricLieAlgebra R L) :=
-  InfoGeometry.Core.Generic.SymmetricLieAlgebra.CartanSignature S
+abbrev HasCartanSignature (S : SymmetricLieAlgebra R L) : Prop :=
+  InfoGeometry.Core.Generic.SymmetricLieAlgebra.HasCartanSignature S
 
 end SymmetricLieAlgebra
 

@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -18,7 +24,39 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.PrimeBosonFermionGas
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open scoped BigOperators
+
+section DivisionRingFactors
+
+variable {D : Type*} [DivisionRing D]
+
+/-- Local boson × signed-fermion Euler factor cancellation in any `[DivisionRing D]`. -/
+theorem divisionRing_boson_mul_signedFermion_factor
+    {x : D} (hx : 1 - x ≠ 0) :
+    (1 - x)⁻¹ * (1 - x) = 1 :=
+  inv_mul_cancel₀ hx
+
+/-- Local signed-fermion × boson Euler factor cancellation in any `[DivisionRing D]`. -/
+theorem divisionRing_signedFermion_mul_boson_factor
+    {x : D} (hx : 1 - x ≠ 0) :
+    (1 - x) * (1 - x)⁻¹ = 1 :=
+  mul_inv_cancel₀ hx
+
+/-- Local boson × square-signed-fermion = positive-fermion identity in any `[DivisionRing D]`. -/
+theorem divisionRing_boson_mul_square_signedFermion_factor
+    {x : D} (hx : 1 - x ≠ 0) :
+    (1 - x)⁻¹ * (1 - x * x) = 1 + x := by
+  have hsq : 1 - x * x = (1 - x) * (1 + x) := by noncomm_ring
+  rw [hsq, ← mul_assoc, inv_mul_cancel₀ hx, one_mul]
+
+end DivisionRingFactors
 
 variable {ι R : Type*}
 

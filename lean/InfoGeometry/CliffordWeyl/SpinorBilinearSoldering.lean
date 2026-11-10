@@ -1,10 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.KreinDiracKasparovSpinorBilinear
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.Basic.Complex.Basic
 
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem spinorBilinearSoldering_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section AdjointIdeals
 
@@ -49,6 +62,15 @@ def solder (metric : Matrix Index Index Scalar) (left right : Index → Scalar) 
 def bilinear (metric operator : Matrix Index Index Scalar) (left right : Index → Scalar) : Scalar :=
   diracRow metric left ⬝ᵥ (operator *ᵥ right)
 
+variable {Channel : Type*}
+
+theorem solder_basis_reconstruction [Fintype Channel]
+    (basis : Module.Basis Channel Scalar (Matrix Index Index Scalar))
+    (metric : Matrix Index Index Scalar) (left right : Index → Scalar) :
+    ∑ channel, basis.repr (solder metric left right) channel • basis channel =
+      solder metric left right :=
+  basis.sum_repr _
+
 variable {Scalar : Type*} [CommRing Scalar] [StarRing Scalar]
 
 theorem solder_trace_readout
@@ -68,15 +90,6 @@ theorem solder_quadratic (metric : Matrix Index Index Scalar) (spinor : Index �
     solder metric spinor spinor * solder metric spinor spinor =
       (diracRow metric spinor ⬝ᵥ spinor) • solder metric spinor spinor :=
   solder_fierz_product metric spinor spinor spinor spinor
-
-variable {Channel : Type*}
-
-theorem solder_basis_reconstruction [Fintype Channel]
-    (basis : Module.Basis Channel Scalar (Matrix Index Index Scalar))
-    (metric : Matrix Index Index Scalar) (left right : Index → Scalar) :
-    ∑ channel, basis.repr (solder metric left right) channel • basis channel =
-      solder metric left right :=
-  basis.sum_repr _
 
 theorem fierz_coefficient_relation
     (basis : Module.Basis Channel Scalar (Matrix Index Index Scalar))

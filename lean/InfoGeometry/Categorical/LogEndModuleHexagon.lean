@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.LogEndModuleCategory
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -24,7 +29,7 @@ open InfoGeometry.Categorical.LogEndModuleCategory.LogEndModule
 
 universe u v
 
-variable {𝕜 : Type u} [CommSemiring 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- First braided hexagon.  Both sides map `(X ⊗ Y) ⊗ Z` to
 `Y ⊗ (Z ⊗ X)`. -/

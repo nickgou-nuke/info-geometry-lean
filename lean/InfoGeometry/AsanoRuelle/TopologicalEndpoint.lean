@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Complex
@@ -13,6 +18,33 @@ No wrappers. No fake closures.
 -/
 
 namespace InfoGeometry.AsanoRuelle
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem topologicalEndpoint_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any noncommutative ring `[Ring K]`, if `C + D * z1 = 0`, any root of
+`A + B * z1 + (C + D * z1) * z2 = 0` forces `A + B * z1 = 0`. -/
+theorem ring_numerator_eq_zero_at_left_pole
+    {K : Type*} [Ring K] {A B C D z1 z2 : K}
+    (hPole : C + D * z1 = 0)
+    (hRoot : A + B * z1 + (C + D * z1) * z2 = 0) :
+    A + B * z1 = 0 := by
+  rw [hPole, zero_mul, add_zero] at hRoot
+  exact hRoot
+
+/-- In any noncommutative ring `[Ring K]`, if `A + B * z1 ≠ 0` and `C + D * z1 = 0`,
+no root `A + B * z1 + (C + D * z1) * z2 = 0` can exist. -/
+theorem ring_no_root_at_left_pole
+    {K : Type*} [Ring K] {A B C D z1 z2 : K}
+    (hNumNe : A + B * z1 ≠ 0)
+    (hPole : C + D * z1 = 0)
+    (hRoot : A + B * z1 + (C + D * z1) * z2 = 0) :
+    False :=
+  hNumNe (ring_numerator_eq_zero_at_left_pole hPole hRoot)
 
 /--
 Exact open mathematical target for the nondegenerate topological endpoint.

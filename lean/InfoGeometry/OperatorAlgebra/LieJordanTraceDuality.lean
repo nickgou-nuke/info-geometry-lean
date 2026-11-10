@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.OperatorAlgebra.LieJordanDuality
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Bilinear trace duality and the distinct star-trace adjoints
@@ -14,11 +15,75 @@ stated separately. No BKM metric, statistical manifold or Levi-Civita
 connection is asserted by these finite operator identities.
 -/
 
+set_option linter.unusedSectionVars false
+
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.LieJordanTraceDuality
 
 open Matrix LieJordanDuality
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingTraceDuality
+
+variable {B M : Type*} [Ring B] [AddCommGroup M]
+
+/-- Cyclic movement of the leading factor in any non-commutative ring `[Ring B]`
+equipped with a cyclic additive trace `τ : B →+ M`. -/
+theorem trace_cycle3_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (A C D : B) :
+    τ (A * C * D) = τ (C * (D * A)) := by
+  calc
+    τ (A * C * D) = τ (A * (C * D)) := by rw [mul_assoc]
+    _ = τ ((C * D) * A) := h_cyc A (C * D)
+    _ = τ (C * (D * A)) := by rw [mul_assoc]
+
+/-- Skew-transposition of the inner commutator derivation `X ↦ H * X - X * H`
+for any cyclic additive trace `τ : B →+ M` on a non-commutative ring `[Ring B]`. -/
+theorem trace_ad_skew_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (H X Y : B) :
+    τ ((H * X - X * H) * Y) + τ (X * (H * Y - Y * H)) = 0 := by
+  rw [sub_mul, mul_sub, map_sub, map_sub,
+    trace_cycle3_ring τ h_cyc H X Y, mul_assoc X H Y]
+  abel
+
+/-- Symmetry of the Jordan anticommutator `X ↦ S * X + X * S` for any cyclic
+additive trace `τ : B →+ M` on a non-commutative ring `[Ring B]`. -/
+theorem trace_jordan_symmetric_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (S X Y : B) :
+    τ ((S * X + X * S) * Y) = τ (X * (S * Y + Y * S)) := by
+  rw [add_mul, mul_add, map_add, map_add,
+    trace_cycle3_ring τ h_cyc S X Y, mul_assoc X S Y]
+  abel
+
+/-- Exact Lie–Jordan trace duality for the dual superoperators over any
+non-commutative ring `[Ring B]` equipped with a cyclic additive trace `τ : B →+ M`. -/
+theorem trace_dual_balance_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (H S X Y : B) :
+    τ (((H * X - X * H) + (S * X + X * S)) * Y) +
+      τ (X * ((H * Y - Y * H) - (S * Y + Y * S))) = 0 := by
+  rw [add_mul, mul_sub, map_add, map_sub,
+    ← trace_jordan_symmetric_ring τ h_cyc S X Y]
+  calc
+    (τ ((H * X - X * H) * Y) + τ ((S * X + X * S) * Y)) +
+        (τ (X * (H * Y - Y * H)) - τ ((S * X + X * S) * Y))
+      = τ ((H * X - X * H) * Y) + τ (X * (H * Y - Y * H)) := by abel
+    _ = 0 := trace_ad_skew_ring τ h_cyc H X Y
+
+/-- Exact commutator obstruction to symmetry of a left-weighted cyclic trace form
+over any non-commutative ring `[Ring B]`. -/
+theorem weighted_symmetry_defect_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (W X Y : B) :
+    τ (W * X * Y) - τ (W * Y * X) =
+      τ ((W * X - X * W) * Y) := by
+  rw [sub_mul, map_sub, trace_cycle3_ring τ h_cyc X W Y, mul_assoc W Y X]
+
+end NonCommRingTraceDuality
 
 variable {R n : Type*} [CommRing R] [Fintype n] [DecidableEq n]
 

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.LieJordanGenerators
 
 /-!
@@ -21,6 +22,34 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 
 open LieJordanBoundaryOperators LieJordanGenerators
 open PeirceDecomposition PeirceCoupledCorners PeirceQuadraticFrame
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem lieJordanSingleSquare_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {A : Type*} [Ring A]
+
+/-- In any noncommutative ring `[Ring A]`, anticommutation `a * x + x * a = 0` determines the
+double commutator `⁅a, ⁅a, x⁆⁆ = 4 • ((a * a) * x)` without any scalar `CommRing`. -/
+theorem ring_double_commutator_of_anticommute (a x : A) (h : a * x + x * a = 0) :
+    ⁅a, ⁅a, x⁆⁆ = 4 • ((a * a) * x) := by
+  have hxa : x * a = -(a * x) := by
+    apply eq_neg_of_add_eq_zero_left
+    simpa only [add_comm] using h
+  have hc : ⁅a, x⁆ = 2 • (a * x) := by
+    change a * x - x * a = 2 • (a * x)
+    rw [hxa, sub_neg_eq_add, two_nsmul]
+  rw [hc, lie_nsmul, Ring.lie_def]
+  rw [mul_assoc a x a, hxa, mul_neg, ← mul_assoc a a x]
+  simp only [nsmul_eq_mul, Nat.cast_ofNat]
+  noncomm_ring
+
+end NoncommRing
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 

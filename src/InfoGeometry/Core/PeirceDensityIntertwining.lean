@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceWeylUnits
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
@@ -19,6 +20,13 @@ namespace InfoGeometry.Core.PeirceDensityIntertwining
 
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceDensityIntertwining_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section Noncomm
 
@@ -68,6 +76,20 @@ theorem density_harmonic_annihilation
       h.harmonicSupport_mul_coexactSupport hd, h.harmonicSupport_mul_exactSupport hd,
       smul_zero, add_zero]
 
+omit [StarRing A] [SMulCommClass R A A] in
+/-- Pass an algebraic cross-intertwining law through an actually tracial map over any `[Ring R]`. -/
+theorem weighted_trace_of_intertwining
+    (τ : A →ₗ[R] R) (hτ : ∀ x y : A, τ (x * y) = τ (y * x))
+    {ρ x : A} {u v : R} (h : u • (ρ * x) = v • (x * ρ)) (y : A) :
+    u * weightedTrace τ ρ (x * y) = v * weightedTrace τ ρ (y * x) := by
+  have ht := congrArg τ (congrArg (fun z : A => z * y) h)
+  simp only [smul_mul_assoc, map_smul, smul_eq_mul] at ht
+  unfold weightedTrace
+  calc
+    u * τ (ρ * (x * y)) = u * τ ((ρ * x) * y) := by rw [mul_assoc]
+    _ = v * τ ((x * ρ) * y) := ht
+    _ = v * τ (ρ * (y * x)) := by rw [mul_assoc, hτ x (ρ * y), mul_assoc]
+
 end Noncomm
 
 variable {R A : Type*} [CommRing R] [Ring A] [StarRing A] [Algebra R A]
@@ -90,20 +112,6 @@ theorem squared_density_intertwining
     (v * v) • (density d b (u * u) (v * v) * b) =
       (u * u) • (b * density d b (u * u) (v * v)) :=
   density_intertwining h hd (u * u) (v * v)
-
-omit [StarRing A] in
-/-- Pass an algebraic cross-intertwining law through an actually tracial map. -/
-theorem weighted_trace_of_intertwining
-    (τ : A →ₗ[R] R) (hτ : ∀ x y : A, τ (x * y) = τ (y * x))
-    {ρ x : A} {u v : R} (h : u • (ρ * x) = v • (x * ρ)) (y : A) :
-    u * weightedTrace τ ρ (x * y) = v * weightedTrace τ ρ (y * x) := by
-  have ht := congrArg τ (congrArg (fun z : A => z * y) h)
-  simp only [smul_mul_assoc, map_smul, smul_eq_mul] at ht
-  unfold weightedTrace
-  calc
-    u * τ (ρ * (x * y)) = u * τ ((ρ * x) * y) := by rw [mul_assoc]
-    _ = v * τ ((x * ρ) * y) := ht
-    _ = v * τ (ρ * (y * x)) := by rw [mul_assoc, hτ x (ρ * y), mul_assoc]
 
 /-- Both directed weighted-trace boundary laws in the same convention. -/
 theorem density_trace_boundary

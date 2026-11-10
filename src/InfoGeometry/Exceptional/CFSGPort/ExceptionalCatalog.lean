@@ -17,6 +17,20 @@ public noncomputable section
 
 namespace InfoGeometry.Exceptional.CFSGPort.Chevalley
 
+/-- Matrix unit `E₀₁` in the `4 × 4` carrier used by the Suzuki model below. -/
+def catalogE01 {K : Type} [Ring K] : Matrix (Fin 4) (Fin 4) K := Matrix.single 0 1 1
+
+/-- Matrix unit `E₁₀` in the `4 × 4` carrier used by the Suzuki model below. -/
+def catalogE10 {K : Type} [Ring K] : Matrix (Fin 4) (Fin 4) K := Matrix.single 1 0 1
+
+/-- Non-commutativity witness for the `4 × 4` carrier over any nontrivial ring:
+`E₀₁ E₁₀ = E₀₀` while `E₁₀ E₀₁ = E₁₁`. -/
+theorem catalog_matrix_noncomm {K : Type} [Ring K] [Nontrivial K] :
+    (catalogE01 : Matrix (Fin 4) (Fin 4) K) * catalogE10 ≠ catalogE10 * catalogE01 := by
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  simp [catalogE01, catalogE10, Matrix.mul_apply, Fin.sum_univ_four, Matrix.single_apply] at h00
+
 /-- Exceptional Ree/Tits group families present in the CFSG catalog. -/
 inductive ExceptionalReeTag
   | twistedG2 | twistedF4 | tits
@@ -289,7 +303,7 @@ theorem suzukiD_one : suzukiD a (1 : Kˣ) = 1 := by
   ext i
   fin_cases i <;> simp
 
-@[expose] def suzukiW (K : Type) [Field K] : Matrix (Fin 4) (Fin 4) K :=
+@[expose] def suzukiW (K : Type) [DivisionRing K] : Matrix (Fin 4) (Fin 4) K :=
   Matrix.of fun i j => if i.val + j.val = 3 then 1 else 0
 
 private def suzukiSUnit (a : ℕ) (K : Type) [Field K] :
@@ -302,7 +316,7 @@ private def suzukiSUnit (a : ℕ) (K : Type) [Field K] :
     rw [Matrix.det_of_isLowerTriangular _ htri]
     simp [suzukiS, Fin.prod_univ_four])
 
-private def suzukiWUnit (K : Type) [Field K] :
+private def suzukiWUnit (K : Type) [DivisionRing K] :
     Matrix.GeneralLinearGroup (Fin 4) K :=
   { val := suzukiW K
     inv := suzukiW K

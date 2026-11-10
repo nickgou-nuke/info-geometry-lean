@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55ExteriorSpinorCoordinateReadout
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NeutralFockFaithfulness
@@ -19,6 +24,20 @@ namespace InfoGeometry.Clifford.Cl55FockMatrixIntertwiner
 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
 open InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
 open InfoGeometry.Clifford.Cl55NeutralFockFaithfulness
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative rings `[Ring B] [Ring C]`, a ring isomorphism `e : B ≃+* C`
+intertwines left multiplication: `e (a * x) = e a * e (e.symm (e x))`. -/
+theorem ringEquiv_intertwines_leftMul
+    {B C : Type*} [Ring B] [Ring C] (e : B ≃+* C) (a : B) (y : C) :
+    e (a * e.symm y) = e a * y := by
+  rw [map_mul, e.apply_symm_apply]
 
 abbrev A := CliffordAlgebra (canonicalNeutralFormUnscaled (E := V5))
 abbrev S := Spinor

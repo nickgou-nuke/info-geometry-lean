@@ -91,6 +91,35 @@ universe u v
 variable {B : Type u} [Ring B]
 variable {M : Type v} [AddCommGroup M]
 
+/-- The fixed points of the De Haro compression `Z ↦ P Z P` are exactly the
+elements of the native non-unital Peirce corner `P B P`. -/
+theorem modelFiber_fixed_iff_mem_peirceCorner (P Z : B) (hP : P * P = P) :
+    ModelFiber P Z = Z ↔
+      Z ∈ InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset.peirceCorner P := by
+  change P * Z * P = Z ↔ P * Z = Z ∧ Z * P = Z
+  constructor
+  · intro h
+    constructor
+    · calc
+        P * Z = P * (P * Z * P) := by
+          rw [h]
+        _ = P * Z * P := by
+          calc
+            P * (P * Z * P) = (P * P) * Z * P := by noncomm_ring
+            _ = P * Z * P := by rw [hP]
+        _ = Z := h
+    · calc
+        Z * P = (P * Z * P) * P := by rw [h]
+        _ = P * Z * P := by
+          calc
+            (P * Z * P) * P = P * Z * (P * P) := by noncomm_ring
+            _ = P * Z * P := by rw [hP]
+        _ = Z := h
+  · rintro ⟨hleft, hright⟩
+    calc
+      P * Z * P = Z * P := by rw [hleft]
+      _ = Z := hright
+
 /-- Total 3-horizon odd differential `d_tot3 = d_out3 + d_in3 = d_sum3`. -/
 def d_tot3 (P1 P2 X Y Z : B) : B :=
   d_sum3 P1 P2 X Y Z
@@ -169,8 +198,9 @@ monodromy and monopole/dyon corner orthogonality, the finite Peirce-corner dilat
 4. Corner conjugation: `U * (P₀ W P₀) * U⁻¹ = P₀ W P₀`,
    `U * (P₁ X P₀) * U⁻¹ = P₁ r P₁ X P₀`, `U * (P₁ Z P₂) * U⁻¹ = P₁ r P₁ Z P₂ r P₂`, and
    `U * U⁻¹ = 1` when `P₁ r P₁ r⁻¹ P₁ = P₁` and `P₂ r⁻¹ P₂ r P₂ = P₂`,
-5. Cyclic-trace equality across dual holonomies `tr.tr Q₁₀ = tr.tr Q₀₁` and Para-Kähler metric
-   trace collapse `tr.tr (V_PK3 P1 P2 X Y) = tr.tr (V1_weyl3 P1 P2 X Y)`. -/
+5. Cyclic-trace equality across dual holonomies `tr.tr Q₁₀ = tr.tr Q₀₁`, Para-Kähler metric
+   trace collapse, and identification of both model-fiber fixed points with their native
+   non-unital Peirce corners. -/
 theorem de_haro_seiberg_witten_finite_peirce_dilation_synthesis
     (tr : CyclicTrace B M)
     (P1 P2 r rinv W X Y Z : B)
@@ -198,19 +228,29 @@ theorem de_haro_seiberg_witten_finite_peirce_dilation_synthesis
     U * (P1 * Z * P2) * Uinv = P1 * r * P1 * Z * P2 * r * P2 ∧
     (P1 * r * P1 * rinv * P1 = P1 → P2 * rinv * P2 * r * P2 = P2 → U * Uinv = 1) ∧
     tr.tr Q10 = tr.tr Q01 ∧
-    tr.tr (V_PK3 P1 P2 X Y) = tr.tr (V1_weyl3 P1 P2 X Y) := by
+    tr.tr (V_PK3 P1 P2 X Y) = tr.tr (V1_weyl3 P1 P2 X Y) ∧
+    Q10 ∈ InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset.peirceCorner P1 ∧
+    Q01 ∈ InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset.peirceCorner P0 := by
   have h_qd := quasi_duality_nilpotency_and_transitive_monodromy P1 P2 X Y h1 h2 h12 h21
   have h_md := monopole_dyon_orthogonality P1 P2 X Y h1 h2 h12 h21
   have h_ct := threeHorizonCornerScaling_transition_action P1 P2 r rinv W X Z h1 h2 h12 h21
   have h_eq := exact_duality_and_theoretical_equivalence tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
   have h_tr := cyclic_trace_vanishes_on_peirce_shells tr P1 P2 X Y h1 h2 h12 h21
+  have h_corner10 :=
+    (modelFiber_fixed_iff_mem_peirceCorner P1
+      (ExactDualityHolonomy P1 (waistProjector P1 P2) X Y) h1).mp h_eq.1
+  have h_corner01 :=
+    (modelFiber_fixed_iff_mem_peirceCorner (waistProjector P1 P2)
+      (ExactDualityHolonomy (waistProjector P1 P2) P1 Y X)
+      (waistProjector_orthogonal_idempotent P1 P2 h1 h2 h12 h21).2.2.2.2).mp h_eq.2.1
   exact ⟨rfl,
          h_qd.1, h_qd.2.1, h_qd.2.2.1,
          h_md.2.2.1, h_md.2.2.2.1, h_md.2.2.2.2,
          h_ct.1, h_ct.2.1, h_ct.2.2,
          fun hr1 hr2 => threeHorizonCornerScaling_mul_right_inverse P1 P2 r rinv h1 h2 h12 h21 hr1 hr2,
          h_eq.2.2,
-         h_tr.2.2.2.2.2.2.2.2⟩
+         h_tr.2.2.2.2.2.2.2.2,
+         h_corner10, h_corner01⟩
 
 /-- **Global Peirce-Spine, Hodge Triality, De Haro Model-Bundle, Yoshizawa Gradient-Flow,
 and Operator Möbius / Steinberg / Cyclotomic Synthesis**
@@ -374,9 +414,9 @@ theorem arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis
        2 • souriauSinkFlow P A_op A_star (sinkSymplecticJ P A_op A_star) = 0) ∧
     (P1 * multiHeadBundleSection P1 P3 M1 M2 M3 * P1 = P1 * M1 * P1 ∧
      (1 - P) * (attnLayerOp P X3 Z3 * pureSinkHead P X2 * attnLayerOp P X1 Z1) * (1 - P) = 0) := by
-  have hS2 :=
+  rcases
     InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.euclidean_tdo_structural_sink_bias_decomposition
-      P A_op A_star hP hRow hRowStar
+      P A_op A_star hP hRow hRowStar with ⟨_, hS2_21, _⟩
   have hS3 :=
     InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.intrinsic_tdo_stationarity_and_centered_invariance
       P D_tdo hP hD_right hD_left
@@ -389,8 +429,7 @@ theorem arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis
   have hVal :=
     InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.conformal_difference_and_multilayer_compression_valley
       τ P L_mu L_mu_inv L_pi A_op A_star X_star Y X1 Z1 X2 Z2 X3 Z3 hP hL_inv
-  dsimp only []
-  exact ⟨hS2.2.1,
+  exact ⟨hS2_21,
     ⟨hS3.2.2.2.1, hS3.2.2.2.2.2.2.1⟩,
     ⟨hTril.1.2.1, hTril.1.2.2.1⟩,
     ⟨hTril.2.2.1.1, hTril.2.2.1.2.2.2⟩,
@@ -449,8 +488,8 @@ theorem epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis
          threeHorizonCornerScaling P1 P2 r1inv r1) := by
   have hHod :=
     three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint tr P1 P2 X Y A Z h1 h2 h12 h21
-  have hFive :=
-    five_grade_peirce_resolution_and_weyl_eigenvalues P1 P2 Z h1 h2 h12 h21
+  rcases
+    five_grade_peirce_resolution_and_weyl_eigenvalues P1 P2 Z h1 h2 h12 h21 with ⟨hFive1, _⟩
   have hCech :=
     cech_three_chart_cocycle_and_maurer_cartan_gauge_transport U1 U1_inv U2 U2_inv U3_inv F hU1 hU2
   have hBreg :=
@@ -463,9 +502,8 @@ theorem epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis
     lie_exponential_nilpotent_group_law_and_eisenstein_discriminant P1 P2 X E4 E6 q h1 h2 h12 h21
   have hCross :=
     crossed_product_covariance_and_modular_group_law P1 P2 r1 r1inv r2 r2inv X Y h1 h2 h12 h21
-  dsimp only []
   exact ⟨⟨hHod.2.2.1, hHod.2.2.2.2.2.1⟩,
-    ⟨hFive.1, hCech.1⟩,
+    ⟨hFive1, hCech.1⟩,
     ⟨hBreg.1, hBreg.2.2.2.2⟩,
     ⟨hVir.2.2.2.2.2.2, hSug.1, hLie.2.1, hLie.2.2.2.1⟩,
     ⟨hCross.1, hCross.2.1, hCross.2.2.2⟩⟩
@@ -594,7 +632,6 @@ theorem master_inductive_colimit_virasoro_temperley_lieb_transport_synthesis
   have hTL :=
     temperley_lieb_yang_baxter_colimit_cone_transport bond toLimit hCone k e1 e2 tau u
       he1 he2 h121 h212 htau1 htau2 hu1 hu2 hutau
-  dsimp only []
   exact ⟨⟨hVir.1, hVir.2.2.2.1, hVir.2.2.2.2.2.2⟩,
          ⟨hUHF.2.1, hUHF.2.2.1⟩,
          ⟨hTL.2.2.2.2.1, hTL.2.2.2.2.2⟩⟩
@@ -631,7 +668,6 @@ theorem master_direct_limit_super_closure_and_clifford_head_tail_unification
     let P2_inf := ofLim k P2
     let Z1_inf := ofLim k Z1
     let X2_inf := ofLim k X2
-    let Z2_inf := ofLim k Z2
     let X3_inf := ofLim k X3
     let Z3_inf := ofLim k Z3
     let φ_tail := (InfoGeometry.Canonical.Cl11MatrixTowerTailShift.cl11MatrixLimit_tailRingEquiv d).toRingHom
@@ -639,7 +675,6 @@ theorem master_direct_limit_super_closure_and_clifford_head_tail_unification
     let U_tail  := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U)
     let W_tail  := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W)
     let U2_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U2)
-    let W2_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W2)
     let U3_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k U3)
     let W3_tail := φ_tail (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage k W3)
     (ofLim n (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond k n hkn
@@ -672,13 +707,16 @@ theorem master_direct_limit_super_closure_and_clifford_head_tail_unification
   have hAttn :=
     attention_routing_direct_limit_and_clifford_head_tail_realization
       bond k n d hkn P X Z1 X2 Z2 X3 Z3 hP Q U W U2 W2 U3 W3 hQ
-  dsimp only []
   exact ⟨⟨hDir.1, hDir.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.1, hDir.2.2.2.2.2.2.2.2⟩,
          ⟨hTail.1, hTail.2.2.2.1, hTail.2.2.2.2.2.2⟩,
          ⟨hUHF.1, hUHF.2.2.2.1⟩,
          ⟨hAttn.2.2.1, hAttn.2.2.2.2.2⟩⟩
 
 open scoped TensorProduct
+open InfoGeometry.CliffordTower
+open InfoGeometry.Canonical.SplitCliffordDirectLimit
+open InfoGeometry.Canonical.SplitCliffordTensorBridge
+open InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift
 open InfoGeometry.Canonical.SplitCliffordHeadTailTower
 
 /-- **Master Finite-Head Module × Infinite-Tail Operator Ring Colimit (`SplitCliffordHeadTailTower`)
@@ -690,12 +728,12 @@ and `arXiv:2609.26342` Hyperbolic Residual Aggregation (`hraHeadAggregate_add_ta
 plus Discounted Straight-Through Estimator (`dHsteWeightSum`). -/
 theorem master_split_clifford_head_tail_module_and_hra_unification
     (k n r s : ℕ) (m : ℤ)
-    (a : CliffordAlgebra (InfoGeometry.Clifford.ClNN.Qsplit k))
-    (x : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitClNNAlg n)
+    (a : CliffordAlgebra (Qsplit k))
+    (x : SplitClNNAlg n)
     (P X Y : SplitCliffordHeadTailStage k n)
     (hP : P * P = P)
-    (X_seq : ℕ → InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity)
-    (γ G : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity) :
+    (X_seq : ℕ → SplitCliffordInfinity)
+    (γ G : SplitCliffordInfinity) :
     let ofHT  := splitCliffordHeadTailOf k n
     let φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom
     let P_ht  := ofHT P
@@ -705,7 +743,7 @@ theorem master_split_clifford_head_tail_module_and_hra_unification
     let X_inf := φ_inf X_ht
     let Y_inf := φ_inf Y_ht
     splitCliffordHeadTailModuleEquiv k
-      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      (a ⊗ₜ[ℝ] splitCliffordTailOf 0 n x) =
       ofHT (a ᵍ⊗ₜ x) ∧
     (ofHT (VirasoroAnomaly24 m P X Y) = 0 ↔ VirasoroAnomaly24 m P X Y = 0) ∧
     φ_inf (virasoroChiralMode r P_ht X_ht Y_ht) =

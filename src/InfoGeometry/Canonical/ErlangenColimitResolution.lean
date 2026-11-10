@@ -15,23 +15,14 @@ and proves that the causal preorders stabilize functorially under the colimit li
 
 open InfoGeometry.Canonical.ErlangenInductiveClosure
 
-set_option linter.unusedVariables false
-
 namespace InfoGeometry.Canonical.ErlangenColimitResolution
 
-universe u v
+universe u
 
 /-- A causal preorder structure, where the preorder behaves compatibly
     with the ring addition (modeling the causal cones of the spacetime). -/
 class CausalPreorder (A : Type*) [Ring A] extends Preorder A where
   add_le_add_left : ∀ a b : A, a ≤ b → ∀ c : A, c + a ≤ c + b
-
-/-- Canonical discrete equality `CausalPreorder` inhabitant on any ring `A`. -/
-instance instInhabitedCausalPreorder {A : Type*} [Ring A] : Inhabited (CausalPreorder A) :=
-  ⟨{ le := (· = ·)
-     le_refl := fun _ => rfl
-     le_trans := fun _ _ _ hab hbc => hab.trans hbc
-     add_le_add_left := fun _ _ hab c => congrArg (c + ·) hab }⟩
 
 /-- A bonding intertwiner that additionally acts as a monotone map
     with respect to the causal preorder. -/
@@ -40,57 +31,45 @@ structure CausalBondingIntertwiner {A B : Type*} [Ring A] [Ring B]
     (invA : SupergradedClosureAt A) (invB : SupergradedClosureAt B) extends BondingIntertwiner invA invB where
   monotone_embed : Monotone map
 
-/-- Canonical trivial supergraded closure packet on any ring `A`. -/
-def trivialSupergradedClosure (A : Type*) [Ring A] : SupergradedClosureAt A where
-  is_odd := fun x => x = 0
-  is_even := fun _ => True
-  is_central := fun x => x = 0
-  odd_nilpotency := fun _ hx => by rw [hx, mul_zero]
-  odd_odd_closure := fun _ _ _ _ => trivial
-  central_lane := fun _ _ hc => by rw [hc, zero_mul, mul_zero]
-  projector_identity := ⟨0, trivial, mul_zero 0⟩
+/-! The ambient stage maps below form an actual cone over the algebraic direct
+limit.  The compatibility condition is essential: unrelated maps out of the
+stages do not induce a map from the colimit. -/
 
-/-- Canonical identity `CausalBondingIntertwiner` inhabitant. -/
-instance instInhabitedCausalBondingIntertwiner {A : Type*} [Ring A] [CausalPreorder A] :
-    Inhabited (CausalBondingIntertwiner (trivialSupergradedClosure A) (trivialSupergradedClosure A)) :=
-  ⟨{ map := RingHom.id A
-     preserves_odd := fun _ hx => hx
-     preserves_even := fun _ hx => hx
-     preserves_central := fun _ hc => hc
-     monotone_embed := fun _ _ h => h }⟩
-
-/-- Resolves the BUCKET 3 OPEN CLOSURE DEBT (`ColimitInheritsInvariants`) natively
-by constructing the colimit stage via a global ambient algebra.
-
-When the inductive chain A_n maps injectively into a universal global algebra A_infty,
-and the grading predicates extend continuously/compatibly, the invariants transport
-exactly to the ambient closure, resolving the socket natively without axioms.
--/
-@[rep_depth transport]
+/-- Resolve the stage invariant package together with the ring hom induced by a
+compatible ambient cone.  The first component is the invariant structure on the
+actual algebraic direct-limit quotient; the second is the universal cone map. -/
 noncomputable def resolveColimitInheritsInvariants_of_ambient
     (Chain : ℕ → Type u) [∀ n, Ring (Chain n)]
     (Invariants : ∀ n, SupergradedClosureAt (Chain n))
     (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))
     -- The Global Ambient Algebra
-    (A_infty : Type v) [Ring A_infty]
+    (A_infty : Type u) [Ring A_infty]
     (GlobalInvariants : SupergradedClosureAt A_infty)
-    -- Embeddings from the finite stages into the global algebra
-    (global_embed : ∀ n, BondingIntertwiner (Invariants n) GlobalInvariants) :
-    ColimitInheritsInvariants Chain Invariants Bonding :=
-  ColimitInheritsInvariants.fromStages Chain Invariants Bonding
+    -- Compatible maps from each stage into the ambient algebra
+    (global_embed : ∀ n, BondingIntertwiner (Invariants n) GlobalInvariants)
+    (global_compatible : ∀ n x,
+      (global_embed (n + 1)).map ((Bonding n).map x) = (global_embed n).map x) :
+    ColimitInheritsInvariants Chain Invariants Bonding ×
+      (ColimitInheritsInvariants.ColimitStage Chain Invariants Bonding →+* A_infty) := by
+  let bond := fun n => (Bonding n).map
+  let cone := fun n => (global_embed n).map
+  refine (ColimitInheritsInvariants.fromStages Chain Invariants Bonding, ?_)
+  exact InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitLift bond cone
+    (by
+      intro n x
+      exact global_compatible n x)
 
-/-- Causal limit stabilization: The global embeddings into the ambient
-    limit algebra are monotone with respect to the causal preorders. -/
-def CausalLimitStabilization (Chain : ℕ → Type u) [∀ n, Ring (Chain n)] [∀ n, CausalPreorder (Chain n)]
-    (A_infty : Type v) [Ring A_infty] [CausalPreorder A_infty]
-    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+/-- Stagewise monotonicity of the supplied maps into the ambient preorder. -/
+def CausalLimitStabilization (Chain : ℕ → Type u) [∀ n, Ring (Chain n)]
+    [∀ n, CausalPreorder (Chain n)] (A_infty : Type v) [Ring A_infty]
+    [CausalPreorder A_infty] (Invariants : ∀ n, SupergradedClosureAt (Chain n))
     (GlobalInvariants : SupergradedClosureAt A_infty)
     (global_embed : ∀ n, CausalBondingIntertwiner (Invariants n) GlobalInvariants) : Prop :=
   ∀ n, Monotone (global_embed n).map
 
-/-- The Capstone Theorem for the Omega Automath Expansion:
-    The global colimit inherits the supergraded invariants AND stabilizes the causal preorder,
-    linking local hyperbolic fermionic CAR to the infinite global boundary. -/
+/-- Stage invariants on the direct limit together with the independently
+supplied monotonicity of each ambient stage map.  This does not assert that
+those maps form a compatible cone. -/
 noncomputable def omegaAutomath_expansion_apex
     (Chain : ℕ → Type u) [∀ n, Ring (Chain n)] [∀ n, CausalPreorder (Chain n)]
     (Invariants : ∀ n, SupergradedClosureAt (Chain n))
@@ -99,11 +78,10 @@ noncomputable def omegaAutomath_expansion_apex
     (GlobalInvariants : SupergradedClosureAt A_infty)
     (global_embed : ∀ n, CausalBondingIntertwiner (Invariants n) GlobalInvariants) :
     PProd (ColimitInheritsInvariants Chain Invariants (fun n => (Bonding n).toBondingIntertwiner))
-          (CausalLimitStabilization Chain A_infty Invariants GlobalInvariants global_embed) :=
+      (CausalLimitStabilization Chain A_infty Invariants GlobalInvariants global_embed) :=
   PProd.mk
-    (resolveColimitInheritsInvariants_of_ambient
-      Chain Invariants (fun n => (Bonding n).toBondingIntertwiner)
-      A_infty GlobalInvariants (fun n => (global_embed n).toBondingIntertwiner))
+    (ColimitInheritsInvariants.fromStages Chain Invariants
+      (fun n => (Bonding n).toBondingIntertwiner))
     (fun n _ _ hxy => (global_embed n).monotone_embed hxy)
 
 /-- **Identity `BondingIntertwiner` (`BondingIntertwiner.id invA`)**:
@@ -114,6 +92,19 @@ def BondingIntertwiner.id {A : Type*} [Ring A] (invA : SupergradedClosureAt A) :
   preserves_odd := fun _ hx => hx
   preserves_even := fun _ hx => hx
   preserves_central := fun _ hc => hc
+
+/-- Identity causal intertwiner on a supplied causal order and invariant packet. -/
+def CausalBondingIntertwiner.id {A : Type*} [Ring A] [CausalPreorder A]
+    (invA : SupergradedClosureAt A) : CausalBondingIntertwiner invA invA where
+  toBondingIntertwiner := BondingIntertwiner.id invA
+  monotone_embed := fun _ _ h => h
+
+/-- Once an actual causal preorder and invariant packet are supplied, the
+identity map is an inhabitant of the corresponding causal intertwiner type. -/
+instance instInhabitedCausalBondingIntertwiner {A : Type*} [Ring A]
+    [CausalPreorder A] (invA : SupergradedClosureAt A) :
+    Inhabited (CausalBondingIntertwiner invA invA) :=
+  ⟨CausalBondingIntertwiner.id invA⟩
 
 /-- **Composition of `BondingIntertwiner` (`BondingIntertwiner.comp g f`)**:
     Composes two bonding intertwiners $f : A \to B$ and $g : B \to C$ along an inductive tower. -/
@@ -144,8 +135,12 @@ theorem colimit_bonding_naturality {A B C : Type*} [Ring A] [Ring B] [Ring C]
     (BondingIntertwiner.comp g f).map x = g.map (f.map x) ∧
     (g.map (f.map x)) * (g.map (f.map x)) = 0 ∧
     (g.map (f.map c)) * z = z * (g.map (f.map c)) := by
+  have hfx : invB.is_odd (f.map x) := f.preserves_odd x hx
+  have hgfx : invC.is_odd (g.map (f.map x)) := g.preserves_odd (f.map x) hfx
+  have hfc : invB.is_central (f.map c) := f.preserves_central c hc
+  have hgfc : invC.is_central (g.map (f.map c)) := g.preserves_central (f.map c) hfc
   refine ⟨rfl, rfl, ?_, ?_⟩
-  · exact invariant_transport_stable invA invC (BondingIntertwiner.comp g f) x hx
-  · exact invC.central_lane _ z ((BondingIntertwiner.comp g f).preserves_central c hc)
+  · exact invC.odd_nilpotency (g.map (f.map x)) hgfx
+  · exact invC.central_lane (g.map (f.map c)) z hgfc
 
 end InfoGeometry.Canonical.ErlangenColimitResolution

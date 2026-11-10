@@ -26,7 +26,7 @@ open Simplicity
 /-- In a finite field whose cardinality is a square `q²`, the `q`-power
 Frobenius is an involution. This is the field-theoretic input used by the
 external twisted-`²E₆` simplicity proof. -/
-theorem pow_pow_card_sq {K : Type*} [Field K] [Finite K] {q : ℕ}
+theorem pow_pow_card_sq {K : Type*} [DivisionRing K] [Finite K] {q : ℕ}
     (hK : Nat.card K = q ^ 2) (c : K) : (c ^ q) ^ q = c := by
   haveI := Fintype.ofFinite K
   rw [← pow_mul, ← sq, ← hK, Nat.card_eq_fintype_card, FiniteField.pow_card]

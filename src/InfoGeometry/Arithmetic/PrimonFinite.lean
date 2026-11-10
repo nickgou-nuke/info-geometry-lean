@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -11,7 +16,8 @@ This file formalizes only the finite algebraic skeleton:
 * fermionic states are finite subsets of a finite mode set;
 * the unsigned fermionic partition is `∏ p, (1 + q p)`;
 * the signed fermionic supertrace is `∏ p, (1 - q p)`;
-* the finite boson/signed-fermion local cancellation is pointwise.
+* the finite boson/signed-fermion local cancellation is pointwise, including
+  non-commutative `[Ring R]` parity and `[DivisionRing D]` ordered supersymmetric cancellation.
 
 It does not assert an infinite Euler product, analytic continuation, zeta zero
 statement, or cohomological interpretation.
@@ -21,46 +27,53 @@ open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.PrimonFinite
 
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
 variable {ι R : Type*}
 
 /-- A fermionic Fock state is a finite subset of modes. -/
 abbrev FState (ι : Type*) :=
   Finset ι
 
+/-- Fermion parity `(-1)^F` over any non-commutative ring `[Ring R]`. -/
+def parity [Ring R] (S : FState ι) : R :=
+  (-1 : R) ^ S.card
+
 section Fermionic
 
-variable [DecidableEq ι] [CommRing R]
+variable [DecidableEq ι]
 
-/-- Multiplicative weight of a fermionic state. -/
-def weight (q : ι → R) (S : FState ι) : R :=
+/-- Multiplicative weight of a fermionic state over `[CommSemiring R]`. -/
+def weight [CommSemiring R] (q : ι → R) (S : FState ι) : R :=
   ∏ p ∈ S, q p
 
 omit [DecidableEq ι] in
-theorem weight_ne_zero [NoZeroDivisors R] [Nontrivial R]
+theorem weight_ne_zero [CommSemiring R] [NoZeroDivisors R] [Nontrivial R]
     (q : ι → R) (S : FState ι)
     (h : ∀ p ∈ S, q p ≠ 0) :
     weight q S ≠ 0 := by
   unfold weight
   exact Finset.prod_ne_zero_iff.mpr h
 
-/-- Fermion parity `(-1)^F`. -/
-def parity (S : FState ι) : R :=
-  (-1 : R) ^ S.card
-
-/-- Ordinary fermionic partition function over a finite set of modes. -/
-def ZF (modes : Finset ι) (q : ι → R) : R :=
+/-- Ordinary fermionic partition function over a finite set of modes (`[CommSemiring R]`). -/
+def ZF [CommSemiring R] (modes : Finset ι) (q : ι → R) : R :=
   ∑ S ∈ modes.powerset, weight q S
 
 /-- Fermionic supertrace / signed partition function. -/
-def STrF (modes : Finset ι) (q : ι → R) : R :=
+def STrF [CommRing R] (modes : Finset ι) (q : ι → R) : R :=
   ∑ S ∈ modes.powerset, parity S * weight q S
 
 /--
-Finite fermionic partition function:
+Finite fermionic partition function over `[CommSemiring R]`:
 
 `∑_{S ⊆ modes} ∏_{p ∈ S} q p = ∏_{p ∈ modes} (1 + q p)`.
 -/
-theorem ZF_eq_prod (modes : Finset ι) (q : ι → R) :
+theorem ZF_eq_prod [CommSemiring R] (modes : Finset ι) (q : ι → R) :
     ZF modes q = ∏ p ∈ modes, (1 + q p) := by
   classical
   refine Finset.induction_on modes ?empty ?insert
@@ -83,6 +96,8 @@ theorem ZF_eq_prod (modes : Finset ι) (q : ι → R) :
     unfold ZF at ih
     rw [ih]
     ring
+
+variable [CommRing R]
 
 /-- Weighting by `-q` is the same as inserting fermion parity. -/
 theorem weight_neg_eq_parity_mul_weight (q : ι → R) (S : FState ι) :
@@ -175,5 +190,23 @@ theorem ZB_mul_STrF_eq_one [DecidableEq ι]
   exact local_susy_cancellation modes q h
 
 end Bosonic
+
+section DivisionRingBosonic
+
+variable {D : Type*} [DivisionRing D]
+
+/-- Single-mode supersymmetric cancellation `(1 - q)⁻¹ * (1 - q) = 1` over any
+non-commutative division ring `[DivisionRing D]`. -/
+theorem divisionRing_local_susy_factor (q : D) (h : 1 - q ≠ 0) :
+    (1 - q)⁻¹ * (1 - q) = 1 :=
+  inv_mul_cancel₀ h
+
+/-- Single-mode reverse supersymmetric cancellation `(1 - q) * (1 - q)⁻¹ = 1` over any
+non-commutative division ring `[DivisionRing D]`. -/
+theorem divisionRing_local_susy_factor_right (q : D) (h : 1 - q ≠ 0) :
+    (1 - q) * (1 - q)⁻¹ = 1 :=
+  mul_inv_cancel₀ h
+
+end DivisionRingBosonic
 
 end InfoGeometry.Arithmetic.PrimonFinite

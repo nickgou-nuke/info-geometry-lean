@@ -12,6 +12,16 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 Every full matrix stage embeds faithfully and real-linearly into the existing
 limit. Its dimension is `4^n`; these dimensions have no finite upper bound.
 The conclusion concerns the actual algebraic quotient, without a completion.
+
+## BUCKET 1: Proved
+Finite-stage dimension, faithful stage inclusion, infinite-dimensionality of
+the algebraic limit, and non-surjectivity of every individual stage map.
+
+## BUCKET 2: Conditional
+No conditional theorem is declared in this module.
+
+## BUCKET 3: Open boundary
+No norm completion, operator topology, or analytic limit is constructed here.
 -/
 
 namespace InfoGeometry.Clifford.Cl11ColimitDimension
@@ -42,5 +52,17 @@ theorem not_finiteDimensional : ¬ FiniteDimensional ℝ Limit := by
     stage_dimension_le n (ofStageStarAlgHom n).toLinearMap
       (ofStageStarAlgHom_injective n)
   exact (Nat.lt_pow_self (by decide : 1 < 4)).not_ge hbound
+
+/-- No single finite tensor head exhausts the algebraic operator colimit.
+
+Each `Stage n` is finite-dimensional, while `Limit` is not. Thus the finite
+head represents an embedded part of the operator algebra, never its entirety;
+this statement is purely algebraic and does not refer to a completion. -/
+theorem ofStageStarAlgHom_not_surjective (n : ℕ) :
+    ¬ Function.Surjective (ofStageStarAlgHom n).toLinearMap := by
+  intro hsurj
+  have hfinite : FiniteDimensional ℝ Limit :=
+    FiniteDimensional.of_surjective (ofStageStarAlgHom n).toLinearMap hsurj
+  exact not_finiteDimensional hfinite
 
 end InfoGeometry.Clifford.Cl11ColimitDimension

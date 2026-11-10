@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Field.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -30,7 +36,36 @@ def zornNorm {F : Type*} [Ring F] (α β u v : F) : F :=
 def bdgBlock {F : Type*} [Ring F] (h Δ : F) : Matrix (Fin 2) (Fin 2) F :=
   blockMatrix h (-h) Δ Δ
 
-@[simp] theorem det_blockMatrix (α β u v : F) :
+theorem zorn_norm_from_schur_of_commute {F : Type*} [DivisionRing F]
+    (α β u v : F) (hβ : β ≠ 0) (hcomm : Commute v β) :
+    zornNorm α β u v = schurComplement α β u v * β := by
+  dsimp [zornNorm, schurComplement]
+  rw [sub_mul]
+  congr 1
+  have h1 : β⁻¹ * v * β = v := by
+    calc
+      β⁻¹ * v * β = β⁻¹ * (v * β) := by rw [mul_assoc]
+      _ = β⁻¹ * (β * v) := by rw [hcomm.eq]
+      _ = (β⁻¹ * β) * v := by rw [← mul_assoc]
+      _ = 1 * v := by rw [inv_mul_cancel₀ hβ]
+      _ = v := one_mul v
+  calc
+    u * v = u * (β⁻¹ * v * β) := by rw [h1]
+    _ = u * β⁻¹ * v * β := by simp only [mul_assoc]
+
+theorem schur_scalar_eq_zorn_norm_div_beta_of_commute {F : Type*} [DivisionRing F]
+    (α β u v : F) (hβ : β ≠ 0) (hcomm : Commute v β) :
+    schurComplement α β u v = zornNorm α β u v / β := by
+  rw [zorn_norm_from_schur_of_commute α β u v hβ hcomm, mul_div_cancel_right₀ _ hβ]
+
+theorem berezinian_scalar_eq_zorn_norm_div_sq_of_commute {F : Type*} [DivisionRing F]
+    (α β u v : F) (hβ : β ≠ 0) (hcomm : Commute v β) :
+    berezinianScalar α β u v = zornNorm α β u v / β ^ 2 := by
+  dsimp [berezinianScalar]
+  rw [schur_scalar_eq_zorn_norm_div_beta_of_commute α β u v hβ hcomm]
+  rw [div_eq_mul_inv, div_eq_mul_inv, div_eq_mul_inv, mul_assoc, ← mul_inv_rev, ← sq]
+
+@[simp] theorem det_blockMatrix {R : Type*} [CommRing R] (α β u v : R) :
     Matrix.det (blockMatrix α β u v) = zornNorm α β u v := by
   simp [blockMatrix, zornNorm, Matrix.det_fin_two]
 
@@ -82,7 +117,7 @@ theorem det_from_berezinian
   rw [det_blockMatrix]
   exact zorn_norm_from_berezinian α β u v hβ
 
-@[simp] theorem det_bdgBlock (h Δ : F) :
+@[simp] theorem det_bdgBlock {R : Type*} [CommRing R] (h Δ : R) :
     Matrix.det (bdgBlock h Δ) = -(h ^ 2 + Δ ^ 2) := by
   rw [bdgBlock, det_blockMatrix]
   unfold zornNorm
@@ -115,5 +150,10 @@ theorem scalar_schur_berezinian_packet
     zorn_norm_from_schur α β u v hβ,
     berezinian_scalar_eq_zorn_norm_div_sq α β u v hβ,
     berezinian_scalar_eq_det_div_sq α β u v hβ⟩
+
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem canonical_bdg_schur_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end InfoGeometry.Canonical.BdGSchurBerezinianCompatibility

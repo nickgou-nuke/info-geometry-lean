@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Weights.Cartan
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornCartanRootSystem
@@ -35,7 +40,7 @@ theorem eq_iSup_inf_genWeightSpace
   · simp [h]
   · exact le_iSup_of_le ⟨_, h⟩ le_rfl
 
-def idealRestrict {R₀ L₀ : Type*} [CommSemiring R₀] [LieRing L₀] [LieAlgebra R₀ L₀]
+def idealRestrict {R₀ L₀ : Type*} [CommRing R₀] [LieRing L₀] [LieAlgebra R₀ L₀]
     (I : LieIdeal R₀ L₀) (H : LieSubalgebra R₀ L₀) : LieSubmodule R₀ H L₀ :=
   { I with
     lie_mem := by

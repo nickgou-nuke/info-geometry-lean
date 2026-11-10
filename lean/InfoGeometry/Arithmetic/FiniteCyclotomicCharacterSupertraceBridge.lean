@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -6,7 +12,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 The Möbius sign and the multiplicative character are separate weights.  This
 owner proves their finite subset-product expansion without constructing an
-infinite Dirichlet series or an analytic `L`-function.
+infinite Dirichlet series or an analytic `L`-function, including the
+non-commutative `[Ring B]` character-weighted Euler factor expansion.
 -/
 
 noncomputable section
@@ -15,6 +22,39 @@ namespace InfoGeometry.Arithmetic.FiniteCyclotomicCharacterSupertraceBridge
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingCharacterEulerFactor
+
+variable {B : Type*} [Ring B]
+
+/-- Character-weighted Euler factor `1 - χp * wp` in an arbitrary non-commutative ring `[Ring B]`. -/
+def ringCharacterEulerFactor (χp wp : B) : B :=
+  1 - χp * wp
+
+/-- Over any non-commutative ring `[Ring B]`, if `w₁` commutes with `χ₂`, then the 2-mode
+character-weighted Euler product factors the character product `χ₁ * χ₂` to the left of `w₁ * w₂`. -/
+theorem ringCharacterEulerFactor_two_modes
+    (χ₁ w₁ χ₂ w₂ : B) (hcomm : Commute w₁ χ₂) :
+    ringCharacterEulerFactor χ₁ w₁ * ringCharacterEulerFactor χ₂ w₂ =
+      1 - χ₁ * w₁ - χ₂ * w₂ + (χ₁ * χ₂) * (w₁ * w₂) := by
+  unfold ringCharacterEulerFactor
+  have hprod : (χ₁ * w₁) * (χ₂ * w₂) = (χ₁ * χ₂) * (w₁ * w₂) := by
+    calc
+      (χ₁ * w₁) * (χ₂ * w₂) = χ₁ * (w₁ * χ₂) * w₂ := by noncomm_ring
+      _ = χ₁ * (χ₂ * w₁) * w₂ := by rw [hcomm.eq]
+      _ = (χ₁ * χ₂) * (w₁ * w₂) := by noncomm_ring
+  calc
+    (1 - χ₁ * w₁) * (1 - χ₂ * w₂)
+      = 1 - χ₁ * w₁ - χ₂ * w₂ + (χ₁ * w₁) * (χ₂ * w₂) := by noncomm_ring
+    _ = 1 - χ₁ * w₁ - χ₂ * w₂ + (χ₁ * χ₂) * (w₁ * w₂) := by rw [hprod]
+
+end NonCommRingCharacterEulerFactor
 
 theorem finite_character_supertrace
     {α : Type*} [CommRing α]

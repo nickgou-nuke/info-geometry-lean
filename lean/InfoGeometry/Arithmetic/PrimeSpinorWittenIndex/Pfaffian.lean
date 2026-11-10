@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Readout
@@ -12,8 +17,16 @@ open InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
 namespace InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair_pfaffian :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 structure MajoranaPfaffianBlock (R : Type*) where
   entry : R
+  deriving Inhabited
 
 def majoranaBlockPfaffian
   {R : Type*}
@@ -33,12 +46,12 @@ theorem majoranaBlockPfaffian_sq_eq_determinant
   rfl
 
 def primeSpinorMajoranaBlock
-  {R : Type*} [CommRing R]
+  {R : Type*} [Ring R]
   (a : R) : MajoranaPfaffianBlock R :=
   ⟨spinorBilinear (thermalSpinorPlus a) (thermalSpinorMinus a)⟩
 
 theorem majoranaBlockPfaffian_primeSpinorMajoranaBlock
-  {R : Type*} [CommRing R]
+  {R : Type*} [Ring R]
   (a : R) :
   majoranaBlockPfaffian (primeSpinorMajoranaBlock a) =
   1 - scalarWeightFromSpinor a := by

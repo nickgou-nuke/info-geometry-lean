@@ -1,9 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Tactic
@@ -38,16 +44,27 @@ This module formalizes the cellular and operator-theoretic bridge uniting:
    A split-complex involution $J$ ($J^2 = +I$) giving the chiral resolution of identity
    $x = x^+ + x^-$ into twistor light-cone rays.
 
-4. **Witten-Deformed Dirac Operator & Exact Chiral Anticommutation**:
-   The deformed Dirac operator $D_\Phi = \begin{pmatrix} 0 & \partial_1 \\ \delta_\Phi & 0 \end{pmatrix}$
-   satisfying exact chiral anticommutation $\Gamma D_\Phi + D_\Phi \Gamma = 0$
-   with grading $\Gamma = \operatorname{diag}(+I, -I)$.
+4. **Two-Term Dirac Block Operator & Exact Chiral Anticommutation**:
+   Given native linear maps $d_1 : C_1 \to C_0$ and $\delta : C_0 \to C_1$,
+   their block operator $D = \begin{pmatrix} 0 & d_1 \\ \delta & 0 \end{pmatrix}$
+   anticommutes with the grading $\Gamma = \operatorname{diag}(+I, -I)$.
+   The current file does not identify these arbitrary linear maps with a
+   particular potential-dependent Witten deformation.
 
-5. **Continuum Colimit & BPS Locking**:
-   Embedding into the split Cayley-Dickson direct inductive colimit $\varinjlim \operatorname{Split-CD}^n$
-   via `cdEmbed`, locking the continuum limit onto the critical line $\operatorname{Re}(s) = 1/2$.
+5. **Split Doubling Readout & Helicity Balance**:
+   The imported `cdEmbed` calculation concerns one carrier `A × A`; no
+   sequence of doubling stages is constructed here. The helicity theorem proves
+   the stated coordinate equalities from balanced left/right data.
 
-All theorems are proved constructively using standard Lean 4 / Mathlib axioms (zero `sorry`, zero `admit`).
+The declarations are checked by Lean's kernel using standard Lean 4 and Mathlib.
+
+## Claim classification
+- **BUCKET 1:** The cellular incidence, chiral projection, and abstract
+  two-term linear Dirac identities proved below.
+- **BUCKET 2:** Statements using supplied face, potential, twistor, and
+  helicity data are conditional on those explicit structures.
+- **BUCKET 3:** A Fredholm/Witten index theorem, a potential-derived global
+  coboundary map, and a colimit of split-doubling stages are not established.
 -/
 
 /-! ### 1. The Dual Cellular 2-Complex Skeleton -/
@@ -60,30 +77,41 @@ structure DualSpinCell where
   spin : ℝ
   h_distinct : src ≠ dst
 
+/-- A concrete oriented cell witnesses that the cell carrier is inhabited. -/
+def canonicalDualSpinCell : DualSpinCell :=
+  ⟨0, 1, 0, by norm_num⟩
+
+instance : Inhabited DualSpinCell := ⟨canonicalDualSpinCell⟩
+
 /-- Boundary 1-incidence function: +1 if v = dst, -1 if v = src, 0 otherwise. -/
 def boundary1Coeff (e : DualSpinCell) (v : ℕ) : ℝ :=
   if v = e.dst then 1 else if v = e.src then -1 else 0
 
+/-- The destination incidence is `+1`. -/
 @[simp]
 theorem boundary1Coeff_dst (e : DualSpinCell) : boundary1Coeff e e.dst = 1 := by
   dsimp [boundary1Coeff]
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
 
+/-- The incidence at the source endpoint is `-1`, using endpoint distinctness. -/
 @[simp]
 theorem boundary1Coeff_src (e : DualSpinCell) : boundary1Coeff e e.src = -1 := by
   dsimp [boundary1Coeff]
   have h_ne : ¬ e.src = e.dst := e.h_distinct
-  rw [if_neg h_ne, if_pos rfl]
+  rw [ite_eq_right h_ne, ite_eq_left rfl]
 
+/-- Incidence vanishes away from both endpoints. -/
 theorem boundary1Coeff_other (e : DualSpinCell) {v : ℕ} (h_dst : v ≠ e.dst) (h_src : v ≠ e.src) :
     boundary1Coeff e v = 0 := by
   dsimp [boundary1Coeff]
-  rw [if_neg h_dst, if_neg h_src]
+  rw [ite_eq_right h_dst, ite_eq_right h_src]
 
+/-- The destination incidence under an endpoint equality. -/
 theorem boundary1Coeff_eq_dst (e : DualSpinCell) {v : ℕ} (h : v = e.dst) : boundary1Coeff e v = 1 := by
   subst h
   exact boundary1Coeff_dst e
 
+/-- The source incidence under an endpoint equality. -/
 theorem boundary1Coeff_eq_src (e : DualSpinCell) {v : ℕ} (h : v = e.src) : boundary1Coeff e v = -1 := by
   subst h
   exact boundary1Coeff_src e
@@ -99,6 +127,13 @@ structure DualFace where
   h_src_distinct : e1.src ≠ e1.dst
   h_mid_distinct : e1.dst ≠ e2.dst
   h_dst_distinct : e1.src ≠ e2.dst
+
+/-- The oriented triangle `0 → 1 → 2` with closing edge `0 → 2`. -/
+def canonicalDualFace : DualFace := by
+  refine ⟨⟨0, 1, 0, by norm_num⟩, ⟨1, 2, 0, by norm_num⟩,
+    ⟨0, 2, 0, by norm_num⟩, rfl, rfl, rfl, by norm_num, by norm_num, by norm_num⟩
+
+instance : Inhabited DualFace := ⟨canonicalDualFace⟩
 
 /-- The combined boundary evaluation of a face 2-cell on vertex v: ∂₁(∂₂(f))(v). -/
 def faceBoundary1Sum (f : DualFace) (v : ℕ) : ℝ :=
@@ -154,6 +189,8 @@ theorem boundary_squared_zero (f : DualFace) (v : ℕ) :
 structure LogBarrierPotential where
   phi : ℕ → ℝ
 
+instance : Inhabited LogBarrierPotential := ⟨⟨fun _ => 0⟩⟩
+
 /-- Dikin conformal metric weight on a dual edge e = (u, v):
     g_Φ(e) = exp((Φ(u) + Φ(v)) / 2). -/
 def dikinEdgeWeight (pot : LogBarrierPotential) (e : DualSpinCell) : ℝ :=
@@ -174,10 +211,11 @@ theorem dikinEdgeWeight_endpoints_comm (pot : LogBarrierPotential) (e : DualSpin
 
 /-- Split-complex twistor structure J with J² = +I. -/
 structure ParaKahlerTwistorStructure (n : ℕ) where
-  J : (Fin n → ℝ) → (Fin n → ℝ)
+  J : (Fin n → ℝ) →ₗ[ℝ] (Fin n → ℝ)
   h_involutive : ∀ x, J (J x) = x
-  h_linear_add : ∀ x y, J (x + y) = J x + J y
-  h_linear_smul : ∀ (c : ℝ) x, J (c • x) = c • J x
+
+instance {n : ℕ} : Inhabited (ParaKahlerTwistorStructure n) :=
+  ⟨⟨LinearMap.id, fun _ => rfl⟩⟩
 
 /-- Chiral idempotent decomposition: x⁺ = (x + Jx)/2. -/
 def chiralProjectorPlus {n : ℕ} (T : ParaKahlerTwistorStructure n) (x : Fin n → ℝ) : Fin n → ℝ :=
@@ -201,21 +239,20 @@ theorem chiral_resolution_of_identity {n : ℕ} (T : ParaKahlerTwistorStructure 
 theorem chiral_projector_plus_eigen {n : ℕ} (T : ParaKahlerTwistorStructure n) (x : Fin n → ℝ) :
     T.J (chiralProjectorPlus T x) = chiralProjectorPlus T x := by
   dsimp [chiralProjectorPlus]
-  rw [T.h_linear_smul, T.h_linear_add, T.h_involutive]
+  rw [map_smul, map_add, T.h_involutive]
   ext i
   simp only [Pi.smul_apply, smul_eq_mul, Pi.add_apply]
   ring
 
+/-- The negative chiral projector is a `-1` eigenvector of the involution. -/
 theorem chiral_projector_minus_eigen {n : ℕ} (T : ParaKahlerTwistorStructure n) (x : Fin n → ℝ) :
     T.J (chiralProjectorMinus T x) = - chiralProjectorMinus T x := by
   dsimp [chiralProjectorMinus]
-  rw [T.h_linear_smul]
+  rw [map_smul]
   have h_sub : ∀ a b : Fin n → ℝ, T.J (a - b) = T.J a - T.J b := by
     intro a b
-    have h_neg : T.J (-b) = - T.J b := by
-      have := T.h_linear_smul (-1) b
-      simpa using this
-    have h_add := T.h_linear_add a (-b)
+    have h_neg : T.J (-b) = - T.J b := map_neg T.J b
+    have h_add := T.J.map_add a (-b)
     rw [sub_eq_add_neg, h_add, h_neg, ← sub_eq_add_neg]
   rw [h_sub, T.h_involutive]
   ext i
@@ -256,119 +293,171 @@ theorem deformedCoboundary_other (pot : LogBarrierPotential) (e : DualSpinCell) 
   dsimp [deformedCoboundary]
   rw [boundary1Coeff_other e h_dst h_src, zero_div]
 
-/-- A chain state on the dual spin network: C₀ ⊕ C₁. -/
-@[ext]
-structure DualSpinState (V E : ℕ) where
-  psi0 : Fin V → ℝ
-  psi1 : Fin E → ℝ
+/-! The state space is the native product module on vertex and edge cochains.
+The Dirac blocks below are Mathlib linear maps, so additivity and homogeneity
+are part of the operator type rather than extra pointwise assumptions. -/
 
-/-- Addition of chain states. -/
-def DualSpinState.add {V E : ℕ} (s1 s2 : DualSpinState V E) : DualSpinState V E :=
-  ⟨s1.psi0 + s2.psi0, s1.psi1 + s2.psi1⟩
+abbrev DualSpinState (V E : ℕ) := (Fin V → ℝ) × (Fin E → ℝ)
 
-instance {V E : ℕ} : Add (DualSpinState V E) := ⟨DualSpinState.add⟩
+/-- The two-term discrete Dirac endomorphism on `C₀ ⊕ C₁`:
+    `D(ψ₀, ψ₁) = (d₁ ψ₁, δ ψ₀)`. -/
+def dualDiracMap {V E : ℕ}
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ)) :
+    DualSpinState V E →ₗ[ℝ] DualSpinState V E where
+  toFun st := (d1 st.2, delta st.1)
+  map_add' x y := by simp
+  map_smul' c x := by simp
 
-/-- Negation of chain states. -/
-def DualSpinState.neg {V E : ℕ} (s : DualSpinState V E) : DualSpinState V E :=
-  ⟨-s.psi0, -s.psi1⟩
+/-- Chiral grading endomorphism `Γ(ψ₀, ψ₁) = (ψ₀, -ψ₁)`. -/
+def chiralGradingMap {V E : ℕ} :
+    DualSpinState V E →ₗ[ℝ] DualSpinState V E where
+  toFun st := (st.1, -st.2)
+  map_add' x y := by
+    apply Prod.ext
+    · rfl
+    · ext i
+      simp [add_comm]
+  map_smul' c x := by simp
 
-instance {V E : ℕ} : Neg (DualSpinState V E) := ⟨DualSpinState.neg⟩
-
-/-- Zero chain state. -/
-def DualSpinState.zero {V E : ℕ} : DualSpinState V E :=
-  ⟨0, 0⟩
-
-instance {V E : ℕ} : Zero (DualSpinState V E) := ⟨DualSpinState.zero⟩
-
-/-- The Witten-deformed discrete Dirac operator acting on C₀ ⊕ C₁:
-    D_Φ(ψ₀, ψ₁) = (d₁ ψ₁, δ_Φ ψ₀). -/
+/-- Pointwise readout of the native linear Dirac endomorphism. -/
 def dualDiracAction {V E : ℕ}
-    (d1 : (Fin E → ℝ) → (Fin V → ℝ))
-    (delta : (Fin V → ℝ) → (Fin E → ℝ))
-    (st : DualSpinState V E) : DualSpinState V E :=
-  ⟨d1 st.psi1, delta st.psi0⟩
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ))
+    (st : DualSpinState V E) : DualSpinState V E := dualDiracMap d1 delta st
 
-/-- Chiral grading operator Γ = diag(+I_C₀, -I_C₁). -/
+/-- Pointwise readout of the native chiral grading endomorphism. -/
 def chiralGradingAction {V E : ℕ} (st : DualSpinState V E) : DualSpinState V E :=
-  ⟨st.psi0, -st.psi1⟩
+  chiralGradingMap st
 
 /-- 🏆 THEOREM 7 (Chiral Involutivity Γ² = I):
     The grading operator is an exact involution. -/
 theorem chiralGrading_involutive {V E : ℕ} (st : DualSpinState V E) :
     chiralGradingAction (chiralGradingAction st) = st := by
   rcases st with ⟨p0, p1⟩
-  ext : 1
-  · rfl
-  · change - -p1 = p1
-    exact neg_neg p1
+  change (p0, - -p1) = (p0, p1)
+  simp
 
-/-- 🏆 THEOREM 8 (Exact Chiral Anticommutation {D_Φ, Γ} = 0):
-    For any boundary operator d₁ and coboundary δ, the Witten Dirac operator
-    anticommutes with the chiral grading Γ unconditionally:
-    Γ(D_Φ(ψ)) + D_Φ(Γ(ψ)) = 0. -/
+/-- Operator-level form of the chiral anticommutation law. Linearity of the
+two blocks supplies the oddness identities automatically. -/
+theorem dualDirac_chiral_anticommutation {V E : ℕ}
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ)) :
+    chiralGradingMap * dualDiracMap d1 delta +
+      dualDiracMap d1 delta * chiralGradingMap = 0 := by
+  apply LinearMap.ext
+  intro st
+  rcases st with ⟨p0, p1⟩
+  simp [dualDiracMap, chiralGradingMap]
+
+/-- THEOREM 8 (Exact Chiral Anticommutation {D, Γ} = 0):
+    For any linear boundary block d₁ and coboundary block δ, the Dirac operator
+    anticommutes with the chiral grading Γ:
+    Γ(D(ψ)) + D(Γ(ψ)) = 0. -/
 theorem chiral_anticommutation {V E : ℕ}
-    (d1 : (Fin E → ℝ) → (Fin V → ℝ))
-    (delta : (Fin V → ℝ) → (Fin E → ℝ))
-    (h_d1_neg : ∀ x, d1 (-x) = - d1 x)
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ))
     (st : DualSpinState V E) :
     chiralGradingAction (dualDiracAction d1 delta st) +
     dualDiracAction d1 delta (chiralGradingAction st) = 0 := by
-  rcases st with ⟨p0, p1⟩
-  ext : 1
-  · change d1 p1 + d1 (-p1) = 0
-    rw [h_d1_neg, add_neg_cancel]
-  · change -delta p0 + delta p0 = 0
-    rw [neg_add_cancel]
+  have h := congrArg (fun f : DualSpinState V E →ₗ[ℝ] DualSpinState V E => f st)
+    (dualDirac_chiral_anticommutation d1 delta)
+  simpa [dualDiracAction, chiralGradingAction] using h
 
-/-! ### 4. Topological Index & BPS Invariance -/
+/-! ### 4. Dirac Square and Chiral Symmetry -/
 
-/-- Dirac squared (Discrete Hodge Laplacian): D_Φ² = Δ₀ ⊕ Δ₁. -/
+/-- Dirac squared (degreewise Hodge Laplacian): `D² = Δ₀ ⊕ Δ₁`. -/
 def dualHodgeLaplacianAction {V E : ℕ}
-    (d1 : (Fin E → ℝ) → (Fin V → ℝ))
-    (delta : (Fin V → ℝ) → (Fin E → ℝ))
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ))
     (st : DualSpinState V E) : DualSpinState V E :=
   dualDiracAction d1 delta (dualDiracAction d1 delta st)
 
-/-- 🏆 THEOREM 9 (Dirac Squared is Purely Block-Diagonal):
-    D_Φ² preserves 0-chains and 1-chains separately:
-    D_Φ²(ψ₀, ψ₁) = (d₁ δ_Φ ψ₀, δ_Φ d₁ ψ₁). -/
-theorem dirac_squared_block_diagonal {V E : ℕ}
-    (d1 : (Fin E → ℝ) → (Fin V → ℝ))
-    (delta : (Fin V → ℝ) → (Fin E → ℝ))
-    (st : DualSpinState V E) :
-    dualHodgeLaplacianAction d1 delta st = ⟨d1 (delta st.psi0), delta (d1 st.psi1)⟩ := by
+/-- The degreewise Hodge Laplacian as a native endomorphism of the cochain
+product. -/
+def dualHodgeLaplacianMap {V E : ℕ}
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ)) :
+    DualSpinState V E →ₗ[ℝ] DualSpinState V E :=
+  dualDiracMap d1 delta * dualDiracMap d1 delta
+
+/-- The explicit block-diagonal endomorphism with blocks `d₁ ∘ δ` and
+`δ ∘ d₁`. -/
+def dualBlockLaplacianMap {V E : ℕ}
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ)) :
+    DualSpinState V E →ₗ[ℝ] DualSpinState V E where
+  toFun st := (d1 (delta st.1), delta (d1 st.2))
+  map_add' x y := by simp
+  map_smul' c x := by simp
+
+/-- Squaring the block-off-diagonal Dirac endomorphism gives the degreewise
+Hodge Laplacian as an equality of linear operators. -/
+theorem dualDiracMap_sq_eq_blockLaplacian {V E : ℕ}
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ)) :
+    dualHodgeLaplacianMap d1 delta = dualBlockLaplacianMap d1 delta := by
+  apply LinearMap.ext
+  intro st
+  rcases st with ⟨p0, p1⟩
   rfl
 
-/-- 🏆 THEOREM 10 (Dirac Squared Commutes with Chiral Grading [D_Φ², Γ] = 0):
+/-- 🏆 THEOREM 9 (Dirac Squared is Purely Block-Diagonal):
+    D_Φ² preserves 0-chains and 1-chains separately:
+    D²(ψ₀, ψ₁) = (d₁ δ ψ₀, δ d₁ ψ₁). -/
+theorem dirac_squared_block_diagonal {V E : ℕ}
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ))
+    (st : DualSpinState V E) :
+    dualHodgeLaplacianAction d1 delta st = (d1 (delta st.1), delta (d1 st.2)) := by
+  have h := congrArg (fun f : DualSpinState V E →ₗ[ℝ] DualSpinState V E => f st)
+    (dualDiracMap_sq_eq_blockLaplacian d1 delta)
+  simpa [dualHodgeLaplacianAction, dualHodgeLaplacianMap,
+    dualBlockLaplacianMap, dualDiracAction] using h
+
+/-- 🏆 THEOREM 10 (Dirac Squared Commutes with Chiral Grading [D², Γ] = 0):
     The Hodge Laplacian is a super-symmetric invariant that commutes with Γ. -/
 theorem dirac_squared_commutes_grading {V E : ℕ}
-    (d1 : (Fin E → ℝ) → (Fin V → ℝ))
-    (delta : (Fin V → ℝ) → (Fin E → ℝ))
-    (h_d1_neg : ∀ x, d1 (-x) = - d1 x)
-    (h_delta_neg : ∀ x, delta (-x) = - delta x)
+    (d1 : (Fin E → ℝ) →ₗ[ℝ] (Fin V → ℝ))
+    (delta : (Fin V → ℝ) →ₗ[ℝ] (Fin E → ℝ))
     (st : DualSpinState V E) :
     chiralGradingAction (dualHodgeLaplacianAction d1 delta st) =
     dualHodgeLaplacianAction d1 delta (chiralGradingAction st) := by
   rcases st with ⟨p0, p1⟩
-  ext : 1
-  · rfl
-  · change - delta (d1 p1) = delta (d1 (-p1))
-    rw [h_d1_neg, h_delta_neg]
+  change (d1 (delta p0), -delta (d1 p1)) =
+    (d1 (delta p0), delta (d1 (-p1)))
+  simp
 
 /-- The Euler-Poincaré topological characteristic of the dual cellular 2-complex:
     χ = n_vertices - n_edges + n_faces. -/
 def dualEulerCharacteristic (nv ne nf : ℤ) : ℤ :=
   nv - ne + nf
 
-/-- 🏆 THEOREM 11 (Topological Witten Index Invariance):
-    The Fredholm / Witten index of D_Φ on any closed 2-complex is invariant
-    under any potential deformation Φ: index(D_Φ) = χ(Δ*). -/
-theorem witten_index_independent_of_potential (nv ne nf : ℤ)
-    (pot1 pot2 : LogBarrierPotential) :
-    dualEulerCharacteristic nv ne nf = dualEulerCharacteristic nv ne nf := by
-  rfl
+/-- Positive Dikin rescaling changes the value of an incidence coefficient,
+but preserves its zero support. This is the pointwise statement supported by
+the current model; a Fredholm-index theorem for a potential-dependent operator
+is not established here. -/
+theorem deformedCoboundary_zero_iff_boundary_zero
+    (pot : LogBarrierPotential) (e : DualSpinCell) (v : ℕ) :
+    deformedCoboundary pot e v = 0 ↔ boundary1Coeff e v = 0 := by
+  unfold deformedCoboundary
+  rw [div_eq_zero_iff]
+  constructor
+  · rintro (h | h)
+    · exact h
+    · exfalso
+      exact (ne_of_gt (dikinEdgeWeight_pos pot e)) h
+  · intro h
+    exact Or.inl h
 
-/-! ### 5. Twistor Helicity Lock & Direct Inductive Colimit -/
+/-- Any two positive Dikin weights induce the same support on a fixed edge. -/
+theorem deformedCoboundary_support_independent_of_potential
+    (pot₁ pot₂ : LogBarrierPotential) (e : DualSpinCell) (v : ℕ) :
+    (deformedCoboundary pot₁ e v = 0) ↔ (deformedCoboundary pot₂ e v = 0) := by
+  rw [deformedCoboundary_zero_iff_boundary_zero,
+    deformedCoboundary_zero_iff_boundary_zero]
+
+/-! ### 5. Twistor Helicity Lock & Split Doubling Readout -/
 
 /-- 🏆 THEOREM 12 (Twistor Helicity BPS Lock on Dual Spin Network):
     When the dual spin network left and right twistor edge modes are balanced (N_L = N_R),
@@ -385,20 +474,25 @@ theorem dual_spin_twistor_helicity_lock
 
 variable (A : Type*) [Ring A]
 
-/-- 🏆 THEOREM 13 (Colimit Embedding of Dual Spin Network into Albert-Cayley-Dickson Tower):
-    The finite dual spin network algebra injects into the split Cayley-Dickson colimit
-    tower injlim Split-CDⁿ via cdEmbed, preserving multiplication and neutral signature. -/
-theorem colimit_dual_spin_embedding_homomorphism
+/-- One-step split-doubling readout for `cdEmbed : A → A × A`: the map is
+injective and the split product agrees with the base product on included
+elements. This theorem does not assert a colimit construction. -/
+theorem split_doubling_embedding_multiplication_formula
     (star : A → A) (h_star_zero : star 0 = 0) (x y : A) :
-    splitCDMul A star x 0 y 0 = cdEmbed A (x * y) := by
-  exact cdEmbed_mul A star h_star_zero x y
+    Function.Injective (cdEmbed A) ∧
+      splitCDMul A star x 0 y 0 = cdEmbed A (x * y) := by
+  constructor
+  · exact cdEmbed_injective A
+  · dsimp [splitCDMul, cdEmbed]
+    simp [h_star_zero]
 
-/-- 🏆 THEOREM 14 (Colimit Norm Conservation):
-    The split quadratic norm is preserved identically under the inductive limit embedding. -/
-theorem colimit_dual_spin_norm_conservation
+/-- The split quadratic expression is preserved by the first-coordinate
+inclusion into `A × A` when the supplied norm sends zero to zero. -/
+theorem split_doubling_embedding_norm_formula
     (normA : A → ℝ) (hn0 : normA 0 = 0) (x : A) :
     splitNormSq A normA (cdEmbed A x) = normA x := by
-  exact cdEmbed_preserves_norm A normA hn0 x
+  dsimp [splitNormSq, cdEmbed]
+  rw [hn0, sub_zero]
 
 /-- 
 🏆 GRAND SYNTHESIS THEOREM:
@@ -407,16 +501,17 @@ simultaneously supports:
 1. Exact cellular nilpotency ∂₁ ∘ ∂₂ = 0.
 2. Dikin metric positivity g_Φ(e) > 0.
 3. Chiral twistor involution J² = +I and resolution of identity.
-4. Exact Witten-Dirac chiral anticommutation {D_Φ, Γ} = 0.
-5. Invariance of the topological Euler characteristic under potential scaling.
-6. Twistor helicity balance locking the continuum limit onto the BPS critical line.
+4. Exact anticommutation for the abstract two-term linear Dirac block map.
+5. Positive Dikin rescaling preserves incidence support, including the nonzero
+   coefficient at the target endpoint of every oriented edge.
+6. Balanced helicity forces zero rapidity and identifies the two twistor values.
 -/
 theorem grand_dual_spin_network_hodge_synthesis
     (f : DualFace) (v : ℕ)
     (pot : LogBarrierPotential) (e : DualSpinCell)
     (T : ParaKahlerTwistorStructure 2) (x : Fin 2 → ℝ)
-    (d1 : (Fin 2 → ℝ) → (Fin 2 → ℝ)) (delta : (Fin 2 → ℝ) → (Fin 2 → ℝ))
-    (h_d1_neg : ∀ y, d1 (-y) = - d1 y)
+    (d1 : (Fin 2 → ℝ) →ₗ[ℝ] (Fin 2 → ℝ))
+    (delta : (Fin 2 → ℝ) →ₗ[ℝ] (Fin 2 → ℝ))
     (st : DualSpinState 2 2)
     (H : ChiralHelicityDatum) (h_balanced : H.nLeft = H.nRight) :
     faceBoundary1Sum f v = 0 ∧
@@ -424,11 +519,17 @@ theorem grand_dual_spin_network_hodge_synthesis
     chiralProjectorPlus T x + chiralProjectorMinus T x = x ∧
     chiralGradingAction (dualDiracAction d1 delta st) +
       dualDiracAction d1 delta (chiralGradingAction st) = 0 ∧
+    deformedCoboundary pot e e.dst ≠ 0 ∧
     H.coords.xi = 0 := by
   refine ⟨boundary_squared_zero f v,
           dikinEdgeWeight_pos pot e,
           chiral_resolution_of_identity T x,
-          chiral_anticommutation d1 delta h_d1_neg st,
+          chiral_anticommutation d1 delta st,
+          ?_,
           helicity_balance_rapidity_collapse H h_balanced⟩
+  · intro hzero
+    have hboundary := (deformedCoboundary_zero_iff_boundary_zero pot e e.dst).mp hzero
+    rw [boundary1Coeff_dst] at hboundary
+    norm_num at hboundary
 
 end InfoGeometry.Canonical.DualSpinNetworkHodge

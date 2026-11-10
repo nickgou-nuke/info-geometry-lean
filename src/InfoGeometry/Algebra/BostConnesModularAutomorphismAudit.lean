@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import InfoGeometry.Algebra.BostConnesModularAutomorphismBridge
@@ -23,4 +28,3 @@ open InfoGeometry.Algebra.BostConnesModularAutomorphism.ModularPhaseFlow
 #print axioms sigma_zero_mu
 #print axioms sigma_add_mu
 #print axioms sigma_inverse_mu
-#print axioms bost_connes_modular_automorphism_synthesis

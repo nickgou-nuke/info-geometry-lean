@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ConformalTwistorBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -6,6 +11,24 @@ namespace InfoGeometry.Clifford.Conformal
 open CliffordAlgebra
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative ring `[Ring B]`, similarity conjugation `g * x * g⁻¹` preserves null elements (`x * x = 0`). -/
+theorem ring_null_conjugation_invariant
+    {B : Type*} [Ring B] (x g g_inv : B)
+    (hx : x * x = 0) (hg : g_inv * g = 1) :
+    (g * x * g_inv) * (g * x * g_inv) = 0 := by
+  calc
+    (g * x * g_inv) * (g * x * g_inv)
+      = g * x * (g_inv * g) * x * g_inv := by simp [mul_assoc]
+    _ = g * (x * x) * g_inv := by rw [hg, mul_one]; simp [mul_assoc]
+    _ = 0 := by rw [hx, mul_zero, zero_mul]
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]

@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -16,6 +22,69 @@ mass-shell readout by `InfoGeometry.Physics.FourVectorDiracReadout`. The
 they are not octonion associators, Jacobiators, or R-flux tensors.
 -/
 namespace InfoGeometry.GrassmannianTower
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingGrassmannBlades
+
+variable {B : Type*} [Ring B]
+
+/-- Non-commutative 2-blade `u * v` in an arbitrary associative ring `[Ring B]`. -/
+def ringBladeTwo (u v : B) : B := u * v
+
+/-- Right absorption by a square-zero generator `v * v = 0` in `[Ring B]`. -/
+theorem ringBladeTwo_mul_repeated_right_zero (u v : B) (hv : v * v = 0) :
+    ringBladeTwo u v * v = 0 := by
+  dsimp [ringBladeTwo]
+  rw [mul_assoc, hv, mul_zero]
+
+/-- Left absorption by a square-zero generator `u * u = 0` in `[Ring B]`. -/
+theorem ringBladeTwo_mul_repeated_left_zero (u v : B) (hu : u * u = 0) :
+    u * ringBladeTwo u v = 0 := by
+  dsimp [ringBladeTwo]
+  rw [← mul_assoc, hu, zero_mul]
+
+/-- In any non-commutative ring `[Ring B]`, if `u * u = 0` and `u * v + v * u = 0`,
+then the 2-blade `ringBladeTwo u v = u * v` squares to zero. -/
+theorem ringBladeTwo_sq_zero_of_anticommute (u v : B)
+    (hu : u * u = 0) (huv : u * v + v * u = 0) :
+    ringBladeTwo u v * ringBladeTwo u v = 0 := by
+  dsimp [ringBladeTwo]
+  have hvu : v * u = - (u * v) := eq_neg_of_add_eq_zero_right huv
+  calc
+    (u * v) * (u * v) = u * (v * u) * v := by noncomm_ring
+    _ = u * (- (u * v)) * v := by rw [hvu]
+    _ = - ((u * u) * (v * v)) := by noncomm_ring
+    _ = 0 := by rw [hu, zero_mul, neg_zero]
+
+/-- Non-commutative 3-blade `u * v * w` in an arbitrary associative ring `[Ring B]`. -/
+def ringBladeThree (u v w : B) : B := u * v * w
+
+/-- Swapping the first two anticommuting generators in `[Ring B]` negates `ringBladeThree`. -/
+theorem ringBladeThree_swap_first_two_of_anticommute (u v w : B)
+    (huv : u * v + v * u = 0) :
+    ringBladeThree u v w = - ringBladeThree v u w := by
+  dsimp [ringBladeThree]
+  have hswap : u * v = - (v * u) := eq_neg_of_add_eq_zero_left huv
+  rw [hswap, neg_mul]
+
+/-- Swapping the last two anticommuting generators in `[Ring B]` negates `ringBladeThree`. -/
+theorem ringBladeThree_swap_last_two_of_anticommute (u v w : B)
+    (hvw : v * w + w * v = 0) :
+    ringBladeThree u v w = - ringBladeThree u w v := by
+  dsimp [ringBladeThree]
+  have hswap : v * w = - (w * v) := eq_neg_of_add_eq_zero_left hvw
+  calc
+    u * v * w = u * (v * w) := by rw [mul_assoc]
+    _ = u * (- (w * v)) := by rw [hswap]
+    _ = - (u * w * v) := by noncomm_ring
+
+end NonCommRingGrassmannBlades
 
 variable (R : Type*) [CommRing R]
 variable {V : Type*} [AddCommGroup V] [Module R V]

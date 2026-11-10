@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.ZornAlternativeLaws
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -15,6 +16,64 @@ not a general analytic exponential or a global Lie-group representation.
 -/
 
 namespace InfoGeometry.Algebra.ZornVectorMatrix
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingTwoModeFlow
+
+variable {B : Type*} [Ring B]
+
+/-- Two-mode polynomial flow `c + s * X` in a non-commutative ring `[Ring B]`. -/
+def ringTwoModeExp (c s X : B) : B :=
+  c + s * X
+
+/-- Over any non-commutative ring `[Ring B]`, if `c₂` and `s₂` commute with `X`,
+then the two-mode polynomial flow satisfies the Cayley–Hamilton multiplication law:
+`(c₁ + s₁ * X) * (c₂ + s₂ * X) = (c₁ * c₂ + s₁ * s₂ * (X * X)) + (c₁ * s₂ + s₁ * c₂) * X`. -/
+theorem ringTwoModeExp_mul_of_commute (c₁ s₁ c₂ s₂ X : B)
+    (hc₂X : Commute c₂ X) (hs₂X : Commute s₂ X) :
+    ringTwoModeExp c₁ s₁ X * ringTwoModeExp c₂ s₂ X =
+      ringTwoModeExp (c₁ * c₂ + s₁ * s₂ * (X * X)) (c₁ * s₂ + s₁ * c₂) X := by
+  dsimp [ringTwoModeExp]
+  have h1 : (s₁ * X) * c₂ = s₁ * c₂ * X := by
+    calc
+      (s₁ * X) * c₂ = s₁ * (X * c₂) := by noncomm_ring
+      _ = s₁ * (c₂ * X) := by rw [hc₂X.symm.eq]
+      _ = s₁ * c₂ * X := by noncomm_ring
+  have h2 : (s₁ * X) * (s₂ * X) = s₁ * s₂ * (X * X) := by
+    calc
+      (s₁ * X) * (s₂ * X) = s₁ * (X * s₂) * X := by noncomm_ring
+      _ = s₁ * (s₂ * X) * X := by rw [hs₂X.symm.eq]
+      _ = s₁ * s₂ * (X * X) := by noncomm_ring
+  calc
+    (c₁ + s₁ * X) * (c₂ + s₂ * X)
+      = c₁ * c₂ + c₁ * (s₂ * X) + (s₁ * X) * c₂ + (s₁ * X) * (s₂ * X) := by noncomm_ring
+    _ = c₁ * c₂ + c₁ * (s₂ * X) + s₁ * c₂ * X + s₁ * s₂ * (X * X) := by rw [h1, h2]
+    _ = (c₁ * c₂ + s₁ * s₂ * (X * X)) + (c₁ * s₂ + s₁ * c₂) * X := by noncomm_ring
+
+/-- Over any non-commutative ring `[Ring B]`, if `c` and `s` commute with `X` and
+with each other, then `(c + s * X) * (c - s * X) = c * c - s * s * (X * X)`. -/
+theorem ringTwoModeExp_mul_opposite_of_commute (c s X : B)
+    (hcX : Commute c X) (hsX : Commute s X) (hcs : Commute c s) :
+    ringTwoModeExp c s X * ringTwoModeExp c (-s) X =
+      c * c - s * s * (X * X) := by
+  have hnsX : Commute (-s) X := hsX.neg_left
+  rw [ringTwoModeExp_mul_of_commute c s c (-s) X hcX hnsX]
+  dsimp [ringTwoModeExp]
+  have hcancel : c * (-s) + s * c = 0 := by
+    calc
+      c * (-s) + s * c = - (c * s) + s * c := by noncomm_ring
+      _ = - (s * c) + s * c := by rw [hcs.eq]
+      _ = 0 := neg_add_cancel (s * c)
+  rw [hcancel]
+  noncomm_ring
+
+end NonCommRingTwoModeFlow
 
 variable {R : Type*} [CommRing R]
 

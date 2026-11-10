@@ -1322,10 +1322,10 @@ theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
   by_cases h : n + m = 0
   · have h' : m + n = 0 := by omega
     have hm : m = -n := by omega
-    rw [ite_eq_left_of_eq_true (eq_true h'), ite_eq_left_of_eq_true (eq_true h), hm]
+    rw [ite_eq_left h', ite_eq_left h, hm]
     ring
   · have h' : m + n ≠ 0 := by omega
-    rw [ite_eq_right_of_eq_false (eq_false h'), ite_eq_right_of_eq_false (eq_false h)]
+    rw [ite_eq_right h', ite_eq_right h]
     ring
 
 /-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
@@ -1340,14 +1340,12 @@ theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
     have h2 : (m + k) + n = 0 := by omega
     have h3 : (k + n) + m = 0 := by omega
     have hk : k = -(n + m) := by omega
-    rw [ite_eq_left_of_eq_true (eq_true h1), ite_eq_left_of_eq_true (eq_true h2),
-        ite_eq_left_of_eq_true (eq_true h3), hk]
+    rw [ite_eq_left h1, ite_eq_left h2, ite_eq_left h3, hk]
     ring
   · have h1 : (n + m) + k ≠ 0 := h
     have h2 : (m + k) + n ≠ 0 := by omega
     have h3 : (k + n) + m ≠ 0 := by omega
-    rw [ite_eq_right_of_eq_false (eq_false h1), ite_eq_right_of_eq_false (eq_false h2),
-        ite_eq_right_of_eq_false (eq_false h3)]
+    rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3]
     ring
 
 /--
@@ -2152,6 +2150,10 @@ theorem hra_unipotent_bch_gyration_and_dhste_routing
       _ = 1 * G := by rw [hDhste]
       _ = G := one_mul G
 
+open InfoGeometry.CliffordTower
+open InfoGeometry.Canonical.SplitCliffordDirectLimit
+open InfoGeometry.Canonical.SplitCliffordTensorBridge
+open InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift
 open InfoGeometry.Canonical.SplitCliffordHeadTailTower
 
 /-- **Finite-Head Module × Infinite-Tail Operator Ring Colimit & Hyperbolic Residual Quantization
@@ -2176,12 +2178,12 @@ infinite-dimensional tail operator ring (`SplitCliffordInfinity`), via `SplitCli
    Virasoro anomaly, and the `arXiv:2609.26342` Head-Plus-Tail and `d-HSTE` telescoping identities! -/
 theorem split_clifford_head_tail_module_colimit_and_hra_realization
     (k n r s : ℕ) (m : ℤ)
-    (a : CliffordAlgebra (InfoGeometry.Clifford.ClNN.Qsplit k))
-    (x : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitClNNAlg n)
+    (a : CliffordAlgebra (Qsplit k))
+    (x : SplitClNNAlg n)
     (P X Y : SplitCliffordHeadTailStage k n)
     (hP : P * P = P)
-    (X_seq : ℕ → InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity)
-    (γ G : InfoGeometry.Canonical.SplitCliffordDirectLimit.SplitCliffordInfinity) :
+    (X_seq : ℕ → SplitCliffordInfinity)
+    (γ G : SplitCliffordInfinity) :
     let ofHT  := splitCliffordHeadTailOf k n
     let φ_inf := (splitCliffordHeadTailInfinity_ringEquiv k).toRingHom
     let P_ht  := ofHT P
@@ -2191,7 +2193,7 @@ theorem split_clifford_head_tail_module_colimit_and_hra_realization
     let X_inf := φ_inf X_ht
     let Y_inf := φ_inf Y_ht
     splitCliffordHeadTailModuleEquiv k
-      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      (a ⊗ₜ[ℝ] splitCliffordTailOf 0 n x) =
       ofHT (a ᵍ⊗ₜ x) ∧
     (ofHT (VirasoroAnomaly24 m P X Y) = 0 ↔ VirasoroAnomaly24 m P X Y = 0) ∧
     φ_inf (virasoroChiralMode r P_ht X_ht Y_ht) =
@@ -2205,7 +2207,7 @@ theorem split_clifford_head_tail_module_colimit_and_hra_realization
     hraHeadAggregate X_seq k + X_seq k = X_seq 0 ∧
     ((1 - γ) * dHsteWeightSum γ k) * G + (γ ^ k) * G = G := by
   have hMod : splitCliffordHeadTailModuleEquiv k
-      (a ⊗ₜ[ℝ] InfoGeometry.Canonical.SplitCliffordDirectLimitRingShift.splitCliffordTailOf 0 n x) =
+      (a ⊗ₜ[ℝ] splitCliffordTailOf 0 n x) =
       splitCliffordHeadTailOf k n (a ᵍ⊗ₜ x) :=
     splitCliffordHeadTailModuleEquiv_tmul_ofStage k n a x
   have hInj : splitCliffordHeadTailOf k n (VirasoroAnomaly24 m P X Y) = 0 ↔
@@ -2223,10 +2225,11 @@ theorem split_clifford_head_tail_module_colimit_and_hra_realization
   have hP_inf : φ_inf (splitCliffordHeadTailOf k n P) * φ_inf (splitCliffordHeadTailOf k n P) =
       φ_inf (splitCliffordHeadTailOf k n P) := by
     rw [← map_mul, hP_ht]
-  have hMapC : ∀ {R1 R2 : Type*} [Ring R1] [Ring R2] (ψ : R1 →+* R2) (P' X' Y' : R1),
-      ψ (virasoroChiralMode r P' X' Y') = virasoroChiralMode r (ψ P') (ψ X') (ψ Y') := by
-    intro R1 R2 _ _ ψ P' X' Y'
-    dsimp [virasoroChiralMode, V_met, Sigma_sp, Q_pos, Q_neg, N_plus, N_minus]
+  have hMapC : ∀ (ψ : SplitCliffordHeadTailInfinity k →+* SplitCliffordInfinity),
+      ψ (virasoroChiralMode r (splitCliffordHeadTailOf k n P) (splitCliffordHeadTailOf k n X) (splitCliffordHeadTailOf k n Y)) =
+      virasoroChiralMode r (ψ (splitCliffordHeadTailOf k n P)) (ψ (splitCliffordHeadTailOf k n X)) (ψ (splitCliffordHeadTailOf k n Y)) := by
+    intro ψ
+    dsimp only [virasoroChiralMode, V_met, Sigma_sp, Q_pos, Q_neg, N_plus, N_minus]
     simp only [map_mul, map_pow, map_add, map_sub, map_one]
   rcases all_mode_sugawara_virasoro_mode_algebra
       (splitCliffordHeadTailOf k n P) (splitCliffordHeadTailOf k n X) (splitCliffordHeadTailOf k n Y)
@@ -2241,7 +2244,7 @@ theorem split_clifford_head_tail_module_colimit_and_hra_realization
       _ = 1 * G := by rw [(dHste_discounted_telescoping γ k).1]
       _ = G := one_mul G
   exact ⟨hMod, hInj,
-         hMapC φ_inf (splitCliffordHeadTailOf k n P) (splitCliffordHeadTailOf k n X) (splitCliffordHeadTailOf k n Y),
+         hMapC φ_inf,
          hAlgHT, hAlgInf, rfl,
          hraHeadAggregate_add_tail_eq_initial X_seq k,
          hDhste⟩

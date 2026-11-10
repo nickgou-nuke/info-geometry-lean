@@ -1,6 +1,14 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
-
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Categorical.BraidColimitVirasoroAction
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.External.Virasoro.FockSpaceSugawara
+
+/-!
 # Charged-Fock braid/Virasoro bridge
 
 The repository's concrete Virasoro carrier is the charged Heisenberg Fock
@@ -12,11 +20,6 @@ does not replace it by a trivial action or identify the Fock space with a
 categorical colimit without a supplied map.
 -/
 
-import InfoGeometry.Categorical.BraidColimitVirasoroAction
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.CurrentSugawaraBridge
-import InfoGeometry.External.Virasoro.FockSpaceSugawara
-
 noncomputable section
 
 namespace InfoGeometry.Categorical.ChargedFockBraidVirasoroBridge
@@ -26,6 +29,28 @@ open InfoGeometry.Categorical.BraidVirasoroIntertwiner
 open InfoGeometry.Categorical.HadjiivanovBraidGroupColimit
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open VirasoroProject
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem chargedFockBraid_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {R : Type*} [Ring R]
+
+/-- In any noncommutative ring `[Ring R]`, if `g * u = 1` and `g` commutes with `L`,
+then conjugating `L` by `(g, u)` fixes `L`. -/
+theorem ring_conj_fixes_of_commute {g u L : R} (hgu : g * u = 1) (hcomm : g * L = L * g) :
+    g * L * u = L := by
+  calc
+    g * L * u = (L * g) * u := by rw [hcomm]
+    _ = L * (g * u) := by rw [mul_assoc]
+    _ = L := by rw [hgu, mul_one]
+
+end NoncommRing
 
 /-- The concrete Fock carrier already owned by the Virasoro modules. -/
 abbrev ChargedFockCarrier (𝕜 : Type) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) : Type :=
@@ -52,94 +77,91 @@ theorem chargedFockVirasoroMode_bracket
   exact CurrentHeisenbergRep.sugawaraStressMode_virasoroBracket
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α) m n
 
-/-- A finite-stage braid system acting on the concrete charged Fock carrier. -/
-structure CompatibleChargedFockAction
-    (𝕜 : Type) [Field 𝕜] [CharZero 𝕜]
-    (α : 𝕜) (B : BraidGroupDiagram) where
-  action :
-    CompatibleStageAction 𝕜 (ChargedFockCarrier 𝕜 α) B
-  modes_are_sugawara :
-    action.L = chargedFockVirasoroMode 𝕜 α
-
 namespace CompatibleChargedFockAction
 
 variable {𝕜 : Type} [Field 𝕜] [CharZero 𝕜]
 variable {α : 𝕜} {B : BraidGroupDiagram}
-variable (A : CompatibleChargedFockAction 𝕜 α B)
+variable (A : CompatibleStageAction 𝕜 (ChargedFockCarrier 𝕜 α) B)
 
 /-- The specialised filtered-colimit action is also an instance of the
 generic braid--Virasoro intertwiner interface. -/
-def toBraidVirasoroIntertwiner :
+def toBraidVirasoroIntertwiner
+    (hA : A.L = chargedFockVirasoroMode 𝕜 α) :
     BraidVirasoroIntertwiner 𝕜 (ChargedFockCarrier 𝕜 α)
       (BraidGroupColimit B) (chargedFockVirasoroMode 𝕜 α) where
   braidRep :=
-    { toFun := fun b => BraidColimitVirasoroAction.action A.action b
+    { toFun := fun b => BraidColimitVirasoroAction.action A b
       map_one' := by
-        exact (descendedAction A.action).hom.map_one
+        exact (descendedAction A).hom.map_one
       map_mul' := by
         intro b c
-        exact A.action.action_mul b c }
+        exact A.action_mul b c }
   intertwine := by
     intro b m
-    rw [← A.modes_are_sugawara]
-    exact CompatibleStageAction.action_intertwines A.action b m
+    rw [← hA]
+    exact CompatibleStageAction.action_intertwines A b m
 
 /-- The finite-stage charged-Fock braid action descends to the existing
 categorical braid colimit. -/
 abbrev descended :
     BraidGroupColimit B ⟶
       GrpCat.of (LinearAut 𝕜 (ChargedFockCarrier 𝕜 α)) :=
-  descendedAction A.action
+  descendedAction A
 
 /-- Universal stage restriction for the charged-Fock action. -/
 theorem action_stage (n : ℕ) (b : B.obj n) :
-    BraidColimitVirasoroAction.action A.action (stageInjection B n b) =
-      A.action.stages.app n b :=
-  A.action.action_stage n b
+    BraidColimitVirasoroAction.action A (stageInjection B n b) =
+      A.stages.app n b :=
+  A.action_stage n b
 
 /-- Every finite-stage braid operator commutes with the existing charged-Fock
 Sugawara mode. -/
-theorem stage_intertwines (n : ℕ) (b : B.obj n) (m : ℤ) :
+theorem stage_intertwines
+    (hA : A.L = chargedFockVirasoroMode 𝕜 α)
+    (n : ℕ) (b : B.obj n) (m : ℤ) :
     Commute
-      ((↑((CategoryTheory.ConcreteCategory.hom (A.action.stages.app n)) b) :
+      ((↑((CategoryTheory.ConcreteCategory.hom (A.stages.app n)) b) :
         LinearAut 𝕜 (ChargedFockCarrier 𝕜 α)).toLinearMap)
       (chargedFockVirasoroMode 𝕜 α m) := by
-  rw [← CompatibleChargedFockAction.modes_are_sugawara A]
-  exact A.action.stage_intertwines_readout n b m
+  rw [← hA]
+  exact A.stage_intertwines_readout n b m
 
 /-- The descended map is a group representation of B-infinity on the
 charged Fock carrier. -/
 theorem descended_mul (b c : BraidGroupColimit B) :
-    BraidColimitVirasoroAction.action A.action (b * c) =
-      BraidColimitVirasoroAction.action A.action b *
-        BraidColimitVirasoroAction.action A.action c := by
-  exact A.action.action_mul b c
+    BraidColimitVirasoroAction.action A (b * c) =
+      BraidColimitVirasoroAction.action A b *
+        BraidColimitVirasoroAction.action A c := by
+  exact A.action_mul b c
 
 /-- The global descended braid operator commutes with every charged-Fock
 Sugawara mode. -/
-theorem action_intertwines (b : BraidGroupColimit B) (m : ℤ) :
+theorem action_intertwines
+    (hA : A.L = chargedFockVirasoroMode 𝕜 α)
+    (b : BraidGroupColimit B) (m : ℤ) :
     Commute
-      ((BraidColimitVirasoroAction.action A.action b :
+      ((BraidColimitVirasoroAction.action A b :
           LinearAut 𝕜 (ChargedFockCarrier 𝕜 α)).toLinearMap)
       (chargedFockVirasoroMode 𝕜 α m) := by
-  rw [← CompatibleChargedFockAction.modes_are_sugawara A]
-  exact A.action.action_intertwines b m
+  rw [← hA]
+  exact A.action_intertwines b m
 
 /-- The carrier-level intertwining law is equivalently invariance of the
 Sugawara mode under the canonical `Module.End` conjugation action. -/
 theorem operator_conjugation_fixes_sugawara
+    (hA : A.L = chargedFockVirasoroMode 𝕜 α)
     (b : BraidGroupColimit B) (m : ℤ) :
     (LinearEquiv.conjAlgEquiv 𝕜
-      (BraidColimitVirasoroAction.action A.action b :
+      (BraidColimitVirasoroAction.action A b :
         LinearAut 𝕜 (ChargedFockCarrier 𝕜 α)))
         (chargedFockVirasoroMode 𝕜 α m) =
       chargedFockVirasoroMode 𝕜 α m := by
   rw [LinearEquiv.conjAlgEquiv_apply]
-  have h := A.action_intertwines b m
+  have h := action_intertwines A hA b m
   apply LinearMap.ext
   intro v
   let g : LinearAut 𝕜 (ChargedFockCarrier 𝕜 α) :=
-    BraidColimitVirasoroAction.action A.action b
+    BraidColimitVirasoroAction.action A b
   let L : Module.End 𝕜 (ChargedFockCarrier 𝕜 α) :=
     chargedFockVirasoroMode 𝕜 α m
   have hcomm : g.toLinearMap.comp L = L.comp g.toLinearMap := h.eq
@@ -152,15 +174,16 @@ theorem operator_conjugation_fixes_sugawara
 /-- The descended braid operators also commute with every commutator of
 charged-Fock Sugawara modes, by the generic intertwiner theorem. -/
 theorem action_intertwines_sugawara_commutator
+    (hA : A.L = chargedFockVirasoroMode 𝕜 α)
     (b : BraidGroupColimit B) (m n : ℤ) :
     Commute
-      ((BraidColimitVirasoroAction.action A.action b :
+      ((BraidColimitVirasoroAction.action A b :
           LinearAut 𝕜 (ChargedFockCarrier 𝕜 α)).toLinearMap)
       (BraidVirasoroIntertwiner.commutator
         (chargedFockVirasoroMode 𝕜 α m)
         (chargedFockVirasoroMode 𝕜 α n)) := by
   exact BraidVirasoroIntertwiner.commutes_with_commutator
-    A.toBraidVirasoroIntertwiner b m n
+    (toBraidVirasoroIntertwiner A hA) b m n
 
 end CompatibleChargedFockAction
 

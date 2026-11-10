@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Vertex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -16,6 +21,41 @@ algebra structure.
 namespace InfoGeometry.Algebra.Vertex
 
 open scoped BigOperators
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair_iterate :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section DivisionRingIterateCollapse
+
+variable {D V : Type*} [DivisionRing D] [AddCommGroup V] [Module D V]
+
+/-- Over any `[DivisionRing D]`, the `m = 0` Borcherds iterate LHS sum collapses to its `i = 0`
+iterate term `mode ell (mode n a b) c` for any mode family `mode : ℤ → V → V → V` and `0 < N`. -/
+theorem borcherdsLhsList_collapse_at_zero
+    (mode : ℤ → V → V → V) (n ell : ℤ) (a b c : V) {N : ℕ} (hN : 0 < N) :
+    (∑ i ∈ Finset.range N,
+      intBinomList D 0 i •
+        mode (ell - (i : ℤ)) (mode (n + (i : ℤ)) a b) c) =
+      mode ell (mode n a b) c := by
+  calc
+    (∑ i ∈ Finset.range N,
+      intBinomList D 0 i •
+        mode (ell - (i : ℤ)) (mode (n + (i : ℤ)) a b) c) =
+      intBinomList D 0 0 •
+        mode (ell - (0 : ℤ)) (mode (n + (0 : ℤ)) a b) c := by
+      apply Finset.sum_eq_single 0
+      · intro i _ hne
+        have hipos : 0 < i := Nat.pos_of_ne_zero hne
+        simp [intBinomList_zero_of_pos D i hipos]
+      · intro hzero
+        exact (hzero (Finset.mem_range.mpr hN)).elim
+    _ = mode ell (mode n a b) c := by
+      simp
+
+end DivisionRingIterateCollapse
 
 variable {k V : Type*}
 variable [Field k] [CharZero k] [AddCommGroup V] [Module k V]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FreudenthalKantorTripleSystem
@@ -11,6 +16,36 @@ form needed by a later bracket construction.
 -/
 
 namespace InfoGeometry.Algebra.FreudenthalKantorTripleSystem
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingTripleOperators
+
+variable {B : Type*} [Ring B]
+
+/-- Additive operator `z ↦ assocTriple x y z = x * y * z` on any non-commutative ring `[Ring B]`. -/
+def assocTripleOperator (x y : B) : B →+ B where
+  toFun z := assocTriple x y z
+  map_zero' := by simp [assocTriple]
+  map_add' u v := by simp [assocTriple, mul_add]
+
+@[simp] theorem assocTripleOperator_apply (x y z : B) :
+    assocTripleOperator x y z = assocTriple x y z := rfl
+
+/-- Commutator of two associative ternary operators over any non-commutative ring `[Ring B]`. -/
+theorem assocTripleOperator_commutator (x y u v z : B) :
+    assocTripleOperator x y (assocTripleOperator u v z) -
+      assocTripleOperator u v (assocTripleOperator x y z) =
+    assocTripleOperator (assocTriple x y u) v z -
+      assocTripleOperator u (assocTriple v x y) z :=
+  assocTriple_left_identity x y u v z
+
+end NonCommRingTripleOperators
 
 variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
 variable (data : FreudenthalKantorTripleSystem (R := R) (U := U))

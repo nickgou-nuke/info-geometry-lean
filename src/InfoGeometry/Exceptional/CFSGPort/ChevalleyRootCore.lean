@@ -72,7 +72,7 @@ inductive IsRoot (τ : Tag) : (Fin τ.rank → ℤ) → Prop
 abbrev Label (τ : Tag) : Type :=
   Fin τ.rank ⊕ {v : Fin τ.rank → ℤ // IsRoot τ v}
 
-abbrev RootModule (τ : Tag) (R : Type*) [CommRing R] : Type _ :=
+abbrev RootModule (τ : Tag) (R : Type*) [Ring R] : Type _ :=
   Label τ →₀ R
 
 @[expose] def Label.weight {τ : Tag} : Label τ → ℤ
@@ -87,7 +87,7 @@ abbrev RootModule (τ : Tag) (R : Type*) [CommRing R] : Type _ :=
       | .inr α, .inr β => toLex α.1 < toLex β.1
       | _, _ => False)
 
-variable (τ : Tag) (R : Type*) [CommRing R]
+variable (τ : Tag) (R : Type*) [Ring R]
 
 @[expose] def hVec (i : Fin τ.rank) : RootModule τ R :=
   Finsupp.single (Sum.inl i) 1
@@ -130,10 +130,10 @@ open Classical in
           (((stringUp τ i α.1 + k).choose k : R) * c ^ k) •
             rootVec τ R (α.1 - (k : ℤ) • Pi.single i 1)
 
-abbrev ModGL (K : Type*) [Field K] : Type _ :=
+abbrev ModGL (K : Type*) [DivisionRing K] : Type _ :=
   LinearMap.GeneralLinearGroup K (RootModule τ K)
 
-@[expose] def adjointGroup (K : Type*) [Field K] : Subgroup (ModGL τ K) :=
+@[expose] def adjointGroup (K : Type*) [DivisionRing K] : Subgroup (ModGL τ K) :=
   Subgroup.closure {g | ∃ (i : Fin τ.rank) (c : K),
     (g : Module.End K (RootModule τ K)) = xOp τ K i c ∨
       (g : Module.End K (RootModule τ K)) = yOp τ K i c}
@@ -217,16 +217,16 @@ theorem TwistTag.cartan_perm (t : TwistTag) (i j : Fin t.tag.rank) :
     · simp only [Sum.inr.injEq, Subtype.mk.injEq]
       ext j; simp [permLattice]
 
-@[expose] def diagramMap (t : TwistTag) (K : Type*) [Field K] : ModGL t.tag K :=
+@[expose] def diagramMap (t : TwistTag) (K : Type*) [DivisionRing K] : ModGL t.tag K :=
   LinearMap.GeneralLinearGroup.ofLinearEquiv
     (Finsupp.domLCongr (labelPerm t.perm t.cartan_perm))
 
-theorem diagramMap_hVec (t : TwistTag) (K : Type*) [Field K] (i : Fin t.tag.rank) :
+theorem diagramMap_hVec (t : TwistTag) (K : Type*) [DivisionRing K] (i : Fin t.tag.rank) :
     (diagramMap t K : Module.End K (RootModule t.tag K)) (hVec t.tag K i) =
       hVec t.tag K (t.perm i) := by
   simp [diagramMap, hVec, labelPerm]
 
-theorem diagramMap_rootVec (t : TwistTag) (K : Type*) [Field K] (α : Fin t.tag.rank → ℤ)
+theorem diagramMap_rootVec (t : TwistTag) (K : Type*) [DivisionRing K] (α : Fin t.tag.rank → ℤ)
     (hα : IsRoot t.tag α) :
     (diagramMap t K : Module.End K (RootModule t.tag K)) (rootVec t.tag K α) =
       rootVec t.tag K (permLattice t.perm α) := by
@@ -282,11 +282,11 @@ theorem entrywise_mul (σ : R →+* R) (A B : Module.End R (RootModule τ R)) :
   map_one' := entrywise_one σ
   map_mul' := entrywise_mul σ
 
-@[expose] def twistHom (t : TwistTag) (K : Type*) [Field K] (σ : K →+* K) :
+@[expose] def twistHom (t : TwistTag) (K : Type*) [DivisionRing K] (σ : K →+* K) :
     ModGL t.tag K →* ModGL t.tag K :=
   (MulAut.conj (diagramMap t K)).toMonoidHom.comp (Units.map (entrywiseHom σ))
 
-theorem coe_twistHom (t : TwistTag) (K : Type*) [Field K] (σ : K →+* K) (g : ModGL t.tag K) :
+theorem coe_twistHom (t : TwistTag) (K : Type*) [DivisionRing K] (σ : K →+* K) (g : ModGL t.tag K) :
     ((twistHom t K σ g : ModGL t.tag K) : Module.End K (RootModule t.tag K)) =
       (diagramMap t K : Module.End K (RootModule t.tag K)) *
         entrywise σ (g : Module.End K (RootModule t.tag K)) *

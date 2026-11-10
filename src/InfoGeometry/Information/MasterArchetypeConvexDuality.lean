@@ -50,6 +50,20 @@ This module integrates and exports the master commutative quadrangle uniting:
 All theorems are fully proved with zero `sorry`s and zero custom axioms.
 -/
 
+/-- 🏆 THEOREM: The Universal Non-Commutative Logarithmic Score Cocycle (Layer 1, `[Ring A]`).
+    Proves both the Left and Right Maurer–Cartan score cocycle laws on any non-commutative ring `A`. -/
+theorem universal_log_functor_mul_noncomm {A : Type*} [Ring A]
+    (D : A → A) (hD : InfoGeometry.Probability.ExpLogRNDerivation.IsDerivation D)
+    (u v : Aˣ) :
+    InfoGeometry.Probability.ExpLogRNDerivation.dlogL D (u * v) =
+      (↑v⁻¹ : A) * InfoGeometry.Probability.ExpLogRNDerivation.dlogL D u * (v : A) +
+      InfoGeometry.Probability.ExpLogRNDerivation.dlogL D v ∧
+    InfoGeometry.Probability.ExpLogRNDerivation.dlogR D (u * v) =
+      InfoGeometry.Probability.ExpLogRNDerivation.dlogR D u +
+      (u : A) * InfoGeometry.Probability.ExpLogRNDerivation.dlogR D v * (↑u⁻¹ : A) :=
+  ⟨InfoGeometry.Probability.ExpLogRNDerivation.dlogL_mul D hD u v,
+   InfoGeometry.Probability.ExpLogRNDerivation.dlogR_mul D hD u v⟩
+
 /-- 🏆 THEOREM: The Universal Logarithmic Score Homomorphism (Layer 1).
     Proves that relative surprisal converts density products into additive potentials. -/
 theorem universal_log_functor_mul {A : Type*} [CommRing A]
@@ -74,9 +88,10 @@ theorem universal_legendre_fenchel_pairing (psi : ℝ → ℝ) (theta eta : ℝ)
   InfoGeometry.Probability.FisherRaoMadelungIsometry.legendre_fenchel_identity psi theta eta
 
 /-- 🏆 THEOREM: The Universal 2-Step Derivation Exponential Automorphism (Layer 4).
-    The exponential flow of a nilpotent derivation preserves non-associative products. -/
+    The exponential flow of a nilpotent derivation preserves non-associative products
+    over any commutative scalar semiring `[CommSemiring K]`. -/
 theorem universal_nilpotent_derivation_automorphism
-    {K A : Type*} [Field K] [CharZero K] [AddCommGroup A] [Module K A]
+    {K A : Type*} [CommSemiring K] [AddCommGroup A] [Module K A]
     (mul : A →ₗ[K] A →ₗ[K] A) (D : A →ₗ[K] A)
     (hD : InfoGeometry.Algebra.NonAssocIteratedLeibniz.IsDerivation mul D)
     (h_cross : ∀ x y : A, mul (D x) (D y) = 0) (t : K) (x y : A) :

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceDefect
 import InfoGeometry.Core.PeirceAdjointCycle
 import InfoGeometry.Physics.Algebra.TripotentPeirceProjectors
@@ -22,7 +23,26 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 open IdempotencyDefect PeirceDecomposition PeirceGrading
 open PeirceCoupledCorners PeirceQuadraticFrame
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceDefectAdjoint_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 variable {A : Type*} [Ring A]
+
+/-- On an anticommuting input over any `[Ring A]`, the double commutator retains the generator square. -/
+theorem ring_double_commutator_of_anticommute {a x : A} (hax : a * x + x * a = 0) :
+    ⁅a, ⁅a, x⁆⁆ = 4 • (a ^ 2 * x) := by
+  have hxa : x * a = -(a * x) := eq_neg_of_add_eq_zero_right hax
+  have hc : ⁅a, x⁆ = 2 • (a * x) := by
+    change a * x - x * a = 2 • (a * x)
+    rw [hxa, sub_neg_eq_add, two_nsmul]
+  rw [hc, lie_nsmul, Ring.lie_def]
+  rw [mul_assoc a x a, hxa, mul_neg, ← mul_assoc a a x]
+  simp only [pow_two, nsmul_eq_mul, Nat.cast_ofNat]
+  noncomm_ring
 
 section Adjoint
 

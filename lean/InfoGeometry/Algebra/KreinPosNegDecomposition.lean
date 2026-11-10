@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Matrix
@@ -20,6 +25,22 @@ All theorems are proven by direct 2×2 computation.
 
 namespace Audit.KreinPosNegDecomposition
 
+/--
+An orthogonal complementary pair of idempotents determines an involution in
+any associative ring. This is the operator identity underlying the positive
+and negative Peirce sheets of a Krein decomposition.
+-/
+theorem involution_from_orthogonal_complementary_idempotents
+    {R : Type*} [Ring R] (e f : R)
+    (he : e * e = e) (hf : f * f = f)
+    (hef : e * f = 0) (hfe : f * e = 0)
+    (hcomp : e + f = 1) :
+    (e - f) * (e - f) = 1 := by
+  calc
+    (e - f) * (e - f) = e * e - e * f - f * e + f * f := by noncomm_ring
+    _ = e + f := by rw [he, hef, hfe, hf]; abel
+    _ = 1 := hcomp
+
 section KreinMetric
 
 /-- Krein metric J = diag(1, -1) over ℂ. -/
@@ -27,9 +48,6 @@ def J : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
 
 theorem det_J_nonzero : det J ≠ 0 := by
   unfold J; simp [Matrix.det_fin_two]
-
-/-- J is nondegenerate because its determinant is non-zero. -/
-theorem nondegenerate : det J ≠ 0 := det_J_nonzero
 
 theorem J_sq : J * J = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [J, Matrix.mul_apply]
@@ -62,12 +80,6 @@ theorem P_plus_add_P_minus : P_plus + P_minus = 1 := by
 /-- The Krein metric acts as J = P₊ - P₋. -/
 theorem J_as_projectors : J = P_plus - P_minus := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [J, P_plus, P_minus]
-
-/-- J² = 1 via the projector algebra (computed entrywise). -/
-theorem J_sq_via_projectors : J * J = 1 := by
-  rw [J_as_projectors]
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [P_plus, P_minus, Matrix.mul_apply]
 
 /-- The determinant of P₊ is zero. -/
 theorem det_P_plus : det P_plus = 0 := by

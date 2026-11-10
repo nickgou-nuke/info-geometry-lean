@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.CubicJordanOs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CubicJordanFreudenthal
@@ -24,7 +29,8 @@ instance : AddCommGroup F4CoordinateCarrier := Pi.addCommGroup
 instance : Module ℝ F4CoordinateCarrier := Pi.module _ _ _
 
 theorem finrank_F4CoordinateCarrier : Module.finrank ℝ F4CoordinateCarrier = 52 := by
-  exact Module.finrank_fin_fun ℝ
+  change Module.finrank ℝ (Fin 52 → ℝ) = 52
+  simp
 
 /-- S3 generation permutations acting on the generation Peirce spaces.
     `genPerm12` swaps generations 1 and 2, which corresponds to swapping α₁ and α₂, and conjugating the respective off-diagonal elements. -/
@@ -44,9 +50,19 @@ def genPerm31 (X : AlbertMatrix) : AlbertMatrix :=
 
 /-- Each generation transposition is an involution. -/
 theorem genPerm_closure : ∀ X : AlbertMatrix,
-    genPerm12 (genPerm12 X) = X ∧ genPerm23 (genPerm23 X) = X := by
+    genPerm12 (genPerm12 X) = X ∧
+    genPerm23 (genPerm23 X) = X ∧
+    genPerm31 (genPerm31 X) = X := by
   intro X
-  constructor <;> cases X <;> simp [genPerm12, genPerm23, conjZ_conjZ]
+  cases X; simp [genPerm12, genPerm23, genPerm31, conjZ_conjZ]
+
+/-- The two adjacent generation transpositions satisfy the Coxeter braid
+relation. Together with their involutivity, this gives the defining relations
+of the symmetric group on three generations. -/
+theorem genPerm_coxeter_braid (X : AlbertMatrix) :
+    genPerm12 (genPerm23 (genPerm12 X)) =
+      genPerm23 (genPerm12 (genPerm23 X)) := by
+  cases X; simp [genPerm12, genPerm23, conjZ_conjZ]
 
 noncomputable section
 

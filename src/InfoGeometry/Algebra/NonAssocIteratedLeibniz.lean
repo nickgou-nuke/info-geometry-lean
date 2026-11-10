@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Module.LinearMap.End
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Choose.Sum
@@ -136,7 +142,7 @@ theorem iterated_leibniz_smul
 
 section FirstOrder
 
-variable {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
+variable {R A : Type*} [CommSemiring R] [AddCommMonoid A] [Module R A]
 variable (mul : A →ₗ[R] A →ₗ[R] A)
 
 /-- The truncated exponential `1 + tD` on the underlying module. -/
@@ -214,7 +220,7 @@ theorem firstOrderExp_fixed_of_derivation_eq_zero
     firstOrderExp t D x = x := by
   rw [firstOrderExp_apply, hx, smul_zero, add_zero]
 
-theorem firstOrderExp_inverse
+theorem firstOrderExp_inverse {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
     (t : R) (D : A →ₗ[R] A)
     (hD2 : ∀ x, D (D x) = 0)
     (x : A) :
@@ -223,7 +229,7 @@ theorem firstOrderExp_inverse
   simp only [map_add, map_smul, hD2, smul_zero, add_zero]
   module
 
-theorem firstOrderExp_inverse'
+theorem firstOrderExp_inverse' {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
     (t : R) (D : A →ₗ[R] A)
     (hD2 : ∀ x, D (D x) = 0)
     (x : A) :
@@ -239,8 +245,8 @@ theorem firstOrderExp_add_apply
     firstOrderExp (s + t) D x =
       firstOrderExp s D (firstOrderExp t D x) := by
   rw [firstOrderExp_apply, firstOrderExp_apply, firstOrderExp_apply]
-  simp only [map_add, map_smul, hD2, smul_zero, add_zero]
-  module
+  simp only [map_add, map_smul, hD2, smul_zero, add_zero, add_smul]
+  abel
 
 end FirstOrder
 
@@ -312,7 +318,7 @@ theorem derivationCommutator_add_right
   abel
 
 /-- The derivation commutator is homogeneous in its left entry. -/
-theorem derivationCommutator_smul_left {R₁ : Type*} [CommRing R₁] [Module R₁ A]
+theorem derivationCommutator_smul_left {R₁ : Type*} [CommSemiring R₁] [Module R₁ A]
     (r : R₁) (D E : A →ₗ[R₁] A) :
     derivationCommutator (r • D) E = r • derivationCommutator D E := by
   ext x
@@ -320,7 +326,7 @@ theorem derivationCommutator_smul_left {R₁ : Type*} [CommRing R₁] [Module R�
   rw [smul_sub]
 
 /-- The derivation commutator is homogeneous in its right entry. -/
-theorem derivationCommutator_smul_right {R₁ : Type*} [CommRing R₁] [Module R₁ A]
+theorem derivationCommutator_smul_right {R₁ : Type*} [CommSemiring R₁] [Module R₁ A]
     (r : R₁) (D E : A →ₗ[R₁] A) :
     derivationCommutator D (r • E) = r • derivationCommutator D E := by
   ext x
@@ -365,7 +371,7 @@ theorem iterD_eq_zero_of_apply_eq_zero {R₁ A₁ : Type*} [Semiring R₁] [AddC
     iterD D n x = 0 := by
   cases n with
   | zero =>
-      omega
+      exact absurd rfl (ne_of_gt hn)
   | succ k =>
       simp [iterD, pow_succ, Module.End.mul_apply, hx]
 
@@ -408,6 +414,15 @@ structure NonAssocAlgEnd where
     toLinearMap one = one
 
 namespace NonAssocAlgEnd
+
+/-- The identity linear map as a constructive `NonAssocAlgEnd` inhabitant. -/
+def idEnd : NonAssocAlgEnd mul one where
+  toLinearMap := LinearMap.id
+  map_mul' := fun _ _ => rfl
+  map_one' := rfl
+
+instance : Inhabited (NonAssocAlgEnd mul one) :=
+  ⟨idEnd mul one⟩
 
 instance : CoeFun (NonAssocAlgEnd mul one) (fun _ => A → A) where
   coe F := F.toLinearMap
@@ -530,6 +545,18 @@ structure NonAssocAlgEquiv where
   right_inv' : ∀ x, toLinearMap (invFun x) = x
 
 namespace NonAssocAlgEquiv
+
+/-- The identity linear map as a constructive `NonAssocAlgEquiv` inhabitant. -/
+def idEquiv : NonAssocAlgEquiv mul one where
+  toLinearMap := LinearMap.id
+  invFun := id
+  map_mul' := fun _ _ => rfl
+  map_one' := rfl
+  left_inv' := fun _ => rfl
+  right_inv' := fun _ => rfl
+
+instance : Inhabited (NonAssocAlgEquiv mul one) :=
+  ⟨idEquiv mul one⟩
 
 instance : CoeFun (NonAssocAlgEquiv mul one) (fun _ => A → A) where
   coe F := F.toLinearMap
@@ -655,5 +682,18 @@ end NonAssocAlgEquiv
 end Equiv
 
 end Transport
+
+/-- Concrete ground inhabitant of `NonAssocAlgEnd` on `ℤ`. -/
+def intIdNonAssocAlgEnd : NonAssocAlgEnd (LinearMap.mul ℤ ℤ) (1 : ℤ) :=
+  ⟨LinearMap.id, fun x y => rfl, rfl⟩
+
+/-- Concrete ground inhabitant of `NonAssocAlgEquiv` on `ℤ`. -/
+def intIdNonAssocAlgEquiv : NonAssocAlgEquiv (LinearMap.mul ℤ ℤ) (1 : ℤ) :=
+  ⟨LinearMap.id, id, fun x y => rfl, rfl, fun x => rfl, fun x => rfl⟩
+
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem iterated_leibniz_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end InfoGeometry.Algebra.NonAssocIteratedLeibniz

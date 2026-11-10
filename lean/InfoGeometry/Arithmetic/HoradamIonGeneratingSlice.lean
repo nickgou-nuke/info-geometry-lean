@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.HoradamIonMatrixMethods
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -21,6 +27,13 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.HoradamIonGeneratingSlice
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open Finset
 open HoradamIonMatrixMethods
 
@@ -38,6 +51,27 @@ theorem seqGeneratingTrunc_succ {R : Type*} [Ring R] (W : ℕ → R) (t : R) (n 
   rw [show n + 1 + 1 = n + 2 by omega]
   rw [show n + 1 = Nat.succ n by rfl]
   rw [Finset.sum_range_succ]
+
+/-- In any non-commutative `[Ring R]`, evaluating the generating polynomial at `t = 1`
+gives the exact recurrence partial-sum identity without any commutativity hypothesis. -/
+theorem seqGeneratingTrunc_at_one_clear_denominator_ring
+    {R : Type*} [Ring R]
+    (W : ℕ → R) (p q : R)
+    (hrec : ∀ n : ℕ, W (n + 2) = p * W (n + 1) + q * W n) :
+    ∀ n : ℕ,
+    (1 - p - q) * seqGeneratingTrunc W 1 n =
+      W 0 + (W 1 - p * W 0) - W (n + 1) - q * W n
+  | 0 => by
+      simp [seqGeneratingTrunc]
+      noncomm_ring
+  | n + 1 => by
+      rw [seqGeneratingTrunc_succ]
+      rw [one_pow, mul_one]
+      rw [mul_add]
+      rw [seqGeneratingTrunc_at_one_clear_denominator_ring W p q hrec n]
+      have hW : W (n + 2) = p * W (n + 1) + q * W n := hrec n
+      rw [hW]
+      noncomm_ring
 
 /-- Finite denominator identity for a truncated generating polynomial. -/
 theorem seqGeneratingTrunc_clear_denominator

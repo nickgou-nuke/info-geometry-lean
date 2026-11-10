@@ -1,12 +1,55 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Killing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.InvariantForm
+import Mathlib.Algebra.Lie.OfAssociative
 
 open scoped Invertible
 
 universe u v
 
 namespace InfoGeometry.Core.Generic
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem symmetricLieGeneric_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section AssociativeRingInvolution
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+
+variable {A : Type*} [Ring A] (θ : A →+* A)
+
+/-- In any noncommutative associative ring `[Ring A]` equipped with a ring endomorphism `θ`,
+if `θ x = x` and `θ y = y`, then `θ ⁅x, y⁆ = ⁅x, y⁆` (`[𝔨, 𝔨] ⊆ 𝔨` without any `CommRing`). -/
+theorem ring_bracket_k_k {x y : A} (hx : θ x = x) (hy : θ y = y) :
+    θ ⁅x, y⁆ = ⁅x, y⁆ := by
+  change θ (x * y - y * x) = x * y - y * x
+  rw [map_sub, map_mul, map_mul, hx, hy]
+
+/-- In any noncommutative associative ring `[Ring A]` equipped with a ring endomorphism `θ`,
+if `θ x = x` and `θ y = -y`, then `θ ⁅x, y⁆ = -⁅x, y⁆` (`[𝔨, 𝔭] ⊆ 𝔭` without any `CommRing`). -/
+theorem ring_bracket_k_p {x y : A} (hx : θ x = x) (hy : θ y = -y) :
+    θ ⁅x, y⁆ = -⁅x, y⁆ := by
+  change θ (x * y - y * x) = -(x * y - y * x)
+  rw [map_sub, map_mul, map_mul, hx, hy, mul_neg, neg_mul]
+  abel
+
+/-- In any noncommutative associative ring `[Ring A]` equipped with a ring endomorphism `θ`,
+if `θ x = -x` and `θ y = -y`, then `θ ⁅x, y⁆ = ⁅x, y⁆` (`[𝔭, 𝔭] ⊆ 𝔨` without any `CommRing`). -/
+theorem ring_bracket_p_p {x y : A} (hx : θ x = -x) (hy : θ y = -y) :
+    θ ⁅x, y⁆ = ⁅x, y⁆ := by
+  change θ (x * y - y * x) = x * y - y * x
+  rw [map_sub, map_mul, map_mul, hx, hy, neg_mul_neg, neg_mul_neg]
+
+end AssociativeRingInvolution
 
 variable {R : Type u} {L : Type v}
 
@@ -20,6 +63,9 @@ structure SymmetricLieAlgebra (R : Type u) (L : Type v)
     [CommRing R] [LieRing L] [LieAlgebra R L] where
   θ : L ≃ₗ⁅R⁆ L
   involution : θ.trans θ = (LieEquiv.refl : L ≃ₗ⁅R⁆ L)
+
+instance : Inhabited (SymmetricLieAlgebra R L) :=
+  ⟨⟨LieEquiv.refl, rfl⟩⟩
 
 namespace SymmetricLieAlgebra
 
@@ -366,12 +412,11 @@ variable [Module.Free R L] [Module.Finite R L]
 
 namespace SymmetricLieAlgebra
 
-/-- A Cartan involutive Lie algebra: symmetric Lie algebra + nondegenerate Killing form. -/
-structure CartanLieAlgebra (R : Type u) (L : Type v)
+/-- A Cartan involutive Lie algebra predicate: nondegenerate Killing form. -/
+def IsCartanLieAlgebra (R : Type u) (L : Type v)
     [CommRing R] [LieRing L] [LieAlgebra R L]
-    [Module.Free R L] [Module.Finite R L]
-    extends SymmetricLieAlgebra R L where
-  killing_nondegenerate : (killingForm R L).Nondegenerate
+    [Module.Free R L] [Module.Finite R L] : Prop :=
+  (killingForm R L).Nondegenerate
 
 variable (S : SymmetricLieAlgebra R L)
 
@@ -414,11 +459,11 @@ namespace SymmetricLieAlgebra
 
 variable (S : SymmetricLieAlgebra R L)
 
-/-- Noncompact sign convention interface:
+/-- Noncompact sign convention predicate:
 `B_θ` is nonnegative on `𝔭` and nonpositive on `𝔨`. -/
-structure CartanSignature where
-  pos_on_p : ∀ x : L, x ∈ S.𝔭 → 0 ≤ S.cartanForm x x
-  neg_on_k : ∀ x : L, x ∈ S.𝔨 → S.cartanForm x x ≤ 0
+def HasCartanSignature : Prop :=
+  (∀ x : L, x ∈ S.𝔭 → 0 ≤ S.cartanForm x x) ∧
+  (∀ x : L, x ∈ S.𝔨 → S.cartanForm x x ≤ 0)
 
 end SymmetricLieAlgebra
 

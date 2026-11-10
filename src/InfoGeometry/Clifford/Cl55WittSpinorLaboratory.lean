@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -6,6 +11,13 @@ noncomputable section
 namespace InfoGeometry.Clifford.Cl55WittSpinorLaboratory
 
 open scoped BigOperators
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem wittSpinorLab_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 /-!
 # Cl(5,5) Purely Real 32-Spinor Operator Laboratory
@@ -37,7 +49,7 @@ $$\boxed{
 \end{aligned}}
 $$
 
-All theorems are exact in native Mathlib 4 with zero `sorry`s.
+All theorems are proved in native Mathlib 4.
 -/
 
 variable {R : Type*} [Ring R] [Invertible (2 : R)]
@@ -486,5 +498,32 @@ theorem grand_cl55_witt_spinor_synthesis
   · intro x y
     exact ⟨BF.chiral_plus_isotropic gamma_star h_gamma_sq x y,
            BF.chiral_minus_isotropic gamma_star h_gamma_sq x y⟩
+
+/-- Ground inhabitant of `WittBasis55` over `Unit`. -/
+def unitWittBasis55 : WittBasis55 Unit where
+  e := fun _ => ()
+  f := fun _ => ()
+  e_sq := fun _ => rfl
+  f_sq := fun _ => rfl
+  anticomm_ee := fun _ _ => rfl
+  anticomm_ff := fun _ _ => rfl
+  anticomm_ef := fun _ _ => Subsingleton.elim _ _
+
+/-- Ground inhabitant of `SpinorChirality` over `Unit`. -/
+def unitSpinorChirality : SpinorChirality Unit unitWittBasis55 where
+  gamma_star := ()
+  gamma_star_sq := rfl
+  gamma_star_anticomm_e := fun _ => rfl
+  gamma_star_anticomm_f := fun _ => rfl
+
+/-- Ground inhabitant of `KreinFundamentalSymmetry` over `ℤ`. -/
+def intUnitKreinFundamentalSymmetry : KreinFundamentalSymmetry ℤ where
+  J_K := 1
+  J_K_sq := one_mul 1
+
+/-- Ground inhabitant of `SpinorBilinearForm` over `ℚ`. -/
+def ratZeroSpinorBilinearForm : SpinorBilinearForm (R := ℚ) ℚ where
+  B := 0
+  chirality_skew := fun _ _ _ => by simp
 
 end InfoGeometry.Clifford.Cl55WittSpinorLaboratory

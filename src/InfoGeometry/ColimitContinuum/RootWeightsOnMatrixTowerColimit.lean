@@ -23,6 +23,13 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.ColimitContinuum.TensorTowerColimit
 open InfoGeometry.ColimitContinuum.CartanActionOnMatrixTowerColimit
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem rootWeightsColimit_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 variable {R : Type} [Ring R]
 
 /-- The raising operator `E₀₂` at stage `n`; the tower embedding keeps it in
@@ -101,10 +108,8 @@ theorem loweringMatrix_cartan_weight (n : ℕ) :
 
 section ColimitWeights
 
-variable {R : Type} [CommRing R]
-
 /-- The represented raising root vector in the actual categorical module
-colimit. -/
+colimit over any `[Ring R]`. -/
 def raisingRoot (n : ℕ) : TowerColimit (R := R) :=
   (stageInclusion (R := R) n).hom (raisingMatrix (R := R) n)
 

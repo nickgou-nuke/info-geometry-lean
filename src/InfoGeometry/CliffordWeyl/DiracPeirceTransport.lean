@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.CliffordWeyl.DiracMetricCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.CliffordWeyl.DiracPeircePerfectPairing
 
 /-! Coordinate covariance of full-matrix Dirac trace pairing and opposite
@@ -12,6 +13,20 @@ transported metric is not assumed involutive.
 -/
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 open Matrix InfoGeometry.Core.PeirceDecomposition
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem diracPeirceTransport_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, similarity conjugation by `(S, T)` with `S * T = 1`
+commutes with `complementIdempotent`. -/
+theorem ring_complement_change_basis {B : Type*} [Ring B] (S T P : B) (hST : S * T = 1) :
+    complementIdempotent (S * P * T) = S * complementIdempotent P * T := by
+  simp only [complementIdempotent, mul_sub, mul_one, sub_mul, hST]
+
 variable {R n : Type*} [Ring R] [StarRing R] [Fintype n] [DecidableEq n]
 
 theorem dirac_trace_pairing_change_basis {R : Type*} [CommRing R] [StarRing R] (S T η ξ X Y : Matrix n n R)

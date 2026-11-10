@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Module.LinearMap.End
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Choose.Sum
@@ -277,5 +283,30 @@ theorem expStep2_eMinus_fixed_of_deriv_zero
       _ = (half : K) • (nilpotentExpStep2 D t one - nilpotentExpStep2 D t I) := by
           rw [(nilpotentExpStep2 D t).map_sub]
       _ = (half : K) • (one - I) := by rw [h_one_fixed, hI_fixed]
+
+/-- Over any `[CommSemiring R]`, `exp(tD)` fixes `NonAssocIteratedLeibniz.ePlus one half I`
+whenever `D one = 0` and `D I = 0`. -/
+theorem expStep2_ePlus_fixed_of_deriv_zero_commSemiring
+    {R A : Type*} [CommSemiring R] [AddCommGroup A] [Module R A]
+    (one : A) (D : A →ₗ[R] A) (hD_one : D one = 0)
+    (t half_scalar : R) (I : A) (hDI : D I = 0) :
+    nilpotentExpStep2 D t (InfoGeometry.Algebra.NonAssocIteratedLeibniz.ePlus one half_scalar I) =
+      InfoGeometry.Algebra.NonAssocIteratedLeibniz.ePlus one half_scalar I := by
+  simp [nilpotentExpStep2_apply, InfoGeometry.Algebra.NonAssocIteratedLeibniz.ePlus, hD_one, hDI]
+
+/-- Over any `[CommSemiring R]`, `exp(tD)` fixes `NonAssocIteratedLeibniz.eMinus one half I`
+whenever `D one = 0` and `D I = 0`. -/
+theorem expStep2_eMinus_fixed_of_deriv_zero_commSemiring
+    {R A : Type*} [CommSemiring R] [AddCommGroup A] [Module R A]
+    (one : A) (D : A →ₗ[R] A) (hD_one : D one = 0)
+    (t half_scalar : R) (I : A) (hDI : D I = 0) :
+    nilpotentExpStep2 D t (InfoGeometry.Algebra.NonAssocIteratedLeibniz.eMinus one half_scalar I) =
+      InfoGeometry.Algebra.NonAssocIteratedLeibniz.eMinus one half_scalar I := by
+  simp [nilpotentExpStep2_apply, InfoGeometry.Algebra.NonAssocIteratedLeibniz.eMinus, hD_one, hDI]
+
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem peirce_transport_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end InfoGeometry.Algebra.PeirceTransport

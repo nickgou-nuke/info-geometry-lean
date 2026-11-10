@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Algebra.Star.Basic
@@ -39,12 +44,11 @@ invariance of the gauge range projections under the time flow:
      under the Hamiltonian modular time evolution.
 
 5. **1-Parameter Dynamics & Group Laws**:
-   - Initial identity: $\sigma_0(\mu_n) = \mu_n$ (`sigma_zero_mu`) and $\sigma_0(e(\gamma)) = e(\gamma)$ (`sigma_zero_e`).
+   - Initial identity on semigroup isometries: $\sigma_0(\mu_n) = \mu_n$ (`sigma_zero_mu`).
+     Phase unitaries are time-fixed by the definition of `sigma_e`.
    - Flow composition: $\sigma_{s+t}(\mu_n) = u(s, n) \sigma_t(\mu_n)$ (`sigma_add_mu`).
    - Time reversal / inverse: $u(-t, n) \sigma_t(\mu_n) = \mu_n$ (`sigma_inverse_mu`).
 
-6. **Master Synthesis Theorem**:
-   - Unbroken kernel certification of all 8 core dynamical pillars (`bost_connes_modular_automorphism_synthesis`).
 -/
 
 namespace InfoGeometry.Algebra.BostConnesModularAutomorphism
@@ -189,9 +193,6 @@ theorem sigma_zero_mu (n : ℕ+) : MF.sigma_mu B 0 n = B.μ n := by
   dsimp [sigma_mu]
   rw [MF.time_zero, one_mul]
 
-/-- Time zero action on phase unitaries is the identity. -/
-theorem sigma_zero_e (g : Γ) : MF.sigma_e B 0 g = B.e g := rfl
-
 /-- Additivity / composition law of the modular flow on isometries. -/
 theorem sigma_add_mu (s t : ℝ) (n : ℕ+) :
     MF.sigma_mu B (s + t) n = MF.u s n * MF.sigma_mu B t n := by
@@ -205,27 +206,6 @@ theorem sigma_inverse_mu (t : ℝ) (n : ℕ+) :
   rw [neg_add_cancel] at h
   rw [← h]
   exact MF.sigma_zero_mu B n
-
-/-- Master synthesis theorem certifying the 8 core pillars of the Bost-Connes
-1-parameter modular automorphism group and strict range projection invariance. -/
-theorem bost_connes_modular_automorphism_synthesis (t s : ℝ) (n m : ℕ+) (g : Γ)
-    (h_coprime : Nat.Coprime m.val n.val) :
-    (MF.sigma_structure B t).P n = B.P n ∧
-    star (MF.sigma_mu B t n) * MF.sigma_mu B t n = 1 ∧
-    MF.sigma_mu B t (m * n) = MF.sigma_mu B t m * MF.sigma_mu B t n ∧
-    star (MF.sigma_mu B t n) * MF.sigma_e B t g = MF.sigma_e B t ((n : ℕ) • g) * star (MF.sigma_mu B t n) ∧
-    MF.sigma_e B t g * MF.sigma_mu B t n = MF.sigma_mu B t n * MF.sigma_e B t ((n : ℕ) • g) ∧
-    star (MF.sigma_mu B t m) * MF.sigma_mu B t n = MF.sigma_mu B t n * star (MF.sigma_mu B t m) ∧
-    MF.sigma_mu B 0 n = B.μ n ∧
-    MF.sigma_mu B (s + t) n = MF.u s n * MF.sigma_mu B t n := by
-  refine ⟨MF.sigma_P_invariance B t n,
-          MF.sigma_mu_isometry B t n,
-          MF.sigma_mu_mul B t m n,
-          MF.sigma_cov_right B t n g,
-          MF.sigma_cov_left B t n g,
-          MF.sigma_hecke_coprime B t m n h_coprime,
-          MF.sigma_zero_mu B n,
-          MF.sigma_add_mu B s t n⟩
 
 end ModularPhaseFlow
 

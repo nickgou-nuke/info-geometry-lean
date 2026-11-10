@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceMatrixTracePairing
 import Mathlib.LinearAlgebra.Matrix.Bilinear
 import Mathlib.LinearAlgebra.PerfectPairing.Basic
@@ -15,6 +16,36 @@ nonzero-rank assumption is required on the idempotent.
 noncomputable section
 namespace InfoGeometry.Core.PeirceDecomposition
 open Matrix
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceMatrixPerfectPairing_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any noncommutative ring `[Ring B]`, if `P * P = P`, then `component10 P` is idempotent. -/
+theorem ring_component10_fixed {B : Type*} [Ring B] (P Y : B) (hP : P * P = P) :
+    component10 P (component10 P Y) = component10 P Y := by
+  unfold component10
+  calc
+    P * (P * Y * complementIdempotent P) * complementIdempotent P =
+        (P * P) * Y * (complementIdempotent P * complementIdempotent P) := by
+      noncomm_ring
+    _ = P * Y * complementIdempotent P := by
+      rw [hP, complementIdempotent_sq P hP]
+
+/-- In any noncommutative ring `[Ring B]`, if `P * P = P`, then `component01 P` is idempotent. -/
+theorem ring_component01_fixed {B : Type*} [Ring B] (P Y : B) (hP : P * P = P) :
+    component01 P (component01 P Y) = component01 P Y := by
+  unfold component01
+  calc
+    complementIdempotent P * (complementIdempotent P * Y * P) * P =
+        (complementIdempotent P * complementIdempotent P) * Y * (P * P) := by
+      noncomm_ring
+    _ = complementIdempotent P * Y * P := by
+      rw [hP, complementIdempotent_sq P hP]
+
 variable {K n : Type*} [CommRing K] [Fintype n] [DecidableEq n]
 
 def component10Linear (P : Matrix n n K) : Module.End K (Matrix n n K) :=

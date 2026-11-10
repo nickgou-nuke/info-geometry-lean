@@ -4,7 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
-import InfoGeometry.Clifford.ClNNFockDirectLimitRepresentation
+import InfoGeometry.Clifford.ClNNFockDirectLimitRepresentationScalarLeftWave19
+
+/-!
+# Lie action law on the symmetric split Clifford Fock colimit
+
+BUCKET 1 — The multiplication law for the descended Chevalley action is owned
+by `ClNNFockDirectLimitRepresentation`.
+BUCKET 2 — Subtraction preservation follows from the already proved additive
+and real-linear action laws.
+BUCKET 3 — The commutator identity is proved for arbitrary elements of the
+algebraic `Cl(n,n)` direct limit acting on the algebraic Fock direct limit.
+No finite-dimensional bound or analytic completion is imposed on either
+colimit carrier.
+-/
 
 noncomputable section
 
@@ -15,71 +28,39 @@ open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
 open InfoGeometry.Clifford.ClNN
 
-/-- The descended Chevalley action is a representation of the Clifford
-algebra direct limit: multiplication in the algebra acts by composition on
-its algebraic Fock direct limit. -/
-theorem splitCliffordFockAction_mul
+/-! The product law is owned by
+`ClNNFockDirectLimitRepresentation.splitCliffordFockAction_mul`. This module
+adds its Lie-bracket consequence on arbitrary elements of the algebraic
+direct limit. -/
+
+/-- The descended action carries subtraction in the Clifford algebra
+colimit to subtraction of the induced spinor operators. -/
+theorem splitCliffordFockAction_sub_left
     (aInf bInf : SplitCliffordInfinity) (ψInf : FockInfinity) :
-    splitCliffordFockAction (aInf * bInf) ψInf =
-      splitCliffordFockAction aInf
-        (splitCliffordFockAction bInf ψInf) := by
-  obtain ⟨n, a, ha⟩ := splitCliffordInfinity_exists_of aInf
-  obtain ⟨m, b, hb⟩ := splitCliffordInfinity_exists_of bInf
-  obtain ⟨r, ψ, hψ⟩ := DirectLimit.exists_eq_mk
-    (f := fun i j h => fockStageMap i j h) ψInf
-  have hψ' : fockToInfinity r ψ = ψInf := by
-    simpa [fockToInfinity] using hψ.symm
-  let k := max (max n m) r
-  have hnk : n ≤ k := le_trans (le_max_left n m) (le_max_left (max n m) r)
-  have hmk : m ≤ k := le_trans (le_max_right n m) (le_max_left (max n m) r)
-  have hrk : r ≤ k := le_max_right (max n m) r
-  let aK := splitCliffordMap n k hnk a
-  let bK := splitCliffordMap m k hmk b
-  let ψK := fockStageMap r k hrk ψ
-  have ha' : DirectLimit.Algebra.of SplitClNNAlg
-      (fun i j h => splitCliffordMap i j h) k aK = aInf := by
+    splitCliffordFockAction (aInf - bInf) ψInf =
+      splitCliffordFockAction aInf ψInf - splitCliffordFockAction bInf ψInf := by
+  rw [sub_eq_add_neg, splitCliffordFockAction_add_left]
+  have hneg : splitCliffordFockAction (-bInf) ψInf =
+      -splitCliffordFockAction bInf ψInf := by
     calc
-      DirectLimit.Algebra.of SplitClNNAlg
-          (fun i j h => splitCliffordMap i j h) k aK =
-          DirectLimit.Algebra.of SplitClNNAlg
-            (fun i j h => splitCliffordMap i j h) n a := by
-              exact DirectLimit.Algebra.of_f
-                (f := fun i j h => splitCliffordMap i j h) hnk a
-      _ = aInf := ha
-  have hb' : DirectLimit.Algebra.of SplitClNNAlg
-      (fun i j h => splitCliffordMap i j h) k bK = bInf := by
-    calc
-      DirectLimit.Algebra.of SplitClNNAlg
-          (fun i j h => splitCliffordMap i j h) k bK =
-          DirectLimit.Algebra.of SplitClNNAlg
-            (fun i j h => splitCliffordMap i j h) m b := by
-              exact DirectLimit.Algebra.of_f
-                (f := fun i j h => splitCliffordMap i j h) hmk b
-      _ = bInf := hb
-  have hψK : fockToInfinity k ψK = ψInf := by
-    calc
-      fockToInfinity k ψK = fockToInfinity r ψ := by
-        exact DirectLimit.Module.of_f
-          (f := fun i j h => fockStageMap i j h)
-          (i := r) (j := k) (hij := hrk) (x := ψ)
-      _ = ψInf := hψ'
-  rw [← ha', ← hb', ← hψK]
-  have hab :
-      DirectLimit.Algebra.of SplitClNNAlg
-          (fun i j h => splitCliffordMap i j h) k (aK * bK) =
-        (DirectLimit.Algebra.of SplitClNNAlg
-          (fun i j h => splitCliffordMap i j h) k aK) *
-          (DirectLimit.Algebra.of SplitClNNAlg
-            (fun i j h => splitCliffordMap i j h) k bK) := by
-    rw [map_mul]
-  rw [← hab]
-  simp only [splitCliffordFockAction_of]
-  change fockToInfinity k
-      (towerSpinorRep k (aK * bK) ψK) =
-    fockToInfinity k
-      (towerSpinorRep k aK (towerSpinorRep k bK ψK))
-  apply congrArg (fockToInfinity k)
-  rw [map_mul]
-  rfl
+      splitCliffordFockAction (-bInf) ψInf =
+          splitCliffordFockAction ((-1 : ℝ) • bInf) ψInf := by
+            congr 1
+      _ = (-1 : ℝ) • splitCliffordFockAction bInf ψInf :=
+        splitCliffordFockAction_smul_left (-1) bInf ψInf
+      _ = -splitCliffordFockAction bInf ψInf := by simp
+  rw [hneg]
+  exact (sub_eq_add_neg _ _).symm
+
+/-- The Chevalley action of a commutator in the Clifford algebra colimit is
+the commutator of the two induced operators on the algebraic Fock colimit.
+This is the Lie-representation law for the unbounded `Cl(n,n)` tower. -/
+theorem splitCliffordFockAction_commutator
+    (aInf bInf : SplitCliffordInfinity) (ψInf : FockInfinity) :
+    splitCliffordFockAction (aInf * bInf - bInf * aInf) ψInf =
+      splitCliffordFockAction aInf (splitCliffordFockAction bInf ψInf) -
+        splitCliffordFockAction bInf (splitCliffordFockAction aInf ψInf) := by
+  rw [splitCliffordFockAction_sub_left,
+    splitCliffordFockAction_mul, splitCliffordFockAction_mul]
 
 end InfoGeometry.Clifford.ClNNFockDirectLimitRepresentation

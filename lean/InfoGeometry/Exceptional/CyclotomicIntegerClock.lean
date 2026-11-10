@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Expand
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.GroupTheory.OrderOfElement
@@ -8,20 +13,20 @@ namespace InfoGeometry.Exceptional.CyclotomicIntegerClock
 
 open Polynomial
 
-theorem cyclotomic_twelve (Scalar : Type*) [Ring Scalar] :
+theorem cyclotomic_twelve (Scalar : Type*) [CommRing Scalar] :
     cyclotomic 12 Scalar = X ^ 4 - X ^ 2 + 1 := by
   rw [show 12 = 6 * 2 by norm_num,
     ← cyclotomic_expand_eq_cyclotomic Nat.prime_two (by decide) Scalar,
     expand_eq_comp_X_pow, cyclotomic_six]
   simp
-  noncomm_ring
+  ring
 
 theorem cyclotomic_twelve_factorization :
     cyclotomic 12 ℤ * (X ^ 2 + 1) * (X ^ 6 - 1) = X ^ 12 - 1 := by
   rw [cyclotomic_twelve]
   ring
 
-theorem cyclotomic_twelve_degree (Scalar : Type*) [Ring Scalar] [Nontrivial Scalar] :
+theorem cyclotomic_twelve_degree (Scalar : Type*) [CommRing Scalar] [Nontrivial Scalar] :
     (cyclotomic 12 Scalar).natDegree = 4 := by
   rw [natDegree_cyclotomic]
   decide

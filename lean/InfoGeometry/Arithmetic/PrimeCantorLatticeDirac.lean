@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
@@ -31,6 +37,12 @@ namespace InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
 
 /-! ## 1. Finite Cantor lattice -/
 
@@ -201,6 +213,7 @@ finite algebraic module.
 @[rep_depth krein]
 structure PrimeCantorDirac (P : PrimeRegister) where
   axisWeight : ℕ → ℝ
+  deriving Inhabited
 
 namespace PrimeCantorDirac
 
@@ -228,6 +241,47 @@ theorem op_eq_axis_sum
   rfl
 
 end PrimeCantorDirac
+
+/-- Concrete ground inhabitant of `PrimeCantorDirac` with zero axis weight. -/
+def zeroPrimeCantorDirac (P : PrimeRegister) : PrimeCantorDirac P where
+  axisWeight := fun _ => 0
+
+section NonCommRingCantorDirac
+
+variable {B : Type*} [Ring B]
+
+/-- An operator-valued field `CantorVertex P → B` on the prime-Cantor lattice over any
+non-commutative ring `[Ring B]`. -/
+abbrev RingCantorField (P : PrimeRegister) (B : Type*) :=
+  CantorVertex P → B
+
+/-- The `p`-axis graph Dirac operator `κ p * f (bitFlipVertex P p hp v)` over any
+non-commutative ring `[Ring B]`. -/
+def ringCantorAxisDirac
+    (P : PrimeRegister) (κ : ℕ → B)
+    (p : ℕ) (hp : p ∈ P.primes)
+    (f : RingCantorField P B) (v : CantorVertex P) : B :=
+  κ p * f (bitFlipVertex P p hp v)
+
+/-- The prime-weighted graph Dirac operator over any non-commutative ring `[Ring B]`. -/
+def ringCantorGraphDirac
+    (P : PrimeRegister) (κ : ℕ → B)
+    (f : RingCantorField P B) (v : CantorVertex P) : B :=
+  ∑ p ∈ P.primes.attach,
+    ringCantorAxisDirac P κ p.val p.property f v
+
+/-- Applying the `p`-axis graph Dirac operator twice over any non-commutative ring `[Ring B]`
+scales the original vertex value `f v` on the left by `κ p * κ p` using `bitFlipVertex_involutive`. -/
+theorem ringCantorAxisDirac_twice
+    (P : PrimeRegister) (κ : ℕ → B)
+    (p : ℕ) (hp : p ∈ P.primes)
+    (f : RingCantorField P B) (v : CantorVertex P) :
+    ringCantorAxisDirac P κ p hp (ringCantorAxisDirac P κ p hp f) v =
+      (κ p * κ p) * f v := by
+  unfold ringCantorAxisDirac
+  rw [bitFlipVertex_involutive P p hp v, mul_assoc]
+
+end NonCommRingCantorDirac
 
 /-! ## 3. Arithmetic Hamiltonian on the Cantor lattice -/
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Cl11Fermions
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
@@ -100,7 +105,7 @@ theorem projUp_idem (O : CliffordAlgebra Cl11Fermions.q11) (hO2 : O ^ 2 = 1) :
           = ((1/2 : ℚ) • (1 + O)) * ((1/2 : ℚ) • (1 + O)) := rfl
       _ = (algebraMap ℚ (CliffordAlgebra Cl11Fermions.q11) (1/2 : ℚ) * (1 + O)) *
           (algebraMap ℚ (CliffordAlgebra Cl11Fermions.q11) (1/2 : ℚ) * (1 + O)) := by
-        simpa [Algebra.smul_def]
+        simp [Algebra.smul_def]
       _ = (algebraMap ℚ (CliffordAlgebra Cl11Fermions.q11) (1/2 : ℚ) * (1 + O)) *
           ((1 + O) * algebraMap ℚ (CliffordAlgebra Cl11Fermions.q11) (1/2 : ℚ)) := by
         rw [Algebra.commutes (1/2 : ℚ) (1 + O)]
@@ -152,7 +157,7 @@ theorem projUp_idem (O : CliffordAlgebra Cl11Fermions.q11) (hO2 : O ^ 2 = 1) :
       _ = (1/2 : ℚ) • (1 + O) := by norm_num
   calc
     ((1/2 : ℚ) • (1 + O)) * ((1/2 : ℚ) • (1 + O)) = (1/4 : ℚ) • ((1 + O) * (1 + O)) := h_sq_prod
-    _ = (1/4 : ℚ) • (2 • (1 + O)) := by simpa [h_sq_Xsq]
+    _ = (1/4 : ℚ) • (2 • (1 + O)) := by simp [h_sq_Xsq]
     _ = (1/2 : ℚ) • (1 + O) := h_scalar
 
 /-- The three projectors sum to 1. -/
@@ -215,26 +220,25 @@ theorem tripotent_factor : ∀ {R : Type*} [Ring R] (a : R), a * a * a - a = a *
   noncomm_ring
 
 
-/-- a(a-1)(a+1) = 0, field has no zero divisors, so a ∈ {0, 1, -1} -/
-theorem tripotent_roots_in_field : ∀ {K : Type*} [Field K] (a : K), a * a * a = a → a = 0 ∨ a = 1 ∨ a = -1 := by
-  intro K inst a h
-  have h1 : a * a * a - a = 0 := by
-    calc a * a * a - a = a * a * a - a := rfl
-    _ = a - a := by rw [h]
-    _ = 0 := sub_self a
+/-- a(a-1)(a+1) = 0, ring with no zero divisors has a ∈ {0, 1, -1} -/
+theorem tripotent_roots_in_field : ∀ {K : Type*} [Ring K] [NoZeroDivisors K] (a : K), a * a * a = a → a = 0 ∨ a = 1 ∨ a = -1 := by
+  intro K _ _ a h
+  have h1 : a * a * a - a = 0 := sub_eq_zero.mpr h
   have h2 : a * (a - 1) * (a + 1) = 0 := by
-    calc a * (a - 1) * (a + 1) = a * a * a - a := (tripotent_factor a).symm
-    _ = 0 := h1
+    rw [← tripotent_factor a, h1]
   rcases mul_eq_zero.mp h2 with h3 | h3
   · rcases mul_eq_zero.mp h3 with h4 | h4
     · left; exact h4
     · right; left
-      calc a = a - 1 + 1 := by ring
-      _ = 0 + 1 := by rw [h4]
-      _ = 1 := by ring
+      exact sub_eq_zero.mp h4
   · right; right
-    calc a = a + 1 - 1 := by ring
-    _ = 0 - 1 := by rw [h3]
-    _ = -1 := by ring
+    exact eq_neg_of_add_eq_zero_left h3
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin matrix algebra carrier (`J_plus * J_minus ≠ J_minus * J_plus`). -/
+theorem tripotent_spin_carrier_noncomm :
+    J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end TripotentClSUSYBridge

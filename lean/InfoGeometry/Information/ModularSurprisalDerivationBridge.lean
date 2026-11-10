@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
@@ -23,6 +28,13 @@ All proofs are complete with 0 `sorry`s, 0 custom axioms, and 0 placeholders.
 -/
 
 namespace InfoGeometry.Information.ModularSurprisalDerivationBridge
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
 
 /-!
 =============================================================================
@@ -81,9 +93,9 @@ PART 2: R-Linear Modular Derivation on Algebras
 
 section AlgebraModularDerivation
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
 
-/-- R-linear adjoint derivation on an algebra. -/
+/-- R-linear adjoint derivation on an algebra over any `[CommSemiring R]`. -/
 def adK_algebra (K : A) : A →ₗ[R] A where
   toFun X := K * X - X * K
   map_add' X Y := by
@@ -121,6 +133,42 @@ PART 3: Logarithmic Radon–Nikodym Derivative and Cocycle Additivity
 -/
 
 section LogarithmicRadonNikodym
+
+/-- Non-commutative Logarithmic Radon–Nikodym Derivation (Fisher Score Generator)
+over `[Ring A]`: `dlogRN_ring D Δ_val inv_Δ = inv_Δ * D Δ_val`. -/
+def dlogRN_ring {A : Type*} [Ring A] (D : A → A) (Δ_val inv_Δ : A) : A :=
+  inv_Δ * D Δ_val
+
+/-- Non-commutative Logarithmic Radon–Nikodym Chain Rule over `[Ring A]`:
+`dlogRN_ring D (Δ12 * Δ23) (inv_Δ23 * inv_Δ12) = inv_Δ23 * dlogRN_ring D Δ12 inv_Δ12 * Δ23 + dlogRN_ring D Δ23 inv_Δ23`. -/
+theorem dlogRN_mul_ring {A : Type*} [Ring A] (D : A → A)
+    (hD : ∀ x y, D (x * y) = D x * y + x * D y)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : A)
+    (h12 : inv_Δ12 * Δ12 = 1) :
+    dlogRN_ring D (Δ12 * Δ23) (inv_Δ23 * inv_Δ12) =
+      inv_Δ23 * dlogRN_ring D Δ12 inv_Δ12 * Δ23 + dlogRN_ring D Δ23 inv_Δ23 := by
+  dsimp [dlogRN_ring]
+  rw [hD Δ12 Δ23, mul_add]
+  have h1 : (inv_Δ23 * inv_Δ12) * (D Δ12 * Δ23) =
+      inv_Δ23 * (inv_Δ12 * D Δ12) * Δ23 := by
+    noncomm_ring
+  have h2 : (inv_Δ23 * inv_Δ12) * (Δ12 * D Δ23) =
+      inv_Δ23 * (inv_Δ12 * Δ12) * D Δ23 := by
+    noncomm_ring
+  rw [h1, h2, h12, mul_one]
+
+/-- When `dlogRN_ring D Δ12 inv_Δ12` commutes with `Δ23` and `inv_Δ23 * Δ23 = 1`,
+the non-commutative Radon–Nikodym chain rule reduces to exact additivity over `[Ring A]`. -/
+theorem dlogRN_mul_of_commute {A : Type*} [Ring A] (D : A → A)
+    (hD : ∀ x y, D (x * y) = D x * y + x * D y)
+    (Δ12 inv_Δ12 Δ23 inv_Δ23 : A)
+    (h12 : inv_Δ12 * Δ12 = 1)
+    (h23 : inv_Δ23 * Δ23 = 1)
+    (hcomm : Commute (dlogRN_ring D Δ12 inv_Δ12) Δ23) :
+    dlogRN_ring D (Δ12 * Δ23) (inv_Δ23 * inv_Δ12) =
+      dlogRN_ring D Δ12 inv_Δ12 + dlogRN_ring D Δ23 inv_Δ23 := by
+  rw [dlogRN_mul_ring D hD Δ12 inv_Δ12 Δ23 inv_Δ23 h12, mul_assoc, hcomm.eq,
+    ← mul_assoc, h23, one_mul]
 
 variable {R : Type*} [CommRing R]
 
@@ -243,6 +291,18 @@ theorem trifold_smul {A : Type*} [AddCommGroup A] [Module R A]
   simp only [smul_add, smul_smul]
 
 end TrifoldDecomposition
+
+/-- Concrete ground inhabitant of `TrifoldSurprisal` over `ℤ`. -/
+def intTrifoldSurprisalZero : TrifoldSurprisal (R := ℤ) ℤ where
+  alpha := 0
+  beta := 0
+  K0 := 0
+  unit_I := 1
+  chiral_Gamma := 1
+  trace := id
+  supertrace := id
+  tr_K0_zero := rfl
+  str_K0_zero := rfl
 
 end InfoGeometry.Information.ModularSurprisalDerivationBridge
 

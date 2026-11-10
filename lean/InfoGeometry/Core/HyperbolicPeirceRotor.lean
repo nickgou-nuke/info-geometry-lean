@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceRotor
 
 /-!
@@ -20,6 +21,13 @@ open InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem hyperbolicPeirceRotor_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section Noncomm
 
@@ -67,6 +75,50 @@ theorem hyperbolicRotor_one_zero : hyperbolicRotor (1 : R) 0 d b = 1 := by
   change (1 - polePlus d b - poleMinus d b) + (polePlus d b + poleMinus d b) = 1
   abel
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
+/-- The hyperbolic moving positive pole `u^2 • P_+ - v^2 • P_- - (u * v) • J` over any `[Ring R]`. -/
+def hyperbolicPolePlus (u v : R) (d b : A) : A :=
+  peirceBlock d b (u * u) (-(u * v)) (v * u) (-(v * v))
+
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
+/-- The complementary hyperbolic moving negative pole over any `[Ring R]`. -/
+def hyperbolicPoleMinus (u v : R) (d b : A) : A :=
+  peirceBlock d b (-(v * v)) (v * u) (-(u * v)) (u * u)
+
+/-- Squeeze conjugation of `polePlus d b` yields `hyperbolicPolePlus u v d b` over any `[Ring R]`. -/
+theorem hyperbolicRotor_conjugates_plus (h : IsDualSeedPair d b) (u v : R) :
+    hyperbolicRotor u v d b * polePlus d b * hyperbolicRotor u (-v) d b =
+      hyperbolicPolePlus u v d b := by
+  have hp : polePlus d b = peirceBlock d b (1 : R) 0 0 0 := by simp [peirceBlock]
+  rw [hp]
+  unfold hyperbolicRotor completedBlock
+  rw [add_mul, (harmonic_block h (1 : R) 0 0 0).1, zero_add, peirceBlock_mul h,
+    mul_add, (harmonic_block h _ _ _ _).2, zero_add, peirceBlock_mul h]
+  unfold hyperbolicPolePlus
+  congr 1 <;> simp [mul_neg]
+
+/-- Squeeze conjugation of `poleMinus d b` yields `hyperbolicPoleMinus u v d b` over any `[Ring R]`. -/
+theorem hyperbolicRotor_conjugates_minus (h : IsDualSeedPair d b) (u v : R) :
+    hyperbolicRotor u v d b * poleMinus d b * hyperbolicRotor u (-v) d b =
+      hyperbolicPoleMinus u v d b := by
+  have hq : poleMinus d b = peirceBlock d b (0 : R) 0 0 1 := by simp [peirceBlock]
+  rw [hq]
+  unfold hyperbolicRotor completedBlock
+  rw [add_mul, (harmonic_block h (0 : R) 0 0 1).1, zero_add, peirceBlock_mul h,
+    mul_add, (harmonic_block h _ _ _ _).2, zero_add, peirceBlock_mul h]
+  unfold hyperbolicPoleMinus
+  congr 1 <;> simp [mul_neg]
+
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
+/-- Over any noncommutative coefficient ring `[Ring R]`, the sum of the hyperbolic moving poles
+retains the velocity commutator `v * u - u * v` on the off-diagonal transition velocity. -/
+theorem hyperbolic_poles_sum_noncomm (u v : R) :
+    hyperbolicPolePlus u v d b + hyperbolicPoleMinus u v d b =
+      peirceBlock d b (u * u - v * v) (v * u - u * v) (v * u - u * v) (u * u - v * v) := by
+  unfold hyperbolicPolePlus hyperbolicPoleMinus peirceBlock
+  simp only [sub_smul, neg_smul]
+  abel
+
 end Noncomm
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
@@ -77,12 +129,14 @@ theorem hyperbolicRotor_inverse (h : IsDualSeedPair d b) {u v : R}
     (huv : u * u - v * v = 1) :
     hyperbolicRotor u v d b * hyperbolicRotor u (-v) d b = 1 ∧
     hyperbolicRotor u (-v) d b * hyperbolicRotor u v d b = 1 := by
-  have h₁ : u * u + v * (-v) = 1 := by linear_combination huv
-  have h₂ : u * u + (-v) * v = 1 := by linear_combination huv
+  have h₁ : u * u + v * (-v) = 1 := by rw [mul_neg, ← sub_eq_add_neg, huv]
+  have h₂ : u * u + (-v) * v = 1 := by rw [neg_mul, ← sub_eq_add_neg, huv]
+  have h₃ : u * (-v) + v * u = 0 := by rw [mul_neg, mul_comm v u, neg_add_cancel]
+  have h₄ : u * v + (-v) * u = 0 := by rw [neg_mul, mul_comm v u, add_neg_cancel]
   constructor
-  · rw [hyperbolicRotor_mul h, h₁, show u * (-v) + v * u = 0 by ring]
+  · rw [hyperbolicRotor_mul h, h₁, h₃]
     exact hyperbolicRotor_one_zero
-  · rw [hyperbolicRotor_mul h, h₂, show u * v + (-v) * u = 0 by ring]
+  · rw [hyperbolicRotor_mul h, h₂, h₄]
     exact hyperbolicRotor_one_zero
 
 /-- Native ambient unit on the unit hyperbola `u^2 - v^2 = 1`. -/
@@ -93,49 +147,19 @@ def hyperbolicRotorUnit (h : IsDualSeedPair d b) {u v : R}
   val_inv := (hyperbolicRotor_inverse h huv).1
   inv_val := (hyperbolicRotor_inverse h huv).2
 
-/-- The hyperbolic moving positive pole `u^2 • P_+ - v^2 • P_- - (u * v) • J`. -/
-def hyperbolicPolePlus (u v : R) (d b : A) : A :=
-  peirceBlock d b (u * u) (-(u * v)) (u * v) (-(v * v))
-
-/-- The complementary hyperbolic moving negative pole. -/
-def hyperbolicPoleMinus (u v : R) (d b : A) : A :=
-  peirceBlock d b (-(v * v)) (u * v) (-(u * v)) (u * u)
-
 theorem hyperbolicPolePlus_formula (u v : R) :
     hyperbolicPolePlus u v d b = (u * u) • polePlus d b - (v * v) • poleMinus d b -
       (u * v) • wheelGenerator d b := by
   unfold hyperbolicPolePlus peirceBlock wheelGenerator majoranaMinus
+  rw [mul_comm v u]
   module
 
 theorem hyperbolicPoleMinus_formula (u v : R) :
     hyperbolicPoleMinus u v d b = -(v * v) • polePlus d b + (u * u) • poleMinus d b +
       (u * v) • wheelGenerator d b := by
   unfold hyperbolicPoleMinus peirceBlock wheelGenerator majoranaMinus
+  rw [mul_comm v u]
   module
-
-/-- Squeeze conjugation of `polePlus d b` yields `hyperbolicPolePlus u v d b`. -/
-theorem hyperbolicRotor_conjugates_plus (h : IsDualSeedPair d b) (u v : R) :
-    hyperbolicRotor u v d b * polePlus d b * hyperbolicRotor u (-v) d b =
-      hyperbolicPolePlus u v d b := by
-  have hp : polePlus d b = peirceBlock d b (1 : R) 0 0 0 := by simp [peirceBlock]
-  rw [hp]
-  unfold hyperbolicRotor completedBlock
-  rw [add_mul, (harmonic_block h (1 : R) 0 0 0).1, zero_add, peirceBlock_mul h,
-    mul_add, (harmonic_block h _ _ _ _).2, zero_add, peirceBlock_mul h]
-  unfold hyperbolicPolePlus
-  congr 1 <;> ring
-
-/-- Squeeze conjugation of `poleMinus d b` yields `hyperbolicPoleMinus u v d b`. -/
-theorem hyperbolicRotor_conjugates_minus (h : IsDualSeedPair d b) (u v : R) :
-    hyperbolicRotor u v d b * poleMinus d b * hyperbolicRotor u (-v) d b =
-      hyperbolicPoleMinus u v d b := by
-  have hq : poleMinus d b = peirceBlock d b (0 : R) 0 0 1 := by simp [peirceBlock]
-  rw [hq]
-  unfold hyperbolicRotor completedBlock
-  rw [add_mul, (harmonic_block h (0 : R) 0 0 1).1, zero_add, peirceBlock_mul h,
-    mul_add, (harmonic_block h _ _ _ _).2, zero_add, peirceBlock_mul h]
-  unfold hyperbolicPoleMinus
-  congr 1 <;> ring
 
 /-- Both idempotences and mutual orthogonality follow from hyperbolic conjugation. -/
 theorem hyperbolic_projector_relations (h : IsDualSeedPair d b) {u v : R}

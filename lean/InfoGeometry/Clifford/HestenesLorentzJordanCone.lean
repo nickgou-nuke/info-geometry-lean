@@ -1,13 +1,45 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.HestenesParavectorPair
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
+import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem lorentzJordan_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NonCommRingJordan
+
+variable {B : Type*} [Ring B]
+
+/-- Unnormalized symmetrized Jordan product `x * y + y * x` over any non-commutative ring `[Ring B]`. -/
+def ringSymmetrizedJordan (x y : B) : B :=
+  x * y + y * x
+
+theorem ringSymmetrizedJordan_comm (x y : B) :
+    ringSymmetrizedJordan x y = ringSymmetrizedJordan y x :=
+  add_comm (x * y) (y * x)
+
+theorem ringSymmetrizedJordan_self (x : B) :
+    ringSymmetrizedJordan x x = 2 * (x * x) := by
+  unfold ringSymmetrizedJordan
+  noncomm_ring
+
+end NonCommRingJordan
+
 variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommMonoid M] [Module R M]
+variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M) (hv0_norm : Q v0 = 1)
 

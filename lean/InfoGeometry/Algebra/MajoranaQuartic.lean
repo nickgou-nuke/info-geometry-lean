@@ -133,7 +133,7 @@ theorem quartet_isSelfAdjoint [StarRing A] (s : MajoranaSystem 4 A)
 
 section Hamiltonian
 
-variable {K : Type*} [Field K] [Algebra K A]
+variable {K : Type*} [CommRing K] [Algebra K A]
 
 /-- A single quartic interaction with central scalar coupling. -/
 def hamiltonian (s : MajoranaSystem 4 A) (g : K) : A :=
@@ -160,7 +160,7 @@ theorem hamiltonian_isSelfAdjoint [StarRing K] [StarRing A] [StarModule K A]
 
 /-- Native algebraic spectral containment for the quartic interaction.
 This asserts neither existence nor multiplicity of the two allowed values. -/
-theorem hamiltonian_spectrum_subset [Nontrivial A]
+theorem hamiltonian_spectrum_subset {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
     (s : MajoranaSystem 4 A) (g : K) :
     spectrum K (hamiltonian s g) ⊆ {g, -g} := by
   intro z hz

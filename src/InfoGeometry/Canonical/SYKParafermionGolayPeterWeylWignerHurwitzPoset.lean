@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 ==============================================================================
 HIVE CONSTITUTIONAL HEADER
 ==============================================================================
@@ -75,6 +80,9 @@ import Mathlib.Data.Nat.Totient
 import Mathlib.Tactic.Abel
 
 namespace InfoGeometry.Canonical.SYKParafermionGolayPeterWeylWignerHurwitzPoset
+
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
 
 universe u
 
@@ -321,15 +329,6 @@ instance : Add (Mat2 B) := ⟨add⟩
 instance : Sub (Mat2 B) := ⟨sub⟩
 instance : One (Mat2 B) := ⟨⟨1, 0, 0, 1⟩⟩
 
-@[simp] lemma add_m11 (A C : Mat2 B) : (A + C).m11 = A.m11 + C.m11 := rfl
-@[simp] lemma add_m12 (A C : Mat2 B) : (A + C).m12 = A.m12 + C.m12 := rfl
-@[simp] lemma add_m21 (A C : Mat2 B) : (A + C).m21 = A.m21 + C.m21 := rfl
-@[simp] lemma add_m22 (A C : Mat2 B) : (A + C).m22 = A.m22 + C.m22 := rfl
-@[simp] lemma sub_m11 (A C : Mat2 B) : (A - C).m11 = A.m11 - C.m11 := rfl
-@[simp] lemma sub_m12 (A C : Mat2 B) : (A - C).m12 = A.m12 - C.m12 := rfl
-@[simp] lemma sub_m21 (A C : Mat2 B) : (A - C).m21 = A.m21 - C.m21 := rfl
-@[simp] lemma sub_m22 (A C : Mat2 B) : (A - C).m22 = A.m22 - C.m22 := rfl
-
 /-- Integer scalar multiplication on `Mat2 B`. -/
 def zsmulMat (c : ℤ) (A : Mat2 B) : Mat2 B :=
   ⟨c • A.m11, c • A.m12, c • A.m21, c • A.m22⟩
@@ -364,12 +363,14 @@ theorem peirce_peter_weyl_four_basis_reconstruction_in_ring (M : Mat2 B) :
       scaleRight (tr (rightBasisMul M basisSP))  basisSP +
       scaleRight (tr (rightBasisMul M basisPhi)) basisPhi -
       scaleRight (tr (rightBasisMul M basisJ))   basisJ := by
+  have add_def (A C : Mat2 B) : A + C = add A C := rfl
+  have sub_def (A C : Mat2 B) : A - C = sub A C := rfl
   apply ext <;>
-  · simp only [add_m11, add_m12, add_m21, add_m22, sub_m11, sub_m12, sub_m21, sub_m22,
-               zsmulMat, scaleRight, tr, rightBasisMul,
-               basisI, basisSP, basisPhi, basisJ,
-               m11, m12, m21, m22,
-               mul_one, mul_zero, mul_neg, add_zero, zero_add, two_zsmul]
+  · simp only [add_def, sub_def]
+    dsimp [add, sub, zsmulMat, scaleRight, tr, rightBasisMul,
+           basisI, basisSP, basisPhi, basisJ,
+           m11, m12, m21, m22]
+    simp only [mul_one, mul_zero, mul_neg, add_zero, zero_add, two_zsmul]
     (try abel)
 
 end Mat2
@@ -409,33 +410,19 @@ lemma ext {A C : Mat3 B}
   subst h11 h12 h13 h21 h22 h23 h31 h32 h33
   rfl
 
-instance : Zero (Mat3 B) := ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩⟩
-/-- Zero `3 × 3` operator matrix inhabitant for model witnessing. -/
-instance : Inhabited (Mat3 B) := ⟨0⟩
-instance : Add  (Mat3 B) := ⟨fun A C =>
+/-- Zero `3 × 3` operator matrix. -/
+def zero : Mat3 B := ⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩
+
+/-- Entrywise addition of `3 × 3` operator matrices. -/
+def add (A C : Mat3 B) : Mat3 B :=
   ⟨A.m11 + C.m11, A.m12 + C.m12, A.m13 + C.m13,
    A.m21 + C.m21, A.m22 + C.m22, A.m23 + C.m23,
-   A.m31 + C.m31, A.m32 + C.m32, A.m33 + C.m33⟩⟩
+   A.m31 + C.m31, A.m32 + C.m32, A.m33 + C.m33⟩
 
-@[simp] lemma zero_m11 : (0 : Mat3 B).m11 = 0 := rfl
-@[simp] lemma zero_m12 : (0 : Mat3 B).m12 = 0 := rfl
-@[simp] lemma zero_m13 : (0 : Mat3 B).m13 = 0 := rfl
-@[simp] lemma zero_m21 : (0 : Mat3 B).m21 = 0 := rfl
-@[simp] lemma zero_m22 : (0 : Mat3 B).m22 = 0 := rfl
-@[simp] lemma zero_m23 : (0 : Mat3 B).m23 = 0 := rfl
-@[simp] lemma zero_m31 : (0 : Mat3 B).m31 = 0 := rfl
-@[simp] lemma zero_m32 : (0 : Mat3 B).m32 = 0 := rfl
-@[simp] lemma zero_m33 : (0 : Mat3 B).m33 = 0 := rfl
-
-@[simp] lemma add_m11 (A C : Mat3 B) : (A + C).m11 = A.m11 + C.m11 := rfl
-@[simp] lemma add_m12 (A C : Mat3 B) : (A + C).m12 = A.m12 + C.m12 := rfl
-@[simp] lemma add_m13 (A C : Mat3 B) : (A + C).m13 = A.m13 + C.m13 := rfl
-@[simp] lemma add_m21 (A C : Mat3 B) : (A + C).m21 = A.m21 + C.m21 := rfl
-@[simp] lemma add_m22 (A C : Mat3 B) : (A + C).m22 = A.m22 + C.m22 := rfl
-@[simp] lemma add_m23 (A C : Mat3 B) : (A + C).m23 = A.m23 + C.m23 := rfl
-@[simp] lemma add_m31 (A C : Mat3 B) : (A + C).m31 = A.m31 + C.m31 := rfl
-@[simp] lemma add_m32 (A C : Mat3 B) : (A + C).m32 = A.m32 + C.m32 := rfl
-@[simp] lemma add_m33 (A C : Mat3 B) : (A + C).m33 = A.m33 + C.m33 := rfl
+instance : Zero (Mat3 B) := ⟨zero⟩
+/-- Zero `3 × 3` operator matrix inhabitant for model witnessing. -/
+instance : Inhabited (Mat3 B) := ⟨0⟩
+instance : Add  (Mat3 B) := ⟨add⟩
 
 /-- Integer scalar multiplication on `Mat3 B`. -/
 def zsmulMat (c : ℤ) (A : Mat3 B) : Mat3 B :=
@@ -483,12 +470,13 @@ theorem clebsch_gordan_s4_idempotency_and_orthogonality_in_ring (M : Mat3 B) :
     Pi1 (Pi2 M) = (0 : Mat3 B) ∧ Pi2 (Pi1 M) = (0 : Mat3 B) ∧
     Pi1 (Pi3_pos M) = (0 : Mat3 B) ∧ Pi2 (Pi3_pos M) = (0 : Mat3 B) ∧
     Pi3_pos (Pi3_neg M) = (0 : Mat3 B) ∧ Pi3_neg (Pi3_pos M) = (0 : Mat3 B) := by
+  have add_def (A C : Mat3 B) : A + C = add A C := rfl
+  have zero_def : (0 : Mat3 B) = zero := rfl
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
   · apply ext <;>
-    · simp only [add_m11, add_m12, add_m13, add_m21, add_m22, add_m23, add_m31, add_m32, add_m33,
-                 zero_m11, zero_m12, zero_m13, zero_m21, zero_m22, zero_m23, zero_m31, zero_m32, zero_m33,
-                 Pi1, Pi2, Pi3_pos, Pi3_neg, zsmulMat, tr,
-                 m11, m12, m13, m21, m22, m23, m31, m32, m33]
+    · (try simp only [add_def, zero_def])
+      dsimp [add, zero, Pi1, Pi2, Pi3_pos, Pi3_neg, zsmulMat, tr,
+             m11, m12, m13, m21, m22, m23, m31, m32, m33]
       (try abel)
 
 end Mat3
@@ -521,22 +509,16 @@ lemma ext {a b : Quat B}
   subst hw hx hy hz
   rfl
 
-instance : Add  (Quat B) := ⟨fun a b => ⟨a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z⟩⟩
-instance : Sub  (Quat B) := ⟨fun a b => ⟨a.w - b.w, a.x - b.x, a.y - b.y, a.z - b.z⟩⟩
-instance : Zero (Quat B) := ⟨⟨0, 0, 0, 0⟩⟩
+/-- Entrywise quaternion addition. -/
+def add (a b : Quat B) : Quat B := ⟨a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z⟩
+/-- Entrywise quaternion subtraction. -/
+def sub (a b : Quat B) : Quat B := ⟨a.w - b.w, a.x - b.x, a.y - b.y, a.z - b.z⟩
+/-- Zero quaternion. -/
+def zero : Quat B := ⟨0, 0, 0, 0⟩
 
-@[simp] lemma zero_w : (0 : Quat B).w = 0 := rfl
-@[simp] lemma zero_x : (0 : Quat B).x = 0 := rfl
-@[simp] lemma zero_y : (0 : Quat B).y = 0 := rfl
-@[simp] lemma zero_z : (0 : Quat B).z = 0 := rfl
-@[simp] lemma add_w (a b : Quat B) : (a + b).w = a.w + b.w := rfl
-@[simp] lemma add_x (a b : Quat B) : (a + b).x = a.x + b.x := rfl
-@[simp] lemma add_y (a b : Quat B) : (a + b).y = a.y + b.y := rfl
-@[simp] lemma add_z (a b : Quat B) : (a + b).z = a.z + b.z := rfl
-@[simp] lemma sub_w (a b : Quat B) : (a - b).w = a.w - b.w := rfl
-@[simp] lemma sub_x (a b : Quat B) : (a - b).x = a.x - b.x := rfl
-@[simp] lemma sub_y (a b : Quat B) : (a - b).y = a.y - b.y := rfl
-@[simp] lemma sub_z (a b : Quat B) : (a - b).z = a.z - b.z := rfl
+instance : Add  (Quat B) := ⟨add⟩
+instance : Sub  (Quat B) := ⟨sub⟩
+instance : Zero (Quat B) := ⟨zero⟩
 
 /-- Integer scalar multiplication on `Quat B`. -/
 def zsmulQuat (c : ℤ) (q : Quat B) : Quat B :=
@@ -553,11 +535,6 @@ def mul (a b : Quat B) : Quat B :=
    a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w⟩
 
 instance : Mul (Quat B) := ⟨mul⟩
-
-@[simp] lemma mul_w (a b : Quat B) : (a * b).w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z := rfl
-@[simp] lemma mul_x (a b : Quat B) : (a * b).x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y := rfl
-@[simp] lemma mul_y (a b : Quat B) : (a * b).y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x := rfl
-@[simp] lemma mul_z (a b : Quat B) : (a * b).z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w := rfl
 
 /-- Quaternion multiplicative identity `1 = (1, 0, 0, 0)`. -/
 def qOne     : Quat B := ⟨1, 0, 0, 0⟩
@@ -580,13 +557,15 @@ theorem hurwitz_corner_triality_attention_filter_in_ring :
     (hurwitzW : Quat B) * qi * conj hurwitzW = zsmulQuat 4 qj ∧
     (hurwitzW : Quat B) * qj * conj hurwitzW = zsmulQuat 4 qk ∧
     (hurwitzW : Quat B) * qk * conj hurwitzW = zsmulQuat 4 qi := by
+  have add_def (a b : Quat B) : a + b = add a b := rfl
+  have sub_def (a b : Quat B) : a - b = sub a b := rfl
+  have mul_def (a b : Quat B) : a * b = mul a b := rfl
+  have zero_def : (0 : Quat B) = zero := rfl
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
   · apply ext <;>
-    · simp only [zero_w, zero_x, zero_y, zero_z, add_w, add_x, add_y, add_z,
-                 sub_w, sub_x, sub_y, sub_z, mul_w, mul_x, mul_y, mul_z,
-                 hurwitzW, qOne, qi, qj, qk, conj, zsmulQuat,
-                 w, x, y, z,
-                 mul_one, mul_zero, one_mul, zero_mul, mul_neg, neg_mul, neg_neg]
+    · (try simp only [add_def, sub_def, mul_def, zero_def])
+      dsimp [add, sub, mul, zero, hurwitzW, qOne, qi, qj, qk, conj, zsmulQuat, w, x, y, z]
+      simp only [mul_one, mul_zero, one_mul, zero_mul, mul_neg, neg_mul, neg_neg]
       (try abel)
 
 end Quat

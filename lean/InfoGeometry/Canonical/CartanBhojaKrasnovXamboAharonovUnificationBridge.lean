@@ -2195,7 +2195,7 @@ theorem archetype_U13_zorn_navier_madelung_vortex_helicity_and_ertel_bianchi_bri
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · ext <;> exact Eq.refl _
   · ext <;>
-    · (simp only [vec3NCToXambo, adjointCurl,
+    · (simp only [vec3NCToXambo, adjointCurl, Vec3NC.v1, Vec3NC.v2, Vec3NC.v3,
                   NonCommutativeNavierMadelungChiralVortexPoset.addVec3,
                   NonCommutativeXamboGeometricAlgebra.Mat2.Rotor3.cross3,
                   NonCommutativeBimetricSheetGeometry.rcomm])
@@ -2434,7 +2434,8 @@ theorem archetype_U14_zorn_de_rham_dirac_kaehler_pell_drazin_unification
   · exact Eq.refl _
   · ext <;>
     · (simp only [vec3NCToZND, covE, covB, vecComm, vecSub, bochnerLaplacian, bochnerLapScalar,
-                  adjointCurl, vecCross, NonCommutativeBimetricSheetGeometry.rcomm,
+                  adjointCurl, vecCross, Vec3NC.v1, Vec3NC.v2, Vec3NC.v3,
+                  NonCommutativeBimetricSheetGeometry.rcomm,
                   InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornForms.diracKaehler,
                   InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornForms.extCurl,
                   InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornForms.extDiv,
@@ -2470,6 +2471,7 @@ theorem archetype_U14_zorn_de_rham_dirac_kaehler_pell_drazin_unification
                   neg_add_rev, neg_sub, sub_neg_eq_add, neg_neg, neg_zero, mul_assoc])
       abel
   · (simp only [vec3NCToZND, covE, covB, vecComm, vecDot, vecCross,
+                Vec3NC.v1, Vec3NC.v2, Vec3NC.v3,
                 NonCommutativeBimetricSheetGeometry.rcomm,
                 InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornForms.extCurl,
                 InfoGeometry.OperatorAlgebra.PeirceSpine.ZornNambuDeRhamDiracKahlerPoset.ZornForms.form0,

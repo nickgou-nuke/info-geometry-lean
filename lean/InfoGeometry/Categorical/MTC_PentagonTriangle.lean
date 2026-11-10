@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
@@ -26,6 +31,13 @@ set_option autoImplicit false
 noncomputable section
 
 namespace InfoGeometry.Categorical.MTC_PentagonTriangle
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem mtcPentagonTriangle_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -108,10 +120,8 @@ theorem MacLane_Triangle_Equation
     {R : Type*} [CommRing R]
     {V : Type*} [AddCommGroup V] [Module R V]
     (B : V →ₗ[R] V →ₗ[R] R)
-    (_v_i : ZornMatrix R V)
     (v_j x : ZornMatrix R V)
-    (z : R)
-    (_hx : half_eq_e1 x) :
+    (z : R) :
     associator B (ZornMatrix.diag (1 : R) z) x (star (mul B v_j x)) = ZornMatrix.diag 0 0 := by
   exact op1_associator_vanishes_of_diag_left (B := B) v_j x z
 

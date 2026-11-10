@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
 import proofs.BraidProject.BraidGroup
@@ -10,6 +16,13 @@ import InfoGeometry.Quantum.SylvesterWeylBraidBridge
 open InfoGeometry.Categorical.UniversalArtinBraidRepresentation
 
 namespace InfoGeometry.SylvesterBraid
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem sylvesterBraidRepresentation_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 variable {R : Type*} [CommRing R]
 variable {I : Type*}
@@ -20,6 +33,10 @@ variable {I : Type*}
 structure PhasedState (n : ℕ) (I R : Type*) [CommRing R] where
   phase : Rˣ
   state : Fin n → I
+
+instance inhabitedPhasedState {n : ℕ} {I R : Type*} [CommRing R] [Inhabited I] :
+    Inhabited (PhasedState n I R) :=
+  ⟨⟨1, fun _ => default⟩⟩
 
 def swapCoord {n : ℕ} (i j : Fin n) (s : Fin n → I) : Fin n → I :=
   fun x => if x = i then s j else if x = j then s i else s x
@@ -84,6 +101,21 @@ lemma mul_four_swap {G : Type*} [CommMonoid G] (P A B C : G) :
     P * A * B * C = P * C * B * A := by
   set_option linter.unusedSimpArgs false in
   simp [mul_comm, mul_left_comm, mul_assoc]
+
+/-- Noncommutative form of `mul_four_swap`: in any monoid (e.g. the unit group of a
+noncommutative operator ring) the reversal `P A B C = P C B A` only needs the three
+phases `A, B, C` to commute pairwise; `P` is arbitrary. -/
+lemma mul_four_swap_of_commute {G : Type*} [Monoid G] (P A B C : G)
+    (hAB : Commute A B) (hAC : Commute A C) (hBC : Commute B C) :
+    P * A * B * C = P * C * B * A := by
+  calc
+    P * A * B * C = P * (A * (B * C)) := by simp only [mul_assoc]
+    _ = P * (A * (C * B)) := by rw [hBC.eq]
+    _ = P * ((A * C) * B) := by rw [← mul_assoc A C B]
+    _ = P * ((C * A) * B) := by rw [hAC.eq]
+    _ = P * (C * (A * B)) := by rw [mul_assoc C A B]
+    _ = P * (C * (B * A)) := by rw [hAB.eq]
+    _ = P * C * B * A := by simp only [mul_assoc]
 
 lemma swapCoord_braid_state {n : ℕ} (i j k : Fin n)
     (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) (s : Fin n → I) :

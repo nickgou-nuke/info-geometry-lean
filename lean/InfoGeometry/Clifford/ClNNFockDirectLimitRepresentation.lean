@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Colimit.DirectLimit
 import InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -5,6 +10,10 @@ import InfoGeometry.Canonical.SplitCliffordSuperGradeColimit
 
 /-!
 # The algebraic Fock colimit for the symmetric split Clifford tower
+
+BUCKET 1 — Finite Clifford and exterior-Fock stages with compatible tail maps.
+BUCKET 2 — Their algebraic directed colimits and induced parity/action maps.
+BUCKET 3 — Stagewise and limit-level compatibility theorems for the action.
 
 The finite-stage Chevalley representations on `Λ (Fin n → ℝ)` are compatible
 with both the recursive `Cl(n,n)` maps and the zero-head exterior-Fock maps.
@@ -62,6 +71,7 @@ def fockStageMap (m n : ℕ) (h : m ≤ n) : FockStage m →ₗ[ℝ] FockStage n
       (next := fun {k} ih => (fockTailMap k).toLinearMap.comp ih)
       (x := (LinearMap.id : FockStage m →ₗ[ℝ] FockStage m)))
 
+/-- An iterated Fock inclusion factors through its final one-step tail map. -/
 theorem fockStageMap_succ (m n : ℕ) (h : m ≤ n) :
     fockStageMap m (n + 1) (Nat.le_trans h (Nat.le_succ n)) =
       (fockTailMap n).toLinearMap.comp (fockStageMap m n h) := by
@@ -110,6 +120,7 @@ theorem fockStageMap_involute (m n : ℕ) (h : m ≤ n)
           (fockStageMap m n hmn (CliffordAlgebra.involute ψ))
       rw [fockTailMap_involute, ih]
 
+/-- Evaluating an iterated Fock transition agrees with successive transitions. -/
 theorem fockStageMap_apply_trans (m n k : ℕ) (hmn : m ≤ n) (hnk : n ≤ k)
     (x : FockStage m) :
     fockStageMap m k (hmn.trans hnk) x =
@@ -280,6 +291,63 @@ existing finite-stage Chevalley representation. -/
       (⟦⟨n, ψ⟩⟧ : FockInfinity) =
     (⟦⟨n, towerSpinorRep n a ψ⟩⟧ : FockInfinity)
   rw [DirectLimit.map₂_def]
+
+/-- The descended action on the algebraic Clifford/Fock colimits preserves
+operator multiplication: acting by a product is composition of the two
+induced actions.  Representatives from the two algebra stages and the Fock
+stage are transported to a common later stage before using the finite-stage
+algebra representation. -/
+theorem splitCliffordFockAction_mul
+    (aInf bInf : SplitCliffordInfinity) (ψInf : FockInfinity) :
+    splitCliffordFockAction (aInf * bInf) ψInf =
+      splitCliffordFockAction aInf (splitCliffordFockAction bInf ψInf) := by
+  obtain ⟨n, a, ha⟩ := splitCliffordInfinity_exists_of aInf
+  obtain ⟨m, b, hb⟩ := splitCliffordInfinity_exists_of bInf
+  obtain ⟨l, ψ, hψ⟩ := DirectLimit.exists_eq_mk
+    (f := fun i j h => fockStageMap i j h) ψInf
+  have hψ' : fockToInfinity l ψ = ψInf := by
+    simpa [fockToInfinity] using hψ.symm
+  let k := max n (max m l)
+  have hnk : n ≤ k := le_max_left n (max m l)
+  have hmk : m ≤ k := le_trans (le_max_left m l) (le_max_right n (max m l))
+  have hlk : l ≤ k := le_trans (le_max_right m l) (le_max_right n (max m l))
+  let aK := splitCliffordMap n k hnk a
+  let bK := splitCliffordMap m k hmk b
+  let ψK := fockStageMap l k hlk ψ
+  have ha' : DirectLimit.Algebra.of SplitClNNAlg
+      (fun i j h => splitCliffordMap i j h) k aK = aInf := by
+    calc
+      DirectLimit.Algebra.of SplitClNNAlg
+          (fun i j h => splitCliffordMap i j h) k aK =
+        DirectLimit.Algebra.of SplitClNNAlg
+          (fun i j h => splitCliffordMap i j h) n a := by
+            exact DirectLimit.Algebra.of_f
+              (f := fun i j h => splitCliffordMap i j h) hnk a
+      _ = aInf := ha
+  have hb' : DirectLimit.Algebra.of SplitClNNAlg
+      (fun i j h => splitCliffordMap i j h) k bK = bInf := by
+    calc
+      DirectLimit.Algebra.of SplitClNNAlg
+          (fun i j h => splitCliffordMap i j h) k bK =
+        DirectLimit.Algebra.of SplitClNNAlg
+          (fun i j h => splitCliffordMap i j h) m b := by
+            exact DirectLimit.Algebra.of_f
+              (f := fun i j h => splitCliffordMap i j h) hmk b
+      _ = bInf := hb
+  have hψK : fockToInfinity k ψK = ψInf := by
+    calc
+      fockToInfinity k ψK = fockToInfinity l ψ := by
+        exact DirectLimit.Module.of_f
+          (f := fun i j h => fockStageMap i j h)
+          (i := l) (j := k) (hij := hlk) (x := ψ)
+      _ = ψInf := hψ'
+  rw [← ha', ← hb', ← hψK]
+  rw [← map_mul (DirectLimit.Algebra.of SplitClNNAlg
+    (fun i j h => splitCliffordMap i j h) k) aK bK]
+  rw [splitCliffordFockAction_of, splitCliffordFockAction_of,
+    splitCliffordFockAction_of]
+  rw [map_mul (towerSpinorRep k)]
+  rfl
 
 /-- On a finite-stage Clifford generator, the colimit action is the native
 Chevalley creation/contraction action on the corresponding Fock representative. -/

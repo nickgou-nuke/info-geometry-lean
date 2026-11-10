@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Polynomial.Splits
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Principal divisors of split rational functions on the projective line
@@ -17,6 +23,13 @@ namespace InfoGeometry.Algebraic.ProjectiveLineRationalDivisor
 
 open Polynomial
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 section Divisor
 
 variable (K : Type*)
@@ -28,6 +41,14 @@ structure ProjectiveLineDivisor where
   zeros : Multiset K
   poles : Multiset K
   orderAtInfinity : ℤ
+  deriving Inhabited
+
+/-- Formal addition of projective-line divisors over any carrier `K` (including non-commutative rings `[Ring K]`). -/
+def ProjectiveLineDivisor.add {K : Type*}
+    (D₁ D₂ : ProjectiveLineDivisor K) : ProjectiveLineDivisor K where
+  zeros := D₁.zeros + D₂.zeros
+  poles := D₁.poles + D₂.poles
+  orderAtInfinity := D₁.orderAtInfinity + D₂.orderAtInfinity
 
 /-- The coefficient of the divisor at a finite point, or at infinity when
 the argument is `none`. -/
@@ -39,6 +60,14 @@ def ProjectiveLineDivisor.orderAt [DecidableEq K]
 /-- Degree of divisor data, counting multiplicities and the point at infinity. -/
 def ProjectiveLineDivisor.degree (D : ProjectiveLineDivisor K) : ℤ :=
   (D.zeros.card : ℤ) - D.poles.card + D.orderAtInfinity
+
+/-- Degree is additive under formal divisor sum over any non-commutative ring `[Ring B]`. -/
+theorem ProjectiveLineDivisor.degree_add {B : Type*} [Ring B]
+    (D₁ D₂ : ProjectiveLineDivisor B) :
+    (D₁.add D₂).degree = D₁.degree + D₂.degree := by
+  simp only [ProjectiveLineDivisor.add, ProjectiveLineDivisor.degree, Multiset.card_add]
+  push_cast
+  ring
 
 end Divisor
 
@@ -88,6 +117,15 @@ theorem SplitRationalFunction.orderAtInfinity_eq_neg_finite_degree
   have hden : (f.denominator.natDegree : ℤ) = f.denominator.roots.card := by
     exact_mod_cast f.denominator_splits.natDegree_eq_card_roots
   simp [SplitRationalFunction.divisor, hnum, hden]
+
+/-- Ground inhabitant of `SplitRationalFunction ℤ` represented by `X / X`. -/
+def intIdentitySplitRationalFunction : SplitRationalFunction ℤ where
+  numerator := Polynomial.X
+  denominator := Polynomial.X
+  numerator_ne_zero := Polynomial.X_ne_zero
+  denominator_ne_zero := Polynomial.X_ne_zero
+  numerator_splits := Polynomial.Splits.X
+  denominator_splits := Polynomial.Splits.X
 
 end SplitRational
 

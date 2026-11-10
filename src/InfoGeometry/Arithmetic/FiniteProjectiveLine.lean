@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Projectivization.Action
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
@@ -6,6 +11,13 @@ import Mathlib.GroupTheory.QuotientGroup.Basic
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.FiniteProjectiveLine
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open scoped LinearAlgebra.Projectivization
 
@@ -859,6 +871,8 @@ theorem pgl2_normalize_affine_triple_unique [Field F] (x y z : F)
     (hh1 : h • affinePoint y = onePoint (F := F))
     (hhinf : h • affinePoint z = infinityPoint (F := F)) :
     g = h := by
+  have hdistinct : x ≠ y ∧ x ≠ z ∧ y ≠ z := ⟨hxy, hxz, hyz⟩
+  rcases hdistinct with ⟨_, _, _⟩
   have hinv0 : h⁻¹ • zeroPoint (F := F) = affinePoint x := by
     rw [← hh0]
     exact inv_smul_smul h _
@@ -1235,5 +1249,50 @@ theorem pgl2Action_transitive [Field F] (p q : Line F) :
   rcases gl2Action_transitive p q with ⟨g, hg⟩
   refine ⟨QuotientGroup.mk' (gl2ActionHom (F := F)).ker g, ?_⟩
   simpa only [pgl2_mk_smul] using hg
+
+section DivisionRingProjectiveLine
+
+variable {D : Type*} [DivisionRing D]
+
+/-- Non-commutative projective line `ℙ D (Fin 2 → D)` over any `[DivisionRing D]`. -/
+abbrev DivisionRingLine (D : Type*) [DivisionRing D] := ℙ D (Fin 2 → D)
+
+/-- Affine point `[x : 1]` on the projective line over any `[DivisionRing D]`. -/
+noncomputable def divisionRingAffinePoint (x : D) : DivisionRingLine D :=
+  Projectivization.mk D ![x, 1] (by
+    intro h
+    have h1 := congrFun h 1
+    simp at h1)
+
+/-- Point at infinity `[1 : 0]` on the projective line over any `[DivisionRing D]`. -/
+noncomputable def divisionRingInfinityPoint : DivisionRingLine D :=
+  Projectivization.mk D ![1, 0] (by
+    intro h
+    have h0 := congrFun h 0
+    simp at h0)
+
+/-- The affine chart `x ↦ [x : 1]` is injective over any `[DivisionRing D]`. -/
+theorem divisionRingAffinePoint_injective :
+    Function.Injective (divisionRingAffinePoint : D → DivisionRingLine D) := by
+  intro x y h
+  rcases (Projectivization.mk_eq_mk_iff' D ![x, 1] ![y, 1]
+    (by simp) (by simp)).mp h with ⟨a, ha⟩
+  have ha1 := congrFun ha 1
+  have ha0 := congrFun ha 0
+  simp at ha1 ha0
+  subst a
+  simpa using ha0.symm
+
+/-- Every affine point `[x : 1]` is distinct from `[1 : 0]` over any `[DivisionRing D]`. -/
+theorem divisionRingAffinePoint_ne_infinityPoint (x : D) :
+    divisionRingAffinePoint x ≠ divisionRingInfinityPoint (D := D) := by
+  intro h
+  rcases (Projectivization.mk_eq_mk_iff' D ![x, 1] ![1, 0]
+    (by simp) (by simp)).mp h with ⟨a, ha⟩
+  have h1 := congrFun ha 1
+  have h0 := congrFun ha 0
+  simp at h1 h0
+
+end DivisionRingProjectiveLine
 
 end InfoGeometry.Arithmetic.FiniteProjectiveLine

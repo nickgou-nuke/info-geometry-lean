@@ -1,13 +1,36 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.HestenesOddSector
 import InfoGeometry.Riemannian.CartanMetric
+import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Clifford.Conformal
 
 open CliffordAlgebra
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem conformalTwistorBridge_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative ring `[Ring B]`, if `x` and `a` are null (`x * x = 0`, `a * a = 0`)
+and mutually orthogonal (`x * a + a * x = 0`), then their sum `x + a` is also null. -/
+theorem ring_null_translation_shift
+    {B : Type*} [Ring B] (x a : B)
+    (hx : x * x = 0) (ha : a * a = 0) (hxa : x * a + a * x = 0) :
+    (x + a) * (x + a) = 0 := by
+  calc
+    (x + a) * (x + a) = x * x + (x * a + a * x) + a * a := by noncomm_ring
+    _ = 0 := by rw [hx, hxa, ha, add_zero, add_zero]
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
@@ -28,6 +51,9 @@ structure ConformalTwistorLift where
   scale_inf : R
   /-- The conformal origin component (e_origin) -/
   origin_comp : R
+
+instance : Inhabited (ConformalTwistorLift Q) :=
+  ⟨⟨0, 0, 0⟩⟩
 
 /--
 The conformal null condition: a lift is a valid Twistor/null-cone representation

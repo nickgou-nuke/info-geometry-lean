@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Vandermonde
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.FieldTheory.Finite.Extension
@@ -12,6 +17,21 @@ native Mathlib Vandermonde nonsingularity theorem, not finite enumeration.
 -/
 
 namespace InfoGeometry.Combinatorics.BinaryBCHMinimumDistance
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem bch_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]` without zero divisors `[NoZeroDivisors B]`,
+a single-term power evaluation `c * α ^ k = 0` with `α ^ k ≠ 0` forces `c = 0`. -/
+theorem ring_coeff_eq_zero_of_mul_pow_eq_zero
+    {B : Type*} [Ring B] [NoZeroDivisors B]
+    {c α : B} {k : ℕ} (hα : α ^ k ≠ 0) (h : c * α ^ k = 0) :
+    c = 0 :=
+  (mul_eq_zero.mp h).resolve_right hα
 
 theorem coefficients_eq_zero_of_consecutive_power_sums
     {K : Type*} [CommRing K] [IsDomain K] {t : ℕ}

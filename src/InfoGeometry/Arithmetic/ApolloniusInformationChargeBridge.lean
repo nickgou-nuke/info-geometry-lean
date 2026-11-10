@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
@@ -29,6 +34,13 @@ open Filter
 open scoped Topology
 
 namespace InfoGeometry.Arithmetic.ApolloniusInformationChargeBridge
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Arithmetic.RiemannApolloniusVectorFields
@@ -555,5 +567,26 @@ theorem dipole_logarithmic_coefficient_reflection
       _ = 0 := by ring
   field_simp [hs0, hs1, h1s, hs1', sub_ne_zero.mpr hs1]
   ring
+
+/-- Non-commutative dipole partial-fraction identity over any `[DivisionRing D]`:
+`(s - 1)⁻¹ - s⁻¹ = (s - 1)⁻¹ * s⁻¹`. -/
+theorem divisionRing_dipole_partial_fraction
+    {D : Type*} [DivisionRing D]
+    {s : D} (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    (s - 1)⁻¹ - s⁻¹ = (s - 1)⁻¹ * s⁻¹ := by
+  have hs1' : s - 1 ≠ 0 := sub_ne_zero.mpr hs1
+  have hdiff : s - (s - 1) = 1 := by noncomm_ring
+  calc
+    (s - 1)⁻¹ - s⁻¹
+        = (s - 1)⁻¹ * (s * s⁻¹) - ((s - 1)⁻¹ * (s - 1)) * s⁻¹ := by
+            rw [mul_inv_cancel₀ hs0, mul_one, inv_mul_cancel₀ hs1', one_mul]
+    _ = (s - 1)⁻¹ * (s - (s - 1)) * s⁻¹ := by noncomm_ring
+    _ = (s - 1)⁻¹ * s⁻¹ := by rw [hdiff, mul_one]
+
+/-- Ground inhabitant of `ApolloniusPotentialData ℝ`. -/
+def realUnitApolloniusPotentialData : ApolloniusPotentialData ℝ where
+  source := 0
+  sink := 1
+  source_ne_sink := zero_ne_one
 
 end InfoGeometry.Arithmetic.ApolloniusInformationChargeBridge

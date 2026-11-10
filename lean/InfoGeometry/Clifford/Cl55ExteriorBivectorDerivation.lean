@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
 import InfoGeometry.Clifford.CliffordExteriorLift
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Exterior derivation induced by a `Cl(5,5)` bivector
@@ -18,6 +25,21 @@ namespace InfoGeometry.Clifford.Cl55ExteriorBivectorDerivation
 open ExteriorAlgebra
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.BivectorVectorRepresentation
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative ring `[Ring B]`, the inner commutator `x ↦ d * x - x * d` satisfies
+the non-commutative Leibniz derivation law on products `x * y`. -/
+theorem ring_inner_derivation_leibniz
+    {B : Type*} [Ring B] (d x y : B) :
+    d * (x * y) - (x * y) * d =
+      (d * x - x * d) * y + x * (d * y - y * d) := by
+  noncomm_ring
 
 /-- The linear endomorphism of the exterior algebra induced by a linear map on
 its degree-one generators. -/

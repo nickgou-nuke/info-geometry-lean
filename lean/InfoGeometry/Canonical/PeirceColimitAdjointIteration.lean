@@ -63,9 +63,11 @@ theorem limit_invS_iteratedCommutator_recurrence
         (invS P) (1 + 2) X =
       (4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
         (invS P) 1 X := by
-    simpa [InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator,
-      InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.commutator,
-      InfoGeometry.OperatorAlgebra.PeirceSpine.comm] using hbase.1
+    change InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P)
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P)
+          (InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P) X)) =
+      (4 : ℤ) • InfoGeometry.OperatorAlgebra.PeirceSpine.comm (invS P) X
+    exact hbase.1
   refine Nat.le_induction (m := 1) h₁ ?_ n hn
   intro k hk ih
   calc
@@ -79,7 +81,70 @@ theorem limit_invS_iteratedCommutator_recurrence
           (invS P) k X) := by rw [ih]
     _ = (4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
         (invS P) (k + 1) X := by
-          rw [commutator_zsmul]
-          rfl
+          calc
+            InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.commutator (invS P)
+                ((4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                  (invS P) k X) =
+                (4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.commutator (invS P)
+                  (InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                    (invS P) k X) := commutator_zsmul (invS P) _ 4
+            _ = (4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                (invS P) (k + 1) X := by
+                  rfl
+
+/-- Repeated application of the two-grade recurrence gives a geometric
+progression separately on the odd and even commutator grades. The powers are
+integer scalar multiples in the same algebraic direct-limit operator ring. -/
+theorem limit_invS_iteratedCommutator_parity_closed_forms
+    (P X : Limit) (hP : P * P = P) (k : ℕ) :
+    InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+        (invS P) (2 * k + 1) X =
+      ((4 : ℤ) ^ k) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+        (invS P) 1 X ∧
+    InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+        (invS P) (2 * k + 2) X =
+      ((4 : ℤ) ^ k) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+        (invS P) 2 X := by
+  have hscale (Y : Limit) (m : ℕ) :
+      (4 : ℤ) • ((4 : ℤ) ^ m • Y) = (4 : ℤ) ^ (m + 1) • Y := by
+    calc
+      (4 : ℤ) • ((4 : ℤ) ^ m • Y) = (4 * (4 : ℤ) ^ m) • Y := smul_smul _ _ _
+      _ = ((4 : ℤ) ^ m * 4) • Y := by rw [mul_comm]
+      _ = (4 : ℤ) ^ (m + 1) • Y := by rw [pow_succ]
+  constructor
+  · induction k with
+    | zero => simp [InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator]
+    | succ k ih =>
+        have hrec := limit_invS_iteratedCommutator_recurrence P X hP (2 * k + 1) (by omega)
+        calc
+          InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+              (invS P) (2 * (k + 1) + 1) X =
+            InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+              (invS P) ((2 * k + 1) + 2) X := rfl
+          _ = (4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                (invS P) (2 * k + 1) X := hrec
+          _ = (4 : ℤ) • ((4 : ℤ) ^ k •
+                InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                  (invS P) 1 X) := by rw [ih]
+          _ = (4 : ℤ) ^ (k + 1) •
+                InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                  (invS P) 1 X := hscale _ _
+  · induction k with
+    | zero => simp [InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator]
+    | succ k ih =>
+        have hrec := limit_invS_iteratedCommutator_recurrence P X hP (2 * k + 2) (by omega)
+        calc
+          InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+              (invS P) (2 * (k + 1) + 2) X =
+            InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+              (invS P) ((2 * k + 2) + 2) X := rfl
+          _ = (4 : ℤ) • InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                (invS P) (2 * k + 2) X := hrec
+          _ = (4 : ℤ) • ((4 : ℤ) ^ k •
+                InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                  (invS P) 2 X) := by rw [ih]
+          _ = (4 : ℤ) ^ (k + 1) •
+                InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit.iteratedCommutator
+                  (invS P) 2 X := hscale _ _
 
 end InfoGeometry.Canonical.PeirceColimitAdjointIteration

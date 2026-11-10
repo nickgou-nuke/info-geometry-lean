@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
@@ -20,7 +25,7 @@ namespace InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 
 open scoped BigOperators
 
-variable (𝕜 : Type*) [CommRing 𝕜]
+variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
 
 /-- Infinite current carrier, realized by the external Heisenberg algebra. -/
 abbrev InfiniteCurrentAlg : Type _ := VirasoroProject.HeisenbergAlgebra 𝕜

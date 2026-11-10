@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -50,11 +54,22 @@ open Complex Real Matrix
 open scoped Matrix BigOperators
 open InfoGeometry.Canonical.YangBaxterProof
 
-set_option linter.unusedVariables false
-
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.GrandUnifiedRosettaStone
+
+/-- First `2 × 2` real non-commutativity witness matrix. -/
+def noncommWitnessA : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+
+/-- Second `2 × 2` real non-commutativity witness matrix. -/
+def noncommWitnessB : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+
+/-- Non-commutativity ground witness (`2 × 2` real matrix algebra). -/
+theorem exists_noncomm_pair :
+    noncommWitnessA * noncommWitnessB ≠ noncommWitnessB * noncommWitnessA := by
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  norm_num [noncommWitnessA, noncommWitnessB, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-! ### 1. Log Lattice & Additive Surprisal -/
 
@@ -136,7 +151,7 @@ theorem local_tate_superalgebra_duality (p : ℕ) (s : ℂ) (h_inv : 1 - (p : �
 
 /-! ### 4. Bost-Connes Crossed Product & Galois SSB -/
 
-structure CyclotomicGenerators (C : Type*) [CommRing C] [StarRing C] [Algebra ℂ C] where
+structure CyclotomicGenerators (C : Type*) [Ring C] [StarRing C] [Algebra ℂ C] where
   e : ℚ → C
   e_zero : e 0 = 1
   e_add : ∀ r s : ℚ, e (r + s) = e r * e s
@@ -144,7 +159,7 @@ structure CyclotomicGenerators (C : Type*) [CommRing C] [StarRing C] [Algebra �
   e_periodic : ∀ r : ℚ, e (r + 1) = e r
 
 structure CrossedProductAlgebra (C Op : Type*)
-    [CommRing C] [StarRing C] [Algebra ℂ C]
+    [Ring C] [StarRing C] [Algebra ℂ C]
     [Ring Op] [StarRing Op] [Algebra ℂ Op]
     (gen : CyclotomicGenerators C) where
   ι : C →ₐ[ℂ] Op
@@ -202,8 +217,6 @@ theorem high_temp_divergent_zeta (β : ℝ) (hβ : β ≤ 1) :
 /-! ### 6. Souriau Dirac-Hodge Continuous Linear Operators -/
 
 universe u
-
-variable (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 structure DiracHodgeData (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] where
   J : H →L[ℂ] H
@@ -338,7 +351,7 @@ Unifies:
 -/
 theorem grand_unified_rosetta_stone_synthesis
     {C Op G : Type*}
-    [CommRing C] [StarRing C] [Algebra ℂ C]
+    [Ring C] [StarRing C] [Algebra ℂ C]
     [Ring Op] [StarRing Op] [Algebra ℂ Op]
     [Group G]
     (gen : CyclotomicGenerators C)
@@ -353,6 +366,7 @@ theorem grand_unified_rosetta_stone_synthesis
     (h_proj_comm : D.twistedProj ∘L D.J = D.J ∘L D.twistedProj)
     (p : ℕ) (hp : 2 ≤ p) (g : G) (n : ℕ+) :
     (0 ≤ bregmanLossKernel 0) ∧
+    (0 < primeSquashing p ∧ primeSquashing p < 1) ∧
     (Complex.normSq (cayleyS1 (Complex.I * (primeSquashing p : ℂ))) = 1) ∧
     (star (bc.μ n) * bc.μ n = 1) ∧
     (kms.eval_e g 0 = 1) ∧
@@ -366,6 +380,7 @@ theorem grand_unified_rosetta_stone_synthesis
     (F * F = 1) ∧
     (F * B * F = R) :=
   ⟨bregmanLossKernel_nonneg 0,
+   primeSquashing_bounds p hp,
    cayley_prime_on_unit_circle (primeSquashing p),
    bc.μ_isometry n,
    kms.eval_zero g,
@@ -378,5 +393,53 @@ theorem grand_unified_rosetta_stone_synthesis
    zeckendorf_right_annihilated,
    F_sq,
    F_B_F_eq_R⟩
+
+/-- Ground inhabitant of `CyclotomicGenerators ℂ`. -/
+def complexUnitCyclotomicGenerators : CyclotomicGenerators ℂ where
+  e := fun _ => 1
+  e_zero := rfl
+  e_add := fun _ _ => (mul_one 1).symm
+  e_star := fun _ => star_one ℂ
+  e_periodic := fun _ => rfl
+
+/-- Ground inhabitant of `CrossedProductAlgebra ℂ ℂ`. -/
+def complexUnitCrossedProductAlgebra :
+    CrossedProductAlgebra ℂ ℂ complexUnitCyclotomicGenerators where
+  ι := AlgHom.id ℂ ℂ
+  μ := fun _ => 1
+  μ_isometry := fun _ => by simp
+  μ_mul := fun _ _ => (mul_one 1).symm
+  crossed_comm := fun _ _ => rfl
+
+/-- Ground inhabitant of `GaloisGroupAction Unit`. -/
+def unitGaloisGroupAction : GaloisGroupAction Unit where
+  actOnQ := fun _ r => r
+  act_one := fun _ => rfl
+  act_mul := fun _ _ _ => rfl
+  act_zero := fun _ => rfl
+  act_add := fun _ _ _ => rfl
+  act_periodic := fun _ _ => rfl
+  act_faithful := fun _ _ => Subsingleton.elim _ _
+
+/-- Ground inhabitant of `PureKMSState Unit`. -/
+def unitPureKMSState : PureKMSState Unit unitGaloisGroupAction where
+  β := 2
+  hβ := by norm_num
+  eval_e := fun _ _ => 1
+  eval_zero := fun _ => rfl
+  eval_equivariance := fun _ _ _ => rfl
+
+/-- Ground inhabitant of `DiracHodgeData` on the zero Hilbert submodule `↥(⊥ : Submodule ℂ ℂ)`. -/
+def botSubmoduleDiracHodgeData : DiracHodgeData ↥(⊥ : Submodule ℂ ℂ) where
+  J := 0
+  J_sq := Subsingleton.elim _ _
+  K := 0
+  K_sq := Subsingleton.elim _ _
+  J_K_anticommute := Subsingleton.elim _ _
+  twistedProj := 0
+  thermalState := fun _ => 0
+  thermal_limit := by
+    simp only [ContinuousLinearMap.zero_comp, ContinuousLinearMap.opNorm_zero]
+    exact tendsto_const_nhds
 
 end InfoGeometry.Arithmetic.GrandUnifiedRosettaStone

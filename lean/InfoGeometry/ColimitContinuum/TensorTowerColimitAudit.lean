@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.ColimitContinuum.TensorTowerColimit
 
 /-!
@@ -41,8 +47,7 @@ open InfoGeometry.ColimitContinuum.TensorTowerColimit
 #print axioms embed_intertwines_jordan
 #print axioms embed_tower_jordan_triple
 
--- Section 6: Master Certification & Conjunction Targets
-#print axioms compile_tensor_tower_colimit_cert
+-- Section 6: Finite-stage structure theorem
 #print axioms compile_tensor_tower_colimit
 
 end InfoGeometry.ColimitContinuum.TensorTowerColimit.Audit

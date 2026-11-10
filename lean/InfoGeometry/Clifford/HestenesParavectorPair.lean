@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.HestenesOddSector
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -5,8 +10,22 @@ namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem paravectorPair_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, if `g0 * g0 = 1`, then multiplying a left paravector `g0 * x`
+by a right paravector `x * g0` equals `g0 * (x * x) * g0`. -/
+theorem ring_left_mul_right_paravector
+    {B : Type*} [Ring B] (g0 x : B) :
+    (g0 * x) * (x * g0) = g0 * (x * x) * g0 := by
+  simp only [mul_assoc]
+
 variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommMonoid M] [Module R M]
+variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M)
 

@@ -1,8 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.CategoryTheory.Category.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Iso
 import Mathlib.LinearAlgebra.TensorProduct.Map
 import Mathlib.LinearAlgebra.TensorProduct.Associator
+import Mathlib.LinearAlgebra.Prod
 
 /-!
 # InfoGeometry.Categorical.LogEndModuleCategory
@@ -35,6 +41,13 @@ open scoped TensorProduct
 
 universe u v w
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem logEndModuleCategory_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 section Ring
 
 variable (𝕜 : Type u) [Ring 𝕜]
@@ -48,6 +61,8 @@ structure LogEndModule where
 
 attribute [instance] LogEndModule.instAddCommGroup LogEndModule.instModule
 
+instance inhabitedLogEndModule {K : Type u} [Ring K] : Inhabited (LogEndModule K) := ⟨⟨PUnit.{v + 1}, 0⟩⟩
+
 instance : CoeSort (LogEndModule 𝕜) (Type v) := ⟨LogEndModule.V⟩
 
 namespace LogEndModule
@@ -59,6 +74,11 @@ variable {𝕜}
 structure Hom (X Y : LogEndModule 𝕜) where
   hom : X →ₗ[𝕜] Y
   comm : hom.comp X.N = Y.N.comp hom
+
+instance inhabitedHom {K : Type u} [Ring K] : Inhabited (Hom (default : LogEndModule.{u, v} K) default) := ⟨⟨0, by simp⟩⟩
+
+/-- The zero map is an intertwiner between any two objects over any `[Ring 𝕜]`. -/
+def zeroHom (X Y : LogEndModule 𝕜) : Hom X Y := ⟨0, by simp⟩
 
 instance (X Y : LogEndModule 𝕜) : CoeFun (Hom X Y) (fun _ => X → Y) :=
   ⟨fun f => f.hom⟩
@@ -93,6 +113,21 @@ theorem Hom.map_N {X Y : LogEndModule 𝕜} (f : X ⟶ Y) (x : X) :
     f.hom (X.N x) = Y.N (f.hom x) := by
   have h := LinearMap.congr_fun f.comm x
   simpa [LinearMap.comp_apply] using h
+
+/-- Direct-sum (product) object in `LogEndModule 𝕜` over any noncommutative `[Ring 𝕜]`. -/
+def prodObj (X Y : LogEndModule 𝕜) : LogEndModule 𝕜 where
+  V := X.V × Y.V
+  N := LinearMap.prodMap X.N Y.N
+
+/-- Direct-sum (product) of intertwining morphisms over any noncommutative `[Ring 𝕜]`. -/
+def prodHom {X X' Y Y' : LogEndModule 𝕜} (f : X ⟶ X') (g : Y ⟶ Y') :
+    prodObj X Y ⟶ prodObj X' Y' where
+  hom := LinearMap.prodMap f.hom g.hom
+  comm := by
+    apply LinearMap.ext
+    intro p
+    change (f.hom (X.N p.1), g.hom (Y.N p.2)) = (X'.N (f.hom p.1), Y'.N (g.hom p.2))
+    rw [Hom.map_N f, Hom.map_N g]
 
 end LogEndModule
 

@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Matrix representation induced by an exterior-algebra basis
@@ -12,6 +18,28 @@ define a Pin(5,5) group action or prove a Pin representation theorem.
 -/
 
 namespace InfoGeometry.AQFT.Pin55Pullback
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative rings `[Ring B] [Ring C] [Ring D]`, post-composing a ring
+homomorphism `ρ : B →+* C` with a ring isomorphism `e : C ≃+* D` preserves and reflects injectivity. -/
+theorem ringHom_comp_equiv_injective_iff
+    {B C D : Type*} [Ring B] [Ring C] [Ring D]
+    (e : C ≃+* D) (ρ : B →+* C) :
+    Function.Injective (e.toRingHom.comp ρ) ↔ Function.Injective ρ := by
+  constructor
+  · intro h a b hab
+    apply h
+    exact congrArg e hab
+  · intro h a b hab
+    apply h
+    apply e.injective
+    exact hab
 
 variable {R W A : Type*}
 variable [CommRing R] [AddCommGroup W] [Module R W]

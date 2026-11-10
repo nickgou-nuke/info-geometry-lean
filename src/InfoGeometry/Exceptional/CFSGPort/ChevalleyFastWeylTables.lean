@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 Adapted from AxiomMath/CFSG RootOps/Fast.lean.
 -/
 module
@@ -29,7 +34,7 @@ namespace InfoGeometry.Exceptional.CFSGPort.Chevalley.RootOps
 
 @[expose] def sgnOf (b : ℕ) : ℤ := if b % 2 = 1 then -1 else 1
 
-theorem neg_one_pow_eq_sgnOf {R : Type*} [CommRing R] (b : ℕ) :
+theorem neg_one_pow_eq_sgnOf {R : Type*} [Ring R] (b : ℕ) :
     ((-1 : R) ^ b) = ((sgnOf b : ℤ) : R) := by
   unfold sgnOf
   split_ifs with h

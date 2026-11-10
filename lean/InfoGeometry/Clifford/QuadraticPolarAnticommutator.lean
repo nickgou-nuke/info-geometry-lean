@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -17,6 +22,13 @@ then its anticommutator is the polar expression
 
 namespace InfoGeometry.Clifford
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem quadraticPolar_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 /--
 Polar expression attached to a quadratic function.
 -/
@@ -24,6 +36,28 @@ def polarFromQuadratic
     {R V : Type*} [Sub R] [Add V]
     (Q : V → R) (x y : V) : R :=
   Q (x + y) - Q x - Q y
+
+/-- Operator-valued Clifford anticommutator from the square relation over any non-commutative ring `[Ring B]`. -/
+theorem ring_anticommutator_from_square_relation
+    {V B : Type*} [Add V] [Ring B]
+    (Q : V → B) (ι : V → B)
+    (hadd : ∀ x y : V, ι (x + y) = ι x + ι y)
+    (hsq : ∀ v : V, ι v * ι v = Q v)
+    (x y : V) :
+    ι x * ι y + ι y * ι x = polarFromQuadratic Q x y := by
+  unfold polarFromQuadratic
+  have hxy := hsq (x + y)
+  rw [hadd x y] at hxy
+  have hexpand :
+      (ι x + ι y) * (ι x + ι y) =
+        ι x * ι x + (ι x * ι y + ι y * ι x) + ι y * ι y := by
+    noncomm_ring
+  calc
+    ι x * ι y + ι y * ι x =
+      (ι x + ι y) * (ι x + ι y) - ι x * ι x - ι y * ι y := by
+        rw [hexpand]; abel
+    _ = Q (x + y) - Q x - Q y := by
+        rw [hxy, hsq x, hsq y]
 
 /--
 Clifford anticommutator from the square relation.

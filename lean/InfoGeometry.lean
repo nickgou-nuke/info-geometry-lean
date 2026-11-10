@@ -426,12 +426,6 @@ previously orphaned in the recovery tree.
 
 /- Orphans wired in for full build coverage -/
 import InfoGeometry.AQFT.Pin55Pullback
-import InfoGeometry.AitchisonCLRSimplex
-import InfoGeometry.AitchisonCLRSimplexAudit
-import InfoGeometry.AitchisonCartanDuallyFlatBridge
-import InfoGeometry.AitchisonCartanDuallyFlatBridgeAudit
-import InfoGeometry.AitchisonRapidityApollonian
-import InfoGeometry.AitchisonRapidityApollonianAudit
 import InfoGeometry.Albert.AlbertCubicDatum
 import InfoGeometry.Algebra.AffineOperatorFrame
 import InfoGeometry.Algebra.AiStudioNativeMathlibFindings
@@ -1330,10 +1324,6 @@ import InfoGeometry.Algebraic.SymmetricSplitSignatureBridge
 import InfoGeometry.All
 import InfoGeometry.AllExhaustive
 import InfoGeometry.Amari.DuallyFlatThermodynamics
-import InfoGeometry.AmariSurprisalIwasawaSynthesis
-import InfoGeometry.AmariSurprisalIwasawaSynthesisAudit
-import InfoGeometry.AmariSurprisalSphereIwasawaBridge
-import InfoGeometry.AmariSurprisalSphereIwasawaBridgeAudit
 import InfoGeometry.Analysis
 import InfoGeometry.Analysis.All
 import InfoGeometry.Analysis.AsanoRuelleBasicBranches
@@ -1743,8 +1733,6 @@ import InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaSupertraceBridge
 import InfoGeometry.Arithmetic.ZetaZ2ParitySpectralDecomposition
-import InfoGeometry.ArnoldSouriauPolarization
-import InfoGeometry.ArnoldSouriauPolarizationAudit
 import InfoGeometry.AsanoRuelle.AsanoContractionEndpointClosureBridge
 import InfoGeometry.AsanoRuelle.AsanoRuelleCounterexample
 import InfoGeometry.AsanoRuelle.MobiusInversion
@@ -1758,8 +1746,6 @@ import InfoGeometry.Canonical.DualConnectionsCore
 import InfoGeometry.Canonical.LLNCore
 import InfoGeometry.Canonical.ManifoldDegreeCore
 import InfoGeometry.Canonical.ManifoldHomologyCore
-import InfoGeometry.AtiyahBottEquivariantLocalizationIndex
-import InfoGeometry.AtiyahBottEquivariantLocalizationIndexAudit
 import InfoGeometry.Attention.AttentionCurvatureHolonomy
 import InfoGeometry.Attention.AttentionMetriplecticPoset
 import InfoGeometry.Attention.ContinuousLyapunovFlow
@@ -1807,8 +1793,6 @@ import InfoGeometry.Automorphic.SiegelJacobiStandardLFunction
 import InfoGeometry.Automorphic.SiegelJacobiStandardLFunctionChecks
 import InfoGeometry.Axioms
 import InfoGeometry.Bar
-import InfoGeometry.BeltramiSobolevStability
-import InfoGeometry.BeltramiSobolevStabilityAudit
 import InfoGeometry.BlueprintTags
 import InfoGeometry.Bridge.AmariZornDerivationBridge
 import InfoGeometry.Bridge.AmariZornRegularActionBridge
@@ -1958,7 +1942,7 @@ import InfoGeometry.Canonical.AssociatorGellMannOctetBridge
 import InfoGeometry.Canonical.AtiyahMantonTriality
 import InfoGeometry.Canonical.AtiyahSingerDiracCapstone
 import InfoGeometry.Canonical.AtiyahSingerDiracSupertraceCapstone
-import InfoGeometry.Canonical.AtiyahSingerMcKeanPrimonCapstone
+import InfoGeometry.Canonical.DrazinObliqueShellResolution
 import InfoGeometry.Canonical.AttentionExpertModuliTopological
 import InfoGeometry.Canonical.AttentionExpertSimplexModuliTopological
 import InfoGeometry.Canonical.AttentionLegendreBregmanBridge
@@ -2469,7 +2453,7 @@ import InfoGeometry.Canonical.CliffordInfiniteLimit
 import InfoGeometry.Canonical.CliffordParityBridge
 import InfoGeometry.Canonical.CliffordPinConjugation
 import InfoGeometry.Canonical.CliffordTensorTowerColimit
-import InfoGeometry.Canonical.CliffordTensorTowerSpectralDiracBridge
+import InfoGeometry.Canonical.Cl11OperatorHeadFiltration
 import InfoGeometry.Canonical.ClusterAlgebraConwayCoxeterFriezeCapstone
 import InfoGeometry.Canonical.ColeFurySpinorProjectiveAtlas
 import InfoGeometry.Canonical.ColeFurySpinorProjectiveChart
@@ -2739,7 +2723,6 @@ import InfoGeometry.Canonical.DrazinShellConsequenceExamplesAudit
 import InfoGeometry.Canonical.DrazinShellExtinctionAudit
 import InfoGeometry.Canonical.DrazinShellMatrixActionAudit
 import InfoGeometry.Canonical.DrazinShellPeirce
-import InfoGeometry.Canonical.DrazinShellResolutionAll
 import InfoGeometry.Canonical.DrazinShellSelfAdjointCriterion
 import InfoGeometry.Canonical.DrazinShellSelfAdjointCriterionAudit
 import InfoGeometry.Canonical.DrazinSupergradedWeyl
@@ -5024,7 +5007,6 @@ import InfoGeometry.Categorical.RindlerFilteredColimit
 import InfoGeometry.Categorical.SplitOctonionCategoricalCoherenceBridge
 import InfoGeometry.Categorical.SylvesterBraidRepresentation
 import InfoGeometry.Categorical.TensorColimit
-import InfoGeometry.Categorical.TensorColimitInverseStageWave25
 import InfoGeometry.Categorical.TestMobiusGeometry
 import InfoGeometry.Categorical.ThermodynamicLimitColimit
 import InfoGeometry.Categorical.TwoSheetKreinFilteredColimit
@@ -5438,7 +5420,8 @@ import InfoGeometry.Clifford.SplitQuaternionNilpotentChiralCARBridge
 import InfoGeometry.Clifford.SplitQuaternionNilpotentMobiusBridge
 import InfoGeometry.Clifford.SplitQuaternions
 import InfoGeometry.Clifford.SplitRealNullTetrad
-import InfoGeometry.Clifford.SplitTower
+import InfoGeometry.Clifford.Tower
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SuperGrassmannianTKK
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.ThermalCommutatorAnticommutator
@@ -5508,6 +5491,7 @@ import InfoGeometry.Combinatorics.BinaryQuadraticResidueBound
 import InfoGeometry.Combinatorics.ExtendedBinaryGolay
 import InfoGeometry.Combinatorics.GolayConstructionA
 import InfoGeometry.Combinatorics.LeechLattice
+import InfoGeometry.Combinatorics.MHVTriplets
 import InfoGeometry.Compatibility.All
 import InfoGeometry.Compatibility.MathlibModularShadow
 import InfoGeometry.Compatibility.MathlibProjectiveDescentShadow
@@ -5518,8 +5502,6 @@ import InfoGeometry.Computation.BayesianTuringCantor
 import InfoGeometry.Computation.HolographicFluidComputer
 import InfoGeometry.CondensedMatter.All
 import InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
-import InfoGeometry.ConformalScaleAnomalyDimensionalTransmutation
-import InfoGeometry.ConformalScaleAnomalyDimensionalTransmutationAudit
 import InfoGeometry.Connection.ApolloniusOperatorConnectionAudit
 import InfoGeometry.Continuous.DeRhamBridge
 import InfoGeometry.Continuous.DeRhamBridgeAudit
@@ -5608,7 +5590,6 @@ import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.TitsExhaustion
 import InfoGeometry.Cosmology.BisognanoWichmannModularFlow
 import InfoGeometry.Cosmology.BisognanoWichmannModularFlowAudit
-import InfoGeometry.Cosmology.CausalPosetArchetypes
 import InfoGeometry.Cosmology.CausalPosetSynthesis
 import InfoGeometry.Cosmology.CausalPosetSynthesisAudit
 import InfoGeometry.Cosmology.Cl11ParabolicVacuumQuotientBridgeAudit
@@ -5650,8 +5631,6 @@ import InfoGeometry.Detector.RepresentationTheoryOfObservation
 import InfoGeometry.Detector.TwoPointQuantumFieldGenesis
 import InfoGeometry.DeterminantTrifactor
 import InfoGeometry.Differential.PoincareFisherRao
-import InfoGeometry.DuistermaatHeckmanFluidLocalization
-import InfoGeometry.DuistermaatHeckmanFluidLocalizationAudit
 import InfoGeometry.Dynamics.ActualZetaCurvatureMetriplecticBridge
 import InfoGeometry.Dynamics.ActualZetaFisherCurvatureCoherenceBridge
 import InfoGeometry.Dynamics.ActualZetaRealFisherMetriplecticBridge
@@ -6550,10 +6529,6 @@ import InfoGeometry.Fibonacci.FibAnyonThm2
 import InfoGeometry.Fibonacci.FibAnyonThm3
 import InfoGeometry.Fibonacci.FibAnyonThm4
 import InfoGeometry.Fibonacci.FibAnyonThm5
-import InfoGeometry.FiniteFisherRaoBhattacharyya
-import InfoGeometry.FiniteFisherRaoBhattacharyyaAudit
-import InfoGeometry.FluidChernSimonsKnotAnyon
-import InfoGeometry.FluidChernSimonsKnotAnyonAudit
 import InfoGeometry.Forge
 import InfoGeometry.FormalAgentLib.Layer1
 import InfoGeometry.FormalTheory
@@ -6874,8 +6849,6 @@ import InfoGeometry.KTheory.KreinBridge
 import InfoGeometry.Kaehler.AmbroseSinger
 import InfoGeometry.Kaehler.FubiniStudyAsymptotics
 import InfoGeometry.Kaehler.PoincareMetric
-import InfoGeometry.KostantSouriauBKSPolarization
-import InfoGeometry.KostantSouriauBKSPolarizationAudit
 import InfoGeometry.Krein
 import InfoGeometry.Krein.All
 import InfoGeometry.Krein.BogoliubovProjectionIdentity
@@ -7336,8 +7309,6 @@ import InfoGeometry.Lint.Vacuity
 import InfoGeometry.Lint.VacuityPackLint
 import InfoGeometry.Lint.WitnessLint
 import InfoGeometry.LogarithmicBridge
-import InfoGeometry.MarsdenWeinsteinHasimotoVortex
-import InfoGeometry.MarsdenWeinsteinHasimotoVortexAudit
 import InfoGeometry.MassSpectrometry.AbsorbingDrazinBridge
 import InfoGeometry.MassSpectrometry.AbsorbingFragmentGrammar
 import InfoGeometry.MassSpectrometry.All
@@ -7865,7 +7836,7 @@ import InfoGeometry.OperatorAlgebra.KreinInnerDerivation
 import InfoGeometry.OperatorAlgebra.KreinSemilinearMap
 import InfoGeometry.OperatorAlgebra.LieJordanBoundaryMatrices
 import InfoGeometry.OperatorAlgebra.LieJordanDiracPair
-import InfoGeometry.OperatorAlgebra.LieJordanGradedDifferential
+import InfoGeometry.OperatorAlgebra.PeirceTwistedComplex
 import InfoGeometry.OperatorAlgebra.LieJordanNoncommutingWitnesses
 import InfoGeometry.OperatorAlgebra.LieJordanOctet
 import InfoGeometry.OperatorAlgebra.LieJordanOctetMatrices
@@ -8073,7 +8044,7 @@ import InfoGeometry.OperatorAlgebra.SplitOctonionPeirceSymplectic
 import InfoGeometry.OperatorAlgebra.SplitOctonionPeirceYangBaxterBridge
 import InfoGeometry.OperatorAlgebra.SplitOctonionSignedPermutationAutomorphism
 import InfoGeometry.OperatorAlgebra.SplitOctonionalIdeals
-import InfoGeometry.OperatorAlgebra.SplitOctonions.FureyCAR
+import InfoGeometry.OperatorAlgebra.SplitOctonions.FureyLadderCAR
 import InfoGeometry.OperatorAlgebra.SplitOctonions.IntegerOrder
 import InfoGeometry.OperatorAlgebra.SplitTorusLogRouting
 import InfoGeometry.OperatorAlgebra.StableAlgebraicSemantics
@@ -9592,8 +9563,6 @@ import InfoGeometry.QuantumGravity.TwistorMassGenesis
 import InfoGeometry.QuantumGravity.WittenCrossedProductTypeII
 import InfoGeometry.QuantumGravity.WittenCrossedProductTypeIIAudit
 import InfoGeometry.QuantumPhysics.ParafermionicFourVector
-import InfoGeometry.QuantumVortexCutoffBlowupProtection
-import InfoGeometry.QuantumVortexCutoffBlowupProtectionAudit
 import InfoGeometry.Quiver.BetheAnsatzXXZ
 import InfoGeometry.Quiver.FermiGTIsometry
 import InfoGeometry.Quiver.HbarOper
@@ -9634,8 +9603,6 @@ import InfoGeometry.Routing.AttentionReadoutCompressionAudit
 import InfoGeometry.Routing.CausalDrazinAudit
 import InfoGeometry.Routing.FunctionalRouteObstructionsAudit
 import InfoGeometry.SLT.ConditionalExpectation
-import InfoGeometry.SLnInformationBundleIwasawaTriad
-import InfoGeometry.SLnInformationBundleIwasawaTriadAudit
 import InfoGeometry.Sandbox.ChernIsomorphismSandbox
 import InfoGeometry.Sandbox.CliffordFunctorSandbox
 import InfoGeometry.Sandbox.CliffordFunctorSandbox.Functor
@@ -9660,12 +9627,7 @@ import InfoGeometry.Sandbox.SpectralStabilitySandbox
 import InfoGeometry.Sandbox.UncertaintyAnomalySwarm.HeisenbergAnomaly
 import InfoGeometry.Sandbox.UncertaintyAnomalySwarm.TwistorNonIncidence
 import InfoGeometry.SandboxCARBridge
-import InfoGeometry.SandboxCARBridge2
-import InfoGeometry.SandboxCARBridge3
-import InfoGeometry.SandboxCARBridge4
 import InfoGeometry.SandboxCARBridge5
-import InfoGeometry.SandboxCARBridge6
-import InfoGeometry.SandboxCARBridge7
 import InfoGeometry.ScalarStatisticalIdentities
 import InfoGeometry.ScalarStatisticalIdentitiesDependencies
 import InfoGeometry.ScalarStatisticalIdentitiesTests
@@ -9692,8 +9654,6 @@ import InfoGeometry.Section5
 import InfoGeometry.Section6
 import InfoGeometry.Section7
 import InfoGeometry.Section9
-import InfoGeometry.SelfConcordantModularSouriau
-import InfoGeometry.SelfConcordantModularSouriauAudit
 import InfoGeometry.Signal.All
 import InfoGeometry.Signal.ComplexRealification
 import InfoGeometry.Signal.QuaternionPhase
@@ -9715,8 +9675,6 @@ import InfoGeometry.SignedNetwork.QubitWignerBridge
 import InfoGeometry.SignedNetwork.RankedDAGResolvent
 import InfoGeometry.SignedNetwork.RegularBimoduleSeparation
 import InfoGeometry.SignedNetwork.RegularBimoduleZornBridge
-import InfoGeometry.SimplexPrincipalBundleIwasawa
-import InfoGeometry.SimplexPrincipalBundleIwasawaAudit
 import InfoGeometry.Singular.All
 import InfoGeometry.Singular.CharacteristicTwoOverlapCounterexample
 import InfoGeometry.Singular.DrazinAdjoint
@@ -10160,8 +10118,6 @@ import InfoGeometry.Synthesis.ZornBraidIntertwinerTests
 import InfoGeometry.TKK.GenericRepresentationBridge
 import InfoGeometry.TKK.TKKFramework
 import InfoGeometry.TKK.TKKTest
-import InfoGeometry.TaoFluidQuantumLogic
-import InfoGeometry.TaoFluidQuantumLogicAudit
 import InfoGeometry.Tensor.All
 import InfoGeometry.Tensor.DeBruijn
 import InfoGeometry.Tensor.DeBruijnFin
@@ -10290,7 +10246,7 @@ import InfoGeometry.Topology.BostConnesZetaVolume
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 import InfoGeometry.Topology.BoundaryMultiplierCore
 import InfoGeometry.Topology.BoundaryMultiplierL2Bridge
-import InfoGeometry.Topology.BraidGroupPresentation
+import proofs.BraidProject.BraidGroup
 import InfoGeometry.Topology.BraidNegativeIdentityMonodromy
 import InfoGeometry.Topology.BraidParafermionClosure
 import InfoGeometry.Topology.BraidedMonoidal
@@ -11224,7 +11180,6 @@ import InfoGeometry.TwistorSmoothness
 import InfoGeometry.Unified.UnifiedInversionMatrix
 import InfoGeometry.UnifiedPipelineArchitecture
 import InfoGeometry.UnitSphereDistanceTriangle
-import InfoGeometry.UnitSphereDistanceTriangleAudit
 import InfoGeometry.Unstable.Quarantine
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Volume.AlgebraEndScalarComposition
@@ -11245,10 +11200,7 @@ import InfoGeometry.Volume.ZeroJacobianWeylBoundary
 import InfoGeometry.Wavelet.All
 import InfoGeometry.Wavelet.PrimeWaveletMRA
 import InfoGeometry.WeilPositivityFiniteKernel
-import InfoGeometry.Weyl.DiscreteDisplacement
 import InfoGeometry.Weyl.WeylDisplacement
-import InfoGeometry.WillertonIsbellAmariDuality
-import InfoGeometry.WillertonIsbellAmariDualityAudit
 import InfoGeometry.auto_blueprints
 import InfoGeometry.generalizedKL
 import InfoGeometry.Parafermion.TetractysMajoranaYangMillsPoset

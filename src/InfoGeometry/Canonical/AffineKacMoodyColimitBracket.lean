@@ -33,7 +33,7 @@ open CategoryTheory CategoryTheory.Limits
 open VirasoroProject
 
 universe u
-variable {𝕜 : Type u} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜] [IsAddTorsionFree 𝕜]
 variable {𝓰 : Type u} [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
 variable (Φ : LinearMap.BilinForm 𝕜 𝓰)
 variable (hΦ : Φ.lieInvariant 𝓰) (hΦs : Φ.IsSymm)

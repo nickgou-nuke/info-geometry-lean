@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.ChiralCARTransport
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornLeftMajorana
 import InfoGeometry.Algebra.ZornColorBilinears
 
@@ -15,6 +16,53 @@ a central scalar component; it is not an alternating bilinear map. All products
 are compositions of native linear maps.
 -/
 namespace InfoGeometry.Algebra.ZornVectorMatrix
+
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingMajoranaRotations
+
+variable {B : Type*} [Ring B]
+
+/-- Difference of two chiral bivector products `γplus_u * γplus_v - γminus_u * γminus_v`
+in an arbitrary non-commutative ring `[Ring B]`. -/
+def majoranaRotationRing (γplus_u γplus_v γminus_u γminus_v : B) : B :=
+  γplus_u * γplus_v - γminus_u * γminus_v
+
+/-- Universal derivation-to-anticommutator identity in any non-commutative ring `[Ring B]`:
+`(A * C) * D - D * (A * C) = A * (C * D + D * C) - (A * D + D * A) * C`. -/
+theorem quadratic_commutator_ring (A C D : B) :
+    (A * C) * D - D * (A * C) = A * (C * D + D * C) - (A * D + D * A) * C := by
+  noncomm_ring
+
+/-- In any non-commutative ring `[Ring B]`, if `γminus_u` and `γminus_v` anticommute
+with `γplus_w`, then the commutator of `majoranaRotationRing γplus_u γplus_v γminus_u γminus_v`
+with `γplus_w` reduces to `γplus_u * {γplus_v, γplus_w} - {γplus_u, γplus_w} * γplus_v`. -/
+theorem majoranaRotationRing_action_plus
+    (γplus_u γplus_v γplus_w γminus_u γminus_v : B)
+    (huw : γminus_u * γplus_w + γplus_w * γminus_u = 0)
+    (hvw : γminus_v * γplus_w + γplus_w * γminus_v = 0) :
+    majoranaRotationRing γplus_u γplus_v γminus_u γminus_v * γplus_w -
+      γplus_w * majoranaRotationRing γplus_u γplus_v γminus_u γminus_v =
+        γplus_u * (γplus_v * γplus_w + γplus_w * γplus_v) -
+          (γplus_u * γplus_w + γplus_w * γplus_u) * γplus_v := by
+  have hsplit :
+      majoranaRotationRing γplus_u γplus_v γminus_u γminus_v * γplus_w -
+        γplus_w * majoranaRotationRing γplus_u γplus_v γminus_u γminus_v =
+      ((γplus_u * γplus_v) * γplus_w - γplus_w * (γplus_u * γplus_v)) -
+        ((γminus_u * γminus_v) * γplus_w - γplus_w * (γminus_u * γminus_v)) := by
+    dsimp [majoranaRotationRing]
+    noncomm_ring
+  rw [hsplit, quadratic_commutator_ring γplus_u γplus_v γplus_w,
+    quadratic_commutator_ring γminus_u γminus_v γplus_w, huw, hvw]
+  noncomm_ring
+
+end NonCommRingMajoranaRotations
+
 variable {R : Type*} [CommRing R]
 noncomputable section
 

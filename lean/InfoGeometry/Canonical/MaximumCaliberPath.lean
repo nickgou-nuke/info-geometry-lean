@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.MaximumCaliberPath
@@ -19,6 +24,17 @@ thermodynamic-curvature path packet.  This file adds:
 
 No analytic MaxCal existence theorem, CP map construction, KMS uniqueness
 theorem, or continuous path-integral result is asserted here.
+
+## BUCKET 1: Path and graph data
+Finite path words and graph edge-rate data supply the underlying carriers.
+
+## BUCKET 2: Derived path identities
+Positive local rate ratios and their factorization yield the exponential
+path-entropy formula by the graph owner's finite-list theorem.
+
+## BUCKET 3: Conditional interfaces
+Bayesian projection and variational optimizer claims remain explicit inputs;
+this module does not promote them to derived analytic results.
 -/
 
 namespace InfoGeometry.Canonical.MaximumCaliberPath
@@ -38,17 +54,19 @@ variable (G : DirectedThermoGraph V E)
 /--
 Maximum-caliber path law over the repository-owned thermodynamic graph.
 
-The variational MaxCal derivation is represented by `ratio_eq_exp_pathEntropy`;
-the graph owner supplies the meaning of path entropy production as the finite
-line integral of the log-affinity connection.
+The path law stores a local factorization of the forward/backward probability
+ratio into the graph's edge-rate ratios, plus positivity of those factors.
+The graph owner derives the exponential path-entropy identity from that data.
 -/
 structure GraphMaxCalPathLaw (PathSample : Type) where
   pathEdges : PathSample → List E
   forwardProbability : PathSample → ℝ
   backwardProbability : PathSample → ℝ
-  ratio_eq_exp_pathEntropy :
-    ∀ γ, forwardProbability γ / backwardProbability γ =
-      Real.exp (G.pathEntropyProduction (pathEdges γ))
+  ratio_factorization : ∀ γ,
+    forwardProbability γ / backwardProbability γ =
+      G.pathForwardBackwardRatio (pathEdges γ)
+  rate_ratio_positive : ∀ γ e, e ∈ pathEdges γ →
+    0 < G.forwardRate e / G.reverseRate e
 
 namespace GraphMaxCalPathLaw
 
@@ -56,20 +74,14 @@ variable {G}
 variable {PathSample : Type}
 variable (L : GraphMaxCalPathLaw G PathSample)
 
-/-- Convert the MaxCal path law to the generic fluctuation-ratio owner packet. -/
-noncomputable def toPathProbabilityRatioLaw :
-    InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.PathProbabilityRatioLaw
-      PathSample where
-  forwardProbability := L.forwardProbability
-  backwardProbability := L.backwardProbability
-  entropyProduction := fun γ => G.pathEntropyProduction (L.pathEdges γ)
-  ratio_law := L.ratio_eq_exp_pathEntropy
-
-/-- Forward/backward path probabilities read as exponentiated graph entropy production. -/
+/-- The global MaxCal path ratio follows from local rate factorization and the
+positive-rate log/product theorem in the graph owner. -/
 theorem forward_backward_ratio_eq_exp_pathEntropy (γ : PathSample) :
     L.forwardProbability γ / L.backwardProbability γ =
-      Real.exp (G.pathEntropyProduction (L.pathEdges γ)) :=
-  L.ratio_eq_exp_pathEntropy γ
+      Real.exp (G.pathEntropyProduction (L.pathEdges γ)) := by
+  rw [L.ratio_factorization γ]
+  exact G.pathForwardBackwardRatio_eq_exp_pathEntropyProduction
+    (L.pathEdges γ) (L.rate_ratio_positive γ)
 
 end GraphMaxCalPathLaw
 

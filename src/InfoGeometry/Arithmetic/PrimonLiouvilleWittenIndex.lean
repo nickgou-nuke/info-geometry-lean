@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
@@ -28,7 +34,42 @@ open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open PrimonFinite
+
+section NonCommRingHyperbolicChiralIndex
+
+variable {PrimeLabel B : Type*} [Ring B]
+
+/-- Ordered stable chiral Euler product `(modes.map (fun p => 1 - qStable p)).prod` in `[Ring B]`. -/
+def ringStableChiralIndexList (modes : List PrimeLabel) (qStable : PrimeLabel → B) : B :=
+  (modes.map (fun p => 1 - qStable p)).prod
+
+/-- Ordered unstable chiral Euler product `(modes.map (fun p => 1 - qUnstable p)).prod` in `[Ring B]`. -/
+def ringUnstableChiralIndexList (modes : List PrimeLabel) (qUnstable : PrimeLabel → B) : B :=
+  (modes.map (fun p => 1 - qUnstable p)).prod
+
+/-- Ordered raw two-branch hyperbolic chiral index `stable - unstable` in `[Ring B]`. -/
+def ringRawHyperbolicChiralIndexList
+    (modes : List PrimeLabel) (qStable qUnstable : PrimeLabel → B) : B :=
+  ringStableChiralIndexList modes qStable - ringUnstableChiralIndexList modes qUnstable
+
+/-- Two-mode non-commutative expansion of the raw hyperbolic chiral index in `[Ring B]`. -/
+theorem ringRawHyperbolicChiralIndexList_two_modes
+    (p₁ p₂ : PrimeLabel) (qStable qUnstable : PrimeLabel → B) :
+    ringRawHyperbolicChiralIndexList [p₁, p₂] qStable qUnstable =
+      (qUnstable p₁ - qStable p₁) + (qUnstable p₂ - qStable p₂) +
+        (qStable p₁ * qStable p₂ - qUnstable p₁ * qUnstable p₂) := by
+  simp [ringRawHyperbolicChiralIndexList, ringStableChiralIndexList, ringUnstableChiralIndexList]
+  noncomm_ring
+
+end NonCommRingHyperbolicChiralIndex
 
 variable {PrimeLabel R : Type*}
 
@@ -290,19 +331,53 @@ theorem readoutSpecies_separate
   cases h
 
 /-- The separated species carrier remembers each Mellin/thermal readout exactly. -/
-@[simp] theorem mellinSpecies_injective
+theorem mellinSpecies_injective
     (G : MellinThermalVsDiracHeatKernelGuard)
     {x y : G.mellinThermalReadout}
     (h : G.mellinSpecies x = G.mellinSpecies y) : x = y := by
   injection h
 
 /-- The separated species carrier remembers each Dirac heat readout exactly. -/
-@[simp] theorem diracSpecies_injective
+theorem diracSpecies_injective
     (G : MellinThermalVsDiracHeatKernelGuard)
     {x y : G.diracHeatReadout}
     (h : G.diracSpecies x = G.diracSpecies y) : x = y := by
   injection h
 
 end MellinThermalVsDiracHeatKernelGuard
+
+/-- Ground inhabitant of `StableBranchRegularization` over `ℤ`. -/
+def intEmptyStableBranchRegularization : StableBranchRegularization ℕ ℤ where
+  modes := ∅
+  qStable := fun idx => (idx : ℤ)
+  qUnstable := fun idx => (idx : ℤ)
+  regularizedReadout := 1
+  regularized_eq_stable := by
+    simp [stableChiralIndex, oneLaneFermionicWittenIndex, STrF, parity, weight]
+
+/-- Ground inhabitant of `ProjectedHyperbolicChiralIndexPacket` over `ℝ`. -/
+def realSingletonProjectedHyperbolicChiralIndexPacket :
+    ProjectedHyperbolicChiralIndexPacket ℕ ℝ where
+  modes := ∅
+  qStable := fun idx => (idx : ℝ)
+  qUnstable := fun idx => (idx : ℝ)
+  rawReadout := 0
+  stableReadout := 1
+  unstableReadout := 1
+  raw_eq_stable_sub_unstable := by norm_num
+  stable_eq_index := by simp [stableChiralIndex, oneLaneFermionicWittenIndex, STrF, parity, weight]
+  unstable_eq_index := by simp [unstableChiralIndex, oneLaneFermionicWittenIndex, STrF, parity, weight]
+  stableSequence := fun _ => 1
+  stableLimit := 1
+  stableSequence_converges := tendsto_const_nhds
+  stableLimit_eq_stableReadout := rfl
+  raw_not_stable_without_projection := by norm_num
+
+/-- Ground inhabitant of `MellinThermalVsDiracHeatKernelGuard`. -/
+def unitMellinThermalVsDiracHeatKernelGuard : MellinThermalVsDiracHeatKernelGuard where
+  Hamiltonian := ℤ
+  DiracOperator := ℤ
+  mellinThermalReadout := ℤ
+  diracHeatReadout := ℤ
 
 end InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex

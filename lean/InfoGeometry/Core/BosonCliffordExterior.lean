@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.BosonMajoranaFermionTransmutation
 import InfoGeometry.Core.AnticommutingSum
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
@@ -21,8 +22,28 @@ namespace InfoGeometry.Core.BosonParityString.IsCommutingBosonSystem
 open scoped BigOperators
 open InfoGeometry.Core.AnticommutingSum
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem bosonCliffordExterior_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+variable {A : Type*} [Ring A]
 variable {N : ℕ} {d B : Fin N → A} (h : IsCommutingBosonSystem d B)
+
+/-- The split Majorana family on the standard positive/negative sum index over any `[Ring A]`. -/
+def majoranaFamily : Fin N ⊕ Fin N → A := Sum.elim h.plus h.minus
+
+lemma majoranaFamily_anti (i j : Fin N ⊕ Fin N) (hne : i ≠ j) :
+    h.majoranaFamily i * h.majoranaFamily j + h.majoranaFamily j * h.majoranaFamily i = 0 := by
+  rcases i with i | i <;> rcases j with j | j
+  · exact (h.majorana_same_sign_anti (fun he => hne (congrArg Sum.inl he))).1
+  · exact h.majorana_mixed_anti i j
+  · simpa only [majoranaFamily, Sum.elim_inl, Sum.elim_inr, add_comm] using h.majorana_mixed_anti j i
+  · exact (h.majorana_same_sign_anti (fun he => hne (congrArg Sum.inr he))).2
+
+variable {R : Type*} [CommRing R] [Algebra R A]
 
 /-- The entire exterior algebra acts, not just its basis generators. -/
 def exteriorRepresentation (c : Bool) : ExteriorAlgebra R (Fin N → R) →ₐ[R] A :=
@@ -48,17 +69,6 @@ theorem exteriorRepresentation_unique (c : Bool)
   apply (Pi.basisFun R (Fin N)).ext
   intro i
   simpa using (hf i).trans (h.exteriorRepresentation_basis (R := R) c i).symm
-
-/-- The split Majorana family on the standard positive/negative sum index. -/
-def majoranaFamily : Fin N ⊕ Fin N → A := Sum.elim h.plus h.minus
-
-lemma majoranaFamily_anti (i j : Fin N ⊕ Fin N) (hne : i ≠ j) :
-    h.majoranaFamily i * h.majoranaFamily j + h.majoranaFamily j * h.majoranaFamily i = 0 := by
-  rcases i with i | i <;> rcases j with j | j
-  · exact (h.majorana_same_sign_anti (fun he => hne (congrArg Sum.inl he))).1
-  · exact h.majorana_mixed_anti i j
-  · simpa only [majoranaFamily, Sum.elim_inl, Sum.elim_inr, add_comm] using h.majorana_mixed_anti j i
-  · exact (h.majorana_same_sign_anti (fun he => hne (congrArg Sum.inr he))).2
 
 lemma majoranaFamily_square (i : Fin N ⊕ Fin N) :
     h.majoranaFamily i * h.majoranaFamily i =

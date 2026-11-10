@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.PeirceDecomposition
 import Mathlib.LinearAlgebra.Matrix.Trace
 
@@ -12,6 +13,14 @@ ring. It does not identify a geometric cotangent bundle or assert a manifold.
 -/
 namespace InfoGeometry.Core.PeirceDecomposition
 open Matrix
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceMatrixTracePairing_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 section CyclicFunctional
 variable {A G : Type*} [Ring A] [AddCommGroup G]
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupermatrixKoszul
@@ -22,12 +27,35 @@ namespace InfoGeometry.Clifford.OpSignatureBridge
 open InfoGeometry.Algebra.HypercomplexTriad
 open KoszulFoundation
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem opSignatureBridge_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 /-- Symbolic operator-square signature. -/
 inductive OpSignature where
   | elliptic
   | parabolic
   | hyperbolic
 deriving DecidableEq, Repr
+
+/-- Operator-square classification predicate over any non-commutative ring `[Ring B]`. -/
+def IsRingSignatureSquare {B : Type*} [Ring B] (sig : OpSignature) (X : B) : Prop :=
+  match sig with
+  | .elliptic => X * X = -1
+  | .parabolic => X * X = 0
+  | .hyperbolic => X * X = 1
+
+theorem ringSignatureSquare_parabolic_unipotent_inv {B : Type*} [Ring B] {X : B}
+    (hX : IsRingSignatureSquare .parabolic X) :
+    (1 + X) * (1 - X) = 1 := by
+  dsimp [IsRingSignatureSquare] at hX
+  calc
+    (1 + X) * (1 - X) = 1 - X * X := by noncomm_ring
+    _ = 1 - 0 := by rw [hX]
+    _ = 1 := sub_zero 1
 
 /-- Bridge-side parity tag for the `1|1` matrix lane. -/
 inductive OpParity where

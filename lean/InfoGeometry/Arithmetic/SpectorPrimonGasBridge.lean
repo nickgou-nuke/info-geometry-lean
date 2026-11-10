@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.MobiusPrimonParity
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
@@ -37,6 +43,26 @@ proved here.
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.SpectorPrimonGasBridge
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Non-commutative local boson/signed-fermion factor closure over any `[DivisionRing D]`. -/
+theorem spector_divisionRing_boson_signed_factor_closure
+    {D : Type*} [DivisionRing D] {x : D} (hx : 1 - x ≠ 0) :
+    (1 - x)⁻¹ * (1 - x) = 1 ∧ (1 - x)⁻¹ * (1 - x * x) = 1 + x :=
+  ⟨InfoGeometry.Arithmetic.PrimeBosonFermionGas.divisionRing_boson_mul_signedFermion_factor hx,
+   InfoGeometry.Arithmetic.PrimeBosonFermionGas.divisionRing_boson_mul_square_signedFermion_factor hx⟩
+
+/-- Non-commutative second-order exterior factor `(1 + x) * (1 - x) = 1 - x * x` in any `[Ring B]`. -/
+theorem spector_ring_fermion_signed_secondOrder_factor
+    {B : Type*} [Ring B] (x : B) :
+    (1 + x) * (1 - x) = 1 - x * x := by
+  noncomm_ring
 
 open scoped BigOperators
 

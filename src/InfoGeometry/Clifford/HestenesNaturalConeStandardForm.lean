@@ -1,9 +1,28 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.HestenesLorentzJordanCone
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem naturalCone_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative `*-ring` `[Ring B] [StarRing B]`, the bilateral modular action
+`a * (y * star y) * star a` equals `(a * y) * star (a * y)`. -/
+theorem ring_cone_conjugation_factorization
+    {B : Type*} [Ring B] [StarRing B] (a y : B) :
+    a * (y * star y) * star a = (a * y) * star (a * y) := by
+  simp [star_mul, mul_assoc]
 
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]

@@ -71,6 +71,41 @@ theorem ring_generators_mul_ne (h : IsDualSeedPair d b) (hd : d ≠ 0) :
     _ = b * (d * d) := by rw [hc, mul_assoc]
     _ = 0 := by rw [h.d_sq, mul_zero]
 
+/-- Matrix-unit sandwiches isolate every entry `(M i j) • d` of `ringRepresentation h M`
+over any noncommutative coefficient ring `[Ring R]`. -/
+theorem ringRepresentation_sandwich_entry (h : IsDualSeedPair d b)
+    (M : Matrix (Fin 2) (Fin 2) R) (i j : Fin 2) :
+    ringRepresentation h (Matrix.single 0 i (1 : R) * M * Matrix.single j 1 (1 : R)) =
+      (M i j) • d := by
+  rw [Matrix.single_mul_mul_single, one_mul, mul_one, ringRepresentation_single01]
+
+/-- Over any noncommutative coefficient ring `[Ring R]` with torsion-free action on `d`
+(`∀ r : R, r • d = 0 → r = 0`), `ringRepresentation h M = 0 ↔ M = 0`. -/
+theorem ringRepresentation_eq_zero_iff (h : IsDualSeedPair d b)
+    (hd_free : ∀ r : R, r • d = 0 → r = 0)
+    (M : Matrix (Fin 2) (Fin 2) R) :
+    ringRepresentation h M = 0 ↔ M = 0 := by
+  constructor
+  · intro hz
+    ext i j
+    have hs : ringRepresentation h
+        (Matrix.single 0 i (1 : R) * M * Matrix.single j 1 (1 : R)) = 0 := by
+      rw [map_mul, map_mul, hz, mul_zero, zero_mul]
+    rw [ringRepresentation_sandwich_entry h M i j] at hs
+    exact hd_free (M i j) hs
+  · rintro rfl
+    exact map_zero _
+
+/-- Faithfulness of `ringRepresentation h` over any noncommutative `[Ring R]` when `R` acts
+torsion-freely on `d`. -/
+theorem ringRepresentation_injective (h : IsDualSeedPair d b)
+    (hd_free : ∀ r : R, r • d = 0 → r = 0) :
+    Function.Injective (ringRepresentation (R := R) h) := by
+  intro M N heq
+  apply sub_eq_zero.mp
+  apply (ringRepresentation_eq_zero_iff h hd_free (M - N)).mp
+  rw [map_sub, heq, sub_self]
+
 end NoncommRing
 
 section Ring

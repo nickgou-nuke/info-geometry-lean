@@ -386,9 +386,41 @@ def schurComplement (α β u v : F) : F :=
 def berezinianScalar (α β u v : F) : F :=
   (schurComplement α β u v) / β
 
-/-- The classical 2×2 determinant (Zorn norm) -/
-def zornNorm (α β u v : F) : F :=
+/-- The classical 2×2 determinant (Zorn norm) over any ring `[Ring R]`. -/
+def zornNorm {R : Type*} [Ring R] (α β u v : R) : R :=
   α * β - u * v
+
+/-- Over any non-commutative `[DivisionRing F]`, `zornNorm α β u v = schurComplement α β u v * β`
+whenever `Commute v β`. -/
+theorem zorn_norm_eq_schur_mul_beta_of_commute (α β u v : F) (hβ : β ≠ 0) (hcomm : Commute v β) :
+    zornNorm α β u v = (schurComplement α β u v) * β := by
+  dsimp [zornNorm, schurComplement]
+  rw [sub_mul]
+  congr 1
+  have h1 : β⁻¹ * v * β = v := by
+    calc
+      β⁻¹ * v * β = β⁻¹ * (v * β) := by rw [mul_assoc]
+      _ = β⁻¹ * (β * v) := by rw [hcomm.eq]
+      _ = (β⁻¹ * β) * v := by rw [← mul_assoc]
+      _ = 1 * v := by rw [inv_mul_cancel₀ hβ]
+      _ = v := one_mul v
+  calc
+    u * v = u * (β⁻¹ * v * β) := by rw [h1]
+    _ = u * β⁻¹ * v * β := by simp only [mul_assoc]
+
+/-- Over any non-commutative `[DivisionRing F]`, `schurComplement α β u v = zornNorm α β u v / β`
+whenever `Commute v β`. -/
+theorem schur_scalar_formula_of_commute (α β u v : F) (hβ : β ≠ 0) (hcomm : Commute v β) :
+    schurComplement α β u v = (zornNorm α β u v) / β := by
+  rw [zorn_norm_eq_schur_mul_beta_of_commute α β u v hβ hcomm, mul_div_cancel_right₀ _ hβ]
+
+/-- Over any non-commutative `[DivisionRing F]`, `berezinianScalar α β u v = zornNorm α β u v / β ^ 2`
+whenever `Commute v β`. -/
+theorem berezinian_eq_zorn_norm_div_sq_of_commute (α β u v : F) (hβ : β ≠ 0) (hcomm : Commute v β) :
+    berezinianScalar α β u v = (zornNorm α β u v) / (β ^ 2) := by
+  dsimp [berezinianScalar]
+  rw [schur_scalar_formula_of_commute α β u v hβ hcomm]
+  rw [div_eq_mul_inv, div_eq_mul_inv, div_eq_mul_inv, mul_assoc, ← mul_inv_rev, ← sq]
 
 end DivisionRing
 
@@ -398,28 +430,24 @@ variable {F : Type*} [Field F]
 THEOREM 1: The scalar Schur complement equals the ratio (α β - u v) / β.
 -/
 theorem schur_scalar_formula (α β u v : F) (hβ : β ≠ 0) :
-    schurComplement α β u v = (zornNorm α β u v) / β := by
-  dsimp [schurComplement, zornNorm]
-  field_simp
+    schurComplement α β u v = (zornNorm α β u v) / β :=
+  schur_scalar_formula_of_commute α β u v hβ (Commute.all v β)
 
 /--
 THEOREM 2: The scalar Berezinian is exactly the normalized Zorn norm:
   Ber(M) = (α β - u v) / β² = det(M) / β².
 -/
 theorem berezinian_eq_zorn_norm_div_sq (α β u v : F) (hβ : β ≠ 0) :
-    berezinianScalar α β u v = (zornNorm α β u v) / (β ^ 2) := by
-  dsimp [berezinianScalar]
-  rw [schur_scalar_formula α β u v hβ]
-  field_simp
+    berezinianScalar α β u v = (zornNorm α β u v) / (β ^ 2) :=
+  berezinian_eq_zorn_norm_div_sq_of_commute α β u v hβ (Commute.all v β)
 
 /--
 THEOREM 3: Exact Reconstruction of the Zorn Determinant from the Schur Complement:
   det(M) = N(Z) = β • (α - u β⁻¹ v).
 -/
 theorem zorn_norm_eq_schur_mul_beta (α β u v : F) (hβ : β ≠ 0) :
-    zornNorm α β u v = (schurComplement α β u v) * β := by
-  rw [schur_scalar_formula α β u v hβ]
-  exact (div_mul_cancel₀ (zornNorm α β u v) hβ).symm
+    zornNorm α β u v = (schurComplement α β u v) * β :=
+  zorn_norm_eq_schur_mul_beta_of_commute α β u v hβ (Commute.all v β)
 
 end ZornNormSchurScalarSpecialization
 

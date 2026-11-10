@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelVolumeElimination
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55NativeCenterScalar
@@ -7,6 +12,26 @@ import InfoGeometry.Clifford.Cl55RealSplitPinKernelNative
 namespace InfoGeometry.Clifford.Clifford55
 
 open InfoGeometry.Clifford.KoszulFoundation
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative ring `[Ring B]`, if `v` anticommutes with `w₁` and `w₂`,
+then `v` commutes with the even product `w₁ * w₂`. -/
+theorem ring_commute_mul_of_anticommute
+    {B : Type*} [Ring B] (v w₁ w₂ : B)
+    (h₁ : v * w₁ = -(w₁ * v)) (h₂ : v * w₂ = -(w₂ * v)) :
+    v * (w₁ * w₂) = (w₁ * w₂) * v := by
+  calc
+    v * (w₁ * w₂) = (v * w₁) * w₂ := by rw [mul_assoc]
+    _ = -(w₁ * v) * w₂ := by rw [h₁]
+    _ = -(w₁ * (v * w₂)) := by rw [neg_mul, mul_assoc]
+    _ = -(w₁ * -(w₂ * v)) := by rw [h₂]
+    _ = (w₁ * w₂) * v := by rw [mul_neg, neg_neg, mul_assoc]
 
 noncomputable section
 

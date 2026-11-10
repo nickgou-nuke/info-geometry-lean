@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Mul
@@ -37,6 +42,13 @@ All proofs are complete in native Mathlib with zero custom axioms and zero proof
 
 namespace InfoGeometry.Information.UniversalConvexDualityQuadrangle
 
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
 /-!
 =============================================================================
 PILLAR 1: The Logarithmic Radon–Nikodym Functor (Microscopic × ➜ Macroscopic +)
@@ -65,6 +77,51 @@ theorem derivation_one
       _ = D 1 + D 1 := by rw [mul_one, one_mul]
   have h : D 1 + D 1 = D 1 + 0 := by rw [← hmul, add_zero]
   exact add_left_cancel h
+
+/-- Non-commutative invertible density derivative over `[Ring A]`:
+`D(u⁻¹) = - (u⁻¹ * D(u) * u⁻¹)`. -/
+theorem derivation_inv_ring
+    (D : A → A)
+    (hD : IsDerivation D)
+    (u : Aˣ) :
+    D (u⁻¹ : Aˣ).val = - ((u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val) := by
+  have h_prod : D ((u : A) * (u⁻¹ : Aˣ).val) = 0 := by
+    rw [Units.mul_inv u, derivation_one D hD]
+  have h_leib := hD.2 (u : A) (u⁻¹ : Aˣ).val
+  rw [h_prod] at h_leib
+  have h_sum : D (u : A) * (u⁻¹ : Aˣ).val + (u : A) * D (u⁻¹ : Aˣ).val = 0 := h_leib.symm
+  have h_mul := congrArg (fun z : A => (u⁻¹ : Aˣ).val * z) (eq_neg_of_add_eq_zero_right h_sum)
+  have h_lhs : (u⁻¹ : Aˣ).val * ((u : A) * D (u⁻¹ : Aˣ).val) = D (u⁻¹ : Aˣ).val := by
+    rw [← mul_assoc, Units.inv_mul u, one_mul]
+  rw [h_lhs, mul_neg, ← mul_assoc] at h_mul
+  exact h_mul
+
+/-- Non-commutative logarithmic cocycle rule over `[Ring A]`:
+`dlog D (u * v) = v⁻¹ * dlog D u * v + dlog D v`. -/
+theorem dlog_mul_ring
+    (D : A → A)
+    (hD : IsDerivation D)
+    (u v : Aˣ) :
+    dlog D (u * v) = (v⁻¹ : Aˣ).val * dlog D u * (v : A) + dlog D v := by
+  dsimp [dlog]
+  rw [hD.2 (u : A) (v : A), mul_inv_rev, Units.val_mul, mul_add]
+  have h1 : (v⁻¹ : Aˣ).val * (u⁻¹ : Aˣ).val * (D (u : A) * (v : A)) =
+      (v⁻¹ : Aˣ).val * ((u⁻¹ : Aˣ).val * D (u : A)) * (v : A) := by
+    noncomm_ring
+  have h2 : (v⁻¹ : Aˣ).val * (u⁻¹ : Aˣ).val * ((u : A) * D (v : A)) =
+      (v⁻¹ : Aˣ).val * ((u⁻¹ : Aˣ).val * (u : A)) * D (v : A) := by
+    noncomm_ring
+  rw [h1, h2, Units.inv_mul u, mul_one]
+
+/-- Over a non-commutative `[Ring A]`, when `dlog D u` commutes with `v`,
+`dlog D (u * v) = dlog D u + dlog D v`. -/
+theorem dlog_mul_of_commute
+    (D : A → A)
+    (hD : IsDerivation D)
+    (u v : Aˣ)
+    (hcomm : Commute (dlog D u) (v : A)) :
+    dlog D (u * v) = dlog D u + dlog D v := by
+  rw [dlog_mul_ring D hD u v, mul_assoc, hcomm.eq, ← mul_assoc, Units.inv_mul v, one_mul]
 
 /-- Invertible density derivative: D(u⁻¹) = - u⁻² D(u). -/
 theorem derivation_inv {A : Type*} [CommRing A]

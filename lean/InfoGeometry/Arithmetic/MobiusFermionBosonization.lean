@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
@@ -29,6 +35,40 @@ open scoped BigOperators
 namespace InfoGeometry.Arithmetic.MobiusFermionBosonization
 
 open PrimonFinite
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingBosonization
+
+variable {PrimeLabel B : Type*} [Ring B]
+
+/-- Fermion parity `(-1 : B) ^ S.card` over an arbitrary non-commutative ring `[Ring B]`. -/
+def ringParity (S : FState PrimeLabel) : B :=
+  (-1 : B) ^ S.card
+
+/-- Fermion parity is multiplicative on disjoint exterior unions over any non-commutative ring `[Ring B]`. -/
+theorem ringParity_union_of_disjoint [DecidableEq PrimeLabel]
+    {S T : FState PrimeLabel} (h : Disjoint S T) :
+    ringParity (B := B) (S ∪ T) =
+      ringParity (B := B) S * ringParity (B := B) T := by
+  unfold ringParity
+  rw [Finset.card_union_of_disjoint h, pow_add]
+
+/-- Ordered exterior weight `(modes.map q).prod` over any non-commutative ring `[Ring B]`. -/
+def ringOrderedWeight (q : PrimeLabel → B) (modes : List PrimeLabel) : B :=
+  (modes.map q).prod
+
+/-- Ordered exterior weights multiply under list concatenation over any non-commutative ring `[Ring B]`. -/
+theorem ringOrderedWeight_append (q : PrimeLabel → B) (m₁ m₂ : List PrimeLabel) :
+    ringOrderedWeight q (m₁ ++ m₂) =
+      ringOrderedWeight q m₁ * ringOrderedWeight q m₂ := by
+  simp [ringOrderedWeight, List.map_append, List.prod_append]
+
+end NonCommRingBosonization
 
 /-! ## 1. Charge/energy separation -/
 
@@ -291,5 +331,13 @@ theorem valid
     G.valid_law
 
 end DeterminantVandermondeComparisonGate
+
+/-- Concrete ground inhabitant of `DeterminantVandermondeComparisonGate` over `ℤ`. -/
+def intIdDeterminantVandermondeComparisonGate :
+    DeterminantVandermondeComparisonGate ℤ ℤ where
+  determinant := 1
+  vandermonde := 1
+  compare := Eq
+  valid_law := rfl
 
 end InfoGeometry.Arithmetic.MobiusFermionBosonization

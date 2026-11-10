@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.BosonCliffordExterior
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Basis
 import Mathlib.LinearAlgebra.QuadraticForm.Dual
 
@@ -18,6 +19,22 @@ noncomputable section
 namespace InfoGeometry.Core.BosonParityString.IsCommutingBosonSystem
 open scoped BigOperators
 open InfoGeometry.Core.AnticommutingSum
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem bosonCAR_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring A]`, the unweighted sum of dressed Majorana generators
+`∑ i : Fin N, h.dressed c i` squares to zero. -/
+theorem ring_dressed_unweighted_sum_sq_zero
+    {A : Type*} [Ring A] {N : ℕ} {d B : Fin N → A}
+    (h : IsCommutingBosonSystem d B) (c : Bool) :
+    (∑ i : Fin N, h.dressed c i) * (∑ i : Fin N, h.dressed c i) = 0 := by
+  rw [sum_square Finset.univ (h.dressed c) (fun i _ j _ _ => h.dressed_self_car c i j)]
+  exact Finset.sum_eq_zero fun i _ => h.dressed_sq c i
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 variable {N : ℕ} {d B : Fin N → A} (h : IsCommutingBosonSystem d B)

@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.ChiralPrimonGas
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -32,10 +38,33 @@ open scoped BigOperators InnerProductSpace
 
 namespace InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBosonFermionGas
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical
+
+section NonCommPrimonFactors
+
+/-- Local second-order exterior factorization `(1 + x) * (1 - x) = 1 - x * x` in any `[Ring B]`. -/
+theorem ring_primon_secondOrder_factor
+    {B : Type*} [Ring B] (x : B) :
+    (1 + x) * (1 - x) = 1 - x * x := by
+  noncomm_ring
+
+/-- Local boson/signed-fermion factor cancellation over any `[DivisionRing D]`. -/
+theorem divisionRing_primon_boson_signedFermion_factor_cancel
+    {D : Type*} [DivisionRing D] {x : D} (hx : 1 - x ≠ 0) :
+    (1 - x)⁻¹ * (1 - x) = 1 ∧ (1 - x) * (1 - x)⁻¹ = 1 :=
+  ⟨inv_mul_cancel₀ hx, mul_inv_cancel₀ hx⟩
+
+end NonCommPrimonFactors
 
 /-! ## Finite prime-register boson/fermion partition layer -/
 

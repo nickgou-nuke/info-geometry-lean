@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.CliffordWeyl.DiracMetricCovariance
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-! Coordinate invariance of Dirac bilinear readouts.
 
@@ -14,6 +15,22 @@ positivity, involutive metric, or claimed Zorn norm isometry.
 -/
 namespace InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 open Matrix
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem diracTraceCovariance_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, similarity conjugation by `(S, T)` with `T * S = 1`
+is multiplicative: `(S * Γ * T) * (S * A * T) = S * (Γ * A) * T`. -/
+theorem ring_conj_mul_change_basis {B : Type*} [Ring B] (S T Γ A : B) (hTS : T * S = 1) :
+    (S * Γ * T) * (S * A * T) = S * (Γ * A) * T := by
+  calc
+    (S * Γ * T) * (S * A * T) = S * Γ * (T * S) * A * T := by noncomm_ring
+    _ = S * (Γ * A) * T := by rw [hTS]; noncomm_ring
+
 variable {R n : Type*} [CommRing R] [StarRing R] [Fintype n] [DecidableEq n]
 
 /-- Trace readout is preserved when the observable and Dirac ket–bra are

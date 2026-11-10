@@ -1,13 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Clifford.SolderingIsotropicSouriauSheetBridge
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-set_option linter.dupNamespace false
 
 /-!
 # Conformal-Projective Boundary: Two-Sheeted Celestial Spheres and Conformal Casimir
@@ -61,6 +64,13 @@ open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Clifford.SolderingIsotropic
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 section Ring
 
 variable {R : Type*} [Ring R]
@@ -72,8 +82,8 @@ def trace2 (M : Mat2 R) : R :=
   M 0 0 + M 1 1
 
 /-- Trace of the soldering matrix equals $2t$, extracting the temporal foliation coordinate. -/
-theorem trace2_solderingMatrix (t x y z : R) :
-    trace2 (solderingMatrix t x y z) = 2 * t := by
+theorem trace2_solderingMatrix (t _x _y z : R) :
+    trace2 (solderingMatrix t _x _y z) = 2 * t := by
   simp [trace2, solderingMatrix, add_sub_cancel_right, ← two_mul]
 
 /-- Linearity of trace2 under matrix addition:
@@ -140,6 +150,15 @@ theorem trace2_neg_P_R : trace2 (- (P_R : Mat2 R)) = -1 := by
 theorem trace2_chiral_difference :
     trace2 ((P_L : Mat2 R) - P_R) = 0 := by
   simp [trace2, P_L, P_R]
+
+/-- Over any non-commutative ring `[Ring R]`, multiplying `M : Mat2 R` by `adj2 M` yields
+diagonal entries `det2 M` and `M 1 1 * M 0 0 - M 1 0 * M 0 1`, with off-diagonal commutator defects. -/
+theorem mul_adj2_noncomm (M : Mat2 R) :
+    M * adj2 M =
+      !![ det2 M, -(M 0 0 * M 0 1 - M 0 1 * M 0 0);
+          M 1 0 * M 1 1 - M 1 1 * M 1 0, M 1 1 * M 0 0 - M 1 0 * M 0 1 ] := by
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [adj2, det2, Matrix.mul_apply, Fin.sum_univ_two] <;> noncomm_ring
 
 end Ring
 
@@ -261,5 +280,10 @@ theorem compile_conformal_projective_boundary_casimir_bridge (R : Type*) [CommRi
   p_l_neg_null := det2_neg_P_L
   p_r_neg_null := det2_neg_P_R
   chiral_diff_trace_zero := trace2_chiral_difference
+
+/-- Ground inhabitant of `ConformalProjectiveBoundaryCasimirCertificate` over `ℤ`. -/
+def intConformalProjectiveBoundaryCasimirCertificate :
+    ConformalProjectiveBoundaryCasimirCertificate ℤ :=
+  compile_conformal_projective_boundary_casimir_bridge ℤ
 
 end InfoGeometry.Clifford.ConformalBoundary

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.A2QutritTransitionRootBridge
@@ -9,6 +14,11 @@ import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 The colour shift acts on the concrete transition-root realization by cyclic
 transport of both matrix indices.  This is an actual matrix equality, not a
 representation contract or a supplied equivariance witness.
+
+BUCKET 1: The finite cyclic action and its conjugation formulas on qutrit
+matrix units are proved directly.
+BUCKET 2: No conditional theorem is asserted.
+BUCKET 3: No Lie-group integration or infinite-dimensional orbit is claimed.
 -/
 
 noncomputable section
@@ -29,12 +39,6 @@ def shiftRoot (r : A2Root) : A2Root :=
     intro h
     exact r.property (next3_injective h)⟩
 
-@[simp] theorem shiftRoot_apply_fst (r : A2Root) :
-    (shiftRoot r).1.1 = next3 r.1.1 := rfl
-
-@[simp] theorem shiftRoot_apply_snd (r : A2Root) :
-    (shiftRoot r).1.2 = next3 r.1.2 := rfl
-
 @[simp] theorem next3_three (i : Fin 3) :
     next3 (next3 (next3 i)) = i := by
   fin_cases i <;> rfl
@@ -44,6 +48,15 @@ def shiftRoot (r : A2Root) : A2Root :=
   apply Subtype.ext
   apply Prod.ext <;> simp [shiftRoot, next3_three]
 
+/-- The cyclic colour shift acts freely on the six ordered roots: an `A₂`
+root cannot be fixed by a simultaneous nontrivial cyclic shift of both
+coordinates. -/
+theorem shiftRoot_ne_self (r : A2Root) : shiftRoot r ≠ r := by
+  intro h
+  have hfst := congrArg (fun s : A2Root => s.1.1) h
+  have hnextfst : next3 r.1.1 = r.1.1 := by simpa [shiftRoot] using hfst
+  exact (next3_ne r.1.1) hnextfst.symm
+
 theorem shiftRoot_injective : Function.Injective shiftRoot := by
   intro r s h
   calc
@@ -51,17 +64,27 @@ theorem shiftRoot_injective : Function.Injective shiftRoot := by
     _ = shiftRoot (shiftRoot (shiftRoot s)) := by rw [h]
     _ = s := shiftRoot_three s
 
+/-- Each root has a genuine orbit of length three under the cyclic Weyl
+action; the two nonidentity translates are distinct from each other and from
+the original root. -/
+theorem shiftRoot_orbit_three_distinct (r : A2Root) :
+    r ≠ shiftRoot r ∧ r ≠ shiftRoot (shiftRoot r) ∧
+      shiftRoot r ≠ shiftRoot (shiftRoot r) := by
+  have h₁ := shiftRoot_ne_self r
+  have h₂ := shiftRoot_ne_self (shiftRoot r)
+  refine ⟨Ne.symm h₁, ?_, ?_⟩
+  · intro h
+    have h₃ : r ≠ shiftRoot (shiftRoot r) := by
+      simpa [shiftRoot_three] using shiftRoot_ne_self (shiftRoot (shiftRoot r))
+    exact h₃ h
+  · intro h
+    exact h₂ h.symm
+
 def shiftRootEquiv : Equiv.Perm A2Root where
   toFun := shiftRoot
   invFun := fun r => shiftRoot (shiftRoot r)
   left_inv r := shiftRoot_three r
   right_inv r := shiftRoot_three r
-
-@[simp] theorem shiftRootEquiv_apply (r : A2Root) :
-    shiftRootEquiv r = shiftRoot r := rfl
-
-@[simp] theorem shiftRootEquiv_inv_apply (r : A2Root) :
-    shiftRootEquiv.symm r = shiftRoot (shiftRoot r) := rfl
 
 @[simp] theorem shiftRoot_opposite (r : A2Root) :
     shiftRoot (oppositeRoot r) = oppositeRoot (shiftRoot r) := by
@@ -71,7 +94,8 @@ def shiftRootEquiv : Equiv.Perm A2Root where
 theorem shiftRootEquiv_cube : shiftRootEquiv ^ 3 = 1 := by
   apply Equiv.ext
   intro r
-  simp [pow_succ, shiftRoot_three]
+  change shiftRoot (shiftRoot (shiftRoot r)) = r
+  exact shiftRoot_three r
 
 theorem colorShift_conj_single (i j : Fin 3) :
     colorShift * Matrix.single i j (1 : ℂ) * colorShift ^ 2 =

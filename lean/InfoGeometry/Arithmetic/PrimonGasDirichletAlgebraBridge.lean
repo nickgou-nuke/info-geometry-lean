@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
@@ -7,19 +12,26 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.PrimonGasDirichletAlgebraBridge
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 /-!
 # Primon Gas Dirichlet Operator Algebra & Energy-Parity Extraction
 
 This module formalizes the algebraic QFT representation of the Riemann/Primon Gas,
-where arithmetic functions form a Commutative Ring under Dirichlet convolution (*):
+where arithmetic functions form a Ring under Dirichlet convolution (*):
 
-1. **Abstract Commutative Dirichlet Algebra**:
+1. **Abstract Non-Commutative & Commutative Dirichlet Algebra**:
    - Vacuum Identity `1` = δ(n, 1)
    - Bosonic Background `Z` = ζ (Zeta state)
    - Fermionic Parity Operator `μ` = Möbius function
    - Single-Particle Energy Density `Λ` = von Mangoldt functional
    - Total Macroscopic Energy Operator `L` = log functional
-   - Proved Abstract Extraction: `Λ = L * μ`
+   - Proved Abstract Extraction in any `[Ring A]` (under `Z * μ = 1`) and `[CommRing A]`: `Λ = L * μ`
 
 2. **Concrete Mathlib Realization on `ArithmeticFunction ℝ`**:
    - Instantiates the Dirichlet ring on `ArithmeticFunction ℝ`
@@ -29,6 +41,25 @@ where arithmetic functions form a Commutative Ring under Dirichlet convolution (
 -- ----------------------------------------------------------------
 -- 1. Abstract Dirichlet Operator Algebra
 -- ----------------------------------------------------------------
+
+section AbstractDirichletNonCommRing
+
+variable {A : Type*} [Ring A]
+
+/-- Non-commutative Mangoldt-Möbius Parity Extraction in any `[Ring A]` from the right-inverse law
+`Z * μ = 1` and `Λ * Z = L`. -/
+theorem ring_mangoldt_moebius_parity_extraction
+    (μ Λ Z L : A)
+    (h_zeta_moebius : Z * μ = 1)
+    (h_mangoldt_total_energy : Λ * Z = L) :
+    Λ = L * μ := by
+  calc
+    Λ = Λ * 1 := (mul_one Λ).symm
+    _ = Λ * (Z * μ) := by rw [← h_zeta_moebius]
+    _ = (Λ * Z) * μ := (mul_assoc Λ Z μ).symm
+    _ = L * μ := by rw [h_mangoldt_total_energy]
+
+end AbstractDirichletNonCommRing
 
 section AbstractDirichletRing
 

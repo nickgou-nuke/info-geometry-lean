@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Algebra.CornerCompressionTraceCounterexample
 
 /-!
@@ -11,6 +17,17 @@ Dependency: trace-pairing nondegeneracy → fixed-factor criterion → global cr
 -/
 
 namespace InfoGeometry.Algebra.CornerCompressionTraceCounterexample
+
+/-- Over any non-commutative ring `B` with cyclic additive trace `τ : B →+ M`,
+if `P` is a central idempotent (`∀ Y : B, Y * P = P * Y`), then the compressed
+trace `X ↦ τ (P * X * P)` is globally cyclic on `B`. -/
+theorem compressed_cyclic_trace_globally_cyclic_of_central_ring
+    {B M : Type*} [Ring B] [AddCommGroup M]
+    (τ : B →+ M) (hcyc : ∀ a b : B, τ (a * b) = τ (b * a))
+    (P : B) (hP : P * P = P) (hcentral : ∀ Y : B, Y * P = P * Y)
+    (X Y : B) :
+    τ (P * (X * Y) * P) = τ (P * (Y * X) * P) :=
+  compressed_cyclic_trace_of_commutes_ring τ hcyc P X Y hP (hcentral Y)
 
 variable {R ι : Type*} [CommRing R] [Fintype ι]
 

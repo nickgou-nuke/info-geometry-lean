@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Module.LinearMap.End
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Choose.Sum
@@ -15,7 +21,7 @@ namespace InfoGeometry.Algebra.NilpotentNonAssocDerivationExp
 
 section Field
 
-variable {K A : Type*} [Field K] [AddCommGroup A] [Module K A]
+variable {K A : Type*} [Semifield K] [AddCommMonoid A] [Module K A]
 
 /-- Truncated polynomial exponential of an endomorphism up to order `N`. -/
 def nilpotentExp (D : A →ₗ[K] A) (N : ℕ) : A →ₗ[K] A :=
@@ -45,7 +51,9 @@ theorem nilpotentExp_two (D : A →ₗ[K] A) :
 
 end Field
 
-variable {K A : Type*} [CommRing K] [AddCommGroup A] [Module K A]
+section CommSemiring
+
+variable {K A : Type*} [CommSemiring K] [AddCommGroup A] [Module K A]
 variable (mul : A →ₗ[K] A →ₗ[K] A) (one : A)
 
 /-- Scaled 2-step nilpotent exponential `exp(tD) = id + t • D`. -/
@@ -89,19 +97,6 @@ theorem nilpotentExpStep2_map_mul (D : A →ₗ[K] A) (hD : IsDerivation mul D)
   simp only [smul_add]
   abel
 
-/-- Group inverse law: `exp(tD) ∘ exp(-tD) = id` when `D² = 0`. -/
-theorem nilpotentExpStep2_comp_neg (D : A →ₗ[K] A) (hD2 : D.comp D = 0) (t : K) :
-    (nilpotentExpStep2 D t).comp (nilpotentExpStep2 D (-t)) = LinearMap.id := by
-  ext x
-  simp only [LinearMap.comp_apply, nilpotentExpStep2_apply, LinearMap.map_add, LinearMap.map_smul, LinearMap.id_apply]
-  have hD2x : D (D x) = 0 := by
-    have : (D.comp D) x = 0 := by rw [hD2, LinearMap.zero_apply]
-    exact this
-  rw [hD2x, smul_zero, add_zero]
-  have h_cancel : t • D x + -t • D x = 0 := by
-    rw [← add_smul, add_neg_cancel, zero_smul]
-  rw [add_assoc, h_cancel, add_zero]
-
 /-- Group composition law: `exp(sD) ∘ exp(tD) = exp((s+t)D)` when `D² = 0`. -/
 theorem nilpotentExpStep2_comp_add (D : A →ₗ[K] A) (hD2 : D.comp D = 0) (s t : K) :
     (nilpotentExpStep2 D s).comp (nilpotentExpStep2 D t) = nilpotentExpStep2 D (s + t) := by
@@ -122,6 +117,62 @@ def toNonAssocAlgEnd (D : A →ₗ[K] A) (hD : IsDerivation mul D)
   toLinearMap := nilpotentExpStep2 D t
   map_mul' := fun x y => nilpotentExpStep2_map_mul mul D hD h_cross t x y
   map_one' := nilpotentExpStep2_one one D t h_one
+
+/-- The nilpotent exponential transports both orientations of orthogonality. -/
+theorem nilpotentExpStep2_map_two_sided_orthogonal
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x y : A)
+    (hxy : mul x y = 0)
+    (hyx : mul y x = 0) :
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t y) = 0 ∧
+      mul (nilpotentExpStep2 D t y) (nilpotentExpStep2 D t x) = 0 := by
+  constructor
+  · rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x y, hxy]
+    exact (nilpotentExpStep2 D t).map_zero
+  · rw [← nilpotentExpStep2_map_mul mul D hD h_cross t y x, hyx]
+    exact (nilpotentExpStep2 D t).map_zero
+
+/-- The nilpotent exponential transports idempotents. -/
+theorem nilpotentExpStep2_map_idempotent
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A)
+    (hx : mul x x = x) :
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) =
+      nilpotentExpStep2 D t x := by
+  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
+
+/-- The nilpotent exponential transports square-zero elements. -/
+theorem nilpotentExpStep2_map_square_zero
+    (D : A →ₗ[K] A)
+    (hD : IsDerivation mul D)
+    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
+    (t : K) (x : A)
+    (hx : mul x x = 0) :
+    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) = 0 := by
+  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
+  exact (nilpotentExpStep2 D t).map_zero
+
+end CommSemiring
+
+variable {K A : Type*} [CommRing K] [AddCommGroup A] [Module K A]
+variable (mul : A →ₗ[K] A →ₗ[K] A) (one : A)
+
+/-- Group inverse law: `exp(tD) ∘ exp(-tD) = id` when `D² = 0`. -/
+theorem nilpotentExpStep2_comp_neg (D : A →ₗ[K] A) (hD2 : D.comp D = 0) (t : K) :
+    (nilpotentExpStep2 D t).comp (nilpotentExpStep2 D (-t)) = LinearMap.id := by
+  ext x
+  simp only [LinearMap.comp_apply, nilpotentExpStep2_apply, LinearMap.map_add, LinearMap.map_smul, LinearMap.id_apply]
+  have hD2x : D (D x) = 0 := by
+    have : (D.comp D) x = 0 := by rw [hD2, LinearMap.zero_apply]
+    exact this
+  rw [hD2x, smul_zero, add_zero]
+  have h_cancel : t • D x + -t • D x = 0 := by
+    rw [← add_smul, add_neg_cancel, zero_smul]
+  rw [add_assoc, h_cancel, add_zero]
 
 /-- A square-nilpotent derivation exponential as a genuine multiplicative
 linear equivalence, with inverse given by the negative parameter. -/
@@ -266,42 +317,9 @@ theorem toNonAssocAlgEquiv_map_resolution
   rw [← (nilpotentExpStep2 D t).map_add, hxy,
     nilpotentExpStep2_one one D t h_one]
 
-/-- The nilpotent exponential transports both orientations of orthogonality. -/
-theorem nilpotentExpStep2_map_two_sided_orthogonal
-    (D : A →ₗ[K] A)
-    (hD : IsDerivation mul D)
-    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
-    (t : K) (x y : A)
-    (hxy : mul x y = 0)
-    (hyx : mul y x = 0) :
-    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t y) = 0 ∧
-      mul (nilpotentExpStep2 D t y) (nilpotentExpStep2 D t x) = 0 := by
-  constructor
-  · rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x y, hxy]
-    exact (nilpotentExpStep2 D t).map_zero
-  · rw [← nilpotentExpStep2_map_mul mul D hD h_cross t y x, hyx]
-    exact (nilpotentExpStep2 D t).map_zero
-
-/-- The nilpotent exponential transports idempotents. -/
-theorem nilpotentExpStep2_map_idempotent
-    (D : A →ₗ[K] A)
-    (hD : IsDerivation mul D)
-    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
-    (t : K) (x : A)
-    (hx : mul x x = x) :
-    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) =
-      nilpotentExpStep2 D t x := by
-  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
-
-/-- The nilpotent exponential transports square-zero elements. -/
-theorem nilpotentExpStep2_map_square_zero
-    (D : A →ₗ[K] A)
-    (hD : IsDerivation mul D)
-    (h_cross : ∀ x y : A, mul (D x) (D y) = 0)
-    (t : K) (x : A)
-    (hx : mul x x = 0) :
-    mul (nilpotentExpStep2 D t x) (nilpotentExpStep2 D t x) = 0 := by
-  rw [← nilpotentExpStep2_map_mul mul D hD h_cross t x x, hx]
-  exact (nilpotentExpStep2 D t).map_zero
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem nilpotent_exp_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end InfoGeometry.Algebra.NilpotentNonAssocDerivationExp

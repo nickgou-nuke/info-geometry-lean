@@ -16,6 +16,49 @@ trace still exists and extends the trace of this rank-two corner.
 
 namespace InfoGeometry.Algebra.CornerCompressionTraceCounterexample
 
+section GeneralNonCommutativeRing
+
+variable {B M : Type*} [Ring B] [AddCommGroup M]
+
+/-- Over any non-commutative ring `B` equipped with an additive cyclic trace `τ : B →+ M`,
+the cyclicity defect of compression by an idempotent `P` (`P * P = P`) is `τ (X * (Y * P - P * Y))`. -/
+theorem compressed_cyclic_trace_defect_ring
+    (τ : B →+ M) (hcyc : ∀ a b : B, τ (a * b) = τ (b * a))
+    (P X Y : B) (hP : P * P = P) :
+    τ (P * (X * Y) * P) - τ (P * (Y * X) * P) =
+      τ (X * (Y * P - P * Y)) := by
+  have h₁ : τ (P * (X * Y) * P) = τ ((X * Y) * P) := by
+    calc
+      τ (P * (X * Y) * P) = τ (P * ((X * Y) * P)) := by simp only [mul_assoc]
+      _ = τ (((X * Y) * P) * P) := hcyc P ((X * Y) * P)
+      _ = τ ((X * Y) * P) := by rw [mul_assoc (X * Y) P P, hP]
+  have h₂ : τ (P * (Y * X) * P) = τ (X * (P * Y)) := by
+    calc
+      τ (P * (Y * X) * P) = τ (P * ((Y * X) * P)) := by simp only [mul_assoc]
+      _ = τ (((Y * X) * P) * P) := hcyc P ((Y * X) * P)
+      _ = τ ((Y * X) * P) := by rw [mul_assoc (Y * X) P P, hP]
+      _ = τ (Y * (X * P)) := by simp only [mul_assoc]
+      _ = τ ((X * P) * Y) := hcyc Y (X * P)
+      _ = τ (X * (P * Y)) := by simp only [mul_assoc]
+  calc
+    τ (P * (X * Y) * P) - τ (P * (Y * X) * P)
+      = τ ((X * Y) * P) - τ (X * (P * Y)) := by rw [h₁, h₂]
+    _ = τ ((X * Y) * P - X * (P * Y)) := (map_sub τ _ _).symm
+    _ = τ (X * (Y * P - P * Y)) := by
+        rw [mul_sub, ← mul_assoc X Y P]
+
+/-- Over any non-commutative ring `B` equipped with an additive cyclic trace `τ : B →+ M`,
+if `Y` commutes with `P`, then compressed trace is cyclic for `(X, Y)`. -/
+theorem compressed_cyclic_trace_of_commutes_ring
+    (τ : B →+ M) (hcyc : ∀ a b : B, τ (a * b) = τ (b * a))
+    (P X Y : B) (hP : P * P = P) (hcomm : Y * P = P * Y) :
+    τ (P * (X * Y) * P) = τ (P * (Y * X) * P) := by
+  have hdef := compressed_cyclic_trace_defect_ring τ hcyc P X Y hP
+  rw [hcomm, sub_self, mul_zero, map_zero] at hdef
+  exact sub_eq_zero.mp hdef
+
+end GeneralNonCommutativeRing
+
 section GeneralMatrix
 
 variable {R : Type*} [CommRing R]

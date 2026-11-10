@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.H3ZornCubicOperators
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -13,6 +18,57 @@ No claim about a basis or a rank certificate is made here.
 namespace InfoGeometry.Algebra
 
 open H3Zorn
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingJordanSurface
+
+variable {B : Type*} [Ring B]
+
+/-- Unnormalized Jordan anticommutator product `X ∘₂ Y = X * Y + Y * X` over any
+non-commutative ring `[Ring B]` (without requiring `2⁻¹` or commutativity of `B`). -/
+def ringJordanMul2 (X Y : B) : B :=
+  X * Y + Y * X
+
+@[simp] theorem ringJordanMul2_comm (X Y : B) :
+    ringJordanMul2 X Y = ringJordanMul2 Y X := by
+  dsimp [ringJordanMul2]
+  abel
+
+theorem ringJordanMul2_add_left (X₁ X₂ Y : B) :
+    ringJordanMul2 (X₁ + X₂) Y = ringJordanMul2 X₁ Y + ringJordanMul2 X₂ Y := by
+  dsimp [ringJordanMul2]
+  noncomm_ring
+
+theorem ringJordanMul2_add_right (X Y₁ Y₂ : B) :
+    ringJordanMul2 X (Y₁ + Y₂) = ringJordanMul2 X Y₁ + ringJordanMul2 X Y₂ := by
+  dsimp [ringJordanMul2]
+  noncomm_ring
+
+/-- Inner derivation `[L_A, L_C](X)` of the unnormalized Jordan product over any
+non-commutative ring `[Ring B]`. -/
+def ringJordanInnerAction2 (A C X : B) : B :=
+  ringJordanMul2 A (ringJordanMul2 C X) - ringJordanMul2 C (ringJordanMul2 A X)
+
+theorem ringJordanInnerAction2_add (A C X Y : B) :
+    ringJordanInnerAction2 A C (X + Y) =
+      ringJordanInnerAction2 A C X + ringJordanInnerAction2 A C Y := by
+  dsimp [ringJordanInnerAction2, ringJordanMul2]
+  noncomm_ring
+
+/-- In any associative ring `[Ring B]`, the Jordan inner derivation `[L_A, L_C](X)`
+equals the double commutator `[[A, C], X] = (A * C - C * A) * X - X * (A * C - C * A)`. -/
+theorem ringJordanInnerAction2_eq_commutator_ad (A C X : B) :
+    ringJordanInnerAction2 A C X =
+      (A * C - C * A) * X - X * (A * C - C * A) := by
+  dsimp [ringJordanInnerAction2, ringJordanMul2]
+  noncomm_ring
+
+end NonCommRingJordanSurface
 
 variable {R : Type*} [CommRing R] [Inv R]
 

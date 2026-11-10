@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Thermo.GenericMetriplecticFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -101,24 +106,24 @@ def reversibleOperator : Covector State3 →ₗ[ℝ] State3 where
       α thetaBasis3 • auxiliaryBasis3
   map_add' α β := by
     ext i
-    fin_cases i <;>
-      simp [etaBasis3, thetaBasis3, auxiliaryBasis3] <;>
+    fin_cases i
+    · simp [thetaBasis3, auxiliaryBasis3]
+    · simp [thetaBasis3, auxiliaryBasis3]
+    · simp [thetaBasis3, auxiliaryBasis3]
       ring
   map_smul' c α := by
     ext i
-    fin_cases i <;>
-      simp [etaBasis3, thetaBasis3, auxiliaryBasis3] <;>
-      ring
+    fin_cases i <;> simp [thetaBasis3, auxiliaryBasis3]
 
 /-- Positive rank-one Onsager operator in the `η` direction. -/
 def dissipativeOperator : Covector State3 →ₗ[ℝ] State3 where
   toFun α := α etaBasis3 • etaBasis3
   map_add' α β := by
     ext i
-    fin_cases i <;> simp [etaBasis3] <;> ring
+    fin_cases i <;> simp [etaBasis3]
   map_smul' c α := by
     ext i
-    fin_cases i <;> simp [etaBasis3] <;> ring
+    fin_cases i <;> simp [etaBasis3]
 
 /-- The reversible operator is skew with respect to covector evaluation. -/
 theorem reversibleOperator_skew (α β : Covector State3) :
@@ -142,7 +147,7 @@ theorem reversibleOperator_neg_eta_zero :
     reversibleOperator (-etaCovector) = 0 := by
   ext i
   fin_cases i <;>
-    simp [reversibleOperator, etaCovector, etaBasis3,
+    simp [reversibleOperator, etaCovector,
       thetaBasis3, auxiliaryBasis3]
 
 /-- Angular Hamiltonian covector lies in the kernel of the dissipative operator. -/
@@ -191,7 +196,8 @@ theorem bipolarGENERIC_flow :
 /-- Energy is conserved by the concrete GENERIC flow. -/
 theorem bipolarGENERIC_energy_rate :
     bipolarGENERIC.dH bipolarGENERIC.flow = 0 := by
-  exact bipolarGENERIC.energy_rate
+  rw [bipolarGENERIC_flow]
+  simp [bipolarGENERIC, thetaCovector, auxiliaryBasis3, etaBasis3]
 
 /-- Entropy production is exactly one in this normalized finite model. -/
 theorem bipolarGENERIC_entropy_rate :
@@ -201,9 +207,12 @@ theorem bipolarGENERIC_entropy_rate :
 
 /-- Hence entropy production is nonnegative. -/
 theorem bipolarGENERIC_entropy_rate_nonneg :
-    0 ≤ bipolarGENERIC.dS bipolarGENERIC.flow := by
-  rw [bipolarGENERIC_entropy_rate]
-  norm_num
+    0 ≤ bipolarGENERIC.dS bipolarGENERIC.flow ∧
+      bipolarGENERIC.dS bipolarGENERIC.flow = 1 := by
+  constructor
+  · rw [bipolarGENERIC_entropy_rate]
+    norm_num
+  · exact bipolarGENERIC_entropy_rate
 
 /-- State on the coordinate hypersurface `η = 0`. -/
 def criticalCoordinateState (θ a : ℝ) : State3 := ![0, θ, a]

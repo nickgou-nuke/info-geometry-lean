@@ -239,8 +239,7 @@ lemma zorn_matrix_cubic_grading_and_corner_factorization
       (2 : ℤ) • kantorWedge P C₀ A₁ A₂ ∧
     superCommDelta P (cornerThirdOrder P C₀ A₁ A₂ C₃) = 0 ∧
     cornerThirdOrder P C₀ A₁ A₂ C₀ = comm (qgtPlus P A₁ C₀) (qgtPlus P A₂ C₀) := by
-  dsimp only []
-  refine ⟨by gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP,
+  refine ⟨by dsimp [zornMatrix]; gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP,
           by gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP,
           by gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP⟩
 

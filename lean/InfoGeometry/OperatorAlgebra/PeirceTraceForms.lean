@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.PeirceLieJordanResolution
 import InfoGeometry.Algebra.PeirceDeWittChiralSplit
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 
@@ -17,11 +18,79 @@ for a self-adjoint idempotent. No DeWitt, BKM, Berry or Fubini--Study
 identification is asserted by these finite matrix identities.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.OperatorAlgebra.LieJordan
 
 open Matrix
 open InfoGeometry.Algebra.PeirceDeWittChiralSplit
+open InfoGeometry.Algebra.FiniteSpin
 open scoped Matrix
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingPeirceTrace
+
+variable {B M : Type*} [Ring B] [AddCommGroup M]
+
+/-- In any non-commutative ring `[Ring B]` equipped with a cyclic additive trace
+`τ : B →+ M`, cyclicity reduces a product of opposing Peirce corners `E * X * F`
+and `F * Y * E` for idempotents `E² = E`, `F² = F`. -/
+theorem trace_sandwich_pair_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    {E F : B} (hE : E * E = E) (hF : F * F = F) (X Y : B) :
+    τ ((E * X * F) * (F * Y * E)) = τ (E * X * F * Y) := by
+  have h1 : (E * X * F) * (F * Y * E) = (E * X * (F * F) * Y) * E := by
+    noncomm_ring
+  have h2 : E * (E * X * (F * F) * Y) = (E * E) * X * (F * F) * Y := by
+    noncomm_ring
+  rw [h1, h_cyc (E * X * (F * F) * Y) E, h2, hE, hF]
+
+/-- Over any non-commutative ring `[Ring B]` equipped with a cyclic additive trace
+`τ : B →+ M`, the bilinear trace pairing `τ (X * Y)` decomposes into the four
+Peirce corner pairings relative to any idempotent `P² = P`. -/
+theorem trace_four_corners_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    {P : B} (hP : IsIdempotent P) (X Y : B) :
+    τ (X * Y) = τ (peirce11 P X * peirce11 P Y) +
+      τ (peirce00 P X * peirce00 P Y) +
+      τ (peirce10 P X * peirce01 P Y) +
+      τ (peirce01 P X * peirce10 P Y) := by
+  have hQ : compIdempotent P * compIdempotent P = compIdempotent P :=
+    compIdempotent_isIdempotent hP
+  simp only [peirce11, peirce00, peirce10, peirce01]
+  rw [trace_sandwich_pair_ring τ h_cyc hP hP,
+    trace_sandwich_pair_ring τ h_cyc hQ hQ,
+    trace_sandwich_pair_ring τ h_cyc hP hQ,
+    trace_sandwich_pair_ring τ h_cyc hQ hP,
+    ← map_add, ← map_add, ← map_add]
+  congr 1
+  simp only [compIdempotent]
+  noncomm_ring
+
+/-- Over any non-commutative ring `[Ring B]` equipped with a cyclic additive trace
+`τ : B →+ M`, the grading-weighted trace `τ (grading P * X * Y)` decomposes into
+the signed Peirce corner pairings. -/
+theorem weightedTrace_four_corners_ring (τ : B →+ M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    {P : B} (hP : IsIdempotent P) (X Y : B) :
+    τ (grading P * X * Y) = τ (peirce11 P X * peirce11 P Y) -
+      τ (peirce00 P X * peirce00 P Y) +
+      τ (peirce10 P X * peirce01 P Y) -
+      τ (peirce01 P X * peirce10 P Y) := by
+  have hQ : compIdempotent P * compIdempotent P = compIdempotent P :=
+    compIdempotent_isIdempotent hP
+  simp only [peirce11, peirce00, peirce10, peirce01]
+  rw [trace_sandwich_pair_ring τ h_cyc hP hP,
+    trace_sandwich_pair_ring τ h_cyc hQ hQ,
+    trace_sandwich_pair_ring τ h_cyc hP hQ,
+    trace_sandwich_pair_ring τ h_cyc hQ hP,
+    ← map_sub, ← map_add, ← map_sub]
+  congr 1
+  simp only [grading, compIdempotent]
+  noncomm_ring
+
+end NonCommRingPeirceTrace
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

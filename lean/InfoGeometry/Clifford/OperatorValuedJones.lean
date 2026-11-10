@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -5,6 +10,13 @@ import Mathlib.Data.Matrix.Basic
 namespace InfoGeometry.Clifford
 
 variable {B : Type*} [Ring B]
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem operatorValuedJones_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 def I_mat : Matrix (Fin 2) (Fin 2) B := !![1, 0; 0, 1]
 def Gamma_mat : Matrix (Fin 2) (Fin 2) B := !![1, 0; 0, -1]
@@ -21,6 +33,10 @@ def K_mat : Matrix (Fin 2) (Fin 2) B := !![0, 1; -1, 0]
   ext i j; fin_cases i <;> fin_cases j <;> simp [K_mat, I_mat, Matrix.mul_apply]
 
 theorem J_Gamma : J_mat (B := B) * Gamma_mat = -(Gamma_mat * J_mat) := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mat, Gamma_mat, Matrix.mul_apply]
+
+theorem J_Gamma_anticomm :
+    J_mat (B := B) * Gamma_mat (B := B) + Gamma_mat (B := B) * J_mat (B := B) = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [J_mat, Gamma_mat, Matrix.mul_apply]
 
 theorem K_eq_Gamma_J : K_mat (B := B) = Gamma_mat * J_mat := by

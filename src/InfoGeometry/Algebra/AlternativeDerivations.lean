@@ -356,10 +356,6 @@ noncomputable def stanDerivation (a b : A) : NonAssocDerivation R A where
   toLinearMap := stanDerMap (R := R) a b
   leibniz' := stanDerMap_isLeibniz (R := R) hleft hright a b
 
-@[simp] theorem stanDerivation_toLinearMap (a b : A) :
-    (stanDerivation (R := R) hleft hright a b).toLinearMap =
-      stanDerMap (R := R) a b := rfl
-
 end Alternative
 
 /-- A standard derivation over a commutative ring is a derivation in the `R`-linear span of `D_{a_i, b_i}`. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesGalois
@@ -36,6 +41,12 @@ open InfoGeometry.Canonical.BostConnesGalois
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
 
 /-! ## Positive scale layer -/
 
@@ -202,7 +213,7 @@ section BostConnes
 universe u
 
 variable
-    {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    {C_comm : Type u} [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (e_rep : GroupElementRepresentation C_comm)
     {G : Type u} [GaloisActionData G]
     (galoisAut : GaloisAlgebraAutomorphism C_comm e_rep (G := G))
@@ -519,5 +530,23 @@ theorem to_from (x : IdeleClassLayer G) :
   D.right_inv x
 
 end RationalIdeleClassDecomposition
+
+/-- Concrete ground inhabitant of `IdeleClassLayer` over `PUnit`. -/
+def unitIdeleClassLayer : IdeleClassLayer PUnit where
+  logScale := 0
+  arithmetic := PUnit.unit
+
+/-- Concrete ground inhabitant of `ThreeLayerIdeleSymmetry` over `PUnit`. -/
+def unitThreeLayerIdeleSymmetry : ThreeLayerIdeleSymmetry PUnit where
+  layer := unitIdeleClassLayer
+  parity := FourierParity.identity
+
+/-- Concrete ground inhabitant of `RationalIdeleClassDecomposition` over `PUnit`. -/
+def unitRationalIdeleClassDecomposition :
+    RationalIdeleClassDecomposition (IdeleClassLayer PUnit) PUnit where
+  toLayers := id
+  fromLayers := id
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end InfoGeometry.Arithmetic.IdeleClassZetaSymmetry

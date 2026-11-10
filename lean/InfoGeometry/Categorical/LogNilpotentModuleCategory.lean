@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.LogEndModuleNilpotentClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -16,6 +21,13 @@ valid bound `m+n-1`.
 noncomputable section
 
 namespace InfoGeometry.Categorical.LogNilpotentModuleCategory
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem logNilpotentModuleCategory_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open CategoryTheory
 open InfoGeometry.Categorical.LogEndModuleCategory
@@ -90,6 +102,33 @@ theorem hom_comp {X Y Z : LogNilpotentModule 𝕜}
 theorem N_pow_order_eq_zero (X : LogNilpotentModule 𝕜) :
     X.N ^ X.nilpotencyOrder = 0 :=
   X.nilpotent
+
+/-- Over any noncommutative `[Ring 𝕜]`, the certified nilpotency persists to
+every larger exponent: `X.N ^ s = 0` whenever `X.nilpotencyOrder ≤ s`. -/
+theorem N_pow_eq_zero_of_le (X : LogNilpotentModule 𝕜) {s : ℕ}
+    (hs : X.nilpotencyOrder ≤ s) : X.N ^ s = 0 := by
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hs
+  rw [pow_add, X.nilpotent, zero_mul]
+
+/-- Morphisms intertwine every power of the distinguished nilpotent, over any
+noncommutative `[Ring 𝕜]`. -/
+theorem hom_comp_N_pow {X Y : LogNilpotentModule 𝕜} (f : X ⟶ Y) (m : ℕ) :
+    f.hom.comp (X.N ^ m) = (Y.N ^ m).comp f.hom := by
+  induction m with
+  | zero => ext x; simp
+  | succ m ih =>
+      rw [pow_succ, pow_succ, Module.End.mul_eq_comp, Module.End.mul_eq_comp,
+        ← LinearMap.comp_assoc, ih, LinearMap.comp_assoc, f.comm, ← LinearMap.comp_assoc]
+
+end LogNilpotentModule
+
+/-- The zero module with zero logarithmic endomorphism (order `1`) inhabits
+the finite-nilpotent category over any noncommutative `[Ring K]`. -/
+instance inhabitedLogNilpotentModule {K : Type u} [Ring K] :
+    Inhabited (LogNilpotentModule K) :=
+  ⟨⟨⟨PUnit.{v + 1}, 0⟩, 1, by simp⟩⟩
+
+namespace LogNilpotentModule
 
 end LogNilpotentModule
 

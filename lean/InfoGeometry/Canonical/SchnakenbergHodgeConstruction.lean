@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.PiL2
@@ -164,23 +169,32 @@ theorem component_unique (a B C : E → ℝ)
   · funext e
     exact congrArg (fun z : EuclideanSpace ℝ E => z e) hcEq
 
-/-- A construction of the existing record, with every law discharged. -/
-def schnakenbergHodge (a : E → ℝ) : G.SchnakenbergDecomposition a where
-  gradientPart := fun e => gradientComponent G a e
-  cyclePart := fun e => cycleComponent G a e
-  gradient_certificate := gradientComponent_isGradient G a
-  cycle_certificate := (mem_orthogonal_gradient_iff G _).mp (cycleComponent_mem G a)
-  reconstruct e := by
-    have h := congrArg (fun z : EuclideanSpace ℝ E => z e) (component_reconstruction G a)
-    exact h.symm
-  unique B C hB hC hrec := component_unique G a B C hB hC hrec
+/-- The actual orthogonal gradient/cycle decomposition of an edge field. -/
+def schnakenbergHodge (a : E → ℝ) : (E → ℝ) × (E → ℝ) :=
+  (fun e => gradientComponent G a e, fun e => cycleComponent G a e)
 
-/-- The owner theorem now applies without a supplied decomposition packet. -/
+/-- Every finite Euclidean edge field has a unique decomposition into a graph
+potential gradient and a divergence-free cycle field. Existence is supplied by
+orthogonal projection onto the gradient subspace; uniqueness follows because
+that subspace intersects its orthogonal complement trivially. -/
 theorem schnakenberg_exists_unique (a : E → ℝ) :
     ∃! P : (E → ℝ) × (E → ℝ),
       G.IsGradientFlow P.1 ∧ G.IsCycleFlow P.2 ∧
         ∀ e, a e = P.1 e + P.2 e := by
-  exact G.schnakenberg_decomposition a (schnakenbergHodge G a)
+  refine ⟨schnakenbergHodge G a, ?_, ?_⟩
+  · refine ⟨gradientComponent_isGradient G a, ?_⟩
+    refine ⟨(mem_orthogonal_gradient_iff G _).mp (cycleComponent_mem G a), ?_⟩
+    intro e
+    have h := congrArg (fun z : EuclideanSpace ℝ E => z e)
+      (component_reconstruction G a)
+    exact h.symm
+  · intro P hP
+    rcases P with ⟨B, C⟩
+    rcases hP with ⟨hB, hC, hrec⟩
+    rcases component_unique G a B C hB hC hrec with ⟨hB', hC'⟩
+    apply Prod.ext
+    · exact hB'
+    · exact hC'
 
 theorem steady_pair_coboundary_zero (J : E → ℝ) (hJ : G.IsCycleFlow J)
     (φ : V → ℝ) :

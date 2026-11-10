@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.Ring.Basic
@@ -59,6 +65,25 @@ def symplecticMatrix (R : Type*) [Ring R] : Matrix (Fin 4) (Fin 4) R :=
       0,  0, 0, 1;
      -1,  0, 0, 0;
       0, -1, 0, 0]
+
+/-- Implicit-carrier alias of `symplecticMatrix R`. -/
+def symplecticOmega {R : Type*} [Ring R] : Matrix (Fin 4) (Fin 4) R :=
+  symplecticMatrix R
+
+/-- Symplectic parity reflection reversing momentum coordinates $p_i \mapsto -p_i$. -/
+def symplecticReflection {R : Type*} [Ring R] : Matrix (Fin 4) (Fin 4) R :=
+  !![ 1, 0,  0,  0;
+      0, 1,  0,  0;
+      0, 0, -1,  0;
+      0, 0,  0, -1]
+
+/-- Exact anticommutation $\Omega \Sigma + \Sigma \Omega = 0$ in $M_4(R)$ over any `[Ring R]`. -/
+theorem symplecticOmega_anticomm_reflection {R : Type*} [Ring R] :
+    symplecticOmega (R := R) * symplecticReflection (R := R) +
+      symplecticReflection (R := R) * symplecticOmega (R := R) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [symplecticOmega, symplecticMatrix, symplecticReflection, Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- The symplectic matrix is skew-symmetric: $\Omega^T = -\Omega$. -/
 theorem symplecticMatrix_transpose (R : Type*) [Ring R] :
@@ -336,77 +361,46 @@ theorem symplectic_complex_metric {R : Type*} [Ring R] (u : PhaseSpace4 R) :
   simp [symplecticForm, symplecticMatrix, Fin.sum_univ_four]
   noncomm_ring
 
-/-! ### Section 5: Master Verification Certificate -/
+/-! ### Section 5: Master Verification Synthesis -/
 
-/-- Master verification certificate for the Weyl-Moyal deformation of Gr(2, 4).
-Bundles:
-1. Skew-symmetry of $\Omega$
-2. Almost complex structure condition $\Omega^2 = -I_4$
-3. Alternating property of the symplectic form
-4. Skew-symmetry of the symplectic form
-5. Antisymmetry of the Poisson bracket
-6. Left-linearity of the Poisson bracket
-7. Linear Jacobi identity
-8. Classical limit of the star commutator ($\hbar \to 0$)
-9. First-order equivalence with the Poisson bracket
-10. Antisymmetry of the star commutator
-11. Canonical Commutation Relations (CCR) on the Darboux basis
-12. Euclidean Hessian diagonal identity
-13. Symplectic-complex metric compatibility $\Omega(u, J u) = -\|u\|^2$
--/
-structure WeylMoyalSuperGrassmannianCertificate : Prop where
-  symplectic_skew : ∀ (R : Type*) [CommRing R],
-    (symplecticMatrix R)ᵀ = -symplecticMatrix R
-  symplectic_sq : ∀ (R : Type*) [CommRing R],
-    symplecticMatrix R * symplecticMatrix R = -1
-  form_alt : ∀ (R : Type*) [CommRing R] (u : PhaseSpace4 R),
-    symplecticForm u u = 0
-  form_skew : ∀ (R : Type*) [CommRing R] (u v : PhaseSpace4 R),
-    symplecticForm u v = -symplecticForm v u
-  poisson_anti : ∀ (R : Type*) [CommRing R] (u v : PhaseSpace4 R),
-    poissonBracket u v = -poissonBracket v u
-  poisson_linear : ∀ (R : Type*) [CommRing R] (c : R) (u₁ u₂ v : PhaseSpace4 R),
-    poissonBracket (u₁ + u₂) v = poissonBracket u₁ v + poissonBracket u₂ v ∧
-    poissonBracket (c • u₁) v = c * poissonBracket u₁ v
-  poisson_jacobi_lin : ∀ (R : Type*) [CommRing R] (F G H : AffineObservable R),
-    affinePoissonBracket F (affinePoissonBracket G H) +
-      affinePoissonBracket G (affinePoissonBracket H F) +
-      affinePoissonBracket H (affinePoissonBracket F G) = 0
-  star_classical : ∀ (R : Type*) [CommRing R] (u v : PhaseSpace4 R),
-    starCommutator 0 u v = 0
-  star_first_order : ∀ (R : Type*) [CommRing R] (ℏ : R) (u v : PhaseSpace4 R),
-    starCommutator ℏ u v = ℏ * poissonBracket u v
-  star_anti : ∀ (R : Type*) [CommRing R] (ℏ : R) (u v : PhaseSpace4 R),
-    starCommutator ℏ u v = -starCommutator ℏ v u
-  ccr_darboux : ∀ (R : Type*) [CommRing R] (ℏ : R),
-    starCommutator ℏ q1 p1 = ℏ ∧
-    starCommutator ℏ p1 q1 = -ℏ ∧
-    starCommutator ℏ q2 p2 = ℏ ∧
-    starCommutator ℏ q1 q2 = 0 ∧
-    starCommutator ℏ p1 p2 = 0 ∧
-    starCommutator ℏ q1 p2 = 0
-  hessian_euclidean : ∀ (R : Type*) [CommRing R] (u : PhaseSpace4 R),
-    phaseSpaceHessian 1 u u = (u 0)^2 + (u 1)^2 + (u 2)^2 + (u 3)^2
-  metric_compatibility : ∀ (R : Type*) [CommRing R] (u : PhaseSpace4 R),
-    symplecticForm u (fun i => ∑ j, (symplecticMatrix R) i j * u j) =
-      -((u 0)^2 + (u 1)^2 + (u 2)^2 + (u 3)^2)
-
-/-- Compilation theorem: the master certificate is constructively inhabited. -/
-theorem compile_weyl_moyal_super_grassmannian :
-    WeylMoyalSuperGrassmannianCertificate := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro R _ ; exact symplecticMatrix_transpose R
-  · intro R _ ; exact symplecticMatrix_sq R
-  · intro R _ u ; exact symplecticForm_alt u
-  · intro R _ u v ; exact symplecticForm_skew u v
-  · intro R _ u v ; exact poisson_antisymm u v
-  · intro R _ c u₁ u₂ v ; exact ⟨poisson_add_left u₁ u₂ v, poisson_smul_left c u₁ v⟩
-  · intro R _ u v w ; exact poisson_jacobi u v w
-  · intro R _ u v ; exact star_commutator_classical_limit u v
-  · intro R _ ℏ u v ; exact star_commutator_first_order ℏ u v
-  · intro R _ ℏ u v ; exact star_commutator_antisymm ℏ u v
-  · intro R _ ℏ ; exact ⟨ccr_q1_p1 ℏ, ccr_p1_q1 ℏ, ccr_q2_p2 ℏ, ccr_q1_q2 ℏ, ccr_p1_p2 ℏ, ccr_q1_p2 ℏ⟩
-  · intro R _ u ; exact phaseSpaceHessian_id u
-  · intro R _ u ; exact symplectic_complex_metric u
+/-- Master verification synthesis for the Weyl-Moyal symplectic and affine Poisson algebra. -/
+theorem compile_weyl_moyal_super_grassmannian
+    {B : Type*} [Ring B] (cb ℏb : B) (ub₁ ub₂ vb : PhaseSpace4 B) (Fb Gb Hb : AffineObservable B)
+    {R : Type*} [CommRing R] (ℏ : R) (u v : PhaseSpace4 R) :
+    ((symplecticMatrix B)ᵀ = -symplecticMatrix B) ∧
+    (symplecticMatrix B * symplecticMatrix B = -1) ∧
+    (symplecticForm u u = 0) ∧
+    (symplecticForm u v = -symplecticForm v u) ∧
+    (poissonBracket u v = -poissonBracket v u) ∧
+    (poissonBracket (ub₁ + ub₂) vb = poissonBracket ub₁ vb + poissonBracket ub₂ vb ∧
+     poissonBracket (cb • ub₁) vb = cb * poissonBracket ub₁ vb) ∧
+    (affinePoissonBracket Fb (affinePoissonBracket Gb Hb) +
+      affinePoissonBracket Gb (affinePoissonBracket Hb Fb) +
+      affinePoissonBracket Hb (affinePoissonBracket Fb Gb) = 0) ∧
+    (starCommutator 0 ub₁ vb = 0) ∧
+    (starCommutator ℏb ub₁ vb = ℏb * poissonBracket ub₁ vb) ∧
+    (starCommutator ℏ u v = -starCommutator ℏ v u) ∧
+    (starCommutator ℏb q1 p1 = ℏb ∧
+     starCommutator ℏb p1 q1 = -ℏb ∧
+     starCommutator ℏb q2 p2 = ℏb ∧
+     starCommutator ℏb q1 q2 = 0 ∧
+     starCommutator ℏb p1 p2 = 0 ∧
+     starCommutator ℏb q1 p2 = 0) ∧
+    (phaseSpaceHessian 1 ub₁ ub₁ = (ub₁ 0)^2 + (ub₁ 1)^2 + (ub₁ 2)^2 + (ub₁ 3)^2) ∧
+    (symplecticForm ub₁ (fun i => ∑ j, (symplecticMatrix B) i j * ub₁ j) =
+      -((ub₁ 0)^2 + (ub₁ 1)^2 + (ub₁ 2)^2 + (ub₁ 3)^2)) :=
+  ⟨symplecticMatrix_transpose B,
+   symplecticMatrix_sq B,
+   symplecticForm_alt u,
+   symplecticForm_skew u v,
+   poisson_antisymm u v,
+   ⟨poisson_add_left ub₁ ub₂ vb, poisson_smul_left cb ub₁ vb⟩,
+   poisson_jacobi Fb Gb Hb,
+   star_commutator_classical_limit ub₁ vb,
+   star_commutator_first_order ℏb ub₁ vb,
+   star_commutator_antisymm ℏ u v,
+   ⟨ccr_q1_p1 ℏb, ccr_p1_q1 ℏb, ccr_q2_p2 ℏb, ccr_q1_q2 ℏb, ccr_p1_p2 ℏb, ccr_q1_p2 ℏb⟩,
+   phaseSpaceHessian_id ub₁,
+   symplectic_complex_metric ub₁⟩
 
 end InfoGeometry.Clifford.WeylMoyalSuperGrassmannian

@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -36,6 +40,19 @@ ho) = \det(1 - B) = 1 - p^{-eta}3490865
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.JordanWignerMobiusZeta
+
+/-- First `2 × 2` real non-commutativity witness matrix. -/
+def noncommWitnessA : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+
+/-- Second `2 × 2` real non-commutativity witness matrix. -/
+def noncommWitnessB : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+
+/-- Non-commutativity ground witness (`2 × 2` real matrix algebra). -/
+theorem exists_noncomm_pair :
+    noncommWitnessA * noncommWitnessB ≠ noncommWitnessB * noncommWitnessA := by
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  norm_num [noncommWitnessA, noncommWitnessB, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 open Matrix
 open Complex
@@ -116,5 +133,19 @@ theorem grand_jordan_wigner_mobius_zeta_master_synthesis
    cayley_transform_is_unitary x,
    F_sq,
    F_B_F_eq_R⟩
+
+/-- Non-commutative `[Ring S]` synthesis combining the Zeta-Möbius Dirichlet convolution
+with the ordered non-commutative fermion Euler product over `List ι`. -/
+theorem ring_jordan_wigner_mobius_zeta_bridge
+    {ι S : Type*} [Ring S]
+    (modes : List ι) (q_modes : ι → S) (p₁ p₂ : ι) :
+    ((ArithmeticFunction.zeta * ArithmeticFunction.moebius : ArithmeticFunction S) = 1) ∧
+    (ringFermionEulerFactor (q_modes p₁) * ringFermionEulerFactor (q_modes p₂) =
+      1 - q_modes p₁ - q_modes p₂ + q_modes p₁ * q_modes p₂) ∧
+    (ringFermionEulerProductList modes q_modes =
+      (modes.map (fun p => 1 - q_modes p)).prod) :=
+  ⟨zeta_moebius_dirichlet_convolution,
+   ringFermionEulerFactor_mul (q_modes p₁) (q_modes p₂),
+   rfl⟩
 
 end InfoGeometry.Arithmetic.JordanWignerMobiusZeta

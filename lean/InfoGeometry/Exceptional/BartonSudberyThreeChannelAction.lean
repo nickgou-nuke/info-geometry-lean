@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.BartonSudberyTrialityAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -11,11 +16,25 @@ Barton--Sudbery tensor--tensor bracket or claim Jacobi closure.
 
 namespace InfoGeometry.Exceptional.BartonSudberyThreeChannelAction
 
-
 open InfoGeometry.Exceptional.CompositionTriality
 open InfoGeometry.Exceptional.CompositionTriality.TrialityTriple
 open InfoGeometry.Exceptional.BartonSudberyTrialityAction
 open scoped TensorProduct
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem bartonSudberyThreeChannel_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any noncommutative ring `[Ring E]`, the pointwise commutator on `Fin 3 → E`
+is skew-symmetric in each channel: `(T * U - U * T) i = -((U * T - T * U) i)`. -/
+theorem ring_three_channel_commutator_skew
+    {E : Type*} [Ring E] (T U : Fin 3 → E) (i : Fin 3) :
+    (T * U - U * T) i = -((U * T - T * U) i) := by
+  change T i * U i - U i * T i = -(U i * T i - T i * U i)
+  exact (neg_sub (U i * T i) (T i * U i)).symm
 
 variable {R A B : Type*} [CommRing R]
   [AddCommGroup A] [Module R A]

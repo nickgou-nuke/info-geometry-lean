@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.LogEndModuleCategory
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -23,6 +28,26 @@ open InfoGeometry.Categorical.LogEndModuleCategory
 open InfoGeometry.Categorical.LogEndModuleCategory.LogEndModule
 
 universe u v
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem logEndModulePentagon_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {R : Type u} [Ring R]
+
+/-- Fourfold composition associativity in `LogEndModule R` over any noncommutative `[Ring R]`. -/
+theorem ring_comp_fourfold_assoc
+    {A B C D E : LogEndModule.{u, v} R}
+    (f : A ⟶ B) (g : B ⟶ C) (h : C ⟶ D) (k : D ⟶ E) :
+    ((f ≫ g) ≫ h) ≫ k = f ≫ (g ≫ (h ≫ k)) := by
+  simp [Category.assoc]
+
+end NoncommRing
 
 variable {𝕜 : Type u} [CommRing 𝕜]
 

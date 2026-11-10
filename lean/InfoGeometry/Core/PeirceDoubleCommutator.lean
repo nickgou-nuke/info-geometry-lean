@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.LieJordanGenerators
 
 /-!
@@ -20,6 +21,45 @@ open PeirceDecomposition PeirceGrading PeirceCoupledCorners
 open PeirceQuadraticFrame PeirceSandwichDuality LieJordanGenerators
 
 attribute [local instance 100] LieRing.ofAssociativeRing
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem peirceDoubleCommutator_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {A : Type*} [Ring A]
+
+/-- In any noncommutative ring `[Ring A]`, a double commutator vanishes on the commutant. -/
+theorem ring_double_commutator_of_commute (a x : A) (hax : Commute a x) :
+    ⁅a, ⁅a, x⁆⁆ = 0 := by
+  change a * (a * x - x * a) - (a * x - x * a) * a = 0
+  rw [hax.eq, sub_self, mul_zero, zero_mul, sub_self]
+
+/-- In any noncommutative ring `[Ring A]`, on an anticommuting element `a * x + x * a = 0`,
+the double commutator equals `4 • (a ^ 2 * x)`. -/
+theorem ring_double_commutator_of_anticommute (a x : A) (hax : a * x + x * a = 0) :
+    ⁅a, ⁅a, x⁆⁆ = 4 • (a ^ 2 * x) := by
+  have hxa : x * a = -(a * x) := by
+    calc
+      x * a = (a * x + x * a) - a * x := by abel
+      _ = -(a * x) := by rw [hax, zero_sub]
+  rw [pow_two]
+  change a * (a * x - x * a) - (a * x - x * a) * a = 4 • ((a * a) * x)
+  calc
+    _ = a * (a * x + a * x) - (a * x + a * x) * a := by
+      rw [hxa, sub_neg_eq_add]
+    _ = (a * a) * x + (a * a) * x - (a * (x * a) + a * (x * a)) := by
+      noncomm_ring
+    _ = 4 • ((a * a) * x) := by
+      rw [hxa]
+      simp only [nsmul_eq_mul, Nat.cast_ofNat]
+      noncomm_ring
+
+end NoncommRing
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 

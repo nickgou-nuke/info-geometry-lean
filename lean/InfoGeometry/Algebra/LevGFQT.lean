@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Matrix
@@ -102,17 +108,42 @@ theorem qconj_I [Ring R] :
     qconj (qI : QuadraticPair R) = qneg qI := by
   ext <;> simp [qconj, qI, qneg]
 
+/-- Over any non-commutative ring `[Ring R]`, pair conjugation preserves the product
+`qconj (qmul z w) = qmul (qconj z) (qconj w)`. -/
+theorem qconj_mul_ring [Ring R] (z w : QuadraticPair R) :
+    qconj (qmul z w) = qmul (qconj z) (qconj w) := by
+  ext
+  · dsimp [qconj, qmul]
+    noncomm_ring
+  · dsimp [qconj, qmul]
+    noncomm_ring
+
+/-- Over any non-commutative ring `[Ring R]`, multiplying by the conjugate gives the norm
+in the real component whenever the two components of `z` commute (`Commute z.1 z.2`). -/
+theorem qmul_conj_of_commute [Ring R] (z : QuadraticPair R) (hcomm : Commute z.1 z.2) :
+    qmul z (qconj z) = (qnorm z, 0) := by
+  ext
+  · dsimp [qconj, qmul, qnorm]
+    noncomm_ring
+  · dsimp [qconj, qmul, qnorm]
+    rw [mul_neg, hcomm.eq, neg_add_cancel]
+
 /-- Pair conjugation is multiplicative for the quadratic-pair product. -/
 theorem qconj_mul [CommRing R] (z w : QuadraticPair R) :
-    qconj (qmul z w) = qmul (qconj z) (qconj w) := by
-  ext <;> simp [qconj, qmul]; ring
+    qconj (qmul z w) = qmul (qconj z) (qconj w) :=
+  qconj_mul_ring z w
 
 /-- Multiplying by the conjugate gives the norm in the real component. -/
 theorem qmul_conj [CommRing R] (z : QuadraticPair R) :
-    qmul z (qconj z) = (qnorm z, 0) := by
-  ext <;> simp [qconj, qmul, qnorm]; ring
+    qmul z (qconj z) = (qnorm z, 0) :=
+  qmul_conj_of_commute z (Commute.all z.1 z.2)
 
 end QuadraticPair
+
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem lev_gfqt_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 section ConcreteBaseFieldWitness
 

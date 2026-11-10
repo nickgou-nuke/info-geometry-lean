@@ -25,7 +25,44 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.ColimitContinuum.TensorTowerColimit
 open InfoGeometry.Spectral.Colimit.SequentialModule
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem cartanColimit_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 variable {R : Type} [Ring R]
+
+/-- Every entry of `H_tower m` is central (`{-1, 0, 1}`), so left multiplication by
+`H_tower m i j` commutes with left scalar multiplication by any `c : R` over any `[Ring R]`. -/
+theorem H_tower_entry_mul_comm :
+    ∀ (m : ℕ) (i j : Fin (2 * m + 1)) (c r : R),
+      H_tower (R := R) m i j * (c * r) = c * (H_tower (R := R) m i j * r)
+  | 0, i, j, c, r => by
+      simp [H_tower]
+  | 1, i, j, c, r => by
+      fin_cases i <;> fin_cases j <;> simp [H_tower, H_3, E3]
+  | m + 2, i, j, c, r => by
+      change embed_sum (k := Fin 2) (H_tower (R := R) (m + 1))
+          ((towerEquiv (m + 1)).symm i) ((towerEquiv (m + 1)).symm j) * (c * r) =
+        c * (embed_sum (k := Fin 2) (H_tower (R := R) (m + 1))
+          ((towerEquiv (m + 1)).symm i) ((towerEquiv (m + 1)).symm j) * r)
+      generalize (towerEquiv (m + 1)).symm i = u
+      generalize (towerEquiv (m + 1)).symm j = v
+      cases u <;> cases v
+      · simpa [embed_sum] using H_tower_entry_mul_comm (m + 1) _ _ c r
+      · simp [embed_sum]
+      · simp [embed_sum]
+      · simp [embed_sum]
+
+/-- Left multiplication by `H_tower m` commutes with scalar multiplication `c • X` over any `[Ring R]`. -/
+theorem H_tower_mul_smul (m : ℕ) (c : R)
+    (X : Matrix (Fin (2 * m + 1)) (Fin (2 * m + 1)) R) :
+    H_tower (R := R) m * (c • X) = c • (H_tower (R := R) m * X) := by
+  ext i j
+  simp only [Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul, Finset.mul_sum]
+  exact Finset.sum_congr rfl fun k _ => H_tower_entry_mul_comm m i k c (X k j)
 
 /-- The `n`th stage starts with the existing `M₃(R)` owner stage. -/
 abbrev Stage (n : ℕ) := Matrix (Fin (2 * (n + 1) + 1)) (Fin (2 * (n + 1) + 1)) R
@@ -50,9 +87,7 @@ theorem stageDiagram_obj (n : ℕ) :
 
 section ColimitAction
 
-variable {R : Type} [CommRing R]
-
-/-- The actual categorical module colimit of the concrete matrix tower. -/
+/-- The actual categorical module colimit of the concrete matrix tower over any `[Ring R]`. -/
 abbrev TowerColimit : ModuleCat R :=
   InfoGeometry.Spectral.Colimit.SequentialModule.Carrier R (stageDiagram (R := R))
 
@@ -69,9 +104,16 @@ theorem stageDiagram_map_succ {R : Type} [Ring R] (n : ℕ) :
     (Functor.ofSequence_map_homOfLE_succ
       (f := fun n => ModuleCat.ofHom (stageBond (R := R) n)) n)
 
-/-- The Cartan commutator at stage `n`, as an `R`-linear endomorphism. -/
-def cartanStageEndomorphism (n : ℕ) : Stage (R := R) n →ₗ[R] Stage (R := R) n :=
-  LinearMap.mulLeft R (H_tower (n + 1)) - LinearMap.mulRight R (H_tower (n + 1))
+/-- The Cartan commutator at stage `n`, as an `R`-linear endomorphism over any `[Ring R]`. -/
+def cartanStageEndomorphism (n : ℕ) : Stage (R := R) n →ₗ[R] Stage (R := R) n where
+  toFun := ad_H (n + 1)
+  map_add' X Y := by
+    dsimp [ad_H, ad, TensorTowerColimit.commutator]
+    rw [Matrix.mul_add, Matrix.add_mul]
+    abel
+  map_smul' c X := by
+    dsimp [ad_H, ad, TensorTowerColimit.commutator]
+    rw [H_tower_mul_smul (n + 1) c X, Matrix.smul_mul, smul_sub]
 
 /-- Its pointwise action is the existing finite-stage `ad_H` operator. -/
 @[simp]

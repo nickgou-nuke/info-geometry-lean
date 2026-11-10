@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.LieJordanGenerators
 import InfoGeometry.Core.SquareZeroSandwich
 import Mathlib.LinearAlgebra.Span.Defs
@@ -22,6 +23,31 @@ namespace InfoGeometry.Core.LieJordanModeActions
 open JordanMultiplicationClosure LieJordanBoundaryOperators LieJordanGenerators
 
 attribute [local instance 100] LieRing.ofAssociativeRing
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem lieJordanModeActions_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {A : Type*} [Ring A] {u v : A}
+
+/-- In any noncommutative ring `[Ring A]`, the signed sandwich `x ↦ u * x * v - v * x * u`
+kills a square-zero first seed `u * u = 0`. -/
+theorem ring_signed_sandwich_left (hu : u * u = 0) :
+    u * u * v - v * u * u = 0 := by
+  rw [hu, zero_mul, mul_assoc, hu, mul_zero, sub_self]
+
+/-- In any noncommutative ring `[Ring A]`, the signed sandwich `x ↦ u * x * v - v * x * u`
+kills a square-zero second seed `v * v = 0`. -/
+theorem ring_signed_sandwich_right (hv : v * v = 0) :
+    u * v * v - v * v * u = 0 := by
+  rw [hv, zero_mul, mul_assoc, hv, mul_zero, sub_self]
+
+end NoncommRing
 
 section Algebra
 

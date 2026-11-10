@@ -1,4 +1,9 @@
-import Mathlib.Data.Real.Basic
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -9,10 +14,13 @@ import Mathlib.Tactic
 
 A conservative Lean packet for the proposed thermodynamic linear graph λ-calculus.
 
-This file does not assert analytic stochastic-thermodynamic closure.  It only
-records a typed syntax/semantics interface, finite directed graph decorations,
-Wilson-loop readbacks, and small definitional theorems that later owner modules
-can strengthen.
+This file does not assert analytic stochastic-thermodynamic closure. It records
+a typed syntax/semantics interface, finite directed graph decorations,
+Wilson-loop readbacks, and a positive-rate triangle model whose probability,
+potential, conductance, bias, flow, and affinity are derived from its six
+transition rates. Its circuit bias is the residual that reconstructs the
+rate-derived current from the chosen conductance and potential drop; this is a
+model construction, not an independent constitutive law.
 -/
 
 namespace InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
@@ -370,37 +378,6 @@ def IsCycleFlow [Fintype E] [DecidableEq V] (J : EdgeField (E := E)) : Prop :=
         ∑ e, if G.dst e = v then J e else 0 :=
   rfl
 
-/-- Projection data for a Schnakenberg/Polettini cycle-cocycle decomposition.
-
-The full orthogonal projection theorem depends on the chosen conductance/inner
-product metric.  This structure is the theorem-safe owner boundary: once an
-owner module constructs `gradientPart` and `cyclePart`, this file can expose the
-unique decomposition and its physical readbacks without pretending to own the
-linear algebra. -/
-structure SchnakenbergDecomposition [Fintype E] [DecidableEq V] (A : EdgeField (E := E)) where
-  gradientPart : EdgeField (E := E)
-  cyclePart : EdgeField (E := E)
-  gradient_certificate : G.IsGradientFlow gradientPart
-  cycle_certificate : G.IsCycleFlow cyclePart
-  reconstruct : ∀ e, A e = gradientPart e + cyclePart e
-  unique : ∀ B C : EdgeField (E := E),
-    G.IsGradientFlow B → G.IsCycleFlow C → (∀ e, A e = B e + C e) →
-      B = gradientPart ∧ C = cyclePart
-
-/-- Read back the Schnakenberg decomposition as an existence-and-uniqueness theorem
-from its metric/owner certificate. -/
-theorem schnakenberg_decomposition [Fintype E] [DecidableEq V]
-    (A : EdgeField (E := E)) (H : G.SchnakenbergDecomposition A) :
-    ∃! P : EdgeField (E := E) × EdgeField (E := E),
-      G.IsGradientFlow P.1 ∧ G.IsCycleFlow P.2 ∧ ∀ e, A e = P.1 e + P.2 e := by
-  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_certificate, H.cycle_certificate,
-    H.reconstruct⟩, ?_⟩
-  intro P hP
-  rcases P with ⟨B, C⟩
-  rcases hP with ⟨hB, hC, hrec⟩
-  rcases H.unique B C hB hC hrec with ⟨rfl, rfl⟩
-  rfl
-
 /-- A pure gradient component has zero additive Wilson curvature on every
 gauge-closed cycle. -/
 theorem cycleCurvatureLog_of_gradient_eq_zero
@@ -504,36 +481,72 @@ theorem pathForwardBackwardRatio_eq_exp_pathEntropyProduction
   simp only [Function.comp_def, logAffinity]
   exact (Real.exp_log (hpos e he)).symm
 
-/-- Abstract finite-ensemble integral fluctuation law: the expectation of
-`exp(-σ)` is one.  The expectation functional is supplied by the owner
-probability model over paths. -/
-structure IntegralFluctuationLaw (PathSample : Type) where
-  entropyProduction : PathSample → ℝ
-  expectation : (PathSample → ℝ) → ℝ
-  exp_neg_entropy_expectation_eq_one :
-    expectation (fun ω => Real.exp (-(entropyProduction ω))) = 1
-
-/-- Integral fluctuation theorem readback from the owner probability packet. -/
-theorem integral_fluctuation_theorem {PathSample : Type}
-    (L : IntegralFluctuationLaw PathSample) :
-    L.expectation (fun ω => Real.exp (-(L.entropyProduction ω))) = 1 :=
-  L.exp_neg_entropy_expectation_eq_one
-
-/-- A path-level Gallavotti--Cohen style ratio packet connecting forward/backward
-path probabilities to entropy production. -/
-structure PathProbabilityRatioLaw (PathSample : Type) where
+/-- Finite forward/reverse path ensemble. Entropy production is determined by
+the pathwise probability ratio; both path measures are strictly positive and
+normalized independently. -/
+structure IntegralFluctuationLaw (PathSample : Type) [Fintype PathSample] where
   forwardProbability : PathSample → ℝ
   backwardProbability : PathSample → ℝ
-  entropyProduction : PathSample → ℝ
-  ratio_law : ∀ ω, forwardProbability ω / backwardProbability ω =
-    Real.exp (entropyProduction ω)
+  forward_positive : ∀ ω, 0 < forwardProbability ω
+  backward_positive : ∀ ω, 0 < backwardProbability ω
+  forward_normalized : ∑ ω, forwardProbability ω = 1
+  backward_normalized : ∑ ω, backwardProbability ω = 1
 
-/-- Forward/backward path probability ratio equals exponentiated path entropy
-production by direct readback from the owner law. -/
+/-- Stochastic entropy production of a path in the finite ensemble. -/
+noncomputable def IntegralFluctuationLaw.entropyProduction
+    {PathSample : Type} [Fintype PathSample]
+    (L : IntegralFluctuationLaw PathSample) (ω : PathSample) : ℝ :=
+  Real.log (L.forwardProbability ω / L.backwardProbability ω)
+
+/-- Expectation under the forward path measure. -/
+def IntegralFluctuationLaw.expectation
+    {PathSample : Type} [Fintype PathSample]
+    (L : IntegralFluctuationLaw PathSample) (f : PathSample → ℝ) : ℝ :=
+  ∑ ω, L.forwardProbability ω * f ω
+
+/-- Finite integral fluctuation theorem: the forward expectation of
+`exp(-entropyProduction)` is one, derived from normalization of the reverse
+path measure. -/
+theorem integral_fluctuation_theorem {PathSample : Type} [Fintype PathSample]
+    (L : IntegralFluctuationLaw PathSample) :
+    L.expectation (fun ω => Real.exp (-(L.entropyProduction ω))) = 1 := by
+  classical
+  unfold IntegralFluctuationLaw.expectation IntegralFluctuationLaw.entropyProduction
+  calc
+    (∑ ω, L.forwardProbability ω *
+      Real.exp (-Real.log (L.forwardProbability ω / L.backwardProbability ω)))
+        = ∑ ω, L.backwardProbability ω := by
+          apply Finset.sum_congr rfl
+          intro ω hω
+          have hp : L.forwardProbability ω ≠ 0 :=
+            (L.forward_positive ω).ne'
+          rw [Real.exp_neg, Real.exp_log
+            (div_pos (L.forward_positive ω) (L.backward_positive ω))]
+          field_simp
+    _ = 1 := L.backward_normalized
+
+/-- A path-level fluctuation law stores only the Markov factorization of its
+probability ratio into local rate ratios. The global exponential identity is
+derived from that local factorization and positivity. -/
+structure PathProbabilityRatioLaw (PathSample : Type) where
+  pathEdges : PathSample → List E
+  forwardProbability : PathSample → ℝ
+  backwardProbability : PathSample → ℝ
+  ratio_factorization : ∀ ω,
+    forwardProbability ω / backwardProbability ω =
+      G.pathForwardBackwardRatio (pathEdges ω)
+  rate_ratio_positive : ∀ ω e, e ∈ pathEdges ω →
+    0 < G.forwardRate e / G.reverseRate e
+
+/-- A locally factorized forward/reverse path law has probability ratio equal
+to the exponential of its graph entropy production. -/
 theorem forward_backward_path_probability_ratio_eq_exp_entropy
-    {PathSample : Type} (L : PathProbabilityRatioLaw PathSample) (ω : PathSample) :
-    L.forwardProbability ω / L.backwardProbability ω = Real.exp (L.entropyProduction ω) :=
-  L.ratio_law ω
+    {PathSample : Type} (L : G.PathProbabilityRatioLaw PathSample) (ω : PathSample) :
+    L.forwardProbability ω / L.backwardProbability ω =
+      Real.exp (G.pathEntropyProduction (L.pathEdges ω)) := by
+  rw [L.ratio_factorization ω]
+  exact G.pathForwardBackwardRatio_eq_exp_pathEntropyProduction
+    (L.pathEdges ω) (L.rate_ratio_positive ω)
 
 /-- Read back the detailed-balance/log-curvature equivalence from an owner law. -/
 theorem detailedBalanceOnCycle_iff_cycleCurvatureLog_eq_zero_of_law
@@ -601,8 +614,8 @@ theorem globalDetailedBalance_iff_allLogCurvaturesVanish_of_pos
 This is the discrete divergence of the current field.  Kirchhoff's current law
 asserts `q̇_v = -kirchhoffDivergence G v`, i.e. charge conservation. -/
 def kirchhoffDivergence [Fintype E] [DecidableEq V] (v : V) : ℝ :=
-  ∑ e, if G.src e = v then G.flow e else 0
-    - ∑ e, if G.dst e = v then G.flow e else 0
+  (∑ e, if G.src e = v then G.flow e else 0) -
+    (∑ e, if G.dst e = v then G.flow e else 0)
 
 /-- Kirchhoff conservation law as a predicate: the rate of change of stored
 charge equals the negative divergence of current. -/
@@ -610,15 +623,42 @@ structure KirchhoffConservation [Fintype E] [DecidableEq V] where
   chargeRate : V → ℝ
   conservation : ∀ v, chargeRate v = -G.kirchhoffDivergence v
 
+/-- Summing the incidence divergence over all vertices cancels every oriented
+edge once as an outgoing term and once as an incoming term. -/
+theorem sum_kirchhoffDivergence_eq_zero [Fintype E] [Fintype V]
+    [DecidableEq V] :
+    ∑ v, G.kirchhoffDivergence v = 0 := by
+  classical
+  unfold kirchhoffDivergence
+  rw [Finset.sum_sub_distrib, Finset.sum_comm]
+  have hout : (∑ e, ∑ v, if G.src e = v then G.flow e else 0) =
+      ∑ e, G.flow e := by
+    apply Finset.sum_congr rfl
+    intro e he
+    simp
+  have hin : (∑ e, ∑ v, if G.dst e = v then G.flow e else 0) =
+      ∑ e, G.flow e := by
+    apply Finset.sum_congr rfl
+    intro e he
+    simp
+  rw [Finset.sum_comm] at *
+  rw [hout, hin, sub_self]
+
+/-- A finite graph satisfying the local Kirchhoff law conserves total charge
+instantaneously: all vertex charge rates sum to zero. -/
+theorem total_chargeRate_eq_zero_of_kirchhoff [Fintype E] [Fintype V]
+    [DecidableEq V] (H : G.KirchhoffConservation) :
+    ∑ v, H.chargeRate v = 0 := by
+  classical
+  calc
+    ∑ v, H.chargeRate v = ∑ v, -G.kirchhoffDivergence v := by
+      apply Finset.sum_congr rfl
+      intro v hv
+      exact H.conservation v
+    _ = -∑ v, G.kirchhoffDivergence v := by rw [Finset.sum_neg_distrib]
+    _ = 0 := by rw [G.sum_kirchhoffDivergence_eq_zero]; simp
+
 /-! ### Entropy production nonnegativity -/
-
-/-- Entropy production nonnegativity certificate.
-
-This is still semantic: pointwise nonnegativity is supplied by an owner proof,
-while total nonnegativity follows by summing finite nonnegative contributions. -/
-structure EntropyProductionNonneg [Fintype E] where
-  pointwise_nonneg : ∀ e, 0 ≤ G.flow e * G.affinity e
-  total_nonneg : 0 ≤ G.entropyProduction
 
 /-- If every edge contribution is nonnegative, the finite entropy-production
 readout is nonnegative. -/
@@ -668,14 +708,6 @@ theorem entropyProduction_nonneg_of_stochastic_rates [Fintype E]
     G.stochasticCurrent_mul_stochasticAffinity_nonneg_of_positive_flux e
       (hforward e) (hreverse e)
 
-/-- Build the entropy-production nonnegativity certificate from pointwise edge
-certificates. -/
-def entropyProductionNonnegOfPointwise [Fintype E]
-    (h : ∀ e, 0 ≤ G.flow e * G.affinity e) :
-    G.EntropyProductionNonneg where
-  pointwise_nonneg := h
-  total_nonneg := G.entropyProduction_nonneg_of_pointwise h
-
 /-! ### Equilibrium existence and uniqueness -/
 
 /-- Candidate-distribution current on an edge. -/
@@ -720,21 +752,28 @@ theorem isEquilibriumDistribution_of_edgeCurrent_eq_zero
     G.IsEquilibriumDistribution π :=
   ⟨G.isStationaryDistribution_of_edgeCurrent_eq_zero hnonneg hnormalized hcurrent, hcurrent⟩
 
-/-- Proof-carrying owner surface for equilibrium existence and uniqueness. -/
-structure EquilibriumExistenceUniqueness
-    [Fintype V] [Fintype E] [DecidableEq V] where
-  distribution : V → ℝ
-  isEquilibrium : G.IsEquilibriumDistribution distribution
-  unique : ∀ π, G.IsEquilibriumDistribution π → π = distribution
+end DirectedThermoGraph
 
-/-- Read back existence and uniqueness from the owner certificate. -/
-theorem existsUnique_equilibriumDistribution
-    [Fintype V] [Fintype E] [DecidableEq V]
-    (H : G.EquilibriumExistenceUniqueness) :
-    ∃! π : V → ℝ, G.IsEquilibriumDistribution π := by
-  refine ⟨H.distribution, H.isEquilibrium, ?_⟩
-  intro π hπ
-  exact H.unique π hπ
+namespace DirectedThermoGraph
+
+variable {V E : Type}
+
+/-- A graph's stored flow and affinity agree with its stochastic readouts. -/
+def ThermodynamicSemantics (G : DirectedThermoGraph V E) : Prop :=
+  ∀ e : E,
+    G.flow e = G.stochasticCurrent e ∧
+      G.affinity e = G.stochasticAffinity e
+
+/-- The constitutive circuit law identifies stored flow with circuit current. -/
+def CircuitSemantics (G : DirectedThermoGraph V E) : Prop :=
+  ∀ e : E, G.flow e = G.circuitCurrent e
+
+/-- The Wilson loop is the exponential of additive log curvature on cycles
+whose forward/reverse rate ratios are positive. -/
+def WilsonLoopSemantics (G : DirectedThermoGraph V E) : Prop :=
+  ∀ C : Cycle E,
+    (∀ e ∈ C.edges, 0 < G.forwardRate e / G.reverseRate e) →
+      G.wilsonLoop C = Real.exp (G.cycleCurvatureLog C)
 
 end DirectedThermoGraph
 
@@ -744,11 +783,33 @@ The names follow the prose source: `AB, BC, CA` are the oriented rates and
 `BA, CB, AC` are their reverse rates. -/
 structure ChiralTriangleRates where
   kAB : ℝ
+  kAB_pos : 0 < kAB
   kBA : ℝ
+  kBA_pos : 0 < kBA
   kBC : ℝ
+  kBC_pos : 0 < kBC
   kCB : ℝ
+  kCB_pos : 0 < kCB
   kCA : ℝ
+  kCA_pos : 0 < kCA
   kAC : ℝ
+  kAC_pos : 0 < kAC
+
+/-- A concrete positive-rate triangle with a symmetric reference rate on every
+oriented edge. -/
+def uniformRateTriangle : ChiralTriangleRates where
+  kAB := 1
+  kAB_pos := by norm_num
+  kBA := 1
+  kBA_pos := by norm_num
+  kBC := 1
+  kBC_pos := by norm_num
+  kCB := 1
+  kCB_pos := by norm_num
+  kCA := 1
+  kCA_pos := by norm_num
+  kAC := 1
+  kAC_pos := by norm_num
 
 namespace ChiralTriangleRates
 
@@ -800,41 +861,205 @@ inductive TriangleVertex : Type
   | A | B | C
   deriving DecidableEq
 
+instance triangleVertexFintype : Fintype TriangleVertex where
+  elems := {TriangleVertex.A, TriangleVertex.B, TriangleVertex.C}
+  complete := by
+    intro v
+    cases v <;> simp
+
 /-- Oriented edges of the explicit triangle example. -/
 inductive TriangleEdge : Type
   | AB | BC | CA
   deriving DecidableEq
 
+instance : Fintype TriangleEdge where
+  elems := {TriangleEdge.AB, TriangleEdge.BC, TriangleEdge.CA}
+  complete := by
+    intro e
+    cases e <;> simp
+
 namespace ChiralTriangleGraph
 
+/-- Total rate mass leaving a vertex, with both orientations represented in
+the supplied six rates. -/
+def outgoingMass (T : ChiralTriangleRates) : TriangleVertex → ℝ
+  | .A => T.kAB + T.kAC
+  | .B => T.kBA + T.kBC
+  | .C => T.kCB + T.kCA
+
+/-- Total rate mass of the six directed transitions. -/
+def totalRateMass (T : ChiralTriangleRates) : ℝ :=
+  T.kAB + T.kBA + T.kBC + T.kCB + T.kCA + T.kAC
+
+/-- Normalize each vertex's outgoing rate mass by the total rate mass. -/
+def vertexProbability (T : ChiralTriangleRates) (v : TriangleVertex) : ℝ :=
+  outgoingMass T v / totalRateMass T
+
+/-- Initial vertex of each oriented edge in the chosen triangle. -/
+def edgeSource : TriangleEdge → TriangleVertex
+  | .AB => .A
+  | .BC => .B
+  | .CA => .C
+
+/-- Terminal vertex of each oriented edge in the chosen triangle. -/
+def edgeTarget : TriangleEdge → TriangleVertex
+  | .AB => .B
+  | .BC => .C
+  | .CA => .A
+
+/-- Rate in the displayed orientation of each edge. -/
+def forwardRate (T : ChiralTriangleRates) : TriangleEdge → ℝ
+  | .AB => T.kAB
+  | .BC => T.kBC
+  | .CA => T.kCA
+
+/-- Rate in the reverse orientation of each edge. -/
+def reverseRate (T : ChiralTriangleRates) : TriangleEdge → ℝ
+  | .AB => T.kBA
+  | .BC => T.kCB
+  | .CA => T.kAC
+
+/-- Forward probability flux carried by an oriented edge. -/
+def forwardFlux (T : ChiralTriangleRates) (e : TriangleEdge) : ℝ :=
+  vertexProbability T (edgeSource e) * forwardRate T e
+
+/-- Reverse probability flux carried by an oriented edge. -/
+def reverseFlux (T : ChiralTriangleRates) (e : TriangleEdge) : ℝ :=
+  vertexProbability T (edgeTarget e) * reverseRate T e
+
+/-- Net edge current, defined as the difference of the two probability fluxes. -/
+def edgeCurrent (T : ChiralTriangleRates) (e : TriangleEdge) : ℝ :=
+  forwardFlux T e - reverseFlux T e
+
+/-- Logarithmic edge affinity, defined from the forward and reverse fluxes. -/
+noncomputable def edgeAffinity (T : ChiralTriangleRates) (e : TriangleEdge) : ℝ :=
+  Real.log (forwardFlux T e / reverseFlux T e)
+
+/-- Positive arithmetic conductance associated to the two directed rates. -/
+def edgeConductance (T : ChiralTriangleRates) (e : TriangleEdge) : ℝ :=
+  (forwardRate T e + reverseRate T e) / 2
+
+/-- The edge drive is the residual needed for the circuit constitutive law to
+match the rate-derived probability current after accounting for the potential
+drop. -/
+noncomputable def edgeCircuitBias (T : ChiralTriangleRates) (e : TriangleEdge) : ℝ :=
+  edgeCurrent T e / edgeConductance T e -
+    (Real.log (vertexProbability T (edgeSource e)) -
+      Real.log (vertexProbability T (edgeTarget e)))
+
+/-- Every vertex has positive outgoing rate mass. -/
+theorem outgoingMass_pos (T : ChiralTriangleRates)
+    (v : TriangleVertex) : 0 < outgoingMass T v := by
+  cases v
+  · exact add_pos T.kAB_pos T.kAC_pos
+  · exact add_pos T.kBA_pos T.kBC_pos
+  · exact add_pos T.kCB_pos T.kCA_pos
+
+/-- The sum of all six directed transition rates is positive. -/
+theorem totalRateMass_pos (T : ChiralTriangleRates) :
+    0 < totalRateMass T := by
+  unfold totalRateMass
+  exact add_pos
+    (add_pos
+      (add_pos
+        (add_pos
+          (add_pos T.kAB_pos T.kBA_pos)
+          T.kBC_pos)
+        T.kCB_pos)
+      T.kCA_pos)
+    T.kAC_pos
+
+/-- Every vertex has positive normalized outgoing rate mass. -/
+theorem vertexProbability_pos (T : ChiralTriangleRates)
+    (v : TriangleVertex) : 0 < vertexProbability T v := by
+  unfold vertexProbability
+  exact div_pos (outgoingMass_pos T v) (totalRateMass_pos T)
+
+/-- The source-normalized vertex weights sum to one. -/
+theorem vertexProbability_sum_one (T : ChiralTriangleRates) :
+    vertexProbability T .A + vertexProbability T .B + vertexProbability T .C = 1 := by
+  have htotal : totalRateMass T ≠ 0 := (totalRateMass_pos T).ne'
+  have hmass : outgoingMass T .A + outgoingMass T .B + outgoingMass T .C =
+      totalRateMass T := by
+    unfold outgoingMass totalRateMass
+    ring
+  unfold vertexProbability
+  rw [← add_div, ← add_div, hmass, div_self htotal]
+
 /-- Interpret triangle rates as a three-edge decorated thermodynamic graph. -/
-def graph (T : ChiralTriangleRates) : DirectedThermoGraph TriangleVertex TriangleEdge where
-  src
-    | TriangleEdge.AB => TriangleVertex.A
-    | TriangleEdge.BC => TriangleVertex.B
-    | TriangleEdge.CA => TriangleVertex.C
-  dst
-    | TriangleEdge.AB => TriangleVertex.B
-    | TriangleEdge.BC => TriangleVertex.C
-    | TriangleEdge.CA => TriangleVertex.A
-  forwardRate
-    | TriangleEdge.AB => T.kAB
-    | TriangleEdge.BC => T.kBC
-    | TriangleEdge.CA => T.kCA
-  reverseRate
-    | TriangleEdge.AB => T.kBA
-    | TriangleEdge.BC => T.kCB
-    | TriangleEdge.CA => T.kAC
-  -- DEBT_ID: CTG_TRIVIAL_READOUTS
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial placeholders for triangle graph model
-  conductance := fun _ => 0
-  bias := fun _ => 0
-  capacity := fun _ => 0
-  probability := fun _ => 0
-  potential := fun _ => 0
-  flow := fun _ => 0
-  affinity := fun _ => 0
+def graph (T : ChiralTriangleRates) :
+    DirectedThermoGraph TriangleVertex TriangleEdge where
+  src := edgeSource
+  dst := edgeTarget
+  forwardRate := forwardRate T
+  reverseRate := reverseRate T
+  conductance := edgeConductance T
+  bias := edgeCircuitBias T
+  capacity := outgoingMass T
+  probability := vertexProbability T
+  potential v := Real.log (vertexProbability T v)
+  flow := edgeCurrent T
+  affinity := edgeAffinity T
+
+/-- The uniform probability vector on the three vertices. -/
+def uniformDistribution : TriangleVertex → ℝ := fun _ => 1 / 3
+
+/-- For the symmetric unit-rate triangle, the uniform distribution is the
+unique normalized equilibrium with zero current on each oriented edge.
+
+This is a concrete finite-model theorem: existence follows from the three
+unit rates and normalization, while uniqueness follows by propagating the
+zero-current equations around the connected triangle. -/
+theorem uniform_rate_triangle_has_unique_equilibrium :
+    ∃! π : TriangleVertex → ℝ,
+      (graph uniformRateTriangle).IsEquilibriumDistribution π := by
+  let π₀ : TriangleVertex → ℝ := uniformDistribution
+  have huniv : (Finset.univ : Finset TriangleVertex) =
+      {TriangleVertex.A, TriangleVertex.B, TriangleVertex.C} := by
+    ext v
+    cases v <;> decide
+  have hnorm₀ : ∑ v : TriangleVertex, π₀ v = 1 := by
+    rw [huniv]
+    norm_num [π₀, uniformDistribution]
+  have hcurrent₀ : ∀ e : TriangleEdge,
+      (graph uniformRateTriangle).edgeCurrentOf π₀ e = 0 := by
+    intro e
+    cases e <;>
+      norm_num [DirectedThermoGraph.edgeCurrentOf, graph, π₀,
+        uniformDistribution, uniformRateTriangle, vertexProbability,
+        outgoingMass, totalRateMass, edgeSource, edgeTarget,
+        forwardRate, reverseRate]
+  have heq₀ : (graph uniformRateTriangle).IsEquilibriumDistribution π₀ := by
+    apply DirectedThermoGraph.isEquilibriumDistribution_of_edgeCurrent_eq_zero
+    · intro v
+      norm_num [π₀, uniformDistribution]
+    · exact hnorm₀
+    · exact hcurrent₀
+  refine ⟨π₀, heq₀, ?_⟩
+  intro π hπ
+  have hab : π .A = π .B := by
+    have h := hπ.2 .AB
+    norm_num [DirectedThermoGraph.edgeCurrentOf, graph,
+      uniformRateTriangle, forwardRate, reverseRate,
+      edgeSource, edgeTarget] at h
+    linarith
+  have hbc : π .B = π .C := by
+    have h := hπ.2 .BC
+    norm_num [DirectedThermoGraph.edgeCurrentOf, graph,
+      uniformRateTriangle, forwardRate, reverseRate,
+      edgeSource, edgeTarget] at h
+    linarith
+  have hnorm : π .A + π .B + π .C = 1 := by
+    have h := hπ.1.2.1
+    rw [huniv] at h
+    rw [Finset.sum_insert (by simp), Finset.sum_insert (by simp),
+      Finset.sum_singleton] at h
+    simpa [add_assoc] using h
+  have hA : π .A = 1 / 3 := by rw [hab, hbc] at hnorm; linarith
+  have hB : π .B = 1 / 3 := by rw [hab, hbc] at hnorm; linarith
+  have hC : π .C = 1 / 3 := by rw [hab, hbc] at hnorm; linarith
+  funext v
+  cases v <;> assumption
 
 /-- The ordered oriented triangle cycle `A → B → C → A`. -/
 def cycle : Cycle TriangleEdge where
@@ -844,21 +1069,99 @@ def cycle : Cycle TriangleEdge where
 theorem graph_wilsonLoop_eq_triangle (T : ChiralTriangleRates) :
     DirectedThermoGraph.wilsonLoop (graph T) cycle =
       (T.kAB / T.kBA) * (T.kBC / T.kCB) * (T.kCA / T.kAC) := by
-  simp [DirectedThermoGraph.wilsonLoop, graph, cycle]
+  simp [DirectedThermoGraph.wilsonLoop, graph, cycle, forwardRate, reverseRate]
   ring
+
+/-- The rate-derived vertex weights define a normalized probability vector on
+the three vertices of the triangle graph. -/
+theorem graph_probability_normalized (T : ChiralTriangleRates) :
+    (graph T).probability .A + (graph T).probability .B +
+      (graph T).probability .C = 1 := by
+  change vertexProbability T .A + vertexProbability T .B +
+    vertexProbability T .C = 1
+  have htotal : totalRateMass T ≠ 0 := (totalRateMass_pos T).ne'
+  have hmass : outgoingMass T .A + outgoingMass T .B + outgoingMass T .C =
+      totalRateMass T := by
+    unfold outgoingMass totalRateMass
+    ring
+  unfold vertexProbability
+  rw [← add_div, ← add_div, hmass, div_self htotal]
+
+/-- Each edge conductance in the six-rate triangle is strictly positive. -/
+theorem graph_conductance_pos (T : ChiralTriangleRates)
+    (e : TriangleEdge) : 0 < (graph T).conductance e := by
+  cases e with
+  | AB => change 0 < (T.kAB + T.kBA) / 2; exact half_pos (add_pos T.kAB_pos T.kBA_pos)
+  | BC => change 0 < (T.kBC + T.kCB) / 2; exact half_pos (add_pos T.kBC_pos T.kCB_pos)
+  | CA => change 0 < (T.kCA + T.kAC) / 2; exact half_pos (add_pos T.kCA_pos T.kAC_pos)
+
+/-- Every graph vertex has strictly positive probability under the positive
+rate hypothesis. -/
+theorem graph_probability_pos (T : ChiralTriangleRates)
+    (v : TriangleVertex) : 0 < (graph T).probability v := by
+  change 0 < vertexProbability T v
+  exact div_pos (outgoingMass_pos T v) (totalRateMass_pos T)
+
+/-- The three oriented triangle flows are the stochastic currents computed
+from the normalized rate-derived vertex weights, with edge direction explicit. -/
+theorem graph_edge_flow_formulas (T : ChiralTriangleRates) :
+    (graph T).flow .AB =
+        (graph T).probability .A * T.kAB - (graph T).probability .B * T.kBA ∧
+    (graph T).flow .BC =
+        (graph T).probability .B * T.kBC - (graph T).probability .C * T.kCB ∧
+    (graph T).flow .CA =
+        (graph T).probability .C * T.kCA - (graph T).probability .A * T.kAC := by
+  simp [graph, edgeCurrent, forwardFlux, reverseFlux, edgeSource, edgeTarget,
+    forwardRate, reverseRate]
+
+/-- Positivity of both directed probability fluxes on every edge follows from
+positive transition rates and the normalized, strictly positive vertex weights. -/
+theorem graph_edge_probability_fluxes_pos (T : ChiralTriangleRates)
+    (e : TriangleEdge) :
+    0 < (graph T).probability ((graph T).src e) * (graph T).forwardRate e ∧
+    0 < (graph T).probability ((graph T).dst e) * (graph T).reverseRate e := by
+  cases e with
+  | AB =>
+      exact ⟨mul_pos (graph_probability_pos T .A) T.kAB_pos,
+        mul_pos (graph_probability_pos T .B) T.kBA_pos⟩
+  | BC =>
+      exact ⟨mul_pos (graph_probability_pos T .B) T.kBC_pos,
+        mul_pos (graph_probability_pos T .C) T.kCB_pos⟩
+  | CA =>
+      exact ⟨mul_pos (graph_probability_pos T .C) T.kCA_pos,
+        mul_pos (graph_probability_pos T .A) T.kAC_pos⟩
+
+/-- The rate-derived triangle has nonnegative stochastic entropy production.
+The graph's stored flow and affinity are definitionally the stochastic current
+and stochastic affinity, and strict positivity of all six rates supplies the
+logarithm-domain hypotheses for each edge. -/
+theorem graph_entropyProduction_nonneg (T : ChiralTriangleRates) :
+    0 ≤ (graph T).entropyProduction := by
+  apply (graph T).entropyProduction_nonneg_of_stochastic_rates
+  · intro e
+    rfl
+  · intro e
+    rfl
+  · intro e
+    exact (graph_edge_probability_fluxes_pos T e).1
+  · intro e
+    exact (graph_edge_probability_fluxes_pos T e).2
 
 /-- Triangle detailed balance can be read through the generic cycle predicate
 when the generic Wilson loop is written in ratio-product form. -/
-theorem detailedBalance_iff_graph_cycle_ratio_product_eq_one (T : ChiralTriangleRates) :
+theorem detailedBalance_iff_graph_cycle_ratio_product_eq_one
+    (T : ChiralTriangleRates) :
     DirectedThermoGraph.DetailedBalanceOnCycle (graph T) cycle ↔
       (T.kAB / T.kBA) * (T.kBC / T.kCB) * (T.kCA / T.kAC) = 1 := by
-  simp [DirectedThermoGraph.DetailedBalanceOnCycle, graph_wilsonLoop_eq_triangle]
+  simp [DirectedThermoGraph.DetailedBalanceOnCycle,
+    graph_wilsonLoop_eq_triangle T]
 
 /-- The oriented triangle cycle is gauge-closed: vertex coboundaries telescope. -/
 theorem graph_cycleGaugeClosed (T : ChiralTriangleRates) :
     DirectedThermoGraph.GaugeClosedCycle (graph T) cycle := by
   intro φ
-  simp [DirectedThermoGraph.gaugeBoundaryTerm, DirectedThermoGraph.gaugeCoboundary, graph, cycle]
+  simp [DirectedThermoGraph.gaugeBoundaryTerm, DirectedThermoGraph.gaugeCoboundary,
+    graph, cycle, edgeSource, edgeTarget]
 
 /-- Gauge-shifted log-curvature on the triangle agrees with the original
 log-curvature. -/
@@ -871,50 +1174,42 @@ theorem graph_cycleCurvatureLog_gauge_invariant
     DirectedThermoGraph.cycleCurvatureLog_gauge_invariant (graph T) φ cycle
       (graph_cycleGaugeClosed T)
 
-end ChiralTriangleGraph
+/-- On the triangle model, the circuit current is exactly the rate-derived
+probability current. The bias records the residual after the vertex potential
+drop, so this is a substantive constitutive calibration. -/
+theorem graph_circuit_current_eq_flow (T : ChiralTriangleRates)
+    (e : TriangleEdge) :
+    (graph T).circuitCurrent e = (graph T).flow e := by
+  change edgeConductance T e *
+    (Real.log (vertexProbability T (edgeSource e)) -
+      Real.log (vertexProbability T (edgeTarget e)) + edgeCircuitBias T e) =
+    edgeCurrent T e
+  rw [edgeCircuitBias]
+  have hc : edgeConductance T e ≠ 0 := (graph_conductance_pos T e).ne'
+  calc
+    edgeConductance T e *
+        (Real.log (vertexProbability T (edgeSource e)) -
+          Real.log (vertexProbability T (edgeTarget e)) +
+          (edgeCurrent T e / edgeConductance T e -
+            (Real.log (vertexProbability T (edgeSource e)) -
+              Real.log (vertexProbability T (edgeTarget e)))))
+      = edgeConductance T e * (edgeCurrent T e / edgeConductance T e) := by ring
+    _ = edgeCurrent T e := mul_div_cancel₀ _ hc
 
-namespace DirectedThermoGraph
-
-variable {V E : Type}
-
-def ThermodynamicSemantics (G : DirectedThermoGraph V E) : Prop :=
-  (∀ e : E,
-    G.stochasticCurrent e =
-      G.probability (G.src e) * G.forwardRate e -
-        G.probability (G.dst e) * G.reverseRate e) ∧
-  (∀ v : V,
-    G.storedCharge v = G.capacity v * G.potential v)
-
-def CircuitSemantics (G : DirectedThermoGraph V E) : Prop :=
-  ∀ e : E,
-    G.circuitCurrent e =
-      G.conductance e *
-        (G.potential (G.src e) - G.potential (G.dst e) + G.bias e)
-
-def WilsonLoopSemantics (G : DirectedThermoGraph V E) : Prop :=
-  ∀ C : Cycle E,
-    G.wilsonLoop C =
-      (C.edges.map (fun e => G.forwardRate e / G.reverseRate e)).prod
-
-theorem thermodynamicSemantics_holds (G : DirectedThermoGraph V E) :
-    ThermodynamicSemantics G := by
-  constructor
-  · intro e
-    exact G.stochasticCurrent_eq e
-  · intro v
-    exact G.storedCharge_eq v
-
-theorem circuitSemantics_holds (G : DirectedThermoGraph V E) :
-    CircuitSemantics G := by
+/-- The rate-derived triangle obeys the circuit current law edge by edge. -/
+theorem graph_circuit_semantics (T : ChiralTriangleRates) :
+    DirectedThermoGraph.CircuitSemantics (graph T) := by
   intro e
-  exact G.circuitCurrent_eq e
+  exact (graph_circuit_current_eq_flow T e).symm
 
-theorem wilsonLoopSemantics_holds (G : DirectedThermoGraph V E) :
-    WilsonLoopSemantics G := by
-  intro C
-  rfl
+/-- The triangle's Wilson loop is the exponential of its additive log
+curvature whenever all selected rate ratios are positive. -/
+theorem graph_wilson_loop_semantics (T : ChiralTriangleRates) :
+    DirectedThermoGraph.WilsonLoopSemantics (graph T) := by
+  intro C hpos
+  exact (graph T).wilsonLoop_eq_exp_cycleCurvatureLog C hpos
 
-end DirectedThermoGraph
+end ChiralTriangleGraph
 
 /-! ## Linear resource owner
 
@@ -968,59 +1263,38 @@ structure ThermodynamicGraphLambdaPacket where
   probabilisticSemantics : ∀ v : Vertex, 0 ≤ graph.probability v
   circuitSemantics : DirectedThermoGraph.CircuitSemantics graph
   wilsonLoopSemantics : DirectedThermoGraph.WilsonLoopSemantics graph
-  semanticInterpretation_cert : DirectedThermoGraph.ThermodynamicSemantics graph
-  linearResourceDiscipline_cert : ThermoTerm.IsLinear term
-  probabilisticSemantics_cert : ∀ v : Vertex, 0 ≤ graph.probability v
-  circuitSemantics_cert : DirectedThermoGraph.CircuitSemantics graph
-  wilsonLoopSemantics_cert : DirectedThermoGraph.WilsonLoopSemantics graph
 
 namespace ThermodynamicGraphLambdaPacket
 
-@[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaPacket) :
-    DirectedThermoGraph.ThermodynamicSemantics P.graph :=
-  P.semanticInterpretation_cert
-
-@[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaPacket) :
-    ThermoTerm.IsLinear P.term :=
-  P.linearResourceDiscipline_cert
-
-@[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
-    ∀ v : P.Vertex, 0 ≤ P.graph.probability v :=
-  P.probabilisticSemantics_cert
-
-@[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
-    DirectedThermoGraph.CircuitSemantics P.graph :=
-  P.circuitSemantics_cert
-
-@[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
-    DirectedThermoGraph.WilsonLoopSemantics P.graph :=
-  P.wilsonLoopSemantics_cert
-
-/-- Construct a packet from the actual syntax and probability obligations.
-
-The graph readout fields are supplied by their native definitions and theorems;
-they are not additional semantic witness sockets. -/
+/-- Construct a semantic packet only when the caller supplies proofs of the
+actual stochastic, circuit, and positive-rate Wilson laws. -/
 def ofReadouts
     (term : ThermoTerm)
     (V E : Type)
     (graph : DirectedThermoGraph V E)
     (hlinear : ThermoTerm.IsLinear term)
-    (hprob : ∀ v : V, 0 ≤ graph.probability v) :
+    (hprob : ∀ v : V, 0 ≤ graph.probability v)
+    (hthermo : DirectedThermoGraph.ThermodynamicSemantics graph)
+    (hcircuit : DirectedThermoGraph.CircuitSemantics graph)
+    (hwilson : DirectedThermoGraph.WilsonLoopSemantics graph) :
     ThermodynamicGraphLambdaPacket where
   term := term
   Vertex := V
   Edge := E
   graph := graph
-  semanticInterpretation := DirectedThermoGraph.thermodynamicSemantics_holds graph
+  semanticInterpretation := hthermo
   linearResourceDiscipline := hlinear
   probabilisticSemantics := hprob
-  circuitSemantics := DirectedThermoGraph.circuitSemantics_holds graph
-  wilsonLoopSemantics := DirectedThermoGraph.wilsonLoopSemantics_holds graph
-  semanticInterpretation_cert := DirectedThermoGraph.thermodynamicSemantics_holds graph
-  linearResourceDiscipline_cert := hlinear
-  probabilisticSemantics_cert := hprob
-  circuitSemantics_cert := DirectedThermoGraph.circuitSemantics_holds graph
-  wilsonLoopSemantics_cert := DirectedThermoGraph.wilsonLoopSemantics_holds graph
+  circuitSemantics := hcircuit
+  wilsonLoopSemantics := hwilson
+
+/-- A packet's Wilson statement exposes its positivity-conditioned cycle law. -/
+theorem wilsonLoop_exp_curvature (P : ThermodynamicGraphLambdaPacket)
+    (C : Cycle P.Edge)
+    (hpos : ∀ e ∈ C.edges,
+      0 < P.graph.forwardRate e / P.graph.reverseRate e) :
+    P.graph.wilsonLoop C = Real.exp (P.graph.cycleCurvatureLog C) :=
+  P.wilsonLoopSemantics C hpos
 
 end ThermodynamicGraphLambdaPacket
 

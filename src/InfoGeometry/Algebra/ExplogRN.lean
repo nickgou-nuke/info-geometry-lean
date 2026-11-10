@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.GroupWithZero.Units.Lemmas
@@ -29,6 +34,39 @@ def dlog (D : A → A) (u : Aˣ) : A :=
     dlog D 1 = 0 := by
   dsimp [dlog]
   rw [derivation_one D hD, mul_zero]
+
+/-- Exact non-commutative unit-inverse derivation law `D(u⁻¹) = - u⁻¹ D(u) u⁻¹` in `[Ring A]`. -/
+theorem derivation_inv_noncomm (D : A → A) (hD : IsDerivation D) (u : Aˣ) :
+    D (u⁻¹ : Aˣ).val = - (u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val := by
+  have h_one : (u : A) * (u⁻¹ : Aˣ).val = 1 := Units.mul_inv u
+  have h_prod : D ((u : A) * (u⁻¹ : Aˣ).val) = 0 := by
+    rw [h_one, derivation_one D hD]
+  have h_leib := hD.2 (u : A) (u⁻¹ : Aˣ).val
+  rw [h_prod] at h_leib
+  have h_shift : (u : A) * D (u⁻¹ : Aˣ).val = -(D (u : A) * (u⁻¹ : Aˣ).val) :=
+    eq_neg_of_add_eq_zero_right h_leib.symm
+  calc
+    D (u⁻¹ : Aˣ).val = 1 * D (u⁻¹ : Aˣ).val := by rw [one_mul]
+    _ = ((u⁻¹ : Aˣ).val * (u : A)) * D (u⁻¹ : Aˣ).val := by rw [Units.inv_mul]
+    _ = (u⁻¹ : Aˣ).val * ((u : A) * D (u⁻¹ : Aˣ).val) := by rw [mul_assoc]
+    _ = (u⁻¹ : Aˣ).val * -(D (u : A) * (u⁻¹ : Aˣ).val) := by rw [h_shift]
+    _ = - (u⁻¹ : Aˣ).val * D (u : A) * (u⁻¹ : Aˣ).val := by noncomm_ring
+
+/-- Exact non-commutative logarithmic derivative twisted 1-cocycle law
+`dlog D (u * v) = v⁻¹ * dlog D u * v + dlog D v` in `[Ring A]`. -/
+theorem dlog_mul_noncomm (D : A → A) (hD : IsDerivation D) (u v : Aˣ) :
+    dlog D (u * v) = (v⁻¹ : Aˣ).val * dlog D u * (v : A) + dlog D v := by
+  dsimp [dlog]
+  rw [hD.2 (u : A) (v : A), mul_inv_rev, Units.val_mul]
+  have hu : (u⁻¹ : Aˣ).val * (u : A) = 1 := Units.inv_mul u
+  calc
+    ((v⁻¹ : Aˣ).val * (u⁻¹ : Aˣ).val) * (D (u : A) * (v : A) + (u : A) * D (v : A))
+        = (v⁻¹ : Aˣ).val * ((u⁻¹ : Aˣ).val * D (u : A)) * (v : A) +
+            (v⁻¹ : Aˣ).val * ((u⁻¹ : Aˣ).val * (u : A)) * D (v : A) := by noncomm_ring
+    _ = (v⁻¹ : Aˣ).val * ((u⁻¹ : Aˣ).val * D (u : A)) * (v : A) +
+          (v⁻¹ : Aˣ).val * 1 * D (v : A) := by rw [hu]
+    _ = (v⁻¹ : Aˣ).val * ((u⁻¹ : Aˣ).val * D (u : A)) * (v : A) +
+          (v⁻¹ : Aˣ).val * D (v : A) := by rw [mul_one]
 
 end Ring
 

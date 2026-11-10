@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.EulerLaurentDerivation
@@ -24,6 +29,13 @@ integral.
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open InfoGeometry.Algebra.EulerLaurentDerivation
 open InfoGeometry.Algebraic.EulerLaurentHestenesDivisor
@@ -303,6 +315,23 @@ theorem winding_charge_reflection_invariant {ι : Type*} [Fintype ι]
     (D : DivisorData ι) :
     (∑ a : ι, D.order a) = (∑ a : ι, D.order (D.reflect a)) := by
   simp [D.order_reflect]
+
+/-- Ordered product of winding rotors `(orders.map (winding r)).prod` in any non-abelian `[Group G]`. -/
+def orderedDivisorWindingList {G : Type*} [Group G] (r : G) (orders : List ℤ) : G :=
+  (orders.map (winding r)).prod
+
+/-- Even in a non-abelian `[Group G]`, all integer powers `r ^ k` of a single generator `r` commute,
+so the ordered product of winding rotors equals `winding r orders.sum`. -/
+theorem orderedDivisorWindingList_eq_winding_sum
+    {G : Type*} [Group G] (r : G) (orders : List ℤ) :
+    orderedDivisorWindingList r orders = winding r orders.sum := by
+  unfold orderedDivisorWindingList
+  induction orders with
+  | nil =>
+      simp [winding]
+  | cons k ks ih =>
+      simp only [List.map_cons, List.prod_cons, List.sum_cons]
+      rw [ih, ← winding_add]
 
 end InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
 

@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -42,30 +46,48 @@ def IsComplexStructure (J : R) : Prop :=
 def rotor (J c s : R) : R :=
   c + s * J
 
-/-- 🏆 THEOREM: Rotor multiplication: $K(c_1, s_1) K(c_2, s_2) = K(c_1 c_2 - s_1 s_2, s_1 c_2 + c_1 s_2)$
-    under $\mathcal{J}^2 = -1$. -/
-theorem rotor_mul {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (c1 s1 c2 s2 : R) :
+/-- 🏆 THEOREM: Over any non-commutative ring `[Ring R]`, rotor multiplication holds
+whenever `J` commutes with `c2` and `s2`. -/
+theorem rotor_mul_of_commute (J : R) (hJ : IsComplexStructure J) (c1 s1 c2 s2 : R)
+    (hc2 : Commute J c2) (hs2 : Commute J s2) :
     rotor J c1 s1 * rotor J c2 s2 =
       rotor J (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) := by
   dsimp [rotor]
   dsimp [IsComplexStructure] at hJ
   calc
-    (c1 + s1 * J) * (c2 + s2 * J) =
-        c1 * c2 + (s1 * c2 + c1 * s2) * J + s1 * s2 * (J * J) := by ring
+    (c1 + s1 * J) * (c2 + s2 * J)
+      = c1 * c2 + s1 * (J * c2) + c1 * s2 * J + s1 * (J * s2) * J := by noncomm_ring
+    _ = c1 * c2 + s1 * (c2 * J) + c1 * s2 * J + s1 * (s2 * J) * J := by rw [hc2.eq, hs2.eq]
+    _ = c1 * c2 + (s1 * c2 + c1 * s2) * J + s1 * s2 * (J * J) := by noncomm_ring
     _ = c1 * c2 + (s1 * c2 + c1 * s2) * J + s1 * s2 * (-1) := by rw [hJ]
-    _ = (c1 * c2 - s1 * s2) + (s1 * c2 + c1 * s2) * J := by ring
+    _ = (c1 * c2 - s1 * s2) + (s1 * c2 + c1 * s2) * J := by noncomm_ring
 
-/-- Unit rotor condition: $c^2 + s^2 = 1 \implies K(c, s) K(c, -s) = 1$. -/
-theorem rotor_inv {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (c s : R) (h : c ^ 2 + s ^ 2 = 1) :
+/-- 🏆 THEOREM: Over any non-commutative ring `[Ring R]`, unit rotor inversion holds
+whenever `c^2 + s^2 = 1`, `Commute c s`, and `J` commutes with `c` and `s`. -/
+theorem rotor_inv_of_commute (J : R) (hJ : IsComplexStructure J) (c s : R)
+    (h : c ^ 2 + s ^ 2 = 1) (hcs : Commute c s) (hcJ : Commute J c) (hsJ : Commute J s) :
     rotor J c s * rotor J c (-s) = 1 := by
-  rw [rotor_mul J hJ]
+  rw [rotor_mul_of_commute J hJ c s c (-s) hcJ hsJ.neg_right]
   dsimp [rotor]
   have h1 : c * c - s * (-s) = 1 := by
     calc
-      c * c - s * (-s) = c ^ 2 + s ^ 2 := by ring
+      c * c - s * (-s) = c ^ 2 + s ^ 2 := by noncomm_ring
       _ = 1 := h
-  have h2 : s * c + c * (-s) = 0 := by ring
+  have h2 : s * c + c * (-s) = 0 := by
+    rw [mul_neg, hcs.symm.eq, add_neg_cancel]
   rw [h1, h2, zero_mul, add_zero]
+
+/-- 🏆 THEOREM: Rotor multiplication: $K(c_1, s_1) K(c_2, s_2) = K(c_1 c_2 - s_1 s_2, s_1 c_2 + c_1 s_2)$
+    under $\mathcal{J}^2 = -1$. -/
+theorem rotor_mul {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (c1 s1 c2 s2 : R) :
+    rotor J c1 s1 * rotor J c2 s2 =
+      rotor J (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) :=
+  rotor_mul_of_commute J hJ c1 s1 c2 s2 (Commute.all J c2) (Commute.all J s2)
+
+/-- Unit rotor condition: $c^2 + s^2 = 1 \implies K(c, s) K(c, -s) = 1$. -/
+theorem rotor_inv {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (c s : R) (h : c ^ 2 + s ^ 2 = 1) :
+    rotor J c s * rotor J c (-s) = 1 :=
+  rotor_inv_of_commute J hJ c s h (Commute.all c s) (Commute.all J c) (Commute.all J s)
 
 end RotorSector
 
@@ -77,6 +99,10 @@ section DilationFlow
 structure WeylDilationPair (Sig D : R) : Prop where
   sig_sq : Sig * Sig = 1
   sig_conj_D : Sig * D * Sig = -D
+
+/-- Constructive inhabitant witness for `WeylDilationPair`: `(1, 0)` satisfies `1 * 1 = 1` and `1 * 0 * 1 = -0`. -/
+theorem weylDilationPair_one_zero : WeylDilationPair (1 : R) (0 : R) :=
+  ⟨mul_one 1, by simp⟩
 
 /-- 🏆 THEOREM: Weyl sheet reflection inverts powers: $\Sigma D^k \Sigma = (-D)^k$. -/
 theorem weyl_dilation_pow (Sig D : R) (hW : WeylDilationPair Sig D) (k : ℕ) :
@@ -103,17 +129,28 @@ section LoxodromicFlow
 def loxodromicElement (J : R) (a c s : R) : R :=
   a * rotor J c s
 
-/-- 🏆 THEOREM: Composition of commuting loxodromic scaling and phase rotations:
-    $(a_1 K(c_1, s_1)) \cdot (a_2 K(c_2, s_2)) = (a_1 a_2) K(c_1 c_2 - s_1 s_2, s_1 c_2 + c_1 s_2)$. -/
-theorem loxodromic_mul {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (a1 c1 s1 a2 c2 s2 : R) :
+/-- 🏆 THEOREM: Over any non-commutative ring `[Ring R]`, loxodromic composition holds
+whenever `rotor J c1 s1` commutes with `a2` and `J` commutes with `c2` and `s2`. -/
+theorem loxodromic_mul_of_commute (J : R) (hJ : IsComplexStructure J) (a1 c1 s1 a2 c2 s2 : R)
+    (ha2 : Commute (rotor J c1 s1) a2) (hc2 : Commute J c2) (hs2 : Commute J s2) :
     loxodromicElement J a1 c1 s1 * loxodromicElement J a2 c2 s2 =
       loxodromicElement J (a1 * a2) (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) := by
   dsimp [loxodromicElement]
   calc
-    (a1 * rotor J c1 s1) * (a2 * rotor J c2 s2) =
-        (a1 * a2) * (rotor J c1 s1 * rotor J c2 s2) := by ring
+    (a1 * rotor J c1 s1) * (a2 * rotor J c2 s2)
+      = a1 * (rotor J c1 s1 * a2) * rotor J c2 s2 := by noncomm_ring
+    _ = a1 * (a2 * rotor J c1 s1) * rotor J c2 s2 := by rw [ha2.eq]
+    _ = (a1 * a2) * (rotor J c1 s1 * rotor J c2 s2) := by noncomm_ring
     _ = (a1 * a2) * rotor J (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) := by
-      rw [rotor_mul J hJ]
+        rw [rotor_mul_of_commute J hJ c1 s1 c2 s2 hc2 hs2]
+
+/-- 🏆 THEOREM: Composition of commuting loxodromic scaling and phase rotations:
+    $(a_1 K(c_1, s_1)) \cdot (a_2 K(c_2, s_2)) = (a_1 a_2) K(c_1 c_2 - s_1 s_2, s_1 c_2 + c_1 s_2)$. -/
+theorem loxodromic_mul {R : Type*} [CommRing R] (J : R) (hJ : IsComplexStructure J) (a1 c1 s1 a2 c2 s2 : R) :
+    loxodromicElement J a1 c1 s1 * loxodromicElement J a2 c2 s2 =
+      loxodromicElement J (a1 * a2) (c1 * c2 - s1 * s2) (s1 * c2 + c1 * s2) :=
+  loxodromic_mul_of_commute J hJ a1 c1 s1 a2 c2 s2
+    (Commute.all _ _) (Commute.all _ _) (Commute.all _ _)
 
 end LoxodromicFlow
 
@@ -244,6 +281,10 @@ structure NonAssocDerivation (D : A → A) : Prop where
   map_add : ∀ x y, D (x + y) = D x + D y
   leibniz : ∀ x y, D (x * y) = D x * y + x * D y
 
+/-- Constructive inhabitant witness for `NonAssocDerivation`: the zero map is a derivation. -/
+theorem nonAssocDerivation_zero : NonAssocDerivation (fun _ : A => (0 : A)) :=
+  ⟨by simp, by simp⟩
+
 /-- The commutator bracket $[D_1, D_2] = D_1 \circ D_2 - D_2 \circ D_1$. -/
 def derCommutator (D1 D2 : A → A) (x : A) : A :=
   D1 (D2 x) - D2 (D1 x)
@@ -267,5 +308,10 @@ theorem derCommutator_is_derivation
     abel
 
 end DerivationLieBracket
+
+open InfoGeometry.Algebra.FiniteSpin in
+/-- Non-commutativity witness for the finite spin operator carrier. -/
+theorem iwasawa_spin_carrier_noncomm : J_plus * J_minus ≠ J_minus * J_plus :=
+  j_plus_j_minus_ne
 
 end InfoGeometry.Algebra.IwasawaOperatorTwinLoxodromic

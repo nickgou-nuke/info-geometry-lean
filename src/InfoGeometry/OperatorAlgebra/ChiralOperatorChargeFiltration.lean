@@ -34,11 +34,11 @@ theorem evalOperatorWordProduct_eq_mul {A : Type*} [Ring A]
       evalWord ρ u * evalWord ρ v :=
   evalWord_append ρ u v
 
-def operatorWordProduct {R : Type*} [CommRing R]
+def operatorWordProduct {R : Type*} [CommSemiring R]
     (u v : ChiralWord) : ChiralOperatorEnvelope R :=
   word (R := R) (u ++ v)
 
-theorem operatorWordProduct_eq_mul {R : Type*} [CommRing R]
+theorem operatorWordProduct_eq_mul {R : Type*} [CommSemiring R]
     (u v : ChiralWord) :
     operatorWordProduct (R := R) u v =
       word (R := R) u * word (R := R) v :=

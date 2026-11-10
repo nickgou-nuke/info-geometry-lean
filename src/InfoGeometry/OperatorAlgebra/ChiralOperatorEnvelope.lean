@@ -28,7 +28,7 @@ deriving DecidableEq, Fintype
 
 instance : Inhabited ChiralGenerator := ⟨.pPlus⟩
 
-abbrev ChiralOperatorEnvelope (R : Type*) [CommRing R] :=
+abbrev ChiralOperatorEnvelope (R : Type*) [CommSemiring R] :=
   FreeAlgebra R ChiralGenerator
 
 namespace ChiralOperatorEnvelope
@@ -71,7 +71,7 @@ theorem ringCommutator_antisymmetric (X Y : A) :
 
 end NoncommRepresentation
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommSemiring R]
 
 /-- The universal associative operator represented by a generator. -/
 def ofGenerator (g : ChiralGenerator) : ChiralOperatorEnvelope R :=
@@ -88,7 +88,7 @@ def SPlus (i : Fin 3) : ChiralOperatorEnvelope R := ofGenerator (.sPlus i)
 def SMinus (i : Fin 3) : ChiralOperatorEnvelope R := ofGenerator (.sMinus i)
 
 /-- Associative commutator and anticommutator in the operator envelope. -/
-def commutator (X Y : ChiralOperatorEnvelope R) : ChiralOperatorEnvelope R :=
+def commutator {R : Type*} [CommRing R] (X Y : ChiralOperatorEnvelope R) : ChiralOperatorEnvelope R :=
   X * Y - Y * X
 
 def anticommutator (X Y : ChiralOperatorEnvelope R) : ChiralOperatorEnvelope R :=
@@ -98,7 +98,7 @@ theorem product_associative (X Y Z : ChiralOperatorEnvelope R) :
     (X * Y) * Z = X * (Y * Z) :=
   mul_assoc X Y Z
 
-theorem commutator_antisymmetric (X Y : ChiralOperatorEnvelope R) :
+theorem commutator_antisymmetric {R : Type*} [CommRing R] (X Y : ChiralOperatorEnvelope R) :
     commutator X Y = -commutator Y X := by
   unfold commutator
   abel

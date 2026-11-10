@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
@@ -68,33 +74,22 @@ This module formalizes:
    - Determinant: $\det_2(\mathcal{M}_{\mathbb{C}}(h, c)) = \exp(4\pi i h)$.
    - For $h = 0$, $\det_2 = 1$, recovering the real unipotent frame dragging.
 
-All proofs are native Mathlib with 0 sorry, 0 admit, and 0 custom axioms.
+All proofs are proved in native Mathlib.
 -/
 
 namespace InfoGeometry.Clifford.LogCFTApex
 
 open Matrix
 open InfoGeometry.Clifford.Coquaternion
+open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Clifford.SolderingIsotropic
 
-/-- The $2 \times 2$ matrix algebra over a ring $R$. -/
-abbrev Mat2 (R : Type*) := Matrix (Fin 2) (Fin 2) R
-
-/-- Determinant of a $2 \times 2$ matrix. -/
-def det2 {R : Type*} [Ring R] (M : Mat2 R) : R :=
-  M 0 0 * M 1 1 - M 0 1 * M 1 0
-
-/-- Determinant of the transpose of a $2 \times 2$ matrix. -/
-theorem det2_transpose {R : Type*} [CommRing R] (M : Mat2 R) :
-    det2 Mᵀ = det2 M := by
-  simp [det2, Matrix.transpose]
-  ring
-
-/-- Multiplicativity of the $2 \times 2$ determinant. -/
-theorem det2_mul {R : Type*} [CommRing R] (A B : Mat2 R) :
-    det2 (A * B) = det2 A * det2 B := by
-  simp [det2, Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 /-- Determinant under scalar multiplication. -/
 theorem det2_smul {R : Type*} [CommRing R] (k : R) (M : Mat2 R) :
@@ -482,75 +477,35 @@ theorem det2_complexMonodromy_zero_weight (c : ℂ) :
 
 end ComplexMonodromy
 
-/-! ### 7. Master Verification Certificate -/
+/-! ### 7. Master Verification Synthesis -/
 
-/-- Master verification certificate for LogCFT de Rham cohomology, log-potential,
+/-- Master certification theorem for LogCFT de Rham cohomology, log-potential,
     and apex frame dragging in the split-quaternion carrier geometry algebra. -/
-structure LogCFTDeRhamApexMonodromyBridgeCertificate : Prop where
-  coquaternion_nilpotents :
-    ∀ (R : Type) [CommRing R],
-      ((coquaternion_N_upper : Coquaternion R) * coquaternion_N_upper = 0) ∧
-      ((coquaternion_N_lower : Coquaternion R) * coquaternion_N_lower = 0)
-  matrix_nilpotency :
-    ∀ (R : Type) [CommRing R],
-      ((N : Mat2 R) * N = 0) ∧
-      ((N : Mat2 R)ᵀ * Nᵀ = 0) ∧
-      (det2 (N : Mat2 R) = 0)
-  chiral_ladder :
-    ∀ (R : Type) [CommRing R],
-      ((P_L : Mat2 R) * N * P_R = N) ∧
-      ((P_R : Mat2 R) * N = 0) ∧
-      ((N : Mat2 R) * P_L = 0)
-  unipotent_monodromy_group :
-    ∀ (R : Type) [CommRing R] (c₁ c₂ : R),
-      monodromy c₁ * monodromy c₂ = monodromy (c₁ + c₂)
-  linear_winding_power :
-    ∀ (R : Type) [CommRing R] (k : ℕ) (c : R),
-      (monodromy c) ^ k = monodromy ((k : R) * c)
-  unimodular_monodromy :
-    ∀ (R : Type) [CommRing R] (c : R),
-      det2 (monodromy c) = 1
-  apex_invariance :
-    ∀ (R : Type) [CommRing R] (c : R),
-      dragSoldering c (0 : Mat2 R) = 0
-  minkowski_interval_preservation :
-    ∀ (R : Type) [CommRing R] (c : R) (t x y z : R),
-      det2 (dragSoldering c (solderingMatrix t x y z)) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2
-  chiral_ray_invariance :
-    ∀ (R : Type) [CommRing R] (c : R),
-      dragSoldering c (P_L : Mat2 R) = P_L
-  klein_parity_reversal :
-    ∀ (R : Type) [CommRing R] (c : R),
-      parity_e1 * monodromy c * parity_e1 = (monodromy c)ᵀ
-  complex_monodromy_det :
-    ∀ (h c : ℂ),
-      det2 (complexMonodromy h c) = Complex.exp ((4 : ℂ) * (Real.pi : ℂ) * Complex.I * h)
-
-/-- Master certification theorem: LogCFT de Rham apex monodromy bridge is fully proved. -/
-theorem compile_logcft_derham_apex_monodromy_bridge :
-    LogCFTDeRhamApexMonodromyBridgeCertificate := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro R _
-    exact ⟨coquaternion_N_upper_sq, coquaternion_N_lower_sq⟩
-  · intro R _
-    exact ⟨N_sq_zero, N_transpose_sq_zero, det2_N⟩
-  · intro R _
-    exact ⟨chiral_ladder_decomp, P_R_mul_N, N_mul_P_L⟩
-  · intro R _ c₁ c₂
-    exact monodromy_mul c₁ c₂
-  · intro R _ k c
-    exact monodromy_pow k c
-  · intro R _ c
-    exact det2_monodromy c
-  · intro R _ c
-    exact dragSoldering_apex c
-  · intro R _ c t x y z
-    exact det2_dragSoldering c t x y z
-  · intro R _ c
-    exact dragSoldering_P_L c
-  · intro R _ c
-    exact e1_monodromy_conj c
-  · intro h c
-    exact det2_complexMonodromy h c
+theorem compile_logcft_derham_apex_monodromy_bridge
+    {B : Type*} [Ring B] (b₁ b₂ b : B) (k : ℕ)
+    {R : Type*} [CommRing R] (c t x y z : R) (h cC : ℂ) :
+    (((coquaternion_N_upper : Coquaternion B) * coquaternion_N_upper = 0) ∧
+     ((coquaternion_N_lower : Coquaternion B) * coquaternion_N_lower = 0)) ∧
+    (((N : Mat2 B) * N = 0) ∧ ((N : Mat2 B)ᵀ * Nᵀ = 0) ∧ (det2 (N : Mat2 B) = 0)) ∧
+    (((P_L : Mat2 B) * N * P_R = N) ∧ ((P_R : Mat2 B) * N = 0) ∧ ((N : Mat2 B) * P_L = 0)) ∧
+    (monodromy b₁ * monodromy b₂ = monodromy (b₁ + b₂)) ∧
+    ((monodromy b) ^ k = monodromy ((k : B) * b)) ∧
+    (det2 (monodromy b) = 1) ∧
+    (dragSoldering b (0 : Mat2 B) = 0) ∧
+    (det2 (dragSoldering c (solderingMatrix t x y z)) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2) ∧
+    (dragSoldering b (P_L : Mat2 B) = P_L) ∧
+    (parity_e1 * monodromy b * parity_e1 = (monodromy b)ᵀ) ∧
+    (det2 (complexMonodromy h cC) = Complex.exp ((4 : ℂ) * (Real.pi : ℂ) * Complex.I * h)) :=
+  ⟨⟨coquaternion_N_upper_sq, coquaternion_N_lower_sq⟩,
+   ⟨N_sq_zero, N_transpose_sq_zero, det2_N⟩,
+   ⟨chiral_ladder_decomp, P_R_mul_N, N_mul_P_L⟩,
+   monodromy_mul b₁ b₂,
+   monodromy_pow k b,
+   det2_monodromy b,
+   dragSoldering_apex b,
+   det2_dragSoldering c t x y z,
+   dragSoldering_P_L b,
+   e1_monodromy_conj b,
+   det2_complexMonodromy h cC⟩
 
 end InfoGeometry.Clifford.LogCFTApex

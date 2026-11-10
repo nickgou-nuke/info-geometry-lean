@@ -132,6 +132,52 @@ theorem peirce_corner_compose (P Q X Y R : B) (hQ : Q * Q = Q) :
     (P * X * Q) * (Q * Y * R) = P * X * Q * Y * R := by
   rw [show (P * X * Q) * (Q * Y * R) = P * X * (Q * Q) * Y * R by noncomm_ring, hQ]
 
+/--
+The commutator of two sums of consecutive Peirce transitions is the signed
+two-path composition through the waist. The coefficients are arbitrary elements
+of the ambient associative ring; no commutation between them is assumed.
+
+This is a determinant-shaped identity for the two ordered paths. It is an
+operator-ring statement and does not identify the Peirce blocks with projective
+Plücker coordinates.
+-/
+theorem peirce_two_path_commutator_determinant
+    (P1 P2 r rho s sigma : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    let P0 := P0_waist P1 P2
+    let L1 := P1 * r * P0 + P0 * rho * P2
+    let L2 := P1 * s * P0 + P0 * sigma * P2
+    comm L1 L2 = P1 * r * P0 * sigma * P2 - P1 * s * P0 * rho * P2 ∧
+    P1 * comm L1 L2 * P2 = comm L1 L2 := by
+  have h1' : ∀ W, P1 * (P1 * W) = P1 * W := fun W => by
+    rw [← mul_assoc, h1]
+  have h2' : ∀ W, P2 * (P2 * W) = P2 * W := fun W => by
+    rw [← mul_assoc, h2]
+  have h12' : ∀ W, P1 * (P2 * W) = 0 := fun W => by
+    rw [← mul_assoc, h12, zero_mul]
+  have h21' : ∀ W, P2 * (P1 * W) = 0 := fun W => by
+    rw [← mul_assoc, h21, zero_mul]
+  have h_first :
+      comm (P1 * r * P0_waist P1 P2 + P0_waist P1 P2 * rho * P2)
+          (P1 * s * P0_waist P1 P2 + P0_waist P1 P2 * sigma * P2) =
+        P1 * r * P0_waist P1 P2 * sigma * P2 -
+          P1 * s * P0_waist P1 P2 * rho * P2 := by
+    dsimp only [comm, P0_waist]
+    parabolic_idem_nf h1 h2 h12 h21 h1' h2' h12' h21'
+  refine ⟨?_, ?_⟩
+  · exact h_first
+  ·
+    rw [h_first]
+    dsimp only [P0_waist]
+    calc
+      P1 * (P1 * r * (1 - P1 - P2) * sigma * P2 -
+          P1 * s * (1 - P1 - P2) * rho * P2) * P2 =
+        (P1 * P1) * r * (1 - P1 - P2) * sigma * (P2 * P2) -
+          (P1 * P1) * s * (1 - P1 - P2) * rho * (P2 * P2) := by noncomm_ring
+      _ = P1 * r * (1 - P1 - P2) * sigma * P2 -
+          P1 * s * (1 - P1 - P2) * rho * P2 := by rw [h1, h2]
+
 /-- Distinct orthogonal middle corners force a product of Peirce blocks to vanish. -/
 theorem peirce_corner_mismatch_zero (P Q R X Y S : B) (hQR : Q * R = 0) :
     (P * X * Q) * (R * Y * S) = 0 := by

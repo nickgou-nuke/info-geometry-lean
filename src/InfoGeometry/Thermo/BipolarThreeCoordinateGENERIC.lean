@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Thermo.GenericMetriplecticFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -65,12 +70,25 @@ lemma dissipative_expand (α : Covector) :
   funext i
   fin_cases i <;> simp [dissipative, basis]
 
-lemma reversible_dEta : reversible dEta = 0 := by
-  funext i
-  fin_cases i
-  · simp [reversible]
-  · simp [reversible, dEta, coordinate_basis]
-  · simp [reversible, dEta, coordinate_basis]
+lemma reversible_coordinate_action (i : Fin 3) :
+    reversible (coordinate i) =
+      (if i = 2 then basis 1 else if i = 1 then -(basis 2) else 0) := by
+  funext j
+  fin_cases i <;> fin_cases j <;>
+    simp [reversible, coordinate, basis]
+
+/-- The reversible map kills the entropy coordinate and preserves its
+annihilation under the entropy covector. -/
+theorem reversible_entropy_casimir :
+    reversible dEta = 0 ∧ dEta (reversible dTheta) = 0 := by
+  have h0 : reversible dEta = 0 := by
+    simpa [dEta] using reversible_coordinate_action 0
+  have h1 : reversible dTheta = -(basis 2) := by
+    simpa [dTheta] using reversible_coordinate_action 1
+  constructor
+  · exact h0
+  · rw [h1]
+    simp [dEta, coordinate_basis]
 
 def system : GenericMetriplecticFlow.System State where
   dH := dTheta
@@ -83,8 +101,7 @@ def system : GenericMetriplecticFlow.System State where
       map_smul, map_smul, map_smul, map_smul]
     simp only [smul_eq_mul]
     ring
-  L_entropy_casimir := by
-    exact reversible_dEta
+  L_entropy_casimir := reversible_entropy_casimir.1
   M_symmetric := by
     intro α β
     rw [dissipative_expand, dissipative_expand, map_smul, map_smul]
@@ -98,17 +115,22 @@ def system : GenericMetriplecticFlow.System State where
     rw [dissipative_expand, map_smul]
     simpa [smul_eq_mul, pow_two] using sq_nonneg (α (basis 0))
 
-theorem energy_rate_zero : system.dH system.flow = 0 := system.energy_rate
-
-theorem entropy_rate_nonneg : 0 ≤ system.dS system.flow := system.entropy_rate_nonneg
-
-theorem reversible_entropy_casimir : reversible dEta = 0 := system.L_entropy_casimir
-
 theorem flow_explicit : system.flow = basis 0 - basis 2 := by
   dsimp [system, GenericMetriplecticFlow.System.flow]
   rw [reversible_expand, dissipative_expand]
   simp [dEta, dTheta, coordinate_basis, sub_eq_add_neg]
   abel
+
+theorem energy_rate_zero : system.dH system.flow = 0 := by
+  rw [flow_explicit]
+  simp [system, dTheta, coordinate, basis]
+
+theorem entropy_rate_nonneg :
+    0 ≤ system.dS system.flow ∧ system.dS system.flow = 1 := by
+  have hrate : system.dS system.flow = 1 := by
+    rw [flow_explicit]
+    simp [system, dEta, coordinate, basis]
+  exact ⟨by rw [hrate]; norm_num, hrate⟩
 
 theorem flow_eta_component : system.flow 0 = 1 := by
   rw [flow_explicit]

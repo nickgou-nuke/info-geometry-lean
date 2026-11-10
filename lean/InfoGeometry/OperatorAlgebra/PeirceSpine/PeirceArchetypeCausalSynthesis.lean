@@ -23,10 +23,15 @@ import InfoGeometry.Canonical.PeirceFrechetOperatorArchetypes
 # Cross-owner causal order for the Peirce operator archetypes
 
 This file orders proved results from the generic-ring, sector, and matrix
-owners.  Edges record theorem-input dependencies; no edge asserts a physical
-interpretation or identifies the finite-matrix and arbitrary-ring carriers.
-The corresponding theorems remain in their owner modules and are imported
-here rather than recopied.
+owners. Each `Node.edge` constructor records its own evidence proposition:
+some are uniform in the displayed operator inputs, while the finite-page
+archetype edges below are witnessed at the named concrete D₆₃ matrix input.
+Thus the graph records established theorem evidence and selected witness
+paths; an edge is not, by itself, a logical implication from one node's
+assumptions to another's. No edge asserts a physical interpretation or
+identifies the finite-matrix and arbitrary-ring carriers. The corresponding
+theorems remain in their owner modules and are imported here rather than
+recopied.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.ArchetypeCausalSynthesis
@@ -401,7 +406,9 @@ inductive Node where
   | opticsFrechetCurvatureLeibniz
   deriving DecidableEq, Repr
 
-/-- Direct dependencies used by the owner theorem proofs. -/
+/-- Per-edge evidence contracts for the cross-owner graph. Interpret each
+constructor by its proposition: universal quantifiers are uniform theorem
+claims, and fixed-input claims certify only that selected witness. -/
 def Node.edge : Node → Node → Prop
   | .idempotentCut, .connesOneForm =>
       ∀ A C a b : D63CausalMatrix,

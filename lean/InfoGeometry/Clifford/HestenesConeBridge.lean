@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -5,10 +10,26 @@ namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem coneBridge_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative `*-ring` `[Ring B] [StarRing B]`, every element of the form
+`y * star y` is self-adjoint (`star x = x`). -/
+theorem ring_self_adjoint_of_mul_star
+    {B : Type*} [Ring B] [StarRing B] {x : B}
+    (hx : ∃ y : B, x = y * star y) :
+    star x = x := by
+  rcases hx with ⟨y, rfl⟩
+  simp [star_mul]
+
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
-variable (v0 : M) (hv0_norm : Q v0 = 1)
+variable (v0 : M)
 
 /--
 Транспортният мост (Cone Bridge).

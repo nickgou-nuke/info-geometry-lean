@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
@@ -27,6 +32,12 @@ namespace InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 
 open PrimeBosonFermionGas
 open PrimonFinite
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
 
 /-! ## 1. Finite prime Weyl denominator -/
 
@@ -128,27 +139,28 @@ theorem bosonicInverse_mul_weylDenominator_cancel
 /-! ## 2. Normalized hyperbolic root factors -/
 
 /--
-Formal symmetric root factor `y - y⁻¹`.
+Formal symmetric root factor `y - y⁻¹` over any `[DivisionRing R]`.
 
 In the primon interpretation, `y` is a finite stand-in for `p^{β/2}`.
 -/
 def symmetricRootFactor
-    {R : Type*} [Field R]
+    {R : Type*} [DivisionRing R]
     (y : R) : R :=
   y - y⁻¹
 
 /--
-Euler weight associated to a half-root coordinate.
+Euler weight associated to a half-root coordinate over any `[DivisionRing R]`.
 
 If `y = p^{β/2}`, this is the finite algebraic stand-in for `p^{-β}`.
 -/
 def eulerWeightFromHalfRoot
-    {R : Type*} [Field R]
+    {R : Type*} [DivisionRing R]
     (y : R) : R :=
   y⁻¹ * y⁻¹
 
 /--
-Normalized hyperbolic root factor equals the Euler denominator factor.
+Normalized hyperbolic root factor equals the Euler denominator factor over any
+`[DivisionRing R]`.
 
 This is the precise finite algebra behind
 
@@ -160,7 +172,7 @@ The raw symmetric factor is not identified with an inverse-zeta trace; the
 Euler denominator appears only after the explicit half-root normalization.
 -/
 theorem normalized_symmetricRootFactor_eq_one_sub_eulerWeight
-    {R : Type*} [Field R]
+    {R : Type*} [DivisionRing R]
     {y : R} (hy : y ≠ 0) :
     y⁻¹ * symmetricRootFactor y =
       1 - eulerWeightFromHalfRoot y := by
@@ -242,7 +254,7 @@ Local determinant factorization:
 `y² - 1 = y * (y - y⁻¹)`.
 -/
 theorem orbitDeterminantFactor_eq_halfRoot_mul_symmetricRootFactor
-    {R : Type*} [Field R]
+    {R : Type*} [DivisionRing R]
     {y : R} (hy : y ≠ 0) :
     orbitDeterminantFactor y = y * symmetricRootFactor y := by
   unfold orbitDeterminantFactor symmetricRootFactor
@@ -278,7 +290,7 @@ Local raw hyperbolic factor as a normalized multiplicative Weyl character:
 `y - y⁻¹ = y * (1 - y⁻¹*y⁻¹)`.
 -/
 theorem symmetricRootFactor_eq_halfRoot_mul_one_sub_eulerWeight
-    {R : Type*} [Field R]
+    {R : Type*} [DivisionRing R]
     {y : R} (hy : y ≠ 0) :
     symmetricRootFactor y =
       y * (1 - eulerWeightFromHalfRoot y) := by
@@ -321,21 +333,21 @@ This models the finite algebraic shape of the raw `sinh` readout.  It is a sum
 of symmetric factors and is not an Euler product.
 -/
 def finiteSignedRawHyperbolicTrace
-    {α R : Type*} [Field R]
+    {α R : Type*} [DivisionRing R]
     (A : Finset α)
     (χ y : α → R) : R :=
   ∑ a ∈ A, χ a * symmetricRootFactor (y a)
 
 /-- The growing part of the raw symmetric-root trace. -/
 def finiteSignedGrowingTrace
-    {α R : Type*} [Field R]
+    {α R : Type*} [DivisionRing R]
     (A : Finset α)
     (χ y : α → R) : R :=
   ∑ a ∈ A, χ a * y a
 
 /-- The decaying part of the raw symmetric-root trace. -/
 def finiteSignedDecayingTrace
-    {α R : Type*} [Field R]
+    {α R : Type*} [DivisionRing R]
     (A : Finset α)
     (χ y : α → R) : R :=
   ∑ a ∈ A, χ a * (y a)⁻¹
@@ -347,7 +359,7 @@ This is the finite warning theorem: without an extra normalization or
 regularization witness, the raw hyperbolic trace is not the Möbius heat trace.
 -/
 theorem finiteSignedRawHyperbolicTrace_eq_growing_sub_decaying
-    {α R : Type*} [Field R]
+    {α R : Type*} [DivisionRing R]
     (A : Finset α)
     (χ y : α → R) :
     finiteSignedRawHyperbolicTrace A χ y =
@@ -357,8 +369,8 @@ theorem finiteSignedRawHyperbolicTrace_eq_growing_sub_decaying
     finiteSignedDecayingTrace symmetricRootFactor
   rw [← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl ?_
-  intro a ha
-  ring
+  intro a _ha
+  exact mul_sub (χ a) (y a) (y a)⁻¹
 
 /--
 Finite signed normalized hyperbolic trace.
@@ -367,7 +379,7 @@ The local factor is explicitly normalized by `y⁻¹`, so each summand contains
 the Euler-denominator factor `1 - y⁻¹*y⁻¹`.
 -/
 def finiteSignedNormalizedHyperbolicTrace
-    {α R : Type*} [Field R]
+    {α R : Type*} [DivisionRing R]
     (A : Finset α)
     (χ y : α → R) : R :=
   ∑ a ∈ A, χ a * ((y a)⁻¹ * symmetricRootFactor (y a))
@@ -377,7 +389,7 @@ After half-root normalization, each signed summand uses the Euler denominator
 factor.
 -/
 theorem finiteSignedNormalizedHyperbolicTrace_eq_eulerFactor_sum
-    {α R : Type*} [Field R]
+    {α R : Type*} [DivisionRing R]
     (A : Finset α)
     (χ y : α → R)
     (hy : ∀ a ∈ A, y a ≠ 0) :
@@ -462,5 +474,22 @@ theorem valid
   W.denominator_matches_vandermonde
 
 end PrimeWeylVandermondeShadow
+
+/-- Ground inhabitant of `HyperbolicRootFactorCalibration` over `ℤ`. -/
+def intEmptyHyperbolicRootFactorCalibration : HyperbolicRootFactorCalibration ℕ ℤ where
+  support := ∅
+  q := fun _ => 0
+  normalizedRootFactor := fun _ => 1
+  normalizedRootFactor_eq := by
+    intro p hp
+    exact False.elim (Finset.notMem_empty p hp)
+
+/-- Ground inhabitant of `PrimeWeylVandermondeShadow` over `ℤ`. -/
+def intIdPrimeWeylVandermondeShadow : PrimeWeylVandermondeShadow ℕ ℤ ℤ where
+  support := ∅
+  denominator := 1
+  vandermonde := 1
+  compare := Eq
+  denominator_matches_vandermonde := rfl
 
 end InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge

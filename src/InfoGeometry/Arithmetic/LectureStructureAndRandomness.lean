@@ -9,6 +9,7 @@ import InfoGeometry.Arithmetic.SarnakLocalCertification
 import Mathlib.NumberTheory.GaussSum
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Arithmetic structure and finite statistical observations
@@ -25,6 +26,13 @@ universality theorem is asserted here.
 -/
 
 namespace InfoGeometry.Arithmetic.LectureStructureAndRandomness
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 open scoped BigOperators
 open BostConnesSystem

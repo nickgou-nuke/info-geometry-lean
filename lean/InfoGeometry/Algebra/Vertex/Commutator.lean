@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Vertex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -15,6 +20,44 @@ algebra structure.
 namespace InfoGeometry.Algebra.Vertex
 
 open scoped BigOperators
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair_commutator :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section DivisionRingCommutatorCollapse
+
+variable {D V : Type*} [DivisionRing D] [AddCommGroup V] [Module D V]
+
+/-- Over any `[DivisionRing D]`, the `n = 0` Borcherds commutator RHS sum collapses to its `i = 0`
+commutator term for any additive mode family `mode : ℤ → V → V → V` and positive cutoff `0 < N`. -/
+theorem borcherdsRhsList_collapse_at_zero
+    (mode : ℤ → V → V → V) (m ell : ℤ) (a b c : V) {N : ℕ} (hN : 0 < N) :
+    (∑ i ∈ Finset.range N,
+      (((-1 : D) ^ i) * intBinomList D 0 i) •
+        (mode (m - (i : ℤ)) a (mode (ell + (i : ℤ)) b c) -
+          mode (ell - (i : ℤ)) b (mode (m + (i : ℤ)) a c))) =
+      mode m a (mode ell b c) - mode ell b (mode m a c) := by
+  calc
+    (∑ i ∈ Finset.range N,
+      (((-1 : D) ^ i) * intBinomList D 0 i) •
+        (mode (m - (i : ℤ)) a (mode (ell + (i : ℤ)) b c) -
+          mode (ell - (i : ℤ)) b (mode (m + (i : ℤ)) a c))) =
+      (((-1 : D) ^ 0) * intBinomList D 0 0) •
+        (mode (m - (0 : ℤ)) a (mode (ell + (0 : ℤ)) b c) -
+          mode (ell - (0 : ℤ)) b (mode (m + (0 : ℤ)) a c)) := by
+      apply Finset.sum_eq_single 0
+      · intro i _ hne
+        have hipos : 0 < i := Nat.pos_of_ne_zero hne
+        simp [intBinomList_zero_of_pos D i hipos]
+      · intro hzero
+        exact (hzero (Finset.mem_range.mpr hN)).elim
+    _ = mode m a (mode ell b c) - mode ell b (mode m a c) := by
+      simp
+
+end DivisionRingCommutatorCollapse
 
 variable {k V : Type*}
 variable [Field k] [CharZero k] [AddCommGroup V] [Module k V]

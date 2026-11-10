@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Thermo.GenericMetriplecticFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -69,17 +74,20 @@ def etaMetriplecticSystem : GenericMetriplecticFlow.System State where
     exact sq_nonneg (α eEta)
 
 theorem energy_rate_zero :
-    etaMetriplecticSystem.dH etaMetriplecticSystem.flow = 0 :=
-  etaMetriplecticSystem.energy_rate
-
-theorem entropy_rate_nonneg :
-    0 ≤ etaMetriplecticSystem.dS etaMetriplecticSystem.flow :=
-  etaMetriplecticSystem.entropy_rate_nonneg
+    etaMetriplecticSystem.dH etaMetriplecticSystem.flow = 0 := by
+  change dTheta (0 + dissipative dEta) = 0
+  simp [dTheta, dissipative, dEta, eEta]
 
 theorem entropy_rate_formula :
     etaMetriplecticSystem.dS etaMetriplecticSystem.flow = 1 := by
   rw [etaMetriplecticSystem.entropy_rate_eq_dissipative]
   change dEta (dissipative dEta) = 1
   simp [dEta, dissipative, eEta]
+
+theorem entropy_rate_nonneg :
+    0 ≤ etaMetriplecticSystem.dS etaMetriplecticSystem.flow ∧
+      etaMetriplecticSystem.dS etaMetriplecticSystem.flow = 1 := by
+  rw [entropy_rate_formula]
+  norm_num
 
 end InfoGeometry.Thermo.BipolarDissipativeGENERIC

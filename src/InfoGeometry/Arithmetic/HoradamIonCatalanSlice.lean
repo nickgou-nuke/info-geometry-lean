@@ -1,22 +1,18 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Arithmetic.HoradamIonBinetSlice
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Horadam `2^k`-ion Catalan/Cassini Binet slice
 
-This module formalizes a theorem-safe commutative-coordinate shadow of the
+This module formalizes both the non-commutative `[Ring B]` Binet Catalan/Cassini
+cross-term identity and the commutative-coordinate `[CommRing R]` shadow of the
 Catalan/Cassini identity family in `preprints201906.0303.v1`, *Horadam 2^k-ions*.
-
-For the Binet core `C_n = A α^n - B β^n`, it proves
-
-`C_m C_{m+2r} - C_{m+r}^2 = - A B (αβ)^m (α^r - β^r)^2`.
-
-The coordinate-lift theorem applies the same identity componentwise to the
-finite `2^k`-ion coordinate packet.
-
-This deliberately does **not** assert the paper's noncommutative
-Cayley-Dickson-product Catalan/Cassini identities.  Those require a separate
-owner for the relevant Cayley-Dickson multiplication and associativity scope.
 -/
 
 noncomputable section
@@ -25,6 +21,52 @@ namespace InfoGeometry.Arithmetic.HoradamIonCatalanSlice
 
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 open InfoGeometry.Arithmetic.HoradamIonBinetSlice
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingBinetCatalan
+
+variable {B : Type*} [Ring B]
+
+/-- Pure Binet sequence `α ^ n - β ^ n` in an arbitrary non-commutative ring `[Ring B]`. -/
+def ringPureBinet (α β : B) (n : ℕ) : B :=
+  α ^ n - β ^ n
+
+/-- Over any non-commutative ring `[Ring B]`, the diagonal powers `α ^ m * α ^ (m + 2 * r)`
+and `β ^ m * β ^ (m + 2 * r)` cancel against `α ^ (m + r) * α ^ (m + r)` and
+`β ^ (m + r) * β ^ (m + r)` without any commutativity assumption between `α` and `β`. -/
+theorem ringPureBinet_catalan_cross_identity (α β : B) (m r : ℕ) :
+    ringPureBinet α β m * ringPureBinet α β (m + 2 * r) -
+      ringPureBinet α β (m + r) * ringPureBinet α β (m + r) =
+        α ^ (m + r) * β ^ (m + r) + β ^ (m + r) * α ^ (m + r) -
+          α ^ m * β ^ (m + 2 * r) - β ^ m * α ^ (m + 2 * r) := by
+  unfold ringPureBinet
+  have hα : α ^ m * α ^ (m + 2 * r) = α ^ (m + r) * α ^ (m + r) := by
+    rw [← pow_add, ← pow_add]
+    congr 1
+    omega
+  have hβ : β ^ m * β ^ (m + 2 * r) = β ^ (m + r) * β ^ (m + r) := by
+    rw [← pow_add, ← pow_add]
+    congr 1
+    omega
+  calc
+    (α ^ m - β ^ m) * (α ^ (m + 2 * r) - β ^ (m + 2 * r)) -
+        (α ^ (m + r) - β ^ (m + r)) * (α ^ (m + r) - β ^ (m + r))
+      = (α ^ m * α ^ (m + 2 * r) - α ^ (m + r) * α ^ (m + r)) +
+          (β ^ m * β ^ (m + 2 * r) - β ^ (m + r) * β ^ (m + r)) +
+          (α ^ (m + r) * β ^ (m + r) + β ^ (m + r) * α ^ (m + r) -
+            α ^ m * β ^ (m + 2 * r) - β ^ m * α ^ (m + 2 * r)) := by
+      noncomm_ring
+    _ = α ^ (m + r) * β ^ (m + r) + β ^ (m + r) * α ^ (m + r) -
+          α ^ m * β ^ (m + 2 * r) - β ^ m * α ^ (m + 2 * r) := by
+      rw [hα, hβ]
+      noncomm_ring
+
+end NonCommRingBinetCatalan
 
 variable {R : Type*} [CommRing R]
 

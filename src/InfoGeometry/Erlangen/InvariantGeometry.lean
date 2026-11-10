@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.GroupTheory.GroupAction.Defs
@@ -16,6 +21,37 @@ Every theorem below is just an unpacking of those action interfaces.
 -/
 
 namespace InfoGeometry.Erlangen.InvariantGeometry
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem invariantGeometry_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRingCasimir
+
+variable (B : Type*) [Ring B]
+
+/-- An element `C : B` of a noncommutative ring `[Ring B]` is a central Casimir element
+if it commutes with every element `X : B`. -/
+def IsRingCasimir (C : B) : Prop := ∀ X : B, X * C = C * X
+
+variable {B}
+
+/-- The product of two central Casimir elements in any `[Ring B]` is a central Casimir element. -/
+theorem isRingCasimir_mul {C₁ C₂ : B}
+    (h₁ : IsRingCasimir B C₁) (h₂ : IsRingCasimir B C₂) :
+    IsRingCasimir B (C₁ * C₂) := by
+  intro X
+  calc
+    X * (C₁ * C₂) = (X * C₁) * C₂ := (mul_assoc X C₁ C₂).symm
+    _ = (C₁ * X) * C₂ := by rw [h₁ X]
+    _ = C₁ * (X * C₂) := mul_assoc C₁ X C₂
+    _ = C₁ * (C₂ * X) := by rw [h₂ X]
+    _ = (C₁ * C₂) * X := (mul_assoc C₁ C₂ X).symm
+
+end NoncommRingCasimir
 
 /-! ## Group-action invariants -/
 

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Formalization Team
+Authors: InfoGeometry Engine Contributors
 -/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
@@ -138,8 +138,7 @@ theorem apollonius_den_pos (s : ℂ) (hs : s ≠ dipolePole) :
     The level set R(s) = 1 is identically the critical line Re(s) = 1/2. -/
 theorem souriau_leaf_one_iff_re_half (s : ℂ) (hs : s ≠ dipolePole) :
     IsOnEntropyLeaf s 1 ↔ s.re = 1 / 2 := by
-  unfold apolloniusEntropyLeafSet apolloniusRatio
-  dsimp only [Set.mem_setOf_eq]
+  change Complex.normSq (s - dipoleZero) / Complex.normSq (s - dipolePole) = 1 ↔ s.re = 1 / 2
   have h_den_pos := apollonius_den_pos s hs
   rw [div_eq_one_iff_eq (ne_of_gt h_den_pos)]
   rw [apollonius_num_normSq, apollonius_den_normSq]
@@ -248,8 +247,8 @@ theorem souriau_beta_pos_iff_exterior_domain (sigma : ℝ) :
 /-- 🏆 THEOREM 4d: The unitary Apollonius leaf (λ = 1) is the critical line σ = 1/2. -/
 theorem unitary_apollonius_leaf_eq_critical_line (p : ℝ × ℝ) :
     p ∈ apolloniusLeafCarrier 1 ↔ p.1 = 1 / 2 := by
-  unfold apolloniusLeafCarrier
-  simp only [Set.mem_setOf_eq, one_mul]
+  change (p.1 - 3 / 2) ^ 2 + p.2 ^ 2 = 1 * ((p.1 + 1 / 2) ^ 2 + p.2 ^ 2) ↔ p.1 = 1 / 2
+  rw [one_mul]
   constructor
   · intro h
     have hdiff :

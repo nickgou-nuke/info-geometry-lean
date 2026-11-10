@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Architect
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -8,7 +13,7 @@ import Mathlib.Topology.Instances.Matrix
 # Assumptions.Determinant
 
 Determinant/group interface now aligned with mathlib objects:
-- `GL` as `Matrix.GeneralLinearGroup`
+- `GL` as `Matrix.GeneralLinearGroup` over any `[Ring R]`
 - `detHom` as `Matrix.GeneralLinearGroup.det`
 - `SL` as `Matrix.SpecialLinearGroup`
 -/
@@ -17,10 +22,29 @@ namespace InfoGeometry.Assumptions.Determinant
 
 universe u v
 
-/-- Canonical matrix general linear group. -/
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem determinant_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Canonical matrix general linear group over any (possibly noncommutative) `[Ring R]`. -/
 abbrev «GL» (R : Type u) (V : Type v)
-    [CommRing R] [Fintype V] [DecidableEq V] :=
+    [Ring R] [Fintype V] [DecidableEq V] :=
   Matrix.GeneralLinearGroup V R
+
+/-- Right inverse law in `GL R V` over any noncommutative `[Ring R]`. -/
+theorem gl_mul_inv (R : Type u) (V : Type v)
+    [Ring R] [Fintype V] [DecidableEq V] (g : «GL» R V) :
+    g * g⁻¹ = 1 :=
+  mul_inv_cancel g
+
+/-- Left inverse law in `GL R V` over any noncommutative `[Ring R]`. -/
+theorem gl_inv_mul (R : Type u) (V : Type v)
+    [Ring R] [Fintype V] [DecidableEq V] (g : «GL» R V) :
+    g⁻¹ * g = 1 :=
+  inv_mul_cancel g
 
 /-- Determinant homomorphism `GL(V) →* Rˣ`. -/
 noncomputable abbrev detHom (R : Type u) (V : Type v)

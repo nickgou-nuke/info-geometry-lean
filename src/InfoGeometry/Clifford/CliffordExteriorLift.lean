@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55BivectorVectorRepresentation
 import InfoGeometry.Canonical.ExteriorGradedDerivationBridge
 
@@ -12,6 +18,21 @@ open ExteriorAlgebra
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 namespace InfoGeometry.CliffordExteriorLift
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, the upper-triangular `2 × 2` matrix product
+implements the Leibniz derivation rule in the `(0, 1)` entry: `(x * dy + dx * y)`. -/
+theorem ring_upper_triangular_derivation_entry
+    {B : Type*} [Ring B] (x y dx dy : B) :
+    (Matrix.of ![![x, dx], ![0, x]] * Matrix.of ![![y, dy], ![0, y]]) 0 1 =
+      x * dy + dx * y := by
+  simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma ι_mul_ι_add_swap (x y : V) : ι R x * ι R y + ι R y * ι R x = 0 := by
   have h := ExteriorAlgebra.ι_sq_zero (R := R) (x + y)

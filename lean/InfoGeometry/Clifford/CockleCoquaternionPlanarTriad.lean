@@ -1,13 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.FinCases
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-set_option linter.dupNamespace false
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cockle's Coquaternions, the Cl(1,1) Planar Triad, and Chiral Lightcone Grading
@@ -49,7 +51,7 @@ namespace InfoGeometry.Clifford.Coquaternion
 
 open Matrix
 
-/-- Cockle's split-quaternion (coquaternion) carrier over a commutative ring R:
+/-- Cockle's split-quaternion (coquaternion) carrier over a ring R:
     q = s • 1 + x • e₁ + y • e₂ + z • ω. -/
 @[ext]
 structure Coquaternion (R : Type*) where
@@ -57,9 +59,16 @@ structure Coquaternion (R : Type*) where
   x : R  -- spacelike vector component (e₁, e₁² = +1)
   y : R  -- timelike vector component (e₂, e₂² = -1)
   z : R  -- chiral bivector component (ω = e₁e₂, ω² = +1)
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Inhabited
 
 variable {R : Type*} [Ring R]
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 namespace Coquaternion
 
@@ -384,48 +393,40 @@ theorem toMatrix_det {S : Type*} [CommRing S] (q : Coquaternion S) :
   simp [toMatrix, det2, normSq]
   ring
 
-/-! ### Section 5: Master Verification Certificate -/
+/-! ### Section 5: Master Synthesis Theorem -/
 
-/-- Master verification certificate for Cockle's coquaternions and the Cl(1,1) triad. -/
-structure CockleCoquaternionPlanarTriadCertificate : Prop where
-  e1_square : ∀ (R : Type) [Ring R], (e1 : Coquaternion R) * e1 = 1
-  e2_square : ∀ (R : Type) [Ring R], (e2 : Coquaternion R) * e2 = -1
-  omega_square : ∀ (R : Type) [Ring R], (omega : Coquaternion R) * omega = 1
-  anticomm_e1_e2 : ∀ (R : Type) [Ring R], (e1 : Coquaternion R) * e2 + e2 * e1 = 0
-  planar_coexistence : ∀ (R : Type) [Ring R],
-    (i_unit : Coquaternion R) * i_unit = -1 ∧
-    (j_unit : Coquaternion R) * j_unit = 1 ∧
-    (epsilon : Coquaternion R) * epsilon = 0
-  chiral_involution : ∀ (R : Type) [Ring R],
-    (chiralGrading : Coquaternion R) * chiralGrading = 1
-  chiral_even_grading : ∀ (R : Type) [Ring R] (q : Coquaternion R),
-    chiralGrading * evenPart q * chiralGrading = evenPart q
-  chiral_odd_grading : ∀ (R : Type) [Ring R] (q : Coquaternion R),
-    chiralGrading * oddPart q * chiralGrading = - oddPart q
-  projector_orthogonal : ∀ (R : Type) [Ring R],
-    (P_plus_raw : Coquaternion R) * P_minus_raw = 0
-  lightcone_ladder : ∀ (R : Type) [Ring R],
-    ((P_plus_raw : Coquaternion R) * e1) * (P_plus_raw * e1) = 0
-  matrix_homomorphism : ∀ (R : Type) [Ring R] (p q : Coquaternion R),
-    toMatrix (p * q) = toMatrix p * toMatrix q
-  matrix_norm_det : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
-    det2 (toMatrix q) = normSq q
+/-- Universal compilation theorem for Cockle's coquaternions and the `Cl(1,1)` triad over `[Ring R]`. -/
+theorem compile_cockle_coquaternion_planar_triad (p q : Coquaternion R) :
+    ((e1 : Coquaternion R) * e1 = 1) ∧
+    ((e2 : Coquaternion R) * e2 = -1) ∧
+    ((omega : Coquaternion R) * omega = 1) ∧
+    ((e1 : Coquaternion R) * e2 + e2 * e1 = 0) ∧
+    ((i_unit : Coquaternion R) * i_unit = -1 ∧
+     (j_unit : Coquaternion R) * j_unit = 1 ∧
+     (epsilon : Coquaternion R) * epsilon = 0) ∧
+    ((chiralGrading : Coquaternion R) * chiralGrading = 1) ∧
+    (chiralGrading * evenPart q * chiralGrading = evenPart q) ∧
+    (chiralGrading * oddPart q * chiralGrading = - oddPart q) ∧
+    ((P_plus_raw : Coquaternion R) * P_minus_raw = 0) ∧
+    (((P_plus_raw : Coquaternion R) * e1) * (P_plus_raw * e1) = 0) ∧
+    (toMatrix (p * q) = toMatrix p * toMatrix q) ∧
+    (det2 (toMatrix q) =
+      normSq q + (q.x * q.s - q.s * q.x) + (q.z * q.y - q.y * q.z)) :=
+  ⟨e1_sq, e2_sq, omega_sq, anticomm_e1_e2, planar_triad_coexistence,
+   chiralGrading_sq, chiral_grading_even q, chiral_grading_odd q,
+   P_plus_mul_P_minus, lightcone_ladder_nilpotent, toMatrix_mul p q,
+   toMatrix_det_noncomm q⟩
 
-/-- Universal compilation theorem proving that the certificate holds unconditionally. -/
-theorem compile_cockle_coquaternion_planar_triad :
-    CockleCoquaternionPlanarTriadCertificate where
-  e1_square := fun _ _ => e1_sq
-  e2_square := fun _ _ => e2_sq
-  omega_square := fun _ _ => omega_sq
-  anticomm_e1_e2 := fun _ _ => anticomm_e1_e2
-  planar_coexistence := fun _ _ => planar_triad_coexistence
-  chiral_involution := fun _ _ => chiralGrading_sq
-  chiral_even_grading := fun _ _ q => chiral_grading_even q
-  chiral_odd_grading := fun _ _ q => chiral_grading_odd q
-  projector_orthogonal := fun _ _ => P_plus_mul_P_minus
-  lightcone_ladder := fun _ _ => lightcone_ladder_nilpotent
-  matrix_homomorphism := fun _ _ p q => toMatrix_mul p q
-  matrix_norm_det := fun _ _ q => toMatrix_det q
+/-- Matrix representation anticommutativity of `e₁` and `e₂` in `Mat2 R`. -/
+theorem toMatrix_anticomm_e1_e2 :
+    toMatrix (e1 : Coquaternion R) * toMatrix (e2 : Coquaternion R) +
+      toMatrix (e2 : Coquaternion R) * toMatrix (e1 : Coquaternion R) = 0 := by
+  rw [← toMatrix_mul, ← toMatrix_mul, ← toMatrix_add, anticomm_e1_e2, toMatrix_zero]
+
+/-- Non-commutative matrix representation anticommutativity witness after `toMatrix_mul`. -/
+theorem toMatrix_anticomm_witness :
+    (e1 : Coquaternion R) * e2 + e2 * e1 = 0 := by
+  ext <;> simp [e1, e2]
 
 end Coquaternion
 

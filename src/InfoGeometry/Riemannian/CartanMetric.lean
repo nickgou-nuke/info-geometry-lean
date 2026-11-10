@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -10,6 +15,20 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 namespace InfoGeometry.Riemannian
 
 open CliffordAlgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, the unnormalized symmetrized Cartan pairing
+`(x, y) ↦ x * y + y * x` is symmetric and reduces on the diagonal to `2 * (x * x)`. -/
+theorem ring_cartan_symmetrized_pairing
+    {B : Type*} [Ring B] (x y : B) :
+    (x * y + y * x = y * x + x * y) ∧ (x * x + x * x = 2 * (x * x)) :=
+  ⟨add_comm (x * y) (y * x), (two_mul (x * x)).symm⟩
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]

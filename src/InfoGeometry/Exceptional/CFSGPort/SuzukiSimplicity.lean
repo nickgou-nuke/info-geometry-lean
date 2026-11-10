@@ -24,7 +24,7 @@ namespace InfoGeometry.Exceptional.CFSGPort.Suzuki
 open InfoGeometry.Exceptional.CFSGPort.Chevalley
 open scoped LinearAlgebra.Projectivization
 
-variable {K : Type} [Field K]
+variable {K : Type} [DivisionRing K]
 
 /-- Under the finite Suzuki field and Tits endomorphism hypotheses, the
 upper-orientation Suzuki operator group is simple. The proof uses its actual

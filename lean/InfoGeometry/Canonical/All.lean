@@ -1943,7 +1943,8 @@ import InfoGeometry.Canonical.TwoSheetComplexPolarization
 import InfoGeometry.Canonical.CreationAnnihilationTomitaBridge
 import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.TomitaConnesBridge
-import InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary
+import InfoGeometry.External.Virasoro.AffineKacMoody
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.Canonical.ModeExtensionBoundary
 import InfoGeometry.Canonical.CliffordCantorModeHierarchy
 import InfoGeometry.Canonical.LevelSeparationNoIso

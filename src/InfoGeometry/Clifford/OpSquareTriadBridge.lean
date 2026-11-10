@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
@@ -25,12 +30,25 @@ open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Clifford.KoszulFoundation
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 
+/-- First `2 × 2` real non-commutativity witness matrix. -/
+def noncommWitnessA : Mat2 := !![0, 1; 0, 0]
+
+/-- Second `2 × 2` real non-commutativity witness matrix. -/
+def noncommWitnessB : Mat2 := !![0, 0; 1, 0]
+
+/-- Non-commutativity ground witness (`2 × 2` real matrix algebra). -/
+theorem exists_noncomm_pair :
+    noncommWitnessA * noncommWitnessB ≠ noncommWitnessB * noncommWitnessA := by
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  norm_num [noncommWitnessA, noncommWitnessB, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
 /-- The basic trichotomy of square classes. -/
 inductive OpSquareClass
   | elliptic
   | parabolic
   | hyperbolic
-deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Inhabited
 
 /-- Classify a real number into its sign class. -/
 def classifySquareValue (x : ℝ) : Option OpSquareClass :=
@@ -124,5 +142,10 @@ theorem cliffordVolumeElement_involute
     CliffordAlgebra.involute (cliffordVolumeElement Q vectors) =
       (-1 : R) ^ vectors.length • cliffordVolumeElement Q vectors := by
   simpa using (clifford_involute_volumeElement (Q := Q) vectors)
+
+/-- Over any non-commutative ring `[Ring B]`, the odd-odd Koszul sign identity `-((-x) * x) = x * x` holds. -/
+theorem ring_oddOdd_koszul_neg_square {B : Type*} [Ring B] (x : B) :
+    -((-x) * x) = x * x := by
+  rw [neg_mul, neg_neg]
 
 end InfoGeometry.Clifford.OpSquareTriadBridge

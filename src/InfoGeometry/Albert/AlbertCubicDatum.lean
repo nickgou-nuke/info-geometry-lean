@@ -29,7 +29,8 @@ noncomputable def albertNormTrilin (X Y Z : AlbertMatrix) : ℝ :=
 
 theorem albert_trace_comm (x y : AlbertMatrix) :
     albertTraceBilin x y = albertTraceBilin y x := by
-  exact trace_comm x y
+  dsimp [albertTraceBilin, traceBilin]
+  ring
 
 theorem albert_normTrilin_swap₂₃ (x y z : AlbertMatrix) :
     albertNormTrilin x y z = albertNormTrilin x z y := by

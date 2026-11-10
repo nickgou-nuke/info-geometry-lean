@@ -1,15 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 import Mathlib.Basic.Complex.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Clifford.SolderingIsotropicSouriauSheetBridge
 import InfoGeometry.Clifford.ConformalProjectiveBoundaryCasimirBridge
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-set_option linter.dupNamespace false
 
 /-!
 # Klein Bottle Loxodromic Möbius Twist, Parity Inversion, and CPT Spin Flip
@@ -60,6 +62,13 @@ open Matrix
 open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 open InfoGeometry.Clifford.SolderingIsotropic
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
 section Ring
 
@@ -143,6 +152,26 @@ theorem boostX_mul (c₁ s₁ c₂ s₂ : R) :
 def kleinGlide (B X : Mat2 R) : Mat2 R :=
   (e1 : Mat2 R) * (B * X * Bᵀ) * e1
 
+/-- Over any non-commutative ring `[Ring R]`, squaring the Klein glide reflection doubles
+the longitudinal boost into `boostX (c * c + s * s) (c * s + s * c)`. -/
+theorem glide_reflection_sq_noncomm (c s : R) (X : Mat2 R) :
+    kleinGlide (boostX c s) (kleinGlide (boostX c s) X) =
+    (boostX (c * c + s * s) (c * s + s * c)) * X * (boostX (c * c + s * s) (c * s + s * c))ᵀ := by
+  unfold kleinGlide
+  have hB_symm : (boostX c s : Mat2 R)ᵀ = boostX c s := boostX_transpose c s
+  have he1_B_e1 : (e1 : Mat2 R) * boostX c s * e1 = boostX c s := e1_boostX_e1 c s
+  have hB2 : (boostX c s : Mat2 R) * boostX c s = boostX (c * c + s * s) (c * s + s * c) :=
+    boostX_mul c s c s
+  rw [hB_symm]
+  have h_assoc : (e1 : Mat2 R) * (boostX c s * (e1 * (boostX c s * X * boostX c s) * e1) * boostX c s) * e1 =
+    ((e1 : Mat2 R) * boostX c s * e1) * (boostX c s * X * boostX c s) * ((e1 : Mat2 R) * boostX c s * e1) := by
+    simp only [Matrix.mul_assoc]
+  rw [h_assoc, he1_B_e1]
+  have h_final : boostX c s * (boostX c s * X * boostX c s) * boostX c s =
+    (boostX c s * boostX c s) * X * (boostX c s * boostX c s) := by
+    simp only [Matrix.mul_assoc]
+  rw [h_final, hB2, boostX_transpose]
+
 /-! ### 6. Spinor Twist and Fermionic Spin Flip (2π Phase) -/
 
 /-- Diagonal twist matrix with generator $I$ satisfying $I^2 = -1$:
@@ -222,7 +251,8 @@ theorem boostX_sq (c s : R) :
     (boostX c s : Mat2 R) * boostX c s =
     boostX (c ^ 2 + s ^ 2) (2 * c * s) := by
   have h := boostX_mul c s c s
-  have h2 : c * s + s * c = 2 * c * s := by ring
+  have h2 : c * s + s * c = 2 * c * s := by
+    rw [mul_comm s c, two_mul, add_mul]
   have hsq : c * c + s * s = c ^ 2 + s ^ 2 := by ring
   rw [h2, hsq] at h
   exact h

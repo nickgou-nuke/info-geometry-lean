@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinModularPersistence
@@ -32,6 +37,23 @@ Klein coordinates are Pluecker bivector coordinates.
 They are linked only after the Fierz bilinears generate chiral rays whose
 wedge is a decomposable bivector.  No spinor, Clifford representation, or
 Drazin/Hodge calibration is constructed here.
+
+#### BUCKET 1: CLOSED COORDINATE THEOREMS
+
+The FPK constraints imply null chiral rays; every explicit vector wedge lies
+on the Klein quadric; and the nondegenerate timelike/spacelike coordinate
+witness satisfies the stated FPK, normalization, and Fierz--Klein conditions.
+
+#### BUCKET 2: CONDITIONAL READOUT THEOREMS
+
+Horizon readouts enter the Fierz--Klein variety only when supplied with an
+explicit `HorizonFierzAdmissible` witness containing the FPK and normalization
+proofs.
+
+#### BUCKET 3: SCOPE BOUNDARY
+
+The module defines coordinate bilinears and readout data; it does not construct
+a Dirac spinor or prove that arbitrary operator channels satisfy FPK identities.
 -/
 
 noncomputable section
@@ -249,6 +271,65 @@ theorem leftChiralRay_null
   rw [FPKIdentities.K_sq h, FPKIdentities.J_dot_K h]
   ring
 
+/-! ## 3a. A nondegenerate coordinate witness -/
+
+/-- A unit timelike vector in the chosen `(+---)` coordinates. -/
+@[rep_depth operator]
+def unitTimelikeVector : Vec4 := fun
+  | .t => 1
+  | .x | .y | .z => 0
+
+/-- A unit spacelike vector orthogonal to `unitTimelikeVector`. -/
+@[rep_depth operator]
+def unitSpacelikeXVector : Vec4 := fun
+  | .x => 1
+  | .t | .y | .z => 0
+
+/-- Nondegenerate Fierz-coordinate witness with timelike current and spacelike
+axial current. The historical name refers to its normalized scalar-phase
+coordinates; the vector, axial, and bivector channels are nonzero. -/
+@[rep_depth operator]
+def trivialNormalizedFierz : FierzBilinears where
+  sigma := 1
+  omega := 0
+  J := unitTimelikeVector
+  K := unitSpacelikeXVector
+  S := ⟨-2, 0, 0, 0, 0, 0⟩
+
+/-- The coordinate witness satisfies all three declared FPK constraints. -/
+@[rep_depth operator]
+theorem unitTimelikeFierzBilinears_fpk :
+    FPKIdentities trivialNormalizedFierz := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [minkowskiDot, trivialNormalizedFierz, unitTimelikeVector]
+  · simp [minkowskiDot, trivialNormalizedFierz, unitTimelikeVector,
+      unitSpacelikeXVector]
+  · simp [minkowskiDot, trivialNormalizedFierz, unitTimelikeVector,
+      unitSpacelikeXVector]
+
+/-- Both current channels in the witness are genuinely nonzero. -/
+@[rep_depth operator]
+theorem unitTimelikeFierzBilinears_currents_ne_zero :
+    trivialNormalizedFierz.J ≠ 0 ∧ trivialNormalizedFierz.K ≠ 0 := by
+  constructor
+  · intro h
+    have ht := congrFun h I4.t
+    norm_num [trivialNormalizedFierz, unitTimelikeVector] at ht
+  · intro h
+    have hx := congrFun h I4.x
+    norm_num [trivialNormalizedFierz, unitSpacelikeXVector] at hx
+
+/-- The stored bivector channel is exactly the Pluecker wedge of the two
+chiral rays for this witness. -/
+@[rep_depth operator]
+theorem unitTimelikeFierzBilinears_area_eq_chiralPlucker :
+    trivialNormalizedFierz.S =
+      chiralPlucker trivialNormalizedFierz := by
+  simp [chiralPlucker, rightChiralRay, leftChiralRay, vadd, vsub,
+      wedgeVec4, trivialNormalizedFierz, unitTimelikeVector,
+      unitSpacelikeXVector]
+  norm_num
+
 /-! ## 4. Normalized scalar-phase Fierz coordinates -/
 
 /-- Normalized scalar/pseudoscalar Fierz coordinates. -/
@@ -282,16 +363,12 @@ structure FierzNormalization (F : FierzBilinears) where
   rho_ne_zero :
     rho ≠ 0
 
-def trivialNormalizedFierz : FierzBilinears where
-  sigma := 1
-  omega := 0
-  J := fun _ => 0
-  K := fun _ => 0
-  S := default
-
-def trivialFierzNormalization : FierzNormalization trivialNormalizedFierz where
+/-- Radius normalization for the nondegenerate scalar-phase witness. -/
+@[rep_depth operator]
+def trivialFierzNormalization :
+    FierzNormalization trivialNormalizedFierz where
   rho := 1
-  rho_sq := by unfold trivialNormalizedFierz; norm_num
+  rho_sq := by norm_num [trivialNormalizedFierz]
   rho_ne_zero := by norm_num
 
 instance : Inhabited (FierzNormalization trivialNormalizedFierz) :=
@@ -358,6 +435,28 @@ theorem fierzKleinCoordinates_holds
   constructor
   · exact normalizedScalarPhase_on_quadric F N
   · exact chiralPlucker_on_klein F
+
+/-- A complete nondegenerate witness for the FPK, chiral-null, and
+Fierz--Klein constraints. -/
+@[rep_depth operator]
+theorem unitTimelikeFierz_coordinates_witness :
+    FPKIdentities trivialNormalizedFierz ∧
+    IsRegularFierz trivialNormalizedFierz ∧
+    minkowskiDot (rightChiralRay trivialNormalizedFierz)
+      (rightChiralRay trivialNormalizedFierz) = 0 ∧
+    minkowskiDot (leftChiralRay trivialNormalizedFierz)
+      (leftChiralRay trivialNormalizedFierz) = 0 ∧
+    IsOnFierzKleinVariety
+      (fierzKleinCoordinates trivialNormalizedFierz
+        trivialFierzNormalization) := by
+  refine ⟨unitTimelikeFierzBilinears_fpk, ?_, ?_, ?_, ?_⟩
+  · norm_num [IsRegularFierz, trivialNormalizedFierz]
+  · exact rightChiralRay_null trivialNormalizedFierz
+      unitTimelikeFierzBilinears_fpk
+  · exact leftChiralRay_null trivialNormalizedFierz
+      unitTimelikeFierzBilinears_fpk
+  · exact fierzKleinCoordinates_holds trivialNormalizedFierz
+      trivialFierzNormalization
 
 /-! ## 6. Area defects and residual bookkeeping -/
 

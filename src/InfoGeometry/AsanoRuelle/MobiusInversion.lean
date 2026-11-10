@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -5,22 +10,53 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 # InfoGeometry.AsanoRuelle.MobiusInversion
 
 Mathematical Proof:
-Step-1 Möbius inversion algebra for the Asano--Ruelle reduction.
+Step-1 Möbius inversion algebra for the Asano--Ruelle reduction over
+non-commutative `[DivisionRing K]` and `[Field K]`.
 
 No placeholders. No `sorry`.
 -/
 
 namespace InfoGeometry.AsanoRuelle
 
-variable {K : Type*} [Field K]
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem mobiusInversion_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
 
-/-- The forward Möbius map `ψ(z) = (A + B z) / (C + D z)`. -/
+/-- The forward Möbius map `ψ(z) = (A + B z) / (C + D z)` over any `[DivisionRing K]`. -/
 def ruelle_psi {K : Type*} [DivisionRing K] (A B C D z : K) : K :=
   (A + B * z) / (C + D * z)
 
-/-- The dual Möbius map `χ(w) = (A + C w) / (B + D w)`. -/
+/-- The dual Möbius map `χ(w) = (A + C w) / (B + D w)` over any `[DivisionRing K]`. -/
 def ruelle_chi {K : Type*} [DivisionRing K] (A B C D w : K) : K :=
   (A + C * w) / (B + D * w)
+
+/-- Over any noncommutative `[DivisionRing K]`, off the pole `C + D * z1 ≠ 0`,
+`A + B * z1 + z2 * (C + D * z1) = 0 ↔ z2 = -ruelle_psi A B C D z1`. -/
+theorem divisionRing_asano_root_iff_psi {K : Type*} [DivisionRing K]
+    (A B C D z1 z2 : K) (hpole : C + D * z1 ≠ 0) :
+    A + B * z1 + z2 * (C + D * z1) = 0 ↔ z2 = -ruelle_psi A B C D z1 := by
+  unfold ruelle_psi
+  constructor
+  · intro h
+    have h1 : z2 * (C + D * z1) = -(A + B * z1) := eq_neg_of_add_eq_zero_right h
+    calc
+      z2 = z2 * (C + D * z1) / (C + D * z1) := (mul_div_cancel_right₀ z2 hpole).symm
+      _ = -(A + B * z1) / (C + D * z1) := by rw [h1]
+      _ = -((A + B * z1) / (C + D * z1)) := neg_div (C + D * z1) (A + B * z1)
+  · intro h
+    rw [h, ← neg_div, div_mul_cancel₀ _ hpole, add_neg_cancel]
+
+/-- Over any noncommutative `[DivisionRing K]`, off the pole `B + D * z2 ≠ 0`,
+`A + C * z2 + z1 * (B + D * z2) = 0 ↔ z1 = -ruelle_chi A B C D z2`. -/
+theorem divisionRing_asano_root_iff_chi {K : Type*} [DivisionRing K]
+    (A B C D z1 z2 : K) (hpole : B + D * z2 ≠ 0) :
+    A + C * z2 + z1 * (B + D * z2) = 0 ↔ z1 = -ruelle_chi A B C D z2 :=
+  divisionRing_asano_root_iff_psi A C B D z2 z1 hpole
+
+variable {K : Type*} [Field K]
 
 /--
 Solve for `z₂`: off the pole, roots of the affine polynomial are exactly

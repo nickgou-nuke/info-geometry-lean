@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 
 /-!
@@ -147,6 +153,23 @@ theorem comm_J_plus_J_minus :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [comm, J_plus, J_minus, J_zero, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The canonical spin-half matrices witness noncommutativity of `Mat2C`. -/
+theorem j_plus_j_minus_ne : J_plus * J_minus ≠ J_minus * J_plus := by
+  intro h
+  have hcomm : J_plus * J_minus - J_minus * J_plus = 0 := by
+    rw [h, sub_self]
+  have hdiag : (2 : ℂ) • J_zero = 0 := by
+    calc
+      (2 : ℂ) • J_zero = comm J_plus J_minus := comm_J_plus_J_minus.symm
+      _ = 0 := hcomm
+  have hzero : J_zero = 0 := by
+    apply smul_eq_zero.mp at hdiag
+    rcases hdiag with htwo | hzero
+    · norm_num at htwo
+    · exact hzero
+  have hentry := congrArg (fun M : Mat2C => M 0 0) hzero
+  norm_num [J_zero] at hentry
 
 /-- The canonical concrete spin-half basis. -/
 def canonicalSpinHalfBasis : SpinHalfBasis 2 where

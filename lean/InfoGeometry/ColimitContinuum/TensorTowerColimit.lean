@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Block
@@ -194,6 +200,24 @@ theorem embed_tower_anticomm {n : ℕ} (X Y : Matrix (Fin (2*n+1)) (Fin (2*n+1))
 def E3 (i j : Fin 3) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of (fun r c => if r = i ∧ c = j then 1 else 0)
 
+/-- The upper off-diagonal matrix unit `E₀₁` in the three-stage head. -/
+def E3_01 : Matrix (Fin 3) (Fin 3) R := E3 0 1
+
+/-- The lower off-diagonal matrix unit `E₁₀` in the three-stage head. -/
+def E3_10 : Matrix (Fin 3) (Fin 3) R := E3 1 0
+
+/-- In every nontrivial coefficient ring, opposite off-diagonal matrix units
+provide a concrete witness that this finite-stage operator ring is
+noncommutative. -/
+theorem E3_01_mul_E3_10_ne [Nontrivial R] :
+    E3_01 (R := R) * E3_10 (R := R) ≠
+      E3_10 (R := R) * E3_01 (R := R) := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  have h10 : (1 : R) = 0 := by
+    simpa [E3_01, E3_10, E3, Matrix.mul_apply] using h00
+  exact one_ne_zero h10
+
 /-- The genuine non-trivial Cartan grading element $H_3 = E_{00} - E_{22} = \operatorname{diag}(1, 0, -1) \in M_3(R)$. -/
 def H_3 : Matrix (Fin 3) (Fin 3) R := E3 0 0 - E3 2 2
 
@@ -287,53 +311,30 @@ theorem embed_tower_jordan_triple (n : ℕ) (x y z : Matrix (Fin (2*n+1)) (Fin (
   rw [embed_tower_sub, embed_tower_mul, embed_tower_mul]
   rw [embed_tower_sub, embed_tower_mul, embed_tower_mul]
 
-/-! ### Section 6: Master Certification Inscription -/
+/-! ### Section 6: Finite-Stage Structure Theorem -/
 
-/-- Master certificate structure packaging the full set of Colimit Continuum Tensor Tower theorems. -/
-structure TensorTowerColimitCertificate : Prop where
-  mul_preserved           : ∀ (A B : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (A * B) = embed_3_to_5 A * embed_3_to_5 B
-  add_preserved           : ∀ (A B : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (A + B) = embed_3_to_5 A + embed_3_to_5 B
-  sub_preserved           : ∀ (A B : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (A - B) = embed_3_to_5 A - embed_3_to_5 B
-  smul_preserved          : ∀ (c : R) (A : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (c • A) = c • embed_3_to_5 A
-  ad_intertwined          : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (ad H_3 X) = ad H_5 (embed_3_to_5 X)
-  quintic_intertwined     : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (quintic_derivation H_3 X) =
-                                quintic_derivation H_5 (embed_3_to_5 X)
-  quintic_stabilized      : ∀ (X : Matrix (Fin 3) (Fin 3) R),
-                              quintic_derivation H_3 X = 0 →
-                                quintic_derivation H_5 (embed_3_to_5 X) = 0
-  jordan_intertwined      : ∀ (x y z : Matrix (Fin 3) (Fin 3) R),
-                              embed_3_to_5 (jordan_triple x y z) =
-                                jordan_triple (embed_3_to_5 x) (embed_3_to_5 y) (embed_3_to_5 z)
-
-/-- Master certificate instantiation. -/
-theorem compile_tensor_tower_colimit_cert :
-    TensorTowerColimitCertificate (R := R) where
-  mul_preserved           := fun A B => embed_3_to_5_mul A B
-  add_preserved           := fun A B => embed_3_to_5_add A B
-  sub_preserved           := fun A B => embed_3_to_5_sub A B
-  smul_preserved          := fun c A => embed_3_to_5_smul c A
-  ad_intertwined          := fun X => embed_intertwines_ad X
-  quintic_intertwined     := fun X => embed_intertwines_quintic X
-  quintic_stabilized      := fun X => quintic_invariant_limit_3_5 X
-  jordan_intertwined      := fun x y z => embed_intertwines_jordan x y z
-
-/-- **Master Gate Target**: The exact 4-clause conjunction specified in the Operational Directive:
-    `ι(AB) = ι(A)ι(B) ∧ ι(ad H₃ X) = ad H₅(ιX) ∧ ι(𝒫 H₃ X) = 𝒫 H₅(ιX) ∧ ι(J(x,y,z)) = J(ιx,ιy,ιz)`. -/
+/-- The `Fin 3` to `Fin 5` block inclusion preserves ring operations,
+intertwines the Cartan and quintic operators, transports quintic vanishing,
+and preserves the nested-commutator triple product. This is a finite-stage
+theorem; it asserts no colimit universal property. -/
 theorem compile_tensor_tower_colimit :
     (∀ (A B : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (A * B) = embed_3_to_5 A * embed_3_to_5 B) ∧
+    (∀ (A B : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (A + B) = embed_3_to_5 A + embed_3_to_5 B) ∧
+    (∀ (A B : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (A - B) = embed_3_to_5 A - embed_3_to_5 B) ∧
+    (∀ (c : R) (A : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (c • A) = c • embed_3_to_5 A) ∧
     (∀ (X : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (ad H_3 X) = ad H_5 (embed_3_to_5 X)) ∧
     (∀ (X : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (quintic_derivation H_3 X) = quintic_derivation H_5 (embed_3_to_5 X)) ∧
+    (∀ (X : Matrix (Fin 3) (Fin 3) R), quintic_derivation H_3 X = 0 →
+      quintic_derivation H_5 (embed_3_to_5 X) = 0) ∧
     (∀ (x y z : Matrix (Fin 3) (Fin 3) R), embed_3_to_5 (jordan_triple x y z) =
       jordan_triple (embed_3_to_5 x) (embed_3_to_5 y) (embed_3_to_5 z)) :=
   ⟨fun A B => embed_3_to_5_mul A B,
+   fun A B => embed_3_to_5_add A B,
+   fun A B => embed_3_to_5_sub A B,
+   fun c A => embed_3_to_5_smul c A,
    fun X => embed_intertwines_ad X,
    fun X => embed_intertwines_quintic X,
+   fun X => quintic_invariant_limit_3_5 X,
    fun x y z => embed_intertwines_jordan x y z⟩
 
 end InfoGeometry.ColimitContinuum.TensorTowerColimit

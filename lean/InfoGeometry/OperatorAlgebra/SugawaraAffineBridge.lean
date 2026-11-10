@@ -48,7 +48,7 @@ namespace VirasoroProject
 open InfoGeometry.Canonical.AffineKacMoodyFiniteModeColimit
 
 universe u
-variable {𝕜 : Type u} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type u} [CommRing 𝕜] [IsAddTorsionFree 𝕜]
 variable {𝓰 : Type u} [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
 
 /-- Single-mode Sugawara adjoint action of the categorical colimit current
@@ -73,7 +73,7 @@ theorem sugawaraColimitAdjointTerm_eq
           ((k : 𝕜) * Φ x y) • affineCentralColimitMode Φ hΦ hΦs
         else 0 := by
   unfold sugawaraColimitAdjointTerm
-  exact affineCurrentColimitMode_lie_eq Φ hΦ hΦs k m x y
+  exact affineCurrentColimitMode_bracket Φ hΦ hΦs k m x y
 
 /-- Every Sugawara adjoint current term commutes with the central colimit
 generator `affineCentralColimitMode Φ hΦ hΦs`. -/

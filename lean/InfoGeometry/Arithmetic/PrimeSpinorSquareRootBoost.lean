@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
 import InfoGeometry.Arithmetic.PrimonFinite
@@ -27,6 +33,13 @@ open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 open PrimeWeylDenominatorBridge
 open MobiusFermionBosonization
 open PrimonFinite
@@ -37,6 +50,7 @@ open PrimonFinite
 structure PrimeSpinor (R : Type*) where
   plus : R
   minus : R
+  deriving Inhabited
 
 /-- The positive one-prime thermal spinor `(1, a)`. -/
 def thermalSpinorPlus
@@ -127,7 +141,7 @@ This is the finite algebraic form of
 `p^{t/2} / p^{-t/2} = p^t`.
 -/
 theorem projectiveRatio_chiralBoostSpinor_eq_square
-    {R : Type*} [Field R]
+    {R : Type*} [DivisionRing R]
     (y : R) :
     projectiveRatio (chiralBoostSpinor y) = scalarWeightFromSpinor y := by
   unfold projectiveRatio chiralBoostSpinor scalarWeightFromSpinor
@@ -140,12 +154,12 @@ This is the finite algebraic form of
 `<(1, p^{-s/2}), (1, -p^{-s/2})> = 1 - p^{-s}`.
 -/
 theorem spinorBilinear_plus_minus_eq_one_sub_square
-    {R : Type*} [CommRing R]
+    {R : Type*} [Ring R]
     (a : R) :
     spinorBilinear (thermalSpinorPlus a) (thermalSpinorMinus a) =
       1 - scalarWeightFromSpinor a := by
   unfold spinorBilinear thermalSpinorPlus thermalSpinorMinus scalarWeightFromSpinor
-  ring
+  noncomm_ring
 
 /-! ## 3. Finite Euler denominator from spinor bilinears -/
 
@@ -222,7 +236,7 @@ theorem finiteUnsignedSpinorAmplitude_sq_eq_weight_squareWeights
 
 /-- Fermion parity squares to one. -/
 theorem parity_mul_self_eq_one
-    {PrimeLabel R : Type*} [CommRing R]
+    {PrimeLabel R : Type*} [Ring R]
     (S : Finset PrimeLabel) :
     parity (R := R) S *
       parity (R := R) S = 1 := by
@@ -294,5 +308,10 @@ theorem bilinear_partition
   finitePrimeSpinorBilinearProduct_eq_weylDenominator_squareWeights P.modes P.amplitude
 
 end PrimeSpinorSquareRootPacket
+
+/-- Ground inhabitant of `PrimeSpinorSquareRootPacket` over `ℤ`. -/
+def intEmptyPrimeSpinorPacket : PrimeSpinorSquareRootPacket ℕ ℤ where
+  modes := ∅
+  amplitude := fun _ => 0
 
 end InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost

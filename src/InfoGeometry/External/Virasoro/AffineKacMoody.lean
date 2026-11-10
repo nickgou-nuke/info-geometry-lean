@@ -1,7 +1,10 @@
 /-
-Copyright (c) 2026 Kalle Kytölä. All rights reserved.
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Kalle Kytölä
+Authors: InfoGeometry Engine Contributors
+-/
+/-
+Original source attribution: Copyright (c) 2026 Kalle Kytölä.
 -/
 import Mathlib.Algebra.Lie.Loop
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -152,6 +155,14 @@ theorem km_current_def_well_defined (n : ℤ) :
 noncomputable def affineCentralGen : AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs :=
   ⟨0, 1⟩
 
+/-- The scalar summand of the affine Kac--Moody central extension is central. -/
+theorem affineKacMoody_centralCopy_bracket (a : 𝕜)
+    (Z : AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs) :
+    ⁅(⟨0, a⟩ : AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs), Z⁆ = 0 := by
+  change LieTwoCocycle.bracket (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs)
+    ⟨0, a⟩ Z = 0
+  ext <;> simp [LieTwoCocycle.bracket_apply]
+
 /--
 Generator-level affine Kac-Moody bracket.
 
@@ -204,10 +215,6 @@ noncomputable def km_current_linear_map (n : ℤ) :
     map_smul' := by
       intro a x
       ext <;> simp [affineCurrentGen, affineLoopMode, TensorProduct.tmul_smul] }
-
-@[simp] theorem km_current_linear_map_apply (n : ℤ) (x : 𝓰) :
-    km_current_linear_map (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x
-      = affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x := rfl
 
 /--
 Bilinearity of the affine Kac--Moody cocycle.

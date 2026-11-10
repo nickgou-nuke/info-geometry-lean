@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -6,8 +11,28 @@ namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative ring `[Ring B]`, if `u` is an involution (`u * u = 1`) that anticommutes
+with `x` (`u * x = -(x * u)`) and `y` (`u * y = -(y * u)`), then `u` commutes with `x * y` (`u * (x * y) = (x * y) * u`). -/
+theorem ring_even_sector_closure_commute
+    {B : Type*} [Ring B] (u x y : B)
+    (hx : u * x = -(x * u)) (hy : u * y = -(y * u)) :
+    u * (x * y) = (x * y) * u := by
+  calc
+    u * (x * y) = (u * x) * y := by rw [mul_assoc]
+    _ = -(x * u) * y := by rw [hx]
+    _ = -(x * (u * y)) := by rw [neg_mul, mul_assoc]
+    _ = -(x * -(y * u)) := by rw [hy]
+    _ = (x * y) * u := by rw [mul_neg, neg_neg, mul_assoc]
+
 variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommMonoid M] [Module R M]
+variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 /-- Четният сектор (The Operator Algebra) -/

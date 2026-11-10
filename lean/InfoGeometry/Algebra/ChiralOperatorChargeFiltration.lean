@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -20,17 +25,15 @@ def chiralChargeModThree (k : ℤ) : ZMod 3 := k
 
 def chiralChargeModThreeHom : ℤ →+ ZMod 3 := Int.castAddHom (ZMod 3)
 
-@[simp] theorem chiralChargeModThreeHom_apply (k : ℤ) :
-    chiralChargeModThreeHom k = chiralChargeModThree k :=
-  rfl
-
 @[simp] theorem chiralChargeModThree_zero :
     chiralChargeModThree 0 = 0 := by
-  exact chiralChargeModThreeHom.map_zero
+  change ((0 : ℤ) : ZMod 3) = 0
+  norm_num
 
 @[simp] theorem chiralChargeModThree_neg (k : ℤ) :
     chiralChargeModThree (-k) = -chiralChargeModThree k := by
-  exact chiralChargeModThreeHom.map_neg k
+  change ((-k : ℤ) : ZMod 3) = -((k : ℤ) : ZMod 3)
+  rw [Int.cast_neg]
 
 def chiralWordCyclotomicCharge
     (w : List ChiralGenerator) : ZMod 3 :=
@@ -39,22 +42,43 @@ def chiralWordCyclotomicCharge
 theorem chiralChargeModThree_add (r s : ℤ) :
     chiralChargeModThree (r + s) =
       chiralChargeModThree r + chiralChargeModThree s := by
-  exact Int.cast_add r s
+  change ((r + s : ℤ) : ZMod 3) =
+    (r : ZMod 3) + (s : ZMod 3)
+  rw [Int.cast_add]
+
+theorem chiralChargeModThree_period_three (k : ℤ) :
+    chiralChargeModThree (k + 3) = chiralChargeModThree k := by
+  rw [chiralChargeModThree_add]
+  change (k : ZMod 3) + (3 : ZMod 3) = (k : ZMod 3)
+  have hthree : (3 : ZMod 3) = 0 := ZMod.natCast_self 3
+  rw [hthree, add_zero]
+
+theorem chiralChargeModThreeHom_apply (k : ℤ) :
+    chiralChargeModThreeHom k = chiralChargeModThree k ∧
+    chiralChargeModThree (k + 3) = chiralChargeModThree k := by
+  constructor
+  · rfl
+  · exact chiralChargeModThree_period_three k
 
 theorem chiralChargeModThree_pos_two_eq_neg_one :
     chiralChargeModThree 2 = chiralChargeModThree (-1) := by
-  decide
+  calc
+    chiralChargeModThree 2 = chiralChargeModThree ((-1 : ℤ) + 3) := by
+      exact congrArg chiralChargeModThree (by norm_num : (2 : ℤ) = -1 + 3)
+    _ = chiralChargeModThree (-1) := chiralChargeModThree_period_three (-1)
 
 theorem chiralChargeModThree_neg_two_eq_pos_one :
     chiralChargeModThree (-2) = chiralChargeModThree 1 := by
-  decide
+  change ((-2 : ℤ) : ZMod 3) = ((1 : ℤ) : ZMod 3)
+  rw [ZMod.intCast_eq_intCast_iff']
+  norm_num
 
 theorem chiralWordCyclotomicCharge_append
     (u v : List ChiralGenerator) :
     chiralWordCyclotomicCharge (u ++ v) =
       chiralWordCyclotomicCharge u + chiralWordCyclotomicCharge v := by
-  simp [chiralWordCyclotomicCharge, chiralChargeModThree,
-    wordDegree_append]
+  unfold chiralWordCyclotomicCharge
+  rw [wordDegree_append, chiralChargeModThree_add]
 
 def ChiralWordCyclotomicGrade (q : ZMod 3) :=
   {w : List ChiralGenerator // chiralWordCyclotomicCharge w = q}
@@ -66,11 +90,15 @@ def chiralWordCyclotomicGradeAppend {q r : ZMod 3}
   ⟨u.1 ++ v.1, by
     rw [chiralWordCyclotomicCharge_append, u.2, v.2]⟩
 
-@[simp] theorem chiralWordCyclotomicGradeAppend_val {q r : ZMod 3}
+theorem chiralWordCyclotomicGradeAppend_val {q r : ZMod 3}
     (u : ChiralWordCyclotomicGrade q)
     (v : ChiralWordCyclotomicGrade r) :
-    (chiralWordCyclotomicGradeAppend u v).1 = u.1 ++ v.1 :=
-  rfl
+    (chiralWordCyclotomicGradeAppend u v).1 = u.1 ++ v.1 ∧
+    chiralWordCyclotomicCharge
+        (chiralWordCyclotomicGradeAppend u v).1 = q + r := by
+  constructor
+  · rfl
+  · exact (chiralWordCyclotomicGradeAppend u v).2
 
 def chiralGeneratorWordGrade
     (g : ChiralGenerator) : ChiralWordGrade (generatorDegree g) :=
@@ -82,16 +110,22 @@ def chiralWordGradeAppend {i j : ℤ}
   ⟨u.1 ++ v.1, by
     rw [wordDegree_append, u.2, v.2]⟩
 
-@[simp] theorem chiralWordGradeAppend_val {i j : ℤ}
-    (u : ChiralWordGrade i) (v : ChiralWordGrade j) :
-    (chiralWordGradeAppend u v).1 = u.1 ++ v.1 :=
-  rfl
+theorem chiralWordGradeAppend_val
+    {i j : ℤ} (u : ChiralWordGrade i) (v : ChiralWordGrade j) :
+    (chiralWordGradeAppend u v).1 = u.1 ++ v.1 ∧
+    word (R := ℝ) (chiralWordGradeAppend u v).1 =
+      word (R := ℝ) u.1 * word (R := ℝ) v.1 := by
+  constructor
+  · rfl
+  · change word (R := ℝ) (u.1 ++ v.1) = _
+    rw [word_append]
 
 theorem chiralWordGradeAppend_operator
     {i j : ℤ} (u : ChiralWordGrade i) (v : ChiralWordGrade j) :
     word (R := ℝ) (chiralWordGradeAppend u v).1 =
       word (R := ℝ) u.1 * word (R := ℝ) v.1 := by
-  rw [chiralWordGradeAppend_val, word_append]
+  change word (R := ℝ) (u.1 ++ v.1) = _
+  rw [word_append]
 
 def chiralPairWordGrade
     (g h : ChiralGenerator) :

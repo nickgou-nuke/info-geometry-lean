@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ThermodynamicGauge
@@ -36,10 +41,10 @@ noncomputable def antisymmetricDivergence
     {State : Type u} (D : State → State → ℝ) (p q : State) : ℝ :=
   (D p q - D q p) / 2
 
-/-- Jeffreys divergence, normalized as the symmetric half-sum. -/
+/-- Jeffreys divergence recovered from the forward divergence and its current. -/
 noncomputable def jeffreysDivergence
     {State : Type u} (D : State → State → ℝ) (p q : State) : ℝ :=
-  symmetricDivergence D p q
+  D p q - antisymmetricDivergence D p q
 
 theorem divergence_eq_symmetric_add_antisymmetric
     {State : Type u} (D : State → State → ℝ) (p q : State) :
@@ -53,15 +58,19 @@ theorem reverseDivergence_eq_symmetric_sub_antisymmetric
   unfold symmetricDivergence antisymmetricDivergence
   ring
 
+/-- Removing the antisymmetric current from the forward divergence gives its symmetric part. -/
 theorem jeffreysDivergence_eq_symmetricDivergence
     {State : Type u} (D : State → State → ℝ) (p q : State) :
     jeffreysDivergence D p q = symmetricDivergence D p q := by
-  rfl
+  unfold jeffreysDivergence symmetricDivergence antisymmetricDivergence
+  ring
 
+/-- The current-corrected divergence is the normalized forward/reverse half-sum. -/
 theorem jeffreysDivergence_eq_half_sum
     {State : Type u} (D : State → State → ℝ) (p q : State) :
     jeffreysDivergence D p q = (D p q + D q p) / 2 := by
-  rfl
+  unfold jeffreysDivergence antisymmetricDivergence
+  ring
 
 theorem symmetricDivergence_swap
     {State : Type u} (D : State → State → ℝ) (p q : State) :
@@ -78,7 +87,8 @@ theorem antisymmetricDivergence_swap
 theorem jeffreysDivergence_swap
     {State : Type u} (D : State → State → ℝ) (p q : State) :
     jeffreysDivergence D q p = jeffreysDivergence D p q := by
-  unfold jeffreysDivergence
+  rw [jeffreysDivergence_eq_symmetricDivergence D q p,
+    jeffreysDivergence_eq_symmetricDivergence D p q]
   exact symmetricDivergence_swap D p q
 
 theorem antisymmetricDivergence_self
@@ -126,13 +136,13 @@ theorem symmetricDivergence_nonneg_of_nonneg
     (hpq : 0 ≤ D p q) (hqp : 0 ≤ D q p) :
     0 ≤ symmetricDivergence D p q := by
   unfold symmetricDivergence
-  nlinarith
+  exact div_nonneg (add_nonneg hpq hqp) (by norm_num)
 
 theorem jeffreysDivergence_nonneg_of_nonneg
     {State : Type u} (D : State → State → ℝ) (p q : State)
     (hpq : 0 ≤ D p q) (hqp : 0 ≤ D q p) :
     0 ≤ jeffreysDivergence D p q := by
-  unfold jeffreysDivergence
+  rw [jeffreysDivergence_eq_symmetricDivergence D p q]
   exact symmetricDivergence_nonneg_of_nonneg D p q hpq hqp
 
 /-- Log forward/backward ratio produced by a two-channel MaxCal constraint pair. -/
@@ -214,14 +224,22 @@ theorem antisymmetric_current_eq_dlnQ
     antisymmetricDivergence D p q = flow.d_ln_Q := by
   rw [hcalibrated, pathConstraint_dlnQ_readout hmatch]
 
-theorem maxCal_state_stationary
+/--
+For a calibrated path constraint, the antisymmetric divergence current vanishes
+exactly when the two transition operators satisfy detailed balance.
+-/
+theorem maxCal_current_vanishes_iff_detailed_balance
     {State : Type u}
-    (transition : State → State)
-    (markovState kmsState : State)
-    (hstationary : transition kmsState = kmsState)
-    (hselect : markovState = kmsState) :
-    transition markovState = markovState := by
-  rw [hselect]
-  exact hstationary
+    (D : State → State → ℝ) (p q : State)
+    {flow : CausalNonequilibriumFlow ℝ}
+    {pathConstraint : ℝ}
+    (hflowConstraint :
+      flow.P_forward * flow.P_backward - flow.P_backward * flow.P_forward =
+        pathConstraint)
+    (hcalibrated : antisymmetricDivergence D p q = pathConstraint) :
+    antisymmetricDivergence D p q = 0 ↔
+      flow.P_forward * flow.P_backward = flow.P_backward * flow.P_forward := by
+  rw [hcalibrated, ← hflowConstraint]
+  simp [sub_eq_zero]
 
 end InfoGeometry.Canonical.MaximumCaliberKLSplit

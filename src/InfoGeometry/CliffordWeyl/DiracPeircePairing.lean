@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.PeirceMatrixTracePairing
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.KreinDiracKasparovSpinorBilinear
 
 /-! Dirac adjunction exchanges opposite Peirce components. Matrix trace
@@ -14,8 +15,20 @@ of the star operation are not assumed.
 namespace InfoGeometry.Physics.KasparovKreinData
 open InfoGeometry.Core.PeirceDecomposition
 
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem diracPeircePairing_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
 section Ring
 variable {A : Type*} [Ring A] [StarRing A] (K : KasparovKreinData A)
+
+theorem diracAdjoint_diagonal_sandwich (P X : A) :
+    K.diracAdjoint (P * X * P) =
+      K.diracAdjoint P * K.diracAdjoint X * K.diracAdjoint P := by
+  rw [diracAdjoint_mul, diracAdjoint_mul, mul_assoc]
 
 theorem diracAdjoint_complement (P : A) :
     K.diracAdjoint (complementIdempotent P) = 1 - K.diracAdjoint P := by

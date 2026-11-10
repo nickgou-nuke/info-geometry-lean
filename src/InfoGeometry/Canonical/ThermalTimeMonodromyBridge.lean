@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricMonodromy
@@ -15,17 +20,13 @@ This file does not identify `ℝ`-valued modular time with `ℤ`-valued winding 
 fiat. Instead it introduces an explicit calibration map from winding labels to
 real times and proves compatibility theorems relative to that calibration.
 
-## Connection to Cl(1,1) Monodromy Dictionary
+## Cl(1,1) data boundary
 
-This bridge is compatible with the concrete Cl(1,1) construction in
-`InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction`, which provides:
-
-- A square-zero modular Hamiltonian `K` (Witt creation operator)
-- A carrier residue operator `Res(X) = [K, X]`
-- An explicit characterization of when `Res² = 0` (parabolicity condition)
-
-The calibration data in this file can be instantiated using the Cl(1,1) tower
-by choosing the period to match the natural scaling of the Witt generator.
+The imported Cl(1,1) construction supplies a square-zero operator and its
+commutator residue. This file also records that witness, but does not map it to
+the Hilbert-space modular flow. The thermal-time/winding relation is conditional
+on the explicit calibration supplied here; identifying it with the Cl(1,1)
+residue remains an open bridge requiring an intertwiner and compatibility proof.
 -/
 
 namespace InfoGeometry.Canonical.ThermalTimeMonodromyBridge
@@ -47,17 +48,39 @@ def ThermalTimeWindingCalibration.timeOfWinding
     (C : ThermalTimeWindingCalibration) (n : ℤ) : ℝ :=
   (n : ℝ) * C.period
 
-@[simp] theorem timeOfWinding_zero (C : ThermalTimeWindingCalibration) :
-    C.timeOfWinding 0 = 0 := by
-  simp [ThermalTimeWindingCalibration.timeOfWinding]
+/-- The nonzero-period hypothesis makes the winding-to-time map faithful. -/
+theorem timeOfWinding_injective (C : ThermalTimeWindingCalibration) :
+    Function.Injective C.timeOfWinding := by
+  intro m n h
+  apply Int.cast_injective (α := ℝ)
+  apply mul_right_cancel₀ C.period_ne_zero
+  simpa [ThermalTimeWindingCalibration.timeOfWinding] using h
 
-@[simp] theorem timeOfWinding_one (C : ThermalTimeWindingCalibration) :
-    C.timeOfWinding 1 = C.period := by
-  simp [ThermalTimeWindingCalibration.timeOfWinding]
+/-- Zero thermal time occurs exactly at zero winding. -/
+theorem timeOfWinding_eq_zero_iff (C : ThermalTimeWindingCalibration) (n : ℤ) :
+    C.timeOfWinding n = 0 ↔ n = 0 := by
+  constructor
+  · intro h
+    apply timeOfWinding_injective C
+    simpa [ThermalTimeWindingCalibration.timeOfWinding] using h
+  · rintro rfl
+    simp [ThermalTimeWindingCalibration.timeOfWinding]
+
+/-- One calibration period identifies the unit winding. -/
+theorem timeOfWinding_eq_period_iff (C : ThermalTimeWindingCalibration) (n : ℤ) :
+    C.timeOfWinding n = C.period ↔ n = 1 := by
+  constructor
+  · intro h
+    apply timeOfWinding_injective C
+    simpa [ThermalTimeWindingCalibration.timeOfWinding] using h
+  · rintro rfl
+    simp [ThermalTimeWindingCalibration.timeOfWinding]
 
 @[simp] theorem timeOfWinding_add (C : ThermalTimeWindingCalibration) (m n : ℤ) :
     C.timeOfWinding (m + n) = C.timeOfWinding m + C.timeOfWinding n := by
-  simp [ThermalTimeWindingCalibration.timeOfWinding, add_mul]
+  change ((m + n : ℤ) : ℝ) * C.period =
+    (m : ℝ) * C.period + (n : ℝ) * C.period
+  rw [Int.cast_add, add_mul]
 
 section Bridge
 
@@ -74,16 +97,32 @@ structure BridgeData where
   radius : ℝ
   radius_pos : 0 < radius
 
-/--
-If a chosen thermal parameter `τ` is calibrated to the winding label `n`, then
-modular evolution at `τ` agrees with modular evolution at the calibrated time.
--/
-theorem modularAutomorphismGroup_eq_calibrated_time
-    (B : BridgeData (E := E)) {τ : ℝ} (n : ℤ)
-    (hτ : τ = B.calibration.timeOfWinding n) (A : EndH E) :
-    modularAutomorphismGroup B.modularData τ A =
-      modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding n) A := by
-  exact modularAutomorphismGroup_eq_of_time_eq (M := B.modularData) hτ A
+/-- The continuously calibrated flow uses the calibration period as its time
+scale. Its derivative records how changing the winding-time normalization
+rescales the infinitesimal modular generator. -/
+noncomputable def calibratedModularFlow
+    (B : BridgeData (E := E)) (t : ℝ) (A : EndH E) : EndH E :=
+  modularAutomorphismGroup B.modularData (t * B.calibration.period) A
+
+set_option maxHeartbeats 800000
+/-- The calibration period scales the infinitesimal modular generator. -/
+theorem hasDerivAt_calibratedModularFlow_zero
+    (B : BridgeData (E := E)) (A : EndH E) :
+    HasDerivAt (fun t : ℝ => calibratedModularFlow B t A)
+      (B.calibration.period • commutator B.modularData.modularHamiltonian A) 0 := by
+  have htime : HasDerivAt (fun t : ℝ => t * B.calibration.period)
+      B.calibration.period 0 := by
+    simpa using (hasDerivAt_id (0 : ℝ)).mul_const B.calibration.period
+  have hflow := hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
+    (M := B.modularData) (A := A)
+  have hflow' : HasDerivAt (fun τ : ℝ => modularAutomorphismGroup B.modularData τ A)
+      (commutator B.modularData.modularHamiltonian A)
+      (0 * B.calibration.period) := by
+    simpa using hflow
+  have hcomp := HasDerivAt.scomp (𝕜 := ℝ) (F := EndH E) (𝕜' := ℝ)
+    (x := 0) hflow' htime
+  simpa [calibratedModularFlow, Function.comp_def] using hcomp
+set_option maxHeartbeats 200000
 
 /--
 The calibrated clock is additive at the level of modular flow: adding winding
@@ -107,7 +146,10 @@ theorem additiveModularFlow_timeOfWinding_add
     B.modularData.toAdditiveModularFlow (B.calibration.timeOfWinding (m + n)) A =
       B.modularData.toAdditiveModularFlow (B.calibration.timeOfWinding m)
         (B.modularData.toAdditiveModularFlow (B.calibration.timeOfWinding n) A) := by
-  exact modularAutomorphismGroup_timeOfWinding_add (B := B) m n A
+  rw [toAdditiveModularFlow_apply, toAdditiveModularFlow_apply,
+    toAdditiveModularFlow_apply, timeOfWinding_add]
+  exact modularAutomorphismGroup_add (M := B.modularData)
+    (B.calibration.timeOfWinding m) (B.calibration.timeOfWinding n) A
 
 /--
 The de Rham winding class at label `n` is the standard residue readout
@@ -116,7 +158,11 @@ The de Rham winding class at label `n` is the standard residue readout
 theorem deRhamClass_of_calibrated_winding
     (B : BridgeData (E := E)) (n : ℤ) :
     (n : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z) = logarithmicPhase n := by
-  exact deRhamClass_of_winding (R := B.radius) B.radius_pos n
+  calc
+    (n : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)
+        = (n : ℂ) * (2 * Real.pi * Complex.I : ℂ) := by
+            rw [circleIntegral_one_div B.radius B.radius_pos]
+    _ = logarithmicPhase n := rfl
 
 /--
 The corresponding Wilson-loop phase closes to unit holonomy at every integer
@@ -125,7 +171,8 @@ winding label on the calibrated bridge radius.
 theorem wilsonPhase_of_calibrated_winding
     (B : BridgeData (E := E)) (n : ℤ) :
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ) := by
-  exact wilsonPhase_of_winding (R := B.radius) B.radius_pos n
+  rw [circleIntegral_one_div B.radius B.radius_pos]
+  exact Complex.exp_int_mul_two_pi_mul_I n
 
 /--
 The concrete `Cl(1,1)` carrier residue from
@@ -143,33 +190,26 @@ theorem cl11_concrete_monodromy_data_available :
   exact InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian_sq
 
 /--
-Explicit calibration of the thermal-time/winding bridge to the concrete Cl(1,1)
-monodromy construction.
+Unit-period calibration used alongside the concrete Cl(1,1) example.
 
-Given the square-zero modular Hamiltonian `K` from the Witt creation operator,
-we construct a canonical calibration where the period is chosen to normalize
-the residue flow. This makes the connection between thermal time and de Rham
-winding concrete rather than abstract.
-
-The calibration period is set to 1 (the natural unit), corresponding to a
-single "tick" of the parabolic clock generated by the nilpotent residue.
+This definition does not depend on the Cl(1,1) residue operator and does not
+identify its commutator action with the Hilbert-space modular flow. It fixes a
+normalization of the winding-to-time map; a genuine identification with a
+specific residue flow would require an intertwining map and a compatibility
+theorem.
 -/
 def cl11CanonicalCalibration : ThermalTimeWindingCalibration :=
   { period := 1
     period_ne_zero := by norm_num }
 
 /--
-Bridge data instantiated from the concrete Cl(1,1) monodromy construction.
+Bridge data with the fixed unit-period calibration.
 
-This packages together:
-- The modular Radon-Nikodym data (from the ambient Hilbert space structure)
-- The canonical Cl(1,1) calibration (period = 1)
-- A reference radius for de Rham winding computations
-
-Note: This construction demonstrates that the bridge is non-vacuous and can
-be concretely realized from the Witt-based nilpotent generator. The choice of
-period = 1 is a normalization; other scalings are possible by multiplying
-the calibration.
+The modular Radon-Nikodym data and reference radius are supplied independently.
+The Cl(1,1) square-zero witness above is not an input to this constructor, so
+this packages a normalized winding/time bridge but does not identify the
+Cl(1,1) residue action with the modular flow. Other period normalizations can
+be supplied through `ThermalTimeWindingCalibration` directly.
 -/
 def cl11BridgeData (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (modularData : ModularRadonNikodymData E) (radius : ℝ) (h_radius : 0 < radius) :
@@ -180,11 +220,10 @@ def cl11BridgeData (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [
   radius_pos := h_radius
 
 /--
-The main calibration theorem: modular flow at integer winding time agrees with
-the flow generated by the concrete Cl(1,1) residue operator.
-
-For the canonical Cl(1,1) bridge data, evolving by `n` winding units ( period = 1)
-produces the same modular automorphism as evolving by real time `n`.
+Under the unit-period normalization, the calibrated modular-flow parameter for
+integer winding `n` is the real number `n`. This is a reparameterization result
+for the supplied modular flow; it does not assert that the flow is generated by
+the separate Cl(1,1) residue witness.
 -/
 theorem cl11_calibrated_flow_agrees (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] (modularData : ModularRadonNikodymData E) (radius : ℝ) (h_radius : 0 < radius)
@@ -196,11 +235,11 @@ theorem cl11_calibrated_flow_agrees (E : Type) [NormedAddCommGroup E] [InnerProd
   rw [mul_one]
 
 /--
-Additivity of the Cl(1,1) calibrated clock at the operator level.
+Additivity of the unit-period calibrated modular flow.
 
-The modular flow at winding `m + n` decomposes as the composition of flows at
-`m` and `n`, with the period normalized to 1. This reflects the additive
-structure of the winding group ℤ and its homomorphic image in thermal time ℝ.
+The flow at winding `m + n` is the composition of the flows at `m` and `n`.
+This uses the modular automorphism group law and the unit-period winding
+calibration; it does not use the Cl(1,1) residue witness.
 -/
 theorem cl11_calibrated_clock_additive (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] (modularData : ModularRadonNikodymData E) (radius : ℝ) (h_radius : 0 < radius)

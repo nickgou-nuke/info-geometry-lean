@@ -1,13 +1,32 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl11SheetDiracMatrices
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11WittBasis
 import InfoGeometry.Clifford.Cl11CircularBasis
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Clifford
 
 open Matrix
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- In any non-commutative ring `[Ring R]`, the sum and difference of two Witt basis elements
+recover twice the original elements. -/
+theorem ring_witt_sum_diff_recovery {R : Type*} [Ring R] (ep em : R) :
+    (ep + em) + (ep - em) = 2 * ep ∧ (ep + em) - (ep - em) = 2 * em := by
+  constructor <;> noncomm_ring
 
 variable (B : Type*) [CommRing B] [Algebra ℚ B] [Algebra ℂ B]
   [IsScalarTower ℚ ℂ B] [Invertible (2 : B)]

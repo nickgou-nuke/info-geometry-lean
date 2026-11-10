@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Module.LinearMap.End
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Field.Basic
@@ -10,18 +15,104 @@ set_option linter.unusedVariables false
 # Cartan Involution Foundation (Strictly Algebraic)
 
 This module implements the algebraic foundation for gradings using Cartan 
-involutions in the endomorphism ring `Module.End 𝕜 E`. 
+involutions in any non-commutative ring `[Ring B]` with `[Invertible (2 : B)]`
+and in the endomorphism ring `Module.End 𝕜 E`. 
 
 Hierarchy:
-1. A Cartan involution θ is an endomorphism squaring to identity.
+1. A Cartan involution θ is an element/endomorphism squaring to identity.
 2. It generates canonical projectors P₊ and P₋.
 3. These projectors define the space grading and operator parity.
 
-All proofs are purely algebraic in the endomorphism ring, avoiding point-wise 
-evaluation on vectors to ensure maximum performance and universe consistency.
+All proofs are purely algebraic, avoiding point-wise evaluation on vectors to
+ensure maximum performance and universe consistency.
 -/
 
 namespace InfoGeometry.Cartan
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem cartanInvolution_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NoncommRing
+
+variable {B : Type*} [Ring B] [Invertible (2 : B)] (θ : B)
+
+/-- A Cartan involution in any noncommutative ring `[Ring B]` is an element squaring to `1`. -/
+def IsRingCartanInvolution : Prop := θ * θ = 1
+
+/-- Positive Cartan projector `P₊ = ⅟2 * (1 + θ)` in any `[Ring B] [Invertible (2 : B)]`. -/
+def ringPplus : B := ⅟(2 : B) * (1 + θ)
+
+/-- Negative Cartan projector `P₋ = ⅟2 * (1 - θ)` in any `[Ring B] [Invertible (2 : B)]`. -/
+def ringPminus : B := ⅟(2 : B) * (1 - θ)
+
+/-- In any noncommutative ring `[Ring B] [Invertible (2 : B)]`, `ringPplus θ + ringPminus θ = 1`. -/
+theorem ringPplus_add_ringPminus : ringPplus θ + ringPminus θ = 1 := by
+  dsimp [ringPplus, ringPminus]
+  rw [← mul_add]
+  have h_sum : (1 + θ) + (1 - θ) = (2 : B) := by
+    rw [← one_add_one_eq_two]
+    abel
+  rw [h_sum, invOf_mul_self]
+
+/-- In any noncommutative ring `[Ring B] [Invertible (2 : B)]`, `⅟(2 : B)` commutes with every element. -/
+theorem invOf_two_commute (b : B) : Commute (⅟(2 : B)) b :=
+  (Commute.ofNat_left 2 b).invOf_left
+
+/-- In any noncommutative ring `[Ring B] [Invertible (2 : B)]`, `ringPplus θ * ringPminus θ = 0`. -/
+theorem ringPplus_mul_ringPminus (hθ : IsRingCartanInvolution θ) :
+    ringPplus θ * ringPminus θ = 0 := by
+  dsimp [ringPplus, ringPminus]
+  have hc := (invOf_two_commute (1 + θ)).eq
+  have hexp : (1 + θ) * (1 - θ) = 0 := by
+    calc
+      (1 + θ) * (1 - θ) = 1 - θ * θ := by noncomm_ring
+      _ = 0 := by rw [hθ, sub_self]
+  calc
+    ⅟(2 : B) * (1 + θ) * (⅟(2 : B) * (1 - θ)) =
+        ⅟(2 : B) * ((1 + θ) * ⅟(2 : B)) * (1 - θ) := by noncomm_ring
+    _ = ⅟(2 : B) * (⅟(2 : B) * (1 + θ)) * (1 - θ) := by rw [← hc]
+    _ = (⅟(2 : B) * ⅟(2 : B)) * ((1 + θ) * (1 - θ)) := by noncomm_ring
+    _ = 0 := by rw [hexp, mul_zero]
+
+/-- In any noncommutative ring `[Ring B] [Invertible (2 : B)]`, `ringPminus θ * ringPplus θ = 0`. -/
+theorem ringPminus_mul_ringPplus (hθ : IsRingCartanInvolution θ) :
+    ringPminus θ * ringPplus θ = 0 := by
+  dsimp [ringPplus, ringPminus]
+  have hc := (invOf_two_commute (1 - θ)).eq
+  have hexp : (1 - θ) * (1 + θ) = 0 := by
+    calc
+      (1 - θ) * (1 + θ) = 1 - θ * θ := by noncomm_ring
+      _ = 0 := by rw [hθ, sub_self]
+  calc
+    ⅟(2 : B) * (1 - θ) * (⅟(2 : B) * (1 + θ)) =
+        ⅟(2 : B) * ((1 - θ) * ⅟(2 : B)) * (1 + θ) := by noncomm_ring
+    _ = ⅟(2 : B) * (⅟(2 : B) * (1 - θ)) * (1 + θ) := by rw [← hc]
+    _ = (⅟(2 : B) * ⅟(2 : B)) * ((1 - θ) * (1 + θ)) := by noncomm_ring
+    _ = 0 := by rw [hexp, mul_zero]
+
+/-- In any noncommutative ring `[Ring B] [Invertible (2 : B)]`, `ringPplus θ` is idempotent. -/
+theorem ringPplus_idempotent (hθ : IsRingCartanInvolution θ) :
+    ringPplus θ * ringPplus θ = ringPplus θ := by
+  calc
+    ringPplus θ * ringPplus θ =
+        ringPplus θ * (ringPplus θ + ringPminus θ) := by
+      rw [mul_add, ringPplus_mul_ringPminus θ hθ, add_zero]
+    _ = ringPplus θ := by rw [ringPplus_add_ringPminus, mul_one]
+
+/-- In any noncommutative ring `[Ring B] [Invertible (2 : B)]`, `ringPminus θ` is idempotent. -/
+theorem ringPminus_idempotent (hθ : IsRingCartanInvolution θ) :
+    ringPminus θ * ringPminus θ = ringPminus θ := by
+  calc
+    ringPminus θ * ringPminus θ =
+        (ringPplus θ + ringPminus θ) * ringPminus θ := by
+      rw [add_mul, ringPplus_mul_ringPminus θ hθ, zero_add]
+    _ = ringPminus θ := by rw [ringPplus_add_ringPminus, one_mul]
+
+end NoncommRing
 
 /-- A Cartan involution is an endomorphism that squares to the identity. -/
 def IsCartanInvolution {𝕜 E : Type*} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] (θ : Module.End 𝕜 E) : Prop :=
@@ -168,6 +259,7 @@ lemma Pminus_apply (x : E) : (Pminus θ) x = (⅟(2 : 𝕜)) • (x - θ x) := b
   simp only [Pminus, LinearMap.smul_apply, LinearMap.sub_apply, Module.End.one_apply]
 
 lemma decompose (hθ : IsCartanInvolution θ) (x : E) : x = (Pplus θ) x + (Pminus θ) x := by
+  have _ := Pplus_idempotent θ hθ
   rw [← LinearMap.add_apply, Pplus_add_Pminus_eq_id, Module.End.one_apply]
 
 end InfoGeometry.Cartan

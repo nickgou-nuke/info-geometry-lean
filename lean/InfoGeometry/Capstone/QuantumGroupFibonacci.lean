@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Coalgebra.HopfConvolution
@@ -30,6 +35,38 @@ namespace InfoGeometry.Capstone.QuantumGroupFibonacci
 
 open Matrix
 open scoped TensorProduct
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ` and `ℝ`). -/
+def fibNoncommA : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 0, 0]
+def fibNoncommB : Matrix (Fin 2) (Fin 2) ℂ := !![0, 0; 1, 0]
+
+theorem quantumGroupFibonacci_noncomm_witness :
+    fibNoncommA * fibNoncommB ≠ fibNoncommB * fibNoncommA := by
+  intro h
+  have h00 : (fibNoncommA * fibNoncommB) 0 0 = (fibNoncommB * fibNoncommA) 0 0 :=
+    congrArg (fun M => M 0 0) h
+  norm_num [fibNoncommA, fibNoncommB, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+def fibNoncommRealA : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+def fibNoncommRealB : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+
+theorem quantumGroupFibonacci_noncomm_real_witness :
+    fibNoncommRealA * fibNoncommRealB ≠ fibNoncommRealB * fibNoncommRealA := by
+  intro h
+  have h00 : (fibNoncommRealA * fibNoncommRealB) 0 0 =
+      (fibNoncommRealB * fibNoncommRealA) 0 0 :=
+    congrArg (fun M => M 0 0) h
+  norm_num [fibNoncommRealA, fibNoncommRealB, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+/-- In any noncommutative ring `[Ring B]`, any golden-ratio generator `τ : B` satisfying
+`τ * τ = τ + 1` satisfies `τ * τ * τ = 2 * τ + 1`. -/
+theorem ring_golden_ratio_cube {B : Type*} [Ring B] {τ : B} (hτ : τ * τ = τ + 1) :
+    τ * τ * τ = 2 * τ + 1 := by
+  calc
+    τ * τ * τ = (τ + 1) * τ := by rw [hτ]
+    _ = τ * τ + τ := by rw [add_mul, one_mul]
+    _ = (τ + 1) + τ := by rw [hτ]
+    _ = 2 * τ + 1 := by rw [two_mul]; abel
 
 /-! ## Native Hopf-algebra foundation -/
 

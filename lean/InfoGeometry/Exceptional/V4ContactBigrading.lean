@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
@@ -21,7 +26,7 @@ $P_{++}, P_{+-}, P_{-+}, P_{--}$.
 variable {R V : Type*} [CommRing R] [Invertible (2 : R)] [AddCommGroup V] [Module R V]
 
 /-- The V₄ Symmetry contract on an endomorphism ring. -/
-structure V4Symmetry (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
+structure V4Symmetry (R V : Type*) [Ring R] [AddCommGroup V] [Module R V] where
   C : Module.End R V
   chi : Module.End R V
   C_sq : C * C = 1
@@ -53,7 +58,7 @@ lemma fourth_mul_fourth_mul_four : (fourth (R := R)) * (fourth (R := R)) * (4 : 
 
 omit [Invertible (2 : R)] in
 lemma four_smul_one_eq : (4 : R) • (1 : Module.End R V) = 1 + 1 + 1 + 1 := by
-  rw [show (4 : R) = 1 + 1 + 1 + 1 by ring, add_smul, add_smul, add_smul, one_smul]
+  rw [show (4 : R) = 1 + 1 + 1 + 1 by norm_num, add_smul, add_smul, add_smul, one_smul]
 
 /-! ### 1. Definition of the Four Projectors -/
 

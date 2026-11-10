@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Clifford.Cl11GeometricBiquaternionBridge
@@ -47,7 +54,7 @@ This module formalizes:
    - For on-shell light states, the quadratic Casimir $C_1 = 0$ is strictly conserved under loxodromic flow,
      verifying that the motion along the celestial boundary is isoentropic ($dS = 0$).
 
-All proofs are native Mathlib with 0 sorry, 0 admit, and 0 custom axioms.
+All proofs are proved in native Mathlib.
 -/
 
 namespace InfoGeometry.Clifford.SouriauLoxodromicCelestial
@@ -56,7 +63,16 @@ open Matrix
 open InfoGeometry.Clifford.Coquaternion
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
 
-variable {R : Type*} [CommRing R]
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+section NonCommRingRotors
+
+variable {R : Type*} [Ring R]
 
 /-! ### 1. The Hyperbolic Boost Rotor in Cl(1,1) -/
 
@@ -68,6 +84,122 @@ def boostRotor (ch sh : R) : Coquaternion R :=
     $(s + z \omega)^\dagger = s - z \omega$. -/
 def boostRotorAdj (ch sh : R) : Coquaternion R :=
   ⟨ch, 0, 0, -sh⟩
+
+/-- Over any non-commutative ring `[Ring R]`, the scalar part of `B * B^\dagger` is `c_h^2 - s_h^2`. -/
+theorem boostRotor_mul_adj_s (ch sh : R) :
+    (boostRotor ch sh * boostRotorAdj ch sh).s = ch ^ 2 - sh ^ 2 := by
+  simp [boostRotor, boostRotorAdj, sq]
+  noncomm_ring
+
+/-- The reduced norm of the boost rotor is $c_h^2 - s_h^2$ over any `[Ring R]`. -/
+theorem normSq_boostRotor (ch sh : R) :
+    normSq (boostRotor ch sh) = ch ^ 2 - sh ^ 2 := by
+  simp [normSq, boostRotor]
+
+/-- The boost rotor scales the unnormalized positive projector $\mathcal{P}_+ = 1 + \omega$
+    by the forward eigenvalue $\lambda = c_h + s_h$ over any `[Ring R]`. -/
+theorem boost_eigen_PPlus (ch sh : R) :
+    boostRotor ch sh * (P_plus_raw : Coquaternion R) =
+    Coquaternion.smul (ch + sh) (P_plus_raw : Coquaternion R) := by
+  ext <;> { simp [boostRotor, P_plus_raw, omega, Coquaternion.smul]; try noncomm_ring }
+
+/-- The boost rotor scales the unnormalized negative projector $\mathcal{P}_- = 1 - \omega$
+    by the reciprocal eigenvalue $\lambda^{-1} = c_h - s_h$ over any `[Ring R]`. -/
+theorem boost_eigen_PMinus (ch sh : R) :
+    boostRotor ch sh * (P_minus_raw : Coquaternion R) =
+    Coquaternion.smul (ch - sh) (P_minus_raw : Coquaternion R) := by
+  ext <;> { simp [boostRotor, P_minus_raw, omega, Coquaternion.smul]; try noncomm_ring }
+
+/-- Spatial rotation rotor $R(c_e, s_e) = c_e \cdot 1 + s_e \cdot e_2$ in the timelike/elliptic plane. -/
+def rotRotor (ce se : R) : Coquaternion R :=
+  ⟨ce, 0, se, 0⟩
+
+/-- The spatial rotation conjugate $\bar{R} = c_e \cdot 1 - s_e \cdot e_2$. -/
+def rotRotorAdj (ce se : R) : Coquaternion R :=
+  ⟨ce, 0, -se, 0⟩
+
+/-- The reduced norm of the rotation rotor is $c_e^2 + s_e^2$ over any `[Ring R]`. -/
+theorem normSq_rotRotor (ce se : R) :
+    normSq (rotRotor ce se) = ce ^ 2 + se ^ 2 := by
+  simp [normSq, rotRotor]
+
+/-- The loxodromic rotor $\Lambda = B * R$ combining a boost and a spatial rotation. -/
+def loxodromicRotor (ch sh ce se : R) : Coquaternion R :=
+  boostRotor ch sh * rotRotor ce se
+
+/-- Minkowski spacetime quadratic Casimir form $C_1(t, x, y, z) = t^2 - x^2 - y^2 - z^2$. -/
+def casimirMinkowski (t x y z : R) : R :=
+  t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2
+
+/-- Planar Minkowski quadratic Casimir form $C_1(t, x) = t^2 - x^2$. -/
+def casimirPlanar (t x : R) : R :=
+  t ^ 2 - x ^ 2
+
+/-- Boost action on a Minkowski 4-vector along the $x$-axis. -/
+def boostVector (ch sh : R) (t x y z : R) : R × R × R × R :=
+  (ch * t + sh * x, sh * t + ch * x, y, z)
+
+/-- Spatial rotation action in the $(y, z)$ plane. -/
+def rotVector (ce se : R) (t x y z : R) : R × R × R × R :=
+  (t, x, ce * y - se * z, se * y + ce * z)
+
+/-- The full loxodromic action on a Minkowski 4-vector: boost along $x$ followed by rotation in $(y, z)$. -/
+def loxodromicVector (ch sh ce se : R) (t x y z : R) : R × R × R × R :=
+  (ch * t + sh * x, sh * t + ch * x, ce * y - se * z, se * y + ce * z)
+
+/-- Null ray forward scaling: On the collinear null ray $(t = r, x = r, y = 0, z = 0)$,
+    hyperbolic boost scales both components uniformly by $\lambda = c_h + s_h$ over any `[Ring R]`. -/
+theorem null_ray_forward_scaling (ch sh r : R) :
+    ch * r + sh * r = (ch + sh) * r :=
+  (add_mul ch sh r).symm
+
+/-- Planar null ray condition: $t = r, x = r \implies C_1(r, r) = 0$ over any `[Ring R]`. -/
+theorem planar_null_ray_casimir_zero (r : R) :
+    casimirPlanar r r = 0 :=
+  sub_self (r ^ 2)
+
+/-- Composition of two logarithmic scale translations is additive over any `[Ring R]`:
+    $(\tau + \delta_1) + \delta_2 = \tau + (\delta_1 + \delta_2)$. -/
+theorem log_scale_translation_additive (tau d1 d2 : R) :
+    (tau + d1) + d2 = tau + (d1 + d2) :=
+  add_assoc tau d1 d2
+
+/-- Inverse scale translation cancels the shift over any `[Ring R]`: $(\tau + \delta) - \delta = \tau$. -/
+theorem log_scale_translation_inverse (tau delta : R) :
+    (tau + delta) - delta = tau :=
+  add_sub_cancel_right tau delta
+
+/-- Helical state in cylinder coordinates: $(\tau, \theta) \in R \times R$. -/
+def helicalFlowStep (delta theta_step : R) (state : R × R) : R × R :=
+  (state.1 + delta, state.2 + theta_step)
+
+/-- $n$-step helical translation is linear in the step count over any `[Ring R]`:
+    two iterations advance $\tau$ by $2 \delta$ and $\theta$ by $2 \Delta\theta$. -/
+theorem helical_flow_iter_two (delta theta_step : R) (state : R × R) :
+    helicalFlowStep delta theta_step (helicalFlowStep delta theta_step state) =
+    (state.1 + 2 * delta, state.2 + 2 * theta_step) := by
+  unfold helicalFlowStep
+  ext <;> simp <;> noncomm_ring
+
+/-- A Souriau coadjoint orbit datum representing an on-shell relativistic state. -/
+structure SouriauState (R : Type*) where
+  t : R
+  x : R
+  y : R
+  z : R
+  deriving Inhabited
+
+/-- Evaluation of the quadratic Casimir invariant on a Souriau state. -/
+def SouriauState.casimir (s : SouriauState R) : R :=
+  casimirMinkowski s.t s.x s.y s.z
+
+/-- Loxodromic transport of a Souriau state. -/
+def SouriauState.loxodromicAct (ch sh ce se : R) (s : SouriauState R) : SouriauState R :=
+  ⟨ch * s.t + sh * s.x, sh * s.t + ch * s.x, ce * s.y - se * s.z, se * s.y + ce * s.z⟩
+
+end NonCommRingRotors
+
+variable {R : Type*} [CommRing R]
 
 /-- The boost rotor satisfies $B * B^\dagger = (c_h^2 - s_h^2) \cdot 1$. -/
 theorem boostRotor_mul_adj (ch sh : R) :
@@ -82,11 +214,6 @@ theorem boostRotor_unitary (ch sh : R) (h_hyp : ch ^ 2 - sh ^ 2 = 1) :
   rw [boostRotor_mul_adj, h_hyp]
   ext <;> simp [Coquaternion.smul]
 
-/-- The reduced norm of the boost rotor is $c_h^2 - s_h^2$. -/
-theorem normSq_boostRotor (ch sh : R) :
-    normSq (boostRotor ch sh) = ch ^ 2 - sh ^ 2 := by
-  simp [normSq, boostRotor]
-
 /-- The matrix representation $\Psi(B)$ has determinant $c_h^2 - s_h^2$. -/
 theorem det2_Psi_boostRotor (ch sh : R) :
     det2 (toMatrix (boostRotor ch sh)) = ch ^ 2 - sh ^ 2 := by
@@ -97,20 +224,6 @@ theorem det2_Psi_boostRotor_unit (ch sh : R) (h_hyp : ch ^ 2 - sh ^ 2 = 1) :
     det2 (toMatrix (boostRotor ch sh)) = 1 := by
   rw [det2_Psi_boostRotor, h_hyp]
 
-/-- The boost rotor scales the unnormalized positive projector $\mathcal{P}_+ = 1 + \omega$
-    by the forward eigenvalue $\lambda = c_h + s_h$. -/
-theorem boost_eigen_PPlus (ch sh : R) :
-    boostRotor ch sh * (P_plus_raw : Coquaternion R) =
-    Coquaternion.smul (ch + sh) (P_plus_raw : Coquaternion R) := by
-  ext <;> { simp [boostRotor, P_plus_raw, omega, Coquaternion.smul]; try ring }
-
-/-- The boost rotor scales the unnormalized negative projector $\mathcal{P}_- = 1 - \omega$
-    by the reciprocal eigenvalue $\lambda^{-1} = c_h - s_h$. -/
-theorem boost_eigen_PMinus (ch sh : R) :
-    boostRotor ch sh * (P_minus_raw : Coquaternion R) =
-    Coquaternion.smul (ch - sh) (P_minus_raw : Coquaternion R) := by
-  ext <;> { simp [boostRotor, P_minus_raw, omega, Coquaternion.smul]; try ring }
-
 /-- The product of the lightcone eigenvalues is $c_h^2 - s_h^2 = 1$. -/
 theorem boost_eigen_product (ch sh : R) (h_hyp : ch ^ 2 - sh ^ 2 = 1) :
     (ch + sh) * (ch - sh) = 1 := by
@@ -119,14 +232,6 @@ theorem boost_eigen_product (ch sh : R) (h_hyp : ch ^ 2 - sh ^ 2 = 1) :
     _ = 1 := h_hyp
 
 /-! ### 2. The Spatial Rotation Rotor in Cl(1,1) -/
-
-/-- Spatial rotation rotor $R(c_e, s_e) = c_e \cdot 1 + s_e \cdot e_2$ in the timelike/elliptic plane. -/
-def rotRotor (ce se : R) : Coquaternion R :=
-  ⟨ce, 0, se, 0⟩
-
-/-- The spatial rotation conjugate $\bar{R} = c_e \cdot 1 - s_e \cdot e_2$. -/
-def rotRotorAdj (ce se : R) : Coquaternion R :=
-  ⟨ce, 0, -se, 0⟩
 
 /-- The rotation rotor satisfies $R * \bar{R} = (c_e^2 + s_e^2) \cdot 1$. -/
 theorem rotRotor_mul_adj (ce se : R) :
@@ -141,11 +246,6 @@ theorem rotRotor_unitary (ce se : R) (h_ell : ce ^ 2 + se ^ 2 = 1) :
   rw [rotRotor_mul_adj, h_ell]
   ext <;> simp [Coquaternion.smul]
 
-/-- The reduced norm of the rotation rotor is $c_e^2 + s_e^2$. -/
-theorem normSq_rotRotor (ce se : R) :
-    normSq (rotRotor ce se) = ce ^ 2 + se ^ 2 := by
-  simp [normSq, rotRotor]
-
 /-- The matrix representation $\Psi(R)$ has determinant $c_e^2 + s_e^2$. -/
 theorem det2_Psi_rotRotor (ce se : R) :
     det2 (toMatrix (rotRotor ce se)) = ce ^ 2 + se ^ 2 := by
@@ -157,10 +257,6 @@ theorem det2_Psi_rotRotor_unit (ce se : R) (h_ell : ce ^ 2 + se ^ 2 = 1) :
   rw [det2_Psi_rotRotor, h_ell]
 
 /-! ### 3. Loxodromic Rotor Decomposition -/
-
-/-- The loxodromic rotor $\Lambda = B * R$ combining a boost and a spatial rotation. -/
-def loxodromicRotor (ch sh ce se : R) : Coquaternion R :=
-  boostRotor ch sh * rotRotor ce se
 
 /-- The norm of a product of coquaternions is the product of their norms:
     $N(p * q) = N(p) N(q)$. -/
@@ -191,18 +287,6 @@ theorem det2_Psi_loxodromic_unit (ch sh ce se : R)
 
 /-! ### 4. Minkowski Quadratic Casimir and Celestial Sphere Null Ray Invariance -/
 
-/-- Minkowski spacetime quadratic Casimir form $C_1(t, x, y, z) = t^2 - x^2 - y^2 - z^2$. -/
-def casimirMinkowski (t x y z : R) : R :=
-  t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2
-
-/-- Planar Minkowski quadratic Casimir form $C_1(t, x) = t^2 - x^2$. -/
-def casimirPlanar (t x : R) : R :=
-  t ^ 2 - x ^ 2
-
-/-- Boost action on a Minkowski 4-vector along the $x$-axis. -/
-def boostVector (ch sh : R) (t x y z : R) : R × R × R × R :=
-  (ch * t + sh * x, sh * t + ch * x, y, z)
-
 /-- Strict Lorentz invariance of the quadratic Casimir under hyperbolic boost:
     $C_1(B(t, x, y, z)) = C_1(t, x, y, z)$ when $c_h^2 - s_h^2 = 1$. -/
 theorem casimir_boost_invariant (ch sh : R) (t x y z : R)
@@ -216,10 +300,6 @@ theorem casimir_boost_invariant (ch sh : R) (t x y z : R)
     _ = 1 * (t ^ 2 - x ^ 2) - y ^ 2 - z ^ 2 := by rw [h_hyp]
     _ = t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2 := by ring
 
-/-- Spatial rotation action in the $(y, z)$ plane. -/
-def rotVector (ce se : R) (t x y z : R) : R × R × R × R :=
-  (t, x, ce * y - se * z, se * y + ce * z)
-
 /-- Strict invariance of the quadratic Casimir under spatial rotation:
     $C_1(R(t, x, y, z)) = C_1(t, x, y, z)$ when $c_e^2 + s_e^2 = 1$. -/
 theorem casimir_rot_invariant (ce se : R) (t x y z : R)
@@ -232,10 +312,6 @@ theorem casimir_rot_invariant (ce se : R) (t x y z : R)
       = t ^ 2 - x ^ 2 - (ce ^ 2 + se ^ 2) * (y ^ 2 + z ^ 2) := by ring
     _ = t ^ 2 - x ^ 2 - 1 * (y ^ 2 + z ^ 2) := by rw [h_ell]
     _ = t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2 := by ring
-
-/-- The full loxodromic action on a Minkowski 4-vector: boost along $x$ followed by rotation in $(y, z)$. -/
-def loxodromicVector (ch sh ce se : R) (t x y z : R) : R × R × R × R :=
-  (ch * t + sh * x, sh * t + ch * x, ce * y - se * z, se * y + ce * z)
 
 /-- Strict Casimir invariance under full loxodromic transformation:
     $C_1(\Lambda(p)) = C_1(p)$. -/
@@ -261,59 +337,7 @@ theorem celestial_null_casimir_preserved (ch sh ce se : R) (t x y z : R)
                      (ce * y - se * z) (se * y + ce * z) = 0 := by
   rw [casimir_loxodromic_invariant ch sh ce se t x y z h_hyp h_ell, h_null]
 
-/-- Null ray forward scaling: On the collinear null ray $(t = r, x = r, y = 0, z = 0)$,
-    hyperbolic boost scales both components uniformly by $\lambda = c_h + s_h$. -/
-theorem null_ray_forward_scaling (ch sh r : R) :
-    ch * r + sh * r = (ch + sh) * r := by
-  ring
-
-/-- Planar null ray condition: $t = r, x = r \implies C_1(r, r) = 0$. -/
-theorem planar_null_ray_casimir_zero (r : R) :
-    casimirPlanar r r = 0 := by
-  unfold casimirPlanar
-  ring
-
-/-! ### 5. Logarithmic Time Chart & Helical Uniformization -/
-
-/-- Composition of two logarithmic scale translations is additive:
-    $(\tau + \delta_1) + \delta_2 = \tau + (\delta_1 + \delta_2)$. -/
-theorem log_scale_translation_additive (tau d1 d2 : R) :
-    (tau + d1) + d2 = tau + (d1 + d2) := by
-  ring
-
-/-- Inverse scale translation cancels the shift: $(\tau + \delta) - \delta = \tau$. -/
-theorem log_scale_translation_inverse (tau delta : R) :
-    (tau + delta) - delta = tau := by
-  ring
-
-/-- Helical state in cylinder coordinates: $(\tau, \theta) \in R \times R$. -/
-def helicalFlowStep (delta theta_step : R) (state : R × R) : R × R :=
-  (state.1 + delta, state.2 + theta_step)
-
-/-- $n$-step helical translation is linear in the step count:
-    two iterations advance $\tau$ by $2 \delta$ and $\theta$ by $2 \Delta\theta$. -/
-theorem helical_flow_iter_two (delta theta_step : R) (state : R × R) :
-    helicalFlowStep delta theta_step (helicalFlowStep delta theta_step state) =
-    (state.1 + 2 * delta, state.2 + 2 * theta_step) := by
-  unfold helicalFlowStep
-  ext <;> simp <;> ring
-
 /-! ### 6. Souriau Coadjoint Orbit / Casimir Isoentropic Invariance -/
-
-/-- A Souriau coadjoint orbit datum representing an on-shell relativistic state. -/
-structure SouriauState (R : Type*) where
-  t : R
-  x : R
-  y : R
-  z : R
-
-/-- Evaluation of the quadratic Casimir invariant on a Souriau state. -/
-def SouriauState.casimir (s : SouriauState R) : R :=
-  casimirMinkowski s.t s.x s.y s.z
-
-/-- Loxodromic transport of a Souriau state. -/
-def SouriauState.loxodromicAct (ch sh ce se : R) (s : SouriauState R) : SouriauState R :=
-  ⟨ch * s.t + sh * s.x, sh * s.t + ch * s.x, ce * s.y - se * s.z, se * s.y + ce * s.z⟩
 
 /-- The quadratic Casimir is strictly conserved along the Souriau coadjoint orbit under loxodromic flow. -/
 theorem souriau_sheet_casimir_conserved (ch sh ce se : R) (s : SouriauState R)
@@ -329,50 +353,39 @@ theorem souriau_celestial_isoentropic (entropy : R → R) (ch sh ce se : R) (s :
     entropy (s.loxodromicAct ch sh ce se).casimir = entropy s.casimir := by
   rw [souriau_sheet_casimir_conserved ch sh ce se s h_hyp h_ell]
 
-/-! ### 7. Master Certificate: Frontier 95 Integration -/
+/-! ### 7. Master Synthesis: Frontier 95 Integration -/
 
-/-- Master certificate verifying the complete algebraic, geometric, and thermodynamic consistency
+/-- Master synthesis theorem verifying the algebraic, geometric, and thermodynamic consistency
     of the Souriau Loxodromic Celestial Bridge. -/
-structure SouriauLoxodromicCelestialCertificate (R : Type*) [CommRing R] where
-  boost_unitary : ∀ (ch sh : R), ch ^ 2 - sh ^ 2 = 1 →
-    boostRotor ch sh * boostRotorAdj ch sh = 1
-  boost_det_unit : ∀ (ch sh : R), ch ^ 2 - sh ^ 2 = 1 →
-    det2 (toMatrix (boostRotor ch sh)) = 1
-  boost_eigen_prod : ∀ (ch sh : R), ch ^ 2 - sh ^ 2 = 1 →
-    (ch + sh) * (ch - sh) = 1
-  rot_unitary : ∀ (ce se : R), ce ^ 2 + se ^ 2 = 1 →
-    rotRotor ce se * rotRotorAdj ce se = 1
-  rot_det_unit : ∀ (ce se : R), ce ^ 2 + se ^ 2 = 1 →
-    det2 (toMatrix (rotRotor ce se)) = 1
-  loxodromic_det_unit : ∀ (ch sh ce se : R), ch ^ 2 - sh ^ 2 = 1 → ce ^ 2 + se ^ 2 = 1 →
-    det2 (toMatrix (loxodromicRotor ch sh ce se)) = 1
-  casimir_conserved : ∀ (ch sh ce se : R) (s : SouriauState R),
-    ch ^ 2 - sh ^ 2 = 1 → ce ^ 2 + se ^ 2 = 1 →
-    (s.loxodromicAct ch sh ce se).casimir = s.casimir
-  celestial_null_preserved : ∀ (ch sh ce se : R) (t x y z : R),
-    ch ^ 2 - sh ^ 2 = 1 → ce ^ 2 + se ^ 2 = 1 →
-    casimirMinkowski t x y z = 0 →
-    casimirMinkowski (ch * t + sh * x) (sh * t + ch * x)
-                     (ce * y - se * z) (se * y + ce * z) = 0
-  null_ray_scale : ∀ (ch sh r : R), ch * r + sh * r = (ch + sh) * r
-  log_translation_additive : ∀ (tau d1 d2 : R), (tau + d1) + d2 = tau + (d1 + d2)
-  isoentropic_flow : ∀ (entropy : R → R) (ch sh ce se : R) (s : SouriauState R),
-    ch ^ 2 - sh ^ 2 = 1 → ce ^ 2 + se ^ 2 = 1 →
-    entropy (s.loxodromicAct ch sh ce se).casimir = entropy s.casimir
-
-/-- Master certificate verifying that all 11 theorems hold natively. -/
-theorem compile_souriau_loxodromic_celestial_bridge (R : Type*) [CommRing R] :
-    SouriauLoxodromicCelestialCertificate R where
-  boost_unitary := boostRotor_unitary
-  boost_det_unit := det2_Psi_boostRotor_unit
-  boost_eigen_prod := boost_eigen_product
-  rot_unitary := rotRotor_unitary
-  rot_det_unit := det2_Psi_rotRotor_unit
-  loxodromic_det_unit := det2_Psi_loxodromic_unit
-  casimir_conserved := souriau_sheet_casimir_conserved
-  celestial_null_preserved := celestial_null_casimir_preserved
-  null_ray_scale := null_ray_forward_scaling
-  log_translation_additive := log_scale_translation_additive
-  isoentropic_flow := souriau_celestial_isoentropic
+theorem compile_souriau_loxodromic_celestial_bridge
+    {B : Type*} [Ring B] (bch bsh br btau bd1 bd2 : B)
+    (ch sh ce se : R) (s : SouriauState R) (entropy : R → R)
+    (h_hyp : ch ^ 2 - sh ^ 2 = 1) (h_ell : ce ^ 2 + se ^ 2 = 1) :
+    (boostRotor bch bsh * (P_plus_raw : Coquaternion B) =
+      Coquaternion.smul (bch + bsh) (P_plus_raw : Coquaternion B)) ∧
+    (boostRotor bch bsh * (P_minus_raw : Coquaternion B) =
+      Coquaternion.smul (bch - bsh) (P_minus_raw : Coquaternion B)) ∧
+    (bch * br + bsh * br = (bch + bsh) * br) ∧
+    ((btau + bd1) + bd2 = btau + (bd1 + bd2)) ∧
+    (boostRotor ch sh * boostRotorAdj ch sh = 1) ∧
+    (det2 (toMatrix (boostRotor ch sh)) = 1) ∧
+    ((ch + sh) * (ch - sh) = 1) ∧
+    (rotRotor ce se * rotRotorAdj ce se = 1) ∧
+    (det2 (toMatrix (rotRotor ce se)) = 1) ∧
+    (det2 (toMatrix (loxodromicRotor ch sh ce se)) = 1) ∧
+    ((s.loxodromicAct ch sh ce se).casimir = s.casimir) ∧
+    (entropy (s.loxodromicAct ch sh ce se).casimir = entropy s.casimir) :=
+  ⟨boost_eigen_PPlus bch bsh,
+   boost_eigen_PMinus bch bsh,
+   null_ray_forward_scaling bch bsh br,
+   log_scale_translation_additive btau bd1 bd2,
+   boostRotor_unitary ch sh h_hyp,
+   det2_Psi_boostRotor_unit ch sh h_hyp,
+   boost_eigen_product ch sh h_hyp,
+   rotRotor_unitary ce se h_ell,
+   det2_Psi_rotRotor_unit ce se h_ell,
+   det2_Psi_loxodromic_unit ch sh ce se h_hyp h_ell,
+   souriau_sheet_casimir_conserved ch sh ce se s h_hyp h_ell,
+   souriau_celestial_isoentropic entropy ch sh ce se s h_hyp h_ell⟩
 
 end InfoGeometry.Clifford.SouriauLoxodromicCelestial

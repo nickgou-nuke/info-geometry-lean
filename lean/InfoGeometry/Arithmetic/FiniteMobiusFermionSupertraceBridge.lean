@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -10,6 +16,49 @@ namespace InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingFermionSupertrace
+
+variable {ι B : Type*} [Ring B]
+
+/-- Single-mode fermionic Euler factor `1 - q` in any non-commutative ring `[Ring B]`. -/
+def ringFermionEulerFactor (q : B) : B :=
+  1 - q
+
+/-- Two-mode fermionic Euler product expansion in any non-commutative ring `[Ring B]`. -/
+theorem ringFermionEulerFactor_mul (q₁ q₂ : B) :
+    ringFermionEulerFactor q₁ * ringFermionEulerFactor q₂ =
+      1 - q₁ - q₂ + q₁ * q₂ := by
+  unfold ringFermionEulerFactor
+  noncomm_ring
+
+/-- Ordered multi-mode fermionic Euler product over any non-commutative ring `[Ring B]`. -/
+def ringFermionEulerProductList (modes : List ι) (q : ι → B) : B :=
+  (modes.map (fun p => 1 - q p)).prod
+
+@[simp]
+theorem ringFermionEulerProductList_nil (q : ι → B) :
+    ringFermionEulerProductList [] q = 1 :=
+  rfl
+
+@[simp]
+theorem ringFermionEulerProductList_cons (p : ι) (modes : List ι) (q : ι → B) :
+    ringFermionEulerProductList (p :: modes) q =
+      (1 - q p) * ringFermionEulerProductList modes q := by
+  simp [ringFermionEulerProductList]
+
+theorem ringFermionEulerProductList_append (m₁ m₂ : List ι) (q : ι → B) :
+    ringFermionEulerProductList (m₁ ++ m₂) q =
+      ringFermionEulerProductList m₁ q * ringFermionEulerProductList m₂ q := by
+  simp [ringFermionEulerProductList, List.map_append, List.prod_append]
+
+end NonCommRingFermionSupertrace
 
 /-!
 Finite arithmetic supertrace bridge.

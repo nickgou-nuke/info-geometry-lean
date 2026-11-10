@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
@@ -43,6 +48,12 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
 open InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
 open InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics.ZetaSouriauLieSymmetry
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
 
 /-- The Fourier parity layer seen as the exact finite zeta chart frame. -/
 def parityToChartSymmetry : FourierParity → ChartSymmetry
@@ -63,7 +74,7 @@ theorem parityToChartSymmetry_compose (p q : FourierParity) :
 
 section CommGroup
 
-variable {G : Type*} [CommGroup G]
+variable {G : Type*}
 
 /--
 Induced Souriau chart symmetry from a three-layer idele symmetry shadow.
@@ -105,9 +116,7 @@ theorem act_eq_of_same_logScale_and_parity
     (x : ZetaCenteredChart) :
     (toZetaSouriauLieSymmetry A).act x =
       (toZetaSouriauLieSymmetry B).act x := by
-  cases A
-  cases B
-  simp_all [toZetaSouriauLieSymmetry]
+  simp [toZetaSouriauLieSymmetry, hlog, hpar]
 
 /-- The dual parity layer acts on centered coordinates by the critical mirror. -/
 theorem dual_act_eq_heightTranslation_criticalMirror
@@ -194,7 +203,7 @@ This records exactly the theorem-safe ingredients already present in the repo:
 * optional trace realization predicate supplied externally.
 -/
 structure IdeleSouriauZetaModel
-    (C_comm : Type*) [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    (C_comm : Type*) [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     (G : Type*) [CommGroup G] [InfoGeometry.Canonical.BostConnesGalois.GaloisActionData G] where
   eRep : InfoGeometry.Canonical.BostConnesGalois.GroupElementRepresentation C_comm
   symmetry : ThreeLayerIdeleSymmetry G
@@ -210,7 +219,7 @@ structure IdeleSouriauZetaModel
 
 /-- The model trace equals the zeta readout at the supplied temperature. -/
 theorem model_tracePartition_eq_zetaReadout
-    {C_comm : Type*} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    {C_comm : Type*} [Ring C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
     {G : Type*} [CommGroup G] [InfoGeometry.Canonical.BostConnesGalois.GaloisActionData G]
     (M : IdeleSouriauZetaModel C_comm G) :
     M.tracePartition = M.zetaReadout M.temperature := by
@@ -222,5 +231,28 @@ theorem model_tracePartition_eq_zetaReadout
     M.traceRealizes ()
 
 end CommGroup
+
+instance : TopologicalSpace PUnit := ⊥
+
+instance : InfoGeometry.Canonical.BostConnesGalois.GaloisActionData PUnit where
+  actOnQ _ r := r
+  actOnQ_zero _ := rfl
+  actOnQ_add _ _ _ := rfl
+  actOnQ_periodic _ _ := rfl
+  act_faithful _ _ := rfl
+
+/-- Concrete ground inhabitant of `IdeleSouriauZetaModel` over `ℂ` and `PUnit`. -/
+def complexUnitIdeleSouriauZetaModel : IdeleSouriauZetaModel ℂ PUnit where
+  eRep :=
+    { e := fun _ => 1
+      e_zero := rfl
+      e_add := fun _ _ => (mul_one 1).symm
+      e_star := fun _ => star_one ℂ
+      e_periodic := fun _ => rfl }
+  symmetry := unitThreeLayerIdeleSymmetry
+  temperature := 0
+  zetaReadout := fun _ => 0
+  tracePartition := 0
+  traceRealizes := fun _ => rfl
 
 end InfoGeometry.Arithmetic.IdeleSouriauZetaThermodynamics

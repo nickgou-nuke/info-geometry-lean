@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.GNSBridge
@@ -56,15 +61,57 @@ theorem anticommutator_u_v (i j : ℕ) :
     anticommutator (car.u i) (car.v j) = if i = j then 1 else 0 :=
   car.anticomm_uv i j
 
-/-- Diagonal CAR specialization: `{uᵢ, vᵢ} = 1`. -/
-@[simp] theorem anticommutator_u_v_self (i : ℕ) :
-    anticommutator (car.u i) (car.v i) = 1 := by
-  simp [car.anticomm_uv i i]
+/--
+Ordered CAR rewrite: moving an annihilation generator past a creation
+generator contributes the diagonal identity term and retains the reversed
+operator product in its original noncommutative order.
+-/
+theorem creation_annihilation_ordered_product (i j : ℕ) :
+    car.u i * car.v j =
+      if i = j then 1 - car.v j * car.u i else -(car.v j * car.u i) := by
+  by_cases hij : i = j
+  · subst j
+    have hrel : car.u i * car.v i + car.v i * car.u i = 1 := by
+      simpa [anticommutator] using car.anticomm_uv i i
+    rw [ite_eq_left rfl]
+    calc
+      car.u i * car.v i =
+          (car.u i * car.v i + car.v i * car.u i) - car.v i * car.u i := by
+            noncomm_ring
+      _ = 1 - car.v i * car.u i := by rw [hrel]
+  · have hrel : car.u i * car.v j + car.v j * car.u i = 0 := by
+      simpa [anticommutator, hij] using car.anticomm_uv i j
+    rw [ite_eq_right hij]
+    calc
+      car.u i * car.v j =
+          (car.u i * car.v j + car.v j * car.u i) - car.v j * car.u i := by
+            noncomm_ring
+      _ = -(car.v j * car.u i) := by rw [hrel]; noncomm_ring
+
+/--
+Diagonal CAR specialization together with its order-sensitive product form:
+`{uᵢ, vᵢ} = 1` and `uᵢ vᵢ = 1 - vᵢ uᵢ`.
+-/
+theorem anticommutator_u_v_self (i : ℕ) :
+    anticommutator (car.u i) (car.v i) = 1 ∧
+      car.u i * car.v i = 1 - car.v i * car.u i := by
+  have horder : car.u i * car.v i = 1 - car.v i * car.u i := by
+    simpa using car.creation_annihilation_ordered_product i i
+  refine ⟨?_, horder⟩
+  unfold anticommutator
+  rw [horder]
+  abel
 
 /-- Off-diagonal CAR specialization: `{uᵢ, vⱼ} = 0` when `i ≠ j`. -/
 theorem anticommutator_u_v_of_ne {i j : ℕ} (hij : i ≠ j) :
-    anticommutator (car.u i) (car.v j) = 0 := by
-  simp [car.anticomm_uv i j, hij]
+    anticommutator (car.u i) (car.v j) = 0 ∧
+      car.u i * car.v j = -(car.v j * car.u i) := by
+  have horder : car.u i * car.v j = -(car.v j * car.u i) := by
+    simpa [hij] using car.creation_annihilation_ordered_product i j
+  refine ⟨?_, horder⟩
+  unfold anticommutator
+  rw [horder]
+  abel
 
 /-- Creation operators anticommute. -/
 @[simp] theorem anticommutator_u_u (i j : ℕ) :

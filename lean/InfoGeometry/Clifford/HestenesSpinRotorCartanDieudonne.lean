@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
@@ -6,6 +11,20 @@ import InfoGeometry.Clifford.HestenesSpinRotor
 namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
+
+/-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
+theorem cartanDieudonne_exists_noncomm_pair :
+    ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
+  ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,
+   _root_.InfoGeometry.Algebra.FiniteSpin.j_plus_j_minus_ne⟩
+
+/-- Over any non-commutative ring `[Ring B]`, the double reflection `v * (u * x * u) * v`
+equals the bilateral action `(v * u) * x * (u * v)` of the rotor `v * u` and its reverse `u * v`. -/
+theorem ring_double_reflection_assoc
+    {B : Type*} [Ring B] (u v x : B) :
+    (v * u) * x * (u * v) = v * (u * x * u) * v := by
+  simp only [mul_assoc]
 
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]

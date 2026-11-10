@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Data.Complex.Basic
@@ -19,8 +24,9 @@ set_option linter.unusedVariables false
 /-!
 # Dickson-Cayley Confinement of Zeros & Riemann Hypothesis Bridge
 
-This module formalizes the resolution of the Hilbert-Pólya / RH frontier cluster
-via **Dikin Ellipsoids on Para-Kähler Symmetric Spaces** and the **Split Cayley-Dickson Colimit**:
+This module formalizes Dikin-ellipsoid and Cayley-transform statements together
+with a single **Split Cayley-Dickson Doubling** calculation. It does not resolve
+the Hilbert-Pólya/RH problem or define a Cayley-Dickson inductive colimit:
 
 1. **Riemann Prime Log-Barrier & Dikin Metric**:
    The prime periodic orbits on `Sp(2n, ℝ) / GL(n, ℝ)` are governed by the
@@ -35,9 +41,10 @@ via **Dikin Ellipsoids on Para-Kähler Symmetric Spaces** and the **Split Cayley
    `‖z‖ = 1` (the Lee-Yang boundary `∂E`) onto the Riemann critical line
    `Re(s) = 1/2` unconditionally without external witness debt.
 
-4. **Split Cayley-Dickson Colimit Invariance**:
-   The inclusion `cdEmbed` into the Albert-Cayley-Dickson tower preserves
-   the neutral norm and spectral confinement across all inductive stages.
+4. **One Split Cayley-Dickson Doubling**:
+   `cdEmbed` is the map `x ↦ (x, 0)` into `A × A`. This file proves its
+   multiplication formula and preservation of the supplied split quadratic
+   norm. It does not construct an inductive tower or its colimit.
 -/
 
 /-! ### 1. Dikin Log-Barrier & Interior Confinement -/
@@ -127,8 +134,14 @@ def splitCDMul (star : A → A) (p q r s : A) : A × A :=
 def cdEmbed (x : A) : A × A :=
   (x, 0)
 
-/-- 🏆 THEOREM 4 (Colimit Embedding Preserves Multiplication):
-    The embedding preserves algebra multiplication unconditionally. -/
+/-- The first-coordinate inclusion into the doubled carrier is injective. -/
+theorem cdEmbed_injective : Function.Injective (cdEmbed A) := by
+  intro x y h
+  exact congrArg Prod.fst h
+
+/-- 🏆 THEOREM 4 (Split Doubling Multiplication Formula):
+    Multiplying two embedded elements by the defined split product agrees
+    with embedding their product, provided the map sends zero to zero. -/
 theorem cdEmbed_mul (star : A → A) (h_star_zero : star 0 = 0) (x y : A) :
     splitCDMul A star x 0 y 0 = cdEmbed A (x * y) := by
   dsimp [splitCDMul, cdEmbed]
@@ -138,8 +151,9 @@ theorem cdEmbed_mul (star : A → A) (h_star_zero : star 0 = 0) (x y : A) :
 def splitNormSq (normA : A → ℝ) (pair : A × A) : ℝ :=
   normA pair.1 - normA pair.2
 
-/-- 🏆 THEOREM 5 (Colimit Embedding Preserves Quadratic Norm):
-    The split Cayley-Dickson embedding strictly preserves the quadratic norm. -/
+/-- 🏆 THEOREM 5 (Split Doubling Norm Formula):
+    The map `x ↦ (x, 0)` preserves the split quadratic expression when
+    `normA 0 = 0`. -/
 theorem cdEmbed_preserves_norm (normA : A → ℝ) (hn0 : normA 0 = 0) (x : A) :
     splitNormSq A normA (cdEmbed A x) = normA x := by
   dsimp [splitNormSq, cdEmbed]

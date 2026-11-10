@@ -1,110 +1,84 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Dynamics.RapiditySpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.RindlerWedge
 import InfoGeometry.Clifford.ConformalReflection55
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
+import InfoGeometry.Clifford.MonodromyFlowAdapter
 import InfoGeometry.Canonical.ConformalSL2GeneratorBridge
+import Mathlib.Tactic.NoncommRing
 
 /-!
-# Conformal Rapidity Rosetta
+# Rapidity, Rindler Flow, and Conformal Inversion
 
-Rosetta table for the rapidity, Rindler, inversion, Möbius, and adjoint lanes.
-
-This file does not add new mathematics. It pins the existing owner surfaces to a
-single named translation table so the SymPy witness and the Lean owner theorems
-share the same vocabulary.
-
-| SymPy / geometric readout | Lean owner |
-| --- | --- |
-| rapidity composition | `Dynamics.RapiditySpace.rapidity_additive_composition` |
-| rapidity logarithm shift | `Dynamics.RapiditySpace.log_coordinate_rapidity_shift` |
-| Rindler time translation | `Dynamics.RindlerWedge.rindler_flow_is_time_translation` |
-| Rindler proper distance | `Dynamics.RindlerWedge.rindler_flow_preserves_proper_distance` |
-| conformal inversion generator | `Clifford.ConformalReflection55.J_sq`, `J_swap_origin`, `J_swap_infinity` |
-| Möbius translation/inversion | `Clifford.DiscreteMoebiusGroup.moebius_T_action`, `moebius_S_action` |
-| conformal `sl₂` readout | `Canonical.ConformalSL2GeneratorBridge.P`, `D`, `K` |
-| ambient orthogonal label | `Canonical.ConformalSL2GeneratorBridge.ambient_group_is_O55` |
-
-The intended physics dictionary is:
-
-- rapidity boost `↔` additive hyperbolic flow;
-- `log`/`exp` `↔` additive/multiplicative coordinate conversion;
-- `J = u - v` `↔` conformal inversion / origin-infinity swap;
-- `z ↦ -1 / z` `↔` projective Möbius inversion;
-- `Op ↦ 1 / Op` only as a projective/inversion readout, not a literal algebraic inverse unless the operator is invertible.
+This owner proves compatibility statements between the finite real rapidity
+model, its Rindler-coordinate realization, and the Clifford sandwich inversion.
+The carriers remain the actual carriers of the source constructions: real
+`2 × 2` matrices for rapidity, `Cl(5,5)` elements for inversion, and complex
+numbers for the projective Möbius chart. These results do not identify those
+carriers or assert a continuum/analytic limit.
 -/
-
-set_option linter.dupNamespace false
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.ConformalRapidityRosetta
 
-/-! ## Rapidities and Rindler flow -/
+open InfoGeometry.Dynamics.HyperbolicComponent
+open InfoGeometry.Dynamics.RapiditySpace
+open InfoGeometry.Dynamics.RindlerWedge
+open InfoGeometry.Clifford.ConformalReflection55
+open InfoGeometry.Clifford.DiscreteMoebiusGroup
+open InfoGeometry.Clifford.MonodromyFlowAdapter
+open InfoGeometry.Canonical.ConformalSL2GeneratorBridge
 
-abbrev rapidity_additive_composition :=
-  InfoGeometry.Dynamics.RapiditySpace.rapidity_additive_composition
+/-- Two successive real boost actions compose to the single summed-rapidity action. -/
+theorem rindler_boost_composition (coords : RindlerCoordinates) (lam mu : ℝ) :
+    componentAReal lam * (componentAReal mu * rindlerToMinkowski coords) =
+      componentAReal (lam + mu) * rindlerToMinkowski coords := by
+  rw [← Matrix.mul_assoc, rapidity_additive_composition]
 
-abbrev rapidity_zero :=
-  InfoGeometry.Dynamics.RapiditySpace.rapidity_zero
+/-- A boost followed by its inverse returns the original Rindler light-cone point. -/
+theorem rindler_boost_round_trip (coords : RindlerCoordinates) (lam : ℝ) :
+    componentAReal lam * (componentAReal (-lam) * rindlerToMinkowski coords) =
+      rindlerToMinkowski coords := by
+  rw [← Matrix.mul_assoc, rapidity_mul_neg, Matrix.one_mul]
 
-abbrev rapidity_mul_neg :=
-  InfoGeometry.Dynamics.RapiditySpace.rapidity_mul_neg
+/-- The Clifford origin/infinity sandwich is an involution on every algebra element. -/
+theorem conformal_sandwich_involution (p : InfoGeometry.Clifford.ConformalLift55.ConformalNullPair)
+    (x : InfoGeometry.Clifford.ConformalLift55.Cl55) :
+    J p * (J p * x * J p) * J p = x := by
+  have hJ : J p * J p = -1 := by
+    simpa [pow_two] using J_sq p
+  calc
+    J p * (J p * x * J p) * J p = (J p * J p) * x * (J p * J p) := by
+      noncomm_ring
+    _ = (-1) * x * (-1) := by rw [hJ]
+    _ = x := by noncomm_ring
 
-abbrev rapidity_neg_mul :=
-  InfoGeometry.Dynamics.RapiditySpace.rapidity_neg_mul
+/-- The modular Möbius shear translates by the sum of two successive parameters. -/
+theorem moebius_shear_composition (s t z : ℂ) :
+    moebiusAction (lcftParabolicFlowStep s * lcftParabolicFlowStep t) z = z + (s + t) := by
+  rw [lcftParabolicFlow_composition]
+  exact moebius_monodromy_flow_action (s + t) z
 
-abbrev log_coordinate_rapidity_shift :=
-  InfoGeometry.Dynamics.RapiditySpace.log_coordinate_rapidity_shift
-
-abbrev rindler_flow_is_time_translation :=
-  InfoGeometry.Dynamics.RindlerWedge.rindler_flow_is_time_translation
-
-abbrev rindler_lightcone_product :=
-  InfoGeometry.Dynamics.RindlerWedge.rindler_lightcone_product
-
-abbrev rindler_flow_preserves_proper_distance :=
-  InfoGeometry.Dynamics.RindlerWedge.rindler_flow_preserves_proper_distance
-
-/-! ## Conformal inversion and projective readout -/
-
-abbrev J_sq :=
-  InfoGeometry.Clifford.ConformalReflection55.J_sq
-
-abbrev J_swap_origin :=
-  InfoGeometry.Clifford.ConformalReflection55.J_swap_origin
-
-abbrev J_swap_infinity :=
-  InfoGeometry.Clifford.ConformalReflection55.J_swap_infinity
-
-abbrev J_mul_neg_J :=
-  InfoGeometry.Clifford.ConformalReflection55.J_mul_neg_J
-
-abbrev neg_J_mul_J :=
-  InfoGeometry.Clifford.ConformalReflection55.neg_J_mul_J
-
-abbrev moebius_T_action :=
-  InfoGeometry.Clifford.DiscreteMoebiusGroup.moebius_T_action
-
-abbrev moebius_S_action :=
-  InfoGeometry.Clifford.DiscreteMoebiusGroup.moebius_S_action
-
-/-! ## Conformal `sl₂` readout and ambient orthogonal label -/
-
-abbrev P_sq_zero :=
-  InfoGeometry.Canonical.ConformalSL2GeneratorBridge.P_sq_zero
-
-abbrev K_sq_zero :=
-  InfoGeometry.Canonical.ConformalSL2GeneratorBridge.K_sq_zero
-
-abbrev comm_D_P :=
-  InfoGeometry.Canonical.ConformalSL2GeneratorBridge.comm_D_P
-
-abbrev comm_D_K :=
-  InfoGeometry.Canonical.ConformalSL2GeneratorBridge.comm_D_K
-
-abbrev comm_P_K :=
-  InfoGeometry.Canonical.ConformalSL2GeneratorBridge.comm_P_K
-
+/-- The square of the dilation adjoint action fixes each nilpotent root generator. -/
+theorem conformal_dilation_adjoint_square_on_roots :
+    (D * (D * P - P * D) - (D * P - P * D) * D = P) ∧
+      (D * (D * K - K * D) - (D * K - K * D) * D = K) := by
+  constructor
+  · calc
+      D * (D * P - P * D) - (D * P - P * D) * D = D * P - P * D := by
+        rw [comm_D_P]
+        exact comm_D_P
+      _ = P := comm_D_P
+  · have hK := comm_D_K
+    rw [hK]
+    calc
+      D * (-K) - (-K) * D = -(D * K - K * D) := by noncomm_ring
+      _ = K := by rw [hK]; simp
 
 end InfoGeometry.Canonical.ConformalRapidityRosetta

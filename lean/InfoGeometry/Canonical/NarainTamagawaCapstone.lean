@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import InfoGeometry.Adelic.NarainTamagawa
 import Mathlib.NumberTheory.ZetaValues
@@ -18,16 +22,12 @@ open scoped BigOperators Topology
 
 /-- The finite reciprocal-square partial sums converge to `π² / 6`.
 
-The proof uses the owner summability result and Mathlib's exact value of the
-series. -/
+The proof follows from the owner's exact `HasSum` statement. -/
 theorem inverse_square_partial_sums_tendsto :
     Tendsto
       (fun N : ℕ => ∑ n ∈ Finset.range N, (1 : ℝ) / (n : ℝ) ^ 2)
       atTop (𝓝 (Real.pi ^ 2 / 6)) := by
-  have hsum : HasSum (fun n : ℕ => (1 : ℝ) / (n : ℝ) ^ 2)
-      (∑' n : ℕ, (1 : ℝ) / (n : ℝ) ^ 2) :=
-    inverse_square_series_summable.hasSum
-  have hvalue := hasSum_zeta_two.tsum_eq
-  simpa only [← hvalue] using hsum.tendsto_sum_nat
+  have hsum := inverse_square_series_summable.1
+  exact hsum.tendsto_sum_nat
 
 end InfoGeometry.Canonical.NarainTamagawaCapstone

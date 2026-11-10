@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledAdjoint
@@ -51,21 +57,29 @@ This is definitionally aligned with `KreinSpace.IsKreinSelfAdjoint` on
 def IsKreinSelfAdjoint (L : EndH (E := E)) : Prop :=
   doubledKreinAdjoint (E := E) L = L
 
-/--
-`doubledKreinInner` agrees with the canonical `KreinSpace.kreinInner` on
-`DoubledSpace E`.
--/
-lemma doubledKreinInner_eq_kreinInner (u v : DoubledSpace E) :
-    doubledKreinInner (E := E) u v = KreinSpace.kreinInner (H := DoubledSpace E) u v := by
-  rfl
-
-/--
-`doubledKreinAdjoint` agrees with the canonical `KreinSpace.kreinAdjoint` on
-`DoubledSpace E`.
--/
-lemma doubledKreinAdjoint_eq_kreinAdjoint (L : EndH (E := E)) :
-    doubledKreinAdjoint (E := E) L = KreinSpace.kreinAdjoint (H := DoubledSpace E) L := by
-  rfl
+/-- The local doubled pairing and adjoint are the canonical Krein operations,
+and the transported adjoint satisfies the genuine pairing identity. This
+collects the definitional carrier compatibility together with its operational
+consequence, rather than exporting the compatibility equalities separately. -/
+theorem doubledKrein_pairing_adjoint_compatibility
+    (L : EndH (E := E)) :
+    (∀ u v : DoubledSpace E,
+      doubledKreinInner (E := E) u v =
+        KreinSpace.kreinInner (H := DoubledSpace E) u v) ∧
+    doubledKreinAdjoint (E := E) L =
+      KreinSpace.kreinAdjoint (H := DoubledSpace E) L ∧
+    (∀ u v : DoubledSpace E,
+      doubledKreinInner (E := E) (L u) v =
+        doubledKreinInner (E := E) u (doubledKreinAdjoint (E := E) L v)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro u v
+    rfl
+  · rfl
+  · intro u v
+    change KreinSpace.kreinInner (H := DoubledSpace E) (L u) v =
+      KreinSpace.kreinInner (H := DoubledSpace E) u
+        (KreinSpace.kreinAdjoint (H := DoubledSpace E) L v)
+    exact KreinSpace.kreinInner_kreinAdjoint (H := DoubledSpace E) L u v
 
 /--
 Characterization of doubled Krein-self-adjointness via the doubled Krein pairing.
@@ -76,6 +90,100 @@ theorem isKreinSelfAdjoint_iff_doubledKreinInner
       ∀ u v : DoubledSpace E,
         doubledKreinInner (E := E) (L u) v = doubledKreinInner (E := E) u (L v) :=
   KreinSpace.isKreinSelfAdjoint_iff (H := DoubledSpace E) L
+
+/-- Conjugation by the doubled grading is an involution on endomorphisms. -/
+theorem gamma5Conjugation_involutive (L : EndH (E := E)) :
+    (gamma5 (E := E)).comp
+        (((gamma5 (E := E)).comp (L.comp (gamma5 (E := E)))).comp
+          (gamma5 (E := E))) = L := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hε (x : DoubledSpace E) :
+      gamma5 (E := E) (gamma5 (E := E) x) = x := by
+    have h := congrArg (fun T : EndH (E := E) => T x)
+      (spectral_epsilon_involution E)
+    simpa [gamma5, ContinuousLinearMap.comp_apply] using h
+  change gamma5 (E := E)
+      (gamma5 (E := E) (L (gamma5 (E := E) (gamma5 (E := E) u))) ) = L u
+  rw [hε u]
+  exact hε (L u)
+
+/-- Anticommutation with the grading is equivalent to conjugation by the grading
+being minus the operator. This is the operator-level passage from a chiral
+off-block condition to a Hilbert skew-adjointness calculation. -/
+theorem isOffBlockDiagonal_iff_gamma5Conjugate_eq_neg
+    (L : EndH (E := E)) :
+    IsOffBlockDiagonal (E := E) L ↔
+      (gamma5 (E := E)).comp (L.comp (gamma5 (E := E))) = -L := by
+  constructor
+  · intro hOff
+    apply ContinuousLinearMap.ext
+    intro u
+    have hε : gamma5 (E := E) (gamma5 (E := E) u) = u := by
+      have h := congrArg (fun T : EndH (E := E) => T u)
+        (spectral_epsilon_involution E)
+      simpa [gamma5, ContinuousLinearMap.comp_apply] using h
+    have h := congrArg (fun T : EndH (E := E) => T (gamma5 (E := E) u)) hOff
+    change L (gamma5 (E := E) (gamma5 (E := E) u)) =
+      -(gamma5 (E := E) (L (gamma5 (E := E) u))) at h
+    rw [hε] at h
+    simpa using (congrArg (fun x : DoubledSpace E => -x) h).symm
+  · intro hConj
+    apply ContinuousLinearMap.ext
+    intro u
+    have hε : gamma5 (E := E) (gamma5 (E := E) u) = u := by
+      have h := congrArg (fun T : EndH (E := E) => T u)
+        (spectral_epsilon_involution E)
+      simpa [gamma5, ContinuousLinearMap.comp_apply] using h
+    have h := congrArg (fun T : EndH (E := E) => T (gamma5 (E := E) u)) hConj
+    change gamma5 (E := E)
+        (L (gamma5 (E := E) (gamma5 (E := E) u))) =
+      -(L (gamma5 (E := E) u)) at h
+    rw [hε] at h
+    simpa using (congrArg (fun x : DoubledSpace E => -x) h).symm
+
+/-- On the doubled operator carrier, the off-block and Krein-self-adjoint
+conditions together are exactly the off-block and Hilbert-skew-adjoint
+conditions. The grading conjugation supplies the sign change between the two
+adjoints. -/
+theorem offBlock_kreinSelfAdjoint_iff_offBlock_hilbertSkewAdjoint
+    (L : EndH (E := E)) :
+    (IsOffBlockDiagonal (E := E) L ∧ IsKreinSelfAdjoint (E := E) L) ↔
+      (IsOffBlockDiagonal (E := E) L ∧
+        ContinuousLinearMap.adjoint L = -L) := by
+  constructor
+  · rintro ⟨hOff, hKrein⟩
+    have hK : (gamma5 (E := E)).comp
+        ((ContinuousLinearMap.adjoint L).comp (gamma5 (E := E))) = L := by
+      change doubledKreinAdjoint (E := E) L = L at hKrein
+      exact hKrein
+    have hAdjConj : (gamma5 (E := E)).comp
+        (L.comp (gamma5 (E := E))) = ContinuousLinearMap.adjoint L := by
+      calc
+        (gamma5 (E := E)).comp (L.comp (gamma5 (E := E))) =
+            (gamma5 (E := E)).comp
+              (((gamma5 (E := E)).comp
+                ((ContinuousLinearMap.adjoint L).comp (gamma5 (E := E)))).comp
+                (gamma5 (E := E))) := by rw [hK]
+        _ = ContinuousLinearMap.adjoint L := gamma5Conjugation_involutive
+          (E := E) (ContinuousLinearMap.adjoint L)
+    exact ⟨hOff,
+      hAdjConj.symm.trans
+        ((isOffBlockDiagonal_iff_gamma5Conjugate_eq_neg (E := E) L).mp hOff)⟩
+  · rintro ⟨hOff, hAdj⟩
+    refine ⟨hOff, ?_⟩
+    change doubledKreinAdjoint (E := E) L = L
+    calc
+      (gamma5 (E := E)).comp
+          ((ContinuousLinearMap.adjoint L).comp (gamma5 (E := E))) =
+        (gamma5 (E := E)).comp ((-L).comp (gamma5 (E := E))) := by rw [hAdj]
+      _ = -((gamma5 (E := E)).comp (L.comp (gamma5 (E := E)))) := by
+        apply ContinuousLinearMap.ext
+        intro u
+        simp [ContinuousLinearMap.comp_apply]
+      _ = -(-L) := by
+        rw [(isOffBlockDiagonal_iff_gamma5Conjugate_eq_neg (E := E) L).mp hOff]
+      _ = L := by simp
 
 /--
 Static ring-constraint packet for a doubled real operator.
@@ -121,17 +229,14 @@ structure HyperbolicPrimonFlowWithGenerator extends HyperbolicPrimonFlow (E := E
   generator_offBlockDiagonal : IsOffBlockDiagonal (E := E) generator
   generator_kreinSelfAdjoint : IsKreinSelfAdjoint (E := E) generator
 
-/-- Re-export: any constrained generator packet has an off-block-diagonal generator. -/
-theorem generator_is_offBlockDiagonal
+/-- A generator satisfying the chiral and Krein constraints is skew-adjoint
+for the ambient Hilbert inner product. -/
+theorem generator_hilbertSkewAdjoint
     (F : HyperbolicPrimonFlowWithGenerator (E := E)) :
-    IsOffBlockDiagonal (E := E) F.generator :=
-  F.generator_offBlockDiagonal
-
-/-- Re-export: any constrained generator packet has a Krein-self-adjoint generator. -/
-theorem generator_is_kreinSelfAdjoint
-    (F : HyperbolicPrimonFlowWithGenerator (E := E)) :
-    IsKreinSelfAdjoint (E := E) F.generator :=
-  F.generator_kreinSelfAdjoint
+    ContinuousLinearMap.adjoint F.generator = -F.generator := by
+  exact ((offBlock_kreinSelfAdjoint_iff_offBlock_hilbertSkewAdjoint
+    (E := E) F.generator).mp
+      ⟨F.generator_offBlockDiagonal, F.generator_kreinSelfAdjoint⟩).2
 
 /--
 Bridge: read a `HyperbolicPrimonFlow` as a `CarrierTransport` on the canonical

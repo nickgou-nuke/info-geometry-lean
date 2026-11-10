@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import DAG.CocycleBridge
 import DAG.ChiralDiracAnticommutation
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -5,19 +11,20 @@ import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Fibonacci.HexagonCocycle
 
 /-!
-# Cocycle Bridge Activation — Wiring Discrete DAG to Analytic Cocycles
+# Cocycle Bridge Activation — Typed DAG and Operator-Cocycle Components
 
-Closes the three-layer connection:
+Exposes three independently owned layers:
 
 ```
-Layer 1 (discrete)    Layer 2 (analytic colimit)    Layer 3 (cocycle)
-DAG.TwoComplex    →   SplitCliffordDirectLimit   →   ConnesCocycle
-  ∂₁, ∂₂, β₁, χ       Cl(n,n) → direct limit       Δ^{it}, Radon-Nikodym
+Layer 1 (discrete)    Layer 2 (algebraic limit)    Layer 3 (Hilbert flow)
+DAG.TwoComplex    |   SplitCliffordDirectLimit   |   AdditiveModularFlow
+  Hodge data          Cl(n,n) → DirectLimit         exp(tK)
 ```
 
-The direct-limit, modular-flow, and braided ingredients are exposed below
-through their existing typed owners.  No analytic completion theorem is
-asserted merely by naming these finite ingredients.
+This module exposes independently typed DAG, algebraic direct-limit,
+Hilbert-space modular-flow, and braided-category components.  It does not
+construct maps connecting those components, nor an analytic completion or a
+Connes cocycle on the split-Clifford direct limit.
 -/
 
 namespace DAG.CocycleBridgeActivation
@@ -34,21 +41,10 @@ open InfoGeometry.CliffordTower
 open InfoGeometry.Volume.ConnesCocycle
 
 /--
-The Three-Layer Cocycle Bridge.
-
-Layer 1: `TwoComplex` — discrete DAG with incidence matrices ∂₁, ∂₂.
-         Provides HodgeCocycleData (β₀, β₁, χ, Hodge dims).
-
-Layer 2: `SplitCliffordInfinity` — the direct limit of the recursive
-         Cl(n,n) tower. This IS the analytic completion. The infinite
-         direct limit carries the Cantor boundary states.
-
-Layer 3: `ConnesCocycle` — the modular automorphism Δ^{it} acting on
-         the direct limit completion. The KMS thermal flow.
-
-The bridge: ∂₁, ∂₂ from the DAG lift to finite Clifford generators.
-The direct limit extends them to the infinite algebra where the
-Connes cocycle is defined.
+The currently implemented data record for this bridge stores only the DAG
+Hodge readout.  The split-Clifford direct limit and the generic Hilbert-space
+modular flow are exposed separately below; no lift of the DAG incidence maps,
+boundary states, or Connes cocycle to that direct limit is defined here.
 -/
 structure CocycleBridge (α : Type) [BEq α] [Hashable α] where
   /-- Layer 1: discrete Hodge data from the DAG TwoComplex -/
@@ -96,11 +92,8 @@ theorem hexagonCocycle_yangBaxter {C : Type u} [CategoryTheory.Category.{v} C]
   exact InfoGeometry.Fibonacci.HexagonCocycle.braid_relation_from_hexagon X Y Z
 
 /--
-Construct the three-layer cocycle bridge from a TwoComplex.
-
-The HodgeCocycleData is computed from the DAG; the other layers are exposed
-by the owner definitions above.  The construction does not claim a completed
-analytic braided functor.
+Construct the implemented Hodge-data record from a TwoComplex.  This does not
+construct a functor to the split-Clifford direct limit or to a Kasparov cycle.
 -/
 def fromTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) : CocycleBridge α :=
   { hodge := CocycleBridge.fromTwoComplex tc}

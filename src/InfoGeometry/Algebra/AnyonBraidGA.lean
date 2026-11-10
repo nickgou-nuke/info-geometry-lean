@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -27,6 +32,39 @@ the resulting rotors to Fibonacci F/R matrices remain open here.
 namespace InfoGeometry.Algebra.AnyonBraidGA
 
 open CliffordAlgebra
+open InfoGeometry.Algebra.FiniteSpin
+
+/-- Non-commutativity witness for the finite spin algebra carrier. -/
+theorem exists_noncomm_pair :
+    ∃ x y : Mat2C, x * y ≠ y * x :=
+  ⟨J_plus, J_minus, j_plus_j_minus_ne⟩
+
+section NonCommRingRotorSubstrate
+
+variable {B : Type*} [Ring B]
+
+/-- Two elements in a non-commutative ring `[Ring B]` anticommute when `u * v + v * u = 0`. -/
+def RingVectorAnticommutes (u v : B) : Prop :=
+  u * v + v * u = 0
+
+/-- In any non-commutative ring `[Ring B]`, if `u` and `v` anticommute (`u * v + v * u = 0`),
+their bivector product `u * v` satisfies `(u * v) * (u * v) = - (u * u * (v * v))`. -/
+theorem bivector_sq_of_anticommute_ring {u v : B} (h : RingVectorAnticommutes u v) :
+    (u * v) * (u * v) = - (u * u * (v * v)) := by
+  have huv : v * u = - (u * v) := eq_neg_of_add_eq_zero_right h
+  calc
+    (u * v) * (u * v) = u * (v * u) * v := by noncomm_ring
+    _ = u * (- (u * v)) * v := by rw [huv]
+    _ = - (u * u * (v * v)) := by noncomm_ring
+
+/-- In any non-commutative ring `[Ring B]`, if `u * u = 1`, `v * v = 1`, and `u` and `v`
+anticommute (`u * v + v * u = 0`), then the bivector `u * v` squares to `-1`. -/
+theorem bivector_sq_neg_one_of_orthonormal_ring {u v : B}
+    (hu : u * u = 1) (hv : v * v = 1) (h : RingVectorAnticommutes u v) :
+    (u * v) * (u * v) = -1 := by
+  rw [bivector_sq_of_anticommute_ring h, hu, hv, mul_one]
+
+end NonCommRingRotorSubstrate
 
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]

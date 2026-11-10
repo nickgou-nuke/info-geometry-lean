@@ -42,7 +42,7 @@ namespace InfoGeometry.Canonical.HeisenbergFiniteModeDirectLimitBridge
 open CategoryTheory CategoryTheory.Limits
 open VirasoroProject
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- The filtered direct-limit carrier for the Heisenberg finite-mode diagram in `ModuleCat 𝕜`. -/
 abbrev heisenbergFiniteModeDirectLimit : ModuleCat 𝕜 :=

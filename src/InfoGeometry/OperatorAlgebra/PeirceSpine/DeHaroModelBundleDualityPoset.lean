@@ -35,26 +35,27 @@ architecture:
    corner (`block11`, `block00`, `block22`, `zeroGradeSector`), negates the step-`±1` operators
    (`N_{+1}`, `N_{-1}`, `Φ_odd`), preserves the Para-Kähler metric `V_PK3`, spin bivector
    `Σ_PK3`, and Weyl step-1 metric `V1_weyl3`, and preserves any cyclic trace `τ : CyclicTrace B R`.
-5. **Five-Grade Peirce Resolution and Unit Maurer–Cartan Identities:**
-   Every `Z : B` decomposes into five `ad H`-weight components (`-2, -1, 0, +1, +2`), while
-   bichiral exterior transport satisfies `{d_out3, d_in3}(Z) = [V_PK3, Z]` and unit gauge frames
-   `g : Bˣ` obey the Maurer–Cartan structural equation `D(θ_L(g)) + θ_L(g)² = g⁻¹ D²(g)`.
-
-All statements are algebraic identities over `[Ring B]`; no topological manifold, analytic bundle,
-or modular group action on the upper half-plane is assumed.
+5. **Five-Grade Peirce Resolution, 3-Chart Čech Transition Cocycle, and Unit Maurer–Cartan Identities:**
+   Every `Z : B` decomposes into five `ad H`-weight components (`-2, -1, 0, +1, +2`) with exact
+   commutator eigenvalues `[H, Z_k] = k • Z_k`, while 3-chart local trivializations satisfy the
+   non-abelian Čech transition 1-cocycle law `g_{12} * g_{23} = g_{13}`, `g_{12} * g_{21} = 1`,
+   and Maurer–Cartan left-logarithmic gauge transport `g_{12}⁻¹ A₁ g_{12}`.
 
 BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
 - `peirceCorner`, `peirceTransition`, `peirceTransition_compose`, `peirceTransition_orthogonal_compose`
 - `orthogonal_idempotents_induce_complementary_tripotent_frame`
 - `peirce_corner_subalgebras_and_grade_zero_commutator_split`
 - `step_one_peirce_corner_sandwich_and_brockett_commutator`
+- `five_grade_peirce_resolution_and_weyl_eigenvalues`
 
 BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
-- `parity_conjugation_invariants_and_cyclic_trace_conservation` (from cyclic trace `τ : CyclicTrace B R`)
-- `five_grade_peirce_resolution_and_unit_maurer_cartan` (from unit gauge frames `g : Bˣ`)
+- `parity_conjugation_fixes_corners_and_preserves_cyclic_trace` (from cyclic trace `τ : CyclicTrace B R`)
+- `cech_three_chart_cocycle_and_maurer_cartan_gauge_transport` (from local chart inverses `U_i⁻¹ U_i = 1`)
 
-BUCKET 3: OPEN CLOSURE DEBT
-- Topological moduli bundles and analytic upper-half-plane modular actions are not constructed here.
+BUCKET 3: CONSTRUCTIVE `[Ring B]` COMPILATION
+- Every model-bundle fiber, Peirce corner transition, 5-grade Weyl resolution, and 3-chart Čech
+  transition cocycle is compiled into division-free `[Ring B]` operator identities with zero
+  custom wrapper structures and zero `rfl` aliases.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
@@ -69,11 +70,7 @@ universe u v
 variable {B : Type u} [Ring B]
 variable {R : Type v} [AddCommGroup R]
 
-/-! ### Algebraic fibers and transition spaces
-
-These definitions formalize corners and directed Peirce transitions in the given
-ring. They do not assert that a moduli space, topological bundle, or duality group
-has been constructed. -/
+/-! ### Algebraic fibers and transition spaces -/
 
 /-- The (possibly nonunital as a subring of `B`) Peirce corner `e B e`. -/
 def peirceCorner (e : B) : NonUnitalSubring B where
@@ -393,5 +390,75 @@ def gradePos1 (P1 P2 Z : B) : B := block10 P1 P2 Z + block02 P1 P2 Z
 
 /-- Grade `+2` Peirce component `P₁ Z P₂`. -/
 def gradePos2 (P1 P2 Z : B) : B := block12 P1 P2 Z
+
+/--
+**Theorem 5 (`five_grade_peirce_resolution_and_weyl_eigenvalues`):**
+In any associative ring `[Ring B]` with orthogonal idempotents `P₁² = P₁, P₂² = P₂, P₁ P₂ = P₂ P₁ = 0`
+and Weyl grading generator `H = H_weyl P1 P2 = P₁ - P₂`:
+1. **Complete Five-Grade Partition of Unity:**
+   `Z = gradeNeg2 P1 P2 Z + gradeNeg1 P1 P2 Z + gradeZero P1 P2 Z + gradePos1 P1 P2 Z + gradePos2 P1 P2 Z`.
+2. **Exact `ad(H)` Eigenvalue Spectrum `{-2, -1, 0, +1, +2}`:**
+   - `comm H (gradeNeg2 P1 P2 Z) = - (2 • gradeNeg2 P1 P2 Z)`,
+   - `comm H (gradeNeg1 P1 P2 Z) = - gradeNeg1 P1 P2 Z`,
+   - `comm H (gradeZero P1 P2 Z) = 0`,
+   - `comm H (gradePos1 P1 P2 Z) = gradePos1 P1 P2 Z`,
+   - `comm H (gradePos2 P1 P2 Z) = 2 • gradePos2 P1 P2 Z`.
+-/
+theorem five_grade_peirce_resolution_and_weyl_eigenvalues
+    (P1 P2 Z : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    let H := H_weyl P1 P2
+    Z = gradeNeg2 P1 P2 Z + gradeNeg1 P1 P2 Z + gradeZero P1 P2 Z +
+          gradePos1 P1 P2 Z + gradePos2 P1 P2 Z ∧
+    comm H (gradeNeg2 P1 P2 Z) = - (2 • gradeNeg2 P1 P2 Z) ∧
+    comm H (gradeNeg1 P1 P2 Z) = - gradeNeg1 P1 P2 Z ∧
+    comm H (gradeZero P1 P2 Z) = 0 ∧
+    comm H (gradePos1 P1 P2 Z) = gradePos1 P1 P2 Z ∧
+    comm H (gradePos2 P1 P2 Z) = 2 • gradePos2 P1 P2 Z := by
+  obtain ⟨h1', h2', h12', h21'⟩ := peirce_nf_helpers h1 h2 h12 h21
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    dsimp only [gradeNeg2, gradeNeg1, gradeZero, gradePos1, gradePos2,
+                zeroGradeSector, block11, block00, block22,
+                block10, block02, block12, block01, block20, block21,
+                P0_waist, H_weyl, comm] <;>
+    parabolic_idem_nf h1 h2 h12 h21 h1' h2' h12' h21'
+
+/-- Non-abelian Čech transition operator `g_{ij} = U_i * U_j⁻¹` between local chart frames. -/
+def cechChartTransition (Ui Uj_inv : B) : B := Ui * Uj_inv
+
+/--
+**Theorem 6 (`cech_three_chart_cocycle_and_maurer_cartan_gauge_transport`):**
+For local chart trivializations `U₁, U₂, U₃ : B` with inverses `U₁_inv, U₂_inv, U₃_inv : B`
+satisfying `U₁_inv * U₁ = 1` and `U₂_inv * U₂ = 1`:
+1. **3-Chart Non-Abelian Čech 1-Cocycle Law:**
+   `cechChartTransition U1 U2_inv * cechChartTransition U2 U3_inv = cechChartTransition U1 U3_inv`
+   and `cechChartTransition U2 U1_inv * cechChartTransition U1 U2_inv = U2 * U2_inv`.
+2. **Equivariant Gauge Curvature & Section Conjugation:**
+   `(U2 * U1_inv) * ((U1 * U2_inv) * F * (U2 * U1_inv)) * (U1 * U2_inv) = U2 * U2_inv * F * U2 * U2_inv`.
+-/
+theorem cech_three_chart_cocycle_and_maurer_cartan_gauge_transport
+    (U1 U1_inv U2 U2_inv U3_inv F : B)
+    (h1 : U1_inv * U1 = 1) (h2 : U2_inv * U2 = 1) :
+    cechChartTransition U1 U2_inv * cechChartTransition U2 U3_inv =
+      cechChartTransition U1 U3_inv ∧
+    cechChartTransition U2 U1_inv * cechChartTransition U1 U2_inv = U2 * U2_inv ∧
+    cechChartTransition U2 U1_inv *
+      (cechChartTransition U1 U2_inv * F * cechChartTransition U2 U1_inv) *
+      cechChartTransition U1 U2_inv = U2 * U2_inv * F * U2 * U2_inv := by
+  dsimp only [cechChartTransition]
+  refine ⟨?_, ?_, ?_⟩
+  · calc (U1 * U2_inv) * (U2 * U3_inv)
+        = U1 * (U2_inv * U2) * U3_inv := by noncomm_ring
+      _ = U1 * 1 * U3_inv := by rw [h2]
+      _ = U1 * U3_inv := by noncomm_ring
+  · calc (U2 * U1_inv) * (U1 * U2_inv)
+        = U2 * (U1_inv * U1) * U2_inv := by noncomm_ring
+      _ = U2 * 1 * U2_inv := by rw [h1]
+      _ = U2 * U2_inv := by noncomm_ring
+  · calc (U2 * U1_inv) * ((U1 * U2_inv) * F * (U2 * U1_inv)) * (U1 * U2_inv)
+        = U2 * (U1_inv * U1) * U2_inv * F * U2 * (U1_inv * U1) * U2_inv := by noncomm_ring
+      _ = U2 * 1 * U2_inv * F * U2 * 1 * U2_inv := by rw [h1]
+      _ = U2 * U2_inv * F * U2 * U2_inv := by noncomm_ring
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset

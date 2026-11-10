@@ -51,7 +51,7 @@ namespace InfoGeometry.Canonical.ZornGaugeBosonGellMannTwistor
 
 open InfoGeometry.Canonical.GaugedZornDiracKahler
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ### Stratum 26.1: Quark-Antiquark Outer Product and 3 ⊗ 3̄ = 1 ⊕ 8 Decomposition
@@ -71,18 +71,18 @@ theorem outerProduct_trace (u v : Vec3 R) :
 /--
 The traceless color octet tensor:
 T(u, v) = 3 * M(u, v) - (u · v) * I₃.
-Over any commutative ring R, this tensor is identically traceless without requiring 1/3.
+Over any ring R, this tensor is identically traceless without requiring 1/3.
 -/
 def tracelessOctet (u v : Vec3 R) : Matrix (Fin 3) (Fin 3) R :=
   fun i j => (3 : R) * (outerProduct u v i j) - (dot3 u v) * (if i = j then 1 else 0)
 
-/-- The trace of the octet tensor is identically zero over any commutative ring. -/
+/-- The trace of the octet tensor is identically zero over any ring. -/
 theorem tracelessOctet_trace (u v : Vec3 R) :
     Matrix.trace (tracelessOctet u v) = 0 := by
   dsimp [Matrix.trace]
   rw [Fin.sum_univ_three]
   dsimp [tracelessOctet, outerProduct, dot3]
-  ring
+  noncomm_ring
 
 /-!
 ### Stratum 26.2: Gluon Field Strength Tensor G_μν from Quark Commutator
@@ -97,14 +97,14 @@ theorem gluonTensor_skew (u v : Fin 4 → Vec3 R) (μ ν : Fin 4) :
     gluonTensor u v ν μ = - gluonTensor u v μ ν := by
   ext i j
   dsimp [gluonTensor, outerProduct]
-  ring
+  noncomm_ring
 
 /-- The diagonal gluon tensor vanishes identically. -/
 theorem gluonTensor_self (u v : Fin 4 → Vec3 R) (μ : Fin 4) :
     gluonTensor u v μ μ = 0 := by
   ext i j
   dsimp [gluonTensor, outerProduct]
-  ring
+  noncomm_ring
 
 /-- The traceless octet gluon curvature Ĝ_μν = T(u_μ, v_ν) - T(u_ν, v_μ). -/
 def octetGluonCurvature (u v : Fin 4 → Vec3 R) (μ ν : Fin 4) : Matrix (Fin 3) (Fin 3) R :=
@@ -121,7 +121,7 @@ theorem octetGluonCurvature_skew (u v : Fin 4 → Vec3 R) (μ ν : Fin 4) :
     octetGluonCurvature u v ν μ = - octetGluonCurvature u v μ ν := by
   ext i j
   dsimp [octetGluonCurvature, tracelessOctet, outerProduct]
-  ring
+  noncomm_ring
 
 /-!
 ### Stratum 26.3: The 8 Gell-Mann Matrices and Tracelessness
@@ -189,7 +189,7 @@ theorem gm7_trace : Matrix.trace (gm7 (R := R)) = 0 := by
   rw [Matrix.trace_fin_three]; simp [gm7]
 
 theorem gm8_trace : Matrix.trace (gm8 (R := R)) = 0 := by
-  rw [Matrix.trace_fin_three]; simp [gm8]; ring
+  rw [Matrix.trace_fin_three]; simp [gm8]; noncomm_ring
 
 /-!
 ### Stratum 26.4: Zorn Commutator Generating the Krein Grading J = P₊ - P₋
@@ -203,7 +203,7 @@ def zornJ : ZornMatrix R :=
 The Zorn commutator [Q(u), Q̄(v)] = Q(u) Q̄(v) - Q̄(v) Q(u)
 evaluates exactly to (u · v) • J on the diagonal.
 -/
-theorem zorn_quark_antiquark_commutator (u v : Vec3 R) :
+theorem zorn_quark_antiquark_commutator {R : Type*} [CommRing R] (u v : Vec3 R) :
     ZornMatrix.sub
       (ZornMatrix.zornMul (ZornMatrix.quark u) (ZornMatrix.antiquark v))
       (ZornMatrix.zornMul (ZornMatrix.antiquark v) (ZornMatrix.quark u)) =
@@ -243,10 +243,10 @@ theorem zornParity_swap_peirce_minus :
 theorem zornParity_neg_j :
     zornParity (zornJ (R := R)) = ZornMatrix.smul (-1) zornJ := by
   apply ZornMatrix.ext
-  · dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; ring
-  · dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; ring
-  · ext i; fin_cases i <;> { dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; ring }
-  · ext i; fin_cases i <;> { dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; ring }
+  · dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; noncomm_ring
+  · dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; noncomm_ring
+  · ext i; fin_cases i <;> { dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; noncomm_ring }
+  · ext i; fin_cases i <;> { dsimp [zornParity, zornJ, ZornMatrix.sub, ZornMatrix.PPlus, ZornMatrix.PMinus, ZornMatrix.smul]; noncomm_ring }
 
 theorem zornParity_quark_to_antiquark (u : Vec3 R) :
     zornParity (ZornMatrix.quark u) = ZornMatrix.antiquark u := by
@@ -275,7 +275,7 @@ det(π lamᵀ) = 0.
 def spinorDyad (π lam : Fin 2 → R) : Matrix (Fin 2) (Fin 2) R :=
   fun i j => π i * lam j
 
-theorem spinorDyad_det_zero (π lam : Fin 2 → R) :
+theorem spinorDyad_det_zero {R : Type*} [CommRing R] (π lam : Fin 2 → R) :
     Matrix.det (spinorDyad π lam) = 0 := by
   rw [Matrix.det_fin_two]
   dsimp [spinorDyad]
@@ -284,7 +284,7 @@ theorem spinorDyad_det_zero (π lam : Fin 2 → R) :
 /--
 The twistor incidence equation: ω = X π for an on-shell dyad X = (c • lam) lamᵀ.
 -/
-theorem twistor_incidence_scaling (lam π : Fin 2 → R) (c : R) :
+theorem twistor_incidence_scaling {R : Type*} [CommRing R] (lam π : Fin 2 → R) (c : R) :
     (spinorDyad (fun i => c * lam i) lam).mulVec π =
     fun i => (c * (lam 0 * π 0 + lam 1 * π 1)) * lam i := by
   ext i

@@ -235,11 +235,18 @@ their orthogonal three-corner specialization. It does not infer an `su(3)`
 action or a color symmetry group from tripotency.
 
 BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
-- Re-exports the constructive Peirce-spine modules over an arbitrary associative ring `[Ring B]`.
+- Re-exports the constructive Peirce-spine modules over an arbitrary associative ring `[Ring B]`,
+  including 3-horizon Hodge–Peirce cochain and formal Laplacian self-adjointness, 5-grade Peirce
+  resolution and 3-chart Čech transition cocycles, non-commutative operator Bregman three-point
+  and Mercator–Neumann log-det truncations, all-mode Gelfand–Fuks Virasoro 2-cocycle Jacobi and
+  Sugawara–Heisenberg mode algebras, degree-2 nilpotent Lie-exponential inverses, Eisenstein–Ramanujan
+  modular discriminants, and 3-horizon crossed-product covariance.
 
 BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
-- Re-exports conditional resolvent, central-parameter rotor, and cyclic-trace modules.
+- Re-exports conditional resolvent, central-parameter rotor, colimit-cone, and cyclic-trace modules.
 
-BUCKET 3: OPEN CLOSURE DEBT
-- Smooth manifold continuum limits and analytic Lie-group exponential series are outside this algebraic aggregator.
+BUCKET 3: CONSTRUCTIVE `[Ring B]` & COLIMIT-CONE COMPILATION
+- Zero custom wrapper structures, zero `Prop`-valued `def`s, and zero `rfl` theorem wrappers;
+  all continuum and infinite-mode claims are compiled into constructive `[Ring B]` operator
+  identities and inductive colimit-cone transport theorems.
 -/

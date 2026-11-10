@@ -41,7 +41,7 @@ open InfoGeometry.Canonical.NonAbelianCurvatureSquareBianchiBridge
 open InfoGeometry.Canonical.ExteriorEvenTraceChernWeil
 open BigOperators
 
-variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V] {n : ℕ}
 
 /-- The Chern--Simons transgression identity for a degree-raising differential
 over a characteristic-zero field. The degree hypothesis is explicit because

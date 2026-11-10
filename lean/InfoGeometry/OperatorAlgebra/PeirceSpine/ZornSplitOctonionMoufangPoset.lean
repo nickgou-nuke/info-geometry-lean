@@ -57,6 +57,17 @@ simplifications:
      and unconditional symmetric closure `(x ⋆ y) ⋆ (y ⋆ x) = 0`.
    - Bilateral active Moufang duality: `((x ⋆ y) ⋆ x) ⋆ w = -[y, x, x] * w` vs. `w ⋆ (x ⋆ (y ⋆ x)) = w * [x, x, y]`,
      and dual lower-cone corner intertwining `w₁ * diagPlus P [w₂, w₃, w₁] = -diagMinus P [w₁, w₂, w₃] * w₁`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All stages `ZO₁ → ZO₁₀`, `ZM₁ → ZM₂₅`, and `ZS₁ → ZS₅`: Zorn vector-matrix decomposition,
+  cubic grading law `Δ_sc³ = 4 Δ_sc`, contravariant split-octonion associator, flexibility–alternativity
+  equivalence, 4-body Kantor–Moufang sandwich, and bilateral active Moufang duality in `[Ring B] [StarRing B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency `hP : P * P = P` and self-adjointness `hPsym : star P = P` on `[Ring B] [StarRing B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Exceptional Jordan algebra `J₃(𝕆)` Freudenthal–Tits magic square extension over three-sheeted Peircean cones.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.ZornSplitOctonionMoufangPoset
@@ -169,6 +180,7 @@ def assocKZ (P c₀ a₀ X Y Z : B) : B :=
   zornMulKZ P c₀ a₀ (zornMulKZ P c₀ a₀ X Y) Z -
   zornMulKZ P c₀ a₀ X (zornMulKZ P c₀ a₀ Y Z)
 
+/-- Left-multiplication absorption `P * (P * X) = P * X` for an idempotent `P`. -/
 lemma P_assoc {P : B} (hP : P * P = P) (X : B) : P * (P * X) = P * X := by
   rw [← mul_assoc, hP]
 
@@ -227,6 +239,7 @@ lemma zorn_matrix_cubic_grading_and_corner_factorization
       (2 : ℤ) • kantorWedge P C₀ A₁ A₂ ∧
     superCommDelta P (cornerThirdOrder P C₀ A₁ A₂ C₃) = 0 ∧
     cornerThirdOrder P C₀ A₁ A₂ C₀ = comm (qgtPlus P A₁ C₀) (qgtPlus P A₂ C₀) := by
+  dsimp only []
   refine ⟨by gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP,
           by gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP,
           by gursey_abel hP, by gursey_abel hP, by gursey_abel hP, by gursey_abel hP⟩
@@ -330,6 +343,7 @@ macro "zorn_sym_abel" hP:ident : tactic =>
                mul_assoc, $hP:ident, P_assoc $hP:ident]
     try abel))
 
+/-- When both Kantor brackets `kantorWedge` and `kantorVee` vanish, `zornMulOct` reduces to associative multiplication `X * Y`. -/
 lemma zornMulOct_eq_mul {P : B} (c₀ a₀ X Y : B)
     (hW : kantorWedge P c₀ X Y = 0) (hV : kantorVee P a₀ X Y = 0) :
     zornMulOct P c₀ a₀ X Y = X * Y := by
@@ -536,6 +550,7 @@ lemma three_vector_associator_and_mixed_cone_moufang
           by rw [hMul_xw C₁, hMul_qx, hMul_qxw2, hMul_xw C₂, hMul_wqp C₂, hMul_xwqp]; dsimp [x, w, w₂]; zorn_oct_abel hP⟩
 
 omit [StarRing B] in
+/-- Six-permutation signed telescoping cancellation in an additive group. -/
 private lemma six_perm_cancel (u123 u132 u231 u213 u312 u321 v123 v213 v231 v321 v312 v132 : B) :
     ((u123 - u132) + (v123 - v213)) +
     ((u231 - u213) + (v231 - v321)) +

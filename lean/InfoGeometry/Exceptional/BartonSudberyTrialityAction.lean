@@ -13,13 +13,13 @@ namespace InfoGeometry.Exceptional.BartonSudberyTrialityAction
 open InfoGeometry.Exceptional.CompositionTriality
 open InfoGeometry.Exceptional.CompositionTriality.TrialityTriple
 
-variable {R A B : Type*} [CommRing R]
-variable [AddCommGroup A] [Module R A]
-variable [AddCommGroup B] [Module R B]
-variable {mulA : A →ₗ[R] A →ₗ[R] A}
-variable {mulB : B →ₗ[R] B →ₗ[R] B}
-
 open scoped TensorProduct
+
+section CommSemiring
+
+variable {R A B : Type*} [CommSemiring R]
+variable [AddCommMonoid A] [Module R A]
+variable [AddCommMonoid B] [Module R B]
 
 def leftTensorAction (D : Module.End R A) :
     Module.End R (A ⊗[R] B) :=
@@ -43,6 +43,25 @@ theorem rightTensorAction_comp (S T : Module.End R B) :
   ext x
   simp [rightTensorAction]
 
+theorem left_right_tensorAction_commute
+    (S : Module.End R A) (T : Module.End R B) :
+    leftTensorAction (A := A) (B := B) S *
+        rightTensorAction (A := A) (B := B) T =
+      rightTensorAction (A := A) (B := B) T *
+        leftTensorAction (A := A) (B := B) S := by
+  ext x
+  simp [leftTensorAction, rightTensorAction]
+
+end CommSemiring
+
+section CommRing
+
+variable {R A B : Type*} [CommRing R]
+variable [AddCommGroup A] [Module R A]
+variable [AddCommGroup B] [Module R B]
+variable {mulA : A →ₗ[R] A →ₗ[R] A}
+variable {mulB : B →ₗ[R] B →ₗ[R] B}
+
 theorem leftTensorAction_commutator
     (S T : Module.End R A) :
     leftTensorAction (A := A) (B := B) (endCommutator S T) =
@@ -58,15 +77,6 @@ theorem rightTensorAction_commutator
         (rightTensorAction (A := A) (B := B) T) := by
   ext x
   simp [endCommutator, rightTensorAction, TensorProduct.tmul_sub]
-
-theorem left_right_tensorAction_commute
-    (S : Module.End R A) (T : Module.End R B) :
-    leftTensorAction (A := A) (B := B) S *
-        rightTensorAction (A := A) (B := B) T =
-      rightTensorAction (A := A) (B := B) T *
-        leftTensorAction (A := A) (B := B) S := by
-  ext x
-  simp [leftTensorAction, rightTensorAction]
 
 def leftTrialityAction₁
     (T : TrialityTriple mulA) : Module.End R (A ⊗[R] B) :=
@@ -133,5 +143,7 @@ theorem rightTrialityAction₃_commutator
       endCommutator (rightTrialityAction₃ (A := A) (B := B) T)
         (rightTrialityAction₃ (A := A) (B := B) U) := by
   exact rightTensorAction_commutator T.t₃ U.t₃
+
+end CommRing
 
 end InfoGeometry.Exceptional.BartonSudberyTrialityAction

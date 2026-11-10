@@ -21,7 +21,7 @@ noncomputable section
 
 namespace InfoGeometry.Physics.CentralizerInvariance
 
-variable {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] (Q : QuadraticForm R M)
+variable {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M] (Q : QuadraticForm R M)
 
 /--
 The twisted-conjugation (sandwich) action of a unit g ∈ Cl(Q)× on an

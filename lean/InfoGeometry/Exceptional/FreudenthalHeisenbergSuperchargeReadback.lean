@@ -110,8 +110,8 @@ bridge from the microscopic operator envelope to the macroscopic Heisenberg Lie 
 generating the extreme poles $E_-$ and $E_+$.
 -/
 
-variable {R : Type*} [CommRing R]
-variable {L : Type*} [LieRing L] [LieAlgebra R L]
+variable {R : Type*} [Semiring R]
+variable {L : Type*} [AddCommMonoid L] [Bracket L L] [Module R L]
 variable (phi : ContactAtom → L)
 
 /-- READBACK THEOREM: The bracket of Q_i⁺ and Q_j⁻ in 𝔤₋₁ yields 2 δ_ij E₋ -/

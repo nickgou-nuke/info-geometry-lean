@@ -89,8 +89,8 @@ theorem traceForm_baseChange
   simp [LieModule.traceForm_apply_apply]
 
 theorem bilinForm_baseChange_zero
-    {R A M : Type*} [CommRing R] [CommRing A] [Algebra R A]
-    [AddCommGroup M] [Module R M] :
+    {R A M : Type*} [CommSemiring R] [CommSemiring A] [Algebra R A]
+    [AddCommMonoid M] [Module R M] :
     LinearMap.BilinForm.baseChange A (0 : LinearMap.BilinForm R M) = 0 := by
   apply LinearMap.BilinForm.ext
   intro x y

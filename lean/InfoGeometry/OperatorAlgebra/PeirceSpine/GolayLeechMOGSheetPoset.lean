@@ -53,11 +53,21 @@ an arbitrary associative ring `[Ring B]`, reusing the canonical `PeirceSpine` vo
    `mog24SheetPlus P_k A C X_n = (24 : ℤ) • ((V_k * V_k * V_k) * V_{k,n})`,
    `mog24SheetPlus P_k A C Y_n = 0`, `mog24SheetMinus P_k A C X_n = 0`, and
    `mog24SheetMinus P_k A C Y_n = (24 : ℤ) • ((V_k * V_k * V_k) * V_{k,n})`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All 6 stages `G₁ → G₆` (`GolayLeechMOGStage`), Scale-12/24 Kantor–Peirce charge frames,
+  Scale-144/576 bilateral compressions, all-scale defect-tower channel isolation, and single-sheet
+  decoders in `[Ring B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency `hP : P * P = P` on the arbitrary associative ring `[Ring B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Infinite-dimensional Monster vertex operator algebra (`V^♮`) modular partition function beyond
+  finite operator polynomials in `[Ring B]`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
-
-open InfoGeometry.Core.IdempotentGraphGrassmannian
 
 open InfoGeometry.Core.IdempotentGraphGrassmannian
 
@@ -85,6 +95,7 @@ def rank : GolayLeechMOGStage → ℕ
   | G5_single_sheet_swap_and_half_projections => 5
   | G6_all_scale_single_sheet_decoders => 6
 
+/-- The topological rank map on `GolayLeechMOGStage` is injective. -/
 theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> revert h <;> decide
@@ -101,20 +112,24 @@ def causalEdge : GolayLeechMOGStage → GolayLeechMOGStage → Prop
   | G5_single_sheet_swap_and_half_projections, G6_all_scale_single_sheet_decoders => True
   | _, _ => False
 
+/-- Every directed causal edge in `GolayLeechMOGStage` strictly increases topological rank. -/
 theorem causalEdge_strict_rank_mono {a b : GolayLeechMOGStage}
     (h : causalEdge a b) : rank a < rank b := by
   cases a <;> cases b <;> simp [causalEdge, rank] at h ⊢
 
+/-- The directed causal edge relation on `GolayLeechMOGStage` is irreflexive. -/
 theorem causalEdge_irrefl (a : GolayLeechMOGStage) : ¬ causalEdge a a := by
   intro h
   exact Nat.lt_irrefl (rank a) (causalEdge_strict_rank_mono h)
 
+/-- Transitive chains of causal edges in `GolayLeechMOGStage` strictly increase topological rank. -/
 theorem transGen_causalEdge_strict_rank_mono {a b : GolayLeechMOGStage}
     (h : Relation.TransGen causalEdge a b) : rank a < rank b := by
   induction h with
   | single hab => exact causalEdge_strict_rank_mono hab
   | tail _ hbc ih => exact lt_trans ih (causalEdge_strict_rank_mono hbc)
 
+/-- The `GolayLeechMOGStage` causal poset is strictly acyclic. -/
 theorem causalEdge_acyclic (a : GolayLeechMOGStage) :
     ¬ Relation.TransGen causalEdge a a := by
   intro h

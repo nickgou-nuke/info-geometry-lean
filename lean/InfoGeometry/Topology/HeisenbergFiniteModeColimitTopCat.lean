@@ -40,7 +40,7 @@ open InfoGeometry.Canonical
 open VirasoroProject
 open InfoGeometry.Topology.HeisenbergFiniteModeColimitTopological
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 instance heisenbergFiniteModeColimitTopologicalSpace :
     TopologicalSpace (heisenbergFiniteModeColimit (𝕜 := 𝕜)) := ⊥

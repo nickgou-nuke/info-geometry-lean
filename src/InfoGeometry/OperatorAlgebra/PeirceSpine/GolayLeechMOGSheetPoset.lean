@@ -53,11 +53,21 @@ an arbitrary associative ring `[Ring B]`, reusing the canonical `PeirceSpine` vo
    `mog24SheetPlus P_k A C X_n = (24 : ℤ) • ((V_k * V_k * V_k) * V_{k,n})`,
    `mog24SheetPlus P_k A C Y_n = 0`, `mog24SheetMinus P_k A C X_n = 0`, and
    `mog24SheetMinus P_k A C Y_n = (24 : ℤ) • ((V_k * V_k * V_k) * V_{k,n})`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All 6 stages `G₁ → G₆` (`GolayLeechMOGStage`), Scale-12/24 Kantor–Peirce charge frames,
+  Scale-144/576 bilateral compressions, all-scale defect-tower channel isolation, and single-sheet
+  decoders in `[Ring B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency `hP : P * P = P` on the arbitrary associative ring `[Ring B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Infinite-dimensional Monster vertex operator algebra (`V^♮`) modular partition function beyond
+  finite operator polynomials in `[Ring B]`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
-
-open InfoGeometry.Core.IdempotentGraphGrassmannian
 
 open InfoGeometry.Core.IdempotentGraphGrassmannian
 
@@ -85,6 +95,7 @@ def rank : GolayLeechMOGStage → ℕ
   | G5_single_sheet_swap_and_half_projections => 5
   | G6_all_scale_single_sheet_decoders => 6
 
+/-- The topological rank map on `GolayLeechMOGStage` is injective. -/
 theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> revert h <;> decide
@@ -101,20 +112,24 @@ def causalEdge : GolayLeechMOGStage → GolayLeechMOGStage → Prop
   | G5_single_sheet_swap_and_half_projections, G6_all_scale_single_sheet_decoders => True
   | _, _ => False
 
+/-- Every directed causal edge in `GolayLeechMOGStage` strictly increases topological rank. -/
 theorem causalEdge_strict_rank_mono {a b : GolayLeechMOGStage}
     (h : causalEdge a b) : rank a < rank b := by
   cases a <;> cases b <;> simp [causalEdge, rank] at h ⊢
 
+/-- The directed causal edge relation on `GolayLeechMOGStage` is irreflexive. -/
 theorem causalEdge_irrefl (a : GolayLeechMOGStage) : ¬ causalEdge a a := by
   intro h
   exact Nat.lt_irrefl (rank a) (causalEdge_strict_rank_mono h)
 
+/-- Transitive chains of causal edges in `GolayLeechMOGStage` strictly increase topological rank. -/
 theorem transGen_causalEdge_strict_rank_mono {a b : GolayLeechMOGStage}
     (h : Relation.TransGen causalEdge a b) : rank a < rank b := by
   induction h with
   | single hab => exact causalEdge_strict_rank_mono hab
   | tail _ hbc ih => exact lt_trans ih (causalEdge_strict_rank_mono hbc)
 
+/-- The `GolayLeechMOGStage` causal poset is strictly acyclic. -/
 theorem causalEdge_acyclic (a : GolayLeechMOGStage) :
     ¬ Relation.TransGen causalEdge a a := by
   intro h
@@ -250,42 +265,6 @@ theorem superChargeP_kantor_eigen
     superChargeP (kantorGm2 P C) P X = -((2 : ℤ) • kantorGm2 P C X) := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
     (dsimp only [superChargeP]; peirce_abel_golay hP)
-
-/-- The cross-grade commutators of the five Kantor–Peirce endomorphisms.
-The commutator of the two grade-one maps is the inner action of the chiral
-curvature; the two grade-one/extremal brackets are the stated triple products,
-and the opposite extremal bracket is the difference of the two QGT sandwiches.
--/
-theorem archetype_A54_kantor_koecher_tits_cross_grade_lie_brackets
-    {P : B} (hP : P * P = P) (A C X : B) :
-    kantorGp1 P A (kantorGm1 P C X) - kantorGm1 P C (kantorGp1 P A X) =
-      comm (genSig P A C) X ∧
-    kantorGp1 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp1 P A X) =
-      kantorTriple (genSig P A C) X (coneMinus P C) ∧
-    superChargeP (fun Y => kantorGp1 P A (kantorGm2 P C Y) -
-      kantorGm2 P C (kantorGp1 P A Y)) P X =
-      -(kantorGp1 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp1 P A X)) ∧
-    kantorGm1 P C (kantorGp2 P A X) - kantorGp2 P A (kantorGm1 P C X) =
-      -kantorTriple (genSig P A C) X (conePlus P A) ∧
-    superChargeP (fun Y => kantorGm1 P C (kantorGp2 P A Y) -
-      kantorGp2 P A (kantorGm1 P C Y)) P X =
-      kantorGm1 P C (kantorGp2 P A X) - kantorGp2 P A (kantorGm1 P C X) ∧
-    kantorGp2 P A (kantorGm2 P C X) - kantorGm2 P C (kantorGp2 P A X) =
-      qgtPlus P A C * X * qgtMinus P A C -
-        qgtMinus P A C * X * qgtPlus P A C ∧
-    superChargeP (fun Y => kantorGp2 P A (kantorGm2 P C Y) -
-      kantorGm2 P C (kantorGp2 P A Y)) P X = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · peirce_abel_golay hP
-  · peirce_abel_golay hP
-  · dsimp only [superChargeP]
-    peirce_abel_golay hP
-  · peirce_abel_golay hP
-  · dsimp only [superChargeP]
-    peirce_abel_golay hP
-  · peirce_abel_golay hP
-  · dsimp only [superChargeP]
-    peirce_abel_golay hP
 
 /-- Linear expansion of `kantorDelta1`, `kantorDelta2`, `kantorDelta3`, and `kantorDelta4`
 in terms of the five graded Kantor–Peirce components. -/

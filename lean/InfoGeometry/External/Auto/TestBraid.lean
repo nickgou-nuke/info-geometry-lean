@@ -8,12 +8,14 @@ namespace TestBraid
 
 section TemperleyLieb
 
-variable {F : Type*} [Field F]
+section DivisionRing
+
+variable {F : Type*} [DivisionRing F]
 variable (A : F)
 
 def d : F := - A^2 - (A⁻¹)^2
 
-variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable {A_alg : Type*} [Ring A_alg] [Module F A_alg] [IsScalarTower F A_alg A_alg] [SMulCommClass F A_alg A_alg]
 variable (e : ℕ → A_alg)
 
 class TemperleyLieb (d_val : F) (e : ℕ → A_alg) : Prop where
@@ -28,11 +30,19 @@ def σ_inv (i : ℕ) : A_alg := (A⁻¹:F) • (1:A_alg) + (A:F) • e i
 
 @[simp] lemma tl_smul_mul_smul_comm (c1 c2 : F) (x1 x2 : A_alg) : 
   (c1 • x1) * (c2 • x2) = (c1 * c2) • (x1 * x2) := by
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
 
 -- We define a normal form for the expansion of σ i * σ j * σ i
 def σ_adj_nf (i j : ℕ) : A_alg :=
   (A^3:F) • (1:A_alg) + (A:F) • e i + (A:F) • e j + (A⁻¹:F) • (e i * e j) + (A⁻¹:F) • (e j * e i)
+
+end DivisionRing
+
+variable {F : Type*} [Field F]
+variable (A : F)
+variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable (e : ℕ → A_alg)
+variable [TemperleyLieb (d A) e]
 
 lemma braid_adj_left (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) (hA : A ≠ 0) : 
   σ A e i * σ A e j * σ A e i = σ_adj_nf A e i j := by

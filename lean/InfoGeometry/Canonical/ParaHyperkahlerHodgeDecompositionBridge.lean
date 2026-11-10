@@ -45,7 +45,7 @@ namespace InfoGeometry.Canonical.ParaHyperkahlerHodgeDecompositionBridge
     Divided into Exact ($\operatorname{im} d$), Coexact ($\operatorname{im} \delta$), and Harmonic ($\mathcal{H}_\Delta$) sectors,
     each split into $(+ / -)$ Peirce chiral sectors. -/
 @[ext]
-structure PolarizedHodgeForm (R : Type*) [CommRing R] where
+structure PolarizedHodgeForm (R : Type*) [Ring R] where
   exact_plus    : R
   exact_minus   : R
   coexact_plus  : R
@@ -55,7 +55,9 @@ structure PolarizedHodgeForm (R : Type*) [CommRing R] where
 
 namespace PolarizedHodgeForm
 
-variable {R : Type*} [CommRing R]
+section Ring
+
+variable {R : Type*} [Ring R]
 
 def zero : PolarizedHodgeForm R where
   exact_plus := 0
@@ -123,34 +125,34 @@ instance : SMul R (PolarizedHodgeForm R) := ⟨smul⟩
 @[simp] theorem smul_harmonic_minus (c : R) (f : PolarizedHodgeForm R) : (c • f).harmonic_minus = c * f.harmonic_minus := rfl
 
 instance : AddCommGroup (PolarizedHodgeForm R) where
-  add_assoc f g h := by ext <;> (dsimp; ring)
-  zero_add f := by ext <;> (dsimp; ring)
-  add_zero f := by ext <;> (dsimp; ring)
+  add_assoc f g h := by ext <;> (dsimp; abel)
+  zero_add f := by ext <;> (dsimp; abel)
+  add_zero f := by ext <;> (dsimp; abel)
   nsmul := nsmulRec
   zsmul := zsmulRec
-  neg_add_cancel f := by ext <;> (dsimp; ring)
-  add_comm f g := by ext <;> (dsimp; ring)
+  neg_add_cancel f := by ext <;> (dsimp; abel)
+  add_comm f g := by ext <;> (dsimp; abel)
 
 @[simp] theorem sub_exact_plus (f g : PolarizedHodgeForm R) : (f - g).exact_plus = f.exact_plus - g.exact_plus := by
-  change (f + -g).exact_plus = f.exact_plus - g.exact_plus; dsimp; ring
+  change (f + -g).exact_plus = f.exact_plus - g.exact_plus; dsimp; abel
 @[simp] theorem sub_exact_minus (f g : PolarizedHodgeForm R) : (f - g).exact_minus = f.exact_minus - g.exact_minus := by
-  change (f + -g).exact_minus = f.exact_minus - g.exact_minus; dsimp; ring
+  change (f + -g).exact_minus = f.exact_minus - g.exact_minus; dsimp; abel
 @[simp] theorem sub_coexact_plus (f g : PolarizedHodgeForm R) : (f - g).coexact_plus = f.coexact_plus - g.coexact_plus := by
-  change (f + -g).coexact_plus = f.coexact_plus - g.coexact_plus; dsimp; ring
+  change (f + -g).coexact_plus = f.coexact_plus - g.coexact_plus; dsimp; abel
 @[simp] theorem sub_coexact_minus (f g : PolarizedHodgeForm R) : (f - g).coexact_minus = f.coexact_minus - g.coexact_minus := by
-  change (f + -g).coexact_minus = f.coexact_minus - g.coexact_minus; dsimp; ring
+  change (f + -g).coexact_minus = f.coexact_minus - g.coexact_minus; dsimp; abel
 @[simp] theorem sub_harmonic_plus (f g : PolarizedHodgeForm R) : (f - g).harmonic_plus = f.harmonic_plus - g.harmonic_plus := by
-  change (f + -g).harmonic_plus = f.harmonic_plus - g.harmonic_plus; dsimp; ring
+  change (f + -g).harmonic_plus = f.harmonic_plus - g.harmonic_plus; dsimp; abel
 @[simp] theorem sub_harmonic_minus (f g : PolarizedHodgeForm R) : (f - g).harmonic_minus = f.harmonic_minus - g.harmonic_minus := by
-  change (f + -g).harmonic_minus = f.harmonic_minus - g.harmonic_minus; dsimp; ring
+  change (f + -g).harmonic_minus = f.harmonic_minus - g.harmonic_minus; dsimp; abel
 
 instance : Module R (PolarizedHodgeForm R) where
-  one_smul f := by ext <;> (dsimp; ring)
-  mul_smul a b f := by ext <;> (dsimp; ring)
-  smul_zero a := by ext <;> (dsimp; ring)
-  smul_add a f g := by ext <;> (dsimp; ring)
-  add_smul a b f := by ext <;> (dsimp; ring)
-  zero_smul f := by ext <;> (dsimp; ring)
+  one_smul f := by ext <;> (dsimp; noncomm_ring)
+  mul_smul a b f := by ext <;> (dsimp; noncomm_ring)
+  smul_zero a := by ext <;> (dsimp; noncomm_ring)
+  smul_add a f g := by ext <;> (dsimp; noncomm_ring)
+  add_smul a b f := by ext <;> (dsimp; noncomm_ring)
+  zero_smul f := by ext <;> (dsimp; noncomm_ring)
 
 /-! ## 1. Canonical Subspace Projectors -/
 
@@ -184,43 +186,43 @@ def projHarmonic (ω : PolarizedHodgeForm R) : PolarizedHodgeForm R where
 /-- Direct sum decomposition: $\omega = P_{\mathrm{ex}}\omega + P_{\mathrm{co}}\omega + P_{\mathrm{harm}}\omega$. -/
 @[simp] theorem projExact_add_projCoexact_add_projHarmonic (ω : PolarizedHodgeForm R) :
     projExact ω + projCoexact ω + projHarmonic ω = ω := by
-  ext <;> (dsimp [projExact, projCoexact, projHarmonic]; ring)
+  ext <;> (dsimp [projExact, projCoexact, projHarmonic]; abel)
 
 @[simp] theorem projExact_idempotent (ω : PolarizedHodgeForm R) :
     projExact (projExact ω) = projExact ω := by
-  ext <;> (dsimp [projExact]; try ring)
+  ext <;> dsimp [projExact]
 
 @[simp] theorem projCoexact_idempotent (ω : PolarizedHodgeForm R) :
     projCoexact (projCoexact ω) = projCoexact ω := by
-  ext <;> (dsimp [projCoexact]; try ring)
+  ext <;> dsimp [projCoexact]
 
 @[simp] theorem projHarmonic_idempotent (ω : PolarizedHodgeForm R) :
     projHarmonic (projHarmonic ω) = projHarmonic ω := by
-  ext <;> (dsimp [projHarmonic]; try ring)
+  ext <;> dsimp [projHarmonic]
 
 @[simp] theorem projExact_projCoexact (ω : PolarizedHodgeForm R) :
     projExact (projCoexact ω) = 0 := by
-  ext <;> (dsimp [projExact, projCoexact]; try ring)
+  ext <;> dsimp [projExact, projCoexact]
 
 @[simp] theorem projCoexact_projExact (ω : PolarizedHodgeForm R) :
     projCoexact (projExact ω) = 0 := by
-  ext <;> (dsimp [projExact, projCoexact]; try ring)
+  ext <;> dsimp [projExact, projCoexact]
 
 @[simp] theorem projExact_projHarmonic (ω : PolarizedHodgeForm R) :
     projExact (projHarmonic ω) = 0 := by
-  ext <;> (dsimp [projExact, projHarmonic]; try ring)
+  ext <;> dsimp [projExact, projHarmonic]
 
 @[simp] theorem projHarmonic_projExact (ω : PolarizedHodgeForm R) :
     projHarmonic (projExact ω) = 0 := by
-  ext <;> (dsimp [projExact, projHarmonic]; try ring)
+  ext <;> dsimp [projExact, projHarmonic]
 
 @[simp] theorem projCoexact_projHarmonic (ω : PolarizedHodgeForm R) :
     projCoexact (projHarmonic ω) = 0 := by
-  ext <;> (dsimp [projCoexact, projHarmonic]; try ring)
+  ext <;> dsimp [projCoexact, projHarmonic]
 
 @[simp] theorem projHarmonic_projCoexact (ω : PolarizedHodgeForm R) :
     projHarmonic (projCoexact ω) = 0 := by
-  ext <;> (dsimp [projCoexact, projHarmonic]; try ring)
+  ext <;> dsimp [projCoexact, projHarmonic]
 
 /-! ## 2. 6-Fold Polarized Components -/
 
@@ -247,7 +249,7 @@ theorem sixfold_polarized_decomposition (ω : PolarizedHodgeForm R) :
     projExactPlus ω + projExactMinus ω +
     projCoexactPlus ω + projCoexactMinus ω +
     projHarmonicPlus ω + projHarmonicMinus ω = ω := by
-  ext <;> (dsimp [projExactPlus, projExactMinus, projCoexactPlus, projCoexactMinus, projHarmonicPlus, projHarmonicMinus]; ring)
+  ext <;> (dsimp [projExactPlus, projExactMinus, projCoexactPlus, projCoexactMinus, projHarmonicPlus, projHarmonicMinus]; abel)
 
 /-! ## 3. Chirality Involution -/
 
@@ -262,7 +264,7 @@ def chirality (ω : PolarizedHodgeForm R) : PolarizedHodgeForm R where
 
 /-- $\Gamma^2 = \mathbb{I}$. -/
 theorem chirality_involutive (ω : PolarizedHodgeForm R) : chirality (chirality ω) = ω := by
-  ext <;> (dsimp [chirality]; try ring)
+  ext <;> (dsimp [chirality]; try abel)
 
 /-! ## 4. Dirac-Kähler Operator & Hodge Laplacian -/
 
@@ -285,27 +287,27 @@ def diracKaehler (ω : PolarizedHodgeForm R) : PolarizedHodgeForm R where
 @[simp] theorem dirac_harmonic_minus (ω : PolarizedHodgeForm R) : (diracKaehler ω).harmonic_minus = 0 := rfl
 
 @[simp] theorem diracKaehler_zero : diracKaehler (0 : PolarizedHodgeForm R) = 0 := by
-  ext <;> (dsimp; try ring)
+  ext <;> (dsimp; try abel)
 
 theorem dirac_kaehler_add (ω η : PolarizedHodgeForm R) :
     diracKaehler (ω + η) = diracKaehler ω + diracKaehler η := by
-  ext <;> (dsimp; try ring)
+  ext <;> (dsimp; try abel)
 
 theorem dirac_kaehler_smul (c : R) (ω : PolarizedHodgeForm R) :
     diracKaehler (c • ω) = c • diracKaehler ω := by
-  ext <;> (dsimp; try ring)
+  ext <;> (dsimp; try noncomm_ring)
 
 /-- **Theorem**: Dirac-Kähler operator anticommutes with chirality: $\{\mathcal{D}, \Gamma\} = 0$. -/
 theorem dirac_kaehler_anticommutes_chirality (ω : PolarizedHodgeForm R) :
     chirality (diracKaehler ω) + diracKaehler (chirality ω) = 0 := by
-  ext <;> (dsimp [chirality, diracKaehler]; try ring)
+  ext <;> (dsimp [chirality, diracKaehler]; try abel)
 
 /-- **Theorem**: Dirac-Kähler operator annihilates the harmonic sector $\mathcal{H}_\Delta$. -/
 theorem dirac_kaehler_on_harmonic (hp hm : R) :
     let ω_harm : PolarizedHodgeForm R := ⟨0, 0, 0, 0, hp, hm⟩
     diracKaehler ω_harm = 0 := by
   intro ω_harm
-  ext <;> (dsimp [ω_harm]; try ring)
+  ext <;> (dsimp [ω_harm]; try abel)
 
 /-- Hodge-de Rham Laplacian $\Delta = -\mathcal{D}^2$ acting on polarized forms. -/
 def hodgeLaplacian (ω : PolarizedHodgeForm R) : PolarizedHodgeForm R where
@@ -327,7 +329,7 @@ def hodgeLaplacian (ω : PolarizedHodgeForm R) : PolarizedHodgeForm R where
     $\mathcal{D}^2 = -\Delta$. -/
 theorem dirac_kaehler_sq_eq_neg_laplacian (ω : PolarizedHodgeForm R) :
     diracKaehler (diracKaehler ω) = - hodgeLaplacian ω := by
-  ext <;> (dsimp; try ring)
+  ext <;> (dsimp; try abel)
 
 /-! ## 5. Exact-Coexact Kinetic Transmutation -/
 
@@ -337,9 +339,9 @@ theorem diracKaehler_maps_exact_to_coexact (ω : PolarizedHodgeForm R) :
     projHarmonic (diracKaehler (projExact ω)) = 0 ∧
     projCoexact (diracKaehler (projExact ω)) = diracKaehler (projExact ω) := by
   refine ⟨?_, ?_, ?_⟩
-  · ext <;> (dsimp [projExact, diracKaehler]; try ring)
-  · ext <;> (dsimp [projHarmonic, diracKaehler]; try ring)
-  · ext <;> (dsimp [projCoexact, projExact, diracKaehler]; try ring)
+  · ext <;> (dsimp [projExact, diracKaehler]; try abel)
+  · ext <;> (dsimp [projHarmonic, diracKaehler]; try abel)
+  · ext <;> (dsimp [projCoexact, projExact, diracKaehler]; try abel)
 
 /-- **Theorem**: $\mathcal{D}$ maps coexact forms entirely into exact forms. -/
 theorem diracKaehler_maps_coexact_to_exact (ω : PolarizedHodgeForm R) :
@@ -347,9 +349,15 @@ theorem diracKaehler_maps_coexact_to_exact (ω : PolarizedHodgeForm R) :
     projHarmonic (diracKaehler (projCoexact ω)) = 0 ∧
     projExact (diracKaehler (projCoexact ω)) = diracKaehler (projCoexact ω) := by
   refine ⟨?_, ?_, ?_⟩
-  · ext <;> (dsimp [projCoexact, diracKaehler]; try ring)
-  · ext <;> (dsimp [projHarmonic, diracKaehler]; try ring)
-  · ext <;> (dsimp [projExact, projCoexact, diracKaehler]; try ring)
+  · ext <;> (dsimp [projCoexact, diracKaehler]; try abel)
+  · ext <;> (dsimp [projHarmonic, diracKaehler]; try abel)
+  · ext <;> (dsimp [projExact, projCoexact, diracKaehler]; try abel)
+
+end Ring
+
+section CommRing
+
+variable {R : Type*} [CommRing R]
 
 /-! ## 6. Krein Metric, Lagrangian Isotropies, & Duality -/
 
@@ -409,6 +417,12 @@ theorem exact_coexact_hyperbolic_pairing (ω η : PolarizedHodgeForm R) :
       ω.exact_plus * η.coexact_plus - ω.exact_minus * η.coexact_minus := by
   dsimp [kreinInnerProduct, projExact, projCoexact]; ring
 
+end CommRing
+
+section BdGZorn
+
+variable {R : Type*} [Ring R]
+
 /-! ## 7. The Zorn-BdG Bi-Wave Operator & Mass Condensation -/
 
 /-- The Bogoliubov-de Gennes / Dirac-Zorn Hamiltonian acting on the bi-wave doublet $(\omega, \eta)$:
@@ -432,7 +446,7 @@ theorem bdgZorn_sq_eq_klein_gordon (m : R) (p : PolarizedHodgeForm R × Polarize
       (- hodgeLaplacian p.1 + (m * m) • p.1,
        - hodgeLaplacian p.2 + (m * m) • p.2) := by
   obtain ⟨ω, η⟩ := p
-  ext <;> (dsimp [bdgZorn]; simp; ring)
+  ext <;> (dsimp [bdgZorn]; simp; noncomm_ring)
 
 /-- **Mass Condensation**: For an exact gradient $\omega = P_{\mathrm{ex}}\omega$ with trivial doublet partner $\eta = 0$,
     the mass parameter $m \neq 0$ generates an exact second-component condensate $m \cdot \omega$ while
@@ -443,6 +457,8 @@ theorem bdgZorn_mass_condensation (m : R) (ω : PolarizedHodgeForm R) :
   dsimp [bdgZorn]
   simp only [smul_zero, add_zero, diracKaehler_zero, sub_zero]
 
+end BdGZorn
+
 end PolarizedHodgeForm
 
 /-! ## 8. Synthesis Structure -/
@@ -451,29 +467,29 @@ end PolarizedHodgeForm
     Krein Lagrangian polarities, and Zorn-BdG mass condensation. -/
 structure ParaHyperkahlerHodgeSynthesis where
   sixfold_decomposition :
-    ∀ {R : Type*} [CommRing R] (ω : PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (ω : PolarizedHodgeForm R),
       PolarizedHodgeForm.projExactPlus ω + PolarizedHodgeForm.projExactMinus ω +
       PolarizedHodgeForm.projCoexactPlus ω + PolarizedHodgeForm.projCoexactMinus ω +
       PolarizedHodgeForm.projHarmonicPlus ω + PolarizedHodgeForm.projHarmonicMinus ω = ω
   chirality_involutive :
-    ∀ {R : Type*} [CommRing R] (ω : PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (ω : PolarizedHodgeForm R),
       PolarizedHodgeForm.chirality (PolarizedHodgeForm.chirality ω) = ω
   dirac_anticomm_chirality :
-    ∀ {R : Type*} [CommRing R] (ω : PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (ω : PolarizedHodgeForm R),
       PolarizedHodgeForm.chirality (PolarizedHodgeForm.diracKaehler ω) +
       PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.chirality ω) = 0
   dirac_sq_eq_neg_laplacian :
-    ∀ {R : Type*} [CommRing R] (ω : PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (ω : PolarizedHodgeForm R),
       PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.diracKaehler ω) =
         - PolarizedHodgeForm.hodgeLaplacian ω
   dirac_exact_to_coexact :
-    ∀ {R : Type*} [CommRing R] (ω : PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (ω : PolarizedHodgeForm R),
       PolarizedHodgeForm.projExact (PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projExact ω)) = 0 ∧
       PolarizedHodgeForm.projHarmonic (PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projExact ω)) = 0 ∧
       PolarizedHodgeForm.projCoexact (PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projExact ω)) =
         PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projExact ω)
   dirac_coexact_to_exact :
-    ∀ {R : Type*} [CommRing R] (ω : PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (ω : PolarizedHodgeForm R),
       PolarizedHodgeForm.projCoexact (PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projCoexact ω)) = 0 ∧
       PolarizedHodgeForm.projHarmonic (PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projCoexact ω)) = 0 ∧
       PolarizedHodgeForm.projExact (PolarizedHodgeForm.diracKaehler (PolarizedHodgeForm.projCoexact ω)) =
@@ -496,11 +512,11 @@ structure ParaHyperkahlerHodgeSynthesis where
       PolarizedHodgeForm.kreinInnerProduct (PolarizedHodgeForm.projExact ω) (PolarizedHodgeForm.projCoexact η) =
         ω.exact_plus * η.coexact_plus - ω.exact_minus * η.coexact_minus
   bdg_massless_decoupling :
-    ∀ {R : Type*} [CommRing R] (p : PolarizedHodgeForm R × PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (p : PolarizedHodgeForm R × PolarizedHodgeForm R),
       PolarizedHodgeForm.bdgZorn 0 p =
         (PolarizedHodgeForm.diracKaehler p.1, - PolarizedHodgeForm.diracKaehler p.2)
   bdg_dispersion :
-    ∀ {R : Type*} [CommRing R] (m : R) (p : PolarizedHodgeForm R × PolarizedHodgeForm R),
+    ∀ {R : Type*} [Ring R] (m : R) (p : PolarizedHodgeForm R × PolarizedHodgeForm R),
       PolarizedHodgeForm.bdgZorn m (PolarizedHodgeForm.bdgZorn m p) =
         (- PolarizedHodgeForm.hodgeLaplacian p.1 + (m * m) • p.1,
          - PolarizedHodgeForm.hodgeLaplacian p.2 + (m * m) • p.2)

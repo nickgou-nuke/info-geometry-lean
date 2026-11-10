@@ -45,8 +45,8 @@ theorem commutatorCurvature_eq_zero_of_commuting
 
 /-- Scalar coefficients give a canonical flat commutator connection. -/
 theorem scalar_commutator_curvature_zero
-    {R A V : Type*} [CommRing R] [Ring A] [Algebra R A]
-    [AddCommGroup V] [Module R V]
+    {R A V : Type*} [CommSemiring R] [Ring A] [Algebra R A]
+    [AddCommMonoid V] [Module R V]
     (f : V → R) (u v : V) :
     (algebraMap R A (f u)) * algebraMap R A (f v) -
       algebraMap R A (f v) * algebraMap R A (f u) = 0 := by
@@ -62,7 +62,7 @@ open scoped TensorProduct
 section Triangle
 
 variable {R L M : Type*} [CommRing R] [LieRing L] [LieAlgebra R L]
-  [AddCommGroup M] [Module R M]
+  [AddCommMonoid M] [Module R M]
 
 /-- The three commutator-weighted exterior channels of a triangle. -/
 def triangleCurvature (x y z : L) (a b c : ExteriorAlgebra R M) :

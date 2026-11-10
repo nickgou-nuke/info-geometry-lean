@@ -5,7 +5,7 @@ import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Riemannian.ConeAction
 
 variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommGroup M] [Module R M]
+variable {M : Type*} [AddCommMonoid M] [Module R M]
 
 open InfoGeometry.Clifford.Hestenes
 open CliffordAlgebra

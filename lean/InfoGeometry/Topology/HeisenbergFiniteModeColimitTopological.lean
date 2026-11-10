@@ -38,7 +38,7 @@ open VirasoroProject
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 instance heisenbergFiniteModeColimitTopologicalSpace :
     TopologicalSpace (heisenbergFiniteModeColimit (𝕜 := 𝕜)) := ⊥

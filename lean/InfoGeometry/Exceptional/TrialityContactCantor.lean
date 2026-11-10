@@ -41,6 +41,14 @@ def fixedLieSubalgebra (rotation : LieCarrier ≃ₗ⁅Scalar⁆ LieCarrier) :
     change rotation ⁅first, second⁆ = ⁅first, second⁆
     rw [rotation.map_lie, hfirst, hsecond]
 
+theorem fixedLieSubalgebra_eq_ker_boundary
+    (rotation : LieCarrier ≃ₗ⁅Scalar⁆ LieCarrier) :
+    (fixedLieSubalgebra rotation).toSubmodule =
+      LinearMap.ker (boundary rotation.toLinearEquiv.toLinearMap) := by
+  ext operator
+  change rotation operator = operator ↔ operator - rotation operator = 0
+  rw [sub_eq_zero, eq_comm]
+
 end LieAction
 
 section Projection
@@ -48,14 +56,6 @@ section Projection
 variable {Scalar LieCarrier : Type*} [Field Scalar] [CharZero Scalar]
 variable [LieRing LieCarrier] [LieAlgebra Scalar LieCarrier]
 variable (rotation : LieCarrier ≃ₗ⁅Scalar⁆ LieCarrier)
-
-omit [CharZero Scalar] in
-theorem fixedLieSubalgebra_eq_ker_boundary :
-    (fixedLieSubalgebra rotation).toSubmodule =
-      LinearMap.ker (boundary rotation.toLinearEquiv.toLinearMap) := by
-  ext operator
-  change rotation operator = operator ↔ operator - rotation operator = 0
-  rw [sub_eq_zero, eq_comm]
 
 theorem range_reynolds_eq_fixedLieSubalgebra
     (hcycle : ∀ operator, rotation (rotation (rotation operator)) = operator) :

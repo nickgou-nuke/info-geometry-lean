@@ -9,7 +9,7 @@ namespace InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge
 
 open ExteriorAlgebra
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V] {n : ℕ}
 
 /-- **Definition**: Homogeneous Exterior Algebra Degree Predicate IsHomogeneousExteriorDegree k x for x ∈ ⋀^k V. -/
 def IsHomogeneousExteriorDegree (k : ℕ) (x : ExteriorAlgebra R V) : Prop :=

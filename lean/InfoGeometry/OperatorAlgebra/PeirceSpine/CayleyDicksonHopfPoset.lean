@@ -43,6 +43,17 @@ arbitrary associative ring with involution `[Ring B] [StarRing B]`, reusing the 
    connecting the Peirce north-pole pair `(P, conePlus P A)` directly to `(P - qgtPlus P A (star A), 0)`
    and the bipartite chiral cone pair `(conePlus P A, coneMinus P (star A))` directly to
    `(genSig P A (star A), 0, genV P A (star A))` with the exact quadratic identity `Z² + Perp² = (R²)²`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All 5 stages `N₁ → N₅` (`CayleyDicksonHopfStage`), Furey's universal Lie–Jordan quartet,
+  sector hypercharge/electric-charge operators `Y₆, Q₆`, corner embedding equivariance, and
+  non-commutative operator Hopf coordinates in `[Ring B] [StarRing B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency, mutual orthogonality, and Hermitian/skew-Hermitian star-hypotheses on `[Ring B] [StarRing B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Non-associative octonionic division-algebra representation beyond associative corner endomorphisms in `[Ring B]`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
@@ -69,6 +80,7 @@ def rank : CayleyDicksonHopfStage → ℕ
   | N4_equivariant_intertwining_embedding => 4
   | N5_operator_hopf_coordinate_evaluations => 5
 
+/-- The topological rank map on `CayleyDicksonHopfStage` is injective. -/
 theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> revert h <;> decide
@@ -85,20 +97,24 @@ def causalEdge : CayleyDicksonHopfStage → CayleyDicksonHopfStage → Prop
   | N4_equivariant_intertwining_embedding, N5_operator_hopf_coordinate_evaluations => True
   | _, _ => False
 
+/-- Every directed causal edge in `CayleyDicksonHopfStage` strictly increases topological rank. -/
 theorem causalEdge_strict_rank_mono {a b : CayleyDicksonHopfStage}
     (h : causalEdge a b) : rank a < rank b := by
   cases a <;> cases b <;> simp [causalEdge, rank] at h ⊢
 
+/-- The directed causal edge relation on `CayleyDicksonHopfStage` is irreflexive. -/
 theorem causalEdge_irrefl (a : CayleyDicksonHopfStage) : ¬ causalEdge a a := by
   intro h
   exact Nat.lt_irrefl (rank a) (causalEdge_strict_rank_mono h)
 
+/-- Transitive chains of causal edges in `CayleyDicksonHopfStage` strictly increase topological rank. -/
 theorem transGen_causalEdge_strict_rank_mono {a b : CayleyDicksonHopfStage}
     (h : Relation.TransGen causalEdge a b) : rank a < rank b := by
   induction h with
   | single hab => exact causalEdge_strict_rank_mono hab
   | tail _ hbc ih => exact lt_trans ih (causalEdge_strict_rank_mono hbc)
 
+/-- The `CayleyDicksonHopfStage` causal poset is strictly acyclic. -/
 theorem causalEdge_acyclic (a : CayleyDicksonHopfStage) :
     ¬ Relation.TransGen causalEdge a a := by
   intro h
@@ -152,10 +168,12 @@ theorem hopfRadiusSq_selfAdjoint (a₁ a₂ : B) :
   rw [star_add, star_mul, star_mul, star_star, star_star]
 
 omit [StarRing B] in
+/-- Left-multiplication absorption `P * (P * X) = P * X` for an idempotent `P`. -/
 theorem P_assoc {P : B} (hP : P * P = P) (X : B) : P * (P * X) = P * X := by
   rw [← mul_assoc, hP]
 
 omit [StarRing B] in
+/-- Associative zero-product propagation `X * (Y * Z) = 0` when `X * Y = 0`. -/
 theorem zero_mul_assoc {X Y : B} (h : X * Y = 0) (Z : B) : X * (Y * Z) = 0 := by
   rw [← mul_assoc, h, zero_mul]
 

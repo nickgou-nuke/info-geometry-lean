@@ -19,7 +19,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.ZornDifferentialFormsCliffordBridge
 
 variable {R V C : Type*}
-variable [CommRing R] [AddCommGroup V] [Module R V]
+variable [CommRing R] [AddCommMonoid V] [Module R V]
 variable [Semiring C] [Algebra R C]
 
 structure FormHodgeCliffordData where

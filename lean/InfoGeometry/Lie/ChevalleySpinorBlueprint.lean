@@ -10,12 +10,12 @@ open LinearMap
 open ExteriorAlgebra
 
 variable {R : Type*} [CommRing R]
-variable {W : Type*} [AddCommGroup W] [Module R W]
+variable {W : Type*} [AddCommMonoid W] [Module R W]
 
-abbrev DualSpace (R W : Type*) [CommRing R] [AddCommGroup W] [Module R W] :=
+abbrev DualSpace (R W : Type*) [CommSemiring R] [AddCommMonoid W] [Module R W] :=
   W →ₗ[R] R
 
-abbrev SplitV (R W : Type*) [CommRing R] [AddCommGroup W] [Module R W] :=
+abbrev SplitV (R W : Type*) [CommSemiring R] [AddCommMonoid W] [Module R W] :=
   W × DualSpace R W
 
 def splitBilin : LinearMap.BilinForm R (SplitV R W) :=
@@ -28,7 +28,7 @@ def splitBilin : LinearMap.BilinForm R (SplitV R W) :=
 def splitQ : QuadraticForm R (SplitV R W) :=
   splitBilin.toQuadraticMap
 
-abbrev SpinorSpace (R W : Type*) [CommRing R] [AddCommGroup W] [Module R W] :=
+abbrev SpinorSpace (R W : Type*) [CommSemiring R] [AddCommMonoid W] [Module R W] :=
   ExteriorAlgebra R W
 
 def actionWedge : W →ₗ[R] Module.End R (SpinorSpace R W) where

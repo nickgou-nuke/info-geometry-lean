@@ -42,6 +42,19 @@ reusing the canonical `InfoGeometry.OperatorAlgebra.PeirceSpine` primitives
   exact identification with `conjPlusInv`/`conjPlus` and `projChartPlus`, Maurer–Cartan
   cocycle evaluation `Λ_{ad_P}(1 + N_+) = N_+`, dressed grading `P^{1 + N_+} = P + 2 N_+`,
   and exact invariance of the Peirce–Clifford horizon metric `V^{1 + N_+} = V`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All 6 stages `F₁ → F₆` (`RelationalDressingStage`), Maurer–Cartan 1-cocycle chain rule,
+  point-coincidence gauge invariance, 2nd-kind quantum reference frame switching, BRST ghost
+  reduction, and Gribov-free unipotent Peirce horizon dressing in `[Ring B] [StarRing B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Two-sided inverse and Leibniz derivation hypotheses (`U * U⁻¹ = 1`, `d(U Γ) = d(U) Γ + U d(Γ)`)
+  and idempotency `hP : P * P = P` on `[Ring B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Non-perturbative Gribov copy topology on infinite-dimensional principal gauge bundles beyond
+  unipotent Peirce horizon charts.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
@@ -64,6 +77,7 @@ def rank : RelationalDressingStage → ℕ
   | F5 => 5
   | F6 => 6
 
+/-- The topological rank map on `RelationalDressingStage` is injective. -/
 theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> first | rfl | cases h
@@ -106,29 +120,33 @@ Non-Abelian Maurer–Cartan 1-cocycle `U⁻¹ d(U)` for an operator map `d : B �
 def maurerCartanCocycle (d : B → B) (U U_inv : B) : B :=
   U_inv * d U
 
-/-- **Archetype `F₂` (`dressedConn`, `dressedCurv`, `dressedState`)**:
-- `dressedConn d U U_inv A := U_inv * A * U + U_inv * d U`,
-- `dressedCurv U U_inv F := U_inv * F * U`,
-- `dressedState U_inv Ψ := U_inv * Ψ`. -/
+/-- **Archetype `F₂` (`dressedConn`)**:
+Dressed gauge connection `U_inv * A * U + U_inv * d U`. -/
 def dressedConn (d : B → B) (U U_inv A : B) : B :=
   U_inv * A * U + U_inv * d U
 
+/-- **Archetype `F₂` (`dressedCurv`)**:
+Dressed tensor/curvature operator `U_inv * F * U`. -/
 def dressedCurv (U U_inv F : B) : B :=
   U_inv * F * U
 
+/-- **Archetype `F₂` (`dressedState`)**:
+Dressed state operator `U_inv * Ψ`. -/
 def dressedState (U_inv Ψ : B) : B :=
   U_inv * Ψ
 
-/-- **Archetype `F₄` (`dressedGhost`, `brstGhostFull`, `brstGhostPartial`)**:
-- `dressedGhost δ_brst U U_inv C_ghost := U_inv * C_ghost * U + U_inv * δ_brst U`,
-- `brstGhostFull δ_brst U U_inv := -(δ_brst U * U_inv)`,
-- `brstGhostPartial δ_brst U₁ U₁_inv C_res := -(δ_brst U₁ * U₁_inv) + U₁ * C_res * U₁_inv`. -/
+/-- **Archetype `F₄` (`dressedGhost`)**:
+Dressed BRST ghost `U_inv * C_ghost * U + U_inv * δ_brst U`. -/
 def dressedGhost (δ_brst : B → B) (U U_inv C_ghost : B) : B :=
   U_inv * C_ghost * U + U_inv * δ_brst U
 
+/-- **Archetype `F₄` (`brstGhostFull`)**:
+Full BRST Maurer–Cartan ghost `-(δ_brst U * U_inv)`. -/
 def brstGhostFull (δ_brst : B → B) (U U_inv : B) : B :=
   -(δ_brst U * U_inv)
 
+/-- **Archetype `F₄` (`brstGhostPartial`)**:
+Partial normal-subgroup BRST ghost `-(δ_brst U₁ * U₁_inv) + U₁ * C_res * U₁_inv`. -/
 def brstGhostPartial (δ_brst : B → B) (U₁ U₁_inv C_res : B) : B :=
   -(δ_brst U₁ * U₁_inv) + U₁ * C_res * U₁_inv
 

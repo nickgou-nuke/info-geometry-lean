@@ -136,4 +136,82 @@ theorem coherent_iteratedCommutator_in_limit
     stageEmbed_coherent_iteratedCommutator A X hA hX k
   exact finite_sequence_constant_in_limit W hW n
 
+/-! ## Residual reconstruction in the operator colimit
+
+The cited hyperbolic residual-quantization construction uses a non-associative
+gyrogroup law and a specific left-cancellation identity.  The theorem below
+formalizes only the algebraic pattern that transfers without that geometry:
+in the additive group of the actual operator colimit, subtracting each
+increment from the residual and then aggregating the increments in reverse
+nested order reconstructs the starting operator.  The finite list is a finite
+sequence of operators in `Limit`; it does not bound the dimension of `Limit`.
+-/
+
+/-- The residual after successively removing a finite list of operator
+increments. -/
+def operatorResidual {R : Type*} [Ring R] : List R → R → R
+  | [], residual => residual
+  | increment :: increments, residual =>
+      operatorResidual increments (residual - increment)
+
+/-- Reverse-nested reconstruction of a finite list of increments and a tail. -/
+def reverseOperatorAggregate {R : Type*} [Ring R] : List R → R → R
+  | [], tail => tail
+  | increment :: increments, tail =>
+      increment + reverseOperatorAggregate increments tail
+
+/-- Removing increments from the residual and restoring them in reverse-nested
+order exactly recovers the initial operator. -/
+theorem reverseOperatorAggregate_operatorResidual
+    {R : Type*} [Ring R] (increments : List R) (initial : R) :
+    reverseOperatorAggregate increments (operatorResidual increments initial) =
+      initial := by
+  induction increments generalizing initial with
+  | nil => rfl
+  | cons increment increments ih =>
+      simp only [operatorResidual, reverseOperatorAggregate, ih]
+      abel
+
+/-- The operator residual/reconstruction identity holds in the actual
+potentially infinite-dimensional `Cl(1,1)` direct limit. -/
+theorem cl11_limit_operator_residual_reconstruction
+    (increments : List Limit) (initial : Limit) :
+    reverseOperatorAggregate increments
+        (operatorResidual increments initial) = initial := by
+  induction increments generalizing initial with
+  | nil => rfl
+  | cons increment increments ih =>
+      simp only [operatorResidual, reverseOperatorAggregate]
+      rw [ih]
+      abel
+
+/-- The same residual reconstruction is compatible with every finite Clifford
+head: applying the canonical colimit map before or after the whole finite
+calculation gives the same operator. -/
+theorem cl11_stage_operator_residual_compatibility
+    (n : ℕ) (increments : List (Stage n)) (initial : Stage n) :
+    ofStage n
+        (reverseOperatorAggregate increments
+          (operatorResidual increments initial)) =
+      reverseOperatorAggregate (increments.map (ofStage n))
+        (operatorResidual (increments.map (ofStage n)) (ofStage n initial)) := by
+  induction increments generalizing initial with
+  | nil => rfl
+  | cons increment increments ih =>
+      simp only [operatorResidual, reverseOperatorAggregate, List.map_cons,
+        map_add, map_sub]
+      rw [ih]
+      rfl
+
+/-- Reconstructing a finite stagewise operator residual remains exact after
+passing to the direct limit. -/
+theorem cl11_stage_operator_residual_reconstruction
+    (n : ℕ) (increments : List (Stage n)) (initial : Stage n) :
+    ofStage n
+        (reverseOperatorAggregate increments
+          (operatorResidual increments initial)) = ofStage n initial := by
+  rw [cl11_stage_operator_residual_compatibility]
+  exact reverseOperatorAggregate_operatorResidual
+    (increments.map (ofStage n)) (ofStage n initial)
+
 end InfoGeometry.Clifford.Cl11RecursiveCommutatorColimit

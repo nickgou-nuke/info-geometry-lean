@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 open InfoGeometry.Canonical.HodgeInnerProductAdjointnessBridge
 open InfoGeometry.Canonical.HodgeIsomorphismHarmonicBridge
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 /-- **Definition**: Harmonic Form Cohomology Class Projection Map π_H : ker(Δ) → H_d = ker d / range d. -/
 def harmonicToCohomologyClassMap

@@ -36,7 +36,7 @@ open InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- The combined Heisenberg boundary / cyclotomic root readout. -/
 def boundaryCyclotomicReadout (α : 𝕜) (q : SixthRootParameter) :

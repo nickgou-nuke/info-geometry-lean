@@ -7,7 +7,7 @@ import InfoGeometry.Quantum.KitaevMajorana
 set_option linter.unusedVariables false
 set_option linter.unusedSectionVars false
 
-variable {R : Type*} [Field R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M) (v0 : M)
 

@@ -10,15 +10,17 @@ namespace InfoGeometry.Canonical.CovectorContractionBladeBridge
 open ExteriorAlgebra
 open InfoGeometry.GrassmannianTower
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
-
-/-- **Definition**: 4-Blade Generator K4 = ι(v1) ∧ ι(v2) ∧ ι(v3) ∧ ι(v4). -/
-def blade4 (v1 v2 v3 v4 : V) : ExteriorAlgebra R V :=
-  ιMulti R 4 ![v1, v2, v3, v4]
+variable {R₀ V₀ : Type*} [CommSemiring R₀] [AddCommMonoid V₀] [Module R₀ V₀]
 
 /-- **Definition**: 5-Blade Generator K5 = ι(v1) ∧ ι(v2) ∧ ι(v3) ∧ ι(v4) ∧ ι(v5). -/
-def blade5 (v1 v2 v3 v4 v5 : V) : ExteriorAlgebra R V :=
-  ι R v1 * ι R v2 * ι R v3 * ι R v4 * ι R v5
+def blade5 (v1 v2 v3 v4 v5 : V₀) : ExteriorAlgebra R₀ V₀ :=
+  ι R₀ v1 * ι R₀ v2 * ι R₀ v3 * ι R₀ v4 * ι R₀ v5
+
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
+
+/-- **Definition**: 4-Blade Generator K4 = ι(v1) ∧ ι(v2) ∧ ι(v3) ∧ ∧(v4). -/
+def blade4 (v1 v2 v3 v4 : V) : ExteriorAlgebra R V :=
+  ιMulti R 4 ![v1, v2, v3, v4]
 
 /-- **Definition**: Explicit 5-Blade Covector Contraction by Linear Form λ : V →ₗ[R] R. -/
 def contractFiveBlade (lambda : V →ₗ[R] R) (u w1 w2 w3 w4 : V) : ExteriorAlgebra R V :=

@@ -20,8 +20,8 @@ noncomputable section
 namespace InfoGeometry.LinearAlgebra.TraceAnticommutation
 
 theorem linearMap_trace_mul_zero_of_anticommute
-    {K M : Type*} [Field K] [CharZero K]
-    [AddCommGroup M] [Module K M] [FiniteDimensional K M]
+    {K M : Type*} [CommRing K] [IsAddTorsionFree K]
+    [AddCommGroup M] [Module K M] [Module.Free K M] [Module.Finite K M]
     (A B : Module.End K M)
     (h : A * B + B * A = 0) :
     LinearMap.trace K M (A * B) = 0 := by

@@ -12,7 +12,7 @@ namespace InfoGeometry.Riemannian
 open CliffordAlgebra
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
-variable {M : Type*} [AddCommGroup M] [Module R M]
+variable {M : Type*} [AddCommMonoid M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 /-- Дефиниране на следата на произволен паравектор като неговата скаларна част (grade 0).

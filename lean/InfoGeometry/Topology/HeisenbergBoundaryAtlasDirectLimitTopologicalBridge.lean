@@ -42,7 +42,7 @@ open InfoGeometry.Topology.HeisenbergFiniteModeDirectLimitTopological
 open InfoGeometry.Canonical.HeisenbergFiniteModeDirectLimitBridge
 open CategoryTheory CategoryTheory.Limits
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- The finite-mode component of `topologicalHeisenbergBoundaryAtlas α` is identically
 the canonical finite-mode colimit linear map. -/

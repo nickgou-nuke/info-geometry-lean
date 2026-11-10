@@ -34,7 +34,7 @@ open InfoGeometry.Canonical.FockVacuumAnnihilationBridge
 open InfoGeometry.Canonical.SingleParticleFockStateBridge
 open InfoGeometry.Canonical.CrossAnticommutatorBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [CommRing R] [AddCommMonoid U] [Module R U]
 
 /-- The two-particle exterior state obtained by two creation operations. -/
 def twoParticleState (alpha beta : U →ₗ[R] R) : ExteriorAlgebra R (U →ₗ[R] R) :=

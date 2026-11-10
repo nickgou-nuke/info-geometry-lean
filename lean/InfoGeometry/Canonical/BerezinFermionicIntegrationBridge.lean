@@ -37,7 +37,7 @@ open InfoGeometry.Canonical.SingleParticleFockStateBridge
 open InfoGeometry.Canonical.WickTheoremVacuumContractionBridge
 open InfoGeometry.Canonical.CrossAnticommutatorBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [CommRing R] [AddCommMonoid U] [Module R U]
 
 /-- One-mode left Berezin operation, realized by native evaluation contraction. -/
 def berezinIntegralOp (u : U) :

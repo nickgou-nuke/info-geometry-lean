@@ -6463,6 +6463,7 @@ import InfoGeometry.External.Auto.V4
 import InfoGeometry.External.Auto.V4_test2
 import InfoGeometry.External.Auto.VacuumCohomology
 import InfoGeometry.External.Auto.VacuumGroundstate
+import InfoGeometry.External.Auto.VacuumTopology
 import InfoGeometry.External.Auto.VarlamovKleinSpectral
 import InfoGeometry.External.Auto.VerberckWallpaperFourier
 import InfoGeometry.External.Auto.VertexAlgebraBraidingCocycle

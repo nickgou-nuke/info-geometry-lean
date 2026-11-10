@@ -37,7 +37,7 @@ open InfoGeometry.Physics.AmplituhedronZetaSum
 
 namespace InfoGeometry.Canonical.AmplituhedronBCFW
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommSemiring R]
 variable {ι : Type*}
 
 /-- 1. BCFW Arnold-Cohen Mixed Form Vanishing:
@@ -62,7 +62,7 @@ theorem amplituhedron_partition_sum_zeta (β : ℝ) (hβ : 1 < β) :
 /- A square-zero element annihilates its own left multiples.  This is a
 noncommutative ring identity and does not assert a Cuntz representation or a
 physical on-shell factorization. -/
-theorem square_zero_left_annihilation {A : Type*} [Ring A] (S x : A) (hS : S * S = 0) :
+theorem square_zero_left_annihilation {A : Type*} [Semiring A] (S x : A) (hS : S * S = 0) :
     S * (S * x) = 0 := by
   rw [← mul_assoc, hS, zero_mul]
 

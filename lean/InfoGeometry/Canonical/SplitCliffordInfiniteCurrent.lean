@@ -20,7 +20,7 @@ namespace InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 
 open scoped BigOperators
 
-variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+variable (𝕜 : Type*) [CommRing 𝕜]
 
 /-- Infinite current carrier, realized by the external Heisenberg algebra. -/
 abbrev InfiniteCurrentAlg : Type _ := VirasoroProject.HeisenbergAlgebra 𝕜

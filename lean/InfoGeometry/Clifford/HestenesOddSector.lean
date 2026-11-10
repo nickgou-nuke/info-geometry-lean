@@ -7,7 +7,7 @@ namespace InfoGeometry.Clifford.Hestenes
 open CliffordAlgebra
 
 variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommGroup M] [Module R M]
+variable {M : Type*} [AddCommMonoid M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 /-- Четният сектор (The Operator Algebra) -/

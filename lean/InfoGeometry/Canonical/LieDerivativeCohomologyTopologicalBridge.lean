@@ -26,7 +26,7 @@ open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 open InfoGeometry.Canonical.DeRhamCohomologyQuotientTopologicalBridge
 open InfoGeometry.Canonical.LieDerivativeCohomologyClassZeroBridge
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 /-- Lie derivative restricted to the closed-form carrier. -/
 def lieDerivativeClosedMap

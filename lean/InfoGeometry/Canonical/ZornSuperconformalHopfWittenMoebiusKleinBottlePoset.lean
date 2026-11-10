@@ -96,7 +96,7 @@ open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
 section ZornCarrierAndIsotropicSheets
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-- Zero element of the 8-dimensional split-octonion Zorn algebra `ZornCell R`. -/
 def zeroZ : ZornCell R :=
@@ -157,7 +157,7 @@ def sheetV (v₁ v₂ v₃ : R) : ZornCell R :=
 For all $\mathbf{u}, \mathbf{v} \in R^3$, the chiral Majorana sheet generators
 $U(\mathbf{u})$ and $V(\mathbf{v})$ square to `zeroZ` and lie on the Zorn null quadric
 $\det_Z = 0$. -/
-theorem sheetU_and_sheetV_nilpotent_and_null (u₁ u₂ u₃ v₁ v₂ v₃ : R) :
+theorem sheetU_and_sheetV_nilpotent_and_null {R : Type*} [CommRing R] (u₁ u₂ u₃ v₁ v₂ v₃ : R) :
     mulZ (sheetU u₁ u₂ u₃) (sheetU u₁ u₂ u₃) = zeroZ ∧
     mulZ (sheetV v₁ v₂ v₃) (sheetV v₁ v₂ v₃) = zeroZ ∧
     detZ (sheetU u₁ u₂ u₃) = 0 ∧
@@ -181,10 +181,10 @@ theorem paraSymplecticK0_involution_and_det :
     traceZ (paraSymplecticK0 (R := R)) = 0 ∧
     superTraceZ (paraSymplecticK0 (R := R)) = 2 := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;> (dsimp [mulZ, paraSymplecticK0, oneZ]; ring)
-  · dsimp [detZ, paraSymplecticK0]; ring
-  · dsimp [traceZ, paraSymplecticK0]; ring
-  · dsimp [superTraceZ, paraSymplecticK0]; ring
+  · refine ext_fields ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;> (dsimp [mulZ, paraSymplecticK0, oneZ]; noncomm_ring)
+  · dsimp [detZ, paraSymplecticK0]; noncomm_ring
+  · dsimp [traceZ, paraSymplecticK0]; noncomm_ring
+  · dsimp [superTraceZ, paraSymplecticK0]; noncomm_ring
 
 /-- **Explicit Non-Commutativity & Non-Associativity Witnesses (`zornCell_noncommutative_and_nonassociative`):**
 On `ZornCell ℤ`, the Zorn product `mulZ` is both strictly non-commutative and strictly
@@ -264,7 +264,7 @@ theorem chiral_sheet_cross_product_fusion (u₁ u₂ u₃ w₁ w₂ w₃ : R) :
 /-- 8D Zorn Kitaev dimer Hamiltonian $H_{\mathrm{Kitaev}}(\mathbf{u}, \mathbf{v})
   = U(\mathbf{u}) + V(\mathbf{v})$
 coupling a forward Plabic ridge $U(\mathbf{u})$ and a backward Plabic ridge $V(\mathbf{v})$. -/
-def zornKitaevDimerHamiltonian (u₁ u₂ u₃ v₁ v₂ v₃ : R) : ZornCell R :=
+def zornKitaevDimerHamiltonian {R : Type*} [Ring R] (u₁ u₂ u₃ v₁ v₂ v₃ : R) : ZornCell R :=
   addZ (sheetU u₁ u₂ u₃) (sheetV v₁ v₂ v₃)
 
 /-- **8D Zorn Kitaev Dimer Mass Gap & Plabic Dangling-Edge Zero Mode
@@ -309,7 +309,7 @@ variable {R : Type*} [CommRing R]
 /-- Diagonal Zorn state $\mathrm{diag}(S + Q,\; S - Q)$ decomposing any diagonal observable
 into its classical/symmetric component $S$ along $\mathbf{1}$ and its quantum/chiral
 component $Q$ along $K_0 = e_1 - e_2$. -/
-def zornDiagonalState (S Q : R) : ZornCell R :=
+def zornDiagonalState {R : Type*} [Ring R] (S Q : R) : ZornCell R :=
   ⟨S + Q, S - Q, 0, 0, 0, 0, 0, 0⟩
 
 /-- **The Four Dualities of the Quantum Key $K_0
@@ -374,7 +374,7 @@ $$\mathcal{P}_{\mathrm{WM}}(c, s, \mathbf{u}, \mathbf{v})
   = c \cdot K_0 - s \cdot \bigl(U(\mathbf{u}) - V(\mathbf{v})\bigr)$$
 rotating the discrete para-symplectic reflection $K_0$ into the off-diagonal chiral
 Majorana sheets $U(\mathbf{u}) - V(\mathbf{v})$. -/
-def wittenMoebiusParity (c s u₁ u₂ u₃ v₁ v₂ v₃ : R) : ZornCell R :=
+def wittenMoebiusParity {R : Type*} [Ring R] (c s u₁ u₂ u₃ v₁ v₂ v₃ : R) : ZornCell R :=
   subZ (smulZ c paraSymplecticK0)
        (smulZ s (subZ (sheetU u₁ u₂ u₃) (sheetV v₁ v₂ v₃)))
 

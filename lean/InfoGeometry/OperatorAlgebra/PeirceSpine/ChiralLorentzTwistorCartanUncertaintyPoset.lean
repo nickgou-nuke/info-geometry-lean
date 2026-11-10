@@ -28,6 +28,18 @@ All definitions, lemmas, and theorems are formulated and proved over an arbitrar
 associative ring `[Ring B]` (with `[StarRing B]` for Hermitian amplituhedron positivity and
 `NormalizedState H` for the Hilbert-space Cramér–Rao commutator uncertainty bound), with zero
 scalar, diagonal, or commuting surrogates and zero `sorry`s.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All 10 stages `CL₁ → CL₁₀` (`ChiralLorentzTwistorCartanStage`), chiral dual real Lorentz
+  representation, Poincaré–SUSY superalgebra, super-Grassmannian para-Kähler twistor incidence,
+  Élie Cartan spin-connection torsion/curvature, and higher-grade uncertainty anomaly in `[Ring B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency `hP : P * P = P` (or nilpotency/von Neumann regularity `N_+² = 0`, `N_+ N_+^* N_+ = N_+`)
+  and `NormalizedState H` for Hilbert-space Cramér–Rao commutator bounds.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Non-perturbative all-loop Grassmannian amplituhedron volume integration over continuous momentum twistors.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
@@ -70,6 +82,7 @@ def rank : ChiralLorentzTwistorCartanStage → ℕ
   | .CL9_RecursiveMetaTowerAndHilbertCramerRaoCurvatureBound  => 8
   | .CL10_MasterChiralLorentzTwistorCartanUncertaintySynthesis => 9
 
+/-- The topological rank map on `ChiralLorentzTwistorCartanStage` is injective. -/
 theorem rank_injective : Function.Injective rank := by
   intro x y h
   cases x <;> cases y <;> first | rfl | cases h
@@ -107,10 +120,12 @@ inductive causalEdge : ChiralLorentzTwistorCartanStage → ChiralLorentzTwistorC
       causalEdge .CL9_RecursiveMetaTowerAndHilbertCramerRaoCurvatureBound
         .CL10_MasterChiralLorentzTwistorCartanUncertaintySynthesis
 
+/-- Every directed causal edge in `ChiralLorentzTwistorCartanStage` strictly increases topological rank. -/
 theorem causalEdge_strict_rank {u v : ChiralLorentzTwistorCartanStage}
     (h : causalEdge u v) : rank u < rank v := by
   cases h <;> decide
 
+/-- Transitive chains of causal edges in `ChiralLorentzTwistorCartanStage` strictly increase topological rank. -/
 theorem transGen_causalEdge_strict_rank {u v : ChiralLorentzTwistorCartanStage}
     (h : Relation.TransGen causalEdge u v) : rank u < rank v := by
   induction h with
@@ -784,10 +799,12 @@ theorem clifford_krein_geometric_product_and_jordan_associator_law
           by simp only [JordanAssoc]; peirce_nf hP,
           by simp only [comm]; noncomm_ring⟩
 
+/-- If `N_plus` is square-zero (`N_plus * N_plus = 0`), then its star-adjoint `star N_plus` is also square-zero. -/
 theorem star_N_plus_sq [StarRing B] (N_plus : B) (h_nil : N_plus * N_plus = 0) :
     star N_plus * star N_plus = 0 := by
   rw [← star_mul, h_nil, star_zero]
 
+/-- If `N_plus` is von Neumann regular (`N_plus * star N_plus * N_plus = N_plus`), then `star N_plus` is also von Neumann regular. -/
 theorem star_N_plus_reg [StarRing B] (N_plus : B)
     (h_reg : N_plus * star N_plus * N_plus = N_plus) :
     star N_plus * N_plus * star N_plus = star N_plus := by

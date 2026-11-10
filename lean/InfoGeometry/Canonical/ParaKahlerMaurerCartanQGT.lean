@@ -58,7 +58,7 @@ variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 /-! ## 1. Para-Complex and Para-Kähler Structures -/
 
 /-- An almost para-complex structure on a module $V$ is an endomorphism $K$ squaring to the identity. -/
-structure ParaComplexStructure (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
+structure ParaComplexStructure (R V : Type*) [Semiring R] [AddCommMonoid V] [Module R V] where
   K : V →ₗ[R] V
   K_sq : K.comp K = LinearMap.id
 
@@ -171,23 +171,23 @@ end ParaKahlerDatum
 /-! ## 2. Para-Quantum Geometric Tensor (Para-QGT) -/
 
 /-- The split-complex / hyperbolic ring $R[e] / (e^2 - 1)$. -/
-structure SplitScalar (R : Type*) [CommRing R] where
+structure SplitScalar (R : Type*) [Semiring R] where
   re : R
   ep : R
 
 namespace SplitScalar
 
-def add (x y : SplitScalar R) : SplitScalar R where
+def add {R : Type*} [Semiring R] (x y : SplitScalar R) : SplitScalar R where
   re := x.re + y.re
   ep := x.ep + y.ep
 
-def mul (x y : SplitScalar R) : SplitScalar R where
+def mul {R : Type*} [Semiring R] (x y : SplitScalar R) : SplitScalar R where
   re := x.re * y.re + x.ep * y.ep
   ep := x.re * y.ep + x.ep * y.re
 
-def e : SplitScalar R := ⟨0, 1⟩
+def e {R : Type*} [Semiring R] : SplitScalar R := ⟨0, 1⟩
 
-@[simp] theorem e_mul_e : mul (e : SplitScalar R) e = ⟨1, 0⟩ := by
+@[simp] theorem e_mul_e {R : Type*} [Semiring R] : mul (e : SplitScalar R) e = ⟨1, 0⟩ := by
   dsimp [e, mul]
   simp
 
@@ -218,7 +218,8 @@ theorem paraQGT_conjugation (D : ParaKahlerDatum R V) (u v : V) :
 /-! ## 3. The Maurer-Cartan Resolution of Arnold-Cohen Relations -/
 
 /-- A flat connection / Maurer-Cartan 1-form data over an algebra $A$. -/
-structure MaurerCartanFlatConnection (A : Type*) [Ring A] [Algebra R A] (M : Type*) [AddCommGroup M] [Module R M] where
+structure MaurerCartanFlatConnection {R : Type*} [Semiring R]
+    (A : Type*) [Ring A] [Module R A] (M : Type*) [AddCommGroup M] [Module R M] where
   conn : M →ₗ[R] A
   curvature : M → M → A
   curvature_eq : ∀ u v : M,
@@ -226,7 +227,8 @@ structure MaurerCartanFlatConnection (A : Type*) [Ring A] [Algebra R A] (M : Typ
 
 /-- An abelian connection has zero commutator curvature. -/
 theorem MaurerCartanFlatConnection.flat_of_commuting
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M)
     (hcomm : ∀ u v : M, C.conn u * C.conn v = C.conn v * C.conn u) :
@@ -239,7 +241,8 @@ theorem MaurerCartanFlatConnection.flat_of_commuting
     connection values.  This is the exact algebraic boundary of the
     Maurer--Cartan statement represented by this owner. -/
 theorem MaurerCartanFlatConnection.curvature_eq_zero_iff
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (u v : M) :
     C.curvature u v = 0 ↔ C.conn u * C.conn v = C.conn v * C.conn u := by
@@ -263,7 +266,8 @@ theorem MaurerCartanFlatConnection.flat_of_scalar_values
 
 /-- The commutator curvature is alternating in its two tangent slots. -/
 theorem MaurerCartanFlatConnection.curvature_skew
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (u v : M) :
     C.curvature u v = - C.curvature v u := by
@@ -273,7 +277,8 @@ theorem MaurerCartanFlatConnection.curvature_skew
 /-- The cyclic commutator identity, i.e. the finite algebraic Bianchi/Jacobi
     identity for the curvature contract. -/
 theorem MaurerCartanFlatConnection.curvature_bianchi
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (u v w : M) :
     (C.conn u * C.curvature v w - C.curvature v w * C.conn u) +
@@ -284,7 +289,8 @@ theorem MaurerCartanFlatConnection.curvature_bianchi
 
 /-- Curvature is additive in the first tangent slot. -/
 theorem MaurerCartanFlatConnection.curvature_add_left
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (u v w : M) :
     C.curvature (u + v) w = C.curvature u w + C.curvature v w := by
@@ -294,7 +300,8 @@ theorem MaurerCartanFlatConnection.curvature_add_left
 
 /-- Curvature is additive in the second tangent slot. -/
 theorem MaurerCartanFlatConnection.curvature_add_right
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (u v w : M) :
     C.curvature u (v + w) = C.curvature u v + C.curvature u w := by
@@ -304,7 +311,8 @@ theorem MaurerCartanFlatConnection.curvature_add_right
 
 /-- Curvature is homogeneous in the first tangent slot. -/
 theorem MaurerCartanFlatConnection.curvature_smul_left
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (r : R) (u v : M) :
     C.curvature (r • u) v = r • C.curvature u v := by
@@ -314,7 +322,8 @@ theorem MaurerCartanFlatConnection.curvature_smul_left
 
 /-- Curvature is homogeneous in the second tangent slot. -/
 theorem MaurerCartanFlatConnection.curvature_smul_right
-    {A : Type*} [Ring A] [Algebra R A]
+    {R : Type*} [Semiring R]
+    {A : Type*} [Ring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
     {M : Type*} [AddCommGroup M] [Module R M]
     (C : MaurerCartanFlatConnection (R := R) A M) (r : R) (u v : M) :
     C.curvature u (r • v) = r • C.curvature u v := by

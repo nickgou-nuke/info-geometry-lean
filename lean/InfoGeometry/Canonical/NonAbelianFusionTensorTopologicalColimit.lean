@@ -25,7 +25,9 @@ open InfoGeometry.Canonical.NonAbelianFusionFRBridge
 open InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge
 open FilteredColimit.Native.Topological
 
-variable {K : Type} [CommRing K]
+section CommSemiring
+
+variable {K : Type} [CommSemiring K]
 variable [TopologicalSpace K] [ContinuousAdd K] [ContinuousMul K]
 
 abbrev FusionCarrier (K : Type) := Matrix (Fin 2) (Fin 2) K
@@ -78,7 +80,7 @@ noncomputable def tensorActionColimitMap
   topologicalDirectDescend (fusionTensorTopologicalDiagram (K := K))
     (tensorActionCocone (K := K) action)
 
-omit [CommRing K] [ContinuousAdd K] [ContinuousMul K] in
+omit [CommSemiring K] [ContinuousAdd K] [ContinuousMul K] in
 theorem tensorActionColimitMap_stage
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) (n : ℕ)
@@ -118,7 +120,7 @@ noncomputable def tensorActionColimitEndomorphism
   topologicalDirectDescend (fusionTensorTopologicalDiagram (K := K))
     (tensorActionColimitCocone (K := K) action)
 
-omit [CommRing K] [ContinuousAdd K] [ContinuousMul K] in
+omit [CommSemiring K] [ContinuousAdd K] [ContinuousMul K] in
 theorem tensorActionColimitEndomorphism_stage
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
@@ -131,7 +133,7 @@ theorem tensorActionColimitEndomorphism_stage
     (fusionTensorTopologicalDiagram (K := K))
     (tensorActionColimitCocone (K := K) action) n
 
-omit [CommRing K] [ContinuousAdd K] [ContinuousMul K] in
+omit [CommSemiring K] [ContinuousAdd K] [ContinuousMul K] in
 theorem tensorActionColimitEndomorphism_comp_stage
     (action₁ action₂ : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
@@ -145,6 +147,13 @@ theorem tensorActionColimitEndomorphism_comp_stage
   rw [← Category.assoc, tensorActionColimitEndomorphism_stage,
     Category.assoc, tensorActionColimitEndomorphism_stage,
     ← Category.assoc]
+
+end CommSemiring
+
+section CommRing
+
+variable {K : Type} [CommRing K]
+variable [TopologicalSpace K] [ContinuousAdd K] [ContinuousMul K]
 
 def fusionCoxeterTensorColimitEndomorphism
     (a b q1 q2 : K) :
@@ -226,5 +235,7 @@ theorem fusionCoxeterTensorFullTwist_stage_apply
   dsimp [tensorLeftTopCatHom] at hx
   rw [Matrix.mul_assoc, Matrix.mul_assoc]
   exact hx
+
+end CommRing
 
 end InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit

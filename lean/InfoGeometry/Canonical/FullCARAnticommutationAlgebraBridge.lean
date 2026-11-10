@@ -19,7 +19,7 @@ open InfoGeometry.Canonical.CARSpinorCliffordActionBridge
 open InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 open InfoGeometry.Canonical.SpinorMixedCARBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [CommRing R] [AddCommMonoid U] [Module R U]
 
 /-- **Theorem**: Creation-Creation CAR Anti-Commutativity {ε_α, ε_β} = 0. -/
 theorem creation_creation_car_anticommute (alpha beta : U →ₗ[R] R) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :

@@ -81,8 +81,8 @@ This is still purely algebraic: it does not construct concrete `d log Q` forms
 or prove a BCFW recursion theorem.
 -/
 theorem arnold_kernel_synthesis_boundary_zero
-    (R : Type*) [CommRing R]
-    (M : Type*) [AddCommGroup M] [Module R M]
+    (R : Type*) [CommSemiring R]
+    (M : Type*) [AddCommMonoid M] [Module R M]
     {Target : Type*} [Semiring Target]
     (w12 w23 w31 : ArnoldExterior R M)
     (toTarget : ArnoldExterior R M →+* Target)

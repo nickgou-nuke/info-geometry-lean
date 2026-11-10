@@ -21,7 +21,7 @@ Archetypes Ordered in Causal Poset:
 
 namespace InfoGeometry.Canonical.TKKBridge
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 variable (Q : QuadraticForm R V)
 
 /-- 

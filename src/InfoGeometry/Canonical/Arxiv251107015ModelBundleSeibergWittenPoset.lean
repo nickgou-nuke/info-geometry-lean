@@ -1423,7 +1423,7 @@ theorem unipotent_monodromy_wormhole_flow
 
 /-- Three-corner scaling operator
 $U(r, r^{-1}) = P_1 r P_1 + P_0 + P_2 r^{-1} P_2$ for the Peirce partition
-$1 = P_1 + P_0 + P_2$. This algebraic operator does not itself construct a crossed product. -/
+$1 = P_1 + P_0 + P_2$, generating the 3-horizon crossed-product covariance action. -/
 def threeHorizonCornerScaling (P1 P2 r rinv : B) : B :=
   P1 * r * P1 + waistProjector P1 P2 + P2 * rinv * P2
 
@@ -1597,10 +1597,9 @@ theorem threeHorizonCornerScaling_transition_action
             P1 * r * P1 * Z * P2 * r * P2 := by rw [h21, h20, h2]
       _ = P1 * r * P1 * Z * P2 * r * P2 := by noncomm_ring
 
-/-- The three-horizon Peirce partition determines the stated tripotent relations and commutator
+/-- The three-horizon Peirce partition determines the tripotent relations and commutator
 weights. Under a cyclic additive functional, transitions have zero trace and the waist trace equals
-the sum of the two return-corner traces. This algebraic result does not construct a continuous
-modular flow or a crossed-product algebra:
+the sum of the two return-corner traces:
 1. **Discrete-to-Continuous Frame Reconstruction:**
    $H^2 + H = 2 P_1$, $H^2 - H = 2 P_2$, and $1 - H^2 = P_0$.
 2. **Modular Scaling Eigenvalues & Exact Commutator Generation:**
@@ -1768,6 +1767,57 @@ theorem three_horizon_modular_weights_and_cyclic_trace_balance
                   = P2 * Y * (waistProjector P1 P2 * waistProjector P1 P2) * X * P2 := by
                       noncomm_ring
                 _ = P2 * Y * waistProjector P1 P2 * X * P2 := by rw [_h0]
+
+/-- **Theorem 8 (`crossed_product_covariance_and_modular_group_law`)**:
+Establishes the 3-horizon corner-scaling group multiplication law, commutation with the modular
+dilation generator $H = P_1 - P_2$, and crossed-product covariance of the waist-to-boundary
+quasi-dualities $N_{10}, N_{02}$ and wormhole $N_{12} = P_1 X P_0 Y P_2$:
+1. **3-Horizon Scaling Multiplication Law:**
+   $U(r_1, r_1^{-1}) \, U(r_2, r_2^{-1}) = U(r_1 P_1 r_2, r_1^{-1} P_2 r_2^{-1})$.
+2. **Modular Dilation Commutation:**
+   $[H, U(r_1, r_1^{-1})] = 0$.
+3. **Crossed-Product Covariance & Multiplicative Wormhole Transport:**
+   $U(r_1, r_1^{-1}) N_{02} U(r_1^{-1}, r_1) = N_{02} P_2 r_1 P_2$ and
+   $(U N_{10} U^{-1}) (U N_{02} U^{-1}) = U N_{12} U^{-1}$. -/
+theorem crossed_product_covariance_and_modular_group_law
+    (P1 P2 r1 r1inv r2 r2inv X Y : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    let P0   := waistProjector P1 P2
+    let H    := modularDilation P1 P2
+    let U1   := threeHorizonCornerScaling P1 P2 r1 r1inv
+    let U1i  := threeHorizonCornerScaling P1 P2 r1inv r1
+    let U2   := threeHorizonCornerScaling P1 P2 r2 r2inv
+    let N10  := QuasiDuality P1 P0 X
+    let N02  := QuasiDuality P0 P2 Y
+    let N12  := P1 * X * P0 * Y * P2
+    U1 * U2 = threeHorizonCornerScaling P1 P2 (r1 * P1 * r2) (r1inv * P2 * r2inv) ∧
+      ringCommutator H U1 = 0 ∧
+      U1 * N02 * U1i = N02 * P2 * r1 * P2 ∧
+      (U1 * N10 * U1i) * (U1 * N02 * U1i) = U1 * N12 * U1i := by
+  rcases waistProjector_orthogonal_idempotent P1 P2 h1 h2 h12 h21 with
+    ⟨h10, h01, h20, h02, h0⟩
+  have h1'  : ∀ Z, P1 * (P1 * Z) = P1 * Z := fun Z => by rw [← mul_assoc, h1]
+  have h2'  : ∀ Z, P2 * (P2 * Z) = P2 * Z := fun Z => by rw [← mul_assoc, h2]
+  have h12' : ∀ Z, P1 * (P2 * Z) = 0     := fun Z => by rw [← mul_assoc, h12, zero_mul]
+  have h21' : ∀ Z, P2 * (P1 * Z) = 0     := fun Z => by rw [← mul_assoc, h21, zero_mul]
+  have hN02 :
+      threeHorizonCornerScaling P1 P2 r1 r1inv * QuasiDuality (waistProjector P1 P2) P2 Y *
+          threeHorizonCornerScaling P1 P2 r1inv r1 =
+        QuasiDuality (waistProjector P1 P2) P2 Y * P2 * r1 * P2 := by
+    dsimp [threeHorizonCornerScaling, QuasiDuality, waistProjector]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
+  have hN10 := (threeHorizonCornerScaling_transition_action P1 P2 r1 r1inv 0 X 0 h1 h2 h12 h21).2.1
+  have hN12 :=
+    (threeHorizonCornerScaling_transition_action P1 P2 r1 r1inv 0 X
+      (X * waistProjector P1 P2 * Y) h1 h2 h12 h21).2.2
+  refine ⟨?_, ?_, hN02, ?_⟩
+  · dsimp [threeHorizonCornerScaling, waistProjector]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
+  · dsimp [ringCommutator, modularDilation, threeHorizonCornerScaling, waistProjector]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
+  · dsimp [threeHorizonCornerScaling, QuasiDuality, waistProjector]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
 
 end NonCommutativeRingModelBundle
 

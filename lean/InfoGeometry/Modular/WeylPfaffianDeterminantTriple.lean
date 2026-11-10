@@ -55,15 +55,15 @@ theorem totalDet_mul (A₁ A₂ D₁ D₂: SubMat) :
   rw [Matrix.det_mul, Matrix.det_mul]
   ring
 
-variable {F: Type*} [Field F]
-local notation "FieldMat" => Matrix ι ι F
-
 /-- 
   The Berezinian / Chiral Ratio:
   Ber(A, D) = det(A) / det(D)
 -/
-def berezinian (A D: FieldMat) : F :=
+def berezinian {F : Type*} [CommRing F] [Div F] (A D: Matrix ι ι F) : F :=
   Matrix.det A / Matrix.det D
+
+variable {F: Type*} [Field F]
+local notation "FieldMat" => Matrix ι ι F
 
 /-- 
   THEOREM 2: The Berezinian is a Multiplicative Group Homomorphism:

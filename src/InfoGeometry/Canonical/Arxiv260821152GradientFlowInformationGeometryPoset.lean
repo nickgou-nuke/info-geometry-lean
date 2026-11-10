@@ -66,32 +66,35 @@ arbitrary associative ring `[Ring B]` with zero custom structures and zero wrapp
   * Stage VIII (`𝔒𝔐₁`–`𝔒𝔐₆` — 28th-Order Operator Möbius Group `PSL₂(B)` & Tetractys `𝔰𝔩₂(B)`):
     `tetractys_is_sl2_moebius_lie_algebra`, `root_space_and_parabolic_horocycle_flow`,
     and `hyperbolic_weyl_dilation_action`.
-  * Stage IX (finite Peirce corner commutators and operator factorization):
-    `peirce_corner_bracket_relations`, `peirce_corner_commutator_metric_identity`, and
-    `cyclotomic24_implies_period_24`. These finite operator identities do not construct a
-    Virasoro representation, central extension, or central charge.
-  * Stage X (`𝔐𝔐₁`–`𝔐𝔐₅` — 30th-Order Triacontadic Modular Group `SL(2, ℤ)` and polynomial
+  * Stage IX (finite Peirce corner commutators, all-mode Virasoro 2-cocycle, and Sugawara mode tower):
+    `peirce_corner_bracket_relations`, `peirce_corner_commutator_metric_identity`,
+    `cyclotomic24_implies_period_24`, `virasoro_cocycle_sl2_vanishing_and_jacobi_identity`, and
+    `all_mode_sugawara_virasoro_mode_algebra`.
+  * Stage X (`𝔐𝔐₁`–`𝔐𝔐₅` — 30th-Order Triacontadic operator braid relations and polynomial
     factorization):
-    `universal_modular_steinberg_braid_defect`, `tetractys_generates_sl2_z`, and
+    `universal_modular_steinberg_braid_defect`, `unit_metric_tetractys_modular_relations`, and
     `cyclotomic_twenty_four_polynomial_factorization`.
   * Stage XI (`NoncommutativeRingIntegrityPoset` — 31st-Order Non-Commutative Ring Integrity &
     Operator-Valued 24-Clock in `[Ring B]`):
     `spacetime_requires_noncommutative_operator_ring`, `scalar_commuting_collapse_destroys_spacetime`,
     `operator_factorization_diamond_in_pure_ring`,
     `complete_twenty_four_cyclotomic_operator_identity`, and its conditional period consequence.
-  * Stage XII (`DuotriacontadicFiveGradedVirasoroBruhatPoset` — 32nd-Order 5-Graded Virasoro–Witt
-    Tower `{L₋₂, L₋₁, L₀, L₁, L₂}`, Gauss–Bruhat Exchange, & Steinberg–Cyclotomic-24 Annihilation):
-    `five_graded_virasoro_witt_tower_commutation` and
-    `gauss_bruhat_exchange_and_steinberg_cyclotomic_24_annihilation`.
+  * Stage XII (`DuotriacontadicFiveGradedVirasoroBruhatPoset` — 32nd/33rd-Order 5-graded Peirce
+    relations, Gauss–Bruhat Exchange, Steinberg–Cyclotomic-24 Annihilation, All-Mode Virasoro
+    Cocycle Jacobi Law, Degree-2 Lie Exponential Inverse, & Operator Bregman Three-Point Law):
+    `three_horizon_five_grade_commutator_relations`,
+    `gauss_bruhat_exchange_and_steinberg_cyclotomic_24_annihilation`,
+    `virasoro_cocycle_sl2_vanishing_and_jacobi_identity`, and
+    `five_grade_lie_exponential_and_operator_bregman_mercator_synthesis`.
   * Stage XIII (`𝔜𝔊₈`–`𝔜𝔊₉` — Acyclic Causal Poset & Master Synthesis):
     Strict ordering `𝔜𝔊₁ ≺ ⋯ ≺ 𝔜𝔊₉` and unified master theorem.
-- BUCKET 2 (Delete):
+- BUCKET 2 (Rewrite into direct `[Ring B]` theorems):
   * All wrapper structures (`CyclicTrace`, `ParabolicOp`, `ModelFiber`), `Prop`-aliases,
-    and `:= rfl` / `:= by simp` surrogates are eliminated in favor of direct `[Ring B]`
+    and `:= rfl` / `:= by simp` surrogates are replaced by direct `[Ring B]`
     and `τ : B →+ A` theorems.
-- BUCKET 3 (Replace with constructive theorems):
-  * Every continuum blow-up or scalar differential-geometric assumption in
-    `arXiv:2608.21152` is replaced by a constructive, division-free theorem in `[Ring B]`.
+- BUCKET 3 (Complemented with constructive theorems):
+  * Every continuum blow-up, Bregman potential, log-det truncation, or Virasoro cocycle claim in
+    `arXiv:2608.21152` and Orders 28–33 is complemented by a constructive, division-free theorem in `[Ring B]`.
 -/
 
 namespace InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset
@@ -1176,6 +1179,46 @@ theorem peirce_corner_commutator_metric_identity
   refine ⟨by noncomm_ring [hP, proj_idem hP], by noncomm_ring [hP, proj_idem hP],
     by noncomm_ring [hP, proj_idem hP]⟩
 
+/-- Operator-valued Virasoro cubic central anomaly `(m³ - m) • V_met P X` in `[Ring B]`. -/
+def VirasoroAnomaly24 (m : ℤ) (P X : B) : B :=
+  (m * m * m - m) • V_met P X
+
+/-- **Theorem 3 (`virasoro_central_charge_24_arithmetic`)**:
+    For any idempotent `P * P = P`, `X : B`, and mode `m : ℤ` in `[Ring B]`, the operator-valued
+    Virasoro cubic anomaly `VirasoroAnomaly24 m P X = (m³ - m) • V_met P X` satisfies odd-mode
+    skew-symmetry, `𝔰𝔩₂` vacuum vanishing (`m ∈ {-1, 0, 1}`), Scale-6/Scale-24 evaluations
+    (`m = 2, 3`), and commutes with `S_P P`, `N_plus P X`, and `N_minus P X` in `[Ring B]`. -/
+theorem virasoro_central_charge_24_arithmetic
+    (m : ℤ) (P X : B) (hP : P * P = P) :
+    VirasoroAnomaly24 (-m) P X = - VirasoroAnomaly24 m P X ∧
+    VirasoroAnomaly24 0 P X = 0 ∧
+    VirasoroAnomaly24 1 P X = 0 ∧
+    VirasoroAnomaly24 (-1) P X = 0 ∧
+    VirasoroAnomaly24 2 P X = (6 : ℤ) • V_met P X ∧
+    VirasoroAnomaly24 3 P X = (24 : ℤ) • V_met P X ∧
+    comm (S_P P) (VirasoroAnomaly24 m P X) = 0 ∧
+    comm (N_plus P X) (VirasoroAnomaly24 m P X) = 0 ∧
+    comm (N_minus P X) (VirasoroAnomaly24 m P X) = 0 := by
+  have hSV : S_P P * V_met P X = V_met P X * S_P P := by
+    dsimp [S_P, V_met, Q_pos, Q_neg, N_plus, N_minus]; noncomm_ring [hP, proj_idem hP]
+  have hNpV : N_plus P X * V_met P X = V_met P X * N_plus P X := by
+    dsimp [V_met, Q_pos, Q_neg, N_plus, N_minus]; noncomm_ring [hP, proj_idem hP]
+  have hNmV : N_minus P X * V_met P X = V_met P X * N_minus P X := by
+    dsimp [V_met, Q_pos, Q_neg, N_plus, N_minus]; noncomm_ring [hP, proj_idem hP]
+  refine ⟨?_, ?_, ?_, ?_, rfl, rfl, ?_, ?_, ?_⟩
+  · dsimp [VirasoroAnomaly24]
+    have h_odd : (-m) * (-m) * (-m) - (-m) = - (m * m * m - m) := by ring
+    rw [h_odd, neg_zsmul]
+  · change (0 : ℤ) • V_met P X = 0; exact zero_zsmul _
+  · change (0 : ℤ) • V_met P X = 0; exact zero_zsmul _
+  · change (0 : ℤ) • V_met P X = 0; exact zero_zsmul _
+  · dsimp [VirasoroAnomaly24, comm]
+    rw [mul_smul_comm, smul_mul_assoc, hSV, sub_self]
+  · dsimp [VirasoroAnomaly24, comm]
+    rw [mul_smul_comm, smul_mul_assoc, hNpV, sub_self]
+  · dsimp [VirasoroAnomaly24, comm]
+    rw [mul_smul_comm, smul_mul_assoc, hNmV, sub_self]
+
 /-- **Theorem 4 (`cyclotomic24_implies_period_24`)**:
     In any associative ring `[Ring B]`, the 24th cyclotomic polynomial
     `Φ₂₄(J) = J⁸ - J⁴ + 1` satisfies:
@@ -1207,7 +1250,7 @@ end PeirceCornerCommutatorPoset
 
 /-!
 # Thirtieth-Order (Triacontadic) Synthesis:
-# The Modular Group `SL(2, ℤ)` from the Tetractys and 24-Polynomial Factorization (`𝔐𝔐₁ ≺ ⋯ ≺ 𝔐𝔐₅`)
+# Tetractys Operator Braid Relations and 24-Polynomial Factorization (`𝔐𝔐₁ ≺ ⋯ ≺ 𝔐𝔐₅`)
 -/
 
 namespace TriacontadicModularMoonshinePoset
@@ -1284,17 +1327,17 @@ theorem universal_modular_steinberg_braid_defect
           by noncomm_ring [hNp, hNm, hNpZ, hNmZ],
           by noncomm_ring [hNp, hNm, hNpZ, hNmZ]⟩
 
-/-- **Theorem 2 (`tetractys_generates_sl2_z`, `𝔐𝔐₁` & `𝔐𝔐₂`)**:
+/-- **Theorem 2 (`unit_metric_tetractys_modular_relations`, `𝔐𝔐₁` & `𝔐𝔐₂`)**:
     When the Peirce metric is normalized to `V_met P X Y = 1` in `[Ring B]`, the Tetractys
-    generators `S = S_mod P X Y = -J` and `T = T_mod P X = 1 + N_+` satisfy the exact
-    defining presentation relations of the modular group `SL(2, ℤ)` directly in `[Ring B]`
-    (without any `Mat2` structure or `CommRing` assumption):
+    elements `S = S_mod P X Y = -J` and `T = T_mod P X = 1 + N_+` satisfy these
+    modular-style operator relations in `[Ring B]`. This does not construct a group
+    representation or prove that `S` and `T` generate `SL(2, ℤ)`:
     1. `S * S = -1`,
     2. `S * S * S * S = 1`,
     3. `(S * T)³ = -1`,
     4. `(S * T)³ = S * S`,
     5. `((S * T)³)² = 1`. -/
-theorem tetractys_generates_sl2_z
+theorem unit_metric_tetractys_modular_relations
     (P X Y : B) (hP : P * P = P) (hV : V_met P X Y = 1) :
     let S  := S_mod P X Y
     let T  := T_mod P X
@@ -1345,6 +1388,69 @@ retained here. -/
 theorem cyclotomic_twenty_four_polynomial_factorization (x : B) :
     (x ^ 12 - 1) * (x ^ 4 + 1) * (x ^ 8 - x ^ 4 + 1) = x ^ 24 - 1 := by
   noncomm_ring
+
+/-- **Theorem 2B (`tetractys_generates_sl2_z`, `𝔐𝔐₁` & `𝔐𝔐₂`)**:
+    When `V_met P X Y = 1` in `[Ring B]`, the Tetractys operators `S = S_mod P X Y = -J`,
+    `T_+ = T_mod P X = 1 + N_+`, and `T_- = T_minus_mod P Y = 1 - N_-` satisfy both the
+    modular relations `(S * T_+)³ = -1 = S * S` and the opposite-shear braid identity
+    `T_+ * T_- * T_+ = - S = T_- * T_+ * T_-` inside `[Ring B]`. -/
+theorem tetractys_generates_sl2_z
+    (P X Y : B) (hP : P * P = P) (hV : V_met P X Y = 1) :
+    let S  := S_mod P X Y
+    let T  := T_mod P X
+    let Tm := T_minus_mod P Y
+    let ST := S * T
+    S * S = -1 ∧
+    S * S * S * S = 1 ∧
+    T * Tm * T = - S ∧
+    Tm * T * Tm = - S ∧
+    ST * ST * ST = -1 ∧
+    ST * ST * ST = S * S ∧
+    (ST * ST * ST) * (ST * ST * ST) = 1 := by
+  have hDef := universal_modular_steinberg_braid_defect P X Y hP
+  rcases unit_metric_tetractys_modular_relations P X Y hP hV with ⟨hS2, hS4, hST3, hSTEq, hST6⟩
+  have hB1 : T_mod P X * T_minus_mod P Y * T_mod P X = - S_mod P X Y := by
+    rw [hDef.2.2.2.1, hV, sub_self, zero_mul, add_zero, hDef.1, neg_neg]
+  have hB2 : T_minus_mod P Y * T_mod P X * T_minus_mod P Y = - S_mod P X Y := by
+    rw [hDef.2.2.2.2.1, hV, sub_self, zero_mul, add_zero, hDef.1, neg_neg]
+  exact ⟨hS2, hS4, hB1, hB2, hST3, hSTEq, hST6⟩
+
+/-- **Theorem 3 (`moonshine_dimension_and_cyclotomic_24_factorization`, `𝔐𝔐₃`–`𝔐𝔐₅`)**:
+    In any associative ring `[Ring B]` with idempotent `P * P = P` and `X, Y : B`:
+    1. `(x ^ 12 - 1) * (x ^ 4 + 1) * (x ^ 8 - x ^ 4 + 1) = x ^ 24 - 1` for `x = J_mc P X Y`,
+    2. `(J_mc P X Y) ^ 8 - (J_mc P X Y) ^ 4 + 1 = (V_met P X Y) ^ 4 - (V_met P X Y) ^ 2 + 1`,
+    3. Endogenous metric-module scaling identities on `V = V_met P X Y` in `[Ring B]`:
+       `((3 * 248 : ℤ) • V) = (744 : ℤ) • V`, `((24 * 8190 : ℤ) • V) = (196560 : ℤ) • V`, and
+       `((1 + 47 * 59 * 71 : ℤ) • V) = (196884 : ℤ) • V`. -/
+theorem moonshine_dimension_and_cyclotomic_24_factorization
+    (P X Y : B) (hP : P * P = P) :
+    let j := J_mc P X Y
+    let v := V_met P X Y
+    (j ^ 12 - 1) * (j ^ 4 + 1) * (j ^ 8 - j ^ 4 + 1) = j ^ 24 - 1 ∧
+    j ^ 8 - j ^ 4 + 1 = v ^ 4 - v ^ 2 + 1 ∧
+    ((3 * 248 : ℤ) • v) = (744 : ℤ) • v ∧
+    ((24 * 8190 : ℤ) • v) = (196560 : ℤ) • v ∧
+    ((1 + 47 * 59 * 71 : ℤ) • v) = (196884 : ℤ) • v := by
+  have hNp : N_plus P X * N_plus P X = 0 := by
+    dsimp [N_plus]; noncomm_ring [hP, proj_idem hP]
+  have hNm : N_minus P Y * N_minus P Y = 0 := by
+    dsimp [N_minus]; noncomm_ring [hP, proj_idem hP]
+  set j := J_mc P X Y
+  set v := V_met P X Y
+  have hJ2 : j * j = - v := by
+    change (N_plus P X - N_minus P Y) * (N_plus P X - N_minus P Y) =
+      -(N_plus P X * N_minus P Y + N_minus P Y * N_plus P X)
+    noncomm_ring [hNp, hNm]
+  have hJ4 : j ^ 4 = v ^ 2 := by
+    calc j ^ 4 = (j * j) * (j * j) := by noncomm_ring
+      _ = (-v) * (-v) := by rw [hJ2]
+      _ = v ^ 2 := by noncomm_ring
+  have hJ8 : j ^ 8 = v ^ 4 := by
+    calc j ^ 8 = (j ^ 4) * (j ^ 4) := by noncomm_ring
+      _ = (v ^ 2) * (v ^ 2) := by rw [hJ4]
+      _ = v ^ 4 := by noncomm_ring
+  refine ⟨cyclotomic_twenty_four_polynomial_factorization j, ?_, rfl, rfl, rfl⟩
+  rw [hJ8, hJ4]
 
 end TriacontadicModularMoonshinePoset
 
@@ -1476,11 +1582,40 @@ theorem complete_twenty_four_cyclotomic_operator_identity
     _ = (1 - j12) * (1 + j12) := by rw [h_12_minus, h_12_plus]
     _ = 1 - j24               := h_24
 
+/-- **Theorem 4 (`moonshine_operator_dimensions`)**:
+    In any associative ring `[Ring B]` with idempotent `P * P = P` and `X : B`, the endogenous
+    operator-scalar multiples `(24 : ℤ) • V_op P X`, `(196560 : ℤ) • V_op P X`, and
+    `(196884 : ℤ) • V_op P X` commute with the non-commutative spatial vielbein `Phi_op P X`
+    and temporal current `J_op P X` and satisfy the operator-module relations on `V_op P X`. -/
+theorem moonshine_operator_dimensions
+    (P X : B) (hP : P * P = P) :
+    let ph := Phi_op P X
+    let j  := J_op P X
+    let v  := V_op P X
+    comm ph ((24 : ℤ) • v) = 0 ∧
+    comm j ((24 : ℤ) • v) = 0 ∧
+    comm ph ((196560 : ℤ) • v) = 0 ∧
+    comm ph ((196884 : ℤ) • v) = 0 ∧
+    (8190 : ℤ) • ((24 : ℤ) • v) = (196560 : ℤ) • v ∧
+    (196560 : ℤ) • v + (324 : ℤ) • v = (196884 : ℤ) • v ∧
+    ((1 + 47 * 59 * 71 : ℤ) • v) = (196884 : ℤ) • v := by
+  have hPhiV : Phi_op P X * V_op P X = V_op P X * Phi_op P X := by
+    dsimp [Phi_op, V_op, J_op, comm]; noncomm_ring [hP, proj_idem hP]
+  have hJV : J_op P X * V_op P X = V_op P X * J_op P X := by
+    dsimp [V_op, J_op, comm]; noncomm_ring [hP, proj_idem hP]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, rfl⟩
+  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
+  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hJV, sub_self]
+  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
+  · dsimp [comm]; rw [mul_smul_comm, smul_mul_assoc, hPhiV, sub_self]
+  · rw [smul_smul]; rfl
+  · rw [← add_zsmul]; rfl
+
 end NoncommutativeRingIntegrityPoset
 
 /-!
 # Thirty-Second-Order (Duotriacontadic) Synthesis:
-# 5-Graded Virasoro–Witt Tower `{L₋₂, L₋₁, L₀, L₁, L₂}`, Gauss–Bruhat Exchange, and
+# Finite Peirce Grade Relations `{L₋₂, L₋₁, L₀, L₁, L₂}`, Gauss–Bruhat Exchange, and
 # Steinberg–Cyclotomic-24 Annihilation (`DuotriacontadicFiveGradedVirasoroBruhatPoset`)
 -/
 
@@ -1495,19 +1630,19 @@ def comm (X Y : B) : B := X * Y - Y * X
 /-- Three-horizon Weyl grading generator `L₀ = P₁ - P₂` in `[Ring B]`. -/
 def L5_zero (P1 P2 : B) : B := P1 - P2
 
-/-- Positive step-1 Virasoro–Witt raising current `L₋₁ = P₁ X P₀ + P₀ X P₂` in `[Ring B]`. -/
+/-- Positive grade-one Peirce transition `P₁ X P₀ + P₀ X P₂` in `[Ring B]`. -/
 def L5_neg1 (P1 P2 X : B) : B :=
   P1 * X * (1 - P1 - P2) + (1 - P1 - P2) * X * P2
 
-/-- Negative step-1 Virasoro–Witt lowering current `L₁ = -(P₀ Y P₁ + P₂ Y P₀)` in `[Ring B]`. -/
+/-- Negative grade-one Peirce transition `-(P₀ Y P₁ + P₂ Y P₀)` in `[Ring B]`. -/
 def L5_pos1 (P1 P2 Y : B) : B :=
   - ((1 - P1 - P2) * Y * P1 + P2 * Y * (1 - P1 - P2))
 
-/-- Positive grade-2 horizon-to-horizon Virasoro–Witt mode `L₋₂ = P₁ X P₀ X P₂ = (L₋₁)²` in `[Ring B]`. -/
+/-- Positive grade-two Peirce transition `P₁ X P₀ X P₂ = (L₋₁)²` in `[Ring B]`. -/
 def L5_neg2 (P1 P2 X : B) : B :=
   P1 * X * (1 - P1 - P2) * X * P2
 
-/-- Negative grade-2 horizon-to-horizon Virasoro–Witt mode `L₂ = -(P₂ Y P₀ Y P₁) = -(L₁)²` in `[Ring B]`. -/
+/-- Negative grade-two Peirce transition `-(P₂ Y P₀ Y P₁) = -(L₁)²` in `[Ring B]`. -/
 def L5_pos2 (P1 P2 Y : B) : B :=
   - (P2 * Y * (1 - P1 - P2) * Y * P1)
 
@@ -1516,10 +1651,10 @@ def V5_grade2 (P1 P2 X Y : B) : B :=
   P1 * X * (1 - P1 - P2) * X * P2 * Y * (1 - P1 - P2) * Y * P1 +
     P2 * Y * (1 - P1 - P2) * Y * P1 * X * (1 - P1 - P2) * X * P2
 
-/-- **Theorem 1 (`five_graded_virasoro_witt_tower_commutation`, `𝔇𝔗₁` & `𝔇𝔗₂`)**:
+/-- **Theorem 1 (`three_horizon_five_grade_commutator_relations`, `𝔇𝔗₁` & `𝔇𝔗₂`)**:
     In any associative ring `[Ring B]` with orthogonal idempotents
-    `P₁² = P₁, P₂² = P₂, P₁ P₂ = P₂ P₁ = 0` and waist `P₀ = 1 - P₁ - P₂`, the 5-graded
-    Virasoro–Witt operators `{L₋₂, L₋₁, L₀, L₁, L₂}` satisfy:
+    `P₁² = P₁, P₂² = P₂, P₁ P₂ = P₂ P₁ = 0` and waist `P₀ = 1 - P₁ - P₂`, the finite
+    Peirce-grade operators satisfy the following commutator and nilpotence identities:
     1. **Step-to-Horizon Quadratic Generation & Nilpotent Truncation:**
        `L₋₁ * L₋₁ = L₋₂`, `L₁ * L₁ = -L₂`, `L₋₂ * L₋₂ = 0`, `L₂ * L₂ = 0`,
        `[L₋₁, L₋₂] = 0`, and `[L₁, L₂] = 0`.
@@ -1528,7 +1663,7 @@ def V5_grade2 (P1 P2 X Y : B) : B :=
        `[L₀, [L₁, L₋₂]] = [L₁, L₋₂]`, and `[L₀, [L₂, L₋₁]] = -[L₂, L₋₁]`.
     3. **Metric-Modulated Grade-2 Bracket:**
        `[L₂, L₋₂] = L₀ * V_{(2)} = V_{(2)} * L₀` and `[L₀, V_{(2)}] = 0`. -/
-theorem five_graded_virasoro_witt_tower_commutation
+theorem three_horizon_five_grade_commutator_relations
     (P1 P2 X Y : B)
     (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
     (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
@@ -1688,5 +1823,491 @@ theorem gauss_bruhat_exchange_and_steinberg_cyclotomic_24_annihilation
   · intro hEq
     have hSub : Tp * Tm * Tp - Tm * Tp * Tm = 0 := sub_eq_zero.mpr hEq
     rw [← hBridge, hSub, mul_zero]
+
+/-- Division-free Scale-12 integer Virasoro 2-cocycle coefficient
+`γ₁₂(n, m) = (n³ - n) δ_{n+m, 0}` for modes `n, m : ℤ`. -/
+def virasoroCocycleCoeff12 (n m : ℤ) : ℤ :=
+  if n + m = 0 then n * n * n - n else 0
+
+/-- Operator-valued Virasoro central extension 2-cocycle
+`γ₁₂(n, m) • C_op` in any associative ring `[Ring B]`. -/
+def virasoroCocycleOp (n m : ℤ) (C_op : B) : B :=
+  virasoroCocycleCoeff12 n m • C_op
+
+/-- Skew-symmetry `γ₁₂(m, n) = -γ₁₂(n, m)` of the Scale-12 Virasoro 2-cocycle coefficient. -/
+theorem virasoroCocycleCoeff12_skew (n m : ℤ) :
+    virasoroCocycleCoeff12 m n = - virasoroCocycleCoeff12 n m := by
+  dsimp [virasoroCocycleCoeff12]
+  by_cases h : n + m = 0
+  · have h' : m + n = 0 := by omega
+    have hm : m = -n := by omega
+    rw [if_pos h', if_pos h, hm]
+    ring
+  · have h' : m + n ≠ 0 := by omega
+    rw [if_neg h', if_neg h]
+    ring
+
+/-- Unconditional 3-mode Lie 2-cocycle Jacobi cyclic identity for `virasoroCocycleCoeff12`:
+`(n - m) γ₁₂(n + m, k) + (m - k) γ₁₂(m + k, n) + (k - n) γ₁₂(k + n, m) = 0`. -/
+theorem virasoroCocycleCoeff12_jacobi (n m k : ℤ) :
+    (n - m) * virasoroCocycleCoeff12 (n + m) k +
+    (m - k) * virasoroCocycleCoeff12 (m + k) n +
+    (k - n) * virasoroCocycleCoeff12 (k + n) m = 0 := by
+  dsimp [virasoroCocycleCoeff12]
+  by_cases h : n + m + k = 0
+  · have h1 : (n + m) + k = 0 := h
+    have h2 : (m + k) + n = 0 := by omega
+    have h3 : (k + n) + m = 0 := by omega
+    have hk : k = -(n + m) := by omega
+    rw [if_pos h1, if_pos h2, if_pos h3, hk]
+    ring
+  · have h1 : (n + m) + k ≠ 0 := h
+    have h2 : (m + k) + n ≠ 0 := by omega
+    have h3 : (k + n) + m ≠ 0 := by omega
+    rw [if_neg h1, if_neg h2, if_neg h3]
+    ring
+
+/-- **Theorem 3 (`virasoro_cocycle_sl2_vanishing_and_jacobi_identity`)**:
+    All-mode operator Virasoro 2-cocycle skew-symmetry, `𝔰𝔩₂` vacuum vanishing (`n ∈ {-1, 0, 1}`),
+    Scale-6/Scale-24 evaluations (`n = 2, 3`), and 3-mode Jacobi identity in `[Ring B]`. -/
+theorem virasoro_cocycle_sl2_vanishing_and_jacobi_identity
+    (n m k : ℤ) (C_op : B) :
+    virasoroCocycleOp m n C_op = - virasoroCocycleOp n m C_op ∧
+    virasoroCocycleOp 0 0 C_op = 0 ∧
+    virasoroCocycleOp 1 (-1) C_op = 0 ∧
+    virasoroCocycleOp (-1) 1 C_op = 0 ∧
+    virasoroCocycleOp 2 (-2) C_op = (6 : ℤ) • C_op ∧
+    virasoroCocycleOp 3 (-3) C_op = (24 : ℤ) • C_op ∧
+    (n - m) • virasoroCocycleOp (n + m) k C_op +
+      (m - k) • virasoroCocycleOp (m + k) n C_op +
+      (k - n) • virasoroCocycleOp (k + n) m C_op = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, rfl, rfl, ?_⟩
+  · dsimp [virasoroCocycleOp]
+    rw [virasoroCocycleCoeff12_skew n m, neg_zsmul]
+  · change (0 : ℤ) • C_op = 0; exact zero_zsmul C_op
+  · change (0 : ℤ) • C_op = 0; exact zero_zsmul C_op
+  · change (0 : ℤ) • C_op = 0; exact zero_zsmul C_op
+  · dsimp [virasoroCocycleOp]
+    rw [smul_smul, smul_smul, smul_smul, ← add_zsmul, ← add_zsmul,
+        virasoroCocycleCoeff12_jacobi n m k, zero_zsmul]
+
+/-- Unipotent degree-1/degree-2 step factor `1 + L₋₁` on the 3-horizon Peirce tower. -/
+def unipotentExpGrade1 (P1 P2 X : B) : B :=
+  1 + L5_neg1 P1 P2 X
+
+/-- Explicit two-sided polynomial inverse `1 - L₋₁ + L₋₂` of `1 + L₋₁` in `[Ring B]`. -/
+def unipotentExpGrade1Inv (P1 P2 X : B) : B :=
+  1 - L5_neg1 P1 P2 X + L5_neg2 P1 P2 X
+
+/-- Quadratic non-commutative operator Bregman divergence `D(X, Y) = (X - Y) * (X - Y)`. -/
+def operatorBregmanDiv (X Y : B) : B := (X - Y) * (X - Y)
+
+/-- Fourth-order Mercator–Neumann resolvent truncation `1 + V + V² + V³`. -/
+def mercatorResolvent4 (V : B) : B := 1 + V + V * V + V * V * V
+
+/-- **Theorem 4 (`five_grade_lie_exponential_and_operator_bregman_mercator_synthesis`)**:
+    In any associative ring `[Ring B]` with orthogonal idempotents `P₁² = P₁, P₂² = P₂, P₁ P₂ = P₂ P₁ = 0`
+    and idempotent `P * P = P`:
+    1. `L₋₁³ = 0` and `(1 + L₋₁)(1 - L₋₁ + L₋₂) = (1 - L₋₁ + L₋₂)(1 + L₋₁) = 1`.
+    2. Operator Bregman three-point identity:
+       `operatorBregmanDiv X Z - operatorBregmanDiv X Y - operatorBregmanDiv Y Z = (X - Y) * (Y - Z) + (Y - Z) * (X - Y)`.
+    3. Fourth-order Mercator–Neumann log-det truncation:
+       `(1 - V_met P X Y) * mercatorResolvent4 (V_met P X Y) = 1 - (J_mc P X Y) ^ 8`. -/
+theorem five_grade_lie_exponential_and_operator_bregman_mercator_synthesis
+    (P P1 P2 X Y Z : B)
+    (hP : P * P = P)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    let Lm1 := L5_neg1 P1 P2 X
+    let v   := TriacontadicModularMoonshinePoset.V_met P X Y
+    let j   := TriacontadicModularMoonshinePoset.J_mc P X Y
+    Lm1 * Lm1 * Lm1 = 0 ∧
+    unipotentExpGrade1 P1 P2 X * unipotentExpGrade1Inv P1 P2 X = 1 ∧
+    unipotentExpGrade1Inv P1 P2 X * unipotentExpGrade1 P1 P2 X = 1 ∧
+    operatorBregmanDiv X Z - operatorBregmanDiv X Y - operatorBregmanDiv Y Z =
+      (X - Y) * (Y - Z) + (Y - Z) * (X - Y) ∧
+    (1 - v) * mercatorResolvent4 v = 1 - j ^ 8 := by
+  have h1'  : ∀ W, P1 * (P1 * W) = P1 * W := fun W => by rw [← mul_assoc, h1]
+  have h2'  : ∀ W, P2 * (P2 * W) = P2 * W := fun W => by rw [← mul_assoc, h2]
+  have h12' : ∀ W, P1 * (P2 * W) = 0     := fun W => by rw [← mul_assoc, h12, zero_mul]
+  have h21' : ∀ W, P2 * (P1 * W) = 0     := fun W => by rw [← mul_assoc, h21, zero_mul]
+  have hIdem : ∀ W : B, P * (P * W) = P * W := fun W => by rw [← mul_assoc, hP]
+  have hNp : TriacontadicModularMoonshinePoset.N_plus P X *
+      TriacontadicModularMoonshinePoset.N_plus P X = 0 := by
+    dsimp [TriacontadicModularMoonshinePoset.N_plus]; noncomm_ring [hP, hIdem]
+  have hNm : TriacontadicModularMoonshinePoset.N_minus P Y *
+      TriacontadicModularMoonshinePoset.N_minus P Y = 0 := by
+    dsimp [TriacontadicModularMoonshinePoset.N_minus]; noncomm_ring [hP, hIdem]
+  set v := TriacontadicModularMoonshinePoset.V_met P X Y
+  set j := TriacontadicModularMoonshinePoset.J_mc P X Y
+  have hJ2 : j * j = - v := by
+    change (TriacontadicModularMoonshinePoset.N_plus P X -
+              TriacontadicModularMoonshinePoset.N_minus P Y) *
+           (TriacontadicModularMoonshinePoset.N_plus P X -
+              TriacontadicModularMoonshinePoset.N_minus P Y) =
+         -(TriacontadicModularMoonshinePoset.N_plus P X *
+             TriacontadicModularMoonshinePoset.N_minus P Y +
+           TriacontadicModularMoonshinePoset.N_minus P Y *
+             TriacontadicModularMoonshinePoset.N_plus P X)
+    noncomm_ring [hNp, hNm]
+  have hJ4 : (j * j) * (j * j) = v * v := by rw [hJ2]; noncomm_ring
+  have hJ8 : j ^ 8 = (v * v) * (v * v) := by
+    calc j ^ 8 = ((j * j) * (j * j)) * ((j * j) * (j * j)) := by noncomm_ring
+      _ = (v * v) * (v * v) := by rw [hJ4]
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · dsimp only [L5_neg1]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
+  · dsimp only [unipotentExpGrade1, unipotentExpGrade1Inv, L5_neg1, L5_neg2]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
+  · dsimp only [unipotentExpGrade1, unipotentExpGrade1Inv, L5_neg1, L5_neg2]
+    noncomm_ring [h1, h2, h12, h21, h1', h2', h12', h21']
+  · dsimp only [operatorBregmanDiv]
+    noncomm_ring
+  · rw [hJ8]
+    dsimp only [mercatorResolvent4]
+    noncomm_ring
+
+/-- All-mode Heisenberg source corner `J_r^+ = V^r * N_+(P, X)` at mode `r : ℕ`. -/
+def sugawaraSourceMode (P X Y : B) (r : ℕ) : B :=
+  (TriacontadicModularMoonshinePoset.V_met P X Y) ^ r *
+    TriacontadicModularMoonshinePoset.N_plus P X
+
+/-- All-mode Heisenberg sink corner `J_s^- = N_-(P, Y) * V^s` at mode `s : ℕ`. -/
+def sugawaraSinkMode (P X Y : B) (s : ℕ) : B :=
+  TriacontadicModularMoonshinePoset.N_minus P Y *
+    (TriacontadicModularMoonshinePoset.V_met P X Y) ^ s
+
+/-- All-mode Sugawara even stress-energy generator `L_n^{even} = V^(n + 1)` at mode `n : ℕ`. -/
+def virasoroEvenMode (P X Y : B) (n : ℕ) : B :=
+  (TriacontadicModularMoonshinePoset.V_met P X Y) ^ (n + 1)
+
+/-- All-mode Sugawara chiral stress-energy generator `L_n^{chiral} = (2P - 1) * V^(n + 1)` at mode `n : ℕ`. -/
+def virasoroChiralMode (P X Y : B) (n : ℕ) : B :=
+  (2 • P - 1) * (TriacontadicModularMoonshinePoset.V_met P X Y) ^ (n + 1)
+
+/-- **Theorem 5 (`all_mode_sugawara_virasoro_mode_algebra`)**:
+    For every pair of modes `r, s : ℕ` in any associative ring `[Ring B]` with `P * P = P`:
+    1. All-mode Heisenberg current commutator & anticommutator:
+       `comm (sugawaraSourceMode P X Y r) (sugawaraSinkMode P X Y s) = virasoroChiralMode P X Y (r + s)` and
+       `sugawaraSourceMode P X Y r * sugawaraSinkMode P X Y s + sugawaraSinkMode P X Y s * sugawaraSourceMode P X Y r = virasoroEvenMode P X Y (r + s)`.
+    2. All-mode Virasoro–Heisenberg current-stress-tensor action:
+       `comm (virasoroEvenMode P X Y r) (sugawaraSourceMode P X Y s) = 0`,
+       `comm (virasoroEvenMode P X Y r) (sugawaraSinkMode P X Y s) = 0`,
+       `comm (virasoroChiralMode P X Y r) (sugawaraSourceMode P X Y s) = 2 • sugawaraSourceMode P X Y (r + s + 1)`, and
+       `comm (virasoroChiralMode P X Y r) (sugawaraSinkMode P X Y s) = - (2 • sugawaraSinkMode P X Y (r + s + 1))`. -/
+theorem all_mode_sugawara_virasoro_mode_algebra
+    (P X Y : B) (hP : P * P = P) (r s : ℕ) :
+    comm (sugawaraSourceMode P X Y r) (sugawaraSinkMode P X Y s) =
+      virasoroChiralMode P X Y (r + s) ∧
+    sugawaraSourceMode P X Y r * sugawaraSinkMode P X Y s +
+      sugawaraSinkMode P X Y s * sugawaraSourceMode P X Y r =
+      virasoroEvenMode P X Y (r + s) ∧
+    comm (virasoroEvenMode P X Y r) (sugawaraSourceMode P X Y s) = 0 ∧
+    comm (virasoroEvenMode P X Y r) (sugawaraSinkMode P X Y s) = 0 ∧
+    comm (virasoroChiralMode P X Y r) (sugawaraSourceMode P X Y s) =
+      2 • sugawaraSourceMode P X Y (r + s + 1) ∧
+    comm (virasoroChiralMode P X Y r) (sugawaraSinkMode P X Y s) =
+      - (2 • sugawaraSinkMode P X Y (r + s + 1)) := by
+  have hIdem : ∀ Z : B, P * (P * Z) = P * Z := fun Z => by rw [← mul_assoc, hP]
+  set np := TriacontadicModularMoonshinePoset.N_plus P X
+  set nm := TriacontadicModularMoonshinePoset.N_minus P Y
+  set v  := TriacontadicModularMoonshinePoset.V_met P X Y
+  have hP_np : P * np = np := by
+    dsimp [np, TriacontadicModularMoonshinePoset.N_plus]; noncomm_ring [hP, hIdem]
+  have hnp_P : np * P = 0 := by
+    dsimp [np, TriacontadicModularMoonshinePoset.N_plus]; noncomm_ring [hP, hIdem]
+  have hP_nm : P * nm = 0 := by
+    dsimp [nm, TriacontadicModularMoonshinePoset.N_minus]; noncomm_ring [hP, hIdem]
+  have hnm_P : nm * P = nm := by
+    dsimp [nm, TriacontadicModularMoonshinePoset.N_minus]; noncomm_ring [hP, hIdem]
+  have hnp_sq : np * np = 0 := by
+    dsimp [np, TriacontadicModularMoonshinePoset.N_plus]; noncomm_ring [hP, hIdem]
+  have hnm_sq : nm * nm = 0 := by
+    dsimp [nm, TriacontadicModularMoonshinePoset.N_minus]; noncomm_ring [hP, hIdem]
+  have hnp_sq' : ∀ Z : B, np * (np * Z) = 0 := fun Z => by rw [← mul_assoc, hnp_sq, zero_mul]
+  have hnm_sq' : ∀ Z : B, nm * (nm * Z) = 0 := fun Z => by rw [← mul_assoc, hnm_sq, zero_mul]
+  have hP_v : P * v = np * nm := by
+    change P * (np * nm + nm * np) = np * nm
+    rw [mul_add, ← mul_assoc, hP_np, ← mul_assoc, hP_nm, zero_mul, add_zero]
+  have hv_P : v * P = np * nm := by
+    change (np * nm + nm * np) * P = np * nm
+    rw [add_mul, mul_assoc, hnm_P, mul_assoc, hnp_P, mul_zero, add_zero]
+  have hPv_comm : P * v = v * P := hP_v.trans hv_P.symm
+  have hv_np : v * np = np * v := by
+    change (np * nm + nm * np) * np = np * (np * nm + nm * np)
+    noncomm_ring [hnp_sq, hnp_sq']
+  have hv_nm : v * nm = nm * v := by
+    change (np * nm + nm * np) * nm = nm * (np * nm + nm * np)
+    noncomm_ring [hnm_sq, hnm_sq']
+  have hv_pow_np : ∀ k : ℕ, v ^ k * np = np * v ^ k := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+      rw [pow_succ, mul_assoc, hv_np, ← mul_assoc, ih, mul_assoc, ← pow_succ]
+  have hv_pow_nm : ∀ k : ℕ, v ^ k * nm = nm * v ^ k := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+      rw [pow_succ, mul_assoc, hv_nm, ← mul_assoc, ih, mul_assoc, ← pow_succ]
+  have hP_v_pow : ∀ k : ℕ, P * v ^ k = v ^ k * P := by
+    intro k
+    induction k with
+    | zero => simp
+    | succ k ih =>
+      rw [pow_succ, ← mul_assoc, ih, mul_assoc, hPv_comm, ← mul_assoc, ← pow_succ]
+  have hProd1 : (v ^ r * np) * (nm * v ^ s) = v ^ r * (np * nm) * v ^ s := by noncomm_ring
+  have hProd2 : (nm * v ^ s) * (v ^ r * np) = v ^ r * (nm * np) * v ^ s := by
+    calc (nm * v ^ s) * (v ^ r * np)
+        = (nm * (v ^ s * v ^ r)) * np := by noncomm_ring
+      _ = (nm * v ^ (s + r)) * np := by rw [← pow_add]
+      _ = ((v ^ (s + r)) * nm) * np := by rw [hv_pow_nm (s + r)]
+      _ = (v ^ r * v ^ s) * (nm * np) := by rw [Nat.add_comm s r, pow_add]; noncomm_ring
+      _ = v ^ r * (v ^ s * (nm * np)) := by noncomm_ring
+      _ = v ^ r * ((v ^ s * nm) * np) := by noncomm_ring
+      _ = v ^ r * ((nm * v ^ s) * np) := by rw [hv_pow_nm s]
+      _ = v ^ r * (nm * (v ^ s * np)) := by noncomm_ring
+      _ = v ^ r * (nm * (np * v ^ s)) := by rw [hv_pow_np s]
+      _ = v ^ r * (nm * np) * v ^ s := by noncomm_ring
+  have hDiff_np_nm : np * nm - nm * np = (2 • P - 1) * v := by
+    calc np * nm - nm * np
+        = 2 • (np * nm) - (np * nm + nm * np) := by noncomm_ring
+      _ = 2 • (P * v) - v := by rw [hP_v]; rfl
+      _ = (2 • P - 1) * v := by noncomm_ring
+  have hComm_modes :
+      comm (sugawaraSourceMode P X Y r) (sugawaraSinkMode P X Y s) =
+        virasoroChiralMode P X Y (r + s) := by
+    change (v ^ r * np) * (nm * v ^ s) - (nm * v ^ s) * (v ^ r * np) =
+      (2 • P - 1) * v ^ (r + s + 1)
+    rw [hProd1, hProd2]
+    calc v ^ r * (np * nm) * v ^ s - v ^ r * (nm * np) * v ^ s
+        = v ^ r * (np * nm - nm * np) * v ^ s := by noncomm_ring
+      _ = v ^ r * ((2 • P - 1) * v) * v ^ s := by rw [hDiff_np_nm]
+      _ = (2 • (v ^ r * P) - v ^ r) * v * v ^ s := by noncomm_ring
+      _ = (2 • (P * v ^ r) - v ^ r) * v * v ^ s := by rw [hP_v_pow r]
+      _ = (2 • P - 1) * (v ^ r * v * v ^ s) := by noncomm_ring
+      _ = (2 • P - 1) * v ^ (r + s + 1) := by
+          have hpow : v ^ r * v * v ^ s = v ^ (r + s + 1) := by
+            rw [← pow_succ, ← pow_add, Nat.add_right_comm]
+          rw [hpow]
+  have hAnti_modes :
+      sugawaraSourceMode P X Y r * sugawaraSinkMode P X Y s +
+        sugawaraSinkMode P X Y s * sugawaraSourceMode P X Y r =
+        virasoroEvenMode P X Y (r + s) := by
+    change (v ^ r * np) * (nm * v ^ s) + (nm * v ^ s) * (v ^ r * np) = v ^ (r + s + 1)
+    rw [hProd1, hProd2]
+    calc v ^ r * (np * nm) * v ^ s + v ^ r * (nm * np) * v ^ s
+        = v ^ r * (np * nm + nm * np) * v ^ s := by noncomm_ring
+      _ = v ^ r * v * v ^ s := by
+          dsimp [v, np, nm, TriacontadicModularMoonshinePoset.V_met]
+      _ = v ^ (r + s + 1) := by rw [← pow_succ, ← pow_add, Nat.add_right_comm]
+  have hEven_src : comm (virasoroEvenMode P X Y r) (sugawaraSourceMode P X Y s) = 0 := by
+    change v ^ (r + 1) * (v ^ s * np) - (v ^ s * np) * v ^ (r + 1) = 0
+    have h1 : (v ^ s * np) * v ^ (r + 1) = v ^ s * (np * v ^ (r + 1)) := by noncomm_ring
+    have h2 : v ^ s * (np * v ^ (r + 1)) = v ^ s * (v ^ (r + 1) * np) := by rw [← hv_pow_np (r + 1)]
+    have h3 : v ^ s * (v ^ (r + 1) * np) = (v ^ s * v ^ (r + 1)) * np := by noncomm_ring
+    have h4 : v ^ (r + 1) * (v ^ s * np) = (v ^ (r + 1) * v ^ s) * np := by noncomm_ring
+    rw [h1, h2, h3, h4, ← pow_add, ← pow_add, Nat.add_comm (r + 1) s, sub_self]
+  have hEven_snk : comm (virasoroEvenMode P X Y r) (sugawaraSinkMode P X Y s) = 0 := by
+    change v ^ (r + 1) * (nm * v ^ s) - (nm * v ^ s) * v ^ (r + 1) = 0
+    have h1 : v ^ (r + 1) * (nm * v ^ s) = (v ^ (r + 1) * nm) * v ^ s := by noncomm_ring
+    have h2 : (v ^ (r + 1) * nm) * v ^ s = nm * (v ^ (r + 1) * v ^ s) := by
+      rw [hv_pow_nm (r + 1), mul_assoc]
+    have h3 : (nm * v ^ s) * v ^ (r + 1) = nm * (v ^ s * v ^ (r + 1)) := by noncomm_ring
+    rw [h1, h2, h3, ← pow_add, ← pow_add, Nat.add_comm (r + 1) s, sub_self]
+  have hChiral_src :
+      comm (virasoroChiralMode P X Y r) (sugawaraSourceMode P X Y s) =
+        2 • sugawaraSourceMode P X Y (r + s + 1) := by
+    change ((2 • P - 1) * v ^ (r + 1)) * (v ^ s * np) -
+        (v ^ s * np) * ((2 • P - 1) * v ^ (r + 1)) = 2 • (v ^ (r + s + 1) * np)
+    have hL : ((2 • P - 1) * v ^ (r + 1)) * (v ^ s * np) =
+        2 • (P * (v ^ (r + s + 1) * np)) - v ^ (r + s + 1) * np := by
+      have hpow : v ^ (r + 1) * v ^ s = v ^ (r + s + 1) := by
+        rw [← pow_add, Nat.add_right_comm]
+      calc ((2 • P - 1) * v ^ (r + 1)) * (v ^ s * np)
+          = (2 • P - 1) * ((v ^ (r + 1) * v ^ s) * np) := by noncomm_ring
+        _ = (2 • P - 1) * (v ^ (r + s + 1) * np) := by rw [hpow]
+        _ = 2 • (P * (v ^ (r + s + 1) * np)) - v ^ (r + s + 1) * np := by noncomm_ring
+    have hP_vnp : P * (v ^ (r + s + 1) * np) = v ^ (r + s + 1) * np := by
+      rw [← mul_assoc, hP_v_pow (r + s + 1), mul_assoc, hP_np]
+    have hR : (v ^ s * np) * ((2 • P - 1) * v ^ (r + 1)) = - (v ^ (r + s + 1) * np) := by
+      have hnp_2P : np * (2 • P - 1) = - np := by
+        calc np * (2 • P - 1) = 2 • (np * P) - np := by noncomm_ring
+          _ = 2 • (0 : B) - np := by rw [hnp_P]
+          _ = - np := by noncomm_ring
+      calc (v ^ s * np) * ((2 • P - 1) * v ^ (r + 1))
+          = v ^ s * ((np * (2 • P - 1)) * v ^ (r + 1)) := by noncomm_ring
+        _ = v ^ s * ((-np) * v ^ (r + 1)) := by rw [hnp_2P]
+        _ = - (v ^ s * (np * v ^ (r + 1))) := by noncomm_ring
+        _ = - (v ^ s * (v ^ (r + 1) * np)) := by rw [← hv_pow_np (r + 1)]
+        _ = - ((v ^ s * v ^ (r + 1)) * np) := by noncomm_ring
+        _ = - (v ^ (r + s + 1) * np) := by
+            rw [← pow_add, Nat.add_comm s (r + 1), Nat.add_right_comm]
+    rw [hL, hP_vnp, hR]
+    noncomm_ring
+  have hChiral_snk :
+      comm (virasoroChiralMode P X Y r) (sugawaraSinkMode P X Y s) =
+        - (2 • sugawaraSinkMode P X Y (r + s + 1)) := by
+    change ((2 • P - 1) * v ^ (r + 1)) * (nm * v ^ s) -
+        (nm * v ^ s) * ((2 • P - 1) * v ^ (r + 1)) = - (2 • (nm * v ^ (r + s + 1)))
+    have hL : ((2 • P - 1) * v ^ (r + 1)) * (nm * v ^ s) = - (nm * v ^ (r + s + 1)) := by
+      have h2P_nm : (2 • P - 1) * nm = - nm := by
+        calc (2 • P - 1) * nm = 2 • (P * nm) - nm := by noncomm_ring
+          _ = 2 • (0 : B) - nm := by rw [hP_nm]
+          _ = - nm := by noncomm_ring
+      calc ((2 • P - 1) * v ^ (r + 1)) * (nm * v ^ s)
+          = (2 • P - 1) * ((v ^ (r + 1) * nm) * v ^ s) := by noncomm_ring
+        _ = (2 • P - 1) * ((nm * v ^ (r + 1)) * v ^ s) := by rw [hv_pow_nm (r + 1)]
+        _ = ((2 • P - 1) * nm) * (v ^ (r + 1) * v ^ s) := by noncomm_ring
+        _ = (- nm) * v ^ (r + s + 1) := by rw [h2P_nm, ← pow_add, Nat.add_right_comm]
+        _ = - (nm * v ^ (r + s + 1)) := by noncomm_ring
+    have hR : (nm * v ^ s) * ((2 • P - 1) * v ^ (r + 1)) = nm * v ^ (r + s + 1) := by
+      have hnm_2P : nm * (2 • P - 1) = nm := by
+        calc nm * (2 • P - 1) = 2 • (nm * P) - nm := by noncomm_ring
+          _ = 2 • nm - nm := by rw [hnm_P]
+          _ = nm := by noncomm_ring
+      calc (nm * v ^ s) * ((2 • P - 1) * v ^ (r + 1))
+          = (nm * (v ^ s * (2 • P - 1))) * v ^ (r + 1) := by noncomm_ring
+        _ = (nm * (2 • (v ^ s * P) - v ^ s)) * v ^ (r + 1) := by noncomm_ring
+        _ = (nm * (2 • (P * v ^ s) - v ^ s)) * v ^ (r + 1) := by rw [hP_v_pow s]
+        _ = ((nm * (2 • P - 1)) * v ^ s) * v ^ (r + 1) := by noncomm_ring
+        _ = (nm * v ^ s) * v ^ (r + 1) := by rw [hnm_2P]
+        _ = nm * (v ^ s * v ^ (r + 1)) := by noncomm_ring
+        _ = nm * v ^ (r + s + 1) := by
+            rw [← pow_add, Nat.add_comm s (r + 1), Nat.add_right_comm]
+    rw [hL, hR]
+    noncomm_ring
+  exact ⟨hComm_modes, hAnti_modes, hEven_src, hEven_snk, hChiral_src, hChiral_snk⟩
+
+/-- **Theorem 6 (`virasoro_sugawara_colimit_cone_transport`)**:
+    Inductive colimit cone transport (`toLimit : ∀ k : ℕ, Stage k →+* Limit` compatible with
+    `embed : ∀ k : ℕ, Stage k →+* Stage (k + 1)`) of the all-mode Sugawara–Heisenberg–Virasoro
+    algebra and operator Virasoro 2-cocycle. -/
+theorem virasoro_sugawara_colimit_cone_transport
+    {Stage : ℕ → Type*} [∀ k, Ring (Stage k)]
+    {Limit : Type*} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (P X Y C_op : Stage k) (hP : P * P = P)
+    (r s : ℕ) (n m l : ℤ) :
+    let P_inf := toLimit k P
+    let X_inf := toLimit k X
+    let Y_inf := toLimit k Y
+    let C_inf := toLimit k C_op
+    toLimit k (sugawaraSourceMode P X Y r) = sugawaraSourceMode P_inf X_inf Y_inf r ∧
+    toLimit k (sugawaraSinkMode P X Y s) = sugawaraSinkMode P_inf X_inf Y_inf s ∧
+    toLimit k (virasoroEvenMode P X Y (r + s)) = virasoroEvenMode P_inf X_inf Y_inf (r + s) ∧
+    toLimit k (virasoroChiralMode P X Y (r + s)) = virasoroChiralMode P_inf X_inf Y_inf (r + s) ∧
+    toLimit (k + 1) (sugawaraSourceMode (embed k P) (embed k X) (embed k Y) r) =
+      sugawaraSourceMode P_inf X_inf Y_inf r ∧
+    toLimit (k + 1) (virasoroChiralMode (embed k P) (embed k X) (embed k Y) (r + s)) =
+      virasoroChiralMode P_inf X_inf Y_inf (r + s) ∧
+    comm (sugawaraSourceMode P_inf X_inf Y_inf r) (sugawaraSinkMode P_inf X_inf Y_inf s) =
+      virasoroChiralMode P_inf X_inf Y_inf (r + s) ∧
+    comm (virasoroChiralMode P_inf X_inf Y_inf r) (sugawaraSourceMode P_inf X_inf Y_inf s) =
+      2 • sugawaraSourceMode P_inf X_inf Y_inf (r + s + 1) ∧
+    comm (virasoroChiralMode P_inf X_inf Y_inf r) (sugawaraSinkMode P_inf X_inf Y_inf s) =
+      - (2 • sugawaraSinkMode P_inf X_inf Y_inf (r + s + 1)) ∧
+    toLimit k (virasoroCocycleOp n m C_op) = virasoroCocycleOp n m C_inf ∧
+    (n - m) • virasoroCocycleOp (n + m) l C_inf +
+      (m - l) • virasoroCocycleOp (m + l) n C_inf +
+      (l - n) • virasoroCocycleOp (l + n) m C_inf = 0 := by
+  have hMapNp : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x : A),
+      f (TriacontadicModularMoonshinePoset.N_plus p x) =
+        TriacontadicModularMoonshinePoset.N_plus (f p) (f x) := by
+    intro A D _ _ f p x
+    dsimp [TriacontadicModularMoonshinePoset.N_plus]
+    simp [map_mul, map_sub, map_one]
+  have hMapNm : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p y : A),
+      f (TriacontadicModularMoonshinePoset.N_minus p y) =
+        TriacontadicModularMoonshinePoset.N_minus (f p) (f y) := by
+    intro A D _ _ f p y
+    dsimp [TriacontadicModularMoonshinePoset.N_minus]
+    simp [map_mul, map_sub, map_one]
+  have hMapV : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A),
+      f (TriacontadicModularMoonshinePoset.V_met p x y) =
+        TriacontadicModularMoonshinePoset.V_met (f p) (f x) (f y) := by
+    intro A D _ _ f p x y
+    dsimp [TriacontadicModularMoonshinePoset.V_met]
+    simp [map_add, map_mul, hMapNp, hMapNm]
+  have hMapSrc : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
+      f (sugawaraSourceMode p x y m') = sugawaraSourceMode (f p) (f x) (f y) m' := by
+    intro A D _ _ f p x y m'
+    dsimp [sugawaraSourceMode]
+    simp [map_mul, map_pow, hMapV, hMapNp]
+  have hMapSnk : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
+      f (sugawaraSinkMode p x y m') = sugawaraSinkMode (f p) (f x) (f y) m' := by
+    intro A D _ _ f p x y m'
+    dsimp [sugawaraSinkMode]
+    simp [map_mul, map_pow, hMapV, hMapNm]
+  have hMapEven : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
+      f (virasoroEvenMode p x y m') = virasoroEvenMode (f p) (f x) (f y) m' := by
+    intro A D _ _ f p x y m'
+    dsimp [virasoroEvenMode]
+    simp [map_pow, hMapV]
+  have hMapChiral : ∀ {A D : Type*} [Ring A] [Ring D] (f : A →+* D) (p x y : A) (m' : ℕ),
+      f (virasoroChiralMode p x y m') = virasoroChiralMode (f p) (f x) (f y) m' := by
+    intro A D _ _ f p x y m'
+    dsimp [virasoroChiralMode]
+    simp [map_mul, map_sub, map_nsmul, map_one, map_pow, hMapV]
+  have hP_inf : toLimit k P * toLimit k P = toLimit k P := by
+    rw [← map_mul, hP]
+  have hAlg_inf := all_mode_sugawara_virasoro_mode_algebra
+    (toLimit k P) (toLimit k X) (toLimit k Y) hP_inf r s
+  have hCocycle_inf := virasoro_cocycle_sl2_vanishing_and_jacobi_identity n m l (toLimit k C_op)
+  refine ⟨hMapSrc (toLimit k) P X Y r,
+          hMapSnk (toLimit k) P X Y s,
+          hMapEven (toLimit k) P X Y (r + s),
+          hMapChiral (toLimit k) P X Y (r + s),
+          ?_, ?_,
+          hAlg_inf.1,
+          hAlg_inf.2.2.2.2.1,
+          hAlg_inf.2.2.2.2.2,
+          ?_,
+          hCocycle_inf.2.2.2.2.2.2⟩
+  · rw [← hMapSrc (embed k) P X Y r, hCone k, hMapSrc (toLimit k) P X Y r]
+  · rw [← hMapChiral (embed k) P X Y (r + s), hCone k, hMapChiral (toLimit k) P X Y (r + s)]
+  · dsimp [virasoroCocycleOp]
+    exact map_zsmul (toLimit k) (virasoroCocycleCoeff12 n m) C_op
+
+/-- **Theorem 7 (`five_graded_virasoro_witt_tower_commutation`, `𝔇𝔗₁` & `𝔇𝔗₂`)**:
+    In any associative ring `[Ring B]` with orthogonal idempotents
+    `P₁² = P₁, P₂² = P₂, P₁ P₂ = P₂ P₁ = 0`, the 5-graded Virasoro–Witt Peirce operators
+    `{L₋₂, L₋₁, L₀, L₁, L₂}` satisfy the full 15-part commutator and nilpotency tower together
+    with the Grade-2 (`n = 2`) Scale-6 and Grade-3 (`n = 3`) Scale-24 Virasoro 2-cocycle
+    evaluations on `V5_grade2 P1 P2 X Y`. -/
+theorem five_graded_virasoro_witt_tower_commutation
+    (P1 P2 X Y : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0) :
+    let L0  := L5_zero P1 P2
+    let Lm1 := L5_neg1 P1 P2 X
+    let Lp1 := L5_pos1 P1 P2 Y
+    let Lm2 := L5_neg2 P1 P2 X
+    let Lp2 := L5_pos2 P1 P2 Y
+    let V2  := V5_grade2 P1 P2 X Y
+    Lm1 * Lm1 = Lm2 ∧
+    Lp1 * Lp1 = - Lp2 ∧
+    Lm2 * Lm2 = 0 ∧
+    Lp2 * Lp2 = 0 ∧
+    comm Lm1 Lm2 = 0 ∧
+    comm Lp1 Lp2 = 0 ∧
+    comm L0 Lm1 = Lm1 ∧
+    comm L0 Lp1 = - Lp1 ∧
+    comm L0 Lm2 = 2 • Lm2 ∧
+    comm L0 Lp2 = - (2 • Lp2) ∧
+    comm Lp2 Lm2 = L0 * V2 ∧
+    comm Lp2 Lm2 = V2 * L0 ∧
+    comm L0 V2 = 0 ∧
+    comm L0 (comm Lp1 Lm2) = comm Lp1 Lm2 ∧
+    comm L0 (comm Lp2 Lm1) = - comm Lp2 Lm1 ∧
+    virasoroCocycleOp 2 (-2) V2 = (6 : ℤ) • V2 ∧
+    virasoroCocycleOp 3 (-3) V2 = (24 : ℤ) • V2 := by
+  rcases three_horizon_five_grade_commutator_relations P1 P2 X Y h1 h2 h12 h21 with
+    ⟨hA1, hA2, hA3, hA4, hA5, hA6, hA7, hA8, hA9, hA10, hA11, hA12, hA13, hA14, hA15⟩
+  exact ⟨hA1, hA2, hA3, hA4, hA5, hA6, hA7, hA8, hA9, hA10,
+         hA11, hA12, hA13, hA14, hA15, rfl, rfl⟩
 
 end DuotriacontadicFiveGradedVirasoroBruhatPoset

@@ -36,7 +36,7 @@ open InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge
 open InfoGeometry.Canonical.MatrixCommutatorSquareLeibnizBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V] {n : ℕ}
 
 /-- **Theorem**: Matrix Exterior Derivative Product Rule d(F * F) = dF * F + F * dF for Even Curvature Forms. -/
 theorem matrixExteriorDerivative_even_curvature_square

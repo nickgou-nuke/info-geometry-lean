@@ -22,8 +22,8 @@ open Filter
 
 universe u
 
-variable {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
-variable [AddCommGroup V] [Module 𝕜 V]
+variable {𝕜 V : Type u} [Semiring 𝕜]
+variable [AddCommMonoid V] [Module 𝕜 V]
 
 abbrev fibFusionClass := InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionClass
 abbrev fibFusionGrothendieckColimit :=
@@ -52,21 +52,18 @@ theorem fibFusionOf_vector_eq_initial (n : Nat) :
     fibFusionOf n (fibFusionVector n) = fibFusionOf 0 (fibFusionVector 0) :=
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionOf_vector_eq_initial n
 
-omit [CharZero 𝕜] in
 theorem fibFusionLZeroReadout_tensorTau
     (L : V →ₗ[𝕜] V) (n : Nat) (x : fibFusionClass) :
     fibFusionLZeroReadout L (n + 1) (fibFusionTensorTau x) =
       fibFusionLZeroReadout L n x :=
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroReadout_tensorTau L n x
 
-omit [CharZero 𝕜] in
 theorem fibFusionLZeroReadout_tensorMap
     (L : V →ₗ[𝕜] V) (m n : Nat) (h : m ≤ n) (x : fibFusionClass) :
     fibFusionLZeroReadout L n (fibFusionTensorMap m n h x) =
       fibFusionLZeroReadout L m x :=
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroReadout_tensorMap L m n h x
 
-omit [CharZero 𝕜] in
 theorem fibFusionGrothendieck_lzero_lift_of_vector
     (L : V →ₗ[𝕜] V) (n : Nat) :
     InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroLift (V := V) (𝕜 := 𝕜) L
@@ -74,31 +71,34 @@ theorem fibFusionGrothendieck_lzero_lift_of_vector
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_of_vector
     (V := V) (𝕜 := 𝕜) L n
 
+variable {𝕜' V' : Type u} [Field 𝕜'] [CharZero 𝕜']
+variable [AddCommGroup V'] [Module 𝕜' V']
+
 theorem fibFusionGrothendieck_lzero_lift_eq_sugawara_lzero
-    (heiOper : Int → V →ₗ[𝕜] V)
+    (heiOper : Int → V' →ₗ[𝕜'] V')
     (heiTrunc : ∀ v, atTop.Eventually (fun l : Int => heiOper l v = 0))
     (heiComm : ∀ k l,
       (heiOper k).commutator (heiOper l) =
-        if k + l = 0 then (k : 𝕜) • (1 : V →ₗ[𝕜] V) else 0)
+        if k + l = 0 then (k : 𝕜') • (1 : V' →ₗ[𝕜'] V') else 0)
     (n : Nat) :
-    InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroLift (V := V) (𝕜 := 𝕜)
+    InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroLift (V := V') (𝕜 := 𝕜')
         (VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc 0)
         (fibFusionOf n (fibFusionVector n)) =
       VirasoroProject.sugawaraRepresentation (heiOper := heiOper) heiTrunc heiComm
-        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0) :=
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜' 0) :=
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_eq_sugawara_lzero
-    (V := V) (𝕜 := 𝕜) heiOper heiTrunc heiComm n
+    (V := V') (𝕜 := 𝕜') heiOper heiTrunc heiComm n
 
 theorem fibFusionGrothendieck_lzero_lift_eq_chargedFock_sugawara_lzero
-    (α : 𝕜) (n : Nat) :
+    (α : 𝕜') (n : Nat) :
     InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionLZeroLift
-        (V := VirasoroProject.ChargedFockSpace 𝕜 α) (𝕜 := 𝕜)
-        (VirasoroProject.ChargedFockSpace.sugawaraRepresentation 𝕜 α
-          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0))
+        (V := VirasoroProject.ChargedFockSpace 𝕜' α) (𝕜 := 𝕜')
+        (VirasoroProject.ChargedFockSpace.sugawaraRepresentation 𝕜' α
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜' 0))
         (fibFusionOf n (fibFusionVector n)) =
-      VirasoroProject.ChargedFockSpace.sugawaraRepresentation 𝕜 α
-        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0) :=
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation 𝕜' α
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜' 0) :=
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_eq_chargedFock_sugawara_lzero
-    (𝕜 := 𝕜) α n
+    (𝕜 := 𝕜') α n
 
 end InfoGeometry.Canonical.FibonacciGrothendieckLimitBridge

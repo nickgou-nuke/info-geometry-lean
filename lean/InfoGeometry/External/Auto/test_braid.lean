@@ -7,8 +7,8 @@ open LinearMap
 section Braid
 
 universe u v
-variable (k : Type u) [CommRing k]
-variable (V : Type v) [AddCommGroup V] [Module k V]
+variable (k : Type u) [CommSemiring k]
+variable (V : Type v) [AddCommMonoid V] [Module k V]
 
 /-- `R12` applies `R` to the first two tensor factors. -/
 def R12 (R : Module.End k (V ⊗[k] V)) : Module.End k ((V ⊗[k] V) ⊗[k] V) :=
@@ -40,8 +40,8 @@ end Braid
 
 section BraidExample
 
-variable (k : Type*) [CommRing k]
-variable (V : Type*) [AddCommGroup V] [Module k V]
+variable (k : Type*) [CommSemiring k]
+variable (V : Type*) [AddCommMonoid V] [Module k V]
 
 /-- The identity map on V ⊗ V -/
 def id_tensor : Module.End k (V ⊗[k] V) := LinearMap.id

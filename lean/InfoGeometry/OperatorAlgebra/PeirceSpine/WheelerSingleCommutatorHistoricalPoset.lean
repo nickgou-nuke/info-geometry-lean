@@ -32,6 +32,18 @@ unifying:
 6. **Nodes `𝔗𝔓₁₃–𝔗𝔓₁₄` (Tridecadic SUSY Fermion Genesis & Tessaradecadic Connes Spectral Triple)**:
    Supercharges `Q = J + Φ = 2 N_+` and `Q̄ = J - Φ = -2 N_-` (`Q² = Q̄² = 0`, `{Q, Q̄} = -4V`,
    `[Q, Q̄] = -4Σ`, `[Σ, Q] = 2VQ`, `[Σ, Q̄] = -2VQ̄`) and Connes spectral triple `(D = Φ, γ₅ = S_P)`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All 14 nodes `𝔗𝔓₁ ≺ ⋯ ≺ 𝔗𝔓₁₄` (`WheelerHistoricalNode`), Peirce–Schrödinger *Zitterbewegung*,
+  Narasimhan–Ramanan metric/spin, Born–Nomizu product/commutator flip, Bloch–Schrieffer–Wolff–Foldy–Wouthuysen
+  decoupling, Sato Grassmannian Lax flow, Unruh–Sakharov `1:1:2` partition, Decadic `1 - J²⁴` crystal,
+  Vieta braid anomaly, and SUSY/Connes spectral triple in `[Ring B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency `hP : P * P = P` (and tripotency `H³ = H` for two-bit XOR ambitwistor flags) on `[Ring B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Non-algebraic transcendentals (`log(1 - J²⁴)`) and analytic continuation of the resolvent series outside `[Ring B]`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.WheelerSingleCommutatorHistoricalPoset
@@ -150,15 +162,20 @@ def d_plus_1 (P X Z : B) : B := N_plus_1 P X * Z - chiralConj P Z * N_plus_1 P X
 /-- Single-operator backward exterior differential `d_{-1}(P, X, Z)`. -/
 def d_minus_1 (P X Z : B) : B := N_minus_1 P X * Z - chiralConj P Z * N_minus_1 P X
 
-/-- Adjoint powers `ad_H^k(Z)` for a 2-bit tripotent generator `H = P - Q`. -/
+/-- First adjoint commutator `ad_H(Z) = H Z - Z H`. -/
 def adH  (H Z : B) : B := H * Z - Z * H
+/-- Second iterated adjoint commutator `ad_H²(Z)`. -/
 def adH2 (H Z : B) : B := adH H (adH H Z)
+/-- Third iterated adjoint commutator `ad_H³(Z)`. -/
 def adH3 (H Z : B) : B := adH H (adH2 H Z)
+/-- Fourth iterated adjoint commutator `ad_H⁴(Z)`. -/
 def adH4 (H Z : B) : B := adH H (adH3 H Z)
+/-- Fifth iterated adjoint commutator `ad_H⁵(Z)`. -/
 def adH5 (H Z : B) : B := adH H (adH4 H Z)
 
-/-- Grade `+2` and `-2` Lagrange projectors `Poly24_±2(H, Z)`. -/
+/-- Grade `+2` Lagrange projector `Poly24_{+2}(H, Z)`. -/
 def Poly24_pos2 (H Z : B) : B := adH4 H Z + 2 • adH3 H Z - adH2 H Z - 2 • adH H Z
+/-- Grade `-2` Lagrange projector `Poly24_{-2}(H, Z)`. -/
 def Poly24_neg2 (H Z : B) : B := adH4 H Z - 2 • adH3 H Z - adH2 H Z + 2 • adH H Z
 
 /-- 24th cyclotomic polynomial `Φ₂₄(J) = J⁸ - J⁴ + 1`. -/
@@ -176,26 +193,32 @@ def Q_bar_susy (P X : B) : B := J_1 P X - Phi_1 P X
 
 /-! ### Bridge Lemmas: Single-Commutator to Atomic Peirce Corners -/
 
+/-- Identification of the single-commutator forward corner `N_plus_1 P X` with `N_plus P X`. -/
 theorem N_plus_1_eq {P : B} (hP : P * P = P) (X : B) : N_plus_1 P X = N_plus P X := by
   dsimp only [N_plus_1, J_1, N_plus, comm]; peirce_base_nf hP
 
+/-- Identification of the single-commutator backward corner `N_minus_1 P X` with `N_minus P X`. -/
 theorem N_minus_1_eq {P : B} (hP : P * P = P) (X : B) : N_minus_1 P X = N_minus P X := by
   dsimp only [N_minus_1, J_1, N_minus, comm]; peirce_base_nf hP
 
+/-- Identification of the single commutator `J_1 P X` with `J_mc P X X`. -/
 theorem J_1_eq (P X : B) : J_1 P X = J_mc P X X := by
   dsimp only [J_1, J_mc, N_plus, N_minus, comm]
   simp only [sub_mul, mul_sub, one_mul, mul_one, mul_assoc]
   abel
 
+/-- Identification of the double commutator `Phi_1 P X` with `Phi_v P X X`. -/
 theorem Phi_1_eq {P : B} (hP : P * P = P) (X : B) : Phi_1 P X = Phi_v P X X := by
   dsimp only [Phi_1, Phi_v, N_plus, N_minus, comm]; peirce_base_nf hP
 
+/-- Identification of the single-commutator metric `V_1 P X` with `V_met P X X`. -/
 theorem V_1_eq {P : B} (hP : P * P = P) (X : B) : V_1 P X = V_met P X X := by
   unfold V_1
   rw [J_1_eq P X]
   dsimp only [J_mc, V_met, Q_pos, Q_neg]
   amari_peirce_nf hP
 
+/-- Identification of the single-commutator spin curvature `Sigma_1 P X` with `Sigma_sp P X X`. -/
 theorem Sigma_1_eq {P : B} (hP : P * P = P) (X : B) : Sigma_1 P X = Sigma_sp P X X := by
   unfold Sigma_1
   rw [J_1_eq P X, Phi_1_eq hP X]
@@ -319,6 +342,7 @@ macro "xor_idem_nf" hP:ident hQ:ident hPQ:ident proj_P:ident proj_Q:ident comm_Q
                    mul_zero, zero_mul]
     try abel))
 
+/-- Quintic characteristic polynomial `(ad_H⁵ - 5 ad_H³ + 4 ad_H)(Z) = 0` for a tripotent `H³ = H`. -/
 theorem tripotent_quintic_adH {H : B} (hH : H * (H * H) = H) (Z : B) :
     adH5 H Z - 5 • adH3 H Z + 4 • adH H Z = 0 := by
   have hH' : ∀ W : B, H * (H * (H * W)) = H * W := fun W => by
@@ -329,22 +353,27 @@ theorem tripotent_quintic_adH {H : B} (hH : H * (H * H) = H) (Z : B) :
   simp only [sub_mul, mul_sub, mul_assoc, hH, hH']
   abel
 
+/-- Additivity of the grade `+2` Lagrange projector `Poly24_pos2`. -/
 theorem Poly24_pos2_add (H A B_op : B) :
     Poly24_pos2 H (A + B_op) = Poly24_pos2 H A + Poly24_pos2 H B_op := by
   dsimp only [Poly24_pos2, adH4, adH3, adH2, adH]; noncomm_ring
 
+/-- Subtraction linearity of the grade `+2` Lagrange projector `Poly24_pos2`. -/
 theorem Poly24_pos2_sub (H A B_op : B) :
     Poly24_pos2 H (A - B_op) = Poly24_pos2 H A - Poly24_pos2 H B_op := by
   dsimp only [Poly24_pos2, adH4, adH3, adH2, adH]; noncomm_ring
 
+/-- Additivity of the grade `-2` Lagrange projector `Poly24_neg2`. -/
 theorem Poly24_neg2_add (H A B_op : B) :
     Poly24_neg2 H (A + B_op) = Poly24_neg2 H A + Poly24_neg2 H B_op := by
   dsimp only [Poly24_neg2, adH4, adH3, adH2, adH]; noncomm_ring
 
+/-- Subtraction linearity of the grade `-2` Lagrange projector `Poly24_neg2`. -/
 theorem Poly24_neg2_sub (H A B_op : B) :
     Poly24_neg2 H (A - B_op) = Poly24_neg2 H A - Poly24_neg2 H B_op := by
   dsimp only [Poly24_neg2, adH4, adH3, adH2, adH]; noncomm_ring
 
+/-- Evaluation of `Poly24_pos2` (`24 • U`) and `Poly24_neg2` (`0`) on a grade-`+2` eigenmode `H U = U`, `U H = -U`. -/
 theorem Poly24_on_grade_pos2 {H U : B} (hL : H * U = U) (hR : U * H = -U) :
     Poly24_pos2 H U = 24 • U ∧ Poly24_neg2 H U = 0 := by
   have h1 : adH H U = U + U := by unfold adH; rw [hL, hR]; abel
@@ -363,6 +392,7 @@ theorem Poly24_on_grade_pos2 {H U : B} (hL : H * U = U) (hR : U * H = -U) :
   · unfold Poly24_pos2; rw [h1, h2, h3, h4]; abel
   · unfold Poly24_neg2; rw [h1, h2, h3, h4]; abel
 
+/-- Evaluation of `Poly24_pos2` (`0`) and `Poly24_neg2` (`24 • U`) on a grade-`-2` eigenmode `H U = -U`, `U H = U`. -/
 theorem Poly24_on_grade_neg2 {H U : B} (hL : H * U = -U) (hR : U * H = U) :
     Poly24_pos2 H U = 0 ∧ Poly24_neg2 H U = 24 • U := by
   have h1 : adH H U = - (U + U) := by unfold adH; rw [hL, hR]; abel
@@ -381,6 +411,7 @@ theorem Poly24_on_grade_neg2 {H U : B} (hL : H * U = -U) (hR : U * H = U) :
   · unfold Poly24_pos2; rw [h1, h2, h3, h4]; abel
   · unfold Poly24_neg2; rw [h1, h2, h3, h4]; abel
 
+/-- Vanishing of `Poly24_pos2` and `Poly24_neg2` on any grade-`0` element (`ad_H(U) = 0`). -/
 theorem Poly24_on_grade_zero {H U : B} (h0 : adH H U = 0) :
     Poly24_pos2 H U = 0 ∧ Poly24_neg2 H U = 0 := by
   have h00 : adH H (0 : B) = 0 := by unfold adH; simp

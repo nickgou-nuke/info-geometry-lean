@@ -62,12 +62,12 @@ abbrev Twistor (R : Type*) := (Fin 2 → R) × (Fin 2 → R)
 
 /-- Twistor incidence relation: the primary chiral component `Z.1` is soldered
 to spacetime point `X : Matrix (Fin 2) (Fin 2) R` acting on the secondary component `Z.2`. -/
-def Incident {R : Type*} [CommRing R] (Z : Twistor R) (X : Matrix (Fin 2) (Fin 2) R) : Prop :=
+def Incident {R : Type*} [Semiring R] (Z : Twistor R) (X : Matrix (Fin 2) (Fin 2) R) : Prop :=
   Z.1 = X.mulVec Z.2
 
 /-- If twistor `Z` is incident to two spacetime points `X` and `Y`, the displacement
 `(X - Y)` annihilates the secondary spinor `Z.2`. -/
-theorem twistor_incidence_displacement {R : Type*} [CommRing R] (Z : Twistor R)
+theorem twistor_incidence_displacement {R : Type*} [Ring R] (Z : Twistor R)
     (X Y : Matrix (Fin 2) (Fin 2) R) (hX : Incident Z X) (hY : Incident Z Y) :
     (X - Y).mulVec Z.2 = 0 := by
   dsimp [Incident] at hX hY
@@ -83,9 +83,9 @@ theorem twistor_incidence_det_smul_zero {R : Type*} [CommRing R] (Z : Twistor R)
   rw [Matrix.adjugate_mul, Matrix.smul_mulVec, Matrix.one_mulVec] at hadj
   exact hadj
 
-/-- In a field, if the secondary spinor is nonzero and incident to both `X` and `Y`,
+/-- In a domain, if the secondary spinor is nonzero and incident to both `X` and `Y`,
 the spacetime separation is null: `det (X - Y) = 0`. -/
-theorem twistor_incidence_det_zero {K : Type*} [Field K] (Z : Twistor K)
+theorem twistor_incidence_det_zero {K : Type*} [CommRing K] [IsDomain K] (Z : Twistor K)
     (X Y : Matrix (Fin 2) (Fin 2) K) (hX : Incident Z X) (hY : Incident Z Y)
     (hPi : Z.2 ≠ 0) : (X - Y).det = 0 := by
   have hsmul : (X - Y).det • Z.2 = 0 := twistor_incidence_det_smul_zero Z X Y hX hY
@@ -100,11 +100,11 @@ theorem twistor_incidence_det_zero {K : Type*} [Field K] (Z : Twistor K)
 
 /-! ### Section 2: Free Edge Module & Arnold Logarithmic Syzygy -/
 
-/-- Free edge module over a commutative ring `R` indexed by pairs in `ι`. -/
-def EdgeModule (R ι : Type*) [CommRing R] [DecidableEq ι] := (ι × ι) →₀ R
+/-- Free edge module over a semiring `R` indexed by pairs in `ι`. -/
+def EdgeModule (R ι : Type*) [Semiring R] [DecidableEq ι] := (ι × ι) →₀ R
 
 /-- Canonical edge generator `(i, j) ↦ 1 : R` in the free edge module. -/
-noncomputable def edgeSingle (R : Type*) [CommRing R] {ι : Type*} [DecidableEq ι] (i j : ι) :
+noncomputable def edgeSingle (R : Type*) [Semiring R] {ι : Type*} [DecidableEq ι] (i j : ι) :
     (ι × ι) →₀ R :=
   Finsupp.single (i, j) (1 : R)
 
@@ -119,7 +119,7 @@ theorem omegaGen_sq_zero {R : Type*} [CommRing R] {ι : Type*} [DecidableEq ι] 
   ExteriorAlgebra.ι_sq_zero (edgeSingle R i j)
 
 /-- Rational Arnold 3-term syzygy expression `w12 * w23 + w23 * w31 + w31 * w12`. -/
-def arnoldRational {R : Type*} [CommRing R] (w12 w23 w31 : R) : R :=
+def arnoldRational {R : Type*} [Semiring R] (w12 w23 w31 : R) : R :=
   w12 * w23 + w23 * w31 + w31 * w12
 
 /-- Exact vanishing of the rational Arnold syzygy on three distinct collinear punctures in a field. -/
@@ -136,20 +136,20 @@ theorem arnold_rational_field_syzygy {K : Type*} [Field K] (z1 z2 z3 : K)
 /-! ### Section 3: Positive Grassmannian Gr⁺(2, n) & Plücker Syzygies -/
 
 /-- 2 × 2 minor `(i, j)` of a 2 × n Grassmannian matrix `C`. -/
-def pluckerMinor {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) : R :=
+def pluckerMinor {n : ℕ} {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) : R :=
   C 0 i * C 1 j - C 0 j * C 1 i
 
 /-- Antisymmetry of Plücker minors under index transposition. -/
-theorem plucker_antisymm {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) :
+theorem plucker_antisymm {n : ℕ} {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n) :
     pluckerMinor C j i = - pluckerMinor C i j := by
   dsimp [pluckerMinor]
-  ring
+  noncomm_ring
 
 /-- Vanishing of diagonal Plücker minor. -/
-theorem plucker_self_zero {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i : Fin n) :
+theorem plucker_self_zero {n : ℕ} {R : Type*} [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i : Fin n) :
     pluckerMinor C i i = 0 := by
   dsimp [pluckerMinor]
-  ring
+  noncomm_ring
 
 /-- The three-term Plücker quadratic syzygy on `Gr(2, n)`. -/
 theorem plucker_syzygy {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n) :
@@ -190,11 +190,11 @@ theorem differencePlucker_klein_identity {Op : Type*} [Ring Op] (e0 e1 e2 e3 : O
         noncomm_ring
 
 /-- Normalized Gibbs weights over `Fin N` with partition function inverse `invZ`. -/
-def normalizedGibbsWeights {R : Type*} [CommRing R] (N : ℕ) (w : Fin N → R) (invZ : R) : Fin N → R :=
+def normalizedGibbsWeights {R : Type*} [Semiring R] (N : ℕ) (w : Fin N → R) (invZ : R) : Fin N → R :=
   fun i => w i * invZ
 
 /-- Truncated partition function normalization identity: sum of normalized weights equals 1. -/
-theorem gibbs_weights_normalized {R : Type*} [CommRing R] (N : ℕ) (w : Fin N → R) (invZ : R)
+theorem gibbs_weights_normalized {R : Type*} [Semiring R] (N : ℕ) (w : Fin N → R) (invZ : R)
     (hZ : (∑ i : Fin N, w i) * invZ = 1) :
     ∑ i : Fin N, normalizedGibbsWeights N w invZ i = 1 := by
   dsimp [normalizedGibbsWeights]
@@ -204,7 +204,7 @@ theorem gibbs_weights_normalized {R : Type*} [CommRing R] (N : ℕ) (w : Fin N �
 /-! ### Section 5: The Synthesis Transition Socket & Master Certificate -/
 
 /-- Explicit transition socket connecting the positive Grassmannian cell to the Bost-Connes boundary readout. -/
-structure AmplituhedronBostConnesSocket (R : Type*) [CommRing R] (Boundary : Type*) where
+structure AmplituhedronBostConnesSocket (R : Type*) [Ring R] (Boundary : Type*) where
   partitionWeights : Fin 4 → R
   grassmannianCell : Matrix (Fin 2) (Fin 4) R
   boundaryMap : (Fin 4 → R) → Boundary
@@ -215,13 +215,13 @@ structure AmplituhedronBostConnesSocket (R : Type*) [CommRing R] (Boundary : Typ
              pluckerMinor grassmannianCell 0 3 * pluckerMinor grassmannianCell 1 2 = 0
 
 /-- Readout of the boundary state via the transition socket. -/
-theorem socket_boundary_readout {R : Type*} [CommRing R] {Boundary : Type*}
+theorem socket_boundary_readout {R : Type*} [Ring R] {Boundary : Type*}
     (s : AmplituhedronBostConnesSocket R Boundary) :
     s.boundaryMap s.partitionWeights = s.targetBoundary :=
   s.hBoundary
 
 /-- Exact Plücker syzygy satisfaction on the Grassmannian cell of the transition socket. -/
-theorem socket_plucker_exact {R : Type*} [CommRing R] {Boundary : Type*}
+theorem socket_plucker_exact {R : Type*} [Ring R] {Boundary : Type*}
     (s : AmplituhedronBostConnesSocket R Boundary) :
     pluckerMinor s.grassmannianCell 0 1 * pluckerMinor s.grassmannianCell 2 3 -
     pluckerMinor s.grassmannianCell 0 2 * pluckerMinor s.grassmannianCell 1 3 +
@@ -231,11 +231,11 @@ theorem socket_plucker_exact {R : Type*} [CommRing R] {Boundary : Type*}
 /-- Master Certificate bundling the complete set of algebraic and geometric theorems. -/
 structure AmplituhedronBostConnesCertificate : Prop where
   -- Section 1: Twistor Incidence & Spacetime Soldering Null Boundary
-  twistor_displacement : ∀ (R : Type*) [CommRing R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
+  twistor_displacement : ∀ (R : Type*) [Ring R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
     (hX : Incident Z X) (hY : Incident Z Y), (X - Y).mulVec Z.2 = 0
   twistor_det_smul : ∀ (R : Type*) [CommRing R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
     (hX : Incident Z X) (hY : Incident Z Y), (X - Y).det • Z.2 = 0
-  twistor_det_null : ∀ (K : Type*) [Field K] (Z : Twistor K) (X Y : Matrix (Fin 2) (Fin 2) K)
+  twistor_det_null : ∀ (K : Type*) [CommRing K] [IsDomain K] (Z : Twistor K) (X Y : Matrix (Fin 2) (Fin 2) K)
     (hX : Incident Z X) (hY : Incident Z Y) (hPi : Z.2 ≠ 0), (X - Y).det = 0
 
   -- Section 2: Free Edge Module & Arnold Logarithmic Syzygy
@@ -245,9 +245,9 @@ structure AmplituhedronBostConnesCertificate : Prop where
     arnoldRational (1 / (z1 - z2)) (1 / (z2 - z3)) (1 / (z3 - z1)) = 0
 
   -- Section 3: Positive Grassmannian Gr⁺(2, n) & Plücker Syzygies
-  plucker_antisymmetry : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n),
+  plucker_antisymmetry : ∀ {n : ℕ} (R : Type*) [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n),
     pluckerMinor C j i = - pluckerMinor C i j
-  plucker_diagonal_zero : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i : Fin n),
+  plucker_diagonal_zero : ∀ {n : ℕ} (R : Type*) [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i : Fin n),
     pluckerMinor C i i = 0
   plucker_quadric_syzygy : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n),
     pluckerMinor C a b * pluckerMinor C c d -
@@ -259,15 +259,15 @@ structure AmplituhedronBostConnesCertificate : Prop where
     (h12 : Commute e1 e2) (h13 : Commute e1 e3) (h23 : Commute e2 e3),
     let P := makeDifferencePlucker e0 e1 e2 e3
     P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0
-  gibbs_normalized : ∀ (R : Type*) [CommRing R] (N : ℕ) (w : Fin N → R) (invZ : R)
+  gibbs_normalized : ∀ (R : Type*) [Semiring R] (N : ℕ) (w : Fin N → R) (invZ : R)
     (hZ : (∑ i : Fin N, w i) * invZ = 1),
     ∑ i : Fin N, normalizedGibbsWeights N w invZ i = 1
 
   -- Section 5: The Synthesis Transition Socket
-  socket_boundary : ∀ (R : Type*) [CommRing R] {Boundary : Type*}
+  socket_boundary : ∀ (R : Type*) [Ring R] {Boundary : Type*}
     (s : AmplituhedronBostConnesSocket R Boundary),
     s.boundaryMap s.partitionWeights = s.targetBoundary
-  socket_plucker : ∀ (R : Type*) [CommRing R] {Boundary : Type*}
+  socket_plucker : ∀ (R : Type*) [Ring R] {Boundary : Type*}
     (s : AmplituhedronBostConnesSocket R Boundary),
     pluckerMinor s.grassmannianCell 0 1 * pluckerMinor s.grassmannianCell 2 3 -
     pluckerMinor s.grassmannianCell 0 2 * pluckerMinor s.grassmannianCell 1 3 +
@@ -277,7 +277,7 @@ structure AmplituhedronBostConnesCertificate : Prop where
 theorem compile_amplituhedron_bost_connes_synthesis : AmplituhedronBostConnesCertificate where
   twistor_displacement := fun R _ Z X Y hX hY => twistor_incidence_displacement Z X Y hX hY
   twistor_det_smul := fun R _ Z X Y hX hY => twistor_incidence_det_smul_zero Z X Y hX hY
-  twistor_det_null := fun K _ Z X Y hX hY hPi => twistor_incidence_det_zero Z X Y hX hY hPi
+  twistor_det_null := fun K _ _ Z X Y hX hY hPi => twistor_incidence_det_zero Z X Y hX hY hPi
   omega_sq_zero := fun R _ ι _ i j => omegaGen_sq_zero i j
   arnold_syzygy := fun K _ z1 z2 z3 h12 h23 h31 => arnold_rational_field_syzygy z1 z2 z3 h12 h23 h31
   plucker_antisymmetry := fun R _ C i j => plucker_antisymm C i j

@@ -18,26 +18,26 @@ def splitQuadraticForm {R : Type*} [CommRing R] {Mp Mm : Type*} [AddCommGroup Mp
 /- 2. SPINOR REPRESENTATION VIA MATHLIB'S NATIVE EVEN SUBALGEBRA -/
 
 /-- The spinor representation of the even subalgebra -/
-def spinorRepEven {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
-    {Q : QuadraticForm R M} {A : Type*} [Ring A] [Algebra R A]
+def spinorRepEven {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M]
+    {Q : QuadraticForm R M} {A : Type*} [Semiring A] [Algebra R A]
     (f : EvenHom Q A) : even Q →ₐ[R] A :=
   (even.lift (R := R) (Q := Q) (A := A)) f
 
 /-- The canonical embedding of pairs into the even subalgebra -/
-def evenIota {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+def evenIota {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M]
     {Q : QuadraticForm R M} : EvenHom Q (even Q) :=
   even.ι Q
 
 /- 3. CUNTZ ALGEBRA SOCKET FOR SPLIT SIGNATURES -/
 
 /-- The Cuntz trace state on the split Clifford algebra -/
-structure CuntzTraceSocket {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
-    (Q : QuadraticForm R M) (A : Type*) [Ring A] [Algebra R A] where
+structure CuntzTraceSocket {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M]
+    (Q : QuadraticForm R M) (A : Type*) [Semiring A] [Algebra R A] where
   trace : A →ₗ[R] R
   trace_mul_comm : ∀ a b : A, trace (a * b) = trace (b * a)
 
 /-- The canonical trace on matrix algebras as a Cuntz trace socket -/
-def matrixCuntzTrace {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+def matrixCuntzTrace {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M]
     (Q : QuadraticForm R M) {n : Type*} [Fintype n] [DecidableEq n] :
     CuntzTraceSocket Q (Matrix n n R) :=
   ⟨Matrix.traceLinearMap n R R, fun a b => by
@@ -48,8 +48,8 @@ def matrixCuntzTrace {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Modu
 
 /-- The Itakura-Saito divergence as an operator Bregman divergence
   on the even subalgebra with the trace socket -/
-noncomputable def itakuraSaitoDivergence {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
-    {Q : QuadraticForm R M} {A : Type*} [Ring A] [Algebra R A] [Inv A]
+noncomputable def itakuraSaitoDivergence {R : Type*} [CommRing R] {M : Type*} [AddCommMonoid M] [Module R M]
+    {Q : QuadraticForm R M} {A : Type*} [Semiring A] [Algebra R A] [Inv A]
     (socket : CuntzTraceSocket Q A) (X Y : A) : R :=
   socket.trace (X * Y⁻¹) - socket.trace (1 : A) - socket.trace (Y * X⁻¹) + socket.trace (1 : A)
 

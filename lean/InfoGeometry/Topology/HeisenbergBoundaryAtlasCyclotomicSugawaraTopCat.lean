@@ -33,7 +33,7 @@ open CategoryTheory
 open InfoGeometry.Topology.HeisenbergCyclotomicAtlasTopological
 open InfoGeometry.Topology.HeisenbergBoundaryAtlasCyclotomicSugawaraTopological
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- The combined Heisenberg boundary / sixth-root / Sugawara bundle as a `TopCat` object. -/
 abbrev topCat : TopCat :=

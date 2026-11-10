@@ -18,10 +18,10 @@ namespace InfoGeometry.Canonical.SplitSpinorCARAlgebraBridge
 
 open ExteriorAlgebra
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [CommRing R] [AddCommMonoid U] [Module R U]
 
 /-- **Definition**: Spinor space `S = ⋀ U*`. -/
-abbrev Spinor (R U : Type*) [CommRing R] [AddCommGroup U] [Module R U] :=
+abbrev Spinor (R U : Type*) [CommSemiring R] [AddCommMonoid U] [Module R U] :=
   ExteriorAlgebra R (Module.Dual R U)
 
 /-- **Definition**: Creation operator `ε_α : S →ₗ[R] S` as left exterior multiplication by `ι(α)`. -/

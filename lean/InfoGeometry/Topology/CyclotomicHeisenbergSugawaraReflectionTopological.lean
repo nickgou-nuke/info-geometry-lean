@@ -39,7 +39,7 @@ open InfoGeometry.Topology.CyclotomicLatentReflectionTopological
 
 noncomputable section
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- Reflection homeomorphism of the combined chart: latent reflection paired with
 Sugawara identity. -/

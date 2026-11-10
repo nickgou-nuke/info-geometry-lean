@@ -19,7 +19,7 @@ open InfoGeometry.Clifford.Cl55ExteriorBivectorDerivation
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.BivectorVectorRepresentation
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V]
 
 private def wordSpan (n : ℕ) : Submodule R (ExteriorAlgebra R V) :=
   Submodule.span R (Set.range fun v : Fin n → V =>

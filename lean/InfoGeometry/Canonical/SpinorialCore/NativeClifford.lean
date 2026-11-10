@@ -12,7 +12,7 @@ namespace InfoGeometry.Canonical.SpinorialCore
 
 /-- Native Clifford specialization of the mixed-sign product theorem. -/
 theorem clifford_mixed_bivector_square
-    {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+    {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M]
     (Q : QuadraticForm R M) (v w : M)
     (hv : Q v = 1) (hw : Q w = -1) (ho : Q.IsOrtho v w) :
     (CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w) *

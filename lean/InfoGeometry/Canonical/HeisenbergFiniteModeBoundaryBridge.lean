@@ -33,7 +33,7 @@ namespace InfoGeometry.Canonical.HeisenbergFiniteModeBoundaryBridge
 open CategoryTheory CategoryTheory.Limits
 open VirasoroProject
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- Every Heisenberg element is represented by a finite-mode colimit stage. -/
 theorem heisenbergFiniteMode_boundaryReadout

@@ -21,7 +21,7 @@ namespace InfoGeometry.OperatorAlgebra.GrassmannCayley
 
 open InfoGeometry.Projective.ExteriorRegressive
 
-variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+variable {K V : Type*} [CommRing K] [AddCommMonoid V] [Module K V]
 variable {n : ℕ} (b : Module.Basis (Fin n) K V)
 
 /-- Regular regressive action, explicitly conjugated from exterior multiplication. -/

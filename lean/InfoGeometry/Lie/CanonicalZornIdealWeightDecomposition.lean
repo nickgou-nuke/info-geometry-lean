@@ -35,14 +35,15 @@ theorem eq_iSup_inf_genWeightSpace
   · simp [h]
   · exact le_iSup_of_le ⟨_, h⟩ le_rfl
 
-variable {R L : Type*} [Field R] [LieRing L] [LieAlgebra R L]
-  [Module.Finite R L] [Module.Free R L]
-
-def idealRestrict (I : LieIdeal R L) (H : LieSubalgebra R L) : LieSubmodule R H L :=
+def idealRestrict {R₀ L₀ : Type*} [CommSemiring R₀] [LieRing L₀] [LieAlgebra R₀ L₀]
+    (I : LieIdeal R₀ L₀) (H : LieSubalgebra R₀ L₀) : LieSubmodule R₀ H L₀ :=
   { I with
     lie_mem := by
       intro h x hx
       exact I.lie_mem hx }
+
+variable {R L : Type*} [Field R] [LieRing L] [LieAlgebra R L]
+  [Module.Finite R L] [Module.Free R L]
 
 theorem lieIdeal_eq_inf_cartan_sup_biSup_inf_rootSpace
     (H : LieSubalgebra R L) [H.IsCartanSubalgebra]

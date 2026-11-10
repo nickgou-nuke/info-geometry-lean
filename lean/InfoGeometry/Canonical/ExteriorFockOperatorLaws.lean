@@ -29,7 +29,7 @@ open FockVacuumAnnihilationBridge SingleParticleFockStateBridge
 open MixedCAROperatorAnticommutatorBridge SplitCliffordUniversalRepresentationBridge
 open TwoParticleLiteralOperatorAnnihilationBridge BerezinFermionicIntegrationBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [CommRing R] [AddCommMonoid U] [Module R U]
 
 theorem annihilation_creation (u : U) (alpha : Module.Dual R U)
     (omega : ExteriorAlgebra R (Module.Dual R U)) :

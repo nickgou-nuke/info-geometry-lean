@@ -69,7 +69,7 @@ variable {R : Type*} [CommRing R]
 /-- A coordinate quadruple mapped to a 2×2 matrix whose determinant has
 neutral signature `(2,2)`; this definition alone does not identify it with a
 Minkowski four-momentum. -/
-def pauliMatrix22 (x0 x1 x2 x3 : R) : Matrix (Fin 2) (Fin 2) R :=
+def pauliMatrix22 {R : Type*} [Ring R] (x0 x1 x2 x3 : R) : Matrix (Fin 2) (Fin 2) R :=
   ![![x0 + x3, x1 - x2],
     ![x1 + x2, x0 - x3]]
 
@@ -81,7 +81,7 @@ theorem pauliMatrix22_det (x0 x1 x2 x3 : R) :
   ring
 
 /-- The dyadic outer product of two 2-component chiral Weyl spinors. -/
-def dyadicSpinorMatrix (pi lambda : Fin 2 → R) : Matrix (Fin 2) (Fin 2) R :=
+def dyadicSpinorMatrix {R : Type*} [Semiring R] (pi lambda : Fin 2 → R) : Matrix (Fin 2) (Fin 2) R :=
   ![![pi 0 * lambda 0, pi 0 * lambda 1],
     ![pi 1 * lambda 0, pi 1 * lambda 1]]
 

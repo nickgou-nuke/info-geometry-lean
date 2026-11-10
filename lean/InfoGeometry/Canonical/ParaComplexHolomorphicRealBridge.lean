@@ -49,23 +49,25 @@ namespace InfoGeometry.Canonical.ParaComplexHolomorphicReal
 
 section ParaComplexAlgebra
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*}
 
 /-- Split Peirce projector $P_+ = \frac{1 + \tau}{2}$ under invertible 2. -/
-def peircePlus (tau half : R) : R :=
+def peircePlus [Ring R] (tau half : R) : R :=
   half * (1 + tau)
 
 /-- Split Peirce projector $P_- = \frac{1 - \tau}{2}$ under invertible 2. -/
-def peirceMinus (tau half : R) : R :=
+def peirceMinus [Ring R] (tau half : R) : R :=
   half * (1 - tau)
 
 /-- Completeness: $P_+ + P_- = 1$ when $2 \cdot \mathrm{half} = 1$. -/
-theorem peirce_sum (tau half : R) (h2 : 2 * half = 1) :
+theorem peirce_sum [Ring R] (tau half : R) (h2 : 2 * half = 1) :
     peircePlus tau half + peirceMinus tau half = 1 := by
   unfold peircePlus peirceMinus
   calc
-    half * (1 + tau) + half * (1 - tau) = (2 * half) := by ring
+    half * (1 + tau) + half * (1 - tau) = (2 * half) := by noncomm_ring
     _ = 1 := h2
+
+variable [CommRing R]
 
 /-- Idempotency of positive projector: $P_+^2 = P_+$ when $\tau^2 = 1$ and $2 \cdot \mathrm{half} = 1$. -/
 theorem peircePlus_idem (tau half : R) (htau : tau * tau = 1) (h2 : 2 * half = 1) :
@@ -135,49 +137,49 @@ theorem peirceMinus_mul_tau (tau half : R) (htau : tau * tau = 1) :
   exact tau_mul_peirceMinus tau half htau
 
 /-- Chirality grading: $P_+ - P_- = \tau$ when $2 \cdot \mathrm{half} = 1$. -/
-theorem peirce_diff (tau half : R) (h2 : 2 * half = 1) :
+theorem peirce_diff {R : Type*} [Ring R] (tau half : R) (h2 : 2 * half = 1) :
     peircePlus tau half - peirceMinus tau half = tau := by
   unfold peircePlus peirceMinus
   calc
-    half * (1 + tau) - half * (1 - tau) = (2 * half) * tau := by ring
+    half * (1 + tau) - half * (1 - tau) = (2 * half) * tau := by noncomm_ring
     _ = 1 * tau := by rw [h2]
-    _ = tau := by ring
+    _ = tau := by noncomm_ring
 
 /-- Holomorphic derivative: $\partial_\tau = P_+ d$. -/
-def holomorphicDeriv (tau half d : R) : R :=
+def holomorphicDeriv {R : Type*} [Ring R] (tau half d : R) : R :=
   peircePlus tau half * d
 
 /-- Antiholomorphic derivative: $\bar{\partial}_\tau = P_- d$. -/
-def antiholomorphicDeriv (tau half d : R) : R :=
+def antiholomorphicDeriv {R : Type*} [Ring R] (tau half d : R) : R :=
   peirceMinus tau half * d
 
 /-- de Rham decomposition: $d = \partial_\tau + \bar{\partial}_\tau$ when $2 \cdot \mathrm{half} = 1$. -/
-theorem deRham_decomposition (tau half d : R) (h2 : 2 * half = 1) :
+theorem deRham_decomposition {R : Type*} [Ring R] (tau half d : R) (h2 : 2 * half = 1) :
     holomorphicDeriv tau half d + antiholomorphicDeriv tau half d = d := by
   unfold holomorphicDeriv antiholomorphicDeriv
   calc
     peircePlus tau half * d + peirceMinus tau half * d =
-        (peircePlus tau half + peirceMinus tau half) * d := by ring
+        (peircePlus tau half + peirceMinus tau half) * d := by noncomm_ring
     _ = 1 * d := by rw [peirce_sum tau half h2]
-    _ = d := by ring
+    _ = d := by noncomm_ring
 
 /-- Real Seam Condition: $z = x + \tau t$ and $\bar{z} = x - \tau t$.
     The seam condition $z = \bar{z}$ is equivalent to $2 \tau t = 0$. -/
-theorem real_seam_condition (x t tau : R) :
+theorem real_seam_condition {R : Type*} [Ring R] (x t tau : R) :
     (x + tau * t = x - tau * t) ↔ (2 * tau * t = 0) := by
   constructor
   · intro h
     calc
-      2 * tau * t = (x + tau * t) - (x - tau * t) := by ring
+      2 * tau * t = (x + tau * t) - (x - tau * t) := by noncomm_ring
       _ = (x - tau * t) - (x - tau * t) := by rw [h]
-      _ = 0 := by ring
+      _ = 0 := by noncomm_ring
   · intro h
     calc
-      x + tau * t = (x - tau * t) + (2 * tau * t) := by ring
+      x + tau * t = (x - tau * t) + (2 * tau * t) := by noncomm_ring
       _ = (x - tau * t) + 0 := by rw [h]
-      _ = x - tau * t := by ring
+      _ = x - tau * t := by noncomm_ring
 
-theorem real_seam_condition_of_isUnit (x t tau : R) (hunit : IsUnit (2 * tau)) :
+theorem real_seam_condition_of_isUnit {R : Type*} [Ring R] (x t tau : R) (hunit : IsUnit (2 * tau)) :
     (x + tau * t = x - tau * t) ↔ t = 0 := by
   rw [real_seam_condition]
   constructor

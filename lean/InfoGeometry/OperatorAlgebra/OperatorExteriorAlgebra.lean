@@ -26,12 +26,15 @@ abbrev Op1Form (R V A : Type*) [Ring R] [AddCommGroup V] [Module R V] [Ring A] [
   V →ₗ[R] A
 
 /-- An operator-valued alternating 2-form on V with values in A. -/
-structure Op2Form (R V A : Type*) [CommRing R] [AddCommGroup V] [Module R V] [Ring A] [Algebra R A] where
+structure Op2Form (R V A : Type*) [CommSemiring R] [AddCommMonoid V] [Module R V] [AddCommMonoid A] [Module R A] where
   toBilin : V →ₗ[R] V →ₗ[R] A
   alt' : ∀ v, toBilin v v = 0
 
 namespace Op2Form
 
+section Semiring
+
+variable {R V A : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V] [AddCommMonoid A] [Module R A]
 variable (ω : Op2Form R V A)
 
 instance : CoeFun (Op2Form R V A) (fun _ => V → V → A) where
@@ -55,24 +58,6 @@ instance : Zero (Op2Form R V A) where
   }
 
 @[simp] theorem zero_apply (u v : V) : (0 : Op2Form R V A) u v = 0 := rfl
-
-instance : Neg (Op2Form R V A) where
-  neg ω := {
-    toBilin := -ω.toBilin
-    alt' := by
-      intro v
-      change -(ω.toBilin v v) = 0
-      rw [ω.alt' v, neg_zero]
-  }
-
-instance : Sub (Op2Form R V A) where
-  sub ω₁ ω₂ := {
-    toBilin := ω₁.toBilin - ω₂.toBilin
-    alt' := by
-      intro v
-      change ω₁.toBilin v v - ω₂.toBilin v v = 0
-      rw [ω₁.alt' v, ω₂.alt' v, sub_zero]
-  }
 
 instance : SMul R (Op2Form R V A) where
   smul c ω := {
@@ -128,6 +113,43 @@ theorem alt
     ω v v = 0 := by
   exact ω.alt' v
 
+/-- Extensionality for 2-forms. -/
+@[ext]
+theorem ext
+    (ω₁ ω₂ : Op2Form R V A)
+    (h : ∀ u v, ω₁ u v = ω₂ u v) :
+    ω₁ = ω₂ := by
+  rcases ω₁ with ⟨b₁, a₁⟩
+  rcases ω₂ with ⟨b₂, a₂⟩
+  congr
+  ext u v
+  exact h u v
+
+end Semiring
+
+section Ring
+
+variable {R V A : Type*} [CommRing R] [AddCommGroup V] [Module R V] [AddCommGroup A] [Module R A]
+variable (ω : Op2Form R V A)
+
+instance : Neg (Op2Form R V A) where
+  neg ω := {
+    toBilin := -ω.toBilin
+    alt' := by
+      intro v
+      change -(ω.toBilin v v) = 0
+      rw [ω.alt' v, neg_zero]
+  }
+
+instance : Sub (Op2Form R V A) where
+  sub ω₁ ω₂ := {
+    toBilin := ω₁.toBilin - ω₂.toBilin
+    alt' := by
+      intro v
+      change ω₁.toBilin v v - ω₂.toBilin v v = 0
+      rw [ω₁.alt' v, ω₂.alt' v, sub_zero]
+  }
+
 /-- Skew-symmetry in vector arguments: ω(u, v) = - ω(v, u). -/
 theorem skew
     (u v : V) :
@@ -141,17 +163,7 @@ theorem skew
   have h_eq : ω u v + ω v u = 0 := h
   exact eq_neg_of_add_eq_zero_left h_eq
 
-/-- Extensionality for 2-forms. -/
-@[ext]
-theorem ext
-    (ω₁ ω₂ : Op2Form R V A)
-    (h : ∀ u v, ω₁ u v = ω₂ u v) :
-    ω₁ = ω₂ := by
-  rcases ω₁ with ⟨b₁, a₁⟩
-  rcases ω₂ with ⟨b₂, a₂⟩
-  congr
-  ext u v
-  exact h u v
+end Ring
 
 end Op2Form
 

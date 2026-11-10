@@ -50,7 +50,7 @@ open InfoGeometry.Canonical.GaugedZornDiracKahler
 open InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix
 open InfoGeometry.Canonical.EmergentSpacetimeSuperPoincare
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 /-!
 ### Stratum 31.1: Baryon Composite State and Exact Colorlessness
@@ -67,15 +67,15 @@ with magnitude equal to the color-singlet determinant u · (v × w).
 def baryonState (u v w : Vec3 R) : ZornMatrix R :=
   zornMul (zornMul (quark u) (quark v)) (quark w)
 
-/-- The baryon state is an exact diagonal scalar with magnitude u · (v × w). -/
+/-- The baryon state is an exact diagonal scalar with magnitude (u × v) · w. -/
 theorem baryonState_eq_scalar (u v w : Vec3 R) :
     baryonState u v w = ⟨0, dot3 (cross3 u v) w, 0, 0⟩ := by
   dsimp [baryonState, zornMul, quark, dot3, cross3]
   apply ZornMatrix.ext
-  · ring
-  · ring
-  · ext i; fin_cases i <;> { dsimp; ring }
-  · ext i; fin_cases i <;> { dsimp; ring }
+  · noncomm_ring
+  · noncomm_ring
+  · ext i; fin_cases i <;> { dsimp; noncomm_ring }
+  · ext i; fin_cases i <;> { dsimp; noncomm_ring }
 
 /-- The baryon state has vanishing off-diagonal quark triplets (exact color singlet). -/
 theorem baryonState_colorless (u v w : Vec3 R) :
@@ -100,7 +100,7 @@ def mesonState (u v : Vec3 R) : ZornMatrix R :=
   ZornMatrix.add (zornMul (quark u) (antiquark v)) (zornMul (antiquark v) (quark u))
 
 /-- The meson state evaluates to a pure diagonal scalar. -/
-theorem mesonState_eq_scalar (u v : Vec3 R) :
+theorem mesonState_eq_scalar {R : Type*} [CommRing R] (u v : Vec3 R) :
     mesonState u v = ⟨dot3 u v, dot3 v u, 0, 0⟩ := by
   dsimp [mesonState, ZornMatrix.add, zornMul, quark, antiquark, dot3, cross3]
   apply ZornMatrix.ext
@@ -110,7 +110,7 @@ theorem mesonState_eq_scalar (u v : Vec3 R) :
   · ext i; fin_cases i <;> { dsimp; ring }
 
 /-- The meson state is an exact color singlet with vanishing quark vectors. -/
-theorem mesonState_colorless (u v : Vec3 R) :
+theorem mesonState_colorless {R : Type*} [CommRing R] (u v : Vec3 R) :
     (mesonState u v).u = 0 ∧ (mesonState u v).v = 0 := by
   rw [mesonState_eq_scalar]
   exact ⟨rfl, rfl⟩
@@ -133,19 +133,19 @@ the Planck-scale non-associative foam and form the smooth macroscopic universe.
 theorem diagonal_singlet_associator (a₁ b₁ a₂ b₂ a₃ b₃ : R) :
     ZornMatrix.associator ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ ⟨a₃, b₃, 0, 0⟩ = zero := by
   apply ZornMatrix.ext
-  · dsimp [ZornMatrix.associator, ZornMatrix.sub, zornMul, zero, dot3, cross3]; ring
-  · dsimp [ZornMatrix.associator, ZornMatrix.sub, zornMul, zero, dot3, cross3]; ring
+  · dsimp [ZornMatrix.associator, ZornMatrix.sub, zornMul, zero, dot3, cross3]; noncomm_ring
+  · dsimp [ZornMatrix.associator, ZornMatrix.sub, zornMul, zero, dot3, cross3]; noncomm_ring
   · ext i; fin_cases i <;> {
       dsimp [ZornMatrix.associator, ZornMatrix.sub, zornMul, zero, cross3, dot3]
-      ring
+      noncomm_ring
     }
   · ext i; fin_cases i <;> {
       dsimp [ZornMatrix.associator, ZornMatrix.sub, zornMul, zero, cross3, dot3]
-      ring
+      noncomm_ring
     }
 
 /-- Associator of meson with two leptons vanishes identically. -/
-theorem meson_lepton_associator (u v : Vec3 R) (a₁ b₁ a₂ b₂ : R) :
+theorem meson_lepton_associator {R : Type*} [CommRing R] (u v : Vec3 R) (a₁ b₁ a₂ b₂ : R) :
     ZornMatrix.associator (mesonState u v) ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ = zero := by
   rw [mesonState_eq_scalar]
   exact diagonal_singlet_associator (dot3 u v) (dot3 v u) a₁ b₁ a₂ b₂
@@ -187,15 +187,15 @@ Macroscopic spacetime formed by color-singlet states obeys genuine Lie algebra s
 theorem diagonal_jacobiator_zero (a₁ b₁ a₂ b₂ a₃ b₃ : R) :
     jacobiator ⟨a₁, b₁, 0, 0⟩ ⟨a₂, b₂, 0, 0⟩ ⟨a₃, b₃, 0, 0⟩ = zero := by
   apply ZornMatrix.ext
-  · dsimp [jacobiator, zornComm, ZornMatrix.add, ZornMatrix.sub, zornMul, zero, dot3, cross3]; ring
-  · dsimp [jacobiator, zornComm, ZornMatrix.add, ZornMatrix.sub, zornMul, zero, dot3, cross3]; ring
+  · dsimp [jacobiator, zornComm, ZornMatrix.add, ZornMatrix.sub, zornMul, zero, dot3, cross3]; noncomm_ring
+  · dsimp [jacobiator, zornComm, ZornMatrix.add, ZornMatrix.sub, zornMul, zero, dot3, cross3]; noncomm_ring
   · ext i; fin_cases i <;> {
       dsimp [jacobiator, zornComm, ZornMatrix.add, ZornMatrix.sub, zornMul, zero, cross3, dot3]
-      ring
+      noncomm_ring
     }
   · ext i; fin_cases i <;> {
       dsimp [jacobiator, zornComm, ZornMatrix.add, ZornMatrix.sub, zornMul, zero, cross3, dot3]
-      ring
+      noncomm_ring
     }
 
 end JacobiatorSection
@@ -219,7 +219,7 @@ def quantumCovarianceMetric (half exp_AB exp_BA exp_A exp_B : R) : R :=
   half * (exp_AB + exp_BA) - exp_A * exp_B
 
 /-- Symmetry of the emergent quantum covariance metric: g_μν = g_νμ. -/
-theorem quantumCovarianceMetric_symmetric
+theorem quantumCovarianceMetric_symmetric {R : Type*} [CommRing R]
     (half exp_AB exp_BA exp_A exp_B : R) :
     quantumCovarianceMetric half exp_AB exp_BA exp_A exp_B =
     quantumCovarianceMetric half exp_BA exp_AB exp_B exp_A := by
@@ -233,9 +233,9 @@ theorem quantumVariance_diagonal
     exp_A2 - exp_A * exp_A := by
   dsimp [quantumCovarianceMetric]
   calc half * (exp_A2 + exp_A2) - exp_A * exp_A
-    _ = (half + half) * exp_A2 - exp_A * exp_A := by ring
+    _ = (half + half) * exp_A2 - exp_A * exp_A := by noncomm_ring
     _ = 1 * exp_A2 - exp_A * exp_A := by rw [h_half]
-    _ = exp_A2 - exp_A * exp_A := by ring
+    _ = exp_A2 - exp_A * exp_A := by noncomm_ring
 
 end QuantumCovarianceMetric
 
@@ -259,7 +259,7 @@ This is the determinant-zero identity for a rank-one $2\times2$ dyad. It is
 not by itself a Minkowski lightcone theorem: that interpretation requires an
 explicit Hermitian-matrix/four-vector identification.
 -/
-theorem dyad_det_zero (u v : Fin 2 → R) :
+theorem dyad_det_zero {R : Type*} [CommRing R] (u v : Fin 2 → R) :
     Matrix.det ((fun i j => u i * v j) : Matrix (Fin 2) (Fin 2) R) = 0 := by
   rw [Matrix.det_fin_two ((fun i j => u i * v j) : Matrix (Fin 2) (Fin 2) R)]
   ring
@@ -268,7 +268,7 @@ theorem dyad_det_zero (u v : Fin 2 → R) :
 the resulting incidence spinor by the same scalar. This is the concrete
 algebraic scaling law supported by twistorIncidence; no expectation map is
 defined in this carrier. -/
-theorem twistorIncidence_smul (X : Matrix (Fin 2) (Fin 2) R)
+theorem twistorIncidence_smul {R : Type*} [CommRing R] (X : Matrix (Fin 2) (Fin 2) R)
     (a : R) (π : Fin 2 → R) :
     twistorIncidence X (fun i => a * π i) =
       fun i => a * twistorIncidence X π i := by

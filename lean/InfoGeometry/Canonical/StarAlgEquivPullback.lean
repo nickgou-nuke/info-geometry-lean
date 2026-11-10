@@ -17,9 +17,11 @@ namespace StarAlgEquivPullback
 
 universe uR uA uB
 
+section Semiring
+
 variable {R : Type uR} {A : Type uA} {B : Type uB}
 variable [CommSemiring R]
-variable [NormedRing A] [NormedRing B]
+variable [Semiring A] [Semiring B]
 variable [Algebra R A] [Algebra R B]
 
 /-- Pull back a full star-ring structure along an algebra equivalence. -/
@@ -41,6 +43,15 @@ theorem starRing_map_star [StarRing B] (e : A ≃ₐ[R] B) (x : A) :
     e (star x) = star (e x) := by
   exact e.apply_symm_apply _
 
+end Semiring
+
+section NormedRing
+
+variable {R : Type uR} {A : Type uA} {B : Type uB}
+variable [CommSemiring R]
+variable [NormedRing A] [NormedRing B]
+variable [Algebra R A] [Algebra R B]
+
 /-- Pull the C-star norm inequality back along an isometric algebra
 equivalence.  This is the normed counterpart of `starRing`: no pointwise
 reconstruction of the C-star law is needed downstream. -/
@@ -56,5 +67,7 @@ theorem norm_mul_self_le [StarRing B] [CStarRing B]
       rw [starRing_map_star]
     _ = ‖e (star x * x)‖ := by rw [map_mul]
     _ = ‖star x * x‖ := hnorm _
+
+end NormedRing
 
 end StarAlgEquivPullback

@@ -25,7 +25,7 @@ open InfoGeometry.Canonical.FockVacuumAnnihilationBridge
 open InfoGeometry.Canonical.SingleParticleFockStateBridge
 open InfoGeometry.Canonical.MixedCAROperatorAnticommutatorBridge
 
-variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
+variable {R U : Type*} [CommRing R] [AddCommMonoid U] [Module R U]
 
 /-- On the vacuum the reverse-ordered term vanishes by native annihilation. -/
 theorem mixed_car_on_vacuum (u : U) (alpha : U →ₗ[R] R) :

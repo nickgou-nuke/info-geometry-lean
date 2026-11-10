@@ -76,7 +76,24 @@ This module formalizes in native Lean 4 over an arbitrary noncommutative ring `[
      the Yang–Baxter braid defect is governed by the exact Jones–Kauffman quadratic $1 + u + \tau u^2$:
      $$g_1 g_2 g_1 - g_2 g_1 g_2 = (u + u^2 + \tau u^3) (e_1 - e_2) = u(1 + u + \tau u^2) H_{12}.$$
    - **Node `𝔒ℭ₅` (`master_octacosadic_three_strand_yang_baxter_coagulation`):**
-     Coagulates `𝔒ℭ₁ ≺ ⋯ ≺ 𝔒ℭ₅` with Track 1A and Track 1B.
+     Coagulates `𝔒ℭ₁ ≺ ⋯ ≺ 𝔒ℭ₅` with Track 1A and Track 1B, and `temperley_lieb_yang_baxter_colimit_cone_transport`
+     transports the 3-strand Temperley–Lieb, Jones–Wenzl, and Yang–Baxter braid algebra across any inductive
+     colimit cone (`toLimit : ∀ k : ℕ, Stage k →+* Limit`).
+
+## Mathematical Audit & Three-Bucket Classification
+
+- **BUCKET 1 — Validated Kernel-Proved Core:**
+  All Vieta–SUSY–Kato–Dissipation theorems (Track 1A), Galois–Golay–Peter–Weyl–Wigner–Hurwitz theorems (Track 1B),
+  and Order 28 3-strand Temperley–Lieb, Jones–Wenzl idempotent, Yang–Baxter braid, and inductive colimit
+  cone transport theorems (Track 2) are constructively proved in `[Ring B]` with zero `sorry`, zero `admit`,
+  and zero custom structures.
+- **BUCKET 2 — Salvageable With Honest Scope Narrowing:**
+  Finite `2 × 2`, `3 × 3`, and quaternion operator tuples are defined as native product types (`Mat2Op`, `Mat3Op`, `QuatOp`)
+  over `[Ring K]`, and the infinite-strand UHF / `TL_∞` limit is transported via explicit inductive colimit cones
+  `toLimit : ∀ k : ℕ, Stage k →+* Limit` compatible with `embed : ∀ k : ℕ, Stage k →+* Stage (k + 1)`.
+- **BUCKET 3 — Vacuous / Unjustified / Beyond Current Formal Scope:**
+  Analytic `II₁` subfactor index classifications and topological 3-manifold Reshetikhin–Turaev state-sum invariants
+  beyond the algebraic Temperley–Lieb, Jones–Wenzl, Yang–Baxter, and inductive colimit cone transport identities proved here.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine
@@ -102,6 +119,7 @@ inductive OctacosadicBraidNode : Type
 
 namespace OctacosadicBraidNode
 
+/-- Default inhabited instance for `OctacosadicBraidNode`. -/
 instance : Inhabited OctacosadicBraidNode := ⟨.OC1_ThreeStrandHalmosAporia⟩
 
 /-- Strict causal rank ordering on `OctacosadicBraidNode`. -/
@@ -112,10 +130,12 @@ def rank : OctacosadicBraidNode → ℕ
   | OC4_KauffmanJonesYangBaxterDefect => 4
   | OC5_OctacosadicMasterCoagulation  => 5
 
+/-- The causal rank map on `OctacosadicBraidNode` is injective. -/
 theorem rank_injective : Function.Injective rank := by
   intro a b h
   cases a <;> cases b <;> first | rfl | cases h
 
+/-- Partial order on `OctacosadicBraidNode` induced by `rank`. -/
 instance : PartialOrder OctacosadicBraidNode where
   le a b := rank a ≤ rank b
   lt a b := rank a < rank b
@@ -124,6 +144,7 @@ instance : PartialOrder OctacosadicBraidNode where
   lt_iff_le_not_ge _ _ := Nat.lt_iff_le_and_not_ge
   le_antisymm _ _ hab hba := rank_injective (Nat.le_antisymm hab hba)
 
+/-- Strict 5-stage causal chain `𝔒ℭ₁ ≺ 𝔒ℭ₂ ≺ 𝔒ℭ₃ ≺ 𝔒ℭ₄ ≺ 𝔒ℭ₅`. -/
 theorem oc_poset_chain :
     OC1_ThreeStrandHalmosAporia < OC2_CubicBraidTransfer ∧
     OC2_CubicBraidTransfer < OC3_JonesWenzlIdempotent ∧
@@ -141,8 +162,9 @@ section Track1A_VietaSusyKatoDissipation
 
 variable {B : Type u} [Ring B]
 
-/-- Positive sheet Gramian `Q_+ = N_+(P, X) N_-(P, X)` and negative sheet Gramian `Q_- = N_-(P, X) N_+(P, X)`. -/
+/-- Positive sheet Gramian `Q_+ = N_+(P, X) N_-(P, X)`. -/
 def Q_pos_sheet (P X : B) : B := (P * J_1 P X) * (- (J_1 P X * P))
+/-- Negative sheet Gramian `Q_- = N_-(P, X) N_+(P, X)`. -/
 def Q_neg_sheet (P X : B) : B := (- (J_1 P X * P)) * (P * J_1 P X)
 
 /-- 24th Cyclotomic Polynomial `Φ₂₄(J) = J⁸ - J⁴ + 1` evaluated on `J : B`. -/
@@ -152,25 +174,34 @@ def Phi24_Op (J : B) : B :=
   let J8 := J4 * J4
   J8 - J4 + 1
 
-/-- Nilpotent lightcone supercharge `N_JF(P, X) = Q_susy(P, X) = J_1(P, X) + Phi_1(P, X)`. -/
+/-- Nilpotent lightcone supercharge `N_JF(P, X) = J_1(P, X) + Phi_1(P, X)`. -/
 def N_JF (P X : B) : B := J_1 P X + Phi_1 P X
+/-- Positive lightcone supercharge `Q_susy(P, X) = J_1(P, X) + Phi_1(P, X)`. -/
 def Q_susy (P X : B) : B := J_1 P X + Phi_1 P X
+/-- Conjugate lightcone supercharge `Q_bar_susy(P, X) = J_1(P, X) - Phi_1(P, X)`. -/
 def Q_bar_susy (P X : B) : B := J_1 P X - Phi_1 P X
 
-/-- Connes spectral triple operators `Dirac(P, X) = Phi_1(P, X)` and `Gamma5(P) = S_P(P)`. -/
+/-- Connes spectral triple Dirac operator `Dirac(P, X) = Phi_1(P, X)`. -/
 def Dirac_Op (P X : B) : B := Phi_1 P X
+/-- Connes chiral grading involution `Gamma5(P) = S_P(P)`. -/
 def Gamma5_Op (P : B) : B := S_P P
 
-/-- Observer Berry–Simon and Kato connections `Gamma_obs = [P, dP]` and `Gamma_Kato = [dP, P]`. -/
+/-- Observer Berry–Simon connection `Gamma_obs = [P, dP]`. -/
 def Gamma_obs (P dP : B) : B := comm P dP
+/-- Kato adiabatic connection `Gamma_Kato = [dP, P]`. -/
 def Gamma_Kato (P dP : B) : B := comm dP P
 
-/-- Waist projector `P0_waist = 1 - P1 - P2` and dark condensate `C_zero = P0 C P0`. -/
+/-- Waist projector `P0_waist = 1 - P1 - P2`. -/
 def P0_waist (P1 P2 : B) : B := 1 - P1 - P2
+/-- Waist dark condensate `C_zero = P0 C P0`. -/
 def C_zero_waist (P1 P2 C : B) : B := P0_waist P1 P2 * C * P0_waist P1 P2
+/-- Bare positive horizon-to-waist corner `P1 X P0`. -/
 def N_plus_bare (P1 P2 X : B) : B := P1 * X * P0_waist P1 P2
+/-- Bare negative waist-to-horizon corner `P0 Y P1`. -/
 def N_minus_bare (P1 P2 Y : B) : B := P0_waist P1 P2 * Y * P1
+/-- Condensate-dressed positive corner `N_plus_bare * C_zero_waist`. -/
 def N_plus_dressed (P1 P2 X C : B) : B := N_plus_bare P1 P2 X * C_zero_waist P1 P2 C
+/-- Condensate-dressed negative corner `C_zero_waist * N_minus_bare`. -/
 def N_minus_dressed (P1 P2 Y C : B) : B := C_zero_waist P1 P2 C * N_minus_bare P1 P2 Y
 
 /--
@@ -799,8 +830,9 @@ def isQuadraticGaloisSpinInvariant (N : ℕ) : Bool :=
 def monodromyPhase (N : Int) (m_ab m_a m_b : Int) : Int :=
   (m_ab - m_a - m_b) % N
 
-/-- Unnormalized `ℤ₃` and `ℤ₄` parafermion condensate projectors in `[Ring B]`. -/
+/-- Unnormalized `ℤ₃` parafermion condensate projector `1 + Ω + Ω²` in `[Ring B]`. -/
 def P_cond3 (Ω : B) : B := 1 + Ω + Ω * Ω
+/-- Unnormalized `ℤ₄` parafermion condensate projector `1 + U²` in `[Ring B]`. -/
 def P_cond4 (U : B) : B := 1 + U * U
 
 /-- **Lean `#12` Theorem 1 (`parafermion_and_vortex_condensation_thresholds`):** -/
@@ -885,9 +917,13 @@ theorem witt_steiner_design_block_counts :
     1 + 759 + 2576 + 759 + 1 = 2 ^ 12 := by
   decide
 
-/-- Single-variable inhomogeneous Hamming/Golay weight enumerators in `[Ring B]`. -/
+/-- Single-variable inhomogeneous Hamming `[8, 4, 4]` weight enumerator `1 + 14 t⁴ + t⁸` in `[Ring B]`. -/
 def W8_op (t : B) : B := 1 + 14 • (t ^ 4) + t ^ 8
+
+/-- Single-variable inhomogeneous Golay cusp discriminant `t⁴ (1 - t⁴)⁴` in `[Ring B]`. -/
 def Delta24_op (t : B) : B := (t ^ 4) * ((1 - t ^ 4) ^ 4)
+
+/-- Single-variable inhomogeneous binary Golay `[24, 12, 8]` weight enumerator in `[Ring B]`. -/
 def W24_op (t : B) : B := 1 + 759 • (t ^ 8) + 2576 • (t ^ 12) + 759 • (t ^ 16) + t ^ 24
 
 /--
@@ -904,8 +940,10 @@ theorem gleason_golay_w24_polynomial_identity (t : B) :
   · dsimp [W8_op, Delta24_op, W24_op]
     noncomm_ring
 
-/-- Truncated `E₈` theta series and Ramanujan discriminant in any noncommutative ring `[Ring B]`. -/
+/-- Truncated `E₈` theta series `1 + 240 q + 2160 q² + 6720 q³` in any noncommutative ring `[Ring B]`. -/
 def ThetaE8_op (q : B) : B := 1 + 240 • q + 2160 • (q ^ 2) + 6720 • (q ^ 3)
+
+/-- Truncated Ramanujan modular discriminant `q - 24 q² + 252 q³` in any noncommutative ring `[Ring B]`. -/
 def RamanujanDelta_op (q : B) : B := q - 24 • (q ^ 2) + 252 • (q ^ 3)
 
 /--
@@ -979,65 +1017,78 @@ theorem covariant_vs_contravariant_noncommutative_convolution_theorem
     ρ_inv (u * v) - ρ_inv u * ρ_inv v = comm (ρ_inv v) (ρ_inv u) := by
   exact ⟨h_cov, h_inv, by rw [h_inv]; rfl⟩
 
-/-- `2 × 2` matrix carrier over an arbitrary noncommutative ring `[Ring B]`. -/
-@[ext]
-structure Mat2Op (K : Type u) where
-  m11 : K
-  m12 : K
-  m21 : K
-  m22 : K
-  deriving DecidableEq
+/-- Native `2 × 2` matrix carrier `((m₁₁, m₁₂), (m₂₁, m₂₂))` over an arbitrary ring `K`. -/
+def Mat2Op (K : Type u) : Type u := (K × K) × (K × K)
 
 namespace Mat2Op
 variable {K : Type u} [Ring K]
 
-instance : Add (Mat2Op K) := ⟨fun A B => ⟨A.m11 + B.m11, A.m12 + B.m12, A.m21 + B.m21, A.m22 + B.m22⟩⟩
-instance : Sub (Mat2Op K) := ⟨fun A B => ⟨A.m11 - B.m11, A.m12 - B.m12, A.m21 - B.m21, A.m22 - B.m22⟩⟩
-instance : One (Mat2Op K) := ⟨⟨1, 0, 0, 1⟩⟩
-instance : Inhabited (Mat2Op K) := ⟨1⟩
+/-- Construct a `2 × 2` matrix `((a11, a12), (a21, a22))` in `Mat2Op K`. -/
+def mkMat (a11 a12 a21 a22 : K) : Mat2Op K := ((a11, a12), (a21, a22))
 
-@[simp] lemma add_m11 (A B : Mat2Op K) : (A + B).m11 = A.m11 + B.m11 := rfl
-@[simp] lemma add_m12 (A B : Mat2Op K) : (A + B).m12 = A.m12 + B.m12 := rfl
-@[simp] lemma add_m21 (A B : Mat2Op K) : (A + B).m21 = A.m21 + B.m21 := rfl
-@[simp] lemma add_m22 (A B : Mat2Op K) : (A + B).m22 = A.m22 + B.m22 := rfl
-@[simp] lemma sub_m11 (A B : Mat2Op K) : (A - B).m11 = A.m11 - B.m11 := rfl
-@[simp] lemma sub_m12 (A B : Mat2Op K) : (A - B).m12 = A.m12 - B.m12 := rfl
-@[simp] lemma sub_m21 (A B : Mat2Op K) : (A - B).m21 = A.m21 - B.m21 := rfl
-@[simp] lemma sub_m22 (A B : Mat2Op K) : (A - B).m22 = A.m22 - B.m22 := rfl
+/-- Top-left `(1, 1)` entry of `A : Mat2Op K`. -/
+def m11 (A : Mat2Op K) : K := A.1.1
 
+/-- Top-right `(1, 2)` entry of `A : Mat2Op K`. -/
+def m12 (A : Mat2Op K) : K := A.1.2
+
+/-- Bottom-left `(2, 1)` entry of `A : Mat2Op K`. -/
+def m21 (A : Mat2Op K) : K := A.2.1
+
+/-- Bottom-right `(2, 2)` entry of `A : Mat2Op K`. -/
+def m22 (A : Mat2Op K) : K := A.2.2
+
+/-- Componentwise addition on `Mat2Op K`. -/
+def addMat (A B : Mat2Op K) : Mat2Op K :=
+  ((A.1.1 + B.1.1, A.1.2 + B.1.2), (A.2.1 + B.2.1, A.2.2 + B.2.2))
+
+/-- Componentwise subtraction on `Mat2Op K`. -/
+def subMat (A B : Mat2Op K) : Mat2Op K :=
+  ((A.1.1 - B.1.1, A.1.2 - B.1.2), (A.2.1 - B.2.1, A.2.2 - B.2.2))
+
+/-- Identity `2 × 2` matrix `((1, 0), (0, 1))` in `Mat2Op K`. -/
+def oneMat : Mat2Op K := ((1, 0), (0, 1))
+
+/-- Natural-number scalar multiple `n • A` on `Mat2Op K`. -/
 def nsmulMat (n : ℕ) (A : Mat2Op K) : Mat2Op K :=
-  ⟨n • A.m11, n • A.m12, n • A.m21, n • A.m22⟩
+  ((n • A.1.1, n • A.1.2), (n • A.2.1, n • A.2.2))
 
+/-- Left scalar multiple `c * A` on `Mat2Op K`. -/
 def scaleRight (c : K) (A : Mat2Op K) : Mat2Op K :=
-  ⟨c * A.m11, c * A.m12, c * A.m21, c * A.m22⟩
+  ((c * A.1.1, c * A.1.2), (c * A.2.1, c * A.2.2))
 
+/-- Matrix multiplication `A * B` on `Mat2Op K`. -/
 def mul (A B : Mat2Op K) : Mat2Op K :=
-  ⟨A.m11 * B.m11 + A.m12 * B.m21, A.m11 * B.m12 + A.m12 * B.m22,
-   A.m21 * B.m11 + A.m22 * B.m21, A.m21 * B.m12 + A.m22 * B.m22⟩
+  ((A.1.1 * B.1.1 + A.1.2 * B.2.1, A.1.1 * B.1.2 + A.1.2 * B.2.2),
+   (A.2.1 * B.1.1 + A.2.2 * B.2.1, A.2.1 * B.1.2 + A.2.2 * B.2.2))
 
-instance : Mul (Mat2Op K) := ⟨mul⟩
+/-- Matrix trace `m₁₁ + m₂₂` on `Mat2Op K`. -/
+def tr (A : Mat2Op K) : K := A.1.1 + A.2.2
 
-@[simp] lemma mul_m11 (A B : Mat2Op K) : (A * B).m11 = A.m11 * B.m11 + A.m12 * B.m21 := rfl
-@[simp] lemma mul_m12 (A B : Mat2Op K) : (A * B).m12 = A.m11 * B.m12 + A.m12 * B.m22 := rfl
-@[simp] lemma mul_m21 (A B : Mat2Op K) : (A * B).m21 = A.m21 * B.m11 + A.m22 * B.m21 := rfl
-@[simp] lemma mul_m22 (A B : Mat2Op K) : (A * B).m22 = A.m21 * B.m12 + A.m22 * B.m22 := rfl
+/-- Identity Peirce basis element `I = ((1, 0), (0, 1))`. -/
+def basisI   : Mat2Op K := ((1,  0), ( 0,  1))
 
-def tr (A : Mat2Op K) : K := A.m11 + A.m22
+/-- Parity involution Peirce basis element `S_P = ((1, 0), (0, -1))`. -/
+def basisSP  : Mat2Op K := ((1,  0), ( 0, -1))
 
-def basisI   : Mat2Op K := ⟨1,  0,  0,  1⟩
-def basisSP  : Mat2Op K := ⟨1,  0,  0, -1⟩
-def basisPhi : Mat2Op K := ⟨0,  1,  1,  0⟩
-def basisJ   : Mat2Op K := ⟨0,  1, -1,  0⟩
+/-- Off-diagonal vielbein Peirce basis element `Φ = ((0, 1), (1, 0))`. -/
+def basisPhi : Mat2Op K := ((0,  1), ( 1,  0))
 
-def s3_tau12 : Mat2Op ℤ := ⟨ 1,  0, 0, -1⟩
-def s3_tau23 : Mat2Op ℤ := ⟨-1, -1, 0,  1⟩
+/-- Symplectic current Peirce basis element `J = ((0, 1), (-1, 0))`. -/
+def basisJ   : Mat2Op K := ((0,  1), (-1,  0))
+
+/-- Transposition generator `τ₁₂` of the standard 2D representation of `S₃` over `ℤ`. -/
+def s3_tau12 : Mat2Op ℤ := (( 1,  0), (0, -1))
+
+/-- Transposition generator `τ₂₃` of the standard 2D representation of `S₃` over `ℤ`. -/
+def s3_tau23 : Mat2Op ℤ := ((-1, -1), (0,  1))
 
 /-- **Lean `#15` Theorem 4 (`s3_wedderburn_artin_and_2d_peirce_syntax_witness`):** -/
 theorem s3_wedderburn_artin_and_2d_peirce_syntax_witness :
     1 ^ 2 + 1 ^ 2 + 2 ^ 2 = 6 ∧
-    s3_tau12 * s3_tau12 = (1 : Mat2Op ℤ) ∧
-    s3_tau23 * s3_tau23 = (1 : Mat2Op ℤ) ∧
-    s3_tau12 * s3_tau23 ≠ s3_tau23 * s3_tau12 := by
+    mul s3_tau12 s3_tau12 = (oneMat : Mat2Op ℤ) ∧
+    mul s3_tau23 s3_tau23 = (oneMat : Mat2Op ℤ) ∧
+    mul s3_tau12 s3_tau23 ≠ mul s3_tau23 s3_tau12 := by
   decide
 
 /--
@@ -1047,92 +1098,70 @@ In any noncommutative ring `[Ring K]`, any `2 × 2` operator matrix `M : Mat2Op 
 -/
 theorem peirce_peter_weyl_four_basis_reconstruction (M : Mat2Op K) :
     nsmulMat 2 M =
-      scaleRight (tr (M * basisI))   basisI  +
-      scaleRight (tr (M * basisSP))  basisSP +
-      scaleRight (tr (M * basisPhi)) basisPhi -
-      scaleRight (tr (M * basisJ))   basisJ := by
-  ext <;>
-  · simp only [nsmulMat, scaleRight, tr, basisI, basisSP, basisPhi, basisJ,
-               add_m11, add_m12, add_m21, add_m22, sub_m11, sub_m12, sub_m21, sub_m22,
-               mul_m11, mul_m12, mul_m21, mul_m22]
-    noncomm_ring
+      subMat
+        (addMat
+          (addMat (scaleRight (tr (mul M basisI)) basisI)
+                  (scaleRight (tr (mul M basisSP)) basisSP))
+          (scaleRight (tr (mul M basisPhi)) basisPhi))
+        (scaleRight (tr (mul M basisJ)) basisJ) := by
+  rcases M with ⟨⟨a11, a12⟩, ⟨a21, a22⟩⟩
+  dsimp only [nsmulMat, subMat, addMat, scaleRight, tr, mul, basisI, basisSP, basisPhi, basisJ]
+  ext <;> noncomm_ring
 
 end Mat2Op
 
-/-- `3 × 3` matrix carrier over an arbitrary noncommutative ring `[Ring K]`. -/
-@[ext]
-structure Mat3Op (K : Type u) where
-  m11 : K
-  m12 : K
-  m13 : K
-  m21 : K
-  m22 : K
-  m23 : K
-  m31 : K
-  m32 : K
-  m33 : K
-  deriving DecidableEq
+/-- Native `3 × 3` matrix carrier `((m₁₁, m₁₂, m₁₃), (m₂₁, m₂₂, m₂₃), (m₃₁, m₃₂, m₃₃))` over `K`. -/
+def Mat3Op (K : Type u) : Type u := (K × K × K) × (K × K × K) × (K × K × K)
 
 namespace Mat3Op
 variable {K : Type u} [Ring K]
 
-instance : Zero (Mat3Op K) := ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩⟩
-instance : Inhabited (Mat3Op K) := ⟨0⟩
-instance : Add  (Mat3Op K) := ⟨fun A B =>
-  ⟨A.m11 + B.m11, A.m12 + B.m12, A.m13 + B.m13,
-   A.m21 + B.m21, A.m22 + B.m22, A.m23 + B.m23,
-   A.m31 + B.m31, A.m32 + B.m32, A.m33 + B.m33⟩⟩
+/-- Zero `3 × 3` matrix in `Mat3Op K`. -/
+def zeroMat : Mat3Op K := ((0, 0, 0), (0, 0, 0), (0, 0, 0))
 
-@[simp] lemma zero_m11 : (0 : Mat3Op K).m11 = 0 := rfl
-@[simp] lemma zero_m12 : (0 : Mat3Op K).m12 = 0 := rfl
-@[simp] lemma zero_m13 : (0 : Mat3Op K).m13 = 0 := rfl
-@[simp] lemma zero_m21 : (0 : Mat3Op K).m21 = 0 := rfl
-@[simp] lemma zero_m22 : (0 : Mat3Op K).m22 = 0 := rfl
-@[simp] lemma zero_m23 : (0 : Mat3Op K).m23 = 0 := rfl
-@[simp] lemma zero_m31 : (0 : Mat3Op K).m31 = 0 := rfl
-@[simp] lemma zero_m32 : (0 : Mat3Op K).m32 = 0 := rfl
-@[simp] lemma zero_m33 : (0 : Mat3Op K).m33 = 0 := rfl
+/-- Componentwise addition on `Mat3Op K`. -/
+def addMat (A B : Mat3Op K) : Mat3Op K :=
+  ((A.1.1 + B.1.1, A.1.2.1 + B.1.2.1, A.1.2.2 + B.1.2.2),
+   (A.2.1.1 + B.2.1.1, A.2.1.2.1 + B.2.1.2.1, A.2.1.2.2 + B.2.1.2.2),
+   (A.2.2.1 + B.2.2.1, A.2.2.2.1 + B.2.2.2.1, A.2.2.2.2 + B.2.2.2.2))
 
-@[simp] lemma add_m11 (A B : Mat3Op K) : (A + B).m11 = A.m11 + B.m11 := rfl
-@[simp] lemma add_m12 (A B : Mat3Op K) : (A + B).m12 = A.m12 + B.m12 := rfl
-@[simp] lemma add_m13 (A B : Mat3Op K) : (A + B).m13 = A.m13 + B.m13 := rfl
-@[simp] lemma add_m21 (A B : Mat3Op K) : (A + B).m21 = A.m21 + B.m21 := rfl
-@[simp] lemma add_m22 (A B : Mat3Op K) : (A + B).m22 = A.m22 + B.m22 := rfl
-@[simp] lemma add_m23 (A B : Mat3Op K) : (A + B).m23 = A.m23 + B.m23 := rfl
-@[simp] lemma add_m31 (A B : Mat3Op K) : (A + B).m31 = A.m31 + B.m31 := rfl
-@[simp] lemma add_m32 (A B : Mat3Op K) : (A + B).m32 = A.m32 + B.m32 := rfl
-@[simp] lemma add_m33 (A B : Mat3Op K) : (A + B).m33 = A.m33 + B.m33 := rfl
-
+/-- Natural-number scalar multiple `n • A` on `Mat3Op K`. -/
 def nsmulMat (n : ℕ) (A : Mat3Op K) : Mat3Op K :=
-  ⟨n • A.m11, n • A.m12, n • A.m13,
-   n • A.m21, n • A.m22, n • A.m23,
-   n • A.m31, n • A.m32, n • A.m33⟩
+  ((n • A.1.1, n • A.1.2.1, n • A.1.2.2),
+   (n • A.2.1.1, n • A.2.1.2.1, n • A.2.1.2.2),
+   (n • A.2.2.1, n • A.2.2.2.1, n • A.2.2.2.2))
 
-def tr (A : Mat3Op K) : K := A.m11 + A.m22 + A.m33
+/-- Matrix trace `m₁₁ + m₂₂ + m₃₃` on `Mat3Op K`. -/
+def tr (A : Mat3Op K) : K := A.1.1 + A.2.1.2.1 + A.2.2.2.2
 
+/-- Non-commutative Frobenius bilinear form `∑_{i,j} A_{ij} B_{ij}` on `Mat3Op K`. -/
 def frobInner (A B : Mat3Op K) : K :=
-  A.m11 * B.m11 + A.m12 * B.m12 + A.m13 * B.m13 +
-  A.m21 * B.m21 + A.m22 * B.m22 + A.m23 * B.m23 +
-  A.m31 * B.m31 + A.m32 * B.m32 + A.m33 * B.m33
+  A.1.1 * B.1.1 + A.1.2.1 * B.1.2.1 + A.1.2.2 * B.1.2.2 +
+  A.2.1.1 * B.2.1.1 + A.2.1.2.1 * B.2.1.2.1 + A.2.1.2.2 * B.2.1.2.2 +
+  A.2.2.1 * B.2.2.1 + A.2.2.2.1 * B.2.2.2.1 + A.2.2.2.2 * B.2.2.2.2
 
+/-- Trivial singlet Wigner–Clebsch–Gordan projector `Π₁` (scaled by `6`) on `Mat3Op K`. -/
 def Pi1 (M : Mat3Op K) : Mat3Op K :=
   let t := 2 • tr M
-  ⟨t, 0, 0, 0, t, 0, 0, 0, t⟩
+  ((t, 0, 0), (0, t, 0), (0, 0, t))
 
+/-- Two-dimensional Cartan diagonal Wigner–Clebsch–Gordan projector `Π₂` (scaled by `6`) on `Mat3Op K`. -/
 def Pi2 (M : Mat3Op K) : Mat3Op K :=
-  ⟨4 • M.m11 - 2 • M.m22 - 2 • M.m33, 0, 0,
-   0, 4 • M.m22 - 2 • M.m11 - 2 • M.m33, 0,
-   0, 0, 4 • M.m33 - 2 • M.m11 - 2 • M.m22⟩
+  ((4 • M.1.1 - 2 • M.2.1.2.1 - 2 • M.2.2.2.2, 0, 0),
+   (0, 4 • M.2.1.2.1 - 2 • M.1.1 - 2 • M.2.2.2.2, 0),
+   (0, 0, 4 • M.2.2.2.2 - 2 • M.1.1 - 2 • M.2.1.2.1))
 
+/-- Symmetric off-diagonal Wigner–Clebsch–Gordan projector `Π₃⁺` (scaled by `6`) on `Mat3Op K`. -/
 def Pi3_pos (M : Mat3Op K) : Mat3Op K :=
-  ⟨0, 3 • (M.m12 + M.m21), 3 • (M.m13 + M.m31),
-   3 • (M.m21 + M.m12), 0, 3 • (M.m23 + M.m32),
-   3 • (M.m31 + M.m13), 3 • (M.m32 + M.m23), 0⟩
+  ((0, 3 • (M.1.2.1 + M.2.1.1), 3 • (M.1.2.2 + M.2.2.1)),
+   (3 • (M.2.1.1 + M.1.2.1), 0, 3 • (M.2.1.2.2 + M.2.2.2.1)),
+   (3 • (M.2.2.1 + M.1.2.2), 3 • (M.2.2.2.1 + M.2.1.2.2), 0))
 
+/-- Antisymmetric off-diagonal Wigner–Clebsch–Gordan projector `Π₃⁻` (scaled by `6`) on `Mat3Op K`. -/
 def Pi3_neg (M : Mat3Op K) : Mat3Op K :=
-  ⟨0, 3 • (M.m12 - M.m21), 3 • (M.m13 - M.m31),
-   3 • (M.m21 - M.m12), 0, 3 • (M.m23 - M.m32),
-   3 • (M.m31 - M.m13), 3 • (M.m32 - M.m23), 0⟩
+  ((0, 3 • (M.1.2.1 - M.2.1.1), 3 • (M.1.2.2 - M.2.2.1)),
+   (3 • (M.2.1.1 - M.1.2.1), 0, 3 • (M.2.1.2.2 - M.2.2.2.1)),
+   (3 • (M.2.2.1 - M.1.2.2), 3 • (M.2.2.2.1 - M.2.1.2.2), 0))
 
 /--
 **Lean `#18` Theorem 1 (`clebsch_gordan_s4_idempotency_and_mutual_orthogonality`, lifted to `[Ring K]`):**
@@ -1141,20 +1170,18 @@ satisfy `Pi1 + Pi2 + Pi3_pos + Pi3_neg = 6 • id`, `Pi_α(Pi_α M) = 6 • Pi_�
 `Pi_α(Pi_β M) = 0` for `α ≠ β`.
 -/
 theorem clebsch_gordan_s4_idempotency_and_mutual_orthogonality (M : Mat3Op K) :
-    Pi1 M + Pi2 M + Pi3_pos M + Pi3_neg M = nsmulMat 6 M ∧
+    addMat (addMat (addMat (Pi1 M) (Pi2 M)) (Pi3_pos M)) (Pi3_neg M) = nsmulMat 6 M ∧
     Pi1 (Pi1 M) = nsmulMat 6 (Pi1 M) ∧
     Pi2 (Pi2 M) = nsmulMat 6 (Pi2 M) ∧
     Pi3_pos (Pi3_pos M) = nsmulMat 6 (Pi3_pos M) ∧
     Pi3_neg (Pi3_neg M) = nsmulMat 6 (Pi3_neg M) ∧
-    Pi1 (Pi2 M) = (0 : Mat3Op K) ∧ Pi2 (Pi1 M) = (0 : Mat3Op K) ∧
-    Pi1 (Pi3_pos M) = (0 : Mat3Op K) ∧ Pi2 (Pi3_pos M) = (0 : Mat3Op K) ∧
-    Pi3_pos (Pi3_neg M) = (0 : Mat3Op K) ∧ Pi3_neg (Pi3_pos M) = (0 : Mat3Op K) := by
+    Pi1 (Pi2 M) = (zeroMat : Mat3Op K) ∧ Pi2 (Pi1 M) = (zeroMat : Mat3Op K) ∧
+    Pi1 (Pi3_pos M) = (zeroMat : Mat3Op K) ∧ Pi2 (Pi3_pos M) = (zeroMat : Mat3Op K) ∧
+    Pi3_pos (Pi3_neg M) = (zeroMat : Mat3Op K) ∧ Pi3_neg (Pi3_pos M) = (zeroMat : Mat3Op K) := by
+  rcases M with ⟨⟨a11, a12, a13⟩, ⟨a21, a22, a23⟩, ⟨a31, a32, a33⟩⟩
+  dsimp only [Pi1, Pi2, Pi3_pos, Pi3_neg, addMat, nsmulMat, zeroMat, tr]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-  · ext <;>
-    · simp only [Pi1, Pi2, Pi3_pos, Pi3_neg, nsmulMat, tr,
-                 add_m11, add_m12, add_m13, add_m21, add_m22, add_m23, add_m31, add_m32, add_m33,
-                 zero_m11, zero_m12, zero_m13, zero_m21, zero_m22, zero_m23, zero_m31, zero_m32, zero_m33]
-      try abel
+  · ext <;> abel
 
 /--
 **Lean `#18` Theorem 2 (`clebsch_gordan_frobenius_pythagorean_theorem`, lifted to `[Ring K]`):**
@@ -1171,66 +1198,61 @@ theorem clebsch_gordan_frobenius_pythagorean_theorem (M N : Mat3Op K) :
       frobInner (Pi2 M) (Pi2 N) +
       frobInner (Pi3_pos M) (Pi3_pos N) +
       frobInner (Pi3_neg M) (Pi3_neg N) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
-  · dsimp [frobInner, Pi1, Pi2, Pi3_pos, Pi3_neg, tr]
-    noncomm_ring
+  rcases M with ⟨⟨m11, m12, m13⟩, ⟨m21, m22, m23⟩, ⟨m31, m32, m33⟩⟩
+  rcases N with ⟨⟨n11, n12, n13⟩, ⟨n21, n22, n23⟩, ⟨n31, n32, n33⟩⟩
+  dsimp only [frobInner, Pi1, Pi2, Pi3_pos, Pi3_neg, tr]
+  refine ⟨by noncomm_ring, by noncomm_ring, by noncomm_ring, by noncomm_ring, by noncomm_ring⟩
 
 end Mat3Op
 
-/-- Quaternion carrier over an arbitrary noncommutative ring `[Ring K]`. -/
-@[ext]
-structure QuatOp (K : Type u) where
-  w : K
-  x : K
-  y : K
-  z : K
-  deriving DecidableEq
+/-- Native quaternion carrier `((w, x), (y, z))` over an arbitrary noncommutative ring `K`. -/
+def QuatOp (K : Type u) : Type u := (K × K) × (K × K)
 
 namespace QuatOp
 variable {K : Type u} [Ring K]
 
-instance : Add (QuatOp K) := ⟨fun a b => ⟨a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z⟩⟩
-instance : Sub (QuatOp K) := ⟨fun a b => ⟨a.w - b.w, a.x - b.x, a.y - b.y, a.z - b.z⟩⟩
-instance : Zero (QuatOp K) := ⟨⟨0, 0, 0, 0⟩⟩
-instance : Inhabited (QuatOp K) := ⟨0⟩
+/-- Zero quaternion `((0, 0), (0, 0))` in `QuatOp K`. -/
+def zeroQuat : QuatOp K := ((0, 0), (0, 0))
 
-@[simp] lemma zero_w : (0 : QuatOp K).w = 0 := rfl
-@[simp] lemma zero_x : (0 : QuatOp K).x = 0 := rfl
-@[simp] lemma zero_y : (0 : QuatOp K).y = 0 := rfl
-@[simp] lemma zero_z : (0 : QuatOp K).z = 0 := rfl
+/-- Componentwise addition on `QuatOp K`. -/
+def addQuat (a b : QuatOp K) : QuatOp K :=
+  ((a.1.1 + b.1.1, a.1.2 + b.1.2), (a.2.1 + b.2.1, a.2.2 + b.2.2))
 
-@[simp] lemma add_w (a b : QuatOp K) : (a + b).w = a.w + b.w := rfl
-@[simp] lemma add_x (a b : QuatOp K) : (a + b).x = a.x + b.x := rfl
-@[simp] lemma add_y (a b : QuatOp K) : (a + b).y = a.y + b.y := rfl
-@[simp] lemma add_z (a b : QuatOp K) : (a + b).z = a.z + b.z := rfl
+/-- Componentwise subtraction on `QuatOp K`. -/
+def subQuat (a b : QuatOp K) : QuatOp K :=
+  ((a.1.1 - b.1.1, a.1.2 - b.1.2), (a.2.1 - b.2.1, a.2.2 - b.2.2))
 
-@[simp] lemma sub_w (a b : QuatOp K) : (a - b).w = a.w - b.w := rfl
-@[simp] lemma sub_x (a b : QuatOp K) : (a - b).x = a.x - b.x := rfl
-@[simp] lemma sub_y (a b : QuatOp K) : (a - b).y = a.y - b.y := rfl
-@[simp] lemma sub_z (a b : QuatOp K) : (a - b).z = a.z - b.z := rfl
+/-- Integer scalar multiple `c • q` on `QuatOp K`. -/
+def zsmulQuat (c : ℤ) (q : QuatOp K) : QuatOp K :=
+  ((c • q.1.1, c • q.1.2), (c • q.2.1, c • q.2.2))
 
-def zsmulQuat (c : ℤ) (q : QuatOp K) : QuatOp K := ⟨c • q.w, c • q.x, c • q.y, c • q.z⟩
-def conj (q : QuatOp K) : QuatOp K := ⟨q.w, -q.x, -q.y, -q.z⟩
-def qNorm (q : QuatOp K) : K := q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z
+/-- Quaternion conjugate `(w, -x, -y, -z)` on `QuatOp K`. -/
+def conj (q : QuatOp K) : QuatOp K := ((q.1.1, -q.1.2), (-q.2.1, -q.2.2))
 
-def mul (a b : QuatOp K) : QuatOp K where
-  w := a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
-  x := a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y
-  y := a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x
-  z := a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w
+/-- Quaternion quadratic norm `w² + x² + y² + z²` in `K`. -/
+def qNorm (q : QuatOp K) : K := q.1.1 * q.1.1 + q.1.2 * q.1.2 + q.2.1 * q.2.1 + q.2.2 * q.2.2
 
-instance : Mul (QuatOp K) := ⟨mul⟩
+/-- Hamilton quaternion multiplication on `QuatOp K`. -/
+def mul (a b : QuatOp K) : QuatOp K :=
+  ((a.1.1 * b.1.1 - a.1.2 * b.1.2 - a.2.1 * b.2.1 - a.2.2 * b.2.2,
+    a.1.1 * b.1.2 + a.1.2 * b.1.1 + a.2.1 * b.2.2 - a.2.2 * b.2.1),
+   (a.1.1 * b.2.1 - a.1.2 * b.2.2 + a.2.1 * b.1.1 + a.2.2 * b.1.2,
+    a.1.1 * b.2.2 + a.1.2 * b.2.1 - a.2.1 * b.1.2 + a.2.2 * b.1.1))
 
-@[simp] lemma mul_w (a b : QuatOp K) : (a * b).w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z := rfl
-@[simp] lemma mul_x (a b : QuatOp K) : (a * b).x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y := rfl
-@[simp] lemma mul_y (a b : QuatOp K) : (a * b).y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x := rfl
-@[simp] lemma mul_z (a b : QuatOp K) : (a * b).z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w := rfl
+/-- Unit quaternion `1 = ((1, 0), (0, 0))` in `QuatOp K`. -/
+def qOne : QuatOp K := ((1, 0), (0, 0))
 
-def qOne : QuatOp K := ⟨1, 0, 0, 0⟩
-def qi   : QuatOp K := ⟨0, 1, 0, 0⟩
-def qj   : QuatOp K := ⟨0, 0, 1, 0⟩
-def qk   : QuatOp K := ⟨0, 0, 0, 1⟩
-def hurwitzW : QuatOp K := ⟨1, 1, 1, 1⟩
+/-- Imaginary quaternion unit `i = ((0, 1), (0, 0))` in `QuatOp K`. -/
+def qi   : QuatOp K := ((0, 1), (0, 0))
+
+/-- Imaginary quaternion unit `j = ((0, 0), (1, 0))` in `QuatOp K`. -/
+def qj   : QuatOp K := ((0, 0), (1, 0))
+
+/-- Imaginary quaternion unit `k = ((0, 0), (0, 1))` in `QuatOp K`. -/
+def qk   : QuatOp K := ((0, 0), (0, 1))
+
+/-- Hurwitz spinor corner `W = ((1, 1), (1, 1))` in `QuatOp K`. -/
+def hurwitzW : QuatOp K := ((1, 1), (1, 1))
 
 /--
 **Lean `#18` Theorem 3 (`hurwitz_corner_triality_attention_filter`, lifted to `[Ring K]`):**
@@ -1241,23 +1263,31 @@ Over any noncommutative ring `[Ring K]`, the Hurwitz spinor corner `W = (1, 1, 1
 theorem hurwitz_corner_triality_attention_filter :
     8 + 2 ^ 4 = 24 ∧ 24 + 6 * 4 = 48 ∧
     qNorm (hurwitzW : QuatOp K) = 4 • (1 : K) ∧
-    (hurwitzW : QuatOp K) * hurwitzW - zsmulQuat 2 hurwitzW + zsmulQuat 4 qOne = (0 : QuatOp K) ∧
-    (hurwitzW : QuatOp K) * hurwitzW * hurwitzW = zsmulQuat (-8) qOne ∧
-    (hurwitzW : QuatOp K) * qi * conj hurwitzW = zsmulQuat 4 qj ∧
-    (hurwitzW : QuatOp K) * qj * conj hurwitzW = zsmulQuat 4 qk ∧
-    (hurwitzW : QuatOp K) * qk * conj hurwitzW = zsmulQuat 4 qi := by
+    addQuat (subQuat (mul (hurwitzW : QuatOp K) hurwitzW) (zsmulQuat 2 hurwitzW))
+      (zsmulQuat 4 qOne) = (zeroQuat : QuatOp K) ∧
+    mul (mul (hurwitzW : QuatOp K) hurwitzW) hurwitzW = zsmulQuat (-8) qOne ∧
+    mul (mul (hurwitzW : QuatOp K) qi) (conj hurwitzW) = zsmulQuat 4 qj ∧
+    mul (mul (hurwitzW : QuatOp K) qj) (conj hurwitzW) = zsmulQuat 4 qk ∧
+    mul (mul (hurwitzW : QuatOp K) qk) (conj hurwitzW) = zsmulQuat 4 qi := by
   refine ⟨by decide, by decide, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · dsimp [qNorm, hurwitzW]; noncomm_ring
-  · ext <;> (simp only [hurwitzW, qOne, zsmulQuat, add_w, add_x, add_y, add_z, sub_w, sub_x, sub_y, sub_z, mul_w, mul_x, mul_y, mul_z, zero_w, zero_x, zero_y, zero_z]; noncomm_ring)
-  · ext <;> (simp only [hurwitzW, qOne, zsmulQuat, mul_w, mul_x, mul_y, mul_z]; noncomm_ring)
-  · ext <;> (simp only [hurwitzW, qi, qj, conj, zsmulQuat, mul_w, mul_x, mul_y, mul_z]; noncomm_ring)
-  · ext <;> (simp only [hurwitzW, qj, qk, conj, zsmulQuat, mul_w, mul_x, mul_y, mul_z]; noncomm_ring)
-  · ext <;> (simp only [hurwitzW, qk, qi, conj, zsmulQuat, mul_w, mul_x, mul_y, mul_z]; noncomm_ring)
+  · dsimp only [qNorm, hurwitzW]; noncomm_ring
+  · dsimp only [hurwitzW, qOne, zeroQuat, addQuat, subQuat, zsmulQuat, mul]
+    ext <;> noncomm_ring
+  · dsimp only [hurwitzW, qOne, zsmulQuat, mul]
+    ext <;> noncomm_ring
+  · dsimp only [hurwitzW, qi, qj, conj, zsmulQuat, mul]
+    ext <;> noncomm_ring
+  · dsimp only [hurwitzW, qj, qk, conj, zsmulQuat, mul]
+    ext <;> noncomm_ring
+  · dsimp only [hurwitzW, qk, qi, conj, zsmulQuat, mul]
+    ext <;> noncomm_ring
 
 end QuatOp
 
-/-- 6th and 24th cyclotomic polynomials in `[Ring B]`. -/
+/-- 6th cyclotomic polynomial `Φ₆(y) = y² - y + 1` in `[Ring B]`. -/
 def Phi6_op (y : B) : B := y ^ 2 - y + 1
+
+/-- 24th cyclotomic polynomial `Φ₂₄(x) = x⁸ - x⁴ + 1` in `[Ring B]`. -/
 def Phi24_cyc (x : B) : B := x ^ 8 - x ^ 4 + 1
 
 /--
@@ -1290,8 +1320,10 @@ def H_tl (e1 e2 : B) : B := e1 - e2
 /-- Adjacent Temperley–Lieb braiding commutator `Sigma_tl(e1, e2) = [e1, e2]`. -/
 def Sigma_tl (e1 e2 : B) : B := comm e1 e2
 
-/-- Forward and backward 3-strand Temperley–Lieb braid transfer operators `T_123 = e1 e2 e3` and `T_321 = e3 e2 e1`. -/
+/-- Forward 3-strand Temperley–Lieb braid transfer operator `T_123 = e1 e2 e3`. -/
 def T_123 (e1 e2 e3 : B) : B := e1 * e2 * e3
+
+/-- Backward 3-strand Temperley–Lieb braid transfer operator `T_321 = e3 e2 e1`. -/
 def T_321 (e1 e2 e3 : B) : B := e3 * e2 * e1
 
 /-- Division-free 2-strand Jones–Wenzl projector `JW_2(e1, e2, τ) = (1 - τ) - (e1 - e2)²`. -/
@@ -1569,11 +1601,78 @@ theorem master_octacosadic_three_strand_yang_baxter_coagulation
     JW_2 e1 e2 tau * JW_2 e1 e2 tau = (1 - tau) * JW_2 e1 e2 tau ∧
     (g_braid u e1 * g_braid u e2 * g_braid u e1 - g_braid u e2 * g_braid u e1 * g_braid u e2 =
       (u * (1 + u + tau * (u * u))) * H_tl e1 e2) := by
+  dsimp only []
   exact ⟨OctacosadicBraidNode.oc_poset_chain,
          (three_strand_halmos_commutator_aporia e1 e2 e3 h13).2,
          (three_strand_cubic_temperley_lieb_braid_transfer e1 e2 e3 tau he1 he3 h13 h121 h232 h323 h212 htau1 htau3).2.2.2.2.2.2.2,
          (jones_wenzl_second_idempotent_from_halmos_square e1 e2 tau he1 he2 h121 h212 htau1 htau2).2.2.2.2.2.2.2,
          (kauffman_jones_yang_baxter_braid_defect_identity e1 e2 tau u he1 he2 h121 h212 hu1 hu2 hutau).1⟩
+
+/--
+**Inductive Colimit Cone Transport of the Temperley–Lieb, Jones–Wenzl, & Yang–Baxter Braid Tower
+(`temperley_lieb_yang_baxter_colimit_cone_transport`):**
+Let `Stage : ℕ → Type u` be a directed tower of non-commutative operator rings `[∀ k, Ring (Stage k)]`
+with connecting ring homomorphisms `embed : ∀ k : ℕ, Stage k →+* Stage (k + 1)` and colimit
+cone legs `toLimit : ∀ k : ℕ, Stage k →+* Limit` into a colimit ring `[Ring Limit]` satisfying
+cone compatibility `∀ k Z, toLimit (k + 1) (embed k Z) = toLimit k Z`.
+Then for any stage `k : ℕ` and any Temperley–Lieb / Jones–Wenzl / Yang–Baxter generators
+`e1, e2, tau, u : Stage k`:
+1. The colimit cone legs preserve `H_tl`, `JW_2`, and `g_braid` and are invariant under stage
+   refinement `embed k`,
+2. If `e1, e2, tau, u` satisfy the Temperley–Lieb relations at stage `k`, then their images in the
+   colimit ring `Limit` satisfy both the Jones–Wenzl scaled idempotence relation and the exact
+   Kauffman–Jones Yang–Baxter braid defect identity!
+-/
+theorem temperley_lieb_yang_baxter_colimit_cone_transport
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    {Limit : Type v} [Ring Limit]
+    (embed : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (Z : Stage k), toLimit (k + 1) (embed k Z) = toLimit k Z)
+    (k : ℕ) (e1 e2 tau u : Stage k)
+    (he1 : e1 * e1 = e1) (he2 : e2 * e2 = e2)
+    (h121 : e1 * e2 * e1 = tau * e1) (h212 : e2 * e1 * e2 = tau * e2)
+    (htau1 : e1 * tau = tau * e1) (htau2 : e2 * tau = tau * e2)
+    (hu1 : e1 * u = u * e1) (hu2 : e2 * u = u * e2) (hutau : u * tau = tau * u) :
+    let E1  := toLimit k e1
+    let E2  := toLimit k e2
+    let Tau := toLimit k tau
+    let U   := toLimit k u
+    toLimit k (JW_2 e1 e2 tau) = JW_2 E1 E2 Tau ∧
+    toLimit (k + 1) (JW_2 (embed k e1) (embed k e2) (embed k tau)) = JW_2 E1 E2 Tau ∧
+    toLimit k (g_braid u e1) = g_braid U E1 ∧
+    toLimit (k + 1) (g_braid (embed k u) (embed k e1)) = g_braid U E1 ∧
+    JW_2 E1 E2 Tau * JW_2 E1 E2 Tau = (1 - Tau) * JW_2 E1 E2 Tau ∧
+    (g_braid U E1 * g_braid U E2 * g_braid U E1 - g_braid U E2 * g_braid U E1 * g_braid U E2 =
+      (U * (1 + U + Tau * (U * U))) * H_tl E1 E2) := by
+  have hMapJW : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (a b t : R),
+      f (JW_2 a b t) = JW_2 (f a) (f b) (f t) := by
+    intro R S _ _ f a b t
+    dsimp only [JW_2]
+    simp only [map_sub, map_mul, map_one]
+  have hMapG : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (x a : R),
+      f (g_braid x a) = g_braid (f x) (f a) := by
+    intro R S _ _ f x a
+    dsimp only [g_braid]
+    simp only [map_add, map_mul, map_one]
+  have hMapH : ∀ {R S : Type*} [Ring R] [Ring S] (f : R →+* S) (a b : R),
+      f (H_tl a b) = H_tl (f a) (f b) := by
+    intro R S _ _ f a b
+    dsimp only [H_tl]
+    simp only [map_sub]
+  have hJW_stage : JW_2 e1 e2 tau * JW_2 e1 e2 tau = (1 - tau) * JW_2 e1 e2 tau :=
+    (jones_wenzl_second_idempotent_from_halmos_square e1 e2 tau he1 he2 h121 h212 htau1 htau2).2.2.2.2.2.2.2
+  have hYB_stage : g_braid u e1 * g_braid u e2 * g_braid u e1 -
+      g_braid u e2 * g_braid u e1 * g_braid u e2 =
+      (u * (1 + u + tau * (u * u))) * H_tl e1 e2 :=
+    (kauffman_jones_yang_baxter_braid_defect_identity e1 e2 tau u he1 he2 h121 h212 hu1 hu2 hutau).1
+  refine ⟨hMapJW (toLimit k) e1 e2 tau, ?_, hMapG (toLimit k) u e1, ?_, ?_, ?_⟩
+  · rw [← hMapJW (embed k), hCone, hMapJW (toLimit k)]
+  · rw [← hMapG (embed k), hCone, hMapG (toLimit k)]
+  · have h := congrArg (toLimit k) hJW_stage
+    simpa only [map_mul, map_sub, map_one, hMapJW] using h
+  · have h := congrArg (toLimit k) hYB_stage
+    simpa only [map_sub, map_mul, map_add, map_one, hMapG, hMapH] using h
 
 end Track2_OctacosadicThreeStrandTemperleyLiebYangBaxter
 

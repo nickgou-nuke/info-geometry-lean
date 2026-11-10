@@ -19,7 +19,7 @@ open InfoGeometry.Canonical.FibonacciGrothendieckLimit
 noncomputable section
 
 variable {u : Level}
-variable {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 V : Type u} [Field 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
 instance fibFusionGrothendieckColimitTopologicalSpace :

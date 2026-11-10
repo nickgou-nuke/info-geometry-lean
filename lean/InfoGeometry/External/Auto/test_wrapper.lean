@@ -8,13 +8,15 @@ namespace TestWrapper
 
 section TemperleyLieb
 
-variable {F : Type*} [Field F]
+section DivisionRing
+
+variable {F : Type*} [DivisionRing F]
 variable (A : F)
 
 /-- The Temperley-Lieb loop value -/
 def d : F := - A^2 - (A⁻¹)^2
 
-variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable {A_alg : Type*} [Ring A_alg] [Module F A_alg] [IsScalarTower F A_alg A_alg] [SMulCommClass F A_alg A_alg]
 variable (e : ℕ → A_alg)
 
 /-- Temperley-Lieb Algebra relations on generators e i -/
@@ -33,7 +35,7 @@ def σ_inv (i : ℕ) : A_alg := (A⁻¹:F) • (1:A_alg) + (A:F) • e i
 
 @[simp] lemma tl_smul_mul_smul_comm (c1 c2 : F) (x1 x2 : A_alg) : 
   (c1 • x1) * (c2 • x2) = (c1 * c2) • (x1 * x2) := by
-  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul]
+  rw [smul_mul_assoc, mul_smul_comm, smul_smul]
 
 macro "tl_expand" : tactic => `(tactic| simp only [add_mul, mul_add, tl_smul_mul_smul_comm, add_assoc, one_mul, mul_one])
 macro "abel_simp" : tactic => `(tactic| simp only [add_assoc, add_left_comm, add_comm])
@@ -45,6 +47,26 @@ lemma add_smul3 (c1 c2 c3 : F) (x : A_alg) :
 lemma add_smul4 (c1 c2 c3 c4 : F) (x : A_alg) : 
   c1 • x + c2 • x + c3 • x + c4 • x = (c1 + c2 + c3 + c4) • x := by
   rw [← add_smul, ← add_smul, ← add_smul]
+
+-- Prove far commutation
+lemma braid_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ A e i * σ A e j = σ A e j * σ A e i := by
+  by_cases hA : A = 0
+  · subst hA
+    simp [σ]
+  · rw [σ, σ]
+    simp only [add_mul, mul_add, tl_smul_mul_smul_comm, one_mul, mul_one, add_assoc]
+    rw [TemperleyLieb.e_comm (d_val := d A) (e := e) i j h]
+    have hAAinv : (A : F) * A⁻¹ = 1 := mul_inv_cancel₀ hA
+    have hAinvA : (A : F)⁻¹ * A = 1 := inv_mul_cancel₀ hA
+    simp [hAAinv, hAinvA, add_comm, add_left_comm, add_assoc]
+
+end DivisionRing
+
+variable {F : Type*} [Field F]
+variable (A : F)
+variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]
+variable (e : ℕ → A_alg)
+variable [TemperleyLieb (d A) e]
 
 -- Prove that σ and σ_inv are inverses
 lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1 := by
@@ -62,18 +84,6 @@ lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1
       congrArg (fun c : F => c • e i) hcoeff
   rw [hsum]
   simp
-
--- Prove far commutation
-lemma braid_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ A e i * σ A e j = σ A e j * σ A e i := by
-  by_cases hA : A = 0
-  · subst hA
-    simp [σ]
-  · rw [σ, σ]
-    simp only [add_mul, mul_add, tl_smul_mul_smul_comm, one_mul, mul_one, add_assoc]
-    rw [TemperleyLieb.e_comm (d_val := d A) (e := e) i j h]
-    have hAAinv : (A : F) * A⁻¹ = 1 := mul_inv_cancel₀ hA
-    have hAinvA : (A : F)⁻¹ * A = 1 := inv_mul_cancel₀ hA
-    simp [hAAinv, hAinvA, add_comm, add_left_comm, add_assoc]
 
 end TemperleyLieb
 

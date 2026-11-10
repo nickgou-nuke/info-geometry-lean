@@ -11,13 +11,13 @@ open ExteriorAlgebra
 open InfoGeometry.Canonical.EinsteinHilbertPalatiniActionBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 /-- 
 Представя структурата на Dirac-Kähler операторите: външния диференциал d 
 и неговия формален кодиференциал δ.
 -/
-structure DiracKahlerSystem (R V : Type*) [CommRing R] [AddCommGroup V] [Module R V] where
+structure DiracKahlerSystem (R V : Type*) [CommRing R] [AddCommMonoid V] [Module R V] where
   d_op : Module.End R (ExteriorAlgebra R V)
   delta_op : Module.End R (ExteriorAlgebra R V)
   d_sq_zero : d_op ∘ₗ d_op = 0

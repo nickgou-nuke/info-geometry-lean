@@ -16,7 +16,7 @@ open VirasoroProject.VirasoroAlgebra
 
 section
 
-variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+variable (𝕜 : Type*) [Field 𝕜]
 
 /-- Single-step adjoint action by `L_n`. -/
 noncomputable def adL (n : ℤ) (X : VirasoroAlgebra 𝕜) : VirasoroAlgebra 𝕜 :=

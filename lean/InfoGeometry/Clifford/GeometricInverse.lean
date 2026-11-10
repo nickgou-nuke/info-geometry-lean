@@ -8,7 +8,7 @@ namespace InfoGeometry.Clifford
 
 open CliffordAlgebra
 
-variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R M : Type*} [CommRing R] [AddCommMonoid M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 /-- 

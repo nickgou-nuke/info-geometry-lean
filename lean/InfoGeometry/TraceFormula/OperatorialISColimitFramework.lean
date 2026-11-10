@@ -48,7 +48,7 @@ open SouriauOnsagerBKM
 section RelativeModular
 
 variable {R B : Type*}
-variable [CommSemiring R] [Semiring B] [Algebra R B]
+variable [Semiring R] [Semiring B] [Module R B] [IsScalarTower R B B] [SMulCommClass R B B]
 
 /--
 The finite algebraic realization of the relative modular operator

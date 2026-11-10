@@ -26,7 +26,7 @@ open InfoGeometry.Canonical.ChernSimonsTransgressionInstantonBridge
 open InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge
 open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V] {n : ℕ}
 
 /-- Abelian field strength of a matrix-valued potential. -/
 def abelianFieldStrength
@@ -47,7 +47,7 @@ theorem abelian_bianchi
 /-- The Yang--Mills curvature reduces to the Abelian field strength when its
 quadratic connection term vanishes. -/
 theorem curvatureFromConnection_eq_abelianFieldStrength
-    {R' V' : Type*} [Field R'] [AddCommGroup V'] [Module R' V'] {n' : ℕ}
+    {R' V' : Type*} [CommRing R'] [AddCommMonoid V'] [Module R' V'] {n' : ℕ}
     (d : Module.End R' (ExteriorAlgebra R' V'))
     (A : Matrix (Fin n') (Fin n') (ExteriorAlgebra R' V'))
     (hAA : A * A = 0) :

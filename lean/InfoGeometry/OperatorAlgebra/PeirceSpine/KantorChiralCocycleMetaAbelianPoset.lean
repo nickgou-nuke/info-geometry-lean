@@ -49,6 +49,17 @@ arbitrary associative ring `[Ring B]` with zero scalar, diagonal, or commuting s
      similarly `derived2Comm Φ J N_+ N_- = 0`.
    - Tier 2 (Multi-Mode Kantor Residual):
      `derived2Comm Φ₁ J₁ Φ₂ J₂ = 4 • comm (kantorCross P C₀ A₁ A₂) (coneMinus P C₀)`.
+
+## Three-Bucket Audit Classification
+
+- **BUCKET 1 (`KERNEL_PROVED`):**
+  All stages `DY₁ → DY₅`, `KC₁ → KC₁₀`, `MK₁ → MK₁₀`, and `MA₁ → MA₅`: non-symmetric bilinear
+  split, Fueter-type curvature squares, Lie–Jordan super-commutator, 4-point cyclic trace cocycle,
+  two-step double-cover orientation restoration, and three-tier solvability hierarchy in `[Ring B]`.
+- **BUCKET 2 (`EXPLICIT_HYPOTHESIS`):**
+  Idempotency `hP : P * P = P` and cyclic trace `tr : B →+ A` (`tr(X Y) = tr(Y X)`) on `[Ring B]`.
+- **BUCKET 3 (`OPEN_HORIZON`):**
+  Higher derived-series solvability bounds (`derived^{(n)}` for `n ≥ 3`) for arbitrary multi-mode Kantor algebras.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.KantorChiralCocycleMetaAbelianPoset
@@ -188,6 +199,7 @@ def metriplecticFlow (P A C X : B) : B :=
 def borelPlus (k : ℤ) (P A : B) : B :=
   k • invS P + conePlus P A
 
+/-- Left-multiplication absorption `P * (P * X) = P * X` for an idempotent `P`. -/
 lemma P_assoc {P : B} (hP : P * P = P) (X : B) : P * (P * X) = P * X := by
   rw [← mul_assoc, hP]
 

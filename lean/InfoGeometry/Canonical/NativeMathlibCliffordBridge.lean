@@ -8,7 +8,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.NativeMathlibCliffordBridge
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V]
 
 /-- **Theorem**: Definitional Equivalence between CliffordAlgebra (0) and ExteriorAlgebra R V.
     In Mathlib, ExteriorAlgebra R V is definitionally CliffordAlgebra (0 : QuadraticForm R V). -/

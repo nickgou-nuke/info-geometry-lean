@@ -6,7 +6,7 @@ namespace InfoGeometry.Projective.Sandbox.BCFWShift
 
 open InfoGeometry.Projective.Amplituhedron
 
-variable (R : Type*) [CommRing R]
+variable (R : Type*) [CommSemiring R]
 variable (ι : Type*)
 variable (f : ι → ι)
 

@@ -470,9 +470,9 @@ end Jaynes
 section JaynesLists
 
 variable {K : Type uR} {B : Type uA}
-variable [Field K] [Ring B] [Algebra K B]
+variable [CommSemiring K] [Semiring B] [Algebra K B]
 
-/-- A point evaluation/character is an algebra homomorphism into the coefficient field. -/
+/-- A point evaluation/character is an algebra homomorphism into the coefficient semiring. -/
 abbrev Character :=
   B →ₐ[K] K
 
@@ -496,27 +496,7 @@ theorem list_sum_map_one
   | nil =>
       simp
   | cons χ tail ih =>
-      simp [ih, Nat.cast_succ]
-      abel
-
-/--
-The empirical state associated to a finite nonzero-character-count list.
-
-The premise `(chars.length : R) ≠ 0` is intentionally explicit: over fields of
-finite characteristic, a nonempty list can have length whose scalar cast
-vanishes.
--/
-noncomputable def empiricalState
-    (chars : List (Character (K := K) (B := B)))
-    (hchars : (chars.length : K) ≠ 0) :
-    AlgebraicState (R := K) (A := B) where
-  toLinearMap :=
-    (1 / (chars.length : K)) •
-      (chars.map (fun (χ : Character (K := K) (B := B)) => χ.toLinearMap)).sum
-  map_one := by
-    rw [LinearMap.smul_apply, list_sum_map_one]
-    change (1 / (chars.length : K)) * (chars.length : K) = 1
-    field_simp [hchars]
+      simp [ih, Nat.cast_succ, add_comm]
 
 /--
 Recursive character-linear-map sum.
@@ -549,6 +529,32 @@ theorem sumCharacterLinearMaps_one
   rw [sumCharacterLinearMaps_eq_list_sum]
   exact list_sum_map_one chars
 
+end JaynesLists
+
+section EmpiricalStates
+
+variable {K : Type uR} {B : Type uA}
+variable [Semifield K] [Semiring B] [Algebra K B]
+
+/--
+The empirical state associated to a finite nonzero-character-count list.
+
+The premise `(chars.length : R) ≠ 0` is intentionally explicit: over fields of
+finite characteristic, a nonempty list can have length whose scalar cast
+vanishes.
+-/
+noncomputable def empiricalState
+    (chars : List (Character (K := K) (B := B)))
+    (hchars : (chars.length : K) ≠ 0) :
+    AlgebraicState (R := K) (A := B) where
+  toLinearMap :=
+    (1 / (chars.length : K)) •
+      (chars.map (fun (χ : Character (K := K) (B := B)) => χ.toLinearMap)).sum
+  map_one := by
+    rw [LinearMap.smul_apply, list_sum_map_one]
+    change (1 / (chars.length : K)) * (chars.length : K) = 1
+    exact one_div_mul_cancel hchars
+
 /--
 Recursive version of `empiricalState`.
 
@@ -564,7 +570,7 @@ noncomputable def empiricalStateRecursive
   map_one := by
     rw [LinearMap.smul_apply, sumCharacterLinearMaps_one]
     change (1 / (chars.length : K)) * (chars.length : K) = 1
-    field_simp [hchars]
+    exact one_div_mul_cancel hchars
 
 @[simp]
 theorem empiricalStateRecursive_toLinearMap
@@ -574,7 +580,7 @@ theorem empiricalStateRecursive_toLinearMap
       (empiricalState (K := K) (B := B) chars hchars).toLinearMap := by
   simp [empiricalStateRecursive, empiricalState]
 
-end JaynesLists
+end EmpiricalStates
 
 /-! ## 7. Algebraic Radon--Nikodym density witnesses -/
 

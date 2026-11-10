@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 open InfoGeometry.Canonical.TracedChernWeilCohomologyClassBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommSemiring R] [AddCommMonoid V] [Module R V] {n : ℕ}
 
 /-- **Definition**: Matrix Curvature Wedge Square F ∧ F = F * F. -/
 def matrixCurvatureWedgeSquare
@@ -34,6 +34,8 @@ theorem trace_matrixCurvatureWedgeSquare_eq
     matrixTraceForm (matrixCurvatureWedgeSquare F) = matrixTraceForm (F * F) :=
   rfl
 
+variable {R' V' : Type*} [CommRing R'] [AddCommMonoid V'] [Module R' V']
+
 /-- **Theorem**: Master Matrix Curvature Wedge Square & Chern-Weil Identification Synthesis.
     Unifies:
     1. Matrix curvature wedge square definition F ∧ F = F * F.
@@ -41,8 +43,8 @@ theorem trace_matrixCurvatureWedgeSquare_eq
     3. Traced Chern-Weil cohomology class construction [Tr(F ∧ F)] ∈ H_d.
     4. Exact formal closure connecting matrix curvature multiplication to Chern-Weil topological densities. -/
 theorem master_matrix_curvature_wedge_square_synthesis
-    (d : Module.End R (ExteriorAlgebra R V))
-    (F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
+    (d : Module.End R' (ExteriorAlgebra R' V'))
+    (F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R' V'))
     (h_closed : matrixExteriorDerivative d (matrixCurvatureWedgeSquare F) = 0) :
     (matrixCurvatureWedgeSquare F = F * F) ∧
     (tracedChernWeilCohomologyClass d (matrixCurvatureWedgeSquare F) h_closed =

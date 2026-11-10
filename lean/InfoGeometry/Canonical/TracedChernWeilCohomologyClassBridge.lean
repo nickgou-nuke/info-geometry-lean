@@ -18,7 +18,7 @@ open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 open InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 open BigOperators
 
-variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
+variable {R V : Type*} [CommRing R] [AddCommMonoid V] [Module R V] {n : ℕ}
 
 /-- **Definition**: Traced Chern-Weil Cohomology Class [Tr(F ∧ F)] ∈ H_d = ker d / range d. -/
 def tracedChernWeilCohomologyClass

@@ -39,7 +39,7 @@ open BigOperators
 variable {R V : Type*} [Field R] [AddCommGroup V] [Module R V] {n : ℕ}
 
 /-- **Lemma**: Covariant Derivative Negation Linearity D_A (-M) = - D_A M. -/
-theorem covariantDerivative_neg
+theorem covariantDerivative_neg {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
     (d : Module.End R (ExteriorAlgebra R V))
     (M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V)) :

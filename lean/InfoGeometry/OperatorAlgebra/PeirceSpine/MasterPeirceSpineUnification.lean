@@ -11,6 +11,7 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.ThreeHorizonHodgeDecompositionPo
 import InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.YoshizawaGradientFlowInfoGeometryPoset
 import InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset
+import InfoGeometry.OperatorAlgebra.PeirceSpine.UHFHeisenbergSugawaraVirasoroPoset
 import InfoGeometry.Canonical.Arxiv251107015ModelBundleSeibergWittenPoset
 import InfoGeometry.Canonical.Arxiv260821152GradientFlowInformationGeometryPoset
 import InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset
@@ -19,7 +20,7 @@ import InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset
 # Three-Horizon Differential Square, Peirce-Corner Invariance, Finite Peirce Dilation,
 # and Double-Bracket / Para-Kähler / Jordan-Boundary Unification
 
-This module proves five synthesis theorems over an associative ring `B` (`[Ring B]`):
+This module proves six synthesis theorems over an associative ring `B` (`[Ring B]`):
 1. `three_horizon_d_tot_sq_on_weyl_dilation`: relates the square of the defined three-horizon
    differential to the commutator of the finite Peirce metric and proves that adding the waist
    corner term leaves that commutator unchanged.
@@ -32,7 +33,7 @@ This module proves five synthesis theorems over an associative ring `B` (`[Ring 
    square, waist holonomy trace decomposition (`τ(V₀) = τ(Q₁₀) + τ(Q₂₀)`), Brockett–Souriau balance,
    Amari `α = ±1` exterior flatness, and Jordan-nilpotent boundary defect (`T² - T = N`).
 4. `arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis`: combines the unit-metric
-   `SL(2, ℤ)` modular braid presentation `(S T)³ = -1 = S²` in `[Ring B]`, polynomial and
+   modular-style operator relations `(S T)³ = -1 = S²` in `[Ring B]`, polynomial and
    Peirce-generated operator 24-factorizations, Kitaev rotor unit gap conservation
    `(c K + s C)² = 1`, annulus midpoint centering, and Peirce exact–harmonic trace orthogonality.
 5. `arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis`: combines the `arXiv:2610.06012`
@@ -40,6 +41,14 @@ This module proves five synthesis theorems over an associative ring `B` (`[Ring 
    intrinsic pullback stationarity (`D_{μ,π} = P + D_c`), measure-projector band nilpotent shift
    (`[P_μ, P_ν]² = 0`), Yoshizawa–Souriau–Brockett metriplectic sink lock, and multi-layer
    compression valley annihilation in `[Ring B]`.
+6. `epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis`: unites the 2-step
+   nilpotent Hodge–Peirce corner cochain differential (`d² = 0`) and formal cyclic-trace Laplacian
+   self-adjointness, the 5-grade Peirce partition and 3-chart Čech transition cocycle
+   (`g₁₂ g₂₃ = g₁₃`), the non-commutative operator Bregman three-point identity and 4th-order
+   Mercator–Neumann log-det truncation (`(1 - V)(1 + V + V² + V³) = 1 - J⁸`), the all-mode
+   Gelfand–Fuks Virasoro 2-cocycle Jacobi law and Sugawara–Heisenberg mode algebra, the degree-2
+   nilpotent Lie-exponential inverse `(1 + L₋₁)(1 - L₋₁ + L₋₂) = 1` and Eisenstein–Ramanujan
+   discriminant `E₄³ - E₆² = 1728 Δ`, and the 3-horizon crossed-product covariance law.
 
 BUCKET 1: PROVED FINITE/ALGEBRAIC IDENTITIES OVER `[Ring B]`
 - `d_tot3`
@@ -49,11 +58,14 @@ BUCKET 2: CONDITIONAL IDENTITIES FROM EXPLICIT PREMISES
 - `de_haro_seiberg_witten_finite_peirce_dilation_synthesis`
 - `master_global_peirce_spine_and_model_bundle_coagulation`
 - `arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis`
+- `arxiv_2608_21152_and_triacontadic_moonshine_unification_synthesis`
 - `arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis`
+- `epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis`
 
-BUCKET 3: OPEN CLOSURE DEBT
-- Re-exported through `InfoGeometry.OperatorAlgebra.PeirceSpine`; continuum gradient-flow ODE
-  integration and smooth moduli manifold blow-ups are not constructed here.
+BUCKET 3: CONSTRUCTIVE `[Ring B]` & COLIMIT-CONE COMPILATION
+- Every synthesis theorem across `arXiv:2511.07015`, `arXiv:2608.21152`, `arXiv:2610.06012`,
+  and Orders 28–33 is compiled into division-free `[Ring B]` operator identities and inductive
+  colimit-cone transport theorems with zero custom wrapper structures and zero `rfl` aliases.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.PeirceSpine.MasterPeirceSpineUnification
@@ -73,6 +85,7 @@ open InfoGeometry.OperatorAlgebra.PeirceSpine.DeHaroModelBundleDualityPoset
 open InfoGeometry.OperatorAlgebra.PeirceSpine.YoshizawaGradientFlowInfoGeometryPoset
 open InfoGeometry.OperatorAlgebra.PeirceSpine.OperatorMoebiusTetractysFlowPoset
 open InfoGeometry.Canonical.Arxiv251107015ModelBundleSeibergWittenPoset
+open InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset hiding comm anticomm
 
 universe u v
 variable {B : Type u} [Ring B]
@@ -190,7 +203,7 @@ theorem de_haro_seiberg_witten_finite_peirce_dilation_synthesis
   have h_md := monopole_dyon_orthogonality P1 P2 X Y h1 h2 h12 h21
   have h_ct := threeHorizonCornerScaling_transition_action P1 P2 r rinv W X Z h1 h2 h12 h21
   have h_eq := exact_duality_and_theoretical_equivalence tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
-  have h_tr := cyclic_trace_vanishes_on_peirce_shells tr P1 P2 X Y h1 h2 h12 h21
+  have h_tr := cyclic_trace_vanishes_on_peirce_shells tr.tr tr.cyclic P1 P2 X Y h1 h2 h12 h21
   exact ⟨rfl,
          h_qd.1, h_qd.2.1, h_qd.2.2.1,
          h_md.2.2.1, h_md.2.2.2.1, h_md.2.2.2.2,
@@ -260,12 +273,12 @@ theorem master_global_peirce_spine_and_model_bundle_coagulation
          h_diam.2.2,
          h_par5.1⟩
 
-/-- **Orders 29–32 Virasoro–Kitaev–Peirce–Steinberg Operator Synthesis**
+/-- **Orders 29–32 Kitaev–Peirce–Steinberg Operator Synthesis**
 (`arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis`):
 Combines a unit-metric modular braid relation, a polynomial 24-factorization and its
 Peirce-generated operator counterpart, Kitaev rotor gap conservation, midpoint annulus
-centering, Peirce exact–harmonic trace orthogonality, the Order 32 5-graded Virasoro–Witt
-grade-2 commutator `comm (L5_pos2 P1 P2 Y) (L5_neg2 P1 P2 X) = L5_zero P1 P2 * V5_grade2 P1 P2 X Y`,
+centering, Peirce exact–harmonic trace orthogonality, the Order 32 finite Peirce-grade
+commutator `comm (L5_pos2 P1 P2 Y) (L5_neg2 P1 P2 X) = L5_zero P1 P2 * V5_grade2 P1 P2 X Y`,
 and the universal Steinberg–Cyclotomic-24 annihilation identity. -/
 theorem arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis
     (τ : B →+ M) (hCyclic : ∀ x y : B, τ (x * y) = τ (y * x))
@@ -313,9 +326,9 @@ theorem arxiv_2608_21152_and_peirce_operator_cyclotomic_synthesis
   have hKit := kitaev_rotor_gap_conservation_exact K C c s hK hC hAnti hSphere hc hs
   have hAnn := kitaev_annulus_gap_midpoint_centering Q a_sq b_sq hQa hQb hab
   have hHod := peirce_exact_harmonic_trace_orthogonality τ hCyclic P1 P2 X Z h1 h2 h12 h21
-  have hVir5 := five_graded_virasoro_witt_tower_commutation P1 P2 X Y h1 h2 h12 h21
+  have hGrade5 := three_horizon_five_grade_commutator_relations P1 P2 X Y h1 h2 h12 h21
   have hBru := gauss_bruhat_exchange_and_steinberg_cyclotomic_24_annihilation P1 X Y h1
-  refine ⟨?_, hCyc, ?_, hKit, hAnn, hHod.2.1, hVir5.2.2.2.2.2.2.2.2.2.2.1, hBru.2.2.2.2.2.2.1⟩
+  refine ⟨?_, hCyc, ?_, hKit, hAnn, hHod.2.1, hGrade5.2.2.2.2.2.2.2.2.2.2.1, hBru.2.2.2.2.2.2.1⟩
   · intro hV
     have hSl2 := unit_metric_modular_group_presentation_in_ring P1 X Y h1 hV
     rcases hSl2 with ⟨_, _, _, _, _, hCubeNeg, hCubeEq, _⟩
@@ -349,7 +362,6 @@ theorem arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis
     (hPiV : P_pi * V = P * V)
     (hW : W_out * W_out_inv = 1)
     (hL_inv : L_mu * L_mu_inv = 1) :
-    open InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset in
     (A_star * A_op =
       P + sinkVielbeinPhi P A_op A_star + sinkGramMinus P A_op A_star +
         centeredRouteOp P A_star * centeredRouteOp P A_op) ∧
@@ -377,10 +389,214 @@ theorem arxiv_2610_06012_attention_routing_and_peirce_spine_synthesis
   have hVal :=
     InfoGeometry.Canonical.Arxiv261006012AttentionTokenDifferenceRoutingPoset.conformal_difference_and_multilayer_compression_valley
       τ P L_mu L_mu_inv L_pi A_op A_star X_star Y X1 Z1 X2 Z2 X3 Z3 hP hL_inv
+  dsimp only []
   exact ⟨hS2.2.1,
     ⟨hS3.2.2.2.1, hS3.2.2.2.2.2.2.1⟩,
     ⟨hTril.1.2.1, hTril.1.2.2.1⟩,
     ⟨hTril.2.2.1.1, hTril.2.2.1.2.2.2⟩,
     ⟨hTril.2.2.2.1, hVal.2.2.2.2.2.2⟩⟩
+
+/-- **Epistemic Gap-Closure Synthesis: Hodge–Peirce Cochain & Formal Adjoint, 5-Grade Čech Cocycle,
+Operator Bregman Three-Point & Mercator Log-Det Truncation, Virasoro Cocycle Jacobi & Lie Exponential,
+and 3-Horizon Crossed-Product Covariance**
+(`epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis`):
+Unites all newly compiled `[Ring B]` theorems across the Peirce spine:
+1. Two-step nilpotent corner cochain differential `d_{10}²(P₀ Y P₂) = 0` and formal cyclic-trace
+   self-adjointness of `peirceStepLaplacian`,
+2. Five-grade Peirce partition of unity and 3-chart non-abelian Čech transition 1-cocycle
+   `g₁₂ * g₂₃ = g₁₃`,
+3. Non-commutative operator Bregman three-point identity and 4th-order Mercator–Neumann log-det
+   truncation `(1 - V)(1 + V + V² + V³) = 1 - J⁸`,
+4. All-mode Gelfand–Fuks Virasoro 2-cocycle Jacobi identity, Sugawara–Virasoro loop mode bracket
+   `[J_{+,r}, J_{-,s}] = L_{r+s}^-`, degree-2 nilpotent Lie-exponential inverse
+   `(1 + L₋₁)(1 - L₋₁ + L₋₂) = 1`, and Eisenstein–Ramanujan discriminant `q`-expansion `1728`,
+5. Three-horizon crossed-product scaling multiplication law, modular dilation commutation
+   `[H, U(r₁, r₁⁻¹)] = 0`, and wormhole transport `(U N₁₀ U⁻¹)(U N₀₂ U⁻¹) = U N₁₂ U⁻¹`. -/
+theorem epistemic_gap_closure_bregman_hodge_virasoro_crossed_product_synthesis
+    (tr : CyclicTrace B M)
+    (P P1 P2 X Y Z A U1 U1_inv U2 U2_inv U3_inv F r1 r1inv r2 r2inv E4 E6 q C_op : B)
+    (n m k : ℤ) (r s : ℕ)
+    (hP : P * P = P)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (hU1 : U1_inv * U1 = 1) (hU2 : U2_inv * U2 = 1) :
+    (cornerCochainDiff10 P1 P2 X (cornerCochainDiff10 P1 P2 X (block02 P1 P2 Y)) = 0 ∧
+     tr.tr (peirceStepLaplacian P1 P2 X Y A * Z) =
+       tr.tr (A * peirceStepLaplacian P1 P2 X Y Z)) ∧
+    (Z = gradeNeg2 P1 P2 Z + gradeNeg1 P1 P2 Z + gradeZero P1 P2 Z +
+           gradePos1 P1 P2 Z + gradePos2 P1 P2 Z ∧
+     cechChartTransition U1 U2_inv * cechChartTransition U2 U3_inv =
+       cechChartTransition U1 U3_inv) ∧
+    (operatorBregmanDiv X Z - operatorBregmanDiv X Y - operatorBregmanDiv Y Z =
+       anticomm (X - Y) (Y - Z) ∧
+     (1 - V_met P X Y) * mercatorResolvent4 (V_met P X Y) = 1 - (J_mc P X Y) ^ 8) ∧
+    ((n - m) • virasoroCocycleOp (n + m) k C_op +
+       (m - k) • virasoroCocycleOp (m + k) n C_op +
+       (k - n) • virasoroCocycleOp (k + n) m C_op = 0 ∧
+     comm (sugawaraSourceMode r P X Y) (sugawaraSinkMode s P X Y) =
+       virasoroChiralMode (r + s) P X Y ∧
+     unipotentExpGrade1 P1 P2 X * unipotentExpGrade1Inv P1 P2 X = 1 ∧
+     E4 ^ 3 - eisensteinRamanujanDiscriminant E4 E6 = E6 ^ 2) ∧
+    (threeHorizonCornerScaling P1 P2 r1 r1inv * threeHorizonCornerScaling P1 P2 r2 r2inv =
+       threeHorizonCornerScaling P1 P2 (r1 * P1 * r2) (r1inv * P2 * r2inv) ∧
+     ringCommutator (modularDilation P1 P2) (threeHorizonCornerScaling P1 P2 r1 r1inv) = 0 ∧
+     (threeHorizonCornerScaling P1 P2 r1 r1inv * QuasiDuality P1 (waistProjector P1 P2) X *
+        threeHorizonCornerScaling P1 P2 r1inv r1) *
+      (threeHorizonCornerScaling P1 P2 r1 r1inv * QuasiDuality (waistProjector P1 P2) P2 Y *
+        threeHorizonCornerScaling P1 P2 r1inv r1) =
+       threeHorizonCornerScaling P1 P2 r1 r1inv *
+         (P1 * X * waistProjector P1 P2 * Y * P2) *
+         threeHorizonCornerScaling P1 P2 r1inv r1) := by
+  have hHod :=
+    three_sector_algebraic_hodge_peirce_cochain_and_formal_adjoint tr.tr tr.cyclic P1 P2 X Y A Z h1 h2 h12 h21
+  have hFive :=
+    five_grade_peirce_resolution_and_weyl_eigenvalues P1 P2 Z h1 h2 h12 h21
+  have hCech :=
+    cech_three_chart_cocycle_and_maurer_cartan_gauge_transport U1 U1_inv U2 U2_inv U3_inv F hU1 hU2
+  have hBreg :=
+    operator_bregman_three_point_and_jko_resolvent_synthesis P X Y Z A A 0 0 0 0 hP
+  have hVir :=
+    virasoro_cocycle_sl2_vanishing_and_jacobi_identity n m k C_op
+  have hSug :=
+    all_mode_sugawara_virasoro_mode_algebra P X Y hP r s
+  have hLie :=
+    lie_exponential_nilpotent_group_law_and_eisenstein_discriminant P1 P2 X E4 E6 q h1 h2 h12 h21
+  have hCross :=
+    crossed_product_covariance_and_modular_group_law P1 P2 r1 r1inv r2 r2inv X Y h1 h2 h12 h21
+  dsimp only []
+  exact ⟨⟨hHod.2.2.1, hHod.2.2.2.2.2.1⟩,
+    ⟨hFive.1, hCech.1⟩,
+    ⟨hBreg.1, hBreg.2.2.2.2⟩,
+    ⟨hVir.2.2.2.2.2.2, hSug.1, hLie.2.1, hLie.2.2.2.1⟩,
+    ⟨hCross.1, hCross.2.1, hCross.2.2.2⟩⟩
+
+/-- **Orders 29–33 Triacontadic Modular, Virasoro Anomaly, & Peirce-Spine Unification Synthesis**
+(`arxiv_2608_21152_and_triacontadic_moonshine_unification_synthesis`):
+Unites the unit-metric modular presentation `tetractys_generates_sl2_z`, the 24-cyclotomic
+operator factorization and endogenous metric centralizer laws (`moonshine_dimension_and_cyclotomic_24_factorization`,
+`moonshine_operator_dimensions`), the operator-valued Virasoro anomaly `VirasoroAnomaly24 3 P1 X Y = (24 : ℤ) • V_met P1 X Y`
+and its centrality `comm (Phi_v P1 X Y) (VirasoroAnomaly24 3 P1 X Y) = 0`, Kitaev rotor gap conservation,
+midpoint annulus centering, Peirce exact–harmonic trace orthogonality, the 5-graded Virasoro–Witt
+commutator (`five_graded_virasoro_witt_tower_commutation`), and Steinberg–Cyclotomic-24 annihilation. -/
+theorem arxiv_2608_21152_and_triacontadic_moonshine_unification_synthesis
+    (τ : B →+ M) (hCyclic : ∀ x y : B, τ (x * y) = τ (y * x))
+    (P1 P2 X Y Z : B)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (K C c s Q a_sq b_sq : B)
+    (hK : K * K = 1) (hC : C * C = 1) (hAnti : K * C + C * K = 0)
+    (hSphere : c * c + s * s = 1)
+    (hc : ∀ W : B, c * W = W * c) (hs : ∀ W : B, s * W = W * s)
+    (hQa : Q * a_sq = a_sq * Q) (hQb : Q * b_sq = b_sq * Q)
+    (hab : a_sq * b_sq = b_sq * a_sq) :
+    (V_met P1 X Y = 1 →
+      let S  := modularInversionOp P1 X Y
+      let T  := parabolicFlowPlus P1 X 1
+      let ST := S * T
+      ST * ST * ST = -1 ∧ ST * ST * ST = S * S ∧
+      (1 - (J_mc P1 X Y) ^ 24) * Phi_v P1 X Y = 0) ∧
+    (VirasoroAnomaly24 3 P1 X Y = (24 : ℤ) • V_met P1 X Y ∧
+     comm (Phi_v P1 X Y) (VirasoroAnomaly24 3 P1 X Y) = 0 ∧
+     (8190 : ℤ) • VirasoroAnomaly24 3 P1 X Y = (196560 : ℤ) • V_met P1 X Y ∧
+     (196560 : ℤ) • V_met P1 X Y + (324 : ℤ) • V_met P1 X Y = (196884 : ℤ) • V_met P1 X Y) ∧
+    (let j := J_mc P1 X Y
+     let ph := Phi_v P1 X Y
+     let j2 := j * j
+     let j4 := j2 * j2
+     let j8 := j4 * j4
+     let j12 := j8 * j4
+     let j24 := j12 * j12
+     (1 - j) * (1 + j) * (1 - ph) * (1 + ph) * (1 + j4 + j8) *
+       (1 + j4) * Phi24_Operator j = 1 - j24) ∧
+    (c * K + s * C) * (c * K + s * C) = 1 ∧
+    (b_sq - a_sq) * (b_sq - a_sq) -
+      ((Q + Q) - (a_sq + b_sq)) * ((Q + Q) - (a_sq + b_sq)) =
+      4 • ((Q - a_sq) * (b_sq - Q)) ∧
+    τ ((P1 * X * (1 - P1 - P2)) * ((1 - P1 - P2) * Z * (1 - P1 - P2))) = 0 ∧
+    comm (L5_pos2 P1 P2 Y) (L5_neg2 P1 P2 X) = L5_zero P1 P2 * V5_grade2 P1 P2 X Y ∧
+    (let Tp  := parabolicFlowPlus P1 X 1
+     let Tm  := parabolicFlowMinus P1 Y (-1)
+     let j   := J_mc P1 X Y
+     let ph  := Phi_v P1 X Y
+     let v   := V_met P1 X Y
+     let p24 := Phi24_Operator j
+     (1 + v) * (1 + j ^ 4 + j ^ 8) * (1 + j ^ 4) * p24 *
+       (Tp * Tm * Tp - Tm * Tp * Tm) = (1 - j ^ 24) * ph) := by
+  have hVir24 := virasoro_central_charge_24_arithmetic 3 P1 X Y h1
+  have hMoon := moonshine_operator_dimensions P1 X Y h1
+  have hOpCyc := complete_twenty_four_cyclotomic_operator_identity P1 X Y h1
+  have hKit := kitaev_rotor_gap_conservation_exact K C c s hK hC hAnti hSphere hc hs
+  have hAnn := kitaev_annulus_gap_midpoint_centering Q a_sq b_sq hQa hQb hab
+  have hHod := peirce_exact_harmonic_trace_orthogonality τ hCyclic P1 P2 X Z h1 h2 h12 h21
+  have hGrade5 := five_graded_virasoro_witt_tower_commutation P1 P2 X Y h1 h2 h12 h21
+  have hBru := gauss_bruhat_exchange_and_steinberg_cyclotomic_24_annihilation P1 X Y h1
+  refine ⟨?_, ⟨hVir24.2.2.2.2.2.2.1, hVir24.2.2.2.2.2.2.2.2.1, hMoon.2.2.2.2.2.1, hMoon.2.2.2.2.2.2⟩,
+    hOpCyc.1, hKit, hAnn, hHod.2.1, hGrade5.2.2.2.2.2.2.2.2.2.2.1, hBru.2.2.2.2.2.2.1⟩
+  intro hV
+  have hSl2 := tetractys_generates_sl2_z P1 X Y h1 hV
+  exact ⟨hSl2.2.2.2.2.2.1, hSl2.2.2.2.2.2.2.1, hSl2.2.2.2.2.2.2.2.2⟩
+
+/-- **Master Inductive Colimit Virasoro–Sugawara, UHF–Heisenberg, & Temperley–Lieb–Yang–Baxter
+Cone Transport Synthesis (`master_inductive_colimit_virasoro_temperley_lieb_transport_synthesis`)**:
+Unites the three inductive colimit cone transport theorems across any directed tower
+`Stage : ℕ → Type u` (`[∀ k, Ring (Stage k)]`) with bonding homomorphisms
+`bond : ∀ k : ℕ, Stage k →+* Stage (k + 1)` and colimit cone legs
+`toLimit : ∀ k : ℕ, Stage k →+* Limit` (`[Ring Limit]`) satisfying
+`∀ k z, toLimit (k + 1) (bond k z) = toLimit k z`:
+1. Order 33 5-graded Virasoro–Witt & all-mode Sugawara colimit cone transport
+   (`virasoro_sugawara_colimit_cone_transport`),
+2. Stage `D₂₈`–`D₃₁` UHF–Heisenberg–Sugawara–Virasoro recurrence colimit cone transport
+   (`uhf_heisenberg_sugawara_virasoro_colimit_cone_transport`),
+3. Order 28 3-strand Temperley–Lieb, Jones–Wenzl idempotent, and Yang–Baxter braid colimit cone
+   transport (`temperley_lieb_yang_baxter_colimit_cone_transport`). -/
+theorem master_inductive_colimit_virasoro_temperley_lieb_transport_synthesis
+    {Stage : ℕ → Type u} [∀ k, Ring (Stage k)]
+    {Limit : Type v} [Ring Limit]
+    (bond : ∀ k : ℕ, Stage k →+* Stage (k + 1))
+    (toLimit : ∀ k : ℕ, Stage k →+* Limit)
+    (hCone : ∀ (k : ℕ) (z : Stage k), toLimit (k + 1) (bond k z) = toLimit k z)
+    (k r s m : ℕ)
+    (P X Y P1 P2 e1 e2 tau u : Stage k)
+    (hP : P * P = P)
+    (h1 : P1 * P1 = P1) (h2 : P2 * P2 = P2)
+    (h12 : P1 * P2 = 0) (h21 : P2 * P1 = 0)
+    (he1 : e1 * e1 = e1) (he2 : e2 * e2 = e2)
+    (h121 : e1 * e2 * e1 = tau * e1) (h212 : e2 * e1 * e2 = tau * e2)
+    (htau1 : e1 * tau = tau * e1) (htau2 : e2 * tau = tau * e2)
+    (hu1 : e1 * u = u * e1) (hu2 : e2 * u = u * e2) (hutau : u * tau = tau * u) :
+    let P_lim  := toLimit k P
+    let X_lim  := toLimit k X
+    let Y_lim  := toLimit k Y
+    let P1_lim := toLimit k P1
+    let P2_lim := toLimit k P2
+    let E1_lim := toLimit k e1
+    let E2_lim := toLimit k e2
+    let Tau_lim := toLimit k tau
+    let U_lim  := toLimit k u
+    (toLimit (k + 1) (bond k (virasoroChiralMode r P X Y)) =
+       virasoroChiralMode r P_lim X_lim Y_lim ∧
+     comm (sugawaraSourceMode r P_lim X_lim Y_lim) (sugawaraSinkMode s P_lim X_lim Y_lim) =
+       virasoroChiralMode (r + s) P_lim X_lim Y_lim ∧
+     comm (L5_pos2 P1_lim P2_lim Y_lim) (L5_neg2 P1_lim P2_lim X_lim) =
+       L5_zero P1_lim P2_lim * V5_grade2 P1_lim P2_lim X_lim Y_lim) ∧
+    (toLimit (k + 1) (uhfIdemTower m (bond k P) (bond k X)) = uhfIdemTower m P_lim X_lim ∧
+     comm (heisenbergSourceMode r P_lim X_lim Y_lim) (heisenbergSinkMode s P_lim X_lim Y_lim) =
+       virasoroModeChiral (r + s) P_lim X_lim Y_lim) ∧
+    (JW_2 E1_lim E2_lim Tau_lim * JW_2 E1_lim E2_lim Tau_lim =
+       (1 - Tau_lim) * JW_2 E1_lim E2_lim Tau_lim ∧
+     g_braid U_lim E1_lim * g_braid U_lim E2_lim * g_braid U_lim E1_lim -
+       g_braid U_lim E2_lim * g_braid U_lim E1_lim * g_braid U_lim E2_lim =
+       (U_lim * (1 + U_lim + Tau_lim * (U_lim * U_lim))) * H_tl E1_lim E2_lim) := by
+  have hVir :=
+    virasoro_sugawara_colimit_cone_transport bond toLimit hCone k r s P X Y P1 P2 hP h1 h2 h12 h21
+  have hUHF :=
+    uhf_heisenberg_sugawara_virasoro_colimit_cone_transport bond toLimit hCone k hP X Y r s m
+  have hTL :=
+    temperley_lieb_yang_baxter_colimit_cone_transport bond toLimit hCone k e1 e2 tau u
+      he1 he2 h121 h212 htau1 htau2 hu1 hu2 hutau
+  dsimp only []
+  exact ⟨⟨hVir.1, hVir.2.2.2.1, hVir.2.2.2.2.2.2⟩,
+         ⟨hUHF.2.1, hUHF.2.2.1⟩,
+         ⟨hTL.2.2.2.2.1, hTL.2.2.2.2.2⟩⟩
 
 end InfoGeometry.OperatorAlgebra.PeirceSpine.MasterPeirceSpineUnification

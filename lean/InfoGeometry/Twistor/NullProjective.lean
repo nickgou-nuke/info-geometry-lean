@@ -88,11 +88,12 @@ end Doubled
 
 /-- Abstract chiral-factorization contract for null vectors. -/
 class ChiralFactorization
-    {Splus Sminus : Type*}
-    [AddCommGroup Splus] [Module K Splus]
-    [AddCommGroup Sminus] [Module K Sminus]
-    (Q : QuadraticForm K V) where
-  factor : Splus → Sminus → V
+    {K₀ V₀ Splus Sminus : Type*}
+    [CommSemiring K₀] [AddCommMonoid V₀] [Module K₀ V₀]
+    [AddCommMonoid Splus] [Module K₀ Splus]
+    [AddCommMonoid Sminus] [Module K₀ Sminus]
+    (Q : QuadraticForm K₀ V₀) where
+  factor : Splus → Sminus → V₀
   null_of_factor : ∀ ψ χ, Q (factor ψ χ) = 0
   factor_of_null : ∀ v, Q v = 0 → ∃ ψ χ, factor ψ χ = v
 

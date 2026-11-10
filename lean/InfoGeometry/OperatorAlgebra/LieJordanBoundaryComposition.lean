@@ -15,7 +15,9 @@ derivation is asserted square-zero merely because its generator is.
 
 namespace InfoGeometry.OperatorAlgebra.LieJordan
 
-variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+section SemiringTransport
+
+variable (R : Type*) [Semiring R] {A : Type*} [Semiring A] [Module R A]
   [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Ordered two-sided multiplication, as a native endomorphism. -/
@@ -31,6 +33,23 @@ def crossTransport (a b : A) : Module.End R A :=
 
 @[simp] theorem crossTransport_apply (a b x : A) :
     crossTransport R a b x = a * x * b + b * x * a := rfl
+
+theorem crossTransport_one (a b : A) :
+    crossTransport R a b 1 = a * b + b * a := by
+  simp
+
+/-- Any ring homomorphism intertwines the evaluated two-sided transport. -/
+theorem RingHom.map_crossTransport {B : Type*} [Semiring B] [Module R B]
+    [IsScalarTower R B B] [SMulCommClass R B B]
+    (f : A →+* B) (a b x : A) :
+    f (crossTransport R a b x) =
+      crossTransport R (f a) (f b) (f x) := by
+  simp only [crossTransport_apply, map_add, map_mul]
+
+end SemiringTransport
+
+variable (R : Type*) [Ring R] {A : Type*} [Ring A] [Module R A]
+  [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Squaring the ordinary commutator retains a negative sandwich term. -/
 theorem lie_square_defect (q : A) :
@@ -140,21 +159,9 @@ theorem pure_pair_difference (a b : A) :
   rw [jordan_pair_sum, lie_pair_sum]
   abel
 
-theorem crossTransport_one (a b : A) :
-    crossTransport R a b 1 = a * b + b * a := by
-  simp
-
-/-- Any ring homomorphism intertwines the evaluated two-sided transport. -/
-theorem RingHom.map_crossTransport {B : Type*} [Ring B] [Module R B]
-    [IsScalarTower R B B] [SMulCommClass R B B]
-    (f : A →+* B) (a b x : A) :
-    f (crossTransport R a b x) =
-      crossTransport R (f a) (f b) (f x) := by
-  simp only [crossTransport_apply, map_add, map_mul]
-
 section AlgebraHom
 
-variable (R₁ : Type*) [CommRing R₁] {A₁ B₁ : Type*} [Ring A₁] [Ring B₁]
+variable (R₁ : Type*) [CommSemiring R₁] {A₁ B₁ : Type*} [Semiring A₁] [Semiring B₁]
   [Algebra R₁ A₁] [Algebra R₁ B₁]
 
 /-- A real algebra map intertwines the complete two-sided transport. -/

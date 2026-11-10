@@ -38,7 +38,7 @@ open InfoGeometry.Canonical.ModularHamiltonianSignum
 section LeftRight
 
 variable {R A : Type*}
-variable [CommSemiring R] [Semiring A] [Algebra R A]
+variable [Semiring R] [Semiring A] [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
 
 /-- Left multiplication as a linear endomorphism: `x ↦ a*x`. -/
 @[rep_depth operator]
@@ -49,14 +49,7 @@ def leftMul (a : A) : A →ₗ[R] A where
     simp [left_distrib]
   map_smul' := by
     intro r x
-    calc
-      a * r • x = a * (algebraMap R A r * x) := by
-        rw [Algebra.smul_def]
-      _ = algebraMap R A r * (a * x) := by
-        rw [← mul_assoc, ← (Algebra.commutes r a), mul_assoc]
-      _ = (RingHom.id R) r • (a * x) := by
-        rw [Algebra.smul_def]
-        rfl
+    exact mul_smul_comm r a x
 
 /-- Right multiplication as a linear endomorphism: `x ↦ x*b`. -/
 @[rep_depth operator]
@@ -67,7 +60,7 @@ def rightMul (b : A) : A →ₗ[R] A where
     simp [right_distrib]
   map_smul' := by
     intro r x
-    simp [Algebra.smul_def, mul_assoc]
+    exact smul_mul_assoc r x b
 
 @[simp, rep_depth operator]
 theorem leftMul_apply (a x : A) :

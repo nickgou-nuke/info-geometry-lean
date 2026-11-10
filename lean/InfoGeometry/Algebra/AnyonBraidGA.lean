@@ -29,7 +29,7 @@ namespace InfoGeometry.Algebra.AnyonBraidGA
 open CliffordAlgebra
 
 variable {R : Type*} [CommRing R]
-variable {M : Type*} [AddCommGroup M] [Module R M]
+variable {M : Type*} [AddCommMonoid M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 /-- Clifford anti-commutator for two vectors in the chosen quadratic space. -/

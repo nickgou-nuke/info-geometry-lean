@@ -19,19 +19,19 @@ open InfoGeometry.Topology.ArtinBraidS3Quotient
 
 noncomputable section
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [CommSemiring R]
 abbrev Conf3FiniteTriple :=
   InfoGeometry.Topology.MobiusFiniteTripleNormalizationTopological.FiniteTriple
 
 /-- The combined Conf₃ Arnold packet and braid shadow packet. -/
-abbrev Conf3ArnoldBraidShadowPacket (R : Type*) [CommRing R] :=
+abbrev Conf3ArnoldBraidShadowPacket (R : Type*) [CommSemiring R] :=
   InfoGeometry.Topology.Conf3ArnoldNormalizationTopological.Conf3ArnoldPacket R ×
     (Equiv.Perm (Fin 3) × Equiv.Perm (Fin 3))
 
-instance conf3ArnoldBraidShadowPacketTopologicalSpace (R : Type*) [CommRing R] :
+instance conf3ArnoldBraidShadowPacketTopologicalSpace (R : Type*) [CommSemiring R] :
     TopologicalSpace (Conf3ArnoldBraidShadowPacket R) := ⊥
 
-instance conf3ArnoldBraidShadowPacketDiscreteTopology (R : Type*) [CommRing R] :
+instance conf3ArnoldBraidShadowPacketDiscreteTopology (R : Type*) [CommSemiring R] :
     DiscreteTopology (Conf3ArnoldBraidShadowPacket R) := ⟨rfl⟩
 
 /-- The canonical braid shadow packet uses the adjacent transpositions in `S₃`. -/

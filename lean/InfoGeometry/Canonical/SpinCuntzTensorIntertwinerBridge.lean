@@ -22,9 +22,9 @@ namespace InfoGeometry.Canonical.SpinCuntzTensorIntertwinerBridge
 open TensorProduct
 
 variable {𝕜 Spin C : Type*}
-  [CommRing 𝕜]
-  [AddCommGroup Spin] [Module 𝕜 Spin]
-  [AddCommGroup C] [Module 𝕜 C]
+  [CommSemiring 𝕜]
+  [AddCommMonoid Spin] [Module 𝕜 Spin]
+  [AddCommMonoid C] [Module 𝕜 C]
 
 /-- Tensor-square transport induced by a carrier equivalence. -/
 def tensorSquareEquiv (J : Spin ≃ₗ[𝕜] C) :

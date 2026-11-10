@@ -61,7 +61,7 @@ def braidGen1 (K : Type*) [Semiring K] (q1 q2 : K) : Matrix (Fin 2) (Fin 2) K :=
   rMatrix K q1 q2
 
 /-- Second braid generator σ₂ = F R F. -/
-def braidGen2 (K : Type*) [CommRing K] (a b q1 q2 : K) : Matrix (Fin 2) (Fin 2) K :=
+def braidGen2 (K : Type*) [Ring K] (a b q1 q2 : K) : Matrix (Fin 2) (Fin 2) K :=
   fMatrix K a b * rMatrix K q1 q2 * fMatrix K a b
 
 /-! ## F-Matrix Involutivity Entry Lemmas -/
@@ -109,7 +109,7 @@ theorem fMatrix_sq (K : Type*) [CommRing K] (a b : K) (h_norm : a ^ 2 + b ^ 2 = 
     rfl
 
 /-- **Theorem**: F-Matrix Self-Adjointness / Symmetry Fᵀ = F. -/
-theorem fMatrix_transpose (K : Type*) [CommRing K] (a b : K) :
+theorem fMatrix_transpose (K : Type*) [Ring K] (a b : K) :
     (fMatrix K a b)ᵀ = fMatrix K a b := by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl

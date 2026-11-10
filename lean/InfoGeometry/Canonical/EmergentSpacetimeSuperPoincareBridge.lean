@@ -47,15 +47,15 @@ namespace InfoGeometry.Canonical.EmergentSpacetimeSuperPoincare
 open InfoGeometry.Canonical.GaugedZornDiracKahler
 open InfoGeometry.Canonical.GaugedZornDiracKahler.ZornMatrix
 
-variable {R : Type*} [CommRing R]
-
 /-- The cyclic invariance of the scalar triple product: u · (v × w) = (u × v) · w. -/
-theorem scalar_triple_product_cyclic (u v w : Vec3 R) :
+theorem scalar_triple_product_cyclic {R : Type*} [CommRing R] (u v w : Vec3 R) :
     dot3 u (cross3 v w) = dot3 (cross3 u v) w := by
   dsimp [dot3, cross3]
   ring
 
 namespace ZornMatrix
+
+variable {R : Type*} [Ring R]
 
 /-- The split Cartan dilatation generator ℓ = E₁₁ - E₂₂ = diag(1, -1). -/
 def splitCartanEll : ZornMatrix R := ⟨1, -1, 0, 0⟩
@@ -70,7 +70,7 @@ def associator (X Y Z : ZornMatrix R) : ZornMatrix R :=
 Key Theorem: The associator of three color quarks generates the split Cartan dilatation generator.
 [Q(u), Q(v), Q(w)] = - (u · (v × w)) • ℓ.
 -/
-theorem three_quark_associator (u v w : Vec3 R) :
+theorem three_quark_associator {R : Type*} [CommRing R] (u v w : Vec3 R) :
     associator (quark u) (quark v) (quark w) =
     smul (-(dot3 u (cross3 v w))) splitCartanEll := by
   apply ZornMatrix.ext
@@ -91,18 +91,20 @@ theorem three_quark_associator (u v w : Vec3 R) :
 theorem lepton_vacuum_associator (a b c : R) :
     associator ⟨a, 0, 0, 0⟩ ⟨b, 0, 0, 0⟩ ⟨c, 0, 0, 0⟩ = zero := by
   apply ZornMatrix.ext
-  · dsimp [associator, ZornMatrix.sub, ZornMatrix.zornMul, zero, dot3, cross3]; ring
-  · dsimp [associator, ZornMatrix.sub, ZornMatrix.zornMul, zero, dot3, cross3]; ring
+  · dsimp [associator, ZornMatrix.sub, ZornMatrix.zornMul, zero, dot3, cross3]; noncomm_ring
+  · dsimp [associator, ZornMatrix.sub, ZornMatrix.zornMul, zero, dot3, cross3]; noncomm_ring
   · ext i; fin_cases i <;> {
       dsimp [associator, ZornMatrix.sub, ZornMatrix.zornMul, zero, cross3, dot3]
-      ring
+      noncomm_ring
     }
   · ext i; fin_cases i <;> {
       dsimp [associator, ZornMatrix.sub, ZornMatrix.zornMul, zero, cross3, dot3]
-      ring
+      noncomm_ring
     }
 
 end ZornMatrix
+
+variable {R : Type*} [CommRing R]
 
 /-!
 ### Supercharge Nilpotence

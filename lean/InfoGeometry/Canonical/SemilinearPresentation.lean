@@ -205,7 +205,7 @@ def idIso
 
 section PairedOffDiagonal
 
-variable (R : Type*) [CommSemiring R]
+variable (R : Type*) [Semiring R]
 
 /-- Paired presentation on the non-diagonal sector. -/
 @[rep_depth operator]

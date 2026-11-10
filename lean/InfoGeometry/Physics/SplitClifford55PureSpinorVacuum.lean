@@ -17,9 +17,9 @@ asserted here.
 namespace InfoGeometry.Physics.PureSpinor
 
 variable {R V W W_star : Type*} [CommRing R]
-variable [AddCommGroup V] [Module R V]
-variable [AddCommGroup W] [Module R W]
-variable [AddCommGroup W_star] [Module R W_star]
+variable [AddCommMonoid V] [Module R V]
+variable [AddCommMonoid W] [Module R W]
+variable [AddCommMonoid W_star] [Module R W_star]
 
 variable (Q : QuadraticForm R V)
 variable (W_inject : W →ₗ[R] V)

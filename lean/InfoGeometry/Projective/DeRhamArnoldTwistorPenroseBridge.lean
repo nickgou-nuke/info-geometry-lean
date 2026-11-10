@@ -36,7 +36,7 @@ theorem finite_bridge_packet :
   (∀ (R : ℝ) (hR : 0 < R) (n : ℤ),
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), grothendieck_dlog z)) =
       (1 : ℂ)) ∧
-  (∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+  (∀ {R : Type*} [CommSemiring R] {M : Type*} [AddCommMonoid M] [Module R M]
     {A : Type*} [Semiring A]
     (w12 w23 w31 : ArnoldExterior R M) (φ : ArnoldExterior R M →+* A),
     arnoldMixedRelation R M w12 w23 w31 ∈ RingHom.ker φ →

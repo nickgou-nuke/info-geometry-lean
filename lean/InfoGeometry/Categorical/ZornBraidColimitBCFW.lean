@@ -8,7 +8,7 @@ open InfoGeometry.Categorical.ZornBraidColimit
 
 universe u
 
-variable (R : Type u) [CommRing R]
+variable (R : Type u) [CommSemiring R]
 variable {J : Type u} [Category.{u} J] [IsFiltered J]
 
 variable (ZornSequence : J ⥤ ModuleCat.{u} R)

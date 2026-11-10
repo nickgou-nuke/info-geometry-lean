@@ -7,7 +7,7 @@
 
  open CliffordAlgebra
  variable {R M : Type*} [CommRing R]
- variable [AddCommGroup M] [Module R M]
+ variable [AddCommMonoid M] [Module R M]
  variable (Q : QuadraticForm R M)
  local notation "EvenQ" => CliffordAlgebra.even Q
 

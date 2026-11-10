@@ -73,6 +73,42 @@ section Cartan
 
 variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] {d b : A}
 
+/-- The common commutant is contained in the Cartan commutant, without seed equations. -/
+theorem jointCentralizer_le_phaseCentralizer (d b : A) :
+    Subalgebra.centralizer R ({d, b} : Set A) ≤
+      Subalgebra.centralizer R ({phasePolarization d b} : Set A) := by
+  intro a ha
+  have hc := (Subalgebra.mem_centralizer_iff R).mp ha
+  have hp := commute_phasePolarization_of_commute
+    (hc d (Set.mem_insert d {b})).symm
+    (hc b (Set.mem_insert_of_mem d (Set.mem_singleton b))).symm
+  rw [Subalgebra.mem_centralizer_iff]
+  intro x hx
+  have hx' : x = phasePolarization d b := Set.mem_singleton_iff.mp hx
+  subst x
+  exact hp.eq.symm
+
+/-- A nonzero seed gives a strict inclusion, even in characteristic two.
+The positive pole is Cartan-fixed but does not centralize the source. -/
+theorem jointCentralizer_lt_phaseCentralizer (h : IsDualSeedPair d b) (hd : d ≠ 0) :
+    Subalgebra.centralizer R ({d, b} : Set A) <
+      Subalgebra.centralizer R ({phasePolarization d b} : Set A) := by
+  refine lt_of_le_not_ge (jointCentralizer_le_phaseCentralizer d b) ?_
+  intro hle
+  have hp : polePlus d b ∈
+      Subalgebra.centralizer R ({phasePolarization d b} : Set A) := by
+    rw [Subalgebra.mem_centralizer_iff]
+    intro x hx
+    have hx' : x = phasePolarization d b := Set.mem_singleton_iff.mp hx
+    subst x
+    change (polePlus d b - poleMinus d b) * polePlus d b =
+      polePlus d b * (polePlus d b - poleMinus d b)
+    rw [sub_mul, mul_sub, h.pp, h.qp, h.pq]
+  have he := (Subalgebra.mem_centralizer_iff R).mp (hle hp)
+    d (Set.mem_insert d {b})
+  rw [h.dp, h.pd] at he
+  exact hd he.symm
+
 /-- The Cartan generator fails to centralize a seed whenever doubling that
 seed is nonzero. This states the exact characteristic/torsion boundary. -/
 theorem phase_not_mem_jointCentralizer (h : IsDualSeedPair d b)

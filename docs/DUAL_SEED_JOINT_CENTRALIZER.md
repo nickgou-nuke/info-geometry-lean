@@ -1,5 +1,12 @@
 # Dual seeds, joint centralizers, and trace orthogonality
 
+This document records the initial three-file mathematical snapshot and its
+prepublication checks. The user subsequently authorized draft publication as
+[PR #304](https://github.com/nickgou-nuke/info-geometry-lean/pull/304).
+The later Cartan-flow extension and current five-target validation are recorded
+in [Dual-seed flows and tower boundaries](DUAL_SEED_FLOW_AND_TOWER_BOUNDARIES.md).
+The source hashes and module counts below belong to the initial snapshot.
+
 ## Intake and theorem contract
 
 Source: the user's Bulgarian mathematical intake of 2026-11-10, applied to
@@ -194,10 +201,12 @@ gaps in the gate's debt scan. The tracked-scope and quarantine audits passed.
 The gate log and exact invocation/result are recorded in
 `scratch/dual-seed-qa/pre-push.log` and `pre-push-result.json`.
 
-The subsequent change only completes this documentation of the observed gate
-result; it does not change the reviewed Lean sources or workflow. Publication
-remains blocked by the repository policy against bypassing the pre-push gate.
-No branch or pull request has been published.
+At this prepublication checkpoint, the documentation follow-up recorded the
+observed failure without changing the reviewed Lean sources or workflow, and
+publication remained blocked by the repository gate. The user then explicitly
+authorized publishing this prepared candidate as a draft despite these known
+failures. PR #304 was published from the identical accepted source tree; the
+publication exception did not change the failed gate results.
 
 The added workflow reproduces the selected source-closure and native audit,
 requires zero warnings for the three new targets, runs the strict screener,

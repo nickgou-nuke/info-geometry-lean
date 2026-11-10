@@ -36,6 +36,36 @@ def centralizerProjection (R : Type*) [CommRing R] [Algebra R A] (d b : A) : A �
     centralizerProjection R d b a = polePlus d b * a * polePlus d b +
       b * a * d + zeroModeSupport d b * a * zeroModeSupport d b := rfl
 
+/-- Polynomial naturality on the full ambient algebra; no seed equations are needed. -/
+theorem centralizerProjection_map {B : Type*} [Ring B] [Algebra R B]
+    (f : A →ₐ[R] B) (d b a : A) :
+    f (centralizerProjection R d b a) =
+      centralizerProjection R (f d) (f b) (f a) := by
+  simp only [centralizerProjection_apply, polePlus, exactSupport, zeroModeSupport,
+    harmonicSupport, coexactSupport, map_add, map_mul, map_sub, map_one]
+
+/-- Reciprocal changes of seed normalization leave the actual projection unchanged. -/
+theorem centralizerProjection_rescale (d b a : A) (l m : R) (hlm : l * m = 1) :
+    centralizerProjection R (l • d) (m • b) a = centralizerProjection R d b a := by
+  have hml : m * l = 1 := by simpa only [mul_comm] using hlm
+  have hp : polePlus (l • d) (m • b) = polePlus d b := by
+    change (l • d) * (m • b) = d * b
+    rw [smul_mul_smul_left, hlm, one_smul]
+  have hq : poleMinus (l • d) (m • b) = poleMinus d b := by
+    change (m • b) * (l • d) = b * d
+    rw [smul_mul_smul_left, hml, one_smul]
+  have hr : zeroModeSupport (l • d) (m • b) = zeroModeSupport d b := by
+    change 1 - polePlus (l • d) (m • b) - poleMinus (l • d) (m • b) = _
+    rw [hp, hq]
+    rfl
+  rw [centralizerProjection_apply, centralizerProjection_apply, hp, hr]
+  rw [smul_mul_assoc, smul_mul_smul_left, hml, one_smul]
+
+/-- Common commutation implies commutation with the Cartan polynomial. -/
+theorem commute_phasePolarization_of_commute {a d b : A}
+    (hd : Commute a d) (hb : Commute a b) : Commute a (phasePolarization d b) :=
+  (hd.mul_right hb).sub_right (hb.mul_right hd)
+
 namespace IsDualSeedPair
 
 variable {d b : A}
@@ -159,6 +189,61 @@ theorem centralizerProjection_polePlus (h : IsDualSeedPair d b) :
     rw [← mul_assoc, h.residual_seed.1, zero_mul]
   rw [centralizerProjection_apply, h.pp, h.pp, h.bp, hrp, zero_mul, add_zero]
   rfl
+
+theorem centralizerProjection_poleMinus (h : IsDualSeedPair d b) :
+    centralizerProjection R d b (poleMinus d b) = 0 := by
+  have hrq : zeroModeSupport d b * poleMinus d b = 0 := by
+    change zeroModeSupport d b * (b * d) = 0
+    rw [← mul_assoc, h.residual_partner.1, zero_mul]
+  rw [centralizerProjection_apply, h.pq, zero_mul, h.bq, zero_mul,
+    hrq, zero_mul, add_zero, add_zero]
+
+theorem centralizerProjection_phase (h : IsDualSeedPair d b) :
+    centralizerProjection R d b (phasePolarization d b) = carrierSupport d b := by
+  change centralizerProjection R d b (polePlus d b - poleMinus d b) = _
+  rw [map_sub, h.centralizerProjection_polePlus, h.centralizerProjection_poleMinus,
+    sub_zero]
+
+/-- The directional projection is not invariant under arbitrary parabolic shear. -/
+theorem centralizerProjection_unipotent_partner (h : IsDualSeedPair d b) (s : R) :
+    centralizerProjection R d b ((1 + s • d) * b * (1 - s • d)) =
+      s • carrierSupport d b := by
+  have hs : (1 + s • d) * b * (1 - s • d) =
+      b + s • phasePolarization d b - (s * s) • d := by
+    change _ = b + s • (d * b - b * d) - (s * s) • d
+    simp only [add_mul, mul_sub, mul_one, one_mul, mul_smul_comm,
+      smul_mul_assoc, smul_add, smul_smul, h.inner, smul_sub]
+    abel
+  rw [hs, map_sub, map_add, map_smul, map_smul, h.centralizerProjection_partner,
+    h.centralizerProjection_phase, h.centralizerProjection_seed,
+    smul_zero, zero_add, sub_zero]
+
+/-- A simultaneous odd commutation rule is converted to an ordinary common
+commutant by the existing global parity involution, including the residual corner. -/
+theorem centralizerProjection_of_anticommute (h : IsDualSeedPair d b) (a : A)
+    (hd : a * d = -(d * a)) (hb : a * b = -(b * a)) :
+    centralizerProjection R d b a = a * superInvolution d b := by
+  have hc (x y : A) (hx : a * x = -(x * a)) (hy : a * y = -(y * a)) :
+      Commute a (x * y) := by
+    change a * (x * y) = (x * y) * a
+    rw [← mul_assoc, hx, neg_mul, mul_assoc, hy, mul_neg, neg_neg, ← mul_assoc]
+  have hp : Commute a (polePlus d b) := hc d b hd hb
+  have hq : Commute a (poleMinus d b) := hc b d hb hd
+  have hr : Commute a (zeroModeSupport d b) :=
+    ((Commute.one_right a).sub_right hp).sub_right hq
+  have hpap : polePlus d b * a * polePlus d b = a * polePlus d b := by
+    rw [← hp.eq, mul_assoc, h.pp]
+  have hba : b * a = -(a * b) := by
+    simpa only [neg_neg] using (congrArg Neg.neg hb).symm
+  have hbad : b * a * d = -(a * poleMinus d b) := by
+    rw [hba, neg_mul, mul_assoc]
+    rfl
+  have hrar : zeroModeSupport d b * a * zeroModeSupport d b =
+      a * zeroModeSupport d b := by
+    rw [← hr.eq, mul_assoc, harmonic_idempotent h]
+  rw [centralizerProjection_apply, hpap, hbad, hrar]
+  change _ = a * (polePlus d b - poleMinus d b + zeroModeSupport d b)
+  noncomm_ring
 
 /-- A nonzero seed forces a concrete multiplicativity failure. -/
 theorem centralizerProjection_mul_ne (h : IsDualSeedPair d b) (hd : d ≠ 0) :

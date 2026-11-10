@@ -5,7 +5,10 @@ on:
       - 'lean/InfoGeometry/Core/DualSeedCentralizer.lean'
       - 'lean/InfoGeometry/Canonical/JointCentralizerGeometry.lean'
       - 'lean/InfoGeometry/Canonical/JointCentralizerGeometryAudit.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerDynamics.lean'
+      - 'lean/InfoGeometry/Canonical/JointCentralizerDynamicsAudit.lean'
       - 'docs/DUAL_SEED_JOINT_CENTRALIZER.md'
+      - 'docs/DUAL_SEED_FLOW_AND_TOWER_BOUNDARIES.md'
       - '.github/workflows/joint-centralizer.yml'
   workflow_dispatch:
 permissions:
@@ -57,7 +60,9 @@ jobs:
           from tools.quality.check_reviewed_prs import closure
           targets = ['InfoGeometry.Core.DualSeedCentralizer',
                      'InfoGeometry.Canonical.JointCentralizerGeometry',
-                     'InfoGeometry.Canonical.JointCentralizerGeometryAudit']
+                     'InfoGeometry.Canonical.JointCentralizerGeometryAudit',
+                     'InfoGeometry.Canonical.JointCentralizerDynamics',
+                     'InfoGeometry.Canonical.JointCentralizerDynamicsAudit']
           _, _, native = closure(pathlib.Path('project'), targets)
           with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'joint-centralizer-cache', block=True):
               subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
@@ -71,7 +76,9 @@ jobs:
             --mathlib-root pinned-mathlib --output verification \
             --target InfoGeometry.Core.DualSeedCentralizer \
             --target InfoGeometry.Canonical.JointCentralizerGeometry \
-            --target InfoGeometry.Canonical.JointCentralizerGeometryAudit
+            --target InfoGeometry.Canonical.JointCentralizerGeometryAudit \
+            --target InfoGeometry.Canonical.JointCentralizerDynamics \
+            --target InfoGeometry.Canonical.JointCentralizerDynamicsAudit
           python3 - <<'PY'
           import json, pathlib, sys
           report = json.loads(pathlib.Path('verification/report.json').read_text())
@@ -91,7 +98,9 @@ jobs:
           python3 tools/infra/opengauss_screener.py --strict \
             lean/InfoGeometry/Core/DualSeedCentralizer.lean \
             lean/InfoGeometry/Canonical/JointCentralizerGeometry.lean \
-            lean/InfoGeometry/Canonical/JointCentralizerGeometryAudit.lean
+            lean/InfoGeometry/Canonical/JointCentralizerGeometryAudit.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerDynamics.lean \
+            lean/InfoGeometry/Canonical/JointCentralizerDynamicsAudit.lean
       - uses: actions/upload-artifact@v4
         if: always()
         with:

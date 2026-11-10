@@ -1,0 +1,58 @@
+{
+  "schema": "info_geometry.ci_path_preflight.v1",
+  "revision": "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0",
+  "ok": false,
+  "packages": [
+    {
+      "name": "HomotopyHypothesis",
+      "dir": "external_refs/homotopy-hypothesis-lean4",
+      "config": "lakefile.lean",
+      "directory_exists": false,
+      "config_exists": false,
+      "source_kind": "untracked",
+      "errors": [
+        "missing_config",
+        "untracked_path_dependency"
+      ],
+      "ok": false
+    },
+    {
+      "name": "Atlas",
+      "dir": "external_refs/atlas-lean",
+      "config": "lakefile.toml",
+      "directory_exists": false,
+      "config_exists": false,
+      "source_kind": "untracked",
+      "errors": [
+        "missing_config",
+        "untracked_path_dependency"
+      ],
+      "ok": false
+    },
+    {
+      "name": "GIFT",
+      "dir": "external_refs/gift-framework-core",
+      "config": "lakefile.lean",
+      "directory_exists": true,
+      "config_exists": false,
+      "source_kind": "gitlink",
+      "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+      "errors": [
+        "missing_config",
+        "uninitialized_gitlink"
+      ],
+      "ok": false
+    },
+    {
+      "name": "InfoGeometryCore",
+      "dir": "lib/InfoGeometryCore",
+      "config": "lakefile.lean",
+      "directory_exists": true,
+      "config_exists": true,
+      "source_kind": "tracked",
+      "errors": [],
+      "ok": true
+    }
+  ],
+  "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+}

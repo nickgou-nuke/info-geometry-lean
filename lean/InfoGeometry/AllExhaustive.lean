@@ -13671,3 +13671,10 @@ import InfoGeometry.Algebra.NilpotentPolynomial
 import InfoGeometry.OperatorAlgebra.PeirceSpine.PolynomialCalculus
 import InfoGeometry.Canonical.PeircePolynomialColimit
 import InfoGeometry.Examples.PeircePolynomialWitness
+import InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry
+import InfoGeometry.Quantum.FinitePartialTrace
+import InfoGeometry.Quantum.BoundaryInstrument
+import InfoGeometry.Quantum.MixedBoundaryReadout
+import InfoGeometry.Quantum.MatrixBoundaryPurification
+import InfoGeometry.Quantum.SemilinearBoundaryReversal
+import InfoGeometry.Quantum.TwoBoundaryOperatorExamples

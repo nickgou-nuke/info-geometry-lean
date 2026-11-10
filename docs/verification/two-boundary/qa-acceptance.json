@@ -1,0 +1,911 @@
+{
+  "schema": "info_geometry.two_boundary_independent_qa.v1",
+  "verdict": "PASS_SCOPED_NATIVE_OPERATOR_GEOMETRY",
+  "completed_utc": "2026-11-09T09:35:27.335775+00:00",
+  "reviewer": "operator_extraction",
+  "repository": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+  "branch": "feat/two-boundary-operator-geometry",
+  "base_and_head": "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0",
+  "source_authorship": "Reviewer authored no repository theorem or verification-tool source; only external QA evidence and comparison scripts.",
+  "aa_review": {
+    "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-aa-review.md",
+    "sha256": "a76ae068c4dd9249054ea773585775a954a0b4bd4736a2ebb4e775c6b427e4f7",
+    "all_26_staged_hashes_match": true
+  },
+  "owners": [
+    "InfoGeometry.Quantum.KrausBoundaryDuality",
+    "InfoGeometry.Quantum.FinitePartialTrace",
+    "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges",
+    "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+    "InfoGeometry.Quantum.BoundaryInstrument",
+    "InfoGeometry.Quantum.MixedBoundaryReadout",
+    "InfoGeometry.Quantum.MatrixBoundaryPurification",
+    "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+    "InfoGeometry.Quantum.TwoBoundaryOperatorExamples"
+  ],
+  "additional_unchanged_consumer": "InfoGeometry.Quantum.KrausInvariantGeometry",
+  "fresh_project_source_runs": {
+    "lean": {
+      "command": {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/check_operator_geometry.py",
+          "--repo",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "--mathlib",
+          "/workspace/scratch/ec4ca3191aef/pinned-mathlib",
+          "--lean",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lean",
+          "--work-dir",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean",
+          "--source-lane",
+          "lean",
+          "--target",
+          "InfoGeometry.Quantum.KrausInvariantGeometry",
+          "--owner",
+          "InfoGeometry.Quantum.KrausBoundaryDuality",
+          "--owner",
+          "InfoGeometry.Quantum.FinitePartialTrace",
+          "--owner",
+          "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "--owner",
+          "InfoGeometry.Quantum.BoundaryInstrument",
+          "--owner",
+          "InfoGeometry.Quantum.MixedBoundaryReadout",
+          "--owner",
+          "InfoGeometry.Quantum.MatrixBoundaryPurification",
+          "--owner",
+          "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+          "--owner",
+          "InfoGeometry.Quantum.TwoBoundaryOperatorExamples",
+          "--audit",
+          "--audit-source",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/TwoBoundaryDeclarationAudit.lean",
+          "--owner-warnings-as-errors",
+          "--base-ref",
+          "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "source_lane": "lean",
+        "fresh_work_dir": true,
+        "incremental": false,
+        "environment_overrides": {
+          "PATH": "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin:/root/.codex/tmp/arg0-linux/codex-arg0GQIjpt:/opt/codex/codex-path:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+          "LD_PRELOAD": "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "started_utc": "2026-11-09T09:15:27.225271+00:00",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:22:47.673920+00:00"
+      },
+      "result_sha256": "34368b0cfa82c5ae1895ce6fac91a0f086a412762e16ba9f9afaeef00ae503da",
+      "source_manifest_sha256": "3e13792e1c36c7cc4679978f2ce9155dcb84fa154af5a5677d36911381bf50d0",
+      "summary": {
+        "audit_sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc",
+        "dag_sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a",
+        "declarations": 284,
+        "kinds": {
+          "definition": 51,
+          "theorem": 230,
+          "inductive": 1,
+          "constructor": 1,
+          "recursor": 1
+        },
+        "direct_edges": 664,
+        "hasse_edges": 359,
+        "layers": 10,
+        "module_counts": {
+          "InfoGeometry.Quantum.KrausBoundaryDuality": {
+            "definition": 4,
+            "theorem": 24
+          },
+          "InfoGeometry.Quantum.FinitePartialTrace": {
+            "definition": 2,
+            "theorem": 3
+          },
+          "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": {
+            "definition": 23,
+            "inductive": 1,
+            "theorem": 40,
+            "constructor": 1,
+            "recursor": 1
+          },
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": {
+            "definition": 4,
+            "theorem": 33
+          },
+          "InfoGeometry.Quantum.BoundaryInstrument": {
+            "theorem": 38,
+            "definition": 4
+          },
+          "InfoGeometry.Quantum.MixedBoundaryReadout": {
+            "definition": 4,
+            "theorem": 22
+          },
+          "InfoGeometry.Quantum.MatrixBoundaryPurification": {
+            "definition": 3,
+            "theorem": 24
+          },
+          "InfoGeometry.Quantum.SemilinearBoundaryReversal": {
+            "theorem": 19,
+            "definition": 1
+          },
+          "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": {
+            "theorem": 27,
+            "definition": 6
+          }
+        },
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "independent_graph_validation": "PASS",
+        "compiled_modules": 31,
+        "owner_warnings": 0,
+        "dependency_warning_count": 95,
+        "dependency_warning_modules": {
+          "InfoGeometry.Quantum.ChoiCompletePositivity": 9,
+          "InfoGeometry.Probability.AitchisonFinite": 4,
+          "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 3,
+          "InfoGeometry.Quantum.PositiveBoundaryConditioning": 2,
+          "InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional": 7,
+          "InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry": 1,
+          "InfoGeometry.Physics.ChiralTensorRecoupling": 3,
+          "InfoGeometry.Physics.ChiralCausalCone": 49,
+          "InfoGeometry.Physics.CPTAtom": 7,
+          "InfoGeometry.Physics.SplitCliffordAlgebras": 5,
+          "InfoGeometry.Physics.IsospinMirrorDynamics": 2,
+          "InfoGeometry.Canonical.FiniteMatrixGibbsFunctional": 3
+        }
+      }
+    },
+    "src": {
+      "command": {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/check_operator_geometry.py",
+          "--repo",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "--mathlib",
+          "/workspace/scratch/ec4ca3191aef/pinned-mathlib",
+          "--lean",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lean",
+          "--work-dir",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src",
+          "--source-lane",
+          "src",
+          "--target",
+          "InfoGeometry.Quantum.KrausInvariantGeometry",
+          "--owner",
+          "InfoGeometry.Quantum.KrausBoundaryDuality",
+          "--owner",
+          "InfoGeometry.Quantum.FinitePartialTrace",
+          "--owner",
+          "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges",
+          "--owner",
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+          "--owner",
+          "InfoGeometry.Quantum.BoundaryInstrument",
+          "--owner",
+          "InfoGeometry.Quantum.MixedBoundaryReadout",
+          "--owner",
+          "InfoGeometry.Quantum.MatrixBoundaryPurification",
+          "--owner",
+          "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+          "--owner",
+          "InfoGeometry.Quantum.TwoBoundaryOperatorExamples",
+          "--audit",
+          "--audit-source",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean/tools/quality/TwoBoundaryDeclarationAudit.lean",
+          "--owner-warnings-as-errors",
+          "--base-ref",
+          "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "source_lane": "src",
+        "fresh_work_dir": true,
+        "incremental": false,
+        "environment_overrides": {
+          "PATH": "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin:/root/.codex/tmp/arg0-linux/codex-arg0GQIjpt:/opt/codex/codex-path:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+          "LD_PRELOAD": "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "started_utc": "2026-11-09T09:23:07.035534+00:00",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:30:14.903350+00:00"
+      },
+      "result_sha256": "1711cb494fd8ca8712008b92859f67c92c92d4bd45cf52e01dece21f451a259b",
+      "source_manifest_sha256": "d59915869307f69bb586c05fa1bea86acee8edae9ea77d32bee9a61f6f73a380",
+      "summary": {
+        "audit_sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc",
+        "dag_sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a",
+        "declarations": 284,
+        "kinds": {
+          "definition": 51,
+          "theorem": 230,
+          "inductive": 1,
+          "constructor": 1,
+          "recursor": 1
+        },
+        "direct_edges": 664,
+        "hasse_edges": 359,
+        "layers": 10,
+        "module_counts": {
+          "InfoGeometry.Quantum.KrausBoundaryDuality": {
+            "definition": 4,
+            "theorem": 24
+          },
+          "InfoGeometry.Quantum.FinitePartialTrace": {
+            "definition": 2,
+            "theorem": 3
+          },
+          "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": {
+            "definition": 23,
+            "inductive": 1,
+            "theorem": 40,
+            "constructor": 1,
+            "recursor": 1
+          },
+          "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": {
+            "definition": 4,
+            "theorem": 33
+          },
+          "InfoGeometry.Quantum.BoundaryInstrument": {
+            "theorem": 38,
+            "definition": 4
+          },
+          "InfoGeometry.Quantum.MixedBoundaryReadout": {
+            "definition": 4,
+            "theorem": 22
+          },
+          "InfoGeometry.Quantum.MatrixBoundaryPurification": {
+            "definition": 3,
+            "theorem": 24
+          },
+          "InfoGeometry.Quantum.SemilinearBoundaryReversal": {
+            "theorem": 19,
+            "definition": 1
+          },
+          "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": {
+            "theorem": 27,
+            "definition": 6
+          }
+        },
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "independent_graph_validation": "PASS",
+        "compiled_modules": 31,
+        "owner_warnings": 0,
+        "dependency_warning_count": 95,
+        "dependency_warning_modules": {
+          "InfoGeometry.Quantum.ChoiCompletePositivity": 9,
+          "InfoGeometry.Probability.AitchisonFinite": 4,
+          "InfoGeometry.OperatorAlgebra.MatrixOperatorIdentities": 3,
+          "InfoGeometry.Quantum.PositiveBoundaryConditioning": 2,
+          "InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional": 7,
+          "InfoGeometry.Physics.NuclearWignerSupermultipletSymmetry": 1,
+          "InfoGeometry.Physics.ChiralTensorRecoupling": 3,
+          "InfoGeometry.Physics.ChiralCausalCone": 49,
+          "InfoGeometry.Physics.CPTAtom": 7,
+          "InfoGeometry.Physics.SplitCliffordAlgebras": 5,
+          "InfoGeometry.Physics.IsospinMirrorDynamics": 2,
+          "InfoGeometry.Canonical.FiniteMatrixGibbsFunctional": 3
+        }
+      }
+    }
+  },
+  "source_comparisons": {
+    "parent_canonical_manifest_exact": true,
+    "audit_and_dag_byte_identical_across_parent_and_both_lanes": true,
+    "cross_lane_source_differences": []
+  },
+  "mirror_hashes": {
+    "InfoGeometry.Quantum.KrausBoundaryDuality": "374742918777bd4f507de8809c3e2fc42eea4200e4f04379cc03ec81ff9e2bf4",
+    "InfoGeometry.Quantum.FinitePartialTrace": "bfb3db143b95aee547e5241d2f854bc2cfcd964c116afd89817726d54a52d7c1",
+    "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges": "fe181c5428136dd0b86cb2676115f7a0dd149b561e6277c8ffdc4c4ca8cd0592",
+    "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": "a4154cd1c50d7c7d7207b5fe692cefcf5ff76ab50ab37fc5b86fbfcb40689aaa",
+    "InfoGeometry.Quantum.BoundaryInstrument": "33a1f8604ef1755adab2cee9a16321296c1a8fcb6673e5b40b5b95df5aa5db15",
+    "InfoGeometry.Quantum.MixedBoundaryReadout": "3708e31d8f41bc14b957e357c768101d5e5dc0b96c383d892bba09c69b72a600",
+    "InfoGeometry.Quantum.MatrixBoundaryPurification": "3414dabfa40cc746d6511c4a9d57b0986228044bcf6eff73d13fcd06f85af7e1",
+    "InfoGeometry.Quantum.SemilinearBoundaryReversal": "972734ce15376f0458db8598615f9f57fa117ab0df152b575c06404d113b52a1",
+    "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": "c3f603ad869f59dd7f35444df1c03f3373a298f0c159097a85e9d32064737252",
+    "InfoGeometry.AllExhaustive": "59769bb22e6f3d814588b7322ef64d408b681fafaf0473b7bc2ea1576b6d6af7"
+  },
+  "registrations": {
+    "lean": {
+      "InfoGeometry.Quantum.FinitePartialTrace": 1,
+      "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": 1,
+      "InfoGeometry.Quantum.BoundaryInstrument": 1,
+      "InfoGeometry.Quantum.MixedBoundaryReadout": 1,
+      "InfoGeometry.Quantum.MatrixBoundaryPurification": 1,
+      "InfoGeometry.Quantum.SemilinearBoundaryReversal": 1,
+      "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": 1
+    },
+    "src": {
+      "InfoGeometry.Quantum.FinitePartialTrace": 1,
+      "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry": 1,
+      "InfoGeometry.Quantum.BoundaryInstrument": 1,
+      "InfoGeometry.Quantum.MixedBoundaryReadout": 1,
+      "InfoGeometry.Quantum.MatrixBoundaryPurification": 1,
+      "InfoGeometry.Quantum.SemilinearBoundaryReversal": 1,
+      "InfoGeometry.Quantum.TwoBoundaryOperatorExamples": 1
+    }
+  },
+  "runtime_and_dependency_identity": {
+    "external_file_hashes": {
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-aa-review.md": "a76ae068c4dd9249054ea773585775a954a0b4bd4736a2ebb4e775c6b427e4f7",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.c": "d603519a061ece743c2d4cb09079ca3f7666c1dd92b3e6be19093184addc8f11",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/self_exe_compat.so": "3ce87eb6dd4bb68e115e669a622a48c60757131fd1a03b4bbd70ee038c05b1ff",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "/workspace/scratch/ec4ca3191aef/verification-runtime/lean-4.34.1-linux/bin/lake": "6f53827dab18010d6c690d14c8401cacabc1db958edb3552a877ed4cf1dd995d",
+      "/workspace/scratch/ec4ca3191aef/pinned-mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "/workspace/scratch/ec4ca3191aef/pinned-mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67"
+    },
+    "mathlib_and_packages": {
+      "mathlib": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib",
+        "expected": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+        "actual": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+        "tracked_status": ""
+      },
+      "plausible": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/plausible",
+        "expected": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "actual": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "tracked_status": ""
+      },
+      "LeanSearchClient": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/LeanSearchClient",
+        "expected": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "actual": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "tracked_status": ""
+      },
+      "importGraph": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/importGraph",
+        "expected": "e928b72544873815af278d38681b31c0293588e3",
+        "actual": "e928b72544873815af278d38681b31c0293588e3",
+        "tracked_status": ""
+      },
+      "proofwidgets": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/proofwidgets",
+        "expected": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+        "actual": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+        "tracked_status": ""
+      },
+      "aesop": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/aesop",
+        "expected": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "actual": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "tracked_status": ""
+      },
+      "Qq": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/Qq",
+        "expected": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "actual": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "tracked_status": ""
+      },
+      "batteries": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/batteries",
+        "expected": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "actual": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "tracked_status": ""
+      },
+      "Cli": {
+        "directory": "/workspace/scratch/ec4ca3191aef/pinned-mathlib/.lake/packages/Cli",
+        "expected": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "actual": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "tracked_status": ""
+      }
+    },
+    "compatibility_helper_scope": "Interposes readlink only for the current process /proc/PID/exe and redirects to /proc/self/exe. No source substitution or proof modification. Binary hash bound; helper not independently rebuilt.",
+    "native_mathlib_scope": "Pinned existing Mathlib and dependency caches; project source closures rebuilt fresh. No claim of a fresh Mathlib cache rebuild or hermetic verification."
+  },
+  "frozen_snapshot": {
+    "before": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/frozen-inputs-before.json",
+      "sha256": "7b4d033f500fda240384e333b17fcb82a8574565fbec7ad7af9c6fc5f580bfe1"
+    },
+    "after": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/frozen-inputs-after.json",
+      "sha256": "c86267c0fd36fab4ff9791c67a10089832d6db487e4427f1ecea5ba1659b23ad"
+    },
+    "all_84_repository_file_hashes_unchanged": true,
+    "staged_count": 26,
+    "index_tree_unchanged": true,
+    "runtime_and_auxiliary_tool_hashes_unchanged": true
+  },
+  "scoped_checks": {
+    "scoped_checks_status": "PASS",
+    "tool_regression_tests": 35,
+    "static_refutation": {
+      "owners": [
+        "InfoGeometry.Quantum.BoundaryInstrument",
+        "InfoGeometry.Quantum.MixedBoundaryReadout",
+        "InfoGeometry.Quantum.MatrixBoundaryPurification",
+        "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+        "InfoGeometry.Quantum.TwoBoundaryOperatorExamples"
+      ],
+      "files": [
+        "lean/InfoGeometry/Quantum/BoundaryInstrument.lean",
+        "lean/InfoGeometry/Quantum/MixedBoundaryReadout.lean",
+        "lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean",
+        "lean/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean",
+        "lean/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean"
+      ],
+      "strict": true,
+      "total_traps": 0
+    },
+    "root_path_preflight_status": "BLOCKED",
+    "root_path_preflight_exit_code": 1,
+    "ordinary_pre_push_certified": false,
+    "routing_test_scope": "Temporary-repository subprocess recorders; no native compilation or actual push",
+    "commands": [
+      {
+        "label": "dag-lean",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/operator_geometry_dependency_order.py",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/declaration-audit.jsonl",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/dependency-order.json"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:31:26.196997+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-lean.stdout.log",
+        "stdout_sha256": "b36c94c24e7c1d275acc3e52dcd9dc0213d814c3e9e4d08c421e11af95d9f000",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-lean.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:31:26.254666+00:00"
+      },
+      {
+        "label": "dag-src",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/operator_geometry_dependency_order.py",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/declaration-audit.jsonl",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/dependency-order.json"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:31:26.254830+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-src.stdout.log",
+        "stdout_sha256": "b36c94c24e7c1d275acc3e52dcd9dc0213d814c3e9e4d08c421e11af95d9f000",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-src.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:31:26.311933+00:00"
+      },
+      {
+        "label": "integrity-comparison",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/validate_integrity.py"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:31:26.312187+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/integrity-comparison.stdout.log",
+        "stdout_sha256": "f73636145d8044230637365b0c221d0bcd8edbce96538fa66f10321b20870f81",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/integrity-comparison.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:31:26.584552+00:00"
+      },
+      {
+        "label": "tool-regressions",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-m",
+          "unittest",
+          "-v",
+          "tests.test_operator_geometry_audit_scope",
+          "tests.quality.test_pre_push_ref_range",
+          "tests.quality.test_two_boundary_gate_routing"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:31:26.584754+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/tool-regressions.stdout.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/tool-regressions.stderr.log",
+        "stderr_sha256": "cbd2b1d1ba4ea7f21bb22aab843eadcaaf1f74814f952e0727e6e1ae003bb966",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:31:28.443964+00:00"
+      },
+      {
+        "label": "static-refutation",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/opengauss_cli.py",
+          "refute",
+          "--strict",
+          "--json",
+          "lean/InfoGeometry/Quantum/BoundaryInstrument.lean",
+          "lean/InfoGeometry/Quantum/MixedBoundaryReadout.lean",
+          "lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean",
+          "lean/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean",
+          "lean/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:31:28.444464+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/static-refutation.stdout.log",
+        "stdout_sha256": "d171359121a71788d72b7edf40a8d2aa7c68ee573c8859147fca2b44d7b28e22",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/static-refutation.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:31:28.690629+00:00"
+      },
+      {
+        "label": "staged-proof-gate",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/quality/proof_proxy_staged_gate.py"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:31:28.690955+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-proof-gate.stdout.log",
+        "stdout_sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-proof-gate.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:32:16.900809+00:00"
+      },
+      {
+        "label": "hook-shell-syntax",
+        "argv": [
+          "bash",
+          "-n",
+          ".githooks/pre-push"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:32:16.901683+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/hook-shell-syntax.stdout.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/hook-shell-syntax.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:32:16.905202+00:00"
+      },
+      {
+        "label": "gate-shell-syntax",
+        "argv": [
+          "bash",
+          "-n",
+          "scripts/quality/post_build_gate.sh"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:32:16.905475+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/gate-shell-syntax.stdout.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/gate-shell-syntax.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:32:16.907751+00:00"
+      },
+      {
+        "label": "staged-whitespace",
+        "argv": [
+          "git",
+          "diff",
+          "--cached",
+          "--check"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:32:16.907949+00:00",
+        "expected_exit_code": 0,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-whitespace.stdout.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-whitespace.stderr.log",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exit_code": 0,
+        "finished_utc": "2026-11-09T09:32:16.932122+00:00"
+      },
+      {
+        "label": "root-path-preflight",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "tools/infra/ci_bootstrap.py",
+          "paths",
+          "--root",
+          "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+          "--report",
+          "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.json"
+        ],
+        "cwd": "/workspace/scratch/ec4ca3191aef/info-geometry-lean",
+        "started_utc": "2026-11-09T09:32:16.932539+00:00",
+        "expected_exit_code": 1,
+        "stdout_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.stdout.log",
+        "stdout_sha256": "6dd6f66260edc9c21b20fe4a263c12a1574c4f7be5b4c97c350eafb013de964b",
+        "stderr_path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.stderr.log",
+        "stderr_sha256": "af055e8422c2eb8d2eb545bc670163ba2ea025fb8df9ead5affdc85b9520e4af",
+        "exit_code": 1,
+        "finished_utc": "2026-11-09T09:32:17.106324+00:00"
+      }
+    ]
+  },
+  "root_path_preflight": {
+    "exit_code": 1,
+    "status": "BLOCKED",
+    "report": {
+      "schema": "info_geometry.ci_path_preflight.v1",
+      "revision": "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0",
+      "ok": false,
+      "packages": [
+        {
+          "name": "HomotopyHypothesis",
+          "dir": "external_refs/homotopy-hypothesis-lean4",
+          "config": "lakefile.lean",
+          "directory_exists": false,
+          "config_exists": false,
+          "source_kind": "untracked",
+          "errors": [
+            "missing_config",
+            "untracked_path_dependency"
+          ],
+          "ok": false
+        },
+        {
+          "name": "Atlas",
+          "dir": "external_refs/atlas-lean",
+          "config": "lakefile.toml",
+          "directory_exists": false,
+          "config_exists": false,
+          "source_kind": "untracked",
+          "errors": [
+            "missing_config",
+            "untracked_path_dependency"
+          ],
+          "ok": false
+        },
+        {
+          "name": "GIFT",
+          "dir": "external_refs/gift-framework-core",
+          "config": "lakefile.lean",
+          "directory_exists": true,
+          "config_exists": false,
+          "source_kind": "gitlink",
+          "pinned_commit": "e6f3c3ac2140c2324fb2ae029c32233e73aa5e92",
+          "errors": [
+            "missing_config",
+            "uninitialized_gitlink"
+          ],
+          "ok": false
+        },
+        {
+          "name": "InfoGeometryCore",
+          "dir": "lib/InfoGeometryCore",
+          "config": "lakefile.lean",
+          "directory_exists": true,
+          "config_exists": true,
+          "source_kind": "tracked",
+          "errors": [],
+          "ok": true
+        }
+      ],
+      "scope": "Direct path-package availability/provenance; not compilation or a transitive dependency audit"
+    },
+    "artifact": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.json",
+      "sha256": "6dd6f66260edc9c21b20fe4a263c12a1574c4f7be5b4c97c350eafb013de964b"
+    }
+  },
+  "scope_limits": [
+    "Both fresh closures compile the same 31 project modules; all-owned safety/axiom audit covers exactly the listed nine owners, including generated/private declarations.",
+    "230 theorem constants are not 230 newly authored named theorems.",
+    "95 warning diagnostics per lane remain in 12 unchanged dependency modules. All nine owned modules and the audit passed warnings-as-errors with zero warnings.",
+    "The declaration DAG records constants in checked types and values, including opaque values; it excludes non-expression ConstantInfo constructor/recursor metadata and is not a complete kernel reduction graph.",
+    "The 35 tooling tests include temporary-repository subprocess recorders and establish parser/routing behavior; they are not a real push or a native Lake integration run.",
+    "AllExhaustive registrations and exact lane mirrors were checked, but the exhaustive entry points were not compiled.",
+    "Managed root path preflight failed on missing/untracked Atlas and HomotopyHypothesis packages and uninitialized GIFT. Ordinary root Lake build and pre-push are not certified.",
+    "No theorem here establishes physical CPT cosmology, thermalization, entanglement generation, or singularity removal."
+  ],
+  "non_gate_observations": [
+    "An ancillary host ps invocation reported fatal library error, lookup self. Active compiler observations used direct /proc enumeration; both native runs and all required scoped checks completed independently."
+  ],
+  "ordinary_root_lake_build_run": false,
+  "ordinary_pre_push_certified": false,
+  "full_repository_certified": false,
+  "repository_or_index_changes_by_reviewer": false,
+  "compiler_test_lane": {
+    "released_to": "/root",
+    "released_after_checks": true,
+    "active_compilers_at_release": []
+  },
+  "artifacts": {
+    "auxiliary-tool-hashes-before.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/auxiliary-tool-hashes-before.json",
+      "sha256": "412b5bcc89fd286c284a45338cb5e6a636dcb2a2550bb99594b5e2504145b709"
+    },
+    "closure-lean.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/closure-lean.log",
+      "sha256": "ffb2f38ccb31de8d78617b28a05f87f33dd68b27182145411fc6581e5d3175ef"
+    },
+    "closure-src.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/closure-src.log",
+      "sha256": "dbd729ed62218119db9076c56b4283e3ca5d7e494d943de980a3ddd74ade055f"
+    },
+    "command-lean.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/command-lean.json",
+      "sha256": "6d686492aeaef08aca824804ba643d4a2f325499af8623476091eed7759ba3a4"
+    },
+    "command-src.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/command-src.json",
+      "sha256": "b1068149f20f5c2d137ab25987a5f7d748984376081b9eb95d64b204c25919e5"
+    },
+    "dag-lean.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-lean.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "dag-lean.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-lean.stdout.log",
+      "sha256": "b36c94c24e7c1d275acc3e52dcd9dc0213d814c3e9e4d08c421e11af95d9f000"
+    },
+    "dag-src.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-src.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "dag-src.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/dag-src.stdout.log",
+      "sha256": "b36c94c24e7c1d275acc3e52dcd9dc0213d814c3e9e4d08c421e11af95d9f000"
+    },
+    "frozen-inputs-after.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/frozen-inputs-after.json",
+      "sha256": "c86267c0fd36fab4ff9791c67a10089832d6db487e4427f1ecea5ba1659b23ad"
+    },
+    "frozen-inputs-before.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/frozen-inputs-before.json",
+      "sha256": "7b4d033f500fda240384e333b17fcb82a8574565fbec7ad7af9c6fc5f580bfe1"
+    },
+    "gate-shell-syntax.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/gate-shell-syntax.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "gate-shell-syntax.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/gate-shell-syntax.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "hook-shell-syntax.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/hook-shell-syntax.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "hook-shell-syntax.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/hook-shell-syntax.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "integrity-comparison.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/integrity-comparison.json",
+      "sha256": "933391c90c86f46a13c7e301e09167c7827d13d92e11f07caead2a1dc3bdab2e"
+    },
+    "integrity-comparison.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/integrity-comparison.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "integrity-comparison.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/integrity-comparison.stdout.log",
+      "sha256": "f73636145d8044230637365b0c221d0bcd8edbce96538fa66f10321b20870f81"
+    },
+    "lean/checked-hashes.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/checked-hashes.json",
+      "sha256": "e348baa045f2916d373992baeeaf9625d1d5e062eb1f35398de63d6eb0ad0dd8"
+    },
+    "lean/compiler-version.txt": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/compiler-version.txt",
+      "sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680"
+    },
+    "lean/declaration-audit.jsonl": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/declaration-audit.jsonl",
+      "sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc"
+    },
+    "lean/dependency-order.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/dependency-order.json",
+      "sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a"
+    },
+    "lean/result.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/result.json",
+      "sha256": "34368b0cfa82c5ae1895ce6fac91a0f086a412762e16ba9f9afaeef00ae503da"
+    },
+    "lean/source-manifest.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/lean/source-manifest.json",
+      "sha256": "3e13792e1c36c7cc4679978f2ce9155dcb84fa154af5a5677d36911381bf50d0"
+    },
+    "root-path-preflight.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.json",
+      "sha256": "6dd6f66260edc9c21b20fe4a263c12a1574c4f7be5b4c97c350eafb013de964b"
+    },
+    "root-path-preflight.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.stderr.log",
+      "sha256": "af055e8422c2eb8d2eb545bc670163ba2ea025fb8df9ead5affdc85b9520e4af"
+    },
+    "root-path-preflight.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/root-path-preflight.stdout.log",
+      "sha256": "6dd6f66260edc9c21b20fe4a263c12a1574c4f7be5b4c97c350eafb013de964b"
+    },
+    "run_scoped_checks.py": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/run_scoped_checks.py",
+      "sha256": "492917f36bba0071a50ddd18dfe9c90753c4ac1cb3df0df0c7fb3f9717fa96d2"
+    },
+    "scoped-check-commands.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/scoped-check-commands.json",
+      "sha256": "3622dc36878a1e4c459f95ace7de079916ca9a7de03e4c9501abad64802ac1a3"
+    },
+    "scoped-checks.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/scoped-checks.json",
+      "sha256": "cc28326eecfb1748ec0d0b66be598db9270e8d382121a8daac75b372afbaf504"
+    },
+    "src/checked-hashes.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/checked-hashes.json",
+      "sha256": "e348baa045f2916d373992baeeaf9625d1d5e062eb1f35398de63d6eb0ad0dd8"
+    },
+    "src/compiler-version.txt": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/compiler-version.txt",
+      "sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680"
+    },
+    "src/declaration-audit.jsonl": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/declaration-audit.jsonl",
+      "sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc"
+    },
+    "src/dependency-order.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/dependency-order.json",
+      "sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a"
+    },
+    "src/result.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/result.json",
+      "sha256": "1711cb494fd8ca8712008b92859f67c92c92d4bd45cf52e01dece21f451a259b"
+    },
+    "src/source-manifest.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/src/source-manifest.json",
+      "sha256": "d59915869307f69bb586c05fa1bea86acee8edae9ea77d32bee9a61f6f73a380"
+    },
+    "staged-proof-gate.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-proof-gate.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "staged-proof-gate.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-proof-gate.stdout.log",
+      "sha256": "15636963213bd1e0893ddeb031ca330861b34fbde83171eaf5ccca90b606f2e2"
+    },
+    "staged-whitespace.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-whitespace.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "staged-whitespace.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/staged-whitespace.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "static-refutation.json": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/static-refutation.json",
+      "sha256": "d171359121a71788d72b7edf40a8d2aa7c68ee573c8859147fca2b44d7b28e22"
+    },
+    "static-refutation.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/static-refutation.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "static-refutation.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/static-refutation.stdout.log",
+      "sha256": "d171359121a71788d72b7edf40a8d2aa7c68ee573c8859147fca2b44d7b28e22"
+    },
+    "tool-regressions.stderr.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/tool-regressions.stderr.log",
+      "sha256": "cbd2b1d1ba4ea7f21bb22aab843eadcaaf1f74814f952e0727e6e1ae003bb966"
+    },
+    "tool-regressions.stdout.log": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/tool-regressions.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validate_integrity.py": {
+      "path": "/workspace/scratch/ec4ca3191aef/verification-runtime/two-boundary-qa/validate_integrity.py",
+      "sha256": "8623411508f2afd9956e8679db5dc0f6ca773fed26cb66a1ecec4afc925332bc"
+    }
+  }
+}

@@ -47,6 +47,44 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def validate_audit_output(output: str, owners: list[str],
+                          allowed_empty: tuple[str, ...] = ()) -> dict:
+    """Reject a passing audit for a different or incomplete owner surface."""
+    records = [json.loads(line) for line in output.splitlines() if line.startswith("{")]
+    summaries = [r for r in records if r.get("record") == "summary"]
+    if len(summaries) != 1 or records[-1] != summaries[0]:
+        raise RuntimeError("Expected one final declaration-audit summary")
+    summary = summaries[0]
+    if summary.get("status") != "PASS" or summary.get("modules") != owners:
+        raise RuntimeError("Declaration-audit owner scope differs from requested scope")
+    allowed = {"propext", "Classical.choice", "Quot.sound"}
+    if set(summary.get("axiom_whitelist", [])) != allowed:
+        raise RuntimeError("Declaration-audit axiom whitelist mismatch")
+    declarations = [r for r in records if r.get("record") == "declaration"]
+    if len(records) != len(declarations) + 1:
+        raise RuntimeError("Unknown declaration-audit record")
+    names = {r["name"] for r in declarations}
+    if len(names) != len(declarations) or len(names) != summary.get("declarations"):
+        raise RuntimeError("Duplicate or missing audited declarations")
+    empty = summary.get("empty_modules", [])
+    seen = {r["module"] for r in declarations}
+    if (len(empty) != len(set(empty)) or not set(empty) <= set(allowed_empty)
+            or set(empty) & seen or seen | set(empty) != set(owners)):
+        raise RuntimeError("Missing or unexpected audited modules")
+    for record in declarations:
+        if record.get("kind") not in {"theorem", "definition", "opaque", "inductive",
+                                      "constructor", "recursor", "quotient"}:
+            raise RuntimeError("Unknown, missing, or prohibited declaration kind")
+        if record.get("unsafe") is not False or record.get("partial") is not False:
+            raise RuntimeError("Unsafe, partial, or incomplete declaration record")
+        if record.get("kind") == "axiom" or not set(record["axioms"]) <= allowed:
+            raise RuntimeError("Rejected declaration axiom dependencies")
+        deps = set(record["owned_dependencies"])
+        if deps != set(record["dependencies"]) & names:
+            raise RuntimeError("Unresolved or inconsistent owned declaration dependencies")
+    return summary
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
@@ -55,16 +93,33 @@ def main() -> None:
     parser.add_argument("--lean", default="lean")
     parser.add_argument("--work-dir", type=Path)
     parser.add_argument("--target", action="append")
+    parser.add_argument("--owner", action="append", help="Exact audit owner; repeat in audit order")
+    parser.add_argument("--allow-empty-owner", action="append", default=[],
+                        help="Explicit import-only owner; never inferred from its filename")
+    parser.add_argument("--source-lane", choices=("lean", "src"), default="lean")
+    parser.add_argument("--audit-source", type=Path)
+    parser.add_argument("--owner-warnings-as-errors", action="store_true")
     parser.add_argument("--audit", action="store_true")
     parser.add_argument("--incremental", action="store_true")
     parser.add_argument("--base-ref", help="Require unchanged dependency sources to match this Git ref")
     args = parser.parse_args()
+    if args.audit_source and not args.audit:
+        parser.error("--audit-source requires --audit")
     root = args.repo.resolve()
     overlay = (args.overlay or root).resolve()
     mathlib = (args.mathlib or root / ".lake/packages/mathlib").resolve()
     work = (args.work_dir or Path(tempfile.mkdtemp(prefix="operator-geometry-"))).resolve()
     work.mkdir(parents=True, exist_ok=True)
     (work / "result.json").unlink(missing_ok=True)
+    owners = args.owner or OWNERS
+    if len(owners) != len(set(owners)):
+        parser.error("--owner entries must be unique")
+    if not set(args.allow_empty_owner) <= set(owners):
+        parser.error("An allowed empty owner must be in the selected owner scope")
+    lane_record = work / "source-lane.txt"
+    if lane_record.exists() and lane_record.read_text().strip() != args.source_lane:
+        raise RuntimeError("Source lanes require separate artifact directories")
+    lane_record.write_text(args.source_lane + "\n")
     manifest = json.loads((root / "lake-manifest.json").read_text())
     pin = next(p["rev"] for p in manifest["packages"] if p["name"] == "mathlib")
     actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=mathlib, text=True).strip()
@@ -98,12 +153,12 @@ def main() -> None:
             raise RuntimeError(f"Import cycle at {module}")
         if module in paths:
             return
-        relative = Path("lean", *module.split(".")).with_suffix(".lean")
+        relative = Path(args.source_lane, *module.split(".")).with_suffix(".lean")
         source = overlay / relative
         if not source.is_file():
             source = root / relative
         data = source.read_bytes()
-        if args.base_ref and module not in OWNERS:
+        if args.base_ref and module not in owners:
             expected = subprocess.check_output(["git", "rev-parse", f"{args.base_ref}:{relative}"],
                                                cwd=root, text=True).strip()
             actual_blob = subprocess.check_output(["git", "hash-object", "--stdin"],
@@ -113,7 +168,7 @@ def main() -> None:
             baseline_blobs[module] = expected
         paths[module] = source
         hashes[module] = hashlib.sha256(data).hexdigest()
-        target = work / relative
+        target = work / "lean" / Path(*module.split(".")).with_suffix(".lean")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
         active.add(module)
@@ -126,14 +181,18 @@ def main() -> None:
         active.remove(module)
         order.append(module)
 
-    targets = args.target or OWNERS
+    targets = args.target or owners
     for module in targets:
         stage(module)
-    audit_source = overlay / "tools/quality/OperatorGeometryDeclarationAudit.lean"
+    audit_source = (args.audit_source or
+                    overlay / "tools/quality/OperatorGeometryDeclarationAudit.lean").resolve()
     if args.audit:
-        for module in OWNERS:
+        for module in owners:
             stage(module)
         shutil.copyfile(audit_source, work / "lean/OperatorGeometryDeclarationAudit.lean")
+    compiled_owners = [owner for owner in owners if owner in paths]
+    if (args.owner or args.owner_warnings_as_errors) and compiled_owners != owners:
+        raise RuntimeError("Selected owners are outside the compiled source closure")
     tool_paths = [Path(__file__).resolve(), root / "tools/build_lock.py"]
     if args.audit:
         tool_paths.extend([audit_source,
@@ -143,7 +202,10 @@ def main() -> None:
         "toolchain": toolchain, "mathlib": pin, "sources": hashes,
         "repository_head": subprocess.check_output(["git", "rev-parse", "HEAD"],
                                                    cwd=root, text=True).strip(),
-        "compile_order": order, "owners": OWNERS,
+        "compile_order": order, "owners": compiled_owners, "source_lane": args.source_lane,
+        "requested_owners": owners, "compiled_owners": compiled_owners,
+        "audited_owners": owners if args.audit else [], "audit_requested": args.audit,
+        "owner_warnings_as_errors": args.owner_warnings_as_errors,
         "mathlib_package_pins": package_pins,
         "baseline_ref": args.base_ref, "baseline_git_blobs": baseline_blobs,
         "verification_tool_sha256": tool_hashes,
@@ -185,13 +247,17 @@ def main() -> None:
         for module in order:
             relative = Path(*module.split("."))
             out = output / relative.with_suffix(".olean")
-            if checked.get(module) != hashes[module] or not out.exists():
+            if (checked.get(module) != hashes[module] or not out.exists()
+                    or (args.owner_warnings_as_errors and module in owners)):
                 changed = True
             if args.incremental and not changed:
                 checked_now[module] = hashes[module]
                 continue
             out.parent.mkdir(parents=True, exist_ok=True)
-            command = [args.lean, "--root=" + str(work / "lean"), "-o", str(out),
+            command = [args.lean]
+            if args.owner_warnings_as_errors and module in owners:
+                command += ["-DwarningAsError=true"]
+            command += ["--root=" + str(work / "lean"), "-o", str(out),
                        str(work / "lean" / relative.with_suffix(".lean"))]
             print("CHECK " + module, flush=True)
             result = subprocess.run(command, cwd=root, env=env, text=True,
@@ -203,7 +269,10 @@ def main() -> None:
             checked_now[module] = hashes[module]
             checked_file.write_text(json.dumps(checked_now, indent=2) + "\n")
         if args.audit:
-            command = [args.lean, "--root=" + str(work / "lean"),
+            command = [args.lean]
+            if args.owner_warnings_as_errors:
+                command += ["-DwarningAsError=true"]
+            command += ["--root=" + str(work / "lean"),
                        str(work / "lean/OperatorGeometryDeclarationAudit.lean")]
             result = subprocess.run(command, cwd=root, env=env, text=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -211,10 +280,8 @@ def main() -> None:
             if result.returncode:
                 print(result.stdout, end="", flush=True)
             result.check_returncode()
-            summaries = [json.loads(s) for s in result.stdout.splitlines() if s.startswith("{")]
-            if not summaries or summaries[-1].get("status") != "PASS":
-                raise RuntimeError("Missing passing declaration-audit summary")
-            print(json.dumps(summaries[-1]), flush=True)
+            summary = validate_audit_output(result.stdout, owners, tuple(args.allow_empty_owner))
+            print(json.dumps(summary), flush=True)
         for module, source in paths.items():
             if digest(source) != hashes[module]:
                 raise RuntimeError(f"Source changed while checking: {module}")

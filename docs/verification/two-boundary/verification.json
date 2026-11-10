@@ -1,0 +1,167 @@
+{
+  "schema": "info_geometry.two_boundary_curated_verification.v1",
+  "verdict": "PASS_SCOPED_NATIVE_OPERATOR_GEOMETRY",
+  "base_ref": "cfbcbca21cf57a4614a9646768ba9356cf3cc6b0",
+  "branch": "feat/two-boundary-operator-geometry",
+  "scope": "Fresh selected project-source closures in both lanes against pinned cached mathlib; not a root-package or publication-gate certificate",
+  "owners": [
+    "InfoGeometry.Quantum.KrausBoundaryDuality",
+    "InfoGeometry.Quantum.FinitePartialTrace",
+    "InfoGeometry.Quantum.FiniteAttentionCanonicalBridges",
+    "InfoGeometry.OperatorAlgebra.SemilinearSheetGeometry",
+    "InfoGeometry.Quantum.BoundaryInstrument",
+    "InfoGeometry.Quantum.MixedBoundaryReadout",
+    "InfoGeometry.Quantum.MatrixBoundaryPurification",
+    "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+    "InfoGeometry.Quantum.TwoBoundaryOperatorExamples"
+  ],
+  "additional_unchanged_consumer": "InfoGeometry.Quantum.KrausInvariantGeometry",
+  "native_runs": {
+    "lean": {
+      "compiled_modules": 31,
+      "fresh_work_dir": true,
+      "incremental": false,
+      "exit_code": 0,
+      "owner_warnings": 0,
+      "unchanged_dependency_warnings": 95
+    },
+    "src": {
+      "compiled_modules": 31,
+      "fresh_work_dir": true,
+      "incremental": false,
+      "exit_code": 0,
+      "owner_warnings": 0,
+      "unchanged_dependency_warnings": 95
+    }
+  },
+  "declarations": {
+    "total": 284,
+    "theorem_constants": 230,
+    "includes_existing_private_and_generated": true,
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "unsafe_allowed": false,
+    "partial_allowed": false,
+    "custom_axioms_allowed": false
+  },
+  "dependency_order": {
+    "scope": "Constants in checked declaration types and values, restricted to the audited owner modules",
+    "relation": "a <= b iff a = b or b transitively depends on a",
+    "orientation": "dependency -> dependent",
+    "is_dag": true,
+    "direct_edges": 664,
+    "hasse_edges": 359,
+    "layers": 10,
+    "layer_sizes": [
+      54,
+      55,
+      78,
+      43,
+      25,
+      12,
+      9,
+      4,
+      3,
+      1
+    ],
+    "independent_reachability_verification": "PASS"
+  },
+  "source_and_artifact_comparisons": {
+    "parent_canonical_manifest_exact": true,
+    "audit_and_dag_byte_identical_across_parent_and_both_lanes": true,
+    "cross_lane_source_differences": []
+  },
+  "tool_regression_tests": 35,
+  "staged_proof_gate": "PASS",
+  "strict_static_refutation": {
+    "owners": [
+      "InfoGeometry.Quantum.BoundaryInstrument",
+      "InfoGeometry.Quantum.MixedBoundaryReadout",
+      "InfoGeometry.Quantum.MatrixBoundaryPurification",
+      "InfoGeometry.Quantum.SemilinearBoundaryReversal",
+      "InfoGeometry.Quantum.TwoBoundaryOperatorExamples"
+    ],
+    "files": [
+      "lean/InfoGeometry/Quantum/BoundaryInstrument.lean",
+      "lean/InfoGeometry/Quantum/MixedBoundaryReadout.lean",
+      "lean/InfoGeometry/Quantum/MatrixBoundaryPurification.lean",
+      "lean/InfoGeometry/Quantum/SemilinearBoundaryReversal.lean",
+      "lean/InfoGeometry/Quantum/TwoBoundaryOperatorExamples.lean"
+    ],
+    "strict": true,
+    "total_traps": 0
+  },
+  "root_path_preflight": {
+    "status": "BLOCKED",
+    "exit_code": 1,
+    "artifact": "root-path-preflight.json"
+  },
+  "ordinary_root_lake_build_certified": false,
+  "ordinary_pre_push_certified": false,
+  "full_repository_certified": false,
+  "exhaustive_entry_points_compiled": false,
+  "compatibility_helper_source": "#define _GNU_SOURCE\n#include <dlfcn.h>\n#include <errno.h>\n#include <stdio.h>\n#include <string.h>\n#include <unistd.h>\n\n/* Adapt only the current process executable lookup to the host PID layout. */\nssize_t readlink(const char *path, char *buffer, size_t size) {\n    static ssize_t (*next_readlink)(const char *, char *, size_t) = NULL;\n    if (next_readlink == NULL)\n        next_readlink = dlsym(RTLD_NEXT, \"readlink\");\n    if (next_readlink == NULL) {\n        errno = ENOSYS;\n        return -1;\n    }\n    char own_executable[80];\n    snprintf(own_executable, sizeof(own_executable), \"/proc/%ld/exe\", (long)getpid());\n    if (strcmp(path, own_executable) == 0)\n        path = \"/proc/self/exe\";\n    return next_readlink(path, buffer, size);\n}\n",
+  "compatibility_helper_scope": "Interposes readlink only for the current process /proc/PID/exe and redirects to /proc/self/exe. No source substitution or proof modification. Binary hash bound; helper not independently rebuilt.",
+  "review_scope_note": "A-A and QA bind the 26 source/tool paths and 84-file closure before adding these evidence documents. Original reviewer reports are copied without rewriting their historical stage or scope.",
+  "artifacts": {
+    "README.md": {
+      "sha256": "f0955bb76fe8f01a93f52398b614890bb2c9b0854edf5d01bf41b5c432a81db3",
+      "bytes": 4690
+    },
+    "declaration-audit.jsonl": {
+      "sha256": "a660268d9350155d3e309d3f7d1d53a0acd3b84e90213951c7dfa32811bb6bfc",
+      "bytes": 471641
+    },
+    "dependency-order.json": {
+      "sha256": "45eafd79911832a1a72bba95f7f38377b8e9c641b119b2230f911d84523e834a",
+      "bytes": 856292
+    },
+    "frozen-inputs-after.json": {
+      "sha256": "c86267c0fd36fab4ff9791c67a10089832d6db487e4427f1ecea5ba1659b23ad",
+      "bytes": 15028
+    },
+    "frozen-inputs-before.json": {
+      "sha256": "7b4d033f500fda240384e333b17fcb82a8574565fbec7ad7af9c6fc5f580bfe1",
+      "bytes": 19022
+    },
+    "integrity-comparison.json": {
+      "sha256": "933391c90c86f46a13c7e301e09167c7827d13d92e11f07caead2a1dc3bdab2e",
+      "bytes": 9283
+    },
+    "lean-result.json": {
+      "sha256": "34368b0cfa82c5ae1895ce6fac91a0f086a412762e16ba9f9afaeef00ae503da",
+      "bytes": 11260
+    },
+    "lean-source-manifest.json": {
+      "sha256": "3e13792e1c36c7cc4679978f2ce9155dcb84fa154af5a5677d36911381bf50d0",
+      "bytes": 11240
+    },
+    "qa-acceptance.json": {
+      "sha256": "07877e574553f3932d3600de02cb59a324378664ababdc8d0d90cd892d0bd4db",
+      "bytes": 45797
+    },
+    "qa-summary.md": {
+      "sha256": "391e394f40adf5a5dc97714701cdf1e644520131c3073ec1bc73d45de3b6acee",
+      "bytes": 3847
+    },
+    "root-path-preflight.json": {
+      "sha256": "6dd6f66260edc9c21b20fe4a263c12a1574c4f7be5b4c97c350eafb013de964b",
+      "bytes": 1539
+    },
+    "source-review.md": {
+      "sha256": "a76ae068c4dd9249054ea773585775a954a0b4bd4736a2ebb4e775c6b427e4f7",
+      "bytes": 22465
+    },
+    "src-result.json": {
+      "sha256": "1711cb494fd8ca8712008b92859f67c92c92d4bd45cf52e01dece21f451a259b",
+      "bytes": 11259
+    },
+    "src-source-manifest.json": {
+      "sha256": "d59915869307f69bb586c05fa1bea86acee8edae9ea77d32bee9a61f6f73a380",
+      "bytes": 11239
+    }
+  }
+}
